@@ -1,880 +1,99 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCHv3] phy: cpcap-usb: Add CPCAP PMIC USB support
-Date: Sun,  9 Apr 2017 21:19:58 -0700
-Message-ID: <20170410041958.21269-1-tony@atomide.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Marcel Partap <mpartap-hi6Y0CQ0nG0@public.gmane.org>, Michael Scott <michael.scott-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+From: Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH V3 0/5] iommu/arm-smmu: Add runtime pm/sleep support
+Date: Mon, 10 Apr 2017 10:15:18 +0530
+Message-ID: <1ceef21f-240a-013d-4bcf-0b4ea5a24bf6@codeaurora.org>
+References: <1489073748-3659-1-git-send-email-sricharan@codeaurora.org>
+	<20170331175457.GD4897@arm.com>
+	<CAF6AEGv_1pNvhCc-mVP5S28Yt5kTJmTRfe8tKSJpEmxfOKM7Jg@mail.gmail.com>
+	<20170403172307.GI5706@arm.com> <20170404193914.GF18246@codeaurora.org>
+	<20170407180105.GA22050@jcrouse-lnx.qualcomm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <20170407180105.GA22050-9PYrDHPZ2Orvke4nUoYGnHL1okKdlPRT@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Some Motorola phones like droid 4 use a custom CPCAP PMIC that has a
-multiplexing USB PHY.
+Hi Jordon,
 
-This USB PHY can operate at least in four modes using pin multiplexing
-and two control GPIOS:
+On 4/7/2017 11:31 PM, Jordan Crouse wrote:
+> On Tue, Apr 04, 2017 at 12:39:14PM -0700, Stephen Boyd wrote:
+>> On 04/03, Will Deacon wrote:
+>>> On Fri, Mar 31, 2017 at 10:58:16PM -0400, Rob Clark wrote:
+>>>> On Fri, Mar 31, 2017 at 1:54 PM, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org> wrote:
+>>>>> On Thu, Mar 09, 2017 at 09:05:43PM +0530, Sricharan R wrote:
+>>>>>> This series provides the support for turning on the arm-smmu's
+>>>>>> clocks/power domains using runtime pm. This is done using the
+>>>>>> recently introduced device links patches, which lets the symmu's
+>>>>>> runtime to follow the master's runtime pm, so the smmu remains
+>>>>>> powered only when the masters use it.
+>>>>>
+>>>>> Do you have any numbers for the power savings you achieve with this?
+>>>>> How often do we actually manage to stop the SMMU clocks on an SoC with
+>>>>> a handful of masters?
+>>>>>
+>>>>> In other words, is this too coarse-grained to be useful, or is it common
+>>>>> that all the devices upstream of the SMMU are suspended?
+>>>>
+>>>> well, if you think about a phone/tablet with a command mode panel,
+>>>> pretty much all devices will be suspended most of the time ;-)
+>>>
+>>> Well, that's really what I was asking about. I assumed that periodic
+>>> modem/radio transactions would keep the SMMU clocked, so would like to get a
+>>> rough idea of the power savings achieved with this coarse-grained approach.
+>>
+>> Sometimes we distribute SMMUs to each IP block in the system and
+>> let each one of those live in their own clock + power domain. In
+>> these cases, the SMMU can be powered down along with the only IP
+>> block that uses it. Furthermore, sometimes we put the IP block
+>> and the SMMU inside the same power domain to really tie the two
+>> together, so we definitely have cases where all devices (device?)
+>> upstream of the SMMU are suspended. And in the case of
+>> multimedia, it could be very often that something like the camera
+>> app isn't open and thus the SMMU dedicated for the camera can be
+>> powered down.
+>>
+>> Other times we have two SMMUs in the system where one is
+>> dedicated to GPU and the other is "everything else". Even in
+>> these cases, we can suspend the GPU one when the GPU is inactive
+>> because it's the only consumer. The other SMMU might not be as
+>> fine grained, but I think we still power it down quite often
+>> because the consumers are mostly multimedia devices that aren't
+>> active when the display is off.
+>
+> And just to confuse things even further: with per-instance pagetables we have an
+> interest in forcing the SMMU clocks *on* because we don't know when the GPU
+> might try to hit the registers to switch a pagetable and if somebody in the
+> pipeline is actively trying to do power management at the same time hilarity
+> will ensue.
+>
 
-- Pass through companion PHY for the SoC USB PHY
-- ULPI PHY for the SoC
-- Pass through USB for the modem
-- UART debug console for the SoC
+Ok, with per-process pagetables which gpu handles by itself, is the gpu driver
+not going to keep its own clocks pm_runtime active before handing it over
+to the firmware ? which would in this case take care of having the iommu clocks
+also enabled because of the device links in the behind.
 
-This patch adds support for droid 4 USB PHY and debug UART modes,
-support for other modes can be added later on as needed.
+> The alternative to pm_runtime is the downstream driver that probes the SMMU
+> clocks from DT and frobs them itself. I think we can agree that is far less
+> reasonable.
 
-Both peripheral and host mode are working for the USB. The
-host mode depends on the cpcap-charger driver for VBUS.
+The idea here was to keep the iommu clocks only represented inside the IOMMU DT
+and handled by that driver. This works fine with the video decoder which is
+already fully pm_runtime enabled and works fine with basic gpu testing. Do you
+see any issues in testing this with the per-process pagetables ?
 
-VBUS and ID pin detection are done using cpcap-adc IIO ADC
-driver.
+Regards,
+  Sricharan
 
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Marcel Partap <mpartap-hi6Y0CQ0nG0@public.gmane.org>
-Cc: Michael Scott <michael.scott-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Tested-by: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Signed-off-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
----
-
-Changes since v2:
-- Added extcon support as requested by Kishon
-
-- Added Rob's ack
-
-- Folded in Kconfig randconfig build fix to add depends on IIO
-
-Changes since v1:
-- Use iio_read_channel_processed() instead of iio_read_channel_scaled()
-  as changed in the v2 of the ADC driver
-
-- Kept Tested-by from Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> as the change
-  from v1 is trivial
-
----
- .../devicetree/bindings/phy/phy-cpcap-usb.txt      |  40 ++
- drivers/phy/Kconfig                                |   8 +
- drivers/phy/Makefile                               |   1 +
- drivers/phy/phy-cpcap-usb.c                        | 734 +++++++++++++++++++++
- 4 files changed, 783 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/phy/phy-cpcap-usb.txt
- create mode 100644 drivers/phy/phy-cpcap-usb.c
-
-diff --git a/Documentation/devicetree/bindings/phy/phy-cpcap-usb.txt b/Documentation/devicetree/bindings/phy/phy-cpcap-usb.txt
-new file mode 100644
---- /dev/null
-+++ b/Documentation/devicetree/bindings/phy/phy-cpcap-usb.txt
-@@ -0,0 +1,40 @@
-+Motorola CPCAP PMIC USB PHY binding
-+
-+Required properties:
-+compatible: Shall be either "motorola,cpcap-usb-phy" or
-+	    "motorola,mapphone-cpcap-usb-phy"
-+#phy-cells: Shall be 0
-+interrupts: CPCAP PMIC interrupts used by the USB PHY
-+interrupt-names: Interrupt names
-+io-channels: IIO ADC channels used by the USB PHY
-+io-channel-names: IIO ADC channel names
-+vusb-supply: Regulator for the PHY
-+
-+Optional properties:
-+pinctrl: Optional alternate pin modes for the PHY
-+pinctrl-names: Names for optional pin modes
-+mode-gpios: Optional GPIOs for configuring alternate modes
-+
-+Example:
-+cpcap_usb2_phy: phy {
-+	compatible = "motorola,mapphone-cpcap-usb-phy";
-+	pinctrl-0 = <&usb_gpio_mux_sel1 &usb_gpio_mux_sel2>;
-+	pinctrl-1 = <&usb_ulpi_pins>;
-+	pinctrl-2 = <&usb_utmi_pins>;
-+	pinctrl-3 = <&uart3_pins>;
-+	pinctrl-names = "default", "ulpi", "utmi", "uart";
-+	#phy-cells = <0>;
-+	interrupts-extended = <
-+		&cpcap 15 0 &cpcap 14 0 &cpcap 28 0 &cpcap 19 0
-+		&cpcap 18 0 &cpcap 17 0 &cpcap 16 0 &cpcap 49 0
-+		&cpcap 48 1
-+	>;
-+	interrupt-names =
-+		"id_ground", "id_float", "se0conn", "vbusvld",
-+		"sessvld", "sessend", "se1", "dm", "dp";
-+	mode-gpios = <&gpio2 28 GPIO_ACTIVE_HIGH
-+		      &gpio1 0 GPIO_ACTIVE_HIGH>;
-+	io-channels = <&cpcap_adc 2>, <&cpcap_adc 7>;
-+	io-channel-names = "vbus", "id";
-+	vusb-supply = <&vusb>;
-+};
-diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
---- a/drivers/phy/Kconfig
-+++ b/drivers/phy/Kconfig
-@@ -47,6 +47,14 @@ config PHY_BERLIN_SATA
- 	help
- 	  Enable this to support the SATA PHY on Marvell Berlin SoCs.
- 
-+config PHY_CPCAP_USB
-+	tristate "CPCAP USB PHY driver"
-+	depends on USB_SUPPORT && IIO
-+	select GENERIC_PHY
-+	select USB_PHY
-+	help
-+	  Enable this for CPCAP USB to work.
-+
- config ARMADA375_USBCLUSTER_PHY
- 	def_bool y
- 	depends on MACH_ARMADA_375 || COMPILE_TEST
-diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile
---- a/drivers/phy/Makefile
-+++ b/drivers/phy/Makefile
-@@ -7,6 +7,7 @@ obj-$(CONFIG_PHY_BCM_NS_USB2)		+= phy-bcm-ns-usb2.o
- obj-$(CONFIG_PHY_BCM_NS_USB3)		+= phy-bcm-ns-usb3.o
- obj-$(CONFIG_PHY_BERLIN_USB)		+= phy-berlin-usb.o
- obj-$(CONFIG_PHY_BERLIN_SATA)		+= phy-berlin-sata.o
-+obj-$(CONFIG_PHY_CPCAP_USB)		+= phy-cpcap-usb.o
- obj-$(CONFIG_PHY_DA8XX_USB)		+= phy-da8xx-usb.o
- obj-$(CONFIG_PHY_DM816X_USB)		+= phy-dm816x-usb.o
- obj-$(CONFIG_ARMADA375_USBCLUSTER_PHY)	+= phy-armada375-usb2.o
-diff --git a/drivers/phy/phy-cpcap-usb.c b/drivers/phy/phy-cpcap-usb.c
-new file mode 100644
---- /dev/null
-+++ b/drivers/phy/phy-cpcap-usb.c
-@@ -0,0 +1,734 @@
-+/*
-+ * Motorola CPCAP PMIC USB PHY driver
-+ * Copyright (C) 2017 Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-+ *
-+ * Some parts based on earlier Motorola Linux kernel tree code in
-+ * board-mapphone-usb.c and cpcap-usb-det.c:
-+ * Copyright (C) 2007 - 2011 Motorola, Inc.
-+ *
-+ * This program is free software; you can redistribute it and/or
-+ * modify it under the terms of the GNU General Public License as
-+ * published by the Free Software Foundation version 2.
-+ *
-+ * This program is distributed "as is" WITHOUT ANY WARRANTY of any
-+ * kind, whether express or implied; without even the implied warranty
-+ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#include <linux/atomic.h>
-+#include <linux/clk.h>
-+#include <linux/delay.h>
-+#include <linux/err.h>
-+#include <linux/extcon.h>
-+#include <linux/io.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_platform.h>
-+#include <linux/iio/consumer.h>
-+#include <linux/pinctrl/consumer.h>
-+#include <linux/platform_device.h>
-+#include <linux/regmap.h>
-+#include <linux/slab.h>
-+
-+#include <linux/gpio/consumer.h>
-+#include <linux/mfd/motorola-cpcap.h>
-+#include <linux/phy/omap_usb.h>
-+#include <linux/phy/phy.h>
-+#include <linux/regulator/consumer.h>
-+#include <linux/usb/musb.h>
-+
-+/* CPCAP_REG_USBC1 register bits */
-+#define CPCAP_BIT_IDPULSE		BIT(15)
-+#define CPCAP_BIT_ID100KPU		BIT(14)
-+#define CPCAP_BIT_IDPUCNTRL		BIT(13)
-+#define CPCAP_BIT_IDPU			BIT(12)
-+#define CPCAP_BIT_IDPD			BIT(11)
-+#define CPCAP_BIT_VBUSCHRGTMR3		BIT(10)
-+#define CPCAP_BIT_VBUSCHRGTMR2		BIT(9)
-+#define CPCAP_BIT_VBUSCHRGTMR1		BIT(8)
-+#define CPCAP_BIT_VBUSCHRGTMR0		BIT(7)
-+#define CPCAP_BIT_VBUSPU		BIT(6)
-+#define CPCAP_BIT_VBUSPD		BIT(5)
-+#define CPCAP_BIT_DMPD			BIT(4)
-+#define CPCAP_BIT_DPPD			BIT(3)
-+#define CPCAP_BIT_DM1K5PU		BIT(2)
-+#define CPCAP_BIT_DP1K5PU		BIT(1)
-+#define CPCAP_BIT_DP150KPU		BIT(0)
-+
-+/* CPCAP_REG_USBC2 register bits */
-+#define CPCAP_BIT_ZHSDRV1		BIT(15)
-+#define CPCAP_BIT_ZHSDRV0		BIT(14)
-+#define CPCAP_BIT_DPLLCLKREQ		BIT(13)
-+#define CPCAP_BIT_SE0CONN		BIT(12)
-+#define CPCAP_BIT_UARTTXTRI		BIT(11)
-+#define CPCAP_BIT_UARTSWAP		BIT(10)
-+#define CPCAP_BIT_UARTMUX1		BIT(9)
-+#define CPCAP_BIT_UARTMUX0		BIT(8)
-+#define CPCAP_BIT_ULPISTPLOW		BIT(7)
-+#define CPCAP_BIT_TXENPOL		BIT(6)
-+#define CPCAP_BIT_USBXCVREN		BIT(5)
-+#define CPCAP_BIT_USBCNTRL		BIT(4)
-+#define CPCAP_BIT_USBSUSPEND		BIT(3)
-+#define CPCAP_BIT_EMUMODE2		BIT(2)
-+#define CPCAP_BIT_EMUMODE1		BIT(1)
-+#define CPCAP_BIT_EMUMODE0		BIT(0)
-+
-+/* CPCAP_REG_USBC3 register bits */
-+#define CPCAP_BIT_SPARE_898_15		BIT(15)
-+#define CPCAP_BIT_IHSTX03		BIT(14)
-+#define CPCAP_BIT_IHSTX02		BIT(13)
-+#define CPCAP_BIT_IHSTX01		BIT(12)
-+#define CPCAP_BIT_IHSTX0		BIT(11)
-+#define CPCAP_BIT_IDPU_SPI		BIT(10)
-+#define CPCAP_BIT_UNUSED_898_9		BIT(9)
-+#define CPCAP_BIT_VBUSSTBY_EN		BIT(8)
-+#define CPCAP_BIT_VBUSEN_SPI		BIT(7)
-+#define CPCAP_BIT_VBUSPU_SPI		BIT(6)
-+#define CPCAP_BIT_VBUSPD_SPI		BIT(5)
-+#define CPCAP_BIT_DMPD_SPI		BIT(4)
-+#define CPCAP_BIT_DPPD_SPI		BIT(3)
-+#define CPCAP_BIT_SUSPEND_SPI		BIT(2)
-+#define CPCAP_BIT_PU_SPI		BIT(1)
-+#define CPCAP_BIT_ULPI_SPI_SEL		BIT(0)
-+
-+struct cpcap_usb_ints_state {
-+	bool id_ground;
-+	bool id_float;
-+	bool chrg_det;
-+	bool rvrs_chrg;
-+	bool vbusov;
-+
-+	bool chrg_se1b;
-+	bool se0conn;
-+	bool rvrs_mode;
-+	bool chrgcurr1;
-+	bool vbusvld;
-+	bool sessvld;
-+	bool sessend;
-+	bool se1;
-+
-+	bool battdetb;
-+	bool dm;
-+	bool dp;
-+};
-+
-+enum cpcap_gpio_mode {
-+	CPCAP_DM_DP,
-+	CPCAP_MDM_RX_TX,
-+	CPCAP_UNKNOWN,
-+	CPCAP_OTG_DM_DP,
-+};
-+
-+struct cpcap_interrupt_desc {
-+	struct list_head node;	/* list of interrupts */
-+	const char *name;
-+	int irq;
-+};
-+
-+struct cpcap_phy_ddata {
-+	struct regmap *reg;
-+	struct device *dev;
-+	struct clk *refclk;
-+	struct usb_phy phy;
-+	struct list_head irq_list;
-+	struct mutex lock;	/* for list of interrupts used */
-+	struct delayed_work detect_work;
-+	struct pinctrl *pins;
-+	struct pinctrl_state *pins_ulpi;
-+	struct pinctrl_state *pins_utmi;
-+	struct pinctrl_state *pins_uart;
-+	struct extcon_dev *extcon;
-+	struct gpio_desc *gpio[2];
-+	struct iio_channel *vbus;
-+	struct iio_channel *id;
-+	struct regulator *vusb;
-+	atomic_t active;
-+};
-+
-+static const unsigned int cpcap_usb_phy_cable[] = {
-+	EXTCON_USB_HOST,
-+	EXTCON_NONE,
-+};
-+
-+static bool cpcap_usb_vbus_valid(struct cpcap_phy_ddata *ddata)
-+{
-+	int error, value = 0;
-+
-+	error = iio_read_channel_processed(ddata->vbus, &value);
-+	if (error >= 0)
-+		return value > 3900 ? true : false;
-+
-+	dev_err(ddata->dev, "error reading VBUS: %i\n", error);
-+
-+	return false;
-+}
-+
-+static int cpcap_usb_phy_set_host(struct usb_otg *otg, struct usb_bus *host)
-+{
-+	otg->host = host;
-+	if (!host)
-+		otg->state = OTG_STATE_UNDEFINED;
-+
-+	return 0;
-+}
-+
-+static int cpcap_usb_phy_set_peripheral(struct usb_otg *otg,
-+					struct usb_gadget *gadget)
-+{
-+	otg->gadget = gadget;
-+	if (!gadget)
-+		otg->state = OTG_STATE_UNDEFINED;
-+
-+	return 0;
-+}
-+
-+static const struct phy_ops ops = {
-+	.owner		= THIS_MODULE,
-+};
-+
-+static int cpcap_phy_get_ints_state(struct cpcap_phy_ddata *ddata,
-+				    struct cpcap_usb_ints_state *s)
-+{
-+	int val, error;
-+
-+	error = regmap_read(ddata->reg, CPCAP_REG_INTS1, &val);
-+	if (error)
-+		return error;
-+
-+	s->id_ground = val & BIT(15);
-+	s->id_float = val & BIT(14);
-+	s->vbusov = val & BIT(11);
-+
-+	error = regmap_read(ddata->reg, CPCAP_REG_INTS2, &val);
-+	if (error)
-+		return error;
-+
-+	s->vbusvld = val & BIT(3);
-+	s->sessvld = val & BIT(2);
-+	s->sessend = val & BIT(1);
-+	s->se1 = val & BIT(0);
-+
-+	error = regmap_read(ddata->reg, CPCAP_REG_INTS4, &val);
-+	if (error)
-+		return error;
-+
-+	s->dm = val & BIT(1);
-+	s->dp = val & BIT(0);
-+
-+	return 0;
-+}
-+
-+static int cpcap_usb_set_uart_mode(struct cpcap_phy_ddata *ddata);
-+static int cpcap_usb_set_usb_mode(struct cpcap_phy_ddata *ddata);
-+
-+static void cpcap_usb_detect(struct work_struct *work)
-+{
-+	struct cpcap_phy_ddata *ddata;
-+	struct cpcap_usb_ints_state s;
-+	bool vbus = false;
-+	int error;
-+
-+	ddata = container_of(work, struct cpcap_phy_ddata, detect_work.work);
-+
-+	error = cpcap_phy_get_ints_state(ddata, &s);
-+	if (error)
-+		return;
-+
-+	if (s.id_ground) {
-+		dev_dbg(ddata->dev, "id ground, USB host mode\n");
-+		error = extcon_set_state_sync(ddata->extcon,
-+					      EXTCON_USB_HOST,
-+					      true);
-+		if (error)
-+			dev_warn(ddata->dev, "could not set extcon state %i\n",
-+				 error);
-+
-+		error = cpcap_usb_set_usb_mode(ddata);
-+		if (error)
-+			goto out_err;
-+
-+		error = musb_mailbox(MUSB_ID_GROUND);
-+		if (error)
-+			goto out_err;
-+
-+		error = regmap_update_bits(ddata->reg, CPCAP_REG_USBC3,
-+					   CPCAP_BIT_VBUSSTBY_EN,
-+					   CPCAP_BIT_VBUSSTBY_EN);
-+		if (error)
-+			goto out_err;
-+
-+		return;
-+	}
-+
-+	error = regmap_update_bits(ddata->reg, CPCAP_REG_USBC3,
-+				   CPCAP_BIT_VBUSSTBY_EN, 0);
-+	if (error)
-+		goto out_err;
-+
-+	vbus = cpcap_usb_vbus_valid(ddata);
-+
-+	if (vbus) {
-+		/* Are we connected to a docking station with vbus? */
-+		if (s.id_ground) {
-+			dev_dbg(ddata->dev, "connected to a dock\n");
-+
-+			/* No VBUS needed with doc */
-+			error = extcon_set_state_sync(ddata->extcon,
-+						      EXTCON_USB_HOST,
-+						      false);
-+			if (error)
-+				dev_warn(ddata->dev,
-+					 "could not set extcon state %i\n",
-+					 error);
-+			error = cpcap_usb_set_usb_mode(ddata);
-+			if (error)
-+				goto out_err;
-+			error = musb_mailbox(MUSB_ID_GROUND);
-+			if (error)
-+				goto out_err;
-+
-+			return;
-+		}
-+
-+		/* Otherwise assume we're connected to a USB host */
-+		dev_dbg(ddata->dev, "connected to USB host\n");
-+		error = extcon_set_state_sync(ddata->extcon,
-+					      EXTCON_USB_HOST, false);
-+		if (error)
-+			dev_warn(ddata->dev, "could not set extcon state %i\n",
-+				 error);
-+		error = cpcap_usb_set_usb_mode(ddata);
-+		if (error)
-+			goto out_err;
-+		error = musb_mailbox(MUSB_VBUS_VALID);
-+		if (error)
-+			goto out_err;
-+
-+		return;
-+	}
-+
-+	/* Default to debug UART mode */
-+	error = extcon_set_state_sync(ddata->extcon,
-+				      EXTCON_USB_HOST, false);
-+	if (error)
-+		dev_warn(ddata->dev, "could not set extcon state %i\n",
-+			 error);
-+	error = cpcap_usb_set_uart_mode(ddata);
-+	if (error)
-+		goto out_err;
-+
-+	error = musb_mailbox(MUSB_VBUS_OFF);
-+	if (error)
-+		goto out_err;
-+
-+	dev_dbg(ddata->dev, "set UART mode\n");
-+
-+	return;
-+
-+out_err:
-+	dev_err(ddata->dev, "error setting cable state: %i\n", error);
-+}
-+
-+static irqreturn_t cpcap_phy_irq_thread(int irq, void *data)
-+{
-+	struct cpcap_phy_ddata *ddata = data;
-+
-+	if (!atomic_read(&ddata->active))
-+		return IRQ_NONE;
-+
-+	schedule_delayed_work(&ddata->detect_work, msecs_to_jiffies(1));
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static int cpcap_usb_init_irq(struct platform_device *pdev,
-+			      struct cpcap_phy_ddata *ddata,
-+			      const char *name)
-+{
-+	struct cpcap_interrupt_desc *d;
-+	int irq, error;
-+
-+	irq = platform_get_irq_byname(pdev, name);
-+	if (!irq)
-+		return -ENODEV;
-+
-+	error = devm_request_threaded_irq(ddata->dev, irq, NULL,
-+					  cpcap_phy_irq_thread,
-+					  IRQF_SHARED,
-+					  name, ddata);
-+	if (error) {
-+		dev_err(ddata->dev, "could not get irq %s: %i\n",
-+			name, error);
-+
-+		return error;
-+	}
-+
-+	d = devm_kzalloc(ddata->dev, sizeof(*d), GFP_KERNEL);
-+	if (!d)
-+		return -ENOMEM;
-+
-+	d->name = name;
-+	d->irq = irq;
-+	list_add(&d->node, &ddata->irq_list);
-+
-+	return 0;
-+}
-+
-+static const char * const cpcap_phy_irqs[] = {
-+	/* REG_INT_0 */
-+	"id_ground", "id_float",
-+
-+	/* REG_INT1 */
-+	"se0conn", "vbusvld", "sessvld", "sessend", "se1",
-+
-+	/* REG_INT_3 */
-+	"dm", "dp",
-+};
-+
-+static int cpcap_usb_init_interrupts(struct platform_device *pdev,
-+				     struct cpcap_phy_ddata *ddata)
-+{
-+	int i, error;
-+
-+	for (i = 0; i < ARRAY_SIZE(cpcap_phy_irqs); i++) {
-+		error = cpcap_usb_init_irq(pdev, ddata, cpcap_phy_irqs[i]);
-+		if (error)
-+			return error;
-+	}
-+
-+	return 0;
-+}
-+
-+/*
-+ * Optional pins and modes. At least Motorola mapphone devices
-+ * are using two GPIOs and dynamic pinctrl to multiplex PHY pins
-+ * to UART, ULPI or UTMI mode.
-+ */
-+
-+static int cpcap_usb_gpio_set_mode(struct cpcap_phy_ddata *ddata,
-+				   enum cpcap_gpio_mode mode)
-+{
-+	if (!ddata->gpio[0] || !ddata->gpio[1])
-+		return 0;
-+
-+	gpiod_set_value(ddata->gpio[0], mode & 1);
-+	gpiod_set_value(ddata->gpio[1], mode >> 1);
-+
-+	return 0;
-+}
-+
-+static int cpcap_usb_set_uart_mode(struct cpcap_phy_ddata *ddata)
-+{
-+	int error;
-+
-+	error = cpcap_usb_gpio_set_mode(ddata, CPCAP_DM_DP);
-+	if (error)
-+		goto out_err;
-+
-+	if (ddata->pins_uart) {
-+		error = pinctrl_select_state(ddata->pins, ddata->pins_uart);
-+		if (error)
-+			goto out_err;
-+	}
-+
-+	error = regmap_update_bits(ddata->reg, CPCAP_REG_USBC1,
-+				   CPCAP_BIT_VBUSPD,
-+				   CPCAP_BIT_VBUSPD);
-+	if (error)
-+		goto out_err;
-+
-+	error = regmap_update_bits(ddata->reg, CPCAP_REG_USBC2,
-+				   0xffff, CPCAP_BIT_UARTMUX0 |
-+				   CPCAP_BIT_EMUMODE0);
-+	if (error)
-+		goto out_err;
-+
-+	error = regmap_update_bits(ddata->reg, CPCAP_REG_USBC3, 0x7fff,
-+				   CPCAP_BIT_IDPU_SPI);
-+	if (error)
-+		goto out_err;
-+
-+	return 0;
-+
-+out_err:
-+	dev_err(ddata->dev, "%s failed with %i\n", __func__, error);
-+
-+	return error;
-+}
-+
-+static int cpcap_usb_set_usb_mode(struct cpcap_phy_ddata *ddata)
-+{
-+	int error;
-+
-+	error = cpcap_usb_gpio_set_mode(ddata, CPCAP_OTG_DM_DP);
-+	if (error)
-+		return error;
-+
-+	if (ddata->pins_utmi) {
-+		error = pinctrl_select_state(ddata->pins, ddata->pins_utmi);
-+		if (error) {
-+			dev_err(ddata->dev, "could not set usb mode: %i\n",
-+				error);
-+
-+			return error;
-+		}
-+	}
-+
-+	error = regmap_update_bits(ddata->reg, CPCAP_REG_USBC1,
-+				   CPCAP_BIT_VBUSPD, 0);
-+	if (error)
-+		goto out_err;
-+
-+	error = regmap_update_bits(ddata->reg, CPCAP_REG_USBC2,
-+				   CPCAP_BIT_USBXCVREN,
-+				   CPCAP_BIT_USBXCVREN);
-+	if (error)
-+		goto out_err;
-+
-+	error = regmap_update_bits(ddata->reg, CPCAP_REG_USBC3,
-+				   CPCAP_BIT_PU_SPI |
-+				   CPCAP_BIT_DMPD_SPI |
-+				   CPCAP_BIT_DPPD_SPI |
-+				   CPCAP_BIT_SUSPEND_SPI |
-+				   CPCAP_BIT_ULPI_SPI_SEL, 0);
-+	if (error)
-+		goto out_err;
-+
-+	error = regmap_update_bits(ddata->reg, CPCAP_REG_USBC2,
-+				   CPCAP_BIT_USBXCVREN,
-+				   CPCAP_BIT_USBXCVREN);
-+	if (error)
-+		goto out_err;
-+
-+	return 0;
-+
-+out_err:
-+	dev_err(ddata->dev, "%s failed with %i\n", __func__, error);
-+
-+	return error;
-+}
-+
-+static int cpcap_usb_init_optional_pins(struct cpcap_phy_ddata *ddata)
-+{
-+	ddata->pins = devm_pinctrl_get(ddata->dev);
-+	if (IS_ERR(ddata->pins)) {
-+		dev_info(ddata->dev, "default pins not configured: %ld\n",
-+			 PTR_ERR(ddata->pins));
-+		ddata->pins = NULL;
-+	}
-+
-+	ddata->pins_ulpi = pinctrl_lookup_state(ddata->pins, "ulpi");
-+	if (IS_ERR(ddata->pins_ulpi)) {
-+		dev_info(ddata->dev, "ulpi pins not configured\n");
-+		ddata->pins_ulpi = NULL;
-+	}
-+
-+	ddata->pins_utmi = pinctrl_lookup_state(ddata->pins, "utmi");
-+	if (IS_ERR(ddata->pins_utmi)) {
-+		dev_info(ddata->dev, "utmi pins not configured\n");
-+		ddata->pins_utmi = NULL;
-+	}
-+
-+	ddata->pins_uart = pinctrl_lookup_state(ddata->pins, "uart");
-+	if (IS_ERR(ddata->pins_uart)) {
-+		dev_info(ddata->dev, "uart pins not configured\n");
-+		ddata->pins_uart = NULL;
-+	}
-+
-+	if (ddata->pins_uart)
-+		return pinctrl_select_state(ddata->pins, ddata->pins_uart);
-+
-+	return 0;
-+}
-+
-+static void cpcap_usb_init_optional_gpios(struct cpcap_phy_ddata *ddata)
-+{
-+	int i;
-+
-+	for (i = 0; i < 2; i++) {
-+		ddata->gpio[i] = devm_gpiod_get_index(ddata->dev, "mode",
-+						      i, GPIOD_OUT_HIGH);
-+		if (IS_ERR(ddata->gpio[i])) {
-+			dev_info(ddata->dev, "no mode change GPIO%i: %li\n",
-+				 i, PTR_ERR(ddata->gpio[i]));
-+				 ddata->gpio[i] = NULL;
-+		}
-+	}
-+}
-+
-+static int cpcap_usb_init_iio(struct cpcap_phy_ddata *ddata)
-+{
-+	enum iio_chan_type type;
-+	int error;
-+
-+	ddata->vbus = devm_iio_channel_get(ddata->dev, "vbus");
-+	if (IS_ERR(ddata->vbus)) {
-+		error = PTR_ERR(ddata->vbus);
-+		goto out_err;
-+	}
-+
-+	if (!ddata->vbus->indio_dev) {
-+		error = -ENXIO;
-+		goto out_err;
-+	}
-+
-+	error = iio_get_channel_type(ddata->vbus, &type);
-+	if (error < 0)
-+		goto out_err;
-+
-+	if (type != IIO_VOLTAGE) {
-+		error = -EINVAL;
-+		goto out_err;
-+	}
-+
-+	return 0;
-+
-+out_err:
-+	dev_err(ddata->dev, "could not initialize VBUS or ID IIO: %i\n",
-+		error);
-+
-+	return error;
-+}
-+
-+#ifdef CONFIG_OF
-+static const struct of_device_id cpcap_usb_phy_id_table[] = {
-+	{
-+		.compatible = "motorola,cpcap-usb-phy",
-+	},
-+	{
-+		.compatible = "motorola,mapphone-cpcap-usb-phy",
-+	},
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, cpcap_usb_phy_id_table);
-+#endif
-+
-+static int cpcap_usb_phy_probe(struct platform_device *pdev)
-+{
-+	struct cpcap_phy_ddata *ddata;
-+	struct phy *generic_phy;
-+	struct phy_provider *phy_provider;
-+	struct usb_otg *otg;
-+	const struct of_device_id *of_id;
-+	int error;
-+
-+	of_id = of_match_device(of_match_ptr(cpcap_usb_phy_id_table),
-+				&pdev->dev);
-+	if (!of_id)
-+		return -EINVAL;
-+
-+	ddata = devm_kzalloc(&pdev->dev, sizeof(*ddata), GFP_KERNEL);
-+	if (!ddata)
-+		return -ENOMEM;
-+
-+	ddata->reg = dev_get_regmap(pdev->dev.parent, NULL);
-+	if (!ddata->reg)
-+		return -ENODEV;
-+
-+	otg = devm_kzalloc(&pdev->dev, sizeof(*otg), GFP_KERNEL);
-+	if (!otg)
-+		return -ENOMEM;
-+
-+	ddata->dev = &pdev->dev;
-+	ddata->phy.dev = ddata->dev;
-+	ddata->phy.label = "cpcap_usb_phy";
-+	ddata->phy.otg = otg;
-+	ddata->phy.type = USB_PHY_TYPE_USB2;
-+	INIT_LIST_HEAD(&ddata->irq_list);
-+	otg->set_host = cpcap_usb_phy_set_host;
-+	otg->set_peripheral = cpcap_usb_phy_set_peripheral;
-+	otg->usb_phy = &ddata->phy;
-+	mutex_init(&ddata->lock);
-+	INIT_DELAYED_WORK(&ddata->detect_work, cpcap_usb_detect);
-+	platform_set_drvdata(pdev, ddata);
-+
-+	ddata->vusb = devm_regulator_get(&pdev->dev, "vusb");
-+	if (IS_ERR(ddata->vusb))
-+		return PTR_ERR(ddata->vusb);
-+
-+	error = regulator_enable(ddata->vusb);
-+	if (error)
-+		return error;
-+
-+	generic_phy = devm_phy_create(ddata->dev, NULL, &ops);
-+	if (IS_ERR(generic_phy)) {
-+		error = PTR_ERR(generic_phy);
-+		return PTR_ERR(generic_phy);
-+	}
-+
-+	phy_set_drvdata(generic_phy, ddata);
-+
-+	phy_provider = devm_of_phy_provider_register(ddata->dev,
-+						     of_phy_simple_xlate);
-+	if (IS_ERR(phy_provider))
-+		return PTR_ERR(phy_provider);
-+
-+	error = cpcap_usb_init_optional_pins(ddata);
-+	if (error)
-+		return error;
-+
-+	cpcap_usb_init_optional_gpios(ddata);
-+
-+	error = cpcap_usb_init_iio(ddata);
-+	if (error)
-+		return error;
-+
-+	error = cpcap_usb_init_interrupts(pdev, ddata);
-+	if (error)
-+		return error;
-+
-+	ddata->extcon = devm_extcon_dev_allocate(ddata->dev,
-+						 cpcap_usb_phy_cable);
-+	if (IS_ERR(ddata->extcon))
-+		return PTR_ERR(ddata->extcon);
-+
-+	error = devm_extcon_dev_register(ddata->dev,
-+					 ddata->extcon);
-+	if (error)
-+		return error;
-+
-+	usb_add_phy_dev(&ddata->phy);
-+	atomic_set(&ddata->active, 1);
-+	schedule_delayed_work(&ddata->detect_work, msecs_to_jiffies(1));
-+
-+	return 0;
-+}
-+
-+static int cpcap_usb_phy_remove(struct platform_device *pdev)
-+{
-+	struct cpcap_phy_ddata *ddata = platform_get_drvdata(pdev);
-+	int error;
-+
-+	atomic_set(&ddata->active, 0);
-+	error = cpcap_usb_set_uart_mode(ddata);
-+	if (error)
-+		dev_err(ddata->dev, "could not set UART mode\n");
-+
-+	error = musb_mailbox(MUSB_VBUS_OFF);
-+	if (error)
-+		dev_err(ddata->dev, "could not set mailbox\n");
-+
-+	usb_remove_phy(&ddata->phy);
-+	cancel_delayed_work_sync(&ddata->detect_work);
-+	clk_unprepare(ddata->refclk);
-+	regulator_disable(ddata->vusb);
-+
-+	return 0;
-+}
-+
-+static struct platform_driver cpcap_usb_phy_driver = {
-+	.probe		= cpcap_usb_phy_probe,
-+	.remove		= cpcap_usb_phy_remove,
-+	.driver		= {
-+		.name	= "cpcap-usb-phy",
-+		.of_match_table = of_match_ptr(cpcap_usb_phy_id_table),
-+	},
-+};
-+
-+module_platform_driver(cpcap_usb_phy_driver);
-+
-+MODULE_ALIAS("platform:cpcap_usb");
-+MODULE_AUTHOR("Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>");
-+MODULE_DESCRIPTION("CPCAP usb phy driver");
-+MODULE_LICENSE("GPL v2");
 -- 
-2.12.2
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+"QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
