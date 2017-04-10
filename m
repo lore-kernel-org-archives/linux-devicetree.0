@@ -1,61 +1,69 @@
-From: Chris Brandt <Chris.Brandt@renesas.com>
-Subject: RE: [PATCH v4 0/9] Renesas RZ/A1 pin and gpio controller
-Date: Mon, 10 Apr 2017 02:33:36 +0000
-Message-ID: <SG2PR06MB1165D83E182D6B043C3C59928A010@SG2PR06MB1165.apcprd06.prod.outlook.com>
-References: <1491401247-7030-1-git-send-email-jacopo+renesas@jmondi.org>
+From: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
+Subject: Re: [PATCH v2 2/2] drivers/serial: Add driver for Aspeed virtual UART
+Date: Mon, 10 Apr 2017 12:37:57 +0930
+Message-ID: <CACPK8XfJT-sGuTwDDSxevm50DLzh5qJ3+qa4qiA6f3enC6r_iw@mail.gmail.com>
+References: <20170405040352.5661-1-joel@jms.id.au> <20170405040352.5661-3-joel@jms.id.au>
+ <CAHp75VckYiBccVN+_K+Tm38kcdC10=sekQZg7Uz_HwS4xyW2UA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1491401247-7030-1-git-send-email-jacopo+renesas@jmondi.org>
-Content-Language: en-US
-Sender: linux-gpio-owner@vger.kernel.org
-To: Jacopo Mondi <jacopo+renesas@jmondi.org>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "geert+renesas@glider.be" <geert+renesas@glider.be>, "laurent.pinchart@ideasonboard.com" <laurent.pinchart@ideasonboard.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux@armlinux.org.uk" <linux@armlinux.org.uk>
-Cc: "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAHp75VckYiBccVN+_K+Tm38kcdC10=sekQZg7Uz_HwS4xyW2UA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Jiri Slaby <jslaby-IBi9RG/b67k@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, "linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, OpenBMC Maillist <openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jacopo,
+On Wed, Apr 5, 2017 at 8:24 PM, Andy Shevchenko
+<andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> On Wed, Apr 5, 2017 at 7:03 AM, Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org> wrote:
+>
+>> +       port.port.irq = irq_of_parse_and_map(np, 0);
+>
+> Isn't better to get this via platform_get_irq() ?
 
-On Wednesday, April 05, 2017, Jacopo Mondi wrote:
-> v3 -> v4:
-> - use "pinmux" property in pmx sub-nodes in place of "renesas,pins"
-> - use pinconf standard properties to set pin mux additional flags
-> - add "bi-directional" and "output-enable" to pinconf generic properties
-> - perform pmx function parsing at dt_node_to_map() time
-> - change DT bindings to use GENERIC_PINCONF
-> - change DT bindings to allow sub-nodes to have "pinmux" property
-> specified
-> - several renames (register names, DT parse functions, set_mux() function=
-)
+I can't see the benefit.
 
+>
+>> +       port.port.irqflags = IRQF_SHARED;
+>> +       port.port.iotype = UPIO_MEM;
+>
+>> +       if (of_property_read_u32(np, "reg-io-width", &prop) == 0) {
+>
+> I would still go with usual pattern.
+>
+>> +               switch (prop) {
+>> +               case 1:
+>> +                       port.port.iotype = UPIO_MEM;
+>> +                       break;
+>> +               case 4:
+>
+>> +                       port.port.iotype = of_device_is_big_endian(np) ?
+>> +                                      UPIO_MEM32BE : UPIO_MEM32;
+>
+> Hmm... And this one is not in align with IO accessors used in this
+> driver. (readx()/writex() are little endian IO accessors).
 
-I just tested this driver on the RZ/A1 RSK board.
-The following worked good.
+We only perform readb/writeb, however you raise a good point that
+we're assuming LE in the register layout. I will remove checking of this
+optional property.
 
-   SCIF2, I2C, SDHI, Ethernet
+I will send v3 with the other cleanups you mentioned.
 
+Cheers,
 
-SDHI also has bi-direction pins. For your reference, here was my DT:
+Joel
 
-
-	/* SHDI ch1 on CN1 */
-	sdhi1_pins: sdhi1 {
-		pins {
-			pinmux =3D <RZA1_PINMUX(3, 8, 7)>,	/* SD_CD_1 */
-				 <RZA1_PINMUX(3, 9, 7)>,	/* SD_WP_1 */
-				 <RZA1_PINMUX(3, 12, 7)>,	/* SD_CLK_1 */
-				 <RZA1_PINMUX(3, 13, 7)>;	/* SD_CMD_1 */
-		};
-
-		pins_bidir {
-			pinmux =3D <RZA1_PINMUX(3, 10, 7)>,	/* SD_D1_1 */
-				 <RZA1_PINMUX(3, 11, 7)>,	/* SD_D0_1 */
-				 <RZA1_PINMUX(3, 14, 7)>,	/* SD_D3_1 */
-				 <RZA1_PINMUX(3, 15, 7)>;	/* SD_D2_1 */
-			bi-directional;
-		};
-	};
-
-
-Thanks,
-Chris
+>
+>> +                       break;
+>> +               default:
+>> +                       dev_warn(&pdev->dev, "unsupported reg-io-width (%d)\n",
+>> +                                prop);
+>> +                       rc = -EINVAL;
+>> +                       goto err_clk_disable;
+>> +               }
+>> +       }
+>> +
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
