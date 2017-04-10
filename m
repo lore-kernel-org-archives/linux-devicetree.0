@@ -1,95 +1,63 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 3/9] dt-bindings: pinctrl: Add RZ/A1 bindings doc
-Date: Mon, 10 Apr 2017 13:12:15 -0500
-Message-ID: <20170410181215.e6cihbv2rfljbm3b@rob-hp-laptop>
-References: <1491401247-7030-1-git-send-email-jacopo+renesas@jmondi.org>
- <1491401247-7030-4-git-send-email-jacopo+renesas@jmondi.org>
+From: Ralph Sennhauser <ralph.sennhauser-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/1] ARM: dts: armada-xp-linksys-mamba: use wan instead
+ of internet for DSA port
+Date: Mon, 10 Apr 2017 20:14:43 +0200
+Message-ID: <20170410201443.18af00d4@gmail.com>
+References: <20170405052847.326-1-ralph.sennhauser@gmail.com>
+ <20170405142824.GB13449@lunn.ch>
+ <20170405172224.38c1f9fb@gmail.com>
+ <20170405155032.GL13449@lunn.ch>
+ <20170405180808.4f8924cb@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1491401247-7030-4-git-send-email-jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
+In-Reply-To: <20170405180808.4f8924cb-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
-Cc: linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 05, 2017 at 04:07:21PM +0200, Jacopo Mondi wrote:
-> Add device tree bindings documentation for Renesas RZ/A1 gpio and pin
-> controller.
-> 
-> Signed-off-by: Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
-> ---
->  .../bindings/pinctrl/renesas,rza1-pinctrl.txt      | 218 +++++++++++++++++++++
->  1 file changed, 218 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/renesas,rza1-pinctrl.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/pinctrl/renesas,rza1-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/renesas,rza1-pinctrl.txt
-> new file mode 100644
-> index 0000000..46584ef
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pinctrl/renesas,rza1-pinctrl.txt
-> @@ -0,0 +1,218 @@
-> +Renesas RZ/A1 combined Pin and GPIO controller
-> +
-> +The Renesas SoCs of RZ/A1 family feature a combined Pin and GPIO controller,
-> +named "Ports" in the hardware reference manual.
-> +Pin multiplexing and GPIO configuration is performed on a per-pin basis
-> +writing configuration values to per-port register sets.
-> +Each "port" features up to 16 pins, each of them configurable for GPIO
-> +function (port mode) or in alternate function mode.
-> +Up to 8 different alternate function modes exist for each single pin.
-> +
-> +Pin controller node
-> +-------------------
-> +
-> +Required properties:
-> +  - compatible
-> +    this shall be "renesas,r7s72100-ports".
-> +
-> +  - reg
-> +    address base and length of the memory area where pin controller
-> +    hardware is mapped to.
-> +
-> +Example:
-> +Pin controller node for RZ/A1H SoC (r7s72100)
-> +
-> +pinctrl: pin-controller@fcfe3000 {
-> +	compatible = "renesas,r7s72100-ports";
-> +
-> +	reg = <0xfcfe3000 0x4230>;
-> +};
-> +
-> +Sub-nodes
-> +---------
-> +
-> +The child nodes of the pin controller node describe a pin multiplexing
-> +function or a gpio controller alternatively.
-> +
-> +- Pin multiplexing sub-nodes:
-> +  A pin multiplexing sub-node describes how to configure a set of
-> +  (or a single) pin in some desired alternate function mode.
-> +  A single sub-node may define several pin configurations.
-> +  Some alternate functions require special pin configuration flags to be
-> +  supplied along with the alternate function configuration number.
-> +  When hardware reference manual specifies a pin function to be either
-> +  "bi-directional" or "software IO driven", use the generic properties from
-> +  <include/linux/pinctrl/pinconf_generic.h> header file to instruct the
-> +  pin controller to perform the desired pin configuration operations.
-> +  Please refer to pinctrl-bindings.txt to get to know more on generic
-> +  pin properties usage.
-> +
-> +  The allowed generic formats for a pin multiplexing sub-node are the
-> +  following ones:
-> +
-> +  node-1 {
-> +      pinmux = <PIN_ID_AND_MUX>, <PIN_ID_AND_MUX>, ... ;
-> +      GENERIC_PINCONFIG;
+On Wed, 5 Apr 2017 18:08:08 +0200
+Ralph Sennhauser <ralph.sennhauser-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
 
-What's GENERIC_PINCONFIG? I see this in some other binding docs, but not 
-used anywhere. If this is a boolean property then get rid of the all 
-caps. If this is a define, then don't use complex defines that expand to 
-dts source.
+> Hi Andrew,
+> 
+> On Wed, 5 Apr 2017 17:50:32 +0200
+> Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org> wrote:
+  
+> > > > I would say, this is now too late. Changing an interface name
+> > > > will break configuration scripts. We are stuck with it.
+> > > >     
+> > > 
+> > > If it weren't for commit cb4f71c42988 that would have been obvious
+> > > for me as well.    
+> > 
+> > Yes, that was not nice. But it was also very earlier in the life of
+> > 38x, so it just affected a few developers with reference boards, not
+> > real products out in the wild, as far as i remember.
+> > 
+> >      Andrew  
+> 
+> The mentioned commit bit me amongst others, see
+> https://lkml.org/lkml/2016/8/21/62
+> 
+> In fact I expect the impact to be much lower this time around, before
+> 4.10 DSA was no contender for swconfig (out of tree switch driver as
+> used by OpenWrt and others). On Mamba ~200Mbit was top speed. Now they
+> perform roughly the same.
+
+When I said much lower I left out the obvious, this only affects a
+specific product line respectively a single device unlike the 38x
+change.
+
+I asked Chad McCue, principal developer of McDebian [1] (the only
+"firmware" using DSA I know of / could make out) about this. McDebain
+already uses "wan" across all devices in the series.
+
+Ralph
+
+[1] https://github.com/Chadster766/McDebian
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
