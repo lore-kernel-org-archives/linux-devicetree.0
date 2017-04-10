@@ -1,109 +1,124 @@
-From: jmondi <jacopo-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 3/9] dt-bindings: pinctrl: Add RZ/A1 bindings doc
-Date: Mon, 10 Apr 2017 21:19:17 +0200
-Message-ID: <20170410191917.GA14910@w540>
-References: <1491401247-7030-1-git-send-email-jacopo+renesas@jmondi.org>
- <1491401247-7030-4-git-send-email-jacopo+renesas@jmondi.org>
- <20170410181215.e6cihbv2rfljbm3b@rob-hp-laptop>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH 1/2] leds: Add driver for Qualcomm LPG
+Date: Mon, 10 Apr 2017 12:19:48 -0700
+Message-ID: <20170410191948.GE15143@minitux>
+References: <20170329021734.afhqmfpmbcjyv7bu@rob-hp-laptop>
+ <20170329190725.GN20094@minitux>
+ <20170329222301.GB7977@amd>
+ <20170330000955.GP20094@minitux>
+ <20170330074309.GA28533@amd>
+ <bf999f34-4509-6f0b-602c-f82d50a18e97@gmail.com>
+ <20170403190032.GX20094@minitux>
+ <dce7f2b1-8d1d-1c5d-5fa5-54c22b6f4758@gmail.com>
+ <20170407202603.GC15143@minitux>
+ <20170408133904.GA9020@amd>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-leds-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170410181215.e6cihbv2rfljbm3b@rob-hp-laptop>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <20170408133904.GA9020@amd>
+Sender: linux-leds-owner@vger.kernel.org
+To: Pavel Machek <pavel@ucw.cz>
+Cc: Jacek Anaszewski <jacek.anaszewski@gmail.com>, Rob Herring <robh@kernel.org>, Richard Purdie <rpurdie@rpsys.net>, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, linux-arm-msm@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+On Sat 08 Apr 06:39 PDT 2017, Pavel Machek wrote:
 
-On Mon, Apr 10, 2017 at 01:12:15PM -0500, Rob Herring wrote:
-> On Wed, Apr 05, 2017 at 04:07:21PM +0200, Jacopo Mondi wrote:
-> > Add device tree bindings documentation for Renesas RZ/A1 gpio and pin
-> > controller.
-> >
-> > Signed-off-by: Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
-> > ---
-> >  .../bindings/pinctrl/renesas,rza1-pinctrl.txt      | 218 +++++++++++++++++++++
-> >  1 file changed, 218 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/pinctrl/renesas,rza1-pinctrl.txt
-> >
-> > diff --git a/Documentation/devicetree/bindings/pinctrl/renesas,rza1-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/renesas,rza1-pinctrl.txt
-> > new file mode 100644
-> > index 0000000..46584ef
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/pinctrl/renesas,rza1-pinctrl.txt
-> > @@ -0,0 +1,218 @@
-> > +Renesas RZ/A1 combined Pin and GPIO controller
-> > +
-> > +The Renesas SoCs of RZ/A1 family feature a combined Pin and GPIO controller,
-> > +named "Ports" in the hardware reference manual.
-> > +Pin multiplexing and GPIO configuration is performed on a per-pin basis
-> > +writing configuration values to per-port register sets.
-> > +Each "port" features up to 16 pins, each of them configurable for GPIO
-> > +function (port mode) or in alternate function mode.
-> > +Up to 8 different alternate function modes exist for each single pin.
-> > +
-> > +Pin controller node
-> > +-------------------
-> > +
-> > +Required properties:
-> > +  - compatible
-> > +    this shall be "renesas,r7s72100-ports".
-> > +
-> > +  - reg
-> > +    address base and length of the memory area where pin controller
-> > +    hardware is mapped to.
-> > +
-> > +Example:
-> > +Pin controller node for RZ/A1H SoC (r7s72100)
-> > +
-> > +pinctrl: pin-controller@fcfe3000 {
-> > +	compatible = "renesas,r7s72100-ports";
-> > +
-> > +	reg = <0xfcfe3000 0x4230>;
-> > +};
-> > +
-> > +Sub-nodes
-> > +---------
-> > +
-> > +The child nodes of the pin controller node describe a pin multiplexing
-> > +function or a gpio controller alternatively.
-> > +
-> > +- Pin multiplexing sub-nodes:
-> > +  A pin multiplexing sub-node describes how to configure a set of
-> > +  (or a single) pin in some desired alternate function mode.
-> > +  A single sub-node may define several pin configurations.
-> > +  Some alternate functions require special pin configuration flags to be
-> > +  supplied along with the alternate function configuration number.
-> > +  When hardware reference manual specifies a pin function to be either
-> > +  "bi-directional" or "software IO driven", use the generic properties from
-> > +  <include/linux/pinctrl/pinconf_generic.h> header file to instruct the
-> > +  pin controller to perform the desired pin configuration operations.
-> > +  Please refer to pinctrl-bindings.txt to get to know more on generic
-> > +  pin properties usage.
-> > +
-> > +  The allowed generic formats for a pin multiplexing sub-node are the
-> > +  following ones:
-> > +
-> > +  node-1 {
-> > +      pinmux = <PIN_ID_AND_MUX>, <PIN_ID_AND_MUX>, ... ;
-> > +      GENERIC_PINCONFIG;
->
-> What's GENERIC_PINCONFIG? I see this in some other binding docs, but not
-> used anywhere. If this is a boolean property then get rid of the all
-> caps. If this is a define, then don't use complex defines that expand to
-> dts source.
+> Hi!
+> 
+> > [..]
+> > > > For the patterns I don't know how a trigger for this would look like,
+> > > > how would setting the pattern of a trigger be propagated down to the
+> > > > hardware?
+> > > 
+> > > We'd need a new op and API similar to blink_set()/led_blink_set().
+> > > 
+> > 
+> > I've tried to find different LED circuits with some sort of pattern
+> > generator in an attempt to figure out how to design this interface, but
+> > turned out to be quite hard to find examples; the three I can compare
+> > are:
+> > 
+> > * LP5xx series "implements" pattern generation by executing code.
+> > 
+> > * Qualcomm LPG iterates over 2-64 brightness-values in a pattern, at a
+> >   fixed rate with knobs to configure what happens before starting and
+> >   after finishing iterating over the defined values. It does not support
+> >   smooth transitions between values.
+> > 
+> > * AS3676 supports a pattern of 32 values controlling if the output
+> >   should be enabled or disabled for each 32.5ms (or 250ms) time period.
+> >   The delay before repeating the pattern can be configured. It support
+> >   smooth transitions between the states.
+> > 
+> > 
+> > So, while I think I see how you would like to architect this interface I
+> > am not sure how to figure out the details.
+> > 
+> > The pattern definition would have to be expressive enough to support the
+> > features of LP5xx and direct enough to support the limited AS3676. It
+> > would likely have to express transitions, so that the LPG could generate
+> > intermediate steps (and we will have to adapt the resolution of the
+> > ramps based on the other LPGs in the system).
+> > 
+> > How do we do with patterns that are implementable by the LP5xx but are
+> > not with the LPG? Should we reject those or should we do some sort of
+> > best-effort approach in the kernel?
+> 
+> Lets say you get series of
+> 
+> (red, green, blue, delta_t )
+> 
+> points, meaning "in delta_t msec, change color to red, green,
+> blue. Lets ignore other channels for now. delta_t of 0 would be step
+> change. Would such interface work for you?
+> 
 
-GENERIC_PINCONF is a wildcard that identifies "generic" pin
-configuration properties the pin controller framework defines.
+So I presume this would be input to the RGB trigger that we discussed.
+But in my current device I have 6 LEDs, that are not in any RGB-like
+configuration. So we would need to come up with an interface that looks
+to be the same in both single-LED and RGB-LED setups.
 
-Have a look at "enum pin_config_param" in
-<include/linux/pinctrl/pinconf-generic.h>
 
-Thanks
-  j
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+This should be sufficient to describe a subset of the patterns I've seen
+so far in products.
+
+But let's consider the standard use case for an RGB LED on an Android
+phone; continuously blinking (pulsing based on patterns) as you have
+some notifications waiting. In this case you want the LED hardware to do
+all the work, so that you can deep-idle the CPU. So we would need to
+introduce a "repeat pattern"-command.
+
+Then consider the fact that you want your patterns to have decent
+resolution, but you have a limited amount of storage. So we either have
+to be able to detect palindromes or have a way to represent this.
+
+> Simple compiler from this to LP5XX code should not be hard to
+> do.
+
+It sounds fairly straight forward to convert a pattern to instructions,
+but we do have an extremely limited amount of storage so it must be a
+quite good implementation for people to be able to use it for anything
+real.
+
+We could implement some optimization steps where we try to detect slopes
+and generate ramp-instructions instead of set-pwm + wait instructions,
+use some variables to handle ramp up/down and we could probably generate
+some jump instructions to implement loops.
+
+But do we really want this logic in the kernel, for each LED chip
+supporting patterns?
+
+> AS3676 ... I'm not sure what to do, AFAICT it is too limited.
+> 
+
+So out of the three examples I've looked at we're skipping one and we're
+abstracting away most functionality from another.
+
+I'm sorry for being pessimistic about this, but while I can see the
+theoretical benefit of providing a uniform interface for this to user
+space I see three very different pieces of hardware that would be used
+in three different ways in products.
+
+Regards,
+Bjorn
