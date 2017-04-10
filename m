@@ -1,128 +1,115 @@
-From: Christopher Bostic <cbostic@linux.vnet.ibm.com>
-Subject: [PATCH v6 08/23] drivers/fsi: Set slave SMODE to init communication
-Date: Mon, 10 Apr 2017 14:46:51 -0500
-Message-ID: <20170410194706.64280-9-cbostic@linux.vnet.ibm.com>
+From: Christopher Bostic <cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH v6 10/23] drivers/fsi: Add device read/write/peek API
+Date: Mon, 10 Apr 2017 14:46:53 -0500
+Message-ID: <20170410194706.64280-11-cbostic@linux.vnet.ibm.com>
 References: <20170410194706.64280-1-cbostic@linux.vnet.ibm.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170410194706.64280-1-cbostic@linux.vnet.ibm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, rostedt@goodmis.org, mingo@redhat.com, gregkh@linuxfoundation.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: Chris Bostic <cbostic@linux.vnet.ibm.com>, joel@jms.id.au, linux-kernel@vger.kernel.org, andrew@aj.id.au, alistair@popple.id.au, benh@kernel.crashing.org, Jeremy Kerr <jk@ozlabs.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170410194706.64280-1-cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, rostedt-nx8X9YLhiw1AfugRpC6u6w@public.gmane.org, mingo-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, andrew-zrmu5oMJ5Fs@public.gmane.org, alistair-Y4h6yKqj69EXC2x5gXVKYQ@public.gmane.org, benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, "Edward A . James" <eajames-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>, Chris Bostic <cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Chris Bostic <cbostic@linux.vnet.ibm.com>
+From: Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
 
-Set CFAM to appropriate ID so that the controlling master can manage
-link memory ranges.  Add slave engine register definitions.
+This change introduces the fsi device API: simple read, write and peek
+accessors for the devices' address spaces.
 
-Includes changes from Jeremy Kerr <jk@ozlabs.org>.
+Includes contributions from Chris Bostic <cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+and Edward A. James <eajames-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>.
 
-Signed-off-by: Jeremy Kerr <jk@ozlabs.org>
-Signed-off-by: Chris Bostic <cbostic@linux.vnet.ibm.com>
-Signed-off-by: Joel Stanley <joel@jms.id.au>
+Signed-off-by: Edward A. James <eajames-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>
+Signed-off-by: Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
+Signed-off-by: Chris Bostic <cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+Signed-off-by: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
 ---
- drivers/fsi/fsi-core.c | 75 ++++++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 75 insertions(+)
+ drivers/fsi/fsi-core.c | 33 +++++++++++++++++++++++++++++++++
+ include/linux/fsi.h    |  7 ++++++-
+ 2 files changed, 39 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/fsi/fsi-core.c b/drivers/fsi/fsi-core.c
-index c705ca2..b7b138b 100644
+index a8faa89..4da0b030 100644
 --- a/drivers/fsi/fsi-core.c
 +++ b/drivers/fsi/fsi-core.c
-@@ -21,6 +21,27 @@
+@@ -32,6 +32,8 @@
+ #define FSI_SLAVE_CONF_CRC_MASK		0x0000000f
+ #define FSI_SLAVE_CONF_DATA_BITS	28
  
- #include "fsi-master.h"
++#define FSI_PEEK_BASE			0x410
++
+ static const int engine_page_size = 0x400;
  
-+#define FSI_SLAVE_BASE			0x800
-+
-+/*
-+ * FSI slave engine control register offsets
-+ */
-+#define FSI_SMODE			0x0	/* R/W: Mode register */
-+
-+/*
-+ * SMODE fields
-+ */
-+#define FSI_SMODE_WSC		0x80000000	/* Warm start done */
-+#define FSI_SMODE_ECRC		0x20000000	/* Hw CRC check */
-+#define FSI_SMODE_SID_SHIFT	24		/* ID shift */
-+#define FSI_SMODE_SID_MASK	3		/* ID Mask */
-+#define FSI_SMODE_ED_SHIFT	20		/* Echo delay shift */
-+#define FSI_SMODE_ED_MASK	0xf		/* Echo delay mask */
-+#define FSI_SMODE_SD_SHIFT	16		/* Send delay shift */
-+#define FSI_SMODE_SD_MASK	0xf		/* Send delay mask */
-+#define FSI_SMODE_LBCRR_SHIFT	8		/* Clk ratio shift */
-+#define FSI_SMODE_LBCRR_MASK	0xf		/* Clk ratio mask */
-+
- #define FSI_SLAVE_SIZE_23b		0x800000
+ #define FSI_SLAVE_BASE			0x800
+@@ -73,9 +75,40 @@ static int fsi_master_read(struct fsi_master *master, int link,
+ 		uint8_t slave_id, uint32_t addr, void *val, size_t size);
+ static int fsi_master_write(struct fsi_master *master, int link,
+ 		uint8_t slave_id, uint32_t addr, const void *val, size_t size);
++static int fsi_slave_read(struct fsi_slave *slave, uint32_t addr,
++		void *val, size_t size);
++static int fsi_slave_write(struct fsi_slave *slave, uint32_t addr,
++		const void *val, size_t size);
  
- static DEFINE_IDA(master_ida);
-@@ -117,6 +138,52 @@ static int fsi_slave_write(struct fsi_slave *slave, uint32_t addr,
- 			addr, val, size);
- }
+ /* FSI endpoint-device support */
  
-+/* Encode slave local bus echo delay */
-+static inline uint32_t fsi_smode_echodly(int x)
++int fsi_device_read(struct fsi_device *dev, uint32_t addr, void *val,
++		size_t size)
 +{
-+	return (x & FSI_SMODE_ED_MASK) << FSI_SMODE_ED_SHIFT;
++	if (addr > dev->size || size > dev->size || addr > dev->size - size)
++		return -EINVAL;
++
++	return fsi_slave_read(dev->slave, dev->addr + addr, val, size);
++}
++EXPORT_SYMBOL_GPL(fsi_device_read);
++
++int fsi_device_write(struct fsi_device *dev, uint32_t addr, const void *val,
++		size_t size)
++{
++	if (addr > dev->size || size > dev->size || addr > dev->size - size)
++		return -EINVAL;
++
++	return fsi_slave_write(dev->slave, dev->addr + addr, val, size);
++}
++EXPORT_SYMBOL_GPL(fsi_device_write);
++
++int fsi_device_peek(struct fsi_device *dev, void *val)
++{
++	uint32_t addr = FSI_PEEK_BASE + ((dev->unit - 2) * sizeof(uint32_t));
++
++	return fsi_slave_read(dev->slave, addr, val, sizeof(uint32_t));
 +}
 +
-+/* Encode slave local bus send delay */
-+static inline uint32_t fsi_smode_senddly(int x)
-+{
-+	return (x & FSI_SMODE_SD_MASK) << FSI_SMODE_SD_SHIFT;
-+}
-+
-+/* Encode slave local bus clock rate ratio */
-+static inline uint32_t fsi_smode_lbcrr(int x)
-+{
-+	return (x & FSI_SMODE_LBCRR_MASK) << FSI_SMODE_LBCRR_SHIFT;
-+}
-+
-+/* Encode slave ID */
-+static inline uint32_t fsi_smode_sid(int x)
-+{
-+	return (x & FSI_SMODE_SID_MASK) << FSI_SMODE_SID_SHIFT;
-+}
-+
-+static const uint32_t fsi_slave_smode(int id)
-+{
-+	return FSI_SMODE_WSC | FSI_SMODE_ECRC
-+		| fsi_smode_sid(id)
-+		| fsi_smode_echodly(0xf) | fsi_smode_senddly(0xf)
-+		| fsi_smode_lbcrr(0x8);
-+}
-+
-+static int fsi_slave_set_smode(struct fsi_master *master, int link, int id)
-+{
-+	uint32_t smode;
-+
-+	/* set our smode register with the slave ID field to 0; this enables
-+	 * extended slave addressing
-+	 */
-+	smode = fsi_slave_smode(id);
-+	smode = cpu_to_be32(smode);
-+
-+	return fsi_master_write(master, link, id, FSI_SLAVE_BASE + FSI_SMODE,
-+			&smode, sizeof(smode));
-+}
-+
- static void fsi_slave_release(struct device *dev)
+ static void fsi_device_release(struct device *_device)
  {
- 	struct fsi_slave *slave = to_fsi_slave(dev);
-@@ -155,6 +222,14 @@ static int fsi_slave_init(struct fsi_master *master, int link, uint8_t id)
- 	dev_info(&master->dev, "fsi: found chip %08x at %02x:%02x:%02x\n",
- 			chip_id, master->idx, link, id);
+ 	struct fsi_device *device = to_fsi_dev(_device);
+diff --git a/include/linux/fsi.h b/include/linux/fsi.h
+index efa55ba..66bce48 100644
+--- a/include/linux/fsi.h
++++ b/include/linux/fsi.h
+@@ -27,6 +27,12 @@ struct fsi_device {
+ 	uint32_t		size;
+ };
  
-+	rc = fsi_slave_set_smode(master, link, id);
-+	if (rc) {
-+		dev_warn(&master->dev,
-+				"can't set smode on slave:%02x:%02x %d\n",
-+				link, id, rc);
-+		return -ENODEV;
-+	}
++extern int fsi_device_read(struct fsi_device *dev, uint32_t addr,
++		void *val, size_t size);
++extern int fsi_device_write(struct fsi_device *dev, uint32_t addr,
++		const void *val, size_t size);
++extern int fsi_device_peek(struct fsi_device *dev, void *val);
 +
- 	/* We can communicate with a slave; create the slave device and
- 	 * register.
- 	 */
+ struct fsi_device_id {
+ 	u8	engine_type;
+ 	u8	version;
+@@ -40,7 +46,6 @@ struct fsi_device_id {
+ #define FSI_DEVICE_VERSIONED(t, v) \
+ 	.engine_type = (t), .version = (v),
+ 
+-
+ struct fsi_driver {
+ 	struct device_driver		drv;
+ 	const struct fsi_device_id	*id_table;
 -- 
 1.8.2.2
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
