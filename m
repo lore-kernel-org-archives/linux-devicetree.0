@@ -1,59 +1,57 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH V4 1/9] PM / OPP: Allow OPP table to be used for
- power-domains
-Date: Mon, 10 Apr 2017 15:20:11 +0530
-Message-ID: <20170410095011.GH24555@vireshk-i7>
-References: <cover.1490001099.git.viresh.kumar@linaro.org>
- <e772e67a5445319bb8e0f312846ace666adc097f.1490001099.git.viresh.kumar@linaro.org>
- <20170324154451.ljszby3mhc4rlgnw@rob-hp-laptop>
- <20170410092515.GF24555@vireshk-i7>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH 1/2] leds: Add driver for Qualcomm LPG
+Date: Mon, 10 Apr 2017 11:52:08 +0200
+Message-ID: <20170410095207.GA4475@xo-6d-61-c0.localdomain>
+References: <20170323055435.29197-1-bjorn.andersson@linaro.org>
+ <20170323203749.GB8563@amd>
+ <20170329021734.afhqmfpmbcjyv7bu@rob-hp-laptop>
+ <20170329190725.GN20094@minitux>
+ <20170329222301.GB7977@amd>
+ <20170330000955.GP20094@minitux>
+ <20170330074309.GA28533@amd>
+ <bf999f34-4509-6f0b-602c-f82d50a18e97@gmail.com>
+ <1192806d-13bf-3b5c-4179-b7795737ed40@gmail.com>
+ <20170403182158.GV20094@minitux>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170410092515.GF24555@vireshk-i7>
-Sender: linux-pm-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>, Kevin Hilman <khilman@kernel.org>
-Cc: Rafael Wysocki <rjw@rjwysocki.net>, ulf.hansson@linaro.org, Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@codeaurora.org>, linaro-kernel@lists.linaro.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, Vincent Guittot <vincent.guittot@linaro.org>, lina.iyer@linaro.org, rnayak@codeaurora.org, devicetree@vger.kernel.org
+In-Reply-To: <20170403182158.GV20094@minitux>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Jacek Anaszewski <jacek.anaszewski@gmail.com>, Rob Herring <robh@kernel.org>, Richard Purdie <rpurdie@rpsys.net>, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, linux-arm-msm@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Fixing Kevin's email id :(
+Hi!
 
-On 10-04-17, 14:55, Viresh Kumar wrote:
-> On 24-03-17, 10:44, Rob Herring wrote:
-> > On Mon, Mar 20, 2017 at 03:02:13PM +0530, Viresh Kumar wrote:
-> > > Power-domains need to express their active states in DT and what's
-> > > better than OPP table for that.
-> > > 
-> > > This patch allows power-domains to reuse OPP tables to express their
-> > > active states. The "opp-hz" property isn't a required property anymore
-> > > as power-domains may not always use them.
+> > Actually we could achieve the goal by listing all available pattern
+> > configurations for given LED class device, so in case of Qualcomm LPG
+> > driver we could have transition-pattern-1 to transition-pattern-15
+> > listed after executing "cat trigger".
 > > 
-> > Then maybe you shouldn't be trying to make OPP table work here. At that 
-> > point you just need a table of voltage(s) per performance state?
 > 
-> Because that's what Kevin strongly recommended in the previous
-> versions.
-> 
-> @Kevin: Would you like to reply here ?
-> 
-> > > Add a new property "domain-performance-state", which will contain
-> > > positive integer values to represent performance levels of the
-> > > power-domains as described in this patch.
+> There's a common pattern-table of 24 (or 64) entries, that is shared
+> among the 8 LPGs (each LPG simply has to indices pointing into the
+> shared table). Each entry in the table holds a value between 0 and 511.
+> So that's a lot of "available pattern configurations".
+
+> > I wonder if I'm not missing some vital constraints here that could
+> > make this design unfeasible.
 > > 
-> > Why not reference the OPP entries from the domain:
-> > 
-> > performance-states = <&opp1>, <&opp2>;
 > 
-> Because that would require additional code in the OPP core to parse
-> these then. Right now it is quite straight forward with the bindings I
-> presented.
-> 
-> > Just thinking out loud, not saying that is what you should do. The 
-> > continual evolution of power (management) domain, idle state, and OPP 
-> > bindings is getting tiring.
-> 
-> I agree :)
+> Regardless of how we expose RGBs to userspace, the 8 LPG hardware blocks
+> are independent of each other. The fact that they end up controlling
+> something that is perceived by the human eye as some mixed color is to
+> me a matter of system integration, and as such should not convolute the
+> implementation of the individual instances.
+
+Well... the 8 LPG blocks share the pattern-table.. and the pattern-table is very
+limited. We could statically allocate 3 entries to each LPG block, but that
+would not be too useful. And if we dynamically allocate entries depending on
+patterns, then the LPG blocks are no longer independent.
+
+									Pavel
 
 -- 
-viresh
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
