@@ -1,29 +1,104 @@
-From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Subject: Re: [PATCH 5/6] dt-bindings: allow up to three clocks for orion-mdio
-Date: Mon, 10 Apr 2017 21:57:57 +0200
-Message-ID: <20170410195757.GG32277@lunn.ch>
-References: <20170410152728.GT17774@n2100.armlinux.org.uk>
- <E1cxbEv-0006gY-PO@rmk-PC.armlinux.org.uk>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v4 2/2] i2c: mux: ltc4306: LTC4306 and LTC4305 I2C multiplexer/switch
+Date: Mon, 10 Apr 2017 22:04:04 +0200
+Message-ID: <CACRpkdbECyEpD7b4OFxwAo6USnK_DGEbASMdTzOO=FQ9BAzRQA@mail.gmail.com>
+References: <1491397671-14675-1-git-send-email-michael.hennerich@analog.com> <1491397671-14675-2-git-send-email-michael.hennerich@analog.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <E1cxbEv-0006gY-PO-eh5Bv4kxaXIk46pC+1QYvQNdhmdF6hFW@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
-Cc: Marcin Wojtas <mw-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org>, Stefan Chulski <stefanc-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1491397671-14675-2-git-send-email-michael.hennerich@analog.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Michael Hennerich <michael.hennerich@analog.com>
+Cc: Wolfram Sang <wsa@the-dreams.de>, Peter Rosin <peda@axentia.se>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 10, 2017 at 04:28:25PM +0100, Russell King wrote:
-> Armada 8040 needs three clocks to be enabled for MDIO accesses to work.
-> Update the binding to allow the extra clocks to be specified.
-> 
-> Signed-off-by: Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+On Wed, Apr 5, 2017 at 3:07 PM,  <michael.hennerich@analog.com> wrote:
 
-Reviewed-by: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+> From: Michael Hennerich <michael.hennerich@analog.com>
+>
+> This patch adds support for the Analog Devices / Linear Technology
+> LTC4306 and LTC4305 4/2 Channel I2C Bus Multiplexer/Switches.
+> The LTC4306 optionally provides two general purpose input/output pins
+> (GPIOs) that can be configured as logic inputs, opendrain outputs or
+> push-pull outputs via the generic GPIOLIB framework.
+>
+> Signed-off-by: Michael Hennerich <michael.hennerich@analog.com>
 
-    Andrew
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Okay!
+
+> +#include <linux/device.h>
+> +#include <linux/gpio.h>
+> +#include <linux/gpio/consumer.h>
+> +#include <linux/gpio/driver.h>
+
+Why are you including all these?
+Normally a GPIO driver should just include
+<linux/gpio/driver.h>
+
+> +#include <linux/i2c-mux.h>
+> +#include <linux/i2c.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/of_device.h>
+> +#include <linux/regmap.h>
+> +#include <linux/slab.h>
+
+> +static int ltc4306_gpio_get(struct gpio_chip *chip, unsigned int offset)
+> +{
+> +       struct ltc4306 *data = gpiochip_get_data(chip);
+> +       unsigned int val;
+> +       int ret;
+> +
+> +       ret = regmap_read(data->regmap, LTC_REG_CONFIG, &val);
+> +       if (ret < 0)
+> +               return ret;
+> +
+> +       return (val & BIT(1 - offset));
+
+Do this:
+
+return !!(val & BIT(1 - offset));
+
+So you clamp the return value to [0,1]
+
+> +static int ltc4306_gpio_set_config(struct gpio_chip *chip,
+> +                                  unsigned int offset, unsigned long config)
+> +{
+> +       struct ltc4306 *data = gpiochip_get_data(chip);
+> +       unsigned int val;
+> +
+> +       switch (pinconf_to_config_param(config)) {
+> +       case PIN_CONFIG_DRIVE_OPEN_DRAIN:
+> +               val = 0;
+> +               break;
+> +       case PIN_CONFIG_DRIVE_PUSH_PULL:
+> +               val = BIT(4 - offset);
+> +               break;
+> +       default:
+> +               return -ENOTSUPP;
+> +       }
+> +
+> +       return regmap_update_bits(data->regmap, LTC_REG_MODE,
+> +                                 BIT(4 - offset), val);
+> +}
+
+Nice!
+
+> +       data->gpiochip.label = dev_name(dev);
+> +       data->gpiochip.base = -1;
+> +       data->gpiochip.ngpio = data->chip->num_gpios;
+> +       data->gpiochip.parent = dev;
+> +       data->gpiochip.can_sleep = true;
+> +       data->gpiochip.direction_input = ltc4306_gpio_direction_input;
+> +       data->gpiochip.direction_output = ltc4306_gpio_direction_output;
+> +       data->gpiochip.get = ltc4306_gpio_get;
+> +       data->gpiochip.set = ltc4306_gpio_set;
+> +       data->gpiochip.set_config = ltc4306_gpio_set_config;
+> +       data->gpiochip.owner = THIS_MODULE;
+
+Please implement .get_direction().
+This is very helpful to userspace, have you tested to use tools/gpio/*
+from the kernel? Like lsgpio?
+
+Yours,
+Linus Walleij
