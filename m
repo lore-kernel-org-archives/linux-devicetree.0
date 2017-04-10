@@ -1,388 +1,249 @@
-From: Fabrice Gasnier <fabrice.gasnier@st.com>
-Subject: Re: [PATCH v2 5/5] iio: dac: stm32: add support for waveform generator
-Date: Mon, 10 Apr 2017 18:43:48 +0200
-Message-ID: <779a0082-3760-75c4-2fd3-b8a5b70dbaf8@st.com>
-References: <1491495116-7209-1-git-send-email-fabrice.gasnier@st.com>
- <1491495116-7209-6-git-send-email-fabrice.gasnier@st.com>
- <8fa183fe-42f1-dc27-efd9-1f7d2e5b5057@kernel.org>
+From: Ludovic BARRE <ludovic.barre@st.com>
+Subject: Re: [PATCH v2 2/2] mtd: spi-nor: add driver for STM32 quad spi flash
+ controller
+Date: Mon, 10 Apr 2017 18:52:19 +0200
+Message-ID: <f9b4b8b0-4987-7f67-df3b-d32d6c130818@st.com>
+References: <1490979724-10905-1-git-send-email-ludovic.Barre@st.com>
+ <1490979724-10905-3-git-send-email-ludovic.Barre@st.com>
+ <5ec38e39-661d-8a83-4168-b9f3d986bcd1@gmail.com>
+ <601e2aa5-7cd3-34fb-660e-359f2a016b65@st.com>
+ <9a0c5f8e-01dc-3d2b-5ebb-069752594e8e@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <8fa183fe-42f1-dc27-efd9-1f7d2e5b5057@kernel.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jonathan Cameron <jic23@kernel.org>, linux@armlinux.org.uk, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: mark.rutland@arm.com, benjamin.gaignard@linaro.org, lars@metafoo.de, alexandre.torgue@st.com, linux-iio@vger.kernel.org, pmeerw@pmeerw.net, mcoquelin.stm32@gmail.com, knaack.h@gmx.de, benjamin.gaignard@st.com
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+In-Reply-To: <9a0c5f8e-01dc-3d2b-5ebb-069752594e8e@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: Marek Vasut <marek.vasut@gmail.com>, Cyrille Pitchen <cyrille.pitchen@atmel.com>
+Cc: Boris Brezillon <boris.brezillon@free-electrons.com>, Alexandre Torgue <alexandre.torgue@st.com>, devicetree@vger.kernel.org, Richard Weinberger <richard@nod.at>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-mtd@lists.infradead.org, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 04/09/2017 11:34 AM, Jonathan Cameron wrote:
-> On 06/04/17 17:11, Fabrice Gasnier wrote:
->> STM32 DAC has built-in noise or triangle waveform generator.
->> - "wavetype" extended attribute selects noise or triangle.
->> - "amplitude" extended attribute selects amplitude for waveform generator
->>
->> A DC offset can be added to waveform generator output. This can be done
->> using out_voltage[1/2]_offset
->>
->> Waveform generator requires a trigger to be configured, to increment /
->> decrement internal counter in case of triangle generator. Noise
->> generator is a bit different,  but also requires a trigger to generate
->> samples.
->>
->> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
-> 
-> Various bits inline.  Mostly I think the blockers on this will be
-> making sure the ABI defined is generic enough to handle the more crazy
-> DDS chips out there... (basically the ones doing frequency modulation).
-> 
-> Jonathan
->> ---
->> Changes in v2:
->> - use _offset parameter to add DC offset to waveform generator
-> Conceptually this offset is just the normal DAC output value (particularly
-yes
-> in the flat case)  I guess we can paper over this by having the _raw
-> and this always have th same value, but it's a little inelegant.
-> Still people are going to expect _raw to control it when in DAC mode but
-> that makes limited sense in DDS mode.
-> 
-> Mind you nothing stops us defining all DDS channels as the sum of whatever
-> the DDS is doing and whatever is _raw is set to. Perhaps we tidy this up
-> purely through documentation.  Think of the DDS as a modulation on top
-> of the DAC...
-> 
->> - Rework ABI to better fit existing DDS ABI: use out_voltageY_wavetype,
->>   out_voltage_wavetype_available, out_voltageY_amplitude,
->>   out_voltage_amplitude_available
-> Hmm. I'm thinking those amplitude values aren't nice and don't fit well
-> with the more general ABI.
-> 
-> I suggested (but didn't really expand upon) having standard defined types
-> for each waveform then using scale to control the amplitude.
+hi Marek
 
-Do you mean _scale attribute ?
-> 
-> Is that something that might work here?
+tomorrow, I send a v3 with your/Rob reviews.
 
-I probably miss the point here...
-> 
-> So say we have our triangle standard form having an amplitude of 1V Peak to
-> Peak. Then we can use scale to make it whatever we actually have in this
-> case?  The docs for wave type will need to describe those standard forms
-> though.
-... scale is fixed here, in line with _raw attribute. In 'amplitude'
-description for STM32 DAC here (e.g. from 1...4095), same scale is used.
-Can you elaborate ?
+BR
 
-> 
-> Hmm. Whether this is worth doing is unclear however as we'll still have
-> to describe the 'frequency' in terms of the clock ticks (here the triggers)
+Ludo
 
-Describing frequency may be an issue, not sure it makes senses in this
-case: 'clock ticks', e.g. triggers here may be timers, but also an EXTI
-(external...), or even software trig perhaps.
 
-> So maybe amplitude is worth having.  Again, looking for input from ADI lot
-> on this...  There are some really fiddly cases to describe were we are doing
-> symbol encoding so have multiple waveforms that we are switching between based
-> on some external signal. Any ABI needs to encompass that sort of usage.
-> Parts like the AD9833 for example...
-> 
->> - Better explain trigger usage in case of waveform generator.
->> ---
->>  Documentation/ABI/testing/sysfs-bus-iio-dac-stm32 |  16 +++
->>  drivers/iio/dac/stm32-dac-core.h                  |   4 +
->>  drivers/iio/dac/stm32-dac.c                       | 158 +++++++++++++++++++++-
->>  3 files changed, 177 insertions(+), 1 deletion(-)
->>  create mode 100644 Documentation/ABI/testing/sysfs-bus-iio-dac-stm32
->>
->> diff --git a/Documentation/ABI/testing/sysfs-bus-iio-dac-stm32 b/Documentation/ABI/testing/sysfs-bus-iio-dac-stm32
->> new file mode 100644
->> index 0000000..8f1fa009
->> --- /dev/null
->> +++ b/Documentation/ABI/testing/sysfs-bus-iio-dac-stm32
-> Fair enough to initially introduced these for this part only, but I'd very
-> much like to see us agree on these sufficiently to get them into the main
-> docs asap so we have something to work with for getting the DDS chips out
-> of staging...
->> @@ -0,0 +1,16 @@
->> +What:		/sys/bus/iio/devices/iio:deviceX/out_voltageY_wavetype
->> +What:		/sys/bus/iio/devices/iio:deviceX/out_voltage_wavetype_available
->> +KernelVersion:	4.12
->> +Contact:	fabrice.gasnier@st.com
->> +Description:
->> +		List and/or select waveform generation provided by STM32 DAC:
->> +		- "flat": waveform generator disabled (default)
->> +		- "noise": select noise waveform
->> +		- "triangle": select triangle waveform
->> +
->> +What:		/sys/bus/iio/devices/iio:deviceX/out_voltageY_amplitude
->> +What:		/sys/bus/iio/devices/iio:deviceX/out_voltage_amplitude_available
->> +KernelVersion:	4.12
->> +Contact:	fabrice.gasnier@st.com
->> +Description:
->> +		List and/or select amplitude used for waveform generator
->> diff --git a/drivers/iio/dac/stm32-dac-core.h b/drivers/iio/dac/stm32-dac-core.h
->> index e51a468..0f02975 100644
->> --- a/drivers/iio/dac/stm32-dac-core.h
->> +++ b/drivers/iio/dac/stm32-dac-core.h
->> @@ -37,8 +37,12 @@
->>  #define STM32H7_DAC_CR_TEN1		BIT(1)
->>  #define STM32H7_DAC_CR_TSEL1_SHIFT	2
->>  #define STM32H7_DAC_CR_TSEL1		GENMASK(5, 2)
->> +#define STM32_DAC_CR_WAVE1		GENMASK(7, 6)
->> +#define STM32_DAC_CR_MAMP1		GENMASK(11, 8)
->>  #define STM32H7_DAC_CR_HFSEL		BIT(15)
->>  #define STM32_DAC_CR_EN2		BIT(16)
->> +#define STM32_DAC_CR_WAVE2		GENMASK(23, 22)
->> +#define STM32_DAC_CR_MAMP2		GENMASK(27, 24)
->>  
->>  /* STM32_DAC_SWTRIGR bit fields */
->>  #define STM32_DAC_SWTRIGR_SWTRIG1	BIT(0)
->> diff --git a/drivers/iio/dac/stm32-dac.c b/drivers/iio/dac/stm32-dac.c
->> index a7a078e..2ed75db 100644
->> --- a/drivers/iio/dac/stm32-dac.c
->> +++ b/drivers/iio/dac/stm32-dac.c
->> @@ -42,10 +42,12 @@
->>  /**
->>   * struct stm32_dac - private data of DAC driver
->>   * @common:		reference to DAC common data
->> + * @wavetype:		waveform generator
->>   * @swtrig:		Using software trigger
->>   */
->>  struct stm32_dac {
->>  	struct stm32_dac_common *common;
->> +	u32 wavetype;
->>  	bool swtrig;
->>  };
->>  
->> @@ -222,6 +224,29 @@ static int stm32_dac_set_value(struct stm32_dac *dac, int channel, int val)
->>  	return ret;
->>  }
->>  
->> +static int stm32_dac_get_offset(struct stm32_dac *dac, int channel, int *val)
->> +{
->> +	int ret;
->> +
->> +	/* Offset is only relevant in waveform generation mode. */
->> +	if (!dac->wavetype) {
->> +		*val = 0;
->> +		return IIO_VAL_INT;
->> +	}
->> +
->> +	/*
->> +	 * In waveform generation mode, DC offset in DHR is added to waveform
->> +	 * generator output, then stored to DOR (data output register).
->> +	 * Read offset from DHR.
->> +	 */
-> Just thinking what fun we could have if we do the fifo based output to push
-> this that I was suggesting for the previous patch ;) triangles on top
-> of fun general waveforms..
-> 
->> +	if (STM32_DAC_IS_CHAN_1(channel))
->> +		ret = regmap_read(dac->common->regmap, STM32_DAC_DHR12R1, val);
->> +	else
->> +		ret = regmap_read(dac->common->regmap, STM32_DAC_DHR12R2, val);
->> +
->> +	return ret ? ret : IIO_VAL_INT;
->> +}
->> +
->>  static int stm32_dac_read_raw(struct iio_dev *indio_dev,
->>  			      struct iio_chan_spec const *chan,
->>  			      int *val, int *val2, long mask)
->> @@ -231,6 +256,8 @@ static int stm32_dac_read_raw(struct iio_dev *indio_dev,
->>  	switch (mask) {
->>  	case IIO_CHAN_INFO_RAW:
->>  		return stm32_dac_get_value(dac, chan->channel, val);
->> +	case IIO_CHAN_INFO_OFFSET:
->> +		return stm32_dac_get_offset(dac, chan->channel, val);
->>  	case IIO_CHAN_INFO_SCALE:
->>  		*val = dac->common->vref_mv;
->>  		*val2 = chan->scan_type.realbits;
->> @@ -247,8 +274,16 @@ static int stm32_dac_write_raw(struct iio_dev *indio_dev,
->>  	struct stm32_dac *dac = iio_priv(indio_dev);
->>  
->>  	switch (mask) {
->> +	case IIO_CHAN_INFO_OFFSET:
->> +		/* Offset only makes sense in waveform generation mode */
->> +		if (dac->wavetype)
->> +			return stm32_dac_set_value(dac, chan->channel, val);
->> +		return -EBUSY;
-> Yeah, I think I sent you down a blind alley here.  If people agree, lets
-> just define DDS signals as always being the sum of _raw + the dds element.
-> Then it's easy.
-Ok, I can revert back to use _raw if this is fine ;-)
+On 04/10/2017 06:15 PM, Marek Vasut wrote:
+> On 04/10/2017 11:08 AM, Ludovic BARRE wrote:
+>> On 04/07/2017 01:55 AM, Marek Vasut wrote:
+>>> On 03/31/2017 07:02 PM, Ludovic Barre wrote:
+>>>> From: Ludovic Barre <ludovic.barre@st.com>
+>>>>
+>>>> The quadspi is a specialized communication interface targeting single,
+>>>> dual or quad SPI Flash memories.
+>>>>
+>>>> It can operate in any of the following modes:
+>>>> -indirect mode: all the operations are performed using the quadspi
+>>>>    registers
+>>>> -read memory-mapped mode: the external Flash memory is mapped to the
+>>>>    microcontroller address space and is seen by the system as if it was
+>>>>    an internal memory
+>>>>
+>>>> Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
+>>>> ---
+>>>>    drivers/mtd/spi-nor/Kconfig         |   7 +
+>>>>    drivers/mtd/spi-nor/Makefile        |   1 +
+>>>>    drivers/mtd/spi-nor/stm32-quadspi.c | 690
+>>>> ++++++++++++++++++++++++++++++++++++
+>>>>    3 files changed, 698 insertions(+)
+>>>>    create mode 100644 drivers/mtd/spi-nor/stm32-quadspi.c
+>>>>
+>>> [...]
+>>>
+>>>> +struct stm32_qspi_flash {
+>>>> +    struct spi_nor nor;
+>>>> +    u32 cs;
+>>>> +    u32 fsize;
+>>>> +    u32 presc;
+>>>> +    struct stm32_qspi *qspi;
+>>>> +};
+>>> [...]
+>>>
+>>>> +struct stm32_qspi_cmd {
+>>>> +    struct {
+>>>> +        u8 addr_width;
+>>>> +        u8 dummy;
+>>>> +        u8 data;
+>>>> +    } conf;
+>>> Is there any benefit in having this structure here or could you just
+>>> make the struct stm32_qspi_cmd flat ?
+>> no benefit, it was just to regroup,  so I can do a flat structure
+> Well, as you like, but I think it does make sense to just make it flat.
+>
+>>>> +    u8 opcode;
+>>>> +    u32 framemode;
+>>>> +    u32 qspimode;
+>>>> +    u32 addr;
+>>>> +    size_t len;
+>>>> +    void *buf;
+>>>> +};
+>>> [...]
+>>>
+>>>> +static ssize_t stm32_qspi_read(struct spi_nor *nor, loff_t from,
+>>>> size_t len,
+>>>> +                   u_char *buf)
+>>>> +{
+>>>> +    struct stm32_qspi_flash *flash = nor->priv;
+>>>> +    struct stm32_qspi *qspi = flash->qspi;
+>>>> +    struct stm32_qspi_cmd cmd;
+>>>> +    int err;
+>>>> +
+>>>> +    dev_dbg(qspi->dev, "read(%#.2x): buf:%p from:%#.8x len:%#x\n",
+>>>> +        nor->read_opcode, buf, (u32)from, len);
+>>>> +
+>>>> +    memset(&cmd, 0, sizeof(cmd));
+>>>> +    cmd.opcode = nor->read_opcode;
+>>>> +    cmd.conf.addr_width = nor->addr_width;
+>>>> +    cmd.addr = (u32)from;
+>>> loff_t (from) can be 64bit ... how do we handle this ?
+>> I'm surprise by the question,
+>> the SPI NOR device uses 3 Bytes or 4 bytes address mode.
+>> So, the stm32 qspi controller has a 32 bit register for NOR address.
+>> On the other hand the framework and other drivers used this variable
+>> (from) like
+>> a 32 bits.
+> Hmmm, (rhetorical question) then why do we even use loff_t in the
+> framework ?
+>
+> Anyway, this is no problem then.
+In fact, the loff_t 64 bit come from mtd interface
+(needed to address biggest device constraint) but not needed for spi-nor 
+devices.
+>>>> +    cmd.conf.data = 1;
+>>>> +    cmd.conf.dummy = nor->read_dummy;
+>>>> +    cmd.len = len;
+>>>> +    cmd.buf = buf;
+>>>> +    cmd.qspimode = qspi->read_mode;
+>>>> +
+>>>> +    stm32_qspi_set_framemode(nor, &cmd, true);
+>>>> +    err = stm32_qspi_send(flash, &cmd);
+>>>> +
+>>>> +    return err ? err : len;
+>>>> +}
+>>> [...]
+>>>
+>>>> +static irqreturn_t stm32_qspi_irq(int irq, void *dev_id)
+>>>> +{
+>>>> +    struct stm32_qspi *qspi = (struct stm32_qspi *)dev_id;
+>>>> +    u32 cr, sr, fcr = 0;
+>>>> +
+>>>> +    cr = readl_relaxed(qspi->io_base + QUADSPI_CR);
+>>>> +    sr = readl_relaxed(qspi->io_base + QUADSPI_SR);
+>>>> +
+>>>> +    if ((cr & CR_TCIE) && (sr & SR_TCF)) {
+>>>> +        /* tx complete */
+>>>> +        fcr |= FCR_CTCF;
+>>>> +        complete(&qspi->cmd_completion);
+>>>> +    } else {
+>>>> +        dev_info(qspi->dev, "spurious interrupt\n");
+>>> You probably want to ratelimit this one ...
+>> yes it's better if there is an issue.
+> Yep
+>
+>>>> +    }
+>>>> +
+>>>> +    writel_relaxed(fcr, qspi->io_base + QUADSPI_FCR);
+>>>> +
+>>>> +    return IRQ_HANDLED;
+>>>> +}
+>>>> +
+>>>> +static int stm32_qspi_prep(struct spi_nor *nor, enum spi_nor_ops ops)
+>>>> +{
+>>>> +    struct stm32_qspi_flash *flash = nor->priv;
+>>>> +    struct stm32_qspi *qspi = flash->qspi;
+>>>> +
+>>>> +    mutex_lock(&qspi->lock);
+>>>> +    return 0;
+>>>> +}
+>>>> +
+>>>> +static void stm32_qspi_unprep(struct spi_nor *nor, enum spi_nor_ops
+>>>> ops)
+>>>> +{
+>>>> +    struct stm32_qspi_flash *flash = nor->priv;
+>>>> +    struct stm32_qspi *qspi = flash->qspi;
+>>>> +
+>>>> +    mutex_unlock(&qspi->lock);
+>>>> +}
+>>>> +
+>>>> +static int stm32_qspi_flash_setup(struct stm32_qspi *qspi,
+>>>> +                  struct device_node *np)
+>>>> +{
+>>>> +    u32 width, flash_read, presc, cs_num, max_rate = 0;
+>>>> +    struct stm32_qspi_flash *flash;
+>>>> +    struct mtd_info *mtd;
+>>>> +    int ret;
+>>>> +
+>>>> +    of_property_read_u32(np, "reg", &cs_num);
+>>>> +    if (cs_num >= STM32_MAX_NORCHIP)
+>>>> +        return -EINVAL;
+>>>> +
+>>>> +    of_property_read_u32(np, "spi-max-frequency", &max_rate);
+>>>> +    if (!max_rate)
+>>>> +        return -EINVAL;
+>>>> +
+>>>> +    presc = DIV_ROUND_UP(qspi->clk_rate, max_rate) - 1;
+>>>> +
+>>>> +    if (of_property_read_u32(np, "spi-rx-bus-width", &width))
+>>>> +        width = 1;
+>>>> +
+>>>> +    if (width == 4)
+>>>> +        flash_read = SPI_NOR_QUAD;
+>>>> +    else if (width == 2)
+>>>> +        flash_read = SPI_NOR_DUAL;
+>>>> +    else if (width == 1)
+>>>> +        flash_read = SPI_NOR_NORMAL;
+>>>> +    else
+>>>> +        return -EINVAL;
+>>>> +
+>>>> +    flash = &qspi->flash[cs_num];
+>>>> +    flash->qspi = qspi;
+>>>> +    flash->cs = cs_num;
+>>>> +    flash->presc = presc;
+>>>> +
+>>>> +    flash->nor.dev = qspi->dev;
+>>>> +    spi_nor_set_flash_node(&flash->nor, np);
+>>>> +    flash->nor.priv = flash;
+>>>> +    mtd = &flash->nor.mtd;
+>>>> +    mtd->priv = &flash->nor;
+>>>> +
+>>>> +    flash->nor.read = stm32_qspi_read;
+>>>> +    flash->nor.write = stm32_qspi_write;
+>>>> +    flash->nor.erase = stm32_qspi_erase;
+>>>> +    flash->nor.read_reg = stm32_qspi_read_reg;
+>>>> +    flash->nor.write_reg = stm32_qspi_write_reg;
+>>>> +    flash->nor.prepare = stm32_qspi_prep;
+>>>> +    flash->nor.unprepare = stm32_qspi_unprep;
+>>>> +
+>>>> +    writel_relaxed(LPTR_DFT_TIMEOUT, qspi->io_base + QUADSPI_LPTR);
+>>>> +
+>>>> +    writel_relaxed(CR_PRESC(presc) | CR_FTHRES(3) | CR_TCEN | CR_SSHIFT
+>>>> +               | CR_EN, qspi->io_base + QUADSPI_CR);
+>>>> +
+>>>> +    /*
+>>>> +     * in stm32 qspi controller, QUADSPI_DCR register has a fsize field
+>>>> +     * which define the size of nor flash.
+>>>> +     * if fsize is NULL, the controller can't sent spi-nor command.
+>>>> +     * set a temporary value just to discover the nor flash with
+>>>> +     * "spi_nor_scan". After, the right value (mtd->size) can be set.
+>>>> +     */
+>>> Is 25 the smallest value ? Use a macro for this ...
+>> 25 is an arbitrary choice, I will define a smallest value
+> Cool, thanks!
+>
 
->>  	case IIO_CHAN_INFO_RAW:
->> -		return stm32_dac_set_value(dac, chan->channel, val);
->> +		if (!dac->wavetype)
->> +			return stm32_dac_set_value(dac, chan->channel, val);
->> +		/* raw value is read only in waveform generation mode */
->> +		return -EBUSY;
->>  	default:
->>  		return -EINVAL;
->>  	}
->> @@ -334,6 +369,122 @@ static ssize_t stm32_dac_write_powerdown(struct iio_dev *indio_dev,
->>  	.set = stm32_dac_set_powerdown_mode,
->>  };
->>  
->> +/* waveform generator wave selection */
->> +static const char * const stm32_dac_wavetype_desc[] = {
->> +	"flat",
->> +	"noise",
->> +	"triangle",
->> +};
->> +
->> +static int stm32_dac_set_wavetype(struct iio_dev *indio_dev,
->> +				  const struct iio_chan_spec *chan,
->> +				  unsigned int wavetype)
->> +{
->> +	struct stm32_dac *dac = iio_priv(indio_dev);
->> +	u32 mask, val;
->> +	int ret;
->> +
->> +	/*
->> +	 * Waveform generator requires a trigger to be configured, to increment
->> +	 * or decrement internal counter in case of triangle generator. Noise
->> +	 * generator is a bit different, but also requires a trigger to
->> +	 * generate samples.
->> +	 */
->> +	if (wavetype && !indio_dev->trig)
->> +		dev_dbg(&indio_dev->dev, "Wavegen requires a trigger\n");
->> +
->> +	if (STM32_DAC_IS_CHAN_1(chan->channel)) {
->> +		val = FIELD_PREP(STM32_DAC_CR_WAVE1, wavetype);
->> +		mask = STM32_DAC_CR_WAVE1;
->> +	} else {
->> +		val = FIELD_PREP(STM32_DAC_CR_WAVE2, wavetype);
->> +		mask = STM32_DAC_CR_WAVE2;
->> +	}
->> +
->> +	ret = regmap_update_bits(dac->common->regmap, STM32_DAC_CR, mask, val);
->> +	if (ret)
->> +		return ret;
->> +	dac->wavetype = wavetype;
->> +
->> +	return 0;
->> +}
->> +
->> +static int stm32_dac_get_wavetype(struct iio_dev *indio_dev,
->> +				  const struct iio_chan_spec *chan)
->> +{
->> +	struct stm32_dac *dac = iio_priv(indio_dev);
->> +	u32 val;
->> +	int ret;
->> +
->> +	ret = regmap_read(dac->common->regmap, STM32_DAC_CR, &val);
->> +	if (ret < 0)
->> +		return ret;
->> +
->> +	if (STM32_DAC_IS_CHAN_1(chan->channel))
->> +		return FIELD_GET(STM32_DAC_CR_WAVE1, val);
->> +	else
->> +		return FIELD_GET(STM32_DAC_CR_WAVE2, val);
->> +}
->> +
->> +static const struct iio_enum stm32_dac_wavetype_enum = {
->> +	.items = stm32_dac_wavetype_desc,
->> +	.num_items = ARRAY_SIZE(stm32_dac_wavetype_desc),
->> +	.get = stm32_dac_get_wavetype,
->> +	.set = stm32_dac_set_wavetype,
->> +};
->> +
->> +/*
->> + * waveform generator mamp selection: mask/amplitude
->> + * - noise: LFSR mask (linear feedback shift register, umasks bit 0, [1:0]...)
-> This needs breaking out into two attributes - for noise it isn't amplitude in
-> any conventional sense...  Keep the result device specific for now. I'm not
-> even sure what type of pseudo random source that actually is...
-Do you suggest to create specific attribute for this ? This will end-up
-to write same register/bitfield as 'amplitude' for triangle generator.
 
-Thanks & Regards,
-Fabrice
-
-> If anyone wants to figure it out it would be great to document it in a general
-> form!
-> 
->> + * - triangle: amplitude (equal to 1, 3, 5, 7... 4095)
->> + */
->> +static const char * const stm32_dac_amplitude_desc[] = {
->> +	"1", "3", "7", "15", "31", "63", "127", "255", "511", "1023", "2047",
->> +	"4095",
->> +};
->> +
->> +static int stm32_dac_set_amplitude(struct iio_dev *indio_dev,
->> +				   const struct iio_chan_spec *chan,
->> +				   unsigned int amplitude)
->> +{
->> +	struct stm32_dac *dac = iio_priv(indio_dev);
->> +	u32 mask, val;
->> +
->> +	if (STM32_DAC_IS_CHAN_1(chan->channel)) {
->> +		val = FIELD_PREP(STM32_DAC_CR_MAMP1, amplitude);
->> +		mask = STM32_DAC_CR_MAMP1;
->> +	} else {
->> +		val = FIELD_PREP(STM32_DAC_CR_MAMP2, amplitude);
->> +		mask = STM32_DAC_CR_MAMP2;
->> +	}
->> +
->> +	return regmap_update_bits(dac->common->regmap, STM32_DAC_CR, mask, val);
->> +}
->> +
->> +static int stm32_dac_get_amplitude(struct iio_dev *indio_dev,
->> +				   const struct iio_chan_spec *chan)
->> +{
->> +	struct stm32_dac *dac = iio_priv(indio_dev);
->> +	u32 val;
->> +	int ret;
->> +
->> +	ret = regmap_read(dac->common->regmap, STM32_DAC_CR, &val);
->> +	if (ret < 0)
->> +		return ret;
->> +
->> +	if (STM32_DAC_IS_CHAN_1(chan->channel))
->> +		return FIELD_GET(STM32_DAC_CR_MAMP1, val);
->> +	else
->> +		return FIELD_GET(STM32_DAC_CR_MAMP2, val);
->> +}
->> +
->> +static const struct iio_enum stm32_dac_amplitude_enum = {
->> +	.items = stm32_dac_amplitude_desc,
->> +	.num_items = ARRAY_SIZE(stm32_dac_amplitude_desc),
->> +	.get = stm32_dac_get_amplitude,
->> +	.set = stm32_dac_set_amplitude,
->> +};
->> +
->>  static const struct iio_chan_spec_ext_info stm32_dac_ext_info[] = {
->>  	{
->>  		.name = "powerdown",
->> @@ -343,6 +494,10 @@ static ssize_t stm32_dac_write_powerdown(struct iio_dev *indio_dev,
->>  	},
->>  	IIO_ENUM("powerdown_mode", IIO_SEPARATE, &stm32_dac_powerdown_mode_en),
->>  	IIO_ENUM_AVAILABLE("powerdown_mode", &stm32_dac_powerdown_mode_en),
->> +	IIO_ENUM("wavetype", IIO_SEPARATE, &stm32_dac_wavetype_enum),
->> +	IIO_ENUM_AVAILABLE("wavetype", &stm32_dac_wavetype_enum),
->> +	IIO_ENUM("amplitude", IIO_SEPARATE, &stm32_dac_amplitude_enum),
->> +	IIO_ENUM_AVAILABLE("amplitude", &stm32_dac_amplitude_enum),
->>  	{},
->>  };
->>  
->> @@ -352,6 +507,7 @@ static ssize_t stm32_dac_write_powerdown(struct iio_dev *indio_dev,
->>  	.output = 1,					\
->>  	.channel = chan,				\
->>  	.info_mask_separate =				\
->> +		BIT(IIO_CHAN_INFO_OFFSET) |		\
->>  		BIT(IIO_CHAN_INFO_RAW) |		\
->>  		BIT(IIO_CHAN_INFO_SCALE),		\
->>  	/* scan_index is always 0 as num_channels is 1 */ \
->>
-> 
+______________________________________________________
+Linux MTD discussion mailing list
+http://lists.infradead.org/mailman/listinfo/linux-mtd/
