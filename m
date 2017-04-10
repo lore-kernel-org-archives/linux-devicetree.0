@@ -1,135 +1,82 @@
-From: Nicholas Piggin <npiggin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 2/3] of/fdt: introduce of_scan_flat_dt_subnodes and
- of_get_flat_dt_phandle
-Date: Mon, 10 Apr 2017 15:43:48 +1000
-Message-ID: <20170410154348.051e7a34@roar.ozlabs.ibm.com>
-References: <20170405123706.6081-1-npiggin@gmail.com>
-        <20170405123706.6081-3-npiggin@gmail.com>
-        <CAL_JsqK4zbACwWVb-rsrvBb4hjBCexrqKRKrzSiZrZH5w=bKqQ@mail.gmail.com>
-        <20170406003251.533e2845@roar.ozlabs.ibm.com>
-        <CAL_JsqLEvjb8S-+-JEa4ALHeCWHiR1A_4ur9kd3pBRJaFYWVKw@mail.gmail.com>
-        <1491425881.4166.90.camel@kernel.crashing.org>
-        <20170406103829.67d462e1@roar.ozlabs.ibm.com>
-        <CAL_JsqKuomE41grhAvjFxkFbS4A3-M_TK8gP8FU=HdDpQ3TTkg@mail.gmail.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH] PM / OPP: Use - instead of @ for DT entries
+Date: Mon, 10 Apr 2017 08:10:45 +0200
+Message-ID: <20170410061045.2jjk5aw75s6am7xv@lukather>
+References: <5ce1fbbc7cd37a6cfe54e93eeca311a7a52093ff.1491801395.git.viresh.kumar@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="dvwcogjz63nwnatx"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqKuomE41grhAvjFxkFbS4A3-M_TK8gP8FU=HdDpQ3TTkg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <5ce1fbbc7cd37a6cfe54e93eeca311a7a52093ff.1491801395.git.viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linuxppc-dev <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Rafael Wysocki <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, MyungJoo Ham <myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Viresh Kumar <vireshk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Daniel Mack <daniel-cYrQPVfZoowdnm+yROfE0A@public.gmane.org>, Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, linaro-kernel-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.orgVincent Guittot <v>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 6 Apr 2017 09:09:41 -0500
-Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
 
-> On Wed, Apr 5, 2017 at 7:38 PM, Nicholas Piggin <npiggin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> > Given that it's quite a small addition to of/fdt code, hopefully
-> > that gives you a reasonable justification to accept it.
-> >
-> > If you prefer not to, that's okay, but I think we would have to carry
-> > it in arch/powerpc at least for a time, because of the schedule we're
-> > working to for POWER9 enablement. As a longer term item I agree with you
-> > and Ben, it would be worth considering unflattening earlier.  
-> 
-> As I mentioned, keeping it in arch/powerpc I like even less. So this is fine.
+--dvwcogjz63nwnatx
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Here is the patch with the change you suggested. Can I add your
-ack and send it via the powerpc tree with the change that uses
-these interfaces?
+On Mon, Apr 10, 2017 at 10:46:37AM +0530, Viresh Kumar wrote:
+> Compiling the DT file with W=3D1, DTC warns like follows:
+>=20
+> Warning (unit_address_vs_reg): Node /opp_table0/opp@1000000000 has a
+> unit name, but no reg property
+>=20
+> Fix this by replacing '@' with '-' as the OPP nodes will never have a
+> "reg" property.
+>=20
+> Reported-by: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+> Signed-off-by: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+>  .../devicetree/bindings/devfreq/exynos-bus.txt     | 46 +++++++--------
+>  Documentation/devicetree/bindings/opp/opp.txt      | 38 ++++++-------
+>  arch/arm/boot/dts/exynos3250.dtsi                  | 46 +++++++--------
+>  arch/arm/boot/dts/exynos4210.dtsi                  | 32 +++++------
+>  arch/arm/boot/dts/exynos4412-prime.dtsi            |  4 +-
+>  arch/arm/boot/dts/exynos4412.dtsi                  | 66 +++++++++++-----=
+------
+>  arch/arm/boot/dts/exynos5420.dtsi                  | 40 ++++++-------
+>  arch/arm/boot/dts/exynos5800.dtsi                  | 56 +++++++++-------=
+--
+>  arch/arm/boot/dts/pxa25x.dtsi                      |  8 +--
+>  arch/arm/boot/dts/pxa27x.dtsi                      | 14 ++---
+>  arch/arm/boot/dts/sun8i-a33.dtsi                   |  8 +--
 
-Thanks,
-Nick
+For sunxi,
+Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 
----
- drivers/of/fdt.c       | 38 ++++++++++++++++++++++++++++++++++++++
- include/linux/of_fdt.h |  6 ++++++
- 2 files changed, 44 insertions(+)
+Maxime
 
-diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-index e5ce4b59e162..961ca97072a9 100644
---- a/drivers/of/fdt.c
-+++ b/drivers/of/fdt.c
-@@ -754,6 +754,36 @@ int __init of_scan_flat_dt(int (*it)(unsigned long node,
- }
- 
- /**
-+ * of_scan_flat_dt_subnodes - scan sub-nodes of a node call callback on each.
-+ * @it: callback function
-+ * @data: context data pointer
-+ *
-+ * This function is used to scan sub-nodes of a node.
-+ */
-+int __init of_scan_flat_dt_subnodes(unsigned long parent,
-+				    int (*it)(unsigned long node,
-+					      const char *uname,
-+					      void *data),
-+				    void *data)
-+{
-+	const void *blob = initial_boot_params;
-+	int node;
-+
-+	fdt_for_each_subnode(node, blob, parent) {
-+		const char *pathp;
-+		int rc;
-+
-+		pathp = fdt_get_name(blob, node, NULL);
-+		if (*pathp == '/')
-+			pathp = kbasename(pathp);
-+		rc = it(node, pathp, data);
-+		if (rc)
-+			return rc;
-+	}
-+	return 0;
-+}
-+
-+/**
-  * of_get_flat_dt_subnode_by_name - get the subnode by given name
-  *
-  * @node: the parent node
-@@ -812,6 +842,14 @@ int __init of_flat_dt_match(unsigned long node, const char *const *compat)
- 	return of_fdt_match(initial_boot_params, node, compat);
- }
- 
-+/**
-+ * of_get_flat_dt_prop - Given a node in the flat blob, return the phandle
-+ */
-+uint32_t __init of_get_flat_dt_phandle(unsigned long node)
-+{
-+	return fdt_get_phandle(initial_boot_params, node);
-+}
-+
- struct fdt_scan_status {
- 	const char *name;
- 	int namelen;
-diff --git a/include/linux/of_fdt.h b/include/linux/of_fdt.h
-index 271b3fdf0070..1dfbfd0d8040 100644
---- a/include/linux/of_fdt.h
-+++ b/include/linux/of_fdt.h
-@@ -54,6 +54,11 @@ extern char __dtb_end[];
- extern int of_scan_flat_dt(int (*it)(unsigned long node, const char *uname,
- 				     int depth, void *data),
- 			   void *data);
-+extern int of_scan_flat_dt_subnodes(unsigned long node,
-+				    int (*it)(unsigned long node,
-+					      const char *uname,
-+					      void *data),
-+				    void *data);
- extern int of_get_flat_dt_subnode_by_name(unsigned long node,
- 					  const char *uname);
- extern const void *of_get_flat_dt_prop(unsigned long node, const char *name,
-@@ -62,6 +67,7 @@ extern int of_flat_dt_is_compatible(unsigned long node, const char *name);
- extern int of_flat_dt_match(unsigned long node, const char *const *matches);
- extern unsigned long of_get_flat_dt_root(void);
- extern int of_get_flat_dt_size(void);
-+extern uint32_t of_get_flat_dt_phandle(unsigned long node);
- 
- extern int early_init_dt_scan_chosen(unsigned long node, const char *uname,
- 				     int depth, void *data);
--- 
-2.11.0
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
 
+--dvwcogjz63nwnatx
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIcBAEBCAAGBQJY6yHhAAoJEBx+YmzsjxAgQyAP/2E0WtvSilSrUz9Jj+gapYhN
+Htvn9T0ibs7adniSriv3V5sCAQuCCUgS2wTx1B6Yv+wOQIE3TmO1UGJtpYfXcQ70
+WGHpZ02tYg6uaEBnW84zYnvAoR2Z8drbTYDj4Jd5Hhdqo4y0GXVlHr581EkUieAw
+mmZ9TlGzD4linhqtn6tMMgcLHNRLm8QdcM9aUjWWC5rB8Cymhmkautu8w49yai/d
++njJQWojDkkjU/1ESjJ5VVQWizT+cyOpKo5YS3HRHJJVEhBuJFE+WzipTMJVdZ2P
+FGNimu1mYS4g+m+onFJoqySLwC4i3Sx4aMAo1rzbmjcKFXL2tT8S6sspZtdoOh/P
+CHPsMMKveI70erQEqp+lYzOCNa2EawWrUy2qasObSE/8PX2B2Gef3n7Qk3THDZO+
+Ui6ExnkNXc/nE2kd3QR42atjxANRi3tuFTWjnfTAAQIjKOWCbGVmyTrflS2gFt2b
+ortp7Uu6g1AUR5u+kxvg/hrwg8oJkkRZYREIKWPxA5jzsxMo3iVxS75Vx0hu8++w
+/8IkyqzGPZMu57SgKEL0fMwcRNtFraUhuUMvxhOPgEyBqTCOrKKeEuPRTXltiwjk
+hXP2iCij/IEHTomXzRSdvPaHbfef5RJxOOfuFKcsvctLYq4muIpNTnWv8GtPkhr8
+a5jcCeQIyn+hGX2vtLg6
+=fllD
+-----END PGP SIGNATURE-----
+
+--dvwcogjz63nwnatx--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
