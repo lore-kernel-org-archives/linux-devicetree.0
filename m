@@ -1,76 +1,100 @@
-From: Sebastian Reichel <sre@kernel.org>
-Subject: Re: [PATCHv5] mfd: cpcap: implement irq sense helper
-Date: Mon, 10 Apr 2017 16:27:49 +0200
-Message-ID: <20170410142748.jxqd65jrcz2ijp47@earth>
-References: <20170329080423.ijbl4seczla2s4nm@dell>
- <20170329121820.14237-1-sre@kernel.org>
- <20170403102615.h7i53ow2dqzpxox2@dell>
+From: Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Subject: Re: [PATCH v2 1/2] extcon: cros-ec: Add extcon-cros-ec driver to
+ support display out.
+Date: Mon, 10 Apr 2017 16:52:12 +0200
+Message-ID: <cb06a494-3bce-0240-9a87-74a7942d4bf6@collabora.com>
+References: <20170301111943.12170-1-enric.balletbo@collabora.com>
+ <CGME20170301112844epcas4p34012f1564f1145f8d8a8967f4fe9a821@epcas4p3.samsung.com>
+ <20170301111943.12170-2-enric.balletbo@collabora.com>
+ <58B7C9BF.1040708@samsung.com> <58E44698.5020605@samsung.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="dk2jctpdm2lzmjcm"
-Return-path: <linux-input-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170403102615.h7i53ow2dqzpxox2@dell>
-Sender: linux-input-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: Tony Lindgren <tony@atomide.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <58E44698.5020605-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, MyungJoo Ham <myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Benson Leung <bleung-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
---dk2jctpdm2lzmjcm
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-Hi Lee,
+On 05/04/17 03:21, Chanwoo Choi wrote:
+> Hi Enric,
+> 
+> On 2017년 03월 02일 16:29, Chanwoo Choi wrote:
+>> Hi,
+>>
+>> On 2017년 03월 01일 20:19, Enric Balletbo i Serra wrote:
+>>> From: Benson Leung <bleung-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+>>>
+>>> This is the driver for the USB Type C cable detection mechanism
+>>> built into the ChromeOS Embedded Controller on systems that
+>>> have USB Type-C ports.
+>>>
+>>> At present, this allows for the presence of display out, but in
+>>> future, it may also be used to notify host and device type cables
+>>> and the presence of power.
+>>>
+>>> Signed-off-by: Benson Leung <bleung-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+>>> Signed-off-by: Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+>>> ---
+>>> Changes since v1:
+>>>  Requested by Chanwoo Choi
+>>>  - Rename files changing _ for -
+>>>  - Remove the unneeded blank line on bottom of header.
+>>>  - Remove kobject.h and cros_ec_commands.h includes.
+>>>  - Remove the debug message as is not necessary.
+>>>  - Use the tab for indentation instead of space for if sentence.
+>>>  - Define each variable on different lines when the variables should be
+>>>    initialized.
+>>>  - Remove EXTCON_USB and EXTCON_USB_HOST as are not really used for now.
+>>>  - Add one blank line to split out between state and property setting.
+>>>  - Add the author information (header and module)
+>>>
+>>>  Enric Balletbo
+>>>  - As Rob suggested to rename the compatible name to something indicating that
+>>>    is USB Type C related I also renamed the file names, extcon-cros-ec ->
+>>>    extcon-usbc-cros-ec, I think it's more clear.
+>>>
+>>>  drivers/extcon/Kconfig               |   7 +
+>>>  drivers/extcon/Makefile              |   1 +
+>>>  drivers/extcon/extcon-usbc-cros-ec.c | 415 +++++++++++++++++++++++++++++++++++
+>>>  include/linux/mfd/cros_ec_commands.h |  75 +++++++
+>>>  4 files changed, 498 insertions(+)
+>>>  create mode 100644 drivers/extcon/extcon-usbc-cros-ec.c
+>>>
+>>
+>> Looks good to me.
+>> Acked-by: Chanwoo Choi <cw00.chio-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+>>
+>> I think this patch should be handled with patches[1].
+>> [1] https://lkml.org/lkml/2017/2/14/655
+>>
+>> I think that one maintainer among following subsystems
+>> (mfd, chrome h/w platform, rtc and extcon)
+>> will apply their git repository, and then one maintainer
+>> will send the pull request of immutable branch for these patches.
+>>
+> 
+> As I mentioned, these patch should be handled with related patches[1].
+> [1] https://lkml.org/lkml/2017/2/14/655
+> 
+> So, I can't apply these patch on extcon git because there is a merge conflict
+> and we should handle these patches with immutable branch between subsystem maintainer.
+> 
+> The v4.11-rc5 was released, if you want to apply this patch to the v4.12-rc1,
+> please take care of these patches.
+> 
 
-On Mon, Apr 03, 2017 at 11:26:15AM +0100, Lee Jones wrote:
-> On Wed, 29 Mar 2017, Sebastian Reichel wrote:
->=20
-> > CPCAP can sense if IRQ is currently set or not. This
-> > functionality is required for a few subdevices, such
-> > as the power button and usb phy modules.
-> >=20
-> > Acked-by: Tony Lindgren <tony@atomide.com>
-> > Signed-off-by: Sebastian Reichel <sre@kernel.org>
-> > ---
-> > Changes since PATCHv3:
-> >  - add extern to function definition
-> >  - use BIT macro for mask variable
-> >  - avoid magic numbers
-> > Changes since PATCHv4:
-> >  - rename base to irq_base
-> > ---
-> >  drivers/mfd/motorola-cpcap.c       | 28 ++++++++++++++++++++++++++++
-> >  include/linux/mfd/motorola-cpcap.h |  2 ++
-> >  2 files changed, 30 insertions(+)
->=20
-> Applied, thanks.
+Thanks, unfortunately the above patch dependency is not merged yet, I'll take
+care of these an resend this series rebased again once I have the confirmation
+of the above patch is merged or in a immutable branch.
 
-Thanks, will you also pick up the input patch?
+ Enric
 
-https://patchwork.kernel.org/patch/9637807/
 
--- Sebastian
-
---dk2jctpdm2lzmjcm
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAljrlmIACgkQ2O7X88g7
-+poBfg//ZSpjRMZz+mYrBNoDv1MzlJbdP03h+HZhG53ciaYaDM7mdcR+IIKcZxmp
-EYSBeP+9I8jBUBeAInBCOQdCc0rty5C+BmvYvu3xYjiqDpmiWkE7nEGxh6D4lhGF
-zvOhkArJ2hQBP2ZIFI4zg/aDlJi1++//ces3jRnW0V+XJ4aFmFCr1Rk5nftnlEwu
-s06laxGMNK22s2yj91hf69m2stuIIJmS83Mm9AZjJlvVK7ZCAL03cLI4irThsK89
-XiDGqLs/chg/PHWtT9M95Iq3kbEsHHIORTc3HIN+P8BJGwbIUzcviUOg8WOstMP1
-0In1BFNlKER4lENYwLsXO+09UzGQ9aVEoNvvm1ka4FDJySgGt7i91SGihQQ9AKjT
-rQ7m3i9M+qSgTk1CNFL0J8ZYYHRXTjDzdU0ox3OSWZf+XRUnwHCWdD0ERrJ5HyLh
-gu6Qi76HmSu13OznLCBSXzPqGvObMPFZnmZ9UH3ml5S6RRBQPraippklCulyaQmY
-fjg1FQE+DMnnSEzUj21qQx04US1EO7t3AlTauxgYUSodjz9W7wfldAF/1nBPF7bp
-xpMJPKvH86gm6mpSab7/zUHqKjzdD0xobWG19WcXWblWSZk4fvgTNcTpxwgFOsvF
-UCckzU1zqKQ9F+VNe2a75hZYXNBe2UtPNHa4vzLSo4AeAd+JKdM=
-=txJq
------END PGP SIGNATURE-----
-
---dk2jctpdm2lzmjcm--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
