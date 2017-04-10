@@ -1,37 +1,107 @@
-From: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v3 9/9] arm, arm64, drivers: add a prefix to drivers
- arch_topology interfaces
-Date: Mon, 10 Apr 2017 09:32:42 +0100
-Message-ID: <20170410083242.GE27538@e104818-lin.cambridge.arm.com>
-References: <20170327131825.32134-1-juri.lelli@arm.com>
- <20170327131825.32134-10-juri.lelli@arm.com>
+From: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v4 2/3] Broadcom USB DRD Phy driver for Northstar2
+Date: Mon, 10 Apr 2017 14:07:44 +0530
+Message-ID: <1727318a-7ef8-1ea7-a657-241bbc96bc89@ti.com>
+References: <1490704052-11314-1-git-send-email-raviteja.garimella@broadcom.com>
+ <1490704052-11314-3-git-send-email-raviteja.garimella@broadcom.com>
+ <8aa2cc42-6fdc-5574-4449-f05f6d5cbd38@ti.com>
+ <CAEHZuqMpHMDMVL6XMxrSPC3zeXZ=-Wx=xTSON_CruXnVC5PsdA@mail.gmail.com>
+ <5f6d688b-7bbc-7b3c-2be8-fcea7853aae3@ti.com>
+ <CAEHZuqM7YUxtN9F+5qqZ6HHBqLP0DuwotQv9ZyaN5UtrsN7j5A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170327131825.32134-10-juri.lelli-5wv7dgnIgG8@public.gmane.org>
+In-Reply-To: <CAEHZuqM7YUxtN9F+5qqZ6HHBqLP0DuwotQv9ZyaN5UtrsN7j5A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Juri Lelli <juri.lelli-5wv7dgnIgG8@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, vincent.guittot-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, peterz-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, dietmar.eggemann-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, morten.rasmussen-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Raviteja Garimella <raviteja.garimella-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, BCM Kernel Feedback <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 27, 2017 at 02:18:25PM +0100, Juri Lelli wrote:
-> Now that some functions that deal with arch topology information live
-> under drivers, there is a clash of naming that might create confusion.
-> 
-> Tidy things up by creating a drivers namespace for interfaces used by
-> arch code; achieve this by prepending a 'atd_' (arch topology driver)
-> prefix to driver interfaces.
-> 
-> Signed-off-by: Juri Lelli <juri.lelli-5wv7dgnIgG8@public.gmane.org>
-> ---
->  arch/arm/kernel/topology.c    |  8 ++++----
->  arch/arm64/kernel/topology.c  |  4 ++--
->  drivers/base/arch_topology.c  | 20 ++++++++++----------
->  include/linux/arch_topology.h |  8 ++++----
->  4 files changed, 20 insertions(+), 20 deletions(-)
+Hi,
 
-Acked-by: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
+On Wednesday 05 April 2017 07:40 PM, Raviteja Garimella wrote:
+> Hi Kishon,
+> 
+> On Wed, Apr 5, 2017 at 7:04 PM, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org> wrote:
+>> Hi Ravi,
+>>
+>> On Wednesday 05 April 2017 06:30 PM, Raviteja Garimella wrote:
+>>> Hi Kishon,
+>>>
+>>> On Wed, Apr 5, 2017 at 4:30 PM, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org> wrote:
+>>>> Hi,
+>>>>
+>>>> On Tuesday 28 March 2017 05:57 PM, Raviteja Garimella wrote:
+>>>>> This is driver for USB DRD Phy used in Broadcom's Northstar2
+>>>>> SoC. The phy can be configured to be in Device mode or Host
+>>>>> mode based on the type of cable connected to the port. The
+>>>>> driver registers to  extcon framework to get appropriate
+>>>>> connect events for Host/Device cables connect/disconnect
+>>>>> states based on VBUS and ID interrupts.
+>>>>
+>>>> $patch should be phy: phy-bcm-ns2-usbdrd: USB DRD Phy driver for Broadcoms
+>>>> Northstar2.
+>>>>
+>>>
+>>> Will do.
+>>>
+>>>> Sorry for not letting you know this earlier. But I feel the design of the
+>>>> driver should be changed. Extcon shouldn't be used here. The extcon
+>>>> notifications should be sent to the consumer driver and the consumer driver
+>>>> should be responsible for invoking the phy ops.
+>>>>
+>>>
+>>> The consumer drivers here would be a UDC driver (USB device
+>>> controller), EHCI and OHCI host controller drivers.
+>>> I was already suggested in UDC driver review to deal with extcon in Phy driver.
+>>>
+>>> This phy connects to 2 host controllers, and one device controller.
+>>> That's the design in Broadcom Northstar2
+>>> platform. The values of the VBUS and ID pins of this port are
+>>> determined based on the type of the cable (device cable
+>>> or host cable). And. phy has to be configured accordingly.
+>>>
+>>>> The phy ops being invoked during extcon events doesn't look right.
+>>>
+>>> Could you please elaborate on the concern, so that we can think of
+>>> mitigating those issues in this driver?
+>>> Since we are dealing with phy init/shutdown in this driver itself, are
+>>> you okay with moving the extcon handling code
+>>> out of phy ops ?
+>>
+>> yeah, For e.g., ns2_drd_phy_init is part of phy_ops and is being invoked from
+>> extcon events too. Can a phy which is initialized by a phy consumer (say your
+>> UDC invokes phy_init) can be shutdown by an extcon event?
+>>
+>> Maybe a clear explanation of when phy_ops here will be invoked and when it will
+>> set using extcon events might help.
+>>
+> 
+> Say, we have a USB pendrive which is connected to the DRD port through
+> a host cable.
+> Now the PHY will be initialized to be in host mode.
+> When the pendrive is unplugged, and we now connect the NS2 device to
+> some linux PC,
+> now the PHY has to be shutdown, and re-initialized to be in Device mode.
+> 
+> On unplug event, it is set neither to Host nor Device mode (basically
+> shutdown). Next time which ever cable is connected, the PHY is
+> initialized to the respective
+> mode.
+> 
+> Please let me know if it's fine to do these initializations outside
+> phy ops, because those will
+> be irrelevant for phy consumers (the controllers) as it's anyways
+> dealt in the phy driver through
+> extcon.
+
+Yes. We shouldn't add phy_ops just for the sake of it. I think this should be
+made as a purely extcon driver (though there are a couple of bits that looks
+like initializing PHY) and keep it in drivers/extcon.
+
+Thanks
+Kishon
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
