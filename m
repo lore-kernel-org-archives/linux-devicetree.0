@@ -1,102 +1,87 @@
-From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 4/5] mtd: nand: add support for Micron on-die ECC
-Date: Tue, 11 Apr 2017 16:49:52 +0200
-Message-ID: <20170411164952.52357b4f@bbrezillon>
-References: <538805ebf8e64015a8b833de755652b3@SIWEX5A.sing.micron.com>
-        <8a171dacd20c45bd8285ecc5dbe8854a@SIWEX5A.sing.micron.com>
-        <20170322144507.4d80d2cc@bbrezillon>
-        <0dccc0abcf234e98be6d340027cf1a30@SIWEX5A.sing.micron.com>
-        <20170322155216.319efc3e@bbrezillon>
-        <414dd35931814ce38381a251917ad79f@SIWEX5A.sing.micron.com>
-        <20170411145102.563fa388@bbrezillon>
-        <106593e04c494120b323836b8bc54f7f@SIWEX5A.sing.micron.com>
+From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Subject: Re: [PATCH v2 03/11] dt-bindings: add device tree binding for X-Powers
+ AXP803 PMIC
+Date: Tue, 11 Apr 2017 23:00:48 +0800 (CST)
+Message-ID: <alpine.LNX.2.20.1704112237290.39759@x220i>
+References: <20170407183441.58750-1-icenowy@aosc.io> <20170407183441.58750-4-icenowy@aosc.io> <20170411140427.doq5atxk6ptjrp36@dell>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed; BOUNDARY="0-562223920-1491922892=:39759"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <106593e04c494120b323836b8bc54f7f-aBoyCxvc2dBaXkNJqdKpEhSpLNRU/VIH@public.gmane.org>
+In-Reply-To: <20170411140427.doq5atxk6ptjrp36@dell>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Bean Huo (beanhuo)" <beanhuo-AL4WhLSQfzjQT0dZR+AlfA@public.gmane.org>
-Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "richard-/L3Ra7n9ekc@public.gmane.org" <richard-/L3Ra7n9ekc@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, "computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 11 Apr 2017 14:26:02 +0000
-"Bean Huo (beanhuo)" <beanhuo-AL4WhLSQfzjQT0dZR+AlfA@public.gmane.org> wrote:
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-> >
-> >Hi Bean,
-> >
-> >On Mon, 3 Apr 2017 11:31:05 +0000
-> >"Bean Huo (beanhuo)" <beanhuo-AL4WhLSQfzjQT0dZR+AlfA@public.gmane.org> wrote:
-> >  
-> >> Hi, Boris and Thomas
-> >>  
-> >> >>
-> >> >> Ok, but I recommend that 70s should be the first choice on this
-> >> >> single solution, it doesn't need to read twice to detect its bitflips count.  
-> >> >
-> >> >That's exactly why we need to differentiate the 2 chips.  
-> >>
-> >> Sorry for later this response.
-> >> Below is the pseudo codes about how to differentiate these 2 series
-> >> parallel NAND with on-die ECC:
-> >>
-> >> if (NAND == SLC ) { // on-die ECC only exists in SLC //check device ID
-> >> byte 4
-> >>      if ((ID.byte4 & 0x02) == 0x02) {// internal ECC level ==10b  
-> >
-> >So here the MT29F1G08ABADAWP datasheet says 0x2 <=> 4bit/512bytes ECC.
-> >  
-> >> 	if (ID.byte4 & 0x80) {//on-Die ECC enabled  
-> >
-> >Did you read my last reply?
-> >Thomas discovered that ID[4].bit7 is actually reflecting the ECC engine state (1 if
-> >the engine is enabled, 0 if it's disabled), not whether the NAND supports on-die
-> >ECC or not, so no this test is not reliable.
-> >  
-> >>                     if (ONFI.byte112 == 4)
-> >> 		 60s SLC NAND with on-die ECC
-> >> 	    else if (ONFI.byte112 == 8)
-> >>      	              70s SLC NAND with on-die ECC  
-> >
-> >This is completely fucked up! Now the ONFI param page says the NAND requires
-> >8bits/512bytes, while the ID bytes advertised an on-die ECC providing
-> >4bits/512bytes correctability.
-> >So either your algorithm is wrong, or the ID and ONFI param page are contracting
-> >(not sure what solution I'd prefer...).
-> >  
-> >> 	    else
-> >>                           Doesn't support on-die ECC  
-> >
-> >Sorry to say that, but I find it worrisome that even someone from Micron is not
-> >able to get it right.
-> >  
-> 
-> Sorry, would you please specify which one is wrong or confuse you?
-
-The initial 'if (ID.byte4 & 0x80)' is wrong, because this bit is only
-set when someone enabled the ECC engine using the SET_FEATURE command
-(this has been verified by Thomas who tried to disable the feature in
-the bootloader and noticed that on-die ECC was reported as
-'unsupported' by the kernel).
-
-Maybe I was wrong about your 'if ((ID.byte4 & 0x02) == 0x02)' test,
-because you apparently only mask bit 1 and not bits 0 and 1.
-Anyway, I can't tell if this is valid because I don't have access to
-the M79A datasheets you're referring to.
+--0-562223920-1491922892=:39759
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8BIT
 
 
-> 
-> >I think we'll stick to the model name to detect whether on-die ECC is supported.
-> >  
-> You want one solution that can clearly differentiate two serial SLC NAND, but NAND ONFI table
-> and device Id are always changing. It is easy to draw a perfect solution to do that.
-> OK, if you like maintain a huge/ugly table in MTD, please do that.
 
-I'm not happy with the big ID table either, but unless I'm missing
-something, what you propose does not work for the MT29F1G08ABADAWP, so
-I prefer to rely on something I can trust.
+On Tue, 11 Apr 2017, Lee Jones wrote:
 
+> On Sat, 08 Apr 2017, Icenowy Zheng wrote:
+>
+>> AXP803 is a PMIC produced by Shenzhen X-Powers, with either I2C or RSB
+>> bus.
+>> 
+>> Add a compatible for it.
+>> 
+>> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+>> Acked-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+>> ---
+>> Changes in v2:
+>> - Place AXP803 before AXP806/809.
+>> - Added Chen-Yu's ACK.
+>>
+>>  Documentation/devicetree/bindings/mfd/axp20x.txt | 5 +++--
+>>  1 file changed, 3 insertions(+), 2 deletions(-)
+>
+> For my own reference:
+>  Acked-for-MFD-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+
+Excuse me... Who will apply this patch?
+
+I think this patch should be applied by you as it's in bindings/mfd 
+directory, however, if I'm wrong, please point out ;-)
+
+>
+>> diff --git a/Documentation/devicetree/bindings/mfd/axp20x.txt b/Documentation/devicetree/bindings/mfd/axp20x.txt
+>> index b41d2601c6ba..334fb19ce605 100644
+>> --- a/Documentation/devicetree/bindings/mfd/axp20x.txt
+>> +++ b/Documentation/devicetree/bindings/mfd/axp20x.txt
+>> @@ -6,12 +6,13 @@ axp202 (X-Powers)
+>>  axp209 (X-Powers)
+>>  axp221 (X-Powers)
+>>  axp223 (X-Powers)
+>> +axp803 (X-Powers)
+>>  axp809 (X-Powers)
+>>
+>>  Required properties:
+>>  - compatible: "x-powers,axp152", "x-powers,axp202", "x-powers,axp209",
+>> -	      "x-powers,axp221", "x-powers,axp223", "x-powers,axp806",
+>> -	      "x-powers,axp809"
+>> +	      "x-powers,axp221", "x-powers,axp223", "x-powers,axp803",
+>> +	      "x-powers,axp806", "x-powers,axp809"
+>>  - reg: The I2C slave address or RSB hardware address for the AXP chip
+>>  - interrupt-parent: The parent interrupt controller
+>>  - interrupts: SoC NMI / GPIO interrupt connected to the PMIC's IRQ pin
+>
+> -- 
+> Lee Jones
+> Linaro STMicroelectronics Landing Team Lead
+> Linaro.org │ Open source software for ARM SoCs
+> Follow Linaro: Facebook | Twitter | Blog
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+--0-562223920-1491922892=:39759--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
