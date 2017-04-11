@@ -1,74 +1,86 @@
-From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Subject: Re: [PATCH v3 2/7] dt-bindings: media: Add MAX2175 binding description
-Date: Tue, 11 Apr 2017 14:27:17 +0300
-Message-ID: <6297638.5S79beP3Jj@avalon>
-References: <1486479757-32128-1-git-send-email-ramesh.shanmugasundaram@bp.renesas.com> <14921696.qIuO4easis@avalon> <HK2PR06MB0545282102FBC0472D9831AEC3000@HK2PR06MB0545.apcprd06.prod.outlook.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+From: Todor Tomov <todor.tomov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH v9 1/2] media: i2c/ov5645: add the device tree binding document
+Date: Tue, 11 Apr 2017 14:28:30 +0300
+Message-ID: <1491910110-15586-1-git-send-email-todor.tomov@linaro.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <HK2PR06MB0545282102FBC0472D9831AEC3000-jAC1QCBx2F1Af0bSEaWBKm0DtJ1/0DrXvxpqHgZTriW3zl9H0oFU5g@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ramesh Shanmugasundaram <ramesh.shanmugasundaram-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-Cc: "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org" <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, "sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org" <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, "crope-X3B1VOXEql0@public.gmane.org" <crope-X3B1VOXEql0@public.gmane.org>, Chris Paterson <Chris.Paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, "geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org" <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, "linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org, sakari.ailus-X3B1VOXEql0@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Todor Tomov <todor.tomov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Ramesh,
+Add the document for ov5645 device tree binding.
 
-On Tuesday 11 Apr 2017 09:57:45 Ramesh Shanmugasundaram wrote:
-> > On Tuesday 07 Feb 2017 15:02:32 Ramesh Shanmugasundaram wrote:
-> >> Add device tree binding documentation for MAX2175 Rf to bits tuner
-> >> device.
-> >> 
-> >> Signed-off-by: Ramesh Shanmugasundaram
-> >> <ramesh.shanmugasundaram-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org> ---
-> >> 
-> >>  .../devicetree/bindings/media/i2c/max2175.txt      | 61 +++++++++++++++
-> >>  .../devicetree/bindings/property-units.txt         |  1 +
-> >>  2 files changed, 62 insertions(+)
-> >>  create mode 100644
-> >> 
-> >> Documentation/devicetree/bindings/media/i2c/max2175.txt
-> >> 
-> >> diff --git a/Documentation/devicetree/bindings/media/i2c/max2175.txt
-> >> b/Documentation/devicetree/bindings/media/i2c/max2175.txt new file
-> >> mode 100644
-> >> index 0000000..f591ab4
-> >> --- /dev/null
-> >> +++ b/Documentation/devicetree/bindings/media/i2c/max2175.txt
+Signed-off-by: Todor Tomov <todor.tomov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Reviewed-by: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Acked-by: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+---
+ .../devicetree/bindings/media/i2c/ov5645.txt       | 54 ++++++++++++++++++++++
+ 1 file changed, 54 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/i2c/ov5645.txt
 
-[snip]
-
-> >> +- maxim,am-hiz	      : empty property indicates AM Hi-Z filter path
-> >> is
-> >> +			selected for AM antenna input. By default this
-> >> +			filter path is not used.
-> > 
-> > Isn't this something that should be selected at runtime through a control
-> > ? Or does the hardware design dictate whether the filter has to be used or
-> > must not be used ?
-> 
-> This is dictated by the h/w design and not selectable at run-time.
-> I will update these changes in the next patchset.
-
-In that case I'm fine with a property, but could we name it in such a way that 
-it describes the hardware instead of instructing the software on how to 
-configure the device ? For instance (and this is a made-up example as I don't 
-know exactly how this works), if the AM Hi-Z filter is required when dealing 
-with AM frequencies and forbidden when dealing with other frequency bands, and 
-*if* boards have to be designed specifically for one frequency band (AM, FM, 
-VHF, L, ...) without any way to accept different bands, then you could instead 
-use
-
-	maxim,frequency-band = "AM";
-
-and enable the filter accordingly in the driver. This would be in my opinion a 
-better system hardware description.
-
+diff --git a/Documentation/devicetree/bindings/media/i2c/ov5645.txt b/Documentation/devicetree/bindings/media/i2c/ov5645.txt
+new file mode 100644
+index 0000000..fd7aec9
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/i2c/ov5645.txt
+@@ -0,0 +1,54 @@
++* Omnivision 1/4-Inch 5Mp CMOS Digital Image Sensor
++
++The Omnivision OV5645 is a 1/4-Inch CMOS active pixel digital image sensor with
++an active array size of 2592H x 1944V. It is programmable through a serial I2C
++interface.
++
++Required Properties:
++- compatible: Value should be "ovti,ov5645".
++- clocks: Reference to the xclk clock.
++- clock-names: Should be "xclk".
++- clock-frequency: Frequency of the xclk clock.
++- enable-gpios: Chip enable GPIO. Polarity is GPIO_ACTIVE_HIGH. This corresponds
++  to the hardware pin PWDNB which is physically active low.
++- reset-gpios: Chip reset GPIO. Polarity is GPIO_ACTIVE_LOW. This corresponds to
++  the hardware pin RESETB.
++- vdddo-supply: Chip digital IO regulator.
++- vdda-supply: Chip analog regulator.
++- vddd-supply: Chip digital core regulator.
++
++The device node must contain one 'port' child node for its digital output
++video port, in accordance with the video interface bindings defined in
++Documentation/devicetree/bindings/media/video-interfaces.txt.
++
++Example:
++
++	&i2c1 {
++		...
++
++		ov5645: ov5645@78 {
++			compatible = "ovti,ov5645";
++			reg = <0x78>;
++
++			enable-gpios = <&gpio1 6 GPIO_ACTIVE_HIGH>;
++			reset-gpios = <&gpio5 20 GPIO_ACTIVE_LOW>;
++			pinctrl-names = "default";
++			pinctrl-0 = <&camera_rear_default>;
++
++			clocks = <&clks 200>;
++			clock-names = "xclk";
++			clock-frequency = <23880000>;
++
++			vdddo-supply = <&camera_dovdd_1v8>;
++			vdda-supply = <&camera_avdd_2v8>;
++			vddd-supply = <&camera_dvdd_1v2>;
++
++			port {
++				ov5645_ep: endpoint {
++					clock-lanes = <1>;
++					data-lanes = <0 2>;
++					remote-endpoint = <&csi0_ep>;
++				};
++			};
++		};
++	};
 -- 
-Regards,
-
-Laurent Pinchart
+1.9.1
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
