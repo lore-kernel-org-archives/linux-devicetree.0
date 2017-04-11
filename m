@@ -1,88 +1,53 @@
-From: Todor Tomov <todor.tomov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v9 1/2] media: i2c/ov5645: add the device tree binding document
-Date: Tue, 11 Apr 2017 14:28:30 +0300
-Message-ID: <1491910110-15586-1-git-send-email-todor.tomov@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org, sakari.ailus-X3B1VOXEql0@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Todor Tomov <todor.tomov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+From: Marcel Holtmann <marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCHv3 00/10] Nokia H4+ support
+Date: Tue, 11 Apr 2017 13:36:44 +0200
+Message-ID: <4FEFA1D8-BE23-40FB-BAA3-3EC910FE9F96@holtmann.org>
+References: <20170328155939.31566-1-sre@kernel.org>
+ <CAL_JsqJcQ9ANtt71KRitOJ9spKD1SaeoL4RDftiCEPs8TjLJGA@mail.gmail.com>
+ <C1A408F2-1DF8-4F49-B399-B936542DE6BC@holtmann.org>
+ <20170331133353.GA32267@kroah.com>
+ <CAL_Jsq+NU3M5yuBpK1UGgzCVvq0eABMApCqEe3_d5+tDaABsgQ@mail.gmail.com>
+ <20170410231041.vz35anezpzhscu4t@earth>
+Mime-Version: 1.0 (Mac OS X Mail 10.3 \(3273\))
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-bluetooth-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170410231041.vz35anezpzhscu4t@earth>
+Sender: linux-bluetooth-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "Gustavo F. Padovan" <gustavo-THi1TnShQwVAfugRpC6u6w@public.gmane.org>, Johan Hedberg <johan.hedberg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Samuel Thibault <samuel.thibault-vYW+cPY1g1pg9hUCZPvPmw@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Jiri Slaby <jslaby-IBi9RG/b67k@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "open list:BLUETOOTH DRIVERS" <linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add the document for ov5645 device tree binding.
+Hi Sebastian,
 
-Signed-off-by: Todor Tomov <todor.tomov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Reviewed-by: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Acked-by: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
----
- .../devicetree/bindings/media/i2c/ov5645.txt       | 54 ++++++++++++++++++++++
- 1 file changed, 54 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/i2c/ov5645.txt
+>>>>>> Here is PATCHv3 for the Nokia bluetooth patchset. I addressed all comments from
+>>>>>> Rob and Pavel regarding the serdev patches and dropped the *.dts patches, since
+>>>>>> they were queued by Tony. I also changed the patch order, so that the serdev
+>>>>>> patches come first. All of them have Acked-by from Rob, so I think it makes
+>>>>>> sense to merge them to serdev subsystem (now) and provide an immutable branch
+>>>>>> for the bluetooth subsystem.
+>>>>> 
+>>>>> Greg doesn't read cover letters generally and since the serdev patches
+>>>>> are Cc rather than To him, he's probably not planning to pick them up.
+>>>> 
+>>>> I wonder actually if we should merge all of these via bluetooth-next
+>>>> tree with proper Ack from Greg. However it would be good to also get
+>>>> buy in from Dave for merging this ultimately through net-next.
+>>> 
+>>> I don't really care where it goes.  I can take the whole thing in my
+>>> tty/serial tree now if no one objects and I get an ack from the relevant
+>>> maintainers {hint...}
+>> 
+>> I think it is better if it goes thru BT tree. I have another driver
+>> converted that is dependent on this series. There's a couple other
+>> serdev changes on the list too, but this shouldn't depend on them.
+> 
+> Is this waiting for something, or could it be queued to
+> bluetooth-next then? It would be nice to finally have
+> this in 4.12 :)
 
-diff --git a/Documentation/devicetree/bindings/media/i2c/ov5645.txt b/Documentation/devicetree/bindings/media/i2c/ov5645.txt
-new file mode 100644
-index 0000000..fd7aec9
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/i2c/ov5645.txt
-@@ -0,0 +1,54 @@
-+* Omnivision 1/4-Inch 5Mp CMOS Digital Image Sensor
-+
-+The Omnivision OV5645 is a 1/4-Inch CMOS active pixel digital image sensor with
-+an active array size of 2592H x 1944V. It is programmable through a serial I2C
-+interface.
-+
-+Required Properties:
-+- compatible: Value should be "ovti,ov5645".
-+- clocks: Reference to the xclk clock.
-+- clock-names: Should be "xclk".
-+- clock-frequency: Frequency of the xclk clock.
-+- enable-gpios: Chip enable GPIO. Polarity is GPIO_ACTIVE_HIGH. This corresponds
-+  to the hardware pin PWDNB which is physically active low.
-+- reset-gpios: Chip reset GPIO. Polarity is GPIO_ACTIVE_LOW. This corresponds to
-+  the hardware pin RESETB.
-+- vdddo-supply: Chip digital IO regulator.
-+- vdda-supply: Chip analog regulator.
-+- vddd-supply: Chip digital core regulator.
-+
-+The device node must contain one 'port' child node for its digital output
-+video port, in accordance with the video interface bindings defined in
-+Documentation/devicetree/bindings/media/video-interfaces.txt.
-+
-+Example:
-+
-+	&i2c1 {
-+		...
-+
-+		ov5645: ov5645@78 {
-+			compatible = "ovti,ov5645";
-+			reg = <0x78>;
-+
-+			enable-gpios = <&gpio1 6 GPIO_ACTIVE_HIGH>;
-+			reset-gpios = <&gpio5 20 GPIO_ACTIVE_LOW>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&camera_rear_default>;
-+
-+			clocks = <&clks 200>;
-+			clock-names = "xclk";
-+			clock-frequency = <23880000>;
-+
-+			vdddo-supply = <&camera_dovdd_1v8>;
-+			vdda-supply = <&camera_avdd_2v8>;
-+			vddd-supply = <&camera_dvdd_1v2>;
-+
-+			port {
-+				ov5645_ep: endpoint {
-+					clock-lanes = <1>;
-+					data-lanes = <0 2>;
-+					remote-endpoint = <&csi0_ep>;
-+				};
-+			};
-+		};
-+	};
--- 
-1.9.1
+I would prefer if we can get an ACK from Greg. Then I merge it through the bluetooth-next tree.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards
+
+Marcel
