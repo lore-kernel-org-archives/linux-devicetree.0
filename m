@@ -1,103 +1,53 @@
-Return-Path: <SRS0=zglS=3W=axentia.se=peda@kernel.org>
-Date: Fri, 14 Apr 2017 12:50:02 +0200
-In-Reply-To: <20170414100705.tiltc433lidqzcr2@piout.net>
-References: <1492118578-15356-1-git-send-email-peda@axentia.se> <20170414100705.tiltc433lidqzcr2@piout.net>
 MIME-Version: 1.0
-Content-Type: multipart/alternative;
-	boundary="----HAP0QF7U9YDK9YGIJ6M37DHAWT0EOL"
-Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH] ARM: dts: at91: use correct compatible for the gpio mux controller
-From: Peter Rosin <peda@axentia.se>
-Message-ID: <3FB89D83-DD6C-41C9-AFB1-1F639803EA09@axentia.se>
-To: Alexandre Belloni <alexandre.belloni@free-electrons.com>
-Cc: linux-kernel@vger.kernel.org, Nicolas Ferre <nicolas.ferre@microchip.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+In-Reply-To: <1491903267.4826.8.camel@rf-debian.wolfsonmicro.main>
+References: <1491568725-14882-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+	<20170410201758.lobmtzxt2jgcwwvc@rob-hp-laptop>
+	<1491903267.4826.8.camel@rf-debian.wolfsonmicro.main>
+Date: Tue, 11 Apr 2017 07:15:52 -0500
+Message-ID: <CAL_Jsq+bUftj-BosShAX6=hrnmRRuU_UNb+GAg+9E1VFWw-8-g@mail.gmail.com>
+Subject: Re: [PATCH 1/2] mfd: arizona: Add GPIO maintain state flag
+From: Rob Herring <robh@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+To: Richard Fitzgerald <rf@opensource.wolfsonmicro.com>
+Cc: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>, Linus Walleij <linus.walleij@linaro.org>, Lee Jones <lee.jones@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Mark Rutland <mark.rutland@arm.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, patches@opensource.wolfsonmicro.com
 List-ID: <devicetree@vger.kernel.org>
 
-------HAP0QF7U9YDK9YGIJ6M37DHAWT0EOL
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-
-
-
-On April 14, 2017 12:07:05 PM GMT+02:00, Alexandre Belloni <alexandre=2Ebe=
-lloni@free-electrons=2Ecom> wrote:
->On 13/04/2017 at 23:22:58 +0200, Peter Rosin wrote:
->> The compatible string for a gpio based mux controller is "gpio-mux",
->> and nothing else=2E
->>=20
->> Fixes: 29dd89418007 ("ARM: dts: at91: add envelope detector mux to
->the Axentia TSE-850")
->> Signed-off-by: Peter Rosin <peda@axentia=2Ese>
->> ---
->>  arch/arm/boot/dts/at91-tse850-3=2Edts | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->>=20
->> Hi!
->>=20
->> The compatible string for the gpio based mux changed along the way
->(on
->> request from Rob) but I failed to update the implementation in the
->> gpio-mux driver when I made that change=2E Consequently, I didn't
->notice
->> that I didn't update the compatible string here either, since it all
->> continued to work in my tests=2E=2E=2E
->>=20
->> The compatible string in the gpio-mux driver is being fixed to match
->> documentation, so this of course needs fixing too=2E No TSE-850 devices
->> are affected, except for the one on my desk=2E
->>=20
->> Sorry for the churn=2E
->>=20
+On Tue, Apr 11, 2017 at 4:34 AM, Richard Fitzgerald <rf@opensource.wolfsonmicro.com> wrote:
+> On Mon, 2017-04-10 at 15:17 -0500, Rob Herring wrote:
+>> On Fri, Apr 07, 2017 at 01:38:44PM +0100, Charles Keepax wrote:
+>> > The Arizona devices only maintain the state of output GPIOs whilst the
+>> > CODEC is active, this can cause issues if the CODEC suspends whilst
+>> > something is relying on the state of one of its GPIOs. However, in
+>> > many systems the CODEC GPIOs are used for audio related features
+>> > and thus the state of the GPIOs is unimportant whilst the CODEC is
+>> > suspended. Often keeping the CODEC resumed in such a system would
+>> > incur a power impact that is unacceptable.
+>> >
+>> > Add a flag through the second cell of the GPIO specifier in device
+>> > tree, to allow the user to select whether a GPIO being configured as
+>> > an output should keep the CODEC resumed.
+>>
+>> If the whole codec can't be suspended, why does this need to be per
+>> GPIO? You could just have a single boolean property.
+>>
 >
->So, I folded that one in the previous one and updated my pull request=2E
->Hopefully this will be OK=2E
+> Three reasons I can think of:
 >
->--=20
->Alexandre Belloni, Free Electrons
->Embedded Linux and Kernel engineering
->http://free-electrons=2Ecom
+> 1) The GPIO binding already provides for passing extra information
+> through the binding ("Exact meaning of each specifier cell is controller
+> specific" as it says in the main gpio binding doc) so why add yet
+> another custom property to do it?
 
-From=20my POV, excellent!
+While that statement is technically true, we do try to standardize flags. If every driver had its own set we'd end up with a mess. 
 
-Cheers,
-peda
+> 2) Doing it through the gpio means that if ultimately the child DT node
+> that is using it gets disabled (status="disabled") or that driver isn't
+> in use the codec will be able to go to sleep. That won't happen with a
+> brute-force "big lock".
+>
+> 3) The codec only has to be kept awake while any such GPIO is actually
+> in use. See (2)
 
---=20
-Sent from my Android device with K-9 Mail=2E Please excuse my brevity=2E
-------HAP0QF7U9YDK9YGIJ6M37DHAWT0EOL
-Content-Type: text/html; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Fair enough.
 
-<html><head></head><body><br><br><div class=3D"gmail_quote">On April 14, 20=
-17 12:07:05 PM GMT+02:00, Alexandre Belloni &lt;alexandre=2Ebelloni@free-el=
-ectrons=2Ecom&gt; wrote:<blockquote class=3D"gmail_quote" style=3D"margin: =
-0pt 0pt 0pt 0=2E8ex; border-left: 1px solid rgb(204, 204, 204); padding-lef=
-t: 1ex;">
-<pre class=3D"k9mail">On 13/04/2017 at 23:22:58 +0200, Peter Rosin wrote:<=
-br /><blockquote class=3D"gmail_quote" style=3D"margin: 0pt 0pt 1ex 0=2E8ex=
-; border-left: 1px solid #729fcf; padding-left: 1ex;"> The compatible strin=
-g for a gpio based mux controller is &quot;gpio-mux&quot;,<br /> and nothin=
-g else=2E<br /> <br /> Fixes: 29dd89418007 (&quot;ARM: dts: at91: add envel=
-ope detector mux to the Axentia TSE-850&quot;)<br /> Signed-off-by: Peter R=
-osin &lt;peda@axentia=2Ese&gt;<br /> ---<br />  arch/arm/boot/dts/at91-tse8=
-50-3=2Edts | 2 +-<br />  1 file changed, 1 insertion(+), 1 deletion(-)<br /=
-> <br /> Hi!<br /> <br /> The compatible string for the gpio based mux chan=
-ged along the way (on<br /> request from Rob) but I failed to update the im=
-plementation in the<br /> gpio-mux driver when I made that change=2E Conseq=
-uently, I didn't notice<br /> that I didn't update the compatible string he=
-re either, since it all<br /> continued to work in my tests=2E=2E=2E<br /> =
-<br /> The compatible string in the gpio-mux driver is being fixed to match=
-<br /> documentation, so this of course needs fixing too=2E No TSE-850 devi=
-ces<br /> are affected, except for the one on my desk=2E<br /> <br /> Sorry=
- for the churn=2E<br /> <br /></blockquote><br />So, I folded that one in t=
-he previous one and updated my pull request=2E<br />Hopefully this will be =
-OK=2E<br /></pre></blockquote></div><br>
-From=20my POV, excellent!<br>
-<br>
-Cheers,<br>
-peda<br>
-<br>
--- <br>
-Sent from my Android device with K-9 Mail=2E Please excuse my brevity=2E</=
-body></html>
-------HAP0QF7U9YDK9YGIJ6M37DHAWT0EOL--
+Acked-by: Rob Herring <robh@kernel.org>
