@@ -1,81 +1,51 @@
-Return-Path: <SRS0=obXi=3T=kuvee.com=geoff@kernel.org>
+Return-Path: <SRS0=nJwA=3T=aosc.io=icenowy@kernel.org>
+Date: Wed, 12 Apr 2017 02:08:31 +0800
+Subject: Re: [linux-sunxi] Re: [PATCH v2 03/11] dt-bindings: add device tree
+ binding for X-Powers AXP803 PMIC
+From: Icenowy Zheng <icenowy@aosc.io>
 MIME-Version: 1.0
-In-Reply-To: <20170405090611.GF2136@zurbaran.ger.intel.com>
-References: <1482380314-16440-1-git-send-email-geoff@kuvee.com> <20170405090611.GF2136@zurbaran.ger.intel.com>
-From: Geoff Lansberry <geoff@kuvee.com>
-Date: Tue, 11 Apr 2017 11:44:19 -0400
-Message-ID: <CAO7Z3WKQZSD2jjn0M0Ga32aYk=6Sx6btz=V8q1Ay2dJBkdN=Og@mail.gmail.com>
-Subject: Re: [PATCH v3 1/3] NFC: trf7970a: add device tree option for 27MHz clock
-Content-Type: multipart/alternative; boundary=001a114495247275d5054ce5f9c9
-To: Samuel Ortiz <sameo@linux.intel.com>
-Cc: linux-wireless <linux-wireless@vger.kernel.org>, robh+dt@kernel.org, mark.rutland@arm.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Mark Greer <mgreer@animalcreek.com>, Justin Bronder <justin@kuvee.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: base64
+Message-Id: <20170411180844.9176B125521@relay.mailchannels.net>
+To: Lee Jones <lee.jones@linaro.org>
+Cc: linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-sunxi <linux-sunxi@googlegroups.com>, Rob Herring <robh+dt@kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, devicetree <devicetree@vger.kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>
 List-ID: <devicetree@vger.kernel.org>
 
---001a114495247275d5054ce5f9c9
-Content-Type: text/plain; charset=UTF-8
-
-On Wed, Apr 5, 2017 at 5:06 AM, Samuel Ortiz <sameo@linux.intel.com> wrote:
-
-> Hi Geoff,
->
-> On Wed, Dec 21, 2016 at 11:18:32PM -0500, Geoff Lansberry wrote:
-> > The TRF7970A has configuration options to support hardware designs
-> > which use a 27.12MHz clock. This commit adds a device tree option
-> > 'clock-frequency' to support configuring the this chip for default
-> > 13.56MHz clock or the optional 27.12MHz clock.
-> >
-> > Signed-off-by: Geoff Lansberry <geoff@kuvee.com>
-> > ---
-> >  .../devicetree/bindings/net/nfc/trf7970a.txt       |  2 +
-> >  drivers/nfc/trf7970a.c                             | 50
-> +++++++++++++++++-----
-> >  2 files changed, 41 insertions(+), 11 deletions(-)
-> Patches #1 and #2 applied to nfc-next. I'll wait for you to rework #3
-> before merging.
->
-> Cheers,
-> Samuel.
->
-
-Excellent - thank you.  For the record, we may end up dropping #3.
-
-Geoff
-
---001a114495247275d5054ce5f9c9
-Content-Type: text/html; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-
-<div dir=3D"ltr"><br><div class=3D"gmail_extra"><br><div class=3D"gmail_quo=
-te">On Wed, Apr 5, 2017 at 5:06 AM, Samuel Ortiz <span dir=3D"ltr">&lt;<a h=
-ref=3D"mailto:sameo@linux.intel.com" target=3D"_blank">sameo@linux.intel.co=
-m</a>&gt;</span> wrote:<br><blockquote class=3D"gmail_quote" style=3D"margi=
-n:0 0 0 .8ex;border-left:1px #ccc solid;padding-left:1ex">Hi Geoff,<br>
-<span class=3D""><br>
-On Wed, Dec 21, 2016 at 11:18:32PM -0500, Geoff Lansberry wrote:<br>
-</span><span class=3D"">&gt; The TRF7970A has configuration options to supp=
-ort hardware designs<br>
-&gt; which use a 27.12MHz clock. This commit adds a device tree option<br>
-&gt; &#39;clock-frequency&#39; to support configuring the this chip for def=
-ault<br>
-&gt; 13.56MHz clock or the optional 27.12MHz clock.<br>
-&gt;<br>
-&gt; Signed-off-by: Geoff Lansberry &lt;<a href=3D"mailto:geoff@kuvee.com">=
-geoff@kuvee.com</a>&gt;<br>
-&gt; ---<br>
-&gt;=C2=A0 .../devicetree/bindings/net/<wbr>nfc/trf7970a.txt=C2=A0 =C2=A0 =
-=C2=A0 =C2=A0|=C2=A0 2 +<br>
-&gt;=C2=A0 drivers/nfc/trf7970a.c=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0| 50 ++++++++=
-+++++++++-----<br>
-&gt;=C2=A0 2 files changed, 41 insertions(+), 11 deletions(-)<br>
-</span>Patches #1 and #2 applied to nfc-next. I&#39;ll wait for you to rewo=
-rk #3<br>
-before merging.<br>
-<br>
-Cheers,<br>
-Samuel.<br>
-</blockquote></div><br></div><div class=3D"gmail_extra">Excellent - thank y=
-ou.=C2=A0 For the record, we may end up dropping #3.</div><div class=3D"gma=
-il_extra"><br></div><div class=3D"gmail_extra">Geoff</div></div>
-
---001a114495247275d5054ce5f9c9--
+CjIwMTflubQ05pyIMTLml6Ug5LiK5Y2IMTI6Mjnkuo4gTGVlIEpvbmVzIDxsZWUuam9uZXNAbGlu
+YXJvLm9yZz7lhpnpgZPvvJoKPgo+IE9uIFR1ZSwgMTEgQXByIDIwMTcsIENoZW4tWXUgVHNhaSB3
+cm90ZToKPgo+ID4gSGksCj4gPiAKPiA+IE9uIFR1ZSwgQXByIDExLCAyMDE3IGF0IDExOjAwIFBN
+LCBJY2Vub3d5IFpoZW5nIDxpY2Vub3d5QGFvc2MuaW8+IHdyb3RlOgo+ID4gPgo+ID4gPgo+ID4g
+PiBPbiBUdWUsIDExIEFwciAyMDE3LCBMZWUgSm9uZXMgd3JvdGU6Cj4gPiA+Cj4gPiA+PiBPbiBT
+YXQsIDA4IEFwciAyMDE3LCBJY2Vub3d5IFpoZW5nIHdyb3RlOgo+ID4gPj4KPiA+ID4+PiBBWFA4
+MDMgaXMgYSBQTUlDIHByb2R1Y2VkIGJ5IFNoZW56aGVuIFgtUG93ZXJzLCB3aXRoIGVpdGhlciBJ
+MkMgb3IgUlNCCj4gPiA+Pj4gYnVzLgo+ID4gPj4+Cj4gPiA+Pj4gQWRkIGEgY29tcGF0aWJsZSBm
+b3IgaXQuCj4gPiA+Pj4KPiA+ID4+PiBTaWduZWQtb2ZmLWJ5OiBJY2Vub3d5IFpoZW5nIDxpY2Vu
+b3d5QGFvc2MuaW8+Cj4gPiA+Pj4gQWNrZWQtYnk6IENoZW4tWXUgVHNhaSA8d2Vuc0Bjc2llLm9y
+Zz4KPiA+ID4+PiAtLS0KPiA+ID4+PiBDaGFuZ2VzIGluIHYyOgo+ID4gPj4+IC0gUGxhY2UgQVhQ
+ODAzIGJlZm9yZSBBWFA4MDYvODA5Lgo+ID4gPj4+IC0gQWRkZWQgQ2hlbi1ZdSdzIEFDSy4KPiA+
+ID4+Pgo+ID4gPj4+wqAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21mZC9heHAy
+MHgudHh0IHwgNSArKystLQo+ID4gPj4+wqAgMSBmaWxlIGNoYW5nZWQsIDMgaW5zZXJ0aW9ucygr
+KSwgMiBkZWxldGlvbnMoLSkKPiA+ID4+Cj4gPiA+Pgo+ID4gPj4gRm9yIG15IG93biByZWZlcmVu
+Y2U6Cj4gPiA+PsKgIEFja2VkLWZvci1NRkQtYnk6IExlZSBKb25lcyA8bGVlLmpvbmVzQGxpbmFy
+by5vcmc+Cj4gPiA+Cj4gPiA+Cj4gPiA+IEV4Y3VzZSBtZS4uLiBXaG8gd2lsbCBhcHBseSB0aGlz
+IHBhdGNoPwo+Cj4gRXhjdXNlIHlvdT/CoCBBcmUgeW91IHRyeWluZyB0byBiZSBwb2xpdGUsIG9y
+IHJ1ZGU/Cj4KPiBJJ20gZ3Vlc3NpbmcgZHVlIHRvIHRoZSBsYWdnaW5nICcuLi4nLCB0aGF0IGl0
+J3MgdGhlIGxhdHRlcj8KCk9oIHNvcnJ5LCBJIG1lYW4gdGhlIGZvcm1lci4uLgoKPgo+ID4gPiBJ
+IHRoaW5rIHRoaXMgcGF0Y2ggc2hvdWxkIGJlIGFwcGxpZWQgYnkgeW91IGFzIGl0J3MgaW4gYmlu
+ZGluZ3MvbWZkCj4gPiA+IGRpcmVjdG9yeSwgaG93ZXZlciwgaWYgSSdtIHdyb25nLCBwbGVhc2Ug
+cG9pbnQgb3V0IDstKQo+ID4KPiA+IFdlIG5lZWQgdGhlIERUIG1haW50YWluZXJzIHRvIGFjayBp
+dCBmaXJzdC4gOikKPgo+IFdlIGRvbid0IHJlYWxseSBuZWVkIHRoZSBEVCBNYWludGFpbmVycyB0
+byBnZXQgaW52b2x2ZWQgaGVyZS4KPgo+IFdoYXQgSSBkbyBuZWVkIGlzIGVpdGhlciBjbGVhciBk
+aXJlY3Rpb24gYXMgdG8gaG93IHRoaXMKPiBwYXRjaC1zZXQgc2hvdWxkIGJlIGFwcGxpZWQsIG9y
+IGFuIGluZGljYXRpb24gb2Ygd2hpY2ggcGF0Y2hlcyBhcmUKPiBkZXBlbmRhbnQgb24gb3RoZXJz
+IGFuZCB3aGljaCBhcmUgb3J0aG9nb25hbCBhbmQgY2FuIGJlIGFwcGxpZWQKPiBpbmRlcGVuZGVu
+dGx5LgoKVGhpcyBwYXRjaCBpcyBpbmRlcGVuZGVudCwgYWx0aG91Z2ggdGhlIHJlZ3VsYXRvciBi
+aW5kaW5nIHBhdGNoCmRlcGVuZHMgb24gaXQuCgpUaGUgcmVhbCBkcml2ZXIgcGF0Y2hlcyB3aWxs
+IG5lZWQgdGhlIGJpbmRpbmcgcGF0Y2hlcyB0byBiZSBtZXJnZWQKZmlyc3QuCgpBbmQgdGhlIGR0
+IHBhdGNoZXMgZGVwZW5kIG9uIGFsc28gdGhlIGJpbmRpbmcgcGF0Y2hlcy4KCj4KPiAtLSAKPiBM
+ZWUgSm9uZXMKPiBMaW5hcm8gU1RNaWNyb2VsZWN0cm9uaWNzIExhbmRpbmcgVGVhbSBMZWFkCj4g
+TGluYXJvLm9yZyDilIIgT3BlbiBzb3VyY2Ugc29mdHdhcmUgZm9yIEFSTSBTb0NzCj4gRm9sbG93
+IExpbmFybzogRmFjZWJvb2sgfCBUd2l0dGVyIHwgQmxvZwo+Cj4gX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX18KPiBsaW51eC1hcm0ta2VybmVsIG1haWxpbmcg
+bGlzdAo+IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwo+IGh0dHA6Ly9saXN0
+cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
