@@ -1,53 +1,81 @@
+Return-Path: <SRS0=obXi=3T=kuvee.com=geoff@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <1491903267.4826.8.camel@rf-debian.wolfsonmicro.main>
-References: <1491568725-14882-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
-	<20170410201758.lobmtzxt2jgcwwvc@rob-hp-laptop>
-	<1491903267.4826.8.camel@rf-debian.wolfsonmicro.main>
-Date: Tue, 11 Apr 2017 07:15:52 -0500
-Message-ID: <CAL_Jsq+bUftj-BosShAX6=hrnmRRuU_UNb+GAg+9E1VFWw-8-g@mail.gmail.com>
-Subject: Re: [PATCH 1/2] mfd: arizona: Add GPIO maintain state flag
-From: Rob Herring <robh@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-To: Richard Fitzgerald <rf@opensource.wolfsonmicro.com>
-Cc: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>, Linus Walleij <linus.walleij@linaro.org>, Lee Jones <lee.jones@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Mark Rutland <mark.rutland@arm.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, patches@opensource.wolfsonmicro.com
+In-Reply-To: <20170405090611.GF2136@zurbaran.ger.intel.com>
+References: <1482380314-16440-1-git-send-email-geoff@kuvee.com> <20170405090611.GF2136@zurbaran.ger.intel.com>
+From: Geoff Lansberry <geoff@kuvee.com>
+Date: Tue, 11 Apr 2017 11:44:19 -0400
+Message-ID: <CAO7Z3WKQZSD2jjn0M0Ga32aYk=6Sx6btz=V8q1Ay2dJBkdN=Og@mail.gmail.com>
+Subject: Re: [PATCH v3 1/3] NFC: trf7970a: add device tree option for 27MHz clock
+Content-Type: multipart/alternative; boundary=001a114495247275d5054ce5f9c9
+To: Samuel Ortiz <sameo@linux.intel.com>
+Cc: linux-wireless <linux-wireless@vger.kernel.org>, robh+dt@kernel.org, mark.rutland@arm.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Mark Greer <mgreer@animalcreek.com>, Justin Bronder <justin@kuvee.com>
 List-ID: <devicetree@vger.kernel.org>
 
-On Tue, Apr 11, 2017 at 4:34 AM, Richard Fitzgerald <rf@opensource.wolfsonmicro.com> wrote:
-> On Mon, 2017-04-10 at 15:17 -0500, Rob Herring wrote:
->> On Fri, Apr 07, 2017 at 01:38:44PM +0100, Charles Keepax wrote:
->> > The Arizona devices only maintain the state of output GPIOs whilst the
->> > CODEC is active, this can cause issues if the CODEC suspends whilst
->> > something is relying on the state of one of its GPIOs. However, in
->> > many systems the CODEC GPIOs are used for audio related features
->> > and thus the state of the GPIOs is unimportant whilst the CODEC is
->> > suspended. Often keeping the CODEC resumed in such a system would
->> > incur a power impact that is unacceptable.
->> >
->> > Add a flag through the second cell of the GPIO specifier in device
->> > tree, to allow the user to select whether a GPIO being configured as
->> > an output should keep the CODEC resumed.
->>
->> If the whole codec can't be suspended, why does this need to be per
->> GPIO? You could just have a single boolean property.
->>
+--001a114495247275d5054ce5f9c9
+Content-Type: text/plain; charset=UTF-8
+
+On Wed, Apr 5, 2017 at 5:06 AM, Samuel Ortiz <sameo@linux.intel.com> wrote:
+
+> Hi Geoff,
 >
-> Three reasons I can think of:
+> On Wed, Dec 21, 2016 at 11:18:32PM -0500, Geoff Lansberry wrote:
+> > The TRF7970A has configuration options to support hardware designs
+> > which use a 27.12MHz clock. This commit adds a device tree option
+> > 'clock-frequency' to support configuring the this chip for default
+> > 13.56MHz clock or the optional 27.12MHz clock.
+> >
+> > Signed-off-by: Geoff Lansberry <geoff@kuvee.com>
+> > ---
+> >  .../devicetree/bindings/net/nfc/trf7970a.txt       |  2 +
+> >  drivers/nfc/trf7970a.c                             | 50
+> +++++++++++++++++-----
+> >  2 files changed, 41 insertions(+), 11 deletions(-)
+> Patches #1 and #2 applied to nfc-next. I'll wait for you to rework #3
+> before merging.
 >
-> 1) The GPIO binding already provides for passing extra information
-> through the binding ("Exact meaning of each specifier cell is controller
-> specific" as it says in the main gpio binding doc) so why add yet
-> another custom property to do it?
-
-While that statement is technically true, we do try to standardize flags. If every driver had its own set we'd end up with a mess. 
-
-> 2) Doing it through the gpio means that if ultimately the child DT node
-> that is using it gets disabled (status="disabled") or that driver isn't
-> in use the codec will be able to go to sleep. That won't happen with a
-> brute-force "big lock".
+> Cheers,
+> Samuel.
 >
-> 3) The codec only has to be kept awake while any such GPIO is actually
-> in use. See (2)
 
-Fair enough.
+Excellent - thank you.  For the record, we may end up dropping #3.
 
-Acked-by: Rob Herring <robh@kernel.org>
+Geoff
+
+--001a114495247275d5054ce5f9c9
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr"><br><div class=3D"gmail_extra"><br><div class=3D"gmail_quo=
+te">On Wed, Apr 5, 2017 at 5:06 AM, Samuel Ortiz <span dir=3D"ltr">&lt;<a h=
+ref=3D"mailto:sameo@linux.intel.com" target=3D"_blank">sameo@linux.intel.co=
+m</a>&gt;</span> wrote:<br><blockquote class=3D"gmail_quote" style=3D"margi=
+n:0 0 0 .8ex;border-left:1px #ccc solid;padding-left:1ex">Hi Geoff,<br>
+<span class=3D""><br>
+On Wed, Dec 21, 2016 at 11:18:32PM -0500, Geoff Lansberry wrote:<br>
+</span><span class=3D"">&gt; The TRF7970A has configuration options to supp=
+ort hardware designs<br>
+&gt; which use a 27.12MHz clock. This commit adds a device tree option<br>
+&gt; &#39;clock-frequency&#39; to support configuring the this chip for def=
+ault<br>
+&gt; 13.56MHz clock or the optional 27.12MHz clock.<br>
+&gt;<br>
+&gt; Signed-off-by: Geoff Lansberry &lt;<a href=3D"mailto:geoff@kuvee.com">=
+geoff@kuvee.com</a>&gt;<br>
+&gt; ---<br>
+&gt;=C2=A0 .../devicetree/bindings/net/<wbr>nfc/trf7970a.txt=C2=A0 =C2=A0 =
+=C2=A0 =C2=A0|=C2=A0 2 +<br>
+&gt;=C2=A0 drivers/nfc/trf7970a.c=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0| 50 ++++++++=
++++++++++-----<br>
+&gt;=C2=A0 2 files changed, 41 insertions(+), 11 deletions(-)<br>
+</span>Patches #1 and #2 applied to nfc-next. I&#39;ll wait for you to rewo=
+rk #3<br>
+before merging.<br>
+<br>
+Cheers,<br>
+Samuel.<br>
+</blockquote></div><br></div><div class=3D"gmail_extra">Excellent - thank y=
+ou.=C2=A0 For the record, we may end up dropping #3.</div><div class=3D"gma=
+il_extra"><br></div><div class=3D"gmail_extra">Geoff</div></div>
+
+--001a114495247275d5054ce5f9c9--
