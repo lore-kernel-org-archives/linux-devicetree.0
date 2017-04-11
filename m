@@ -1,151 +1,145 @@
-From: Guillaume Tucker <guillaume.tucker-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-Subject: Re: [PATCH v2 1/5] dt-bindings: gpu: add bindings for the ARM Mali
- Midgard GPU
-Date: Tue, 11 Apr 2017 18:40:37 +0100
-Message-ID: <936a53ee-2ed8-11e4-a860-744256676af9@collabora.com>
-References: <cover.1491118230.git.guillaume.tucker@collabora.com>
- <db45d0d68957d699f13a0d92f4f84d8ebfd0270e.1491118230.git.guillaume.tucker@collabora.com>
- <a01a50d3-bb1b-2c56-2a15-30651fa2fac9@baylibre.com>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH 1/2] leds: Add driver for Qualcomm LPG
+Date: Tue, 11 Apr 2017 19:54:31 +0200
+Message-ID: <20170411175431.GA25483@amd>
+References: <20170329190725.GN20094@minitux>
+ <20170329222301.GB7977@amd>
+ <20170330000955.GP20094@minitux>
+ <20170330074309.GA28533@amd>
+ <bf999f34-4509-6f0b-602c-f82d50a18e97@gmail.com>
+ <20170403190032.GX20094@minitux>
+ <dce7f2b1-8d1d-1c5d-5fa5-54c22b6f4758@gmail.com>
+ <20170407202603.GC15143@minitux>
+ <20170408133904.GA9020@amd>
+ <20170410191948.GE15143@minitux>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <a01a50d3-bb1b-2c56-2a15-30651fa2fac9-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sjoerd Simons <sjoerd.simons-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, Wookey <wookey-Xpnwy/r4z8dg9hUCZPvPmw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, John Reitan <john.reitan-5wv7dgnIgG8@public.gmane.org>, Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="nFreZHaLTZJo0R7j"
+Return-path: <linux-leds-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170410191948.GE15143@minitux>
+Sender: linux-leds-owner@vger.kernel.org
+To: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Jacek Anaszewski <jacek.anaszewski@gmail.com>, Rob Herring <robh@kernel.org>, Richard Purdie <rpurdie@rpsys.net>, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, linux-arm-msm@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 03/04/17 09:12, Neil Armstrong wrote:
-> On 04/02/2017 09:59 AM, Guillaume Tucker wrote:
->> The ARM Mali Midgard GPU family is present in a number of SoCs
->> from many different vendors such as Samsung Exynos and Rockchip.
->>
->> Import the device tree bindings documentation from the r16p0
->> release of the Mali Midgard GPU kernel driver:
->>
->>   https://developer.arm.com/-/media/Files/downloads/mali-drivers/kernel/mali-midgard-gpu/TX011-SW-99002-r16p0-00rel0.tgz
->>
->> The following optional bindings have been omitted in this initial
->> version as they are only used in very specific cases:
->>
->>   * snoop_enable_smc
->>   * snoop_disable_smc
->>   * jm_config
->>   * power_model
->>   * system-coherency
->>   * ipa-model
->>
->> The example has been simplified accordingly.
->>
->> The compatible string definition has been limited to
->> "arm,mali-midgard" to avoid checkpatch.pl warnings and to match
->> what the driver actually expects (as of r16p0 out-of-tree).
->>
->> CC: John Reitan <john.reitan-5wv7dgnIgG8@public.gmane.org>
->> Signed-off-by: Guillaume Tucker <guillaume.tucker-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
->> ---
->>  .../devicetree/bindings/gpu/arm,mali-midgard.txt   | 53 ++++++++++++++++++++++
->>  1 file changed, 53 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt
->>
->> diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt b/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt
->> new file mode 100644
->> index 000000000000..da8fc6d21bbf
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt
->> @@ -0,0 +1,53 @@
->> +#
->> +# (C) COPYRIGHT 2013-2016 ARM Limited.
->> +# Copyright (C) 2017 Collabora Ltd
->> +#
->> +# This program is free software and is provided to you under the terms of the
->> +# GNU General Public License version 2 as published by the Free Software
->> +# Foundation, and any use by you of this program is subject to the terms
->> +# of such GNU licence.
->> +#
-> Hi Guillaume,
-> This is unnecessary, please remove.
 
-Hi Neil,
+--nFreZHaLTZJo0R7j
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I see most other documentation files don't have such a header,
-including the arm,mali-utgard.txt one.  I left it in my patch
-after copying the file from the driver tarball as removing it
-didn't seem right from a GPL and copyright point of view.  If
-it's safe in practice to remove it then fine.
+Hi!
 
->> +
->> +
->> +ARM Mali Midgard GPU
->> +====================
->> +
->> +Required properties:
->> +
->> +- compatible : Should be "arm,mali-midgard".
->> +- reg : Physical base address of the device and length of the register area.
->> +- interrupts : Contains the three IRQ lines required by Mali Midgard devices.
->> +- interrupt-names : Contains the names of IRQ resources in the order they were
->> +  provided in the interrupts property. Must contain: "JOB, "MMU", "GPU".
->
->
-> Please follow the bindings introduced for the utgard family :
-> https://patchwork.kernel.org/patch/9553745/
->
-> - an entry for each mali-midgard revision, i.e. "arm,mali-t820"
+> > > How do we do with patterns that are implementable by the LP5xx but are
+> > > not with the LPG? Should we reject those or should we do some sort of
+> > > best-effort approach in the kernel?
+> >=20
+> > Lets say you get series of
+> >=20
+> > (red, green, blue, delta_t )
+> >=20
+> > points, meaning "in delta_t msec, change color to red, green,
+> > blue. Lets ignore other channels for now. delta_t of 0 would be step
+> > change. Would such interface work for you?
+>=20
+> So I presume this would be input to the RGB trigger that we discussed.
+> But in my current device I have 6 LEDs, that are not in any RGB-like
+> configuration. So we would need to come up with an interface that looks
+> to be the same in both single-LED and RGB-LED setups.
 
-Sure.  It's a bit more complicated with Midgard (more variants,
-some have the number of cores in the last digit...) but it should
-be possible to put together a suitable list in v3.
+Ok.
 
-> - an entry for each vendor specific wrapping if necessary, i.e. "amlogic,meson-gxm-mali"
+> This should be sufficient to describe a subset of the patterns I've seen
+> so far in products.
+>=20
+> But let's consider the standard use case for an RGB LED on an Android
+> phone; continuously blinking (pulsing based on patterns) as you have
+> some notifications waiting. In this case you want the LED hardware to do
+> all the work, so that you can deep-idle the CPU. So we would need to
+> introduce a "repeat pattern"-command.
 
-Well, fine although I'm a bit confused about this - please see
-below.
+I'd say have additional parameter with number of repetitions. Yes. In
+your case you can do 1 and infinity, LP5XX can do 1-255 or infinity.
 
-> - low-case for interrupt names
+> Then consider the fact that you want your patterns to have decent
+> resolution, but you have a limited amount of storage. So we either have
+> to be able to detect palindromes or have a way to represent this.
 
-OK, can change that in v3.  It means however that the out-of-tree
-driver will need to be patched as it's looking for these names in
-capital letters.  This shouldn't be a big issue but adds a bit of
-work to anyone maintaining a kernel driver package.
+I'm not sure how common hardware support for palindromes is going to
+be. I'd say "detect", but...
 
->> +
->> +Optional:
->> +
->> +- clocks : Phandle to clock for the Mali Midgard device.
->> +- clock-names : Shall be "clk_mali".
->> +- mali-supply : Phandle to regulator for the Mali device. Refer to
->> +  Documentation/devicetree/bindings/regulator/regulator.txt for details.
->> +- operating-points : Refer to Documentation/devicetree/bindings/power/opp.txt
->> +  for details.
->
-> Please add :
->    * Must be one of the following:
->       "arm,mali-t820"
->    * And, optionally, one of the vendor specific compatible:
->       "amlogic,meson-gxm-mali"
->
-> with my Ack for the amlogic platform.
+> > Simple compiler from this to LP5XX code should not be hard to
+> > do.
+>=20
+> It sounds fairly straight forward to convert a pattern to instructions,
+> but we do have an extremely limited amount of storage so it must be a
+> quite good implementation for people to be able to use it for anything
+> real.
+>=20
+> We could implement some optimization steps where we try to detect slopes
+> and generate ramp-instructions instead of set-pwm + wait instructions,
+> use some variables to handle ramp up/down and we could probably generate
+> some jump instructions to implement loops.
 
-It seems to me that as long as the GPU architecture hasn't been
-modified (I don't think I've ever encountered such a case) then
-it has to be a standard ARM Mali type regardless of the SoC
-vendor.  So unless a Mali-T820 in the Amlogic S912 SoC is not the
-same as a T820 in a different SoC, please forgive me but I don't
-understand why a vendor compatible string is needed.  My main
-concern is that it's going to be very hard to keep that list
-up-to-date with all existing Midgard SoC variants.  If do we need
-to add vendor compatible strings to correctly describe the
-hardware then I'm happy to add the amlogic one in my patch v3; I
-would just like to understand why that's necessary.
+Actually it is easier than that. Hardware can do slopes itself. If we
+see change with non-zero delta_t, we issue slope, otherwise we issue
+set_value.
 
+Here's example "compiler": https://gitlab.com/tui/tui/blob/master/ofone/not=
+cc.py
+Here's example "program": https://gitlab.com/tui/tui/blob/master/ofone/test=
+s.notcc/primes.nc
 
-Thanks,
-Guillaume
+> But do we really want this logic in the kernel, for each LED chip
+> supporting patterns?
 
+I'd say so, yes. It should be, dunno, 200? 500? lines of code for
+LP5XX?  Sounds acceptable.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Otherwise we'd have to have led-chip-dependend part in userspace. That
+would be ok... but we'd _still_ need led-chip-dependend part in the
+kernel... and driver spread between kernel and userland is difficult.
+
+The code needs to be created, anyway, so lets put it in kernel.
+
+> > AS3676 ... I'm not sure what to do, AFAICT it is too limited.
+> >=20
+>=20
+> So out of the three examples I've looked at we're skipping one and we're
+> abstracting away most functionality from another.
+
+Well. We don't need to _skip_ AS3676, but its pattern engine is
+basically useless for anything involving different PWM levels.
+
+And abstracting away most of LP5XX functionality... well, you can
+compute prime numbers on that chip (see example above), but you better
+should not. And patterns we'll pretty much expose all the functionality.
+
+> I'm sorry for being pessimistic about this, but while I can see the
+> theoretical benefit of providing a uniform interface for this to user
+> space I see three very different pieces of hardware that would be used
+> in three different ways in products.
+
+Three different pieces of hardware, at least two of them used in
+phones to provide blinking leds... I'd say common interface is the
+right thing to do.
+								Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--nFreZHaLTZJo0R7j
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAljtGFYACgkQMOfwapXb+vJSywCeJhYyYRUM+sWGkYeuMj5uaN86
+c+4AnjvCxlGHSUsMsfjvhG95H4j8GyNg
+=yWVe
+-----END PGP SIGNATURE-----
+
+--nFreZHaLTZJo0R7j--
