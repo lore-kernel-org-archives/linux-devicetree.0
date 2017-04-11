@@ -1,123 +1,85 @@
-From: "Bean Huo (beanhuo)" <beanhuo-AL4WhLSQfzjQT0dZR+AlfA@public.gmane.org>
-Subject: RE: [PATCH 4/5] mtd: nand: add support for Micron on-die ECC
-Date: Tue, 11 Apr 2017 17:01:51 +0000
-Message-ID: <5a96e73ef951414a82c01b67088b24d3@SIWEX5A.sing.micron.com>
-References: <538805ebf8e64015a8b833de755652b3@SIWEX5A.sing.micron.com>
-        <8a171dacd20c45bd8285ecc5dbe8854a@SIWEX5A.sing.micron.com>
-        <20170322144507.4d80d2cc@bbrezillon>
-        <0dccc0abcf234e98be6d340027cf1a30@SIWEX5A.sing.micron.com>
-        <20170322155216.319efc3e@bbrezillon>
-        <414dd35931814ce38381a251917ad79f@SIWEX5A.sing.micron.com>
-        <20170411145102.563fa388@bbrezillon>
-        <90300f14cd2a4ae6967d8be0f7dff4e9@SIWEX5A.sing.micron.com>
- <20170411173051.7aafb717@bbrezillon>
+From: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v6 0/6] genirq/gpio: Add driver for ThunderX and OCTEON-TX SoCs
+Date: Tue, 11 Apr 2017 10:21:03 -0700
+Message-ID: <1491931269-15650-1-git-send-email-david.daney@cavium.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170411173051.7aafb717@bbrezillon>
-Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "richard-/L3Ra7n9ekc@public.gmane.org" <richard-/L3Ra7n9ekc@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, "computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
->On Tue, 11 Apr 2017 15:02:22 +0000
->"Bean Huo (beanhuo)" <beanhuo-AL4WhLSQfzjQT0dZR+AlfA@public.gmane.org> wrote:
->
->> Hi, Boris and Thomas
->> Let me do some explanation.
->>
->> >> if (NAND == SLC ) { // on-die ECC only exists in SLC //check device
->> >> ID byte 4
->> >>      if ((ID.byte4 & 0x02) == 0x02) {// internal ECC level ==10b
->> >
->> >So here the MT29F1G08ABADAWP datasheet says 0x2 <=> 4bit/512bytes ECC.
->> >
->>
->> If the NAND supports on-die ECC, here should be 10b, not matter it is
->> 8bit or 4bit, You are correct, MT29F1G08ABADAWP is 0x2, its explanation is
->4bit/512bytes ECC.
->> But for the 70s, it is 8bit on-die ECC, but it is still 10b.
->> So that why here using these two bits to determine if exist on-die ECC.
->> What's more, for some old products, they don't support on-die ECC,
->> Sometimes, here is still 01b, so still need following codes to do
->> further determinations.
->
->Okay, then here is the differentiator. Did you check that on SLC NANDs there's no
->collision on ID[4].bits[1:0]. I've seen NAND vendors changing their ID scheme in
->incompatible ways (old fields were replaced by new ones with completely
->different meanings).
+The ThunderX/OCTEON-TX GPIO hardware looks like a PCIe device, with
+the interrupt signal from each GPIO line being routed to a dedicated
+MSI-X.  This interrupt routing requires that we add some custom
+processing to the beginning of the MSI-X irqdomain hierarchy.
 
+Changes from v5:
 
-Yes, this is true, there is no one standard to define and formalize ID.byte4,
-It is always changing. Also, sometimes it definitely conflicts with other NAND without
-On-die ECC. For the Micron both serials SLC NAND with on-die ECC, bits[1:0] is defined
-Internal ECC level. 
+ - Added .irq_{request,release}_resources() functions to irq_chip.
 
->I'd really like to make sure we're not mis-interpreting READ_ID information, so
->maybe we should restrict the test on ONFI NANDs if all NANDs supporting on-die
->ECC are ONFI compliant. We should probably also check that chip->id.len >= 5.
->
->
->>
->> >> 	if (ID.byte4 & 0x80) {//on-Die ECC enabled
->> >
->> >Did you read my last reply?
->> >Thomas discovered that ID[4].bit7 is actually reflecting the ECC
->> >engine state (1 if the engine is enabled, 0 if it's disabled), not
->> >whether the NAND supports on-die ECC or not, so no this test is not reliable.
->> >
->> For the on-die ECC, it is not always default enabled. It depends on requirement
->from costumers.
->> If on-die ECC is not enabled, bit7 is 0. It can be switched through "Feature
->Operations".
->
->So this check is not needed, right?
+ - Quit calling irq_set_irq_type() in the irq_map() function.
 
-Here is much complicated. One question is that what main purpose of on-die ECC.
-there are two types of usage model:
-1.  on-die ECC default enabled:
-Normally before bootloader and kernel, there is no any ECC to correct and maintain
-Bootloader reliability.  For this kind of customer, I think, they mainly want to have reliable booting.
-Rather than for store user data. Per this kind of condition, we don't check, because on-die ECC
-Always be enabled, cannot be disabled.
+ - Added more error condition checking to irq_domain_{push,pop}_irq()
 
-2. on-die ECC default disabled:
-I think this is used for some important user data. Unless the bootrom of CPU can issue 
-SET_FEATURE to enable on-die ECC, and until Linux running, on-die ECC is still enabled.
-Otherwise, we need to check if it enables or not.
+Changes from v4:
 
->BTW, do you have NANDs where the on-die ECC is always enabled, and if this is
->the case, what happens when you call
->SET_FEATURE(disable/enable-ECC) on these NANDs?
+ - Rebased to post-v4.10 to support .set_config() function.
 
-If this NAND is on-die ECC defaulted enabled, the on-die ECC cannot
-Disabled later. Why? This is related to specific user model.
-We have one PPT on Micron domain website, it is "on die ECC training",
-It opens and can freely download. It clearly describes this.
-If you cannot download, please let me know, I send to you.
+ - Added .get_direction() support.
 
-As for the on-die ECC default disabled, you can freely switch on or off
-by SET_FEATURE(disable/enable-ECC).
+ - Added PIN_CONFIG_INPUT_DEBOUNCE support.
 
->
->>
->> >>                     if (ONFI.byte112 == 4)
->> >> 		 60s SLC NAND with on-die ECC
->> >> 	    else if (ONFI.byte112 == 8)
->> >>      	              70s SLC NAND with on-die ECC
->> >
->> >This is completely fucked up! Now the ONFI param page says the NAND
->> >requires 8bits/512bytes, while the ID bytes advertised an on-die ECC
->> >providing 4bits/512bytes correctability.
->>
->> I think, my previous answers can answer this confusion.
->
->Yep. BTW, sorry for being so harsh in my previous reply.
-Don't sorry, open source community should like this. And if you have any confusion and
-Something fucked up about Micron NAND, please freely speak out and let me know.
-If we can give any support, we are very happy. 
+ - Removed some improper use of ENOSYS.
+
+Changes from v3:
+
+ - Add some "depends on" to the driver Kconfig to avoid build errors
+   in some architectures when doing COMPILE_TEST builds.
+
+Changes from v2:
+
+ - in 4/6: Added Rob Harring's Acked-by
+
+ - Added three patches to genirq/irqdomain to support interrupt code
+   in the driver.
+
+ - Rewrite irq code in driver to use irqdomain hierarchy.
+
+ - Other naming and style changes as recommended by Linus Walleij.
+
+Changes from v1:
+
+ - in 1/3: Addressed Rob Harring's comments.
+
+ - in 2/3: Trivial cleanups found in internal review + add some
+   comments.
+
+David Daney (6):
+  genirq: Export more irq_chip_*_parent() functions.
+  genirq: Add handle_fasteoi_{level,edge}_irq flow handlers.
+  irqdomain: Add irq_domain_{push,pop}_irq() functions.
+  dt-bindings: gpio: Add binding documentation for gpio-thunderx
+  gpio: Add gpio driver support for ThunderX and OCTEON-TX
+  MAINTAINERS: Add entry for THUNDERX GPIO Driver.
+
+ .../devicetree/bindings/gpio/gpio-thunderx.txt     |  27 +
+ MAINTAINERS                                        |   5 +
+ drivers/gpio/Kconfig                               |   8 +
+ drivers/gpio/Makefile                              |   1 +
+ drivers/gpio/gpio-thunderx.c                       | 639 +++++++++++++++++++++
+ include/linux/irq.h                                |   2 +
+ include/linux/irqdomain.h                          |   3 +
+ kernel/irq/chip.c                                  | 105 ++++
+ kernel/irq/irqdomain.c                             | 178 ++++++
+ 9 files changed, 968 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/gpio/gpio-thunderx.txt
+ create mode 100644 drivers/gpio/gpio-thunderx.c
+
+-- 
+1.8.3.1
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
