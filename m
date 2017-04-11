@@ -1,455 +1,96 @@
-From: <michael.hennerich@analog.com>
-Subject: [PATCH v5 2/2] i2c: mux: ltc4306: LTC4306 and LTC4305 I2C multiplexer/switch
-Date: Tue, 11 Apr 2017 14:16:16 +0200
-Message-ID: <1491912976-8396-2-git-send-email-michael.hennerich@analog.com>
-References: <1491912976-8396-1-git-send-email-michael.hennerich@analog.com>
+From: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 2/2] drivers/serial: Add driver for Aspeed virtual UART
+Date: Tue, 11 Apr 2017 15:15:18 +0300
+Message-ID: <CAHp75Vd=oONhzF34Pe8WwYKBWWxcsaQtgJy66aFD68iNKTxEfg@mail.gmail.com>
+References: <20170410040400.5509-1-joel@jms.id.au> <20170410040400.5509-3-joel@jms.id.au>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1491912976-8396-1-git-send-email-michael.hennerich@analog.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: wsa@the-dreams.de, peda@axentia.se, robh+dt@kernel.org, mark.rutland@arm.com, linus.walleij@linaro.org
-Cc: linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, Michael Hennerich <michael.hennerich@analog.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170410040400.5509-3-joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
+Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Jiri Slaby <jslaby-IBi9RG/b67k@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, "linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Michael Hennerich <michael.hennerich@analog.com>
+On Mon, Apr 10, 2017 at 7:04 AM, Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org> wrote:
+> From: Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
+>
+> This change adds a driver for the 16550-based Aspeed virtual UART
+> device. We use a similar process to the of_serial driver for device
+> probe, but expose some VUART-specific functions through sysfs too.
+>
+> The VUART is two UART 'front ends' connected by their FIFO (no actual
+> serial line in between). One is on the BMC side (management controller)
+> and one is on the host CPU side.
+>
+> This driver is for the BMC side. The sysfs files allow the BMC
+> userspace, which owns the system configuration policy, to specify at
+> what IO port and interrupt number the host side will appear to the host
+> on the Host <-> BMC LPC bus. It could be different on a different system
+> (though most of them use 3f8/4).
+>
+> OpenPOWER host firmware doesn't like it when the host-side of the
+> VUART's FIFO is not drained. This driver only disables host TX discard
+> mode when the port is in use. We set the VUART enabled bit when we bind
+> to the device, and clear it on unbind.
+>
+> We don't want to do this on open/release, as the host may be using this
+> bit to configure serial output modes, which is independent of whether
+> the devices has been opened by BMC userspace.
 
-This patch adds support for the Analog Devices / Linear Technology
-LTC4306 and LTC4305 4/2 Channel I2C Bus Multiplexer/Switches.
-The LTC4306 optionally provides two general purpose input/output pins
-(GPIOs) that can be configured as logic inputs, opendrain outputs or
-push-pull outputs via the generic GPIOLIB framework.
+> +static void aspeed_vuart_set_enabled(struct aspeed_vuart *vuart, bool enabled)
+> +{
+> +       u8 reg;
+> +
+> +       reg = readb(vuart->regs + ASPEED_VUART_GCRA);
 
-Signed-off-by: Michael Hennerich <michael.hennerich@analog.com>
+> +       reg &= ~ASPEED_VUART_GCRA_VUART_EN;
+> +       if (enabled)
+> +               reg |= ASPEED_VUART_GCRA_VUART_EN;
 
----
+Usually the pattern is
+if (something)
+ set x bit;
+else
+ clear x bit;
 
-Changes since v1:
+It would make it one operation in any case and a bit more understandable.
 
- - Sort makefile entries
- - Sort driver includes
- - Use proper defines
- - Miscellaneous coding style fixups
- - Rename mux select callback
- - Revise i2c-mux-idle-disconnect handling
- - Add ENABLE GPIO handling on error and device removal.
- - Remove surplus of_match_device call.
+> +       writeb(reg, vuart->regs + ASPEED_VUART_GCRA);
+> +}
+> +
+> +static void aspeed_vuart_set_host_tx_discard(struct aspeed_vuart *vuart,
+> +                                            bool discard)
+> +{
+> +       u8 reg;
+> +
+> +       reg = readb(vuart->regs + ASPEED_VUART_GCRA);
+> +
+> +       /* If the DISABLE_HOST_TX_DISCARD bit is set, discard is disabled */
 
-Changes since v2:
+> +       reg &= ~ASPEED_VUART_GCRA_DISABLE_HOST_TX_DISCARD;
+> +       if (!discard)
+> +               reg |= ASPEED_VUART_GCRA_DISABLE_HOST_TX_DISCARD;
 
- - Stop double error reporting (i2c_mux_add_adapter)
- - Change subject
- - Split dt bindings to separate patch
+Ditto.
 
-Changes since v3:
+> +
+> +       writeb(reg, vuart->regs + ASPEED_VUART_GCRA);
+> +}
 
- - Change subject and add spaces
- - Convert to I2C_MUX_LOCKED
- - Convert to regmap
- - Remove local register cache
- - Restore previous ENABLE GPIO handling
- - Initially pulse ENABLE low
- - Eliminate i2c client struct in driver state structure
- - Simplify error return path
- - Misc minor cleanups
+> +       /* The 8510 core creates the mapping, which we grab a reference to
+> +        * for VUART-specific registers */
 
-Changes since v4:
+Hmm... What about multi-line style?
 
- - Remove redundant includes
- - Use regmap cache type REGCACHE_FLAT
- - gpio_get restore double negates on return
- - Implement gpio_get_direction
- - Use unified device property interface
- - mux_alloc exact number of channels
- - Reword kconfig help text
----
- MAINTAINERS                         |   8 +
- drivers/i2c/muxes/Kconfig           |  11 ++
- drivers/i2c/muxes/Makefile          |   1 +
- drivers/i2c/muxes/i2c-mux-ltc4306.c | 322 ++++++++++++++++++++++++++++++++++++
- 4 files changed, 342 insertions(+)
- create mode 100644 drivers/i2c/muxes/i2c-mux-ltc4306.c
+> +       port.port.irq = irq_of_parse_and_map(np, 0);
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index c776906..9a27a19 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -7698,6 +7698,14 @@ S:	Maintained
- F:	Documentation/hwmon/ltc4261
- F:	drivers/hwmon/ltc4261.c
- 
-+LTC4306 I2C MULTIPLEXER DRIVER
-+M:	Michael Hennerich <michael.hennerich@analog.com>
-+W:	http://ez.analog.com/community/linux-device-drivers
-+L:	linux-i2c@vger.kernel.org
-+S:	Supported
-+F:	drivers/i2c/muxes/i2c-mux-ltc4306.c
-+F:	Documentation/devicetree/bindings/i2c/i2c-mux-ltc4306.txt
-+
- LTP (Linux Test Project)
- M:	Mike Frysinger <vapier@gentoo.org>
- M:	Cyril Hrubis <chrubis@suse.cz>
-diff --git a/drivers/i2c/muxes/Kconfig b/drivers/i2c/muxes/Kconfig
-index 10b3d17..1e160fc 100644
---- a/drivers/i2c/muxes/Kconfig
-+++ b/drivers/i2c/muxes/Kconfig
-@@ -30,6 +30,17 @@ config I2C_MUX_GPIO
- 	  This driver can also be built as a module.  If so, the module
- 	  will be called i2c-mux-gpio.
- 
-+config I2C_MUX_LTC4306
-+	tristate "LTC LTC4306/5 I2C multiplexer"
-+	select GPIOLIB
-+	select REGMAP_I2C
-+	help
-+	  If you say yes here you get support for the Analog Devices
-+	  LTC4306 or LTC4305 I2C mux/switch devices.
-+
-+	  This driver can also be built as a module.  If so, the module
-+	  will be called i2c-mux-ltc4306.
-+
- config I2C_MUX_PCA9541
- 	tristate "NXP PCA9541 I2C Master Selector"
- 	help
-diff --git a/drivers/i2c/muxes/Makefile b/drivers/i2c/muxes/Makefile
-index 9948fa4..ff7618c 100644
---- a/drivers/i2c/muxes/Makefile
-+++ b/drivers/i2c/muxes/Makefile
-@@ -6,6 +6,7 @@ obj-$(CONFIG_I2C_ARB_GPIO_CHALLENGE)	+= i2c-arb-gpio-challenge.o
- obj-$(CONFIG_I2C_DEMUX_PINCTRL)		+= i2c-demux-pinctrl.o
- 
- obj-$(CONFIG_I2C_MUX_GPIO)	+= i2c-mux-gpio.o
-+obj-$(CONFIG_I2C_MUX_LTC4306)	+= i2c-mux-ltc4306.o
- obj-$(CONFIG_I2C_MUX_MLXCPLD)	+= i2c-mux-mlxcpld.o
- obj-$(CONFIG_I2C_MUX_PCA9541)	+= i2c-mux-pca9541.o
- obj-$(CONFIG_I2C_MUX_PCA954x)	+= i2c-mux-pca954x.o
-diff --git a/drivers/i2c/muxes/i2c-mux-ltc4306.c b/drivers/i2c/muxes/i2c-mux-ltc4306.c
-new file mode 100644
-index 0000000..311b1cc
---- /dev/null
-+++ b/drivers/i2c/muxes/i2c-mux-ltc4306.c
-@@ -0,0 +1,322 @@
-+/*
-+ * Linear Technology LTC4306 and LTC4305 I2C multiplexer/switch
-+ *
-+ * Copyright (C) 2017 Analog Devices Inc.
-+ *
-+ * Licensed under the GPL-2.
-+ *
-+ * Based on: i2c-mux-pca954x.c
-+ *
-+ * Datasheet: http://cds.linear.com/docs/en/datasheet/4306.pdf
-+ */
-+
-+#include <linux/gpio/consumer.h>
-+#include <linux/gpio/driver.h>
-+#include <linux/i2c-mux.h>
-+#include <linux/i2c.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_device.h>
-+#include <linux/property.h>
-+#include <linux/regmap.h>
-+#include <linux/slab.h>
-+
-+#define LTC4305_MAX_NCHANS 2
-+#define LTC4306_MAX_NCHANS 4
-+
-+#define LTC_REG_STATUS	0x0
-+#define LTC_REG_CONFIG	0x1
-+#define LTC_REG_MODE	0x2
-+#define LTC_REG_SWITCH	0x3
-+
-+#define LTC_DOWNSTREAM_ACCL_EN	BIT(6)
-+#define LTC_UPSTREAM_ACCL_EN	BIT(7)
-+
-+#define LTC_GPIO_ALL_INPUT	0xC0
-+#define LTC_SWITCH_MASK		0xF0
-+
-+enum ltc_type {
-+	ltc_4305,
-+	ltc_4306,
-+};
-+
-+struct chip_desc {
-+	u8 nchans;
-+	u8 num_gpios;
-+};
-+
-+struct ltc4306 {
-+	struct regmap *regmap;
-+	struct gpio_chip gpiochip;
-+	const struct chip_desc *chip;
-+};
-+
-+static const struct chip_desc chips[] = {
-+	[ltc_4305] = {
-+		.nchans = LTC4305_MAX_NCHANS,
-+	},
-+	[ltc_4306] = {
-+		.nchans = LTC4306_MAX_NCHANS,
-+		.num_gpios = 2,
-+	},
-+};
-+
-+static bool ltc4306_is_volatile_reg(struct device *dev, unsigned int reg)
-+{
-+	return (reg == LTC_REG_CONFIG) ? true : false;
-+}
-+
-+static const struct regmap_config ltc4306_regmap_config = {
-+	.reg_bits = 8,
-+	.val_bits = 8,
-+	.max_register = LTC_REG_SWITCH,
-+	.volatile_reg = ltc4306_is_volatile_reg,
-+	.cache_type = REGCACHE_FLAT,
-+};
-+
-+static int ltc4306_gpio_get(struct gpio_chip *chip, unsigned int offset)
-+{
-+	struct ltc4306 *data = gpiochip_get_data(chip);
-+	unsigned int val;
-+	int ret;
-+
-+	ret = regmap_read(data->regmap, LTC_REG_CONFIG, &val);
-+	if (ret < 0)
-+		return ret;
-+
-+	return !!(val & BIT(1 - offset));
-+}
-+
-+static void ltc4306_gpio_set(struct gpio_chip *chip, unsigned int offset,
-+			     int value)
-+{
-+	struct ltc4306 *data = gpiochip_get_data(chip);
-+
-+	regmap_update_bits(data->regmap, LTC_REG_CONFIG, BIT(5 - offset),
-+			   value ? BIT(5 - offset) : 0);
-+}
-+
-+static int ltc4306_gpio_get_direction(struct gpio_chip *chip,
-+				      unsigned int offset)
-+{
-+	struct ltc4306 *data = gpiochip_get_data(chip);
-+	unsigned int val;
-+	int ret;
-+
-+	ret = regmap_read(data->regmap, LTC_REG_MODE, &val);
-+	if (ret < 0)
-+		return ret;
-+
-+	return !!(val & BIT(7 - offset));
-+}
-+
-+static int ltc4306_gpio_direction_input(struct gpio_chip *chip,
-+					unsigned int offset)
-+{
-+	struct ltc4306 *data = gpiochip_get_data(chip);
-+
-+	return regmap_update_bits(data->regmap, LTC_REG_MODE,
-+				  BIT(7 - offset), BIT(7 - offset));
-+}
-+
-+static int ltc4306_gpio_direction_output(struct gpio_chip *chip,
-+					 unsigned int offset, int value)
-+{
-+	struct ltc4306 *data = gpiochip_get_data(chip);
-+
-+	ltc4306_gpio_set(chip, offset, value);
-+	return regmap_update_bits(data->regmap, LTC_REG_MODE,
-+				  BIT(7 - offset), 0);
-+}
-+
-+static int ltc4306_gpio_set_config(struct gpio_chip *chip,
-+				   unsigned int offset, unsigned long config)
-+{
-+	struct ltc4306 *data = gpiochip_get_data(chip);
-+	unsigned int val;
-+
-+	switch (pinconf_to_config_param(config)) {
-+	case PIN_CONFIG_DRIVE_OPEN_DRAIN:
-+		val = 0;
-+		break;
-+	case PIN_CONFIG_DRIVE_PUSH_PULL:
-+		val = BIT(4 - offset);
-+		break;
-+	default:
-+		return -ENOTSUPP;
-+	}
-+
-+	return regmap_update_bits(data->regmap, LTC_REG_MODE,
-+				  BIT(4 - offset), val);
-+}
-+
-+static int ltc4306_gpio_init(struct ltc4306 *data)
-+{
-+	struct device *dev = regmap_get_device(data->regmap);
-+
-+	if (!data->chip->num_gpios)
-+		return 0;
-+
-+	data->gpiochip.label = dev_name(dev);
-+	data->gpiochip.base = -1;
-+	data->gpiochip.ngpio = data->chip->num_gpios;
-+	data->gpiochip.parent = dev;
-+	data->gpiochip.can_sleep = true;
-+	data->gpiochip.get_direction = ltc4306_gpio_get_direction;
-+	data->gpiochip.direction_input = ltc4306_gpio_direction_input;
-+	data->gpiochip.direction_output = ltc4306_gpio_direction_output;
-+	data->gpiochip.get = ltc4306_gpio_get;
-+	data->gpiochip.set = ltc4306_gpio_set;
-+	data->gpiochip.set_config = ltc4306_gpio_set_config;
-+	data->gpiochip.owner = THIS_MODULE;
-+
-+	/* gpiolib assumes all GPIOs default input */
-+	regmap_write(data->regmap, LTC_REG_MODE, LTC_GPIO_ALL_INPUT);
-+
-+	return devm_gpiochip_add_data(dev, &data->gpiochip, data);
-+}
-+
-+static int ltc4306_select_mux(struct i2c_mux_core *muxc, u32 chan)
-+{
-+	struct ltc4306 *data = i2c_mux_priv(muxc);
-+
-+	return regmap_update_bits(data->regmap, LTC_REG_SWITCH,
-+				  LTC_SWITCH_MASK, BIT(7 - chan));
-+}
-+
-+static int ltc4306_deselect_mux(struct i2c_mux_core *muxc, u32 chan)
-+{
-+	struct ltc4306 *data = i2c_mux_priv(muxc);
-+
-+	return regmap_update_bits(data->regmap, LTC_REG_SWITCH,
-+				  LTC_SWITCH_MASK, 0);
-+}
-+
-+static const struct i2c_device_id ltc4306_id[] = {
-+	{ "ltc4305", ltc_4305 },
-+	{ "ltc4306", ltc_4306 },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(i2c, ltc4306_id);
-+
-+static const struct of_device_id ltc4306_of_match[] = {
-+	{ .compatible = "lltc,ltc4305", .data = &chips[ltc_4305] },
-+	{ .compatible = "lltc,ltc4306", .data = &chips[ltc_4306] },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, ltc4306_of_match);
-+
-+static int ltc4306_probe(struct i2c_client *client,
-+			 const struct i2c_device_id *id)
-+{
-+	struct i2c_adapter *adap = to_i2c_adapter(client->dev.parent);
-+	const struct chip_desc *chip;
-+	struct i2c_mux_core *muxc;
-+	struct ltc4306 *data;
-+	struct gpio_desc *gpio;
-+	bool idle_disc;
-+	unsigned int val = 0;
-+	int num, ret;
-+
-+	chip = of_device_get_match_data(&client->dev);
-+
-+	if (!chip)
-+		chip = &chips[id->driver_data];
-+
-+	idle_disc = device_property_read_bool(&client->dev,
-+					      "i2c-mux-idle-disconnect");
-+
-+	muxc = i2c_mux_alloc(adap, &client->dev,
-+			     chip->nchans, sizeof(*data),
-+			     I2C_MUX_LOCKED, ltc4306_select_mux,
-+			     idle_disc ? ltc4306_deselect_mux : NULL);
-+	if (!muxc)
-+		return -ENOMEM;
-+	data = i2c_mux_priv(muxc);
-+	data->chip = chip;
-+
-+	i2c_set_clientdata(client, muxc);
-+
-+	data->regmap = devm_regmap_init_i2c(client, &ltc4306_regmap_config);
-+	if (IS_ERR(data->regmap)) {
-+		ret = PTR_ERR(data->regmap);
-+		dev_err(&client->dev, "Failed to allocate register map: %d\n",
-+			ret);
-+		return ret;
-+	}
-+
-+	/* Reset and enable the mux if an enable GPIO is specified. */
-+	gpio = devm_gpiod_get_optional(&client->dev, "enable", GPIOD_OUT_LOW);
-+	if (IS_ERR(gpio))
-+		return PTR_ERR(gpio);
-+
-+	if (gpio) {
-+		udelay(1);
-+		gpiod_set_value(gpio, 1);
-+	}
-+
-+	/*
-+	 * Write the mux register at addr to verify
-+	 * that the mux is in fact present. This also
-+	 * initializes the mux to disconnected state.
-+	 */
-+	if (regmap_write(data->regmap, LTC_REG_SWITCH, 0) < 0) {
-+		dev_warn(&client->dev, "probe failed\n");
-+		return -ENODEV;
-+	}
-+
-+	if (device_property_read_bool(&client->dev,
-+				      "ltc,downstream-accelerators-enable"))
-+		val |= LTC_DOWNSTREAM_ACCL_EN;
-+
-+	if (device_property_read_bool(&client->dev,
-+				      "ltc,upstream-accelerators-enable"))
-+		val |= LTC_UPSTREAM_ACCL_EN;
-+
-+	if (regmap_write(data->regmap, LTC_REG_CONFIG, val) < 0)
-+		return -ENODEV;
-+
-+	ret = ltc4306_gpio_init(data);
-+	if (ret < 0)
-+		return ret;
-+
-+	/* Now create an adapter for each channel */
-+	for (num = 0; num < chip->nchans; num++) {
-+		ret = i2c_mux_add_adapter(muxc, 0, num, 0);
-+		if (ret) {
-+			i2c_mux_del_adapters(muxc);
-+			return ret;
-+		}
-+	}
-+
-+	dev_info(&client->dev,
-+		 "registered %d multiplexed busses for I2C switch %s\n",
-+		 num, client->name);
-+
-+	return 0;
-+}
-+
-+static int ltc4306_remove(struct i2c_client *client)
-+{
-+	struct i2c_mux_core *muxc = i2c_get_clientdata(client);
-+
-+	i2c_mux_del_adapters(muxc);
-+
-+	return 0;
-+}
-+
-+static struct i2c_driver ltc4306_driver = {
-+	.driver		= {
-+		.name	= "ltc4306",
-+		.of_match_table = of_match_ptr(ltc4306_of_match),
-+	},
-+	.probe		= ltc4306_probe,
-+	.remove		= ltc4306_remove,
-+	.id_table	= ltc4306_id,
-+};
-+
-+module_i2c_driver(ltc4306_driver);
-+
-+MODULE_AUTHOR("Michael Hennerich <michael.hennerich@analog.com>");
-+MODULE_DESCRIPTION("Linear Technology LTC4306, LTC4305 I2C mux/switch driver");
-+MODULE_LICENSE("GPL v2");
+The benefit of use platform_get_irq() is to get rid of some OF specific headers.
+
 -- 
-2.7.4
+With Best Regards,
+Andy Shevchenko
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
