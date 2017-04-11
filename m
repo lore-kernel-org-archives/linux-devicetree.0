@@ -1,95 +1,104 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v1 3/3] nvmem: dt: document SNVS LPGPR binding
-Date: Tue, 11 Apr 2017 08:35:00 -0500
-Message-ID: <CAL_JsqJeqYEw7v_z9zhtnP9hZEvkc5Z8TsktzbrCrmc7vorGkA@mail.gmail.com>
-References: <20170406073107.32445-1-o.rempel@pengutronix.de>
- <20170406073107.32445-3-o.rempel@pengutronix.de> <20170410182235.pmobyxn6kvyvcwsj@rob-hp-laptop>
- <1e0f8a71-9dca-7aaa-a603-86ed3934da4d@pengutronix.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1e0f8a71-9dca-7aaa-a603-86ed3934da4d-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Oleksij Rempel <ore-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Oleksij Rempel <o.rempel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: John Muir <john@jmuir.com>
+Subject: Re: [PATCH 2/2] devicetree: Document the max31760 device binding.
+Date: Tue, 11 Apr 2017 06:47:28 -0700
+Message-ID: <996F9836-F468-4FB5-A16E-2E1FAE8752AD@jmuir.com>
+References: <20170404192034.158901-1-john@jmuir.com>
+ <20170404192034.158901-3-john@jmuir.com>
+ <20170410154249.r77b6vf3ctzn4kua@rob-hp-laptop>
+Mime-Version: 1.0 (Mac OS X Mail 10.3 \(3273\))
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-hwmon-owner@vger.kernel.org>
+In-Reply-To: <20170410154249.r77b6vf3ctzn4kua@rob-hp-laptop>
+Sender: linux-hwmon-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, Jonathan Corbet <corbet@lwn.net>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-hwmon@vger.kernel.org, linux-doc@vger.kernel.org, Anatol Pomazau <anatol@google.com>, Mark Segal <segal@google.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 10, 2017 at 11:36 PM, Oleksij Rempel <ore-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
-> Hi,
->
->
-> On 04/10/2017 08:22 PM, Rob Herring wrote:
->>
->> On Thu, Apr 06, 2017 at 09:31:07AM +0200, Oleksij Rempel wrote:
->>>
->>> Documenation bindings for the Low Power General Purpose Registe
->>
->>
->> s/Registe/Register/
->>
->>> available on i.MX6 SoCs in the Secure Non-Volatile Storage.
->>>
->>> Signed-off-by: Oleksij Rempel <o.rempel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
->>> Cc: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->>> Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
->>> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->>> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
->>> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->>> Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->>> ---
->>>  Documentation/devicetree/bindings/nvmem/snvs-lpgpr.txt | 15
->>> +++++++++++++++
->>>  1 file changed, 15 insertions(+)
->>>  create mode 100644
->>> Documentation/devicetree/bindings/nvmem/snvs-lpgpr.txt
->>>
->>> diff --git a/Documentation/devicetree/bindings/nvmem/snvs-lpgpr.txt
->>> b/Documentation/devicetree/bindings/nvmem/snvs-lpgpr.txt
->>> new file mode 100644
->>> index 000000000000..9a8be1a2d12e
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/nvmem/snvs-lpgpr.txt
->>> @@ -0,0 +1,15 @@
->>> +Device tree bindings for Low Power General Purpose Registe found in
->>> i.MX6Q/D
->>> +Secure Non-Volatile Storage.
->>> +
->>> +Required properties:
->>> +- compatible: should be one of
->>> +       "fsl,imx6q-snvs-lpgpr" (i.MX6Q/D/DL/S).
->>> +- offset: Should contain the offset relative to syscon parrent node.
->>
->>
->> typo
->
->
-> ok.
->
->>  +- regmap: Should contain a phandle pointing to syscon.
->>>
->>> +
->>> +Example:
->>> +       snvs_lpgpr: snvs-lpgpr {
->>> +               compatible = "fsl,imx6q-snvs-lpgpr";
->>> +               regmap = <&snvs>;
->>> +               offset = <0x68>;
->>
->>
->> Why does this need to be in DT? Is something going to refer to this
->> node? If not, the &snvs node should be enough information for the OS.
->
->
-> Jes, it is refereed by other driver.
+> On Apr 10, 2017, at 8:42 AM, Rob Herring <robh@kernel.org> wrote:
+>=20
+> On Tue, Apr 04, 2017 at 12:20:34PM -0700, John Muir wrote:
+>> +MAX31760 fan controller
+>> +-----------------------
+>> +
+>> +This device supports I2C only. Many properties of this device are =
+configurable
+>> +thorugh the hwmon interface. See also Documentation/hwmon/max31760.
+>=20
+> I really think we need to describe the fans as separate nodes and=20
+> preferably with a common binding. This is the second fan controller=20
+> binding recently[1].
+>=20
+> Features of the "hwmon interface" are not relevant to the binding.=20
+> Bindings describe h/w.
 
-What I mean is snvs-lpgpr referenced elsewhere in DT, not by some
-driver? You are not using the nvmem binding here so it doesn't seem
-like it is. If that's the case, then you don't need this node. The
-only information here is the offset which can be part of a driver for
-the parent node. To put it another way, we don't want to fill DT with
-a node per register.
+It seems to me that referring to the hwmon interface is only helpful. =
+You are suggesting removing those sentences? If so, can I add a link to =
+the data sheet?
 
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>=20
+>> +Optional node properties:
+>> +- maxim,fan1-enabled		- 1 to enable, 0 to disable. =
+Default: 1.
+>> +- maxim,fan2-enabled		- 1 to enable, 0 to disable. =
+Default: 1.
+>> +- maxim,fan1-label		- String: Hwmon fan1_label.
+>> +- maxim,fan2-label		- String: Hwmon fan2_label.
+>=20
+> Perhaps 2 fan sub nodes. reg for fan number, status for enabled, and=20=
+
+> label for label.
+
+OK.
+
+Right now a fan=E2=80=99s number of pulses and the PWM frequency are =
+configured using the hwmon sysfs interface (which defines standard =
+controls for those), but as those are characteristics of the hardware, =
+should they also be configured via the device tree binding?
+
+>> +- maxim,pwm-zero-fan-can-fail	- 0: Fan failure detection =
+disabled when PWM is
+>> +				     ramping to 0%.
+>> +				  1: Fan failure detection enabled for =
+all PWM
+>> +				     values.
+>> +				  Default: 0.
+>=20
+> All these can be boolean=E2=80=A6
+
+OK. The only issue I see is when the default is =E2=80=98true=E2=80=99 =
+in the device, but I=E2=80=99ll try to avoid that. Sometimes I wish that =
+you could set a boolean to false in DTS files.
+
+>=20
+>> +- maxim,temp1-label		- String: Hwmon temp1_label.
+>> +- maxim,temp2-label		- String: Hwmon temp2_label.
+>> +- maxim,temp2-ideality		- Set ideality factor for the =
+remote temperature
+>> +				  sensor. Integer with range 0 to 63,
+>> +				  representing a multiplication factor =
+of 0.9844
+>> +				  to 1.0489. Default: 24 (1.0080).
+>=20
+> No maxim,temp1-ideality?
+No - the device only lets you set the ideality of the =E2=80=98external' =
+temperature sensor. I guess if there is an ideality for the internal =
+temperature sensor, it would be hard-wired as a characteristic of the =
+part that was used.
+
+> Not sure what to do with these, but perhaps=20
+> also as sub-nodes. Surely we have some bindings already for devices =
+with=20
+> multiple temp sensors. Don't invent something custom here.
+
+I=E2=80=99ll look into it.
+
+What is the best way to distinguish between =E2=80=98fan=E2=80=99 and =
+=E2=80=98temp=E2=80=99 sub-nodes? Do I require a =E2=80=98compatible=E2=80=
+=99 string?
+
+Thanks!
+
+John.
+
+
