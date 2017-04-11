@@ -1,104 +1,93 @@
-From: John Muir <john@jmuir.com>
-Subject: Re: [PATCH 2/2] devicetree: Document the max31760 device binding.
-Date: Tue, 11 Apr 2017 06:47:28 -0700
-Message-ID: <996F9836-F468-4FB5-A16E-2E1FAE8752AD@jmuir.com>
-References: <20170404192034.158901-1-john@jmuir.com>
- <20170404192034.158901-3-john@jmuir.com>
- <20170410154249.r77b6vf3ctzn4kua@rob-hp-laptop>
-Mime-Version: 1.0 (Mac OS X Mail 10.3 \(3273\))
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v4 2/8] mfd: retu: Drop -mfd suffix from I2C device ID
+ name
+Date: Tue, 11 Apr 2017 14:56:04 +0100
+Message-ID: <20170411135604.x2bavwti7atebwux@dell>
+References: <20170404153036.6651-1-javier@osg.samsung.com>
+ <20170404153036.6651-3-javier@osg.samsung.com>
+Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-hwmon-owner@vger.kernel.org>
-In-Reply-To: <20170410154249.r77b6vf3ctzn4kua@rob-hp-laptop>
-Sender: linux-hwmon-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, Jonathan Corbet <corbet@lwn.net>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-hwmon@vger.kernel.org, linux-doc@vger.kernel.org, Anatol Pomazau <anatol@google.com>, Mark Segal <segal@google.com>
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170404153036.6651-3-javier@osg.samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Javier Martinez Canillas <javier@osg.samsung.com>
+Cc: linux-kernel@vger.kernel.org, Aaro Koskinen <aaro.koskinen@iki.fi>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Tony Lindgren <tony@atomide.com>, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>, Mark Rutland <mark.rutland@arm.com>, linux-omap@vger.kernel.org, Russell King <linux@armlinux.org.uk>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-> On Apr 10, 2017, at 8:42 AM, Rob Herring <robh@kernel.org> wrote:
->=20
-> On Tue, Apr 04, 2017 at 12:20:34PM -0700, John Muir wrote:
->> +MAX31760 fan controller
->> +-----------------------
->> +
->> +This device supports I2C only. Many properties of this device are =
-configurable
->> +thorugh the hwmon interface. See also Documentation/hwmon/max31760.
->=20
-> I really think we need to describe the fans as separate nodes and=20
-> preferably with a common binding. This is the second fan controller=20
-> binding recently[1].
->=20
-> Features of the "hwmon interface" are not relevant to the binding.=20
-> Bindings describe h/w.
+On Tue, 04 Apr 2017, Javier Martinez Canillas wrote:
 
-It seems to me that referring to the hwmon interface is only helpful. =
-You are suggesting removing those sentences? If so, can I add a link to =
-the data sheet?
+> It's not correct to encode the subsystem in the I2C device name, so
+> drop the -mfd suffix. To maintain bisect-ability, change driver and
+> platform code / DTS users in the same patch.
+> 
+> Suggested-by: Lee Jones <lee.jones@linaro.org>
+> Signed-off-by: Javier Martinez Canillas <javier@osg.samsung.com>
+> ---
+> 
+> Changes in v4: None
+> Changes in v3: None
+> Changes in v2: None
+> 
+>  arch/arm/boot/dts/omap2420-n8x0-common.dtsi | 4 ++--
+>  arch/arm/mach-omap1/board-nokia770.c        | 4 ++--
+>  drivers/mfd/retu-mfd.c                      | 4 ++--
+>  3 files changed, 6 insertions(+), 6 deletions(-)
 
->=20
->> +Optional node properties:
->> +- maxim,fan1-enabled		- 1 to enable, 0 to disable. =
-Default: 1.
->> +- maxim,fan2-enabled		- 1 to enable, 0 to disable. =
-Default: 1.
->> +- maxim,fan1-label		- String: Hwmon fan1_label.
->> +- maxim,fan2-label		- String: Hwmon fan2_label.
->=20
-> Perhaps 2 fan sub nodes. reg for fan number, status for enabled, and=20=
+For my own reference:
+  Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
 
-> label for label.
+> diff --git a/arch/arm/boot/dts/omap2420-n8x0-common.dtsi b/arch/arm/boot/dts/omap2420-n8x0-common.dtsi
+> index 7e5ffc583c90..1b06430c8013 100644
+> --- a/arch/arm/boot/dts/omap2420-n8x0-common.dtsi
+> +++ b/arch/arm/boot/dts/omap2420-n8x0-common.dtsi
+> @@ -15,8 +15,8 @@
+>  				>;
+>  			#address-cells = <1>;
+>  			#size-cells = <0>;
+> -			retu_mfd: retu@1 {
+> -				compatible = "retu-mfd";
+> +			retu: retu@1 {
+> +				compatible = "retu";
+>  				interrupt-parent = <&gpio4>;
+>  				interrupts = <12 IRQ_TYPE_EDGE_RISING>;
+>  				reg = <0x1>;
+> diff --git a/arch/arm/mach-omap1/board-nokia770.c b/arch/arm/mach-omap1/board-nokia770.c
+> index ee8d9f553db4..06243c0b12d2 100644
+> --- a/arch/arm/mach-omap1/board-nokia770.c
+> +++ b/arch/arm/mach-omap1/board-nokia770.c
+> @@ -233,10 +233,10 @@ static struct platform_device nokia770_cbus_device = {
+>  
+>  static struct i2c_board_info nokia770_i2c_board_info_2[] __initdata = {
+>  	{
+> -		I2C_BOARD_INFO("retu-mfd", 0x01),
+> +		I2C_BOARD_INFO("retu", 0x01),
+>  	},
+>  	{
+> -		I2C_BOARD_INFO("tahvo-mfd", 0x02),
+> +		I2C_BOARD_INFO("tahvo", 0x02),
+>  	},
+>  };
+>  
+> diff --git a/drivers/mfd/retu-mfd.c b/drivers/mfd/retu-mfd.c
+> index d4c114abeb75..53e1d386d2c0 100644
+> --- a/drivers/mfd/retu-mfd.c
+> +++ b/drivers/mfd/retu-mfd.c
+> @@ -302,8 +302,8 @@ static int retu_remove(struct i2c_client *i2c)
+>  }
+>  
+>  static const struct i2c_device_id retu_id[] = {
+> -	{ "retu-mfd", 0 },
+> -	{ "tahvo-mfd", 0 },
+> +	{ "retu", 0 },
+> +	{ "tahvo", 0 },
+>  	{ }
+>  };
+>  MODULE_DEVICE_TABLE(i2c, retu_id);
 
-OK.
-
-Right now a fan=E2=80=99s number of pulses and the PWM frequency are =
-configured using the hwmon sysfs interface (which defines standard =
-controls for those), but as those are characteristics of the hardware, =
-should they also be configured via the device tree binding?
-
->> +- maxim,pwm-zero-fan-can-fail	- 0: Fan failure detection =
-disabled when PWM is
->> +				     ramping to 0%.
->> +				  1: Fan failure detection enabled for =
-all PWM
->> +				     values.
->> +				  Default: 0.
->=20
-> All these can be boolean=E2=80=A6
-
-OK. The only issue I see is when the default is =E2=80=98true=E2=80=99 =
-in the device, but I=E2=80=99ll try to avoid that. Sometimes I wish that =
-you could set a boolean to false in DTS files.
-
->=20
->> +- maxim,temp1-label		- String: Hwmon temp1_label.
->> +- maxim,temp2-label		- String: Hwmon temp2_label.
->> +- maxim,temp2-ideality		- Set ideality factor for the =
-remote temperature
->> +				  sensor. Integer with range 0 to 63,
->> +				  representing a multiplication factor =
-of 0.9844
->> +				  to 1.0489. Default: 24 (1.0080).
->=20
-> No maxim,temp1-ideality?
-No - the device only lets you set the ideality of the =E2=80=98external' =
-temperature sensor. I guess if there is an ideality for the internal =
-temperature sensor, it would be hard-wired as a characteristic of the =
-part that was used.
-
-> Not sure what to do with these, but perhaps=20
-> also as sub-nodes. Surely we have some bindings already for devices =
-with=20
-> multiple temp sensors. Don't invent something custom here.
-
-I=E2=80=99ll look into it.
-
-What is the best way to distinguish between =E2=80=98fan=E2=80=99 and =
-=E2=80=98temp=E2=80=99 sub-nodes? Do I require a =E2=80=98compatible=E2=80=
-=99 string?
-
-Thanks!
-
-John.
-
-
+-- 
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
