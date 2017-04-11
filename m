@@ -1,62 +1,139 @@
-From: Hans Verkuil <hansverk-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [git:media_tree/master] [media] ARM: dts: exynos: add HDMI
- controller phandle to exynos4.dtsi
-Date: Tue, 11 Apr 2017 10:39:08 +0200
-Message-ID: <0c8fef60-a99d-c5ed-67e4-3769105fa211@cisco.com>
-References: <E1cxc0o-0003RE-PP@www.linuxtv.org>
- <CAJKOXPfbJpFu6r9rS8oCqxTH+s7y2wYKx9+TzGrv4Cd8DYaKew@mail.gmail.com>
+From: Michael Hennerich <michael.hennerich@analog.com>
+Subject: Re: [PATCH v4 2/2] i2c: mux: ltc4306: LTC4306 and LTC4305 I2C
+ multiplexer/switch
+Date: Tue, 11 Apr 2017 10:46:13 +0200
+Message-ID: <75c28713-0139-7b6e-f554-fcc4f9e1e040@analog.com>
+References: <1491397671-14675-1-git-send-email-michael.hennerich@analog.com>
+ <1491397671-14675-2-git-send-email-michael.hennerich@analog.com>
+ <CACRpkdbECyEpD7b4OFxwAo6USnK_DGEbASMdTzOO=FQ9BAzRQA@mail.gmail.com>
+Reply-To: <michael.hennerich@analog.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAJKOXPfbJpFu6r9rS8oCqxTH+s7y2wYKx9+TzGrv4Cd8DYaKew-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JsYNTwtnfakRB7SZvlqPiA@public.gmane.org>
-Cc: linuxtv-commits-dJidKbW2IEtAfugRpC6u6w@public.gmane.org, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdbECyEpD7b4OFxwAo6USnK_DGEbASMdTzOO=FQ9BAzRQA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Wolfram Sang <wsa@the-dreams.de>, Peter Rosin <peda@axentia.se>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 04/11/17 10:36, Krzysztof Kozlowski wrote:
-> On Mon, Apr 10, 2017 at 6:12 PM, Mauro Carvalho Chehab
-> <mchehab-JsYNTwtnfakRB7SZvlqPiA@public.gmane.org> wrote:
->> This is an automatic generated email to let you know that the following patch were queued:
+On 10.04.2017 22:04, Linus Walleij wrote:
+> On Wed, Apr 5, 2017 at 3:07 PM,  <michael.hennerich@analog.com> wrote:
+>
+>> From: Michael Hennerich <michael.hennerich@analog.com>
 >>
->> Subject: [media] ARM: dts: exynos: add HDMI controller phandle to exynos4.dtsi
->> Author:  Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
->> Date:    Tue Dec 13 12:37:16 2016 -0200
+>> This patch adds support for the Analog Devices / Linear Technology
+>> LTC4306 and LTC4305 4/2 Channel I2C Bus Multiplexer/Switches.
+>> The LTC4306 optionally provides two general purpose input/output pins
+>> (GPIOs) that can be configured as logic inputs, opendrain outputs or
+>> push-pull outputs via the generic GPIOLIB framework.
 >>
->> Add the new hdmi phandle to exynos4.dtsi. This phandle is needed by the
->> s5p-cec driver to initialize the CEC notifier framework.
->>
->> Tested with my Odroid U3.
->>
->> Signed-off-by: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
->> Tested-by: Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
->> CC: linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->> CC: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->> CC: Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->> Signed-off-by: Mauro Carvalho Chehab <mchehab-JsYNTwtnfakRB7SZvlqPiA@public.gmane.org>
->>
->>  arch/arm/boot/dts/exynos4.dtsi | 1 +
->>  1 file changed, 1 insertion(+)
->>
-> 
-> Mauro, you should not apply it. It is already going through samsung-soc [1].
-> if you need this patch for bisectability or any other reasons, I
-> provided a tag with it here:
-> https://www.spinics.net/lists/devicetree/msg171182.html
-> 
-> Please drop the patch because now it will get duplicated.
+>> Signed-off-by: Michael Hennerich <michael.hennerich@analog.com>
+>
+> Okay!
 
-I apologize for that. I realized that I shouldn't have included this in
-my pull request when it was already merged.
+Hi Linus,
 
-My fault completely.
+Thanks for your review.
+Comments below.
 
-Regards,
+>
+>> +#include <linux/device.h>
+>> +#include <linux/gpio.h>
+>> +#include <linux/gpio/consumer.h>
+>> +#include <linux/gpio/driver.h>
+>
+> Why are you including all these?
+> Normally a GPIO driver should just include
+> <linux/gpio/driver.h>
 
-	Hans
+Well - this driver is also a gpio consumer.
+But right I can drop gpio.h, and while gpio/driver.h also includes 
+device.h - we don't need it here as well.
+
+>
+>> +#include <linux/i2c-mux.h>
+>> +#include <linux/i2c.h>
+>> +#include <linux/module.h>
+>> +#include <linux/of.h>
+>> +#include <linux/of_device.h>
+>> +#include <linux/regmap.h>
+>> +#include <linux/slab.h>
+>
+>> +static int ltc4306_gpio_get(struct gpio_chip *chip, unsigned int offset)
+>> +{
+>> +       struct ltc4306 *data = gpiochip_get_data(chip);
+>> +       unsigned int val;
+>> +       int ret;
+>> +
+>> +       ret = regmap_read(data->regmap, LTC_REG_CONFIG, &val);
+>> +       if (ret < 0)
+>> +               return ret;
+>> +
+>> +       return (val & BIT(1 - offset));
+>
+> Do this:
+>
+> return !!(val & BIT(1 - offset));
+>
+> So you clamp the return value to [0,1]
+
+That's what I had in a previous version of the patch.
+Then I noticed gpiolib is also doing this.
+Anyways I'll add it back.
+
+>
+>> +static int ltc4306_gpio_set_config(struct gpio_chip *chip,
+>> +                                  unsigned int offset, unsigned long config)
+>> +{
+>> +       struct ltc4306 *data = gpiochip_get_data(chip);
+>> +       unsigned int val;
+>> +
+>> +       switch (pinconf_to_config_param(config)) {
+>> +       case PIN_CONFIG_DRIVE_OPEN_DRAIN:
+>> +               val = 0;
+>> +               break;
+>> +       case PIN_CONFIG_DRIVE_PUSH_PULL:
+>> +               val = BIT(4 - offset);
+>> +               break;
+>> +       default:
+>> +               return -ENOTSUPP;
+>> +       }
+>> +
+>> +       return regmap_update_bits(data->regmap, LTC_REG_MODE,
+>> +                                 BIT(4 - offset), val);
+>> +}
+>
+> Nice!
+>
+>> +       data->gpiochip.label = dev_name(dev);
+>> +       data->gpiochip.base = -1;
+>> +       data->gpiochip.ngpio = data->chip->num_gpios;
+>> +       data->gpiochip.parent = dev;
+>> +       data->gpiochip.can_sleep = true;
+>> +       data->gpiochip.direction_input = ltc4306_gpio_direction_input;
+>> +       data->gpiochip.direction_output = ltc4306_gpio_direction_output;
+>> +       data->gpiochip.get = ltc4306_gpio_get;
+>> +       data->gpiochip.set = ltc4306_gpio_set;
+>> +       data->gpiochip.set_config = ltc4306_gpio_set_config;
+>> +       data->gpiochip.owner = THIS_MODULE;
+>
+> Please implement .get_direction().
+> This is very helpful to userspace, have you tested to use tools/gpio/*
+> from the kernel? Like lsgpio?
+
+Ok - convinced me.
+
+>
+> Yours,
+> Linus Walleij
+>
+
+-- 
+Greetings,
+Michael
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Analog Devices GmbH      Otl-Aicher Strasse 60-64      80807 München
+Sitz der Gesellschaft München, Registergericht München HRB 40368,
+Geschäftsführer: Peter Kolberg, Ali Raza Husain, Eileen Wynne
