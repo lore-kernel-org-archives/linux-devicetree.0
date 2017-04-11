@@ -1,56 +1,123 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] drm/panel: simple: Add support for Seiko 43WVF1G
-Date: Tue, 11 Apr 2017 11:36:37 -0500
-Message-ID: <CAL_Jsq+6QM21f1BgVeDHZ6HG0G8ywu1WbTU+W-Z5GXUM+aQGYg@mail.gmail.com>
-References: <1486065840-13575-1-git-send-email-breno.lima@nxp.com>
- <20170207184935.7shhx5pqtprucmgc@rob-hp-laptop> <CAOMZO5Bv2gHa3O_6dbAgKePcZDfMeueeYptRb4r=WLTHYYS8uA@mail.gmail.com>
- <CAL_Jsq+Fu6XRbPEO2OWvpGHuRk9w+k=X3tT+P-UUqiu2r+F12Q@mail.gmail.com>
- <CAOMZO5C+7v=ppVpSYwKEiprCSVSM1z0wVVOwSmbuEPaO3618Wg@mail.gmail.com> <CAOMZO5C21w9eGbFciZn3PEdB14eqPJ0dwbtVw=F4dTafyng0aQ@mail.gmail.com>
+From: "Bean Huo (beanhuo)" <beanhuo-AL4WhLSQfzjQT0dZR+AlfA@public.gmane.org>
+Subject: RE: [PATCH 4/5] mtd: nand: add support for Micron on-die ECC
+Date: Tue, 11 Apr 2017 17:01:51 +0000
+Message-ID: <5a96e73ef951414a82c01b67088b24d3@SIWEX5A.sing.micron.com>
+References: <538805ebf8e64015a8b833de755652b3@SIWEX5A.sing.micron.com>
+        <8a171dacd20c45bd8285ecc5dbe8854a@SIWEX5A.sing.micron.com>
+        <20170322144507.4d80d2cc@bbrezillon>
+        <0dccc0abcf234e98be6d340027cf1a30@SIWEX5A.sing.micron.com>
+        <20170322155216.319efc3e@bbrezillon>
+        <414dd35931814ce38381a251917ad79f@SIWEX5A.sing.micron.com>
+        <20170411145102.563fa388@bbrezillon>
+        <90300f14cd2a4ae6967d8be0f7dff4e9@SIWEX5A.sing.micron.com>
+ <20170411173051.7aafb717@bbrezillon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAOMZO5C21w9eGbFciZn3PEdB14eqPJ0dwbtVw=F4dTafyng0aQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <20170411173051.7aafb717@bbrezillon>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Breno Lima <breno.lima-3arQi8VN3Tc@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, DRI mailing list <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Breno Matheus Lima <brenomatheus-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
+To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "richard-/L3Ra7n9ekc@public.gmane.org" <richard-/L3Ra7n9ekc@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, "computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Apr 8, 2017 at 3:45 PM, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> Thierry/Rob,
+>On Tue, 11 Apr 2017 15:02:22 +0000
+>"Bean Huo (beanhuo)" <beanhuo-AL4WhLSQfzjQT0dZR+AlfA@public.gmane.org> wrote:
 >
-> On Tue, Feb 7, 2017 at 10:48 PM, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> On Tue, Feb 7, 2017 at 9:36 PM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+>> Hi, Boris and Thomas
+>> Let me do some explanation.
 >>
->>> Except I have no way of knowing whether: a) you omitted a supply
->>> because you don't (yet) care, b) the panel has a single supply and you
->>> are using power-supply or c) the panel has multiple supplies and your
->>> binding is wrong.
->>>
->>> I can only eliminate A if you list the supplies. Just need something
->>> like "power-supply : see simple-panel.txt". I've still got to go read
->>> the panel spec if I really want to check the binding.
+>> >> if (NAND == SLC ) { // on-die ECC only exists in SLC //check device
+>> >> ID byte 4
+>> >>      if ((ID.byte4 & 0x02) == 0x02) {// internal ECC level ==10b
+>> >
+>> >So here the MT29F1G08ABADAWP datasheet says 0x2 <=> 4bit/512bytes ECC.
+>> >
 >>
->> Just checked the panel datasheet at
->> http://www.glyn.de/data/glyn/media/doc/43wvf1g-0.pdf and it lists two
->> supplies:
->> DVDD (Digital power supply) and AVDD (Analog power supply).
->>
->> Our dts was just providing a single 'power-supply' which referred to a
->> GPIO enabled regulator that drives DVDD.
->>
->> So it seems we missed to pass AVDD (not software controlled in our
->> case, but we need to describe it in dts anyway).
->>
->> Does this mean we cannot use simple-panel for this particular panel
->> and we should add a separate driver for it?
+>> If the NAND supports on-die ECC, here should be 10b, not matter it is
+>> 8bit or 4bit, You are correct, MT29F1G08ABADAWP is 0x2, its explanation is
+>4bit/512bytes ECC.
+>> But for the 70s, it is 8bit on-die ECC, but it is still 10b.
+>> So that why here using these two bits to determine if exist on-die ECC.
+>> What's more, for some old products, they don't support on-die ECC,
+>> Sometimes, here is still 01b, so still need following codes to do
+>> further determinations.
 >
-> Please confirm if we need to create a separate driver for this panel, thanks.
+>Okay, then here is the differentiator. Did you check that on SLC NANDs there's no
+>collision on ID[4].bits[1:0]. I've seen NAND vendors changing their ID scheme in
+>incompatible ways (old fields were replaced by new ones with completely
+>different meanings).
 
-The binding should list both. They can be optional though. Maybe you
-can parameterize the supply name in the driver for the single
-(controlled) supply case. Or provide power on/off hooks.
 
-Rob
+Yes, this is true, there is no one standard to define and formalize ID.byte4,
+It is always changing. Also, sometimes it definitely conflicts with other NAND without
+On-die ECC. For the Micron both serials SLC NAND with on-die ECC, bits[1:0] is defined
+Internal ECC level. 
+
+>I'd really like to make sure we're not mis-interpreting READ_ID information, so
+>maybe we should restrict the test on ONFI NANDs if all NANDs supporting on-die
+>ECC are ONFI compliant. We should probably also check that chip->id.len >= 5.
+>
+>
+>>
+>> >> 	if (ID.byte4 & 0x80) {//on-Die ECC enabled
+>> >
+>> >Did you read my last reply?
+>> >Thomas discovered that ID[4].bit7 is actually reflecting the ECC
+>> >engine state (1 if the engine is enabled, 0 if it's disabled), not
+>> >whether the NAND supports on-die ECC or not, so no this test is not reliable.
+>> >
+>> For the on-die ECC, it is not always default enabled. It depends on requirement
+>from costumers.
+>> If on-die ECC is not enabled, bit7 is 0. It can be switched through "Feature
+>Operations".
+>
+>So this check is not needed, right?
+
+Here is much complicated. One question is that what main purpose of on-die ECC.
+there are two types of usage model:
+1.  on-die ECC default enabled:
+Normally before bootloader and kernel, there is no any ECC to correct and maintain
+Bootloader reliability.  For this kind of customer, I think, they mainly want to have reliable booting.
+Rather than for store user data. Per this kind of condition, we don't check, because on-die ECC
+Always be enabled, cannot be disabled.
+
+2. on-die ECC default disabled:
+I think this is used for some important user data. Unless the bootrom of CPU can issue 
+SET_FEATURE to enable on-die ECC, and until Linux running, on-die ECC is still enabled.
+Otherwise, we need to check if it enables or not.
+
+>BTW, do you have NANDs where the on-die ECC is always enabled, and if this is
+>the case, what happens when you call
+>SET_FEATURE(disable/enable-ECC) on these NANDs?
+
+If this NAND is on-die ECC defaulted enabled, the on-die ECC cannot
+Disabled later. Why? This is related to specific user model.
+We have one PPT on Micron domain website, it is "on die ECC training",
+It opens and can freely download. It clearly describes this.
+If you cannot download, please let me know, I send to you.
+
+As for the on-die ECC default disabled, you can freely switch on or off
+by SET_FEATURE(disable/enable-ECC).
+
+>
+>>
+>> >>                     if (ONFI.byte112 == 4)
+>> >> 		 60s SLC NAND with on-die ECC
+>> >> 	    else if (ONFI.byte112 == 8)
+>> >>      	              70s SLC NAND with on-die ECC
+>> >
+>> >This is completely fucked up! Now the ONFI param page says the NAND
+>> >requires 8bits/512bytes, while the ID bytes advertised an on-die ECC
+>> >providing 4bits/512bytes correctability.
+>>
+>> I think, my previous answers can answer this confusion.
+>
+>Yep. BTW, sorry for being so harsh in my previous reply.
+Don't sorry, open source community should like this. And if you have any confusion and
+Something fucked up about Micron NAND, please freely speak out and let me know.
+If we can give any support, we are very happy. 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
