@@ -1,283 +1,206 @@
-From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v3 14/37] mtd: nand: denali: support "nand-ecc-strength"
- DT property
-Date: Tue, 11 Apr 2017 09:56:37 +0200
-Message-ID: <20170411095637.5aa87cf6@bbrezillon>
-References: <1490856383-31560-1-git-send-email-yamada.masahiro@socionext.com>
-        <1490856383-31560-15-git-send-email-yamada.masahiro@socionext.com>
-        <20170330160238.59e5a2c1@bbrezillon>
-        <CAK7LNARUKwMHd79ALDx_SDY9XKcHPY96xTAOMQx6XarFgwb-AA@mail.gmail.com>
-        <20170331114659.4964be35@bbrezillon>
-        <CAK7LNAToTmirpkhNmPCLhcTXG_SFqS762mEGK3mjyqLKXuWa1Q@mail.gmail.com>
-        <20170409183301.037d3f95@bbrezillon>
-        <CAK7LNARxR722uRE9SnJPuOqictrpnbFmcKBsW_g=f1OnNgvpRA@mail.gmail.com>
+From: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Subject: Re: [PATCH v7 00/13] mmc: Add support to Marvell Xenon SD Host Controller
+Date: Tue, 11 Apr 2017 09:59:59 +0200
+Message-ID: <87o9w3idc0.fsf@free-electrons.com>
+References: <cover.51071caa64e5df81264a91b9a81ed1e94f47d2c4.1490886907.git-series.gregory.clement@free-electrons.com>
+        <CAPDyKFqsU6vSmM3kMzGw4DmoB8JpUKaTJYzXUfwCz5cCbYM_3A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAK7LNARxR722uRE9SnJPuOqictrpnbFmcKBsW_g=f1OnNgvpRA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Enrico Jorns <ejo-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Artem Bityutskiy <artem.bityutskiy-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Dinh Nguyen <dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Graham Moore <grmoore-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Masami Hiramatsu <mhiramat-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chuanxiao Dong <chuanxiao.dong-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <CAPDyKFqsU6vSmM3kMzGw4DmoB8JpUKaTJYzXUfwCz5cCbYM_3A@mail.gmail.com>
+        (Ulf Hansson's message of "Mon, 10 Apr 2017 17:14:29 +0200")
+Sender: linux-mmc-owner@vger.kernel.org
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Adrian Hunter <adrian.hunter@intel.com>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-clk <linux-clk@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Ziji Hu <huziji@marvell.com>, Jimmy Xu <zmxu@marvell.com>, Jisheng Zhang <jszhang@marvell.com>, Nadav Haklai <nadavh@marvell.com>R
 List-Id: devicetree@vger.kernel.org
 
-Hi Masahiro,
+Hi Ulf,
+ 
+ On lun., avril 10 2017, Ulf Hansson <ulf.hansson@linaro.org> wrote:
 
-On Tue, 11 Apr 2017 15:19:21 +0900
-Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org> wrote:
+> On 30 March 2017 at 17:22, Gregory CLEMENT
+> <gregory.clement@free-electrons.com> wrote:
+>> Hello,
+>>
+>> This the seventh version of the series adding support for the SDHCI
+>> Xenon controller. It can be currently found on the Armada 37xx and the
+>> Armada 7K/8K but will be also used in more Marvell SoC (and not only
+>> the mvebu ones actually).
+>>
+>> v6->v7:
+>>  - Add comments on vqmmc and vmmc in examples in dt binding doc.
+>>
+>>  - Fix all the issues pointed out by Ulf and Adrian:
+>>
+>>    - Align the prefix of function and variable names.
+>>    - Replace the if-else with switch statements when checking MMC_TIMING_*
+>>    - Remove the spinlocks in set_ios.
+>>    - Optimize the delay loop as Adrian patch does.
+>>    - Add release of phy params structures
+>>
+>> - Add check of Vqmmc supply in Xenon signal voltage switch. If Vqmmc
+>>   regulator doesn't exist, skip standard SD signal voltage regulator
+>>   switch process.
+>>
+>> - Remove parse of child node mmc-card. Wait for a better solution.
+>>
+>> v5->v6:
+>>
+>> - Add a generic "mmc-card" parse in core layer.
+>>
+>> - Fix the spelling issues in Xenon dt binding doc and drivers.
+>>
+>> - Remove descriptions to common mmc properties from Xenon dt binding
+>>   doc.
+>>
+>> - Split compatible string "marvell,armada-8k-sdhci" into
+>>  "marvell,armada-ap806-sdhci" and "marvell,armada-cp110-sdhci".
+>>
+>> - Also updates the example in Xenon dt binding doc.
+>>
+>> - Remove unnecessary dependency on MMC_SDHCI from Xenon entry in
+>>   Kconfig.
+>>
+>> - Move Xenon specific dt parse into a separate function.
+>>
+>> - Adjust warnings and condition check in Xenon PHY setting, to remove
+>>  fragile hs200->hs400/hs400->hs200 sequence check function.
+>>
+>> - Enable PHY Slow Mode in MMC_TIMING_LEGACY timing if PHY Slow Mode is
+>>  required in dts.
+>>
+>> - Add a patch allowing dts backwards compatible for the clock
+>>
+>> v4->v5:
+>>
+>> - Remove the patch to export sdhci_execute_tuning(). It is already
+>>   exported in v4.10.
+>>
+>> - Introduce a patch adding a missing clock for the sdhci controller
+>>   present on the CP master for A7K/A8K. There is no build dependency
+>>   but obviously this patch is need to use the sdhci controller present
+>>   on the CP part.
+>>
+>> - Adjust Xenon return setup, to avoid being overwritten by
+>>    sdhci_add_host().
+>>
+>> - Change Xenon register definition prefix to "XENON_".
+>>
+>> -  Fix typos in Xenon driver and dt-binding docs.
+>>
+>> - Change compatible string "marvell,armada-7000-sdhci" to
+>>   "marvell,armada-8k-sdhci". Actually the Armada 7K SoCs are a subset
+>>   of the Armada 8K SoCs. Moreover, the use of the '000' is not
+>>   consistent with all the other compatible string already used for the
+>>   Armada 7K/8K family.
+>>
+>> - Added the Tested-by from Russell King on an Armada 8K based board.
+>>
+>> v3 -> v4:
+>> For this version a few change have been done:
+>> - fixes 2 bug  reported by kbuild-bot
+>>   - remove extra of_node_put()
+>>   - convert 0 in false for function returning boolean
+>>
+>> - add a device tree node for the sdhci controller present on the CP
+>>   master for A7K/A8K. It also led to rename the sdhci0 node on AP to
+>>   ap_sdhci0 to make a distinction with the one present on CP master.
+>>
+>> v2 -> v3
+>> I think that now most (if not all) the remarks had been taking into
+>> account since the second version. According to Ziji Hu, here are the
+>> following changes:
+>> " Changes in V3:
+>>   Adjust and improve Xenon DT bindings. Move some caps setting from driver into
+>>   DT. Use mmc-card sub-node to represent eMMC type.
+>>   Remove PHY Sampling Fixed Delay Line scan in lower speed mode.
+>>   Improve Xenon probe and ->init_card() functions.
+>>   Export sdhci_enable_sdio_irq() and implement own SDIO IRQ control.
+>>   Split PHY patch into two smaller patches.
+>>   Temporarily remove AXI clock before its implementation is improved."
+>>
+>> Besides this changes I also
+>> - Removed the sdhci-xenon-phy.h and moved its content in the
+>> shc-xenon-phy.c file.
+>> - Fixed the tuning-count usage
+>> - Managed the error case for clk_prepare_enable
+>>
+>> For the record the change from v1 was:
+>> " Changes in V2:
+>>   rebase on v4.9-rc2.
+>>   Re-write Xenon bindings. Ajust Xenon DT property naming.
+>>   Add a new DT property to indicate eMMC card type, instead of using
+>>   variable card_candidate.
+>>   Clear quirks SDHCI_QUIRK_MULTIBLOCK_READ_ACMD12 in Xenon platform data
+>>   Add support to HS400 retuning."
+>>
+>> Thanks,
+>>
+>> Gregory
+>>
+>> Gregory CLEMENT (4):
+>>   clk: apn806: Turn the eMMC clock as optional for dts backwards compatible
+>>   arm64: dts: marvell: add eMMC support for Armada 37xx
+>>   arm64: dts: marvell: add sdhci support for Armada 7K/8K
+>>   arm64: configs: enable SDHCI driver for Xenon
+>>
+>> Hu Ziji (8):
+>>   mmc: sdhci: Export sdhci_set_ios() from sdhci.c
+>>   mmc: sdhci: Export sdhci_start_signal_voltage_switch() in sdhci.c
+>>   mmc: sdhci: Export sdhci_enable_sdio_irq() from sdhci.c
+>>   dt: bindings: Add bindings for Marvell Xenon SD Host Controller
+>>   mmc: sdhci-xenon: Add Marvell Xenon SDHC core functionality
+>>   mmc: sdhci-xenon: Add support to PHYs of Marvell Xenon SDHC
+>>   mmc: sdhci-xenon: Add SoC PHY PAD voltage control
+>>   MAINTAINERS: add entry for Marvell Xenon MMC Host Controller drivers
+>>
+>> Konstantin Porotchkin (1):
+>>   clk: apn806: Add eMMC clock to system controller driver
+>>
+>>  Documentation/devicetree/bindings/mmc/marvell,xenon-sdhci.txt | 170 +-
+>>  MAINTAINERS                                                   |   7 +-
+>>  arch/arm64/boot/dts/marvell/armada-3720-db.dts                |   9 +-
+>>  arch/arm64/boot/dts/marvell/armada-37xx.dtsi                  |  11 +-
+>>  arch/arm64/boot/dts/marvell/armada-7040-db.dts                |  14 +-
+>>  arch/arm64/boot/dts/marvell/armada-8040-db.dts                |  12 +-
+>>  arch/arm64/boot/dts/marvell/armada-ap806.dtsi                 |  14 +-
+>>  arch/arm64/boot/dts/marvell/armada-cp110-master.dtsi          |  11 +-
+>>  arch/arm64/configs/defconfig                                  |   1 +-
+>>  drivers/clk/mvebu/ap806-system-controller.c                   |  21 +-
+>>  drivers/mmc/host/Kconfig                                      |   8 +-
+>>  drivers/mmc/host/Makefile                                     |   3 +-
+>>  drivers/mmc/host/sdhci-xenon-phy.c                            | 835 +++++++-
+>>  drivers/mmc/host/sdhci-xenon.c                                | 548 +++++-
+>>  drivers/mmc/host/sdhci-xenon.h                                | 101 +-
+>>  drivers/mmc/host/sdhci.c                                      |  11 +-
+>>  drivers/mmc/host/sdhci.h                                      |   4 +-
+>>  17 files changed, 1774 insertions(+), 6 deletions(-)
+>>  create mode 100644 Documentation/devicetree/bindings/mmc/marvell,xenon-sdhci.txt
+>>  create mode 100644 drivers/mmc/host/sdhci-xenon-phy.c
+>>  create mode 100644 drivers/mmc/host/sdhci-xenon.c
+>>  create mode 100644 drivers/mmc/host/sdhci-xenon.h
+>>
+>> base-commit: a645cc1df4ff41ba54a2fb839962b8ff142121d9
+>> --
+>> git-series 0.9.1
+>
+>
+> Thanks, applied patch 1->10 for next! 11->13 will have to go via the
+> SoC maintainer tree.
 
-> Hi Boris,
-> 
-> 
-> 
-> 2017-04-10 1:33 GMT+09:00 Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>:
-> > On Mon, 3 Apr 2017 12:16:34 +0900
-> > Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org> wrote:
-> >  
-> >> Hi Boris,
-> >>
-> >>
-> >>
-> >> 2017-03-31 18:46 GMT+09:00 Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>:
-> >>  
-> >> > You can try something like that when no explicit ecc.strength and
-> >> > ecc.size has been set in the DT and when ECC_MAXIMIZE was not passed.
-> >> >
-> >> > static int
-> >> > denali_get_closest_ecc_strength(struct denali_nand_info *denali,
-> >> >                                 int strength)
-> >> > {
-> >> >         /*
-> >> >          * Whatever you need to select a strength that is greater than
-> >> >          * or equal to strength.
-> >> >          */
-> >> >
-> >> >         return X;
-> >> > }  
-> >>
-> >>
-> >> Is here anything specific to Denali?  
-> >
-> > Well, only the denali driver knows what the hardware supports, though
-> > having a generic function that takes a table of supported strengths
-> > would work.
-> >  
-> >>
-> >>  
-> >> > static int denali_try_to_match_ecc_req(struct denali_nand_info *denali)
-> >> > {
-> >> >         struct nand_chip *chip = &denali->nand;
-> >> >         struct mtd_info *mtd = nand_to_mtd(chip);
-> >> >         int max_ecc_bytes = mtd->oobsize - denali->bbtskipbytes;
-> >> >         int ecc_steps, ecc_strength, ecc_bytes;
-> >> >         int ecc_size = chip->ecc_step_ds;
-> >> >         int ecc_strength = chip->ecc_strength_ds;
-> >> >
-> >> >         /*
-> >> >          * No information provided by the NAND chip, let the core
-> >> >          * maximize the strength.
-> >> >          */
-> >> >         if (!ecc_size || !ecc_strength)
-> >> >                 return -ENOTSUPP;
-> >> >
-> >> >         if (ecc_size > 512)
-> >> >                 ecc_size = 1024;
-> >> >         else
-> >> >                 ecc_size = 512;
-> >> >
-> >> >         /* Adjust ECC step size based on hardware support. */
-> >> >         if (ecc_size == 1024 &&
-> >> >             !(denali->caps & DENALI_CAP_ECC_SIZE_1024))
-> >> >                 ecc_size = 512;
-> >> >         else if(ecc_size == 512 &&
-> >> >                 !(denali->caps & DENALI_CAP_ECC_SIZE_512))
-> >> >                 ecc_size = 1024;
-> >> >
-> >> >         if (ecc_size < chip->ecc_size_ds) {
-> >> >                 /*
-> >> >                  * When the selected size if smaller than the expected
-> >> >                  * one we try to use the same strength but on 512 blocks
-> >> >                  * so that we can still fix the same number of errors
-> >> >                  * even if they are concentrated in the first 512bytes
-> >> >                  * of a 1024bytes portion.
-> >> >                  */
-> >> >                 ecc_strength = chip->ecc_strength_ds;
-> >> >                 ecc_strength = denali_get_closest_ecc_strength(denali,
-> >> >                                                                ecc_strength);
-> >> >         } else {
-> >> >                 /* Always prefer 1024bytes ECC blocks when possible. */
-> >> >                 if (ecc_size != 1024 &&
-> >> >                     (denali->caps & DENALI_CAP_ECC_SIZE_1024) &&
-> >> >                     mtd->writesize > 1024)
-> >> >                         ecc_size = 1024;
-> >> >
-> >> >                 /*
-> >> >                  * Adjust the strength based on the selected ECC step
-> >> >                  * size.
-> >> >                  */
-> >> >                 ecc_strength = DIV_ROUND_UP(ecc_size,
-> >> >                                             chip->ecc_step_ds) *
-> >> >                                chip->ecc_strength_ds;
-> >> >         }
-> >> >
-> >> >         ecc_bytes = denali_calc_ecc_bytes(ecc_size,
-> >> >                                           ecc_strength);
-> >> >         ecc_bytes *= mtd->writesize / ecc_size;
-> >> >
-> >> >         /*
-> >> >          * If we don't have enough space, let the core maximize
-> >> >          * the strength.
-> >> >          */
-> >> >         if (ecc_bytes > max_ecc_bytes)
-> >> >                 return -ENOTSUPP;
-> >> >
-> >> >         chip->ecc.strength = ecc_strength;
-> >> >         chip->ecc.size = ecc_size;
-> >> >
-> >> >         return 0;
-> >> > }  
-> >>
-> >>
-> >> As a whole, this does not seem to driver-specific.  
-> >
-> > It's almost controller-agnostic, except for the denali_calc_ecc_bytes()
-> > function, but I guess we could ask drivers to implement a hook that is
-> > passed the ECC step size and strength and returns the associated
-> > number of ECC bytes.
-> >  
-> >>
-> >>
-> >> [1] A driver provides some pairs of (ecc_strength, ecc_size)
-> >>     it can support.
-> >>
-> >> [2] The core framework knows the chip's requirement
-> >>     (ecc_strength_ds, ecc_size_ds).
-> >>
-> >>
-> >> Then, the core framework provides a function
-> >> to return a most recommended (ecc_strength, ecc_size).
-> >>
-> >>
-> >>
-> >> struct nand_ecc_spec {
-> >>        int ecc_strength;
-> >>        int ecc_size;
-> >> };
-> >>
-> >> /*
-> >>  * This function choose the most recommented (ecc_str, ecc_size)
-> >>  * "recommended" means: minimum ecc stregth that meets
-> >>  * the chip's requirment.
-> >>  *
-> >>  *
-> >>  * @chip   - nand_chip
-> >>  * @controller_ecc_spec - Array of (ecc_str, ecc_size) supported by the
-> >>                           controller. (terminated by NULL as sentinel)
-> >>  */
-> >> struct nand_ecc_spec * nand_try_to_match_ecc_req(struct nand_chip *chip,
-> >>                                                  struct nand_ecc_spec
-> >> *controller_ecc_spec)
-> >> {
-> >>       /*
-> >>        * Return the pointer to the most recommended
-> >>        * struct nand_ecc_spec.
-> >>        * If nothing suitable found, return NULL.
-> >>        */
-> >> }
-> >>  
-> >
-> > I like the idea, except I would do this slightly differently to avoid
-> > declaring all combinations of stepsize and strengths
-> >
-> > struct nand_ecc_stepsize_info {
-> >         int stepsize;
-> >         int nstrengths;
-> >         int *strengths;
-> > };
-> >
-> > struct nand_ecc_engine_caps {
-> >         int nstepsizes;
-> >         struct nand_ecc_stepsize_info *stepsizes;
-> >         int (*calc_ecc_bytes)(int stepsize, int strength);
-> > };
-> >
-> > int nand_try_to_match_ecc_req(struct nand_chip *chip,
-> >                               const struct nand_ecc_engine_caps *caps,
-> >                               struct nand_ecc_spec *spec)
-> > {
-> >         /*
-> >          * Find the most appropriate setting based on the ECC engine
-> >          * caps and fill the spec object accordingly.
-> >          * Returns 0 in case of success and a negative error code
-> >          * otherwise.
-> >          */
-> > }
-> >
-> > Note that nand_try_to_match_ecc_req() has to be more generic than
-> > denali_try_to_match_ecc_req() WRT step sizes, which will probably
-> > complexify the logic.  
-> 
-> 
-> After I fiddle with this generic approach for a while,
-> I started to feel like giving up.
+Great, thanks!
 
-I don't get it. What was the problem with my initial suggestion (the
-denali specific one, not the generic approach)? You proposed to make it
-generic, which, I agree, is a bit more complicated.
+Patch 11 and 12 are now applied on mvebu/dt64 and patch 13 on
+mvebu/defconfig64.
 
-> 
-> I wonder if we really want over-implementation
-> for covering _theoretically_ possible cases.
+Gregory
 
-Okay, one more theoretical case I'd like to expose: you have board
-design with different NAND parts which have different ECC requirements.
-If you were about to describe the exact ECC strength you want for each
-board you'll have to have different DTs. Maximizing the ECC strength
-would still work, but what if the MTD user needs some OOB bytes (like
-is the case with JFFS2) and ECC maximization reserved all of the
-available bytes?
+>
+> Kind regards
+> Uffe
 
-The other reason I prefer to have the drivers automatically guessing
-what's appropriate is because then you don't have to care when writing
-your DT.
-
-> 
-> In practice, there are not so many ECC settings possible
-> on a single controller.
-> 
-> As for Denali IP, it would be theoretically possible to instantiate
-> multiple ECC engines.  However, in practice, there is no sensible
-> reason to do so.  At least, I do not know any real chip to support that.
-> 
-> So, I'd like to simplify the logic for Denali.
-> 
->   - Support either 512 or 1024 ECC size.
->     If there is (ever) a controller that supports both,
->     1024 should be chosen.
-> 
->   - ECC strength is not specified via DT, it is simply maximized.
-> 
-> This simplifies the logic much and I believe this is enough.
-> 
-> One more reason is, as we talked before,
-> we need to match ECC setting between Linux and firmware (boot-loader),
-
-If the bootloader implements the same logic it should match.
-
-> so anyway we end up with using a fixed setting specified by DT.
-> 
-
-Really, I don't see what's the problem with the function I proposed,
-but I'm willing to make a concession.
-Make the nand-ecc-strength+nand-ecc-step-size or nand-ecc-maximize
-mandatory so that if someone ever needs to support the 'match NAND
-requirements' feature we won't have to add a vendor specific property
-like this one [1].
-
-Are you fine with that?
-
-[1]http://lxr.free-electrons.com/source/Documentation/devicetree/bindings/mtd/gpmi-nand.txt#L20
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Gregory Clement, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
