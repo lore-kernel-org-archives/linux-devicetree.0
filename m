@@ -1,32 +1,105 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [v3, 0/7] Add SD UHS-I and eMMC HS200 support for eSDHC
-Date: Mon, 10 Apr 2017 12:48:30 +0200
-Message-ID: <CAPDyKFpN-+7mxxeBHEELROWsn275Mec6unDHdnY3Gsz3oKT9pw@mail.gmail.com>
-References: <1490600982-5410-1-git-send-email-yangbo.lu@nxp.com> <DB6PR0401MB253627A0ABBF6DA9EC063A84F8010@DB6PR0401MB2536.eurprd04.prod.outlook.com>
+From: Dong Aisheng <dongas86@gmail.com>
+Subject: Re: [PATCH 2/2] ARM: dts: imx7: add USDHC NAND clock to SDHC
+ instances
+Date: Tue, 11 Apr 2017 10:59:56 +0800
+Message-ID: <20170411025956.GA9067@b29396-OptiPlex-7040>
+References: <20170330005029.6472-1-stefan@agner.ch>
+ <20170330005029.6472-2-stefan@agner.ch>
+ <20170401030312.GB24882@b29396-OptiPlex-7040>
+ <5c8339900fa1bd6215fb94d4386f7e06@agner.ch>
+ <CAOMZO5CprxqnqRXMFJLBAgYAZGGnXNs3ZciyVz_mSLRnnSQQRQ@mail.gmail.com>
+ <CAOMZO5A7QQEe5rgBbJBzo8GY41aYV9WA8e9teCUROyihg0kq_g@mail.gmail.com>
+ <c95a7f535296623bdd4e4a640b3c27f5@agner.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <DB6PR0401MB253627A0ABBF6DA9EC063A84F8010@DB6PR0401MB2536.eurprd04.prod.outlook.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: "Y.B. Lu" <yangbo.lu@nxp.com>
-Cc: "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Adrian Hunter <adrian.hunter@intel.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Xiaobo Xie <xiaobo.xie@nxp.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <c95a7f535296623bdd4e4a640b3c27f5@agner.ch>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stefan Agner <stefan@agner.ch>
+Cc: Fabio Estevam <festevam@gmail.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Stephen Boyd <sboyd@codeaurora.org>, Dong Aisheng <aisheng.dong@nxp.com>, Fabio Estevam <fabio.estevam@nxp.com>, robh+dt@kernel.org, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 10 April 2017 at 10:20, Y.B. Lu <yangbo.lu@nxp.com> wrote:
-> Hi Andrian and Uffe,
->
-> Do you have any comments on MMC patches?
-> Could you help to merge the mmc patches if there is no changes requested?
+On Tue, Apr 04, 2017 at 07:36:01PM -0700, Stefan Agner wrote:
+> On 2017-04-04 19:15, Fabio Estevam wrote:
+> > On Sun, Apr 2, 2017 at 2:02 PM, Fabio Estevam <festevam@gmail.com> wrote:
+> >> On Sat, Apr 1, 2017 at 1:15 AM, Stefan Agner <stefan@agner.ch> wrote:
+> >>
+> >>> IMX7D_IPG_ROOT_CLK is currently not a valid clock in upstream... So we
+> >>> would have to add it to the clock driver first.
+> >>>
+> >>> I guess we could/should add it anyway at one point? But probably also as
+> >>> init on, just to make sure Linux does not disable it since it is
+> >>> currently used by several IPs implicitly.
+> >>
+> >> Yes, I made a previous attempt do add  IMX7D_IPG_ROOT_CLK and it did
+> >> not work as I did not put it in the init_on clock list.
+> >>
+> >> Will submit a new patch adding it to init_on, thanks.
+> > 
+> > I thought that adding IMX7D_IPG_ROOT_CLK would do the trick, but the
+> > patch below also causes the kernel to not boot:
+> > 
+> > --- a/drivers/clk/imx/clk-imx7d.c
+> > +++ b/drivers/clk/imx/clk-imx7d.c
+> > @@ -386,7 +386,7 @@ static int const clks_init_on[] __initconst = {
+> >         IMX7D_PLL_SYS_MAIN_480M_CLK, IMX7D_NAND_USDHC_BUS_ROOT_CLK,
+> >         IMX7D_DRAM_PHYM_ROOT_CLK, IMX7D_DRAM_ROOT_CLK,
+> >         IMX7D_DRAM_PHYM_ALT_ROOT_CLK, IMX7D_DRAM_ALT_ROOT_CLK,
+> > -       IMX7D_AHB_CHANNEL_ROOT_CLK,
+> > +       IMX7D_AHB_CHANNEL_ROOT_CLK, IMX7D_IPG_ROOT_CLK,
+> >  };
+> > 
+> >  static struct clk_onecell_data clk_data;
+> > @@ -788,7 +788,7 @@ static void __init imx7d_clocks_init(struct
+> > device_node *ccm_node)
+> >         clks[IMX7D_WRCLK_ROOT_DIV] =
+> > imx_clk_divider2("wrclk_post_div", "wrclk_pre_div", base + 0xbd00, 0,
+> > 6);
+> >         clks[IMX7D_CLKO1_ROOT_DIV] =
+> > imx_clk_divider2("clko1_post_div", "clko1_pre_div", base + 0xbd80, 0,
+> > 6);
+> >         clks[IMX7D_CLKO2_ROOT_DIV] =
+> > imx_clk_divider2("clko2_post_div", "clko2_pre_div", base + 0xbe00, 0,
+> > 6);
+> > -
+> > +       clks[IMX7D_IPG_ROOT_CLK] = imx_clk_divider2("ipg_root_clk",
+> > "ahb_root_clk", base + 0x9080, 0, 2);
+> >         clks[IMX7D_ARM_A7_ROOT_CLK] = imx_clk_gate4("arm_a7_root_clk",
+> > "arm_a7_div", base + 0x4000, 0);
+> >         clks[IMX7D_ARM_M4_ROOT_CLK] = imx_clk_gate4("arm_m4_root_clk",
+> > "arm_m4_div", base + 0x4010, 0);
+> >         clks[IMX7D_ARM_M0_ROOT_CLK] = imx_clk_gate4("arm_m0_root_clk",
+> > "arm_m0_div", base + 0x4020, 0);
+> 
+> Hm, imx_clk_divider2 sets CLK_SET_RATE_PARENT, maybe that influences the
+> parent?
+> 
+> I guess we actually don't want the clock framework to change that clock
+> rate, not sure whether we can freeze it or similar.
+> 
 
-I am waiting for Adrian's acks.
+This is caused by ahb_root_clk gets disabled accidently and system hangs.
 
->
-> Regarding to the dts patches, I have some more platforms to support.
-> So I'd like to drop them currently, and send them all to arm mailing list for reviewing.
+Because this patch defines ipg_root_clk earlier before its parent
+(ahb_root_clk) got registered, then it will be marked as a orphan clk
+temporarily. Until the parent ahb_root_clk got registered, the clk core
+will reparent it to the newly found parent. (see __clk_core_init() function).
 
-If it's new bindings/compatibles, the DT doc changes needs to be
-discussed and agreed upon first. Actual changes to the DTS files,
-should preferably go via the arm soc tree.
+Due to CLK_SET_RATE_PARENT flag, the ahb clk will be enabled during
+set_parent operation and then disabled after that.
+Then system hang cause we still get no chance to run init_on clks.
 
-Kind regards
-Uffe
+I just send out a proper fix patch with correct register sequence.
+
+Probably we can switch all imx clk driver to CLK_IS_CRITICAL for critical
+clocks in the future, but that's another thing to do later.
+
+Stefan,
+I think you can just resend your series based on my patches.
+
+Regards
+Dong Aisheng
+
+> --
+> Stefan
