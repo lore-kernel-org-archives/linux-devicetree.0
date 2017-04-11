@@ -1,239 +1,77 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v3 5/7] doc_rst: media: New SDR formats PC16, PC18 & PC20
-Date: Tue, 11 Apr 2017 15:39:40 +0300
-Message-ID: <213133284.36Jzg1zrIM@avalon>
-References: <1486479757-32128-1-git-send-email-ramesh.shanmugasundaram@bp.renesas.com> <1486479757-32128-6-git-send-email-ramesh.shanmugasundaram@bp.renesas.com>
+From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 4/5] mtd: nand: add support for Micron on-die ECC
+Date: Tue, 11 Apr 2017 14:51:02 +0200
+Message-ID: <20170411145102.563fa388@bbrezillon>
+References: <538805ebf8e64015a8b833de755652b3@SIWEX5A.sing.micron.com>
+        <8a171dacd20c45bd8285ecc5dbe8854a@SIWEX5A.sing.micron.com>
+        <20170322144507.4d80d2cc@bbrezillon>
+        <0dccc0abcf234e98be6d340027cf1a30@SIWEX5A.sing.micron.com>
+        <20170322155216.319efc3e@bbrezillon>
+        <414dd35931814ce38381a251917ad79f@SIWEX5A.sing.micron.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <1486479757-32128-6-git-send-email-ramesh.shanmugasundaram@bp.renesas.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, mchehab@kernel.org, hverkuil@xs4all.nl, sakari.ailus@linux.intel.com, crope@iki.fi, chris.paterson2@renesas.com, geert+renesas@glider.be, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <414dd35931814ce38381a251917ad79f-aBoyCxvc2dBaXkNJqdKpEhSpLNRU/VIH@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Bean Huo (beanhuo)" <beanhuo-AL4WhLSQfzjQT0dZR+AlfA@public.gmane.org>
+Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "richard-/L3Ra7n9ekc@public.gmane.org" <richard-/L3Ra7n9ekc@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, "computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Ramesh,
+Hi Bean,
 
-Thank you for the patch.
+On Mon, 3 Apr 2017 11:31:05 +0000
+"Bean Huo (beanhuo)" <beanhuo-AL4WhLSQfzjQT0dZR+AlfA@public.gmane.org> wrote:
 
-On Tuesday 07 Feb 2017 15:02:35 Ramesh Shanmugasundaram wrote:
-> This patch adds documentation for the three new SDR formats
+> Hi, Boris and Thomas
 > 
-> V4L2_SDR_FMT_PCU16BE
-> V4L2_SDR_FMT_PCU18BE
-> V4L2_SDR_FMT_PCU20BE
+> >>
+> >> Ok, but I recommend that 70s should be the first choice on this single
+> >> solution, it doesn't need to read twice to detect its bitflips count.  
+> >
+> >That's exactly why we need to differentiate the 2 chips.  
 > 
-> Signed-off-by: Ramesh Shanmugasundaram
-> <ramesh.shanmugasundaram@bp.renesas.com> ---
->  .../media/uapi/v4l/pixfmt-sdr-pcu16be.rst          | 55 +++++++++++++++++++
->  .../media/uapi/v4l/pixfmt-sdr-pcu18be.rst          | 55 +++++++++++++++++++
->  .../media/uapi/v4l/pixfmt-sdr-pcu20be.rst          | 54 +++++++++++++++++++
->  Documentation/media/uapi/v4l/sdr-formats.rst       |  3 ++
->  4 files changed, 167 insertions(+)
->  create mode 100644 Documentation/media/uapi/v4l/pixfmt-sdr-pcu16be.rst
->  create mode 100644 Documentation/media/uapi/v4l/pixfmt-sdr-pcu18be.rst
->  create mode 100644 Documentation/media/uapi/v4l/pixfmt-sdr-pcu20be.rst
+> Sorry for later this response. 
+> Below is the pseudo codes about how to differentiate these 2 series parallel
+> NAND with on-die ECC:
 > 
-> diff --git a/Documentation/media/uapi/v4l/pixfmt-sdr-pcu16be.rst
-> b/Documentation/media/uapi/v4l/pixfmt-sdr-pcu16be.rst new file mode 100644
-> index 0000000..2de1b1a
-> --- /dev/null
-> +++ b/Documentation/media/uapi/v4l/pixfmt-sdr-pcu16be.rst
-> @@ -0,0 +1,55 @@
-> +.. -*- coding: utf-8; mode: rst -*-
-> +
-> +.. _V4L2-SDR-FMT-PCU16BE:
-> +
-> +******************************
-> +V4L2_SDR_FMT_PCU16BE ('PC16')
-> +******************************
-> +
-> +Planar complex unsigned 16-bit big endian IQ sample
-> +
-> +Description
-> +===========
-> +
-> +This format contains a sequence of complex number samples. Each complex
-> +number consist of two parts called In-phase and Quadrature (IQ). Both I
-> +and Q are represented as a 16 bit unsigned big endian number stored in
-> +32 bit space. The remaining unused bits within the 32 bit space will be
-> +padded with 0. I value starts first and Q value starts at an offset
-> +equalling half of the buffer size (i.e.) offset = buffersize/2. Out of
-> +the 16 bits, bit 15:2 (14 bit) is data and bit 1:0 (2 bit) can be any
-> +value.
+> if (NAND == SLC ) { // on-die ECC only exists in SLC
+> //check device ID byte 4
+>      if ((ID.byte4 & 0x02) == 0x02) {// internal ECC level ==10b
 
-This sounds very strange to me. Are the two lower bits always random ? What is 
-that used for ?
+So here the MT29F1G08ABADAWP datasheet says 0x2 <=> 4bit/512bytes ECC.
 
-> +**Byte Order.**
-> +Each cell is one byte.
-> +
-> +.. flat-table::
-> +    :header-rows:  1
-> +    :stub-columns: 0
-> +
-> +    * -  Offset:
-> +      -  Byte B0
-> +      -  Byte B1
-> +      -  Byte B2
-> +      -  Byte B3
-> +    * -  start + 0:
-> +      -  I'\ :sub:`0[13:6]`
-> +      -  I'\ :sub:`0[5:0]; B1[1:0]=pad`
-> +      -  pad
-> +      -  pad
-> +    * -  start + 4:
-> +      -  I'\ :sub:`1[13:6]`
-> +      -  I'\ :sub:`1[5:0]; B1[1:0]=pad`
-> +      -  pad
-> +      -  pad
-> +    * -  ...
-> +    * - start + offset:
-> +      -  Q'\ :sub:`0[13:6]`
-> +      -  Q'\ :sub:`0[5:0]; B1[1:0]=pad`
-> +      -  pad
-> +      -  pad
-> +    * - start + offset + 4:
-> +      -  Q'\ :sub:`1[13:6]`
-> +      -  Q'\ :sub:`1[5:0]; B1[1:0]=pad`
-> +      -  pad
-> +      -  pad
-> diff --git a/Documentation/media/uapi/v4l/pixfmt-sdr-pcu18be.rst
-> b/Documentation/media/uapi/v4l/pixfmt-sdr-pcu18be.rst new file mode 100644
-> index 0000000..da8b26b
-> --- /dev/null
-> +++ b/Documentation/media/uapi/v4l/pixfmt-sdr-pcu18be.rst
-> @@ -0,0 +1,55 @@
-> +.. -*- coding: utf-8; mode: rst -*-
-> +
-> +.. _V4L2-SDR-FMT-PCU18BE:
-> +
-> +******************************
-> +V4L2_SDR_FMT_PCU18BE ('PC18')
-> +******************************
-> +
-> +Planar complex unsigned 18-bit big endian IQ sample
-> +
-> +Description
-> +===========
-> +
-> +This format contains a sequence of complex number samples. Each complex
-> +number consist of two parts called In-phase and Quadrature (IQ). Both I
-> +and Q are represented as a 18 bit unsigned big endian number stored in
-> +32 bit space. The remaining unused bits within the 32 bit space will be
-> +padded with 0. I value starts first and Q value starts at an offset
-> +equalling half of the buffer size (i.e.) offset = buffersize/2. Out of
-> +the 18 bits, bit 17:2 (16 bit) is data and bit 1:0 (2 bit) can be any
-> +value.
-> +
-> +**Byte Order.**
-> +Each cell is one byte.
-> +
-> +.. flat-table::
-> +    :header-rows:  1
-> +    :stub-columns: 0
-> +
-> +    * -  Offset:
-> +      -  Byte B0
-> +      -  Byte B1
-> +      -  Byte B2
-> +      -  Byte B3
-> +    * -  start + 0:
-> +      -  I'\ :sub:`0[17:10]`
-> +      -  I'\ :sub:`0[9:2]`
-> +      -  I'\ :sub:`0[1:0]; B2[5:0]=pad`
-> +      -  pad
-> +    * -  start + 4:
-> +      -  I'\ :sub:`1[17:10]`
-> +      -  I'\ :sub:`1[9:2]`
-> +      -  I'\ :sub:`1[1:0]; B2[5:0]=pad`
-> +      -  pad
-> +    * -  ...
-> +    * - start + offset:
-> +      -  Q'\ :sub:`0[17:10]`
-> +      -  Q'\ :sub:`0[9:2]`
-> +      -  Q'\ :sub:`0[1:0]; B2[5:0]=pad`
-> +      -  pad
-> +    * - start + offset + 4:
-> +      -  Q'\ :sub:`1[17:10]`
-> +      -  Q'\ :sub:`1[9:2]`
-> +      -  Q'\ :sub:`1[1:0]; B2[5:0]=pad`
-> +      -  pad
-> diff --git a/Documentation/media/uapi/v4l/pixfmt-sdr-pcu20be.rst
-> b/Documentation/media/uapi/v4l/pixfmt-sdr-pcu20be.rst new file mode 100644
-> index 0000000..5499eed
-> --- /dev/null
-> +++ b/Documentation/media/uapi/v4l/pixfmt-sdr-pcu20be.rst
-> @@ -0,0 +1,54 @@
-> +.. -*- coding: utf-8; mode: rst -*-
-> +.. _V4L2-SDR-FMT-PCU20BE:
-> +
-> +******************************
-> +V4L2_SDR_FMT_PCU20BE ('PC20')
-> +******************************
-> +
-> +Planar complex unsigned 20-bit big endian IQ sample
-> +
-> +Description
-> +===========
-> +
-> +This format contains a sequence of complex number samples. Each complex
-> +number consist of two parts called In-phase and Quadrature (IQ). Both I
-> +and Q are represented as a 20 bit unsigned big endian number stored in
-> +32 bit space. The remaining unused bits within the 32 bit space will be
-> +padded with 0. I value starts first and Q value starts at an offset
-> +equalling half of the buffer size (i.e.) offset = buffersize/2. Out of
-> +the 20 bits, bit 19:2 (18 bit) is data and bit 1:0 (2 bit) can be any
-> +value.
-> +
-> +**Byte Order.**
-> +Each cell is one byte.
-> +
-> +.. flat-table::
-> +    :header-rows:  1
-> +    :stub-columns: 0
-> +
-> +    * -  Offset:
-> +      -  Byte B0
-> +      -  Byte B1
-> +      -  Byte B2
-> +      -  Byte B3
-> +    * -  start + 0:
-> +      -  I'\ :sub:`0[19:12]`
-> +      -  I'\ :sub:`0[11:4]`
-> +      -  I'\ :sub:`0[3:0]; B2[3:0]=pad`
-> +      -  pad
-> +    * -  start + 4:
-> +      -  I'\ :sub:`1[19:12]`
-> +      -  I'\ :sub:`1[11:4]`
-> +      -  I'\ :sub:`1[3:0]; B2[3:0]=pad`
-> +      -  pad
-> +    * -  ...
-> +    * - start + offset:
-> +      -  Q'\ :sub:`0[19:12]`
-> +      -  Q'\ :sub:`0[11:4]`
-> +      -  Q'\ :sub:`0[3:0]; B2[3:0]=pad`
-> +      -  pad
-> +    * - start + offset + 4:
-> +      -  Q'\ :sub:`1[19:12]`
-> +      -  Q'\ :sub:`1[11:4]`
-> +      -  Q'\ :sub:`1[3:0]; B2[3:0]=pad`
-> +      -  pad
-> diff --git a/Documentation/media/uapi/v4l/sdr-formats.rst
-> b/Documentation/media/uapi/v4l/sdr-formats.rst index f863c08..2037f5b
-> 100644
-> --- a/Documentation/media/uapi/v4l/sdr-formats.rst
-> +++ b/Documentation/media/uapi/v4l/sdr-formats.rst
-> @@ -17,3 +17,6 @@ These formats are used for :ref:`SDR <sdr>` interface
-> only. pixfmt-sdr-cs08
->      pixfmt-sdr-cs14le
->      pixfmt-sdr-ru12le
-> +    pixfmt-sdr-pcu16be
-> +    pixfmt-sdr-pcu18be
-> +    pixfmt-sdr-pcu20be
+> 	if (ID.byte4 & 0x80) {//on-Die ECC enabled
 
--- 
+Did you read my last reply?
+Thomas discovered that ID[4].bit7 is actually reflecting the ECC engine
+state (1 if the engine is enabled, 0 if it's disabled), not whether the
+NAND supports on-die ECC or not, so no this test is not reliable.
+
+>                     if (ONFI.byte112 == 4)
+> 		 60s SLC NAND with on-die ECC
+> 	    else if (ONFI.byte112 == 8)
+>      	              70s SLC NAND with on-die ECC
+
+This is completely fucked up! Now the ONFI param page says the NAND
+requires 8bits/512bytes, while the ID bytes advertised an on-die ECC
+providing 4bits/512bytes correctability.
+So either your algorithm is wrong, or the ID and ONFI param page are
+contracting (not sure what solution I'd prefer...).
+
+> 	    else
+>                           Doesn't support on-die ECC
+
+Sorry to say that, but I find it worrisome that even someone from Micron
+is not able to get it right.
+
+I think we'll stick to the model name to detect whether on-die ECC is
+supported.
+
 Regards,
 
-Laurent Pinchart
+Boris
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
