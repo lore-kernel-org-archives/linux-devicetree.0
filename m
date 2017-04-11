@@ -1,46 +1,38 @@
-From: Martin Kepplinger <martin.kepplinger@ginzinger.com>
-Subject: [PATCH 3/3] input: touchscreen: ar1021_i2c: coding style fixes
-Date: Tue, 11 Apr 2017 12:27:59 +0200
-Message-ID: <1491906479-17639-3-git-send-email-martin.kepplinger@ginzinger.com>
-References: <1491906479-17639-1-git-send-email-martin.kepplinger@ginzinger.com>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH] ARM: mxs: add support for I2SE Duckbill 2 boards
+Date: Tue, 11 Apr 2017 18:32:04 +0800
+Message-ID: <20170411103202.GA9880@dragon>
+References: <20170410082400.GA1872@dragon>
+ <1491815335-26469-1-git-send-email-michael.heimpold@i2se.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1491906479-17639-1-git-send-email-martin.kepplinger@ginzinger.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: dmitry.torokhov@gmail.com, christian.gmeiner@gmail.com
-Cc: linux@roeck-us.net, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Martin Kepplinger <martin.kepplinger@ginzinger.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1491815335-26469-1-git-send-email-michael.heimpold@i2se.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Michael Heimpold <michael.heimpold@i2se.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, stefan.wahren@i2se.com, robh+dt@kernel.org, Michael Heimpold <mhei@heimpold.de>, kernel@pengutronix.de, fabio.estevam@nxp.com, frowand.list@gmail.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Use the common kernel coding style and corrently align parameters with
-open parenthesis.
+On Mon, Apr 10, 2017 at 11:08:55AM +0200, Michael Heimpold wrote:
+> The Duckbill devices are small, pen-drive sized boards based on
+> NXP's i.MX28 SoC. While the initial variants (Duckbill series)
+> were equipped with a micro SD card slot only, the latest generation
+> (Duckbill 2 series) have an additional internal eMMC onboard.
+> 
+> To distinguish between both generations, a new device tree
+> compatible string was introduced. To get the MAC address fixup
+> applied, we need to check for this new string here, too.
+> 
+> Signed-off-by: Michael Heimpold <michael.heimpold@i2se.com>
 
-Signed-off-by: Martin Kepplinger <martin.kepplinger@ginzinger.com>
----
- drivers/input/touchscreen/ar1021_i2c.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/input/touchscreen/ar1021_i2c.c b/drivers/input/touchscreen/ar1021_i2c.c
-index 1767257..cac7eeb 100644
---- a/drivers/input/touchscreen/ar1021_i2c.c
-+++ b/drivers/input/touchscreen/ar1021_i2c.c
-@@ -38,7 +38,7 @@ static irqreturn_t ar1021_i2c_irq(int irq, void *dev_id)
- 	int retval;
- 
- 	retval = i2c_master_recv(ar1021->client,
--				ar1021->data, sizeof(ar1021->data));
-+				 ar1021->data, sizeof(ar1021->data));
- 	if (retval != sizeof(ar1021->data))
- 		goto out;
- 
-@@ -78,7 +78,7 @@ static void ar1021_i2c_close(struct input_dev *dev)
- }
- 
- static int ar1021_i2c_probe(struct i2c_client *client,
--				     const struct i2c_device_id *id)
-+			    const struct i2c_device_id *id)
- {
- 	struct ar1021_i2c *ar1021;
- 	struct input_dev *input;
--- 
-2.1.4
+Applied, thanks.
