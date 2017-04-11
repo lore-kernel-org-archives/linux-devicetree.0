@@ -1,53 +1,96 @@
-From: Marcel Holtmann <marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCHv3 00/10] Nokia H4+ support
-Date: Tue, 11 Apr 2017 13:36:44 +0200
-Message-ID: <4FEFA1D8-BE23-40FB-BAA3-3EC910FE9F96@holtmann.org>
-References: <20170328155939.31566-1-sre@kernel.org>
- <CAL_JsqJcQ9ANtt71KRitOJ9spKD1SaeoL4RDftiCEPs8TjLJGA@mail.gmail.com>
- <C1A408F2-1DF8-4F49-B399-B936542DE6BC@holtmann.org>
- <20170331133353.GA32267@kroah.com>
- <CAL_Jsq+NU3M5yuBpK1UGgzCVvq0eABMApCqEe3_d5+tDaABsgQ@mail.gmail.com>
- <20170410231041.vz35anezpzhscu4t@earth>
-Mime-Version: 1.0 (Mac OS X Mail 10.3 \(3273\))
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-bluetooth-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170410231041.vz35anezpzhscu4t@earth>
-Sender: linux-bluetooth-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "Gustavo F. Padovan" <gustavo-THi1TnShQwVAfugRpC6u6w@public.gmane.org>, Johan Hedberg <johan.hedberg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Samuel Thibault <samuel.thibault-vYW+cPY1g1pg9hUCZPvPmw@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Jiri Slaby <jslaby-IBi9RG/b67k@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "open list:BLUETOOTH DRIVERS" <linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+From: <michael.hennerich@analog.com>
+Subject: [PATCH v5 1/2] dt-bindings: i2c: mux: ltc4306: Add dt-bindings for I2C multiplexer/switch
+Date: Tue, 11 Apr 2017 14:16:15 +0200
+Message-ID: <1491912976-8396-1-git-send-email-michael.hennerich@analog.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: wsa@the-dreams.de, peda@axentia.se, robh+dt@kernel.org, mark.rutland@arm.com, linus.walleij@linaro.org
+Cc: linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, Michael Hennerich <michael.hennerich@analog.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sebastian,
+From: Michael Hennerich <michael.hennerich@analog.com>
 
->>>>>> Here is PATCHv3 for the Nokia bluetooth patchset. I addressed all comments from
->>>>>> Rob and Pavel regarding the serdev patches and dropped the *.dts patches, since
->>>>>> they were queued by Tony. I also changed the patch order, so that the serdev
->>>>>> patches come first. All of them have Acked-by from Rob, so I think it makes
->>>>>> sense to merge them to serdev subsystem (now) and provide an immutable branch
->>>>>> for the bluetooth subsystem.
->>>>> 
->>>>> Greg doesn't read cover letters generally and since the serdev patches
->>>>> are Cc rather than To him, he's probably not planning to pick them up.
->>>> 
->>>> I wonder actually if we should merge all of these via bluetooth-next
->>>> tree with proper Ack from Greg. However it would be good to also get
->>>> buy in from Dave for merging this ultimately through net-next.
->>> 
->>> I don't really care where it goes.  I can take the whole thing in my
->>> tty/serial tree now if no one objects and I get an ack from the relevant
->>> maintainers {hint...}
->> 
->> I think it is better if it goes thru BT tree. I have another driver
->> converted that is dependent on this series. There's a couple other
->> serdev changes on the list too, but this shouldn't depend on them.
-> 
-> Is this waiting for something, or could it be queued to
-> bluetooth-next then? It would be nice to finally have
-> this in 4.12 :)
+This patch adds support for the Analog Devices / Linear Technology
+LTC4306 and LTC4305 4/2 Channel I2C Bus Multiplexer/Switches.
+The LTC4306 optionally provides two general purpose input/output pins
+(GPIOs) that can be configured as logic inputs, opendrain outputs or
+push-pull outputs via the generic GPIOLIB framework.
 
-I would prefer if we can get an ACK from Greg. Then I merge it through the bluetooth-next tree.
+Signed-off-by: Michael Hennerich <michael.hennerich@analog.com>
+Acked-by: Rob Herring <robh@kernel.org>
+---
+ .../devicetree/bindings/i2c/i2c-mux-ltc4306.txt    | 61 ++++++++++++++++++++++
+ 1 file changed, 61 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/i2c/i2c-mux-ltc4306.txt
 
-Regards
-
-Marcel
+diff --git a/Documentation/devicetree/bindings/i2c/i2c-mux-ltc4306.txt b/Documentation/devicetree/bindings/i2c/i2c-mux-ltc4306.txt
+new file mode 100644
+index 0000000..1e98c6b
+--- /dev/null
++++ b/Documentation/devicetree/bindings/i2c/i2c-mux-ltc4306.txt
+@@ -0,0 +1,61 @@
++* Linear Technology / Analog Devices I2C bus switch
++
++Required Properties:
++
++  - compatible: Must contain one of the following.
++    "lltc,ltc4305", "lltc,ltc4306"
++  - reg: The I2C address of the device.
++
++  The following required properties are defined externally:
++
++  - Standard I2C mux properties. See i2c-mux.txt in this directory.
++  - I2C child bus nodes. See i2c-mux.txt in this directory.
++
++Optional Properties:
++
++  - enable-gpios: Reference to the GPIO connected to the enable input.
++  - i2c-mux-idle-disconnect: Boolean; if defined, forces mux to disconnect all
++    children in idle state. This is necessary for example, if there are several
++    multiplexers on the bus and the devices behind them use same I2C addresses.
++  - gpio-controller: Marks the device node as a GPIO Controller.
++  - #gpio-cells: Should be two.  The first cell is the pin number and
++	the second cell is used to specify flags.
++	See ../gpio/gpio.txt for more information.
++  - ltc,downstream-accelerators-enable: Enables the rise time accelerators
++	on the downstream port.
++  - ltc,upstream-accelerators-enable: Enables the rise time accelerators
++	on the upstream port.
++
++Example:
++
++	ltc4306: i2c-mux@4a {
++		compatible = "lltc,ltc4306";
++		#address-cells = <1>;
++		#size-cells = <0>;
++		reg = <0x4a>;
++
++		gpio-controller;
++		#gpio-cells = <2>;
++
++		i2c@0 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <0>;
++
++			eeprom@50 {
++				compatible = "at,24c02";
++				reg = <0x50>;
++			};
++		};
++
++		i2c@1 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <1>;
++
++			eeprom@50 {
++				compatible = "at,24c02";
++				reg = <0x50>;
++			};
++		};
++	};
+-- 
+2.7.4
