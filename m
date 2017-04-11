@@ -1,66 +1,96 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH 1/2] leds: cpcap: new driver
-Date: Tue, 11 Apr 2017 22:20:08 +0200
-Message-ID: <20170411202008.GB14911@amd>
-References: <20170305172234.24120-1-sre@kernel.org>
- <20170306221147.GA24272@amd>
- <20170306233859.GQ20572@atomide.com>
- <20170307115549.GA914@amd>
- <20170307162640.GS20572@atomide.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 1/2] dt-bindings: Document STM32 I2S
+	bindings
+Date: Tue, 11 Apr 2017 21:19:50 +0100
+Message-ID: <20170411201950.37ef4qpiefhengjn@sirena.org.uk>
+References: <1491493236-2574-1-git-send-email-olivier.moysan@st.com>
+ <1491493236-2574-2-git-send-email-olivier.moysan@st.com>
+ <20170410194832.iivnkyejtywbe2c7@rob-hp-laptop>
+ <20170411143250.3r7ys3rjshtxgaee@sirena.org.uk>
+ <CAL_Jsq+bsh8Byow4poT7cdpLY_skb7QxbzkAmj4q7Cf6Z88GWA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="CdrF4e02JqNVZeln"
-Return-path: <linux-leds-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170307162640.GS20572@atomide.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: Sebastian Reichel <sre@kernel.org>, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: multipart/mixed; boundary="===============4381782170080685463=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <CAL_Jsq+bsh8Byow4poT7cdpLY_skb7QxbzkAmj4q7Cf6Z88GWA@mail.gmail.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Rob Herring <robh@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-ALSA <alsa-devel@alsa-project.org>, olivier moysan <olivier.moysan@st.com>, Alexandre Torgue <alexandre.torgue@st.com>, Arnaud POULIQUEN <arnaud.pouliquen@st.com>, Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Benjamin Gaignard <benjamin.gaignard@st.com>
 List-Id: devicetree@vger.kernel.org
 
 
---CdrF4e02JqNVZeln
+--===============4381782170080685463==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="xacb7rhtzkaf6p74"
+Content-Disposition: inline
+
+
+--xacb7rhtzkaf6p74
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Tue 2017-03-07 08:26:40, Tony Lindgren wrote:
-> * Pavel Machek <pavel@ucw.cz> [170307 03:57]:
-> > 2 cores and more importantly 1GB of RAM. Nice. OTOH, I'm avoiding N950
-> > due to its crazy "security" system and this one is even worse.
->=20
-> Yeah this security crap sucks big time in general. It just slows
-> down Linux development on usable devices making most of them throw
-> away bricks that nobody bothers to work on.
->=20
-> > Anyway, good luck, and thanks for the pointers. I will get Droid 4 if
-> > it is easy. But I guess I'll stick to N900 for now. I want something
-> > that can do voice calls.
->=20
-> Yeah.. For a security free solution, let's hope pyra will be able to
-> make voice calls too :)
->=20
-> Meanwhile, using droid 4 with a lapdock as a low power laptop is
-> probably few weeks away, which means I can use it :p
+On Tue, Apr 11, 2017 at 11:02:57AM -0500, Rob Herring wrote:
+> On Tue, Apr 11, 2017 at 9:32 AM, Mark Brown <broonie@kernel.org> wrote:
 
-Turning phones into laptops, nice ;-). I think I'll keep the thinkpad
-for a while, but yes, interesting machine.
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
+> > The graph card is blocked on your review...
 
---CdrF4e02JqNVZeln
+> Maybe if there were more reviewers it would move faster. I don't know
+> ASoC that well.
+
+The times I've looked at it recently it's been stuck in DT style issues
+rather than anything substantially ASoC related, as far as I can tell
+the binding is essentially empty from an ASoC point of view and
+inherited from the of_graph binding.  There's bits in that are a bit
+random like specifically listing the CPU DAIs and only them but that
+just looks like one of these random DT things that's predetermined.  I
+really can't see anything at all in there to review from an ASoC point
+of view, I've applied the changes that don't seem blocked on the
+binding.  If there's something you're looking for then please say...
+
+We never seem to make any progress on the generic changes in drivers/of at
+the start of the series either...
+
+> > I'm also not clear how
+> > without something like this we'd be able to identify a specific DAI
+> > within a device if we don't have a way of identifying them.
+
+> Isn't that what the graph does? "dais" points to a list of ports which
+> are the specific DAIs whether there are multiple ones in a single
+> device or multiple devices with a single DAI each.
+
+But the ports can still have indexes AFAICT (the examples show port@0,
+port@1 and so on) so we still need to define what those indexes mean
+which is what this is doing?
+
+--xacb7rhtzkaf6p74
 Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
 
-iEYEARECAAYFAljtOngACgkQMOfwapXb+vKFkQCfctNIIleyEGhWc2Zp/VsyRoJZ
-+eEAn3hMhhbvWV+Nb3Qel5FnVByZTWVP
-=3jSB
+iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAljtOmYACgkQJNaLcl1U
+h9B5OQf7B9wNcudZtBplNLf1XRNZi7DFyY4DCG+5G4YCqxk16xgA9osL0lUiOTy3
+lAsejRSnnkn/lH+Ii6Dji784DoUw4P1PhOTcJHcXUdbBShreBPTvC4heIbXy+waF
+cZuXsLxjC7iQGWUU9fCxm7YNYnaME1NKZPjGb7Pcy8LQAp5WYu0k2E7OxZbWg77f
+6rmUNbEWBPBU2qI+ykibDGs+5iBZh/vMdp/AapvwKBoS3wjpa7VasK+P7axm7F+U
+YZaiVHsm9iNIZEu5qcXaVC8HzQCm0NQXG5C3FMSqMGquCcPct/Q0RQRW2QtitZO0
+oXijSKpN2MvhHcMSRx+6HHQaxdAnYg==
+=uZV/
 -----END PGP SIGNATURE-----
 
---CdrF4e02JqNVZeln--
+--xacb7rhtzkaf6p74--
+
+--===============4381782170080685463==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============4381782170080685463==--
