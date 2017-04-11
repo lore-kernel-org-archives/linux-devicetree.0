@@ -1,47 +1,81 @@
-From: Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>
-Subject: Re: [PATCH v5 04/10] drm/stm: Add STM32 LTDC driver
-Date: Tue, 11 Apr 2017 22:51:32 +0200
-Message-ID: <20170411205132.sze2wfnnim4halqb@phenom.ffwll.local>
-References: <1490694293-18358-1-git-send-email-yannick.fertre@st.com>
- <1490694293-18358-5-git-send-email-yannick.fertre@st.com>
- <87wpaqeks2.fsf@eliezer.anholt.net>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH v2 1/5] dt-bindings: gpu: add bindings for the ARM Mali Midgard GPU
+Date: Tue, 11 Apr 2017 22:52:29 +0200
+Message-ID: <8676554.1IW2xieEGM@diego>
+References: <cover.1491118230.git.guillaume.tucker@collabora.com> <a01a50d3-bb1b-2c56-2a15-30651fa2fac9@baylibre.com> <936a53ee-2ed8-11e4-a860-744256676af9@collabora.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <87wpaqeks2.fsf-omZaPlIz5HhaEpDpdNBo/KxOck334EZe@public.gmane.org>
+In-Reply-To: <936a53ee-2ed8-11e4-a860-744256676af9-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-Cc: Yannick Fertre <yannick.fertre-qxv4g6HH51o@public.gmane.org>, Alexandre TORGUE <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Benjamin Gaignard <benjamin.gaignard-qxv4g6HH51o@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, Philippe Cornu <philippe.cornu-qxv4g6HH51o@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Fabien Dessenne <fabien.dessenne-qxv4g6HH51o@public.gmane.org>, Mickael Reulier <mickael.reulier-qxv4g6HH51o@public.gmane.org>, Vincent Abriou <vincent.abriou-qxv4g6HH51o@public.gmane.org>, Gabriel FERNANDEZ <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Guillaume Tucker <guillaume.tucker-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Cc: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sjoerd Simons <sjoerd.simons-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, Wookey <wookey-Xpnwy/r4z8dg9hUCZPvPmw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, John Reitan <john.reitan-5wv7dgnIgG8@public.gmane.org>, Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 11, 2017 at 01:45:01PM -0700, Eric Anholt wrote:
-> Yannick Fertre <yannick.fertre-qxv4g6HH51o@public.gmane.org> writes:
-> > +static void ltdc_crtc_disable(struct drm_crtc *crtc)
-> > +{
-> > +	struct ltdc_device *ldev = crtc_to_ltdc(crtc);
-> > +	struct drm_pending_vblank_event *event = crtc->state->event;
-> > +
-> > +	DRM_DEBUG_DRIVER("\n");
-> > +
-> > +	if (!crtc->enabled) {
-> > +		DRM_DEBUG_DRIVER("already disabled\n");
-> > +		return;
-> > +	}
+Hi Guillaume,
+
+Am Dienstag, 11. April 2017, 18:40:37 CEST schrieb Guillaume Tucker:
+> On 03/04/17 09:12, Neil Armstrong wrote:
+> > On 04/02/2017 09:59 AM, Guillaume Tucker wrote:
+> >> +Optional:
+> >> +
+> >> +- clocks : Phandle to clock for the Mali Midgard device.
+> >> +- clock-names : Shall be "clk_mali".
+> >> +- mali-supply : Phandle to regulator for the Mali device. Refer to
+> >> +  Documentation/devicetree/bindings/regulator/regulator.txt for details.
+> >> +- operating-points : Refer to
+> >> Documentation/devicetree/bindings/power/opp.txt +  for details.
+> > 
+> > Please add :
+> >    * Must be one of the following:
+> >       "arm,mali-t820"
+> >    
+> >    * And, optionally, one of the vendor specific compatible:
+> >       "amlogic,meson-gxm-mali"
+> > 
+> > with my Ack for the amlogic platform.
 > 
-> I think this crtc->enabled is a given for the disable() being called.
+> It seems to me that as long as the GPU architecture hasn't been
+> modified (I don't think I've ever encountered such a case) then
+> it has to be a standard ARM Mali type regardless of the SoC
+> vendor.  So unless a Mali-T820 in the Amlogic S912 SoC is not the
+> same as a T820 in a different SoC, please forgive me but I don't
+> understand why a vendor compatible string is needed.  My main
+> concern is that it's going to be very hard to keep that list
+> up-to-date with all existing Midgard SoC variants.  If do we need
+> to add vendor compatible strings to correctly describe the
+> hardware then I'm happy to add the amlogic one in my patch v3; I
+> would just like to understand why that's necessary.
 
-Yup, one design principle of atomic (compared to the legacy modeset
-helpers) is to correctly keep track of hw state and not call a hook when
-not needed. If you don't trust them, conver them to WARN_ON, but otherwise
-best to remove.
+SoC vendors in most cases hook ip blocks into their socs in different
+and often strange ways. After all it's not some discrete ic you solder
+onto a board, but instead a part of the soc itself.
 
-But like Eric said, totally fine in a follow-up patch.
--Daniel
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+So in most cases you will have some hooks outside the actual gpu iospace
+that can be used to tune different things about how the gpu interacts with
+the system. Which is probably also the reason the midgard kernel driver
+has this ugly "platform" subdirectory for compile-time platform selection.
+
+On my rk3288 for example we have [0] in the chromeos tree, that handles
+the oddities of the midgard on the rk3288 used in a lot of Chromebooks.
+There are soc-specific oddities of frequencies, frequency-scaling and
+whatnot. And there are also more gpu-specific setting in syscon areas
+of the soc (pmu and grf) that can also influence the gpus performance
+and might need tweaking at some point.
+
+That doesn't even take into account that there may even be differences
+on how things are synthesized that we don't know about. See all the
+variants of the dw_hdmi ip block (imx, rockchip, meson [more?]) .
+
+So we really want to have the special compatibles in place, to be prepared
+for the future per-soc oddities that always appear :-) .
+
+
+Heiko
+
+[0] https://chromium.googlesource.com/chromiumos/third_party/kernel/+/chromeos-3.14/drivers/gpu/arm/midgard/platform/rk/
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
