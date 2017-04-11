@@ -1,63 +1,94 @@
-From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH 1/1] ARM: dts: dra7x-evm: Enable dual-role mode for USB1
-Date: Tue, 11 Apr 2017 16:16:15 +0300
-Message-ID: <1491916575-16023-2-git-send-email-rogerq@ti.com>
-References: <1491916575-16023-1-git-send-email-rogerq@ti.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v1 3/3] nvmem: dt: document SNVS LPGPR binding
+Date: Tue, 11 Apr 2017 08:35:00 -0500
+Message-ID: <CAL_JsqJeqYEw7v_z9zhtnP9hZEvkc5Z8TsktzbrCrmc7vorGkA@mail.gmail.com>
+References: <20170406073107.32445-1-o.rempel@pengutronix.de>
+ <20170406073107.32445-3-o.rempel@pengutronix.de> <20170410182235.pmobyxn6kvyvcwsj@rob-hp-laptop>
+ <1e0f8a71-9dca-7aaa-a603-86ed3934da4d@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1491916575-16023-1-git-send-email-rogerq-l0cyMroinI0@public.gmane.org>
+In-Reply-To: <1e0f8a71-9dca-7aaa-a603-86ed3934da4d-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org
-Cc: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+To: Oleksij Rempel <ore-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Oleksij Rempel <o.rempel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-USB1 port is micro-AB type and can function as peripheral
-as well as host. Enable dual-role mode for USB1.
+On Mon, Apr 10, 2017 at 11:36 PM, Oleksij Rempel <ore-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
+> Hi,
+>
+>
+> On 04/10/2017 08:22 PM, Rob Herring wrote:
+>>
+>> On Thu, Apr 06, 2017 at 09:31:07AM +0200, Oleksij Rempel wrote:
+>>>
+>>> Documenation bindings for the Low Power General Purpose Registe
+>>
+>>
+>> s/Registe/Register/
+>>
+>>> available on i.MX6 SoCs in the Secure Non-Volatile Storage.
+>>>
+>>> Signed-off-by: Oleksij Rempel <o.rempel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+>>> Cc: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>>> Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+>>> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>>> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+>>> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>>> Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>>> ---
+>>>  Documentation/devicetree/bindings/nvmem/snvs-lpgpr.txt | 15
+>>> +++++++++++++++
+>>>  1 file changed, 15 insertions(+)
+>>>  create mode 100644
+>>> Documentation/devicetree/bindings/nvmem/snvs-lpgpr.txt
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/nvmem/snvs-lpgpr.txt
+>>> b/Documentation/devicetree/bindings/nvmem/snvs-lpgpr.txt
+>>> new file mode 100644
+>>> index 000000000000..9a8be1a2d12e
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/nvmem/snvs-lpgpr.txt
+>>> @@ -0,0 +1,15 @@
+>>> +Device tree bindings for Low Power General Purpose Registe found in
+>>> i.MX6Q/D
+>>> +Secure Non-Volatile Storage.
+>>> +
+>>> +Required properties:
+>>> +- compatible: should be one of
+>>> +       "fsl,imx6q-snvs-lpgpr" (i.MX6Q/D/DL/S).
+>>> +- offset: Should contain the offset relative to syscon parrent node.
+>>
+>>
+>> typo
+>
+>
+> ok.
+>
+>>  +- regmap: Should contain a phandle pointing to syscon.
+>>>
+>>> +
+>>> +Example:
+>>> +       snvs_lpgpr: snvs-lpgpr {
+>>> +               compatible = "fsl,imx6q-snvs-lpgpr";
+>>> +               regmap = <&snvs>;
+>>> +               offset = <0x68>;
+>>
+>>
+>> Why does this need to be in DT? Is something going to refer to this
+>> node? If not, the &snvs node should be enough information for the OS.
+>
+>
+> Jes, it is refereed by other driver.
 
-We don't want to use the OTG controller block on this
-platform as it limits host mode to high-speed. Instead
-we rely on extcon framework to give us ID events for
-dual-role mode detection.
+What I mean is snvs-lpgpr referenced elsewhere in DT, not by some
+driver? You are not using the nvmem binding here so it doesn't seem
+like it is. If that's the case, then you don't need this node. The
+only information here is the offset which can be part of a driver for
+the parent node. To put it another way, we don't want to fill DT with
+a node per register.
 
-Signed-off-by: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-Signed-off-by: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
----
- arch/arm/boot/dts/dra7-evm.dts          | 3 ++-
- arch/arm/boot/dts/dra72-evm-common.dtsi | 3 ++-
- 2 files changed, 4 insertions(+), 2 deletions(-)
-
-diff --git a/arch/arm/boot/dts/dra7-evm.dts b/arch/arm/boot/dts/dra7-evm.dts
-index 4bc4b57..c408aaa 100644
---- a/arch/arm/boot/dts/dra7-evm.dts
-+++ b/arch/arm/boot/dts/dra7-evm.dts
-@@ -527,7 +527,8 @@
- };
- 
- &usb1 {
--	dr_mode = "peripheral";
-+	dr_mode = "otg";
-+	extcon = <&extcon_usb1>;
- };
- 
- &usb2 {
-diff --git a/arch/arm/boot/dts/dra72-evm-common.dtsi b/arch/arm/boot/dts/dra72-evm-common.dtsi
-index ad24544..8578054 100644
---- a/arch/arm/boot/dts/dra72-evm-common.dtsi
-+++ b/arch/arm/boot/dts/dra72-evm-common.dtsi
-@@ -392,7 +392,8 @@
- };
- 
- &usb1 {
--	dr_mode = "peripheral";
-+	dr_mode = "otg";
-+	extcon = <&extcon_usb1>;
- };
- 
- &usb2 {
--- 
-2.7.4
-
+Rob
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
