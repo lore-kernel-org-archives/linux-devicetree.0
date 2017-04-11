@@ -1,152 +1,151 @@
-From: David Daney <david.daney@cavium.com>
-Subject: [PATCH v6 2/6] genirq: Add handle_fasteoi_{level,edge}_irq flow handlers.
-Date: Tue, 11 Apr 2017 10:21:05 -0700
-Message-ID: <1491931269-15650-3-git-send-email-david.daney@cavium.com>
-References: <1491931269-15650-1-git-send-email-david.daney@cavium.com>
+From: Guillaume Tucker <guillaume.tucker-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Subject: Re: [PATCH v2 1/5] dt-bindings: gpu: add bindings for the ARM Mali
+ Midgard GPU
+Date: Tue, 11 Apr 2017 18:40:37 +0100
+Message-ID: <936a53ee-2ed8-11e4-a860-744256676af9@collabora.com>
+References: <cover.1491118230.git.guillaume.tucker@collabora.com>
+ <db45d0d68957d699f13a0d92f4f84d8ebfd0270e.1491118230.git.guillaume.tucker@collabora.com>
+ <a01a50d3-bb1b-2c56-2a15-30651fa2fac9@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1491931269-15650-1-git-send-email-david.daney@cavium.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Marc Zyngier <marc.zyngier@arm.com>, Thomas Gleixner <tglx@linutronix.de>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, David Daney <david.daney@cavium.com>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <a01a50d3-bb1b-2c56-2a15-30651fa2fac9-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sjoerd Simons <sjoerd.simons-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, Wookey <wookey-Xpnwy/r4z8dg9hUCZPvPmw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, John Reitan <john.reitan-5wv7dgnIgG8@public.gmane.org>, Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Follow-on patch for gpio-thunderx uses a irqdomain hierarchy which
-requires slightly different flow handlers, add them to chip.c which
-contains most of the other flow handlers.
+On 03/04/17 09:12, Neil Armstrong wrote:
+> On 04/02/2017 09:59 AM, Guillaume Tucker wrote:
+>> The ARM Mali Midgard GPU family is present in a number of SoCs
+>> from many different vendors such as Samsung Exynos and Rockchip.
+>>
+>> Import the device tree bindings documentation from the r16p0
+>> release of the Mali Midgard GPU kernel driver:
+>>
+>>   https://developer.arm.com/-/media/Files/downloads/mali-drivers/kernel/mali-midgard-gpu/TX011-SW-99002-r16p0-00rel0.tgz
+>>
+>> The following optional bindings have been omitted in this initial
+>> version as they are only used in very specific cases:
+>>
+>>   * snoop_enable_smc
+>>   * snoop_disable_smc
+>>   * jm_config
+>>   * power_model
+>>   * system-coherency
+>>   * ipa-model
+>>
+>> The example has been simplified accordingly.
+>>
+>> The compatible string definition has been limited to
+>> "arm,mali-midgard" to avoid checkpatch.pl warnings and to match
+>> what the driver actually expects (as of r16p0 out-of-tree).
+>>
+>> CC: John Reitan <john.reitan-5wv7dgnIgG8@public.gmane.org>
+>> Signed-off-by: Guillaume Tucker <guillaume.tucker-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+>> ---
+>>  .../devicetree/bindings/gpu/arm,mali-midgard.txt   | 53 ++++++++++++++++++++++
+>>  1 file changed, 53 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt b/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt
+>> new file mode 100644
+>> index 000000000000..da8fc6d21bbf
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt
+>> @@ -0,0 +1,53 @@
+>> +#
+>> +# (C) COPYRIGHT 2013-2016 ARM Limited.
+>> +# Copyright (C) 2017 Collabora Ltd
+>> +#
+>> +# This program is free software and is provided to you under the terms of the
+>> +# GNU General Public License version 2 as published by the Free Software
+>> +# Foundation, and any use by you of this program is subject to the terms
+>> +# of such GNU licence.
+>> +#
+> Hi Guillaume,
+> This is unnecessary, please remove.
 
-Signed-off-by: David Daney <david.daney@cavium.com>
----
- include/linux/irq.h |   2 ++
- kernel/irq/chip.c   | 102 ++++++++++++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 104 insertions(+)
+Hi Neil,
 
-diff --git a/include/linux/irq.h b/include/linux/irq.h
-index f887351..3db0eb8 100644
---- a/include/linux/irq.h
-+++ b/include/linux/irq.h
-@@ -518,6 +518,8 @@ static inline int irq_set_parent(int irq, int parent_irq)
- extern int irq_chip_pm_get(struct irq_data *data);
- extern int irq_chip_pm_put(struct irq_data *data);
- #ifdef	CONFIG_IRQ_DOMAIN_HIERARCHY
-+extern void handle_fasteoi_edge_irq(struct irq_desc *desc);
-+extern void handle_fasteoi_level_irq(struct irq_desc *desc);
- extern void irq_chip_enable_parent(struct irq_data *data);
- extern void irq_chip_disable_parent(struct irq_data *data);
- extern void irq_chip_ack_parent(struct irq_data *data);
-diff --git a/kernel/irq/chip.c b/kernel/irq/chip.c
-index 73ea90b..213105d 100644
---- a/kernel/irq/chip.c
-+++ b/kernel/irq/chip.c
-@@ -981,6 +981,108 @@ void irq_cpu_offline(void)
- 
- #ifdef	CONFIG_IRQ_DOMAIN_HIERARCHY
- /**
-+ *	handle_fasteoi_edge_irq - irq handler for edge hierarchy
-+ *	stacked on transparent controllers
-+ *
-+ *	@desc:	the interrupt description structure for this irq
-+ *
-+ *	Like handle_fasteoi_irq(), but for use with hierarchy where
-+ *	the irq_chip also needs to have its ->irq_ack() function
-+ *	called.
-+ */
-+void handle_fasteoi_edge_irq(struct irq_desc *desc)
-+{
-+	struct irq_chip *chip = desc->irq_data.chip;
-+
-+	raw_spin_lock(&desc->lock);
-+
-+	if (!irq_may_run(desc))
-+		goto out;
-+
-+	desc->istate &= ~(IRQS_REPLAY | IRQS_WAITING);
-+
-+	/*
-+	 * If its disabled or no action available
-+	 * then mask it and get out of here:
-+	 */
-+	if (unlikely(!desc->action || irqd_irq_disabled(&desc->irq_data))) {
-+		desc->istate |= IRQS_PENDING;
-+		mask_irq(desc);
-+		goto out;
-+	}
-+
-+	kstat_incr_irqs_this_cpu(desc);
-+	if (desc->istate & IRQS_ONESHOT)
-+		mask_irq(desc);
-+
-+	/* Start handling the irq */
-+	desc->irq_data.chip->irq_ack(&desc->irq_data);
-+
-+	preflow_handler(desc);
-+	handle_irq_event(desc);
-+
-+	cond_unmask_eoi_irq(desc, chip);
-+
-+	raw_spin_unlock(&desc->lock);
-+	return;
-+out:
-+	if (!(chip->flags & IRQCHIP_EOI_IF_HANDLED))
-+		chip->irq_eoi(&desc->irq_data);
-+	raw_spin_unlock(&desc->lock);
-+}
-+EXPORT_SYMBOL_GPL(handle_fasteoi_edge_irq);
-+
-+/**
-+ *	handle_fasteoi_level_irq - irq handler for level hierarchy
-+ *	stacked on transparent controllers
-+ *
-+ *	@desc:	the interrupt description structure for this irq
-+ *
-+ *	Like handle_fasteoi_irq(), but for use with hierarchy where
-+ *	the irq_chip also needs to have its ->irq_mask_ack() function
-+ *	called.
-+ */
-+void handle_fasteoi_level_irq(struct irq_desc *desc)
-+{
-+	struct irq_chip *chip = desc->irq_data.chip;
-+
-+	raw_spin_lock(&desc->lock);
-+	mask_ack_irq(desc);
-+
-+	if (!irq_may_run(desc))
-+		goto out;
-+
-+	desc->istate &= ~(IRQS_REPLAY | IRQS_WAITING);
-+
-+	/*
-+	 * If its disabled or no action available
-+	 * then mask it and get out of here:
-+	 */
-+	if (unlikely(!desc->action || irqd_irq_disabled(&desc->irq_data))) {
-+		desc->istate |= IRQS_PENDING;
-+		mask_irq(desc);
-+		goto out;
-+	}
-+
-+	kstat_incr_irqs_this_cpu(desc);
-+	if (desc->istate & IRQS_ONESHOT)
-+		mask_irq(desc);
-+
-+	preflow_handler(desc);
-+	handle_irq_event(desc);
-+
-+	cond_unmask_eoi_irq(desc, chip);
-+
-+	raw_spin_unlock(&desc->lock);
-+	return;
-+out:
-+	if (!(chip->flags & IRQCHIP_EOI_IF_HANDLED))
-+		chip->irq_eoi(&desc->irq_data);
-+	raw_spin_unlock(&desc->lock);
-+}
-+EXPORT_SYMBOL_GPL(handle_fasteoi_level_irq);
-+
-+/**
-  * irq_chip_enable_parent - Enable the parent interrupt (defaults to unmask if
-  * NULL)
-  * @data:	Pointer to interrupt specific data
--- 
-1.8.3.1
+I see most other documentation files don't have such a header,
+including the arm,mali-utgard.txt one.  I left it in my patch
+after copying the file from the driver tarball as removing it
+didn't seem right from a GPL and copyright point of view.  If
+it's safe in practice to remove it then fine.
+
+>> +
+>> +
+>> +ARM Mali Midgard GPU
+>> +====================
+>> +
+>> +Required properties:
+>> +
+>> +- compatible : Should be "arm,mali-midgard".
+>> +- reg : Physical base address of the device and length of the register area.
+>> +- interrupts : Contains the three IRQ lines required by Mali Midgard devices.
+>> +- interrupt-names : Contains the names of IRQ resources in the order they were
+>> +  provided in the interrupts property. Must contain: "JOB, "MMU", "GPU".
+>
+>
+> Please follow the bindings introduced for the utgard family :
+> https://patchwork.kernel.org/patch/9553745/
+>
+> - an entry for each mali-midgard revision, i.e. "arm,mali-t820"
+
+Sure.  It's a bit more complicated with Midgard (more variants,
+some have the number of cores in the last digit...) but it should
+be possible to put together a suitable list in v3.
+
+> - an entry for each vendor specific wrapping if necessary, i.e. "amlogic,meson-gxm-mali"
+
+Well, fine although I'm a bit confused about this - please see
+below.
+
+> - low-case for interrupt names
+
+OK, can change that in v3.  It means however that the out-of-tree
+driver will need to be patched as it's looking for these names in
+capital letters.  This shouldn't be a big issue but adds a bit of
+work to anyone maintaining a kernel driver package.
+
+>> +
+>> +Optional:
+>> +
+>> +- clocks : Phandle to clock for the Mali Midgard device.
+>> +- clock-names : Shall be "clk_mali".
+>> +- mali-supply : Phandle to regulator for the Mali device. Refer to
+>> +  Documentation/devicetree/bindings/regulator/regulator.txt for details.
+>> +- operating-points : Refer to Documentation/devicetree/bindings/power/opp.txt
+>> +  for details.
+>
+> Please add :
+>    * Must be one of the following:
+>       "arm,mali-t820"
+>    * And, optionally, one of the vendor specific compatible:
+>       "amlogic,meson-gxm-mali"
+>
+> with my Ack for the amlogic platform.
+
+It seems to me that as long as the GPU architecture hasn't been
+modified (I don't think I've ever encountered such a case) then
+it has to be a standard ARM Mali type regardless of the SoC
+vendor.  So unless a Mali-T820 in the Amlogic S912 SoC is not the
+same as a T820 in a different SoC, please forgive me but I don't
+understand why a vendor compatible string is needed.  My main
+concern is that it's going to be very hard to keep that list
+up-to-date with all existing Midgard SoC variants.  If do we need
+to add vendor compatible strings to correctly describe the
+hardware then I'm happy to add the amlogic one in my patch v3; I
+would just like to understand why that's necessary.
+
+
+Thanks,
+Guillaume
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
