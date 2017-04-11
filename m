@@ -1,82 +1,57 @@
 From: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v6 0/6] genirq/gpio: Add driver for ThunderX and OCTEON-TX SoCs
-Date: Tue, 11 Apr 2017 10:21:03 -0700
-Message-ID: <1491931269-15650-1-git-send-email-david.daney@cavium.com>
+Subject: [PATCH v6 1/6] genirq: Export more irq_chip_*_parent() functions.
+Date: Tue, 11 Apr 2017 10:21:04 -0700
+Message-ID: <1491931269-15650-2-git-send-email-david.daney@cavium.com>
+References: <1491931269-15650-1-git-send-email-david.daney@cavium.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1491931269-15650-1-git-send-email-david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The ThunderX/OCTEON-TX GPIO hardware looks like a PCIe device, with
-the interrupt signal from each GPIO line being routed to a dedicated
-MSI-X.  This interrupt routing requires that we add some custom
-processing to the beginning of the MSI-X irqdomain hierarchy.
+Many of the family of functions including irq_chip_mask_parent(),
+irq_chip_unmask_parent() are exported, but not all.
 
-Changes from v5:
+Add EXPORT_SYMBOL_GPL to irq_chip_enable_parent,
+irq_chip_disable_parent and irq_chip_set_affinity_parent, so they
+likewise are usable from modules.
 
- - Added .irq_{request,release}_resources() functions to irq_chip.
+Signed-off-by: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+---
+ kernel/irq/chip.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
- - Quit calling irq_set_irq_type() in the irq_map() function.
-
- - Added more error condition checking to irq_domain_{push,pop}_irq()
-
-Changes from v4:
-
- - Rebased to post-v4.10 to support .set_config() function.
-
- - Added .get_direction() support.
-
- - Added PIN_CONFIG_INPUT_DEBOUNCE support.
-
- - Removed some improper use of ENOSYS.
-
-Changes from v3:
-
- - Add some "depends on" to the driver Kconfig to avoid build errors
-   in some architectures when doing COMPILE_TEST builds.
-
-Changes from v2:
-
- - in 4/6: Added Rob Harring's Acked-by
-
- - Added three patches to genirq/irqdomain to support interrupt code
-   in the driver.
-
- - Rewrite irq code in driver to use irqdomain hierarchy.
-
- - Other naming and style changes as recommended by Linus Walleij.
-
-Changes from v1:
-
- - in 1/3: Addressed Rob Harring's comments.
-
- - in 2/3: Trivial cleanups found in internal review + add some
-   comments.
-
-David Daney (6):
-  genirq: Export more irq_chip_*_parent() functions.
-  genirq: Add handle_fasteoi_{level,edge}_irq flow handlers.
-  irqdomain: Add irq_domain_{push,pop}_irq() functions.
-  dt-bindings: gpio: Add binding documentation for gpio-thunderx
-  gpio: Add gpio driver support for ThunderX and OCTEON-TX
-  MAINTAINERS: Add entry for THUNDERX GPIO Driver.
-
- .../devicetree/bindings/gpio/gpio-thunderx.txt     |  27 +
- MAINTAINERS                                        |   5 +
- drivers/gpio/Kconfig                               |   8 +
- drivers/gpio/Makefile                              |   1 +
- drivers/gpio/gpio-thunderx.c                       | 639 +++++++++++++++++++++
- include/linux/irq.h                                |   2 +
- include/linux/irqdomain.h                          |   3 +
- kernel/irq/chip.c                                  | 105 ++++
- kernel/irq/irqdomain.c                             | 178 ++++++
- 9 files changed, 968 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/gpio/gpio-thunderx.txt
- create mode 100644 drivers/gpio/gpio-thunderx.c
-
+diff --git a/kernel/irq/chip.c b/kernel/irq/chip.c
+index be3c34e..73ea90b 100644
+--- a/kernel/irq/chip.c
++++ b/kernel/irq/chip.c
+@@ -993,6 +993,7 @@ void irq_chip_enable_parent(struct irq_data *data)
+ 	else
+ 		data->chip->irq_unmask(data);
+ }
++EXPORT_SYMBOL_GPL(irq_chip_enable_parent);
+ 
+ /**
+  * irq_chip_disable_parent - Disable the parent interrupt (defaults to mask if
+@@ -1007,6 +1008,7 @@ void irq_chip_disable_parent(struct irq_data *data)
+ 	else
+ 		data->chip->irq_mask(data);
+ }
++EXPORT_SYMBOL_GPL(irq_chip_disable_parent);
+ 
+ /**
+  * irq_chip_ack_parent - Acknowledge the parent interrupt
+@@ -1069,6 +1071,7 @@ int irq_chip_set_affinity_parent(struct irq_data *data,
+ 
+ 	return -ENOSYS;
+ }
++EXPORT_SYMBOL_GPL(irq_chip_set_affinity_parent);
+ 
+ /**
+  * irq_chip_set_type_parent - Set IRQ type on the parent interrupt
 -- 
 1.8.3.1
 
