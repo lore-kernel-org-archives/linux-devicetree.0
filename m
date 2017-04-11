@@ -1,63 +1,85 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 06/16] regulator: madera-ldo1: LDO1 driver for Cirrus
- Logic Madera codecs
-Date: Tue, 11 Apr 2017 21:03:31 +0100
-Message-ID: <20170411200331.nv7bhwglrc7peggu@sirena.org.uk>
-References: <1491386884-30689-1-git-send-email-rf@opensource.wolfsonmicro.com>
- <1491386884-30689-7-git-send-email-rf@opensource.wolfsonmicro.com>
- <20170410174917.dlklrvw2sraeq6xs@rob-hp-laptop>
- <20170410181136.btpvcat2ijwiebvm@sirena.org.uk>
- <CAL_JsqLYi8txm2xb5emGvbC0P2cvtW2wXLdA=2qCO-wt_4JXXA@mail.gmail.com>
+From: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
+Subject: Re: [PATCH 1/2] leds: cpcap: new driver
+Date: Tue, 11 Apr 2017 22:19:03 +0200
+Message-ID: <20170411201903.GA14911@amd>
+References: <20170305172234.24120-1-sre@kernel.org>
+ <20170306221147.GA24272@amd>
+ <20170307171926.wscaogsrdmxc2opz@earth>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="ju7rq4pk2b5yh6ah"
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="M9NhX3UHpAaciwkO"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CAL_JsqLYi8txm2xb5emGvbC0P2cvtW2wXLdA=2qCO-wt_4JXXA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <20170307171926.wscaogsrdmxc2opz@earth>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Richard Fitzgerald <rf-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linux-ALSA <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Jacek Anaszewski <jacek.anaszewski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---ju7rq4pk2b5yh6ah
-Content-Type: text/plain; charset=us-ascii
+--M9NhX3UHpAaciwkO
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Apr 11, 2017 at 02:20:31PM -0500, Rob Herring wrote:
-> On Mon, Apr 10, 2017 at 1:11 PM, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+Hi!
 
-> > In what way?  Other than the -gpios stuff (which would just be a trivial
-> > thing if we wanted to change it)?
+> On Mon, Mar 06, 2017 at 11:11:47PM +0100, Pavel Machek wrote:
+> > > Motorola CPCAP is a PMIC found in multiple smartphones.
+> > > This driver adds support for the chip's LED controllers.
+> > > It has explicit support for all controllers used by the
+> > > Droid 4. Since no datasheets are available the other
+> > > available controllers are not supported until somebody
+> > > verified, that the register layout matches.
+> >=20
+> > This of course leads me to two questions:
+> >=20
+> > 1) Where can I get Droid 4?
+>=20
+> I got a used one on Ebay for 42=E2=82=AC incl. shipping & customs. The tr=
+ick
+> is clicking the worldwide option, since they are pretty expensive in
+> EU (they only exist with US LTE modem, so they were not sold here
+> officially).
+>=20
+> > 2) How well is it supported?
+>=20
+> UART + WLAN works with mainline master branch. As written by Tony
+> we have a couple of patches ready for 4.12. Big open tasks are the
+> cameras and the modems. Cameras are handled via co-processor in the
+> stock system (that's about all I know about them so far) and modems are
+> connected via USB + GPIOs (and for the 2G/3G modem an additional UART).
+> LTE modem support seems simple (USB-CDC based), but does not work
+> in EU and 2G/3G looks like much work. Modem voice support will be
+> simpler than on N900, though (data goes directly to the audio codec).
+> Speaking about audio codec: I'm currently working on that.
 
-> That's mainly it.
+Thanks for all the information. It looks like a nice and powerful
+machine, but I'm looking for a phone, first. (I'd actually like
+something smaller than n900, preferably 3 times smaller... but... as
+long as it calls it will have to do :-) ).
 
-I don't see that as meaningful or a good reason to duplicate the driver
-or the binding, it'd be better to just add the new property and
-deprecate the old.
+Best regards,
+								Pavel
 
->                   It's not clear which node wlf,ldoena goes in either.
-> In the parent? ldo1?
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
 
-Parent since it's looked up in device context, this is also something
-that it seems better to fix in one binding rather than duplicate.
-
---ju7rq4pk2b5yh6ah
+--M9NhX3UHpAaciwkO
 Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
-iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAljtNpIACgkQJNaLcl1U
-h9A0Vgf9G9MsNcnST0EhK+nIH9UisqZhfYnkOGa0lR7m31xbaqxhSyg8Mv5G+Nv2
-OeE+wL3czTi1+xTdV3RqmJifaatrRIWecDHZLaKArtnUnvcvIHC6PPM9awpHqPS4
-OOSBRZ2jTGF6TREmjkXl9VhLjVgBoYmLSCVmvHThO4ewatuJS8hSDMN4fwZWdqRh
-TAUZC5pW7sTY3g7xFygDej1wGJlxZkxh6auSZlLHMuL3auIP8WB5RRGpuB/Dvc48
-XLfSNn477rbE2jKh9uJDWnfqG7UWclFmvnEmZgb5/fi3TGbacHyX9sYYekoCWsGY
-uvWQKb5lq9TZURIWSa9fx7sjRmxf5g==
-=RCcr
+iEYEARECAAYFAljtOjcACgkQMOfwapXb+vL1mgCcCkFkwzboCiuh1m2JaaDVoOZP
+Sr8An0OQsz8X+3/tIaXP10FuMGBRWfIY
+=1U34
 -----END PGP SIGNATURE-----
 
---ju7rq4pk2b5yh6ah--
+--M9NhX3UHpAaciwkO--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
