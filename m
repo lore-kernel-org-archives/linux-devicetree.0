@@ -1,45 +1,94 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v4 0/9] Renesas RZ/A1 pin and gpio controller
-Date: Tue, 11 Apr 2017 11:14:18 +0200
-Message-ID: <CAMuHMdX_QAyJTs_M_KUyw=JfP0KuRw+2u5w+eo9AYxBc2BC+sA@mail.gmail.com>
-References: <1491401247-7030-1-git-send-email-jacopo+renesas@jmondi.org> <CACRpkdaxdDX71m4EGSHD2OV1gQsCwQeOCyeMDCndPxNpZU-oPw@mail.gmail.com>
+From: Michael Hennerich <michael.hennerich@analog.com>
+Subject: Re: [PATCH v4 2/2] i2c: mux: ltc4306: LTC4306 and LTC4305 I2C
+ multiplexer/switch
+Date: Tue, 11 Apr 2017 11:29:03 +0200
+Message-ID: <b565b940-e5d9-04da-dcd8-887848bb1af4@analog.com>
+References: <1491397671-14675-1-git-send-email-michael.hennerich@analog.com>
+ <1491397671-14675-2-git-send-email-michael.hennerich@analog.com>
+ <a5127934-863a-64d6-88e6-b8119035baf9@axentia.se>
+ <376f970f-9e0f-1d44-3813-93691c849b83@analog.com>
+ <67c557ae-f094-9fe4-d2f3-d7a2af2df9ca@axentia.se>
+Reply-To: <michael.hennerich@analog.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdaxdDX71m4EGSHD2OV1gQsCwQeOCyeMDCndPxNpZU-oPw@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Chris Brandt <chris.brandt@renesas.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <67c557ae-f094-9fe4-d2f3-d7a2af2df9ca@axentia.se>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Peter Rosin <peda@axentia.se>, wsa@the-dreams.de, robh+dt@kernel.org, mark.rutland@arm.com, linus.walleij@linaro.org
+Cc: linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Linus,
+On 06.04.2017 22:03, Peter Rosin wrote:
+> On 2017-04-06 13:31, Michael Hennerich wrote:
+>> On 06.04.2017 10:39, Peter Rosin wrote:
 
-On Tue, Apr 11, 2017 at 11:05 AM, Linus Walleij
-<linus.walleij@linaro.org> wrote:
-> On Wed, Apr 5, 2017 at 4:07 PM, Jacopo Mondi <jacopo+renesas@jmondi.org> wrote:
->> Hi Linus,
->>    this is 4th round of gpio/pincontroller for RZ/A1 devices.
+Hi Peter,
+
+again - thanks for your review.
+Comments below.
+
+>>>> +static const struct regmap_config ltc4306_regmap_config = {
+>>>> +	.reg_bits = 8,
+>>>> +	.val_bits = 8,
+>>>> +	.max_register = LTC_REG_SWITCH,
+>>>> +	.volatile_reg = ltc4306_is_volatile_reg,
+>>>> +	.cache_type = REGCACHE_RBTREE,
+>>>
+>>> Did you consider REGCACHE_FLAT? There are very few registers and no hole
+>>> in the map, and maintaining a tree seems like total overkill.
 >>
->> As you suggested in v3 review, I have now added what we called pinmux flags
->> to the list of standard pinconf generic properties, and we're now using
->> generic parsing routines to collect them and apply them when multiplexing
->> pins.
+>> There is no reason to use REGCACHE_FLAT, in our case it will be a single
+>> node.
 >
-> I have merged patch 1/9 so you have the necessary infrastructure in place.
+> Ok, so that makes me wonder what need REGCACHE_FLAT satisfies? To me,
+> a flat regmap seems like a perfect fit here. Oh well...
+
+https://lkml.org/lkml/2012/12/19/172
+
+It's not worth arguing - if you prefer FLAT - then it's FLAT
+While it's still round :-)
+
+
+>>>> +static int ltc4306_gpio_init(struct ltc4306 *data)
+>>>> +{
+>>>> +	struct device *dev = regmap_get_device(data->regmap);
+>>>> +
+>>>> +	if (!data->chip->num_gpios)
+>>>> +		return 0;
+>>>> +
+>>>> +	data->gpiochip.label = dev_name(dev);
+>>>> +	data->gpiochip.base = -1;
+>>>> +	data->gpiochip.ngpio = data->chip->num_gpios;
+>>>> +	data->gpiochip.parent = dev;
+>>>> +	data->gpiochip.can_sleep = true;
+>>>> +	data->gpiochip.direction_input = ltc4306_gpio_direction_input;
+>>>> +	data->gpiochip.direction_output = ltc4306_gpio_direction_output;
+>>>
+>>> I'm missing a get_direction op?
+>>
+>> No - its purely optional - the vast majority of gpiochips don't
+>> implement it.
+>>
+>> linux/drivers/gpio$ grep -lr --include \*.c get_direction | wc
+>>       36      36     523
+>> linux/drivers/gpio$ grep -Lr --include \*.c get_direction | wc
+>>      101     101    1461
 >
-> If Geert want to send a pull request based on my devel branch that is fine
-> (but a bit late) else the requirements are there for a merge in the early
-> v4.12 kernel cycle.
+> Ok, but while optional, why not provide it? The implementation would
+> be about as simple as ltc4306_gpio_get, no?
 
-I agree it's a bit late. Will queue for v4.13.
+ok - convinced me.
 
-Gr{oetje,eeting}s,
 
-                        Geert
+I'll send version 5 shortly.
+
+
+-- 
+Greetings,
+Michael
 
 --
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Analog Devices GmbH      Otl-Aicher Strasse 60-64      80807 München
+Sitz der Gesellschaft München, Registergericht München HRB 40368,
+Geschäftsführer: Peter Kolberg, Ali Raza Husain, Eileen Wynne
