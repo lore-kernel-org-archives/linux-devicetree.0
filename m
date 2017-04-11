@@ -1,83 +1,61 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 1/2] dt-bindings: Document STM32 I2S
-	bindings
-Date: Tue, 11 Apr 2017 22:10:40 +0100
-Message-ID: <20170411211040.htrcedus3c57fbed@sirena.org.uk>
-References: <1491493236-2574-1-git-send-email-olivier.moysan@st.com>
- <1491493236-2574-2-git-send-email-olivier.moysan@st.com>
- <20170410194832.iivnkyejtywbe2c7@rob-hp-laptop>
- <20170411143250.3r7ys3rjshtxgaee@sirena.org.uk>
- <73caede5-ea6f-8b2b-2270-227f7ef31823@st.com>
+From: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH V2] clk: hi6220: Add the hi655x's pmic clock
+Date: Tue, 11 Apr 2017 23:19:36 +0200
+Message-ID: <20170411211936.GT2078@mai>
+References: <1491683412-12237-1-git-send-email-daniel.lezcano@linaro.org>
+ <20170411140613.jvhzsvrxa4evwxjh@dell>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============9130808511986004486=="
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <73caede5-ea6f-8b2b-2270-227f7ef31823@st.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Olivier MOYSAN <olivier.moysan@st.com>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, Rob Herring <robh@kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, Alexandre TORGUE <alexandre.torgue@st.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Arnaud POULIQUEN <arnaud.pouliquen@st.com>, "tiwai@suse.com" <tiwai@suse.com>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Benjamin GAIGNARD <benjamin.gaignard@st.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170411140613.jvhzsvrxa4evwxjh@dell>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Tue, Apr 11, 2017 at 03:06:13PM +0100, Lee Jones wrote:
+> On Sat, 08 Apr 2017, Daniel Lezcano wrote:
+> 
+> > The hi655x multi function device is a PMIC providing regulators.
+> > 
+> > The PMIC also provides a clock for the WiFi and the Bluetooth, let's implement
+> > this clock in order to add it in the hi655x MFD and allow proper wireless
+> > initialization.
+> > 
+> > Signed-off-by: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> > ---
+> > 
+> > Changelog:
+> > 
+> >  V2:
+> >     - Added COMPILE_TEST option, compiled on x86
+> >     - Removed useless parenthesis
+> >     - Used of_clk_hw_simple_get() instead of deref dance
+> >     - Do bailout if the clock-names is not specified
+> >     - Rollback on error
+> >     - Folded mfd line change and binding
+> 
+> Why did you do that?
 
---===============9130808511986004486==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="jh2nlyaixolfggcy"
-Content-Disposition: inline
+I thought as the V1 had comments you would have waited for the V2 and as it was
+trivial enough, it could be folded and picked up via the clk tree via with your
+acked-by.
 
+I realize it was not a good idea.
 
---jh2nlyaixolfggcy
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Do you want to drop it from your tree or shall I resubmit a V3 without the mfd
+change?
 
-On Tue, Apr 11, 2017 at 03:44:52PM +0000, Olivier MOYSAN wrote:
+-- 
 
-> However, regarding STM32 I2S driver, I'm wondering if selecting DAI
-> is the best way to configure interface as tx, rx or fd.
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
 
-Why do you even need to configure this?
-
-> Maybe, it is more relevant to configure DAI according to DMA
-> configuration from I2S node.
-> This would moreover avoid to allocate 2 dmas channels when not
-> necessary (tx or rx only).
-> If you agree with this, I will implement this change in a v2.
-
-That sounds wrong, I'd expect this wiring to be done statically as part
-of the .dtsi for the SoC (or just grabbed as needed at runtime if
-things are flexbile enough) rather than being a configuration thing done
-per board...  I had thought that this was configuration reflecting
-different ways of taping out the IP with different feature sets, is that
-not the case?
-
---jh2nlyaixolfggcy
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAljtRk8ACgkQJNaLcl1U
-h9CLDgf+M9DhYHfCGvepGUI42xmKuQfThWXEWGEqG3AWvay34FVJhdQzfBMwcYT3
-/3OFaOyDM5EkfISPUZo0ZKpPqE6QHg5jlgodFbZD1rwX8kOl1FaFVDFq3k7d5d5/
-5Y444c5D4/sfkUH9O3nANvyl2cBfYPys0UwzCU4S/+Nw/XvehvSF0mMOsz3a5dkh
-CCdCWTjjcqOjQUDEnf2Enx866l+62vBbBWdYww23ijpgx6SUhRrsejDewuVEhUDb
-jkBsF4dAp5675V2serc57020YmNRiM+Fu431FhJk7NGFocc7gFId3eksr0QRfQYg
-mMPeywRQFdTFFdWEQfdfRMuCOWXeeA==
-=C5cB
------END PGP SIGNATURE-----
-
---jh2nlyaixolfggcy--
-
---===============9130808511986004486==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-
---===============9130808511986004486==--
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
