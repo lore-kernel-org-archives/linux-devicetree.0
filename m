@@ -1,103 +1,64 @@
-From: Bjorn Helgaas <helgaas@kernel.org>
-Subject: Re: [GIT PULL] PCI: Support for configurable PCI endpoint
-Date: Tue, 11 Apr 2017 14:34:47 -0500
-Message-ID: <20170411193447.GA14778@bhelgaas-glaptop.roam.corp.google.com>
-References: <20170405085243.18123-1-kishon@ti.com>
- <20170410154328.GB13170@bhelgaas-glaptop.roam.corp.google.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 06/16] regulator: madera-ldo1: LDO1 driver for Cirrus
+ Logic Madera codecs
+Date: Tue, 11 Apr 2017 21:03:31 +0100
+Message-ID: <20170411200331.nv7bhwglrc7peggu@sirena.org.uk>
+References: <1491386884-30689-1-git-send-email-rf@opensource.wolfsonmicro.com>
+ <1491386884-30689-7-git-send-email-rf@opensource.wolfsonmicro.com>
+ <20170410174917.dlklrvw2sraeq6xs@rob-hp-laptop>
+ <20170410181136.btpvcat2ijwiebvm@sirena.org.uk>
+ <CAL_JsqLYi8txm2xb5emGvbC0P2cvtW2wXLdA=2qCO-wt_4JXXA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pci-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="ju7rq4pk2b5yh6ah"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20170410154328.GB13170@bhelgaas-glaptop.roam.corp.google.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: devicetree@vger.kernel.org, Joao Pinto <Joao.Pinto@synopsys.com>, linux-doc@vger.kernel.org, linux-pci@vger.kernel.org, nsekhar@ti.com, linux-kernel@vger.kernel.org, hch@infradead.org, Bjorn Helgaas <bhelgaas@google.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <CAL_JsqLYi8txm2xb5emGvbC0P2cvtW2wXLdA=2qCO-wt_4JXXA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Richard Fitzgerald <rf-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linux-ALSA <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 10, 2017 at 10:43:28AM -0500, Bjorn Helgaas wrote:
-> On Wed, Apr 05, 2017 at 02:22:20PM +0530, Kishon Vijay Abraham I wrote:
-> > Hi Bjorn,
-> > 
-> > Please find the pull request for PCI endpoint support below. I've
-> > also included all the history here.
-> 
-> Thanks, I applied these (with v7 of the first patch) to pci/host-designware
-> for v4.12.
 
-Ok, sorry, I screwed this up.  I think my branch actually had v5, not
-v6.  But I *think* I fixed it.  Here's the diff from my branch to your
-git tree.  Apparently you haven't pushed the v7 patch there, so I
-*think* the diff below is the diff between v6 and v7 of that first
-patch.
+--ju7rq4pk2b5yh6ah
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-$ git diff pci/host-designware a5c85ba45c96
-diff --git a/drivers/pci/endpoint/pci-epc-core.c b/drivers/pci/endpoint/pci-epc-core.c
-index caa7be10e473..9ae9e59b2a74 100644
---- a/drivers/pci/endpoint/pci-epc-core.c
-+++ b/drivers/pci/endpoint/pci-epc-core.c
-@@ -83,7 +83,6 @@ struct pci_epc *pci_epc_get(const char *epc_name)
- 			goto err;
- 		}
- 
--		class_dev_iter_exit(&iter);
- 		get_device(&epc->dev);
- 		return epc;
- 	}
-diff --git a/drivers/pci/endpoint/pci-epf-core.c b/drivers/pci/endpoint/pci-epf-core.c
-index 6877d6a5bcc9..92db7dcd911c 100644
---- a/drivers/pci/endpoint/pci-epf-core.c
-+++ b/drivers/pci/endpoint/pci-epf-core.c
-@@ -40,10 +40,8 @@ static struct device_type pci_epf_type;
-  */
- void pci_epf_linkup(struct pci_epf *epf)
- {
--	if (!epf->driver) {
-+	if (!epf->driver)
- 		dev_WARN(&epf->dev, "epf device not bound to driver\n");
--		return;
--	}
- 
- 	epf->driver->ops->linkup(epf);
- }
-@@ -59,10 +57,8 @@ EXPORT_SYMBOL_GPL(pci_epf_linkup);
-  */
- void pci_epf_unbind(struct pci_epf *epf)
- {
--	if (!epf->driver) {
-+	if (!epf->driver)
- 		dev_WARN(&epf->dev, "epf device not bound to driver\n");
--		return;
--	}
- 
- 	epf->driver->ops->unbind(epf);
- 	module_put(epf->driver->owner);
-@@ -78,10 +74,8 @@ EXPORT_SYMBOL_GPL(pci_epf_unbind);
-  */
- int pci_epf_bind(struct pci_epf *epf)
- {
--	if (!epf->driver) {
-+	if (!epf->driver)
- 		dev_WARN(&epf->dev, "epf device not bound to driver\n");
--		return -EINVAL;
--	}
- 
- 	if (!try_module_get(epf->driver->owner))
- 		return -EAGAIN;
-@@ -233,7 +227,7 @@ struct pci_epf *pci_epf_create(const char *name)
- 	epf->name = kstrdup(func_name, GFP_KERNEL);
- 	if (!epf->name) {
- 		ret = -ENOMEM;
--		goto free_func_name;
-+		goto free_epf;
- 	}
- 
- 	dev = &epf->dev;
-@@ -255,8 +249,6 @@ struct pci_epf *pci_epf_create(const char *name)
- put_dev:
- 	put_device(dev);
- 	kfree(epf->name);
--
--free_func_name:
- 	kfree(func_name);
- 
- free_epf:
+On Tue, Apr 11, 2017 at 02:20:31PM -0500, Rob Herring wrote:
+> On Mon, Apr 10, 2017 at 1:11 PM, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+
+> > In what way?  Other than the -gpios stuff (which would just be a trivial
+> > thing if we wanted to change it)?
+
+> That's mainly it.
+
+I don't see that as meaningful or a good reason to duplicate the driver
+or the binding, it'd be better to just add the new property and
+deprecate the old.
+
+>                   It's not clear which node wlf,ldoena goes in either.
+> In the parent? ldo1?
+
+Parent since it's looked up in device context, this is also something
+that it seems better to fix in one binding rather than duplicate.
+
+--ju7rq4pk2b5yh6ah
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAljtNpIACgkQJNaLcl1U
+h9A0Vgf9G9MsNcnST0EhK+nIH9UisqZhfYnkOGa0lR7m31xbaqxhSyg8Mv5G+Nv2
+OeE+wL3czTi1+xTdV3RqmJifaatrRIWecDHZLaKArtnUnvcvIHC6PPM9awpHqPS4
+OOSBRZ2jTGF6TREmjkXl9VhLjVgBoYmLSCVmvHThO4ewatuJS8hSDMN4fwZWdqRh
+TAUZC5pW7sTY3g7xFygDej1wGJlxZkxh6auSZlLHMuL3auIP8WB5RRGpuB/Dvc48
+XLfSNn477rbE2jKh9uJDWnfqG7UWclFmvnEmZgb5/fi3TGbacHyX9sYYekoCWsGY
+uvWQKb5lq9TZURIWSa9fx7sjRmxf5g==
+=RCcr
+-----END PGP SIGNATURE-----
+
+--ju7rq4pk2b5yh6ah--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
