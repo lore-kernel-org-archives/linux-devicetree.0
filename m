@@ -1,78 +1,47 @@
-From: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/3] power: supply: New driver for LEGO MINDSTORMS EV3
- battery
-Date: Tue, 11 Apr 2017 18:02:05 +0200
-Message-ID: <20170411160205.yqr6z5nwh5xn5zdb@earth>
-References: <1491251029-23256-1-git-send-email-david@lechnology.com>
- <1491251029-23256-3-git-send-email-david@lechnology.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/2] dt-bindings: Document STM32 I2S bindings
+Date: Tue, 11 Apr 2017 11:02:57 -0500
+Message-ID: <CAL_Jsq+bsh8Byow4poT7cdpLY_skb7QxbzkAmj4q7Cf6Z88GWA@mail.gmail.com>
+References: <1491493236-2574-1-git-send-email-olivier.moysan@st.com>
+ <1491493236-2574-2-git-send-email-olivier.moysan@st.com> <20170410194832.iivnkyejtywbe2c7@rob-hp-laptop>
+ <20170411143250.3r7ys3rjshtxgaee@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="fqkalhwbzwhan7m7"
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1491251029-23256-3-git-send-email-david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
+In-Reply-To: <20170411143250.3r7ys3rjshtxgaee-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
-Cc: linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: olivier moysan <olivier.moysan-qxv4g6HH51o@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Linux-ALSA <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Arnaud POULIQUEN <arnaud.pouliquen-qxv4g6HH51o@public.gmane.org>, Benjamin Gaignard <benjamin.gaignard-qxv4g6HH51o@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
---fqkalhwbzwhan7m7
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-Hi,
-
-Driver looks fine. One minor thing, though:
-
-On Mon, Apr 03, 2017 at 03:23:48PM -0500, David Lechner wrote:
-> [...]
+On Tue, Apr 11, 2017 at 9:32 AM, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> On Mon, Apr 10, 2017 at 02:48:32PM -0500, Rob Herring wrote:
+>> On Thu, Apr 06, 2017 at 05:40:35PM +0200, olivier moysan wrote:
 >
-> +	batt->psy = power_supply_register(dev, &lego_ev3_battery_desc, &psy_cfg);
-> +	err = PTR_ERR_OR_ZERO(batt->psy);
-> +	if (err) {
-> +		dev_err(dev, "failed to register power supply\n");
-> +		return err;
-> +	}
+>> > +Required properties:
+>> > +  - compatible: Must be "st,stm32h7-i2s"
+>> > +  - #sound-dai-cells: Must be 1. (one parameter)
+>> > +    This parameter allows to specify CPU DAI index in soundcard CPU dai link.
+>> > +   index 0: playback DAI
+>> > +   index 1: capture DAI
+>> > +   index 2: full duplex DAI
+>
+>> Is this still needed for graph-card?
+>
+> The graph card is blocked on your review...
 
-There is devm_power_supply_register() and it makes sense to use it,
-since that means you can drop the remove function completly :)
+Maybe if there were more reviewers it would move faster. I don't know
+ASoC that well.
 
-> +	return 0;
-> +}
-> +
-> +static int lego_ev3_battery_remove(struct platform_device *pdev)
-> +{
-> +	struct lego_ev3_battery *batt = platform_get_drvdata(pdev);
-> +
-> +	power_supply_unregister(batt->psy);
-> +
-> +	return 0;
-> +}
+> I'm also not clear how
+> without something like this we'd be able to identify a specific DAI
+> within a device if we don't have a way of identifying them.
 
--- Sebastian
+Isn't that what the graph does? "dais" points to a list of ports which
+are the specific DAIs whether there are multiple ones in a single
+device or multiple devices with a single DAI each.
 
---fqkalhwbzwhan7m7
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAljs/foACgkQ2O7X88g7
-+pqDYQ/+NhaQdXYfOEVQWaQkXUKJ2r6YdW/BX0j6pB13Cp2JNTRwSl4JGDluA9Oo
-DVa2mBcofZmLuy1ubr/VOqc3cwBHPg2gvsw8Yeb6VjPakiBq9x4MI8vhfjZhUpi5
-Cs5XsBoi8+feeUuUdP/MlpC7dA+smv1i7Gy+DLXamatXcmJl5CS8dA4onLppsmr+
-afGYdKIFYzVBRty+Tgl96PydFSwL6MtHp0LhB2zt5L4OupWO2h90dSLGCtIvNPoF
-TcPH52xt0V0MFPmUidOQnHtOvUqdIEJk1yJOkTpnpCh4aPE7N+nElI3s/fGnIRDL
-h3QjPPNc9ek3Ul4P8YO1j6oQx/DlcyBeH4moroLQykB9fXB0G3EKvpwzdACqAiZD
-PMRdfp1XVpWM7vVE0hEZ4iXDGYgx8CsmTMDOrK+mWT08LeK0If3dCew95EjNI+XA
-lu6dAcFsgK9jarHuKaRkle4IOB95JtbH04gXWAOzNcaLyKWgc8VrzimJmEqdVPAZ
-DDmkvqFg2a/28k17QrOe0fztO94tqhK7U7DHLPP2X9lB27xkvu9aalCJOXJevy3m
-zKBtzppPEEcpAGUj60rvqIrjqhGpu6CqUcjcZXarCbePwG+qp1mIhppeJrHR0omz
-pHDwn80PzNrsKxmNE7YOzGYAhxnWTvaV68djHyXzpm3/8lz4yg4=
-=Ytsm
------END PGP SIGNATURE-----
-
---fqkalhwbzwhan7m7--
+Rob
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
