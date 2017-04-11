@@ -1,54 +1,50 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v3 1/7] media: v4l2-ctrls: Reserve controls for MAX217X
-Date: Tue, 11 Apr 2017 11:28:52 +0300
-Message-ID: <7073271.ns6LVO0PF7@avalon>
-References: <1486479757-32128-1-git-send-email-ramesh.shanmugasundaram@bp.renesas.com> <1486479757-32128-2-git-send-email-ramesh.shanmugasundaram@bp.renesas.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [git:media_tree/master] [media] ARM: dts: exynos: add HDMI
+ controller phandle to exynos4.dtsi
+Date: Tue, 11 Apr 2017 10:36:58 +0200
+Message-ID: <CAJKOXPfbJpFu6r9rS8oCqxTH+s7y2wYKx9+TzGrv4Cd8DYaKew@mail.gmail.com>
+References: <E1cxc0o-0003RE-PP@www.linuxtv.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <1486479757-32128-2-git-send-email-ramesh.shanmugasundaram@bp.renesas.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, mchehab@kernel.org, hverkuil@xs4all.nl, sakari.ailus@linux.intel.com, crope@iki.fi, chris.paterson2@renesas.com, geert+renesas@glider.be, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <E1cxc0o-0003RE-PP@www.linuxtv.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Mauro Carvalho Chehab <mchehab@s-opensource.com>
+Cc: linuxtv-commits@linuxtv.org, Marek Szyprowski <m.szyprowski@samsung.com>, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, Hans Verkuil <hans.verkuil@cisco.com>, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Ramesh,
+On Mon, Apr 10, 2017 at 6:12 PM, Mauro Carvalho Chehab
+<mchehab@s-opensource.com> wrote:
+> This is an automatic generated email to let you know that the following patch were queued:
+>
+> Subject: [media] ARM: dts: exynos: add HDMI controller phandle to exynos4.dtsi
+> Author:  Hans Verkuil <hans.verkuil@cisco.com>
+> Date:    Tue Dec 13 12:37:16 2016 -0200
+>
+> Add the new hdmi phandle to exynos4.dtsi. This phandle is needed by the
+> s5p-cec driver to initialize the CEC notifier framework.
+>
+> Tested with my Odroid U3.
+>
+> Signed-off-by: Hans Verkuil <hans.verkuil@cisco.com>
+> Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> CC: linux-samsung-soc@vger.kernel.org
+> CC: devicetree@vger.kernel.org
+> CC: Krzysztof Kozlowski <krzk@kernel.org>
+> Signed-off-by: Mauro Carvalho Chehab <mchehab@s-opensource.com>
+>
+>  arch/arm/boot/dts/exynos4.dtsi | 1 +
+>  1 file changed, 1 insertion(+)
+>
 
-Thank you for the patch.
+Mauro, you should not apply it. It is already going through samsung-soc [1].
+if you need this patch for bisectability or any other reasons, I
+provided a tag with it here:
+https://www.spinics.net/lists/devicetree/msg171182.html
 
-On Tuesday 07 Feb 2017 15:02:31 Ramesh Shanmugasundaram wrote:
-> Reserve controls for MAX217X RF to Bits tuner family. These hybrid
-> radio receiver chips are highly programmable and hence reserving 32
-> controls.
-> 
-> Signed-off-by: Ramesh Shanmugasundaram
-> <ramesh.shanmugasundaram@bp.renesas.com>
+Please drop the patch because now it will get duplicated.
 
-Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Best regards,
+Krzysztof
 
-> ---
->  include/uapi/linux/v4l2-controls.h | 5 +++++
->  1 file changed, 5 insertions(+)
-> 
-> diff --git a/include/uapi/linux/v4l2-controls.h
-> b/include/uapi/linux/v4l2-controls.h index 0d2e1e0..83b28b4 100644
-> --- a/include/uapi/linux/v4l2-controls.h
-> +++ b/include/uapi/linux/v4l2-controls.h
-> @@ -180,6 +180,11 @@ enum v4l2_colorfx {
->   * We reserve 16 controls for this driver. */
->  #define V4L2_CID_USER_TC358743_BASE		(V4L2_CID_USER_BASE + 0x1080)
-> 
-> +/* The base for the max217x driver controls.
-> + * We reserve 32 controls for this driver
-> + */
-> +#define V4L2_CID_USER_MAX217X_BASE		(V4L2_CID_USER_BASE + 0x1090)
-> +
->  /* MPEG-class control IDs */
->  /* The MPEG controls are applicable to all codec controls
->   * and the 'MPEG' part of the define is historical */
-
--- 
-Regards,
-
-Laurent Pinchart
+[1] https://www.spinics.net/lists/arm-kernel/msg575229.html
