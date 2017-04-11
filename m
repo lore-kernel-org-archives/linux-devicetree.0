@@ -1,75 +1,46 @@
-From: Oleksij Rempel <ore-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH v1 3/3] nvmem: dt: document SNVS LPGPR binding
-Date: Tue, 11 Apr 2017 06:36:14 +0200
-Message-ID: <1e0f8a71-9dca-7aaa-a603-86ed3934da4d@pengutronix.de>
-References: <20170406073107.32445-1-o.rempel@pengutronix.de>
- <20170406073107.32445-3-o.rempel@pengutronix.de>
- <20170410182235.pmobyxn6kvyvcwsj@rob-hp-laptop>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v2 01/13] devicetree/bindings: display: Document common panel properties
+Date: Tue, 11 Apr 2017 08:12:34 +0300
+Message-ID: <2098006.Rlj3CgHVZA@avalon>
+References: <1479526093-7014-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com> <1479526093-7014-2-git-send-email-laurent.pinchart+renesas@ideasonboard.com> <CACvgo52dydV5fpcDDPnFaRN32uxoeitvazwPpxOs4wOqg0=45A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170410182235.pmobyxn6kvyvcwsj@rob-hp-laptop>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Oleksij Rempel <o.rempel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <CACvgo52dydV5fpcDDPnFaRN32uxoeitvazwPpxOs4wOqg0=45A@mail.gmail.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Emil Velikov <emil.l.velikov@gmail.com>
+Cc: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, ML dri-devel <dri-devel@lists.freedesktop.org>, linux-renesas-soc@vger.kernel.org, devicetree <devicetree@vger.kernel.org>, Tomi Valkeinen <tomi.valkeinen@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Emil,
 
-On 04/10/2017 08:22 PM, Rob Herring wrote:
-> On Thu, Apr 06, 2017 at 09:31:07AM +0200, Oleksij Rempel wrote:
->> Documenation bindings for the Low Power General Purpose Registe
->
-> s/Registe/Register/
->
->> available on i.MX6 SoCs in the Secure Non-Volatile Storage.
->>
->> Signed-off-by: Oleksij Rempel <o.rempel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
->> Cc: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->> Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
->> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
->> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->> Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->> ---
->>  Documentation/devicetree/bindings/nvmem/snvs-lpgpr.txt | 15 +++++++++++++++
->>  1 file changed, 15 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/nvmem/snvs-lpgpr.txt
->>
->> diff --git a/Documentation/devicetree/bindings/nvmem/snvs-lpgpr.txt b/Documentation/devicetree/bindings/nvmem/snvs-lpgpr.txt
->> new file mode 100644
->> index 000000000000..9a8be1a2d12e
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/nvmem/snvs-lpgpr.txt
->> @@ -0,0 +1,15 @@
->> +Device tree bindings for Low Power General Purpose Registe found in i.MX6Q/D
->> +Secure Non-Volatile Storage.
->> +
->> +Required properties:
->> +- compatible: should be one of
->> +	"fsl,imx6q-snvs-lpgpr" (i.MX6Q/D/DL/S).
->> +- offset: Should contain the offset relative to syscon parrent node.
->
-> typo
+On Sunday 09 Apr 2017 12:47:01 Emil Velikov wrote:
+> Hi Laurent,
+> 
+> Pardon for reviving this old thread. I've noticed a couple of things
+> which might want some attention.
+> 
+> On 19 November 2016 at 03:28, Laurent Pinchart wrote:
+> > +
+> > +- panel-timing: Most display panels are restricted to a single resolution
+> > and +  require specific display timings. The panel-timing subnode
+> > expresses those +  timings as specified in the timing subnode section of
+> > the display timing +  bindings defined in
+> > +  Documentation/devicetree/bindings/display/display-timing.txt.
+> 
+> Cannot find such a file in linux-next. Perhaps you meant
+> Documentation/devicetree/bindings/display/panel/display-timing.txt?
 
-ok.
+Oops. My bad, I'll fix that. Thank you for noticing it.
 
->  +- regmap: Should contain a phandle pointing to syscon.
->> +
->> +Example:
->> +	snvs_lpgpr: snvs-lpgpr {
->> +		compatible = "fsl,imx6q-snvs-lpgpr";
->> +		regmap = <&snvs>;
->> +		offset = <0x68>;
->
-> Why does this need to be in DT? Is something going to refer to this
-> node? If not, the &snvs node should be enough information for the OS.
+> Documentation/devicetree/bindings/display/panel/panel.txt includes a
+> "rotation" property, which we might want to fold here.
 
-Jes, it is refereed by other driver.
+I believe that panel.txt and panel-common.txt were added concurrently. We 
+should indeed merge the two.
 
-Thank you.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Regards,
+
+Laurent Pinchart
