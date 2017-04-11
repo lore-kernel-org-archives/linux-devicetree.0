@@ -1,48 +1,78 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2] dt-bindings: Document STM32 I2S bindings
-Date: Tue, 11 Apr 2017 11:02:57 -0500
-Message-ID: <CAL_Jsq+bsh8Byow4poT7cdpLY_skb7QxbzkAmj4q7Cf6Z88GWA@mail.gmail.com>
-References: <1491493236-2574-1-git-send-email-olivier.moysan@st.com>
- <1491493236-2574-2-git-send-email-olivier.moysan@st.com> <20170410194832.iivnkyejtywbe2c7@rob-hp-laptop>
- <20170411143250.3r7ys3rjshtxgaee@sirena.org.uk>
+From: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Subject: Re: [PATCH v4 1/7] pinctrl: dt-bindings: Add documentation for Armada 37xx pin controllers
+Date: Tue, 11 Apr 2017 18:09:59 +0200
+Message-ID: <87inmbhqnc.fsf@free-electrons.com>
+References: <cover.65d0e6796fecf1fe6c5d07b981160b54dc9b4acd.1491405475.git-series.gregory.clement@free-electrons.com>
+        <941d03c9a3bdfd5e789aada29b35184ec9fed9fe.1491405475.git-series.gregory.clement@free-electrons.com>
+        <20170410181514.kzbpkaxkwf7uycdc@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170411143250.3r7ys3rjshtxgaee-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: olivier moysan <olivier.moysan-qxv4g6HH51o@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Linux-ALSA <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Arnaud POULIQUEN <arnaud.pouliquen-qxv4g6HH51o@public.gmane.org>, Benjamin Gaignard <benjamin.gaignard-qxv4g6HH51o@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <20170410181514.kzbpkaxkwf7uycdc@rob-hp-laptop> (Rob Herring's
+        message of "Mon, 10 Apr 2017 13:15:14 -0500")
+Sender: linux-gpio-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Rob Herring <robh@kernel.org>, linux-gpio@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Nadav Haklai <nadavh@marvell.com>, Victor Gu <xigu@marvell.com>, Marcin Wojtas <mw@semihalf.com>, Wilson Ding <dingwei@marvell.com>, Hua Jing <jinghua@marvell.com>, Neta Zur Hershkovits <neta@marvell.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 11, 2017 at 9:32 AM, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> On Mon, Apr 10, 2017 at 02:48:32PM -0500, Rob Herring wrote:
->> On Thu, Apr 06, 2017 at 05:40:35PM +0200, olivier moysan wrote:
+Hi Linus,
+ 
+ On lun., avril 10 2017, Rob Herring <robh@kernel.org> wrote:
+
+> On Wed, Apr 05, 2017 at 05:18:02PM +0200, Gregory CLEMENT wrote:
+
+>> +Example:
+>> +pinctrl_sb: pinctrl-sb@18800 {
 >
->> > +Required properties:
->> > +  - compatible: Must be "st,stm32h7-i2s"
->> > +  - #sound-dai-cells: Must be 1. (one parameter)
->> > +    This parameter allows to specify CPU DAI index in soundcard CPU dai link.
->> > +   index 0: playback DAI
->> > +   index 1: capture DAI
->> > +   index 2: full duplex DAI
+> Just pinctrl@...
 >
->> Is this still needed for graph-card?
+>> +	compatible = "marvell,armada3710-sb-pinctrl", "syscon", "simple-mfd";
+>> +	reg = <0x18800 0x100>, <0x18C00 0x20>;
+>> +	gpiosb: gpiosb {
 >
-> The graph card is blocked on your review...
+> gpio {
+>
+> With that,
+>
+> Acked-by: Rob Herring <robh@kernel.org>
 
-Maybe if there were more reviewers it would move faster. I don't know
-ASoC that well.
+Could you do this change while applying the patches, or do you want a
+new series?
 
-> I'm also not clear how
-> without something like this we'd be able to identify a specific DAI
-> within a device if we don't have a way of identifying them.
+Also, if the binding is also OK for you, do you agree that I apply the
+last 2 patches on the mvebu trees? (of course with the same changes
+asked by Rob)
 
-Isn't that what the graph does? "dais" points to a list of ports which
-are the specific DAIs whether there are multiple ones in a single
-device or multiple devices with a single DAI each.
+Thanks,
 
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Gregory
+
+
+
+>
+>
+>> +		#gpio-cells = <2>;
+>> +		gpio-ranges = <&pinctrl_sb 0 0 29>;
+>> +		gpio-controller;
+>> +		interrupts =
+>> +		<GIC_SPI 160 IRQ_TYPE_LEVEL_HIGH>,
+>> +		<GIC_SPI 159 IRQ_TYPE_LEVEL_HIGH>,
+>> +		<GIC_SPI 158 IRQ_TYPE_LEVEL_HIGH>,
+>> +		<GIC_SPI 157 IRQ_TYPE_LEVEL_HIGH>,
+>> +		<GIC_SPI 156 IRQ_TYPE_LEVEL_HIGH>;
+>> +	};
+>> +
+>> +	rgmii_pins: mii-pins {
+>> +		groups = "rgmii";
+>> +		function = "mii";
+>> +	};
+>> +
+>> +};
+>> -- 
+>> git-series 0.9.1
+
+-- 
+Gregory Clement, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
