@@ -1,107 +1,108 @@
-From: John Muir <john-eXjPKP/gKhgAvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v2 2/2] devicetree: Document the max31760 device binding.
-Date: Tue, 11 Apr 2017 14:32:18 -0700
-Message-ID: <20170411213218.138718-3-john@jmuir.com>
-References: <20170404192034.158901-1-john@jmuir.com>
- <20170411213218.138718-1-john@jmuir.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170411213218.138718-1-john-eXjPKP/gKhgAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jean Delvare <jdelvare-IBi9RG/b67k@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-hwmon-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: John Muir <john-eXjPKP/gKhgAvxtiuMwx3w@public.gmane.org>, Anatol Pomazau <anatol-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Mark Segal <segal-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [RFC net-next] of: mdio: Honor hints from MDIO bus drivers
+Date: Tue, 11 Apr 2017 15:18:36 -0700
+Message-ID: <8ef102a4-22e5-def8-b50e-04f84b5849d7@gmail.com>
+References: <20170410214258.9409-1-f.fainelli@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170410214258.9409-1-f.fainelli@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: netdev@vger.kernel.org
+Cc: davem@davemloft.net, Andrew Lunn <andrew@lunn.ch>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-v2:
-- Fixup based on comments.
+On 04/10/2017 02:42 PM, Florian Fainelli wrote:
+> A MDIO bus driver can set phy_mask to indicate which PHYs should be
+> probed and which should not. Right now, of_mdiobus_register() always
+> sets mdio->phy_mask to ~0 which means: don't probe anything yourself,
+> and let the Device Tree scanning do it based on the availability of
+> child nodes.
+> 
+> When MDIO buses are stacked together (on purpose, as is done by DSA), we
+> run into possible double probing which is, at best unnecessary, and at
+> worse, can cause problems if that's not expected (e.g: during probe
+> deferral).
+> 
+> Fix this by remember the original mdio->phy_mask, and make sure that if
+> it was set to all 0xF, we set it to zero internally in order not to
+> influence how the child PHY/MDIO device registration is going to behave.
+> When the original mdio->phy_mask is set to something non-zero, we honor
+> this value and utilize it as a hint to register only the child nodes
+> that we have both found, and indicated to be necessary.
+> 
+> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+> ---
+> Sending this as RFC because a quick look at the current tree makes
+> me think we are fine, but I would appreciate some review/feedback
+> before this gets merged.
 
-Signed-off-by: John Muir <john-eXjPKP/gKhgAvxtiuMwx3w@public.gmane.org>
----
- .../devicetree/bindings/hwmon/max31760.txt         | 72 ++++++++++++++++++++++
- 1 file changed, 72 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/hwmon/max31760.txt
+To give some more background and rational for this change.
 
-diff --git a/Documentation/devicetree/bindings/hwmon/max31760.txt b/Documentation/devicetree/bindings/hwmon/max31760.txt
-new file mode 100644
-index 000000000000..760fdf0b55e0
---- /dev/null
-+++ b/Documentation/devicetree/bindings/hwmon/max31760.txt
-@@ -0,0 +1,72 @@
-+MAX31760 fan controller
-+-----------------------
-+
-+This device supports I2C only. Fan sub-nodes must be defined in order to enable
-+the fan tachometer input. See also the datasheet:
-+https://datasheets.maximintegrated.com/en/ds/MAX31760.pdf
-+
-+Required node properties:
-+ - compatible: "maxim,max31760"
-+ - reg: The I2C address of the device. This is 0x50 - 0x57 depending on the
-+   hardware configuration.
-+ - #address-cells: Must be 1.
-+ - #size-cells: Must be 0.
-+
-+Optional node properties:
-+ - maxim,fan-fail-full-only: Boolean; Assert a fan failure only when the PWM is
-+   at 100%.
-+ - maxim,fan-rd-signal: Boolean; Fans provide a rotation detection (RD) signal
-+   instead of generating square-wave pulses.
-+ - maxim,fan-rd-polarity-high: Boolean; RD is high when the fan is running, not
-+   low. Only relevant when fan-rd-signal is true.
-+ - maxim,fan-signal-enabled: Boolean; Externally driving FF/FS low should force
-+   PWM output to 100%.
-+ - maxim,fan-spin-up-enabled: Boolean; For fan startup set the PWM to 100% until
-+   tach is detected or two seconds have passed before reducing to the target
-+   value.
-+ - maxim,pwm-polarity-negative: Boolean; 100% PWM is when PWM is low, not high.
-+ - maxim,pwm-pulse-stretch-enabled: Boolean; Enable PWM pulse stretching.
-+ - maxim,pwm-zero-fan-can-fail: Boolean; Enable fan failure detection while
-+   ramping to 0% PWM.
-+
-+Fan sub-nodes must be present in order to enable the fan.
-+
-+Required fan sub-node properties:
-+ - reg: Fan address. Must be <0x00> or <0x01>.
-+
-+Optional fan sub-node properties:
-+ - label: String; Assigned to the hwmon fanX_label property.
-+
-+Temperature sub-nodes are optional.
-+
-+Required temp sub-node properties:
-+ - reg: Temperature sensor address. Must be <0x00> or <0x01>.
-+
-+Optional temp sub-node properties:
-+ - label: String; Assigned to the hwmon tempX_label property.
-+ - ideality: For temperature node with reg 1 only: Set ideality factor for the
-+   remote temperature sensor. Integer with range 0 to 63, representing a
-+   multiplication factor of 0.9844 to 1.0489. Default: 24 (1.0080).
-+
-+Example:
-+	max31760@50 {
-+		compatible = "maxim,max31760";
-+		reg = <0x50>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		maxim,fan-spin-up-enabled;
-+
-+		fan@0 {
-+			reg = <0x00>;
-+			label = "Left";
-+		};
-+		fan@1 {
-+			reg = <0x01>;
-+			label = "Right";
-+		};
-+		temp@1 {
-+			reg = <0x01>;
-+			label = "CPU";
-+		};
-+	};
+On a platform where we have a parent MDIO bus, backed by the
+mdio-bcm-unimac.c driver, we also register a slave MII bus (through
+net/dsa/dsa2.c) which is parented to this UniMAC MDIO bus through an
+assignment of of_node. This slave MII bus is created in order to
+intercept reads/writes to problematic addresses (e.g: that clashes with
+another piece of hardware).
+
+This means that the slave DSA MII bus inherits all child nodes from the
+originating master MII bus. This also means that when the slave MII bus
+is probed via of_mdiobus_register(), we probe the same devices twice:
+once through the master, another time through the slave.
+
+With this change, we avoid double probing, because when creating the
+slave MDIO bus, we carefully set phy_mask to intentionally restrict the
+child PHY/MDIO device's creation to the relevant devices.
+
+> 
+> Thank you!
+> 
+>  drivers/of/of_mdio.c | 12 ++++++++++++
+>  1 file changed, 12 insertions(+)
+> 
+> diff --git a/drivers/of/of_mdio.c b/drivers/of/of_mdio.c
+> index 0b2979816dbf..6bfbf00623cb 100644
+> --- a/drivers/of/of_mdio.c
+> +++ b/drivers/of/of_mdio.c
+> @@ -209,6 +209,7 @@ int of_mdiobus_register(struct mii_bus *mdio, struct device_node *np)
+>  {
+>  	struct device_node *child;
+>  	bool scanphys = false;
+> +	u32 orig_phy_mask;
+>  	int addr, rc;
+>  
+>  	/* Do not continue if the node is disabled */
+> @@ -217,8 +218,15 @@ int of_mdiobus_register(struct mii_bus *mdio, struct device_node *np)
+>  
+>  	/* Mask out all PHYs from auto probing.  Instead the PHYs listed in
+>  	 * the device tree are populated after the bus has been registered */
+> +	orig_phy_mask = mdio->phy_mask;
+>  	mdio->phy_mask = ~0;
+>  
+> +	/* If the original phy_mask was all 0xf, we make it zero here in order
+> +	 * to get child Device Tree nodes to be probed successfully
+> +	 */
+> +	if (orig_phy_mask == mdio->phy_mask)
+> +		orig_phy_mask = 0;
+> +
+>  	mdio->dev.of_node = np;
+>  
+>  	/* Register the MDIO bus */
+> @@ -234,6 +242,10 @@ int of_mdiobus_register(struct mii_bus *mdio, struct device_node *np)
+>  			continue;
+>  		}
+>  
+> +		/* Honor hints from the mdio bus */
+> +		if (orig_phy_mask & BIT(addr))
+> +			continue;
+> +
+>  		if (of_mdiobus_child_is_phy(child))
+>  			of_mdiobus_register_phy(mdio, child, addr);
+>  		else
+> 
+
+
 -- 
-2.12.2.715.g7642488e1d-goog
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Florian
