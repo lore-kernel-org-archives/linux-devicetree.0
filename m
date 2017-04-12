@@ -1,84 +1,113 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2] dt-bindings: Document STM32 I2S bindings
-Date: Wed, 12 Apr 2017 16:38:31 +0100
-Message-ID: <20170412153831.r2urwvfseipfsrsi@sirena.org.uk>
-References: <1491493236-2574-1-git-send-email-olivier.moysan@st.com>
- <1491493236-2574-2-git-send-email-olivier.moysan@st.com>
- <20170410194832.iivnkyejtywbe2c7@rob-hp-laptop>
- <20170411143250.3r7ys3rjshtxgaee@sirena.org.uk>
- <73caede5-ea6f-8b2b-2270-227f7ef31823@st.com>
- <20170411211040.htrcedus3c57fbed@sirena.org.uk>
- <86a179ad-7961-18f7-8050-25e0e584c77d@st.com>
- <20170412113251.nfyk5sw6c5pnpmwr@sirena.org.uk>
- <d886a9c7-ca46-f37a-0e82-6ed8d7a4e052@st.com>
+From: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/3] input: touchscreen: ar1021_i2c: add support for
+ AR1020
+Date: Wed, 12 Apr 2017 08:40:54 -0700
+Message-ID: <20170412154054.GB6297@dtor-ws>
+References: <1491906479-17639-1-git-send-email-martin.kepplinger@ginzinger.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="okqjiama34qumvis"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <d886a9c7-ca46-f37a-0e82-6ed8d7a4e052-qxv4g6HH51o@public.gmane.org>
+In-Reply-To: <1491906479-17639-1-git-send-email-martin.kepplinger-hfTNJOUbDMh54TAoqtyWWQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Olivier MOYSAN <olivier.moysan-qxv4g6HH51o@public.gmane.org>
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "perex-/Fr2/VpizcU@public.gmane.org" <perex-/Fr2/VpizcU@public.gmane.org>, "tiwai-IBi9RG/b67k@public.gmane.org" <tiwai-IBi9RG/b67k@public.gmane.org>, "mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre TORGUE <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, "alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org" <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Arnaud POULIQUEN <arnaud.pouliquen-qxv4g6HH51o@public.gmane.org>, Benjamin GAIGNARD <benjamin.gaignard-qxv4g6HH51o@public.gmane.org>
+To: Martin Kepplinger <martin.kepplinger-hfTNJOUbDMh54TAoqtyWWQ@public.gmane.org>
+Cc: christian.gmeiner-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Martin,
 
---okqjiama34qumvis
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Tue, Apr 11, 2017 at 12:27:57PM +0200, Martin Kepplinger wrote:
+> ar1021_i2c simply also supports the ar1020 device we use. This is tested.
+> They also share the same datasheet:
+> 
+>    http://ww1.microchip.com/downloads/en/DeviceDoc/40001393C.pdf
+> 
+> We differentiate not only to make it obvious that we support both devices,
+> but also to be able to implement the few model specific things in the
+> future.
+> 
+> Signed-off-by: Martin Kepplinger <martin.kepplinger-hfTNJOUbDMh54TAoqtyWWQ@public.gmane.org>
+> ---
+>  drivers/input/touchscreen/Kconfig      |  4 ++--
+>  drivers/input/touchscreen/ar1021_i2c.c | 13 ++++++++++---
+>  2 files changed, 12 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/input/touchscreen/Kconfig b/drivers/input/touchscreen/Kconfig
+> index 33c62e5..535b91a 100644
+> --- a/drivers/input/touchscreen/Kconfig
+> +++ b/drivers/input/touchscreen/Kconfig
+> @@ -96,8 +96,8 @@ config TOUCHSCREEN_AR1021_I2C
+>  	tristate "Microchip AR1021 i2c touchscreen"
+>  	depends on I2C && OF
+>  	help
+> -	  Say Y here if you have the Microchip AR1021 touchscreen controller
+> -	  chip in your system.
+> +	  Say Y here if you have the Microchip AR1020 or AR1021 touchscreen
+> +	  controller chip in your system.
+>  
+>  	  If unsure, say N.
+>  
+> diff --git a/drivers/input/touchscreen/ar1021_i2c.c b/drivers/input/touchscreen/ar1021_i2c.c
+> index 6562b17..1767257 100644
+> --- a/drivers/input/touchscreen/ar1021_i2c.c
+> +++ b/drivers/input/touchscreen/ar1021_i2c.c
+> @@ -1,5 +1,5 @@
+>  /*
+> - * Microchip AR1021 driver for I2C
+> + * Microchip AR1020 and AR1021 driver for I2C
+>   *
+>   * Author: Christian Gmeiner <christian.gmeiner-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>   *
+> @@ -24,6 +24,11 @@ struct ar1021_i2c {
+>  	u8 data[AR1021_TOCUH_PKG_SIZE];
+>  };
+>  
+> +enum {
+> +	ar1021,
+> +	ar1020,
+> +};
+> +
+>  static irqreturn_t ar1021_i2c_irq(int irq, void *dev_id)
+>  {
+>  	struct ar1021_i2c *ar1021 = dev_id;
+> @@ -151,13 +156,15 @@ static int __maybe_unused ar1021_i2c_resume(struct device *dev)
+>  static SIMPLE_DEV_PM_OPS(ar1021_i2c_pm, ar1021_i2c_suspend, ar1021_i2c_resume);
+>  
+>  static const struct i2c_device_id ar1021_i2c_id[] = {
+> -	{ "MICROCHIP_AR1021_I2C", 0 },
+> +	{ "MICROCHIP_AR1021_I2C", ar1021 },
+> +	{ "MICROCHIP_AR1020_I2C", ar1020 },
+>  	{ },
+>  };
+>  MODULE_DEVICE_TABLE(i2c, ar1021_i2c_id);
+>  
+>  static const struct of_device_id ar1021_i2c_of_match[] = {
+>  	{ .compatible = "microchip,ar1021-i2c", },
+> +	{ .compatible = "microchip,ar1020-i2c", },
+>  	{ }
+>  };
+>  MODULE_DEVICE_TABLE(of, ar1021_i2c_of_match);
+> @@ -175,5 +182,5 @@ static struct i2c_driver ar1021_i2c_driver = {
+>  module_i2c_driver(ar1021_i2c_driver);
+>  
+>  MODULE_AUTHOR("Christian Gmeiner <christian.gmeiner-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>");
+> -MODULE_DESCRIPTION("Microchip AR1021 I2C Driver");
+> +MODULE_DESCRIPTION("Microchip AR1020 and AR1021 I2C Driver");
+>  MODULE_LICENSE("GPL");
+> -- 
+> 2.1.4
+> 
 
-On Wed, Apr 12, 2017 at 12:58:16PM +0000, Olivier MOYSAN wrote:
-> On 04/12/2017 01:32 PM, Mark Brown wrote:
+I do not see where you handle ar1020 differently from ar1021. If devices
+are compatible, you do not need to add a new compatible to the driver,
+simply use it in the binding:
 
-> > It is totally normal to just not use one direction in a given system, we
-> > don't normally need to do anything special to handle things.  I'm a bit
-> > confused as to what's different here and needs configuring?
+	compatible = "microchip,ar1020-i2c", "microchip,ar1021-i2c";
 
-> The IP does not provide an audio channel configured either as rx or tx.
-> I agree, that in such case, the cpu driver does not generally need
-> to worry about direction and there is nothing special required to handle =
-it.
+Thanks.
 
-No, that's not what I'm saying - such hardware would be extremely
-unusual.
-
-> Here the IP provides 2 channels, 1 tx and 1 rx,  which may be active or=
-=20
-> not. The driver has to know which channel is used, and if both channels
-> have to be managed. The affected registers depend on selected channel.=20
-
-This sounds like essentially every audio controller out there.  The
-overwhelming majority of controllers do exactly as you describe and have
-both directions in the same IP, this really doesn't seem at all unusual.
-Off the top of my head I can only think of one SoC family which combines
-multiple IPs to do bidirectional audio (though I didn't check).
-
-It really feels like there is something different here and I'm just
-missing it.
-
-> Moreover specific processing has to be performed if both channels are use=
-d.
-
-Given that this case has to be supported anyway I'd be more inclined to
-ask the question the other way around TBH.
-
---okqjiama34qumvis
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAljuSfYACgkQJNaLcl1U
-h9BIYQf8DbaZhiVW3Tp/9AENsa/ntqfUnXdyokr8O9CNPL5ifBeRhJ9/kMNYX8D+
-GWP9kO93yXpwthXlXqNWtNErv1BlZrw78dzyPNR+QhNw052QcSIgG+k5/7iKjT6T
-bLw9AfIriDcE4kPNKzN4w0YpFqwJjhAMcsaIjnBYob/Su9uYfLnqEXniJqo4ebDZ
-tsx8GAaeJ2TFbgxnW5RBrpstCENYdc8oNaPmRaK423bcbRXFWmA6IXwN8Il0EetH
-TWvGE/c3pftOZF7M6Vj7Xtni/2aH62Ra8DE0jnhYtJ9VXRoos02FoipHsAe92rJN
-rYNEPDNl3nzJPm3r6a1O2FnVtJPQVA==
-=yXLf
------END PGP SIGNATURE-----
-
---okqjiama34qumvis--
+-- 
+Dmitry
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
