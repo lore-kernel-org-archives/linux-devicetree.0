@@ -1,108 +1,126 @@
-From: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
-Subject: Re: [PATCH] [media] imx: csi: retain current field order and
- colorimetry setting as default
-Date: Wed, 12 Apr 2017 09:03:09 +0200
-Message-ID: <6c22519f-64f8-7213-d458-23470bdd5ecd@xs4all.nl>
-References: <1490661656-10318-1-git-send-email-steve_longerbeam@mentor.com>
- <1490661656-10318-22-git-send-email-steve_longerbeam@mentor.com>
- <1491486929.2392.29.camel@pengutronix.de>
- <0f9690f8-c7f6-59ff-9e3e-123af9972d4b@xs4all.nl>
- <1491490451.2392.70.camel@pengutronix.de>
- <59e72974-bfb0-6061-8b13-5f13f8723ba6@xs4all.nl>
- <1491494481.2392.102.camel@pengutronix.de>
+From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 4/5] mtd: nand: add support for Micron on-die ECC
+Date: Wed, 12 Apr 2017 09:03:13 +0200
+Message-ID: <20170412090313.539f81b2@bbrezillon>
+References: <538805ebf8e64015a8b833de755652b3@SIWEX5A.sing.micron.com>
+        <8a171dacd20c45bd8285ecc5dbe8854a@SIWEX5A.sing.micron.com>
+        <20170322144507.4d80d2cc@bbrezillon>
+        <0dccc0abcf234e98be6d340027cf1a30@SIWEX5A.sing.micron.com>
+        <20170322155216.319efc3e@bbrezillon>
+        <414dd35931814ce38381a251917ad79f@SIWEX5A.sing.micron.com>
+        <20170411145102.563fa388@bbrezillon>
+        <90300f14cd2a4ae6967d8be0f7dff4e9@SIWEX5A.sing.micron.com>
+        <20170411173051.7aafb717@bbrezillon>
+        <5a96e73ef951414a82c01b67088b24d3@SIWEX5A.sing.micron.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1491494481.2392.102.camel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+In-Reply-To: <5a96e73ef951414a82c01b67088b24d3-aBoyCxvc2dBaXkNJqdKpEhSpLNRU/VIH@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, nick-gcszYUEDH4VrovVCs/uTlw@public.gmane.org, markus.heiser-O6JHGLzbNUwb1SvskN2V4Q@public.gmane.org, laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, bparrot-l0cyMroinI0@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, sudipm.mukherjee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, jean-christophe.trotin-qxv4g6HH51o@public.gmane.org, horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, robert.jarzmik-GANU6spQydw@public.gmane.org, songjun.wu-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, shuah-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-medi
+To: "Bean Huo (beanhuo)" <beanhuo-AL4WhLSQfzjQT0dZR+AlfA@public.gmane.org>
+Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "richard-/L3Ra7n9ekc@public.gmane.org" <richard-/L3Ra7n9ekc@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, "computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 04/06/2017 06:01 PM, Philipp Zabel wrote:
-> On Thu, 2017-04-06 at 17:43 +0200, Hans Verkuil wrote:
->> On 04/06/2017 04:54 PM, Philipp Zabel wrote:
->>> On Thu, 2017-04-06 at 16:20 +0200, Hans Verkuil wrote:
->>>> On 04/06/2017 03:55 PM, Philipp Zabel wrote:
->>>>> If the the field order is set to ANY in set_fmt, choose the currently
->>>>> set field order. If the colorspace is set to DEFAULT, choose the current
->>>>> colorspace.  If any of xfer_func, ycbcr_enc or quantization are set to
->>>>> DEFAULT, either choose the current setting, or the default setting for the
->>>>> new colorspace, if non-DEFAULT colorspace was given.
->>>>>
->>>>> This allows to let field order and colorimetry settings be propagated
->>>>> from upstream by calling media-ctl on the upstream entity source pad,
->>>>> and then call media-ctl on the sink pad to manually set the input frame
->>>>> interval, without changing the already set field order and colorimetry
->>>>> information.
->>>>>
->>>>> Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
->>>>> ---
->>>>> This is based on imx-media-staging-md-v14, and it is supposed to allow
->>>>> configuring the pipeline with media-ctl like this:
->>>>>
->>>>> 1) media-ctl --set-v4l2 "'tc358743 1-000f':0[fmt:UYVY8_1X16/1920x1080]"
->>>>> 2) media-ctl --set-v4l2 "'imx6-mipi-csi2':1[fmt:UYVY8_1X16/1920x108]"
->>>>> 3) media-ctl --set-v4l2 "'ipu1_csi0_mux':2[fmt:UYVY8_1X16/1920x1080]"
->>>>> 4) media-ctl --set-v4l2 "'ipu1_csi0':0[fmt:UYVY8_1X16/1920x1080@1/60]"
->>>>> 5) media-ctl --set-v4l2 "'ipu1_csi0':2[fmt:AYUV32/1920x1080@1/30]"
->>>>>
->>>>> Without having step 4) overwrite the colorspace and field order set on
->>>>> 'ipu1_csi0':0 by the propagation in step 3).
->>>>> ---
->>>>>  drivers/staging/media/imx/imx-media-csi.c | 34 +++++++++++++++++++++++++++++++
->>>>>  1 file changed, 34 insertions(+)
->>>>>
->>>>> diff --git a/drivers/staging/media/imx/imx-media-csi.c b/drivers/staging/media/imx/imx-media-csi.c
->>>>> index 64dc454f6b371..d94ce1de2bf05 100644
->>>>> --- a/drivers/staging/media/imx/imx-media-csi.c
->>>>> +++ b/drivers/staging/media/imx/imx-media-csi.c
->>>>> @@ -1325,6 +1325,40 @@ static int csi_set_fmt(struct v4l2_subdev *sd,
->>>>>  	csi_try_fmt(priv, sensor, cfg, sdformat, crop, compose, &cc);
->>>>>  
->>>>>  	fmt = __csi_get_fmt(priv, cfg, sdformat->pad, sdformat->which);
->>>>> +
->>>>> +	/* Retain current field setting as default */
->>>>> +	if (sdformat->format.field == V4L2_FIELD_ANY)
->>>>> +		sdformat->format.field = fmt->field;
->>>>
->>>> sdformat->format.field should never be FIELD_ANY. If it is, then that's a
->>>> subdev bug and I'm pretty sure FIELD_NONE was intended.
->>>
->>> This is the subdev. sdformat is passed in from userspace, so we have to
->>> deal with it being set to ANY. I'm trying hard right now not to return
->>> ANY though. The values in sdformat->format are applied to fmt down
->>> below.
->>
->> Do you have a git tree with this patch? It is really hard to review without
->> having the full imx-media-csi.c source.
-> 
-> The patch applies on top of
-> 
->   https://github.com/slongerbeam/mediatree.git imx-media-staging-md-v14
-> 
-> I have uploaded a branch
-> 
->   git://git.pengutronix.de/git/pza/linux imx-media-staging-md-v14+color
-> 
-> with the patch applied on top.
-> 
->> I think one problem is that it is not clearly defined how subdevs and colorspace
->> information should work.
+On Tue, 11 Apr 2017 17:01:51 +0000
+"Bean Huo (beanhuo)" <beanhuo-AL4WhLSQfzjQT0dZR+AlfA@public.gmane.org> wrote:
 
-Ah, having the full source helped.
+> >On Tue, 11 Apr 2017 15:02:22 +0000
+> >"Bean Huo (beanhuo)" <beanhuo-AL4WhLSQfzjQT0dZR+AlfA@public.gmane.org> wrote:
+> >  
+> >> Hi, Boris and Thomas
+> >> Let me do some explanation.
+> >>  
+> >> >> if (NAND == SLC ) { // on-die ECC only exists in SLC //check device
+> >> >> ID byte 4
+> >> >>      if ((ID.byte4 & 0x02) == 0x02) {// internal ECC level ==10b  
+> >> >
+> >> >So here the MT29F1G08ABADAWP datasheet says 0x2 <=> 4bit/512bytes ECC.
+> >> >  
+> >>
+> >> If the NAND supports on-die ECC, here should be 10b, not matter it is
+> >> 8bit or 4bit, You are correct, MT29F1G08ABADAWP is 0x2, its explanation is  
+> >4bit/512bytes ECC.  
+> >> But for the 70s, it is 8bit on-die ECC, but it is still 10b.
+> >> So that why here using these two bits to determine if exist on-die ECC.
+> >> What's more, for some old products, they don't support on-die ECC,
+> >> Sometimes, here is still 01b, so still need following codes to do
+> >> further determinations.  
+> >
+> >Okay, then here is the differentiator. Did you check that on SLC NANDs there's no
+> >collision on ID[4].bits[1:0]. I've seen NAND vendors changing their ID scheme in
+> >incompatible ways (old fields were replaced by new ones with completely
+> >different meanings).  
+> 
+> 
+> Yes, this is true, there is no one standard to define and formalize ID.byte4,
+> It is always changing. Also, sometimes it definitely conflicts with other NAND without
+> On-die ECC. For the Micron both serials SLC NAND with on-die ECC, bits[1:0] is defined
+> Internal ECC level. 
+> 
+> >I'd really like to make sure we're not mis-interpreting READ_ID information, so
+> >maybe we should restrict the test on ONFI NANDs if all NANDs supporting on-die
+> >ECC are ONFI compliant. We should probably also check that chip->id.len >= 5.
+> >
+> >  
+> >>  
+> >> >> 	if (ID.byte4 & 0x80) {//on-Die ECC enabled  
+> >> >
+> >> >Did you read my last reply?
+> >> >Thomas discovered that ID[4].bit7 is actually reflecting the ECC
+> >> >engine state (1 if the engine is enabled, 0 if it's disabled), not
+> >> >whether the NAND supports on-die ECC or not, so no this test is not reliable.
+> >> >  
+> >> For the on-die ECC, it is not always default enabled. It depends on requirement  
+> >from costumers.  
+> >> If on-die ECC is not enabled, bit7 is 0. It can be switched through "Feature  
+> >Operations".
+> >
+> >So this check is not needed, right?  
+> 
+> Here is much complicated. One question is that what main purpose of on-die ECC.
+> there are two types of usage model:
+> 1.  on-die ECC default enabled:
+> Normally before bootloader and kernel, there is no any ECC to correct and maintain
+> Bootloader reliability.  For this kind of customer, I think, they mainly want to have reliable booting.
+> Rather than for store user data. Per this kind of condition, we don't check, because on-die ECC
+> Always be enabled, cannot be disabled.
+> 
+> 2. on-die ECC default disabled:
+> I think this is used for some important user data. Unless the bootrom of CPU can issue 
+> SET_FEATURE to enable on-die ECC, and until Linux running, on-die ECC is still enabled.
+> Otherwise, we need to check if it enables or not.
 
-Ignore my previous review, it was incorrect.
+Well, knowing whether the NAND has on-die ECC or not and determining if
+it's enabled by default are 2 different things. Until now, we were
+trying to detect the former.
 
-I'll have to think about this some more. I'll get back to this, but it may take some
-time since my vacation starts tomorrow. The spec is simply unclear about how to handle
-this so we have to come up with some guidelines.
+> 
+> >BTW, do you have NANDs where the on-die ECC is always enabled, and if this is
+> >the case, what happens when you call
+> >SET_FEATURE(disable/enable-ECC) on these NANDs?  
+> 
+> If this NAND is on-die ECC defaulted enabled, the on-die ECC cannot
+> Disabled later. Why? This is related to specific user model.
 
-Regards,
+Erf, this changes a bit what Thomas and I had in mind, because that
+means read/write_page_raw() are not supported in this case, and more
+importantly, that means users should by no mean enable external ECC
+engines.
 
-	Hans
+> We have one PPT on Micron domain website, it is "on die ECC training",
+> It opens and can freely download. It clearly describes this.
 
+Okay, I'll try to download this document.
+
+One last question. Is it dangerous to call
+SET_FEATURE(disable/enable-ECC) on a NAND that has ECC enabled by
+default? We could use that to detect whether on-die ECC can be turned
+off or not and adjust the chip->ecc init steps accordingly.
+
+Thanks,
+
+Boris
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
