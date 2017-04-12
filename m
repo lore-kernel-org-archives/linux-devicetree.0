@@ -1,128 +1,34 @@
-From: Guillaume Tucker <guillaume.tucker@collabora.com>
-Subject: Re: [PATCH v2 1/5] dt-bindings: gpu: add bindings for the ARM Mali
- Midgard GPU
-Date: Wed, 12 Apr 2017 09:25:35 +0100
-Message-ID: <7a875b2d-f288-8136-de04-11e744f0118b@collabora.com>
-References: <cover.1491118230.git.guillaume.tucker@collabora.com>
- <a01a50d3-bb1b-2c56-2a15-30651fa2fac9@baylibre.com>
- <936a53ee-2ed8-11e4-a860-744256676af9@collabora.com>
- <8676554.1IW2xieEGM@diego>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v5 2/2] i2c: mux: ltc4306: LTC4306 and LTC4305 I2C multiplexer/switch
+Date: Wed, 12 Apr 2017 10:26:43 +0200
+Message-ID: <CACRpkdbOQtJvwtNRuPWh9VQyupH3kXK9-3Vu7qMemngg6O5j1w@mail.gmail.com>
+References: <1491912976-8396-1-git-send-email-michael.hennerich@analog.com> <1491912976-8396-2-git-send-email-michael.hennerich@analog.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <8676554.1IW2xieEGM@diego>
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko@sntech.de>
-Cc: Neil Armstrong <narmstrong@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Sjoerd Simons <sjoerd.simons@collabora.com>, Wookey <wookey@wookware.org>, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, John Reitan <john.reitan@arm.com>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1491912976-8396-2-git-send-email-michael.hennerich@analog.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Michael Hennerich <michael.hennerich@analog.com>
+Cc: Wolfram Sang <wsa@the-dreams.de>, Peter Rosin <peda@axentia.se>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Heiko,
+On Tue, Apr 11, 2017 at 2:16 PM,  <michael.hennerich@analog.com> wrote:
 
-On 11/04/17 21:52, Heiko Stübner wrote:
-> Hi Guillaume,
+> From: Michael Hennerich <michael.hennerich@analog.com>
 >
-> Am Dienstag, 11. April 2017, 18:40:37 CEST schrieb Guillaume Tucker:
->> On 03/04/17 09:12, Neil Armstrong wrote:
->>> On 04/02/2017 09:59 AM, Guillaume Tucker wrote:
->>>> +Optional:
->>>> +
->>>> +- clocks : Phandle to clock for the Mali Midgard device.
->>>> +- clock-names : Shall be "clk_mali".
->>>> +- mali-supply : Phandle to regulator for the Mali device. Refer to
->>>> +  Documentation/devicetree/bindings/regulator/regulator.txt for details.
->>>> +- operating-points : Refer to
->>>> Documentation/devicetree/bindings/power/opp.txt +  for details.
->>>
->>> Please add :
->>>    * Must be one of the following:
->>>       "arm,mali-t820"
->>>
->>>    * And, optionally, one of the vendor specific compatible:
->>>       "amlogic,meson-gxm-mali"
->>>
->>> with my Ack for the amlogic platform.
->>
->> It seems to me that as long as the GPU architecture hasn't been
->> modified (I don't think I've ever encountered such a case) then
->> it has to be a standard ARM Mali type regardless of the SoC
->> vendor.  So unless a Mali-T820 in the Amlogic S912 SoC is not the
->> same as a T820 in a different SoC, please forgive me but I don't
->> understand why a vendor compatible string is needed.  My main
->> concern is that it's going to be very hard to keep that list
->> up-to-date with all existing Midgard SoC variants.  If do we need
->> to add vendor compatible strings to correctly describe the
->> hardware then I'm happy to add the amlogic one in my patch v3; I
->> would just like to understand why that's necessary.
+> This patch adds support for the Analog Devices / Linear Technology
+> LTC4306 and LTC4305 4/2 Channel I2C Bus Multiplexer/Switches.
+> The LTC4306 optionally provides two general purpose input/output pins
+> (GPIOs) that can be configured as logic inputs, opendrain outputs or
+> push-pull outputs via the generic GPIOLIB framework.
 >
-> SoC vendors in most cases hook ip blocks into their socs in different
-> and often strange ways. After all it's not some discrete ic you solder
-> onto a board, but instead a part of the soc itself.
+> Signed-off-by: Michael Hennerich <michael.hennerich@analog.com>
+(...)
+> Changes since v4:
 
-Thanks for your explanation.  I see, it's really about special
-things that are not supported by the standard Midgard kernel
-driver.
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-> So in most cases you will have some hooks outside the actual gpu iospace
-> that can be used to tune different things about how the gpu interacts with
-> the system. Which is probably also the reason the midgard kernel driver
-> has this ugly "platform" subdirectory for compile-time platform selection.
+Please go ahead and merge to the i2c tree if you like.
 
-I see the "platform" directory approach as an old and deprecated
-way of supporting platforms, upstreaming the dt bindings goes in
-the direction of using solely the device tree to describe the GPU
-hardware (i.e. CONFIG_MALI_PLATFORM_DEVICETREE).  If something
-quirky is needed in the platform, it should be possible to
-support it outside the GPU driver (platform devfreq etc...).
-
-Back to the original intent of enabling distros to make Mali GPU
-driver packages, when using the device tree you can have a single
-kernel driver package for all Midgard platforms.  When using the
-third-party platform sources approach, you need to make an extra
-package for each one of them.
-
-So if there is value in supporting platforms that absolutely
-require something special due to their hardware GPU integration,
-then yes I see why vendor dt bindings might be useful.  However
-it seems to me that this should really be an exception and
-avoided whenever possible.
-
-> On my rk3288 for example we have [0] in the chromeos tree, that handles
-> the oddities of the midgard on the rk3288 used in a lot of Chromebooks.
-> There are soc-specific oddities of frequencies, frequency-scaling and
-> whatnot. And there are also more gpu-specific setting in syscon areas
-> of the soc (pmu and grf) that can also influence the gpus performance
-> and might need tweaking at some point.
-
-For the rk3288, this is purely a software implementation issue on
-the chromeos-3.14 branch.  With mainline kernel, you can use
-devfreq and no platform files at all (that's how I tested these
-dt bindings).  So as far as I know, there's no need for a vendor
-compatible string on rk3288.
-
-> That doesn't even take into account that there may even be differences
-> on how things are synthesized that we don't know about. See all the
-> variants of the dw_hdmi ip block (imx, rockchip, meson [more?]) .
-
-I'm not too familiar with that driver, just had a quick look and
-it seems to be a different issue as there's a kernel config for
-each platform to build separate driver modules.  And it looks
-like they are actually needed to cope with variants of the
-hardware inside the display processor block, unlike with the Mali
-GPU which in principle should always be the same.  I've run this
-Midgard driver without any platform files and using devfreq at
-least on rk3288 Firefly, Exynos 5422 ODROID-XU3 and Juno and they
-all have a vanilla Mali GPU hw block.  It's just wired
-differently in each SoC.
-
-> So we really want to have the special compatibles in place, to be prepared
-> for the future per-soc oddities that always appear :-) .
-
-How about aiming for the ideal case where vendor-specific things
-are not needed and add them if and when they really become
-inevitable and worth the cost?
-
-Thanks,
-Guillaume
-
-> [0] https://chromium.googlesource.com/chromiumos/third_party/kernel/+/chromeos-3.14/drivers/gpu/arm/midgard/platform/rk/
+Yours,
+Linus Walleij
