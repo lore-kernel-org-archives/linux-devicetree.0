@@ -1,13 +1,12 @@
 From: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v4 17/18] arm: sunxi: Enable dwmac-sun8i driver
- on sunxi_defconfig
-Date: Wed, 12 Apr 2017 13:13:59 +0200
-Message-ID: <20170412111400.2296-18-clabbe.montjoie@gmail.com>
+Subject: [PATCH v4 15/18] arm: allwinner: pine64-plus: Enable dwmac-sun8i
+Date: Wed, 12 Apr 2017 13:13:57 +0200
+Message-ID: <20170412111400.2296-16-clabbe.montjoie@gmail.com>
 References: <20170412111400.2296-1-clabbe.montjoie@gmail.com>
 Reply-To: clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBD7YLCN32UNBBCMZXDDQKGQEJVECG6Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBD7YLCN32UNBBB4ZXDDQKGQEGKVXU7Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20170412111400.2296-1-clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -20,24 +19,39 @@ To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@pu
 Cc: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Enable the dwmac-sun8i driver in the sunxi default configuration
+The dwmac-sun8i hardware is present on the pine64 plus.
+It uses an external PHY rtl8211e via RGMII.
 
 Signed-off-by: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- arch/arm/configs/sunxi_defconfig | 1 +
- 1 file changed, 1 insertion(+)
+ .../arm64/boot/dts/allwinner/sun50i-a64-pine64-plus.dts | 17 ++++++++++++++++-
+ 1 file changed, 16 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/configs/sunxi_defconfig b/arch/arm/configs/sunxi_defconfig
-index 5cd5dd70..504e022 100644
---- a/arch/arm/configs/sunxi_defconfig
-+++ b/arch/arm/configs/sunxi_defconfig
-@@ -40,6 +40,7 @@ CONFIG_ATA=y
- CONFIG_AHCI_SUNXI=y
- CONFIG_NETDEVICES=y
- CONFIG_SUN4I_EMAC=y
-+CONFIG_DWMAC_SUN8I=y
- # CONFIG_NET_VENDOR_ARC is not set
- # CONFIG_NET_CADENCE is not set
- # CONFIG_NET_VENDOR_BROADCOM is not set
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64-plus.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64-plus.dts
+index 790d14d..dea76c2 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64-plus.dts
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64-plus.dts
+@@ -46,5 +46,20 @@
+ 	model = "Pine64+";
+ 	compatible = "pine64,pine64-plus", "allwinner,sun50i-a64";
+ 
+-	/* TODO: Camera, Ethernet PHY, touchscreen, etc. */
++	/* TODO: Camera, touchscreen, etc. */
++};
++
++&mdio {
++	ext_rgmii_phy: ethernet-phy@1 {
++		compatible = "ethernet-phy-ieee802.3-c22";
++		reg = <1>;
++	};
++};
++
++&emac {
++	pinctrl-names = "default";
++	pinctrl-0 = <&rgmii_pins>;
++	phy-mode = "rgmii";
++	phy-handle = <&ext_rgmii_phy>;
++	status = "okay";
+ };
 -- 
 2.10.2
