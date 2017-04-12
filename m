@@ -1,44 +1,49 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: [PATCH v2 1/3] mfd: max8998: Remove CONFIG_OF around max8998_dt_match
-Date: Tue, 11 Apr 2017 21:41:54 -0700
-Message-ID: <20170412044156.17351-2-f.fainelli@gmail.com>
-References: <20170412044156.17351-1-f.fainelli@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170412044156.17351-1-f.fainelli@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: andrew@lunn.ch, vivien.didelot@savoirfairelinux.com, Florian Fainelli <f.fainelli@gmail.com>, Lee Jones <lee.jones@linaro.org>, Nicolas Ferre <nicolas.ferre@microchip.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, "open list:NETWORKING DRIVERS" <netdev@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE" <devicetree@vger.kernel.org>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [GIT PULL] PCI: Support for configurable PCI endpoint
+Date: Wed, 12 Apr 2017 11:13:41 +0530
+Message-ID: <e4c7d2af-9d80-b6e0-def9-43254d815e25@ti.com>
+References: <20170405085243.18123-1-kishon@ti.com>
+ <20170410154328.GB13170@bhelgaas-glaptop.roam.corp.google.com>
+ <20170411193447.GA14778@bhelgaas-glaptop.roam.corp.google.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20170411193447.GA14778@bhelgaas-glaptop.roam.corp.google.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: devicetree@vger.kernel.org, Joao Pinto <Joao.Pinto@synopsys.com>, linux-doc@vger.kernel.org, linux-pci@vger.kernel.org, nsekhar@ti.com, linux-kernel@vger.kernel.org, hch@infradead.org, Bjorn Helgaas <bhelgaas@google.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-A subsequent patch is going to make of_match_node() an inline stub when
-CONFIG_OF is disabled which will properly take care of having the compiler
-eliminate the variable. To avoid more #ifdef/#else, just always make the match
-table available.
+Hi Bjorn,
 
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
----
- drivers/mfd/max8998.c | 2 --
- 1 file changed, 2 deletions(-)
+On Wednesday 12 April 2017 01:04 AM, Bjorn Helgaas wrote:
+> On Mon, Apr 10, 2017 at 10:43:28AM -0500, Bjorn Helgaas wrote:
+>> On Wed, Apr 05, 2017 at 02:22:20PM +0530, Kishon Vijay Abraham I wrote:
+>>> Hi Bjorn,
+>>>
+>>> Please find the pull request for PCI endpoint support below. I've
+>>> also included all the history here.
+>>
+>> Thanks, I applied these (with v7 of the first patch) to pci/host-designware
+>> for v4.12.
+> 
+> Ok, sorry, I screwed this up.  I think my branch actually had v5, not
+> v6.  But I *think* I fixed it.  Here's the diff from my branch to your
+> git tree.  Apparently you haven't pushed the v7 patch there, so I
+> *think* the diff below is the diff between v6 and v7 of that first
+> patch.
 
-diff --git a/drivers/mfd/max8998.c b/drivers/mfd/max8998.c
-index 4c33b8063bc3..372f681ec1bb 100644
---- a/drivers/mfd/max8998.c
-+++ b/drivers/mfd/max8998.c
-@@ -129,14 +129,12 @@ int max8998_update_reg(struct i2c_client *i2c, u8 reg, u8 val, u8 mask)
- }
- EXPORT_SYMBOL(max8998_update_reg);
- 
--#ifdef CONFIG_OF
- static const struct of_device_id max8998_dt_match[] = {
- 	{ .compatible = "maxim,max8998", .data = (void *)TYPE_MAX8998 },
- 	{ .compatible = "national,lp3974", .data = (void *)TYPE_LP3974 },
- 	{ .compatible = "ti,lp3974", .data = (void *)TYPE_LP3974 },
- 	{},
- };
--#endif
- 
- /*
-  * Only the common platform data elements for max8998 are parsed here from the
--- 
-2.9.3
+I just checked your pci/host-designware branch and it looks correct. Thanks for
+sorting this out.
+
+Cheers
+Kishon
