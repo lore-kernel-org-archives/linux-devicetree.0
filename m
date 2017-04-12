@@ -1,51 +1,49 @@
-From: Ravikumar Kattekola <rk@ti.com>
-Subject: [PATCH 1/1] ARM: dts: dra7: Reduce cpu thermal shutdown temperature
-Date: Wed, 12 Apr 2017 11:54:42 +0530
-Message-ID: <20170412062442.17736-1-rk@ti.com>
+From: Oleksij Rempel <ore-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH v1 3/3] nvmem: dt: document SNVS LPGPR binding
+Date: Wed, 12 Apr 2017 08:23:53 +0200
+Message-ID: <20170412062353.s5nf5thsn2xxdlre@pengutronix.de>
+References: <20170406073107.32445-1-o.rempel@pengutronix.de>
+ <20170406073107.32445-3-o.rempel@pengutronix.de>
+ <20170410182235.pmobyxn6kvyvcwsj@rob-hp-laptop>
+ <1e0f8a71-9dca-7aaa-a603-86ed3934da4d@pengutronix.de>
+ <CAL_JsqJeqYEw7v_z9zhtnP9hZEvkc5Z8TsktzbrCrmc7vorGkA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: bcousson@baylibre.com, tony@atomide.com
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqJeqYEw7v_z9zhtnP9hZEvkc5Z8TsktzbrCrmc7vorGkA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Oleksij Rempel <o.rempel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, kernel-rffoE+Jg25C1LGEWPFfZhQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T24gZHJhNywgYXMgcGVyIFRSTSwgdGhlIEhXIHNodXRkb3duIChUU0hVVCkgdGVtcGVyYXR1cmUg
-aXMgaGFyZGNvZGVkCnRvIDEyM0MgYW5kIGNhbm5vdCBiZSBtb2RpZmllZCBieSBTVy4gVGhpcyBt
-ZWFucyB3aGVuIHRoZSB0ZW1wZXJhdHVyZQpyZWFjaGVzIDEyM0MgSFcgYXNzZXJ0cyBUU0hVVCBv
-dXRwdXQgd2hpY2ggc2lnbmFscyBhIHdhcm0gcmVzZXQuClRoaXMgcmVzZXQgaXMgaGVsZCB1bnRp
-bCB0aGUgdGVtcGVyYXR1cmUgZ29lcyBiZWxvdyB0aGUgVFNIVVQgbG93ICgxMDVDKS4KCldoaWxl
-IGluIFNXLCB0aGUgdGhlcm1hbCBkcml2ZXIgY29udGludW91c2x5IG1vbml0b3JzIGN1cnJlbnQg
-dGVtcGVyYXR1cmUKYW5kIHRha2VzIGRlY2lzaW9ucyBiYXNlZCBvbiB3aGV0aGVyIGl0IHJlYWNo
-ZWQgYW4gYWxlcnQgb3IgYSBjcml0aWNhbCBwb2ludC4KVGhlIGludGVudGlvbiBvZiBzZXR0aW5n
-IGEgU1cgY3JpdGljYWwgcG9pbnQgaXMgdG8gcHJldmVudCBmb3JjZSByZXNldCBieSBIVwphbmQg
-aW5zdGVhZCBkbyBhbiBvcmRlcmx5X3Bvd2Vyb2ZmKCkuIEJ1dCBpZiB0aGUgU1cgY3JpdGljYWwg
-dGVtcGVyYXR1cmUgaXMKZ3JlYXRlciB0aGFuIG9yIGVxdWFsIHRvIHRoYXQgb2YgSFcgdGhlbiBp
-dCBkZWZlYXRzIHRoZSBwdXJwb3NlLiBUbyBhZGRyZXNzCnRoaXMgYW5kIGxldCBTVyB0YWtlIGFj
-dGlvbiBiZWZvcmUgSFcgZG9lcyBrZWVwIHRoZSBTVyBjcml0aWNhbCB0ZW1wZXJhdHVyZQpsZXNz
-IHRoYW4gSFcgVFNIVVQgdmFsdWUuCgpUaGUgdmFsdWUgZm9yIFNXIGNyaXRpY2FsIHRlbXBlcmF0
-dXJlIHdhcyBjaG9zZW4gYXMgMTIwQyBqdXN0IHRvIGVuc3VyZQp3ZSBnaXZlIFNXIHNvbWV0aW1l
-IGJlZm9yZSBIVyBjYXRjaGVzIHVwLgoKRG9jdW1lbnQgcmVmZXJlbmNlClNQUlVJMzBDIOKAkyBE
-UkE3NXgsIERSQTc0eCBUZWNobmljYWwgUmVmZXJlbmNlIE1hbnVhbCAtIE5vdmVtYmVyIDIwMTYK
-U1BSVUhaNkggLSBBTTU3MnggVGVjaG5pY2FsIFJlZmVyZW5jZSBNYW51YWwgLSBOb3ZlbWJlciAy
-MDE2CgpUZXN0ZWQgb246CkRSQTc1eCBQRyAyLjAgUmV2IEggRVZNCgpTaWduZWQtb2ZmLWJ5OiBS
-YXZpa3VtYXIgS2F0dGVrb2xhIDxya0B0aS5jb20+Ci0tLQogYXJjaC9hcm0vYm9vdC9kdHMvZHJh
-Ny5kdHNpIHwgNCArKysrCiAxIGZpbGUgY2hhbmdlZCwgNCBpbnNlcnRpb25zKCspCgpkaWZmIC0t
-Z2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMvZHJhNy5kdHNpIGIvYXJjaC9hcm0vYm9vdC9kdHMvZHJh
-Ny5kdHNpCmluZGV4IDU3ODkyZjIuLmU3MTQ0NjYgMTAwNjQ0Ci0tLSBhL2FyY2gvYXJtL2Jvb3Qv
-ZHRzL2RyYTcuZHRzaQorKysgYi9hcmNoL2FybS9ib290L2R0cy9kcmE3LmR0c2kKQEAgLTIwMTcs
-NCArMjAxNyw4IEBACiAJY29lZmZpY2llbnRzID0gPDAgMjAwMD47CiB9OwogCismY3B1X2NyaXQg
-eworCXRlbXBlcmF0dXJlID0gPDEyMDAwMD47IC8qIG1pbGxpIENlbHNpdXMgKi8KK307CisKIC9p
-bmNsdWRlLyAiZHJhN3h4LWNsb2Nrcy5kdHNpIgotLSAKMi44LjAuR0lUCgoKX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWls
-aW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0
-cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+On Tue, Apr 11, 2017 at 08:35:00AM -0500, Rob Herring wrote:
+> On Mon, Apr 10, 2017 at 11:36 PM, Oleksij Rempel <ore-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
+> > Hi,
+> > On 04/10/2017 08:22 PM, Rob Herring wrote:
+> >>
+> >> On Thu, Apr 06, 2017 at 09:31:07AM +0200, Oleksij Rempel wrote:
+> >>>
+> >>> Documenation bindings for the Low Power General Purpose Registe
+> >>
+> > Jes, it is refereed by other driver.
+> 
+> What I mean is snvs-lpgpr referenced elsewhere in DT, not by some
+> driver? You are not using the nvmem binding here so it doesn't seem
+> like it is. If that's the case, then you don't need this node. The
+> only information here is the offset which can be part of a driver for
+> the parent node. To put it another way, we don't want to fill DT with
+> a node per register.
+
+This node is referenced insight of product DT. Since the system has
+or may have more then one nvmem node we need to assigne aliase to it.
+
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
