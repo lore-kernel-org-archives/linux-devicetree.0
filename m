@@ -1,104 +1,86 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH V2] clk: hi6220: Add the hi655x's pmic clock
-Date: Wed, 12 Apr 2017 08:02:45 -0700
-Message-ID: <20170412150245.GK7065@codeaurora.org>
-References: <1491683412-12237-1-git-send-email-daniel.lezcano@linaro.org>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH v5 1/4] gpio: mvebu: Add limited PWM support
+Date: Wed, 12 Apr 2017 17:19:32 +0200
+Message-ID: <20170412151932.GE7023@lunn.ch>
+References: <20170409180931.4884-1-ralph.sennhauser@gmail.com>
+ <20170409180931.4884-2-ralph.sennhauser@gmail.com>
+ <20170412163128.5c985a26@free-electrons.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-clk-owner@vger.kernel.org>
+Return-path: <linux-gpio-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1491683412-12237-1-git-send-email-daniel.lezcano@linaro.org>
-Sender: linux-clk-owner@vger.kernel.org
-To: Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: mturquette@baylibre.com, lee.jones@linaro.org, xuwei5@hisilicon.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org
+In-Reply-To: <20170412163128.5c985a26@free-electrons.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Cc: Ralph Sennhauser <ralph.sennhauser@gmail.com>, Thierry Reding <thierry.reding@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Jason Cooper <jason@lakedaemon.net>, Alexandre Courbot <gnurou@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Russell King <linux@armlinux.org.uk>, linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org, Gregory Clement <gregory.clement@free-electrons.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 04/08, Daniel Lezcano wrote:
->  
->  Example:
->  	pmic: pmic@f8000000 {
-> @@ -24,4 +29,5 @@ Example:
->  		interrupt-controller;
->  		#interrupt-cells = <2>;
->  		pmic-gpios = <&gpio1 2 GPIO_ACTIVE_HIGH>;
-> +		clock-cells = <0>;
+On Wed, Apr 12, 2017 at 04:31:28PM +0200, Thomas Petazzoni wrote:
+> Hello,
+> 
+> Sorry for the late feedback about this.
+> 
+> On Sun,  9 Apr 2017 20:09:27 +0200, Ralph Sennhauser wrote:
+> 
+> > +		gpio1: gpio@18140 {
+> > +			compatible = "marvell,armada-370-xp-gpio";
+> > +			reg = <0x18140 0x40>, <0x181c8 0x08>;
+> 
+> One issue I see is that you have only two counters A and B. You
+> associate counter A with the first bank of GPIOs, and counter B with
+> the second bank of GPIOs.
+> 
+> Which means that if you need to PWM a GPIO from the third bank of
+> GPIOs, you can't, even if the HW allows it.
+>
+> 
+> While I'm fine with not supporting all the HW features, but it's a bit
+> sad that this gets encoded into the DT.
+> 
+> But I guess the only way to make this possible would be to have a
+> single node for all GPIOs rather than one per bank? Or do we have a way
+> to have those counter A/B registers bound to a separate PWM driver, and
+> then the GPIO driver being smart enough to select the counter to be
+> used? Seems not easy to do though :-/
 
-Should be #clock-cells instead.
+Hi Thomas
 
->  	}
-> diff --git a/drivers/clk/Makefile b/drivers/clk/Makefile
-> index 92c12b8..c19983a 100644
-> --- a/drivers/clk/Makefile
-> +++ b/drivers/clk/Makefile
-> @@ -36,6 +36,7 @@ obj-$(CONFIG_COMMON_CLK_PALMAS)		+= clk-palmas.o
->  obj-$(CONFIG_COMMON_CLK_PWM)		+= clk-pwm.o
->  obj-$(CONFIG_CLK_QORIQ)			+= clk-qoriq.o
->  obj-$(CONFIG_COMMON_CLK_RK808)		+= clk-rk808.o
-> +obj-$(CONFIG_COMMON_CLK_HI655X)		+= clk-hi655x.o
->  obj-$(CONFIG_COMMON_CLK_S2MPS11)	+= clk-s2mps11.o
->  obj-$(CONFIG_COMMON_CLK_SCPI)           += clk-scpi.o
->  obj-$(CONFIG_COMMON_CLK_SI5351)		+= clk-si5351.o
-> diff --git a/drivers/clk/clk-hi655x.c b/drivers/clk/clk-hi655x.c
-> new file mode 100644
-> index 0000000..b2bea32
-> --- /dev/null
-> +++ b/drivers/clk/clk-hi655x.c
-> @@ -0,0 +1,140 @@
-> +
-> +static int hi655x_clk_probe(struct platform_device *pdev)
-> +{
-> +	struct device *parent = pdev->dev.parent;
-> +	struct hi655x_pmic *hi655x = dev_get_drvdata(parent);
-> +	struct clk_init_data *hi655x_clk_init;
+Yep. It was a compromise. By adding a new binding for the GPIO driver,
+this might be possible. But it did not seem worth such a major change.
 
-This can just go onto the stack? We don't need it around after
-probe.
+The prime use of this feature is for controlling a fan. So far, i've
+not seen any hardware with more than one fan, i.e. needs more than one
+PWM. Nor have i seen any hardware with the GPIO for the fan being on
+the third bank. A hardware manufacture could add multiple fans, but i
+doubt it, they make noise and fail. And if a manufacture does place a
+fan on the third bank, it can still be controlled as a plain GPIO fan,
+as we have been doing for the last few years.
 
-> +	struct hi655x_clk *hi655x_clk;
-> +	const char *clk_name = "hi655x-clk";
-> +	int ret;
-> +
-> +	hi655x_clk = devm_kzalloc(&pdev->dev, sizeof(*hi655x_clk), GFP_KERNEL);
-> +	if (!hi655x_clk)
-> +		return -ENOMEM;
-> +
-> +	hi655x_clk_init = devm_kzalloc(&pdev->dev, sizeof(*hi655x_clk_init),
-> +				       GFP_KERNEL);
-> +	if (!hi655x_clk_init)
-> +		return -ENOMEM;
-> +
-> +	of_property_read_string_index(parent->of_node, "clock-output-names",
-> +				      0, &clk_name);
-> +
-> +	hi655x_clk_init->name	= clk_name;
-> +	hi655x_clk_init->ops	= &hi655x_clk_ops;
-> +
-> +	hi655x_clk->clk_hw.init	= hi655x_clk_init;
-> +	hi655x_clk->hi655x	= hi655x;
-> +
-> +	platform_set_drvdata(pdev, hi655x_clk);
-> +
-> +	ret = devm_clk_hw_register(&pdev->dev, &hi655x_clk->clk_hw);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = of_clk_add_hw_provider(parent->of_node, of_clk_hw_simple_get,
-> +				     &hi655x_clk->clk_hw);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = clk_hw_register_clkdev(&hi655x_clk->clk_hw, clk_name, NULL);
+So i personally think it is an O.K. compromise.
 
-Missed this last time. Do you use this clkdev lookup? The name is
-usually supposed to be based on what the device is expecting,
-instead of clk_name, and we would want some device name for the
-third argument here.
+> > @@ -555,6 +842,10 @@ static const struct of_device_id mvebu_gpio_of_match[] = {
+> >  		.data	    = (void *) MVEBU_GPIO_SOC_VARIANT_ARMADAXP,
+> >  	},
+> >  	{
+> > +		.compatible = "marvell,armada-370-xp-gpio",
+> > +		.data	    = (void *) MVEBU_GPIO_SOC_VARIANT_ORION,
+> 
+> Whum, what are you doing here?
 
-> +	if (ret)
-> +		of_clk_del_provider(parent->of_node);
-> +
-> +	return ret;
+Since you are late to the discussion, you probably missed this part.
 
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Only 370 and XP have the hardware needed to do this. Kirkwood and
+Orion5x does not. It was requested a compatible string was added to
+indicate SoC has the needed hardware.
+
+The driver was extended when XP was added, due it is per CPU
+interrupts. However, that turned out to be broken. One CPU would
+enable the interrupt, and it was delivered to another, causing it to
+be missed. So XP was reverted to use the plan old ORION way of doing
+interrupts.
+
+So this patch adds in a new compatible string for 370 and XP, to
+indicate the PWM hardware is available, and keeps using the ORION way
+of handing interrupts.
+
+   Andrew
