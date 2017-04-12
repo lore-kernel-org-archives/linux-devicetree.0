@@ -1,46 +1,840 @@
-From: Marcel Holtmann <marcel@holtmann.org>
-Subject: Re: [PATCH v2 3/4] bluetooth: hci_uart: add LL protocol serdev driver
- support
-Date: Wed, 12 Apr 2017 22:20:26 +0200
-Message-ID: <1EF987AA-8426-43BF-B92B-62AFF554FAA1@holtmann.org>
-References: <20170407143516.9945-1-robh@kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 10.3 \(3273\))
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 8BIT
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20170407143516.9945-1-robh@kernel.org>
-Sender: netdev-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: linux-bluetooth@vger.kernel.org, linux-arm-kernel@lists.infradead.org, "Gustavo F. Padovan" <gustavo@padovan.org>, Johan Hedberg <johan.hedberg@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Wei Xu <xuwei5@hisilicon.com>, Eyal Reizer <eyalr@ti.com>, Satish Patel <satish.patel@linaro.org>, netdev@vger.kernel.org, devicetree@vger.kernel.org
+From: Cyrille Pitchen <cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org>
+Subject: Re: [PATCH v3 2/2] mtd: spi-nor: add driver for STM32 quad spi flash
+ controller
+Date: Wed, 12 Apr 2017 22:28:40 +0200
+Message-ID: <819a043f-c34d-56f6-c612-69fdc45cc785@wedev4u.fr>
+References: <1492016785-24976-1-git-send-email-ludovic.Barre@st.com>
+ <1492016785-24976-3-git-send-email-ludovic.Barre@st.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1492016785-24976-3-git-send-email-ludovic.Barre-qxv4g6HH51o@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ludovic Barre <ludovic.Barre-qxv4g6HH51o@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+Hi Ludovic,
 
-> Turns out that the LL protocol and the TI-ST are the same thing AFAICT.
-> The TI-ST adds firmware loading, GPIO control, and shared access for
-> NFC, FM radio, etc. For now, we're only implementing what is needed for
-> BT. This mirrors other drivers like BCM and Intel, but uses the new
-> serdev bus.
+Globally I will say this is pretty good and, IMHO, almost ready to be
+merged into the github/spi-nor tree.
+
+I have few comments, all but one are mainly recommendations hence not
+blocking on my side. However one should be fixed. Even if not critical
+and very unlikely to happen, I think it is more a potential bug than a
+simple cosmetic issue.
+
+So if you have time to prepare a new series, I will try if possible to
+add your patch into the PR, which should be sent ideally before the end
+of the week. I can't give you any guarantee since the timing is really
+short now. Besides Marek still needs to add his Acked-by / Reviewed-by
+once satisfied, otherwise your patch will have to wait for the next release.
+
+If something I say is wrong or if you disagree with me, do not hesitate:
+we can discuss and I can change my mind.
+
+So my comments to follow:
+
+Le 12/04/2017 à 19:06, Ludovic Barre a écrit :
+> From: Ludovic Barre <ludovic.barre-qxv4g6HH51o@public.gmane.org>
 > 
-> The firmware loading is greatly simplified by using existing
-> infrastructure to send commands. It may be a bit slower than the
-> original code using synchronous functions, but the real bottleneck is
-> likely doing firmware load at 115.2kbps.
+> The quadspi is a specialized communication interface targeting single,
+> dual or quad SPI Flash memories.
 > 
-> Signed-off-by: Rob Herring <robh@kernel.org>
-> Cc: Marcel Holtmann <marcel@holtmann.org>
-> Cc: Gustavo Padovan <gustavo@padovan.org>
-> Cc: Johan Hedberg <johan.hedberg@gmail.com>
-> Cc: linux-bluetooth@vger.kernel.org
+> It can operate in any of the following modes:
+> -indirect mode: all the operations are performed using the quadspi
+>  registers
+> -read memory-mapped mode: the external Flash memory is mapped to the
+>  microcontroller address space and is seen by the system as if it was
+>  an internal memory
+> 
+> Signed-off-by: Ludovic Barre <ludovic.barre-qxv4g6HH51o@public.gmane.org>
 > ---
-> v2:
-> - Use IS_ENABLED() to fix module build
+>  drivers/mtd/spi-nor/Kconfig         |   7 +
+>  drivers/mtd/spi-nor/Makefile        |   1 +
+>  drivers/mtd/spi-nor/stm32-quadspi.c | 693 ++++++++++++++++++++++++++++++++++++
+>  3 files changed, 701 insertions(+)
+>  create mode 100644 drivers/mtd/spi-nor/stm32-quadspi.c
 > 
-> drivers/bluetooth/hci_ll.c | 261 ++++++++++++++++++++++++++++++++++++++++++++-
-> 1 file changed, 260 insertions(+), 1 deletion(-)
+> diff --git a/drivers/mtd/spi-nor/Kconfig b/drivers/mtd/spi-nor/Kconfig
+> index 7252087..bfdfb1e 100644
+> --- a/drivers/mtd/spi-nor/Kconfig
+> +++ b/drivers/mtd/spi-nor/Kconfig
+> @@ -106,4 +106,11 @@ config SPI_INTEL_SPI_PLATFORM
+>  	  To compile this driver as a module, choose M here: the module
+>  	  will be called intel-spi-platform.
+>  
+> +config SPI_STM32_QUADSPI
+> +	tristate "STM32 Quad SPI controller"
+> +	depends on ARCH_STM32
+> +	help
+> +	  This enables support for the STM32 Quad SPI controller.
+> +	  We only connect the NOR to this controller.
+> +
+>  endif # MTD_SPI_NOR
+> diff --git a/drivers/mtd/spi-nor/Makefile b/drivers/mtd/spi-nor/Makefile
+> index 72238a7..285aab8 100644
+> --- a/drivers/mtd/spi-nor/Makefile
+> +++ b/drivers/mtd/spi-nor/Makefile
+> @@ -8,3 +8,4 @@ obj-$(CONFIG_MTD_MT81xx_NOR)    += mtk-quadspi.o
+>  obj-$(CONFIG_SPI_NXP_SPIFI)	+= nxp-spifi.o
+>  obj-$(CONFIG_SPI_INTEL_SPI)	+= intel-spi.o
+>  obj-$(CONFIG_SPI_INTEL_SPI_PLATFORM)	+= intel-spi-platform.o
+> +obj-$(CONFIG_SPI_STM32_QUADSPI)	+= stm32-quadspi.o
+> \ No newline at end of file
+> diff --git a/drivers/mtd/spi-nor/stm32-quadspi.c b/drivers/mtd/spi-nor/stm32-quadspi.c
+> new file mode 100644
+> index 0000000..9e90dee
+> --- /dev/null
+> +++ b/drivers/mtd/spi-nor/stm32-quadspi.c
+> @@ -0,0 +1,693 @@
+> +/*
+> + * stm32_quadspi.c
+> + *
+> + * Copyright (C) 2017, Ludovic Barre
+> + *
+> + * License terms: GNU General Public License (GPL), version 2
+> + */
+> +#include <linux/clk.h>
+> +#include <linux/errno.h>
+> +#include <linux/io.h>
+> +#include <linux/iopoll.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/module.h>
+> +#include <linux/mtd/mtd.h>
+> +#include <linux/mtd/partitions.h>
+> +#include <linux/mtd/spi-nor.h>
+> +#include <linux/mutex.h>
+> +#include <linux/of.h>
+> +#include <linux/of_device.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/reset.h>
+> +
+> +#define QUADSPI_CR		0x00
+> +#define CR_EN			BIT(0)
+> +#define CR_ABORT		BIT(1)
+> +#define CR_DMAEN		BIT(2)
+> +#define CR_TCEN			BIT(3)
+> +#define CR_SSHIFT		BIT(4)
+> +#define CR_DFM			BIT(6)
+> +#define CR_FSEL			BIT(7)
+> +#define CR_FTHRES_SHIFT		8
+> +#define CR_FTHRES_MASK		GENMASK(12, 8)
+> +#define CR_FTHRES(n)		(((n) << CR_FTHRES_SHIFT) & CR_FTHRES_MASK)
+> +#define CR_TEIE			BIT(16)
+> +#define CR_TCIE			BIT(17)
+> +#define CR_FTIE			BIT(18)
+> +#define CR_SMIE			BIT(19)
+> +#define CR_TOIE			BIT(20)
+> +#define CR_PRESC_SHIFT		24
+> +#define CR_PRESC_MASK		GENMASK(31, 24)
+> +#define CR_PRESC(n)		(((n) << CR_PRESC_SHIFT) & CR_PRESC_MASK)
+> +
+> +#define QUADSPI_DCR		0x04
+> +#define DCR_CSHT_SHIFT		8
+> +#define DCR_CSHT_MASK		GENMASK(10, 8)
+> +#define DCR_CSHT(n)		(((n) << DCR_CSHT_SHIFT) & DCR_CSHT_MASK)
+> +#define DCR_FSIZE_SHIFT		16
+> +#define DCR_FSIZE_MASK		GENMASK(20, 16)
+> +#define DCR_FSIZE(n)		(((n) << DCR_FSIZE_SHIFT) & DCR_FSIZE_MASK)
+> +
+> +#define QUADSPI_SR		0x08
+> +#define SR_TEF			BIT(0)
+> +#define SR_TCF			BIT(1)
+> +#define SR_FTF			BIT(2)
+> +#define SR_SMF			BIT(3)
+> +#define SR_TOF			BIT(4)
+> +#define SR_BUSY			BIT(5)
+> +#define SR_FLEVEL_SHIFT		8
+> +#define SR_FLEVEL_MASK		GENMASK(13, 8)
+> +
+> +#define QUADSPI_FCR		0x0c
+> +#define FCR_CTCF		BIT(1)
+> +
+> +#define QUADSPI_DLR		0x10
+> +
+> +#define QUADSPI_CCR		0x14
+> +#define CCR_INST_SHIFT		0
+> +#define CCR_INST_MASK		GENMASK(7, 0)
+> +#define CCR_INST(n)		(((n) << CCR_INST_SHIFT) & CCR_INST_MASK)
+> +#define CCR_IMODE_NONE		(0 << 8)
+> +#define CCR_IMODE_1		(1 << 8)
+> +#define CCR_IMODE_2		(2 << 8)
+> +#define CCR_IMODE_4		(3 << 8)
+> +#define CCR_ADMODE_NONE		(0 << 10)
+> +#define CCR_ADMODE_1		(1 << 10)
+> +#define CCR_ADMODE_2		(2 << 10)
+> +#define CCR_ADMODE_4		(3 << 10)
 
-can you re-send any missing patch on top of today's bluetooth-next tree.
+For bitfields, it would have been better to use (1u << 8) that is
+unsigned int instead of signed int. It might avoid some warnings or even
+bugs depending on how you use those macros, especially if you were using
+BIT(31). The GENMASK() macro generates an unsigned int on its side.
 
-Regards
+However, I guess you have tested your driver so if you have noticed any
+issue, I will say this is not blocking for me :)
 
-Marcel
+You don't use BIT(31) and I don't see any use of the >> operator so I
+think it should be safe. My comment is just a recommendation for the
+next time!
+
+To be fair, you can point out the atmel_qspi.c driver and I did the same
+mistake but like you, I didn't use the >> operator with the bitmask I
+have defined :p
+
+> +#define CCR_ADSIZE_SHIFT	12
+> +#define CCR_ADSIZE_MASK		GENMASK(13, 12)
+> +#define CCR_ADSIZE(n)		(((n) << CCR_ADSIZE_SHIFT) & CCR_ADSIZE_MASK)
+> +#define CCR_ABMODE_NONE		(0 << 14)
+> +#define CCR_ABMODE_1		(1 << 14)
+> +#define CCR_ABMODE_2		(2 << 14)
+> +#define CCR_ABMODE_4		(3 << 14)
+> +#define CCR_ABSIZE_8		(0 << 16)
+> +#define CCR_ABSIZE_16		(1 << 16)
+> +#define CCR_ABSIZE_24		(2 << 16)
+> +#define CCR_ABSIZE_32		(3 << 16)
+> +#define CCR_DCYC_SHIFT		18
+> +#define CCR_DCYC_MASK		GENMASK(22, 18)
+> +#define CCR_DCYC(n)		(((n) << CCR_DCYC_SHIFT) & CCR_DCYC_MASK)
+> +#define CCR_DMODE_NONE		(0 << 24)
+> +#define CCR_DMODE_1		(1 << 24)
+> +#define CCR_DMODE_2		(2 << 24)
+> +#define CCR_DMODE_4		(3 << 24)
+> +#define CCR_FMODE_INDW		(0 << 26)
+> +#define CCR_FMODE_INDR		(1 << 26)
+> +#define CCR_FMODE_APM		(2 << 26)
+> +#define CCR_FMODE_MM		(3 << 26)
+> +
+> +#define QUADSPI_AR		0x18
+> +#define QUADSPI_ABR		0x1c
+> +#define QUADSPI_DR		0x20
+> +#define QUADSPI_PSMKR		0x24
+> +#define QUADSPI_PSMAR		0x28
+> +#define QUADSPI_PIR		0x2c
+> +#define QUADSPI_LPTR		0x30
+> +#define LPTR_DFT_TIMEOUT	0x10
+> +
+> +#define FSIZE_VAL(size)		(__fls(size) - 1)
+> +
+> +#define STM32_MAX_MMAP_SZ	SZ_256M
+> +#define STM32_MAX_NORCHIP	2
+> +
+> +#define STM32_QSPI_FIFO_TIMEOUT_US 30000
+> +#define STM32_QSPI_BUSY_TIMEOUT_US 100000
+> +
+> +struct stm32_qspi_flash {
+> +	struct spi_nor nor;
+> +	u32 cs;
+> +	u32 fsize;
+> +	u32 presc;
+> +	u32 read_mode;
+> +	struct stm32_qspi *qspi;
+> +};
+> +
+> +struct stm32_qspi {
+> +	struct device *dev;
+> +	void __iomem *io_base;
+> +	void __iomem *mm_base;
+> +	resource_size_t mm_size;
+> +	u32 nor_num;
+> +	struct clk *clk;
+> +	u32 clk_rate;
+> +	struct stm32_qspi_flash flash[STM32_MAX_NORCHIP];
+> +	struct completion cmd_completion;
+> +
+> +	/*
+> +	 * to protect device configuration, could be different between
+> +	 * 2 flash access (bk1, bk2)
+> +	 */
+> +	struct mutex lock;
+> +};
+> +
+> +struct stm32_qspi_cmd {
+> +	u8 addr_width;
+> +	u8 dummy;
+> +	bool tx_data;
+> +	u8 opcode;
+> +	u32 framemode;
+> +	u32 qspimode;
+> +	u32 addr;
+> +	size_t len;
+> +	void *buf;
+> +};
+> +
+> +static int stm32_qspi_wait_cmd(struct stm32_qspi *qspi)
+> +{
+> +	u32 cr;
+> +	int err = 0;
+> +
+> +	if (readl_relaxed(qspi->io_base + QUADSPI_SR) & SR_TCF)
+> +		return 0;
+> +
+> +	reinit_completion(&qspi->cmd_completion);
+> +	cr = readl_relaxed(qspi->io_base + QUADSPI_CR);
+> +	writel_relaxed(cr | CR_TCIE, qspi->io_base + QUADSPI_CR);
+> +
+> +	if (!wait_for_completion_interruptible_timeout(&qspi->cmd_completion,
+> +						       msecs_to_jiffies(1000)))
+> +		err = -ETIMEDOUT;
+> +
+> +	writel_relaxed(cr, qspi->io_base + QUADSPI_CR);
+> +	return err;
+> +}
+> +
+> +static int stm32_qspi_wait_nobusy(struct stm32_qspi *qspi)
+> +{
+> +	u32 sr;
+> +
+> +	return readl_relaxed_poll_timeout(qspi->io_base + QUADSPI_SR, sr,
+> +					  !(sr & SR_BUSY), 10,
+> +					  STM32_QSPI_BUSY_TIMEOUT_US);
+> +}
+> +
+> +static void stm32_qspi_set_framemode(struct spi_nor *nor,
+> +				     struct stm32_qspi_cmd *cmd, bool read)
+> +{
+> +	u32 dmode = CCR_DMODE_1;
+> +
+> +	cmd->framemode = CCR_IMODE_1;
+> +
+> +	if (read) {
+> +		switch (nor->flash_read) {
+> +		case SPI_NOR_NORMAL:
+> +		case SPI_NOR_FAST:
+> +			dmode = CCR_DMODE_1;
+> +			break;
+> +		case SPI_NOR_DUAL:
+> +			dmode = CCR_DMODE_2;
+> +			break;
+> +		case SPI_NOR_QUAD:
+> +			dmode = CCR_DMODE_4;
+> +			break;
+> +		}
+> +	}
+> +
+> +	cmd->framemode |= cmd->tx_data ? dmode : 0;
+> +	cmd->framemode |= cmd->addr_width ? CCR_ADMODE_1 : 0;
+> +}
+> +
+> +static void stm32_qspi_read_fifo(u8 *val, void __iomem *addr)
+> +{
+> +	*val = readb_relaxed(addr);
+> +}
+> +
+> +static void stm32_qspi_write_fifo(u8 *val, void __iomem *addr)
+> +{
+> +	writeb_relaxed(*val, addr);
+> +}
+> +
+> +static int stm32_qspi_tx_poll(struct stm32_qspi *qspi,
+> +			      const struct stm32_qspi_cmd *cmd)
+> +{
+> +	void (*tx_fifo)(u8 *, void __iomem *);
+> +	u32 len = cmd->len, sr;
+> +	u8 *buf = cmd->buf;
+> +	int ret;
+> +
+> +	if (cmd->qspimode == CCR_FMODE_INDW)
+> +		tx_fifo = stm32_qspi_write_fifo;
+> +	else
+> +		tx_fifo = stm32_qspi_read_fifo;
+> +
+> +	while (len--) {
+> +		ret = readl_relaxed_poll_timeout(qspi->io_base + QUADSPI_SR,
+> +						 sr, (sr & SR_FTF), 10,
+> +						 STM32_QSPI_FIFO_TIMEOUT_US);
+> +		if (ret) {
+> +			dev_err(qspi->dev, "fifo timeout (stat:%#x)\n", sr);
+> +			break;
+> +		}
+> +		tx_fifo(buf++, qspi->io_base + QUADSPI_DR);
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+> +static int stm32_qspi_tx_mm(struct stm32_qspi *qspi,
+> +			    const struct stm32_qspi_cmd *cmd)
+> +{
+> +	memcpy_fromio(cmd->buf, qspi->mm_base + cmd->addr, cmd->len);
+> +	return 0;
+> +}
+> +
+> +static int stm32_qspi_tx(struct stm32_qspi *qspi,
+> +			 const struct stm32_qspi_cmd *cmd)
+> +{
+> +	if (!cmd->tx_data)
+> +		return 0;
+> +
+> +	if (cmd->qspimode == CCR_FMODE_MM)
+> +		return stm32_qspi_tx_mm(qspi, cmd);
+> +
+> +	return stm32_qspi_tx_poll(qspi, cmd);
+> +}
+> +
+> +static int stm32_qspi_send(struct stm32_qspi_flash *flash,
+> +			   const struct stm32_qspi_cmd *cmd)
+> +{
+> +	struct stm32_qspi *qspi = flash->qspi;
+> +	u32 ccr, dcr, cr;
+> +	int err;
+> +
+> +	err = stm32_qspi_wait_nobusy(qspi);
+> +	if (err)
+> +		goto abort;
+> +
+> +	dcr = readl_relaxed(qspi->io_base + QUADSPI_DCR) & ~DCR_FSIZE_MASK;
+> +	dcr |= DCR_FSIZE(flash->fsize);
+> +	writel_relaxed(dcr, qspi->io_base + QUADSPI_DCR);
+> +
+> +	cr = readl_relaxed(qspi->io_base + QUADSPI_CR);
+> +	cr &= ~CR_PRESC_MASK & ~CR_FSEL;
+> +	cr |= CR_PRESC(flash->presc);
+> +	cr |= flash->cs ? CR_FSEL : 0;
+> +	writel_relaxed(cr, qspi->io_base + QUADSPI_CR);
+> +
+> +	if (cmd->tx_data)
+> +		writel_relaxed(cmd->len - 1, qspi->io_base + QUADSPI_DLR);
+> +
+> +	ccr = cmd->framemode | cmd->qspimode;
+> +
+> +	if (cmd->dummy)
+> +		ccr |= CCR_DCYC(cmd->dummy);
+> +
+> +	if (cmd->addr_width)
+> +		ccr |= CCR_ADSIZE(cmd->addr_width - 1);
+> +
+> +	ccr |= CCR_INST(cmd->opcode);
+> +	writel_relaxed(ccr, qspi->io_base + QUADSPI_CCR);
+> +
+> +	if (cmd->addr_width && cmd->qspimode != CCR_FMODE_MM)
+> +		writel_relaxed(cmd->addr, qspi->io_base + QUADSPI_AR);
+> +
+> +	err = stm32_qspi_tx(qspi, cmd);
+> +	if (err)
+> +		goto abort;
+> +
+> +	if (cmd->qspimode != CCR_FMODE_MM) {
+> +		err = stm32_qspi_wait_cmd(qspi);
+> +		if (err)
+> +			goto abort;
+> +		writel_relaxed(FCR_CTCF, qspi->io_base + QUADSPI_FCR);
+> +	}
+> +
+> +	return err;
+> +
+> +abort:
+> +	cr = readl_relaxed(qspi->io_base + QUADSPI_CR) | CR_ABORT;
+> +	writel_relaxed(cr, qspi->io_base + QUADSPI_CR);
+> +
+> +	dev_err(qspi->dev, "%s abort err:%d\n", __func__, err);
+> +	return err;
+> +}
+> +
+> +static int stm32_qspi_read_reg(struct spi_nor *nor,
+> +			       u8 opcode, u8 *buf, int len)
+> +{
+> +	struct stm32_qspi_flash *flash = nor->priv;
+> +	struct device *dev = flash->qspi->dev;
+> +	struct stm32_qspi_cmd cmd;
+> +
+> +	dev_dbg(dev, "read_reg: cmd:%#.2x buf:%p len:%#x\n", opcode, buf, len);
+> +
+> +	memset(&cmd, 0, sizeof(cmd));
+> +	cmd.opcode = opcode;
+> +	cmd.tx_data = true;
+> +	cmd.len = len;
+> +	cmd.buf = buf;
+> +	cmd.qspimode = CCR_FMODE_INDR;
+> +
+> +	stm32_qspi_set_framemode(nor, &cmd, false);
+> +
+> +	return stm32_qspi_send(flash, &cmd);
+> +}
+> +
+> +static int stm32_qspi_write_reg(struct spi_nor *nor, u8 opcode,
+> +				u8 *buf, int len)
+> +{
+> +	struct stm32_qspi_flash *flash = nor->priv;
+> +	struct device *dev = flash->qspi->dev;
+> +	struct stm32_qspi_cmd cmd;
+> +
+> +	dev_dbg(dev, "write_reg: cmd:%#.2x buf:%p len:%#x\n", opcode, buf, len);
+> +
+> +	memset(&cmd, 0, sizeof(cmd));
+> +	cmd.opcode = opcode;
+> +	cmd.tx_data = !!(buf && len > 0);
+> +	cmd.len = len;
+> +	cmd.buf = buf;
+> +	cmd.qspimode = CCR_FMODE_INDW;
+> +
+> +	stm32_qspi_set_framemode(nor, &cmd, false);
+> +
+> +	return stm32_qspi_send(flash, &cmd);
+> +}
+> +
+> +static ssize_t stm32_qspi_read(struct spi_nor *nor, loff_t from, size_t len,
+> +			       u_char *buf)
+> +{
+> +	struct stm32_qspi_flash *flash = nor->priv;
+> +	struct stm32_qspi *qspi = flash->qspi;
+> +	struct stm32_qspi_cmd cmd;
+> +	int err;
+> +
+> +	dev_dbg(qspi->dev, "read(%#.2x): buf:%p from:%#.8x len:%#x\n",
+> +		nor->read_opcode, buf, (u32)from, len);
+> +
+> +	memset(&cmd, 0, sizeof(cmd));
+> +	cmd.opcode = nor->read_opcode;
+> +	cmd.addr_width = nor->addr_width;
+> +	cmd.addr = (u32)from;
+> +	cmd.tx_data = true;
+> +	cmd.dummy = nor->read_dummy;
+> +	cmd.len = len;
+> +	cmd.buf = buf;
+> +	cmd.qspimode = flash->read_mode;
+> +
+> +	stm32_qspi_set_framemode(nor, &cmd, true);
+> +	err = stm32_qspi_send(flash, &cmd);
+> +
+> +	return err ? err : len;
+> +}
+> +
+> +static ssize_t stm32_qspi_write(struct spi_nor *nor, loff_t to, size_t len,
+> +				const u_char *buf)
+> +{
+> +	struct stm32_qspi_flash *flash = nor->priv;
+> +	struct device *dev = flash->qspi->dev;
+> +	struct stm32_qspi_cmd cmd;
+> +	int err;
+> +
+> +	dev_dbg(dev, "write(%#.2x): buf:%p to:%#.8x len:%#x\n",
+> +		nor->program_opcode, buf, (u32)to, len);
+> +
+> +	memset(&cmd, 0, sizeof(cmd));
+> +	cmd.opcode = nor->program_opcode;
+> +	cmd.addr_width = nor->addr_width;
+> +	cmd.addr = (u32)to;
+> +	cmd.tx_data = true;
+> +	cmd.len = len;
+> +	cmd.buf = (void *)buf;
+> +	cmd.qspimode = CCR_FMODE_INDW;
+> +
+> +	stm32_qspi_set_framemode(nor, &cmd, false);
+> +	err = stm32_qspi_send(flash, &cmd);
+> +
+> +	return err ? err : len;
+> +}
+> +
+> +static int stm32_qspi_erase(struct spi_nor *nor, loff_t offs)
+> +{
+> +	struct stm32_qspi_flash *flash = nor->priv;
+> +	struct device *dev = flash->qspi->dev;
+> +	struct stm32_qspi_cmd cmd;
+> +
+> +	dev_dbg(dev, "erase(%#.2x):offs:%#x\n", nor->erase_opcode, (u32)offs);
+> +
+> +	memset(&cmd, 0, sizeof(cmd));
+> +	cmd.opcode = nor->erase_opcode;
+> +	cmd.addr_width = nor->addr_width;
+> +	cmd.addr = (u32)offs;
+> +	cmd.qspimode = CCR_FMODE_INDW;
+> +
+> +	stm32_qspi_set_framemode(nor, &cmd, false);
+> +
+> +	return stm32_qspi_send(flash, &cmd);
+> +}
+> +
+> +static irqreturn_t stm32_qspi_irq(int irq, void *dev_id)
+> +{
+> +	struct stm32_qspi *qspi = (struct stm32_qspi *)dev_id;
+> +	u32 cr, sr, fcr = 0;
+> +
+> +	cr = readl_relaxed(qspi->io_base + QUADSPI_CR);
+> +	sr = readl_relaxed(qspi->io_base + QUADSPI_SR);
+> +
+> +	if ((cr & CR_TCIE) && (sr & SR_TCF)) {
+> +		/* tx complete */
+> +		fcr |= FCR_CTCF;
+> +		complete(&qspi->cmd_completion);
+> +	} else {
+> +		dev_info_ratelimited(qspi->dev, "spurious interrupt\n");
+> +	}
+> +
+> +	writel_relaxed(fcr, qspi->io_base + QUADSPI_FCR);
+> +
+> +	return IRQ_HANDLED;
+> +}
+> +
+> +static int stm32_qspi_prep(struct spi_nor *nor, enum spi_nor_ops ops)
+> +{
+> +	struct stm32_qspi_flash *flash = nor->priv;
+> +	struct stm32_qspi *qspi = flash->qspi;
+> +
+> +	mutex_lock(&qspi->lock);
+> +	return 0;
+> +}
+> +
+> +static void stm32_qspi_unprep(struct spi_nor *nor, enum spi_nor_ops ops)
+> +{
+> +	struct stm32_qspi_flash *flash = nor->priv;
+> +	struct stm32_qspi *qspi = flash->qspi;
+> +
+> +	mutex_unlock(&qspi->lock);
+> +}
+> +
+> +static int stm32_qspi_flash_setup(struct stm32_qspi *qspi,
+> +				  struct device_node *np)
+> +{
+> +	u32 width, flash_read, presc, cs_num, max_rate = 0;
+> +	struct stm32_qspi_flash *flash;
+> +	struct mtd_info *mtd;
+> +	int ret;
+> +
+> +	of_property_read_u32(np, "reg", &cs_num);
+> +	if (cs_num >= STM32_MAX_NORCHIP)
+> +		return -EINVAL;
+> +
+> +	of_property_read_u32(np, "spi-max-frequency", &max_rate);
+> +	if (!max_rate)
+> +		return -EINVAL;
+> +
+> +	presc = DIV_ROUND_UP(qspi->clk_rate, max_rate) - 1;
+> +
+> +	if (of_property_read_u32(np, "spi-rx-bus-width", &width))
+> +		width = 1;
+> +
+> +	if (width == 4)
+> +		flash_read = SPI_NOR_QUAD;
+> +	else if (width == 2)
+> +		flash_read = SPI_NOR_DUAL;
+> +	else if (width == 1)
+> +		flash_read = SPI_NOR_NORMAL;
+> +	else
+> +		return -EINVAL;
+> +
+> +	flash = &qspi->flash[cs_num];
+> +	flash->qspi = qspi;
+> +	flash->cs = cs_num;
+> +	flash->presc = presc;
+> +
+> +	flash->nor.dev = qspi->dev;
+> +	spi_nor_set_flash_node(&flash->nor, np);
+> +	flash->nor.priv = flash;
+> +	mtd = &flash->nor.mtd;
+> +	mtd->priv = &flash->nor;
+
+This line is not needed: spi_nor_scan() already initializes mtd->priv
+with the nor pointer. Not blocking anyway.
+
+> +
+> +	flash->nor.read = stm32_qspi_read;
+> +	flash->nor.write = stm32_qspi_write;
+> +	flash->nor.erase = stm32_qspi_erase;
+> +	flash->nor.read_reg = stm32_qspi_read_reg;
+> +	flash->nor.write_reg = stm32_qspi_write_reg;
+> +	flash->nor.prepare = stm32_qspi_prep;
+> +	flash->nor.unprepare = stm32_qspi_unprep;
+
+A shared comment: your implementations of all those handlers seem good
+to me. I didn't notice any particular mistake or issue :)
+
+> +
+> +	writel_relaxed(LPTR_DFT_TIMEOUT, qspi->io_base + QUADSPI_LPTR);
+> +
+> +	writel_relaxed(CR_PRESC(presc) | CR_FTHRES(3) | CR_TCEN | CR_SSHIFT
+> +		       | CR_EN, qspi->io_base + QUADSPI_CR);
+> +
+> +	/*
+> +	 * in stm32 qspi controller, QUADSPI_DCR register has a fsize field
+> +	 * which define the size of nor flash.
+> +	 * if fsize is NULL, the controller can't sent spi-nor command.
+> +	 * set a temporary value just to discover the nor flash with
+> +	 * "spi_nor_scan". After, the right value (mtd->size) can be set.
+> +	 */
+> +	flash->fsize = FSIZE_VAL(SZ_1K);
+> +
+> +	ret = spi_nor_scan(&flash->nor, NULL, flash_read);
+> +	if (ret) {
+> +		dev_err(qspi->dev, "device scan failed\n");
+
+At this point, (flash->qspi != NULL)
+
+Hence in the control flow, once you have returned from
+stm32_qspi__flash_setup() back into stm32_qspi_probe(), you handle the
+reported error calling stm32_qspi_mtd_free().
+
+This latest function test flash->qspi, which is not NULL, before calling
+mtd_device_unregister(). However you did not register flash->nor.mtd at all.
+
+Though not critical, can you fix this anyway, please?
+I think, it's more a potential bug than a costmetic issue.
+
+> +		return ret;
+> +	}
+> +
+> +	flash->fsize = FSIZE_VAL(mtd->size);
+> +
+> +	flash->read_mode = CCR_FMODE_MM;
+> +	if (mtd->size > qspi->mm_size)
+> +		flash->read_mode = CCR_FMODE_INDR;
+> +
+> +	writel_relaxed(DCR_CSHT(1), qspi->io_base + QUADSPI_DCR);
+> +
+> +	ret = mtd_device_register(mtd, NULL, 0);
+> +	if (ret) {
+> +		dev_err(qspi->dev, "mtd device parse failed\n");
+
+Almost the same mistake here: you shouldn't call mtd_device_unregister()
+later from stm32_qspi_mtd_free() if mtd_devire_register() fails here.
+
+> +		return ret;
+> +	}
+> +
+> +	dev_dbg(qspi->dev, "read mm:%s cs:%d bus:%d\n",
+> +		flash->read_mode == CCR_FMODE_MM ? "yes" : "no", cs_num, width);
+> +
+> +	return 0;
+> +}
+> +
+> +static void stm32_qspi_mtd_free(struct stm32_qspi *qspi)
+> +{
+> +	int i;
+> +
+> +	for (i = 0; i < STM32_MAX_NORCHIP; i++) {
+> +		if (qspi->flash[i].qspi)
+> +			mtd_device_unregister(&qspi->flash[i].nor.mtd);
+> +	}
+
+IMHO, I guess braces {} in the for() loop are not needed here. So if
+checkpatch doesn't complain it's ok for me, you can leave it as is if
+you want. Otherwise, please fix!
+
+> +}
+> +
+> +static int stm32_qspi_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct device_node *flash_np;
+> +	struct reset_control *rstc;
+> +	struct stm32_qspi *qspi;
+> +	struct resource *res;
+> +	int ret, irq;
+> +
+> +	qspi = devm_kzalloc(dev, sizeof(*qspi), GFP_KERNEL);
+> +	if (!qspi)
+> +		return -ENOMEM;
+> +
+> +	qspi->nor_num = of_get_child_count(dev->of_node);
+> +	if (!qspi->nor_num || qspi->nor_num > STM32_MAX_NORCHIP)
+> +		return -ENODEV;
+> +
+> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "qspi");
+> +	qspi->io_base = devm_ioremap_resource(dev, res);
+> +	if (IS_ERR(qspi->io_base))
+> +		return PTR_ERR(qspi->io_base);
+> +
+> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "qspi_mm");
+> +	qspi->mm_base = devm_ioremap_resource(dev, res);
+> +	if (IS_ERR(qspi->mm_base))
+> +		return PTR_ERR(qspi->mm_base);
+> +
+> +	qspi->mm_size = resource_size(res);
+> +
+> +	irq = platform_get_irq(pdev, 0);
+> +	ret = devm_request_irq(dev, irq, stm32_qspi_irq, 0,
+> +			       dev_name(dev), qspi);
+> +	if (ret) {
+> +		dev_err(dev, "failed to request irq\n");
+> +		return ret;
+> +	}
+> +
+> +	init_completion(&qspi->cmd_completion);
+> +
+> +	qspi->clk = devm_clk_get(dev, NULL);
+> +	if (IS_ERR(qspi->clk))
+> +		return PTR_ERR(qspi->clk);
+> +
+> +	qspi->clk_rate = clk_get_rate(qspi->clk);
+> +	if (!qspi->clk_rate)
+> +		return -EINVAL;
+> +
+> +	ret = clk_prepare_enable(qspi->clk);
+> +	if (ret) {
+> +		dev_err(dev, "can not enable the clock\n");
+> +		return ret;
+> +	}
+> +
+> +	rstc = devm_reset_control_get(dev, NULL);
+> +	if (!IS_ERR(rstc)) {
+> +		reset_control_assert(rstc);
+> +		udelay(2);
+> +		reset_control_deassert(rstc);
+> +	}
+> +
+> +	qspi->dev = dev;
+> +	platform_set_drvdata(pdev, qspi);
+> +	mutex_init(&qspi->lock);
+> +
+> +	for_each_available_child_of_node(dev->of_node, flash_np) {
+> +		ret = stm32_qspi_flash_setup(qspi, flash_np);
+> +		if (ret) {
+> +			dev_err(dev, "unable to setup flash chip\n");
+> +			goto err_flash;
+> +		}
+> +	}
+> +
+> +	return 0;
+> +
+> +err_flash:
+> +	mutex_destroy(&qspi->lock);
+> +	stm32_qspi_mtd_free(qspi);
+> +
+> +	clk_disable_unprepare(qspi->clk);
+> +	return ret;
+> +}
+> +
+> +static int stm32_qspi_remove(struct platform_device *pdev)
+> +{
+> +	struct stm32_qspi *qspi = platform_get_drvdata(pdev);
+> +
+> +	/* disable qspi */
+> +	writel_relaxed(0, qspi->io_base + QUADSPI_CR);
+> +
+> +	stm32_qspi_mtd_free(qspi);
+> +	mutex_destroy(&qspi->lock);
+> +
+> +	clk_disable_unprepare(qspi->clk);
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id stm32_qspi_match[] = {
+> +	{.compatible = "st,stm32f469-qspi"},
+> +	{}
+> +};
+> +MODULE_DEVICE_TABLE(of, stm32_qspi_match);
+> +
+> +static struct platform_driver stm32_qspi_driver = {
+> +	.probe	= stm32_qspi_probe,
+> +	.remove	= stm32_qspi_remove,
+> +	.driver	= {
+> +		.name = "stm32-quadspi",
+> +		.of_match_table = stm32_qspi_match,
+> +	},
+> +};
+> +module_platform_driver(stm32_qspi_driver);
+> +
+> +MODULE_ALIAS("platform:" DRIVER_NAME);
+> +MODULE_AUTHOR("Ludovic Barre <ludovic.barre-qxv4g6HH51o@public.gmane.org>");
+> +MODULE_DESCRIPTION("STMicroelectronics STM32 quad spi driver");
+> +MODULE_LICENSE("GPL v2");
+> 
+
+Best regards,
+
+Cyrille
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
