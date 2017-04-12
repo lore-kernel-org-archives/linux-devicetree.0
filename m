@@ -1,92 +1,70 @@
-From: Dongdong Liu <liudongdong3@huawei.com>
-Subject: Re: [PATCH] PCI: hisi: Fix DT binding (hisi-pcie-almost-ecam)
-Date: Wed, 12 Apr 2017 18:24:10 +0800
-Message-ID: <ba97961b-ad10-65ed-63a0-e00fbaefbf03@huawei.com>
-References: <1490275097-39349-1-git-send-email-liudongdong3@huawei.com>
+From: =?UTF-8?Q?Noralf_Tr=c3=b8nnes?= <noralf@tronnes.org>
+Subject: Re: [PATCH v4 5/7] dt-bindings: display/panel: Add common rotation
+ property
+Date: Wed, 12 Apr 2017 13:01:21 +0200
+Message-ID: <ccf78130-0031-d961-6b33-5e3ca5b099a5@tronnes.org>
+References: <20170211184858.26421-1-noralf@tronnes.org>
+ <20170211184858.26421-6-noralf@tronnes.org> <1802283.9kerWUhyh6@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="gbk"; format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <1490275097-39349-1-git-send-email-liudongdong3@huawei.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: helgaas@kernel.org, mark.rutland@arm.com
-Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org, wangzhou1@hisilicon.com, gabriele.paoloni@huawei.com, linuxarm@huawei.com
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1802283.9kerWUhyh6@avalon>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, dri-devel@lists.freedesktop.org
+Cc: thomas.petazzoni@free-electrons.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Bjorn
-
-This is a fixup for v4.11, and needs to go
-through ASAP so as to avoid a release with the broken binding.
-
-Please help to look at the patch.
-
-Thanks,
-Dongdong
-
-ÔÚ 2017/3/23 21:18, Dongdong Liu Ð´µÀ:
-> The "hisilicon,pcie-almost-ecam", which goes against the usual DT
-> conventions, and is non-sensical in that it describes the IP based on
-> what it isn't. Fix the DT binding with "hisilicon,hip06-pcie-ecam"
-> and "hisilicon,hip07-pcie-ecam".
->
-> Signed-off-by: Mark Rutland <mark.rutland@arm.com>
-> Signed-off-by: Dongdong Liu <liudongdong3@huawei.com>
-> ---
->  Documentation/devicetree/bindings/pci/hisilicon-pcie.txt | 10 ++++++++--
->  drivers/pci/dwc/pcie-hisi.c                              |  6 +++++-
->  2 files changed, 13 insertions(+), 3 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/pci/hisilicon-pcie.txt b/Documentation/devicetree/bindings/pci/hisilicon-pcie.txt
-> index b7fa3b9..a339dbb 100644
-> --- a/Documentation/devicetree/bindings/pci/hisilicon-pcie.txt
-> +++ b/Documentation/devicetree/bindings/pci/hisilicon-pcie.txt
-> @@ -44,13 +44,19 @@ Hip05 Example (note that Hip06 is the same except compatible):
->  	};
->
->  HiSilicon Hip06/Hip07 PCIe host bridge DT (almost-ECAM) description.
-> +
-> +Some BIOSes place the host controller in a mode where it is ECAM
-> +compliant for all devices other than the root complex. In such cases,
-> +the host controller should be described as below.
-> +
->  The properties and their meanings are identical to those described in
->  host-generic-pci.txt except as listed below.
->
->  Properties of the host controller node that differ from
->  host-generic-pci.txt:
->
-> -- compatible     : Must be "hisilicon,pcie-almost-ecam"
-> +- compatible     : Must be "hisilicon,hip06-pcie-ecam", or
-> +		   "hisilicon,hip07-pcie-ecam"
->
->  - reg            : Two entries: First the ECAM configuration space for any
->  		   other bus underneath the root bus. Second, the base
-> @@ -59,7 +65,7 @@ host-generic-pci.txt:
->
->  Example:
->  	pcie0: pcie@a0090000 {
-> -		compatible = "hisilicon,pcie-almost-ecam";
-> +		compatible = "hisilicon,hip06-pcie-ecam";
->  		reg = <0 0xb0000000 0 0x2000000>,  /*  ECAM configuration space */
->  		      <0 0xa0090000 0 0x10000>; /* host bridge registers */
->  		bus-range = <0  31>;
-> diff --git a/drivers/pci/dwc/pcie-hisi.c b/drivers/pci/dwc/pcie-hisi.c
-> index fd66a31..cf9d6a9 100644
-> --- a/drivers/pci/dwc/pcie-hisi.c
-> +++ b/drivers/pci/dwc/pcie-hisi.c
-> @@ -380,9 +380,13 @@ struct pci_ecam_ops hisi_pcie_platform_ops = {
->
->  static const struct of_device_id hisi_pcie_almost_ecam_of_match[] = {
->  	{
-> -		.compatible = "hisilicon,pcie-almost-ecam",
-> +		.compatible =  "hisilicon,hip06-pcie-ecam",
->  		.data	    = (void *) &hisi_pcie_platform_ops,
->  	},
-> +	{
-> +		.compatible =  "hisilicon,hip07-pcie-ecam",
-> +		.data       = (void *) &hisi_pcie_platform_ops,
-> +	},
->  	{},
->  };
->
->
+CkRlbiAxMS4wNC4yMDE3IDA3LjI5LCBza3JldiBMYXVyZW50IFBpbmNoYXJ0Ogo+IEhpIE5vcmFs
+ZiwKPgo+IE9uIFNhdHVyZGF5IDExIEZlYiAyMDE3IDE5OjQ4OjU2IE5vcmFsZiBUcsO4bm5lcyB3
+cm90ZToKPj4gRGlzcGxheSBwYW5lbHMgY2FuIGJlIG9yaWVudGVkIG1hbnkgd2F5cywgZXNwZWNp
+YWxseSBpbiB0aGUgZW1iZWRkZWQKPj4gd29ybGQuIFRoZSByb3RhdGlvbiBwcm9wZXJ0eSBpcyBh
+IHdheSB0byBkZXNjcmliZSB0aGlzIG9yaWVudGF0aW9uLgo+PiBUaGUgY291bnRlciBjbG9ja3dp
+c2UgZGlyZWN0aW9uIGlzIGNob3NlbiBiZWNhdXNlIHRoYXQncyB3aGF0IGZiZGV2Cj4+IGFuZCBk
+cm0gdXNlLgo+Pgo+PiBTaWduZWQtb2ZmLWJ5OiBOb3JhbGYgVHLDuG5uZXMgPG5vcmFsZkB0cm9u
+bmVzLm9yZz4KPj4gQWNrZWQtYnk6IFRoaWVycnkgUmVkaW5nIDx0cmVkaW5nQG52aWRpYS5jb20+
+Cj4+IC0tLQo+Pgo+PiBDaGFuZ2VzIHNpbmNlIHZlcnNpb24gMzoKPj4gLSBDaGFuZ2VkIGRpc3Bs
+YXkvZGlzcGxheS50eHQgLT4gZGlzcGxheS9wYW5lbC9wYW5lbC50eHQKPj4KPj4gICBEb2N1bWVu
+dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9wYW5lbC50eHQgfCA0ICsr
+KysKPiBXZSBub3cgaGF2ZSBib3RoIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9k
+aXNwbGF5L3BhbmVsL3BhbmVsLnR4dCBhbmQKPiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
+ZGluZ3MvZGlzcGxheS9wYW5lbC9wYW5lbC1jb21tb24udHh0IGFzIHRoZXkgaGF2ZQo+IGJlZW4g
+bWVyZ2VkIGNvbmN1cnJlbnRseSB3aXRob3V0IGJlaW5nIGF3YXJlIG9mIGVhY2ggb3RoZXIuIFdv
+dWxkIHlvdSBtaW5kIGlmCj4gSSBtb3ZlZCB0aGlzIHByb3BlcnR5IHRvIHBhbmVsLWNvbW1vbi50
+eHQgPwoKTm90IGF0IGFsbCwgcGxlYXNlIGRvLgoKPiBJIHdvdWxkIGFsc28gbGlrZSB0byBkb2N1
+bWVudCB0aGUgcHJvcGVydHkgaW4gYSBiaXQgbW9yZSBkZXRhaWxzIHRvIGF2b2lkCj4gY29uZnVz
+aW9uIGFib3V0IHRoZSByb3RhdGlvbiBkaXJlY3Rpb24sIGFzICJkaXNwbGF5IHJvdGF0aW9uIiBj
+b3VsZCBiZQo+IGludGVycHJldGVkIGFzIHRoZSBhbmdsZSBieSB3aGljaCB0aGUgZGlzcGxheSBv
+dXRwdXQgaGFzIHRvIGJlIHJvdGF0ZWQgdG8KPiBvYnRhaW4gYW4gdXBzaWRlLXVwIGltYWdlLiBX
+aGF0IHdvdWxkIHlvdSB0aGluayBvZiB0aGUgZm9sbG93aW5nLCBhbSBJCj4gb3ZlcmRvaW5nIGl0
+LCBvciBpcyBpdCBldmVuIG1vcmUgY29uZnVzaW5nID8KCkkgd2FzIG1vcmUgY29uZnVzZWQgYXQg
+bGVhc3QgOi0pCkl0J3Mgbm90IGltcG9ydGFudCB0byBtZSB3aGF0IHRoZSBhY3R1YWwgd29yZGlu
+ZyBpcywgYnV0IEkgc2VlIHRoYXQgSQpoYXZlIHVzZWQgdGhlIHdvcmQgJ0Rpc3BsYXknIHdoaWNo
+IHNob3VsZCBoYXZlIGJlZW4gJ1BhbmVsJy4KCk5vcmFsZi4KCj4gLSByb3RhdGlvbjogUGFuZWxz
+IGFyZSBjb21tb25seSBtb3VudGVkIHJvdGF0ZWQsIHdpdGggdGhlaXIgbmF0aXZlIG9yaWVudGF0
+aW9uCj4gbm90IGFsaWduZWQgd2l0aCB0aGUgZGV2aWNlJ3Mgb3JpZW50YXRpb24uIFRoZSByb3Rh
+dGlvbiBwcm9wZXJ0eSBzcGVjaWZpZXMgdGhlCj4gYW5nbGUgaW4gZGVncmVlcyBiZXR3ZWVuIHRo
+ZSBwYW5lbCdzIG9yaWVudGF0aW9uIGFuZCB0aGUgZGV2aWNlJ3Mgb3JpZW50YXRpb24KPiAoY29y
+cmVzcG9uZGluZyB0byBhIGNvdW50ZXItY2xvY2t3aXNlIHJvdGF0aW9uIG9mIHRoZSBwYW5lbCku
+IFZhbGlkIHZhbHVlcyBhcmUKPiAwLCA5MCwgMTgwIGFuZCAyNzAuCj4KPgo+PiAgIDEgZmlsZSBj
+aGFuZ2VkLCA0IGluc2VydGlvbnMoKykKPj4gICBjcmVhdGUgbW9kZSAxMDA2NDQKPj4gRG9jdW1l
+bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvcGFuZWwudHh0Cj4+Cj4+
+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9w
+YW5lbC9wYW5lbC50eHQKPj4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlz
+cGxheS9wYW5lbC9wYW5lbC50eHQgbmV3IGZpbGUgbW9kZQo+PiAxMDA2NDQKPj4gaW5kZXggMDAw
+MDAwMC4uZTJlNjg2Nwo+PiAtLS0gL2Rldi9udWxsCj4+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2
+aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL3BhbmVsLnR4dAo+PiBAQCAtMCwwICsxLDQg
+QEAKPj4gK0NvbW1vbiBkaXNwbGF5IHByb3BlcnRpZXMKPj4gKy0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0KPj4gKwo+PiArLSByb3RhdGlvbjoJRGlzcGxheSByb3RhdGlvbiBpbiBkZWdyZWVzIGNv
+dW50ZXIgY2xvY2t3aXNlICgwLDkwLDE4MCwyNzApCgpfX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBs
+aXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1h
+bi9saXN0aW5mby9kcmktZGV2ZWwK
