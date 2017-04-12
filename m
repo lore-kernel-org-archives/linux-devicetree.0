@@ -1,103 +1,128 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [linux-sunxi] Re: [PATCH v2 03/11] dt-bindings: add device tree
- binding for X-Powers AXP803 PMIC
-Date: Wed, 12 Apr 2017 09:06:02 +0100
-Message-ID: <20170412080602.f7cjeeht5r45cnvh@dell>
-References: <20170411180844.9176B125521@relay.mailchannels.net>
+From: Guillaume Tucker <guillaume.tucker@collabora.com>
+Subject: Re: [PATCH v2 1/5] dt-bindings: gpu: add bindings for the ARM Mali
+ Midgard GPU
+Date: Wed, 12 Apr 2017 09:25:35 +0100
+Message-ID: <7a875b2d-f288-8136-de04-11e744f0118b@collabora.com>
+References: <cover.1491118230.git.guillaume.tucker@collabora.com>
+ <a01a50d3-bb1b-2c56-2a15-30651fa2fac9@baylibre.com>
+ <936a53ee-2ed8-11e4-a860-744256676af9@collabora.com>
+ <8676554.1IW2xieEGM@diego>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170411180844.9176B125521-Y9/x5g2N/Tt0ykcd9G8QkxTxI0vvWBSX@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Cc: linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <8676554.1IW2xieEGM@diego>
+Sender: linux-kernel-owner@vger.kernel.org
+To: =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko@sntech.de>
+Cc: Neil Armstrong <narmstrong@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Sjoerd Simons <sjoerd.simons@collabora.com>, Wookey <wookey@wookware.org>, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, John Reitan <john.reitan@arm.com>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 12 Apr 2017, Icenowy Zheng wrote:
+Hi Heiko,
 
-> 
-> 2017年4月12日 上午12:29于 Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>写道：
-> >
-> > On Tue, 11 Apr 2017, Chen-Yu Tsai wrote:
-> >
-> > > Hi,
-> > > 
-> > > On Tue, Apr 11, 2017 at 11:00 PM, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org> wrote:
-> > > >
-> > > >
-> > > > On Tue, 11 Apr 2017, Lee Jones wrote:
-> > > >
-> > > >> On Sat, 08 Apr 2017, Icenowy Zheng wrote:
-> > > >>
-> > > >>> AXP803 is a PMIC produced by Shenzhen X-Powers, with either I2C or RSB
-> > > >>> bus.
-> > > >>>
-> > > >>> Add a compatible for it.
-> > > >>>
-> > > >>> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-> > > >>> Acked-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-> > > >>> ---
-> > > >>> Changes in v2:
-> > > >>> - Place AXP803 before AXP806/809.
-> > > >>> - Added Chen-Yu's ACK.
-> > > >>>
-> > > >>>  Documentation/devicetree/bindings/mfd/axp20x.txt | 5 +++--
-> > > >>>  1 file changed, 3 insertions(+), 2 deletions(-)
-> > > >>
-> > > >>
-> > > >> For my own reference:
-> > > >>  Acked-for-MFD-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> > > >
-> > > >
-> > > > Excuse me... Who will apply this patch?
-> >
-> > Excuse you?  Are you trying to be polite, or rude?
-> >
-> > I'm guessing due to the lagging '...', that it's the latter?
-> 
-> Oh sorry, I mean the former...
+On 11/04/17 21:52, Heiko St�bner wrote:
+> Hi Guillaume,
+>
+> Am Dienstag, 11. April 2017, 18:40:37 CEST schrieb Guillaume Tucker:
+>> On 03/04/17 09:12, Neil Armstrong wrote:
+>>> On 04/02/2017 09:59 AM, Guillaume Tucker wrote:
+>>>> +Optional:
+>>>> +
+>>>> +- clocks : Phandle to clock for the Mali Midgard device.
+>>>> +- clock-names : Shall be "clk_mali".
+>>>> +- mali-supply : Phandle to regulator for the Mali device. Refer to
+>>>> +  Documentation/devicetree/bindings/regulator/regulator.txt for details.
+>>>> +- operating-points : Refer to
+>>>> Documentation/devicetree/bindings/power/opp.txt +  for details.
+>>>
+>>> Please add :
+>>>    * Must be one of the following:
+>>>       "arm,mali-t820"
+>>>
+>>>    * And, optionally, one of the vendor specific compatible:
+>>>       "amlogic,meson-gxm-mali"
+>>>
+>>> with my Ack for the amlogic platform.
+>>
+>> It seems to me that as long as the GPU architecture hasn't been
+>> modified (I don't think I've ever encountered such a case) then
+>> it has to be a standard ARM Mali type regardless of the SoC
+>> vendor.  So unless a Mali-T820 in the Amlogic S912 SoC is not the
+>> same as a T820 in a different SoC, please forgive me but I don't
+>> understand why a vendor compatible string is needed.  My main
+>> concern is that it's going to be very hard to keep that list
+>> up-to-date with all existing Midgard SoC variants.  If do we need
+>> to add vendor compatible strings to correctly describe the
+>> hardware then I'm happy to add the amlogic one in my patch v3; I
+>> would just like to understand why that's necessary.
+>
+> SoC vendors in most cases hook ip blocks into their socs in different
+> and often strange ways. After all it's not some discrete ic you solder
+> onto a board, but instead a part of the soc itself.
 
-Okay, no problem then.
+Thanks for your explanation.  I see, it's really about special
+things that are not supported by the standard Midgard kernel
+driver.
 
-> > > > I think this patch should be applied by you as it's in bindings/mfd
-> > > > directory, however, if I'm wrong, please point out ;-)
-> > >
-> > > We need the DT maintainers to ack it first. :)
-> >
-> > We don't really need the DT Maintainers to get involved here.
-> >
-> > What I do need is either clear direction as to how this
-> > patch-set should be applied, or an indication of which patches are
-> > dependant on others and which are orthogonal and can be applied
-> > independently.
-> 
-> This patch is independent, although the regulator binding patch
-> depends on it.
-> 
-> The real driver patches will need the binding patches to be merged
-> first.
+> So in most cases you will have some hooks outside the actual gpu iospace
+> that can be used to tune different things about how the gpu interacts with
+> the system. Which is probably also the reason the midgard kernel driver
+> has this ugly "platform" subdirectory for compile-time platform selection.
 
-Right, so Acking and not applying wasn't such a strange practice
-after all then. =;-)
+I see the "platform" directory approach as an old and deprecated
+way of supporting platforms, upstreaming the dt bindings goes in
+the direction of using solely the device tree to describe the GPU
+hardware (i.e. CONFIG_MALI_PLATFORM_DEVICETREE).  If something
+quirky is needed in the platform, it should be possible to
+support it outside the GPU driver (platform devfreq etc...).
 
-> And the dt patches depend on also the binding patches.
+Back to the original intent of enabling distros to make Mali GPU
+driver packages, when using the device tree you can have a single
+kernel driver package for all Midgard platforms.  When using the
+third-party platform sources approach, you need to make an extra
+package for each one of them.
 
-The issue I have now is; because your email client replies as a new
-mail i.e. non-threaded, now I have no reference to the patch-set.
+So if there is value in supporting platforms that absolutely
+require something special due to their hardware GPU integration,
+then yes I see why vendor dt bindings might be useful.  However
+it seems to me that this should really be an exception and
+avoided whenever possible.
 
-Since time is a valuable resource, I will not be dredging though my
-inbox looking for all your replies.
+> On my rk3288 for example we have [0] in the chromeos tree, that handles
+> the oddities of the midgard on the rk3288 used in a lot of Chromebooks.
+> There are soc-specific oddities of frequencies, frequency-scaling and
+> whatnot. And there are also more gpu-specific setting in syscon areas
+> of the soc (pmu and grf) that can also influence the gpus performance
+> and might need tweaking at some point.
 
-Please fix your client before replying to another mail.
+For the rk3288, this is purely a software implementation issue on
+the chromeos-3.14 branch.  With mainline kernel, you can use
+devfreq and no platform files at all (that's how I tested these
+dt bindings).  So as far as I know, there's no need for a vendor
+compatible string on rk3288.
 
--- 
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> That doesn't even take into account that there may even be differences
+> on how things are synthesized that we don't know about. See all the
+> variants of the dw_hdmi ip block (imx, rockchip, meson [more?]) .
+
+I'm not too familiar with that driver, just had a quick look and
+it seems to be a different issue as there's a kernel config for
+each platform to build separate driver modules.  And it looks
+like they are actually needed to cope with variants of the
+hardware inside the display processor block, unlike with the Mali
+GPU which in principle should always be the same.  I've run this
+Midgard driver without any platform files and using devfreq at
+least on rk3288 Firefly, Exynos 5422 ODROID-XU3 and Juno and they
+all have a vanilla Mali GPU hw block.  It's just wired
+differently in each SoC.
+
+> So we really want to have the special compatibles in place, to be prepared
+> for the future per-soc oddities that always appear :-) .
+
+How about aiming for the ideal case where vendor-specific things
+are not needed and add them if and when they really become
+inevitable and worth the cost?
+
+Thanks,
+Guillaume
+
+> [0] https://chromium.googlesource.com/chromiumos/third_party/kernel/+/chromeos-3.14/drivers/gpu/arm/midgard/platform/rk/
