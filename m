@@ -1,54 +1,83 @@
-From: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH V2] clk: hi6220: Add the hi655x's pmic clock
-Date: Wed, 12 Apr 2017 14:10:31 +0200
-Message-ID: <c1dba250-a60c-febc-a5c3-5ba645a61ce0@linaro.org>
-References: <1491683412-12237-1-git-send-email-daniel.lezcano@linaro.org>
- <20170411140613.jvhzsvrxa4evwxjh@dell> <20170411211936.GT2078@mai>
- <20170412080038.kk4vrjhvr3eao26q@dell>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v4 08/18] arm: sun8i: orangepi-pc: Enable dwmac-sun8i
+Date: Wed, 12 Apr 2017 14:39:08 +0200
+Message-ID: <20170412123908.vho6eodh4p3t7fry@lukather>
+References: <20170412111400.2296-1-clabbe.montjoie@gmail.com>
+ <20170412111400.2296-9-clabbe.montjoie@gmail.com>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170412080038.kk4vrjhvr3eao26q@dell>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="d4sutcdjykfj5rbu"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBB557XDDQKGQEI6KBYLA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20170412111400.2296-9-clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, peppe.cavallaro-qxv4g6HH51o@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 12/04/2017 10:00, Lee Jones wrote:
-> On Tue, 11 Apr 2017, Daniel Lezcano wrote:
+
+--d4sutcdjykfj5rbu
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
+
+Hi Corentin,
+
+On Wed, Apr 12, 2017 at 01:13:50PM +0200, Corentin Labbe wrote:
+> The dwmac-sun8i hardware is present on the Orange PI PC.
+> It uses the internal PHY.
 > 
->> On Tue, Apr 11, 2017 at 03:06:13PM +0100, Lee Jones wrote:
->>> On Sat, 08 Apr 2017, Daniel Lezcano wrote:
->>>
->>>> The hi655x multi function device is a PMIC providing regulators.
->>>>
->>>> The PMIC also provides a clock for the WiFi and the Bluetooth, let's implement
->>>> this clock in order to add it in the hi655x MFD and allow proper wireless
->>>> initialization.
->>>>
->>>> Signed-off-by: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-
-[ ... ]
-
->> Do you want to drop it from your tree or shall I resubmit a V3 without the mfd
->> change?
+> This patch create the needed emac node.
 > 
-> The latter please.
+> Signed-off-by: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts b/arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts
+> index f148111..746c25a 100644
+> --- a/arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts
+> +++ b/arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts
+> @@ -53,6 +53,7 @@
+>  
+>  	aliases {
+>  		serial0 = &uart0;
+> +		ethernet0 = &emac;
 
-Ok.
+Sorry for not spotting this earlier...
 
-What about the DT binding change?
+This should be ordered by alphabetical order, 
 
+>  	};
+>  
+>  	chosen {
+> @@ -184,3 +185,10 @@
+>  	/* USB VBUS is always on */
+>  	status = "okay";
+>  };
+> +
+> +&emac {
+> +	phy-handle = <&int_mii_phy>;
+> +	phy-mode = "mii";
+> +	allwinner,leds-active-low;
+> +	status = "okay";
+> +};
+
+And the node here as well.
+
+Almost all your other DT patches also have this issue, please fix it
+in all of them.
+
+Maxime
 
 -- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--d4sutcdjykfj5rbu--
