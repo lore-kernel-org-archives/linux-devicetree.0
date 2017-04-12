@@ -1,12 +1,13 @@
 From: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v4 14/18] arm: allwinner: pine64: Enable dwmac-sun8i
-Date: Wed, 12 Apr 2017 13:13:56 +0200
-Message-ID: <20170412111400.2296-15-clabbe.montjoie@gmail.com>
+Subject: [PATCH v4 11/18] arm: sun8i: orangepi-pc-plus: Set EMAC
+ activity LEDs to active high
+Date: Wed, 12 Apr 2017 13:13:53 +0200
+Message-ID: <20170412111400.2296-12-clabbe.montjoie@gmail.com>
 References: <20170412111400.2296-1-clabbe.montjoie@gmail.com>
 Reply-To: clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBD7YLCN32UNBBBUZXDDQKGQEUZSHQ5I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBD7YLCN32UNBBA4ZXDDQKGQEUSK4E5Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20170412111400.2296-1-clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -19,37 +20,27 @@ To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@pu
 Cc: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The dwmac-sun8i hardware is present on the pine64
-It uses an external PHY via RMII.
+On the Orange Pi PC Plus, the polarity of the LEDs on the RJ45 Ethernet
+port were changed from active low to active high.
 
+Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 Signed-off-by: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+ arch/arm/boot/dts/sun8i-h3-orangepi-pc-plus.dts | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts
-index c680ed3..6aee3d5 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts
-@@ -109,3 +109,19 @@
- &usbphy {
- 	status = "okay";
+diff --git a/arch/arm/boot/dts/sun8i-h3-orangepi-pc-plus.dts b/arch/arm/boot/dts/sun8i-h3-orangepi-pc-plus.dts
+index 8b93f5c..0380769 100644
+--- a/arch/arm/boot/dts/sun8i-h3-orangepi-pc-plus.dts
++++ b/arch/arm/boot/dts/sun8i-h3-orangepi-pc-plus.dts
+@@ -86,3 +86,8 @@
+ 	/* eMMC is missing pull-ups */
+ 	bias-pull-up;
  };
 +
-+&mdio {
-+	ext_rmii_phy1: ethernet-phy@1 {
-+		compatible = "ethernet-phy-ieee802.3-c22";
-+		reg = <1>;
-+	};
-+};
-+
 +&emac {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&rmii_pins>;
-+	phy-mode = "rmii";
-+	phy-handle = <&ext_rmii_phy1>;
-+	status = "okay";
-+
++	/* LEDs changed to active high on the plus */
++	/delete-property/ allwinner,leds-active-low;
 +};
 -- 
 2.10.2
