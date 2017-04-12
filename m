@@ -1,86 +1,85 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH v5 1/4] gpio: mvebu: Add limited PWM support
-Date: Wed, 12 Apr 2017 17:19:32 +0200
-Message-ID: <20170412151932.GE7023@lunn.ch>
-References: <20170409180931.4884-1-ralph.sennhauser@gmail.com>
- <20170409180931.4884-2-ralph.sennhauser@gmail.com>
- <20170412163128.5c985a26@free-electrons.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/2] dt-bindings: Document STM32 I2S bindings
+Date: Wed, 12 Apr 2017 16:38:31 +0100
+Message-ID: <20170412153831.r2urwvfseipfsrsi@sirena.org.uk>
+References: <1491493236-2574-1-git-send-email-olivier.moysan@st.com>
+ <1491493236-2574-2-git-send-email-olivier.moysan@st.com>
+ <20170410194832.iivnkyejtywbe2c7@rob-hp-laptop>
+ <20170411143250.3r7ys3rjshtxgaee@sirena.org.uk>
+ <73caede5-ea6f-8b2b-2270-227f7ef31823@st.com>
+ <20170411211040.htrcedus3c57fbed@sirena.org.uk>
+ <86a179ad-7961-18f7-8050-25e0e584c77d@st.com>
+ <20170412113251.nfyk5sw6c5pnpmwr@sirena.org.uk>
+ <d886a9c7-ca46-f37a-0e82-6ed8d7a4e052@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="okqjiama34qumvis"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20170412163128.5c985a26@free-electrons.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Cc: Ralph Sennhauser <ralph.sennhauser@gmail.com>, Thierry Reding <thierry.reding@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Jason Cooper <jason@lakedaemon.net>, Alexandre Courbot <gnurou@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Russell King <linux@armlinux.org.uk>, linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org, Gregory Clement <gregory.clement@free-electrons.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+In-Reply-To: <d886a9c7-ca46-f37a-0e82-6ed8d7a4e052-qxv4g6HH51o@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Olivier MOYSAN <olivier.moysan-qxv4g6HH51o@public.gmane.org>
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "perex-/Fr2/VpizcU@public.gmane.org" <perex-/Fr2/VpizcU@public.gmane.org>, "tiwai-IBi9RG/b67k@public.gmane.org" <tiwai-IBi9RG/b67k@public.gmane.org>, "mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre TORGUE <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, "alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org" <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Arnaud POULIQUEN <arnaud.pouliquen-qxv4g6HH51o@public.gmane.org>, Benjamin GAIGNARD <benjamin.gaignard-qxv4g6HH51o@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 12, 2017 at 04:31:28PM +0200, Thomas Petazzoni wrote:
-> Hello,
-> 
-> Sorry for the late feedback about this.
-> 
-> On Sun,  9 Apr 2017 20:09:27 +0200, Ralph Sennhauser wrote:
-> 
-> > +		gpio1: gpio@18140 {
-> > +			compatible = "marvell,armada-370-xp-gpio";
-> > +			reg = <0x18140 0x40>, <0x181c8 0x08>;
-> 
-> One issue I see is that you have only two counters A and B. You
-> associate counter A with the first bank of GPIOs, and counter B with
-> the second bank of GPIOs.
-> 
-> Which means that if you need to PWM a GPIO from the third bank of
-> GPIOs, you can't, even if the HW allows it.
->
-> 
-> While I'm fine with not supporting all the HW features, but it's a bit
-> sad that this gets encoded into the DT.
-> 
-> But I guess the only way to make this possible would be to have a
-> single node for all GPIOs rather than one per bank? Or do we have a way
-> to have those counter A/B registers bound to a separate PWM driver, and
-> then the GPIO driver being smart enough to select the counter to be
-> used? Seems not easy to do though :-/
 
-Hi Thomas
+--okqjiama34qumvis
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Yep. It was a compromise. By adding a new binding for the GPIO driver,
-this might be possible. But it did not seem worth such a major change.
+On Wed, Apr 12, 2017 at 12:58:16PM +0000, Olivier MOYSAN wrote:
+> On 04/12/2017 01:32 PM, Mark Brown wrote:
 
-The prime use of this feature is for controlling a fan. So far, i've
-not seen any hardware with more than one fan, i.e. needs more than one
-PWM. Nor have i seen any hardware with the GPIO for the fan being on
-the third bank. A hardware manufacture could add multiple fans, but i
-doubt it, they make noise and fail. And if a manufacture does place a
-fan on the third bank, it can still be controlled as a plain GPIO fan,
-as we have been doing for the last few years.
+> > It is totally normal to just not use one direction in a given system, we
+> > don't normally need to do anything special to handle things.  I'm a bit
+> > confused as to what's different here and needs configuring?
 
-So i personally think it is an O.K. compromise.
+> The IP does not provide an audio channel configured either as rx or tx.
+> I agree, that in such case, the cpu driver does not generally need
+> to worry about direction and there is nothing special required to handle =
+it.
 
-> > @@ -555,6 +842,10 @@ static const struct of_device_id mvebu_gpio_of_match[] = {
-> >  		.data	    = (void *) MVEBU_GPIO_SOC_VARIANT_ARMADAXP,
-> >  	},
-> >  	{
-> > +		.compatible = "marvell,armada-370-xp-gpio",
-> > +		.data	    = (void *) MVEBU_GPIO_SOC_VARIANT_ORION,
-> 
-> Whum, what are you doing here?
+No, that's not what I'm saying - such hardware would be extremely
+unusual.
 
-Since you are late to the discussion, you probably missed this part.
+> Here the IP provides 2 channels, 1 tx and 1 rx,  which may be active or=
+=20
+> not. The driver has to know which channel is used, and if both channels
+> have to be managed. The affected registers depend on selected channel.=20
 
-Only 370 and XP have the hardware needed to do this. Kirkwood and
-Orion5x does not. It was requested a compatible string was added to
-indicate SoC has the needed hardware.
+This sounds like essentially every audio controller out there.  The
+overwhelming majority of controllers do exactly as you describe and have
+both directions in the same IP, this really doesn't seem at all unusual.
+Off the top of my head I can only think of one SoC family which combines
+multiple IPs to do bidirectional audio (though I didn't check).
 
-The driver was extended when XP was added, due it is per CPU
-interrupts. However, that turned out to be broken. One CPU would
-enable the interrupt, and it was delivered to another, causing it to
-be missed. So XP was reverted to use the plan old ORION way of doing
-interrupts.
+It really feels like there is something different here and I'm just
+missing it.
 
-So this patch adds in a new compatible string for 370 and XP, to
-indicate the PWM hardware is available, and keeps using the ORION way
-of handing interrupts.
+> Moreover specific processing has to be performed if both channels are use=
+d.
 
-   Andrew
+Given that this case has to be supported anyway I'd be more inclined to
+ask the question the other way around TBH.
+
+--okqjiama34qumvis
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAljuSfYACgkQJNaLcl1U
+h9BIYQf8DbaZhiVW3Tp/9AENsa/ntqfUnXdyokr8O9CNPL5ifBeRhJ9/kMNYX8D+
+GWP9kO93yXpwthXlXqNWtNErv1BlZrw78dzyPNR+QhNw052QcSIgG+k5/7iKjT6T
+bLw9AfIriDcE4kPNKzN4w0YpFqwJjhAMcsaIjnBYob/Su9uYfLnqEXniJqo4ebDZ
+tsx8GAaeJ2TFbgxnW5RBrpstCENYdc8oNaPmRaK423bcbRXFWmA6IXwN8Il0EetH
+TWvGE/c3pftOZF7M6Vj7Xtni/2aH62Ra8DE0jnhYtJ9VXRoos02FoipHsAe92rJN
+rYNEPDNl3nzJPm3r6a1O2FnVtJPQVA==
+=yXLf
+-----END PGP SIGNATURE-----
+
+--okqjiama34qumvis--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
