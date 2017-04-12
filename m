@@ -1,33 +1,61 @@
-From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v5 3/3] DT nodes for Broadcom Northstar2 USB DRD Phy
-Date: Wed, 12 Apr 2017 09:09:49 -0700
-Message-ID: <e77ee510-0598-a906-11a3-edefa601f2c4@gmail.com>
-References: <1491981125-6859-1-git-send-email-raviteja.garimella@broadcom.com>
- <1491981125-6859-4-git-send-email-raviteja.garimella@broadcom.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+From: Luis Oliveira <Luis.Oliveira-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v8 0/6] i2c: designware: add I2C SLAVE support
+Date: Wed, 12 Apr 2017 17:47:50 +0100
+Message-ID: <cover.1492014220.git.lolivei@synopsys.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1491981125-6859-4-git-send-email-raviteja.garimella-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Raviteja Garimella <raviteja.garimella-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, jarkko.nikula-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Luis.Oliveira-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, Ramiro.Oliveira-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, Joao.Pinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, CARLOS.PALMINHA-HKixBCOQz3hWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 04/12/2017 12:12 AM, Raviteja Garimella wrote:
-> This patch adds device tree nodes for USB Dual Role Device Phy for
-> Broadcom's Northstar2 SoC.
+The purpose of this patchset is to enable Linux to be a I2C slave by 
+enabling the slave functionality in the designware I2C controller and at
+the same time it does some cleaning of the existing code.
 
-The subject of this patch should be something like:
+The patch 1 is for cleaning and commentary fix.
+The patch 2 refactors the original i2c-designware-core and extracts all
+master functions to a i2c-designware-master source file as suggested by
+Andy Shevchenko when I first submited the update. The patch 3 then
+separates the MASTER flow from the common flow.
+The patch 4 introduces the SLAVE necessary definitions to the 
+i2c-designware library and adds a how-to-use example to the designware.txt
+in device tree bindings.
+The patch 5 adds the necessary functions to give the ability to be a SLAVE
+to the controller and for that changes also had to be made in the 
+Makefile and Kconfig.
+The patch 6 enables the SLAVE mode to be detected by the platform module.
 
-arm64: dts: NS2: Add USB DRD PHY Device Tree node
+The functionality was tested using the hardware independent slave-eeprom
+driver based on top of i2c/for-next. The tree I used can be found here:
 
-to be consistent with prior submissions done to the same file.
+https://git.kernel.org/cgit/linux/kernel/git/wsa/linux.git/log/?h=i2c/for-next
 
-Depending on the fate of the patch series, I will either fix it up
-myself while applying, or please include this change in a respin.
+Luis Oliveira (6):
+  i2c: designware: Cleaning and comment style fixes.
+  i2c: designware: refactoring of the i2c-designware
+  i2c: designware: MASTER mode as separated driver
+  i2c: designware: introducing I2C_SLAVE definitions
+  i2c: designware: add SLAVE mode functions
+  i2c: designware: enable SLAVE in platform module
+
+ .../devicetree/bindings/i2c/i2c-designware.txt     |  16 +-
+ drivers/i2c/busses/Kconfig                         |  15 +-
+ drivers/i2c/busses/Makefile                        |   2 +
+ drivers/i2c/busses/i2c-designware-common.c         | 280 +++++++++++++
+ drivers/i2c/busses/i2c-designware-core.h           | 180 +++++++-
+ ...c-designware-core.c => i2c-designware-master.c} | 465 +++------------------
+ drivers/i2c/busses/i2c-designware-pcidrv.c         |   8 +-
+ drivers/i2c/busses/i2c-designware-platdrv.c        | 117 ++++--
+ drivers/i2c/busses/i2c-designware-slave.c          | 403 ++++++++++++++++++
+ 9 files changed, 1033 insertions(+), 453 deletions(-)
+ create mode 100644 drivers/i2c/busses/i2c-designware-common.c
+ rename drivers/i2c/busses/{i2c-designware-core.c => i2c-designware-master.c} (60%)
+ create mode 100644 drivers/i2c/busses/i2c-designware-slave.c
+
 -- 
-Florian
+2.11.0
+
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
