@@ -1,47 +1,87 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v2 2/3] net: macb: Remove CONFIG_OF around DT match table
-Date: Wed, 12 Apr 2017 15:51:34 -0500
-Message-ID: <CAL_JsqLm_cP7zF71HwX8UZOLaWQf0Q90zOrXyXjU96xc5Cchrg@mail.gmail.com>
-References: <20170412044156.17351-1-f.fainelli@gmail.com> <20170412044156.17351-3-f.fainelli@gmail.com>
+From: Cyrille Pitchen <cyrille.pitchen@wedev4u.fr>
+Subject: Re: [PATCH v1 1/1] mtd: mtk-nor: set controller's address width
+ according to nor flash
+Date: Wed, 12 Apr 2017 22:57:27 +0200
+Message-ID: <e9eafca3-41a0-7e88-996b-9d1c51f0c132@wedev4u.fr>
+References: <1491381462-21893-1-git-send-email-guochun.mao@mediatek.com>
+ <1491381462-21893-2-git-send-email-guochun.mao@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20170412044156.17351-3-f.fainelli@gmail.com>
-Sender: netdev-owner@vger.kernel.org
-To: Florian Fainelli <f.fainelli@gmail.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Andrew Lunn <andrew@lunn.ch>, Vivien Didelot <vivien.didelot@savoirfairelinux.com>, Lee Jones <lee.jones@linaro.org>, Nicolas Ferre <nicolas.ferre@microchip.com>, Frank Rowand <frowand.list@gmail.com>, "open list:NETWORKING DRIVERS" <netdev@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1491381462-21893-2-git-send-email-guochun.mao@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Guochun Mao <guochun.mao@mediatek.com>, Cyrille Pitchen <cyrille.pitchen@atmel.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Richard Weinberger <richard@nod.at>, Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-mtd@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, linux-mediatek@lists.infradead.org, David Woodhouse <dwmw2@infradead.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 11, 2017 at 11:41 PM, Florian Fainelli <f.fainelli@gmail.com> wrote:
-> A subsequent patch is going to make of_match_node() an inline stub when
-> CONFIG_OF is disabled, which will let the compiler eliminate unused variables.
-> In order not to clutter the code more, remove the CONFIG_OF #ifdef such that
-> macb_dt_ids and what it references are always defined.
->
-> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Hi Guochun,
+
+Le 05/04/2017 à 10:37, Guochun Mao a écrit :
+> When nor's size larger than 16MByte, nor's address width maybe
+> set to 3 or 4, and controller should change address width according
+> to nor's setting.
+> 
+> Signed-off-by: Guochun Mao <guochun.mao@mediatek.com>
 > ---
->  drivers/net/ethernet/cadence/macb.c | 2 --
->  1 file changed, 2 deletions(-)
->
-> diff --git a/drivers/net/ethernet/cadence/macb.c b/drivers/net/ethernet/cadence/macb.c
-> index 30606b11b128..01016e9525ee 100644
-> --- a/drivers/net/ethernet/cadence/macb.c
-> +++ b/drivers/net/ethernet/cadence/macb.c
-> @@ -2811,7 +2811,6 @@ static int macb_init(struct platform_device *pdev)
->         return 0;
+>  drivers/mtd/spi-nor/mtk-quadspi.c |   27 +++++++++++++++++++++++++++
+>  1 file changed, 27 insertions(+)
+> 
+> diff --git a/drivers/mtd/spi-nor/mtk-quadspi.c b/drivers/mtd/spi-nor/mtk-quadspi.c
+> index e661877..b637770 100644
+> --- a/drivers/mtd/spi-nor/mtk-quadspi.c
+> +++ b/drivers/mtd/spi-nor/mtk-quadspi.c
+> @@ -104,6 +104,8 @@
+>  #define MTK_NOR_MAX_RX_TX_SHIFT		6
+>  /* can shift up to 56 bits (7 bytes) transfer by MTK_NOR_PRG_CMD */
+>  #define MTK_NOR_MAX_SHIFT		7
+> +/* nor controller 4-byte address mode enable bit */
+> +#define MTK_NOR_4B_ADDR_EN		BIT(4)
+>  
+>  /* Helpers for accessing the program data / shift data registers */
+>  #define MTK_NOR_PRG_REG(n)		(MTK_NOR_PRGDATA0_REG + 4 * (n))
+> @@ -230,10 +232,35 @@ static int mt8173_nor_write_buffer_disable(struct mt8173_nor *mt8173_nor)
+>  				  10000);
 >  }
->
-> -#if defined(CONFIG_OF)
->  /* 1518 rounded up */
->  #define AT91ETHER_MAX_RBUFF_SZ 0x600
->  /* max number of receive buffers */
-> @@ -3215,7 +3214,6 @@ static const struct of_device_id macb_dt_ids[] = {
->         { /* sentinel */ }
->  };
->  MODULE_DEVICE_TABLE(of, macb_dt_ids);
+>  
+> +static void mt8173_nor_set_addr_width(struct mt8173_nor *mt8173_nor)
+> +{
+> +	u8 val;
+> +	struct spi_nor *nor = &mt8173_nor->nor;
+> +
+> +	val = readb(mt8173_nor->base + MTK_NOR_DUAL_REG);
+> +
+> +	switch (nor->addr_width) {
+> +	case 3:
+> +		val &= ~MTK_NOR_4B_ADDR_EN;
+> +		break;
+> +	case 4:
+> +		val |= MTK_NOR_4B_ADDR_EN;
+> +		break;
+> +	default:
+> +		dev_warn(mt8173_nor->dev, "Unexpected address width %u.\n",
+> +			 nor->addr_width);
+> +		break;
+> +	}
+> +
+> +	writeb(val, mt8173_nor->base + MTK_NOR_DUAL_REG);
+> +}
+> +
+>  static void mt8173_nor_set_addr(struct mt8173_nor *mt8173_nor, u32 addr)
+>  {
+>  	int i;
+>  
+> +	mt8173_nor_set_addr_width(mt8173_nor);
+> +
+>  	for (i = 0; i < 3; i++) {
 
-Did you actually check that the compiler can eliminate things when
-modules are enabled? Because it's not going to be able to eliminate
-MODULE_DEVICE_TABLE entry AFAICT.
+Should it be 'i < nor->addr_width' instead of 'i < 3' ?
+Does it work when accessing data after 128Mbit ?
 
-Rob
+Best regards,
+
+Cyrille
+
+>  		writeb(addr & 0xff, mt8173_nor->base + MTK_NOR_RADR0_REG + i * 4);
+>  		addr >>= 8;
+> 
