@@ -1,88 +1,104 @@
-From: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2] power: supply: tps65217: remove debug messages for
- function calls
-Date: Wed, 12 Apr 2017 17:01:14 +0200
-Message-ID: <20170412150113.v3opwtovza2d3qvk@earth>
-References: <20170403164446.28076-1-enric.balletbo@collabora.com>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH V2] clk: hi6220: Add the hi655x's pmic clock
+Date: Wed, 12 Apr 2017 08:02:45 -0700
+Message-ID: <20170412150245.GK7065@codeaurora.org>
+References: <1491683412-12237-1-git-send-email-daniel.lezcano@linaro.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="gotcspk7xqgieite"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-clk-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170403164446.28076-1-enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1491683412-12237-1-git-send-email-daniel.lezcano@linaro.org>
+Sender: linux-clk-owner@vger.kernel.org
+To: Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: mturquette@baylibre.com, lee.jones@linaro.org, xuwei5@hisilicon.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On 04/08, Daniel Lezcano wrote:
+>  
+>  Example:
+>  	pmic: pmic@f8000000 {
+> @@ -24,4 +29,5 @@ Example:
+>  		interrupt-controller;
+>  		#interrupt-cells = <2>;
+>  		pmic-gpios = <&gpio1 2 GPIO_ACTIVE_HIGH>;
+> +		clock-cells = <0>;
 
---gotcspk7xqgieite
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Should be #clock-cells instead.
 
-Hi,
+>  	}
+> diff --git a/drivers/clk/Makefile b/drivers/clk/Makefile
+> index 92c12b8..c19983a 100644
+> --- a/drivers/clk/Makefile
+> +++ b/drivers/clk/Makefile
+> @@ -36,6 +36,7 @@ obj-$(CONFIG_COMMON_CLK_PALMAS)		+= clk-palmas.o
+>  obj-$(CONFIG_COMMON_CLK_PWM)		+= clk-pwm.o
+>  obj-$(CONFIG_CLK_QORIQ)			+= clk-qoriq.o
+>  obj-$(CONFIG_COMMON_CLK_RK808)		+= clk-rk808.o
+> +obj-$(CONFIG_COMMON_CLK_HI655X)		+= clk-hi655x.o
+>  obj-$(CONFIG_COMMON_CLK_S2MPS11)	+= clk-s2mps11.o
+>  obj-$(CONFIG_COMMON_CLK_SCPI)           += clk-scpi.o
+>  obj-$(CONFIG_COMMON_CLK_SI5351)		+= clk-si5351.o
+> diff --git a/drivers/clk/clk-hi655x.c b/drivers/clk/clk-hi655x.c
+> new file mode 100644
+> index 0000000..b2bea32
+> --- /dev/null
+> +++ b/drivers/clk/clk-hi655x.c
+> @@ -0,0 +1,140 @@
+> +
+> +static int hi655x_clk_probe(struct platform_device *pdev)
+> +{
+> +	struct device *parent = pdev->dev.parent;
+> +	struct hi655x_pmic *hi655x = dev_get_drvdata(parent);
+> +	struct clk_init_data *hi655x_clk_init;
 
-On Mon, Apr 03, 2017 at 06:44:45PM +0200, Enric Balletbo i Serra wrote:
-> Equivalent information can be nowadays obtained using function tracer.
->=20
-> Signed-off-by: Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-> ---
->  drivers/power/supply/tps65217_charger.c | 4 ----
->  1 file changed, 4 deletions(-)
->=20
-> diff --git a/drivers/power/supply/tps65217_charger.c b/drivers/power/supp=
-ly/tps65217_charger.c
-> index 29b61e8..1f52340 100644
-> --- a/drivers/power/supply/tps65217_charger.c
-> +++ b/drivers/power/supply/tps65217_charger.c
-> @@ -58,8 +58,6 @@ static int tps65217_config_charger(struct tps65217_char=
-ger *charger)
->  {
->  	int ret;
-> =20
-> -	dev_dbg(charger->dev, "%s\n", __func__);
-> -
->  	/*
->  	 * tps65217 rev. G, p. 31 (see p. 32 for NTC schematic)
->  	 *
-> @@ -205,8 +203,6 @@ static int tps65217_charger_probe(struct platform_dev=
-ice *pdev)
->  	int ret;
->  	int i;
-> =20
-> -	dev_dbg(&pdev->dev, "%s\n", __func__);
-> -
->  	charger =3D devm_kzalloc(&pdev->dev, sizeof(*charger), GFP_KERNEL);
->  	if (!charger)
->  		return -ENOMEM;
+This can just go onto the stack? We don't need it around after
+probe.
 
-Thanks, queued.
+> +	struct hi655x_clk *hi655x_clk;
+> +	const char *clk_name = "hi655x-clk";
+> +	int ret;
+> +
+> +	hi655x_clk = devm_kzalloc(&pdev->dev, sizeof(*hi655x_clk), GFP_KERNEL);
+> +	if (!hi655x_clk)
+> +		return -ENOMEM;
+> +
+> +	hi655x_clk_init = devm_kzalloc(&pdev->dev, sizeof(*hi655x_clk_init),
+> +				       GFP_KERNEL);
+> +	if (!hi655x_clk_init)
+> +		return -ENOMEM;
+> +
+> +	of_property_read_string_index(parent->of_node, "clock-output-names",
+> +				      0, &clk_name);
+> +
+> +	hi655x_clk_init->name	= clk_name;
+> +	hi655x_clk_init->ops	= &hi655x_clk_ops;
+> +
+> +	hi655x_clk->clk_hw.init	= hi655x_clk_init;
+> +	hi655x_clk->hi655x	= hi655x;
+> +
+> +	platform_set_drvdata(pdev, hi655x_clk);
+> +
+> +	ret = devm_clk_hw_register(&pdev->dev, &hi655x_clk->clk_hw);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = of_clk_add_hw_provider(parent->of_node, of_clk_hw_simple_get,
+> +				     &hi655x_clk->clk_hw);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = clk_hw_register_clkdev(&hi655x_clk->clk_hw, clk_name, NULL);
 
--- Sebastian
+Missed this last time. Do you use this clkdev lookup? The name is
+usually supposed to be based on what the device is expecting,
+instead of clk_name, and we would want some device name for the
+third argument here.
 
---gotcspk7xqgieite
-Content-Type: application/pgp-signature; name="signature.asc"
+> +	if (ret)
+> +		of_clk_del_provider(parent->of_node);
+> +
+> +	return ret;
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAljuQTkACgkQ2O7X88g7
-+pr/0g/9F8bj9QghqwMkxZpyt6ef6PEK5WdrWjuJovrpdcgE2vg64G9s2s5sGMaB
-UB5lvYVYCUa4CeWGL2UP9q+ViJvOElpg5O13Gxcj9MM9FIR8SIUnlR3qqU+nE5YP
-bHhawatq22RhvnJx6hKt60RSfRo6/vqOsUjAHLwQ8lVStbV3mT87S2P8ReAbPHSS
-F65K7safRS5bhsyPeNU9Ae20DRlY62HfZ3SI58mIoXQalXqdY1vyDwo7ZPMtmmdG
-W52bIk/7bIM0VFCgNzxsZke6Ms8aYp3shhOQFraSyg465GQkegajFUXwgVuEhfnz
-kL5Ju73gyYsqF38OrFytin1cKgUUOD3KLrgSefc8LD4yqm7KuJP7809LSGvMqird
-iV0szMeVvE5ispTLkWjp+WURj24P88R6bQyYkf5j+nCxrCtsKGS3HIqJ5WhXIWq7
-AVRkmGcfkre67QBL2OhmW8nxg6q4BNTr0D8JVqNXW65FlJS+FGtHQiYvis28wSYq
-qw/ytXGM+C2RvKOshkUnA8LvcaxXr8FOmGkoX9KuWx1NbVoFrMzrKze/66WYJe8s
-Y+XnSuQ+PLgB7qwJIUFlTs+4z0zIv66v4gsMd1dN/u9PPBie/424Gb8oYFNt4ri/
-T9KmTgtxc3iCkNnfyM0fwoihI0caAApng2VWMl6mYhkX6JTUOz8=
-=erk5
------END PGP SIGNATURE-----
-
---gotcspk7xqgieite--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
