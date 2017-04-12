@@ -1,202 +1,168 @@
-From: Luis Oliveira <Luis.Oliveira@synopsys.com>
-Subject: [PATCH v8 2/6] i2c: designware: refactoring of the i2c-designware
-Date: Wed, 12 Apr 2017 17:47:52 +0100
-Message-ID: <6447255569f0fe6c29749cec58e038db59d606d3.1492014220.git.lolivei@synopsys.com>
-References: <cover.1492014220.git.lolivei@synopsys.com>
+From: Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [PATCH V4 1/9] PM / OPP: Allow OPP table to be used for
+ power-domains
+Date: Wed, 12 Apr 2017 17:49:44 +0100
+Message-ID: <0a7146f9-72f1-317c-3aab-770a72462968@arm.com>
+References: <cover.1490001099.git.viresh.kumar@linaro.org>
+ <e772e67a5445319bb8e0f312846ace666adc097f.1490001099.git.viresh.kumar@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1492014220.git.lolivei@synopsys.com>
-In-Reply-To: <cover.1492014220.git.lolivei@synopsys.com>
-References: <cover.1492014220.git.lolivei@synopsys.com>
+In-Reply-To: <e772e67a5445319bb8e0f312846ace666adc097f.1490001099.git.viresh.kumar@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: wsa@the-dreams.de, robh+dt@kernel.org, mark.rutland@arm.com, jarkko.nikula@linux.intel.com, andriy.shevchenko@linux.intel.com, mika.westerberg@linux.intel.com, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Luis.Oliveira@synopsys.com, Ramiro.Oliveira@synopsys.com, Joao.Pinto@synopsys.com, CARLOS.PALMINHA@synopsys.com
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: Rafael Wysocki <rjw@rjwysocki.net>, ulf.hansson@linaro.org, Kevin Hilman <khilman@linaro.org>, Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@codeaurora.org>, Sudeep Holla <sudeep.holla@arm.com>, linaro-kernel@lists.linaro.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, Vincent Guittot <vincent.guittot@linaro.org>, robh+dt@kernel.org, lina.iyer@linaro.org, rnayak@codeaurora.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-- Factor out all _master() part of code from i2c-designware-core
-  and i2c-designware-platdrv to separate functions.
-- Standardize all code related with MASTER mode.
-- I have to take off DW_IC_INTR_TX_EMPTY from DW_IC_INTR_DEFAULT_MASK
-  because it is master specific.
 
-The purpose of this is to prepare the controller to have is I2C MASTER
-flow in a separate driver. To do this first all the
-functions/definitions related to the MASTER flow were identified.
 
-Signed-off-by: Luis Oliveira <lolivei@synopsys.com>
-Acked-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Acked-by: Jarkko Nikula <jarkko.nikula@linux.intel.com>
----
-v7-v8
-- no changes
+On 20/03/17 09:32, Viresh Kumar wrote:
+> Power-domains need to express their active states in DT and what's
+> better than OPP table for that.
+> 
+> This patch allows power-domains to reuse OPP tables to express their
+> active states. The "opp-hz" property isn't a required property anymore
+> as power-domains may not always use them.
+> 
+> Add a new property "domain-performance-state", which will contain
+> positive integer values to represent performance levels of the
+> power-domains as described in this patch.
+> 
+> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+> ---
+>  Documentation/devicetree/bindings/opp/opp.txt | 73 ++++++++++++++++++++++++++-
+>  1 file changed, 71 insertions(+), 2 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/opp/opp.txt b/Documentation/devicetree/bindings/opp/opp.txt
+> index 63725498bd20..d0b95c9e1011 100644
+> --- a/Documentation/devicetree/bindings/opp/opp.txt
+> +++ b/Documentation/devicetree/bindings/opp/opp.txt
+> @@ -76,10 +76,9 @@ This describes the OPPs belonging to a device. This node can have following
+>  This defines voltage-current-frequency combinations along with other related
+>  properties.
+>  
+> -Required properties:
+> +Optional properties:
+>  - opp-hz: Frequency in Hz, expressed as a 64-bit big-endian integer.
+>  
+> -Optional properties:
+>  - opp-microvolt: voltage in micro Volts.
+>  
+>    A single regulator's voltage is specified with an array of size one or three.
+> @@ -154,6 +153,19 @@ properties.
+>  
+>  - status: Marks the node enabled/disabled.
+>  
+> +- domain-performance-state: A positive integer value representing the minimum
+> +  power-domain performance level required by the device for the OPP node. The
 
- drivers/i2c/busses/i2c-designware-core.c    | 56 +++++++++++++++++------------
- drivers/i2c/busses/i2c-designware-platdrv.c | 31 +++++++++-------
- 2 files changed, 52 insertions(+), 35 deletions(-)
+So the above definition is when this field in in the device node rather
+than the OPP table entry, right ? For simplicity why not have the
+properties named slightly different or just use phandle to an entry in
+the device node for this purpose.
 
-diff --git a/drivers/i2c/busses/i2c-designware-core.c b/drivers/i2c/busses/i2c-designware-core.c
-index c0e9cf374e2b..ce5d11102070 100644
---- a/drivers/i2c/busses/i2c-designware-core.c
-+++ b/drivers/i2c/busses/i2c-designware-core.c
-@@ -87,10 +87,10 @@
- #define DW_IC_INTR_GEN_CALL	0x800
- 
- #define DW_IC_INTR_DEFAULT_MASK		(DW_IC_INTR_RX_FULL | \
--					 DW_IC_INTR_TX_EMPTY | \
- 					 DW_IC_INTR_TX_ABRT | \
- 					 DW_IC_INTR_STOP_DET)
--
-+#define DW_IC_INTR_MASTER_MASK		(DW_IC_INTR_DEFAULT_MASK | \
-+					 DW_IC_INTR_TX_EMPTY)
- #define DW_IC_STATUS_ACTIVITY	0x1
- 
- #define DW_IC_SDA_HOLD_RX_SHIFT		16
-@@ -202,6 +202,16 @@ static void dw_writel(struct dw_i2c_dev *dev, u32 b, int offset)
- 	}
- }
- 
-+static void i2c_dw_configure_fifo_master(struct dw_i2c_dev *dev)
-+{
-+	/* Configure Tx/Rx FIFO threshold levels */
-+	dw_writel(dev, dev->tx_fifo_depth / 2, DW_IC_TX_TL);
-+	dw_writel(dev, 0, DW_IC_RX_TL);
-+
-+	/* Configure the I2C master */
-+	dw_writel(dev, dev->master_cfg, DW_IC_CON);
-+}
-+
- static u32
- i2c_dw_scl_hcnt(u32 ic_clk, u32 tSYMBOL, u32 tf, int cond, int offset)
- {
-@@ -440,13 +450,7 @@ int i2c_dw_init(struct dw_i2c_dev *dev)
- 			"Hardware too old to adjust SDA hold time.\n");
- 	}
- 
--	/* Configure Tx/Rx FIFO threshold levels */
--	dw_writel(dev, dev->tx_fifo_depth / 2, DW_IC_TX_TL);
--	dw_writel(dev, 0, DW_IC_RX_TL);
--
--	/* Configure the I2C master */
--	dw_writel(dev, dev->master_cfg , DW_IC_CON);
--
-+	i2c_dw_configure_fifo_master(dev);
- 	i2c_dw_release_lock(dev);
- 
- 	return 0;
-@@ -511,7 +515,7 @@ static void i2c_dw_xfer_init(struct dw_i2c_dev *dev)
- 
- 	/* Clear and enable interrupts */
- 	dw_readl(dev, DW_IC_CLR_INTR);
--	dw_writel(dev, DW_IC_INTR_DEFAULT_MASK, DW_IC_INTR_MASK);
-+	dw_writel(dev, DW_IC_INTR_MASTER_MASK, DW_IC_INTR_MASK);
- }
- 
- /*
-@@ -531,7 +535,7 @@ i2c_dw_xfer_msg(struct dw_i2c_dev *dev)
- 	u8 *buf = dev->tx_buf;
- 	bool need_restart = false;
- 
--	intr_mask = DW_IC_INTR_DEFAULT_MASK;
-+	intr_mask = DW_IC_INTR_MASTER_MASK;
- 
- 	for (; dev->msg_write_idx < dev->msgs_num; dev->msg_write_idx++) {
- 		u32 flags = msgs[dev->msg_write_idx].flags;
-@@ -881,22 +885,14 @@ static u32 i2c_dw_read_clear_intrbits(struct dw_i2c_dev *dev)
- }
- 
- /*
-- * Interrupt service routine. This gets called whenever an I2C interrupt
-+ * Interrupt service routine. This gets called whenever an I2C master interrupt
-  * occurs.
-  */
--static irqreturn_t i2c_dw_isr(int this_irq, void *dev_id)
-+static int i2c_dw_irq_handler_master(struct dw_i2c_dev *dev)
- {
--	struct dw_i2c_dev *dev = dev_id;
--	u32 stat, enabled;
--
--	enabled = dw_readl(dev, DW_IC_ENABLE);
--	stat = dw_readl(dev, DW_IC_RAW_INTR_STAT);
--	dev_dbg(dev->dev, "%s: enabled=%#x stat=%#x\n", __func__, enabled, stat);
--	if (!enabled || !(stat & ~DW_IC_INTR_ACTIVITY))
--		return IRQ_NONE;
-+	u32 stat;
- 
- 	stat = i2c_dw_read_clear_intrbits(dev);
--
- 	if (stat & DW_IC_INTR_TX_ABRT) {
- 		dev->cmd_err |= DW_IC_ERR_TX_ABRT;
- 		dev->status = STATUS_IDLE;
-@@ -931,6 +927,22 @@ static irqreturn_t i2c_dw_isr(int this_irq, void *dev_id)
- 		dw_writel(dev, stat, DW_IC_INTR_MASK);
- 	}
- 
-+	return 0;
-+}
-+
-+static irqreturn_t i2c_dw_isr(int this_irq, void *dev_id)
-+{
-+	struct dw_i2c_dev *dev = dev_id;
-+	u32 stat, enabled;
-+
-+	enabled = dw_readl(dev, DW_IC_ENABLE);
-+	stat = dw_readl(dev, DW_IC_RAW_INTR_STAT);
-+	dev_dbg(dev->dev, "enabled=%#x stat=%#x\n", enabled, stat);
-+	if (!enabled || !(stat & ~DW_IC_INTR_ACTIVITY))
-+		return IRQ_NONE;
-+
-+	i2c_dw_irq_handler_master(dev);
-+
- 	return IRQ_HANDLED;
- }
- 
-diff --git a/drivers/i2c/busses/i2c-designware-platdrv.c b/drivers/i2c/busses/i2c-designware-platdrv.c
-index ee587f872ef8..7dece6f325d4 100644
---- a/drivers/i2c/busses/i2c-designware-platdrv.c
-+++ b/drivers/i2c/busses/i2c-designware-platdrv.c
-@@ -155,6 +155,23 @@ static inline int dw_i2c_acpi_configure(struct platform_device *pdev)
- }
- #endif
- 
-+static void i2c_dw_configure_master(struct dw_i2c_dev *dev)
-+{
-+	dev->master_cfg = DW_IC_CON_MASTER | DW_IC_CON_SLAVE_DISABLE |
-+			  DW_IC_CON_RESTART_EN;
-+
-+	switch (dev->clk_freq) {
-+	case 100000:
-+		dev->master_cfg |= DW_IC_CON_SPEED_STD;
-+		break;
-+	case 3400000:
-+		dev->master_cfg |= DW_IC_CON_SPEED_HIGH;
-+		break;
-+	default:
-+		dev->master_cfg |= DW_IC_CON_SPEED_FAST;
-+	}
-+}
-+
- static int i2c_dw_plat_prepare_clk(struct dw_i2c_dev *i_dev, bool prepare)
- {
- 	if (IS_ERR(i_dev->clk))
-@@ -270,19 +287,7 @@ static int dw_i2c_plat_probe(struct platform_device *pdev)
- 
- 	dev->functionality = I2C_FUNC_10BIT_ADDR | DW_IC_DEFAULT_FUNCTIONALITY;
- 
--	dev->master_cfg = DW_IC_CON_MASTER | DW_IC_CON_SLAVE_DISABLE |
--			  DW_IC_CON_RESTART_EN;
--
--	switch (dev->clk_freq) {
--	case 100000:
--		dev->master_cfg |= DW_IC_CON_SPEED_STD;
--		break;
--	case 3400000:
--		dev->master_cfg |= DW_IC_CON_SPEED_HIGH;
--		break;
--	default:
--		dev->master_cfg |= DW_IC_CON_SPEED_FAST;
--	}
-+	i2c_dw_configure_master(dev);
- 
- 	dev->clk = devm_clk_get(&pdev->dev, NULL);
- 	if (!i2c_dw_plat_prepare_clk(dev, true)) {
+> +  The integer value '0' represents the lowest performance level and the higher
+> +  values represent higher performance levels. 
+
+needs to be changed as OPP table entry.
+
+>  When present in the OPP table of a
+> + power-domain, it represents the performance level of the domain. When present
+
+again "performance level of the domain corresponding to that OPP entry"
+on something similar
+
+> +  in the OPP table of a normal device, it represents the performance level of
+
+what do you mean by normal device ? needs description as that's
+something new introduced here.
+
+> +  the parent power-domain. The OPP table can contain the
+> +  "domain-performance-state" property, only if the device node contains the
+> +  "power-domains" or "#power-domain-cells" property. 
+
+Why such a restriction ?
+
+> The OPP nodes aren't
+> +  allowed to contain the "domain-performance-state" property partially, i.e.
+> +  Either all OPP nodes in the OPP table have the "domain-performance-state"
+> +  property or none of them have it.
+> +
+>  Example 1: Single cluster Dual-core ARM cortex A9, switch DVFS states together.
+>  
+>  / {
+> @@ -528,3 +540,60 @@ Example 5: opp-supported-hw
+>  		};
+>  	};
+>  };
+> +
+> +Example 7: domain-Performance-state:
+> +(example: For 1GHz require domain state 1 and for 1.1 & 1.2 GHz require state 2)
+> +
+> +/ {
+> +	domain_opp_table: opp_table0 {
+> +		compatible = "operating-points-v2";
+> +
+> +		opp@1 {
+> +			domain-performance-state = <1>;
+> +			opp-microvolt = <975000 970000 985000>;
+> +		};
+> +		opp@2 {
+> +			domain-performance-state = <2>;
+> +			opp-microvolt = <1075000 1000000 1085000>;
+> +		};
+> +	};
+> +
+> +	foo_domain: power-controller@12340000 {
+> +		compatible = "foo,power-controller";
+> +		reg = <0x12340000 0x1000>;
+> +		#power-domain-cells = <0>;
+> +		operating-points-v2 = <&domain_opp_table>;
+
+How does it scale with power domain providers with multiple power domain ?
+
+> +	}
+> +
+> +	cpu0_opp_table: opp_table1 {
+> +		compatible = "operating-points-v2";
+> +		opp-shared;
+> +
+> +		opp@1000000000 {
+> +			opp-hz = /bits/ 64 <1000000000>;
+> +			domain-performance-state = <1>;
+> +		};
+> +		opp@1100000000 {
+> +			opp-hz = /bits/ 64 <1100000000>;
+> +			domain-performance-state = <2>;
+> +		};
+> +		opp@1200000000 {
+> +			opp-hz = /bits/ 64 <1200000000>;
+> +			domain-performance-state = <2>;
+> +		};
+> +	};
+> +
+> +	cpus {
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		cpu@0 {
+> +			compatible = "arm,cortex-a9";
+> +			reg = <0>;
+> +			clocks = <&clk_controller 0>;
+> +			clock-names = "cpu";
+> +			operating-points-v2 = <&cpu0_opp_table>;
+
+Do we ignore operating-points-v2 above as this device/cpu node contains
+power domain which has operating-points-v2 property ? In other words
+how do they correlate ?
+
+> +			power-domains = <&foo_domain>;
+> +		};
+> +	};
+> +};
+> 
+
 -- 
-2.11.0
+Regards,
+Sudeep
