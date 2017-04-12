@@ -1,35 +1,63 @@
-From: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 01/20] net: stmmac: export
- stmmac_set_mac_addr/stmmac_get_mac_addr
-Date: Wed, 12 Apr 2017 09:42:57 +0200
-Message-ID: <20170412074257.GC11170@Red>
-References: <20170403091444.29876-1-clabbe.montjoie@gmail.com>
- <20170403091444.29876-2-clabbe.montjoie@gmail.com>
- <9514c077-1738-ea49-ca18-fbc46bac6144@st.com>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 1/3] mfd: max8998: Remove CONFIG_OF around
+ max8998_dt_match
+Date: Wed, 12 Apr 2017 08:59:21 +0100
+Message-ID: <20170412075921.m3yszzgayyd25iws@dell>
+References: <20170412044156.17351-1-f.fainelli@gmail.com>
+ <20170412044156.17351-2-f.fainelli@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <9514c077-1738-ea49-ca18-fbc46bac6144-qxv4g6HH51o@public.gmane.org>
+In-Reply-To: <20170412044156.17351-2-f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Giuseppe CAVALLARO <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, vivien.didelot-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org, Nicolas Ferre <nicolas.ferre-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "open list:NETWORKING DRIVERS" <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 03, 2017 at 02:39:03PM +0200, Giuseppe CAVALLARO wrote:
-> Hello Alex
-> 
-> do you can check if this has to be done for ST platforms?
-> I do not remember that it was necessary when build as module so
-> I cannot expect this should be only for dwmac-sun8i.
-> 
-> Regards
-> peppe
-> 
+On Tue, 11 Apr 2017, Florian Fainelli wrote:
 
-dwmac-sun8i is simply the first "user" of stmmac_[sg]et_mac_addr outside of stmmac-objs
+> A subsequent patch is going to make of_match_node() an inline stub when
+> CONFIG_OF is disabled which will properly take care of having the compiler
+> eliminate the variable. To avoid more #ifdef/#else, just always make the match
+> table available.
+> 
+> Signed-off-by: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+>  drivers/mfd/max8998.c | 2 --
+>  1 file changed, 2 deletions(-)
 
-Regards
+If it works, great!
+
+For my own reference:
+  Acked-for-MFD-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+  
+> diff --git a/drivers/mfd/max8998.c b/drivers/mfd/max8998.c
+> index 4c33b8063bc3..372f681ec1bb 100644
+> --- a/drivers/mfd/max8998.c
+> +++ b/drivers/mfd/max8998.c
+> @@ -129,14 +129,12 @@ int max8998_update_reg(struct i2c_client *i2c, u8 reg, u8 val, u8 mask)
+>  }
+>  EXPORT_SYMBOL(max8998_update_reg);
+>  
+> -#ifdef CONFIG_OF
+>  static const struct of_device_id max8998_dt_match[] = {
+>  	{ .compatible = "maxim,max8998", .data = (void *)TYPE_MAX8998 },
+>  	{ .compatible = "national,lp3974", .data = (void *)TYPE_LP3974 },
+>  	{ .compatible = "ti,lp3974", .data = (void *)TYPE_LP3974 },
+>  	{},
+>  };
+> -#endif
+>  
+>  /*
+>   * Only the common platform data elements for max8998 are parsed here from the
+
+-- 
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
