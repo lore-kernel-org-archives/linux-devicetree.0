@@ -1,87 +1,106 @@
-From: Bjorn Helgaas <helgaas@kernel.org>
-Subject: Re: [PATCH] PCI: hisi: Fix DT binding (hisi-pcie-almost-ecam)
-Date: Wed, 12 Apr 2017 10:49:27 -0500
-Message-ID: <20170412154927.GB25197@bhelgaas-glaptop.roam.corp.google.com>
-References: <1490275097-39349-1-git-send-email-liudongdong3@huawei.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pci-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1490275097-39349-1-git-send-email-liudongdong3@huawei.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Dongdong Liu <liudongdong3@huawei.com>
-Cc: mark.rutland@arm.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, wangzhou1@hisilicon.com, gabriele.paoloni@huawei.com, linuxarm@huawei.com
+From: Mark Brown <broonie@kernel.org>
+Subject: Applied "regulator: tps65132: add device-tree binding" to the regulator tree
+Date: Wed, 12 Apr 2017 17:00:34 +0100
+Message-ID: <E1cyKh8-00068Q-0n@debutante>
+References: <1491992104-21921-1-git-send-email-vreddytalla@nvidia.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1491992104-21921-1-git-send-email-vreddytalla@nvidia.com>
+Sender: linux-kernel-owner@vger.kernel.org
+Cc: Mark Brown <broonie@kernel.org>, lgirdwood@gmail.combroonie@kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, vreddytalla@nvidia.com, ldewangan@nvidia.comlinux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 23, 2017 at 09:18:17PM +0800, Dongdong Liu wrote:
-> The "hisilicon,pcie-almost-ecam", which goes against the usual DT
-> conventions, and is non-sensical in that it describes the IP based on
-> what it isn't. Fix the DT binding with "hisilicon,hip06-pcie-ecam"
-> and "hisilicon,hip07-pcie-ecam".
-> 
-> Signed-off-by: Mark Rutland <mark.rutland@arm.com>
-> Signed-off-by: Dongdong Liu <liudongdong3@huawei.com>
+The patch
 
-Applied to for-linus for v4.11, thanks!
+   regulator: tps65132: add device-tree binding
 
-> ---
->  Documentation/devicetree/bindings/pci/hisilicon-pcie.txt | 10 ++++++++--
->  drivers/pci/dwc/pcie-hisi.c                              |  6 +++++-
->  2 files changed, 13 insertions(+), 3 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/pci/hisilicon-pcie.txt b/Documentation/devicetree/bindings/pci/hisilicon-pcie.txt
-> index b7fa3b9..a339dbb 100644
-> --- a/Documentation/devicetree/bindings/pci/hisilicon-pcie.txt
-> +++ b/Documentation/devicetree/bindings/pci/hisilicon-pcie.txt
-> @@ -44,13 +44,19 @@ Hip05 Example (note that Hip06 is the same except compatible):
->  	};
->  
->  HiSilicon Hip06/Hip07 PCIe host bridge DT (almost-ECAM) description.
-> +
-> +Some BIOSes place the host controller in a mode where it is ECAM
-> +compliant for all devices other than the root complex. In such cases,
-> +the host controller should be described as below.
-> +
->  The properties and their meanings are identical to those described in
->  host-generic-pci.txt except as listed below.
->  
->  Properties of the host controller node that differ from
->  host-generic-pci.txt:
->  
-> -- compatible     : Must be "hisilicon,pcie-almost-ecam"
-> +- compatible     : Must be "hisilicon,hip06-pcie-ecam", or
-> +		   "hisilicon,hip07-pcie-ecam"
->  
->  - reg            : Two entries: First the ECAM configuration space for any
->  		   other bus underneath the root bus. Second, the base
-> @@ -59,7 +65,7 @@ host-generic-pci.txt:
->  
->  Example:
->  	pcie0: pcie@a0090000 {
-> -		compatible = "hisilicon,pcie-almost-ecam";
-> +		compatible = "hisilicon,hip06-pcie-ecam";
->  		reg = <0 0xb0000000 0 0x2000000>,  /*  ECAM configuration space */
->  		      <0 0xa0090000 0 0x10000>; /* host bridge registers */
->  		bus-range = <0  31>;
-> diff --git a/drivers/pci/dwc/pcie-hisi.c b/drivers/pci/dwc/pcie-hisi.c
-> index fd66a31..cf9d6a9 100644
-> --- a/drivers/pci/dwc/pcie-hisi.c
-> +++ b/drivers/pci/dwc/pcie-hisi.c
-> @@ -380,9 +380,13 @@ struct pci_ecam_ops hisi_pcie_platform_ops = {
->  
->  static const struct of_device_id hisi_pcie_almost_ecam_of_match[] = {
->  	{
-> -		.compatible = "hisilicon,pcie-almost-ecam",
-> +		.compatible =  "hisilicon,hip06-pcie-ecam",
->  		.data	    = (void *) &hisi_pcie_platform_ops,
->  	},
-> +	{
-> +		.compatible =  "hisilicon,hip07-pcie-ecam",
-> +		.data       = (void *) &hisi_pcie_platform_ops,
-> +	},
->  	{},
->  };
->  
-> -- 
-> 1.9.1
-> 
+has been applied to the regulator tree at
+
+   git://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git 
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+>From 682d33c65c28bca28238e84dc3f3b629008d1079 Mon Sep 17 00:00:00 2001
+From: Venkat Reddy Talla <vreddytalla@nvidia.com>
+Date: Wed, 12 Apr 2017 15:45:04 +0530
+Subject: [PATCH] regulator: tps65132: add device-tree binding
+
+Add tps65132 regulator device-tree binding documentation
+
+Signed-off-by: Venkat Reddy Talla <vreddytalla@nvidia.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ .../bindings/regulator/tps65132-regulator.txt      | 46 ++++++++++++++++++++++
+ 1 file changed, 46 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/regulator/tps65132-regulator.txt
+
+diff --git a/Documentation/devicetree/bindings/regulator/tps65132-regulator.txt b/Documentation/devicetree/bindings/regulator/tps65132-regulator.txt
+new file mode 100644
+index 000000000000..3a3505520c69
+--- /dev/null
++++ b/Documentation/devicetree/bindings/regulator/tps65132-regulator.txt
+@@ -0,0 +1,46 @@
++TPS65132 regulators
++
++Required properties:
++- compatible: "ti,tps65132"
++- reg: I2C slave address
++
++Optional Subnode:
++Device supports two regulators OUTP and OUTN. A sub node within the
++   device node describe the properties of these regulators. The sub-node
++   names must be as follows:
++	-For regulator outp, the sub node name should be "outp".
++	-For regulator outn, the sub node name should be "outn".
++
++-enable-gpios:(active high, output) Regulators are controlled by the input pins.
++   If it is connected to GPIO through host system then provide the
++   gpio number as per gpio.txt.
++-active-discharge-gpios: (active high, output) Some configurations use delay mechanisms
++  on the enable pin, to keep the regulator enabled for some time after
++  the enable signal goes low. This GPIO is used to actively discharge
++  the delay mechanism. Requires specification of ti,active-discharge-time-us
++-ti,active-discharge-time-us: how long the active discharge gpio should be
++  asserted for during active discharge, in microseconds.
++
++Each regulator is defined using the standard binding for regulators.
++
++Example:
++
++	tps65132@3e {
++		compatible = "ti,tps65132";
++		reg = <0x3e>;
++
++		outp {
++			regulator-name = "outp";
++			regulator-boot-on;
++			regulator-always-on;
++			enable-gpios = <&gpio 23 0>;
++		};
++
++		outn {
++			regulator-name = "outn";
++			regulator-boot-on;
++			regulator-always-on;
++			regulator-active-discharge = <0>;
++			enable-gpios = <&gpio 40 0>;
++		};
++	};
+-- 
+2.11.0
