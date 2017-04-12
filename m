@@ -1,87 +1,75 @@
-From: Cyrille Pitchen <cyrille.pitchen@wedev4u.fr>
-Subject: Re: [PATCH v1 1/1] mtd: mtk-nor: set controller's address width
- according to nor flash
-Date: Wed, 12 Apr 2017 22:57:27 +0200
-Message-ID: <e9eafca3-41a0-7e88-996b-9d1c51f0c132@wedev4u.fr>
-References: <1491381462-21893-1-git-send-email-guochun.mao@mediatek.com>
- <1491381462-21893-2-git-send-email-guochun.mao@mediatek.com>
+From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [RFC net-next] of: mdio: Honor hints from MDIO bus drivers
+Date: Wed, 12 Apr 2017 14:48:48 -0700
+Message-ID: <417fdaa1-7aba-e646-8a50-043322f1410d@gmail.com>
+References: <20170410214258.9409-1-f.fainelli@gmail.com>
+ <8ef102a4-22e5-def8-b50e-04f84b5849d7@gmail.com>
+ <20170411231424.GA6174@lunn.ch>
+ <6de72d4c-5634-f3d6-5bfd-fcc0acda0b83@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1491381462-21893-2-git-send-email-guochun.mao@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Guochun Mao <guochun.mao@mediatek.com>, Cyrille Pitchen <cyrille.pitchen@atmel.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Richard Weinberger <richard@nod.at>, Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-mtd@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, linux-mediatek@lists.infradead.org, David Woodhouse <dwmw2@infradead.org>, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <6de72d4c-5634-f3d6-5bfd-fcc0acda0b83-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Guochun,
-
-Le 05/04/2017 à 10:37, Guochun Mao a écrit :
-> When nor's size larger than 16MByte, nor's address width maybe
-> set to 3 or 4, and controller should change address width according
-> to nor's setting.
+On 04/11/2017 04:23 PM, Florian Fainelli wrote:
+> On 04/11/2017 04:14 PM, Andrew Lunn wrote:
+>>> To give some more background and rational for this change.
+>>>
+>>> On a platform where we have a parent MDIO bus, backed by the
+>>> mdio-bcm-unimac.c driver, we also register a slave MII bus (through
+>>> net/dsa/dsa2.c) which is parented to this UniMAC MDIO bus through an
+>>> assignment of of_node. This slave MII bus is created in order to
+>>> intercept reads/writes to problematic addresses (e.g: that clashes with
+>>> another piece of hardware).
+>>>
+>>> This means that the slave DSA MII bus inherits all child nodes from the
+>>> originating master MII bus. This also means that when the slave MII bus
+>>> is probed via of_mdiobus_register(), we probe the same devices twice:
+>>> once through the master, another time through the slave.
+>>
+>> Ah, O.K. This makes more sense. On the hardware i have, we get three
+>> deep in MDIO busses. We have the FEC mdio bus. On top of that we have
+>> a gpio-mux-mdio, and on top of that we have the mv88e6xxx mdio
+>> bus. And i've never seen issues.
+>>
+>> So your real problem here is you have two mdio busses using the same
+>> device tree properties. I would actually say that is just plain
+>> broken.
 > 
-> Signed-off-by: Guochun Mao <guochun.mao@mediatek.com>
-> ---
->  drivers/mtd/spi-nor/mtk-quadspi.c |   27 +++++++++++++++++++++++++++
->  1 file changed, 27 insertions(+)
+> From a Device Tree/HW representation perspective, we do have the
+> external BCM53125 switch physically attached to the 7445/7278
+> SWITCH_MDIO bus (backed by mdio-bcm-unimac) so in that regard the
+> representation is correct. There is also an integrated Gigabit PHY
+> (bcm7xxx) which is attached to that bus.
 > 
-> diff --git a/drivers/mtd/spi-nor/mtk-quadspi.c b/drivers/mtd/spi-nor/mtk-quadspi.c
-> index e661877..b637770 100644
-> --- a/drivers/mtd/spi-nor/mtk-quadspi.c
-> +++ b/drivers/mtd/spi-nor/mtk-quadspi.c
-> @@ -104,6 +104,8 @@
->  #define MTK_NOR_MAX_RX_TX_SHIFT		6
->  /* can shift up to 56 bits (7 bytes) transfer by MTK_NOR_PRG_CMD */
->  #define MTK_NOR_MAX_SHIFT		7
-> +/* nor controller 4-byte address mode enable bit */
-> +#define MTK_NOR_4B_ADDR_EN		BIT(4)
->  
->  /* Helpers for accessing the program data / shift data registers */
->  #define MTK_NOR_PRG_REG(n)		(MTK_NOR_PRGDATA0_REG + 4 * (n))
-> @@ -230,10 +232,35 @@ static int mt8173_nor_write_buffer_disable(struct mt8173_nor *mt8173_nor)
->  				  10000);
->  }
->  
-> +static void mt8173_nor_set_addr_width(struct mt8173_nor *mt8173_nor)
-> +{
-> +	u8 val;
-> +	struct spi_nor *nor = &mt8173_nor->nor;
-> +
-> +	val = readb(mt8173_nor->base + MTK_NOR_DUAL_REG);
-> +
-> +	switch (nor->addr_width) {
-> +	case 3:
-> +		val &= ~MTK_NOR_4B_ADDR_EN;
-> +		break;
-> +	case 4:
-> +		val |= MTK_NOR_4B_ADDR_EN;
-> +		break;
-> +	default:
-> +		dev_warn(mt8173_nor->dev, "Unexpected address width %u.\n",
-> +			 nor->addr_width);
-> +		break;
-> +	}
-> +
-> +	writeb(val, mt8173_nor->base + MTK_NOR_DUAL_REG);
-> +}
-> +
->  static void mt8173_nor_set_addr(struct mt8173_nor *mt8173_nor, u32 addr)
->  {
->  	int i;
->  
-> +	mt8173_nor_set_addr_width(mt8173_nor);
-> +
->  	for (i = 0; i < 3; i++) {
-
-Should it be 'i < nor->addr_width' instead of 'i < 3' ?
-Does it work when accessing data after 128Mbit ?
-
-Best regards,
-
-Cyrille
-
->  		writeb(addr & 0xff, mt8173_nor->base + MTK_NOR_RADR0_REG + i * 4);
->  		addr >>= 8;
+> From a SW perspective though, we want to talk to the integrated Gigabit
+> PHY using mdio-bcm-unimac but talk to the external BCM53125 switch using
+> the slave MII bus created by the bcm_sf2 driver in order to create an
+> isolation. We need to inherit some of the parent (mdio-bcm-unimac) child
+> DT nodes (such as the BCM53125), but not the GPHY. The easiest solution
+> I found was to use this patch.
 > 
+> Using mdiobus_register() instead of of_mdiobus_register() was
+> considered, but then, the child BCM53125 has no more "visbility" into
+> the OF world at all, and it matters, because this switch is also driven
+> via a DSA switch driver and its Ethernet data-path is connected to one
+> port of the bcm_sf2 switch..
+> 
+> Thankfully the HW bug was fixed eventually ;)
+
+In fact, all I need is to flag the internal Gigabit PHY for the slave
+MII bus node with something that makes it appear as "disabled" which I
+can presumably do with of_update_property() and putting a status =
+"disabled" property in there. Let me do something like that and see how
+big of a hack this becomes.
+-- 
+Florian
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
