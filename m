@@ -1,761 +1,631 @@
-From: Ludovic Barre <ludovic.Barre@st.com>
-Subject: [PATCH v3 2/2] mtd: spi-nor: add driver for STM32 quad spi flash controller
-Date: Wed, 12 Apr 2017 19:06:25 +0200
-Message-ID: <1492016785-24976-3-git-send-email-ludovic.Barre@st.com>
-References: <1492016785-24976-1-git-send-email-ludovic.Barre@st.com>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH v5 1/4] gpio: mvebu: Add limited PWM support
+Date: Wed, 12 Apr 2017 19:11:21 +0200
+Message-ID: <20170412171121.GB11964@ulmo.ba.sec>
+References: <20170409180931.4884-1-ralph.sennhauser@gmail.com>
+ <20170409180931.4884-2-ralph.sennhauser@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1492016785-24976-1-git-send-email-ludovic.Barre@st.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Cyrille Pitchen <cyrille.pitchen@atmel.com>, Marek Vasut <marek.vasut@gmail.com>
-Cc: David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Richard Weinberger <richard@nod.at>, Alexandre Torgue <alexandre.torgue@st.com>, Rob Herring <robh+dt@kernel.org>, linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="WhfpMioaduB5tiZL"
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170409180931.4884-2-ralph.sennhauser@gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Ralph Sennhauser <ralph.sennhauser@gmail.com>
+Cc: Andrew Lunn <andrew@lunn.ch>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jason Cooper <jason@lakedaemon.net>, Gregory Clement <gregory.clement@free-electrons.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Russell King <linux@armlinux.org.uk>, linux-pwm@vger.kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Ludovic Barre <ludovic.barre@st.com>
 
-The quadspi is a specialized communication interface targeting single,
-dual or quad SPI Flash memories.
+--WhfpMioaduB5tiZL
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-It can operate in any of the following modes:
--indirect mode: all the operations are performed using the quadspi
- registers
--read memory-mapped mode: the external Flash memory is mapped to the
- microcontroller address space and is seen by the system as if it was
- an internal memory
+On Sun, Apr 09, 2017 at 08:09:27PM +0200, Ralph Sennhauser wrote:
+> From: Andrew Lunn <andrew@lunn.ch>
+>=20
+> Armada 370/XP devices can 'blink' GPIO lines with a configurable on
+> and off period. This can be modelled as a PWM.
+>=20
+> However, there are only two sets of PWM configuration registers for
+> all the GPIO lines. This driver simply allows a single GPIO line per
+> GPIO chip of 32 lines to be used as a PWM. Attempts to use more return
+> EBUSY.
+>=20
+> Due to the interleaving of registers it is not simple to separate the
+> PWM driver from the GPIO driver. Thus the GPIO driver has been
+> extended with a PWM driver.
+>=20
+> Signed-off-by: Andrew Lunn <andrew@lunn.ch>
+> URL: https://patchwork.ozlabs.org/patch/427287/
+> URL: https://patchwork.ozlabs.org/patch/427295/
+> [Ralph Sennhauser:
+>   * Port forward
+>   * Merge PWM portion into gpio-mvebu.c
+>   * Switch to atomic PWM API
+>   * Add new compatible string marvell,armada-370-xp-gpio
+>   * Update and merge documentation patch
+>   * Update MAINTAINERS]
+> Signed-off-by: Ralph Sennhauser <ralph.sennhauser@gmail.com>
+> Tested-by: Andrew Lunn <andrew@lunn.ch>
+> ---
+>  .../devicetree/bindings/gpio/gpio-mvebu.txt        |  32 ++
+>  MAINTAINERS                                        |   2 +
+>  drivers/gpio/gpio-mvebu.c                          | 324 +++++++++++++++=
++++++-
+>  3 files changed, 346 insertions(+), 12 deletions(-)
+>=20
+> diff --git a/Documentation/devicetree/bindings/gpio/gpio-mvebu.txt b/Docu=
+mentation/devicetree/bindings/gpio/gpio-mvebu.txt
+> index a6f3bec..fe49e9d 100644
+> --- a/Documentation/devicetree/bindings/gpio/gpio-mvebu.txt
+> +++ b/Documentation/devicetree/bindings/gpio/gpio-mvebu.txt
+> @@ -38,6 +38,24 @@ Required properties:
+>  - #gpio-cells: Should be two. The first cell is the pin number. The
+>    second cell is reserved for flags, unused at the moment.
+> =20
+> +Optional properties:
+> +
+> +In order to use the gpio lines in PWM mode, some additional optional
+> +properties are required. Only Armada 370 and XP support these properties.
+> +
+> +- compatible: Must contain "marvell,armada-370-xp-gpio"
+> +
+> +- reg: an additional register set is needed, for the GPIO Blink
+> +  Counter on/off registers.
+> +
+> +- reg-names: Must contain an entry "pwm" corresponding to the
+> +  additional register range needed for pwm operation.
+> +
+> +- #pwm-cells: Should be two. The first cell is the GPIO line number. The
+> +  second cell is the period in nanoseconds.
+> +
+> +- clocks: Must be a phandle to the clock for the gpio controller.
+> +
+>  Example:
+> =20
+>  		gpio0: gpio@d0018100 {
+> @@ -51,3 +69,17 @@ Example:
+>  			#interrupt-cells =3D <2>;
+>  			interrupts =3D <16>, <17>, <18>, <19>;
+>  		};
+> +
+> +		gpio1: gpio@18140 {
+> +			compatible =3D "marvell,armada-370-xp-gpio";
+> +			reg =3D <0x18140 0x40>, <0x181c8 0x08>;
+> +			reg-names =3D "gpio", "pwm";
+> +			ngpios =3D <17>;
+> +			gpio-controller;
+> +			#gpio-cells =3D <2>;
+> +			#pwm-cells =3D <2>;
+> +			interrupt-controller;
+> +			#interrupt-cells =3D <2>;
+> +			interrupts =3D <87>, <88>, <89>;
+> +			clocks =3D <&coreclk 0>;
+> +		};
 
-Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
----
- drivers/mtd/spi-nor/Kconfig         |   7 +
- drivers/mtd/spi-nor/Makefile        |   1 +
- drivers/mtd/spi-nor/stm32-quadspi.c | 693 ++++++++++++++++++++++++++++++++++++
- 3 files changed, 701 insertions(+)
- create mode 100644 drivers/mtd/spi-nor/stm32-quadspi.c
+This is going to need an Acked-by from one of the device tree
+maintainers. Rob and devicetree@vger.kernel.org are on Cc, but I suspect
+nobody might look for the binding change "hidden" in this patch.
 
-diff --git a/drivers/mtd/spi-nor/Kconfig b/drivers/mtd/spi-nor/Kconfig
-index 7252087..bfdfb1e 100644
---- a/drivers/mtd/spi-nor/Kconfig
-+++ b/drivers/mtd/spi-nor/Kconfig
-@@ -106,4 +106,11 @@ config SPI_INTEL_SPI_PLATFORM
- 	  To compile this driver as a module, choose M here: the module
- 	  will be called intel-spi-platform.
- 
-+config SPI_STM32_QUADSPI
-+	tristate "STM32 Quad SPI controller"
-+	depends on ARCH_STM32
-+	help
-+	  This enables support for the STM32 Quad SPI controller.
-+	  We only connect the NOR to this controller.
-+
- endif # MTD_SPI_NOR
-diff --git a/drivers/mtd/spi-nor/Makefile b/drivers/mtd/spi-nor/Makefile
-index 72238a7..285aab8 100644
---- a/drivers/mtd/spi-nor/Makefile
-+++ b/drivers/mtd/spi-nor/Makefile
-@@ -8,3 +8,4 @@ obj-$(CONFIG_MTD_MT81xx_NOR)    += mtk-quadspi.o
- obj-$(CONFIG_SPI_NXP_SPIFI)	+= nxp-spifi.o
- obj-$(CONFIG_SPI_INTEL_SPI)	+= intel-spi.o
- obj-$(CONFIG_SPI_INTEL_SPI_PLATFORM)	+= intel-spi-platform.o
-+obj-$(CONFIG_SPI_STM32_QUADSPI)	+= stm32-quadspi.o
-\ No newline at end of file
-diff --git a/drivers/mtd/spi-nor/stm32-quadspi.c b/drivers/mtd/spi-nor/stm32-quadspi.c
-new file mode 100644
-index 0000000..9e90dee
---- /dev/null
-+++ b/drivers/mtd/spi-nor/stm32-quadspi.c
-@@ -0,0 +1,693 @@
-+/*
-+ * stm32_quadspi.c
-+ *
-+ * Copyright (C) 2017, Ludovic Barre
-+ *
-+ * License terms: GNU General Public License (GPL), version 2
-+ */
-+#include <linux/clk.h>
-+#include <linux/errno.h>
-+#include <linux/io.h>
-+#include <linux/iopoll.h>
-+#include <linux/interrupt.h>
-+#include <linux/module.h>
-+#include <linux/mtd/mtd.h>
-+#include <linux/mtd/partitions.h>
-+#include <linux/mtd/spi-nor.h>
-+#include <linux/mutex.h>
-+#include <linux/of.h>
-+#include <linux/of_device.h>
-+#include <linux/platform_device.h>
-+#include <linux/reset.h>
-+
-+#define QUADSPI_CR		0x00
-+#define CR_EN			BIT(0)
-+#define CR_ABORT		BIT(1)
-+#define CR_DMAEN		BIT(2)
-+#define CR_TCEN			BIT(3)
-+#define CR_SSHIFT		BIT(4)
-+#define CR_DFM			BIT(6)
-+#define CR_FSEL			BIT(7)
-+#define CR_FTHRES_SHIFT		8
-+#define CR_FTHRES_MASK		GENMASK(12, 8)
-+#define CR_FTHRES(n)		(((n) << CR_FTHRES_SHIFT) & CR_FTHRES_MASK)
-+#define CR_TEIE			BIT(16)
-+#define CR_TCIE			BIT(17)
-+#define CR_FTIE			BIT(18)
-+#define CR_SMIE			BIT(19)
-+#define CR_TOIE			BIT(20)
-+#define CR_PRESC_SHIFT		24
-+#define CR_PRESC_MASK		GENMASK(31, 24)
-+#define CR_PRESC(n)		(((n) << CR_PRESC_SHIFT) & CR_PRESC_MASK)
-+
-+#define QUADSPI_DCR		0x04
-+#define DCR_CSHT_SHIFT		8
-+#define DCR_CSHT_MASK		GENMASK(10, 8)
-+#define DCR_CSHT(n)		(((n) << DCR_CSHT_SHIFT) & DCR_CSHT_MASK)
-+#define DCR_FSIZE_SHIFT		16
-+#define DCR_FSIZE_MASK		GENMASK(20, 16)
-+#define DCR_FSIZE(n)		(((n) << DCR_FSIZE_SHIFT) & DCR_FSIZE_MASK)
-+
-+#define QUADSPI_SR		0x08
-+#define SR_TEF			BIT(0)
-+#define SR_TCF			BIT(1)
-+#define SR_FTF			BIT(2)
-+#define SR_SMF			BIT(3)
-+#define SR_TOF			BIT(4)
-+#define SR_BUSY			BIT(5)
-+#define SR_FLEVEL_SHIFT		8
-+#define SR_FLEVEL_MASK		GENMASK(13, 8)
-+
-+#define QUADSPI_FCR		0x0c
-+#define FCR_CTCF		BIT(1)
-+
-+#define QUADSPI_DLR		0x10
-+
-+#define QUADSPI_CCR		0x14
-+#define CCR_INST_SHIFT		0
-+#define CCR_INST_MASK		GENMASK(7, 0)
-+#define CCR_INST(n)		(((n) << CCR_INST_SHIFT) & CCR_INST_MASK)
-+#define CCR_IMODE_NONE		(0 << 8)
-+#define CCR_IMODE_1		(1 << 8)
-+#define CCR_IMODE_2		(2 << 8)
-+#define CCR_IMODE_4		(3 << 8)
-+#define CCR_ADMODE_NONE		(0 << 10)
-+#define CCR_ADMODE_1		(1 << 10)
-+#define CCR_ADMODE_2		(2 << 10)
-+#define CCR_ADMODE_4		(3 << 10)
-+#define CCR_ADSIZE_SHIFT	12
-+#define CCR_ADSIZE_MASK		GENMASK(13, 12)
-+#define CCR_ADSIZE(n)		(((n) << CCR_ADSIZE_SHIFT) & CCR_ADSIZE_MASK)
-+#define CCR_ABMODE_NONE		(0 << 14)
-+#define CCR_ABMODE_1		(1 << 14)
-+#define CCR_ABMODE_2		(2 << 14)
-+#define CCR_ABMODE_4		(3 << 14)
-+#define CCR_ABSIZE_8		(0 << 16)
-+#define CCR_ABSIZE_16		(1 << 16)
-+#define CCR_ABSIZE_24		(2 << 16)
-+#define CCR_ABSIZE_32		(3 << 16)
-+#define CCR_DCYC_SHIFT		18
-+#define CCR_DCYC_MASK		GENMASK(22, 18)
-+#define CCR_DCYC(n)		(((n) << CCR_DCYC_SHIFT) & CCR_DCYC_MASK)
-+#define CCR_DMODE_NONE		(0 << 24)
-+#define CCR_DMODE_1		(1 << 24)
-+#define CCR_DMODE_2		(2 << 24)
-+#define CCR_DMODE_4		(3 << 24)
-+#define CCR_FMODE_INDW		(0 << 26)
-+#define CCR_FMODE_INDR		(1 << 26)
-+#define CCR_FMODE_APM		(2 << 26)
-+#define CCR_FMODE_MM		(3 << 26)
-+
-+#define QUADSPI_AR		0x18
-+#define QUADSPI_ABR		0x1c
-+#define QUADSPI_DR		0x20
-+#define QUADSPI_PSMKR		0x24
-+#define QUADSPI_PSMAR		0x28
-+#define QUADSPI_PIR		0x2c
-+#define QUADSPI_LPTR		0x30
-+#define LPTR_DFT_TIMEOUT	0x10
-+
-+#define FSIZE_VAL(size)		(__fls(size) - 1)
-+
-+#define STM32_MAX_MMAP_SZ	SZ_256M
-+#define STM32_MAX_NORCHIP	2
-+
-+#define STM32_QSPI_FIFO_TIMEOUT_US 30000
-+#define STM32_QSPI_BUSY_TIMEOUT_US 100000
-+
-+struct stm32_qspi_flash {
-+	struct spi_nor nor;
-+	u32 cs;
-+	u32 fsize;
-+	u32 presc;
-+	u32 read_mode;
-+	struct stm32_qspi *qspi;
-+};
-+
-+struct stm32_qspi {
-+	struct device *dev;
-+	void __iomem *io_base;
-+	void __iomem *mm_base;
-+	resource_size_t mm_size;
-+	u32 nor_num;
-+	struct clk *clk;
-+	u32 clk_rate;
-+	struct stm32_qspi_flash flash[STM32_MAX_NORCHIP];
-+	struct completion cmd_completion;
-+
-+	/*
-+	 * to protect device configuration, could be different between
-+	 * 2 flash access (bk1, bk2)
-+	 */
-+	struct mutex lock;
-+};
-+
-+struct stm32_qspi_cmd {
-+	u8 addr_width;
-+	u8 dummy;
-+	bool tx_data;
-+	u8 opcode;
-+	u32 framemode;
-+	u32 qspimode;
-+	u32 addr;
-+	size_t len;
-+	void *buf;
-+};
-+
-+static int stm32_qspi_wait_cmd(struct stm32_qspi *qspi)
-+{
-+	u32 cr;
-+	int err = 0;
-+
-+	if (readl_relaxed(qspi->io_base + QUADSPI_SR) & SR_TCF)
-+		return 0;
-+
-+	reinit_completion(&qspi->cmd_completion);
-+	cr = readl_relaxed(qspi->io_base + QUADSPI_CR);
-+	writel_relaxed(cr | CR_TCIE, qspi->io_base + QUADSPI_CR);
-+
-+	if (!wait_for_completion_interruptible_timeout(&qspi->cmd_completion,
-+						       msecs_to_jiffies(1000)))
-+		err = -ETIMEDOUT;
-+
-+	writel_relaxed(cr, qspi->io_base + QUADSPI_CR);
-+	return err;
-+}
-+
-+static int stm32_qspi_wait_nobusy(struct stm32_qspi *qspi)
-+{
-+	u32 sr;
-+
-+	return readl_relaxed_poll_timeout(qspi->io_base + QUADSPI_SR, sr,
-+					  !(sr & SR_BUSY), 10,
-+					  STM32_QSPI_BUSY_TIMEOUT_US);
-+}
-+
-+static void stm32_qspi_set_framemode(struct spi_nor *nor,
-+				     struct stm32_qspi_cmd *cmd, bool read)
-+{
-+	u32 dmode = CCR_DMODE_1;
-+
-+	cmd->framemode = CCR_IMODE_1;
-+
-+	if (read) {
-+		switch (nor->flash_read) {
-+		case SPI_NOR_NORMAL:
-+		case SPI_NOR_FAST:
-+			dmode = CCR_DMODE_1;
-+			break;
-+		case SPI_NOR_DUAL:
-+			dmode = CCR_DMODE_2;
-+			break;
-+		case SPI_NOR_QUAD:
-+			dmode = CCR_DMODE_4;
-+			break;
-+		}
-+	}
-+
-+	cmd->framemode |= cmd->tx_data ? dmode : 0;
-+	cmd->framemode |= cmd->addr_width ? CCR_ADMODE_1 : 0;
-+}
-+
-+static void stm32_qspi_read_fifo(u8 *val, void __iomem *addr)
-+{
-+	*val = readb_relaxed(addr);
-+}
-+
-+static void stm32_qspi_write_fifo(u8 *val, void __iomem *addr)
-+{
-+	writeb_relaxed(*val, addr);
-+}
-+
-+static int stm32_qspi_tx_poll(struct stm32_qspi *qspi,
-+			      const struct stm32_qspi_cmd *cmd)
-+{
-+	void (*tx_fifo)(u8 *, void __iomem *);
-+	u32 len = cmd->len, sr;
-+	u8 *buf = cmd->buf;
-+	int ret;
-+
-+	if (cmd->qspimode == CCR_FMODE_INDW)
-+		tx_fifo = stm32_qspi_write_fifo;
-+	else
-+		tx_fifo = stm32_qspi_read_fifo;
-+
-+	while (len--) {
-+		ret = readl_relaxed_poll_timeout(qspi->io_base + QUADSPI_SR,
-+						 sr, (sr & SR_FTF), 10,
-+						 STM32_QSPI_FIFO_TIMEOUT_US);
-+		if (ret) {
-+			dev_err(qspi->dev, "fifo timeout (stat:%#x)\n", sr);
-+			break;
-+		}
-+		tx_fifo(buf++, qspi->io_base + QUADSPI_DR);
-+	}
-+
-+	return ret;
-+}
-+
-+static int stm32_qspi_tx_mm(struct stm32_qspi *qspi,
-+			    const struct stm32_qspi_cmd *cmd)
-+{
-+	memcpy_fromio(cmd->buf, qspi->mm_base + cmd->addr, cmd->len);
-+	return 0;
-+}
-+
-+static int stm32_qspi_tx(struct stm32_qspi *qspi,
-+			 const struct stm32_qspi_cmd *cmd)
-+{
-+	if (!cmd->tx_data)
-+		return 0;
-+
-+	if (cmd->qspimode == CCR_FMODE_MM)
-+		return stm32_qspi_tx_mm(qspi, cmd);
-+
-+	return stm32_qspi_tx_poll(qspi, cmd);
-+}
-+
-+static int stm32_qspi_send(struct stm32_qspi_flash *flash,
-+			   const struct stm32_qspi_cmd *cmd)
-+{
-+	struct stm32_qspi *qspi = flash->qspi;
-+	u32 ccr, dcr, cr;
-+	int err;
-+
-+	err = stm32_qspi_wait_nobusy(qspi);
-+	if (err)
-+		goto abort;
-+
-+	dcr = readl_relaxed(qspi->io_base + QUADSPI_DCR) & ~DCR_FSIZE_MASK;
-+	dcr |= DCR_FSIZE(flash->fsize);
-+	writel_relaxed(dcr, qspi->io_base + QUADSPI_DCR);
-+
-+	cr = readl_relaxed(qspi->io_base + QUADSPI_CR);
-+	cr &= ~CR_PRESC_MASK & ~CR_FSEL;
-+	cr |= CR_PRESC(flash->presc);
-+	cr |= flash->cs ? CR_FSEL : 0;
-+	writel_relaxed(cr, qspi->io_base + QUADSPI_CR);
-+
-+	if (cmd->tx_data)
-+		writel_relaxed(cmd->len - 1, qspi->io_base + QUADSPI_DLR);
-+
-+	ccr = cmd->framemode | cmd->qspimode;
-+
-+	if (cmd->dummy)
-+		ccr |= CCR_DCYC(cmd->dummy);
-+
-+	if (cmd->addr_width)
-+		ccr |= CCR_ADSIZE(cmd->addr_width - 1);
-+
-+	ccr |= CCR_INST(cmd->opcode);
-+	writel_relaxed(ccr, qspi->io_base + QUADSPI_CCR);
-+
-+	if (cmd->addr_width && cmd->qspimode != CCR_FMODE_MM)
-+		writel_relaxed(cmd->addr, qspi->io_base + QUADSPI_AR);
-+
-+	err = stm32_qspi_tx(qspi, cmd);
-+	if (err)
-+		goto abort;
-+
-+	if (cmd->qspimode != CCR_FMODE_MM) {
-+		err = stm32_qspi_wait_cmd(qspi);
-+		if (err)
-+			goto abort;
-+		writel_relaxed(FCR_CTCF, qspi->io_base + QUADSPI_FCR);
-+	}
-+
-+	return err;
-+
-+abort:
-+	cr = readl_relaxed(qspi->io_base + QUADSPI_CR) | CR_ABORT;
-+	writel_relaxed(cr, qspi->io_base + QUADSPI_CR);
-+
-+	dev_err(qspi->dev, "%s abort err:%d\n", __func__, err);
-+	return err;
-+}
-+
-+static int stm32_qspi_read_reg(struct spi_nor *nor,
-+			       u8 opcode, u8 *buf, int len)
-+{
-+	struct stm32_qspi_flash *flash = nor->priv;
-+	struct device *dev = flash->qspi->dev;
-+	struct stm32_qspi_cmd cmd;
-+
-+	dev_dbg(dev, "read_reg: cmd:%#.2x buf:%p len:%#x\n", opcode, buf, len);
-+
-+	memset(&cmd, 0, sizeof(cmd));
-+	cmd.opcode = opcode;
-+	cmd.tx_data = true;
-+	cmd.len = len;
-+	cmd.buf = buf;
-+	cmd.qspimode = CCR_FMODE_INDR;
-+
-+	stm32_qspi_set_framemode(nor, &cmd, false);
-+
-+	return stm32_qspi_send(flash, &cmd);
-+}
-+
-+static int stm32_qspi_write_reg(struct spi_nor *nor, u8 opcode,
-+				u8 *buf, int len)
-+{
-+	struct stm32_qspi_flash *flash = nor->priv;
-+	struct device *dev = flash->qspi->dev;
-+	struct stm32_qspi_cmd cmd;
-+
-+	dev_dbg(dev, "write_reg: cmd:%#.2x buf:%p len:%#x\n", opcode, buf, len);
-+
-+	memset(&cmd, 0, sizeof(cmd));
-+	cmd.opcode = opcode;
-+	cmd.tx_data = !!(buf && len > 0);
-+	cmd.len = len;
-+	cmd.buf = buf;
-+	cmd.qspimode = CCR_FMODE_INDW;
-+
-+	stm32_qspi_set_framemode(nor, &cmd, false);
-+
-+	return stm32_qspi_send(flash, &cmd);
-+}
-+
-+static ssize_t stm32_qspi_read(struct spi_nor *nor, loff_t from, size_t len,
-+			       u_char *buf)
-+{
-+	struct stm32_qspi_flash *flash = nor->priv;
-+	struct stm32_qspi *qspi = flash->qspi;
-+	struct stm32_qspi_cmd cmd;
-+	int err;
-+
-+	dev_dbg(qspi->dev, "read(%#.2x): buf:%p from:%#.8x len:%#x\n",
-+		nor->read_opcode, buf, (u32)from, len);
-+
-+	memset(&cmd, 0, sizeof(cmd));
-+	cmd.opcode = nor->read_opcode;
-+	cmd.addr_width = nor->addr_width;
-+	cmd.addr = (u32)from;
-+	cmd.tx_data = true;
-+	cmd.dummy = nor->read_dummy;
-+	cmd.len = len;
-+	cmd.buf = buf;
-+	cmd.qspimode = flash->read_mode;
-+
-+	stm32_qspi_set_framemode(nor, &cmd, true);
-+	err = stm32_qspi_send(flash, &cmd);
-+
-+	return err ? err : len;
-+}
-+
-+static ssize_t stm32_qspi_write(struct spi_nor *nor, loff_t to, size_t len,
-+				const u_char *buf)
-+{
-+	struct stm32_qspi_flash *flash = nor->priv;
-+	struct device *dev = flash->qspi->dev;
-+	struct stm32_qspi_cmd cmd;
-+	int err;
-+
-+	dev_dbg(dev, "write(%#.2x): buf:%p to:%#.8x len:%#x\n",
-+		nor->program_opcode, buf, (u32)to, len);
-+
-+	memset(&cmd, 0, sizeof(cmd));
-+	cmd.opcode = nor->program_opcode;
-+	cmd.addr_width = nor->addr_width;
-+	cmd.addr = (u32)to;
-+	cmd.tx_data = true;
-+	cmd.len = len;
-+	cmd.buf = (void *)buf;
-+	cmd.qspimode = CCR_FMODE_INDW;
-+
-+	stm32_qspi_set_framemode(nor, &cmd, false);
-+	err = stm32_qspi_send(flash, &cmd);
-+
-+	return err ? err : len;
-+}
-+
-+static int stm32_qspi_erase(struct spi_nor *nor, loff_t offs)
-+{
-+	struct stm32_qspi_flash *flash = nor->priv;
-+	struct device *dev = flash->qspi->dev;
-+	struct stm32_qspi_cmd cmd;
-+
-+	dev_dbg(dev, "erase(%#.2x):offs:%#x\n", nor->erase_opcode, (u32)offs);
-+
-+	memset(&cmd, 0, sizeof(cmd));
-+	cmd.opcode = nor->erase_opcode;
-+	cmd.addr_width = nor->addr_width;
-+	cmd.addr = (u32)offs;
-+	cmd.qspimode = CCR_FMODE_INDW;
-+
-+	stm32_qspi_set_framemode(nor, &cmd, false);
-+
-+	return stm32_qspi_send(flash, &cmd);
-+}
-+
-+static irqreturn_t stm32_qspi_irq(int irq, void *dev_id)
-+{
-+	struct stm32_qspi *qspi = (struct stm32_qspi *)dev_id;
-+	u32 cr, sr, fcr = 0;
-+
-+	cr = readl_relaxed(qspi->io_base + QUADSPI_CR);
-+	sr = readl_relaxed(qspi->io_base + QUADSPI_SR);
-+
-+	if ((cr & CR_TCIE) && (sr & SR_TCF)) {
-+		/* tx complete */
-+		fcr |= FCR_CTCF;
-+		complete(&qspi->cmd_completion);
-+	} else {
-+		dev_info_ratelimited(qspi->dev, "spurious interrupt\n");
-+	}
-+
-+	writel_relaxed(fcr, qspi->io_base + QUADSPI_FCR);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static int stm32_qspi_prep(struct spi_nor *nor, enum spi_nor_ops ops)
-+{
-+	struct stm32_qspi_flash *flash = nor->priv;
-+	struct stm32_qspi *qspi = flash->qspi;
-+
-+	mutex_lock(&qspi->lock);
-+	return 0;
-+}
-+
-+static void stm32_qspi_unprep(struct spi_nor *nor, enum spi_nor_ops ops)
-+{
-+	struct stm32_qspi_flash *flash = nor->priv;
-+	struct stm32_qspi *qspi = flash->qspi;
-+
-+	mutex_unlock(&qspi->lock);
-+}
-+
-+static int stm32_qspi_flash_setup(struct stm32_qspi *qspi,
-+				  struct device_node *np)
-+{
-+	u32 width, flash_read, presc, cs_num, max_rate = 0;
-+	struct stm32_qspi_flash *flash;
-+	struct mtd_info *mtd;
-+	int ret;
-+
-+	of_property_read_u32(np, "reg", &cs_num);
-+	if (cs_num >= STM32_MAX_NORCHIP)
-+		return -EINVAL;
-+
-+	of_property_read_u32(np, "spi-max-frequency", &max_rate);
-+	if (!max_rate)
-+		return -EINVAL;
-+
-+	presc = DIV_ROUND_UP(qspi->clk_rate, max_rate) - 1;
-+
-+	if (of_property_read_u32(np, "spi-rx-bus-width", &width))
-+		width = 1;
-+
-+	if (width == 4)
-+		flash_read = SPI_NOR_QUAD;
-+	else if (width == 2)
-+		flash_read = SPI_NOR_DUAL;
-+	else if (width == 1)
-+		flash_read = SPI_NOR_NORMAL;
-+	else
-+		return -EINVAL;
-+
-+	flash = &qspi->flash[cs_num];
-+	flash->qspi = qspi;
-+	flash->cs = cs_num;
-+	flash->presc = presc;
-+
-+	flash->nor.dev = qspi->dev;
-+	spi_nor_set_flash_node(&flash->nor, np);
-+	flash->nor.priv = flash;
-+	mtd = &flash->nor.mtd;
-+	mtd->priv = &flash->nor;
-+
-+	flash->nor.read = stm32_qspi_read;
-+	flash->nor.write = stm32_qspi_write;
-+	flash->nor.erase = stm32_qspi_erase;
-+	flash->nor.read_reg = stm32_qspi_read_reg;
-+	flash->nor.write_reg = stm32_qspi_write_reg;
-+	flash->nor.prepare = stm32_qspi_prep;
-+	flash->nor.unprepare = stm32_qspi_unprep;
-+
-+	writel_relaxed(LPTR_DFT_TIMEOUT, qspi->io_base + QUADSPI_LPTR);
-+
-+	writel_relaxed(CR_PRESC(presc) | CR_FTHRES(3) | CR_TCEN | CR_SSHIFT
-+		       | CR_EN, qspi->io_base + QUADSPI_CR);
-+
-+	/*
-+	 * in stm32 qspi controller, QUADSPI_DCR register has a fsize field
-+	 * which define the size of nor flash.
-+	 * if fsize is NULL, the controller can't sent spi-nor command.
-+	 * set a temporary value just to discover the nor flash with
-+	 * "spi_nor_scan". After, the right value (mtd->size) can be set.
-+	 */
-+	flash->fsize = FSIZE_VAL(SZ_1K);
-+
-+	ret = spi_nor_scan(&flash->nor, NULL, flash_read);
-+	if (ret) {
-+		dev_err(qspi->dev, "device scan failed\n");
-+		return ret;
-+	}
-+
-+	flash->fsize = FSIZE_VAL(mtd->size);
-+
-+	flash->read_mode = CCR_FMODE_MM;
-+	if (mtd->size > qspi->mm_size)
-+		flash->read_mode = CCR_FMODE_INDR;
-+
-+	writel_relaxed(DCR_CSHT(1), qspi->io_base + QUADSPI_DCR);
-+
-+	ret = mtd_device_register(mtd, NULL, 0);
-+	if (ret) {
-+		dev_err(qspi->dev, "mtd device parse failed\n");
-+		return ret;
-+	}
-+
-+	dev_dbg(qspi->dev, "read mm:%s cs:%d bus:%d\n",
-+		flash->read_mode == CCR_FMODE_MM ? "yes" : "no", cs_num, width);
-+
-+	return 0;
-+}
-+
-+static void stm32_qspi_mtd_free(struct stm32_qspi *qspi)
-+{
-+	int i;
-+
-+	for (i = 0; i < STM32_MAX_NORCHIP; i++) {
-+		if (qspi->flash[i].qspi)
-+			mtd_device_unregister(&qspi->flash[i].nor.mtd);
-+	}
-+}
-+
-+static int stm32_qspi_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct device_node *flash_np;
-+	struct reset_control *rstc;
-+	struct stm32_qspi *qspi;
-+	struct resource *res;
-+	int ret, irq;
-+
-+	qspi = devm_kzalloc(dev, sizeof(*qspi), GFP_KERNEL);
-+	if (!qspi)
-+		return -ENOMEM;
-+
-+	qspi->nor_num = of_get_child_count(dev->of_node);
-+	if (!qspi->nor_num || qspi->nor_num > STM32_MAX_NORCHIP)
-+		return -ENODEV;
-+
-+	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "qspi");
-+	qspi->io_base = devm_ioremap_resource(dev, res);
-+	if (IS_ERR(qspi->io_base))
-+		return PTR_ERR(qspi->io_base);
-+
-+	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "qspi_mm");
-+	qspi->mm_base = devm_ioremap_resource(dev, res);
-+	if (IS_ERR(qspi->mm_base))
-+		return PTR_ERR(qspi->mm_base);
-+
-+	qspi->mm_size = resource_size(res);
-+
-+	irq = platform_get_irq(pdev, 0);
-+	ret = devm_request_irq(dev, irq, stm32_qspi_irq, 0,
-+			       dev_name(dev), qspi);
-+	if (ret) {
-+		dev_err(dev, "failed to request irq\n");
-+		return ret;
-+	}
-+
-+	init_completion(&qspi->cmd_completion);
-+
-+	qspi->clk = devm_clk_get(dev, NULL);
-+	if (IS_ERR(qspi->clk))
-+		return PTR_ERR(qspi->clk);
-+
-+	qspi->clk_rate = clk_get_rate(qspi->clk);
-+	if (!qspi->clk_rate)
-+		return -EINVAL;
-+
-+	ret = clk_prepare_enable(qspi->clk);
-+	if (ret) {
-+		dev_err(dev, "can not enable the clock\n");
-+		return ret;
-+	}
-+
-+	rstc = devm_reset_control_get(dev, NULL);
-+	if (!IS_ERR(rstc)) {
-+		reset_control_assert(rstc);
-+		udelay(2);
-+		reset_control_deassert(rstc);
-+	}
-+
-+	qspi->dev = dev;
-+	platform_set_drvdata(pdev, qspi);
-+	mutex_init(&qspi->lock);
-+
-+	for_each_available_child_of_node(dev->of_node, flash_np) {
-+		ret = stm32_qspi_flash_setup(qspi, flash_np);
-+		if (ret) {
-+			dev_err(dev, "unable to setup flash chip\n");
-+			goto err_flash;
-+		}
-+	}
-+
-+	return 0;
-+
-+err_flash:
-+	mutex_destroy(&qspi->lock);
-+	stm32_qspi_mtd_free(qspi);
-+
-+	clk_disable_unprepare(qspi->clk);
-+	return ret;
-+}
-+
-+static int stm32_qspi_remove(struct platform_device *pdev)
-+{
-+	struct stm32_qspi *qspi = platform_get_drvdata(pdev);
-+
-+	/* disable qspi */
-+	writel_relaxed(0, qspi->io_base + QUADSPI_CR);
-+
-+	stm32_qspi_mtd_free(qspi);
-+	mutex_destroy(&qspi->lock);
-+
-+	clk_disable_unprepare(qspi->clk);
-+	return 0;
-+}
-+
-+static const struct of_device_id stm32_qspi_match[] = {
-+	{.compatible = "st,stm32f469-qspi"},
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, stm32_qspi_match);
-+
-+static struct platform_driver stm32_qspi_driver = {
-+	.probe	= stm32_qspi_probe,
-+	.remove	= stm32_qspi_remove,
-+	.driver	= {
-+		.name = "stm32-quadspi",
-+		.of_match_table = stm32_qspi_match,
-+	},
-+};
-+module_platform_driver(stm32_qspi_driver);
-+
-+MODULE_ALIAS("platform:" DRIVER_NAME);
-+MODULE_AUTHOR("Ludovic Barre <ludovic.barre@st.com>");
-+MODULE_DESCRIPTION("STMicroelectronics STM32 quad spi driver");
-+MODULE_LICENSE("GPL v2");
--- 
-2.7.4
+Maybe best to split this off into a separate patch, or explicitly ping
+Rob to look at this patch.
+
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 58b3a22..19382f5 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -10295,6 +10295,8 @@ F:	include/linux/pwm.h
+>  F:	drivers/pwm/
+>  F:	drivers/video/backlight/pwm_bl.c
+>  F:	include/linux/pwm_backlight.h
+> +F:	drivers/gpio/gpio-mvebu.c
+> +F:	Documentation/devicetree/bindings/gpio/gpio-mvebu.txt
+> =20
+>  PXA2xx/PXA3xx SUPPORT
+>  M:	Daniel Mack <daniel@zonque.org>
+> diff --git a/drivers/gpio/gpio-mvebu.c b/drivers/gpio/gpio-mvebu.c
+> index fae4db6..e310951 100644
+> --- a/drivers/gpio/gpio-mvebu.c
+> +++ b/drivers/gpio/gpio-mvebu.c
+> @@ -42,22 +42,34 @@
+>  #include <linux/io.h>
+>  #include <linux/of_irq.h>
+>  #include <linux/of_device.h>
+> +#include <linux/pwm.h>
+>  #include <linux/clk.h>
+>  #include <linux/pinctrl/consumer.h>
+>  #include <linux/irqchip/chained_irq.h>
+> +#include <linux/platform_device.h>
+>  #include <linux/bitops.h>
+> =20
+> +#include "gpiolib.h"
+> +
+>  /*
+>   * GPIO unit register offsets.
+>   */
+> -#define GPIO_OUT_OFF		0x0000
+> -#define GPIO_IO_CONF_OFF	0x0004
+> -#define GPIO_BLINK_EN_OFF	0x0008
+> -#define GPIO_IN_POL_OFF		0x000c
+> -#define GPIO_DATA_IN_OFF	0x0010
+> -#define GPIO_EDGE_CAUSE_OFF	0x0014
+> -#define GPIO_EDGE_MASK_OFF	0x0018
+> -#define GPIO_LEVEL_MASK_OFF	0x001c
+> +#define GPIO_OUT_OFF			0x0000
+> +#define GPIO_IO_CONF_OFF		0x0004
+> +#define GPIO_BLINK_EN_OFF		0x0008
+> +#define GPIO_IN_POL_OFF			0x000c
+> +#define GPIO_DATA_IN_OFF		0x0010
+> +#define GPIO_EDGE_CAUSE_OFF		0x0014
+> +#define GPIO_EDGE_MASK_OFF		0x0018
+> +#define GPIO_LEVEL_MASK_OFF		0x001c
+> +#define GPIO_BLINK_CNT_SELECT_OFF	0x0020
+> +
+> +/*
+> + * PWM register offsets.
+> + */
+> +#define PWM_BLINK_ON_DURATION_OFF	0x0
+> +#define PWM_BLINK_OFF_DURATION_OFF	0x4
+> +
+> =20
+>  /* The MV78200 has per-CPU registers for edge mask and level mask */
+>  #define GPIO_EDGE_MASK_MV78200_OFF(cpu)	  ((cpu) ? 0x30 : 0x18)
+> @@ -78,6 +90,20 @@
+> =20
+>  #define MVEBU_MAX_GPIO_PER_BANK		32
+> =20
+> +struct mvebu_pwm {
+> +	void __iomem		*membase;
+> +	unsigned long		 clk_rate;
+> +	bool			 used;
+
+I think you could've probably made this a little simpler by making bool
+used into struct gpio_desc *gpio; and reference that rather than having
+to convert with gpio_to_desc(). More on why I think that's important
+below.
+
+> +	struct pwm_chip		 chip;
+> +	spinlock_t		 lock;
+> +	struct mvebu_gpio_chip	*mvchip;
+> +
+> +	/* Used to preserve GPIO/PWM registers across suspend/resume */
+> +	u32			 blink_select;
+> +	u32			 blink_on_duration;
+> +	u32			 blink_off_duration;
+> +};
+> +
+>  struct mvebu_gpio_chip {
+>  	struct gpio_chip   chip;
+>  	spinlock_t	   lock;
+> @@ -87,6 +113,10 @@ struct mvebu_gpio_chip {
+>  	struct irq_domain *domain;
+>  	int		   soc_variant;
+> =20
+> +	/* Used for PWM support */
+> +	struct clk	  *clk;
+> +	struct mvebu_pwm  *mvpwm;
+> +
+>  	/* Used to preserve GPIO registers across suspend/resume */
+>  	u32		   out_reg;
+>  	u32		   io_conf_reg;
+> @@ -110,6 +140,12 @@ static void __iomem *mvebu_gpioreg_blink(struct mveb=
+u_gpio_chip *mvchip)
+>  	return mvchip->membase + GPIO_BLINK_EN_OFF;
+>  }
+> =20
+> +static void __iomem *mvebu_gpioreg_blink_counter_select(struct mvebu_gpi=
+o_chip
+> +							*mvchip)
+> +{
+> +	return mvchip->membase + GPIO_BLINK_CNT_SELECT_OFF;
+> +}
+> +
+>  static void __iomem *mvebu_gpioreg_io_conf(struct mvebu_gpio_chip *mvchi=
+p)
+>  {
+>  	return mvchip->membase + GPIO_IO_CONF_OFF;
+> @@ -181,6 +217,20 @@ static void __iomem *mvebu_gpioreg_level_mask(struct=
+ mvebu_gpio_chip *mvchip)
+>  }
+> =20
+>  /*
+> + * Functions returning addresses of individual registers for a given
+> + * PWM controller.
+> + */
+> +static void __iomem *mvebu_pwmreg_blink_on_duration(struct mvebu_pwm *mv=
+pwm)
+> +{
+> +	return mvpwm->membase + PWM_BLINK_ON_DURATION_OFF;
+> +}
+> +
+> +static void __iomem *mvebu_pwmreg_blink_off_duration(struct mvebu_pwm *m=
+vpwm)
+> +{
+> +	return mvpwm->membase + PWM_BLINK_OFF_DURATION_OFF;
+> +}
+> +
+> +/*
+>   * Functions implementing the gpio_chip methods
+>   */
+>  static void mvebu_gpio_set(struct gpio_chip *chip, unsigned int pin, int=
+ value)
+> @@ -484,6 +534,243 @@ static void mvebu_gpio_irq_handler(struct irq_desc =
+*desc)
+>  	chained_irq_exit(chip, desc);
+>  }
+> =20
+> +/*
+> + * Functions implementing the pwm_chip methods
+> + */
+> +static struct mvebu_pwm *to_mvebu_pwm(struct pwm_chip *chip)
+> +{
+> +	return container_of(chip, struct mvebu_pwm, chip);
+> +}
+> +
+> +static int mvebu_pwm_request(struct pwm_chip *chip, struct pwm_device *p=
+wm)
+> +{
+> +	struct mvebu_pwm *mvpwm =3D to_mvebu_pwm(chip);
+> +	struct gpio_desc *desc =3D gpio_to_desc(pwm->pwm);
+
+This assumes that the GPIO chip base and the PWM chip base are the same.
+You make sure of that by setting the PWM chip base to be the same as the
+GPIO chip base, which is the easy way out. It's also somewhat brittle
+because some other PWM chip may have occupied the region that you want
+to use. It's fairly unlikely, but I think you can very easily side-step
+any issues by simply doing:
+
+	struct mvebu_gpio_chip *mvchip =3D mvpwm->mvchip;
+
+	desc =3D gpio_to_desc(mvchip->chip.base + pwm->hwpwm);
+
+Now that's somewhat complicated, but you only have to do it once if you
+store the desc in mvpwm->gpio as pointed out above.
+
+> +	unsigned long flags;
+> +	int ret =3D 0;
+> +
+> +	spin_lock_irqsave(&mvpwm->lock, flags);
+> +	if (mvpwm->used) {
+> +		ret =3D -EBUSY;
+
+Then you can also easily use mvpwm->gpio to check for -EBUSY here.
+
+> +	} else {
+> +		if (!desc) {
+> +			ret =3D -ENODEV;
+> +			goto out;
+> +		}
+> +		ret =3D gpiod_request(desc, "mvebu-pwm");
+> +		if (ret)
+> +			goto out;
+> +
+> +		ret =3D gpiod_direction_output(desc, 0);
+> +		if (ret) {
+> +			gpiod_free(desc);
+> +			goto out;
+> +		}
+> +
+> +		mvpwm->used =3D true;
+> +	}
+> +
+> +out:
+> +	spin_unlock_irqrestore(&mvpwm->lock, flags);
+> +	return ret;
+> +}
+> +
+> +static void mvebu_pwm_free(struct pwm_chip *chip, struct pwm_device *pwm)
+> +{
+> +	struct mvebu_pwm *mvpwm =3D to_mvebu_pwm(chip);
+> +	struct gpio_desc *desc =3D gpio_to_desc(pwm->pwm);
+> +	unsigned long flags;
+> +
+> +	spin_lock_irqsave(&mvpwm->lock, flags);
+> +	gpiod_free(desc);
+> +	mvpwm->used =3D false;
+> +	spin_unlock_irqrestore(&mvpwm->lock, flags);
+> +}
+> +
+> +static void mvebu_pwm_get_state(struct pwm_chip *chip,
+> +				struct pwm_device *pwm,
+> +				struct pwm_state *state) {
+> +
+> +	struct mvebu_pwm *mvpwm =3D to_mvebu_pwm(chip);
+> +	struct mvebu_gpio_chip *mvchip =3D mvpwm->mvchip;
+> +	unsigned long long val;
+> +	unsigned long flags;
+> +	u32 u;
+> +
+> +	spin_lock_irqsave(&mvpwm->lock, flags);
+> +
+> +	val =3D (unsigned long long)
+> +		readl_relaxed(mvebu_pwmreg_blink_on_duration);
+> +	val *=3D NSEC_PER_SEC;
+> +	do_div(val, mvpwm->clk_rate);
+> +	if (val > UINT_MAX)
+> +		state->duty_cycle =3D UINT_MAX;
+> +	else if (val)
+> +		state->duty_cycle =3D val;
+> +	else
+> +		state->duty_cycle =3D 1;
+> +
+> +	val =3D (unsigned long long)
+> +		readl_relaxed(mvebu_pwmreg_blink_off_duration);
+> +	val *=3D NSEC_PER_SEC;
+> +	do_div(val, mvpwm->clk_rate);
+> +	if (val < state->duty_cycle) {
+> +		state->period =3D 1;
+> +	} else {
+> +		val -=3D state->duty_cycle;
+> +		if (val > UINT_MAX)
+> +			state->period =3D UINT_MAX;
+> +		else if (val)
+> +			state->period =3D val;
+> +		else
+> +			state->period =3D 1;
+> +	}
+> +
+> +	u =3D readl_relaxed(mvebu_gpioreg_blink(mvchip));
+> +	if (u)
+> +		state->enabled =3D true;
+> +	else
+> +		state->enabled =3D false;
+> +
+> +	spin_unlock_irqrestore(&mvpwm->lock, flags);
+> +}
+> +
+> +static int mvebu_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+> +			   struct pwm_state *state)
+> +{
+> +	struct mvebu_pwm *mvpwm =3D to_mvebu_pwm(chip);
+> +	struct mvebu_gpio_chip *mvchip =3D mvpwm->mvchip;
+> +	unsigned long long val;
+> +	unsigned long flags;
+> +	unsigned int on, off;
+> +
+> +	val =3D (unsigned long long) mvpwm->clk_rate * state->duty_cycle;
+> +	do_div(val, NSEC_PER_SEC);
+> +	if (val > UINT_MAX)
+> +		return -EINVAL;
+> +	if (val)
+> +		on =3D val;
+> +	else
+> +		on =3D 1;
+> +
+> +	val =3D (unsigned long long) mvpwm->clk_rate *
+> +		(state->period - state->duty_cycle);
+> +	do_div(val, NSEC_PER_SEC);
+> +	if (val > UINT_MAX)
+> +		return -EINVAL;
+> +	if (val)
+> +		off =3D val;
+> +	else
+> +		off =3D 1;
+> +
+> +	spin_lock_irqsave(&mvpwm->lock, flags);
+> +
+> +	writel_relaxed(on, mvebu_pwmreg_blink_on_duration(mvpwm));
+> +	writel_relaxed(off, mvebu_pwmreg_blink_off_duration(mvpwm));
+> +	if (state->enabled)
+> +		mvebu_gpio_blink(&mvchip->chip, pwm->hwpwm, 1);
+> +	else
+> +		mvebu_gpio_blink(&mvchip->chip, pwm->hwpwm, 0);
+> +
+> +	spin_unlock_irqrestore(&mvpwm->lock, flags);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct pwm_ops mvebu_pwm_ops =3D {
+> +	.request =3D mvebu_pwm_request,
+> +	.free =3D mvebu_pwm_free,
+> +	.get_state =3D mvebu_pwm_get_state,
+> +	.apply =3D mvebu_pwm_apply,
+> +	.owner =3D THIS_MODULE,
+> +};
+> +
+> +static void __maybe_unused mvebu_pwm_suspend(struct mvebu_gpio_chip *mvc=
+hip)
+> +{
+> +	struct mvebu_pwm *mvpwm =3D mvchip->mvpwm;
+> +
+> +	mvpwm->blink_select =3D
+> +		readl_relaxed(mvebu_gpioreg_blink_counter_select(mvchip));
+> +	mvpwm->blink_on_duration =3D
+> +		readl_relaxed(mvebu_pwmreg_blink_on_duration(mvpwm));
+> +	mvpwm->blink_off_duration =3D
+> +		readl_relaxed(mvebu_pwmreg_blink_off_duration(mvpwm));
+> +}
+> +
+> +static void __maybe_unused mvebu_pwm_resume(struct mvebu_gpio_chip *mvch=
+ip)
+> +{
+> +	struct mvebu_pwm *mvpwm =3D mvchip->mvpwm;
+> +
+> +	writel_relaxed(mvpwm->blink_select,
+> +		       mvebu_gpioreg_blink_counter_select(mvchip));
+> +	writel_relaxed(mvpwm->blink_on_duration,
+> +		       mvebu_pwmreg_blink_on_duration(mvpwm));
+> +	writel_relaxed(mvpwm->blink_off_duration,
+> +		       mvebu_pwmreg_blink_off_duration(mvpwm));
+> +}
+> +
+> +static int mvebu_pwm_probe(struct platform_device *pdev,
+> +			   struct mvebu_gpio_chip *mvchip,
+> +			   int id)
+> +{
+> +	struct device *dev =3D &pdev->dev;
+> +	struct mvebu_pwm *mvpwm;
+> +	struct resource *res;
+> +
+> +	if (!of_device_is_compatible(mvchip->chip.of_node,
+> +				     "marvell,armada-370-xp-gpio"))
+> +		return 0;
+> +	/*
+> +	 * There are only two sets of PWM configuration registers for
+> +	 * all the GPIO lines on those SoCs which this driver reserves
+> +	 * for the first two GPIO chips. So if the resource is missing
+> +	 * we can't treat it as an error.
+> +	 */
+> +	res =3D platform_get_resource_byname(pdev, IORESOURCE_MEM, "pwm");
+> +	if (!res)
+> +		return 0;
+> +
+> +	/*
+> +	 * Use set A for lines of GPIO chip with id 0, B for GPIO chip
+> +	 * with id 1. Don't allow further GPIO chips to be used for PWM.
+> +	 */
+> +	if (id =3D=3D 0)
+> +		writel_relaxed(0, mvebu_gpioreg_blink_counter_select(mvchip));
+> +	else if (id =3D=3D 1)
+> +		writel_relaxed(U32_MAX,
+> +			       mvebu_gpioreg_blink_counter_select(mvchip));
+
+You could've just set a variable and then call writel_relaxed() after
+the return -EINVAL below.
+
+> +	else
+> +		return -EINVAL;
+> +
+> +	mvpwm =3D devm_kzalloc(dev, sizeof(struct mvebu_pwm), GFP_KERNEL);
+> +	if (!mvpwm)
+> +		return -ENOMEM;
+> +	mvchip->mvpwm =3D mvpwm;
+> +	mvpwm->mvchip =3D mvchip;
+> +
+> +	mvpwm->membase =3D devm_ioremap_resource(dev, res);
+> +	if (IS_ERR(mvpwm->membase))
+> +		return PTR_ERR(mvpwm->membase);
+> +
+> +	if (IS_ERR(mvchip->clk))
+> +		return PTR_ERR(mvchip->clk);
+
+Maybe do this much earlier to avoid all the unnecessary register
+accesses, allocations and mappings?
+
+> +
+> +	mvpwm->clk_rate =3D clk_get_rate(mvchip->clk);
+> +	if (!mvpwm->clk_rate) {
+> +		dev_err(dev, "failed to get clock rate\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	mvpwm->chip.dev =3D dev;
+> +	mvpwm->chip.ops =3D &mvebu_pwm_ops;
+> +	mvpwm->chip.base =3D mvchip->chip.base;
+> +	mvpwm->chip.npwm =3D mvchip->chip.ngpio;
+
+I still would've done this differently. If you use this with a PWM user
+you have to hook it up via DT anyway, so it doesn't matter whether you
+specify the PWM index or the GPIO via some other property. The _only_
+use-case where this might actually be an advantage is if you request a
+PWM via the sysfs interface.
+
+> +	spin_lock_init(&mvpwm->lock);
+> +
+> +	return pwmchip_add(&mvpwm->chip);
+> +}
+> +
+>  #ifdef CONFIG_DEBUG_FS
+>  #include <linux/seq_file.h>
+> =20
+> @@ -555,6 +842,10 @@ static const struct of_device_id mvebu_gpio_of_match=
+[] =3D {
+>  		.data	    =3D (void *) MVEBU_GPIO_SOC_VARIANT_ARMADAXP,
+>  	},
+>  	{
+> +		.compatible =3D "marvell,armada-370-xp-gpio",
+> +		.data	    =3D (void *) MVEBU_GPIO_SOC_VARIANT_ORION,
+> +	},
+> +	{
+>  		/* sentinel */
+>  	},
+>  };
+> @@ -600,6 +891,9 @@ static int mvebu_gpio_suspend(struct platform_device =
+*pdev, pm_message_t state)
+>  		BUG();
+>  	}
+> =20
+> +	if (IS_ENABLED(CONFIG_PWM))
+> +		mvebu_pwm_suspend(mvchip);
+> +
+>  	return 0;
+>  }
+> =20
+> @@ -643,6 +937,9 @@ static int mvebu_gpio_resume(struct platform_device *=
+pdev)
+>  		BUG();
+>  	}
+> =20
+> +	if (IS_ENABLED(CONFIG_PWM))
+> +		mvebu_pwm_resume(mvchip);
+> +
+>  	return 0;
+>  }
+> =20
+> @@ -654,7 +951,6 @@ static int mvebu_gpio_probe(struct platform_device *p=
+dev)
+>  	struct resource *res;
+>  	struct irq_chip_generic *gc;
+>  	struct irq_chip_type *ct;
+> -	struct clk *clk;
+>  	unsigned int ngpios;
+>  	bool have_irqs;
+>  	int soc_variant;
+> @@ -688,10 +984,10 @@ static int mvebu_gpio_probe(struct platform_device =
+*pdev)
+>  		return id;
+>  	}
+> =20
+> -	clk =3D devm_clk_get(&pdev->dev, NULL);
+> +	mvchip->clk =3D devm_clk_get(&pdev->dev, NULL);
+>  	/* Not all SoCs require a clock.*/
+> -	if (!IS_ERR(clk))
+> -		clk_prepare_enable(clk);
+> +	if (!IS_ERR(mvchip->clk))
+> +		clk_prepare_enable(mvchip->clk);
+> =20
+>  	mvchip->soc_variant =3D soc_variant;
+>  	mvchip->chip.label =3D dev_name(&pdev->dev);
+> @@ -822,6 +1118,10 @@ static int mvebu_gpio_probe(struct platform_device =
+*pdev)
+>  						 mvchip);
+>  	}
+> =20
+> +	/* Armada 370/XP has simple PWM support for GPIO lines */
+> +	if (IS_ENABLED(CONFIG_PWM))
+> +		return mvebu_pwm_probe(pdev, mvchip, id);
+> +
+>  	return 0;
+> =20
+>  err_domain:
+> --=20
+> 2.10.2
+
+All of my comments are effectively of a bikeshed nature, so from a PWM
+perspective this is:
+
+Acked-by: Thierry Reding <thierry.reding@gmail.com>
+
+--WhfpMioaduB5tiZL
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAljuX7YACgkQ3SOs138+
+s6En2w/9ElQ6kJhPYV/+8CDxDvGgmHA2ATgUx4RjzFRVGbPFh0MmV0aBo+YHiO65
+T5+AHmrzcgg0VFcD8/4wSpvzynEpi2jWfaqGBtgSeRActMEZCSHE7GJ4XJ7uLSSc
+ZfXnUoqt0nGqhXrzvqjkOztnZBKlbPySUvsucgGq0Esu2O5cQwDtxXFyyQjEatIA
+MjXp+fpmwa7fCnjHA/2W7zTP6wO/s6CguKprErfzMH7LwYhTDn7Re6NrW9HGoWIN
+cB8Y02km3uQfLJs7x5oN+9EepO74egeQuF+/vmL6xmRgE48UjXFIPVRDa4PE/cCT
+u5P1O8I/Va/7vkeJdZ+plNLidUZq9+Qc5mT/b3H40tzi9rT2KeBoqvwzLfG495VQ
+eoHNQh2Z4Nn0DuDmS+V4iBPR0cqfW52K/F19Re/8xSSEpuiR3KubyTU+13H82jKk
+Vka7zk5txtr8lkuDUANWGppStr5ipz815FwMlbHiYWTP/YhlARr9LkRb8tKl3zxk
+n7dQ9cPYjhbo/eEfjUvlfxbNomeWEA7ZkwGHfVJ2Kc447js2s4ouKFMNmDbBEV3y
+nn6tAmWcDum+22/4oiSLna6eSnZ5+hzvK51dcUK7vSZNNrVrHn2na8+qUm2dw6pX
+V428343R5BCqLww/7sLSYXQ/ymAo1P12Nps8UIkDjh6wU2gZdKU=
+=VBaa
+-----END PGP SIGNATURE-----
+
+--WhfpMioaduB5tiZL--
