@@ -1,81 +1,154 @@
-From: Minghsiu Tsai <minghsiu.tsai@mediatek.com>
-Subject: [PATCH 1/3] dt-bindings: mt8173: Fix mdp device tree
-Date: Thu, 13 Apr 2017 15:33:05 +0800
-Message-ID: <1492068787-17838-2-git-send-email-minghsiu.tsai@mediatek.com>
-References: <1492068787-17838-1-git-send-email-minghsiu.tsai@mediatek.com>
+From: Ralph Sennhauser <ralph.sennhauser@gmail.com>
+Subject: Re: [PATCH v5 1/4] gpio: mvebu: Add limited PWM support
+Date: Thu, 13 Apr 2017 09:45:33 +0200
+Message-ID: <20170413094533.68d47edd@gmail.com>
+References: <20170409180931.4884-1-ralph.sennhauser@gmail.com>
+ <20170409180931.4884-2-ralph.sennhauser@gmail.com>
+ <20170412171121.GB11964@ulmo.ba.sec>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1492068787-17838-1-git-send-email-minghsiu.tsai@mediatek.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Hans Verkuil <hans.verkuil@cisco.com>, daniel.thompson@linaro.org, Rob Herring <robh+dt@kernel.org>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Matthias Brugger <matthias.bgg@gmail.com>, Daniel Kurtz <djkurtz@chromium.org>, Pawel Osciak <posciak@chromium.org>, Houlong Wei <houlong.wei@mediatek.com>
-Cc: devicetree@vger.kernel.org, Minghsiu Tsai <minghsiu.tsai@mediatek.com>, srv_heupstream@mediatek.com, Wu-Cheng Li <wuchengli@google.com>, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, Yingjoe Chen <yingjoe.chen@mediatek.com>, Eddie Huang <eddie.huang@mediatek.com>, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <20170412171121.GB11964@ulmo.ba.sec>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: Andrew Lunn <andrew@lunn.ch>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jason Cooper <jason@lakedaemon.net>, Gregory Clement <gregory.clement@free-electrons.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Russell King <linux@armlinux.org.uk>, linux-pwm@vger.kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-If the mdp_* nodes are under an mdp sub-node, their corresponding
-platform device does not automatically get its iommu assigned properly.
+On Wed, 12 Apr 2017 19:11:21 +0200
+Thierry Reding <thierry.reding@gmail.com> wrote:
 
-Fix this by moving the mdp component nodes up a level such that they are
-siblings of mdp and all other SoC subsystems.  This also simplifies the
-device tree.
+> On Sun, Apr 09, 2017 at 08:09:27PM +0200, Ralph Sennhauser wrote:
+> > From: Andrew Lunn <andrew@lunn.ch>
+> > 
+> > Armada 370/XP devices can 'blink' GPIO lines with a configurable on
+> > and off period. This can be modelled as a PWM.
+> > 
+> > However, there are only two sets of PWM configuration registers for
+> > all the GPIO lines. This driver simply allows a single GPIO line per
+> > GPIO chip of 32 lines to be used as a PWM. Attempts to use more
+> > return EBUSY.
+> > 
+> > Due to the interleaving of registers it is not simple to separate
+> > the PWM driver from the GPIO driver. Thus the GPIO driver has been
+> > extended with a PWM driver.
+> > 
+> > Signed-off-by: Andrew Lunn <andrew@lunn.ch>
+> > URL: https://patchwork.ozlabs.org/patch/427287/
+> > URL: https://patchwork.ozlabs.org/patch/427295/
+> > [Ralph Sennhauser:
+> >   * Port forward
+> >   * Merge PWM portion into gpio-mvebu.c
+> >   * Switch to atomic PWM API
+> >   * Add new compatible string marvell,armada-370-xp-gpio
+> >   * Update and merge documentation patch
+> >   * Update MAINTAINERS]
+> > Signed-off-by: Ralph Sennhauser <ralph.sennhauser@gmail.com>
+> > Tested-by: Andrew Lunn <andrew@lunn.ch>
+> > ---
+> >  .../devicetree/bindings/gpio/gpio-mvebu.txt        |  32 ++
+> >  MAINTAINERS                                        |   2 +
+> >  drivers/gpio/gpio-mvebu.c                          | 324
+> > ++++++++++++++++++++- 3 files changed, 346 insertions(+), 12
+> > deletions(-)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/gpio/gpio-mvebu.txt
+> > b/Documentation/devicetree/bindings/gpio/gpio-mvebu.txt index
+> > a6f3bec..fe49e9d 100644 ---
+> > a/Documentation/devicetree/bindings/gpio/gpio-mvebu.txt +++
+> > b/Documentation/devicetree/bindings/gpio/gpio-mvebu.txt @@ -38,6
+> > +38,24 @@ Required properties:
+> >  - #gpio-cells: Should be two. The first cell is the pin number. The
+> >    second cell is reserved for flags, unused at the moment.
+> >  
+> > +Optional properties:
+> > +
+> > +In order to use the gpio lines in PWM mode, some additional
+> > optional +properties are required. Only Armada 370 and XP support
+> > these properties. +
+> > +- compatible: Must contain "marvell,armada-370-xp-gpio"
+> > +
+> > +- reg: an additional register set is needed, for the GPIO Blink
+> > +  Counter on/off registers.
+> > +
+> > +- reg-names: Must contain an entry "pwm" corresponding to the
+> > +  additional register range needed for pwm operation.
+> > +
+> > +- #pwm-cells: Should be two. The first cell is the GPIO line
+> > number. The
+> > +  second cell is the period in nanoseconds.
+> > +
+> > +- clocks: Must be a phandle to the clock for the gpio controller.
+> > +
+> >  Example:
+> >  
+> >  		gpio0: gpio@d0018100 {
+> > @@ -51,3 +69,17 @@ Example:
+> >  			#interrupt-cells = <2>;
+> >  			interrupts = <16>, <17>, <18>, <19>;
+> >  		};
+> > +
+> > +		gpio1: gpio@18140 {
+> > +			compatible = "marvell,armada-370-xp-gpio";
+> > +			reg = <0x18140 0x40>, <0x181c8 0x08>;
+> > +			reg-names = "gpio", "pwm";
+> > +			ngpios = <17>;
+> > +			gpio-controller;
+> > +			#gpio-cells = <2>;
+> > +			#pwm-cells = <2>;
+> > +			interrupt-controller;
+> > +			#interrupt-cells = <2>;
+> > +			interrupts = <87>, <88>, <89>;
+> > +			clocks = <&coreclk 0>;
+> > +		};  
+> 
+> This is going to need an Acked-by from one of the device tree
+> maintainers. Rob and devicetree@vger.kernel.org are on Cc, but I
+> suspect nobody might look for the binding change "hidden" in this
+> patch.
+> 
+> Maybe best to split this off into a separate patch, or explicitly ping
+> Rob to look at this patch.
 
-Signed-off-by: Daniel Kurtz <djkurtz@chromium.org>
-Signed-off-by: Minghsiu Tsai <minghsiu.tsai@mediatek.com>
+Hi Thierry,
 
----
- Documentation/devicetree/bindings/media/mediatek-mdp.txt | 12 +++---------
- 1 file changed, 3 insertions(+), 9 deletions(-)
+Rob asked for the new compatible string so he did see it presumably. As
+you prefer to have an ACK by him I'll see to getting one for the driver
+(bindings part). The patch could be split but then one might want to
+split it even further. Like this the first patch in the series is a nice
+self contained package.
 
-diff --git a/Documentation/devicetree/bindings/media/mediatek-mdp.txt b/Documentation/devicetree/bindings/media/mediatek-mdp.txt
-index 4182063..0d03e3a 100644
---- a/Documentation/devicetree/bindings/media/mediatek-mdp.txt
-+++ b/Documentation/devicetree/bindings/media/mediatek-mdp.txt
-@@ -2,7 +2,7 @@
- 
- Media Data Path is used for scaling and color space conversion.
- 
--Required properties (controller (parent) node):
-+Required properties (controller node):
- - compatible: "mediatek,mt8173-mdp"
- - mediatek,vpu: the node of video processor unit, see
-   Documentation/devicetree/bindings/media/mediatek-vpu.txt for details.
-@@ -32,21 +32,16 @@ Required properties (DMA function blocks, child node):
-   for details.
- 
- Example:
--mdp {
--	compatible = "mediatek,mt8173-mdp";
--	#address-cells = <2>;
--	#size-cells = <2>;
--	ranges;
--	mediatek,vpu = <&vpu>;
--
- 	mdp_rdma0: rdma@14001000 {
- 		compatible = "mediatek,mt8173-mdp-rdma";
-+			     "mediatek,mt8173-mdp";
- 		reg = <0 0x14001000 0 0x1000>;
- 		clocks = <&mmsys CLK_MM_MDP_RDMA0>,
- 			 <&mmsys CLK_MM_MUTEX_32K>;
- 		power-domains = <&scpsys MT8173_POWER_DOMAIN_MM>;
- 		iommus = <&iommu M4U_PORT_MDP_RDMA0>;
- 		mediatek,larb = <&larb0>;
-+		mediatek,vpu = <&vpu>;
- 	};
- 
- 	mdp_rdma1: rdma@14002000 {
-@@ -106,4 +101,3 @@ mdp {
- 		iommus = <&iommu M4U_PORT_MDP_WROT1>;
- 		mediatek,larb = <&larb4>;
- 	};
--};
--- 
-1.9.1
+>
+<snip/>
+> 
+> > +
+> > +	mvpwm->clk_rate = clk_get_rate(mvchip->clk);
+> > +	if (!mvpwm->clk_rate) {
+> > +		dev_err(dev, "failed to get clock rate\n");
+> > +		return -EINVAL;
+> > +	}
+> > +
+> > +	mvpwm->chip.dev = dev;
+> > +	mvpwm->chip.ops = &mvebu_pwm_ops;
+> > +	mvpwm->chip.base = mvchip->chip.base;
+> > +	mvpwm->chip.npwm = mvchip->chip.ngpio;  
+> 
+> I still would've done this differently. If you use this with a PWM
+> user you have to hook it up via DT anyway, so it doesn't matter
+> whether you specify the PWM index or the GPIO via some other
+> property. The _only_ use-case where this might actually be an
+> advantage is if you request a PWM via the sysfs interface.
+
+Let me answer this in the other mail where you bring this up.
+
+> 
+<snip/>
+> All of my comments are effectively of a bikeshed nature, so from a PWM
+> perspective this is:
+> 
+> Acked-by: Thierry Reding <thierry.reding@gmail.com>
+
+Thanks for the detailed review and the ACK. Will work on all the
+mentioned bits for v6.
+
+Ralph
