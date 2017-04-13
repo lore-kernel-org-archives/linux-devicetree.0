@@ -1,96 +1,112 @@
-From: Tyler Baker <tyler.baker-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 4/8] ARM: dts: imx7s: Add node for GPC
-Date: Thu, 13 Apr 2017 14:35:25 -0700
-Message-ID: <CANMBJr4mci5LyuBNT50dupxSVz+t-5mhWv8a7LBvY4MgupomVQ@mail.gmail.com>
-References: <20170413133242.5068-1-andrew.smirnov@gmail.com>
- <20170413133242.5068-5-andrew.smirnov@gmail.com> <CANMBJr5sFeVxVq2w2uUd-ehXi9SpaJ7W9S_PTS_VN25YZEdXvQ@mail.gmail.com>
- <CAOMZO5CgLP7P+Q2Mvzpnx6u5ryb1TjAvaj9xDKXpD+8fMmn7MQ@mail.gmail.com>
- <CANMBJr4BWtU7SXEa0-4LFLx+ydVWas0Cx18kRn-=-Bz8pPZ=fg@mail.gmail.com>
- <CAOMZO5BaKBsXean8-560HUuZbhjef9dpMNku0SRUVtkv+XsZ6w@mail.gmail.com>
- <CANMBJr7We9uOyE6=BCWoe9L7xRKjOG6ScgtDGEgQ-hPawPeppg@mail.gmail.com> <CAOMZO5BjzSJws7zjJ5+aZkfeF+15twEu9zS3V+g6wQrtUiNyqQ@mail.gmail.com>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [RFC net-next] of: mdio: Honor hints from MDIO bus drivers
+Date: Thu, 13 Apr 2017 23:51:14 +0200
+Message-ID: <20170413215114.GB29708@lunn.ch>
+References: <20170410214258.9409-1-f.fainelli@gmail.com>
+ <8ef102a4-22e5-def8-b50e-04f84b5849d7@gmail.com>
+ <20170411231424.GA6174@lunn.ch>
+ <6de72d4c-5634-f3d6-5bfd-fcc0acda0b83@gmail.com>
+ <417fdaa1-7aba-e646-8a50-043322f1410d@gmail.com>
+ <20170412221016.GA29708@lunn.ch>
+ <6fdcec91-829b-70c9-8780-992b67f6831a@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAOMZO5BjzSJws7zjJ5+aZkfeF+15twEu9zS3V+g6wQrtUiNyqQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, yurovsky-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <netdev-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <6fdcec91-829b-70c9-8780-992b67f6831a@gmail.com>
+Sender: netdev-owner@vger.kernel.org
+To: Florian Fainelli <f.fainelli@gmail.com>
+Cc: netdev@vger.kernel.org, davem@davemloft.net, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 13 April 2017 at 13:49, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On Thu, Apr 13, 2017 at 5:13 PM, Tyler Baker <tyler.baker-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
->
->> I've rebased this series on the next-20170413 for sanity sake, and
->> realized there doesn't appear to be a way to select CONFIG_IMX_GPCV2.
->> I forced it using 'default y' and configured with imx_v6_v7_defconfig.
->> Now my board is booting. Before this series is applied, it may be good
->> to have CONFIG_IMX_GPCV2 selected specifically for iMX7 platform,
->> otherwise there will be boot regressions.
->
-> Something like this?
->
-> diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
-> index f03ef43..fe99a48 100644
-> --- a/drivers/irqchip/Kconfig
-> +++ b/drivers/irqchip/Kconfig
-> @@ -253,6 +253,7 @@ config RENESAS_H8S_INTC
->
->  config IMX_GPCV2
->   bool
-> + def_bool y if SOC_IMX7D
->   select IRQ_DOMAIN
->   help
->    Enables the wakeup IRQs for IMX platforms with GPCv2 block
+> The DT binding is in tree and provides an example of how the switch
+> looks like, below is the example, but I am also adding the MDIO bus and
+> the PHYs just so you can see how things wind up:
+> 
+> switch_top@f0b00000 {
+>         compatible = "simple-bus";
+>         #size-cells = <1>;
+>         #address-cells = <1>;
+>         ranges = <0 0xf0b00000 0x40804>;
+> 
+>         ethernet_switch@0 {
+>                 compatible = "brcm,bcm7445-switch-v4.0";
+>                 #size-cells = <0>;
+>                 #address-cells = <1>;
+>                 reg = <0x0 0x40000
+>                         0x40000 0x110
+>                         0x40340 0x30
+>                         0x40380 0x30
+>                         0x40400 0x34
+>                         0x40600 0x208>;
+>                 reg-names = "core", "reg", intrl2_0", "intrl2_1",
+>                             "fcb, "acb";
+>                 interrupts = <0 0x18 0
+>                                 0 0x19 0>;
+>                 brcm,num-gphy = <1>;
+>                 brcm,num-rgmii-ports = <2>;
+>                 brcm,fcb-pause-override;
+>                 brcm,acb-packets-inflight;
+> 
+>                 ports {
+>                         #address-cells = <1>;
+>                         #size-cells = <0>;
+> 
+>                         port@0 {
+>                                 label = "gphy";
+>                                 reg = <0>;
+> 				phy-handle = <&phy5>;
+>                         };
+> 
+> 			sw0port1: port@1 {
+> 				label = "rgmii_1";
+> 				reg = <1>;
+> 				phy-mode = "rgmii";
+> 				fixed-link {
+> 					speed = <1000>;
+> 					full-duplex;
+> 				};
+> 			}
+>                 };
+>         };
+> 
+> 	mdio@403c0 {
+> 		reg = <0x403c0 0x8 0x40300 0x18>;
+> 		#address-cells = <0x1>;
+> 		#size-cells = <0x0>;
+> 		compatible = "brcm,unimac-mdio";
+> 		reg-names = "mdio", "mdio_indir_rw";
+> 
+> 		switch: switch@0 {
+> 			broken-turn-around;
+> 			reg = <0x0>;
+> 			compatible = "brcm,bcm53125";
+> 			#address-cells = <1>;
+> 			#size-cells = <0>;
+> 
+> 			ports {
+> 				..
+> 				port@8 {
+> 					ethernet = <&sw0port1>;
+> 				};
+> 				...
+> 			};
+> 		};
+> 
+> 		phy5: ethernet-phy@5 {
+> 			reg = <0x5>;
+> 			compatible = "ethernet-phy-ieee802.3-c22";
+> 		};
+> 	};
+> };
 
-Exactly. LGTM.
+So phy5 is connected to the internal switch with a phy-handle. But
+because of your double usage of this node, it also can be mapped into
+the external switches port 5?
 
->> I'd encounter a backtrace with next-20170413 +  imx_v6_v7_defconfig +
->> CONFIG_IMX_GPCV2=y
->>
->> Backtrace:
->> [<c010c364>] (dump_backtrace) from [<c010c610>] (show_stack+0x18/0x1c)
->
-> but prior to fixing the Kconfig we need to fix this backtrace you reported.
+Is that your problem?
 
-I dug into this a bit, and lockdep is unhappy about spin locks not
-being initialized before use.
+It seems like you should add an mdio node inside your switch node, and
+list your external switch internal/external phys there if needed.
 
-The following patch fixes the backtrace on my board. I'll submit this
-patch in a moment.
-
-From: Tyler Baker <tyler.baker-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Date: Thu, 13 Apr 2017 14:29:49 -0700
-Subject: [PATCH] irqchip/irq-imx-gpcv2: fix spinlock initialization
-
-Call raw_spin_lock_init() before the spinlocks are used to prevent a
-lockdep splat.
-
-Signed-off-by: Tyler Baker <tyler.baker-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
- drivers/irqchip/irq-imx-gpcv2.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/drivers/irqchip/irq-imx-gpcv2.c b/drivers/irqchip/irq-imx-gpcv2.c
-index e13236f..9463f35 100644
---- a/drivers/irqchip/irq-imx-gpcv2.c
-+++ b/drivers/irqchip/irq-imx-gpcv2.c
-@@ -230,6 +230,8 @@ static int __init imx_gpcv2_irqchip_init(struct
-device_node *node,
-  return -ENOMEM;
-  }
-
-+ raw_spin_lock_init(&cd->rlock);
-+
-  cd->gpc_base = of_iomap(node, 0);
-  if (!cd->gpc_base) {
-  pr_err("fsl-gpcv2: unable to map gpc registers\n");
--- 
-2.9.3
-
-Cheers,
-
-Tyler
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+   Andrew
