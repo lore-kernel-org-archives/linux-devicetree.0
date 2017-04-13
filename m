@@ -1,63 +1,95 @@
-From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
-Subject: Re: [PATCH v2 05/22] ARM: dts: at91: Add generic compatible string
- for I2C EEPROM
-Date: Thu, 13 Apr 2017 23:20:59 +0200
-Message-ID: <20170413212059.unh2mfo2w4oc4t33@piout.net>
-References: <20170413182839.25381-1-javier@osg.samsung.com>
- <20170413182839.25381-6-javier@osg.samsung.com>
- <869a0f44-6c97-2109-776b-6da9b86c732a@axentia.se>
- <dd93eb32-ca1e-5041-051e-c4f072f0f9a2@osg.samsung.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/3] Documentation: dt: i2c: Add Altera I2C Controller
+Date: Thu, 13 Apr 2017 16:22:40 -0500
+Message-ID: <20170413212240.uxwh5525baqmgny4@rob-hp-laptop>
+References: <1491926547-29510-1-git-send-email-thor.thayer@linux.intel.com>
+ <1491926547-29510-3-git-send-email-thor.thayer@linux.intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <dd93eb32-ca1e-5041-051e-c4f072f0f9a2@osg.samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Javier Martinez Canillas <javier@osg.samsung.com>
-Cc: Peter Rosin <peda@axentia.se>, linux-kernel@vger.kernel.org, Wolfram Sang <wsa@the-dreams.de>, devicetree@vger.kernel.org, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, Nicolas Ferre <nicolas.ferre@microchip.com>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org, Geert Uytterhoeven <geert@linux-m68k.org>
+In-Reply-To: <1491926547-29510-3-git-send-email-thor.thayer-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: thor.thayer-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
+Cc: wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 13/04/2017 at 18:09:56 -0300, Javier Martinez Canillas wrote:
-> Hello Peter,
+On Tue, Apr 11, 2017 at 11:02:26AM -0500, thor.thayer-VuQAYsv1563Yd54FQh9/CA@public.gmane.org wrote:
+> From: Thor Thayer <thor.thayer-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
 > 
-> On 04/13/2017 05:43 PM, Peter Rosin wrote:
-> > On 2017-04-13 20:28, Javier Martinez Canillas wrote:
-> 
-> [snip]
-> 
-> >>  
-> >>  	eeprom@50 {
-> >> -		compatible = "nxp,24c02";
-> >> +		compatible = "nxp,24c02","atmel,24c02";
-> >>  		reg = <0x50>;
-> >>  		pagesize = <16>;
-> >>  	};
-> >>
-> > 
-> > Sure, in principle. But not having a space after the commas is a real OCD
-> > trigger for me. My spine is rotating... :-)
-> >
-> 
-> Right, Geert already pointed out. It's something I missed in my sed script
-> so I got it wrong in all the DTS :(
-> 
-> I'll fix my script and send a v2.
-> 
+> Add the documentation to support the Altera I2C Controller.
 
-That would be v3, right? ;)
+"dt-bindings: i2c: ..." for the subject.
 
-> > Anyway, with those whitespace fixes (and without them too, but please):
-> > Acked-by: Peter Rosin <peda@axentia.se>
-> >
 > 
-> Thanks for the review!
+> Signed-off-by: Thor Thayer <thor.thayer-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+> ---
+>  .../devicetree/bindings/i2c/i2c-altera.txt         | 37 ++++++++++++++++++++++
+>  1 file changed, 37 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/i2c/i2c-altera.txt
 > 
+> diff --git a/Documentation/devicetree/bindings/i2c/i2c-altera.txt b/Documentation/devicetree/bindings/i2c/i2c-altera.txt
+> new file mode 100644
+> index 0000000..a67241c
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/i2c/i2c-altera.txt
+> @@ -0,0 +1,37 @@
+> +* Altera I2C Controller
 
-I'd like to be copied on the first patches to ensure they are applied
-before applying that one. (Also, it is probably too late for 4.12 anyway
-because we are past rc6).
+This is the only one? For synthesizable logic or a hard block in 
+socfpga?
 
--- 
-Alexandre Belloni, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+> +
+> +Required properties :
+> + - compatible : should be "altr,sip-i2c"
+
+Seems kind of generic.
+
+> + - reg        : Offset and length of the register set for the device
+> + - interrupts : <IRQ> where IRQ is the interrupt number.
+> + - clocks     : phandles to input clocks.
+
+Need to specify how many clocks.
+
+> + - #address-cells = <1>;
+> + - #size-cells = <0>;
+> +
+> +Recommended properties :
+> + - clock-frequency : desired I2C bus clock frequency in Hz.
+> +
+> +Optional properties :
+> + - altr,fifo-size : Size of the RX and TX FIFOs.
+
+in bytes?
+
+Just "fifo-size" is already fairly common, so drop the vendor prefix.
+
+> + - Child nodes conforming to i2c bus binding
+> +
+> +Example :
+> +
+> +	i2c@100080000 {
+> +		compatible = "altr,sip-i2c";
+> +		reg = <0x00000001 0x00080000 0x00000040>;
+> +		interrupt-parent = <&intc>;
+> +		interrupts = <0 43 4>;
+> +		clocks = <&clk_0>;
+> +		clock-frequency = <100000>;
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +		altr,fifo-size = <4>;
+> +
+> +		eeprom@51 {
+> +			compatible = "atmel,24c32";
+> +			reg = <0x51>;
+> +			pagesize = <32>;
+> +		};
+> +	};
+> +
+> -- 
+> 1.9.1
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
