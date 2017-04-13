@@ -1,35 +1,87 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/6] dma: pl08x: Add Faraday FTDMAC020 to compatible list
-Date: Thu, 13 Apr 2017 15:03:06 -0500
-Message-ID: <20170413200306.rplc7crm272lvobo@rob-hp-laptop>
-References: <20170408120457.22750-1-linus.walleij@linaro.org>
- <20170408120457.22750-2-linus.walleij@linaro.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v5] dt-bindings: fpga: Add bindings document for Xilinx
+ LogiCore PR Decoupler
+Date: Thu, 13 Apr 2017 15:07:28 -0500
+Message-ID: <20170413200728.z6t2c7e6jobpstmb@rob-hp-laptop>
+References: <1491757831-10510-1-git-send-email-mdf@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170408120457.22750-2-linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Janos Laube <janos.dev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Paulius Zaleckas <paulius.zaleckas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, openwrt-devel-p3rKhJxN3npAfugRpC6u6w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Hans Ulli Kroll <ulli.kroll-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kuo-Jung Su <dantesu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1491757831-10510-1-git-send-email-mdf@kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Moritz Fischer <mdf@kernel.org>
+Cc: linux-fpga@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org, Michal Simek <michal.simek@xilinx.com>, =?iso-8859-1?Q?S=F6ren?= Brinkmann <soren.brinkmann@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Apr 08, 2017 at 02:04:53PM +0200, Linus Walleij wrote:
-> This augments the PL08x bindings to include the Faraday Technology
-> FTDMAC020 DMA engine, as it is clearly a derivative of the PL08x
-> PrimeCell. Also specify that it needs the special peripheral ID
-> specified to work properly.
+On Sun, Apr 09, 2017 at 10:10:31AM -0700, Moritz Fischer wrote:
+> This adds the binding documentation for the Xilinx LogiCORE PR
+> Decoupler soft core.
 > 
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Signed-off-by: Moritz Fischer <mdf@kernel.org>
+> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+> Acked-by: Alan Tull <atull@kernel.org>
+> Cc: Sören Brinkmann <soren.brinkmann@xilinx.com>
+> Cc: linux-kernel@vger.kernel.org
+> Cc: devicetree@vger.kernel.org
 > ---
-> Seeking a DT maintainer ACK on this.
+> 
+> Changes from v4:
+> - Ssubject line
+> - Replaced 'or' by 'followed by' as suggested by Rob
+> 
+> Changes from v3:
+> - Addressed Michal's comments
+> - Addressed Alan's Comments
+> - Added Alan's Acked-by
+> 
+> Changes from v2:
+> - Added refence to generic fpga-region bindings
+> - Fixed up reg property in example
+> - Added fallback to "xlnx,pr-decoupler" without version
+> 
+> Changes from v1:
+> - Added clock names & clock to example
+> - Merged some of the description from Michal's version
+> 
 > ---
->  Documentation/devicetree/bindings/dma/arm-pl08x.txt | 9 +++++++--
->  1 file changed, 7 insertions(+), 2 deletions(-)
+>  .../bindings/fpga/xilinx-pr-decoupler.txt          | 36 ++++++++++++++++++++++
+>  1 file changed, 36 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/fpga/xilinx-pr-decoupler.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/fpga/xilinx-pr-decoupler.txt b/Documentation/devicetree/bindings/fpga/xilinx-pr-decoupler.txt
+> new file mode 100644
+> index 0000000..b2c58fb
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/fpga/xilinx-pr-decoupler.txt
+> @@ -0,0 +1,36 @@
+> +Xilinx LogiCORE Partial Reconfig Decoupler Softcore
+> +
+> +The Xilinx LogiCORE Partial Reconfig Decoupler manages one or more
+> +decouplers / fpga bridges.
+> +The controller can decouple/disable the bridges which prevents signal
+> +changes from passing through the bridge.  The controller can also
+> +couple / enable the bridges which allows traffic to pass through the
+> +bridge normally.
+> +
+> +The Driver supports only MMIO handling. A PR region can have multiple
+> +PR Decouplers which can be handled independently or chained via decouple/
+> +decouple_status signals.
+> +
+> +Required properties:
+> +- compatible		: Should contain "xlnx,pr-decoupler-1.00" followed by
+> +                          "xlnx,pr-decoupler"
+> +- regs			: base address and size for decoupler module
+> +- clocks		: input clock to IP
+> +- clock-names		: should contain "aclk"
+> +
+> +Optional properties:
+> +- bridge-enable		: 0 if driver should disable bridge at startup
+> +			  1 if driver should enable bridge at startup
+> +			  Default is to leave bridge in current state.
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Did this get into a common location? If so, then just "see .../?.txt" is 
+enough of a description.
+
+Rob
