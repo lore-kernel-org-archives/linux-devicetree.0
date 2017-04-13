@@ -1,140 +1,48 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 1/2] ASoC: stm32: add bindings for SAI
-Date: Thu, 13 Apr 2017 15:45:44 -0500
-Message-ID: <20170413204544.sq6i43s7naeoh3zj@rob-hp-laptop>
-References: <1491925646-29113-1-git-send-email-olivier.moysan@st.com>
- <1491925646-29113-2-git-send-email-olivier.moysan@st.com>
+From: Leonard Crestez <leonard.crestez-3arQi8VN3Tc@public.gmane.org>
+Subject: Re: [RFC 4/8] regulator: core: Check enabling bypass respects
+ constraints
+Date: Thu, 13 Apr 2017 23:46:15 +0300
+Message-ID: <1492116375.17723.15.camel@nxp.com>
+References: <cover.1490199005.git.leonard.crestez@nxp.com>
+         <1edff9bc610969b0c53fa1080d5db021c8e00b2d.1490199005.git.leonard.crestez@nxp.com>
+         <20170324125212.vikgekqxsnu7htzl@sirena.org.uk>
+         <1490704781.3546.57.camel@nxp.com>
+         <20170328164754.z2c2ttovs3sxbcos@sirena.org.uk>
+         <1490730595.15830.1.camel@nxp.com>
+         <20170406185202.uixxcv3dgucrddgc@sirena.org.uk>
+         <1491562312.9365.41.camel@nxp.com>
+         <20170407112212.gzv3p7ldkh62657m@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1491925646-29113-2-git-send-email-olivier.moysan-qxv4g6HH51o@public.gmane.org>
+In-Reply-To: <20170407112212.gzv3p7ldkh62657m-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: olivier moysan <olivier.moysan-qxv4g6HH51o@public.gmane.org>
-Cc: lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, perex-/Fr2/VpizcU@public.gmane.org, tiwai-IBi9RG/b67k@public.gmane.org, mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnaud.pouliquen-qxv4g6HH51o@public.gmane.org, benjamin.gaignard-qxv4g6HH51o@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Robin Gong <yibin.gong-3arQi8VN3Tc@public.gmane.org>, Anson Huang <Anson.Huang-3arQi8VN3Tc@public.gmane.org>, Irina Tirdea <irina.tirdea-3arQi8VN3Tc@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Octavian Purdila <octavian.purdila-3arQi8VN3Tc@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 11, 2017 at 05:47:25PM +0200, olivier moysan wrote:
-> This patch adds documentation of device tree bindings for the
-> STM32 SAI ASoC driver.
-> 
-> Signed-off-by: olivier moysan <olivier.moysan-qxv4g6HH51o@public.gmane.org>
-> ---
->  .../devicetree/bindings/sound/st,stm32-sai.txt     | 89 ++++++++++++++++++++++
->  1 file changed, 89 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/sound/st,stm32-sai.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/sound/st,stm32-sai.txt b/Documentation/devicetree/bindings/sound/st,stm32-sai.txt
-> new file mode 100644
-> index 0000000..c59a3d7
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/sound/st,stm32-sai.txt
-> @@ -0,0 +1,89 @@
-> +STMicroelectronics STM32 Serial Audio Interface (SAI).
-> +
-> +The SAI interface (Serial Audio Interface) offers a wide set of audio protocols
-> +as I2S standards, LSB or MSB-justified, PCM/DSP, TDM, and AC'97.
-> +The SAI contains two independent audio sub-blocks. Each sub-block has
-> +its own clock generator and I/O lines controller.
-> +
-> +Required properties:
-> +  - compatible: Should be "st,stm32f4-sai"
-> +  - reg: Base address and size of SAI common register set.
-> +  - clocks: Must contain phandle and clock specifier pairs for each entry
-> +	in clock-names.
-> +  - clock-names: Must contain "x8k" and "x11k"
-> +	"x8k": SAI parent clock for sampling rates multiple of 8kHz.
-> +	"x11k": SAI parent clock for sampling rates multiple of 11.025kHz.
-> +  - interrupts: cpu DAI interrupt line shared by SAI sub-blocks
-> +
-> +Optional properties:
-> +  - resets: Reference to a reset controller asserting the SAI
-> +
-> +SAI subnodes:
-> +Two subnodes corresponding to SAI sub-block instances A et B can be defined.
-> +Subnode can be omitted for unsused sub-block.
-> +
-> +SAI subnodes required properties:
-> +  - compatible: Should be "st,stm32-sai-sub-a" or "st,stm32-sai-sub-b"
-> +	for SAI sub-block A or B respectively.
-> +  - reg: Base address and size of SAI sub-block register set.
-> +  - clocks: Must contain one phandle and clock specifier pair
-> +	for sai_ck which feeds the internal clock generator.
-> +  - clock-names: Must contain "sai_ck".
-> +  - dmas: see Documentation/devicetree/bindings/dma/stm32-dma.txt
-> +  - dma-names: identifier string for each DMA request line
-> +	"tx": if sai sub-block is configured as playback DAI
-> +	"rx": if sai sub-block is configured as capture DAI
-> +  - pinctrl-names: should contain only value "default"
-> +  - pinctrl-0: see Documentation/devicetree/bindings/pinctrl/pinctrl-stm32.txt
-> +
-> +Example:
-> +sound_card {
-> +	compatible = "audio-graph-card";
-> +	dais = <&sai1b_port>;
-> +};
-> +
-> +sai1: sai1@40015800 {
-> +	compatible = "st,stm32f4-sai";
-> +	#address-cells = <1>;
-> +	#size-cells = <1>;
-> +	ranges;
+On Fri, 2017-04-07 at 12:22 +0100, Mark Brown wrote:
+> On Fri, Apr 07, 2017 at 01:51:52PM +0300, Leonard Crestez wrote:
 
-It's preferred if this is not empty and it limited to the address range 
-needed.
+> > It currently seems to work how I expect but from your statement it's
+> > not clear if it's entirely intentional.
 
-> +	reg = <0x40015800 0x4>;
-> +	clocks = <&rcc 1 CLK_SAIQ_PDIV>, <&rcc 1 CLK_I2SQ_PDIV>;
-> +	clock-names = "x8k", "x11k";
-> +	interrupts = <87>;
-> +
-> +	sai1b: audio-controller@40015824 {
-> +		#sound-dai-cells = <0>;
-> +		compatible = "st,stm32-sai-sub-b";
-> +		reg = <0x40015824 0x1C>;
-> +		clocks = <&rcc 1 CLK_SAI2>;
-> +		clock-names = "sai_ck";
-> +		dmas = <&dma2 5 0 0x400 0x0>;
-> +		dma-names = "tx";
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&pinctrl_sai1b>;
-> +
-> +		ports {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +
-> +			sai1b_port: port@0 {
+> The current behaviour of bypassed regulators is intentional.
 
-Need to document how many ports and endpoints.
+I did not mean to imply that there is something wrong with bypassed
+regulators. I just wanted more information about how regulators (non-
+bypassed) pick their voltage when consumers allow a range.
 
-> +				reg = <0>;
+After some more reading through the code it seems that the driver
+itself receives the range (either through set_voltage or map_voltage)
+and gets to make the choice.
 
-For a single port, you don't need a reg prop.
+So it seems fine for my concerns, sorry to bother you.
 
-> +				cpu_endpoint: endpoint {
-> +					remote-endpoint = <&codec_endpoint>;
-> +					audio-graph-card,format = "i2s";
-> +					audio-graph-card,bitclock-master = <&codec_endpoint>;
-> +					audio-graph-card,frame-master = <&codec_endpoint>;
-
-The prefix is gone now.
-
-> +				};
-> +			};
-> +		};
-> +	};
-> +};
-> +
-> +audio-codec {
-> +	codec_port: port {
-> +		codec_endpoint: endpoint {
-> +			remote-endpoint = <&cpu_endpoint>;
-> +		};
-> +	};
-> +};
-> -- 
-> 1.9.1
-> 
+--
+Regards,
+Leonard
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
