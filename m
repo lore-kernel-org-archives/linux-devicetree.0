@@ -1,38 +1,70 @@
-From: Moritz Fischer <moritz.fischer.private@gmail.com>
-Subject: Re: [PATCH 1/3] mfd: cros-ec: Add functions to read mapped memory
-Date: Thu, 13 Apr 2017 15:53:38 -0700
-Message-ID: <CAJYdmeNXJgzgM3uTi-DjA1B10wSipqSPZ20qhboysqKY_tvVLQ@mail.gmail.com>
-References: <1491602410-31518-1-git-send-email-moritz.fischer@ettus.com> <20170413210354.GA17134@roeck-us.net>
+From: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCHv4 0/2] Nokia H4+ support
+Date: Fri, 14 Apr 2017 01:19:43 +0200
+Message-ID: <20170413231943.jx6cyynectrdgawo@earth>
+References: <20170413002659.25821-1-sre@kernel.org>
+ <3CE124E5-09B7-423D-B979-73564EB3BC6C@holtmann.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-hwmon-owner@vger.kernel.org>
-In-Reply-To: <20170413210354.GA17134@roeck-us.net>
-Sender: linux-hwmon-owner@vger.kernel.org
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: Moritz Fischer <moritz.fischer@ettus.com>, linux-hwmon@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Devicetree List <devicetree@vger.kernel.org>, Lee Jones <lee.jones@linaro.org>, olof@lixom.net, jdelvare@suse.com, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="h3kjkmj35q4k64in"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <3CE124E5-09B7-423D-B979-73564EB3BC6C-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Marcel Holtmann <marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org>
+Cc: "Gustavo F. Padovan" <gustavo-THi1TnShQwVAfugRpC6u6w@public.gmane.org>, Johan Hedberg <johan.hedberg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, Linux Bluetooth <linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Guenter,
 
-On Thu, Apr 13, 2017 at 2:03 PM, Guenter Roeck <linux@roeck-us.net> wrote:
-> On Fri, Apr 07, 2017 at 03:00:08PM -0700, Moritz Fischer wrote:
->> From: Moritz Fischer <mdf@kernel.org>
->>
->> The ChromeOS EC has mapped memory regions where things like temperature
->> sensors and fan speed are stored. Provide access to those from the
->> cros-ec mfd device.
->>
->
-> Turns out struct cros_ec_device already provides a cmd_readmem callback,
-> which is widely used by other drivers. Why don't you just use it ?
+--h3kjkmj35q4k64in
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-This is only actually set by the lpc version of the cros_ec. I2C and
-SPI connected ECs
-emulate it. I can most certainly hook it up in the (spi,i2c) drivers,
-but the implementation
-for SPI and I2C needs to live somewhere. drivers/platform/chrome/cros_ec_proto.c
-seemed to be a good place.
+Hi Marcel,
 
-Thanks for the feedback!
+On Thu, Apr 13, 2017 at 10:33:58AM +0200, Marcel Holtmann wrote:
+> > Here is the fourth revision of the nokia bluetooth patchset. Compared
+> > to the previous one the following things have changed:
+> >=20
+> > * Drop patch 1-8 (applied by Marcel) and update Cc/To for patchset
+> > * Order includes in the driver alphabetically
+> > * Explicitly include <linux/of.h> in the nokia bluetooth driver
+> >=20
+> > -- Sebastian
+> >=20
+> > Sebastian Reichel (2):
+> >  dt-bindings: net: bluetooth: Add nokia-bluetooth
+> >  Bluetooth: add nokia driver
+>=20
+> both patches have been applied to bluetooth-next tree.
 
-Moritz
+Thanks.
+
+-- Sebastian
+
+--h3kjkmj35q4k64in
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAljwB4wACgkQ2O7X88g7
++poVLBAAmtB+Flcbzk3saxxNIsSyf7niKFC1YfvqHp1pmCv+aFQd3xEkZY1uUc4i
+25my/k1Mb/MoC+MhPBIAfioXaznFqGV6VFqatqYa4b4yGC3fgy4q6jSN2uz1iFox
+Oqdl873ac1GtiFayWfbIoiULHKcgtF+VJh/07dppPsnht25/SbmsJAcuAIj2QLQz
+P0Qd2mUfZEJwefil17pBV3ylZXfyXlV/MwYNKDtH9mBqKu+VNbMNEPtedIK30AfR
+sakhn8HpjIJ53ZL5z/+4QLuBsFE80GbzkEayYyFUp7g6H8QANtroLjFGP0LVYXJ0
+uPah15Rbmm7AoVZWVTrIXyN2x3Z0QaN32K+ADQc3Syh9WnyXDBuaNXbk5CUUqnX/
+IitdcnJ9JCATLNhT3s/p5BLt7uhKsOpG/27CJPSVXNflASNjYzUrof58KRucXUad
+SHc9Uqg+njn19MDt6UsKGu5fokw1cHT7Ah1i4voqko5iDE3vlJWuCqqFjtEnlY99
+4Zwfsz4XkOII15mchHi/NOOe5qj8yXGkzg0gkP+r7qVdH2JON1YSxcslNGIDOKOL
+q8PGyw5RhCyFkiFSkDv0b14s14DF1+TbE2DJJQhQ+pfOvbwtrDUKDUW7tQC7cjKz
+dMFlk4Wge/h0HsD6APQBRXm66z5KCQdvkVR7NhXxi7PsjeUyOuY=
+=dPjv
+-----END PGP SIGNATURE-----
+
+--h3kjkmj35q4k64in--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
