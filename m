@@ -1,27 +1,38 @@
-From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 8/8] ARM: dts: imx7d-sdb: Enable PCIe peripheral
-Date: Thu, 13 Apr 2017 19:23:21 -0300
-Message-ID: <CAOMZO5D=ceiTRuM3-vjc-qnd=3yKKYHzwVYwFUWkaLZr6Lnb8w@mail.gmail.com>
-References: <20170413133242.5068-1-andrew.smirnov@gmail.com> <20170413133242.5068-9-andrew.smirnov@gmail.com>
+From: Moritz Fischer <moritz.fischer.private@gmail.com>
+Subject: Re: [PATCH 1/3] mfd: cros-ec: Add functions to read mapped memory
+Date: Thu, 13 Apr 2017 15:53:38 -0700
+Message-ID: <CAJYdmeNXJgzgM3uTi-DjA1B10wSipqSPZ20qhboysqKY_tvVLQ@mail.gmail.com>
+References: <1491602410-31518-1-git-send-email-moritz.fischer@ettus.com> <20170413210354.GA17134@roeck-us.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170413133242.5068-9-andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, yurovsky-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Return-path: <linux-hwmon-owner@vger.kernel.org>
+In-Reply-To: <20170413210354.GA17134@roeck-us.net>
+Sender: linux-hwmon-owner@vger.kernel.org
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: Moritz Fischer <moritz.fischer@ettus.com>, linux-hwmon@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Devicetree List <devicetree@vger.kernel.org>, Lee Jones <lee.jones@linaro.org>, olof@lixom.net, jdelvare@suse.com, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 13, 2017 at 10:32 AM, Andrey Smirnov
-<andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+Hi Guenter,
 
-> +&pcie {
-> +       pinctrl-names = "default";
-> +       reset-gpio = <&gpio_spi 1 GPIO_ACTIVE_LOW>;
-> +       disable-gpio = <&gpio_spi 0 GPIO_ACTIVE_LOW>;
+On Thu, Apr 13, 2017 at 2:03 PM, Guenter Roeck <linux@roeck-us.net> wrote:
+> On Fri, Apr 07, 2017 at 03:00:08PM -0700, Moritz Fischer wrote:
+>> From: Moritz Fischer <mdf@kernel.org>
+>>
+>> The ChromeOS EC has mapped memory regions where things like temperature
+>> sensors and fan speed are stored. Provide access to those from the
+>> cros-ec mfd device.
+>>
+>
+> Turns out struct cros_ec_device already provides a cmd_readmem callback,
+> which is widely used by other drivers. Why don't you just use it ?
 
-I don't see this property in linux-next.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+This is only actually set by the lpc version of the cros_ec. I2C and
+SPI connected ECs
+emulate it. I can most certainly hook it up in the (spi,i2c) drivers,
+but the implementation
+for SPI and I2C needs to live somewhere. drivers/platform/chrome/cros_ec_proto.c
+seemed to be a good place.
+
+Thanks for the feedback!
+
+Moritz
