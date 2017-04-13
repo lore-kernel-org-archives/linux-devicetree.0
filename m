@@ -1,28 +1,24 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 1/4] pinctrl: aspeed: Document pinconf in devicetree
- bindings
-Date: Thu, 13 Apr 2017 14:49:07 -0500
-Message-ID: <20170413194907.x5ij6cehgb5dh6nj@rob-hp-laptop>
-References: <20170407125713.15678-1-andrew@aj.id.au>
- <20170407125713.15678-2-andrew@aj.id.au>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 1/4] gpio: aspeed: dt: Fix description alignment in
+ bindings document
+Date: Thu, 13 Apr 2017 14:50:36 -0500
+Message-ID: <20170413195036.eu5wqx6bgpx2f7ok@rob-hp-laptop>
+References: <20170407125902.15960-1-andrew@aj.id.au>
+ <20170407125902.15960-2-andrew@aj.id.au>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-gpio-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170407125713.15678-2-andrew-zrmu5oMJ5Fs@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>
-Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+In-Reply-To: <20170407125902.15960-2-andrew@aj.id.au>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Andrew Jeffery <andrew@aj.id.au>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Joel Stanley <joel@jms.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 07, 2017 at 10:27:10PM +0930, Andrew Jeffery wrote:
-> Signed-off-by: Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>
+On Fri, Apr 07, 2017 at 10:28:59PM +0930, Andrew Jeffery wrote:
+> Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
 > ---
->  .../devicetree/bindings/pinctrl/pinctrl-aspeed.txt | 40 +++++++++++++++++-----
->  1 file changed, 31 insertions(+), 9 deletions(-)
+>  Documentation/devicetree/bindings/gpio/gpio-aspeed.txt | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Acked-by: Rob Herring <robh@kernel.org>
