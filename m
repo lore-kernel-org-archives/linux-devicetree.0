@@ -1,13 +1,13 @@
 From: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
-Subject: [PATCH v2 05/22] ARM: dts: at91: Add generic compatible string for I2C EEPROM
-Date: Thu, 13 Apr 2017 15:28:22 -0300
-Message-ID: <20170413182839.25381-6-javier@osg.samsung.com>
+Subject: [PATCH v2 06/22] ARM: dts: efm32: Add generic compatible string for I2C EEPROM
+Date: Thu, 13 Apr 2017 15:28:23 -0300
+Message-ID: <20170413182839.25381-7-javier@osg.samsung.com>
 References: <20170413182839.25381-1-javier@osg.samsung.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <20170413182839.25381-1-javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Nicolas Ferre <nicolas.ferre-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 The at24 driver allows to register I2C EEPROM chips using different vendor
@@ -26,36 +26,22 @@ Signed-off-by: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gm
 
 Changes in v2: None
 
- arch/arm/boot/dts/at91-linea.dtsi   | 2 +-
- arch/arm/boot/dts/at91-tse850-3.dts | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/efm32gg-dk3750.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/at91-linea.dtsi b/arch/arm/boot/dts/at91-linea.dtsi
-index 0721c8472509..9a19080fd3bf 100644
---- a/arch/arm/boot/dts/at91-linea.dtsi
-+++ b/arch/arm/boot/dts/at91-linea.dtsi
-@@ -31,7 +31,7 @@
- 	status = "okay";
+diff --git a/arch/arm/boot/dts/efm32gg-dk3750.dts b/arch/arm/boot/dts/efm32gg-dk3750.dts
+index 98fc667d22c7..2f34491881ae 100644
+--- a/arch/arm/boot/dts/efm32gg-dk3750.dts
++++ b/arch/arm/boot/dts/efm32gg-dk3750.dts
+@@ -36,7 +36,7 @@
+ 			};
  
- 	eeprom@51 {
--		compatible = "st,24c64";
-+		compatible = "st,24c64","atmel,24c64";
- 		reg = <0x51>;
- 		pagesize = <32>;
- 	};
-diff --git a/arch/arm/boot/dts/at91-tse850-3.dts b/arch/arm/boot/dts/at91-tse850-3.dts
-index 7a68805a4eb5..6f005c14a6b0 100644
---- a/arch/arm/boot/dts/at91-tse850-3.dts
-+++ b/arch/arm/boot/dts/at91-tse850-3.dts
-@@ -239,7 +239,7 @@
- 	};
- 
- 	eeprom@50 {
--		compatible = "nxp,24c02";
-+		compatible = "nxp,24c02","atmel,24c02";
- 		reg = <0x50>;
- 		pagesize = <16>;
- 	};
+ 			eeprom@50 {
+-				compatible = "microchip,24c02";
++				compatible = "microchip,24c02","atmel,24c02";
+ 				reg = <0x50>;
+ 				pagesize = <16>;
+ 			};
 -- 
 2.9.3
 
