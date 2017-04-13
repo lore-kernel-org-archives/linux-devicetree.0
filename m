@@ -1,155 +1,80 @@
-From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [RFC net-next] of: mdio: Honor hints from MDIO bus drivers
-Date: Thu, 13 Apr 2017 16:20:56 -0700
-Message-ID: <d498c31b-1017-a42f-11cd-54a97814c0a8@gmail.com>
-References: <20170410214258.9409-1-f.fainelli@gmail.com>
- <8ef102a4-22e5-def8-b50e-04f84b5849d7@gmail.com>
- <20170411231424.GA6174@lunn.ch>
- <6de72d4c-5634-f3d6-5bfd-fcc0acda0b83@gmail.com>
- <417fdaa1-7aba-e646-8a50-043322f1410d@gmail.com>
- <20170412221016.GA29708@lunn.ch>
- <6fdcec91-829b-70c9-8780-992b67f6831a@gmail.com>
- <20170413215114.GB29708@lunn.ch>
+From: Javier Martinez Canillas <javier@osg.samsung.com>
+Subject: Re: [PATCH v2 05/22] ARM: dts: at91: Add generic compatible string
+ for I2C EEPROM
+Date: Thu, 13 Apr 2017 20:46:55 -0300
+Message-ID: <021d8065-9d7a-f9ef-a497-f9c467d1e6d8@osg.samsung.com>
+References: <20170413182839.25381-1-javier@osg.samsung.com>
+ <20170413182839.25381-6-javier@osg.samsung.com>
+ <869a0f44-6c97-2109-776b-6da9b86c732a@axentia.se>
+ <dd93eb32-ca1e-5041-051e-c4f072f0f9a2@osg.samsung.com>
+ <20170413212059.unh2mfo2w4oc4t33@piout.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170413215114.GB29708-g2DYL2Zd6BY@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170413212059.unh2mfo2w4oc4t33@piout.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+Cc: Peter Rosin <peda@axentia.se>, linux-kernel@vger.kernel.org, Wolfram Sang <wsa@the-dreams.de>, devicetree@vger.kernel.org, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, Nicolas Ferre <nicolas.ferre@microchip.com>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org, Geert Uytterhoeven <geert@linux-m68k.org>
 List-Id: devicetree@vger.kernel.org
 
-On 04/13/2017 02:51 PM, Andrew Lunn wrote:
->> The DT binding is in tree and provides an example of how the switch
->> looks like, below is the example, but I am also adding the MDIO bus and
->> the PHYs just so you can see how things wind up:
+Hello Alexandre,
+
+On 04/13/2017 06:20 PM, Alexandre Belloni wrote:
+> On 13/04/2017 at 18:09:56 -0300, Javier Martinez Canillas wrote:
+>> Hello Peter,
 >>
->> switch_top@f0b00000 {
->>         compatible = "simple-bus";
->>         #size-cells = <1>;
->>         #address-cells = <1>;
->>         ranges = <0 0xf0b00000 0x40804>;
+>> On 04/13/2017 05:43 PM, Peter Rosin wrote:
+>>> On 2017-04-13 20:28, Javier Martinez Canillas wrote:
 >>
->>         ethernet_switch@0 {
->>                 compatible = "brcm,bcm7445-switch-v4.0";
->>                 #size-cells = <0>;
->>                 #address-cells = <1>;
->>                 reg = <0x0 0x40000
->>                         0x40000 0x110
->>                         0x40340 0x30
->>                         0x40380 0x30
->>                         0x40400 0x34
->>                         0x40600 0x208>;
->>                 reg-names = "core", "reg", intrl2_0", "intrl2_1",
->>                             "fcb, "acb";
->>                 interrupts = <0 0x18 0
->>                                 0 0x19 0>;
->>                 brcm,num-gphy = <1>;
->>                 brcm,num-rgmii-ports = <2>;
->>                 brcm,fcb-pause-override;
->>                 brcm,acb-packets-inflight;
+>> [snip]
 >>
->>                 ports {
->>                         #address-cells = <1>;
->>                         #size-cells = <0>;
+>>>>  
+>>>>  	eeprom@50 {
+>>>> -		compatible = "nxp,24c02";
+>>>> +		compatible = "nxp,24c02","atmel,24c02";
+>>>>  		reg = <0x50>;
+>>>>  		pagesize = <16>;
+>>>>  	};
+>>>>
+>>>
+>>> Sure, in principle. But not having a space after the commas is a real OCD
+>>> trigger for me. My spine is rotating... :-)
+>>>
 >>
->>                         port@0 {
->>                                 label = "gphy";
->>                                 reg = <0>;
->> 				phy-handle = <&phy5>;
->>                         };
+>> Right, Geert already pointed out. It's something I missed in my sed script
+>> so I got it wrong in all the DTS :(
 >>
->> 			sw0port1: port@1 {
->> 				label = "rgmii_1";
->> 				reg = <1>;
->> 				phy-mode = "rgmii";
->> 				fixed-link {
->> 					speed = <1000>;
->> 					full-duplex;
->> 				};
->> 			}
->>                 };
->>         };
+>> I'll fix my script and send a v2.
 >>
->> 	mdio@403c0 {
->> 		reg = <0x403c0 0x8 0x40300 0x18>;
->> 		#address-cells = <0x1>;
->> 		#size-cells = <0x0>;
->> 		compatible = "brcm,unimac-mdio";
->> 		reg-names = "mdio", "mdio_indir_rw";
->>
->> 		switch: switch@0 {
->> 			broken-turn-around;
->> 			reg = <0x0>;
->> 			compatible = "brcm,bcm53125";
->> 			#address-cells = <1>;
->> 			#size-cells = <0>;
->>
->> 			ports {
->> 				..
->> 				port@8 {
->> 					ethernet = <&sw0port1>;
->> 				};
->> 				...
->> 			};
->> 		};
->>
->> 		phy5: ethernet-phy@5 {
->> 			reg = <0x5>;
->> 			compatible = "ethernet-phy-ieee802.3-c22";
->> 		};
->> 	};
->> };
 > 
-> So phy5 is connected to the internal switch with a phy-handle. But
-> because of your double usage of this node, it also can be mapped into
-> the external switches port 5?
+> That would be v3, right? ;)
 > 
-> Is that your problem?
 
-Kind of, it does translate into an invalid mapping by virtue of the PHY
-being in a bad state, see below.
+err, right :)
 
-The mapping per-se is not the problem, but the fact that the PHY driver
-is probed twice is the original problem that I have. The double probing
-comes from the switch driver being probed first (drivers/net/dsa/ comes
-before drivers/net/ethernet) and depends on the master netdev to be running.
-
-We need to turn on the Gigabit PHY clock in order to be able to read its
-PHY OUI and map it to a driver (yes a workaround could be to put its
-exact compatible string in DT, that way, no need for get_phy_id()). We
-have a local change in mdio-bcm-unimac.c which does exactly that (using
-the clock framework), and then, to avoid artificially bumping the clock
-reference count, the BCM7xxx PHY driver in its ->probe() function checks
-whether the clock is enabled (yes, using __clk_is_enabled while it
-probably should not) and keep the clock turned on for the MDIO layer to
-successfully read/write from the PHY. The BCM7xxx PHY driver does
-properly manage the clock though, and turns it off upon ->remove(). We
-got probed and removed once, no more clock enabled because of the first
-probe deferral.
-
-The second time around, when the slave MII bus probes us again, we go
-through the BCM7xxx ->probe() and ->remove() callbacks again, but the
-clock was already turned off due to first probe that got deferred.
-
-When the bcm_sf2 driver finally gets initialized, we try to attach to
-this Gigabit PHY, the driver is there, good, but the clock is turned off
-already, so the PHY does not respond correctly at all anymore and we
-end-up reading garbage.
-
+>>> Anyway, with those whitespace fixes (and without them too, but please):
+>>> Acked-by: Peter Rosin <peda@axentia.se>
+>>>
+>>
+>> Thanks for the review!
+>>
 > 
-> It seems like you should add an mdio node inside your switch node, and
-> list your external switch internal/external phys there if needed.
+> I'd like to be copied on the first patches to ensure they are applied
+> before applying that one. (Also, it is probably too late for 4.12 anyway
 
-I think I am going to keep this hack local and think about solving this
-differently on an upstream kernel, since I am convinced now this is not
-necessarily the right approach.
+Ok, I'll copy you on the whole patch-set. But keep in mind that there is
+no strict order since $SUBJECT without the at24 OF table is a no-op (the
+match happens between first device in compatible string and I2C table).
 
-Thanks for your time and consideration!
+> because we are past rc6).
+>
+
+Yes, there's no rush on applying these. I'm just posting all the patches
+needed to finally have a proper OF modalias reporting in the I2C core.
+
+Best regards,
 -- 
-Florian
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Javier Martinez Canillas
+Open Source Group
+Samsung Research America
