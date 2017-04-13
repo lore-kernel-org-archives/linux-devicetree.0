@@ -1,99 +1,65 @@
-From: Alan Tull <atull@kernel.org>
-Subject: Re: [PATCH v5] dt-bindings: fpga: Add bindings document for Xilinx
- LogiCore PR Decoupler
-Date: Thu, 13 Apr 2017 15:25:45 -0500
-Message-ID: <CANk1AXQGXdAY_vz5GzujQL1ziqa5W23bGvkUPU2u5BaJKhBzrA@mail.gmail.com>
-References: <1491757831-10510-1-git-send-email-mdf@kernel.org> <20170413200728.z6t2c7e6jobpstmb@rob-hp-laptop>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/3] input: touchscreen: ar1021_i2c: add support for
+ AR1020
+Date: Thu, 13 Apr 2017 15:35:32 -0500
+Message-ID: <20170413203532.thktt4yhqsg34cvc@rob-hp-laptop>
+References: <1491906479-17639-1-git-send-email-martin.kepplinger@ginzinger.com>
+ <20170412154054.GB6297@dtor-ws>
+ <fd7e784f-824c-1fff-4978-858c11971999@ginzinger.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170413200728.z6t2c7e6jobpstmb@rob-hp-laptop>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Moritz Fischer <mdf@kernel.org>, linux-fpga@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Michal Simek <michal.simek@xilinx.com>, =?UTF-8?Q?S=C3=B6ren_Brinkmann?= <soren.brinkmann@xilinx.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <fd7e784f-824c-1fff-4978-858c11971999-hfTNJOUbDMh54TAoqtyWWQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Martin Kepplinger <martin.kepplinger-hfTNJOUbDMh54TAoqtyWWQ@public.gmane.org>
+Cc: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, christian.gmeiner-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 13, 2017 at 3:07 PM, Rob Herring <robh@kernel.org> wrote:
-> On Sun, Apr 09, 2017 at 10:10:31AM -0700, Moritz Fischer wrote:
->> This adds the binding documentation for the Xilinx LogiCORE PR
->> Decoupler soft core.
->>
->> Signed-off-by: Moritz Fischer <mdf@kernel.org>
->> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
->> Acked-by: Alan Tull <atull@kernel.org>
->> Cc: Sören Brinkmann <soren.brinkmann@xilinx.com>
->> Cc: linux-kernel@vger.kernel.org
->> Cc: devicetree@vger.kernel.org
->> ---
->>
->> Changes from v4:
->> - Ssubject line
->> - Replaced 'or' by 'followed by' as suggested by Rob
->>
->> Changes from v3:
->> - Addressed Michal's comments
->> - Addressed Alan's Comments
->> - Added Alan's Acked-by
->>
->> Changes from v2:
->> - Added refence to generic fpga-region bindings
->> - Fixed up reg property in example
->> - Added fallback to "xlnx,pr-decoupler" without version
->>
->> Changes from v1:
->> - Added clock names & clock to example
->> - Merged some of the description from Michal's version
->>
->> ---
->>  .../bindings/fpga/xilinx-pr-decoupler.txt          | 36 ++++++++++++++++++++++
->>  1 file changed, 36 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/fpga/xilinx-pr-decoupler.txt
->>
->> diff --git a/Documentation/devicetree/bindings/fpga/xilinx-pr-decoupler.txt b/Documentation/devicetree/bindings/fpga/xilinx-pr-decoupler.txt
->> new file mode 100644
->> index 0000000..b2c58fb
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/fpga/xilinx-pr-decoupler.txt
->> @@ -0,0 +1,36 @@
->> +Xilinx LogiCORE Partial Reconfig Decoupler Softcore
->> +
->> +The Xilinx LogiCORE Partial Reconfig Decoupler manages one or more
->> +decouplers / fpga bridges.
->> +The controller can decouple/disable the bridges which prevents signal
->> +changes from passing through the bridge.  The controller can also
->> +couple / enable the bridges which allows traffic to pass through the
->> +bridge normally.
->> +
->> +The Driver supports only MMIO handling. A PR region can have multiple
->> +PR Decouplers which can be handled independently or chained via decouple/
->> +decouple_status signals.
->> +
->> +Required properties:
->> +- compatible         : Should contain "xlnx,pr-decoupler-1.00" followed by
->> +                          "xlnx,pr-decoupler"
->> +- regs                       : base address and size for decoupler module
->> +- clocks             : input clock to IP
->> +- clock-names                : should contain "aclk"
->> +
->> +Optional properties:
->> +- bridge-enable              : 0 if driver should disable bridge at startup
->> +                       1 if driver should enable bridge at startup
->> +                       Default is to leave bridge in current state.
->
-> Did this get into a common location? If so, then just "see .../?.txt" is
-> enough of a description.
+On Thu, Apr 13, 2017 at 08:38:39AM +0200, Martin Kepplinger wrote:
+> 
+> 
+> On 2017-04-12 17:40, Dmitry Torokhov wrote:
+> > Hi Martin,
+> > 
+> > On Tue, Apr 11, 2017 at 12:27:57PM +0200, Martin Kepplinger wrote:
+> >> ar1021_i2c simply also supports the ar1020 device we use. This is tested.
+> >> They also share the same datasheet:
+> >>
+> >>    http://ww1.microchip.com/downloads/en/DeviceDoc/40001393C.pdf
+> >>
+> >> We differentiate not only to make it obvious that we support both devices,
+> >> but also to be able to implement the few model specific things in the
+> >> future.
 
-IIRC we went with this as is, with the intent of moving it to
-a common location in a separate patch.  This binding shows
-up in a a few bindings docs, so one patch could move it from all
-of them at the same time.  That hasn't happened yet.
+[...]
 
-Alan
+> > 
+> > I do not see where you handle ar1020 differently from ar1021. If devices
+> > are compatible, you do not need to add a new compatible to the driver,
+> > simply use it in the binding:
+> > 
+> > 	compatible = "microchip,ar1020-i2c", "microchip,ar1021-i2c";
+> > 
+> > Thanks.
+> > 
+> 
+> Why would you use "microchip,ar1020-i2c" in the dts if it's not
+> available? people don't obviously see, by grepping or reading,
+> that they have a compatible driver. ... or did I get you wrong?
+> 
+> I don't handle anything differently now. Factory reset has to be done
+> differntly though, as one example. So it'd be nice to have the option
+> to add data.
 
->
-> Rob
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-fpga" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Having both lets you use the current driver now and you can match on the 
+more specific compatible string when and if you need to. That's exactly 
+why we have multiple compatibles. I could imagine the driver never 
+supports factory reset. Add both to comments or kconfig help if you want 
+to make it clear that both devices are supported.
+
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
