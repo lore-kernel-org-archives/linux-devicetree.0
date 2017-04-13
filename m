@@ -1,40 +1,85 @@
-From: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: [PATCHv4 0/2] Nokia H4+ support
-Date: Thu, 13 Apr 2017 02:26:57 +0200
-Message-ID: <20170413002659.25821-1-sre@kernel.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Marcel Holtmann <marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org>, Gustavo Padovan <gustavo-THi1TnShQwVAfugRpC6u6w@public.gmane.org>, Johan Hedberg <johan.hedberg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Sebastian Reichel <sre@kernel.org>
+Subject: [PATCHv4 1/2] dt-bindings: net: bluetooth: Add nokia-bluetooth
+Date: Thu, 13 Apr 2017 02:26:58 +0200
+Message-ID: <20170413002659.25821-2-sre@kernel.org>
+References: <20170413002659.25821-1-sre@kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170413002659.25821-1-sre@kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sebastian Reichel <sre@kernel.org>, Marcel Holtmann <marcel@holtmann.org>, Gustavo Padovan <gustavo@padovan.org>, Johan Hedberg <johan.hedberg@gmail.com>, Rob Herring <robh+dt@kernel.org>
+Cc: Pavel Machek <pavel@ucw.cz>, linux-bluetooth@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Add binding document for serial bluetooth chips using
+Nokia H4+ protocol.
 
-Here is the fourth revision of the nokia bluetooth patchset. Compared
-to the previous one the following things have changed:
-
- * Drop patch 1-8 (applied by Marcel) and update Cc/To for patchset
- * Order includes in the driver alphabetically
- * Explicitly include <linux/of.h> in the nokia bluetooth driver
-
--- Sebastian
-
-Sebastian Reichel (2):
-  dt-bindings: net: bluetooth: Add nokia-bluetooth
-  Bluetooth: add nokia driver
-
- .../devicetree/bindings/net/nokia-bluetooth.txt    |  51 ++
- drivers/bluetooth/Kconfig                          |  12 +
- drivers/bluetooth/Makefile                         |   2 +
- drivers/bluetooth/hci_nokia.c                      | 820 +++++++++++++++++++++
- 4 files changed, 885 insertions(+)
+Acked-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Sebastian Reichel <sre@kernel.org>
+---
+Changes since PATCHv1:
+ * change compatible strings
+ * mention active high/low state for GPIOs
+---
+ .../devicetree/bindings/net/nokia-bluetooth.txt    | 51 ++++++++++++++++++++++
+ 1 file changed, 51 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/net/nokia-bluetooth.txt
- create mode 100644 drivers/bluetooth/hci_nokia.c
 
+diff --git a/Documentation/devicetree/bindings/net/nokia-bluetooth.txt b/Documentation/devicetree/bindings/net/nokia-bluetooth.txt
+new file mode 100644
+index 000000000000..42be7dc9a70b
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/nokia-bluetooth.txt
+@@ -0,0 +1,51 @@
++Nokia Bluetooth Chips
++---------------------
++
++Nokia phones often come with UART connected bluetooth chips from different
++vendors and modified device API. Those devices speak a protocol named H4+
++(also known as h4p) by Nokia, which is similar to the H4 protocol from the
++Bluetooth standard. In addition to the H4 protocol it specifies two more
++UART status lines for wakeup of UART transceivers to improve power management
++and a few new packet types used to negotiate uart speed.
++
++Required properties:
++
++ - compatible: should contain "nokia,h4p-bluetooth" as well as one of the following:
++   * "brcm,bcm2048-nokia"
++   * "ti,wl1271-bluetooth-nokia"
++ - reset-gpios: GPIO specifier, used to reset the BT module (active low)
++ - bluetooth-wakeup-gpios: GPIO specifier, used to wakeup the BT module (active high)
++ - host-wakeup-gpios: GPIO specifier, used to wakeup the host processor (active high)
++ - clock-names: should be "sysclk"
++ - clocks: should contain a clock specifier for every name in clock-names
++
++Optional properties:
++
++ - None
++
++Example:
++
++/ {
++       /* controlled (enabled/disabled) directly by BT module */
++       bluetooth_clk: vctcxo {
++               compatible = "fixed-clock";
++               #clock-cells = <0>;
++               clock-frequency = <38400000>;
++       };
++};
++
++&uart2 {
++       pinctrl-names = "default";
++       pinctrl-0 = <&uart2_pins>;
++
++       bluetooth {
++               compatible = "ti,wl1271-bluetooth-nokia", "nokia,h4p-bluetooth";
++
++               reset-gpios = <&gpio1 26 GPIO_ACTIVE_LOW>; /* gpio26 */
++               host-wakeup-gpios = <&gpio4 5 GPIO_ACTIVE_HIGH>; /* gpio101 */
++               bluetooth-wakeup-gpios = <&gpio2 5 GPIO_ACTIVE_HIGH>; /* gpio37 */
++
++               clocks = <&bluetooth_clk>;
++               clock-names = "sysclk";
++       };
++};
 -- 
 2.11.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
