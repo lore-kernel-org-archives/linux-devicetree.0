@@ -1,52 +1,177 @@
-From: <sean.wang@mediatek.com>
-Subject: [PATCH 1/2] dt-bindings: hwrng: Add Mediatek hardware random generator bindings
-Date: Thu, 13 Apr 2017 15:05:07 +0800
-Message-ID: <1492067108-14748-2-git-send-email-sean.wang@mediatek.com>
-References: <1492067108-14748-1-git-send-email-sean.wang@mediatek.com>
+From: Minghsiu Tsai <minghsiu.tsai@mediatek.com>
+Subject: [PATCH 2/3] arm64: dts: mt8173: Fix mdp device tree
+Date: Thu, 13 Apr 2017 15:33:06 +0800
+Message-ID: <1492068787-17838-3-git-send-email-minghsiu.tsai@mediatek.com>
+References: <1492068787-17838-1-git-send-email-minghsiu.tsai@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1492067108-14748-1-git-send-email-sean.wang@mediatek.com>
+In-Reply-To: <1492068787-17838-1-git-send-email-minghsiu.tsai@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: herbert@gondor.apana.org.au, mpm@selenic.com, robh+dt@kernel.org, mark.rutland@arm.com, clabbe.montjoie@gmail.com, prasannatsmkumar@gmail.com, romain.perier@free-electrons.com, shannon.nelson@oracle.com
-Cc: weiyongjun1@huawei.com, devicetree@vger.kernel.org, linux-crypto@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, keyhaede@gmail.com, Sean Wang <sean.wang@mediatek.com>
+To: Hans Verkuil <hans.verkuil@cisco.com>, daniel.thompson@linaro.org, Rob Herring <robh+dt@kernel.org>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Matthias Brugger <matthias.bgg@gmail.com>, Daniel Kurtz <djkurtz@chromium.org>, Pawel Osciak <posciak@chromium.org>, Houlong Wei <houlong.wei@mediatek.com>
+Cc: srv_heupstream@mediatek.com, Eddie Huang <eddie.huang@mediatek.com>, Yingjoe Chen <yingjoe.chen@mediatek.com>, Wu-Cheng Li <wuchengli@google.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org, linux-mediatek@lists.infradead.org, Minghsiu Tsai <minghsiu.tsai@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Sean Wang <sean.wang@mediatek.com>
+From: Daniel Kurtz <djkurtz@chromium.org>
 
-Document the devicetree bindings for Mediatek random number
-generator which could be found on MT7623 SoC or other similar
-Mediatek SoCs.
+If the mdp_* nodes are under an mdp sub-node, their corresponding
+platform device does not automatically get its iommu assigned properly.
 
-Signed-off-by: Sean Wang <sean.wang@mediatek.com>
+Fix this by moving the mdp component nodes up a level such that they are
+siblings of mdp and all other SoC subsystems.  This also simplifies the
+device tree.
+
+Signed-off-by: Daniel Kurtz <djkurtz@chromium.org>
+Signed-off-by: Minghsiu Tsai <minghsiu.tsai@mediatek.com>
+
 ---
- Documentation/devicetree/bindings/rng/mtk-rng.txt | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/rng/mtk-rng.txt
+ arch/arm64/boot/dts/mediatek/mt8173.dtsi | 126 +++++++++++++++----------------
+ 1 file changed, 60 insertions(+), 66 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/rng/mtk-rng.txt b/Documentation/devicetree/bindings/rng/mtk-rng.txt
-new file mode 100644
-index 0000000..a6d62a2
---- /dev/null
-+++ b/Documentation/devicetree/bindings/rng/mtk-rng.txt
-@@ -0,0 +1,18 @@
-+Device-Tree bindings for Mediatek random number generator
-+found in Mediatek SoC family
-+
-+Required properties:
-+- compatible	    : Should be "mediatek,mt7623-rng"
-+- clocks	    : list of clock specifiers, corresponding to
-+		      entries in clock-names property;
-+- clock-names	    : Should contain "rng" entries;
-+- reg 		    : Specifies base physical address and size of the registers
-+
-+Example:
-+
-+rng: rng@1020f000 {
-+	compatible = "mediatek,mt7623-rng";
-+	reg = <0 0x1020f000 0 0x1000>;
-+	clocks = <&infracfg CLK_INFRA_TRNG>;
-+	clock-names = "rng";
-+};
+diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+index 6922252..d28a363 100644
+--- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+@@ -792,80 +792,74 @@
+ 			#clock-cells = <1>;
+ 		};
+ 
+-		mdp {
+-			compatible = "mediatek,mt8173-mdp";
+-			#address-cells = <2>;
+-			#size-cells = <2>;
+-			ranges;
++		mdp_rdma0: rdma@14001000 {
++			compatible = "mediatek,mt8173-mdp-rdma",
++				     "mediatek,mt8173-mdp";
++			reg = <0 0x14001000 0 0x1000>;
++			clocks = <&mmsys CLK_MM_MDP_RDMA0>,
++				 <&mmsys CLK_MM_MUTEX_32K>;
++			power-domains = <&scpsys MT8173_POWER_DOMAIN_MM>;
++			iommus = <&iommu M4U_PORT_MDP_RDMA0>;
++			mediatek,larb = <&larb0>;
+ 			mediatek,vpu = <&vpu>;
++		};
+ 
+-			mdp_rdma0: rdma@14001000 {
+-				compatible = "mediatek,mt8173-mdp-rdma";
+-				reg = <0 0x14001000 0 0x1000>;
+-				clocks = <&mmsys CLK_MM_MDP_RDMA0>,
+-					 <&mmsys CLK_MM_MUTEX_32K>;
+-				power-domains = <&scpsys MT8173_POWER_DOMAIN_MM>;
+-				iommus = <&iommu M4U_PORT_MDP_RDMA0>;
+-				mediatek,larb = <&larb0>;
+-			};
+-
+-			mdp_rdma1: rdma@14002000 {
+-				compatible = "mediatek,mt8173-mdp-rdma";
+-				reg = <0 0x14002000 0 0x1000>;
+-				clocks = <&mmsys CLK_MM_MDP_RDMA1>,
+-					 <&mmsys CLK_MM_MUTEX_32K>;
+-				power-domains = <&scpsys MT8173_POWER_DOMAIN_MM>;
+-				iommus = <&iommu M4U_PORT_MDP_RDMA1>;
+-				mediatek,larb = <&larb4>;
+-			};
++		mdp_rdma1: rdma@14002000 {
++			compatible = "mediatek,mt8173-mdp-rdma";
++			reg = <0 0x14002000 0 0x1000>;
++			clocks = <&mmsys CLK_MM_MDP_RDMA1>,
++				 <&mmsys CLK_MM_MUTEX_32K>;
++			power-domains = <&scpsys MT8173_POWER_DOMAIN_MM>;
++			iommus = <&iommu M4U_PORT_MDP_RDMA1>;
++			mediatek,larb = <&larb4>;
++		};
+ 
+-			mdp_rsz0: rsz@14003000 {
+-				compatible = "mediatek,mt8173-mdp-rsz";
+-				reg = <0 0x14003000 0 0x1000>;
+-				clocks = <&mmsys CLK_MM_MDP_RSZ0>;
+-				power-domains = <&scpsys MT8173_POWER_DOMAIN_MM>;
+-			};
++		mdp_rsz0: rsz@14003000 {
++			compatible = "mediatek,mt8173-mdp-rsz";
++			reg = <0 0x14003000 0 0x1000>;
++			clocks = <&mmsys CLK_MM_MDP_RSZ0>;
++			power-domains = <&scpsys MT8173_POWER_DOMAIN_MM>;
++		};
+ 
+-			mdp_rsz1: rsz@14004000 {
+-				compatible = "mediatek,mt8173-mdp-rsz";
+-				reg = <0 0x14004000 0 0x1000>;
+-				clocks = <&mmsys CLK_MM_MDP_RSZ1>;
+-				power-domains = <&scpsys MT8173_POWER_DOMAIN_MM>;
+-			};
++		mdp_rsz1: rsz@14004000 {
++			compatible = "mediatek,mt8173-mdp-rsz";
++			reg = <0 0x14004000 0 0x1000>;
++			clocks = <&mmsys CLK_MM_MDP_RSZ1>;
++			power-domains = <&scpsys MT8173_POWER_DOMAIN_MM>;
++		};
+ 
+-			mdp_rsz2: rsz@14005000 {
+-				compatible = "mediatek,mt8173-mdp-rsz";
+-				reg = <0 0x14005000 0 0x1000>;
+-				clocks = <&mmsys CLK_MM_MDP_RSZ2>;
+-				power-domains = <&scpsys MT8173_POWER_DOMAIN_MM>;
+-			};
++		mdp_rsz2: rsz@14005000 {
++			compatible = "mediatek,mt8173-mdp-rsz";
++			reg = <0 0x14005000 0 0x1000>;
++			clocks = <&mmsys CLK_MM_MDP_RSZ2>;
++			power-domains = <&scpsys MT8173_POWER_DOMAIN_MM>;
++		};
+ 
+-			mdp_wdma0: wdma@14006000 {
+-				compatible = "mediatek,mt8173-mdp-wdma";
+-				reg = <0 0x14006000 0 0x1000>;
+-				clocks = <&mmsys CLK_MM_MDP_WDMA>;
+-				power-domains = <&scpsys MT8173_POWER_DOMAIN_MM>;
+-				iommus = <&iommu M4U_PORT_MDP_WDMA>;
+-				mediatek,larb = <&larb0>;
+-			};
++		mdp_wdma0: wdma@14006000 {
++			compatible = "mediatek,mt8173-mdp-wdma";
++			reg = <0 0x14006000 0 0x1000>;
++			clocks = <&mmsys CLK_MM_MDP_WDMA>;
++			power-domains = <&scpsys MT8173_POWER_DOMAIN_MM>;
++			iommus = <&iommu M4U_PORT_MDP_WDMA>;
++			mediatek,larb = <&larb0>;
++		};
+ 
+-			mdp_wrot0: wrot@14007000 {
+-				compatible = "mediatek,mt8173-mdp-wrot";
+-				reg = <0 0x14007000 0 0x1000>;
+-				clocks = <&mmsys CLK_MM_MDP_WROT0>;
+-				power-domains = <&scpsys MT8173_POWER_DOMAIN_MM>;
+-				iommus = <&iommu M4U_PORT_MDP_WROT0>;
+-				mediatek,larb = <&larb0>;
+-			};
++		mdp_wrot0: wrot@14007000 {
++			compatible = "mediatek,mt8173-mdp-wrot";
++			reg = <0 0x14007000 0 0x1000>;
++			clocks = <&mmsys CLK_MM_MDP_WROT0>;
++			power-domains = <&scpsys MT8173_POWER_DOMAIN_MM>;
++			iommus = <&iommu M4U_PORT_MDP_WROT0>;
++			mediatek,larb = <&larb0>;
++		};
+ 
+-			mdp_wrot1: wrot@14008000 {
+-				compatible = "mediatek,mt8173-mdp-wrot";
+-				reg = <0 0x14008000 0 0x1000>;
+-				clocks = <&mmsys CLK_MM_MDP_WROT1>;
+-				power-domains = <&scpsys MT8173_POWER_DOMAIN_MM>;
+-				iommus = <&iommu M4U_PORT_MDP_WROT1>;
+-				mediatek,larb = <&larb4>;
+-			};
++		mdp_wrot1: wrot@14008000 {
++			compatible = "mediatek,mt8173-mdp-wrot";
++			reg = <0 0x14008000 0 0x1000>;
++			clocks = <&mmsys CLK_MM_MDP_WROT1>;
++			power-domains = <&scpsys MT8173_POWER_DOMAIN_MM>;
++			iommus = <&iommu M4U_PORT_MDP_WROT1>;
++			mediatek,larb = <&larb4>;
+ 		};
+ 
+ 		ovl0: ovl@1400c000 {
 -- 
 1.9.1
