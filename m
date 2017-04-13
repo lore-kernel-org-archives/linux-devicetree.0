@@ -1,208 +1,395 @@
-From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [RFC net-next] of: mdio: Honor hints from MDIO bus drivers
-Date: Wed, 12 Apr 2017 16:58:26 -0700
-Message-ID: <6fdcec91-829b-70c9-8780-992b67f6831a@gmail.com>
-References: <20170410214258.9409-1-f.fainelli@gmail.com>
- <8ef102a4-22e5-def8-b50e-04f84b5849d7@gmail.com>
- <20170411231424.GA6174@lunn.ch>
- <6de72d4c-5634-f3d6-5bfd-fcc0acda0b83@gmail.com>
- <417fdaa1-7aba-e646-8a50-043322f1410d@gmail.com>
- <20170412221016.GA29708@lunn.ch>
+From: Vikas MANOCHA <vikas.manocha-qxv4g6HH51o@public.gmane.org>
+Subject: RE: [PATCH] ARM: dts: stm32f7: add STM32f769I & stm32f746 discovery
+ board support
+Date: Thu, 13 Apr 2017 00:03:22 +0000
+Message-ID: <e48d63b2d79249b3b0da4388b5e3dc2d@SFHDAG7NODE3.st.com>
+References: <1491613929-11485-1-git-send-email-vikas.manocha@st.com>
+ <6ea617a3-94bc-870f-dd52-a45ad45c6d26@st.com>
+ <6e07ebcf-4463-523f-ea24-5a176efb0779@st.com>
+ <e6592982-9c24-bfde-469b-770218bf88be@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170412221016.GA29708-g2DYL2Zd6BY@public.gmane.org>
+In-Reply-To: <e6592982-9c24-bfde-469b-770218bf88be-qxv4g6HH51o@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Alexandre TORGUE <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Patrice CHOTARD <patrice.chotard-qxv4g6HH51o@public.gmane.org>
+Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "moderated list:ARM PORT" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 04/12/2017 03:10 PM, Andrew Lunn wrote:
->>>>> To give some more background and rational for this change.
->>>>>
->>>>> On a platform where we have a parent MDIO bus, backed by the
->>>>> mdio-bcm-unimac.c driver, we also register a slave MII bus (through
->>>>> net/dsa/dsa2.c) which is parented to this UniMAC MDIO bus through an
->>>>> assignment of of_node. This slave MII bus is created in order to
->>>>> intercept reads/writes to problematic addresses (e.g: that clashes with
->>>>> another piece of hardware).
->>>>>
->>>>> This means that the slave DSA MII bus inherits all child nodes from the
->>>>> originating master MII bus. This also means that when the slave MII bus
->>>>> is probed via of_mdiobus_register(), we probe the same devices twice:
->>>>> once through the master, another time through the slave.
->>>>
->>>> Ah, O.K. This makes more sense. On the hardware i have, we get three
->>>> deep in MDIO busses. We have the FEC mdio bus. On top of that we have
->>>> a gpio-mux-mdio, and on top of that we have the mv88e6xxx mdio
->>>> bus. And i've never seen issues.
->>>>
->>>> So your real problem here is you have two mdio busses using the same
->>>> device tree properties. I would actually say that is just plain
->>>> broken.
->>>
->>> From a Device Tree/HW representation perspective, we do have the
->>> external BCM53125 switch physically attached to the 7445/7278
->>> SWITCH_MDIO bus (backed by mdio-bcm-unimac) so in that regard the
->>> representation is correct. There is also an integrated Gigabit PHY
->>> (bcm7xxx) which is attached to that bus.
+Hi Alex,
+
+> -----Original Message-----
+> From: Alexandre TORGUE
+> Sent: Tuesday, April 11, 2017 12:51 AM
+> To: Vikas MANOCHA <vikas.manocha-qxv4g6HH51o@public.gmane.org>; Patrice CHOTARD <patrice.chotard-qxv4g6HH51o@public.gmane.org>
+> Cc: open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>; moderated list:ARM PORT
+> <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>; open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>; Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>; Maxime
+> Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>; Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>; Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+> Subject: Re: [PATCH] ARM: dts: stm32f7: add STM32f769I & stm32f746 discovery board support
 > 
-> This is made harder by you talking about a board which does not appear
-> to have its DT file in mainline. So i'm having to guess what it looks
-> like.
+> Hi Vikas
+> 
+> On 04/10/2017 08:40 PM, Vikas Manocha wrote:
+> > Thanks Alex,
+> >
+> > On 04/10/2017 12:23 AM, Alexandre Torgue wrote:
+> >> Hi
+> >>
+> >> On 04/08/2017 03:12 AM, Vikas Manocha wrote:
+> >>> Stm32f769I & stm32f746 are MCUs of stm32f7 family. Here are the
+> >>> major spces of the two boards:
+> >>>
+> >>> stm32f769I discovery board:
+> >>>     - Cortex-M7 core @216MHz
+> >>>     - 2MB mcu internal flash
+> >>>     - 512KB internal sram
+> >>>     - 16MB sdram memory
+> >>>     - 64MB qspi flash memory
+> >>>     - 4 inch wvga LCD-TFT Display
+> >>>
+> >>> stm32f746 discovery board:
+> >>>     - Cortex-M7 core @216MHz
+> >>>     - 1MB mcu internal flash
+> >>>     - 320KB internal sram
+> >>>     - 8MB sdram memory
+> >>>     - 16MB qspi flash memory
+> >>>     - 4.3 inch 480x272 LCD-TFT display
+> >>>
+> >>> Signed-off-by: Vikas Manocha <vikas.manocha-qxv4g6HH51o@public.gmane.org>
+> >>> ---
+> >>>  arch/arm/boot/dts/Makefile            |   2 +
+> >>>  arch/arm/boot/dts/stm32f746-disco.dts | 101 ++++++++++++++++++++++++++++++++++
+> >>>  arch/arm/boot/dts/stm32f746.dtsi      |   2 +-
+> >>>  arch/arm/boot/dts/stm32f769-disco.dts | 101
+> >>> ++++++++++++++++++++++++++++++++++
+> >>>  4 files changed, 205 insertions(+), 1 deletion(-)  create mode
+> >>> 100644 arch/arm/boot/dts/stm32f746-disco.dts
+> >>>  create mode 100644 arch/arm/boot/dts/stm32f769-disco.dts
+> >>>
+> >>> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> >>> index 0118084..a119f74 100644
+> >>> --- a/arch/arm/boot/dts/Makefile
+> >>> +++ b/arch/arm/boot/dts/Makefile
+> >>> @@ -763,6 +763,8 @@ dtb-$(CONFIG_ARCH_STI) += \
+> >>> dtb-$(CONFIG_ARCH_STM32)+= \
+> >>>      stm32f429-disco.dtb \
+> >>>      stm32f469-disco.dtb \
+> >>> +    stm32f746-disco.dtb \
+> >>> +    stm32f769-disco.dtb \
+> >>>      stm32429i-eval.dtb \
+> >>>      stm32746g-eval.dtb
+> >>>  dtb-$(CONFIG_MACH_SUN4I) += \
+> >>> diff --git a/arch/arm/boot/dts/stm32f746-disco.dts
+> >>> b/arch/arm/boot/dts/stm32f746-disco.dts
+> >>> new file mode 100644
+> >>> index 0000000..c0e313f
+> >>> --- /dev/null
+> >>> +++ b/arch/arm/boot/dts/stm32f746-disco.dts
+> >>> @@ -0,0 +1,101 @@
+> >>> +/*
+> >>> + * Copyright 2017 - Vikas MANOCHA <vikas.manocha-qxv4g6HH51o@public.gmane.org>
+> >>> + *
+> >>> + * This file is dual-licensed: you can use it either under the
+> >>> +terms
+> >>> + * of the GPL or the X11 license, at your option. Note that this
+> >>> +dual
+> >>> + * licensing only applies to this file, and not this project as a
+> >>> + * whole.
+> >>> + *
+> >>> + *  a) This file is free software; you can redistribute it and/or
+> >>> + *     modify it under the terms of the GNU General Public License as
+> >>> + *     published by the Free Software Foundation; either version 2 of the
+> >>> + *     License, or (at your option) any later version.
+> >>> + *
+> >>> + *     This file is distributed in the hope that it will be useful,
+> >>> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+> >>> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> >>> + *     GNU General Public License for more details.
+> >>> + *
+> >>> + * Or, alternatively,
+> >>> + *
+> >>> + *  b) Permission is hereby granted, free of charge, to any person
+> >>> + *     obtaining a copy of this software and associated documentation
+> >>> + *     files (the "Software"), to deal in the Software without
+> >>> + *     restriction, including without limitation the rights to use,
+> >>> + *     copy, modify, merge, publish, distribute, sublicense, and/or
+> >>> + *     sell copies of the Software, and to permit persons to whom the
+> >>> + *     Software is furnished to do so, subject to the following
+> >>> + *     conditions:
+> >>> + *
+> >>> + *     The above copyright notice and this permission notice shall be
+> >>> + *     included in all copies or substantial portions of the Software.
+> >>> + *
+> >>> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+> >>> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+> >>> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+> >>> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+> >>> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+> >>> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+> >>> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+> >>> + *     OTHER DEALINGS IN THE SOFTWARE.
+> >>> + */
+> >>> +
+> >>> +/dts-v1/;
+> >>> +#include "stm32f746.dtsi"
+> >>> +#include <dt-bindings/input/input.h>
+> >>> +
+> >>> +/ {
+> >>> +    model = "STMicroelectronics STM32F746-DISCO board";
+> >>> +    compatible = "st,stm32f746-disco", "st,stm32f746";
+> >>> +
+> >>> +    chosen {
+> >>> +        bootargs = "root=/dev/ram";
+> >>> +        stdout-path = "serial0:115200n8";
+> >>> +    };
+> >>> +
+> >>> +    memory {
+> >>> +        reg = <0xC0000000 0x800000>;
+> >>> +    };
+> >>> +
+> >>> +    aliases {
+> >>> +        serial0 = &usart1;
+> >>> +    };
+> >>> +
+> >>> +};
+> >>> +
+> >>> +&clk_hse {
+> >>> +    clock-frequency = <25000000>;
+> >>> +};
+> >>> +
+> >>> +&pinctrl {
+> >>
+> >>
+> >> Pin muxing is not defined in board file. Please move it into SOC dtsi file.
 
-The DT binding is in tree and provides an example of how the switch
-looks like, below is the example, but I am also adding the MDIO bus and
-the PHYs just so you can see how things wind up:
+Ok, I will move pin muxing in the stm32f746.dtsi file as per current implementation & send V2.
 
-switch_top@f0b00000 {
-        compatible = "simple-bus";
-        #size-cells = <1>;
-        #address-cells = <1>;
-        ranges = <0 0xf0b00000 0x40804>;
+> >
+> > Pin muxing used is different for different boards. e.g. usart1_rx pad is PA10 for stm32f769-disco board while it is PB7 for stm32f746-
+> disco board.
+> > The other possibilities for same pad (usart1_rx) is PB15. To make situation bit more complex, it is only available in f769 device.
+> >
+> > Putting in SOC dtsi file means having lot of combinations for different pins in separate groups.
+> > e.g. only for one instance of one ip (usart1), following groups might be required at one point of time:
+> >
+> > usart1_pa10_pa9 {..}
+> > usart1_pa10_pb14 {..}
+> > usart1_pa10_pb6 {..}
+> >
+> > usart1_pb7_pa9 {..}
+> > usart1_pb7_pb14 {..}
+> > usart1_pb7_pb6 {..}
+> >
+> > usart1_pb15_pa9 {..}
+> > usart1_pb15_pb14 {..}
+> > usart1_pb15_pb6 {..}
+> >
+> > In case of boards based on stm32f746 device, all the above mentioned groups with pb14 & pb15 will not be available.
+> > One solution (to avoid using not available groups) could be to have separate dtsi (or separate pinmux.dtsi) for different devices of
+> same family like one for stm32f746 & other for stm32f769. Still it does not resolve the need to have lot of groups combinations for
+> each instance of every peripheral in dtsi as mentioned above.
+> 
+> Yes, it is what I want to have. I did the job on for STM32F4 (F429 / F469). You could have a look on ARM Linux patchwork:
+> https://patchwork.kernel.org/patch/9669433/
+> 
+> To sum-up the implementation:
+> 
+> -Pinmuxing is defined in separate files which will be included in board dts file.
+> 
+> -We have a common pinmuxing file + a dedicated pinmuxing file per SOC.
+> 
+> Example for STMF469-disco:
+> stm32f4-pinctrl.dtsi --> stm32f469-pinctrl.dtsi --> stm32f469-disco.dts
+> 
+> stm32f4-pinctrl.dtsi contains common pinmuxing bindings between STM32F4 stm32f469-pinctrl.dtsi contains dedicated pinmuxing
+> bindings for
+> STM32F469 (ex: QSPI pins, gpio-ranges ...)
+> 
+> This implementation is under review.
 
-        ethernet_switch@0 {
-                compatible = "brcm,bcm7445-switch-v4.0";
-                #size-cells = <0>;
-                #address-cells = <1>;
-                reg = <0x0 0x40000
-                        0x40000 0x110
-                        0x40340 0x30
-                        0x40380 0x30
-                        0x40400 0x34
-                        0x40600 0x208>;
-                reg-names = "core", "reg", intrl2_0", "intrl2_1",
-                            "fcb, "acb";
-                interrupts = <0 0x18 0
-                                0 0x19 0>;
-                brcm,num-gphy = <1>;
-                brcm,num-rgmii-ports = <2>;
-                brcm,fcb-pause-override;
-                brcm,acb-packets-inflight;
+Sounds good.
 
-                ports {
-                        #address-cells = <1>;
-                        #size-cells = <0>;
-
-                        port@0 {
-                                label = "gphy";
-                                reg = <0>;
-				phy-handle = <&phy5>;
-                        };
-
-			sw0port1: port@1 {
-				label = "rgmii_1";
-				reg = <1>;
-				phy-mode = "rgmii";
-				fixed-link {
-					speed = <1000>;
-					full-duplex;
-				};
-			}
-                };
-        };
-
-	mdio@403c0 {
-		reg = <0x403c0 0x8 0x40300 0x18>;
-		#address-cells = <0x1>;
-		#size-cells = <0x0>;
-		compatible = "brcm,unimac-mdio";
-		reg-names = "mdio", "mdio_indir_rw";
-
-		switch: switch@0 {
-			broken-turn-around;
-			reg = <0x0>;
-			compatible = "brcm,bcm53125";
-			#address-cells = <1>;
-			#size-cells = <0>;
-
-			ports {
-				..
-				port@8 {
-					ethernet = <&sw0port1>;
-				};
-				...
-			};
-		};
-
-		phy5: ethernet-phy@5 {
-			reg = <0x5>;
-			compatible = "ethernet-phy-ieee802.3-c22";
-		};
-	};
-};
-
+Cheers,
+Vikas
 
 > 
-> So what i think we are talking about is this bit of code:
 > 
-> static int bcm_sf2_mdio_register(struct dsa_switch *ds)
-> {
->         struct bcm_sf2_priv *priv = bcm_sf2_to_priv(ds);
->         struct device_node *dn;
->         static int index;
->         int err;
+> > It seems cleaner solution would be pin muxing in board dts file. Please let me know if there is some drawback of this approach. One
+> point which i can think of is : duplication of pinmux groups in different board dts files.
 > 
->         /* Find our integrated MDIO bus node */
->         dn = of_find_compatible_node(NULL, NULL, "brcm,unimac-mdio");
->         priv->master_mii_bus = of_mdio_find_bus(dn);
->         if (!priv->master_mii_bus)
->                 return -EPROBE_DEFER;
+> Pinmuxing in board file is currently not my choice. In the board file we only select the group to use.
 > 
->         get_device(&priv->master_mii_bus->dev);
->         priv->master_mii_dn = dn;
+> Regards
+> Alex
 > 
->         priv->slave_mii_bus = devm_mdiobus_alloc(ds->dev);
->         if (!priv->slave_mii_bus)
->                 return -ENOMEM;
 > 
->         priv->slave_mii_bus->priv = priv;
->         priv->slave_mii_bus->name = "sf2 slave mii";
->         priv->slave_mii_bus->read = bcm_sf2_sw_mdio_read;
->         priv->slave_mii_bus->write = bcm_sf2_sw_mdio_write;
->         snprintf(priv->slave_mii_bus->id, MII_BUS_ID_SIZE, "sf2-%d",
->                  index++);
->         priv->slave_mii_bus->dev.of_node = dn;
-> 
-> If i get you right, your switch is hanging off the MDIO bus
-> "brcm,unimac-mdio" you find the dn for. You then register another MDIO
-> bus using the exact same node? How does that make any sense? Isn't it
-> a physical separate MDIO bus?
-
-First, the main switch is memory mapped into the 7445 SoC's register
-space. This switch has an external MDIO bus which connects to an
-integrated Gigabit PHY at MDIO address 5, but also to a BCM53125 switch
-at address 30.
-
-Because of a bug in the D0 revision of the 7445, programming the
-BCM53125 switch through MDIO ends-up programming the 7445 memory mapped
-switch as well because the integrated 7445 switch has its pseudo-PHY
-snooping accesses to the MDIO bus! What was done to work-around this is
-to create a slave MII bus through DSA, and divert the reads/writes
-from/to the BCM53125 by instead using internal 7445 switch registers
-which isolate its pseudo-PHY from the MDIO bus, thus no double
-programming anymore.
-
-Since the BCM53125 switch is a) physically attached to the mdio@403c0
-node, and b) needs to have visibility in the OF world for DSA to probe
-it, this is what I did here.
-
-The slave MII bus is using the same node here because that's the
-simplest way to make this bus inherit the devices of interest from the
-parent bus.
-
-> So it should have its own set of nodes
-> in the device tree. This is how we do it for the Marvell switches. See
-> Documentation/devicetree/binding/net/dsa/marvell.txt and
-> arch/arm/boot/dts/vf610-zii-dev-rev-b.dts. That DT blob uses
-> phy-handle to link the switch ports to the phys on the mdio bus.
-
->From a pure HW representation, this is not quite correct, because the
-switch is physically attached to mdio@403c0, but since we are
-pathologically broken, we need something different here...
--- 
-Florian
+> >
+> > Cheers,
+> > Vikas
+> >
+> >>> +    usart1_pins: usart1@0    {
+> >>> +        pins1 {
+> >>> +            pinmux = <STM32F746_PA9_FUNC_USART1_TX>;
+> >>> +                bias-disable;
+> >>> +                drive-push-pull;
+> >>> +                slew-rate = <2>;
+> >>> +        };
+> >>> +        pins2 {
+> >>> +            pinmux = <STM32F746_PB7_FUNC_USART1_RX>;
+> >>> +            bias-disable;
+> >>> +        };
+> >>> +    };
+> >>> +
+> >>> +    qspi_pins: qspi@0 {
+> >>> +        pins {
+> >>> +            pinmux = <STM32F746_PB2_FUNC_QUADSPI_CLK>,
+> >>> +                   <STM32F746_PB6_FUNC_QUADSPI_BK1_NCS>,
+> >>> +                   <STM32F746_PD11_FUNC_QUADSPI_BK1_IO0>,
+> >>> +                   <STM32F746_PD12_FUNC_QUADSPI_BK1_IO1>,
+> >>> +                   <STM32F746_PD13_FUNC_QUADSPI_BK1_IO3>,
+> >>> +                   <STM32F746_PE2_FUNC_QUADSPI_BK1_IO2>;
+> >>> +            slew-rate = <2>;
+> >>> +        };
+> >>> +    };
+> >>> +};
+> >>> +
+> >>> +&usart1 {
+> >>> +    pinctrl-0 = <&usart1_pins>;
+> >>> +    pinctrl-names = "default";
+> >>> +    status = "okay";
+> >>> +};
+> >>> diff --git a/arch/arm/boot/dts/stm32f746.dtsi
+> >>> b/arch/arm/boot/dts/stm32f746.dtsi
+> >>> index f321ffe..826700f 100644
+> >>> --- a/arch/arm/boot/dts/stm32f746.dtsi
+> >>> +++ b/arch/arm/boot/dts/stm32f746.dtsi
+> >>> @@ -178,7 +178,7 @@
+> >>>              interrupts = <1>, <2>, <3>, <6>, <7>, <8>, <9>, <10>, <23>, <40>, <41>, <42>, <62>, <76>;
+> >>>          };
+> >>>
+> >>> -        pin-controller {
+> >>> +        pinctrl: pin-controller {
+> >>>              #address-cells = <1>;
+> >>>              #size-cells = <1>;
+> >>>              compatible = "st,stm32f746-pinctrl"; diff --git
+> >>> a/arch/arm/boot/dts/stm32f769-disco.dts
+> >>> b/arch/arm/boot/dts/stm32f769-disco.dts
+> >>> new file mode 100644
+> >>> index 0000000..5f8558e
+> >>> --- /dev/null
+> >>> +++ b/arch/arm/boot/dts/stm32f769-disco.dts
+> >>> @@ -0,0 +1,101 @@
+> >>> +/*
+> >>> + * Copyright 2017 - Vikas MANOCHA <vikas.manocha-qxv4g6HH51o@public.gmane.org>
+> >>> + *
+> >>> + * This file is dual-licensed: you can use it either under the
+> >>> +terms
+> >>> + * of the GPL or the X11 license, at your option. Note that this
+> >>> +dual
+> >>> + * licensing only applies to this file, and not this project as a
+> >>> + * whole.
+> >>> + *
+> >>> + *  a) This file is free software; you can redistribute it and/or
+> >>> + *     modify it under the terms of the GNU General Public License as
+> >>> + *     published by the Free Software Foundation; either version 2 of the
+> >>> + *     License, or (at your option) any later version.
+> >>> + *
+> >>> + *     This file is distributed in the hope that it will be useful,
+> >>> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+> >>> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> >>> + *     GNU General Public License for more details.
+> >>> + *
+> >>> + * Or, alternatively,
+> >>> + *
+> >>> + *  b) Permission is hereby granted, free of charge, to any person
+> >>> + *     obtaining a copy of this software and associated documentation
+> >>> + *     files (the "Software"), to deal in the Software without
+> >>> + *     restriction, including without limitation the rights to use,
+> >>> + *     copy, modify, merge, publish, distribute, sublicense, and/or
+> >>> + *     sell copies of the Software, and to permit persons to whom the
+> >>> + *     Software is furnished to do so, subject to the following
+> >>> + *     conditions:
+> >>> + *
+> >>> + *     The above copyright notice and this permission notice shall be
+> >>> + *     included in all copies or substantial portions of the Software.
+> >>> + *
+> >>> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+> >>> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+> >>> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+> >>> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+> >>> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+> >>> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+> >>> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+> >>> + *     OTHER DEALINGS IN THE SOFTWARE.
+> >>> + */
+> >>> +
+> >>> +/dts-v1/;
+> >>> +#include "stm32f746.dtsi"
+> >>> +#include <dt-bindings/input/input.h>
+> >>> +
+> >>> +/ {
+> >>> +    model = "STMicroelectronics STM32F769-DISCO board";
+> >>> +    compatible = "st,stm32f769-disco", "st,stm32f7";
+> >>> +
+> >>> +    chosen {
+> >>> +        bootargs = "root=/dev/ram";
+> >>> +        stdout-path = "serial0:115200n8";
+> >>> +    };
+> >>> +
+> >>> +    memory {
+> >>> +        reg = <0xC0000000 0x1000000>;
+> >>> +    };
+> >>> +
+> >>> +    aliases {
+> >>> +        serial0 = &usart1;
+> >>> +    };
+> >>> +
+> >>> +};
+> >>> +
+> >>> +&clk_hse {
+> >>> +    clock-frequency = <25000000>;
+> >>> +};
+> >>> +
+> >>> +&pinctrl {
+> >>
+> >> same.
+> >>
+> >>> +    usart1_pins: usart1@0    {
+> >>> +        pins1 {
+> >>> +            pinmux = <STM32F746_PA9_FUNC_USART1_TX>;
+> >>> +                bias-disable;
+> >>> +                drive-push-pull;
+> >>> +                slew-rate = <2>;
+> >>> +        };
+> >>> +        pins2 {
+> >>> +            pinmux = <STM32F746_PA10_FUNC_USART1_RX>;
+> >>> +            bias-disable;
+> >>> +        };
+> >>> +    };
+> >>> +
+> >>> +    qspi_pins: qspi@0 {
+> >>> +        pins {
+> >>> +            pinmux = <STM32F746_PB2_FUNC_QUADSPI_CLK>,
+> >>> +                   <STM32F746_PB6_FUNC_QUADSPI_BK1_NCS>,
+> >>> +                   <STM32F746_PC9_FUNC_QUADSPI_BK1_IO0>,
+> >>> +                   <STM32F746_PC10_FUNC_QUADSPI_BK1_IO1>,
+> >>> +                   <STM32F746_PD13_FUNC_QUADSPI_BK1_IO3>,
+> >>> +                   <STM32F746_PE2_FUNC_QUADSPI_BK1_IO2>;
+> >>> +            slew-rate = <2>;
+> >>> +        };
+> >>> +    };
+> >>> +};
+> >>> +
+> >>> +&usart1 {
+> >>> +    pinctrl-0 = <&usart1_pins>;
+> >>> +    pinctrl-names = "default";
+> >>> +    status = "okay";
+> >>> +};
+> >>>
+> >> .
+> >>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
