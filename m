@@ -1,47 +1,70 @@
-From: Javier Martinez Canillas <javier@osg.samsung.com>
-Subject: [PATCH v2 22/22] powerpc/44x: Add generic compatible string for I2C EEPROM
-Date: Thu, 13 Apr 2017 15:28:39 -0300
-Message-ID: <20170413182839.25381-23-javier@osg.samsung.com>
-References: <20170413182839.25381-1-javier@osg.samsung.com>
+From: Tyler Baker <tyler.baker@linaro.org>
+Subject: Re: [PATCH 4/8] ARM: dts: imx7s: Add node for GPC
+Date: Thu, 13 Apr 2017 12:03:41 -0700
+Message-ID: <CANMBJr5sFeVxVq2w2uUd-ehXi9SpaJ7W9S_PTS_VN25YZEdXvQ@mail.gmail.com>
+References: <20170413133242.5068-1-andrew.smirnov@gmail.com> <20170413133242.5068-5-andrew.smirnov@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170413182839.25381-1-javier@osg.samsung.com>
+In-Reply-To: <20170413133242.5068-5-andrew.smirnov@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: Wolfram Sang <wsa@the-dreams.de>, Javier Martinez Canillas <javier@osg.samsung.com>, devicetree@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linuxppc-dev@lists.ozlabs.org
+To: Andrey Smirnov <andrew.smirnov@gmail.com>
+Cc: Shawn Guo <shawnguo@kernel.org>, yurovsky@gmail.com, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-The at24 driver allows to register I2C EEPROM chips using different vendor
-and devices, but the I2C subsystem does not take the vendor into account
-when matching using the I2C table since it only has device entries.
+Hi Andrey,
 
-But when matching using an OF table, both the vendor and device has to be
-taken into account so the driver defines only a set of compatible strings
-using the "atmel" vendor as a generic fallback for compatible I2C devices.
+On 13 April 2017 at 06:32, Andrey Smirnov <andrew.smirnov@gmail.com> wrote:
+> Add node for GPC and specify as a parent interrupt controller for SoC bus.
+>
+> Cc: yurovsky@gmail.com
+> Cc: Sascha Hauer <kernel@pengutronix.de>
+> Cc: Fabio Estevam <fabio.estevam@nxp.com>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Russell King <linux@armlinux.org.uk>
+> Cc: devicetree@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Cc: linux-arm-kernel@lists.infradead.org
+> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+> ---
+>  arch/arm/boot/dts/imx7s.dtsi | 27 ++++++++++++++++++++++++++-
+>  1 file changed, 26 insertions(+), 1 deletion(-)
+>
+> diff --git a/arch/arm/boot/dts/imx7s.dtsi b/arch/arm/boot/dts/imx7s.dtsi
+> index 8fee299..1a7058f 100644
+> --- a/arch/arm/boot/dts/imx7s.dtsi
+> +++ b/arch/arm/boot/dts/imx7s.dtsi
+> @@ -42,6 +42,7 @@
+>   */
+>[0
+>  #include <dt-bindings/clock/imx7d-clock.h>
+> +#include <dt-bindings/power/imx7-power.h>
+>  #include <dt-bindings/gpio/gpio.h>
+>  #include <dt-bindings/input/input.h>
+>  #include <dt-bindings/interrupt-controller/arm-gic.h>
+> @@ -119,7 +120,7 @@
+>                 #address-cells = <1>;
+>                 #size-cells = <1>;
+>                 compatible = "simple-bus";
+> -               interrupt-parent = <&intc>;
+> +               interrupt-parent = <&gpc>;
 
-So add this generic fallback to the device node compatible string to make
-the device to match the driver using the OF device ID table.
+I've been testing your GPC/PCIe patch sets against v4.11-rc5 on my
+imx7d-cl-som-imx7, but hit a bit of a wall. When gpc is set as the
+interrupt-parent for the soc, the kernel seems to hang and not produce
+any output on the serial port[0]. I tried to enable earlyprintk, but
+no luck getting a trace. Reversing this change, gets the board
+booting[1], but obviously isn't using the gpc which is needed for PCIe
+support as I understand it. I assume you've tested these changes on a
+imx7d-sdb and are not seeing a similar issue? You can find the patches
+I've picked on top of v4.11-rc5 here[2], any idea what might be the
+issue?
 
-Signed-off-by: Javier Martinez Canillas <javier@osg.samsung.com>
+Cheers,
 
----
+Tyler
 
-Changes in v2: None
-
- arch/powerpc/boot/dts/warp.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/powerpc/boot/dts/warp.dts b/arch/powerpc/boot/dts/warp.dts
-index e576ee85c42f..5b36dbf6c9f4 100644
---- a/arch/powerpc/boot/dts/warp.dts
-+++ b/arch/powerpc/boot/dts/warp.dts
-@@ -238,7 +238,7 @@
- 
- 				/* This will create 52 and 53 */
- 				at24@52 {
--					compatible = "at,24c04";
-+					compatible = "at,24c04","atmel,24c04";
- 					reg = <0x52>;
- 				};
- 			};
--- 
-2.9.3
+[0] https://hastebin.com/zetohetuwi.coffeescript
+[1] https://hastebin.com/uvacuyicuh.sql
+[2] https://github.com/EmbeddedAndroid/linux/commits/tracking-ltd-imx-dev
