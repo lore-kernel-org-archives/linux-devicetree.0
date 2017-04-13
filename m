@@ -1,92 +1,123 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH V4 2/9] PM / Domains: Use OPP tables for power-domains
-Date: Thu, 13 Apr 2017 11:33:42 +0530
-Message-ID: <20170413060342.GO5910@vireshk-i7>
-References: <cover.1490001099.git.viresh.kumar@linaro.org>
- <5619ac7777689f282f8aafabbde22d71b46a979b.1490001099.git.viresh.kumar@linaro.org>
- <6f72cb6e-2d8c-4e68-59cd-67f40e8c3118@arm.com>
+From: Martin Kepplinger <martin.kepplinger@ginzinger.com>
+Subject: Re: [PATCH 1/3] input: touchscreen: ar1021_i2c: add support for
+ AR1020
+Date: Thu, 13 Apr 2017 08:38:39 +0200
+Message-ID: <fd7e784f-824c-1fff-4978-858c11971999@ginzinger.com>
+References: <1491906479-17639-1-git-send-email-martin.kepplinger@ginzinger.com>
+ <20170412154054.GB6297@dtor-ws>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <6f72cb6e-2d8c-4e68-59cd-67f40e8c3118@arm.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Sudeep Holla <sudeep.holla@arm.com>
-Cc: Rafael Wysocki <rjw@rjwysocki.net>, ulf.hansson@linaro.org, Kevin Hilman <khilman@linaro.org>, linaro-kernel@lists.linaro.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, Vincent Guittot <vincent.guittot@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, Nishanth Menon <nm@ti.com>, robh+dt@kernel.org, lina.iyer@linaro.org, rnayak@codeaurora.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <20170412154054.GB6297@dtor-ws>
+Sender: linux-input-owner@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: christian.gmeiner@gmail.com, linux@roeck-us.net, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 12-04-17, 17:58, Sudeep Holla wrote:
-> 
-> 
-> On 20/03/17 09:32, Viresh Kumar wrote:
-> > The OPP table bindings contains all the necessary fields to support
-> > power-domains now. Update the power-domain bindings to allow
-> > "operating-points-v2" to be present within the power-domain node.
-> > 
-> > Also allow consumer devices, that don't use OPP tables, to specify the
-> > parent power-domain's performance level using the
-> > "domain-performance-state" property.
-> > 
-> > Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
-> > ---
-> >  .../devicetree/bindings/power/power_domain.txt     | 42 ++++++++++++++++++++++
-> >  1 file changed, 42 insertions(+)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/power/power_domain.txt b/Documentation/devicetree/bindings/power/power_domain.txt
-> > index 723e1ad937da..5db112fa5d7c 100644
-> > --- a/Documentation/devicetree/bindings/power/power_domain.txt
-> > +++ b/Documentation/devicetree/bindings/power/power_domain.txt
-> > @@ -38,6 +38,9 @@ phandle arguments (so called PM domain specifiers) of length specified by the
-> >    domain's idle states. In the absence of this property, the domain would be
-> >    considered as capable of being powered-on or powered-off.
-> >  
-> > +- operating-points-v2 : This describes the performance states of a PM domain.
-> > +  Refer to ../opp/opp.txt for more information.
-> > +
-> >  Example:
-> >  
-> >  	power: power-controller@12340000 {
-> > @@ -118,4 +121,43 @@ The node above defines a typical PM domain consumer device, which is located
-> >  inside a PM domain with index 0 of a power controller represented by a node
-> >  with the label "power".
-> >  
-> > +Optional properties:
-> > +- domain-performance-state: A positive integer value representing the minimum
-> > +  power-domain performance level required by the consumer device. The integer
-> > +  value '0' represents the lowest performance level and the higher values
-> > +  represent higher performance levels. The value of "domain-performance-state"
-> > +  field should match the "domain-performance-state" field of one of the OPP
-> > +  nodes in the parent power-domain's OPP table.
-> > +
-> > +
-> > +
-> > +Example:
-> > +
-> > +	domain_opp_table: opp_table {
-> > +		compatible = "operating-points-v2";
-> > +
-> > +		opp@1 {
-> > +			domain-performance-state = <1>;
-> > +			opp-microvolt = <975000 970000 985000>;
-> > +		};
-> > +		opp@2 {
-> > +			domain-performance-state = <2>;
-> > +			opp-microvolt = <1075000 1000000 1085000>;
-> > +		};
-> > +	};
-> > +
-> > +	parent: power-controller@12340000 {
-> > +		compatible = "foo,power-controller";
-> > +		reg = <0x12340000 0x1000>;
-> > +		#power-domain-cells = <0>;
-> > +		operating-points-v2 = <&domain_opp_table>;
-> 
-> As mentioned in the other email, it would be good to consider
-> scalability with multiple power domains in a PM domain provider.
-> i.e case of #power-domain-cells = <1> or more
 
-Yeah, but that isn't supported for devices today. So no point
-considering that today.
 
--- 
-viresh
+On 2017-04-12 17:40, Dmitry Torokhov wrote:
+> Hi Martin,
+> 
+> On Tue, Apr 11, 2017 at 12:27:57PM +0200, Martin Kepplinger wrote:
+>> ar1021_i2c simply also supports the ar1020 device we use. This is tested.
+>> They also share the same datasheet:
+>>
+>>    http://ww1.microchip.com/downloads/en/DeviceDoc/40001393C.pdf
+>>
+>> We differentiate not only to make it obvious that we support both devices,
+>> but also to be able to implement the few model specific things in the
+>> future.
+>>
+>> Signed-off-by: Martin Kepplinger <martin.kepplinger@ginzinger.com>
+>> ---
+>>  drivers/input/touchscreen/Kconfig      |  4 ++--
+>>  drivers/input/touchscreen/ar1021_i2c.c | 13 ++++++++++---
+>>  2 files changed, 12 insertions(+), 5 deletions(-)
+>>
+>> diff --git a/drivers/input/touchscreen/Kconfig b/drivers/input/touchscreen/Kconfig
+>> index 33c62e5..535b91a 100644
+>> --- a/drivers/input/touchscreen/Kconfig
+>> +++ b/drivers/input/touchscreen/Kconfig
+>> @@ -96,8 +96,8 @@ config TOUCHSCREEN_AR1021_I2C
+>>  	tristate "Microchip AR1021 i2c touchscreen"
+>>  	depends on I2C && OF
+>>  	help
+>> -	  Say Y here if you have the Microchip AR1021 touchscreen controller
+>> -	  chip in your system.
+>> +	  Say Y here if you have the Microchip AR1020 or AR1021 touchscreen
+>> +	  controller chip in your system.
+>>  
+>>  	  If unsure, say N.
+>>  
+>> diff --git a/drivers/input/touchscreen/ar1021_i2c.c b/drivers/input/touchscreen/ar1021_i2c.c
+>> index 6562b17..1767257 100644
+>> --- a/drivers/input/touchscreen/ar1021_i2c.c
+>> +++ b/drivers/input/touchscreen/ar1021_i2c.c
+>> @@ -1,5 +1,5 @@
+>>  /*
+>> - * Microchip AR1021 driver for I2C
+>> + * Microchip AR1020 and AR1021 driver for I2C
+>>   *
+>>   * Author: Christian Gmeiner <christian.gmeiner@gmail.com>
+>>   *
+>> @@ -24,6 +24,11 @@ struct ar1021_i2c {
+>>  	u8 data[AR1021_TOCUH_PKG_SIZE];
+>>  };
+>>  
+>> +enum {
+>> +	ar1021,
+>> +	ar1020,
+>> +};
+>> +
+>>  static irqreturn_t ar1021_i2c_irq(int irq, void *dev_id)
+>>  {
+>>  	struct ar1021_i2c *ar1021 = dev_id;
+>> @@ -151,13 +156,15 @@ static int __maybe_unused ar1021_i2c_resume(struct device *dev)
+>>  static SIMPLE_DEV_PM_OPS(ar1021_i2c_pm, ar1021_i2c_suspend, ar1021_i2c_resume);
+>>  
+>>  static const struct i2c_device_id ar1021_i2c_id[] = {
+>> -	{ "MICROCHIP_AR1021_I2C", 0 },
+>> +	{ "MICROCHIP_AR1021_I2C", ar1021 },
+>> +	{ "MICROCHIP_AR1020_I2C", ar1020 },
+>>  	{ },
+>>  };
+>>  MODULE_DEVICE_TABLE(i2c, ar1021_i2c_id);
+>>  
+>>  static const struct of_device_id ar1021_i2c_of_match[] = {
+>>  	{ .compatible = "microchip,ar1021-i2c", },
+>> +	{ .compatible = "microchip,ar1020-i2c", },
+>>  	{ }
+>>  };
+>>  MODULE_DEVICE_TABLE(of, ar1021_i2c_of_match);
+>> @@ -175,5 +182,5 @@ static struct i2c_driver ar1021_i2c_driver = {
+>>  module_i2c_driver(ar1021_i2c_driver);
+>>  
+>>  MODULE_AUTHOR("Christian Gmeiner <christian.gmeiner@gmail.com>");
+>> -MODULE_DESCRIPTION("Microchip AR1021 I2C Driver");
+>> +MODULE_DESCRIPTION("Microchip AR1020 and AR1021 I2C Driver");
+>>  MODULE_LICENSE("GPL");
+>> -- 
+>> 2.1.4
+>>
+> 
+> I do not see where you handle ar1020 differently from ar1021. If devices
+> are compatible, you do not need to add a new compatible to the driver,
+> simply use it in the binding:
+> 
+> 	compatible = "microchip,ar1020-i2c", "microchip,ar1021-i2c";
+> 
+> Thanks.
+> 
+
+Why would you use "microchip,ar1020-i2c" in the dts if it's not
+available? people don't obviously see, by grepping or reading,
+that they have a compatible driver. ... or did I get you wrong?
+
+I don't handle anything differently now. Factory reset has to be done
+differntly though, as one example. So it'd be nice to have the option
+to add data.
+
+thanks
+                          martin
