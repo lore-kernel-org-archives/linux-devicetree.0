@@ -1,64 +1,42 @@
-From: Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 1/8] Revert "ARM: dts: imx: Remove unexistant property"
-Date: Thu, 13 Apr 2017 06:32:35 -0700
-Message-ID: <20170413133242.5068-2-andrew.smirnov@gmail.com>
-References: <20170413133242.5068-1-andrew.smirnov@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170413133242.5068-1-andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, yurovsky-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Rafal Ozieblo <rafalo@cadence.com>
+Subject: [PATCH 2/4] net: macb: Add tsu_clk to device tree
+Date: Thu, 13 Apr 2017 14:38:06 +0100
+Message-ID: <1492090686-14778-1-git-send-email-rafalo@cadence.com>
+References: <1492090439-11793-1-git-send-email-rafalo@cadence.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1492090439-11793-1-git-send-email-rafalo@cadence.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: David Miller <davem@davemloft.net>, nicolas.ferre@atmel.com, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, harinikatakamlinux@gmail.com, harini.katakam@xilinx.com, richardcochran@gmail.com, Andrei.Pistirica@microchip.com
+Cc: Rafal Ozieblo <rafalo@cadence.com>
 List-Id: devicetree@vger.kernel.org
 
-Commit ca7734a ("regulator: anatop: Add support for
-"anatop-enable-bit"") added code to support this particular binding
-and 'anatop-enable-bit' is no longer an unused property.
-
-This reverts commit 27958ccdf29e9971732e02494b48be54b0691269.
-
-Cc: yurovsky-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Signed-off-by: Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Signed-off-by: Rafal Ozieblo <rafalo@cadence.com>
 ---
- arch/arm/boot/dts/imx6ul.dtsi | 1 +
- arch/arm/boot/dts/imx7s.dtsi  | 1 +
- 2 files changed, 2 insertions(+)
+ Documentation/devicetree/bindings/net/macb.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm/boot/dts/imx6ul.dtsi b/arch/arm/boot/dts/imx6ul.dtsi
-index b9d7d2d..6da2b77 100644
---- a/arch/arm/boot/dts/imx6ul.dtsi
-+++ b/arch/arm/boot/dts/imx6ul.dtsi
-@@ -542,6 +542,7 @@
- 					anatop-min-bit-val = <0>;
- 					anatop-min-voltage = <2625000>;
- 					anatop-max-voltage = <3400000>;
-+					anatop-enable-bit = <0>;
- 				};
+diff --git a/Documentation/devicetree/bindings/net/macb.txt b/Documentation/devicetree/bindings/net/macb.txt
+index 1506e94..27966ae 100644
+--- a/Documentation/devicetree/bindings/net/macb.txt
++++ b/Documentation/devicetree/bindings/net/macb.txt
+@@ -22,6 +22,7 @@ Required properties:
+ 	Required elements: 'pclk', 'hclk'
+ 	Optional elements: 'tx_clk'
+ 	Optional elements: 'rx_clk' applies to cdns,zynqmp-gem
++	Optional elements: 'tsu_clk'
+ - clocks: Phandles to input clocks.
  
- 				reg_arm: regulator-vddcore {
-diff --git a/arch/arm/boot/dts/imx7s.dtsi b/arch/arm/boot/dts/imx7s.dtsi
-index c4f12fd..22c9788 100644
---- a/arch/arm/boot/dts/imx7s.dtsi
-+++ b/arch/arm/boot/dts/imx7s.dtsi
-@@ -516,6 +516,7 @@
- 					anatop-min-bit-val = <8>;
- 					anatop-min-voltage = <800000>;
- 					anatop-max-voltage = <1200000>;
-+					anatop-enable-bit = <31>;
- 				};
- 			};
- 
+ Optional properties for PHY child node:
 -- 
-2.9.3
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.4.5
