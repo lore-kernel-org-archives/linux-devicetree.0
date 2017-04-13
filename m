@@ -1,71 +1,84 @@
-From: Rob Herring <robh@kernel.org>
-Subject: [PATCH v3 2/4] bluetooth: hci_uart: remove unused hci_uart_init_tty
-Date: Thu, 13 Apr 2017 10:03:51 -0500
-Message-ID: <20170413150353.7389-3-robh@kernel.org>
-References: <20170413150353.7389-1-robh@kernel.org>
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20170413150353.7389-1-robh@kernel.org>
-Sender: netdev-owner@vger.kernel.org
-To: Marcel Holtmann <marcel@holtmann.org>, linux-bluetooth@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org, Gustavo Padovan <gustavo@padovan.org>, Johan Hedberg <johan.hedberg@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Wei Xu <xuwei5@hisilicon.com>, Eyal Reizer <eyalr@ti.com>, Satish Patel <satish.patel@linaro.org>, netdev@vger.kernel.org, devicetree@vger.kernel.org
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: [RFC 1/2] dt-bindings: add mmio-based syscon mux controller DT bindings
+Date: Thu, 13 Apr 2017 17:48:11 +0200
+Message-ID: <20170413154812.19597-1-p.zabel@pengutronix.de>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Peter Rosin <peda@axentia.se>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sakari Ailus <sakari.ailus@iki.fi>, Steve Longerbeam <slongerbeam@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, kernel@pengutronix.de, Philipp Zabel <p.zabel@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-There are no users of hci_uart_init_tty, so remove it.
+This adds device tree binding documentation for mmio-based syscon
+multiplexers controlled by a single bitfield in a syscon register
+range.
 
-Signed-off-by: Rob Herring <robh@kernel.org>
-Cc: Marcel Holtmann <marcel@holtmann.org>
-Cc: Gustavo Padovan <gustavo@padovan.org>
-Cc: Johan Hedberg <johan.hedberg@gmail.com>
-Cc: linux-bluetooth@vger.kernel.org
+Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
 ---
-v3:
-- rebase on bluetooth-next
+ Documentation/devicetree/bindings/mux/mmio-mux.txt | 56 ++++++++++++++++++++++
+ 1 file changed, 56 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mux/mmio-mux.txt
 
- drivers/bluetooth/hci_ldisc.c | 19 -------------------
- drivers/bluetooth/hci_uart.h  |  1 -
- 2 files changed, 20 deletions(-)
-
-diff --git a/drivers/bluetooth/hci_ldisc.c b/drivers/bluetooth/hci_ldisc.c
-index 17bcbc13623f..cec4438ede01 100644
---- a/drivers/bluetooth/hci_ldisc.c
-+++ b/drivers/bluetooth/hci_ldisc.c
-@@ -319,25 +319,6 @@ void hci_uart_set_speeds(struct hci_uart *hu, unsigned int init_speed,
- 	hu->oper_speed = oper_speed;
- }
- 
--void hci_uart_init_tty(struct hci_uart *hu)
--{
--	struct tty_struct *tty = hu->tty;
--	struct ktermios ktermios;
--
--	/* Bring the UART into a known 8 bits no parity hw fc state */
--	ktermios = tty->termios;
--	ktermios.c_iflag &= ~(IGNBRK | BRKINT | PARMRK | ISTRIP |
--			      INLCR | IGNCR | ICRNL | IXON);
--	ktermios.c_oflag &= ~OPOST;
--	ktermios.c_lflag &= ~(ECHO | ECHONL | ICANON | ISIG | IEXTEN);
--	ktermios.c_cflag &= ~(CSIZE | PARENB);
--	ktermios.c_cflag |= CS8;
--	ktermios.c_cflag |= CRTSCTS;
--
--	/* tty_set_termios() return not checked as it is always 0 */
--	tty_set_termios(tty, &ktermios);
--}
--
- void hci_uart_set_baudrate(struct hci_uart *hu, unsigned int speed)
- {
- 	struct tty_struct *tty = hu->tty;
-diff --git a/drivers/bluetooth/hci_uart.h b/drivers/bluetooth/hci_uart.h
-index 1b41c661bbb8..2b05e557fad0 100644
---- a/drivers/bluetooth/hci_uart.h
-+++ b/drivers/bluetooth/hci_uart.h
-@@ -114,7 +114,6 @@ int hci_uart_register_device(struct hci_uart *hu, const struct hci_uart_proto *p
- 
- int hci_uart_tx_wakeup(struct hci_uart *hu);
- int hci_uart_init_ready(struct hci_uart *hu);
--void hci_uart_init_tty(struct hci_uart *hu);
- void hci_uart_set_baudrate(struct hci_uart *hu, unsigned int speed);
- void hci_uart_set_flow_control(struct hci_uart *hu, bool enable);
- void hci_uart_set_speeds(struct hci_uart *hu, unsigned int init_speed,
+diff --git a/Documentation/devicetree/bindings/mux/mmio-mux.txt b/Documentation/devicetree/bindings/mux/mmio-mux.txt
+new file mode 100644
+index 0000000000000..11d96f5d98583
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mux/mmio-mux.txt
+@@ -0,0 +1,56 @@
++MMIO bitfield-based multiplexer controller bindings
++
++Define a syscon bitfield to be used to control a multiplexer. The parent
++device tree node must be a syscon node to provide register access.
++
++Required properties:
++- compatible : "gpio-mux"
++- reg : register base of the register containing the control bitfield
++- bit-mask : bitmask of the control bitfield in the control register
++- bit-shift : bit offset of the control bitfield in the control register
++- #mux-control-cells : <0>
++* Standard mux-controller bindings as decribed in mux-controller.txt
++
++Optional properties:
++- idle-state : if present, the state the mux will have when idle. The
++	       special state MUX_IDLE_AS_IS is the default.
++
++The multiplexer state is defined as the value of the bitfield described
++by the reg, bit-mask, and bit-shift properties, accessed through the parent
++syscon.
++
++Example:
++
++	syscon {
++		compatible = "syscon";
++
++		mux: mux-controller@3 {
++			compatible = "mmio-mux";
++			reg = <0x3>;
++			bit-mask = <0x1>;
++			bit-shift = <5>;
++			#mux-control-cells = <0>;
++		};
++	};
++
++	video-mux {
++		compatible = "video-mux";
++		mux-controls = <&mux>;
++
++		ports {
++			/* input 0 */
++			port@0 {
++				reg = <0>;
++			};
++
++			/* input 1 */
++			port@1 {
++				reg = <1>;
++			};
++
++			/* output */
++			port@2 {
++				reg = <2>;
++			};
++		};
++	};
 -- 
 2.11.0
