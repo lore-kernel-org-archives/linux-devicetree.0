@@ -1,73 +1,63 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH 2/3] dt-bindings: hwmon: Add bindings for Google Chromium
- EC HWMON
-Date: Thu, 13 Apr 2017 14:07:07 -0700
-Message-ID: <20170413210707.GA16304@roeck-us.net>
-References: <1491602410-31518-1-git-send-email-moritz.fischer@ettus.com>
- <1491602410-31518-2-git-send-email-moritz.fischer@ettus.com>
- <20170413200140.lcynmsv255ktoiyl@rob-hp-laptop>
+From: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
+Subject: Re: [PATCH v2 05/22] ARM: dts: at91: Add generic compatible string
+ for I2C EEPROM
+Date: Thu, 13 Apr 2017 18:09:56 -0300
+Message-ID: <dd93eb32-ca1e-5041-051e-c4f072f0f9a2@osg.samsung.com>
+References: <20170413182839.25381-1-javier@osg.samsung.com>
+ <20170413182839.25381-6-javier@osg.samsung.com>
+ <869a0f44-6c97-2109-776b-6da9b86c732a@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-hwmon-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170413200140.lcynmsv255ktoiyl@rob-hp-laptop>
-Sender: linux-hwmon-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Moritz Fischer <moritz.fischer@ettus.com>, linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, lee.jones@linaro.org, olof@lixom.net, jdelvare@suse.com, mark.rutland@arm.com, Moritz Fischer <mdf@kernel.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <869a0f44-6c97-2109-776b-6da9b86c732a-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Nicolas Ferre <nicolas.ferre-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 13, 2017 at 03:01:40PM -0500, Rob Herring wrote:
-> On Fri, Apr 07, 2017 at 03:00:09PM -0700, Moritz Fischer wrote:
-> > From: Moritz Fischer <mdf@kernel.org>
-> > 
-> > Add bindings for the Chromium EC HWMON. The Chromium EC HWMON
-> > allows monitoring of temperature sensors and fans attached to the
-> > EC.
-> > 
-> > Signed-off-by: Moritz Fischer <mdf@kernel.org>
-> > ---
-> >  .../devicetree/bindings/hwmon/cros-ec-hwmon.txt    | 25 ++++++++++++++++++++++
-> >  1 file changed, 25 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/hwmon/cros-ec-hwmon.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/hwmon/cros-ec-hwmon.txt b/Documentation/devicetree/bindings/hwmon/cros-ec-hwmon.txt
-> > new file mode 100644
-> > index 0000000..4c94869
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/hwmon/cros-ec-hwmon.txt
-> > @@ -0,0 +1,25 @@
-> > +Chromium Embedded Controller EC temperature and fan control
-> > +-----------------------------------------------------------
-> > +
-> > +Google's Chromium EC HWMON is a hwmon implemented byimplemented by the Chromium EC
-> > +firmware attached to the Embedded Controller (EC) and controlled via a host-command
-> > +interface.
-> > +
-> > +An EC HWMON node should be only found as a sub-node of the EC node (see
-> > +Documentation/devicetree/bindings/mfd/cros-ec.txt).
-> > +
-> > +Required properties:
-> > +- compatible: Must contain "google,cros-ec-hwmon"
-> > +
-> > +Example:
-> > +	embedded-controller@1e {
-> > +		reg = <0x1e>;
-> > +		compatible = "google,cros-ec-i2c";
-> > +		interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
-> > +		interrupt-parent = <&gpio0>;
-> > +
-> > +		hwmon {
-> > +			compatible = "google,cros-ec-hwmon";
-> 
-> This is sufficient for all devices? I don't see that DT provides 
-> anything here other than instantiating a device, but the parent device 
-> can just as easily do that.
-> 
-The parent driver (drivers/mfd/cros_ec_i2c.c) calls cros_ec_register(),
-which uses uses of_platform_populate() to populate all sub-devices.
-There are various examples in the dts files (look for "google,cros-ec").
-Does it really make sense to start a second method for instantiating
-sub-devices ?
+Hello Peter,
 
-Thanks,
-Guenter
+On 04/13/2017 05:43 PM, Peter Rosin wrote:
+> On 2017-04-13 20:28, Javier Martinez Canillas wrote:
+
+[snip]
+
+>>  
+>>  	eeprom@50 {
+>> -		compatible = "nxp,24c02";
+>> +		compatible = "nxp,24c02","atmel,24c02";
+>>  		reg = <0x50>;
+>>  		pagesize = <16>;
+>>  	};
+>>
+> 
+> Sure, in principle. But not having a space after the commas is a real OCD
+> trigger for me. My spine is rotating... :-)
+>
+
+Right, Geert already pointed out. It's something I missed in my sed script
+so I got it wrong in all the DTS :(
+
+I'll fix my script and send a v2.
+ 
+> Anyway, with those whitespace fixes (and without them too, but please):
+> Acked-by: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+>
+
+Thanks for the review!
+
+> Cheers,
+> peda
+> 
+> 
+
+Best regards,
+-- 
+Javier Martinez Canillas
+Open Source Group
+Samsung Research America
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
