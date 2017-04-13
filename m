@@ -1,96 +1,64 @@
-From: Andrey Smirnov <andrew.smirnov@gmail.com>
-Subject: [PATCH 4/8] ARM: dts: imx7s: Add node for GPC
-Date: Thu, 13 Apr 2017 06:32:38 -0700
-Message-ID: <20170413133242.5068-5-andrew.smirnov@gmail.com>
+From: Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 3/8] ARM: dts: imx7s: Adjust anatop-enable-bit for 'reg_1p0d'
+Date: Thu, 13 Apr 2017 06:32:37 -0700
+Message-ID: <20170413133242.5068-4-andrew.smirnov@gmail.com>
 References: <20170413133242.5068-1-andrew.smirnov@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170413133242.5068-1-andrew.smirnov@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Guo <shawnguo@kernel.org>
-Cc: Andrey Smirnov <andrew.smirnov@gmail.com>, yurovsky@gmail.com, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170413133242.5068-1-andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, yurovsky-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add node for GPC and specify as a parent interrupt controller for SoC bus.
+In PMU_REG_1P0Dn ENABLE_LINREG is bit 0. Bit 31 is called OVERRIDE and
+it serves the function of granting permission to GPC IP block to alter
+various bit-fields of the register. The reason why this property, that
+trickeld here from Freescale BSP, is set to 31 is because in the code
+it came from it is used in conjunction with a notifier handler for
+REGULATOR_EVENT_PRE_DO_ENABLE and REGULATOR_EVENT_PRE_DO_DISABLE
+events (not found in upstream kernel) that triggers GPC to start
+manipulating aforementioned other bitfields.
 
-Cc: yurovsky@gmail.com
-Cc: Sascha Hauer <kernel@pengutronix.de>
-Cc: Fabio Estevam <fabio.estevam@nxp.com>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Russell King <linux@armlinux.org.uk>
-Cc: devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org
-Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+Since:
+	a) none of the aforementioned machinery is implemented by
+	   upstream
+	b) using 'anatop-enable-bit' in that capacity is a bit of a
+	   semantic stretch
+
+simplify the situation by setting the value of 'anatop-enable-bit' to
+point to ENABLE_LINREG (same as i.MX6).
+
+Cc: yurovsky-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Signed-off-by: Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- arch/arm/boot/dts/imx7s.dtsi | 27 ++++++++++++++++++++++++++-
- 1 file changed, 26 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/imx7s.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/arch/arm/boot/dts/imx7s.dtsi b/arch/arm/boot/dts/imx7s.dtsi
-index 8fee299..1a7058f 100644
+index 22c9788..8fee299 100644
 --- a/arch/arm/boot/dts/imx7s.dtsi
 +++ b/arch/arm/boot/dts/imx7s.dtsi
-@@ -42,6 +42,7 @@
-  */
- 
- #include <dt-bindings/clock/imx7d-clock.h>
-+#include <dt-bindings/power/imx7-power.h>
- #include <dt-bindings/gpio/gpio.h>
- #include <dt-bindings/input/input.h>
- #include <dt-bindings/interrupt-controller/arm-gic.h>
-@@ -119,7 +120,7 @@
- 		#address-cells = <1>;
- 		#size-cells = <1>;
- 		compatible = "simple-bus";
--		interrupt-parent = <&intc>;
-+		interrupt-parent = <&gpc>;
- 		ranges;
- 
- 		funnel@30041000 {
-@@ -301,6 +302,7 @@
- 			interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>;
- 			#interrupt-cells = <3>;
- 			interrupt-controller;
-+			interrupt-parent = <&intc>;
- 			reg = <0x31001000 0x1000>,
- 			      <0x31002000 0x2000>,
- 			      <0x31004000 0x2000>,
-@@ -309,6 +311,7 @@
- 
- 		timer {
- 			compatible = "arm,armv7-timer";
-+			interrupt-parent = <&intc>;
- 			interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
- 				     <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
- 				     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
-@@ -564,6 +567,28 @@
- 				interrupts = <GIC_SPI 89 IRQ_TYPE_LEVEL_HIGH>;
- 				#reset-cells = <1>;
+@@ -516,7 +516,7 @@
+ 					anatop-min-bit-val = <8>;
+ 					anatop-min-voltage = <800000>;
+ 					anatop-max-voltage = <1200000>;
+-					anatop-enable-bit = <31>;
++					anatop-enable-bit = <0>;
+ 				};
  			};
-+
-+			gpc: gpc@303a0000 {
-+				compatible = "fsl,imx7d-gpc";
-+				reg = <0x303a0000 0x10000>;
-+				interrupt-controller;
-+				interrupts = <GIC_SPI 87 IRQ_TYPE_LEVEL_HIGH>;
-+				#interrupt-cells = <3>;
-+				interrupt-parent = <&intc>;
-+				#power-domain-cells = <1>;
-+
-+				pgc {
-+					#address-cells = <1>;
-+					#size-cells = <0>;
-+
-+					pgc_pcie_phy: pgc-pcie-phy-domain {
-+						#power-domain-cells = <0>;
-+
-+						reg = <IMX7_POWER_DOMAIN_PCIE_PHY>;
-+						power-supply = <&reg_1p0d>;
-+					};
-+				};
-+			};
- 		};
  
- 		aips2: aips-bus@30400000 {
 -- 
 2.9.3
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
