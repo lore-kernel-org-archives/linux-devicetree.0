@@ -1,48 +1,55 @@
-From: Leonard Crestez <leonard.crestez-3arQi8VN3Tc@public.gmane.org>
-Subject: Re: [RFC 4/8] regulator: core: Check enabling bypass respects
- constraints
-Date: Thu, 13 Apr 2017 23:46:15 +0300
-Message-ID: <1492116375.17723.15.camel@nxp.com>
-References: <cover.1490199005.git.leonard.crestez@nxp.com>
-         <1edff9bc610969b0c53fa1080d5db021c8e00b2d.1490199005.git.leonard.crestez@nxp.com>
-         <20170324125212.vikgekqxsnu7htzl@sirena.org.uk>
-         <1490704781.3546.57.camel@nxp.com>
-         <20170328164754.z2c2ttovs3sxbcos@sirena.org.uk>
-         <1490730595.15830.1.camel@nxp.com>
-         <20170406185202.uixxcv3dgucrddgc@sirena.org.uk>
-         <1491562312.9365.41.camel@nxp.com>
-         <20170407112212.gzv3p7ldkh62657m@sirena.org.uk>
+From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 4/8] ARM: dts: imx7s: Add node for GPC
+Date: Thu, 13 Apr 2017 17:49:32 -0300
+Message-ID: <CAOMZO5BjzSJws7zjJ5+aZkfeF+15twEu9zS3V+g6wQrtUiNyqQ@mail.gmail.com>
+References: <20170413133242.5068-1-andrew.smirnov@gmail.com>
+ <20170413133242.5068-5-andrew.smirnov@gmail.com> <CANMBJr5sFeVxVq2w2uUd-ehXi9SpaJ7W9S_PTS_VN25YZEdXvQ@mail.gmail.com>
+ <CAOMZO5CgLP7P+Q2Mvzpnx6u5ryb1TjAvaj9xDKXpD+8fMmn7MQ@mail.gmail.com>
+ <CANMBJr4BWtU7SXEa0-4LFLx+ydVWas0Cx18kRn-=-Bz8pPZ=fg@mail.gmail.com>
+ <CAOMZO5BaKBsXean8-560HUuZbhjef9dpMNku0SRUVtkv+XsZ6w@mail.gmail.com> <CANMBJr7We9uOyE6=BCWoe9L7xRKjOG6ScgtDGEgQ-hPawPeppg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170407112212.gzv3p7ldkh62657m-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+In-Reply-To: <CANMBJr7We9uOyE6=BCWoe9L7xRKjOG6ScgtDGEgQ-hPawPeppg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Robin Gong <yibin.gong-3arQi8VN3Tc@public.gmane.org>, Anson Huang <Anson.Huang-3arQi8VN3Tc@public.gmane.org>, Irina Tirdea <irina.tirdea-3arQi8VN3Tc@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Octavian Purdila <octavian.purdila-3arQi8VN3Tc@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tyler Baker <tyler.baker-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, yurovsky-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2017-04-07 at 12:22 +0100, Mark Brown wrote:
-> On Fri, Apr 07, 2017 at 01:51:52PM +0300, Leonard Crestez wrote:
+On Thu, Apr 13, 2017 at 5:13 PM, Tyler Baker <tyler.baker-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
 
-> > It currently seems to work how I expect but from your statement it's
-> > not clear if it's entirely intentional.
+> I've rebased this series on the next-20170413 for sanity sake, and
+> realized there doesn't appear to be a way to select CONFIG_IMX_GPCV2.
+> I forced it using 'default y' and configured with imx_v6_v7_defconfig.
+> Now my board is booting. Before this series is applied, it may be good
+> to have CONFIG_IMX_GPCV2 selected specifically for iMX7 platform,
+> otherwise there will be boot regressions.
 
-> The current behaviour of bypassed regulators is intentional.
+Something like this?
 
-I did not mean to imply that there is something wrong with bypassed
-regulators. I just wanted more information about how regulators (non-
-bypassed) pick their voltage when consumers allow a range.
+diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
+index f03ef43..fe99a48 100644
+--- a/drivers/irqchip/Kconfig
++++ b/drivers/irqchip/Kconfig
+@@ -253,6 +253,7 @@ config RENESAS_H8S_INTC
 
-After some more reading through the code it seems that the driver
-itself receives the range (either through set_voltage or map_voltage)
-and gets to make the choice.
+ config IMX_GPCV2
+  bool
++ def_bool y if SOC_IMX7D
+  select IRQ_DOMAIN
+  help
+   Enables the wakeup IRQs for IMX platforms with GPCv2 block
 
-So it seems fine for my concerns, sorry to bother you.
+>
+> I'd encounter a backtrace with next-20170413 +  imx_v6_v7_defconfig +
+> CONFIG_IMX_GPCV2=y
+>
+> Backtrace:
+> [<c010c364>] (dump_backtrace) from [<c010c610>] (show_stack+0x18/0x1c)
 
---
-Regards,
-Leonard
+but prior to fixing the Kconfig we need to fix this backtrace you reported.
+
+Thanks
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
