@@ -1,81 +1,63 @@
-From: =?UTF-8?B?V3UtQ2hlbmcgTGkgKOadjuWLmeiqoCk=?= <wuchengli@google.com>
-Subject: Re: [PATCH] [media] mtk-mdp: Fix g_/s_selection capture/compose logic
-Date: Thu, 13 Apr 2017 14:50:08 +0800
-Message-ID: <CAOMLVLiLkZsBfezx6b9Xq=kyPjUZOXwHC4LfHh1=wy6Ynt=zSQ@mail.gmail.com>
-References: <1492057130-1194-1-git-send-email-minghsiu.tsai@mediatek.com>
+From: Michael Hennerich <michael.hennerich@analog.com>
+Subject: Re: [PATCH v5 2/2] i2c: mux: ltc4306: LTC4306 and LTC4305 I2C
+ multiplexer/switch
+Date: Thu, 13 Apr 2017 08:58:26 +0200
+Message-ID: <03a776ee-87f7-18d7-94f1-5864d26f846e@analog.com>
+References: <1491912976-8396-1-git-send-email-michael.hennerich@analog.com>
+ <1491912976-8396-2-git-send-email-michael.hennerich@analog.com>
+ <CACRpkdbOQtJvwtNRuPWh9VQyupH3kXK9-3Vu7qMemngg6O5j1w@mail.gmail.com>
+ <ef75918a-3e5d-91d2-bc05-546e1e0f0bb4@axentia.se>
+Reply-To: <michael.hennerich@analog.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1492057130-1194-1-git-send-email-minghsiu.tsai@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Minghsiu Tsai <minghsiu.tsai@mediatek.com>
-Cc: Hans Verkuil <hans.verkuil@cisco.com>, Daniel Thompson <daniel.thompson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Matthias Brugger <matthias.bgg@gmail.com>, Daniel Kurtz <djkurtz@chromium.org>, Pawel Osciak <posciak@chromium.org>, Houlong Wei <houlong.wei@mediatek.com>, srv_heupstream@mediatek.com, Eddie Huang <eddie.huang@mediatek.com>, Yingjoe Chen <yingjoe.chen@mediatek.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org, linux-mediatek@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <ef75918a-3e5d-91d2-bc05-546e1e0f0bb4@axentia.se>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Peter Rosin <peda@axentia.se>, Linus Walleij <linus.walleij@linaro.org>
+Cc: Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Reviewed-by: Wu-Cheng Li <wuchengli@chromium.org>
+On 12.04.2017 18:53, Peter Rosin wrote:
+> On 2017-04-12 10:26, Linus Walleij wrote:
+>> On Tue, Apr 11, 2017 at 2:16 PM,  <michael.hennerich@analog.com> wrote:
+>>
+>>> From: Michael Hennerich <michael.hennerich@analog.com>
+>>>
+>>> This patch adds support for the Analog Devices / Linear Technology
+>>> LTC4306 and LTC4305 4/2 Channel I2C Bus Multiplexer/Switches.
+>>> The LTC4306 optionally provides two general purpose input/output pins
+>>> (GPIOs) that can be configured as logic inputs, opendrain outputs or
+>>> push-pull outputs via the generic GPIOLIB framework.
+>
+> Great, thanks for your contribution Michael! Both patches pushed to the
+> for-next branch of the i2c-mux tree.
+>
+>>> Signed-off-by: Michael Hennerich <michael.hennerich@analog.com>
+>> (...)
+>>> Changes since v4:
+>>
+>> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+>>
+>> Please go ahead and merge to the i2c tree if you like.
+>
+> Yup, thanks for the review! (But not merged directly to the i2c tree,
+> although they will get there eventually...)
+>
+> Cheers,
+> peda
+>
+>
 
-On Thu, Apr 13, 2017 at 12:18 PM, Minghsiu Tsai
-<minghsiu.tsai@mediatek.com> wrote:
-> From: Daniel Kurtz <djkurtz@chromium.org>
->
-> Experiments show that the:
->  (1) mtk-mdp uses the _MPLANE form of CAPTURE/OUTPUT
->  (2) CAPTURE types use CROP targets, and OUTPUT types use COMPOSE targets
->
-> Signed-off-by: Daniel Kurtz <djkurtz@chromium.org>
-> Signed-off-by: Minghsiu Tsai <minghsiu.tsai@mediatek.com>
->
-> ---
->  drivers/media/platform/mtk-mdp/mtk_mdp_m2m.c | 18 +++++++++---------
->  1 file changed, 9 insertions(+), 9 deletions(-)
->
-> diff --git a/drivers/media/platform/mtk-mdp/mtk_mdp_m2m.c b/drivers/media/platform/mtk-mdp/mtk_mdp_m2m.c
-> index 13afe48..8ab7ca0 100644
-> --- a/drivers/media/platform/mtk-mdp/mtk_mdp_m2m.c
-> +++ b/drivers/media/platform/mtk-mdp/mtk_mdp_m2m.c
-> @@ -837,12 +837,12 @@ static int mtk_mdp_m2m_g_selection(struct file *file, void *fh,
->         struct mtk_mdp_ctx *ctx = fh_to_ctx(fh);
->         bool valid = false;
->
-> -       if (s->type == V4L2_BUF_TYPE_VIDEO_CAPTURE) {
-> -               if (mtk_mdp_is_target_compose(s->target))
-> -                       valid = true;
-> -       } else if (s->type == V4L2_BUF_TYPE_VIDEO_OUTPUT) {
-> +       if (s->type == V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE) {
->                 if (mtk_mdp_is_target_crop(s->target))
->                         valid = true;
-> +       } else if (s->type == V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE) {
-> +               if (mtk_mdp_is_target_compose(s->target))
-> +                       valid = true;
->         }
->         if (!valid) {
->                 mtk_mdp_dbg(1, "[%d] invalid type:%d,%u", ctx->id, s->type,
-> @@ -907,12 +907,12 @@ static int mtk_mdp_m2m_s_selection(struct file *file, void *fh,
->         int ret;
->         bool valid = false;
->
-> -       if (s->type == V4L2_BUF_TYPE_VIDEO_CAPTURE) {
-> -               if (s->target == V4L2_SEL_TGT_COMPOSE)
-> -                       valid = true;
-> -       } else if (s->type == V4L2_BUF_TYPE_VIDEO_OUTPUT) {
-> +       if (s->type == V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE) {
->                 if (s->target == V4L2_SEL_TGT_CROP)
->                         valid = true;
-> +       } else if (s->type == V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE) {
-> +               if (s->target == V4L2_SEL_TGT_COMPOSE)
-> +                       valid = true;
->         }
->         if (!valid) {
->                 mtk_mdp_dbg(1, "[%d] invalid type:%d,%u", ctx->id, s->type,
-> @@ -925,7 +925,7 @@ static int mtk_mdp_m2m_s_selection(struct file *file, void *fh,
->         if (ret)
->                 return ret;
->
-> -       if (mtk_mdp_is_target_crop(s->target))
-> +       if (mtk_mdp_is_target_compose(s->target))
->                 frame = &ctx->s_frame;
->         else
->                 frame = &ctx->d_frame;
-> --
-> 1.9.1
->
+Peter and Linus,
+
+Thanks for your precious time - really appreciated!
+
+-- 
+Greetings,
+Michael
+
+--
+Analog Devices GmbH      Otl-Aicher Strasse 60-64      80807 München
+Sitz der Gesellschaft München, Registergericht München HRB 40368,
+Geschäftsführer: Peter Kolberg, Ali Raza Husain, Eileen Wynne
