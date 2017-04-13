@@ -1,72 +1,83 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 1/2] mfd: arizona: Add GPIO maintain state flag
-Date: Thu, 13 Apr 2017 14:48:45 +0200
-Message-ID: <CACRpkdYAgd+ovH5x+GpbqPqGNG8W=t3A_g1rpY6tha2=FPsfOA@mail.gmail.com>
-References: <1491568725-14882-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
- <20170410201758.lobmtzxt2jgcwwvc@rob-hp-laptop> <1491903267.4826.8.camel@rf-debian.wolfsonmicro.main>
- <20170413091513.GA1878@localhost.localdomain> <CACRpkdZ6PBv72BCn1bXsvhcHD2+dsCdh=3F3Vnnm7AWZqyWrig@mail.gmail.com>
- <1492086093.4826.25.camel@rf-debian.wolfsonmicro.main>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH RFC 0/5] *** SPI Slave mode support ***
+Date: Thu, 13 Apr 2017 13:59:29 +0100
+Message-ID: <20170413125929.dygodgj6c35ydh5p@sirena.org.uk>
+References: <1492085644-4195-1-git-send-email-jiada_wang@mentor.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1492086093.4826.25.camel@rf-debian.wolfsonmicro.main>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Richard Fitzgerald <rf@opensource.wolfsonmicro.com>
-Cc: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>, Rob Herring <robh@kernel.org>, Lee Jones <lee.jones@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Mark Rutland <mark.rutland@arm.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:WOLFSON MICROELECTRONICS DRIVERS" <patches@opensource.wolfsonmicro.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="2vyyg5ms6wnpv2id"
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1492085644-4195-1-git-send-email-jiada_wang-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: jiada_wang-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 13, 2017 at 2:21 PM, Richard Fitzgerald
-<rf@opensource.wolfsonmicro.com> wrote:
-> On Thu, 2017-04-13 at 14:14 +0200, Linus Walleij wrote:
->> On Thu, Apr 13, 2017 at 11:15 AM, Charles Keepax
->> <ckeepax@opensource.wolfsonmicro.com> wrote:
->> > On Tue, Apr 11, 2017 at 10:34:27AM +0100, Richard Fitzgerald wrote:
->>
->> >> 3) The codec only has to be kept awake while any such GPIO is actually
->> >> in use. See (2)
->> >
->> > Yeah option 3 is the primary issue here, we only want to keep the
->> > CODEC enabled whilst specific GPIOs are in use. As GPIOs can be
->> > dynamically requested/released by things in the kernel we want to
->> > know which GPIOs require the CODEC to be kept alive. Also in the
->> > future one might be tempted to add maintain whilst high and
->> > maintain whilst low options for lines with pulls on them to
->> > further optimise power.
->>
->> Why does this have to be encoded as information in the device
->> tree? Isn't it better to use a static table in the driver?
->>
->> I don't see what use system integrators and others playing
->> around with the device tree has of this, it will just be confusing
->> to them if it is a chip-internal detail.
->>
->
-> They are GPIOs for connecting to external hardware, we don't know what
-> people are going to connect them to so they have to tell us how they
-> need them to behave.
 
-Aha it is a consumer configuration thing, then I see it.
+--2vyyg5ms6wnpv2id
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I think it seems a bit odd that it is assumed that the default is that
-we should *not* preserve the GPIO output value if we go to sleep.
-Should the flag be inverted?
+On Thu, Apr 13, 2017 at 05:13:59AM -0700, jiada_wang-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org wrote:
+> From: Jiada Wang <jiada_wang-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+>=20
+> v1:
+>   add Slave mode support in SPI core
+>   spidev create slave device when SPI controller work in slave mode
+>   spi-imx support to work in slave mode
 
-Also, why can't we just use a generic flag for this, it seems very
-very generic.
+Adding Geert who also had a series doing this in progress that was
+getting very near to being merged.
 
-Look in:
-include/dt-bindings/gpio/gpio.h
+>=20
+> Jiada Wang (5):
+>   spi: core: add support to work in Slave mode
+>   spi: spidev: use different name for SPI controller slave mode device
+>   spi: imx: add selection for iMX53 and iMX6 controller
+>   ARM: dts: imx: change compatiblity for SPI controllers on imx53 later
+>     soc
+>   spi: imx: Add support for SPI Slave mode for imx53 and imx6 chips
+>=20
+>  Documentation/devicetree/bindings/spi/spi-bus.txt |  27 ++-
+>  Documentation/spi/spi-summary                     |  19 +-
+>  arch/arm/boot/dts/imx53.dtsi                      |   4 +-
+>  arch/arm/boot/dts/imx6q.dtsi                      |   2 +-
+>  arch/arm/boot/dts/imx6qdl.dtsi                    |   8 +-
+>  arch/arm/boot/dts/imx6sl.dtsi                     |   8 +-
+>  arch/arm/boot/dts/imx6sx.dtsi                     |   8 +-
+>  arch/arm/boot/dts/imx6ul.dtsi                     |   8 +-
+>  drivers/spi/Kconfig                               |  14 +-
+>  drivers/spi/spi-imx.c                             | 216 ++++++++++++++++=
+++++--
+>  drivers/spi/spi.c                                 |  23 ++-
+>  drivers/spi/spidev.c                              |  15 +-
+>  include/linux/spi/spi.h                           |  15 ++
+>  13 files changed, 310 insertions(+), 57 deletions(-)
+>=20
+> --=20
+> 2.7.4
+>=20
+>=20
 
-Is there any reasons why we can't have:
-/* Bit 3 express GPIO suspend/resume persistance in low power mode */
-#define GPIO_MUST_KEEP_VALUE 0
-#define GPIO_MAY_LOOSE_VALUE_DURING_SLEEP 8
+--2vyyg5ms6wnpv2id
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Yeah it's talkative but informative. This way you can mark up lines
-that are OK to loose their value during low-power/sleep using
-just (new) standard bindings that can be reused by others,
-also optionally making it possible for the gpiolib core to take action
-on these properties if need be.
+-----BEGIN PGP SIGNATURE-----
 
-Yours,
-Linus Walleij
+iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAljvdjEACgkQJNaLcl1U
+h9DeVgf+JWpTNpyDnSVvyjWtXJFB+Bln7qRS6mduVicURu12JOcXsV8uSGxDIocY
+EGGuS1mvKMY0OoEzqC8EFo55HXcUbqObnEaTXZQu956Ih6x+5BYWnPPkKNEFQKBq
+AgdEWYx5UpPBBZ4YHBIocEhUb5ym+NtzPxmBtg5GUnnVgdeb7iPV1XGGlxiaMqte
+Ui81i1cPkbOj+/GjLqIKqhEIJ3nhmwejEtcxjvt7lXPoRvmLQN9oc7fCDsIMMi1/
+krc/8sU0ZYomYcmQA7xM1V6aD+yO7S2g5ytISVSYgftC3+tuBHNogFxLUyvcUf4Q
+CrHT6wFBcRvHqnbeaziUQ8XHZWVIZQ==
+=bHod
+-----END PGP SIGNATURE-----
+
+--2vyyg5ms6wnpv2id--
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
