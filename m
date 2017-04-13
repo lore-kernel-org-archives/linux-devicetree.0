@@ -1,44 +1,119 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2] mfd: arizona: Add GPIO maintain state flag
-Date: Thu, 13 Apr 2017 14:14:25 +0200
-Message-ID: <CACRpkdZ6PBv72BCn1bXsvhcHD2+dsCdh=3F3Vnnm7AWZqyWrig@mail.gmail.com>
-References: <1491568725-14882-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
- <20170410201758.lobmtzxt2jgcwwvc@rob-hp-laptop> <1491903267.4826.8.camel@rf-debian.wolfsonmicro.main>
- <20170413091513.GA1878@localhost.localdomain>
+From: <jiada_wang@mentor.com>
+Subject: [PATCH RFC 3/5] spi: imx: add selection for iMX53 and iMX6 controller
+Date: Thu, 13 Apr 2017 05:14:02 -0700
+Message-ID: <1492085644-4195-4-git-send-email-jiada_wang@mentor.com>
+References: <1492085644-4195-1-git-send-email-jiada_wang@mentor.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170413091513.GA1878-bi+AKbBUZKY6gyzm1THtWbp2dZbC/Bob@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Cc: Richard Fitzgerald <rf-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:WOLFSON MICROELECTRONICS DRIVERS" <patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1492085644-4195-1-git-send-email-jiada_wang@mentor.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com
+Cc: linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Jiada Wang <jiada_wang@mentor.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 13, 2017 at 11:15 AM, Charles Keepax
-<ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org> wrote:
-> On Tue, Apr 11, 2017 at 10:34:27AM +0100, Richard Fitzgerald wrote:
+From: Jiada Wang <jiada_wang@mentor.com>
 
->> 3) The codec only has to be kept awake while any such GPIO is actually
->> in use. See (2)
->
-> Yeah option 3 is the primary issue here, we only want to keep the
-> CODEC enabled whilst specific GPIOs are in use. As GPIOs can be
-> dynamically requested/released by things in the kernel we want to
-> know which GPIOs require the CODEC to be kept alive. Also in the
-> future one might be tempted to add maintain whilst high and
-> maintain whilst low options for lines with pulls on them to
-> further optimise power.
+ECSPI contorller for iMX53 and iMX6 has few hardware issues
+comparing to iMX51.
+The change add possibility to detect which controller is used
+to apply possible workaround and limitations.
 
-Why does this have to be encoded as information in the device
-tree? Isn't it better to use a static table in the driver?
+Signed-off-by: Jiada Wang <jiada_wang@mentor.com>
+---
+ drivers/spi/spi-imx.c | 43 ++++++++++++++++++++++++++++++++++++++++---
+ 1 file changed, 40 insertions(+), 3 deletions(-)
 
-I don't see what use system integrators and others playing
-around with the device tree has of this, it will just be confusing
-to them if it is a chip-internal detail.
-
-Yours,
-Linus Walleij
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/drivers/spi/spi-imx.c b/drivers/spi/spi-imx.c
+index 9a7c62f..b2323b9 100644
+--- a/drivers/spi/spi-imx.c
++++ b/drivers/spi/spi-imx.c
+@@ -67,7 +67,8 @@ enum spi_imx_devtype {
+ 	IMX27_CSPI,
+ 	IMX31_CSPI,
+ 	IMX35_CSPI,	/* CSPI on all i.mx except above */
+-	IMX51_ECSPI,	/* ECSPI on i.mx51 and later */
++	IMX51_ECSPI,	/* ECSPI on i.mx51 */
++	IMX53_ECSPI,	/* ECSPI on i.mx53 and later */
+ };
+ 
+ struct spi_imx_data;
+@@ -127,9 +128,32 @@ static inline int is_imx51_ecspi(struct spi_imx_data *d)
+ 	return d->devtype_data->devtype == IMX51_ECSPI;
+ }
+ 
++static inline int is_imx53_ecspi(struct spi_imx_data *d)
++{
++	return d->devtype_data->devtype == IMX53_ECSPI;
++}
++
+ static inline unsigned spi_imx_get_fifosize(struct spi_imx_data *d)
+ {
+-	return is_imx51_ecspi(d) ? 64 : 8;
++	switch (d->devtype_data->devtype) {
++	case IMX51_ECSPI:
++	case IMX53_ECSPI:
++		return 64;
++	default:
++		return 8;
++	}
++}
++
++static inline bool spi_imx_has_dmamode(struct spi_imx_data *d)
++{
++	switch (d->devtype_data->devtype) {
++	case IMX35_CSPI:
++	case IMX51_ECSPI:
++	case IMX53_ECSPI:
++		return true;
++	default:
++		return false;
++	}
+ }
+ 
+ #define MXC_SPI_BUF_RX(type)						\
+@@ -746,6 +770,15 @@ static struct spi_imx_devtype_data imx51_ecspi_devtype_data = {
+ 	.devtype = IMX51_ECSPI,
+ };
+ 
++static struct spi_imx_devtype_data imx53_ecspi_devtype_data = {
++	.intctrl = mx51_ecspi_intctrl,
++	.config = mx51_ecspi_config,
++	.trigger = mx51_ecspi_trigger,
++	.rx_available = mx51_ecspi_rx_available,
++	.reset = mx51_ecspi_reset,
++	.devtype = IMX53_ECSPI,
++};
++
+ static const struct platform_device_id spi_imx_devtype[] = {
+ 	{
+ 		.name = "imx1-cspi",
+@@ -766,6 +799,9 @@ static const struct platform_device_id spi_imx_devtype[] = {
+ 		.name = "imx51-ecspi",
+ 		.driver_data = (kernel_ulong_t) &imx51_ecspi_devtype_data,
+ 	}, {
++		.name = "imx53-ecspi",
++		.driver_data = (kernel_ulong_t) &imx53_ecspi_devtype_data,
++	}, {
+ 		/* sentinel */
+ 	}
+ };
+@@ -777,6 +813,7 @@ static const struct of_device_id spi_imx_dt_ids[] = {
+ 	{ .compatible = "fsl,imx31-cspi", .data = &imx31_cspi_devtype_data, },
+ 	{ .compatible = "fsl,imx35-cspi", .data = &imx35_cspi_devtype_data, },
+ 	{ .compatible = "fsl,imx51-ecspi", .data = &imx51_ecspi_devtype_data, },
++	{ .compatible = "fsl,imx53-ecspi", .data = &imx53_ecspi_devtype_data, },
+ 	{ /* sentinel */ }
+ };
+ MODULE_DEVICE_TABLE(of, spi_imx_dt_ids);
+@@ -1266,7 +1303,7 @@ static int spi_imx_probe(struct platform_device *pdev)
+ 	 * Only validated on i.mx35 and i.mx6 now, can remove the constraint
+ 	 * if validated on other chips.
+ 	 */
+-	if (is_imx35_cspi(spi_imx) || is_imx51_ecspi(spi_imx)) {
++	if (spi_imx_has_dmamode(spi_imx)) {
+ 		ret = spi_imx_sdma_init(&pdev->dev, spi_imx, master);
+ 		if (ret == -EPROBE_DEFER)
+ 			goto out_clk_put;
+-- 
+2.7.4
