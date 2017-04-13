@@ -1,63 +1,38 @@
-From: Michael Hennerich <michael.hennerich@analog.com>
-Subject: Re: [PATCH v5 2/2] i2c: mux: ltc4306: LTC4306 and LTC4305 I2C
- multiplexer/switch
-Date: Thu, 13 Apr 2017 08:58:26 +0200
-Message-ID: <03a776ee-87f7-18d7-94f1-5864d26f846e@analog.com>
-References: <1491912976-8396-1-git-send-email-michael.hennerich@analog.com>
- <1491912976-8396-2-git-send-email-michael.hennerich@analog.com>
- <CACRpkdbOQtJvwtNRuPWh9VQyupH3kXK9-3Vu7qMemngg6O5j1w@mail.gmail.com>
- <ef75918a-3e5d-91d2-bc05-546e1e0f0bb4@axentia.se>
-Reply-To: <michael.hennerich@analog.com>
+From: <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH 0/2] hwrng: mtk: add support for hardware random generator on MT7623 SoC
+Date: Thu, 13 Apr 2017 15:05:06 +0800
+Message-ID: <1492067108-14748-1-git-send-email-sean.wang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <ef75918a-3e5d-91d2-bc05-546e1e0f0bb4@axentia.se>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Peter Rosin <peda@axentia.se>, Linus Walleij <linus.walleij@linaro.org>
-Cc: Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org, mpm-VDJrAJ4Gl5ZBDgjK7y7TUQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, prasannatsmkumar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, romain.perier-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, shannon.nelson-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org
+Cc: weiyongjun1-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, keyhaede-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 12.04.2017 18:53, Peter Rosin wrote:
-> On 2017-04-12 10:26, Linus Walleij wrote:
->> On Tue, Apr 11, 2017 at 2:16 PM,  <michael.hennerich@analog.com> wrote:
->>
->>> From: Michael Hennerich <michael.hennerich@analog.com>
->>>
->>> This patch adds support for the Analog Devices / Linear Technology
->>> LTC4306 and LTC4305 4/2 Channel I2C Bus Multiplexer/Switches.
->>> The LTC4306 optionally provides two general purpose input/output pins
->>> (GPIOs) that can be configured as logic inputs, opendrain outputs or
->>> push-pull outputs via the generic GPIOLIB framework.
->
-> Great, thanks for your contribution Michael! Both patches pushed to the
-> for-next branch of the i2c-mux tree.
->
->>> Signed-off-by: Michael Hennerich <michael.hennerich@analog.com>
->> (...)
->>> Changes since v4:
->>
->> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
->>
->> Please go ahead and merge to the i2c tree if you like.
->
-> Yup, thanks for the review! (But not merged directly to the i2c tree,
-> although they will get there eventually...)
->
-> Cheers,
-> peda
->
->
+From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 
-Peter and Linus,
+This patchset introduces support for Mediatek hardware random generator (RNG)
+Currently, the driver is already tested successfully with rng-tools on MT7623
+SoC. And it should also be workable on other similar Mediatek SoCs.
 
-Thanks for your precious time - really appreciated!
+SoC that also works on other similar SoCs. 
+Sean Wang (2):
+  dt-bindings: hwrng: Add Mediatek hardware random generator bindings
+  hwrng: mtk: Add driver for hardware random generator on MT7623 SoC
+
+ Documentation/devicetree/bindings/rng/mtk-rng.txt |  18 +++
+ drivers/char/hw_random/Kconfig                    |  16 +-
+ drivers/char/hw_random/Makefile                   |   2 +-
+ drivers/char/hw_random/mtk-rng.c                  | 174 ++++++++++++++++++++++
+ 4 files changed, 208 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/rng/mtk-rng.txt
+ create mode 100644 drivers/char/hw_random/mtk-rng.c
 
 -- 
-Greetings,
-Michael
+1.9.1
 
 --
-Analog Devices GmbH      Otl-Aicher Strasse 60-64      80807 München
-Sitz der Gesellschaft München, Registergericht München HRB 40368,
-Geschäftsführer: Peter Kolberg, Ali Raza Husain, Eileen Wynne
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
