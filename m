@@ -1,31 +1,16 @@
 From: Andrey Smirnov <andrew.smirnov@gmail.com>
-Subject: [PATCH 2/8] ARM: dts: imx6: Specify 'anatop-enable-bit' where
- appropriate
-Date: Thu, 13 Apr 2017 06:32:36 -0700
-Message-ID: <20170413133242.5068-3-andrew.smirnov@gmail.com>
+Subject: [PATCH 4/8] ARM: dts: imx7s: Add node for GPC
+Date: Thu, 13 Apr 2017 06:32:38 -0700
+Message-ID: <20170413133242.5068-5-andrew.smirnov@gmail.com>
 References: <20170413133242.5068-1-andrew.smirnov@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170413133242.5068-1-andrew.smirnov@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: Shawn Guo <shawnguo@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Andrey Smirnov <andrew.smirnov@gmail.com>, Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, linux-arm-kernel@lists.infradead.org, yurovsky@gmail.com
+Cc: Andrey Smirnov <andrew.smirnov@gmail.com>, yurovsky@gmail.com, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-ENABLE_LINREG bit is implemented by 3P0, 1P1 and 2P5 regulators on
-i.MX6. This property is present in similar code in Fresscale BSP and
-made its way upstream in imx6ul.dtsi, so this patch adds this property
-to the rest of i.MX6 family for completness.
+Add node for GPC and specify as a parent interrupt controller for SoC bus.
 
 Cc: yurovsky@gmail.com
 Cc: Sascha Hauer <kernel@pengutronix.de>
@@ -38,94 +23,74 @@ Cc: linux-kernel@vger.kernel.org
 Cc: linux-arm-kernel@lists.infradead.org
 Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
 ---
- arch/arm/boot/dts/imx6qdl.dtsi | 3 +++
- arch/arm/boot/dts/imx6sl.dtsi  | 3 +++
- arch/arm/boot/dts/imx6sx.dtsi  | 3 +++
- 3 files changed, 9 insertions(+)
+ arch/arm/boot/dts/imx7s.dtsi | 27 ++++++++++++++++++++++++++-
+ 1 file changed, 26 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/imx6qdl.dtsi b/arch/arm/boot/dts/imx6qdl.dtsi
-index e426faa..0576ef6 100644
---- a/arch/arm/boot/dts/imx6qdl.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl.dtsi
-@@ -644,6 +644,7 @@
- 					anatop-min-bit-val = <4>;
- 					anatop-min-voltage = <800000>;
- 					anatop-max-voltage = <1375000>;
-+					anatop-enable-bit = <0>;
- 				};
+diff --git a/arch/arm/boot/dts/imx7s.dtsi b/arch/arm/boot/dts/imx7s.dtsi
+index 8fee299..1a7058f 100644
+--- a/arch/arm/boot/dts/imx7s.dtsi
++++ b/arch/arm/boot/dts/imx7s.dtsi
+@@ -42,6 +42,7 @@
+  */
  
- 				regulator-3p0 {
-@@ -658,6 +659,7 @@
- 					anatop-min-bit-val = <0>;
- 					anatop-min-voltage = <2625000>;
- 					anatop-max-voltage = <3400000>;
-+					anatop-enable-bit = <0>;
- 				};
+ #include <dt-bindings/clock/imx7d-clock.h>
++#include <dt-bindings/power/imx7-power.h>
+ #include <dt-bindings/gpio/gpio.h>
+ #include <dt-bindings/input/input.h>
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
+@@ -119,7 +120,7 @@
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
+ 		compatible = "simple-bus";
+-		interrupt-parent = <&intc>;
++		interrupt-parent = <&gpc>;
+ 		ranges;
  
- 				regulator-2p5 {
-@@ -672,6 +674,7 @@
- 					anatop-min-bit-val = <0>;
- 					anatop-min-voltage = <2100000>;
- 					anatop-max-voltage = <2875000>;
-+					anatop-enable-bit = <0>;
- 				};
+ 		funnel@30041000 {
+@@ -301,6 +302,7 @@
+ 			interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>;
+ 			#interrupt-cells = <3>;
+ 			interrupt-controller;
++			interrupt-parent = <&intc>;
+ 			reg = <0x31001000 0x1000>,
+ 			      <0x31002000 0x2000>,
+ 			      <0x31004000 0x2000>,
+@@ -309,6 +311,7 @@
  
- 				reg_arm: regulator-vddcore {
-diff --git a/arch/arm/boot/dts/imx6sl.dtsi b/arch/arm/boot/dts/imx6sl.dtsi
-index cc9572e..3243af4 100644
---- a/arch/arm/boot/dts/imx6sl.dtsi
-+++ b/arch/arm/boot/dts/imx6sl.dtsi
-@@ -530,6 +530,7 @@
- 					anatop-min-bit-val = <4>;
- 					anatop-min-voltage = <800000>;
- 					anatop-max-voltage = <1375000>;
-+					anatop-enable-bit = <0>;
- 				};
+ 		timer {
+ 			compatible = "arm,armv7-timer";
++			interrupt-parent = <&intc>;
+ 			interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
+ 				     <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
+ 				     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
+@@ -564,6 +567,28 @@
+ 				interrupts = <GIC_SPI 89 IRQ_TYPE_LEVEL_HIGH>;
+ 				#reset-cells = <1>;
+ 			};
++
++			gpc: gpc@303a0000 {
++				compatible = "fsl,imx7d-gpc";
++				reg = <0x303a0000 0x10000>;
++				interrupt-controller;
++				interrupts = <GIC_SPI 87 IRQ_TYPE_LEVEL_HIGH>;
++				#interrupt-cells = <3>;
++				interrupt-parent = <&intc>;
++				#power-domain-cells = <1>;
++
++				pgc {
++					#address-cells = <1>;
++					#size-cells = <0>;
++
++					pgc_pcie_phy: pgc-pcie-phy-domain {
++						#power-domain-cells = <0>;
++
++						reg = <IMX7_POWER_DOMAIN_PCIE_PHY>;
++						power-supply = <&reg_1p0d>;
++					};
++				};
++			};
+ 		};
  
- 				regulator-3p0 {
-@@ -544,6 +545,7 @@
- 					anatop-min-bit-val = <0>;
- 					anatop-min-voltage = <2625000>;
- 					anatop-max-voltage = <3400000>;
-+					anatop-enable-bit = <0>;
- 				};
- 
- 				regulator-2p5 {
-@@ -558,6 +560,7 @@
- 					anatop-min-bit-val = <0>;
- 					anatop-min-voltage = <2100000>;
- 					anatop-max-voltage = <2850000>;
-+					anatop-enable-bit = <0>;
- 				};
- 
- 				reg_arm: regulator-vddcore {
-diff --git a/arch/arm/boot/dts/imx6sx.dtsi b/arch/arm/boot/dts/imx6sx.dtsi
-index 3f1416b..f16b9df 100644
---- a/arch/arm/boot/dts/imx6sx.dtsi
-+++ b/arch/arm/boot/dts/imx6sx.dtsi
-@@ -587,6 +587,7 @@
- 					anatop-min-bit-val = <4>;
- 					anatop-min-voltage = <800000>;
- 					anatop-max-voltage = <1375000>;
-+					anatop-enable-bit = <0>;
- 				};
- 
- 				regulator-3p0 {
-@@ -601,6 +602,7 @@
- 					anatop-min-bit-val = <0>;
- 					anatop-min-voltage = <2625000>;
- 					anatop-max-voltage = <3400000>;
-+					anatop-enable-bit = <0>;
- 				};
- 
- 				regulator-2p5 {
-@@ -615,6 +617,7 @@
- 					anatop-min-bit-val = <0>;
- 					anatop-min-voltage = <2100000>;
- 					anatop-max-voltage = <2875000>;
-+					anatop-enable-bit = <0>;
- 				};
- 
- 				reg_arm: regulator-vddcore {
+ 		aips2: aips-bus@30400000 {
 -- 
 2.9.3
