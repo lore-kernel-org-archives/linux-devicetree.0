@@ -1,123 +1,81 @@
-From: Martin Kepplinger <martin.kepplinger@ginzinger.com>
-Subject: Re: [PATCH 1/3] input: touchscreen: ar1021_i2c: add support for
- AR1020
-Date: Thu, 13 Apr 2017 08:38:39 +0200
-Message-ID: <fd7e784f-824c-1fff-4978-858c11971999@ginzinger.com>
-References: <1491906479-17639-1-git-send-email-martin.kepplinger@ginzinger.com>
- <20170412154054.GB6297@dtor-ws>
+From: =?UTF-8?B?V3UtQ2hlbmcgTGkgKOadjuWLmeiqoCk=?= <wuchengli@google.com>
+Subject: Re: [PATCH] [media] mtk-mdp: Fix g_/s_selection capture/compose logic
+Date: Thu, 13 Apr 2017 14:50:08 +0800
+Message-ID: <CAOMLVLiLkZsBfezx6b9Xq=kyPjUZOXwHC4LfHh1=wy6Ynt=zSQ@mail.gmail.com>
+References: <1492057130-1194-1-git-send-email-minghsiu.tsai@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <20170412154054.GB6297@dtor-ws>
-Sender: linux-input-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: christian.gmeiner@gmail.com, linux@roeck-us.net, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1492057130-1194-1-git-send-email-minghsiu.tsai@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Minghsiu Tsai <minghsiu.tsai@mediatek.com>
+Cc: Hans Verkuil <hans.verkuil@cisco.com>, Daniel Thompson <daniel.thompson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Matthias Brugger <matthias.bgg@gmail.com>, Daniel Kurtz <djkurtz@chromium.org>, Pawel Osciak <posciak@chromium.org>, Houlong Wei <houlong.wei@mediatek.com>, srv_heupstream@mediatek.com, Eddie Huang <eddie.huang@mediatek.com>, Yingjoe Chen <yingjoe.chen@mediatek.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org, linux-mediatek@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+Reviewed-by: Wu-Cheng Li <wuchengli@chromium.org>
 
-
-On 2017-04-12 17:40, Dmitry Torokhov wrote:
-> Hi Martin,
-> 
-> On Tue, Apr 11, 2017 at 12:27:57PM +0200, Martin Kepplinger wrote:
->> ar1021_i2c simply also supports the ar1020 device we use. This is tested.
->> They also share the same datasheet:
->>
->>    http://ww1.microchip.com/downloads/en/DeviceDoc/40001393C.pdf
->>
->> We differentiate not only to make it obvious that we support both devices,
->> but also to be able to implement the few model specific things in the
->> future.
->>
->> Signed-off-by: Martin Kepplinger <martin.kepplinger@ginzinger.com>
->> ---
->>  drivers/input/touchscreen/Kconfig      |  4 ++--
->>  drivers/input/touchscreen/ar1021_i2c.c | 13 ++++++++++---
->>  2 files changed, 12 insertions(+), 5 deletions(-)
->>
->> diff --git a/drivers/input/touchscreen/Kconfig b/drivers/input/touchscreen/Kconfig
->> index 33c62e5..535b91a 100644
->> --- a/drivers/input/touchscreen/Kconfig
->> +++ b/drivers/input/touchscreen/Kconfig
->> @@ -96,8 +96,8 @@ config TOUCHSCREEN_AR1021_I2C
->>  	tristate "Microchip AR1021 i2c touchscreen"
->>  	depends on I2C && OF
->>  	help
->> -	  Say Y here if you have the Microchip AR1021 touchscreen controller
->> -	  chip in your system.
->> +	  Say Y here if you have the Microchip AR1020 or AR1021 touchscreen
->> +	  controller chip in your system.
->>  
->>  	  If unsure, say N.
->>  
->> diff --git a/drivers/input/touchscreen/ar1021_i2c.c b/drivers/input/touchscreen/ar1021_i2c.c
->> index 6562b17..1767257 100644
->> --- a/drivers/input/touchscreen/ar1021_i2c.c
->> +++ b/drivers/input/touchscreen/ar1021_i2c.c
->> @@ -1,5 +1,5 @@
->>  /*
->> - * Microchip AR1021 driver for I2C
->> + * Microchip AR1020 and AR1021 driver for I2C
->>   *
->>   * Author: Christian Gmeiner <christian.gmeiner@gmail.com>
->>   *
->> @@ -24,6 +24,11 @@ struct ar1021_i2c {
->>  	u8 data[AR1021_TOCUH_PKG_SIZE];
->>  };
->>  
->> +enum {
->> +	ar1021,
->> +	ar1020,
->> +};
->> +
->>  static irqreturn_t ar1021_i2c_irq(int irq, void *dev_id)
->>  {
->>  	struct ar1021_i2c *ar1021 = dev_id;
->> @@ -151,13 +156,15 @@ static int __maybe_unused ar1021_i2c_resume(struct device *dev)
->>  static SIMPLE_DEV_PM_OPS(ar1021_i2c_pm, ar1021_i2c_suspend, ar1021_i2c_resume);
->>  
->>  static const struct i2c_device_id ar1021_i2c_id[] = {
->> -	{ "MICROCHIP_AR1021_I2C", 0 },
->> +	{ "MICROCHIP_AR1021_I2C", ar1021 },
->> +	{ "MICROCHIP_AR1020_I2C", ar1020 },
->>  	{ },
->>  };
->>  MODULE_DEVICE_TABLE(i2c, ar1021_i2c_id);
->>  
->>  static const struct of_device_id ar1021_i2c_of_match[] = {
->>  	{ .compatible = "microchip,ar1021-i2c", },
->> +	{ .compatible = "microchip,ar1020-i2c", },
->>  	{ }
->>  };
->>  MODULE_DEVICE_TABLE(of, ar1021_i2c_of_match);
->> @@ -175,5 +182,5 @@ static struct i2c_driver ar1021_i2c_driver = {
->>  module_i2c_driver(ar1021_i2c_driver);
->>  
->>  MODULE_AUTHOR("Christian Gmeiner <christian.gmeiner@gmail.com>");
->> -MODULE_DESCRIPTION("Microchip AR1021 I2C Driver");
->> +MODULE_DESCRIPTION("Microchip AR1020 and AR1021 I2C Driver");
->>  MODULE_LICENSE("GPL");
->> -- 
->> 2.1.4
->>
-> 
-> I do not see where you handle ar1020 differently from ar1021. If devices
-> are compatible, you do not need to add a new compatible to the driver,
-> simply use it in the binding:
-> 
-> 	compatible = "microchip,ar1020-i2c", "microchip,ar1021-i2c";
-> 
-> Thanks.
-> 
-
-Why would you use "microchip,ar1020-i2c" in the dts if it's not
-available? people don't obviously see, by grepping or reading,
-that they have a compatible driver. ... or did I get you wrong?
-
-I don't handle anything differently now. Factory reset has to be done
-differntly though, as one example. So it'd be nice to have the option
-to add data.
-
-thanks
-                          martin
+On Thu, Apr 13, 2017 at 12:18 PM, Minghsiu Tsai
+<minghsiu.tsai@mediatek.com> wrote:
+> From: Daniel Kurtz <djkurtz@chromium.org>
+>
+> Experiments show that the:
+>  (1) mtk-mdp uses the _MPLANE form of CAPTURE/OUTPUT
+>  (2) CAPTURE types use CROP targets, and OUTPUT types use COMPOSE targets
+>
+> Signed-off-by: Daniel Kurtz <djkurtz@chromium.org>
+> Signed-off-by: Minghsiu Tsai <minghsiu.tsai@mediatek.com>
+>
+> ---
+>  drivers/media/platform/mtk-mdp/mtk_mdp_m2m.c | 18 +++++++++---------
+>  1 file changed, 9 insertions(+), 9 deletions(-)
+>
+> diff --git a/drivers/media/platform/mtk-mdp/mtk_mdp_m2m.c b/drivers/media/platform/mtk-mdp/mtk_mdp_m2m.c
+> index 13afe48..8ab7ca0 100644
+> --- a/drivers/media/platform/mtk-mdp/mtk_mdp_m2m.c
+> +++ b/drivers/media/platform/mtk-mdp/mtk_mdp_m2m.c
+> @@ -837,12 +837,12 @@ static int mtk_mdp_m2m_g_selection(struct file *file, void *fh,
+>         struct mtk_mdp_ctx *ctx = fh_to_ctx(fh);
+>         bool valid = false;
+>
+> -       if (s->type == V4L2_BUF_TYPE_VIDEO_CAPTURE) {
+> -               if (mtk_mdp_is_target_compose(s->target))
+> -                       valid = true;
+> -       } else if (s->type == V4L2_BUF_TYPE_VIDEO_OUTPUT) {
+> +       if (s->type == V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE) {
+>                 if (mtk_mdp_is_target_crop(s->target))
+>                         valid = true;
+> +       } else if (s->type == V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE) {
+> +               if (mtk_mdp_is_target_compose(s->target))
+> +                       valid = true;
+>         }
+>         if (!valid) {
+>                 mtk_mdp_dbg(1, "[%d] invalid type:%d,%u", ctx->id, s->type,
+> @@ -907,12 +907,12 @@ static int mtk_mdp_m2m_s_selection(struct file *file, void *fh,
+>         int ret;
+>         bool valid = false;
+>
+> -       if (s->type == V4L2_BUF_TYPE_VIDEO_CAPTURE) {
+> -               if (s->target == V4L2_SEL_TGT_COMPOSE)
+> -                       valid = true;
+> -       } else if (s->type == V4L2_BUF_TYPE_VIDEO_OUTPUT) {
+> +       if (s->type == V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE) {
+>                 if (s->target == V4L2_SEL_TGT_CROP)
+>                         valid = true;
+> +       } else if (s->type == V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE) {
+> +               if (s->target == V4L2_SEL_TGT_COMPOSE)
+> +                       valid = true;
+>         }
+>         if (!valid) {
+>                 mtk_mdp_dbg(1, "[%d] invalid type:%d,%u", ctx->id, s->type,
+> @@ -925,7 +925,7 @@ static int mtk_mdp_m2m_s_selection(struct file *file, void *fh,
+>         if (ret)
+>                 return ret;
+>
+> -       if (mtk_mdp_is_target_crop(s->target))
+> +       if (mtk_mdp_is_target_compose(s->target))
+>                 frame = &ctx->s_frame;
+>         else
+>                 frame = &ctx->d_frame;
+> --
+> 1.9.1
+>
