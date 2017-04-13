@@ -1,7 +1,7 @@
 From: Javier Martinez Canillas <javier@osg.samsung.com>
-Subject: [PATCH v2 21/22] powerpc/5200: Add generic compatible string for I2C EEPROM
-Date: Thu, 13 Apr 2017 15:28:38 -0300
-Message-ID: <20170413182839.25381-22-javier@osg.samsung.com>
+Subject: [PATCH v2 22/22] powerpc/44x: Add generic compatible string for I2C EEPROM
+Date: Thu, 13 Apr 2017 15:28:39 -0300
+Message-ID: <20170413182839.25381-23-javier@osg.samsung.com>
 References: <20170413182839.25381-1-javier@osg.samsung.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170413182839.25381-1-javier@osg.samsung.com>
@@ -22,39 +22,26 @@ So add this generic fallback to the device node compatible string to make
 the device to match the driver using the OF device ID table.
 
 Signed-off-by: Javier Martinez Canillas <javier@osg.samsung.com>
+
 ---
 
 Changes in v2: None
 
- arch/powerpc/boot/dts/pcm030.dts | 2 +-
- arch/powerpc/boot/dts/pcm032.dts | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ arch/powerpc/boot/dts/warp.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/powerpc/boot/dts/pcm030.dts b/arch/powerpc/boot/dts/pcm030.dts
-index 192e66af0001..c7a26c9f634e 100644
---- a/arch/powerpc/boot/dts/pcm030.dts
-+++ b/arch/powerpc/boot/dts/pcm030.dts
-@@ -71,7 +71,7 @@
- 				reg = <0x51>;
- 			};
- 			eeprom@52 {
--				compatible = "catalyst,24c32";
-+				compatible = "catalyst,24c32","atmel,24c32";
- 				reg = <0x52>;
- 				pagesize = <32>;
- 			};
-diff --git a/arch/powerpc/boot/dts/pcm032.dts b/arch/powerpc/boot/dts/pcm032.dts
-index 96b139bf50e9..27d6a1e4c018 100644
---- a/arch/powerpc/boot/dts/pcm032.dts
-+++ b/arch/powerpc/boot/dts/pcm032.dts
-@@ -75,7 +75,7 @@
- 				reg = <0x51>;
- 			};
- 			eeprom@52 {
--				compatible = "catalyst,24c32";
-+				compatible = "catalyst,24c32","atmel,24c32";
- 				reg = <0x52>;
- 				pagesize = <32>;
+diff --git a/arch/powerpc/boot/dts/warp.dts b/arch/powerpc/boot/dts/warp.dts
+index e576ee85c42f..5b36dbf6c9f4 100644
+--- a/arch/powerpc/boot/dts/warp.dts
++++ b/arch/powerpc/boot/dts/warp.dts
+@@ -238,7 +238,7 @@
+ 
+ 				/* This will create 52 and 53 */
+ 				at24@52 {
+-					compatible = "at,24c04";
++					compatible = "at,24c04","atmel,24c04";
+ 					reg = <0x52>;
+ 				};
  			};
 -- 
 2.9.3
