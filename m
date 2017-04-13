@@ -1,47 +1,48 @@
-From: Marcel Holtmann <marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH v3 0/4] TI Bluetooth serdev support
-Date: Thu, 13 Apr 2017 19:24:30 +0200
-Message-ID: <A73F0F81-63B4-4555-9865-F35469902338@holtmann.org>
-References: <20170413150353.7389-1-robh@kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 10.3 \(3273\))
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-bluetooth-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170413150353.7389-1-robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Sender: linux-bluetooth-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Linux Bluetooth <linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "Gustavo F. Padovan" <gustavo-THi1TnShQwVAfugRpC6u6w@public.gmane.org>, Johan Hedberg <johan.hedberg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Eyal Reizer <eyalr-l0cyMroinI0@public.gmane.org>, Satish Patel <satish.patel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Network Development <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Javier Martinez Canillas <javier@osg.samsung.com>
+Subject: [PATCH v2 01/22] dt-bindings: i2c: eeprom: Document manufacturer used as generic fallback
+Date: Thu, 13 Apr 2017 15:28:18 -0300
+Message-ID: <20170413182839.25381-2-javier@osg.samsung.com>
+References: <20170413182839.25381-1-javier@osg.samsung.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170413182839.25381-1-javier@osg.samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: Wolfram Sang <wsa@the-dreams.de>, Javier Martinez Canillas <javier@osg.samsung.com>, devicetree@vger.kernel.org, Sekhar Nori <nsekhar@ti.com>, David Lechner <david@lechnology.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+The at24 driver allows to register I2C EEPROM chips using different vendor
+and devices, but the I2C subsystem does not take the vendor into account
+when matching using the I2C table since it only has device entries.
 
-> This series adds serdev support to the HCI LL protocol used on TI BT
-> modules and enables support on HiKey board with with the WL1835 module.
-> With this the custom TI UIM daemon and btattach are no longer needed.
-> 
-> The series is available on this git branch[1]. This version is rebased on 
-> bluetooth-next tree containing its dependencies.
-> 
-> Rob
-> 
-> [1] git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git ti-bluetooth
-> 
-> Rob Herring (4):
->  dt-bindings: net: Add TI WiLink shared transport binding
->  bluetooth: hci_uart: remove unused hci_uart_init_tty
->  bluetooth: hci_uart: add LL protocol serdev driver support
->  arm64: dts: hikey: add WL1835 Bluetooth device node
-> 
-> .../devicetree/bindings/net/ti,wilink-st.txt       |  35 +++
-> arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts     |   5 +
-> drivers/bluetooth/hci_ldisc.c                      |  19 --
-> drivers/bluetooth/hci_ll.c                         | 262 ++++++++++++++++++++-
-> drivers/bluetooth/hci_uart.h                       |   1 -
-> 5 files changed, 301 insertions(+), 21 deletions(-)
-> create mode 100644 Documentation/devicetree/bindings/net/ti,wilink-st.txt
+But when matching using an OF table, both the vendor and device has to be
+taken into account so the driver defines only a set of compatible strings
+using the "atmel" vendor as a generic fallback for compatible I2C devices.
 
-all 4 patches have been applied to bluetooth-next tree.
+Document in the Device Tree binding document that this manufacturer should
+be used as the generic fallback.
 
-Regards
+Suggested-by: Wolfram Sang <wsa@the-dreams.de>
+Signed-off-by: Javier Martinez Canillas <javier@osg.samsung.com>
+---
 
-Marcel
+Changes in v2: None
+
+ Documentation/devicetree/bindings/eeprom/eeprom.txt | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/Documentation/devicetree/bindings/eeprom/eeprom.txt b/Documentation/devicetree/bindings/eeprom/eeprom.txt
+index 5696eb508e95..d0395f14e2b3 100644
+--- a/Documentation/devicetree/bindings/eeprom/eeprom.txt
++++ b/Documentation/devicetree/bindings/eeprom/eeprom.txt
+@@ -17,7 +17,8 @@ Required properties:
+ 	"renesas,r1ex24002"
+ 
+ 	 If there is no specific driver for <manufacturer>, a generic
+-	 driver based on <type> is selected. Possible types are:
++	 driver based on <type> and manufacturer "atmel" is selected.
++	 Possible types are:
+ 	 "24c00", "24c01", "24c02", "24c04", "24c08", "24c16", "24c32", "24c64",
+ 	 "24c128", "24c256", "24c512", "24c1024", "spd"
+ 
+-- 
+2.9.3
