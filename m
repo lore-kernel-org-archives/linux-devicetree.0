@@ -1,33 +1,44 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH 3/3] arm64: dts: exynos: Add support for S6E3HA2 edge
- panel device on TM2e board
-Date: Fri, 14 Apr 2017 11:03:11 +0200
-Message-ID: <20170414090311.ysmewlnlk2rtsslp@kozik-lap>
-References: <1492147179-7824-1-git-send-email-hoegeun.kwon@samsung.com>
- <CGME20170414051959epcas1p3a246070b065129c4ffbf94736cde321a@epcas1p3.samsung.com>
- <1492147179-7824-4-git-send-email-hoegeun.kwon@samsung.com>
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: Re: [PATCH v6 5/9] [media] add maintainers for DRM STM driver
+Date: Fri, 14 Apr 2017 11:07:16 +0200
+Message-ID: <9c4d57de-95f2-e07e-82fb-a7d81bc1d5f7@baylibre.com>
+References: <1492157455-2283-1-git-send-email-yannick.fertre@st.com>
+ <1492157455-2283-6-git-send-email-yannick.fertre@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1492147179-7824-4-git-send-email-hoegeun.kwon@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Hoegeun Kwon <hoegeun.kwon@samsung.com>
-Cc: thierry.reding@gmail.com, airlied@linux.ie, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, kgene@kernel.org, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, javier@osg.samsung.com, a.hajda@samsung.com, andi.shyti@samsung.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1492157455-2283-6-git-send-email-yannick.fertre@st.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Yannick Fertre <yannick.fertre@st.com>, Alexandre TORGUE <alexandre.torgue@st.com>, Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Russell King <linux@armlinux.org.uk>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Benjamin Gaignard <benjamin.gaignard@st.com>
+Cc: devicetree@vger.kernel.org, kernel@stlinux.com, Philippe Cornu <philippe.cornu@st.com>, dri-devel@lists.freedesktop.org, Fabien Dessenne <fabien.dessenne@st.com>, Mickael Reulier <mickael.reulier@st.com>, Vincent Abriou <vincent.abriou@st.com>, Gabriel FERNANDEZ <gabriel.fernandez@st.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 14, 2017 at 02:19:39PM +0900, Hoegeun Kwon wrote:
-> This patch add the panel device tree node for S6E3HA2 edge display
-> controller to TM2e dts.
-> 
-> Signed-off-by: Hoegeun Kwon <hoegeun.kwon@samsung.com>
-> ---
->  arch/arm64/boot/dts/exynos/exynos5433-tm2e.dts | 12 ++++++++++++
->  1 file changed, 12 insertions(+)
-> 
-
-Looks good to me but I see that bindings are discussed still. I'll take
-this when they settle.
-
-Best regards,
-Krzysztof
+T24gMDQvMTQvMjAxNyAxMDoxMCBBTSwgWWFubmljayBGZXJ0cmUgd3JvdGU6Cj4gQWRkIFBoaWxp
+cHBlIENvcm51IGFuZCBteXNlbGYgYXMgbWFpbnRhaW5lcnMuCj4gCj4gU2lnbmVkLW9mZi1ieTog
+WWFubmljayBGZXJ0cmUgPHlhbm5pY2suZmVydHJlQHN0LmNvbT4KPiAtLS0KPiAgTUFJTlRBSU5F
+UlMgfCA5ICsrKysrKysrKwo+ICAxIGZpbGUgY2hhbmdlZCwgOSBpbnNlcnRpb25zKCspCj4gCj4g
+ZGlmZiAtLWdpdCBhL01BSU5UQUlORVJTIGIvTUFJTlRBSU5FUlMKPiBpbmRleCBjMzZkZmFlLi44
+NGNmNzNmIDEwMDY0NAo+IC0tLSBhL01BSU5UQUlORVJTCj4gKysrIGIvTUFJTlRBSU5FUlMKPiBA
+QCAtNDQyNCw2ICs0NDI0LDE1IEBAIFM6CU1haW50YWluZWQKPiAgRjoJZHJpdmVycy9ncHUvZHJt
+L3N0aQo+ICBGOglEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9zdCxz
+dGloNHh4LnR4dAo+ICAKPiArRFJNIERSSVZFUlMgRk9SIFNUTQo+ICtNOglZYW5uaWNrIEZlcnRy
+ZSA8eWFubmljay5mZXJ0cmVAc3QuY29tPgo+ICtNOglQaGlsaXBwZSBDb3JudSA8cGhpbGlwcGUu
+Y29ybnVAc3QuY29tPgo+ICtMOglkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCj4gK1Q6
+CWdpdCBnaXQ6Ly9hbm9uZ2l0LmZyZWVkZXNrdG9wLm9yZy9kcm0vZHJtLW1pc2MKPiArUzoJTWFp
+bnRhaW5lZAo+ICtGOglkcml2ZXJzL2dwdS9kcm0vc3RtCj4gK0Y6CURvY3VtZW50YXRpb24vZGV2
+aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3N0LHN0bTMyLWx0ZGMudHh0Cj4gKwo+ICBEUk0gRFJJ
+VkVSIEZPUiBUREZYIFZJREVPIENBUkRTCj4gIFM6CU9ycGhhbiAvIE9ic29sZXRlCj4gIEY6CWRy
+aXZlcnMvZ3B1L2RybS90ZGZ4Lwo+IAoKSGkgWWFubmljaywKCndoeSB0aGUgW21lZGlhXSB0YWcg
+aW4gdGhlIHN1YmplY3QgPwoKTmVpbApfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVl
+ZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5m
+by9kcmktZGV2ZWwK
