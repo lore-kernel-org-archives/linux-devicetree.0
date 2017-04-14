@@ -1,25 +1,13 @@
 From: Javier Martinez Canillas <javier@osg.samsung.com>
-Subject: [PATCH v3 09/21] ARM: dts: lpc18xx: Add generic compatible string for
- I2C EEPROM
-Date: Thu, 13 Apr 2017 22:04:33 -0300
-Message-ID: <20170414010445.21727-10-javier@osg.samsung.com>
+Subject: [PATCH v3 18/21] powerpc/fsl: Add generic compatible string for I2C EEPROM
+Date: Thu, 13 Apr 2017 22:04:42 -0300
+Message-ID: <20170414010445.21727-19-javier@osg.samsung.com>
 References: <20170414010445.21727-1-javier@osg.samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170414010445.21727-1-javier@osg.samsung.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Wolfram Sang <wsa@the-dreams.de>, Joachim Eastwood <manabian@gmail.com>, Russell King <linux@armlinux.org.uk>, Javier Martinez Canillas <javier@osg.samsung.com>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
+Cc: Wolfram Sang <wsa@the-dreams.de>, Javier Martinez Canillas <javier@osg.samsung.com>, devicetree@vger.kernel.org, Florian Larysch <fl@n621.de>, Michael Ellerman <mpe@ellerman.id.au>, Scott Wood <oss@buserror.net>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linuxppc-dev@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
 The at24 driver allows to register I2C EEPROM chips using different vendor
@@ -39,61 +27,275 @@ Signed-off-by: Javier Martinez Canillas <javier@osg.samsung.com>
 Changes in v3: None
 Changes in v2: None
 
- arch/arm/boot/dts/lpc4337-ciaa.dts          | 6 +++---
- arch/arm/boot/dts/lpc4350-hitex-eval.dts    | 2 +-
- arch/arm/boot/dts/lpc4357-ea4357-devkit.dts | 2 +-
- 3 files changed, 5 insertions(+), 5 deletions(-)
+ arch/powerpc/boot/dts/fsl/b4qds.dtsi    |  8 ++++----
+ arch/powerpc/boot/dts/fsl/c293pcie.dts  |  2 +-
+ arch/powerpc/boot/dts/fsl/p1010rdb.dtsi |  2 +-
+ arch/powerpc/boot/dts/fsl/p1023rdb.dts  |  2 +-
+ arch/powerpc/boot/dts/fsl/p2041rdb.dts  |  4 ++--
+ arch/powerpc/boot/dts/fsl/p3041ds.dts   |  4 ++--
+ arch/powerpc/boot/dts/fsl/p4080ds.dts   |  4 ++--
+ arch/powerpc/boot/dts/fsl/p5020ds.dts   |  4 ++--
+ arch/powerpc/boot/dts/fsl/p5040ds.dts   |  4 ++--
+ arch/powerpc/boot/dts/fsl/t208xqds.dtsi |  8 ++++----
+ arch/powerpc/boot/dts/fsl/t4240qds.dts  | 12 ++++++------
+ arch/powerpc/boot/dts/fsl/t4240rdb.dts  |  6 +++---
+ 12 files changed, 30 insertions(+), 30 deletions(-)
 
-diff --git a/arch/arm/boot/dts/lpc4337-ciaa.dts b/arch/arm/boot/dts/lpc4337-ciaa.dts
-index 7c16d639a1b4..beddaba85393 100644
---- a/arch/arm/boot/dts/lpc4337-ciaa.dts
-+++ b/arch/arm/boot/dts/lpc4337-ciaa.dts
-@@ -174,17 +174,17 @@
- 	clock-frequency = <400000>;
+diff --git a/arch/powerpc/boot/dts/fsl/b4qds.dtsi b/arch/powerpc/boot/dts/fsl/b4qds.dtsi
+index 3785ef826d07..18053d59be01 100644
+--- a/arch/powerpc/boot/dts/fsl/b4qds.dtsi
++++ b/arch/powerpc/boot/dts/fsl/b4qds.dtsi
+@@ -166,19 +166,19 @@
+ 					reg = <0>;
  
- 	eeprom@50 {
--		compatible = "microchip,24c512";
-+		compatible = "microchip,24c512", "atmel,24c512";
- 		reg = <0x50>;
- 	};
+ 					eeprom@50 {
+-						compatible = "at24,24c64";
++						compatible = "at24,24c64", "atmel,24c64";
+ 						reg = <0x50>;
+ 					};
+ 					eeprom@51 {
+-						compatible = "at24,24c256";
++						compatible = "at24,24c256", "atmel,24c256";
+ 						reg = <0x51>;
+ 					};
+ 					eeprom@53 {
+-						compatible = "at24,24c256";
++						compatible = "at24,24c256", "atmel,24c256";
+ 						reg = <0x53>;
+ 					};
+ 					eeprom@57 {
+-						compatible = "at24,24c256";
++						compatible = "at24,24c256", "atmel,24c256";
+ 						reg = <0x57>;
+ 					};
+ 					rtc@68 {
+diff --git a/arch/powerpc/boot/dts/fsl/c293pcie.dts b/arch/powerpc/boot/dts/fsl/c293pcie.dts
+index 66709788429d..5e905e0857cf 100644
+--- a/arch/powerpc/boot/dts/fsl/c293pcie.dts
++++ b/arch/powerpc/boot/dts/fsl/c293pcie.dts
+@@ -153,7 +153,7 @@
+ &soc {
+ 	i2c@3000 {
+ 		eeprom@50 {
+-			compatible = "st,24c1024";
++			compatible = "st,24c1024", "atmel,24c1024";
+ 			reg = <0x50>;
+ 		};
  
- 	eeprom@51 {
--		compatible = "microchip,24c02";
-+		compatible = "microchip,24c02", "atmel,24c02";
- 		reg = <0x51>;
- 	};
+diff --git a/arch/powerpc/boot/dts/fsl/p1010rdb.dtsi b/arch/powerpc/boot/dts/fsl/p1010rdb.dtsi
+index a8e4ba070104..2ca9cee2ddeb 100644
+--- a/arch/powerpc/boot/dts/fsl/p1010rdb.dtsi
++++ b/arch/powerpc/boot/dts/fsl/p1010rdb.dtsi
+@@ -89,7 +89,7 @@
+ &board_soc {
+ 	i2c@3000 {
+ 		eeprom@50 {
+-			compatible = "st,24c256";
++			compatible = "st,24c256", "atmel,24c256";
+ 			reg = <0x50>;
+ 		};
  
- 	eeprom@54 {
--		compatible = "microchip,24c512";
-+		compatible = "microchip,24c512", "atmel,24c512";
- 		reg = <0x54>;
- 	};
- };
-diff --git a/arch/arm/boot/dts/lpc4350-hitex-eval.dts b/arch/arm/boot/dts/lpc4350-hitex-eval.dts
-index 874c75d44013..8b973f537d3a 100644
---- a/arch/arm/boot/dts/lpc4350-hitex-eval.dts
-+++ b/arch/arm/boot/dts/lpc4350-hitex-eval.dts
-@@ -429,7 +429,7 @@
- 	};
+diff --git a/arch/powerpc/boot/dts/fsl/p1023rdb.dts b/arch/powerpc/boot/dts/fsl/p1023rdb.dts
+index 9716ca64651c..ae38ed66a7a4 100644
+--- a/arch/powerpc/boot/dts/fsl/p1023rdb.dts
++++ b/arch/powerpc/boot/dts/fsl/p1023rdb.dts
+@@ -79,7 +79,7 @@
  
- 	eeprom@50 {
--		compatible = "nxp,24c02";
-+		compatible = "nxp,24c02", "atmel,24c02";
- 		reg = <0x50>;
- 	};
+ 		i2c@3000 {
+ 			eeprom@53 {
+-				compatible = "at24,24c04";
++				compatible = "at24,24c04", "atmel,24c04";
+ 				reg = <0x53>;
+ 			};
  
-diff --git a/arch/arm/boot/dts/lpc4357-ea4357-devkit.dts b/arch/arm/boot/dts/lpc4357-ea4357-devkit.dts
-index 9b5fad622522..02b23fa29d75 100644
---- a/arch/arm/boot/dts/lpc4357-ea4357-devkit.dts
-+++ b/arch/arm/boot/dts/lpc4357-ea4357-devkit.dts
-@@ -490,7 +490,7 @@
- 	};
+diff --git a/arch/powerpc/boot/dts/fsl/p2041rdb.dts b/arch/powerpc/boot/dts/fsl/p2041rdb.dts
+index e50fea95a853..0c34e8c46961 100644
+--- a/arch/powerpc/boot/dts/fsl/p2041rdb.dts
++++ b/arch/powerpc/boot/dts/fsl/p2041rdb.dts
+@@ -127,7 +127,7 @@
+ 				reg = <0x48>;
+ 			};
+ 			eeprom@50 {
+-				compatible = "at24,24c256";
++				compatible = "at24,24c256", "atmel,24c256";
+ 				reg = <0x50>;
+ 			};
+ 			rtc@68 {
+@@ -142,7 +142,7 @@
  
- 	eeprom@57 {
--		compatible = "microchip,24c64";
-+		compatible = "microchip,24c64", "atmel,24c64";
- 		reg = <0x57>;
- 	};
- };
+ 		i2c@118100 {
+ 			eeprom@50 {
+-				compatible = "at24,24c256";
++				compatible = "at24,24c256", "atmel,24c256";
+ 				reg = <0x50>;
+ 			};
+ 		};
+diff --git a/arch/powerpc/boot/dts/fsl/p3041ds.dts b/arch/powerpc/boot/dts/fsl/p3041ds.dts
+index 40748e415adb..383656b73e61 100644
+--- a/arch/powerpc/boot/dts/fsl/p3041ds.dts
++++ b/arch/powerpc/boot/dts/fsl/p3041ds.dts
+@@ -124,11 +124,11 @@
+ 
+ 		i2c@118100 {
+ 			eeprom@51 {
+-				compatible = "at24,24c256";
++				compatible = "at24,24c256", "atmel,24c256";
+ 				reg = <0x51>;
+ 			};
+ 			eeprom@52 {
+-				compatible = "at24,24c256";
++				compatible = "at24,24c256", "atmel,24c256";
+ 				reg = <0x52>;
+ 			};
+ 		};
+diff --git a/arch/powerpc/boot/dts/fsl/p4080ds.dts b/arch/powerpc/boot/dts/fsl/p4080ds.dts
+index 816b9788d5f6..9ca8d7cf8d48 100644
+--- a/arch/powerpc/boot/dts/fsl/p4080ds.dts
++++ b/arch/powerpc/boot/dts/fsl/p4080ds.dts
+@@ -125,11 +125,11 @@
+ 
+ 		i2c@118100 {
+ 			eeprom@51 {
+-				compatible = "at24,24c256";
++				compatible = "at24,24c256", "atmel,24c256";
+ 				reg = <0x51>;
+ 			};
+ 			eeprom@52 {
+-				compatible = "at24,24c256";
++				compatible = "at24,24c256", "atmel,24c256";
+ 				reg = <0x52>;
+ 			};
+ 			rtc@68 {
+diff --git a/arch/powerpc/boot/dts/fsl/p5020ds.dts b/arch/powerpc/boot/dts/fsl/p5020ds.dts
+index cd6f37386111..4e6eab62f747 100644
+--- a/arch/powerpc/boot/dts/fsl/p5020ds.dts
++++ b/arch/powerpc/boot/dts/fsl/p5020ds.dts
+@@ -124,11 +124,11 @@
+ 
+ 		i2c@118100 {
+ 			eeprom@51 {
+-				compatible = "at24,24c256";
++				compatible = "at24,24c256", "atmel,24c256";
+ 				reg = <0x51>;
+ 			};
+ 			eeprom@52 {
+-				compatible = "at24,24c256";
++				compatible = "at24,24c256", "atmel,24c256";
+ 				reg = <0x52>;
+ 			};
+ 		};
+diff --git a/arch/powerpc/boot/dts/fsl/p5040ds.dts b/arch/powerpc/boot/dts/fsl/p5040ds.dts
+index 45084738cf4e..d164e731146e 100644
+--- a/arch/powerpc/boot/dts/fsl/p5040ds.dts
++++ b/arch/powerpc/boot/dts/fsl/p5040ds.dts
+@@ -133,11 +133,11 @@
+ 
+ 		i2c@118100 {
+ 			eeprom@51 {
+-				compatible = "at24,24c256";
++				compatible = "at24,24c256", "atmel,24c256";
+ 				reg = <0x51>;
+ 			};
+ 			eeprom@52 {
+-				compatible = "at24,24c256";
++				compatible = "at24,24c256", "atmel,24c256";
+ 				reg = <0x52>;
+ 			};
+ 		};
+diff --git a/arch/powerpc/boot/dts/fsl/t208xqds.dtsi b/arch/powerpc/boot/dts/fsl/t208xqds.dtsi
+index ec080bd01b09..780103e3eaae 100644
+--- a/arch/powerpc/boot/dts/fsl/t208xqds.dtsi
++++ b/arch/powerpc/boot/dts/fsl/t208xqds.dtsi
+@@ -147,17 +147,17 @@
+ 					reg = <0x0>;
+ 
+ 					eeprom@50 {
+-						compatible = "at24,24c512";
++						compatible = "at24,24c512", "atmel,24c512";
+ 						reg = <0x50>;
+ 					};
+ 
+ 					eeprom@51 {
+-						compatible = "at24,24c02";
++						compatible = "at24,24c02", "atmel,24c02";
+ 						reg = <0x51>;
+ 					};
+ 
+ 					eeprom@57 {
+-						compatible = "at24,24c02";
++						compatible = "at24,24c02", "atmel,24c02";
+ 						reg = <0x57>;
+ 					};
+ 
+@@ -174,7 +174,7 @@
+ 					reg = <0x1>;
+ 
+ 					eeprom@55 {
+-						compatible = "at24,24c02";
++						compatible = "at24,24c02", "atmel,24c02";
+ 						reg = <0x55>;
+ 					};
+ 				};
+diff --git a/arch/powerpc/boot/dts/fsl/t4240qds.dts b/arch/powerpc/boot/dts/fsl/t4240qds.dts
+index 9573ceada07c..9f01bcfad699 100644
+--- a/arch/powerpc/boot/dts/fsl/t4240qds.dts
++++ b/arch/powerpc/boot/dts/fsl/t4240qds.dts
+@@ -377,27 +377,27 @@
+ 					reg = <0>;
+ 
+ 					eeprom@51 {
+-						compatible = "at24,24c256";
++						compatible = "at24,24c256", "atmel,24c256";
+ 						reg = <0x51>;
+ 					};
+ 					eeprom@52 {
+-						compatible = "at24,24c256";
++						compatible = "at24,24c256", "atmel,24c256";
+ 						reg = <0x52>;
+ 					};
+ 					eeprom@53 {
+-						compatible = "at24,24c256";
++						compatible = "at24,24c256", "atmel,24c256";
+ 						reg = <0x53>;
+ 					};
+ 					eeprom@54 {
+-						compatible = "at24,24c256";
++						compatible = "at24,24c256", "atmel,24c256";
+ 						reg = <0x54>;
+ 					};
+ 					eeprom@55 {
+-						compatible = "at24,24c256";
++						compatible = "at24,24c256", "atmel,24c256";
+ 						reg = <0x55>;
+ 					};
+ 					eeprom@56 {
+-						compatible = "at24,24c256";
++						compatible = "at24,24c256", "atmel,24c256";
+ 						reg = <0x56>;
+ 					};
+ 					rtc@68 {
+diff --git a/arch/powerpc/boot/dts/fsl/t4240rdb.dts b/arch/powerpc/boot/dts/fsl/t4240rdb.dts
+index 8166c660712a..9fb192e36bf0 100644
+--- a/arch/powerpc/boot/dts/fsl/t4240rdb.dts
++++ b/arch/powerpc/boot/dts/fsl/t4240rdb.dts
+@@ -130,15 +130,15 @@
+ 				reg = <0x2f>;
+ 			};
+ 			eeprom@52 {
+-				compatible = "at24,24c256";
++				compatible = "at24,24c256", "atmel,24c256";
+ 				reg = <0x52>;
+ 			};
+ 			eeprom@54 {
+-				compatible = "at24,24c256";
++				compatible = "at24,24c256", "atmel,24c256";
+ 				reg = <0x54>;
+ 			};
+ 			eeprom@56 {
+-				compatible = "at24,24c256";
++				compatible = "at24,24c256", "atmel,24c256";
+ 				reg = <0x56>;
+ 			};
+ 			rtc@68 {
 -- 
 2.9.3
