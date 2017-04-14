@@ -1,56 +1,55 @@
-From: <Yasunari.Takiguchi-7U/KSKJipcs@public.gmane.org>
-Subject: [PATCH v2 15/15] [media] cxd2880 : Update MAINTAINERS file for CXD2880 driver
-Date: Fri, 14 Apr 2017 11:48:42 +0900
-Message-ID: <20170414024842.18477-1-Yasunari.Takiguchi@sony.com>
-References: <20170414015043.16731-1-Yasunari.Takiguchi@sony.com>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH 1/3] mfd: cros-ec: Add functions to read mapped memory
+Date: Thu, 13 Apr 2017 19:49:43 -0700
+Message-ID: <ac61bfca-bfa0-143b-c9ca-365b8026ce8d@roeck-us.net>
+References: <1491602410-31518-1-git-send-email-moritz.fischer@ettus.com>
+ <20170413210354.GA17134@roeck-us.net>
+ <CAJYdmeNXJgzgM3uTi-DjA1B10wSipqSPZ20qhboysqKY_tvVLQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170414015043.16731-1-Yasunari.Takiguchi-7U/KSKJipcs@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: tbird20d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Yasunari Takiguchi <Yasunari.Takiguchi-7U/KSKJipcs@public.gmane.org>, Masayuki Yamamoto <Masayuki.Yamamoto-7U/KSKJipcs@public.gmane.org>, Hideki Nozawa <Hideki.Nozawa-7U/KSKJipcs@public.gmane.org>, Kota Yonezawa <Kota.Yonezawa-7U/KSKJipcs@public.gmane.org>, Toshihiko Matsumoto <Toshihiko.Matsumoto-7U/KSKJipcs@public.gmane.org>, Satoshi Watanabe <Satoshi.C.Watanabe-7U/KSKJipcs@public.gmane.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-hwmon-owner@vger.kernel.org>
+In-Reply-To: <CAJYdmeNXJgzgM3uTi-DjA1B10wSipqSPZ20qhboysqKY_tvVLQ@mail.gmail.com>
+Sender: linux-hwmon-owner@vger.kernel.org
+To: Moritz Fischer <moritz.fischer.private@gmail.com>
+Cc: Moritz Fischer <moritz.fischer@ettus.com>, linux-hwmon@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Devicetree List <devicetree@vger.kernel.org>, Lee Jones <lee.jones@linaro.org>, olof@lixom.net, jdelvare@suse.com, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Yasunari Takiguchi <Yasunari.Takiguchi-7U/KSKJipcs@public.gmane.org>
+On 04/13/2017 03:53 PM, Moritz Fischer wrote:
+> Hi Guenter,
+>
+> On Thu, Apr 13, 2017 at 2:03 PM, Guenter Roeck <linux@roeck-us.net> wrote:
+>> On Fri, Apr 07, 2017 at 03:00:08PM -0700, Moritz Fischer wrote:
+>>> From: Moritz Fischer <mdf@kernel.org>
+>>>
+>>> The ChromeOS EC has mapped memory regions where things like temperature
+>>> sensors and fan speed are stored. Provide access to those from the
+>>> cros-ec mfd device.
+>>>
+>>
+>> Turns out struct cros_ec_device already provides a cmd_readmem callback,
+>> which is widely used by other drivers. Why don't you just use it ?
+>
+> This is only actually set by the lpc version of the cros_ec. I2C and
+> SPI connected ECs
 
-This is MAINTAINERS file update about the driver for
-the Sony CXD2880 DVB-T2/T tuner + demodulator.
+Hmm - weird. I thought I saw it implemented for those, but I must have been
+struck by lightning or something. Let me check with Gwendal to see how
+this (ie its use from iio) is supposed to work on non-LPC systems.
 
-Signed-off-by: Yasunari Takiguchi <Yasunari.Takiguchi-7U/KSKJipcs@public.gmane.org>
-Signed-off-by: Masayuki Yamamoto <Masayuki.Yamamoto-7U/KSKJipcs@public.gmane.org>
-Signed-off-by: Hideki Nozawa <Hideki.Nozawa-7U/KSKJipcs@public.gmane.org>
-Signed-off-by: Kota Yonezawa <Kota.Yonezawa-7U/KSKJipcs@public.gmane.org>
-Signed-off-by: Toshihiko Matsumoto <Toshihiko.Matsumoto-7U/KSKJipcs@public.gmane.org>
-Signed-off-by: Satoshi Watanabe <Satoshi.C.Watanabe-7U/KSKJipcs@public.gmane.org>
----
- MAINTAINERS | 9 +++++++++
- 1 file changed, 9 insertions(+)
+Guenter
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index fdd5350fe261..62543a76d6bf 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -8042,6 +8042,15 @@ T:	git git://linuxtv.org/media_tree.git
- S:	Supported
- F:	drivers/media/dvb-frontends/cxd2841er*
- 
-+MEDIA DRIVERS FOR CXD2880
-+M:	Yasunari Takiguchi <Yasunari.Takiguchi-7U/KSKJipcs@public.gmane.org>
-+L:	linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-+W:	http://linuxtv.org/
-+T:	git git://linuxtv.org/media_tree.git
-+S:	Supported
-+F:	drivers/media/dvb-frontends/cxd2880/*
-+F:	drivers/media/spi/cxd2880*
-+
- MEDIA DRIVERS FOR HORUS3A
- M:	Sergey Kozlov <serjk-SoTE/FI7wRI@public.gmane.org>
- M:	Abylay Ospan <aospan-SoTE/FI7wRI@public.gmane.org>
--- 
-2.11.0
+> emulate it. I can most certainly hook it up in the (spi,i2c) drivers,
+> but the implementation
+> for SPI and I2C needs to live somewhere. drivers/platform/chrome/cros_ec_proto.c
+> seemed to be a good place.
+>
+> Thanks for the feedback!
+>
+> Moritz
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-hwmon" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
