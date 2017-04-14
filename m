@@ -1,59 +1,65 @@
-From: Martin Kepplinger <martin.kepplinger-hfTNJOUbDMh54TAoqtyWWQ@public.gmane.org>
-Subject: [PATCH v2] dt-bindings: input: add bindings document for ar1021_i2c driver
-Date: Fri, 14 Apr 2017 08:11:38 +0200
-Message-ID: <1492150298-15244-1-git-send-email-martin.kepplinger@ginzinger.com>
-References: <20170413204041.lqtqfc24vueo5fbj@rob-hp-laptop>
+From: Andrzej Hajda <a.hajda@samsung.com>
+Subject: Re: [PATCH 1/3] dt-bindings: Add support for samsung s6e3ha2 edge
+ panel binding
+Date: Fri, 14 Apr 2017 09:33:35 +0200
+Message-ID: <96b2c957-35f3-ae73-1c92-d46fc81e2d16@samsung.com>
+References: <1492147179-7824-1-git-send-email-hoegeun.kwon@samsung.com>
+ <CGME20170414051959epcas5p3917fe7adbc17a42bf0450a46b2baf55d@epcas5p3.samsung.com>
+ <1492147179-7824-2-git-send-email-hoegeun.kwon@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170413204041.lqtqfc24vueo5fbj@rob-hp-laptop>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: christian.gmeiner-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Martin Kepplinger <martin.kepplinger-hfTNJOUbDMh54TAoqtyWWQ@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-reply-to: <1492147179-7824-2-git-send-email-hoegeun.kwon@samsung.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Hoegeun Kwon <hoegeun.kwon@samsung.com>, thierry.reding@gmail.com, airlied@linux.ie, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, kgene@kernel.org, krzk@kernel.org
+Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, javier@osg.samsung.com, andi.shyti@samsung.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add a simple binding document describing the supported devices and the
-I2C bus address.
-
-Signed-off-by: Martin Kepplinger <martin.kepplinger-hfTNJOUbDMh54TAoqtyWWQ@public.gmane.org>
----
-
-revision history
-----------------
-v2: fixed subject line and binding; thanks Rob Herring
-v1: initial idea
-
-
- .../devicetree/bindings/input/touchscreen/ar1021.txt     | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/input/touchscreen/ar1021.txt
-
-diff --git a/Documentation/devicetree/bindings/input/touchscreen/ar1021.txt b/Documentation/devicetree/bindings/input/touchscreen/ar1021.txt
-new file mode 100644
-index 0000000..e459e85
---- /dev/null
-+++ b/Documentation/devicetree/bindings/input/touchscreen/ar1021.txt
-@@ -0,0 +1,16 @@
-+* Microchip AR1020 and AR1021 touchscreen interface (I2C)
-+
-+Required properties:
-+- compatible		: "microchip,ar1021-i2c"
-+- reg			: I2C slave address
-+- interrupt-parent	: the phandle for the interrupt controller
-+- interrupts		: touch controller interrupt
-+
-+Example:
-+
-+	touchscreen@4d {
-+		compatible = "microchip,ar1021-i2c";
-+		reg = <0x4d>;
-+		interrupt-parent = <&gpio3>;
-+		interrupts = <11 IRQ_TYPE_LEVEL_HIGH>;
-+	};
--- 
-2.1.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGkgSG9lZ2V1biwKCk9uIDE0LjA0LjIwMTcgMDc6MTksIEhvZWdldW4gS3dvbiB3cm90ZToKPiBU
+aGUgU2Ftc3VuZyBzNmUzaGEyIGVkZ2UgaXMgYSA1LjY1IiAxNjAweDI1NjAgQU1PTEVEIHBhbmVs
+IGNvbm5lY3RlZAo+IHVzaW5nIE1JUEktRFNJIGludGVyZmFjZXMuCgpBcyBJIHdyb3RlIGluIGRp
+c2N1c3Npb24gYWJvdXQgczZlM2hhMiwgdGhlcmUgaXMgbm8gZWRnZSB2ZXJzaW9uIG9mCnM2ZTNo
+YTIsIGl0IGlzIGp1c3QgZGlmZmVyZW50IHBhbmVsOiBzNmUzaGYyLCBvciBtb3JlIHByZWNpc2Vs
+eSBJQyBkcml2ZXIuCgpbMV06IGh0dHBzOi8vbGttbC5vcmcvbGttbC8yMDE3LzEvOS8xNTkKCj4K
+PiBTaWduZWQtb2ZmLWJ5OiBIb2VnZXVuIEt3b24gPGhvZWdldW4ua3dvbkBzYW1zdW5nLmNvbT4K
+PiAtLS0KPiAgLi4uL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvc2Ftc3VuZyxzNmUzaGEyLWUudHh0
+ICAgfCAyOCArKysrKysrKysrKysrKysrKysrKysrCj4gIDEgZmlsZSBjaGFuZ2VkLCAyOCBpbnNl
+cnRpb25zKCspCj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
+YmluZGluZ3MvZGlzcGxheS9wYW5lbC9zYW1zdW5nLHM2ZTNoYTItZS50eHQKPgo+IGRpZmYgLS1n
+aXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9zYW1z
+dW5nLHM2ZTNoYTItZS50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlz
+cGxheS9wYW5lbC9zYW1zdW5nLHM2ZTNoYTItZS50eHQKPiBuZXcgZmlsZSBtb2RlIDEwMDY0NAo+
+IGluZGV4IDAwMDAwMDAuLjA5YzY1ZjYKPiAtLS0gL2Rldi9udWxsCj4gKysrIGIvRG9jdW1lbnRh
+dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvc2Ftc3VuZyxzNmUzaGEyLWUu
+dHh0Cj4gQEAgLTAsMCArMSwyOCBAQAo+ICtTYW1zdW5nIFM2RTNIQTIgNS42NSIgMTYwMHgyNTYw
+IEFNT0xFRCBwYW5lbAo+ICsKPiArUmVxdWlyZWQgcHJvcGVydGllczoKPiArICAtIGNvbXBhdGli
+bGU6ICJzYW1zdW5nLHM2ZTNoYTItZSIKCkkgdGhpbmsgInNhbXN1bmcsczZlM2hmMiIgc2hvdWxk
+IGJlIHRoZW4gdXNlZCwgSSBndWVzcyBpdCBjb3VsZCBiZSBldmVuCnNpbXBsZXIgdG8ganVzdCBh
+ZGQgbmV3IGNvbXBhdGlibGUgc3RyaW5nIHRvIHNhbXN1bmcsczZlM2hhMi50eHQgYmluZGluZwp3
+aXRoIHNvbWUgY29tbWVudHMsIGFzIHRoZXNlIHBhbmVscyBhcmUgb2YgdGhlIHNhbWUgZmFtaWx5
+LgoKUmVnYXJkcwpBbmRyemVqCgo+ICsgIC0gcmVnOiB0aGUgdmlydHVhbCBjaGFubmVsIG51bWJl
+ciBvZiBhIERTSSBwZXJpcGhlcmFsCj4gKyAgLSB2ZGQzLXN1cHBseTogSS9PIHZvbHRhZ2Ugc3Vw
+cGx5Cj4gKyAgLSB2Y2ktc3VwcGx5OiB2b2x0YWdlIHN1cHBseSBmb3IgYW5hbG9nIGNpcmN1aXRz
+Cj4gKyAgLSByZXNldC1ncGlvczogYSBHUElPIHNwZWMgZm9yIHRoZSByZXNldCBwaW4gKGFjdGl2
+ZSBsb3cpCj4gKyAgLSBlbmFibGUtZ3Bpb3M6IGEgR1BJTyBzcGVjIGZvciB0aGUgcGFuZWwgZW5h
+YmxlIHBpbiAoYWN0aXZlIGhpZ2gpCj4gKwo+ICtPcHRpb25hbCBwcm9wZXJ0aWVzOgo+ICsgIC0g
+dGUtZ3Bpb3M6IGEgR1BJTyBzcGVjIGZvciB0aGUgdGVhcmluZyBlZmZlY3Qgc3luY2hyb25pemF0
+aW9uIHNpZ25hbAo+ICsgICAgZ3BpbyBwaW4gKGFjdGl2ZSBoaWdoKQo+ICsKPiArRXhhbXBsZToK
+PiArJmRzaSB7Cj4gKwkuLi4KPiArCj4gKwlwYW5lbEAwIHsKPiArCQljb21wYXRpYmxlID0gInNh
+bXN1bmcsczZlM2hhMi1lIjsKPiArCQlyZWcgPSA8MD47Cj4gKwkJdmRkMy1zdXBwbHkgPSA8Jmxk
+bzI3X3JlZz47Cj4gKwkJdmNpLXN1cHBseSA9IDwmbGRvMjhfcmVnPjsKPiArCQlyZXNldC1ncGlv
+cyA9IDwmZ3BnMCAwIEdQSU9fQUNUSVZFX0xPVz47Cj4gKwkJZW5hYmxlLWdwaW9zID0gPCZncGYx
+IDUgR1BJT19BQ1RJVkVfSElHSD47Cj4gKwkJdGUtZ3Bpb3MgPSA8JmdwZjEgMyBHUElPX0FDVElW
+RV9ISUdIPjsKPiArCX07Cj4gK307CgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJl
+ZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGlu
+Zm8vZHJpLWRldmVsCg==
