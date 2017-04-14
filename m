@@ -1,54 +1,75 @@
-From: Hoegeun Kwon <hoegeun.kwon@samsung.com>
-Subject: [PATCH 1/3] dt-bindings: Add support for samsung s6e3ha2 edge panel
- binding
-Date: Fri, 14 Apr 2017 14:19:37 +0900
-Message-ID: <1492147179-7824-2-git-send-email-hoegeun.kwon@samsung.com>
-References: <1492147179-7824-1-git-send-email-hoegeun.kwon@samsung.com>
- <CGME20170414051959epcas5p3917fe7adbc17a42bf0450a46b2baf55d@epcas5p3.samsung.com>
+From: Jiada Wang <jiada_wang-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH RFC 0/5] *** SPI Slave mode support ***
+Date: Thu, 13 Apr 2017 22:39:30 -0700
+Message-ID: <58F06092.9080409@mentor.com>
+References: <1492085644-4195-1-git-send-email-jiada_wang@mentor.com> <20170413125929.dygodgj6c35ydh5p@sirena.org.uk> <CAMuHMdUm=90ddNWM5KWqT+W0hqZ-QO6vPHj5OisbYquDYq1ZmA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-reply-to: <1492147179-7824-1-git-send-email-hoegeun.kwon@samsung.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: thierry.reding@gmail.com, airlied@linux.ie, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, kgene@kernel.org, krzk@kernel.org
-Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, javier@osg.samsung.com, andi.shyti@samsung.com, Hoegeun Kwon <hoegeun.kwon@samsung.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAMuHMdUm=90ddNWM5KWqT+W0hqZ-QO6vPHj5OisbYquDYq1ZmA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, linux-spi <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-VGhlIFNhbXN1bmcgczZlM2hhMiBlZGdlIGlzIGEgNS42NSIgMTYwMHgyNTYwIEFNT0xFRCBwYW5l
-bCBjb25uZWN0ZWQKdXNpbmcgTUlQSS1EU0kgaW50ZXJmYWNlcy4KClNpZ25lZC1vZmYtYnk6IEhv
-ZWdldW4gS3dvbiA8aG9lZ2V1bi5rd29uQHNhbXN1bmcuY29tPgotLS0KIC4uLi9iaW5kaW5ncy9k
-aXNwbGF5L3BhbmVsL3NhbXN1bmcsczZlM2hhMi1lLnR4dCAgIHwgMjggKysrKysrKysrKysrKysr
-KysrKysrKwogMSBmaWxlIGNoYW5nZWQsIDI4IGluc2VydGlvbnMoKykKIGNyZWF0ZSBtb2RlIDEw
-MDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9zYW1z
-dW5nLHM2ZTNoYTItZS50eHQKCmRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
-YmluZGluZ3MvZGlzcGxheS9wYW5lbC9zYW1zdW5nLHM2ZTNoYTItZS50eHQgYi9Eb2N1bWVudGF0
-aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9zYW1zdW5nLHM2ZTNoYTItZS50
-eHQKbmV3IGZpbGUgbW9kZSAxMDA2NDQKaW5kZXggMDAwMDAwMC4uMDljNjVmNgotLS0gL2Rldi9u
-dWxsCisrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVs
-L3NhbXN1bmcsczZlM2hhMi1lLnR4dApAQCAtMCwwICsxLDI4IEBACitTYW1zdW5nIFM2RTNIQTIg
-NS42NSIgMTYwMHgyNTYwIEFNT0xFRCBwYW5lbAorCitSZXF1aXJlZCBwcm9wZXJ0aWVzOgorICAt
-IGNvbXBhdGlibGU6ICJzYW1zdW5nLHM2ZTNoYTItZSIKKyAgLSByZWc6IHRoZSB2aXJ0dWFsIGNo
-YW5uZWwgbnVtYmVyIG9mIGEgRFNJIHBlcmlwaGVyYWwKKyAgLSB2ZGQzLXN1cHBseTogSS9PIHZv
-bHRhZ2Ugc3VwcGx5CisgIC0gdmNpLXN1cHBseTogdm9sdGFnZSBzdXBwbHkgZm9yIGFuYWxvZyBj
-aXJjdWl0cworICAtIHJlc2V0LWdwaW9zOiBhIEdQSU8gc3BlYyBmb3IgdGhlIHJlc2V0IHBpbiAo
-YWN0aXZlIGxvdykKKyAgLSBlbmFibGUtZ3Bpb3M6IGEgR1BJTyBzcGVjIGZvciB0aGUgcGFuZWwg
-ZW5hYmxlIHBpbiAoYWN0aXZlIGhpZ2gpCisKK09wdGlvbmFsIHByb3BlcnRpZXM6CisgIC0gdGUt
-Z3Bpb3M6IGEgR1BJTyBzcGVjIGZvciB0aGUgdGVhcmluZyBlZmZlY3Qgc3luY2hyb25pemF0aW9u
-IHNpZ25hbAorICAgIGdwaW8gcGluIChhY3RpdmUgaGlnaCkKKworRXhhbXBsZToKKyZkc2kgewor
-CS4uLgorCisJcGFuZWxAMCB7CisJCWNvbXBhdGlibGUgPSAic2Ftc3VuZyxzNmUzaGEyLWUiOwor
-CQlyZWcgPSA8MD47CisJCXZkZDMtc3VwcGx5ID0gPCZsZG8yN19yZWc+OworCQl2Y2ktc3VwcGx5
-ID0gPCZsZG8yOF9yZWc+OworCQlyZXNldC1ncGlvcyA9IDwmZ3BnMCAwIEdQSU9fQUNUSVZFX0xP
-Vz47CisJCWVuYWJsZS1ncGlvcyA9IDwmZ3BmMSA1IEdQSU9fQUNUSVZFX0hJR0g+OworCQl0ZS1n
-cGlvcyA9IDwmZ3BmMSAzIEdQSU9fQUNUSVZFX0hJR0g+OworCX07Cit9OwotLSAKMS45LjEKCl9f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBt
-YWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3Rz
-LmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+Hello Geert
+
+On 04/13/2017 12:47 PM, Geert Uytterhoeven wrote:
+> On Thu, Apr 13, 2017 at 2:59 PM, Mark Brown<broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>  wrote:
+>> On Thu, Apr 13, 2017 at 05:13:59AM -0700, jiada_wang-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org wrote:
+>>> From: Jiada Wang<jiada_wang-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+>>>
+>>> v1:
+>>>    add Slave mode support in SPI core
+>>>    spidev create slave device when SPI controller work in slave mode
+>>>    spi-imx support to work in slave mode
+>> Adding Geert who also had a series doing this in progress that was
+>> getting very near to being merged.
+> Thank you!
+>
+> Actually my plan is to fix the last remaining issues and resubmit for v4.13.
+I noticed your patch set for SPI slave support,
+(I am sure you can find out some of the change
+in this patch set is based on your work).
+we have similar requirement to add slave mode support to ecspi IP on 
+imx6 Soc.
+
+Our use case is to use spidev as an interface to communicate with 
+external SPI master devices.
+meanwhile the SPI bus controller can also act as master device to send 
+data to other
+SPI slave devices on the board.
+
+I found in your implementation, SPI bus controller is limited to either 
+work in master mode or
+slave mode, is there any reasoning to not configure SPI mode based on 
+SPI devices use case?
+
+
+Thanks,
+Jiada
+
+> References:
+>    - v2: https://lkml.org/lkml/2016/9/12/1065
+>    - v1: https://lkml.org/lkml/2016/6/22/423
+>
+> BTW Jiada, what's your use case? Just spidev?
+>
+> Thx!
+>
+> Gr{oetje,eeting}s,
+>
+>                          Geert
+>
+> --
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+>
+> In personal conversations with technical people, I call myself a hacker. But
+> when I'm talking to journalists I just say "programmer" or something like that.
+>                                  -- Linus Torvalds
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
