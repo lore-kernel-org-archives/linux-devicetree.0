@@ -1,63 +1,330 @@
-From: Yannick Fertre <yannick.fertre@st.com>
-Subject: [PATCH v6 7/9] ARM: dts: stm32: Enable ltdc & simple panel on
- stm32f429-Eval board
-Date: Fri, 14 Apr 2017 10:10:53 +0200
-Message-ID: <1492157455-2283-8-git-send-email-yannick.fertre@st.com>
-References: <1492157455-2283-1-git-send-email-yannick.fertre@st.com>
+From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v3 14/37] mtd: nand: denali: support "nand-ecc-strength"
+ DT property
+Date: Fri, 14 Apr 2017 10:19:28 +0200
+Message-ID: <20170414101928.5255736e@bbrezillon>
+References: <1490856383-31560-1-git-send-email-yamada.masahiro@socionext.com>
+        <1490856383-31560-15-git-send-email-yamada.masahiro@socionext.com>
+        <20170330160238.59e5a2c1@bbrezillon>
+        <CAK7LNARUKwMHd79ALDx_SDY9XKcHPY96xTAOMQx6XarFgwb-AA@mail.gmail.com>
+        <20170331114659.4964be35@bbrezillon>
+        <CAK7LNAToTmirpkhNmPCLhcTXG_SFqS762mEGK3mjyqLKXuWa1Q@mail.gmail.com>
+        <20170409183301.037d3f95@bbrezillon>
+        <CAK7LNARxR722uRE9SnJPuOqictrpnbFmcKBsW_g=f1OnNgvpRA@mail.gmail.com>
+        <20170411095637.5aa87cf6@bbrezillon>
+        <CAK7LNARJU2PB8UPTRMrLsbZaQdEaQMAr6zOOHUozVoPWpESxgw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1492157455-2283-1-git-send-email-yannick.fertre@st.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Alexandre TORGUE <alexandre.torgue@st.com>, Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Russell King <linux@armlinux.org.uk>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Benjamin Gaignard <benjamin.gaignard@st.com>, Yannick Fertre <yannick.fertre@st.com>
-Cc: devicetree@vger.kernel.org, kernel@stlinux.com, Philippe Cornu <philippe.cornu@st.com>, Fabien Dessenne <fabien.dessenne@st.com>, dri-devel@lists.freedesktop.org, Mickael Reulier <mickael.reulier@st.com>, Vincent Abriou <vincent.abriou@st.com>, Gabriel FERNANDEZ <gabriel.fernandez@st.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAK7LNARJU2PB8UPTRMrLsbZaQdEaQMAr6zOOHUozVoPWpESxgw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Enrico Jorns <ejo-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Artem Bityutskiy <artem.bityutskiy-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Dinh Nguyen <dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Graham Moore <grmoore-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Masami Hiramatsu <mhiramat-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chuanxiao Dong <chuanxiao.dong-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-RW5hYmxlIGx0ZGMgJiBlbmFibGUgYW0tNDgwMjcyaDN0bXF3LXQwMWggcGFuZWwuCgpTaWduZWQt
-b2ZmLWJ5OiBZYW5uaWNrIEZlcnRyZSA8eWFubmljay5mZXJ0cmVAc3QuY29tPgotLS0KIGFyY2gv
-YXJtL2Jvb3QvZHRzL3N0bTMyNDI5aS1ldmFsLmR0cyB8IDU5ICsrKysrKysrKysrKysrKysrKysr
-KysrKysrKysrKysrKysrKwogMSBmaWxlIGNoYW5nZWQsIDU5IGluc2VydGlvbnMoKykKCmRpZmYg
-LS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9zdG0zMjQyOWktZXZhbC5kdHMgYi9hcmNoL2FybS9i
-b290L2R0cy9zdG0zMjQyOWktZXZhbC5kdHMKaW5kZXggM2M5OTQ2Ni4uNjMxZjA4YSAxMDA2NDQK
-LS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvc3RtMzI0MjlpLWV2YWwuZHRzCisrKyBiL2FyY2gvYXJt
-L2Jvb3QvZHRzL3N0bTMyNDI5aS1ldmFsLmR0cwpAQCAtMTI0LDYgKzEyNCw2NSBAQAogCQljbG9j
-a3MgPSA8JnJjYyAwIFNUTTMyRjRfQUhCMV9DTE9DSyhPVEdIU1VMUEkpPjsKIAkJY2xvY2stbmFt
-ZXMgPSAibWFpbl9jbGsiOwogCX07CisKKwlwYW5lbF9yZ2I6IHBhbmVsLXJnYiB7CisJCWNvbXBh
-dGlibGUgPSAiYW1waXJlLGFtLTQ4MDI3MmgzdG1xdy10MDFoIjsKKwkJc3RhdHVzID0gIm9rYXki
-OworCQlwb3J0IHsKKwkJCXBhbmVsX2luX3JnYjogZW5kcG9pbnQgeworCQkJCXJlbW90ZS1lbmRw
-b2ludCA9IDwmbHRkY19vdXRfcmdiPjsKKwkJCX07CisJCX07CisJfTsKK307CisKKyZwaW5jdHJs
-IHsKKwlwaW5jdHJsX2x0ZGM6IGx0ZGNAMCB7CisJCXBpbnMgeworCQkJcGlubXV4ID0gPFNUTTMy
-RjQyOV9QSTEyX0ZVTkNfTENEX0hTWU5DPiwKKwkJCQkgPFNUTTMyRjQyOV9QSTEzX0ZVTkNfTENE
-X1ZTWU5DPiwKKwkJCQkgPFNUTTMyRjQyOV9QSTE0X0ZVTkNfTENEX0NMSz4sCisJCQkJIDxTVE0z
-MkY0MjlfUEkxNV9GVU5DX0xDRF9SMD4sCisJCQkJIDxTVE0zMkY0MjlfUEowX0ZVTkNfTENEX1Ix
-PiwKKwkJCQkgPFNUTTMyRjQyOV9QSjFfRlVOQ19MQ0RfUjI+LAorCQkJCSA8U1RNMzJGNDI5X1BK
-Ml9GVU5DX0xDRF9SMz4sCisJCQkJIDxTVE0zMkY0MjlfUEozX0ZVTkNfTENEX1I0PiwKKwkJCQkg
-PFNUTTMyRjQyOV9QSjRfRlVOQ19MQ0RfUjU+LAorCQkJCSA8U1RNMzJGNDI5X1BKNV9GVU5DX0xD
-RF9SNj4sCisJCQkJIDxTVE0zMkY0MjlfUEo2X0ZVTkNfTENEX1I3PiwKKwkJCQkgPFNUTTMyRjQy
-OV9QSjdfRlVOQ19MQ0RfRzA+LAorCQkJCSA8U1RNMzJGNDI5X1BKOF9GVU5DX0xDRF9HMT4sCisJ
-CQkJIDxTVE0zMkY0MjlfUEo5X0ZVTkNfTENEX0cyPiwKKwkJCQkgPFNUTTMyRjQyOV9QSjEwX0ZV
-TkNfTENEX0czPiwKKwkJCQkgPFNUTTMyRjQyOV9QSjExX0ZVTkNfTENEX0c0PiwKKwkJCQkgPFNU
-TTMyRjQyOV9QSjEyX0ZVTkNfTENEX0IwPiwKKwkJCQkgPFNUTTMyRjQyOV9QSjEzX0ZVTkNfTENE
-X0IxPiwKKwkJCQkgPFNUTTMyRjQyOV9QSjE0X0ZVTkNfTENEX0IyPiwKKwkJCQkgPFNUTTMyRjQy
-OV9QSjE1X0ZVTkNfTENEX0IzPiwKKwkJCQkgPFNUTTMyRjQyOV9QSzBfRlVOQ19MQ0RfRzU+LAor
-CQkJCSA8U1RNMzJGNDI5X1BLMV9GVU5DX0xDRF9HNj4sCisJCQkJIDxTVE0zMkY0MjlfUEsyX0ZV
-TkNfTENEX0c3PiwKKwkJCQkgPFNUTTMyRjQyOV9QSzNfRlVOQ19MQ0RfQjQ+LAorCQkJCSA8U1RN
-MzJGNDI5X1BLNF9GVU5DX0xDRF9CNT4sCisJCQkJIDxTVE0zMkY0MjlfUEs1X0ZVTkNfTENEX0I2
-PiwKKwkJCQkgPFNUTTMyRjQyOV9QSzZfRlVOQ19MQ0RfQjc+LAorCQkJCSA8U1RNMzJGNDI5X1BL
-N19GVU5DX0xDRF9ERT47CisJCQlzbGV3LXJhdGUgPSA8Mj47CisJCX07CisJfTsKK307CisKKyZs
-dGRjIHsKKwlzdGF0dXMgPSAib2theSI7CisJcGluY3RybC0wID0gPCZwaW5jdHJsX2x0ZGM+Owor
-CXBpbmN0cmwtbmFtZXMgPSAiZGVmYXVsdCI7CisJZG1hLXJhbmdlczsKKworCXBvcnQgeworCQls
-dGRjX291dF9yZ2I6IGVuZHBvaW50IHsKKwkJCXJlbW90ZS1lbmRwb2ludCA9IDwmcGFuZWxfaW5f
-cmdiPjsKKwkJfTsKKwl9OwogfTsKIAogJmFkYyB7Ci0tIAoxLjkuMQoKX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApk
-cmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Au
-b3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+On Fri, 14 Apr 2017 16:57:23 +0900
+Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org> wrote:
+
+> Hi Boris,
+> 
+> 
+> 2017-04-11 16:56 GMT+09:00 Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>:
+> > Hi Masahiro,
+> >
+> > On Tue, 11 Apr 2017 15:19:21 +0900
+> > Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org> wrote:
+> >  
+> >> Hi Boris,
+> >>
+> >>
+> >>
+> >> 2017-04-10 1:33 GMT+09:00 Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>:  
+> >> > On Mon, 3 Apr 2017 12:16:34 +0900
+> >> > Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org> wrote:
+> >> >  
+> >> >> Hi Boris,
+> >> >>
+> >> >>
+> >> >>
+> >> >> 2017-03-31 18:46 GMT+09:00 Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>:
+> >> >>  
+> >> >> > You can try something like that when no explicit ecc.strength and
+> >> >> > ecc.size has been set in the DT and when ECC_MAXIMIZE was not passed.
+> >> >> >
+> >> >> > static int
+> >> >> > denali_get_closest_ecc_strength(struct denali_nand_info *denali,
+> >> >> >                                 int strength)
+> >> >> > {
+> >> >> >         /*
+> >> >> >          * Whatever you need to select a strength that is greater than
+> >> >> >          * or equal to strength.
+> >> >> >          */
+> >> >> >
+> >> >> >         return X;
+> >> >> > }  
+> >> >>
+> >> >>
+> >> >> Is here anything specific to Denali?  
+> >> >
+> >> > Well, only the denali driver knows what the hardware supports, though
+> >> > having a generic function that takes a table of supported strengths
+> >> > would work.
+> >> >  
+> >> >>
+> >> >>  
+> >> >> > static int denali_try_to_match_ecc_req(struct denali_nand_info *denali)
+> >> >> > {
+> >> >> >         struct nand_chip *chip = &denali->nand;
+> >> >> >         struct mtd_info *mtd = nand_to_mtd(chip);
+> >> >> >         int max_ecc_bytes = mtd->oobsize - denali->bbtskipbytes;
+> >> >> >         int ecc_steps, ecc_strength, ecc_bytes;
+> >> >> >         int ecc_size = chip->ecc_step_ds;
+> >> >> >         int ecc_strength = chip->ecc_strength_ds;
+> >> >> >
+> >> >> >         /*
+> >> >> >          * No information provided by the NAND chip, let the core
+> >> >> >          * maximize the strength.
+> >> >> >          */
+> >> >> >         if (!ecc_size || !ecc_strength)
+> >> >> >                 return -ENOTSUPP;
+> >> >> >
+> >> >> >         if (ecc_size > 512)
+> >> >> >                 ecc_size = 1024;
+> >> >> >         else
+> >> >> >                 ecc_size = 512;
+> >> >> >
+> >> >> >         /* Adjust ECC step size based on hardware support. */
+> >> >> >         if (ecc_size == 1024 &&
+> >> >> >             !(denali->caps & DENALI_CAP_ECC_SIZE_1024))
+> >> >> >                 ecc_size = 512;
+> >> >> >         else if(ecc_size == 512 &&
+> >> >> >                 !(denali->caps & DENALI_CAP_ECC_SIZE_512))
+> >> >> >                 ecc_size = 1024;
+> >> >> >
+> >> >> >         if (ecc_size < chip->ecc_size_ds) {
+> >> >> >                 /*
+> >> >> >                  * When the selected size if smaller than the expected
+> >> >> >                  * one we try to use the same strength but on 512 blocks
+> >> >> >                  * so that we can still fix the same number of errors
+> >> >> >                  * even if they are concentrated in the first 512bytes
+> >> >> >                  * of a 1024bytes portion.
+> >> >> >                  */
+> >> >> >                 ecc_strength = chip->ecc_strength_ds;
+> >> >> >                 ecc_strength = denali_get_closest_ecc_strength(denali,
+> >> >> >                                                                ecc_strength);
+> >> >> >         } else {
+> >> >> >                 /* Always prefer 1024bytes ECC blocks when possible. */
+> >> >> >                 if (ecc_size != 1024 &&
+> >> >> >                     (denali->caps & DENALI_CAP_ECC_SIZE_1024) &&
+> >> >> >                     mtd->writesize > 1024)
+> >> >> >                         ecc_size = 1024;
+> >> >> >
+> >> >> >                 /*
+> >> >> >                  * Adjust the strength based on the selected ECC step
+> >> >> >                  * size.
+> >> >> >                  */
+> >> >> >                 ecc_strength = DIV_ROUND_UP(ecc_size,
+> >> >> >                                             chip->ecc_step_ds) *
+> >> >> >                                chip->ecc_strength_ds;
+> >> >> >         }
+> >> >> >
+> >> >> >         ecc_bytes = denali_calc_ecc_bytes(ecc_size,
+> >> >> >                                           ecc_strength);
+> >> >> >         ecc_bytes *= mtd->writesize / ecc_size;
+> >> >> >
+> >> >> >         /*
+> >> >> >          * If we don't have enough space, let the core maximize
+> >> >> >          * the strength.
+> >> >> >          */
+> >> >> >         if (ecc_bytes > max_ecc_bytes)
+> >> >> >                 return -ENOTSUPP;
+> >> >> >
+> >> >> >         chip->ecc.strength = ecc_strength;
+> >> >> >         chip->ecc.size = ecc_size;
+> >> >> >
+> >> >> >         return 0;
+> >> >> > }  
+> >> >>
+> >> >>
+> >> >> As a whole, this does not seem to driver-specific.  
+> >> >
+> >> > It's almost controller-agnostic, except for the denali_calc_ecc_bytes()
+> >> > function, but I guess we could ask drivers to implement a hook that is
+> >> > passed the ECC step size and strength and returns the associated
+> >> > number of ECC bytes.
+> >> >  
+> >> >>
+> >> >>
+> >> >> [1] A driver provides some pairs of (ecc_strength, ecc_size)
+> >> >>     it can support.
+> >> >>
+> >> >> [2] The core framework knows the chip's requirement
+> >> >>     (ecc_strength_ds, ecc_size_ds).
+> >> >>
+> >> >>
+> >> >> Then, the core framework provides a function
+> >> >> to return a most recommended (ecc_strength, ecc_size).
+> >> >>
+> >> >>
+> >> >>
+> >> >> struct nand_ecc_spec {
+> >> >>        int ecc_strength;
+> >> >>        int ecc_size;
+> >> >> };
+> >> >>
+> >> >> /*
+> >> >>  * This function choose the most recommented (ecc_str, ecc_size)
+> >> >>  * "recommended" means: minimum ecc stregth that meets
+> >> >>  * the chip's requirment.
+> >> >>  *
+> >> >>  *
+> >> >>  * @chip   - nand_chip
+> >> >>  * @controller_ecc_spec - Array of (ecc_str, ecc_size) supported by the
+> >> >>                           controller. (terminated by NULL as sentinel)
+> >> >>  */
+> >> >> struct nand_ecc_spec * nand_try_to_match_ecc_req(struct nand_chip *chip,
+> >> >>                                                  struct nand_ecc_spec
+> >> >> *controller_ecc_spec)
+> >> >> {
+> >> >>       /*
+> >> >>        * Return the pointer to the most recommended
+> >> >>        * struct nand_ecc_spec.
+> >> >>        * If nothing suitable found, return NULL.
+> >> >>        */
+> >> >> }
+> >> >>  
+> >> >
+> >> > I like the idea, except I would do this slightly differently to avoid
+> >> > declaring all combinations of stepsize and strengths
+> >> >
+> >> > struct nand_ecc_stepsize_info {
+> >> >         int stepsize;
+> >> >         int nstrengths;
+> >> >         int *strengths;
+> >> > };
+> >> >
+> >> > struct nand_ecc_engine_caps {
+> >> >         int nstepsizes;
+> >> >         struct nand_ecc_stepsize_info *stepsizes;
+> >> >         int (*calc_ecc_bytes)(int stepsize, int strength);
+> >> > };
+> >> >
+> >> > int nand_try_to_match_ecc_req(struct nand_chip *chip,
+> >> >                               const struct nand_ecc_engine_caps *caps,
+> >> >                               struct nand_ecc_spec *spec)
+> >> > {
+> >> >         /*
+> >> >          * Find the most appropriate setting based on the ECC engine
+> >> >          * caps and fill the spec object accordingly.
+> >> >          * Returns 0 in case of success and a negative error code
+> >> >          * otherwise.
+> >> >          */
+> >> > }
+> >> >
+> >> > Note that nand_try_to_match_ecc_req() has to be more generic than
+> >> > denali_try_to_match_ecc_req() WRT step sizes, which will probably
+> >> > complexify the logic.  
+> >>
+> >>
+> >> After I fiddle with this generic approach for a while,
+> >> I started to feel like giving up.  
+> >
+> > I don't get it. What was the problem with my initial suggestion (the
+> > denali specific one, not the generic approach)? You proposed to make it
+> > generic, which, I agree, is a bit more complicated.
+> >  
+> >>
+> >> I wonder if we really want over-implementation
+> >> for covering _theoretically_ possible cases.  
+> >
+> > Okay, one more theoretical case I'd like to expose: you have board
+> > design with different NAND parts which have different ECC requirements.
+> > If you were about to describe the exact ECC strength you want for each
+> > board you'll have to have different DTs.  
+> 
+> In this case, fixed ecc-strength in DT is not feasible.
+> 
+> > Maximizing the ECC strength
+> > would still work, but what if the MTD user needs some OOB bytes (like
+> > is the case with JFFS2) and ECC maximization reserved all of the
+> > available bytes?  
+> 
+> JFFS2 needs some bytes in oob-free area for the clean marker.
+> You are right.
+> This implies NAND_ECC_MAXIMIZE is not very useful.
+> We do not know whether we have enough space left in oob, or not.
+> 
+> 
+> 
+> > The other reason I prefer to have the drivers automatically guessing
+> > what's appropriate is because then you don't have to care when writing
+> > your DT.
+> >  
+> >>
+> >> In practice, there are not so many ECC settings possible
+> >> on a single controller.
+> >>
+> >> As for Denali IP, it would be theoretically possible to instantiate
+> >> multiple ECC engines.  However, in practice, there is no sensible
+> >> reason to do so.  At least, I do not know any real chip to support that.
+> >>
+> >> So, I'd like to simplify the logic for Denali.
+> >>
+> >>   - Support either 512 or 1024 ECC size.
+> >>     If there is (ever) a controller that supports both,
+> >>     1024 should be chosen.
+> >>
+> >>   - ECC strength is not specified via DT, it is simply maximized.
+> >>
+> >> This simplifies the logic much and I believe this is enough.
+> >>
+> >> One more reason is, as we talked before,
+> >> we need to match ECC setting between Linux and firmware (boot-loader),  
+> >
+> > If the bootloader implements the same logic it should match.
+> >  
+> >> so anyway we end up with using a fixed setting specified by DT.
+> >>  
+> >
+> > Really, I don't see what's the problem with the function I proposed,
+> > but I'm willing to make a concession.
+> > Make the nand-ecc-strength+nand-ecc-step-size or nand-ecc-maximize
+> > mandatory so that if someone ever needs to support the 'match NAND
+> > requirements' feature we won't have to add a vendor specific property
+> > like this one [1].
+> >
+> > Are you fine with that?  
+> 
+> No.  This requirement seems too strong.
+
+Hm, can you give more details? All I want is a solution where we can
+later support the feature I'm asking without adding a extra DT
+property, and, in order to do that we must make sure the case you want
+to support as a first step are explicitly requested in the DT.
+
+It's as simple as:
+
+	if ((!ecc->strength || !ecc->size) &&
+	    !(ecc->options & NAND_ECC_MAXIMIZE))
+		return -ENOTSUPP;
+
+> At least, it is a problem for non-DT platforms.
+
+Well, for non-DT platforms you have to keep ECC maximization anyway,
+otherwise you're not backward compatible.
+
+> 
+> 
+> If a driver provides ECC engine caps info,
+> perhaps ECC maximizing could be a generalized helper function as well.
+
+I don't get it. I thought the generic helper was too hard to implement.
+Now you want to add a new functionality.
+
+I'm not against this idea, but maybe it's easier to provide a denali
+specific implementation before tackling the generic one.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
