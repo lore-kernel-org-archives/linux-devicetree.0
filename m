@@ -1,22 +1,53 @@
 From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: [PATCH 0/3] Add R8A7743/SK-RZG1M PFC support
-Date: Sat, 15 Apr 2017 00:09:41 +0300
-Message-ID: <20170414210941.143838720@cogentembedded.com>
+Subject: [PATCH 2/3] ARM: dts: sk-rzg1m: add SCIF0 pins
+Date: Sat, 15 Apr 2017 00:09:43 +0300
+Message-ID: <20170414211509.818645915@cogentembedded.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-15
 Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Content-Disposition: inline; filename=ARM-dts-sk-rzg1m-add-SCIF0-pins.patch
 Sender: linux-renesas-soc-owner@vger.kernel.org
 To: Simon Horman <horms@verge.net.au>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, linux-arm-kernel@lists.infradead.org
+Cc: Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, linux-arm-kernel@lists.infradead.org, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+Add the (previously omitted) SCIF0 pin data to the SK-RZG1M board's
+device tree.
 
-Here's the set of 3 patches against Simon Horman's 'renesas.git' repo,
-'renesas-devel-20170410-v4.11-rc6' tag.  We're adding the R8A7743 PFC node and
-then describe the pins for SCIF0 and Ether devices described eralier. These
-patches depend on the R8A7743 PFC suport in order to work properly.
+Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
-[1/3] ARM: dts: r8a7743: add PFC support
-[2/3] ARM: dts: sk-rzg1m: add SCIF0 pins
-[3/3] ARM: dts: sk-rzg1m: add Ether pins
+---
+ arch/arm/boot/dts/r8a7743-sk-rzg1m.dts |   12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
 
-WBR, Sergei
+Index: renesas/arch/arm/boot/dts/r8a7743-sk-rzg1m.dts
+===================================================================
+--- renesas.orig/arch/arm/boot/dts/r8a7743-sk-rzg1m.dts
++++ renesas/arch/arm/boot/dts/r8a7743-sk-rzg1m.dts
+@@ -1,7 +1,7 @@
+ /*
+  * Device Tree Source for the SK-RZG1M board
+  *
+- * Copyright (C) 2016 Cogent Embedded, Inc.
++ * Copyright (C) 2016-2017 Cogent Embedded, Inc.
+  *
+  * This file is licensed under the terms of the GNU General Public License
+  * version 2. This program is licensed "as is" without any warranty of any
+@@ -39,7 +39,17 @@
+ 	clock-frequency = <20000000>;
+ };
+ 
++&pfc {
++	scif0_pins: scif0 {
++		groups = "scif0_data";
++		function = "scif0";
++	};
++};
++
+ &scif0 {
++	pinctrl-0 = <&scif0_pins>;
++	pinctrl-names = "default";
++
+ 	status = "okay";
+ };
+ 
