@@ -1,58 +1,113 @@
-From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Subject: [PATCH 2/2] arm64: allwinner: a64: enable EHCI0/OHCI0
- for Pine64
-Date: Fri, 14 Apr 2017 21:15:55 +0800
-Message-ID: <20170414131555.9431-2-icenowy@aosc.io>
-References: <20170414131555.9431-1-icenowy@aosc.io>
-Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
+From: Thor Thayer <thor.thayer-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Subject: Re: [PATCH 2/3] Documentation: dt: i2c: Add Altera I2C Controller
+Date: Fri, 14 Apr 2017 08:46:28 -0500
+Message-ID: <7c803e53-5c1b-cd59-6c59-5a32b07edcb8@linux.intel.com>
+References: <1491926547-29510-1-git-send-email-thor.thayer@linux.intel.com>
+ <1491926547-29510-3-git-send-email-thor.thayer@linux.intel.com>
+ <20170413212240.uxwh5525baqmgny4@rob-hp-laptop>
+Reply-To: thor.thayer-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDS6XAN6ZADRBIEZYPDQKGQE5HQKL7A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20170414131555.9431-1-icenowy-h8G6r0blFSE@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170413212240.uxwh5525baqmgny4@rob-hp-laptop>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-As we have USB0 controller switch available on A64, we should now enable
-the EHCI0/OHCI0 controllers for Pine64.
+Hi Rob,
 
-Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
----
- arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts | 8 ++++++++
- 1 file changed, 8 insertions(+)
+On 04/13/2017 04:22 PM, Rob Herring wrote:
+> On Tue, Apr 11, 2017 at 11:02:26AM -0500, thor.thayer-VuQAYsv1563Yd54FQh9/CA@public.gmane.org wrote:
+>> From: Thor Thayer <thor.thayer-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+>>
+>> Add the documentation to support the Altera I2C Controller.
+>
+> "dt-bindings: i2c: ..." for the subject.
+>
+Got it. Thanks.
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts
-index c680ed385da3..4782add50b94 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts
-@@ -66,6 +66,10 @@
- 	};
- };
- 
-+&ehci0 {
-+	status = "okay";
-+};
-+
- &ehci1 {
- 	status = "okay";
- };
-@@ -91,6 +95,10 @@
- 	status = "okay";
- };
- 
-+&ohci0 {
-+	status = "okay";
-+};
-+
- &ohci1 {
- 	status = "okay";
- };
--- 
-2.12.2
+>>
+>> Signed-off-by: Thor Thayer <thor.thayer-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+>> ---
+>>  .../devicetree/bindings/i2c/i2c-altera.txt         | 37 ++++++++++++++++++++++
+>>  1 file changed, 37 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/i2c/i2c-altera.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/i2c/i2c-altera.txt b/Documentation/devicetree/bindings/i2c/i2c-altera.txt
+>> new file mode 100644
+>> index 0000000..a67241c
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/i2c/i2c-altera.txt
+>> @@ -0,0 +1,37 @@
+>> +* Altera I2C Controller
+>
+> This is the only one? For synthesizable logic or a hard block in
+> socfpga?
+>
+This is synthesizable logic in an FPGA.
+
+>> +
+>> +Required properties :
+>> + - compatible : should be "altr,sip-i2c"
+>
+> Seems kind of generic.
+>
+I'm using sip for soft IP - right now we only offer 1 flavor.
+
+>> + - reg        : Offset and length of the register set for the device
+>> + - interrupts : <IRQ> where IRQ is the interrupt number.
+>> + - clocks     : phandles to input clocks.
+>
+> Need to specify how many clocks.
+>
+OK. There is only 1 so I'll change to singular. phandle to input clock.
+
+>> + - #address-cells = <1>;
+>> + - #size-cells = <0>;
+>> +
+>> +Recommended properties :
+>> + - clock-frequency : desired I2C bus clock frequency in Hz.
+>> +
+>> +Optional properties :
+>> + - altr,fifo-size : Size of the RX and TX FIFOs.
+>
+> in bytes?
+>
+> Just "fifo-size" is already fairly common, so drop the vendor prefix.
+>
+Yes, it is in bytes. I'll make the change.
+
+Thanks for reviewing!
+
+>> + - Child nodes conforming to i2c bus binding
+>> +
+>> +Example :
+>> +
+>> +	i2c@100080000 {
+>> +		compatible = "altr,sip-i2c";
+>> +		reg = <0x00000001 0x00080000 0x00000040>;
+>> +		interrupt-parent = <&intc>;
+>> +		interrupts = <0 43 4>;
+>> +		clocks = <&clk_0>;
+>> +		clock-frequency = <100000>;
+>> +		#address-cells = <1>;
+>> +		#size-cells = <0>;
+>> +		altr,fifo-size = <4>;
+>> +
+>> +		eeprom@51 {
+>> +			compatible = "atmel,24c32";
+>> +			reg = <0x51>;
+>> +			pagesize = <32>;
+>> +		};
+>> +	};
+>> +
+>> --
+>> 1.9.1
+>>
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
