@@ -1,49 +1,78 @@
-From: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>
-Subject: Re: [PATCH V5 2/2] thermal: broadcom: add Northstar thermal driver
-Date: Fri, 14 Apr 2017 14:16:36 +0200
-Message-ID: <6dd2617d-a8a8-d7a4-53a4-7ebcb274573c@milecki.pl>
-References: <20170331201124.656-1-zajec5@gmail.com>
- <20170403154829.29780-1-zajec5@gmail.com>
- <20170403154829.29780-2-zajec5@gmail.com>
- <20170407044218.GA12447@localhost.localdomain>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/3] dt-bindings: hwmon: Add bindings for Google Chromium
+ EC HWMON
+Date: Fri, 14 Apr 2017 07:48:15 -0500
+Message-ID: <CAL_Jsq+OaMAdRLuC0BBDpOPapisaETaUZpEX10yJk=fYLQCCdg@mail.gmail.com>
+References: <1491602410-31518-1-git-send-email-moritz.fischer@ettus.com>
+ <1491602410-31518-2-git-send-email-moritz.fischer@ettus.com>
+ <20170413200140.lcynmsv255ktoiyl@rob-hp-laptop> <20170413210707.GA16304@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170407044218.GA12447@localhost.localdomain>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Eduardo Valentin <edubezval@gmail.com>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Scott Branden <sbranden@broadcom.com>, Stephen Warren <swarren@wwwdotorg.org>, Ray Jui <rjui@broadcom.com>, linux-pm@vger.kernel.org, Lee Jones <lee@kernel.org>, Jon Mason <jon.mason@broadcom.com>, Eric Anholt <eric@anholt.net>, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list@broadcom.com, linux-rpi-kernel@lists.infradead.org, Zhang Rui <rui.zhang@intel.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170413210707.GA16304-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Cc: Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>, linux-hwmon-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Jean Delvare <jdelvare-IBi9RG/b67k@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Moritz Fischer <mdf-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gMDQvMDcvMjAxNyAwNjo0MiBBTSwgRWR1YXJkbyBWYWxlbnRpbiB3cm90ZToKPiBPbiBNb24s
-IEFwciAwMywgMjAxNyBhdCAwNTo0ODoyOVBNICswMjAwLCBSYWZhxYIgTWnFgmVja2kgd3JvdGU6
-Cj4+IEZyb206IFJhZmHFgiBNacWCZWNraSA8cmFmYWxAbWlsZWNraS5wbD4KPj4KPj4gTm9ydGhz
-dGFyIGlzIGEgU29DIGZhbWlseSBjb21tb25seSB1c2VkIGluIGhvbWUgcm91dGVycy4gVGhpcyBj
-b21taXQKPj4gYWRkcyBhIGRyaXZlciBmb3IgY2hlY2tpbmcgQ1BVIHRlbXBlcmF0dXJlLiBBcyBO
-b3J0aHN0YXIgUGx1cyBzZWVtcyB0bwo+PiBhbHNvIGhhdmUgdGhpcyBJUCBibG9jayB0aGlzIG5l
-dyBzeW1ib2wgZ2V0cyBBUkNIX0JDTV9JUFJPQyBkZXBlbmRlbmN5Lgo+Pgo+PiBTaWduZWQtb2Zm
-LWJ5OiBSYWZhxYIgTWnFgmVja2kgPHJhZmFsQG1pbGVja2kucGw+Cj4+IFNpZ25lZC1vZmYtYnk6
-IEpvbiBNYXNvbiA8am9uLm1hc29uQGJyb2FkY29tLmNvbT4KPgo+IElmIG5vIG9iamVjdGlvbiwg
-SSBhbSBhcHBseWluZyB0aGlzIHNlcmllcy4KCkNvb2wsIGhvcGVmdWxseSB0aGVyZSBhcmVuJ3Qg
-YW55IG1vcmUgb2JqZWN0aW9ucyA6KSBPbmNlIGFwcGxpZWQgc2hvdWxkIEkKZXhwZWN0IHRoaXMg
-aW4KaHR0cHM6Ly9naXQua2VybmVsLm9yZy9wdWIvc2NtL2xpbnV4L2tlcm5lbC9naXQvZXZhbGVu
-dGkvbGludXgtc29jLXRoZXJtYWwuZ2l0L2xvZy8/aD1uZXh0Cj8KClRoYXQgd291bGQgYWxsb3cg
-bWUgdG8gbW92ZSBiY20yODM1X3RoZXJtYWwuYyB0byB0aGUgYnJvYWRjb20gc3ViZGlyLgoKCj4+
-ICtjb25zdCBzdHJ1Y3QgdGhlcm1hbF96b25lX29mX2RldmljZV9vcHMgbnNfdGhlcm1hbF9vcHMg
-PSB7Cj4KPiBtaW5vciBjb3JyZWN0aW9uIGhlcmU6Cj4KPiAtY29uc3Qgc3RydWN0IHRoZXJtYWxf
-em9uZV9vZl9kZXZpY2Vfb3BzIG5zX3RoZXJtYWxfb3BzID0gewo+ICtzdGF0aWMgY29uc3Qgc3Ry
-dWN0IHRoZXJtYWxfem9uZV9vZl9kZXZpY2Vfb3BzIG5zX3RoZXJtYWxfb3BzID0gewo+Cj4gYnV0
-IEkgYW0gYXBwbHlpbmcgdGhpcyBhbHJlYWR5IGluIG15IHRyZWUuCj4KPj4gKwkuZ2V0X3RlbXAg
-PSBuc190aGVybWFsX2dldF90ZW1wLAo+PiArfTsKClRoYW5rIHlvdSEKCl9fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGlu
-ZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMu
-aW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+On Thu, Apr 13, 2017 at 4:07 PM, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org> wrote:
+> On Thu, Apr 13, 2017 at 03:01:40PM -0500, Rob Herring wrote:
+>> On Fri, Apr 07, 2017 at 03:00:09PM -0700, Moritz Fischer wrote:
+>> > From: Moritz Fischer <mdf-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>> >
+>> > Add bindings for the Chromium EC HWMON. The Chromium EC HWMON
+>> > allows monitoring of temperature sensors and fans attached to the
+>> > EC.
+>> >
+>> > Signed-off-by: Moritz Fischer <mdf-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>> > ---
+>> >  .../devicetree/bindings/hwmon/cros-ec-hwmon.txt    | 25 ++++++++++++++++++++++
+>> >  1 file changed, 25 insertions(+)
+>> >  create mode 100644 Documentation/devicetree/bindings/hwmon/cros-ec-hwmon.txt
+>> >
+>> > diff --git a/Documentation/devicetree/bindings/hwmon/cros-ec-hwmon.txt b/Documentation/devicetree/bindings/hwmon/cros-ec-hwmon.txt
+>> > new file mode 100644
+>> > index 0000000..4c94869
+>> > --- /dev/null
+>> > +++ b/Documentation/devicetree/bindings/hwmon/cros-ec-hwmon.txt
+>> > @@ -0,0 +1,25 @@
+>> > +Chromium Embedded Controller EC temperature and fan control
+>> > +-----------------------------------------------------------
+>> > +
+>> > +Google's Chromium EC HWMON is a hwmon implemented byimplemented by the Chromium EC
+>> > +firmware attached to the Embedded Controller (EC) and controlled via a host-command
+>> > +interface.
+>> > +
+>> > +An EC HWMON node should be only found as a sub-node of the EC node (see
+>> > +Documentation/devicetree/bindings/mfd/cros-ec.txt).
+>> > +
+>> > +Required properties:
+>> > +- compatible: Must contain "google,cros-ec-hwmon"
+>> > +
+>> > +Example:
+>> > +   embedded-controller@1e {
+>> > +           reg = <0x1e>;
+>> > +           compatible = "google,cros-ec-i2c";
+>> > +           interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
+>> > +           interrupt-parent = <&gpio0>;
+>> > +
+>> > +           hwmon {
+>> > +                   compatible = "google,cros-ec-hwmon";
+>>
+>> This is sufficient for all devices? I don't see that DT provides
+>> anything here other than instantiating a device, but the parent device
+>> can just as easily do that.
+>>
+> The parent driver (drivers/mfd/cros_ec_i2c.c) calls cros_ec_register(),
+> which uses uses of_platform_populate() to populate all sub-devices.
+> There are various examples in the dts files (look for "google,cros-ec").
+> Does it really make sense to start a second method for instantiating
+> sub-devices ?
+
+Okay, I suppose not. That wasn't clear from the example.
+
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
