@@ -1,13 +1,13 @@
 From: Javier Martinez Canillas <javier@osg.samsung.com>
-Subject: [PATCH v3 16/21] arm64: zynqmp: Add generic compatible string for I2C EEPROM
-Date: Thu, 13 Apr 2017 22:04:40 -0300
-Message-ID: <20170414010445.21727-17-javier@osg.samsung.com>
+Subject: [PATCH v3 19/21] powerpc/512x: Add generic compatible string for I2C EEPROM
+Date: Thu, 13 Apr 2017 22:04:43 -0300
+Message-ID: <20170414010445.21727-20-javier@osg.samsung.com>
 References: <20170414010445.21727-1-javier@osg.samsung.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170414010445.21727-1-javier@osg.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org
-Cc: Wolfram Sang <wsa@the-dreams.de>, Javier Martinez Canillas <javier@osg.samsung.com>, =?UTF-8?q?S=C3=B6ren=20Brinkmann?= <soren.brinkmann@xilinx.com>, devicetree@vger.kernel.org, Michal Simek <michal.simek@xilinx.com>, Rob Herring <robh+dt@kernel.org>, Will Deacon <will.deacon@arm.com>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, linux-arm-kernel@lists.infradead.org
+Cc: Wolfram Sang <wsa@the-dreams.de>, Javier Martinez Canillas <javier@osg.samsung.com>, devicetree@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linuxppc-dev@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
 The at24 driver allows to register I2C EEPROM chips using different vendor
@@ -27,30 +27,21 @@ Signed-off-by: Javier Martinez Canillas <javier@osg.samsung.com>
 Changes in v3: None
 Changes in v2: None
 
- arch/arm64/boot/dts/xilinx/zynqmp-ep108.dts | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/powerpc/boot/dts/mpc5121ads.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/xilinx/zynqmp-ep108.dts b/arch/arm64/boot/dts/xilinx/zynqmp-ep108.dts
-index ef1b9e573af0..9f29f99984f7 100644
---- a/arch/arm64/boot/dts/xilinx/zynqmp-ep108.dts
-+++ b/arch/arm64/boot/dts/xilinx/zynqmp-ep108.dts
-@@ -55,7 +55,7 @@
- 	status = "okay";
- 	clock-frequency = <400000>;
- 	eeprom@54 {
--		compatible = "at,24c64";
-+		compatible = "at,24c64", "atmel,24c64";
- 		reg = <0x54>;
- 	};
- };
-@@ -64,7 +64,7 @@
- 	status = "okay";
- 	clock-frequency = <400000>;
- 	eeprom@55 {
--		compatible = "at,24c64";
-+		compatible = "at,24c64", "atmel,24c64";
- 		reg = <0x55>;
- 	};
- };
+diff --git a/arch/powerpc/boot/dts/mpc5121ads.dts b/arch/powerpc/boot/dts/mpc5121ads.dts
+index 75888ce2c792..ece5d60256ee 100644
+--- a/arch/powerpc/boot/dts/mpc5121ads.dts
++++ b/arch/powerpc/boot/dts/mpc5121ads.dts
+@@ -94,7 +94,7 @@
+ 			};
+ 
+ 			eeprom@50 {
+-				compatible = "at,24c32";
++				compatible = "at,24c32", "atmel,24c32";
+ 				reg = <0x50>;
+ 			};
+ 
 -- 
 2.9.3
