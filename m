@@ -1,111 +1,53 @@
-From: Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [RFC 1/2] dt-bindings: add mmio-based syscon mux controller DT
- bindings
-Date: Thu, 13 Apr 2017 18:03:43 -0700
-Message-ID: <d6d32063-5df3-3848-32f5-824c500a8927@gmail.com>
-References: <20170413154812.19597-1-p.zabel@pengutronix.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
+From: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
+Subject: [PATCH v3 01/21] dt-bindings: i2c: eeprom: Document manufacturer used as generic fallback
+Date: Thu, 13 Apr 2017 22:04:25 -0300
+Message-ID: <20170414010445.21727-2-javier@osg.samsung.com>
+References: <20170414010445.21727-1-javier@osg.samsung.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170413154812.19597-1-p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+In-Reply-To: <20170414010445.21727-1-javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+The at24 driver allows to register I2C EEPROM chips using different vendor
+and devices, but the I2C subsystem does not take the vendor into account
+when matching using the I2C table since it only has device entries.
 
+But when matching using an OF table, both the vendor and device has to be
+taken into account so the driver defines only a set of compatible strings
+using the "atmel" vendor as a generic fallback for compatible I2C devices.
 
-On 04/13/2017 08:48 AM, Philipp Zabel wrote:
-> This adds device tree binding documentation for mmio-based syscon
-> multiplexers controlled by a single bitfield in a syscon register
-> range.
+Document in the Device Tree binding document that this manufacturer should
+be used as the generic fallback.
 
-Nice! (you beat me to it, I was about to embark on this myself :)
+Suggested-by: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Signed-off-by: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
 
-Looks good to me, just some minor comments below.
+---
 
->
-> Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> ---
->   Documentation/devicetree/bindings/mux/mmio-mux.txt | 56 ++++++++++++++++++++++
->   1 file changed, 56 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/mux/mmio-mux.txt
->
-> diff --git a/Documentation/devicetree/bindings/mux/mmio-mux.txt b/Documentation/devicetree/bindings/mux/mmio-mux.txt
-> new file mode 100644
-> index 0000000000000..11d96f5d98583
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mux/mmio-mux.txt
-> @@ -0,0 +1,56 @@
-> +MMIO bitfield-based multiplexer controller bindings
-> +
-> +Define a syscon bitfield to be used to control a multiplexer. The parent
+Changes in v3: None
+Changes in v2: None
 
-I think "Define a register bitfield to be used ..." is more clear.
+ Documentation/devicetree/bindings/eeprom/eeprom.txt | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-> +device tree node must be a syscon node to provide register access.
-> +
-> +Required properties:
-> +- compatible : "gpio-mux"
-
-Er, "mmio-mux"
-
-> +- reg : register base of the register containing the control bitfield
-> +- bit-mask : bitmask of the control bitfield in the control register
-> +- bit-shift : bit offset of the control bitfield in the control register
-> +- #mux-control-cells : <0>
-> +* Standard mux-controller bindings as decribed in mux-controller.txt
-> +
-> +Optional properties:
-> +- idle-state : if present, the state the mux will have when idle. The
-> +	       special state MUX_IDLE_AS_IS is the default.
-> +
-> +The multiplexer state is defined as the value of the bitfield described
-> +by the reg, bit-mask, and bit-shift properties, accessed through the parent
-> +syscon.
-> +
-> +Example:
-> +
-> +	syscon {
-> +		compatible = "syscon";
-> +
-> +		mux: mux-controller@3 {
-> +			compatible = "mmio-mux";
-> +			reg = <0x3>;
-> +			bit-mask = <0x1>;
-> +			bit-shift = <5>;
-> +			#mux-control-cells = <0>;
-> +		};
-> +	};
-> +
-> +	video-mux {
-
-I like this as an example consumer of a mmio-mux, but just
-the same some might argue this doesn't really fit here.
-
-Steve
-
-> +		compatible = "video-mux";
-> +		mux-controls = <&mux>;
-> +
-> +		ports {
-> +			/* input 0 */
-> +			port@0 {
-> +				reg = <0>;
-> +			};
-> +
-> +			/* input 1 */
-> +			port@1 {
-> +				reg = <1>;
-> +			};
-> +
-> +			/* output */
-> +			port@2 {
-> +				reg = <2>;
-> +			};
-> +		};
-> +	};
+diff --git a/Documentation/devicetree/bindings/eeprom/eeprom.txt b/Documentation/devicetree/bindings/eeprom/eeprom.txt
+index 5696eb508e95..d0395f14e2b3 100644
+--- a/Documentation/devicetree/bindings/eeprom/eeprom.txt
++++ b/Documentation/devicetree/bindings/eeprom/eeprom.txt
+@@ -17,7 +17,8 @@ Required properties:
+ 	"renesas,r1ex24002"
+ 
+ 	 If there is no specific driver for <manufacturer>, a generic
+-	 driver based on <type> is selected. Possible types are:
++	 driver based on <type> and manufacturer "atmel" is selected.
++	 Possible types are:
+ 	 "24c00", "24c01", "24c02", "24c04", "24c08", "24c16", "24c32", "24c64",
+ 	 "24c128", "24c256", "24c512", "24c1024", "spd"
+ 
+-- 
+2.9.3
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
