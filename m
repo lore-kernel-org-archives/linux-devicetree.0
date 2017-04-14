@@ -1,75 +1,71 @@
-From: Jiada Wang <jiada_wang-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH RFC 0/5] *** SPI Slave mode support ***
-Date: Thu, 13 Apr 2017 22:39:30 -0700
-Message-ID: <58F06092.9080409@mentor.com>
-References: <1492085644-4195-1-git-send-email-jiada_wang@mentor.com> <20170413125929.dygodgj6c35ydh5p@sirena.org.uk> <CAMuHMdUm=90ddNWM5KWqT+W0hqZ-QO6vPHj5OisbYquDYq1ZmA@mail.gmail.com>
+From: Martin Kepplinger <martin.kepplinger@ginzinger.com>
+Subject: [PATCH v2] input: touchscreen: ar1021_i2c: highlight support for AR1020
+Date: Fri, 14 Apr 2017 08:02:56 +0200
+Message-ID: <1492149776-14696-1-git-send-email-martin.kepplinger@ginzinger.com>
+References: <20170413203532.thktt4yhqsg34cvc@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAMuHMdUm=90ddNWM5KWqT+W0hqZ-QO6vPHj5OisbYquDYq1ZmA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, linux-spi <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <20170413203532.thktt4yhqsg34cvc@rob-hp-laptop>
+Sender: linux-input-owner@vger.kernel.org
+To: robh@kernel.org, dmitry.torokhov@gmail.com
+Cc: christian.gmeiner@gmail.com, linux@roeck-us.net, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Martin Kepplinger <martin.kepplinger@ginzinger.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello Geert
+ar1021_i2c simply also supports the ar1020 device I'm using. This is
+tested. They also share the same datasheet:
 
-On 04/13/2017 12:47 PM, Geert Uytterhoeven wrote:
-> On Thu, Apr 13, 2017 at 2:59 PM, Mark Brown<broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>  wrote:
->> On Thu, Apr 13, 2017 at 05:13:59AM -0700, jiada_wang-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org wrote:
->>> From: Jiada Wang<jiada_wang-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
->>>
->>> v1:
->>>    add Slave mode support in SPI core
->>>    spidev create slave device when SPI controller work in slave mode
->>>    spi-imx support to work in slave mode
->> Adding Geert who also had a series doing this in progress that was
->> getting very near to being merged.
-> Thank you!
->
-> Actually my plan is to fix the last remaining issues and resubmit for v4.13.
-I noticed your patch set for SPI slave support,
-(I am sure you can find out some of the change
-in this patch set is based on your work).
-we have similar requirement to add slave mode support to ecspi IP on 
-imx6 Soc.
+   http://ww1.microchip.com/downloads/en/DeviceDoc/40001393C.pdf
 
-Our use case is to use spidev as an interface to communicate with 
-external SPI master devices.
-meanwhile the SPI bus controller can also act as master device to send 
-data to other
-SPI slave devices on the board.
+So let users see that they have a compatible in front of them by adding
+AR1020 to the driver's description.
 
-I found in your implementation, SPI bus controller is limited to either 
-work in master mode or
-slave mode, is there any reasoning to not configure SPI mode based on 
-SPI devices use case?
+Signed-off-by: Martin Kepplinger <martin.kepplinger@ginzinger.com>
+---
+
+revision history
+----------------
+v2: leave compatible string untouched. only add description.
+v1: initial idea.
 
 
-Thanks,
-Jiada
+ drivers/input/touchscreen/Kconfig      | 4 ++--
+ drivers/input/touchscreen/ar1021_i2c.c | 4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-> References:
->    - v2: https://lkml.org/lkml/2016/9/12/1065
->    - v1: https://lkml.org/lkml/2016/6/22/423
->
-> BTW Jiada, what's your use case? Just spidev?
->
-> Thx!
->
-> Gr{oetje,eeting}s,
->
->                          Geert
->
-> --
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
->
-> In personal conversations with technical people, I call myself a hacker. But
-> when I'm talking to journalists I just say "programmer" or something like that.
->                                  -- Linus Torvalds
+diff --git a/drivers/input/touchscreen/Kconfig b/drivers/input/touchscreen/Kconfig
+index 33c62e5..535b91a 100644
+--- a/drivers/input/touchscreen/Kconfig
++++ b/drivers/input/touchscreen/Kconfig
+@@ -96,8 +96,8 @@ config TOUCHSCREEN_AR1021_I2C
+ 	tristate "Microchip AR1021 i2c touchscreen"
+ 	depends on I2C && OF
+ 	help
+-	  Say Y here if you have the Microchip AR1021 touchscreen controller
+-	  chip in your system.
++	  Say Y here if you have the Microchip AR1020 or AR1021 touchscreen
++	  controller chip in your system.
+ 
+ 	  If unsure, say N.
+ 
+diff --git a/drivers/input/touchscreen/ar1021_i2c.c b/drivers/input/touchscreen/ar1021_i2c.c
+index 2e7500e..03784d2 100644
+--- a/drivers/input/touchscreen/ar1021_i2c.c
++++ b/drivers/input/touchscreen/ar1021_i2c.c
+@@ -1,5 +1,5 @@
+ /*
+- * Microchip AR1021 driver for I2C
++ * Microchip AR1020 and AR1021 driver for I2C
+  *
+  * Author: Christian Gmeiner <christian.gmeiner@gmail.com>
+  *
+@@ -175,5 +175,5 @@ static struct i2c_driver ar1021_i2c_driver = {
+ module_i2c_driver(ar1021_i2c_driver);
+ 
+ MODULE_AUTHOR("Christian Gmeiner <christian.gmeiner@gmail.com>");
+-MODULE_DESCRIPTION("Microchip AR1021 I2C Driver");
++MODULE_DESCRIPTION("Microchip AR1020 and AR1021 I2C Driver");
+ MODULE_LICENSE("GPL");
+-- 
+2.1.4
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
