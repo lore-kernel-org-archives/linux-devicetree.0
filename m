@@ -1,51 +1,53 @@
-From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH 1/3] ARM: dts: r8a7743: add PFC support
-Date: Sat, 15 Apr 2017 00:09:42 +0300
-Message-ID: <20170414211505.733692280@cogentembedded.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: [PATCH 3/3] ARM: dts: sk-rzg1m: add Ether pins
+Date: Sat, 15 Apr 2017 00:09:44 +0300
+Message-ID: <20170414211513.443487793@cogentembedded.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-15
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline; filename=ARM-dts-r8a7743-add-PFC-support.patch
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Content-Disposition: inline; filename=ARM-dts-sk-rzg1m-add-Ether-pins.patch
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, linux-arm-kernel@lists.infradead.org, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 List-Id: devicetree@vger.kernel.org
 
-Define the generic R8A7743 part of the PFC device node.
+Add the (previously omitted) Ether/PHY pin data to the SK-RZG1M board's
+device tree.
 
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
 ---
- arch/arm/boot/dts/r8a7743.dtsi |    7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/r8a7743-sk-rzg1m.dts |   13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-Index: renesas/arch/arm/boot/dts/r8a7743.dtsi
+Index: renesas/arch/arm/boot/dts/r8a7743-sk-rzg1m.dts
 ===================================================================
---- renesas.orig/arch/arm/boot/dts/r8a7743.dtsi
-+++ renesas/arch/arm/boot/dts/r8a7743.dtsi
-@@ -1,7 +1,7 @@
- /*
-  * Device Tree Source for the r8a7743 SoC
-  *
-- * Copyright (C) 2016 Cogent Embedded Inc.
-+ * Copyright (C) 2016-2017 Cogent Embedded Inc.
-  *
-  * This file is licensed under the terms of the GNU General Public License
-  * version 2. This program is licensed "as is" without any warranty of any
-@@ -123,6 +123,11 @@
- 			#power-domain-cells = <1>;
- 		};
- 
-+		pfc: pin-controller@e6060000 {
-+			compatible = "renesas,pfc-r8a7743";
-+			reg = <0 0xe6060000 0 0x250>;
-+		};
+--- renesas.orig/arch/arm/boot/dts/r8a7743-sk-rzg1m.dts
++++ renesas/arch/arm/boot/dts/r8a7743-sk-rzg1m.dts
+@@ -44,6 +44,16 @@
+ 		groups = "scif0_data";
+ 		function = "scif0";
+ 	};
 +
- 		dmac0: dma-controller@e6700000 {
- 			compatible = "renesas,dmac-r8a7743",
- 				     "renesas,rcar-dmac";
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
++	ether_pins: ether {
++		groups = "eth_link", "eth_mdio", "eth_rmii";
++		function = "eth";
++	};
++
++	phy1_pins: phy1 {
++		groups = "intc_irq0";
++		function = "intc";
++	};
+ };
+ 
+ &scif0 {
+@@ -54,6 +64,9 @@
+ };
+ 
+ &ether {
++	pinctrl-0 = <&ether_pins &phy1_pins>;
++	pinctrl-names = "default";
++
+ 	phy-handle = <&phy1>;
+ 	renesas,ether-link-active-low;
+ 	status = "okay";
