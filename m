@@ -1,13 +1,13 @@
-From: Javier Martinez Canillas <javier@osg.samsung.com>
-Subject: [PATCH v3 05/21] ARM: dts: at91: Add generic compatible string for I2C EEPROM
-Date: Thu, 13 Apr 2017 22:04:29 -0300
-Message-ID: <20170414010445.21727-6-javier@osg.samsung.com>
+From: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
+Subject: [PATCH v3 06/21] ARM: dts: efm32: Add generic compatible string for I2C EEPROM
+Date: Thu, 13 Apr 2017 22:04:30 -0300
+Message-ID: <20170414010445.21727-7-javier@osg.samsung.com>
 References: <20170414010445.21727-1-javier@osg.samsung.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170414010445.21727-1-javier@osg.samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: Wolfram Sang <wsa@the-dreams.de>, Javier Martinez Canillas <javier@osg.samsung.com>, devicetree@vger.kernel.org, Russell King <linux@armlinux.org.uk>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Nicolas Ferre <nicolas.ferre@microchip.com>, Peter Rosin <peda@axentia.se>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170414010445.21727-1-javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 The at24 driver allows to register I2C EEPROM chips using different vendor
@@ -21,45 +21,32 @@ using the "atmel" vendor as a generic fallback for compatible I2C devices.
 So add this generic fallback to the device node compatible string to make
 the device to match the driver using the OF device ID table.
 
-Signed-off-by: Javier Martinez Canillas <javier@osg.samsung.com>
-Acked-by: Peter Rosin <peda@axentia.se>
-
+Signed-off-by: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
 ---
 
-Changes in v3:
-- Add Peter Rosin acked-by tag.
-
+Changes in v3: None
 Changes in v2: None
 
- arch/arm/boot/dts/at91-linea.dtsi   | 2 +-
- arch/arm/boot/dts/at91-tse850-3.dts | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/efm32gg-dk3750.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/at91-linea.dtsi b/arch/arm/boot/dts/at91-linea.dtsi
-index 0721c8472509..9bf9aaeff3e8 100644
---- a/arch/arm/boot/dts/at91-linea.dtsi
-+++ b/arch/arm/boot/dts/at91-linea.dtsi
-@@ -31,7 +31,7 @@
- 	status = "okay";
+diff --git a/arch/arm/boot/dts/efm32gg-dk3750.dts b/arch/arm/boot/dts/efm32gg-dk3750.dts
+index 98fc667d22c7..84f0a9abc290 100644
+--- a/arch/arm/boot/dts/efm32gg-dk3750.dts
++++ b/arch/arm/boot/dts/efm32gg-dk3750.dts
+@@ -36,7 +36,7 @@
+ 			};
  
- 	eeprom@51 {
--		compatible = "st,24c64";
-+		compatible = "st,24c64", "atmel,24c64";
- 		reg = <0x51>;
- 		pagesize = <32>;
- 	};
-diff --git a/arch/arm/boot/dts/at91-tse850-3.dts b/arch/arm/boot/dts/at91-tse850-3.dts
-index 7a68805a4eb5..e760e5982565 100644
---- a/arch/arm/boot/dts/at91-tse850-3.dts
-+++ b/arch/arm/boot/dts/at91-tse850-3.dts
-@@ -239,7 +239,7 @@
- 	};
- 
- 	eeprom@50 {
--		compatible = "nxp,24c02";
-+		compatible = "nxp,24c02", "atmel,24c02";
- 		reg = <0x50>;
- 		pagesize = <16>;
- 	};
+ 			eeprom@50 {
+-				compatible = "microchip,24c02";
++				compatible = "microchip,24c02", "atmel,24c02";
+ 				reg = <0x50>;
+ 				pagesize = <16>;
+ 			};
 -- 
 2.9.3
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
