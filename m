@@ -1,330 +1,121 @@
-From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v3 14/37] mtd: nand: denali: support "nand-ecc-strength"
- DT property
-Date: Fri, 14 Apr 2017 10:19:28 +0200
-Message-ID: <20170414101928.5255736e@bbrezillon>
-References: <1490856383-31560-1-git-send-email-yamada.masahiro@socionext.com>
-        <1490856383-31560-15-git-send-email-yamada.masahiro@socionext.com>
-        <20170330160238.59e5a2c1@bbrezillon>
-        <CAK7LNARUKwMHd79ALDx_SDY9XKcHPY96xTAOMQx6XarFgwb-AA@mail.gmail.com>
-        <20170331114659.4964be35@bbrezillon>
-        <CAK7LNAToTmirpkhNmPCLhcTXG_SFqS762mEGK3mjyqLKXuWa1Q@mail.gmail.com>
-        <20170409183301.037d3f95@bbrezillon>
-        <CAK7LNARxR722uRE9SnJPuOqictrpnbFmcKBsW_g=f1OnNgvpRA@mail.gmail.com>
-        <20170411095637.5aa87cf6@bbrezillon>
-        <CAK7LNARJU2PB8UPTRMrLsbZaQdEaQMAr6zOOHUozVoPWpESxgw@mail.gmail.com>
+From: Andrzej Hajda <a.hajda@samsung.com>
+Subject: Re: [PATCH 2/3] drm/panel: s6e3ha2: Add support for S6eHEA2 edge panel
+ on TM2e board
+Date: Fri, 14 Apr 2017 10:26:46 +0200
+Message-ID: <5ea68f29-69d5-f1e3-9ffc-646449033989@samsung.com>
+References: <1492147179-7824-1-git-send-email-hoegeun.kwon@samsung.com>
+ <CGME20170414051959epcas5p338f72abbf841233f6f1f0a240df2a1e9@epcas5p3.samsung.com>
+ <1492147179-7824-3-git-send-email-hoegeun.kwon@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAK7LNARJU2PB8UPTRMrLsbZaQdEaQMAr6zOOHUozVoPWpESxgw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Enrico Jorns <ejo-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Artem Bityutskiy <artem.bityutskiy-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Dinh Nguyen <dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Graham Moore <grmoore-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Masami Hiramatsu <mhiramat-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chuanxiao Dong <chuanxiao.dong-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-reply-to: <1492147179-7824-3-git-send-email-hoegeun.kwon@samsung.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Hoegeun Kwon <hoegeun.kwon@samsung.com>, thierry.reding@gmail.com, airlied@linux.ie, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, kgene@kernel.org, krzk@kernel.org
+Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, javier@osg.samsung.com, andi.shyti@samsung.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 14 Apr 2017 16:57:23 +0900
-Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org> wrote:
-
-> Hi Boris,
-> 
-> 
-> 2017-04-11 16:56 GMT+09:00 Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>:
-> > Hi Masahiro,
-> >
-> > On Tue, 11 Apr 2017 15:19:21 +0900
-> > Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org> wrote:
-> >  
-> >> Hi Boris,
-> >>
-> >>
-> >>
-> >> 2017-04-10 1:33 GMT+09:00 Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>:  
-> >> > On Mon, 3 Apr 2017 12:16:34 +0900
-> >> > Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org> wrote:
-> >> >  
-> >> >> Hi Boris,
-> >> >>
-> >> >>
-> >> >>
-> >> >> 2017-03-31 18:46 GMT+09:00 Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>:
-> >> >>  
-> >> >> > You can try something like that when no explicit ecc.strength and
-> >> >> > ecc.size has been set in the DT and when ECC_MAXIMIZE was not passed.
-> >> >> >
-> >> >> > static int
-> >> >> > denali_get_closest_ecc_strength(struct denali_nand_info *denali,
-> >> >> >                                 int strength)
-> >> >> > {
-> >> >> >         /*
-> >> >> >          * Whatever you need to select a strength that is greater than
-> >> >> >          * or equal to strength.
-> >> >> >          */
-> >> >> >
-> >> >> >         return X;
-> >> >> > }  
-> >> >>
-> >> >>
-> >> >> Is here anything specific to Denali?  
-> >> >
-> >> > Well, only the denali driver knows what the hardware supports, though
-> >> > having a generic function that takes a table of supported strengths
-> >> > would work.
-> >> >  
-> >> >>
-> >> >>  
-> >> >> > static int denali_try_to_match_ecc_req(struct denali_nand_info *denali)
-> >> >> > {
-> >> >> >         struct nand_chip *chip = &denali->nand;
-> >> >> >         struct mtd_info *mtd = nand_to_mtd(chip);
-> >> >> >         int max_ecc_bytes = mtd->oobsize - denali->bbtskipbytes;
-> >> >> >         int ecc_steps, ecc_strength, ecc_bytes;
-> >> >> >         int ecc_size = chip->ecc_step_ds;
-> >> >> >         int ecc_strength = chip->ecc_strength_ds;
-> >> >> >
-> >> >> >         /*
-> >> >> >          * No information provided by the NAND chip, let the core
-> >> >> >          * maximize the strength.
-> >> >> >          */
-> >> >> >         if (!ecc_size || !ecc_strength)
-> >> >> >                 return -ENOTSUPP;
-> >> >> >
-> >> >> >         if (ecc_size > 512)
-> >> >> >                 ecc_size = 1024;
-> >> >> >         else
-> >> >> >                 ecc_size = 512;
-> >> >> >
-> >> >> >         /* Adjust ECC step size based on hardware support. */
-> >> >> >         if (ecc_size == 1024 &&
-> >> >> >             !(denali->caps & DENALI_CAP_ECC_SIZE_1024))
-> >> >> >                 ecc_size = 512;
-> >> >> >         else if(ecc_size == 512 &&
-> >> >> >                 !(denali->caps & DENALI_CAP_ECC_SIZE_512))
-> >> >> >                 ecc_size = 1024;
-> >> >> >
-> >> >> >         if (ecc_size < chip->ecc_size_ds) {
-> >> >> >                 /*
-> >> >> >                  * When the selected size if smaller than the expected
-> >> >> >                  * one we try to use the same strength but on 512 blocks
-> >> >> >                  * so that we can still fix the same number of errors
-> >> >> >                  * even if they are concentrated in the first 512bytes
-> >> >> >                  * of a 1024bytes portion.
-> >> >> >                  */
-> >> >> >                 ecc_strength = chip->ecc_strength_ds;
-> >> >> >                 ecc_strength = denali_get_closest_ecc_strength(denali,
-> >> >> >                                                                ecc_strength);
-> >> >> >         } else {
-> >> >> >                 /* Always prefer 1024bytes ECC blocks when possible. */
-> >> >> >                 if (ecc_size != 1024 &&
-> >> >> >                     (denali->caps & DENALI_CAP_ECC_SIZE_1024) &&
-> >> >> >                     mtd->writesize > 1024)
-> >> >> >                         ecc_size = 1024;
-> >> >> >
-> >> >> >                 /*
-> >> >> >                  * Adjust the strength based on the selected ECC step
-> >> >> >                  * size.
-> >> >> >                  */
-> >> >> >                 ecc_strength = DIV_ROUND_UP(ecc_size,
-> >> >> >                                             chip->ecc_step_ds) *
-> >> >> >                                chip->ecc_strength_ds;
-> >> >> >         }
-> >> >> >
-> >> >> >         ecc_bytes = denali_calc_ecc_bytes(ecc_size,
-> >> >> >                                           ecc_strength);
-> >> >> >         ecc_bytes *= mtd->writesize / ecc_size;
-> >> >> >
-> >> >> >         /*
-> >> >> >          * If we don't have enough space, let the core maximize
-> >> >> >          * the strength.
-> >> >> >          */
-> >> >> >         if (ecc_bytes > max_ecc_bytes)
-> >> >> >                 return -ENOTSUPP;
-> >> >> >
-> >> >> >         chip->ecc.strength = ecc_strength;
-> >> >> >         chip->ecc.size = ecc_size;
-> >> >> >
-> >> >> >         return 0;
-> >> >> > }  
-> >> >>
-> >> >>
-> >> >> As a whole, this does not seem to driver-specific.  
-> >> >
-> >> > It's almost controller-agnostic, except for the denali_calc_ecc_bytes()
-> >> > function, but I guess we could ask drivers to implement a hook that is
-> >> > passed the ECC step size and strength and returns the associated
-> >> > number of ECC bytes.
-> >> >  
-> >> >>
-> >> >>
-> >> >> [1] A driver provides some pairs of (ecc_strength, ecc_size)
-> >> >>     it can support.
-> >> >>
-> >> >> [2] The core framework knows the chip's requirement
-> >> >>     (ecc_strength_ds, ecc_size_ds).
-> >> >>
-> >> >>
-> >> >> Then, the core framework provides a function
-> >> >> to return a most recommended (ecc_strength, ecc_size).
-> >> >>
-> >> >>
-> >> >>
-> >> >> struct nand_ecc_spec {
-> >> >>        int ecc_strength;
-> >> >>        int ecc_size;
-> >> >> };
-> >> >>
-> >> >> /*
-> >> >>  * This function choose the most recommented (ecc_str, ecc_size)
-> >> >>  * "recommended" means: minimum ecc stregth that meets
-> >> >>  * the chip's requirment.
-> >> >>  *
-> >> >>  *
-> >> >>  * @chip   - nand_chip
-> >> >>  * @controller_ecc_spec - Array of (ecc_str, ecc_size) supported by the
-> >> >>                           controller. (terminated by NULL as sentinel)
-> >> >>  */
-> >> >> struct nand_ecc_spec * nand_try_to_match_ecc_req(struct nand_chip *chip,
-> >> >>                                                  struct nand_ecc_spec
-> >> >> *controller_ecc_spec)
-> >> >> {
-> >> >>       /*
-> >> >>        * Return the pointer to the most recommended
-> >> >>        * struct nand_ecc_spec.
-> >> >>        * If nothing suitable found, return NULL.
-> >> >>        */
-> >> >> }
-> >> >>  
-> >> >
-> >> > I like the idea, except I would do this slightly differently to avoid
-> >> > declaring all combinations of stepsize and strengths
-> >> >
-> >> > struct nand_ecc_stepsize_info {
-> >> >         int stepsize;
-> >> >         int nstrengths;
-> >> >         int *strengths;
-> >> > };
-> >> >
-> >> > struct nand_ecc_engine_caps {
-> >> >         int nstepsizes;
-> >> >         struct nand_ecc_stepsize_info *stepsizes;
-> >> >         int (*calc_ecc_bytes)(int stepsize, int strength);
-> >> > };
-> >> >
-> >> > int nand_try_to_match_ecc_req(struct nand_chip *chip,
-> >> >                               const struct nand_ecc_engine_caps *caps,
-> >> >                               struct nand_ecc_spec *spec)
-> >> > {
-> >> >         /*
-> >> >          * Find the most appropriate setting based on the ECC engine
-> >> >          * caps and fill the spec object accordingly.
-> >> >          * Returns 0 in case of success and a negative error code
-> >> >          * otherwise.
-> >> >          */
-> >> > }
-> >> >
-> >> > Note that nand_try_to_match_ecc_req() has to be more generic than
-> >> > denali_try_to_match_ecc_req() WRT step sizes, which will probably
-> >> > complexify the logic.  
-> >>
-> >>
-> >> After I fiddle with this generic approach for a while,
-> >> I started to feel like giving up.  
-> >
-> > I don't get it. What was the problem with my initial suggestion (the
-> > denali specific one, not the generic approach)? You proposed to make it
-> > generic, which, I agree, is a bit more complicated.
-> >  
-> >>
-> >> I wonder if we really want over-implementation
-> >> for covering _theoretically_ possible cases.  
-> >
-> > Okay, one more theoretical case I'd like to expose: you have board
-> > design with different NAND parts which have different ECC requirements.
-> > If you were about to describe the exact ECC strength you want for each
-> > board you'll have to have different DTs.  
-> 
-> In this case, fixed ecc-strength in DT is not feasible.
-> 
-> > Maximizing the ECC strength
-> > would still work, but what if the MTD user needs some OOB bytes (like
-> > is the case with JFFS2) and ECC maximization reserved all of the
-> > available bytes?  
-> 
-> JFFS2 needs some bytes in oob-free area for the clean marker.
-> You are right.
-> This implies NAND_ECC_MAXIMIZE is not very useful.
-> We do not know whether we have enough space left in oob, or not.
-> 
-> 
-> 
-> > The other reason I prefer to have the drivers automatically guessing
-> > what's appropriate is because then you don't have to care when writing
-> > your DT.
-> >  
-> >>
-> >> In practice, there are not so many ECC settings possible
-> >> on a single controller.
-> >>
-> >> As for Denali IP, it would be theoretically possible to instantiate
-> >> multiple ECC engines.  However, in practice, there is no sensible
-> >> reason to do so.  At least, I do not know any real chip to support that.
-> >>
-> >> So, I'd like to simplify the logic for Denali.
-> >>
-> >>   - Support either 512 or 1024 ECC size.
-> >>     If there is (ever) a controller that supports both,
-> >>     1024 should be chosen.
-> >>
-> >>   - ECC strength is not specified via DT, it is simply maximized.
-> >>
-> >> This simplifies the logic much and I believe this is enough.
-> >>
-> >> One more reason is, as we talked before,
-> >> we need to match ECC setting between Linux and firmware (boot-loader),  
-> >
-> > If the bootloader implements the same logic it should match.
-> >  
-> >> so anyway we end up with using a fixed setting specified by DT.
-> >>  
-> >
-> > Really, I don't see what's the problem with the function I proposed,
-> > but I'm willing to make a concession.
-> > Make the nand-ecc-strength+nand-ecc-step-size or nand-ecc-maximize
-> > mandatory so that if someone ever needs to support the 'match NAND
-> > requirements' feature we won't have to add a vendor specific property
-> > like this one [1].
-> >
-> > Are you fine with that?  
-> 
-> No.  This requirement seems too strong.
-
-Hm, can you give more details? All I want is a solution where we can
-later support the feature I'm asking without adding a extra DT
-property, and, in order to do that we must make sure the case you want
-to support as a first step are explicitly requested in the DT.
-
-It's as simple as:
-
-	if ((!ecc->strength || !ecc->size) &&
-	    !(ecc->options & NAND_ECC_MAXIMIZE))
-		return -ENOTSUPP;
-
-> At least, it is a problem for non-DT platforms.
-
-Well, for non-DT platforms you have to keep ECC maximization anyway,
-otherwise you're not backward compatible.
-
-> 
-> 
-> If a driver provides ECC engine caps info,
-> perhaps ECC maximizing could be a generalized helper function as well.
-
-I don't get it. I thought the generic helper was too hard to implement.
-Now you want to add a new functionality.
-
-I'm not against this idea, but maybe it's easier to provide a denali
-specific implementation before tackling the generic one.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGkgSG9lZ2V1biwKClRoZSBwYXRjaCBsb29rcyBPSywgYmVsb3cgc21hbGwgbml0cGlja3MuCgpP
+biAxNC4wNC4yMDE3IDA3OjE5LCBIb2VnZXVuIEt3b24gd3JvdGU6Cj4gVGhpcyBwYXRjaCBjb25z
+aWRlcnMgZWRnZSB0eXBlIG9mIHBhbmVsIG9uIFRNMmUgYm9hcmQgYW5kIFRoZSBwYW5lbAo+IGhh
+cyAxNjAweDI1NjAgcmVzb2x1dGlvbiBpbiA1LjY1IiBwaHlzaWNhbCBwYW5lbCBpbiB0aGUgVE0y
+ZSBkZXZpY2UuCj4KPiBUaGlzIGlkZW50aWZ5IHBhbmVsIHR5cGUgd2l0aCBjb21wYXRpYmlsaXR5
+IHN0cmluZywgYWxzbyBpbnZva2UKPiBkaXNwbGF5IG1vZGUgdGhhdCBtYXRjaGVzIHRoZSB0eXBl
+LiBTbyBhZGQgdGhlIGNoZWNrIGNvZGUgZm9yIGRlZmF1bHQKPiBjb21wYXRpYmlsaXR5IGFuZCBl
+ZGdlIHR5cGUgYW5kIHNlbGVjdCB0aGUgZHJtX2Rpc3BsYXlfbW9kZSBvZiBkZWZhdWx0Cj4gYW5k
+IGVkZ2UgdHlwZS4KPgo+IFNpZ25lZC1vZmYtYnk6IEhvZWdldW4gS3dvbiA8aG9lZ2V1bi5rd29u
+QHNhbXN1bmcuY29tPgo+IC0tLQo+ICBkcml2ZXJzL2dwdS9kcm0vcGFuZWwvcGFuZWwtc2Ftc3Vu
+Zy1zNmUzaGEyLmMgfCA2MiArKysrKysrKysrKysrKysrKysrKysrKystLS0KPiAgMSBmaWxlIGNo
+YW5nZWQsIDU2IGluc2VydGlvbnMoKyksIDYgZGVsZXRpb25zKC0pCj4KPiBkaWZmIC0tZ2l0IGEv
+ZHJpdmVycy9ncHUvZHJtL3BhbmVsL3BhbmVsLXNhbXN1bmctczZlM2hhMi5jIGIvZHJpdmVycy9n
+cHUvZHJtL3BhbmVsL3BhbmVsLXNhbXN1bmctczZlM2hhMi5jCj4gaW5kZXggNGNjMDhkNy4uYjRh
+MDY0YSAxMDA2NDQKPiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0vcGFuZWwvcGFuZWwtc2Ftc3VuZy1z
+NmUzaGEyLmMKPiArKysgYi9kcml2ZXJzL2dwdS9kcm0vcGFuZWwvcGFuZWwtc2Ftc3VuZy1zNmUz
+aGEyLmMKPiBAQCAtMTYsNiArMTYsNyBAQAo+ICAjaW5jbHVkZSA8ZHJtL2RybV9wYW5lbC5oPgo+
+ICAjaW5jbHVkZSA8bGludXgvYmFja2xpZ2h0Lmg+Cj4gICNpbmNsdWRlIDxsaW51eC9ncGlvL2Nv
+bnN1bWVyLmg+Cj4gKyNpbmNsdWRlIDxsaW51eC9vZl9kZXZpY2UuaD4KPiAgI2luY2x1ZGUgPGxp
+bnV4L3JlZ3VsYXRvci9jb25zdW1lci5oPgo+ICAKPiAgI2RlZmluZSBTNkUzSEEyX01JTl9CUklH
+SFRORVNTCQkwCj4gQEAgLTIxOCw2ICsyMTksMTYgQEAKPiAgCTB4MWQsIDB4MWUsIDB4MWYsIDB4
+MjAsIDB4MjEKPiAgfTsKPiAgCj4gK2VudW0gczZlM2hhMl90eXBlIHsKPiArCURFRkFVTFRfVFlQ
+RSwKPiArCUVER0VfVFlQRSwKPiArfTsKCkkgYW0gbm90IHN1cmUgaWYgZGVmYXVsdCBpcyB0aGUg
+YmVzdCBuYW1lLCBpdCBzdWdnZXN0IHNvbWUgaGllcmFyY2h5CndoaWNoIGlzIG5vdCB0cnVlLiBB
+bHNvIGVkZ2UgZG9lcyBub3QgZml0IGhlcmUgd2VsbCwgaXQgaXMganVzdCBidXp6d29yZAp1c2Vk
+IGZvciBtYXJrZXRpbmcuCgpBbHRlcm5hdGl2ZSBlbnVtczoKLSBTNkUzSEEyX1RZUEUsIFM2RTNI
+RjJfVFlQRSwgcXVpdGUgbG9uZywgaGFyZCB0byBjYXRjaCBkaWZmZXJlbmNlLCBidXQKY29uc2lz
+dGVudCB3aXRoIGNvbXBhdGlibGVzLAotIEhBMl9UWVBFLCBIRjJfVFlQRSAtIHNob3J0ZXIsIG1v
+cmUgcmVhZGFibGUgdmVyc2lvbiwKLSBRSERfVFlQRSwgV1FYR0FfVFlQRSAtIHRvIGVtcGFoc2l6
+ZSByZXNvbHV0aW9ucy4KCj4gKwo+ICtzdHJ1Y3QgczZlM2hhMl9wYW5lbF9kZXNjIHsKPiArCWNv
+bnN0IHN0cnVjdCBkcm1fZGlzcGxheV9tb2RlICptb2RlOwo+ICsJZW51bSBzNmUzaGEyX3R5cGUg
+dHlwZTsKPiArfTsKPiArCj4gIHN0cnVjdCBzNmUzaGEyIHsKPiAgCXN0cnVjdCBkZXZpY2UgKmRl
+djsKPiAgCXN0cnVjdCBkcm1fcGFuZWwgcGFuZWw7Cj4gQEAgLTIyNiw2ICsyMzcsOCBAQCBzdHJ1
+Y3QgczZlM2hhMiB7Cj4gIAlzdHJ1Y3QgcmVndWxhdG9yX2J1bGtfZGF0YSBzdXBwbGllc1syXTsK
+PiAgCXN0cnVjdCBncGlvX2Rlc2MgKnJlc2V0X2dwaW87Cj4gIAlzdHJ1Y3QgZ3Bpb19kZXNjICpl
+bmFibGVfZ3BpbzsKPiArCj4gKwljb25zdCBzdHJ1Y3QgczZlM2hhMl9wYW5lbF9kZXNjICpkZXNj
+Owo+ICB9Owo+ICAKPiAgc3RhdGljIGludCBzNmUzaGEyX2Rjc193cml0ZShzdHJ1Y3QgczZlM2hh
+MiAqY3R4LCBjb25zdCB2b2lkICpkYXRhLCBzaXplX3QgbGVuKQo+IEBAIC0yODMsMTEgKzI5Niwx
+OSBAQCBzdGF0aWMgaW50IHM2ZTNoYTJfc2luZ2xlX2RzaV9zZXQoc3RydWN0IHM2ZTNoYTIgKmN0
+eCkKPiAgc3RhdGljIGludCBzNmUzaGEyX2ZyZXFfY2FsaWJyYXRpb24oc3RydWN0IHM2ZTNoYTIg
+KmN0eCkKPiAgewo+ICAJczZlM2hhMl9kY3Nfd3JpdGVfc2VxX3N0YXRpYyhjdHgsIDB4ZmQsIDB4
+MWMpOwo+ICsJaWYgKGN0eC0+ZGVzYy0+dHlwZSA9PSBFREdFX1RZUEUpCj4gKwkJczZlM2hhMl9k
+Y3Nfd3JpdGVfc2VxX3N0YXRpYyhjdHgsIDB4ZjIsIDB4NjcsIDB4NDAsIDB4YzUpOwo+ICAJczZl
+M2hhMl9kY3Nfd3JpdGVfc2VxX3N0YXRpYyhjdHgsIDB4ZmUsIDB4MjAsIDB4MzkpOwo+ICAJczZl
+M2hhMl9kY3Nfd3JpdGVfc2VxX3N0YXRpYyhjdHgsIDB4ZmUsIDB4YTApOwo+ICAJczZlM2hhMl9k
+Y3Nfd3JpdGVfc2VxX3N0YXRpYyhjdHgsIDB4ZmUsIDB4MjApOwo+IC0JczZlM2hhMl9kY3Nfd3Jp
+dGVfc2VxX3N0YXRpYyhjdHgsIDB4Y2UsIDB4MDMsIDB4M2IsIDB4MTIsIDB4NjIsIDB4NDAsCj4g
+LQkJCQkweDgwLCAweGMwLCAweDI4LCAweDI4LCAweDI4LCAweDI4LCAweDM5LCAweGM1KTsKPiAr
+Cj4gKwlpZiAoY3R4LT5kZXNjLT50eXBlID09IERFRkFVTFRfVFlQRSkKPiArCQlzNmUzaGEyX2Rj
+c193cml0ZV9zZXFfc3RhdGljKGN0eCwgMHhjZSwgMHgwMywgMHgzYiwgMHgxMiwgMHg2MiwKPiAr
+CQkJMHg0MCwgMHg4MCwgMHhjMCwgMHgyOCwgMHgyOCwgMHgyOCwgMHgyOCwgMHgzOSwgMHhjNSk7
+Cj4gKwllbHNlCj4gKwkJczZlM2hhMl9kY3Nfd3JpdGVfc2VxX3N0YXRpYyhjdHgsIDB4Y2UsIDB4
+MDMsIDB4M2IsIDB4MTQsIDB4NmQsCj4gKwkJCTB4NDAsIDB4ODAsIDB4YzAsIDB4MjgsIDB4Mjgs
+IDB4MjgsIDB4MjgsIDB4MzksIDB4YzUpOwo+ICsKPiAgCXJldHVybiAwOwo+ICB9Cj4gIAo+IEBA
+IC01OTcsMTYgKzYxOCw0MSBAQCBzdGF0aWMgaW50IHM2ZTNoYTJfZW5hYmxlKHN0cnVjdCBkcm1f
+cGFuZWwgKnBhbmVsKQo+ICAJLmZsYWdzID0gMCwKPiAgfTsKPiAgCj4gK3N0YXRpYyBjb25zdCBz
+dHJ1Y3QgczZlM2hhMl9wYW5lbF9kZXNjIHNhbXN1bmdfczZlM2hhMl90bTIgPSB7CgpQbGVhc2Ug
+ZG8gbm90IHVzZSB0bTIvdG0yZSBoZXJlIGFuZCBsYXRlciwgdGhleSBoYXZlIG5vdGhpbmcgdG8g
+ZG8gd2l0aAp0aGUgcGFuZWwuCgo+ICsJLm1vZGUgPSAmZGVmYXVsdF9tb2RlLAo+ICsJLnR5cGUg
+PSBERUZBVUxUX1RZUEUsCj4gK307Cj4gKwo+ICtzdGF0aWMgY29uc3Qgc3RydWN0IGRybV9kaXNw
+bGF5X21vZGUgZWRnZV9tb2RlID0gewo+ICsJLmNsb2NrID0gMjQ3ODU2LAo+ICsJLmhkaXNwbGF5
+ID0gMTYwMCwKPiArCS5oc3luY19zdGFydCA9IDE2MDAgKyAxLAo+ICsJLmhzeW5jX2VuZCA9IDE2
+MDAgKyAxICsgMSwKPiArCS5odG90YWwgPSAxNjAwICsgMSArIDEgKyAxLAo+ICsJLnZkaXNwbGF5
+ID0gMjU2MCwKPiArCS52c3luY19zdGFydCA9IDI1NjAgKyAxLAo+ICsJLnZzeW5jX2VuZCA9IDI1
+NjAgKyAxICsgMSwKPiArCS52dG90YWwgPSAyNTYwICsgMSArIDEgKyAxNSwKPiArCS52cmVmcmVz
+aCA9IDYwLAo+ICsJLmZsYWdzID0gMCwKPiArfTsKPiArCj4gK3N0YXRpYyBjb25zdCBzdHJ1Y3Qg
+czZlM2hhMl9wYW5lbF9kZXNjIHNhbXN1bmdfczZlM2hhMl90bTJlID0gewo+ICsJLm1vZGUgPSAm
+ZWRnZV9tb2RlLAo+ICsJLnR5cGUgPSBFREdFX1RZUEUsCj4gK307Cj4gKwo+ICBzdGF0aWMgaW50
+IHM2ZTNoYTJfZ2V0X21vZGVzKHN0cnVjdCBkcm1fcGFuZWwgKnBhbmVsKQo+ICB7Cj4gIAlzdHJ1
+Y3QgZHJtX2Nvbm5lY3RvciAqY29ubmVjdG9yID0gcGFuZWwtPmNvbm5lY3RvcjsKPiArCXN0cnVj
+dCBzNmUzaGEyICpjdHggPSBjb250YWluZXJfb2YocGFuZWwsIHN0cnVjdCBzNmUzaGEyLCBwYW5l
+bCk7Cj4gIAlzdHJ1Y3QgZHJtX2Rpc3BsYXlfbW9kZSAqbW9kZTsKPiAgCj4gLQltb2RlID0gZHJt
+X21vZGVfZHVwbGljYXRlKHBhbmVsLT5kcm0sICZkZWZhdWx0X21vZGUpOwo+ICsJbW9kZSA9IGRy
+bV9tb2RlX2R1cGxpY2F0ZShwYW5lbC0+ZHJtLCBjdHgtPmRlc2MtPm1vZGUpOwo+ICAJaWYgKCFt
+b2RlKSB7Cj4gIAkJRFJNX0VSUk9SKCJmYWlsZWQgdG8gYWRkIG1vZGUgJXV4JXV4QCV1XG4iLAo+
+IC0JCQkJZGVmYXVsdF9tb2RlLmhkaXNwbGF5LCBkZWZhdWx0X21vZGUudmRpc3BsYXksCj4gLQkJ
+CQlkZWZhdWx0X21vZGUudnJlZnJlc2gpOwo+ICsJCQljdHgtPmRlc2MtPm1vZGUtPmhkaXNwbGF5
+LCBjdHgtPmRlc2MtPm1vZGUtPnZkaXNwbGF5LAo+ICsJCQljdHgtPmRlc2MtPm1vZGUtPnZyZWZy
+ZXNoKTsKPiAgCQlyZXR1cm4gLUVOT01FTTsKPiAgCX0KPiAgCj4gQEAgLTY0Miw2ICs2ODgsNyBA
+QCBzdGF0aWMgaW50IHM2ZTNoYTJfcHJvYmUoc3RydWN0IG1pcGlfZHNpX2RldmljZSAqZHNpKQo+
+ICAJbWlwaV9kc2lfc2V0X2RydmRhdGEoZHNpLCBjdHgpOwo+ICAKPiAgCWN0eC0+ZGV2ID0gZGV2
+Owo+ICsJY3R4LT5kZXNjID0gb2ZfZGV2aWNlX2dldF9tYXRjaF9kYXRhKGRldik7Cj4gIAo+ICAJ
+ZHNpLT5sYW5lcyA9IDQ7Cj4gIAlkc2ktPmZvcm1hdCA9IE1JUElfRFNJX0ZNVF9SR0I4ODg7Cj4g
+QEAgLTcxNyw3ICs3NjQsMTAgQEAgc3RhdGljIGludCBzNmUzaGEyX3JlbW92ZShzdHJ1Y3QgbWlw
+aV9kc2lfZGV2aWNlICpkc2kpCj4gIH0KPiAgCj4gIHN0YXRpYyBjb25zdCBzdHJ1Y3Qgb2ZfZGV2
+aWNlX2lkIHM2ZTNoYTJfb2ZfbWF0Y2hbXSA9IHsKPiAtCXsgLmNvbXBhdGlibGUgPSAic2Ftc3Vu
+ZyxzNmUzaGEyIiB9LAo+ICsJeyAuY29tcGF0aWJsZSA9ICJzYW1zdW5nLHM2ZTNoYTIiLAo+ICsJ
+ICAuZGF0YSA9ICZzYW1zdW5nX3M2ZTNoYTJfdG0yIH0sCj4gKwl7IC5jb21wYXRpYmxlID0gInNh
+bXN1bmcsczZlM2hhMi1lIiwKPiArCSAgLmRhdGEgPSAmc2Ftc3VuZ19zNmUzaGEyX3RtMmUgfSwK
+CkFuZCBwbGVhc2UgdXNlIGNvbXBhdGlibGUgInNhbXN1bmcsczZlM2hmMiIuCgpSZWdhcmRzCkFu
+ZHJ6ZWoKCgo+ICAJeyB9Cj4gIH07Cj4gIE1PRFVMRV9ERVZJQ0VfVEFCTEUob2YsIHM2ZTNoYTJf
+b2ZfbWF0Y2gpOwoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9y
+ZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZl
+bAo=
