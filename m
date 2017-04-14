@@ -1,13 +1,25 @@
 From: Javier Martinez Canillas <javier@osg.samsung.com>
-Subject: [PATCH v3 21/21] powerpc/44x: Add generic compatible string for I2C EEPROM
-Date: Thu, 13 Apr 2017 22:04:45 -0300
-Message-ID: <20170414010445.21727-22-javier@osg.samsung.com>
+Subject: [PATCH v3 08/21] ARM: dts: keystone: Add generic compatible string
+ for I2C EEPROM
+Date: Thu, 13 Apr 2017 22:04:32 -0300
+Message-ID: <20170414010445.21727-9-javier@osg.samsung.com>
 References: <20170414010445.21727-1-javier@osg.samsung.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <20170414010445.21727-1-javier@osg.samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: linux-kernel@vger.kernel.org
-Cc: Wolfram Sang <wsa@the-dreams.de>, Javier Martinez Canillas <javier@osg.samsung.com>, devicetree@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linuxppc-dev@lists.ozlabs.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Wolfram Sang <wsa@the-dreams.de>, Russell King <linux@armlinux.org.uk>, Javier Martinez Canillas <javier@osg.samsung.com>, Rob Herring <robh+dt@kernel.org>, Santosh Shilimkar <ssantosh@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
 The at24 driver allows to register I2C EEPROM chips using different vendor
@@ -22,27 +34,54 @@ So add this generic fallback to the device node compatible string to make
 the device to match the driver using the OF device ID table.
 
 Signed-off-by: Javier Martinez Canillas <javier@osg.samsung.com>
-
 ---
 
 Changes in v3: None
 Changes in v2: None
 
- arch/powerpc/boot/dts/warp.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/boot/dts/keystone-k2e-evm.dts  | 2 +-
+ arch/arm/boot/dts/keystone-k2hk-evm.dts | 2 +-
+ arch/arm/boot/dts/keystone-k2l-evm.dts  | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/powerpc/boot/dts/warp.dts b/arch/powerpc/boot/dts/warp.dts
-index e576ee85c42f..19e0ec83b1a5 100644
---- a/arch/powerpc/boot/dts/warp.dts
-+++ b/arch/powerpc/boot/dts/warp.dts
-@@ -238,7 +238,7 @@
+diff --git a/arch/arm/boot/dts/keystone-k2e-evm.dts b/arch/arm/boot/dts/keystone-k2e-evm.dts
+index ae1ebe7ee021..8c79caae9c1b 100644
+--- a/arch/arm/boot/dts/keystone-k2e-evm.dts
++++ b/arch/arm/boot/dts/keystone-k2e-evm.dts
+@@ -69,7 +69,7 @@
  
- 				/* This will create 52 and 53 */
- 				at24@52 {
--					compatible = "at,24c04";
-+					compatible = "at,24c04", "atmel,24c04";
- 					reg = <0x52>;
- 				};
- 			};
+ &i2c0 {
+ 	dtt@50 {
+-		compatible = "at,24c1024";
++		compatible = "at,24c1024", "atmel,24c1024";
+ 		reg = <0x50>;
+ 	};
+ };
+diff --git a/arch/arm/boot/dts/keystone-k2hk-evm.dts b/arch/arm/boot/dts/keystone-k2hk-evm.dts
+index 2156ff92d08f..7c6916a11b18 100644
+--- a/arch/arm/boot/dts/keystone-k2hk-evm.dts
++++ b/arch/arm/boot/dts/keystone-k2hk-evm.dts
+@@ -145,7 +145,7 @@
+ 
+ &i2c0 {
+ 	dtt@50 {
+-		compatible = "at,24c1024";
++		compatible = "at,24c1024", "atmel,24c1024";
+ 		reg = <0x50>;
+ 	};
+ };
+diff --git a/arch/arm/boot/dts/keystone-k2l-evm.dts b/arch/arm/boot/dts/keystone-k2l-evm.dts
+index 056b42f99d7a..685a236a57f4 100644
+--- a/arch/arm/boot/dts/keystone-k2l-evm.dts
++++ b/arch/arm/boot/dts/keystone-k2l-evm.dts
+@@ -42,7 +42,7 @@
+ 
+ &i2c0 {
+ 	dtt@50 {
+-		compatible = "at,24c1024";
++		compatible = "at,24c1024", "atmel,24c1024";
+ 		reg = <0x50>;
+ 	};
+ };
 -- 
 2.9.3
