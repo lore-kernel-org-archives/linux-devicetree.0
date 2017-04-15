@@ -1,26 +1,46 @@
-From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH 0/3] Add R8A7745/SK-RZG1E PFC support
-Date: Sat, 15 Apr 2017 23:18:25 +0300
-Message-ID: <20170415201825.223149827__43320.3581641012$1492287644$gmane$org@cogentembedded.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: [PATCH 1/3] ARM: dts: r8a7745: add PFC support
+Date: Sat, 15 Apr 2017 23:18:26 +0300
+Message-ID: <20170415202036.987901107@cogentembedded.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-15
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Content-Disposition: inline; filename=ARM-dts-r8a7745-add-PFC-support.patch
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, linux-arm-kernel@lists.infradead.org, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+Define the generic R8A7745 part of the PFC device node.
 
-   Here's the set of 3 patches against Simon Horman's 'renesas.git' repo,
-'renesas-devel-20170410-v4.11-rc6' tag.  We're adding the R8A7745 PFC node and
-then describe the pins for SCIF2 and Ether devices declared earlier. These
-patches depend on the R8A7745 PFC suport in order to work properly.
+Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
-[1/3] ARM: dts: r8a7745: add PFC support
-[2/3] ARM: dts: sk-rzg1e: add SCIF2 pins
-[3/3] ARM: dts: sk-rzg1e: add Ether pins
+---
+ arch/arm/boot/dts/r8a7745.dtsi |    7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-WBR, Sergei
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Index: renesas/arch/arm/boot/dts/r8a7745.dtsi
+===================================================================
+--- renesas.orig/arch/arm/boot/dts/r8a7745.dtsi
++++ renesas/arch/arm/boot/dts/r8a7745.dtsi
+@@ -1,7 +1,7 @@
+ /*
+  * Device Tree Source for the r8a7745 SoC
+  *
+- * Copyright (C) 2016 Cogent Embedded Inc.
++ * Copyright (C) 2016-2017 Cogent Embedded Inc.
+  *
+  * This file is licensed under the terms of the GNU General Public License
+  * version 2. This program is licensed "as is" without any warranty of any
+@@ -123,6 +123,11 @@
+ 			#power-domain-cells = <1>;
+ 		};
+ 
++		pfc: pin-controller@e6060000 {
++			compatible = "renesas,pfc-r8a7745";
++			reg = <0 0xe6060000 0 0x11c>;
++		};
++
+ 		dmac0: dma-controller@e6700000 {
+ 			compatible = "renesas,dmac-r8a7745",
+ 				     "renesas,rcar-dmac";
