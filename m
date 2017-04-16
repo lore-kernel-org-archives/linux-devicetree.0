@@ -1,68 +1,100 @@
 From: Cyrille Pitchen <cyrille.pitchen@wedev4u.fr>
-Subject: Re: [PATCH v4 2/2] mtd: spi-nor: add driver for STM32 quad spi flash
- controller
-Date: Sun, 16 Apr 2017 19:11:58 +0200
-Message-ID: <dfa45902-29e6-067c-ada6-59f9a312690f@wedev4u.fr>
-References: <1492103757-22375-1-git-send-email-ludovic.Barre@st.com>
- <1492103757-22375-3-git-send-email-ludovic.Barre@st.com>
- <b0238aad-38a1-3b06-ac2e-45f658041661@gmail.com>
+Subject: Re: [PATCH v1 1/1] mtd: mtk-nor: set controller's address width
+ according to nor flash
+Date: Sun, 16 Apr 2017 19:18:18 +0200
+Message-ID: <e78dba15-80d0-f2c3-c963-a7eb033af58d@wedev4u.fr>
+References: <1491381462-21893-1-git-send-email-guochun.mao@mediatek.com>
+ <1491381462-21893-2-git-send-email-guochun.mao@mediatek.com>
+ <e9eafca3-41a0-7e88-996b-9d1c51f0c132@wedev4u.fr>
+ <1492051237.2866.36.camel@mhfsdcap03>
+ <3cf1c63e-c56f-2f07-9d16-7ec346758dfa@wedev4u.fr>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <b0238aad-38a1-3b06-ac2e-45f658041661@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: Marek Vasut <marek.vasut@gmail.com>, Ludovic Barre <ludovic.Barre@st.com>, Cyrille Pitchen <cyrille.pitchen@atmel.com>
-Cc: Boris Brezillon <boris.brezillon@free-electrons.com>, Alexandre Torgue <alexandre.torgue@st.com>, devicetree@vger.kernel.org, Richard Weinberger <richard@nod.at>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-mtd@lists.infradead.org, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <3cf1c63e-c56f-2f07-9d16-7ec346758dfa@wedev4u.fr>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Guochun Mao <guochun.mao@mediatek.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Richard Weinberger <richard@nod.at>, Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-mtd@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, linux-mediatek@lists.infradead.org, Cyrille Pitchen <cyrille.pitchen@atmel.com>, David Woodhouse <dwmw2@infradead.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi all,
-
-Le 14/04/2017 =E0 18:15, Marek Vasut a =E9crit :
-> On 04/13/2017 07:15 PM, Ludovic Barre wrote:
->> From: Ludovic Barre <ludovic.barre@st.com>
->>
->> The quadspi is a specialized communication interface targeting single,
->> dual or quad SPI Flash memories.
->>
->> It can operate in any of the following modes:
->> -indirect mode: all the operations are performed using the quadspi
->>  registers
->> -read memory-mapped mode: the external Flash memory is mapped to the
->>  microcontroller address space and is seen by the system as if it was
->>  an internal memory
->>
->> Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
-> =
-
-> Reviewed-by: Marek Vasut <marek.vasut@gmail.com>
-> =
-
-Applied to github/spi-nor
-
-About patch 1, I wait for Rob's acknowledgement before merging it into
-the next branch of github/spi-nor but I'd rather take patch 2 now since
-it has been reviewed by Marek and integration issues would be detected
-sooner with linux-next so we would have more time to adapt this patch,
-if needed.
-I've already compile this patch inside the next branch of github/spi-nor
-and no warning was risen so I think there should be any issue.
-
-Hence if no integration issue is detected, I'll try to add it into the
-next spi-nor PR for 4.12.
-
-Best regards,
-
-Cyrille
-
-______________________________________________________
-Linux MTD discussion mailing list
-http://lists.infradead.org/mailman/listinfo/linux-mtd/
+TGUgMTMvMDQvMjAxNyDDoCAxMDoyNCwgQ3lyaWxsZSBQaXRjaGVuIGEgw6ljcml0IDoKPiBIaSBH
+dW9jaHVuLAo+IAo+IExlIDEzLzA0LzIwMTcgw6AgMDQ6NDAsIEd1b2NodW4gTWFvIGEgw6ljcml0
+IDoKPj4gSGkgQ3lyaWxsZSwKPj4KPj4gT24gV2VkLCAyMDE3LTA0LTEyIGF0IDIyOjU3ICswMjAw
+LCBDeXJpbGxlIFBpdGNoZW4gd3JvdGU6Cj4+PiBIaSBHdW9jaHVuLAo+Pj4KPj4+IExlIDA1LzA0
+LzIwMTcgw6AgMTA6MzcsIEd1b2NodW4gTWFvIGEgw6ljcml0IDoKPj4+PiBXaGVuIG5vcidzIHNp
+emUgbGFyZ2VyIHRoYW4gMTZNQnl0ZSwgbm9yJ3MgYWRkcmVzcyB3aWR0aCBtYXliZQo+Pj4+IHNl
+dCB0byAzIG9yIDQsIGFuZCBjb250cm9sbGVyIHNob3VsZCBjaGFuZ2UgYWRkcmVzcyB3aWR0aCBh
+Y2NvcmRpbmcKPj4+PiB0byBub3IncyBzZXR0aW5nLgo+Pj4+Cj4+Pj4gU2lnbmVkLW9mZi1ieTog
+R3VvY2h1biBNYW8gPGd1b2NodW4ubWFvQG1lZGlhdGVrLmNvbT5zdAo+IAo+IEFja2VkLWJ5OiBD
+eXJpbGxlIFBpdGNoZW4gPGN5cmlsbGUucGl0Y2hlbkBhdG1lbC5jb20+Cj4gCgpBcHBsaWVkIHRv
+IGdpdGh1Yi9zcGktbm9yCgpUaGFua3MhCgoKPj4+PiAtLS0KPj4+PiAgZHJpdmVycy9tdGQvc3Bp
+LW5vci9tdGstcXVhZHNwaS5jIHwgICAyNyArKysrKysrKysrKysrKysrKysrKysrKysrKysKPj4+
+PiAgMSBmaWxlIGNoYW5nZWQsIDI3IGluc2VydGlvbnMoKykKPj4+Pgo+Pj4+IGRpZmYgLS1naXQg
+YS9kcml2ZXJzL210ZC9zcGktbm9yL210ay1xdWFkc3BpLmMgYi9kcml2ZXJzL210ZC9zcGktbm9y
+L210ay1xdWFkc3BpLmMKPj4+PiBpbmRleCBlNjYxODc3Li5iNjM3NzcwIDEwMDY0NAo+Pj4+IC0t
+LSBhL2RyaXZlcnMvbXRkL3NwaS1ub3IvbXRrLXF1YWRzcGkuYwo+Pj4+ICsrKyBiL2RyaXZlcnMv
+bXRkL3NwaS1ub3IvbXRrLXF1YWRzcGkuYwo+Pj4+IEBAIC0xMDQsNiArMTA0LDggQEAKPj4+PiAg
+I2RlZmluZSBNVEtfTk9SX01BWF9SWF9UWF9TSElGVAkJNgo+Pj4+ICAvKiBjYW4gc2hpZnQgdXAg
+dG8gNTYgYml0cyAoNyBieXRlcykgdHJhbnNmZXIgYnkgTVRLX05PUl9QUkdfQ01EICovCj4+Pj4g
+ICNkZWZpbmUgTVRLX05PUl9NQVhfU0hJRlQJCTcKPj4+PiArLyogbm9yIGNvbnRyb2xsZXIgNC1i
+eXRlIGFkZHJlc3MgbW9kZSBlbmFibGUgYml0ICovCj4+Pj4gKyNkZWZpbmUgTVRLX05PUl80Ql9B
+RERSX0VOCQlCSVQoNCkKPj4+PiAgCj4+Pj4gIC8qIEhlbHBlcnMgZm9yIGFjY2Vzc2luZyB0aGUg
+cHJvZ3JhbSBkYXRhIC8gc2hpZnQgZGF0YSByZWdpc3RlcnMgKi8KPj4+PiAgI2RlZmluZSBNVEtf
+Tk9SX1BSR19SRUcobikJCShNVEtfTk9SX1BSR0RBVEEwX1JFRyArIDQgKiAobikpCj4+Pj4gQEAg
+LTIzMCwxMCArMjMyLDM1IEBAIHN0YXRpYyBpbnQgbXQ4MTczX25vcl93cml0ZV9idWZmZXJfZGlz
+YWJsZShzdHJ1Y3QgbXQ4MTczX25vciAqbXQ4MTczX25vcikKPj4+PiAgCQkJCSAgMTAwMDApOwo+
+Pj4+ICB9Cj4+Pj4gIAo+Pj4+ICtzdGF0aWMgdm9pZCBtdDgxNzNfbm9yX3NldF9hZGRyX3dpZHRo
+KHN0cnVjdCBtdDgxNzNfbm9yICptdDgxNzNfbm9yKQo+Pj4+ICt7Cj4+Pj4gKwl1OCB2YWw7Cj4+
+Pj4gKwlzdHJ1Y3Qgc3BpX25vciAqbm9yID0gJm10ODE3M19ub3ItPm5vcjsKPj4+PiArCj4+Pj4g
+Kwl2YWwgPSByZWFkYihtdDgxNzNfbm9yLT5iYXNlICsgTVRLX05PUl9EVUFMX1JFRyk7Cj4+Pj4g
+Kwo+Pj4+ICsJc3dpdGNoIChub3ItPmFkZHJfd2lkdGgpIHsKPj4+PiArCWNhc2UgMzoKPj4+PiAr
+CQl2YWwgJj0gfk1US19OT1JfNEJfQUREUl9FTjsKPj4+PiArCQlicmVhazsKPj4+PiArCWNhc2Ug
+NDoKPj4+PiArCQl2YWwgfD0gTVRLX05PUl80Ql9BRERSX0VOOwo+Pj4+ICsJCWJyZWFrOwo+Pj4+
+ICsJZGVmYXVsdDoKPj4+PiArCQlkZXZfd2FybihtdDgxNzNfbm9yLT5kZXYsICJVbmV4cGVjdGVk
+IGFkZHJlc3Mgd2lkdGggJXUuXG4iLAo+Pj4+ICsJCQkgbm9yLT5hZGRyX3dpZHRoKTsKPj4+PiAr
+CQlicmVhazsKPj4+PiArCX0KPj4+PiArCj4+Pj4gKwl3cml0ZWIodmFsLCBtdDgxNzNfbm9yLT5i
+YXNlICsgTVRLX05PUl9EVUFMX1JFRyk7Cj4+Pj4gK30KPj4+PiArCj4+Pj4gIHN0YXRpYyB2b2lk
+IG10ODE3M19ub3Jfc2V0X2FkZHIoc3RydWN0IG10ODE3M19ub3IgKm10ODE3M19ub3IsIHUzMiBh
+ZGRyKQo+Pj4+ICB7Cj4+Pj4gIAlpbnQgaTsKPj4+PiAgCj4+Pj4gKwltdDgxNzNfbm9yX3NldF9h
+ZGRyX3dpZHRoKG10ODE3M19ub3IpOwo+Pj4+ICsKPj4+PiAgCWZvciAoaSA9IDA7IGkgPCAzOyBp
+KyspIHsKPj4+Cj4+PiBTaG91bGQgaXQgYmUgJ2kgPCBub3ItPmFkZHJfd2lkdGgnIGluc3RlYWQg
+b2YgJ2kgPCAzJyA/Cj4+PiBEb2VzIGl0IHdvcmsgd2hlbiBhY2Nlc3NpbmcgZGF0YSBhZnRlciAx
+MjhNYml0ID8KPj4KPj4gWWVzLCBpdCBjYW4gd29yay4KPj4KPj4gTGV0J3Mgc2VlIHRoZSB3aG9s
+ZSBmdW5jdGlvbiwKPj4KPj4gc3RhdGljIHZvaWQgbXQ4MTczX25vcl9zZXRfYWRkcihzdHJ1Y3Qg
+bXQ4MTczX25vciAqbXQ4MTczX25vciwgdTMyIGFkZHIpCj4+IHsKPj4gICAgICAgICBpbnQgaTsK
+Pj4KPj4gICAgICAgICBtdDgxNzNfbm9yX3NldF9hZGRyX3dpZHRoKG10ODE3M19ub3IpOwo+Pgo+
+PiAgICAgICAgIGZvciAoaSA9IDA7IGkgPCAzOyBpKyspIHsKPj4gICAgICAgICAgICAgICAgIHdy
+aXRlYihhZGRyICYgMHhmZiwgbXQ4MTczX25vci0+YmFzZSArIE1US19OT1JfUkFEUjBfUkVHCj4+
+ICsgaSAqIDQpOwo+PiAgICAgICAgICAgICAgICAgYWRkciA+Pj0gODsKPj4gICAgICAgICB9Cj4+
+ICAgICAgICAgLyogTGFzdCByZWdpc3RlciBpcyBub24tY29udGlndW91cyAqLwo+PiAgICAgICAg
+IHdyaXRlYihhZGRyICYgMHhmZiwgbXQ4MTczX25vci0+YmFzZSArIE1US19OT1JfUkFEUjNfUkVH
+KTsKPj4gfQo+Pgo+PiBUaGUgbm9yIGNvbnRyb2xsZXIgaGFzIDQgcmVnaXN0ZXJzIGZvciBhZGRy
+ZXNzLgo+PiBUaGlzICczJyBpbmRpY2F0ZXMgdGhlIG51bWJlciBvZiBjb250aWd1b3VzIGFkZHJl
+c3MnIHJlZ2lzdGVycwo+PiBiYXNlICsgTVRLX05PUl9SQURSMF9SRUcoMHgxMCkKPj4gYmFzZSAr
+IE1US19OT1JfUkFEUjFfUkVHKDB4MTQpCj4+IGJhc2UgKyBNVEtfTk9SX1JBRFIyX1JFRygweDE4
+KSwKPj4gYnV0IHRoZSBsYXN0IGFkZHJlc3MgcmVnaXN0ZXIgaXMgbm9uLWNvbnRpZ3VvdXMsCj4+
+IGl0J3MgYmFzZSArIE1US19OT1JfUkFEUjNfUkVHKDB4YzgpCj4+Cj4+IG10ODE3M19ub3Jfc2V0
+X2FkZHIgd2lsbCBzZXQgYWRkciBpbnRvIHRoZXNlIDQgcmVnaXN0ZXJzIGJ5IEJ5dGUuCj4+IFRo
+ZSBiaXQgTVRLX05PUl80Ql9BRERSX0VOIHdpbGwgZGVjaWRlIHdoZXRoZXIgMy1ieXRlKDB4MTAs
+MHgxNCwweDE4KQo+PiBvciA0LWJ5dGUoMHgxMCwweDE0LHgwMTgsMHhjOCkgYmVlbiBzZW50IHRv
+IG5vciBkZXZpY2UuCj4+IGFuZCwgaXQgY2FuIGFjY2VzcyBkYXRhIGFmdGVyIDEyOE1iaXQgd2hl
+biBzZW50IDQtYnl0ZSBhZGRyZXNzLgo+IAo+IEluZGVlZCwgeW91J3JlIHJpZ2h0LiBTb3JyeSBm
+b3IgdGhlIG5vaXNlIQo+IAo+Pgo+PiBCZXN0IHJlZ2FyZHMsCj4+Cj4+IEd1b2NodW4KPj4KPj4+
+Cj4+PiBCZXN0IHJlZ2FyZHMsCj4+Pgo+Pj4gQ3lyaWxsZQo+Pj4KPj4+PiAgCQl3cml0ZWIoYWRk
+ciAmIDB4ZmYsIG10ODE3M19ub3ItPmJhc2UgKyBNVEtfTk9SX1JBRFIwX1JFRyArIGkgKiA0KTsK
+Pj4+PiAgCQlhZGRyID4+PSA4Owo+Pj4+Cj4+Pgo+Pgo+Pgo+Pgo+IAo+IAo+IF9fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwo+IExpbnV4IE1URCBk
+aXNjdXNzaW9uIG1haWxpbmcgbGlzdAo+IGh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxt
+YW4vbGlzdGluZm8vbGludXgtbXRkLwo+IAoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFy
+bS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9t
+YWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
