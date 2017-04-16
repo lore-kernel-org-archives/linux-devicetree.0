@@ -1,100 +1,91 @@
-From: Mars Cheng <mars.cheng@mediatek.com>
-Subject: Re: [PATCH v4 00/10] Add Basic SoC support for MT6797
-Date: Sun, 16 Apr 2017 11:42:30 +0800
-Message-ID: <1492314150.19878.2.camel@mtkswgap22>
-References: <1491614435-23754-1-git-send-email-mars.cheng@mediatek.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <1491614435-23754-1-git-send-email-mars.cheng@mediatek.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>, Matthias Brugger <matthias.bgg@gmail.com>
-Cc: CC Hwang <cc.hwang@mediatek.com>, Loda Chou <loda.chou@mediatek.com>, Miles Chen <miles.chen@mediatek.com>, Jades Shih <jades.shih@mediatek.com>, Yingjoe Chen <yingjoe.chen@mediatek.com>, Kevin-CW Chen <kevin-cw.chen@mediatek.com>, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org, wsd_upstream@mediatek.com
+From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Subject: [PATCH v4 00/11] Initial Allwinner Display Engine 2.0 Support
+Date: Sun, 16 Apr 2017 20:08:38 +0800
+Message-ID: <20170416120849.54542-1-icenowy@aosc.io>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+Cc: linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Stephen, Matthias
+This patchset is the initial patchset for Allwinner DE2 support.
 
-gentle ping. :-)
+It contains the support of clocks in DE2 and the mixers in DE2.
 
-Thanks.
+The SoC used to develop this patchset is V3s, as V3s is the simplest
+one of the SoCs that have DE2.
+(Allwinner V3s features only one mixer, although its clock control
+unit contains support for second mixer's clock; and its only video
+output is RGB LCD, which is already supported in our TCON driver)
 
-On Sat, 2017-04-08 at 09:20 +0800, Mars Cheng wrote:
-> This patch set adds basic SoC support for mediatek's first 10-core
-> chip, X20, also known as MT6797.
-> 
-> - based on 4.11-rc1
-> - support common clk framework
-> - apply patches about intpol just accepted to get full feature support:
-> http://lists.infradead.org/pipermail/linux-mediatek/2017-March/008371.html
-> http://lists.infradead.org/pipermail/linux-mediatek/2017-March/008375.html
-> http://lists.infradead.org/pipermail/linux-mediatek/2017-March/008373.html
-> 
-> Changes since v3:
-> - since intpol patches accepted in v3, remove them
-> - clk ID header separated from original clk driver submit
-> - clean up clk driver, including unnecessary header and fields in structure
-> 
-> Changes since v2:
-> - prevent uncessary #intpol-bases for mtk-sysirq
-> - add fast path for mtk-sysirq set_type when introducing multiple bases
-> - add acked-by and tested-by
-> - remove wrong usage for timer node
-> 
-> Changes since v1:
-> - add multiple base addresses support, v1 only allow 2 bases
-> - clean up clk driver
-> 
-> Kevin-CW Chen (2):
->   dt-bindings: arm: mediatek: document clk bindings for MT6797
->   clk: mediatek: add clk support for MT6797
-> 
-> Mars Cheng (8):
->   dt-bindings: mediatek: Add bindings for mediatek MT6797 Platform
->   arm64: dts: mediatek: add mt6797 support
->   clk: mediatek: add mt6797 clock IDs
->   soc: mediatek: avoid using fixed spm power status defines
->   soc: mediatek: add vdec item for scpsys
->   dt-bindings: mediatek: add MT6797 power dt-bindings
->   soc: mediatek: add MT6797 scpsys support
->   arm64: dts: mediatek: add clk and scp nodes for MT6797
-> 
->  Documentation/devicetree/bindings/arm/mediatek.txt |    4 +
->  .../bindings/arm/mediatek/mediatek,apmixedsys.txt  |    1 +
->  .../bindings/arm/mediatek/mediatek,imgsys.txt      |    1 +
->  .../bindings/arm/mediatek/mediatek,infracfg.txt    |    1 +
->  .../bindings/arm/mediatek/mediatek,mmsys.txt       |    1 +
->  .../bindings/arm/mediatek/mediatek,topckgen.txt    |    1 +
->  .../bindings/arm/mediatek/mediatek,vdecsys.txt     |    1 +
->  .../bindings/arm/mediatek/mediatek,vencsys.txt     |    3 +-
->  .../interrupt-controller/mediatek,sysirq.txt       |    1 +
->  .../devicetree/bindings/serial/mtk-uart.txt        |    1 +
->  .../devicetree/bindings/soc/mediatek/scpsys.txt    |    6 +-
->  arch/arm64/boot/dts/mediatek/Makefile              |    1 +
->  arch/arm64/boot/dts/mediatek/mt6797-evb.dts        |   36 +
->  arch/arm64/boot/dts/mediatek/mt6797.dtsi           |  245 +++++++
->  drivers/clk/mediatek/Kconfig                       |   32 +
->  drivers/clk/mediatek/Makefile                      |    5 +
->  drivers/clk/mediatek/clk-mt6797-img.c              |   76 +++
->  drivers/clk/mediatek/clk-mt6797-mm.c               |  136 ++++
->  drivers/clk/mediatek/clk-mt6797-vdec.c             |   93 +++
->  drivers/clk/mediatek/clk-mt6797-venc.c             |   78 +++
->  drivers/clk/mediatek/clk-mt6797.c                  |  714 ++++++++++++++++++++
->  drivers/soc/mediatek/mtk-scpsys.c                  |  149 +++-
->  include/dt-bindings/clock/mt6797-clk.h             |  281 ++++++++
->  include/dt-bindings/power/mt6797-power.h           |   30 +
->  24 files changed, 1889 insertions(+), 8 deletions(-)
->  create mode 100644 arch/arm64/boot/dts/mediatek/mt6797-evb.dts
->  create mode 100644 arch/arm64/boot/dts/mediatek/mt6797.dtsi
->  create mode 100644 drivers/clk/mediatek/clk-mt6797-img.c
->  create mode 100644 drivers/clk/mediatek/clk-mt6797-mm.c
->  create mode 100644 drivers/clk/mediatek/clk-mt6797-vdec.c
->  create mode 100644 drivers/clk/mediatek/clk-mt6797-venc.c
->  create mode 100644 drivers/clk/mediatek/clk-mt6797.c
->  create mode 100644 include/dt-bindings/clock/mt6797-clk.h
->  create mode 100644 include/dt-bindings/power/mt6797-power.h
-> 
-> --
-> 1.7.9.5
+The last patch is only a testing patch, it shouldn't be merged; and
+for the patch to be really usable, the RFC fix of the TCON driver [1]
+is needed.
 
+No HDMI, TV encoder or other internal bridges' support is included
+in this patchset, which makes it currently not usable on H3.
 
+Thanks to Jean-Francois Moine and Jernej Skrabec for their efforts
+to discover the internal of DE2!
+
+[1] https://lists.freedesktop.org/archives/dri-devel/2016-December/126264.html
+
+Icenowy Zheng (11):
+  dt-bindings: add binding for the Allwinner DE2 CCU
+  clk: sunxi-ng: add support for DE2 CCU
+  dt-bindings: add bindings for DE2 on V3s SoC
+  drm/sun4i: return only planes for layers created
+  drm/sun4i: abstract a engine type
+  drm/sun4i: add support for Allwinner DE2 mixers
+  drm/sun4i: Add compatible string for V3s display engine
+  drm/sun4i: tcon: add support for V3s TCON
+  ARM: dts: sun8i: add DE2 nodes for V3s SoC
+  ARM: dts: sun8i: add pinmux for LCD pins of V3s SoC
+  [DO NOT MERGE] ARM: dts: sun8i: enable LCD panel of Lichee Pi Zero
+
+ .../devicetree/bindings/clock/sun8i-de2.txt        |  31 ++
+ .../bindings/display/sunxi/sun4i-drm.txt           |  29 +-
+ arch/arm/boot/dts/sun8i-v3s-licheepi-zero.dts      |  36 ++
+ arch/arm/boot/dts/sun8i-v3s.dtsi                   |  96 ++++++
+ drivers/clk/sunxi-ng/Kconfig                       |   5 +
+ drivers/clk/sunxi-ng/Makefile                      |   1 +
+ drivers/clk/sunxi-ng/ccu-sun8i-de2.c               | 218 ++++++++++++
+ drivers/clk/sunxi-ng/ccu-sun8i-de2.h               |  28 ++
+ drivers/gpu/drm/sun4i/Kconfig                      |  20 ++
+ drivers/gpu/drm/sun4i/Makefile                     |  10 +-
+ drivers/gpu/drm/sun4i/sun4i_backend.c              |  26 +-
+ drivers/gpu/drm/sun4i/sun4i_backend.h              |   5 -
+ drivers/gpu/drm/sun4i/sun4i_crtc.c                 |  35 +-
+ drivers/gpu/drm/sun4i/sun4i_crtc.h                 |   8 +-
+ drivers/gpu/drm/sun4i/sun4i_drv.c                  |   4 +-
+ drivers/gpu/drm/sun4i/sun4i_drv.h                  |   3 +-
+ drivers/gpu/drm/sun4i/sun4i_layer.c                |  18 +-
+ drivers/gpu/drm/sun4i/sun4i_layer.h                |   7 +-
+ drivers/gpu/drm/sun4i/sun4i_tcon.c                 |   7 +-
+ drivers/gpu/drm/sun4i/sun4i_tv.c                   |  11 +-
+ drivers/gpu/drm/sun4i/sun8i_layer.c                | 142 ++++++++
+ drivers/gpu/drm/sun4i/sun8i_layer.h                |  36 ++
+ drivers/gpu/drm/sun4i/sun8i_mixer.c                | 381 +++++++++++++++++++++
+ drivers/gpu/drm/sun4i/sun8i_mixer.h                | 131 +++++++
+ drivers/gpu/drm/sun4i/sunxi_engine.h               |  35 ++
+ include/dt-bindings/clock/sun8i-de2.h              |  54 +++
+ include/dt-bindings/reset/sun8i-de2.h              |  50 +++
+ 27 files changed, 1371 insertions(+), 56 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/clock/sun8i-de2.txt
+ create mode 100644 drivers/clk/sunxi-ng/ccu-sun8i-de2.c
+ create mode 100644 drivers/clk/sunxi-ng/ccu-sun8i-de2.h
+ create mode 100644 drivers/gpu/drm/sun4i/sun8i_layer.c
+ create mode 100644 drivers/gpu/drm/sun4i/sun8i_layer.h
+ create mode 100644 drivers/gpu/drm/sun4i/sun8i_mixer.c
+ create mode 100644 drivers/gpu/drm/sun4i/sun8i_mixer.h
+ create mode 100644 drivers/gpu/drm/sun4i/sunxi_engine.h
+ create mode 100644 include/dt-bindings/clock/sun8i-de2.h
+ create mode 100644 include/dt-bindings/reset/sun8i-de2.h
+
+-- 
+2.12.2
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
