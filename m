@@ -1,63 +1,98 @@
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: [PATCH 25/29] ARM: dts: rockchip: Add timer entries to rk3188 SoC
-Date: Sun, 16 Apr 2017 22:27:15 +0200
-Message-ID: <1492374441-23336-25-git-send-email-daniel.lezcano@linaro.org>
-References: <20170416202542.GV2078@mai>
- <1492374441-23336-1-git-send-email-daniel.lezcano@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1492374441-23336-1-git-send-email-daniel.lezcano@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: tglx@linutronix.de
-Cc: linux-kernel@vger.kernel.org, Alexander Kochetkov <al.kochet@gmail.com>, Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, "moderated list:ARM/Rockchip SoC
-        support" <linux-arm-kernel@lists.infradead.org>, "open list:ARM/Rockchip SoC support" <linux-rockchip@lists.infradead.org>, "open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
+From: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH V2] clk: hi6220: Add the hi655x's pmic clock
+Date: Sun, 16 Apr 2017 22:57:13 +0200
+Message-ID: <20170416205713.GW2078@mai>
+References: <1491683412-12237-1-git-send-email-daniel.lezcano@linaro.org>
+ <20170412150245.GK7065@codeaurora.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170412150245.GK7065-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Alexander Kochetkov <al.kochet@gmail.com>
+On Wed, Apr 12, 2017 at 08:02:45AM -0700, Stephen Boyd wrote:
+> On 04/08, Daniel Lezcano wrote:
+> >  
+> >  Example:
+> >  	pmic: pmic@f8000000 {
+> > @@ -24,4 +29,5 @@ Example:
+> >  		interrupt-controller;
+> >  		#interrupt-cells = <2>;
+> >  		pmic-gpios = <&gpio1 2 GPIO_ACTIVE_HIGH>;
+> > +		clock-cells = <0>;
+> 
+> Should be #clock-cells instead.
 
-The patch add two timers to all rk3188 based boards.
+Ok.
 
-The first timer is from alive subsystem and it act as a backup
-for the local timers at sleep time. It act the same as other
-SoC rockchip timers already present in kernel.
+> > +static int hi655x_clk_probe(struct platform_device *pdev)
+> > +{
+> > +	struct device *parent = pdev->dev.parent;
+> > +	struct hi655x_pmic *hi655x = dev_get_drvdata(parent);
+> > +	struct clk_init_data *hi655x_clk_init;
+> 
+> This can just go onto the stack? We don't need it around after
+> probe.
 
-The second timer is from CPU subsystem and act as replacement
-for the arm-global-timer clocksource and sched clock. It run
-at stable frequency 24MHz.
-
-Signed-off-by: Alexander Kochetkov <al.kochet@gmail.com>
-Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-Reviewed-by: Heiko Stuebner <heiko@sntech.de>
----
- arch/arm/boot/dts/rk3188.dtsi | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
-
-diff --git a/arch/arm/boot/dts/rk3188.dtsi b/arch/arm/boot/dts/rk3188.dtsi
-index cf91254..8428fae 100644
---- a/arch/arm/boot/dts/rk3188.dtsi
-+++ b/arch/arm/boot/dts/rk3188.dtsi
-@@ -106,6 +106,22 @@
- 		};
- 	};
+Agree.
  
-+	timer3: timer@2000e000 {
-+		compatible = "rockchip,rk3188-timer", "rockchip,rk3288-timer";
-+		reg = <0x2000e000 0x20>;
-+		interrupts = <GIC_SPI 46 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&cru SCLK_TIMER3>, <&cru PCLK_TIMER3>;
-+		clock-names = "timer", "pclk";
-+	};
-+
-+	timer6: timer@200380a0 {
-+		compatible = "rockchip,rk3188-timer", "rockchip,rk3288-timer";
-+		reg = <0x200380a0 0x20>;
-+		interrupts = <GIC_SPI 64 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&cru SCLK_TIMER6>, <&cru PCLK_TIMER0>;
-+		clock-names = "timer", "pclk";
-+	};
-+
- 	i2s0: i2s@1011a000 {
- 		compatible = "rockchip,rk3188-i2s", "rockchip,rk3066-i2s";
- 		reg = <0x1011a000 0x2000>;
+> > +	struct hi655x_clk *hi655x_clk;
+> > +	const char *clk_name = "hi655x-clk";
+> > +	int ret;
+> > +
+> > +	hi655x_clk = devm_kzalloc(&pdev->dev, sizeof(*hi655x_clk), GFP_KERNEL);
+> > +	if (!hi655x_clk)
+> > +		return -ENOMEM;
+> > +
+> > +	hi655x_clk_init = devm_kzalloc(&pdev->dev, sizeof(*hi655x_clk_init),
+> > +				       GFP_KERNEL);
+> > +	if (!hi655x_clk_init)
+> > +		return -ENOMEM;
+> > +
+> > +	of_property_read_string_index(parent->of_node, "clock-output-names",
+> > +				      0, &clk_name);
+> > +
+> > +	hi655x_clk_init->name	= clk_name;
+> > +	hi655x_clk_init->ops	= &hi655x_clk_ops;
+> > +
+> > +	hi655x_clk->clk_hw.init	= hi655x_clk_init;
+> > +	hi655x_clk->hi655x	= hi655x;
+> > +
+> > +	platform_set_drvdata(pdev, hi655x_clk);
+> > +
+> > +	ret = devm_clk_hw_register(&pdev->dev, &hi655x_clk->clk_hw);
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	ret = of_clk_add_hw_provider(parent->of_node, of_clk_hw_simple_get,
+> > +				     &hi655x_clk->clk_hw);
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	ret = clk_hw_register_clkdev(&hi655x_clk->clk_hw, clk_name, NULL);
+> 
+> Missed this last time. Do you use this clkdev lookup? The name is
+> usually supposed to be based on what the device is expecting,
+> instead of clk_name, and we would want some device name for the
+> third argument here.
+
+I'm not sure to get your comment. Are you saying the clk_name should be the
+third argument?
+
+
 -- 
-2.7.4
+
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
