@@ -1,13 +1,13 @@
 From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Subject: [PATCH v4 10/11] ARM: dts: sun8i: add pinmux for LCD
- pins of V3s SoC
-Date: Sun, 16 Apr 2017 20:08:48 +0800
-Message-ID: <20170416120849.54542-11-icenowy@aosc.io>
+Subject: [PATCH v4 11/11] [DO NOT MERGE] ARM: dts: sun8i: enable
+ LCD panel of Lichee Pi Zero
+Date: Sun, 16 Apr 2017 20:08:49 +0800
+Message-ID: <20170416120849.54542-12-icenowy@aosc.io>
 References: <20170416120849.54542-1-icenowy@aosc.io>
 Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDS6XAN6ZADRBD57ZXDQKGQEPH6UPBY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBDS6XAN6ZADRBHF7ZXDQKGQE5SXPDKI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20170416120849.54542-1-icenowy-h8G6r0blFSE@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -20,35 +20,71 @@ To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard
 Cc: linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Allwinner V3s SoC features a set of pins that have functionality of RGB
-LCD, the pins are at different pin ban than other SoCs.
+A 480x272 QiaoDian QD43003C0-40-7LED panel is available from Lichee Pi.
 
-Add pinctrl node for them.
+This commit connects this panel to Lichee Pi Zero.
+
+Lichee Pi also provides a 800x480 panel without accurate model number,
+so do not merge this patch. It will finally come as device tree overlay.
 
 Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
 ---
- arch/arm/boot/dts/sun8i-v3s.dtsi | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ arch/arm/boot/dts/sun8i-v3s-licheepi-zero.dts | 36 +++++++++++++++++++++++++++
+ 1 file changed, 36 insertions(+)
 
-diff --git a/arch/arm/boot/dts/sun8i-v3s.dtsi b/arch/arm/boot/dts/sun8i-v3s.dtsi
-index ae23746731a8..ac783a8a4fd3 100644
---- a/arch/arm/boot/dts/sun8i-v3s.dtsi
-+++ b/arch/arm/boot/dts/sun8i-v3s.dtsi
-@@ -297,6 +297,15 @@
- 				function = "i2c0";
- 			};
- 
-+			lcd_rgb666_pins: lcd_rgb666@0 {
-+				pins = "PE0", "PE1", "PE2", "PE3", "PE4",
-+				       "PE5", "PE6", "PE7", "PE8", "PE9",
-+				       "PE10", "PE11", "PE12", "PE13", "PE14",
-+				       "PE15", "PE16", "PE17", "PE18", "PE19",
-+				       "PE23", "PE24";
-+				function = "lcd";
-+			};
+diff --git a/arch/arm/boot/dts/sun8i-v3s-licheepi-zero.dts b/arch/arm/boot/dts/sun8i-v3s-licheepi-zero.dts
+index 387fc2aa546d..7ae72bf63cd0 100644
+--- a/arch/arm/boot/dts/sun8i-v3s-licheepi-zero.dts
++++ b/arch/arm/boot/dts/sun8i-v3s-licheepi-zero.dts
+@@ -75,6 +75,28 @@
+ 			gpios = <&pio 6 2 GPIO_ACTIVE_LOW>; /* PG2 */
+ 		};
+ 	};
 +
- 			uart0_pins_a: uart0@0 {
- 				pins = "PB8", "PB9";
- 				function = "uart0";
++	panel: panel {
++		compatible = "qiaodian,qd43003c0-40", "simple-panel";
++		enable-gpios = <&pio 1 4 GPIO_ACTIVE_HIGH>; /* Should be backlight */
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		port@0 {
++			reg = <0>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			panel_input: endpoint@0 {
++				reg = <0>;
++				remote-endpoint = <&tcon0_out_lcd>;
++			};
++		};
++	};
++};
++
++&de {
++	status = "okay";
+ };
+ 
+ &mmc0 {
+@@ -86,6 +108,20 @@
+ 	status = "okay";
+ };
+ 
++&tcon0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&lcd_rgb666_pins>;
++	status = "okay";
++
++};
++
++&tcon0_out {
++	tcon0_out_lcd: endpoint@0 {
++		reg = <0>;
++		remote-endpoint = <&panel_input>;
++	};
++};
++
+ &uart0 {
+ 	pinctrl-0 = <&uart0_pins_a>;
+ 	pinctrl-names = "default";
 -- 
 2.12.2
