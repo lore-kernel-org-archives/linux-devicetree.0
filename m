@@ -1,90 +1,108 @@
-From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Subject: [PATCH v4 11/11] [DO NOT MERGE] ARM: dts: sun8i: enable
- LCD panel of Lichee Pi Zero
-Date: Sun, 16 Apr 2017 20:08:49 +0800
-Message-ID: <20170416120849.54542-12-icenowy@aosc.io>
-References: <20170416120849.54542-1-icenowy@aosc.io>
-Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
+From: Cyrille Pitchen <cyrille.pitchen@wedev4u.fr>
+Subject: Re: [PATCH v4 1/2] dt-bindings: Document the STM32 QSPI bindings
+Date: Sun, 16 Apr 2017 18:53:06 +0200
+Message-ID: <b62272c9-027c-9c9b-42f0-1056d88aac7c@wedev4u.fr>
+References: <1492103757-22375-1-git-send-email-ludovic.Barre@st.com>
+ <1492103757-22375-2-git-send-email-ludovic.Barre@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDS6XAN6ZADRBHF7ZXDQKGQE5SXPDKI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20170416120849.54542-1-icenowy-h8G6r0blFSE@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-Cc: linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+In-Reply-To: <1492103757-22375-2-git-send-email-ludovic.Barre@st.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: Ludovic Barre <ludovic.Barre@st.com>, Cyrille Pitchen <cyrille.pitchen@atmel.com>, Marek Vasut <marek.vasut@gmail.com>
+Cc: Boris Brezillon <boris.brezillon@free-electrons.com>, Alexandre Torgue <alexandre.torgue@st.com>, devicetree@vger.kernel.org, Richard Weinberger <richard@nod.at>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-mtd@lists.infradead.org, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-A 480x272 QiaoDian QD43003C0-40-7LED panel is available from Lichee Pi.
+Hi all,
 
-This commit connects this panel to Lichee Pi Zero.
+Rob, is this version ok for you? If so, I can take it into the
+github/spi-nor tree.
 
-Lichee Pi also provides a 800x480 panel without accurate model number,
-so do not merge this patch. It will finally come as device tree overlay.
+Best regards,
 
-Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
----
- arch/arm/boot/dts/sun8i-v3s-licheepi-zero.dts | 36 +++++++++++++++++++++++++++
- 1 file changed, 36 insertions(+)
+Cyrille
 
-diff --git a/arch/arm/boot/dts/sun8i-v3s-licheepi-zero.dts b/arch/arm/boot/dts/sun8i-v3s-licheepi-zero.dts
-index 387fc2aa546d..7ae72bf63cd0 100644
---- a/arch/arm/boot/dts/sun8i-v3s-licheepi-zero.dts
-+++ b/arch/arm/boot/dts/sun8i-v3s-licheepi-zero.dts
-@@ -75,6 +75,28 @@
- 			gpios = <&pio 6 2 GPIO_ACTIVE_LOW>; /* PG2 */
- 		};
- 	};
-+
-+	panel: panel {
-+		compatible = "qiaodian,qd43003c0-40", "simple-panel";
-+		enable-gpios = <&pio 1 4 GPIO_ACTIVE_HIGH>; /* Should be backlight */
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		port@0 {
-+			reg = <0>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			panel_input: endpoint@0 {
-+				reg = <0>;
-+				remote-endpoint = <&tcon0_out_lcd>;
-+			};
-+		};
-+	};
-+};
-+
-+&de {
-+	status = "okay";
- };
- 
- &mmc0 {
-@@ -86,6 +108,20 @@
- 	status = "okay";
- };
- 
-+&tcon0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&lcd_rgb666_pins>;
-+	status = "okay";
-+
-+};
-+
-+&tcon0_out {
-+	tcon0_out_lcd: endpoint@0 {
-+		reg = <0>;
-+		remote-endpoint = <&panel_input>;
-+	};
-+};
-+
- &uart0 {
- 	pinctrl-0 = <&uart0_pins_a>;
- 	pinctrl-names = "default";
--- 
-2.12.2
+Le 13/04/2017 =E0 19:15, Ludovic Barre a =E9crit :
+> From: Ludovic Barre <ludovic.barre@st.com>
+> =
+
+> This patch adds documentation of device tree bindings for the STM32
+> QSPI controller.
+> =
+
+> Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
+> ---
+>  .../devicetree/bindings/mtd/stm32-quadspi.txt      | 43 ++++++++++++++++=
+++++++
+>  1 file changed, 43 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mtd/stm32-quadspi.t=
+xt
+> =
+
+> diff --git a/Documentation/devicetree/bindings/mtd/stm32-quadspi.txt b/Do=
+cumentation/devicetree/bindings/mtd/stm32-quadspi.txt
+> new file mode 100644
+> index 0000000..ddd18c1
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mtd/stm32-quadspi.txt
+> @@ -0,0 +1,43 @@
+> +* STMicroelectronics Quad Serial Peripheral Interface(QuadSPI)
+> +
+> +Required properties:
+> +- compatible: should be "st,stm32f469-qspi"
+> +- reg: the first contains the register location and length.
+> +       the second contains the memory mapping address and length
+> +- reg-names: should contain the reg names "qspi" "qspi_mm"
+> +- interrupts: should contain the interrupt for the device
+> +- clocks: the phandle of the clock needed by the QSPI controller
+> +- A pinctrl must be defined to set pins in mode of operation for QSPI tr=
+ansfer
+> +
+> +Optional properties:
+> +- resets: must contain the phandle to the reset controller.
+> +
+> +A spi flash must be a child of the nor_flash node and could have some
+> +properties. Also see jedec,spi-nor.txt.
+> +
+> +Required properties:
+> +- reg: chip-Select number (QSPI controller may connect 2 nor flashes)
+> +- spi-max-frequency: max frequency of spi bus
+> +
+> +Optional property:
+> +- spi-rx-bus-width: see ../spi/spi-bus.txt for the description
+> +
+> +Example:
+> +
+> +qspi: spi@a0001000 {
+> +	compatible =3D "st,stm32f469-qspi";
+> +	reg =3D <0xa0001000 0x1000>, <0x90000000 0x10000000>;
+> +	reg-names =3D "qspi", "qspi_mm";
+> +	interrupts =3D <91>;
+> +	resets =3D <&rcc STM32F4_AHB3_RESET(QSPI)>;
+> +	clocks =3D <&rcc 0 STM32F4_AHB3_CLOCK(QSPI)>;
+> +	pinctrl-names =3D "default";
+> +	pinctrl-0 =3D <&pinctrl_qspi0>;
+> +
+> +	flash@0 {
+> +		reg =3D <0>;
+> +		spi-rx-bus-width =3D <4>;
+> +		spi-max-frequency =3D <108000000>;
+> +		...
+> +	};
+> +};
+> =
+
+
+
+______________________________________________________
+Linux MTD discussion mailing list
+http://lists.infradead.org/mailman/listinfo/linux-mtd/
