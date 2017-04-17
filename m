@@ -1,118 +1,133 @@
-From: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
-Subject: [PATCH 12/13] Documentation: DT: MIPS: lantiq: Add docs for the RCU bindings
-Date: Mon, 17 Apr 2017 21:29:41 +0200
-Message-ID: <20170417192942.32219-13-hauke@hauke-m.de>
-References: <20170417192942.32219-1-hauke@hauke-m.de>
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170417192942.32219-1-hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
-Cc: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org, john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, hauke.mehrtens-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
+From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH V4 2/3] mtd: add core code reading DT specified part
+ probes
+Date: Mon, 17 Apr 2017 21:31:28 +0200
+Message-ID: <20170417213128.0d56f033@bbrezillon>
+References: <20170331114016.26858-1-zajec5@gmail.com>
+        <20170417182853.24281-1-zajec5@gmail.com>
+        <20170417182853.24281-2-zajec5@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170417182853.24281-2-zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+On Mon, 17 Apr 2017 20:28:52 +0200
+Rafał Miłecki <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
 
-This adds the initial documentation for the RCU module (a MFD device
-which provides USB PHYs, reset controllers and more).
+> From: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+> 
+> Handling (creating) partitions for flash devices requires using a proper
+> driver that will read partition table (out of somewhere). We can't
+> simply try all existing drivers one by one:
+> 1) It would increase boot time
+> 2) The order could be a problem
+> 3) In some corner cases parsers could misinterpret some data as a table
+> Due to this MTD subsystem allows drivers to specify a list of applicable
+> part probes.
+> 
+> So far physmap_of was the only driver with support for linux,part-probe
+> DT property. Other ones had list or probes hardcoded which wasn't making
+> them really flexible. It prevented using common flash drivers on
+> platforms that required some specific partition table access.
+> 
+> This commit adds support for mentioned DT property directly to the MTD
+> core. It's a rewritten implementation of physmap_of's code and it makes
+> original code obsolete. Thanks to calling it on device parse
+> registration (as suggested by Boris) all drivers gain support for it for
+> free.
+> 
+> Signed-off-by: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+> ---
+> V4: Rename of functions
+>     Add comment to the of_get_mtd_part_probes
+>     Simplify mtd_device_parse_register changes
+>     Thanks Boris for help on all above!
+> ---
+>  drivers/mtd/mtdcore.c | 34 ++++++++++++++++++++++++++++++++++
+>  1 file changed, 34 insertions(+)
+> 
+> diff --git a/drivers/mtd/mtdcore.c b/drivers/mtd/mtdcore.c
+> index 66a9dedd1062..07b07de7e080 100644
+> --- a/drivers/mtd/mtdcore.c
+> +++ b/drivers/mtd/mtdcore.c
+> @@ -664,6 +664,33 @@ static void mtd_set_dev_defaults(struct mtd_info *mtd)
+>  	}
+>  }
+>  
+> +static const char * const *of_get_mtd_part_probes(struct device_node *np)
+> +{
+> +	const char **res;
+> +	int count;
+> +
+> +	count = of_property_count_strings(np, "linux,part-probe");
+> +	if (count < 0)
+> +		return NULL;
+> +
+> +	/* This looks common: consider helper function if copying */
+> +	res = kzalloc((count + 1) * sizeof(*res), GFP_KERNEL);
+> +	if (!res)
+> +		return NULL;
+> +
+> +	count = of_property_read_string_array(np, "linux,part-probe", res,
+> +					      count);
+> +	if (count < 0)
+> +		return NULL;
+> +
+> +	return res;
+> +}
+> +
+> +static void of_free_mtd_part_probes(const char * const *probes)
+> +{
+> +	kfree(probes);
+> +}
+> +
+>  /**
+>   * mtd_device_parse_register - parse partitions and register an MTD device.
+>   *
+> @@ -698,11 +725,16 @@ int mtd_device_parse_register(struct mtd_info *mtd, const char * const *types,
+>  			      const struct mtd_partition *parts,
+>  			      int nr_parts)
+>  {
+> +	const char * const *part_probe_types;
 
-Signed-off-by: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
----
- .../devicetree/bindings/mips/lantiq/rcu.txt        | 82 ++++++++++++++++++++++
- 1 file changed, 82 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mips/lantiq/rcu.txt
+One last thing: can we rename this variable of_part_probe_types?
 
-diff --git a/Documentation/devicetree/bindings/mips/lantiq/rcu.txt b/Documentation/devicetree/bindings/mips/lantiq/rcu.txt
-new file mode 100644
-index 000000000000..9e5b1e7493e4
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mips/lantiq/rcu.txt
-@@ -0,0 +1,82 @@
-+Lantiq XWAY SoC RCU binding
-+===========================
-+
-+This binding describes the RCU (reset controller unit) multifunction device,
-+where each sub-device has it's own set of registers.
-+
-+
-+-------------------------------------------------------------------------------
-+Required properties:
-+- compatible	: The first and second values must be: "simple-mfd", "syscon"
-+- reg		: The address and length of the system control registers
-+
-+
-+-------------------------------------------------------------------------------
-+Example of the RCU bindings on a xRX200 SoC:
-+	rcu0: rcu@203000 {
-+		compatible = "simple-mfd", "syscon";
-+		reg = <0x203000 0x100>;
-+		big-endian;
-+
-+		gphy0: rcu_gphy@0 {
-+			compatible = "lantiq,xrx200a2x-rcu-gphy";
-+			lantiq,rcu-syscon = <&rcu0 0x20>;
-+			resets = <&rcu_reset0 31>;
-+			reset-names = "gphy";
-+			lantiq,gphy-mode = <GPHY_MODE_GE>;
-+			clocks = <&pmu0 XRX200_PMU_GATE_GPHY>;
-+			clock-names = "gphy";
-+		};
-+
-+		gphy1: rcu_gphy@1 {
-+			compatible = "lantiq,xrx200a2x-rcu-gphy";
-+			lantiq,rcu-syscon = <&rcu0 0x68>;
-+			resets = <&rcu_reset0 29>;
-+			reset-names = "gphy";
-+			lantiq,gphy-mode = <GPHY_MODE_FE>;
-+			clocks = <&pmu0 XRX200_PMU_GATE_GPHY>;
-+			clock-names = "gphy";
-+		};
-+
-+		rcu_reset0: rcu_reset@0 {
-+			compatible = "lantiq,rcu-reset";
-+			lantiq,rcu-syscon = <&rcu0 0x10 0x14>;
-+			#reset-cells = <1>;
-+			reset-request = <31>, <29>, <21>, <19>, <16>, <12>;
-+			reset-status  = <30>, <28>, <16>, <25>, <5>,  <24>;
-+		};
-+
-+		rcu_reset1: rcu_reset@1 {
-+			compatible = "lantiq,rcu-reset";
-+			lantiq,rcu-syscon = <&rcu0 0x48 0x24>;
-+			#reset-cells = <1>;
-+		};
-+
-+		usb_phys0: rcu-usb2-phy@0 {
-+			compatible = "lantiq,xrx200-rcu-usb2-phy";
-+
-+			lantiq,rcu-syscon = <&rcu0 0x18 0x38>;
-+			resets = <&rcu_reset1 4>, <&rcu_reset0 4>;
-+			reset-names = "phy", "ctrl";
-+			#phy-cells = <0>;
-+		};
-+
-+		usb_phys1: rcu-usb2-phy@1 {
-+			compatible = "lantiq,xrx200-rcu-usb2-phy";
-+
-+			lantiq,rcu-syscon = <&rcu0 0x34 0x3C>;
-+			resets = <&rcu_reset1 5>, <&rcu_reset0 4>;
-+			reset-names = "phy", "ctrl";
-+			#phy-cells = <0>;
-+		};
-+
-+		reboot {
-+			compatible = "syscon-reboot";
-+			regmap = <&rcu0>;
-+			offset = <0x10>;
-+			mask = <0x40000000>;
-+		};
-+
-+		/* more sub-device nodes (USB PHY, etc.) */
-+	};
-+
--- 
-2.11.0
+With this addressed,
+
+Acked-by: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+
+Thanks,
+
+Boris
+
+>  	struct mtd_partitions parsed;
+>  	int ret;
+>  
+>  	mtd_set_dev_defaults(mtd);
+>  
+> +	part_probe_types = of_get_mtd_part_probes(mtd_get_of_node(mtd));
+> +	if (part_probe_types)
+> +		types = part_probe_types;
+> +
+>  	memset(&parsed, 0, sizeof(parsed));
+>  
+>  	ret = parse_mtd_partitions(mtd, types, &parsed, parser_data);
+> @@ -720,6 +752,8 @@ int mtd_device_parse_register(struct mtd_info *mtd, const char * const *types,
+>  		memset(&parsed, 0, sizeof(parsed));
+>  	}
+>  
+> +	of_free_mtd_part_probes(part_probe_types);
+> +
+>  	ret = mtd_add_device_partitions(mtd, &parsed);
+>  	if (ret)
+>  		goto out;
 
 --
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
