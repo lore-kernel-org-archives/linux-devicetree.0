@@ -1,64 +1,58 @@
-From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Subject: [PATCH 3/3] iio: adc: meson-saradc: mark all meson_sar_adc_data static and const
-Date: Mon, 17 Apr 2017 20:28:20 +0200
-Message-ID: <20170417182820.26670-4-martin.blumenstingl@googlemail.com>
-References: <20170417182820.26670-1-martin.blumenstingl@googlemail.com>
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170417182820.26670-1-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+From: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH V4 1/3] dt-bindings: mtd: document linux,part-probe property
+Date: Mon, 17 Apr 2017 20:28:51 +0200
+Message-ID: <20170417182853.24281-1-zajec5@gmail.com>
+References: <20170331114016.26858-1-zajec5@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170331114016.26858-1-zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-These are only passed as of_device_id.data and never modified. Thus we
-can mark them as static const, just like the of_device_id instances
-where they are used.
+From: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
 
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Support for this property has been introduced in 2010 with commit
+9d5da3a9b849 ("mtd: extend physmap_of to let the device tree specify the
+parition probe") but it was never documented. Fix this by adding a
+proper description and example.
+
+Signed-off-by: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Acked-by: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 ---
- drivers/iio/adc/meson_saradc.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ Documentation/devicetree/bindings/mtd/common.txt | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/drivers/iio/adc/meson_saradc.c b/drivers/iio/adc/meson_saradc.c
-index cf13691009ee..8f742b71b165 100644
---- a/drivers/iio/adc/meson_saradc.c
-+++ b/drivers/iio/adc/meson_saradc.c
-@@ -843,31 +843,31 @@ static const struct iio_info meson_sar_adc_iio_info = {
- 	.driver_module = THIS_MODULE,
- };
+diff --git a/Documentation/devicetree/bindings/mtd/common.txt b/Documentation/devicetree/bindings/mtd/common.txt
+index fc068b923d7a..1ada70e718b2 100644
+--- a/Documentation/devicetree/bindings/mtd/common.txt
++++ b/Documentation/devicetree/bindings/mtd/common.txt
+@@ -6,10 +6,17 @@ Optional properties:
+   controller based name) in order to ease flash device identification
+   and/or describe what they are used for.
  
--struct meson_sar_adc_data meson_sar_adc_meson8_data = {
-+static const struct meson_sar_adc_data meson_sar_adc_meson8_data = {
- 	.has_bl30_integration = false,
- 	.resolution = 10,
- 	.name = "meson-meson8b-saradc",
- };
++- linux,part-probe: if present, this property should contain a list of strings
++  with partition probes to be used for the flash device. A role of partition
++  probe (parser) is to read/construct partition table and register found
++  partitions. Getting partition table may be platform or device specific so
++  various devices may use various Linux drivers for this purpose.
++
+ Example:
  
--struct meson_sar_adc_data meson_sar_adc_meson8b_data = {
-+static const struct meson_sar_adc_data meson_sar_adc_meson8b_data = {
- 	.has_bl30_integration = false,
- 	.resolution = 10,
- 	.name = "meson-meson8b-saradc",
- };
+ 	flash@0 {
+ 		label = "System-firmware";
++		linux,part-probe = "cmdlinepart", "ofpart";
  
--struct meson_sar_adc_data meson_sar_adc_gxbb_data = {
-+static const struct meson_sar_adc_data meson_sar_adc_gxbb_data = {
- 	.has_bl30_integration = true,
- 	.resolution = 10,
- 	.name = "meson-gxbb-saradc",
- };
- 
--struct meson_sar_adc_data meson_sar_adc_gxl_data = {
-+static const struct meson_sar_adc_data meson_sar_adc_gxl_data = {
- 	.has_bl30_integration = true,
- 	.resolution = 12,
- 	.name = "meson-gxl-saradc",
- };
- 
--struct meson_sar_adc_data meson_sar_adc_gxm_data = {
-+static const struct meson_sar_adc_data meson_sar_adc_gxm_data = {
- 	.has_bl30_integration = true,
- 	.resolution = 12,
- 	.name = "meson-gxm-saradc",
+ 		/* flash type specific properties */
+ 	};
 -- 
-2.12.2
+2.11.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
