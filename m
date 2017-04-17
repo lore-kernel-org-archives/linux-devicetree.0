@@ -1,53 +1,53 @@
-From: Guochun Mao <guochun.mao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v1 1/1] mtd: mtk-nor: set controller's address width
- according to nor flash
-Date: Mon, 17 Apr 2017 11:34:32 +0800
-Message-ID: <1492400072.2866.39.camel@mhfsdcap03>
-References: <1491381462-21893-1-git-send-email-guochun.mao@mediatek.com>
-         <1491381462-21893-2-git-send-email-guochun.mao@mediatek.com>
-         <e9eafca3-41a0-7e88-996b-9d1c51f0c132@wedev4u.fr>
-         <1492051237.2866.36.camel@mhfsdcap03>
-         <3cf1c63e-c56f-2f07-9d16-7ec346758dfa@wedev4u.fr>
-         <e78dba15-80d0-f2c3-c963-a7eb033af58d@wedev4u.fr>
+From: <nkosuta-f+iqBESB6gc@public.gmane.org>
+Subject: (unknown)
+Date: Mon, 17 Apr 2017 04:06:22 -0000
+Message-ID: <149240198207.20709.17624624368542332929@173-164-33-177-colorado.hfc.comcastbusiness.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: application/zip; name="$MONEY-52123352603-devicetree.zip"
+Content-Transfer-Encoding: base64
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <e78dba15-80d0-f2c3-c963-a7eb033af58d-yU5RGvR974pGWvitb5QawA@public.gmane.org>
+Content-Disposition: attachment
+Subject: 
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Cyrille Pitchen <cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Cyrille,
-
-On Sun, 2017-04-16 at 19:18 +0200, Cyrille Pitchen wrote:
-> Le 13/04/2017 à 10:24, Cyrille Pitchen a écrit :
-> > Hi Guochun,
-> > 
-> > Le 13/04/2017 à 04:40, Guochun Mao a écrit :
-> >> Hi Cyrille,
-> >>
-> >> On Wed, 2017-04-12 at 22:57 +0200, Cyrille Pitchen wrote:
-> >>> Hi Guochun,
-> >>>
-> >>> Le 05/04/2017 à 10:37, Guochun Mao a écrit :
-> >>>> When nor's size larger than 16MByte, nor's address width maybe
-> >>>> set to 3 or 4, and controller should change address width according
-> >>>> to nor's setting.
-> >>>>
-> >>>> Signed-off-by: Guochun Mao <guochun.mao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>st
-> > 
-> > Acked-by: Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-> > 
-> 
-> Applied to github/spi-nor
-
-Thank you very much!
-
-Best regards,
-Guochun
-
+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
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
