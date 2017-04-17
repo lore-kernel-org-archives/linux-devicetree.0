@@ -1,68 +1,147 @@
-Return-Path: <SRS0=ybYS=3O=aosc.io=icenowy@kernel.org>
-Date: Thu, 06 Apr 2017 03:11:38 +0800
-Subject: Re: [RFC PATCH v2 1/4] dt-bindings: update the Allwinner GPADC
- device tree binding for H3
-From: Icenowy Zheng <icenowy@aosc.io>
+Return-Path: <SRS0=bs18=3Z=arcticsand.com=olimpiu@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: base64
-Message-Id: <20170406095534.299945C355D@relay.mailchannels.net>
-To: Rob Herring <robh@kernel.org>
-Cc: Zhang Rui <rui.zhang@intel.com>, linux-sunxi <linux-sunxi@googlegroups.com>, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, Quentin Schulz <quentin.schulz@free-electrons.com>, Lee Jones <lee.jones@linaro.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Jonathan Cameron <jic23@kernel.org>, linux-arm-kernel@lists.infradead.org, Chen-Yu Tsai <wens@csie.org>
+In-Reply-To: <ea774441-7f41-b784-433c-4c5eb4b3f30d@linaro.org>
+References: <201703172233.osJjGFrP%fengguang.wu@intel.com> <1489607133-7870-3-git-send-email-olimpiu@arcticsand.com>
+ <20170317144809.GA103304@lkp-hsx03.lkp.intel.com> <CAF-XLWL6KODEkqjN58abz2ieywgZ0BO5enHQJ2jSD5WpX+NSaQ@mail.gmail.com>
+ <ea774441-7f41-b784-433c-4c5eb4b3f30d@linaro.org>
+From: Olimpiu Dejeu <olimpiu@arcticsand.com>
+Date: Mon, 17 Apr 2017 08:57:36 -0400
+Message-ID: <CAF-XLWL_w3OqafbLzcM=kOkS1nPb0VSCAyDaudQh2UwE4Gw0gg@mail.gmail.com>
+Subject: Re: [PATCH] fix ptr_ret.cocci warnings
+Content-Type: multipart/alternative; boundary=001a1142958ae52be2054d5c5546
+To: Daniel Thompson <daniel.thompson@linaro.org>
+Cc: kbuild test robot <lkp@intel.com>, fengguang.wu@intel.com, kbuild-all@01.org, Rob Herring <robh@kernel.org>, Lee Jones <lee.jones@linaro.org>, linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org, jingoohan1@gmail.com, Brian Dodge <bdodge@arcticsand.com>, joe@perches.com, Matthew D'Asaro <medasaro@arcticsand.com>
 List-ID: <devicetree@vger.kernel.org>
 
-CjIwMTflubQ05pyINuaXpSAwMzowNOS6jiBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3JnPuWG
-memBk++8mgo+Cj4gT24gVHVlLCBBcHIgNCwgMjAxNyBhdCAxMDowMiBBTSwgSWNlbm93eSBaaGVu
-ZyA8aWNlbm93eUBhb3NjLmlvPiB3cm90ZTogCj4gPiAKPiA+IAo+ID4g5ZyoIDIwMTflubQwNOac
-iDA05pelIDIyOjQ3LCBSb2IgSGVycmluZyDlhpnpgZM6IAo+ID4+IAo+ID4+IE9uIFN1biwgQXBy
-IDAyLCAyMDE3IGF0IDA5OjMzOjAxUE0gKzA4MDAsIEljZW5vd3kgWmhlbmcgd3JvdGU6IAo+ID4+
-PiAKPiA+Pj4gQWxsd2lubmVyIEgzIGZlYXR1cmVzIGEgdGhlcm1hbCBzZW5zb3IgbGlrZSB0aGUg
-b25lIGluIEEzMywgYnV0IGhhcyBpdHMgCj4gPj4+IHJlZ2lzdGVyIHJlLWFycmFuZ2VkLCB0aGUg
-Y2xvY2sgZGl2aWRlciBtb3ZlZCB0byBDQ1UgKG9yaWdpbmFsbHkgdGhlIAo+ID4+PiBjbG9jayBk
-aXZpZGVyIGlzIGluIEFEQykgYW5kIGFkZGVkIGEgcGFpciBvZiBidXMgY2xvY2sgYW5kIHJlc2V0
-LiAKPiA+Pj4gCj4gPj4+IFVwZGF0ZSB0aGUgYmluZGluZyBkb2N1bWVudCB0byBjb3ZlciBIMy4g
-Cj4gPj4+IAo+ID4+PiBTaWduZWQtb2ZmLWJ5OiBJY2Vub3d5IFpoZW5nIDxpY2Vub3d5QGFvc2Mu
-aW8+IAo+ID4+PiAtLS0gCj4gPj4+wqAgLi4uL2RldmljZXRyZWUvYmluZGluZ3MvbWZkL3N1bjRp
-LWdwYWRjLnR4dMKgwqDCoMKgwqDCoMKgIHwgMjMgCj4gPj4+ICsrKysrKysrKysrKysrKysrKysr
-LS0gCj4gPj4+wqAgMSBmaWxlIGNoYW5nZWQsIDIxIGluc2VydGlvbnMoKyksIDIgZGVsZXRpb25z
-KC0pIAo+ID4+PiAKPiA+Pj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
-aW5kaW5ncy9tZmQvc3VuNGktZ3BhZGMudHh0IAo+ID4+PiBiL0RvY3VtZW50YXRpb24vZGV2aWNl
-dHJlZS9iaW5kaW5ncy9tZmQvc3VuNGktZ3BhZGMudHh0IAo+ID4+PiBpbmRleCBiYWRmZjM2MTFh
-OTguLjc3NTMxMzNjYTBmZiAxMDA2NDQgCj4gPj4+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNl
-dHJlZS9iaW5kaW5ncy9tZmQvc3VuNGktZ3BhZGMudHh0IAo+ID4+PiArKysgYi9Eb2N1bWVudGF0
-aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbWZkL3N1bjRpLWdwYWRjLnR4dCAKPiA+Pj4gQEAgLTQs
-MTIgKzQsMjAgQEAgVGhlIEFsbHdpbm5lciBTb0NzIGFsbCBoYXZlIGFuIEFEQyB0aGF0IGNhbiBh
-bHNvIGFjdCBhcyAKPiA+Pj4gYSB0aGVybWFsIHNlbnNvciAKPiA+Pj7CoCBhbmQgc29tZXRpbWVz
-IGFzIGEgdG91Y2hzY3JlZW4gY29udHJvbGxlci4gCj4gPj4+IAo+ID4+PsKgIFJlcXVpcmVkIHBy
-b3BlcnRpZXM6IAo+ID4+PiAtwqAgLSBjb21wYXRpYmxlOiAiYWxsd2lubmVyLHN1bjhpLWEzMy10
-aHMiLCAKPiA+Pj4gK8KgIC0gY29tcGF0aWJsZTogbXVzdCBjb250YWluIG9uZSBvZiB0aGUgZm9s
-bG93aW5nIGNvbXBhdGlibGVzOiAKPiA+Pj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAg
-LSAiYWxsd2lubmVyLHN1bjhpLWEzMy10aHMiIAo+ID4+PiArwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoCAtICJhbGx3aW5uZXIsc3VuOGktaDMtdGhzIiAKPiA+Pj7CoMKgwqAgLSByZWc6IG1t
-aW8gYWRkcmVzcyByYW5nZSBvZiB0aGUgY2hpcCwgCj4gPj4+wqDCoMKgIC0gI3RoZXJtYWwtc2Vu
-c29yLWNlbGxzOiBzaGFsbCBiZSAwLCAKPiA+Pj7CoMKgwqAgLSAjaW8tY2hhbm5lbC1jZWxsczog
-c2hhbGwgYmUgMCwgCj4gPj4+IAo+ID4+PiAtRXhhbXBsZTogCj4gPj4+ICtSZXF1aXJlZCBwcm9w
-ZXJ0aWVzIGZvciB0aGUgZm9sbG93aW5nIGNvbXBhdGlibGVzOiAKPiA+Pj4gK8KgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqAgLSAiYWxsd2lubmVyLHN1bjhpLWgzLXRocyIgCj4gPj4+ICvCoCAt
-IGNsb2NrczogdGhlIGJ1cyBjbG9jayBhbmQgdGhlIGlucHV0IGNsb2NrIG9mIHRoZSBBREMsIAo+
-ID4+PiArwqAgLSBjbG9jay1uYW1lczogc2hvdWxkIGJlICJidXMiIGFuZCAidGhzIiwgCj4gPj4+
-ICvCoCAtIHJlc2V0czogdGhlIGJ1cyByZXNldCBvZiB0aGUgQURDLCAKPiA+Pj4gKyAKPiA+Pj4g
-K0V4YW1wbGUgZm9yIEEzMzogCj4gPj4+wqDCoMKgwqDCoMKgwqDCoCB0aHM6IHRoc0AwMWMyNTAw
-MCB7IAo+ID4+PsKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGNvbXBhdGlibGUgPSAi
-YWxsd2lubmVyLHN1bjhpLWEzMy10aHMiOyAKPiA+Pj7CoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoCByZWcgPSA8MHgwMWMyNTAwMCAweDEwMD47IAo+ID4+PiBAQCAtMTcsNiArMjUsMTcg
-QEAgRXhhbXBsZTogCj4gPj4+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgI2lvLWNo
-YW5uZWwtY2VsbHMgPSA8MD47IAo+ID4+PsKgwqDCoMKgwqDCoMKgwqAgfTsgCj4gPj4+IAo+ID4+
-PiArRXhhbXBsZSBmb3IgSDM6IAo+ID4+PiArwqDCoMKgwqDCoMKgIHRoczogdGhzQDAxYzI1MDAw
-IHsgCj4gPj4gCj4gPj4gCj4gPj4gYWRjQC4uLiAKPiA+IAo+ID4gCj4gPiBJdCdzIGEgdGhlcm1h
-bCBzZW5zb3IsIHNvIEkgdGhpbmsgY2FsbCBpdCBUSFMgaXMgbW9yZSBhcHByb3ByaWF0ZSAKPiA+
-IGhlcmUuIEl0J3MgaW1wbGVtZW50ZWQgYXMgYW4gQURDIGRyaXZlciBqdXN0IGJlY2F1c2UgdGhl
-IGludGVybmFsIAo+ID4gY29kZSByZXVzaW5nIG9mIExpbnV4LiBGcm9tIGRldmljZSB0cmVlIGJp
-bmRpbmcgdmlldyBJIGNob29zZSB0byAKPiA+IGNhbGwgaXQgdGhzLiAKPgo+IFRoZXJlJ3MgbnVt
-ZXJvdXMgb2NjdXJyZW5jZXMgaW4gdGhpcyBmaWxlIGFuZCB0aGUgZmlsZW5hbWUgdGhhdCBjYWxs
-IGl0IGFuIEFEQy4gCj4KPiBGdXJ0aGVybW9yZSwgbm9kZSBuYW1lcyBhcmUgc3VwcG9zZWQgdG8g
-YmUgZ2VuZXJpYywgbm90IHBhcnQgIydzIG9yIAo+IHdoYXRldmVyIHlvdSBkZWNpZGUgdG8gbWFr
-ZSB1cC4gU28gcGljayBmcm9tIGFkYyBvciB0ZW1wZXJhdHVyZS1zZW5zb3IgCj4gYXMgdGhvc2Ug
-YXJlIHRoZSBzdGFuZGFyZCBuYW1lcyAuIAoKT0suIEkgd2lsbCBtYWtlIGl0IDoKdGhzOiB0ZW1w
-ZXJhdHVyZS1zZW5zb3JAMWMyNTAwMAoKKENhbGxpbmcgaXQgdGVtcGVyYXR1cmUgc2Vuc29yIGlz
-IGFjY29yZGluZyB0byB0aGUgZGF0YXNoZWV0IG5hbWUpCgo+Cj4gUm9iIAo=
+--001a1142958ae52be2054d5c5546
+Content-Type: text/plain; charset=UTF-8
+
+On Tue, Mar 21, 2017 at 11:07 AM, Daniel Thompson <
+daniel.thompson@linaro.org> wrote:
+
+> On 21/03/17 14:58, Olimpiu Dejeu wrote:
+>
+>> On Fri, Mar 17, 2017 at 10:48 AM, kbuild test robot <lkp@intel.com>
+>> wrote:
+>>
+>>> drivers/video/backlight/arcxcnn_bl.c:183:1-3: WARNING: PTR_ERR_OR_ZERO
+>>> can be used
+>>>
+>>>
+>>>  Use PTR_ERR_OR_ZERO rather than if(IS_ERR(...)) + PTR_ERR
+>>>
+>>> Generated by: scripts/coccinelle/api/ptr_ret.cocci
+>>>
+>>> CC: Olimpiu Dejeu <olimpiu@arcticsand.com>
+>>> Signed-off-by: Fengguang Wu <fengguang.wu@intel.com>
+>>> ---
+>>>
+>>>  arcxcnn_bl.c |    5 +----
+>>>  1 file changed, 1 insertion(+), 4 deletions(-)
+>>>
+>>> --- a/drivers/video/backlight/arcxcnn_bl.c
+>>> +++ b/drivers/video/backlight/arcxcnn_bl.c
+>>> @@ -180,10 +180,7 @@ static int arcxcnn_backlight_register(st
+>>>
+>>>         lp->bl = devm_backlight_device_register(lp->dev, name, lp->dev,
+>>> lp,
+>>>                                        &arcxcnn_bl_ops, props);
+>>> -       if (IS_ERR(lp->bl))
+>>> -               return PTR_ERR(lp->bl);
+>>> -
+>>> -       return 0;
+>>> +       return PTR_ERR_OR_ZERO(lp->bl);
+>>>  }
+>>>
+>>>  static void arcxcnn_parse_dt(struct arcxcnn *lp)
+>>>
+>>
+>> Acked-by: Olimpiu Dejeu <olimpiu@arcticsand.com>
+>>
+>
+> Glad you approve! Could you apply this change and re-post the patch
+> series? Thanks.
+>
+>
+> Daniel.
+>
+>
+Applied change, re-posted series on March 21st. No sure what next. Please
+advise. Thanks.
+
+Olimpiu
+
+--001a1142958ae52be2054d5c5546
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr"><div class=3D"gmail_extra"><div><div class=3D"m_-268199362=
+8849917151gmail_signature" data-smartmail=3D"gmail_signature"><div dir=3D"l=
+tr"><div dir=3D"ltr"><div dir=3D"ltr"><div dir=3D"ltr"><div dir=3D"ltr"><di=
+v dir=3D"ltr"><div dir=3D"ltr"><div dir=3D"ltr"><div dir=3D"ltr"><div><br><=
+/div></div></div></div></div></div></div></div></div></div></div></div><div=
+ class=3D"gmail_quote">On Tue, Mar 21, 2017 at 11:07 AM, Daniel Thompson <s=
+pan dir=3D"ltr">&lt;<a href=3D"mailto:daniel.thompson@linaro.org" target=3D=
+"_blank">daniel.thompson@linaro.org</a>&gt;</span> wrote:<br><blockquote cl=
+ass=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1px #ccc solid;p=
+adding-left:1ex">On 21/03/17 14:58, Olimpiu Dejeu wrote:<br>
+<blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1p=
+x #ccc solid;padding-left:1ex">
+On Fri, Mar 17, 2017 at 10:48 AM, kbuild test robot &lt;<a href=3D"mailto:l=
+kp@intel.com" target=3D"_blank">lkp@intel.com</a>&gt; wrote:<br>
+<blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1p=
+x #ccc solid;padding-left:1ex">
+drivers/video/backlight/arcxcn<wbr>n_bl.c:183:1-3: WARNING: PTR_ERR_OR_ZERO=
+ can be used<br>
+<br>
+<br>
+=C2=A0Use PTR_ERR_OR_ZERO rather than if(IS_ERR(...)) + PTR_ERR<br>
+<br>
+Generated by: scripts/coccinelle/api/ptr_ret<wbr>.cocci<br>
+<br>
+CC: Olimpiu Dejeu &lt;<a href=3D"mailto:olimpiu@arcticsand.com" target=3D"_=
+blank">olimpiu@arcticsand.com</a>&gt;<br>
+Signed-off-by: Fengguang Wu &lt;<a href=3D"mailto:fengguang.wu@intel.com" t=
+arget=3D"_blank">fengguang.wu@intel.com</a>&gt;<br>
+---<br>
+<br>
+=C2=A0arcxcnn_bl.c |=C2=A0 =C2=A0 5 +----<br>
+=C2=A01 file changed, 1 insertion(+), 4 deletions(-)<br>
+<br>
+--- a/drivers/video/backlight/arcx<wbr>cnn_bl.c<br>
++++ b/drivers/video/backlight/arcx<wbr>cnn_bl.c<br>
+@@ -180,10 +180,7 @@ static int arcxcnn_backlight_register(st<br>
+<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 lp-&gt;bl =3D devm_backlight_device_register<wb=
+r>(lp-&gt;dev, name, lp-&gt;dev, lp,<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0&amp;arcx=
+cnn_bl_ops, props);<br>
+-=C2=A0 =C2=A0 =C2=A0 =C2=A0if (IS_ERR(lp-&gt;bl))<br>
+-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0return PTR_ERR(lp-&=
+gt;bl);<br>
+-<br>
+-=C2=A0 =C2=A0 =C2=A0 =C2=A0return 0;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0return PTR_ERR_OR_ZERO(lp-&gt;bl);<br>
+=C2=A0}<br>
+<br>
+=C2=A0static void arcxcnn_parse_dt(struct arcxcnn *lp)<br>
+</blockquote>
+<br>
+Acked-by: Olimpiu Dejeu &lt;<a href=3D"mailto:olimpiu@arcticsand.com" targe=
+t=3D"_blank">olimpiu@arcticsand.com</a>&gt;<br>
+</blockquote>
+<br>
+Glad you approve! Could you apply this change and re-post the patch series?=
+ Thanks.<span class=3D"m_-2681993628849917151HOEnZb"><font color=3D"#888888=
+"><br>
+<br>
+<br>
+Daniel.<br>
+<br>
+</font></span></blockquote></div><br></div><div class=3D"gmail_extra">Appli=
+ed change, re-posted series on March 21st. No sure what next. Please advise=
+. Thanks.</div><div class=3D"gmail_extra"><br></div><div class=3D"gmail_ext=
+ra">Olimpiu=C2=A0</div></div>
+
+--001a1142958ae52be2054d5c5546--
