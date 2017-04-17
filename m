@@ -1,43 +1,42 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH V4 1/9] PM / OPP: Allow OPP table to be used for
- power-domains
-Date: Mon, 17 Apr 2017 11:03:03 +0530
-Message-ID: <20170417053303.GG28191@vireshk-i7>
-References: <cover.1490001099.git.viresh.kumar@linaro.org>
- <e772e67a5445319bb8e0f312846ace666adc097f.1490001099.git.viresh.kumar@linaro.org>
- <468e756b-7112-4006-b31d-9fcf1c32673d@arm.com>
- <20170413055049.GN5910@vireshk-i7>
- <854e3f66-6f93-2b90-14a9-7eaea6a0b74c@arm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <854e3f66-6f93-2b90-14a9-7eaea6a0b74c@arm.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Sudeep Holla <sudeep.holla@arm.com>
-Cc: Rafael Wysocki <rjw@rjwysocki.net>, ulf.hansson@linaro.org, Kevin Hilman <khilman@linaro.org>, Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@codeaurora.org>, linaro-kernel@lists.linaro.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, Vincent Guittot <vincent.guittot@linaro.org>, robh+dt@kernel.org, lina.iyer@linaro.org, rnayak@codeaurora.org, devicetree@vger.kernel.org
+From: Hoegeun Kwon <hoegeun.kwon@samsung.com>
+Subject: [PATCH v2 0/3] Add support for the S6E3HF2 panel on TM2e board
+Date: Mon, 17 Apr 2017 15:02:11 +0900
+Message-ID: <1492408934-22096-1-git-send-email-hoegeun.kwon@samsung.com>
+References: <CGME20170417060217epcas1p167d86ba0e12d461efbab67b0014fa1d2@epcas1p1.samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: thierry.reding@gmail.com, airlied@linux.ie, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, kgene@kernel.org, krzk@kernel.org
+Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, javier@osg.samsung.com, a.hajda@samsung.com, andi.shyti@samsung.com, Hoegeun Kwon <hoegeun.kwon@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On 13-04-17, 14:43, Sudeep Holla wrote:
-> Interesting. My understand of power domain and in particular power
-> domain performance was that it would control both. The abstract number
-> you introduce would hide clocks and regulators.
-> 
-> But if the concept treats it just as yet another regulator, we do we
-> need these at all. Why don't we relate this performance to regulator
-> values and be done with it ?
-> 
-> Sorry if I am missing to understand something here. I would look this as
-> replacement for both clocks and regulators, something similar to ACPI
-> CPPC. If not, it looks unnecessary to me with the information I have got
-> so far.
+Hi all,
 
-I kind of answered that in the other email.
+First, thanks for Andrzej review.
 
-Some background may be good here. So Qcom tried to solve all this with virtual
-regulators, but the problem was that they need to talk in terms of integer
-values (1, 2, 3..) and not voltages and so they can't use the regulator
-framework straight away. And so we are doing all this.
+The purpose of this patch is add support for s6e3hf2 AMOLED panel on
+the TM2e board. The panel has 1600x2560 resolution in 5.65" physical
+panel in the TM2e device.
+
+The s6e3hf2 panel(5.65") is simliar to the previous s6e3ha2 panel(5.7"),
+but resolution and some command message are different. So it can be
+distinguished as a compatiblitiy string.
+
+Best regards,
+Hoegeun
+
+Changes for V2:
+- Add new compatible string to "samsung,s6e3ha2.txt binding with comments.
+- Fix the panel name from s6e3ha2-e to s6e3hf2
+
+Hoegeun Kwon (3):
+  dt-bindings: Add support for samsung s6e3hf2 panel
+  drm/panel: s6e3ha2: Add support for s6e3hf2 panel on TM2e board
+  arm64: dts: exynos: Add support for s6e3hf2 panel device on TM2e board
+
+ .../bindings/display/panel/samsung,s6e3ha2.txt     |  5 +-
+ arch/arm64/boot/dts/exynos/exynos5433-tm2e.dts     | 12 ++++
+ drivers/gpu/drm/panel/panel-samsung-s6e3ha2.c      | 64 +++++++++++++++++++---
+ 3 files changed, 73 insertions(+), 8 deletions(-)
 
 -- 
-viresh
+1.9.1
