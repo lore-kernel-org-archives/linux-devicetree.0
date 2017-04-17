@@ -1,60 +1,44 @@
-From: Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: dra7: Add power hold and power controller
- properties to palmas
-Date: Mon, 17 Apr 2017 11:45:39 +0530
-Message-ID: <5745adc5-1296-a489-4895-b18463b3f346@ti.com>
-References: <1492059081-20124-1-git-send-email-j-keerthy@ti.com>
- <20170414142142.GT5339@atomide.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 2/2] arm64: allwinner: a64: enable
+ EHCI0/OHCI0 for Pine64
+Date: Mon, 17 Apr 2017 09:49:53 +0200
+Message-ID: <20170417074953.ncvuid7jewsylx6f@lukather>
+References: <20170414131555.9431-1-icenowy@aosc.io>
+ <20170414131555.9431-2-icenowy@aosc.io>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170414142142.GT5339-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, t-kristo-l0cyMroinI0@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="yjfr4iyh2lsq2vzw"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBLHH2HDQKGQE7KS4RPA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20170414131555.9431-2-icenowy-h8G6r0blFSE@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
+--yjfr4iyh2lsq2vzw
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
-On Friday 14 April 2017 07:51 PM, Tony Lindgren wrote:
-> * Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org> [170412 21:55]:
->> Add power hold and power controller properties to palmas node.
->> This is needed to shutdown pmic correctly on boards with
->> powerhold set.
+On Fri, Apr 14, 2017 at 09:15:55PM +0800, Icenowy Zheng wrote:
+> As we have USB0 controller switch available on A64, we should now enable
+> the EHCI0/OHCI0 controllers for Pine64.
 > 
-> Is this OK to wait for v4.12 or is this needed as a fix for
-> the -rc series?
+> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
 
-Can wait for v4.12.
+Applied both, thanks!
+Maxime
 
-> 
-> Regards,
-> 
-> Tony
-> 
->> Signed-off-by: Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>
->> ---
->>  arch/arm/boot/dts/dra7-evm.dts | 2 ++
->>  1 file changed, 2 insertions(+)
->>
->> diff --git a/arch/arm/boot/dts/dra7-evm.dts b/arch/arm/boot/dts/dra7-evm.dts
->> index 4bc4b57..31a9e06 100644
->> --- a/arch/arm/boot/dts/dra7-evm.dts
->> +++ b/arch/arm/boot/dts/dra7-evm.dts
->> @@ -204,6 +204,8 @@
->>  	tps659038: tps659038@58 {
->>  		compatible = "ti,tps659038";
->>  		reg = <0x58>;
->> +		ti,palmas-override-powerhold;
->> +		ti,system-power-controller;
->>  
->>  		tps659038_pmic {
->>  			compatible = "ti,tps659038-pmic";
->> -- 
->> 1.9.1
->>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--yjfr4iyh2lsq2vzw--
