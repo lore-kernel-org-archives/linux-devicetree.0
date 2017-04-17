@@ -1,54 +1,61 @@
-From: <nkosuta-f+iqBESB6gc@public.gmane.org>
-Subject: (unknown)
-Date: Mon, 17 Apr 2017 04:06:22 -0000
-Message-ID: <149240198207.20709.17624624368542332929@173-164-33-177-colorado.hfc.comcastbusiness.net>
+From: "Takiguchi, Yasunari" <Yasunari.Takiguchi@sony.com>
+Subject: Re: [PATCH v2 01/15] [dt-bindings] [media] Add document file for
+ CXD2880 SPI I/F
+Date: Mon, 17 Apr 2017 13:58:56 +0900
+Message-ID: <c669e485-41b5-71fe-5ef6-f1a181c168e6@sony.com>
+References: <20170414015043.16731-1-Yasunari.Takiguchi@sony.com>
+ <20170414020041.16897-1-Yasunari.Takiguchi@sony.com>
 Mime-Version: 1.0
-Content-Type: application/zip; name="$MONEY-52123352603-devicetree.zip"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: attachment
-Subject: 
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <20170414020041.16897-1-Yasunari.Takiguchi@sony.com>
+Sender: linux-media-owner@vger.kernel.org
+To: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>
+Cc: "tbird20d@gmail.com" <tbird20d@gmail.com>, "frowand.list@gmail.com" <frowand.list@gmail.com>, "Yamamoto, Masayuki" <Masayuki.Yamamoto@sony.com>, "Nozawa, Hideki (STWN)" <Hideki.Nozawa@sony.com>, "Yonezawa, Kota" <Kota.Yonezawa@sony.com>, "Matsumoto, Toshihiko" <Toshihiko.Matsumoto@sony.com>, "Watanabe, Satoshi (SSS)" <Satoshi.C.Watanabe@sony.com>, yasunari.takiguchi@sony.com
 List-Id: devicetree@vger.kernel.org
 
-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
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> From: Yasunari Takiguchi <Yasunari.Takiguchi@sony.com>
+> 
+> This is the document file for Sony CXD2880 DVB-T2/T tuner + demodulator.
+> It contains the description of the SPI adapter binding.
+> 
+> Signed-off-by: Yasunari Takiguchi <Yasunari.Takiguchi@sony.com>
+> Signed-off-by: Masayuki Yamamoto <Masayuki.Yamamoto@sony.com>
+> Signed-off-by: Hideki Nozawa <Hideki.Nozawa@sony.com>
+> Signed-off-by: Kota Yonezawa <Kota.Yonezawa@sony.com>
+> Signed-off-by: Toshihiko Matsumoto <Toshihiko.Matsumoto@sony.com>
+> Signed-off-by: Satoshi Watanabe <Satoshi.C.Watanabe@sony.com>
+No changes since version 1, I should have carried the ack forward:
+
+Acked-by: Rob Herring <robh@kernel.org>
+
+
+> ---
+>  .../devicetree/bindings/media/spi/sony-cxd2880.txt         | 14 ++++++++++++++
+>  1 file changed, 14 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/spi/sony-cxd2880.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/media/spi/sony-cxd2880.txt b/Documentation/devicetree/bindings/media/spi/sony-cxd2880.txt
+> new file mode 100644
+> index 000000000000..fc5aa263abe5
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/spi/sony-cxd2880.txt
+> @@ -0,0 +1,14 @@
+> +Sony CXD2880 DVB-T2/T tuner + demodulator driver SPI adapter
+> +
+> +Required properties:
+> +- compatible: Should be "sony,cxd2880".
+> +- reg: SPI chip select number for the device.
+> +- spi-max-frequency: Maximum bus speed, should be set to <55000000> (55MHz).
+> +
+> +Example:
+> +
+> +cxd2880@0 {
+> +	compatible = "sony,cxd2880";
+> +	reg = <0>; /* CE0 */
+> +	spi-max-frequency = <55000000>; /* 55MHz */
+> +};
+> 
+
+Takiguchi
