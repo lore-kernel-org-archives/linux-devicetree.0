@@ -1,54 +1,55 @@
-From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Subject: Re: [PATCH V2] PM / OPP: Use - instead of @ for DT entries
-Date: Mon, 17 Apr 2017 18:40:08 +0200
-Message-ID: <6048149.VQXQ7HobDf@aspire.rjw.lan>
-References: <70e7c7ee13722ab9c73cb073f88502eaf1ada5f5.1491816050.git.viresh.kumar@linaro.org> <CAK7LNAQ7Uf1Jkj64-Ykdk5TSeWvkq7=BaqUMJo6KqrN7BhYvsQ@mail.gmail.com> <22966574.2zMrIUgKz4@aspire.rjw.lan>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <22966574.2zMrIUgKz4@aspire.rjw.lan>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Masahiro Yamada <yamada.masahiro@socionext.com>, Viresh Kumar <viresh.kumar@linaro.org>, Rob Herring <robh+dt@kernel.org>
-Cc: Chanwoo Choi <cw00.choi@samsung.com>, MyungJoo Ham <myungjoo.ham@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@codeaurora.org>, =?ISO-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Mark Rutland <mark.rutland@arm.com>, Daniel Mack <daniel@zonque.org>, Haojian Zhuang <haojian.zhuang@gmail.com>, Robert Jarzmik <robert.jarzmik@free.fr>, Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, linaro-kernel@lists.linaro.org, linux-pm@vger.kernel.orgLinux Kernel Mailing List <linux>
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: [PATCH V3 2/2] ARM64: dts: hi6220-hikey: Add clock binding for the pmic mfd
+Date: Mon, 17 Apr 2017 19:19:26 +0200
+Message-ID: <1492449567-31399-2-git-send-email-daniel.lezcano@linaro.org>
+References: <1492449567-31399-1-git-send-email-daniel.lezcano@linaro.org>
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <1492449567-31399-1-git-send-email-daniel.lezcano@linaro.org>
+Sender: linux-clk-owner@vger.kernel.org
+To: sboyd@codeaurora.org, mturquette@baylibre.com
+Cc: lee.jones@linaro.org, xuwei5@hisilicon.com, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Monday, April 17, 2017 06:35:25 PM Rafael J. Wysocki wrote:
-> On Monday, April 17, 2017 11:07:51 AM Masahiro Yamada wrote:
-> > 2017-04-15 7:47 GMT+09:00 Rafael J. Wysocki <rjw@rjwysocki.net>:
-> > > On Monday, April 10, 2017 02:51:35 PM Viresh Kumar wrote:
-> > >> Compiling the DT file with W=1, DTC warns like follows:
-> > >>
-> > >> Warning (unit_address_vs_reg): Node /opp_table0/opp@1000000000 has a
-> > >> unit name, but no reg property
-> > >>
-> > >> Fix this by replacing '@' with '-' as the OPP nodes will never have a
-> > >> "reg" property.
-> > >>
-> > >> Reported-by: Krzysztof Kozlowski <krzk@kernel.org>
-> > >> Reported-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> > >> Suggested-by: Mark Rutland <mark.rutland@arm.com>
-> > >> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
-> > >> Acked-by: Maxime Ripard <maxime.ripard@free-electrons.com> (sunxi)
-> > >> Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
-> > >> Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
-> > >
-> > > OK, so any ACKs from the DT side?  Rob?
-> > >
-> > > Thanks,
-> > > Rafael
-> > 
-> > 
-> > 
-> > I see Rob's Acked-by.
-> > 
-> > https://lkml.org/lkml/2017/4/13/648
-> 
-> Indeed.  Thanks!
+Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+---
+ Documentation/devicetree/bindings/mfd/hisilicon,hi655x.txt | 6 ++++++
+ arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts             | 1 +
+ 2 files changed, 7 insertions(+)
 
-But it doesn't apply on top of -rc7 for me, so I guess there is new 4.12-candidate
-material in the DTS tree that conflicts with this, in which case it is better to route
-it through the DTS tree IMO.
+diff --git a/Documentation/devicetree/bindings/mfd/hisilicon,hi655x.txt b/Documentation/devicetree/bindings/mfd/hisilicon,hi655x.txt
+index 0548569..9630ac0 100644
+--- a/Documentation/devicetree/bindings/mfd/hisilicon,hi655x.txt
++++ b/Documentation/devicetree/bindings/mfd/hisilicon,hi655x.txt
+@@ -16,6 +16,11 @@ Required properties:
+ - reg:                  Base address of PMIC on Hi6220 SoC.
+ - interrupt-controller: Hi655x has internal IRQs (has own IRQ domain).
+ - pmic-gpios:           The GPIO used by PMIC IRQ.
++- #clock-cells:		From common clock binding; shall be set to 0
++
++Optional properties:
++- clock-output-names: From common clock binding to override the
++  default output clock name
+ 
+ Example:
+ 	pmic: pmic@f8000000 {
+@@ -24,4 +29,5 @@ Example:
+ 		interrupt-controller;
+ 		#interrupt-cells = <2>;
+ 		pmic-gpios = <&gpio1 2 GPIO_ACTIVE_HIGH>;
++		#clock-cells = <0>;
+ 	}
+diff --git a/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts b/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
+index dba3c13..e0496f7 100644
+--- a/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
++++ b/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
+@@ -325,6 +325,7 @@
+ 	pmic: pmic@f8000000 {
+ 		compatible = "hisilicon,hi655x-pmic";
+ 		reg = <0x0 0xf8000000 0x0 0x1000>;
++		#clock-cells = <0>;
+ 		interrupt-controller;
+ 		#interrupt-cells = <2>;
+ 		pmic-gpios = <&gpio1 2 GPIO_ACTIVE_HIGH>;
+-- 
+1.9.1
 
-Thanks,
-Rafael
