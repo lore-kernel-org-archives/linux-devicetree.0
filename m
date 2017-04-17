@@ -1,47 +1,60 @@
-From: Hoegeun Kwon <hoegeun.kwon@samsung.com>
-Subject: [PATCH v2 3/3] arm64: dts: exynos: Add support for s6e3hf2 panel
- device on TM2e board
-Date: Mon, 17 Apr 2017 15:02:14 +0900
-Message-ID: <1492408934-22096-4-git-send-email-hoegeun.kwon@samsung.com>
-References: <1492408934-22096-1-git-send-email-hoegeun.kwon@samsung.com>
-        <CGME20170417060220epcas5p42f6ed43d9db94779382e84a129b9da2d@epcas5p4.samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1492408934-22096-1-git-send-email-hoegeun.kwon@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: thierry.reding@gmail.com, airlied@linux.ie, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, kgene@kernel.org, krzk@kernel.org
-Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, javier@osg.samsung.com, a.hajda@samsung.com, andi.shyti@samsung.com, Hoegeun Kwon <hoegeun.kwon@samsung.com>
+From: Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: dra7: Add power hold and power controller
+ properties to palmas
+Date: Mon, 17 Apr 2017 11:45:39 +0530
+Message-ID: <5745adc5-1296-a489-4895-b18463b3f346@ti.com>
+References: <1492059081-20124-1-git-send-email-j-keerthy@ti.com>
+ <20170414142142.GT5339@atomide.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170414142142.GT5339-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, t-kristo-l0cyMroinI0@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch add the panel device tree node for s6e3hf2 display
-controller to TM2e dts.
 
-Signed-off-by: Hoegeun Kwon <hoegeun.kwon@samsung.com>
----
- arch/arm64/boot/dts/exynos/exynos5433-tm2e.dts | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/exynos/exynos5433-tm2e.dts b/arch/arm64/boot/dts/exynos/exynos5433-tm2e.dts
-index 694717a..98ad094 100644
---- a/arch/arm64/boot/dts/exynos/exynos5433-tm2e.dts
-+++ b/arch/arm64/boot/dts/exynos/exynos5433-tm2e.dts
-@@ -52,6 +52,18 @@
- 	assigned-clock-rates = <278000000>, <400000000>;
- };
- 
-+&dsi {
-+	panel@0 {
-+		compatible = "samsung,s6e3hf2";
-+		reg = <0>;
-+		vdd3-supply = <&ldo27_reg>;
-+		vci-supply = <&ldo28_reg>;
-+		reset-gpios = <&gpg0 0 GPIO_ACTIVE_LOW>;
-+		enable-gpios = <&gpf1 5 GPIO_ACTIVE_HIGH>;
-+		te-gpios = <&gpf1 3 GPIO_ACTIVE_HIGH>;
-+	};
-+};
-+
- &ldo31_reg {
- 	regulator-name = "TSP_VDD_1.8V_AP";
- 	regulator-min-microvolt = <1800000>;
--- 
-1.9.1
+On Friday 14 April 2017 07:51 PM, Tony Lindgren wrote:
+> * Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org> [170412 21:55]:
+>> Add power hold and power controller properties to palmas node.
+>> This is needed to shutdown pmic correctly on boards with
+>> powerhold set.
+> 
+> Is this OK to wait for v4.12 or is this needed as a fix for
+> the -rc series?
+
+Can wait for v4.12.
+
+> 
+> Regards,
+> 
+> Tony
+> 
+>> Signed-off-by: Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>
+>> ---
+>>  arch/arm/boot/dts/dra7-evm.dts | 2 ++
+>>  1 file changed, 2 insertions(+)
+>>
+>> diff --git a/arch/arm/boot/dts/dra7-evm.dts b/arch/arm/boot/dts/dra7-evm.dts
+>> index 4bc4b57..31a9e06 100644
+>> --- a/arch/arm/boot/dts/dra7-evm.dts
+>> +++ b/arch/arm/boot/dts/dra7-evm.dts
+>> @@ -204,6 +204,8 @@
+>>  	tps659038: tps659038@58 {
+>>  		compatible = "ti,tps659038";
+>>  		reg = <0x58>;
+>> +		ti,palmas-override-powerhold;
+>> +		ti,system-power-controller;
+>>  
+>>  		tps659038_pmic {
+>>  			compatible = "ti,tps659038-pmic";
+>> -- 
+>> 1.9.1
+>>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
