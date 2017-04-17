@@ -1,228 +1,40 @@
 From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Subject: Re: [PATCH 13/13] MIPS: lantiq: Remove the arch/mips/lantiq/xway/reset.c
- implementation
-Date: Mon, 17 Apr 2017 23:28:50 +0200
-Message-ID: <CAFBinCDwbrBBov6UV00O2tBwMTimTW=LY+n1AD92Yz-ugthavA@mail.gmail.com>
-References: <20170417192942.32219-1-hauke@hauke-m.de> <20170417192942.32219-14-hauke@hauke-m.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170417192942.32219-14-hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
-Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
-Cc: ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, hauke.mehrtens-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org
+Subject: [PATCH 0/2] Amlogic Meson (32-bit) .dts cleanups
+Date: Mon, 17 Apr 2017 23:39:36 +0200
+Message-ID: <20170417213938.22626-1-martin.blumenstingl@googlemail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 17, 2017 at 9:29 PM, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org> wrote:
-> From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
->
-> The RCU register are now access through separates drivers. remove the
-> last peaces of the old implementation.
-s/peaces/pieces/
+This series provides a few cleanups in the 32-bit Amlogic .dts files.
 
-you should probably mention that arch/mips/kernel/reset.c handles the
-ltq_machine_halt and ltq_machine_power_off code, while
-ltq_machine_restart (setting some reset bits) can be replaced with
-"syscon-reboot"
+The first patch introduces the actual busses so the .dts' basic structure
+is similar to what we have in the 64-bit .dts files.
 
-apart from that: great to see that this gets some love! :)
+The second patch removes even more duplication by inheriting meson.dtsi
+from meson8b.dtsi (just like meson6.dtsi and meson8.dtsi are doing).
 
-> Signed-off-by: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
-> ---
->  arch/mips/lantiq/Kconfig       |   1 +
->  arch/mips/lantiq/xway/Makefile |   2 +-
->  arch/mips/lantiq/xway/reset.c  | 157 -----------------------------------------
->  3 files changed, 2 insertions(+), 158 deletions(-)
->  delete mode 100644 arch/mips/lantiq/xway/reset.c
->
-> diff --git a/arch/mips/lantiq/Kconfig b/arch/mips/lantiq/Kconfig
-> index f5db4a426568..35bc69b78268 100644
-> --- a/arch/mips/lantiq/Kconfig
-> +++ b/arch/mips/lantiq/Kconfig
-> @@ -18,6 +18,7 @@ config SOC_XWAY
->         select SOC_TYPE_XWAY
->         select HW_HAS_PCI
->         select MFD_SYSCON
-> +       select MFD_CORE
->
->  config SOC_FALCON
->         bool "FALCON"
-> diff --git a/arch/mips/lantiq/xway/Makefile b/arch/mips/lantiq/xway/Makefile
-> index 6daf3149e7ca..fbb0747c70b7 100644
-> --- a/arch/mips/lantiq/xway/Makefile
-> +++ b/arch/mips/lantiq/xway/Makefile
-> @@ -1,3 +1,3 @@
-> -obj-y := prom.o sysctrl.o clk.o reset.o dma.o gptu.o dcdc.o
-> +obj-y := prom.o sysctrl.o clk.o dma.o gptu.o dcdc.o
->
->  obj-y += vmmc.o
-> diff --git a/arch/mips/lantiq/xway/reset.c b/arch/mips/lantiq/xway/reset.c
-> deleted file mode 100644
-> index 5aec1f54275b..000000000000
-> --- a/arch/mips/lantiq/xway/reset.c
-> +++ /dev/null
-> @@ -1,157 +0,0 @@
-> -/*
-> - *  This program is free software; you can redistribute it and/or modify it
-> - *  under the terms of the GNU General Public License version 2 as published
-> - *  by the Free Software Foundation.
-> - *
-> - *  Copyright (C) 2010 John Crispin <john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org>
-> - *  Copyright (C) 2013-2015 Lantiq Beteiligungs-GmbH & Co.KG
-> - */
-> -
-> -#include <linux/init.h>
-> -#include <linux/io.h>
-> -#include <linux/ioport.h>
-> -#include <linux/pm.h>
-> -#include <linux/export.h>
-> -#include <linux/delay.h>
-> -#include <linux/of_address.h>
-> -#include <linux/of_platform.h>
-> -#include <linux/reset-controller.h>
-> -
-> -#include <asm/reboot.h>
-> -
-> -#include <lantiq_soc.h>
-> -
-> -#include "../prom.h"
-> -
-> -/* reset request register */
-> -#define RCU_RST_REQ            0x0010
-> -/* reset status register */
-> -#define RCU_RST_STAT           0x0014
-> -
-> -/* xbar BE flag */
-> -#define RCU_AHB_ENDIAN          0x004C
-> -#define RCU_VR9_BE_AHB1S        0x00000008
-> -
-> -/* reboot bit */
-> -#define RCU_RD_GPHY0_XRX200    BIT(31)
-> -#define RCU_RD_SRST            BIT(30)
-> -#define RCU_RD_GPHY1_XRX200    BIT(29)
-> -
-> -/* reset cause */
-> -#define RCU_STAT_SHIFT         26
-> -/* boot selection */
-> -#define RCU_BOOT_SEL(x)                ((x >> 18) & 0x7)
-> -#define RCU_BOOT_SEL_XRX200(x) (((x >> 17) & 0xf) | ((x >> 8) & 0x10))
-> -
-> -/* dwc2 USB configuration registers */
-> -#define RCU_USB1CFG            0x0018
-> -#define RCU_USB2CFG            0x0034
-> -
-> -/* USB DMA endianness bits */
-> -#define RCU_USBCFG_HDSEL_BIT   BIT(11)
-> -#define RCU_USBCFG_HOST_END_BIT        BIT(10)
-> -#define RCU_USBCFG_SLV_END_BIT BIT(9)
-> -
-> -/* USB reset bits */
-> -#define RCU_USBRESET           0x0010
-> -
-> -#define USBRESET_BIT           BIT(4)
-> -
-> -#define RCU_USBRESET2          0x0048
-> -
-> -#define USB1RESET_BIT          BIT(4)
-> -#define USB2RESET_BIT          BIT(5)
-> -
-> -#define RCU_CFG1A              0x0038
-> -#define RCU_CFG1B              0x003C
-> -
-> -/* USB PMU devices */
-> -#define PMU_AHBM               BIT(15)
-> -#define PMU_USB0               BIT(6)
-> -#define PMU_USB1               BIT(27)
-> -
-> -/* USB PHY PMU devices */
-> -#define PMU_USB0_P             BIT(0)
-> -#define PMU_USB1_P             BIT(26)
-> -
-> -/* remapped base addr of the reset control unit */
-> -static void __iomem *ltq_rcu_membase;
-> -static struct device_node *ltq_rcu_np;
-> -static DEFINE_SPINLOCK(ltq_rcu_lock);
-> -
-> -static void ltq_rcu_w32(uint32_t val, uint32_t reg_off)
-> -{
-> -       ltq_w32(val, ltq_rcu_membase + reg_off);
-> -}
-> -
-> -static uint32_t ltq_rcu_r32(uint32_t reg_off)
-> -{
-> -       return ltq_r32(ltq_rcu_membase + reg_off);
-> -}
-> -
-> -static void ltq_rcu_w32_mask(uint32_t clr, uint32_t set, uint32_t reg_off)
-> -{
-> -       unsigned long flags;
-> -
-> -       spin_lock_irqsave(&ltq_rcu_lock, flags);
-> -       ltq_rcu_w32((ltq_rcu_r32(reg_off) & ~(clr)) | (set), reg_off);
-> -       spin_unlock_irqrestore(&ltq_rcu_lock, flags);
-> -}
-> -
-> -static void ltq_machine_restart(char *command)
-> -{
-> -       u32 val = ltq_rcu_r32(RCU_RST_REQ);
-> -
-> -       if (of_device_is_compatible(ltq_rcu_np, "lantiq,rcu-xrx200"))
-> -               val |= RCU_RD_GPHY1_XRX200 | RCU_RD_GPHY0_XRX200;
-> -
-> -       val |= RCU_RD_SRST;
-> -
-> -       local_irq_disable();
-> -       ltq_rcu_w32(val, RCU_RST_REQ);
-> -       unreachable();
-> -}
-> -
-> -static void ltq_machine_halt(void)
-> -{
-> -       local_irq_disable();
-> -       unreachable();
-> -}
-> -
-> -static void ltq_machine_power_off(void)
-> -{
-> -       local_irq_disable();
-> -       unreachable();
-> -}
-> -
-> -static int __init mips_reboot_setup(void)
-> -{
-> -       struct resource res;
-> -
-> -       ltq_rcu_np = of_find_compatible_node(NULL, NULL, "lantiq,rcu-xway");
-> -       if (!ltq_rcu_np)
-> -               ltq_rcu_np = of_find_compatible_node(NULL, NULL,
-> -                                                       "lantiq,rcu-xrx200");
-> -
-> -       /* check if all the reset register range is available */
-> -       if (!ltq_rcu_np)
-> -               panic("Failed to load reset resources from devicetree");
-> -
-> -       if (of_address_to_resource(ltq_rcu_np, 0, &res))
-> -               panic("Failed to get rcu memory range");
-> -
-> -       if (!request_mem_region(res.start, resource_size(&res), res.name))
-> -               pr_err("Failed to request rcu memory");
-> -
-> -       ltq_rcu_membase = ioremap_nocache(res.start, resource_size(&res));
-> -       if (!ltq_rcu_membase)
-> -               panic("Failed to remap core memory");
-> -
-> -       _machine_restart = ltq_machine_restart;
-> -       _machine_halt = ltq_machine_halt;
-> -       pm_power_off = ltq_machine_power_off;
-> -
-> -       return 0;
-> -}
-> -
-> -arch_initcall(mips_reboot_setup);
-> --
-> 2.11.0
->
+There should not be any functional changes with these patches. However,
+I was only test this on a Meson8 based device, so it would be great if
+somebody could test this on a Meson8b device.
+
+
+Martin Blumenstingl (2):
+  ARM: dts: meson: organize devices in their corresponding busses
+  ARM: dts: meson8b: inherit meson.dtsi from meson8b.dtsi
+
+ arch/arm/boot/dts/meson.dtsi   | 180 ++++++++++++++++++-----------------
+ arch/arm/boot/dts/meson6.dtsi  |   2 -
+ arch/arm/boot/dts/meson8.dtsi  | 116 +++++++++++++++--------
+ arch/arm/boot/dts/meson8b.dtsi | 210 +++++++++++++++++------------------------
+ 4 files changed, 255 insertions(+), 253 deletions(-)
+
+-- 
+2.12.2
+
 --
-To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
