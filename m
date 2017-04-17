@@ -1,70 +1,74 @@
-From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Subject: [PATCH v3 12/12] arm64: allwinner: a64: enable Wi-Fi for Pine64
-Date: Mon, 17 Apr 2017 19:57:47 +0800
-Message-ID: <20170417115747.7300-13-icenowy@aosc.io>
-References: <20170417115747.7300-1-icenowy@aosc.io>
+From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [resend][PATCH v5 05/10] ASoC: simple-card-utils: enable "label"
+ on asoc_simple_card_parse_card_name
+Date: Mon, 17 Apr 2017 08:21:41 -0500
+Message-ID: <CAL_JsqKPJ6WF08hEtx2Y7Z5WqUXQ0OBOeohEaPujX891ksZS2A@mail.gmail.com>
+References: <87bmrvvqgs.wl%kuninori.morimoto.gx@renesas.com> <874lxnvqcm.wl%kuninori.morimoto.gx@renesas.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170417115747.7300-1-icenowy-h8G6r0blFSE@public.gmane.org>
+In-Reply-To: <874lxnvqcm.wl%kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+To: Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linux-ALSA <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, Simon <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Linux-DT <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The Wi-Fi module of Pine64 is powered via DLDO4 and ELDO1 (the latter
-one provides I/O voltage).
+On Sun, Apr 16, 2017 at 7:22 PM, Kuninori Morimoto
+<kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org> wrote:
+> From: Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+>
+> Current asoc_simple_card_parse_card_name() detect [prefix]name,
+> but in generally, we uses "label" for user visible names.
+> This patch enables [prefix]label too.
+>
+> Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+> ---
+> v4 -> v5
+>
+>  - don't exchange simle-xxx-card side
+>
+>  sound/soc/generic/simple-card-utils.c | 18 ++++++++++++++----
+>  1 file changed, 14 insertions(+), 4 deletions(-)
+>
+> diff --git a/sound/soc/generic/simple-card-utils.c b/sound/soc/generic/simple-card-utils.c
+> index 4924575..4dfd9a2 100644
+> --- a/sound/soc/generic/simple-card-utils.c
+> +++ b/sound/soc/generic/simple-card-utils.c
+> @@ -82,14 +82,24 @@ int asoc_simple_card_parse_card_name(struct snd_soc_card *card,
+>                                      char *prefix)
+>  {
+>         char prop[128];
+> +       char *names[] = {
+> +               "label", "name"
+> +       };
+> +       int i;
+>         int ret;
+>
+> -       snprintf(prop, sizeof(prop), "%sname", prefix);
+> +       if (!prefix)
+> +               prefix = "";
+>
+>         /* Parse the card name from DT */
+> -       ret = snd_soc_of_parse_card_name(card, prop);
+> -       if (ret < 0)
+> -               return ret;
+> +       for (i = 0; i < ARRAY_SIZE(names); i++) {
+> +               snprintf(prop, sizeof(prop), "%s%s", prefix, names[i]);
 
-Add device node for it.
+"<prefix>label" is not a valid property name.
 
-Although the Wi-Fi module is an external module which should be inserted
-to a header, according to my personal talk with TL Lim, he does not want
-this header to be used as GPIO (so it's with 2.0mm pitch, not 2.54mm as
-other GPIO headers).
-
-Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
----
-Changes in v3:
-- Added explaination on 2.0mm pitch.
-
- arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts
-index 7da074f95065..9d90bb32aa87 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts
-@@ -64,6 +64,11 @@
- 		regulator-min-microvolt = <3300000>;
- 		regulator-max-microvolt = <3300000>;
- 	};
-+
-+	wifi_pwrseq: wifi_pwrseq {
-+		compatible = "mmc-pwrseq-simple";
-+		reset-gpios = <&r_pio 0 2 GPIO_ACTIVE_LOW>; /* PL2 */
-+	};
- };
- 
- &ehci1 {
-@@ -91,6 +96,17 @@
- 	status = "okay";
- };
- 
-+&mmc1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&mmc1_pins>;
-+	vmmc-supply = <&reg_dldo4>;
-+	vqmmc-supply = <&reg_eldo1>;
-+	mmc-pwrseq = <&wifi_pwrseq>;
-+	non-removable;
-+	bus-width = <4>;
-+	status = "okay";
-+};
-+
- &ohci1 {
- 	status = "okay";
- };
--- 
-2.12.2
-
+> +               ret = snd_soc_of_parse_card_name(card, prop);
+> +               if (ret < 0)
+> +                       return ret;
+> +               if (card->name)
+> +                       break;
+> +       }
+>
+>         if (!card->name && card->dai_link)
+>                 card->name = card->dai_link->name;
+> --
+> 1.9.1
+>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
