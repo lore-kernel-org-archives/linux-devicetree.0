@@ -1,39 +1,49 @@
-From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH v13 03/10] mux: minimal mux subsystem and gpio-based mux
- controller
-Date: Tue, 18 Apr 2017 10:34:40 +0200
-Message-ID: <1492504480.2432.37.camel@pengutronix.de>
-References: <1492101794-13444-1-git-send-email-peda@axentia.se>
-         <1492101794-13444-4-git-send-email-peda@axentia.se>
+From: Hoegeun Kwon <hoegeun.kwon@samsung.com>
+Subject: [PATCH v3 1/3] dt-bindings: Add support for samsung s6e3hf2 panel
+Date: Tue, 18 Apr 2017 17:40:34 +0900
+Message-ID: <1492504836-19225-2-git-send-email-hoegeun.kwon@samsung.com>
+References: <1492504836-19225-1-git-send-email-hoegeun.kwon@samsung.com>
+ <CGME20170418084047epcas5p440464afa8770d07253f42f362764059b@epcas5p4.samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1492101794-13444-4-git-send-email-peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Colin Ian King <colin.king-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Paul Gortmaker <paul.gortmaker-CWA4WttNNZF54TAoqtyWWQ@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-reply-to: <1492504836-19225-1-git-send-email-hoegeun.kwon@samsung.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: thierry.reding@gmail.com, airlied@linux.ie, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, kgene@kernel.org, krzk@kernel.org
+Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, javier@osg.samsung.com, andi.shyti@samsung.com, Hoegeun Kwon <hoegeun.kwon@samsung.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Peter,
-
-On Thu, 2017-04-13 at 18:43 +0200, Peter Rosin wrote:
-[...]
-> diff --git a/include/linux/mux.h b/include/linux/mux.h
-> new file mode 100644
-> index 000000000000..febdde4246df
-> --- /dev/null
-> +++ b/include/linux/mux.h
-[...]
-
-Consider separating mux.h into a consumer header and a driver header.
-Right now there is no separation between the consumer API and the
-framework internals.
-
-regards
-Philipp
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+VGhlIHNhbXN1bmcgczZlM2hmMiBwYW5lbCBpcyBhIDUuNjUiIDE2MDB4MjU2MCBBTU9MRUQgcGFu
+ZWwgY29ubmVjdGVkCnVzaW5nIE1JUEktRFNJIGludGVyZmFjZXMuCgpUaGUgczZlM2hmMiBpcyBh
+ZGQgdG8gc2Ftc3VuZyxzNmUzaGEyLnR4dCBiaW5kaW5nIGJlY2F1c2UgaXQgaXMgYQpwYW5lbCBz
+aW1pbGFyIHRvIHRoZSBzNmUzaGEyLiBTbyBhZGQgdGhlIGNvbXBhdGlibGUgc3RyaW5nIGFuZApj
+b21tZW50cy4KClNpZ25lZC1vZmYtYnk6IEhvZWdldW4gS3dvbiA8aG9lZ2V1bi5rd29uQHNhbXN1
+bmcuY29tPgpSZXZpZXdlZC1ieTogQW5kcnplaiBIYWpkYSA8YS5oYWpkYUBzYW1zdW5nLmNvbT4K
+LS0tCiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9zYW1z
+dW5nLHM2ZTNoYTIudHh0IHwgNSArKysrLQogMSBmaWxlIGNoYW5nZWQsIDQgaW5zZXJ0aW9ucygr
+KSwgMSBkZWxldGlvbigtKQoKZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
+aW5kaW5ncy9kaXNwbGF5L3BhbmVsL3NhbXN1bmcsczZlM2hhMi50eHQgYi9Eb2N1bWVudGF0aW9u
+L2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9zYW1zdW5nLHM2ZTNoYTIudHh0Cmlu
+ZGV4IDE4ODU0ZjQuLjRhY2VhMjUgMTAwNjQ0Ci0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJl
+ZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL3NhbXN1bmcsczZlM2hhMi50eHQKKysrIGIvRG9jdW1l
+bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvc2Ftc3VuZyxzNmUzaGEy
+LnR4dApAQCAtMSw3ICsxLDEwIEBACiBTYW1zdW5nIFM2RTNIQTIgNS43IiAxNDQweDI1NjAgQU1P
+TEVEIHBhbmVsCitTYW1zdW5nIFM2RTNIRjIgNS42NSIgMTYwMHgyNTYwIEFNT0xFRCBwYW5lbAog
+CiBSZXF1aXJlZCBwcm9wZXJ0aWVzOgotICAtIGNvbXBhdGlibGU6ICJzYW1zdW5nLHM2ZTNoYTIi
+CisgIC0gY29tcGF0aWJsZTogc2hvdWxkIGJlIG9uZSBvZjoKKyAgICAic2Ftc3VuZyxzNmUzaGEy
+IiwKKyAgICAic2Ftc3VuZyxzNmUzaGYyIi4KICAgLSByZWc6IHRoZSB2aXJ0dWFsIGNoYW5uZWwg
+bnVtYmVyIG9mIGEgRFNJIHBlcmlwaGVyYWwKICAgLSB2ZGQzLXN1cHBseTogSS9PIHZvbHRhZ2Ug
+c3VwcGx5CiAgIC0gdmNpLXN1cHBseTogdm9sdGFnZSBzdXBwbHkgZm9yIGFuYWxvZyBjaXJjdWl0
+cwotLSAKMS45LjEKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9y
+ZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZl
+bAo=
