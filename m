@@ -1,102 +1,138 @@
 From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH v6 17/39] platform: add video-multiplexer subdevice driver
-Date: Tue, 18 Apr 2017 10:09:49 +0200
-Message-ID: <1492502989.2432.23.camel@pengutronix.de>
-References: <1490661656-10318-1-git-send-email-steve_longerbeam@mentor.com>
- <1490661656-10318-18-git-send-email-steve_longerbeam@mentor.com>
- <20170404124732.GD3288@valkosipuli.retiisi.org.uk>
- <1492091578.2383.39.camel@pengutronix.de> <20170414203216.GA10920@amd>
+Subject: Re: [RFC 1/2] dt-bindings: add mmio-based syscon mux controller DT
+ bindings
+Date: Tue, 18 Apr 2017 10:19:04 +0200
+Message-ID: <1492503544.2432.32.camel@pengutronix.de>
+References: <20170413154812.19597-1-p.zabel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170414203216.GA10920@amd>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Pavel Machek <pavel@ucw.cz>
-Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, nick@shmanahar.org, songjun.wu@microchip.com, hverkuil@xs4all.nl, Steve Longerbeam <steve_longerbeam@mentor.com>, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, shuah@kernel.org, linux@armlinux.org.uk, geert@linux-m68k.org, Steve Longerbeam <slongerbeam@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, sakari.ailus@linux.intel.com, arnd@arndb.de, mchehab@kernel.org, bparrot@ti.com, robh+dt@kernel.org, horms+renesas@verge.net.au, tiffany.lin@mediatek.com, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, Sakari Ailus <sakari.ailus@iki.fi>, jean-christophe.trotin@st.com, kernel@pe
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170413154812.19597-1-p.zabel@pengutronix.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Peter Rosin <peda@axentia.se>, Pavel Machek <pavel@ucw.cz>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sakari Ailus <sakari.ailus@iki.fi>, Steve Longerbeam <slongerbeam@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, kernel@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-Hi Pavel,
-
-On Fri, 2017-04-14 at 22:32 +0200, Pavel Machek wrote:
-> Hi!
+On Thu, 2017-04-13 at 17:48 +0200, Philipp Zabel wrote:
+> This adds device tree binding documentation for mmio-based syscon
+> multiplexers controlled by a single bitfield in a syscon register
+> range.
 > 
-> > > The MUX framework is already in linux-next. Could you use that instead of
-> > > adding new driver + bindings that are not compliant with the MUX framework?
-> > > I don't think it'd be much of a change in terms of code, using the MUX
-> > > framework appears quite simple.
-> > 
-> > It is not quite clear to me how to design the DT bindings for this. Just
-> > splitting the video-multiplexer driver from the mux-mmio / mux-gpio
-> > would make it necessary to keep the video-multiplexer node to describe
-> > the of-graph bindings. But then we have two different nodes in the DT
-> > that describe the same hardware:
-> > 
-> > 	mux: mux {
-> > 		compatible = "mux-gpio";
-> > 		mux-gpios = <&gpio 0>, <&gpio 1>;
-> > 		#mux-control-cells = <0>;
-> > 	}
-> > 
-> > 	video-multiplexer {
-> > 		compatible = "video-multiplexer"
-> > 		mux-controls = <&mux>;
-> > 
-> > 		ports {
-> > 			/* ... */
-> > 		}
-> > 	}
-> > 
-> > It would feel more natural to have the ports in the mux node, but then
-> > how would the video-multiplexer driver be instanciated, and how would it
-> > get to the of-graph nodes?
+> Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+> ---
+>  Documentation/devicetree/bindings/mux/mmio-mux.txt | 56 ++++++++++++++++++++++
+>  1 file changed, 56 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mux/mmio-mux.txt
 > 
-> Device tree representation and code used to implement the muxing
-> driver should be pretty independend, no? Yes, one piece of hardware
-> should have one entry in the device tree,
+> diff --git a/Documentation/devicetree/bindings/mux/mmio-mux.txt b/Documentation/devicetree/bindings/mux/mmio-mux.txt
+> new file mode 100644
+> index 0000000000000..11d96f5d98583
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mux/mmio-mux.txt
+> @@ -0,0 +1,56 @@
+> +MMIO bitfield-based multiplexer controller bindings
+> +
+> +Define a syscon bitfield to be used to control a multiplexer. The parent
+> +device tree node must be a syscon node to provide register access.
+> +
+> +Required properties:
+> +- compatible : "gpio-mux"
+> +- reg : register base of the register containing the control bitfield
+> +- bit-mask : bitmask of the control bitfield in the control register
+> +- bit-shift : bit offset of the control bitfield in the control register
+> +- #mux-control-cells : <0>
+> +* Standard mux-controller bindings as decribed in mux-controller.txt
+> +
+> +Optional properties:
+> +- idle-state : if present, the state the mux will have when idle. The
+> +	       special state MUX_IDLE_AS_IS is the default.
+> +
+> +The multiplexer state is defined as the value of the bitfield described
+> +by the reg, bit-mask, and bit-shift properties, accessed through the parent
+> +syscon.
+> +
+> +Example:
+> +
+> +	syscon {
+> +		compatible = "syscon";
+> +
+> +		mux: mux-controller@3 {
+> +			compatible = "mmio-mux";
+> +			reg = <0x3>;
+> +			bit-mask = <0x1>;
+> +			bit-shift = <5>;
+> +			#mux-control-cells = <0>;
+> +		};
+> +	};
+> +
+> +	video-mux {
+> +		compatible = "video-mux";
+> +		mux-controls = <&mux>;
+> +
+> +		ports {
+> +			/* input 0 */
+> +			port@0 {
+> +				reg = <0>;
+> +			};
+> +
+> +			/* input 1 */
+> +			port@1 {
+> +				reg = <1>;
+> +			};
+> +
+> +			/* output */
+> +			port@2 {
+> +				reg = <2>;
+> +			};
+> +		};
+> +	};
 
-I agree.
+So Pavel (added to Cc:) suggested to merge these into one node for the
+video mux, as really we are describing a single hardware entity that
+happens to be multiplexing multiple video buses into one:
 
->  so it should be something like:
-> 
->  	video-multiplexer {
->  		compatible = "video-multiplexer-gpio"	
->  		mux-gpios = <&gpio 0>, <&gpio 1>;
->  		#mux-control-cells = <0>;
-> 
->  		mux-controls = <&mux>;
->  
->  		ports {
->  			/* ... */
->  		}
->  	}
+	syscon {
+		compatible = "syscon";
 
-That self-referencing mux-controls property looks a bit superfluous:
+		/* video multiplexer */
+		mux: mux-controller@3 {
+			compatible = "video-mmio-mux";
+			reg = <0x3>;
+			bit-mask = <0x1>;
+			bit-shift = <5>;
+			#mux-control-cells = <0>;
+ 
+			mux-controls = <&mux>;
 
-	mux: video-multiplexer {
-		mux-controls = <&mux>;
+			ports {
+				/* input 0 */
+				port@0 {
+					reg = <0>;
+				};
+
+				/* input 1 */
+				port@1 {
+					reg = <1>;
+				};
+
+				/* output */
+				port@2 {
+					reg = <2>;
+				};
+			};
+		};
 	};
 
-Other than that, I'm completely fine with splitting the compatible into
-something like video-mux-gpio and video-mux-mmio and reusing the
-mux-gpios property for video-mux-gpio.
+That would not touch on this "general purpose" mmio-mux binding itself,
+but would make it necessary to add a separate "video-mmio-mux" and a
+"video-gpio-mux" binding that mirror the "mmio-mux" and "gpio-mux"
+bindings but add the OF-graph connections.
 
-> You should be able to use code in drivers/mux as a library...
-
-This is a good idea in principle, but this requires some rework of the
-mux subsystem, and that subsystem hasn't even landed yet. For now I'd
-like to focus on getting the DT bindings right.
-
-I'd honestly prefer to not add this rework as a requirement for the i.MX
-media drivers to get into staging.
+Also I think in this case the self-referencing mux-controls property
+would be superfluous, as the driver binding to this node is expected to
+control the mux according to activation of the links described by the
+OF-graph bindings.
 
 regards
 Philipp
