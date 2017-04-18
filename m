@@ -1,51 +1,73 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH 2/2] hwmon: (brcmstb) Add driver for Broadcom STB DPFE
-Date: Tue, 18 Apr 2017 13:58:39 -0700
-Message-ID: <20170418205839.GA3554@roeck-us.net>
-References: <20170418201702.57019-1-code@mmayer.net>
- <20170418201702.57019-3-code@mmayer.net>
+From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 0/4] of: remove *phandle properties from expanded device
+ tree
+Date: Tue, 18 Apr 2017 14:08:26 -0700
+Message-ID: <58F6804A.3080206@gmail.com>
+References: <1492228520-12450-1-git-send-email-frowand.list@gmail.com>
+ <58F19A75.80500@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-hwmon-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170418201702.57019-3-code@mmayer.net>
-Sender: linux-hwmon-owner@vger.kernel.org
-To: Markus Mayer <code@mmayer.net>
-Cc: Jean Delvare <jdelvare@suse.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Florian Fainelli <f.fainelli@gmail.com>, Markus Mayer <mmayer@broadcom.com>, Broadcom Kernel List <bcm-kernel-feedback-list@broadcom.com>, Linux HWMON List <linux-hwmon@vger.kernel.org>, Device Tree List <devicetree@vger.kernel.org>, ARM Kernel List <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <58F19A75.80500-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Stephen Boyd <stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Markus,
+Hi Rob,
 
-On Tue, Apr 18, 2017 at 01:17:02PM -0700, Markus Mayer wrote:
-> From: Markus Mayer <mmayer@broadcom.com>
-> 
-> This driver allows access to DRAM properties, such as the refresh rate,
-> via the Broadcom STB DDR PHY Front End (DPFE). The refresh rate can be
-> used as indirect indicator of the DRAM temperature.
-> 
-> The driver also allows setting of the sampling interval.
-> 
-> Signed-off-by: Markus Mayer <mmayer@broadcom.com>
-> ---
-[ ... ]
+Please do not apply this patch series.
 
-> +
-> +static SENSOR_DEVICE_ATTR(dpfe_info, 0444, show_info, NULL, 1000);
-> +static SENSOR_DEVICE_ATTR(dpfe_refresh, 0644, show_refresh, store_refresh,
-> +			  1000);
-> +static SENSOR_DEVICE_ATTR(dpfe_vendor, 0444, show_vendor, NULL, 1000);
-> +static struct attribute *dpfe_attrs[] = {
-> +	&sensor_dev_attr_dpfe_info.dev_attr.attr,
-> +	&sensor_dev_attr_dpfe_refresh.dev_attr.attr,
-> +	&sensor_dev_attr_dpfe_vendor.dev_attr.attr,
-> +	NULL
-> +};
-> +ATTRIBUTE_GROUPS(dpfe);
-> +
+The more context I look at, the less this approach seems good.
 
-There is not a single standard hwmon attribute. I don't know how
-to classify this driver, and where it should reside, but it is not
-a hwmon driver. 
+I hope to have a simpler version completed quickly.
 
 Thanks,
-Guenter
+
+- Frank
+
+
+On 04/14/17 20:58, Frank Rowand wrote:
+> Hi Stephen,
+> 
+> I left you off the distribution list, sorry...
+> 
+> On 04/14/17 20:55, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
+>> From: Frank Rowand <frank.rowand-7U/KSKJipcs@public.gmane.org>
+>>
+>> Remove "phandle" and "linux,phandle" properties from the internal
+>> device tree.  The phandle will still be in the struct device_node
+>> phandle field.
+>>
+>> This is to resolve the issue found by Stephen Boyd [1] when he changed
+>> the type of struct property.value from void * to const void *.  As
+>> a result of the type change, the overlay code had compile errors
+>> where the resolver updates phandle values.
+>>
+>>   [1] http://lkml.iu.edu/hypermail/linux/kernel/1702.1/04160.html
+>>
+>> Patch 1 is the phandle related changes.
+>>
+>> Patches 2 - 4 are minor fixups for issues that became visible
+>> while implementing patch 1.
+>>
+>> Frank Rowand (4):
+>>   of: remove *phandle properties from expanded device tree
+>>   of: make __of_attach_node() static
+>>   of: be consistent in form of file mode
+>>   of: detect invalid phandle in overlay
+>>
+>>  drivers/of/base.c       | 53 +++++++++++++++++++++++++++++++++++++++++++++----
+>>  drivers/of/dynamic.c    | 31 ++++++++++++++++-------------
+>>  drivers/of/fdt.c        | 40 ++++++++++++++++++++++---------------
+>>  drivers/of/of_private.h |  1 -
+>>  drivers/of/overlay.c    |  8 +++++---
+>>  drivers/of/resolver.c   | 23 +--------------------
+>>  include/linux/of.h      |  1 +
+>>  7 files changed, 97 insertions(+), 60 deletions(-)
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
