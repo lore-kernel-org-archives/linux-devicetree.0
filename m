@@ -1,72 +1,111 @@
-From: Eric Anholt <eric@anholt.net>
-Subject: [PATCH 3/3] drm/vc4: Add specific compatible strings for Cygnus.
-Date: Tue, 18 Apr 2017 12:11:57 -0700
-Message-ID: <20170418191157.18517-3-eric@anholt.net>
-References: <20170418191157.18517-1-eric@anholt.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20170418191157.18517-1-eric@anholt.net>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
+From: Nicholas Piggin <npiggin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 3/4] of/fdt: introduce of_scan_flat_dt_subnodes and of_get_flat_dt_phandle
+Date: Wed, 19 Apr 2017 05:12:18 +1000
+Message-ID: <20170418191220.3166-4-npiggin@gmail.com>
+References: <20170418191220.3166-1-npiggin@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170418191220.3166-1-npiggin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: Nicholas Piggin <npiggin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Q3lnbnVzIGhhcyBWM0QgMi42IGluc3RlYWQgb2YgMi4xLCBhbmQgZG9lc24ndCB1c2UgdGhlIFZD
-NCBkaXNwbGF5Cm1vZHVsZXMuICBUaGUgVjNEIGNhbiBiZSB1bmlxdWVseSBpZGVudGlmaWVkIGJ5
-IHRoZSBJREVOVFswMV0KcmVnaXN0ZXJzLCBhbmQgdGhlcmUncyBub3RoaW5nIHRvIGtleSBvZmYg
-b2YgZm9yIHRoZSBkaXNwbGF5IGNoYW5nZQpvdGhlciB0aGFuIHRoZSBsYWNrIG9mIERUIG5vZGVz
-IGZvciB0aGUgZGlzcGxheSBjb21wb25lbnRzLCBidXQgaXQncwpjb252ZW50aW9uIHRvIGhhdmUg
-bmV3IGNvbXBhdGlibGUgc3RyaW5ncyBhbnl3YXkuCgpTaWduZWQtb2ZmLWJ5OiBFcmljIEFuaG9s
-dCA8ZXJpY0BhbmhvbHQubmV0PgotLS0KIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
-cy9kaXNwbGF5L2JyY20sYmNtLXZjNC50eHQgfCA0ICsrLS0KIGRyaXZlcnMvZ3B1L2RybS92YzQv
-dmM0X2Rydi5jICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAxICsKIGRyaXZlcnMvZ3B1
-L2RybS92YzQvdmM0X3YzZC5jICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAxICsKIDMg
-ZmlsZXMgY2hhbmdlZCwgNCBpbnNlcnRpb25zKCspLCAyIGRlbGV0aW9ucygtKQoKZGlmZiAtLWdp
-dCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyY20sYmNtLXZj
-NC50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmNtLGJj
-bS12YzQudHh0CmluZGV4IGJjMTc1NmY0Zjc5MS4uMjg0ZTJiMTRjZmJlIDEwMDY0NAotLS0gYS9E
-b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmNtLGJjbS12YzQudHh0
-CisrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyY20sYmNt
-LXZjNC50eHQKQEAgLTUsNyArNSw3IEBAIHdpdGggSERNSSBvdXRwdXQgYW5kIHRoZSBIVlMgKEhh
-cmR3YXJlIFZpZGVvIFNjYWxlcikgZm9yIGNvbXBvc2l0aW5nCiBkaXNwbGF5IHBsYW5lcy4KIAog
-UmVxdWlyZWQgcHJvcGVydGllcyBmb3IgVkM0OgotLSBjb21wYXRpYmxlOglTaG91bGQgYmUgImJy
-Y20sYmNtMjgzNS12YzQiCistIGNvbXBhdGlibGU6CVNob3VsZCBiZSAiYnJjbSxiY20yODM1LXZj
-NCIgb3IgImJyY20sY3lnbnVzLXZjNCIKIAogUmVxdWlyZWQgcHJvcGVydGllcyBmb3IgUGl4ZWwg
-VmFsdmU6CiAtIGNvbXBhdGlibGU6CVNob3VsZCBiZSBvbmUgb2YgImJyY20sYmNtMjgzNS1waXhl
-bHZhbHZlMCIsCkBAIC01NCw3ICs1NCw3IEBAIFJlcXVpcmVkIHByb3BlcnRpZXMgZm9yIFZFQzoK
-IAkJICBTZWUgYmluZGluZ3MvaW50ZXJydXB0LWNvbnRyb2xsZXIvYnJjbSxiY20yODM1LWFybWN0
-cmwtaWMudHh0CiAKIFJlcXVpcmVkIHByb3BlcnRpZXMgZm9yIFYzRDoKLS0gY29tcGF0aWJsZToJ
-U2hvdWxkIGJlICJicmNtLGJjbTI4MzUtdjNkIgorLSBjb21wYXRpYmxlOglTaG91bGQgYmUgImJy
-Y20sYmNtMjgzNS12M2QiIG9yICJicmNtLGN5Z251cy12M2QiCiAtIHJlZzoJCVBoeXNpY2FsIGJh
-c2UgYWRkcmVzcyBhbmQgbGVuZ3RoIG9mIHRoZSBWM0QncyByZWdpc3RlcnMKIC0gaW50ZXJydXB0
-czoJVGhlIGludGVycnVwdCBudW1iZXIKIAkJICBTZWUgYmluZGluZ3MvaW50ZXJydXB0LWNvbnRy
-b2xsZXIvYnJjbSxiY20yODM1LWFybWN0cmwtaWMudHh0CmRpZmYgLS1naXQgYS9kcml2ZXJzL2dw
-dS9kcm0vdmM0L3ZjNF9kcnYuYyBiL2RyaXZlcnMvZ3B1L2RybS92YzQvdmM0X2Rydi5jCmluZGV4
-IDkyZmI5YTQxZmU3Yy4uNzU0Y2U3NmQ0Yjk4IDEwMDY0NAotLS0gYS9kcml2ZXJzL2dwdS9kcm0v
-dmM0L3ZjNF9kcnYuYworKysgYi9kcml2ZXJzL2dwdS9kcm0vdmM0L3ZjNF9kcnYuYwpAQCAtMzM1
-LDYgKzMzNSw3IEBAIHN0YXRpYyBpbnQgdmM0X3BsYXRmb3JtX2RybV9yZW1vdmUoc3RydWN0IHBs
-YXRmb3JtX2RldmljZSAqcGRldikKIAogc3RhdGljIGNvbnN0IHN0cnVjdCBvZl9kZXZpY2VfaWQg
-dmM0X29mX21hdGNoW10gPSB7CiAJeyAuY29tcGF0aWJsZSA9ICJicmNtLGJjbTI4MzUtdmM0Iiwg
-fSwKKwl7IC5jb21wYXRpYmxlID0gImJyY20sY3lnbnVzLXZjNCIsIH0sCiAJe30sCiB9OwogTU9E
-VUxFX0RFVklDRV9UQUJMRShvZiwgdmM0X29mX21hdGNoKTsKZGlmZiAtLWdpdCBhL2RyaXZlcnMv
-Z3B1L2RybS92YzQvdmM0X3YzZC5jIGIvZHJpdmVycy9ncHUvZHJtL3ZjNC92YzRfdjNkLmMKaW5k
-ZXggMjQ0MjYyMmU2YmZmLi4zYWJjZDI3YWE0NmYgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvZ3B1L2Ry
-bS92YzQvdmM0X3YzZC5jCisrKyBiL2RyaXZlcnMvZ3B1L2RybS92YzQvdmM0X3YzZC5jCkBAIC0z
-MDQsNiArMzA0LDcgQEAgc3RhdGljIGludCB2YzRfdjNkX2Rldl9yZW1vdmUoc3RydWN0IHBsYXRm
-b3JtX2RldmljZSAqcGRldikKIAogc3RhdGljIGNvbnN0IHN0cnVjdCBvZl9kZXZpY2VfaWQgdmM0
-X3YzZF9kdF9tYXRjaFtdID0gewogCXsgLmNvbXBhdGlibGUgPSAiYnJjbSxiY20yODM1LXYzZCIg
-fSwKKwl7IC5jb21wYXRpYmxlID0gImJyY20sY3lnbnVzLXYzZCIgfSwKIAl7IC5jb21wYXRpYmxl
-ID0gImJyY20sdmM0LXYzZCIgfSwKIAl7fQogfTsKLS0gCjIuMTEuMAoKX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApk
-cmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Au
-b3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+Introduce primitives for FDT parsing. These will be used for powerpc
+cpufeatures node scanning, which has quite complex structure but should
+be processed early.
+
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Signed-off-by: Nicholas Piggin <npiggin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+ drivers/of/fdt.c       | 38 ++++++++++++++++++++++++++++++++++++++
+ include/linux/of_fdt.h |  6 ++++++
+ 2 files changed, 44 insertions(+)
+
+diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+index e5ce4b59e162..961ca97072a9 100644
+--- a/drivers/of/fdt.c
++++ b/drivers/of/fdt.c
+@@ -754,6 +754,36 @@ int __init of_scan_flat_dt(int (*it)(unsigned long node,
+ }
+ 
+ /**
++ * of_scan_flat_dt_subnodes - scan sub-nodes of a node call callback on each.
++ * @it: callback function
++ * @data: context data pointer
++ *
++ * This function is used to scan sub-nodes of a node.
++ */
++int __init of_scan_flat_dt_subnodes(unsigned long parent,
++				    int (*it)(unsigned long node,
++					      const char *uname,
++					      void *data),
++				    void *data)
++{
++	const void *blob = initial_boot_params;
++	int node;
++
++	fdt_for_each_subnode(node, blob, parent) {
++		const char *pathp;
++		int rc;
++
++		pathp = fdt_get_name(blob, node, NULL);
++		if (*pathp == '/')
++			pathp = kbasename(pathp);
++		rc = it(node, pathp, data);
++		if (rc)
++			return rc;
++	}
++	return 0;
++}
++
++/**
+  * of_get_flat_dt_subnode_by_name - get the subnode by given name
+  *
+  * @node: the parent node
+@@ -812,6 +842,14 @@ int __init of_flat_dt_match(unsigned long node, const char *const *compat)
+ 	return of_fdt_match(initial_boot_params, node, compat);
+ }
+ 
++/**
++ * of_get_flat_dt_prop - Given a node in the flat blob, return the phandle
++ */
++uint32_t __init of_get_flat_dt_phandle(unsigned long node)
++{
++	return fdt_get_phandle(initial_boot_params, node);
++}
++
+ struct fdt_scan_status {
+ 	const char *name;
+ 	int namelen;
+diff --git a/include/linux/of_fdt.h b/include/linux/of_fdt.h
+index 271b3fdf0070..1dfbfd0d8040 100644
+--- a/include/linux/of_fdt.h
++++ b/include/linux/of_fdt.h
+@@ -54,6 +54,11 @@ extern char __dtb_end[];
+ extern int of_scan_flat_dt(int (*it)(unsigned long node, const char *uname,
+ 				     int depth, void *data),
+ 			   void *data);
++extern int of_scan_flat_dt_subnodes(unsigned long node,
++				    int (*it)(unsigned long node,
++					      const char *uname,
++					      void *data),
++				    void *data);
+ extern int of_get_flat_dt_subnode_by_name(unsigned long node,
+ 					  const char *uname);
+ extern const void *of_get_flat_dt_prop(unsigned long node, const char *name,
+@@ -62,6 +67,7 @@ extern int of_flat_dt_is_compatible(unsigned long node, const char *name);
+ extern int of_flat_dt_match(unsigned long node, const char *const *matches);
+ extern unsigned long of_get_flat_dt_root(void);
+ extern int of_get_flat_dt_size(void);
++extern uint32_t of_get_flat_dt_phandle(unsigned long node);
+ 
+ extern int early_init_dt_scan_chosen(unsigned long node, const char *uname,
+ 				     int depth, void *data);
+-- 
+2.11.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
