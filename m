@@ -1,276 +1,873 @@
-From: Juergen Borleis <jbe@pengutronix.de>
-Subject: [PATCH v6 4/4] net: dsa: LAN9303: add MDIO managed mode support
-Date: Tue, 18 Apr 2017 10:48:27 +0200
-Message-ID: <20170418084827.19613-5-jbe@pengutronix.de>
-References: <20170418084827.19613-1-jbe@pengutronix.de>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170418084827.19613-1-jbe@pengutronix.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: netdev@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, f.fainelli@gmail.com, kernel@pengutronix.de, andrew@lunn.ch, vivien.didelot@savoirfairelinux.com, davem@davemloft.net, devicetree@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, sr@denx.de
+From: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Subject: Re: [PATCH v13 03/10] mux: minimal mux subsystem and gpio-based mux
+ controller
+Date: Tue, 18 Apr 2017 10:51:56 +0200
+Message-ID: <20170418085156.GA4773@kroah.com>
+References: <1492101794-13444-1-git-send-email-peda@axentia.se>
+ <1492101794-13444-4-git-send-email-peda@axentia.se>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1492101794-13444-4-git-send-email-peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Colin Ian King <colin.king-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Paul Gortmaker <paul.gortmaker-CWA4WttNNZF54TAoqtyWWQ@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-When the LAN9303 device is in MDIO manged mode, all register accesses must
-be done via MDIO.
+On Thu, Apr 13, 2017 at 06:43:07PM +0200, Peter Rosin wrote:
+> +config MUX_GPIO
+> +	tristate "GPIO-controlled Multiplexer"
+> +	depends on OF && GPIOLIB
 
-Please note: this code is compile time tested only due to the absence of such
-configured hardware. It is based on a patch from Stefan Roese from 2014.
+Why have the gpio and mux core in the same patch?
 
-Signed-off-by: Juergen Borleis <jbe@pengutronix.de>
-CC: devicetree@vger.kernel.org
-CC: robh+dt@kernel.org
-CC: mark.rutland@arm.com
-CC: sr@denx.de
----
- .../devicetree/bindings/net/dsa/lan9303.txt        |  45 ++++++-
- drivers/net/dsa/Kconfig                            |   8 ++
- drivers/net/dsa/Makefile                           |   1 +
- drivers/net/dsa/lan9303_mdio.c                     | 148 +++++++++++++++++++++
- 4 files changed, 201 insertions(+), 1 deletion(-)
- create mode 100644 drivers/net/dsa/lan9303_mdio.c
+And why does this depend on OF?
 
-diff --git a/Documentation/devicetree/bindings/net/dsa/lan9303.txt b/Documentation/devicetree/bindings/net/dsa/lan9303.txt
-index 2edc2561467a7..04f2965a44676 100644
---- a/Documentation/devicetree/bindings/net/dsa/lan9303.txt
-+++ b/Documentation/devicetree/bindings/net/dsa/lan9303.txt
-@@ -3,7 +3,10 @@ SMSC/MicroChip LAN9303 three port ethernet switch
- 
- Required properties:
- 
--- compatible: should be "smsc,lan9303-i2c"
-+- compatible: should be
-+  - "smsc,lan9303-i2c" for I2C managed mode
-+    or
-+  - "smsc,lan9303-mdio" for mdio managed mode
- 
- Optional properties:
- 
-@@ -60,3 +63,43 @@ I2C managed mode:
- 			};
- 		};
- 	};
-+
-+MDIO managed mode:
-+
-+	master: masterdevice@X {
-+		status = "okay";
-+		phy-handle = <&switch>;
-+
-+		mdio {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			switch: switch-phy@0 {
-+				compatible = "smsc,lan9303-mdio";
-+				reg = <0>;
-+				reset-gpios = <&gpio7 6 GPIO_ACTIVE_LOW>;
-+				reset-duration = <100>;
-+
-+				ports {
-+					#address-cells = <1>;
-+					#size-cells = <0>;
-+
-+					port@0 {
-+						reg = <0>;
-+						label = "cpu";
-+						ethernet = <&master>;
-+					};
-+
-+					port@1 { /* external port 1 */
-+						reg = <1>;
-+						label = "lan1;
-+					};
-+
-+					port@2 { /* external port 2 */
-+						reg = <2>;
-+						label = "lan2";
-+					};
-+				};
-+			};
-+		};
-+	};
-diff --git a/drivers/net/dsa/Kconfig b/drivers/net/dsa/Kconfig
-index c56533bffc8ce..131a5b1cbfc83 100644
---- a/drivers/net/dsa/Kconfig
-+++ b/drivers/net/dsa/Kconfig
-@@ -66,4 +66,12 @@ config NET_DSA_SMSC_LAN9303_I2C
- 	  Enable access functions if the SMSC/Microchip LAN9303 is configured
- 	  for I2C managed mode.
- 
-+config NET_DSA_SMSC_LAN9303_MDIO
-+	tristate "SMSC/Microchip LAN9303 3-ports 10/100 ethernet switch in MDIO managed mode"
-+	depends on NET_DSA
-+	select NET_DSA_SMSC_LAN9303
-+	---help---
-+	  Enable access functions if the SMSC/Microchip LAN9303 is configured
-+	  for MDIO managed mode.
-+
- endmenu
-diff --git a/drivers/net/dsa/Makefile b/drivers/net/dsa/Makefile
-index c1981ba18963f..edd6303617365 100644
---- a/drivers/net/dsa/Makefile
-+++ b/drivers/net/dsa/Makefile
-@@ -5,6 +5,7 @@ obj-$(CONFIG_NET_DSA_QCA8K)	+= qca8k.o
- obj-$(CONFIG_NET_DSA_MT7530)	+= mt7530.o
- obj-$(CONFIG_NET_DSA_SMSC_LAN9303) += lan9303-core.o
- obj-$(CONFIG_NET_DSA_SMSC_LAN9303_I2C) += lan9303_i2c.o
-+obj-$(CONFIG_NET_DSA_SMSC_LAN9303_MDIO) += lan9303_mdio.o
- obj-y				+= b53/
- obj-y				+= mv88e6xxx/
- obj-$(CONFIG_NET_DSA_LOOP)	+= dsa_loop.o dsa_loop_bdinfo.o
-diff --git a/drivers/net/dsa/lan9303_mdio.c b/drivers/net/dsa/lan9303_mdio.c
-new file mode 100644
-index 0000000000000..93c36c0541cf9
---- /dev/null
-+++ b/drivers/net/dsa/lan9303_mdio.c
-@@ -0,0 +1,148 @@
-+/*
-+ * Copyright (C) 2017 Pengutronix, Juergen Borleis <kernel@pengutronix.de>
-+ *
-+ * Partially based on a patch from
-+ * Copyright (c) 2014 Stefan Roese <sr@denx.de>
-+ *
-+ * This program is free software; you can redistribute it and/or
-+ * modify it under the terms of the GNU General Public License
-+ * version 2, as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ *
-+ */
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/mdio.h>
-+#include <linux/phy.h>
-+#include <linux/of.h>
-+
-+#include "lan9303.h"
-+
-+/* Generate phy-addr and -reg from the input address */
-+#define PHY_ADDR(x) ((((x) >> 6) + 0x10) & 0x1f)
-+#define PHY_REG(x) (((x) >> 1) & 0x1f)
-+
-+struct lan9303_mdio {
-+	struct mdio_device *device;
-+	struct lan9303 chip;
-+};
-+
-+static void lan9303_mdio_real_write(struct mdio_device *mdio, int reg, u16 val)
-+{
-+	mdio->bus->write(mdio->bus, PHY_ADDR(reg), PHY_REG(reg), val);
-+}
-+
-+static int lan9303_mdio_write(void *ctx, uint32_t reg, uint32_t val)
-+{
-+	struct lan9303_mdio *sw_dev = (struct lan9303_mdio *)ctx;
-+
-+	mutex_lock(&sw_dev->device->bus->mdio_lock);
-+	lan9303_mdio_real_write(sw_dev->device, reg, val & 0xffff);
-+	lan9303_mdio_real_write(sw_dev->device, reg + 2, (val >> 16) & 0xffff);
-+	mutex_unlock(&sw_dev->device->bus->mdio_lock);
-+
-+	return 0;
-+}
-+
-+static u16 lan9303_mdio_real_read(struct mdio_device *mdio, int reg)
-+{
-+	return mdio->bus->read(mdio->bus, PHY_ADDR(reg), PHY_REG(reg));
-+}
-+
-+static int lan9303_mdio_read(void *ctx, uint32_t reg, uint32_t *val)
-+{
-+	struct lan9303_mdio *sw_dev = (struct lan9303_mdio *)ctx;
-+
-+	mutex_lock(&sw_dev->device->bus->mdio_lock);
-+	*val = lan9303_mdio_real_read(sw_dev->device, reg);
-+	*val |= (lan9303_mdio_real_read(sw_dev->device, reg + 2) << 16);
-+	mutex_unlock(&sw_dev->device->bus->mdio_lock);
-+
-+	return 0;
-+}
-+
-+static const struct regmap_config lan9303_mdio_regmap_config = {
-+	.reg_bits = 8,
-+	.val_bits = 32,
-+	.reg_stride = 1,
-+	.can_multi_write = true,
-+	.max_register = 0x0ff, /* address bits 0..1 are not used */
-+	.reg_format_endian = REGMAP_ENDIAN_LITTLE,
-+
-+	.volatile_table = &lan9303_register_set,
-+	.wr_table = &lan9303_register_set,
-+	.rd_table = &lan9303_register_set,
-+
-+	.reg_read = lan9303_mdio_read,
-+	.reg_write = lan9303_mdio_write,
-+
-+	.cache_type = REGCACHE_NONE,
-+};
-+
-+static int lan9303_mdio_probe(struct mdio_device *mdiodev)
-+{
-+	struct lan9303_mdio *sw_dev;
-+	int ret;
-+
-+	sw_dev = devm_kzalloc(&mdiodev->dev, sizeof(struct lan9303_mdio),
-+			      GFP_KERNEL);
-+	if (!sw_dev)
-+		return -ENOMEM;
-+
-+	sw_dev->chip.regmap = devm_regmap_init(&mdiodev->dev, NULL, sw_dev,
-+						&lan9303_mdio_regmap_config);
-+	if (IS_ERR(sw_dev->chip.regmap)) {
-+		ret = PTR_ERR(sw_dev->chip.regmap);
-+		dev_err(&mdiodev->dev, "regmap init failed: %d\n", ret);
-+		return ret;
-+	}
-+
-+	/* link forward and backward */
-+	sw_dev->device = mdiodev;
-+	dev_set_drvdata(&mdiodev->dev, sw_dev);
-+	sw_dev->chip.dev = &mdiodev->dev;
-+
-+	ret = lan9303_probe(&sw_dev->chip, mdiodev->dev.of_node);
-+	if (ret != 0)
-+		return ret;
-+
-+	dev_info(&mdiodev->dev, "LAN9303 MDIO driver loaded successfully\n");
-+
-+	return 0;
-+}
-+
-+static void lan9303_mdio_remove(struct mdio_device *mdiodev)
-+{
-+	struct lan9303_mdio *sw_dev = dev_get_drvdata(&mdiodev->dev);
-+
-+	if (!sw_dev)
-+		return;
-+
-+	lan9303_remove(&sw_dev->chip);
-+}
-+
-+/*-------------------------------------------------------------------------*/
-+
-+static const struct of_device_id lan9303_mdio_of_match[] = {
-+	{ .compatible = "smsc,lan9303-mdio" },
-+	{ /* sentinel */ },
-+};
-+MODULE_DEVICE_TABLE(of, lan9303_mdio_of_match);
-+
-+static struct mdio_driver lan9303_mdio_driver = {
-+	.mdiodrv.driver = {
-+		.name = "LAN9303_MDIO",
-+		.of_match_table = of_match_ptr(lan9303_mdio_of_match),
-+	},
-+	.probe  = lan9303_mdio_probe,
-+	.remove = lan9303_mdio_remove,
-+};
-+mdio_module_driver(lan9303_mdio_driver);
-+
-+MODULE_AUTHOR("Stefan Roese <sr@denx.de>, Juergen Borleis <kernel@pengutronix.de>");
-+MODULE_DESCRIPTION("Driver for SMSC/Microchip LAN9303 three port ethernet switch in MDIO managed mode");
-+MODULE_LICENSE("GPL v2");
--- 
-2.11.0
+
+> +	help
+> +	  GPIO-controlled Multiplexer controller.
+> +
+> +	  The driver builds a single multiplexer controller using a number
+> +	  of gpio pins. For N pins, there will be 2^N possible multiplexer
+> +	  states. The GPIO pins can be connected (by the hardware) to several
+> +	  multiplexers, which in that case will be operated in parallel.
+> +
+> +	  To compile the driver as a module, choose M here: the module will
+> +	  be called mux-gpio.
+> +
+> +endif
+> diff --git a/drivers/mux/Makefile b/drivers/mux/Makefile
+> new file mode 100644
+> index 000000000000..bb16953f6290
+> --- /dev/null
+> +++ b/drivers/mux/Makefile
+> @@ -0,0 +1,6 @@
+> +#
+> +# Makefile for multiplexer devices.
+> +#
+> +
+> +obj-$(CONFIG_MULTIPLEXER)	+= mux-core.o
+> +obj-$(CONFIG_MUX_GPIO)		+= mux-gpio.o
+> diff --git a/drivers/mux/mux-core.c b/drivers/mux/mux-core.c
+> new file mode 100644
+> index 000000000000..66a8bccfc3d7
+> --- /dev/null
+> +++ b/drivers/mux/mux-core.c
+> @@ -0,0 +1,422 @@
+> +/*
+> + * Multiplexer subsystem
+> + *
+> + * Copyright (C) 2017 Axentia Technologies AB
+> + *
+> + * Author: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + */
+> +
+> +#define pr_fmt(fmt) "mux-core: " fmt
+> +
+> +#include <linux/device.h>
+> +#include <linux/err.h>
+> +#include <linux/export.h>
+> +#include <linux/idr.h>
+> +#include <linux/init.h>
+> +#include <linux/module.h>
+> +#include <linux/mux.h>
+> +#include <linux/of.h>
+> +#include <linux/of_platform.h>
+> +#include <linux/slab.h>
+> +
+> +/*
+> + * The idle-as-is "state" is not an actual state that may be selected, it
+> + * only implies that the state should not be changed. So, use that state
+> + * as indication that the cached state of the multiplexer is unknown.
+> + */
+> +#define MUX_CACHE_UNKNOWN MUX_IDLE_AS_IS
+> +
+> +static struct class mux_class = {
+> +	.name = "mux",
+> +	.owner = THIS_MODULE,
+> +};
+
+No Documentation/ABI/ update for your sysfs files?  Please do so.
+
+> +
+> +static int __init mux_init(void)
+> +{
+> +	return class_register(&mux_class);
+> +}
+> +
+> +static DEFINE_IDA(mux_ida);
+
+When your module is unloaded, you forgot to clean this structure up with
+what was done with it.
+
+> +
+> +static void mux_chip_release(struct device *dev)
+> +{
+> +	struct mux_chip *mux_chip = to_mux_chip(dev);
+> +
+> +	ida_simple_remove(&mux_ida, mux_chip->id);
+> +	kfree(mux_chip);
+> +}
+> +
+> +static struct device_type mux_type = {
+> +	.name = "mux-chip",
+> +	.release = mux_chip_release,
+> +};
+> +
+> +struct mux_chip *mux_chip_alloc(struct device *dev,
+> +				unsigned int controllers, size_t sizeof_priv)
+> +{
+> +	struct mux_chip *mux_chip;
+> +	int i;
+> +
+> +	if (WARN_ON(!dev || !controllers))
+> +		return NULL;
+> +
+> +	mux_chip = kzalloc(sizeof(*mux_chip) +
+> +			   controllers * sizeof(*mux_chip->mux) +
+> +			   sizeof_priv, GFP_KERNEL);
+> +	if (!mux_chip)
+> +		return NULL;
+
+You don't return PTR_ERR(-ENOMEM)?  Ok, why not?  (I'm not arguing for
+it, just curious...)
+
+> +
+> +	mux_chip->mux = (struct mux_control *)(mux_chip + 1);
+> +	mux_chip->dev.class = &mux_class;
+> +	mux_chip->dev.type = &mux_type;
+> +	mux_chip->dev.parent = dev;
+> +	mux_chip->dev.of_node = dev->of_node;
+> +	dev_set_drvdata(&mux_chip->dev, mux_chip);
+> +
+> +	mux_chip->id = ida_simple_get(&mux_ida, 0, 0, GFP_KERNEL);
+> +	if (mux_chip->id < 0) {
+> +		pr_err("muxchipX failed to get a device id\n");
+> +		kfree(mux_chip);
+> +		return NULL;
+> +	}
+> +	dev_set_name(&mux_chip->dev, "muxchip%d", mux_chip->id);
+> +
+> +	mux_chip->controllers = controllers;
+> +	for (i = 0; i < controllers; ++i) {
+> +		struct mux_control *mux = &mux_chip->mux[i];
+> +
+> +		mux->chip = mux_chip;
+> +		init_rwsem(&mux->lock);
+> +		mux->cached_state = MUX_CACHE_UNKNOWN;
+> +		mux->idle_state = MUX_IDLE_AS_IS;
+> +	}
+> +
+> +	device_initialize(&mux_chip->dev);
+
+Why are you not registering the device here as well?  Why have this be a
+two step process?
+
+> +
+> +	return mux_chip;
+> +}
+> +EXPORT_SYMBOL_GPL(mux_chip_alloc);
+> +
+> +static int mux_control_set(struct mux_control *mux, int state)
+> +{
+> +	int ret = mux->chip->ops->set(mux, state);
+> +
+> +	mux->cached_state = ret < 0 ? MUX_CACHE_UNKNOWN : state;
+> +
+> +	return ret;
+> +}
+> +
+> +int mux_chip_register(struct mux_chip *mux_chip)
+> +{
+> +	int i;
+> +	int ret;
+> +
+> +	for (i = 0; i < mux_chip->controllers; ++i) {
+> +		struct mux_control *mux = &mux_chip->mux[i];
+> +
+> +		if (mux->idle_state == mux->cached_state)
+> +			continue;
+> +
+> +		ret = mux_control_set(mux, mux->idle_state);
+> +		if (ret < 0) {
+> +			dev_err(&mux_chip->dev, "unable to set idle state\n");
+> +			return ret;
+> +		}
+> +	}
+> +
+> +	ret = device_add(&mux_chip->dev);
+> +	if (ret < 0)
+> +		dev_err(&mux_chip->dev,
+> +			"device_add failed in mux_chip_register: %d\n", ret);
+
+Did you run checkpatch.pl in strict mode on this new file?  Please do so :)
+
+> +	return ret;
+> +}
+> +EXPORT_SYMBOL_GPL(mux_chip_register);
+> +
+> +void mux_chip_unregister(struct mux_chip *mux_chip)
+> +{
+> +	device_del(&mux_chip->dev);
+> +}
+> +EXPORT_SYMBOL_GPL(mux_chip_unregister);
+> +
+> +void mux_chip_free(struct mux_chip *mux_chip)
+> +{
+> +	if (!mux_chip)
+> +		return;
+> +
+> +	put_device(&mux_chip->dev);
+> +}
+> +EXPORT_SYMBOL_GPL(mux_chip_free);
+> +
+> +static void devm_mux_chip_release(struct device *dev, void *res)
+> +{
+> +	struct mux_chip *mux_chip = *(struct mux_chip **)res;
+> +
+> +	mux_chip_free(mux_chip);
+> +}
+> +
+> +struct mux_chip *devm_mux_chip_alloc(struct device *dev,
+> +				     unsigned int controllers,
+> +				     size_t sizeof_priv)
+> +{
+> +	struct mux_chip **ptr, *mux_chip;
+> +
+> +	ptr = devres_alloc(devm_mux_chip_release, sizeof(*ptr), GFP_KERNEL);
+> +	if (!ptr)
+> +		return NULL;
+> +
+> +	mux_chip = mux_chip_alloc(dev, controllers, sizeof_priv);
+> +	if (!mux_chip) {
+> +		devres_free(ptr);
+> +		return NULL;
+> +	}
+> +
+> +	*ptr = mux_chip;
+> +	devres_add(dev, ptr);
+> +
+> +	return mux_chip;
+> +}
+> +EXPORT_SYMBOL_GPL(devm_mux_chip_alloc);
+
+
+Having devm functions that create/destroy other struct devices worries
+me, do we have other examples of this happening today?  Are you sure you
+got the reference counting all correct?
+
+> +
+> +static int devm_mux_chip_match(struct device *dev, void *res, void *data)
+> +{
+> +	struct mux_chip **r = res;
+> +
+> +	if (WARN_ON(!r || !*r))
+
+How can this happen?
+
+> +		return 0;
+> +
+> +	return *r == data;
+> +}
+> +
+> +void devm_mux_chip_free(struct device *dev, struct mux_chip *mux_chip)
+> +{
+> +	WARN_ON(devres_release(dev, devm_mux_chip_release,
+> +			       devm_mux_chip_match, mux_chip));
+
+What can someone do with these WARN_ON() splats in the kernel log?
+
+
+> +}
+> +EXPORT_SYMBOL_GPL(devm_mux_chip_free);
+> +
+> +static void devm_mux_chip_reg_release(struct device *dev, void *res)
+> +{
+> +	struct mux_chip *mux_chip = *(struct mux_chip **)res;
+> +
+> +	mux_chip_unregister(mux_chip);
+> +}
+> +
+> +int devm_mux_chip_register(struct device *dev,
+> +			   struct mux_chip *mux_chip)
+> +{
+> +	struct mux_chip **ptr;
+> +	int res;
+> +
+> +	ptr = devres_alloc(devm_mux_chip_reg_release, sizeof(*ptr), GFP_KERNEL);
+> +	if (!ptr)
+> +		return -ENOMEM;
+> +
+> +	res = mux_chip_register(mux_chip);
+> +	if (res) {
+> +		devres_free(ptr);
+> +		return res;
+> +	}
+> +
+> +	*ptr = mux_chip;
+> +	devres_add(dev, ptr);
+> +
+> +	return res;
+> +}
+> +EXPORT_SYMBOL_GPL(devm_mux_chip_register);
+> +
+> +void devm_mux_chip_unregister(struct device *dev, struct mux_chip *mux_chip)
+> +{
+> +	WARN_ON(devres_release(dev, devm_mux_chip_reg_release,
+> +			       devm_mux_chip_match, mux_chip));
+> +}
+> +EXPORT_SYMBOL_GPL(devm_mux_chip_unregister);
+> +
+> +int mux_control_select(struct mux_control *mux, int state)
+> +{
+> +	int ret;
+> +
+> +	if (down_read_trylock(&mux->lock)) {
+> +		if (mux->cached_state == state)
+> +			return 0;
+> +
+> +		/* Sigh, the mux needs updating... */
+> +		up_read(&mux->lock);
+> +	}
+> +
+> +	/* ...or it's just contended. */
+> +	down_write(&mux->lock);
+
+Why use a read/write lock at all?  Have you tested this to verify it
+really is faster and needed?
+
+> +
+> +	if (mux->cached_state == state) {
+> +		/*
+> +		 * Hmmm, someone else changed the mux to my liking.
+> +		 * That makes me wonder how long I waited for nothing?
+> +		 */
+> +		downgrade_write(&mux->lock);
+
+Oh that always scares me...  Are you _sure_ this is correct?  And
+needed?
+
+> +		return 0;
+> +	}
+> +
+> +	ret = mux_control_set(mux, state);
+> +	if (ret < 0) {
+> +		if (mux->idle_state != MUX_IDLE_AS_IS)
+> +			mux_control_set(mux, mux->idle_state);
+> +
+> +		up_write(&mux->lock);
+> +		return ret;
+> +	}
+> +
+> +	downgrade_write(&mux->lock);
+> +
+> +	return 1;
+> +}
+> +EXPORT_SYMBOL_GPL(mux_control_select);
+> +
+> +int mux_control_deselect(struct mux_control *mux)
+> +{
+> +	int ret = 0;
+> +
+> +	if (mux->idle_state != MUX_IDLE_AS_IS &&
+> +	    mux->idle_state != mux->cached_state)
+> +		ret = mux_control_set(mux, mux->idle_state);
+> +
+> +	up_read(&mux->lock);
+
+You require a lock to be held for a "global" function?  Without
+documentation?  Or even a sparse marking?  That's asking for trouble...
+
+> +
+> +	return ret;
+> +}
+> +EXPORT_SYMBOL_GPL(mux_control_deselect);
+> +
+> +static int of_dev_node_match(struct device *dev, const void *data)
+> +{
+> +	return dev->of_node == data;
+> +}
+> +
+> +static struct mux_chip *of_find_mux_chip_by_node(struct device_node *np)
+> +{
+> +	struct device *dev;
+> +
+> +	dev = class_find_device(&mux_class, NULL, np, of_dev_node_match);
+> +
+> +	return dev ? to_mux_chip(dev) : NULL;
+> +}
+> +
+> +struct mux_control *mux_control_get(struct device *dev, const char *mux_name)
+> +{
+> +	struct device_node *np = dev->of_node;
+> +	struct of_phandle_args args;
+> +	struct mux_chip *mux_chip;
+> +	unsigned int controller;
+> +	int index = 0;
+> +	int ret;
+> +
+> +	if (mux_name) {
+> +		index = of_property_match_string(np, "mux-control-names",
+> +						 mux_name);
+> +		if (index < 0) {
+> +			dev_err(dev, "mux controller '%s' not found\n",
+> +				mux_name);
+> +			return ERR_PTR(index);
+> +		}
+> +	}
+> +
+> +	ret = of_parse_phandle_with_args(np,
+> +					 "mux-controls", "#mux-control-cells",
+> +					 index, &args);
+> +	if (ret) {
+> +		dev_err(dev, "%s: failed to get mux-control %s(%i)\n",
+> +			np->full_name, mux_name ?: "", index);
+> +		return ERR_PTR(ret);
+> +	}
+> +
+> +	mux_chip = of_find_mux_chip_by_node(args.np);
+> +	of_node_put(args.np);
+> +	if (!mux_chip)
+> +		return ERR_PTR(-EPROBE_DEFER);
+> +
+> +	if (args.args_count > 1 ||
+> +	    (!args.args_count && (mux_chip->controllers > 1))) {
+> +		dev_err(dev, "%s: wrong #mux-control-cells for %s\n",
+> +			np->full_name, args.np->full_name);
+> +		return ERR_PTR(-EINVAL);
+> +	}
+> +
+> +	controller = 0;
+> +	if (args.args_count)
+> +		controller = args.args[0];
+> +
+> +	if (controller >= mux_chip->controllers) {
+> +		dev_err(dev, "%s: bad mux controller %u specified in %s\n",
+> +			np->full_name, controller, args.np->full_name);
+> +		return ERR_PTR(-EINVAL);
+> +	}
+> +
+> +	get_device(&mux_chip->dev);
+> +	return &mux_chip->mux[controller];
+> +}
+> +EXPORT_SYMBOL_GPL(mux_control_get);
+> +
+> +void mux_control_put(struct mux_control *mux)
+> +{
+> +	put_device(&mux->chip->dev);
+> +}
+> +EXPORT_SYMBOL_GPL(mux_control_put);
+> +
+> +static void devm_mux_control_release(struct device *dev, void *res)
+> +{
+> +	struct mux_control *mux = *(struct mux_control **)res;
+> +
+> +	mux_control_put(mux);
+> +}
+> +
+> +struct mux_control *devm_mux_control_get(struct device *dev,
+> +					 const char *mux_name)
+> +{
+> +	struct mux_control **ptr, *mux;
+> +
+> +	ptr = devres_alloc(devm_mux_control_release, sizeof(*ptr), GFP_KERNEL);
+> +	if (!ptr)
+> +		return ERR_PTR(-ENOMEM);
+> +
+> +	mux = mux_control_get(dev, mux_name);
+> +	if (IS_ERR(mux)) {
+> +		devres_free(ptr);
+> +		return mux;
+> +	}
+> +
+> +	*ptr = mux;
+> +	devres_add(dev, ptr);
+> +
+> +	return mux;
+> +}
+> +EXPORT_SYMBOL_GPL(devm_mux_control_get);
+> +
+> +static int devm_mux_control_match(struct device *dev, void *res, void *data)
+> +{
+> +	struct mux_control **r = res;
+> +
+> +	if (WARN_ON(!r || !*r))
+> +		return 0;
+
+Same here, how can this happen?
+
+> +
+> +	return *r == data;
+> +}
+> +
+> +void devm_mux_control_put(struct device *dev, struct mux_control *mux)
+> +{
+> +	WARN_ON(devres_release(dev, devm_mux_control_release,
+> +			       devm_mux_control_match, mux));
+> +}
+> +EXPORT_SYMBOL_GPL(devm_mux_control_put);
+> +
+> +/*
+> + * Using subsys_initcall instead of module_init here to ensure - for the
+> + * non-modular case - that the subsystem is initialized when mux consumers
+> + * and mux controllers start to use it /without/ relying on link order.
+> + * For the modular case, the ordering is ensured with module dependencies.
+> + */
+> +subsys_initcall(mux_init);
+
+Even with subsys_initcall you are relying on link order, you do realize
+that?  What about other subsystems that rely on this?  :)
+
+
+> +
+> +MODULE_DESCRIPTION("Multiplexer subsystem");
+> +MODULE_AUTHOR("Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>");
+> +MODULE_LICENSE("GPL v2");
+> diff --git a/drivers/mux/mux-gpio.c b/drivers/mux/mux-gpio.c
+> new file mode 100644
+> index 000000000000..227d3572e6db
+> --- /dev/null
+> +++ b/drivers/mux/mux-gpio.c
+> @@ -0,0 +1,114 @@
+> +/*
+> + * GPIO-controlled multiplexer driver
+> + *
+> + * Copyright (C) 2017 Axentia Technologies AB
+> + *
+> + * Author: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + */
+> +
+> +#include <linux/err.h>
+> +#include <linux/gpio/consumer.h>
+> +#include <linux/module.h>
+> +#include <linux/mux.h>
+> +#include <linux/of_platform.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/property.h>
+> +
+> +struct mux_gpio {
+> +	struct gpio_descs *gpios;
+> +	int *val;
+> +};
+> +
+> +static int mux_gpio_set(struct mux_control *mux, int state)
+> +{
+> +	struct mux_gpio *mux_gpio = mux_chip_priv(mux->chip);
+> +	int i;
+> +
+> +	for (i = 0; i < mux_gpio->gpios->ndescs; i++)
+> +		mux_gpio->val[i] = (state >> i) & 1;
+> +
+> +	gpiod_set_array_value_cansleep(mux_gpio->gpios->ndescs,
+> +				       mux_gpio->gpios->desc,
+> +				       mux_gpio->val);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct mux_control_ops mux_gpio_ops = {
+> +	.set = mux_gpio_set,
+> +};
+> +
+> +static const struct of_device_id mux_gpio_dt_ids[] = {
+> +	{ .compatible = "gpio-mux", },
+> +	{ /* sentinel */ }
+> +};
+> +MODULE_DEVICE_TABLE(of, mux_gpio_dt_ids);
+> +
+> +static int mux_gpio_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct mux_chip *mux_chip;
+> +	struct mux_gpio *mux_gpio;
+> +	int pins;
+> +	s32 idle_state;
+> +	int ret;
+> +
+> +	pins = gpiod_count(dev, "mux");
+> +	if (pins < 0)
+> +		return pins;
+> +
+> +	mux_chip = devm_mux_chip_alloc(dev, 1, sizeof(*mux_gpio) +
+> +				       pins * sizeof(*mux_gpio->val));
+> +	if (!mux_chip)
+> +		return -ENOMEM;
+> +
+> +	mux_gpio = mux_chip_priv(mux_chip);
+> +	mux_gpio->val = (int *)(mux_gpio + 1);
+> +	mux_chip->ops = &mux_gpio_ops;
+> +
+> +	mux_gpio->gpios = devm_gpiod_get_array(dev, "mux", GPIOD_OUT_LOW);
+> +	if (IS_ERR(mux_gpio->gpios)) {
+> +		ret = PTR_ERR(mux_gpio->gpios);
+> +		if (ret != -EPROBE_DEFER)
+> +			dev_err(dev, "failed to get gpios\n");
+> +		return ret;
+> +	}
+> +	WARN_ON(pins != mux_gpio->gpios->ndescs);
+> +	mux_chip->mux->states = 1 << pins;
+> +
+> +	ret = device_property_read_u32(dev, "idle-state", (u32 *)&idle_state);
+> +	if (ret >= 0 && idle_state != MUX_IDLE_AS_IS) {
+> +		if (idle_state < 0 || idle_state >= mux_chip->mux->states) {
+> +			dev_err(dev, "invalid idle-state %u\n", idle_state);
+> +			return -EINVAL;
+> +		}
+> +
+> +		mux_chip->mux->idle_state = idle_state;
+> +	}
+> +
+> +	ret = devm_mux_chip_register(dev, mux_chip);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	dev_info(dev, "%u-way mux-controller registered\n",
+> +		 mux_chip->mux->states);
+> +
+> +	return 0;
+> +}
+> +
+> +static struct platform_driver mux_gpio_driver = {
+> +	.driver = {
+> +		.name = "gpio-mux",
+> +		.of_match_table	= of_match_ptr(mux_gpio_dt_ids),
+> +	},
+> +	.probe = mux_gpio_probe,
+> +};
+> +module_platform_driver(mux_gpio_driver);
+> +
+> +MODULE_DESCRIPTION("GPIO-controlled multiplexer driver");
+> +MODULE_AUTHOR("Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>");
+> +MODULE_LICENSE("GPL v2");
+> diff --git a/include/linux/mux.h b/include/linux/mux.h
+> new file mode 100644
+> index 000000000000..febdde4246df
+> --- /dev/null
+> +++ b/include/linux/mux.h
+> @@ -0,0 +1,252 @@
+> +/*
+> + * mux.h - definitions for the multiplexer interface
+> + *
+> + * Copyright (C) 2017 Axentia Technologies AB
+> + *
+> + * Author: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + */
+> +
+> +#ifndef _LINUX_MUX_H
+> +#define _LINUX_MUX_H
+> +
+> +#include <linux/device.h>
+> +#include <linux/rwsem.h>
+> +
+> +struct mux_chip;
+> +struct mux_control;
+> +struct platform_device;
+> +
+> +/**
+> + * struct mux_control_ops -	Mux controller operations for a mux chip.
+> + * @set:			Set the state of the given mux controller.
+> + */
+> +struct mux_control_ops {
+> +	int (*set)(struct mux_control *mux, int state);
+> +};
+> +
+> +/* These defines match the constants from the dt-bindings. On purpose. */
+
+Why on purpose?
+
+> +#define MUX_IDLE_AS_IS      (-1)
+> +#define MUX_IDLE_DISCONNECT (-2)
+> +
+> +/**
+> + * struct mux_control -	Represents a mux controller.
+> + * @lock:		Protects the mux controller state.
+> + * @chip:		The mux chip that is handling this mux controller.
+> + * @states:		The number of mux controller states.
+> + * @cached_state:	The current mux controller state, or -1 if none.
+> + * @idle_state:		The mux controller state to use when inactive, or one
+> + *			of MUX_IDLE_AS_IS and MUX_IDLE_DISCONNECT.
+> + */
+> +struct mux_control {
+> +	struct rw_semaphore lock; /* protects the state of the mux */
+> +
+> +	struct mux_chip *chip;
+> +
+> +	unsigned int states;
+> +	int cached_state;
+> +	int idle_state;
+> +};
+> +
+> +/**
+> + * struct mux_chip -	Represents a chip holding mux controllers.
+> + * @controllers:	Number of mux controllers handled by the chip.
+> + * @mux:		Array of mux controllers that are handled.
+> + * @dev:		Device structure.
+> + * @id:			Used to identify the device internally.
+> + * @ops:		Mux controller operations.
+> + */
+> +struct mux_chip {
+> +	unsigned int controllers;
+> +	struct mux_control *mux;
+> +	struct device dev;
+> +	int id;
+> +
+> +	const struct mux_control_ops *ops;
+> +};
+> +
+> +#define to_mux_chip(x) container_of((x), struct mux_chip, dev)
+> +
+> +/**
+> + * mux_chip_priv() - Get the extra memory reserved by mux_chip_alloc().
+> + * @mux_chip: The mux-chip to get the private memory from.
+> + *
+> + * Return: Pointer to the private memory reserved by the allocator.
+> + */
+> +static inline void *mux_chip_priv(struct mux_chip *mux_chip)
+> +{
+> +	return &mux_chip->mux[mux_chip->controllers];
+> +}
+> +
+> +/**
+> + * mux_chip_alloc() - Allocate a mux-chip.
+> + * @dev: The parent device implementing the mux interface.
+> + * @controllers: The number of mux controllers to allocate for this chip.
+> + * @sizeof_priv: Size of extra memory area for private use by the caller.
+> + *
+> + * Return: A pointer to the new mux-chip, NULL on failure.
+> + */
+> +struct mux_chip *mux_chip_alloc(struct device *dev,
+> +				unsigned int controllers, size_t sizeof_priv);
+> +
+
+Don't put kernel doc comments in a .h file, they normally go into the .c
+file, next to the code itself.  That makes it easier to fix up and
+realise when they need to be changed when the code changes.  The .h file
+rarely changes.
+
+
+> +/**
+> + * mux_chip_register() - Register a mux-chip, thus readying the controllers
+> + *			 for use.
+> + * @mux_chip: The mux-chip to register.
+> + *
+> + * Do not retry registration of the same mux-chip on failure. You should
+> + * instead put it away with mux_chip_free() and allocate a new one, if you
+> + * for some reason would like to retry registration.
+> + *
+> + * Return: Zero on success or a negative errno on error.
+> + */
+> +int mux_chip_register(struct mux_chip *mux_chip);
+> +
+> +/**
+> + * mux_chip_unregister() - Take the mux-chip off-line.
+> + * @mux_chip: The mux-chip to unregister.
+> + *
+> + * mux_chip_unregister() reverses the effects of mux_chip_register().
+> + * But not completely, you should not try to call mux_chip_register()
+> + * on a mux-chip that has been registered before.
+> + */
+> +void mux_chip_unregister(struct mux_chip *mux_chip);
+> +
+> +/**
+> + * mux_chip_free() - Free the mux-chip for good.
+> + * @mux_chip: The mux-chip to free.
+> + *
+> + * mux_chip_free() reverses the effects of mux_chip_alloc().
+> + */
+> +void mux_chip_free(struct mux_chip *mux_chip);
+> +
+> +/**
+> + * devm_mux_chip_alloc() - Resource-managed version of mux_chip_alloc().
+> + * @dev: The parent device implementing the mux interface.
+> + * @controllers: The number of mux controllers to allocate for this chip.
+> + * @sizeof_priv: Size of extra memory area for private use by the caller.
+> + *
+> + * See mux_chip_alloc() for more details.
+> + *
+> + * Return: A pointer to the new mux-chip, NULL on failure.
+> + */
+> +struct mux_chip *devm_mux_chip_alloc(struct device *dev,
+> +				     unsigned int controllers,
+> +				     size_t sizeof_priv);
+> +
+> +/**
+> + * devm_mux_chip_register() - Resource-managed version mux_chip_register().
+> + * @dev: The parent device implementing the mux interface.
+> + * @mux_chip: The mux-chip to register.
+> + *
+> + * See mux_chip_register() for more details.
+> + *
+> + * Return: Zero on success or a negative errno on error.
+> + */
+> +int devm_mux_chip_register(struct device *dev, struct mux_chip *mux_chip);
+> +
+> +/**
+> + * devm_mux_chip_unregister() - Resource-managed version mux_chip_unregister().
+> + * @dev: The device that originally registered the mux-chip.
+> + * @mux_chip: The mux-chip to unregister.
+> + *
+> + * See mux_chip_unregister() for more details.
+> + *
+> + * Note that you do not normally need to call this function.
+
+Odd, then why is it exported???
+
+
+> + */
+> +void devm_mux_chip_unregister(struct device *dev, struct mux_chip *mux_chip);
+> +
+> +/**
+> + * devm_mux_chip_free() - Resource-managed version mux_chip_free().
+> + * @dev: The device that originally got the mux-chip.
+> + * @mux_chip: The mux-chip to free.
+> + *
+> + * See mux_chip_free() for more details.
+> + *
+> + * Note that you do not normally need to call this function.
+> + */
+> +void devm_mux_chip_free(struct device *dev, struct mux_chip *mux_chip);
+> +
+> +/**
+> + * mux_control_select() - Select the given multiplexer state.
+> + * @mux: The mux-control to request a change of state from.
+> + * @state: The new requested state.
+> + *
+> + * Make sure to call mux_control_deselect() when the operation is complete and
+> + * the mux-control is free for others to use, but do not call
+> + * mux_control_deselect() if mux_control_select() fails.
+> + *
+> + * Return: 0 if the requested state was already active, or 1 it the
+> + * mux-control state was changed to the requested state. Or a negative
+> + * errno on error.
+> + *
+> + * Note that the difference in return value of zero or one is of
+> + * questionable value; especially if the mux-control has several independent
+> + * consumers, which is something the consumers should perhaps not be making
+> + * assumptions about.
+
+I don't understand this note, what is a user of this api supposed to do
+differently between 1 and 0?  Why make the difference at all?
+
+And I agree with the comment to split this up into 2 different .h files,
+if possible.
+
+thanks,
+
+greg k-h
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
