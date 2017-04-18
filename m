@@ -1,101 +1,83 @@
-From: Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v6 5/8] coresight: use const for device_node structures
-Date: Tue, 18 Apr 2017 09:24:47 -0600
-Message-ID: <20170418152447.GB22806@linaro.org>
-References: <1491485461-22800-1-git-send-email-leo.yan@linaro.org>
- <1491485461-22800-6-git-send-email-leo.yan@linaro.org>
+From: Gilad Ben-Yossef <gilad-6S/DczAoZh3WXxRugSxzZg@public.gmane.org>
+Subject: Re: [PATCH 0/4] staging: add ccree crypto driver
+Date: Tue, 18 Apr 2017 18:29:22 +0300
+Message-ID: <CAOtvUMeB8ub-e6PXxgJWyK=TW4HseZgSN6NO=kSmVax514ufdg@mail.gmail.com>
+References: <1492524470-13847-1-git-send-email-gilad@benyossef.com> <20170418151355.GI17866@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1491485461-22800-6-git-send-email-leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+In-Reply-To: <20170418151355.GI17866@leverpostej>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Brown <david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Suzuki K Poulose <suzuki.poulose-5wv7dgnIgG8@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mike Leach <mike.leach-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux kernel mailing list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Gilad Ben-Yossef <gilad.benyossef-5wv7dgnIgG8@public.gmane.org>, Binoy Jayan <binoy.jayan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ofir Drang <ofir.drang-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 06, 2017 at 09:30:58PM +0800, Leo Yan wrote:
-> Almost low level functions from open firmware have used const to
-> qualify device_node structures, so add const for device_node
-> parameters in of_coresight related functions.
-> 
-> Reviewed-by: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> Signed-off-by: Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Hi Mark,
 
-I agree with these changes but the patch needs to be split up - please see
-below.
+On Tue, Apr 18, 2017 at 6:13 PM, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
+> Hi,
+>
+> On Tue, Apr 18, 2017 at 05:07:50PM +0300, Gilad Ben-Yossef wrote:
+>> Arm TrustZone CryptoCell 700 is a family of cryptographic hardware
+>> accelerators. It is supported by a long lived series of out of tree
+>> drivers, which I am now in the process of unifying and upstreaming.
+>> This is the first drop, supporting the new CryptoCell 712 REE.
+>>
+>> The code still needs some cleanup before maturing to a proper
+>> upstream driver, which I am in the process of doing. However,
+>> as discussion of some of the capabilities of the hardware and
+>> its application to some dm-crypt and dm-verity features recently
+>> took place I though it is better to do this in the open via the
+>> staging tree.
+>>
+>> A Git repository based off of Linux 4.11-rc7 is available at
+>> https://github.com/gby/linux.git branch ccree.
+>>
+>> Signed-off-by: Gilad Ben-Yossef <gilad-6S/DczAoZh3WXxRugSxzZg@public.gmane.org>
+>> CC: Binoy Jayan <binoy.jayan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> CC: Ofir Drang <ofir.drang-5wv7dgnIgG8@public.gmane.org>
+>>
+>> Gilad Ben-Yossef (4):
+>>   staging: add ccree crypto driver
+>>   staging: ccree: add TODO list
+>>   staging: ccree: add devicetree bindings
+>>   MAINTAINERS: add Gilad BY as maintainer for ccree
+>>
+>>  .../devicetree/bindings/crypto/arm-cryptocell.txt  |   23 +
+>
+> I'm interested in looking at the DT binding, but for some reason I've
+> only recevied the cover letter so far.
+>
+> Are my mail servers being particularly slow today, or has something gone
+> wrong with the Cc list for the remaining patches?
+>
 
-> ---
->  drivers/hwtracing/coresight/of_coresight.c | 6 +++---
->  include/linux/coresight.h                  | 8 ++++----
->  2 files changed, 7 insertions(+), 7 deletions(-)
-> 
-> diff --git a/drivers/hwtracing/coresight/of_coresight.c b/drivers/hwtracing/coresight/of_coresight.c
-> index 78d2399..46eec0f 100644
-> --- a/drivers/hwtracing/coresight/of_coresight.c
-> +++ b/drivers/hwtracing/coresight/of_coresight.c
-> @@ -52,7 +52,7 @@ of_coresight_get_endpoint_device(struct device_node *endpoint)
->  			       endpoint, of_dev_node_match);
->  }
->  
-> -static void of_coresight_get_ports(struct device_node *node,
-> +static void of_coresight_get_ports(const struct device_node *node,
->  				   int *nr_inport, int *nr_outport)
+Thanks a bunch for the willingness to review this.
 
-Move this to a patch by itself as it is not related to this driver.
+My apologies for not communicating this clearly enough -  Since it is
+an pre-existing driver it is rather big.
+I did not want to inflict a 600K patch on the mailing list so opted to
+provide a git repo instead, as stated in the
+email.
 
->  {
->  	struct device_node *ep = NULL;
-> @@ -101,7 +101,7 @@ static int of_coresight_alloc_memory(struct device *dev,
->  	return 0;
->  }
->  
-> -int of_coresight_get_cpu(struct device_node *node)
-> +int of_coresight_get_cpu(const struct device_node *node)
+The patch in question is here:
+https://github.com/gby/linux/commit/12d92e0bc19aa9bbd891cdab765eaaeabe0b6967
 
-Move this to the previous patch in this set.  There is not need to undo what you
-just did there.
+Do let me know if you prefer that I will send at least the smaller
+patch file via email in the normal fashion.
 
->  {
->  	int cpu;
->  	bool found;
-> @@ -128,7 +128,7 @@ int of_coresight_get_cpu(struct device_node *node)
->  EXPORT_SYMBOL_GPL(of_coresight_get_cpu);
->  
->  struct coresight_platform_data *of_get_coresight_platform_data(
-> -				struct device *dev, struct device_node *node)
-> +			struct device *dev, const struct device_node *node)
+Many thanks,
+Gilad
 
-Same here, move this to a new patch (the same one as of_coresight_get_ports()).
 
->  {
->  	int i = 0, ret = 0;
->  	struct coresight_platform_data *pdata;
-> diff --git a/include/linux/coresight.h b/include/linux/coresight.h
-> index bf96678..4915254 100644
-> --- a/include/linux/coresight.h
-> +++ b/include/linux/coresight.h
-> @@ -263,13 +263,13 @@ static inline int coresight_timeout(void __iomem *addr, u32 offset,
->  #endif
->  
->  #ifdef CONFIG_OF
-> -extern int of_coresight_get_cpu(struct device_node *node);
-> +extern int of_coresight_get_cpu(const struct device_node *node);
->  extern struct coresight_platform_data *of_get_coresight_platform_data(
-> -				struct device *dev, struct device_node *node);
-> +	struct device *dev, const struct device_node *node);
->  #else
-> -static inline int of_coresight_get_cpu(struct device_node *node) { return 0; }
-> +static inline int of_coresight_get_cpu(const struct device_node *node) { return 0; }
->  static inline struct coresight_platform_data *of_get_coresight_platform_data(
-> -	struct device *dev, struct device_node *node) { return NULL; }
-> +	struct device *dev, const struct device_node *node) { return NULL; }
->  #endif
->  
->  #ifdef CONFIG_PID_NS
-> -- 
-> 2.7.4
-> 
+
+-- 
+Gilad Ben-Yossef
+Chief Coffee Drinker
+
+"If you take a class in large-scale robotics, can you end up in a
+situation where the homework eats your dog?"
+ -- Jean-Baptiste Queru
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
