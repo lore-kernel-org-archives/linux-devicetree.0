@@ -1,42 +1,61 @@
-From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: rockchip: reuse firefly dtsi
-Date: Wed, 19 Apr 2017 00:20:32 +0200
-Message-ID: <746291609.ssvjv54Vin@phil>
-References: <20170418121527.3155-1-eddie.cai.linux@gmail.com>
+From: Mark Greer <mgreer-luAo+O/VEmrlveNOaEYElw@public.gmane.org>
+Subject: Re: [PATCH v3 0/7] NFC: trf7970a: Fixups & convert to desc-based GPIO
+Date: Tue, 18 Apr 2017 15:26:34 -0700
+Message-ID: <20170418222634.GA27280@animalcreek.com>
+References: <20170120191745.29255-1-mgreer@animalcreek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170418121527.3155-1-eddie.cai.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170120191745.29255-1-mgreer-luAo+O/VEmrlveNOaEYElw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Eddie Cai <eddie.cai.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lauro Ramos Venancio <lauro.venancio-430g2QfJUUCGglJvpFV4uA@public.gmane.org>, Aloisio Almeida Jr <aloisio.almeida-430g2QfJUUCGglJvpFV4uA@public.gmane.org>
+Cc: linux-nfc-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Greer <mgreer-luAo+O/VEmrlveNOaEYElw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Eddie,
-
-Am Dienstag, 18. April 2017, 20:15:27 CEST schrieb Eddie Cai:
-> firefly reload is very similar with firefly board, so reuse firefly dtsi
+On Fri, Jan 20, 2017 at 12:17:38PM -0700, Mark Greer wrote:
+> These trf7970a driver patches do the following things:
+>  - a couple minor fixups
+>  - allow EN2 to not be managed by the driver (e.g., when its tied low by
+>    hardware
+>  - convert the driver to use the descriptor-based GPIO interface
+>  - remove support for 'vin-voltage-override' DT property
+>  - change the DTS example to indicate that EN and EN2 are active high GPIOs
+>  - add Mark Greer as the maintainer of the trf7970a driver
 > 
-> Signed-off-by: Eddie Cai <eddie.cai.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->  arch/arm/boot/dts/rk3288-firefly-reload-core.dtsi | 310 ------------------
->  arch/arm/boot/dts/rk3288-firefly-reload.dts       | 368 ++--------------------
+> Based on k.o. 44b4b46 (Merge tag 'armsoc-fixes' of
+> git://git.kernel.org/pub/scm/linux/kernel/git/arm/arm-soc)
+> 
+> v2->v3:
+>  - Removed "[PATCH v2 5/7] NFC: trf7970a: Clean up coding style issues"
+>    because it will make merging patches from Geoff Lansberry and others
+>    hard to apply.  I will resubmit once those patches have been merged
+>    or rejected.
+>  - Added a patch to remove 'vin-voltage-override' DT property support as
+>    proper DT regulator set up makes it unnecessary.
+> 
+> v1->v2:
+>  - Commit description fixups only; no functional changes.
+> 
+> Mark Greer (7):
+>   NFC: trf7970a: Don't de-assert EN2 unless it was asserted
+>   NFC: trf7970a: Don't manage EN2 when not specified in DT
+>   NFC: trf7970a: Convert to descriptor based GPIO interface
+>   NFC: trf7970a: Remove useless comment
+>   NFC: trf7970a: Remove support for 'vin-voltage-override' DT property
+>   NFC: trf7970a: Enable pins are active high not active low
+>   MAINTAINERS: NFC: trf7970a: Add Mark Greer as maintainer
+> 
+>  .../devicetree/bindings/net/nfc/trf7970a.txt       |  6 +-
+>  MAINTAINERS                                        |  7 ++
+>  drivers/nfc/Kconfig                                |  2 +-
+>  drivers/nfc/trf7970a.c                             | 75 +++++++++-------------
+>  4 files changed, 40 insertions(+), 50 deletions(-)
+> 
+> -- 
+> 2.11.0
 
-I would disagree and remember having a similar discussion when the reload-
-support was initially submitted. Please keep in mind that the firefly-
-reload is a som+baseboard combination, so somebody could (or maybe
-already has) create a completely different baseboard for the som that
-does not have any similarities with the original firefly.
-The previous firefly being a real single board.
-
-We also don't combine rock2 and firefly and other boards following the
-general rk3288 design guidelines :-) and the original firefly and reload are
-very different boards if you look at them.
-
-
-Heiko
-
+Ping?
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
