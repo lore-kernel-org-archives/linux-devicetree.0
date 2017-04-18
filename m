@@ -1,138 +1,46 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [RFC 1/2] dt-bindings: add mmio-based syscon mux controller DT
- bindings
-Date: Tue, 18 Apr 2017 10:19:04 +0200
-Message-ID: <1492503544.2432.32.camel@pengutronix.de>
-References: <20170413154812.19597-1-p.zabel@pengutronix.de>
+From: Hoegeun Kwon <hoegeun.kwon@samsung.com>
+Subject: Re: [PATCH v2 3/3] arm64: dts: exynos: Add support for s6e3hf2
+ panel device on TM2e board
+Date: Tue, 18 Apr 2017 17:27:39 +0900
+Message-ID: <fe6129d5-2501-5685-c11f-aa910b39c10e@samsung.com>
+References: <1492408934-22096-1-git-send-email-hoegeun.kwon@samsung.com>
+ <CGME20170417060220epcas5p42f6ed43d9db94779382e84a129b9da2d@epcas5p4.samsung.com>
+ <1492408934-22096-4-git-send-email-hoegeun.kwon@samsung.com>
+ <b9bfcdd9-5576-34c3-6c7d-556b6c81946d@samsung.com>
+ <f2acb724-ba41-175c-061a-7be765cc1939@samsung.com>
+ <94152d85-5fb0-f5dc-045d-e6ee6c009f42@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170413154812.19597-1-p.zabel@pengutronix.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Rosin <peda@axentia.se>, Pavel Machek <pavel@ucw.cz>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sakari Ailus <sakari.ailus@iki.fi>, Steve Longerbeam <slongerbeam@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, kernel@pengutronix.de
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-reply-to: <94152d85-5fb0-f5dc-045d-e6ee6c009f42@samsung.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Andrzej Hajda <a.hajda@samsung.com>, thierry.reding@gmail.com, airlied@linux.ie, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, kgene@kernel.org, krzk@kernel.org
+Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, javier@osg.samsung.com, andi.shyti@samsung.com, Hoegeun Kwon <hoegeun.kwon@samsung.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2017-04-13 at 17:48 +0200, Philipp Zabel wrote:
-> This adds device tree binding documentation for mmio-based syscon
-> multiplexers controlled by a single bitfield in a syscon register
-> range.
-> 
-> Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
-> ---
->  Documentation/devicetree/bindings/mux/mmio-mux.txt | 56 ++++++++++++++++++++++
->  1 file changed, 56 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mux/mmio-mux.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/mux/mmio-mux.txt b/Documentation/devicetree/bindings/mux/mmio-mux.txt
-> new file mode 100644
-> index 0000000000000..11d96f5d98583
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mux/mmio-mux.txt
-> @@ -0,0 +1,56 @@
-> +MMIO bitfield-based multiplexer controller bindings
-> +
-> +Define a syscon bitfield to be used to control a multiplexer. The parent
-> +device tree node must be a syscon node to provide register access.
-> +
-> +Required properties:
-> +- compatible : "gpio-mux"
-> +- reg : register base of the register containing the control bitfield
-> +- bit-mask : bitmask of the control bitfield in the control register
-> +- bit-shift : bit offset of the control bitfield in the control register
-> +- #mux-control-cells : <0>
-> +* Standard mux-controller bindings as decribed in mux-controller.txt
-> +
-> +Optional properties:
-> +- idle-state : if present, the state the mux will have when idle. The
-> +	       special state MUX_IDLE_AS_IS is the default.
-> +
-> +The multiplexer state is defined as the value of the bitfield described
-> +by the reg, bit-mask, and bit-shift properties, accessed through the parent
-> +syscon.
-> +
-> +Example:
-> +
-> +	syscon {
-> +		compatible = "syscon";
-> +
-> +		mux: mux-controller@3 {
-> +			compatible = "mmio-mux";
-> +			reg = <0x3>;
-> +			bit-mask = <0x1>;
-> +			bit-shift = <5>;
-> +			#mux-control-cells = <0>;
-> +		};
-> +	};
-> +
-> +	video-mux {
-> +		compatible = "video-mux";
-> +		mux-controls = <&mux>;
-> +
-> +		ports {
-> +			/* input 0 */
-> +			port@0 {
-> +				reg = <0>;
-> +			};
-> +
-> +			/* input 1 */
-> +			port@1 {
-> +				reg = <1>;
-> +			};
-> +
-> +			/* output */
-> +			port@2 {
-> +				reg = <2>;
-> +			};
-> +		};
-> +	};
-
-So Pavel (added to Cc:) suggested to merge these into one node for the
-video mux, as really we are describing a single hardware entity that
-happens to be multiplexing multiple video buses into one:
-
-	syscon {
-		compatible = "syscon";
-
-		/* video multiplexer */
-		mux: mux-controller@3 {
-			compatible = "video-mmio-mux";
-			reg = <0x3>;
-			bit-mask = <0x1>;
-			bit-shift = <5>;
-			#mux-control-cells = <0>;
- 
-			mux-controls = <&mux>;
-
-			ports {
-				/* input 0 */
-				port@0 {
-					reg = <0>;
-				};
-
-				/* input 1 */
-				port@1 {
-					reg = <1>;
-				};
-
-				/* output */
-				port@2 {
-					reg = <2>;
-				};
-			};
-		};
-	};
-
-That would not touch on this "general purpose" mmio-mux binding itself,
-but would make it necessary to add a separate "video-mmio-mux" and a
-"video-gpio-mux" binding that mirror the "mmio-mux" and "gpio-mux"
-bindings but add the OF-graph connections.
-
-Also I think in this case the self-referencing mux-controls property
-would be superfluous, as the driver binding to this node is expected to
-control the mux according to activation of the links described by the
-OF-graph bindings.
-
-regards
-Philipp
+T24gMDQvMTgvMjAxNyAwNDo1NiBQTSwgQW5kcnplaiBIYWpkYSB3cm90ZToKPiBPbiAxOC4wNC4y
+MDE3IDA5OjQ0LCBIb2VnZXVuIEt3b24gd3JvdGU6Cj4+IE9uIDA0LzE4LzIwMTcgMDM6MDAgUE0s
+IEFuZHJ6ZWogSGFqZGEgd3JvdGU6Cj4+PiBPbiAxNy4wNC4yMDE3IDA4OjAyLCBIb2VnZXVuIEt3
+b24gd3JvdGU6Cj4+Pj4gVGhpcyBwYXRjaCBhZGQgdGhlIHBhbmVsIGRldmljZSB0cmVlIG5vZGUg
+Zm9yIHM2ZTNoZjIgZGlzcGxheQo+Pj4+IGNvbnRyb2xsZXIgdG8gVE0yZSBkdHMuCj4+Pj4KPj4+
+PiBTaWduZWQtb2ZmLWJ5OiBIb2VnZXVuIEt3b24gPGhvZWdldW4ua3dvbkBzYW1zdW5nLmNvbT4K
+Pj4+IE1heWJlIGl0IHdvdWxkIGJlIGdvb2QgdG8gcmVtb3ZlIHRlLWdwaW9zIHByb3BlcnR5IC0g
+dG0yL3RtMmUgdXNlcwo+Pj4gaGFyZHdhcmUgdHJpZ2dlciwgc28gaXQgaXMgbm90IG5lY2Vzc2Fy
+eSBhbmQgZ2VuZXJhdGVzIHVzZWxlc3MgaW50ZXJydXB0cy4KPj4gVGhhbmtzIGZvciB5b3VyIHJl
+dmlldy4KPj4KPj4gSSBhZ3JlZSwgYnV0IEkgdGhpbmtzIHJlbW92ZSB0aGUgdGUtZ3BpbyBwcm9w
+ZXJ0eSBhZnRlciB5b3VyIHBhdGNoIFsxXQo+PiBoYXMgYmVlbiBtZXJnZWQuCj4gUGF0Y2ggWzFd
+IGhhcyBiZWVuIG1lcmdlZCBhYm91dCBtb250aCBhZ28gOikKCkFoLi4uLCBNeSBtaXN0YWtlLi4u
+LiA6KQoKSSB3aWxsIHNlbmQgdmVyMyBwYXRjaHNldCB3aXRob3V0IHRlLWdwaW8gcHJvcGVydHku
+CgpCZXN0IHJlZ2FyZHMsCkhvZWdldW4KCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5m
+cmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0
+aW5mby9kcmktZGV2ZWwK
