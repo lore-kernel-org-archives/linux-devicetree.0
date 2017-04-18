@@ -1,53 +1,101 @@
-From: David Daney <ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH] of: fix "/cpus" reference leak in
- of_numa_parse_cpu_nodes()
-Date: Tue, 18 Apr 2017 08:16:58 -0700
-Message-ID: <1005a5c3-22d1-b082-0383-d8f74e711315@caviumnetworks.com>
-References: <1492475357-10784-1-git-send-email-tyreld@linux.vnet.ibm.com>
+From: Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v6 5/8] coresight: use const for device_node structures
+Date: Tue, 18 Apr 2017 09:24:47 -0600
+Message-ID: <20170418152447.GB22806@linaro.org>
+References: <1491485461-22800-1-git-send-email-leo.yan@linaro.org>
+ <1491485461-22800-6-git-send-email-leo.yan@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1492475357-10784-1-git-send-email-tyreld-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <1491485461-22800-6-git-send-email-leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tyrel Datwyler <tyreld-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Brown <david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Suzuki K Poulose <suzuki.poulose-5wv7dgnIgG8@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mike Leach <mike.leach-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 04/17/2017 05:29 PM, Tyrel Datwyler wrote:
-> The call to of_find_node_by_path("/cpus") returns the cpus device_node
-> with its reference count incremented. There is no matching of_node_put()
-> call in of_numa_parse_cpu_nodes() which results in a leaked reference
-> to the "/cpus" node.
+On Thu, Apr 06, 2017 at 09:30:58PM +0800, Leo Yan wrote:
+> Almost low level functions from open firmware have used const to
+> qualify device_node structures, so add const for device_node
+> parameters in of_coresight related functions.
 > 
-> This patch adds an of_node_put() to release the reference.
+> Reviewed-by: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> Signed-off-by: Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
-Good catch:
-Acked-by: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+I agree with these changes but the patch needs to be split up - please see
+below.
 
-> 
-> fixes: 298535c00a2c ("of, numa: Add NUMA of binding implementation.")
-> Signed-off-by: Tyrel Datwyler <tyreld-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
 > ---
->   drivers/of/of_numa.c | 2 ++
->   1 file changed, 2 insertions(+)
+>  drivers/hwtracing/coresight/of_coresight.c | 6 +++---
+>  include/linux/coresight.h                  | 8 ++++----
+>  2 files changed, 7 insertions(+), 7 deletions(-)
 > 
-> diff --git a/drivers/of/of_numa.c b/drivers/of/of_numa.c
-> index a53982a..2db1f7a 100644
-> --- a/drivers/of/of_numa.c
-> +++ b/drivers/of/of_numa.c
-> @@ -57,6 +57,8 @@ static void __init of_numa_parse_cpu_nodes(void)
->   		else
->   			node_set(nid, numa_nodes_parsed);
->   	}
-> +
-> +	of_node_put(cpus);
->   }
->   
->   static int __init of_numa_parse_memory_nodes(void)
-> 
+> diff --git a/drivers/hwtracing/coresight/of_coresight.c b/drivers/hwtracing/coresight/of_coresight.c
+> index 78d2399..46eec0f 100644
+> --- a/drivers/hwtracing/coresight/of_coresight.c
+> +++ b/drivers/hwtracing/coresight/of_coresight.c
+> @@ -52,7 +52,7 @@ of_coresight_get_endpoint_device(struct device_node *endpoint)
+>  			       endpoint, of_dev_node_match);
+>  }
+>  
+> -static void of_coresight_get_ports(struct device_node *node,
+> +static void of_coresight_get_ports(const struct device_node *node,
+>  				   int *nr_inport, int *nr_outport)
 
+Move this to a patch by itself as it is not related to this driver.
+
+>  {
+>  	struct device_node *ep = NULL;
+> @@ -101,7 +101,7 @@ static int of_coresight_alloc_memory(struct device *dev,
+>  	return 0;
+>  }
+>  
+> -int of_coresight_get_cpu(struct device_node *node)
+> +int of_coresight_get_cpu(const struct device_node *node)
+
+Move this to the previous patch in this set.  There is not need to undo what you
+just did there.
+
+>  {
+>  	int cpu;
+>  	bool found;
+> @@ -128,7 +128,7 @@ int of_coresight_get_cpu(struct device_node *node)
+>  EXPORT_SYMBOL_GPL(of_coresight_get_cpu);
+>  
+>  struct coresight_platform_data *of_get_coresight_platform_data(
+> -				struct device *dev, struct device_node *node)
+> +			struct device *dev, const struct device_node *node)
+
+Same here, move this to a new patch (the same one as of_coresight_get_ports()).
+
+>  {
+>  	int i = 0, ret = 0;
+>  	struct coresight_platform_data *pdata;
+> diff --git a/include/linux/coresight.h b/include/linux/coresight.h
+> index bf96678..4915254 100644
+> --- a/include/linux/coresight.h
+> +++ b/include/linux/coresight.h
+> @@ -263,13 +263,13 @@ static inline int coresight_timeout(void __iomem *addr, u32 offset,
+>  #endif
+>  
+>  #ifdef CONFIG_OF
+> -extern int of_coresight_get_cpu(struct device_node *node);
+> +extern int of_coresight_get_cpu(const struct device_node *node);
+>  extern struct coresight_platform_data *of_get_coresight_platform_data(
+> -				struct device *dev, struct device_node *node);
+> +	struct device *dev, const struct device_node *node);
+>  #else
+> -static inline int of_coresight_get_cpu(struct device_node *node) { return 0; }
+> +static inline int of_coresight_get_cpu(const struct device_node *node) { return 0; }
+>  static inline struct coresight_platform_data *of_get_coresight_platform_data(
+> -	struct device *dev, struct device_node *node) { return NULL; }
+> +	struct device *dev, const struct device_node *node) { return NULL; }
+>  #endif
+>  
+>  #ifdef CONFIG_PID_NS
+> -- 
+> 2.7.4
+> 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
