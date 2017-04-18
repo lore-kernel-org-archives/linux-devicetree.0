@@ -1,76 +1,81 @@
-From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Subject: Re: [PATCH 2/2] hwmon: (brcmstb) Add driver for Broadcom STB DPFE
-Date: Tue, 18 Apr 2017 15:47:39 -0700
-Message-ID: <20170418224739.GA24376@roeck-us.net>
-References: <20170418201702.57019-1-code@mmayer.net>
- <20170418201702.57019-3-code@mmayer.net>
- <20170418205839.GA3554@roeck-us.net>
- <f8c99c6f-8c53-0d0e-0712-d001c1e45f75@gmail.com>
+From: Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v6 5/8] coresight: use const for device_node structures
+Date: Wed, 19 Apr 2017 07:13:27 +0800
+Message-ID: <20170418231327.GA8524@leoy-linaro>
+References: <1491485461-22800-1-git-send-email-leo.yan@linaro.org>
+ <1491485461-22800-6-git-send-email-leo.yan@linaro.org>
+ <20170418152447.GB22806@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <f8c99c6f-8c53-0d0e-0712-d001c1e45f75-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <20170418152447.GB22806-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Markus Mayer <code-7CzEARzsJhSsTnJN9+BGXg@public.gmane.org>, Jean Delvare <jdelvare-IBi9RG/b67k@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Markus Mayer <mmayer-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Broadcom Kernel List <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Linux HWMON List <linux-hwmon-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Device Tree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, ARM Kernel List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Brown <david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Suzuki K Poulose <suzuki.poulose-5wv7dgnIgG8@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mike Leach <mike.leach-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Florian,
+Hi Mathieu,
 
-On Tue, Apr 18, 2017 at 03:29:55PM -0700, Florian Fainelli wrote:
-> Hey Guenter,
-> 
-> On 04/18/2017 01:58 PM, Guenter Roeck wrote:
-> > Hi Markus,
+On Tue, Apr 18, 2017 at 09:24:47AM -0600, Mathieu Poirier wrote:
+> On Thu, Apr 06, 2017 at 09:30:58PM +0800, Leo Yan wrote:
+> > Almost low level functions from open firmware have used const to
+> > qualify device_node structures, so add const for device_node
+> > parameters in of_coresight related functions.
 > > 
-> > On Tue, Apr 18, 2017 at 01:17:02PM -0700, Markus Mayer wrote:
-> >> From: Markus Mayer <mmayer-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-> >>
-> >> This driver allows access to DRAM properties, such as the refresh rate,
-> >> via the Broadcom STB DDR PHY Front End (DPFE). The refresh rate can be
-> >> used as indirect indicator of the DRAM temperature.
-> >>
-> >> The driver also allows setting of the sampling interval.
-> >>
-> >> Signed-off-by: Markus Mayer <mmayer-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-> >> ---
-> > [ ... ]
-> > 
-> >> +
-> >> +static SENSOR_DEVICE_ATTR(dpfe_info, 0444, show_info, NULL, 1000);
-> >> +static SENSOR_DEVICE_ATTR(dpfe_refresh, 0644, show_refresh, store_refresh,
-> >> +			  1000);
-> >> +static SENSOR_DEVICE_ATTR(dpfe_vendor, 0444, show_vendor, NULL, 1000);
-> >> +static struct attribute *dpfe_attrs[] = {
-> >> +	&sensor_dev_attr_dpfe_info.dev_attr.attr,
-> >> +	&sensor_dev_attr_dpfe_refresh.dev_attr.attr,
-> >> +	&sensor_dev_attr_dpfe_vendor.dev_attr.attr,
-> >> +	NULL
-> >> +};
-> >> +ATTRIBUTE_GROUPS(dpfe);
-> >> +
-> > 
-> > There is not a single standard hwmon attribute. I don't know how
-> > to classify this driver, and where it should reside, but it is not
-> > a hwmon driver. 
+> > Reviewed-by: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> > Signed-off-by: Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 > 
-> This is a driver that talks to an embedded CPU running firmware which is
-> capable of giving various informations about the DRAM chip being
-> populated, including a temperature trend (hotter or cooler). We thought
-> initially we would be able to expose the actual temperature, but this in
-> turn required a lot more knowledge about the DRAM chip that we wish we
-> knew about. That is sort of where and why this driver was proposed for
-> hwmon.
+> I agree with these changes but the patch needs to be split up - please see
+> below.
 > 
-> Which subsystem do you think would be best for this driver drivers/misc/
-> or drivers/soc/bcm/brcmstb/ maybe?
+> > ---
+> >  drivers/hwtracing/coresight/of_coresight.c | 6 +++---
+> >  include/linux/coresight.h                  | 8 ++++----
+> >  2 files changed, 7 insertions(+), 7 deletions(-)
+> > 
+> > diff --git a/drivers/hwtracing/coresight/of_coresight.c b/drivers/hwtracing/coresight/of_coresight.c
+> > index 78d2399..46eec0f 100644
+> > --- a/drivers/hwtracing/coresight/of_coresight.c
+> > +++ b/drivers/hwtracing/coresight/of_coresight.c
+> > @@ -52,7 +52,7 @@ of_coresight_get_endpoint_device(struct device_node *endpoint)
+> >  			       endpoint, of_dev_node_match);
+> >  }
+> >  
+> > -static void of_coresight_get_ports(struct device_node *node,
+> > +static void of_coresight_get_ports(const struct device_node *node,
+> >  				   int *nr_inport, int *nr_outport)
+> 
+> Move this to a patch by itself as it is not related to this driver.
+> 
+> >  {
+> >  	struct device_node *ep = NULL;
+> > @@ -101,7 +101,7 @@ static int of_coresight_alloc_memory(struct device *dev,
+> >  	return 0;
+> >  }
+> >  
+> > -int of_coresight_get_cpu(struct device_node *node)
+> > +int of_coresight_get_cpu(const struct device_node *node)
+> 
+> Move this to the previous patch in this set.  There is not need to undo what you
+> just did there.
+> 
+> >  {
+> >  	int cpu;
+> >  	bool found;
+> > @@ -128,7 +128,7 @@ int of_coresight_get_cpu(struct device_node *node)
+> >  EXPORT_SYMBOL_GPL(of_coresight_get_cpu);
+> >  
+> >  struct coresight_platform_data *of_get_coresight_platform_data(
+> > -				struct device *dev, struct device_node *node)
+> > +			struct device *dev, const struct device_node *node)
+> 
+> Same here, move this to a new patch (the same one as of_coresight_get_ports()).
 
-Both should work. I would probably try misc first and let Greg tell me
-which way to go ;-).
+Yeah, this is better than my form. Will change.
 
 Thanks,
-Guenter
+Leo Yan
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
