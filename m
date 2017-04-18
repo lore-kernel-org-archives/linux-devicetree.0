@@ -1,56 +1,83 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 0/4] arm64: renesas: enable M3ULCB board peripherals
-Date: Tue, 18 Apr 2017 10:01:54 +0900
-Message-ID: <20170418010153.GA8356@verge.net.au>
-References: <1485442422-18259-1-git-send-email-vladimir.barinov@cogentembedded.com>
- <1489788135.8957.2.camel@collabora.co.uk>
- <CAMuHMdX9caECvsBnfUQhbQKdW_uGJ_VXAUksMMXw7EAGP8QUCQ@mail.gmail.com>
- <20170407135212.GA24096@verge.net.au>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170407135212.GA24096@verge.net.au>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Vladimir Barinov <vladimir.barinov@cogentembedded.com>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Sjoerd Simons <sjoerd.simons@collabora.co.uk>
+From: Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH 1/2] clk: hi6220: add acpu clock
+Date: Tue, 18 Apr 2017 09:17:21 +0800
+Message-ID: <1492478242-16146-1-git-send-email-zhangfei.gao@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Li Pengcheng <lipengcheng8-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 07, 2017 at 09:52:13AM -0400, Simon Horman wrote:
-> On Thu, Apr 06, 2017 at 11:53:45AM +0200, Geert Uytterhoeven wrote:
-> > Hi Simon,
-> > 
-> > On Fri, Mar 17, 2017 at 11:02 PM, Sjoerd Simons
-> > <sjoerd.simons@collabora.co.uk> wrote:
-> > > On Thu, 2017-01-26 at 17:53 +0300, Vladimir Barinov wrote:
-> > >> This adds the folowing:
-> > >> - R8A7796 SoC based M3ULCB board peripherals
-> > >>
-> > >> Vladimir Barinov (4):
-> > >> [1/4] arm64: dts: m3ulcb: enable I2C
-> > >> [2/4] arm64: dts: m3ulcb: Update memory node to 2 GiB map
-> 
-> I have queued up the above two patches.
-> > >> [3/4] arm64: dts: m3ulcb: enable EthernetAVB
-> 
-> Please update the above patch to reflect the changes made in
-> ef3f08c83fd1 ("arm64: dts: r8a7796: salvator-x: Fix EthernetAVB PHY timing")
+Add acpu clock, including sft clock controlling hi6220 coresight module
 
-I have queued up the above patch anyway.
-I will post an incremental patch to update the PHY timing values.
+Signed-off-by: Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Signed-off-by: Li Pengcheng <lipengcheng8-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+---
+ .../devicetree/bindings/clock/hi6220-clock.txt     |  1 +
+ drivers/clk/hisilicon/clk-hi6220.c                 | 23 ++++++++++++++++++++++
+ include/dt-bindings/clock/hi6220-clock.h           |  4 ++++
+ 3 files changed, 28 insertions(+)
 
-> 
-> > >> [4/4] arm64: dts: m3ulcb: enable HS200 for eMMC
-> 
-> I will look at queuing this up in the near future
-> with other HS200 enablement patches.
-> 
-> > > Seems these didn't hit -next just yet, for this series (tested on a
-> > > M3ULCB)
-> > >
-> > > Tested-By: Sjoerd Simons <sjoerd.simons@collabora.co.uk>
-> > 
-> > It seems this series is still pending? Any reason (not) to apply it?
-> 
-> Sorry for the extended delay.
-> 
+diff --git a/Documentation/devicetree/bindings/clock/hi6220-clock.txt b/Documentation/devicetree/bindings/clock/hi6220-clock.txt
+index e4d5fea..ef3deb7 100644
+--- a/Documentation/devicetree/bindings/clock/hi6220-clock.txt
++++ b/Documentation/devicetree/bindings/clock/hi6220-clock.txt
+@@ -11,6 +11,7 @@ Required Properties:
+ - compatible: the compatible should be one of the following strings to
+ 	indicate the clock controller functionality.
+ 
++	- "hisilicon,hi6220-acpu-sctrl"
+ 	- "hisilicon,hi6220-aoctrl"
+ 	- "hisilicon,hi6220-sysctrl"
+ 	- "hisilicon,hi6220-mediactrl"
+diff --git a/drivers/clk/hisilicon/clk-hi6220.c b/drivers/clk/hisilicon/clk-hi6220.c
+index 2ae151c..fc8813f 100644
+--- a/drivers/clk/hisilicon/clk-hi6220.c
++++ b/drivers/clk/hisilicon/clk-hi6220.c
+@@ -285,3 +285,26 @@ static void __init hi6220_clk_power_init(struct device_node *np)
+ 				ARRAY_SIZE(hi6220_div_clks_power), clk_data);
+ }
+ CLK_OF_DECLARE(hi6220_clk_power, "hisilicon,hi6220-pmctrl", hi6220_clk_power_init);
++
++
++/* clocks in acpu */
++static const struct hisi_gate_clock hi6220_acpu_sc_gate_sep_clks[] = {
++	{ HI6220_ACPU_SFT_AT_S, "sft_at_s", "cs_atb",
++	  CLK_SET_RATE_PARENT | CLK_IGNORE_UNUSED, 0xc, 11, 0, },
++};
++
++static void __init hi6220_clk_acpu_init(struct device_node *np)
++{
++	struct hisi_clock_data *clk_data;
++	int nr = ARRAY_SIZE(hi6220_acpu_sc_gate_sep_clks);
++
++	clk_data = hisi_clk_init(np, nr);
++	if (!clk_data)
++		return;
++
++	hisi_clk_register_gate_sep(hi6220_acpu_sc_gate_sep_clks,
++				   ARRAY_SIZE(hi6220_acpu_sc_gate_sep_clks),
++				   clk_data);
++}
++
++CLK_OF_DECLARE(hi6220_clk_acpu, "hisilicon,hi6220-acpu-sctrl", hi6220_clk_acpu_init);
+diff --git a/include/dt-bindings/clock/hi6220-clock.h b/include/dt-bindings/clock/hi6220-clock.h
+index b8ba665..409cc02 100644
+--- a/include/dt-bindings/clock/hi6220-clock.h
++++ b/include/dt-bindings/clock/hi6220-clock.h
+@@ -174,4 +174,8 @@
+ #define HI6220_DDRC_AXI1	7
+ 
+ #define HI6220_POWER_NR_CLKS	8
++
++/* clk in Hi6220 acpu sctrl */
++#define HI6220_ACPU_SFT_AT_S		0
++
+ #endif
+-- 
+2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
