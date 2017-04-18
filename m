@@ -1,38 +1,43 @@
 From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH] arm64: dts: allwinner: a64: Add UART2 pin nodes
-Date: Tue, 18 Apr 2017 07:34:58 +0200
-Message-ID: <20170418053458.phcbp4da3vatejpg@lukather>
-References: <20170414171320.19743-1-afaerber@suse.de>
+Subject: Re: [PATCH] arm64: dts: allwinner: pine64: Add remaining UART aliases
+Date: Tue, 18 Apr 2017 07:35:22 +0200
+Message-ID: <20170418053522.ebkimevucq57y2km@lukather>
+References: <20170414190804.21865-1-afaerber@suse.de>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="jzybeeumiuv4f6jr"
+        protocol="application/pgp-signature"; boundary="tysmkt73rdvixcm5"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20170414171320.19743-1-afaerber-l3A5Bk7waGM@public.gmane.org>
+In-Reply-To: <20170414190804.21865-1-afaerber-l3A5Bk7waGM@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
 Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---jzybeeumiuv4f6jr
+--tysmkt73rdvixcm5
 Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Apr 14, 2017 at 07:13:20PM +0200, Andreas F=E4rber wrote:
-> UART2 is exposed on the Pi connector of Pine64. Make a pinctrl node
-> available at the SoC level, to simplify enabling UART2 via DT overlay.
+On Fri, Apr 14, 2017 at 09:08:04PM +0200, Andreas F=E4rber wrote:
+> Enabling uart2 node currently leads to a /dev/ttyS1 device, with ttyS0..4
+> always present, causing confusion on the user's part.
+>=20
+> dtc cannot resolve an overlay's &uart2 reference for strings, only for
+> phandles, so it would need to hardcode the full node path.
+>=20
+> Avoid this and enforce reliable numbering by adding serialX aliases for:
+>=20
+> UART1 - on Wifi/BT connector
+> UART2 - on Pi-2 connector
+> UART3 - on Euler connector
+> UART4 - on Euler connector
 >=20
 > Signed-off-by: Andreas F=E4rber <afaerber-l3A5Bk7waGM@public.gmane.org>
 
-Applied, thanks!
+Applied, thanks
 
-Could you also create the node in the pine64 DTS (with an explicit
-status =3D "disabled" in there) so that the overlay would be even easier
-to make ?
-
-Thanks,
 Maxime
 
 --=20
@@ -40,27 +45,27 @@ Maxime Ripard, Free Electrons
 Embedded Linux and Kernel engineering
 http://free-electrons.com
 
---jzybeeumiuv4f6jr
+--tysmkt73rdvixcm5
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIcBAABCAAGBQJY9aV+AAoJEBx+YmzsjxAgrw8P/R/fC1dGWuQr+Ei9qXuf3oV2
-qNQh7xV1vx0idW05pill8GyY3M2IBtwOlf7mB/WoLCD/5c5S15Zrd4r8n2F04D60
-Foh4IvbBxGBIyqI+SJhb2zEBfhgbclel3ddR+GeozBYsp7SG7ijwyBYOy4IX1jPq
-Ov4TUdeWnlOy11ISij9uqwDp15myjblBtnrWGQFE/Eu1c3Y+o7Ft+ZGnk9oyqUGG
-pbUDiqLZgSmZufwzA9uVw7a53KQqA3qXH/0TdZ95JE6VjaplbTtsN2OzP7w7gttA
-yLrZFESlNfhefC0zo4pjkjug898ngoBybxQC7A+SIlLJlKowTgHG5ss7ik5utAm2
-n+13E8YBeE4OQcD0hHEW9jzes7Ab3QeW+p+/6Ql61W8DV5TolyuP2BG7RtQuRKiG
-ObounDIV6wsCB26eO/qNc/wPk2VRBKq3YYZiaroQYMkmw6KlOAXRneirgxj3JTNa
-1tUMLRFOP5gsKhogN7V6aeMhBZVC6deKTnhvxkxodnMdmLhUU7cVovbe7cKAAdQ3
-KU6q6VMOFvJiy3QIMktdnJOPXniE5jj0wTfA57h3OIe14pq3TjVhYaxy7Osnanrz
-dI9CLGGkRV5gCyOd9y6frEcLuqhceZI7RYPu3Rac4OFz3+/JTpNGsBWKWe9RpJtR
-5/etY+ZC2JwovBjqPeCM
-=tMvv
+iQIcBAABCAAGBQJY9aWaAAoJEBx+YmzsjxAgsz8QALeki+mW1XDM+brGAEqiuOa4
+Q78onngFCunmO0u0rvoEJ3Vy0hLJPZIyHrMmnAnXCJ14gCA/3crQM8d7NF5AWBtN
+M4H4xeT6L2HsY4bJr+5ngbVFTzUYL59iztgsb9PbWMj8nZCuUkiunq0n2lg60XDU
+FxtKQGfjiLlFfy7z8PClOSY5O6l3gqwfRkwpLHltEY2nZuJfiIZ0k23bwPGHXR+y
+kqvfoHz5Ei7jnKC6w76d7CRl9RzMfaXxmZDSCCfWje2HtYgkQciDXkKshN04eO2Z
+zO8jaUkUkiAfSLLf2HcfCG6QpWaI0NY12RBqYBtZ5W3qWmQz5MnqiV1vDoJRLSh6
+uV7TaFGPupLo8X++e4oC1vFsKg4eaBSUkY5ZW73dpqyCZe7KjBCStU7u2+ZebH+y
+qOyJijtG2hl4c7UXRIykvrrJ5M6OFDdD1w4+U8r2Kxf3NfxaQcMXbcObV6/7YCnB
+YOKunjA+MYM+OST/GObvmnTH915ASGDAMq/uxTs5sO6zpMw1hUx1KzuhAdR7lf7w
+9udwh8hpsR8oIS47Qh27pari2i1Xmu98uc0pbcixhkvn98j7k+KRZc6aUJ869Pr4
+kQEH3nJsm17efLKK8LLd4+SxFk/nrahXvQRDVJ0j5otCCI8tN7u7D2NeA9mNLm+k
+BYRDdRcy2XyTvAQXBJj2
+=GJCl
 -----END PGP SIGNATURE-----
 
---jzybeeumiuv4f6jr--
+--tysmkt73rdvixcm5--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
