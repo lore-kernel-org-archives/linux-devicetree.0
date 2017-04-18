@@ -1,88 +1,103 @@
-From: Eric Anholt <eric@anholt.net>
-Subject: [PATCH 1/3 v2] drm/vc4: Turn the V3D clock on at runtime.
-Date: Tue, 18 Apr 2017 16:38:05 -0700
-Message-ID: <20170418233805.15767-1-eric@anholt.net>
+From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/3 v2] drm/vc4: Turn the V3D clock on at runtime.
+Date: Tue, 18 Apr 2017 16:48:56 -0700
+Message-ID: <7906db2f-cfb8-e2e6-5869-b6e829dd8c6f@gmail.com>
 References: <20170418191157.18517-1-eric@anholt.net>
+ <20170418233805.15767-1-eric@anholt.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20170418191157.18517-1-eric@anholt.net>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170418233805.15767-1-eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Rm9yIHRoZSBSYXNwYmVycnkgUGkncyBiaW5kaW5ncywgdGhlIHBvd2VyIGRvbWFpbiBhbHNvIGlt
-cGxpY2l0bHkKdHVybnMgb24gdGhlIGNsb2NrIGFuZCBkZWFzc2VydHMgcmVzZXQsIGJ1dCBmb3Ig
-dGhlIG5ldyBDeWdudXMgcG9ydCB3ZQpzdGFydCByZXByZXNlbnRpbmcgdGhlIGNsb2NrIGluIHRo
-ZSBkZXZpY2V0cmVlLgoKdjI6IERvY3VtZW50IHRoZSBjbG9jay1uYW1lcyBwcm9wZXJ0eSwgY2hl
-Y2sgZm9yIC1FTk9FTlQgZm9yIG5vIGNsb2NrCiAgICBpbiBEVC4KClNpZ25lZC1vZmYtYnk6IEVy
-aWMgQW5ob2x0IDxlcmljQGFuaG9sdC5uZXQ+Ci0tLQogLi4uL2RldmljZXRyZWUvYmluZGluZ3Mv
-ZGlzcGxheS9icmNtLGJjbS12YzQudHh0ICAgfCAgNCArKysKIGRyaXZlcnMvZ3B1L2RybS92YzQv
-dmM0X2Rydi5oICAgICAgICAgICAgICAgICAgICAgIHwgIDEgKwogZHJpdmVycy9ncHUvZHJtL3Zj
-NC92YzRfdjNkLmMgICAgICAgICAgICAgICAgICAgICAgfCAzOCArKysrKysrKysrKysrKysrKysr
-KystCiAzIGZpbGVzIGNoYW5nZWQsIDQyIGluc2VydGlvbnMoKyksIDEgZGVsZXRpb24oLSkKCmRp
-ZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmNt
-LGJjbS12YzQudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkv
-YnJjbSxiY20tdmM0LnR4dAppbmRleCBjYTAyZDNlNGRiOTEuLjIzMTgyNjZmNjQ4MSAxMDA2NDQK
-LS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJjbSxiY20t
-dmM0LnR4dAorKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9i
-cmNtLGJjbS12YzQudHh0CkBAIC01OSw2ICs1OSwxMCBAQCBSZXF1aXJlZCBwcm9wZXJ0aWVzIGZv
-ciBWM0Q6CiAtIGludGVycnVwdHM6CVRoZSBpbnRlcnJ1cHQgbnVtYmVyCiAJCSAgU2VlIGJpbmRp
-bmdzL2ludGVycnVwdC1jb250cm9sbGVyL2JyY20sYmNtMjgzNS1hcm1jdHJsLWljLnR4dAogCitP
-cHRpb25hbCBwcm9wZXJ0aWVzIGZvciBWM0Q6CistIGNsb2NrczoJVGhlIGNsb2NrIHRoZSB1bml0
-IHJ1bnMgb24KKy0gY2xvY2stbmFtZXM6CU11c3QgYmUgInYzZF9jbGsiCisKIFJlcXVpcmVkIHBy
-b3BlcnRpZXMgZm9yIERTSToKIC0gY29tcGF0aWJsZToJU2hvdWxkIGJlICJicmNtLGJjbTI4MzUt
-ZHNpMCIgb3IgImJyY20sYmNtMjgzNS1kc2kxIgogLSByZWc6CQlQaHlzaWNhbCBiYXNlIGFkZHJl
-c3MgYW5kIGxlbmd0aCBvZiB0aGUgRFNJIGJsb2NrJ3MgcmVnaXN0ZXJzCmRpZmYgLS1naXQgYS9k
-cml2ZXJzL2dwdS9kcm0vdmM0L3ZjNF9kcnYuaCBiL2RyaXZlcnMvZ3B1L2RybS92YzQvdmM0X2Ry
-di5oCmluZGV4IGIwOTY3ZTJmN2U4OC4uOTJlYjdkODExYmYyIDEwMDY0NAotLS0gYS9kcml2ZXJz
-L2dwdS9kcm0vdmM0L3ZjNF9kcnYuaAorKysgYi9kcml2ZXJzL2dwdS9kcm0vdmM0L3ZjNF9kcnYu
-aApAQCAtMjAwLDYgKzIwMCw3IEBAIHN0cnVjdCB2YzRfdjNkIHsKIAlzdHJ1Y3QgdmM0X2RldiAq
-dmM0OwogCXN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXY7CiAJdm9pZCBfX2lvbWVtICpyZWdz
-OworCXN0cnVjdCBjbGsgKmNsazsKIH07CiAKIHN0cnVjdCB2YzRfaHZzIHsKZGlmZiAtLWdpdCBh
-L2RyaXZlcnMvZ3B1L2RybS92YzQvdmM0X3YzZC5jIGIvZHJpdmVycy9ncHUvZHJtL3ZjNC92YzRf
-djNkLmMKaW5kZXggYTg4MDc4ZDdjOWQxLi5jYTk4N2QyODAwYzYgMTAwNjQ0Ci0tLSBhL2RyaXZl
-cnMvZ3B1L2RybS92YzQvdmM0X3YzZC5jCisrKyBiL2RyaXZlcnMvZ3B1L2RybS92YzQvdmM0X3Yz
-ZC5jCkBAIC0xNiw2ICsxNiw3IEBACiAgKiB0aGlzIHByb2dyYW0uICBJZiBub3QsIHNlZSA8aHR0
-cDovL3d3dy5nbnUub3JnL2xpY2Vuc2VzLz4uCiAgKi8KIAorI2luY2x1ZGUgImxpbnV4L2Nsay5o
-IgogI2luY2x1ZGUgImxpbnV4L2NvbXBvbmVudC5oIgogI2luY2x1ZGUgImxpbnV4L3BtX3J1bnRp
-bWUuaCIKICNpbmNsdWRlICJ2YzRfZHJ2LmgiCkBAIC0zMDUsNiArMzA2LDkgQEAgc3RhdGljIGlu
-dCB2YzRfdjNkX3J1bnRpbWVfc3VzcGVuZChzdHJ1Y3QgZGV2aWNlICpkZXYpCiAJZHJtX2dlbV9v
-YmplY3RfcHV0X3VubG9ja2VkKCZ2YzQtPmJpbl9iby0+YmFzZS5iYXNlKTsKIAl2YzQtPmJpbl9i
-byA9IE5VTEw7CiAKKwlpZiAodjNkLT5jbGspCisJCWNsa19kaXNhYmxlX3VucHJlcGFyZSh2M2Qt
-PmNsayk7CisKIAlyZXR1cm4gMDsKIH0KIApAQCAtMzE4LDYgKzMyMiwxMyBAQCBzdGF0aWMgaW50
-IHZjNF92M2RfcnVudGltZV9yZXN1bWUoc3RydWN0IGRldmljZSAqZGV2KQogCWlmIChyZXQpCiAJ
-CXJldHVybiByZXQ7CiAKKwlpZiAodjNkLT5jbGspIHsKKwkJaW50IHJldCA9IGNsa19wcmVwYXJl
-X2VuYWJsZSh2M2QtPmNsayk7CisKKwkJaWYgKHJldCAhPSAwKQorCQkJcmV0dXJuIHJldDsKKwl9
-CisKIAl2YzRfdjNkX2luaXRfaHcodmM0LT5kZXYpOwogCXZjNF9pcnFfcG9zdGluc3RhbGwodmM0
-LT5kZXYpOwogCkBAIC0zNDgsMTUgKzM1OSw0MCBAQCBzdGF0aWMgaW50IHZjNF92M2RfYmluZChz
-dHJ1Y3QgZGV2aWNlICpkZXYsIHN0cnVjdCBkZXZpY2UgKm1hc3Rlciwgdm9pZCAqZGF0YSkKIAl2
-YzQtPnYzZCA9IHYzZDsKIAl2M2QtPnZjNCA9IHZjNDsKIAorCXYzZC0+Y2xrID0gZGV2bV9jbGtf
-Z2V0KGRldiwgInYzZF9jbGsiKTsKKwlpZiAoSVNfRVJSKHYzZC0+Y2xrKSkgeworCQlpbnQgcmV0
-ID0gUFRSX0VSUih2M2QtPmNsayk7CisKKwkJaWYgKHJldCA9PSAtRU5PRU5UKSB7CisJCQkvKiBi
-Y20yODM1IGRpZG4ndCBoYXZlIGEgY2xvY2sgcmVmZXJlbmNlIGluIHRoZSBEVC4gKi8KKwkJCXJl
-dCA9IDA7CisJCQl2M2QtPmNsayA9IE5VTEw7CisJCX0gZWxzZSB7CisJCQlpZiAocmV0ICE9IC1F
-UFJPQkVfREVGRVIpCisJCQkJZGV2X2VycihkZXYsICJGYWlsZWQgdG8gZ2V0IFYzRCBjbG9jazog
-JWRcbiIsCisJCQkJCXJldCk7CisJCQlyZXR1cm4gcmV0OworCQl9CisJfQorCiAJaWYgKFYzRF9S
-RUFEKFYzRF9JREVOVDApICE9IFYzRF9FWFBFQ1RFRF9JREVOVDApIHsKIAkJRFJNX0VSUk9SKCJW
-M0RfSURFTlQwIHJlYWQgMHglMDh4IGluc3RlYWQgb2YgMHglMDh4XG4iLAogCQkJICBWM0RfUkVB
-RChWM0RfSURFTlQwKSwgVjNEX0VYUEVDVEVEX0lERU5UMCk7CiAJCXJldHVybiAtRUlOVkFMOwog
-CX0KIAorCWlmICh2M2QtPmNsaykgeworCQlyZXQgPSBjbGtfcHJlcGFyZV9lbmFibGUodjNkLT5j
-bGspOworCQlpZiAocmV0ICE9IDApCisJCQlyZXR1cm4gcmV0OworCX0KKwogCXJldCA9IHZjNF9h
-bGxvY2F0ZV9iaW5fYm8oZHJtKTsKLQlpZiAocmV0KQorCWlmIChyZXQpIHsKKwkJaWYgKHYzZC0+
-Y2xrKQorCQkJY2xrX2Rpc2FibGVfdW5wcmVwYXJlKHYzZC0+Y2xrKTsKIAkJcmV0dXJuIHJldDsK
-Kwl9CiAKIAkvKiBSZXNldCB0aGUgYmlubmVyIG92ZXJmbG93IGFkZHJlc3Mvc2l6ZSBhdCBzZXR1
-cCwgdG8gYmUgc3VyZQogCSAqIHdlIGRvbid0IHJldXNlIGFuIG9sZCBvbmUuCi0tIAoyLjExLjAK
-Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZl
-bCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xp
-c3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+On 04/18/2017 04:38 PM, Eric Anholt wrote:
+> For the Raspberry Pi's bindings, the power domain also implicitly
+> turns on the clock and deasserts reset, but for the new Cygnus port we
+> start representing the clock in the devicetree.
+> 
+> v2: Document the clock-names property, check for -ENOENT for no clock
+>     in DT.
+> 
+> Signed-off-by: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+> ---
+
+> +	if (v3d->clk)
+> +		clk_disable_unprepare(v3d->clk);
+
+The clock API allows you to pass a NULL clk and do nothing in these
+cases which is what you seem to have done a few lines below, you could
+simplify these checks?
+
+> +
+>  	return 0;
+>  }
+>  
+> @@ -318,6 +322,13 @@ static int vc4_v3d_runtime_resume(struct device *dev)
+>  	if (ret)
+>  		return ret;
+>  
+> +	if (v3d->clk) {
+> +		int ret = clk_prepare_enable(v3d->clk);
+> +
+> +		if (ret != 0)
+> +			return ret;
+> +	}
+> +
+>  	vc4_v3d_init_hw(vc4->dev);
+>  	vc4_irq_postinstall(vc4->dev);
+>  
+> @@ -348,15 +359,40 @@ static int vc4_v3d_bind(struct device *dev, struct device *master, void *data)
+>  	vc4->v3d = v3d;
+>  	v3d->vc4 = vc4;
+>  
+> +	v3d->clk = devm_clk_get(dev, "v3d_clk");
+> +	if (IS_ERR(v3d->clk)) {
+> +		int ret = PTR_ERR(v3d->clk);
+> +
+> +		if (ret == -ENOENT) {
+> +			/* bcm2835 didn't have a clock reference in the DT. */
+> +			ret = 0;
+> +			v3d->clk = NULL;
+> +		} else {
+> +			if (ret != -EPROBE_DEFER)
+> +				dev_err(dev, "Failed to get V3D clock: %d\n",
+> +					ret);
+> +			return ret;
+> +		}
+> +	}
+> +
+>  	if (V3D_READ(V3D_IDENT0) != V3D_EXPECTED_IDENT0) {
+>  		DRM_ERROR("V3D_IDENT0 read 0x%08x instead of 0x%08x\n",
+>  			  V3D_READ(V3D_IDENT0), V3D_EXPECTED_IDENT0);
+>  		return -EINVAL;
+>  	}
+>  
+> +	if (v3d->clk) {
+> +		ret = clk_prepare_enable(v3d->clk);
+> +		if (ret != 0)
+> +			return ret;
+> +	}
+> +
+>  	ret = vc4_allocate_bin_bo(drm);
+> -	if (ret)
+> +	if (ret) {
+> +		if (v3d->clk)
+> +			clk_disable_unprepare(v3d->clk);
+>  		return ret;
+> +	}
+>  
+>  	/* Reset the binner overflow address/size at setup, to be sure
+>  	 * we don't reuse an old one.
+> 
+
+
+-- 
+Florian
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
