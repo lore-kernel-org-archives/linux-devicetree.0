@@ -1,68 +1,107 @@
-From: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-Subject: Re: [PATCH 1/3] drm/vc4: Turn the V3D clock on at runtime.
-Date: Tue, 18 Apr 2017 12:23:50 -0700
-Message-ID: <87tw5lldtl.fsf@eliezer.anholt.net>
-References: <20170418191157.18517-1-eric@anholt.net>
+From: =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
+Subject: [PATCH] arm64: dts: allwinner: pine64: Prepare optional UART nodes with pinctrl
+Date: Tue, 18 Apr 2017 21:25:38 +0200
+Message-ID: <20170418192538.24174-1-afaerber@suse.de>
+References: <20170418053458.phcbp4da3vatejpg@lukather>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha512; protocol="application/pgp-signature"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170418191157.18517-1-eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170418053458.phcbp4da3vatejpg@lukather>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
+Pine64 exposes all A64 UARTs, not just UART0.
 
-Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org> writes:
+Since the pins can be used as GPIO, don't enable the new UART nodes by
+default, but prepare the pinctrl settings to aid in activating them via
+overlays, i.e., overriding the status property of &uartX nodes.
 
-> For the Raspberry Pi's bindings, the power domain also implicitly
-> turns on the clock and deasserts reset, but for the new Cygnus port we
-> start representing the clock in the devicetree.
+For UART4 (Euler) the safer route of not including RTS/CTS pins is chosen,
+whereas for UART1 (Bluetooth) they are included.
 
-> +	v3d->clk = devm_clk_get(dev, "v3d_clk");
-> +	if (IS_ERR(v3d->clk)) {
-> +		int ret = PTR_ERR(v3d->clk);
-> +
-> +		if (ret == -ENODEV) {
+Add the corresponding pinctrl nodes where missing.
 
-Apparently I hadn't booted this on RPi yet.  This is supposed to be
--ENOENT.
+Suggested-by: Maxime Ripard <maxime.ripard@free-electrons.com>
+Signed-off-by: Andreas Färber <afaerber@suse.de>
+---
+ .../arm64/boot/dts/allwinner/sun50i-a64-pine64.dts | 29 ++++++++++++++++++++++
+ arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi      | 15 +++++++++++
+ 2 files changed, 44 insertions(+)
 
-> +			/* bcm2835 didn't have a clock reference in the DT. */
-> +			ret = 0;
-> +			v3d->clk = NULL;
-> +		} else {
-> +			if (ret != -EPROBE_DEFER)
-> +				dev_err(dev, "Failed to get V3D clock: %d\n",
-> +					ret);
-> +			return ret;
-> +		}
-> +	}
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE/JuuFDWp9/ZkuCBXtdYpNtH8nugFAlj2Z8YACgkQtdYpNtH8
-nujEZRAAspu9+nIn6ocSbJfegJrrF1WkC0wTbzqyB1d5lfWO+2eVZ36KCF8rQGEJ
-KWMJTPGEzoILPtFMuoGazlNbnroMMhuPtVJqyfmtchMhWkTAIwxfzqQIUR7dsBRo
-lP+RiTHE6KQZvGlMEL84UXzNoo1/lF+2zrBWDmxrvYrjWt5SnZ7S9RiSro5LMPug
-sKAeweBMG5Twq82kCG/EBBIvjN4rDUQWUdtyeaB/rR7OisuBxOlqcpju4zdFz/mW
-QKFlbhzefyxOepDNHbhYSZ0Qxx1Zww5fcZyGJIhoY0iMx0J5liMd9aT9v0TXs5Wc
-obnuPDxxKqaKUWdOr3gP2eCsnb4egNduk9+f/j01pF14AOsBex3c+9GNy1FcUUCf
-Bw4NGuqHapn5HFnJvAI7pdw/4y9vRh/0uJ2WUk3GW+/xvGyDupJBddzO83fl/Chy
-c8HYgxt2PLAqPVon6igTYdaprVsbDmG7e7+Oiq+orlTcJJZDX42/oaz9R+wzxwx3
-hPN+2GvU6WE7eXUsMX0trO5527W+p2piFHkbqMAME65uqpyhQlGTLPIiVrGphlTh
-o2VfjOlMZuwBrdeXUrRYwPuzqoHHadpzZTKH/7c5DEof1wsXgIpW5panPhjPI4NQ
-j9dZx+XoQiTnHBPn5NMAfF/kttLOSlTUhJNeZYOxQvU7oZrmK7Q=
-=ruS9
------END PGP SIGNATURE-----
---=-=-=--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts
+index db6c0f36999e..260fb12ac3fc 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts
+@@ -99,12 +99,41 @@
+ 	status = "okay";
+ };
+ 
++/* On Exp and Euler connectors */
+ &uart0 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&uart0_pins_a>;
+ 	status = "okay";
+ };
+ 
++/* On Wifi/BT connector, with RTS/CTS */
++&uart1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&uart1_pins>, <&uart1_rts_cts_pins>;
++	status = "disabled";
++};
++
++/* On Pi-2 connector */
++&uart2 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&uart2_pins>;
++	status = "disabled";
++};
++
++/* On Euler connector */
++&uart3 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&uart3_pins>;
++	status = "disabled";
++};
++
++/* On Euler connector, RTS/CTS optional */
++&uart4 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&uart4_pins>;
++	status = "disabled";
++};
++
+ &usb_otg {
+ 	dr_mode = "host";
+ 	status = "okay";
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+index 133810df06b9..c172c62447e8 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+@@ -292,6 +292,21 @@
+ 				pins = "PB0", "PB1";
+ 				function = "uart2";
+ 			};
++
++			uart3_pins: uart3-pins {
++				pins = "PD0", "PD1";
++				function = "uart3";
++			};
++
++			uart4_pins: uart4-pins {
++				pins = "PD2", "PD3";
++				function = "uart4";
++			};
++
++			uart4_rts_cts_pins: uart4-rts-cts-pins {
++				pins = "PD4", "PD5";
++				function = "uart4";
++			};
+ 		};
+ 
+ 		uart0: serial@1c28000 {
+-- 
+2.10.2
