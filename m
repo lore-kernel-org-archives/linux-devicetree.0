@@ -1,48 +1,72 @@
-From: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-Subject: [PATCH 2/3] drm/vc4: Don't try to initialize FBDEV if we're only bound to V3D.
-Date: Tue, 18 Apr 2017 12:11:56 -0700
-Message-ID: <20170418191157.18517-2-eric@anholt.net>
+From: Eric Anholt <eric@anholt.net>
+Subject: [PATCH 3/3] drm/vc4: Add specific compatible strings for Cygnus.
+Date: Tue, 18 Apr 2017 12:11:57 -0700
+Message-ID: <20170418191157.18517-3-eric@anholt.net>
 References: <20170418191157.18517-1-eric@anholt.net>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170418191157.18517-1-eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20170418191157.18517-1-eric@anholt.net>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The FBDEV initialization would throw an error in dmesg, when we just
-want to silently not initialize fbdev on a V3D-only VC4 instance.
-
-Signed-off-by: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
----
- drivers/gpu/drm/vc4/vc4_kms.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/gpu/drm/vc4/vc4_kms.c b/drivers/gpu/drm/vc4/vc4_kms.c
-index ad7925a9e0ea..237a504f11f0 100644
---- a/drivers/gpu/drm/vc4/vc4_kms.c
-+++ b/drivers/gpu/drm/vc4/vc4_kms.c
-@@ -230,10 +230,12 @@ int vc4_kms_load(struct drm_device *dev)
- 
- 	drm_mode_config_reset(dev);
- 
--	vc4->fbdev = drm_fbdev_cma_init(dev, 32,
--					dev->mode_config.num_connector);
--	if (IS_ERR(vc4->fbdev))
--		vc4->fbdev = NULL;
-+	if (dev->mode_config.num_connector) {
-+		vc4->fbdev = drm_fbdev_cma_init(dev, 32,
-+						dev->mode_config.num_connector);
-+		if (IS_ERR(vc4->fbdev))
-+			vc4->fbdev = NULL;
-+	}
- 
- 	drm_kms_helper_poll_init(dev);
- 
--- 
-2.11.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Q3lnbnVzIGhhcyBWM0QgMi42IGluc3RlYWQgb2YgMi4xLCBhbmQgZG9lc24ndCB1c2UgdGhlIFZD
+NCBkaXNwbGF5Cm1vZHVsZXMuICBUaGUgVjNEIGNhbiBiZSB1bmlxdWVseSBpZGVudGlmaWVkIGJ5
+IHRoZSBJREVOVFswMV0KcmVnaXN0ZXJzLCBhbmQgdGhlcmUncyBub3RoaW5nIHRvIGtleSBvZmYg
+b2YgZm9yIHRoZSBkaXNwbGF5IGNoYW5nZQpvdGhlciB0aGFuIHRoZSBsYWNrIG9mIERUIG5vZGVz
+IGZvciB0aGUgZGlzcGxheSBjb21wb25lbnRzLCBidXQgaXQncwpjb252ZW50aW9uIHRvIGhhdmUg
+bmV3IGNvbXBhdGlibGUgc3RyaW5ncyBhbnl3YXkuCgpTaWduZWQtb2ZmLWJ5OiBFcmljIEFuaG9s
+dCA8ZXJpY0BhbmhvbHQubmV0PgotLS0KIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
+cy9kaXNwbGF5L2JyY20sYmNtLXZjNC50eHQgfCA0ICsrLS0KIGRyaXZlcnMvZ3B1L2RybS92YzQv
+dmM0X2Rydi5jICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAxICsKIGRyaXZlcnMvZ3B1
+L2RybS92YzQvdmM0X3YzZC5jICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAxICsKIDMg
+ZmlsZXMgY2hhbmdlZCwgNCBpbnNlcnRpb25zKCspLCAyIGRlbGV0aW9ucygtKQoKZGlmZiAtLWdp
+dCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyY20sYmNtLXZj
+NC50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmNtLGJj
+bS12YzQudHh0CmluZGV4IGJjMTc1NmY0Zjc5MS4uMjg0ZTJiMTRjZmJlIDEwMDY0NAotLS0gYS9E
+b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmNtLGJjbS12YzQudHh0
+CisrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyY20sYmNt
+LXZjNC50eHQKQEAgLTUsNyArNSw3IEBAIHdpdGggSERNSSBvdXRwdXQgYW5kIHRoZSBIVlMgKEhh
+cmR3YXJlIFZpZGVvIFNjYWxlcikgZm9yIGNvbXBvc2l0aW5nCiBkaXNwbGF5IHBsYW5lcy4KIAog
+UmVxdWlyZWQgcHJvcGVydGllcyBmb3IgVkM0OgotLSBjb21wYXRpYmxlOglTaG91bGQgYmUgImJy
+Y20sYmNtMjgzNS12YzQiCistIGNvbXBhdGlibGU6CVNob3VsZCBiZSAiYnJjbSxiY20yODM1LXZj
+NCIgb3IgImJyY20sY3lnbnVzLXZjNCIKIAogUmVxdWlyZWQgcHJvcGVydGllcyBmb3IgUGl4ZWwg
+VmFsdmU6CiAtIGNvbXBhdGlibGU6CVNob3VsZCBiZSBvbmUgb2YgImJyY20sYmNtMjgzNS1waXhl
+bHZhbHZlMCIsCkBAIC01NCw3ICs1NCw3IEBAIFJlcXVpcmVkIHByb3BlcnRpZXMgZm9yIFZFQzoK
+IAkJICBTZWUgYmluZGluZ3MvaW50ZXJydXB0LWNvbnRyb2xsZXIvYnJjbSxiY20yODM1LWFybWN0
+cmwtaWMudHh0CiAKIFJlcXVpcmVkIHByb3BlcnRpZXMgZm9yIFYzRDoKLS0gY29tcGF0aWJsZToJ
+U2hvdWxkIGJlICJicmNtLGJjbTI4MzUtdjNkIgorLSBjb21wYXRpYmxlOglTaG91bGQgYmUgImJy
+Y20sYmNtMjgzNS12M2QiIG9yICJicmNtLGN5Z251cy12M2QiCiAtIHJlZzoJCVBoeXNpY2FsIGJh
+c2UgYWRkcmVzcyBhbmQgbGVuZ3RoIG9mIHRoZSBWM0QncyByZWdpc3RlcnMKIC0gaW50ZXJydXB0
+czoJVGhlIGludGVycnVwdCBudW1iZXIKIAkJICBTZWUgYmluZGluZ3MvaW50ZXJydXB0LWNvbnRy
+b2xsZXIvYnJjbSxiY20yODM1LWFybWN0cmwtaWMudHh0CmRpZmYgLS1naXQgYS9kcml2ZXJzL2dw
+dS9kcm0vdmM0L3ZjNF9kcnYuYyBiL2RyaXZlcnMvZ3B1L2RybS92YzQvdmM0X2Rydi5jCmluZGV4
+IDkyZmI5YTQxZmU3Yy4uNzU0Y2U3NmQ0Yjk4IDEwMDY0NAotLS0gYS9kcml2ZXJzL2dwdS9kcm0v
+dmM0L3ZjNF9kcnYuYworKysgYi9kcml2ZXJzL2dwdS9kcm0vdmM0L3ZjNF9kcnYuYwpAQCAtMzM1
+LDYgKzMzNSw3IEBAIHN0YXRpYyBpbnQgdmM0X3BsYXRmb3JtX2RybV9yZW1vdmUoc3RydWN0IHBs
+YXRmb3JtX2RldmljZSAqcGRldikKIAogc3RhdGljIGNvbnN0IHN0cnVjdCBvZl9kZXZpY2VfaWQg
+dmM0X29mX21hdGNoW10gPSB7CiAJeyAuY29tcGF0aWJsZSA9ICJicmNtLGJjbTI4MzUtdmM0Iiwg
+fSwKKwl7IC5jb21wYXRpYmxlID0gImJyY20sY3lnbnVzLXZjNCIsIH0sCiAJe30sCiB9OwogTU9E
+VUxFX0RFVklDRV9UQUJMRShvZiwgdmM0X29mX21hdGNoKTsKZGlmZiAtLWdpdCBhL2RyaXZlcnMv
+Z3B1L2RybS92YzQvdmM0X3YzZC5jIGIvZHJpdmVycy9ncHUvZHJtL3ZjNC92YzRfdjNkLmMKaW5k
+ZXggMjQ0MjYyMmU2YmZmLi4zYWJjZDI3YWE0NmYgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvZ3B1L2Ry
+bS92YzQvdmM0X3YzZC5jCisrKyBiL2RyaXZlcnMvZ3B1L2RybS92YzQvdmM0X3YzZC5jCkBAIC0z
+MDQsNiArMzA0LDcgQEAgc3RhdGljIGludCB2YzRfdjNkX2Rldl9yZW1vdmUoc3RydWN0IHBsYXRm
+b3JtX2RldmljZSAqcGRldikKIAogc3RhdGljIGNvbnN0IHN0cnVjdCBvZl9kZXZpY2VfaWQgdmM0
+X3YzZF9kdF9tYXRjaFtdID0gewogCXsgLmNvbXBhdGlibGUgPSAiYnJjbSxiY20yODM1LXYzZCIg
+fSwKKwl7IC5jb21wYXRpYmxlID0gImJyY20sY3lnbnVzLXYzZCIgfSwKIAl7IC5jb21wYXRpYmxl
+ID0gImJyY20sdmM0LXYzZCIgfSwKIAl7fQogfTsKLS0gCjIuMTEuMAoKX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApk
+cmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Au
+b3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
