@@ -1,97 +1,138 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH v6 17/39] platform: add video-multiplexer subdevice driver
-Date: Tue, 18 Apr 2017 11:05:05 +0200
-Message-ID: <20170418090505.GA25414@amd>
-References: <1490661656-10318-1-git-send-email-steve_longerbeam@mentor.com>
- <1490661656-10318-18-git-send-email-steve_longerbeam@mentor.com>
- <20170404124732.GD3288@valkosipuli.retiisi.org.uk>
- <1492091578.2383.39.camel@pengutronix.de>
- <20170414203216.GA10920@amd>
- <1492502989.2432.23.camel@pengutronix.de>
+From: Guillaume Tucker <guillaume.tucker-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Subject: Re: [PATCH v2 1/5] dt-bindings: gpu: add bindings for the ARM Mali
+ Midgard GPU
+Date: Tue, 18 Apr 2017 10:15:08 +0100
+Message-ID: <b8cf7acd-83e9-49fb-0800-19a76b8dcce5@collabora.com>
+References: <cover.1491118230.git.guillaume.tucker@collabora.com>
+ <db45d0d68957d699f13a0d92f4f84d8ebfd0270e.1491118230.git.guillaume.tucker@collabora.com>
+ <20170404020056.d7osj7rmog22xbjd@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============5137808126934820969=="
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <1492502989.2432.23.camel@pengutronix.de>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, nick@shmanahar.org, songjun.wu@microchip.com, hverkuil@xs4all.nl, Steve Longerbeam <steve_longerbeam@mentor.com>, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, shuah@kernel.org, linux@armlinux.org.uk, geert@linux-m68k.org, Steve Longerbeam <slongerbeam@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, sakari.ailus@linux.intel.com, arnd@arndb.de, mchehab@kernel.org, bparrot@ti.com, robh+dt@kernel.org, horms+renesas@verge.net.au, tiffany.lin@mediatek.com, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, Sakari Ailus <sakari.ailus@iki.fi>, jean-christophe.trotin@st.com, kernel@pe
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <20170404020056.d7osj7rmog22xbjd@rob-hp-laptop>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Sjoerd Simons <sjoerd.simons-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, Wookey <wookey-Xpnwy/r4z8dg9hUCZPvPmw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, John Reitan <john.reitan-5wv7dgnIgG8@public.gmane.org>, Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Rob,
 
---===============5137808126934820969==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="FL5UXtIhxfXey3p5"
-Content-Disposition: inline
+On 04/04/17 03:00, Rob Herring wrote:
+> On Sun, Apr 02, 2017 at 08:59:44AM +0100, Guillaume Tucker wrote:
+>> The ARM Mali Midgard GPU family is present in a number of SoCs
+>> from many different vendors such as Samsung Exynos and Rockchip.
+>>
+>> Import the device tree bindings documentation from the r16p0
+>> release of the Mali Midgard GPU kernel driver:
+>>
+>>   https://developer.arm.com/-/media/Files/downloads/mali-drivers/kernel/mali-midgard-gpu/TX011-SW-99002-r16p0-00rel0.tgz
+>>
+>> The following optional bindings have been omitted in this initial
+>> version as they are only used in very specific cases:
+>>
+>>   * snoop_enable_smc
+>>   * snoop_disable_smc
+>>   * jm_config
+>>   * power_model
+>>   * system-coherency
+>>   * ipa-model
+>>
+>> The example has been simplified accordingly.
+>>
+>> The compatible string definition has been limited to
+>> "arm,mali-midgard" to avoid checkpatch.pl warnings and to match
+>> what the driver actually expects (as of r16p0 out-of-tree).
+>>
+>> CC: John Reitan <john.reitan-5wv7dgnIgG8@public.gmane.org>
+>> Signed-off-by: Guillaume Tucker <guillaume.tucker-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+>> ---
+>>  .../devicetree/bindings/gpu/arm,mali-midgard.txt   | 53 ++++++++++++++++++++++
+>>  1 file changed, 53 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt b/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt
+>> new file mode 100644
+>> index 000000000000..da8fc6d21bbf
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt
+>> @@ -0,0 +1,53 @@
+>> +#
+>> +# (C) COPYRIGHT 2013-2016 ARM Limited.
+>> +# Copyright (C) 2017 Collabora Ltd
+>> +#
+>> +# This program is free software and is provided to you under the terms of the
+>> +# GNU General Public License version 2 as published by the Free Software
+>> +# Foundation, and any use by you of this program is subject to the terms
+>> +# of such GNU licence.
+>> +#
+>> +
+>> +
+>> +ARM Mali Midgard GPU
+>> +====================
+>> +
+>> +Required properties:
+>> +
+>> +- compatible : Should be "arm,mali-midgard".
+>
+> As Neil said...
 
+Sure; as discussed in my previous emails.
 
---FL5UXtIhxfXey3p5
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+>> +- reg : Physical base address of the device and length of the register area.
+>> +- interrupts : Contains the three IRQ lines required by Mali Midgard devices.
+>> +- interrupt-names : Contains the names of IRQ resources in the order they were
+>> +  provided in the interrupts property. Must contain: "JOB, "MMU", "GPU".
+>> +
+>> +Optional:
+>> +
+>> +- clocks : Phandle to clock for the Mali Midgard device.
+>> +- clock-names : Shall be "clk_mali".
+>
+> "clk_" is redundant. Actually, if there is only 1 clock, then just drop
+> names. But there's not at least a core and bus clock?
 
-Hi!
+Only one clock needs to be provided with the Midgard GPU
+architecture.  It shares the same bus and system memory as the
+CPU.  So I'll remove clock-names in patch v3.
 
-> That self-referencing mux-controls property looks a bit superfluous:
->=20
-> 	mux: video-multiplexer {
-> 		mux-controls =3D <&mux>;
-> 	};
->=20
-> Other than that, I'm completely fine with splitting the compatible into
-> something like video-mux-gpio and video-mux-mmio and reusing the
-> mux-gpios property for video-mux-gpio.
+>> +- mali-supply : Phandle to regulator for the Mali device. Refer to
+>> +  Documentation/devicetree/bindings/regulator/regulator.txt for details.
+>> +- operating-points : Refer to Documentation/devicetree/bindings/power/opp.txt
+>> +  for details.
+>
+> Is this going to be sufficient vs. operating-points-v2? Or should it be
+> a power domain with OPPs?
 
-Agreed, I overseen that.
+In principle, switching to operating-points-v2 should be very
+straightforward.  I have smoke-tested the driver with an
+operating-points-v2 table and a phandle to it inside the gpu node
+in place of operating-points and it seems to be working fine.  At
+least it parsed the OPPs and got initialised correctly.
 
-> > You should be able to use code in drivers/mux as a library...
->=20
-> This is a good idea in principle, but this requires some rework of the
-> mux subsystem, and that subsystem hasn't even landed yet. For now I'd
-> like to focus on getting the DT bindings right.
->=20
-> I'd honestly prefer to not add this rework as a requirement for the i.MX
-> media drivers to get into staging.
+My understanding is that operating-points (v1) are not deprecated
+so we could keep the bindings as-is, but please let me know
+otherwise and I can try to address that in my next patch version.
+In the documentation, it should only be the case of replacing
+operating-points with operating-points-v2.
 
-Hmm. staging/ normally accepts code with bigger design problems than
-that.
+>> +
+>> +Example for a Mali-T602:
+>> +
+>> +gpu@0xfc010000 {
+>
+> Drop the '0x'.
 
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
+OK, I'm also updating the example with lower-case IRQ names, no
+clock-names etc...
 
---FL5UXtIhxfXey3p5
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlj11sEACgkQMOfwapXb+vJbDwCgopEMFgzPpbEIC0BHU9TwyS1c
-NWYAnjd4KGUl40C8oLHre+PEbMM25sc+
-=pmAS
------END PGP SIGNATURE-----
-
---FL5UXtIhxfXey3p5--
-
---===============5137808126934820969==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-devel mailing list
-devel@linuxdriverproject.org
-http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel
-
---===============5137808126934820969==--
+Thanks,
+Guillaume
