@@ -1,64 +1,87 @@
-From: Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v2 3/3] arm64: dts: exynos: Add support for s6e3hf2 panel
- device on TM2e board
-Date: Tue, 18 Apr 2017 08:00:14 +0200
-Message-ID: <b9bfcdd9-5576-34c3-6c7d-556b6c81946d@samsung.com>
-References: <1492408934-22096-1-git-send-email-hoegeun.kwon@samsung.com>
- <CGME20170417060220epcas5p42f6ed43d9db94779382e84a129b9da2d@epcas5p4.samsung.com>
- <1492408934-22096-4-git-send-email-hoegeun.kwon@samsung.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v3 02/12] arm64: allwinner: a64: add NMI controller on A64
+Date: Tue, 18 Apr 2017 09:00:16 +0200
+Message-ID: <20170418070016.qsng3qtk76bqxyc5@lukather>
+References: <20170417115747.7300-1-icenowy@aosc.io>
+ <20170417115747.7300-3-icenowy@aosc.io>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="gjtkzvfpdhuo5m42"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <1492408934-22096-4-git-send-email-hoegeun.kwon-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170417115747.7300-3-icenowy-h8G6r0blFSE@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hoegeun Kwon <hoegeun.kwon-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org, andi.shyti-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
+To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 17.04.2017 08:02, Hoegeun Kwon wrote:
-> This patch add the panel device tree node for s6e3hf2 display
-> controller to TM2e dts.
->
-> Signed-off-by: Hoegeun Kwon <hoegeun.kwon-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 
-Maybe it would be good to remove te-gpios property - tm2/tm2e uses
-hardware trigger, so it is not necessary and generates useless interrupts.
+--gjtkzvfpdhuo5m42
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Beside this:
-Reviewed-by: Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
- --
-Regards
-Andrzej
+On Mon, Apr 17, 2017 at 07:57:37PM +0800, Icenowy Zheng wrote:
+> Allwinner A64 SoC features a NMI controller, which is usually connected
+> to the AXP PMIC.
+>=20
+> Add support for it.
+>=20
+> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+> Acked-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 > ---
->  arch/arm64/boot/dts/exynos/exynos5433-tm2e.dts | 12 ++++++++++++
->  1 file changed, 12 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/exynos/exynos5433-tm2e.dts b/arch/arm64/boot/dts/exynos/exynos5433-tm2e.dts
-> index 694717a..98ad094 100644
-> --- a/arch/arm64/boot/dts/exynos/exynos5433-tm2e.dts
-> +++ b/arch/arm64/boot/dts/exynos/exynos5433-tm2e.dts
-> @@ -52,6 +52,18 @@
->  	assigned-clock-rates = <278000000>, <400000000>;
->  };
->  
-> +&dsi {
-> +	panel@0 {
-> +		compatible = "samsung,s6e3hf2";
-> +		reg = <0>;
-> +		vdd3-supply = <&ldo27_reg>;
-> +		vci-supply = <&ldo28_reg>;
-> +		reset-gpios = <&gpg0 0 GPIO_ACTIVE_LOW>;
-> +		enable-gpios = <&gpf1 5 GPIO_ACTIVE_HIGH>;
-> +		te-gpios = <&gpf1 3 GPIO_ACTIVE_HIGH>;
-> +	};
-> +};
-> +
->  &ldo31_reg {
->  	regulator-name = "TSP_VDD_1.8V_AP";
->  	regulator-min-microvolt = <1800000>;
+> Changes in v2:
+> - Added Chen-Yu's ACK.
+>=20
+>  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+>=20
+> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/b=
+oot/dts/allwinner/sun50i-a64.dtsi
+> index 05ec9fc5e81f..53c18ca372ea 100644
+> --- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+> @@ -403,6 +403,14 @@
+>  				     <GIC_SPI 41 IRQ_TYPE_LEVEL_HIGH>;
+>  		};
+> =20
+> +		nmi_intc: interrupt-controller@01f00c0c {
+> +			compatible =3D "allwinner,sun6i-a31-sc-nmi";
+> +			interrupt-controller;
+> +			#interrupt-cells =3D <2>;
+> +			reg =3D <0x01f00c0c 0x38>;
 
+The base address is not correct, and there's uncertainty on whether
+this is this particular controller or not. Did you even test this?
 
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+
+--gjtkzvfpdhuo5m42
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIcBAABCAAGBQJY9bl7AAoJEBx+YmzsjxAgn3gQAKop8hYTP0yO7/lygPlFzzX0
+qJzMHV7yYfLjWRR6yYR8bBKPmVMRI0GAEAvOwbAIiBEDz2lepY5Ktl8X9QR2JKo7
+u9Zudahxw0FGzVgdYQGweEfTdhyKy301C/EPOS0KZ+vB7sus3L48ajkt+6RZrh+E
+/lBa06B2fGPGnlT4aEQPAAIZSbPQAJsH8FXkLzy8iVLJpjw2yhO+Va3+J+8Wnj+3
+u++Iou96PT4+0xRigkqGlxynp+Fi0e77Dm7zxuepUBOsMWmQF6Nxnk4AMeo7E3Kx
+9wgdFnLArvPPkDW09Cr5Q6lSgVIHLb+/ltcFVL7saWJAtRb6T0fc1FssMWsDXMYt
+ZOHlrevAzbc+q6o6hbkLz/QYh9OxAO9YI9mu24KaB17jsFeKz1ferRU+6jbDz2Ix
+kZ6UItgyj+WFLGg7FQMp9ESfhTmv1urXR/3iaOvQ61KpLBqS+kJDE1ordCT/FEzL
+O2yeTgPHgoaRhnnQQ/AezKayfkoKlLJvqZOrLvksHG3kuBrNJ0DVJIgZBTB+OJKY
+fB8hMjhjrBdphHrfeMZAzCMDKSqVOeTCAlJRI8kZUIPzYqkgHMlrhR51tYUPHm+v
+OjblBEoPs2nNiH+gw3lVlj8Afr5JCbPJQTZKPlyAiOGvsyUxxjtNvhXZ5+3+vlkl
+ExiXiiYMspu4r7zh8xH8
+=lIbv
+-----END PGP SIGNATURE-----
+
+--gjtkzvfpdhuo5m42--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
