@@ -1,56 +1,43 @@
-From: Tyrel Datwyler <tyreld@linux.vnet.ibm.com>
-Subject: [PATCH 2/2] powerpc/sysfs: fix reference leak of cpu device_nodes present at boot
-Date: Mon, 17 Apr 2017 20:24:39 -0400
-Message-ID: <1492475079-10740-1-git-send-email-tyreld@linux.vnet.ibm.com>
-References: <1492474900-10658-1-git-send-email-tyreld@linux.vnet.ibm.com>
-Return-path: <stable-owner@vger.kernel.org>
-In-Reply-To: <1492474900-10658-1-git-send-email-tyreld@linux.vnet.ibm.com>
-Sender: stable-owner@vger.kernel.org
-To: mpe@ellerman.id.au
-Cc: benh@kernel.crashing.org, linuxppc-dev@lists.ozlabs.org, nfont@linux.vnet.ibm.com, bharata@linux.vnet.ibm.com, sachinp@linux.vnet.ibm.com, devicetree@vger.kernel.org, robh+dt@kernel.org, sudeep.karkadanagesha@arm.com, Tyrel Datwyler <tyreld@linux.vnet.ibm.com>, stable@vger.kernel.org
+From: Tyrel Datwyler <tyreld-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH] of: fix "/cpus" reference leak in of_numa_parse_cpu_nodes()
+Date: Mon, 17 Apr 2017 20:29:17 -0400
+Message-ID: <1492475357-10784-1-git-send-email-tyreld@linux.vnet.ibm.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tyrel Datwyler <tyreld-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-For cpus present at boot each logical cpu acquires a reference to the
-associated device node of the core. This happens in register_cpu() which
-is called by topology_init(). The result of this is that we end up with
-a reference held by each thread of the core. However, these references
-are never freed if the cpu core is dlpar removed.
+The call to of_find_node_by_path("/cpus") returns the cpus device_node
+with its reference count incremented. There is no matching of_node_put()
+call in of_numa_parse_cpu_nodes() which results in a leaked reference
+to the "/cpus" node.
 
-This patch fixes the reference leaks by acquiring and releasing the
-references in the cpu hotplug callbacks un/register_cpu_online().
-With this patch symmetric reference counting is observed with both cpus
-present at boot, and those dlpar added after boot.
+This patch adds an of_node_put() to release the reference.
 
-Cc: stable@vger.kernel.org
-fixes: f86e4718f24b ("driver/core: cpu: initialize of_node in cpu's device struture")
-Signed-off-by: Tyrel Datwyler <tyreld@linux.vnet.ibm.com>
+fixes: 298535c00a2c ("of, numa: Add NUMA of binding implementation.")
+Signed-off-by: Tyrel Datwyler <tyreld-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
 ---
- arch/powerpc/kernel/sysfs.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/of/of_numa.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/powerpc/kernel/sysfs.c b/arch/powerpc/kernel/sysfs.c
-index c1fb255..949957b 100644
---- a/arch/powerpc/kernel/sysfs.c
-+++ b/arch/powerpc/kernel/sysfs.c
-@@ -710,6 +710,10 @@ static int register_cpu_online(unsigned int cpu)
- 	struct device_attribute *attrs, *pmc_attrs;
- 	int i, nattrs;
- 
-+	/* For cpus present at boot a reference was already grabbed in register_cpu() */
-+	if (!s->of_node)
-+		s->of_node = of_get_cpu_node(cpu, NULL);
-+
- #ifdef CONFIG_PPC64
- 	if (cpu_has_feature(CPU_FTR_SMT))
- 		device_create_file(s, &dev_attr_smt_snooze_delay);
-@@ -864,6 +868,8 @@ static int unregister_cpu_online(unsigned int cpu)
+diff --git a/drivers/of/of_numa.c b/drivers/of/of_numa.c
+index a53982a..2db1f7a 100644
+--- a/drivers/of/of_numa.c
++++ b/drivers/of/of_numa.c
+@@ -57,6 +57,8 @@ static void __init of_numa_parse_cpu_nodes(void)
+ 		else
+ 			node_set(nid, numa_nodes_parsed);
  	}
- #endif
- 	cacheinfo_cpu_offline(cpu);
-+	of_node_put(s->of_node);
-+	s->of_node = NULL;
- #endif /* CONFIG_HOTPLUG_CPU */
- 	return 0;
++
++	of_node_put(cpus);
  }
+ 
+ static int __init of_numa_parse_memory_nodes(void)
 -- 
 1.8.3.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
