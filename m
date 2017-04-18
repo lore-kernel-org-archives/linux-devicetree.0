@@ -1,53 +1,54 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH 0/4] staging: add ccree crypto driver
-Date: Tue, 18 Apr 2017 16:13:55 +0100
-Message-ID: <20170418151355.GI17866@leverpostej>
-References: <1492524470-13847-1-git-send-email-gilad@benyossef.com>
+From: David Daney <ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH] of: fix "/cpus" reference leak in
+ of_numa_parse_cpu_nodes()
+Date: Tue, 18 Apr 2017 08:16:58 -0700
+Message-ID: <1005a5c3-22d1-b082-0383-d8f74e711315@caviumnetworks.com>
+References: <1492475357-10784-1-git-send-email-tyreld@linux.vnet.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-crypto-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1492524470-13847-1-git-send-email-gilad@benyossef.com>
-Sender: linux-crypto-owner@vger.kernel.org
-To: Gilad Ben-Yossef <gilad@benyossef.com>
-Cc: Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devel@driverdev.osuosl.org, linux-crypto@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, gilad.benyossef@arm.com, Binoy Jayan <binoy.jayan@linaro.org>, Ofir Drang <ofir.drang@arm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1492475357-10784-1-git-send-email-tyreld-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tyrel Datwyler <tyreld-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On 04/17/2017 05:29 PM, Tyrel Datwyler wrote:
+> The call to of_find_node_by_path("/cpus") returns the cpus device_node
+> with its reference count incremented. There is no matching of_node_put()
+> call in of_numa_parse_cpu_nodes() which results in a leaked reference
+> to the "/cpus" node.
+> 
+> This patch adds an of_node_put() to release the reference.
 
-On Tue, Apr 18, 2017 at 05:07:50PM +0300, Gilad Ben-Yossef wrote:
-> Arm TrustZone CryptoCell 700 is a family of cryptographic hardware
-> accelerators. It is supported by a long lived series of out of tree
-> drivers, which I am now in the process of unifying and upstreaming.
-> This is the first drop, supporting the new CryptoCell 712 REE. 
-> 
-> The code still needs some cleanup before maturing to a proper
-> upstream driver, which I am in the process of doing. However,
-> as discussion of some of the capabilities of the hardware and
-> its application to some dm-crypt and dm-verity features recently
-> took place I though it is better to do this in the open via the
-> staging tree.
-> 
-> A Git repository based off of Linux 4.11-rc7 is available at
-> https://github.com/gby/linux.git branch ccree.
-> 
-> Signed-off-by: Gilad Ben-Yossef <gilad@benyossef.com>
-> CC: Binoy Jayan <binoy.jayan@linaro.org>
-> CC: Ofir Drang <ofir.drang@arm.com>
-> 
-> Gilad Ben-Yossef (4):
->   staging: add ccree crypto driver
->   staging: ccree: add TODO list
->   staging: ccree: add devicetree bindings
->   MAINTAINERS: add Gilad BY as maintainer for ccree
-> 
->  .../devicetree/bindings/crypto/arm-cryptocell.txt  |   23 +
+Good catch:
+Acked-by: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
 
-I'm interested in looking at the DT binding, but for some reason I've
-only recevied the cover letter so far.
+> 
+> fixes: 298535c00a2c ("of, numa: Add NUMA of binding implementation.")
+> Signed-off-by: Tyrel Datwyler <tyreld-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+> ---
+>   drivers/of/of_numa.c | 2 ++
+>   1 file changed, 2 insertions(+)
+> 
+> diff --git a/drivers/of/of_numa.c b/drivers/of/of_numa.c
+> index a53982a..2db1f7a 100644
+> --- a/drivers/of/of_numa.c
+> +++ b/drivers/of/of_numa.c
+> @@ -57,6 +57,8 @@ static void __init of_numa_parse_cpu_nodes(void)
+>   		else
+>   			node_set(nid, numa_nodes_parsed);
+>   	}
+> +
+> +	of_node_put(cpus);
+>   }
+>   
+>   static int __init of_numa_parse_memory_nodes(void)
+> 
 
-Are my mail servers being particularly slow today, or has something gone
-wrong with the Cc list for the remaining patches?
-
-Thanks,
-Mark.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
