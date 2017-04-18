@@ -1,46 +1,39 @@
-From: Hoegeun Kwon <hoegeun.kwon@samsung.com>
-Subject: Re: [PATCH v2 3/3] arm64: dts: exynos: Add support for s6e3hf2
- panel device on TM2e board
-Date: Tue, 18 Apr 2017 17:27:39 +0900
-Message-ID: <fe6129d5-2501-5685-c11f-aa910b39c10e@samsung.com>
-References: <1492408934-22096-1-git-send-email-hoegeun.kwon@samsung.com>
- <CGME20170417060220epcas5p42f6ed43d9db94779382e84a129b9da2d@epcas5p4.samsung.com>
- <1492408934-22096-4-git-send-email-hoegeun.kwon@samsung.com>
- <b9bfcdd9-5576-34c3-6c7d-556b6c81946d@samsung.com>
- <f2acb724-ba41-175c-061a-7be765cc1939@samsung.com>
- <94152d85-5fb0-f5dc-045d-e6ee6c009f42@samsung.com>
+From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH v13 03/10] mux: minimal mux subsystem and gpio-based mux
+ controller
+Date: Tue, 18 Apr 2017 10:34:40 +0200
+Message-ID: <1492504480.2432.37.camel@pengutronix.de>
+References: <1492101794-13444-1-git-send-email-peda@axentia.se>
+         <1492101794-13444-4-git-send-email-peda@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-reply-to: <94152d85-5fb0-f5dc-045d-e6ee6c009f42@samsung.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Andrzej Hajda <a.hajda@samsung.com>, thierry.reding@gmail.com, airlied@linux.ie, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, kgene@kernel.org, krzk@kernel.org
-Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, javier@osg.samsung.com, andi.shyti@samsung.com, Hoegeun Kwon <hoegeun.kwon@samsung.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1492101794-13444-4-git-send-email-peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Colin Ian King <colin.king-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Paul Gortmaker <paul.gortmaker-CWA4WttNNZF54TAoqtyWWQ@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T24gMDQvMTgvMjAxNyAwNDo1NiBQTSwgQW5kcnplaiBIYWpkYSB3cm90ZToKPiBPbiAxOC4wNC4y
-MDE3IDA5OjQ0LCBIb2VnZXVuIEt3b24gd3JvdGU6Cj4+IE9uIDA0LzE4LzIwMTcgMDM6MDAgUE0s
-IEFuZHJ6ZWogSGFqZGEgd3JvdGU6Cj4+PiBPbiAxNy4wNC4yMDE3IDA4OjAyLCBIb2VnZXVuIEt3
-b24gd3JvdGU6Cj4+Pj4gVGhpcyBwYXRjaCBhZGQgdGhlIHBhbmVsIGRldmljZSB0cmVlIG5vZGUg
-Zm9yIHM2ZTNoZjIgZGlzcGxheQo+Pj4+IGNvbnRyb2xsZXIgdG8gVE0yZSBkdHMuCj4+Pj4KPj4+
-PiBTaWduZWQtb2ZmLWJ5OiBIb2VnZXVuIEt3b24gPGhvZWdldW4ua3dvbkBzYW1zdW5nLmNvbT4K
-Pj4+IE1heWJlIGl0IHdvdWxkIGJlIGdvb2QgdG8gcmVtb3ZlIHRlLWdwaW9zIHByb3BlcnR5IC0g
-dG0yL3RtMmUgdXNlcwo+Pj4gaGFyZHdhcmUgdHJpZ2dlciwgc28gaXQgaXMgbm90IG5lY2Vzc2Fy
-eSBhbmQgZ2VuZXJhdGVzIHVzZWxlc3MgaW50ZXJydXB0cy4KPj4gVGhhbmtzIGZvciB5b3VyIHJl
-dmlldy4KPj4KPj4gSSBhZ3JlZSwgYnV0IEkgdGhpbmtzIHJlbW92ZSB0aGUgdGUtZ3BpbyBwcm9w
-ZXJ0eSBhZnRlciB5b3VyIHBhdGNoIFsxXQo+PiBoYXMgYmVlbiBtZXJnZWQuCj4gUGF0Y2ggWzFd
-IGhhcyBiZWVuIG1lcmdlZCBhYm91dCBtb250aCBhZ28gOikKCkFoLi4uLCBNeSBtaXN0YWtlLi4u
-LiA6KQoKSSB3aWxsIHNlbmQgdmVyMyBwYXRjaHNldCB3aXRob3V0IHRlLWdwaW8gcHJvcGVydHku
-CgpCZXN0IHJlZ2FyZHMsCkhvZWdldW4KCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5m
-cmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0
-aW5mby9kcmktZGV2ZWwK
+Hi Peter,
+
+On Thu, 2017-04-13 at 18:43 +0200, Peter Rosin wrote:
+[...]
+> diff --git a/include/linux/mux.h b/include/linux/mux.h
+> new file mode 100644
+> index 000000000000..febdde4246df
+> --- /dev/null
+> +++ b/include/linux/mux.h
+[...]
+
+Consider separating mux.h into a consumer header and a driver header.
+Right now there is no separation between the consumer API and the
+framework internals.
+
+regards
+Philipp
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
