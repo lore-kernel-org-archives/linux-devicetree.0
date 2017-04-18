@@ -1,255 +1,69 @@
-From: Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>
-Subject: RE: [PATCH v3 5/7] doc_rst: media: New SDR formats PC16, PC18 & PC20
-Date: Tue, 18 Apr 2017 17:13:13 +0000
-Message-ID: <HK2PR06MB054587E6329C32C2DD9A38B1C3190@HK2PR06MB0545.apcprd06.prod.outlook.com>
-References: <1486479757-32128-1-git-send-email-ramesh.shanmugasundaram@bp.renesas.com>
- <1486479757-32128-6-git-send-email-ramesh.shanmugasundaram@bp.renesas.com>
- <213133284.36Jzg1zrIM@avalon>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH] drm: rcar-du: Document the vsps property in the DT bindings
+Date: Tue, 18 Apr 2017 19:36:07 +0200
+Message-ID: <CAMuHMdVOZm1oA+EvaOGpgbpsVJ1sZwLiCNBJG+NS+Xtdtvhpnw@mail.gmail.com>
+References: <20170327095652.5755-1-laurent.pinchart+renesas@ideasonboard.com>
+ <CAMuHMdUiDzGt6bz96D-5yRLF-HiZfpQTTxKP5Y4+j-9HiF1LLQ@mail.gmail.com> <8105647.ANSr0hWnZy@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <213133284.36Jzg1zrIM@avalon>
-Content-Language: en-US
+In-Reply-To: <8105647.ANSr0hWnZy@avalon>
 Sender: linux-renesas-soc-owner@vger.kernel.org
 To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "mchehab@kernel.org" <mchehab@kernel.org>, "hverkuil@xs4all.nl" <hverkuil@xs4all.nl>, "sakari.ailus@linux.intel.com" <sakari.ailus@linux.intel.com>, "crope@iki.fi" <crope@iki.fi>, Chris Paterson <Chris.Paterson2@renesas.com>, "geert+renesas@glider.be" <geert+renesas@glider.be>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>
+Cc: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, DRI Development <dri-devel@lists.freedesktop.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
 Hi Laurent,
 
-Thanks for the review comments.
+On Fri, Mar 31, 2017 at 11:19 AM, Laurent Pinchart
+<laurent.pinchart@ideasonboard.com> wrote:
+> On Monday 27 Mar 2017 13:05:48 Geert Uytterhoeven wrote:
+>> On Mon, Mar 27, 2017 at 11:56 AM, Laurent Pinchart wrote:
+>> > The property is used by the driver but is missing from the DT bindings.
+>> > Document it.
+>> >
+>> > Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
+>> > Signed-off-by: Laurent Pinchart
+>> > <laurent.pinchart+renesas@ideasonboard.com>
+>> > ---
+>> >
+>> >  Documentation/devicetree/bindings/display/renesas,du.txt | 5 +++++
+>> >  1 file changed, 5 insertions(+)
+>> >
+>> > diff --git a/Documentation/devicetree/bindings/display/renesas,du.txt
+>> > b/Documentation/devicetree/bindings/display/renesas,du.txt index
+>> > 1a02f099a0ff..cf34893a1b53 100644
+>> > --- a/Documentation/devicetree/bindings/display/renesas,du.txt
+>> > +++ b/Documentation/devicetree/bindings/display/renesas,du.txt
+>> >
+>> > @@ -36,6 +36,11 @@ Required Properties:
+>> >        When supplied they must be named "dclkin.x" with "x" being the
+>> >        input
+>> >        clock numerical index.
+>> >
+>> > +Optional Properties:
+>> > +
+>> > +  - vsps: A list of phandles to the VSP nodes that handle the memory
+>> > +    interfaces for the DU channels (Gen3 only).
+>>
+>> ", one per channel"?
+>>
+>> Required for Gen3, optional for Gen2? (cfr. Sergei's patches).
+>
+> How about making it mandatory on Gen2 as well ? The VSPs are there, even if
+> the driver doesn't use them, it makes sense to describe the connection. Of
+> course the driver will treat the property as optional for backward
+> compatibility.
 
-> On Tuesday 07 Feb 2017 15:02:35 Ramesh Shanmugasundaram wrote:
-> > This patch adds documentation for the three new SDR formats
-> >
-> > V4L2_SDR_FMT_PCU16BE
-> > V4L2_SDR_FMT_PCU18BE
-> > V4L2_SDR_FMT_PCU20BE
-> >
-> > Signed-off-by: Ramesh Shanmugasundaram
-> > <ramesh.shanmugasundaram@bp.renesas.com> ---
-> >  .../media/uapi/v4l/pixfmt-sdr-pcu16be.rst          | 55
-> +++++++++++++++++++
-> >  .../media/uapi/v4l/pixfmt-sdr-pcu18be.rst          | 55
-> +++++++++++++++++++
-> >  .../media/uapi/v4l/pixfmt-sdr-pcu20be.rst          | 54
-> +++++++++++++++++++
-> >  Documentation/media/uapi/v4l/sdr-formats.rst       |  3 ++
-> >  4 files changed, 167 insertions(+)
-> >  create mode 100644
-> > Documentation/media/uapi/v4l/pixfmt-sdr-pcu16be.rst
-> >  create mode 100644
-> > Documentation/media/uapi/v4l/pixfmt-sdr-pcu18be.rst
-> >  create mode 100644
-> > Documentation/media/uapi/v4l/pixfmt-sdr-pcu20be.rst
-> >
-> > diff --git a/Documentation/media/uapi/v4l/pixfmt-sdr-pcu16be.rst
-> > b/Documentation/media/uapi/v4l/pixfmt-sdr-pcu16be.rst new file mode
-> > 100644 index 0000000..2de1b1a
-> > --- /dev/null
-> > +++ b/Documentation/media/uapi/v4l/pixfmt-sdr-pcu16be.rst
-> > @@ -0,0 +1,55 @@
-> > +.. -*- coding: utf-8; mode: rst -*-
-> > +
-> > +.. _V4L2-SDR-FMT-PCU16BE:
-> > +
-> > +******************************
-> > +V4L2_SDR_FMT_PCU16BE ('PC16')
-> > +******************************
-> > +
-> > +Planar complex unsigned 16-bit big endian IQ sample
-> > +
-> > +Description
-> > +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> > +
-> > +This format contains a sequence of complex number samples. Each
-> > +complex number consist of two parts called In-phase and Quadrature
-> > +(IQ). Both I and Q are represented as a 16 bit unsigned big endian
-> > +number stored in
-> > +32 bit space. The remaining unused bits within the 32 bit space will
-> > +be padded with 0. I value starts first and Q value starts at an
-> > +offset equalling half of the buffer size (i.e.) offset =3D
-> > +buffersize/2. Out of the 16 bits, bit 15:2 (14 bit) is data and bit
-> > +1:0 (2 bit) can be any value.
->=20
-> This sounds very strange to me. Are the two lower bits always random ?
-> What is that used for ?
+Now it's mandatory, the vsps property should be present in the example, too.
 
-It could be zeros or it could be status bits in case of MAX2175 (if enabled=
-). I mentioned any value because the user app does not have any assumptions=
- on these bits value.
-=20
->=20
-> > +**Byte Order.**
-> > +Each cell is one byte.
-> > +
-> > +.. flat-table::
-> > +    :header-rows:  1
-> > +    :stub-columns: 0
-> > +
-> > +    * -  Offset:
-> > +      -  Byte B0
-> > +      -  Byte B1
-> > +      -  Byte B2
-> > +      -  Byte B3
-> > +    * -  start + 0:
-> > +      -  I'\ :sub:`0[13:6]`
-> > +      -  I'\ :sub:`0[5:0]; B1[1:0]=3Dpad`
-> > +      -  pad
-> > +      -  pad
-> > +    * -  start + 4:
-> > +      -  I'\ :sub:`1[13:6]`
-> > +      -  I'\ :sub:`1[5:0]; B1[1:0]=3Dpad`
-> > +      -  pad
-> > +      -  pad
-> > +    * -  ...
-> > +    * - start + offset:
-> > +      -  Q'\ :sub:`0[13:6]`
-> > +      -  Q'\ :sub:`0[5:0]; B1[1:0]=3Dpad`
-> > +      -  pad
-> > +      -  pad
-> > +    * - start + offset + 4:
-> > +      -  Q'\ :sub:`1[13:6]`
-> > +      -  Q'\ :sub:`1[5:0]; B1[1:0]=3Dpad`
-> > +      -  pad
-> > +      -  pad
-> > diff --git a/Documentation/media/uapi/v4l/pixfmt-sdr-pcu18be.rst
-> > b/Documentation/media/uapi/v4l/pixfmt-sdr-pcu18be.rst new file mode
-> > 100644 index 0000000..da8b26b
-> > --- /dev/null
-> > +++ b/Documentation/media/uapi/v4l/pixfmt-sdr-pcu18be.rst
-> > @@ -0,0 +1,55 @@
-> > +.. -*- coding: utf-8; mode: rst -*-
-> > +
-> > +.. _V4L2-SDR-FMT-PCU18BE:
-> > +
-> > +******************************
-> > +V4L2_SDR_FMT_PCU18BE ('PC18')
-> > +******************************
-> > +
-> > +Planar complex unsigned 18-bit big endian IQ sample
-> > +
-> > +Description
-> > +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> > +
-> > +This format contains a sequence of complex number samples. Each
-> > +complex number consist of two parts called In-phase and Quadrature
-> > +(IQ). Both I and Q are represented as a 18 bit unsigned big endian
-> > +number stored in
-> > +32 bit space. The remaining unused bits within the 32 bit space will
-> > +be padded with 0. I value starts first and Q value starts at an
-> > +offset equalling half of the buffer size (i.e.) offset =3D
-> > +buffersize/2. Out of the 18 bits, bit 17:2 (16 bit) is data and bit
-> > +1:0 (2 bit) can be any value.
-> > +
-> > +**Byte Order.**
-> > +Each cell is one byte.
-> > +
-> > +.. flat-table::
-> > +    :header-rows:  1
-> > +    :stub-columns: 0
-> > +
-> > +    * -  Offset:
-> > +      -  Byte B0
-> > +      -  Byte B1
-> > +      -  Byte B2
-> > +      -  Byte B3
-> > +    * -  start + 0:
-> > +      -  I'\ :sub:`0[17:10]`
-> > +      -  I'\ :sub:`0[9:2]`
-> > +      -  I'\ :sub:`0[1:0]; B2[5:0]=3Dpad`
-> > +      -  pad
-> > +    * -  start + 4:
-> > +      -  I'\ :sub:`1[17:10]`
-> > +      -  I'\ :sub:`1[9:2]`
-> > +      -  I'\ :sub:`1[1:0]; B2[5:0]=3Dpad`
-> > +      -  pad
-> > +    * -  ...
-> > +    * - start + offset:
-> > +      -  Q'\ :sub:`0[17:10]`
-> > +      -  Q'\ :sub:`0[9:2]`
-> > +      -  Q'\ :sub:`0[1:0]; B2[5:0]=3Dpad`
-> > +      -  pad
-> > +    * - start + offset + 4:
-> > +      -  Q'\ :sub:`1[17:10]`
-> > +      -  Q'\ :sub:`1[9:2]`
-> > +      -  Q'\ :sub:`1[1:0]; B2[5:0]=3Dpad`
-> > +      -  pad
-> > diff --git a/Documentation/media/uapi/v4l/pixfmt-sdr-pcu20be.rst
-> > b/Documentation/media/uapi/v4l/pixfmt-sdr-pcu20be.rst new file mode
-> > 100644 index 0000000..5499eed
-> > --- /dev/null
-> > +++ b/Documentation/media/uapi/v4l/pixfmt-sdr-pcu20be.rst
-> > @@ -0,0 +1,54 @@
-> > +.. -*- coding: utf-8; mode: rst -*-
-> > +.. _V4L2-SDR-FMT-PCU20BE:
-> > +
-> > +******************************
-> > +V4L2_SDR_FMT_PCU20BE ('PC20')
-> > +******************************
-> > +
-> > +Planar complex unsigned 20-bit big endian IQ sample
-> > +
-> > +Description
-> > +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> > +
-> > +This format contains a sequence of complex number samples. Each
-> > +complex number consist of two parts called In-phase and Quadrature
-> > +(IQ). Both I and Q are represented as a 20 bit unsigned big endian
-> > +number stored in
-> > +32 bit space. The remaining unused bits within the 32 bit space will
-> > +be padded with 0. I value starts first and Q value starts at an
-> > +offset equalling half of the buffer size (i.e.) offset =3D
-> > +buffersize/2. Out of the 20 bits, bit 19:2 (18 bit) is data and bit
-> > +1:0 (2 bit) can be any value.
-> > +
-> > +**Byte Order.**
-> > +Each cell is one byte.
-> > +
-> > +.. flat-table::
-> > +    :header-rows:  1
-> > +    :stub-columns: 0
-> > +
-> > +    * -  Offset:
-> > +      -  Byte B0
-> > +      -  Byte B1
-> > +      -  Byte B2
-> > +      -  Byte B3
-> > +    * -  start + 0:
-> > +      -  I'\ :sub:`0[19:12]`
-> > +      -  I'\ :sub:`0[11:4]`
-> > +      -  I'\ :sub:`0[3:0]; B2[3:0]=3Dpad`
-> > +      -  pad
-> > +    * -  start + 4:
-> > +      -  I'\ :sub:`1[19:12]`
-> > +      -  I'\ :sub:`1[11:4]`
-> > +      -  I'\ :sub:`1[3:0]; B2[3:0]=3Dpad`
-> > +      -  pad
-> > +    * -  ...
-> > +    * - start + offset:
-> > +      -  Q'\ :sub:`0[19:12]`
-> > +      -  Q'\ :sub:`0[11:4]`
-> > +      -  Q'\ :sub:`0[3:0]; B2[3:0]=3Dpad`
-> > +      -  pad
-> > +    * - start + offset + 4:
-> > +      -  Q'\ :sub:`1[19:12]`
-> > +      -  Q'\ :sub:`1[11:4]`
-> > +      -  Q'\ :sub:`1[3:0]; B2[3:0]=3Dpad`
-> > +      -  pad
-> > diff --git a/Documentation/media/uapi/v4l/sdr-formats.rst
-> > b/Documentation/media/uapi/v4l/sdr-formats.rst index f863c08..2037f5b
-> > 100644
-> > --- a/Documentation/media/uapi/v4l/sdr-formats.rst
-> > +++ b/Documentation/media/uapi/v4l/sdr-formats.rst
-> > @@ -17,3 +17,6 @@ These formats are used for :ref:`SDR <sdr>`
-> > interface only. pixfmt-sdr-cs08
-> >      pixfmt-sdr-cs14le
-> >      pixfmt-sdr-ru12le
-> > +    pixfmt-sdr-pcu16be
-> > +    pixfmt-sdr-pcu18be
-> > +    pixfmt-sdr-pcu20be
+Gr{oetje,eeting}s,
 
+                        Geert
 
-Thanks,
-Ramesh
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
