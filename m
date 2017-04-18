@@ -1,337 +1,82 @@
-From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Subject: [PATCH 2/2] arm64: dts: juno: add information about L1 and L2 caches
-Date: Tue, 18 Apr 2017 18:57:59 +0100
-Message-ID: <1492538279-16405-2-git-send-email-sudeep.holla@arm.com>
-References: <1492538279-16405-1-git-send-email-sudeep.holla@arm.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1492538279-16405-1-git-send-email-sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Liviu Dudau <liviu.dudau-5wv7dgnIgG8@public.gmane.org>
+From: Eric Anholt <eric@anholt.net>
+Subject: [PATCH 1/3] drm/vc4: Turn the V3D clock on at runtime.
+Date: Tue, 18 Apr 2017 12:11:55 -0700
+Message-ID: <20170418191157.18517-1-eric@anholt.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Commit a8d4636f96ad ("arm64: cacheinfo: Remove CCSIDR-based cache
-information probing") removed mechanism to extract cache information
-based on CCSIDR register as the architecture explicitly states no
-inference about the actual sizes of caches based on CCSIDR registers.
-
-Commit 9a802431c527 ("arm64: cacheinfo: add support to override cache
-levels via device tree") had already provided options to override cache
-information from the device tree.
-
-This patch adds the information about L1 and L2 caches on all variants
-of Juno platform.
-
-Cc: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Cc: Liviu Dudau <liviu.dudau-5wv7dgnIgG8@public.gmane.org>
-Signed-off-by: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
----
- arch/arm64/boot/dts/arm/juno-r1.dts | 42 +++++++++++++++++++++++++++++++++++++
- arch/arm64/boot/dts/arm/juno-r2.dts | 42 +++++++++++++++++++++++++++++++++++++
- arch/arm64/boot/dts/arm/juno.dts    | 42 +++++++++++++++++++++++++++++++++++++
- 3 files changed, 126 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/arm/juno-r1.dts b/arch/arm64/boot/dts/arm/juno-r1.dts
-index 0033c59a64b5..0e8943ab94d7 100644
---- a/arch/arm64/boot/dts/arm/juno-r1.dts
-+++ b/arch/arm64/boot/dts/arm/juno-r1.dts
-@@ -89,6 +89,12 @@
- 			reg = <0x0 0x0>;
- 			device_type = "cpu";
- 			enable-method = "psci";
-+			i-cache-size = <0xc000>;
-+			i-cache-line-size = <64>;
-+			i-cache-sets = <256>;
-+			d-cache-size = <0x8000>;
-+			d-cache-line-size = <64>;
-+			d-cache-sets = <256>;
- 			next-level-cache = <&A57_L2>;
- 			clocks = <&scpi_dvfs 0>;
- 			cpu-idle-states = <&CPU_SLEEP_0 &CLUSTER_SLEEP_0>;
-@@ -100,6 +106,12 @@
- 			reg = <0x0 0x1>;
- 			device_type = "cpu";
- 			enable-method = "psci";
-+			i-cache-size = <0xc000>;
-+			i-cache-line-size = <64>;
-+			i-cache-sets = <256>;
-+			d-cache-size = <0x8000>;
-+			d-cache-line-size = <64>;
-+			d-cache-sets = <256>;
- 			next-level-cache = <&A57_L2>;
- 			clocks = <&scpi_dvfs 0>;
- 			cpu-idle-states = <&CPU_SLEEP_0 &CLUSTER_SLEEP_0>;
-@@ -111,6 +123,12 @@
- 			reg = <0x0 0x100>;
- 			device_type = "cpu";
- 			enable-method = "psci";
-+			i-cache-size = <0x8000>;
-+			i-cache-line-size = <64>;
-+			i-cache-sets = <256>;
-+			d-cache-size = <0x8000>;
-+			d-cache-line-size = <64>;
-+			d-cache-sets = <128>;
- 			next-level-cache = <&A53_L2>;
- 			clocks = <&scpi_dvfs 1>;
- 			cpu-idle-states = <&CPU_SLEEP_0 &CLUSTER_SLEEP_0>;
-@@ -122,6 +140,12 @@
- 			reg = <0x0 0x101>;
- 			device_type = "cpu";
- 			enable-method = "psci";
-+			i-cache-size = <0x8000>;
-+			i-cache-line-size = <64>;
-+			i-cache-sets = <256>;
-+			d-cache-size = <0x8000>;
-+			d-cache-line-size = <64>;
-+			d-cache-sets = <128>;
- 			next-level-cache = <&A53_L2>;
- 			clocks = <&scpi_dvfs 1>;
- 			cpu-idle-states = <&CPU_SLEEP_0 &CLUSTER_SLEEP_0>;
-@@ -133,6 +157,12 @@
- 			reg = <0x0 0x102>;
- 			device_type = "cpu";
- 			enable-method = "psci";
-+			i-cache-size = <0x8000>;
-+			i-cache-line-size = <64>;
-+			i-cache-sets = <256>;
-+			d-cache-size = <0x8000>;
-+			d-cache-line-size = <64>;
-+			d-cache-sets = <128>;
- 			next-level-cache = <&A53_L2>;
- 			clocks = <&scpi_dvfs 1>;
- 			cpu-idle-states = <&CPU_SLEEP_0 &CLUSTER_SLEEP_0>;
-@@ -144,6 +174,12 @@
- 			reg = <0x0 0x103>;
- 			device_type = "cpu";
- 			enable-method = "psci";
-+			i-cache-size = <0x8000>;
-+			i-cache-line-size = <64>;
-+			i-cache-sets = <256>;
-+			d-cache-size = <0x8000>;
-+			d-cache-line-size = <64>;
-+			d-cache-sets = <128>;
- 			next-level-cache = <&A53_L2>;
- 			clocks = <&scpi_dvfs 1>;
- 			cpu-idle-states = <&CPU_SLEEP_0 &CLUSTER_SLEEP_0>;
-@@ -152,10 +188,16 @@
-
- 		A57_L2: l2-cache0 {
- 			compatible = "cache";
-+			cache-size = <0x200000>;
-+			cache-line-size = <64>;
-+			cache-sets = <2048>;
- 		};
-
- 		A53_L2: l2-cache1 {
- 			compatible = "cache";
-+			cache-size = <0x100000>;
-+			cache-line-size = <64>;
-+			cache-sets = <1024>;
- 		};
- 	};
-
-diff --git a/arch/arm64/boot/dts/arm/juno-r2.dts b/arch/arm64/boot/dts/arm/juno-r2.dts
-index 218d0e4736a8..405e2fba025b 100644
---- a/arch/arm64/boot/dts/arm/juno-r2.dts
-+++ b/arch/arm64/boot/dts/arm/juno-r2.dts
-@@ -89,6 +89,12 @@
- 			reg = <0x0 0x0>;
- 			device_type = "cpu";
- 			enable-method = "psci";
-+			i-cache-size = <0xc000>;
-+			i-cache-line-size = <64>;
-+			i-cache-sets = <256>;
-+			d-cache-size = <0x8000>;
-+			d-cache-line-size = <64>;
-+			d-cache-sets = <256>;
- 			next-level-cache = <&A72_L2>;
- 			clocks = <&scpi_dvfs 0>;
- 			cpu-idle-states = <&CPU_SLEEP_0 &CLUSTER_SLEEP_0>;
-@@ -100,6 +106,12 @@
- 			reg = <0x0 0x1>;
- 			device_type = "cpu";
- 			enable-method = "psci";
-+			i-cache-size = <0xc000>;
-+			i-cache-line-size = <64>;
-+			i-cache-sets = <256>;
-+			d-cache-size = <0x8000>;
-+			d-cache-line-size = <64>;
-+			d-cache-sets = <256>;
- 			next-level-cache = <&A72_L2>;
- 			clocks = <&scpi_dvfs 0>;
- 			cpu-idle-states = <&CPU_SLEEP_0 &CLUSTER_SLEEP_0>;
-@@ -111,6 +123,12 @@
- 			reg = <0x0 0x100>;
- 			device_type = "cpu";
- 			enable-method = "psci";
-+			i-cache-size = <0x8000>;
-+			i-cache-line-size = <64>;
-+			i-cache-sets = <256>;
-+			d-cache-size = <0x8000>;
-+			d-cache-line-size = <64>;
-+			d-cache-sets = <128>;
- 			next-level-cache = <&A53_L2>;
- 			clocks = <&scpi_dvfs 1>;
- 			cpu-idle-states = <&CPU_SLEEP_0 &CLUSTER_SLEEP_0>;
-@@ -122,6 +140,12 @@
- 			reg = <0x0 0x101>;
- 			device_type = "cpu";
- 			enable-method = "psci";
-+			i-cache-size = <0x8000>;
-+			i-cache-line-size = <64>;
-+			i-cache-sets = <256>;
-+			d-cache-size = <0x8000>;
-+			d-cache-line-size = <64>;
-+			d-cache-sets = <128>;
- 			next-level-cache = <&A53_L2>;
- 			clocks = <&scpi_dvfs 1>;
- 			cpu-idle-states = <&CPU_SLEEP_0 &CLUSTER_SLEEP_0>;
-@@ -133,6 +157,12 @@
- 			reg = <0x0 0x102>;
- 			device_type = "cpu";
- 			enable-method = "psci";
-+			i-cache-size = <0x8000>;
-+			i-cache-line-size = <64>;
-+			i-cache-sets = <256>;
-+			d-cache-size = <0x8000>;
-+			d-cache-line-size = <64>;
-+			d-cache-sets = <128>;
- 			next-level-cache = <&A53_L2>;
- 			clocks = <&scpi_dvfs 1>;
- 			cpu-idle-states = <&CPU_SLEEP_0 &CLUSTER_SLEEP_0>;
-@@ -144,6 +174,12 @@
- 			reg = <0x0 0x103>;
- 			device_type = "cpu";
- 			enable-method = "psci";
-+			i-cache-size = <0x8000>;
-+			i-cache-line-size = <64>;
-+			i-cache-sets = <256>;
-+			d-cache-size = <0x8000>;
-+			d-cache-line-size = <64>;
-+			d-cache-sets = <128>;
- 			next-level-cache = <&A53_L2>;
- 			clocks = <&scpi_dvfs 1>;
- 			cpu-idle-states = <&CPU_SLEEP_0 &CLUSTER_SLEEP_0>;
-@@ -152,10 +188,16 @@
-
- 		A72_L2: l2-cache0 {
- 			compatible = "cache";
-+			cache-size = <0x200000>;
-+			cache-line-size = <64>;
-+			cache-sets = <2048>;
- 		};
-
- 		A53_L2: l2-cache1 {
- 			compatible = "cache";
-+			cache-size = <0x100000>;
-+			cache-line-size = <64>;
-+			cache-sets = <1024>;
- 		};
- 	};
-
-diff --git a/arch/arm64/boot/dts/arm/juno.dts b/arch/arm64/boot/dts/arm/juno.dts
-index bb2820ef3d5b..0220494c9b80 100644
---- a/arch/arm64/boot/dts/arm/juno.dts
-+++ b/arch/arm64/boot/dts/arm/juno.dts
-@@ -88,6 +88,12 @@
- 			reg = <0x0 0x0>;
- 			device_type = "cpu";
- 			enable-method = "psci";
-+			i-cache-size = <0xc000>;
-+			i-cache-line-size = <64>;
-+			i-cache-sets = <256>;
-+			d-cache-size = <0x8000>;
-+			d-cache-line-size = <64>;
-+			d-cache-sets = <256>;
- 			next-level-cache = <&A57_L2>;
- 			clocks = <&scpi_dvfs 0>;
- 			cpu-idle-states = <&CPU_SLEEP_0 &CLUSTER_SLEEP_0>;
-@@ -99,6 +105,12 @@
- 			reg = <0x0 0x1>;
- 			device_type = "cpu";
- 			enable-method = "psci";
-+			i-cache-size = <0xc000>;
-+			i-cache-line-size = <64>;
-+			i-cache-sets = <256>;
-+			d-cache-size = <0x8000>;
-+			d-cache-line-size = <64>;
-+			d-cache-sets = <256>;
- 			next-level-cache = <&A57_L2>;
- 			clocks = <&scpi_dvfs 0>;
- 			cpu-idle-states = <&CPU_SLEEP_0 &CLUSTER_SLEEP_0>;
-@@ -110,6 +122,12 @@
- 			reg = <0x0 0x100>;
- 			device_type = "cpu";
- 			enable-method = "psci";
-+			i-cache-size = <0x8000>;
-+			i-cache-line-size = <64>;
-+			i-cache-sets = <256>;
-+			d-cache-size = <0x8000>;
-+			d-cache-line-size = <64>;
-+			d-cache-sets = <128>;
- 			next-level-cache = <&A53_L2>;
- 			clocks = <&scpi_dvfs 1>;
- 			cpu-idle-states = <&CPU_SLEEP_0 &CLUSTER_SLEEP_0>;
-@@ -121,6 +139,12 @@
- 			reg = <0x0 0x101>;
- 			device_type = "cpu";
- 			enable-method = "psci";
-+			i-cache-size = <0x8000>;
-+			i-cache-line-size = <64>;
-+			i-cache-sets = <256>;
-+			d-cache-size = <0x8000>;
-+			d-cache-line-size = <64>;
-+			d-cache-sets = <128>;
- 			next-level-cache = <&A53_L2>;
- 			clocks = <&scpi_dvfs 1>;
- 			cpu-idle-states = <&CPU_SLEEP_0 &CLUSTER_SLEEP_0>;
-@@ -132,6 +156,12 @@
- 			reg = <0x0 0x102>;
- 			device_type = "cpu";
- 			enable-method = "psci";
-+			i-cache-size = <0x8000>;
-+			i-cache-line-size = <64>;
-+			i-cache-sets = <256>;
-+			d-cache-size = <0x8000>;
-+			d-cache-line-size = <64>;
-+			d-cache-sets = <128>;
- 			next-level-cache = <&A53_L2>;
- 			clocks = <&scpi_dvfs 1>;
- 			cpu-idle-states = <&CPU_SLEEP_0 &CLUSTER_SLEEP_0>;
-@@ -143,6 +173,12 @@
- 			reg = <0x0 0x103>;
- 			device_type = "cpu";
- 			enable-method = "psci";
-+			i-cache-size = <0x8000>;
-+			i-cache-line-size = <64>;
-+			i-cache-sets = <256>;
-+			d-cache-size = <0x8000>;
-+			d-cache-line-size = <64>;
-+			d-cache-sets = <128>;
- 			next-level-cache = <&A53_L2>;
- 			clocks = <&scpi_dvfs 1>;
- 			cpu-idle-states = <&CPU_SLEEP_0 &CLUSTER_SLEEP_0>;
-@@ -151,10 +187,16 @@
-
- 		A57_L2: l2-cache0 {
- 			compatible = "cache";
-+			cache-size = <0x200000>;
-+			cache-line-size = <64>;
-+			cache-sets = <2048>;
- 		};
-
- 		A53_L2: l2-cache1 {
- 			compatible = "cache";
-+			cache-size = <0x100000>;
-+			cache-line-size = <64>;
-+			cache-sets = <1024>;
- 		};
- 	};
-
---
-2.7.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Rm9yIHRoZSBSYXNwYmVycnkgUGkncyBiaW5kaW5ncywgdGhlIHBvd2VyIGRvbWFpbiBhbHNvIGlt
+cGxpY2l0bHkKdHVybnMgb24gdGhlIGNsb2NrIGFuZCBkZWFzc2VydHMgcmVzZXQsIGJ1dCBmb3Ig
+dGhlIG5ldyBDeWdudXMgcG9ydCB3ZQpzdGFydCByZXByZXNlbnRpbmcgdGhlIGNsb2NrIGluIHRo
+ZSBkZXZpY2V0cmVlLgoKU2lnbmVkLW9mZi1ieTogRXJpYyBBbmhvbHQgPGVyaWNAYW5ob2x0Lm5l
+dD4KLS0tCiAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyY20sYmNtLXZjNC50eHQg
+ICB8ICAzICsrCiBkcml2ZXJzL2dwdS9kcm0vdmM0L3ZjNF9kcnYuaCAgICAgICAgICAgICAgICAg
+ICAgICB8ICAxICsKIGRyaXZlcnMvZ3B1L2RybS92YzQvdmM0X3YzZC5jICAgICAgICAgICAgICAg
+ICAgICAgIHwgMzMgKysrKysrKysrKysrKysrKysrKysrKwogMyBmaWxlcyBjaGFuZ2VkLCAzNyBp
+bnNlcnRpb25zKCspCgpkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
+bmdzL2Rpc3BsYXkvYnJjbSxiY20tdmM0LnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
+aW5kaW5ncy9kaXNwbGF5L2JyY20sYmNtLXZjNC50eHQKaW5kZXggY2EwMmQzZTRkYjkxLi5iYzE3
+NTZmNGY3OTEgMTAwNjQ0Ci0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9k
+aXNwbGF5L2JyY20sYmNtLXZjNC50eHQKKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
+bmRpbmdzL2Rpc3BsYXkvYnJjbSxiY20tdmM0LnR4dApAQCAtNTksNiArNTksOSBAQCBSZXF1aXJl
+ZCBwcm9wZXJ0aWVzIGZvciBWM0Q6CiAtIGludGVycnVwdHM6CVRoZSBpbnRlcnJ1cHQgbnVtYmVy
+CiAJCSAgU2VlIGJpbmRpbmdzL2ludGVycnVwdC1jb250cm9sbGVyL2JyY20sYmNtMjgzNS1hcm1j
+dHJsLWljLnR4dAogCitPcHRpb25hbCBwcm9wZXJ0aWVzIGZvciBWM0Q6CistIGNsb2NrczoJVGhl
+IGNsb2NrIHRoZSB1bml0IHJ1bnMgb24KKwogUmVxdWlyZWQgcHJvcGVydGllcyBmb3IgRFNJOgog
+LSBjb21wYXRpYmxlOglTaG91bGQgYmUgImJyY20sYmNtMjgzNS1kc2kwIiBvciAiYnJjbSxiY20y
+ODM1LWRzaTEiCiAtIHJlZzoJCVBoeXNpY2FsIGJhc2UgYWRkcmVzcyBhbmQgbGVuZ3RoIG9mIHRo
+ZSBEU0kgYmxvY2sncyByZWdpc3RlcnMKZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS92YzQv
+dmM0X2Rydi5oIGIvZHJpdmVycy9ncHUvZHJtL3ZjNC92YzRfZHJ2LmgKaW5kZXggODFkMmJjMDhl
+NzY2Li4wOGQ1YzIyMTNjODAgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvZ3B1L2RybS92YzQvdmM0X2Ry
+di5oCisrKyBiL2RyaXZlcnMvZ3B1L2RybS92YzQvdmM0X2Rydi5oCkBAIC0xODksNiArMTg5LDcg
+QEAgc3RydWN0IHZjNF92M2QgewogCXN0cnVjdCB2YzRfZGV2ICp2YzQ7CiAJc3RydWN0IHBsYXRm
+b3JtX2RldmljZSAqcGRldjsKIAl2b2lkIF9faW9tZW0gKnJlZ3M7CisJc3RydWN0IGNsayAqY2xr
+OwogfTsKIAogc3RydWN0IHZjNF9odnMgewpkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL3Zj
+NC92YzRfdjNkLmMgYi9kcml2ZXJzL2dwdS9kcm0vdmM0L3ZjNF92M2QuYwppbmRleCA3Y2MzNDZh
+ZDliMGIuLjI0NDI2MjJlNmJmZiAxMDA2NDQKLS0tIGEvZHJpdmVycy9ncHUvZHJtL3ZjNC92YzRf
+djNkLmMKKysrIGIvZHJpdmVycy9ncHUvZHJtL3ZjNC92YzRfdjNkLmMKQEAgLTE2LDYgKzE2LDcg
+QEAKICAqIHRoaXMgcHJvZ3JhbS4gIElmIG5vdCwgc2VlIDxodHRwOi8vd3d3LmdudS5vcmcvbGlj
+ZW5zZXMvPi4KICAqLwogCisjaW5jbHVkZSAibGludXgvY2xrLmgiCiAjaW5jbHVkZSAibGludXgv
+Y29tcG9uZW50LmgiCiAjaW5jbHVkZSAibGludXgvcG1fcnVudGltZS5oIgogI2luY2x1ZGUgInZj
+NF9kcnYuaCIKQEAgLTE2NCw2ICsxNjUsOSBAQCBzdGF0aWMgaW50IHZjNF92M2RfcnVudGltZV9z
+dXNwZW5kKHN0cnVjdCBkZXZpY2UgKmRldikKIAogCXZjNF9pcnFfdW5pbnN0YWxsKHZjNC0+ZGV2
+KTsKIAorCWlmICh2M2QtPmNsaykKKwkJY2xrX2Rpc2FibGVfdW5wcmVwYXJlKHYzZC0+Y2xrKTsK
+KwogCXJldHVybiAwOwogfQogCkBAIC0xNzIsNiArMTc2LDEzIEBAIHN0YXRpYyBpbnQgdmM0X3Yz
+ZF9ydW50aW1lX3Jlc3VtZShzdHJ1Y3QgZGV2aWNlICpkZXYpCiAJc3RydWN0IHZjNF92M2QgKnYz
+ZCA9IGRldl9nZXRfZHJ2ZGF0YShkZXYpOwogCXN0cnVjdCB2YzRfZGV2ICp2YzQgPSB2M2QtPnZj
+NDsKIAorCWlmICh2M2QtPmNsaykgeworCQlpbnQgcmV0ID0gY2xrX3ByZXBhcmVfZW5hYmxlKHYz
+ZC0+Y2xrKTsKKworCQlpZiAocmV0ICE9IDApCisJCQlyZXR1cm4gcmV0OworCX0KKwogCXZjNF92
+M2RfaW5pdF9odyh2YzQtPmRldik7CiAJdmM0X2lycV9wb3N0aW5zdGFsbCh2YzQtPmRldik7CiAK
+QEAgLTIwMiwxMiArMjEzLDM0IEBAIHN0YXRpYyBpbnQgdmM0X3YzZF9iaW5kKHN0cnVjdCBkZXZp
+Y2UgKmRldiwgc3RydWN0IGRldmljZSAqbWFzdGVyLCB2b2lkICpkYXRhKQogCXZjNC0+djNkID0g
+djNkOwogCXYzZC0+dmM0ID0gdmM0OwogCisJdjNkLT5jbGsgPSBkZXZtX2Nsa19nZXQoZGV2LCAi
+djNkX2NsayIpOworCWlmIChJU19FUlIodjNkLT5jbGspKSB7CisJCWludCByZXQgPSBQVFJfRVJS
+KHYzZC0+Y2xrKTsKKworCQlpZiAocmV0ID09IC1FTk9ERVYpIHsKKwkJCS8qIGJjbTI4MzUgZGlk
+bid0IGhhdmUgYSBjbG9jayByZWZlcmVuY2UgaW4gdGhlIERULiAqLworCQkJcmV0ID0gMDsKKwkJ
+CXYzZC0+Y2xrID0gTlVMTDsKKwkJfSBlbHNlIHsKKwkJCWlmIChyZXQgIT0gLUVQUk9CRV9ERUZF
+UikKKwkJCQlkZXZfZXJyKGRldiwgIkZhaWxlZCB0byBnZXQgVjNEIGNsb2NrOiAlZFxuIiwKKwkJ
+CQkJcmV0KTsKKwkJCXJldHVybiByZXQ7CisJCX0KKwl9CisKIAlpZiAoVjNEX1JFQUQoVjNEX0lE
+RU5UMCkgIT0gVjNEX0VYUEVDVEVEX0lERU5UMCkgewogCQlEUk1fRVJST1IoIlYzRF9JREVOVDAg
+cmVhZCAweCUwOHggaW5zdGVhZCBvZiAweCUwOHhcbiIsCiAJCQkgIFYzRF9SRUFEKFYzRF9JREVO
+VDApLCBWM0RfRVhQRUNURURfSURFTlQwKTsKIAkJcmV0dXJuIC1FSU5WQUw7CiAJfQogCisJaWYg
+KHYzZC0+Y2xrKSB7CisJCXJldCA9IGNsa19wcmVwYXJlX2VuYWJsZSh2M2QtPmNsayk7CisJCWlm
+IChyZXQgIT0gMCkKKwkJCXJldHVybiByZXQ7CisJfQorCiAJLyogUmVzZXQgdGhlIGJpbm5lciBv
+dmVyZmxvdyBhZGRyZXNzL3NpemUgYXQgc2V0dXAsIHRvIGJlIHN1cmUKIAkgKiB3ZSBkb24ndCBy
+ZXVzZSBhbiBvbGQgb25lLgogCSAqLwotLSAKMi4xMS4wCgpfX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZl
+bEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFp
+bG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
