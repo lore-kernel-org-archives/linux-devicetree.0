@@ -1,61 +1,116 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH V2] PM / OPP: Use - instead of @ for DT entries
-Date: Tue, 18 Apr 2017 10:45:26 +0530
-Message-ID: <20170418051526.GN28191@vireshk-i7>
-References: <70e7c7ee13722ab9c73cb073f88502eaf1ada5f5.1491816050.git.viresh.kumar@linaro.org>
- <CAK7LNAQ7Uf1Jkj64-Ykdk5TSeWvkq7=BaqUMJo6KqrN7BhYvsQ@mail.gmail.com>
- <22966574.2zMrIUgKz4@aspire.rjw.lan>
- <6048149.VQXQ7HobDf@aspire.rjw.lan>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <6048149.VQXQ7HobDf@aspire.rjw.lan>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: Masahiro Yamada <yamada.masahiro@socionext.com>, Rob Herring <robh+dt@kernel.org>, Chanwoo Choi <cw00.choi@samsung.com>, MyungJoo Ham <myungjoo.ham@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@codeaurora.org>, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Mark Rutland <mark.rutland@arm.com>, Daniel Mack <daniel@zonque.org>, Haojian Zhuang <haojian.zhuang@gmail.com>, Robert Jarzmik <robert.jarzmik@free.fr>, Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, linaro-
+From: William Wu <william.wu@rock-chips.com>
+Subject: [PATCH v2] usb: dwc3: add disable u2mac linestate check quirk
+Date: Tue, 18 Apr 2017 13:17:39 +0800
+Message-ID: <1492492659-19266-1-git-send-email-william.wu@rock-chips.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: balbi@kernel.org, gregkh@linuxfoundation.org
+Cc: heiko@sntech.de, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, robh+dt@kernel.org, frank.wang@rock-chips.com, huangtao@rock-chips.com, dianders@google.com, briannorris@google.com, groeck@google.com, daniel.meng@rock-chips.com, wulf@rock-chips.com, William Wu <william.wu@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-On 17-04-17, 18:40, Rafael J. Wysocki wrote:
-> On Monday, April 17, 2017 06:35:25 PM Rafael J. Wysocki wrote:
-> > On Monday, April 17, 2017 11:07:51 AM Masahiro Yamada wrote:
-> > > 2017-04-15 7:47 GMT+09:00 Rafael J. Wysocki <rjw@rjwysocki.net>:
-> > > > On Monday, April 10, 2017 02:51:35 PM Viresh Kumar wrote:
-> > > >> Compiling the DT file with W=1, DTC warns like follows:
-> > > >>
-> > > >> Warning (unit_address_vs_reg): Node /opp_table0/opp@1000000000 has a
-> > > >> unit name, but no reg property
-> > > >>
-> > > >> Fix this by replacing '@' with '-' as the OPP nodes will never have a
-> > > >> "reg" property.
-> > > >>
-> > > >> Reported-by: Krzysztof Kozlowski <krzk@kernel.org>
-> > > >> Reported-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> > > >> Suggested-by: Mark Rutland <mark.rutland@arm.com>
-> > > >> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
-> > > >> Acked-by: Maxime Ripard <maxime.ripard@free-electrons.com> (sunxi)
-> > > >> Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
-> > > >> Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
-> > > >
-> > > > OK, so any ACKs from the DT side?  Rob?
-> > > >
-> > > > Thanks,
-> > > > Rafael
-> > > 
-> > > 
-> > > 
-> > > I see Rob's Acked-by.
-> > > 
-> > > https://lkml.org/lkml/2017/4/13/648
-> > 
-> > Indeed.  Thanks!
-> 
-> But it doesn't apply on top of -rc7 for me, so I guess there is new 4.12-candidate
-> material in the DTS tree that conflicts with this, in which case it is better to route
-> it through the DTS tree IMO.
+This patch adds a quirk to disable USB 2.0 MAC linestate check
+during HS transmit. Refer the dwc3 databook, we can use it for
+some special platforms if the linestate not reflect the expected
+line state(J) during transmission.
 
-Yes a minor conflict. I have sent the rebased version now, see if you
-want to apply it directly or want arm-soc guys to do it.
+When use this quirk, the controller implements a fixed 40-bit
+TxEndDelay after the packet is given on UTMI and ignores the
+linestate during the transmit of a token (during token-to-token
+and token-to-data IPGAP).
 
+On some rockchip platforms (e.g. rk3399), it requires to disable
+the u2mac linestate check to decrease the SSPLIT token to SETUP
+token inter-packet delay from 566ns to 466ns, and fix the issue
+that FS/LS devices not recognized if inserted through USB 3.0 HUB.
+
+Signed-off-by: William Wu <william.wu@rock-chips.com>
+---
+Changes in v2:
+- fix coding style
+
+ Documentation/devicetree/bindings/usb/dwc3.txt |  2 ++
+ drivers/usb/dwc3/core.c                        | 14 ++++++++++----
+ drivers/usb/dwc3/core.h                        |  4 ++++
+ 3 files changed, 16 insertions(+), 4 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt b/Documentation/devicetree/bindings/usb/dwc3.txt
+index f658f39..6a89f0c 100644
+--- a/Documentation/devicetree/bindings/usb/dwc3.txt
++++ b/Documentation/devicetree/bindings/usb/dwc3.txt
+@@ -45,6 +45,8 @@ Optional properties:
+ 			a free-running PHY clock.
+  - snps,dis-del-phy-power-chg-quirk: when set core will change PHY power
+ 			from P0 to P1/P2/P3 without delay.
++ - snps,tx-ipgap-linecheck-dis-quirk: when set, disable u2mac linestate check
++			during HS transmit.
+  - snps,is-utmi-l1-suspend: true when DWC3 asserts output signal
+ 			utmi_l1_suspend_n, false when asserts utmi_sleep_n
+  - snps,hird-threshold: HIRD threshold
+diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
+index 455d89a..03429c5 100644
+--- a/drivers/usb/dwc3/core.c
++++ b/drivers/usb/dwc3/core.c
+@@ -796,15 +796,19 @@ static int dwc3_core_init(struct dwc3 *dwc)
+ 		dwc3_writel(dwc->regs, DWC3_GUCTL2, reg);
+ 	}
+ 
++	reg = dwc3_readl(dwc->regs, DWC3_GUCTL1);
++
+ 	/*
+ 	 * Enable hardware control of sending remote wakeup in HS when
+ 	 * the device is in the L1 state.
+ 	 */
+-	if (dwc->revision >= DWC3_REVISION_290A) {
+-		reg = dwc3_readl(dwc->regs, DWC3_GUCTL1);
++	if (dwc->revision >= DWC3_REVISION_290A)
+ 		reg |= DWC3_GUCTL1_DEV_L1_EXIT_BY_HW;
+-		dwc3_writel(dwc->regs, DWC3_GUCTL1, reg);
+-	}
++
++	if (dwc->tx_ipgap_linecheck_dis_quirk)
++		reg |= DWC3_GUCTL1_TX_IPGAP_LINECHECK_DIS;
++
++	dwc3_writel(dwc->regs, DWC3_GUCTL1, reg);
+ 
+ 	return 0;
+ 
+@@ -1023,6 +1027,8 @@ static void dwc3_get_properties(struct dwc3 *dwc)
+ 				"snps,dis-u2-freeclk-exists-quirk");
+ 	dwc->dis_del_phy_power_chg_quirk = device_property_read_bool(dev,
+ 				"snps,dis-del-phy-power-chg-quirk");
++	dwc->tx_ipgap_linecheck_dis_quirk = device_property_read_bool(dev,
++				"snps,tx-ipgap-linecheck-dis-quirk");
+ 
+ 	dwc->tx_de_emphasis_quirk = device_property_read_bool(dev,
+ 				"snps,tx_de_emphasis_quirk");
+diff --git a/drivers/usb/dwc3/core.h b/drivers/usb/dwc3/core.h
+index 981c77f..3c2537b 100644
+--- a/drivers/usb/dwc3/core.h
++++ b/drivers/usb/dwc3/core.h
+@@ -204,6 +204,7 @@
+ #define DWC3_GCTL_DSBLCLKGTNG		BIT(0)
+ 
+ /* Global User Control 1 Register */
++#define DWC3_GUCTL1_TX_IPGAP_LINECHECK_DIS	BIT(28)
+ #define DWC3_GUCTL1_DEV_L1_EXIT_BY_HW	BIT(24)
+ 
+ /* Global USB2 PHY Configuration Register */
+@@ -850,6 +851,8 @@ struct dwc3_scratchpad_array {
+  *			provide a free-running PHY clock.
+  * @dis_del_phy_power_chg_quirk: set if we disable delay phy power
+  *			change quirk.
++ * @tx_ipgap_linecheck_dis_quirk: set if we disable u2mac linestate
++ *			check during HS transmit.
+  * @tx_de_emphasis_quirk: set if we enable Tx de-emphasis quirk
+  * @tx_de_emphasis: Tx de-emphasis value
+  * 	0	- -6dB de-emphasis
+@@ -1004,6 +1007,7 @@ struct dwc3 {
+ 	unsigned		dis_rxdet_inp3_quirk:1;
+ 	unsigned		dis_u2_freeclk_exists_quirk:1;
+ 	unsigned		dis_del_phy_power_chg_quirk:1;
++	unsigned		tx_ipgap_linecheck_dis_quirk:1;
+ 
+ 	unsigned		tx_de_emphasis_quirk:1;
+ 	unsigned		tx_de_emphasis:2;
 -- 
-viresh
+2.0.0
