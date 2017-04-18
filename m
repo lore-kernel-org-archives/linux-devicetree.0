@@ -1,81 +1,53 @@
-From: Mathieu Poirier <mathieu.poirier@linaro.org>
-Subject: Re: [PATCH v6 3/8] coresight: of_get_coresight_platform_data: Add
- missing of_node_put
-Date: Tue, 18 Apr 2017 09:09:10 -0600
-Message-ID: <20170418150910.GA22806@linaro.org>
-References: <1491485461-22800-1-git-send-email-leo.yan@linaro.org>
- <1491485461-22800-4-git-send-email-leo.yan@linaro.org>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH 0/4] staging: add ccree crypto driver
+Date: Tue, 18 Apr 2017 16:13:55 +0100
+Message-ID: <20170418151355.GI17866@leverpostej>
+References: <1492524470-13847-1-git-send-email-gilad@benyossef.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
+Return-path: <linux-crypto-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1491485461-22800-4-git-send-email-leo.yan@linaro.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: Leo Yan <leo.yan@linaro.org>
-Cc: Jonathan Corbet <corbet@lwn.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Wei Xu <xuwei5@hisilicon.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Suzuki K Poulose <suzuki.poulose@arm.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, Mike Leach <mike.leach@linaro.org>, Sudeep Holla <sudeep.holla@arm.com>
+In-Reply-To: <1492524470-13847-1-git-send-email-gilad@benyossef.com>
+Sender: linux-crypto-owner@vger.kernel.org
+To: Gilad Ben-Yossef <gilad@benyossef.com>
+Cc: Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devel@driverdev.osuosl.org, linux-crypto@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, gilad.benyossef@arm.com, Binoy Jayan <binoy.jayan@linaro.org>, Ofir Drang <ofir.drang@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 06, 2017 at 09:30:56PM +0800, Leo Yan wrote:
-> From: Suzuki K Poulose <suzuki.poulose@arm.com>
-> 
-> The of_get_coresight_platform_data iterates over the possible CPU nodes
-> to find a given cpu phandle. However it does not drop the reference
-> to the node pointer returned by the of_get_coresight_platform_data.
-> 
-> This patch also introduces another minor fix is to use
-> of_cpu_device_node_get() to replace of_get_cpu_node().
-> 
-> Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
-> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-> [Leo: minor tweaks for of_get_coresight_platform_data]
-> Signed-off-by: Leo Yan <leo.yan@linaro.org>
+Hi,
 
-Suzuki sent a Reviewed-by for this, it should be added here.
+On Tue, Apr 18, 2017 at 05:07:50PM +0300, Gilad Ben-Yossef wrote:
+> Arm TrustZone CryptoCell 700 is a family of cryptographic hardware
+> accelerators. It is supported by a long lived series of out of tree
+> drivers, which I am now in the process of unifying and upstreaming.
+> This is the first drop, supporting the new CryptoCell 712 REE. 
+> 
+> The code still needs some cleanup before maturing to a proper
+> upstream driver, which I am in the process of doing. However,
+> as discussion of some of the capabilities of the hardware and
+> its application to some dm-crypt and dm-verity features recently
+> took place I though it is better to do this in the open via the
+> staging tree.
+> 
+> A Git repository based off of Linux 4.11-rc7 is available at
+> https://github.com/gby/linux.git branch ccree.
+> 
+> Signed-off-by: Gilad Ben-Yossef <gilad@benyossef.com>
+> CC: Binoy Jayan <binoy.jayan@linaro.org>
+> CC: Ofir Drang <ofir.drang@arm.com>
+> 
+> Gilad Ben-Yossef (4):
+>   staging: add ccree crypto driver
+>   staging: ccree: add TODO list
+>   staging: ccree: add devicetree bindings
+>   MAINTAINERS: add Gilad BY as maintainer for ccree
+> 
+>  .../devicetree/bindings/crypto/arm-cryptocell.txt  |   23 +
 
-> ---
->  drivers/hwtracing/coresight/of_coresight.c | 17 ++++++++++-------
->  1 file changed, 10 insertions(+), 7 deletions(-)
-> 
-> diff --git a/drivers/hwtracing/coresight/of_coresight.c b/drivers/hwtracing/coresight/of_coresight.c
-> index 629e031..1a77280 100644
-> --- a/drivers/hwtracing/coresight/of_coresight.c
-> +++ b/drivers/hwtracing/coresight/of_coresight.c
-> @@ -108,7 +108,8 @@ struct coresight_platform_data *of_get_coresight_platform_data(
->  	struct coresight_platform_data *pdata;
->  	struct of_endpoint endpoint, rendpoint;
->  	struct device *rdev;
-> -	struct device_node *dn;
-> +	bool found;
-> +	struct device_node *dn, *np;
->  	struct device_node *ep = NULL;
->  	struct device_node *rparent = NULL;
->  	struct device_node *rport = NULL;
-> @@ -175,17 +176,19 @@ struct coresight_platform_data *of_get_coresight_platform_data(
->  		} while (ep);
->  	}
->  
-> -	/* Affinity defaults to CPU0 */
-> -	pdata->cpu = 0;
->  	dn = of_parse_phandle(node, "cpu", 0);
-> -	for (cpu = 0; dn && cpu < nr_cpu_ids; cpu++) {
-> -		if (dn == of_get_cpu_node(cpu, NULL)) {
-> -			pdata->cpu = cpu;
-> +	for_each_possible_cpu(cpu) {
-> +		np = of_cpu_device_node_get(cpu);
-> +		found = (dn == np);
-> +		of_node_put(np);
-> +		if (found)
->  			break;
-> -		}
->  	}
->  	of_node_put(dn);
->  
-> +	/* Affinity to CPU0 if no cpu nodes are found */
-> +	pdata->cpu = found ? cpu : 0;
-> +
->  	return pdata;
->  }
->  EXPORT_SYMBOL_GPL(of_get_coresight_platform_data);
-> -- 
-> 2.7.4
-> 
+I'm interested in looking at the DT binding, but for some reason I've
+only recevied the cover letter so far.
+
+Are my mail servers being particularly slow today, or has something gone
+wrong with the Cc list for the remaining patches?
+
+Thanks,
+Mark.
