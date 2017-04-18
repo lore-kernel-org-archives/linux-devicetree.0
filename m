@@ -1,90 +1,81 @@
-From: Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v2 6/7] ARM: dts: imx7d: Add node for PCIe controller
-Date: Tue, 18 Apr 2017 08:01:32 -0700
-Message-ID: <20170418150133.31679-7-andrew.smirnov@gmail.com>
-References: <20170418150133.31679-1-andrew.smirnov@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170418150133.31679-1-andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, yurovsky-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Dong Aisheng <aisheng.dong-3arQi8VN3Tc@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Mathieu Poirier <mathieu.poirier@linaro.org>
+Subject: Re: [PATCH v6 3/8] coresight: of_get_coresight_platform_data: Add
+ missing of_node_put
+Date: Tue, 18 Apr 2017 09:09:10 -0600
+Message-ID: <20170418150910.GA22806@linaro.org>
+References: <1491485461-22800-1-git-send-email-leo.yan@linaro.org>
+ <1491485461-22800-4-git-send-email-leo.yan@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1491485461-22800-4-git-send-email-leo.yan@linaro.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Leo Yan <leo.yan@linaro.org>
+Cc: Jonathan Corbet <corbet@lwn.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Wei Xu <xuwei5@hisilicon.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Suzuki K Poulose <suzuki.poulose@arm.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, Mike Leach <mike.leach@linaro.org>, Sudeep Holla <sudeep.holla@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Cc: yurovsky-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: Dong Aisheng <aisheng.dong-3arQi8VN3Tc@public.gmane.org>
-Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Signed-off-by: Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- arch/arm/boot/dts/imx7d.dtsi | 37 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 37 insertions(+)
+On Thu, Apr 06, 2017 at 09:30:56PM +0800, Leo Yan wrote:
+> From: Suzuki K Poulose <suzuki.poulose@arm.com>
+> 
+> The of_get_coresight_platform_data iterates over the possible CPU nodes
+> to find a given cpu phandle. However it does not drop the reference
+> to the node pointer returned by the of_get_coresight_platform_data.
+> 
+> This patch also introduces another minor fix is to use
+> of_cpu_device_node_get() to replace of_get_cpu_node().
+> 
+> Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
+> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+> [Leo: minor tweaks for of_get_coresight_platform_data]
+> Signed-off-by: Leo Yan <leo.yan@linaro.org>
 
-diff --git a/arch/arm/boot/dts/imx7d.dtsi b/arch/arm/boot/dts/imx7d.dtsi
-index f6dee41..f46814a 100644
---- a/arch/arm/boot/dts/imx7d.dtsi
-+++ b/arch/arm/boot/dts/imx7d.dtsi
-@@ -42,6 +42,7 @@
-  */
- 
- #include "imx7s.dtsi"
-+#include <dt-bindings/reset/imx7-reset.h>
- 
- / {
- 	cpus {
-@@ -127,6 +128,42 @@
- 		fsl,num-rx-queues=<3>;
- 		status = "disabled";
- 	};
-+
-+	pcie: pcie@0x33800000 {
-+		compatible = "fsl,imx7d-pcie", "snps,dw-pcie";
-+		reg = <0x33800000 0x4000>,
-+		      <0x4ff00000 0x80000>;
-+		reg-names = "dbi", "config";
-+		#address-cells = <3>;
-+		#size-cells = <2>;
-+		device_type = "pci";
-+		ranges = <0x81000000 0 0          0x4ff80000 0 0x00010000   /* downstream I/O */
-+			  0x82000000 0 0x40000000 0x40000000 0 0x0ff00000>; /* non-prefetchable memory */
-+		num-lanes = <1>;
-+		interrupts = <GIC_SPI 122 IRQ_TYPE_LEVEL_HIGH>;
-+		interrupt-names = "msi";
-+		#interrupt-cells = <1>;
-+		interrupt-map-mask = <0 0 0 0x7>;
-+		interrupt-map = <0 0 0 1 &intc GIC_SPI 125 IRQ_TYPE_LEVEL_HIGH>,
-+				<0 0 0 2 &intc GIC_SPI 124 IRQ_TYPE_LEVEL_HIGH>,
-+				<0 0 0 3 &intc GIC_SPI 123 IRQ_TYPE_LEVEL_HIGH>,
-+				<0 0 0 4 &intc GIC_SPI 122 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&clks IMX7D_PCIE_CTRL_ROOT_CLK>,
-+			 <&clks IMX7D_PLL_ENET_MAIN_100M_CLK>,
-+			 <&clks IMX7D_PCIE_PHY_ROOT_CLK>;
-+		clock-names = "pcie", "pcie_bus", "pcie_phy";
-+		assigned-clocks = <&clks IMX7D_PCIE_CTRL_ROOT_SRC>,
-+				  <&clks IMX7D_PCIE_PHY_ROOT_SRC>;
-+		assigned-clock-parents = <&clks IMX7D_PLL_ENET_MAIN_250M_CLK>,
-+					 <&clks IMX7D_PLL_ENET_MAIN_100M_CLK>;
-+
-+		fsl,max-link-speed = <2>;
-+		power-domains = <&pgc_pcie_phy>;
-+		resets = <&src IMX7_RESET_PCIEPHY>,
-+			 <&src IMX7_RESET_PCIE_CTRL_APPS_EN>;
-+		reset-names = "pciephy", "apps";
-+		status = "disabled";
-+	};
- };
- 
- &ca_funnel_ports {
--- 
-2.9.3
+Suzuki sent a Reviewed-by for this, it should be added here.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> ---
+>  drivers/hwtracing/coresight/of_coresight.c | 17 ++++++++++-------
+>  1 file changed, 10 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/hwtracing/coresight/of_coresight.c b/drivers/hwtracing/coresight/of_coresight.c
+> index 629e031..1a77280 100644
+> --- a/drivers/hwtracing/coresight/of_coresight.c
+> +++ b/drivers/hwtracing/coresight/of_coresight.c
+> @@ -108,7 +108,8 @@ struct coresight_platform_data *of_get_coresight_platform_data(
+>  	struct coresight_platform_data *pdata;
+>  	struct of_endpoint endpoint, rendpoint;
+>  	struct device *rdev;
+> -	struct device_node *dn;
+> +	bool found;
+> +	struct device_node *dn, *np;
+>  	struct device_node *ep = NULL;
+>  	struct device_node *rparent = NULL;
+>  	struct device_node *rport = NULL;
+> @@ -175,17 +176,19 @@ struct coresight_platform_data *of_get_coresight_platform_data(
+>  		} while (ep);
+>  	}
+>  
+> -	/* Affinity defaults to CPU0 */
+> -	pdata->cpu = 0;
+>  	dn = of_parse_phandle(node, "cpu", 0);
+> -	for (cpu = 0; dn && cpu < nr_cpu_ids; cpu++) {
+> -		if (dn == of_get_cpu_node(cpu, NULL)) {
+> -			pdata->cpu = cpu;
+> +	for_each_possible_cpu(cpu) {
+> +		np = of_cpu_device_node_get(cpu);
+> +		found = (dn == np);
+> +		of_node_put(np);
+> +		if (found)
+>  			break;
+> -		}
+>  	}
+>  	of_node_put(dn);
+>  
+> +	/* Affinity to CPU0 if no cpu nodes are found */
+> +	pdata->cpu = found ? cpu : 0;
+> +
+>  	return pdata;
+>  }
+>  EXPORT_SYMBOL_GPL(of_get_coresight_platform_data);
+> -- 
+> 2.7.4
+> 
