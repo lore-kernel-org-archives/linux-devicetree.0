@@ -1,274 +1,255 @@
-From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Subject: Re: [PATCH v4 05/11] drm/sun4i: abstract a engine type
-Date: Tue, 18 Apr 2017 19:05:12 +0800
-Message-ID: <5F52665D-8A24-40D3-B84B-E8991B3BE457@aosc.io>
-References: <20170416120849.54542-1-icenowy@aosc.io> <20170416120849.54542-6-icenowy@aosc.io> <20170418085548.4cisone2yfcuizcp@lukather>
-Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
+From: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Subject: Re: [PATCH v13 03/10] mux: minimal mux subsystem and gpio-based mux
+ controller
+Date: Tue, 18 Apr 2017 13:44:30 +0200
+Message-ID: <20170418114430.GA1496@kroah.com>
+References: <1492101794-13444-1-git-send-email-peda@axentia.se>
+ <1492101794-13444-4-git-send-email-peda@axentia.se>
+ <20170418085156.GA4773@kroah.com>
+ <bdeecccf-02d6-226b-8516-1d41e3602a7a@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBDS6XAN6ZADRB6XF27DQKGQED3UHKAQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20170418085548.4cisone2yfcuizcp@lukather>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <bdeecccf-02d6-226b-8516-1d41e3602a7a-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Colin Ian King <colin.king-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Paul Gortmaker <paul.gortmaker-CWA4WttNNZF54TAoqtyWWQ@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Tue, Apr 18, 2017 at 12:59:50PM +0200, Peter Rosin wrote:
+> On 2017-04-18 10:51, Greg Kroah-Hartman wrote:
+> > On Thu, Apr 13, 2017 at 06:43:07PM +0200, Peter Rosin wrote:
+> >> +config MUX_GPIO
+> >> +	tristate "GPIO-controlled Multiplexer"
+> >> +	depends on OF && GPIOLIB
+> > 
+> > Why have the gpio and mux core in the same patch?
+> 
+> One is not usable w/o the other. I can split them if you want to?
 
+Then why are they two different config options?  Add the core code in
+one patch, and then add the gpio controled mutiplexer in a separate
+patch.
 
-=E4=BA=8E 2017=E5=B9=B44=E6=9C=8818=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=8D=884:=
-55:48, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> =E5=86=99=E5=88=B0:
->Hi,
->
->Thanks for that rework.
->
->On Sun, Apr 16, 2017 at 08:08:43PM +0800, Icenowy Zheng wrote:
->> As we are going to add support for the Allwinner DE2 engine in
->sun4i-drm
->> driver, we will finally have two types of display engines -- the DE1
->> backend and the DE2 mixer. They both do some display blending and
->feed
->> graphics data to TCON, so I choose to call them both "engine" here.
->>=20
->> Abstract the engine type to void * and a ops struct, which contains
->> functions that should be called outside the engine-specified code (in
->> TCON, CRTC or TV Encoder code).
->>=20
->> A dedicated Kconfig option is also added to control whether
->> sun4i-backend-specified code (sun4i_backend.c and sun4i_layer.c)
->should
->> be built. As we removed the codes in CRTC code that directly call the
->> layer code, we can now extract the layer part and combine it with the
->> backend part into a new module, sun4i-backend.ko.
->>=20
->> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
->> ---
->> Changes in v4:
->> - Comments to tag the color correction functions as optional.
->> - Check before calling the optional functions.
->> - Change layers_init to satisfy new PATCH v4 04/11.
->>=20
->>  drivers/gpu/drm/sun4i/Kconfig         | 10 ++++++++++
->>  drivers/gpu/drm/sun4i/Makefile        |  6 ++++--
->>  drivers/gpu/drm/sun4i/sun4i_backend.c | 26
->+++++++++++++++++++-------
->>  drivers/gpu/drm/sun4i/sun4i_backend.h |  5 -----
->>  drivers/gpu/drm/sun4i/sun4i_crtc.c    | 14 +++++++-------
->>  drivers/gpu/drm/sun4i/sun4i_crtc.h    |  7 ++++---
->>  drivers/gpu/drm/sun4i/sun4i_drv.h     |  3 ++-
->>  drivers/gpu/drm/sun4i/sun4i_layer.c   |  2 +-
->>  drivers/gpu/drm/sun4i/sun4i_layer.h   |  3 ++-
->>  drivers/gpu/drm/sun4i/sun4i_tcon.c    |  2 +-
->>  drivers/gpu/drm/sun4i/sun4i_tv.c      | 11 ++++++-----
->>  drivers/gpu/drm/sun4i/sunxi_engine.h  | 35
->+++++++++++++++++++++++++++++++++++
->>  12 files changed, 91 insertions(+), 33 deletions(-)
->>  create mode 100644 drivers/gpu/drm/sun4i/sunxi_engine.h
->>=20
->> diff --git a/drivers/gpu/drm/sun4i/Kconfig
->b/drivers/gpu/drm/sun4i/Kconfig
->> index a4b357db8856..5a8227f37cc4 100644
->> --- a/drivers/gpu/drm/sun4i/Kconfig
->> +++ b/drivers/gpu/drm/sun4i/Kconfig
->> @@ -12,3 +12,13 @@ config DRM_SUN4I
->>  	  Choose this option if you have an Allwinner SoC with a
->>  	  Display Engine. If M is selected the module will be called
->>  	  sun4i-drm.
->> +
->> +config DRM_SUN4I_BACKEND
->> +	tristate "Support for Allwinner A10 Display Engine Backend"
->> +	depends on DRM_SUN4I
->> +	default DRM_SUN4I
->> +	help
->> +	  Choose this option if you have an Allwinner SoC with the
->> +	  original Allwinner Display Engine, which has a backend to
->> +	  do some alpha blending and feed graphics to TCON. If M is
->> +	  selected the module will be called sun4i-backend.
->> diff --git a/drivers/gpu/drm/sun4i/Makefile
->b/drivers/gpu/drm/sun4i/Makefile
->> index 59b757350a1f..1db1068b9be1 100644
->> --- a/drivers/gpu/drm/sun4i/Makefile
->> +++ b/drivers/gpu/drm/sun4i/Makefile
->> @@ -5,9 +5,11 @@ sun4i-tcon-y +=3D sun4i_tcon.o
->>  sun4i-tcon-y +=3D sun4i_rgb.o
->>  sun4i-tcon-y +=3D sun4i_dotclock.o
->>  sun4i-tcon-y +=3D sun4i_crtc.o
->> -sun4i-tcon-y +=3D sun4i_layer.o
->> +
->> +sun4i-backend-y +=3D sun4i_layer.o
->> +sun4i-backend-y +=3D sun4i_backend.o
->> =20
->>  obj-$(CONFIG_DRM_SUN4I)		+=3D sun4i-drm.o sun4i-tcon.o
->> -obj-$(CONFIG_DRM_SUN4I)		+=3D sun4i_backend.o
->> +obj-$(CONFIG_DRM_SUN4I_BACKEND)	+=3D sun4i-backend.o
->>  obj-$(CONFIG_DRM_SUN4I)		+=3D sun6i_drc.o
->>  obj-$(CONFIG_DRM_SUN4I)		+=3D sun4i_tv.o
->> diff --git a/drivers/gpu/drm/sun4i/sun4i_backend.c
->b/drivers/gpu/drm/sun4i/sun4i_backend.c
->> index d660741ba475..a16c96a002a4 100644
->> --- a/drivers/gpu/drm/sun4i/sun4i_backend.c
->> +++ b/drivers/gpu/drm/sun4i/sun4i_backend.c
->> @@ -23,6 +23,8 @@
->> =20
->>  #include "sun4i_backend.h"
->>  #include "sun4i_drv.h"
->> +#include "sun4i_layer.h"
->> +#include "sunxi_engine.h"
->> =20
->>  static const u32 sunxi_rgb2yuv_coef[12] =3D {
->>  	0x00000107, 0x00000204, 0x00000064, 0x00000108,
->> @@ -30,9 +32,10 @@ static const u32 sunxi_rgb2yuv_coef[12] =3D {
->>  	0x000001c1, 0x00003e88, 0x00003fb8, 0x00000808
->>  };
->> =20
->> -void sun4i_backend_apply_color_correction(struct sun4i_backend
->*backend)
->> +static void sun4i_backend_apply_color_correction(void *engine)
->>  {
->>  	int i;
->> +	struct sun4i_backend *backend =3D engine;
->
->I'm not really fond of passing an opaque pointer here, and hope that
->things will work out.
->
->I think having a common structure, holding the common thingsand a more
->specific structure for that one would work better.
->
->Something like
->
->struct sunxi_engine {
->       struct regmap	*regs;
->};
->
->struct sun4i_backend {
->       struct sunxi_engine	engine;
->
->	struct clk		*sat_clk;
->	struct reset_control	*sat_reset;
->=09
->};
+> >> +static struct class mux_class = {
+> >> +	.name = "mux",
+> >> +	.owner = THIS_MODULE,
+> >> +};
+> > 
+> > No Documentation/ABI/ update for your sysfs files?  Please do so.
+> 
+> Ok I'll look into it. Wasn't even aware that I added any. But there's the
+> new class of course...
 
-Sounds good ;-)
+Hint, you have files, the devices that belong to the class :)
 
->
->static void sun4i_backend_apply_color_correction(struct sunxi_engine
->*engine)
->struct sun4i_backend *backend =3D container_of(engine, struct
->sun4i_backend, engine);
->
->...
->
->> +static const struct sunxi_engine_ops sun4i_backend_engine_ops =3D {
->> +	.commit =3D sun4i_backend_commit,
->> +	.layers_init =3D sun4i_layers_init,
->> +	.apply_color_correction =3D sun4i_backend_apply_color_correction,
->> +	.disable_color_correction =3D sun4i_backend_disable_color_correction,
->
->Please align the values with tabs, like done in the other structures
->created that way in this driver.
->
->>  static void sun4i_crtc_atomic_begin(struct drm_crtc *crtc,
->> @@ -56,7 +55,7 @@ static void sun4i_crtc_atomic_flush(struct drm_crtc
->*crtc,
->> =20
->>  	DRM_DEBUG_DRIVER("Committing plane changes\n");
->> =20
->> -	sun4i_backend_commit(scrtc->backend);
->> +	scrtc->engine_ops->commit(scrtc->engine);
->
->You rely on the backend having setup things properly, which is pretty
->fragile. Ideally, you should have a function to check that engine_ops
->and commit is !NULL, and call it, and the consumers would use that
->function...
+> >> +static int __init mux_init(void)
+> >> +{
+> >> +	return class_register(&mux_class);
+> >> +}
+> >> +
+> >> +static DEFINE_IDA(mux_ida);
+> > 
+> > When your module is unloaded, you forgot to clean this structure up with
+> > what was done with it.
+> 
+> I was under the impression that not providing an exit function for modules
+> made the module infrastructure prevent unloading (by bumping some reference
+> counter). Maybe that is a misconception?
 
-If it's really NULL how should the function return?
+Ah, messy, don't do that.  Make it so you can unload your module please,
+why wouldn't you want that to happen?
 
->
->> @@ -362,7 +361,9 @@ static void sun4i_tv_disable(struct drm_encoder
->*encoder)
->>  	regmap_update_bits(tv->regs, SUN4I_TVE_EN_REG,
->>  			   SUN4I_TVE_EN_ENABLE,
->>  			   0);
->> -	sun4i_backend_disable_color_correction(backend);
->> +
->> +	if (crtc->engine_ops->disable_color_correction)
->> +		crtc->engine_ops->disable_color_correction(crtc->engine);
->>  }
->
->... Instead of having to do it in some cases, but not always ...
->
->>  static void sun4i_tv_enable(struct drm_encoder *encoder)
->> @@ -370,11 +371,11 @@ static void sun4i_tv_enable(struct drm_encoder
->*encoder)
->>  	struct sun4i_tv *tv =3D drm_encoder_to_sun4i_tv(encoder);
->>  	struct sun4i_crtc *crtc =3D drm_crtc_to_sun4i_crtc(encoder->crtc);
->>  	struct sun4i_tcon *tcon =3D crtc->tcon;
->> -	struct sun4i_backend *backend =3D crtc->backend;
->> =20
->>  	DRM_DEBUG_DRIVER("Enabling the TV Output\n");
->> =20
->> -	sun4i_backend_apply_color_correction(backend);
->> +	if (crtc->engine_ops->apply_color_correction)
->> +		crtc->engine_ops->apply_color_correction(crtc->engine);
->> =20
->>  	regmap_update_bits(tv->regs, SUN4I_TVE_EN_REG,
->>  			   SUN4I_TVE_EN_ENABLE,
->> diff --git a/drivers/gpu/drm/sun4i/sunxi_engine.h
->b/drivers/gpu/drm/sun4i/sunxi_engine.h
->> new file mode 100644
->> index 000000000000..a9128abda66f
->> --- /dev/null
->> +++ b/drivers/gpu/drm/sun4i/sunxi_engine.h
->> @@ -0,0 +1,35 @@
->> +/*
->> + * Copyright (C) 2017 Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
->> + *
->> + * This program is free software; you can redistribute it and/or
->> + * modify it under the terms of the GNU General Public License as
->> + * published by the Free Software Foundation; either version 2 of
->> + * the License, or (at your option) any later version.
->> + */
->> +
->> +#ifndef _SUNXI_ENGINE_H_
->> +#define _SUNXI_ENGINE_H_
->> +
->> +struct sun4i_crtc;
->> +
->> +struct sunxi_engine_ops {
->> +	/* Commit the changes to the engine */
->> +	void (*commit)(void *engine);
->> +	/* Initialize layers (planes) for this engine */
->> +	struct drm_plane **(*layers_init)(struct drm_device *drm,
->> +					  struct sun4i_crtc *crtc);
->> +
->> +	/*
->> +	 * These are optional functions for the TV Encoder. Please check
->> +	 * their presence before calling them.
->> +	 *
->> +	 * The first function applies the color space correction needed
->> +	 * for outputing correct TV signal.
->> +	 *
->> +	 * The second function disabled the correction.
->> +	 */
->> +	void (*apply_color_correction)(void *engine);
->> +	void (*disable_color_correction)(void *engine);
->
->... And have to document it.
->
->Please also use kerneldoc for those comments.
->
->Thanks again!
->Maxime
+> >> +	mux_chip = kzalloc(sizeof(*mux_chip) +
+> >> +			   controllers * sizeof(*mux_chip->mux) +
+> >> +			   sizeof_priv, GFP_KERNEL);
+> >> +	if (!mux_chip)
+> >> +		return NULL;
+> > 
+> > You don't return PTR_ERR(-ENOMEM)?  Ok, why not?  (I'm not arguing for
+> > it, just curious...)
+> 
+> There's no particular reason. Do you think I should change it?
 
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+What does the caller do with an error?  Pass it up to where?  Who gets
+it?  Don't you want the caller to know you are out of memory?
+
+> >> +
+> >> +	device_initialize(&mux_chip->dev);
+> > 
+> > Why are you not registering the device here as well?  Why have this be a
+> > two step process?
+> 
+> Because of idle state handling. The drivers are expected to fill in
+> the desired idle state(s) after allocating the mux controller(s).
+> Then, when registering, the desired idle state is activated (if the
+> idle state is not idle-as-is, of course) and as a last step the mux
+> is "advertised".
+
+Ok, is that documented in the functions somewhere?
+
+> >> +	ret = device_add(&mux_chip->dev);
+> >> +	if (ret < 0)
+> >> +		dev_err(&mux_chip->dev,
+> >> +			"device_add failed in mux_chip_register: %d\n", ret);
+> > 
+> > Did you run checkpatch.pl in strict mode on this new file?  Please do so :)
+> 
+> I did, and did it again just to be sure, and I do not get any complaints.
+> So, what's wrong?
+
+You list the function name in the printk string, it should complain
+that __func__ should be used.  Oh well, it's just a perl script, it
+doesn't always catch everything.
+isn't always correct :)
+
+> >> +EXPORT_SYMBOL_GPL(devm_mux_chip_alloc);
+> > 
+> > 
+> > Having devm functions that create/destroy other struct devices worries
+> > me, do we have other examples of this happening today?  Are you sure you
+> > got the reference counting all correct?
+> 
+> drivers/iio/industrialio_core.c:devm_iio_device_alloc
+> 
+> Or is the iio case different in some subtle way that I'm missing?
+
+I don't know, hopefully you got it all correct, I haven't audited that
+code path in a long time :)
+
+> >> +
+> >> +static int devm_mux_chip_match(struct device *dev, void *res, void *data)
+> >> +{
+> >> +	struct mux_chip **r = res;
+> >> +
+> >> +	if (WARN_ON(!r || !*r))
+> > 
+> > How can this happen?
+> 
+> It shouldn't. I copied the pattern from the iio subsystem.
+
+Then it should be removed there too...
+
+> >> +void devm_mux_chip_free(struct device *dev, struct mux_chip *mux_chip)
+> >> +{
+> >> +	WARN_ON(devres_release(dev, devm_mux_chip_release,
+> >> +			       devm_mux_chip_match, mux_chip));
+> > 
+> > What can someone do with these WARN_ON() splats in the kernel log?
+> 
+> Don't know. Again, I copied the pattern from the iio subsystem.
+
+If you don't know what it should be used for, don't copy it!
+
+Cargo-cult coding is horrible, please no.
+
+> >> +	/* ...or it's just contended. */
+> >> +	down_write(&mux->lock);
+> > 
+> > Why use a read/write lock at all?  Have you tested this to verify it
+> > really is faster and needed?
+> 
+> For one of the HW configuration that drove the development, the same mux
+> controller is used to mux both an I2C channel and a couple of ADC lines.
+> 
+> If there is no kind of reader/writer locking going on, there is no way to
+> do ADC readings concurrently with an I2C transfer even when the consumers
+> want the mux in the same position. With an ordinary mutex controlling the
+> mux position, the consumers will unconditionally get serialized, which
+> seems like a waste to me. Or maybe I'm missing something?
+
+Why is serializing things a "waste"?  Again, a rw semaphore is slower,
+takes more logic to get correct, and is very complex at times.  If you
+are not SURE you need it, and that it matters, don't use it.  And if you
+do use it, document the heck out of it how you need it and why.
+
+> >> +
+> >> +	if (mux->cached_state == state) {
+> >> +		/*
+> >> +		 * Hmmm, someone else changed the mux to my liking.
+> >> +		 * That makes me wonder how long I waited for nothing?
+> >> +		 */
+> >> +		downgrade_write(&mux->lock);
+> > 
+> > Oh that always scares me...  Are you _sure_ this is correct?  And
+> > needed?
+> 
+> It might not be needed, and it would probably work ok to just fall
+> through and call mux_control_set unconditionally. What is it that
+> always scares you exactly? Relying on cached state to be correct?
+> Downgrading writer locks?
+
+downgrading a writer lock scares me, especially for something as
+"simple" as this type of interface.  Again, don't use it unless you
+_have_ to.  Simple is good, start with that always.
+
+> >> +	if (mux->idle_state != MUX_IDLE_AS_IS &&
+> >> +	    mux->idle_state != mux->cached_state)
+> >> +		ret = mux_control_set(mux, mux->idle_state);
+> >> +
+> >> +	up_read(&mux->lock);
+> > 
+> > You require a lock to be held for a "global" function?  Without
+> > documentation?  Or even a sparse marking?  That's asking for trouble...
+> 
+> Documentation I can handle, but where should I look to understand how I
+> should add sparse markings?
+
+Run sparse on the code and see what it says :)
+
+> The mux needs to be locked somehow. But as I stated in the cover letter
+> the rwsem isn't a perfect fit.
+> 
+> 	I'm using an rwsem to lock a mux, but that isn't really a
+> 	perfect fit. Is there a better locking primitive that I don't
+> 	know about that fits better? I had a mutex at one point, but
+> 	that didn't allow any concurrent accesses at all. At least
+> 	the rwsem allows concurrent access as long as all users
+> 	agree on the mux state, but I suspect that the rwsem will
+> 	degrade to the mutex situation pretty quickly if there is
+> 	any contention.
+> 
+> Also, the lock doesn't add anything if there is only one consumer of
+> a mux controller. Maybe there should be some mechanism for shortcutting
+> the locking for the (more common?) single-consumer case?
+> 
+> But again, I need the locking for my multi-consumer use case.
+
+Go back to a mutex, and having a function that requires it to be held
+is, icky.
+
+> >> +/*
+> >> + * Using subsys_initcall instead of module_init here to ensure - for the
+> >> + * non-modular case - that the subsystem is initialized when mux consumers
+> >> + * and mux controllers start to use it /without/ relying on link order.
+> >> + * For the modular case, the ordering is ensured with module dependencies.
+> >> + */
+> >> +subsys_initcall(mux_init);
+> > 
+> > Even with subsys_initcall you are relying on link order, you do realize
+> > that?  What about other subsystems that rely on this?  :)
+> 
+> Yes, that is true, but if others start relying on this, that's their problem,
+> right? :-)
+
+Yes, but no need to document something that isn't true.  You are relying
+on link order here.
+
+> >> +struct mux_control_ops {
+> >> +	int (*set)(struct mux_control *mux, int state);
+> >> +};
+> >> +
+> >> +/* These defines match the constants from the dt-bindings. On purpose. */
+> > 
+> > Why on purpose?
+> 
+> I sure wasn't an accident? :-)
+> 
+> Want me to remove it?
+
+At least explain _why_ you are doing this, that would help, right?
+
+thanks,
+
+greg k-h
