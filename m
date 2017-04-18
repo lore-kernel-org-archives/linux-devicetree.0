@@ -1,255 +1,165 @@
-From: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Subject: Re: [PATCH v13 03/10] mux: minimal mux subsystem and gpio-based mux
- controller
-Date: Tue, 18 Apr 2017 13:44:30 +0200
-Message-ID: <20170418114430.GA1496@kroah.com>
-References: <1492101794-13444-1-git-send-email-peda@axentia.se>
- <1492101794-13444-4-git-send-email-peda@axentia.se>
- <20170418085156.GA4773@kroah.com>
- <bdeecccf-02d6-226b-8516-1d41e3602a7a@axentia.se>
+From: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
+Subject: Re: [RFC 1/2] dt-bindings: add mmio-based syscon mux controller DT
+ bindings
+Date: Tue, 18 Apr 2017 13:51:59 +0200
+Message-ID: <20170418115159.GD14505@amd>
+References: <20170413154812.19597-1-p.zabel@pengutronix.de>
+ <1492503544.2432.32.camel@pengutronix.de>
+ <20170418100840.GF7456@valkosipuli.retiisi.org.uk>
+ <20170418103453.GC14505@amd>
+ <20170418105540.GH7456@valkosipuli.retiisi.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="gE7i1rD7pdK0Ng3j"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <bdeecccf-02d6-226b-8516-1d41e3602a7a-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Colin Ian King <colin.king-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Paul Gortmaker <paul.gortmaker-CWA4WttNNZF54TAoqtyWWQ@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+In-Reply-To: <20170418105540.GH7456-S+BSfZ9RZZmRSg0ZkenSGLdO1Tsj/99ntUK59QYPAWc@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
+Cc: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 18, 2017 at 12:59:50PM +0200, Peter Rosin wrote:
-> On 2017-04-18 10:51, Greg Kroah-Hartman wrote:
-> > On Thu, Apr 13, 2017 at 06:43:07PM +0200, Peter Rosin wrote:
-> >> +config MUX_GPIO
-> >> +	tristate "GPIO-controlled Multiplexer"
-> >> +	depends on OF && GPIOLIB
-> > 
-> > Why have the gpio and mux core in the same patch?
-> 
-> One is not usable w/o the other. I can split them if you want to?
 
-Then why are they two different config options?  Add the core code in
-one patch, and then add the gpio controled mutiplexer in a separate
-patch.
+--gE7i1rD7pdK0Ng3j
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> >> +static struct class mux_class = {
-> >> +	.name = "mux",
-> >> +	.owner = THIS_MODULE,
-> >> +};
-> > 
-> > No Documentation/ABI/ update for your sysfs files?  Please do so.
-> 
-> Ok I'll look into it. Wasn't even aware that I added any. But there's the
-> new class of course...
+On Tue 2017-04-18 13:55:40, Sakari Ailus wrote:
+> On Tue, Apr 18, 2017 at 12:34:53PM +0200, Pavel Machek wrote:
+> > On Tue 2017-04-18 13:08:41, Sakari Ailus wrote:
+> > > Hi Philipp,
+> > >=20
+> > > On Tue, Apr 18, 2017 at 10:19:04AM +0200, Philipp Zabel wrote:
+> > > > On Thu, 2017-04-13 at 17:48 +0200, Philipp Zabel wrote:
+> > > > > This adds device tree binding documentation for mmio-based syscon
+> > > > > multiplexers controlled by a single bitfield in a syscon register
+> > > > > range.
+> > > > >=20
+> > > > > Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> > > > > ---
+> > > > >  Documentation/devicetree/bindings/mux/mmio-mux.txt | 56 ++++++++=
+++++++++++++++
+> > > > >  1 file changed, 56 insertions(+)
+> > > > >  create mode 100644 Documentation/devicetree/bindings/mux/mmio-mu=
+x.txt
+> > > > >=20
+> > > > > diff --git a/Documentation/devicetree/bindings/mux/mmio-mux.txt b=
+/Documentation/devicetree/bindings/mux/mmio-mux.txt
+> > > > > new file mode 100644
+> > > > > index 0000000000000..11d96f5d98583
+> > > > > --- /dev/null
+> > > > > +++ b/Documentation/devicetree/bindings/mux/mmio-mux.txt
+> > > > > @@ -0,0 +1,56 @@
+> > > > > +MMIO bitfield-based multiplexer controller bindings
+> > > > > +
+> > > > > +Define a syscon bitfield to be used to control a multiplexer. Th=
+e parent
+> > > > > +device tree node must be a syscon node to provide register acces=
+s.
+> > > > > +
+> > > > > +Required properties:
+> > > > > +- compatible : "gpio-mux"
+> > > > > +- reg : register base of the register containing the control bit=
+field
+> > > > > +- bit-mask : bitmask of the control bitfield in the control regi=
+ster
+> > > > > +- bit-shift : bit offset of the control bitfield in the control =
+register
+> > > > > +- #mux-control-cells : <0>
+> > > > > +* Standard mux-controller bindings as decribed in mux-controller=
+=2Etxt
+> > > > > +
+> > > > > +Optional properties:
+> > > > > +- idle-state : if present, the state the mux will have when idle=
+=2E The
+> > > > > +	       special state MUX_IDLE_AS_IS is the default.
+> > > > > +
+> > > > > +The multiplexer state is defined as the value of the bitfield de=
+scribed
+> > > > > +by the reg, bit-mask, and bit-shift properties, accessed through=
+ the parent
+> > > > > +syscon.
+> > > > > +
+> > > > > +Example:
+> > > > > +
+> > > > > +	syscon {
+> > > > > +		compatible =3D "syscon";
+> > > > > +
+> > > > > +		mux: mux-controller@3 {
+> > > > > +			compatible =3D "mmio-mux";
+> > > > > +			reg =3D <0x3>;
+> > > > > +			bit-mask =3D <0x1>;
+> > > > > +			bit-shift =3D <5>;
+> > > > > +			#mux-control-cells =3D <0>;
+> > > > > +		};
+> > > > > +	};
+> > > > > +
+> > > > > +	video-mux {
+> > > > > +		compatible =3D "video-mux";
+> > > > > +		mux-controls =3D <&mux>;
+> > > > > +
+> > > > > +		ports {
+> > > > > +			/* input 0 */
+> > > > > +			port@0 {
+> > > > > +				reg =3D <0>;
+> > > > > +			};
+> > > > > +
+> > > > > +			/* input 1 */
+> > > > > +			port@1 {
+> > > > > +				reg =3D <1>;
+> > > > > +			};
+> > > > > +
+> > > > > +			/* output */
+> > > > > +			port@2 {
+> > > > > +				reg =3D <2>;
+> > > > > +			};
+> > > > > +		};
+> > > > > +	};
+> > > >=20
+> > > > So Pavel (added to Cc:) suggested to merge these into one node for =
+the
+> > > > video mux, as really we are describing a single hardware entity that
+> > > > happens to be multiplexing multiple video buses into one:
+> > >=20
+> > > Two drivers will be needed in a way or another to disconnect the depe=
+ndency
+> > > between the video switch driver and the MUX implementation. Are there=
+ ways
+> > > to do that cleanly other than having two devices?
+> >=20
+> > Yes.
+> >=20
+> > Device tree describes hardware, not the driver structure.
+>=20
+> I think you you could view the MUX control as a device, too, and that's
+> separate from the actual video switch.
 
-Hint, you have files, the devices that belong to the class :)
+Actually, I believe what matters here is hardware. There's some chip,
+somewhere, that does the switching, and the device tree should should
+basically describe that switch.
 
-> >> +static int __init mux_init(void)
-> >> +{
-> >> +	return class_register(&mux_class);
-> >> +}
-> >> +
-> >> +static DEFINE_IDA(mux_ida);
-> > 
-> > When your module is unloaded, you forgot to clean this structure up with
-> > what was done with it.
-> 
-> I was under the impression that not providing an exit function for modules
-> made the module infrastructure prevent unloading (by bumping some reference
-> counter). Maybe that is a misconception?
 
-Ah, messy, don't do that.  Make it so you can unload your module please,
-why wouldn't you want that to happen?
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
 
-> >> +	mux_chip = kzalloc(sizeof(*mux_chip) +
-> >> +			   controllers * sizeof(*mux_chip->mux) +
-> >> +			   sizeof_priv, GFP_KERNEL);
-> >> +	if (!mux_chip)
-> >> +		return NULL;
-> > 
-> > You don't return PTR_ERR(-ENOMEM)?  Ok, why not?  (I'm not arguing for
-> > it, just curious...)
-> 
-> There's no particular reason. Do you think I should change it?
+--gE7i1rD7pdK0Ng3j
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-What does the caller do with an error?  Pass it up to where?  Who gets
-it?  Don't you want the caller to know you are out of memory?
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
-> >> +
-> >> +	device_initialize(&mux_chip->dev);
-> > 
-> > Why are you not registering the device here as well?  Why have this be a
-> > two step process?
-> 
-> Because of idle state handling. The drivers are expected to fill in
-> the desired idle state(s) after allocating the mux controller(s).
-> Then, when registering, the desired idle state is activated (if the
-> idle state is not idle-as-is, of course) and as a last step the mux
-> is "advertised".
+iEYEARECAAYFAlj1/d8ACgkQMOfwapXb+vKAJwCfWbgb0nzf1+I9LEgozU1NPDji
+0fUAoMRrSSgwTCjlnY28ny2ZKLbncSDQ
+=wgIl
+-----END PGP SIGNATURE-----
 
-Ok, is that documented in the functions somewhere?
-
-> >> +	ret = device_add(&mux_chip->dev);
-> >> +	if (ret < 0)
-> >> +		dev_err(&mux_chip->dev,
-> >> +			"device_add failed in mux_chip_register: %d\n", ret);
-> > 
-> > Did you run checkpatch.pl in strict mode on this new file?  Please do so :)
-> 
-> I did, and did it again just to be sure, and I do not get any complaints.
-> So, what's wrong?
-
-You list the function name in the printk string, it should complain
-that __func__ should be used.  Oh well, it's just a perl script, it
-doesn't always catch everything.
-isn't always correct :)
-
-> >> +EXPORT_SYMBOL_GPL(devm_mux_chip_alloc);
-> > 
-> > 
-> > Having devm functions that create/destroy other struct devices worries
-> > me, do we have other examples of this happening today?  Are you sure you
-> > got the reference counting all correct?
-> 
-> drivers/iio/industrialio_core.c:devm_iio_device_alloc
-> 
-> Or is the iio case different in some subtle way that I'm missing?
-
-I don't know, hopefully you got it all correct, I haven't audited that
-code path in a long time :)
-
-> >> +
-> >> +static int devm_mux_chip_match(struct device *dev, void *res, void *data)
-> >> +{
-> >> +	struct mux_chip **r = res;
-> >> +
-> >> +	if (WARN_ON(!r || !*r))
-> > 
-> > How can this happen?
-> 
-> It shouldn't. I copied the pattern from the iio subsystem.
-
-Then it should be removed there too...
-
-> >> +void devm_mux_chip_free(struct device *dev, struct mux_chip *mux_chip)
-> >> +{
-> >> +	WARN_ON(devres_release(dev, devm_mux_chip_release,
-> >> +			       devm_mux_chip_match, mux_chip));
-> > 
-> > What can someone do with these WARN_ON() splats in the kernel log?
-> 
-> Don't know. Again, I copied the pattern from the iio subsystem.
-
-If you don't know what it should be used for, don't copy it!
-
-Cargo-cult coding is horrible, please no.
-
-> >> +	/* ...or it's just contended. */
-> >> +	down_write(&mux->lock);
-> > 
-> > Why use a read/write lock at all?  Have you tested this to verify it
-> > really is faster and needed?
-> 
-> For one of the HW configuration that drove the development, the same mux
-> controller is used to mux both an I2C channel and a couple of ADC lines.
-> 
-> If there is no kind of reader/writer locking going on, there is no way to
-> do ADC readings concurrently with an I2C transfer even when the consumers
-> want the mux in the same position. With an ordinary mutex controlling the
-> mux position, the consumers will unconditionally get serialized, which
-> seems like a waste to me. Or maybe I'm missing something?
-
-Why is serializing things a "waste"?  Again, a rw semaphore is slower,
-takes more logic to get correct, and is very complex at times.  If you
-are not SURE you need it, and that it matters, don't use it.  And if you
-do use it, document the heck out of it how you need it and why.
-
-> >> +
-> >> +	if (mux->cached_state == state) {
-> >> +		/*
-> >> +		 * Hmmm, someone else changed the mux to my liking.
-> >> +		 * That makes me wonder how long I waited for nothing?
-> >> +		 */
-> >> +		downgrade_write(&mux->lock);
-> > 
-> > Oh that always scares me...  Are you _sure_ this is correct?  And
-> > needed?
-> 
-> It might not be needed, and it would probably work ok to just fall
-> through and call mux_control_set unconditionally. What is it that
-> always scares you exactly? Relying on cached state to be correct?
-> Downgrading writer locks?
-
-downgrading a writer lock scares me, especially for something as
-"simple" as this type of interface.  Again, don't use it unless you
-_have_ to.  Simple is good, start with that always.
-
-> >> +	if (mux->idle_state != MUX_IDLE_AS_IS &&
-> >> +	    mux->idle_state != mux->cached_state)
-> >> +		ret = mux_control_set(mux, mux->idle_state);
-> >> +
-> >> +	up_read(&mux->lock);
-> > 
-> > You require a lock to be held for a "global" function?  Without
-> > documentation?  Or even a sparse marking?  That's asking for trouble...
-> 
-> Documentation I can handle, but where should I look to understand how I
-> should add sparse markings?
-
-Run sparse on the code and see what it says :)
-
-> The mux needs to be locked somehow. But as I stated in the cover letter
-> the rwsem isn't a perfect fit.
-> 
-> 	I'm using an rwsem to lock a mux, but that isn't really a
-> 	perfect fit. Is there a better locking primitive that I don't
-> 	know about that fits better? I had a mutex at one point, but
-> 	that didn't allow any concurrent accesses at all. At least
-> 	the rwsem allows concurrent access as long as all users
-> 	agree on the mux state, but I suspect that the rwsem will
-> 	degrade to the mutex situation pretty quickly if there is
-> 	any contention.
-> 
-> Also, the lock doesn't add anything if there is only one consumer of
-> a mux controller. Maybe there should be some mechanism for shortcutting
-> the locking for the (more common?) single-consumer case?
-> 
-> But again, I need the locking for my multi-consumer use case.
-
-Go back to a mutex, and having a function that requires it to be held
-is, icky.
-
-> >> +/*
-> >> + * Using subsys_initcall instead of module_init here to ensure - for the
-> >> + * non-modular case - that the subsystem is initialized when mux consumers
-> >> + * and mux controllers start to use it /without/ relying on link order.
-> >> + * For the modular case, the ordering is ensured with module dependencies.
-> >> + */
-> >> +subsys_initcall(mux_init);
-> > 
-> > Even with subsys_initcall you are relying on link order, you do realize
-> > that?  What about other subsystems that rely on this?  :)
-> 
-> Yes, that is true, but if others start relying on this, that's their problem,
-> right? :-)
-
-Yes, but no need to document something that isn't true.  You are relying
-on link order here.
-
-> >> +struct mux_control_ops {
-> >> +	int (*set)(struct mux_control *mux, int state);
-> >> +};
-> >> +
-> >> +/* These defines match the constants from the dt-bindings. On purpose. */
-> > 
-> > Why on purpose?
-> 
-> I sure wasn't an accident? :-)
-> 
-> Want me to remove it?
-
-At least explain _why_ you are doing this, that would help, right?
-
-thanks,
-
-greg k-h
+--gE7i1rD7pdK0Ng3j--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
