@@ -1,65 +1,88 @@
 From: Eric Anholt <eric@anholt.net>
-Subject: [PATCH] ARM: dts: bcm-cygnus: Add 911360's V3D device.
-Date: Tue, 18 Apr 2017 16:32:34 -0700
-Message-ID: <20170418233234.13374-1-eric@anholt.net>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Florian Fainelli <f.fainelli@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Eric Anholt <eric@anholt.net>
+Subject: [PATCH 1/3 v2] drm/vc4: Turn the V3D clock on at runtime.
+Date: Tue, 18 Apr 2017 16:38:05 -0700
+Message-ID: <20170418233805.15767-1-eric@anholt.net>
+References: <20170418191157.18517-1-eric@anholt.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20170418191157.18517-1-eric@anholt.net>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This loads the VC4 driver on the 911360_entphn platform (with the
-corresponding series sent to dri-devel), which is supported by master
-of the Mesa tree.
-
-Signed-off-by: Eric Anholt <eric@anholt.net>
----
- arch/arm/boot/dts/bcm-cygnus.dtsi      | 13 +++++++++++++
- arch/arm/boot/dts/bcm911360_entphn.dts |  8 ++++++++
- 2 files changed, 21 insertions(+)
-
-diff --git a/arch/arm/boot/dts/bcm-cygnus.dtsi b/arch/arm/boot/dts/bcm-cygnus.dtsi
-index f52750c6d3ed..907a5e843364 100644
---- a/arch/arm/boot/dts/bcm-cygnus.dtsi
-+++ b/arch/arm/boot/dts/bcm-cygnus.dtsi
-@@ -406,6 +406,19 @@
- 			status = "disabled";
- 		};
- 
-+		v3d: v3d@180a2000 {
-+			compatible = "brcm,cygnus-v3d";
-+			reg = <0x180a2000 0x1000>;
-+			clocks = <&mipipll BCM_CYGNUS_MIPIPLL_CH2_V3D>;
-+			clock-names = "v3d_clk";
-+			interrupts = <GIC_SPI 182 IRQ_TYPE_LEVEL_HIGH>;
-+			status = "disabled";
-+		};
-+
-+		vc4: gpu {
-+			compatible = "brcm,cygnus-vc4";
-+		};
-+
- 		adc: adc@180a6000 {
- 			compatible = "brcm,iproc-static-adc";
- 			#io-channel-cells = <1>;
-diff --git a/arch/arm/boot/dts/bcm911360_entphn.dts b/arch/arm/boot/dts/bcm911360_entphn.dts
-index 8b3800f46288..037621c13290 100644
---- a/arch/arm/boot/dts/bcm911360_entphn.dts
-+++ b/arch/arm/boot/dts/bcm911360_entphn.dts
-@@ -57,6 +57,14 @@
- 	};
- };
- 
-+&v3d {
-+	assigned-clocks =
-+		<&mipipll BCM_CYGNUS_MIPIPLL>,
-+		<&mipipll BCM_CYGNUS_MIPIPLL_CH2_V3D>;
-+	assigned-clock-rates = <525000000>, <300000000>;
-+	status = "okay";
-+};
-+
- &uart3 {
- 	status = "okay";
- };
--- 
-2.11.0
+Rm9yIHRoZSBSYXNwYmVycnkgUGkncyBiaW5kaW5ncywgdGhlIHBvd2VyIGRvbWFpbiBhbHNvIGlt
+cGxpY2l0bHkKdHVybnMgb24gdGhlIGNsb2NrIGFuZCBkZWFzc2VydHMgcmVzZXQsIGJ1dCBmb3Ig
+dGhlIG5ldyBDeWdudXMgcG9ydCB3ZQpzdGFydCByZXByZXNlbnRpbmcgdGhlIGNsb2NrIGluIHRo
+ZSBkZXZpY2V0cmVlLgoKdjI6IERvY3VtZW50IHRoZSBjbG9jay1uYW1lcyBwcm9wZXJ0eSwgY2hl
+Y2sgZm9yIC1FTk9FTlQgZm9yIG5vIGNsb2NrCiAgICBpbiBEVC4KClNpZ25lZC1vZmYtYnk6IEVy
+aWMgQW5ob2x0IDxlcmljQGFuaG9sdC5uZXQ+Ci0tLQogLi4uL2RldmljZXRyZWUvYmluZGluZ3Mv
+ZGlzcGxheS9icmNtLGJjbS12YzQudHh0ICAgfCAgNCArKysKIGRyaXZlcnMvZ3B1L2RybS92YzQv
+dmM0X2Rydi5oICAgICAgICAgICAgICAgICAgICAgIHwgIDEgKwogZHJpdmVycy9ncHUvZHJtL3Zj
+NC92YzRfdjNkLmMgICAgICAgICAgICAgICAgICAgICAgfCAzOCArKysrKysrKysrKysrKysrKysr
+KystCiAzIGZpbGVzIGNoYW5nZWQsIDQyIGluc2VydGlvbnMoKyksIDEgZGVsZXRpb24oLSkKCmRp
+ZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmNt
+LGJjbS12YzQudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkv
+YnJjbSxiY20tdmM0LnR4dAppbmRleCBjYTAyZDNlNGRiOTEuLjIzMTgyNjZmNjQ4MSAxMDA2NDQK
+LS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJjbSxiY20t
+dmM0LnR4dAorKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9i
+cmNtLGJjbS12YzQudHh0CkBAIC01OSw2ICs1OSwxMCBAQCBSZXF1aXJlZCBwcm9wZXJ0aWVzIGZv
+ciBWM0Q6CiAtIGludGVycnVwdHM6CVRoZSBpbnRlcnJ1cHQgbnVtYmVyCiAJCSAgU2VlIGJpbmRp
+bmdzL2ludGVycnVwdC1jb250cm9sbGVyL2JyY20sYmNtMjgzNS1hcm1jdHJsLWljLnR4dAogCitP
+cHRpb25hbCBwcm9wZXJ0aWVzIGZvciBWM0Q6CistIGNsb2NrczoJVGhlIGNsb2NrIHRoZSB1bml0
+IHJ1bnMgb24KKy0gY2xvY2stbmFtZXM6CU11c3QgYmUgInYzZF9jbGsiCisKIFJlcXVpcmVkIHBy
+b3BlcnRpZXMgZm9yIERTSToKIC0gY29tcGF0aWJsZToJU2hvdWxkIGJlICJicmNtLGJjbTI4MzUt
+ZHNpMCIgb3IgImJyY20sYmNtMjgzNS1kc2kxIgogLSByZWc6CQlQaHlzaWNhbCBiYXNlIGFkZHJl
+c3MgYW5kIGxlbmd0aCBvZiB0aGUgRFNJIGJsb2NrJ3MgcmVnaXN0ZXJzCmRpZmYgLS1naXQgYS9k
+cml2ZXJzL2dwdS9kcm0vdmM0L3ZjNF9kcnYuaCBiL2RyaXZlcnMvZ3B1L2RybS92YzQvdmM0X2Ry
+di5oCmluZGV4IGIwOTY3ZTJmN2U4OC4uOTJlYjdkODExYmYyIDEwMDY0NAotLS0gYS9kcml2ZXJz
+L2dwdS9kcm0vdmM0L3ZjNF9kcnYuaAorKysgYi9kcml2ZXJzL2dwdS9kcm0vdmM0L3ZjNF9kcnYu
+aApAQCAtMjAwLDYgKzIwMCw3IEBAIHN0cnVjdCB2YzRfdjNkIHsKIAlzdHJ1Y3QgdmM0X2RldiAq
+dmM0OwogCXN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXY7CiAJdm9pZCBfX2lvbWVtICpyZWdz
+OworCXN0cnVjdCBjbGsgKmNsazsKIH07CiAKIHN0cnVjdCB2YzRfaHZzIHsKZGlmZiAtLWdpdCBh
+L2RyaXZlcnMvZ3B1L2RybS92YzQvdmM0X3YzZC5jIGIvZHJpdmVycy9ncHUvZHJtL3ZjNC92YzRf
+djNkLmMKaW5kZXggYTg4MDc4ZDdjOWQxLi5jYTk4N2QyODAwYzYgMTAwNjQ0Ci0tLSBhL2RyaXZl
+cnMvZ3B1L2RybS92YzQvdmM0X3YzZC5jCisrKyBiL2RyaXZlcnMvZ3B1L2RybS92YzQvdmM0X3Yz
+ZC5jCkBAIC0xNiw2ICsxNiw3IEBACiAgKiB0aGlzIHByb2dyYW0uICBJZiBub3QsIHNlZSA8aHR0
+cDovL3d3dy5nbnUub3JnL2xpY2Vuc2VzLz4uCiAgKi8KIAorI2luY2x1ZGUgImxpbnV4L2Nsay5o
+IgogI2luY2x1ZGUgImxpbnV4L2NvbXBvbmVudC5oIgogI2luY2x1ZGUgImxpbnV4L3BtX3J1bnRp
+bWUuaCIKICNpbmNsdWRlICJ2YzRfZHJ2LmgiCkBAIC0zMDUsNiArMzA2LDkgQEAgc3RhdGljIGlu
+dCB2YzRfdjNkX3J1bnRpbWVfc3VzcGVuZChzdHJ1Y3QgZGV2aWNlICpkZXYpCiAJZHJtX2dlbV9v
+YmplY3RfcHV0X3VubG9ja2VkKCZ2YzQtPmJpbl9iby0+YmFzZS5iYXNlKTsKIAl2YzQtPmJpbl9i
+byA9IE5VTEw7CiAKKwlpZiAodjNkLT5jbGspCisJCWNsa19kaXNhYmxlX3VucHJlcGFyZSh2M2Qt
+PmNsayk7CisKIAlyZXR1cm4gMDsKIH0KIApAQCAtMzE4LDYgKzMyMiwxMyBAQCBzdGF0aWMgaW50
+IHZjNF92M2RfcnVudGltZV9yZXN1bWUoc3RydWN0IGRldmljZSAqZGV2KQogCWlmIChyZXQpCiAJ
+CXJldHVybiByZXQ7CiAKKwlpZiAodjNkLT5jbGspIHsKKwkJaW50IHJldCA9IGNsa19wcmVwYXJl
+X2VuYWJsZSh2M2QtPmNsayk7CisKKwkJaWYgKHJldCAhPSAwKQorCQkJcmV0dXJuIHJldDsKKwl9
+CisKIAl2YzRfdjNkX2luaXRfaHcodmM0LT5kZXYpOwogCXZjNF9pcnFfcG9zdGluc3RhbGwodmM0
+LT5kZXYpOwogCkBAIC0zNDgsMTUgKzM1OSw0MCBAQCBzdGF0aWMgaW50IHZjNF92M2RfYmluZChz
+dHJ1Y3QgZGV2aWNlICpkZXYsIHN0cnVjdCBkZXZpY2UgKm1hc3Rlciwgdm9pZCAqZGF0YSkKIAl2
+YzQtPnYzZCA9IHYzZDsKIAl2M2QtPnZjNCA9IHZjNDsKIAorCXYzZC0+Y2xrID0gZGV2bV9jbGtf
+Z2V0KGRldiwgInYzZF9jbGsiKTsKKwlpZiAoSVNfRVJSKHYzZC0+Y2xrKSkgeworCQlpbnQgcmV0
+ID0gUFRSX0VSUih2M2QtPmNsayk7CisKKwkJaWYgKHJldCA9PSAtRU5PRU5UKSB7CisJCQkvKiBi
+Y20yODM1IGRpZG4ndCBoYXZlIGEgY2xvY2sgcmVmZXJlbmNlIGluIHRoZSBEVC4gKi8KKwkJCXJl
+dCA9IDA7CisJCQl2M2QtPmNsayA9IE5VTEw7CisJCX0gZWxzZSB7CisJCQlpZiAocmV0ICE9IC1F
+UFJPQkVfREVGRVIpCisJCQkJZGV2X2VycihkZXYsICJGYWlsZWQgdG8gZ2V0IFYzRCBjbG9jazog
+JWRcbiIsCisJCQkJCXJldCk7CisJCQlyZXR1cm4gcmV0OworCQl9CisJfQorCiAJaWYgKFYzRF9S
+RUFEKFYzRF9JREVOVDApICE9IFYzRF9FWFBFQ1RFRF9JREVOVDApIHsKIAkJRFJNX0VSUk9SKCJW
+M0RfSURFTlQwIHJlYWQgMHglMDh4IGluc3RlYWQgb2YgMHglMDh4XG4iLAogCQkJICBWM0RfUkVB
+RChWM0RfSURFTlQwKSwgVjNEX0VYUEVDVEVEX0lERU5UMCk7CiAJCXJldHVybiAtRUlOVkFMOwog
+CX0KIAorCWlmICh2M2QtPmNsaykgeworCQlyZXQgPSBjbGtfcHJlcGFyZV9lbmFibGUodjNkLT5j
+bGspOworCQlpZiAocmV0ICE9IDApCisJCQlyZXR1cm4gcmV0OworCX0KKwogCXJldCA9IHZjNF9h
+bGxvY2F0ZV9iaW5fYm8oZHJtKTsKLQlpZiAocmV0KQorCWlmIChyZXQpIHsKKwkJaWYgKHYzZC0+
+Y2xrKQorCQkJY2xrX2Rpc2FibGVfdW5wcmVwYXJlKHYzZC0+Y2xrKTsKIAkJcmV0dXJuIHJldDsK
+Kwl9CiAKIAkvKiBSZXNldCB0aGUgYmlubmVyIG92ZXJmbG93IGFkZHJlc3Mvc2l6ZSBhdCBzZXR1
+cCwgdG8gYmUgc3VyZQogCSAqIHdlIGRvbid0IHJldXNlIGFuIG9sZCBvbmUuCi0tIAoyLjExLjAK
+Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZl
+bCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xp
+c3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
