@@ -1,110 +1,67 @@
-From: Nicholas Piggin <npiggin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 3/4] of/fdt: introduce of_scan_flat_dt_subnodes and of_get_flat_dt_phandle
-Date: Wed, 19 Apr 2017 05:12:18 +1000
-Message-ID: <20170418191220.3166-4-npiggin@gmail.com>
-References: <20170418191220.3166-1-npiggin@gmail.com>
+From: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+Subject: Re: [PATCH 1/3] drm/vc4: Turn the V3D clock on at runtime.
+Date: Tue, 18 Apr 2017 12:23:50 -0700
+Message-ID: <87tw5lldtl.fsf@eliezer.anholt.net>
+References: <20170418191157.18517-1-eric@anholt.net>
+Mime-Version: 1.0
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha512; protocol="application/pgp-signature"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170418191220.3166-1-npiggin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <20170418191157.18517-1-eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: Nicholas Piggin <npiggin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Introduce primitives for FDT parsing. These will be used for powerpc
-cpufeatures node scanning, which has quite complex structure but should
-be processed early.
+--=-=-=
+Content-Type: text/plain
 
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Signed-off-by: Nicholas Piggin <npiggin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- drivers/of/fdt.c       | 38 ++++++++++++++++++++++++++++++++++++++
- include/linux/of_fdt.h |  6 ++++++
- 2 files changed, 44 insertions(+)
+Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org> writes:
 
-diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-index e5ce4b59e162..961ca97072a9 100644
---- a/drivers/of/fdt.c
-+++ b/drivers/of/fdt.c
-@@ -754,6 +754,36 @@ int __init of_scan_flat_dt(int (*it)(unsigned long node,
- }
- 
- /**
-+ * of_scan_flat_dt_subnodes - scan sub-nodes of a node call callback on each.
-+ * @it: callback function
-+ * @data: context data pointer
-+ *
-+ * This function is used to scan sub-nodes of a node.
-+ */
-+int __init of_scan_flat_dt_subnodes(unsigned long parent,
-+				    int (*it)(unsigned long node,
-+					      const char *uname,
-+					      void *data),
-+				    void *data)
-+{
-+	const void *blob = initial_boot_params;
-+	int node;
-+
-+	fdt_for_each_subnode(node, blob, parent) {
-+		const char *pathp;
-+		int rc;
-+
-+		pathp = fdt_get_name(blob, node, NULL);
-+		if (*pathp == '/')
-+			pathp = kbasename(pathp);
-+		rc = it(node, pathp, data);
-+		if (rc)
-+			return rc;
-+	}
-+	return 0;
-+}
-+
-+/**
-  * of_get_flat_dt_subnode_by_name - get the subnode by given name
-  *
-  * @node: the parent node
-@@ -812,6 +842,14 @@ int __init of_flat_dt_match(unsigned long node, const char *const *compat)
- 	return of_fdt_match(initial_boot_params, node, compat);
- }
- 
-+/**
-+ * of_get_flat_dt_prop - Given a node in the flat blob, return the phandle
-+ */
-+uint32_t __init of_get_flat_dt_phandle(unsigned long node)
-+{
-+	return fdt_get_phandle(initial_boot_params, node);
-+}
-+
- struct fdt_scan_status {
- 	const char *name;
- 	int namelen;
-diff --git a/include/linux/of_fdt.h b/include/linux/of_fdt.h
-index 271b3fdf0070..1dfbfd0d8040 100644
---- a/include/linux/of_fdt.h
-+++ b/include/linux/of_fdt.h
-@@ -54,6 +54,11 @@ extern char __dtb_end[];
- extern int of_scan_flat_dt(int (*it)(unsigned long node, const char *uname,
- 				     int depth, void *data),
- 			   void *data);
-+extern int of_scan_flat_dt_subnodes(unsigned long node,
-+				    int (*it)(unsigned long node,
-+					      const char *uname,
-+					      void *data),
-+				    void *data);
- extern int of_get_flat_dt_subnode_by_name(unsigned long node,
- 					  const char *uname);
- extern const void *of_get_flat_dt_prop(unsigned long node, const char *name,
-@@ -62,6 +67,7 @@ extern int of_flat_dt_is_compatible(unsigned long node, const char *name);
- extern int of_flat_dt_match(unsigned long node, const char *const *matches);
- extern unsigned long of_get_flat_dt_root(void);
- extern int of_get_flat_dt_size(void);
-+extern uint32_t of_get_flat_dt_phandle(unsigned long node);
- 
- extern int early_init_dt_scan_chosen(unsigned long node, const char *uname,
- 				     int depth, void *data);
--- 
-2.11.0
+> For the Raspberry Pi's bindings, the power domain also implicitly
+> turns on the clock and deasserts reset, but for the new Cygnus port we
+> start representing the clock in the devicetree.
 
+> +	v3d->clk = devm_clk_get(dev, "v3d_clk");
+> +	if (IS_ERR(v3d->clk)) {
+> +		int ret = PTR_ERR(v3d->clk);
+> +
+> +		if (ret == -ENODEV) {
+
+Apparently I hadn't booted this on RPi yet.  This is supposed to be
+-ENOENT.
+
+> +			/* bcm2835 didn't have a clock reference in the DT. */
+> +			ret = 0;
+> +			v3d->clk = NULL;
+> +		} else {
+> +			if (ret != -EPROBE_DEFER)
+> +				dev_err(dev, "Failed to get V3D clock: %d\n",
+> +					ret);
+> +			return ret;
+> +		}
+> +	}
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE/JuuFDWp9/ZkuCBXtdYpNtH8nugFAlj2Z8YACgkQtdYpNtH8
+nujEZRAAspu9+nIn6ocSbJfegJrrF1WkC0wTbzqyB1d5lfWO+2eVZ36KCF8rQGEJ
+KWMJTPGEzoILPtFMuoGazlNbnroMMhuPtVJqyfmtchMhWkTAIwxfzqQIUR7dsBRo
+lP+RiTHE6KQZvGlMEL84UXzNoo1/lF+2zrBWDmxrvYrjWt5SnZ7S9RiSro5LMPug
+sKAeweBMG5Twq82kCG/EBBIvjN4rDUQWUdtyeaB/rR7OisuBxOlqcpju4zdFz/mW
+QKFlbhzefyxOepDNHbhYSZ0Qxx1Zww5fcZyGJIhoY0iMx0J5liMd9aT9v0TXs5Wc
+obnuPDxxKqaKUWdOr3gP2eCsnb4egNduk9+f/j01pF14AOsBex3c+9GNy1FcUUCf
+Bw4NGuqHapn5HFnJvAI7pdw/4y9vRh/0uJ2WUk3GW+/xvGyDupJBddzO83fl/Chy
+c8HYgxt2PLAqPVon6igTYdaprVsbDmG7e7+Oiq+orlTcJJZDX42/oaz9R+wzxwx3
+hPN+2GvU6WE7eXUsMX0trO5527W+p2piFHkbqMAME65uqpyhQlGTLPIiVrGphlTh
+o2VfjOlMZuwBrdeXUrRYwPuzqoHHadpzZTKH/7c5DEof1wsXgIpW5panPhjPI4NQ
+j9dZx+XoQiTnHBPn5NMAfF/kttLOSlTUhJNeZYOxQvU7oZrmK7Q=
+=ruS9
+-----END PGP SIGNATURE-----
+--=-=-=--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
