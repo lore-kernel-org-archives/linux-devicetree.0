@@ -1,46 +1,31 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v3 01/12] arm64: allwinner: a64: enable RSB
- on A64
-Date: Tue, 18 Apr 2017 07:37:11 +0200
-Message-ID: <20170418053711.5qa3vhc7v6rqp3sf@lukather>
-References: <20170417115747.7300-1-icenowy@aosc.io>
- <20170417115747.7300-2-icenowy@aosc.io>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Andrzej Hajda <a.hajda@samsung.com>
+Subject: Re: [PATCH v2 1/3] dt-bindings: Add support for samsung s6e3hf2 panel
+Date: Tue, 18 Apr 2017 07:53:13 +0200
+Message-ID: <42f1ab45-9903-9255-de95-ce29bdbffff8@samsung.com>
+References: <1492408934-22096-1-git-send-email-hoegeun.kwon@samsung.com>
+ <CGME20170417060218epcas1p1dd328b9af56638f30fa6f350a81fce45@epcas1p1.samsung.com>
+ <1492408934-22096-2-git-send-email-hoegeun.kwon@samsung.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="w2b5iqgnratwumi4"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBCGM23DQKGQETA7AB3Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20170417115747.7300-2-icenowy-h8G6r0blFSE@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1492408934-22096-2-git-send-email-hoegeun.kwon@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Hoegeun Kwon <hoegeun.kwon@samsung.com>, thierry.reding@gmail.com, airlied@linux.ie, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, kgene@kernel.org, krzk@kernel.org
+Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, javier@osg.samsung.com, andi.shyti@samsung.com
 List-Id: devicetree@vger.kernel.org
 
+On 17.04.2017 08:02, Hoegeun Kwon wrote:
+> The samsung s6e3hf2 panel is a 5.65" 1600x2560 AMOLED panel connected
+> using MIPI-DSI interfaces.
+>
+> The s6e3hf2 is add to samsung,s6e3ha2.txt binding because it is a
+> panel similar to the s6e3ha2. So add the compatible string and
+> comments.
+>
+> Signed-off-by: Hoegeun Kwon <hoegeun.kwon@samsung.com>
+Reviewed-by: Andrzej Hajda <a.hajda@samsung.com>
 
---w2b5iqgnratwumi4
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
-
-On Mon, Apr 17, 2017 at 07:57:36PM +0800, Icenowy Zheng wrote:
-> Allwinner A64 have a RSB controller like the one on A23/A33 SoCs.
-> 
-> Add it and its pinmux.
-> 
-> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-> Acked-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-
-Applied, thanks!
-Maxime
-
--- 
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
---w2b5iqgnratwumi4--
+ --
+Regards
+Andrzej
