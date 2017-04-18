@@ -1,179 +1,156 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH v3 10/12] arm64: allwinner: a64: add DTSI
- file for AXP803 PMIC
-Date: Tue, 18 Apr 2017 15:20:09 +0800
-Message-ID: <CAGb2v64DRQeKAkBiVCLTpsGGi3vSYzztthmgCt1z6HeCRb0PHQ@mail.gmail.com>
-References: <20170417115747.7300-1-icenowy@aosc.io> <20170417115747.7300-11-icenowy@aosc.io>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+From: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH v6 0/6] add support for AXP20X and AXP22X
+ battery power supply driver
+Date: Tue, 18 Apr 2017 09:34:15 +0200
+Message-ID: <20170418073421.31351-1-quentin.schulz@free-electrons.com>
+Reply-To: quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBQX423DQKGQE3XFEV3A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBCLZXSNY5IDBBHEE27DQKGQEAYUBQMQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20170417115747.7300-11-icenowy-h8G6r0blFSE@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
 List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
  <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+Cc: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, icenowy-ymACFijhrKM@public.gmane.org, liam-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+This is a series for AXP20X and AXP22X battery power supply without the
+support for changing constant charge current from the DT. The patches for
+supporting the constant charge current from DT are ready and will be sent
+once the battery framework required to make this work has been merged.
 
-On Mon, Apr 17, 2017 at 7:57 PM, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org> wrote:
-> As nearly all A64 boards are using AXP803 PMIC, add a DTSI file for it,
-> like the old DTSI files for AXP20x/22x, for the common parts of the
-> PMIC.
->
-> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-> ---
->  arch/arm64/boot/dts/allwinner/axp803.dtsi | 150 ++++++++++++++++++++++++++++++
->  1 file changed, 150 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/allwinner/axp803.dtsi
->
-> diff --git a/arch/arm64/boot/dts/allwinner/axp803.dtsi b/arch/arm64/boot/dts/allwinner/axp803.dtsi
-> new file mode 100644
-> index 000000000000..f0e53a7fffbd
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/allwinner/axp803.dtsi
-> @@ -0,0 +1,150 @@
-> +/*
-> + * Copyright 2017 Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
-> + *
-> + * This file is dual-licensed: you can use it either under the terms
-> + * of the GPL or the X11 license, at your option. Note that this dual
-> + * licensing only applies to this file, and not this project as a
-> + * whole.
-> + *
-> + *  a) This file is free software; you can redistribute it and/or
-> + *     modify it under the terms of the GNU General Public License as
-> + *     published by the Free Software Foundation; either version 2 of the
-> + *     License, or (at your option) any later version.
-> + *
-> + *     This file is distributed in the hope that it will be useful,
-> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + *     GNU General Public License for more details.
-> + *
-> + * Or, alternatively,
-> + *
-> + *  b) Permission is hereby granted, free of charge, to any person
-> + *     obtaining a copy of this software and associated documentation
-> + *     files (the "Software"), to deal in the Software without
-> + *     restriction, including without limitation the rights to use,
-> + *     copy, modify, merge, publish, distribute, sublicense, and/or
-> + *     sell copies of the Software, and to permit persons to whom the
-> + *     Software is furnished to do so, subject to the following
-> + *     conditions:
-> + *
-> + *     The above copyright notice and this permission notice shall be
-> + *     included in all copies or substantial portions of the Software.
-> + *
-> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-> + *     OTHER DEALINGS IN THE SOFTWARE.
-> + */
-> +
-> +/*
-> + * AXP803 Integrated Power Management Chip
-> + * http://files.pine64.org/doc/datasheet/pine64/AXP803_Datasheet_V1.0.pdf
-> + */
-> +
-> +&axp803 {
-> +       interrupt-controller;
-> +       #interrupt-cells = <1>;
-> +
-> +       regulators {
-> +               /* Default work frequency for buck regulators */
-> +               x-powers,dcdc-freq = <3000>;
-> +
-> +               reg_dcdc1: dcdc1 {
-> +                       regulator-name = "dcdc1";
-> +               };
-> +
-> +               reg_dcdc2: dcdc2 {
-> +                       regulator-name = "dcdc2";
-> +               };
-> +
-> +               reg_dcdc3: dcdc3 {
-> +                       regulator-name = "dcdc3";
-> +               };
-> +
-> +               reg_dcdc4: dcdc4 {
-> +                       regulator-name = "dcdc4";
-> +               };
-> +
-> +               reg_dcdc5: dcdc5 {
-> +                       regulator-name = "dcdc5";
-> +               };
-> +
-> +               reg_dcdc6: dcdc6 {
-> +                       regulator-name = "dcdc6";
-> +               };
-> +
-> +               reg_dc1sw: dc1sw {
-> +                       regulator-name = "dc1sw";
-> +               };
-> +
-> +               reg_aldo1: aldo1 {
-> +                       regulator-name = "aldo1";
-> +               };
-> +
-> +               reg_aldo2: aldo2 {
-> +                       regulator-name = "aldo2";
-> +               };
-> +
-> +               reg_aldo3: aldo3 {
-> +                       regulator-name = "aldo3";
-> +               };
-> +
-> +               reg_dldo1: dldo1 {
-> +                       regulator-name = "dldo1";
-> +               };
-> +
-> +               reg_dldo2: dldo2 {
-> +                       regulator-name = "dldo2";
-> +               };
-> +
-> +               reg_dldo3: dldo3 {
-> +                       regulator-name = "dldo3";
-> +               };
-> +
-> +               reg_dldo4: dldo4 {
-> +                       regulator-name = "dldo4";
-> +               };
-> +
-> +               reg_eldo1: eldo1 {
-> +                       regulator-name = "eldo1";
-> +               };
-> +
-> +               reg_eldo2: eldo2 {
-> +                       regulator-name = "eldo2";
-> +               };
-> +
-> +               reg_eldo3: eldo3 {
-> +                       regulator-name = "eldo3";
-> +               };
-> +
-> +               reg_fldo1: fldo1 {
-> +                       regulator-name = "fldo1";
-> +               };
-> +
-> +               reg_fldo2: fldo2 {
-> +                       regulator-name = "fldo2";
-> +               };
-> +
-> +               reg_ldo_io0: ldo_io0 {
-> +                       regulator-name = "ldo_io0";
+v6:
+  - removed mention to fixed battery in DT-binding documentation,
 
-Please use hyphens instead of underscores for the node name,
-and preferably, for the regulator name as well.
+Quote from v4 cover letter:
 
-ChenYu
+The X-Powers AXP20X and AXP22X PMICs have multiple ADCs. They expose
+information and data of the various power supplies they support such as
+ACIN, battery and VBUS. For example, they expose the current battery
+voltage, charge or discharge, as well as ACIN and VBUS current voltages
+and currents, internal PMIC temperature and ADC on 2 different GPIOs
+when in the right mode (for the AXP209 only).
+
+The ACIN power supply driver is added by this patch. The AXP20X and
+AXP22X can both read the status and the "usability" of the power supply
+but only the AXP209 will be able to tell the current current and voltage
+of the power supply by reading ADC channels. It is simply not supported
+by the AXP22X PMICs.
+
+The battery power supply driver is also added by this patch. The AXP20X
+and AXP22X share most of their behaviour but have slight variations. The
+allowed target voltages for battery charging are not the same, the
+AXP22X PMIC are able to tell if the battery percentage computed by the
+PMIC is trustworthy and they have different formulas for computing max
+current for battery power supply. The driver is able to give the current
+voltage and current of the battery (be it charging or discharging), the
+maximal and minimal voltage and maximal current allowed for the battery,
+whether the battery is present and usable and its capacity. It will get
+the battery current current and voltage by reading the ADC channels. The
+PMIC allows maximal voltages (4.36V for AXP20X and 4.22V and 4.24V for
+AXP22X) that should not be used with Lithium-based batteries and since
+this PMIC is supposed to be used with Lithium-based batteries, they have
+been disabled. The values returned by the ADC driver are multipled by
+1000 to scale from the mV returned by the ADC to the uV expected by the
+power supply framework.
+
+This series of patch adds DT bindings for ACIN power supply, ADC and
+battery power supply drivers for AXP20X and AXP22X PMICs and their
+documentation. It also enables the supported power supplies for the
+Nextthing Co. CHIP and Sinlinx SinA33 boards.
+
+The different drivers are also added to the MFD cells of the AXP20X and
+AXP22X cells and the writeable and volatile regs updated to work with
+the newly added drivers.
+
+This series of patch is based on a previous upstreaming attempt done by
+Bruno Pr=C3=A9mont few months ago. It differs in three points: the ADC
+driver does not tell the battery temperature (TS_IN) as I do not have a
+board to test it with, it does not tell the instantaneous battery power
+as it returns crazy values for me and finally no support for OCV curves
+for the battery.
+
+You can test these patches from this repo and branch:
+https://github.com/QSchulz/linux/tree/axp2xx_adc_batt_ac_v4
+
+v4:
+ - added the ability to set maximum constant charge current from sysfs,
+ - added a warning when setting a higher than current maximum constant char=
+ge
+ current,
+ - set default to minimum possible value for current and maximum constant c=
+harge
+ current when no battery DT is present or invalid battery DT,
+ - fixed a forgotten custom formula to compute maximum constant charge curr=
+ent
+ for AXP22X,
+ - automatically lower the current constant charge current when it is highe=
+r
+ than the maximum constant charge current about to be set,
+
+v3:
+ - Removed DT property for constant charge current in favor of the WIP
+ battery framework as requested by Sebastian Reichel,
+ - Using a simple if condition instead of a switch in the ADC driver,
+ - Fixed error handling in ADC driver's probe,
+ - Fixed missing call to iio_map_array_unregister in the ADC driver's
+ remove,
+ - Removed ADC driver's DT node and documentation,
+ - Merged IIO channel mapping patches into the original ADC driver
+ patch,
+ - Removed `adding V-OFF to writeable reg' patch as it's already in
+ writeable reg range,
+
+v2:
+ - Some registers' name have been changed to better reflect their
+ purpose,
+ - Make VBUS power supply driver use IIO channels when AXP ADC driver is
+ enabled, but fall back on previous behavior when disabled. This is made
+ to avoid the ADC driver overwritting registers for VBUS power supply
+ ADC when removed,
+ - Removed useless adding of data registers to volatile registers,
+ - Reordered IIO channels, now grouped by same part of the PMIC (e.g.
+ voltage and current of the battery have the same index in different
+ IIO types),
+ - Added structures for specific data instead of matching on IDs,
+ - Switched from DT IIO channels mapping to iio_map structures IIO
+ channels mapping,
+
+Quentin
+
+Quentin Schulz (6):
+  dt-bindings: power: supply: add AXP20X/AXP22X battery DT binding
+  power: supply: add battery driver for AXP20X and AXP22X PMICs
+  ARM: dtsi: axp209: add battery power supply subnode
+  ARM: dtsi: axp22x: add battery power supply subnode
+  ARM: dts: sun8i: sina33: enable battery power supply subnode
+  ARM: sun5i: chip: enable battery power supply subnode
+
+ .../bindings/power/supply/axp20x_battery.txt       |  20 +
+ arch/arm/boot/dts/axp209.dtsi                      |   5 +
+ arch/arm/boot/dts/axp22x.dtsi                      |   5 +
+ arch/arm/boot/dts/sun5i-r8-chip.dts                |   4 +
+ arch/arm/boot/dts/sun8i-a33-sinlinx-sina33.dts     |   4 +
+ drivers/power/supply/Kconfig                       |  12 +
+ drivers/power/supply/Makefile                      |   1 +
+ drivers/power/supply/axp20x_battery.c              | 502 +++++++++++++++++=
+++++
+ 8 files changed, 553 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/power/supply/axp20x_b=
+attery.txt
+ create mode 100644 drivers/power/supply/axp20x_battery.c
+
+--=20
+2.11.0
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
