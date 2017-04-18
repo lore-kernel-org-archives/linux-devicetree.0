@@ -1,93 +1,65 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH 3/3] ARM: sun8i: a83t: Rename pinmux setting names
-Date: Tue, 18 Apr 2017 12:22:05 +0800
-Message-ID: <20170418042205.27894-4-wens@csie.org>
-References: <20170418042205.27894-1-wens@csie.org>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+From: Andrzej Hajda <a.hajda@samsung.com>
+Subject: Re: [PATCH v2 3/3] arm64: dts: exynos: Add support for s6e3hf2 panel
+ device on TM2e board
+Date: Tue, 18 Apr 2017 09:56:28 +0200
+Message-ID: <94152d85-5fb0-f5dc-045d-e6ee6c009f42@samsung.com>
+References: <1492408934-22096-1-git-send-email-hoegeun.kwon@samsung.com>
+ <CGME20170417060220epcas5p42f6ed43d9db94779382e84a129b9da2d@epcas5p4.samsung.com>
+ <1492408934-22096-4-git-send-email-hoegeun.kwon@samsung.com>
+ <b9bfcdd9-5576-34c3-6c7d-556b6c81946d@samsung.com>
+ <f2acb724-ba41-175c-061a-7be765cc1939@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBP4K27DQKGQE5EJMCAI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20170418042205.27894-1-wens-jdAy2FN1RRM@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-reply-to: <f2acb724-ba41-175c-061a-7be765cc1939@samsung.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Hoegeun Kwon <hoegeun.kwon@samsung.com>, thierry.reding@gmail.com, airlied@linux.ie, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, kgene@kernel.org, krzk@kernel.org
+Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, javier@osg.samsung.com, andi.shyti@samsung.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The pinmux setting nodes all have an address element in their node
-names, however the pinctrl node does not have #address-cells.
-
-Rename the existing pinmux setting nodes and labels in sun8i-a83t.dtsi,
-dropping identifiers for functions that only have one possible setting,
-and using the pingroup name if the function is identically available on
-different pingroups.
-
-Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
----
- arch/arm/boot/dts/sun8i-a83t-allwinner-h8homlet-v2.dts |  2 +-
- arch/arm/boot/dts/sun8i-a83t-cubietruck-plus.dts       |  2 +-
- arch/arm/boot/dts/sun8i-a83t.dtsi                      | 10 +++++-----
- 3 files changed, 7 insertions(+), 7 deletions(-)
-
-diff --git a/arch/arm/boot/dts/sun8i-a83t-allwinner-h8homlet-v2.dts b/arch/arm/boot/dts/sun8i-a83t-allwinner-h8homlet-v2.dts
-index 342e1d33fa1c..aecdeeb368ed 100644
---- a/arch/arm/boot/dts/sun8i-a83t-allwinner-h8homlet-v2.dts
-+++ b/arch/arm/boot/dts/sun8i-a83t-allwinner-h8homlet-v2.dts
-@@ -59,6 +59,6 @@
- 
- &uart0 {
- 	pinctrl-names = "default";
--	pinctrl-0 = <&uart0_pins_b>;
-+	pinctrl-0 = <&uart0_pb_pins>;
- 	status = "okay";
- };
-diff --git a/arch/arm/boot/dts/sun8i-a83t-cubietruck-plus.dts b/arch/arm/boot/dts/sun8i-a83t-cubietruck-plus.dts
-index 88b1e0970b8d..d2614f101ecc 100644
---- a/arch/arm/boot/dts/sun8i-a83t-cubietruck-plus.dts
-+++ b/arch/arm/boot/dts/sun8i-a83t-cubietruck-plus.dts
-@@ -60,6 +60,6 @@
- 
- &uart0 {
- 	pinctrl-names = "default";
--	pinctrl-0 = <&uart0_pins_b>;
-+	pinctrl-0 = <&uart0_pb_pins>;
- 	status = "okay";
- };
-diff --git a/arch/arm/boot/dts/sun8i-a83t.dtsi b/arch/arm/boot/dts/sun8i-a83t.dtsi
-index 82cb87f21b96..87b99338716b 100644
---- a/arch/arm/boot/dts/sun8i-a83t.dtsi
-+++ b/arch/arm/boot/dts/sun8i-a83t.dtsi
-@@ -174,7 +174,7 @@
- 			#interrupt-cells = <3>;
- 			#gpio-cells = <3>;
- 
--			mmc0_pins_a: mmc0@0 {
-+			mmc0_pins: mmc0_pins {
- 				pins = "PF0", "PF1", "PF2",
- 				       "PF3", "PF4", "PF5";
- 				function = "mmc0";
-@@ -182,13 +182,13 @@
- 				bias-pull-up;
- 			};
- 
--			uart0_pins_a: uart0@0 {
--				pins = "PF2", "PF4";
-+			uart0_pb_pins: uart0_pb_pins {
-+				pins = "PB9", "PB10";
- 				function = "uart0";
- 			};
- 
--			uart0_pins_b: uart0@1 {
--				pins = "PB9", "PB10";
-+			uart0_pf_pins: uart0_pf_pins {
-+				pins = "PF2", "PF4";
- 				function = "uart0";
- 			};
- 		};
--- 
-2.11.0
+T24gMTguMDQuMjAxNyAwOTo0NCwgSG9lZ2V1biBLd29uIHdyb3RlOgo+IE9uIDA0LzE4LzIwMTcg
+MDM6MDAgUE0sIEFuZHJ6ZWogSGFqZGEgd3JvdGU6Cj4+IE9uIDE3LjA0LjIwMTcgMDg6MDIsIEhv
+ZWdldW4gS3dvbiB3cm90ZToKPj4+IFRoaXMgcGF0Y2ggYWRkIHRoZSBwYW5lbCBkZXZpY2UgdHJl
+ZSBub2RlIGZvciBzNmUzaGYyIGRpc3BsYXkKPj4+IGNvbnRyb2xsZXIgdG8gVE0yZSBkdHMuCj4+
+Pgo+Pj4gU2lnbmVkLW9mZi1ieTogSG9lZ2V1biBLd29uIDxob2VnZXVuLmt3b25Ac2Ftc3VuZy5j
+b20+Cj4+IE1heWJlIGl0IHdvdWxkIGJlIGdvb2QgdG8gcmVtb3ZlIHRlLWdwaW9zIHByb3BlcnR5
+IC0gdG0yL3RtMmUgdXNlcwo+PiBoYXJkd2FyZSB0cmlnZ2VyLCBzbyBpdCBpcyBub3QgbmVjZXNz
+YXJ5IGFuZCBnZW5lcmF0ZXMgdXNlbGVzcyBpbnRlcnJ1cHRzLgo+IFRoYW5rcyBmb3IgeW91ciBy
+ZXZpZXcuCj4KPiBJIGFncmVlLCBidXQgSSB0aGlua3MgcmVtb3ZlIHRoZSB0ZS1ncGlvIHByb3Bl
+cnR5IGFmdGVyIHlvdXIgcGF0Y2ggWzFdIAo+IGhhcyBiZWVuIG1lcmdlZC4KClBhdGNoIFsxXSBo
+YXMgYmVlbiBtZXJnZWQgYWJvdXQgbW9udGggYWdvIDopCgpSZWdhcmRzCkFuZHJ6ZWoKCj4KPgo+
+IFsxXSBodHRwczovL3BhdGNod29yay5rZXJuZWwub3JnL3BhdGNoLzk2MjUzODMvCj4KPiBCZXN0
+IHJlZ2FyZHMsCj4gSG9lZ2V1bgo+Cj4+IEJlc2lkZSB0aGlzOgo+PiBSZXZpZXdlZC1ieTogQW5k
+cnplaiBIYWpkYSA8YS5oYWpkYUBzYW1zdW5nLmNvbT4KPj4gICAtLQo+PiBSZWdhcmRzCj4+IEFu
+ZHJ6ZWoKPj4+IC0tLQo+Pj4gICBhcmNoL2FybTY0L2Jvb3QvZHRzL2V4eW5vcy9leHlub3M1NDMz
+LXRtMmUuZHRzIHwgMTIgKysrKysrKysrKysrCj4+PiAgIDEgZmlsZSBjaGFuZ2VkLCAxMiBpbnNl
+cnRpb25zKCspCj4+Pgo+Pj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvZXh5bm9z
+L2V4eW5vczU0MzMtdG0yZS5kdHMgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL2V4eW5vcy9leHlub3M1
+NDMzLXRtMmUuZHRzCj4+PiBpbmRleCA2OTQ3MTdhLi45OGFkMDk0IDEwMDY0NAo+Pj4gLS0tIGEv
+YXJjaC9hcm02NC9ib290L2R0cy9leHlub3MvZXh5bm9zNTQzMy10bTJlLmR0cwo+Pj4gKysrIGIv
+YXJjaC9hcm02NC9ib290L2R0cy9leHlub3MvZXh5bm9zNTQzMy10bTJlLmR0cwo+Pj4gQEAgLTUy
+LDYgKzUyLDE4IEBACj4+PiAgIAlhc3NpZ25lZC1jbG9jay1yYXRlcyA9IDwyNzgwMDAwMDA+LCA8
+NDAwMDAwMDAwPjsKPj4+ICAgfTsKPj4+ICAgCj4+PiArJmRzaSB7Cj4+PiArCXBhbmVsQDAgewo+
+Pj4gKwkJY29tcGF0aWJsZSA9ICJzYW1zdW5nLHM2ZTNoZjIiOwo+Pj4gKwkJcmVnID0gPDA+Owo+
+Pj4gKwkJdmRkMy1zdXBwbHkgPSA8JmxkbzI3X3JlZz47Cj4+PiArCQl2Y2ktc3VwcGx5ID0gPCZs
+ZG8yOF9yZWc+Owo+Pj4gKwkJcmVzZXQtZ3Bpb3MgPSA8JmdwZzAgMCBHUElPX0FDVElWRV9MT1c+
+Owo+Pj4gKwkJZW5hYmxlLWdwaW9zID0gPCZncGYxIDUgR1BJT19BQ1RJVkVfSElHSD47Cj4+PiAr
+CQl0ZS1ncGlvcyA9IDwmZ3BmMSAzIEdQSU9fQUNUSVZFX0hJR0g+Owo+Pj4gKwl9Owo+Pj4gK307
+Cj4+PiArCj4+PiAgICZsZG8zMV9yZWcgewo+Pj4gICAJcmVndWxhdG9yLW5hbWUgPSAiVFNQX1ZE
+RF8xLjhWX0FQIjsKPj4+ICAgCXJlZ3VsYXRvci1taW4tbWljcm92b2x0ID0gPDE4MDAwMDA+Owo+
+Pgo+Pgo+IC0tCj4gVG8gdW5zdWJzY3JpYmUgZnJvbSB0aGlzIGxpc3Q6IHNlbmQgdGhlIGxpbmUg
+InVuc3Vic2NyaWJlIGxpbnV4LXNhbXN1bmctc29jIiBpbgo+IHRoZSBib2R5IG9mIGEgbWVzc2Fn
+ZSB0byBtYWpvcmRvbW9Admdlci5rZXJuZWwub3JnCj4gTW9yZSBtYWpvcmRvbW8gaW5mbyBhdCAg
+aHR0cDovL3ZnZXIua2VybmVsLm9yZy9tYWpvcmRvbW8taW5mby5odG1sCj4KPgo+CgpfX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGlu
+ZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVl
+ZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
