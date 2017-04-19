@@ -1,83 +1,61 @@
 From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH 0/8] arm64: dts: renesas: Break out R-Car H3 and M3-W SiP
-Date: Wed, 19 Apr 2017 11:15:43 +0200
-Message-ID: <1492593351-13835-1-git-send-email-geert+renesas@glider.be>
+Subject: [PATCH 3/8] [RFC] arm64: dts: renesas: Add R-Car M3-W SiP (2 x 1 GiB) support
+Date: Wed, 19 Apr 2017 11:15:46 +0200
+Message-ID: <1492593351-13835-4-git-send-email-geert+renesas@glider.be>
+References: <1492593351-13835-1-git-send-email-geert+renesas@glider.be>
 Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <1492593351-13835-1-git-send-email-geert+renesas@glider.be>
 Sender: linux-renesas-soc-owner@vger.kernel.org
 To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 Cc: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-	Hi all,
+Add support for the R-Car M3-W System-in-Package (r8j7796), which contains:
+  - an R-Car M3-W SoC (r8a7796),
+  - 2 channels of 1 GiB of RAM (2 GiB total),
+  - HyperFlash (not yet described).
 
-Renesas R-Car H3 and M3-W are available as SoC (r8a779[56]) or SiP
-(r8j779[56]).  The latter is an integrated package
-("System-in-Package"), containing an SoC, RAM, and HyperFlash.
-
-This patch series adds DT bindings for the SiPs, breaks out hardware
-descriptions for the SiPs into separate .dtsi files, and migrates the
-board-specific DTSes from the SoC-specific to the SiP-specific .dtsi
-files.
-
-The motivations for this are:
-  - Provide a better description of the hardware hierarchy,
-  - Share more DTS fragments (not that visible due to boilerplate and
-    limited number of boards),
-  - Some quirks may be SiP-specific.
-    I believe this is the case for the limitation of RAVB Ethernet to
-    10/100 Mbps on H3 ES1.0.
-
-Questions (reiterated in the individual patches):
-  - Do we need more compatible values, for different configurations?
-    At least r8j7796 is available with either 2 GiB or 4 GiB of RAM,
-    possibly using RAM parts from different vendors.
-  - How are the different SiP versions named officially?
-  - How should the .dtsi files be named?
-  - Should the board-specific files be renamed from <soc>-<board>.dts to
-    <sip>-<board>.dts?
-    Probably not, as this would inconvenience downstream developers even
-    more than the H3 ES1.x rename, and <soc> is not that incorrect.
-
-DTB changes have been inspected using scripts/dtc/dtx_diff.
-This has been tested on Salvator-X (both H3 and M3-W).
-
-Thanks for your comments!
-
-Geert Uytterhoeven (8):
-  [RFC] dt-bindings: renesas: Document R-Car H3 and M3-W SiP DT bindings
-  [RFC] arm64: dts: renesas: Add R-Car H3 SiP (4 x 1 GiB) support
-  [RFC] arm64: dts: renesas: Add R-Car M3-W SiP (2 x 1 GiB) support
-  [RFC] arm64: dts: renesas: Add R-Car M3-W SiP (2 x 2 GiB) support
-  [RFC] arm64: dts: renesas: Migrate R-Car H3 Salvator-X to
-    r8j7795-4x1g.dtsi
-  [RFC] arm64: dts: renesas: Migrate R-Car M3-W Salvator-X to
-    r8j7796-2x2g.dtsi
-  [RFC] arm64: dts: renesas: Migrate H3ULCB to r8j7795-4x1g.dtsi
-  [RFC] arm64: dts: renesas: Migrate M3ULCB to r8j7796-2x1g.dtsi
-
- Documentation/devicetree/bindings/arm/shmobile.txt | 16 +++++++---
- arch/arm64/boot/dts/renesas/r8a7795-h3ulcb.dts     | 27 ++--------------
- arch/arm64/boot/dts/renesas/r8a7795-salvator-x.dts | 27 ++--------------
- arch/arm64/boot/dts/renesas/r8a7796-m3ulcb.dts     | 17 ++--------
- arch/arm64/boot/dts/renesas/r8a7796-salvator-x.dts | 17 ++--------
- arch/arm64/boot/dts/renesas/r8j7795-4x1g.dtsi      | 36 ++++++++++++++++++++++
- arch/arm64/boot/dts/renesas/r8j7796-2x1g.dtsi      | 26 ++++++++++++++++
- arch/arm64/boot/dts/renesas/r8j7796-2x2g.dtsi      | 26 ++++++++++++++++
- 8 files changed, 112 insertions(+), 80 deletions(-)
- create mode 100644 arch/arm64/boot/dts/renesas/r8j7795-4x1g.dtsi
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+Questions:
+  - Should this file be named r8j7796-2g.dtsi instead?
+  - What's the official name of r8j7796 with 2 x 1 GiB of RAM?
+---
+ arch/arm64/boot/dts/renesas/r8j7796-2x1g.dtsi | 26 ++++++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
  create mode 100644 arch/arm64/boot/dts/renesas/r8j7796-2x1g.dtsi
- create mode 100644 arch/arm64/boot/dts/renesas/r8j7796-2x2g.dtsi
 
+diff --git a/arch/arm64/boot/dts/renesas/r8j7796-2x1g.dtsi b/arch/arm64/boot/dts/renesas/r8j7796-2x1g.dtsi
+new file mode 100644
+index 0000000000000000..ba274c132e6dd984
+--- /dev/null
++++ b/arch/arm64/boot/dts/renesas/r8j7796-2x1g.dtsi
+@@ -0,0 +1,26 @@
++/*
++ * Device Tree Source for the r8a7796 SiP with 2 channels of 1 GiB RAM
++ *
++ * Copyright (C) 2016 Renesas Electronics Corp.
++ *
++ * This file is licensed under the terms of the GNU General Public License
++ * version 2.  This program is licensed "as is" without any warranty of any
++ * kind, whether express or implied.
++ */
++
++#include "r8a7796.dtsi"
++
++/ {
++	compatible = "renesas,r8j7796", "renesas,r8a7796";
++
++	memory@48000000 {
++		device_type = "memory";
++		/* first 128MB is reserved for secure area. */
++		reg = <0x0 0x48000000 0x0 0x38000000>;
++	};
++
++	memory@600000000 {
++		device_type = "memory";
++		reg = <0x6 0x00000000 0x0 0x40000000>;
++	};
++};
 -- 
 2.7.4
-
-Gr{oetje,eeting}s,
-
-						Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-							    -- Linus Torvalds
