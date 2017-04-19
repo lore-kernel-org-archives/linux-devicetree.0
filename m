@@ -1,74 +1,63 @@
-From: Suzuki K Poulose <Suzuki.Poulose-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v6 6/8] coresight: add support for CPU debug module
-Date: Wed, 19 Apr 2017 15:32:39 +0100
-Message-ID: <f42088f6-aa53-06b1-b332-22198744ab7a@arm.com>
-References: <1491485461-22800-1-git-send-email-leo.yan@linaro.org>
- <1491485461-22800-7-git-send-email-leo.yan@linaro.org>
- <5c5cb6f8-1dcb-8a9d-1605-c006656005eb@arm.com>
- <20170419142812.GA16160@leoy-linaro>
+From: Gilad Ben-Yossef <gilad@benyossef.com>
+Subject: Re: [PATCH 0/4] staging: add ccree crypto driver
+Date: Wed, 19 Apr 2017 17:34:57 +0300
+Message-ID: <CAOtvUMexVoojHMtxgJfxgGM+DVpVP2Yn9OZYtrYfdenKwQ_oVw@mail.gmail.com>
+References: <1492524470-13847-1-git-send-email-gilad@benyossef.com> <20170418153951.GA31214@kroah.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170419142812.GA16160@leoy-linaro>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Brown <david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mike Leach <mike.leach-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-crypto-owner@vger.kernel.org>
+In-Reply-To: <20170418153951.GA31214@kroah.com>
+Sender: linux-crypto-owner@vger.kernel.org
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devel@driverdev.osuosl.org, linux-crypto@vger.kernel.org, devicetree@vger.kernel.org, Linux kernel mailing list <linux-kernel@vger.kernel.org>, Gilad Ben-Yossef <gilad.benyossef@arm.com>, Binoy Jayan <binoy.jayan@linaro.org>, Ofir Drang <ofir.drang@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On 19/04/17 15:28, Leo Yan wrote:
-> Hi Suzuki,
->
-> On Wed, Apr 19, 2017 at 02:23:04PM +0100, Suzuki K Poulose wrote:
->> Hi Leo,
+On Tue, Apr 18, 2017 at 6:39 PM, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+> On Tue, Apr 18, 2017 at 05:07:50PM +0300, Gilad Ben-Yossef wrote:
+>> Arm TrustZone CryptoCell 700 is a family of cryptographic hardware
+>> accelerators. It is supported by a long lived series of out of tree
+>> drivers, which I am now in the process of unifying and upstreaming.
+>> This is the first drop, supporting the new CryptoCell 712 REE.
 >>
->> This version looks good to me. I have two minor comments below.
->
-> Thanks for reviewing. Will take the suggestions. Just check a bit for
-> last comment.
->
-> [...]
->
->>> +static int debug_probe(struct amba_device *adev, const struct amba_id *id)
->>> +{
->>> +	void __iomem *base;
->>> +	struct device *dev = &adev->dev;
->>> +	struct debug_drvdata *drvdata;
->>> +	struct resource *res = &adev->res;
->>> +	struct device_node *np = adev->dev.of_node;
->>> +	int ret;
->>> +
->>> +	drvdata = devm_kzalloc(dev, sizeof(*drvdata), GFP_KERNEL);
->>> +	if (!drvdata)
->>> +		return -ENOMEM;
->>> +
->>> +	drvdata->cpu = np ? of_coresight_get_cpu(np) : 0;
->>> +	if (per_cpu(debug_drvdata, drvdata->cpu)) {
->>> +		dev_err(dev, "CPU%d drvdata has been initialized\n",
->>> +			drvdata->cpu);
+>> The code still needs some cleanup before maturing to a proper
+>> upstream driver, which I am in the process of doing. However,
+>> as discussion of some of the capabilities of the hardware and
+>> its application to some dm-crypt and dm-verity features recently
+>> took place I though it is better to do this in the open via the
+>> staging tree.
 >>
->> May be we could warn about a possible issue in the DT ?
+>> A Git repository based off of Linux 4.11-rc7 is available at
+>> https://github.com/gby/linux.git branch ccree.
+>>
+>> Signed-off-by: Gilad Ben-Yossef <gilad@benyossef.com>
+>> CC: Binoy Jayan <binoy.jayan@linaro.org>
+>> CC: Ofir Drang <ofir.drang@arm.com>
+>>
+>> Gilad Ben-Yossef (4):
+>>   staging: add ccree crypto driver
+>>   staging: ccree: add TODO list
+>>   staging: ccree: add devicetree bindings
+>>   MAINTAINERS: add Gilad BY as maintainer for ccree
 >
-> So can I understand the suggestion is to add warning in function
-> of_coresight_get_cpu() when cannot find CPU number, and here directly
-> bail out?
+> We can't do much without a real patch, sorry.  Digging in random git
+> trees doesn't work :(
+>
+> I can't take this as-is, I need patches.
 
-No. One could have single CPU DT, where he doesn't need to provide the CPU number.
-Hence, it doesn't make sense to WARN  in of_coresight_get_cpu().
+Got it.
 
-But when we hit the case above, we find that the some node was registered for
-the given CPU (be it 0 or any other), which is definitely an error in DT. Due to
+I'll break the driver to a series of patches and post them .
+Thanks for the feedback.
 
-1) Hasn't specified the CPU number for more than one node
+Gilad
 
-OR
 
-2) CPU number duplicated in the more than one nodes.
 
-Cheers
-Suzuki
+-- 
+Gilad Ben-Yossef
+Chief Coffee Drinker
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+"If you take a class in large-scale robotics, can you end up in a
+situation where the homework eats your dog?"
+ -- Jean-Baptiste Queru
