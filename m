@@ -1,35 +1,62 @@
-From: Eddie Cai <eddie.cai.linux@gmail.com>
-Subject: [PATCH 2/2] clk: rockchip: fix the incorrect id for clk_testout1
-Date: Wed, 19 Apr 2017 15:30:23 +0800
-Message-ID: <20170419073023.1921-3-eddie.cai.linux@gmail.com>
-References: <20170419073023.1921-1-eddie.cai.linux@gmail.com>
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <20170419073023.1921-1-eddie.cai.linux@gmail.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, heiko@sntech.de, zhengxing@rock-chips.com, zyw@rock-chips.com, hl@rock-chips.com, mturquette@baylibre.com, sboyd@codeaurora.org
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, Eddie Cai <eddie.cai.linux@gmail.com>
+From: Guillaume Tucker <guillaume.tucker-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Subject: [PATCH v3 0/5] Add ARM Mali Midgard device tree bindings and gpu node for rk3288
+Date: Wed, 19 Apr 2017 09:06:16 +0100
+Message-ID: <cover.1492588180.git.guillaume.tucker@collabora.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, =?UTF-8?q?Heiko=20St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Cc: Sjoerd Simons <sjoerd.simons-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, John Reitan <john.reitan-5wv7dgnIgG8@public.gmane.org>, Wookey <wookey-Xpnwy/r4z8dg9hUCZPvPmw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Guillaume Tucker <guillaume.tucker-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-the id for clk_testout1 is wrong, so correct it.
+The ARM Mali Midgard GPU kernel driver is only available
+out-of-tree and is not going to be merged in its current form.
+However, it would be useful to have its device tree bindings
+merged.  In particular, this would enable distributions to create
+working driver packages (dkms...) without having to patch the
+kernel.
 
-Signed-off-by: Eddie Cai <eddie.cai.linux@gmail.com>
----
- drivers/clk/rockchip/clk-rk3399.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+The bindings for the earlier Mali Utgard GPU family have already
+been merged, so this is essentially the same scenario but for
+newer GPUs (Mali-T604 ~ Mali-T880).
 
-diff --git a/drivers/clk/rockchip/clk-rk3399.c b/drivers/clk/rockchip/clk-rk3399.c
-index 73121b14..322611d 100644
---- a/drivers/clk/rockchip/clk-rk3399.c
-+++ b/drivers/clk/rockchip/clk-rk3399.c
-@@ -1066,7 +1066,7 @@ static struct rockchip_clk_branch rk3399_clk_branches[] __initdata = {
- 	/* cif_testout */
- 	MUX(0, "clk_testout1_pll_src", mux_pll_src_cpll_gpll_npll_p, 0,
- 			RK3399_CLKSEL_CON(38), 6, 2, MFLAGS),
--	COMPOSITE(0, "clk_testout1", mux_clk_testout1_p, 0,
-+	COMPOSITE(SCLK_TESTCLKOUT1, "clk_testout1", mux_clk_testout1_p, 0,
- 			RK3399_CLKSEL_CON(38), 5, 1, MFLAGS, 0, 5, DFLAGS,
- 			RK3399_CLKGATE_CON(13), 14, GFLAGS),
- 
--- 
-2.10.2
+This series of patches first imports the bindings from the latest
+driver release with some clean-up then adds a gpu node for the
+rk3288 SoC.  This was successfully tested on Radxa Rock2 Square,
+Firefly, Veyron Minnie and Jerry boards board using Mali kernel
+driver r16p0 and r12p0 user-space binary.
 
+Changes since v1:
+- enabled gpu on rk3288-veyron boards
+
+Changes since v2:
+- removed "clk-names" property and "clk_mali" name
+- converted values of "interrupt-names" property to
+  lower-case: "job", "mmu" and "gpu"
+- replaced dt compatible strings with list of all Midgard GPU variants and
+  optional vendors
+- cleaned up gpu node example
+
+
+Enric Balletbo i Serra (1):
+  ARM: dts: rockchip: enable ARM Mali GPU on rk3288-veyron
+
+Guillaume Tucker (4):
+  dt-bindings: gpu: add bindings for the ARM Mali Midgard GPU
+  ARM: dts: rockchip: add ARM Mali GPU node for rk3288
+  ARM: dts: rockchip: enable ARM Mali GPU on rk3288-rock2-som
+  ARM: dts: rockchip: enable ARM Mali GPU on rk3288-firefly
+
+ .../devicetree/bindings/gpu/arm,mali-midgard.txt   | 57 ++++++++++++++++++++++
+ arch/arm/boot/dts/rk3288-firefly.dtsi              |  5 ++
+ arch/arm/boot/dts/rk3288-rock2-som.dtsi            |  5 ++
+ arch/arm/boot/dts/rk3288-veyron.dtsi               |  5 ++
+ arch/arm/boot/dts/rk3288.dtsi                      | 22 +++++++++
+ 5 files changed, 94 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt
+
+--
+2.11.0
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
