@@ -1,246 +1,120 @@
-From: Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v6 2/8] doc: Add documentation for Coresight CPU debug
-Date: Wed, 19 Apr 2017 11:25:31 -0600
-Message-ID: <CANLsYkwS9Zo4eZ7TVBUma4+D_BSDW6Dn5rytTyp5kgdfW+Um1A@mail.gmail.com>
-References: <1491485461-22800-1-git-send-email-leo.yan@linaro.org> <1491485461-22800-3-git-send-email-leo.yan@linaro.org>
+From: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: BCM5301X: Specify MDIO bus in the DT
+Date: Wed, 19 Apr 2017 19:35:56 +0200
+Message-ID: <cd324440-ad88-0981-1577-822d39ee289d@gmail.com>
+References: <20170402210840.11429-1-zajec5@gmail.com>
+ <5a6ecda9-2cf6-2171-7210-6b3a1d4c6012@gmail.com>
+ <c3a0455a-821f-d8a8-bf8a-7ad06ad0466e@milecki.pl>
+ <94250925-7d5d-ac31-58ad-918406d904f1@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1491485461-22800-3-git-send-email-leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+In-Reply-To: <94250925-7d5d-ac31-58ad-918406d904f1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Brown <david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Suzuki K Poulose <suzuki.poulose-5wv7dgnIgG8@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mike Leach <mike.leach-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+Cc: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 6 April 2017 at 07:30, Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> Update kernel-parameters.txt to add new parameter:
-> coresight_cpu_debug.enable is a knob to enable debugging at boot time.
+On 04/19/2017 06:43 PM, Florian Fainelli wrote:
+> On 04/02/2017 02:25 PM, Rafał Miłecki wrote:
+>> On 04/02/2017 11:14 PM, Florian Fainelli wrote:
+>>> Le 04/02/17 à 14:08, Rafał Miłecki a écrit :
+>>>> From: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+>>>>
+>>>> Northstar devices have MDIO bus that may contain various PHYs attached.
+>>>> A common example is USB 3.0 PHY (that doesn't have an MDIO driver yet).
+>>>>
+>>>> Signed-off-by: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+>>>> ---
+>>>>  arch/arm/boot/dts/bcm5301x.dtsi | 7 +++++++
+>>>>  1 file changed, 7 insertions(+)
+>>>>
+>>>> diff --git a/arch/arm/boot/dts/bcm5301x.dtsi
+>>>> b/arch/arm/boot/dts/bcm5301x.dtsi
+>>>> index acee36a61004..6a2afe7880ae 100644
+>>>> --- a/arch/arm/boot/dts/bcm5301x.dtsi
+>>>> +++ b/arch/arm/boot/dts/bcm5301x.dtsi
+>>>> @@ -320,6 +320,13 @@
+>>>>          };
+>>>>      };
+>>>>
+>>>> +    mdio@18003000 {
+>>>> +        compatible = "brcm,iproc-mdio";
+>>>> +        reg = <0x18003000 0x8>;
+>>>> +        #size-cells = <1>;
+>>>> +        #address-cells = <0>;
+>>>> +    };
+>>>
+>>> This looks fine, but usually the block should be enabled on a per-board
+>>> basis, such that there should be a status = "disabled" property here by
+>>> default.
+>>
+>> I think we have few blocks in bcm5301x.dtsi enabled by default. I guess
+>> it's
+>> for stuff that is always present on every SoC family board: rng, nand,
+>> spi to
+>> name few.
+>>
+>> It makes some sense, consider e.g. spi. Every Northstar board has SPI
+>> controller so it's enabled by default. Not every board has SPI flash, so
+>> it's
+>> disabled by default.
+>>
+>> It's there and it make sense to me. Is that OK or not?
 >
-> Add detailed documentation, which contains the implementation, Mike
-> Leach excellent summary for "clock and power domain". At the end some
-> examples on how to enable the debugging functionality are provided.
->
-> Suggested-by: Mike Leach <mike.leach-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Signed-off-by: Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
->  Documentation/admin-guide/kernel-parameters.txt |   7 +
->  Documentation/trace/coresight-cpu-debug.txt     | 173 ++++++++++++++++++++++++
->  2 files changed, 180 insertions(+)
->  create mode 100644 Documentation/trace/coresight-cpu-debug.txt
->
-> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-> index facc20a..cf90146 100644
-> --- a/Documentation/admin-guide/kernel-parameters.txt
-> +++ b/Documentation/admin-guide/kernel-parameters.txt
-> @@ -650,6 +650,13 @@
->                         /proc/<pid>/coredump_filter.
->                         See also Documentation/filesystems/proc.txt.
->
-> +       coresight_cpu_debug.enable
-> +                       [ARM,ARM64]
-> +                       Format: <bool>
-> +                       Enable/disable the CPU sampling based debugging.
-> +                       0: default value, disable debugging
-> +                       1: enable debugging at boot time
-> +
->         cpuidle.off=1   [CPU_IDLE]
->                         disable the cpuidle sub-system
->
-> diff --git a/Documentation/trace/coresight-cpu-debug.txt b/Documentation/trace/coresight-cpu-debug.txt
-> new file mode 100644
-> index 0000000..e7ad05e
-> --- /dev/null
-> +++ b/Documentation/trace/coresight-cpu-debug.txt
-> @@ -0,0 +1,173 @@
-> +               Coresight CPU Debug Module
-> +               ==========================
-> +
-> +   Author:   Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> +   Date:     April 5th, 2017
-> +
-> +Introduction
-> +------------
-> +
-> +Coresight CPU debug module is defined in ARMv8-a architecture reference manual
-> +(ARM DDI 0487A.k) Chapter 'Part H: External debug', the CPU can integrate
-> +debug module and it is mainly used for two modes: self-hosted debug and
-> +external debug. Usually the external debug mode is well known as the external
-> +debugger connects with SoC from JTAG port; on the other hand the program can
-> +explore debugging method which rely on self-hosted debug mode, this document
-> +is to focus on this part.
-> +
-> +The debug module provides sample-based profiling extension, which can be used
-> +to sample CPU program counter, secure state and exception level, etc; usually
-> +every CPU has one dedicated debug module to be connected. Based on self-hosted
-> +debug mechanism, Linux kernel can access these related registers from mmio
-> +region when the kernel panic happens. The callback notifier for kernel panic
-> +will dump related registers for every CPU; finally this is good for assistant
-> +analysis for panic.
-> +
-> +
-> +Implementation
-> +--------------
-> +
-> +- During driver registration, use EDDEVID and EDDEVID1 two device ID
-> +  registers to decide if sample-based profiling is implemented or not. On some
-> +  platforms this hardware feature is fully or partialy implemented; and if
-> +  this feature is not supported then registration will fail.
-> +
-> +- When write this doc, the debug driver mainly relies on three sampling
-> +  registers. The kernel panic callback notifier gathers info from EDPCSR
-> +  EDVIDSR and EDCIDSR; from EDPCSR we can get program counter, EDVIDSR has
-> +  information for secure state, exception level, bit width, etc; EDCIDSR is
-> +  context ID value which contains the sampled value of CONTEXTIDR_EL1.
-> +
-> +- The driver supports CPU running mode with either AArch64 or AArch32. The
-> +  registers naming convention is a bit different between them, AArch64 uses
-> +  'ED' for register prefix (ARM DDI 0487A.k, chapter H9.1) and AArch32 uses
-> +  'DBG' as prefix (ARM DDI 0487A.k, chapter G5.1). The driver is unified to
-> +  use AArch64 naming convention.
-> +
-> +- ARMv8-a (ARM DDI 0487A.k) and ARMv7-a (ARM DDI 0406C.b) have different
-> +  register bits definition. So the driver consolidates two difference:
-> +
-> +  If PCSROffset=0b0000. ARMv8-a doesn't apply offset on PCSR, but ARMv7-a
-> +  defines "PCSR samples are offset by a value that depends on the instruction
-> +  set state".
+> Even though there are devices that are always enabled on a given SoC,
+> because the board designs are always consistent does not necessarily
+> make them good candidates to be enabled at the .dtsi level. This is
+> particularly true when there are external connections to blocks (SPI,
+> NAND, USB, Ethernet, MDIO to name a few), having them disabled by
+> default is safer as a starting point to begin with.
 
-I had to look in the documentation (ID092916) a little here.  On ARMv8
-if DEVID1.PCSROffset is 0 then the feature is not implemented - as
-such the first part of the sentence should be corrected.  The rest of
-the sentence about ARMv7 is correct.
+In case of Northstar there is USB 3.0 PHY connected *internally* to this MDIO.
+I don't think any board manufacturer is able to rip SoC out of the MDIO or the
+USB 3.0 PHY.
 
-> For ARMv7-a, the driver checks furthermore if CPU runs with ARM
-> +  or thumb instruction set and calibrate PCSR value, the detailed description
-> +  for offset is in ARMv7-a ARM (ARM DDI 0406C.b) chapter C11.11.34 "DBGPCSR,
-> +  Program Counter Sampling Register".
-> +
-> +  If PCSROffset=0b0010, ARMv8-a defines "EDPCSR implemented, and samples have
-> +  no offset applied and do not sample the instruction set state in AArch32
-> +  state". So for the case when CPU runs with AArch32 state and PCSROffset=
-> +  0b0010, the driver considers PCSR doesn't really work.
 
-Please remove the word "really" - it either works or it doesn't.  So
-on ARMv8 if DEVID1.PCSROffset is 0x2 and the CPU operates in AArch32
-state, EDPCSR is not sampled.  When the CPU operates in AArch64 state
-EDPCSR is sampled and no offset are applied.
-
-> +
-> +
-> +Clock and power domain
-> +----------------------
-> +
-> +Before accessing debug registers, we should ensure the clock and power domain
-> +have been enabled properly. In ARMv8-a ARM (ARM DDI 0487A.k) chapter 'H9.1
-> +Debug registers', the debug registers are spread into two domains: the debug
-> +domain and the CPU domain.
-> +
-> +                                +---------------+
-> +                                |               |
-> +                                |               |
-> +                     +----------+--+            |
-> +          dbg_clk -->|          |**|            |<-- cpu_clk
-> +                     |    Debug |**|   CPU      |
-> +           dbg_pd -->|          |**|            |<-- cpu_pd
-> +                     +----------+--+            |
-> +                                |               |
-> +                                |               |
-> +                                +---------------+
-> +
-> +For debug domain, the user uses DT binding "clocks" and "power-domains" to
-> +specify the corresponding clock source and power supply for the debug logic.
-> +The driver calls the pm_runtime_{put|get} operations as needed to handle the
-> +debug power domain.
-> +
-> +For CPU domain, the different SoC designs have different power management
-> +schemes and finally this heavily impacts external debug module. So we can
-> +divide into below cases:
-> +
-> +- On systems with a sane power controller which can behave correctly with
-> +  respect to CPU power domain, the CPU power domain can be controlled by
-> +  register EDPRCR in driver. The driver firstly writes bit EDPRCR.COREPURQ
-> +  to power up the CPU, and then writes bit EDPRCR.CORENPDRQ for emulation
-> +  of CPU power down. As result, this can ensure the CPU power domain is
-> +  powered on properly during the period when access debug related registers;
-> +
-> +- Some designs will power down an entire cluster if all CPUs on the cluster
-> +  are powered down - including the parts of the debug registers that should
-> +  remain powered in the debug power domain. The bits in EDPRCR are not
-> +  respected in these cases, so these designs do not really support debug over
-> +  power down in the way that the CoreSight / Debug designers anticipated.
-> +  This means that even checking EDPRSR has the potential to cause a bus hang
-> +  if the target register is unpowered.
-> +
-> +  In this case, accessing to the debug registers while they are not powered
-> +  is a recipe for disaster; so we need preventing CPU low power states at boot
-> +  time or when user enable module at the run time. Please see chapter
-> +  "How to use the module" for detailed usage info for this.
-> +
-> +
-> +Device Tree Bindings
-> +--------------------
-> +
-> +See Documentation/devicetree/bindings/arm/coresight-cpu-debug.txt for details.
-> +
-> +
-> +How to use the module
-> +---------------------
-> +
-> +If you want to enable debugging functionality at boot time, you can add
-> +"coresight_cpu_debug.enable=1" to the kernel command line parameter.
-> +
-> +The driver also can work as module, so can enable the debugging when insmod
-> +module:
-> +# insmod coresight_cpu_debug.ko debug=1
-> +
-> +When boot time or insmod module you have not enabled the debugging, the driver
-> +uses the debugfs file system to provide a knob to dynamically enable or disable
-> +debugging:
-> +
-> +To enable it, write a '1' into /sys/kernel/debug/coresight_cpu_debug/enable:
-> +# echo 1 > /sys/kernel/debug/coresight_cpu_debug/enable
-> +
-> +To disable it, write a '0' into /sys/kernel/debug/coresight_cpu_debug/enable:
-> +# echo 0 > /sys/kernel/debug/coresight_cpu_debug/enable
-> +
-> +As explained in chapter "Clock and power domain", if you are working on one
-> +platform which has idle states to power off debug logic and the power
-> +controller cannot work well for the request from EDPRCR, then you should
-> +firstly constraint CPU idle states before enable CPU debugging feature; so can
-> +ensure the accessing to debug logic.
-> +
-> +If you want to limit idle states at boot time, you can use "nohlt" or
-> +"cpuidle.off=1" in the kernel command line.
-> +
-> +At the runtime you can disable idle states with below methods:
-> +
-> +Set latency request to /dev/cpu_dma_latency to disable all CPUs specific idle
-> +states (if latency = 0uS then disable all idle states):
-> +# echo "what_ever_latency_you_need_in_uS" > /dev/cpu_dma_latency
-> +
-> +Disable specific CPU's specific idle state:
-> +# echo 1 > /sys/devices/system/cpu/cpu$cpu/cpuidle/state$state/disable
-> +
-> +
-> +Output format
-> +-------------
-> +
-> +Here is an example of the debugging output format:
-> +
-> +ARM external debug module:
-> +CPU[0]:
-> + EDPRSR:  0000000b (Power:On DLK:Unlock)
-> + EDPCSR:  [<ffff00000808eb54>] handle_IPI+0xe4/0x150
-> + EDCIDSR: 00000000
-> + EDVIDSR: 90000000 (State:Non-secure Mode:EL1/0 Width:64bits VMID:0)
-> +CPU[1]:
-> + EDPRSR:  0000000b (Power:On DLK:Unlock)
-> + EDPCSR:  [<ffff0000087a64c0>] debug_notifier_call+0x108/0x288
-> + EDCIDSR: 00000000
-> + EDVIDSR: 90000000 (State:Non-secure Mode:EL1/0 Width:64bits VMID:0)
-> --
-> 2.7.4
+>> I find MDIO situation quite simiar. It seems every Northstar board has
+>> MDIO bus
+>> just devices may differ and should not be enabled by default.
 >
+> In which case, the only difference, for you would be to do to, at the
+> board-level DTS:
+>
+> &mdio {
+> 	status = "okay";
+>
+> 	phy@0 {
+> 		reg = <0>;
+> 		...
+> 	};
+> };
+>
+> versus:
+>
+> &mdio {
+> 	phy@0 {
+> 		reg = <0>;
+> 		...
+> 	};
+> };
+>
+> I think we can afford putting the mdio node's status property in each
+> board-level DTS and make it clear that way that it is enabled because
+> there are child nodes enabled?
+
+This will be a pretty big effort because every Northstar device I know has USB
+3.0 PHY in the SoC.
+
+
+> NB: with a CONFIG_OF system, there is no automatic probing of MDIO child
+> devices because it relies on child nodes being declared, but you would
+> still get the driver to be probed and enabled, which is a waste of
+> resources at best.
+
+Right, but DT role is to describe device/board and not really care if operating
+system handles that efficiently.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
