@@ -1,111 +1,49 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [RFC 1/2] dt-bindings: add mmio-based syscon mux controller DT
- bindings
-Date: Wed, 19 Apr 2017 17:09:00 -0500
-Message-ID: <20170419220900.ndrtt2m7d6tqsddh@rob-hp-laptop>
-References: <20170413154812.19597-1-p.zabel@pengutronix.de>
+From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Subject: Re: [PATCH V3] PM / OPP: Use - instead of @ for DT entries
+Date: Thu, 20 Apr 2017 00:06:03 +0200
+Message-ID: <3142028.bncGUUQ4qB@aspire.rjw.lan>
+References: <734c5d5a66ef8a5505f368fc68a8ab9c02d710f9.1492492253.git.viresh.kumar@linaro.org> <20170419142215.GA12105@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170413154812.19597-1-p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>, Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20170419142215.GA12105@localhost>
+Sender: linux-pm-owner@vger.kernel.org
+To: Olof Johansson <olof@lixom.net>
+Cc: Viresh Kumar <viresh.kumar@linaro.org>, arm@kernel.org, Chanwoo Choi <cw00.choi@samsung.com>, MyungJoo Ham <myungjoo.ham@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@codeaurora.org>, Beno??t Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Daniel Mack <daniel@zonque.org>, Haojian Zhuang <haojian.zhuang@gmail.com>, Robert Jarzmik <robert.jarzmik@free.fr>, Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, Masahiro
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 13, 2017 at 05:48:11PM +0200, Philipp Zabel wrote:
-> This adds device tree binding documentation for mmio-based syscon
-> multiplexers controlled by a single bitfield in a syscon register
-> range.
+On Wednesday, April 19, 2017 07:22:15 AM Olof Johansson wrote:
+> Hi Viresh,
 > 
-> Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/mux/mmio-mux.txt | 56 ++++++++++++++++++++++
->  1 file changed, 56 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mux/mmio-mux.txt
+> On Tue, Apr 18, 2017 at 10:44:50AM +0530, Viresh Kumar wrote:
+> > Compiling the DT file with W=1, DTC warns like follows:
+> > 
+> > Warning (unit_address_vs_reg): Node /opp_table0/opp@1000000000 has a
+> > unit name, but no reg property
+> > 
+> > Fix this by replacing '@' with '-' as the OPP nodes will never have a
+> > "reg" property.
+> > 
+> > Reported-by: Krzysztof Kozlowski <krzk@kernel.org>
+> > Reported-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> > Suggested-by: Mark Rutland <mark.rutland@arm.com>
+> > Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+> > Acked-by: Maxime Ripard <maxime.ripard@free-electrons.com> (sunxi)
+> > Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
+> > Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
+> > Acked-by: Masahiro Yamada <yamada.masahiro@socionext.com> (uniphier)
+> > Acked-by: Rob Herring <robh@kernel.org>
+> > Acked-by: Tony Lindgren <tony@atomide.com>
 > 
-> diff --git a/Documentation/devicetree/bindings/mux/mmio-mux.txt b/Documentation/devicetree/bindings/mux/mmio-mux.txt
-> new file mode 100644
-> index 0000000000000..11d96f5d98583
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mux/mmio-mux.txt
-> @@ -0,0 +1,56 @@
-> +MMIO bitfield-based multiplexer controller bindings
-> +
-> +Define a syscon bitfield to be used to control a multiplexer. The parent
-> +device tree node must be a syscon node to provide register access.
-> +
-> +Required properties:
-> +- compatible : "gpio-mux"
-
-?
-
-> +- reg : register base of the register containing the control bitfield
-> +- bit-mask : bitmask of the control bitfield in the control register
-> +- bit-shift : bit offset of the control bitfield in the control register
-> +- #mux-control-cells : <0>
-> +* Standard mux-controller bindings as decribed in mux-controller.txt
-> +
-> +Optional properties:
-> +- idle-state : if present, the state the mux will have when idle. The
-> +	       special state MUX_IDLE_AS_IS is the default.
-> +
-> +The multiplexer state is defined as the value of the bitfield described
-> +by the reg, bit-mask, and bit-shift properties, accessed through the parent
-> +syscon.
-> +
-> +Example:
-> +
-> +	syscon {
-> +		compatible = "syscon";
-> +
-> +		mux: mux-controller@3 {
-> +			compatible = "mmio-mux";
-> +			reg = <0x3>;
-> +			bit-mask = <0x1>;
-> +			bit-shift = <5>;
-
-This pattern doesn't scale once you have multiple fields @ addr 3. I 
-also don't really think a node per register field in DT really scales.
-
-I think the parent should be declared as a mux controller instead. You 
-could encode the mux addr and bit position in the mux cells.
-
-> +			#mux-control-cells = <0>;
-> +		};
-> +	};
-> +
-> +	video-mux {
-> +		compatible = "video-mux";
-> +		mux-controls = <&mux>;
-
-The mux binding was largely defined for a single control controling 
-multiple muxes. This doesn't really fit that, but I guess this is an 
-improvement over a custom syscon phandle.
-
-> +
-> +		ports {
-> +			/* input 0 */
-> +			port@0 {
-> +				reg = <0>;
-> +			};
-> +
-> +			/* input 1 */
-> +			port@1 {
-> +				reg = <1>;
-> +			};
-> +
-> +			/* output */
-> +			port@2 {
-> +				reg = <2>;
-> +			};
-> +		};
-> +	};
-> -- 
-> 2.11.0
+> We've already turned down other patches that does this in a sweeping manner
+> like this, since they tend to be conflict prone with other DT changes.
 > 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Please split per platform and merge with each maintainer.
+
+OK
+
+So I'm assuming that you guys will take care of this going forward.
+
+Thanks,
+Rafael
