@@ -1,102 +1,185 @@
-From: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>
+From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Subject: Re: [PATCH] ARM: dts: BCM5301X: Specify MDIO bus in the DT
-Date: Wed, 19 Apr 2017 20:10:02 +0200
-Message-ID: <ab696d24-3544-a554-82d1-18839b29caa0@milecki.pl>
+Date: Wed, 19 Apr 2017 11:13:26 -0700
+Message-ID: <84230a10-a10a-ee60-0238-24db94d2c53c@gmail.com>
 References: <20170402210840.11429-1-zajec5@gmail.com>
  <5a6ecda9-2cf6-2171-7210-6b3a1d4c6012@gmail.com>
  <c3a0455a-821f-d8a8-bf8a-7ad06ad0466e@milecki.pl>
  <94250925-7d5d-ac31-58ad-918406d904f1@gmail.com>
  <cd324440-ad88-0981-1577-822d39ee289d@gmail.com>
  <221a0208-8a64-6bd8-f6b2-39e845520a83@gmail.com>
+ <ab696d24-3544-a554-82d1-18839b29caa0@milecki.pl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <221a0208-8a64-6bd8-f6b2-39e845520a83@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Florian Fainelli <f.fainelli@gmail.com>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Hauke Mehrtens <hauke@hauke-m.de>, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list@broadcom.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <ab696d24-3544-a554-82d1-18839b29caa0-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T24gMDQvMTkvMjAxNyAwNzo1MiBQTSwgRmxvcmlhbiBGYWluZWxsaSB3cm90ZToKPiBPbiAwNC8x
-OS8yMDE3IDEwOjM1IEFNLCBSYWZhxYIgTWnFgmVja2kgd3JvdGU6Cj4+IE9uIDA0LzE5LzIwMTcg
-MDY6NDMgUE0sIEZsb3JpYW4gRmFpbmVsbGkgd3JvdGU6Cj4+PiBPbiAwNC8wMi8yMDE3IDAyOjI1
-IFBNLCBSYWZhxYIgTWnFgmVja2kgd3JvdGU6Cj4+Pj4gT24gMDQvMDIvMjAxNyAxMToxNCBQTSwg
-RmxvcmlhbiBGYWluZWxsaSB3cm90ZToKPj4+Pj4gTGUgMDQvMDIvMTcgw6AgMTQ6MDgsIFJhZmHF
-giBNacWCZWNraSBhIMOpY3JpdCA6Cj4+Pj4+PiBGcm9tOiBSYWZhxYIgTWnFgmVja2kgPHJhZmFs
-QG1pbGVja2kucGw+Cj4+Pj4+Pgo+Pj4+Pj4gTm9ydGhzdGFyIGRldmljZXMgaGF2ZSBNRElPIGJ1
-cyB0aGF0IG1heSBjb250YWluIHZhcmlvdXMgUEhZcwo+Pj4+Pj4gYXR0YWNoZWQuCj4+Pj4+PiBB
-IGNvbW1vbiBleGFtcGxlIGlzIFVTQiAzLjAgUEhZICh0aGF0IGRvZXNuJ3QgaGF2ZSBhbiBNRElP
-IGRyaXZlcgo+Pj4+Pj4geWV0KS4KPj4+Pj4+Cj4+Pj4+PiBTaWduZWQtb2ZmLWJ5OiBSYWZhxYIg
-TWnFgmVja2kgPHJhZmFsQG1pbGVja2kucGw+Cj4+Pj4+PiAtLS0KPj4+Pj4+ICBhcmNoL2FybS9i
-b290L2R0cy9iY201MzAxeC5kdHNpIHwgNyArKysrKysrCj4+Pj4+PiAgMSBmaWxlIGNoYW5nZWQs
-IDcgaW5zZXJ0aW9ucygrKQo+Pj4+Pj4KPj4+Pj4+IGRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290
-L2R0cy9iY201MzAxeC5kdHNpCj4+Pj4+PiBiL2FyY2gvYXJtL2Jvb3QvZHRzL2JjbTUzMDF4LmR0
-c2kKPj4+Pj4+IGluZGV4IGFjZWUzNmE2MTAwNC4uNmEyYWZlNzg4MGFlIDEwMDY0NAo+Pj4+Pj4g
-LS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvYmNtNTMwMXguZHRzaQo+Pj4+Pj4gKysrIGIvYXJjaC9h
-cm0vYm9vdC9kdHMvYmNtNTMwMXguZHRzaQo+Pj4+Pj4gQEAgLTMyMCw2ICszMjAsMTMgQEAKPj4+
-Pj4+ICAgICAgICAgIH07Cj4+Pj4+PiAgICAgIH07Cj4+Pj4+Pgo+Pj4+Pj4gKyAgICBtZGlvQDE4
-MDAzMDAwIHsKPj4+Pj4+ICsgICAgICAgIGNvbXBhdGlibGUgPSAiYnJjbSxpcHJvYy1tZGlvIjsK
-Pj4+Pj4+ICsgICAgICAgIHJlZyA9IDwweDE4MDAzMDAwIDB4OD47Cj4+Pj4+PiArICAgICAgICAj
-c2l6ZS1jZWxscyA9IDwxPjsKPj4+Pj4+ICsgICAgICAgICNhZGRyZXNzLWNlbGxzID0gPDA+Owo+
-Pj4+Pj4gKyAgICB9Owo+Pj4+Pgo+Pj4+PiBUaGlzIGxvb2tzIGZpbmUsIGJ1dCB1c3VhbGx5IHRo
-ZSBibG9jayBzaG91bGQgYmUgZW5hYmxlZCBvbiBhIHBlci1ib2FyZAo+Pj4+PiBiYXNpcywgc3Vj
-aCB0aGF0IHRoZXJlIHNob3VsZCBiZSBhIHN0YXR1cyA9ICJkaXNhYmxlZCIgcHJvcGVydHkgaGVy
-ZSBieQo+Pj4+PiBkZWZhdWx0Lgo+Pj4+Cj4+Pj4gSSB0aGluayB3ZSBoYXZlIGZldyBibG9ja3Mg
-aW4gYmNtNTMwMXguZHRzaSBlbmFibGVkIGJ5IGRlZmF1bHQuIEkgZ3Vlc3MKPj4+PiBpdCdzCj4+
-Pj4gZm9yIHN0dWZmIHRoYXQgaXMgYWx3YXlzIHByZXNlbnQgb24gZXZlcnkgU29DIGZhbWlseSBi
-b2FyZDogcm5nLCBuYW5kLAo+Pj4+IHNwaSB0bwo+Pj4+IG5hbWUgZmV3Lgo+Pj4+Cj4+Pj4gSXQg
-bWFrZXMgc29tZSBzZW5zZSwgY29uc2lkZXIgZS5nLiBzcGkuIEV2ZXJ5IE5vcnRoc3RhciBib2Fy
-ZCBoYXMgU1BJCj4+Pj4gY29udHJvbGxlciBzbyBpdCdzIGVuYWJsZWQgYnkgZGVmYXVsdC4gTm90
-IGV2ZXJ5IGJvYXJkIGhhcyBTUEkgZmxhc2gsIHNvCj4+Pj4gaXQncwo+Pj4+IGRpc2FibGVkIGJ5
-IGRlZmF1bHQuCj4+Pj4KPj4+PiBJdCdzIHRoZXJlIGFuZCBpdCBtYWtlIHNlbnNlIHRvIG1lLiBJ
-cyB0aGF0IE9LIG9yIG5vdD8KPj4+Cj4+PiBFdmVuIHRob3VnaCB0aGVyZSBhcmUgZGV2aWNlcyB0
-aGF0IGFyZSBhbHdheXMgZW5hYmxlZCBvbiBhIGdpdmVuIFNvQywKPj4+IGJlY2F1c2UgdGhlIGJv
-YXJkIGRlc2lnbnMgYXJlIGFsd2F5cyBjb25zaXN0ZW50IGRvZXMgbm90IG5lY2Vzc2FyaWx5Cj4+
-PiBtYWtlIHRoZW0gZ29vZCBjYW5kaWRhdGVzIHRvIGJlIGVuYWJsZWQgYXQgdGhlIC5kdHNpIGxl
-dmVsLiBUaGlzIGlzCj4+PiBwYXJ0aWN1bGFybHkgdHJ1ZSB3aGVuIHRoZXJlIGFyZSBleHRlcm5h
-bCBjb25uZWN0aW9ucyB0byBibG9ja3MgKFNQSSwKPj4+IE5BTkQsIFVTQiwgRXRoZXJuZXQsIE1E
-SU8gdG8gbmFtZSBhIGZldyksIGhhdmluZyB0aGVtIGRpc2FibGVkIGJ5Cj4+PiBkZWZhdWx0IGlz
-IHNhZmVyIGFzIGEgc3RhcnRpbmcgcG9pbnQgdG8gYmVnaW4gd2l0aC4KPj4KPj4gSW4gY2FzZSBv
-ZiBOb3J0aHN0YXIgdGhlcmUgaXMgVVNCIDMuMCBQSFkgY29ubmVjdGVkICppbnRlcm5hbGx5KiB0
-byB0aGlzCj4+IE1ESU8uCj4+IEkgZG9uJ3QgdGhpbmsgYW55IGJvYXJkIG1hbnVmYWN0dXJlciBp
-cyBhYmxlIHRvIHJpcCBTb0Mgb3V0IG9mIHRoZSBNRElPCj4+IG9yIHRoZQo+PiBVU0IgMy4wIFBI
-WS4KPgo+IE9LLCB0aGVuIGNhbiB5b3Ugc3RpbGwgcmVzdWJtaXQgYSBwcm9wZXIgcGF0Y2ggdGhh
-dCBhKSBwdXRzIHRoYXQKPiBpbmZvcm1hdGlvbiBpbiB0aGUgY29tbWl0IG1lc3NhZ2UsIGFuZCBi
-KSBhbHNvIGFkZHMgYSBwcm9wZXIgbGFiZWwgdG8KPiB0aGUgbWRpbyBub2RlIHN1Y2ggdGhhdCBp
-dCBjYW4gbGF0ZXIgb24gYmUgcmVmZXJlbmNlZCBieSBsYWJlbCBpbgo+IGJvYXJkLWxldmVsIERU
-UyBmaWxlcz8gQnkgdGhhdCBJIG1lYW46Cj4KPiBtZGlvOiBtZGlvQDE4MDAzMDAwIHsKPgo+IFRo
-YW5rIHlvdQo+Cj4+Cj4+Cj4+Pj4gSSBmaW5kIE1ESU8gc2l0dWF0aW9uIHF1aXRlIHNpbWlhci4g
-SXQgc2VlbXMgZXZlcnkgTm9ydGhzdGFyIGJvYXJkIGhhcwo+Pj4+IE1ESU8gYnVzCj4+Pj4ganVz
-dCBkZXZpY2VzIG1heSBkaWZmZXIgYW5kIHNob3VsZCBub3QgYmUgZW5hYmxlZCBieSBkZWZhdWx0
-Lgo+Pj4KPj4+IEluIHdoaWNoIGNhc2UsIHRoZSBvbmx5IGRpZmZlcmVuY2UsIGZvciB5b3Ugd291
-bGQgYmUgdG8gZG8gdG8sIGF0IHRoZQo+Pj4gYm9hcmQtbGV2ZWwgRFRTOgo+Pj4KPj4+ICZtZGlv
-IHsKPj4+ICAgICBzdGF0dXMgPSAib2theSI7Cj4+Pgo+Pj4gICAgIHBoeUAwIHsKPj4+ICAgICAg
-ICAgcmVnID0gPDA+Owo+Pj4gICAgICAgICAuLi4KPj4+ICAgICB9Owo+Pj4gfTsKPj4+Cj4+PiB2
-ZXJzdXM6Cj4+Pgo+Pj4gJm1kaW8gewo+Pj4gICAgIHBoeUAwIHsKPj4+ICAgICAgICAgcmVnID0g
-PDA+Owo+Pj4gICAgICAgICAuLi4KPj4+ICAgICB9Owo+Pj4gfTsKPj4+Cj4+PiBJIHRoaW5rIHdl
-IGNhbiBhZmZvcmQgcHV0dGluZyB0aGUgbWRpbyBub2RlJ3Mgc3RhdHVzIHByb3BlcnR5IGluIGVh
-Y2gKPj4+IGJvYXJkLWxldmVsIERUUyBhbmQgbWFrZSBpdCBjbGVhciB0aGF0IHdheSB0aGF0IGl0
-IGlzIGVuYWJsZWQgYmVjYXVzZQo+Pj4gdGhlcmUgYXJlIGNoaWxkIG5vZGVzIGVuYWJsZWQ/Cj4+
-Cj4+IFRoaXMgd2lsbCBiZSBhIHByZXR0eSBiaWcgZWZmb3J0IGJlY2F1c2UgZXZlcnkgTm9ydGhz
-dGFyIGRldmljZSBJIGtub3cKPj4gaGFzIFVTQgo+PiAzLjAgUEhZIGluIHRoZSBTb0MuCj4KPiBB
-ZGRpbmcgYSBvbmUgbGluZXIgaXMgYSAicHJldHR5IGJpZyBlZmZvcnQiLCBmb3Igc3VyZS4KClNv
-cnJ5LCB3ZSBnb3QgYSBtaXN1bmRlcnN0YW5kaW5nIGhlcmUuCgpJIHRob3VnaHQgeW91IG1lYW50
-IGFkZGluZyBzb21ldGhpbmcgbGlrZSB0aGlzIGZvciBldmVyeSBkZXZpY2U6CgombWRpbyB7Cglz
-dGF0dXMgPSAib2theSI7CgoJdXNiM19waHk6IHVzYi1waHlAMTAgewoJCWNvbXBhdGlibGUgPSAi
-YnJjbSxucy1heC11c2IzLXBoeSI7CgkJcmVnID0gPDB4MTA+OwoJCXVzYjMtZG1wLXN5c2NvbiA9
-IDwmdXNiM19kbXA+OwoJCSNwaHktY2VsbHMgPSA8MD47Cgl9Owp9OwoKdXNiM19kbXA6IHN5c2Nv
-bkAxODEwNTAwMCB7CglyZWcgPSA8MHgxODEwNTAwMCAweDEwMDA+Owp9OwoKU28gSSBjbGVhcmx5
-IG1pc3NlZCBzb21ldGhpbmcgaW1wb3J0YW50LiBEaWQgeW91IHdhbnQgdG8gaGF2ZSBVU0IgMy4w
-IFBIWQpkZWZpbmVkIGluIHRoZSBkdHNpIGZpbGU/CgpfX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51
-eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5v
-cmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+On 04/19/2017 11:10 AM, Rafał Miłecki wrote:
+> On 04/19/2017 07:52 PM, Florian Fainelli wrote:
+>> On 04/19/2017 10:35 AM, Rafał Miłecki wrote:
+>>> On 04/19/2017 06:43 PM, Florian Fainelli wrote:
+>>>> On 04/02/2017 02:25 PM, Rafał Miłecki wrote:
+>>>>> On 04/02/2017 11:14 PM, Florian Fainelli wrote:
+>>>>>> Le 04/02/17 à 14:08, Rafał Miłecki a écrit :
+>>>>>>> From: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+>>>>>>>
+>>>>>>> Northstar devices have MDIO bus that may contain various PHYs
+>>>>>>> attached.
+>>>>>>> A common example is USB 3.0 PHY (that doesn't have an MDIO driver
+>>>>>>> yet).
+>>>>>>>
+>>>>>>> Signed-off-by: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+>>>>>>> ---
+>>>>>>>  arch/arm/boot/dts/bcm5301x.dtsi | 7 +++++++
+>>>>>>>  1 file changed, 7 insertions(+)
+>>>>>>>
+>>>>>>> diff --git a/arch/arm/boot/dts/bcm5301x.dtsi
+>>>>>>> b/arch/arm/boot/dts/bcm5301x.dtsi
+>>>>>>> index acee36a61004..6a2afe7880ae 100644
+>>>>>>> --- a/arch/arm/boot/dts/bcm5301x.dtsi
+>>>>>>> +++ b/arch/arm/boot/dts/bcm5301x.dtsi
+>>>>>>> @@ -320,6 +320,13 @@
+>>>>>>>          };
+>>>>>>>      };
+>>>>>>>
+>>>>>>> +    mdio@18003000 {
+>>>>>>> +        compatible = "brcm,iproc-mdio";
+>>>>>>> +        reg = <0x18003000 0x8>;
+>>>>>>> +        #size-cells = <1>;
+>>>>>>> +        #address-cells = <0>;
+>>>>>>> +    };
+>>>>>>
+>>>>>> This looks fine, but usually the block should be enabled on a
+>>>>>> per-board
+>>>>>> basis, such that there should be a status = "disabled" property
+>>>>>> here by
+>>>>>> default.
+>>>>>
+>>>>> I think we have few blocks in bcm5301x.dtsi enabled by default. I
+>>>>> guess
+>>>>> it's
+>>>>> for stuff that is always present on every SoC family board: rng, nand,
+>>>>> spi to
+>>>>> name few.
+>>>>>
+>>>>> It makes some sense, consider e.g. spi. Every Northstar board has SPI
+>>>>> controller so it's enabled by default. Not every board has SPI
+>>>>> flash, so
+>>>>> it's
+>>>>> disabled by default.
+>>>>>
+>>>>> It's there and it make sense to me. Is that OK or not?
+>>>>
+>>>> Even though there are devices that are always enabled on a given SoC,
+>>>> because the board designs are always consistent does not necessarily
+>>>> make them good candidates to be enabled at the .dtsi level. This is
+>>>> particularly true when there are external connections to blocks (SPI,
+>>>> NAND, USB, Ethernet, MDIO to name a few), having them disabled by
+>>>> default is safer as a starting point to begin with.
+>>>
+>>> In case of Northstar there is USB 3.0 PHY connected *internally* to this
+>>> MDIO.
+>>> I don't think any board manufacturer is able to rip SoC out of the MDIO
+>>> or the
+>>> USB 3.0 PHY.
+>>
+>> OK, then can you still resubmit a proper patch that a) puts that
+>> information in the commit message, and b) also adds a proper label to
+>> the mdio node such that it can later on be referenced by label in
+>> board-level DTS files? By that I mean:
+>>
+>> mdio: mdio@18003000 {
+>>
+>> Thank you
+>>
+>>>
+>>>
+>>>>> I find MDIO situation quite simiar. It seems every Northstar board has
+>>>>> MDIO bus
+>>>>> just devices may differ and should not be enabled by default.
+>>>>
+>>>> In which case, the only difference, for you would be to do to, at the
+>>>> board-level DTS:
+>>>>
+>>>> &mdio {
+>>>>     status = "okay";
+>>>>
+>>>>     phy@0 {
+>>>>         reg = <0>;
+>>>>         ...
+>>>>     };
+>>>> };
+>>>>
+>>>> versus:
+>>>>
+>>>> &mdio {
+>>>>     phy@0 {
+>>>>         reg = <0>;
+>>>>         ...
+>>>>     };
+>>>> };
+>>>>
+>>>> I think we can afford putting the mdio node's status property in each
+>>>> board-level DTS and make it clear that way that it is enabled because
+>>>> there are child nodes enabled?
+>>>
+>>> This will be a pretty big effort because every Northstar device I know
+>>> has USB
+>>> 3.0 PHY in the SoC.
+>>
+>> Adding a one liner is a "pretty big effort", for sure.
+> 
+> Sorry, we got a misunderstanding here.
+> 
+> I thought you meant adding something like this for every device:
+> 
+> &mdio {
+>     status = "okay";
+> 
+>     usb3_phy: usb-phy@10 {
+>         compatible = "brcm,ns-ax-usb3-phy";
+>         reg = <0x10>;
+>         usb3-dmp-syscon = <&usb3_dmp>;
+>         #phy-cells = <0>;
+>     };
+> };
+
+Ah no, I would have just done the following in the per-board DTS:
+
+&mdio {
+	status = "okay";
+};
+
+&usb3_phy {
+	status = "okay";
+};
+
+&xhci {
+	status = "okay";
+};
+
+Something like that.
+
+> 
+> usb3_dmp: syscon@18105000 {
+>     reg = <0x18105000 0x1000>;
+> };
+> 
+> So I clearly missed something important. Did you want to have USB 3.0 PHY
+> defined in the dtsi file?
+
+Yes, I think it does make sense to have it defined in the .dtsi file
+because it's internal to the SoC, however it should probably be marked
+disabled by default, unless a board enables its xHCI controller, does
+that make sense?
+-- 
+Florian
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
