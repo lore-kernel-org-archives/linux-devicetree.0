@@ -1,78 +1,102 @@
-From: Eric Anholt <eric@anholt.net>
-Subject: Re: [PATCH 2/3] drm/vc4: Don't try to initialize FBDEV if we're only
- bound to V3D.
-Date: Wed, 19 Apr 2017 10:55:31 -0700
-Message-ID: <8760i046zw.fsf@eliezer.anholt.net>
-References: <20170418191157.18517-1-eric@anholt.net>
- <20170418191157.18517-2-eric@anholt.net>
- <CAKMK7uFSsA3c+wMfq_O9kSvu0cWLUA-bRqTHyryqi+1ZVeir_w@mail.gmail.com>
+From: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>
+Subject: Re: [PATCH] ARM: dts: BCM5301X: Specify MDIO bus in the DT
+Date: Wed, 19 Apr 2017 20:10:02 +0200
+Message-ID: <ab696d24-3544-a554-82d1-18839b29caa0@milecki.pl>
+References: <20170402210840.11429-1-zajec5@gmail.com>
+ <5a6ecda9-2cf6-2171-7210-6b3a1d4c6012@gmail.com>
+ <c3a0455a-821f-d8a8-bf8a-7ad06ad0466e@milecki.pl>
+ <94250925-7d5d-ac31-58ad-918406d904f1@gmail.com>
+ <cd324440-ad88-0981-1577-822d39ee289d@gmail.com>
+ <221a0208-8a64-6bd8-f6b2-39e845520a83@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1681970871=="
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <CAKMK7uFSsA3c+wMfq_O9kSvu0cWLUA-bRqTHyryqi+1ZVeir_w@mail.gmail.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Daniel Vetter <daniel@ffwll.ch>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <221a0208-8a64-6bd8-f6b2-39e845520a83@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Florian Fainelli <f.fainelli@gmail.com>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Hauke Mehrtens <hauke@hauke-m.de>, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list@broadcom.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
---===============1681970871==
-Content-Type: multipart/signed; boundary="=-=-=";
-	micalg=pgp-sha512; protocol="application/pgp-signature"
-
---=-=-=
-Content-Type: text/plain
-
-Daniel Vetter <daniel@ffwll.ch> writes:
-
-> On Tue, Apr 18, 2017 at 9:11 PM, Eric Anholt <eric@anholt.net> wrote:
->> The FBDEV initialization would throw an error in dmesg, when we just
->> want to silently not initialize fbdev on a V3D-only VC4 instance.
->>
->> Signed-off-by: Eric Anholt <eric@anholt.net>
->
-> Hm, this shouldn't be an error really, you might want to hotplug more
-> connectors later on. What exactly complains?
-
-drm_fb_helper_init() throws an error if the passed in connector count is
-0, so drm_fb_cma_helper() printks an error.
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE/JuuFDWp9/ZkuCBXtdYpNtH8nugFAlj3pJMACgkQtdYpNtH8
-nujfMA/+JBynPdfY/qNyvUQ6z3JU/2H9meAiKvhua14mirgn3jzq6DjnYYMQe5XM
-8ueAV1X8fX6jy4udBFGw19nxGeBcrKwg6eT0HICZzIwADVmfO6m+GgnAiXcwkc+k
-Pn4uEdzSyTozxix7MGNz2GEQWByepy28KxVib/SCPcd6FGteSH5vEsWQh/DuQkSN
-Fs3fW3R0LS9Cd25Hci5630jQfNujlbSNzO9u4UxYtGL/dEoZ/7AIsu/I8sX00OGU
-UAYImL0SrbjoiFKNQru52dPqWf/m5pAmRai6ZZaLjaVcTC011+SLilyqP4AtdSWm
-fmoUVeSyrlb8AXDMDpK5tqyrkVDhC/2F7ZrSUFs6xxZWxA/usLkM5AKMv9A9rNOH
-YmF3PNkBZuP9jYNZF4zi3s8YWzZFS8gcNoynnLNcHKQ5RSOIheoeCHYBqHq4IqR9
-gxKfnldC2m0ovCS39nM7R5kZ5wtq2u+VLPxGiKleE/yZ/LFNGkk2nsSDAiOnbzVC
-qWGrCS6jDQRvn9o0RBSgo9pwmIJ8d+5KzrwKWohnn+2MKZJ4cPAY9wfXrvjX9Bp8
-fTuchspswniPm7LcmvggUpRErHvKRXMO0aD17Au9ZE4n6I2thlIbhA4FQfESxLk8
-2H9cijNZXwLFoM0FFoFusRchx4eSo+tTLfJtXHaV+9jIfzkQEpw=
-=696r
------END PGP SIGNATURE-----
---=-=-=--
-
---===============1681970871==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: inline
-
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
-
---===============1681970871==--
+T24gMDQvMTkvMjAxNyAwNzo1MiBQTSwgRmxvcmlhbiBGYWluZWxsaSB3cm90ZToKPiBPbiAwNC8x
+OS8yMDE3IDEwOjM1IEFNLCBSYWZhxYIgTWnFgmVja2kgd3JvdGU6Cj4+IE9uIDA0LzE5LzIwMTcg
+MDY6NDMgUE0sIEZsb3JpYW4gRmFpbmVsbGkgd3JvdGU6Cj4+PiBPbiAwNC8wMi8yMDE3IDAyOjI1
+IFBNLCBSYWZhxYIgTWnFgmVja2kgd3JvdGU6Cj4+Pj4gT24gMDQvMDIvMjAxNyAxMToxNCBQTSwg
+RmxvcmlhbiBGYWluZWxsaSB3cm90ZToKPj4+Pj4gTGUgMDQvMDIvMTcgw6AgMTQ6MDgsIFJhZmHF
+giBNacWCZWNraSBhIMOpY3JpdCA6Cj4+Pj4+PiBGcm9tOiBSYWZhxYIgTWnFgmVja2kgPHJhZmFs
+QG1pbGVja2kucGw+Cj4+Pj4+Pgo+Pj4+Pj4gTm9ydGhzdGFyIGRldmljZXMgaGF2ZSBNRElPIGJ1
+cyB0aGF0IG1heSBjb250YWluIHZhcmlvdXMgUEhZcwo+Pj4+Pj4gYXR0YWNoZWQuCj4+Pj4+PiBB
+IGNvbW1vbiBleGFtcGxlIGlzIFVTQiAzLjAgUEhZICh0aGF0IGRvZXNuJ3QgaGF2ZSBhbiBNRElP
+IGRyaXZlcgo+Pj4+Pj4geWV0KS4KPj4+Pj4+Cj4+Pj4+PiBTaWduZWQtb2ZmLWJ5OiBSYWZhxYIg
+TWnFgmVja2kgPHJhZmFsQG1pbGVja2kucGw+Cj4+Pj4+PiAtLS0KPj4+Pj4+ICBhcmNoL2FybS9i
+b290L2R0cy9iY201MzAxeC5kdHNpIHwgNyArKysrKysrCj4+Pj4+PiAgMSBmaWxlIGNoYW5nZWQs
+IDcgaW5zZXJ0aW9ucygrKQo+Pj4+Pj4KPj4+Pj4+IGRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290
+L2R0cy9iY201MzAxeC5kdHNpCj4+Pj4+PiBiL2FyY2gvYXJtL2Jvb3QvZHRzL2JjbTUzMDF4LmR0
+c2kKPj4+Pj4+IGluZGV4IGFjZWUzNmE2MTAwNC4uNmEyYWZlNzg4MGFlIDEwMDY0NAo+Pj4+Pj4g
+LS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvYmNtNTMwMXguZHRzaQo+Pj4+Pj4gKysrIGIvYXJjaC9h
+cm0vYm9vdC9kdHMvYmNtNTMwMXguZHRzaQo+Pj4+Pj4gQEAgLTMyMCw2ICszMjAsMTMgQEAKPj4+
+Pj4+ICAgICAgICAgIH07Cj4+Pj4+PiAgICAgIH07Cj4+Pj4+Pgo+Pj4+Pj4gKyAgICBtZGlvQDE4
+MDAzMDAwIHsKPj4+Pj4+ICsgICAgICAgIGNvbXBhdGlibGUgPSAiYnJjbSxpcHJvYy1tZGlvIjsK
+Pj4+Pj4+ICsgICAgICAgIHJlZyA9IDwweDE4MDAzMDAwIDB4OD47Cj4+Pj4+PiArICAgICAgICAj
+c2l6ZS1jZWxscyA9IDwxPjsKPj4+Pj4+ICsgICAgICAgICNhZGRyZXNzLWNlbGxzID0gPDA+Owo+
+Pj4+Pj4gKyAgICB9Owo+Pj4+Pgo+Pj4+PiBUaGlzIGxvb2tzIGZpbmUsIGJ1dCB1c3VhbGx5IHRo
+ZSBibG9jayBzaG91bGQgYmUgZW5hYmxlZCBvbiBhIHBlci1ib2FyZAo+Pj4+PiBiYXNpcywgc3Vj
+aCB0aGF0IHRoZXJlIHNob3VsZCBiZSBhIHN0YXR1cyA9ICJkaXNhYmxlZCIgcHJvcGVydHkgaGVy
+ZSBieQo+Pj4+PiBkZWZhdWx0Lgo+Pj4+Cj4+Pj4gSSB0aGluayB3ZSBoYXZlIGZldyBibG9ja3Mg
+aW4gYmNtNTMwMXguZHRzaSBlbmFibGVkIGJ5IGRlZmF1bHQuIEkgZ3Vlc3MKPj4+PiBpdCdzCj4+
+Pj4gZm9yIHN0dWZmIHRoYXQgaXMgYWx3YXlzIHByZXNlbnQgb24gZXZlcnkgU29DIGZhbWlseSBi
+b2FyZDogcm5nLCBuYW5kLAo+Pj4+IHNwaSB0bwo+Pj4+IG5hbWUgZmV3Lgo+Pj4+Cj4+Pj4gSXQg
+bWFrZXMgc29tZSBzZW5zZSwgY29uc2lkZXIgZS5nLiBzcGkuIEV2ZXJ5IE5vcnRoc3RhciBib2Fy
+ZCBoYXMgU1BJCj4+Pj4gY29udHJvbGxlciBzbyBpdCdzIGVuYWJsZWQgYnkgZGVmYXVsdC4gTm90
+IGV2ZXJ5IGJvYXJkIGhhcyBTUEkgZmxhc2gsIHNvCj4+Pj4gaXQncwo+Pj4+IGRpc2FibGVkIGJ5
+IGRlZmF1bHQuCj4+Pj4KPj4+PiBJdCdzIHRoZXJlIGFuZCBpdCBtYWtlIHNlbnNlIHRvIG1lLiBJ
+cyB0aGF0IE9LIG9yIG5vdD8KPj4+Cj4+PiBFdmVuIHRob3VnaCB0aGVyZSBhcmUgZGV2aWNlcyB0
+aGF0IGFyZSBhbHdheXMgZW5hYmxlZCBvbiBhIGdpdmVuIFNvQywKPj4+IGJlY2F1c2UgdGhlIGJv
+YXJkIGRlc2lnbnMgYXJlIGFsd2F5cyBjb25zaXN0ZW50IGRvZXMgbm90IG5lY2Vzc2FyaWx5Cj4+
+PiBtYWtlIHRoZW0gZ29vZCBjYW5kaWRhdGVzIHRvIGJlIGVuYWJsZWQgYXQgdGhlIC5kdHNpIGxl
+dmVsLiBUaGlzIGlzCj4+PiBwYXJ0aWN1bGFybHkgdHJ1ZSB3aGVuIHRoZXJlIGFyZSBleHRlcm5h
+bCBjb25uZWN0aW9ucyB0byBibG9ja3MgKFNQSSwKPj4+IE5BTkQsIFVTQiwgRXRoZXJuZXQsIE1E
+SU8gdG8gbmFtZSBhIGZldyksIGhhdmluZyB0aGVtIGRpc2FibGVkIGJ5Cj4+PiBkZWZhdWx0IGlz
+IHNhZmVyIGFzIGEgc3RhcnRpbmcgcG9pbnQgdG8gYmVnaW4gd2l0aC4KPj4KPj4gSW4gY2FzZSBv
+ZiBOb3J0aHN0YXIgdGhlcmUgaXMgVVNCIDMuMCBQSFkgY29ubmVjdGVkICppbnRlcm5hbGx5KiB0
+byB0aGlzCj4+IE1ESU8uCj4+IEkgZG9uJ3QgdGhpbmsgYW55IGJvYXJkIG1hbnVmYWN0dXJlciBp
+cyBhYmxlIHRvIHJpcCBTb0Mgb3V0IG9mIHRoZSBNRElPCj4+IG9yIHRoZQo+PiBVU0IgMy4wIFBI
+WS4KPgo+IE9LLCB0aGVuIGNhbiB5b3Ugc3RpbGwgcmVzdWJtaXQgYSBwcm9wZXIgcGF0Y2ggdGhh
+dCBhKSBwdXRzIHRoYXQKPiBpbmZvcm1hdGlvbiBpbiB0aGUgY29tbWl0IG1lc3NhZ2UsIGFuZCBi
+KSBhbHNvIGFkZHMgYSBwcm9wZXIgbGFiZWwgdG8KPiB0aGUgbWRpbyBub2RlIHN1Y2ggdGhhdCBp
+dCBjYW4gbGF0ZXIgb24gYmUgcmVmZXJlbmNlZCBieSBsYWJlbCBpbgo+IGJvYXJkLWxldmVsIERU
+UyBmaWxlcz8gQnkgdGhhdCBJIG1lYW46Cj4KPiBtZGlvOiBtZGlvQDE4MDAzMDAwIHsKPgo+IFRo
+YW5rIHlvdQo+Cj4+Cj4+Cj4+Pj4gSSBmaW5kIE1ESU8gc2l0dWF0aW9uIHF1aXRlIHNpbWlhci4g
+SXQgc2VlbXMgZXZlcnkgTm9ydGhzdGFyIGJvYXJkIGhhcwo+Pj4+IE1ESU8gYnVzCj4+Pj4ganVz
+dCBkZXZpY2VzIG1heSBkaWZmZXIgYW5kIHNob3VsZCBub3QgYmUgZW5hYmxlZCBieSBkZWZhdWx0
+Lgo+Pj4KPj4+IEluIHdoaWNoIGNhc2UsIHRoZSBvbmx5IGRpZmZlcmVuY2UsIGZvciB5b3Ugd291
+bGQgYmUgdG8gZG8gdG8sIGF0IHRoZQo+Pj4gYm9hcmQtbGV2ZWwgRFRTOgo+Pj4KPj4+ICZtZGlv
+IHsKPj4+ICAgICBzdGF0dXMgPSAib2theSI7Cj4+Pgo+Pj4gICAgIHBoeUAwIHsKPj4+ICAgICAg
+ICAgcmVnID0gPDA+Owo+Pj4gICAgICAgICAuLi4KPj4+ICAgICB9Owo+Pj4gfTsKPj4+Cj4+PiB2
+ZXJzdXM6Cj4+Pgo+Pj4gJm1kaW8gewo+Pj4gICAgIHBoeUAwIHsKPj4+ICAgICAgICAgcmVnID0g
+PDA+Owo+Pj4gICAgICAgICAuLi4KPj4+ICAgICB9Owo+Pj4gfTsKPj4+Cj4+PiBJIHRoaW5rIHdl
+IGNhbiBhZmZvcmQgcHV0dGluZyB0aGUgbWRpbyBub2RlJ3Mgc3RhdHVzIHByb3BlcnR5IGluIGVh
+Y2gKPj4+IGJvYXJkLWxldmVsIERUUyBhbmQgbWFrZSBpdCBjbGVhciB0aGF0IHdheSB0aGF0IGl0
+IGlzIGVuYWJsZWQgYmVjYXVzZQo+Pj4gdGhlcmUgYXJlIGNoaWxkIG5vZGVzIGVuYWJsZWQ/Cj4+
+Cj4+IFRoaXMgd2lsbCBiZSBhIHByZXR0eSBiaWcgZWZmb3J0IGJlY2F1c2UgZXZlcnkgTm9ydGhz
+dGFyIGRldmljZSBJIGtub3cKPj4gaGFzIFVTQgo+PiAzLjAgUEhZIGluIHRoZSBTb0MuCj4KPiBB
+ZGRpbmcgYSBvbmUgbGluZXIgaXMgYSAicHJldHR5IGJpZyBlZmZvcnQiLCBmb3Igc3VyZS4KClNv
+cnJ5LCB3ZSBnb3QgYSBtaXN1bmRlcnN0YW5kaW5nIGhlcmUuCgpJIHRob3VnaHQgeW91IG1lYW50
+IGFkZGluZyBzb21ldGhpbmcgbGlrZSB0aGlzIGZvciBldmVyeSBkZXZpY2U6CgombWRpbyB7Cglz
+dGF0dXMgPSAib2theSI7CgoJdXNiM19waHk6IHVzYi1waHlAMTAgewoJCWNvbXBhdGlibGUgPSAi
+YnJjbSxucy1heC11c2IzLXBoeSI7CgkJcmVnID0gPDB4MTA+OwoJCXVzYjMtZG1wLXN5c2NvbiA9
+IDwmdXNiM19kbXA+OwoJCSNwaHktY2VsbHMgPSA8MD47Cgl9Owp9OwoKdXNiM19kbXA6IHN5c2Nv
+bkAxODEwNTAwMCB7CglyZWcgPSA8MHgxODEwNTAwMCAweDEwMDA+Owp9OwoKU28gSSBjbGVhcmx5
+IG1pc3NlZCBzb21ldGhpbmcgaW1wb3J0YW50LiBEaWQgeW91IHdhbnQgdG8gaGF2ZSBVU0IgMy4w
+IFBIWQpkZWZpbmVkIGluIHRoZSBkdHNpIGZpbGU/CgpfX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51
+eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5v
+cmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
