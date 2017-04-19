@@ -1,8 +1,8 @@
 From: Guillaume Tucker <guillaume.tucker@collabora.com>
-Subject: [PATCH v3 4/5] ARM: dts: rockchip: enable ARM Mali GPU on
- rk3288-firefly
-Date: Wed, 19 Apr 2017 09:06:20 +0100
-Message-ID: <db2cd08e603735413175f32dc037abe78216cc6b.1492588180.git.guillaume.tucker@collabora.com>
+Subject: [PATCH v3 3/5] ARM: dts: rockchip: enable ARM Mali GPU on
+ rk3288-rock2-som
+Date: Wed, 19 Apr 2017 09:06:19 +0100
+Message-ID: <11c4daa7aa88eb8c960ef02e88258ec67f58f0ea.1492588180.git.guillaume.tucker@collabora.com>
 References: <cover.1492588180.git.guillaume.tucker@collabora.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -24,19 +24,19 @@ To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, =?UTF
 Cc: devicetree@vger.kernel.org, Guillaume Tucker <guillaume.tucker@collabora.com>, Sjoerd Simons <sjoerd.simons@collabora.com>, Wookey <wookey@wookware.org>, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, John Reitan <john.reitan@arm.com>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add reference to the Mali GPU device tree node on rk3288-firefly.
-Tested on Firefly board.
+Add reference to the Mali GPU device tree node on the
+rk3288-rock2-som platform.  Tested on a Radxa Rock2 Square board.
 
 Signed-off-by: Guillaume Tucker <guillaume.tucker@collabora.com>
 ---
- arch/arm/boot/dts/rk3288-firefly.dtsi | 5 +++++
+ arch/arm/boot/dts/rk3288-rock2-som.dtsi | 5 +++++
  1 file changed, 5 insertions(+)
 
-diff --git a/arch/arm/boot/dts/rk3288-firefly.dtsi b/arch/arm/boot/dts/rk3288-firefly.dtsi
-index 10793ac18599..f520589493b4 100644
---- a/arch/arm/boot/dts/rk3288-firefly.dtsi
-+++ b/arch/arm/boot/dts/rk3288-firefly.dtsi
-@@ -594,3 +594,8 @@
+diff --git a/arch/arm/boot/dts/rk3288-rock2-som.dtsi b/arch/arm/boot/dts/rk3288-rock2-som.dtsi
+index 1c0bbc9b928b..f694867fa46a 100644
+--- a/arch/arm/boot/dts/rk3288-rock2-som.dtsi
++++ b/arch/arm/boot/dts/rk3288-rock2-som.dtsi
+@@ -301,3 +301,8 @@
  &wdt {
  	status = "okay";
  };
