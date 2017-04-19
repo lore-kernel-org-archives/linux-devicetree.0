@@ -1,35 +1,62 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 04/18] dt-bindings: syscon: Add DT
- bindings documentation for Allwinner syscon
-Date: Wed, 19 Apr 2017 16:06:21 -0500
-Message-ID: <20170419210621.h2ibdpdo3kpbimin@rob-hp-laptop>
-References: <20170412111400.2296-1-clabbe.montjoie@gmail.com>
- <20170412111400.2296-5-clabbe.montjoie@gmail.com>
-Reply-To: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+From: Tyrel Datwyler <tyreld@linux.vnet.ibm.com>
+Subject: Re: [PATCH] of: introduce event tracepoints for dynamic device_node
+ lifecyle
+Date: Wed, 19 Apr 2017 14:13:50 -0700
+Message-ID: <5aa699db-255a-773b-7d60-3c6f05e88050@linux.vnet.ibm.com>
+References: <1492475525-10827-1-git-send-email-tyreld@linux.vnet.ibm.com>
+ <CAL_Jsq+GRkssqcn0wGzMgQRUtT-BO4zNDyYE7u1Cr5EhADK1SQ@mail.gmail.com>
+ <CAOSf1CH8HgP0rKd0WCp87BADYcEGT5OCoq_yq+f3ZeoyTcXeng@mail.gmail.com>
+ <87y3uw66y5.fsf@concordia.ellerman.id.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDJIP47K7MERBT5C37DQKGQESCLFLBA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20170412111400.2296-5-clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, peppe.cavallaro-qxv4g6HH51o@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <87y3uw66y5.fsf@concordia.ellerman.id.au>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Michael Ellerman <mpe@ellerman.id.au>, Oliver O'Halloran <oohall@gmail.com>, Rob Herring <robh+dt@kernel.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, rostedt@goodmis.org, Ingo Molnar <mingo@redhat.com>, Tyrel Datwyler <tyreld@linux.vnet.ibm.com>, Nathan Fontenot <nfont@linux.vnet.ibm.com>, Frank Rowand <frowand.list@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 12, 2017 at 01:13:46PM +0200, Corentin Labbe wrote:
-> This patch adds documentation for Device-Tree bindings for the
-> syscon present in allwinner devices.
+On 04/19/2017 03:13 AM, Michael Ellerman wrote:
+> Oliver O'Halloran <oohall@gmail.com> writes:
 > 
-> Signed-off-by: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->  .../devicetree/bindings/misc/allwinner,syscon.txt     | 19 +++++++++++++++++++
->  1 file changed, 19 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/misc/allwinner,syscon.txt
+>> On Wed, Apr 19, 2017 at 2:46 AM, Rob Herring <robh+dt@kernel.org> wrote:
+>>> On Mon, Apr 17, 2017 at 7:32 PM, Tyrel Datwyler
+>>> <tyreld@linux.vnet.ibm.com> wrote:
+>>>> This patch introduces event tracepoints for tracking a device_nodes
+>>>> reference cycle as well as reconfig notifications generated in response
+>>>> to node/property manipulations.
+>>>>
+>>>> With the recent upstreaming of the refcount API several device_node
+>>>> underflows and leaks have come to my attention in the pseries (DLPAR) dynamic
+>>>> logical partitioning code (ie. POWER speak for hotplugging virtual and physcial
+>>>> resources at runtime such as cpus or IOAs). These tracepoints provide a
+>>>> easy and quick mechanism for validating the reference counting of
+>>>> device_nodes during their lifetime.
+>>>
+>>> Not really relevant for this patch, but since you are looking at
+>>> pseries and refcounting, the refcounting largely exists for pseries.
+>>> It's also hard to get right as this type of fix is fairly common. It's
+>>> now used for overlays, but we really probably only need to refcount
+>>> the overlays or changesets as a whole, not at a node level. If you
+>>> have any thoughts on how a different model of refcounting could work
+>>> for pseries, I'd like to discuss it.
+>>
+>> One idea I've been kicking around is differentiating short and long
+>> term references to a node.
+> 
+> I actually did this a long time ago, but balked at the size of the patch
+> to do the conversion. Let me see if I can find it lying around ...
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+It would be interesting to revisit this, and toss around any other ideas
+anyone may have.
+
+-Tyrel
+
+> 
+> cheers
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
