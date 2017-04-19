@@ -1,34 +1,53 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 1/4] dt-bindings: gpio - add exar to vendor prefixes
- list
-Date: Wed, 19 Apr 2017 16:48:56 -0500
-Message-ID: <20170419214856.syz6r5dsos76toma@rob-hp-laptop>
-References: <cover.1492077070.git.nandor.han@ge.com>
- <f02af49f4d72326c455c9137ffb2714e7236cbab.1492077070.git.nandor.han@ge.com>
+From: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH V2] ARM: dts: BCM5301X: Specify MDIO bus in the DT
+Date: Wed, 19 Apr 2017 23:54:25 +0200
+Message-ID: <20170419215425.14821-1-zajec5@gmail.com>
+References: <20170402210840.11429-1-zajec5@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <f02af49f4d72326c455c9137ffb2714e7236cbab.1492077070.git.nandor.han-JJi787mZWgc@public.gmane.org>
+In-Reply-To: <20170402210840.11429-1-zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Nandor Han <nandor.han-JJi787mZWgc@public.gmane.org>
-Cc: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, daniel.vetter-/w4YWyX8dFk@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 13, 2017 at 01:27:48PM +0300, Nandor Han wrote:
-> Add Exar Corporation to vendors list.
+From: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
 
-This patch has nothing to do with gpio, so that should be dropped from 
-the subject.
+Northstar devices have MDIO bus that may contain various PHYs attached.
+A common example is USB 3.0 PHY (that doesn't have an MDIO driver yet).
 
-> 
-> Signed-off-by: Nandor Han <nandor.han-JJi787mZWgc@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+Signed-off-by: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+---
+V2: Disable MDIO bus by default.
+    Add mdio label to allow enabling it easily per board
+---
+ arch/arm/boot/dts/bcm5301x.dtsi | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-Otherwise,
+diff --git a/arch/arm/boot/dts/bcm5301x.dtsi b/arch/arm/boot/dts/bcm5301x.dtsi
+index acee36a61004..1f34bc6905f2 100644
+--- a/arch/arm/boot/dts/bcm5301x.dtsi
++++ b/arch/arm/boot/dts/bcm5301x.dtsi
+@@ -320,6 +320,14 @@
+ 		};
+ 	};
+ 
++	mdio: mdio@18003000 {
++		compatible = "brcm,iproc-mdio";
++		reg = <0x18003000 0x8>;
++		#size-cells = <1>;
++		#address-cells = <0>;
++		status = "disabled";
++	};
++
+ 	i2c0: i2c@18009000 {
+ 		compatible = "brcm,iproc-i2c";
+ 		reg = <0x18009000 0x50>;
+-- 
+2.11.0
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
