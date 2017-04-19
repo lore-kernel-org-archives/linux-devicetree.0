@@ -1,53 +1,35 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 2/2] drm/panel: simple: add support for NLT
- NL192108AC18-02D
-Date: Wed, 19 Apr 2017 16:15:18 -0500
-Message-ID: <20170419211518.uie37orpqwda3qaa@rob-hp-laptop>
-References: <20170412171526.32393-1-l.stach@pengutronix.de>
- <20170412171526.32393-2-l.stach@pengutronix.de>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/2] dt-bindings: hwrng: Add Mediatek hardware random
+ generator bindings
+Date: Wed, 19 Apr 2017 16:23:25 -0500
+Message-ID: <20170419212325.y3t2vohmsuhet2xu@rob-hp-laptop>
+References: <1492067108-14748-1-git-send-email-sean.wang@mediatek.com>
+ <1492067108-14748-2-git-send-email-sean.wang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20170412171526.32393-2-l.stach@pengutronix.de>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Lucas Stach <l.stach@pengutronix.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, patchwork-lst@pengutronix.de, kernel@pengutronix.de
+In-Reply-To: <1492067108-14748-2-git-send-email-sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
+Cc: herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org, mpm-VDJrAJ4Gl5ZBDgjK7y7TUQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, prasannatsmkumar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, romain.perier-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, shannon.nelson-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org, weiyongjun1-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, keyhaede-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCBBcHIgMTIsIDIwMTcgYXQgMDc6MTU6MjZQTSArMDIwMCwgTHVjYXMgU3RhY2ggd3Jv
-dGU6Cj4gVGhpcyBhZGRzIHN1cHBvcnQgZm9yIHRoZSBOTFQgVGVjaG5vbG9naWVzIE5MMTkyMTA4
-QUMxOC0wMkQKPiAxNS42IiBMVkRTIEZ1bGxIRCBURlQgTENEIHBhbmVsLCB3aGljaCBjYW4gYmUg
-c3VwcG9ydGVkCj4gYnkgdGhlIHNpbXBsZSBwYW5lbCBkcml2ZXIuCj4gCj4gVGltaW5ncyBhcmUg
-dGFrZW4gZnJvbSB0aGUgcHJlbGltaW5hcnkgZGF0YXNoZWV0LCBhcyBhIGZpbmFsCj4gb25lIGlz
-IG5vdCB5ZXQgYXZhaWxhYmxlLgo+IAo+IFNpZ25lZC1vZmYtYnk6IEx1Y2FzIFN0YWNoIDxsLnN0
-YWNoQHBlbmd1dHJvbml4LmRlPgo+IC0tLQo+ICAuLi4vZGlzcGxheS9wYW5lbC9ubHQsbmwxOTIx
-MDhhYzE4LTAyZC50eHQgICAgICAgICB8ICA3ICsrKysrKwo+ICBkcml2ZXJzL2dwdS9kcm0vcGFu
-ZWwvcGFuZWwtc2ltcGxlLmMgICAgICAgICAgICAgICB8IDI5ICsrKysrKysrKysrKysrKysrKysr
-KysKPiAgMiBmaWxlcyBjaGFuZ2VkLCAzNiBpbnNlcnRpb25zKCspCj4gIGNyZWF0ZSBtb2RlIDEw
-MDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9ubHQs
-bmwxOTIxMDhhYzE4LTAyZC50eHQKPiAKPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZp
-Y2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvbmx0LG5sMTkyMTA4YWMxOC0wMmQudHh0IGIv
-RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvbmx0LG5sMTky
-MTA4YWMxOC0wMmQudHh0Cj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQKPiBpbmRleCAwMDAwMDAwMDAw
-MDAuLmVkYzM0ZmJkMjEzMQo+IC0tLSAvZGV2L251bGwKPiArKysgYi9Eb2N1bWVudGF0aW9uL2Rl
-dmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9ubHQsbmwxOTIxMDhhYzE4LTAyZC50eHQK
-PiBAQCAtMCwwICsxLDcgQEAKPiArTkxUIFRlY2hub2xvZ2llcywgTHRkLiAxNS42IiBGSEQgKDE5
-MjB4MTA4MCkgTFZEUyBURlQgTENEIHBhbmVsCj4gKwo+ICtSZXF1aXJlZCBwcm9wZXJ0aWVzOgo+
-ICstIGNvbXBhdGlibGU6IHNob3VsZCBiZSAibmx0LG5sMTkyMTA4YWMxOC0wMmQiCgpQbGVhc2Ug
-ZGVmaW5lIHRoZSBwb3dlciBzdXBwbHkuIElzIHBvd2VyLXN1cHBseSB1c2VkIG9yIGFyZSB0aGVy
-ZSAKbXVsdGlwbGUgc3VwcGxpZXM/Cgo+ICsKPiArVGhpcyBiaW5kaW5nIGlzIGNvbXBhdGlibGUg
-d2l0aCB0aGUgc2ltcGxlLXBhbmVsIGJpbmRpbmcsIHdoaWNoIGlzIHNwZWNpZmllZAo+ICtpbiBz
-aW1wbGUtcGFuZWwudHh0IGluIHRoaXMgZGlyZWN0b3J5LgpfX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZl
-bEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFp
-bG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+On Thu, Apr 13, 2017 at 03:05:07PM +0800, sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org wrote:
+> From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> 
+> Document the devicetree bindings for Mediatek random number
+> generator which could be found on MT7623 SoC or other similar
+> Mediatek SoCs.
+> 
+> Signed-off-by: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/rng/mtk-rng.txt | 18 ++++++++++++++++++
+>  1 file changed, 18 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/rng/mtk-rng.txt
+
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
