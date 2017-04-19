@@ -1,50 +1,147 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2] pinctrl: sh-pfc: r8a7794: add R8A7745 support
-Date: Wed, 19 Apr 2017 17:46:46 -0500
-Message-ID: <20170419224646.wwjerpgnidvk4fkh@rob-hp-laptop>
-References: <20170413201932.890107963@cogentembedded.com>
+From: Tyrel Datwyler <turtle.in.the.kernel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] of: introduce event tracepoints for dynamic device_node
+ lifecyle
+Date: Wed, 19 Apr 2017 16:27:10 -0700
+Message-ID: <1d51a229-612b-bf09-93d5-6e43b476e2cf@gmail.com>
+References: <1492475525-10827-1-git-send-email-tyreld@linux.vnet.ibm.com>
+ <58F6AA35.2040902@gmail.com> <87efwp6v4e.fsf@concordia.ellerman.id.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170413201932.890107963@cogentembedded.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Linus Walleij <linus.walleij@linaro.org>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <87efwp6v4e.fsf-W0DJWXSxmBNbyGPkN3NxC2scP1bn1w/D@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Tyrel Datwyler <tyreld-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, nfont-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org, rostedt-nx8X9YLhiw1AfugRpC6u6w@public.gmane.org, mingo-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 13, 2017 at 11:19:24PM +0300, Sergei Shtylyov wrote:
-> Renesas  RZ/G1E (R8A7745) is pin compatible with R-Car E2 (R8A7794),
-> however  it doesn't have several automotive specific peripherals.
-
-Is a single space between words really so hard for you? You've been told 
-to write proper sentences multiple times.
-
-Yes, kernel developers suffer from OCD. Sorry.
-
-> Annotate all the items that only exist on the R-Car SoCs and only
-> supply the pin groups/functions existing on a given SoC (that required
-> splitting  of the AVB function)...
+On 04/18/2017 06:31 PM, Michael Ellerman wrote:
+> Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> writes:
 > 
-> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+>> On 04/17/17 17:32, Tyrel Datwyler wrote:
+>>> This patch introduces event tracepoints for tracking a device_nodes
+>>> reference cycle as well as reconfig notifications generated in response
+>>> to node/property manipulations.
+>>>
+>>> With the recent upstreaming of the refcount API several device_node
+>>> underflows and leaks have come to my attention in the pseries (DLPAR) dynamic
+>>> logical partitioning code (ie. POWER speak for hotplugging virtual and physcial
+>>> resources at runtime such as cpus or IOAs). These tracepoints provide a
+>>> easy and quick mechanism for validating the reference counting of
+>>> device_nodes during their lifetime.
+>>>
+>>> Further, when pseries lpars are migrated to a different machine we
+>>> perform a live update of our device tree to bring it into alignment with the
+>>> configuration of the new machine. The of_reconfig_notify trace point
+>>> provides a mechanism that can be turned for debuging the device tree
+>>> modifications with out having to build a custom kernel to get at the
+>>> DEBUG code introduced by commit 00aa3720.
+>>
+>> I do not like changing individual (or small groups of) printk() style
+>> debugging information to tracepoint style.
 > 
-> ---
-> This patch is  against the 'devel' branch of Linus Walleij's 'linux-pinctrl.git'
-> repo plus  R8A7794 PFC fix and R8A7743 PFC support patch...
+> I'm not quite sure which printks() you're referring to.
 > 
-> Changes in version 2:
-> - fixed indentation to use tabs instead of spaces;
-> - updated the PFC bindings.
+> The only printks that are removed in this series are under #ifdef DEBUG,
+> and so are essentially not there unless you build a custom kernel.
 > 
->  Documentation/devicetree/bindings/pinctrl/renesas,pfc-pinctrl.txt |    1 
+> They also only cover the reconfig case, which is actually less
+> interesting than the much more common and bug-prone get/put logic.
+> 
+>> As far as I know, there is no easy way to combine trace data and printk()
+>> style data to create a single chronology of events.  If some of the
+>> information needed to debug an issue is trace data and some is printk()
+>> style data then it becomes more difficult to understand the overall
+>> situation.
+> 
+> If you enable CONFIG_PRINTK_TIME then you should be able to just sort
+> the trace and the printk output by the timestamp. If you're really
+> trying to correlate the two then you should probably just be using
+> trace_printk().
+> 
+> But IMO this level of detail, tracing every get/put, does not belong in
+> printk. Trace points are absolutely the right solution for this type of
+> debugging.
 
-But given it's a one line DT change:
+Something else to keep in mind is that while pr_debugs could be used to
+provide feedback on the reference counts and of_reconfig events they
+don't in anyway tell us where they are happening in the kernel. The
+trace infrastructure provides the ability to stack trace those events.
+The following example provides me a lot more information about who is
+doing what and where after I hot-add an ethernet adapter:
 
-Acked-by: Rob Herring <robh@kernel.org>
+# echo stacktrace > /sys/kernel/debug/tracing/trace_options
+# cat trace | grep -A6 "/pci@800000020000018"
+...
+           drmgr-7349  [006] d...  7138.821875: of_node_get: refcount=8,
+dn->full_name=/pci@800000020000018
+           drmgr-7349  [006] d...  7138.821876: <stack trace>
+ => .msi_quota_for_device
+ => .rtas_setup_msi_irqs
+ => .arch_setup_msi_irqs
+ => .__pci_enable_msix
+ => .pci_enable_msix_range
+--
+           drmgr-7349  [006] d...  7138.821876: of_node_put: refcount=2,
+dn->full_name=/pci@800000020000018/ethernet@0
+           drmgr-7349  [006] d...  7138.821877: <stack trace>
+ => .msi_quota_for_device
+ => .rtas_setup_msi_irqs
+ => .arch_setup_msi_irqs
+ => .__pci_enable_msix
+ => .pci_enable_msix_range
+--
+           drmgr-7349  [006] ....  7138.821878: of_node_put: refcount=7,
+dn->full_name=/pci@800000020000018
+           drmgr-7349  [006] ....  7138.821879: <stack trace>
+ => .rtas_setup_msi_irqs
+ => .arch_setup_msi_irqs
+ => .__pci_enable_msix
+ => .pci_enable_msix_range
+ => .bnx2x_enable_msix
+--
 
->  drivers/pinctrl/sh-pfc/Kconfig                                    |    5 
->  drivers/pinctrl/sh-pfc/Makefile                                   |    1 
->  drivers/pinctrl/sh-pfc/core.c                                     |    6 
->  drivers/pinctrl/sh-pfc/pfc-r8a7794.c                              | 1970 +++++-----
->  drivers/pinctrl/sh-pfc/sh_pfc.h                                   |    1 
->  6 files changed, 1140 insertions(+), 844 deletions(-)
+To get that same info as far as I know is to add a dump_stack() after
+each pr_debug.
+
+Further, filters can be set on the tracepoint event fields such that
+trace data could be restricted to a particular device_node or refcount
+threshold. For example:
+
+# cd /sys/kernel/debug/tracing# cat events/of/of_node_get/format
+# echo "dn_name == /pci@800000020000018" > events/of/filter
+
+# cat trace
+           drmgr-10542 [003] ....  9630.677001: of_node_put: refcount=5,
+dn->full_name=/pci@800000020000018
+           drmgr-10542 [003] d...  9631.677368: of_node_get: refcount=6,
+dn->full_name=/pci@800000020000018
+           drmgr-10542 [003] ....  9631.677389: of_node_put: refcount=5,
+dn->full_name=/pci@800000020000018
+           drmgr-10542 [003] ....  9631.677390: of_reconfig_notify:
+action=DETACH_NODE, dn->full_name=/pci@800000020000018, prop->name=null,
+old_prop->name=null
+           drmgr-10542 [003] .n..  9632.025656: of_node_put: refcount=4,
+dn->full_name=/pci@800000020000018
+           drmgr-10542 [003] .n..  9632.025657: of_node_put: refcount=3,
+dn->full_name=/pci@800000020000018
+
+After setting the filter and doing a hot-remove of the pci device in
+question the trace quickly tells me 3 references are being leaked. In
+combination with the stacktrace option I can quickly correlate call
+sites that take references without releasing them.
+
+-Tyrel
+
+> 
+> cheers
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
