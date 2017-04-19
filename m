@@ -1,136 +1,78 @@
-From: Guenter Roeck <groeck-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v3] usb: dwc3: add disable u2mac linestate check quirk
-Date: Wed, 19 Apr 2017 12:44:22 -0700
-Message-ID: <CABXOdTcAuUj2ZjU8sWHJjXcD=v51TOueS0=wzvd4JneWk2gjrA@mail.gmail.com>
-References: <1492603898-25070-1-git-send-email-william.wu@rock-chips.com>
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: Re: [PATCH V2] clk: hi6220: Add the hi655x's pmic clock
+Date: Wed, 19 Apr 2017 21:47:37 +0200
+Message-ID: <20170419194737.GB2523@mai>
+References: <1491683412-12237-1-git-send-email-daniel.lezcano@linaro.org>
+ <20170412150245.GK7065@codeaurora.org>
+ <20170416205713.GW2078@mai>
+ <20170419160005.GS7065@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1492603898-25070-1-git-send-email-william.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: William Wu <william.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Wang <frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Tao Huang <huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Doug Anderson <dianders-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Brian Norris <briannorris-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, daniel.meng-TNX95d0MmH7DzftRWevZcw@public.gmane.org, John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-clk-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170419160005.GS7065@codeaurora.org>
+Sender: linux-clk-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>
+Cc: mturquette@baylibre.com, lee.jones@linaro.org, xuwei5@hisilicon.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 19, 2017 at 5:11 AM, William Wu <william.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org> wrote:
-> This patch adds a quirk to disable USB 2.0 MAC linestate check
-> during HS transmit. Refer the dwc3 databook, we can use it for
-> some special platforms if the linestate not reflect the expected
-> line state(J) during transmission.
->
-> When use this quirk, the controller implements a fixed 40-bit
-> TxEndDelay after the packet is given on UTMI and ignores the
-> linestate during the transmit of a token (during token-to-token
-> and token-to-data IPGAP).
->
-> On some rockchip platforms (e.g. rk3399), it requires to disable
-> the u2mac linestate check to decrease the SSPLIT token to SETUP
-> token inter-packet delay from 566ns to 466ns, and fix the issue
-> that FS/LS devices not recognized if inserted through USB 3.0 HUB.
->
-> Signed-off-by: William Wu <william.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+On Wed, Apr 19, 2017 at 09:00:05AM -0700, Stephen Boyd wrote:
+> On 04/16, Daniel Lezcano wrote:
+> > On Wed, Apr 12, 2017 at 08:02:45AM -0700, Stephen Boyd wrote:
+> > > On 04/08, Daniel Lezcano wrote:
 
-Reviewed-by: Guenter Roeck <groeck-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+[ ... ]
 
-> ---
-> Changes in v3:
-> - change quirk name
-> - only read and write GUCTL1 if dwc3 version >= 2.50a
->
-> Changes in v2:
-> - fix coding style
->
->  Documentation/devicetree/bindings/usb/dwc3.txt |  2 ++
->  drivers/usb/dwc3/core.c                        | 20 ++++++++++++++------
->  drivers/usb/dwc3/core.h                        |  4 ++++
->  3 files changed, 20 insertions(+), 6 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt b/Documentation/devicetree/bindings/usb/dwc3.txt
-> index f658f39..52fb410 100644
-> --- a/Documentation/devicetree/bindings/usb/dwc3.txt
-> +++ b/Documentation/devicetree/bindings/usb/dwc3.txt
-> @@ -45,6 +45,8 @@ Optional properties:
->                         a free-running PHY clock.
->   - snps,dis-del-phy-power-chg-quirk: when set core will change PHY power
->                         from P0 to P1/P2/P3 without delay.
-> + - snps,dis-tx-ipgap-linecheck-quirk: when set, disable u2mac linestate check
-> +                       during HS transmit.
->   - snps,is-utmi-l1-suspend: true when DWC3 asserts output signal
->                         utmi_l1_suspend_n, false when asserts utmi_sleep_n
->   - snps,hird-threshold: HIRD threshold
-> diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
-> index 455d89a..9d5a67c 100644
-> --- a/drivers/usb/dwc3/core.c
-> +++ b/drivers/usb/dwc3/core.c
-> @@ -796,13 +796,19 @@ static int dwc3_core_init(struct dwc3 *dwc)
->                 dwc3_writel(dwc->regs, DWC3_GUCTL2, reg);
->         }
->
-> -       /*
-> -        * Enable hardware control of sending remote wakeup in HS when
-> -        * the device is in the L1 state.
-> -        */
-> -       if (dwc->revision >= DWC3_REVISION_290A) {
-> +       if (dwc->revision >= DWC3_REVISION_250A) {
->                 reg = dwc3_readl(dwc->regs, DWC3_GUCTL1);
-> -               reg |= DWC3_GUCTL1_DEV_L1_EXIT_BY_HW;
-> +
-> +               /*
-> +                * Enable hardware control of sending remote wakeup
-> +                * in HS when the device is in the L1 state.
-> +                */
-> +               if (dwc->revision >= DWC3_REVISION_290A)
-> +                       reg |= DWC3_GUCTL1_DEV_L1_EXIT_BY_HW;
-> +
-> +               if (dwc->dis_tx_ipgap_linecheck_quirk)
-> +                       reg |= DWC3_GUCTL1_TX_IPGAP_LINECHECK_DIS;
-> +
->                 dwc3_writel(dwc->regs, DWC3_GUCTL1, reg);
->         }
->
-> @@ -1023,6 +1029,8 @@ static void dwc3_get_properties(struct dwc3 *dwc)
->                                 "snps,dis-u2-freeclk-exists-quirk");
->         dwc->dis_del_phy_power_chg_quirk = device_property_read_bool(dev,
->                                 "snps,dis-del-phy-power-chg-quirk");
-> +       dwc->dis_tx_ipgap_linecheck_quirk = device_property_read_bool(dev,
-> +                               "snps,dis-tx-ipgap-linecheck-quirk");
->
->         dwc->tx_de_emphasis_quirk = device_property_read_bool(dev,
->                                 "snps,tx_de_emphasis_quirk");
-> diff --git a/drivers/usb/dwc3/core.h b/drivers/usb/dwc3/core.h
-> index 981c77f..6f6294d 100644
-> --- a/drivers/usb/dwc3/core.h
-> +++ b/drivers/usb/dwc3/core.h
-> @@ -204,6 +204,7 @@
->  #define DWC3_GCTL_DSBLCLKGTNG          BIT(0)
->
->  /* Global User Control 1 Register */
-> +#define DWC3_GUCTL1_TX_IPGAP_LINECHECK_DIS     BIT(28)
->  #define DWC3_GUCTL1_DEV_L1_EXIT_BY_HW  BIT(24)
->
->  /* Global USB2 PHY Configuration Register */
-> @@ -850,6 +851,8 @@ struct dwc3_scratchpad_array {
->   *                     provide a free-running PHY clock.
->   * @dis_del_phy_power_chg_quirk: set if we disable delay phy power
->   *                     change quirk.
-> + * @dis_tx_ipgap_linecheck_quirk: set if we disable u2mac linestate
-> + *                     check during HS transmit.
->   * @tx_de_emphasis_quirk: set if we enable Tx de-emphasis quirk
->   * @tx_de_emphasis: Tx de-emphasis value
->   *     0       - -6dB de-emphasis
-> @@ -1004,6 +1007,7 @@ struct dwc3 {
->         unsigned                dis_rxdet_inp3_quirk:1;
->         unsigned                dis_u2_freeclk_exists_quirk:1;
->         unsigned                dis_del_phy_power_chg_quirk:1;
-> +       unsigned                dis_tx_ipgap_linecheck_quirk:1;
->
->         unsigned                tx_de_emphasis_quirk:1;
->         unsigned                tx_de_emphasis:2;
-> --
-> 2.0.0
->
->
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> > > > +	ret = clk_hw_register_clkdev(&hi655x_clk->clk_hw, clk_name, NULL);
+> > > 
+> > > Missed this last time. Do you use this clkdev lookup? The name is
+> > > usually supposed to be based on what the device is expecting,
+> > > instead of clk_name, and we would want some device name for the
+> > > third argument here.
+> > 
+> > I'm not sure to get your comment. Are you saying the clk_name should be the
+> > third argument?
+> > 
+> > 
+> 
+> Sorry, no. I meant that con_id is typically something like "core"
+> or "ahb" or something like that, and dev_id is something like
+> "a456002.pmic_device" or whatever dev_name(pmic_dev) would return for
+> the consuming device. That way when we call clk_get(dev, "core")
+> it will find the lookup with "core" and "a456002.pmic_device" to
+> match up the clk lookup.
+> 
+> If anything, the clk_name should just go into the con_id for now,
+> and then it will need to be a globally unique identifier for the
+> clk. But that is going against how clkdev is supposed to be used.
+> Hence the question if you even need to use it. If not, just don't
+> add it. I can fix up v3 of this patch to put clk_name back at
+> con_id if you like. No need to resend.
+
+Ok, I'm not very used with the CCF, so perhaps clk_name is not needed at all. I
+gave a try with the following combination:
+
+ - con_id = NULL, dev_id = clk_name
+ - con_id = clk_name, dev_id = NULL
+ - con_id = NULL, dev_id = NULL
+
+All worked.
+
+And finally I removed the clk_hw_register_clkdev() call and it worked also.
+
+So I'm not sure about this function.
+
+Any idea ?
+
+> -- 
+> Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+> a Linux Foundation Collaborative Project
+
+-- 
+
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
