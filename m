@@ -1,86 +1,50 @@
-From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH V5 1/3] dt-bindings: mtd: document linux,part-probe
- property
-Date: Wed, 19 Apr 2017 13:37:05 -0700
-Message-ID: <20170419203705.GF20555@google.com>
-References: <20170417182853.24281-1-zajec5@gmail.com>
- <20170417194746.10697-1-zajec5@gmail.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 3/4] bluetooth: hci_uart: add LL protocol serdev driver support
+Date: Wed, 19 Apr 2017 15:47:23 -0500
+Message-ID: <CAL_JsqKv=pYRTxE4H81DTiUqzgSU0tVDPKBQ+WPo=VJOBNTu9Q@mail.gmail.com>
+References: <20170413150353.7389-1-robh@kernel.org> <20170413150353.7389-4-robh@kernel.org>
+ <CAHCN7xLNcD1rmifEOyPhG2rpB_C81hsyzV9W2q6kCQkKa69sZg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170417194746.10697-1-zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-bluetooth-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAHCN7xLNcD1rmifEOyPhG2rpB_C81hsyzV9W2q6kCQkKa69sZg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-bluetooth-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Adam Ford <aford173-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Marcel Holtmann <marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org>, "open list:BLUETOOTH DRIVERS" <linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Johan Hedberg <johan.hedberg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gustavo Padovan <gustavo-THi1TnShQwVAfugRpC6u6w@public.gmane.org>, Satish Patel <satish.patel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Eyal Reizer <eyalr-l0cyMroinI0@public.gmane.org>, netdev <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Mon, Apr 17, 2017 at 3:11 PM, Adam Ford <aford173-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> On Thu, Apr 13, 2017 at 10:03 AM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+>> Turns out that the LL protocol and the TI-ST are the same thing AFAICT.
+>> The TI-ST adds firmware loading, GPIO control, and shared access for
+>> NFC, FM radio, etc. For now, we're only implementing what is needed for
+>> BT. This mirrors other drivers like BCM and Intel, but uses the new
+>> serdev bus.
+>>
+>> The firmware loading is greatly simplified by using existing
+>> infrastructure to send commands. It may be a bit slower than the
+>> original code using synchronous functions, but the real bottleneck is
+>> likely doing firmware load at 115.2kbps.
+>
+> I am using pdata-quirks to drive my wl1283 Bluetooth on a DM3730.  I
+> have the Bluetooth set to 3000000 baud in pdata quirks.  Looking at
+> the binding, I don't see an option to set the baudrate.  Is there (or
+> will there) be a way to set the baud rate of the Bluetooth?
 
-On Mon, Apr 17, 2017 at 09:47:44PM +0200, Rafał Miłecki wrote:
-> From: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
-> 
-> Support for this property has been introduced in 2010 with commit
-> 9d5da3a9b849 ("mtd: extend physmap_of to let the device tree specify the
-> parition probe") but it was never documented. Fix this by adding a
-> proper description and example.
-> 
-> Signed-off-by: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Acked-by: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/mtd/common.txt | 7 +++++++
->  1 file changed, 7 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/mtd/common.txt b/Documentation/devicetree/bindings/mtd/common.txt
-> index fc068b923d7a..1ada70e718b2 100644
-> --- a/Documentation/devicetree/bindings/mtd/common.txt
-> +++ b/Documentation/devicetree/bindings/mtd/common.txt
-> @@ -6,10 +6,17 @@ Optional properties:
->    controller based name) in order to ease flash device identification
->    and/or describe what they are used for.
->  
-> +- linux,part-probe: if present, this property should contain a list of strings
-> +  with partition probes to be used for the flash device. A role of partition
-> +  probe (parser) is to read/construct partition table and register found
-> +  partitions. Getting partition table may be platform or device specific so
-> +  various devices may use various Linux drivers for this purpose.
+If you read hci_ti_probe, you will see it is already there. The
+default is 3Mbps and the DT can override that with "max-speed". The
+intent is that 3Mbps is the max the device can do and max-speed is
+only for board or host limitations. Though I just checked the
+datasheet on the 1835 and it can go up to 4364kbps. No datasheets for
+wl1283, so I have no idea what the max is.
 
-Have you reviewed the old threads about this? I thought I already
-discouraged extending this binding to be generic. Particularly, we do
-*not* want to codify things like 'linux,part-probe = "bcm47xxpart"',
-which doesn't follow any accepted practice about naming. And you've also
-failed to document any actual strings to put here, which hides the fact
-that you're opening a can of worms.
+>> +static int hci_ti_probe(struct serdev_device *serdev)
+>> +{
+>> +       struct hci_uart *hu;
+>> +       struct ll_device *lldev;
+>> +       u32 max_speed = 3000000;
 
-Piece of a previous thread:
-http://lists.infradead.org/pipermail/linux-mtd/2015-October/062613.html
-[PATCH] mtd: document linux-specific partition parser DT binding
+[...]
 
-I attempted to resolve that here, but never made time to address the few
-not-so-constructive comments I received:
-
-https://mail-archive.com/linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org/msg1035539.html
-[RFC PATCH 0/7] mtd: partitions: add of_match_table support
-
-I'd still prefer that approach to supporting this shortcut for all MTDs.
-
-Brian
-
-> +
->  Example:
->  
->  	flash@0 {
->  		label = "System-firmware";
-> +		linux,part-probe = "cmdlinepart", "ofpart";
->  
->  		/* flash type specific properties */
->  	};
-> -- 
-> 2.11.0
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>> +       of_property_read_u32(serdev->dev.of_node, "max-speed", &max_speed);
+>> +       hci_uart_set_speeds(hu, 115200, max_speed);
