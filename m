@@ -1,68 +1,37 @@
-From: Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] iio: stm32 trigger: fix sampling_frequency read
-Date: Wed, 19 Apr 2017 10:30:39 +0200
-Message-ID: <CA+M3ks6fujDoxhQqA8VS6x+pFcHJPEZ4p8J+Ci0YnAcoCuhy_Q@mail.gmail.com>
-References: <1491566026-302-1-git-send-email-fabrice.gasnier@st.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v5 4/4] arm64: dts: salvator-x: Add current sense amplifiers
+Date: Wed, 19 Apr 2017 10:40:21 +0200
+Message-ID: <CAMuHMdXkixLn9xdnrhEXW9pCg-4WjOuoPdyxXYeBwRfetMSYsA@mail.gmail.com>
+References: <1491488454-22468-1-git-send-email-jacopo+renesas@jmondi.org> <1491488454-22468-5-git-send-email-jacopo+renesas@jmondi.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1491566026-302-1-git-send-email-fabrice.gasnier-qxv4g6HH51o@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Fabrice Gasnier <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>
-Cc: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Benjamin GAIGNARD <benjamin.gaignard-qxv4g6HH51o@public.gmane.org>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <1491488454-22468-5-git-send-email-jacopo+renesas@jmondi.org>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>, Magnus Damm <magnus.damm@gmail.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-iio@vger.kernel.org, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-2017-04-07 13:53 GMT+02:00 Fabrice Gasnier <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>:
-> When prescaler (PSC) is 0, it means div factor is 1: counter clock
-> frequency is equal to input clk / (PSC + 1).
-> When reload value is 8 for example, counter counts 9 cycles, from 0 to 8.
-> This is handled in frequency write routine, by writing respectively:
-> - prescaler - 1 to PSC
-> - reload value - 1 to ARR
-> This fix does the opposite when reading the frequency from PSC and ARR:
-> - prescaler is PSC + 1
-> - reload value is ARR + 1
+Hi Jacopo,
+
+On Thu, Apr 6, 2017 at 4:20 PM, Jacopo Mondi <jacopo+renesas@jmondi.org> wrote:
+> [PATCH v5 4/4] arm64: dts: salvator-x: Add current sense amplifiers
+
+This should be "arm64: dts: r8a7796: salvator-x: Add current sense amplifiers".
+Perhaps Simon can just fix that himself while applying?
+
+> Add device nodes for two Maxim max961x current sense amplifiers
+> sensing VDD_08 and DVFS_08 lines.
 >
-> Thus, PSC may be 0, depending on requested sampling frequency (div 1).
-> In this case, reading freq wrongly reports 0, instead of computing and
-> reporting correct value.
-> Remove test on !psc and !arr.
->
-> Small test on stm32f4 (example on tim1_trgo), before this fix:
-> $ cd /sys/bus/iio/devices/triggerX
-> $ echo 10000 > sampling_frequency
-> $ cat sampling_frequency
-> 0
->
-> After this fix:
-> $ echo 10000 > sampling_frequency
-> $ cat sampling_frequency
-> 10000
->
-> Signed-off-by: Fabrice Gasnier <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>
-> ---
->  drivers/iio/trigger/stm32-timer-trigger.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/iio/trigger/stm32-timer-trigger.c b/drivers/iio/trigger/stm32-timer-trigger.c
-> index 994b96d..5ee362b 100644
-> --- a/drivers/iio/trigger/stm32-timer-trigger.c
-> +++ b/drivers/iio/trigger/stm32-timer-trigger.c
-> @@ -152,10 +152,10 @@ static ssize_t stm32_tt_read_frequency(struct device *dev,
->         regmap_read(priv->regmap, TIM_PSC, &psc);
->         regmap_read(priv->regmap, TIM_ARR, &arr);
->
-> -       if (psc && arr && (cr1 & TIM_CR1_CEN)) {
-> +       if (cr1 & TIM_CR1_CEN) {
->                 freq = (unsigned long long)clk_get_rate(priv->clk);
-> -               do_div(freq, psc);
-> -               do_div(freq, arr);
-> +               do_div(freq, psc + 1);
-> +               do_div(freq, arr + 1);
->         }
->
->         return sprintf(buf, "%d\n", (unsigned int)freq);
-> --
-> 1.9.1
->
-Acked-by: Benjamin Gaignard <benjamin.gaignard-qxv4g6HH51o@public.gmane.org>
+> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
