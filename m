@@ -1,57 +1,101 @@
-From: Daniel Vetter <daniel@ffwll.ch>
-Subject: Re: [PATCH 2/3] drm/vc4: Don't try to initialize FBDEV if we're only
- bound to V3D.
-Date: Wed, 19 Apr 2017 06:59:59 +0200
-Message-ID: <CAKMK7uFSsA3c+wMfq_O9kSvu0cWLUA-bRqTHyryqi+1ZVeir_w@mail.gmail.com>
-References: <20170418191157.18517-1-eric@anholt.net>
- <20170418191157.18517-2-eric@anholt.net>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: [PATCH 0/4] ARM: sunxi: device tree pinctrl clean up
+ and H3 OTG
+Date: Wed, 19 Apr 2017 13:09:15 +0800
+Message-ID: <20170419050919.6762-1-wens@csie.org>
+Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20170418191157.18517-2-eric@anholt.net>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Eric Anholt <eric@anholt.net>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBAXC3PDQKGQEWDG24RQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCBBcHIgMTgsIDIwMTcgYXQgOToxMSBQTSwgRXJpYyBBbmhvbHQgPGVyaWNAYW5ob2x0
-Lm5ldD4gd3JvdGU6Cj4gVGhlIEZCREVWIGluaXRpYWxpemF0aW9uIHdvdWxkIHRocm93IGFuIGVy
-cm9yIGluIGRtZXNnLCB3aGVuIHdlIGp1c3QKPiB3YW50IHRvIHNpbGVudGx5IG5vdCBpbml0aWFs
-aXplIGZiZGV2IG9uIGEgVjNELW9ubHkgVkM0IGluc3RhbmNlLgo+Cj4gU2lnbmVkLW9mZi1ieTog
-RXJpYyBBbmhvbHQgPGVyaWNAYW5ob2x0Lm5ldD4KCkhtLCB0aGlzIHNob3VsZG4ndCBiZSBhbiBl
-cnJvciByZWFsbHksIHlvdSBtaWdodCB3YW50IHRvIGhvdHBsdWcgbW9yZQpjb25uZWN0b3JzIGxh
-dGVyIG9uLiBXaGF0IGV4YWN0bHkgY29tcGxhaW5zPwotRGFuaWVsCgo+IC0tLQo+ICBkcml2ZXJz
-L2dwdS9kcm0vdmM0L3ZjNF9rbXMuYyB8IDEwICsrKysrKy0tLS0KPiAgMSBmaWxlIGNoYW5nZWQs
-IDYgaW5zZXJ0aW9ucygrKSwgNCBkZWxldGlvbnMoLSkKPgo+IGRpZmYgLS1naXQgYS9kcml2ZXJz
-L2dwdS9kcm0vdmM0L3ZjNF9rbXMuYyBiL2RyaXZlcnMvZ3B1L2RybS92YzQvdmM0X2ttcy5jCj4g
-aW5kZXggYWQ3OTI1YTllMGVhLi4yMzdhNTA0ZjExZjAgMTAwNjQ0Cj4gLS0tIGEvZHJpdmVycy9n
-cHUvZHJtL3ZjNC92YzRfa21zLmMKPiArKysgYi9kcml2ZXJzL2dwdS9kcm0vdmM0L3ZjNF9rbXMu
-Ywo+IEBAIC0yMzAsMTAgKzIzMCwxMiBAQCBpbnQgdmM0X2ttc19sb2FkKHN0cnVjdCBkcm1fZGV2
-aWNlICpkZXYpCj4KPiAgICAgICAgIGRybV9tb2RlX2NvbmZpZ19yZXNldChkZXYpOwo+Cj4gLSAg
-ICAgICB2YzQtPmZiZGV2ID0gZHJtX2ZiZGV2X2NtYV9pbml0KGRldiwgMzIsCj4gLSAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGRldi0+bW9kZV9jb25maWcubnVtX2Nvbm5l
-Y3Rvcik7Cj4gLSAgICAgICBpZiAoSVNfRVJSKHZjNC0+ZmJkZXYpKQo+IC0gICAgICAgICAgICAg
-ICB2YzQtPmZiZGV2ID0gTlVMTDsKPiArICAgICAgIGlmIChkZXYtPm1vZGVfY29uZmlnLm51bV9j
-b25uZWN0b3IpIHsKPiArICAgICAgICAgICAgICAgdmM0LT5mYmRldiA9IGRybV9mYmRldl9jbWFf
-aW5pdChkZXYsIDMyLAo+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgIGRldi0+bW9kZV9jb25maWcubnVtX2Nvbm5lY3Rvcik7Cj4gKyAgICAgICAgICAgICAg
-IGlmIChJU19FUlIodmM0LT5mYmRldikpCj4gKyAgICAgICAgICAgICAgICAgICAgICAgdmM0LT5m
-YmRldiA9IE5VTEw7Cj4gKyAgICAgICB9Cj4KPiAgICAgICAgIGRybV9rbXNfaGVscGVyX3BvbGxf
-aW5pdChkZXYpOwo+Cj4gLS0KPiAyLjExLjAKPgo+IF9fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fCj4gZHJpLWRldmVsIG1haWxpbmcgbGlzdAo+IGRyaS1kZXZl
-bEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKPiBodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9t
-YWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAoKCgotLSAKRGFuaWVsIFZldHRlcgpTb2Z0d2FyZSBF
-bmdpbmVlciwgSW50ZWwgQ29ycG9yYXRpb24KKzQxICgwKSA3OSAzNjUgNTcgNDggLSBodHRwOi8v
-YmxvZy5mZndsbC5jaApfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5v
-cmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2
-ZWwK
+Hi Maxime,
+
+This series has 2 parts. The parts are largely unrelated, though the
+second part should be applied after the first part, so we don't
+accidentally mux pins that we shouldn't. Hence I'm sending them
+together.
+
+The first 2 patches clean up the sunxi device tree files, removing
+pinmux settings for common GPIO pins. These include the enable pins
+for the common regulators, and the mmc0 card detect pin from the
+reference designs.
+
+The second part, the latter 2 patches, enable USB OTG on the Orangepi
+PC, PC Plus, Plus 2E, and the Bananapi M2+. The first 3 boards are
+bunched together, due to how the PC Plus and Plus 2E device trees include
+the device tree of the Opi PC.
+
+Regards
+ChenYu
+
+Chen-Yu Tsai (4):
+  ARM: sunxi: common-regulators: Drop pinmux settings for GPIO pins
+  ARM: sunxi: Drop mmc0_cd_pin_reference_design pinmux setting
+  ARM: sun8i: h3: orangepi-pc: Enable USB OTG
+  ARM: sun8i: h3: bananapi-m2-plus: Enable USB OTG
+
+ arch/arm/boot/dts/sun4i-a10-a1000.dts              |  2 +-
+ arch/arm/boot/dts/sun4i-a10-ba10-tvbox.dts         |  2 +-
+ arch/arm/boot/dts/sun4i-a10-chuwi-v7-cw0825.dts    |  2 +-
+ arch/arm/boot/dts/sun4i-a10-cubieboard.dts         |  2 +-
+ arch/arm/boot/dts/sun4i-a10-dserve-dsrv9703c.dts   |  2 +-
+ arch/arm/boot/dts/sun4i-a10-gemei-g9.dts           |  2 +-
+ arch/arm/boot/dts/sun4i-a10-hackberry.dts          |  2 +-
+ arch/arm/boot/dts/sun4i-a10-hyundai-a7hd.dts       |  6 +----
+ arch/arm/boot/dts/sun4i-a10-inet1.dts              |  2 +-
+ arch/arm/boot/dts/sun4i-a10-inet97fv2.dts          |  2 +-
+ arch/arm/boot/dts/sun4i-a10-inet9f-rev03.dts       |  2 +-
+ .../boot/dts/sun4i-a10-itead-iteaduino-plus.dts    |  2 +-
+ arch/arm/boot/dts/sun4i-a10-jesurun-q5.dts         |  2 +-
+ arch/arm/boot/dts/sun4i-a10-marsboard.dts          |  2 +-
+ arch/arm/boot/dts/sun4i-a10-mini-xplus.dts         |  2 +-
+ arch/arm/boot/dts/sun4i-a10-mk802.dts              |  2 +-
+ arch/arm/boot/dts/sun4i-a10-mk802ii.dts            |  2 +-
+ arch/arm/boot/dts/sun4i-a10-olinuxino-lime.dts     |  2 +-
+ arch/arm/boot/dts/sun4i-a10-pcduino.dts            |  2 +-
+ arch/arm/boot/dts/sun4i-a10-pov-protab2-ips9.dts   |  2 +-
+ arch/arm/boot/dts/sun4i-a10.dtsi                   |  6 -----
+ arch/arm/boot/dts/sun5i-a10s-auxtek-t003.dts       |  8 ------
+ arch/arm/boot/dts/sun5i-a10s-auxtek-t004.dts       |  4 ---
+ arch/arm/boot/dts/sun5i-a10s-olinuxino-micro.dts   |  4 ---
+ arch/arm/boot/dts/sun5i-a10s-wobo-i5.dts           |  4 ---
+ .../boot/dts/sun5i-a13-empire-electronix-d709.dts  |  4 ---
+ arch/arm/boot/dts/sun5i-a13-hsg-h702.dts           |  5 ----
+ arch/arm/boot/dts/sun5i-a13-olinuxino.dts          |  4 ---
+ arch/arm/boot/dts/sun6i-a31-hummingbird.dts        |  5 ----
+ arch/arm/boot/dts/sun7i-a20-cubieboard2.dts        |  2 +-
+ arch/arm/boot/dts/sun7i-a20-cubietruck.dts         |  2 +-
+ arch/arm/boot/dts/sun7i-a20-hummingbird.dts        |  2 +-
+ arch/arm/boot/dts/sun7i-a20-i12-tvbox.dts          |  2 +-
+ arch/arm/boot/dts/sun7i-a20-icnova-swac.dts        |  2 +-
+ arch/arm/boot/dts/sun7i-a20-itead-ibox.dts         |  2 +-
+ arch/arm/boot/dts/sun7i-a20-lamobo-r1.dts          |  8 ------
+ arch/arm/boot/dts/sun7i-a20-m3.dts                 |  2 +-
+ arch/arm/boot/dts/sun7i-a20-mk808c.dts             |  2 +-
+ arch/arm/boot/dts/sun7i-a20-olimex-som-evb.dts     |  2 +-
+ arch/arm/boot/dts/sun7i-a20-olinuxino-lime.dts     |  2 +-
+ arch/arm/boot/dts/sun7i-a20-olinuxino-lime2.dts    |  2 +-
+ arch/arm/boot/dts/sun7i-a20-olinuxino-micro.dts    |  2 +-
+ arch/arm/boot/dts/sun7i-a20-pcduino3-nano.dts      |  2 +-
+ arch/arm/boot/dts/sun7i-a20-pcduino3.dts           |  6 +----
+ arch/arm/boot/dts/sun7i-a20-wexler-tab7200.dts     |  2 +-
+ arch/arm/boot/dts/sun7i-a20-wits-pro-a20-dkt.dts   |  2 +-
+ arch/arm/boot/dts/sun7i-a20.dtsi                   |  6 -----
+ arch/arm/boot/dts/sun8i-h3-bananapi-m2-plus.dts    | 22 +++++++++++++++-
+ arch/arm/boot/dts/sun8i-h3-orangepi-2.dts          |  4 ---
+ arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts         | 22 +++++++++++++++-
+ arch/arm/boot/dts/sunxi-common-regulators.dtsi     | 30 ----------------------
+ 51 files changed, 78 insertions(+), 138 deletions(-)
+
+-- 
+2.11.0
