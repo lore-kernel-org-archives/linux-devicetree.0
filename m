@@ -1,126 +1,133 @@
-From: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
-Subject: Re: [PATCH v13 03/10] mux: minimal mux subsystem and gpio-based mux
- controller
-Date: Wed, 19 Apr 2017 14:00:54 +0200
-Message-ID: <da90526b-7274-c52c-07e8-9f0d75cf1cbf@axentia.se>
-References: <1492101794-13444-1-git-send-email-peda@axentia.se>
- <1492101794-13444-4-git-send-email-peda@axentia.se>
- <1492592817.2970.14.camel@pengutronix.de>
+From: William Wu <william.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [PATCH v3] usb: dwc3: add disable u2mac linestate check quirk
+Date: Wed, 19 Apr 2017 20:11:38 +0800
+Message-ID: <1492603898-25070-1-git-send-email-william.wu@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1492592817.2970.14.camel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Colin Ian King <colin.king-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Paul Gortmaker <paul.gortmaker-CWA4WttNNZF54TAoqtyWWQ@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org
+Cc: huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, groeck-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dianders-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, william.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, briannorris-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, daniel.meng-TNX95d0MmH7DzftRWevZcw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 2017-04-19 11:06, Philipp Zabel wrote:
-> On Thu, 2017-04-13 at 18:43 +0200, Peter Rosin wrote:
->> Add a new minimalistic subsystem that handles multiplexer controllers.
->> When multiplexers are used in various places in the kernel, and the
->> same multiplexer controller can be used for several independent things,
->> there should be one place to implement support for said multiplexer
->> controller.
->>
->> A single multiplexer controller can also be used to control several
->> parallel multiplexers, that are in turn used by different subsystems
->> in the kernel, leading to a need to coordinate multiplexer accesses.
->> The multiplexer subsystem handles this coordination.
->>
->> This new mux controller subsystem initially comes with a single backend
->> driver that controls gpio based multiplexers. Even though not needed by
->> this initial driver, the mux controller subsystem is prepared to handle
->> chips with multiple (independent) mux controllers.
->>
->> Reviewed-by: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->> Signed-off-by: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
->> ---
+This patch adds a quirk to disable USB 2.0 MAC linestate check
+during HS transmit. Refer the dwc3 databook, we can use it for
+some special platforms if the linestate not reflect the expected
+line state(J) during transmission.
 
-*snip*
+When use this quirk, the controller implements a fixed 40-bit
+TxEndDelay after the packet is given on UTMI and ignores the
+linestate during the transmit of a token (during token-to-token
+and token-to-data IPGAP).
 
->> +int mux_control_select(struct mux_control *mux, int state)
-> 
-> If we let two of these race, ...
+On some rockchip platforms (e.g. rk3399), it requires to disable
+the u2mac linestate check to decrease the SSPLIT token to SETUP
+token inter-packet delay from 566ns to 466ns, and fix the issue
+that FS/LS devices not recognized if inserted through USB 3.0 HUB.
 
-The window for this "race" is positively huge. If there are several
-mux consumers of a single mux controller, it is self-evident that
-if one of them grabs the mux for a long time, the others will suffer.
+Signed-off-by: William Wu <william.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+---
+Changes in v3:
+- change quirk name
+- only read and write GUCTL1 if dwc3 version >= 2.50a
 
-The design is that the rwsem is reader-locked for the full duration
-of a select/deselect operation by the mux consumer.
+Changes in v2:
+- fix coding style
 
->> +{
->> +	int ret;
->> +
->> +	if (down_read_trylock(&mux->lock)) {
->> +		if (mux->cached_state == state)
->> +			return 0;
->> +		/* Sigh, the mux needs updating... */
->> +		up_read(&mux->lock);
-> 
-> ... and both decide the mux needs updating ...
-> 
->> +	}
->> +
->> +	/* ...or it's just contended. */
->> +	down_write(&mux->lock);
-> 
-> ... then the last to get to down_write will just wait here forever (or
-> until the first consumer calls mux_control_deselect, which may never
-> happen)?
+ Documentation/devicetree/bindings/usb/dwc3.txt |  2 ++
+ drivers/usb/dwc3/core.c                        | 20 ++++++++++++++------
+ drivers/usb/dwc3/core.h                        |  4 ++++
+ 3 files changed, 20 insertions(+), 6 deletions(-)
 
-It is vital that the mux consumer call _deselect when it is done with
-the mux. Not doing so will surely starve out any other mux consumers.
-The whole thing is designed around the fact that mux consumers should
-deselect the mux as soon as it's no longer needed.
-
-It's simply not possible to share something as fundamental as a mux
-without some cooperation. It's not like suffering mux consumers can
-go off and use some other mux, and it's also not possible for a
-"competing" mux consumer to just clobber the mux state.
-
->> +
->> +	if (mux->cached_state == state) {
->> +		/*
->> +		 * Hmmm, someone else changed the mux to my liking.
->> +		 * That makes me wonder how long I waited for nothing?
->> +		 */
->> +		downgrade_write(&mux->lock);
->> +		return 0;
->> +	}
->> +
->> +	ret = mux_control_set(mux, state);
->> +	if (ret < 0) {
->> +		if (mux->idle_state != MUX_IDLE_AS_IS)
->> +			mux_control_set(mux, mux->idle_state);
->> +
->> +		up_write(&mux->lock);
->> +		return ret;
->> +	}
->> +
->> +	downgrade_write(&mux->lock);
->> +
->> +	return 1;
->> +}
->> +EXPORT_SYMBOL_GPL(mux_control_select);
-> 
-> I wonder if these should be called mux_control_lock/unlock instead,
-> which would allow for try_lock and lock_timeout variants.
-
-Maybe, I'm not totally against it. Do others care to opine?
-
-But mux_control_try_select and mux_control_select_timeout does not
-look all that bad either. But maybe foo_lock is making it clearer
-that a foo_unlock is needed, if you compared it to foo_select and
-foo_unselect? I'm probably not the best person to make the call,
-as I know all to well what to expect from the functions...
-
-Cheers,
-peda
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt b/Documentation/devicetree/bindings/usb/dwc3.txt
+index f658f39..52fb410 100644
+--- a/Documentation/devicetree/bindings/usb/dwc3.txt
++++ b/Documentation/devicetree/bindings/usb/dwc3.txt
+@@ -45,6 +45,8 @@ Optional properties:
+ 			a free-running PHY clock.
+  - snps,dis-del-phy-power-chg-quirk: when set core will change PHY power
+ 			from P0 to P1/P2/P3 without delay.
++ - snps,dis-tx-ipgap-linecheck-quirk: when set, disable u2mac linestate check
++			during HS transmit.
+  - snps,is-utmi-l1-suspend: true when DWC3 asserts output signal
+ 			utmi_l1_suspend_n, false when asserts utmi_sleep_n
+  - snps,hird-threshold: HIRD threshold
+diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
+index 455d89a..9d5a67c 100644
+--- a/drivers/usb/dwc3/core.c
++++ b/drivers/usb/dwc3/core.c
+@@ -796,13 +796,19 @@ static int dwc3_core_init(struct dwc3 *dwc)
+ 		dwc3_writel(dwc->regs, DWC3_GUCTL2, reg);
+ 	}
+ 
+-	/*
+-	 * Enable hardware control of sending remote wakeup in HS when
+-	 * the device is in the L1 state.
+-	 */
+-	if (dwc->revision >= DWC3_REVISION_290A) {
++	if (dwc->revision >= DWC3_REVISION_250A) {
+ 		reg = dwc3_readl(dwc->regs, DWC3_GUCTL1);
+-		reg |= DWC3_GUCTL1_DEV_L1_EXIT_BY_HW;
++
++		/*
++		 * Enable hardware control of sending remote wakeup
++		 * in HS when the device is in the L1 state.
++		 */
++		if (dwc->revision >= DWC3_REVISION_290A)
++			reg |= DWC3_GUCTL1_DEV_L1_EXIT_BY_HW;
++
++		if (dwc->dis_tx_ipgap_linecheck_quirk)
++			reg |= DWC3_GUCTL1_TX_IPGAP_LINECHECK_DIS;
++
+ 		dwc3_writel(dwc->regs, DWC3_GUCTL1, reg);
+ 	}
+ 
+@@ -1023,6 +1029,8 @@ static void dwc3_get_properties(struct dwc3 *dwc)
+ 				"snps,dis-u2-freeclk-exists-quirk");
+ 	dwc->dis_del_phy_power_chg_quirk = device_property_read_bool(dev,
+ 				"snps,dis-del-phy-power-chg-quirk");
++	dwc->dis_tx_ipgap_linecheck_quirk = device_property_read_bool(dev,
++				"snps,dis-tx-ipgap-linecheck-quirk");
+ 
+ 	dwc->tx_de_emphasis_quirk = device_property_read_bool(dev,
+ 				"snps,tx_de_emphasis_quirk");
+diff --git a/drivers/usb/dwc3/core.h b/drivers/usb/dwc3/core.h
+index 981c77f..6f6294d 100644
+--- a/drivers/usb/dwc3/core.h
++++ b/drivers/usb/dwc3/core.h
+@@ -204,6 +204,7 @@
+ #define DWC3_GCTL_DSBLCLKGTNG		BIT(0)
+ 
+ /* Global User Control 1 Register */
++#define DWC3_GUCTL1_TX_IPGAP_LINECHECK_DIS	BIT(28)
+ #define DWC3_GUCTL1_DEV_L1_EXIT_BY_HW	BIT(24)
+ 
+ /* Global USB2 PHY Configuration Register */
+@@ -850,6 +851,8 @@ struct dwc3_scratchpad_array {
+  *			provide a free-running PHY clock.
+  * @dis_del_phy_power_chg_quirk: set if we disable delay phy power
+  *			change quirk.
++ * @dis_tx_ipgap_linecheck_quirk: set if we disable u2mac linestate
++ *			check during HS transmit.
+  * @tx_de_emphasis_quirk: set if we enable Tx de-emphasis quirk
+  * @tx_de_emphasis: Tx de-emphasis value
+  * 	0	- -6dB de-emphasis
+@@ -1004,6 +1007,7 @@ struct dwc3 {
+ 	unsigned		dis_rxdet_inp3_quirk:1;
+ 	unsigned		dis_u2_freeclk_exists_quirk:1;
+ 	unsigned		dis_del_phy_power_chg_quirk:1;
++	unsigned		dis_tx_ipgap_linecheck_quirk:1;
+ 
+ 	unsigned		tx_de_emphasis_quirk:1;
+ 	unsigned		tx_de_emphasis:2;
+-- 
+2.0.0
