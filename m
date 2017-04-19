@@ -1,89 +1,169 @@
-From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH v3 2/5] ARM: dts: rockchip: add ARM Mali GPU node for rk3288
-Date: Wed, 19 Apr 2017 10:59:21 +0200
-Message-ID: <5403013.fQWx48MQOq@phil>
-References: <cover.1492588180.git.guillaume.tucker@collabora.com> <f6f127efb44fb1012f18c483fa522918f8f82d7c.1492588180.git.guillaume.tucker@collabora.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+From: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [PATCH 2/2] mmc: dw_mmc-rockchip: parse rockchip,default-num-phases from DT
+Date: Wed, 19 Apr 2017 17:00:34 +0800
+Message-ID: <1492592434-81312-3-git-send-email-shawn.lin@rock-chips.com>
+References: <1492592434-81312-1-git-send-email-shawn.lin@rock-chips.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <f6f127efb44fb1012f18c483fa522918f8f82d7c.1492588180.git.guillaume.tucker-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+In-Reply-To: <1492592434-81312-1-git-send-email-shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Guillaume Tucker <guillaume.tucker-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Sjoerd Simons <sjoerd.simons-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, John Reitan <john.reitan-5wv7dgnIgG8@public.gmane.org>, Wookey <wookey-Xpnwy/r4z8dg9hUCZPvPmw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Ziyuan Xu <xzy.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Am Mittwoch, 19. April 2017, 09:06:18 CEST schrieb Guillaume Tucker:
-> Add Mali GPU device tree node for the rk3288 SoC, with devfreq
-> opp table.
-> 
-> Tested-by: Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-> Signed-off-by: Guillaume Tucker <guillaume.tucker-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-> ---
->  arch/arm/boot/dts/rk3288.dtsi | 22 ++++++++++++++++++++++
->  1 file changed, 22 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
-> index df8a0dbe9d91..187eed528f83 100644
-> --- a/arch/arm/boot/dts/rk3288.dtsi
-> +++ b/arch/arm/boot/dts/rk3288.dtsi
-> @@ -43,6 +43,7 @@
->  #include <dt-bindings/interrupt-controller/arm-gic.h>
->  #include <dt-bindings/pinctrl/rockchip.h>
->  #include <dt-bindings/clock/rk3288-cru.h>
-> +#include <dt-bindings/power/rk3288-power.h>
->  #include <dt-bindings/thermal/thermal.h>
->  #include <dt-bindings/power/rk3288-power.h>
->  #include <dt-bindings/soc/rockchip,boot-mode.h>
-> @@ -227,6 +228,27 @@
->  		ports = <&vopl_out>, <&vopb_out>;
->  	};
->  
-> +	gpu: mali@ffa30000 {
+Currently we unconditionally do tuning for each degree, which
+costs 900ms for each boot and resume.
 
-please sort nodes by address. ffa30000 should be placed below hdmi@ff980000
-and above qos@ffaa0000 .
+May someone argue that this is a question of accuracy VS time. But I
+would say it's a trick of how we need to do decision for our boards.
+If we don't care the time we spend at all, we could definitely do tuning
+for each degree. But when we need to improve the user experience, for
+instance, speed up resuming from S3, we should also have the right to
+do that. This patch add parsing "rockchip,default-num-phases", for folks
+to specify the number of doing tuning. If not specified, 360 will be used
+as before.
 
+Signed-off-by: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 
-> +		compatible = "arm,mali-t760", "arm,mali-midgard";
+---
 
-As indicated before I don't trust that a generic binding will work for
-everything, so I would feel safer if we had a "rockchip,rk3288-mali" in
-front for future purposes, making it a
+ drivers/mmc/host/dw_mmc-rockchip.c | 48 ++++++++++++++++++++++++--------------
+ 1 file changed, 30 insertions(+), 18 deletions(-)
 
-		compatible = "rockchip,rk3288-mali", "arm,mali-t760", "arm,mali-midgard";
-
-
-> +		reg = <0xffa30000 0x10000>;
-> +		interrupts = <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>,
-> +			     <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>,
-> +			     <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>;
-> +		interrupt-names = "job", "mmu", "gpu";
-> +		clocks = <&cru ACLK_GPU>;
-> +		operating-points = <
-> +			/* KHz uV */
-> +			100000 950000
-> +			200000 950000
-> +			300000 1000000
-> +			400000 1100000
-> +			500000 1200000
-> +			600000 1250000
-> +		>;
-
-Wasn't there a wish for opp-v2 in a previous version?
-
-
-Thanks
-Heiko
-
-> +		power-domains = <&power RK3288_PD_GPU>;
-> +		status = "disabled";
-> +	};
-> +
->  	sdmmc: dwmmc@ff0c0000 {
->  		compatible = "rockchip,rk3288-dw-mshc";
->  		max-frequency = <150000000>;
-> 
+diff --git a/drivers/mmc/host/dw_mmc-rockchip.c b/drivers/mmc/host/dw_mmc-rockchip.c
+index 372fb6e..c535526 100644
+--- a/drivers/mmc/host/dw_mmc-rockchip.c
++++ b/drivers/mmc/host/dw_mmc-rockchip.c
+@@ -25,6 +25,7 @@ struct dw_mci_rockchip_priv_data {
+ 	struct clk		*drv_clk;
+ 	struct clk		*sample_clk;
+ 	int			default_sample_phase;
++	int			num_phases;
+ };
+ 
+ static void dw_mci_rk3288_set_ios(struct dw_mci *host, struct mmc_ios *ios)
+@@ -133,8 +134,8 @@ static void dw_mci_rk3288_set_ios(struct dw_mci *host, struct mmc_ios *ios)
+ 	}
+ }
+ 
+-#define NUM_PHASES			360
+-#define TUNING_ITERATION_TO_PHASE(i)	(DIV_ROUND_UP((i) * 360, NUM_PHASES))
++#define TUNING_ITERATION_TO_PHASE(i, num_phases) \
++		(DIV_ROUND_UP((i) * 360, num_phases))
+ 
+ static int dw_mci_rk3288_execute_tuning(struct dw_mci_slot *slot, u32 opcode)
+ {
+@@ -159,13 +160,15 @@ static int dw_mci_rk3288_execute_tuning(struct dw_mci_slot *slot, u32 opcode)
+ 		return -EIO;
+ 	}
+ 
+-	ranges = kmalloc_array(NUM_PHASES / 2 + 1, sizeof(*ranges), GFP_KERNEL);
++	ranges = kmalloc_array(priv->num_phases / 2 + 1,
++			       sizeof(*ranges), GFP_KERNEL);
+ 	if (!ranges)
+ 		return -ENOMEM;
+ 
+ 	/* Try each phase and extract good ranges */
+-	for (i = 0; i < NUM_PHASES; ) {
+-		clk_set_phase(priv->sample_clk, TUNING_ITERATION_TO_PHASE(i));
++	for (i = 0; i < priv->num_phases; ) {
++		clk_set_phase(priv->sample_clk,
++			      TUNING_ITERATION_TO_PHASE(i, priv->num_phases));
+ 
+ 		v = !mmc_send_tuning(mmc, opcode, NULL);
+ 
+@@ -179,7 +182,7 @@ static int dw_mci_rk3288_execute_tuning(struct dw_mci_slot *slot, u32 opcode)
+ 		if (v) {
+ 			ranges[range_count-1].end = i;
+ 			i++;
+-		} else if (i == NUM_PHASES - 1) {
++		} else if (i == priv->num_phases - 1) {
+ 			/* No extra skipping rules if we're at the end */
+ 			i++;
+ 		} else {
+@@ -188,11 +191,11 @@ static int dw_mci_rk3288_execute_tuning(struct dw_mci_slot *slot, u32 opcode)
+ 			 * one since testing bad phases is slow.  Skip
+ 			 * 20 degrees.
+ 			 */
+-			i += DIV_ROUND_UP(20 * NUM_PHASES, 360);
++			i += DIV_ROUND_UP(20 * priv->num_phases, 360);
+ 
+ 			/* Always test the last one */
+-			if (i >= NUM_PHASES)
+-				i = NUM_PHASES - 1;
++			if (i >= priv->num_phases)
++				i = priv->num_phases - 1;
+ 		}
+ 
+ 		prev_v = v;
+@@ -210,7 +213,7 @@ static int dw_mci_rk3288_execute_tuning(struct dw_mci_slot *slot, u32 opcode)
+ 		range_count--;
+ 	}
+ 
+-	if (ranges[0].start == 0 && ranges[0].end == NUM_PHASES - 1) {
++	if (ranges[0].start == 0 && ranges[0].end == priv->num_phases - 1) {
+ 		clk_set_phase(priv->sample_clk, priv->default_sample_phase);
+ 		dev_info(host->dev, "All phases work, using default phase %d.",
+ 			 priv->default_sample_phase);
+@@ -222,7 +225,7 @@ static int dw_mci_rk3288_execute_tuning(struct dw_mci_slot *slot, u32 opcode)
+ 		int len = (ranges[i].end - ranges[i].start + 1);
+ 
+ 		if (len < 0)
+-			len += NUM_PHASES;
++			len += priv->num_phases;
+ 
+ 		if (longest_range_len < len) {
+ 			longest_range_len = len;
+@@ -230,25 +233,30 @@ static int dw_mci_rk3288_execute_tuning(struct dw_mci_slot *slot, u32 opcode)
+ 		}
+ 
+ 		dev_dbg(host->dev, "Good phase range %d-%d (%d len)\n",
+-			TUNING_ITERATION_TO_PHASE(ranges[i].start),
+-			TUNING_ITERATION_TO_PHASE(ranges[i].end),
++			TUNING_ITERATION_TO_PHASE(ranges[i].start,
++						  priv->num_phases),
++			TUNING_ITERATION_TO_PHASE(ranges[i].end,
++						  priv->num_phases),
+ 			len
+ 		);
+ 	}
+ 
+ 	dev_dbg(host->dev, "Best phase range %d-%d (%d len)\n",
+-		TUNING_ITERATION_TO_PHASE(ranges[longest_range].start),
+-		TUNING_ITERATION_TO_PHASE(ranges[longest_range].end),
++		TUNING_ITERATION_TO_PHASE(ranges[longest_range].start,
++					  priv->num_phases),
++		TUNING_ITERATION_TO_PHASE(ranges[longest_range].end,
++					  priv->num_phases),
+ 		longest_range_len
+ 	);
+ 
+ 	middle_phase = ranges[longest_range].start + longest_range_len / 2;
+-	middle_phase %= NUM_PHASES;
++	middle_phase %= priv->num_phases;
+ 	dev_info(host->dev, "Successfully tuned phase to %d\n",
+-		 TUNING_ITERATION_TO_PHASE(middle_phase));
++		 TUNING_ITERATION_TO_PHASE(middle_phase, priv->num_phases));
+ 
+ 	clk_set_phase(priv->sample_clk,
+-		      TUNING_ITERATION_TO_PHASE(middle_phase));
++		      TUNING_ITERATION_TO_PHASE(middle_phase,
++						priv->num_phases));
+ 
+ free:
+ 	kfree(ranges);
+@@ -264,6 +272,10 @@ static int dw_mci_rk3288_parse_dt(struct dw_mci *host)
+ 	if (!priv)
+ 		return -ENOMEM;
+ 
++	if (of_property_read_u32(np, "rockchip,default-num-phases",
++					&priv->num_phases))
++		priv->num_phases = 360;
++
+ 	if (of_property_read_u32(np, "rockchip,default-sample-phase",
+ 					&priv->default_sample_phase))
+ 		priv->default_sample_phase = 0;
+-- 
+1.9.1
 
 
 --
