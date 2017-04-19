@@ -1,55 +1,62 @@
 From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [v5,4/8] ARM: dts: n8x0: Add vendor prefix to retu node
-Date: Wed, 19 Apr 2017 21:40:47 +0200
-Message-ID: <20170419194046.43kgrmgbl3btx5tv@ninjato>
-References: <20170412172800.23035-5-javier@osg.samsung.com>
+Subject: Re: [PATCH v5 5/8] i2c: i2c-cbus-gpio: Add vendor prefix to retu
+ node in example
+Date: Wed, 19 Apr 2017 21:41:55 +0200
+Message-ID: <20170419194155.yux5sivesu3sjfba@ninjato>
+References: <20170412172800.23035-1-javier@osg.samsung.com>
+ <20170412172800.23035-6-javier@osg.samsung.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="fk5p7madrdb7xfep"
+        protocol="application/pgp-signature"; boundary="4v6ysjcjbk4qlcp6"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170412172800.23035-5-javier@osg.samsung.com>
+In-Reply-To: <20170412172800.23035-6-javier@osg.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Javier Martinez Canillas <javier@osg.samsung.com>
-Cc: linux-kernel@vger.kernel.org, Aaro Koskinen <aaro.koskinen@iki.fi>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Tony Lindgren <tony@atomide.com>, Lee Jones <lee.jones@linaro.org>, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>, Mark Rutland <mark.rutland@arm.com>, linux-omap@vger.kernel.org, Russell King <linux@armlinux.org.uk>, linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org, Aaro Koskinen <aaro.koskinen@iki.fi>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Tony Lindgren <tony@atomide.com>, Lee Jones <lee.jones@linaro.org>, linux-i2c@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
 
---fk5p7madrdb7xfep
+--4v6ysjcjbk4qlcp6
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Apr 12, 2017 at 02:27:55PM -0300, Javier Martinez Canillas wrote:
-> The retu device node doesn't have a vendor prefix
-> in its compatible string, fix it by adding one.
+On Wed, Apr 12, 2017 at 02:27:56PM -0300, Javier Martinez Canillas wrote:
+> The example contains a device node for a retu device, but
+> its compatible string doesn't have a vendor prefix.
+>=20
+> While being there, drop the -mfd suffix since isn't correct.
 >=20
 > Signed-off-by: Javier Martinez Canillas <javier@osg.samsung.com>
 > Acked-by: Rob Herring <robh@kernel.org>
 > Acked-by: Aaro Koskinen <aaro.koskinen@iki.fi>
 > Acked-by: Tony Lindgren <tony@atomide.com>
+>=20
 
 Reviewed-by: Wolfram Sang <wsa@the-dreams.de>
 
+I assume this goes with the rest of the series and not via my tree.
 
---fk5p7madrdb7xfep
+
+--4v6ysjcjbk4qlcp6
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlj3vT4ACgkQFA3kzBSg
-KbbdnQ/+P/V08mbJ5QPL3Bx6j6TRT8aL6hJFSKPmH66lGy/zsZJwdwbyc3W+WFjU
-Wa+XjxZQae3d9wpksEzoeUj927KnPiEMiAvpo7xou4HqyY76m62KVQLmoCK5HlBf
-vyxgTdJOXe19+rqJ3IeuZOUfxIk0uad0wIkeeheFPJIfkM7MRyUMwOzGXJ6zjeyk
-KOf4ezRqzP7kQL8BbmTiVlx1uTIcMdr7UhKs9nZHlC53k8LHbNrI/V6uaEvRfG4O
-0/H5cFjdbC4DB7IwNfGgon30CaFA+FS5QAWWDpV/95JOFh/4yRIVuvqxmAbBa8yI
-oz2g6gup6l8KmsYgPR6JK+4wd+2Cy4NDXk9aiswIATmcYMo6iQY5/x+G8sqEB0+n
-8UXZFFp+OMDW0KgJK0Yp69t9vxh9tiQO2NlMr3J9t6MI15KieagWfCRFMENgigh0
-l4hrXeAZAug/WaBOpL5L6eecVWv9Yd+0R+kUiQKIXZPw8FpY1yDXCCHSTkXj6mh/
-g08ho56eu0RWgsiHzX/uIY1kpMBeOa2sNWrUto8AwHlvQaImY7z9K0X0foxOdgaF
-SbFivZgP2yzMwGjs6rZrE4wfunBJVll6ZRJQ3yOf3EsLkwqJacXTHmStzeUt8Fje
-UmlVsLeGBK4vuEQbYHtjX4wJ8mbEPK700Vfceu2m7u/vGLZmPLM=
-=yjQL
+iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlj3vYMACgkQFA3kzBSg
+KbbG4RAArV8NwHy8CPgBCIniHhUOFGZWAAIl8Y076qm5WCP6b2fStsMBV+mZ4kam
+jJoOA9Q8fqRR+Sz03VI/bAr3WUG+ultmYG/ctSfa2/1ZwPFBJIOLTGGJnIlTLDwH
+MC7jvhGo1TPsr9KCUwapSVjBdt3lLXvrobRTfX3Z9Dk5mRVbjUw3dUXq60vUm8Hq
+ZYcYbI0DfNDyqujmekXAxpXA3ThaIge5UDDBPV7bIGQBSTyf3Fd8T+k+rqkymYhV
+K2M+QvX6CbrryM6TxKQQcG9+S5RSv69wQlYK6ozDOgLnuGMN6Jjp8+/Tg62kFH/B
+akiJhv5GJHjyxCg/Roo2/3uidGWhqyyOOQrTQ6Xf4B6lI0zlY70llJ8ruf2r8PiK
+h5QmFuii/QB+mwzCncK5I4YqAgJvarndYAEXGsMyQKl58bZyeuA8rEQPztCu8hf3
+wkzM7x5LReO5ACcF76XO0QitLZuytG6OaVeO2r4aBS9Rrg1B/u2Xe90M630TdWoF
+E/uwsNUsAX3ujpK0h7uXPrn8/0WDy6J8xGL02HjFSkTTu+7lrzjB5RisARHaBoWR
+qIYyB4jAH3d4zYCJZB3sYjGoXaXpKs1P7P1Gt02JYuVmavWUVHj3LBzfUiw3F9vG
+gLYXpoiiG6u0pd7YyP8iQD7GOSqeOcqEJkhwLx6CIZ8mxNst6lM=
+=gj+v
 -----END PGP SIGNATURE-----
 
---fk5p7madrdb7xfep--
+--4v6ysjcjbk4qlcp6--
