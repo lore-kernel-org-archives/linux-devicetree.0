@@ -1,55 +1,63 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 0/4] ARM: sunxi: device tree pinctrl clean
- up and H3 OTG
-Date: Wed, 19 Apr 2017 16:54:10 +0200
-Message-ID: <20170419145410.k2nkyfrz6ss7o2tt@lukather>
-References: <20170419050919.6762-1-wens@csie.org>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Leo Yan <leo.yan@linaro.org>
+Subject: Re: [PATCH v6 6/8] coresight: add support for CPU debug module
+Date: Wed, 19 Apr 2017 23:07:53 +0800
+Message-ID: <20170419150753.GA23319@leoy-linaro>
+References: <1491485461-22800-1-git-send-email-leo.yan@linaro.org>
+ <1491485461-22800-7-git-send-email-leo.yan@linaro.org>
+ <5c5cb6f8-1dcb-8a9d-1605-c006656005eb@arm.com>
+ <20170419142812.GA16160@leoy-linaro>
+ <f42088f6-aa53-06b1-b332-22198744ab7a@arm.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="dp6oxvrep2jjmtlc"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBE7U3XDQKGQEB23VEQY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170419050919.6762-1-wens-jdAy2FN1RRM@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <f42088f6-aa53-06b1-b332-22198744ab7a@arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Suzuki K Poulose <Suzuki.Poulose@arm.com>
+Cc: Jonathan Corbet <corbet@lwn.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Wei Xu <xuwei5@hisilicon.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Mathieu Poirier <mathieu.poirier@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, Mike Leach <mike.leach@linaro.org>, Sudeep Holla <sudeep.holla@arm.com>
 List-Id: devicetree@vger.kernel.org
 
+On Wed, Apr 19, 2017 at 03:32:39PM +0100, Suzuki K Poulose wrote:
 
---dp6oxvrep2jjmtlc
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+[...]
 
-On Wed, Apr 19, 2017 at 01:09:15PM +0800, Chen-Yu Tsai wrote:
-> Hi Maxime,
+> >>>+static int debug_probe(struct amba_device *adev, const struct amba_id *id)
+> >>>+{
+> >>>+	void __iomem *base;
+> >>>+	struct device *dev = &adev->dev;
+> >>>+	struct debug_drvdata *drvdata;
+> >>>+	struct resource *res = &adev->res;
+> >>>+	struct device_node *np = adev->dev.of_node;
+> >>>+	int ret;
+> >>>+
+> >>>+	drvdata = devm_kzalloc(dev, sizeof(*drvdata), GFP_KERNEL);
+> >>>+	if (!drvdata)
+> >>>+		return -ENOMEM;
+> >>>+
+> >>>+	drvdata->cpu = np ? of_coresight_get_cpu(np) : 0;
+> >>>+	if (per_cpu(debug_drvdata, drvdata->cpu)) {
+> >>>+		dev_err(dev, "CPU%d drvdata has been initialized\n",
+> >>>+			drvdata->cpu);
+> >>
+> >>May be we could warn about a possible issue in the DT ?
+> >
+> >So can I understand the suggestion is to add warning in function
+> >of_coresight_get_cpu() when cannot find CPU number, and here directly
+> >bail out?
 > 
-> This series has 2 parts. The parts are largely unrelated, though the
-> second part should be applied after the first part, so we don't
-> accidentally mux pins that we shouldn't. Hence I'm sending them
-> together.
+> No. One could have single CPU DT, where he doesn't need to provide the CPU number.
+> Hence, it doesn't make sense to WARN  in of_coresight_get_cpu().
 > 
-> The first 2 patches clean up the sunxi device tree files, removing
-> pinmux settings for common GPIO pins. These include the enable pins
-> for the common regulators, and the mmc0 card detect pin from the
-> reference designs.
+> But when we hit the case above, we find that the some node was registered for
+> the given CPU (be it 0 or any other), which is definitely an error in DT. Due to
 > 
-> The second part, the latter 2 patches, enable USB OTG on the Orangepi
-> PC, PC Plus, Plus 2E, and the Bananapi M2+. The first 3 boards are
-> bunched together, due to how the PC Plus and Plus 2E device trees include
-> the device tree of the Opi PC.
+> 1) Hasn't specified the CPU number for more than one node
+> 
+> OR
+> 
+> 2) CPU number duplicated in the more than one nodes.
 
-Applied, thanks!
-Maxime
+Thanks for explaination. It's clear for me now.
 
--- 
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
---dp6oxvrep2jjmtlc--
+> Cheers
+> Suzuki
