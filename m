@@ -1,33 +1,45 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 1/2] dt-bindings: Document the STM32 QSPI bindings
-Date: Wed, 19 Apr 2017 17:35:06 -0500
-Message-ID: <20170419223506.slmoivl3oenp5nub@rob-hp-laptop>
-References: <1492103757-22375-1-git-send-email-ludovic.Barre@st.com>
- <1492103757-22375-2-git-send-email-ludovic.Barre@st.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3] pinctrl: sh-pfc: r8a7791: add R8A7743 support
+Date: Wed, 19 Apr 2017 17:36:20 -0500
+Message-ID: <20170419223619.girdiji5igwwa3sy@rob-hp-laptop>
+References: <20170413201346.358012116@cogentembedded.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-gpio-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1492103757-22375-2-git-send-email-ludovic.Barre-qxv4g6HH51o@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ludovic Barre <ludovic.Barre-qxv4g6HH51o@public.gmane.org>
-Cc: Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <20170413201346.358012116@cogentembedded.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Linus Walleij <linus.walleij@linaro.org>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 13, 2017 at 07:15:56PM +0200, Ludovic Barre wrote:
-> From: Ludovic Barre <ludovic.barre-qxv4g6HH51o@public.gmane.org>
+On Thu, Apr 13, 2017 at 11:13:32PM +0300, Sergei Shtylyov wrote:
+> Renesas RZ/G1M (R8A7743) is pin compatible with R-Car M2-W/N (R8A7791/3),
+> however it doesn't have several automotive specific peripherals. Annotate
+> all the items that only exist on the R-Car SoCs and only supply  the pin
+> groups/functions existing on a given SoC...
 > 
-> This patch adds documentation of device tree bindings for the STM32
-> QSPI controller.
+> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 > 
-> Signed-off-by: Ludovic Barre <ludovic.barre-qxv4g6HH51o@public.gmane.org>
 > ---
->  .../devicetree/bindings/mtd/stm32-quadspi.txt      | 43 ++++++++++++++++++++++
->  1 file changed, 43 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mtd/stm32-quadspi.txt
+> This patch is against the 'devel' branch of Linus Walleij's 'linux-pinctrl.git'
+> repo plus  4  R8A7791 PFC fixes and the "grand I2C rename" patch...
+> 
+> Changes in version 3:
+> - updated the PFC bindings.
+> 
+> Changes in version 2:
+> - switch to supplying exactly the groups/functions existing on a given SoC,
+>   update the patch descriptions accordingly;
+> - resolved rejects due to the "grand I2C rename" patch being updated.
+> 
+>  Documentation/devicetree/bindings/pinctrl/renesas,pfc-pinctrl.txt |    1 
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Acked-by: Rob Herring <robh@kernel.org>
+
+>  drivers/pinctrl/sh-pfc/Kconfig                                    |    5 
+>  drivers/pinctrl/sh-pfc/Makefile                                   |    1 
+>  drivers/pinctrl/sh-pfc/core.c                                     |    6 
+>  drivers/pinctrl/sh-pfc/pfc-r8a7791.c                              | 1889 +++++-----
+>  drivers/pinctrl/sh-pfc/sh_pfc.h                                   |    1 
+>  6 files changed, 1023 insertions(+), 880 deletions(-)
