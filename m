@@ -1,82 +1,78 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH v13 03/10] mux: minimal mux subsystem and gpio-based mux
- controller
-Date: Wed, 19 Apr 2017 15:49:16 +0200
-Message-ID: <1492609756.2970.131.camel@pengutronix.de>
-References: <1492101794-13444-1-git-send-email-peda@axentia.se>
-         <1492101794-13444-4-git-send-email-peda@axentia.se>
-         <1492592817.2970.14.camel@pengutronix.de>
-         <da90526b-7274-c52c-07e8-9f0d75cf1cbf@axentia.se>
+From: Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [PATCH V4 1/9] PM / OPP: Allow OPP table to be used for
+ power-domains
+Date: Wed, 19 Apr 2017 14:58:00 +0100
+Message-ID: <9dee7c0d-e5f4-9fcd-3c92-bf7ec9d43a3b@arm.com>
+References: <cover.1490001099.git.viresh.kumar@linaro.org>
+ <e772e67a5445319bb8e0f312846ace666adc097f.1490001099.git.viresh.kumar@linaro.org>
+ <0a7146f9-72f1-317c-3aab-770a72462968@arm.com>
+ <20170413053736.GM5910@vireshk-i7>
+ <3adbef6a-7b43-528f-e88f-c2121d30a5d3@arm.com>
+ <20170417052758.GF28191@vireshk-i7>
+ <95aa4b97-4e1a-13bb-f4d8-982b778012ba@arm.com>
+ <20170419114740.GD5436@vireshk-i7>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <da90526b-7274-c52c-07e8-9f0d75cf1cbf@axentia.se>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Rosin <peda@axentia.se>
-Cc: linux-kernel@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Jonathan Corbet <corbet@lwn.net>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, linux-doc@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, Colin Ian King <colin.king@canonical.com>, Paul Gortmaker <paul.gortmaker@windriver.com>, kernel@pengutronix.de
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20170419114740.GD5436@vireshk-i7>
+Sender: linux-pm-owner@vger.kernel.org
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: Sudeep Holla <sudeep.holla@arm.com>, Rafael Wysocki <rjw@rjwysocki.net>, ulf.hansson@linaro.org, Kevin Hilman <khilman@linaro.org>, Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@codeaurora.org>, linaro-kernel@lists.linaro.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, Vincent Guittot <vincent.guittot@linaro.org>, robh+dt@kernel.org, lina.iyer@linaro.org, rnayak@codeaurora.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2017-04-19 at 14:00 +0200, Peter Rosin wrote:
-[...]
-> >> +int mux_control_select(struct mux_control *mux, int state)
-> > 
-> > If we let two of these race, ...
->
-> The window for this "race" is positively huge. If there are several
-> mux consumers of a single mux controller, it is self-evident that
-> if one of them grabs the mux for a long time, the others will suffer.
+
+
+On 19/04/17 12:47, Viresh Kumar wrote:
+> On 18-04-17, 17:01, Sudeep Holla wrote:
+>> Understood. I would incline towards reusing regulators we that's what is
 > 
-> The design is that the rwsem is reader-locked for the full duration
-> of a select/deselect operation by the mux consumer.
-
-I was not clear. I meant: I think this can also happen if we let them
-race with the same state target.
-
-> >> +{
-> >> +	int ret;
-> >> +
-> >> +	if (down_read_trylock(&mux->lock)) {
-> >> +		if (mux->cached_state == state)
-> >> +			return 0;
-
-This check makes it clear that a second select call is not intended to
-block if the intended state is already selected. But if the instance we
-will lose the race against has not yet updated cached_state, ...
-
-> >> +		/* Sigh, the mux needs updating... */
-> >> +		up_read(&mux->lock);
-> >> +	}
-> >> +
-> >> +	/* ...or it's just contended. */
-> >> +	down_write(&mux->lock);
-
-... we are blocking here until the other instance calls up_read. Even
-though in this case (same state target) we would only have to block
-until the other instance calls downgrade_write after the mux control is
-set to the correct state.
-
-Basically there is a small window before down_write with no lock at all,
-where multiple instances can already have decided they must change the
-mux (to the same state). If this happens, they go on to block each other
-unnecessarily.
-
-> > ... then the last to get to down_write will just wait here forever (or
-> > until the first consumer calls mux_control_deselect, which may never
-> > happen)?
+> It can be just a regulator, but it can be anything else as well. That
+> entity may have its own clock/volt/current tunables, etc.
 > 
-> It is vital that the mux consumer call _deselect when it is done with
-> the mux. Not doing so will surely starve out any other mux consumers.
-> The whole thing is designed around the fact that mux consumers should
-> deselect the mux as soon as it's no longer needed.
 
-I'd like to use this for video bus multiplexers. Those would not be
-selected for the duration of an i2c transfer, but for the duration of a
-running video capture stream, or for the duration of an enabled display
-path. While I currently have no use case for multiple consumers
-controlling the same mux, this scenario is what shapes my perspective.
-For such long running selections the consumer should have the option to
-return -EBUSY instead of blocking when the lock can't be taken.
+Agreed.
 
-regards
-Philipp
+>> changed behind the scene. Calling this operating performance point
+>> is misleading and doesn't align well with existing specs/features.
+> 
+> Yeah, but there are no voltage levels available here and that doesn't
+> fit as a regulator then.
+> 
+
+We can't dismiss just based on that. We do have systems where
+performance index is mapped to clocks though it may not be 1:1 mapping.
+I am not disagreeing here, just trying to understand it better.
+
+>> Understood. We have exactly same thing with SCPI but it controls both
+>> frequency and voltage referred as operating points. In general, this OPP
+>> terminology is used in SCPI/ACPI/SCMI specifications as both frequency
+>> and voltage control. I am bit worried that this binding might introduce
+>> confusions on the definitions. But it can be reworded/renamed easily if
+>> required.
+> 
+> Yeah, so far we have been looking at OPPs as freq-voltage pairs ONLY
+> and that is changing. I am not sure if it going in the wrong
+> direction really. Without frequency also it is an operating point for
+> the domain. Isn't it?
+> 
+
+Yes, I completely agree. I am not saying the direction is wrong. I am
+saying it's confusing and binding needs to be more clear.
+
+On the contrary(playing devil's advocate here), we can treat all
+existing regulators alone as OPP then if you strip the voltages and
+treat it as abstract number. So if the firmware handles more than just
+regulators, I agree. At the same time, I would have preferred firmware
+to even abstract the frequency like ACPI CPPC. It would be good to get
+more information on what exactly that firmware handles.
+
+I am just more cautious here since we are designing generic bindings and
+changing generic code, we need to understand what that firmware supports
+and how it may evolve(so that we can maintain DT compatibility)
+
+I did a brief check and wanted to check if this is SMD/RPM regulators ?
+
+-- 
+Regards,
+Sudeep
