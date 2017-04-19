@@ -1,78 +1,83 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [linux-sunxi] Re: [PATCH 2/4] ARM: sunxi: Drop
- mmc0_cd_pin_reference_design pinmux setting
-Date: Wed, 19 Apr 2017 23:49:30 +0800
-Message-ID: <CAGb2v66jgUYHWzdhysznst6jPF=jtTVw3jZ7x3qh1X36FPPp1A@mail.gmail.com>
-References: <20170419050919.6762-1-wens@csie.org> <20170419050919.6762-3-wens@csie.org>
- <442479d213a83c73cd7ff44538d234ea@aosc.io>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH V2] clk: hi6220: Add the hi655x's pmic clock
+Date: Wed, 19 Apr 2017 09:00:05 -0700
+Message-ID: <20170419160005.GS7065@codeaurora.org>
+References: <1491683412-12237-1-git-send-email-daniel.lezcano@linaro.org>
+ <20170412150245.GK7065@codeaurora.org>
+ <20170416205713.GW2078@mai>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <442479d213a83c73cd7ff44538d234ea-h8G6r0blFSE@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-clk-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170416205713.GW2078@mai>
+Sender: linux-clk-owner@vger.kernel.org
+To: Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: mturquette@baylibre.com, lee.jones@linaro.org, xuwei5@hisilicon.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 19, 2017 at 11:36 PM,  <icenowy-h8G6r0blFSE@public.gmane.org> wrote:
-> 在 2017-04-19 13:09，Chen-Yu Tsai 写道：
->>
->> As part of our effort to move pinctrl/GPIO interlocking into the
->> driver where it belongs, this patch drops the definition and usage
->> of the mmc0_cd_pin_reference_design pinmux setting for the default
->> mmc0 card detect GPIO pin.
->>
->> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+On 04/16, Daniel Lezcano wrote:
+> On Wed, Apr 12, 2017 at 08:02:45AM -0700, Stephen Boyd wrote:
+> > On 04/08, Daniel Lezcano wrote:
+>  
+> > > +	struct hi655x_clk *hi655x_clk;
+> > > +	const char *clk_name = "hi655x-clk";
+> > > +	int ret;
+> > > +
+> > > +	hi655x_clk = devm_kzalloc(&pdev->dev, sizeof(*hi655x_clk), GFP_KERNEL);
+> > > +	if (!hi655x_clk)
+> > > +		return -ENOMEM;
+> > > +
+> > > +	hi655x_clk_init = devm_kzalloc(&pdev->dev, sizeof(*hi655x_clk_init),
+> > > +				       GFP_KERNEL);
+> > > +	if (!hi655x_clk_init)
+> > > +		return -ENOMEM;
+> > > +
+> > > +	of_property_read_string_index(parent->of_node, "clock-output-names",
+> > > +				      0, &clk_name);
+> > > +
+> > > +	hi655x_clk_init->name	= clk_name;
+> > > +	hi655x_clk_init->ops	= &hi655x_clk_ops;
+> > > +
+> > > +	hi655x_clk->clk_hw.init	= hi655x_clk_init;
+> > > +	hi655x_clk->hi655x	= hi655x;
+> > > +
+> > > +	platform_set_drvdata(pdev, hi655x_clk);
+> > > +
+> > > +	ret = devm_clk_hw_register(&pdev->dev, &hi655x_clk->clk_hw);
+> > > +	if (ret)
+> > > +		return ret;
+> > > +
+> > > +	ret = of_clk_add_hw_provider(parent->of_node, of_clk_hw_simple_get,
+> > > +				     &hi655x_clk->clk_hw);
+> > > +	if (ret)
+> > > +		return ret;
+> > > +
+> > > +	ret = clk_hw_register_clkdev(&hi655x_clk->clk_hw, clk_name, NULL);
+> > 
+> > Missed this last time. Do you use this clkdev lookup? The name is
+> > usually supposed to be based on what the device is expecting,
+> > instead of clk_name, and we would want some device name for the
+> > third argument here.
+> 
+> I'm not sure to get your comment. Are you saying the clk_name should be the
+> third argument?
+> 
+> 
 
-[...]
+Sorry, no. I meant that con_id is typically something like "core"
+or "ahb" or something like that, and dev_id is something like
+"a456002.pmic_device" or whatever dev_name(pmic_dev) would return for
+the consuming device. That way when we call clk_get(dev, "core")
+it will find the lookup with "core" and "a456002.pmic_device" to
+match up the clk lookup.
 
->> diff --git a/arch/arm/boot/dts/sun7i-a20.dtsi
->> b/arch/arm/boot/dts/sun7i-a20.dtsi
->> index 93aa55970bd7..c03b59aaec82 100644
->> --- a/arch/arm/boot/dts/sun7i-a20.dtsi
->> +++ b/arch/arm/boot/dts/sun7i-a20.dtsi
->> @@ -1190,12 +1190,6 @@
->>                                 bias-pull-up;
->>                         };
->>
->> -                       mmc0_cd_pin_reference_design: mmc0_cd_pin@0 {
->> -                               pins = "PH1";
->> -                               function = "gpio_in";
->> -                               bias-pull-up;
->
->
-> It needs pull up, so shouldn't be dropped.
->
-> (Although there may be external pull-up resistors on the board;
-> however last time we removed the pull-up on MMC node many boards
-> failed, so we cannot rely on external pull-up resistors)
+If anything, the clk_name should just go into the con_id for now,
+and then it will need to be a globally unique identifier for the
+clk. But that is going against how clkdev is supposed to be used.
+Hence the question if you even need to use it. If not, just don't
+add it. I can fix up v3 of this patch to put clk_name back at
+con_id if you like. No need to resend.
 
-I checked the boards that I have schematics, and the reference design.
-All have proper external pull-up resistors for this pin, unlike the
-other mmc pins.
-
-If some board doesn't, it really needs to be singled out and handled
-separately. Have you encountered any issues?
-
-Regards
-ChenYu
-
->
->> -                       };
->> -
->>                         mmc2_pins_a: mmc2@0 {
->>                                 pins = "PC6", "PC7", "PC8",
->>                                        "PC9", "PC10", "PC11";
->
->
-> --
-> You received this message because you are subscribed to the Google Groups
-> "linux-sunxi" group.
-> To unsubscribe from this group and stop receiving emails from it, send an
-> email to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-> For more options, visit https://groups.google.com/d/optout.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
