@@ -1,94 +1,71 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [RFC 2/2] mux: mmio-based syscon mux controller
-Date: Wed, 19 Apr 2017 17:27:20 +0200
-Message-ID: <1492615640.2970.145.camel@pengutronix.de>
-References: <20170413154812.19597-1-p.zabel@pengutronix.de>
-         <20170413154812.19597-2-p.zabel@pengutronix.de>
-         <58fd5844-f24a-37cc-be81-26a716251860@gmail.com>
-         <1492602613.2970.92.camel@pengutronix.de>
-         <e4d4b515-e799-9594-f88a-de9d8a5d14bb@axentia.se>
+From: Leo Yan <leo.yan@linaro.org>
+Subject: Re: [PATCH v6 6/8] coresight: add support for CPU debug module
+Date: Wed, 19 Apr 2017 23:30:45 +0800
+Message-ID: <20170419153045.GB23319@leoy-linaro>
+References: <1491485461-22800-1-git-send-email-leo.yan@linaro.org>
+ <1491485461-22800-7-git-send-email-leo.yan@linaro.org>
+ <20170418174050.GC22806@linaro.org>
+ <20170419001807.GB8524@leoy-linaro>
+ <CANLsYkyheVJkEjpcWAd5HHFCimfTPhgihioE7bYo1RAL=8Shdw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <e4d4b515-e799-9594-f88a-de9d8a5d14bb@axentia.se>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Rosin <peda@axentia.se>
-Cc: Steve Longerbeam <slongerbeam@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sakari Ailus <sakari.ailus@iki.fi>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, kernel@pengutronix.de
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CANLsYkyheVJkEjpcWAd5HHFCimfTPhgihioE7bYo1RAL=8Shdw@mail.gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc: Jonathan Corbet <corbet@lwn.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Wei Xu <xuwei5@hisilicon.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Suzuki K Poulose <suzuki.poulose@arm.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-doc@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, Mike Leach <mike.leach@linaro.org>, Sudeep Holla <sudeep.holla@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2017-04-19 at 13:58 +0200, Peter Rosin wrote:
-> On 2017-04-19 13:50, Philipp Zabel wrote:
-> > On Thu, 2017-04-13 at 18:09 -0700, Steve Longerbeam wrote:
+On Wed, Apr 19, 2017 at 08:52:12AM -0600, Mathieu Poirier wrote:
+
+[...]
+
+> >> > +static bool debug_enable;
+> >> > +module_param_named(enable, debug_enable, bool, 0600);
+> >> > +MODULE_PARM_DESC(enable, "Knob to enable debug functionality "
+> >> > +            "(default is 0, which means is disabled by default)");
 > >>
-> >> On 04/13/2017 08:48 AM, Philipp Zabel wrote:
-> >>> This adds a driver for mmio-based syscon multiplexers controlled by a
-> >>> single bitfield in a syscon register range.
-> >>>
-> >>> Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
-> >>> ---
-> >>>   drivers/mux/Kconfig      |  13 +++++
-> >>>   drivers/mux/Makefile     |   1 +
-> >>>   drivers/mux/mux-syscon.c | 130 +++++++++++++++++++++++++++++++++++++++++++++++
-> >>>   3 files changed, 144 insertions(+)
-> >>>   create mode 100644 drivers/mux/mux-syscon.c
-> >>>
-> >>> diff --git a/drivers/mux/Kconfig b/drivers/mux/Kconfig
-> >>> index 86668b4d2fc52..a5e6a3b01ac24 100644
-> >>> --- a/drivers/mux/Kconfig
-> >>> +++ b/drivers/mux/Kconfig
-> >>> @@ -43,4 +43,17 @@ config MUX_GPIO
-> >>>   	  To compile the driver as a module, choose M here: the module will
-> >>>   	  be called mux-gpio.
-> >>>   
-> >>> +config MUX_SYSCON
-> >>
-> >> my preference would be CONFIG_MUX_MMIO.
-> >>
-> >>> +	tristate "MMIO bitfield-controlled Multiplexer"
-> >>
-> >> "MMIO register bitfield-controlled Multiplexer"
-> >>
-> >> The rest looks good to me.
-> > 
-> > I'll change those. mux-syscon.c should probably be renamed to
-> > mux-mmio.c, too.
+> >> For this driver we have a debugFS interface so I question the validity of a
+> >> kernel module parameter.  Other than adding complexity to the code it offers no
+> >> real added value.  If a user is to insmod a module, it is just as easy to switch
+> >> on the functionality using debugFS in a second step.
+> >
+> > This module parameter can be used for kernel command line, so
+> > it's useful when user wants to dynamically turn on/off the
+> > functionality at boot up time.
+> >
+> > Does this make sense for you? Removing this parameter is okay for
+> > me, but this means users need to decide if use it by Kernel config
+> > with static building in. This is a bit contradictory with before's
+> > discussion.
 > 
-> I think I disagree. But I'm not familiar with syscon so I don't know.
-> IIUC, syscon uses regmap to do mmio and this driver requires syscon
-> to get at the regmap, and in the end this driver doesn't know anything
-> about mmio. All it knows is syscon/regmap.
-
-That is a good point. Right now there is nothing MMIO about the driver
-except for the hardware that I want it to handle.
-
->  If some warped syscon
-> thing shows up that wraps something other than mmio in its regmap,
-> this driver wouldn't care about it. And syscon is something that
-> is also known in the DT world. Given that, I think everything in this
-> driver should be named syscon and not mmio.
+> My hope was to use the kernel command line and the debugFS interface,
+> avoiding the module parameter.  Look at what the baycom_par and
+> blacklist drivers are doing with the "__setup()" function and see if
+> we can void a module parameter.  If not then let it be, unless someone
+> else has a better idea.
 > 
-> Or?
+> [1]. drivers/net/hamradio/baycom_par.c
+> [2]. drivers/s390/cio/blacklist.c
 
-Well, ...
+This driver supports module mode. So we can choose to use either module
+parameter or __setup(). But as described in the file
+Documentation/admin-guide/kernel-parameters.rst, the module parameter
+is more flexible to be used at boot time or insmod the module:
 
-the driver could be extended to do actual MMIO if the syscon is not
-found. This would work only if it has exclusive access to its register.
+"Parameters for modules which are built into the kernel need to be
+specified on the kernel command line.  modprobe looks through the 
+kernel command line (/proc/cmdline) and collects module parameters
+when it loads a module, so the kernel command line can be used for 
+loadable modules too."
 
-On the other hand, the driver could also be made to match against
-    compatible = "bitfield-mux",
-for example, and allow handling muxes inside SPI or I2C controlled MFD
-devices that provide a syscon regmap, as you describe:
+__setup() cannot support module mode, and when use __setup(), we need
+register one callback function for it. The callback function is
+friendly to parse complex parameters rather than module parameter.
+but it's not necessary for this case.
 
-	spi-host {
-		mfd-device {
-			compatible = "some-spi-regmap-device";
+So I'm bias to use module parameter :)
 
-			mux {
-				compatible = "bitfield-mux";
-			};
-		};
-	};
-
-regards
-Philipp
+Thanks,
+Leo Yan
