@@ -1,146 +1,78 @@
-From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: BCM5301X: Specify MDIO bus in the DT
-Date: Wed, 19 Apr 2017 10:52:44 -0700
-Message-ID: <221a0208-8a64-6bd8-f6b2-39e845520a83@gmail.com>
-References: <20170402210840.11429-1-zajec5@gmail.com>
- <5a6ecda9-2cf6-2171-7210-6b3a1d4c6012@gmail.com>
- <c3a0455a-821f-d8a8-bf8a-7ad06ad0466e@milecki.pl>
- <94250925-7d5d-ac31-58ad-918406d904f1@gmail.com>
- <cd324440-ad88-0981-1577-822d39ee289d@gmail.com>
+From: Eric Anholt <eric@anholt.net>
+Subject: Re: [PATCH 2/3] drm/vc4: Don't try to initialize FBDEV if we're only
+ bound to V3D.
+Date: Wed, 19 Apr 2017 10:55:31 -0700
+Message-ID: <8760i046zw.fsf@eliezer.anholt.net>
+References: <20170418191157.18517-1-eric@anholt.net>
+ <20170418191157.18517-2-eric@anholt.net>
+ <CAKMK7uFSsA3c+wMfq_O9kSvu0cWLUA-bRqTHyryqi+1ZVeir_w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <cd324440-ad88-0981-1577-822d39ee289d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
-Cc: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: multipart/mixed; boundary="===============1681970871=="
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <CAKMK7uFSsA3c+wMfq_O9kSvu0cWLUA-bRqTHyryqi+1ZVeir_w@mail.gmail.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Daniel Vetter <daniel@ffwll.ch>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>
 List-Id: devicetree@vger.kernel.org
 
-On 04/19/2017 10:35 AM, Rafał Miłecki wrote:
-> On 04/19/2017 06:43 PM, Florian Fainelli wrote:
->> On 04/02/2017 02:25 PM, Rafał Miłecki wrote:
->>> On 04/02/2017 11:14 PM, Florian Fainelli wrote:
->>>> Le 04/02/17 à 14:08, Rafał Miłecki a écrit :
->>>>> From: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
->>>>>
->>>>> Northstar devices have MDIO bus that may contain various PHYs
->>>>> attached.
->>>>> A common example is USB 3.0 PHY (that doesn't have an MDIO driver
->>>>> yet).
->>>>>
->>>>> Signed-off-by: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
->>>>> ---
->>>>>  arch/arm/boot/dts/bcm5301x.dtsi | 7 +++++++
->>>>>  1 file changed, 7 insertions(+)
->>>>>
->>>>> diff --git a/arch/arm/boot/dts/bcm5301x.dtsi
->>>>> b/arch/arm/boot/dts/bcm5301x.dtsi
->>>>> index acee36a61004..6a2afe7880ae 100644
->>>>> --- a/arch/arm/boot/dts/bcm5301x.dtsi
->>>>> +++ b/arch/arm/boot/dts/bcm5301x.dtsi
->>>>> @@ -320,6 +320,13 @@
->>>>>          };
->>>>>      };
->>>>>
->>>>> +    mdio@18003000 {
->>>>> +        compatible = "brcm,iproc-mdio";
->>>>> +        reg = <0x18003000 0x8>;
->>>>> +        #size-cells = <1>;
->>>>> +        #address-cells = <0>;
->>>>> +    };
->>>>
->>>> This looks fine, but usually the block should be enabled on a per-board
->>>> basis, such that there should be a status = "disabled" property here by
->>>> default.
->>>
->>> I think we have few blocks in bcm5301x.dtsi enabled by default. I guess
->>> it's
->>> for stuff that is always present on every SoC family board: rng, nand,
->>> spi to
->>> name few.
->>>
->>> It makes some sense, consider e.g. spi. Every Northstar board has SPI
->>> controller so it's enabled by default. Not every board has SPI flash, so
->>> it's
->>> disabled by default.
->>>
->>> It's there and it make sense to me. Is that OK or not?
+--===============1681970871==
+Content-Type: multipart/signed; boundary="=-=-=";
+	micalg=pgp-sha512; protocol="application/pgp-signature"
+
+--=-=-=
+Content-Type: text/plain
+
+Daniel Vetter <daniel@ffwll.ch> writes:
+
+> On Tue, Apr 18, 2017 at 9:11 PM, Eric Anholt <eric@anholt.net> wrote:
+>> The FBDEV initialization would throw an error in dmesg, when we just
+>> want to silently not initialize fbdev on a V3D-only VC4 instance.
 >>
->> Even though there are devices that are always enabled on a given SoC,
->> because the board designs are always consistent does not necessarily
->> make them good candidates to be enabled at the .dtsi level. This is
->> particularly true when there are external connections to blocks (SPI,
->> NAND, USB, Ethernet, MDIO to name a few), having them disabled by
->> default is safer as a starting point to begin with.
-> 
-> In case of Northstar there is USB 3.0 PHY connected *internally* to this
-> MDIO.
-> I don't think any board manufacturer is able to rip SoC out of the MDIO
-> or the
-> USB 3.0 PHY.
+>> Signed-off-by: Eric Anholt <eric@anholt.net>
+>
+> Hm, this shouldn't be an error really, you might want to hotplug more
+> connectors later on. What exactly complains?
 
-OK, then can you still resubmit a proper patch that a) puts that
-information in the commit message, and b) also adds a proper label to
-the mdio node such that it can later on be referenced by label in
-board-level DTS files? By that I mean:
+drm_fb_helper_init() throws an error if the passed in connector count is
+0, so drm_fb_cma_helper() printks an error.
 
-mdio: mdio@18003000 {
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Thank you
+-----BEGIN PGP SIGNATURE-----
 
-> 
-> 
->>> I find MDIO situation quite simiar. It seems every Northstar board has
->>> MDIO bus
->>> just devices may differ and should not be enabled by default.
->>
->> In which case, the only difference, for you would be to do to, at the
->> board-level DTS:
->>
->> &mdio {
->>     status = "okay";
->>
->>     phy@0 {
->>         reg = <0>;
->>         ...
->>     };
->> };
->>
->> versus:
->>
->> &mdio {
->>     phy@0 {
->>         reg = <0>;
->>         ...
->>     };
->> };
->>
->> I think we can afford putting the mdio node's status property in each
->> board-level DTS and make it clear that way that it is enabled because
->> there are child nodes enabled?
-> 
-> This will be a pretty big effort because every Northstar device I know
-> has USB
-> 3.0 PHY in the SoC.
+iQIzBAEBCgAdFiEE/JuuFDWp9/ZkuCBXtdYpNtH8nugFAlj3pJMACgkQtdYpNtH8
+nujfMA/+JBynPdfY/qNyvUQ6z3JU/2H9meAiKvhua14mirgn3jzq6DjnYYMQe5XM
+8ueAV1X8fX6jy4udBFGw19nxGeBcrKwg6eT0HICZzIwADVmfO6m+GgnAiXcwkc+k
+Pn4uEdzSyTozxix7MGNz2GEQWByepy28KxVib/SCPcd6FGteSH5vEsWQh/DuQkSN
+Fs3fW3R0LS9Cd25Hci5630jQfNujlbSNzO9u4UxYtGL/dEoZ/7AIsu/I8sX00OGU
+UAYImL0SrbjoiFKNQru52dPqWf/m5pAmRai6ZZaLjaVcTC011+SLilyqP4AtdSWm
+fmoUVeSyrlb8AXDMDpK5tqyrkVDhC/2F7ZrSUFs6xxZWxA/usLkM5AKMv9A9rNOH
+YmF3PNkBZuP9jYNZF4zi3s8YWzZFS8gcNoynnLNcHKQ5RSOIheoeCHYBqHq4IqR9
+gxKfnldC2m0ovCS39nM7R5kZ5wtq2u+VLPxGiKleE/yZ/LFNGkk2nsSDAiOnbzVC
+qWGrCS6jDQRvn9o0RBSgo9pwmIJ8d+5KzrwKWohnn+2MKZJ4cPAY9wfXrvjX9Bp8
+fTuchspswniPm7LcmvggUpRErHvKRXMO0aD17Au9ZE4n6I2thlIbhA4FQfESxLk8
+2H9cijNZXwLFoM0FFoFusRchx4eSo+tTLfJtXHaV+9jIfzkQEpw=
+=696r
+-----END PGP SIGNATURE-----
+--=-=-=--
 
-Adding a one liner is a "pretty big effort", for sure.
+--===============1681970871==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: inline
 
-> 
-> 
->> NB: with a CONFIG_OF system, there is no automatic probing of MDIO child
->> devices because it relies on child nodes being declared, but you would
->> still get the driver to be probed and enabled, which is a waste of
->> resources at best.
-> 
-> Right, but DT role is to describe device/board and not really care if
-> operating
-> system handles that efficiently.
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
 
-
--- 
-Florian
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--===============1681970871==--
