@@ -1,62 +1,136 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [PATCH v5 5/8] i2c: i2c-cbus-gpio: Add vendor prefix to retu
- node in example
-Date: Wed, 19 Apr 2017 21:41:55 +0200
-Message-ID: <20170419194155.yux5sivesu3sjfba@ninjato>
-References: <20170412172800.23035-1-javier@osg.samsung.com>
- <20170412172800.23035-6-javier@osg.samsung.com>
+From: Guenter Roeck <groeck-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v3] usb: dwc3: add disable u2mac linestate check quirk
+Date: Wed, 19 Apr 2017 12:44:22 -0700
+Message-ID: <CABXOdTcAuUj2ZjU8sWHJjXcD=v51TOueS0=wzvd4JneWk2gjrA@mail.gmail.com>
+References: <1492603898-25070-1-git-send-email-william.wu@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="4v6ysjcjbk4qlcp6"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170412172800.23035-6-javier@osg.samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Javier Martinez Canillas <javier@osg.samsung.com>
-Cc: linux-kernel@vger.kernel.org, Aaro Koskinen <aaro.koskinen@iki.fi>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Tony Lindgren <tony@atomide.com>, Lee Jones <lee.jones@linaro.org>, linux-i2c@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1492603898-25070-1-git-send-email-william.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: William Wu <william.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Wang <frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Tao Huang <huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Doug Anderson <dianders-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Brian Norris <briannorris-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, daniel.meng-TNX95d0MmH7DzftRWevZcw@public.gmane.org, John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Wed, Apr 19, 2017 at 5:11 AM, William Wu <william.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org> wrote:
+> This patch adds a quirk to disable USB 2.0 MAC linestate check
+> during HS transmit. Refer the dwc3 databook, we can use it for
+> some special platforms if the linestate not reflect the expected
+> line state(J) during transmission.
+>
+> When use this quirk, the controller implements a fixed 40-bit
+> TxEndDelay after the packet is given on UTMI and ignores the
+> linestate during the transmit of a token (during token-to-token
+> and token-to-data IPGAP).
+>
+> On some rockchip platforms (e.g. rk3399), it requires to disable
+> the u2mac linestate check to decrease the SSPLIT token to SETUP
+> token inter-packet delay from 566ns to 466ns, and fix the issue
+> that FS/LS devices not recognized if inserted through USB 3.0 HUB.
+>
+> Signed-off-by: William Wu <william.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 
---4v6ysjcjbk4qlcp6
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Reviewed-by: Guenter Roeck <groeck-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 
-On Wed, Apr 12, 2017 at 02:27:56PM -0300, Javier Martinez Canillas wrote:
-> The example contains a device node for a retu device, but
-> its compatible string doesn't have a vendor prefix.
->=20
-> While being there, drop the -mfd suffix since isn't correct.
->=20
-> Signed-off-by: Javier Martinez Canillas <javier@osg.samsung.com>
-> Acked-by: Rob Herring <robh@kernel.org>
-> Acked-by: Aaro Koskinen <aaro.koskinen@iki.fi>
-> Acked-by: Tony Lindgren <tony@atomide.com>
->=20
-
-Reviewed-by: Wolfram Sang <wsa@the-dreams.de>
-
-I assume this goes with the rest of the series and not via my tree.
-
-
---4v6ysjcjbk4qlcp6
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlj3vYMACgkQFA3kzBSg
-KbbG4RAArV8NwHy8CPgBCIniHhUOFGZWAAIl8Y076qm5WCP6b2fStsMBV+mZ4kam
-jJoOA9Q8fqRR+Sz03VI/bAr3WUG+ultmYG/ctSfa2/1ZwPFBJIOLTGGJnIlTLDwH
-MC7jvhGo1TPsr9KCUwapSVjBdt3lLXvrobRTfX3Z9Dk5mRVbjUw3dUXq60vUm8Hq
-ZYcYbI0DfNDyqujmekXAxpXA3ThaIge5UDDBPV7bIGQBSTyf3Fd8T+k+rqkymYhV
-K2M+QvX6CbrryM6TxKQQcG9+S5RSv69wQlYK6ozDOgLnuGMN6Jjp8+/Tg62kFH/B
-akiJhv5GJHjyxCg/Roo2/3uidGWhqyyOOQrTQ6Xf4B6lI0zlY70llJ8ruf2r8PiK
-h5QmFuii/QB+mwzCncK5I4YqAgJvarndYAEXGsMyQKl58bZyeuA8rEQPztCu8hf3
-wkzM7x5LReO5ACcF76XO0QitLZuytG6OaVeO2r4aBS9Rrg1B/u2Xe90M630TdWoF
-E/uwsNUsAX3ujpK0h7uXPrn8/0WDy6J8xGL02HjFSkTTu+7lrzjB5RisARHaBoWR
-qIYyB4jAH3d4zYCJZB3sYjGoXaXpKs1P7P1Gt02JYuVmavWUVHj3LBzfUiw3F9vG
-gLYXpoiiG6u0pd7YyP8iQD7GOSqeOcqEJkhwLx6CIZ8mxNst6lM=
-=gj+v
------END PGP SIGNATURE-----
-
---4v6ysjcjbk4qlcp6--
+> ---
+> Changes in v3:
+> - change quirk name
+> - only read and write GUCTL1 if dwc3 version >= 2.50a
+>
+> Changes in v2:
+> - fix coding style
+>
+>  Documentation/devicetree/bindings/usb/dwc3.txt |  2 ++
+>  drivers/usb/dwc3/core.c                        | 20 ++++++++++++++------
+>  drivers/usb/dwc3/core.h                        |  4 ++++
+>  3 files changed, 20 insertions(+), 6 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt b/Documentation/devicetree/bindings/usb/dwc3.txt
+> index f658f39..52fb410 100644
+> --- a/Documentation/devicetree/bindings/usb/dwc3.txt
+> +++ b/Documentation/devicetree/bindings/usb/dwc3.txt
+> @@ -45,6 +45,8 @@ Optional properties:
+>                         a free-running PHY clock.
+>   - snps,dis-del-phy-power-chg-quirk: when set core will change PHY power
+>                         from P0 to P1/P2/P3 without delay.
+> + - snps,dis-tx-ipgap-linecheck-quirk: when set, disable u2mac linestate check
+> +                       during HS transmit.
+>   - snps,is-utmi-l1-suspend: true when DWC3 asserts output signal
+>                         utmi_l1_suspend_n, false when asserts utmi_sleep_n
+>   - snps,hird-threshold: HIRD threshold
+> diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
+> index 455d89a..9d5a67c 100644
+> --- a/drivers/usb/dwc3/core.c
+> +++ b/drivers/usb/dwc3/core.c
+> @@ -796,13 +796,19 @@ static int dwc3_core_init(struct dwc3 *dwc)
+>                 dwc3_writel(dwc->regs, DWC3_GUCTL2, reg);
+>         }
+>
+> -       /*
+> -        * Enable hardware control of sending remote wakeup in HS when
+> -        * the device is in the L1 state.
+> -        */
+> -       if (dwc->revision >= DWC3_REVISION_290A) {
+> +       if (dwc->revision >= DWC3_REVISION_250A) {
+>                 reg = dwc3_readl(dwc->regs, DWC3_GUCTL1);
+> -               reg |= DWC3_GUCTL1_DEV_L1_EXIT_BY_HW;
+> +
+> +               /*
+> +                * Enable hardware control of sending remote wakeup
+> +                * in HS when the device is in the L1 state.
+> +                */
+> +               if (dwc->revision >= DWC3_REVISION_290A)
+> +                       reg |= DWC3_GUCTL1_DEV_L1_EXIT_BY_HW;
+> +
+> +               if (dwc->dis_tx_ipgap_linecheck_quirk)
+> +                       reg |= DWC3_GUCTL1_TX_IPGAP_LINECHECK_DIS;
+> +
+>                 dwc3_writel(dwc->regs, DWC3_GUCTL1, reg);
+>         }
+>
+> @@ -1023,6 +1029,8 @@ static void dwc3_get_properties(struct dwc3 *dwc)
+>                                 "snps,dis-u2-freeclk-exists-quirk");
+>         dwc->dis_del_phy_power_chg_quirk = device_property_read_bool(dev,
+>                                 "snps,dis-del-phy-power-chg-quirk");
+> +       dwc->dis_tx_ipgap_linecheck_quirk = device_property_read_bool(dev,
+> +                               "snps,dis-tx-ipgap-linecheck-quirk");
+>
+>         dwc->tx_de_emphasis_quirk = device_property_read_bool(dev,
+>                                 "snps,tx_de_emphasis_quirk");
+> diff --git a/drivers/usb/dwc3/core.h b/drivers/usb/dwc3/core.h
+> index 981c77f..6f6294d 100644
+> --- a/drivers/usb/dwc3/core.h
+> +++ b/drivers/usb/dwc3/core.h
+> @@ -204,6 +204,7 @@
+>  #define DWC3_GCTL_DSBLCLKGTNG          BIT(0)
+>
+>  /* Global User Control 1 Register */
+> +#define DWC3_GUCTL1_TX_IPGAP_LINECHECK_DIS     BIT(28)
+>  #define DWC3_GUCTL1_DEV_L1_EXIT_BY_HW  BIT(24)
+>
+>  /* Global USB2 PHY Configuration Register */
+> @@ -850,6 +851,8 @@ struct dwc3_scratchpad_array {
+>   *                     provide a free-running PHY clock.
+>   * @dis_del_phy_power_chg_quirk: set if we disable delay phy power
+>   *                     change quirk.
+> + * @dis_tx_ipgap_linecheck_quirk: set if we disable u2mac linestate
+> + *                     check during HS transmit.
+>   * @tx_de_emphasis_quirk: set if we enable Tx de-emphasis quirk
+>   * @tx_de_emphasis: Tx de-emphasis value
+>   *     0       - -6dB de-emphasis
+> @@ -1004,6 +1007,7 @@ struct dwc3 {
+>         unsigned                dis_rxdet_inp3_quirk:1;
+>         unsigned                dis_u2_freeclk_exists_quirk:1;
+>         unsigned                dis_del_phy_power_chg_quirk:1;
+> +       unsigned                dis_tx_ipgap_linecheck_quirk:1;
+>
+>         unsigned                tx_de_emphasis_quirk:1;
+>         unsigned                tx_de_emphasis:2;
+> --
+> 2.0.0
+>
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
