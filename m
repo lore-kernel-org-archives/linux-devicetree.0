@@ -1,68 +1,94 @@
-From: Joao Pinto <Joao.Pinto@synopsys.com>
-Subject: Re: [PATCH net-next v3] bindings: net: stmmac: add missing note about
- LPI interrupt
-Date: Wed, 19 Apr 2017 16:22:10 +0100
-Message-ID: <d721ecfb-0c65-d654-3f36-75083d8c058a@synopsys.com>
-References: <20170418123955.21335-1-niklass@axis.com>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [RFC 2/2] mux: mmio-based syscon mux controller
+Date: Wed, 19 Apr 2017 17:27:20 +0200
+Message-ID: <1492615640.2970.145.camel@pengutronix.de>
+References: <20170413154812.19597-1-p.zabel@pengutronix.de>
+         <20170413154812.19597-2-p.zabel@pengutronix.de>
+         <58fd5844-f24a-37cc-be81-26a716251860@gmail.com>
+         <1492602613.2970.92.camel@pengutronix.de>
+         <e4d4b515-e799-9594-f88a-de9d8a5d14bb@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170418123955.21335-1-niklass@axis.com>
+In-Reply-To: <e4d4b515-e799-9594-f88a-de9d8a5d14bb@axentia.se>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Niklas Cassel <niklas.cassel@axis.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "David S. Miller" <davem@davemloft.net>, Joao Pinto <Joao.Pinto@synopsys.com>, Niklas Cassel <niklass@axis.com>, Alexandre TORGUE <alexandre.torgue@st.com>, Giuseppe CAVALLARO <peppe.cavallaro@st.com>, Thierry Reding <treding@nvidia.com>, Eric Engestrom <eric@engestrom.ch>
-Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Peter Rosin <peda@axentia.se>
+Cc: Steve Longerbeam <slongerbeam@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sakari Ailus <sakari.ailus@iki.fi>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, kernel@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-Hi Niklas,
+On Wed, 2017-04-19 at 13:58 +0200, Peter Rosin wrote:
+> On 2017-04-19 13:50, Philipp Zabel wrote:
+> > On Thu, 2017-04-13 at 18:09 -0700, Steve Longerbeam wrote:
+> >>
+> >> On 04/13/2017 08:48 AM, Philipp Zabel wrote:
+> >>> This adds a driver for mmio-based syscon multiplexers controlled by a
+> >>> single bitfield in a syscon register range.
+> >>>
+> >>> Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+> >>> ---
+> >>>   drivers/mux/Kconfig      |  13 +++++
+> >>>   drivers/mux/Makefile     |   1 +
+> >>>   drivers/mux/mux-syscon.c | 130 +++++++++++++++++++++++++++++++++++++++++++++++
+> >>>   3 files changed, 144 insertions(+)
+> >>>   create mode 100644 drivers/mux/mux-syscon.c
+> >>>
+> >>> diff --git a/drivers/mux/Kconfig b/drivers/mux/Kconfig
+> >>> index 86668b4d2fc52..a5e6a3b01ac24 100644
+> >>> --- a/drivers/mux/Kconfig
+> >>> +++ b/drivers/mux/Kconfig
+> >>> @@ -43,4 +43,17 @@ config MUX_GPIO
+> >>>   	  To compile the driver as a module, choose M here: the module will
+> >>>   	  be called mux-gpio.
+> >>>   
+> >>> +config MUX_SYSCON
+> >>
+> >> my preference would be CONFIG_MUX_MMIO.
+> >>
+> >>> +	tristate "MMIO bitfield-controlled Multiplexer"
+> >>
+> >> "MMIO register bitfield-controlled Multiplexer"
+> >>
+> >> The rest looks good to me.
+> > 
+> > I'll change those. mux-syscon.c should probably be renamed to
+> > mux-mmio.c, too.
+> 
+> I think I disagree. But I'm not familiar with syscon so I don't know.
+> IIUC, syscon uses regmap to do mmio and this driver requires syscon
+> to get at the regmap, and in the end this driver doesn't know anything
+> about mmio. All it knows is syscon/regmap.
 
-Às 1:39 PM de 4/18/2017, Niklas Cassel escreveu:
-> From: Niklas Cassel <niklas.cassel@axis.com>
-> 
-> The hardware has a LPI interrupt.
-> There is already code in the stmmac driver to parse and handle the
-> interrupt. However, this information was missing from the DT binding.
-> 
-> At the same time, improve the description of the existing interrupts.
-> 
-> Signed-off-by: Niklas Cassel <niklas.cassel@axis.com>
-> ---
->  Documentation/devicetree/bindings/net/stmmac.txt | 13 ++++++++-----
->  1 file changed, 8 insertions(+), 5 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/net/stmmac.txt b/Documentation/devicetree/bindings/net/stmmac.txt
-> index f652b0c384ce..c3a7be6615c5 100644
-> --- a/Documentation/devicetree/bindings/net/stmmac.txt
-> +++ b/Documentation/devicetree/bindings/net/stmmac.txt
-> @@ -7,9 +7,12 @@ Required properties:
->  - interrupt-parent: Should be the phandle for the interrupt controller
->    that services interrupts for this device
->  - interrupts: Should contain the STMMAC interrupts
-> -- interrupt-names: Should contain the interrupt names "macirq"
-> -  "eth_wake_irq" if this interrupt is supported in the "interrupts"
-> -  property
-> +- interrupt-names: Should contain a list of interrupt names corresponding to
-> +	the interrupts in the interrupts property, if available.
-> +	Valid interrupt names are:
-> +  - "macirq" (combined signal for various interrupt events)
-> +  - "eth_wake_irq" (the interrupt to manage the remote wake-up packet detection)
-> +  - "eth_lpi" (the interrupt that occurs when Tx or Rx enters/exits LPI state)
->  - phy-mode: See ethernet.txt file in the same directory.
->  - snps,reset-gpio 	gpio number for phy reset.
->  - snps,reset-active-low boolean flag to indicate if phy reset is active low.
-> @@ -152,8 +155,8 @@ Examples:
->  		compatible = "st,spear600-gmac";
->  		reg = <0xe0800000 0x8000>;
->  		interrupt-parent = <&vic1>;
-> -		interrupts = <24 23>;
-> -		interrupt-names = "macirq", "eth_wake_irq";
-> +		interrupts = <24 23 22>;
-> +		interrupt-names = "macirq", "eth_wake_irq", "eth_lpi";
->  		mac-address = [000000000000]; /* Filled in by U-Boot */
->  		max-frame-size = <3800>;
->  		phy-mode = "gmii";
-> 
+That is a good point. Right now there is nothing MMIO about the driver
+except for the hardware that I want it to handle.
 
-Acked-By: Joao Pinto <jpinto@synopsys.com>
+>  If some warped syscon
+> thing shows up that wraps something other than mmio in its regmap,
+> this driver wouldn't care about it. And syscon is something that
+> is also known in the DT world. Given that, I think everything in this
+> driver should be named syscon and not mmio.
+> 
+> Or?
 
-Regards!
+Well, ...
+
+the driver could be extended to do actual MMIO if the syscon is not
+found. This would work only if it has exclusive access to its register.
+
+On the other hand, the driver could also be made to match against
+    compatible = "bitfield-mux",
+for example, and allow handling muxes inside SPI or I2C controlled MFD
+devices that provide a syscon regmap, as you describe:
+
+	spi-host {
+		mfd-device {
+			compatible = "some-spi-regmap-device";
+
+			mux {
+				compatible = "bitfield-mux";
+			};
+		};
+	};
+
+regards
+Philipp
