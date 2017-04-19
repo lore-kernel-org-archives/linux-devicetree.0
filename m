@@ -1,7 +1,7 @@
 From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH 4/8] [RFC] arm64: dts: renesas: Add R-Car M3-W SiP (2 x 2 GiB) support
-Date: Wed, 19 Apr 2017 11:15:47 +0200
-Message-ID: <1492593351-13835-5-git-send-email-geert+renesas@glider.be>
+Subject: [PATCH 8/8] [RFC] arm64: dts: renesas: Migrate M3ULCB to r8j7796-2x1g.dtsi
+Date: Wed, 19 Apr 2017 11:15:51 +0200
+Message-ID: <1492593351-13835-9-git-send-email-geert+renesas@glider.be>
 References: <1492593351-13835-1-git-send-email-geert+renesas@glider.be>
 Return-path: <linux-renesas-soc-owner@vger.kernel.org>
 In-Reply-To: <1492593351-13835-1-git-send-email-geert+renesas@glider.be>
@@ -10,52 +10,57 @@ To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Kuni
 Cc: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-Add support for the R-Car M3-W System-in-Package (r8j7796), which contains:
-  - an R-Car M3-W SoC (r8a7796),
-  - 2 channels of 2 GiB of RAM (4 GiB total),
-  - HyperFlash (not yet described).
+The Renesas R-Car Starter Kit Pro (M3ULCB) development board is equipped
+with an r8j7796 SiP with 2 GiB of RAM.
+
+Hence migrate from r8a7796.dtsi to r8j7796-2x1g.dtsi.
 
 Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
 Questions:
-  - Should this file be named r8j7796-4g.dtsi instead?
-  - What's the official name of r8j7796 with 2 x 2 GiB of RAM?
+  - Should this file be renamed to r8j7796-m3ulcb.dts?
 ---
- arch/arm64/boot/dts/renesas/r8j7796-2x2g.dtsi | 26 ++++++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
- create mode 100644 arch/arm64/boot/dts/renesas/r8j7796-2x2g.dtsi
+ arch/arm64/boot/dts/renesas/r8a7796-m3ulcb.dts | 17 +++--------------
+ 1 file changed, 3 insertions(+), 14 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/renesas/r8j7796-2x2g.dtsi b/arch/arm64/boot/dts/renesas/r8j7796-2x2g.dtsi
-new file mode 100644
-index 0000000000000000..9623bd2b4a914ae3
---- /dev/null
-+++ b/arch/arm64/boot/dts/renesas/r8j7796-2x2g.dtsi
-@@ -0,0 +1,26 @@
-+/*
-+ * Device Tree Source for the r8a7796 SiP with 2 channels of 2 GiB RAM
-+ *
-+ * Copyright (C) 2016 Renesas Electronics Corp.
-+ *
-+ * This file is licensed under the terms of the GNU General Public License
-+ * version 2.  This program is licensed "as is" without any warranty of any
-+ * kind, whether express or implied.
-+ */
-+
-+#include "r8a7796.dtsi"
-+
-+/ {
-+	compatible = "renesas,r8j7796", "renesas,r8a7796";
-+
-+	memory@48000000 {
-+		device_type = "memory";
-+		/* first 128MB is reserved for secure area. */
-+		reg = <0x0 0x48000000 0x0 0x78000000>;
-+	};
-+
-+	memory@600000000 {
-+		device_type = "memory";
-+		reg = <0x6 0x00000000 0x0 0x80000000>;
-+	};
-+};
+diff --git a/arch/arm64/boot/dts/renesas/r8a7796-m3ulcb.dts b/arch/arm64/boot/dts/renesas/r8a7796-m3ulcb.dts
+index c2a4549d3738f81c..533d03662e98982b 100644
+--- a/arch/arm64/boot/dts/renesas/r8a7796-m3ulcb.dts
++++ b/arch/arm64/boot/dts/renesas/r8a7796-m3ulcb.dts
+@@ -10,13 +10,13 @@
+  */
+ 
+ /dts-v1/;
+-#include "r8a7796.dtsi"
++#include "r8j7796-2x1g.dtsi"
+ #include <dt-bindings/gpio/gpio.h>
+ #include <dt-bindings/input/input.h>
+ 
+ / {
+-	model = "Renesas M3ULCB board based on r8a7796";
+-	compatible = "renesas,m3ulcb", "renesas,r8a7796";
++	model = "Renesas M3ULCB board based on r8j7796";
++	compatible = "renesas,m3ulcb", "renesas,r8j7796", "renesas,r8a7796";
+ 
+ 	aliases {
+ 		serial0 = &scif2;
+@@ -27,17 +27,6 @@
+ 		stdout-path = "serial0:115200n8";
+ 	};
+ 
+-	memory@48000000 {
+-		device_type = "memory";
+-		/* first 128MB is reserved for secure area. */
+-		reg = <0x0 0x48000000 0x0 0x38000000>;
+-	};
+-
+-	memory@600000000 {
+-		device_type = "memory";
+-		reg = <0x6 0x00000000 0x0 0x40000000>;
+-	};
+-
+ 	leds {
+ 		compatible = "gpio-leds";
+ 
 -- 
 2.7.4
