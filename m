@@ -1,54 +1,31 @@
-From: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH V2] ARM: dts: BCM5301X: Specify MDIO bus in the DT
-Date: Wed, 19 Apr 2017 23:54:25 +0200
-Message-ID: <20170419215425.14821-1-zajec5@gmail.com>
-References: <20170402210840.11429-1-zajec5@gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 3/4] doc,dts - add XRA1403 DTS binding documentation
+Date: Wed, 19 Apr 2017 16:55:40 -0500
+Message-ID: <20170419215540.54rct3vlot4y733r@rob-hp-laptop>
+References: <cover.1492077070.git.nandor.han@ge.com>
+ <0d970c6a929597804eae3577ed24f57ee23b820a.1492077070.git.nandor.han@ge.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170402210840.11429-1-zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <0d970c6a929597804eae3577ed24f57ee23b820a.1492077070.git.nandor.han@ge.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Nandor Han <nandor.han@ge.com>
+Cc: gregkh@linuxfoundation.org, davem@davemloft.net, geert@linux-m68k.org, mchehab@kernel.org, daniel.vetter@ffwll.ch, linus.walleij@linaro.org, gnurou@gmail.com, mark.rutland@arm.com, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+On Thu, Apr 13, 2017 at 01:27:50PM +0300, Nandor Han wrote:
+> Add the XRA1403 DTS binding documentation.
 
-Northstar devices have MDIO bus that may contain various PHYs attached.
-A common example is USB 3.0 PHY (that doesn't have an MDIO driver yet).
+"dt-bindings: gpio: ..." for the subject.
 
-Signed-off-by: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
----
-V2: Disable MDIO bus by default.
-    Add mdio label to allow enabling it easily per board
----
- arch/arm/boot/dts/bcm5301x.dtsi | 8 ++++++++
- 1 file changed, 8 insertions(+)
+> 
+> Signed-off-by: Nandor Han <nandor.han@ge.com>
+> ---
+>  .../devicetree/bindings/gpio/gpio-xra1403.txt      | 46 ++++++++++++++++++++++
+>  1 file changed, 46 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/gpio/gpio-xra1403.txt
 
-diff --git a/arch/arm/boot/dts/bcm5301x.dtsi b/arch/arm/boot/dts/bcm5301x.dtsi
-index acee36a61004..1f34bc6905f2 100644
---- a/arch/arm/boot/dts/bcm5301x.dtsi
-+++ b/arch/arm/boot/dts/bcm5301x.dtsi
-@@ -320,6 +320,14 @@
- 		};
- 	};
- 
-+	mdio: mdio@18003000 {
-+		compatible = "brcm,iproc-mdio";
-+		reg = <0x18003000 0x8>;
-+		#size-cells = <1>;
-+		#address-cells = <0>;
-+		status = "disabled";
-+	};
-+
- 	i2c0: i2c@18009000 {
- 		compatible = "brcm,iproc-i2c";
- 		reg = <0x18009000 0x50>;
--- 
-2.11.0
+Otherwise,
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Acked-by: Rob Herring <robh@kernel.org>
