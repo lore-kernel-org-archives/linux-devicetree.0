@@ -1,50 +1,49 @@
-From: Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v13 03/10] mux: minimal mux subsystem and gpio-based mux
- controller
-Date: Tue, 18 Apr 2017 19:23:11 -0700
-Message-ID: <1492568591.8661.53.camel@perches.com>
-References: <1492101794-13444-1-git-send-email-peda@axentia.se>
-         <1492101794-13444-4-git-send-email-peda@axentia.se>
-         <20170418085156.GA4773@kroah.com>
-         <bdeecccf-02d6-226b-8516-1d41e3602a7a@axentia.se>
-         <20170418114430.GA1496@kroah.com>
-         <aacdc359-e46d-7d1a-d959-63d4ecb99fde@axentia.se>
+From: "Oliver O'Halloran" <oohall-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] of: introduce event tracepoints for dynamic device_node lifecyle
+Date: Wed, 19 Apr 2017 12:30:50 +1000
+Message-ID: <CAOSf1CH8HgP0rKd0WCp87BADYcEGT5OCoq_yq+f3ZeoyTcXeng@mail.gmail.com>
+References: <1492475525-10827-1-git-send-email-tyreld@linux.vnet.ibm.com> <CAL_Jsq+GRkssqcn0wGzMgQRUtT-BO4zNDyYE7u1Cr5EhADK1SQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <aacdc359-e46d-7d1a-d959-63d4ecb99fde-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Colin Ian King <colin.king-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Paul Gortmaker <paul.gortmaker-CWA4WttNNZF54TAoqtyWWQ@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL_Jsq+GRkssqcn0wGzMgQRUtT-BO4zNDyYE7u1Cr5EhADK1SQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Tyrel Datwyler <tyreld-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, rostedt-nx8X9YLhiw1AfugRpC6u6w@public.gmane.org, Ingo Molnar <mingo-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Nathan Fontenot <nfont-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, linuxppc-dev <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2017-04-18 at 23:53 +0200, Peter Rosin wrote:
-> On 2017-04-18 13:44, Greg Kroah-Hartman wrote:
-> > On Tue, Apr 18, 2017 at 12:59:50PM +0200, Peter Rosin wrote:
-[]
-> > > > > +	ret = device_add(&mux_chip->dev);
-> > > > > +	if (ret < 0)
-> > > > > +		dev_err(&mux_chip->dev,
-> > > > > +			"device_add failed in mux_chip_register: %d\n", ret);
-> > > > 
-> > > > Did you run checkpatch.pl in strict mode on this new file?  Please do so :)
-> > > 
-> > > I did, and did it again just to be sure, and I do not get any complaints.
-> > > So, what's wrong?
-> > 
-> > You list the function name in the printk string, it should complain
-> > that __func__ should be used.  Oh well, it's just a perl script, it
-> > doesn't always catch everything.
-> > isn't always correct :)
-> 
-> Ah, ok.
+On Wed, Apr 19, 2017 at 2:46 AM, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> On Mon, Apr 17, 2017 at 7:32 PM, Tyrel Datwyler
+> <tyreld-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org> wrote:
+>> This patch introduces event tracepoints for tracking a device_nodes
+>> reference cycle as well as reconfig notifications generated in response
+>> to node/property manipulations.
+>>
+>> With the recent upstreaming of the refcount API several device_node
+>> underflows and leaks have come to my attention in the pseries (DLPAR) dynamic
+>> logical partitioning code (ie. POWER speak for hotplugging virtual and physcial
+>> resources at runtime such as cpus or IOAs). These tracepoints provide a
+>> easy and quick mechanism for validating the reference counting of
+>> device_nodes during their lifetime.
+>
+> Not really relevant for this patch, but since you are looking at
+> pseries and refcounting, the refcounting largely exists for pseries.
+> It's also hard to get right as this type of fix is fairly common. It's
+> now used for overlays, but we really probably only need to refcount
+> the overlays or changesets as a whole, not at a node level. If you
+> have any thoughts on how a different model of refcounting could work
+> for pseries, I'd like to discuss it.
 
-Also, please use the checkpatch in -next as it has a
-slightly better mechanism to identify functions and
-uses in strings.
+One idea I've been kicking around is differentiating short and long
+term references to a node. I figure most leaks are due to a missing
+of_node_put() within a stack frame so it might be possible to use the
+ftrace infrastructure to detect and emit warnings if a short term
+reference is leaked. Long term references are slightly harder to deal
+with, but they're less common so we can add more detailed reference
+tracking there (devm_of_get_node?).
 
-$ ./scripts/checkpatch.pl ~/1.patch
-WARNING: Prefer using '"%s...", __func__' to using 'mux_chip_register', this function's name, in a string
-#302: FILE: drivers/mux/mux-core.c:134:
-+			"device_add failed in mux_chip_register: %d\n", ret);
+Oliver
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
