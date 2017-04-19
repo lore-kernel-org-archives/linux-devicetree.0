@@ -1,124 +1,201 @@
-From: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
-Subject: Re: [PATCH v13 02/10] dt-bindings: document devicetree bindings for
- mux-controllers and gpio-mux
-Date: Wed, 19 Apr 2017 13:23:42 +0200
-Message-ID: <687b26d7-7d80-e8e1-5aa8-a4e8bc070e42@axentia.se>
-References: <1492101794-13444-1-git-send-email-peda@axentia.se>
- <1492101794-13444-3-git-send-email-peda@axentia.se>
- <1492509996.2432.63.camel@pengutronix.de>
- <17135062-e58a-b50e-ac85-5f0f0b73d958@axentia.se>
- <1492593449.2970.24.camel@pengutronix.de>
- <0cf0254e-0e43-37c3-f14d-eeffa7d7b9ba@axentia.se>
- <1492599958.2970.84.camel@pengutronix.de>
+From: wlf <wulf-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: Re: [PATCH v2] usb: dwc3: add disable u2mac linestate check quirk
+Date: Wed, 19 Apr 2017 19:32:06 +0800
+Message-ID: <8e9e559b-7344-8d29-bd54-f2757325cfb0@rock-chips.com>
+References: <1492492659-19266-1-git-send-email-william.wu@rock-chips.com>
+ <CABXOdTctJLh7rno=U9Zr91SvuLtwyzWo0vuE0h08uxV63LsK7A@mail.gmail.com>
+ <67e21e78-2f4e-47eb-38f5-734fe13dccab@rock-chips.com>
+ <CABXOdTeszyp834fjYpqESqpKkgzt58Qjms=g+5G5U3Mx4y=b+A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1492599958.2970.84.camel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Paul Gortmaker <paul.gortmaker-CWA4WttNNZF54TAoqtyWWQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Colin Ian King <colin.king-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CABXOdTeszyp834fjYpqESqpKkgzt58Qjms=g+5G5U3Mx4y=b+A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Guenter Roeck <groeck-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Cc: William Wu <william.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Wang <frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Tao Huang <huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Doug Anderson <dianders-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Brian Norris <briannorris-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, daniel.meng-TNX95d0MmH7DzftRWevZcw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 2017-04-19 13:05, Philipp Zabel wrote:
-> On Wed, 2017-04-19 at 12:41 +0200, Peter Rosin wrote:
->> On 2017-04-19 11:17, Philipp Zabel wrote:
->>> On Tue, 2017-04-18 at 15:36 +0200, Peter Rosin wrote:
->>>> If I got things wrong when I skimmed whatever I came across, and if the
->>>> mmio register is the only mux control option in the stars, it becomes
->>>> less obvious... It's of course still possible to hook into the mux
->>>> subsystem, but the benefit is questionable. And you do get the extra
->>>> device tree node. You could of course also implement a mux driver
->>>> outside of drivers/mux and thus make use of the mux api, but it's tiny
->>>> and any benefit is truly small.
+Dear Guenter，
+
+在 2017年04月19日 13:15, Guenter Roeck 写道:
+> On Tue, Apr 18, 2017 at 8:59 PM, wlf <wulf-TNX95d0MmH7DzftRWevZcw@public.gmane.org> wrote:
+>> Dear Guenter,
+>>
+>>
+>>
+>> 在 2017年04月18日 21:18, Guenter Roeck 写道:
+>>> On Mon, Apr 17, 2017 at 10:17 PM, William Wu <william.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+>>> wrote:
+>>>> This patch adds a quirk to disable USB 2.0 MAC linestate check
+>>>> during HS transmit. Refer the dwc3 databook, we can use it for
+>>>> some special platforms if the linestate not reflect the expected
+>>>> line state(J) during transmission.
+>>>>
+>>>> When use this quirk, the controller implements a fixed 40-bit
+>>>> TxEndDelay after the packet is given on UTMI and ignores the
+>>>> linestate during the transmit of a token (during token-to-token
+>>>> and token-to-data IPGAP).
+>>>>
+>>>> On some rockchip platforms (e.g. rk3399), it requires to disable
+>>>> the u2mac linestate check to decrease the SSPLIT token to SETUP
+>>>> token inter-packet delay from 566ns to 466ns, and fix the issue
+>>>> that FS/LS devices not recognized if inserted through USB 3.0 HUB.
+>>>>
+>>>> Signed-off-by: William Wu <william.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+>>>> ---
+>>>> Changes in v2:
+>>>> - fix coding style
+>>>>
+>>>>    Documentation/devicetree/bindings/usb/dwc3.txt |  2 ++
+>>>>    drivers/usb/dwc3/core.c                        | 14 ++++++++++----
+>>>>    drivers/usb/dwc3/core.h                        |  4 ++++
+>>>>    3 files changed, 16 insertions(+), 4 deletions(-)
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt
+>>>> b/Documentation/devicetree/bindings/usb/dwc3.txt
+>>>> index f658f39..6a89f0c 100644
+>>>> --- a/Documentation/devicetree/bindings/usb/dwc3.txt
+>>>> +++ b/Documentation/devicetree/bindings/usb/dwc3.txt
+>>>> @@ -45,6 +45,8 @@ Optional properties:
+>>>>                           a free-running PHY clock.
+>>>>     - snps,dis-del-phy-power-chg-quirk: when set core will change PHY
+>>>> power
+>>>>                           from P0 to P1/P2/P3 without delay.
+>>>> + - snps,tx-ipgap-linecheck-dis-quirk: when set, disable u2mac linestate
+>>>> check
+>>>> +                       during HS transmit.
+>>> All other disable-something quirks are named
+>>> "snps,dis-something-quirk". Maybe use the same naming convention ?
+>> Yes, good idea！ I will fix it with "snps,dis-tx-ipgap-linecheck-quirk"  in
+>> next patch verison.
+>> Thanks:-)
 >>>
->>> What I wondered mostly is whether it would be a good idea to move the
->>> OF-graph ports into the mux controller node, and let the video capture
->>> device be the consumer of the mux.
->>> But this wouldn't fit well with the clear split between the mux
->>> controller and the actual mux hardware in the mux DT bindings.
+>>>>     - snps,is-utmi-l1-suspend: true when DWC3 asserts output signal
+>>>>                           utmi_l1_suspend_n, false when asserts
+>>>> utmi_sleep_n
+>>>>     - snps,hird-threshold: HIRD threshold
+>>>> diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
+>>>> index 455d89a..03429c5 100644
+>>>> --- a/drivers/usb/dwc3/core.c
+>>>> +++ b/drivers/usb/dwc3/core.c
+>>>> @@ -796,15 +796,19 @@ static int dwc3_core_init(struct dwc3 *dwc)
+>>>>                   dwc3_writel(dwc->regs, DWC3_GUCTL2, reg);
+>>>>           }
+>>>>
+>>>> +       reg = dwc3_readl(dwc->regs, DWC3_GUCTL1);
+>>>> +
+>>> My understanding is that the register was only introduced with dwc3
+>>> revision 2.50a. Is it ok to read and write it unconditionally ?
+>> Yes, refer to dwc3 databook, the DWC3_GUCTL1 was introduced since 2.50a.
+>> Maybe it's better
+>> to read and write it only when we know our controller version.
 >>
->> I have tried to do something similar. I think. The current
->> drivers/i2c/muxes/i2c-mux-gpio.c is a good candidate for the same thing
->> IIUC.
+>> Is it good to fix it like the following patch?
+>> But this patch has a problem that we need to read and write the register
+>> twice if our controller verison > = 2.90a, and need this quirk.
 >>
->> That dedicated driver and the general purpose i2c mux driver does pretty
->> much the same thing with these two DT snippets:
+>> --- a/drivers/usb/dwc3/core.c
+>> +++ b/drivers/usb/dwc3/core.c
+>> @@ -806,6 +806,12 @@ static int dwc3_core_init(struct dwc3 *dwc)
+>>                  dwc3_writel(dwc->regs, DWC3_GUCTL1, reg);
+>>          }
 >>
->> Dedicated i2c-mux-gpio DT snippet:
+>> +       if (dwc->dis_tx_ipgap_linecheck_quirk) {
+>> +               reg = dwc3_readl(dwc->regs, DWC3_GUCTL1);
+>> +               reg |= DWC3_GUCTL1_TX_IPGAP_LINECHECK_DIS;
+>> +               dwc3_writel(dwc->regs, DWC3_GUCTL1, reg);
+>> +       }
+>> +
 >>
->> 	i2c-mux {
->> 		compatible = "i2c-mux-gpio";
->> 		i2c-parent = <&i2c1>;
+> How about this ?
+>
+>      if (dwc->revision >= DWC3_REVISION_250A) {
+>          reg = dwc3_readl(dwc->regs, DWC3_GUCTL1);
+>          if (dwc->revision >= DWC3_REVISION_290A)
+>              reg |= DWC3_GUCTL1_DEV_L1_EXIT_BY_HW;
+>          if (dwc->dis_tx_ipgap_linecheck_quirk)
+>             reg |= DWC3_GUCTL1_TX_IPGAP_LINECHECK_DIS;
+>          dwc3_writel(dwc->regs, DWC3_GUCTL1, reg);
+>      }
+>
+> Thanks,
+> Guenter
+Thanks， looks good to me. I will fix it in patch v2.
+>
+>> Hi John & Felipe,
+>>         Could you provide me some suggestion？
+>>         Thank you！
 >>
->> 		mux-gpios = <&gpio1 22 0 &gpio1 23 0>;
+>>>>           /*
+>>>>            * Enable hardware control of sending remote wakeup in HS when
+>>>>            * the device is in the L1 state.
+>>>>            */
+>>>> -       if (dwc->revision >= DWC3_REVISION_290A) {
+>>>> -               reg = dwc3_readl(dwc->regs, DWC3_GUCTL1);
+>>>> +       if (dwc->revision >= DWC3_REVISION_290A)
+>>>>                   reg |= DWC3_GUCTL1_DEV_L1_EXIT_BY_HW;
+>>>> -               dwc3_writel(dwc->regs, DWC3_GUCTL1, reg);
+>>>> -       }
+>>>> +
+>>>> +       if (dwc->tx_ipgap_linecheck_dis_quirk)
+>>>> +               reg |= DWC3_GUCTL1_TX_IPGAP_LINECHECK_DIS;
+>>>> +
+>>>> +       dwc3_writel(dwc->regs, DWC3_GUCTL1, reg);
+>>>>
+>>>>           return 0;
+>>>>
+>>>> @@ -1023,6 +1027,8 @@ static void dwc3_get_properties(struct dwc3 *dwc)
+>>>>                                   "snps,dis-u2-freeclk-exists-quirk");
+>>>>           dwc->dis_del_phy_power_chg_quirk =
+>>>> device_property_read_bool(dev,
+>>>>                                   "snps,dis-del-phy-power-chg-quirk");
+>>>> +       dwc->tx_ipgap_linecheck_dis_quirk =
+>>>> device_property_read_bool(dev,
+>>>> +                               "snps,tx-ipgap-linecheck-dis-quirk");
+>>>>
+>>>>           dwc->tx_de_emphasis_quirk = device_property_read_bool(dev,
+>>>>                                   "snps,tx_de_emphasis_quirk");
+>>>> diff --git a/drivers/usb/dwc3/core.h b/drivers/usb/dwc3/core.h
+>>>> index 981c77f..3c2537b 100644
+>>>> --- a/drivers/usb/dwc3/core.h
+>>>> +++ b/drivers/usb/dwc3/core.h
+>>>> @@ -204,6 +204,7 @@
+>>>>    #define DWC3_GCTL_DSBLCLKGTNG          BIT(0)
+>>>>
+>>>>    /* Global User Control 1 Register */
+>>>> +#define DWC3_GUCTL1_TX_IPGAP_LINECHECK_DIS     BIT(28)
+>>>>    #define DWC3_GUCTL1_DEV_L1_EXIT_BY_HW  BIT(24)
+>>>>
+>>>>    /* Global USB2 PHY Configuration Register */
+>>>> @@ -850,6 +851,8 @@ struct dwc3_scratchpad_array {
+>>>>     *                     provide a free-running PHY clock.
+>>>>     * @dis_del_phy_power_chg_quirk: set if we disable delay phy power
+>>>>     *                     change quirk.
+>>>> + * @tx_ipgap_linecheck_dis_quirk: set if we disable u2mac linestate
+>>>> + *                     check during HS transmit.
+>>>>     * @tx_de_emphasis_quirk: set if we enable Tx de-emphasis quirk
+>>>>     * @tx_de_emphasis: Tx de-emphasis value
+>>>>     *     0       - -6dB de-emphasis
+>>>> @@ -1004,6 +1007,7 @@ struct dwc3 {
+>>>>           unsigned                dis_rxdet_inp3_quirk:1;
+>>>>           unsigned                dis_u2_freeclk_exists_quirk:1;
+>>>>           unsigned                dis_del_phy_power_chg_quirk:1;
+>>>> +       unsigned                tx_ipgap_linecheck_dis_quirk:1;
+>>>>
+>>>>           unsigned                tx_de_emphasis_quirk:1;
+>>>>           unsigned                tx_de_emphasis:2;
+>>>> --
+>>>> 2.0.0
+>>>>
+>>>>
+>>>
 >>
->> 		#address-cells = <1>;
->> 		#size-cells = <0>;
->>
->> 		i2c@1 {
->> 			...
->> 		};
->>
->> 		i2c@3 {
->> 			...
->> 		};
->> 	};
->>
->> General purpose mux DT snippet:
->>
->> 	mux: mux-controller {
->> 		compatible = "gpio-mux";
->> 		#mux-control-cells = <0>;
->>
->> 		mux-gpios = <&gpio1 22 0 &gpio1 23 0>;
->> 	};
->>
->> 	i2c-mux {
->> 		compatible = "i2c-mux";
->> 		i2c-parent = <&i2c1>;
->>
->> 		mux-controls = <&mux>;
->>
->> 		#address-cells = <1>;
->> 		#size-cells = <0>;
->>
->> 		i2c@1 {
->> 			...
->> 		};
->>
->> 		i2c@3 {
->> 			...
->> 		};
->> 	};
-> 
-> Yes, replace i2c-mux with video-mux and the i2c@x nodes with port@x
-> nodes, and this is very close to what I am thinking about.
-> 
->> I would love to find a way to cleanly get the mux framework to handle
->> the first DT as well, and thus being able to obsolete the dedicated
->> i2c-mux-gpio driver. I have not figured out how to accomplish that
->> without abusing the driver-model to a point that it's not working.
->> Help with that task is dearly appreciated.
->>
->> What I have stumbled on, I think, is that two drivers needs to be
->> instantiated from the same DT node. At the same time, I need the
->> mux framework to handle the current out-of-node thing with a
->> phandle as well, so that several mux consumers can share a common
->> mux controller. My understanding of these matters are apparently not
->> deep enough...
-> 
-> Not necessarily, if the framework could export a function to create a
-> gpio/mmio mux_chip on a given device and the gpio-mux and *-mux-gpio
-> drivers just reuse that.
+>
+>
 
-I've been up that creek. Why should the gpio mux be special cased?
-That's not clean, the implication is that all mux consumers need
-to handle the gpio case and have a special compatible for that
-case etc. Then someone thinks the DT should look equally "clean" for
-some i2c based mux, and the weeds start piling up. This is exactly
-what we don't want. We want the mux consumer drivers to be totally
-agnostic about the fact that they happen to use a gpio mux.
 
-Cheers,
-peda
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
