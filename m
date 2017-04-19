@@ -1,86 +1,101 @@
-Return-Path: <SRS0=WhIB=3N=aosc.io=icenowy@kernel.org>
-Date: Wed, 05 Apr 2017 14:15:43 +0800
-Subject: Re: [linux-sunxi] Re: [PATCH 10/11] arm64: allwinner: a64: enable
- AXP803 regulators for Pine64
-From: Icenowy Zheng <icenowy@aosc.io>
+Return-Path: <SRS0=r4nj=33=gmail.com=eddie.cai.linux@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: base64
-Message-Id: <20170405061552.C15201033DF@relay.mailchannels.net>
-To: Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: Rob Herring <robh+dt@kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, linux-arm-kernel@lists.infradead.org, linux-sunxi@googlegroups.com, Chen-Yu Tsai <wens@csie.org>
+In-Reply-To: <746291609.ssvjv54Vin@phil>
+References: <20170418121527.3155-1-eddie.cai.linux@gmail.com> <746291609.ssvjv54Vin@phil>
+From: Eddie Cai <eddie.cai.linux@gmail.com>
+Date: Wed, 19 Apr 2017 08:40:42 +0800
+Message-ID: <CAJrj+DNqA46_k5kjvyN8YQb=kmVSfF3tKYuadHQ7ojZYuFhUXQ@mail.gmail.com>
+Subject: Re: [PATCH] ARM: dts: rockchip: reuse firefly dtsi
+Content-Type: multipart/alternative; boundary=001a11430eaa3d4d2f054d7a4643
+To: Heiko Stuebner <heiko@sntech.de>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-CjIwMTflubQ05pyINeaXpSAxNDoxM+S6jiBNYXhpbWUgUmlwYXJkIDxtYXhpbWUucmlwYXJkQGZy
-ZWUtZWxlY3Ryb25zLmNvbT7lhpnpgZPvvJoKPgo+IE9uIFdlZCwgQXByIDA1LCAyMDE3IGF0IDAy
-OjAxOjQ0QU0gKzA4MDAsIEljZW5vd3kgWmhlbmcgd3JvdGU6IAo+ID4gQWRkIHN1cHBvcnQgb2Yg
-QVhQODAzIHJlZ3VsYXRvcnMgaW4gdGhlIFBpbmU2NCBkZXZpY2UgdHJlZSwgaW4gb3JkZXIgdG8g
-Cj4gPiBlbmFibGUgbWFueSBmdXR1cmUgZnVuY3Rpb25hbGl0aWVzLCBlLmcuIFdpLUZpLiAKPiA+
-IAo+ID4gU2lnbmVkLW9mZi1ieTogSWNlbm93eSBaaGVuZyA8aWNlbm93eUBhb3NjLmlvPiAKPiA+
-IC0tLSAKPiA+wqAgLi4uL2FybTY0L2Jvb3QvZHRzL2FsbHdpbm5lci9zdW41MGktYTY0LXBpbmU2
-NC5kdHMgfCAxMDkgKysrKysrKysrKysrKysrKysrKysrIAo+ID7CoCAxIGZpbGUgY2hhbmdlZCwg
-MTA5IGluc2VydGlvbnMoKykgCj4gPiAKPiA+IGRpZmYgLS1naXQgYS9hcmNoL2FybTY0L2Jvb3Qv
-ZHRzL2FsbHdpbm5lci9zdW41MGktYTY0LXBpbmU2NC5kdHMgYi9hcmNoL2FybTY0L2Jvb3QvZHRz
-L2FsbHdpbm5lci9zdW41MGktYTY0LXBpbmU2NC5kdHMgCj4gPiBpbmRleCAyMTMyZDhlNmNiM2Qu
-LjdkYTA3NGY5NTA2NSAxMDA2NDQgCj4gPiAtLS0gYS9hcmNoL2FybTY0L2Jvb3QvZHRzL2FsbHdp
-bm5lci9zdW41MGktYTY0LXBpbmU2NC5kdHMgCj4gPiArKysgYi9hcmNoL2FybTY0L2Jvb3QvZHRz
-L2FsbHdpbm5lci9zdW41MGktYTY0LXBpbmU2NC5kdHMgCj4gPiBAQCAtMTA2LDYgKzEwNiwxMTUg
-QEAgCj4gPsKgIH07IAo+ID7CoCB9OyAKPiA+wqAgCj4gPiArI2luY2x1ZGUgImF4cDgwMy5kdHNp
-IiAKPiA+ICsgCj4gPiArJnJlZ19hbGRvMSB7IAo+ID4gKyByZWd1bGF0b3ItbWluLW1pY3Jvdm9s
-dCA9IDwyODAwMDAwPjsgCj4gPiArIHJlZ3VsYXRvci1tYXgtbWljcm92b2x0ID0gPDI4MDAwMDA+
-OyAKPiA+ICsgcmVndWxhdG9yLW5hbWUgPSAidmNjLWNzaSI7IAo+ID4gK307IAo+ID4gKyAKPiA+
-ICsmcmVnX2FsZG8yIHsgCj4gPiArIHJlZ3VsYXRvci1hbHdheXMtb247IAo+ID4gKyByZWd1bGF0
-b3ItbWluLW1pY3Jvdm9sdCA9IDwxODAwMDAwPjsgCj4gPiArIHJlZ3VsYXRvci1tYXgtbWljcm92
-b2x0ID0gPDMzMDAwMDA+OyAKPiA+ICsgcmVndWxhdG9yLW5hbWUgPSAidmNjLXBsIjsgCj4gPiAr
-fTsgCj4gPiArIAo+ID4gKyZyZWdfYWxkbzMgeyAKPiA+ICsgcmVndWxhdG9yLWFsd2F5cy1vbjsg
-Cj4gPiArIHJlZ3VsYXRvci1taW4tbWljcm92b2x0ID0gPDI3MDAwMDA+OyAKPiA+ICsgcmVndWxh
-dG9yLW1heC1taWNyb3ZvbHQgPSA8MzMwMDAwMD47IAo+ID4gKyByZWd1bGF0b3ItbmFtZSA9ICJ2
-Y2MtcGxsLWF2Y2MiOyAKPiA+ICt9OyAKPiA+ICsgCj4gPiArJnJlZ19kYzFzdyB7IAo+ID4gKyBy
-ZWd1bGF0b3ItbmFtZSA9ICJ2Y2MtcGh5IjsgCj4gPiArfTsgCj4gPiArIAo+ID4gKyZyZWdfZGNk
-YzEgeyAKPiA+ICsgcmVndWxhdG9yLWFsd2F5cy1vbjsgCj4gPiArIHJlZ3VsYXRvci1taW4tbWlj
-cm92b2x0ID0gPDMzMDAwMDA+OyAKPiA+ICsgcmVndWxhdG9yLW1heC1taWNyb3ZvbHQgPSA8MzMw
-MDAwMD47IAo+ID4gKyByZWd1bGF0b3ItbmFtZSA9ICJ2Y2MtM3YzIjsgCj4gPiArfTsgCj4gPiAr
-IAo+ID4gKyZyZWdfZGNkYzIgeyAKPiA+ICsgcmVndWxhdG9yLWFsd2F5cy1vbjsgCj4gPiArIHJl
-Z3VsYXRvci1taW4tbWljcm92b2x0ID0gPDEwMDAwMDA+OyAKPiA+ICsgcmVndWxhdG9yLW1heC1t
-aWNyb3ZvbHQgPSA8MTMwMDAwMD47IAo+ID4gKyByZWd1bGF0b3ItbmFtZSA9ICJ2ZGQtY3B1eCI7
-IAo+ID4gK307IAo+ID4gKyAKPiA+ICsvKiBEQ0RDMyBpcyBwb2x5cGhhc2VkIHdpdGggRENEQzIg
-Ki8gCj4gPiArIAo+ID4gKyZyZWdfZGNkYzUgeyAKPiA+ICsgcmVndWxhdG9yLWFsd2F5cy1vbjsg
-Cj4gPiArIHJlZ3VsYXRvci1taW4tbWljcm92b2x0ID0gPDE1MDAwMDA+OyAKPiA+ICsgcmVndWxh
-dG9yLW1heC1taWNyb3ZvbHQgPSA8MTUwMDAwMD47IAo+ID4gKyByZWd1bGF0b3ItbmFtZSA9ICJ2
-Y2MtZHJhbSI7IAo+ID4gK307IAo+ID4gKyAKPiA+ICsmcmVnX2RjZGM2IHsgCj4gPiArIHJlZ3Vs
-YXRvci1hbHdheXMtb247IAo+ID4gKyByZWd1bGF0b3ItbWluLW1pY3Jvdm9sdCA9IDwxMTAwMDAw
-PjsgCj4gPiArIHJlZ3VsYXRvci1tYXgtbWljcm92b2x0ID0gPDExMDAwMDA+OyAKPiA+ICsgcmVn
-dWxhdG9yLW5hbWUgPSAidmRkLXN5cyI7IAo+ID4gK307IAo+ID4gKyAKPiA+ICsmcmVnX2RsZG8x
-IHsgCj4gPiArIHJlZ3VsYXRvci1taW4tbWljcm92b2x0ID0gPDMzMDAwMDA+OyAKPiA+ICsgcmVn
-dWxhdG9yLW1heC1taWNyb3ZvbHQgPSA8MzMwMDAwMD47IAo+ID4gKyByZWd1bGF0b3ItbmFtZSA9
-ICJ2Y2MtaGRtaSI7IAo+ID4gK307IAo+ID4gKyAKPiA+ICsmcmVnX2RsZG8yIHsgCj4gPiArIHJl
-Z3VsYXRvci1taW4tbWljcm92b2x0ID0gPDMzMDAwMDA+OyAKPiA+ICsgcmVndWxhdG9yLW1heC1t
-aWNyb3ZvbHQgPSA8MzMwMDAwMD47IAo+ID4gKyByZWd1bGF0b3ItbmFtZSA9ICJ2Y2MtbWlwaSI7
-IAo+ID4gK307IAo+ID4gKyAKPiA+ICsmcmVnX2RsZG8zIHsgCj4gPiArIHJlZ3VsYXRvci1taW4t
-bWljcm92b2x0ID0gPDMzMDAwMDA+OyAKPiA+ICsgcmVndWxhdG9yLW1heC1taWNyb3ZvbHQgPSA8
-MzMwMDAwMD47IAo+ID4gKyByZWd1bGF0b3ItbmFtZSA9ICJhdmRkLWNzaSI7IAo+ID4gK307IAo+
-ID4gKyAKPiA+ICsmcmVnX2RsZG80IHsgCj4gPiArIHJlZ3VsYXRvci1taW4tbWljcm92b2x0ID0g
-PDMzMDAwMDA+OyAKPiA+ICsgcmVndWxhdG9yLW1heC1taWNyb3ZvbHQgPSA8MzMwMDAwMD47IAo+
-ID4gKyByZWd1bGF0b3ItbmFtZSA9ICJ2Y2Mtd2lmaSI7IAo+ID4gK307IAo+ID4gKyAKPiA+ICsm
-cmVnX2VsZG8xIHsgCj4gPiArIHJlZ3VsYXRvci1taW4tbWljcm92b2x0ID0gPDE4MDAwMDA+OyAK
-PiA+ICsgcmVndWxhdG9yLW1heC1taWNyb3ZvbHQgPSA8MTgwMDAwMD47IAo+ID4gKyByZWd1bGF0
-b3ItbmFtZSA9ICJjcHZkZCI7IAo+ID4gK307IAo+ID4gKyAKPiA+ICsmcmVnX2VsZG8zIHsgCj4g
-PiArIHJlZ3VsYXRvci1taW4tbWljcm92b2x0ID0gPDE4MDAwMDA+OyAKPiA+ICsgcmVndWxhdG9y
-LW1heC1taWNyb3ZvbHQgPSA8MTgwMDAwMD47IAo+ID4gKyByZWd1bGF0b3ItbmFtZSA9ICJ2ZGQt
-MXY4LWNzaSI7IAo+ID4gK307IAo+ID4gKyAKPiA+ICsmcmVnX2ZsZG8xIHsgCj4gPiArIHJlZ3Vs
-YXRvci1taW4tbWljcm92b2x0ID0gPDEyMDAwMDA+OyAKPiA+ICsgcmVndWxhdG9yLW1heC1taWNy
-b3ZvbHQgPSA8MTIwMDAwMD47IAo+ID4gKyByZWd1bGF0b3ItbmFtZSA9ICJ2Y2MtMXYyLWhzaWMi
-OyAKPiA+ICt9OyAKPiA+ICsgCj4gPiArJnJlZ19mbGRvMiB7IAo+ID4gKyByZWd1bGF0b3ItYWx3
-YXlzLW9uOyAKPiA+ICsgcmVndWxhdG9yLW1pbi1taWNyb3ZvbHQgPSA8MTEwMDAwMD47IAo+ID4g
-KyByZWd1bGF0b3ItbWF4LW1pY3Jvdm9sdCA9IDwxMTAwMDAwPjsgCj4gPiArIHJlZ3VsYXRvci1u
-YW1lID0gInZkZC1jcHVzIjsgCj4gPiArfTsgCj4KPiBXaHkgZG8geW91IG5lZWQgdG8gYWx3YXlz
-IHBvd2VyIHRoZSBBUjEwMCBvbj8gCgpJdCdzIGZvciBDUFVTIHBvd2VyIGRvbWFpbiwgbm90IHRo
-ZSBBUjEwMCBwcm9jZXNzb3IuCgpLaWxsIGl0IHdpbGwgbGVhZCB0byBpbnN0YW50bHkgc3lzdGVt
-IGhhbmcuCgo+Cj4gTWF4aW1lIAo+Cj4gLS0gCj4gTWF4aW1lIFJpcGFyZCwgRnJlZSBFbGVjdHJv
-bnMgCj4gRW1iZWRkZWQgTGludXggYW5kIEtlcm5lbCBlbmdpbmVlcmluZyAKPiBodHRwOi8vZnJl
-ZS1lbGVjdHJvbnMuY29tIAo+Cj4gLS0gCj4gWW91IHJlY2VpdmVkIHRoaXMgbWVzc2FnZSBiZWNh
-dXNlIHlvdSBhcmUgc3Vic2NyaWJlZCB0byB0aGUgR29vZ2xlIEdyb3VwcyAibGludXgtc3VueGki
-IGdyb3VwLiAKPiBUbyB1bnN1YnNjcmliZSBmcm9tIHRoaXMgZ3JvdXAgYW5kIHN0b3AgcmVjZWl2
-aW5nIGVtYWlscyBmcm9tIGl0LCBzZW5kIGFuIGVtYWlsIHRvIGxpbnV4LXN1bnhpK3Vuc3Vic2Ny
-aWJlQGdvb2dsZWdyb3Vwcy5jb20uIAo+IEZvciBtb3JlIG9wdGlvbnMsIHZpc2l0IGh0dHBzOi8v
-Z3JvdXBzLmdvb2dsZS5jb20vZC9vcHRvdXQuIAo=
+--001a11430eaa3d4d2f054d7a4643
+Content-Type: text/plain; charset=UTF-8
+
+2017-04-19 6:20 GMT+08:00 Heiko Stuebner <heiko@sntech.de>:
+
+> Hi Eddie,
+>
+> Am Dienstag, 18. April 2017, 20:15:27 CEST schrieb Eddie Cai:
+> > firefly reload is very similar with firefly board, so reuse firefly dtsi
+> >
+> > Signed-off-by: Eddie Cai <eddie.cai.linux@gmail.com>
+> > ---
+> >  arch/arm/boot/dts/rk3288-firefly-reload-core.dtsi | 310
+> ------------------
+> >  arch/arm/boot/dts/rk3288-firefly-reload.dts       | 368
+> ++--------------------
+>
+> I would disagree and remember having a similar discussion when the reload-
+> support was initially submitted. Please keep in mind that the firefly-
+> reload is a som+baseboard combination, so somebody could (or maybe
+> already has) create a completely different baseboard for the som that
+> does not have any similarities with the original firefly.
+> The previous firefly being a real single board.
+
+
+> We also don't combine rock2 and firefly and other boards following the
+> general rk3288 design guidelines :-) and the original firefly and reload
+> are
+> very different boards if you look at them.
+>
+OK, i think the real similar part is the core board and firefly. how about
+reuse the
+firefly code in the core board?
+
+>
+>
+> Heiko
+>
+>
+
+--001a11430eaa3d4d2f054d7a4643
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr"><br><div class=3D"gmail_extra"><br><div class=3D"gmail_quo=
+te">2017-04-19 6:20 GMT+08:00 Heiko Stuebner <span dir=3D"ltr">&lt;<a href=
+=3D"mailto:heiko@sntech.de" target=3D"_blank">heiko@sntech.de</a>&gt;</span=
+>:<br><blockquote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;b=
+order-left:1px solid rgb(204,204,204);padding-left:1ex">Hi Eddie,<br>
+<span class=3D"gmail-"><br>
+Am Dienstag, 18. April 2017, 20:15:27 CEST schrieb Eddie Cai:<br>
+&gt; firefly reload is very similar with firefly board, so reuse firefly dt=
+si<br>
+&gt;<br>
+&gt; Signed-off-by: Eddie Cai &lt;<a href=3D"mailto:eddie.cai.linux@gmail.c=
+om">eddie.cai.linux@gmail.com</a>&gt;<br>
+&gt; ---<br>
+&gt;=C2=A0 arch/arm/boot/dts/rk3288-<wbr>firefly-reload-core.dtsi | 310 ---=
+---------------<br>
+&gt;=C2=A0 arch/arm/boot/dts/rk3288-<wbr>firefly-reload.dts=C2=A0 =C2=A0 =
+=C2=A0 =C2=A0| 368 ++--------------------<br>
+<br>
+</span>I would disagree and remember having a similar discussion when the r=
+eload-<br>
+support was initially submitted. Please keep in mind that the firefly-<br>
+reload is a som+baseboard combination, so somebody could (or maybe<br>
+already has) create a completely different baseboard for the som that<br>
+does not have any similarities with the original firefly.<br>
+The previous firefly being a real single board.</blockquote><blockquote cla=
+ss=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid =
+rgb(204,204,204);padding-left:1ex">
+<br>
+We also don&#39;t combine rock2 and firefly and other boards following the<=
+br>
+general rk3288 design guidelines :-) and the original firefly and reload ar=
+e<br>
+very different boards if you look at them.<br></blockquote><div>OK, i think=
+ the real similar part is the core board and firefly. how about reuse the=
+=C2=A0</div><div>firefly code in the core board?<br></div><blockquote class=
+=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid rg=
+b(204,204,204);padding-left:1ex">
+<span class=3D"gmail-HOEnZb"><font color=3D"#888888"><br>
+<br>
+Heiko<br>
+<br>
+</font></span></blockquote></div><br></div></div>
+
+--001a11430eaa3d4d2f054d7a4643--
