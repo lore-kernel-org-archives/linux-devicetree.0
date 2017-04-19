@@ -1,78 +1,55 @@
-From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH V4 1/9] PM / OPP: Allow OPP table to be used for
- power-domains
-Date: Wed, 19 Apr 2017 14:58:00 +0100
-Message-ID: <9dee7c0d-e5f4-9fcd-3c92-bf7ec9d43a3b@arm.com>
-References: <cover.1490001099.git.viresh.kumar@linaro.org>
- <e772e67a5445319bb8e0f312846ace666adc097f.1490001099.git.viresh.kumar@linaro.org>
- <0a7146f9-72f1-317c-3aab-770a72462968@arm.com>
- <20170413053736.GM5910@vireshk-i7>
- <3adbef6a-7b43-528f-e88f-c2121d30a5d3@arm.com>
- <20170417052758.GF28191@vireshk-i7>
- <95aa4b97-4e1a-13bb-f4d8-982b778012ba@arm.com>
- <20170419114740.GD5436@vireshk-i7>
+From: Leo Yan <leo.yan@linaro.org>
+Subject: Re: [PATCH v6 6/8] coresight: add support for CPU debug module
+Date: Wed, 19 Apr 2017 22:28:12 +0800
+Message-ID: <20170419142812.GA16160@leoy-linaro>
+References: <1491485461-22800-1-git-send-email-leo.yan@linaro.org>
+ <1491485461-22800-7-git-send-email-leo.yan@linaro.org>
+ <5c5cb6f8-1dcb-8a9d-1605-c006656005eb@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20170419114740.GD5436@vireshk-i7>
-Sender: linux-pm-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: Sudeep Holla <sudeep.holla@arm.com>, Rafael Wysocki <rjw@rjwysocki.net>, ulf.hansson@linaro.org, Kevin Hilman <khilman@linaro.org>, Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@codeaurora.org>, linaro-kernel@lists.linaro.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, Vincent Guittot <vincent.guittot@linaro.org>, robh+dt@kernel.org, lina.iyer@linaro.org, rnayak@codeaurora.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <5c5cb6f8-1dcb-8a9d-1605-c006656005eb@arm.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Suzuki K Poulose <Suzuki.Poulose@arm.com>
+Cc: Jonathan Corbet <corbet@lwn.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Wei Xu <xuwei5@hisilicon.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Mathieu Poirier <mathieu.poirier@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, Mike Leach <mike.leach@linaro.org>, Sudeep Holla <sudeep.holla@arm.com>
 List-Id: devicetree@vger.kernel.org
 
+Hi Suzuki,
 
-
-On 19/04/17 12:47, Viresh Kumar wrote:
-> On 18-04-17, 17:01, Sudeep Holla wrote:
->> Understood. I would incline towards reusing regulators we that's what is
+On Wed, Apr 19, 2017 at 02:23:04PM +0100, Suzuki K Poulose wrote:
+> Hi Leo,
 > 
-> It can be just a regulator, but it can be anything else as well. That
-> entity may have its own clock/volt/current tunables, etc.
+> This version looks good to me. I have two minor comments below.
+
+Thanks for reviewing. Will take the suggestions. Just check a bit for
+last comment.
+
+[...]
+
+> >+static int debug_probe(struct amba_device *adev, const struct amba_id *id)
+> >+{
+> >+	void __iomem *base;
+> >+	struct device *dev = &adev->dev;
+> >+	struct debug_drvdata *drvdata;
+> >+	struct resource *res = &adev->res;
+> >+	struct device_node *np = adev->dev.of_node;
+> >+	int ret;
+> >+
+> >+	drvdata = devm_kzalloc(dev, sizeof(*drvdata), GFP_KERNEL);
+> >+	if (!drvdata)
+> >+		return -ENOMEM;
+> >+
+> >+	drvdata->cpu = np ? of_coresight_get_cpu(np) : 0;
+> >+	if (per_cpu(debug_drvdata, drvdata->cpu)) {
+> >+		dev_err(dev, "CPU%d drvdata has been initialized\n",
+> >+			drvdata->cpu);
 > 
+> May be we could warn about a possible issue in the DT ?
 
-Agreed.
+So can I understand the suggestion is to add warning in function
+of_coresight_get_cpu() when cannot find CPU number, and here directly
+bail out?
 
->> changed behind the scene. Calling this operating performance point
->> is misleading and doesn't align well with existing specs/features.
-> 
-> Yeah, but there are no voltage levels available here and that doesn't
-> fit as a regulator then.
-> 
-
-We can't dismiss just based on that. We do have systems where
-performance index is mapped to clocks though it may not be 1:1 mapping.
-I am not disagreeing here, just trying to understand it better.
-
->> Understood. We have exactly same thing with SCPI but it controls both
->> frequency and voltage referred as operating points. In general, this OPP
->> terminology is used in SCPI/ACPI/SCMI specifications as both frequency
->> and voltage control. I am bit worried that this binding might introduce
->> confusions on the definitions. But it can be reworded/renamed easily if
->> required.
-> 
-> Yeah, so far we have been looking at OPPs as freq-voltage pairs ONLY
-> and that is changing. I am not sure if it going in the wrong
-> direction really. Without frequency also it is an operating point for
-> the domain. Isn't it?
-> 
-
-Yes, I completely agree. I am not saying the direction is wrong. I am
-saying it's confusing and binding needs to be more clear.
-
-On the contrary(playing devil's advocate here), we can treat all
-existing regulators alone as OPP then if you strip the voltages and
-treat it as abstract number. So if the firmware handles more than just
-regulators, I agree. At the same time, I would have preferred firmware
-to even abstract the frequency like ACPI CPPC. It would be good to get
-more information on what exactly that firmware handles.
-
-I am just more cautious here since we are designing generic bindings and
-changing generic code, we need to understand what that firmware supports
-and how it may evolve(so that we can maintain DT compatibility)
-
-I did a brief check and wanted to check if this is SMD/RPM regulators ?
-
--- 
-Regards,
-Sudeep
+Thanks,
+Leo Yan
