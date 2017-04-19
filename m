@@ -1,95 +1,144 @@
-From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [RFC 2/2] mux: mmio-based syscon mux controller
-Date: Wed, 19 Apr 2017 18:32:34 +0200
-Message-ID: <1492619554.2970.176.camel@pengutronix.de>
-References: <20170413154812.19597-1-p.zabel@pengutronix.de>
-         <20170413154812.19597-2-p.zabel@pengutronix.de>
-         <58fd5844-f24a-37cc-be81-26a716251860@gmail.com>
-         <1492602613.2970.92.camel@pengutronix.de>
-         <e4d4b515-e799-9594-f88a-de9d8a5d14bb@axentia.se>
-         <1492615640.2970.145.camel@pengutronix.de>
-         <c45fb784-e4ef-c5a8-3ae9-df1870c9e4a6@gmail.com>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [PATCH v13 02/10] dt-bindings: document devicetree bindings for
+ mux-controllers and gpio-mux
+Date: Wed, 19 Apr 2017 18:34:01 +0200
+Message-ID: <1492619641.2970.178.camel@pengutronix.de>
+References: <1492101794-13444-1-git-send-email-peda@axentia.se>
+         <1492101794-13444-3-git-send-email-peda@axentia.se>
+         <1492509996.2432.63.camel@pengutronix.de>
+         <17135062-e58a-b50e-ac85-5f0f0b73d958@axentia.se>
+         <1492593449.2970.24.camel@pengutronix.de>
+         <0cf0254e-0e43-37c3-f14d-eeffa7d7b9ba@axentia.se>
+         <1492599958.2970.84.camel@pengutronix.de>
+         <687b26d7-7d80-e8e1-5aa8-a4e8bc070e42@axentia.se>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <c45fb784-e4ef-c5a8-3ae9-df1870c9e4a6-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <687b26d7-7d80-e8e1-5aa8-a4e8bc070e42@axentia.se>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Peter Rosin <peda@axentia.se>
+Cc: linux-kernel@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>, Wolfram Sang <wsa@the-dreams.de>, linux-iio@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org, kernel@pengutronix.de, Paul Gortmaker <paul.gortmaker@windriver.com>, Rob Herring <robh+dt@kernel.org>, linux-i2c@vger.kernel.org, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Hartmut Knaack <knaack.h@gmx.de>, Colin Ian King <colin.king@canonical.com>, Andrew Morton <akpm@linux-foundation.org>, Jonathan Cameron <jic23@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2017-04-19 at 09:23 -0700, Steve Longerbeam wrote:
-> 
-> On 04/19/2017 08:27 AM, Philipp Zabel wrote:
-> > On Wed, 2017-04-19 at 13:58 +0200, Peter Rosin wrote:
-> >> On 2017-04-19 13:50, Philipp Zabel wrote:
-> >>> On Thu, 2017-04-13 at 18:09 -0700, Steve Longerbeam wrote:
-> >>>>
-> >>>> On 04/13/2017 08:48 AM, Philipp Zabel wrote:
-> >>>>> This adds a driver for mmio-based syscon multiplexers controlled by a
-> >>>>> single bitfield in a syscon register range.
-> >>>>>
-> >>>>> Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> >>>>> ---
-> >>>>>   drivers/mux/Kconfig      |  13 +++++
-> >>>>>   drivers/mux/Makefile     |   1 +
-> >>>>>   drivers/mux/mux-syscon.c | 130 +++++++++++++++++++++++++++++++++++++++++++++++
-> >>>>>   3 files changed, 144 insertions(+)
-> >>>>>   create mode 100644 drivers/mux/mux-syscon.c
-> >>>>>
-> >>>>> diff --git a/drivers/mux/Kconfig b/drivers/mux/Kconfig
-> >>>>> index 86668b4d2fc52..a5e6a3b01ac24 100644
-> >>>>> --- a/drivers/mux/Kconfig
-> >>>>> +++ b/drivers/mux/Kconfig
-> >>>>> @@ -43,4 +43,17 @@ config MUX_GPIO
-> >>>>>   	  To compile the driver as a module, choose M here: the module will
-> >>>>>   	  be called mux-gpio.
-> >>>>>
-> >>>>> +config MUX_SYSCON
-> >>>>
-> >>>> my preference would be CONFIG_MUX_MMIO.
-> >>>>
-> >>>>> +	tristate "MMIO bitfield-controlled Multiplexer"
-> >>>>
-> >>>> "MMIO register bitfield-controlled Multiplexer"
-> >>>>
-> >>>> The rest looks good to me.
+On Wed, 2017-04-19 at 13:23 +0200, Peter Rosin wrote:
+> On 2017-04-19 13:05, Philipp Zabel wrote:
+> > On Wed, 2017-04-19 at 12:41 +0200, Peter Rosin wrote:
+> >> On 2017-04-19 11:17, Philipp Zabel wrote:
+> >>> On Tue, 2017-04-18 at 15:36 +0200, Peter Rosin wrote:
+> >>>> If I got things wrong when I skimmed whatever I came across, and if the
+> >>>> mmio register is the only mux control option in the stars, it becomes
+> >>>> less obvious... It's of course still possible to hook into the mux
+> >>>> subsystem, but the benefit is questionable. And you do get the extra
+> >>>> device tree node. You could of course also implement a mux driver
+> >>>> outside of drivers/mux and thus make use of the mux api, but it's tiny
+> >>>> and any benefit is truly small.
 > >>>
-> >>> I'll change those. mux-syscon.c should probably be renamed to
-> >>> mux-mmio.c, too.
+> >>> What I wondered mostly is whether it would be a good idea to move the
+> >>> OF-graph ports into the mux controller node, and let the video capture
+> >>> device be the consumer of the mux.
+> >>> But this wouldn't fit well with the clear split between the mux
+> >>> controller and the actual mux hardware in the mux DT bindings.
 > >>
-> >> I think I disagree. But I'm not familiar with syscon so I don't know.
-> >> IIUC, syscon uses regmap to do mmio and this driver requires syscon
-> >> to get at the regmap, and in the end this driver doesn't know anything
-> >> about mmio. All it knows is syscon/regmap.
-> >
-> > That is a good point. Right now there is nothing MMIO about the driver
-> > except for the hardware that I want it to handle.
-> >
-> >>  If some warped syscon
-> >> thing shows up that wraps something other than mmio in its regmap,
-> >> this driver wouldn't care about it. And syscon is something that
-> >> is also known in the DT world. Given that, I think everything in this
-> >> driver should be named syscon and not mmio.
+> >> I have tried to do something similar. I think. The current
+> >> drivers/i2c/muxes/i2c-mux-gpio.c is a good candidate for the same thing
+> >> IIUC.
 > >>
+> >> That dedicated driver and the general purpose i2c mux driver does pretty
+> >> much the same thing with these two DT snippets:
+> >>
+> >> Dedicated i2c-mux-gpio DT snippet:
+> >>
+> >> 	i2c-mux {
+> >> 		compatible = "i2c-mux-gpio";
+> >> 		i2c-parent = <&i2c1>;
+> >>
+> >> 		mux-gpios = <&gpio1 22 0 &gpio1 23 0>;
+> >>
+> >> 		#address-cells = <1>;
+> >> 		#size-cells = <0>;
+> >>
+> >> 		i2c@1 {
+> >> 			...
+> >> 		};
+> >>
+> >> 		i2c@3 {
+> >> 			...
+> >> 		};
+> >> 	};
+> >>
+> >> General purpose mux DT snippet:
+> >>
+> >> 	mux: mux-controller {
+> >> 		compatible = "gpio-mux";
+> >> 		#mux-control-cells = <0>;
+> >>
+> >> 		mux-gpios = <&gpio1 22 0 &gpio1 23 0>;
+> >> 	};
+> >>
+> >> 	i2c-mux {
+> >> 		compatible = "i2c-mux";
+> >> 		i2c-parent = <&i2c1>;
+> >>
+> >> 		mux-controls = <&mux>;
+> >>
+> >> 		#address-cells = <1>;
+> >> 		#size-cells = <0>;
+> >>
+> >> 		i2c@1 {
+> >> 			...
+> >> 		};
+> >>
+> >> 		i2c@3 {
+> >> 			...
+> >> 		};
+> >> 	};
+> > 
+> > Yes, replace i2c-mux with video-mux and the i2c@x nodes with port@x
+> > nodes, and this is very close to what I am thinking about.
+> > 
+> >> I would love to find a way to cleanly get the mux framework to handle
+> >> the first DT as well, and thus being able to obsolete the dedicated
+> >> i2c-mux-gpio driver. I have not figured out how to accomplish that
+> >> without abusing the driver-model to a point that it's not working.
+> >> Help with that task is dearly appreciated.
+> >>
+> >> What I have stumbled on, I think, is that two drivers needs to be
+> >> instantiated from the same DT node. At the same time, I need the
+> >> mux framework to handle the current out-of-node thing with a
+> >> phandle as well, so that several mux consumers can share a common
+> >> mux controller. My understanding of these matters are apparently not
+> >> deep enough...
+> > 
+> > Not necessarily, if the framework could export a function to create a
+> > gpio/mmio mux_chip on a given device and the gpio-mux and *-mux-gpio
+> > drivers just reuse that.
 > 
-> My argument against using the name "syscon" in the device tree is that
-> it is referring to a subsystem in the Linux kernel. Besides the fact
-> that "syscon" does not clearly describe, at least to me, what sort of
-> device this mux is.
+> I've been up that creek. Why should the gpio mux be special cased?
 
-If I'm not mistaken, this point was not about the DT compatible
-property, just about the driver name.
+You are right, this does not scale.
 
-I'm also in favor of keeping the "syscon" name out of the device tree as
-far as it is still possible, for the same reasons. The i.MX6 muxes are
-MMIO register bitfield muxes, but not "syscon muxes".
+> That's not clean, the implication is that all mux consumers need
+> to handle the gpio case and have a special compatible for that
+> case etc. Then someone thinks the DT should look equally "clean" for
+> some i2c based mux, and the weeds start piling up. This is exactly
+> what we don't want. We want the mux consumer drivers to be totally
+> agnostic about the fact that they happen to use a gpio mux.
+
+If you want to have i2c-mux-gpio and i2c-mux compatibles, and a single
+driver to handle them both, it must at least match both compatibles, so
+it can't be completely agnostic.
+
+Why not then have it call
+
+	if (/* compatible == "i2c-mux" */)
+		mux = devm_mux_control_get(dev, NULL);
+	else /* if (compatible == "i2c-mux-gpio/mmio/etc.") */
+		mux = devm_mux_control_create(dev);
+
+? The mux framework core could hold a list of those <usage>-mux-<type>
+compatibles and dispatch creation of the correct mux (or mux platform
+device, if necessary).
 
 regards
 Philipp
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
