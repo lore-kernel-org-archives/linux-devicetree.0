@@ -1,34 +1,33 @@
-From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] clk: imx7d: fix USDHC NAND clock
-Date: Wed, 19 Apr 2017 09:14:35 -0700
-Message-ID: <20170419161435.GA7065@codeaurora.org>
-References: <20170410210015.1620-1-stefan@agner.ch>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH v4 05/10] clk: mediatek: add clk support for MT6797
+Date: Wed, 19 Apr 2017 09:19:00 -0700
+Message-ID: <20170419161900.GC7065@codeaurora.org>
+References: <1491614435-23754-1-git-send-email-mars.cheng@mediatek.com>
+ <1491614435-23754-6-git-send-email-mars.cheng@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170410210015.1620-1-stefan-XLVq0VzYD2Y@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
-Cc: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, aisheng.dong-3arQi8VN3Tc@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1491614435-23754-6-git-send-email-mars.cheng@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mars Cheng <mars.cheng@mediatek.com>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>, CC Hwang <cc.hwang@mediatek.com>, Loda Chou <loda.chou@mediatek.com>, Miles Chen <miles.chen@mediatek.com>, Jades Shih <jades.shih@mediatek.com>, Yingjoe Chen <yingjoe.chen@mediatek.com>, Kevin-CW Chen <kevin-cw.chen@mediatek.com>, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org, wsd_upstream@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-On 04/10, Stefan Agner wrote:
-> The USDHC NAND root clock is not gated by any CCM clock gate. Remove
-> the bogus gate definition.
+On 04/08, Mars Cheng wrote:
+> From: Kevin-CW Chen <kevin-cw.chen@mediatek.com>
 > 
-> Signed-off-by: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+> Add MT6797 clock support, include topckgen, apmixedsys, infracfg
+> and subsystem clocks
+> 
+> Signed-off-by: Kevin-CW Chen <kevin-cw.chen@mediatek.com>
+> Signed-off-by: Mars Cheng <mars.cheng@mediatek.com>
+> Tested-by: Matthias Brugger <matthias.bgg@gmail.com>
+> Acked-by: Stephen Boyd <sboyd@codeaurora.org>
 > ---
 
-Can this be applied? It's followed by a dtsi change and there is
-zero information about if the two depend on each other. Please
-add cover letters for these sorts of things in the future
-indicating how you expect merging to work.
+Applied to clk-next
 
 -- 
 Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
 a Linux Foundation Collaborative Project
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
