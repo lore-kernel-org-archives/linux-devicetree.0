@@ -1,262 +1,774 @@
-From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] of: introduce event tracepoints for dynamic device_node
- lifecyle
-Date: Wed, 19 Apr 2017 10:44:17 -0700
-Message-ID: <58F7A1F1.9030501@gmail.com>
-References: <1492475525-10827-1-git-send-email-tyreld@linux.vnet.ibm.com>
+From: Mathieu Poirier <mathieu.poirier@linaro.org>
+Subject: Re: [PATCH v6 6/8] coresight: add support for CPU debug module
+Date: Wed, 19 Apr 2017 11:49:48 -0600
+Message-ID: <CANLsYkx_C826Ph+QB1U3Onnyi9GNaztPARbCpaFB=xg5=yx_ww@mail.gmail.com>
+References: <1491485461-22800-1-git-send-email-leo.yan@linaro.org> <1491485461-22800-7-git-send-email-leo.yan@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1492475525-10827-1-git-send-email-tyreld-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tyrel Datwyler <tyreld-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, nfont-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org, mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org, rostedt-nx8X9YLhiw1AfugRpC6u6w@public.gmane.org, mingo-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1491485461-22800-7-git-send-email-leo.yan@linaro.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Leo Yan <leo.yan@linaro.org>
+Cc: Jonathan Corbet <corbet@lwn.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Wei Xu <xuwei5@hisilicon.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Suzuki K Poulose <suzuki.poulose@arm.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-doc@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, Mike Leach <mike.leach@linaro.org>, Sudeep Holla <sudeep.holla@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On 04/17/17 17:32, Tyrel Datwyler wrote:
-> This patch introduces event tracepoints for tracking a device_nodes
-> reference cycle as well as reconfig notifications generated in response
-> to node/property manipulations.
-> 
-> With the recent upstreaming of the refcount API several device_node
-> underflows and leaks have come to my attention in the pseries (DLPAR) dynamic
-> logical partitioning code (ie. POWER speak for hotplugging virtual and physcial
-> resources at runtime such as cpus or IOAs). These tracepoints provide a
-> easy and quick mechanism for validating the reference counting of
-> device_nodes during their lifetime.
-> 
-> Further, when pseries lpars are migrated to a different machine we
-> perform a live update of our device tree to bring it into alignment with the
-> configuration of the new machine. The of_reconfig_notify trace point
-> provides a mechanism that can be turned for debuging the device tree
-> modifications with out having to build a custom kernel to get at the
-> DEBUG code introduced by commit 00aa3720.
-
-Is the normal kernel built with CONFIG_DYNAMIC_DEBUG=y?  If so, then
-simply removing the "ifdef DEBUG" around the switch in
-of_reconfig_notify() would solve that issue.
-
--Frank
-
-
-> The following trace events are provided: of_node_get, of_node_put,
-> of_node_release, and of_reconfig_notify. These trace points require a kernel
-> built with ftrace support to be enabled. In a typical environment where
-> debugfs is mounted at /sys/kernel/debug the entire set of tracepoints
-> can be set with the following:
-> 
->   echo "of:*" > /sys/kernel/debug/tracing/set_event
-> 
-> or
-> 
->   echo 1 > /sys/kernel/debug/tracing/of/enable
-> 
-> The following shows the trace point data from a DLPAR remove of a cpu
-> from a pseries lpar:
-> 
-> cat /sys/kernel/debug/tracing/trace | grep "POWER8@10"
-> 
-> cpuhp/23-147   [023] ....   128.324827:
-> 	of_node_put: refcount=5, dn->full_name=/cpus/PowerPC,POWER8@10
-> cpuhp/23-147   [023] ....   128.324829:
-> 	of_node_put: refcount=4, dn->full_name=/cpus/PowerPC,POWER8@10
-> cpuhp/23-147   [023] ....   128.324829:
-> 	of_node_put: refcount=3, dn->full_name=/cpus/PowerPC,POWER8@10
-> cpuhp/23-147   [023] ....   128.324831:
-> 	of_node_put: refcount=2, dn->full_name=/cpus/PowerPC,POWER8@10
->    drmgr-7284  [009] ....   128.439000:
-> 	of_node_put: refcount=1, dn->full_name=/cpus/PowerPC,POWER8@10
->    drmgr-7284  [009] ....   128.439002:
-> 	of_reconfig_notify: action=DETACH_NODE, dn->full_name=/cpus/PowerPC,POWER8@10,
-> 			    prop->name=null, old_prop->name=null
->    drmgr-7284  [009] ....   128.439015:
-> 	of_node_put: refcount=0, dn->full_name=/cpus/PowerPC,POWER8@10
->    drmgr-7284  [009] ....   128.439016:
-> 	of_node_release: dn->full_name=/cpus/PowerPC,POWER8@10, dn->_flags=4
-> 
-> Signed-off-by: Tyrel Datwyler <tyreld-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+On 6 April 2017 at 07:30, Leo Yan <leo.yan@linaro.org> wrote:
+> Coresight includes debug module and usually the module connects with CPU
+> debug logic. ARMv8 architecture reference manual (ARM DDI 0487A.k) has
+> description for related info in "Part H: External Debug".
+>
+> Chapter H7 "The Sample-based Profiling Extension" introduces several
+> sampling registers, e.g. we can check program counter value with
+> combined CPU exception level, secure state, etc. So this is helpful for
+> analysis CPU lockup scenarios, e.g. if one CPU has run into infinite
+> loop with IRQ disabled. In this case the CPU cannot switch context and
+> handle any interrupt (including IPIs), as the result it cannot handle
+> SMP call for stack dump.
+>
+> This patch is to enable coresight debug module, so firstly this driver
+> is to bind apb clock for debug module and this is to ensure the debug
+> module can be accessed from program or external debugger. And the driver
+> uses sample-based registers for debug purpose, e.g. when system triggers
+> panic, the driver will dump program counter and combined context
+> registers (EDCIDSR, EDVIDSR); by parsing context registers so can
+> quickly get to know CPU secure state, exception level, etc.
+>
+> Some of the debug module registers are located in CPU power domain, so
+> this requires the CPU power domain stays on when access related debug
+> registers, but the power management for CPU power domain is quite
+> dependent on SoC integration for power management. For the platforms
+> which with sane power controller implementations, this driver follows
+> the method to set EDPRCR to try to pull the CPU out of low power state
+> and then set 'no power down request' bit so the CPU has no chance to
+> lose power.
+>
+> If the SoC has not followed up this design well for power management
+> controller, the user should use the command line parameter or sysfs
+> to constrain all or partial idle states to ensure the CPU power
+> domain is enabled and access coresight CPU debug component safely.
+>
+> Signed-off-by: Leo Yan <leo.yan@linaro.org>
 > ---
->  drivers/of/dynamic.c      | 30 ++++++---------
->  include/trace/events/of.h | 93 +++++++++++++++++++++++++++++++++++++++++++++++
->  2 files changed, 105 insertions(+), 18 deletions(-)
->  create mode 100644 include/trace/events/of.h
-> 
-> diff --git a/drivers/of/dynamic.c b/drivers/of/dynamic.c
-> index 888fdbc..85c0966 100644
-> --- a/drivers/of/dynamic.c
-> +++ b/drivers/of/dynamic.c
-> @@ -16,6 +16,9 @@
->  
->  #include "of_private.h"
->  
-> +#define CREATE_TRACE_POINTS
-> +#include <trace/events/of.h>
+>  drivers/hwtracing/coresight/Kconfig               |  14 +
+>  drivers/hwtracing/coresight/Makefile              |   1 +
+>  drivers/hwtracing/coresight/coresight-cpu-debug.c | 667 ++++++++++++++++++++++
+>  3 files changed, 682 insertions(+)
+>  create mode 100644 drivers/hwtracing/coresight/coresight-cpu-debug.c
+>
+> diff --git a/drivers/hwtracing/coresight/Kconfig b/drivers/hwtracing/coresight/Kconfig
+> index 130cb21..8d55d6d 100644
+> --- a/drivers/hwtracing/coresight/Kconfig
+> +++ b/drivers/hwtracing/coresight/Kconfig
+> @@ -89,4 +89,18 @@ config CORESIGHT_STM
+>           logging useful software events or data coming from various entities
+>           in the system, possibly running different OSs
+>
+> +config CORESIGHT_CPU_DEBUG
+> +       tristate "CoreSight CPU Debug driver"
+> +       depends on ARM || ARM64
+> +       depends on DEBUG_FS
+> +       help
+> +         This driver provides support for coresight debugging module. This
+> +         is primarily used to dump sample-based profiling registers when
+> +         system triggers panic, the driver will parse context registers so
+> +         can quickly get to know program counter (PC), secure state,
+> +         exception level, etc. Before use debugging functionality, platform
+> +         needs to ensure the clock domain and power domain are enabled
+> +         properly, please refer Documentation/trace/coresight-cpu-debug.txt
+> +         for detailed description and the example for usage.
 > +
->  /**
->   * of_node_get() - Increment refcount of a node
->   * @node:	Node to inc refcount, NULL is supported to simplify writing of
-> @@ -25,8 +28,10 @@
->   */
->  struct device_node *of_node_get(struct device_node *node)
->  {
-> -	if (node)
-> +	if (node) {
->  		kobject_get(&node->kobj);
-> +		trace_of_node_get(refcount_read(&node->kobj.kref.refcount), node->full_name);
-> +	}
->  	return node;
->  }
->  EXPORT_SYMBOL(of_node_get);
-> @@ -38,8 +43,10 @@ struct device_node *of_node_get(struct device_node *node)
->   */
->  void of_node_put(struct device_node *node)
->  {
-> -	if (node)
-> +	if (node) {
-> +		trace_of_node_put(refcount_read(&node->kobj.kref.refcount) - 1, node->full_name);
->  		kobject_put(&node->kobj);
-> +	}
->  }
->  EXPORT_SYMBOL(of_node_put);
->  
-> @@ -92,24 +99,9 @@ int of_reconfig_notifier_unregister(struct notifier_block *nb)
->  int of_reconfig_notify(unsigned long action, struct of_reconfig_data *p)
->  {
->  	int rc;
-> -#ifdef DEBUG
-> -	struct of_reconfig_data *pr = p;
->  
-> -	switch (action) {
-> -	case OF_RECONFIG_ATTACH_NODE:
-> -	case OF_RECONFIG_DETACH_NODE:
-> -		pr_debug("notify %-15s %s\n", action_names[action],
-> -			pr->dn->full_name);
-> -		break;
-> -	case OF_RECONFIG_ADD_PROPERTY:
-> -	case OF_RECONFIG_REMOVE_PROPERTY:
-> -	case OF_RECONFIG_UPDATE_PROPERTY:
-> -		pr_debug("notify %-15s %s:%s\n", action_names[action],
-> -			pr->dn->full_name, pr->prop->name);
-> -		break;
-> +	trace_of_reconfig_notify(action, p);
->  
-> -	}
-> -#endif
->  	rc = blocking_notifier_call_chain(&of_reconfig_chain, action, p);
->  	return notifier_to_errno(rc);
->  }
-> @@ -326,6 +318,8 @@ void of_node_release(struct kobject *kobj)
->  	struct device_node *node = kobj_to_device_node(kobj);
->  	struct property *prop = node->properties;
->  
-> +	trace_of_node_release(node);
-> +
->  	/* We should never be releasing nodes that haven't been detached. */
->  	if (!of_node_check_flag(node, OF_DETACHED)) {
->  		pr_err("ERROR: Bad of_node_put() on %s\n", node->full_name);
-> diff --git a/include/trace/events/of.h b/include/trace/events/of.h
+>  endif
+> diff --git a/drivers/hwtracing/coresight/Makefile b/drivers/hwtracing/coresight/Makefile
+> index af480d9..433d590 100644
+> --- a/drivers/hwtracing/coresight/Makefile
+> +++ b/drivers/hwtracing/coresight/Makefile
+> @@ -16,3 +16,4 @@ obj-$(CONFIG_CORESIGHT_SOURCE_ETM4X) += coresight-etm4x.o \
+>                                         coresight-etm4x-sysfs.o
+>  obj-$(CONFIG_CORESIGHT_QCOM_REPLICATOR) += coresight-replicator-qcom.o
+>  obj-$(CONFIG_CORESIGHT_STM) += coresight-stm.o
+> +obj-$(CONFIG_CORESIGHT_CPU_DEBUG) += coresight-cpu-debug.o
+> diff --git a/drivers/hwtracing/coresight/coresight-cpu-debug.c b/drivers/hwtracing/coresight/coresight-cpu-debug.c
 > new file mode 100644
-> index 0000000..0d53271
+> index 0000000..8470e31
 > --- /dev/null
-> +++ b/include/trace/events/of.h
-> @@ -0,0 +1,93 @@
-> +#undef TRACE_SYSTEM
-> +#define TRACE_SYSTEM of
+> +++ b/drivers/hwtracing/coresight/coresight-cpu-debug.c
+> @@ -0,0 +1,667 @@
+> +/*
+> + * Copyright (c) 2017 Linaro Limited. All rights reserved.
+> + *
+> + * Author: Leo Yan <leo.yan@linaro.org>
+> + *
+> + * This program is free software; you can redistribute it and/or modify it
+> + * under the terms of the GNU General Public License version 2 as published by
+> + * the Free Software Foundation.
+> + *
+> + * This program is distributed in the hope that it will be useful, but WITHOUT
+> + * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+> + * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+> + * more details.
+> + *
+> + * You should have received a copy of the GNU General Public License along with
+> + * this program.  If not, see <http://www.gnu.org/licenses/>.
+> + *
+> + */
+> +#include <linux/amba/bus.h>
+> +#include <linux/coresight.h>
+> +#include <linux/cpu.h>
+> +#include <linux/debugfs.h>
+> +#include <linux/delay.h>
+> +#include <linux/device.h>
+> +#include <linux/err.h>
+> +#include <linux/init.h>
+> +#include <linux/io.h>
+> +#include <linux/iopoll.h>
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/moduleparam.h>
+> +#include <linux/pm_qos.h>
+> +#include <linux/slab.h>
+> +#include <linux/smp.h>
+> +#include <linux/types.h>
+> +#include <linux/uaccess.h>
 > +
-> +#if !defined(_TRACE_OF_H) || defined(TRACE_HEADER_MULTI_READ)
-> +#define _TRACE_OF_H
+> +#include "coresight-priv.h"
 > +
-> +#include <linux/of.h>
-> +#include <linux/tracepoint.h>
+> +#define EDPCSR                         0x0A0
+> +#define EDCIDSR                                0x0A4
+> +#define EDVIDSR                                0x0A8
+> +#define EDPCSR_HI                      0x0AC
+> +#define EDOSLAR                                0x300
+> +#define EDPRCR                         0x310
+> +#define EDPRSR                         0x314
+> +#define EDDEVID1                       0xFC4
+> +#define EDDEVID                                0xFC8
 > +
-> +DECLARE_EVENT_CLASS(of_node_ref_template,
+> +#define EDPCSR_PROHIBITED              0xFFFFFFFF
 > +
-> +	TP_PROTO(int refcount, const char* dn_name),
+> +/* bits definition for EDPCSR */
+> +#define EDPCSR_THUMB                   BIT(0)
+> +#define EDPCSR_ARM_INST_MASK           GENMASK(31, 2)
+> +#define EDPCSR_THUMB_INST_MASK         GENMASK(31, 1)
 > +
-> +	TP_ARGS(refcount, dn_name),
+> +/* bits definition for EDPRCR */
+> +#define EDPRCR_COREPURQ                        BIT(3)
+> +#define EDPRCR_CORENPDRQ               BIT(0)
 > +
-> +	TP_STRUCT__entry(
-> +		__string(dn_name, dn_name)
-> +		__field(int, refcount)
-> +	),
+> +/* bits definition for EDPRSR */
+> +#define EDPRSR_DLK                     BIT(6)
+> +#define EDPRSR_PU                      BIT(0)
 > +
-> +	TP_fast_assign(
-> +		__assign_str(dn_name, dn_name);
-> +		__entry->refcount = refcount;
-> +	),
+> +/* bits definition for EDVIDSR */
+> +#define EDVIDSR_NS                     BIT(31)
+> +#define EDVIDSR_E2                     BIT(30)
+> +#define EDVIDSR_E3                     BIT(29)
+> +#define EDVIDSR_HV                     BIT(28)
+> +#define EDVIDSR_VMID                   GENMASK(7, 0)
 > +
-> +	TP_printk("refcount=%d, dn->full_name=%s",
-> +		  __entry->refcount, __get_str(dn_name))
-> +);
+> +/*
+> + * bits definition for EDDEVID1:PSCROffset
+> + *
+> + * NOTE: armv8 and armv7 have different definition for the register,
+> + * so consolidate the bits definition as below:
+> + *
+> + * 0b0000 - Sample offset applies based on the instruction state, we
+> + *          rely on EDDEVID to check if EDPCSR is implemented or not
+> + * 0b0001 - No offset applies.
+> + * 0b0010 - No offset applies, but do not use in AArch32 mode
+> + *
+> + */
+> +#define EDDEVID1_PCSR_OFFSET_MASK      GENMASK(3, 0)
+> +#define EDDEVID1_PCSR_OFFSET_INS_SET   (0x0)
+> +#define EDDEVID1_PCSR_NO_OFFSET_DIS_AARCH32    (0x2)
 > +
-> +DEFINE_EVENT(of_node_ref_template, of_node_get,
-> +	     TP_PROTO(int refcount, const char* dn_name),
-> +	     TP_ARGS(refcount, dn_name));
+> +/* bits definition for EDDEVID */
+> +#define EDDEVID_PCSAMPLE_MODE          GENMASK(3, 0)
+> +#define EDDEVID_IMPL_EDPCSR            (0x1)
+> +#define EDDEVID_IMPL_EDPCSR_EDCIDSR    (0x2)
+> +#define EDDEVID_IMPL_FULL              (0x3)
 > +
-> +DEFINE_EVENT(of_node_ref_template, of_node_put,
-> +	     TP_PROTO(int refcount, const char* dn_name),
-> +	     TP_ARGS(refcount, dn_name));
+> +#define DEBUG_WAIT_SLEEP               1000
+> +#define DEBUG_WAIT_TIMEOUT             32000
 > +
-> +TRACE_EVENT(of_node_release,
+> +struct debug_drvdata {
+> +       void __iomem    *base;
+> +       struct device   *dev;
+> +       int             cpu;
 > +
-> +	TP_PROTO(struct device_node *dn),
+> +       bool            edpcsr_present;
+> +       bool            edcidsr_present;
+> +       bool            edvidsr_present;
+> +       bool            pc_has_offset;
 > +
-> +	TP_ARGS(dn),
+> +       u32             edpcsr;
+> +       u32             edpcsr_hi;
+> +       u32             edprsr;
+> +       u32             edvidsr;
+> +       u32             edcidsr;
+> +};
 > +
-> +	TP_STRUCT__entry(
-> +		__string(dn_name, dn->full_name)
-> +		__field(unsigned long, flags)
-> +	),
+> +static DEFINE_MUTEX(debug_lock);
+> +static DEFINE_PER_CPU(struct debug_drvdata *, debug_drvdata);
+> +static int debug_count;
+> +static struct dentry *debug_debugfs_dir;
 > +
-> +	TP_fast_assign(
-> +		__assign_str(dn_name, dn->full_name);
-> +		__entry->flags = dn->_flags;
-> +	),
+> +static bool debug_enable;
+> +module_param_named(enable, debug_enable, bool, 0600);
+> +MODULE_PARM_DESC(enable, "Knob to enable debug functionality "
+> +                "(default is 0, which means is disabled by default)");
 > +
-> +	TP_printk("dn->full_name=%s, dn->_flags=%lu", 
-> +		  __get_str(dn_name), __entry->flags)
-> +);
+> +static void debug_os_unlock(struct debug_drvdata *drvdata)
+> +{
+> +       /* Unlocks the debug registers */
+> +       writel_relaxed(0x0, drvdata->base + EDOSLAR);
+> +       wmb();
+> +}
 > +
-> +#define of_reconfig_action_names \
-> +	{OF_RECONFIG_ATTACH_NODE, "ATTACH_NODE"}, \
-> +	{OF_RECONFIG_DETACH_NODE, "DETACH_NODE"}, \
-> +	{OF_RECONFIG_ADD_PROPERTY, "ADD_PROPERTY"}, \
-> +	{OF_RECONFIG_REMOVE_PROPERTY, "REMOVE_PROPERTY"}, \
-> +	{OF_RECONFIG_UPDATE_PROPERTY, "UPDATE_PROPERTY"}
+> +/*
+> + * According to ARM DDI 0487A.k, before access external debug
+> + * registers should firstly check the access permission; if any
+> + * below condition has been met then cannot access debug
+> + * registers to avoid lockup issue:
+> + *
+> + * - CPU power domain is powered off;
+> + * - The OS Double Lock is locked;
+> + *
+> + * By checking EDPRSR can get to know if meet these conditions.
+> + */
+> +static bool debug_access_permitted(struct debug_drvdata *drvdata)
+> +{
+> +       /* CPU is powered off */
+> +       if (!(drvdata->edprsr & EDPRSR_PU))
+> +               return false;
 > +
-> +TRACE_EVENT(of_reconfig_notify,
+> +       /* The OS Double Lock is locked */
+> +       if (drvdata->edprsr & EDPRSR_DLK)
+> +               return false;
 > +
-> +	TP_PROTO(unsigned long action, struct of_reconfig_data *ord),
+> +       return true;
+> +}
 > +
-> +	TP_ARGS(action, ord),
+> +static void debug_force_cpu_powered_up(struct debug_drvdata *drvdata)
+> +{
+> +       bool retried = false;
+> +       u32 edprcr;
 > +
-> +	TP_STRUCT__entry(
-> +		__field(unsigned long, action)
-> +		__string(dn_name, ord->dn->full_name)
-> +		__string(prop_name, ord->prop ? ord->prop->name : "null")
-> +		__string(oldprop_name, ord->old_prop ? ord->old_prop->name : "null")
-> +	),
+> +try_again:
 > +
-> +	TP_fast_assign(
-> +		__entry->action = action;
-> +		__assign_str(dn_name, ord->dn->full_name);
-> +		__assign_str(prop_name, ord->prop ? ord->prop->name : "null");
-> +		__assign_str(oldprop_name, ord->old_prop ? ord->old_prop->name : "null");
-> +	),
+> +       /*
+> +        * Send request to power management controller and assert
+> +        * DBGPWRUPREQ signal; if power management controller has
+> +        * sane implementation, it should enable CPU power domain
+> +        * in case CPU is in low power state.
+> +        */
+> +       edprcr = readl_relaxed(drvdata->base + EDPRCR);
+> +       edprcr |= EDPRCR_COREPURQ;
+> +       writel_relaxed(edprcr, drvdata->base + EDPRCR);
 > +
-> +	TP_printk("action=%s, dn->full_name=%s, prop->name=%s, old_prop->name=%s",
-> +		  __print_symbolic(__entry->action, of_reconfig_action_names),
-> +		  __get_str(dn_name), __get_str(prop_name), __get_str(oldprop_name))
-> +);
+> +       /* Wait for CPU to be powered up (timeout~=32ms) */
+> +       if (readx_poll_timeout_atomic(readl_relaxed, drvdata->base + EDPRSR,
+> +                       drvdata->edprsr, (drvdata->edprsr & EDPRSR_PU),
+> +                       DEBUG_WAIT_SLEEP, DEBUG_WAIT_TIMEOUT)) {
+> +               /*
+> +                * Unfortunately the CPU cannot be powered up, so return
+> +                * back and later has no permission to access other
+> +                * registers. For this case, should disable CPU low power
+> +                * states to ensure CPU power domain is enabled!
+> +                */
+> +               pr_err("%s: power up request for CPU%d failed\n",
+> +                       __func__, drvdata->cpu);
+> +               return;
+> +       }
 > +
-> +#endif /*	_TRACE_OF_H */
+> +       /*
+> +        * At this point the CPU is powered up, so set the no powerdown
+> +        * request bit so we don't lose power and emulate power down.
+> +        */
+> +       edprcr = readl_relaxed(drvdata->base + EDPRCR);
+> +       edprcr |= EDPRCR_COREPURQ | EDPRCR_CORENPDRQ;
+> +       writel_relaxed(edprcr, drvdata->base + EDPRCR);
 > +
-> +/* This part must be outside protection */
-> +#include <trace/define_trace.h>
-> 
+> +       drvdata->edprsr = readl_relaxed(drvdata->base + EDPRSR);
+> +
+> +       /* Bail out if CPU is powered up */
+> +       if (likely(drvdata->edprsr & EDPRSR_PU))
+> +               return;
+> +
+> +       /*
+> +        * Handle race condition if CPU has been waken up but it sleeps
+> +        * again if EDPRCR_CORENPDRQ has been flipped, so try to run
+> +        * waken flow one more time.
+> +        */
+> +       if (!retried) {
+> +               retried = true;
+> +               goto try_again;
+> +       }
+> +}
+> +
+> +static void debug_read_regs(struct debug_drvdata *drvdata)
+> +{
+> +       u32 save_edprcr;
+> +
+> +       CS_UNLOCK(drvdata->base);
+> +
+> +       /* Unlock os lock */
+> +       debug_os_unlock(drvdata);
+> +
+> +       /* Save EDPRCR register */
+> +       save_edprcr = readl_relaxed(drvdata->base + EDPRCR);
+> +
+> +       /*
+> +        * Ensure CPU power domain is enabled to let registers
+> +        * are accessiable.
+> +        */
+> +       debug_force_cpu_powered_up(drvdata);
+> +
+> +       if (!debug_access_permitted(drvdata))
+> +               goto out;
+> +
+> +       drvdata->edpcsr = readl_relaxed(drvdata->base + EDPCSR);
+> +
+> +       /*
+> +        * As described in ARM DDI 0487A.k, if the processing
+> +        * element (PE) is in debug state, or sample-based
+> +        * profiling is prohibited, EDPCSR reads as 0xFFFFFFFF;
+> +        * EDCIDSR, EDVIDSR and EDPCSR_HI registers also become
+> +        * UNKNOWN state. So directly bail out for this case.
+> +        */
+> +       if (drvdata->edpcsr == EDPCSR_PROHIBITED)
+> +               goto out;
+> +
+> +       /*
+> +        * A read of the EDPCSR normally has the side-effect of
+> +        * indirectly writing to EDCIDSR, EDVIDSR and EDPCSR_HI;
+> +        * at this point it's safe to read value from them.
+> +        */
+> +       if (IS_ENABLED(CONFIG_64BIT))
+> +               drvdata->edpcsr_hi = readl_relaxed(drvdata->base + EDPCSR_HI);
+> +
+> +       if (drvdata->edcidsr_present)
+> +               drvdata->edcidsr = readl_relaxed(drvdata->base + EDCIDSR);
+> +
+> +       if (drvdata->edvidsr_present)
+> +               drvdata->edvidsr = readl_relaxed(drvdata->base + EDVIDSR);
+> +
+> +out:
+> +       /* Restore EDPRCR register */
+> +       writel_relaxed(save_edprcr, drvdata->base + EDPRCR);
+> +
+> +       CS_LOCK(drvdata->base);
+> +}
+> +
+> +static unsigned long debug_adjust_pc(struct debug_drvdata *drvdata)
+> +{
+> +       unsigned long arm_inst_offset = 0, thumb_inst_offset = 0;
+> +       unsigned long pc;
+> +
+> +       if (IS_ENABLED(CONFIG_64BIT))
+> +               return (unsigned long)drvdata->edpcsr_hi << 32 |
+> +                      (unsigned long)drvdata->edpcsr;
+> +
+> +       pc = (unsigned long)drvdata->edpcsr;
+> +
+> +       if (drvdata->pc_has_offset) {
+> +               arm_inst_offset = 8;
+> +               thumb_inst_offset = 4;
+> +       }
+> +
+> +       /* Handle thumb instruction */
+> +       if (pc & EDPCSR_THUMB) {
+> +               pc = (pc & EDPCSR_THUMB_INST_MASK) - thumb_inst_offset;
+> +               return pc;
+> +       }
+> +
+> +       /*
+> +        * Handle arm instruction offset, if the arm instruction
+> +        * is not 4 byte alignment then it's possible the case
+> +        * for implementation defined; keep original value for this
+> +        * case and print info for notice.
+> +        */
+> +       if (pc & BIT(1))
+> +               pr_emerg("Instruction offset is implementation defined\n");
+> +       else
+> +               pc = (pc & EDPCSR_ARM_INST_MASK) - arm_inst_offset;
+> +
+> +       return pc;
+> +}
+> +
+> +static void debug_dump_regs(struct debug_drvdata *drvdata)
+> +{
+> +       unsigned long pc;
+> +
+> +       pr_emerg("\tEDPRSR:  %08x (Power:%s DLK:%s)\n", drvdata->edprsr,
+> +                drvdata->edprsr & EDPRSR_PU ? "On" : "Off",
+> +                drvdata->edprsr & EDPRSR_DLK ? "Lock" : "Unlock");
+> +
+> +       if (!debug_access_permitted(drvdata)) {
+> +               pr_emerg("No permission to access debug registers!\n");
+> +               return;
+> +       }
+> +
+> +       if (drvdata->edpcsr == EDPCSR_PROHIBITED) {
+> +               pr_emerg("CPU is in Debug state or profiling is prohibited!\n");
+> +               return;
+> +       }
+> +
+> +       pc = debug_adjust_pc(drvdata);
+> +       pr_emerg("\tEDPCSR:  [<%p>] %pS\n", (void *)pc, (void *)pc);
+> +
+> +       if (drvdata->edcidsr_present)
+> +               pr_emerg("\tEDCIDSR: %08x\n", drvdata->edcidsr);
+> +
+> +       if (drvdata->edvidsr_present)
+> +               pr_emerg("\tEDVIDSR: %08x (State:%s Mode:%s Width:%dbits VMID:%x)\n",
+> +                        drvdata->edvidsr,
+> +                        drvdata->edvidsr & EDVIDSR_NS ? "Non-secure" : "Secure",
+> +                        drvdata->edvidsr & EDVIDSR_E3 ? "EL3" :
+> +                               (drvdata->edvidsr & EDVIDSR_E2 ? "EL2" : "EL1/0"),
+> +                        drvdata->edvidsr & EDVIDSR_HV ? 64 : 32,
+> +                        drvdata->edvidsr & (u32)EDVIDSR_VMID);
+> +}
+> +
+> +static void debug_init_arch_data(void *info)
+> +{
+> +       struct debug_drvdata *drvdata = info;
+> +       u32 mode, pcsr_offset;
+> +       u32 eddevid, eddevid1;
+> +
+> +       CS_UNLOCK(drvdata->base);
+> +
+> +       /* Read device info */
+> +       eddevid  = readl_relaxed(drvdata->base + EDDEVID);
+> +       eddevid1 = readl_relaxed(drvdata->base + EDDEVID1);
+> +
+> +       CS_LOCK(drvdata->base);
+> +
+> +       /* Parse implementation feature */
+> +       mode = eddevid & EDDEVID_PCSAMPLE_MODE;
+> +       pcsr_offset = eddevid1 & EDDEVID1_PCSR_OFFSET_MASK;
+> +
+> +       drvdata->edpcsr_present  = false;
+> +       drvdata->edcidsr_present = false;
+> +       drvdata->edvidsr_present = false;
+> +       drvdata->pc_has_offset   = false;
+> +
+> +       switch (mode) {
+> +       case EDDEVID_IMPL_FULL:
+> +               drvdata->edvidsr_present = true;
+> +               /* Fall through */
+> +       case EDDEVID_IMPL_EDPCSR_EDCIDSR:
+> +               drvdata->edcidsr_present = true;
+> +               /* Fall through */
+> +       case EDDEVID_IMPL_EDPCSR:
+> +               /*
+> +                * In ARM DDI 0487A.k, the EDDEVID1.PCSROffset is used to
+> +                * define if has the offset for PC sampling value; if read
+> +                * back EDDEVID1.PCSROffset == 0x2, then this means the debug
+> +                * module does not sample the instruction set state when
+> +                * armv8 CPU in AArch32 state.
+> +                */
+> +               drvdata->edpcsr_present = (IS_ENABLED(CONFIG_64BIT) ||
+> +                       (pcsr_offset != EDDEVID1_PCSR_NO_OFFSET_DIS_AARCH32));
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Following my previous comment in patch 2/6 this condition needs to be
+reviewed to deal with conditions where pcsr_offset == 0 on AArch64.
+Probably
+               drvdata->edpcsr_present = ((IS_ENABLED(CONFIG_64BIT) &&
+pcsr_offset != 0)) ||
+
+(pcsr_offset != EDDEVID1_PCSR_NO_OFFSET_DIS_AARCH32));
+
+> +
+> +               drvdata->pc_has_offset =
+> +                       (pcsr_offset == EDDEVID1_PCSR_OFFSET_INS_SET);
+> +               break;
+> +       default:
+> +               break;
+> +       }
+> +}
+> +
+> +/*
+> + * Dump out information on panic.
+> + */
+> +static int debug_notifier_call(struct notifier_block *self,
+> +                              unsigned long v, void *p)
+> +{
+> +       int cpu;
+> +       struct debug_drvdata *drvdata;
+> +
+> +       pr_emerg("ARM external debug module:\n");
+> +
+> +       for_each_possible_cpu(cpu) {
+> +               drvdata = per_cpu(debug_drvdata, cpu);
+> +               if (!drvdata)
+> +                       continue;
+> +
+> +               pr_emerg("CPU[%d]:\n", drvdata->cpu);
+> +
+> +               debug_read_regs(drvdata);
+> +               debug_dump_regs(drvdata);
+> +       }
+> +
+> +       return 0;
+> +}
+> +
+> +static struct notifier_block debug_notifier = {
+> +       .notifier_call = debug_notifier_call,
+> +};
+> +
+> +static int debug_enable_func(void)
+> +{
+> +       struct debug_drvdata *drvdata;
+> +       int cpu;
+> +
+> +       for_each_possible_cpu(cpu) {
+> +               drvdata = per_cpu(debug_drvdata, cpu);
+> +               if (!drvdata)
+> +                       continue;
+> +
+> +               pm_runtime_get_sync(drvdata->dev);
+> +       }
+> +
+> +       return atomic_notifier_chain_register(&panic_notifier_list,
+> +                                             &debug_notifier);
+> +}
+> +
+> +static int debug_disable_func(void)
+> +{
+> +       struct debug_drvdata *drvdata;
+> +       int cpu;
+> +
+> +       for_each_possible_cpu(cpu) {
+> +               drvdata = per_cpu(debug_drvdata, cpu);
+> +               if (!drvdata)
+> +                       continue;
+> +
+> +               pm_runtime_put(drvdata->dev);
+> +       }
+> +
+> +       return atomic_notifier_chain_unregister(&panic_notifier_list,
+> +                                               &debug_notifier);
+> +}
+> +
+> +static ssize_t debug_func_knob_write(struct file *f,
+> +               const char __user *buf, size_t count, loff_t *ppos)
+> +{
+> +       u8 val;
+> +       int ret;
+> +
+> +       ret = kstrtou8_from_user(buf, count, 2, &val);
+> +       if (ret)
+> +               return ret;
+> +
+> +       mutex_lock(&debug_lock);
+> +
+> +       if (val == debug_enable)
+> +               goto out;
+> +
+> +       if (val)
+> +               ret = debug_enable_func();
+> +       else
+> +               ret = debug_disable_func();
+> +
+> +       if (ret) {
+> +               pr_err("%s: unable to %s debug function: %d\n",
+> +                      __func__, val ? "enable" : "disable", ret);
+> +               goto err;
+> +       }
+> +
+> +       debug_enable = val;
+> +out:
+> +       ret = count;
+> +err:
+> +       mutex_unlock(&debug_lock);
+> +       return ret;
+> +}
+> +
+> +static ssize_t debug_func_knob_read(struct file *f,
+> +               char __user *ubuf, size_t count, loff_t *ppos)
+> +{
+> +       ssize_t ret;
+> +       char buf[2];
+> +
+> +       mutex_lock(&debug_lock);
+> +
+> +       buf[0] = '0' + debug_enable;
+> +       buf[1] = '\n';
+> +       ret = simple_read_from_buffer(ubuf, count, ppos, buf, sizeof(buf));
+> +
+> +       mutex_unlock(&debug_lock);
+> +       return ret;
+> +}
+> +
+> +static const struct file_operations debug_func_knob_fops = {
+> +       .open   = simple_open,
+> +       .read   = debug_func_knob_read,
+> +       .write  = debug_func_knob_write,
+> +};
+> +
+> +static int debug_func_init(void)
+> +{
+> +       struct dentry *file;
+> +       int ret;
+> +
+> +       /* Create debugfs node */
+> +       debug_debugfs_dir = debugfs_create_dir("coresight_cpu_debug", NULL);
+> +       if (!debug_debugfs_dir) {
+> +               pr_err("%s: unable to create debugfs directory\n", __func__);
+> +               return -ENOMEM;
+> +       }
+> +
+> +       file = debugfs_create_file("enable", S_IRUGO | S_IWUSR,
+> +                       debug_debugfs_dir, NULL, &debug_func_knob_fops);
+> +       if (!file) {
+> +               pr_err("%s: unable to create enable knob file\n", __func__);
+> +               ret = -ENOMEM;
+> +               goto err;
+> +       }
+> +
+> +       /* Use sysfs node to enable functionality */
+> +       if (!debug_enable)
+> +               return 0;
+> +
+> +       /* Register function to be called for panic */
+> +       ret = atomic_notifier_chain_register(&panic_notifier_list,
+> +                                            &debug_notifier);
+> +       if (ret) {
+> +               pr_err("%s: unable to register notifier: %d\n",
+> +                      __func__, ret);
+> +               goto err;
+> +       }
+> +
+> +       return 0;
+> +
+> +err:
+> +       debugfs_remove_recursive(debug_debugfs_dir);
+> +       return ret;
+> +}
+> +
+> +static void debug_func_exit(void)
+> +{
+> +       debugfs_remove_recursive(debug_debugfs_dir);
+> +
+> +       /* Unregister panic notifier callback */
+> +       if (debug_enable)
+> +               atomic_notifier_chain_unregister(&panic_notifier_list,
+> +                                                &debug_notifier);
+> +}
+> +
+> +static int debug_probe(struct amba_device *adev, const struct amba_id *id)
+> +{
+> +       void __iomem *base;
+> +       struct device *dev = &adev->dev;
+> +       struct debug_drvdata *drvdata;
+> +       struct resource *res = &adev->res;
+> +       struct device_node *np = adev->dev.of_node;
+> +       int ret;
+> +
+> +       drvdata = devm_kzalloc(dev, sizeof(*drvdata), GFP_KERNEL);
+> +       if (!drvdata)
+> +               return -ENOMEM;
+> +
+> +       drvdata->cpu = np ? of_coresight_get_cpu(np) : 0;
+> +       if (per_cpu(debug_drvdata, drvdata->cpu)) {
+> +               dev_err(dev, "CPU%d drvdata has been initialized\n",
+> +                       drvdata->cpu);
+> +               return -EBUSY;
+> +       }
+> +
+> +       drvdata->dev = &adev->dev;
+> +       amba_set_drvdata(adev, drvdata);
+> +
+> +       /* Validity for the resource is already checked by the AMBA core */
+> +       base = devm_ioremap_resource(dev, res);
+> +       if (IS_ERR(base))
+> +               return PTR_ERR(base);
+> +
+> +       drvdata->base = base;
+> +
+> +       get_online_cpus();
+> +       per_cpu(debug_drvdata, drvdata->cpu) = drvdata;
+> +       ret = smp_call_function_single(drvdata->cpu,
+> +                               debug_init_arch_data, drvdata, 1);
+> +       put_online_cpus();
+> +
+> +       if (ret) {
+> +               dev_err(dev, "CPU%d debug arch init failed\n", drvdata->cpu);
+> +               goto err;
+> +       }
+> +
+> +       if (!drvdata->edpcsr_present) {
+> +               dev_err(dev, "CPU%d sample-based profiling isn't implemented\n",
+> +                       drvdata->cpu);
+> +               ret = -ENXIO;
+> +               goto err;
+> +       }
+> +
+> +       if (!debug_count++) {
+> +               ret = debug_func_init();
+> +               if (ret)
+> +                       goto err_func_init;
+> +       }
+> +
+> +       if (!debug_enable)
+> +               pm_runtime_put(dev);
+> +
+> +       dev_info(dev, "Coresight debug-CPU%d initialized\n", drvdata->cpu);
+> +       return 0;
+> +
+> +err_func_init:
+> +       debug_count--;
+> +err:
+> +       per_cpu(debug_drvdata, drvdata->cpu) = NULL;
+> +       return ret;
+> +}
+> +
+> +static int debug_remove(struct amba_device *adev)
+> +{
+> +       struct device *dev = &adev->dev;
+> +       struct debug_drvdata *drvdata = amba_get_drvdata(adev);
+> +
+> +       per_cpu(debug_drvdata, drvdata->cpu) = NULL;
+> +
+> +       if (debug_enable)
+> +               pm_runtime_put(dev);
+> +
+> +       if (!--debug_count)
+> +               debug_func_exit();
+> +
+> +       return 0;
+> +}
+> +
+> +static struct amba_id debug_ids[] = {
+> +       {       /* Debug for Cortex-A53 */
+> +               .id     = 0x000bbd03,
+> +               .mask   = 0x000fffff,
+> +       },
+> +       {       /* Debug for Cortex-A57 */
+> +               .id     = 0x000bbd07,
+> +               .mask   = 0x000fffff,
+> +       },
+> +       {       /* Debug for Cortex-A72 */
+> +               .id     = 0x000bbd08,
+> +               .mask   = 0x000fffff,
+> +       },
+> +       { 0, 0 },
+> +};
+> +
+> +static struct amba_driver debug_driver = {
+> +       .drv = {
+> +               .name   = "coresight-cpu-debug",
+> +               .suppress_bind_attrs = true,
+> +       },
+> +       .probe          = debug_probe,
+> +       .remove         = debug_remove,
+> +       .id_table       = debug_ids,
+> +};
+> +
+> +module_amba_driver(debug_driver);
+> +
+> +MODULE_AUTHOR("Leo Yan <leo.yan@linaro.org>");
+> +MODULE_DESCRIPTION("ARM Coresight CPU Debug Driver");
+> +MODULE_LICENSE("GPL");
+> --
+> 2.7.4
+>
