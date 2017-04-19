@@ -1,115 +1,78 @@
-From: "sboyd@codeaurora.org" <sboyd@codeaurora.org>
-Subject: Re: [PATCH v2] clk/axs10x: introduce AXS10X pll driver
-Date: Wed, 19 Apr 2017 09:49:49 -0700
-Message-ID: <20170419164949.GH7065@codeaurora.org>
-References: <1487682670-4164-1-git-send-email-vzakhar@synopsys.com>
- <20170405013525.GJ18246@codeaurora.org>
- <1491408370.9650.24.camel@synopsys.com>
+From: Mathieu Poirier <mathieu.poirier@linaro.org>
+Subject: Re: [PATCH v6 6/8] coresight: add support for CPU debug module
+Date: Wed, 19 Apr 2017 10:50:43 -0600
+Message-ID: <CANLsYkzDPdrJUFVhyF8SNKhjyqfF9jGDtrzhLdbvoN1BmAMa7w@mail.gmail.com>
+References: <1491485461-22800-1-git-send-email-leo.yan@linaro.org>
+ <1491485461-22800-7-git-send-email-leo.yan@linaro.org> <20170418174050.GC22806@linaro.org>
+ <20170419001807.GB8524@leoy-linaro> <CANLsYkyheVJkEjpcWAd5HHFCimfTPhgihioE7bYo1RAL=8Shdw@mail.gmail.com>
+ <20170419153045.GB23319@leoy-linaro>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1491408370.9650.24.camel@synopsys.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Vlad Zakharov <Vladislav.Zakharov@synopsys.com>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Jose.Abreu@synopsys.com" <Jose.Abreu@synopsys.com>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "linux-snps-arc@lists.infradead.org" <linux-snps-arc@lists.infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <20170419153045.GB23319@leoy-linaro>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Leo Yan <leo.yan@linaro.org>
+Cc: Jonathan Corbet <corbet@lwn.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Wei Xu <xuwei5@hisilicon.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Suzuki K Poulose <suzuki.poulose@arm.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-doc@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, Mike Leach <mike.leach@linaro.org>, Sudeep Holla <sudeep.holla@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On 04/05, Vlad Zakharov wrote:
-> Hi Stephen,
-> 
-> On Tue, 2017-04-04 at 18:35 -0700, Stephen Boyd wrote:
-> > > +     .pll_table = (struct pll_of_table []){
-> > > +             {
-> > > +                     .prate = 27000000,
-> > 
-> > Can this be another clk in the framework instead of hardcoding
-> > the parent rate?
-> 
-> In fact there is another clk in the framework that represents this parent clock. But this field is needed to get
-> appropriate pll_cfg_table as it depends on parent clock frequency. Below in pll_cfg_get function we are searching for
-> the correct table comparing .parent_node field with real hardware parent clock frequency:
-> ---------------------------------->8------------------------------------
-> for (i = 0; pll_table[i].prate != 0; i++)
->     if (pll_table[i].prate == prate)
->         return pll_table[i].pll_cfg_table;
-> ---------------------------------->8------------------------------------
+On 19 April 2017 at 09:30, Leo Yan <leo.yan@linaro.org> wrote:
+> On Wed, Apr 19, 2017 at 08:52:12AM -0600, Mathieu Poirier wrote:
+>
+> [...]
+>
+>> >> > +static bool debug_enable;
+>> >> > +module_param_named(enable, debug_enable, bool, 0600);
+>> >> > +MODULE_PARM_DESC(enable, "Knob to enable debug functionality "
+>> >> > +            "(default is 0, which means is disabled by default)");
+>> >>
+>> >> For this driver we have a debugFS interface so I question the validity of a
+>> >> kernel module parameter.  Other than adding complexity to the code it offers no
+>> >> real added value.  If a user is to insmod a module, it is just as easy to switch
+>> >> on the functionality using debugFS in a second step.
+>> >
+>> > This module parameter can be used for kernel command line, so
+>> > it's useful when user wants to dynamically turn on/off the
+>> > functionality at boot up time.
+>> >
+>> > Does this make sense for you? Removing this parameter is okay for
+>> > me, but this means users need to decide if use it by Kernel config
+>> > with static building in. This is a bit contradictory with before's
+>> > discussion.
+>>
+>> My hope was to use the kernel command line and the debugFS interface,
+>> avoiding the module parameter.  Look at what the baycom_par and
+>> blacklist drivers are doing with the "__setup()" function and see if
+>> we can void a module parameter.  If not then let it be, unless someone
+>> else has a better idea.
+>>
+>> [1]. drivers/net/hamradio/baycom_par.c
+>> [2]. drivers/s390/cio/blacklist.c
+>
+> This driver supports module mode. So we can choose to use either module
+> parameter or __setup(). But as described in the file
+> Documentation/admin-guide/kernel-parameters.rst, the module parameter
+> is more flexible to be used at boot time or insmod the module:
+>
+> "Parameters for modules which are built into the kernel need to be
+> specified on the kernel command line.  modprobe looks through the
+> kernel command line (/proc/cmdline) and collects module parameters
+> when it loads a module, so the kernel command line can be used for
+> loadable modules too."
+>
+> __setup() cannot support module mode, and when use __setup(), we need
+> register one callback function for it. The callback function is
+> friendly to parse complex parameters rather than module parameter.
+> but it's not necessary for this case.
 
-When is that done though? During round_rate and recalc_rate the
-parent frequency is passed into the function, so it should be
-possible to use that if the tree is properly expressed.
+__setup() definitely supports module - the baycom driver is a good
+example of that.
 
-> 
-> > 
-> > > +                     .pll_cfg_table = (struct pll_cfg []){
-> > > +                             { 25200000, 1, 84, 90 },
-> > > +                             { 50000000, 1, 100, 54 },
-> > > +                             { 74250000, 1, 44, 16 },
-> > > +                             { },
-> > > +                     },
-> > > +             },
-> > > +             /* Used as list limiter */
-> > > +             { },
-> > 
-> > There's only ever one, so I'm confused why we're making a list.
-> 
-> By this patch we only add support of core arc pll and pgu pll and today they are clocked by the only parent clocks
-> introduced here. But other plls on axs10x may be driven by different or configurable clocks, so in such cases we will
-> have more than one entry in this list. And we are going to add more supported plls to this driver in the nearest future.
+But as you pointed out kernel-parameters.rst is pretty clear on how to
+proceed.  As such disregard my comment and proceed with a module
+parameter.
 
-Ok.
-
-> 
-> > > +
-> > > +     clk = clk_register(NULL, &pll_clk->hw);
-> > > +     if (IS_ERR(clk)) {
-> > > +             pr_err("failed to register %s clock (%ld)\n",
-> > > +                             node->name, PTR_ERR(clk));
-> > > +             kfree(pll_clk);
-> > > +             return;
-> > > +     }
-> > > +
-> > > +     of_clk_add_provider(node, of_clk_src_simple_get, clk);
-> > 
-> > Can you please use the clk_hw based provider and clk registration
-> > functions?
-> 
-> Sure. Could you be so kind to explain what is the difference between hw and non-hw based provider and clk registration
-> functions please? In which cases they are preferred? 
-> 
-
-We're trying to split the consumer and provider APIs along struct
-clk_hw and struct clk respectively. If we can have drivers only
-registers clk_hw pointers and never get back anything but an
-error code, then we can force consumers to always go through the
-clk_get() family of APIs. Then we can easily tell who is a
-provider, who is a consumer, and who is a provider + a consumer.
-Right now this isn't always clear cut because clk_hw has access
-to struct clk, and also clk_register() returns a clk pointer, but
-it doesn't really get used by anything in a provider driver,
-unless provider drivers are doing something with the consumer
-API.
-
-> > 
-> > > +}
-> > > +
-> > > +CLK_OF_DECLARE(axs10x_pll_clock, "snps,axs10x-arc-pll-clock", of_pll_clk_setup);
-> > 
-> > Does this need to be CLK_OF_DECLARE_DRIVER? I mean does the
-> > driver need to probe and also have this of declare happen? Is the
-> > PLL special and needs to be used for the timers?
-> 
-> It is special and is used for the timers, so we have to CLK_OF_DECLARE it. On the other hand similar pll is used to
-> drive PGU clock frequency and other subsystems and so we add usual probe func.
-> 
-
-Presumably we'll have different compatible strings for the
-different PLLs then? CLK_OF_DECLARE() will make it so that the
-device node that matches never gets a ->probe() from a
-platform_driver called on it. If you want it to be called twice,
-then you need to use CLK_OF_DECLARE_DRIVER() instead.
-
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+>
+> So I'm bias to use module parameter :)
+>
+> Thanks,
+> Leo Yan
