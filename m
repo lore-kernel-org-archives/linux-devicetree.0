@@ -1,573 +1,204 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH 2/4] ARM: sunxi: Drop mmc0_cd_pin_reference_design
- pinmux setting
-Date: Wed, 19 Apr 2017 13:09:17 +0800
-Message-ID: <20170419050919.6762-3-wens@csie.org>
-References: <20170419050919.6762-1-wens@csie.org>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+From: Guenter Roeck <groeck-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v2] usb: dwc3: add disable u2mac linestate check quirk
+Date: Tue, 18 Apr 2017 22:15:46 -0700
+Message-ID: <CABXOdTeszyp834fjYpqESqpKkgzt58Qjms=g+5G5U3Mx4y=b+A@mail.gmail.com>
+References: <1492492659-19266-1-git-send-email-william.wu@rock-chips.com>
+ <CABXOdTctJLh7rno=U9Zr91SvuLtwyzWo0vuE0h08uxV63LsK7A@mail.gmail.com> <67e21e78-2f4e-47eb-38f5-734fe13dccab@rock-chips.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBA7C3PDQKGQECIF57HY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20170419050919.6762-1-wens-jdAy2FN1RRM@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <67e21e78-2f4e-47eb-38f5-734fe13dccab-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: wlf <wulf-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: William Wu <william.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Wang <frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Tao Huang <huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Doug Anderson <dianders-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Brian Norris <briannorris-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, daniel.meng-TNX95d0MmH7DzftRWevZcw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-As part of our effort to move pinctrl/GPIO interlocking into the
-driver where it belongs, this patch drops the definition and usage
-of the mmc0_cd_pin_reference_design pinmux setting for the default
-mmc0 card detect GPIO pin.
+On Tue, Apr 18, 2017 at 8:59 PM, wlf <wulf-TNX95d0MmH7DzftRWevZcw@public.gmane.org> wrote:
+> Dear Guenter,
+>
+>
+>
+> =E5=9C=A8 2017=E5=B9=B404=E6=9C=8818=E6=97=A5 21:18, Guenter Roeck =E5=86=
+=99=E9=81=93:
+>>
+>> On Mon, Apr 17, 2017 at 10:17 PM, William Wu <william.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+>> wrote:
+>>>
+>>> This patch adds a quirk to disable USB 2.0 MAC linestate check
+>>> during HS transmit. Refer the dwc3 databook, we can use it for
+>>> some special platforms if the linestate not reflect the expected
+>>> line state(J) during transmission.
+>>>
+>>> When use this quirk, the controller implements a fixed 40-bit
+>>> TxEndDelay after the packet is given on UTMI and ignores the
+>>> linestate during the transmit of a token (during token-to-token
+>>> and token-to-data IPGAP).
+>>>
+>>> On some rockchip platforms (e.g. rk3399), it requires to disable
+>>> the u2mac linestate check to decrease the SSPLIT token to SETUP
+>>> token inter-packet delay from 566ns to 466ns, and fix the issue
+>>> that FS/LS devices not recognized if inserted through USB 3.0 HUB.
+>>>
+>>> Signed-off-by: William Wu <william.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+>>> ---
+>>> Changes in v2:
+>>> - fix coding style
+>>>
+>>>   Documentation/devicetree/bindings/usb/dwc3.txt |  2 ++
+>>>   drivers/usb/dwc3/core.c                        | 14 ++++++++++----
+>>>   drivers/usb/dwc3/core.h                        |  4 ++++
+>>>   3 files changed, 16 insertions(+), 4 deletions(-)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt
+>>> b/Documentation/devicetree/bindings/usb/dwc3.txt
+>>> index f658f39..6a89f0c 100644
+>>> --- a/Documentation/devicetree/bindings/usb/dwc3.txt
+>>> +++ b/Documentation/devicetree/bindings/usb/dwc3.txt
+>>> @@ -45,6 +45,8 @@ Optional properties:
+>>>                          a free-running PHY clock.
+>>>    - snps,dis-del-phy-power-chg-quirk: when set core will change PHY
+>>> power
+>>>                          from P0 to P1/P2/P3 without delay.
+>>> + - snps,tx-ipgap-linecheck-dis-quirk: when set, disable u2mac linestat=
+e
+>>> check
+>>> +                       during HS transmit.
+>>
+>> All other disable-something quirks are named
+>> "snps,dis-something-quirk". Maybe use the same naming convention ?
+>
+> Yes, good idea=EF=BC=81 I will fix it with "snps,dis-tx-ipgap-linecheck-q=
+uirk"  in
+> next patch verison.
+> Thanks:-)
+>>
+>>
+>>>    - snps,is-utmi-l1-suspend: true when DWC3 asserts output signal
+>>>                          utmi_l1_suspend_n, false when asserts
+>>> utmi_sleep_n
+>>>    - snps,hird-threshold: HIRD threshold
+>>> diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
+>>> index 455d89a..03429c5 100644
+>>> --- a/drivers/usb/dwc3/core.c
+>>> +++ b/drivers/usb/dwc3/core.c
+>>> @@ -796,15 +796,19 @@ static int dwc3_core_init(struct dwc3 *dwc)
+>>>                  dwc3_writel(dwc->regs, DWC3_GUCTL2, reg);
+>>>          }
+>>>
+>>> +       reg =3D dwc3_readl(dwc->regs, DWC3_GUCTL1);
+>>> +
+>>
+>> My understanding is that the register was only introduced with dwc3
+>> revision 2.50a. Is it ok to read and write it unconditionally ?
+>
+> Yes, refer to dwc3 databook, the DWC3_GUCTL1 was introduced since 2.50a.
+> Maybe it's better
+> to read and write it only when we know our controller version.
+>
+> Is it good to fix it like the following patch?
+> But this patch has a problem that we need to read and write the register
+> twice if our controller verison > =3D 2.90a, and need this quirk.
+>
+> --- a/drivers/usb/dwc3/core.c
+> +++ b/drivers/usb/dwc3/core.c
+> @@ -806,6 +806,12 @@ static int dwc3_core_init(struct dwc3 *dwc)
+>                 dwc3_writel(dwc->regs, DWC3_GUCTL1, reg);
+>         }
+>
+> +       if (dwc->dis_tx_ipgap_linecheck_quirk) {
+> +               reg =3D dwc3_readl(dwc->regs, DWC3_GUCTL1);
+> +               reg |=3D DWC3_GUCTL1_TX_IPGAP_LINECHECK_DIS;
+> +               dwc3_writel(dwc->regs, DWC3_GUCTL1, reg);
+> +       }
+> +
+>
 
-Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
----
- arch/arm/boot/dts/sun4i-a10-a1000.dts                | 2 +-
- arch/arm/boot/dts/sun4i-a10-ba10-tvbox.dts           | 2 +-
- arch/arm/boot/dts/sun4i-a10-chuwi-v7-cw0825.dts      | 2 +-
- arch/arm/boot/dts/sun4i-a10-cubieboard.dts           | 2 +-
- arch/arm/boot/dts/sun4i-a10-dserve-dsrv9703c.dts     | 2 +-
- arch/arm/boot/dts/sun4i-a10-gemei-g9.dts             | 2 +-
- arch/arm/boot/dts/sun4i-a10-hackberry.dts            | 2 +-
- arch/arm/boot/dts/sun4i-a10-hyundai-a7hd.dts         | 2 +-
- arch/arm/boot/dts/sun4i-a10-inet1.dts                | 2 +-
- arch/arm/boot/dts/sun4i-a10-inet97fv2.dts            | 2 +-
- arch/arm/boot/dts/sun4i-a10-inet9f-rev03.dts         | 2 +-
- arch/arm/boot/dts/sun4i-a10-itead-iteaduino-plus.dts | 2 +-
- arch/arm/boot/dts/sun4i-a10-jesurun-q5.dts           | 2 +-
- arch/arm/boot/dts/sun4i-a10-marsboard.dts            | 2 +-
- arch/arm/boot/dts/sun4i-a10-mini-xplus.dts           | 2 +-
- arch/arm/boot/dts/sun4i-a10-mk802.dts                | 2 +-
- arch/arm/boot/dts/sun4i-a10-mk802ii.dts              | 2 +-
- arch/arm/boot/dts/sun4i-a10-olinuxino-lime.dts       | 2 +-
- arch/arm/boot/dts/sun4i-a10-pcduino.dts              | 2 +-
- arch/arm/boot/dts/sun4i-a10-pov-protab2-ips9.dts     | 2 +-
- arch/arm/boot/dts/sun4i-a10.dtsi                     | 6 ------
- arch/arm/boot/dts/sun7i-a20-cubieboard2.dts          | 2 +-
- arch/arm/boot/dts/sun7i-a20-cubietruck.dts           | 2 +-
- arch/arm/boot/dts/sun7i-a20-hummingbird.dts          | 2 +-
- arch/arm/boot/dts/sun7i-a20-i12-tvbox.dts            | 2 +-
- arch/arm/boot/dts/sun7i-a20-icnova-swac.dts          | 2 +-
- arch/arm/boot/dts/sun7i-a20-itead-ibox.dts           | 2 +-
- arch/arm/boot/dts/sun7i-a20-m3.dts                   | 2 +-
- arch/arm/boot/dts/sun7i-a20-mk808c.dts               | 2 +-
- arch/arm/boot/dts/sun7i-a20-olimex-som-evb.dts       | 2 +-
- arch/arm/boot/dts/sun7i-a20-olinuxino-lime.dts       | 2 +-
- arch/arm/boot/dts/sun7i-a20-olinuxino-lime2.dts      | 2 +-
- arch/arm/boot/dts/sun7i-a20-olinuxino-micro.dts      | 2 +-
- arch/arm/boot/dts/sun7i-a20-pcduino3-nano.dts        | 2 +-
- arch/arm/boot/dts/sun7i-a20-pcduino3.dts             | 2 +-
- arch/arm/boot/dts/sun7i-a20-wexler-tab7200.dts       | 2 +-
- arch/arm/boot/dts/sun7i-a20-wits-pro-a20-dkt.dts     | 2 +-
- arch/arm/boot/dts/sun7i-a20.dtsi                     | 6 ------
- 38 files changed, 36 insertions(+), 48 deletions(-)
+How about this ?
 
-diff --git a/arch/arm/boot/dts/sun4i-a10-a1000.dts b/arch/arm/boot/dts/sun4i-a10-a1000.dts
-index f2a01fe2bebc..f80d37ddc4c6 100644
---- a/arch/arm/boot/dts/sun4i-a10-a1000.dts
-+++ b/arch/arm/boot/dts/sun4i-a10-a1000.dts
-@@ -171,7 +171,7 @@
- 
- &mmc0 {
- 	pinctrl-names = "default";
--	pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin_reference_design>;
-+	pinctrl-0 = <&mmc0_pins_a>;
- 	vmmc-supply = <&reg_vcc3v3>;
- 	bus-width = <4>;
- 	cd-gpios = <&pio 7 1 GPIO_ACTIVE_HIGH>; /* PH1 */
-diff --git a/arch/arm/boot/dts/sun4i-a10-ba10-tvbox.dts b/arch/arm/boot/dts/sun4i-a10-ba10-tvbox.dts
-index 942d739a4384..6b02de592a02 100644
---- a/arch/arm/boot/dts/sun4i-a10-ba10-tvbox.dts
-+++ b/arch/arm/boot/dts/sun4i-a10-ba10-tvbox.dts
-@@ -109,7 +109,7 @@
- 
- &mmc0 {
- 	pinctrl-names = "default";
--	pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin_reference_design>;
-+	pinctrl-0 = <&mmc0_pins_a>;
- 	vmmc-supply = <&reg_vcc3v3>;
- 	bus-width = <4>;
- 	cd-gpios = <&pio 7 1 GPIO_ACTIVE_HIGH>; /* PH1 */
-diff --git a/arch/arm/boot/dts/sun4i-a10-chuwi-v7-cw0825.dts b/arch/arm/boot/dts/sun4i-a10-chuwi-v7-cw0825.dts
-index 17f8c5ec011c..a7d61994b8fd 100644
---- a/arch/arm/boot/dts/sun4i-a10-chuwi-v7-cw0825.dts
-+++ b/arch/arm/boot/dts/sun4i-a10-chuwi-v7-cw0825.dts
-@@ -128,7 +128,7 @@
- 
- &mmc0 {
- 	pinctrl-names = "default";
--	pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin_reference_design>;
-+	pinctrl-0 = <&mmc0_pins_a>;
- 	vmmc-supply = <&reg_vcc3v3>;
- 	bus-width = <4>;
- 	cd-gpios = <&pio 7 1 GPIO_ACTIVE_HIGH>; /* PH1 */
-diff --git a/arch/arm/boot/dts/sun4i-a10-cubieboard.dts b/arch/arm/boot/dts/sun4i-a10-cubieboard.dts
-index d844938e2aa7..a698a994e5ff 100644
---- a/arch/arm/boot/dts/sun4i-a10-cubieboard.dts
-+++ b/arch/arm/boot/dts/sun4i-a10-cubieboard.dts
-@@ -142,7 +142,7 @@
- 
- &mmc0 {
- 	pinctrl-names = "default";
--	pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin_reference_design>;
-+	pinctrl-0 = <&mmc0_pins_a>;
- 	vmmc-supply = <&reg_vcc3v3>;
- 	bus-width = <4>;
- 	cd-gpios = <&pio 7 1 GPIO_ACTIVE_HIGH>; /* PH1 */
-diff --git a/arch/arm/boot/dts/sun4i-a10-dserve-dsrv9703c.dts b/arch/arm/boot/dts/sun4i-a10-dserve-dsrv9703c.dts
-index aad3bec1cb39..e0777ae808c7 100644
---- a/arch/arm/boot/dts/sun4i-a10-dserve-dsrv9703c.dts
-+++ b/arch/arm/boot/dts/sun4i-a10-dserve-dsrv9703c.dts
-@@ -163,7 +163,7 @@
- 
- &mmc0 {
- 	pinctrl-names = "default";
--	pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin_reference_design>;
-+	pinctrl-0 = <&mmc0_pins_a>;
- 	vmmc-supply = <&reg_vcc3v3>;
- 	bus-width = <4>;
- 	cd-gpios = <&pio 7 1 GPIO_ACTIVE_HIGH>; /* PH1 */
-diff --git a/arch/arm/boot/dts/sun4i-a10-gemei-g9.dts b/arch/arm/boot/dts/sun4i-a10-gemei-g9.dts
-index 9616cdecce93..d8bfd7b74916 100644
---- a/arch/arm/boot/dts/sun4i-a10-gemei-g9.dts
-+++ b/arch/arm/boot/dts/sun4i-a10-gemei-g9.dts
-@@ -146,7 +146,7 @@
- 
- &mmc0 {
- 	pinctrl-names = "default";
--	pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin_reference_design>;
-+	pinctrl-0 = <&mmc0_pins_a>;
- 	vmmc-supply = <&reg_vcc3v3>;
- 	bus-width = <4>;
- 	cd-gpios = <&pio 7 1 GPIO_ACTIVE_HIGH>; /* PH01 */
-diff --git a/arch/arm/boot/dts/sun4i-a10-hackberry.dts b/arch/arm/boot/dts/sun4i-a10-hackberry.dts
-index a1a7282199d5..856cfc9128e6 100644
---- a/arch/arm/boot/dts/sun4i-a10-hackberry.dts
-+++ b/arch/arm/boot/dts/sun4i-a10-hackberry.dts
-@@ -107,7 +107,7 @@
- 
- &mmc0 {
- 	pinctrl-names = "default";
--	pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin_reference_design>;
-+	pinctrl-0 = <&mmc0_pins_a>;
- 	vmmc-supply = <&reg_vcc3v3>;
- 	bus-width = <4>;
- 	cd-gpios = <&pio 7 1 GPIO_ACTIVE_HIGH>; /* PH1 */
-diff --git a/arch/arm/boot/dts/sun4i-a10-hyundai-a7hd.dts b/arch/arm/boot/dts/sun4i-a10-hyundai-a7hd.dts
-index bc4351bb851f..6506595268b2 100644
---- a/arch/arm/boot/dts/sun4i-a10-hyundai-a7hd.dts
-+++ b/arch/arm/boot/dts/sun4i-a10-hyundai-a7hd.dts
-@@ -79,7 +79,7 @@
- 
- &mmc0 {
- 	pinctrl-names = "default";
--	pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin_reference_design>;
-+	pinctrl-0 = <&mmc0_pins_a>;
- 	vmmc-supply = <&reg_vcc3v3>;
- 	bus-width = <4>;
- 	cd-gpios = <&pio 7 1 GPIO_ACTIVE_HIGH>; /* PH1 */
-diff --git a/arch/arm/boot/dts/sun4i-a10-inet1.dts b/arch/arm/boot/dts/sun4i-a10-inet1.dts
-index b8923b92cb36..d51d8c302daf 100644
---- a/arch/arm/boot/dts/sun4i-a10-inet1.dts
-+++ b/arch/arm/boot/dts/sun4i-a10-inet1.dts
-@@ -161,7 +161,7 @@
- 
- &mmc0 {
- 	pinctrl-names = "default";
--	pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin_reference_design>;
-+	pinctrl-0 = <&mmc0_pins_a>;
- 	vmmc-supply = <&reg_vcc3v3>;
- 	bus-width = <4>;
- 	cd-gpios = <&pio 7 1 GPIO_ACTIVE_HIGH>; /* PH1 */
-diff --git a/arch/arm/boot/dts/sun4i-a10-inet97fv2.dts b/arch/arm/boot/dts/sun4i-a10-inet97fv2.dts
-index a1a2bbb3f9d3..a8e479fe43ca 100644
---- a/arch/arm/boot/dts/sun4i-a10-inet97fv2.dts
-+++ b/arch/arm/boot/dts/sun4i-a10-inet97fv2.dts
-@@ -147,7 +147,7 @@
- 
- &mmc0 {
- 	pinctrl-names = "default";
--	pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin_reference_design>;
-+	pinctrl-0 = <&mmc0_pins_a>;
- 	vmmc-supply = <&reg_vcc3v3>;
- 	bus-width = <4>;
- 	cd-gpios = <&pio 7 1 GPIO_ACTIVE_HIGH>; /* PH1 */
-diff --git a/arch/arm/boot/dts/sun4i-a10-inet9f-rev03.dts b/arch/arm/boot/dts/sun4i-a10-inet9f-rev03.dts
-index 4a27eb9102cd..2acb89a87d41 100644
---- a/arch/arm/boot/dts/sun4i-a10-inet9f-rev03.dts
-+++ b/arch/arm/boot/dts/sun4i-a10-inet9f-rev03.dts
-@@ -305,7 +305,7 @@
- 
- &mmc0 {
- 	pinctrl-names = "default";
--	pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin_reference_design>;
-+	pinctrl-0 = <&mmc0_pins_a>;
- 	vmmc-supply = <&reg_vcc3v3>;
- 	bus-width = <4>;
- 	cd-gpios = <&pio 7 1 GPIO_ACTIVE_HIGH>; /* PH1 */
-diff --git a/arch/arm/boot/dts/sun4i-a10-itead-iteaduino-plus.dts b/arch/arm/boot/dts/sun4i-a10-itead-iteaduino-plus.dts
-index 4e798f014c99..92e3e030ced3 100644
---- a/arch/arm/boot/dts/sun4i-a10-itead-iteaduino-plus.dts
-+++ b/arch/arm/boot/dts/sun4i-a10-itead-iteaduino-plus.dts
-@@ -100,7 +100,7 @@
- 
- &mmc0 {
- 	pinctrl-names = "default";
--	pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin_reference_design>;
-+	pinctrl-0 = <&mmc0_pins_a>;
- 	vmmc-supply = <&reg_vcc3v3>;
- 	bus-width = <4>;
- 	cd-gpios = <&pio 7 1 GPIO_ACTIVE_HIGH>; /* PH1 */
-diff --git a/arch/arm/boot/dts/sun4i-a10-jesurun-q5.dts b/arch/arm/boot/dts/sun4i-a10-jesurun-q5.dts
-index 308dc1513041..92b2d4af3d21 100644
---- a/arch/arm/boot/dts/sun4i-a10-jesurun-q5.dts
-+++ b/arch/arm/boot/dts/sun4i-a10-jesurun-q5.dts
-@@ -140,7 +140,7 @@
- 
- &mmc0 {
- 	pinctrl-names = "default";
--	pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin_reference_design>;
-+	pinctrl-0 = <&mmc0_pins_a>;
- 	vmmc-supply = <&reg_vcc3v3>;
- 	bus-width = <4>;
- 	cd-gpios = <&pio 7 1 GPIO_ACTIVE_HIGH>; /* PH1 */
-diff --git a/arch/arm/boot/dts/sun4i-a10-marsboard.dts b/arch/arm/boot/dts/sun4i-a10-marsboard.dts
-index 98a5f7258dca..0f927da28ee1 100644
---- a/arch/arm/boot/dts/sun4i-a10-marsboard.dts
-+++ b/arch/arm/boot/dts/sun4i-a10-marsboard.dts
-@@ -141,7 +141,7 @@
- 
- &mmc0 {
- 	pinctrl-names = "default";
--	pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin_reference_design>;
-+	pinctrl-0 = <&mmc0_pins_a>;
- 	vmmc-supply = <&reg_vcc3v3>;
- 	bus-width = <4>;
- 	cd-gpios = <&pio 7 1 GPIO_ACTIVE_HIGH>; /* PH1 */
-diff --git a/arch/arm/boot/dts/sun4i-a10-mini-xplus.dts b/arch/arm/boot/dts/sun4i-a10-mini-xplus.dts
-index 484c57493bd2..a5ed9e4e22c6 100644
---- a/arch/arm/boot/dts/sun4i-a10-mini-xplus.dts
-+++ b/arch/arm/boot/dts/sun4i-a10-mini-xplus.dts
-@@ -97,7 +97,7 @@
- 
- &mmc0 {
- 	pinctrl-names = "default";
--	pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin_reference_design>;
-+	pinctrl-0 = <&mmc0_pins_a>;
- 	vmmc-supply = <&reg_vcc3v3>;
- 	bus-width = <4>;
- 	cd-gpios = <&pio 7 1 GPIO_ACTIVE_HIGH>; /* PH1 */
-diff --git a/arch/arm/boot/dts/sun4i-a10-mk802.dts b/arch/arm/boot/dts/sun4i-a10-mk802.dts
-index 2b75745cd246..81db6824a2c7 100644
---- a/arch/arm/boot/dts/sun4i-a10-mk802.dts
-+++ b/arch/arm/boot/dts/sun4i-a10-mk802.dts
-@@ -72,7 +72,7 @@
- 
- &mmc0 {
- 	pinctrl-names = "default";
--	pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin_reference_design>;
-+	pinctrl-0 = <&mmc0_pins_a>;
- 	vmmc-supply = <&reg_vcc3v3>;
- 	bus-width = <4>;
- 	cd-gpios = <&pio 7 1 GPIO_ACTIVE_HIGH>; /* PH1 */
-diff --git a/arch/arm/boot/dts/sun4i-a10-mk802ii.dts b/arch/arm/boot/dts/sun4i-a10-mk802ii.dts
-index c861fa7e356c..e74a881fd9a7 100644
---- a/arch/arm/boot/dts/sun4i-a10-mk802ii.dts
-+++ b/arch/arm/boot/dts/sun4i-a10-mk802ii.dts
-@@ -83,7 +83,7 @@
- 
- &mmc0 {
- 	pinctrl-names = "default";
--	pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin_reference_design>;
-+	pinctrl-0 = <&mmc0_pins_a>;
- 	vmmc-supply = <&reg_vcc3v3>;
- 	bus-width = <4>;
- 	cd-gpios = <&pio 7 1 GPIO_ACTIVE_HIGH>; /* PH1 */
-diff --git a/arch/arm/boot/dts/sun4i-a10-olinuxino-lime.dts b/arch/arm/boot/dts/sun4i-a10-olinuxino-lime.dts
-index 3a2522a9419d..462412ee903c 100644
---- a/arch/arm/boot/dts/sun4i-a10-olinuxino-lime.dts
-+++ b/arch/arm/boot/dts/sun4i-a10-olinuxino-lime.dts
-@@ -145,7 +145,7 @@
- 
- &mmc0 {
- 	pinctrl-names = "default";
--	pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin_reference_design>;
-+	pinctrl-0 = <&mmc0_pins_a>;
- 	vmmc-supply = <&reg_vcc3v3>;
- 	bus-width = <4>;
- 	cd-gpios = <&pio 7 1 GPIO_ACTIVE_HIGH>; /* PH1 */
-diff --git a/arch/arm/boot/dts/sun4i-a10-pcduino.dts b/arch/arm/boot/dts/sun4i-a10-pcduino.dts
-index 83596fd2ccfc..84f55e76df0c 100644
---- a/arch/arm/boot/dts/sun4i-a10-pcduino.dts
-+++ b/arch/arm/boot/dts/sun4i-a10-pcduino.dts
-@@ -147,7 +147,7 @@
- 
- &mmc0 {
- 	pinctrl-names = "default";
--	pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin_reference_design>;
-+	pinctrl-0 = <&mmc0_pins_a>;
- 	vmmc-supply = <&reg_vcc3v3>;
- 	bus-width = <4>;
- 	cd-gpios = <&pio 7 1 GPIO_ACTIVE_HIGH>; /* PH1 */
-diff --git a/arch/arm/boot/dts/sun4i-a10-pov-protab2-ips9.dts b/arch/arm/boot/dts/sun4i-a10-pov-protab2-ips9.dts
-index a68c7cc53b94..c0f8c88b5a7d 100644
---- a/arch/arm/boot/dts/sun4i-a10-pov-protab2-ips9.dts
-+++ b/arch/arm/boot/dts/sun4i-a10-pov-protab2-ips9.dts
-@@ -149,7 +149,7 @@
- 
- &mmc0 {
- 	pinctrl-names = "default";
--	pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin_reference_design>;
-+	pinctrl-0 = <&mmc0_pins_a>;
- 	vmmc-supply = <&reg_vcc3v3>;
- 	bus-width = <4>;
- 	cd-gpios = <&pio 7 1 GPIO_ACTIVE_HIGH>; /* PH1 */
-diff --git a/arch/arm/boot/dts/sun4i-a10.dtsi b/arch/arm/boot/dts/sun4i-a10.dtsi
-index b63668ece151..41c2579143fd 100644
---- a/arch/arm/boot/dts/sun4i-a10.dtsi
-+++ b/arch/arm/boot/dts/sun4i-a10.dtsi
-@@ -1030,12 +1030,6 @@
- 				bias-pull-up;
- 			};
- 
--			mmc0_cd_pin_reference_design: mmc0_cd_pin@0 {
--				pins = "PH1";
--				function = "gpio_in";
--				bias-pull-up;
--			};
--
- 			ps20_pins_a: ps20@0 {
- 				pins = "PI20", "PI21";
- 				function = "ps2";
-diff --git a/arch/arm/boot/dts/sun7i-a20-cubieboard2.dts b/arch/arm/boot/dts/sun7i-a20-cubieboard2.dts
-index a2eab7aa80e0..7ac5bcc9f972 100644
---- a/arch/arm/boot/dts/sun7i-a20-cubieboard2.dts
-+++ b/arch/arm/boot/dts/sun7i-a20-cubieboard2.dts
-@@ -137,7 +137,7 @@
- 
- &mmc0 {
- 	pinctrl-names = "default";
--	pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin_reference_design>;
-+	pinctrl-0 = <&mmc0_pins_a>;
- 	vmmc-supply = <&reg_vcc3v3>;
- 	bus-width = <4>;
- 	cd-gpios = <&pio 7 1 GPIO_ACTIVE_HIGH>; /* PH1 */
-diff --git a/arch/arm/boot/dts/sun7i-a20-cubietruck.dts b/arch/arm/boot/dts/sun7i-a20-cubietruck.dts
-index 102903e83bd2..4ebeecf9c3d7 100644
---- a/arch/arm/boot/dts/sun7i-a20-cubietruck.dts
-+++ b/arch/arm/boot/dts/sun7i-a20-cubietruck.dts
-@@ -178,7 +178,7 @@
- 
- &mmc0 {
- 	pinctrl-names = "default";
--	pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin_reference_design>;
-+	pinctrl-0 = <&mmc0_pins_a>;
- 	vmmc-supply = <&reg_vcc3v3>;
- 	bus-width = <4>;
- 	cd-gpios = <&pio 7 1 GPIO_ACTIVE_HIGH>; /* PH1 */
-diff --git a/arch/arm/boot/dts/sun7i-a20-hummingbird.dts b/arch/arm/boot/dts/sun7i-a20-hummingbird.dts
-index 99c00b9a1546..6e6264cd69f8 100644
---- a/arch/arm/boot/dts/sun7i-a20-hummingbird.dts
-+++ b/arch/arm/boot/dts/sun7i-a20-hummingbird.dts
-@@ -160,7 +160,7 @@
- 
- &mmc0 {
- 	pinctrl-names = "default";
--	pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin_reference_design>;
-+	pinctrl-0 = <&mmc0_pins_a>;
- 	vmmc-supply = <&reg_vcc3v0>;
- 	bus-width = <4>;
- 	cd-gpios = <&pio 7 1 GPIO_ACTIVE_HIGH>; /* PH1 */
-diff --git a/arch/arm/boot/dts/sun7i-a20-i12-tvbox.dts b/arch/arm/boot/dts/sun7i-a20-i12-tvbox.dts
-index 4da49717da21..e5cbcad3a556 100644
---- a/arch/arm/boot/dts/sun7i-a20-i12-tvbox.dts
-+++ b/arch/arm/boot/dts/sun7i-a20-i12-tvbox.dts
-@@ -157,7 +157,7 @@
- 
- &mmc0 {
- 	pinctrl-names = "default";
--	pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin_reference_design>;
-+	pinctrl-0 = <&mmc0_pins_a>;
- 	vmmc-supply = <&reg_vcc3v3>;
- 	bus-width = <4>;
- 	cd-gpios = <&pio 7 1 GPIO_ACTIVE_HIGH>; /* PH1 */
-diff --git a/arch/arm/boot/dts/sun7i-a20-icnova-swac.dts b/arch/arm/boot/dts/sun7i-a20-icnova-swac.dts
-index 28d3abbdc2d4..794e7617f545 100644
---- a/arch/arm/boot/dts/sun7i-a20-icnova-swac.dts
-+++ b/arch/arm/boot/dts/sun7i-a20-icnova-swac.dts
-@@ -104,7 +104,7 @@
- 
- &mmc0 {
- 	pinctrl-names = "default";
--	pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin_reference_design>;
-+	pinctrl-0 = <&mmc0_pins_a>;
- 	vmmc-supply = <&reg_vcc3v3>;
- 	bus-width = <4>;
- 	cd-gpios = <&pio 8 5 GPIO_ACTIVE_HIGH>; /* PI5 */
-diff --git a/arch/arm/boot/dts/sun7i-a20-itead-ibox.dts b/arch/arm/boot/dts/sun7i-a20-itead-ibox.dts
-index d52222c82cb8..8a8a6dbcd414 100644
---- a/arch/arm/boot/dts/sun7i-a20-itead-ibox.dts
-+++ b/arch/arm/boot/dts/sun7i-a20-itead-ibox.dts
-@@ -121,7 +121,7 @@
- 
- &mmc0 {
- 	pinctrl-names = "default";
--	pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin_reference_design>;
-+	pinctrl-0 = <&mmc0_pins_a>;
- 	vmmc-supply = <&reg_vcc3v3>;
- 	bus-width = <4>;
- 	cd-gpios = <&pio 7 1 GPIO_ACTIVE_HIGH>; /* PH1 */
-diff --git a/arch/arm/boot/dts/sun7i-a20-m3.dts b/arch/arm/boot/dts/sun7i-a20-m3.dts
-index 86f69813683e..43c94787ef07 100644
---- a/arch/arm/boot/dts/sun7i-a20-m3.dts
-+++ b/arch/arm/boot/dts/sun7i-a20-m3.dts
-@@ -117,7 +117,7 @@
- 
- &mmc0 {
- 	pinctrl-names = "default";
--	pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin_reference_design>;
-+	pinctrl-0 = <&mmc0_pins_a>;
- 	vmmc-supply = <&reg_vcc3v3>;
- 	bus-width = <4>;
- 	cd-gpios = <&pio 7 1 GPIO_ACTIVE_HIGH>; /* PH1 */
-diff --git a/arch/arm/boot/dts/sun7i-a20-mk808c.dts b/arch/arm/boot/dts/sun7i-a20-mk808c.dts
-index c4ee30709f3a..f7413094183c 100644
---- a/arch/arm/boot/dts/sun7i-a20-mk808c.dts
-+++ b/arch/arm/boot/dts/sun7i-a20-mk808c.dts
-@@ -109,7 +109,7 @@
- 
- &mmc0 {
- 	pinctrl-names = "default";
--	pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin_reference_design>;
-+	pinctrl-0 = <&mmc0_pins_a>;
- 	vmmc-supply = <&reg_vcc3v0>;
- 	bus-width = <4>;
- 	cd-gpios = <&pio 7 1 GPIO_ACTIVE_HIGH>; /* PH1 */
-diff --git a/arch/arm/boot/dts/sun7i-a20-olimex-som-evb.dts b/arch/arm/boot/dts/sun7i-a20-olimex-som-evb.dts
-index 1af5b46862cb..64c8ef9a2756 100644
---- a/arch/arm/boot/dts/sun7i-a20-olimex-som-evb.dts
-+++ b/arch/arm/boot/dts/sun7i-a20-olimex-som-evb.dts
-@@ -187,7 +187,7 @@
- 
- &mmc0 {
- 	pinctrl-names = "default";
--	pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin_reference_design>;
-+	pinctrl-0 = <&mmc0_pins_a>;
- 	vmmc-supply = <&reg_vcc3v3>;
- 	bus-width = <4>;
- 	cd-gpios = <&pio 7 1 GPIO_ACTIVE_HIGH>; /* PH1 */
-diff --git a/arch/arm/boot/dts/sun7i-a20-olinuxino-lime.dts b/arch/arm/boot/dts/sun7i-a20-olinuxino-lime.dts
-index dcd0f7a0dffa..2ce1a9f13a17 100644
---- a/arch/arm/boot/dts/sun7i-a20-olinuxino-lime.dts
-+++ b/arch/arm/boot/dts/sun7i-a20-olinuxino-lime.dts
-@@ -130,7 +130,7 @@
- 
- &mmc0 {
- 	pinctrl-names = "default";
--	pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin_reference_design>;
-+	pinctrl-0 = <&mmc0_pins_a>;
- 	vmmc-supply = <&reg_vcc3v3>;
- 	bus-width = <4>;
- 	cd-gpios = <&pio 7 1 GPIO_ACTIVE_HIGH>; /* PH1 */
-diff --git a/arch/arm/boot/dts/sun7i-a20-olinuxino-lime2.dts b/arch/arm/boot/dts/sun7i-a20-olinuxino-lime2.dts
-index e7d45425758c..097bd755764c 100644
---- a/arch/arm/boot/dts/sun7i-a20-olinuxino-lime2.dts
-+++ b/arch/arm/boot/dts/sun7i-a20-olinuxino-lime2.dts
-@@ -131,7 +131,7 @@
- 
- &mmc0 {
- 	pinctrl-names = "default";
--	pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin_reference_design>;
-+	pinctrl-0 = <&mmc0_pins_a>;
- 	vmmc-supply = <&reg_vcc3v3>;
- 	bus-width = <4>;
- 	cd-gpios = <&pio 7 1 GPIO_ACTIVE_HIGH>; /* PH1 */
-diff --git a/arch/arm/boot/dts/sun7i-a20-olinuxino-micro.dts b/arch/arm/boot/dts/sun7i-a20-olinuxino-micro.dts
-index def0ad8395bb..0b7403e4d687 100644
---- a/arch/arm/boot/dts/sun7i-a20-olinuxino-micro.dts
-+++ b/arch/arm/boot/dts/sun7i-a20-olinuxino-micro.dts
-@@ -198,7 +198,7 @@
- 
- &mmc0 {
- 	pinctrl-names = "default";
--	pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin_reference_design>;
-+	pinctrl-0 = <&mmc0_pins_a>;
- 	vmmc-supply = <&reg_vcc3v3>;
- 	bus-width = <4>;
- 	cd-gpios = <&pio 7 1 GPIO_ACTIVE_HIGH>; /* PH1 */
-diff --git a/arch/arm/boot/dts/sun7i-a20-pcduino3-nano.dts b/arch/arm/boot/dts/sun7i-a20-pcduino3-nano.dts
-index f47a5c46bc20..39bc73db72e5 100644
---- a/arch/arm/boot/dts/sun7i-a20-pcduino3-nano.dts
-+++ b/arch/arm/boot/dts/sun7i-a20-pcduino3-nano.dts
-@@ -130,7 +130,7 @@
- 
- &mmc0 {
- 	pinctrl-names = "default";
--	pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin_reference_design>;
-+	pinctrl-0 = <&mmc0_pins_a>;
- 	vmmc-supply = <&reg_vcc3v3>;
- 	bus-width = <4>;
- 	cd-gpios = <&pio 7 1 GPIO_ACTIVE_HIGH>; /* PH1 */
-diff --git a/arch/arm/boot/dts/sun7i-a20-pcduino3.dts b/arch/arm/boot/dts/sun7i-a20-pcduino3.dts
-index 98177b5891cb..777152a3df0f 100644
---- a/arch/arm/boot/dts/sun7i-a20-pcduino3.dts
-+++ b/arch/arm/boot/dts/sun7i-a20-pcduino3.dts
-@@ -156,7 +156,7 @@
- 
- &mmc0 {
- 	pinctrl-names = "default";
--	pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin_reference_design>;
-+	pinctrl-0 = <&mmc0_pins_a>;
- 	vmmc-supply = <&reg_vcc3v3>;
- 	bus-width = <4>;
- 	cd-gpios = <&pio 7 1 GPIO_ACTIVE_HIGH>; /* PH1 */
-diff --git a/arch/arm/boot/dts/sun7i-a20-wexler-tab7200.dts b/arch/arm/boot/dts/sun7i-a20-wexler-tab7200.dts
-index e19f17177755..f8d0aafb9f88 100644
---- a/arch/arm/boot/dts/sun7i-a20-wexler-tab7200.dts
-+++ b/arch/arm/boot/dts/sun7i-a20-wexler-tab7200.dts
-@@ -151,7 +151,7 @@
- 
- &mmc0 {
- 	pinctrl-names = "default";
--	pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin_reference_design>;
-+	pinctrl-0 = <&mmc0_pins_a>;
- 	vmmc-supply = <&reg_vcc3v3>;
- 	bus-width = <4>;
- 	cd-gpios = <&pio 7 1 GPIO_ACTIVE_HIGH>; /* PH1 */
-diff --git a/arch/arm/boot/dts/sun7i-a20-wits-pro-a20-dkt.dts b/arch/arm/boot/dts/sun7i-a20-wits-pro-a20-dkt.dts
-index c3078d4f1093..84462d7961f5 100644
---- a/arch/arm/boot/dts/sun7i-a20-wits-pro-a20-dkt.dts
-+++ b/arch/arm/boot/dts/sun7i-a20-wits-pro-a20-dkt.dts
-@@ -120,7 +120,7 @@
- 
- &mmc0 {
- 	pinctrl-names = "default";
--	pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin_reference_design>;
-+	pinctrl-0 = <&mmc0_pins_a>;
- 	vmmc-supply = <&reg_vcc3v3>;
- 	bus-width = <4>;
- 	cd-gpios = <&pio 7 1 GPIO_ACTIVE_HIGH>; /* PH1 */
-diff --git a/arch/arm/boot/dts/sun7i-a20.dtsi b/arch/arm/boot/dts/sun7i-a20.dtsi
-index 93aa55970bd7..c03b59aaec82 100644
---- a/arch/arm/boot/dts/sun7i-a20.dtsi
-+++ b/arch/arm/boot/dts/sun7i-a20.dtsi
-@@ -1190,12 +1190,6 @@
- 				bias-pull-up;
- 			};
- 
--			mmc0_cd_pin_reference_design: mmc0_cd_pin@0 {
--				pins = "PH1";
--				function = "gpio_in";
--				bias-pull-up;
--			};
--
- 			mmc2_pins_a: mmc2@0 {
- 				pins = "PC6", "PC7", "PC8",
- 				       "PC9", "PC10", "PC11";
--- 
-2.11.0
+    if (dwc->revision >=3D DWC3_REVISION_250A) {
+        reg =3D dwc3_readl(dwc->regs, DWC3_GUCTL1);
+        if (dwc->revision >=3D DWC3_REVISION_290A)
+            reg |=3D DWC3_GUCTL1_DEV_L1_EXIT_BY_HW;
+        if (dwc->dis_tx_ipgap_linecheck_quirk)
+           reg |=3D DWC3_GUCTL1_TX_IPGAP_LINECHECK_DIS;
+        dwc3_writel(dwc->regs, DWC3_GUCTL1, reg);
+    }
+
+Thanks,
+Guenter
+
+> Hi John & Felipe,
+>        Could you provide me some suggestion=EF=BC=9F
+>        Thank you=EF=BC=81
+>
+>>>          /*
+>>>           * Enable hardware control of sending remote wakeup in HS when
+>>>           * the device is in the L1 state.
+>>>           */
+>>> -       if (dwc->revision >=3D DWC3_REVISION_290A) {
+>>> -               reg =3D dwc3_readl(dwc->regs, DWC3_GUCTL1);
+>>> +       if (dwc->revision >=3D DWC3_REVISION_290A)
+>>>                  reg |=3D DWC3_GUCTL1_DEV_L1_EXIT_BY_HW;
+>>> -               dwc3_writel(dwc->regs, DWC3_GUCTL1, reg);
+>>> -       }
+>>> +
+>>> +       if (dwc->tx_ipgap_linecheck_dis_quirk)
+>>> +               reg |=3D DWC3_GUCTL1_TX_IPGAP_LINECHECK_DIS;
+>>> +
+>>> +       dwc3_writel(dwc->regs, DWC3_GUCTL1, reg);
+>>>
+>>>          return 0;
+>>>
+>>> @@ -1023,6 +1027,8 @@ static void dwc3_get_properties(struct dwc3 *dwc)
+>>>                                  "snps,dis-u2-freeclk-exists-quirk");
+>>>          dwc->dis_del_phy_power_chg_quirk =3D
+>>> device_property_read_bool(dev,
+>>>                                  "snps,dis-del-phy-power-chg-quirk");
+>>> +       dwc->tx_ipgap_linecheck_dis_quirk =3D
+>>> device_property_read_bool(dev,
+>>> +                               "snps,tx-ipgap-linecheck-dis-quirk");
+>>>
+>>>          dwc->tx_de_emphasis_quirk =3D device_property_read_bool(dev,
+>>>                                  "snps,tx_de_emphasis_quirk");
+>>> diff --git a/drivers/usb/dwc3/core.h b/drivers/usb/dwc3/core.h
+>>> index 981c77f..3c2537b 100644
+>>> --- a/drivers/usb/dwc3/core.h
+>>> +++ b/drivers/usb/dwc3/core.h
+>>> @@ -204,6 +204,7 @@
+>>>   #define DWC3_GCTL_DSBLCLKGTNG          BIT(0)
+>>>
+>>>   /* Global User Control 1 Register */
+>>> +#define DWC3_GUCTL1_TX_IPGAP_LINECHECK_DIS     BIT(28)
+>>>   #define DWC3_GUCTL1_DEV_L1_EXIT_BY_HW  BIT(24)
+>>>
+>>>   /* Global USB2 PHY Configuration Register */
+>>> @@ -850,6 +851,8 @@ struct dwc3_scratchpad_array {
+>>>    *                     provide a free-running PHY clock.
+>>>    * @dis_del_phy_power_chg_quirk: set if we disable delay phy power
+>>>    *                     change quirk.
+>>> + * @tx_ipgap_linecheck_dis_quirk: set if we disable u2mac linestate
+>>> + *                     check during HS transmit.
+>>>    * @tx_de_emphasis_quirk: set if we enable Tx de-emphasis quirk
+>>>    * @tx_de_emphasis: Tx de-emphasis value
+>>>    *     0       - -6dB de-emphasis
+>>> @@ -1004,6 +1007,7 @@ struct dwc3 {
+>>>          unsigned                dis_rxdet_inp3_quirk:1;
+>>>          unsigned                dis_u2_freeclk_exists_quirk:1;
+>>>          unsigned                dis_del_phy_power_chg_quirk:1;
+>>> +       unsigned                tx_ipgap_linecheck_dis_quirk:1;
+>>>
+>>>          unsigned                tx_de_emphasis_quirk:1;
+>>>          unsigned                tx_de_emphasis:2;
+>>> --
+>>> 2.0.0
+>>>
+>>>
+>>
+>>
+>
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
