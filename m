@@ -1,128 +1,35 @@
-From: Liviu Dudau <liviu.dudau-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 1/2] arm64: dts: juno: fix few unit address format
- warnings
-Date: Wed, 19 Apr 2017 11:08:06 +0100
-Message-ID: <20170419100806.GI10078@e110455-lin.cambridge.arm.com>
-References: <1492538279-16405-1-git-send-email-sudeep.holla@arm.com>
+From: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH V4 1/9] PM / OPP: Allow OPP table to be used for
+ power-domains
+Date: Wed, 19 Apr 2017 15:41:41 +0530
+Message-ID: <20170419101141.GB5436@vireshk-i7>
+References: <cover.1490001099.git.viresh.kumar@linaro.org>
+ <e772e67a5445319bb8e0f312846ace666adc097f.1490001099.git.viresh.kumar@linaro.org>
+ <0a7146f9-72f1-317c-3aab-770a72462968@arm.com>
+ <20170413053736.GM5910@vireshk-i7>
+ <3adbef6a-7b43-528f-e88f-c2121d30a5d3@arm.com>
+ <20170417052758.GF28191@vireshk-i7>
+ <95aa4b97-4e1a-13bb-f4d8-982b778012ba@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1492538279-16405-1-git-send-email-sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+In-Reply-To: <95aa4b97-4e1a-13bb-f4d8-982b778012ba-5wv7dgnIgG8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Rafael Wysocki <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Viresh Kumar <vireshk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linaro-kernel-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Vincent Guittot <vincent.guittot-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, lina.iyer-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, rnayak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 18, 2017 at 06:57:58PM +0100, Sudeep Holla wrote:
-> This patch fixes the following set of warnings on juno.
-> 
->  smb@08000000 unit name should not have leading 0s
->  sysctl@020000 simple-bus unit address format error, expected "20000"
->  apbregs@010000 simple-bus unit address format error, expected "10000"
->  mmci@050000 simple-bus unit address format error, expected "50000"
->  kmi@060000 simple-bus unit address format error, expected "60000"
->  kmi@070000 simple-bus unit address format error, expected "70000"
->  wdt@0f0000 simple-bus unit address format error, expected "f0000"
-> 
-> Cc: Liviu Dudau <liviu.dudau-5wv7dgnIgG8@public.gmane.org>
+On 18-04-17, 17:01, Sudeep Holla wrote:
+> No, may be I was not so clear. I am just referring a power controller
+> that provides say 3 different power domains and are indexed 0 - 2.
+> The consumer just passes the index along with the phandle for the power
+> domain info.
 
-Acked-by: Liviu Dudau <liviu.dudau-5wv7dgnIgG8@public.gmane.org>
-
-Thanks!
-Liviu
-
-> Signed-off-by: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-> ---
->  arch/arm64/boot/dts/arm/juno-base.dtsi        |  2 +-
->  arch/arm64/boot/dts/arm/juno-motherboard.dtsi | 12 ++++++------
->  2 files changed, 7 insertions(+), 7 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/arm/juno-base.dtsi b/arch/arm64/boot/dts/arm/juno-base.dtsi
-> index 8ffaff2043d0..bfe7d683a42e 100644
-> --- a/arch/arm64/boot/dts/arm/juno-base.dtsi
-> +++ b/arch/arm64/boot/dts/arm/juno-base.dtsi
-> @@ -699,7 +699,7 @@
->  		      <0x00000008 0x80000000 0x1 0x80000000>;
->  	};
-> 
-> -	smb@08000000 {
-> +	smb@8000000 {
->  		compatible = "simple-bus";
->  		#address-cells = <2>;
->  		#size-cells = <1>;
-> diff --git a/arch/arm64/boot/dts/arm/juno-motherboard.dtsi b/arch/arm64/boot/dts/arm/juno-motherboard.dtsi
-> index 098601657f82..2ac43221ddb6 100644
-> --- a/arch/arm64/boot/dts/arm/juno-motherboard.dtsi
-> +++ b/arch/arm64/boot/dts/arm/juno-motherboard.dtsi
-> @@ -137,7 +137,7 @@
->  				#size-cells = <1>;
->  				ranges = <0 3 0 0x200000>;
-> 
-> -				v2m_sysctl: sysctl@020000 {
-> +				v2m_sysctl: sysctl@20000 {
->  					compatible = "arm,sp810", "arm,primecell";
->  					reg = <0x020000 0x1000>;
->  					clocks = <&v2m_refclk32khz>, <&v2m_refclk1mhz>, <&mb_clk24mhz>;
-> @@ -148,7 +148,7 @@
->  					assigned-clock-parents = <&v2m_refclk1mhz>, <&v2m_refclk1mhz>, <&v2m_refclk1mhz>, <&v2m_refclk1mhz>;
->  				};
-> 
-> -				apbregs@010000 {
-> +				apbregs@10000 {
->  					compatible = "syscon", "simple-mfd";
->  					reg = <0x010000 0x1000>;
-> 
-> @@ -216,7 +216,7 @@
->  					};
->  				};
-> 
-> -				mmci@050000 {
-> +				mmci@50000 {
->  					compatible = "arm,pl180", "arm,primecell";
->  					reg = <0x050000 0x1000>;
->  					interrupts = <5>;
-> @@ -228,7 +228,7 @@
->  					clock-names = "mclk", "apb_pclk";
->  				};
-> 
-> -				kmi@060000 {
-> +				kmi@60000 {
->  					compatible = "arm,pl050", "arm,primecell";
->  					reg = <0x060000 0x1000>;
->  					interrupts = <8>;
-> @@ -236,7 +236,7 @@
->  					clock-names = "KMIREFCLK", "apb_pclk";
->  				};
-> 
-> -				kmi@070000 {
-> +				kmi@70000 {
->  					compatible = "arm,pl050", "arm,primecell";
->  					reg = <0x070000 0x1000>;
->  					interrupts = <8>;
-> @@ -244,7 +244,7 @@
->  					clock-names = "KMIREFCLK", "apb_pclk";
->  				};
-> 
-> -				wdt@0f0000 {
-> +				wdt@f0000 {
->  					compatible = "arm,sp805", "arm,primecell";
->  					reg = <0x0f0000 0x10000>;
->  					interrupts = <7>;
-> --
-> 2.7.4
-> 
+Ahh, I got you now. Will take care of it in next version.
 
 -- 
-====================
-| I would like to |
-| fix the world,  |
-| but they're not |
-| giving me the   |
- \ source code!  /
-  ---------------
-    ¯\_(ツ)_/¯
+viresh
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
