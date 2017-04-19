@@ -1,46 +1,42 @@
-From: Olof Johansson <olof@lixom.net>
-Subject: Re: [PATCH V3] PM / OPP: Use - instead of @ for DT entries
-Date: Wed, 19 Apr 2017 07:22:15 -0700
-Message-ID: <20170419142215.GA12105@localhost>
-References: <734c5d5a66ef8a5505f368fc68a8ab9c02d710f9.1492492253.git.viresh.kumar@linaro.org>
+From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Subject: Re: [PATCH V5 1/4] arm64: dts: Add basic DT to support Spreadtrum's
+ SP9860G
+Date: Wed, 19 Apr 2017 07:24:25 -0700
+Message-ID: <20170419142425.GB12105@localhost>
+References: <1490594208-26897-1-git-send-email-chunyan.zhang@spreadtrum.com>
+ <1490599960-27330-1-git-send-email-chunyan.zhang@spreadtrum.com>
+ <CAAfSe-s-Jbvin0GV6F6W8OM5zp3kSzHO0YLTM3Gt_Qxv_vA6ag@mail.gmail.com>
+ <1492603726250.cnoz1xemvxpkp3sd4toaurm2@android.mail.163.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <734c5d5a66ef8a5505f368fc68a8ab9c02d710f9.1492492253.git.viresh.kumar@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: Rafael Wysocki <rjw@rjwysocki.net>, arm@kernel.org, Chanwoo Choi <cw00.choi@samsung.com>, MyungJoo Ham <myungjoo.ham@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@codeaurora.org>, Beno??t Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Daniel Mack <daniel@zonque.org>, Haojian Zhuang <haojian.zhuang@gmail.com>, Robert Jarzmik <robert.jarzmik@free.fr>, Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, Masahiro
+In-Reply-To: <1492603726250.cnoz1xemvxpkp3sd4toaurm2-z5hGa2qSFaSios+IgheDglaTQe2KTcn/@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lyra Zhang <zhang.lyra-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "Orson Zhai (??????)" <orson.zhai-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Chunyan Zhang <chunyan.zhang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Viresh,
+Hi,
 
-On Tue, Apr 18, 2017 at 10:44:50AM +0530, Viresh Kumar wrote:
-> Compiling the DT file with W=1, DTC warns like follows:
-> 
-> Warning (unit_address_vs_reg): Node /opp_table0/opp@1000000000 has a
-> unit name, but no reg property
-> 
-> Fix this by replacing '@' with '-' as the OPP nodes will never have a
-> "reg" property.
-> 
-> Reported-by: Krzysztof Kozlowski <krzk@kernel.org>
-> Reported-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> Suggested-by: Mark Rutland <mark.rutland@arm.com>
-> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
-> Acked-by: Maxime Ripard <maxime.ripard@free-electrons.com> (sunxi)
-> Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
-> Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
-> Acked-by: Masahiro Yamada <yamada.masahiro@socionext.com> (uniphier)
-> Acked-by: Rob Herring <robh@kernel.org>
-> Acked-by: Tony Lindgren <tony@atomide.com>
+On Wed, Apr 19, 2017 at 08:09:00PM +0800, Lyra Zhang wrote:
+> Hi Arnd, Olof, Could you please take this patch through arm-soc git if
+> there are no further comments? (The three other patches in this series
+> have been taken by Greg.) Thanks, Chunyan On
 
-We've already turned down other patches that does this in a sweeping manner
-like this, since they tend to be conflict prone with other DT changes.
+First, something bad seems to have happened with this email, the formatting
+was all wrapped and it was hard to read. You might want to look into it so
+you can avoid more problems like it in the future.
 
-Please split per platform and merge with each maintainer.
+That being said, we can apply the patches but please re-send the series to
+arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org with any acks received added, etc.
 
 
-Thanks,
+Thanks!
+
 
 -Olof
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
