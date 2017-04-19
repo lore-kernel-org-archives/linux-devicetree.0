@@ -1,49 +1,51 @@
-From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Subject: Re: [PATCH V3] PM / OPP: Use - instead of @ for DT entries
-Date: Thu, 20 Apr 2017 00:06:03 +0200
-Message-ID: <3142028.bncGUUQ4qB@aspire.rjw.lan>
-References: <734c5d5a66ef8a5505f368fc68a8ab9c02d710f9.1492492253.git.viresh.kumar@linaro.org> <20170419142215.GA12105@localhost>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] ASoC: cs35l35: Allow user to configure IMON SCALE
+Date: Wed, 19 Apr 2017 17:32:58 -0500
+Message-ID: <20170419223258.qwliz3onwry2p4dl@rob-hp-laptop>
+References: <1492098729-30491-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20170419142215.GA12105@localhost>
-Sender: linux-pm-owner@vger.kernel.org
-To: Olof Johansson <olof@lixom.net>
-Cc: Viresh Kumar <viresh.kumar@linaro.org>, arm@kernel.org, Chanwoo Choi <cw00.choi@samsung.com>, MyungJoo Ham <myungjoo.ham@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@codeaurora.org>, Beno??t Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Daniel Mack <daniel@zonque.org>, Haojian Zhuang <haojian.zhuang@gmail.com>, Robert Jarzmik <robert.jarzmik@free.fr>, Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, Masahiro
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1492098729-30491-1-git-send-email-ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Cc: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, brian.austin-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org, Paul.Handrigan-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday, April 19, 2017 07:22:15 AM Olof Johansson wrote:
-> Hi Viresh,
+On Thu, Apr 13, 2017 at 04:52:09PM +0100, Charles Keepax wrote:
+> On the chip the IMON signal is a full 24-bits however normally only
+> some of the bits will be sent over the bus. The chip provides a field
+> to select which bits of the IMON will be sent back, this is the only
+> feedback signal that has this feature.
 > 
-> On Tue, Apr 18, 2017 at 10:44:50AM +0530, Viresh Kumar wrote:
-> > Compiling the DT file with W=1, DTC warns like follows:
-> > 
-> > Warning (unit_address_vs_reg): Node /opp_table0/opp@1000000000 has a
-> > unit name, but no reg property
-> > 
-> > Fix this by replacing '@' with '-' as the OPP nodes will never have a
-> > "reg" property.
-> > 
-> > Reported-by: Krzysztof Kozlowski <krzk@kernel.org>
-> > Reported-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> > Suggested-by: Mark Rutland <mark.rutland@arm.com>
-> > Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
-> > Acked-by: Maxime Ripard <maxime.ripard@free-electrons.com> (sunxi)
-> > Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
-> > Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
-> > Acked-by: Masahiro Yamada <yamada.masahiro@socionext.com> (uniphier)
-> > Acked-by: Rob Herring <robh@kernel.org>
-> > Acked-by: Tony Lindgren <tony@atomide.com>
+> Add an additional entry to the cirrus,imon device tree property to
+> allow the IMON scale parameter to be passed.
 > 
-> We've already turned down other patches that does this in a sweeping manner
-> like this, since they tend to be conflict prone with other DT changes.
+> Signed-off-by: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+> ---
 > 
-> Please split per platform and merge with each maintainer.
+> I realise this is changing the binding slightly, but thought
+> we might be able to sneak it before cs35l35 ships as it hasn't
+> shipped in a kernel yet.  However, it would be relatively simple
+> (although makes the code a little messier) to support both the 3
+> and 4 entry versions of the binding if people prefer?
 
-OK
+Given it is new, I'm okay with the change if you are.
 
-So I'm assuming that you guys will take care of this going forward.
+> 
+> Thanks,
+> Charles
+> 
+>  .../devicetree/bindings/sound/cs35l35.txt          |  4 ++--
 
-Thanks,
-Rafael
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+
+>  include/sound/cs35l35.h                            |  1 +
+>  sound/soc/codecs/cs35l35.c                         | 22 +++++++++++++++-------
+>  sound/soc/codecs/cs35l35.h                         |  3 +++
+>  4 files changed, 21 insertions(+), 9 deletions(-)
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
