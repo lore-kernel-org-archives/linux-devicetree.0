@@ -1,57 +1,57 @@
-From: Javier Martinez Canillas <javier@osg.samsung.com>
-Subject: Re: [PATCH v5 5/8] i2c: i2c-cbus-gpio: Add vendor prefix to retu node
- in example
-Date: Wed, 19 Apr 2017 15:13:19 -0400
-Message-ID: <fc8fb064-8fda-d42d-036f-522964b72973@osg.samsung.com>
-References: <20170412172800.23035-1-javier@osg.samsung.com>
- <20170412172800.23035-6-javier@osg.samsung.com>
- <20170419185113.msqhjm7fzqfeyjlk@ninjato>
+From: Daniel Vetter <daniel@ffwll.ch>
+Subject: Re: [PATCH 2/3] drm/vc4: Don't try to initialize FBDEV if we're only
+ bound to V3D.
+Date: Wed, 19 Apr 2017 21:36:04 +0200
+Message-ID: <CAKMK7uHBE1Qtjr2dM3U9edEfZ0mXVEjcw+hs8mF9ZkRP4Vcm=A@mail.gmail.com>
+References: <20170418191157.18517-1-eric@anholt.net>
+ <20170418191157.18517-2-eric@anholt.net>
+ <CAKMK7uFSsA3c+wMfq_O9kSvu0cWLUA-bRqTHyryqi+1ZVeir_w@mail.gmail.com>
+ <8760i046zw.fsf@eliezer.anholt.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-i2c-owner@vger.kernel.org>
-In-Reply-To: <20170419185113.msqhjm7fzqfeyjlk@ninjato>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Wolfram Sang <wsa@the-dreams.de>
-Cc: linux-kernel@vger.kernel.org, Aaro Koskinen <aaro.koskinen@iki.fi>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Tony Lindgren <tony@atomide.com>, Lee Jones <lee.jones@linaro.org>, linux-i2c@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <8760i046zw.fsf@eliezer.anholt.net>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Eric Anholt <eric@anholt.net>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Wolfram,
-
-On 04/19/2017 02:51 PM, Wolfram Sang wrote:
-> On Wed, Apr 12, 2017 at 02:27:56PM -0300, Javier Martinez Canillas wrote:
->> The example contains a device node for a retu device, but
->> its compatible string doesn't have a vendor prefix.
->>
->> While being there, drop the -mfd suffix since isn't correct.
->>
->> Signed-off-by: Javier Martinez Canillas <javier@osg.samsung.com>
->> Acked-by: Rob Herring <robh@kernel.org>
->> Acked-by: Aaro Koskinen <aaro.koskinen@iki.fi>
->> Acked-by: Tony Lindgren <tony@atomide.com>
-> 
-> Wouldn't it be nice if we fix the driver also so it actually matches the
-> below compatible? I can't find such a change in linux-next.
-> 
-
-[snip]
-
->>  
->> -	retu-mfd: retu@1 {
->> -		compatible = "retu-mfd";
->> +	retu: retu@1 {
->> +		compatible = "nokia,retu";
->>  		reg = <0x1>;
->>  	};
-
-You mean having a "nokia,retu" entry in a OF table?
-
-That's done by patch 3/8 in this series:
-
-http://www.spinics.net/lists/devicetree/msg173145.html
-
-Best regards,
--- 
-Javier Martinez Canillas
-Open Source Group
-Samsung Research America
+T24gV2VkLCBBcHIgMTksIDIwMTcgYXQgNzo1NSBQTSwgRXJpYyBBbmhvbHQgPGVyaWNAYW5ob2x0
+Lm5ldD4gd3JvdGU6Cj4gRGFuaWVsIFZldHRlciA8ZGFuaWVsQGZmd2xsLmNoPiB3cml0ZXM6Cj4+
+IE9uIFR1ZSwgQXByIDE4LCAyMDE3IGF0IDk6MTEgUE0sIEVyaWMgQW5ob2x0IDxlcmljQGFuaG9s
+dC5uZXQ+IHdyb3RlOgo+Pj4gVGhlIEZCREVWIGluaXRpYWxpemF0aW9uIHdvdWxkIHRocm93IGFu
+IGVycm9yIGluIGRtZXNnLCB3aGVuIHdlIGp1c3QKPj4+IHdhbnQgdG8gc2lsZW50bHkgbm90IGlu
+aXRpYWxpemUgZmJkZXYgb24gYSBWM0Qtb25seSBWQzQgaW5zdGFuY2UuCj4+Pgo+Pj4gU2lnbmVk
+LW9mZi1ieTogRXJpYyBBbmhvbHQgPGVyaWNAYW5ob2x0Lm5ldD4KPj4KPj4gSG0sIHRoaXMgc2hv
+dWxkbid0IGJlIGFuIGVycm9yIHJlYWxseSwgeW91IG1pZ2h0IHdhbnQgdG8gaG90cGx1ZyBtb3Jl
+Cj4+IGNvbm5lY3RvcnMgbGF0ZXIgb24uIFdoYXQgZXhhY3RseSBjb21wbGFpbnM/Cj4KPiBkcm1f
+ZmJfaGVscGVyX2luaXQoKSB0aHJvd3MgYW4gZXJyb3IgaWYgdGhlIHBhc3NlZCBpbiBjb25uZWN0
+b3IgY291bnQgaXMKPiAwLCBzbyBkcm1fZmJfY21hX2hlbHBlcigpIHByaW50a3MgYW4gZXJyb3Iu
+CgpPaCwgX3RoYXRfIHRoaW5nLiBUaGUgZXJyb3IgaW4gdGhlcmUgaXMgY29ycmVjdCwgYnV0IChh
+bG1vc3QpIGV2ZXJ5b25lCmdldHMgdGhpcyBwYXJhbWV0ZXIgd3JvbmcuIFRoaXMgaXNuJ3QgdGhl
+IG1heCBudW1iZXIgb2YgY29ubmVjdG9ycyB0aGUKZmIgaGVscGVyIHdpbGwgbGlnaHQgdXAsIGJ1
+dCBqdXN0IHRoZSBtYXggbnVtYmVyIG9mIGNvbm5lY3RvcnMgX3Blcl8KY3J0YyB3aGVuIGRyaXZp
+bmcgaW4gaHcgY2xvbmUgbW9kZS4gVGhlcmUncyB0d28gcHJvYmxlbXMgd2l0aCB0aGF0OgotIGZi
+IGhlbHBlcnMgZG9uJ3Qgc3VwcG9ydCBodyBjbG9uZSBtb2RlLCB3ZSBzZWxlY3QgMToxIGNydGNz
+IGZvciBlYWNoCmFjdGl2ZSBjb25uZWN0b3IKLSBJIG1lbnRpb25lZCB0aGF0IGV2ZXJ5b25lIGdl
+dHMgdGhpcyB3cm9uZz8KCklmIHlvdSdyZSBtb2RlcmF0ZWx5IGJvcmVkIGl0J2QgYmUgZ3JlYXQg
+dG8gbnVrZSB0aGUgbWF4X2Nvbm5lY3Rvcgphcmd1bWVudCBmcm9tIGRybV9mYl9oZWxwZXJfaW5p
+dCwgYW5kIGhhcmQtY29kZSBpdCB0byAxICh3aXRoIGEgYmlnCmNvbW1lbnQgZXhwbGFpbmluZyB0
+aGF0IHRoaXMgbmVlZHMgdG8gYmUgY2hhbmdlZCwgcHJvYmFibHkgd2l0aApkeW5hbWljIHJlYWxs
+b2NhdGlvbiwgb25jZSBzb21lb25lIGdldHMgYXJvdW5kIHRvIGltcGxlbWVudGluZyBodwpjbG9u
+ZSBtb2RlKS4KCklmIHlvdSdyZSBsZXNzIGJvcmVkLCBqdXN0IGhhcmRjb2RlIHRoaXMgdG8gMSBp
+biB2YzQgYW5kIGRvbmUuIFBsdXMgYQpUT0RPLnJzdCBlbnRyeSB3b3VsZCBiZSBncmVhdCBpbiB0
+aGF0IGNhc2UuCi1EYW5pZWwKLS0gCkRhbmllbCBWZXR0ZXIKU29mdHdhcmUgRW5naW5lZXIsIElu
+dGVsIENvcnBvcmF0aW9uCis0MSAoMCkgNzkgMzY1IDU3IDQ4IC0gaHR0cDovL2Jsb2cuZmZ3bGwu
+Y2gKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRl
+dmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8v
+bGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
