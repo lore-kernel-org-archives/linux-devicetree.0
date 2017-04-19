@@ -1,75 +1,113 @@
-From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH V5 1/3] dt-bindings: mtd: document linux,part-probe
- property
-Date: Wed, 19 Apr 2017 22:55:30 +0200
-Message-ID: <20170419225530.1ca228f7@bbrezillon>
-References: <20170417182853.24281-1-zajec5@gmail.com>
-        <20170417194746.10697-1-zajec5@gmail.com>
-        <20170419203705.GF20555@google.com>
+From: Peter Rosin <peda@axentia.se>
+Subject: Re: [PATCH v13 03/10] mux: minimal mux subsystem and gpio-based mux
+ controller
+Date: Wed, 19 Apr 2017 23:04:30 +0200
+Message-ID: <5945890d-2eea-f287-96ca-c095e8fa7be5@axentia.se>
+References: <1492101794-13444-1-git-send-email-peda@axentia.se>
+ <1492101794-13444-4-git-send-email-peda@axentia.se>
+ <1492592817.2970.14.camel@pengutronix.de>
+ <da90526b-7274-c52c-07e8-9f0d75cf1cbf@axentia.se>
+ <1492609756.2970.131.camel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170419203705.GF20555-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1492609756.2970.131.camel@pengutronix.de>
+Sender: linux-doc-owner@vger.kernel.org
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: linux-kernel@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Jonathan Corbet <corbet@lwn.net>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, linux-doc@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, Colin Ian King <colin.king@canonical.com>, Paul Gortmaker <paul.gortmaker@windriver.com>, kernel@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 19 Apr 2017 13:37:05 -0700
-Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+On 2017-04-19 15:49, Philipp Zabel wrote:
+> On Wed, 2017-04-19 at 14:00 +0200, Peter Rosin wrote:
+> [...]
+>>>> +int mux_control_select(struct mux_control *mux, int state)
+>>>
+>>> If we let two of these race, ...
+>>
+>> The window for this "race" is positively huge. If there are several
+>> mux consumers of a single mux controller, it is self-evident that
+>> if one of them grabs the mux for a long time, the others will suffer.
+>>
+>> The design is that the rwsem is reader-locked for the full duration
+>> of a select/deselect operation by the mux consumer.
+> 
+> I was not clear. I meant: I think this can also happen if we let them
+> race with the same state target.
 
-> Hi,
-> 
-> On Mon, Apr 17, 2017 at 09:47:44PM +0200, Rafał Miłecki wrote:
-> > From: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
-> > 
-> > Support for this property has been introduced in 2010 with commit
-> > 9d5da3a9b849 ("mtd: extend physmap_of to let the device tree specify the
-> > parition probe") but it was never documented. Fix this by adding a
-> > proper description and example.
-> > 
-> > Signed-off-by: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
-> > Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> > Acked-by: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> > ---
-> >  Documentation/devicetree/bindings/mtd/common.txt | 7 +++++++
-> >  1 file changed, 7 insertions(+)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/mtd/common.txt b/Documentation/devicetree/bindings/mtd/common.txt
-> > index fc068b923d7a..1ada70e718b2 100644
-> > --- a/Documentation/devicetree/bindings/mtd/common.txt
-> > +++ b/Documentation/devicetree/bindings/mtd/common.txt
-> > @@ -6,10 +6,17 @@ Optional properties:
-> >    controller based name) in order to ease flash device identification
-> >    and/or describe what they are used for.
-> >  
-> > +- linux,part-probe: if present, this property should contain a list of strings
-> > +  with partition probes to be used for the flash device. A role of partition
-> > +  probe (parser) is to read/construct partition table and register found
-> > +  partitions. Getting partition table may be platform or device specific so
-> > +  various devices may use various Linux drivers for this purpose.  
-> 
-> Have you reviewed the old threads about this? I thought I already
-> discouraged extending this binding to be generic. Particularly, we do
-> *not* want to codify things like 'linux,part-probe = "bcm47xxpart"',
-> which doesn't follow any accepted practice about naming. And you've also
-> failed to document any actual strings to put here, which hides the fact
-> that you're opening a can of worms.
-> 
-> Piece of a previous thread:
-> http://lists.infradead.org/pipermail/linux-mtd/2015-October/062613.html
-> [PATCH] mtd: document linux-specific partition parser DT binding
-> 
-> I attempted to resolve that here, but never made time to address the few
-> not-so-constructive comments I received:
-> 
-> https://mail-archive.com/linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org/msg1035539.html
-> [RFC PATCH 0/7] mtd: partitions: add of_match_table support
+Right, but there is another glaring problem with the v13 implementation
+of select/deselect. If there are three consumers and the first one
+holds the mux while the other two tries to select it to some other
+position, then even if the two "new" consumers agree on the mux state,
+then both of them will end up in the "it's just contended" case and
+then be serialized. So, yes, the select/deselect implementation is not
+perfect. To quote the cover letter:
 
-Oops, completely forgot you had proposed an alternative solution. Sorry
-about that.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+	I'm using an rwsem to lock a mux, but that isn't really a
+	perfect fit. Is there a better locking primitive that I don't
+	know about that fits better? I had a mutex at one point, but
+	that didn't allow any concurrent accesses at all. At least
+	the rwsem allows concurrent access as long as all users
+	agree on the mux state, but I suspect that the rwsem will
+	degrade to the mutex situation pretty quickly if there is
+	any contention.
+
+But with your discovery that there's a race when two consumers go
+for the same state in a free mux, in addition to the above contention
+problem, I'm about ready to go with Greg's suggestion and just use a
+mutex. I.e. ignore the desire to allow concurrent use. Because it's
+not like the sketchy thing I threw out in the other part of the thread
+solves any of these problems. I can live without the concurrency, and
+I guess I can also live with passing the buck to the poor sod that
+eventually needs it.
+
+>>>> +{
+>>>> +	int ret;
+>>>> +
+>>>> +	if (down_read_trylock(&mux->lock)) {
+>>>> +		if (mux->cached_state == state)
+>>>> +			return 0;
+> 
+> This check makes it clear that a second select call is not intended to
+> block if the intended state is already selected. But if the instance we
+> will lose the race against has not yet updated cached_state, ...
+> 
+>>>> +		/* Sigh, the mux needs updating... */
+>>>> +		up_read(&mux->lock);
+>>>> +	}
+>>>> +
+>>>> +	/* ...or it's just contended. */
+>>>> +	down_write(&mux->lock);
+> 
+> ... we are blocking here until the other instance calls up_read. Even
+> though in this case (same state target) we would only have to block
+> until the other instance calls downgrade_write after the mux control is
+> set to the correct state.
+> 
+> Basically there is a small window before down_write with no lock at all,
+> where multiple instances can already have decided they must change the
+> mux (to the same state). If this happens, they go on to block each other
+> unnecessarily.
+> 
+>>> ... then the last to get to down_write will just wait here forever (or
+>>> until the first consumer calls mux_control_deselect, which may never
+>>> happen)?
+>>
+>> It is vital that the mux consumer call _deselect when it is done with
+>> the mux. Not doing so will surely starve out any other mux consumers.
+>> The whole thing is designed around the fact that mux consumers should
+>> deselect the mux as soon as it's no longer needed.
+> 
+> I'd like to use this for video bus multiplexers. Those would not be
+> selected for the duration of an i2c transfer, but for the duration of a
+> running video capture stream, or for the duration of an enabled display
+> path. While I currently have no use case for multiple consumers
+> controlling the same mux, this scenario is what shapes my perspective.
+> For such long running selections the consumer should have the option to
+> return -EBUSY instead of blocking when the lock can't be taken.
+
+I'll see if I can implement a try variant for the mutex based select I
+will probably end up with in v14...
+
+Cheers,
+peda
