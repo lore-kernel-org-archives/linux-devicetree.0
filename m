@@ -1,72 +1,75 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 1/4] dt-bindings: net: Add TI WiLink shared transport binding
-Date: Wed, 19 Apr 2017 15:49:28 -0500
-Message-ID: <CAL_JsqLdeVnYRROmgj37Yh09h9eHtPWT8UhS_uTwjGj2FT2TYQ@mail.gmail.com>
-References: <20170413150353.7389-1-robh@kernel.org> <20170413150353.7389-2-robh@kernel.org>
- <CAHCN7x+HhwmXGxZn_31LuzdkEdoAnOSxukAdXULrGbSeKmrtRQ@mail.gmail.com>
- <CAHCN7xLHZmS_3+JygQgRxi_tX0mXL22D1Nj9T8jkrMz3-8eQDg@mail.gmail.com> <CAHCN7x+G_jbQTDfyPBZ4Er8vz46tEojrWf29Eztq56c9zBnMeA@mail.gmail.com>
+From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH V5 1/3] dt-bindings: mtd: document linux,part-probe
+ property
+Date: Wed, 19 Apr 2017 22:55:30 +0200
+Message-ID: <20170419225530.1ca228f7@bbrezillon>
+References: <20170417182853.24281-1-zajec5@gmail.com>
+        <20170417194746.10697-1-zajec5@gmail.com>
+        <20170419203705.GF20555@google.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-bluetooth-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAHCN7x+G_jbQTDfyPBZ4Er8vz46tEojrWf29Eztq56c9zBnMeA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-bluetooth-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Adam Ford <aford173-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Johan Hedberg <johan.hedberg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Eyal Reizer <eyalr-l0cyMroinI0@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:BLUETOOTH DRIVERS" <linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Gustavo Padovan <gustavo-THi1TnShQwVAfugRpC6u6w@public.gmane.org>, Marcel Holtmann <marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org>, Satish Patel <satish.patel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, netdev <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170419203705.GF20555-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Apr 16, 2017 at 9:09 AM, Adam Ford <aford173-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->
->
-> On Apr 13, 2017 10:04 AM, "Rob Herring" <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
->
-> Add serial slave device binding for the TI WiLink series of Bluetooth/FM/GPS
-> devices.
->
-> Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-> Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> ---
-> v3:
-> - rebase on bluetooth-next
->
->  .../devicetree/bindings/net/ti,wilink-st.txt       | 35
-> ++++++++++++++++++++++
->  1 file changed, 35 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/net/ti,wilink-st.txt
->
-> diff --git a/Documentation/devicetree/bindings/net/ti,wilink-st.txt
-> b/Documentation/devicetree/bindings/net/ti,wilink-st.txt
-> new file mode 100644
-> index 000000000000..cbad73a84ac4
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/net/ti,wilink-st.txt
-> @@ -0,0 +1,35 @@
-> +TI WiLink 7/8 (wl12xx/wl18xx) Shared Transport BT/FM/GPS devices
-> +
-> +TI WiLink devices have a UART interface for providing Bluetooth, FM radio,
-> +and GPS over what's called "shared transport". The shared transport is
-> +standard BT HCI protocol with additional channels for the other functions.
-> +
-> +These devices also have a separate WiFi interface as described in
-> +wireless/ti,wlcore.txt.
-> +
-> +This bindings follows the UART slave device binding in
-> +../serial/slave-device.txt.
-> +
-> +Required properties:
-> + - compatible: should be one of the following:
-> +    "ti,wl1271-st"
-> +    "ti,wl1273-st"
-> +    "ti,wl1831-st"
-> +    "ti,wl1835-st"
-> +    "ti,wl1837-st"
-> +
->
->
-> Would you expect the wl1283 chipset too?
+On Wed, 19 Apr 2017 13:37:05 -0700
+Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
 
-Probably, but I left it out as there's no public information.
+> Hi,
+> 
+> On Mon, Apr 17, 2017 at 09:47:44PM +0200, Rafał Miłecki wrote:
+> > From: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+> > 
+> > Support for this property has been introduced in 2010 with commit
+> > 9d5da3a9b849 ("mtd: extend physmap_of to let the device tree specify the
+> > parition probe") but it was never documented. Fix this by adding a
+> > proper description and example.
+> > 
+> > Signed-off-by: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+> > Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> > Acked-by: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> > ---
+> >  Documentation/devicetree/bindings/mtd/common.txt | 7 +++++++
+> >  1 file changed, 7 insertions(+)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/mtd/common.txt b/Documentation/devicetree/bindings/mtd/common.txt
+> > index fc068b923d7a..1ada70e718b2 100644
+> > --- a/Documentation/devicetree/bindings/mtd/common.txt
+> > +++ b/Documentation/devicetree/bindings/mtd/common.txt
+> > @@ -6,10 +6,17 @@ Optional properties:
+> >    controller based name) in order to ease flash device identification
+> >    and/or describe what they are used for.
+> >  
+> > +- linux,part-probe: if present, this property should contain a list of strings
+> > +  with partition probes to be used for the flash device. A role of partition
+> > +  probe (parser) is to read/construct partition table and register found
+> > +  partitions. Getting partition table may be platform or device specific so
+> > +  various devices may use various Linux drivers for this purpose.  
+> 
+> Have you reviewed the old threads about this? I thought I already
+> discouraged extending this binding to be generic. Particularly, we do
+> *not* want to codify things like 'linux,part-probe = "bcm47xxpart"',
+> which doesn't follow any accepted practice about naming. And you've also
+> failed to document any actual strings to put here, which hides the fact
+> that you're opening a can of worms.
+> 
+> Piece of a previous thread:
+> http://lists.infradead.org/pipermail/linux-mtd/2015-October/062613.html
+> [PATCH] mtd: document linux-specific partition parser DT binding
+> 
+> I attempted to resolve that here, but never made time to address the few
+> not-so-constructive comments I received:
+> 
+> https://mail-archive.com/linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org/msg1035539.html
+> [RFC PATCH 0/7] mtd: partitions: add of_match_table support
 
-> I can help test this if you like after the holiday weekend. I have a board
-> with WL1283 and currently using pdata-quirks to support it.
+Oops, completely forgot you had proposed an alternative solution. Sorry
+about that.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
