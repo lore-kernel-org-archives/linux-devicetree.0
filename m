@@ -1,239 +1,72 @@
-From: Suzuki K Poulose <Suzuki.Poulose@arm.com>
-Subject: Re: [PATCH v6 6/8] coresight: add support for CPU debug module
-Date: Wed, 19 Apr 2017 14:23:04 +0100
-Message-ID: <5c5cb6f8-1dcb-8a9d-1605-c006656005eb@arm.com>
-References: <1491485461-22800-1-git-send-email-leo.yan@linaro.org>
- <1491485461-22800-7-git-send-email-leo.yan@linaro.org>
+From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH v2 1/6] arm64: dts: Add symlinks for cros-ec-keyboard and cros-ec-sbs
+Date: Wed, 19 Apr 2017 15:25:36 +0200
+Message-ID: <2579212.374vCSe9xi@phil>
+References: <20170210010521.78872-1-briannorris@chromium.org> <1529949.5djtX72aeJ@phil> <CAOesGMirj2j5P7_Ri4CSCux+O3hH_wxvrra7-p33AdXO4Ej5Hg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1491485461-22800-7-git-send-email-leo.yan@linaro.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Leo Yan <leo.yan@linaro.org>, Jonathan Corbet <corbet@lwn.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Wei Xu <xuwei5@hisilicon.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Mathieu Poirier <mathieu.poirier@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, Mike Leach <mike.leach@linaro.org>, Sudeep Holla <sudeep.holla@arm.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAOesGMirj2j5P7_Ri4CSCux+O3hH_wxvrra7-p33AdXO4Ej5Hg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Cc: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Stephen Barber <smbarber-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 06/04/17 14:30, Leo Yan wrote:
-> Coresight includes debug module and usually the module connects with CPU
-> debug logic. ARMv8 architecture reference manual (ARM DDI 0487A.k) has
-> description for related info in "Part H: External Debug".
->
-> Chapter H7 "The Sample-based Profiling Extension" introduces several
-> sampling registers, e.g. we can check program counter value with
-> combined CPU exception level, secure state, etc. So this is helpful for
-> analysis CPU lockup scenarios, e.g. if one CPU has run into infinite
-> loop with IRQ disabled. In this case the CPU cannot switch context and
-> handle any interrupt (including IPIs), as the result it cannot handle
-> SMP call for stack dump.
->
-> This patch is to enable coresight debug module, so firstly this driver
-> is to bind apb clock for debug module and this is to ensure the debug
-> module can be accessed from program or external debugger. And the driver
-> uses sample-based registers for debug purpose, e.g. when system triggers
-> panic, the driver will dump program counter and combined context
-> registers (EDCIDSR, EDVIDSR); by parsing context registers so can
-> quickly get to know CPU secure state, exception level, etc.
->
-> Some of the debug module registers are located in CPU power domain, so
-> this requires the CPU power domain stays on when access related debug
-> registers, but the power management for CPU power domain is quite
-> dependent on SoC integration for power management. For the platforms
-> which with sane power controller implementations, this driver follows
-> the method to set EDPRCR to try to pull the CPU out of low power state
-> and then set 'no power down request' bit so the CPU has no chance to
-> lose power.
->
-> If the SoC has not followed up this design well for power management
-> controller, the user should use the command line parameter or sysfs
-> to constrain all or partial idle states to ensure the CPU power
-> domain is enabled and access coresight CPU debug component safely.
+Am Mittwoch, 19. April 2017, 21:54:09 CEST schrieb Olof Johansson:
+> Hi,
+> 
+> On Tue, Feb 28, 2017 at 3:20 AM, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org> wrote:
+> > Hi Olof,
+> >
+> > Am Dienstag, 21. Februar 2017, 15:47:31 CET schrieb Olof Johansson:
+> >> On Thu, Feb 9, 2017 at 5:05 PM, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> wrote:
+> >> > From: Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+> >> >
+> >> > We'd like to be able to use the cros-ec-keyboard.dtsi and
+> >> > cros-ec-sbs.dtsi snippets for arm64 devices.  Currently those files live
+> >> > in the arm/boot/dts directory.
+> >> >
+> >> > Let's follow the convention set by commit 8ee57b8182c4 ("ARM64: dts:
+> >> > vexpress: Use a symlink to vexpress-v2m-rs1.dtsi from arch=arm") and use
+> >> > a symlink.  Note that in this case we put the files in a new
+> >> > "include/common" directory since these snippets may need to be
+> >> > referenced by dts files in many different subdirectories.
+> >>
+> >> I'd rather have something like this:
+> >>
+> >> https://marc.info/?m=147547436324674&w=2
+> >>
+> >> Instead of having everybody move things over. I.e. make it easy to
+> >> refer to the arm version from arm64 instead of creating a "common"
+> >> layer inbetween.
+> >
+> > just so it gets noticed, I've done and tested [0], which hopefully should
+> > implement your suggestions above.
+> >
+> > If that looks ok, how do you want that picked up? Should I just include
+> > them in my regular rockchip branches or do you to pick them into some
+> > immutable branch, if other surprise-users turn up in time for 4.12?
+> 
+> Sigh. I completely dropped the ball on this, and I didn't see it
+> included in any of your pull requests for 4.12 since I never actually
+> acked that approach.
+> 
+> I've applied the patches onto a dt/include-paths stable branch, but
+> we're late for merging dependent code on top of it for 4.12.
 
-Hi Leo,
+Didn't you merge the patches into a branch already and the rk3399-gru
+support on top of it?
 
-This version looks good to me. I have two minor comments below.
+Aka
+https://git.kernel.org/pub/scm/linux/kernel/git/arm/arm-soc.git/log/?h=shared/dt-symlinks
 
-
-> +
-> +static struct notifier_block debug_notifier = {
-> +	.notifier_call = debug_notifier_call,
-> +};
-> +
-> +static int debug_enable_func(void)
-> +{
-> +	struct debug_drvdata *drvdata;
-> +	int cpu;
-> +
-> +	for_each_possible_cpu(cpu) {
-> +		drvdata = per_cpu(debug_drvdata, cpu);
-> +		if (!drvdata)
-> +			continue;
-> +
-> +		pm_runtime_get_sync(drvdata->dev);
-> +	}
-> +
-> +	return atomic_notifier_chain_register(&panic_notifier_list,
-> +					      &debug_notifier);
-> +}
-> +
-> +static int debug_disable_func(void)
-> +{
-> +	struct debug_drvdata *drvdata;
-> +	int cpu;
-> +
-> +	for_each_possible_cpu(cpu) {
-> +		drvdata = per_cpu(debug_drvdata, cpu);
-> +		if (!drvdata)
-> +			continue;
-> +
-> +		pm_runtime_put(drvdata->dev);
-> +	}
-> +
-> +	return atomic_notifier_chain_unregister(&panic_notifier_list,
-> +						&debug_notifier);
-> +}
-
-I believe you should, reverse the order of these operations in debug_disable_func()
-to prevent getting a panic notifier after we have released the power domain for the
-debug.
-i.e, :
-	atomic_notifier_chain_unregister(...);
-	
-	for_each_possible_cpu(cpu) {}
+Which one of my previous pull requests was already based on.
 
 
+Heiko
 
-> +
-> +static ssize_t debug_func_knob_write(struct file *f,
-> +		const char __user *buf, size_t count, loff_t *ppos)
-> +{
-> +	u8 val;
-> +	int ret;
-> +
-> +	ret = kstrtou8_from_user(buf, count, 2, &val);
-> +	if (ret)
-> +		return ret;
-> +
-> +	mutex_lock(&debug_lock);
-> +
-> +	if (val == debug_enable)
-> +		goto out;
-> +
-> +	if (val)
-> +		ret = debug_enable_func();
-> +	else
-> +		ret = debug_disable_func();
-> +
-> +	if (ret) {
-> +		pr_err("%s: unable to %s debug function: %d\n",
-> +		       __func__, val ? "enable" : "disable", ret);
-> +		goto err;
-> +	}
-> +
-> +	debug_enable = val;
-> +out:
-> +	ret = count;
-> +err:
-> +	mutex_unlock(&debug_lock);
-> +	return ret;
-> +}
-> +
-> +static ssize_t debug_func_knob_read(struct file *f,
-> +		char __user *ubuf, size_t count, loff_t *ppos)
-> +{
-> +	ssize_t ret;
-> +	char buf[2];
-> +
-> +	mutex_lock(&debug_lock);
-> +
-> +	buf[0] = '0' + debug_enable;
-> +	buf[1] = '\n';
-> +	ret = simple_read_from_buffer(ubuf, count, ppos, buf, sizeof(buf));
-> +
-> +	mutex_unlock(&debug_lock);
-> +	return ret;
-> +}
-> +
-> +static const struct file_operations debug_func_knob_fops = {
-> +	.open	= simple_open,
-> +	.read	= debug_func_knob_read,
-> +	.write	= debug_func_knob_write,
-> +};
-> +
-> +static int debug_func_init(void)
-> +{
-> +	struct dentry *file;
-> +	int ret;
-> +
-> +	/* Create debugfs node */
-> +	debug_debugfs_dir = debugfs_create_dir("coresight_cpu_debug", NULL);
-> +	if (!debug_debugfs_dir) {
-> +		pr_err("%s: unable to create debugfs directory\n", __func__);
-> +		return -ENOMEM;
-> +	}
-> +
-> +	file = debugfs_create_file("enable", S_IRUGO | S_IWUSR,
-> +			debug_debugfs_dir, NULL, &debug_func_knob_fops);
-> +	if (!file) {
-> +		pr_err("%s: unable to create enable knob file\n", __func__);
-> +		ret = -ENOMEM;
-> +		goto err;
-> +	}
-> +
-> +	/* Use sysfs node to enable functionality */
-> +	if (!debug_enable)
-> +		return 0;
-> +
-> +	/* Register function to be called for panic */
-> +	ret = atomic_notifier_chain_register(&panic_notifier_list,
-> +					     &debug_notifier);
-> +	if (ret) {
-> +		pr_err("%s: unable to register notifier: %d\n",
-> +		       __func__, ret);
-> +		goto err;
-> +	}
-> +
-
-Since we depend on the value of debug_enable above, below in debug_probe()
-and in debug_remove(), we should protect these paths using the debug_lock mutex,
-like we do above, to make sure we don't create a race.
-
-> +	return 0;
-> +
-> +err:
-> +	debugfs_remove_recursive(debug_debugfs_dir);
-> +	return ret;
-> +}
-> +
-> +static void debug_func_exit(void)
-> +{
-> +	debugfs_remove_recursive(debug_debugfs_dir);
-> +
-> +	/* Unregister panic notifier callback */
-> +	if (debug_enable)
-> +		atomic_notifier_chain_unregister(&panic_notifier_list,
-> +						 &debug_notifier);
-> +}
-> +
-> +static int debug_probe(struct amba_device *adev, const struct amba_id *id)
-> +{
-> +	void __iomem *base;
-> +	struct device *dev = &adev->dev;
-> +	struct debug_drvdata *drvdata;
-> +	struct resource *res = &adev->res;
-> +	struct device_node *np = adev->dev.of_node;
-> +	int ret;
-> +
-> +	drvdata = devm_kzalloc(dev, sizeof(*drvdata), GFP_KERNEL);
-> +	if (!drvdata)
-> +		return -ENOMEM;
-> +
-> +	drvdata->cpu = np ? of_coresight_get_cpu(np) : 0;
-> +	if (per_cpu(debug_drvdata, drvdata->cpu)) {
-> +		dev_err(dev, "CPU%d drvdata has been initialized\n",
-> +			drvdata->cpu);
-
-May be we could warn about a possible issue in the DT ?
-
-
-Cheers
-Suzuki
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
