@@ -1,184 +1,60 @@
-From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: BCM5301X: Specify MDIO bus in the DT
-Date: Wed, 19 Apr 2017 11:13:26 -0700
-Message-ID: <84230a10-a10a-ee60-0238-24db94d2c53c@gmail.com>
-References: <20170402210840.11429-1-zajec5@gmail.com>
- <5a6ecda9-2cf6-2171-7210-6b3a1d4c6012@gmail.com>
- <c3a0455a-821f-d8a8-bf8a-7ad06ad0466e@milecki.pl>
- <94250925-7d5d-ac31-58ad-918406d904f1@gmail.com>
- <cd324440-ad88-0981-1577-822d39ee289d@gmail.com>
- <221a0208-8a64-6bd8-f6b2-39e845520a83@gmail.com>
- <ab696d24-3544-a554-82d1-18839b29caa0@milecki.pl>
+From: Tyler Baker <tyler.baker-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 0/8] i.MX7 PCIe related device tree changes
+Date: Wed, 19 Apr 2017 11:28:18 -0700
+Message-ID: <CANMBJr6HVp+Pe4QLRU2-fePW8_kZ4tGRELkDCdq8ihUEy901Cw@mail.gmail.com>
+References: <20170413133242.5068-1-andrew.smirnov@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <ab696d24-3544-a554-82d1-18839b29caa0-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+In-Reply-To: <20170413133242.5068-1-andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, yurovsky-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 04/19/2017 11:10 AM, Rafał Miłecki wrote:
-> On 04/19/2017 07:52 PM, Florian Fainelli wrote:
->> On 04/19/2017 10:35 AM, Rafał Miłecki wrote:
->>> On 04/19/2017 06:43 PM, Florian Fainelli wrote:
->>>> On 04/02/2017 02:25 PM, Rafał Miłecki wrote:
->>>>> On 04/02/2017 11:14 PM, Florian Fainelli wrote:
->>>>>> Le 04/02/17 à 14:08, Rafał Miłecki a écrit :
->>>>>>> From: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
->>>>>>>
->>>>>>> Northstar devices have MDIO bus that may contain various PHYs
->>>>>>> attached.
->>>>>>> A common example is USB 3.0 PHY (that doesn't have an MDIO driver
->>>>>>> yet).
->>>>>>>
->>>>>>> Signed-off-by: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
->>>>>>> ---
->>>>>>>  arch/arm/boot/dts/bcm5301x.dtsi | 7 +++++++
->>>>>>>  1 file changed, 7 insertions(+)
->>>>>>>
->>>>>>> diff --git a/arch/arm/boot/dts/bcm5301x.dtsi
->>>>>>> b/arch/arm/boot/dts/bcm5301x.dtsi
->>>>>>> index acee36a61004..6a2afe7880ae 100644
->>>>>>> --- a/arch/arm/boot/dts/bcm5301x.dtsi
->>>>>>> +++ b/arch/arm/boot/dts/bcm5301x.dtsi
->>>>>>> @@ -320,6 +320,13 @@
->>>>>>>          };
->>>>>>>      };
->>>>>>>
->>>>>>> +    mdio@18003000 {
->>>>>>> +        compatible = "brcm,iproc-mdio";
->>>>>>> +        reg = <0x18003000 0x8>;
->>>>>>> +        #size-cells = <1>;
->>>>>>> +        #address-cells = <0>;
->>>>>>> +    };
->>>>>>
->>>>>> This looks fine, but usually the block should be enabled on a
->>>>>> per-board
->>>>>> basis, such that there should be a status = "disabled" property
->>>>>> here by
->>>>>> default.
->>>>>
->>>>> I think we have few blocks in bcm5301x.dtsi enabled by default. I
->>>>> guess
->>>>> it's
->>>>> for stuff that is always present on every SoC family board: rng, nand,
->>>>> spi to
->>>>> name few.
->>>>>
->>>>> It makes some sense, consider e.g. spi. Every Northstar board has SPI
->>>>> controller so it's enabled by default. Not every board has SPI
->>>>> flash, so
->>>>> it's
->>>>> disabled by default.
->>>>>
->>>>> It's there and it make sense to me. Is that OK or not?
->>>>
->>>> Even though there are devices that are always enabled on a given SoC,
->>>> because the board designs are always consistent does not necessarily
->>>> make them good candidates to be enabled at the .dtsi level. This is
->>>> particularly true when there are external connections to blocks (SPI,
->>>> NAND, USB, Ethernet, MDIO to name a few), having them disabled by
->>>> default is safer as a starting point to begin with.
->>>
->>> In case of Northstar there is USB 3.0 PHY connected *internally* to this
->>> MDIO.
->>> I don't think any board manufacturer is able to rip SoC out of the MDIO
->>> or the
->>> USB 3.0 PHY.
->>
->> OK, then can you still resubmit a proper patch that a) puts that
->> information in the commit message, and b) also adds a proper label to
->> the mdio node such that it can later on be referenced by label in
->> board-level DTS files? By that I mean:
->>
->> mdio: mdio@18003000 {
->>
->> Thank you
->>
->>>
->>>
->>>>> I find MDIO situation quite simiar. It seems every Northstar board has
->>>>> MDIO bus
->>>>> just devices may differ and should not be enabled by default.
->>>>
->>>> In which case, the only difference, for you would be to do to, at the
->>>> board-level DTS:
->>>>
->>>> &mdio {
->>>>     status = "okay";
->>>>
->>>>     phy@0 {
->>>>         reg = <0>;
->>>>         ...
->>>>     };
->>>> };
->>>>
->>>> versus:
->>>>
->>>> &mdio {
->>>>     phy@0 {
->>>>         reg = <0>;
->>>>         ...
->>>>     };
->>>> };
->>>>
->>>> I think we can afford putting the mdio node's status property in each
->>>> board-level DTS and make it clear that way that it is enabled because
->>>> there are child nodes enabled?
->>>
->>> This will be a pretty big effort because every Northstar device I know
->>> has USB
->>> 3.0 PHY in the SoC.
->>
->> Adding a one liner is a "pretty big effort", for sure.
-> 
-> Sorry, we got a misunderstanding here.
-> 
-> I thought you meant adding something like this for every device:
-> 
-> &mdio {
->     status = "okay";
-> 
->     usb3_phy: usb-phy@10 {
->         compatible = "brcm,ns-ax-usb3-phy";
->         reg = <0x10>;
->         usb3-dmp-syscon = <&usb3_dmp>;
->         #phy-cells = <0>;
->     };
-> };
+On 13 April 2017 at 06:32, Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> Shawn, everyone:
+>
+> This series includes changes made to device-tree in order to support
+> PCIe on i.MX7 platform. They include:
+>
+>      - Bringing 'anatop-enable-bit' property of ANATOP regulators back
+>        and extending it to all of the HW it is applicable to
+>
+>      - Adding GPCv2 node for i.MX7 (which was missing, despite the
+>        irqchip driver for it being in the tree for quite some time)
+>
+>      - Adding a PCIe node for i.MX7
+>
+>      - Adding GPIO expander used by PCIe and enabling PCIe node from
+>        above on i.MX7 based Sabre board
+>
+> As usual, feedback is welcome.
+>
+> Thanks,
+> Andrey Smrinov
+>
+> Andrey Smirnov (8):
+>   Revert "ARM: dts: imx: Remove unexistant property"
+>   ARM: dts: imx6: Specify 'anatop-enable-bit' where appropriate
+>   ARM: dts: imx7s: Adjust anatop-enable-bit for 'reg_1p0d'
+>   ARM: dts: imx7s: Add node for GPC
+>   ARM: dts: imx7s: Mark 'gpr' compatible with i.MX6 variant
+>   ARM: dts: imx7d-sdb: Add GPIO expander node
+>   ARM: dts: imx7d: Add node for PCIe controller
+>   ARM: dts: imx7d-sdb: Enable PCIe peripheral
 
-Ah no, I would have just done the following in the per-board DTS:
+FWIW:
 
-&mdio {
-	status = "okay";
-};
+Tested-by: Tyler Baker <tyler.baker-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
-&usb3_phy {
-	status = "okay";
-};
+This whole series on top of v4.11-rc7, with the addition of the iMX7
+GPCv2 and reset driver. Tested on a imx7d-cl-som with a CUK Killer
+Doubleshot Wireless-AC 1535 wlan/bt radio using a mini pcie to m2
+adapter. Confirmed that the radio was able to associate with an AP
+using WPA2, and connected to multiple devices using 6lowpan over BLE.
 
-&xhci {
-	status = "okay";
-};
-
-Something like that.
-
-> 
-> usb3_dmp: syscon@18105000 {
->     reg = <0x18105000 0x1000>;
-> };
-> 
-> So I clearly missed something important. Did you want to have USB 3.0 PHY
-> defined in the dtsi file?
-
-Yes, I think it does make sense to have it defined in the .dtsi file
-because it's internal to the SoC, however it should probably be marked
-disabled by default, unless a board enables its xHCI controller, does
-that make sense?
--- 
-Florian
+Tyler
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
