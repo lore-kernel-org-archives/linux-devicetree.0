@@ -1,113 +1,119 @@
-From: Peter Rosin <peda@axentia.se>
-Subject: Re: [PATCH v13 03/10] mux: minimal mux subsystem and gpio-based mux
- controller
-Date: Wed, 19 Apr 2017 23:04:30 +0200
-Message-ID: <5945890d-2eea-f287-96ca-c095e8fa7be5@axentia.se>
-References: <1492101794-13444-1-git-send-email-peda@axentia.se>
- <1492101794-13444-4-git-send-email-peda@axentia.se>
- <1492592817.2970.14.camel@pengutronix.de>
- <da90526b-7274-c52c-07e8-9f0d75cf1cbf@axentia.se>
- <1492609756.2970.131.camel@pengutronix.de>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 2/2] devicetree: Document the max31760 device binding.
+Date: Wed, 19 Apr 2017 16:04:41 -0500
+Message-ID: <20170419210441.ban4kbmpgdqw6w25@rob-hp-laptop>
+References: <20170404192034.158901-1-john@jmuir.com>
+ <20170411213218.138718-1-john@jmuir.com>
+ <20170411213218.138718-3-john@jmuir.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1492609756.2970.131.camel@pengutronix.de>
+Content-Disposition: inline
+In-Reply-To: <20170411213218.138718-3-john@jmuir.com>
 Sender: linux-doc-owner@vger.kernel.org
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: linux-kernel@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Jonathan Corbet <corbet@lwn.net>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, linux-doc@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, Colin Ian King <colin.king@canonical.com>, Paul Gortmaker <paul.gortmaker@windriver.com>, kernel@pengutronix.de
+To: John Muir <john@jmuir.com>
+Cc: Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, Jonathan Corbet <corbet@lwn.net>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-hwmon@vger.kernel.org, linux-doc@vger.kernel.org, Anatol Pomazau <anatol@google.com>, Mark Segal <segal@google.com>
 List-Id: devicetree@vger.kernel.org
 
-On 2017-04-19 15:49, Philipp Zabel wrote:
-> On Wed, 2017-04-19 at 14:00 +0200, Peter Rosin wrote:
-> [...]
->>>> +int mux_control_select(struct mux_control *mux, int state)
->>>
->>> If we let two of these race, ...
->>
->> The window for this "race" is positively huge. If there are several
->> mux consumers of a single mux controller, it is self-evident that
->> if one of them grabs the mux for a long time, the others will suffer.
->>
->> The design is that the rwsem is reader-locked for the full duration
->> of a select/deselect operation by the mux consumer.
-> 
-> I was not clear. I meant: I think this can also happen if we let them
-> race with the same state target.
+On Tue, Apr 11, 2017 at 02:32:18PM -0700, John Muir wrote:
+> v2:
+> - Fixup based on comments.
 
-Right, but there is another glaring problem with the v13 implementation
-of select/deselect. If there are three consumers and the first one
-holds the mux while the other two tries to select it to some other
-position, then even if the two "new" consumers agree on the mux state,
-then both of them will end up in the "it's just contended" case and
-then be serialized. So, yes, the select/deselect implementation is not
-perfect. To quote the cover letter:
+While you should have a commit msg here, the patch versioning goes below
+the '---'.
 
-	I'm using an rwsem to lock a mux, but that isn't really a
-	perfect fit. Is there a better locking primitive that I don't
-	know about that fits better? I had a mutex at one point, but
-	that didn't allow any concurrent accesses at all. At least
-	the rwsem allows concurrent access as long as all users
-	agree on the mux state, but I suspect that the rwsem will
-	degrade to the mutex situation pretty quickly if there is
-	any contention.
+This history is not too useful either. You should describe what you 
+changed so reviewers don't have to go find the previous versions. I may 
+remember reviewing a patch, but I likely don't remember what I said.
 
-But with your discovery that there's a race when two consumers go
-for the same state in a free mux, in addition to the above contention
-problem, I'm about ready to go with Greg's suggestion and just use a
-mutex. I.e. ignore the desire to allow concurrent use. Because it's
-not like the sketchy thing I threw out in the other part of the thread
-solves any of these problems. I can live without the concurrency, and
-I guess I can also live with passing the buck to the poor sod that
-eventually needs it.
+> 
+> Signed-off-by: John Muir <john@jmuir.com>
+> ---
+>  .../devicetree/bindings/hwmon/max31760.txt         | 72 ++++++++++++++++++++++
+>  1 file changed, 72 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/hwmon/max31760.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/hwmon/max31760.txt b/Documentation/devicetree/bindings/hwmon/max31760.txt
+> new file mode 100644
+> index 000000000000..760fdf0b55e0
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/hwmon/max31760.txt
+> @@ -0,0 +1,72 @@
+> +MAX31760 fan controller
+> +-----------------------
+> +
+> +This device supports I2C only. Fan sub-nodes must be defined in order to enable
+> +the fan tachometer input. See also the datasheet:
+> +https://datasheets.maximintegrated.com/en/ds/MAX31760.pdf
+> +
+> +Required node properties:
+> + - compatible: "maxim,max31760"
+> + - reg: The I2C address of the device. This is 0x50 - 0x57 depending on the
+> +   hardware configuration.
+> + - #address-cells: Must be 1.
+> + - #size-cells: Must be 0.
+> +
+> +Optional node properties:
+> + - maxim,fan-fail-full-only: Boolean; Assert a fan failure only when the PWM is
+> +   at 100%.
+> + - maxim,fan-rd-signal: Boolean; Fans provide a rotation detection (RD) signal
+> +   instead of generating square-wave pulses.
+> + - maxim,fan-rd-polarity-high: Boolean; RD is high when the fan is running, not
+> +   low. Only relevant when fan-rd-signal is true.
+> + - maxim,fan-signal-enabled: Boolean; Externally driving FF/FS low should force
+> +   PWM output to 100%.
+> + - maxim,fan-spin-up-enabled: Boolean; For fan startup set the PWM to 100% until
+> +   tach is detected or two seconds have passed before reducing to the target
+> +   value.
+> + - maxim,pwm-polarity-negative: Boolean; 100% PWM is when PWM is low, not high.
+> + - maxim,pwm-pulse-stretch-enabled: Boolean; Enable PWM pulse stretching.
+> + - maxim,pwm-zero-fan-can-fail: Boolean; Enable fan failure detection while
+> +   ramping to 0% PWM.
+> +
+> +Fan sub-nodes must be present in order to enable the fan.
+> +
+> +Required fan sub-node properties:
+> + - reg: Fan address. Must be <0x00> or <0x01>.
+> +
+> +Optional fan sub-node properties:
+> + - label: String; Assigned to the hwmon fanX_label property.
+> +
+> +Temperature sub-nodes are optional.
+> +
+> +Required temp sub-node properties:
+> + - reg: Temperature sensor address. Must be <0x00> or <0x01>.
+> +
+> +Optional temp sub-node properties:
+> + - label: String; Assigned to the hwmon tempX_label property.
+> + - ideality: For temperature node with reg 1 only: Set ideality factor for the
 
->>>> +{
->>>> +	int ret;
->>>> +
->>>> +	if (down_read_trylock(&mux->lock)) {
->>>> +		if (mux->cached_state == state)
->>>> +			return 0;
-> 
-> This check makes it clear that a second select call is not intended to
-> block if the intended state is already selected. But if the instance we
-> will lose the race against has not yet updated cached_state, ...
-> 
->>>> +		/* Sigh, the mux needs updating... */
->>>> +		up_read(&mux->lock);
->>>> +	}
->>>> +
->>>> +	/* ...or it's just contended. */
->>>> +	down_write(&mux->lock);
-> 
-> ... we are blocking here until the other instance calls up_read. Even
-> though in this case (same state target) we would only have to block
-> until the other instance calls downgrade_write after the mux control is
-> set to the correct state.
-> 
-> Basically there is a small window before down_write with no lock at all,
-> where multiple instances can already have decided they must change the
-> mux (to the same state). If this happens, they go on to block each other
-> unnecessarily.
-> 
->>> ... then the last to get to down_write will just wait here forever (or
->>> until the first consumer calls mux_control_deselect, which may never
->>> happen)?
->>
->> It is vital that the mux consumer call _deselect when it is done with
->> the mux. Not doing so will surely starve out any other mux consumers.
->> The whole thing is designed around the fact that mux consumers should
->> deselect the mux as soon as it's no longer needed.
-> 
-> I'd like to use this for video bus multiplexers. Those would not be
-> selected for the duration of an i2c transfer, but for the duration of a
-> running video capture stream, or for the duration of an enabled display
-> path. While I currently have no use case for multiple consumers
-> controlling the same mux, this scenario is what shapes my perspective.
-> For such long running selections the consumer should have the option to
-> return -EBUSY instead of blocking when the lock can't be taken.
+This too needs a maxim prefix.
 
-I'll see if I can implement a try variant for the mutex based select I
-will probably end up with in v14...
-
-Cheers,
-peda
+> +   remote temperature sensor. Integer with range 0 to 63, representing a
+> +   multiplication factor of 0.9844 to 1.0489. Default: 24 (1.0080).
+> +
+> +Example:
+> +	max31760@50 {
+> +		compatible = "maxim,max31760";
+> +		reg = <0x50>;
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		maxim,fan-spin-up-enabled;
+> +
+> +		fan@0 {
+> +			reg = <0x00>;
+> +			label = "Left";
+> +		};
+> +		fan@1 {
+> +			reg = <0x01>;
+> +			label = "Right";
+> +		};
+> +		temp@1 {
+> +			reg = <0x01>;
+> +			label = "CPU";
+> +		};
+> +	};
+> -- 
+> 2.12.2.715.g7642488e1d-goog
+> 
