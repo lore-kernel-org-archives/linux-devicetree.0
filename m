@@ -1,48 +1,59 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH V4 1/9] PM / OPP: Allow OPP table to be used for
- power-domains
-Date: Wed, 19 Apr 2017 17:17:40 +0530
-Message-ID: <20170419114740.GD5436@vireshk-i7>
-References: <cover.1490001099.git.viresh.kumar@linaro.org>
- <e772e67a5445319bb8e0f312846ace666adc097f.1490001099.git.viresh.kumar@linaro.org>
- <0a7146f9-72f1-317c-3aab-770a72462968@arm.com>
- <20170413053736.GM5910@vireshk-i7>
- <3adbef6a-7b43-528f-e88f-c2121d30a5d3@arm.com>
- <20170417052758.GF28191@vireshk-i7>
- <95aa4b97-4e1a-13bb-f4d8-982b778012ba@arm.com>
+From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [RFC 2/2] mux: mmio-based syscon mux controller
+Date: Wed, 19 Apr 2017 13:50:13 +0200
+Message-ID: <1492602613.2970.92.camel@pengutronix.de>
+References: <20170413154812.19597-1-p.zabel@pengutronix.de>
+         <20170413154812.19597-2-p.zabel@pengutronix.de>
+         <58fd5844-f24a-37cc-be81-26a716251860@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <95aa4b97-4e1a-13bb-f4d8-982b778012ba@arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sudeep Holla <sudeep.holla@arm.com>
-Cc: Rafael Wysocki <rjw@rjwysocki.net>, ulf.hansson@linaro.org, Kevin Hilman <khilman@linaro.org>, Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@codeaurora.org>, linaro-kernel@lists.linaro.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, Vincent Guittot <vincent.guittot@linaro.org>, robh+dt@kernel.org, lina.iyer@linaro.org, rnayak@codeaurora.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <58fd5844-f24a-37cc-be81-26a716251860-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 18-04-17, 17:01, Sudeep Holla wrote:
-> Understood. I would incline towards reusing regulators we that's what is
+On Thu, 2017-04-13 at 18:09 -0700, Steve Longerbeam wrote:
+> 
+> On 04/13/2017 08:48 AM, Philipp Zabel wrote:
+> > This adds a driver for mmio-based syscon multiplexers controlled by a
+> > single bitfield in a syscon register range.
+> >
+> > Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> > ---
+> >   drivers/mux/Kconfig      |  13 +++++
+> >   drivers/mux/Makefile     |   1 +
+> >   drivers/mux/mux-syscon.c | 130 +++++++++++++++++++++++++++++++++++++++++++++++
+> >   3 files changed, 144 insertions(+)
+> >   create mode 100644 drivers/mux/mux-syscon.c
+> >
+> > diff --git a/drivers/mux/Kconfig b/drivers/mux/Kconfig
+> > index 86668b4d2fc52..a5e6a3b01ac24 100644
+> > --- a/drivers/mux/Kconfig
+> > +++ b/drivers/mux/Kconfig
+> > @@ -43,4 +43,17 @@ config MUX_GPIO
+> >   	  To compile the driver as a module, choose M here: the module will
+> >   	  be called mux-gpio.
+> >   
+> > +config MUX_SYSCON
+> 
+> my preference would be CONFIG_MUX_MMIO.
+> 
+> > +	tristate "MMIO bitfield-controlled Multiplexer"
+> 
+> "MMIO register bitfield-controlled Multiplexer"
+> 
+> The rest looks good to me.
 
-It can be just a regulator, but it can be anything else as well. That
-entity may have its own clock/volt/current tunables, etc.
+I'll change those. mux-syscon.c should probably be renamed to
+mux-mmio.c, too.
 
-> changed behind the scene. Calling this operating performance point
-> is misleading and doesn't align well with existing specs/features.
+regards
+Philipp
 
-Yeah, but there are no voltage levels available here and that doesn't
-fit as a regulator then.
-
-> Understood. We have exactly same thing with SCPI but it controls both
-> frequency and voltage referred as operating points. In general, this OPP
-> terminology is used in SCPI/ACPI/SCMI specifications as both frequency
-> and voltage control. I am bit worried that this binding might introduce
-> confusions on the definitions. But it can be reworded/renamed easily if
-> required.
-
-Yeah, so far we have been looking at OPPs as freq-voltage pairs ONLY
-and that is changing. I am not sure if it going in the wrong
-direction really. Without frequency also it is an operating point for
-the domain. Isn't it?
-
--- 
-viresh
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
