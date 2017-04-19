@@ -1,73 +1,121 @@
-From: Mauro Carvalho Chehab <mchehab@osg.samsung.com>
-Subject: Re: [PATCH] media: mtk-vcodec: remove informative log
-Date: Wed, 19 Apr 2017 07:56:43 -0300
-Message-ID: <20170419075643.0a04af21@vento.lan>
-References: <1491389669-32737-1-git-send-email-minghsiu.tsai@mediatek.com>
-        <1491390599.32502.1.camel@mtksdaap41>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [PATCH v13 02/10] dt-bindings: document devicetree bindings for
+ mux-controllers and gpio-mux
+Date: Wed, 19 Apr 2017 13:05:58 +0200
+Message-ID: <1492599958.2970.84.camel@pengutronix.de>
+References: <1492101794-13444-1-git-send-email-peda@axentia.se>
+         <1492101794-13444-3-git-send-email-peda@axentia.se>
+         <1492509996.2432.63.camel@pengutronix.de>
+         <17135062-e58a-b50e-ac85-5f0f0b73d958@axentia.se>
+         <1492593449.2970.24.camel@pengutronix.de>
+         <0cf0254e-0e43-37c3-f14d-eeffa7d7b9ba@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <1491390599.32502.1.camel@mtksdaap41>
-Sender: linux-media-owner@vger.kernel.org
-To: Tiffany Lin <tiffany.lin@mediatek.com>
-Cc: Minghsiu Tsai <minghsiu.tsai@mediatek.com>, Hans Verkuil <hans.verkuil@cisco.com>, daniel.thompson@linaro.org, Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Daniel Kurtz <djkurtz@chromium.org>, Pawel Osciak <posciak@chromium.org>, srv_heupstream@mediatek.com, Eddie Huang <eddie.huang@mediatek.com>, Yingjoe Chen <yingjoe.chen@mediatek.com>, Wu-Cheng Li <wuchengli@google.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org, linux-mediatek@lists.infradead.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <0cf0254e-0e43-37c3-f14d-eeffa7d7b9ba@axentia.se>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Peter Rosin <peda@axentia.se>
+Cc: linux-kernel@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>, Wolfram Sang <wsa@the-dreams.de>, linux-iio@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org, kernel@pengutronix.de, Paul Gortmaker <paul.gortmaker@windriver.com>, Rob Herring <robh+dt@kernel.org>, linux-i2c@vger.kernel.org, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Hartmut Knaack <knaack.h@gmx.de>, Colin Ian King <colin.king@canonical.com>, Andrew Morton <akpm@linux-foundation.org>, Jonathan Cameron <jic23@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Em Wed, 5 Apr 2017 19:09:59 +0800
-Tiffany Lin <tiffany.lin@mediatek.com> escreveu:
-
-> On Wed, 2017-04-05 at 18:54 +0800, Minghsiu Tsai wrote:
-> > Driver is stable. Remove DEBUG definition from driver.
+On Wed, 2017-04-19 at 12:41 +0200, Peter Rosin wrote:
+> On 2017-04-19 11:17, Philipp Zabel wrote:
+> > On Tue, 2017-04-18 at 15:36 +0200, Peter Rosin wrote:
+> >> If I got things wrong when I skimmed whatever I came across, and if the
+> >> mmio register is the only mux control option in the stars, it becomes
+> >> less obvious... It's of course still possible to hook into the mux
+> >> subsystem, but the benefit is questionable. And you do get the extra
+> >> device tree node. You could of course also implement a mux driver
+> >> outside of drivers/mux and thus make use of the mux api, but it's tiny
+> >> and any benefit is truly small.
 > > 
-> > There are debug message in /var/log/messages if DEBUG is defined,
-> > such as:
-> > [MTK_V4L2] level=0 fops_vcodec_open(),170: decoder capability 0
-> > [MTK_V4L2] level=0 fops_vcodec_open(),177: 16000000.vcodec decoder [0]
-> > [MTK_V4L2] level=0 fops_vcodec_release(),200: [0] decoder
-> > 
-> > Signed-off-by: Minghsiu Tsai <minghsiu.tsai@mediatek.com>  
-> Acked-by:Tiffany Lin <Tiffany.lin@mediatek.com>
+> > What I wondered mostly is whether it would be a good idea to move the
+> > OF-graph ports into the mux controller node, and let the video capture
+> > device be the consumer of the mux.
+> > But this wouldn't fit well with the clear split between the mux
+> > controller and the actual mux hardware in the mux DT bindings.
 > 
-> > ---
-> >  drivers/media/platform/mtk-vcodec/mtk_vcodec_util.h | 1 -
-> >  1 file changed, 1 deletion(-)
-> > 
-> > diff --git a/drivers/media/platform/mtk-vcodec/mtk_vcodec_util.h b/drivers/media/platform/mtk-vcodec/mtk_vcodec_util.h
-> > index 7d55975..1248083 100644
-> > --- a/drivers/media/platform/mtk-vcodec/mtk_vcodec_util.h
-> > +++ b/drivers/media/platform/mtk-vcodec/mtk_vcodec_util.h
-> > @@ -31,7 +31,6 @@ struct mtk_vcodec_mem {
-> >  extern int mtk_v4l2_dbg_level;
-> >  extern bool mtk_vcodec_dbg;
-> >  
-> > -#define DEBUG	1
-> >  
-> >  #if defined(DEBUG)
-> >    
+> I have tried to do something similar. I think. The current
+> drivers/i2c/muxes/i2c-mux-gpio.c is a good candidate for the same thing
+> IIUC.
+>
+> That dedicated driver and the general purpose i2c mux driver does pretty
+> much the same thing with these two DT snippets:
+> 
+> Dedicated i2c-mux-gpio DT snippet:
+> 
+> 	i2c-mux {
+> 		compatible = "i2c-mux-gpio";
+> 		i2c-parent = <&i2c1>;
+> 
+> 		mux-gpios = <&gpio1 22 0 &gpio1 23 0>;
+> 
+> 		#address-cells = <1>;
+> 		#size-cells = <0>;
+> 
+> 		i2c@1 {
+> 			...
+> 		};
+> 
+> 		i2c@3 {
+> 			...
+> 		};
+> 	};
+> 
+> General purpose mux DT snippet:
+> 
+> 	mux: mux-controller {
+> 		compatible = "gpio-mux";
+> 		#mux-control-cells = <0>;
+> 
+> 		mux-gpios = <&gpio1 22 0 &gpio1 23 0>;
+> 	};
+> 
+> 	i2c-mux {
+> 		compatible = "i2c-mux";
+> 		i2c-parent = <&i2c1>;
+> 
+> 		mux-controls = <&mux>;
+> 
+> 		#address-cells = <1>;
+> 		#size-cells = <0>;
+> 
+> 		i2c@1 {
+> 			...
+> 		};
+> 
+> 		i2c@3 {
+> 			...
+> 		};
+> 	};
 
-After this patch, building the Kernel with W=1 now shows warnings:
+Yes, replace i2c-mux with video-mux and the i2c@x nodes with port@x
+nodes, and this is very close to what I am thinking about.
 
-drivers/media/platform/mtk-vcodec/mtk_vcodec_dec_pm.c: In function 'mtk_vcodec_dec_pw_on':
-drivers/media/platform/mtk-vcodec/mtk_vcodec_dec_pm.c:114:51: warning: suggest braces around empty body in an 'if' statement [-Wempty-body]
-   mtk_v4l2_err("pm_runtime_get_sync fail %d", ret);
-                                                   ^
+> I would love to find a way to cleanly get the mux framework to handle
+> the first DT as well, and thus being able to obsolete the dedicated
+> i2c-mux-gpio driver. I have not figured out how to accomplish that
+> without abusing the driver-model to a point that it's not working.
+> Help with that task is dearly appreciated.
+> 
+> What I have stumbled on, I think, is that two drivers needs to be
+> instantiated from the same DT node. At the same time, I need the
+> mux framework to handle the current out-of-node thing with a
+> phandle as well, so that several mux consumers can share a common
+> mux controller. My understanding of these matters are apparently not
+> deep enough...
 
-I wrote a patch fixing it, as this is really a trivial issue.
+Not necessarily, if the framework could export a function to create a
+gpio/mmio mux_chip on a given device and the gpio-mux and *-mux-gpio
+drivers just reuse that.
 
-Yet, after that, this one still remains:
+> I think you would like a DT that looks more like the first DT
+> snippet but still enjoy the flexibility of the mux framework and w/o
+> implementing a (another) full muxing sub-sub-system like the i2c
+> sub-system has done. Correct?
 
+Correct.
 
-drivers/media/platform/mtk-vcodec/mtk_vcodec_dec.c: In function 'mtk_vdec_pic_info_update':
-drivers/media/platform/mtk-vcodec/mtk_vcodec_dec.c:284:6: warning: variable 'ret' set but not used [-Wunused-but-set-variable]
-  int ret;
-      ^~~
-
-
-Shouldn't be mtk_vdec_pic_info_update() returning an error code?
-
-
-Also, IMHO, at least errors should be shown at dmesg.
-
-Thanks,
-Mauro
+regards
+Philipp
