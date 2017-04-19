@@ -1,49 +1,35 @@
-From: Guillaume Tucker <guillaume.tucker@collabora.com>
-Subject: [PATCH v3 3/5] ARM: dts: rockchip: enable ARM Mali GPU on
- rk3288-rock2-som
-Date: Wed, 19 Apr 2017 09:06:19 +0100
-Message-ID: <11c4daa7aa88eb8c960ef02e88258ec67f58f0ea.1492588180.git.guillaume.tucker@collabora.com>
-References: <cover.1492588180.git.guillaume.tucker@collabora.com>
+From: Eugen Hristev <eugen.hristev-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
+Subject: [PATCH 0/3] iio: adc: sama5d2_adc hw triggers and buffers
+Date: Wed, 19 Apr 2017 11:20:42 +0300
+Message-ID: <1492590045-17329-1-git-send-email-eugen.hristev@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <cover.1492588180.git.guillaume.tucker@collabora.com>
-In-Reply-To: <cover.1492588180.git.guillaume.tucker@collabora.com>
-References: <cover.1492588180.git.guillaume.tucker@collabora.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, =?UTF-8?q?Heiko=20St=C3=BCbner?= <heiko@sntech.de>, Neil Armstrong <narmstrong@baylibre.com>
-Cc: devicetree@vger.kernel.org, Guillaume Tucker <guillaume.tucker@collabora.com>, Sjoerd Simons <sjoerd.simons@collabora.com>, Wookey <wookey@wookware.org>, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, John Reitan <john.reitan@arm.com>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: nicolas.ferre-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: ludovic.desroches-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, eugen.hristev-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add reference to the Mali GPU device tree node on the
-rk3288-rock2-som platform.  Tested on a Radxa Rock2 Square board.
+This patch implements the hardware triggers support and
+buffer management for sama5d2.
+The DT modifications ( [PATCH 1/3] ARM: dts: at91: sama5d2_xplained:
+enable ADTRG pin) are for demonstration purposes of the feature,
+setting the pinctrl for the ADC hw trigger pin,should go through at91
+maintainers.
+I also increased the buffer size for the trigger name in the generic_buffer
+application to cope with longer names and avoid stack smashing problem.
+This is in patch [PATCH 3/3] iio: tools: generic_buffer: increase trigger length
 
-Signed-off-by: Guillaume Tucker <guillaume.tucker@collabora.com>
----
- arch/arm/boot/dts/rk3288-rock2-som.dtsi | 5 +++++
- 1 file changed, 5 insertions(+)
 
-diff --git a/arch/arm/boot/dts/rk3288-rock2-som.dtsi b/arch/arm/boot/dts/rk3288-rock2-som.dtsi
-index 1c0bbc9b928b..f694867fa46a 100644
---- a/arch/arm/boot/dts/rk3288-rock2-som.dtsi
-+++ b/arch/arm/boot/dts/rk3288-rock2-som.dtsi
-@@ -301,3 +301,8 @@
- &wdt {
- 	status = "okay";
- };
-+
-+&gpu {
-+	mali-supply = <&vdd_gpu>;
-+	status = "okay";
-+};
+Eugen Hristev (3):
+  ARM: dts: at91: sama5d2_xplained: enable ADTRG pin
+  iio: adc: at91-sama5d2_adc: add hw trigger and buffer support
+  iio: tools: generic_buffer: increase trigger length
+
+ arch/arm/boot/dts/at91-sama5d2_xplained.dts |  16 ++-
+ drivers/iio/adc/at91-sama5d2_adc.c          | 208 +++++++++++++++++++++++++++-
+ tools/iio/iio_utils.h                       |   2 +-
+ 3 files changed, 220 insertions(+), 6 deletions(-)
+
 -- 
-2.11.0
+2.7.4
