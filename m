@@ -1,36 +1,56 @@
-From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] mtd: use dev_of_node helper in mtd_get_of_node
-Date: Wed, 19 Apr 2017 11:39:10 -0700
-Message-ID: <20170419183910.GB20555@google.com>
-References: <20170331091148.19816-1-zajec5@gmail.com>
- <20170331114950.726c9cb7@bbrezillon>
+From: Tyrel Datwyler <tyreld-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH] of: introduce event tracepoints for dynamic device_node
+ lifecyle
+Date: Wed, 19 Apr 2017 11:45:07 -0700
+Message-ID: <641aa8ee-9b54-716a-77a1-076cafb95e3a@linux.vnet.ibm.com>
+References: <1492475525-10827-1-git-send-email-tyreld@linux.vnet.ibm.com>
+ <58F6AA35.2040902@gmail.com> <58F6C088.8020304@gmail.com>
+ <20170418224953.685943a3@grimm.local.home>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170331114950.726c9cb7@bbrezillon>
+In-Reply-To: <20170418224953.685943a3-2kNGR76GQU9OHLTnHDQRgA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+To: Steven Rostedt <rostedt-nx8X9YLhiw1AfugRpC6u6w@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Tyrel Datwyler <tyreld-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, nfont-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org, mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org, mingo-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 31, 2017 at 11:49:50AM +0200, Boris Brezillon wrote:
-> On Fri, 31 Mar 2017 11:11:48 +0200
-> Rafał Miłecki <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+On 04/18/2017 07:49 PM, Steven Rostedt wrote:
+> On Tue, 18 Apr 2017 18:42:32 -0700
+> Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
 > 
-> > From: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
-> > 
-> > This allows better compile-time optimizations with CONFIG_OF disabled.
-> > 
-> > Signed-off-by: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+>> And of course the other issue with using tracepoints is the extra space
+>> required to hold the tracepoint info.  With the pr_debug() approach, the
+>> space usage can be easily removed for a production kernel via a config
+>> option.
 > 
-> Not sure we care about such micro-optimizations, but it shouldn't hurst
-> so,
-> 
-> Acked-by: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> Now if you are saying you want to be able to enable debugging without
+> the tracing infrastructure I would agree. As the tracing infrastructure
+> is large. But I'm working on shrinking it more.
 
-Applied
+The primary consumers of OF_DYNAMIC seem to be pseries and powernv where
+we are generally going to see the trace infrastructure enabled by
+default in production.
+
+-Tyrel
+
+> 
+>>
+>> Tracepoints are wonderful technology, but not always the proper tool to
+>> use for debug info.
+> 
+> But if you are going to have tracing enabled regardless, adding a few
+> more tracepoints isn't going to make the difference.
+> 
+> -- Steve
+> 
+>>
+>>> If Rob wants to convert printk() style data to trace data (and I can't
+>>> convince him otherwise) then I will have further comments on this specific
+>>> patch.
+>>>
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
