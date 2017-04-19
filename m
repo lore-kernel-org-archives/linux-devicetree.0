@@ -1,63 +1,68 @@
-From: Leo Yan <leo.yan@linaro.org>
-Subject: Re: [PATCH v6 6/8] coresight: add support for CPU debug module
-Date: Wed, 19 Apr 2017 23:07:53 +0800
-Message-ID: <20170419150753.GA23319@leoy-linaro>
-References: <1491485461-22800-1-git-send-email-leo.yan@linaro.org>
- <1491485461-22800-7-git-send-email-leo.yan@linaro.org>
- <5c5cb6f8-1dcb-8a9d-1605-c006656005eb@arm.com>
- <20170419142812.GA16160@leoy-linaro>
- <f42088f6-aa53-06b1-b332-22198744ab7a@arm.com>
+From: Joao Pinto <Joao.Pinto@synopsys.com>
+Subject: Re: [PATCH net-next v3] bindings: net: stmmac: add missing note about
+ LPI interrupt
+Date: Wed, 19 Apr 2017 16:22:10 +0100
+Message-ID: <d721ecfb-0c65-d654-3f36-75083d8c058a@synopsys.com>
+References: <20170418123955.21335-1-niklass@axis.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <f42088f6-aa53-06b1-b332-22198744ab7a@arm.com>
+In-Reply-To: <20170418123955.21335-1-niklass@axis.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Suzuki K Poulose <Suzuki.Poulose@arm.com>
-Cc: Jonathan Corbet <corbet@lwn.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Wei Xu <xuwei5@hisilicon.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Mathieu Poirier <mathieu.poirier@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, Mike Leach <mike.leach@linaro.org>, Sudeep Holla <sudeep.holla@arm.com>
+To: Niklas Cassel <niklas.cassel@axis.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "David S. Miller" <davem@davemloft.net>, Joao Pinto <Joao.Pinto@synopsys.com>, Niklas Cassel <niklass@axis.com>, Alexandre TORGUE <alexandre.torgue@st.com>, Giuseppe CAVALLARO <peppe.cavallaro@st.com>, Thierry Reding <treding@nvidia.com>, Eric Engestrom <eric@engestrom.ch>
+Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 19, 2017 at 03:32:39PM +0100, Suzuki K Poulose wrote:
+Hi Niklas,
 
-[...]
+Às 1:39 PM de 4/18/2017, Niklas Cassel escreveu:
+> From: Niklas Cassel <niklas.cassel@axis.com>
+> 
+> The hardware has a LPI interrupt.
+> There is already code in the stmmac driver to parse and handle the
+> interrupt. However, this information was missing from the DT binding.
+> 
+> At the same time, improve the description of the existing interrupts.
+> 
+> Signed-off-by: Niklas Cassel <niklas.cassel@axis.com>
+> ---
+>  Documentation/devicetree/bindings/net/stmmac.txt | 13 ++++++++-----
+>  1 file changed, 8 insertions(+), 5 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/net/stmmac.txt b/Documentation/devicetree/bindings/net/stmmac.txt
+> index f652b0c384ce..c3a7be6615c5 100644
+> --- a/Documentation/devicetree/bindings/net/stmmac.txt
+> +++ b/Documentation/devicetree/bindings/net/stmmac.txt
+> @@ -7,9 +7,12 @@ Required properties:
+>  - interrupt-parent: Should be the phandle for the interrupt controller
+>    that services interrupts for this device
+>  - interrupts: Should contain the STMMAC interrupts
+> -- interrupt-names: Should contain the interrupt names "macirq"
+> -  "eth_wake_irq" if this interrupt is supported in the "interrupts"
+> -  property
+> +- interrupt-names: Should contain a list of interrupt names corresponding to
+> +	the interrupts in the interrupts property, if available.
+> +	Valid interrupt names are:
+> +  - "macirq" (combined signal for various interrupt events)
+> +  - "eth_wake_irq" (the interrupt to manage the remote wake-up packet detection)
+> +  - "eth_lpi" (the interrupt that occurs when Tx or Rx enters/exits LPI state)
+>  - phy-mode: See ethernet.txt file in the same directory.
+>  - snps,reset-gpio 	gpio number for phy reset.
+>  - snps,reset-active-low boolean flag to indicate if phy reset is active low.
+> @@ -152,8 +155,8 @@ Examples:
+>  		compatible = "st,spear600-gmac";
+>  		reg = <0xe0800000 0x8000>;
+>  		interrupt-parent = <&vic1>;
+> -		interrupts = <24 23>;
+> -		interrupt-names = "macirq", "eth_wake_irq";
+> +		interrupts = <24 23 22>;
+> +		interrupt-names = "macirq", "eth_wake_irq", "eth_lpi";
+>  		mac-address = [000000000000]; /* Filled in by U-Boot */
+>  		max-frame-size = <3800>;
+>  		phy-mode = "gmii";
+> 
 
-> >>>+static int debug_probe(struct amba_device *adev, const struct amba_id *id)
-> >>>+{
-> >>>+	void __iomem *base;
-> >>>+	struct device *dev = &adev->dev;
-> >>>+	struct debug_drvdata *drvdata;
-> >>>+	struct resource *res = &adev->res;
-> >>>+	struct device_node *np = adev->dev.of_node;
-> >>>+	int ret;
-> >>>+
-> >>>+	drvdata = devm_kzalloc(dev, sizeof(*drvdata), GFP_KERNEL);
-> >>>+	if (!drvdata)
-> >>>+		return -ENOMEM;
-> >>>+
-> >>>+	drvdata->cpu = np ? of_coresight_get_cpu(np) : 0;
-> >>>+	if (per_cpu(debug_drvdata, drvdata->cpu)) {
-> >>>+		dev_err(dev, "CPU%d drvdata has been initialized\n",
-> >>>+			drvdata->cpu);
-> >>
-> >>May be we could warn about a possible issue in the DT ?
-> >
-> >So can I understand the suggestion is to add warning in function
-> >of_coresight_get_cpu() when cannot find CPU number, and here directly
-> >bail out?
-> 
-> No. One could have single CPU DT, where he doesn't need to provide the CPU number.
-> Hence, it doesn't make sense to WARN  in of_coresight_get_cpu().
-> 
-> But when we hit the case above, we find that the some node was registered for
-> the given CPU (be it 0 or any other), which is definitely an error in DT. Due to
-> 
-> 1) Hasn't specified the CPU number for more than one node
-> 
-> OR
-> 
-> 2) CPU number duplicated in the more than one nodes.
+Acked-By: Joao Pinto <jpinto@synopsys.com>
 
-Thanks for explaination. It's clear for me now.
-
-> Cheers
-> Suzuki
+Regards!
