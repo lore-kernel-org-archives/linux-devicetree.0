@@ -1,210 +1,777 @@
-From: Quentin Schulz <quentin.schulz@free-electrons.com>
-Subject: Re: [PATCH v2] ARM: dts: at91: sama5d2: add m_can nodes
-Date: Wed, 19 Apr 2017 15:07:42 +0200
-Message-ID: <75f97593-1c22-c116-3321-9c87d6eb8a1d@free-electrons.com>
-References: <20170419084606.27543-1-wenyou.yang@atmel.com>
+From: Chunyan Zhang <zhang.lyra-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH V5 1/4] arm64: dts: Add basic DT to support Spreadtrum's SP9860G
+Date: Wed, 19 Apr 2017 21:12:35 +0800
+Message-ID: <CAAfSe-sk+Eq-KU_r63mn486oFOA5Jnf8d8cSDeXYkJULvsXpbg@mail.gmail.com>
+References: <1490594208-26897-1-git-send-email-chunyan.zhang@spreadtrum.com> <1490599960-27330-1-git-send-email-chunyan.zhang@spreadtrum.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-can-owner@vger.kernel.org>
-In-Reply-To: <20170419084606.27543-1-wenyou.yang@atmel.com>
-Sender: linux-can-owner@vger.kernel.org
-To: Wenyou Yang <wenyou.yang@atmel.com>, Nicolas.Ferre@Microchip.com, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>
-Cc: devicetree@vger.kernel.org, Wenyou Yang <wenyou.yang@microchip.com>, Oliver Hartkopp <socketcan@hartkopp.net>, linux-kernel@vger.kernel.org, linux-can@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1490599960-27330-1-git-send-email-chunyan.zhang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, =?UTF-8?B?T3Jzb24gWmhhaSAo57+f5LqsKQ==?= <orson.zhai-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Chunyan Zhang <chunyan.zhang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Arnd, Olof
 
-On 19/04/2017 10:46, Wenyou Yang wrote:
-> Add nodes to support the Controller Area Network(M_CAN) on SAMA5D2.
-> The version of M_CAN IP core is 3.1.0 (CREL = 0x31040730).
-> 
-> As said in SAMA5D2 datasheet, the CAN clock is recommended to use
-> frequencies of 20, 40 or 80 MHz. To achieve these frequencies,
-> PMC GCLK3 must select the UPLLCK(480 MHz) as source clock and
-> divide by 24, 12, or 6. So, the "assigned-clock-rates" property
-> has three options: 20000000, 40000000, and 80000000.
-> The "assigned-clock-parents" property should be referred to utmi
-> fixedly.
-> 
-> The MSBs [bits 31:16] of the CAN Message RAM for CAN0 and CAN1 are
-> default configured in 0x00200000. To avoid conflict with SRAM map
-> for PM, change them to 0x00210000 in the AT91Bootstrap via setting
-> the CAN Memories Address-based Register(SFR_CAN) of SFR.
-> 
-> Signed-off-by: Wenyou Yang <wenyou.yang@atmel.com>
-> ---
-> The patch is tested on SAMA5D2 Xplained and based on the patch set,
->  1. [PATCH v4 1/7] can: m_can: Disabled Interrupt Line 1
->     http://marc.info/?l=linux-can&m=149165343604033&w=2
-> 
-> Changes in v2:
->  - Configures 10 TX Event FIFO elements and 10 TX Buffers/FIFO slots,
->    because the TXE FIFO is needed to be configured.
->  - Configure the offset of Message RAM for CAN1 followed from CAN0's.
-> 
-
-
-I've tested with the v4 patch series of Mario Hüttel on a SAMA5D2
-Xplained and did the following:
-
-# ip link set can0 down
-# ip link set can0 up type can bitrate 125000
-# cansend can0 500#1E.10.10
-
-Last line at least 10 times, every message is received on my computer.
-Same with can1. Tested with candump can0 as well, everything looks fine.
-
-Tested-by: Quentin Schulz <quentin.schulz@free-electrons.com>
+Could you please take this patch through arm-soc git if there are no
+further comments? (The three other patches in this series have been
+taken by Greg.)
 
 Thanks,
-Quentin
+Chunyan
 
-
->  arch/arm/boot/dts/at91-sama5d2_xplained.dts | 24 +++++++++++++
->  arch/arm/boot/dts/sama5d2.dtsi              | 56 +++++++++++++++++++++++++++++
->  2 files changed, 80 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/at91-sama5d2_xplained.dts b/arch/arm/boot/dts/at91-sama5d2_xplained.dts
-> index 9f7f8a7d8ff9..2f19b08dc226 100644
-> --- a/arch/arm/boot/dts/at91-sama5d2_xplained.dts
-> +++ b/arch/arm/boot/dts/at91-sama5d2_xplained.dts
-> @@ -257,6 +257,12 @@
->  				status = "okay";
->  			};
->  
-> +			can0: can@f8054000 {
-> +				pinctrl-names = "default";
-> +				pinctrl-0 = <&pinctrl_can0_default>;
-> +				status = "okay";
-> +			};
+On 27 March 2017 at 15:32, Chunyan Zhang <chunyan.zhang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org> wrote:
+> From: Orson Zhai <orson.zhai-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
+>
+> SC9860G is a 8 cores of A53 SoC with 4G LTE support SoC from Spreadtrum.
+>
+> According to regular hierarchy of sprd dts, whale2.dtsi contains SoC
+> peripherals IP nodes, sc9860.dtsi contains stuff related to ARM core stuff
+> and sp9860g dts is for the board level.
+>
+> Signed-off-by: Orson Zhai <orson.zhai-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
+> Signed-off-by: Chunyan Zhang <chunyan.zhang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
+> Reviewed-by: Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+>  arch/arm64/boot/dts/sprd/Makefile         |   3 +-
+>  arch/arm64/boot/dts/sprd/sc9860.dtsi      | 569 ++++++++++++++++++++++++++++++
+>  arch/arm64/boot/dts/sprd/sp9860g-1h10.dts |  56 +++
+>  arch/arm64/boot/dts/sprd/whale2.dtsi      |  71 ++++
+>  4 files changed, 698 insertions(+), 1 deletion(-)
+>  create mode 100644 arch/arm64/boot/dts/sprd/sc9860.dtsi
+>  create mode 100644 arch/arm64/boot/dts/sprd/sp9860g-1h10.dts
+>  create mode 100644 arch/arm64/boot/dts/sprd/whale2.dtsi
+>
+> diff --git a/arch/arm64/boot/dts/sprd/Makefile b/arch/arm64/boot/dts/sprd/Makefile
+> index b658c5e..f0535e6 100644
+> --- a/arch/arm64/boot/dts/sprd/Makefile
+> +++ b/arch/arm64/boot/dts/sprd/Makefile
+> @@ -1,4 +1,5 @@
+> -dtb-$(CONFIG_ARCH_SPRD) += sc9836-openphone.dtb
+> +dtb-$(CONFIG_ARCH_SPRD) += sc9836-openphone.dtb \
+> +                       sp9860g-1h10.dtb
+>
+>  always         := $(dtb-y)
+>  subdir-y       := $(dts-dirs)
+> diff --git a/arch/arm64/boot/dts/sprd/sc9860.dtsi b/arch/arm64/boot/dts/sprd/sc9860.dtsi
+> new file mode 100644
+> index 0000000..7b7d8ce
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/sprd/sc9860.dtsi
+> @@ -0,0 +1,569 @@
+> +/*
+> + * Spreadtrum SC9860 SoC
+> + *
+> + * Copyright (C) 2016, Spreadtrum Communications Inc.
+> + *
+> + * SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+> + */
 > +
->  			uart3: serial@fc008000 {
->  				atmel,use-dma-rx;
->  				atmel,use-dma-tx;
-> @@ -321,6 +327,18 @@
->  					bias-disable;
->  				};
->  
-> +				pinctrl_can0_default: can0_default {
-> +					pinmux = <PIN_PC10__CANTX0>,
-> +						 <PIN_PC11__CANRX0>;
-> +					bias-disable;
-> +				};
+> +#include <dt-bindings/interrupt-controller/arm-gic.h>
+> +#include "whale2.dtsi"
 > +
-> +				pinctrl_can1_default: can1_default {
-> +					pinmux = <PIN_PC26__CANTX1>,
-> +						 <PIN_PC27__CANRX1>;
-> +					bias-disable;
-> +				};
+> +/ {
+> +       cpus {
+> +               #address-cells = <2>;
+> +               #size-cells = <0>;
 > +
->  				pinctrl_charger_chglev: charger_chglev {
->  					pinmux = <PIN_PA12__GPIO>;
->  					bias-disable;
-> @@ -468,6 +486,12 @@
->  				};
->  
->  			};
+> +               cpu-map {
+> +                       cluster0 {
+> +                               core0 {
+> +                                       cpu = <&CPU0>;
+> +                               };
+> +                               core1 {
+> +                                       cpu = <&CPU1>;
+> +                               };
+> +                               core2 {
+> +                                       cpu = <&CPU2>;
+> +                               };
+> +                               core3 {
+> +                                       cpu = <&CPU3>;
+> +                               };
+> +                       };
 > +
-> +			can1: can@fc050000 {
-> +				pinctrl-names = "default";
-> +				pinctrl-0 = <&pinctrl_can1_default>;
-> +				status = "okay";
-> +			};
->  		};
->  	};
->  
-> diff --git a/arch/arm/boot/dts/sama5d2.dtsi b/arch/arm/boot/dts/sama5d2.dtsi
-> index 22332be72140..383ca9307edf 100644
-> --- a/arch/arm/boot/dts/sama5d2.dtsi
-> +++ b/arch/arm/boot/dts/sama5d2.dtsi
-> @@ -762,6 +762,18 @@
->  						atmel,clk-output-range = <0 83000000>;
->  					};
->  
-> +					can0_clk: can0_clk {
-> +						#clock-cells = <0>;
-> +						reg = <56>;
-> +						atmel,clk-output-range = <0 83000000>;
-> +					};
+> +                       cluster1 {
+> +                               core0 {
+> +                                       cpu = <&CPU4>;
+> +                               };
+> +                               core1 {
+> +                                       cpu = <&CPU5>;
+> +                               };
+> +                               core2 {
+> +                                       cpu = <&CPU6>;
+> +                               };
+> +                               core3 {
+> +                                       cpu = <&CPU7>;
+> +                               };
+> +                       };
+> +               };
 > +
-> +					can1_clk: can1_clk {
-> +						#clock-cells = <0>;
-> +						reg = <57>;
-> +						atmel,clk-output-range = <0 83000000>;
-> +					};
+> +               CPU0: cpu@530000 {
+> +                       device_type = "cpu";
+> +                       compatible = "arm,cortex-a53", "arm,armv8";
+> +                       reg = <0x0 0x530000>;
+> +                       enable-method = "psci";
+> +                       cpu-idle-states = <&CORE_PD &CLUSTER_PD>;
+> +               };
 > +
->  					classd_clk: classd_clk {
->  						#clock-cells = <0>;
->  						reg = <59>;
-> @@ -890,6 +902,18 @@
->  						#clock-cells = <0>;
->  						reg = <55>;
->  					};
+> +               CPU1: cpu@530001 {
+> +                       device_type = "cpu";
+> +                       compatible = "arm,cortex-a53", "arm,armv8";
+> +                       reg = <0x0 0x530001>;
+> +                       enable-method = "psci";
+> +                       cpu-idle-states = <&CORE_PD &CLUSTER_PD>;
+> +               };
 > +
-> +					can0_gclk: can0_gclk {
-> +						#clock-cells = <0>;
-> +						reg = <56>;
-> +						atmel,clk-output-range = <0 80000000>;
-> +					};
+> +               CPU2: cpu@530002 {
+> +                       device_type = "cpu";
+> +                       compatible = "arm,cortex-a53", "arm,armv8";
+> +                       reg = <0x0 0x530002>;
+> +                       enable-method = "psci";
+> +                       cpu-idle-states = <&CORE_PD &CLUSTER_PD>;
+> +               };
 > +
-> +					can1_gclk: can1_gclk {
-> +						#clock-cells = <0>;
-> +						reg = <57>;
-> +						atmel,clk-output-range = <0 80000000>;
-> +					};
->  				};
->  			};
->  
-> @@ -1144,6 +1168,22 @@
->  				clocks = <&clk32k>;
->  			};
->  
-> +			can0: can@f8054000 {
-> +				compatible = "bosch,m_can";
-> +				reg = <0xf8054000 0x4000>, <0x210000 0x4000>;
-> +				reg-names = "m_can", "message_ram";
-> +				interrupts = <56 IRQ_TYPE_LEVEL_HIGH 7>,
-> +					     <64 IRQ_TYPE_LEVEL_HIGH 7>;
-> +				interrupt-names = "int0", "int1";
-> +				clocks = <&can0_clk>, <&can0_gclk>;
-> +				clock-names = "hclk", "cclk";
-> +				assigned-clocks = <&can0_gclk>;
-> +				assigned-clock-parents = <&utmi>;
-> +				assigned-clock-rates = <40000000>;
-> +				bosch,mram-cfg = <0x0 0 0 32 0 0 10 10>;
-> +				status = "disabled";
-> +			};
+> +               CPU3: cpu@530003 {
+> +                       device_type = "cpu";
+> +                       compatible = "arm,cortex-a53", "arm,armv8";
+> +                       reg = <0x0 0x530003>;
+> +                       enable-method = "psci";
+> +                       cpu-idle-states = <&CORE_PD &CLUSTER_PD>;
+> +               };
 > +
->  			spi1: spi@fc000000 {
->  				compatible = "atmel,at91rm9200-spi";
->  				reg = <0xfc000000 0x100>;
-> @@ -1305,6 +1345,22 @@
->  				status = "okay";
->  			};
->  
-> +			can1: can@fc050000 {
-> +				compatible = "bosch,m_can";
-> +				reg = <0xfc050000 0x4000>, <0x210000 0x4000>;
-> +				reg-names = "m_can", "message_ram";
-> +				interrupts = <57 IRQ_TYPE_LEVEL_HIGH 7>,
-> +					     <65 IRQ_TYPE_LEVEL_HIGH 7>;
-> +				interrupt-names = "int0", "int1";
-> +				clocks = <&can1_clk>, <&can1_gclk>;
-> +				clock-names = "hclk", "cclk";
-> +				assigned-clocks = <&can1_gclk>;
-> +				assigned-clock-parents = <&utmi>;
-> +				assigned-clock-rates = <40000000>;
-> +				bosch,mram-cfg = <0x1100 0 0 32 0 0 10 10>;
-> +				status = "disabled";
-> +			};
+> +               CPU4: cpu@530100 {
+> +                       device_type = "cpu";
+> +                       compatible = "arm,cortex-a53", "arm,armv8";
+> +                       reg = <0x0 0x530100>;
+> +                       enable-method = "psci";
+> +                       cpu-idle-states = <&CORE_PD &CLUSTER_PD>;
+> +               };
 > +
->  			chipid@fc069000 {
->  				compatible = "atmel,sama5d2-chipid";
->  				reg = <0xfc069000 0x8>;
-> 
-
--- 
-Quentin Schulz, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+> +               CPU5: cpu@530101 {
+> +                       device_type = "cpu";
+> +                       compatible = "arm,cortex-a53", "arm,armv8";
+> +                       reg = <0x0 0x530101>;
+> +                       enable-method = "psci";
+> +                       cpu-idle-states = <&CORE_PD &CLUSTER_PD>;
+> +               };
+> +
+> +               CPU6: cpu@530102 {
+> +                       device_type = "cpu";
+> +                       compatible = "arm,cortex-a53", "arm,armv8";
+> +                       reg = <0x0 0x530102>;
+> +                       enable-method = "psci";
+> +                       cpu-idle-states = <&CORE_PD &CLUSTER_PD>;
+> +               };
+> +
+> +               CPU7: cpu@530103 {
+> +                       device_type = "cpu";
+> +                       compatible = "arm,cortex-a53", "arm,armv8";
+> +                       reg = <0x0 0x530103>;
+> +                       enable-method = "psci";
+> +                       cpu-idle-states = <&CORE_PD &CLUSTER_PD>;
+> +               };
+> +       };
+> +
+> +       idle-states{
+> +               entry-method = "arm,psci";
+> +
+> +               CORE_PD: core_pd {
+> +                       compatible = "arm,idle-state";
+> +                       entry-latency-us = <1000>;
+> +                       exit-latency-us = <700>;
+> +                       min-residency-us = <2500>;
+> +                       local-timer-stop;
+> +                       arm,psci-suspend-param = <0x00010002>;
+> +               };
+> +
+> +               CLUSTER_PD: cluster_pd {
+> +                       compatible = "arm,idle-state";
+> +                       entry-latency-us = <1000>;
+> +                       exit-latency-us = <1000>;
+> +                       min-residency-us = <3000>;
+> +                       local-timer-stop;
+> +                       arm,psci-suspend-param = <0x01010003>;
+> +               };
+> +       };
+> +
+> +       gic: interrupt-controller@12001000 {
+> +               compatible = "arm,gic-400";
+> +               reg = <0 0x12001000 0 0x1000>,
+> +                     <0 0x12002000 0 0x2000>,
+> +                     <0 0x12004000 0 0x2000>,
+> +                     <0 0x12006000 0 0x2000>;
+> +               #interrupt-cells = <3>;
+> +               interrupt-controller;
+> +               interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(8)
+> +                                       | IRQ_TYPE_LEVEL_HIGH)>;
+> +       };
+> +
+> +       psci {
+> +               compatible = "arm,psci-0.2";
+> +               method = "smc";
+> +       };
+> +
+> +       timer {
+> +               compatible = "arm,armv8-timer";
+> +               interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(8)
+> +                                        | IRQ_TYPE_LEVEL_LOW)>,
+> +                            <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(8)
+> +                                        | IRQ_TYPE_LEVEL_LOW)>,
+> +                            <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(8)
+> +                                        | IRQ_TYPE_LEVEL_LOW)>,
+> +                            <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(8)
+> +                                        | IRQ_TYPE_LEVEL_LOW)>;
+> +       };
+> +
+> +       pmu {
+> +               compatible = "arm,cortex-a53-pmu", "arm,armv8-pmuv3";
+> +               interrupts = <GIC_SPI 122 IRQ_TYPE_LEVEL_HIGH>,
+> +                            <GIC_SPI 123 IRQ_TYPE_LEVEL_HIGH>,
+> +                            <GIC_SPI 124 IRQ_TYPE_LEVEL_HIGH>,
+> +                            <GIC_SPI 125 IRQ_TYPE_LEVEL_HIGH>,
+> +                            <GIC_SPI 154 IRQ_TYPE_LEVEL_HIGH>,
+> +                            <GIC_SPI 155 IRQ_TYPE_LEVEL_HIGH>,
+> +                            <GIC_SPI 156 IRQ_TYPE_LEVEL_HIGH>,
+> +                            <GIC_SPI 157 IRQ_TYPE_LEVEL_HIGH>;
+> +               interrupt-affinity = <&CPU0>,
+> +                                    <&CPU1>,
+> +                                    <&CPU2>,
+> +                                    <&CPU3>,
+> +                                    <&CPU4>,
+> +                                    <&CPU5>,
+> +                                    <&CPU6>,
+> +                                    <&CPU7>;
+> +       };
+> +
+> +       soc {
+> +               funnel@10001000 { /* SoC Funnel */
+> +                       compatible = "arm,coresight-funnel", "arm,primecell";
+> +                       reg = <0 0x10001000 0 0x1000>;
+> +                       clocks = <&ext_26m>;
+> +                       clock-names = "apb_pclk";
+> +                       ports {
+> +                               #address-cells = <1>;
+> +                               #size-cells = <0>;
+> +
+> +                               port@0 {
+> +                                       reg = <0>;
+> +                                       soc_funnel_out_port: endpoint {
+> +                                               remote-endpoint = <&etb_in>;
+> +                                       };
+> +                               };
+> +
+> +                               port@1 {
+> +                                       reg = <0>;
+> +                                       soc_funnel_in_port0: endpoint {
+> +                                               slave-mode;
+> +                                               remote-endpoint =
+> +                                               <&main_funnel_out_port>;
+> +                                       };
+> +                               };
+> +
+> +                               port@2 {
+> +                                       reg = <4>;
+> +                                       soc_funnel_in_port1: endpoint {
+> +                                               slave-mode;
+> +                                               remote-endpioint =
+> +                                                       <&stm_out_port>;
+> +                                       };
+> +                               };
+> +                       };
+> +               };
+> +
+> +               etb@10003000 {
+> +                       compatible = "arm,coresight-tmc", "arm,primecell";
+> +                       reg = <0 0x10003000 0 0x1000>;
+> +                       clocks = <&ext_26m>;
+> +                       clock-names = "apb_pclk";
+> +                       port {
+> +                               etb_in: endpoint {
+> +                                       slave-mode;
+> +                                       remote-endpoint =
+> +                                               <&soc_funnel_out_port>;
+> +                               };
+> +                       };
+> +               };
+> +
+> +               stm@10006000 {
+> +                       compatible = "arm,coresight-stm", "arm,primecell";
+> +                       reg = <0 0x10006000 0 0x1000>,
+> +                             <0 0x01000000 0 0x180000>;
+> +                       reg-names = "stm-base", "stm-stimulus-base";
+> +                       clocks = <&ext_26m>;
+> +                       clock-names = "apb_pclk";
+> +                       port {
+> +                               stm_out_port: endpoint {
+> +                                       remote-endpoint =
+> +                                               <&soc_funnel_in_port1>;
+> +                               };
+> +                       };
+> +               };
+> +
+> +               funnel@11001000 { /* Cluster0 Funnel */
+> +                       compatible = "arm,coresight-funnel", "arm,primecell";
+> +                       reg = <0 0x11001000 0 0x1000>;
+> +                       clocks = <&ext_26m>;
+> +                       clock-names = "apb_pclk";
+> +                       ports {
+> +                               #address-cells = <1>;
+> +                               #size-cells = <0>;
+> +
+> +                               port@0 {
+> +                                       reg = <0>;
+> +                                       cluster0_funnel_out_port: endpoint {
+> +                                               remote-endpoint =
+> +                                                       <&cluster0_etf_in>;
+> +                                       };
+> +                               };
+> +
+> +                               port@1 {
+> +                                       reg = <0>;
+> +                                       cluster0_funnel_in_port0: endpoint {
+> +                                               slave-mode;
+> +                                               remote-endpoint = <&etm0_out>;
+> +                                       };
+> +                               };
+> +
+> +                               port@2 {
+> +                                       reg = <1>;
+> +                                       cluster0_funnel_in_port1: endpoint {
+> +                                               slave-mode;
+> +                                               remote-endpoint = <&etm1_out>;
+> +                                       };
+> +                               };
+> +
+> +                               port@3 {
+> +                                       reg = <2>;
+> +                                       cluster0_funnel_in_port2: endpoint {
+> +                                               slave-mode;
+> +                                               remote-endpoint = <&etm2_out>;
+> +                                       };
+> +                               };
+> +
+> +                               port@4 {
+> +                                       reg = <4>;
+> +                                       cluster0_funnel_in_port3: endpoint {
+> +                                               slave-mode;
+> +                                               remote-endpoint = <&etm3_out>;
+> +                                       };
+> +                               };
+> +                       };
+> +               };
+> +
+> +               funnel@11002000 { /* Cluster1 Funnel */
+> +                       compatible = "arm,coresight-funnel", "arm,primecell";
+> +                       reg = <0 0x11002000 0 0x1000>;
+> +                       clocks = <&ext_26m>;
+> +                       clock-names = "apb_pclk";
+> +                       ports {
+> +                               #address-cells = <1>;
+> +                               #size-cells = <0>;
+> +
+> +                               port@0 {
+> +                                       reg = <0>;
+> +                                       cluster1_funnel_out_port: endpoint {
+> +                                               remote-endpoint =
+> +                                                       <&cluster1_etf_in>;
+> +                                       };
+> +                               };
+> +
+> +                               port@1 {
+> +                                       reg = <0>;
+> +                                       cluster1_funnel_in_port0: endpoint {
+> +                                               slave-mode;
+> +                                               remote-endpoint = <&etm4_out>;
+> +                                       };
+> +                               };
+> +
+> +                               port@2 {
+> +                                       reg = <1>;
+> +                                       cluster1_funnel_in_port1: endpoint {
+> +                                               slave-mode;
+> +                                               remote-endpoint = <&etm5_out>;
+> +                                       };
+> +                               };
+> +
+> +                               port@3 {
+> +                                       reg = <2>;
+> +                                       cluster1_funnel_in_port2: endpoint {
+> +                                               slave-mode;
+> +                                               remote-endpoint = <&etm6_out>;
+> +                                       };
+> +                               };
+> +
+> +                               port@4 {
+> +                                       reg = <3>;
+> +                                       cluster1_funnel_in_port3: endpoint {
+> +                                               slave-mode;
+> +                                               remote-endpoint = <&etm7_out>;
+> +                                       };
+> +                               };
+> +                       };
+> +               };
+> +
+> +               etf@11003000 { /*  ETF on Cluster0 */
+> +                       compatible = "arm,coresight-tmc", "arm,primecell";
+> +                       reg = <0 0x11003000 0 0x1000>;
+> +                       clocks = <&ext_26m>;
+> +                       clock-names = "apb_pclk";
+> +
+> +                       ports {
+> +                               #address-cells = <1>;
+> +                               #size-cells = <0>;
+> +
+> +                               port@0 {
+> +                                       reg = <0>;
+> +                                       cluster0_etf_out: endpoint {
+> +                                               remote-endpoint =
+> +                                               <&main_funnel_in_port0>;
+> +                                       };
+> +                               };
+> +
+> +                               port@1 {
+> +                                       reg = <0>;
+> +                                       cluster0_etf_in: endpoint {
+> +                                               slave-mode;
+> +                                               remote-endpoint =
+> +                                               <&cluster0_funnel_out_port>;
+> +                                       };
+> +                               };
+> +                       };
+> +               };
+> +
+> +               etf@11004000 { /* ETF on Cluster1 */
+> +                       compatible = "arm,coresight-tmc", "arm,primecell";
+> +                       reg = <0 0x11004000 0 0x1000>;
+> +                       clocks = <&ext_26m>;
+> +                       clock-names = "apb_pclk";
+> +
+> +                       ports {
+> +                               #address-cells = <1>;
+> +                               #size-cells = <0>;
+> +
+> +                               port@0 {
+> +                                       reg = <0>;
+> +                                       cluster1_etf_out: endpoint {
+> +                                               remote-endpoint =
+> +                                               <&main_funnel_in_port1>;
+> +                                       };
+> +                               };
+> +
+> +                               port@1 {
+> +                                       reg = <0>;
+> +                                       cluster1_etf_in: endpoint {
+> +                                               slave-mode;
+> +                                               remote-endpoint =
+> +                                               <&cluster1_funnel_out_port>;
+> +                                       };
+> +                               };
+> +                       };
+> +               };
+> +
+> +               funnel@11005000 { /* Main Funnel */
+> +                       compatible = "arm,coresight-funnel", "arm,primecell";
+> +                       reg = <0 0x11005000 0 0x1000>;
+> +                       clocks = <&ext_26m>;
+> +                       clock-names = "apb_pclk";
+> +
+> +                       ports {
+> +                               #address-cells = <1>;
+> +                               #size-cells = <0>;
+> +
+> +                               port@0 {
+> +                                       reg = <0>;
+> +                                       main_funnel_out_port: endpoint {
+> +                                               remote-endpoint =
+> +                                                       <&soc_funnel_in_port0>;
+> +                                       };
+> +                               };
+> +
+> +                               port@1 {
+> +                                       reg = <0>;
+> +                                       main_funnel_in_port0: endpoint {
+> +                                               slave-mode;
+> +                                               remote-endpoint =
+> +                                                       <&cluster0_etf_out>;
+> +                                       };
+> +                               };
+> +
+> +                               port@2 {
+> +                                       reg = <1>;
+> +                                       main_funnel_in_port1: endpoint {
+> +                                               slave-mode;
+> +                                               remote-endpoint =
+> +                                                       <&cluster1_etf_out>;
+> +                                       };
+> +                               };
+> +                       };
+> +               };
+> +
+> +               etm@11440000 {
+> +                       compatible = "arm,coresight-etm4x", "arm,primecell";
+> +                       reg = <0 0x11440000 0 0x1000>;
+> +                       cpu = <&CPU0>;
+> +                       clocks = <&ext_26m>;
+> +                       clock-names = "apb_pclk";
+> +
+> +                       port {
+> +                               etm0_out: endpoint {
+> +                                       remote-endpoint =
+> +                                               <&cluster0_funnel_in_port0>;
+> +                               };
+> +                       };
+> +               };
+> +
+> +               etm@11540000 {
+> +                       compatible = "arm,coresight-etm4x", "arm,primecell";
+> +                       reg = <0 0x11540000 0 0x1000>;
+> +                       cpu = <&CPU1>;
+> +                       clocks = <&ext_26m>;
+> +                       clock-names = "apb_pclk";
+> +
+> +                       port {
+> +                               etm1_out: endpoint {
+> +                                       remote-endpoint =
+> +                                               <&cluster0_funnel_in_port1>;
+> +                               };
+> +                       };
+> +               };
+> +
+> +               etm@11640000 {
+> +                       compatible = "arm,coresight-etm4x", "arm,primecell";
+> +                       reg = <0 0x11640000 0 0x1000>;
+> +                       cpu = <&CPU2>;
+> +                       clocks = <&ext_26m>;
+> +                       clock-names = "apb_pclk";
+> +
+> +                       port {
+> +                               etm2_out: endpoint {
+> +                                       remote-endpoint =
+> +                                               <&cluster0_funnel_in_port2>;
+> +                               };
+> +                       };
+> +               };
+> +
+> +               etm@11740000 {
+> +                       compatible = "arm,coresight-etm4x", "arm,primecell";
+> +                       reg = <0 0x11740000 0 0x1000>;
+> +                       cpu = <&CPU3>;
+> +                       clocks = <&ext_26m>;
+> +                       clock-names = "apb_pclk";
+> +
+> +                       port {
+> +                               etm3_out: endpoint {
+> +                                       remote-endpoint =
+> +                                               <&cluster0_funnel_in_port3>;
+> +                               };
+> +                       };
+> +               };
+> +
+> +               etm@11840000 {
+> +                       compatible = "arm,coresight-etm4x", "arm,primecell";
+> +                       reg = <0 0x11840000 0 0x1000>;
+> +                       cpu = <&CPU4>;
+> +                       clocks = <&ext_26m>;
+> +                       clock-names = "apb_pclk";
+> +
+> +                       port {
+> +                               etm4_out: endpoint {
+> +                                       remote-endpoint =
+> +                                               <&cluster1_funnel_in_port0>;
+> +                               };
+> +                       };
+> +               };
+> +
+> +               etm@11940000 {
+> +                       compatible = "arm,coresight-etm4x", "arm,primecell";
+> +                       reg = <0 0x11940000 0 0x1000>;
+> +                       cpu = <&CPU5>;
+> +                       clocks = <&ext_26m>;
+> +                       clock-names = "apb_pclk";
+> +
+> +                       port {
+> +                               etm5_out: endpoint {
+> +                                       remote-endpoint =
+> +                                               <&cluster1_funnel_in_port1>;
+> +                               };
+> +                       };
+> +               };
+> +
+> +               etm@11a40000 {
+> +                       compatible = "arm,coresight-etm4x", "arm,primecell";
+> +                       reg = <0 0x11a40000 0 0x1000>;
+> +                       cpu = <&CPU6>;
+> +                       clocks = <&ext_26m>;
+> +                       clock-names = "apb_pclk";
+> +
+> +                       port {
+> +                               etm6_out: endpoint {
+> +                                       remote-endpoint =
+> +                                               <&cluster1_funnel_in_port2>;
+> +                               };
+> +                       };
+> +               };
+> +
+> +               etm@11b40000 {
+> +                       compatible = "arm,coresight-etm4x", "arm,primecell";
+> +                       reg = <0 0x11b40000 0 0x1000>;
+> +                       cpu = <&CPU7>;
+> +                       clocks = <&ext_26m>;
+> +                       clock-names = "apb_pclk";
+> +
+> +                       port {
+> +                               etm7_out: endpoint {
+> +                                       remote-endpoint =
+> +                                               <&cluster1_funnel_in_port3>;
+> +                               };
+> +                       };
+> +               };
+> +       };
+> +};
+> diff --git a/arch/arm64/boot/dts/sprd/sp9860g-1h10.dts b/arch/arm64/boot/dts/sprd/sp9860g-1h10.dts
+> new file mode 100644
+> index 0000000..ae0b28c
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/sprd/sp9860g-1h10.dts
+> @@ -0,0 +1,56 @@
+> +/*
+> + * Spreadtrum SP9860g board
+> + *
+> + * Copyright (C) 2017, Spreadtrum Communications Inc.
+> + *
+> + * SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+> + */
+> +
+> +/dts-v1/;
+> +
+> +#include "sc9860.dtsi"
+> +
+> +/ {
+> +       model = "Spreadtrum SP9860G 3GFHD Board";
+> +
+> +       compatible = "sprd,sp9860g-1h10", "sprd,sc9860";
+> +
+> +       aliases {
+> +               serial0 = &uart0; /* for Bluetooth */
+> +               serial1 = &uart1; /* UART console */
+> +               serial2 = &uart2; /* Reserved */
+> +               serial3 = &uart3; /* for GPS */
+> +       };
+> +
+> +       memory{
+> +               device_type = "memory";
+> +               reg = <0x0 0x80000000 0 0x60000000>,
+> +                     <0x1 0x80000000 0 0x60000000>;
+> +       };
+> +
+> +       chosen {
+> +               stdout-path = "serial1:115200n8";
+> +       };
+> +
+> +       reserved-memory {
+> +               #address-cells = <2>;
+> +               #size-cells = <2>;
+> +               ranges;
+> +       };
+> +};
+> +
+> +&uart0 {
+> +       status = "okay";
+> +};
+> +
+> +&uart1 {
+> +       status = "okay";
+> +};
+> +
+> +&uart2 {
+> +       status = "okay";
+> +};
+> +
+> +&uart3 {
+> +       status = "okay";
+> +};
+> diff --git a/arch/arm64/boot/dts/sprd/whale2.dtsi b/arch/arm64/boot/dts/sprd/whale2.dtsi
+> new file mode 100644
+> index 0000000..7c217c5
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/sprd/whale2.dtsi
+> @@ -0,0 +1,71 @@
+> +/*
+> + * Spreadtrum Whale2 platform peripherals
+> + *
+> + * Copyright (C) 2016, Spreadtrum Communications Inc.
+> + *
+> + * SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+> + */
+> +
+> +/ {
+> +       interrupt-parent = <&gic>;
+> +       #address-cells = <2>;
+> +       #size-cells = <2>;
+> +
+> +       soc: soc {
+> +               compatible = "simple-bus";
+> +               #address-cells = <2>;
+> +               #size-cells = <2>;
+> +               ranges;
+> +
+> +               ap-apb {
+> +                       compatible = "simple-bus";
+> +                       #address-cells = <1>;
+> +                       #size-cells = <1>;
+> +                       ranges = <0 0x0 0x70000000 0x10000000>;
+> +
+> +                       uart0: serial@0 {
+> +                               compatible = "sprd,sc9860-uart",
+> +                                            "sprd,sc9836-uart";
+> +                               reg = <0x0 0x100>;
+> +                               interrupts = <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>;
+> +                               clocks = <&ext_26m>;
+> +                               status = "disabled";
+> +                       };
+> +
+> +                       uart1: serial@100000 {
+> +                               compatible = "sprd,sc9860-uart",
+> +                                            "sprd,sc9836-uart";
+> +                               reg = <0x100000 0x100>;
+> +                               interrupts = <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>;
+> +                               clocks = <&ext_26m>;
+> +                               status = "disabled";
+> +                       };
+> +
+> +                       uart2: serial@200000 {
+> +                               compatible = "sprd,sc9860-uart",
+> +                                            "sprd,sc9836-uart";
+> +                               reg = <0x200000 0x100>;
+> +                               interrupts = <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>;
+> +                               clocks = <&ext_26m>;
+> +                               status = "disabled";
+> +                       };
+> +
+> +                       uart3: serial@300000 {
+> +                               compatible = "sprd,sc9860-uart",
+> +                                            "sprd,sc9836-uart";
+> +                               reg = <0x300000 0x100>;
+> +                               interrupts = <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>;
+> +                               clocks = <&ext_26m>;
+> +                               status = "disabled";
+> +                       };
+> +               };
+> +
+> +       };
+> +
+> +       ext_26m: ext-26m {
+> +               compatible = "fixed-clock";
+> +               #clock-cells = <0>;
+> +               clock-frequency = <26000000>;
+> +               clock-output-names = "ext_26m";
+> +       };
+> +};
+> --
+> 2.7.4
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
