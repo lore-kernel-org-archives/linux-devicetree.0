@@ -1,78 +1,79 @@
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: Re: [PATCH V2] clk: hi6220: Add the hi655x's pmic clock
-Date: Wed, 19 Apr 2017 21:47:37 +0200
-Message-ID: <20170419194737.GB2523@mai>
-References: <1491683412-12237-1-git-send-email-daniel.lezcano@linaro.org>
- <20170412150245.GK7065@codeaurora.org>
- <20170416205713.GW2078@mai>
- <20170419160005.GS7065@codeaurora.org>
+From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH 2/2] mmc: dw_mmc-rockchip: parse rockchip,default-num-phases
+ from DT
+Date: Wed, 19 Apr 2017 13:19:19 -0700
+Message-ID: <CAD=FV=X6PRe1u+s4Nnt=9gJD2T4=YyLdMWnKe5rZg2KgWGNAvg@mail.gmail.com>
+References: <1492592434-81312-1-git-send-email-shawn.lin@rock-chips.com> <1492592434-81312-3-git-send-email-shawn.lin@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170419160005.GS7065@codeaurora.org>
-Sender: linux-clk-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: mturquette@baylibre.com, lee.jones@linaro.org, xuwei5@hisilicon.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1492592434-81312-3-git-send-email-shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ziyuan Xu <xzy.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 19, 2017 at 09:00:05AM -0700, Stephen Boyd wrote:
-> On 04/16, Daniel Lezcano wrote:
-> > On Wed, Apr 12, 2017 at 08:02:45AM -0700, Stephen Boyd wrote:
-> > > On 04/08, Daniel Lezcano wrote:
+Hi,
 
-[ ... ]
+On Wed, Apr 19, 2017 at 2:00 AM, Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org> wrote:
+> Currently we unconditionally do tuning for each degree, which
+> costs 900ms for each boot and resume.
+>
+> May someone argue that this is a question of accuracy VS time. But I
+> would say it's a trick of how we need to do decision for our boards.
+> If we don't care the time we spend at all, we could definitely do tuning
+> for each degree. But when we need to improve the user experience, for
+> instance, speed up resuming from S3, we should also have the right to
+> do that. This patch add parsing "rockchip,default-num-phases", for folks
+> to specify the number of doing tuning. If not specified, 360 will be used
+> as before.
+>
+> Signed-off-by: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+>
+> ---
+>
+>  drivers/mmc/host/dw_mmc-rockchip.c | 48 ++++++++++++++++++++++++--------------
+>  1 file changed, 30 insertions(+), 18 deletions(-)
 
-> > > > +	ret = clk_hw_register_clkdev(&hi655x_clk->clk_hw, clk_name, NULL);
-> > > 
-> > > Missed this last time. Do you use this clkdev lookup? The name is
-> > > usually supposed to be based on what the device is expecting,
-> > > instead of clk_name, and we would want some device name for the
-> > > third argument here.
-> > 
-> > I'm not sure to get your comment. Are you saying the clk_name should be the
-> > third argument?
-> > 
-> > 
-> 
-> Sorry, no. I meant that con_id is typically something like "core"
-> or "ahb" or something like that, and dev_id is something like
-> "a456002.pmic_device" or whatever dev_name(pmic_dev) would return for
-> the consuming device. That way when we call clk_get(dev, "core")
-> it will find the lookup with "core" and "a456002.pmic_device" to
-> match up the clk lookup.
-> 
-> If anything, the clk_name should just go into the con_id for now,
-> and then it will need to be a globally unique identifier for the
-> clk. But that is going against how clkdev is supposed to be used.
-> Hence the question if you even need to use it. If not, just don't
-> add it. I can fix up v3 of this patch to put clk_name back at
-> con_id if you like. No need to resend.
+No huge objection here, but I do remember we ended up at the 360
+phases due to some of the craziness with dw_mmc delay elements on
+rk3288.  IIRC one of the big problems was that the delay elements
+changed _a lot_ with the "LOGIC" voltage and we tweaked the voltage at
+runtime for DDR DVFS.  That imposed an extra need to be very accurate
+on that SoC, at least on any board that was designed to support DDR
+DVFS.
 
-Ok, I'm not very used with the CCF, so perhaps clk_name is not needed at all. I
-gave a try with the following combination:
+I also remember there being some weirdness on the Rockchip
+implementation where there was a certain set of phases that the MMC
+controller was essentially "blind".  This blind spot was in the middle
+of an otherwise good range of points.  Unfortunately this blind spot
+was somewhat hard to detect properly because it was not very big.
+...the variability of the delay elements meant that there could be big
+ranges where we weren't getting any good test coverage, but also the
+fact that they changed with the LOGIC voltage might mean that we
+weren't in the "blind" spot and then suddenly we were.
 
- - con_id = NULL, dev_id = clk_name
- - con_id = clk_name, dev_id = NULL
- - con_id = NULL, dev_id = NULL
+One other note is that i remember that the vast majority of time spent
+tuning was dealing with "bad" phases, not dealing with "good" phases.
+If you're looking to speed things up, maybe finding a way to make
+"bad" phases fail faster would be wise?  I think one of the reasons
+bad phases failed so slowly is because the dw_mmc timeouts are all so
+long.
 
-All worked.
+Oh, and I guess one last note is that I have no idea if folks will
+like the device bindings here.  Part of me thinks it should be
+something more "symbolic" like "rockchip,need-accurate-tuning" or
+something like that.  I guess I'd let the DT experts chime in.
 
-And finally I removed the clk_hw_register_clkdev() call and it worked also.
 
-So I'm not sure about this function.
+So I guess to summarize:
+* On rk3288 boards w/ DDR DVFS (or any other similar boards), 360
+seems to provide real benefit.
+* On other boards, probably you can get by with fewer phases.
 
-Any idea ?
 
-> -- 
-> Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-> a Linux Foundation Collaborative Project
-
--- 
-
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+-Doug
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
