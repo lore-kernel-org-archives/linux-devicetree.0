@@ -1,65 +1,81 @@
-From: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH V4 5/7] ARM: sun8i: Use - instead of @ for DT OPP entries
-Date: Thu, 20 Apr 2017 11:14:16 +0530
-Message-ID: <d13e447e9cc080d81c4f2db3bd5433506d3ef739.1492666725.git.viresh.kumar@linaro.org>
-References: <cover.1492666725.git.viresh.kumar@linaro.org>
+From: Guillaume Tucker <guillaume.tucker-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Subject: Re: [PATCH v3 1/5] dt-bindings: gpu: add bindings for the ARM Mali
+ Midgard GPU
+Date: Thu, 20 Apr 2017 06:58:46 +0100
+Message-ID: <4fd957ab-8365-eb4f-b003-467d3747a949@collabora.com>
+References: <cover.1492588180.git.guillaume.tucker@collabora.com>
+ <96021d989387d9aaff039efebd66aa3bfe667941.1492588180.git.guillaume.tucker@collabora.com>
+ <5481965.3RkcDb038R@phil>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <cover.1492666725.git.viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-In-Reply-To: <cover.1492666725.git.viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-References: <cover.1492666725.git.viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+In-Reply-To: <5481965.3RkcDb038R@phil>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: linaro-kernel-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rafael Wysocki <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Sjoerd Simons <sjoerd.simons-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, John Reitan <john.reitan-5wv7dgnIgG8@public.gmane.org>, Wookey <wookey-Xpnwy/r4z8dg9hUCZPvPmw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Compiling the DT file with W=1, DTC warns like follows:
+Hi Heiko,
 
-Warning (unit_address_vs_reg): Node /opp_table0/opp@1000000000 has a
-unit name, but no reg property
+On 19/04/17 10:02, Heiko Stuebner wrote:
+> Am Mittwoch, 19. April 2017, 09:06:17 CEST schrieb Guillaume Tucker:
+>> diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt b/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt
+>> new file mode 100644
+>> index 000000000000..917c4f8d178f
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt
+>> @@ -0,0 +1,57 @@
+>> +ARM Mali Midgard GPU
+>> +====================
+>> +
+>> +Required properties:
+>> +
+>> +- compatible :
+>> +  * Must be one of the following:
+>> +    + "arm,mali-t60x"
+>> +    + "arm,mali-t62x"
+>> +    + "arm,mali-t720"
+>> +    + "arm,mali-t760"
+>> +    + "arm,mali-t820"
+>> +    + "arm,mali-t830"
+>> +    + "arm,mali-t860"
+>> +    + "arm,mali-t880"
+>> +  * And, optionally, one of the vendor specific compatible:
+>> +    + "amlogic,meson-gxm-mali"
+>
+> Please add a "rockchip,rk3288-mali" as well :-) , as I don't trust that the
+> generic compatible will be enough for all time and having that already
+> defined makes fixing the per soc things later a lot easier.
 
-Fix this by replacing '@' with '-' as the OPP nodes will never have a
-"reg" property.
+Sure, will do in patch v4.
 
-Reported-by: Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Reported-by: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-Suggested-by: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Signed-off-by: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
----
- arch/arm/boot/dts/sun8i-a33.dtsi | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+>> +
+>> +- reg : Physical base address of the device and length of the register area.
+>> +
+>> +- interrupts : Contains the three IRQ lines required by Mali Midgard devices.
+>> +
+>> +- interrupt-names : Contains the names of IRQ resources in the order they were
+>> +  provided in the interrupts property. Must contain: "job", "mmu", "gpu".
+>> +
+>> +
+>> +Optional properties:
+>> +
+>> +- clocks : Phandle to clock for the Mali Midgard device.
+>> +
+>> +- mali-supply : Phandle to regulator for the Mali device. Refer to
+>> +  Documentation/devicetree/bindings/regulator/regulator.txt for details.
+>> +
+>> +- operating-points : Refer to Documentation/devicetree/bindings/power/opp.txt
+>> +  for details.
 
-diff --git a/arch/arm/boot/dts/sun8i-a33.dtsi b/arch/arm/boot/dts/sun8i-a33.dtsi
-index 306af6cadf26..a2c555d6475c 100644
---- a/arch/arm/boot/dts/sun8i-a33.dtsi
-+++ b/arch/arm/boot/dts/sun8i-a33.dtsi
-@@ -49,19 +49,19 @@
- 		compatible = "operating-points-v2";
- 		opp-shared;
- 
--		opp@648000000 {
-+		opp-648000000 {
- 			opp-hz = /bits/ 64 <648000000>;
- 			opp-microvolt = <1040000>;
- 			clock-latency-ns = <244144>; /* 8 32k periods */
- 		};
- 
--		opp@816000000 {
-+		opp-816000000 {
- 			opp-hz = /bits/ 64 <816000000>;
- 			opp-microvolt = <1100000>;
- 			clock-latency-ns = <244144>; /* 8 32k periods */
- 		};
- 
--		opp@1008000000 {
-+		opp-1008000000 {
- 			opp-hz = /bits/ 64 <1008000000>;
- 			opp-microvolt = <1200000>;
- 			clock-latency-ns = <244144>; /* 8 32k periods */
--- 
-2.12.0.432.g71c3a4f4ba37
+So I can simply change that to operating-points-v2.  Both
+versions can be used in practice but it sounds like
+operating-points can just be ignored in this binding's
+documentation.  Could you please confirm?
 
+Thanks,
+Guillaume
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
