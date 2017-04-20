@@ -1,33 +1,86 @@
-From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 02/13] mtd: lantiq-flash: drop check of boot select
-Date: Thu, 20 Apr 2017 15:36:29 -0700
-Message-ID: <20170420223629.GI20555@google.com>
-References: <20170417192942.32219-1-hauke@hauke-m.de>
- <20170417192942.32219-3-hauke@hauke-m.de>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v4 02/11] clk: sunxi-ng: add support for DE2 CCU
+Date: Thu, 20 Apr 2017 17:36:31 -0500
+Message-ID: <CAL_JsqL=bKVX4MsqHE+Nhg9TnR6B25_-5RPW2chTsCjXudtFfQ@mail.gmail.com>
+References: <20170416120849.54542-1-icenowy@aosc.io>
+ <20170416120849.54542-3-icenowy@aosc.io>
+ <20170420140252.vd6aeeweshx2tdou@rob-hp-laptop>
+ <20170420143617.v6yemhjamqufbqwj@lukather>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170417192942.32219-3-hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
-Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
-Cc: ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org, hauke.mehrtens-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20170420143617.v6yemhjamqufbqwj@lukather>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Jernej Skrabec <jernej.skrabec@siol.net>, linux-sunxi <linux-sunxi@googlegroups.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Chen-Yu Tsai <wens@csie.org>, linux-clk <linux-clk@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Icenowy Zheng <icenowy@aosc.io>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 17, 2017 at 09:29:31PM +0200, Hauke Mehrtens wrote:
-> Do not check which flash type the SoC was booted from before
-> using this driver. Assume that the device tree is correct and use this
-> driver when it was added to device tree. This also removes a build
-> dependency to the SoC code.
-> 
-> Signed-off-by: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
-
-Presuming you get the platform details right (i.e., device tree), I'm
-happy with this. It's not really this driver's job to check your boot
-strappings.
-
-Acked-by: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gVGh1LCBBcHIgMjAsIDIwMTcgYXQgOTozNiBBTSwgTWF4aW1lIFJpcGFyZAo8bWF4aW1lLnJp
+cGFyZEBmcmVlLWVsZWN0cm9ucy5jb20+IHdyb3RlOgo+IEhpIFJvYiwKPgo+IE9uIFRodSwgQXBy
+IDIwLCAyMDE3IGF0IDA5OjAyOjUzQU0gLTA1MDAsIFJvYiBIZXJyaW5nIHdyb3RlOgo+PiBPbiBT
+dW4sIEFwciAxNiwgMjAxNyBhdCAwODowODo0MFBNICswODAwLCBJY2Vub3d5IFpoZW5nIHdyb3Rl
+Ogo+PiA+IGRpZmYgLS1naXQgYS9pbmNsdWRlL2R0LWJpbmRpbmdzL2Nsb2NrL3N1bjhpLWRlMi5o
+IGIvaW5jbHVkZS9kdC1iaW5kaW5ncy9jbG9jay9zdW44aS1kZTIuaAo+PiA+IG5ldyBmaWxlIG1v
+ZGUgMTAwNjQ0Cj4+ID4gaW5kZXggMDAwMDAwMDAwMDAwLi45ODJjNmQxOGM3NWIKPj4gPiAtLS0g
+L2Rldi9udWxsCj4+ID4gKysrIGIvaW5jbHVkZS9kdC1iaW5kaW5ncy9jbG9jay9zdW44aS1kZTIu
+aAo+PiA+IEBAIC0wLDAgKzEsNTQgQEAKPj4gPiArLyoKPj4gPiArICogQ29weXJpZ2h0IChDKSAy
+MDE2IEljZW5vd3kgWmhlbmcgPGljZW5vd3lAYW9zYy5pbz4KPj4gPiArICoKPj4gPiArICogVGhp
+cyBmaWxlIGlzIGR1YWwtbGljZW5zZWQ6IHlvdSBjYW4gdXNlIGl0IGVpdGhlciB1bmRlciB0aGUg
+dGVybXMKPj4gPiArICogb2YgdGhlIEdQTCBvciB0aGUgWDExIGxpY2Vuc2UsIGF0IHlvdXIgb3B0
+aW9uLiBOb3RlIHRoYXQgdGhpcyBkdWFsCj4+ID4gKyAqIGxpY2Vuc2luZyBvbmx5IGFwcGxpZXMg
+dG8gdGhpcyBmaWxlLCBhbmQgbm90IHRoaXMgcHJvamVjdCBhcyBhCj4+ID4gKyAqIHdob2xlLgo+
+PiA+ICsgKgo+PiA+ICsgKiAgYSkgVGhpcyBmaWxlIGlzIGZyZWUgc29mdHdhcmU7IHlvdSBjYW4g
+cmVkaXN0cmlidXRlIGl0IGFuZC9vcgo+PiA+ICsgKiAgICAgbW9kaWZ5IGl0IHVuZGVyIHRoZSB0
+ZXJtcyBvZiB0aGUgR05VIEdlbmVyYWwgUHVibGljIExpY2Vuc2UgYXMKPj4gPiArICogICAgIHB1
+Ymxpc2hlZCBieSB0aGUgRnJlZSBTb2Z0d2FyZSBGb3VuZGF0aW9uOyBlaXRoZXIgdmVyc2lvbiAy
+IG9mIHRoZQo+PiA+ICsgKiAgICAgTGljZW5zZSwgb3IgKGF0IHlvdXIgb3B0aW9uKSBhbnkgbGF0
+ZXIgdmVyc2lvbi4KPj4gPiArICoKPj4gPiArICogICAgIFRoaXMgZmlsZSBpcyBkaXN0cmlidXRl
+ZCBpbiB0aGUgaG9wZSB0aGF0IGl0IHdpbGwgYmUgdXNlZnVsLAo+PiA+ICsgKiAgICAgYnV0IFdJ
+VEhPVVQgQU5ZIFdBUlJBTlRZOyB3aXRob3V0IGV2ZW4gdGhlIGltcGxpZWQgd2FycmFudHkgb2YK
+Pj4gPiArICogICAgIE1FUkNIQU5UQUJJTElUWSBvciBGSVRORVNTIEZPUiBBIFBBUlRJQ1VMQVIg
+UFVSUE9TRS4gIFNlZSB0aGUKPj4gPiArICogICAgIEdOVSBHZW5lcmFsIFB1YmxpYyBMaWNlbnNl
+IGZvciBtb3JlIGRldGFpbHMuCj4+ID4gKyAqCj4+ID4gKyAqIE9yLCBhbHRlcm5hdGl2ZWx5LAo+
+PiA+ICsgKgo+PiA+ICsgKiAgYikgUGVybWlzc2lvbiBpcyBoZXJlYnkgZ3JhbnRlZCwgZnJlZSBv
+ZiBjaGFyZ2UsIHRvIGFueSBwZXJzb24KPj4gPiArICogICAgIG9idGFpbmluZyBhIGNvcHkgb2Yg
+dGhpcyBzb2Z0d2FyZSBhbmQgYXNzb2NpYXRlZCBkb2N1bWVudGF0aW9uCj4+ID4gKyAqICAgICBm
+aWxlcyAodGhlICJTb2Z0d2FyZSIpLCB0byBkZWFsIGluIHRoZSBTb2Z0d2FyZSB3aXRob3V0Cj4+
+ID4gKyAqICAgICByZXN0cmljdGlvbiwgaW5jbHVkaW5nIHdpdGhvdXQgbGltaXRhdGlvbiB0aGUg
+cmlnaHRzIHRvIHVzZSwKPj4gPiArICogICAgIGNvcHksIG1vZGlmeSwgbWVyZ2UsIHB1Ymxpc2gs
+IGRpc3RyaWJ1dGUsIHN1YmxpY2Vuc2UsIGFuZC9vcgo+PiA+ICsgKiAgICAgc2VsbCBjb3BpZXMg
+b2YgdGhlIFNvZnR3YXJlLCBhbmQgdG8gcGVybWl0IHBlcnNvbnMgdG8gd2hvbSB0aGUKPj4gPiAr
+ICogICAgIFNvZnR3YXJlIGlzIGZ1cm5pc2hlZCB0byBkbyBzbywgc3ViamVjdCB0byB0aGUgZm9s
+bG93aW5nCj4+ID4gKyAqICAgICBjb25kaXRpb25zOgo+PiA+ICsgKgo+PiA+ICsgKiAgICAgVGhl
+IGFib3ZlIGNvcHlyaWdodCBub3RpY2UgYW5kIHRoaXMgcGVybWlzc2lvbiBub3RpY2Ugc2hhbGwg
+YmUKPj4gPiArICogICAgIGluY2x1ZGVkIGluIGFsbCBjb3BpZXMgb3Igc3Vic3RhbnRpYWwgcG9y
+dGlvbnMgb2YgdGhlIFNvZnR3YXJlLgo+PiA+ICsgKgo+PiA+ICsgKiAgICAgVEhFIFNPRlRXQVJF
+IElTIFBST1ZJREVEICJBUyBJUyIsIFdJVEhPVVQgV0FSUkFOVFkgT0YgQU5ZIEtJTkQsCj4+ID4g
+KyAqICAgICBFWFBSRVNTIE9SIElNUExJRUQsIElOQ0xVRElORyBCVVQgTk9UIExJTUlURUQgVE8g
+VEhFIFdBUlJBTlRJRVMKPj4gPiArICogICAgIE9GIE1FUkNIQU5UQUJJTElUWSwgRklUTkVTUyBG
+T1IgQSBQQVJUSUNVTEFSIFBVUlBPU0UgQU5ECj4+ID4gKyAqICAgICBOT05JTkZSSU5HRU1FTlQu
+IElOIE5PIEVWRU5UIFNIQUxMIFRIRSBBVVRIT1JTIE9SIENPUFlSSUdIVAo+PiA+ICsgKiAgICAg
+SE9MREVSUyBCRSBMSUFCTEUgRk9SIEFOWSBDTEFJTSwgREFNQUdFUyBPUiBPVEhFUiBMSUFCSUxJ
+VFksCj4+ID4gKyAqICAgICBXSEVUSEVSIElOIEFOIEFDVElPTiBPRiBDT05UUkFDVCwgVE9SVCBP
+UiBPVEhFUldJU0UsIEFSSVNJTkcKPj4gPiArICogICAgIEZST00sIE9VVCBPRiBPUiBJTiBDT05O
+RUNUSU9OIFdJVEggVEhFIFNPRlRXQVJFIE9SIFRIRSBVU0UgT1IKPj4gPiArICogICAgIE9USEVS
+IERFQUxJTkdTIElOIFRIRSBTT0ZUV0FSRS4KPj4gPiArICovCj4+Cj4+IFlvdSBjYW4gdXNlIFNQ
+RFggdGFnIGhlcmU6Cj4+Cj4+IFNQRFgtTGljZW5zZS1JZGVudGlmaWVyOiAoR1BMLTIuMCsgT1Ig
+TUlUKQo+Cj4gSSBkb24ndCB0aGluayB5b3UgZXZlciBhZGRyZXNzZWQgUnVzc2VsbCdzIGNvbW1l
+bnQgYWJvdXQgd2hhdCB3b3VsZAo+IGhhcHBlbiB0byB0aGUgbGljZW5zZSBpZiBhbmQgd2hlbiB0
+aGUgU1BEWCBkb2MgaXMgY2hhbmdlZCBvciBnb2VzCj4gb2ZmbGluZT8KCkZyYW5rbHksIGl0J3Mg
+YSBjb3B5cmlnaHQgaG9sZGVycyBkZWNpc2lvbiB3aGF0IHRoZXkgd2FudCB0byB1c2UuIFNQRFgK
+aXMgYWxyZWFkeSB1c2VkIGluIHRoZSBrZXJuZWwuIExvb2sgaW4gdGhlIFVTQiBzdWJzeXN0ZW0u
+IFNQRFggaXMgbm90CmdvaW5nIGFueXdoZXJlIGFuZCBpcyBlbmRvcnNlZCBieSBjb21wYW5pZXMg
+d2l0aCB3ZWxsIGtub3duIGxlZ2FsCmRlcHRzLiBJZiBwZW9wbGUgd2FudCB0byBhcmd1ZSBhYm91
+dCBpdCBzdGlsbCwgdGhlbiBJJ3ZlIGdvdCBiZXR0ZXIKdGhpbmdzIHRvIGRvLgoKUm9iCl9fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWls
+aW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZy
+ZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
