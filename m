@@ -1,71 +1,92 @@
-From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] of: introduce event tracepoints for dynamic device_node
- lifecyle
-Date: Thu, 20 Apr 2017 12:34:46 -0700
-Message-ID: <58F90D56.9070602@gmail.com>
-References: <1492475525-10827-1-git-send-email-tyreld@linux.vnet.ibm.com>
- <58F6AA35.2040902@gmail.com> <87efwp6v4e.fsf@concordia.ellerman.id.au>
- <1d51a229-612b-bf09-93d5-6e43b476e2cf@gmail.com> <58F83C66.7030806@gmail.com>
- <64505d40-926d-b302-4ff3-dff71aa5018a@gmail.com>
+From: Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
+Subject: Re: Re: [PATCH v2 1/6] clk: sunxi-ng: Add sun4i/sun7i
+ CCU driver
+Date: Thu, 20 Apr 2017 19:59:17 +0000
+Message-ID: <20170420195917.GA16113@plaes.org>
+References: <cover.a58841efb571d44013658505f3fa140536a89d1c.1490545262.git-series.plaes@plaes.org>
+ <ac8c4dab4f160ec605d52120517774bf1de87c2e.1490545262.git-series.plaes@plaes.org>
+ <20170327075438.cw3d6s7zyeemenwr@lukather>
+ <20170404200919.GA22159@plaes.org>
+ <20170407133805.aiythp3hdvuyhcrc@lukather>
+Reply-To: plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <64505d40-926d-b302-4ff3-dff71aa5018a-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tyrel Datwyler <turtle.in.the.kernel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>, Tyrel Datwyler <tyreld-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, nfont-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org, rostedt-nx8X9YLhiw1AfugRpC6u6w@public.gmane.org, mingo-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBDJLTBEBXENBBF5G4TDQKGQER7OQHXY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20170407133805.aiythp3hdvuyhcrc@lukather>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 04/20/17 09:51, Tyrel Datwyler wrote:
-> On 04/19/2017 09:43 PM, Frank Rowand wrote:
-> 
+On Fri, Apr 07, 2017 at 03:38:05PM +0200, Maxime Ripard wrote:
+> Hi Priit,
+>=20
+> On Tue, Apr 04, 2017 at 08:09:19PM +0000, Priit Laes wrote:
+> > > > +/* Not documented on A10 */
+> > > > +static SUNXI_CCU_GATE(pll_periph_sata_clk, "pll-periph-sata", "pll=
+-periph",
+> > > > +		      0x028, BIT(14), 0);
+> > >=20
+> > > The rate doesn't come from pll-periph directly, does it?
+> >=20
+> > So it uses hosc (24MHz parent clock) instead of pll-periph?
+>=20
+> I never looked too much at this, but it looks more like the input is
+> pll-periph-sata itself.
 
-< snip >
+OK, I think I have now fixed most of the issues thanks to Maxime and Chen-Y=
+u
+and I'm almost ready to send out V3.
 
+>From my side there is only single issue remaining - how to create "sata-ext=
+"
+clock?
 
->> The call stack could easily be post-processed, for example using addr2line.
->> Here is the call stack for when the refcount incremented to 23 from 22 (or
->> more accurately, to 22 from 21):
->>
->> 0xc0d00e3c Line 857 of "init/main.c"
->> 0xc03017d0 Line 792 of "init/main.c"
->> 0xc0d3a234 Line 528 of "drivers/of/platform.c"
->> 0xc0810684 Line 503 of "drivers/of/platform.c"
->> 0xc081061c Line 267 of "include/linux/of.h"
->> 0xc080d928 Line 815 of "drivers/of/base.c"
->>
->> Which ends up being this code:
->>
->>    of_platform_default_populate_init()
->>       of_platform_default_populate()
->>          of_platform_populate()
->>             [[ of_find_node_by_path("/") ]]
->>                [[ of_find_node_opts_by_path(path, NULL) ]]
->>                   of_node_get(of_root)
->>
->> Note that some functions can be left out of the ARM call stack, with
->> a return going back more than one level.  The functions in the call
->> list above that are enclosed in '[[' and ']]' were found by source
->> inspection in those cases.
-> 
-> The same thing is encountered in ppc64 stack traces. I assume it is
-> generally inlining of small functions, but I've never actually verified
-> that theory. Probably should take the time to investigate, or just ask
-> someone.
+[snip]
+static struct ccu_div pll_periph_sata_clk =3D {
+	.enable		=3D BIT(14),
+	.div		=3D _SUNXI_CCU_DIV(0, 2),
+	.common		=3D {
+		.prediv		=3D 6,
+		.reg		=3D 0x028,
+		.features	=3D CCU_FEATURE_ALL_PREDIV,
+		.hw.init	=3D CLK_HW_INIT("pll-periph-sata",
+					      "pll-periph-base",
+					      &ccu_nk_ops, 0),
+	},
+};
 
-Yes, inlining small functions is one reason for this.
+static const char* const sata_parents[] =3D {"pll-periph-sata", "sata-ext"}=
+;
+static SUNXI_CCU_MUX_WITH_GATE(sata_clk, "sata", sata_parents,
+			       0x0c8, 24, 1, BIT(31), 0);
+[/snip]
 
-Another case I often find is that when function A calls function B calls
-function C.  If the final statement of function B is 'return C()' then
-there is no need for function C to return through function B, it can
-instead return directly to function A.  (That is more a conceptual
-hand-waving of the idea, not the actual way the compiler implements
-it.  Take this with a grain of salt, I'm not a compiler guy.)
+Should I create a fixed-clock node in the dtsi:
 
-< snip >
+sata-ext: clk@0 {
+	#clock-cells =3D <0>;
+	compatible =3D "fixed-clock";
+	clock-frequency =3D <200000000>;
+	clock-output-names =3D "sata-ext";
+};
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+And would it also need pio definition?
+
+P=C3=A4ikest,
+Priit :)
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
