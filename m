@@ -1,51 +1,75 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH/RFC v2 1/2] arm64: dts: r8a7795: Add support for R-Car H3 ES2.0
-Date: Thu, 20 Apr 2017 11:36:59 +0200
-Message-ID: <CAMuHMdXOzyo+kzaGAXp+jZTtUejYyXCQzezo+SmvNVQuEC9=_Q@mail.gmail.com>
-References: <1490362665-4422-1-git-send-email-geert+renesas@glider.be>
- <1490362665-4422-2-git-send-email-geert+renesas@glider.be> <1612430.SNEha5n02K@avalon>
+From: Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [PATCH V4 1/9] PM / OPP: Allow OPP table to be used for
+ power-domains
+Date: Thu, 20 Apr 2017 10:43:36 +0100
+Message-ID: <34c7fb69-0324-ad06-678d-8726064e9a18@arm.com>
+References: <cover.1490001099.git.viresh.kumar@linaro.org>
+ <e772e67a5445319bb8e0f312846ace666adc097f.1490001099.git.viresh.kumar@linaro.org>
+ <0a7146f9-72f1-317c-3aab-770a72462968@arm.com>
+ <20170413053736.GM5910@vireshk-i7>
+ <3adbef6a-7b43-528f-e88f-c2121d30a5d3@arm.com>
+ <20170417052758.GF28191@vireshk-i7>
+ <95aa4b97-4e1a-13bb-f4d8-982b778012ba@arm.com>
+ <20170419114740.GD5436@vireshk-i7>
+ <9dee7c0d-e5f4-9fcd-3c92-bf7ec9d43a3b@arm.com>
+ <20170420052533.GF5436@vireshk-i7>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <1612430.SNEha5n02K@avalon>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Wolfram Sang <wsa@sang-engineering.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20170420052533.GF5436@vireshk-i7>
+Sender: linux-pm-owner@vger.kernel.org
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: Sudeep Holla <sudeep.holla@arm.com>, Rafael Wysocki <rjw@rjwysocki.net>, ulf.hansson@linaro.org, Kevin Hilman <khilman@linaro.org>, Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@codeaurora.org>, linaro-kernel@lists.linaro.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, Vincent Guittot <vincent.guittot@linaro.org>, robh+dt@kernel.org, lina.iyer@linaro.org, rnayak@codeaurora.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Laurent,
 
-On Mon, Mar 27, 2017 at 10:48 AM, Laurent Pinchart
-<laurent.pinchart@ideasonboard.com> wrote:
-> On Friday 24 Mar 2017 14:37:44 Geert Uytterhoeven wrote:
->> Update r8a7795.dtsi so it corresponds to R-Car H3 ES2.0 or later:
->>   - The following devices no longer exist on ES2.0, and are thus removed:
->>     fcpf2, fcpvd3, fcpvi2, fdp1-2, usb3-if1, vspd3, vspi2.
->>   - The DU <-> VSPD topology is different on ES2.0, hence remove the
->>     "vsps" property from the DU node until the driver can handle this.
->
-> I think I'll need a different compatible string between ES1.x and ES2 for the
-> DU. It could make sense to move the whole DU node to *-es1.dtsi. We can decide
-> about that later when I'll have a DU driver prototype ready.
 
-Why would you need a different compatible string?
-Can't you use soc_device_match() to handle ES1.x SoCs?
+On 20/04/17 06:25, Viresh Kumar wrote:
+> On 19-04-17, 14:58, Sudeep Holla wrote:
+>> On 19/04/17 12:47, Viresh Kumar wrote:
+>>> On 18-04-17, 17:01, Sudeep Holla wrote:
 
-The different DU <-> VSPD topology is handled through the vsps property in DTS.
-Are the ports different, too? That can be handled in DTS.
+[...]
 
-The main reason why I kept the DU node in r8a7795.dtsi is that the board DTS
-refers to it.  Sharing board DTS means there needs to be at least a
-placeholder node for the DU in r8a7795.dtsi, unless you want to keep on
-shuffling board overrides around.
+>> 
+>> Yes, I completely agree. I am not saying the direction is wrong. I
+>> am saying it's confusing and binding needs to be more clear.
+> 
+> What exactly isn't clear? (Yeah, there had been lots of emails and I 
+> want to know what improvements are you looking for).
+> 
 
-Gr{oetje,eeting}s,
+Just that the term performance is closely related to frequency, it needs
+to be explicit on what *exactly* it means. As it stands now,
+it can be used for OPP as I explain which controls both but as you
+clarify that's not what it's designed for.
 
-                        Geert
+>> On the contrary(playing devil's advocate here), we can treat all 
+>> existing regulators alone as OPP then if you strip the voltages
+>> and treat it as abstract number.
+> 
+> But then we are going to have lots of platform specific code which 
+> will program the actual hardware, etc. Which is all handled by the 
+> regulator framework. Also note that the regulator core selects the 
+> common voltage selected by all the children, while we want to select 
+> the highest performance point here.
+> 
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+I am not sure if choosing highest performance point makes it difficult
+to fit it in regulator framework. It could be some configuration.
+Also IIUC the actual programming is done in the firmware in this case
+and I fail to see how that adds lot of platform code.
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+> Even if we have to configure both clock and voltage for the power 
+> domain using standard clk/regulator frameworks, OPP will work just 
+> fine as it will do that then. So, its not that we are bypassing the 
+> regulator framework here. It will be used if we have the voltages 
+> available for the power-domain's performance states.
+> 
+
+Yes I understand that.
+
+-- 
+Regards,
+Sudeep
