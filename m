@@ -1,105 +1,53 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH 1/4] mfd: Add ROHM BD9571MWV-M PMIC DT bindings
-Date: Thu, 20 Apr 2017 14:35:56 +0200
-Message-ID: <CAMuHMdUUkZ_si8DAmvY_KvNF8tO=q2wHzjqRCjxXJD3-XxxJFw@mail.gmail.com>
-References: <20170416180801.17828-1-marek.vasut+renesas@gmail.com>
+From: Jarkko Nikula <jarkko.nikula-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Subject: Re: [PATCH v8 3/6] i2c: designware: MASTER mode as separated driver
+Date: Thu, 20 Apr 2017 15:49:01 +0300
+Message-ID: <3963c4b3-0ca7-8a97-825c-09dde3472554@linux.intel.com>
+References: <cover.1492014220.git.lolivei@synopsys.com>
+ <f4ffddb9cb8206d299700d9de89b11246757e8c0.1492014220.git.lolivei@synopsys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <20170416180801.17828-1-marek.vasut+renesas@gmail.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Marek Vasut <marek.vasut@gmail.com>
-Cc: Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Marek Vasut <marek.vasut+renesas@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <f4ffddb9cb8206d299700d9de89b11246757e8c0.1492014220.git.lolivei-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Luis Oliveira <Luis.Oliveira-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Ramiro.Oliveira-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, Joao.Pinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, CARLOS.PALMINHA-HKixBCOQz3hWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Marek,
-
-On Sun, Apr 16, 2017 at 8:07 PM, Marek Vasut <marek.vasut@gmail.com> wrote:
-> Add DT bindings for the ROHM BD9571MWV-M PMIC. This PMIC has
-> the following features:
-> - multiple voltage monitors for 1V8, 2V5, 3V3 voltage rail
-> - one voltage regulator for DVFS
-> - two GPIOs
+On 04/12/2017 07:47 PM, Luis Oliveira wrote:
+> - The functions related to I2C master mode of operation were transformed
+>   in a single driver.
+> - Common definitions were moved to i2c-designware-core.h
+> - The i2c-designware-core is now only a library file, the functions
+>   associated are in a source file called i2c-designware-common and
+>   are used by both i2c-designware-master and i2c-designware-slave.
+> - To decrease noise in namespace common i2c_dw_*() functions are
+>   now using ops to keep them private.
+> - Designware PCI driver had to be changed to match the previous ops
+>   functions implementation.
 >
-> Signed-off-by: Marek Vasut <marek.vasut+renesas@gmail.com>
-> Cc: devicetree@vger.kernel.org
-> Cc: Rob Herring <robh@kernel.org>
-> Cc: Geert Uytterhoeven <geert+renesas@glider.be>
-> Cc: linux-renesas-soc@vger.kernel.org
+> Almost all of the "core" source is now part of the "master" source. The
+> difference is the functions used by both modes and they are in the
+> "common" source file.
+>
+> Signed-off-by: Luis Oliveira <lolivei-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+> Acked-by: Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
 > ---
->  .../devicetree/bindings/mfd/bd9571mwv.txt          | 49 ++++++++++++++++++++++
->  1 file changed, 49 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mfd/bd9571mwv.txt
+> v7-v8
+> - removed "@dynamic_tar_update_enabled" comment
 >
-> diff --git a/Documentation/devicetree/bindings/mfd/bd9571mwv.txt b/Documentation/devicetree/bindings/mfd/bd9571mwv.txt
-> new file mode 100644
-> index 000000000000..0952ee3bc30b
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mfd/bd9571mwv.txt
-> @@ -0,0 +1,49 @@
-> +* ROHM BD9571MWV Power Management Integrated Circuit (PMIC) bindings
-> +
-> +Required properties:
-> + - compatible          : Should be "rohm,bd9571mwv".
-> + - reg                 : I2C slave address.
-> + - interrupt-parent    : Phandle to the parent interrupt controller.
-> + - interrupts          : The interrupt line the device is connected to.
-> + - interrupt-controller        : Marks the device node as an interrupt controller.
-> + - #interrupt-cells    : The number of cells to describe an IRQ, should be 2.
-> +                           The first cell is the IRQ number.
-> +                           The second cell is the flags, encoded as trigger
-> +                           masks from ../interrupt-controller/interrupts.txt.
-> + - gpio-controller      : Marks the device node as a GPIO Controller.
-> + - #gpio-cells          : Should be two.  The first cell is the pin number and
-> +                            the second cell is used to specify flags.
-> +                            See ../gpio/gpio.txt for more information.
-> + - regulators:          : List of child nodes that specify the regulator
-> +                            initialization data. Child nodes must be named
-> +                            after their hardware counterparts:
-> +                            - vd18
-> +                            - vd25
-> +                            - vd33
-> +                            - dvfs
-
-Missing vd09, which is used for VDD0.8 on Salvator-X.
-
-> +                           Each child node is defined using the standard
-> +                           binding for regulators.
-> +
-> +Example:
-> +
-> +       pmic: bd9571mwv@30 {
-> +               compatible = "rohm,bd9571mwv";
-> +               reg = <0x30>;
-> +               interrupt-parent = <&gpio2>;
-> +               interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
-> +               interrupt-controller;
-> +               #interrupt-cells = <2>;
-> +               gpio-controller;
-> +               #gpio-cells = <2>;
-> +
-> +               regulators {
-> +                       dvfs: dvfs {
-> +                               compatible = "regulator-fixed";
-
-What's the purpose of this compatible value?
-
-> +                               regulator-name = "dvfs";
-> +                               regulator-min-microvolt = <750000>;
-> +                               regulator-max-microvolt = <1030000>;
-> +                               regulator-boot-on;
-> +                               regulator-always-on;
-> +                       };
-> +               };
-> +       };
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
+>  drivers/i2c/busses/Makefile                        |   1 +
+>  drivers/i2c/busses/i2c-designware-common.c         | 274 +++++++++++++++
+>  drivers/i2c/busses/i2c-designware-core.h           | 145 +++++++-
+>  ...c-designware-core.c => i2c-designware-master.c} | 367 +--------------------
+>  drivers/i2c/busses/i2c-designware-pcidrv.c         |   8 +-
+>  drivers/i2c/busses/i2c-designware-platdrv.c        |   6 +-
+>  6 files changed, 432 insertions(+), 369 deletions(-)
+>  create mode 100644 drivers/i2c/busses/i2c-designware-common.c
+>  rename drivers/i2c/busses/{i2c-designware-core.c => i2c-designware-master.c} (65%)
+>
+Acked-by: Jarkko Nikula <jarkko.nikula-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
 --
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
