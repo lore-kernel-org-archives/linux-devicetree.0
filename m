@@ -1,82 +1,113 @@
-From: Guillaume Tucker <guillaume.tucker-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-Subject: Re: [PATCH v3 1/5] dt-bindings: gpu: add bindings for the ARM Mali
- Midgard GPU
-Date: Thu, 20 Apr 2017 06:58:46 +0100
-Message-ID: <4fd957ab-8365-eb4f-b003-467d3747a949@collabora.com>
-References: <cover.1492588180.git.guillaume.tucker@collabora.com>
- <96021d989387d9aaff039efebd66aa3bfe667941.1492588180.git.guillaume.tucker@collabora.com>
- <5481965.3RkcDb038R@phil>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: Re: [PATCH v3 02/12] arm64: allwinner: a64: add NMI
+ controller on A64
+Date: Thu, 20 Apr 2017 07:58:02 +0200
+Message-ID: <20170420055802.btibui5pspan4qal@lukather>
+References: <20170417115747.7300-1-icenowy@aosc.io>
+ <20170417115747.7300-3-icenowy@aosc.io>
+ <20170418070016.qsng3qtk76bqxyc5@lukather>
+ <FB3B3C68-EB16-4352-B0B9-64857B1A6C03@aosc.io>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5481965.3RkcDb038R@phil>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Sjoerd Simons <sjoerd.simons-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, John Reitan <john.reitan-5wv7dgnIgG8@public.gmane.org>, Wookey <wookey-Xpnwy/r4z8dg9hUCZPvPmw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="igw46omcbrryc5ij"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBY5M4HDQKGQEKCTAKXY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <FB3B3C68-EB16-4352-B0B9-64857B1A6C03-h8G6r0blFSE@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Heiko,
 
-On 19/04/17 10:02, Heiko Stuebner wrote:
-> Am Mittwoch, 19. April 2017, 09:06:17 CEST schrieb Guillaume Tucker:
->> diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt b/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt
->> new file mode 100644
->> index 000000000000..917c4f8d178f
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt
->> @@ -0,0 +1,57 @@
->> +ARM Mali Midgard GPU
->> +====================
->> +
->> +Required properties:
->> +
->> +- compatible :
->> +  * Must be one of the following:
->> +    + "arm,mali-t60x"
->> +    + "arm,mali-t62x"
->> +    + "arm,mali-t720"
->> +    + "arm,mali-t760"
->> +    + "arm,mali-t820"
->> +    + "arm,mali-t830"
->> +    + "arm,mali-t860"
->> +    + "arm,mali-t880"
->> +  * And, optionally, one of the vendor specific compatible:
->> +    + "amlogic,meson-gxm-mali"
->
-> Please add a "rockchip,rk3288-mali" as well :-) , as I don't trust that the
-> generic compatible will be enough for all time and having that already
-> defined makes fixing the per soc things later a lot easier.
+--igw46omcbrryc5ij
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Sure, will do in patch v4.
+On Tue, Apr 18, 2017 at 06:56:43PM +0800, Icenowy Zheng wrote:
+>=20
+>=20
+> =E4=BA=8E 2017=E5=B9=B44=E6=9C=8818=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=8D=88=
+3:00:16, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> =E5=86=99=E5=88=
+=B0:
+> >On Mon, Apr 17, 2017 at 07:57:37PM +0800, Icenowy Zheng wrote:
+> >> Allwinner A64 SoC features a NMI controller, which is usually
+> >connected
+> >> to the AXP PMIC.
+> >>=20
+> >> Add support for it.
+> >>=20
+> >> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+> >> Acked-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+> >> ---
+> >> Changes in v2:
+> >> - Added Chen-Yu's ACK.
+> >>=20
+> >>  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 8 ++++++++
+> >>  1 file changed, 8 insertions(+)
+> >>=20
+> >> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+> >b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+> >> index 05ec9fc5e81f..53c18ca372ea 100644
+> >> --- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+> >> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+> >> @@ -403,6 +403,14 @@
+> >>  				     <GIC_SPI 41 IRQ_TYPE_LEVEL_HIGH>;
+> >>  		};
+> >> =20
+> >> +		nmi_intc: interrupt-controller@01f00c0c {
+> >> +			compatible =3D "allwinner,sun6i-a31-sc-nmi";
+> >> +			interrupt-controller;
+> >> +			#interrupt-cells =3D <2>;
+> >> +			reg =3D <0x01f00c0c 0x38>;
+> >
+> >The base address is not correct, and there's uncertainty on whether
+> >this is this particular controller or not. Did you even test this?
+>=20
+> Tested by axp20x-pek.
 
->> +
->> +- reg : Physical base address of the device and length of the register area.
->> +
->> +- interrupts : Contains the three IRQ lines required by Mali Midgard devices.
->> +
->> +- interrupt-names : Contains the names of IRQ resources in the order they were
->> +  provided in the interrupts property. Must contain: "job", "mmu", "gpu".
->> +
->> +
->> +Optional properties:
->> +
->> +- clocks : Phandle to clock for the Mali Midgard device.
->> +
->> +- mali-supply : Phandle to regulator for the Mali device. Refer to
->> +  Documentation/devicetree/bindings/regulator/regulator.txt for details.
->> +
->> +- operating-points : Refer to Documentation/devicetree/bindings/power/opp.txt
->> +  for details.
+Still, the base address is wrong, which is yet another hint that this
+is not the same interrupt controller, and just works by accident.
 
-So I can simply change that to operating-points-v2.  Both
-versions can be used in practice but it sounds like
-operating-points can just be ignored in this binding's
-documentation.  Could you please confirm?
+Maxime
 
-Thanks,
-Guillaume
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
+
+--igw46omcbrryc5ij
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIcBAABCAAGBQJY+E3lAAoJEBx+YmzsjxAgQt0QAKBnazClOM/YeEpzHhYlzRQc
+0YwiOmy9T/ZFCJ7meeeVfnJjeTi7+gX07cpTgQbnG1qI5g/ZYr60daWCCm45iahW
+slrvRe//hyLQyxyu829iYH1Vm1a5uUlHYr1EXEEjxHxSsW6FQmqtbqSvpOHTGtHp
+72WmeV8YIsE5cH5uSSsYNP6ILDLoqyI9fD/pakWHfIEwXl+cKrMY8Z/VtrB5hblf
+4s7XKiyRZAcKeIk3LHloxmiK8QGcuVfc/fNQB0jeq4yRBnPpw0873RMxSZ4Jhj+7
+zIHLLIZbIeWdx65TjKxuvKVBVMFIDaKvqE56eWis8nX/ZFNgLF+v1Kwm6TCj38uP
+o1u/aspFT/mf8JmIs4ZGTzDm26g3VJvWbc4oPSgvPenOTYiDKH9/npKlGI+XdQX9
+h2bZr7F9zmjjrZprChvQ7XiIUak4klj5Aq8lRDOgLK+6+JSUis2u1FH2dsIf4Zlr
+5aKKPI8mRaT374YEljsl2rTEtKwslBuvmOT8f8tgqiDErd/SDmprzXgNAR9LFhDH
+HNuBcfCyFTbD5w4e7IZ8yEE7x4D2KmUFD8lVTK2KNqTefFUPHbA4qL1wWwJK3Cih
+FOKgKOkLJBe2oIyjbKIyCmrv/gVn787a+qgSMzkohdeX9HbSklzn7uXMzHJGC3qp
+6oMLWTS3nLpkHv3QR+U1
+=G06A
+-----END PGP SIGNATURE-----
+
+--igw46omcbrryc5ij--
