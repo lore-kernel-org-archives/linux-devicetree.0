@@ -1,64 +1,40 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v6 1/6] dt-bindings: power: supply: add
- AXP20X/AXP22X battery DT binding
-Date: Thu, 20 Apr 2017 10:58:20 -0500
-Message-ID: <20170420155820.tzvvwqnl2ze63jel@rob-hp-laptop>
-References: <20170418073421.31351-1-quentin.schulz@free-electrons.com>
- <20170418073421.31351-2-quentin.schulz@free-electrons.com>
-Reply-To: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3 1/3] dt-bindings: Add support for samsung s6e3hf2 panel
+Date: Thu, 20 Apr 2017 10:59:10 -0500
+Message-ID: <20170420155910.jv33e5iyiqxam5fg@rob-hp-laptop>
+References: <1492504836-19225-1-git-send-email-hoegeun.kwon@samsung.com>
+ <CGME20170418084047epcas5p440464afa8770d07253f42f362764059b@epcas5p4.samsung.com>
+ <1492504836-19225-2-git-send-email-hoegeun.kwon@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDJIP47K7MERBHNV4PDQKGQENTVUYEQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 Content-Disposition: inline
-In-Reply-To: <20170418073421.31351-2-quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, icenowy-ymACFijhrKM@public.gmane.org, liam-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <1492504836-19225-2-git-send-email-hoegeun.kwon@samsung.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Hoegeun Kwon <hoegeun.kwon@samsung.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, andi.shyti@samsung.com, catalin.marinas@arm.com, dri-devel@lists.freedesktop.org, will.deacon@arm.com, linux-kernel@vger.kernel.org, krzk@kernel.org, javier@osg.samsung.com, kgene@kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 18, 2017 at 09:34:16AM +0200, Quentin Schulz wrote:
-> The X-Powers AXP20X and AXP22X PMICs can have a battery as power supply.
-> 
-> This patch adds the DT binding documentation for the battery power
-> supply which gets various data from the PMIC, such as the battery status
-> (charging, discharging, full, dead), current max limit, current current,
-> battery capacity (in percentage), voltage max and min limits, current
-> voltage and battery capacity (in Ah).
-> 
-> Signed-off-by: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> Acked-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-> Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> ---
-> v6:
->   - removed mention to monitored-battery, will be sent when the battery
->   framework has been merged,
-> 
-> v5:
->   - removed DT property example from monitored-battery,
-> 
-> v4:
->  - added monitored-battery optional property,
->  - added example with battery,
-> 
-> v3:
->  - removed constant charge current property, now should use the WIP
->  battery framework,
-> 
-> v2:
->  - changed DT node name from ac_power_supply to ac-power-supply,
->  - removed io-channels and io-channel-names from DT (the IIO mapping is
->  done in the IIO ADC driver now),
->  - added x-powers,constant-charge-current property to set the maximal
->  default constant current charge of the battery,
-> 
->  .../bindings/power/supply/axp20x_battery.txt         | 20 ++++++++++++++++++++
->  1 file changed, 20 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/power/supply/axp20x_battery.txt
-
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+T24gVHVlLCBBcHIgMTgsIDIwMTcgYXQgMDU6NDA6MzRQTSArMDkwMCwgSG9lZ2V1biBLd29uIHdy
+b3RlOgo+IFRoZSBzYW1zdW5nIHM2ZTNoZjIgcGFuZWwgaXMgYSA1LjY1IiAxNjAweDI1NjAgQU1P
+TEVEIHBhbmVsIGNvbm5lY3RlZAo+IHVzaW5nIE1JUEktRFNJIGludGVyZmFjZXMuCj4gCj4gVGhl
+IHM2ZTNoZjIgaXMgYWRkIHRvIHNhbXN1bmcsczZlM2hhMi50eHQgYmluZGluZyBiZWNhdXNlIGl0
+IGlzIGEKPiBwYW5lbCBzaW1pbGFyIHRvIHRoZSBzNmUzaGEyLiBTbyBhZGQgdGhlIGNvbXBhdGli
+bGUgc3RyaW5nIGFuZAo+IGNvbW1lbnRzLgo+IAo+IFNpZ25lZC1vZmYtYnk6IEhvZWdldW4gS3dv
+biA8aG9lZ2V1bi5rd29uQHNhbXN1bmcuY29tPgo+IFJldmlld2VkLWJ5OiBBbmRyemVqIEhhamRh
+IDxhLmhhamRhQHNhbXN1bmcuY29tPgo+IC0tLQo+ICBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
+YmluZGluZ3MvZGlzcGxheS9wYW5lbC9zYW1zdW5nLHM2ZTNoYTIudHh0IHwgNSArKysrLQo+ICAx
+IGZpbGUgY2hhbmdlZCwgNCBpbnNlcnRpb25zKCspLCAxIGRlbGV0aW9uKC0pCgpBY2tlZC1ieTog
+Um9iIEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz4KX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4v
+bGlzdGluZm8vZHJpLWRldmVsCg==
