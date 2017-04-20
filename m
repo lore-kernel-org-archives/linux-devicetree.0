@@ -1,39 +1,46 @@
-From: Gilad Ben-Yossef <gilad@benyossef.com>
-Subject: [PATCH v2 9/9] MAINTAINERS: add Gilad BY as ccree maintainer
-Date: Thu, 20 Apr 2017 16:13:03 +0300
-Message-ID: <1492693983-8175-10-git-send-email-gilad@benyossef.com>
+From: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Subject: Re: [PATCH v2 0/9] staging: ccree: add Arm TrustZone CryptoCell REE
+ driver
+Date: Thu, 20 Apr 2017 15:30:52 +0200
+Message-ID: <20170420133052.GA8998@kroah.com>
 References: <1492693983-8175-1-git-send-email-gilad@benyossef.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1492693983-8175-1-git-send-email-gilad@benyossef.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devel@driverdev.osuosl.org
-Cc: linux-crypto@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, gilad.benyossef@arm.com, Binoy Jayan <binoy.jayan@linaro.org>, Ofir Drang <ofir.drang@arm.com>, Stuart Yoder <stuart.yoder@arm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1492693983-8175-1-git-send-email-gilad-6S/DczAoZh3WXxRugSxzZg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Gilad Ben-Yossef <gilad-6S/DczAoZh3WXxRugSxzZg@public.gmane.org>
+Cc: Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, Binoy Jayan <binoy.jayan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gilad.benyossef-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stuart Yoder <stuart.yoder-5wv7dgnIgG8@public.gmane.org>, Ofir Drang <ofir.drang-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-I work for Arm on maintaining the TrustZone CryptoCell driver.
+On Thu, Apr 20, 2017 at 04:12:54PM +0300, Gilad Ben-Yossef wrote:
+> Arm TrustZone CryptoCell 700 is a family of cryptographic hardware
+> accelerators. It is supported by a long lived series of out of tree
+> drivers, which I am now in the process of unifying and upstreaming.
+> This is the first drop, supporting the new CryptoCell 712 REE.
+> 
+> The code still needs some cleanup before maturing to a proper
+> upstream driver, which I am in the process of doing. However,
+> as discussion of some of the capabilities of the hardware and
+> its application to some dm-crypt and dm-verity features recently
+> took place I though it is better to do this in the open via the
+> staging tree.
+> 
+> A Git repository based off of Linux 4.11-rc7 is also available at
+> https://github.com/gby/linux.git branch ccree_v2 for those inclined.
 
-Signed-off-by: Gilad Ben-Yossef <gilad@benyossef.com>
----
- MAINTAINERS | 7 +++++++
- 1 file changed, 7 insertions(+)
+If you want this in staging, I'll be glad to take it, but note then you
+can't work off of an external repo, as syncing the two is almost
+impossible and more work than you want to go through.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 676c139..f21caa1 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -3066,6 +3066,13 @@ F:	drivers/net/ieee802154/cc2520.c
- F:	include/linux/spi/cc2520.h
- F:	Documentation/devicetree/bindings/net/ieee802154/cc2520.txt
- 
-+CCREE ARM TRUSTZONE CRYPTOCELL 700 REE DRIVER
-+M:	Gilad Ben-Yossef <gilad@benyossef.com>
-+L:	linux-crypto@vger.kernel.org
-+S:	Supported
-+F:	drivers/staging/ccree/
-+W:	https://developer.arm.com/products/system-ip/trustzone-cryptocell/cryptocell-700-family
-+
- CEC DRIVER
- M:	Hans Verkuil <hans.verkuil@cisco.com>
- L:	linux-media@vger.kernel.org
--- 
-2.1.4
+So, as long as this builds properly, want me to queue these up in my
+tree?
+
+thanks,
+
+greg k-h
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
