@@ -1,56 +1,61 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: [PATCH v2 2/3] ARM: dts: sk-rzg1m: add SCIF0 pins
-Date: Thu, 20 Apr 2017 21:51:34 +0300
-Message-ID: <20170420185547.232302495@cogentembedded.com>
+From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH v2 3/3] ARM: dts: sk-rzg1m: add Ether pins
+Date: Thu, 20 Apr 2017 21:51:35 +0300
+Message-ID: <20170420185550.571168105@cogentembedded.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-15
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-Content-Disposition: inline; filename=ARM-dts-sk-rzg1m-add-SCIF0-pins-v2.patch
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, linux-arm-kernel@lists.infradead.org, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline; filename=ARM-dts-sk-rzg1m-add-Ether-pins-v2.patch
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add the (previously omitted) SCIF0 pin data to the SK-RZG1M board's
+Add the (previously omitted) Ether/PHY pin data to the SK-RZG1M board's
 device tree.
 
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
 
 ---
 Changes in version 2:
-- fixed the SCIF0 data group inside the PFC node.
+- refreshed the patch.
 
- arch/arm/boot/dts/r8a7743-sk-rzg1m.dts |   12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/r8a7743-sk-rzg1m.dts |   13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
 Index: renesas/arch/arm/boot/dts/r8a7743-sk-rzg1m.dts
 ===================================================================
 --- renesas.orig/arch/arm/boot/dts/r8a7743-sk-rzg1m.dts
 +++ renesas/arch/arm/boot/dts/r8a7743-sk-rzg1m.dts
-@@ -1,7 +1,7 @@
- /*
-  * Device Tree Source for the SK-RZG1M board
-  *
-- * Copyright (C) 2016 Cogent Embedded, Inc.
-+ * Copyright (C) 2016-2017 Cogent Embedded, Inc.
-  *
-  * This file is licensed under the terms of the GNU General Public License
-  * version 2. This program is licensed "as is" without any warranty of any
-@@ -39,7 +39,17 @@
- 	clock-frequency = <20000000>;
+@@ -44,6 +44,16 @@
+ 		groups = "scif0_data_d";
+ 		function = "scif0";
+ 	};
++
++	ether_pins: ether {
++		groups = "eth_link", "eth_mdio", "eth_rmii";
++		function = "eth";
++	};
++
++	phy1_pins: phy1 {
++		groups = "intc_irq0";
++		function = "intc";
++	};
  };
  
-+&pfc {
-+	scif0_pins: scif0 {
-+		groups = "scif0_data_d";
-+		function = "scif0";
-+	};
-+};
-+
  &scif0 {
-+	pinctrl-0 = <&scif0_pins>;
+@@ -54,6 +64,9 @@
+ };
+ 
+ &ether {
++	pinctrl-0 = <&ether_pins &phy1_pins>;
 +	pinctrl-names = "default";
 +
+ 	phy-handle = <&phy1>;
+ 	renesas,ether-link-active-low;
  	status = "okay";
- };
- 
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
