@@ -1,63 +1,76 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH/RFC v2 1/2] arm64: dts: r8a7795: Add support for R-Car H3 ES2.0
-Date: Thu, 20 Apr 2017 13:42:23 +0300
-Message-ID: <1714563.qChlbIjNcO@avalon>
-References: <1490362665-4422-1-git-send-email-geert+renesas@glider.be> <1612430.SNEha5n02K@avalon> <CAMuHMdXOzyo+kzaGAXp+jZTtUejYyXCQzezo+SmvNVQuEC9=_Q@mail.gmail.com>
+From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] of: introduce event tracepoints for dynamic device_node
+ lifecyle
+Date: Thu, 20 Apr 2017 03:44:32 -0700
+Message-ID: <58F89110.1020904@gmail.com>
+References: <1492475525-10827-1-git-send-email-tyreld@linux.vnet.ibm.com>
+ <58F6AA35.2040902@gmail.com> <58F6C088.8020304@gmail.com>
+ <20170418224953.685943a3@grimm.local.home>
+ <641aa8ee-9b54-716a-77a1-076cafb95e3a@linux.vnet.ibm.com>
+ <58F81EF4.5070304@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdXOzyo+kzaGAXp+jZTtUejYyXCQzezo+SmvNVQuEC9=_Q@mail.gmail.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Wolfram Sang <wsa@sang-engineering.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <58F81EF4.5070304-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tyrel Datwyler <tyreld-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, Steven Rostedt <rostedt-nx8X9YLhiw1AfugRpC6u6w@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, nfont-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org, mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org, mingo-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Geert,
-
-On Thursday 20 Apr 2017 11:36:59 Geert Uytterhoeven wrote:
-> On Mon, Mar 27, 2017 at 10:48 AM, Laurent Pinchart wrote:
-> > On Friday 24 Mar 2017 14:37:44 Geert Uytterhoeven wrote:
-> >> Update r8a7795.dtsi so it corresponds to R-Car H3 ES2.0 or later:
-> >>   - The following devices no longer exist on ES2.0, and are thus removed:
-> >>     fcpf2, fcpvd3, fcpvi2, fdp1-2, usb3-if1, vspd3, vspi2.
-> >>   
-> >>   - The DU <-> VSPD topology is different on ES2.0, hence remove the
-> >>     "vsps" property from the DU node until the driver can handle this.
-> > 
-> > I think I'll need a different compatible string between ES1.x and ES2 for
-> > the DU. It could make sense to move the whole DU node to *-es1.dtsi. We
-> > can decide about that later when I'll have a DU driver prototype ready.
+On 04/19/17 19:37, Frank Rowand wrote:
+> On 04/19/17 11:45, Tyrel Datwyler wrote:
+>> On 04/18/2017 07:49 PM, Steven Rostedt wrote:
+>>> On Tue, 18 Apr 2017 18:42:32 -0700
+>>> Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>>>
+>>>> And of course the other issue with using tracepoints is the extra space
+>>>> required to hold the tracepoint info.  With the pr_debug() approach, the
+>>>> space usage can be easily removed for a production kernel via a config
+>>>> option.
+>>>
+>>> Now if you are saying you want to be able to enable debugging without
+>>> the tracing infrastructure I would agree. As the tracing infrastructure
+>>> is large. But I'm working on shrinking it more.
+>>
+>> The primary consumers of OF_DYNAMIC seem to be pseries and powernv where
+>> we are generally going to see the trace infrastructure enabled by
+>> default in production.
 > 
-> Why would you need a different compatible string?
-> Can't you use soc_device_match() to handle ES1.x SoCs?
+> Another primary consumer will be overlays for ARM expansion boards.  Still
+> a work in progress.
+
+And dynamic configuration for the FPGA folks.
+
+
+> -Frank
 > 
-> The different DU <-> VSPD topology is handled through the vsps property in
-> DTS. Are the ports different, too? That can be handled in DTS.
+>>
+>> -Tyrel
+>>
+>>>
+>>>>
+>>>> Tracepoints are wonderful technology, but not always the proper tool to
+>>>> use for debug info.
+>>>
+>>> But if you are going to have tracing enabled regardless, adding a few
+>>> more tracepoints isn't going to make the difference.
+>>>
+>>> -- Steve
+>>>
+>>>>
+>>>>> If Rob wants to convert printk() style data to trace data (and I can't
+>>>>> convince him otherwise) then I will have further comments on this specific
+>>>>> patch.
+>>>>>
+>>
+>> .
+>>
+> 
+> .
+> 
 
-My point (not expressed clearly) was that, as I'll need a different vsps 
-property, I can as well go for a different compatible string.
-
-> The main reason why I kept the DU node in r8a7795.dtsi is that the board DTS
-> refers to it.  Sharing board DTS means there needs to be at least a
-> placeholder node for the DU in r8a7795.dtsi, unless you want to keep on
-> shuffling board overrides around.
-
-As the ports are identical it makes sense to share the same board DTS, I agree 
-with you. We could override the compatible string in r8a7795-es1.dtsi and 
-leave it blank in r8a7795.dtsi for now, as there's no driver support for 
-ES2.0. That's a bit of a workaround as it shouldn't matter to DT whether 
-driver support is available or not. On the other hand, leaving the vsps 
-property out is a workaround too.
-
-The current driver will fail probing if the number of VSPs is different than 
-the number of CRTCs, so I believe you can keep the vsps property in 
-r8a7795.dtsi with 3 VSPS without causing any problem. However, there's no DT 
-bindings for the H3 ES2.0 DU yet, so we would end up merging DT without 
-bindings, which is not good. I think that regardless of how we proceed, 
-keeping the DU node in the ES2.0 .dtsi will be a violation of that policy.
-
--- 
-Regards,
-
-Laurent Pinchart
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
