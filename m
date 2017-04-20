@@ -1,124 +1,125 @@
-From: Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/4] mfd: Add ROHM BD9571MWV-M PMIC DT bindings
-Date: Thu, 20 Apr 2017 14:51:40 +0200
-Message-ID: <dbfbadbd-9850-4a8e-581f-abd5ae39e841@gmail.com>
-References: <20170416180801.17828-1-marek.vasut+renesas@gmail.com>
- <CAMuHMdUUkZ_si8DAmvY_KvNF8tO=q2wHzjqRCjxXJD3-XxxJFw@mail.gmail.com>
+From: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+Subject: Re: [RFC 1/2] dt-bindings: add mmio-based syscon mux controller DT
+ bindings
+Date: Thu, 20 Apr 2017 15:32:21 +0200
+Message-ID: <67388375-4f9e-fd1e-5155-7aeac0ea7b46@axentia.se>
+References: <20170413154812.19597-1-p.zabel@pengutronix.de>
+ <20170419220900.ndrtt2m7d6tqsddh@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAMuHMdUUkZ_si8DAmvY_KvNF8tO=q2wHzjqRCjxXJD3-XxxJFw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <20170419220900.ndrtt2m7d6tqsddh@rob-hp-laptop>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Cc: Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Marek Vasut <marek.vasut+renesas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>, Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 04/20/2017 02:35 PM, Geert Uytterhoeven wrote:
-> Hi Marek,
-
-Hi!
-
-> On Sun, Apr 16, 2017 at 8:07 PM, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> Add DT bindings for the ROHM BD9571MWV-M PMIC. This PMIC has
->> the following features:
->> - multiple voltage monitors for 1V8, 2V5, 3V3 voltage rail
->> - one voltage regulator for DVFS
->> - two GPIOs
+On 2017-04-20 00:09, Rob Herring wrote:
+> On Thu, Apr 13, 2017 at 05:48:11PM +0200, Philipp Zabel wrote:
+>> This adds device tree binding documentation for mmio-based syscon
+>> multiplexers controlled by a single bitfield in a syscon register
+>> range.
 >>
->> Signed-off-by: Marek Vasut <marek.vasut+renesas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->> Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->> Cc: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
->> Cc: linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>> Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 >> ---
->>  .../devicetree/bindings/mfd/bd9571mwv.txt          | 49 ++++++++++++++++++++++
->>  1 file changed, 49 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/mfd/bd9571mwv.txt
+>>  Documentation/devicetree/bindings/mux/mmio-mux.txt | 56 ++++++++++++++++++++++
+>>  1 file changed, 56 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/mux/mmio-mux.txt
 >>
->> diff --git a/Documentation/devicetree/bindings/mfd/bd9571mwv.txt b/Documentation/devicetree/bindings/mfd/bd9571mwv.txt
+>> diff --git a/Documentation/devicetree/bindings/mux/mmio-mux.txt b/Documentation/devicetree/bindings/mux/mmio-mux.txt
 >> new file mode 100644
->> index 000000000000..0952ee3bc30b
+>> index 0000000000000..11d96f5d98583
 >> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/mfd/bd9571mwv.txt
->> @@ -0,0 +1,49 @@
->> +* ROHM BD9571MWV Power Management Integrated Circuit (PMIC) bindings
+>> +++ b/Documentation/devicetree/bindings/mux/mmio-mux.txt
+>> @@ -0,0 +1,56 @@
+>> +MMIO bitfield-based multiplexer controller bindings
+>> +
+>> +Define a syscon bitfield to be used to control a multiplexer. The parent
+>> +device tree node must be a syscon node to provide register access.
 >> +
 >> +Required properties:
->> + - compatible          : Should be "rohm,bd9571mwv".
->> + - reg                 : I2C slave address.
->> + - interrupt-parent    : Phandle to the parent interrupt controller.
->> + - interrupts          : The interrupt line the device is connected to.
->> + - interrupt-controller        : Marks the device node as an interrupt controller.
->> + - #interrupt-cells    : The number of cells to describe an IRQ, should be 2.
->> +                           The first cell is the IRQ number.
->> +                           The second cell is the flags, encoded as trigger
->> +                           masks from ../interrupt-controller/interrupts.txt.
->> + - gpio-controller      : Marks the device node as a GPIO Controller.
->> + - #gpio-cells          : Should be two.  The first cell is the pin number and
->> +                            the second cell is used to specify flags.
->> +                            See ../gpio/gpio.txt for more information.
->> + - regulators:          : List of child nodes that specify the regulator
->> +                            initialization data. Child nodes must be named
->> +                            after their hardware counterparts:
->> +                            - vd18
->> +                            - vd25
->> +                            - vd33
->> +                            - dvfs
+>> +- compatible : "gpio-mux"
 > 
-> Missing vd09, which is used for VDD0.8 on Salvator-X.
-
-This is not supported by the driver, I don't think we should prematurely
-add it into the bindings. We can add it later though.
-
->> +                           Each child node is defined using the standard
->> +                           binding for regulators.
+> ?
+> 
+>> +- reg : register base of the register containing the control bitfield
+>> +- bit-mask : bitmask of the control bitfield in the control register
+>> +- bit-shift : bit offset of the control bitfield in the control register
+>> +- #mux-control-cells : <0>
+>> +* Standard mux-controller bindings as decribed in mux-controller.txt
+>> +
+>> +Optional properties:
+>> +- idle-state : if present, the state the mux will have when idle. The
+>> +	       special state MUX_IDLE_AS_IS is the default.
+>> +
+>> +The multiplexer state is defined as the value of the bitfield described
+>> +by the reg, bit-mask, and bit-shift properties, accessed through the parent
+>> +syscon.
 >> +
 >> +Example:
 >> +
->> +       pmic: bd9571mwv@30 {
->> +               compatible = "rohm,bd9571mwv";
->> +               reg = <0x30>;
->> +               interrupt-parent = <&gpio2>;
->> +               interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
->> +               interrupt-controller;
->> +               #interrupt-cells = <2>;
->> +               gpio-controller;
->> +               #gpio-cells = <2>;
+>> +	syscon {
+>> +		compatible = "syscon";
 >> +
->> +               regulators {
->> +                       dvfs: dvfs {
->> +                               compatible = "regulator-fixed";
+>> +		mux: mux-controller@3 {
+>> +			compatible = "mmio-mux";
+>> +			reg = <0x3>;
+>> +			bit-mask = <0x1>;
+>> +			bit-shift = <5>;
 > 
-> What's the purpose of this compatible value?
+> This pattern doesn't scale once you have multiple fields @ addr 3. I 
+> also don't really think a node per register field in DT really scales.
+> 
+> I think the parent should be declared as a mux controller instead. You 
+> could encode the mux addr and bit position in the mux cells.
 
-The purpose is for it to be removed in V2 , thanks for catching this one.
+But then you need to create mux controllers on demand. I have not
+succeeded in doing that while also following the rules of the driver
+model. I had severe problems with life-time issues when I tried.
+I would like to see code before embarking on this path, and I'm
+apparently not the one writing it...
 
->> +                               regulator-name = "dvfs";
->> +                               regulator-min-microvolt = <750000>;
->> +                               regulator-max-microvolt = <1030000>;
->> +                               regulator-boot-on;
->> +                               regulator-always-on;
->> +                       };
->> +               };
->> +       };
-> 
-> Gr{oetje,eeting}s,
-> 
->                         Geert
-> 
-> --
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
-> 
-> In personal conversations with technical people, I call myself a hacker. But
-> when I'm talking to journalists I just say "programmer" or something like that.
->                                 -- Linus Torvalds
-> 
+So, either you meant that, or that the parent node should somehow
+specify the possible mux controllers up front so that they can be
+pre-created and ready when the consumers request them. But if you
+do that, you can just refer to them by some enumeration from the
+mux consumers instead of by some convoluted reg+field notation.
 
+>> +			#mux-control-cells = <0>;
+>> +		};
+>> +	};
+>> +
+>> +	video-mux {
+>> +		compatible = "video-mux";
+>> +		mux-controls = <&mux>;
+> 
+> The mux binding was largely defined for a single control controling 
+> multiple muxes. This doesn't really fit that, but I guess this is an 
+> improvement over a custom syscon phandle.
+> 
+>> +
+>> +		ports {
+>> +			/* input 0 */
+>> +			port@0 {
+>> +				reg = <0>;
+>> +			};
+>> +
+>> +			/* input 1 */
+>> +			port@1 {
+>> +				reg = <1>;
+>> +			};
+>> +
+>> +			/* output */
+>> +			port@2 {
+>> +				reg = <2>;
+>> +			};
+>> +		};
+>> +	};
+>> -- 
+>> 2.11.0
+>>
 
--- 
-Best regards,
-Marek Vasut
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
