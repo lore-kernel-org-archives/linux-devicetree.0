@@ -1,82 +1,65 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/4] mfd: Add ROHM BD9571MWV-M PMIC DT bindings
-Date: Thu, 20 Apr 2017 09:09:29 -0500
-Message-ID: <20170420140929.peraem4uv57d7i25@rob-hp-laptop>
-References: <20170416180801.17828-1-marek.vasut+renesas@gmail.com>
- <CAMuHMdUUkZ_si8DAmvY_KvNF8tO=q2wHzjqRCjxXJD3-XxxJFw@mail.gmail.com>
- <dbfbadbd-9850-4a8e-581f-abd5ae39e841@gmail.com>
+Subject: Re: [PATCH 22/29] dt-bindings: Clarify compatible property for
+ rockchip timers
+Date: Thu, 20 Apr 2017 09:12:29 -0500
+Message-ID: <20170420141229.a3qran4agt24iczc@rob-hp-laptop>
+References: <20170416202542.GV2078@mai>
+ <1492374441-23336-1-git-send-email-daniel.lezcano@linaro.org>
+ <1492374441-23336-22-git-send-email-daniel.lezcano@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <dbfbadbd-9850-4a8e-581f-abd5ae39e841-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <1492374441-23336-22-git-send-email-daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Marek Vasut <marek.vasut+renesas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+To: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alexander Kochetkov <al.kochet-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Huang Tao <huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "moderated list:ARM/Rockchip SoC support" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "open list:ARM/Rockchip SoC support" <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 20, 2017 at 02:51:40PM +0200, Marek Vasut wrote:
-> On 04/20/2017 02:35 PM, Geert Uytterhoeven wrote:
-> > Hi Marek,
+On Sun, Apr 16, 2017 at 10:27:12PM +0200, Daniel Lezcano wrote:
+> From: Alexander Kochetkov <al.kochet-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 > 
-> Hi!
+> Make all properties description in form '"rockchip,<chip>-timer",
+> "rockchip,rk3288-timer"' for all chips found in linux kernel.
 > 
-> > On Sun, Apr 16, 2017 at 8:07 PM, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> >> Add DT bindings for the ROHM BD9571MWV-M PMIC. This PMIC has
-> >> the following features:
-> >> - multiple voltage monitors for 1V8, 2V5, 3V3 voltage rail
-> >> - one voltage regulator for DVFS
-> >> - two GPIOs
-> >>
-> >> Signed-off-by: Marek Vasut <marek.vasut+renesas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> >> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> >> Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> >> Cc: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-> >> Cc: linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> >> ---
-> >>  .../devicetree/bindings/mfd/bd9571mwv.txt          | 49 ++++++++++++++++++++++
-> >>  1 file changed, 49 insertions(+)
-> >>  create mode 100644 Documentation/devicetree/bindings/mfd/bd9571mwv.txt
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/mfd/bd9571mwv.txt b/Documentation/devicetree/bindings/mfd/bd9571mwv.txt
-> >> new file mode 100644
-> >> index 000000000000..0952ee3bc30b
-> >> --- /dev/null
-> >> +++ b/Documentation/devicetree/bindings/mfd/bd9571mwv.txt
-> >> @@ -0,0 +1,49 @@
-> >> +* ROHM BD9571MWV Power Management Integrated Circuit (PMIC) bindings
-> >> +
-> >> +Required properties:
-> >> + - compatible          : Should be "rohm,bd9571mwv".
-> >> + - reg                 : I2C slave address.
-> >> + - interrupt-parent    : Phandle to the parent interrupt controller.
-> >> + - interrupts          : The interrupt line the device is connected to.
-> >> + - interrupt-controller        : Marks the device node as an interrupt controller.
-> >> + - #interrupt-cells    : The number of cells to describe an IRQ, should be 2.
-> >> +                           The first cell is the IRQ number.
-> >> +                           The second cell is the flags, encoded as trigger
-> >> +                           masks from ../interrupt-controller/interrupts.txt.
-> >> + - gpio-controller      : Marks the device node as a GPIO Controller.
-> >> + - #gpio-cells          : Should be two.  The first cell is the pin number and
-> >> +                            the second cell is used to specify flags.
-> >> +                            See ../gpio/gpio.txt for more information.
-> >> + - regulators:          : List of child nodes that specify the regulator
-> >> +                            initialization data. Child nodes must be named
-> >> +                            after their hardware counterparts:
-> >> +                            - vd18
-> >> +                            - vd25
-> >> +                            - vd33
-> >> +                            - dvfs
-> > 
-> > Missing vd09, which is used for VDD0.8 on Salvator-X.
+> Suggested-by: Heiko Stübner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+> Signed-off-by: Alexander Kochetkov <al.kochet-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Reviewed-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+> Signed-off-by: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+>  .../devicetree/bindings/timer/rockchip,rk-timer.txt          | 12 +++++++++---
+>  1 file changed, 9 insertions(+), 3 deletions(-)
 > 
-> This is not supported by the driver, I don't think we should prematurely
-> add it into the bindings. We can add it later though.
+> diff --git a/Documentation/devicetree/bindings/timer/rockchip,rk-timer.txt b/Documentation/devicetree/bindings/timer/rockchip,rk-timer.txt
+> index a41b184..16a5f45 100644
+> --- a/Documentation/devicetree/bindings/timer/rockchip,rk-timer.txt
+> +++ b/Documentation/devicetree/bindings/timer/rockchip,rk-timer.txt
+> @@ -1,9 +1,15 @@
+>  Rockchip rk timer
+>  
+>  Required properties:
+> -- compatible: shall be one of:
+> -  "rockchip,rk3288-timer" - for rk3066, rk3036, rk3188, rk322x, rk3288, rk3368
+> -  "rockchip,rk3399-timer" - for rk3399
+> +- compatible: should be:
 
-If it is trivial to add, then do so now. Bindings should be complete, 
-not what a driver supports.
+should be one of:
 
-Rob
+> +  "rockchip,rk3036-timer", "rockchip,rk3288-timer": for Rockchip RK3036
+> +  "rockchip,rk3066-timer", "rockchip,rk3288-timer": for Rockchip RK3066
+> +  "rockchip,rk3188-timer", "rockchip,rk3288-timer": for Rockchip RK3188
+> +  "rockchip,rk3228-timer", "rockchip,rk3288-timer": for Rockchip RK3228
+> +  "rockchip,rk3229-timer", "rockchip,rk3288-timer": for Rockchip RK3229
+> +  "rockchip,rk3288-timer": for Rockchip RK3288
+> +  "rockchip,rk3368-timer", "rockchip,rk3288-timer": for Rockchip RK3368
+> +  "rockchip,rk3399-timer": for Rockchip RK3399
+
+I find the "for Rockchip RKxxxx" a bit redundant, but it's fine with or 
+without. Otherwise,
+
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
