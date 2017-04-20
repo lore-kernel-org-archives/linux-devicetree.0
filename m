@@ -1,86 +1,51 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH V4 1/9] PM / OPP: Allow OPP table to be used for
- power-domains
-Date: Thu, 20 Apr 2017 15:03:01 +0530
-Message-ID: <20170420093301.GI5436@vireshk-i7>
-References: <e772e67a5445319bb8e0f312846ace666adc097f.1490001099.git.viresh.kumar@linaro.org>
- <0a7146f9-72f1-317c-3aab-770a72462968@arm.com>
- <20170413053736.GM5910@vireshk-i7>
- <3adbef6a-7b43-528f-e88f-c2121d30a5d3@arm.com>
- <20170417052758.GF28191@vireshk-i7>
- <95aa4b97-4e1a-13bb-f4d8-982b778012ba@arm.com>
- <20170419114740.GD5436@vireshk-i7>
- <9dee7c0d-e5f4-9fcd-3c92-bf7ec9d43a3b@arm.com>
- <20170420052533.GF5436@vireshk-i7>
- <CAPDyKFq5xwv5Vy6wNfjFYi_4+immDH9UKTS1EG2j6c4OwnQONg@mail.gmail.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH/RFC v2 1/2] arm64: dts: r8a7795: Add support for R-Car H3 ES2.0
+Date: Thu, 20 Apr 2017 11:36:59 +0200
+Message-ID: <CAMuHMdXOzyo+kzaGAXp+jZTtUejYyXCQzezo+SmvNVQuEC9=_Q@mail.gmail.com>
+References: <1490362665-4422-1-git-send-email-geert+renesas@glider.be>
+ <1490362665-4422-2-git-send-email-geert+renesas@glider.be> <1612430.SNEha5n02K@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAPDyKFq5xwv5Vy6wNfjFYi_4+immDH9UKTS1EG2j6c4OwnQONg@mail.gmail.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Sudeep Holla <sudeep.holla@arm.com>, Rafael Wysocki <rjw@rjwysocki.net>, Kevin Hilman <khilman@linaro.org>, Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@codeaurora.org>, linaro-kernel <linaro-kernel@lists.linaro.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Vincent Guittot <vincent.guittot@linaro.org>, Rob Herring <robh+dt@kernel.org>, Lina Iyer <lina.iyer@linaro.org>, Rajendra Nayak <rnayak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <1612430.SNEha5n02K@avalon>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Wolfram Sang <wsa@sang-engineering.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 20-04-17, 10:23, Ulf Hansson wrote:
-> Viresh, Sudeep,
-> 
-> Sorry for jumping in late.
-> 
-> [...]
-> 
-> >> On the contrary(playing devil's advocate here), we can treat all
-> >> existing regulators alone as OPP then if you strip the voltages and
-> >> treat it as abstract number.
-> >
-> > But then we are going to have lots of platform specific code which
-> > will program the actual hardware, etc. Which is all handled by the
-> > regulator framework. Also note that the regulator core selects the
-> > common voltage selected by all the children, while we want to select
-> > the highest performance point here.
-> 
-> If I understand correctly, Sudeep is not convinced that this is about
-> PM domain regulator(s), right?
-> 
-> To me there is no doubt, these regulators is exactly the definition of
-> PM domain regulators.
-> 
-> That said, long time ago we have decided PM domain regulator shall be
-> modeled as exactly that. From DT point of view, this means the handle
-> to the PM domain regulator belongs in the node of the PM domain
-> controller - and not in each device's node of those belonging to the
-> PM domain.
-> 
-> Isn't that what this discussion really boils down to? Or maybe I am
-> not getting it.
+Hi Laurent,
 
-Maybe not. I think Sudeep understands that this is about PM domain
-regulators only but he is asking why aren't we solving this problem
-using regulators framework but performance-levels instead.
+On Mon, Mar 27, 2017 at 10:48 AM, Laurent Pinchart
+<laurent.pinchart@ideasonboard.com> wrote:
+> On Friday 24 Mar 2017 14:37:44 Geert Uytterhoeven wrote:
+>> Update r8a7795.dtsi so it corresponds to R-Car H3 ES2.0 or later:
+>>   - The following devices no longer exist on ES2.0, and are thus removed:
+>>     fcpf2, fcpvd3, fcpvi2, fdp1-2, usb3-if1, vspd3, vspi2.
+>>   - The DU <-> VSPD topology is different on ES2.0, hence remove the
+>>     "vsps" property from the DU node until the driver can handle this.
+>
+> I think I'll need a different compatible string between ES1.x and ES2 for the
+> DU. It could make sense to move the whole DU node to *-es1.dtsi. We can decide
+> about that later when I'll have a DU driver prototype ready.
 
-> >
-> > Even if we have to configure both clock and voltage for the power
-> > domain using standard clk/regulator frameworks, OPP will work just
-> > fine as it will do that then. So, its not that we are bypassing the
-> > regulator framework here. It will be used if we have the voltages
-> > available for the power-domain's performance states.
-> >
-> >> So if the firmware handles more than just
-> >> regulators, I agree.
-> >
-> > I don't know the internals of that really.
-> >
-> >> At the same time, I would have preferred firmware
-> >> to even abstract the frequency like ACPI CPPC.
-> >
-> > Frequency isn't required to be configured for the cases I know, but it
-> > can be in future implementations.
-> 
-> To me using OPP tables makes sense as it gives us the flexibility that
-> is needed. If I understand correct, that was also Kevin's point.
+Why would you need a different compatible string?
+Can't you use soc_device_match() to handle ES1.x SoCs?
 
-Right.
+The different DU <-> VSPD topology is handled through the vsps property in DTS.
+Are the ports different, too? That can be handled in DTS.
 
--- 
-viresh
+The main reason why I kept the DU node in r8a7795.dtsi is that the board DTS
+refers to it.  Sharing board DTS means there needs to be at least a
+placeholder node for the DU in r8a7795.dtsi, unless you want to keep on
+shuffling board overrides around.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
