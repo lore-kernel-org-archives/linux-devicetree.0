@@ -1,59 +1,49 @@
-From: Gilad Ben-Yossef <gilad-6S/DczAoZh3WXxRugSxzZg@public.gmane.org>
-Subject: Re: [PATCH v2 0/9] staging: ccree: add Arm TrustZone CryptoCell REE driver
-Date: Thu, 20 Apr 2017 16:36:08 +0300
-Message-ID: <CAOtvUMcwcWTWaH2xskWFzUxq3QNOH7bMR8O0ByhZ7cgfcsdO7Q@mail.gmail.com>
-References: <1492693983-8175-1-git-send-email-gilad@benyossef.com> <20170420133052.GA8998@kroah.com>
+From: Steven Rostedt <rostedt-nx8X9YLhiw1AfugRpC6u6w@public.gmane.org>
+Subject: Re: [PATCH] of: introduce event tracepoints for dynamic device_node
+ lifecyle
+Date: Thu, 20 Apr 2017 09:37:04 -0400
+Message-ID: <20170420093704.577f262d@gandalf.local.home>
+References: <1492475525-10827-1-git-send-email-tyreld@linux.vnet.ibm.com>
+        <58F6AA35.2040902@gmail.com>
+        <87efwp6v4e.fsf@concordia.ellerman.id.au>
+        <1d51a229-612b-bf09-93d5-6e43b476e2cf@gmail.com>
+        <20170419223342.0bbe2593@grimm.local.home>
+        <90e008a7-0660-99b9-edbe-6bf146268ba8@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170420133052.GA8998-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <90e008a7-0660-99b9-edbe-6bf146268ba8-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Cc: Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, Binoy Jayan <binoy.jayan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Gilad Ben-Yossef <gilad.benyossef-5wv7dgnIgG8@public.gmane.org>, Linux kernel mailing list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stuart Yoder <stuart.yoder-5wv7dgnIgG8@public.gmane.org>, Ofir Drang <ofir.drang-5wv7dgnIgG8@public.gmane.org>
+To: Tyrel Datwyler <turtle.in.the.kernel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Tyrel Datwyler <tyreld-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, nfont-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org, mingo-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 20, 2017 at 4:30 PM, Greg Kroah-Hartman
-<gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org> wrote:
-> On Thu, Apr 20, 2017 at 04:12:54PM +0300, Gilad Ben-Yossef wrote:
->> Arm TrustZone CryptoCell 700 is a family of cryptographic hardware
->> accelerators. It is supported by a long lived series of out of tree
->> drivers, which I am now in the process of unifying and upstreaming.
->> This is the first drop, supporting the new CryptoCell 712 REE.
->>
->> The code still needs some cleanup before maturing to a proper
->> upstream driver, which I am in the process of doing. However,
->> as discussion of some of the capabilities of the hardware and
->> its application to some dm-crypt and dm-verity features recently
->> took place I though it is better to do this in the open via the
->> staging tree.
->>
->> A Git repository based off of Linux 4.11-rc7 is also available at
->> https://github.com/gby/linux.git branch ccree_v2 for those inclined.
->
-> If you want this in staging, I'll be glad to take it, but note then you
-> can't work off of an external repo, as syncing the two is almost
-> impossible and more work than you want to go through.
+On Wed, 19 Apr 2017 22:24:58 -0700
+Tyrel Datwyler <turtle.in.the.kernel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
 
-Once it's in the staging tree I don't need a separate repo. It was only useful
-so long as I did not have an upstream tree to point people to.
->
-> So, as long as this builds properly, want me to queue these up in my
-> tree?
+> On 04/19/2017 07:33 PM, Steven Rostedt wrote:
+> > On Wed, 19 Apr 2017 16:27:10 -0700
+> > Tyrel Datwyler <turtle.in.the.kernel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> >   
+> >> # echo stacktrace > /sys/kernel/debug/tracing/trace_options
+> >> # cat trace | grep -A6 "/pci@800000020000018"  
+> > 
+> > Just to let you know that there is now stacktrace event triggers, where
+> > you don't need to stacktrace all events, you can pick and choose. And
+> > even filter the stack trace on specific fields of the event.  
+> 
+> This is great, and I did figure that out this afternoon. One thing I was
+> still trying to determine though was whether its possible to set these
+> triggers at boot? As far as I could tell I'm still limited to
+> "trace_options=stacktrace" as a kernel boot parameter to get the stack
+> for event tracepoints.
 
-Yes, please.
+No not yet. But I'll add that to the todo list.
 
 Thanks,
-Gilad
 
-
-
--- 
-Gilad Ben-Yossef
-Chief Coffee Drinker
-
-"If you take a class in large-scale robotics, can you end up in a
-situation where the homework eats your dog?"
- -- Jean-Baptiste Queru
+-- Steve
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
