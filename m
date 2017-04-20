@@ -1,110 +1,86 @@
-From: Moritz Fischer <mdf-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] rtc: ds1374: Add trickle charger device tree binding
-Date: Thu, 20 Apr 2017 10:25:39 -0700
-Message-ID: <20170420172538.GA13892@tyrael.amer.corp.natinst.com>
-References: <1492468810-17224-1-git-send-email-mdf@kernel.org>
- <20170420155634.gs7qkufw7j4mfqpx@rob-hp-laptop>
-Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Marek Vasut <marek.vasut@gmail.com>
+Subject: Re: [PATCH 1/4] mfd: Add ROHM BD9571MWV-M PMIC DT bindings
+Date: Thu, 20 Apr 2017 18:59:48 +0200
+Message-ID: <aad8abab-c59d-aa29-1cb4-3a05743c95ff@gmail.com>
+References: <20170416180801.17828-1-marek.vasut+renesas@gmail.com>
+ <CAMuHMdUUkZ_si8DAmvY_KvNF8tO=q2wHzjqRCjxXJD3-XxxJFw@mail.gmail.com>
+ <dbfbadbd-9850-4a8e-581f-abd5ae39e841@gmail.com>
+ <20170420140929.peraem4uv57d7i25@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="h31gzZEtNLTqOjlF"
-Return-path: <rtc-linux+bncBAABBFO64PDQKGQEAT62VHA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20170420155634.gs7qkufw7j4mfqpx@rob-hp-laptop>
-List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/rtc-linux
-List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/rtc-linux/subscribe>
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Moritz Fischer <mdf-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <20170420140929.peraem4uv57d7i25@rob-hp-laptop>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Marek Vasut <marek.vasut+renesas@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-
---h31gzZEtNLTqOjlF
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
-
-On Thu, Apr 20, 2017 at 10:56:34AM -0500, Rob Herring wrote:
-> On Mon, Apr 17, 2017 at 03:40:10PM -0700, Moritz Fischer wrote:
-> > Introduce a device tree binding for specifying the trickle charger
-> > configuration for ds1374. This is based on the code for ds13390.
-> > 
-> > Signed-off-by: Moritz Fischer <mdf-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> > ---
-> >  .../devicetree/bindings/rtc/dallas,ds1374.txt      | 18 ++++++++
-> >  drivers/rtc/rtc-ds1374.c                           | 54 ++++++++++++++++++++++
-> >  2 files changed, 72 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/rtc/dallas,ds1374.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/rtc/dallas,ds1374.txt b/Documentation/devicetree/bindings/rtc/dallas,ds1374.txt
-> > new file mode 100644
-> > index 0000000..4cf5bd7
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/rtc/dallas,ds1374.txt
-> > @@ -0,0 +1,18 @@
-> > +* Dallas DS1374		I2C Real-Time Clock / WDT
+On 04/20/2017 04:09 PM, Rob Herring wrote:
+> On Thu, Apr 20, 2017 at 02:51:40PM +0200, Marek Vasut wrote:
+>> On 04/20/2017 02:35 PM, Geert Uytterhoeven wrote:
+>>> Hi Marek,
+>>
+>> Hi!
+>>
+>>> On Sun, Apr 16, 2017 at 8:07 PM, Marek Vasut <marek.vasut@gmail.com> wrote:
+>>>> Add DT bindings for the ROHM BD9571MWV-M PMIC. This PMIC has
+>>>> the following features:
+>>>> - multiple voltage monitors for 1V8, 2V5, 3V3 voltage rail
+>>>> - one voltage regulator for DVFS
+>>>> - two GPIOs
+>>>>
+>>>> Signed-off-by: Marek Vasut <marek.vasut+renesas@gmail.com>
+>>>> Cc: devicetree@vger.kernel.org
+>>>> Cc: Rob Herring <robh@kernel.org>
+>>>> Cc: Geert Uytterhoeven <geert+renesas@glider.be>
+>>>> Cc: linux-renesas-soc@vger.kernel.org
+>>>> ---
+>>>>  .../devicetree/bindings/mfd/bd9571mwv.txt          | 49 ++++++++++++++++++++++
+>>>>  1 file changed, 49 insertions(+)
+>>>>  create mode 100644 Documentation/devicetree/bindings/mfd/bd9571mwv.txt
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/mfd/bd9571mwv.txt b/Documentation/devicetree/bindings/mfd/bd9571mwv.txt
+>>>> new file mode 100644
+>>>> index 000000000000..0952ee3bc30b
+>>>> --- /dev/null
+>>>> +++ b/Documentation/devicetree/bindings/mfd/bd9571mwv.txt
+>>>> @@ -0,0 +1,49 @@
+>>>> +* ROHM BD9571MWV Power Management Integrated Circuit (PMIC) bindings
+>>>> +
+>>>> +Required properties:
+>>>> + - compatible          : Should be "rohm,bd9571mwv".
+>>>> + - reg                 : I2C slave address.
+>>>> + - interrupt-parent    : Phandle to the parent interrupt controller.
+>>>> + - interrupts          : The interrupt line the device is connected to.
+>>>> + - interrupt-controller        : Marks the device node as an interrupt controller.
+>>>> + - #interrupt-cells    : The number of cells to describe an IRQ, should be 2.
+>>>> +                           The first cell is the IRQ number.
+>>>> +                           The second cell is the flags, encoded as trigger
+>>>> +                           masks from ../interrupt-controller/interrupts.txt.
+>>>> + - gpio-controller      : Marks the device node as a GPIO Controller.
+>>>> + - #gpio-cells          : Should be two.  The first cell is the pin number and
+>>>> +                            the second cell is used to specify flags.
+>>>> +                            See ../gpio/gpio.txt for more information.
+>>>> + - regulators:          : List of child nodes that specify the regulator
+>>>> +                            initialization data. Child nodes must be named
+>>>> +                            after their hardware counterparts:
+>>>> +                            - vd18
+>>>> +                            - vd25
+>>>> +                            - vd33
+>>>> +                            - dvfs
+>>>
+>>> Missing vd09, which is used for VDD0.8 on Salvator-X.
+>>
+>> This is not supported by the driver, I don't think we should prematurely
+>> add it into the bindings. We can add it later though.
 > 
-> Please remove from trivial-devices.txt, too. (which is moving in 4.12 
-> BTW)
+> If it is trivial to add, then do so now. Bindings should be complete, 
+> not what a driver supports.
 
-Ok, I'll redo this on top of b7e252fcddfa573bb1ee275b53bba6cef85671d4
-(Documentation: devicetree: move trivial-devices out of I2C realm) then.
-
-> 
-> > +
-> > +Required properties:
-> > +- compatible: Should contain "dallas,ds1374".
-> > +- reg: I2C address for chip
-> > +
-> > +Optional properties:
-> > +- trickle-resistor-ohms : Selected resistor for trickle charger
-> > +	Values usable for ds1374 are 250, 2000, 4000
-> > +	Should be given if trickle charger should be enabled
-> > +- trickle-diode-disable : Do not use internal trickle charger diode
-> > +	Should be given if internal trickle charger diode should be disabled
-> 
-> These should have vendor prefix unless you think they are common.
-
-Well works at least for maxim, dallas & different models like
-ds1390, ds1374, so I figured I'd keep the bindings the same.
-
-> 
-> > +Example:
-> > +	ds1374: rtc@0 {
-> > +		compatible = "dallas,ds1374";
-> > +		trickle-resistor-ohms = <250>;
-> > +		reg = <0>;
-> > +	};
-
-Thanks,
-
-Moritz
+OK, will be in V2 . I actually figured out how that regulator works and
+I can even set voltage.
 
 -- 
-You received this message because you are subscribed to "rtc-linux".
-Membership options at http://groups.google.com/group/rtc-linux .
-Please read http://groups.google.com/group/rtc-linux/web/checklist
-before submitting a driver.
---- 
-You received this message because you are subscribed to the Google Groups "rtc-linux" group.
-To unsubscribe from this group and stop receiving emails from it, send an email to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
-
---h31gzZEtNLTqOjlF
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEcBAEBAgAGBQJY+O8QAAoJEL5CEHepFqovni8H/1HsZv5pWBlbnW1xEio7f4ac
-0jb7u+fXvhn/dPVz46LD3JhJjEdSBaQRh9SKFJFiLUUxlPquXnn+OfpGjGIp4lX7
-P0iPAcN8Nkj078pEyokjs31Au9lGoMFJdhxqPr1mU8BgUyqV1yopT9FpL1e6amX3
-rJatOIFfXTCmc3O5dG4AZt/WE5C2yGPmD9eEQh3zof1iCDnw7Ol0TtRzylAQ2Flr
-fQtsDT/GIHWtGrqePxCSx61CuY698wGEUW4aKtQNfY7g/Ap4CUHItA8Zpxbj4Ji3
-o12o3tBLQ0iY6+4ZaRbl5+6NqypiwDCHNgfJQx/mejQy4ATCfkLmQZsvUcodV24=
-=lUWj
------END PGP SIGNATURE-----
-
---h31gzZEtNLTqOjlF--
+Best regards,
+Marek Vasut
