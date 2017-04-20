@@ -1,52 +1,100 @@
-From: Vincent Guittot <vincent.guittot@linaro.org>
-Subject: Re: [PATCH v4 3/8] arm: fix return value of parse_cpu_capacity
-Date: Thu, 20 Apr 2017 16:50:03 +0200
-Message-ID: <CAKfTPtCnK6TW3+pdYLeDcUWEtQi5j+id70Lhtv4umg1eNyZV1w@mail.gmail.com>
-References: <20170420144316.15632-1-juri.lelli@arm.com> <20170420144316.15632-4-juri.lelli@arm.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 08/13] reset: Add a reset controller driver for the
+ Lantiq XWAY based SoCs
+Date: Thu, 20 Apr 2017 09:54:05 -0500
+Message-ID: <20170420145405.7s3iapxggr5575d2@rob-hp-laptop>
+References: <20170417192942.32219-1-hauke@hauke-m.de>
+ <20170417192942.32219-9-hauke@hauke-m.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20170420144316.15632-4-juri.lelli@arm.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Juri Lelli <juri.lelli@arm.com>
-Cc: linux-kernel <linux-kernel@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, LAK <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Peter Zijlstra <peterz@infradead.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Sudeep Holla <sudeep.holla@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Morten Rasmussen <morten.rasmussen@arm.com>, Dietmar Eggemann <dietmar.eggemann@arm.com>, Mark Brown <broonie@kernel.org>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170417192942.32219-9-hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
+Cc: ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org, john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, hauke.mehrtens-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 20 April 2017 at 16:43, Juri Lelli <juri.lelli@arm.com> wrote:
-> parse_cpu_capacity() has to return 0 on failure, but it currently returns
-> 1 instead if raw_capacity kcalloc failed.
->
-> Fix it (by directly returning 0).
->
-> Cc: Russell King <linux@arm.linux.org.uk>
-> Reported-by: Morten Rasmussen <morten.rasmussen@arm.com>
-> Fixes: 06073ee26775 ('ARM: 8621/3: parse cpu capacity-dmips-mhz from DT')
-> Signed-off-by: Juri Lelli <juri.lelli@arm.com>
-> Acked-by: Russell King <rmk+kernel@armlinux.org.uk>
+On Mon, Apr 17, 2017 at 09:29:37PM +0200, Hauke Mehrtens wrote:
+> From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+> 
+> The reset controllers (on xRX200 and newer SoCs have two of them) are
+> provided by the RCU module. This was initially implemented as a simple
+> reset controller. However, the RCU module provides more functionality
+> (ethernet GPHYs, USB PHY, etc.), which makes it a MFD device.
+> The old reset controller driver implementation from
+> arch/mips/lantiq/xway/reset.c did not honor this fact.
+> 
+> For some devices the request and the status bits are different.
+> 
+> Signed-off-by: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
 > ---
->
-> Changes from v3:
->
->  - directly return 0 on failure (as pointed out by Vincent)
-> ---
->  arch/arm/kernel/topology.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/arch/arm/kernel/topology.c b/arch/arm/kernel/topology.c
-> index f8a3ab82e77f..1b8ec3054642 100644
-> --- a/arch/arm/kernel/topology.c
-> +++ b/arch/arm/kernel/topology.c
-> @@ -166,7 +166,7 @@ static int __init parse_cpu_capacity(struct device_node *cpu_node, int cpu)
->                         if (!raw_capacity) {
->                                 pr_err("cpu_capacity: failed to allocate memory for raw capacities\n");
->                                 cap_parsing_failed = true;
-> -                               return !ret;
-> +                               return 0;
+>  .../devicetree/bindings/reset/lantiq,rcu-reset.txt |  43 ++++
+>  arch/mips/lantiq/xway/reset.c                      |  68 ------
+>  drivers/reset/Kconfig                              |   6 +
+>  drivers/reset/Makefile                             |   1 +
+>  drivers/reset/reset-lantiq-rcu.c                   | 231 +++++++++++++++++++++
+>  5 files changed, 281 insertions(+), 68 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/reset/lantiq,rcu-reset.txt
+>  create mode 100644 drivers/reset/reset-lantiq-rcu.c
+> 
+> diff --git a/Documentation/devicetree/bindings/reset/lantiq,rcu-reset.txt b/Documentation/devicetree/bindings/reset/lantiq,rcu-reset.txt
+> new file mode 100644
+> index 000000000000..7f097d16bbb7
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/reset/lantiq,rcu-reset.txt
+> @@ -0,0 +1,43 @@
+> +Lantiq XWAY SoC RCU reset controller binding
+> +============================================
+> +
+> +This binding describes a reset-controller found on the RCU module on Lantiq
+> +XWAY SoCs.
+> +
+> +
+> +-------------------------------------------------------------------------------
+> +Required properties (controller (parent) node):
+> +- compatible		: Should be "lantiq,rcu-reset"
+> +- lantiq,rcu-syscon	: A phandle to the RCU syscon, the reset register
+> +			  offset and the status register offset.
+> +- #reset-cells		: Specifies the number of cells needed to encode the
+> +			  reset line, should be 1.
+> +
+> +Optional properties:
+> +- reset-status		: The request status bit. For some bits the request bit
+> +			  and the status bit are different. This is depending
+> +			  on the SoC. If the reset-status bit does not match
+> +			  the reset-request bit, put the reset number into the
+> +			  reset-request property and the status bit at the same
+> +			  index into the reset-status property. If no
+> +			  reset-request bit is given here, the driver assume
+> +			  status and request bit are the same.
+> +- reset-request		: The reset request bit, to map it to the reset-status
+> +			  bit.
 
-Acked-by: Vincent Guittot <vincent.guittot@linaor.org>
->                         }
->                 }
->                 capacity_scale = max(cpu_capacity, capacity_scale);
-> --
-> 2.10.0
->
+These should either be implied by SoC specific compatible or be made 
+part of the reset cells. In the latter case, you still need the SoC 
+specific compatible.
+
+> +-------------------------------------------------------------------------------
+> +Example for the reset-controllers on the xRX200 SoCs:
+> +	rcu_reset0: rcu_reset {
+> +		compatible = "lantiq,rcu-reset";
+> +		lantiq,rcu-syscon = <&rcu0 0x10 0x14>;
+> +		#reset-cells = <1>;
+> +		reset-request = <31>, <29>, <21>, <19>, <16>, <12>;
+> +		reset-status  = <30>, <28>, <16>, <25>, <5>,  <24>;
+> +	};
+> +
+> +	rcu_reset1: rcu_reset {
+> +		compatible = "lantiq,rcu-reset";
+
+These 2 blocks are identical? Given different registers sizes, I'd say 
+not. So they should have different compatible strings.
+
+> +		lantiq,rcu-syscon = <&rcu0 0x48 0x24>;
+> +		#reset-cells = <1>;
+> +	};
+--
+To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
