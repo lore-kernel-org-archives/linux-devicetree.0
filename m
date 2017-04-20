@@ -1,32 +1,38 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH v3 3/3] arm64: dts: exynos: Add support for s6e3hf2 panel
- device on TM2e board
-Date: Thu, 20 Apr 2017 18:01:59 +0200
-Message-ID: <20170420160159.lkdy3oqntbvxd46w@kozik-lap>
-References: <1492504836-19225-1-git-send-email-hoegeun.kwon@samsung.com>
- <CGME20170418084047epcas5p42535837ac327ec48730ca766176bf86d@epcas5p4.samsung.com>
- <1492504836-19225-4-git-send-email-hoegeun.kwon@samsung.com>
+From: Daniel Baluta <daniel.baluta@gmail.com>
+Subject: Re: [PATCH 3/3] iio: tools: generic_buffer: increase trigger length
+Date: Thu, 20 Apr 2017 19:06:30 +0300
+Message-ID: <CAEnQRZADGzSVJfTnd_L+aZ6uEiV5QntyF3mSWm8x0Wma4B3YJw@mail.gmail.com>
+References: <1492590045-17329-1-git-send-email-eugen.hristev@microchip.com> <1492590045-17329-4-git-send-email-eugen.hristev@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1492504836-19225-4-git-send-email-hoegeun.kwon@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Hoegeun Kwon <hoegeun.kwon@samsung.com>
-Cc: thierry.reding@gmail.com, airlied@linux.ie, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, kgene@kernel.org, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, javier@osg.samsung.com, a.hajda@samsung.com, inki.dae@samsung.com, andi.shyti@samsung.com
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1492590045-17329-4-git-send-email-eugen.hristev@microchip.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Eugen Hristev <eugen.hristev@microchip.com>
+Cc: nicolas.ferre@microchip.com, alexandre.belloni@free-electrons.com, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, linux-arm-kernel@lists.infradead.org, Devicetree List <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, ludovic.desroches@microchip.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 18, 2017 at 05:40:36PM +0900, Hoegeun Kwon wrote:
-> This patch add the panel device tree node for s6e3hf2 display
-> controller to TM2e dts.
-> 
-> Signed-off-by: Hoegeun Kwon <hoegeun.kwon@samsung.com>
-> Reviewed-by: Andrzej Hajda <a.hajda@samsung.com>
+On Wed, Apr 19, 2017 at 11:20 AM, Eugen Hristev
+<eugen.hristev@microchip.com> wrote:
+> Increased trigger length to 50 in order to cope with trigger names like
+> fc030000.adc-dev0-external-rising
+>
+> Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
 > ---
->  arch/arm64/boot/dts/exynos/exynos5433-tm2e.dts | 11 +++++++++++
->  1 file changed, 11 insertions(+)
+>  tools/iio/iio_utils.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/tools/iio/iio_utils.h b/tools/iio/iio_utils.h
+> index 780f201..9d59771 100644
+> --- a/tools/iio/iio_utils.h
+> +++ b/tools/iio/iio_utils.h
+> @@ -13,7 +13,7 @@
+>  #include <stdint.h>
+>
+>  /* Made up value to limit allocation sizes */
+> -#define IIO_MAX_NAME_LENGTH 30
+> +#define IIO_MAX_NAME_LENGTH 50
 
-Thanks, applied.
+While at it, lets be brave and set it to 64. :)
 
-Best regards,
-Krzysztof
+Daniel.
