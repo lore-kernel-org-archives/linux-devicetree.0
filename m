@@ -1,147 +1,355 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH v2] pinctrl: sh-pfc: r8a7794: add R8A7745 support
-Date: Thu, 20 Apr 2017 19:34:20 +0300
-Message-ID: <feaf9fd2-775a-b75f-d8c9-93b72dc1ecfb@cogentembedded.com>
-References: <20170413201932.890107963@cogentembedded.com>
- <CAMuHMdWSTHhLHdJt3+oASrYwpnzDserWjb5RRxYqhVxe=DNe8g@mail.gmail.com>
+From: Tyrel Datwyler <turtle.in.the.kernel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] of: introduce event tracepoints for dynamic device_node
+ lifecyle
+Date: Thu, 20 Apr 2017 09:51:55 -0700
+Message-ID: <64505d40-926d-b302-4ff3-dff71aa5018a@gmail.com>
+References: <1492475525-10827-1-git-send-email-tyreld@linux.vnet.ibm.com>
+ <58F6AA35.2040902@gmail.com> <87efwp6v4e.fsf@concordia.ellerman.id.au>
+ <1d51a229-612b-bf09-93d5-6e43b476e2cf@gmail.com> <58F83C66.7030806@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdWSTHhLHdJt3+oASrYwpnzDserWjb5RRxYqhVxe=DNe8g@mail.gmail.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Linus Walleij <linus.walleij@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <58F83C66.7030806-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>, Tyrel Datwyler <tyreld-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, nfont-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org, rostedt-nx8X9YLhiw1AfugRpC6u6w@public.gmane.org, mingo-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 04/20/2017 03:20 PM, Geert Uytterhoeven wrote:
+On 04/19/2017 09:43 PM, Frank Rowand wrote:
 
->> Renesas  RZ/G1E (R8A7745) is pin compatible with R-Car E2 (R8A7794),
->> however  it doesn't have several automotive specific peripherals.
->> Annotate all the items that only exist on the R-Car SoCs and only
->> supply the pin groups/functions existing on a given SoC (that required
->> splitting  of the AVB function)...
+<snip>
+
+>> Something else to keep in mind is that while pr_debugs could be used to
+>> provide feedback on the reference counts and of_reconfig events they
+>> don't in anyway tell us where they are happening in the kernel. The
+> 
+> Yes, that is critical information.  When there are refcount issues, the
+> root cause is at varying levels back in the call stack.
+> 
+> 
+>> trace infrastructure provides the ability to stack trace those events.
+>> The following example provides me a lot more information about who is
+>> doing what and where after I hot-add an ethernet adapter:
 >>
->> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+>> # echo stacktrace > /sys/kernel/debug/tracing/trace_options
+>> # cat trace | grep -A6 "/pci@800000020000018"
+>> ...
+>>            drmgr-7349  [006] d...  7138.821875: of_node_get: refcount=8,
+>> dn->full_name=/pci@800000020000018
+>>            drmgr-7349  [006] d...  7138.821876: <stack trace>
+>>  => .msi_quota_for_device
+>>  => .rtas_setup_msi_irqs
+>>  => .arch_setup_msi_irqs
+>>  => .__pci_enable_msix
+>>  => .pci_enable_msix_range
+> 
+> Nice!  It is great to have function names in the call stack.
+
+Agreed.
+
+<snip>
+
+>> To get that same info as far as I know is to add a dump_stack() after
+>> each pr_debug.
+> 
+> Here is a patch that I have used.  It is not as user friendly in terms
+> of human readable stack traces (though a very small user space program
+> should be able to fix that).  The patch is cut and pasted into this
+> email, so probably white space damaged.
+> 
+> Instead of dumping the stack, each line in the "report" contains
+> the top six addresses in the call stack.  If interesting, they
+> can be post-processed (as I will show in some examples below).
+
+Very cool. I wasn't familiar with the CALLER_ADDR* defines. Thanks for
+sharing.
+
+> 
+> ---
+>  drivers/of/dynamic.c |   29 +++++++++++++++++++++++++++++
+>  1 file changed, 29 insertions(+)
+> 
+> Index: b/drivers/of/dynamic.c
+> ===================================================================
+> --- a/drivers/of/dynamic.c
+> +++ b/drivers/of/dynamic.c
+> @@ -13,6 +13,7 @@
+>  #include <linux/slab.h>
+>  #include <linux/string.h>
+>  #include <linux/proc_fs.h>
+> +#include <linux/ftrace.h>
+>  
+>  #include "of_private.h"
+>  
+> @@ -27,6 +28,20 @@ struct device_node *of_node_get(struct d
+>  {
+>  	if (node)
+>  		kobject_get(&node->kobj);
+> +
+> +	if (node) {
+> +		int k;
+> +		int refcount = refcount_read(&node->kobj.kref.refcount);
+> +		pr_err("XXX get 0x%p %3d [0x%08lx 0x%08lx 0x%08lx 0x%08lx 0x%08lx 0x%08lx] ",
+> +			node, refcount,
+> +			CALLER_ADDR5, CALLER_ADDR4, CALLER_ADDR3,
+> +			CALLER_ADDR2, CALLER_ADDR1, CALLER_ADDR0);
+> +		// refcount = (refcount > 20) ? 20 : refcount; /* clamp max */
+> +		for (k = 0; k < refcount; k++)
+> +			pr_cont("+");
+> +		pr_cont(" %s\n", of_node_full_name(node));
+> +	}
+> +
+>  	return node;
+>  }
+>  EXPORT_SYMBOL(of_node_get);
+> @@ -38,8 +53,22 @@ EXPORT_SYMBOL(of_node_get);
+>   */
+>  void of_node_put(struct device_node *node)
+>  {
+> +	if (node) {
+> +		int k;
+> +		int refcount = refcount_read(&node->kobj.kref.refcount);
+> +		pr_err("XXX put 0x%p %3d [0x%08lx 0x%08lx 0x%08lx 0x%08lx 0x%08lx 0x%08lx] ",
+> +			node, refcount,
+> +			CALLER_ADDR5, CALLER_ADDR4, CALLER_ADDR3,
+> +			CALLER_ADDR2, CALLER_ADDR1, CALLER_ADDR0);
+> +		// refcount = (refcount > 20) ? 20 : refcount; /* clamp max */
+> +		for (k = 0; k < refcount; k++)
+> +			pr_cont("-");
+> +		pr_cont(" %s\n", of_node_full_name(node));
+> +	}
+> +
+>  	if (node)
+>  		kobject_put(&node->kobj);
+> +
+>  }
+>  EXPORT_SYMBOL(of_node_put);
+> 
+> 
+> I have used this mostly in the context of boot time, so there is a lot
+> of output.  My notes on configuration needed for my ARM boards are:
+> 
+>    FIXME: Currently using pr_err() so I don't need to set loglevel on boot.
+> 
+>           So obviously not a user friendly tool!!!
+>           The process is:
+>              - apply patch
+>              - configure, build, boot kernel
+>              - analyze data
+>              - remove patch
+> 
+>    LOG_BUF_SHIFT (was 17)
+>    General Setup ->
+>       [select 21] Kernel log buffer size (16 => 64KB, 17 => 128KB)
+> 
+> 
+>    Device Drivers ->
+>       Device Tree and Open Firmware support ->
+>         Device Tree overlays
+> 
+> 
+> Want CONFIG_FRAME_POINTER so that CALLER_ADDR* will work.
+> To be able to enable CONFIG_FRAME_POINTER, need to disable CONFIG_ARM_UNWIND.
+> 
+>    Kernel hacking ->
+>       [unselect] Enable stack unwinding support (EXPERIMENTAL)
+>       CONFIG_FRAME_POINTER will then be selected automatically
+> 
+> 
+> The output looks like:
+> 
+> [    0.231430] OF: XXX get 0xeefeb5dc   2 [0xc0814c58 0xc08148b0 0xc080e970 0xc080e894 0xc080e678 0xc080de7c] ++ /smp2p-adsp/slave-kernel
+> [    0.231457] OF: XXX get 0xeefeb5dc   3 [0xc08103c4 0xc0810024 0xc080fd94 0xc0814c58 0xc08149a8 0xc0814188] +++ /smp2p-adsp/slave-kernel
+> [    0.231495] OF: XXX get 0xeefeb5dc   4 [0xc08103c4 0xc0810024 0xc080fd94 0xc0814c58 0xc08149a8 0xc0814258] ++++ /smp2p-adsp/slave-kernel
+> [    0.231537] OF: XXX get 0xeefeb244   4 [0xc0810024 0xc080fd94 0xc0814c58 0xc08149a8 0xc0814278 0xc080ccc8] ++++ /smp2p-adsp
+> [    0.231568] OF: XXX put 0xeefeb5dc   4 [0xc08103c4 0xc0810024 0xc080fd94 0xc0814c58 0xc08149a8 0xc0814284] ---- /smp2p-adsp/slave-kernel
+> [    0.231610] OF: XXX get 0xeefe759c  23 [0xc0810024 0xc080fd94 0xc0814c58 0xc08149a8 0xc0814278 0xc080ccc8] +++++++++++++++++++++++ /
+> [    0.231702] OF: XXX put 0xeefeb244   4 [0xc08103c4 0xc0810024 0xc080fd94 0xc0814c58 0xc08149a8 0xc0814284] ---- /smp2p-adsp
+> [    0.231744] OF: XXX put 0xeefe759c  23 [0xc08103c4 0xc0810024 0xc080fd94 0xc0814c58 0xc08149a8 0xc0814284] ----------------------- /
+> [    0.231881] OF: XXX get 0xeefecb2c  22 [0xc0814c58 0xc08148b0 0xc080e970 0xc080e86c 0xc080e678 0xc080de7c] ++++++++++++++++++++++ /soc/interrupt-controller@f9000000
+> [    0.231972] OF: XXX put 0xeefecb2c  22 [0xc080fd94 0xc0814c58 0xc08148b0 0xc080e970 0xc080e894 0xc080e61c] ---------------------- /soc/interrupt-controller@f9000000
+> [    0.232101] OF: XXX get 0xeefeb5dc   4 [0xc0814c58 0xc08148b0 0xc080e970 0xc080e894 0xc080e678 0xc080de7c] ++++ /smp2p-adsp/slave-kernel
+> [    0.232134] OF: XXX put 0xeefeb5dc   4 [0xc080fd94 0xc0814c58 0xc08148b0 0xc080e970 0xc080e894 0xc080e61c] ---- /smp2p-adsp/slave-kernel
+> [    0.232178] OF: XXX get 0xeefeb5dc   4 [0xc0814c58 0xc08148b0 0xc080e970 0xc080e894 0xc080e678 0xc080de7c] ++++ /smp2p-adsp/slave-kernel
+> [    0.232211] OF: XXX get 0xeefeb5dc   5 [0xc08103c4 0xc0810024 0xc080fd94 0xc0814c58 0xc08149a8 0xc0814188] +++++ /smp2p-adsp/slave-kernel
+> [    0.232257] OF: XXX get 0xeefeb5dc   6 [0xc08103c4 0xc0810024 0xc080fd94 0xc0814c58 0xc08149a8 0xc0814258] ++++++ /smp2p-adsp/slave-kernel
+> [    0.232308] OF: XXX get 0xeefeb244   4 [0xc0810024 0xc080fd94 0xc0814c58 0xc08149a8 0xc0814278 0xc080ccc8] ++++ /smp2p-adsp
+> [    0.232339] OF: XXX put 0xeefeb5dc   6 [0xc08103c4 0xc0810024 0xc080fd94 0xc0814c58 0xc08149a8 0xc0814284] ------ /smp2p-adsp/slave-kernel
+> [    0.232390] OF: XXX get 0xeefe759c  23 [0xc0810024 0xc080fd94 0xc0814c58 0xc08149a8 0xc0814278 0xc080ccc8] +++++++++++++++++++++++ /
+> [    0.232482] OF: XXX put 0xeefeb244   4 [0xc08103c4 0xc0810024 0xc080fd94 0xc0814c58 0xc08149a8 0xc0814284] ---- /smp2p-adsp
+> 
+> 
+> 
+> But I normally strip off the timestamp, and grep for the "OF: XXX ",
+> which gets me only the get and put info.  It is also easy to grep
+> for a single node of interest.
+> 
+> The data fields are:
+>   get or put
+>   the struct device_node address
+>   refcount
+>   a 6 caller deep call stack
+>   for get, one '+' per refcount or for put, one '-' per refcount
+>   the full node name
+> 
+> The refcount for get is the post get value, for put is the pre put value,
+> so they are easy to match up for human scanning. The length of the "++++"
+> and "----" patterns on the end are also intended for easy human scanning.
+> 
+> Here are two actual refcount issues for the root node on my 4.11-rc1:
+> 
+> OF: XXX get 0xeefe759c   2 [0xc08138bc 0xc08137fc 0xc08136e4 0xc08136b4 0xc0813070 0xc080ccc8] ++ /
+> OF: XXX put 0xeefe759c   2 [0xc031aa28 0xc08138bc 0xc08137fc 0xc08136e4 0xc08136b4 0xc0813014] -- /
+> OF: XXX get 0xeefe759c   2 [0xc08138bc 0xc08137fc 0xc08136e4 0xc08136b4 0xc0813070 0xc080ccc8] ++ /
+> OF: XXX put 0xeefe759c   2 [0xc031aa40 0xc08138bc 0xc08137fc 0xc08136e4 0xc08136b4 0xc0813014] -- /
+> OF: XXX get 0xeefe759c  22 [0xc0308518 0xc09330e0 0xc0d00e3c 0xc03017d0 0xc0d3a1fc 0xc080d948] ++++++++++++++++++++++ /
+> OF: XXX put 0xeefe759c  22 [0xc0308518 0xc09330e0 0xc0d00e3c 0xc03017d0 0xc0d3a1fc 0xc080d8c8] ---------------------- /
+> OF: XXX get 0xeefe759c  22 [0xc0d00e3c 0xc03017d0 0xc0d3a234 0xc0810684 0xc081061c 0xc080d928] ++++++++++++++++++++++ /
+> OF: XXX get 0xeefe759c  23 [0xc08103c4 0xc0810024 0xc080fd84 0xc08137b4 0xc0812c88 0xc080ccc8] +++++++++++++++++++++++ /
+> OF: XXX put 0xeefe759c  23 [0xc08105d8 0xc08103c4 0xc0810024 0xc080fd84 0xc08137b4 0xc0812cb4] ----------------------- /
+> 
+> The call stack could easily be post-processed, for example using addr2line.
+> Here is the call stack for when the refcount incremented to 23 from 22 (or
+> more accurately, to 22 from 21):
+> 
+> 0xc0d00e3c Line 857 of "init/main.c"
+> 0xc03017d0 Line 792 of "init/main.c"
+> 0xc0d3a234 Line 528 of "drivers/of/platform.c"
+> 0xc0810684 Line 503 of "drivers/of/platform.c"
+> 0xc081061c Line 267 of "include/linux/of.h"
+> 0xc080d928 Line 815 of "drivers/of/base.c"
+> 
+> Which ends up being this code:
+> 
+>    of_platform_default_populate_init()
+>       of_platform_default_populate()
+>          of_platform_populate()
+>             [[ of_find_node_by_path("/") ]]
+>                [[ of_find_node_opts_by_path(path, NULL) ]]
+>                   of_node_get(of_root)
+> 
+> Note that some functions can be left out of the ARM call stack, with
+> a return going back more than one level.  The functions in the call
+> list above that are enclosed in '[[' and ']]' were found by source
+> inspection in those cases.
+
+The same thing is encountered in ppc64 stack traces. I assume it is
+generally inlining of small functions, but I've never actually verified
+that theory. Probably should take the time to investigate, or just ask
+someone.
+
+> 
+> It looks like a put is missing, but about 250 get/put pairs later,
+> of_platform_populate() does the required put on node "/".
+> 
+> Then quite a bit later, after lots of balanced gets and puts, there is an
+> initcall that does a get on the root without a corresponding put.
+> 
+> 
+> The jump from refcount 2 to refcount 22 is an interesting case, insofar as it
+> is not the result of of_node_get().  It is instead inside a series of calls to
+> kobject_add():
+
+Took me a hot minute to track this one down when I first encountered the
+extreme reference count jump on the root node with no associated
+of_node_gets. Luckily, the other nodes with children sent me looking in
+the right direction.
+
+> 
+>    kernel_init()
+>       kernel_init_freeable()
+>         do_basic_setup()
+>             driver_init()
+>                of_core_init()
+>                   for_each_of_allnodes(np)
+>                      __of_attach_node_sysfs(np)
+>                         kobject_add()
+> 
+> 
+> Filtering and reformatting is "easily done" with grep and other
+> normal unix tools.
+> 
+> For example, a simple stream of command line tools can show a
+> streamlined report of the refcounts of a single node (in this
+> case the root node), which can easily be scanned for interesting
+> events:
+> 
+> [    0.199569]    2  ++ /
+> [    0.199629]    2  -- /
+> [    0.199826]    2  ++ /
+> [    0.199886]    2  -- /
+> [    0.212549]   22  ++++++++++++++++++++++ /
+> [    0.212855]   22  ---------------------- /
+> [    0.213087]   22  ++++++++++++++++++++++ /
+> [    0.213700]   23  +++++++++++++++++++++++ /
+> [    0.213797]   23  ----------------------- /
+> [    0.213973]   23  +++++++++++++++++++++++ /
+> 
+> ... hundreds of boring put/get pairs
+> 
+> [    0.458737]   23  ----------------------- /
+> [    0.458909]   23  +++++++++++++++++++++++ /
+> [    0.459035]   23  ----------------------- /
+> [    0.459305]   22  ---------------------- /
+> [    0.470255]   22  ++++++++++++++++++++++ /
+> 
+> ... hundreds of boring put/get pairs
+> 
+> [   93.110548]   22  ++++++++++++++++++++++ /
+> [   93.140046]   22  ---------------------- /
+> [   93.264639]   22  ++++++++++++++++++++++ /
+> [   93.389530]   23  +++++++++++++++++++++++ /
+> [   93.414269]   23  ----------------------- /
+> 
+> 
+> You might have noticed that the call trace is not interesting for
+> most of the gets and puts.  There are over 350 get/put pairs for
+> the root node in the boot that I collected the above examples on,
+> but only a few instances where the trace matters.  Thus leaving
+> the call stack in a compact format until needed is a feature.
+> 
+> I will be the first to admit that the tool is not polished and not
+> easy to use, though it is easily extended with post-processing.
+> 
+> I wrote the patch as a proof of concept a while ago and have not
+> fleshed it out.  In fact, calling it a "tool" is overstating what
+> it is.
+> 
+> 
+>> Further, filters can be set on the tracepoint event fields such that
+>> trace data could be restricted to a particular device_node or refcount
+>> threshold. For example:
 >>
->> ---
->> This patch is  against the 'devel' branch of Linus Walleij's 'linux-pinctrl.git'
->> repo plus  R8A7794 PFC fix and R8A7743 PFC support patch...
+>> # cd /sys/kernel/debug/tracing# cat events/of/of_node_get/format
+>> # echo "dn_name == /pci@800000020000018" > events/of/filter
 >>
->> Changes in version 2:
->> - fixed indentation to use tabs instead of spaces;
->> - updated the PFC bindings.
->
-> Thanks for the update!
->
->> --- linux-pinctrl.orig/drivers/pinctrl/sh-pfc/pfc-r8a7794.c
->> +++ linux-pinctrl/drivers/pinctrl/sh-pfc/pfc-r8a7794.c
->
->> @@ -110,10 +110,12 @@ enum {
->>         FN_I2C1_SDA_B, FN_D10, FN_HSCIF2_HSCK, FN_SCIF1_SCK_C, FN_IRQ6,
->>         FN_PWM5_C, FN_D11, FN_HSCIF2_HCTS_N, FN_SCIF1_RXD_C, FN_I2C1_SCL_D,
->>         FN_D12, FN_HSCIF2_HRTS_N, FN_SCIF1_TXD_C, FN_I2C1_SDA_D, FN_D13,
->> -       FN_SCIFA1_SCK, FN_TANS1, FN_PWM2_C, FN_TCLK2_B, FN_D14, FN_SCIFA1_RXD,
->> -       FN_IIC0_SCL_B, FN_D15, FN_SCIFA1_TXD, FN_IIC0_SDA_B, FN_A0,
->> -       FN_SCIFB1_SCK, FN_PWM3_B, FN_A1, FN_SCIFB1_TXD, FN_A3, FN_SCIFB0_SCK,
->> -       FN_A4, FN_SCIFB0_TXD, FN_A5, FN_SCIFB0_RXD, FN_PWM4_B, FN_TPUTO3_C,
->> +       FN_SCIFA1_SCK, FN_TANS1 /* R8A7794 only */, FN_PWM2_C, FN_TCLK2_B,
->> +       FN_D14, FN_SCIFA1_RXD, FN_IIC0_SCL_B,
->> +       FN_D15, FN_SCIFA1_TXD, FN_IIC0_SDA_B,
->> +       FN_A0, FN_SCIFB1_SCK, FN_PWM3_B, FN_A1, FN_SCIFB1_TXD,
->> +       FN_A3, FN_SCIFB0_SCK, FN_A4, FN_SCIFB0_TXD,
->> +       FN_A5, FN_SCIFB0_RXD, FN_PWM4_B, FN_TPUTO3_C,
->
-> I still have mixed feelings about adding all these annotations.
-
-    I don't. With the R-Car gen2 manuals not publicly available, this info 
-seems crucial enough...
-
-> IMHO the groups and functions provide sufficient documentation, and not adding
-
-    Not when adding the new ones!
-
-> the annotations means less code has to be changed now, and perhaps in the
-> future.
-
-    No, I won't give in! B-)
-
->> @@ -123,77 +125,139 @@ enum {
->>         FN_A12, FN_MSIOF1_SS1, FN_SCIFA5_RXD_B, FN_A13, FN_MSIOF1_SS2,
->>         FN_SCIFA5_TXD_B, FN_A14, FN_MSIOF2_RXD, FN_HSCIF0_HRX_B, FN_DREQ1_N,
->>         FN_A15, FN_MSIOF2_TXD, FN_HSCIF0_HTX_B, FN_DACK1, FN_A16,
->> -       FN_MSIOF2_SCK, FN_HSCIF0_HSCK_B, FN_SPEEDIN, FN_VSP, FN_CAN_CLK_C,
->> -       FN_TPUTO2_B, FN_A17, FN_MSIOF2_SYNC, FN_SCIF4_RXD_E, FN_CAN1_RX_B,
->> -       FN_AVB_AVTP_CAPTURE_B, FN_A18, FN_MSIOF2_SS1, FN_SCIF4_TXD_E,
->> -       FN_CAN1_TX_B, FN_AVB_AVTP_MATCH_B, FN_A19, FN_MSIOF2_SS2, FN_PWM4,
->> -       FN_TPUTO2, FN_MOUT0, FN_A20, FN_SPCLK, FN_MOUT1,
->> +       FN_MSIOF2_SCK, FN_HSCIF0_HSCK_B, FN_SPEEDIN /* R8A7794 only */,
->> +       FN_VSP /* R8A7794 only */, FN_CAN_CLK_C, FN_TPUTO2_B,
->> +       FN_A17, FN_MSIOF2_SYNC, FN_SCIF4_RXD_E, FN_CAN1_RX_B,
->> +       FN_AVB_AVTP_CAPTURE_B /* R8A7794 only */,
->> +       FN_A18, FN_MSIOF2_SS1, FN_SCIF4_TXD_E, FN_CAN1_TX_B,
->> +       FN_AVB_AVTP_MATCH_B /* R8A7794 only */,
->> +       FN_A19, FN_MSIOF2_SS2, FN_PWM4, FN_TPUTO2, FN_MOUT0 /* R8A7794 only */,
->> +       FN_A20, FN_SPCLK, FN_MOUT1 /* R8A7794 only */,
->
-> Interestingly, the AVB_AVTP bits are marked "reserved" in revision 1.10
-> of the R-Car E2 user manual as well.
-> The only remnants are in Table 5.2, for GP5[11] and GP5[12].
-
-    Hum, indeed!
-
->>  static const struct sh_pfc_pin pinmux_pins[] = {
->> @@ -1660,6 +1898,7 @@ static const unsigned int avb_gmii_mux[]
->>         AVB_TX_EN_MARK, AVB_TX_ER_MARK, AVB_TX_CLK_MARK,
->>         AVB_COL_MARK,
->>  };
->> +/* - AVB AVTP (R8A7794 only) ------------------------------------------------ */
->>  static const unsigned int avb_avtp_capture_pins[] = {
->>         RCAR_GP_PIN(5, 11),
->>  };
->
->> @@ -3809,6 +4055,9 @@ static const char * const avb_groups[] =
->>         "avb_mdio",
->>         "avb_mii",
->>         "avb_gmii",
->> +};
->> +
->> +static const char * const avb_avtp_groups[] = {
->>         "avb_avtp_capture",
->>         "avb_avtp_match",
->>         "avb_avtp_capture_b",
->> @@ -4183,50 +4432,58 @@ static const char * const vin1_groups[]
->>         "vin1_clk",
->>  };
+>> # cat trace
+>>            drmgr-10542 [003] ....  9630.677001: of_node_put: refcount=5,
+>> dn->full_name=/pci@800000020000018
+>>            drmgr-10542 [003] d...  9631.677368: of_node_get: refcount=6,
+>> dn->full_name=/pci@800000020000018
+>>            drmgr-10542 [003] ....  9631.677389: of_node_put: refcount=5,
+>> dn->full_name=/pci@800000020000018
+>>            drmgr-10542 [003] ....  9631.677390: of_reconfig_notify:
+>> action=DETACH_NODE, dn->full_name=/pci@800000020000018, prop->name=null,
+>> old_prop->name=null
+>>            drmgr-10542 [003] .n..  9632.025656: of_node_put: refcount=4,
+>> dn->full_name=/pci@800000020000018
+>>            drmgr-10542 [003] .n..  9632.025657: of_node_put: refcount=3,
+>> dn->full_name=/pci@800000020000018
 >>
->> -static const struct sh_pfc_function pinmux_functions[] = {
->
-> [...]
->
->> +static const struct {
->> +       struct sh_pfc_function common[43];
->> +       struct sh_pfc_function r8a7794[1];
->> +} pinmux_functions = {
->
-> [...]
->
->> +       .r8a7794 = {
->> +               SH_PFC_FUNCTION(avb_avtp),
->> +       }
->
-> This changes the user-visible name of the pinctrl function from "avb" to
-> "avb_avtp", which is part of the DT ABI.
+>> After setting the filter and doing a hot-remove of the pci device in
+>> question the trace quickly tells me 3 references are being leaked. In
+>> combination with the stacktrace option I can quickly correlate call
+>> sites that take references without releasing them.
+> 
+> Thanks for sharing that.  It is nice seeing your results.
 
-    I couldn't invent anything better...
+Ditto.
 
-> Combined with the above, I'm inclined to not touch AVB_AVTP for now.
-
-    Indeed. However the 1.10 manual seems to suggest that they should just be 
-removed for good. Would you agree?
-
->
-> Gr{oetje,eeting}s,
->
->                         Geert
-
-MBR, Sergei
+-Tyrel
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
