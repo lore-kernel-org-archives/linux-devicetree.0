@@ -1,54 +1,44 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH 2/3] ARM: dts: sk-rzg1m: add SCIF0 pins
-Date: Thu, 20 Apr 2017 18:45:54 +0300
-Message-ID: <45efbee2-eb71-a702-5c96-5312cbb4eaac@cogentembedded.com>
-References: <20170414211509.818645915@cogentembedded.com>
- <CAMuHMdWCan+XRgbjdMXNqWuUoY_ZeWR1hiicgYg3s5gKQRchpQ@mail.gmail.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/3] Documentation: dt: i2c: Add Altera I2C Controller
+Date: Thu, 20 Apr 2017 10:47:05 -0500
+Message-ID: <CAL_JsqLcrFsRDXfVUtnvUT+RWuk-eduJKV9vN94_d9TswEuCdQ@mail.gmail.com>
+References: <1491926547-29510-1-git-send-email-thor.thayer@linux.intel.com>
+ <1491926547-29510-3-git-send-email-thor.thayer@linux.intel.com>
+ <20170413212240.uxwh5525baqmgny4@rob-hp-laptop> <7c803e53-5c1b-cd59-6c59-5a32b07edcb8@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdWCan+XRgbjdMXNqWuUoY_ZeWR1hiicgYg3s5gKQRchpQ@mail.gmail.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Simon Horman <horms@verge.net.au>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <7c803e53-5c1b-cd59-6c59-5a32b07edcb8-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: thor.thayer-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
+Cc: "wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org" <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, "linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 04/20/2017 05:19 PM, Geert Uytterhoeven wrote:
+On Fri, Apr 14, 2017 at 8:46 AM, Thor Thayer
+<thor.thayer-VuQAYsv1563Yd54FQh9/CA@public.gmane.org> wrote:
+> Hi Rob,
+>
+> On 04/13/2017 04:22 PM, Rob Herring wrote:
+>>
+>> On Tue, Apr 11, 2017 at 11:02:26AM -0500, thor.thayer-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
+>> wrote:
+>>>
+>>> From: Thor Thayer <thor.thayer-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
 
->> Add the (previously omitted) SCIF0 pin data to the SK-RZG1M board's
->> device tree.
->>
->> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
->>
->> ---
->>  arch/arm/boot/dts/r8a7743-sk-rzg1m.dts |   12 +++++++++++-
->>  1 file changed, 11 insertions(+), 1 deletion(-)
->>
->> Index: renesas/arch/arm/boot/dts/r8a7743-sk-rzg1m.dts
->> ===================================================================
->> --- renesas.orig/arch/arm/boot/dts/r8a7743-sk-rzg1m.dts
->> +++ renesas/arch/arm/boot/dts/r8a7743-sk-rzg1m.dts
 [...]
->> @@ -39,7 +39,17 @@
->>         clock-frequency = <20000000>;
->>  };
+
+>>> +Required properties :
+>>> + - compatible : should be "altr,sip-i2c"
 >>
->> +&pfc {
->> +       scif0_pins: scif0 {
->> +               groups = "scif0_data";
->
-> I don't have schematics for this board, but you told me it's very similar to
-> Porter. Hence I'd expect "scif0_data_d" instead.
+>>
+>> Seems kind of generic.
+>>
+> I'm using sip for soft IP - right now we only offer 1 flavor.
 
-    And you are absolutely right! Sorry about my overlook...
+There is no versioning or release numbering associated with it?
 
-> In my experience, when changing pinctrl to map the lines of a device to a new
-> set of pins, but not mapping another device to the old set of pins, it may
-> output the signals on both the old and the new set of pins.
->
-> Does serial console input work with "scif0_data"?
-
-    Sure. :-)
-
-MBR, Sergei
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
