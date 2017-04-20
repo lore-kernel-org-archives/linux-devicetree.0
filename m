@@ -1,63 +1,70 @@
-From: kbuild test robot <lkp-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 5/9] staging: ccree: add AEAD support
-Date: Fri, 21 Apr 2017 02:57:53 +0800
-Message-ID: <201704210221.n1RK8DTY%fengguang.wu@intel.com>
-References: <1492693983-8175-6-git-send-email-gilad@benyossef.com>
+From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] of: introduce event tracepoints for dynamic device_node
+ lifecyle
+Date: Thu, 20 Apr 2017 12:34:46 -0700
+Message-ID: <58F90D56.9070602@gmail.com>
+References: <1492475525-10827-1-git-send-email-tyreld@linux.vnet.ibm.com>
+ <58F6AA35.2040902@gmail.com> <87efwp6v4e.fsf@concordia.ellerman.id.au>
+ <1d51a229-612b-bf09-93d5-6e43b476e2cf@gmail.com> <58F83C66.7030806@gmail.com>
+ <64505d40-926d-b302-4ff3-dff71aa5018a@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1492693983-8175-6-git-send-email-gilad-6S/DczAoZh3WXxRugSxzZg@public.gmane.org>
+In-Reply-To: <64505d40-926d-b302-4ff3-dff71aa5018a-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Gilad Ben-Yossef <gilad-6S/DczAoZh3WXxRugSxzZg@public.gmane.org>
-Cc: kbuild-all-JC7UmRfGjtg@public.gmane.org, Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, Binoy Jayan <binoy.jayan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gilad.benyossef-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stuart Yoder <stuart.yoder-5wv7dgnIgG8@public.gmane.org>, Ofir Drang <ofir.drang-5wv7dgnIgG8@public.gmane.org>
+To: Tyrel Datwyler <turtle.in.the.kernel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>, Tyrel Datwyler <tyreld-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, nfont-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org, rostedt-nx8X9YLhiw1AfugRpC6u6w@public.gmane.org, mingo-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Gilad,
+On 04/20/17 09:51, Tyrel Datwyler wrote:
+> On 04/19/2017 09:43 PM, Frank Rowand wrote:
+> 
 
-[auto build test WARNING on linus/master]
-[also build test WARNING on v4.11-rc7]
-[cannot apply to staging/staging-testing next-20170420]
-[if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
-
-url:    https://github.com/0day-ci/linux/commits/Gilad-Ben-Yossef/staging-ccree-add-Arm-TrustZone-CryptoCell-REE-driver/20170420-222023
+< snip >
 
 
-coccinelle warnings: (new ones prefixed by >>)
+>> The call stack could easily be post-processed, for example using addr2line.
+>> Here is the call stack for when the refcount incremented to 23 from 22 (or
+>> more accurately, to 22 from 21):
+>>
+>> 0xc0d00e3c Line 857 of "init/main.c"
+>> 0xc03017d0 Line 792 of "init/main.c"
+>> 0xc0d3a234 Line 528 of "drivers/of/platform.c"
+>> 0xc0810684 Line 503 of "drivers/of/platform.c"
+>> 0xc081061c Line 267 of "include/linux/of.h"
+>> 0xc080d928 Line 815 of "drivers/of/base.c"
+>>
+>> Which ends up being this code:
+>>
+>>    of_platform_default_populate_init()
+>>       of_platform_default_populate()
+>>          of_platform_populate()
+>>             [[ of_find_node_by_path("/") ]]
+>>                [[ of_find_node_opts_by_path(path, NULL) ]]
+>>                   of_node_get(of_root)
+>>
+>> Note that some functions can be left out of the ARM call stack, with
+>> a return going back more than one level.  The functions in the call
+>> list above that are enclosed in '[[' and ']]' were found by source
+>> inspection in those cases.
+> 
+> The same thing is encountered in ppc64 stack traces. I assume it is
+> generally inlining of small functions, but I've never actually verified
+> that theory. Probably should take the time to investigate, or just ask
+> someone.
 
->> drivers/staging/ccree/ssi_buffer_mgr.c:758:2-4: ERROR: test of a variable/field address
+Yes, inlining small functions is one reason for this.
 
-vim +758 drivers/staging/ccree/ssi_buffer_mgr.c
+Another case I often find is that when function A calls function B calls
+function C.  If the final statement of function B is 'return C()' then
+there is no need for function C to return through function B, it can
+instead return directly to function A.  (That is more a conceptual
+hand-waving of the idea, not the actual way the compiler implements
+it.  Take this with a grain of salt, I'm not a compiler guy.)
 
-   742		
-   743			if (areq_ctx->gcm_iv_inc2_dma_addr != 0) {
-   744				SSI_RESTORE_DMA_ADDR_TO_48BIT(areq_ctx->gcm_iv_inc2_dma_addr);
-   745				dma_unmap_single(dev, areq_ctx->gcm_iv_inc2_dma_addr, 
-   746					AES_BLOCK_SIZE, DMA_TO_DEVICE);
-   747			}
-   748		}
-   749	#endif
-   750	
-   751		if (areq_ctx->ccm_hdr_size != ccm_header_size_null) {
-   752			if (areq_ctx->ccm_iv0_dma_addr != 0) {
-   753				SSI_RESTORE_DMA_ADDR_TO_48BIT(areq_ctx->ccm_iv0_dma_addr);
-   754				dma_unmap_single(dev, areq_ctx->ccm_iv0_dma_addr, 
-   755					AES_BLOCK_SIZE, DMA_TO_DEVICE);
-   756			}
-   757	
- > 758			if (&areq_ctx->ccm_adata_sg != NULL)
-   759				dma_unmap_sg(dev, &areq_ctx->ccm_adata_sg,
-   760					1, DMA_TO_DEVICE);
-   761		}
-   762		if (areq_ctx->gen_ctx.iv_dma_addr != 0) {
-   763			SSI_RESTORE_DMA_ADDR_TO_48BIT(areq_ctx->gen_ctx.iv_dma_addr);
-   764			dma_unmap_single(dev, areq_ctx->gen_ctx.iv_dma_addr,
-   765					 hw_iv_size, DMA_BIDIRECTIONAL);
-   766		}
+< snip >
 
----
-0-DAY kernel test infrastructure                Open Source Technology Center
-https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
