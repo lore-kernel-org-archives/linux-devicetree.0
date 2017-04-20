@@ -1,45 +1,124 @@
-From: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Subject: Re: [PATCH v2 0/9] staging: ccree: add Arm TrustZone CryptoCell REE
- driver
-Date: Thu, 20 Apr 2017 15:30:52 +0200
-Message-ID: <20170420133052.GA8998@kroah.com>
-References: <1492693983-8175-1-git-send-email-gilad@benyossef.com>
+From: Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/4] mfd: Add ROHM BD9571MWV-M PMIC DT bindings
+Date: Thu, 20 Apr 2017 14:51:40 +0200
+Message-ID: <dbfbadbd-9850-4a8e-581f-abd5ae39e841@gmail.com>
+References: <20170416180801.17828-1-marek.vasut+renesas@gmail.com>
+ <CAMuHMdUUkZ_si8DAmvY_KvNF8tO=q2wHzjqRCjxXJD3-XxxJFw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1492693983-8175-1-git-send-email-gilad-6S/DczAoZh3WXxRugSxzZg@public.gmane.org>
+In-Reply-To: <CAMuHMdUUkZ_si8DAmvY_KvNF8tO=q2wHzjqRCjxXJD3-XxxJFw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Gilad Ben-Yossef <gilad-6S/DczAoZh3WXxRugSxzZg@public.gmane.org>
-Cc: Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, Binoy Jayan <binoy.jayan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gilad.benyossef-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stuart Yoder <stuart.yoder-5wv7dgnIgG8@public.gmane.org>, Ofir Drang <ofir.drang-5wv7dgnIgG8@public.gmane.org>
+To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Cc: Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Marek Vasut <marek.vasut+renesas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 20, 2017 at 04:12:54PM +0300, Gilad Ben-Yossef wrote:
-> Arm TrustZone CryptoCell 700 is a family of cryptographic hardware
-> accelerators. It is supported by a long lived series of out of tree
-> drivers, which I am now in the process of unifying and upstreaming.
-> This is the first drop, supporting the new CryptoCell 712 REE.
+On 04/20/2017 02:35 PM, Geert Uytterhoeven wrote:
+> Hi Marek,
+
+Hi!
+
+> On Sun, Apr 16, 2017 at 8:07 PM, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>> Add DT bindings for the ROHM BD9571MWV-M PMIC. This PMIC has
+>> the following features:
+>> - multiple voltage monitors for 1V8, 2V5, 3V3 voltage rail
+>> - one voltage regulator for DVFS
+>> - two GPIOs
+>>
+>> Signed-off-by: Marek Vasut <marek.vasut+renesas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>> Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>> Cc: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+>> Cc: linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>> ---
+>>  .../devicetree/bindings/mfd/bd9571mwv.txt          | 49 ++++++++++++++++++++++
+>>  1 file changed, 49 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/mfd/bd9571mwv.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/mfd/bd9571mwv.txt b/Documentation/devicetree/bindings/mfd/bd9571mwv.txt
+>> new file mode 100644
+>> index 000000000000..0952ee3bc30b
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/mfd/bd9571mwv.txt
+>> @@ -0,0 +1,49 @@
+>> +* ROHM BD9571MWV Power Management Integrated Circuit (PMIC) bindings
+>> +
+>> +Required properties:
+>> + - compatible          : Should be "rohm,bd9571mwv".
+>> + - reg                 : I2C slave address.
+>> + - interrupt-parent    : Phandle to the parent interrupt controller.
+>> + - interrupts          : The interrupt line the device is connected to.
+>> + - interrupt-controller        : Marks the device node as an interrupt controller.
+>> + - #interrupt-cells    : The number of cells to describe an IRQ, should be 2.
+>> +                           The first cell is the IRQ number.
+>> +                           The second cell is the flags, encoded as trigger
+>> +                           masks from ../interrupt-controller/interrupts.txt.
+>> + - gpio-controller      : Marks the device node as a GPIO Controller.
+>> + - #gpio-cells          : Should be two.  The first cell is the pin number and
+>> +                            the second cell is used to specify flags.
+>> +                            See ../gpio/gpio.txt for more information.
+>> + - regulators:          : List of child nodes that specify the regulator
+>> +                            initialization data. Child nodes must be named
+>> +                            after their hardware counterparts:
+>> +                            - vd18
+>> +                            - vd25
+>> +                            - vd33
+>> +                            - dvfs
 > 
-> The code still needs some cleanup before maturing to a proper
-> upstream driver, which I am in the process of doing. However,
-> as discussion of some of the capabilities of the hardware and
-> its application to some dm-crypt and dm-verity features recently
-> took place I though it is better to do this in the open via the
-> staging tree.
+> Missing vd09, which is used for VDD0.8 on Salvator-X.
+
+This is not supported by the driver, I don't think we should prematurely
+add it into the bindings. We can add it later though.
+
+>> +                           Each child node is defined using the standard
+>> +                           binding for regulators.
+>> +
+>> +Example:
+>> +
+>> +       pmic: bd9571mwv@30 {
+>> +               compatible = "rohm,bd9571mwv";
+>> +               reg = <0x30>;
+>> +               interrupt-parent = <&gpio2>;
+>> +               interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
+>> +               interrupt-controller;
+>> +               #interrupt-cells = <2>;
+>> +               gpio-controller;
+>> +               #gpio-cells = <2>;
+>> +
+>> +               regulators {
+>> +                       dvfs: dvfs {
+>> +                               compatible = "regulator-fixed";
 > 
-> A Git repository based off of Linux 4.11-rc7 is also available at
-> https://github.com/gby/linux.git branch ccree_v2 for those inclined.
+> What's the purpose of this compatible value?
 
-If you want this in staging, I'll be glad to take it, but note then you
-can't work off of an external repo, as syncing the two is almost
-impossible and more work than you want to go through.
+The purpose is for it to be removed in V2 , thanks for catching this one.
 
-So, as long as this builds properly, want me to queue these up in my
-tree?
+>> +                               regulator-name = "dvfs";
+>> +                               regulator-min-microvolt = <750000>;
+>> +                               regulator-max-microvolt = <1030000>;
+>> +                               regulator-boot-on;
+>> +                               regulator-always-on;
+>> +                       };
+>> +               };
+>> +       };
+> 
+> Gr{oetje,eeting}s,
+> 
+>                         Geert
+> 
+> --
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+> 
+> In personal conversations with technical people, I call myself a hacker. But
+> when I'm talking to journalists I just say "programmer" or something like that.
+>                                 -- Linus Torvalds
+> 
 
-thanks,
 
-greg k-h
+-- 
+Best regards,
+Marek Vasut
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
