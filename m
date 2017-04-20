@@ -1,41 +1,77 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 03/12] dt-bindings: make AXP20X
- compatible strings one per line
-Date: Thu, 20 Apr 2017 09:18:30 -0500
-Message-ID: <20170420141830.63tusju7typolwxa@rob-hp-laptop>
-References: <20170417115747.7300-1-icenowy@aosc.io>
- <20170417115747.7300-4-icenowy@aosc.io>
-Reply-To: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH 2/3] ARM: dts: sk-rzg1m: add SCIF0 pins
+Date: Thu, 20 Apr 2017 16:19:09 +0200
+Message-ID: <CAMuHMdWCan+XRgbjdMXNqWuUoY_ZeWR1hiicgYg3s5gKQRchpQ@mail.gmail.com>
+References: <20170414211509.818645915@cogentembedded.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDJIP47K7MERBOEG4PDQKGQEV2FM2TA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20170417115747.7300-4-icenowy-h8G6r0blFSE@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <20170414211509.818645915@cogentembedded.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: Simon Horman <horms@verge.net.au>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 17, 2017 at 07:57:38PM +0800, Icenowy Zheng wrote:
-> In the binding documentation of AXP20X mfd, the compatible strings used
-> to be listed for three per line, which leads to some mess when trying to
-> add AXP803 compatible string (as we have already AXP806 and AXP809
-> compatibles, which is after AXP803 in ascending order).
-> 
-> Make the compatible strings one per line, so that inserting a new
-> compatible string will be directly a new line.
-> 
-> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-> ---
-> New patch in v3.
-> 
->  Documentation/devicetree/bindings/mfd/axp20x.txt | 11 ++++++++---
->  1 file changed, 8 insertions(+), 3 deletions(-)
+Hi Sergei,
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+On Fri, Apr 14, 2017 at 11:09 PM, Sergei Shtylyov
+<sergei.shtylyov@cogentembedded.com> wrote:
+> Add the (previously omitted) SCIF0 pin data to the SK-RZG1M board's
+> device tree.
+>
+> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+>
+> ---
+>  arch/arm/boot/dts/r8a7743-sk-rzg1m.dts |   12 +++++++++++-
+>  1 file changed, 11 insertions(+), 1 deletion(-)
+>
+> Index: renesas/arch/arm/boot/dts/r8a7743-sk-rzg1m.dts
+> ===================================================================
+> --- renesas.orig/arch/arm/boot/dts/r8a7743-sk-rzg1m.dts
+> +++ renesas/arch/arm/boot/dts/r8a7743-sk-rzg1m.dts
+> @@ -1,7 +1,7 @@
+>  /*
+>   * Device Tree Source for the SK-RZG1M board
+>   *
+> - * Copyright (C) 2016 Cogent Embedded, Inc.
+> + * Copyright (C) 2016-2017 Cogent Embedded, Inc.
+>   *
+>   * This file is licensed under the terms of the GNU General Public License
+>   * version 2. This program is licensed "as is" without any warranty of any
+> @@ -39,7 +39,17 @@
+>         clock-frequency = <20000000>;
+>  };
+>
+> +&pfc {
+> +       scif0_pins: scif0 {
+> +               groups = "scif0_data";
+
+I don't have schematics for this board, but you told me it's very similar to
+Porter. Hence I'd expect "scif0_data_d" instead.
+
+In my experience, when changing pinctrl to map the lines of a device to a new
+set of pins, but not mapping another device to the old set of pins, it may
+output the signals on both the old and the new set of pins.
+
+Does serial console input work with "scif0_data"?
+
+> +               function = "scif0";
+> +       };
+> +};
+> +
+>  &scif0 {
+> +       pinctrl-0 = <&scif0_pins>;
+> +       pinctrl-names = "default";
+> +
+>         status = "okay";
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
