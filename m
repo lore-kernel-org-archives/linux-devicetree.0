@@ -1,156 +1,138 @@
-From: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
-Subject: Re: [RFC 1/2] dt-bindings: add mmio-based syscon mux controller DT
- bindings
-Date: Thu, 20 Apr 2017 13:57:30 +0200
-Message-ID: <3f6e0337-46e1-fcfd-430b-4221e45c6ca8@axentia.se>
-References: <20170413154812.19597-1-p.zabel@pengutronix.de>
- <20170419220900.ndrtt2m7d6tqsddh@rob-hp-laptop>
- <1492676048.2158.25.camel@pengutronix.de>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [PATCH v2] pinctrl: sh-pfc: r8a7794: add R8A7745 support
+Date: Thu, 20 Apr 2017 14:20:57 +0200
+Message-ID: <CAMuHMdWSTHhLHdJt3+oASrYwpnzDserWjb5RRxYqhVxe=DNe8g@mail.gmail.com>
+References: <20170413201932.890107963@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1492676048.2158.25.camel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+In-Reply-To: <20170413201932.890107963-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>, Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2017-04-20 10:14, Philipp Zabel wrote:
-> Hi Rob,
-> 
-> On Wed, 2017-04-19 at 17:09 -0500, Rob Herring wrote:
->> On Thu, Apr 13, 2017 at 05:48:11PM +0200, Philipp Zabel wrote:
->>> This adds device tree binding documentation for mmio-based syscon
->>> multiplexers controlled by a single bitfield in a syscon register
->>> range.
->>>
->>> Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
->>> ---
->>>  Documentation/devicetree/bindings/mux/mmio-mux.txt | 56 ++++++++++++++++++++++
->>>  1 file changed, 56 insertions(+)
->>>  create mode 100644 Documentation/devicetree/bindings/mux/mmio-mux.txt
->>>
->>> diff --git a/Documentation/devicetree/bindings/mux/mmio-mux.txt b/Documentation/devicetree/bindings/mux/mmio-mux.txt
->>> new file mode 100644
->>> index 0000000000000..11d96f5d98583
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/mux/mmio-mux.txt
->>> @@ -0,0 +1,56 @@
->>> +MMIO bitfield-based multiplexer controller bindings
->>> +
->>> +Define a syscon bitfield to be used to control a multiplexer. The parent
->>> +device tree node must be a syscon node to provide register access.
->>> +
->>> +Required properties:
->>> +- compatible : "gpio-mux"
->>
->> ?
->>
->>> +- reg : register base of the register containing the control bitfield
->>> +- bit-mask : bitmask of the control bitfield in the control register
->>> +- bit-shift : bit offset of the control bitfield in the control register
->>> +- #mux-control-cells : <0>
->>> +* Standard mux-controller bindings as decribed in mux-controller.txt
->>> +
->>> +Optional properties:
->>> +- idle-state : if present, the state the mux will have when idle. The
->>> +	       special state MUX_IDLE_AS_IS is the default.
->>> +
->>> +The multiplexer state is defined as the value of the bitfield described
->>> +by the reg, bit-mask, and bit-shift properties, accessed through the parent
->>> +syscon.
->>> +
->>> +Example:
->>> +
->>> +	syscon {
->>> +		compatible = "syscon";
->>> +
->>> +		mux: mux-controller@3 {
->>> +			compatible = "mmio-mux";
->>> +			reg = <0x3>;
->>> +			bit-mask = <0x1>;
->>> +			bit-shift = <5>;
->>
->> This pattern doesn't scale once you have multiple fields @ addr 3. I 
->> also don't really think a node per register field in DT really scales.
-> 
-> Thanks, I have been a bit uneasy with the separate per-bitfield mux
-> controller node, so I'm eager to agree. But thit makes me unsure how to
-> best represent the information that is spelled out above.
-> 
->> I think the parent should be declared as a mux controller instead.
-> 
-> The syscon node itself should be the mux controller? Would you expect
-> the mmio-mux driver bind to the syscon node, or should the mux framework
-> handle creation of the mux controls in this case (i.e. does the syscon
-> node get a "mmio-mux" added to its compatible list)?
-> 
->> You could encode the mux addr and bit position in the mux cells.
-> 
-> What about the bit-mask / bitfield width? Just add a cell for it?
-> 
-> 	gpr: syscon {
-> 		compatible = "mmio-mux", "syscon", "simple-mfd";
-> 		#mux-control-cells = <3>;
-> 
-> 		video-mux {
-> 			compatible = "video-mux";
-> 			/* register 0x3, bits [6:5] */
-> 			mux-controls = <&gpr 0x3 5 0x3>;
-> 
-> 			ports {
-> 				/* ports 0..5 */
-> 			};
-> 		};
-> 	};
-> 
-> Or maybe using MSB and LSB would be better to read?
-> 
-> 		video-mux {
-> 			/* register 0x3, bits [6:5] */
-> 			mux-control = <&gpr 0x3 6 5>;
-> 
-> 			ports {
-> 				/* ports 0..5 */
-> 			};
-> 		};
+Hi Sergei,
 
-Why do you need three values for one register+field? The shift can be
-implied from the mask, if the mask is pre-shifted. I.e. specifying a
-mask of 0x60 in this case. What I'm I missing?
+On Thu, Apr 13, 2017 at 10:19 PM, Sergei Shtylyov
+<sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org> wrote:
+> Renesas  RZ/G1E (R8A7745) is pin compatible with R-Car E2 (R8A7794),
+> however  it doesn't have several automotive specific peripherals.
+> Annotate all the items that only exist on the R-Car SoCs and only
+> supply the pin groups/functions existing on a given SoC (that required
+> splitting  of the AVB function)...
+>
+> Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+>
+> ---
+> This patch is  against the 'devel' branch of Linus Walleij's 'linux-pinctrl.git'
+> repo plus  R8A7794 PFC fix and R8A7743 PFC support patch...
+>
+> Changes in version 2:
+> - fixed indentation to use tabs instead of spaces;
+> - updated the PFC bindings.
 
->>> +			#mux-control-cells = <0>;
->>> +		};
->>> +	};
->>> +
->>> +	video-mux {
->>> +		compatible = "video-mux";
->>> +		mux-controls = <&mux>;
->>
->> The mux binding was largely defined for a single control controling 
->> multiple muxes. This doesn't really fit that, but I guess this is an 
->> improvement over a custom syscon phandle.
-> 
-> What I especially like about the mux-controls property is that would
-> allow me to use the gpio-mux driver (or any other mux controller)
-> instead of having to code variants of the video-mux for all possible
-> control schemes.
+Thanks for the update!
 
-Yes, when talking about e.g. PWMs or GPIOs, there seem to be little
-question that they can sit in their own nodes. I don't get the reluctance
-to have MUXes in nodes of their own?
+> --- linux-pinctrl.orig/drivers/pinctrl/sh-pfc/pfc-r8a7794.c
+> +++ linux-pinctrl/drivers/pinctrl/sh-pfc/pfc-r8a7794.c
 
-PWMs and GPIOs are controlled from one end and mostly used for something
-completely different. Just like MUXes. At least there are many MUXes like
-that. Agreed, there are also many MUXes where the MUX is tightly integrated
-in some bigger function. But in this case, it appears that there is benefit
-in moving the MUX to its own DT node and have the MUX consumer oblivious
-of the details of the MUX. Why is that a problem?
+> @@ -110,10 +110,12 @@ enum {
+>         FN_I2C1_SDA_B, FN_D10, FN_HSCIF2_HSCK, FN_SCIF1_SCK_C, FN_IRQ6,
+>         FN_PWM5_C, FN_D11, FN_HSCIF2_HCTS_N, FN_SCIF1_RXD_C, FN_I2C1_SCL_D,
+>         FN_D12, FN_HSCIF2_HRTS_N, FN_SCIF1_TXD_C, FN_I2C1_SDA_D, FN_D13,
+> -       FN_SCIFA1_SCK, FN_TANS1, FN_PWM2_C, FN_TCLK2_B, FN_D14, FN_SCIFA1_RXD,
+> -       FN_IIC0_SCL_B, FN_D15, FN_SCIFA1_TXD, FN_IIC0_SDA_B, FN_A0,
+> -       FN_SCIFB1_SCK, FN_PWM3_B, FN_A1, FN_SCIFB1_TXD, FN_A3, FN_SCIFB0_SCK,
+> -       FN_A4, FN_SCIFB0_TXD, FN_A5, FN_SCIFB0_RXD, FN_PWM4_B, FN_TPUTO3_C,
+> +       FN_SCIFA1_SCK, FN_TANS1 /* R8A7794 only */, FN_PWM2_C, FN_TCLK2_B,
+> +       FN_D14, FN_SCIFA1_RXD, FN_IIC0_SCL_B,
+> +       FN_D15, FN_SCIFA1_TXD, FN_IIC0_SDA_B,
+> +       FN_A0, FN_SCIFB1_SCK, FN_PWM3_B, FN_A1, FN_SCIFB1_TXD,
+> +       FN_A3, FN_SCIFB0_SCK, FN_A4, FN_SCIFB0_TXD,
+> +       FN_A5, FN_SCIFB0_RXD, FN_PWM4_B, FN_TPUTO3_C,
 
-Cheers,
-peda
+I still have mixed feelings about adding all these annotations.
+IMHO the groups and functions provide sufficient documentation, and not adding
+the annotations means less code has to be changed now, and perhaps in the
+future.
 
+> @@ -123,77 +125,139 @@ enum {
+>         FN_A12, FN_MSIOF1_SS1, FN_SCIFA5_RXD_B, FN_A13, FN_MSIOF1_SS2,
+>         FN_SCIFA5_TXD_B, FN_A14, FN_MSIOF2_RXD, FN_HSCIF0_HRX_B, FN_DREQ1_N,
+>         FN_A15, FN_MSIOF2_TXD, FN_HSCIF0_HTX_B, FN_DACK1, FN_A16,
+> -       FN_MSIOF2_SCK, FN_HSCIF0_HSCK_B, FN_SPEEDIN, FN_VSP, FN_CAN_CLK_C,
+> -       FN_TPUTO2_B, FN_A17, FN_MSIOF2_SYNC, FN_SCIF4_RXD_E, FN_CAN1_RX_B,
+> -       FN_AVB_AVTP_CAPTURE_B, FN_A18, FN_MSIOF2_SS1, FN_SCIF4_TXD_E,
+> -       FN_CAN1_TX_B, FN_AVB_AVTP_MATCH_B, FN_A19, FN_MSIOF2_SS2, FN_PWM4,
+> -       FN_TPUTO2, FN_MOUT0, FN_A20, FN_SPCLK, FN_MOUT1,
+> +       FN_MSIOF2_SCK, FN_HSCIF0_HSCK_B, FN_SPEEDIN /* R8A7794 only */,
+> +       FN_VSP /* R8A7794 only */, FN_CAN_CLK_C, FN_TPUTO2_B,
+> +       FN_A17, FN_MSIOF2_SYNC, FN_SCIF4_RXD_E, FN_CAN1_RX_B,
+> +       FN_AVB_AVTP_CAPTURE_B /* R8A7794 only */,
+> +       FN_A18, FN_MSIOF2_SS1, FN_SCIF4_TXD_E, FN_CAN1_TX_B,
+> +       FN_AVB_AVTP_MATCH_B /* R8A7794 only */,
+> +       FN_A19, FN_MSIOF2_SS2, FN_PWM4, FN_TPUTO2, FN_MOUT0 /* R8A7794 only */,
+> +       FN_A20, FN_SPCLK, FN_MOUT1 /* R8A7794 only */,
+
+Interestingly, the AVB_AVTP bits are marked "reserved" in revision 1.10
+of the R-Car E2 user manual as well.
+The only remnants are in Table 5.2, for GP5[11] and GP5[12].
+
+>  static const struct sh_pfc_pin pinmux_pins[] = {
+> @@ -1660,6 +1898,7 @@ static const unsigned int avb_gmii_mux[]
+>         AVB_TX_EN_MARK, AVB_TX_ER_MARK, AVB_TX_CLK_MARK,
+>         AVB_COL_MARK,
+>  };
+> +/* - AVB AVTP (R8A7794 only) ------------------------------------------------ */
+>  static const unsigned int avb_avtp_capture_pins[] = {
+>         RCAR_GP_PIN(5, 11),
+>  };
+
+> @@ -3809,6 +4055,9 @@ static const char * const avb_groups[] =
+>         "avb_mdio",
+>         "avb_mii",
+>         "avb_gmii",
+> +};
+> +
+> +static const char * const avb_avtp_groups[] = {
+>         "avb_avtp_capture",
+>         "avb_avtp_match",
+>         "avb_avtp_capture_b",
+> @@ -4183,50 +4432,58 @@ static const char * const vin1_groups[]
+>         "vin1_clk",
+>  };
+>
+> -static const struct sh_pfc_function pinmux_functions[] = {
+
+[...]
+
+> +static const struct {
+> +       struct sh_pfc_function common[43];
+> +       struct sh_pfc_function r8a7794[1];
+> +} pinmux_functions = {
+
+[...]
+
+> +       .r8a7794 = {
+> +               SH_PFC_FUNCTION(avb_avtp),
+> +       }
+
+This changes the user-visible name of the pinctrl function from "avb" to
+"avb_avtp", which is part of the DT ABI.
+
+Combined with the above, I'm inclined to not touch AVB_AVTP for now.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
