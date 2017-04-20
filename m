@@ -1,47 +1,97 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 00/21] eeprom: at24: Add OF device ID table
-Date: Wed, 19 Apr 2017 19:12:42 -0500
-Message-ID: <20170420001242.vl3sga2bd65jlaoi@rob-hp-laptop>
-References: <20170414010445.21727-1-javier@osg.samsung.com>
+From: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: Re: [PATCH 2/2] mmc: dw_mmc-rockchip: parse
+ rockchip,default-num-phases from DT
+Date: Thu, 20 Apr 2017 09:21:27 +0800
+Message-ID: <58609a89-3413-3383-4bd5-271868500f7d@rock-chips.com>
+References: <1492592434-81312-1-git-send-email-shawn.lin@rock-chips.com>
+ <1492592434-81312-3-git-send-email-shawn.lin@rock-chips.com>
+ <CAD=FV=X6PRe1u+s4Nnt=9gJD2T4=YyLdMWnKe5rZg2KgWGNAvg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20170414010445.21727-1-javier@osg.samsung.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Javier Martinez Canillas <javier@osg.samsung.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Wolfram Sang <wsa@the-dreams.de>, Tony Lindgren <tony@atomide.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Masahiro Yamada <yamada.masahiro@socionext.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, linux-i2c@vger.kernel.org, Hongtao Jia <hongtao.jia@nxp.com>, Russell King <linux@armlinux.org.uk>, Mark Jackson <mpfj@newflow.co.uk>, Herbert Xu <herbert@gondor.apana.org.au>, Horia =?utf-8?Q?Geant=C4=83?= <horia.geanta@nxp.com>, Michael Ellerman <mpe@ellerman.id.au>, Magnus Damm <magnus.damm@gmail.com>, Michal Simek <michal.simek@xilinx.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, linux-arm-kernel@lists.infradead.org, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Jason Cooper <jason@lakedaemon.net>, Sebastian
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <CAD=FV=X6PRe1u+s4Nnt=9gJD2T4=YyLdMWnKe5rZg2KgWGNAvg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ziyuan Xu <xzy.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, "linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 13, 2017 at 10:04:24PM -0300, Javier Martinez Canillas wrote:
-> Hello Wolfram,
-> 
-> This series is a follow-up to patch [0] that added an OF device ID table
-> to the at24 EEPROM driver. As you suggested [1], this version instead of
-> adding entries for every used <vendor,device> tuple, only adds a single
-> entry for each chip type using the "atmel" vendor as a generic fallback.
-> 
-> The first patch adds the OF device ID table for the at24 driver and the
-> next patches adds a generic fallback compatible string to each DTS that
-> defines a compatible I2C EEPROM device node.
-> 
-> Patches can be applied independently since the DTS change without the
-> driver change is a no-op and the OF device table won't be used without
-> the DTS changes.
-> 
-> [0]: https://lkml.org/lkml/2017/3/14/589
-
-I don't have this patch in my inbox, but the i2c core will still match 
-on compatibles with no vendor prefix? If not, those need to be added to 
-the match table too.
-
-Rob
+SGkgRG91ZywKCuWcqCAyMDE3LzQvMjAgNDoxOSwgRG91ZyBBbmRlcnNvbiDlhpnpgZM6Cj4gSGks
+Cj4KPiBPbiBXZWQsIEFwciAxOSwgMjAxNyBhdCAyOjAwIEFNLCBTaGF3biBMaW4gPHNoYXduLmxp
+bkByb2NrLWNoaXBzLmNvbT4gd3JvdGU6Cj4+IEN1cnJlbnRseSB3ZSB1bmNvbmRpdGlvbmFsbHkg
+ZG8gdHVuaW5nIGZvciBlYWNoIGRlZ3JlZSwgd2hpY2gKPj4gY29zdHMgOTAwbXMgZm9yIGVhY2gg
+Ym9vdCBhbmQgcmVzdW1lLgo+Pgo+PiBNYXkgc29tZW9uZSBhcmd1ZSB0aGF0IHRoaXMgaXMgYSBx
+dWVzdGlvbiBvZiBhY2N1cmFjeSBWUyB0aW1lLiBCdXQgSQo+PiB3b3VsZCBzYXkgaXQncyBhIHRy
+aWNrIG9mIGhvdyB3ZSBuZWVkIHRvIGRvIGRlY2lzaW9uIGZvciBvdXIgYm9hcmRzLgo+PiBJZiB3
+ZSBkb24ndCBjYXJlIHRoZSB0aW1lIHdlIHNwZW5kIGF0IGFsbCwgd2UgY291bGQgZGVmaW5pdGVs
+eSBkbyB0dW5pbmcKPj4gZm9yIGVhY2ggZGVncmVlLiBCdXQgd2hlbiB3ZSBuZWVkIHRvIGltcHJv
+dmUgdGhlIHVzZXIgZXhwZXJpZW5jZSwgZm9yCj4+IGluc3RhbmNlLCBzcGVlZCB1cCByZXN1bWlu
+ZyBmcm9tIFMzLCB3ZSBzaG91bGQgYWxzbyBoYXZlIHRoZSByaWdodCB0bwo+PiBkbyB0aGF0LiBU
+aGlzIHBhdGNoIGFkZCBwYXJzaW5nICJyb2NrY2hpcCxkZWZhdWx0LW51bS1waGFzZXMiLCBmb3Ig
+Zm9sa3MKPj4gdG8gc3BlY2lmeSB0aGUgbnVtYmVyIG9mIGRvaW5nIHR1bmluZy4gSWYgbm90IHNw
+ZWNpZmllZCwgMzYwIHdpbGwgYmUgdXNlZAo+PiBhcyBiZWZvcmUuCj4+Cj4+IFNpZ25lZC1vZmYt
+Ynk6IFNoYXduIExpbiA8c2hhd24ubGluQHJvY2stY2hpcHMuY29tPgo+Pgo+PiAtLS0KPj4KPj4g
+IGRyaXZlcnMvbW1jL2hvc3QvZHdfbW1jLXJvY2tjaGlwLmMgfCA0OCArKysrKysrKysrKysrKysr
+KysrKysrKystLS0tLS0tLS0tLS0tLQo+PiAgMSBmaWxlIGNoYW5nZWQsIDMwIGluc2VydGlvbnMo
+KyksIDE4IGRlbGV0aW9ucygtKQo+Cj4gTm8gaHVnZSBvYmplY3Rpb24gaGVyZSwgYnV0IEkgZG8g
+cmVtZW1iZXIgd2UgZW5kZWQgdXAgYXQgdGhlIDM2MAo+IHBoYXNlcyBkdWUgdG8gc29tZSBvZiB0
+aGUgY3JhemluZXNzIHdpdGggZHdfbW1jIGRlbGF5IGVsZW1lbnRzIG9uCj4gcmszMjg4LiAgSUlS
+QyBvbmUgb2YgdGhlIGJpZyBwcm9ibGVtcyB3YXMgdGhhdCB0aGUgZGVsYXkgZWxlbWVudHMKPiBj
+aGFuZ2VkIF9hIGxvdF8gd2l0aCB0aGUgIkxPR0lDIiB2b2x0YWdlIGFuZCB3ZSB0d2Vha2VkIHRo
+ZSB2b2x0YWdlIGF0Cj4gcnVudGltZSBmb3IgRERSIERWRlMuICBUaGF0IGltcG9zZWQgYW4gZXh0
+cmEgbmVlZCB0byBiZSB2ZXJ5IGFjY3VyYXRlCj4gb24gdGhhdCBTb0MsIGF0IGxlYXN0IG9uIGFu
+eSBib2FyZCB0aGF0IHdhcyBkZXNpZ25lZCB0byBzdXBwb3J0IEREUgo+IERWRlMuCj4KCk5vdCBq
+dXN0IHdpdGggdGhlIHZkZF9sb2dpYyBidXQgYWxzbyB3aXRoIHRoZSBwcm9jZXNzIG9mIFNvYy4K
+VG8gYmV0dGVyIGd1YXJhdGVlIHRoZSBhY2N1cmFjeSwgZmlyc3RseSB3ZSB1c2UgZGVsYXkgZWxl
+bWVudCB0byBkbwp0dW5pbmcgYW5kIHRoZW4gY29udmVydCBpdCB0byBiZSBjb21iaW5hdGlvbiBv
+ZiBkZWdyZWUgKyBkZWxheSBlbGVtZW50LgpCdXQgYXMgdGhlIGRhbGF5IGVsZW1lbnRzIGFyZW4n
+dCBhY2N1cmFjeSB0aGVtc2VsZiwgc28gYWxsIHRoZSBtYXRoIHdlCmRvIGhlcmUgaXMgdHJpY2su
+Cgo+IEkgYWxzbyByZW1lbWJlciB0aGVyZSBiZWluZyBzb21lIHdlaXJkbmVzcyBvbiB0aGUgUm9j
+a2NoaXAKPiBpbXBsZW1lbnRhdGlvbiB3aGVyZSB0aGVyZSB3YXMgYSBjZXJ0YWluIHNldCBvZiBw
+aGFzZXMgdGhhdCB0aGUgTU1DCj4gY29udHJvbGxlciB3YXMgZXNzZW50aWFsbHkgImJsaW5kIi4g
+IFRoaXMgYmxpbmQgc3BvdCB3YXMgaW4gdGhlIG1pZGRsZQo+IG9mIGFuIG90aGVyd2lzZSBnb29k
+IHJhbmdlIG9mIHBvaW50cy4gIFVuZm9ydHVuYXRlbHkgdGhpcyBibGluZCBzcG90Cj4gd2FzIHNv
+bWV3aGF0IGhhcmQgdG8gZGV0ZWN0IHByb3Blcmx5IGJlY2F1c2UgaXQgd2FzIG5vdCB2ZXJ5IGJp
+Zy4KPiAuLi50aGUgdmFyaWFiaWxpdHkgb2YgdGhlIGRlbGF5IGVsZW1lbnRzIG1lYW50IHRoYXQg
+dGhlcmUgY291bGQgYmUgYmlnCj4gcmFuZ2VzIHdoZXJlIHdlIHdlcmVuJ3QgZ2V0dGluZyBhbnkg
+Z29vZCB0ZXN0IGNvdmVyYWdlLCBidXQgYWxzbyB0aGUKPiBmYWN0IHRoYXQgdGhleSBjaGFuZ2Vk
+IHdpdGggdGhlIExPR0lDIHZvbHRhZ2UgbWlnaHQgbWVhbiB0aGF0IHdlCj4gd2VyZW4ndCBpbiB0
+aGUgImJsaW5kIiBzcG90IGFuZCB0aGVuIHN1ZGRlbmx5IHdlIHdlcmUuCgpJIHVuZGVydGFuZCBh
+bGwgb2YgdGhlc2UgYXMgSSB3YXMgc3VmZmVyaW5nIGZyb20gaXQgd2hlbiBicmluZ2luZyB1cApS
+SzMyODguCgo+Cj4gT25lIG90aGVyIG5vdGUgaXMgdGhhdCBpIHJlbWVtYmVyIHRoYXQgdGhlIHZh
+c3QgbWFqb3JpdHkgb2YgdGltZSBzcGVudAo+IHR1bmluZyB3YXMgZGVhbGluZyB3aXRoICJiYWQi
+IHBoYXNlcywgbm90IGRlYWxpbmcgd2l0aCAiZ29vZCIgcGhhc2VzLgo+IElmIHlvdSdyZSBsb29r
+aW5nIHRvIHNwZWVkIHRoaW5ncyB1cCwgbWF5YmUgZmluZGluZyBhIHdheSB0byBtYWtlCj4gImJh
+ZCIgcGhhc2VzIGZhaWwgZmFzdGVyIHdvdWxkIGJlIHdpc2U/ICBJIHRoaW5rIG9uZSBvZiB0aGUg
+cmVhc29ucwo+IGJhZCBwaGFzZXMgZmFpbGVkIHNvIHNsb3dseSBpcyBiZWNhdXNlIHRoZSBkd19t
+bWMgdGltZW91dHMgYXJlIGFsbCBzbwo+IGxvbmcuCgpHb29kIHBvaW50LiBJIGhhdmVuJ3QgdGhv
+dWdodCBvZiBzcGVlZGluZyB1cCB0aGUgaGFuZGxlIG9mIGJhZCBwaGFzZXMsCmJ1dCBJIHdpbGwg
+dGFrZSBhIGxvb2sgYXQgdGhpcy4KCj4KPiBPaCwgYW5kIEkgZ3Vlc3Mgb25lIGxhc3Qgbm90ZSBp
+cyB0aGF0IEkgaGF2ZSBubyBpZGVhIGlmIGZvbGtzIHdpbGwKPiBsaWtlIHRoZSBkZXZpY2UgYmlu
+ZGluZ3MgaGVyZS4gIFBhcnQgb2YgbWUgdGhpbmtzIGl0IHNob3VsZCBiZQo+IHNvbWV0aGluZyBt
+b3JlICJzeW1ib2xpYyIgbGlrZSAicm9ja2NoaXAsbmVlZC1hY2N1cmF0ZS10dW5pbmciIG9yCj4g
+c29tZXRoaW5nIGxpa2UgdGhhdC4gIEkgZ3Vlc3MgSSdkIGxldCB0aGUgRFQgZXhwZXJ0cyBjaGlt
+ZSBpbi4KPgo+Cj4gU28gSSBndWVzcyB0byBzdW1tYXJpemU6Cj4gKiBPbiByazMyODggYm9hcmRz
+IHcvIEREUiBEVkZTIChvciBhbnkgb3RoZXIgc2ltaWxhciBib2FyZHMpLCAzNjAKPiBzZWVtcyB0
+byBwcm92aWRlIHJlYWwgYmVuZWZpdC4KPiAqIE9uIG90aGVyIGJvYXJkcywgcHJvYmFibHkgeW91
+IGNhbiBnZXQgYnkgd2l0aCBmZXdlciBwaGFzZXMuCj4KCkkgd291bGQgdHJ5IHRvIHNheSBpdCdz
+IGEgcXVlc3Rpb24gb2YgIjkwMG1zIGZvciBhIHNpbmdsZSB0aW1lIiBWUy4KInNvbWUgb2YgZGlz
+Y3JldGUgdHVuaW5nIGNvc3QgZm9yIG1vcmUgY2hhbmNlIHRvIGRvIHJldHVuZSIuCgooMSlXZSBj
+b3VsZCB0cnkgdG8gZG8gYSBtb3JlIGFjY3VyYXRlIHR1bmluZyBwcm9jZXNzIGFuZCBzcGVuZHMg
+OTAwbXMuClRoZW4gd2UgaGF2ZSBsZXNzIGNoYW5jZSB0byBkbyByZXR1bmUgbGF0ZXIuCgooMilX
+ZSBkbyBhIHJvdWdoIHR1bmluZyBhbmQgaGF2ZSBtb3JlIGNoYW5jZSB0byBkbyByZXR1bmUgbGF0
+ZXIuCgpJIGFsc28gd291bGQgc2F5IHRoYXQgdGhpcyBpcyBhIGdhbWUgLCBhbmQgd2UgY2FuJ3Qg
+c2F5IHdoaWNoCm9uZSBpcyBiZXR0ZXIuIE9idmlvdXMgbm93IHRoZSAiOTAwbXMiIGFsd3lhcyBo
+YXBwZW5zIGluIHRoZSBzcG90CnJvdXRpbmUsIGZvciBpbnN0YW5jZSwgYm9vdGluZyBhbmQgcmVz
+dW1pbmcgZnJvbSBTMy4KCj4KPiAtRG91Zwo+Cj4KPgoKCl9fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fCkxpbnV4LXJvY2tjaGlwIG1haWxpbmcgbGlzdApMaW51
+eC1yb2NrY2hpcEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3Jn
+L21haWxtYW4vbGlzdGluZm8vbGludXgtcm9ja2NoaXAK
