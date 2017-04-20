@@ -1,52 +1,41 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] dt-binding: regulator: anatop: make regulator
- name property required
-Date: Thu, 20 Apr 2017 21:26:25 +0100
-Message-ID: <20170420202625.shn25txsqx4xun6j@sirena.org.uk>
-References: <1492180234-2496-1-git-send-email-aisheng.dong@nxp.com>
- <DB5PR04MB1431C0B3F327E547A001D57580180@DB5PR04MB1431.eurprd04.prod.outlook.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 3/3] drm/vc4: Add specific compatible strings for Cygnus.
+Date: Thu, 20 Apr 2017 15:33:41 -0500
+Message-ID: <20170420203341.ae6dzs4uev7vqyws@rob-hp-laptop>
+References: <20170418191157.18517-1-eric@anholt.net>
+ <20170418191157.18517-3-eric@anholt.net>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="esne7sjqoewjwvfj"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 Content-Disposition: inline
-In-Reply-To: <DB5PR04MB1431C0B3F327E547A001D57580180-rqLcZCCNzVwrYIBjo4yUUM9NdZoXdze2vxpqHgZTriW3zl9H0oFU5g@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "A.S. Dong" <aisheng.dong-3arQi8VN3Tc@public.gmane.org>
-Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170418191157.18517-3-eric@anholt.net>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Eric Anholt <eric@anholt.net>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
 List-Id: devicetree@vger.kernel.org
 
-
---esne7sjqoewjwvfj
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Wed, Apr 19, 2017 at 03:33:03PM +0000, A.S. Dong wrote:
-
-> > We actually can't allow the missing of the regualor name, thus update the
-> > binding doc to make regulator-name property to be required.
-
-> Sorry, Mark, missed you about this one.
-
-Please resend, I don't have a copy.
-
---esne7sjqoewjwvfj
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlj5GXEACgkQJNaLcl1U
-h9BonAf+MR9LAbpijA9o/4VHpcHU+ZB58GPv53vNMJ7ec18wtTUbf9a3hnHHi5N3
-YLLKT2ZGcYCY2irCNR6i3UreObqZHd5GuAXQDtJdSdRMGnIjh7Xuh3tT74c7t1Y2
-eZLlBta8gn8TgGjxnBBmTOBTODuN2mGjXydrbSR4qhnnoBLK7SAPJXA9Ea1d9iVa
-Khgmaw8cqgZosi32QcvlALvL4aifi/Jt1A4p98YbOv9mvVQWcQpm64DhMofv+JrS
-3y7jhkWesyB3E0bozulA6U/6AzUntdR+wtBOo3MjR7HNFAHZiULrhS/iKXuc1508
-1XAWV9jmb6bhIcB0R6odn3EnHzpRSg==
-=CHyt
------END PGP SIGNATURE-----
-
---esne7sjqoewjwvfj--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gVHVlLCBBcHIgMTgsIDIwMTcgYXQgMTI6MTE6NTdQTSAtMDcwMCwgRXJpYyBBbmhvbHQgd3Jv
+dGU6Cj4gQ3lnbnVzIGhhcyBWM0QgMi42IGluc3RlYWQgb2YgMi4xLCBhbmQgZG9lc24ndCB1c2Ug
+dGhlIFZDNCBkaXNwbGF5Cj4gbW9kdWxlcy4gIFRoZSBWM0QgY2FuIGJlIHVuaXF1ZWx5IGlkZW50
+aWZpZWQgYnkgdGhlIElERU5UWzAxXQo+IHJlZ2lzdGVycywgYW5kIHRoZXJlJ3Mgbm90aGluZyB0
+byBrZXkgb2ZmIG9mIGZvciB0aGUgZGlzcGxheSBjaGFuZ2UKPiBvdGhlciB0aGFuIHRoZSBsYWNr
+IG9mIERUIG5vZGVzIGZvciB0aGUgZGlzcGxheSBjb21wb25lbnRzLCBidXQgaXQncwo+IGNvbnZl
+bnRpb24gdG8gaGF2ZSBuZXcgY29tcGF0aWJsZSBzdHJpbmdzIGFueXdheS4KPiAKPiBTaWduZWQt
+b2ZmLWJ5OiBFcmljIEFuaG9sdCA8ZXJpY0BhbmhvbHQubmV0Pgo+IC0tLQo+ICBEb2N1bWVudGF0
+aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmNtLGJjbS12YzQudHh0IHwgNCArKy0t
+Cj4gIGRyaXZlcnMvZ3B1L2RybS92YzQvdmM0X2Rydi5jICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgfCAxICsKPiAgZHJpdmVycy9ncHUvZHJtL3ZjNC92YzRfdjNkLmMgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICB8IDEgKwo+ICAzIGZpbGVzIGNoYW5nZWQsIDQgaW5zZXJ0aW9ucygr
+KSwgMiBkZWxldGlvbnMoLSkKCkFja2VkLWJ5OiBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3Jn
+PgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2
+ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9s
+aXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
