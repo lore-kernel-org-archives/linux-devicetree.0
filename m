@@ -1,51 +1,58 @@
-From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Tyrel Datwyler <turtle.in.the.kernel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Subject: Re: [PATCH] of: introduce event tracepoints for dynamic device_node
  lifecyle
-Date: Wed, 19 Apr 2017 22:13:13 -0700
-Message-ID: <58F84369.3080304@gmail.com>
+Date: Wed, 19 Apr 2017 22:24:58 -0700
+Message-ID: <90e008a7-0660-99b9-edbe-6bf146268ba8@gmail.com>
 References: <1492475525-10827-1-git-send-email-tyreld@linux.vnet.ibm.com>
  <58F6AA35.2040902@gmail.com> <87efwp6v4e.fsf@concordia.ellerman.id.au>
- <1d51a229-612b-bf09-93d5-6e43b476e2cf@gmail.com> <58F83C66.7030806@gmail.com>
+ <1d51a229-612b-bf09-93d5-6e43b476e2cf@gmail.com>
+ <20170419223342.0bbe2593@grimm.local.home>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <58F83C66.7030806-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <20170419223342.0bbe2593-2kNGR76GQU9OHLTnHDQRgA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tyrel Datwyler <turtle.in.the.kernel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>, Tyrel Datwyler <tyreld-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, nfont-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org, rostedt-nx8X9YLhiw1AfugRpC6u6w@public.gmane.org, mingo-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
+To: Steven Rostedt <rostedt-nx8X9YLhiw1AfugRpC6u6w@public.gmane.org>
+Cc: Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Tyrel Datwyler <tyreld-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, nfont-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org, mingo-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 04/19/17 21:43, Frank Rowand wrote:
-> On 04/19/17 16:27, Tyrel Datwyler wrote:
->> On 04/18/2017 06:31 PM, Michael Ellerman wrote:
-
-< snip >
-
->>
->> To get that same info as far as I know is to add a dump_stack() after
->> each pr_debug.
+On 04/19/2017 07:33 PM, Steven Rostedt wrote:
+> On Wed, 19 Apr 2017 16:27:10 -0700
+> Tyrel Datwyler <turtle.in.the.kernel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
 > 
-> Here is a patch that I have used.  It is not as user friendly in terms
-> of human readable stack traces (though a very small user space program
-> should be able to fix that).  The patch is cut and pasted into this
-> email, so probably white space damaged.
+>> # echo stacktrace > /sys/kernel/debug/tracing/trace_options
+>> # cat trace | grep -A6 "/pci@800000020000018"
+> 
+> Just to let you know that there is now stacktrace event triggers, where
+> you don't need to stacktrace all events, you can pick and choose. And
+> even filter the stack trace on specific fields of the event.
 
-< snip >
+This is great, and I did figure that out this afternoon. One thing I was
+still trying to determine though was whether its possible to set these
+triggers at boot? As far as I could tell I'm still limited to
+"trace_options=stacktrace" as a kernel boot parameter to get the stack
+for event tracepoints.
 
-> +
-> +	if (node) {
-> +		int k;
-> +		int refcount = refcount_read(&node->kobj.kref.refcount);
-> +		pr_err("XXX get 0x%p %3d [0x%08lx 0x%08lx 0x%08lx 0x%08lx 0x%08lx 0x%08lx] ",
-> +			node, refcount,
+-Tyrel
 
-If this was a real patch, meant for people other than myself, the
-pr_err() would instead be pr_debug().
+> 
+>  # cd /sys/kernel/debug/tracing
+>  # echo "stacktrace if common_pid == $$ && reason == 3" \
+>    > events/tlb/tlb_flush/trigger
+> 
+>  # cat trace
+>             bash-1103  [003] ...1  1290.100133: tlb_flush: pages:-1 reason:local mm shootdown (3)
+>             bash-1103  [003] ...2  1290.100140: <stack trace>
+>  => copy_process.part.39
+>  => _do_fork
+>  => SyS_clone
+>  => do_syscall_64
+>  => return_from_SYSCALL_64
+> 
+> -- Steve
+> 
 
--Frank
-
-< snip >
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
