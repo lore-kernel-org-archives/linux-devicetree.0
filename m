@@ -1,87 +1,38 @@
-From: Hugues Fruchet <hugues.fruchet@st.com>
-Subject: [PATCH v4 3/8] ARM: dts: stm32: Enable DCMI support on STM32F429 MCU
-Date: Thu, 20 Apr 2017 18:07:20 +0200
-Message-ID: <1492704445-22186-4-git-send-email-hugues.fruchet@st.com>
-References: <1492704445-22186-1-git-send-email-hugues.fruchet@st.com>
+From: <sean.wang@mediatek.com>
+Subject: [PATCH v2 0/2] hwrng: mtk: add support for hardware random generator on MT7623 SoC
+Date: Fri, 21 Apr 2017 00:24:24 +0800
+Message-ID: <1492705466-27287-1-git-send-email-sean.wang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1492704445-22186-1-git-send-email-hugues.fruchet@st.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Yannick Fertre <yannick.fertre@st.com>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Hugues Fruchet <hugues.fruchet@st.com>, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
+Content-Type: text/plain
+Return-path: <linux-crypto-owner@vger.kernel.org>
+Sender: linux-crypto-owner@vger.kernel.org
+To: herbert@gondor.apana.org.au, mpm@selenic.com, robh+dt@kernel.org, mark.rutland@arm.com, clabbe.montjoie@gmail.com, prasannatsmkumar@gmail.com, romain.perier@free-electrons.com, shannon.nelson@oracle.com
+Cc: weiyongjun1@huawei.com, devicetree@vger.kernel.org, linux-crypto@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, keyhaede@gmail.com, Sean Wang <sean.wang@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-Enable DCMI camera interface on STM32F429 MCU.
+From: Sean Wang <sean.wang@mediatek.com>
 
-Signed-off-by: Hugues Fruchet <hugues.fruchet@st.com>
----
- arch/arm/boot/dts/stm32f429.dtsi | 37 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 37 insertions(+)
+This patchset introduces support for Mediatek hardware random generator (RNG)
+Currently, the driver is already tested successfully with rng-tools on MT7623
+SoC. And it should also be workable on other similar Mediatek SoCs.
 
-diff --git a/arch/arm/boot/dts/stm32f429.dtsi b/arch/arm/boot/dts/stm32f429.dtsi
-index ee0da97..e1ff978 100644
---- a/arch/arm/boot/dts/stm32f429.dtsi
-+++ b/arch/arm/boot/dts/stm32f429.dtsi
-@@ -736,6 +736,29 @@
- 					slew-rate = <3>;
- 				};
- 			};
-+
-+			dcmi_pins: dcmi_pins@0 {
-+				pins {
-+					pinmux = <STM32F429_PA4_FUNC_DCMI_HSYNC>,
-+						 <STM32F429_PB7_FUNC_DCMI_VSYNC>,
-+						 <STM32F429_PA6_FUNC_DCMI_PIXCLK>,
-+						 <STM32F429_PC6_FUNC_DCMI_D0>,
-+						 <STM32F429_PC7_FUNC_DCMI_D1>,
-+						 <STM32F429_PC8_FUNC_DCMI_D2>,
-+						 <STM32F429_PC9_FUNC_DCMI_D3>,
-+						 <STM32F429_PC11_FUNC_DCMI_D4>,
-+						 <STM32F429_PD3_FUNC_DCMI_D5>,
-+						 <STM32F429_PB8_FUNC_DCMI_D6>,
-+						 <STM32F429_PE6_FUNC_DCMI_D7>,
-+						 <STM32F429_PC10_FUNC_DCMI_D8>,
-+						 <STM32F429_PC12_FUNC_DCMI_D9>,
-+						 <STM32F429_PD6_FUNC_DCMI_D10>,
-+						 <STM32F429_PD2_FUNC_DCMI_D11>;
-+					bias-disable;
-+					drive-push-pull;
-+					slew-rate = <3>;
-+				};
-+			};
- 		};
- 
- 		rcc: rcc@40023810 {
-@@ -805,6 +828,20 @@
- 			status = "disabled";
- 		};
- 
-+		dcmi: dcmi@50050000 {
-+			compatible = "st,stm32-dcmi";
-+			reg = <0x50050000 0x400>;
-+			interrupts = <78>;
-+			resets = <&rcc STM32F4_AHB2_RESET(DCMI)>;
-+			clocks = <&rcc 0 STM32F4_AHB2_CLOCK(DCMI)>;
-+			clock-names = "mclk";
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&dcmi_pins>;
-+			dmas = <&dma2 1 1 0x414 0x3>;
-+			dma-names = "tx";
-+			status = "disabled";
-+		};
-+
- 		rng: rng@50060800 {
- 			compatible = "st,stm32-rng";
- 			reg = <0x50060800 0x400>;
+Changes since v1:
+- remove unnecessary warning message
+- remove mistakenly changed line
+- refine macro definition with keeping one space between name and define
+- remove redundant platform_get_resource() call
+
+Sean Wang (2):
+  dt-bindings: hwrng: Add Mediatek hardware random generator bindings
+  hwrng: mtk: Add driver for hardware random generator on MT7623 SoC
+
+ Documentation/devicetree/bindings/rng/mtk-rng.txt |  18 +++
+ drivers/char/hw_random/Kconfig                    |  14 ++
+ drivers/char/hw_random/Makefile                   |   1 +
+ drivers/char/hw_random/mtk-rng.c                  | 168 ++++++++++++++++++++++
+ 4 files changed, 201 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/rng/mtk-rng.txt
+ create mode 100644 drivers/char/hw_random/mtk-rng.c
+
 -- 
 1.9.1
