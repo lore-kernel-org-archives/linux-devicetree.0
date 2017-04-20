@@ -1,59 +1,31 @@
-From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2] pinctrl: sh-pfc: r8a7794: add R8A7745 support
-Date: Thu, 20 Apr 2017 19:26:53 +0300
-Message-ID: <53d77809-c448-443a-6e41-6258253d98eb@cogentembedded.com>
-References: <20170413201932.890107963@cogentembedded.com>
- <20170419224646.wwjerpgnidvk4fkh@rob-hp-laptop>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 1/3] mmc: dt-bindings: update Mediatek MMC bindings
+Date: Thu, 20 Apr 2017 11:27:18 -0500
+Message-ID: <20170420162718.nxgzkiek6xhk2atb@rob-hp-laptop>
+References: <1492510391-704-1-git-send-email-yong.mao@mediatek.com>
+ <1492510391-704-2-git-send-email-yong.mao@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170419224646.wwjerpgnidvk4fkh@rob-hp-laptop>
+Content-Disposition: inline
+In-Reply-To: <1492510391-704-2-git-send-email-yong.mao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Yong Mao <yong.mao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Chaotian Jing <chaotian.jing-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 04/20/2017 01:46 AM, Rob Herring wrote:
+On Tue, Apr 18, 2017 at 06:13:09PM +0800, Yong Mao wrote:
+> From: yong mao <yong.mao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> 
+> Add description for mediatek,clk-pad-delay
+> 
+> Signed-off-by: Yong Mao <yong.mao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> Signed-off-by: Chaotian Jing <chaotian.jing-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/mmc/mtk-sd.txt |    2 ++
+>  1 file changed, 2 insertions(+)
 
->> Renesas  RZ/G1E (R8A7745) is pin compatible with R-Car E2 (R8A7794),
->> however  it doesn't have several automotive specific peripherals.
->
-> Is a single space between words really so hard for you? You've been told
-> to write proper sentences multiple times.
-
-    Nobody else but suffer from "double spaces". I just failed to remember 
-that once you are included into the patch addresses (I forget to update the 
-bindings in v1), you'll suffer from it again...
-
-> Yes, kernel developers suffer from OCD. Sorry.
-
-    Obsessive-compulsive disorder, you mean? I feel your pain then... B-)
-
->> Annotate all the items that only exist on the R-Car SoCs and only
->> supply the pin groups/functions existing on a given SoC (that required
->> splitting  of the AVB function)...
->>
->> Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
->>
->> ---
->> This patch is  against the 'devel' branch of Linus Walleij's 'linux-pinctrl.git'
->> repo plus  R8A7794 PFC fix and R8A7743 PFC support patch...
->>
->> Changes in version 2:
->> - fixed indentation to use tabs instead of spaces;
->> - updated the PFC bindings.
->>
->>  Documentation/devicetree/bindings/pinctrl/renesas,pfc-pinctrl.txt |    1
->
-> But given it's a one line DT change:
->
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-
-   Thank you!
-
-MBR, Sergei
-
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
