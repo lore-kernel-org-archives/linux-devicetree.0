@@ -1,59 +1,42 @@
-From: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH RESEND 4/4] mtd: ofpart: add of_match_table with "fixed-partitions"
-Date: Thu, 20 Apr 2017 15:57:31 +0200
-Message-ID: <20170420135731.13272-5-zajec5@gmail.com>
-References: <20170420135431.12585-1-zajec5@gmail.com>
- <20170420135731.13272-1-zajec5@gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v4 01/11] dt-bindings: add binding for the Allwinner DE2
+ CCU
+Date: Thu, 20 Apr 2017 08:58:31 -0500
+Message-ID: <20170420135831.owkaymplu4tbzdzs@rob-hp-laptop>
+References: <20170416120849.54542-1-icenowy@aosc.io>
+ <20170416120849.54542-2-icenowy@aosc.io>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170420135731.13272-1-zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <20170416120849.54542-2-icenowy@aosc.io>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Icenowy Zheng <icenowy@aosc.io>
+Cc: devicetree@vger.kernel.org, Jernej Skrabec <jernej.skrabec@siol.net>, linux-sunxi@googlegroups.com, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
-
-This allows using this parser with any flash driver that takes care of
-setting of_node (using mtd_set_of_node helper) correctly. Up to now
-support for "fixed-partitions" DT compatibility string was working only
-with flash drivers that were specifying "ofpart" (manually or by letting
-mtd use the default set of parsers).
-
-This matches existing bindings documentation.
-
-Signed-off-by: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
----
- drivers/mtd/ofpart.c | 7 +++++++
- 1 file changed, 7 insertions(+)
-
-diff --git a/drivers/mtd/ofpart.c b/drivers/mtd/ofpart.c
-index 2861c7079d7b..fb6f3df40e94 100644
---- a/drivers/mtd/ofpart.c
-+++ b/drivers/mtd/ofpart.c
-@@ -140,9 +140,16 @@ static int parse_ofpart_partitions(struct mtd_info *master,
- 	return ret;
- }
- 
-+static const struct of_device_id parse_ofpart_match_table[] = {
-+	{ .compatible = "fixed-partitions" },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, parse_ofpart_match_table);
-+
- static struct mtd_part_parser ofpart_parser = {
- 	.parse_fn = parse_ofpart_partitions,
- 	.name = "ofpart",
-+	.of_match_table = parse_ofpart_match_table,
- };
- 
- static int parse_ofoldpart_partitions(struct mtd_info *master,
--- 
-2.11.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gU3VuLCBBcHIgMTYsIDIwMTcgYXQgMDg6MDg6MzlQTSArMDgwMCwgSWNlbm93eSBaaGVuZyB3
+cm90ZToKPiBBbGx3aW5uZXIgIkRpc3BsYXkgRW5naW5lIDIuMCIgY29udGFpbnMgc29tZSBjbG9j
+ayBjb250cm9scyBpbiBpdC4KPiAKPiBJbiBvcmRlciB0byBhZGQgdGhlbSBhcyBjbG9jayBkcml2
+ZXJzLCB3ZSBuZWVkIGEgZGV2aWNlIHRyZWUgYmluZGluZy4KPiBBZGQgdGhlIGJpbmRpbmcgaGVy
+ZS4KPiAKPiBTaWduZWQtb2ZmLWJ5OiBJY2Vub3d5IFpoZW5nIDxpY2Vub3d5QGFvc2MuaW8+Cj4g
+LS0tCj4gQ2hhbmdlcyBpbiB2NDoKPiAtIERyb3BwZWQgdGhlIGxlYWRpbmcgMCBpbiBjbG9ja0Ax
+MDAwMDAwIC4KPiBDaGFuZ2VzIGluIHYzOgo+IC0gRmlsbCB0aGUgYWRkcmVzcyBzcGFjZSBsZW5n
+dGggb2YgREUyIENDVSB0byAweDEwMDAwMCwganVzdCByZWFjaCB0aGUgc3RhcnQgb2YgbWl4ZXIw
+Lgo+IAo+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9jbG9jay9zdW44aS1kZTIudHh0ICAgICAg
+ICB8IDMxICsrKysrKysrKysrKysrKysrKysrKysKPiAgMSBmaWxlIGNoYW5nZWQsIDMxIGluc2Vy
+dGlvbnMoKykKPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
+aW5kaW5ncy9jbG9jay9zdW44aS1kZTIudHh0CgpBY2tlZC1ieTogUm9iIEhlcnJpbmcgPHJvYmhA
+a2VybmVsLm9yZz4KX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3Jn
+Cmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
+Cg==
