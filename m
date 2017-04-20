@@ -1,38 +1,28 @@
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 0/3] Add R8A7743/SK-RZG1M PFC support
-Date: Thu, 20 Apr 2017 17:52:24 +0900
-Message-ID: <20170420085223.GG3760@verge.net.au>
-References: <20170414210941.143838720@cogentembedded.com>
+Subject: Re: [PATCH v5 4/4] arm64: dts: salvator-x: Add current sense
+ amplifiers
+Date: Thu, 20 Apr 2017 18:16:25 +0900
+Message-ID: <20170420091624.GM3760@verge.net.au>
+References: <1491488454-22468-1-git-send-email-jacopo+renesas@jmondi.org>
+ <1491488454-22468-5-git-send-email-jacopo+renesas@jmondi.org>
+ <CAMuHMdXkixLn9xdnrhEXW9pCg-4WjOuoPdyxXYeBwRfetMSYsA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170414210941.143838720@cogentembedded.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <CAMuHMdXkixLn9xdnrhEXW9pCg-4WjOuoPdyxXYeBwRfetMSYsA@mail.gmail.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, Wolfram Sang <wsa+renesas@sang-engineering.com>, Magnus Damm <magnus.damm@gmail.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-iio@vger.kernel.org, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Apr 15, 2017 at 12:09:41AM +0300, Sergei Shtylyov wrote:
-> Hello.
+On Wed, Apr 19, 2017 at 10:40:21AM +0200, Geert Uytterhoeven wrote:
+> Hi Jacopo,
 > 
-> Here's the set of 3 patches against Simon Horman's 'renesas.git' repo,
-> 'renesas-devel-20170410-v4.11-rc6' tag.  We're adding the R8A7743 PFC node and
-> then describe the pins for SCIF0 and Ether devices described eralier. These
-> patches depend on the R8A7743 PFC suport in order to work properly.
+> On Thu, Apr 6, 2017 at 4:20 PM, Jacopo Mondi <jacopo+renesas@jmondi.org> wrote:
+> > [PATCH v5 4/4] arm64: dts: salvator-x: Add current sense amplifiers
 > 
-> [1/3] ARM: dts: r8a7743: add PFC support
-> [2/3] ARM: dts: sk-rzg1m: add SCIF0 pins
-> [3/3] ARM: dts: sk-rzg1m: add Ether pins
+> This should be "arm64: dts: r8a7796: salvator-x: Add current sense amplifiers".
+> Perhaps Simon can just fix that himself while applying?
 
-These look good to me. Please repost me or ping me once the prerequisites
-have been accepted. Likewise for the similar patchset for the R8A7745/SK-RZG1E.
+Done :)
