@@ -1,44 +1,74 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/3] Documentation: dt: i2c: Add Altera I2C Controller
-Date: Thu, 20 Apr 2017 10:47:05 -0500
-Message-ID: <CAL_JsqLcrFsRDXfVUtnvUT+RWuk-eduJKV9vN94_d9TswEuCdQ@mail.gmail.com>
-References: <1491926547-29510-1-git-send-email-thor.thayer@linux.intel.com>
- <1491926547-29510-3-git-send-email-thor.thayer@linux.intel.com>
- <20170413212240.uxwh5525baqmgny4@rob-hp-laptop> <7c803e53-5c1b-cd59-6c59-5a32b07edcb8@linux.intel.com>
+Subject: Re: [PATCH] rtc: ds1374: Add trickle charger device tree binding
+Date: Thu, 20 Apr 2017 10:56:34 -0500
+Message-ID: <20170420155634.gs7qkufw7j4mfqpx@rob-hp-laptop>
+References: <1492468810-17224-1-git-send-email-mdf@kernel.org>
+Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <7c803e53-5c1b-cd59-6c59-5a32b07edcb8-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: thor.thayer-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
-Cc: "wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org" <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, "linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <rtc-linux+bncBDJIP47K7MERBNFU4PDQKGQESKH3WRQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <1492468810-17224-1-git-send-email-mdf-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/rtc-linux
+List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/rtc-linux/subscribe>
+To: Moritz Fischer <mdf-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 14, 2017 at 8:46 AM, Thor Thayer
-<thor.thayer-VuQAYsv1563Yd54FQh9/CA@public.gmane.org> wrote:
-> Hi Rob,
->
-> On 04/13/2017 04:22 PM, Rob Herring wrote:
->>
->> On Tue, Apr 11, 2017 at 11:02:26AM -0500, thor.thayer-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
->> wrote:
->>>
->>> From: Thor Thayer <thor.thayer-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+On Mon, Apr 17, 2017 at 03:40:10PM -0700, Moritz Fischer wrote:
+> Introduce a device tree binding for specifying the trickle charger
+> configuration for ds1374. This is based on the code for ds13390.
+> 
+> Signed-off-by: Moritz Fischer <mdf-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> ---
+>  .../devicetree/bindings/rtc/dallas,ds1374.txt      | 18 ++++++++
+>  drivers/rtc/rtc-ds1374.c                           | 54 ++++++++++++++++++++++
+>  2 files changed, 72 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/rtc/dallas,ds1374.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/rtc/dallas,ds1374.txt b/Documentation/devicetree/bindings/rtc/dallas,ds1374.txt
+> new file mode 100644
+> index 0000000..4cf5bd7
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/rtc/dallas,ds1374.txt
+> @@ -0,0 +1,18 @@
+> +* Dallas DS1374		I2C Real-Time Clock / WDT
 
-[...]
+Please remove from trivial-devices.txt, too. (which is moving in 4.12 
+BTW)
 
->>> +Required properties :
->>> + - compatible : should be "altr,sip-i2c"
->>
->>
->> Seems kind of generic.
->>
-> I'm using sip for soft IP - right now we only offer 1 flavor.
+> +
+> +Required properties:
+> +- compatible: Should contain "dallas,ds1374".
+> +- reg: I2C address for chip
+> +
+> +Optional properties:
+> +- trickle-resistor-ohms : Selected resistor for trickle charger
+> +	Values usable for ds1374 are 250, 2000, 4000
+> +	Should be given if trickle charger should be enabled
+> +- trickle-diode-disable : Do not use internal trickle charger diode
+> +	Should be given if internal trickle charger diode should be disabled
 
-There is no versioning or release numbering associated with it?
+These should have vendor prefix unless you think they are common.
 
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +Example:
+> +	ds1374: rtc@0 {
+> +		compatible = "dallas,ds1374";
+> +		trickle-resistor-ohms = <250>;
+> +		reg = <0>;
+> +	};
+
+-- 
+You received this message because you are subscribed to "rtc-linux".
+Membership options at http://groups.google.com/group/rtc-linux .
+Please read http://groups.google.com/group/rtc-linux/web/checklist
+before submitting a driver.
+--- 
+You received this message because you are subscribed to the Google Groups "rtc-linux" group.
+To unsubscribe from this group and stop receiving emails from it, send an email to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
