@@ -1,42 +1,205 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v6 4/4] net: dsa: LAN9303: add MDIO managed mode support
-Date: Thu, 20 Apr 2017 11:06:07 -0500
-Message-ID: <20170420160607.kf7bdrlmwrle4ghy@rob-hp-laptop>
-References: <20170418084827.19613-1-jbe@pengutronix.de>
- <20170418084827.19613-5-jbe@pengutronix.de>
+From: Hugues Fruchet <hugues.fruchet@st.com>
+Subject: [PATCH v4 0/8] Add support for DCMI camera interface of
+ STMicroelectronics STM32 SoC series
+Date: Thu, 20 Apr 2017 18:07:17 +0200
+Message-ID: <1492704445-22186-1-git-send-email-hugues.fruchet@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170418084827.19613-5-jbe@pengutronix.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Juergen Borleis <jbe@pengutronix.de>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, f.fainelli@gmail.com, kernel@pengutronix.de, andrew@lunn.ch, vivien.didelot@savoirfairelinux.com, davem@davemloft.net, devicetree@vger.kernel.org, mark.rutland@arm.com, sr@denx.de
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Yannick Fertre <yannick.fertre@st.com>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Hugues Fruchet <hugues.fruchet@st.com>, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 18, 2017 at 10:48:27AM +0200, Juergen Borleis wrote:
-> When the LAN9303 device is in MDIO manged mode, all register accesses must
-> be done via MDIO.
-> 
-> Please note: this code is compile time tested only due to the absence of such
-> configured hardware. It is based on a patch from Stefan Roese from 2014.
-> 
-> Signed-off-by: Juergen Borleis <jbe@pengutronix.de>
-> CC: devicetree@vger.kernel.org
-> CC: robh+dt@kernel.org
-> CC: mark.rutland@arm.com
-> CC: sr@denx.de
-> ---
->  .../devicetree/bindings/net/dsa/lan9303.txt        |  45 ++++++-
+This patchset introduces a basic support for Digital Camera Memory Interface
+(DCMI) of STMicroelectronics STM32 SoC series.
 
-I'd prefer to see the full binding in one separate patch.
+This first basic support implements RGB565 & YUV frame grabbing.
+Cropping and JPEG support will be added later on.
 
-Otherwise, looks fine to me.
+This has been tested on STM324x9I-EVAL evaluation board embedding
+an OV2640 camera sensor.
 
-Acked-by: Rob Herring <robh@kernel.org>
+This driver depends on:
+  - [PATCHv6 00/14] atmel-isi/ov7670/ov2640: convert to standalone drivers http://www.spinics.net/lists/linux-media/msg113480.html
 
->  drivers/net/dsa/Kconfig                            |   8 ++
->  drivers/net/dsa/Makefile                           |   1 +
->  drivers/net/dsa/lan9303_mdio.c                     | 148 +++++++++++++++++++++
->  4 files changed, 201 insertions(+), 1 deletion(-)
->  create mode 100644 drivers/net/dsa/lan9303_mdio.c
+===========
+= history =
+===========
+version 4:
+  - "v4l2-compliance -s -f" report
+  - fix behaviour in case of start_streaming failure (DMA memory shortage for ex.)
+  - dt-bindings: Fix remarks from Rob Herring:
+    http://www.mail-archive.com/linux-media@vger.kernel.org/msg111340.html
+    Add "Acked-by: Rob Herring <robh@kernel.org>"
+
+version 3:
+  - stm32-dcmi: Add "Reviewed-by: Hans Verkuil <hans.verkuil@cisco.com>"
+  - dt-bindings: Fix remarks from Rob Herring:
+    http://www.mail-archive.com/linux-media@vger.kernel.org/msg110956.html
+
+version 2:
+  - Fix a Kbuild warning in probe:
+    http://www.mail-archive.com/linux-media@vger.kernel.org/msg110678.html
+  - Fix a warning in dcmi_queue_setup()
+  - dt-bindings: warn on sensor signals level inversion in board example
+  - Typos fixing
+
+version 1:
+  - Initial submission
+
+===================
+= v4l2-compliance =
+===================
+Below is the v4l2-compliance report for this current version of the DCMI camera interface.
+v4l2-compliance has been built from v4l-utils-1.12.3.
+
+~ # v4l2-compliance -s -f -d /dev/video0
+v4l2-compliance SHA   : f5f45e17ee98a0ebad7836ade2b34ceec909d751
+
+Driver Info:
+        Driver name   : stm32-dcmi
+        Card type     : STM32 Digital Camera Memory Int
+        Bus info      : platform:dcmi
+        Driver version: 4.11.0
+        Capabilities  : 0x85200001
+                Video Capture
+                Read/Write
+                Streaming
+                Extended Pix Format
+                Device Capabilities
+        Device Caps   : 0x05200001
+                Video Capture
+                Read/Write
+                Streaming
+                Extended Pix Format
+
+Compliance test for device /dev/video0 (not using libv4l2):
+
+Required ioctls:
+        test VIDIOC_QUERYCAP: OK
+
+Allow for multiple opens:
+        test second video open: OK
+        test VIDIOC_QUERYCAP: OK
+        test VIDIOC_G/S_PRIORITY: OK
+        test for unlimited opens: OK
+
+Debug ioctls:
+        test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
+        test VIDIOC_LOG_STATUS: OK
+
+Input ioctls:
+        test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
+        test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+        test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
+        test VIDIOC_ENUMAUDIO: OK (Not Supported)
+        test VIDIOC_G/S/ENUMINPUT: OK
+        test VIDIOC_G/S_AUDIO: OK (Not Supported)
+        Inputs: 1 Audio Inputs: 0 Tuners: 0
+
+Output ioctls:
+        test VIDIOC_G/S_MODULATOR: OK (Not Supported)
+        test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+        test VIDIOC_ENUMAUDOUT: OK (Not Supported)
+        test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
+        test VIDIOC_G/S_AUDOUT: OK (Not Supported)
+        Outputs: 0 Audio Outputs: 0 Modulators: 0
+
+Input/Output configuration ioctls:
+        test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
+        test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
+        test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
+        test VIDIOC_G/S_EDID: OK (Not Supported)
+
+Test input 0:
+
+        Control ioctls:
+                test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK
+                test VIDIOC_QUERYCTRL: OK
+                test VIDIOC_G/S_CTRL: OK
+                test VIDIOC_G/S/TRY_EXT_CTRLS: OK
+                test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK
+                test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
+                Standard Controls: 3 Private Controls: 0
+
+        Format ioctls:
+                test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
+                test VIDIOC_G/S_PARM: OK (Not Supported)
+                test VIDIOC_G_FBUF: OK (Not Supported)
+                test VIDIOC_G_FMT: OK
+                test VIDIOC_TRY_FMT: OK
+                test VIDIOC_S_FMT: OK
+                test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
+                test Cropping: OK (Not Supported)
+                test Composing: OK (Not Supported)
+                test Scaling: OK
+
+        Codec ioctls:
+                test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
+                test VIDIOC_G_ENC_INDEX: OK (Not Supported)
+                test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
+
+        Buffer ioctls:
+                test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK
+                test VIDIOC_EXPBUF: OK
+
+Test input 0:
+
+Streaming ioctls:
+        test read/write: OK
+        test MMAP: OK                                     
+        test USERPTR: OK (Not Supported)
+        test DMABUF: Cannot test, specify --expbuf-device
+
+Stream using all formats:
+        test MMAP for Format YUYV, Frame Size 176x144:
+                Stride 352, Field None: OK                                  
+        test MMAP for Format YUYV, Frame Size 320x240:
+                Stride 640, Field None: OK                                  
+        test MMAP for Format UYVY, Frame Size 176x144:
+                Stride 352, Field None: OK                                  
+        test MMAP for Format UYVY, Frame Size 320x240:
+                Stride 640, Field None: OK                                  
+        test MMAP for Format RGBP, Frame Size 176x144:
+                Stride 352, Field None: OK                                  
+        test MMAP for Format RGBP, Frame Size 320x240:
+                Stride 640, Field None: OK                                  
+
+Total: 52, Succeeded: 52, Failed: 0, Warnings: 0
+
+Hugues Fruchet (8):
+  dt-bindings: Document STM32 DCMI bindings
+  [media] stm32-dcmi: STM32 DCMI camera interface driver
+  ARM: dts: stm32: Enable DCMI support on STM32F429 MCU
+  ARM: dts: stm32: Enable DCMI camera interface on STM32F429-EVAL board
+  ARM: dts: stm32: Enable STMPE1600 gpio expander of STM32F429-EVAL
+    board
+  ARM: dts: stm32: Enable OV2640 camera support of STM32F429-EVAL board
+  ARM: configs: stm32: STMPE1600 GPIO expander
+  ARM: configs: stm32: DCMI + OV2640 camera support
+
+ .../devicetree/bindings/media/st,stm32-dcmi.txt    |   46 +
+ arch/arm/boot/dts/stm32429i-eval.dts               |   56 +
+ arch/arm/boot/dts/stm32f429.dtsi                   |   37 +
+ arch/arm/configs/stm32_defconfig                   |    9 +
+ drivers/media/platform/Kconfig                     |   12 +
+ drivers/media/platform/Makefile                    |    2 +
+ drivers/media/platform/stm32/Makefile              |    1 +
+ drivers/media/platform/stm32/stm32-dcmi.c          | 1419 ++++++++++++++++++++
+ 8 files changed, 1582 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/st,stm32-dcmi.txt
+ create mode 100644 drivers/media/platform/stm32/Makefile
+ create mode 100644 drivers/media/platform/stm32/stm32-dcmi.c
+
+-- 
+1.9.1
