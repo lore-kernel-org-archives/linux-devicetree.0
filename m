@@ -1,111 +1,63 @@
-From: Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] extcon: cros-ec: Add extcon-cros-ec driver to
- support display out.
-Date: Thu, 20 Apr 2017 12:16:56 +0200
-Message-ID: <b0a76ac2-b524-23b3-ef58-22114e8bf209@collabora.com>
-References: <20170301111943.12170-1-enric.balletbo@collabora.com>
- <CGME20170301112844epcas4p34012f1564f1145f8d8a8967f4fe9a821@epcas4p3.samsung.com>
- <20170301111943.12170-2-enric.balletbo@collabora.com>
- <58B7C9BF.1040708@samsung.com> <58E44698.5020605@samsung.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH/RFC v2 1/2] arm64: dts: r8a7795: Add support for R-Car H3 ES2.0
+Date: Thu, 20 Apr 2017 13:42:23 +0300
+Message-ID: <1714563.qChlbIjNcO@avalon>
+References: <1490362665-4422-1-git-send-email-geert+renesas@glider.be> <1612430.SNEha5n02K@avalon> <CAMuHMdXOzyo+kzaGAXp+jZTtUejYyXCQzezo+SmvNVQuEC9=_Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <58E44698.5020605-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, MyungJoo Ham <myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Benson Leung <bleung-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <CAMuHMdXOzyo+kzaGAXp+jZTtUejYyXCQzezo+SmvNVQuEC9=_Q@mail.gmail.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Wolfram Sang <wsa@sang-engineering.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 05/04/17 03:21, Chanwoo Choi wrote:
-> Hi Enric,
+Hi Geert,
+
+On Thursday 20 Apr 2017 11:36:59 Geert Uytterhoeven wrote:
+> On Mon, Mar 27, 2017 at 10:48 AM, Laurent Pinchart wrote:
+> > On Friday 24 Mar 2017 14:37:44 Geert Uytterhoeven wrote:
+> >> Update r8a7795.dtsi so it corresponds to R-Car H3 ES2.0 or later:
+> >>   - The following devices no longer exist on ES2.0, and are thus removed:
+> >>     fcpf2, fcpvd3, fcpvi2, fdp1-2, usb3-if1, vspd3, vspi2.
+> >>   
+> >>   - The DU <-> VSPD topology is different on ES2.0, hence remove the
+> >>     "vsps" property from the DU node until the driver can handle this.
+> > 
+> > I think I'll need a different compatible string between ES1.x and ES2 for
+> > the DU. It could make sense to move the whole DU node to *-es1.dtsi. We
+> > can decide about that later when I'll have a DU driver prototype ready.
 > 
-> On 2017년 03월 02일 16:29, Chanwoo Choi wrote:
->> Hi,
->>
->> On 2017년 03월 01일 20:19, Enric Balletbo i Serra wrote:
->>> From: Benson Leung <bleung-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
->>>
->>> This is the driver for the USB Type C cable detection mechanism
->>> built into the ChromeOS Embedded Controller on systems that
->>> have USB Type-C ports.
->>>
->>> At present, this allows for the presence of display out, but in
->>> future, it may also be used to notify host and device type cables
->>> and the presence of power.
->>>
->>> Signed-off-by: Benson Leung <bleung-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
->>> Signed-off-by: Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
->>> ---
->>> Changes since v1:
->>>  Requested by Chanwoo Choi
->>>  - Rename files changing _ for -
->>>  - Remove the unneeded blank line on bottom of header.
->>>  - Remove kobject.h and cros_ec_commands.h includes.
->>>  - Remove the debug message as is not necessary.
->>>  - Use the tab for indentation instead of space for if sentence.
->>>  - Define each variable on different lines when the variables should be
->>>    initialized.
->>>  - Remove EXTCON_USB and EXTCON_USB_HOST as are not really used for now.
->>>  - Add one blank line to split out between state and property setting.
->>>  - Add the author information (header and module)
->>>
->>>  Enric Balletbo
->>>  - As Rob suggested to rename the compatible name to something indicating that
->>>    is USB Type C related I also renamed the file names, extcon-cros-ec ->
->>>    extcon-usbc-cros-ec, I think it's more clear.
->>>
->>>  drivers/extcon/Kconfig               |   7 +
->>>  drivers/extcon/Makefile              |   1 +
->>>  drivers/extcon/extcon-usbc-cros-ec.c | 415 +++++++++++++++++++++++++++++++++++
->>>  include/linux/mfd/cros_ec_commands.h |  75 +++++++
->>>  4 files changed, 498 insertions(+)
->>>  create mode 100644 drivers/extcon/extcon-usbc-cros-ec.c
->>>
->>
->> Looks good to me.
->> Acked-by: Chanwoo Choi <cw00.chio-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
->>
->> I think this patch should be handled with patches[1].
->> [1] https://lkml.org/lkml/2017/2/14/655
->>
->> I think that one maintainer among following subsystems
->> (mfd, chrome h/w platform, rtc and extcon)
->> will apply their git repository, and then one maintainer
->> will send the pull request of immutable branch for these patches.
->>
+> Why would you need a different compatible string?
+> Can't you use soc_device_match() to handle ES1.x SoCs?
 > 
-> As I mentioned, these patch should be handled with related patches[1].
-> [1] https://lkml.org/lkml/2017/2/14/655
-> 
-> So, I can't apply these patch on extcon git because there is a merge conflict
-> and we should handle these patches with immutable branch between subsystem maintainer.
-> 
-> The v4.11-rc5 was released, if you want to apply this patch to the v4.12-rc1,
-> please take care of these patches.
-> 
+> The different DU <-> VSPD topology is handled through the vsps property in
+> DTS. Are the ports different, too? That can be handled in DTS.
 
-CC'ied : Olof Johansson
+My point (not expressed clearly) was that, as I'll need a different vsps 
+property, I can as well go for a different compatible string.
 
-Olof, Benson,
+> The main reason why I kept the DU node in r8a7795.dtsi is that the board DTS
+> refers to it.  Sharing board DTS means there needs to be at least a
+> placeholder node for the DU in r8a7795.dtsi, unless you want to keep on
+> shuffling board overrides around.
 
-Could at least the following patch in this series [1] picked as soon as possible
-if it's ok.
+As the ports are identical it makes sense to share the same board DTS, I agree 
+with you. We could override the compatible string in r8a7795-es1.dtsi and 
+leave it blank in r8a7795.dtsi for now, as there's no driver support for 
+ES2.0. That's a bit of a workaround as it shouldn't matter to DT whether 
+driver support is available or not. On the other hand, leaving the vsps 
+property out is a workaround too.
 
-9630769 New          [01/13] mfd: cros_ec: Add helper for event notifier
+The current driver will fail probing if the number of VSPs is different than 
+the number of CRTCs, so I believe you can keep the vsps property in 
+r8a7795.dtsi with 3 VSPS without causing any problem. However, there's no DT 
+bindings for the H3 ES2.0 DU yet, so we would end up merging DT without 
+bindings, which is not good. I think that regardless of how we proceed, 
+keeping the DU node in the ES2.0 .dtsi will be a violation of that policy.
 
-This specific patch is blocking this and others like the rtc-cros-ec to land and
-the series were send some time ago without received bad feedback.
+-- 
+Regards,
 
-[1] https://lkml.org/lkml/2017/3/17/321
-
-Many thanks,
- Enric
-
-
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Laurent Pinchart
