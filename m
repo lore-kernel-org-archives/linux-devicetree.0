@@ -1,140 +1,172 @@
-From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [RFC 1/2] dt-bindings: add mmio-based syscon mux controller DT
- bindings
-Date: Thu, 20 Apr 2017 15:03:13 +0200
-Message-ID: <1492693393.2158.71.camel@pengutronix.de>
-References: <20170413154812.19597-1-p.zabel@pengutronix.de>
-         <20170419220900.ndrtt2m7d6tqsddh@rob-hp-laptop>
-         <1492676048.2158.25.camel@pengutronix.de>
-         <3f6e0337-46e1-fcfd-430b-4221e45c6ca8@axentia.se>
+From: Gilad Ben-Yossef <gilad@benyossef.com>
+Subject: [PATCH v2 0/9] staging: ccree: add Arm TrustZone CryptoCell REE driver
+Date: Thu, 20 Apr 2017 16:12:54 +0300
+Message-ID: <1492693983-8175-1-git-send-email-gilad@benyossef.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <3f6e0337-46e1-fcfd-430b-4221e45c6ca8-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>, Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devel@driverdev.osuosl.org
+Cc: Binoy Jayan <binoy.jayan@linaro.org>, devicetree@vger.kernel.org, gilad.benyossef@arm.com, linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org, Stuart Yoder <stuart.yoder@arm.com>, Ofir Drang <ofir.drang@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2017-04-20 at 13:57 +0200, Peter Rosin wrote:
-> On 2017-04-20 10:14, Philipp Zabel wrote:
-> > Hi Rob,
-> > 
-> > On Wed, 2017-04-19 at 17:09 -0500, Rob Herring wrote:
-> >> On Thu, Apr 13, 2017 at 05:48:11PM +0200, Philipp Zabel wrote:
-> >>> This adds device tree binding documentation for mmio-based syscon
-> >>> multiplexers controlled by a single bitfield in a syscon register
-> >>> range.
-> >>>
-> >>> Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> >>> ---
-> >>>  Documentation/devicetree/bindings/mux/mmio-mux.txt | 56 ++++++++++++++++++++++
-> >>>  1 file changed, 56 insertions(+)
-> >>>  create mode 100644 Documentation/devicetree/bindings/mux/mmio-mux.txt
-> >>>
-> >>> diff --git a/Documentation/devicetree/bindings/mux/mmio-mux.txt b/Documentation/devicetree/bindings/mux/mmio-mux.txt
-> >>> new file mode 100644
-> >>> index 0000000000000..11d96f5d98583
-> >>> --- /dev/null
-> >>> +++ b/Documentation/devicetree/bindings/mux/mmio-mux.txt
-> >>> @@ -0,0 +1,56 @@
-> >>> +MMIO bitfield-based multiplexer controller bindings
-> >>> +
-> >>> +Define a syscon bitfield to be used to control a multiplexer. The parent
-> >>> +device tree node must be a syscon node to provide register access.
-> >>> +
-> >>> +Required properties:
-> >>> +- compatible : "gpio-mux"
-> >>
-> >> ?
-> >>
-> >>> +- reg : register base of the register containing the control bitfield
-> >>> +- bit-mask : bitmask of the control bitfield in the control register
-> >>> +- bit-shift : bit offset of the control bitfield in the control register
-> >>> +- #mux-control-cells : <0>
-> >>> +* Standard mux-controller bindings as decribed in mux-controller.txt
-> >>> +
-> >>> +Optional properties:
-> >>> +- idle-state : if present, the state the mux will have when idle. The
-> >>> +	       special state MUX_IDLE_AS_IS is the default.
-> >>> +
-> >>> +The multiplexer state is defined as the value of the bitfield described
-> >>> +by the reg, bit-mask, and bit-shift properties, accessed through the parent
-> >>> +syscon.
-> >>> +
-> >>> +Example:
-> >>> +
-> >>> +	syscon {
-> >>> +		compatible = "syscon";
-> >>> +
-> >>> +		mux: mux-controller@3 {
-> >>> +			compatible = "mmio-mux";
-> >>> +			reg = <0x3>;
-> >>> +			bit-mask = <0x1>;
-> >>> +			bit-shift = <5>;
-> >>
-> >> This pattern doesn't scale once you have multiple fields @ addr 3. I 
-> >> also don't really think a node per register field in DT really scales.
-> > 
-> > Thanks, I have been a bit uneasy with the separate per-bitfield mux
-> > controller node, so I'm eager to agree. But thit makes me unsure how to
-> > best represent the information that is spelled out above.
-> > 
-> >> I think the parent should be declared as a mux controller instead.
-> > 
-> > The syscon node itself should be the mux controller? Would you expect
-> > the mmio-mux driver bind to the syscon node, or should the mux framework
-> > handle creation of the mux controls in this case (i.e. does the syscon
-> > node get a "mmio-mux" added to its compatible list)?
-> > 
-> >> You could encode the mux addr and bit position in the mux cells.
-> > 
-> > What about the bit-mask / bitfield width? Just add a cell for it?
-> > 
-> > 	gpr: syscon {
-> > 		compatible = "mmio-mux", "syscon", "simple-mfd";
-> > 		#mux-control-cells = <3>;
-> > 
-> > 		video-mux {
-> > 			compatible = "video-mux";
-> > 			/* register 0x3, bits [6:5] */
-> > 			mux-controls = <&gpr 0x3 5 0x3>;
-> > 
-> > 			ports {
-> > 				/* ports 0..5 */
-> > 			};
-> > 		};
-> > 	};
-> > 
-> > Or maybe using MSB and LSB would be better to read?
-> > 
-> > 		video-mux {
-> > 			/* register 0x3, bits [6:5] */
-> > 			mux-control = <&gpr 0x3 6 5>;
-> > 
-> > 			ports {
-> > 				/* ports 0..5 */
-> > 			};
-> > 		};
-> 
-> Why do you need three values for one register+field? The shift can be
-> implied from the mask, if the mask is pre-shifted. I.e. specifying a
-> mask of 0x60 in this case. What I'm I missing?
+Arm TrustZone CryptoCell 700 is a family of cryptographic hardware
+accelerators. It is supported by a long lived series of out of tree
+drivers, which I am now in the process of unifying and upstreaming.
+This is the first drop, supporting the new CryptoCell 712 REE.
 
-As long as we have <= 32-bit hardware registers, that would work.
-The question then is if things like
-	mux-control = <&gpr 0x04 0x00300000>;
-are considered readable/reviewable enough. And what happens when we get
-64-bit general purpose registers containing muxes? Also a binding like
-this would allow non-contiguous bit masks.
-The reason I suggested using bit-shift in the first place was that there
-are already other bindings using "bit-shift" or "reg-shift" properties.
+The code still needs some cleanup before maturing to a proper
+upstream driver, which I am in the process of doing. However,
+as discussion of some of the capabilities of the hardware and
+its application to some dm-crypt and dm-verity features recently
+took place I though it is better to do this in the open via the
+staging tree.
 
-regards
-Philipp
+A Git repository based off of Linux 4.11-rc7 is also available at
+https://github.com/gby/linux.git branch ccree_v2 for those inclined.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Signed-off-by: Gilad Ben-Yossef <gilad@benyossef.com>
+CC: Binoy Jayan <binoy.jayan@linaro.org>
+CC: Ofir Drang <ofir.drang@arm.com>
+CC: Stuart Yoder <stuart.yoder@arm.com>
+
+Changes from v1:
+- Broke up patch set into smaller units for mailing list review as per
+  Greg KH's indication.
+- Changed DT binding compatible tag as per Mark Rutland suggestion.
+- Moved DT binding document inside the staging directory and added DT binding
+  review to TODO list as per Mark Rutland's request.
+
+Many thanks to all reviewers :-)
+
+Gilad Ben-Yossef (9):
+  staging: ccree: introduce CryptoCell HW driver
+  staging: ccree: add ahash support
+  staging: ccree: add skcipher support
+  staging: ccree: add IV generation support
+  staging: ccree: add AEAD support
+  staging: ccree: add FIPS support
+  staging: ccree: add TODO list
+  staging: ccree: add DT bindings for Arm CryptoCell
+  MAINTAINERS: add Gilad BY as ccree maintainer
+
+ MAINTAINERS                                        |    7 +
+ drivers/staging/Kconfig                            |    2 +
+ drivers/staging/Makefile                           |    2 +-
+ .../devicetree/bindings/crypto/arm-cryptocell.txt  |   27 +
+ drivers/staging/ccree/Kconfig                      |   43 +
+ drivers/staging/ccree/Makefile                     |    3 +
+ drivers/staging/ccree/TODO                         |   28 +
+ drivers/staging/ccree/bsp.h                        |   21 +
+ drivers/staging/ccree/cc_bitops.h                  |   62 +
+ drivers/staging/ccree/cc_crypto_ctx.h              |  299 +++
+ drivers/staging/ccree/cc_hal.h                     |   35 +
+ drivers/staging/ccree/cc_hw_queue_defs.h           |  603 +++++
+ drivers/staging/ccree/cc_lli_defs.h                |   57 +
+ drivers/staging/ccree/cc_pal_log.h                 |  188 ++
+ drivers/staging/ccree/cc_pal_log_plat.h            |   33 +
+ drivers/staging/ccree/cc_pal_types.h               |   97 +
+ drivers/staging/ccree/cc_pal_types_plat.h          |   29 +
+ drivers/staging/ccree/cc_regs.h                    |  106 +
+ drivers/staging/ccree/dx_crys_kernel.h             |  180 ++
+ drivers/staging/ccree/dx_env.h                     |  224 ++
+ drivers/staging/ccree/dx_host.h                    |  155 ++
+ drivers/staging/ccree/dx_reg_base_host.h           |   34 +
+ drivers/staging/ccree/dx_reg_common.h              |   26 +
+ drivers/staging/ccree/hash_defs.h                  |   78 +
+ drivers/staging/ccree/hw_queue_defs_plat.h         |   43 +
+ drivers/staging/ccree/ssi_aead.c                   | 2832 ++++++++++++++++++++
+ drivers/staging/ccree/ssi_aead.h                   |  120 +
+ drivers/staging/ccree/ssi_buffer_mgr.c             | 1876 +++++++++++++
+ drivers/staging/ccree/ssi_buffer_mgr.h             |  105 +
+ drivers/staging/ccree/ssi_cipher.c                 | 1503 +++++++++++
+ drivers/staging/ccree/ssi_cipher.h                 |   89 +
+ drivers/staging/ccree/ssi_config.h                 |   61 +
+ drivers/staging/ccree/ssi_driver.c                 |  557 ++++
+ drivers/staging/ccree/ssi_driver.h                 |  228 ++
+ drivers/staging/ccree/ssi_fips.c                   |   65 +
+ drivers/staging/ccree/ssi_fips.h                   |   70 +
+ drivers/staging/ccree/ssi_fips_data.h              |  315 +++
+ drivers/staging/ccree/ssi_fips_ext.c               |   96 +
+ drivers/staging/ccree/ssi_fips_ll.c                | 1681 ++++++++++++
+ drivers/staging/ccree/ssi_fips_local.c             |  369 +++
+ drivers/staging/ccree/ssi_fips_local.h             |   77 +
+ drivers/staging/ccree/ssi_hash.c                   | 2751 +++++++++++++++++++
+ drivers/staging/ccree/ssi_hash.h                   |  101 +
+ drivers/staging/ccree/ssi_ivgen.c                  |  301 +++
+ drivers/staging/ccree/ssi_ivgen.h                  |   72 +
+ drivers/staging/ccree/ssi_pm.c                     |  150 ++
+ drivers/staging/ccree/ssi_pm.h                     |   46 +
+ drivers/staging/ccree/ssi_pm_ext.c                 |   60 +
+ drivers/staging/ccree/ssi_pm_ext.h                 |   33 +
+ drivers/staging/ccree/ssi_request_mgr.c            |  713 +++++
+ drivers/staging/ccree/ssi_request_mgr.h            |   60 +
+ drivers/staging/ccree/ssi_sram_mgr.c               |  138 +
+ drivers/staging/ccree/ssi_sram_mgr.h               |   80 +
+ drivers/staging/ccree/ssi_sysfs.c                  |  440 +++
+ drivers/staging/ccree/ssi_sysfs.h                  |   54 +
+ 55 files changed, 17424 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/staging/ccree/Documentation/devicetree/bindings/crypto/arm-cryptocell.txt
+ create mode 100644 drivers/staging/ccree/Kconfig
+ create mode 100644 drivers/staging/ccree/Makefile
+ create mode 100644 drivers/staging/ccree/TODO
+ create mode 100644 drivers/staging/ccree/bsp.h
+ create mode 100644 drivers/staging/ccree/cc_bitops.h
+ create mode 100644 drivers/staging/ccree/cc_crypto_ctx.h
+ create mode 100644 drivers/staging/ccree/cc_hal.h
+ create mode 100644 drivers/staging/ccree/cc_hw_queue_defs.h
+ create mode 100644 drivers/staging/ccree/cc_lli_defs.h
+ create mode 100644 drivers/staging/ccree/cc_pal_log.h
+ create mode 100644 drivers/staging/ccree/cc_pal_log_plat.h
+ create mode 100644 drivers/staging/ccree/cc_pal_types.h
+ create mode 100644 drivers/staging/ccree/cc_pal_types_plat.h
+ create mode 100644 drivers/staging/ccree/cc_regs.h
+ create mode 100644 drivers/staging/ccree/dx_crys_kernel.h
+ create mode 100644 drivers/staging/ccree/dx_env.h
+ create mode 100644 drivers/staging/ccree/dx_host.h
+ create mode 100644 drivers/staging/ccree/dx_reg_base_host.h
+ create mode 100644 drivers/staging/ccree/dx_reg_common.h
+ create mode 100644 drivers/staging/ccree/hash_defs.h
+ create mode 100644 drivers/staging/ccree/hw_queue_defs_plat.h
+ create mode 100644 drivers/staging/ccree/ssi_aead.c
+ create mode 100644 drivers/staging/ccree/ssi_aead.h
+ create mode 100644 drivers/staging/ccree/ssi_buffer_mgr.c
+ create mode 100644 drivers/staging/ccree/ssi_buffer_mgr.h
+ create mode 100644 drivers/staging/ccree/ssi_cipher.c
+ create mode 100644 drivers/staging/ccree/ssi_cipher.h
+ create mode 100644 drivers/staging/ccree/ssi_config.h
+ create mode 100644 drivers/staging/ccree/ssi_driver.c
+ create mode 100644 drivers/staging/ccree/ssi_driver.h
+ create mode 100644 drivers/staging/ccree/ssi_fips.c
+ create mode 100644 drivers/staging/ccree/ssi_fips.h
+ create mode 100644 drivers/staging/ccree/ssi_fips_data.h
+ create mode 100644 drivers/staging/ccree/ssi_fips_ext.c
+ create mode 100644 drivers/staging/ccree/ssi_fips_ll.c
+ create mode 100644 drivers/staging/ccree/ssi_fips_local.c
+ create mode 100644 drivers/staging/ccree/ssi_fips_local.h
+ create mode 100644 drivers/staging/ccree/ssi_hash.c
+ create mode 100644 drivers/staging/ccree/ssi_hash.h
+ create mode 100644 drivers/staging/ccree/ssi_ivgen.c
+ create mode 100644 drivers/staging/ccree/ssi_ivgen.h
+ create mode 100644 drivers/staging/ccree/ssi_pm.c
+ create mode 100644 drivers/staging/ccree/ssi_pm.h
+ create mode 100644 drivers/staging/ccree/ssi_pm_ext.c
+ create mode 100644 drivers/staging/ccree/ssi_pm_ext.h
+ create mode 100644 drivers/staging/ccree/ssi_request_mgr.c
+ create mode 100644 drivers/staging/ccree/ssi_request_mgr.h
+ create mode 100644 drivers/staging/ccree/ssi_sram_mgr.c
+ create mode 100644 drivers/staging/ccree/ssi_sram_mgr.h
+ create mode 100644 drivers/staging/ccree/ssi_sysfs.c
+ create mode 100644 drivers/staging/ccree/ssi_sysfs.h
+
+-- 
+2.1.4
