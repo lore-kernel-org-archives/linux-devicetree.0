@@ -1,97 +1,196 @@
-From: Guillaume Tucker <guillaume.tucker-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-Subject: Re: [PATCH v3 2/5] ARM: dts: rockchip: add ARM Mali GPU node for
- rk3288
-Date: Thu, 20 Apr 2017 06:44:56 +0100
-Message-ID: <319a2a72-ca25-08d7-68dc-7eae74f1a622@collabora.com>
-References: <cover.1492588180.git.guillaume.tucker@collabora.com>
- <f6f127efb44fb1012f18c483fa522918f8f82d7c.1492588180.git.guillaume.tucker@collabora.com>
- <5403013.fQWx48MQOq@phil>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5403013.fQWx48MQOq@phil>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Sjoerd Simons <sjoerd.simons-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, John Reitan <john.reitan-5wv7dgnIgG8@public.gmane.org>, Wookey <wookey-Xpnwy/r4z8dg9hUCZPvPmw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: [PATCH V4 1/7] PM / OPP: Use - instead of @ for DT entries
+Date: Thu, 20 Apr 2017 11:14:12 +0530
+Message-ID: <f8323bb507a97755c7c164f1d2aff45d2f0be3f0.1492666725.git.viresh.kumar@linaro.org>
+References: <cover.1492666725.git.viresh.kumar@linaro.org>
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <cover.1492666725.git.viresh.kumar@linaro.org>
+In-Reply-To: <cover.1492666725.git.viresh.kumar@linaro.org>
+References: <cover.1492666725.git.viresh.kumar@linaro.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: arm@kernel.org, Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@codeaurora.org>
+Cc: linaro-kernel@lists.linaro.org, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org, Rafael Wysocki <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, Krzysztof Kozlowski <krzk@kernel.org>, Masahiro Yamada <yamada.masahiro@socionext.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Heiko,
+Compiling the DT file with W=1, DTC warns like follows:
 
-On 19/04/17 09:59, Heiko Stuebner wrote:
-> Am Mittwoch, 19. April 2017, 09:06:18 CEST schrieb Guillaume Tucker:
->> Add Mali GPU device tree node for the rk3288 SoC, with devfreq
->> opp table.
->>
->> Tested-by: Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
->> Signed-off-by: Guillaume Tucker <guillaume.tucker-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
->> ---
->>  arch/arm/boot/dts/rk3288.dtsi | 22 ++++++++++++++++++++++
->>  1 file changed, 22 insertions(+)
->>
->> diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
->> index df8a0dbe9d91..187eed528f83 100644
->> --- a/arch/arm/boot/dts/rk3288.dtsi
->> +++ b/arch/arm/boot/dts/rk3288.dtsi
->> @@ -43,6 +43,7 @@
->>  #include <dt-bindings/interrupt-controller/arm-gic.h>
->>  #include <dt-bindings/pinctrl/rockchip.h>
->>  #include <dt-bindings/clock/rk3288-cru.h>
->> +#include <dt-bindings/power/rk3288-power.h>
->>  #include <dt-bindings/thermal/thermal.h>
->>  #include <dt-bindings/power/rk3288-power.h>
->>  #include <dt-bindings/soc/rockchip,boot-mode.h>
->> @@ -227,6 +228,27 @@
->>  		ports = <&vopl_out>, <&vopb_out>;
->>  	};
->>
->> +	gpu: mali@ffa30000 {
->
-> please sort nodes by address. ffa30000 should be placed below hdmi@ff980000
-> and above qos@ffaa0000 .
+Warning (unit_address_vs_reg): Node /opp_table0/opp@1000000000 has a
+unit name, but no reg property
 
-Sure, will fix that in v4.
+Fix this by replacing '@' with '-' as the OPP nodes will never have a
+"reg" property.
 
->> +		compatible = "arm,mali-t760", "arm,mali-midgard";
->
-> As indicated before I don't trust that a generic binding will work for
-> everything, so I would feel safer if we had a "rockchip,rk3288-mali" in
-> front for future purposes, making it a
->
-> 		compatible = "rockchip,rk3288-mali", "arm,mali-t760", "arm,mali-midgard";
+Reported-by: Krzysztof Kozlowski <krzk@kernel.org>
+Reported-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Suggested-by: Mark Rutland <mark.rutland@arm.com>
+Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+Acked-by: Rob Herring <robh@kernel.org>
+---
+ Documentation/devicetree/bindings/opp/opp.txt | 38 +++++++++++++--------------
+ 1 file changed, 19 insertions(+), 19 deletions(-)
 
-OK, sorry I overlooked this part.  I'll add it in v4 with a
-vendor compatible string in the binding documentation.
-
->> +		reg = <0xffa30000 0x10000>;
->> +		interrupts = <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>,
->> +			     <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>,
->> +			     <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>;
->> +		interrupt-names = "job", "mmu", "gpu";
->> +		clocks = <&cru ACLK_GPU>;
->> +		operating-points = <
->> +			/* KHz uV */
->> +			100000 950000
->> +			200000 950000
->> +			300000 1000000
->> +			400000 1100000
->> +			500000 1200000
->> +			600000 1250000
->> +		>;
->
-> Wasn't there a wish for opp-v2 in a previous version?
-
-Well it wasn't entirely clear to me in Rob's email whether it was
-necessary to use opp-v2 now or rather if it would be a potential
-option whenever opp-v2 was needed.  If operating-points (v1) are
-being deprecated then I can change that in my next patch v4.
-Using operating-points-v2 with the Mali driver works as far as I
-can tell on rk3288 so that's not an issue.
-
-Thanks,
-Guillaume
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/opp/opp.txt b/Documentation/devicetree/bindings/opp/opp.txt
+index 63725498bd20..e36d261b9ba6 100644
+--- a/Documentation/devicetree/bindings/opp/opp.txt
++++ b/Documentation/devicetree/bindings/opp/opp.txt
+@@ -186,20 +186,20 @@ Example 1: Single cluster Dual-core ARM cortex A9, switch DVFS states together.
+ 		compatible = "operating-points-v2";
+ 		opp-shared;
+ 
+-		opp@1000000000 {
++		opp-1000000000 {
+ 			opp-hz = /bits/ 64 <1000000000>;
+ 			opp-microvolt = <975000 970000 985000>;
+ 			opp-microamp = <70000>;
+ 			clock-latency-ns = <300000>;
+ 			opp-suspend;
+ 		};
+-		opp@1100000000 {
++		opp-1100000000 {
+ 			opp-hz = /bits/ 64 <1100000000>;
+ 			opp-microvolt = <1000000 980000 1010000>;
+ 			opp-microamp = <80000>;
+ 			clock-latency-ns = <310000>;
+ 		};
+-		opp@1200000000 {
++		opp-1200000000 {
+ 			opp-hz = /bits/ 64 <1200000000>;
+ 			opp-microvolt = <1025000>;
+ 			clock-latency-ns = <290000>;
+@@ -265,20 +265,20 @@ independently.
+ 		 * independently.
+ 		 */
+ 
+-		opp@1000000000 {
++		opp-1000000000 {
+ 			opp-hz = /bits/ 64 <1000000000>;
+ 			opp-microvolt = <975000 970000 985000>;
+ 			opp-microamp = <70000>;
+ 			clock-latency-ns = <300000>;
+ 			opp-suspend;
+ 		};
+-		opp@1100000000 {
++		opp-1100000000 {
+ 			opp-hz = /bits/ 64 <1100000000>;
+ 			opp-microvolt = <1000000 980000 1010000>;
+ 			opp-microamp = <80000>;
+ 			clock-latency-ns = <310000>;
+ 		};
+-		opp@1200000000 {
++		opp-1200000000 {
+ 			opp-hz = /bits/ 64 <1200000000>;
+ 			opp-microvolt = <1025000>;
+ 			opp-microamp = <90000;
+@@ -341,20 +341,20 @@ DVFS state together.
+ 		compatible = "operating-points-v2";
+ 		opp-shared;
+ 
+-		opp@1000000000 {
++		opp-1000000000 {
+ 			opp-hz = /bits/ 64 <1000000000>;
+ 			opp-microvolt = <975000 970000 985000>;
+ 			opp-microamp = <70000>;
+ 			clock-latency-ns = <300000>;
+ 			opp-suspend;
+ 		};
+-		opp@1100000000 {
++		opp-1100000000 {
+ 			opp-hz = /bits/ 64 <1100000000>;
+ 			opp-microvolt = <1000000 980000 1010000>;
+ 			opp-microamp = <80000>;
+ 			clock-latency-ns = <310000>;
+ 		};
+-		opp@1200000000 {
++		opp-1200000000 {
+ 			opp-hz = /bits/ 64 <1200000000>;
+ 			opp-microvolt = <1025000>;
+ 			opp-microamp = <90000>;
+@@ -367,20 +367,20 @@ DVFS state together.
+ 		compatible = "operating-points-v2";
+ 		opp-shared;
+ 
+-		opp@1300000000 {
++		opp-1300000000 {
+ 			opp-hz = /bits/ 64 <1300000000>;
+ 			opp-microvolt = <1050000 1045000 1055000>;
+ 			opp-microamp = <95000>;
+ 			clock-latency-ns = <400000>;
+ 			opp-suspend;
+ 		};
+-		opp@1400000000 {
++		opp-1400000000 {
+ 			opp-hz = /bits/ 64 <1400000000>;
+ 			opp-microvolt = <1075000>;
+ 			opp-microamp = <100000>;
+ 			clock-latency-ns = <400000>;
+ 		};
+-		opp@1500000000 {
++		opp-1500000000 {
+ 			opp-hz = /bits/ 64 <1500000000>;
+ 			opp-microvolt = <1100000 1010000 1110000>;
+ 			opp-microamp = <95000>;
+@@ -409,7 +409,7 @@ Example 4: Handling multiple regulators
+ 		compatible = "operating-points-v2";
+ 		opp-shared;
+ 
+-		opp@1000000000 {
++		opp-1000000000 {
+ 			opp-hz = /bits/ 64 <1000000000>;
+ 			opp-microvolt = <970000>, /* Supply 0 */
+ 					<960000>, /* Supply 1 */
+@@ -422,7 +422,7 @@ Example 4: Handling multiple regulators
+ 
+ 		/* OR */
+ 
+-		opp@1000000000 {
++		opp-1000000000 {
+ 			opp-hz = /bits/ 64 <1000000000>;
+ 			opp-microvolt = <975000 970000 985000>, /* Supply 0 */
+ 					<965000 960000 975000>, /* Supply 1 */
+@@ -435,7 +435,7 @@ Example 4: Handling multiple regulators
+ 
+ 		/* OR */
+ 
+-		opp@1000000000 {
++		opp-1000000000 {
+ 			opp-hz = /bits/ 64 <1000000000>;
+ 			opp-microvolt = <975000 970000 985000>, /* Supply 0 */
+ 					<965000 960000 975000>, /* Supply 1 */
+@@ -467,7 +467,7 @@ Example 5: opp-supported-hw
+ 		status = "okay";
+ 		opp-shared;
+ 
+-		opp@600000000 {
++		opp-600000000 {
+ 			/*
+ 			 * Supports all substrate and process versions for 0xF
+ 			 * cuts, i.e. only first four cuts.
+@@ -478,7 +478,7 @@ Example 5: opp-supported-hw
+ 			...
+ 		};
+ 
+-		opp@800000000 {
++		opp-800000000 {
+ 			/*
+ 			 * Supports:
+ 			 * - cuts: only one, 6th cut (represented by 6th bit).
+@@ -510,7 +510,7 @@ Example 5: opp-supported-hw
+ 		compatible = "operating-points-v2";
+ 		opp-shared;
+ 
+-		opp@1000000000 {
++		opp-1000000000 {
+ 			opp-hz = /bits/ 64 <1000000000>;
+ 			opp-microvolt-slow = <915000 900000 925000>;
+ 			opp-microvolt-fast = <975000 970000 985000>;
+@@ -518,7 +518,7 @@ Example 5: opp-supported-hw
+ 			opp-microamp-fast =  <71000>;
+ 		};
+ 
+-		opp@1200000000 {
++		opp-1200000000 {
+ 			opp-hz = /bits/ 64 <1200000000>;
+ 			opp-microvolt-slow = <915000 900000 925000>, /* Supply vcc0 */
+ 					      <925000 910000 935000>; /* Supply vcc1 */
+-- 
+2.12.0.432.g71c3a4f4ba37
