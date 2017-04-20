@@ -1,83 +1,114 @@
-From: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v4 04/18] dt-bindings: syscon: Add DT
- bindings documentation for Allwinner syscon
-Date: Thu, 20 Apr 2017 08:50:53 +0200
-Message-ID: <20170420065053.GA28021@Red>
-References: <20170412111400.2296-1-clabbe.montjoie@gmail.com>
- <20170412111400.2296-5-clabbe.montjoie@gmail.com>
- <9382f9ae-895a-397b-3d8c-846cb0bc4486@arm.com>
-Reply-To: clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: icenowy-h8G6r0blFSE@public.gmane.org
+Subject: Re: Re: [PATCH v3 02/12] arm64: allwinner: a64: add NMI
+ controller on A64
+Date: Thu, 20 Apr 2017 15:03:38 +0800
+Message-ID: <18ae853e9ce59a83bdeb6b64f96caee0@aosc.io>
+References: <20170417115747.7300-1-icenowy@aosc.io>
+ <20170417115747.7300-3-icenowy@aosc.io>
+ <20170418070016.qsng3qtk76bqxyc5@lukather>
+ <FB3B3C68-EB16-4352-B0B9-64857B1A6C03@aosc.io>
+ <20170420055802.btibui5pspan4qal@lukather>
+Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBD7YLCN32UNBBU5U4HDQKGQELM5GREA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBDS6XAN6ZADRBT524HDQKGQE3HD5WVI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <9382f9ae-895a-397b-3d8c-846cb0bc4486-5wv7dgnIgG8@public.gmane.org>
+In-Reply-To: <20170420055802.btibui5pspan4qal@lukather>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
 List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
  <https://groups.google.com/group/linux-sunxi/subscribe>
-To: =?iso-8859-1?Q?Andr=E9?= Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, peppe.cavallaro-qxv4g6HH51o@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 20, 2017 at 12:38:50AM +0100, Andr=C3=A9 Przywara wrote:
-> On 12/04/17 12:13, Corentin Labbe wrote:
-> > This patch adds documentation for Device-Tree bindings for the
-> > syscon present in allwinner devices.
-> >=20
-> > Signed-off-by: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> > ---
-> >  .../devicetree/bindings/misc/allwinner,syscon.txt     | 19 +++++++++++=
-++++++++
-> >  1 file changed, 19 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/misc/allwinner,sy=
-scon.txt
-> >=20
-> > diff --git a/Documentation/devicetree/bindings/misc/allwinner,syscon.tx=
-t b/Documentation/devicetree/bindings/misc/allwinner,syscon.txt
-> > new file mode 100644
-> > index 0000000..c056c5b
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/misc/allwinner,syscon.txt
-> > @@ -0,0 +1,19 @@
-> > +* Allwinner sun8i system controller
-> > +
-> > +This file describes the bindings for the system controller present in
-> > +Allwinner SoC H3, A83T and A64.
-> > +The principal function of this syscon is to control EMAC PHY choice an=
-d
-> > +config.
-> > +
-> > +Required properties for the system controller:
-> > +- reg: address and length of the register for the device.
-> > +- compatible: should be "syscon" and one of the following string:
-> > +		"allwinner,sun8i-h3-system-controller"
-> > +		"allwinner,sun8i-a64-system-controller"
+=E5=9C=A8 2017-04-20 13:58=EF=BC=8CMaxime Ripard =E5=86=99=E9=81=93=EF=BC=
+=9A
+> On Tue, Apr 18, 2017 at 06:56:43PM +0800, Icenowy Zheng wrote:
+>>=20
+>>=20
+>> =E4=BA=8E 2017=E5=B9=B44=E6=9C=8818=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=8D=
+=883:00:16, Maxime Ripard=20
+>> <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> =E5=86=99=E5=88=B0:
+>> >On Mon, Apr 17, 2017 at 07:57:37PM +0800, Icenowy Zheng wrote:
+>> >> Allwinner A64 SoC features a NMI controller, which is usually
+>> >connected
+>> >> to the AXP PMIC.
+>> >>
+>> >> Add support for it.
+>> >>
+>> >> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+>> >> Acked-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+>> >> ---
+>> >> Changes in v2:
+>> >> - Added Chen-Yu's ACK.
+>> >>
+>> >>  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 8 ++++++++
+>> >>  1 file changed, 8 insertions(+)
+>> >>
+>> >> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+>> >b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+>> >> index 05ec9fc5e81f..53c18ca372ea 100644
+>> >> --- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+>> >> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+>> >> @@ -403,6 +403,14 @@
+>> >>  				     <GIC_SPI 41 IRQ_TYPE_LEVEL_HIGH>;
+>> >>  		};
+>> >>
+>> >> +		nmi_intc: interrupt-controller@01f00c0c {
+>> >> +			compatible =3D "allwinner,sun6i-a31-sc-nmi";
+>> >> +			interrupt-controller;
+>> >> +			#interrupt-cells =3D <2>;
+>> >> +			reg =3D <0x01f00c0c 0x38>;
+>> >
+>> >The base address is not correct, and there's uncertainty on whether
+>> >this is this particular controller or not. Did you even test this?
+>>=20
+>> Tested by axp20x-pek.
 >=20
-> While sun8i might make some sense technically, all 64-bit sunxi
-> compatible strings use the sun50i prefix to follow the Allwinner naming.
-> So this should read:
-> 		"allwinner,sun50i-a64-system-controller"
->=20
-> Also I am wondering if we should add a compatible string for the H5
-> (support for that SoC is in -next already):
-> 		"allwinner,sun50i-h5-system-controller"
->=20
-> Cheers,
-> Andre.
->=20
+> Still, the base address is wrong, which is yet another hint that this
+> is not the same interrupt controller, and just works by accident.
 
-I agree with sun50i-a64-system-controller, the sun8i-a64 is a copy/paste er=
-ror.
-I will add sun50i-h5-system-controller since all xxx-system-controller are =
-just hypothetic compatible.
+No, it's the same as other post-sun6i device trees.
+See other post-sun6i device trees: (or maybe they're all wrong, but
+as we have no document for it, we should temporarily keep them)
 
-Thanks
-Regards
+sun6i-a31.dtsi
+```
+		nmi_intc: interrupt-controller@01f00c0c {
+			compatible =3D "allwinner,sun6i-a31-sc-nmi";
+			interrupt-controller;
+			#interrupt-cells =3D <2>;
+			reg =3D <0x01f00c0c 0x38>;
+			interrupts =3D <GIC_SPI 32 IRQ_TYPE_LEVEL_HIGH>;
+		};
+```
+
+sun8i-a23-a33.dtsi
+```
+		nmi_intc: interrupt-controller@01f00c0c {
+			compatible =3D "allwinner,sun6i-a31-sc-nmi";
+			interrupt-controller;
+			#interrupt-cells =3D <2>;
+			reg =3D <0x01f00c0c 0x38>;
+			interrupts =3D <GIC_SPI 32 IRQ_TYPE_LEVEL_HIGH>;
+		};
+```
+
+But according to the BSP device tree, the base address should be
+0x01f00c00. Should I send some patch to fix all of them? (but it will
+break device tree compatibility)
+
+>=20
+> Maxime
+>=20
+> --
+> Maxime Ripard, Free Electrons
+> Embedded Linux and Kernel engineering
+> http://free-electrons.com
 
 --=20
 You received this message because you are subscribed to the Google Groups "=
