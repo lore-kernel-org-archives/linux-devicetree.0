@@ -1,31 +1,42 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH] dt-bindings: input: rotary-encoder: fix typo
-Date: Thu, 20 Apr 2017 10:47:10 -0700
-Message-ID: <20170420174710.GB3730@dtor-ws>
-References: <1492231636-4385-1-git-send-email-rahulbedarkar89@gmail.com>
- <20170420135142.rys7qazvlh44jbpk@rob-hp-laptop>
+From: kbuild test robot <lkp@intel.com>
+Subject: Re: [PATCH v2 2/9] staging: ccree: add ahash support
+Date: Fri, 21 Apr 2017 02:06:29 +0800
+Message-ID: <201704210146.3krxPlST%fengguang.wu@intel.com>
+References: <1492693983-8175-3-git-send-email-gilad@benyossef.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-input-owner@vger.kernel.org>
+Return-path: <linux-crypto-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170420135142.rys7qazvlh44jbpk@rob-hp-laptop>
-Sender: linux-input-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Rahul Bedarkar <rahulbedarkar89@gmail.com>, Mark Rutland <mark.rutland@arm.com>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <1492693983-8175-3-git-send-email-gilad@benyossef.com>
+Sender: linux-crypto-owner@vger.kernel.org
+To: Gilad Ben-Yossef <gilad@benyossef.com>
+Cc: kbuild-all@01.org, Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devel@driverdev.osuosl.org, Binoy Jayan <binoy.jayan@linaro.org>, devicetree@vger.kernel.org, gilad.benyossef@arm.com, linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org, Stuart Yoder <stuart.yoder@arm.com>, Ofir Drang <ofir.drang@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 20, 2017 at 08:51:42AM -0500, Rob Herring wrote:
-> On Sat, Apr 15, 2017 at 10:17:16AM +0530, Rahul Bedarkar wrote:
-> > s/rollove/rollover/
-> > 
-> > Signed-off-by: Rahul Bedarkar <rahulbedarkar89@gmail.com>
-> > ---
-> >  Documentation/devicetree/bindings/input/rotary-encoder.txt | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> Acked-by: Rob Herring <robh@kernel.org>
+Hi Gilad,
 
-Applied, thank you.
+[auto build test WARNING on linus/master]
+[also build test WARNING on v4.11-rc7]
+[cannot apply to staging/staging-testing next-20170420]
+[if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
 
--- 
-Dmitry
+url:    https://github.com/0day-ci/linux/commits/Gilad-Ben-Yossef/staging-ccree-add-Arm-TrustZone-CryptoCell-REE-driver/20170420-222023
+
+
+coccinelle warnings: (new ones prefixed by >>)
+
+>> drivers/staging/ccree/ssi_hash.c:317:2-7: WARNING: NULL check before freeing functions like kfree, debugfs_remove, debugfs_remove_recursive or usb_free_urb is not needed. Maybe consider reorganizing relevant code to avoid passing NULL values.
+   drivers/staging/ccree/ssi_hash.c:320:2-7: WARNING: NULL check before freeing functions like kfree, debugfs_remove, debugfs_remove_recursive or usb_free_urb is not needed. Maybe consider reorganizing relevant code to avoid passing NULL values.
+   drivers/staging/ccree/ssi_hash.c:323:2-7: WARNING: NULL check before freeing functions like kfree, debugfs_remove, debugfs_remove_recursive or usb_free_urb is not needed. Maybe consider reorganizing relevant code to avoid passing NULL values.
+   drivers/staging/ccree/ssi_hash.c:373:2-7: WARNING: NULL check before freeing functions like kfree, debugfs_remove, debugfs_remove_recursive or usb_free_urb is not needed. Maybe consider reorganizing relevant code to avoid passing NULL values.
+   drivers/staging/ccree/ssi_hash.c:375:2-7: WARNING: NULL check before freeing functions like kfree, debugfs_remove, debugfs_remove_recursive or usb_free_urb is not needed. Maybe consider reorganizing relevant code to avoid passing NULL values.
+   drivers/staging/ccree/ssi_hash.c:377:2-7: WARNING: NULL check before freeing functions like kfree, debugfs_remove, debugfs_remove_recursive or usb_free_urb is not needed. Maybe consider reorganizing relevant code to avoid passing NULL values.
+   drivers/staging/ccree/ssi_hash.c:379:3-8: WARNING: NULL check before freeing functions like kfree, debugfs_remove, debugfs_remove_recursive or usb_free_urb is not needed. Maybe consider reorganizing relevant code to avoid passing NULL values.
+   drivers/staging/ccree/ssi_hash.c:381:2-7: WARNING: NULL check before freeing functions like kfree, debugfs_remove, debugfs_remove_recursive or usb_free_urb is not needed. Maybe consider reorganizing relevant code to avoid passing NULL values.
+   drivers/staging/ccree/ssi_hash.c:383:2-7: WARNING: NULL check before freeing functions like kfree, debugfs_remove, debugfs_remove_recursive or usb_free_urb is not needed. Maybe consider reorganizing relevant code to avoid passing NULL values.
+
+Please review and possibly fold the followup patch.
+
+---
+0-DAY kernel test infrastructure                Open Source Technology Center
+https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
