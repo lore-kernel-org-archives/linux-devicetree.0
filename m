@@ -1,130 +1,65 @@
-From: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
-Subject: Re: [RFC 1/2] dt-bindings: add mmio-based syscon mux controller DT
- bindings
-Date: Thu, 20 Apr 2017 16:13:19 +0200
-Message-ID: <b2e0c3bb-c74a-3ef3-6b58-1139d7a932a4@axentia.se>
-References: <20170413154812.19597-1-p.zabel@pengutronix.de>
- <20170419220900.ndrtt2m7d6tqsddh@rob-hp-laptop>
- <67388375-4f9e-fd1e-5155-7aeac0ea7b46@axentia.se>
+From: Luis Oliveira <Luis.Oliveira@synopsys.com>
+Subject: Re: [PATCH v8 5/6] i2c: designware: add SLAVE mode functions
+Date: Thu, 20 Apr 2017 15:17:08 +0100
+Message-ID: <b523039c-0120-2861-d9a8-4a8288ffe527@synopsys.com>
+References: <cover.1492014220.git.lolivei@synopsys.com>
+ <fd93983d95d31974c917eab15221d675f08a50f6.1492014220.git.lolivei@synopsys.com>
+ <47b60352-183b-0cf6-b8a6-7aea2fd2d111@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <67388375-4f9e-fd1e-5155-7aeac0ea7b46-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>, Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <47b60352-183b-0cf6-b8a6-7aea2fd2d111@linux.intel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jarkko Nikula <jarkko.nikula@linux.intel.com>, Luis Oliveira <Luis.Oliveira@synopsys.com>, wsa@the-dreams.de, robh+dt@kernel.org, mark.rutland@arm.com, andriy.shevchenko@linux.intel.com, mika.westerberg@linux.intel.com, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Ramiro.Oliveira@synopsys.com, Joao.Pinto@synopsys.com, CARLOS.PALMINHA@synopsys.com
 List-Id: devicetree@vger.kernel.org
 
-On 2017-04-20 15:32, Peter Rosin wrote:
-> On 2017-04-20 00:09, Rob Herring wrote:
->> On Thu, Apr 13, 2017 at 05:48:11PM +0200, Philipp Zabel wrote:
->>> This adds device tree binding documentation for mmio-based syscon
->>> multiplexers controlled by a single bitfield in a syscon register
->>> range.
->>>
->>> Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
->>> ---
->>>  Documentation/devicetree/bindings/mux/mmio-mux.txt | 56 ++++++++++++++++++++++
->>>  1 file changed, 56 insertions(+)
->>>  create mode 100644 Documentation/devicetree/bindings/mux/mmio-mux.txt
->>>
->>> diff --git a/Documentation/devicetree/bindings/mux/mmio-mux.txt b/Documentation/devicetree/bindings/mux/mmio-mux.txt
->>> new file mode 100644
->>> index 0000000000000..11d96f5d98583
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/mux/mmio-mux.txt
->>> @@ -0,0 +1,56 @@
->>> +MMIO bitfield-based multiplexer controller bindings
->>> +
->>> +Define a syscon bitfield to be used to control a multiplexer. The parent
->>> +device tree node must be a syscon node to provide register access.
->>> +
->>> +Required properties:
->>> +- compatible : "gpio-mux"
+On 20-Apr-17 13:50, Jarkko Nikula wrote:
+> On 04/12/2017 07:47 PM, Luis Oliveira wrote:
+>> - Changes in Kconfig to enable I2C_DESIGNWARE_SLAVE support
+>> - Slave functions added to core library file
+>> - Slave abort sources added to common source file
+>> - New driver: i2c-designware-slave added
+>> - Changes in the Makefile to compile the I2C_DESIGNWARE_SLAVE module
+>>   when supported by the architecture.
 >>
->> ?
+>> All the SLAVE flow is added but it is not enabled via platform
+>> driver.
 >>
->>> +- reg : register base of the register containing the control bitfield
->>> +- bit-mask : bitmask of the control bitfield in the control register
->>> +- bit-shift : bit offset of the control bitfield in the control register
->>> +- #mux-control-cells : <0>
->>> +* Standard mux-controller bindings as decribed in mux-controller.txt
->>> +
->>> +Optional properties:
->>> +- idle-state : if present, the state the mux will have when idle. The
->>> +	       special state MUX_IDLE_AS_IS is the default.
->>> +
->>> +The multiplexer state is defined as the value of the bitfield described
->>> +by the reg, bit-mask, and bit-shift properties, accessed through the parent
->>> +syscon.
->>> +
->>> +Example:
->>> +
->>> +	syscon {
->>> +		compatible = "syscon";
->>> +
->>> +		mux: mux-controller@3 {
->>> +			compatible = "mmio-mux";
->>> +			reg = <0x3>;
->>> +			bit-mask = <0x1>;
->>> +			bit-shift = <5>;
+>> Signed-off-by: Luis Oliveira <lolivei@synopsys.com>
+>> ---
+>> v7-v8
+>> - no changes
 >>
->> This pattern doesn't scale once you have multiple fields @ addr 3. I 
->> also don't really think a node per register field in DT really scales.
+>>  drivers/i2c/busses/Kconfig                 |  14 +-
+>>  drivers/i2c/busses/Makefile                |   1 +
+>>  drivers/i2c/busses/i2c-designware-common.c |   6 +
+>>  drivers/i2c/busses/i2c-designware-core.h   |   2 +
+>>  drivers/i2c/busses/i2c-designware-slave.c  | 403 +++++++++++++++++++++++++++++
+>>  5 files changed, 425 insertions(+), 1 deletion(-)
+>>  create mode 100644 drivers/i2c/busses/i2c-designware-slave.c
 >>
->> I think the parent should be declared as a mux controller instead. You 
->> could encode the mux addr and bit position in the mux cells.
+>> diff --git a/drivers/i2c/busses/Kconfig b/drivers/i2c/busses/Kconfig
+>> index 144cbadc7c72..84efa57f90b3 100644
+>> --- a/drivers/i2c/busses/Kconfig
+>> +++ b/drivers/i2c/busses/Kconfig
+>> @@ -474,11 +474,23 @@ config I2C_DESIGNWARE_PLATFORM
+>>      depends on (ACPI && COMMON_CLK) || !ACPI
+>>      help
+>>        If you say yes to this option, support will be included for the
+>> -      Synopsys DesignWare I2C adapter. Only master mode is supported.
+>> +      Synopsys DesignWare I2C adapter.
+>>
+>>        This driver can also be built as a module.  If so, the module
+>>        will be called i2c-designware-platform.
+>>
+>> +config I2C_DESIGNWARE_SLAVE
+>> +    bool "Synopsys DesignWare Slave"
+>> +    select I2C_SLAVE
+>> +    select I2C_SLAVE_EEPROM
 > 
-> But then you need to create mux controllers on demand. I have not
-> succeeded in doing that while also following the rules of the driver
-> model. I had severe problems with life-time issues when I tried.
-> I would like to see code before embarking on this path, and I'm
-> apparently not the one writing it...
+> I didn't notice this before - is there reason to select I2C_SLAVE_EEPROM?
 > 
-> So, either you meant that, or that the parent node should somehow
-> specify the possible mux controllers up front so that they can be
-> pre-created and ready when the consumers request them. But if you
-> do that, you can just refer to them by some enumeration from the
-> mux consumers instead of by some convoluted reg+field notation.
-
-Ok, thinking some more about this. Sorry for spamming and replying to
-self...
-
-How about:
-
- 	syscon {
- 		compatible = "syscon", "simple-mfd";
-
-		mux: mux-controllers {
-			compatible = "mmio-mux";
-	 		#mux-control-cells = <1>;
-
-			/* three mux controllers, one at reg 3 bits 0:2,
-			 * one at reg 3 bits 5:6 and one at reg 7 bit 3.
-			 */
-			mux-reg-masks = <0x3 0x07>, <0x3 0x60>, <0x7 0x08>;
-			idle-state = <7>, <MUX_IDLE_AS_IS>, <0>;
-		};
-
- 
- 		video-mux {
- 			compatible = "video-mux";
- 			mux-controls = <&mux 1>; /* i.e. reg 3 bits 5:6 */
- 
- 			ports {
- 				/* ports 0..5 */
- 			};
- 		};
- 	};
-
-Optionally using some 64-bit safe 3-value encoding of the register fields
-in the mux-reg-masks binding...
-
-Cheers,
-peda
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Yeah, this is in the wrong place. I need it to test it, but it shouldn't be
+here. I will remove it.
