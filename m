@@ -1,38 +1,36 @@
-From: Daniel Baluta <daniel.baluta@gmail.com>
-Subject: Re: [PATCH 3/3] iio: tools: generic_buffer: increase trigger length
-Date: Thu, 20 Apr 2017 19:06:30 +0300
-Message-ID: <CAEnQRZADGzSVJfTnd_L+aZ6uEiV5QntyF3mSWm8x0Wma4B3YJw@mail.gmail.com>
-References: <1492590045-17329-1-git-send-email-eugen.hristev@microchip.com> <1492590045-17329-4-git-send-email-eugen.hristev@microchip.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v6 3/4] net: dsa: LAN9303: add I2C managed mode support
+Date: Thu, 20 Apr 2017 11:04:22 -0500
+Message-ID: <20170420160422.ypqmrexunklhjtqu@rob-hp-laptop>
+References: <20170418084827.19613-1-jbe@pengutronix.de>
+ <20170418084827.19613-4-jbe@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1492590045-17329-4-git-send-email-eugen.hristev@microchip.com>
+Content-Disposition: inline
+In-Reply-To: <20170418084827.19613-4-jbe@pengutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Eugen Hristev <eugen.hristev@microchip.com>
-Cc: nicolas.ferre@microchip.com, alexandre.belloni@free-electrons.com, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, linux-arm-kernel@lists.infradead.org, Devicetree List <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, ludovic.desroches@microchip.com
+To: Juergen Borleis <jbe@pengutronix.de>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, f.fainelli@gmail.com, kernel@pengutronix.de, andrew@lunn.ch, vivien.didelot@savoirfairelinux.com, davem@davemloft.net, devicetree@vger.kernel.org, mark.rutland@arm.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 19, 2017 at 11:20 AM, Eugen Hristev
-<eugen.hristev@microchip.com> wrote:
-> Increased trigger length to 50 in order to cope with trigger names like
-> fc030000.adc-dev0-external-rising
->
-> Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
+On Tue, Apr 18, 2017 at 10:48:26AM +0200, Juergen Borleis wrote:
+> In this mode the switch device and the internal phys will be managed via
+> I2C interface. The MDIO interface is still supported, but for the
+> (emulated) CPU port only.
+> 
+> Signed-off-by: Juergen Borleis <jbe@pengutronix.de>
+> CC: devicetree@vger.kernel.org
+> CC: robh+dt@kernel.org
+> CC: mark.rutland@arm.com
 > ---
->  tools/iio/iio_utils.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/tools/iio/iio_utils.h b/tools/iio/iio_utils.h
-> index 780f201..9d59771 100644
-> --- a/tools/iio/iio_utils.h
-> +++ b/tools/iio/iio_utils.h
-> @@ -13,7 +13,7 @@
->  #include <stdint.h>
->
->  /* Made up value to limit allocation sizes */
-> -#define IIO_MAX_NAME_LENGTH 30
-> +#define IIO_MAX_NAME_LENGTH 50
+>  .../devicetree/bindings/net/dsa/lan9303.txt        |  62 +++++++++++
 
-While at it, lets be brave and set it to 64. :)
+Acked-by: Rob Herring <robh@kernel.org>
 
-Daniel.
+>  drivers/net/dsa/Kconfig                            |  16 +++
+>  drivers/net/dsa/Makefile                           |   2 +
+>  drivers/net/dsa/lan9303_i2c.c                      | 113 +++++++++++++++++++++
+>  4 files changed, 193 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/net/dsa/lan9303.txt
+>  create mode 100644 drivers/net/dsa/lan9303_i2c.c
