@@ -1,74 +1,80 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH V4 1/9] PM / OPP: Allow OPP table to be used for power-domains
-Date: Thu, 20 Apr 2017 10:23:03 +0200
-Message-ID: <CAPDyKFq5xwv5Vy6wNfjFYi_4+immDH9UKTS1EG2j6c4OwnQONg@mail.gmail.com>
-References: <cover.1490001099.git.viresh.kumar@linaro.org> <e772e67a5445319bb8e0f312846ace666adc097f.1490001099.git.viresh.kumar@linaro.org>
- <0a7146f9-72f1-317c-3aab-770a72462968@arm.com> <20170413053736.GM5910@vireshk-i7>
- <3adbef6a-7b43-528f-e88f-c2121d30a5d3@arm.com> <20170417052758.GF28191@vireshk-i7>
- <95aa4b97-4e1a-13bb-f4d8-982b778012ba@arm.com> <20170419114740.GD5436@vireshk-i7>
- <9dee7c0d-e5f4-9fcd-3c92-bf7ec9d43a3b@arm.com> <20170420052533.GF5436@vireshk-i7>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v4 06/11] drm/sun4i: add support for
+ Allwinner DE2 mixers
+Date: Thu, 20 Apr 2017 10:37:07 +0200
+Message-ID: <20170420083707.wdtrdlxpvocpzc7g@lukather>
+References: <20170416120849.54542-1-icenowy@aosc.io>
+ <20170416120849.54542-7-icenowy@aosc.io>
+ <20170418090047.7i2k6dtoqxfdqwwy@lukather>
+ <88F5FAC9-1873-4C76-9AB9-FF361C07664E@aosc.io>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20170420052533.GF5436@vireshk-i7>
-Sender: linux-pm-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>, Sudeep Holla <sudeep.holla@arm.com>
-Cc: Rafael Wysocki <rjw@rjwysocki.net>, Kevin Hilman <khilman@linaro.org>, Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@codeaurora.org>, linaro-kernel <linaro-kernel@lists.linaro.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Vincent Guittot <vincent.guittot@linaro.org>, Rob Herring <robh+dt@kernel.org>, Lina Iyer <lina.iyer@linaro.org>, Rajendra Nayak <rnayak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="qhz3kxodf4smqjbf"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBPPG4HDQKGQESTMDC4Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <88F5FAC9-1873-4C76-9AB9-FF361C07664E-h8G6r0blFSE@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Viresh, Sudeep,
 
-Sorry for jumping in late.
+--qhz3kxodf4smqjbf
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
-[...]
+On Tue, Apr 18, 2017 at 06:47:56PM +0800, Icenowy Zheng wrote:
+> >> +	/* Get the physical address of the buffer in memory */
+> >> +	gem = drm_fb_cma_get_gem_obj(fb, 0);
+> >> +
+> >> +	DRM_DEBUG_DRIVER("Using GEM @ %pad\n", &gem->paddr);
+> >> +
+> >> +	/* Compute the start of the displayed memory */
+> >> +	bpp = fb->format->cpp[0];
+> >> +	paddr = gem->paddr + fb->offsets[0];
+> >> +	paddr += (state->src_x >> 16) * bpp;
+> >> +	paddr += (state->src_y >> 16) * fb->pitches[0];
+> >> +
+> >> +	DRM_DEBUG_DRIVER("Setting buffer address to %pad\n", &paddr);
+> >> +
+> >> +	paddr_u32 = (uint32_t) paddr;
+> >
+> >How does that work on 64-bits systems ?
+> 
+> The hardware is not designed to work on 64-bit systems.
+> 
+> Even 64-bit A64/H5 has also 3GiB memory limit.
 
->> On the contrary(playing devil's advocate here), we can treat all
->> existing regulators alone as OPP then if you strip the voltages and
->> treat it as abstract number.
->
-> But then we are going to have lots of platform specific code which
-> will program the actual hardware, etc. Which is all handled by the
-> regulator framework. Also note that the regulator core selects the
-> common voltage selected by all the children, while we want to select
-> the highest performance point here.
+That's a fragile assumption.
 
-If I understand correctly, Sudeep is not convinced that this is about
-PM domain regulator(s), right?
+> The address cell in mixer hardware is also only 32-bit.
+> 
+> So we should just keep the force conversion here. If we then really
+> met 4GiB-capable AW SoC without changing DE2, I think we should have
+> other way to limit CMA pool inside 4GiB.
 
-To me there is no doubt, these regulators is exactly the definition of
-PM domain regulators.
+The register name looks like this is only the lower 32 bits that you
+can set here, and that there is another register for the upper 32 bits
+of that address somewhere.
 
-That said, long time ago we have decided PM domain regulator shall be
-modeled as exactly that. From DT point of view, this means the handle
-to the PM domain regulator belongs in the node of the PM domain
-controller - and not in each device's node of those belonging to the
-PM domain.
+In that case, please use the lower_32_bits and upper_32_bits helper,
+and don't cast it that way.
 
-Isn't that what this discussion really boils down to? Or maybe I am
-not getting it.
+If it isn't the case, you should set the DMA mask (through
+dma_set_mask) so that we only allocate memory that can be accessed by
+this device.
 
->
-> Even if we have to configure both clock and voltage for the power
-> domain using standard clk/regulator frameworks, OPP will work just
-> fine as it will do that then. So, its not that we are bypassing the
-> regulator framework here. It will be used if we have the voltages
-> available for the power-domain's performance states.
->
->> So if the firmware handles more than just
->> regulators, I agree.
->
-> I don't know the internals of that really.
->
->> At the same time, I would have preferred firmware
->> to even abstract the frequency like ACPI CPPC.
->
-> Frequency isn't required to be configured for the cases I know, but it
-> can be in future implementations.
+Maxime
 
-To me using OPP tables makes sense as it gives us the flexibility that
-is needed. If I understand correct, that was also Kevin's point.
-
-[...]
-
-Kind regards
-Uffe
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--qhz3kxodf4smqjbf--
