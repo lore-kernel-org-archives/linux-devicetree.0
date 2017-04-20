@@ -1,239 +1,60 @@
-From: <sean.wang@mediatek.com>
-Subject: [PATCH v2 2/2] hwrng: mtk: Add driver for hardware random generator on MT7623 SoC
-Date: Fri, 21 Apr 2017 00:24:26 +0800
-Message-ID: <1492705466-27287-3-git-send-email-sean.wang@mediatek.com>
-References: <1492705466-27287-1-git-send-email-sean.wang@mediatek.com>
+From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2] pinctrl: sh-pfc: r8a7794: add R8A7745 support
+Date: Thu, 20 Apr 2017 19:26:53 +0300
+Message-ID: <53d77809-c448-443a-6e41-6258253d98eb@cogentembedded.com>
+References: <20170413201932.890107963@cogentembedded.com>
+ <20170419224646.wwjerpgnidvk4fkh@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1492705466-27287-1-git-send-email-sean.wang@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: herbert@gondor.apana.org.au, mpm@selenic.com, robh+dt@kernel.org, mark.rutland@arm.com, clabbe.montjoie@gmail.com, prasannatsmkumar@gmail.com, romain.perier@free-electrons.com, shannon.nelson@oracle.com
-Cc: weiyongjun1@huawei.com, devicetree@vger.kernel.org, linux-crypto@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, keyhaede@gmail.com, Sean Wang <sean.wang@mediatek.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170419224646.wwjerpgnidvk4fkh@rob-hp-laptop>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Sean Wang <sean.wang@mediatek.com>
+On 04/20/2017 01:46 AM, Rob Herring wrote:
 
-This patch adds support for hardware random generator on MT7623 SoC
-and should also work on other similar Mediatek SoCs. Currently,
-the driver is already tested successfully with rng-tools.
+>> Renesas  RZ/G1E (R8A7745) is pin compatible with R-Car E2 (R8A7794),
+>> however  it doesn't have several automotive specific peripherals.
+>
+> Is a single space between words really so hard for you? You've been told
+> to write proper sentences multiple times.
 
-Signed-off-by: Sean Wang <sean.wang@mediatek.com>
-Reviewed-by: PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
----
- drivers/char/hw_random/Kconfig   |  14 ++++
- drivers/char/hw_random/Makefile  |   1 +
- drivers/char/hw_random/mtk-rng.c | 168 +++++++++++++++++++++++++++++++++++++++
- 3 files changed, 183 insertions(+)
- create mode 100644 drivers/char/hw_random/mtk-rng.c
+    Nobody else but suffer from "double spaces". I just failed to remember 
+that once you are included into the patch addresses (I forget to update the 
+bindings in v1), you'll suffer from it again...
 
-diff --git a/drivers/char/hw_random/Kconfig b/drivers/char/hw_random/Kconfig
-index 0cafe08..df5e7c2 100644
---- a/drivers/char/hw_random/Kconfig
-+++ b/drivers/char/hw_random/Kconfig
-@@ -423,6 +423,20 @@ config HW_RANDOM_CAVIUM
- 
-          If unsure, say Y.
- 
-+config HW_RANDOM_MTK
-+	tristate "Mediatek Random Number Generator support"
-+	depends on HW_RANDOM
-+	depends on ARCH_MEDIATEK || COMPILE_TEST
-+	default y
-+	---help---
-+	  This driver provides kernel-side support for the Random Number
-+	  Generator hardware found on Mediatek SoCs.
-+
-+	  To compile this driver as a module, choose M here. the
-+	  module will be called mtk-rng.
-+
-+	  If unsure, say Y.
-+
- endif # HW_RANDOM
- 
- config UML_RANDOM
-diff --git a/drivers/char/hw_random/Makefile b/drivers/char/hw_random/Makefile
-index 5f52b1e..59eacb7 100644
---- a/drivers/char/hw_random/Makefile
-+++ b/drivers/char/hw_random/Makefile
-@@ -36,3 +36,4 @@ obj-$(CONFIG_HW_RANDOM_STM32) += stm32-rng.o
- obj-$(CONFIG_HW_RANDOM_PIC32) += pic32-rng.o
- obj-$(CONFIG_HW_RANDOM_MESON) += meson-rng.o
- obj-$(CONFIG_HW_RANDOM_CAVIUM) += cavium-rng.o cavium-rng-vf.o
-+obj-$(CONFIG_HW_RANDOM_MTK)	+= mtk-rng.o
-diff --git a/drivers/char/hw_random/mtk-rng.c b/drivers/char/hw_random/mtk-rng.c
-new file mode 100644
-index 0000000..df8eb54
---- /dev/null
-+++ b/drivers/char/hw_random/mtk-rng.c
-@@ -0,0 +1,168 @@
-+/*
-+ * Driver for Mediatek Hardware Random Number Generator
-+ *
-+ * Copyright (C) 2017 Sean Wang <sean.wang@mediatek.com>
-+ *
-+ * This program is free software; you can redistribute it and/or
-+ * modify it under the terms of the GNU General Public License as
-+ * published by the Free Software Foundation; either version 2 of
-+ * the License, or (at your option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-+ * GNU General Public License for more details.
-+ */
-+#define MTK_RNG_DEV KBUILD_MODNAME
-+
-+#include <linux/clk.h>
-+#include <linux/delay.h>
-+#include <linux/err.h>
-+#include <linux/hw_random.h>
-+#include <linux/io.h>
-+#include <linux/iopoll.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+
-+#define USEC_POLL			2
-+#define TIMEOUT_POLL			20
-+
-+#define RNG_CTRL			0x00
-+#define RNG_EN				BIT(0)
-+#define RNG_READY			BIT(31)
-+
-+#define RNG_DATA			0x08
-+
-+#define to_mtk_rng(p)	container_of(p, struct mtk_rng, rng)
-+
-+struct mtk_rng {
-+	void __iomem *base;
-+	struct clk *clk;
-+	struct hwrng rng;
-+};
-+
-+static int mtk_rng_init(struct hwrng *rng)
-+{
-+	struct mtk_rng *priv = to_mtk_rng(rng);
-+	u32 val;
-+	int err;
-+
-+	err = clk_prepare_enable(priv->clk);
-+	if (err)
-+		return err;
-+
-+	val = readl(priv->base + RNG_CTRL);
-+	val |= RNG_EN;
-+	writel(val, priv->base + RNG_CTRL);
-+
-+	return 0;
-+}
-+
-+static void mtk_rng_cleanup(struct hwrng *rng)
-+{
-+	struct mtk_rng *priv = to_mtk_rng(rng);
-+	u32 val;
-+
-+	val = readl(priv->base + RNG_CTRL);
-+	val &= ~RNG_EN;
-+	writel(val, priv->base + RNG_CTRL);
-+
-+	clk_disable_unprepare(priv->clk);
-+}
-+
-+static bool mtk_rng_wait_ready(struct hwrng *rng, bool wait)
-+{
-+	struct mtk_rng *priv = to_mtk_rng(rng);
-+	int ready;
-+
-+	ready = readl(priv->base + RNG_CTRL) & RNG_READY;
-+	if (!ready && wait)
-+		readl_poll_timeout_atomic(priv->base + RNG_CTRL, ready,
-+					  ready & RNG_READY, USEC_POLL,
-+					  TIMEOUT_POLL);
-+	return !!ready;
-+}
-+
-+static int mtk_rng_read(struct hwrng *rng, void *buf, size_t max, bool wait)
-+{
-+	struct mtk_rng *priv = to_mtk_rng(rng);
-+	int retval = 0;
-+
-+	while (max >= sizeof(u32)) {
-+		if (!mtk_rng_wait_ready(rng, wait))
-+			break;
-+
-+		*(u32 *)buf = readl(priv->base + RNG_DATA);
-+		retval += sizeof(u32);
-+		buf += sizeof(u32);
-+		max -= sizeof(u32);
-+	}
-+
-+	return retval || !wait ? retval : -EIO;
-+}
-+
-+static int mtk_rng_probe(struct platform_device *pdev)
-+{
-+	struct resource *res;
-+	int ret;
-+	struct mtk_rng *priv;
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	if (!res) {
-+		dev_err(&pdev->dev, "no iomem resource\n");
-+		return -ENXIO;
-+	}
-+
-+	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	priv->rng.name = pdev->name;
-+	priv->rng.init = mtk_rng_init;
-+	priv->rng.cleanup = mtk_rng_cleanup;
-+	priv->rng.read = mtk_rng_read;
-+
-+	priv->clk = devm_clk_get(&pdev->dev, "rng");
-+	if (IS_ERR(priv->clk)) {
-+		ret = PTR_ERR(priv->clk);
-+		dev_err(&pdev->dev, "no clock for device: %d\n", ret);
-+		return ret;
-+	}
-+
-+	priv->base = devm_ioremap_resource(&pdev->dev, res);
-+	if (IS_ERR(priv->base))
-+		return PTR_ERR(priv->base);
-+
-+	ret = devm_hwrng_register(&pdev->dev, &priv->rng);
-+	if (ret) {
-+		dev_err(&pdev->dev, "failed to register rng device: %d\n",
-+			ret);
-+		return ret;
-+	}
-+
-+	dev_info(&pdev->dev, "registered RNG driver\n");
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id mtk_rng_match[] = {
-+	{ .compatible = "mediatek,mt7623-rng" },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, mtk_rng_match);
-+
-+static struct platform_driver mtk_rng_driver = {
-+	.probe          = mtk_rng_probe,
-+	.driver = {
-+		.name = MTK_RNG_DEV,
-+		.of_match_table = mtk_rng_match,
-+	},
-+};
-+
-+module_platform_driver(mtk_rng_driver);
-+
-+MODULE_DESCRIPTION("Mediatek Random Number Generator Driver");
-+MODULE_AUTHOR("Sean Wang <sean.wang@mediatek.com>");
-+MODULE_LICENSE("GPL");
--- 
-1.9.1
+> Yes, kernel developers suffer from OCD. Sorry.
+
+    Obsessive-compulsive disorder, you mean? I feel your pain then... B-)
+
+>> Annotate all the items that only exist on the R-Car SoCs and only
+>> supply the pin groups/functions existing on a given SoC (that required
+>> splitting  of the AVB function)...
+>>
+>> Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+>>
+>> ---
+>> This patch is  against the 'devel' branch of Linus Walleij's 'linux-pinctrl.git'
+>> repo plus  R8A7794 PFC fix and R8A7743 PFC support patch...
+>>
+>> Changes in version 2:
+>> - fixed indentation to use tabs instead of spaces;
+>> - updated the PFC bindings.
+>>
+>>  Documentation/devicetree/bindings/pinctrl/renesas,pfc-pinctrl.txt |    1
+>
+> But given it's a one line DT change:
+>
+> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+
+   Thank you!
+
+MBR, Sergei
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
