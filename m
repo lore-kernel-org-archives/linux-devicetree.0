@@ -1,50 +1,117 @@
-From: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
-Subject: Re: [RFC 1/2] dt-bindings: add mmio-based syscon mux controller DT
- bindings
-Date: Thu, 20 Apr 2017 17:01:59 +0200
-Message-ID: <5aca7019-7c0a-5377-89e7-3d3eed5c2b73@axentia.se>
-References: <20170413154812.19597-1-p.zabel@pengutronix.de>
- <20170419220900.ndrtt2m7d6tqsddh@rob-hp-laptop>
- <67388375-4f9e-fd1e-5155-7aeac0ea7b46@axentia.se>
- <b2e0c3bb-c74a-3ef3-6b58-1139d7a932a4@axentia.se>
- <1492699816.2158.107.camel@pengutronix.de>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 09/13] MIPS: lantiq: Add a GPHY driver which uses the RCU
+ syscon-mfd
+Date: Thu, 20 Apr 2017 10:27:54 -0500
+Message-ID: <20170420152754.3tkjxjvoiuatbvpo@rob-hp-laptop>
+References: <20170417192942.32219-1-hauke@hauke-m.de>
+ <20170417192942.32219-10-hauke@hauke-m.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1492699816.2158.107.camel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>, Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170417192942.32219-10-hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
+Cc: ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org, john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, hauke.mehrtens-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 2017-04-20 16:50, Philipp Zabel wrote:
-> 		mux: mux-controllers {
-> 			compatible = "mmio-mux";
-> 			#mux-control-cells = <1>;
+On Mon, Apr 17, 2017 at 09:29:38PM +0200, Hauke Mehrtens wrote:
+> From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 > 
-> 			/* This list is not complete */
-> 			mux-reg-masks = <0x04 0x00080000>, /* MIPI_IPU1_MUX */
-> 					<0x04 0x00100000>, /* MIPI_IPU2_MUX */
-> 					<0x0c 0x0000000c>, /* HDMI_MUX_CTL */
-> 					<0x0c 0x000000c0>, /* LVDS0_MUX_CTL */
-> 					<0x0c 0x0000030c>, /* LVDS1_MUX_CTL */
+> Compared to the old xrx200_phy_fw driver the new version has multiple
+> enhancements. The name of the firmware files does not have to be added
+> to all .dts files anymore - one now configures the GPHY mode (FE or GE)
+> instead. Each GPHY can now also boot separate firmware (thus mixing of
+> GE and FE GPHYs is now possible).
+> The new implementation is based on the RCU syscon-mfd and uses the
+> reeset_controller framework instead of raw RCU register reads/writes.
+> 
+> Signed-off-by: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
+> ---
+>  .../devicetree/bindings/mips/lantiq/rcu-gphy.txt   |  54 +++++
+>  arch/mips/lantiq/xway/sysctrl.c                    |   4 +-
+>  drivers/soc/lantiq/Makefile                        |   1 +
+>  drivers/soc/lantiq/gphy.c                          | 242 +++++++++++++++++++++
+>  include/dt-bindings/mips/lantiq_rcu_gphy.h         |  15 ++
+>  5 files changed, 314 insertions(+), 2 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/mips/lantiq/rcu-gphy.txt
+>  create mode 100644 drivers/soc/lantiq/gphy.c
+>  create mode 100644 include/dt-bindings/mips/lantiq_rcu_gphy.h
+> 
+> diff --git a/Documentation/devicetree/bindings/mips/lantiq/rcu-gphy.txt b/Documentation/devicetree/bindings/mips/lantiq/rcu-gphy.txt
+> new file mode 100644
+> index 000000000000..d525c7ce9f0b
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mips/lantiq/rcu-gphy.txt
+> @@ -0,0 +1,54 @@
+> +Lantiq XWAY SoC GPHY binding
+> +============================
+> +
+> +This binding describes a software-defined ethernet PHY, provided by the RCU
+> +module on newer Lantiq XWAY SoCs (xRX200 and newer).
+> +This depends on binary firmware blobs which must be provided by userspace.
 
-I hope you mean
- 					<0x0c 0x00000300>, /* LVDS1_MUX_CTL */
+Where the blobs come from is not relevant. 
 
-:-)
+> +
+> +
+> +-------------------------------------------------------------------------------
+> +Required properties (controller (parent) node):
+> +- compatible		: Should be one of
+> +				"lantiq,xrx200a1x-rcu-gphy"
+> +				"lantiq,xrx200a2x-rcu-gphy"
+> +				"lantiq,xrx300-rcu-gphy"
+> +				"lantiq,xrx330-rcu-gphy"
+> +- lantiq,rcu-syscon	: A phandle and offset to the GPHY address registers in
+> +			  the RCU
+> +- resets		: Must reference the RCU GPHY reset bit
+> +- reset-names		: One entry, value must be "gphy" or optional "gphy2"
+> +
+> +Optional properties (port (child) node):
+> +- lantiq,gphy-mode	: GPHY_MODE_GE (default) or GPHY_MODE_FE as defined in
+> +			  <dt-bindings/mips/lantiq_xway_gphy.h>
+> +- clocks		: A reference to the (PMU) GPHY clock gate
+> +- clock-names		: If clocks is given then this must be "gphy"
 
-> 					<0x28 0x00000003>, /* DCIC1_MUX_CTL */
-> 					<0x28 0x0000000c>; /* DCIC2_MUX_CTL */
-> 		};
+Kind of pointless to have a name for a single clock.
 
-(BTW, same bug in the other example)
+> +
+> +
+> +-------------------------------------------------------------------------------
+> +Example for the GPHys on the xRX200 SoCs:
+> +
+> +#include <dt-bindings/mips/lantiq_rcu_gphy.h>
+> +	gphy0: rcu_gphy@0 {
 
-Cheers,
-peda
+Use generic node names: phy@...
 
+> +		compatible = "lantiq,xrx200a2x-rcu-gphy";
+> +		reg = <0>;
+> +
+> +		lantiq,rcu-syscon = <&rcu0 0x20>;
+
+Could the phy just be a child of the rcu? Then you don't need a phandle 
+here and 0x20 becomes the reg address.
+
+> +		resets = <&rcu_reset0 31>, <&rcu_reset1 7>;
+> +		reset-names = "gphy", "gphy2";
+> +		lantiq,gphy-mode = <GPHY_MODE_GE>;
+> +		clocks = <&pmu0 XRX200_PMU_GATE_GPHY>;
+> +		clock-names = "gphy";
+> +	};
+> +
+> +	gphy1: rcu_gphy@1 {
+> +		compatible = "lantiq,xrx200a2x-rcu-gphy";
+> +		reg = <0>;
+> +
+> +		lantiq,rcu-syscon = <&rcu0 0x68>;
+> +		resets = <&rcu_reset0 29>, <&rcu_reset1 6>;
+> +		reset-names = "gphy", "gphy2";
+> +		lantiq,gphy-mode = <GPHY_MODE_FE>;
+> +		clocks = <&pmu0 XRX200_PMU_GATE_GPHY>;
+> +		clock-names = "gphy";
+> +	};
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
