@@ -1,326 +1,158 @@
-From: Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-Subject: [PATCH v2] power: tps65217_charger: Add properties like voltage and current charge
-Date: Fri, 21 Apr 2017 17:50:32 +0200
-Message-ID: <20170421155032.22784-1-enric.balletbo@collabora.com>
+From: Jens Rottmann <Jens.Rottmann@ADLINKtech.com>
+Subject: [PATCH] streamline TLV320AIC23 drivers
+Date: Fri, 21 Apr 2017 21:22:02 +0200
+Message-ID: <b4127646-565b-ab16-0a8f-1fd6c263389e@ADLINKtech.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
+Cc: alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Allow the possibility to configure the charge and the current voltage of
-the charger and also the NTC type for battery temperature measurement.
+The iMX-TLV320AIC23 driver isn't from Freescale, but from a company named
+Eukrea Electromatique, originally for their own boards. From the code I get
+the impression it is a bit older, its DT options use a differing naming
+scheme. Patch it up a bit:
 
-Signed-off-by: Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
----
-Changes since v1:
- - Requested by Rob Herring
-   - Rename ti,charge-* to charge-* to be standard properties.
-   - Use unit suffixes as per bindings/property-units.txt
----
- .../bindings/power/supply/tps65217_charger.txt     |  15 ++
- drivers/power/supply/tps65217_charger.c            | 187 +++++++++++++++++++--
- include/linux/mfd/tps65217.h                       |   2 +
- 3 files changed, 192 insertions(+), 12 deletions(-)
+- Remove Eukrea naming, i.MX is from Freescale, TLV320AIC23 is from TI,
+  driver was written by Eukrea, but it's DT capable, so it's not exclusive:
+  - Kconfig option title
+  - 'model' option
+  - driver 'compatible' string
+- Other options just have changed over time, this driver remaining (one of)
+  the last with the old semantics:
+  - 'audio-codec' option (also moved from ssi node)
+  - 'mux-int/ext-port' options
+- All options stay backwards compatible, the DT binding documents new and
+  old names.
 
-diff --git a/Documentation/devicetree/bindings/power/supply/tps65217_charger.txt b/Documentation/devicetree/bindings/power/supply/tps65217_charger.txt
-index a11072c..4415618 100644
---- a/Documentation/devicetree/bindings/power/supply/tps65217_charger.txt
-+++ b/Documentation/devicetree/bindings/power/supply/tps65217_charger.txt
-@@ -6,6 +6,18 @@ Required Properties:
-              Should be <0> for the USB charger and <1> for the AC adapter.
- -interrupt-names: Should be "USB" and "AC"
+CONFIG variable and files have not been renamed, though, so no need to
+change old defconfigs.
+
+Signed-off-by: Jens Rottmann <Jens.Rottmann@ADLINKtech.com>
+---
+
+--- a/Documentation/devicetree/bindings/sound/eukrea-tlv320.txt
++++ b/Documentation/devicetree/bindings/sound/eukrea-tlv320.txt
+@@ -1,16 +1,23 @@
+-Audio complex for Eukrea boards with tlv320aic23 codec.
++Audio complex for Freescale i.MX boards with TI TLV320AIC23 I2S codecs,
++like those from Eukrea Electromatique.
  
-+Optional properties:
-+-charge-voltage-microvolt: set the charge voltage. The value can be: 4100000,
-+	4150000, 4200000, 4250000; default: 4100000
-+
-+-charge-current-microamp: set the charging current. The value can be: 300000,
-+	400000, 500000, 700000; default: 500000
-+
-+-ti,ntc-type: set the NTC type for battery temperature measurement. The value
-+	must be 0 or 1, where:
-+	  0 – 100k (curve 1, B = 3960)
-+	  1 – 10k  (curve 2, B = 3480) (default)
-+
- This node is a subnode of the tps65217 PMIC.
+ Required properties:
  
+-  - compatible		: "eukrea,asoc-tlv320"
++  - compatible		: "fsl,imx-audio-tlv320aic23" or
++			  "eukrea,asoc-tlv320" (deprecated)
+ 
+-  - eukrea,model	: The user-visible name of this sound complex.
++  - model		: The user-visible name of this sound complex.
++  - eukrea,model	: Dito, deprecated.
+ 
+   - ssi-controller	: The phandle of the SSI controller.
+ 
+-  - fsl,mux-int-port	: The internal port of the i.MX audio muxer (AUDMUX).
++  - mux-int-port	: The internal port of the i.MX audio muxer (AUDMUX).
++  - fsl,mux-int-port	: Dito, deprecated.
+ 
+-  - fsl,mux-ext-port	: The external port of the i.MX audio muxer.
++  - mux-ext-port	: The external port of the i.MX audio muxer.
++  - fsl,mux-ext-port	: Dito, deprecated.
++
++  - audio-codec		: The phandle of the audio codec.
+ 
+ Note: The AUDMUX port numbering should start at 1, which is consistent with
+ hardware manual.
+@@ -18,9 +25,10 @@ hardware manual.
  Example:
-@@ -14,4 +26,7 @@ Example:
- 		compatible = "ti,tps65217-charger";
- 		interrupts = <0>, <1>;
- 		interrupt-names = "USB", "AC";
-+		charge-voltage-microvolt = <4100000>;
-+		charge-current-microamp = <500000>;
-+		ti,ntc-type = <1>;
+ 
+ 	sound {
+-		compatible = "eukrea,asoc-tlv320";
+-		eukrea,model = "imx51-eukrea-tlv320aic23";
++		compatible = "fsl,imx-audio-tlv320aic23";
++		model = "imx51-eukrea-tlv320aic23";
+ 		ssi-controller = <&ssi2>;
+-		fsl,mux-int-port = <2>;
+-		fsl,mux-ext-port = <3>;
++		mux-int-port = <2>;
++		mux-ext-port = <3>;
++		audio-codec = <&codec>;
  	};
-diff --git a/drivers/power/supply/tps65217_charger.c b/drivers/power/supply/tps65217_charger.c
-index 1f52340..087f29c 100644
---- a/drivers/power/supply/tps65217_charger.c
-+++ b/drivers/power/supply/tps65217_charger.c
-@@ -39,6 +39,12 @@
- #define NUM_CHARGER_IRQS	2
- #define POLL_INTERVAL		(HZ * 2)
+--- a/sound/soc/fsl/Kconfig
++++ b/sound/soc/fsl/Kconfig
+@@ -220,7 +220,7 @@ config SND_SOC_PHYCORE_AC97
+ 	  and phyCARD boards in AC97 mode
  
-+struct tps65217_charger_platform_data {
-+	u32	charge_current_uamp;
-+	u32	charge_voltage_uvolt;
-+	int	ntc_type;
-+};
-+
- struct tps65217_charger {
- 	struct tps65217 *tps;
- 	struct device *dev;
-@@ -48,16 +54,82 @@ struct tps65217_charger {
- 	int	prev_online;
+ config SND_SOC_EUKREA_TLV320
+-	tristate "Eukrea TLV320"
++	tristate "SoC Audio support for i.MX boards with TLV320AIC23"
+ 	depends on ARCH_MXC && I2C
+ 	select SND_SOC_TLV320AIC23_I2C
+ 	select SND_SOC_IMX_AUDMUX
+--- a/sound/soc/fsl/eukrea-tlv320.c
++++ b/sound/soc/fsl/eukrea-tlv320.c
+@@ -92,11 +92,13 @@ static int eukrea_tlv320_probe(struct platform_device *pdev)
  
- 	struct task_struct	*poll_task;
-+	struct tps65217_charger_platform_data *pdata;
- };
+ 	eukrea_tlv320.dev = &pdev->dev;
+ 	if (np) {
+-		ret = snd_soc_of_parse_card_name(&eukrea_tlv320,
+-						 "eukrea,model");
++		ret = snd_soc_of_parse_card_name(&eukrea_tlv320, "model");
++		if (ret) /* backwards compatible */
++			ret = snd_soc_of_parse_card_name(&eukrea_tlv320,
++			                                 "eukrea,model");
+ 		if (ret) {
+ 			dev_err(&pdev->dev,
+-				"eukrea,model node missing or invalid.\n");
++			        "model node missing or invalid.\n");
+ 			goto err;
+ 		}
  
- static enum power_supply_property tps65217_charger_props[] = {
- 	POWER_SUPPLY_PROP_ONLINE,
- };
+@@ -109,22 +111,28 @@ static int eukrea_tlv320_probe(struct platform_device *pdev)
+ 			goto err;
+ 		}
  
--static int tps65217_config_charger(struct tps65217_charger *charger)
-+static int tps65217_set_charge_current(struct tps65217_charger *charger,
-+				       unsigned int uamp)
-+{
-+	int ret, val;
-+
-+	dev_dbg(charger->dev, "setting charge current to %d uA\n", uamp);
-+
-+	if (uamp == 300000)
-+		val = 0x00;
-+	else if (uamp == 400000)
-+		val = 0x01;
-+	else if (uamp == 500000)
-+		val = 0x02;
-+	else if (uamp == 700000)
-+		val = 0x03;
-+	else
-+		return -EINVAL;
-+
-+	ret = tps65217_set_bits(charger->tps, TPS65217_REG_CHGCONFIG3,
-+				TPS65217_CHGCONFIG3_ICHRG_MASK,
-+				val << TPS65217_CHGCONFIG3_ICHRG_SHIFT,
-+				TPS65217_PROTECT_NONE);
-+	if (ret) {
-+		dev_err(charger->dev,
-+			"failed to set ICHRG setting to 0x%02x (err: %d)\n",
-+			val, ret);
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static int tps65217_set_charge_voltage(struct tps65217_charger *charger,
-+				       unsigned int uvolt)
-+{
-+	int ret, val;
-+
-+	dev_dbg(charger->dev, "setting charge voltage to %d uV\n", uvolt);
-+
-+	if (uvolt != 4100000 && uvolt != 4150000 &&
-+	    uvolt != 4200000 && uvolt != 4250000)
-+		return -EINVAL;
-+
-+	val = (uvolt - 4100000) / 50000;
-+
-+	ret = tps65217_set_bits(charger->tps, TPS65217_REG_CHGCONFIG2,
-+				TPS65217_CHGCONFIG2_VOREG_MASK,
-+				val << TPS65217_CHGCONFIG2_VOREG_SHIFT,
-+				TPS65217_PROTECT_NONE);
-+	if (ret) {
-+		dev_err(charger->dev,
-+			"failed to set VOCHG setting to 0x%02x (err: %d)\n",
-+			val, ret);
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static int tps65217_set_ntc_type(struct tps65217_charger *charger,
-+				 unsigned int ntc)
- {
- 	int ret;
+-		codec_np = of_parse_phandle(ssi_np, "codec-handle", 0);
++		codec_np = of_parse_phandle(pdev->dev.of_node, "audio-codec", 0);
++		if (!codec_np) /* backwards compatible */
++			codec_np = of_parse_phandle(ssi_np, "codec-handle", 0);
+ 		if (codec_np)
+ 			eukrea_tlv320_dai.codec_of_node = codec_np;
+ 		else
+-			dev_err(&pdev->dev, "codec-handle node missing or invalid.\n");
++			dev_err(&pdev->dev, "audio-codec node missing or invalid.\n");
  
-+	dev_dbg(charger->dev, "setting NTC type to %d\n", ntc);
-+
-+	if (ntc != 0 && ntc != 1)
-+		return -EINVAL;
-+
- 	/*
- 	 * tps65217 rev. G, p. 31 (see p. 32 for NTC schematic)
- 	 *
-@@ -74,14 +146,57 @@ static int tps65217_config_charger(struct tps65217_charger *charger)
- 	 * NTC TYPE (for battery temperature measurement)
- 	 *   0 – 100k (curve 1, B = 3960)
- 	 *   1 – 10k  (curve 2, B = 3480) (default on reset)
--	 *
- 	 */
--	ret = tps65217_clear_bits(charger->tps, TPS65217_REG_CHGCONFIG1,
--				  TPS65217_CHGCONFIG1_NTC_TYPE,
--				  TPS65217_PROTECT_NONE);
-+	if (ntc) {
-+		ret = tps65217_set_bits(charger->tps, TPS65217_REG_CHGCONFIG1,
-+					TPS65217_CHGCONFIG1_NTC_TYPE,
-+					TPS65217_CHGCONFIG1_NTC_TYPE,
-+					TPS65217_PROTECT_NONE);
-+		if (ret) {
-+			dev_err(charger->dev,
-+				"failed to set NTC type to 10K: %d\n", ret);
-+			return ret;
-+		}
-+	} else {
-+		ret = tps65217_clear_bits(charger->tps, TPS65217_REG_CHGCONFIG1,
-+					  TPS65217_CHGCONFIG1_NTC_TYPE,
-+					  TPS65217_PROTECT_NONE);
-+		if (ret) {
-+			dev_err(charger->dev,
-+				"failed to set NTC type to 100K: %d\n", ret);
-+			return ret;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+static int tps65217_config_charger(struct tps65217_charger *charger)
-+{
-+	int ret;
-+	struct tps65217_charger_platform_data *pdata = charger->pdata;
-+
-+	if (!charger->pdata)
-+		return -EINVAL;
-+
-+	ret = tps65217_set_charge_voltage(charger, pdata->charge_voltage_uvolt);
- 	if (ret) {
- 		dev_err(charger->dev,
--			"failed to set 100k NTC setting: %d\n", ret);
-+			"failed to set charge voltage setting: %d\n", ret);
-+		return ret;
-+	}
-+
-+	ret = tps65217_set_charge_current(charger, pdata->charge_current_uamp);
-+	if (ret) {
-+		dev_err(charger->dev,
-+			"failed to set charge current setting: %d\n", ret);
-+		return ret;
-+	}
-+
-+	ret = tps65217_set_ntc_type(charger, pdata->ntc_type);
-+	if (ret) {
-+		dev_err(charger->dev,
-+			"failed to set NTC type setting: %d\n", ret);
- 		return ret;
- 	}
+-		ret = of_property_read_u32(np, "fsl,mux-int-port", &int_port);
++		ret = of_property_read_u32(np, "mux-int-port", &int_port);
++		if (ret) /* backwards compatible */
++			ret = of_property_read_u32(np, "fsl,mux-int-port", &int_port);
+ 		if (ret) {
+ 			dev_err(&pdev->dev,
+-				"fsl,mux-int-port node missing or invalid.\n");
++			        "mux-int-port node missing or invalid.\n");
+ 			return ret;
+ 		}
+-		ret = of_property_read_u32(np, "fsl,mux-ext-port", &ext_port);
++		ret = of_property_read_u32(np, "mux-ext-port", &ext_port);
++		if (ret) /* backwards compatible */
++			ret = of_property_read_u32(np, "fsl,mux-ext-port", &ext_port);
+ 		if (ret) {
+ 			dev_err(&pdev->dev,
+-				"fsl,mux-ext-port node missing or invalid.\n");
++			        "mux-ext-port node missing or invalid.\n");
+ 			return ret;
+ 		}
  
-@@ -185,6 +300,48 @@ static int tps65217_charger_poll_task(void *data)
- 	return 0;
+@@ -213,7 +221,8 @@ static int eukrea_tlv320_remove(struct platform_device *pdev)
  }
  
-+#ifdef CONFIG_OF
-+static struct tps65217_charger_platform_data *tps65217_charger_pdata_init(
-+		struct platform_device *pdev)
-+{
-+	struct tps65217_charger_platform_data *pdata;
-+	struct device_node *np = pdev->dev.of_node;
-+	int ret;
-+
-+	if (!np) {
-+		dev_err(&pdev->dev, "No charger OF node\n");
-+		return ERR_PTR(-EINVAL);
-+	}
-+
-+	pdata = devm_kzalloc(&pdev->dev, sizeof(*pdata), GFP_KERNEL);
-+	if (!pdata)
-+		return ERR_PTR(-ENOMEM);
-+
-+	ret = of_property_read_u32(np, "charge-voltage-microvolt",
-+				   &pdata->charge_voltage_uvolt);
-+	if (ret)
-+		pdata->charge_voltage_uvolt = 4100000;
-+
-+	ret = of_property_read_u32(np, "charge-current-microamp",
-+				   &pdata->charge_current_uamp);
-+	if (ret)
-+		pdata->charge_current_uamp = 500000;
-+
-+	ret = of_property_read_u32(np, "ti,ntc-type",
-+				   &pdata->ntc_type);
-+	if (ret)
-+		pdata->ntc_type = 1;	/* 10k  (curve 2, B = 3480) */
-+
-+	return pdata;
-+}
-+#else /* CONFIG_OF */
-+static struct tps65217_charger_platform_data *tps65217_charger_pdata_init(
-+		struct platform_device *pdev)
-+{
-+	return NULL;
-+}
-+#endif /* CONFIG_OF */
-+
- static const struct power_supply_desc tps65217_charger_desc = {
- 	.name			= "tps65217-charger",
- 	.type			= POWER_SUPPLY_TYPE_MAINS,
-@@ -214,6 +371,18 @@ static int tps65217_charger_probe(struct platform_device *pdev)
- 	cfg.of_node = pdev->dev.of_node;
- 	cfg.drv_data = charger;
- 
-+	charger->pdata = tps65217_charger_pdata_init(pdev);
-+	if (IS_ERR(charger->pdata)) {
-+		dev_err(charger->dev, "failed: getting platform data\n");
-+		return PTR_ERR(charger->pdata);
-+	}
-+
-+	ret = tps65217_config_charger(charger);
-+	if (ret < 0) {
-+		dev_err(charger->dev, "charger config failed, err %d\n", ret);
-+		return ret;
-+	}
-+
- 	charger->psy = devm_power_supply_register(&pdev->dev,
- 						  &tps65217_charger_desc,
- 						  &cfg);
-@@ -225,12 +394,6 @@ static int tps65217_charger_probe(struct platform_device *pdev)
- 	irq[0] = platform_get_irq_byname(pdev, "USB");
- 	irq[1] = platform_get_irq_byname(pdev, "AC");
- 
--	ret = tps65217_config_charger(charger);
--	if (ret < 0) {
--		dev_err(charger->dev, "charger config failed, err %d\n", ret);
--		return ret;
--	}
--
- 	/* Create a polling thread if an interrupt is invalid */
- 	if (irq[0] < 0 || irq[1] < 0) {
- 		poll_task = kthread_run(tps65217_charger_poll_task,
-diff --git a/include/linux/mfd/tps65217.h b/include/linux/mfd/tps65217.h
-index eac2857..d040062 100644
---- a/include/linux/mfd/tps65217.h
-+++ b/include/linux/mfd/tps65217.h
-@@ -103,8 +103,10 @@
- #define TPS65217_CHGCONFIG2_DYNTMR	BIT(7)
- #define TPS65217_CHGCONFIG2_VPREGHG	BIT(6)
- #define TPS65217_CHGCONFIG2_VOREG_MASK	0x30
-+#define TPS65217_CHGCONFIG2_VOREG_SHIFT	4
- 
- #define TPS65217_CHGCONFIG3_ICHRG_MASK	0xC0
-+#define TPS65217_CHGCONFIG3_ICHRG_SHIFT	6
- #define TPS65217_CHGCONFIG3_DPPMTH_MASK	0x30
- #define TPS65217_CHGCONFIG2_PCHRGT	BIT(3)
- #define TPS65217_CHGCONFIG2_TERMIF	0x06
--- 
-2.9.3
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+ static const struct of_device_id imx_tlv320_dt_ids[] = {
+-	{ .compatible = "eukrea,asoc-tlv320"},
++	{ .compatible = "eukrea,asoc-tlv320"}, /* backwards compatible */
++	{ .compatible = "fsl,imx-audio-tlv320aic23"},
+ 	{ /* sentinel */ }
+ };
+ MODULE_DEVICE_TABLE(of, imx_tlv320_dt_ids);
+_
