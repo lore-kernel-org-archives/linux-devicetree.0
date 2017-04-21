@@ -1,68 +1,52 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Applied "regulator: anatop: make regulator name property required" to the regulator tree
-Date: Fri, 21 Apr 2017 18:28:50 +0100
-Message-ID: <E1d1cMU-00024R-Az@debutante>
-References: <1492180234-2496-1-git-send-email-aisheng.dong@nxp.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1492180234-2496-1-git-send-email-aisheng.dong@nxp.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Dong Aisheng <aisheng.dong@nxp.com>
-Cc: Rob Herring <robh@kernel.org>, Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.orglinux-kernel@vger.kernel.org
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: Re: [PATCH 01/13] MIPS: lantiq: Use of_platform_populate instead of __dt_register_buses
+Date: Fri, 21 Apr 2017 20:17:38 +0200
+Message-ID: <CAFBinCBjnDz3oSUVOLKR0ku-TvrCHDNEgGX6NzGnkSQCk_yPLA@mail.gmail.com>
+References: <20170417192942.32219-1-hauke@hauke-m.de> <20170417192942.32219-2-hauke@hauke-m.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-mips-bounce@linux-mips.org>
+In-Reply-To: <20170417192942.32219-2-hauke@hauke-m.de>
+Sender: linux-mips-bounce@linux-mips.org
+Errors-to: linux-mips-bounce@linux-mips.org
+List-help: <mailto:ecartis@linux-mips.org?Subject=help>
+List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
+List-software: Ecartis version 1.0.0
+List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
+List-owner: <mailto:ralf@linux-mips.org>
+List-post: <mailto:linux-mips@linux-mips.org>
+List-archive: <http://www.linux-mips.org/archives/linux-mips/>
+To: Hauke Mehrtens <hauke@hauke-m.de>
+Cc: ralf@linux-mips.org, linux-mips@linux-mips.org, linux-mtd@lists.infradead.org, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, john@phrozen.org, linux-spi@vger.kernel.org, hauke.mehrtens@intel.com
 List-Id: devicetree@vger.kernel.org
 
-The patch
+On Mon, Apr 17, 2017 at 9:29 PM, Hauke Mehrtens <hauke@hauke-m.de> wrote:
+> From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+>
+> This allows populating syscon devices which are using "simple-mfd"
+> instead of "simple-bus".
+>
+> Signed-off-by: Hauke Mehrtens <hauke@hauke-m.de>
+Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 
-   regulator: anatop: make regulator name property required
-
-has been applied to the regulator tree at
-
-   git://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git 
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
->From 0e69c2eceb7c71327086c6f48db42a0ba2378cbb Mon Sep 17 00:00:00 2001
-From: Dong Aisheng <aisheng.dong@nxp.com>
-Date: Fri, 21 Apr 2017 10:53:52 +0800
-Subject: [PATCH] regulator: anatop: make regulator name property required
-
-We actually can't allow the missing of the regualor name, thus update
-the binding doc to make regulator-name property to be required.
-
-Acked-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- Documentation/devicetree/bindings/regulator/anatop-regulator.txt | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/Documentation/devicetree/bindings/regulator/anatop-regulator.txt b/Documentation/devicetree/bindings/regulator/anatop-regulator.txt
-index 37c4ea076f88..312060658a53 100644
---- a/Documentation/devicetree/bindings/regulator/anatop-regulator.txt
-+++ b/Documentation/devicetree/bindings/regulator/anatop-regulator.txt
-@@ -2,6 +2,7 @@ Anatop Voltage regulators
- 
- Required properties:
- - compatible: Must be "fsl,anatop-regulator"
-+- regulator-name: A string used as a descriptive name for regulator outputs
- - anatop-reg-offset: Anatop MFD register offset
- - anatop-vol-bit-shift: Bit shift for the register
- - anatop-vol-bit-width: Number of bits used in the register
--- 
-2.11.0
+> ---
+>  arch/mips/lantiq/prom.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+>
+> diff --git a/arch/mips/lantiq/prom.c b/arch/mips/lantiq/prom.c
+> index 96773bed8a8a..72cc12f1b6a5 100644
+> --- a/arch/mips/lantiq/prom.c
+> +++ b/arch/mips/lantiq/prom.c
+> @@ -117,7 +117,8 @@ void __init prom_init(void)
+>
+>  int __init plat_of_setup(void)
+>  {
+> -       return __dt_register_buses(soc_info.compatible, "simple-bus");
+> +       return of_platform_populate(NULL, of_default_bus_match_table, NULL,
+> +                                   NULL);
+>  }
+>
+>  arch_initcall(plat_of_setup);
+> --
+> 2.11.0
+>
