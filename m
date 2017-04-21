@@ -1,13 +1,16 @@
-From: Ludovic Desroches <ludovic.desroches@microchip.com>
-Subject: [PATCH v2 1/5] dt-bindings: input: Add Atmel PTC subsystem bindings
-Date: Fri, 21 Apr 2017 10:39:20 +0200
-Message-ID: <20170421083924.15096-2-ludovic.desroches@microchip.com>
-References: <20170421083924.15096-1-ludovic.desroches@microchip.com>
+From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Subject: Re: [PATCH v5 1/4] gpio: mvebu: Add limited PWM support
+Date: Fri, 21 Apr 2017 11:19:52 +0200
+Message-ID: <20170421111952.54978e80@free-electrons.com>
+References: <20170409180931.4884-1-ralph.sennhauser@gmail.com>
+ <20170409180931.4884-2-ralph.sennhauser@gmail.com>
+ <20170412163128.5c985a26@free-electrons.com>
+ <20170412151932.GE7023@lunn.ch>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170421083924.15096-1-ludovic.desroches@microchip.com>
+In-Reply-To: <20170412151932.GE7023@lunn.ch>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -17,91 +20,47 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-input@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Cc: Ludovic Desroches <ludovic.desroches@microchip.com>, dmitry.torokhov@gmail.com, alexandre.belloni@free-electrons.com, linux-kernel@vger.kernel.org
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: Mark Rutland <mark.rutland@arm.com>, Alexandre Courbot <gnurou@gmail.com>, Jason Cooper <jason@lakedaemon.net>, linux-pwm@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org, Gregory Clement <gregory.clement@free-electrons.com>, devicetree@vger.kernel.org, Thierry Reding <thierry.reding@gmail.com>, linux-gpio@vger.kernel.org, Ralph Sennhauser <ralph.sennhauser@gmail.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Add description of the Atmel PTC subsystem bindings.
+Hello,
 
-Signed-off-by: Ludovic Desroches <ludovic.desroches@microchip.com>
-Acked-by: Rob Herring <robh@kernel.org>
----
- .../devicetree/bindings/input/atmel,ptc.txt        | 67 ++++++++++++++++++++++
- 1 file changed, 67 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/input/atmel,ptc.txt
+On Wed, 12 Apr 2017 17:19:32 +0200, Andrew Lunn wrote:
 
-diff --git a/Documentation/devicetree/bindings/input/atmel,ptc.txt b/Documentation/devicetree/bindings/input/atmel,ptc.txt
-new file mode 100644
-index 0000000..a183fd5
---- /dev/null
-+++ b/Documentation/devicetree/bindings/input/atmel,ptc.txt
-@@ -0,0 +1,67 @@
-+Atmel PTC Subsystem
-+
-+The Atmel Peripheral Touch Controller subsystem offers built-in hardware
-+for capacitive touch measurement on sensors that function as buttons, sliders
-+and wheels.
-+
-+1) PTC Subsystem node
-+
-+Required properties:
-+- compatible: 		Must be "atmel,sama5d2-ptc"
-+- reg: 			Address, length of the shared memory and ppp registers location
-+			and length.
-+- clocks: 		Phandlers to the clocks.
-+- clock-names: 		Must be "ptc_clk", "ptc_int_osc", "slow_clk".
-+- #address-cells:	Must be one. The cell is the button or scroller id.
-+- #size-cells: 		Must be zero.
-+
-+Example:
-+	ptc@fc060000 {
-+		compatible = "atmel,sama5d2-ptc";
-+		reg = <0x00800000 0x10000
-+		       0xfc060000 0xcf>;
-+		interrupts = <58 IRQ_TYPE_LEVEL_HIGH 7>;
-+		clocks = <&ptc_clk>, <&main>, <&clk32k>;
-+		clock-names = "ptc_clk", "ptc_int_osc", "slow_clk";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		[ child node definitions... ]
-+	};
-+
-+2) Scroller / buttons subnodes
-+
-+Subnodes describe the kind of sensors the customer want to use. They have to be
-+named according to their function: button, slider or wheel.
-+
-+2.1) Scroller subnodes
-+
-+Required properties:
-+- reg:	Id of the scroller, each id must be different.
-+
-+Example:
-+	slider@0 {
-+		reg = <0>;
-+	};
-+
-+	wheel@1 {
-+		reg = <1>;
-+	};
-+
-+2.2) Button subnodes
-+
-+Required properties:
-+- reg:			Id of node used for the button, each id must be
-+			different.
-+- linux,keycode: 	Key code of the button.
-+
-+Example:
-+		button@8 {
-+			reg = <8>;
-+			linux,keycode = <2>;
-+		};
-+
-+		button@9 {
-+			reg = <9>;
-+			linux,keycode = <3>;
-+		};
+> Yep. It was a compromise. By adding a new binding for the GPIO driver,
+> this might be possible. But it did not seem worth such a major change.
+> 
+> The prime use of this feature is for controlling a fan. So far, i've
+> not seen any hardware with more than one fan, i.e. needs more than one
+> PWM. Nor have i seen any hardware with the GPIO for the fan being on
+> the third bank. A hardware manufacture could add multiple fans, but i
+> doubt it, they make noise and fail. And if a manufacture does place a
+> fan on the third bank, it can still be controlled as a plain GPIO fan,
+> as we have been doing for the last few years.
+
+Right.
+
+> So i personally think it is an O.K. compromise.
+
+I clearly don't want to block this, but I believe this is a very good
+illustration of why stable DT bindings simply don't work. We are
+realizing here that having each GPIO bank represented as a separate DT
+node doesn't work, because this blinking functionality is not per GPIO
+bank, but global to all GPIO banks.
+
+I am totally fine with compromise, and having things simple first, and
+extend them later if needed. But this stable DT binding rule makes this
+quite impossible: what is a compromise today might put you in big
+troubles tomorrow.
+
+Anyway, it's fine for me, I don't think it's worth the effort making a
+much more complicated solution/change.
+
+Best regards,
+
+Thomas
 -- 
-2.9.0
+Thomas Petazzoni, CTO, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
