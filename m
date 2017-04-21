@@ -1,52 +1,72 @@
-From: Martin Kaiser <martin-XxZfDwE/svGeZLLa646FqQ@public.gmane.org>
-Subject: [PATCH 2/2 v4] dt-bindings: display: imx: entry for AUS mode
-Date: Fri, 21 Apr 2017 14:29:50 +0200
-Message-ID: <1492777790-12748-1-git-send-email-martin@kaiser.cx>
-References: <1492770549-7347-1-git-send-email-martin@kaiser.cx>
+From: Anders Darander <anders-7UjN0b3lYz2SbKU13Z4Etw@public.gmane.org>
+Subject: [PATCH 1/2] gpio: move tca9554 from pcf857x to pca953x
+Date: Fri, 21 Apr 2017 14:46:30 +0200
+Message-ID: <20170421124631.19269-1-anders@chargestorm.se>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1492770549-7347-1-git-send-email-martin-XxZfDwE/svGeZLLa646FqQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Martin Kaiser <martin-XxZfDwE/svGeZLLa646FqQ@public.gmane.org>
+To: linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
+Cc: Anders Darander <anders-7UjN0b3lYz2SbKU13Z4Etw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Allow setting AUS mode for a display from the device tree. Use an
-optional boolean property. AUS mode can be set only on imx21 and
-compatible chipsets.
+The TCA9554 doesn't work with the pcf857x driver, trying to change the direction
+gives a NAK bailout error.
 
-Signed-off-by: Martin Kaiser <martin-XxZfDwE/svGeZLLa646FqQ@public.gmane.org>
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+TCA9554 is similar to the PCA9554, thus change the driver.
+
+Signed-off-by: Anders Darander <anders-7UjN0b3lYz2SbKU13Z4Etw@public.gmane.org>
 ---
-sending this again, I missed the v4 in the Subject line
+ drivers/gpio/Kconfig        | 2 +-
+ drivers/gpio/gpio-pca953x.c | 1 +
+ drivers/gpio/gpio-pcf857x.c | 2 --
+ 3 files changed, 2 insertions(+), 3 deletions(-)
 
-v4:
-   rename the DT property to fsl,aus-mode
-
-v3:
-   use a boolean DT property instead of the register value
-   separate patches for DT binding and code changes
-
-v2:
-   re-sending DT bindings and code changes as one patch
-
- Documentation/devicetree/bindings/display/imx/fsl,imx-fb.txt | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/display/imx/fsl,imx-fb.txt b/Documentation/devicetree/bindings/display/imx/fsl,imx-fb.txt
-index 7a5c0e2..e5a8b36 100644
---- a/Documentation/devicetree/bindings/display/imx/fsl,imx-fb.txt
-+++ b/Documentation/devicetree/bindings/display/imx/fsl,imx-fb.txt
-@@ -13,6 +13,8 @@ Required nodes:
- 	Additional, the display node has to define properties:
- 	- bits-per-pixel: Bits per pixel
- 	- fsl,pcr: LCDC PCR value
-+	A display node may optionally define
-+	- fsl,aus-mode: boolean to enable AUS mode (only for imx21)
+diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+index 05043071fc98..684f887173e9 100644
+--- a/drivers/gpio/Kconfig
++++ b/drivers/gpio/Kconfig
+@@ -753,7 +753,7 @@ config GPIO_PCA953X
+ 	  4 bits:	pca9536, pca9537
  
- Optional properties:
- - lcd-supply: Regulator for LCD supply voltage.
+ 	  8 bits:	max7310, max7315, pca6107, pca9534, pca9538, pca9554,
+-			pca9556, pca9557, pca9574, tca6408, xra1202
++			pca9556, pca9557, pca9574, tca6408, tca9554, xra1202
+ 
+ 	  16 bits:	max7312, max7313, pca9535, pca9539, pca9555, pca9575,
+ 			tca6416
+diff --git a/drivers/gpio/gpio-pca953x.c b/drivers/gpio/gpio-pca953x.c
+index d44232aadb6c..13d895264fc8 100644
+--- a/drivers/gpio/gpio-pca953x.c
++++ b/drivers/gpio/gpio-pca953x.c
+@@ -81,6 +81,7 @@ static const struct i2c_device_id pca953x_id[] = {
+ 	{ "tca6416", 16 | PCA953X_TYPE | PCA_INT, },
+ 	{ "tca6424", 24 | PCA953X_TYPE | PCA_INT, },
+ 	{ "tca9539", 16 | PCA953X_TYPE | PCA_INT, },
++	{ "tca9554", 8  | PCA953X_TYPE | PCA_INT, },
+ 	{ "xra1202", 8  | PCA953X_TYPE },
+ 	{ }
+ };
+diff --git a/drivers/gpio/gpio-pcf857x.c b/drivers/gpio/gpio-pcf857x.c
+index 895af42a4513..8ddf9302ce3b 100644
+--- a/drivers/gpio/gpio-pcf857x.c
++++ b/drivers/gpio/gpio-pcf857x.c
+@@ -46,7 +46,6 @@ static const struct i2c_device_id pcf857x_id[] = {
+ 	{ "pca9675", 16 },
+ 	{ "max7328", 8 },
+ 	{ "max7329", 8 },
+-	{ "tca9554", 8 },
+ 	{ }
+ };
+ MODULE_DEVICE_TABLE(i2c, pcf857x_id);
+@@ -66,7 +65,6 @@ static const struct of_device_id pcf857x_of_table[] = {
+ 	{ .compatible = "nxp,pca9675" },
+ 	{ .compatible = "maxim,max7328" },
+ 	{ .compatible = "maxim,max7329" },
+-	{ .compatible = "ti,tca9554" },
+ 	{ }
+ };
+ MODULE_DEVICE_TABLE(of, pcf857x_of_table);
 -- 
-2.1.4
+2.11.0
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
