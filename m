@@ -1,30 +1,32 @@
-From: Herbert Xu <herbert@gondor.apana.org.au>
-Subject: Re: [PATCH v2 0/2] hwrng: mtk: add support for hardware random
- generator on MT7623 SoC
-Date: Fri, 21 Apr 2017 21:16:53 +0800
-Message-ID: <20170421131653.GI14803@gondor.apana.org.au>
-References: <1492705466-27287-1-git-send-email-sean.wang@mediatek.com>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [PATCH v13 03/10] mux: minimal mux subsystem and gpio-based mux
+ controller
+Date: Fri, 21 Apr 2017 16:18:38 +0200
+Message-ID: <1492784318.2364.8.camel@pengutronix.de>
+References: <1492101794-13444-1-git-send-email-peda@axentia.se>
+         <1492101794-13444-4-git-send-email-peda@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-crypto-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1492705466-27287-1-git-send-email-sean.wang@mediatek.com>
-Sender: linux-crypto-owner@vger.kernel.org
-To: sean.wang@mediatek.com
-Cc: mpm@selenic.com, robh+dt@kernel.org, mark.rutland@arm.com, clabbe.montjoie@gmail.com, prasannatsmkumar@gmail.com, romain.perier@free-electrons.com, shannon.nelson@oracle.com, weiyongjun1@huawei.com, devicetree@vger.kernel.org, linux-crypto@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, keyhaede@gmail.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1492101794-13444-4-git-send-email-peda@axentia.se>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Peter Rosin <peda@axentia.se>
+Cc: linux-kernel@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Jonathan Corbet <corbet@lwn.net>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, linux-doc@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, Colin Ian King <colin.king@canonical.com>, Paul Gortmaker <paul.gortmaker@windriver.com>, kernel@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 21, 2017 at 12:24:24AM +0800, sean.wang@mediatek.com wrote:
-> From: Sean Wang <sean.wang@mediatek.com>
-> 
-> This patchset introduces support for Mediatek hardware random generator (RNG)
-> Currently, the driver is already tested successfully with rng-tools on MT7623
-> SoC. And it should also be workable on other similar Mediatek SoCs.
-> 
-> Changes since v1:
+Hi Peter,
 
-All applied.  Thanks.
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+On Thu, 2017-04-13 at 18:43 +0200, Peter Rosin wrote:
+[...]
+> +int mux_control_select(struct mux_control *mux, int state)
+
+state could be unsigned int for the consumer facing API.
+
+> +{
+> +	int ret;
+
+And mux_control_select should check that (0 <= state < mux->states).
+
+regards
+Philipp
