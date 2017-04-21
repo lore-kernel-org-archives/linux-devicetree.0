@@ -1,139 +1,131 @@
-From: Marek Vasut <marek.vasut@gmail.com>
-Subject: Re: [PATCH 2/5] mtd: nand: gpmi: add i.MX 7 SoC support
-Date: Fri, 21 Apr 2017 19:22:05 +0200
-Message-ID: <57336d7e-7b48-8855-9e87-3eb370facd05@gmail.com>
-References: <20170421010755.18025-1-stefan@agner.ch>
- <20170421010755.18025-3-stefan@agner.ch>
- <af3fe671-c5fb-d3cf-c891-e6b7c973baa1@gmail.com>
- <5cf26d2b020392c875464c7504a9fb5b@agner.ch>
- <8377dadc-043f-5932-cb13-3367db38a6dd@gmail.com>
- <494a7bc044457240a302d92b3a50b8e5@agner.ch>
+From: Mark Brown <broonie@kernel.org>
+Subject: Applied "ASoC: Add Odroid sound DT bindings
+	documentation" to the asoc tree
+Date: Fri, 21 Apr 2017 18:28:18 +0100
+Message-ID: <E1d1cLy-0001qc-PC@debutante>
+References: <1492795191-31298-6-git-send-email-s.nawrocki@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <494a7bc044457240a302d92b3a50b8e5@agner.ch>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Stefan Agner <stefan@agner.ch>
-Cc: mark.rutland@arm.com, boris.brezillon@free-electrons.com, fabio.estevam@freescale.com, devicetree@vger.kernel.org, richard@nod.at, linux-kernel@vger.kernel.org, robh+dt@kernel.org, linux-mtd@lists.infradead.org, kernel@pengutronix.de, han.xu@nxp.com, shawnguo@kernel.org, cyrille.pitchen@atmel.com, computersforpeace@gmail.com, dwmw2@infradead.org, linux-arm-kernel@lists.infradead.org, LW@karo-electronics.de
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <1492795191-31298-6-git-send-email-s.nawrocki@samsung.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-samsung-soc@vger.kernel.org, jy0922.shim@samsung.com, b.zolnierkie@samsung.com, sw0312.kim@samsung.com, dri-devel@lists.freedesktop.org, inki.dae@samsung.com, javier@osg.samsung.com, broonie@kernel.org, krzk@kernel.org, robh+dt@kernel.org, cw00.choi@samsung.com, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 04/21/2017 06:19 PM, Stefan Agner wrote:
-> On 2017-04-21 06:08, Marek Vasut wrote:
->> On 04/21/2017 05:15 AM, Stefan Agner wrote:
->>> On 2017-04-20 19:03, Marek Vasut wrote:
->>>> On 04/21/2017 03:07 AM, Stefan Agner wrote:
->>>>> Add support for i.MX 7 SoC. The i.MX 7 has a slightly different
->>>>> clock architecture requiring only two clocks to be referenced.
->>>>> The IP is slightly different compared to i.MX 6SoloX, but currently
->>>>> none of this differences are in use so there is no detection needed
->>>>> and the driver can reuse IS_MX6SX.
->>>>>
->>>>> Signed-off-by: Stefan Agner <stefan@agner.ch>
->>>>> ---
->>>>>  drivers/mtd/nand/gpmi-nand/gpmi-nand.c | 15 +++++++++++++++
->>>>>  1 file changed, 15 insertions(+)
->>>>>
->>>>> diff --git a/drivers/mtd/nand/gpmi-nand/gpmi-nand.c b/drivers/mtd/nand/gpmi-nand/gpmi-nand.c
->>>>> index c8bbf5da2ab8..4a45d37ddc80 100644
->>>>> --- a/drivers/mtd/nand/gpmi-nand/gpmi-nand.c
->>>>> +++ b/drivers/mtd/nand/gpmi-nand/gpmi-nand.c
->>>>> @@ -127,6 +127,18 @@ static const struct gpmi_devdata gpmi_devdata_imx6sx = {
->>>>>  	.clks_count = ARRAY_SIZE(gpmi_clks_for_mx6),
->>>>>  };
->>>>>
->>>>> +static const char * const gpmi_clks_for_mx7d[] = {
->>>>> +	"gpmi_io", "gpmi_bch_apb",
->>>>> +};
->>>>> +
->>>>> +static const struct gpmi_devdata gpmi_devdata_imx7d = {
->>>>> +	.type = IS_MX6SX,
->>>>
->>>> Would it make sense to use IS_MX7 here already to prevent future surprises ?
->>>>
->>>
->>> Yeah I was thinking we can do it once we have an actual reason to
->>> distinguish.
->>
->> So what are the differences anyway ?
->>
-> 
-> I did not check the details, but Han's patchset (link in cover letter)
-> mentions:
-> "add the HW bitflip detection and correction for i.MX6QP and i.MX7D."...
+The patch
 
-Oh, interesting.
+   ASoC: Add Odroid sound DT bindings documentation
 
->>> But then, adding the type would only require 2-3 lines of change if I
->>> add it to the GPMI_IS_MX6 macro...
->>
->> Then at least add a comment because using type = IMX6SX right under
->> gpmi_data_mx7d can trigger some head-scratching. And put my R-B on V2.
-> 
-> FWIW, I mentioned it in the commit message.
-> 
-> I think rather then adding a comment it is cleaner to just add IS_IMX7D
-> and add it to the GPMI_IS_MX6 macro. That does not need a comment since
-> it implicitly says we have a i.MX 7 but treat it like i.MX 6 and it is a
-> rather small change. Does that sound acceptable?
+has been applied to the asoc tree at
 
-Sure, that's even better, thanks.
+   git://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
 
-btw isn't there some single-core mx7 (mx7s ?) , maybe we should just go
-with mx7 (without the d suffix). I dunno if it has GPMI NAND though, so
-maybe mx7d is the right thing to do here ...
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
 
-> --- a/drivers/mtd/nand/gpmi-nand/gpmi-nand.c
-> +++ b/drivers/mtd/nand/gpmi-nand/gpmi-nand.c
-> @@ -132,7 +132,7 @@ static const char * const gpmi_clks_for_mx7d[] = {
->  };
-> 
->  static const struct gpmi_devdata gpmi_devdata_imx7d = {
-> -       .type = IS_MX6SX,
-> +       .type = IS_MX7D,
->         .bch_max_ecc_strength = 62,
->         .max_chain_delay = 12,
->         .clks = gpmi_clks_for_mx7d,
-> diff --git a/drivers/mtd/nand/gpmi-nand/gpmi-nand.h
-> b/drivers/mtd/nand/gpmi-nand/gpmi-nand.h
-> index 2e584e18d980..f2cc13abc896 100644
-> --- a/drivers/mtd/nand/gpmi-nand/gpmi-nand.h
-> +++ b/drivers/mtd/nand/gpmi-nand/gpmi-nand.h
-> @@ -123,7 +123,8 @@ enum gpmi_type {
->         IS_MX23,
->         IS_MX28,
->         IS_MX6Q,
-> -       IS_MX6SX
-> +       IS_MX6SX,
-> +       IS_MX7D,
->  };
-> 
->  struct gpmi_devdata {
-> @@ -307,6 +308,8 @@ void gpmi_copy_bits(u8 *dst, size_t dst_bit_off,
->  #define GPMI_IS_MX28(x)                ((x)->devdata->type == IS_MX28)
->  #define GPMI_IS_MX6Q(x)                ((x)->devdata->type == IS_MX6Q)
->  #define GPMI_IS_MX6SX(x)       ((x)->devdata->type == IS_MX6SX)
-> +#define GPMI_IS_MX7D(x)                ((x)->devdata->type == IS_MX7D)
-> 
-> -#define GPMI_IS_MX6(x)         (GPMI_IS_MX6Q(x) || GPMI_IS_MX6SX(x))
-> +#define GPMI_IS_MX6(x)         (GPMI_IS_MX6Q(x) || GPMI_IS_MX6SX(x) ||
-> \
-> +                                GPMI_IS_MX7D(x))
->  #endif
-> 
-> --
-> Stefan
-> 
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+>From 92c9f05ebc7290e638c7b1b85288918c4fc65d4e Mon Sep 17 00:00:00 2001
+From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Date: Fri, 21 Apr 2017 19:19:49 +0200
+Subject: [PATCH] ASoC: Add Odroid sound DT bindings documentation
+
+This patch adds DT binding documentation for Odroid XU3/4
+sound subsystem.
+
+Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ .../devicetree/bindings/sound/samsung,odroid.txt   | 57 ++++++++++++++++++++++
+ 1 file changed, 57 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/samsung,odroid.txt
+
+diff --git a/Documentation/devicetree/bindings/sound/samsung,odroid.txt b/Documentation/devicetree/bindings/sound/samsung,odroid.txt
+new file mode 100644
+index 000000000000..c1ac70cb0afb
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/samsung,odroid.txt
+@@ -0,0 +1,57 @@
++Samsung Exynos Odroid XU3/XU4 audio complex with MAX98090 codec
++
++Required properties:
++
++ - compatible - "samsung,odroidxu3-audio" - for Odroid XU3 board,
++		"samsung,odroidxu4-audio" - for Odroid XU4 board
++ - model - the user-visible name of this sound complex
++ - 'cpu' subnode with a 'sound-dai' property containing the phandle of the I2S
++    controller
++ - 'codec' subnode with a 'sound-dai' property containing list of phandles
++    to the CODEC nodes, first entry must be corresponding to the MAX98090
++    CODEC and the second entry must be the phandle of the HDMI IP block node
++ - clocks - should contain entries matching clock names in the clock-names
++    property
++ - clock-names - should contain following entries:
++    - "epll" - indicating the EPLL output clock
++    - "i2s_rclk" - indicating the RCLK (root) clock of the I2S0 controller
++ - samsung,audio-widgets - this property specifies off-codec audio elements
++   like headphones or speakers, for details see widgets.txt
++ - samsung,audio-routing - a list of the connections between audio
++   components;  each entry is a pair of strings, the first being the
++   connection's sink, the second being the connection's source;
++   valid names for sources and sinks are the MAX98090's pins (as
++   documented in its binding), and the jacks on the board
++
++   For Odroid X2:
++     "Headphone Jack", "Mic Jack", "DMIC"
++
++   For Odroid U3, XU3:
++     "Headphone Jack", "Speakers"
++
++   For Odroid XU4:
++     no entries
++
++Example:
++
++sound {
++	compatible = "samsung,odroidxu3-audio";
++	samsung,cpu-dai = <&i2s0>;
++	samsung,codec-dai = <&max98090>;
++	model = "Odroid-XU3";
++	samsung,audio-routing =
++		"Headphone Jack", "HPL",
++		"Headphone Jack", "HPR",
++		"IN1", "Mic Jack",
++		"Mic Jack", "MICBIAS";
++
++	clocks = <&clock CLK_FOUT_EPLL>, <&i2s0 CLK_I2S_RCLK_SRC>;
++	clock-names = "epll", "sclk_i2s";
++
++	cpu {
++		sound-dai = <&i2s0 0>;
++	};
++	codec {
++		sound-dai = <&hdmi>, <&max98090>;
++	};
++};
 -- 
-Best regards,
-Marek Vasut
+2.11.0
