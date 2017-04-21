@@ -1,123 +1,61 @@
-From: Stefan Agner <stefan@agner.ch>
-Subject: Re: [PATCH 2/5] mtd: nand: gpmi: add i.MX 7 SoC support
-Date: Fri, 21 Apr 2017 09:19:56 -0700
-Message-ID: <494a7bc044457240a302d92b3a50b8e5@agner.ch>
-References: <20170421010755.18025-1-stefan@agner.ch>
- <20170421010755.18025-3-stefan@agner.ch>
- <af3fe671-c5fb-d3cf-c891-e6b7c973baa1@gmail.com>
- <5cf26d2b020392c875464c7504a9fb5b@agner.ch>
- <8377dadc-043f-5932-cb13-3367db38a6dd@gmail.com>
+From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH v13 03/10] mux: minimal mux subsystem and gpio-based mux
+ controller
+Date: Fri, 21 Apr 2017 16:41:04 +0200
+Message-ID: <1492785664.2364.13.camel@pengutronix.de>
+References: <1492101794-13444-1-git-send-email-peda@axentia.se>
+         <1492101794-13444-4-git-send-email-peda@axentia.se>
+         <1492784582.2364.10.camel@pengutronix.de>
+         <9e3d48c4-0dbc-3e80-c653-b0357abf1d6f@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <8377dadc-043f-5932-cb13-3367db38a6dd@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Marek Vasut <marek.vasut@gmail.com>
-Cc: mark.rutland@arm.com, boris.brezillon@free-electrons.com, fabio.estevam@freescale.com, devicetree@vger.kernel.org, richard@nod.at, linux-kernel@vger.kernel.org, robh+dt@kernel.org, linux-mtd@lists.infradead.org, kernel@pengutronix.de, han.xu@nxp.com, shawnguo@kernel.org, cyrille.pitchen@atmel.com, computersforpeace@gmail.com, dwmw2@infradead.org, linux-arm-kernel@lists.infradead.org, LW@karo-electronics.de
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <9e3d48c4-0dbc-3e80-c653-b0357abf1d6f-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Paul Gortmaker <paul.gortmaker-CWA4WttNNZF54TAoqtyWWQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Colin Ian King <colin.king-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2017-04-21 06:08, Marek Vasut wrote:
-> On 04/21/2017 05:15 AM, Stefan Agner wrote:
->> On 2017-04-20 19:03, Marek Vasut wrote:
->>> On 04/21/2017 03:07 AM, Stefan Agner wrote:
->>>> Add support for i.MX 7 SoC. The i.MX 7 has a slightly different
->>>> clock architecture requiring only two clocks to be referenced.
->>>> The IP is slightly different compared to i.MX 6SoloX, but currently
->>>> none of this differences are in use so there is no detection needed
->>>> and the driver can reuse IS_MX6SX.
->>>>
->>>> Signed-off-by: Stefan Agner <stefan@agner.ch>
->>>> ---
->>>>  drivers/mtd/nand/gpmi-nand/gpmi-nand.c | 15 +++++++++++++++
->>>>  1 file changed, 15 insertions(+)
->>>>
->>>> diff --git a/drivers/mtd/nand/gpmi-nand/gpmi-nand.c b/drivers/mtd/nand/gpmi-nand/gpmi-nand.c
->>>> index c8bbf5da2ab8..4a45d37ddc80 100644
->>>> --- a/drivers/mtd/nand/gpmi-nand/gpmi-nand.c
->>>> +++ b/drivers/mtd/nand/gpmi-nand/gpmi-nand.c
->>>> @@ -127,6 +127,18 @@ static const struct gpmi_devdata gpmi_devdata_imx6sx = {
->>>>  	.clks_count = ARRAY_SIZE(gpmi_clks_for_mx6),
->>>>  };
->>>>
->>>> +static const char * const gpmi_clks_for_mx7d[] = {
->>>> +	"gpmi_io", "gpmi_bch_apb",
->>>> +};
->>>> +
->>>> +static const struct gpmi_devdata gpmi_devdata_imx7d = {
->>>> +	.type = IS_MX6SX,
->>>
->>> Would it make sense to use IS_MX7 here already to prevent future surprises ?
->>>
->>
->> Yeah I was thinking we can do it once we have an actual reason to
->> distinguish.
+On Fri, 2017-04-21 at 16:32 +0200, Peter Rosin wrote:
+> On 2017-04-21 16:23, Philipp Zabel wrote:
+> > On Thu, 2017-04-13 at 18:43 +0200, Peter Rosin wrote:
+> > [...]
+> >> +int mux_chip_register(struct mux_chip *mux_chip)
+> >> +{
+> >> +	int i;
+> >> +	int ret;
+> >> +
+> >> +	for (i = 0; i < mux_chip->controllers; ++i) {
+> >> +		struct mux_control *mux = &mux_chip->mux[i];
+> >> +
+> >> +		if (mux->idle_state == mux->cached_state)
+> >> +			continue;
+> > 
+> > I think this should be changed to
+> >  
+> > -               if (mux->idle_state == mux->cached_state)
+> > +               if (mux->idle_state == mux->cached_state ||
+> > +                   mux->idle_state == MUX_IDLE_AS_IS)
+> >                         continue;
+> > 
+> > or the following mux_control_set will be called with state ==
+> > MUX_IDLE_AS_IS. Alternatively, mux_control_set should return when passed
+> > this value.
 > 
-> So what are the differences anyway ?
-> 
+> That cannot happen because ->cached_state is initialized to -1
+> in mux_chip_alloc, so should always be == MUX_IDLE_AS_IS when
+> registering. And drivers are not supposed to touch ->cached_state.
+> I.e., ->cached_state is "owned" by the core.
 
-I did not check the details, but Han's patchset (link in cover letter)
-mentions:
-"add the HW bitflip detection and correction for i.MX6QP and i.MX7D."...
+So this was caused by me filling cached_state from register reads in the
+mmio driver. Makes me wonder why I am not allowed to do this, though, if
+I am able to read back the initial state?
 
->> But then, adding the type would only require 2-3 lines of change if I
->> add it to the GPMI_IS_MX6 macro...
-> 
-> Then at least add a comment because using type = IMX6SX right under
-> gpmi_data_mx7d can trigger some head-scratching. And put my R-B on V2.
-
-FWIW, I mentioned it in the commit message.
-
-I think rather then adding a comment it is cleaner to just add IS_IMX7D
-and add it to the GPMI_IS_MX6 macro. That does not need a comment since
-it implicitly says we have a i.MX 7 but treat it like i.MX 6 and it is a
-rather small change. Does that sound acceptable?
-
---- a/drivers/mtd/nand/gpmi-nand/gpmi-nand.c
-+++ b/drivers/mtd/nand/gpmi-nand/gpmi-nand.c
-@@ -132,7 +132,7 @@ static const char * const gpmi_clks_for_mx7d[] = {
- };
-
- static const struct gpmi_devdata gpmi_devdata_imx7d = {
--       .type = IS_MX6SX,
-+       .type = IS_MX7D,
-        .bch_max_ecc_strength = 62,
-        .max_chain_delay = 12,
-        .clks = gpmi_clks_for_mx7d,
-diff --git a/drivers/mtd/nand/gpmi-nand/gpmi-nand.h
-b/drivers/mtd/nand/gpmi-nand/gpmi-nand.h
-index 2e584e18d980..f2cc13abc896 100644
---- a/drivers/mtd/nand/gpmi-nand/gpmi-nand.h
-+++ b/drivers/mtd/nand/gpmi-nand/gpmi-nand.h
-@@ -123,7 +123,8 @@ enum gpmi_type {
-        IS_MX23,
-        IS_MX28,
-        IS_MX6Q,
--       IS_MX6SX
-+       IS_MX6SX,
-+       IS_MX7D,
- };
-
- struct gpmi_devdata {
-@@ -307,6 +308,8 @@ void gpmi_copy_bits(u8 *dst, size_t dst_bit_off,
- #define GPMI_IS_MX28(x)                ((x)->devdata->type == IS_MX28)
- #define GPMI_IS_MX6Q(x)                ((x)->devdata->type == IS_MX6Q)
- #define GPMI_IS_MX6SX(x)       ((x)->devdata->type == IS_MX6SX)
-+#define GPMI_IS_MX7D(x)                ((x)->devdata->type == IS_MX7D)
-
--#define GPMI_IS_MX6(x)         (GPMI_IS_MX6Q(x) || GPMI_IS_MX6SX(x))
-+#define GPMI_IS_MX6(x)         (GPMI_IS_MX6Q(x) || GPMI_IS_MX6SX(x) ||
-\
-+                                GPMI_IS_MX7D(x))
- #endif
+regards
+Philipp
 
 --
-Stefan
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
