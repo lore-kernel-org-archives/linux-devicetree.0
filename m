@@ -1,141 +1,75 @@
-From: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
-Subject: Re: [PATCH 2/5] mtd: nand: gpmi: add i.MX 7 SoC support
-Date: Fri, 21 Apr 2017 10:38:28 -0700
-Message-ID: <a9cdc47795433e7b152dcdd123f9bd63@agner.ch>
-References: <20170421010755.18025-1-stefan@agner.ch>
- <20170421010755.18025-3-stefan@agner.ch>
- <af3fe671-c5fb-d3cf-c891-e6b7c973baa1@gmail.com>
- <5cf26d2b020392c875464c7504a9fb5b@agner.ch>
- <8377dadc-043f-5932-cb13-3367db38a6dd@gmail.com>
- <494a7bc044457240a302d92b3a50b8e5@agner.ch>
- <57336d7e-7b48-8855-9e87-3eb370facd05@gmail.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: Applied "ASoC: Add Odroid sound DT bindings documentation" to
+ the asoc tree
+Date: Fri, 21 Apr 2017 18:58:00 +0100
+Message-ID: <20170421175800.qiwvr46phfafqi75@sirena.org.uk>
+References: <1492795191-31298-6-git-send-email-s.nawrocki@samsung.com>
+ <E1d1cLy-0001qc-PC@debutante>
+ <CAJKOXPebDt030tcdBGya4Wpm8HCvMqyM7qJzDvibmvnMttH-FA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <57336d7e-7b48-8855-9e87-3eb370facd05-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, richard-/L3Ra7n9ekc@public.gmane.org, cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, han.xu-3arQi8VN3Tc@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, LW-AvR2QvxeiV7DiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: multipart/mixed; boundary="===============0655216362=="
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <CAJKOXPebDt030tcdBGya4Wpm8HCvMqyM7qJzDvibmvnMttH-FA@mail.gmail.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-samsung-soc@vger.kernel.org, =?utf-8?Q?Bart=C5=82omiej_=C5=BBo=C5=82nierkiewicz?= <b.zolnierkie@samsung.com>, Seung Woo Kim <sw0312.kim@samsung.com>, dri-devel@lists.freedesktop.org, Javier Martinez Canillas <javier@osg.samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, robh+dt@kernel.org, Sylwester Nawrocki <s.nawrocki@samsung.com>, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 2017-04-21 10:22, Marek Vasut wrote:
-> On 04/21/2017 06:19 PM, Stefan Agner wrote:
->> On 2017-04-21 06:08, Marek Vasut wrote:
->>> On 04/21/2017 05:15 AM, Stefan Agner wrote:
->>>> On 2017-04-20 19:03, Marek Vasut wrote:
->>>>> On 04/21/2017 03:07 AM, Stefan Agner wrote:
->>>>>> Add support for i.MX 7 SoC. The i.MX 7 has a slightly different
->>>>>> clock architecture requiring only two clocks to be referenced.
->>>>>> The IP is slightly different compared to i.MX 6SoloX, but currently
->>>>>> none of this differences are in use so there is no detection needed
->>>>>> and the driver can reuse IS_MX6SX.
->>>>>>
->>>>>> Signed-off-by: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
->>>>>> ---
->>>>>>  drivers/mtd/nand/gpmi-nand/gpmi-nand.c | 15 +++++++++++++++
->>>>>>  1 file changed, 15 insertions(+)
->>>>>>
->>>>>> diff --git a/drivers/mtd/nand/gpmi-nand/gpmi-nand.c b/drivers/mtd/nand/gpmi-nand/gpmi-nand.c
->>>>>> index c8bbf5da2ab8..4a45d37ddc80 100644
->>>>>> --- a/drivers/mtd/nand/gpmi-nand/gpmi-nand.c
->>>>>> +++ b/drivers/mtd/nand/gpmi-nand/gpmi-nand.c
->>>>>> @@ -127,6 +127,18 @@ static const struct gpmi_devdata gpmi_devdata_imx6sx = {
->>>>>>  	.clks_count = ARRAY_SIZE(gpmi_clks_for_mx6),
->>>>>>  };
->>>>>>
->>>>>> +static const char * const gpmi_clks_for_mx7d[] = {
->>>>>> +	"gpmi_io", "gpmi_bch_apb",
->>>>>> +};
->>>>>> +
->>>>>> +static const struct gpmi_devdata gpmi_devdata_imx7d = {
->>>>>> +	.type = IS_MX6SX,
->>>>>
->>>>> Would it make sense to use IS_MX7 here already to prevent future surprises ?
->>>>>
->>>>
->>>> Yeah I was thinking we can do it once we have an actual reason to
->>>> distinguish.
->>>
->>> So what are the differences anyway ?
->>>
->>
->> I did not check the details, but Han's patchset (link in cover letter)
->> mentions:
->> "add the HW bitflip detection and correction for i.MX6QP and i.MX7D."...
-> 
-> Oh, interesting.
-> 
->>>> But then, adding the type would only require 2-3 lines of change if I
->>>> add it to the GPMI_IS_MX6 macro...
->>>
->>> Then at least add a comment because using type = IMX6SX right under
->>> gpmi_data_mx7d can trigger some head-scratching. And put my R-B on V2.
->>
->> FWIW, I mentioned it in the commit message.
->>
->> I think rather then adding a comment it is cleaner to just add IS_IMX7D
->> and add it to the GPMI_IS_MX6 macro. That does not need a comment since
->> it implicitly says we have a i.MX 7 but treat it like i.MX 6 and it is a
->> rather small change. Does that sound acceptable?
-> 
-> Sure, that's even better, thanks.
-> 
-> btw isn't there some single-core mx7 (mx7s ?) , maybe we should just go
-> with mx7 (without the d suffix). I dunno if it has GPMI NAND though, so
-> maybe mx7d is the right thing to do here ...
-> 
 
-There is a Solo version yes, and it has GPMI NAND too. However, almost
-all i.MX 7 IPs have been named imx7d by NXP for some reason (including
-compatible strings, see grep -r -e imx7 Documentation/), so I thought I
-stay consistent here...
+--===============0655216362==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="qh7evjb7nsszf276"
+Content-Disposition: inline
 
---
-Stefan
 
->> --- a/drivers/mtd/nand/gpmi-nand/gpmi-nand.c
->> +++ b/drivers/mtd/nand/gpmi-nand/gpmi-nand.c
->> @@ -132,7 +132,7 @@ static const char * const gpmi_clks_for_mx7d[] = {
->>  };
->>
->>  static const struct gpmi_devdata gpmi_devdata_imx7d = {
->> -       .type = IS_MX6SX,
->> +       .type = IS_MX7D,
->>         .bch_max_ecc_strength = 62,
->>         .max_chain_delay = 12,
->>         .clks = gpmi_clks_for_mx7d,
->> diff --git a/drivers/mtd/nand/gpmi-nand/gpmi-nand.h
->> b/drivers/mtd/nand/gpmi-nand/gpmi-nand.h
->> index 2e584e18d980..f2cc13abc896 100644
->> --- a/drivers/mtd/nand/gpmi-nand/gpmi-nand.h
->> +++ b/drivers/mtd/nand/gpmi-nand/gpmi-nand.h
->> @@ -123,7 +123,8 @@ enum gpmi_type {
->>         IS_MX23,
->>         IS_MX28,
->>         IS_MX6Q,
->> -       IS_MX6SX
->> +       IS_MX6SX,
->> +       IS_MX7D,
->>  };
->>
->>  struct gpmi_devdata {
->> @@ -307,6 +308,8 @@ void gpmi_copy_bits(u8 *dst, size_t dst_bit_off,
->>  #define GPMI_IS_MX28(x)                ((x)->devdata->type == IS_MX28)
->>  #define GPMI_IS_MX6Q(x)                ((x)->devdata->type == IS_MX6Q)
->>  #define GPMI_IS_MX6SX(x)       ((x)->devdata->type == IS_MX6SX)
->> +#define GPMI_IS_MX7D(x)                ((x)->devdata->type == IS_MX7D)
->>
->> -#define GPMI_IS_MX6(x)         (GPMI_IS_MX6Q(x) || GPMI_IS_MX6SX(x))
->> +#define GPMI_IS_MX6(x)         (GPMI_IS_MX6Q(x) || GPMI_IS_MX6SX(x) ||
->> \
->> +                                GPMI_IS_MX7D(x))
->>  #endif
->>
->> --
->> Stefan
->>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--qh7evjb7nsszf276
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Fri, Apr 21, 2017 at 07:31:42PM +0200, Krzysztof Kozlowski wrote:
+
+> Although Sylwester is known of writing good quality code and can be
+> trusted but he posted it just 9 minutes ago. Isn't it a little bit too
+> fast to apply? I just finished reading cover letter but didn't manage
+> to start looking at the rest. :)
+
+It's pretty standard boilerplate stuff, there's not much in there to
+review and Sylwester is one of the maintainers listed for this code so I
+wasn't particularly expecting extra review.
+
+--qh7evjb7nsszf276
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlj6SCcACgkQJNaLcl1U
+h9C+Iwf8D6IKeh5wpio4MW6/M8koYR4I2MqmgLsi+HB6Dss3vXKs7zCQl8xrUEle
+c/iem7Q4BeljFC7aI9k/L7dTvP45eIgLGZehTqKdDzDfHO3ZPwTNxb0A3rsVsm/W
+7k1fUeTNn4i3DyaOPcCgo1f04zv50LME2/Jdqe0LI4B1AxcbICyAmURcW5BAUGJl
+FuvvKWiLrMm0r1ly5+jS+/vO6s1g/f3FGUWbajd7qzKnKF+ALQm1g7iiBbUkCLis
+2LCgA9yXuLxvwWqLgoWduUnmKqpqhD0XphKifwWLBWmx4toULGbEr7yumVc0d0EY
+UpA1+ekba31afTPRITzeVMco8hKKFQ==
+=0dvd
+-----END PGP SIGNATURE-----
+
+--qh7evjb7nsszf276--
+
+--===============0655216362==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: inline
+
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+
+--===============0655216362==--
