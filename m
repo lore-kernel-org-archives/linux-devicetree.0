@@ -1,94 +1,139 @@
-From: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Subject: [PATCH RFC 7/7] ARM: dts: samsung: Switch to dedicated Odroid sound
- card binding
-Date: Fri, 21 Apr 2017 19:19:51 +0200
-Message-ID: <1492795191-31298-8-git-send-email-s.nawrocki@samsung.com>
-References: <1492795191-31298-1-git-send-email-s.nawrocki@samsung.com>
- <CGME20170421172053epcas1p26cbba167969b1bffb48e3b7e6f5c3604@epcas1p2.samsung.com>
+From: Marek Vasut <marek.vasut@gmail.com>
+Subject: Re: [PATCH 2/5] mtd: nand: gpmi: add i.MX 7 SoC support
+Date: Fri, 21 Apr 2017 19:22:05 +0200
+Message-ID: <57336d7e-7b48-8855-9e87-3eb370facd05@gmail.com>
+References: <20170421010755.18025-1-stefan@agner.ch>
+ <20170421010755.18025-3-stefan@agner.ch>
+ <af3fe671-c5fb-d3cf-c891-e6b7c973baa1@gmail.com>
+ <5cf26d2b020392c875464c7504a9fb5b@agner.ch>
+ <8377dadc-043f-5932-cb13-3367db38a6dd@gmail.com>
+ <494a7bc044457240a302d92b3a50b8e5@agner.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-reply-to: <1492795191-31298-1-git-send-email-s.nawrocki@samsung.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: linux-samsung-soc@vger.kernel.org, linux-clk@vger.kernel.org, dri-devel@lists.freedesktop.org, alsa-devel@alsa-project.org, devicetree@vger.kernel.org
-Cc: javier@osg.samsung.com, b.zolnierkie@samsung.com, sw0312.kim@samsung.com, krzk@kernel.org, cw00.choi@samsung.com, broonie@kernel.org, Sylwester Nawrocki <s.nawrocki@samsung.com>, robh+dt@kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <494a7bc044457240a302d92b3a50b8e5@agner.ch>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Stefan Agner <stefan@agner.ch>
+Cc: mark.rutland@arm.com, boris.brezillon@free-electrons.com, fabio.estevam@freescale.com, devicetree@vger.kernel.org, richard@nod.at, linux-kernel@vger.kernel.org, robh+dt@kernel.org, linux-mtd@lists.infradead.org, kernel@pengutronix.de, han.xu@nxp.com, shawnguo@kernel.org, cyrille.pitchen@atmel.com, computersforpeace@gmail.com, dwmw2@infradead.org, linux-arm-kernel@lists.infradead.org, LW@karo-electronics.de
 List-Id: devicetree@vger.kernel.org
 
-VGhlIG5ldyBzb3VuZCBjYXJkIERUIGJpbmRpbmcgaXMgdXNlZCBmb3IgT2Ryb2lkIFhVMyBpbiBv
-cmRlcgp0byBwcm9wZXJseSBzdXBwb3J0IHRoZSBIRE1JIGF1ZGlvIHBhdGguCkNsb2NrcyBjb25m
-aWd1cmF0aW9uIGlzIGNoYW5nZWQgc28gdGhlIEkyUyBjb250cm9sbGVyIGlzIG5vdyB0aGUgYml0
-CmFuZCB0aGUgZnJhbWUgY2xvY2sgbWFzdGVyIHdpdGggRVBMTCBhcyB0aGUgcm9vdCBjbG9jayBz
-b3VyY2UuCgpTaWduZWQtb2ZmLWJ5OiBTeWx3ZXN0ZXIgTmF3cm9ja2kgPHMubmF3cm9ja2lAc2Ft
-c3VuZy5jb20+Ci0tLQogYXJjaC9hcm0vYm9vdC9kdHMvZXh5bm9zNC5kdHNpICAgICAgICAgICAg
-ICAgICAgICB8ICAxICsKIGFyY2gvYXJtL2Jvb3QvZHRzL2V4eW5vczU0MjAuZHRzaSAgICAgICAg
-ICAgICAgICAgfCAgMSArCiBhcmNoL2FybS9ib290L2R0cy9leHlub3M1NDIyLW9kcm9pZHh1My1h
-dWRpby5kdHNpIHwgNTkgKysrKysrKysrKysrKysrKysrLS0tLS0KIDMgZmlsZXMgY2hhbmdlZCwg
-NDggaW5zZXJ0aW9ucygrKSwgMTMgZGVsZXRpb25zKC0pCgpkaWZmIC0tZ2l0IGEvYXJjaC9hcm0v
-Ym9vdC9kdHMvZXh5bm9zNC5kdHNpIGIvYXJjaC9hcm0vYm9vdC9kdHMvZXh5bm9zNC5kdHNpCmlu
-ZGV4IDE4ZGVmMWMuLmYzZGNiN2YgMTAwNjQ0Ci0tLSBhL2FyY2gvYXJtL2Jvb3QvZHRzL2V4eW5v
-czQuZHRzaQorKysgYi9hcmNoL2FybS9ib290L2R0cy9leHlub3M0LmR0c2kKQEAgLTc2MSw2ICs3
-NjEsNyBAQAogCQlwaHkgPSA8JmhkbWlfaTJjX3BoeT47CiAJCXBvd2VyLWRvbWFpbnMgPSA8JnBk
-X3R2PjsKIAkJc2Ftc3VuZyxzeXNjb24tcGhhbmRsZSA9IDwmcG11X3N5c3RlbV9jb250cm9sbGVy
-PjsKKwkJI3NvdW5kLWRhaS1jZWxscyA9IDwwPjsKIAkJc3RhdHVzID0gImRpc2FibGVkIjsKIAl9
-OwogCmRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9leHlub3M1NDIwLmR0c2kgYi9hcmNo
-L2FybS9ib290L2R0cy9leHlub3M1NDIwLmR0c2kKaW5kZXggN2RjOWRjOC4uYzdkMjliNiAxMDA2
-NDQKLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvZXh5bm9zNTQyMC5kdHNpCisrKyBiL2FyY2gvYXJt
-L2Jvb3QvZHRzL2V4eW5vczU0MjAuZHRzaQpAQCAtNjE4LDYgKzYxOCw3IEBACiAJCQlzYW1zdW5n
-LHN5c2Nvbi1waGFuZGxlID0gPCZwbXVfc3lzdGVtX2NvbnRyb2xsZXI+OwogCQkJc3RhdHVzID0g
-ImRpc2FibGVkIjsKIAkJCXBvd2VyLWRvbWFpbnMgPSA8JmRpc3BfcGQ+OworCQkJI3NvdW5kLWRh
-aS1jZWxscyA9IDwwPjsKIAkJfTsKIAogCQloZG1pcGh5OiBoZG1pcGh5QDE0NUQwMDAwIHsKZGlm
-ZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL2V4eW5vczU0MjItb2Ryb2lkeHUzLWF1ZGlvLmR0
-c2kgYi9hcmNoL2FybS9ib290L2R0cy9leHlub3M1NDIyLW9kcm9pZHh1My1hdWRpby5kdHNpCmlu
-ZGV4IDk0OTM5MjMuLjg0NzAzZjcgMTAwNjQ0Ci0tLSBhL2FyY2gvYXJtL2Jvb3QvZHRzL2V4eW5v
-czU0MjItb2Ryb2lkeHUzLWF1ZGlvLmR0c2kKKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvZXh5bm9z
-NTQyMi1vZHJvaWR4dTMtYXVkaW8uZHRzaQpAQCAtMTEsMTUgKzExLDE3IEBACiAgKiBwdWJsaXNo
-ZWQgYnkgdGhlIEZyZWUgU29mdHdhcmUgRm91bmRhdGlvbi4KICovCiAKKyNpbmNsdWRlIDxkdC1i
-aW5kaW5ncy9zb3VuZC9zYW1zdW5nLWkycy5oPgorCiAvIHsKIAlzb3VuZDogc291bmQgewotCQlj
-b21wYXRpYmxlID0gInNpbXBsZS1hdWRpby1jYXJkIjsKKwkJY29tcGF0aWJsZSA9ICJzYW1zdW5n
-LG9kcm9pZC14dTMtYXVkaW8iOworCQltb2RlbCA9ICJPZHJvaWQtWFUzIjsKIAotCQlzaW1wbGUt
-YXVkaW8tY2FyZCxuYW1lID0gIk9kcm9pZC1YVTMiOwotCQlzaW1wbGUtYXVkaW8tY2FyZCx3aWRn
-ZXRzID0KKwkJc2Ftc3VuZyxhdWRpby13aWRnZXRzID0KIAkJCSJIZWFkcGhvbmUiLCAiSGVhZHBo
-b25lIEphY2siLAogCQkJIlNwZWFrZXJzIiwgIlNwZWFrZXJzIjsKLQkJc2ltcGxlLWF1ZGlvLWNh
-cmQscm91dGluZyA9CisJCXNhbXN1bmcsYXVkaW8tcm91dGluZyA9CiAJCQkiSGVhZHBob25lIEph
-Y2siLCAiSFBMIiwKIAkJCSJIZWFkcGhvbmUgSmFjayIsICJIUFIiLAogCQkJIkhlYWRwaG9uZSBK
-YWNrIiwgIk1JQ0JJQVMiLApAQCAtMjcsMjIgKzI5LDUxIEBACiAJCQkiU3BlYWtlcnMiLCAiU1BL
-TCIsCiAJCQkiU3BlYWtlcnMiLCAiU1BLUiI7CiAKLQkJc2ltcGxlLWF1ZGlvLWNhcmQsZm9ybWF0
-ID0gImkycyI7Ci0JCXNpbXBsZS1hdWRpby1jYXJkLGJpdGNsb2NrLW1hc3RlciA9IDwmbGluazBf
-Y29kZWM+OwotCQlzaW1wbGUtYXVkaW8tY2FyZCxmcmFtZS1tYXN0ZXIgPSA8JmxpbmswX2NvZGVj
-PjsKKwkJY2xvY2tzID0gPCZjbG9jayBDTEtfRk9VVF9FUExMPiwgPCZpMnMwIENMS19JMlNfUkNM
-S19TUkM+OworCQljbG9jay1uYW1lcyA9ICJlcGxsIiwgImkyc19yY2xrIjsKIAotCQlzaW1wbGUt
-YXVkaW8tY2FyZCxjcHUgeworCQljcHUgewogCQkJc291bmQtZGFpID0gPCZpMnMwIDA+OwotCQkJ
-c3lzdGVtLWNsb2NrLWZyZXF1ZW5jeSA9IDwxOTIwMDAwMD47CiAJCX07Ci0KLQkJbGluazBfY29k
-ZWM6IHNpbXBsZS1hdWRpby1jYXJkLGNvZGVjIHsKLQkJCXNvdW5kLWRhaSA9IDwmbWF4OTgwOTA+
-OwotCQkJY2xvY2tzID0gPCZpMnMwIENMS19JMlNfQ0RDTEs+OworCQljb2RlYyB7CisJCQlzb3Vu
-ZC1kYWkgPSA8JmhkbWk+LCA8Jm1heDk4MDkwPjsKIAkJfTsKIAl9OwogfTsKIAorJmNsb2NrX2F1
-ZHNzIHsKKwlhc3NpZ25lZC1jbG9ja3MgPSA8JmNsb2NrX2F1ZHNzIEVYWU5PU19ET1VUX1NSUD4s
-CisJCQkgIDwmY2xvY2sgQ0xLX0ZPVVRfRVBMTD47CisJYXNzaWduZWQtY2xvY2stcmF0ZXMgPSA8
-KDE5NjYwODAwMCAvIDI1Nik+LAorCQkJICAgICAgIDwxOTY2MDgwMDA+OworfTsKKworJnNvdW5k
-IHsKKwlhc3NpZ25lZC1jbG9ja3MgPSA8JmNsb2NrIENMS19NT1VUX0VQTEw+LAorCQkJPCZjbG9j
-ayBDTEtfTU9VVF9NQVVfRVBMTD4sCisJCQk8JmNsb2NrIENMS19NT1VUX1VTRVJfTUFVX0VQTEw+
-LAorCQkJPCZjbG9ja19hdWRzcyBFWFlOT1NfTU9VVF9BVURTUz4sCisJCQk8JmNsb2NrX2F1ZHNz
-IEVYWU5PU19NT1VUX0kyUz4sCisJCQk8JmNsb2NrX2F1ZHNzIEVYWU5PU19ET1VUX1NSUD4sCisJ
-CQk8JmNsb2NrX2F1ZHNzIEVYWU5PU19ET1VUX0FVRF9CVVM+LAorCQkJPCZjbG9ja19hdWRzcyBF
-WFlOT1NfRE9VVF9JMlM+OworCisJYXNzaWduZWQtY2xvY2stcGFyZW50cyA9IDwmY2xvY2sgQ0xL
-X0ZPVVRfRVBMTD4sCisJCQk8JmNsb2NrIENMS19NT1VUX0VQTEw+LAorCQkJPCZjbG9jayBDTEtf
-TU9VVF9NQVVfRVBMTD4sCisJCQk8JmNsb2NrIENMS19NQVVfRVBMTD4sCisJCQk8JmNsb2NrX2F1
-ZHNzIEVYWU5PU19NT1VUX0FVRFNTPjsKKworCWFzc2lnbmVkLWNsb2NrLXJhdGVzID0gPDA+LAor
-CQkJPDA+LAorCQkJPDA+LAorCQkJPDA+LAorCQkJPDA+LAorCQkJPDE5NjYwODAwMD4sCisJCQk8
-KDE5NjYwODAwMCAvIDIpPiwKKwkJCTwxOTY2MDgwMDA+OworfTsKKwogJmhzaTJjXzUgewogCXN0
-YXR1cyA9ICJva2F5IjsKIAltYXg5ODA5MDogbWF4OTgwOTBAMTAgewpAQCAtNTgsNCArODksNiBA
-QAogCiAmaTJzMCB7CiAJc3RhdHVzID0gIm9rYXkiOworCWFzc2lnbmVkLWNsb2NrcyA9IDwmaTJz
-MCBDTEtfSTJTX1JDTEtfU1JDPjsKKwlhc3NpZ25lZC1jbG9jay1wYXJlbnRzID0gPCZjbG9ja19h
-dWRzcyBFWFlOT1NfU0NMS19JMlM+OwogfTsKLS0gCjEuOS4xCgpfX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1k
-ZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcv
-bWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+On 04/21/2017 06:19 PM, Stefan Agner wrote:
+> On 2017-04-21 06:08, Marek Vasut wrote:
+>> On 04/21/2017 05:15 AM, Stefan Agner wrote:
+>>> On 2017-04-20 19:03, Marek Vasut wrote:
+>>>> On 04/21/2017 03:07 AM, Stefan Agner wrote:
+>>>>> Add support for i.MX 7 SoC. The i.MX 7 has a slightly different
+>>>>> clock architecture requiring only two clocks to be referenced.
+>>>>> The IP is slightly different compared to i.MX 6SoloX, but currently
+>>>>> none of this differences are in use so there is no detection needed
+>>>>> and the driver can reuse IS_MX6SX.
+>>>>>
+>>>>> Signed-off-by: Stefan Agner <stefan@agner.ch>
+>>>>> ---
+>>>>>  drivers/mtd/nand/gpmi-nand/gpmi-nand.c | 15 +++++++++++++++
+>>>>>  1 file changed, 15 insertions(+)
+>>>>>
+>>>>> diff --git a/drivers/mtd/nand/gpmi-nand/gpmi-nand.c b/drivers/mtd/nand/gpmi-nand/gpmi-nand.c
+>>>>> index c8bbf5da2ab8..4a45d37ddc80 100644
+>>>>> --- a/drivers/mtd/nand/gpmi-nand/gpmi-nand.c
+>>>>> +++ b/drivers/mtd/nand/gpmi-nand/gpmi-nand.c
+>>>>> @@ -127,6 +127,18 @@ static const struct gpmi_devdata gpmi_devdata_imx6sx = {
+>>>>>  	.clks_count = ARRAY_SIZE(gpmi_clks_for_mx6),
+>>>>>  };
+>>>>>
+>>>>> +static const char * const gpmi_clks_for_mx7d[] = {
+>>>>> +	"gpmi_io", "gpmi_bch_apb",
+>>>>> +};
+>>>>> +
+>>>>> +static const struct gpmi_devdata gpmi_devdata_imx7d = {
+>>>>> +	.type = IS_MX6SX,
+>>>>
+>>>> Would it make sense to use IS_MX7 here already to prevent future surprises ?
+>>>>
+>>>
+>>> Yeah I was thinking we can do it once we have an actual reason to
+>>> distinguish.
+>>
+>> So what are the differences anyway ?
+>>
+> 
+> I did not check the details, but Han's patchset (link in cover letter)
+> mentions:
+> "add the HW bitflip detection and correction for i.MX6QP and i.MX7D."...
+
+Oh, interesting.
+
+>>> But then, adding the type would only require 2-3 lines of change if I
+>>> add it to the GPMI_IS_MX6 macro...
+>>
+>> Then at least add a comment because using type = IMX6SX right under
+>> gpmi_data_mx7d can trigger some head-scratching. And put my R-B on V2.
+> 
+> FWIW, I mentioned it in the commit message.
+> 
+> I think rather then adding a comment it is cleaner to just add IS_IMX7D
+> and add it to the GPMI_IS_MX6 macro. That does not need a comment since
+> it implicitly says we have a i.MX 7 but treat it like i.MX 6 and it is a
+> rather small change. Does that sound acceptable?
+
+Sure, that's even better, thanks.
+
+btw isn't there some single-core mx7 (mx7s ?) , maybe we should just go
+with mx7 (without the d suffix). I dunno if it has GPMI NAND though, so
+maybe mx7d is the right thing to do here ...
+
+> --- a/drivers/mtd/nand/gpmi-nand/gpmi-nand.c
+> +++ b/drivers/mtd/nand/gpmi-nand/gpmi-nand.c
+> @@ -132,7 +132,7 @@ static const char * const gpmi_clks_for_mx7d[] = {
+>  };
+> 
+>  static const struct gpmi_devdata gpmi_devdata_imx7d = {
+> -       .type = IS_MX6SX,
+> +       .type = IS_MX7D,
+>         .bch_max_ecc_strength = 62,
+>         .max_chain_delay = 12,
+>         .clks = gpmi_clks_for_mx7d,
+> diff --git a/drivers/mtd/nand/gpmi-nand/gpmi-nand.h
+> b/drivers/mtd/nand/gpmi-nand/gpmi-nand.h
+> index 2e584e18d980..f2cc13abc896 100644
+> --- a/drivers/mtd/nand/gpmi-nand/gpmi-nand.h
+> +++ b/drivers/mtd/nand/gpmi-nand/gpmi-nand.h
+> @@ -123,7 +123,8 @@ enum gpmi_type {
+>         IS_MX23,
+>         IS_MX28,
+>         IS_MX6Q,
+> -       IS_MX6SX
+> +       IS_MX6SX,
+> +       IS_MX7D,
+>  };
+> 
+>  struct gpmi_devdata {
+> @@ -307,6 +308,8 @@ void gpmi_copy_bits(u8 *dst, size_t dst_bit_off,
+>  #define GPMI_IS_MX28(x)                ((x)->devdata->type == IS_MX28)
+>  #define GPMI_IS_MX6Q(x)                ((x)->devdata->type == IS_MX6Q)
+>  #define GPMI_IS_MX6SX(x)       ((x)->devdata->type == IS_MX6SX)
+> +#define GPMI_IS_MX7D(x)                ((x)->devdata->type == IS_MX7D)
+> 
+> -#define GPMI_IS_MX6(x)         (GPMI_IS_MX6Q(x) || GPMI_IS_MX6SX(x))
+> +#define GPMI_IS_MX6(x)         (GPMI_IS_MX6Q(x) || GPMI_IS_MX6SX(x) ||
+> \
+> +                                GPMI_IS_MX7D(x))
+>  #endif
+> 
+> --
+> Stefan
+> 
+
+
+-- 
+Best regards,
+Marek Vasut
