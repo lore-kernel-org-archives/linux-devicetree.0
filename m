@@ -1,51 +1,51 @@
-From: Bartlomiej Zolnierkiewicz <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 1/2 v3 resend] video: fbdev: imxfb: support AUS mode
-Date: Fri, 21 Apr 2017 11:33:13 +0200
-Message-ID: <7991281.N2SBFgRzh8@amdc3058>
-References: <1488193030-13064-1-git-send-email-martin@kaiser.cx>
-        <CGME20170421074622epcas3p1a7c713728386d1ac175bd8104867ffd0@epcas3p1.samsung.com>
-        <1492760753-8374-1-git-send-email-martin@kaiser.cx>
+From: Ludovic Desroches <ludovic.desroches-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
+Subject: Re: [PATCH v2 3/5] MAINTAINERS: add Atmel PTC entries
+Date: Fri, 21 Apr 2017 11:56:36 +0200
+Message-ID: <20170421095636.a4gkkdrug5ezo3yk@rfolt0960.corp.atmel.com>
+References: <20170421083924.15096-1-ludovic.desroches@microchip.com>
+ <20170421083924.15096-4-ludovic.desroches@microchip.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <1492760753-8374-1-git-send-email-martin-XxZfDwE/svGeZLLa646FqQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170421083924.15096-4-ludovic.desroches-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Martin Kaiser <martin-XxZfDwE/svGeZLLa646FqQ@public.gmane.org>
-Cc: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, nicolas.ferre-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ludovic Desroches <ludovic.desroches-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
-Hi,
-
-On Friday, April 21, 2017 09:45:52 AM Martin Kaiser wrote:
-> Some displays require setting AUS mode in the LDCD AUS Mode Control
-> Register to work with the imxfb driver. Like the value of the Panel
-> Configuration Register, the AUS mode setting depends on the display
-> mode.
+On Fri, Apr 21, 2017 at 10:39:22AM +0200, Ludovic Desroches wrote:
+> Add entries for the Atmel PTC Subsystem.
 > 
-> Allow setting AUS mode from the device tree by adding a boolean
-> property. Make this property optional to keep the DT ABI stable.
-> AUS mode can be set only on imx21 and compatible chipsets.
-> 
-> Signed-off-by: Martin Kaiser <martin-XxZfDwE/svGeZLLa646FqQ@public.gmane.org>
+> Signed-off-by: Ludovic Desroches <ludovic.desroches-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
 > ---
-> re-sending v3, rebased against current linux-next
-> it seems this got lost along the way, there was a bit of confusion
-> whether to split this in two patches or not
+>  MAINTAINERS | 7 +++++++
+>  1 file changed, 7 insertions(+)
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 860dacb..e1b8b0e 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -2323,6 +2323,13 @@ F:	Documentation/devicetree/bindings/input/atmel,maxtouch.txt
+>  F:	drivers/input/touchscreen/atmel_mxt_ts.c
+>  F:	include/linux/platform_data/atmel_mxt_ts.h
+>  
+> +ATMEL PTC SUBSYSTEM DRIVER
+> +M:	Ludovic Desroches <ludovic.desroches-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
+> +L:	linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> +S:	Supported
+> +F:	drivers/input/misc/atmel_ptc.c
+> +F:	include/uapi/linux/atmel_ptc.h
 
-It hadn't been lost, I've been waiting on v4, please see:
+I'll remove it in v3.
 
-https://lkml.org/lkml/2017/3/15/709
-
-[ Rob has requested rename of the property to "fsl,aus-mode". ]
-
-Best regards,
---
-Bartlomiej Zolnierkiewicz
-Samsung R&D Institute Poland
-Samsung Electronics
-
+> +
+>  ATTO EXPRESSSAS SAS/SATA RAID SCSI DRIVER
+>  M:	Bradley Grove <linuxdrivers-hoWRoavIt3ZWk0Htik3J/w@public.gmane.org>
+>  L:	linux-scsi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> -- 
+> 2.9.0
+> 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
