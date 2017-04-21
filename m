@@ -1,47 +1,78 @@
-From: Anders Darander <anders@chargestorm.se>
-Subject: [PATCH 2/2] gpio: DT bindings, move tca9554 from pcf857x to pca953x
-Date: Fri, 21 Apr 2017 14:46:31 +0200
-Message-ID: <20170421124631.19269-2-anders@chargestorm.se>
-References: <20170421124631.19269-1-anders@chargestorm.se>
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <20170421124631.19269-1-anders@chargestorm.se>
-Sender: linux-gpio-owner@vger.kernel.org
-To: linus.walleij@linaro.org, gnurou@gmail.com, robh+dt@kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, mark.rutland@arm.com
-Cc: Anders Darander <anders@chargestorm.se>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH/RFC 0/5] arm64: dts: renesas: Break out common board support
+Date: Fri, 21 Apr 2017 14:55:16 +0200
+Message-ID: <1492779321-23939-1-git-send-email-geert+renesas@glider.be>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-The TCA9554 is similar to the PCA9554. Update the DT binding docs.
+	Hi all,
 
-Signed-off-by: Anders Darander <anders@chargestorm.se>
----
- Documentation/devicetree/bindings/gpio/gpio-pca953x.txt | 1 +
- Documentation/devicetree/bindings/gpio/gpio-pcf857x.txt | 1 -
- 2 files changed, 1 insertion(+), 1 deletion(-)
+The Renesas Salvator-X and ULCB development board can be equipped with
+either an R-Car H3 or M3-W SiP, which are pin-compatible.  All boards
+use separate DTBs, but currently there's no sharing of board-specific
+devices in DTS.
 
-diff --git a/Documentation/devicetree/bindings/gpio/gpio-pca953x.txt b/Documentation/devicetree/bindings/gpio/gpio-pca953x.txt
-index e63935710011..7f57271df2bc 100644
---- a/Documentation/devicetree/bindings/gpio/gpio-pca953x.txt
-+++ b/Documentation/devicetree/bindings/gpio/gpio-pca953x.txt
-@@ -26,6 +26,7 @@ Required properties:
- 	ti,tca6416
- 	ti,tca6424
- 	ti,tca9539
-+	ti,tca9554
- 	onsemi,pca9654
- 	exar,xra1202
- 
-diff --git a/Documentation/devicetree/bindings/gpio/gpio-pcf857x.txt b/Documentation/devicetree/bindings/gpio/gpio-pcf857x.txt
-index ada4e2973323..7d3bd631d011 100644
---- a/Documentation/devicetree/bindings/gpio/gpio-pcf857x.txt
-+++ b/Documentation/devicetree/bindings/gpio/gpio-pcf857x.txt
-@@ -25,7 +25,6 @@ Required Properties:
-     - "nxp,pcf8574": For the NXP PCF8574
-     - "nxp,pcf8574a": For the NXP PCF8574A
-     - "nxp,pcf8575": For the NXP PCF8575
--    - "ti,tca9554": For the TI TCA9554
- 
-   - reg: I2C slave address.
- 
+This series reduces duplication by extracting common board support into
+their own .dtsi files.  As the level of support varies across boards and
+SoCs, this requires the addition of a few external clocks and
+placeholder devices on R-Car M3-W, so the common board support DTS can
+refer to them.
+
+  - Patches 1 and 2 add the external audio and PCIe bus clocks on R-Car
+    M3-W, which are present in r8a7795.dtsi, and used in
+    r8a7795-salvator-x.dts,
+  - RFC patch 3 adds placeholders for devices that are not yet supported
+    and/or tested on R-Car M3-W, but used on R-Car H3,
+  - RFC patch 4 extracts common Salvator-X board support,
+  - RFC patch 5 extracts common ULCB board support.
+
+For R-Car H3 based boards, there are no functional changes.
+For R-Car M3-W based boards, some new devices are now described in DT.
+
+Dependencies:
+  - renesas-devel-20170420-v4.11-rc7,
+  - Patches 1 and 2 can be applied as-is,
+  - Patches 4 and 5 depend on "[PATCH 0/8] arm64: dts: renesas: Break
+    out R-Car H3 and M3-W SiP"
+    (http://www.spinics.net/lists/devicetree/msg173820.html).
+
+DTB changes have been inspected using scripts/dtc/dtx_diff.
+This has been tested on Salvator-X (both H3 and M3-W).
+This has not been tested on H3ULCB and M3ULCB due to lack of hardware.
+
+Thanks for your comments!
+
+Geert Uytterhoeven (5):
+  arm64: renesas: r8a7796: Add external audio clocks
+  arm64: renesas: r8a7796: Add external PCIe bus clock
+  [RFC] arm64: dts: r8a7796: Add placeholders for various devices
+  [RFC] arm64: dts: renesas: Extract common Salvator-X board support
+  [RFC] arm64: dts: renesas: Extract common ULCB board support
+
+ arch/arm64/boot/dts/renesas/r8a7795-h3ulcb.dts     | 341 +-------------
+ arch/arm64/boot/dts/renesas/r8a7795-salvator-x.dts | 522 +--------------------
+ arch/arm64/boot/dts/renesas/r8a7796-m3ulcb.dts     | 201 +-------
+ arch/arm64/boot/dts/renesas/r8a7796-salvator-x.dts | 259 +---------
+ arch/arm64/boot/dts/renesas/r8a7796.dtsi           | 112 +++++
+ .../{r8a7795-salvator-x.dts => salvator-x.dtsi}    | 372 +++++++--------
+ .../dts/renesas/{r8a7795-h3ulcb.dts => ulcb.dtsi}  | 243 +++++-----
+ 7 files changed, 421 insertions(+), 1629 deletions(-)
+ copy arch/arm64/boot/dts/renesas/{r8a7795-salvator-x.dts => salvator-x.dtsi} (95%)
+ copy arch/arm64/boot/dts/renesas/{r8a7795-h3ulcb.dts => ulcb.dtsi} (96%)
+
 -- 
-2.11.0
+2.7.4
 
+Gr{oetje,eeting}s,
+
+						Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+							    -- Linus Torvalds
