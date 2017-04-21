@@ -1,51 +1,111 @@
-From: Ludovic Desroches <ludovic.desroches-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
-Subject: Re: [PATCH v2 3/5] MAINTAINERS: add Atmel PTC entries
-Date: Fri, 21 Apr 2017 11:56:36 +0200
-Message-ID: <20170421095636.a4gkkdrug5ezo3yk@rfolt0960.corp.atmel.com>
-References: <20170421083924.15096-1-ludovic.desroches@microchip.com>
- <20170421083924.15096-4-ludovic.desroches@microchip.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+From: Martin Kaiser <martin-XxZfDwE/svGeZLLa646FqQ@public.gmane.org>
+Subject: [PATCH 1/2 v4] video: fbdev: imxfb: support AUS mode
+Date: Fri, 21 Apr 2017 12:29:08 +0200
+Message-ID: <1492770549-7347-1-git-send-email-martin@kaiser.cx>
+References: <1488193030-13064-1-git-send-email-martin@kaiser.cx>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170421083924.15096-4-ludovic.desroches-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
+In-Reply-To: <1488193030-13064-1-git-send-email-martin-XxZfDwE/svGeZLLa646FqQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, nicolas.ferre-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ludovic Desroches <ludovic.desroches-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
+To: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Martin Kaiser <martin-XxZfDwE/svGeZLLa646FqQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 21, 2017 at 10:39:22AM +0200, Ludovic Desroches wrote:
-> Add entries for the Atmel PTC Subsystem.
-> 
-> Signed-off-by: Ludovic Desroches <ludovic.desroches-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
-> ---
->  MAINTAINERS | 7 +++++++
->  1 file changed, 7 insertions(+)
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 860dacb..e1b8b0e 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -2323,6 +2323,13 @@ F:	Documentation/devicetree/bindings/input/atmel,maxtouch.txt
->  F:	drivers/input/touchscreen/atmel_mxt_ts.c
->  F:	include/linux/platform_data/atmel_mxt_ts.h
->  
-> +ATMEL PTC SUBSYSTEM DRIVER
-> +M:	Ludovic Desroches <ludovic.desroches-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
-> +L:	linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> +S:	Supported
-> +F:	drivers/input/misc/atmel_ptc.c
-> +F:	include/uapi/linux/atmel_ptc.h
+Some displays require setting AUS mode in the LDCD AUS Mode Control
+Register to work with the imxfb driver. Like the value of the Panel
+Configuration Register, the AUS mode setting depends on the display
+mode.
 
-I'll remove it in v3.
+Allow setting AUS mode from the device tree by adding a boolean
+property. Make this property optional to keep the DT ABI stable.
+AUS mode can be set only on imx21 and compatible chipsets.
 
-> +
->  ATTO EXPRESSSAS SAS/SATA RAID SCSI DRIVER
->  M:	Bradley Grove <linuxdrivers-hoWRoavIt3ZWk0Htik3J/w@public.gmane.org>
->  L:	linux-scsi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> -- 
-> 2.9.0
-> 
+Signed-off-by: Martin Kaiser <martin-XxZfDwE/svGeZLLa646FqQ@public.gmane.org>
+---
+v4:
+   rename the DT property to fsl,aus-mode
+
+v3:
+   use a boolean DT property instead of the register value
+   separate patches for DT binding and code changes
+
+v2:
+   re-sending DT bindings and code changes as one patch
+
+ drivers/video/fbdev/imxfb.c               | 17 +++++++++++++++++
+ include/linux/platform_data/video-imxfb.h |  1 +
+ 2 files changed, 18 insertions(+)
+
+diff --git a/drivers/video/fbdev/imxfb.c b/drivers/video/fbdev/imxfb.c
+index 1b0faad..c166e07 100644
+--- a/drivers/video/fbdev/imxfb.c
++++ b/drivers/video/fbdev/imxfb.c
+@@ -117,6 +117,9 @@
+ 
+ #define IMXFB_LSCR1_DEFAULT 0x00120300
+ 
++#define LCDC_LAUSCR	0x80
++#define LAUSCR_AUS_MODE	(1<<31)
++
+ /* Used fb-mode. Can be set on kernel command line, therefore file-static. */
+ static const char *fb_mode;
+ 
+@@ -158,6 +161,7 @@ struct imxfb_info {
+ 	dma_addr_t		dbar2;
+ 
+ 	u_int			pcr;
++	u_int			lauscr;
+ 	u_int			pwmr;
+ 	u_int			lscr1;
+ 	u_int			dmacr;
+@@ -422,6 +426,11 @@ static int imxfb_check_var(struct fb_var_screeninfo *var, struct fb_info *info)
+ 	pcr |= imxfb_mode->pcr & ~(0x3f | (7 << 25));
+ 
+ 	fbi->pcr = pcr;
++	/*
++	 * The LCDC AUS Mode Control Register does not exist on imx1.
++	 */
++	if (!is_imx1_fb(fbi) && imxfb_mode->aus_mode)
++		fbi->lauscr = LAUSCR_AUS_MODE;
+ 
+ 	/*
+ 	 * Copy the RGB parameters for this display
+@@ -638,6 +647,9 @@ static int imxfb_activate_var(struct fb_var_screeninfo *var, struct fb_info *inf
+ 	if (fbi->dmacr)
+ 		writel(fbi->dmacr, fbi->regs + LCDC_DMACR);
+ 
++	if (fbi->lauscr)
++		writel(fbi->lauscr, fbi->regs + LCDC_LAUSCR);
++
+ 	return 0;
+ }
+ 
+@@ -734,6 +746,11 @@ static int imxfb_of_read_mode(struct device *dev, struct device_node *np,
+ 	imxfb_mode->bpp = bpp;
+ 	imxfb_mode->pcr = pcr;
+ 
++	/*
++	 * fsl,aus-mode is optional
++	 */
++	imxfb_mode->aus_mode = of_property_read_bool(np, "fsl,aus-mode");
++
+ 	return 0;
+ }
+ 
+diff --git a/include/linux/platform_data/video-imxfb.h b/include/linux/platform_data/video-imxfb.h
+index a5c0a71..cf9348b 100644
+--- a/include/linux/platform_data/video-imxfb.h
++++ b/include/linux/platform_data/video-imxfb.h
+@@ -50,6 +50,7 @@
+ struct imx_fb_videomode {
+ 	struct fb_videomode mode;
+ 	u32 pcr;
++	bool aus_mode;
+ 	unsigned char	bpp;
+ };
+ 
+-- 
+2.1.4
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
