@@ -1,78 +1,141 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: Applied "ASoC: Add Odroid sound DT bindings
- documentation" to the asoc tree
-Date: Fri, 21 Apr 2017 19:31:42 +0200
-Message-ID: <CAJKOXPebDt030tcdBGya4Wpm8HCvMqyM7qJzDvibmvnMttH-FA@mail.gmail.com>
-References: <1492795191-31298-6-git-send-email-s.nawrocki@samsung.com>
- <E1d1cLy-0001qc-PC@debutante>
+From: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+Subject: Re: [PATCH 2/5] mtd: nand: gpmi: add i.MX 7 SoC support
+Date: Fri, 21 Apr 2017 10:38:28 -0700
+Message-ID: <a9cdc47795433e7b152dcdd123f9bd63@agner.ch>
+References: <20170421010755.18025-1-stefan@agner.ch>
+ <20170421010755.18025-3-stefan@agner.ch>
+ <af3fe671-c5fb-d3cf-c891-e6b7c973baa1@gmail.com>
+ <5cf26d2b020392c875464c7504a9fb5b@agner.ch>
+ <8377dadc-043f-5932-cb13-3367db38a6dd@gmail.com>
+ <494a7bc044457240a302d92b3a50b8e5@agner.ch>
+ <57336d7e-7b48-8855-9e87-3eb370facd05@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <E1d1cLy-0001qc-PC@debutante>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Mark Brown <broonie@kernel.org>
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-samsung-soc@vger.kernel.org, jy0922.shim@samsung.com, =?UTF-8?B?QmFydMWCb21pZWogxbtvxYJuaWVya2lld2ljeg==?= <b.zolnierkie@samsung.com>, Seung Woo Kim <sw0312.kim@samsung.com>, dri-devel@lists.freedesktop.org, Inki Dae <inki.dae@samsung.com>, Javier Martinez Canillas <javier@osg.samsung.com>, robh+dt@kernel.org, Sylwester Nawrocki <s.nawrocki@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, linux-clk@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <57336d7e-7b48-8855-9e87-3eb370facd05-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, richard-/L3Ra7n9ekc@public.gmane.org, cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, han.xu-3arQi8VN3Tc@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, LW-AvR2QvxeiV7DiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 21, 2017 at 7:28 PM, Mark Brown <broonie@kernel.org> wrote:
-> The patch
->
->    ASoC: Add Odroid sound DT bindings documentation
->
-> has been applied to the asoc tree at
->
->    git://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git
->
-> All being well this means that it will be integrated into the linux-next
-> tree (usually sometime in the next 24 hours) and sent to Linus during
-> the next merge window (or sooner if it is a bug fix), however if
-> problems are discovered then the patch may be dropped or reverted.
->
-> You may get further e-mails resulting from automated or manual testing
-> and review of the tree, please engage with people reporting problems and
-> send followup patches addressing any issues that are reported if needed.
->
-> If any updates are required or you are submitting further changes they
-> should be sent as incremental updates against current git, existing
-> patches will not be replaced.
->
-> Please add any relevant lists and maintainers to the CCs when replying
-> to this mail.
->
-> Thanks,
-> Mark
->
-> From 92c9f05ebc7290e638c7b1b85288918c4fc65d4e Mon Sep 17 00:00:00 2001
-> From: Sylwester Nawrocki <s.nawrocki@samsung.com>
-> Date: Fri, 21 Apr 2017 19:19:49 +0200
-> Subject: [PATCH] ASoC: Add Odroid sound DT bindings documentation
->
-> This patch adds DT binding documentation for Odroid XU3/4
-> sound subsystem.
->
-> Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
-> Signed-off-by: Mark Brown <broonie@kernel.org>
-> ---
->  .../devicetree/bindings/sound/samsung,odroid.txt   | 57 ++++++++++++++++++++++
->  1 file changed, 57 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/sound/samsung,odroid.txt
+On 2017-04-21 10:22, Marek Vasut wrote:
+> On 04/21/2017 06:19 PM, Stefan Agner wrote:
+>> On 2017-04-21 06:08, Marek Vasut wrote:
+>>> On 04/21/2017 05:15 AM, Stefan Agner wrote:
+>>>> On 2017-04-20 19:03, Marek Vasut wrote:
+>>>>> On 04/21/2017 03:07 AM, Stefan Agner wrote:
+>>>>>> Add support for i.MX 7 SoC. The i.MX 7 has a slightly different
+>>>>>> clock architecture requiring only two clocks to be referenced.
+>>>>>> The IP is slightly different compared to i.MX 6SoloX, but currently
+>>>>>> none of this differences are in use so there is no detection needed
+>>>>>> and the driver can reuse IS_MX6SX.
+>>>>>>
+>>>>>> Signed-off-by: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+>>>>>> ---
+>>>>>>  drivers/mtd/nand/gpmi-nand/gpmi-nand.c | 15 +++++++++++++++
+>>>>>>  1 file changed, 15 insertions(+)
+>>>>>>
+>>>>>> diff --git a/drivers/mtd/nand/gpmi-nand/gpmi-nand.c b/drivers/mtd/nand/gpmi-nand/gpmi-nand.c
+>>>>>> index c8bbf5da2ab8..4a45d37ddc80 100644
+>>>>>> --- a/drivers/mtd/nand/gpmi-nand/gpmi-nand.c
+>>>>>> +++ b/drivers/mtd/nand/gpmi-nand/gpmi-nand.c
+>>>>>> @@ -127,6 +127,18 @@ static const struct gpmi_devdata gpmi_devdata_imx6sx = {
+>>>>>>  	.clks_count = ARRAY_SIZE(gpmi_clks_for_mx6),
+>>>>>>  };
+>>>>>>
+>>>>>> +static const char * const gpmi_clks_for_mx7d[] = {
+>>>>>> +	"gpmi_io", "gpmi_bch_apb",
+>>>>>> +};
+>>>>>> +
+>>>>>> +static const struct gpmi_devdata gpmi_devdata_imx7d = {
+>>>>>> +	.type = IS_MX6SX,
+>>>>>
+>>>>> Would it make sense to use IS_MX7 here already to prevent future surprises ?
+>>>>>
+>>>>
+>>>> Yeah I was thinking we can do it once we have an actual reason to
+>>>> distinguish.
+>>>
+>>> So what are the differences anyway ?
+>>>
+>>
+>> I did not check the details, but Han's patchset (link in cover letter)
+>> mentions:
+>> "add the HW bitflip detection and correction for i.MX6QP and i.MX7D."...
+> 
+> Oh, interesting.
+> 
+>>>> But then, adding the type would only require 2-3 lines of change if I
+>>>> add it to the GPMI_IS_MX6 macro...
+>>>
+>>> Then at least add a comment because using type = IMX6SX right under
+>>> gpmi_data_mx7d can trigger some head-scratching. And put my R-B on V2.
+>>
+>> FWIW, I mentioned it in the commit message.
+>>
+>> I think rather then adding a comment it is cleaner to just add IS_IMX7D
+>> and add it to the GPMI_IS_MX6 macro. That does not need a comment since
+>> it implicitly says we have a i.MX 7 but treat it like i.MX 6 and it is a
+>> rather small change. Does that sound acceptable?
+> 
+> Sure, that's even better, thanks.
+> 
+> btw isn't there some single-core mx7 (mx7s ?) , maybe we should just go
+> with mx7 (without the d suffix). I dunno if it has GPMI NAND though, so
+> maybe mx7d is the right thing to do here ...
+> 
 
+There is a Solo version yes, and it has GPMI NAND too. However, almost
+all i.MX 7 IPs have been named imx7d by NXP for some reason (including
+compatible strings, see grep -r -e imx7 Documentation/), so I thought I
+stay consistent here...
 
-Hi Mark,
+--
+Stefan
 
-Although Sylwester is known of writing good quality code and can be
-trusted but he posted it just 9 minutes ago. Isn't it a little bit too
-fast to apply? I just finished reading cover letter but didn't manage
-to start looking at the rest. :)
-
-Best regards,
-Krzysztof
+>> --- a/drivers/mtd/nand/gpmi-nand/gpmi-nand.c
+>> +++ b/drivers/mtd/nand/gpmi-nand/gpmi-nand.c
+>> @@ -132,7 +132,7 @@ static const char * const gpmi_clks_for_mx7d[] = {
+>>  };
+>>
+>>  static const struct gpmi_devdata gpmi_devdata_imx7d = {
+>> -       .type = IS_MX6SX,
+>> +       .type = IS_MX7D,
+>>         .bch_max_ecc_strength = 62,
+>>         .max_chain_delay = 12,
+>>         .clks = gpmi_clks_for_mx7d,
+>> diff --git a/drivers/mtd/nand/gpmi-nand/gpmi-nand.h
+>> b/drivers/mtd/nand/gpmi-nand/gpmi-nand.h
+>> index 2e584e18d980..f2cc13abc896 100644
+>> --- a/drivers/mtd/nand/gpmi-nand/gpmi-nand.h
+>> +++ b/drivers/mtd/nand/gpmi-nand/gpmi-nand.h
+>> @@ -123,7 +123,8 @@ enum gpmi_type {
+>>         IS_MX23,
+>>         IS_MX28,
+>>         IS_MX6Q,
+>> -       IS_MX6SX
+>> +       IS_MX6SX,
+>> +       IS_MX7D,
+>>  };
+>>
+>>  struct gpmi_devdata {
+>> @@ -307,6 +308,8 @@ void gpmi_copy_bits(u8 *dst, size_t dst_bit_off,
+>>  #define GPMI_IS_MX28(x)                ((x)->devdata->type == IS_MX28)
+>>  #define GPMI_IS_MX6Q(x)                ((x)->devdata->type == IS_MX6Q)
+>>  #define GPMI_IS_MX6SX(x)       ((x)->devdata->type == IS_MX6SX)
+>> +#define GPMI_IS_MX7D(x)                ((x)->devdata->type == IS_MX7D)
+>>
+>> -#define GPMI_IS_MX6(x)         (GPMI_IS_MX6Q(x) || GPMI_IS_MX6SX(x))
+>> +#define GPMI_IS_MX6(x)         (GPMI_IS_MX6Q(x) || GPMI_IS_MX6SX(x) ||
+>> \
+>> +                                GPMI_IS_MX7D(x))
+>>  #endif
+>>
+>> --
+>> Stefan
+>>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
