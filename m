@@ -1,68 +1,55 @@
-From: Giuseppe CAVALLARO <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>
-Subject: Re: [PATCH net-next v3] bindings: net: stmmac: add missing note about
- LPI interrupt
-Date: Fri, 21 Apr 2017 07:26:39 +0200
-Message-ID: <8d41bee9-9564-ef47-ba58-7becb97ab672@st.com>
-References: <20170418123955.21335-1-niklass@axis.com>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [PATCH V5 3/7] ARM: exynos: Use - instead of @ for DT OPP entries
+Date: Fri, 21 Apr 2017 10:57:05 +0530
+Message-ID: <20170421052705.GA26900@vireshk-i7>
+References: <cover.1492685450.git.viresh.kumar@linaro.org>
+ <8fd1dcd1bfa2011411dceab82bcd1587fe913cd1.1492685450.git.viresh.kumar@linaro.org>
+ <20170420160930.halyszjunt4q2634@kozik-lap>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170418123955.21335-1-niklass-VrBV9hrLPhE@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Niklas Cassel <niklas.cassel-VrBV9hrLPhE@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Joao Pinto <Joao.Pinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Niklas Cassel <niklass-VrBV9hrLPhE@public.gmane.org>, Alexandre TORGUE <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Eric Engestrom <eric-op+oiCINJLTt9jDmeYuA0g@public.gmane.org>
-Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170420160930.halyszjunt4q2634@kozik-lap>
+Sender: linux-pm-owner@vger.kernel.org
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: arm@kernel.org, Chanwoo Choi <cw00.choi@samsung.com>, MyungJoo Ham <myungjoo.ham@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Kukjin Kim <kgene@kernel.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linaro-kernel@lists.linaro.org, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org, Rafael Wysocki <rjw@rjwysocki.net>, Masahiro Yamada <yamada.masahiro@socionext.com>, Rob Herring <robh@kernel.org>, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 4/18/2017 2:39 PM, Niklas Cassel wrote:
-> From: Niklas Cassel <niklas.cassel-VrBV9hrLPhE@public.gmane.org>
->
-> The hardware has a LPI interrupt.
-> There is already code in the stmmac driver to parse and handle the
-> interrupt. However, this information was missing from the DT binding.
->
-> At the same time, improve the description of the existing interrupts.
->
-> Signed-off-by: Niklas Cassel <niklas.cassel-VrBV9hrLPhE@public.gmane.org>
-> ---
->   Documentation/devicetree/bindings/net/stmmac.txt | 13 ++++++++-----
->   1 file changed, 8 insertions(+), 5 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/net/stmmac.txt b/Documentation/devicetree/bindings/net/stmmac.txt
-> index f652b0c384ce..c3a7be6615c5 100644
-> --- a/Documentation/devicetree/bindings/net/stmmac.txt
-> +++ b/Documentation/devicetree/bindings/net/stmmac.txt
-> @@ -7,9 +7,12 @@ Required properties:
->   - interrupt-parent: Should be the phandle for the interrupt controller
->     that services interrupts for this device
->   - interrupts: Should contain the STMMAC interrupts
-> -- interrupt-names: Should contain the interrupt names "macirq"
-> -  "eth_wake_irq" if this interrupt is supported in the "interrupts"
-> -  property
-> +- interrupt-names: Should contain a list of interrupt names corresponding to
-> +	the interrupts in the interrupts property, if available.
-> +	Valid interrupt names are:
-> +  - "macirq" (combined signal for various interrupt events)
-> +  - "eth_wake_irq" (the interrupt to manage the remote wake-up packet detection)
-> +  - "eth_lpi" (the interrupt that occurs when Tx or Rx enters/exits LPI state)
->   - phy-mode: See ethernet.txt file in the same directory.
->   - snps,reset-gpio 	gpio number for phy reset.
->   - snps,reset-active-low boolean flag to indicate if phy reset is active low.
-> @@ -152,8 +155,8 @@ Examples:
->   		compatible = "st,spear600-gmac";
->   		reg = <0xe0800000 0x8000>;
->   		interrupt-parent = <&vic1>;
-> -		interrupts = <24 23>;
-> -		interrupt-names = "macirq", "eth_wake_irq";
-> +		interrupts = <24 23 22>;
-> +		interrupt-names = "macirq", "eth_wake_irq", "eth_lpi";
->   		mac-address = [000000000000]; /* Filled in by U-Boot */
->   		max-frame-size = <3800>;
->   		phy-mode = "gmii";
+On 20-04-17, 18:09, Krzysztof Kozlowski wrote:
+> On Thu, Apr 20, 2017 at 04:25:07PM +0530, Viresh Kumar wrote:
+> > Compiling the DT file with W=1, DTC warns like follows:
+> > 
+> > Warning (unit_address_vs_reg): Node /opp_table0/opp@1000000000 has a
+> > unit name, but no reg property
+> > 
+> > Fix this by replacing '@' with '-' as the OPP nodes will never have a
+> > "reg" property.
+> > 
+> > Reported-by: Krzysztof Kozlowski <krzk@kernel.org>
+> > Reported-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> > Suggested-by: Mark Rutland <mark.rutland@arm.com>
+> > Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+> > Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
+> > Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
+> > Acked-by: Rob Herring <robh@kernel.org>
+> > ---
+> >  .../devicetree/bindings/devfreq/exynos-bus.txt     | 46 +++++++--------
+> >  arch/arm/boot/dts/exynos3250.dtsi                  | 46 +++++++--------
+> >  arch/arm/boot/dts/exynos4210.dtsi                  | 32 +++++------
+> >  arch/arm/boot/dts/exynos4412-prime.dtsi            |  4 +-
+> >  arch/arm/boot/dts/exynos4412.dtsi                  | 66 +++++++++++-----------
+> >  arch/arm/boot/dts/exynos5420.dtsi                  | 40 ++++++-------
+> >  arch/arm/boot/dts/exynos5800.dtsi                  | 56 +++++++++---------
+> >  arch/arm64/boot/dts/exynos/exynos5433-bus.dtsi     | 48 ++++++++--------
+> >  arch/arm64/boot/dts/exynos/exynos5433.dtsi         | 50 ++++++++--------
+> >  9 files changed, 194 insertions(+), 194 deletions(-)
+> 
+> 
+> Thanks, split ARM64 from ARM and applied (for v4.12). arm-soc keeps DTS
+> separated between ARM architectures. Technically this should require a
+> resend but we had way too many resends for this simple patch.
 
-Acked-by: Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>
+Bah! Will make sure to send separate patches from now on. Thanks.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+viresh
