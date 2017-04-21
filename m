@@ -1,38 +1,54 @@
-From: Colin King <colin.king@canonical.com>
-Subject: [PATCH] ARM: at91/at91-pinctrl documentation: fix spelling mistake: "contoller" -> "controller"
-Date: Fri, 21 Apr 2017 13:07:13 +0100
-Message-ID: <20170421120713.4939-1-colin.king@canonical.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org
-Cc: kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Martin Kaiser <martin-XxZfDwE/svGeZLLa646FqQ@public.gmane.org>
+Subject: [PATCH 2/2 v4] dt-bindings: display: imx: entry for AUS mode
+Date: Fri, 21 Apr 2017 14:29:50 +0200
+Message-ID: <1492777790-12748-1-git-send-email-martin@kaiser.cx>
+References: <1492770549-7347-1-git-send-email-martin@kaiser.cx>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1492770549-7347-1-git-send-email-martin-XxZfDwE/svGeZLLa646FqQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Martin Kaiser <martin-XxZfDwE/svGeZLLa646FqQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+Allow setting AUS mode for a display from the device tree. Use an
+optional boolean property. AUS mode can be set only on imx21 and
+compatible chipsets.
 
-trivial fix to spelling mistake in documentation
-
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Signed-off-by: Martin Kaiser <martin-XxZfDwE/svGeZLLa646FqQ@public.gmane.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 ---
- Documentation/devicetree/bindings/pinctrl/atmel,at91-pinctrl.txt | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+sending this again, I missed the v4 in the Subject line
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/atmel,at91-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/atmel,at91-pinctrl.txt
-index 9a8a45d9d8ab..590e60378be3 100644
---- a/Documentation/devicetree/bindings/pinctrl/atmel,at91-pinctrl.txt
-+++ b/Documentation/devicetree/bindings/pinctrl/atmel,at91-pinctrl.txt
-@@ -4,7 +4,7 @@ The AT91 Pinmux Controller, enables the IC
- to share one PAD to several functional blocks. The sharing is done by
- multiplexing the PAD input/output signals. For each PAD there are up to
- 8 muxing options (called periph modes). Since different modules require
--different PAD settings (like pull up, keeper, etc) the contoller controls
-+different PAD settings (like pull up, keeper, etc) the controller controls
- also the PAD settings parameters.
+v4:
+   rename the DT property to fsl,aus-mode
+
+v3:
+   use a boolean DT property instead of the register value
+   separate patches for DT binding and code changes
+
+v2:
+   re-sending DT bindings and code changes as one patch
+
+ Documentation/devicetree/bindings/display/imx/fsl,imx-fb.txt | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/display/imx/fsl,imx-fb.txt b/Documentation/devicetree/bindings/display/imx/fsl,imx-fb.txt
+index 7a5c0e2..e5a8b36 100644
+--- a/Documentation/devicetree/bindings/display/imx/fsl,imx-fb.txt
++++ b/Documentation/devicetree/bindings/display/imx/fsl,imx-fb.txt
+@@ -13,6 +13,8 @@ Required nodes:
+ 	Additional, the display node has to define properties:
+ 	- bits-per-pixel: Bits per pixel
+ 	- fsl,pcr: LCDC PCR value
++	A display node may optionally define
++	- fsl,aus-mode: boolean to enable AUS mode (only for imx21)
  
- Please refer to pinctrl-bindings.txt in this directory for details of the
+ Optional properties:
+ - lcd-supply: Regulator for LCD supply voltage.
 -- 
-2.11.0
+2.1.4
 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
