@@ -1,202 +1,1112 @@
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH v2 2/2] dmaengine: Add DW AXI DMAC driver
-Date: Fri, 21 Apr 2017 18:13:03 +0300
-Message-ID: <1492787583.24567.120.camel@linux.intel.com>
-References: <1491573855-1039-1-git-send-email-Eugeniy.Paltsev@synopsys.com>
- <1491573855-1039-3-git-send-email-Eugeniy.Paltsev@synopsys.com>
- <1492518695.24567.56.camel@linux.intel.com>
- <1492784977.16657.6.camel@synopsys.com>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: [PATCH 13/15] drm/sun4i: Add HDMI support
+Date: Fri, 21 Apr 2017 23:17:17 +0800
+Message-ID: <CAGb2v66n6AXbOAh05V_Gv2UgRp=xEMG9qhJU8JSuy4-F-UOQQQ@mail.gmail.com>
+References: <cover.bc06ffa88f847ddd9ddd7c259415d5f61b55307b.1488876832.git-series.maxime.ripard@free-electrons.com>
+ <c63d01aedeccc58bf8d6f5bfd66d8595156e9491.1488876832.git-series.maxime.ripard@free-electrons.com>
+Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-snps-arc-bounces+gla-linux-snps-arc=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1492784977.16657.6.camel@synopsys.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-snps-arc>,
- <mailto:linux-snps-arc-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-snps-arc/>
-List-Post: <mailto:linux-snps-arc@lists.infradead.org>
-List-Help: <mailto:linux-snps-arc-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-snps-arc>,
- <mailto:linux-snps-arc-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-snps-arc" <linux-snps-arc-bounces@lists.infradead.org>
-Errors-To: linux-snps-arc-bounces+gla-linux-snps-arc=m.gmane.org@lists.infradead.org
-To: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "vinod.koul@intel.com" <vinod.koul@intel.com>, "Alexey.Brodkin@synopsys.com" <Alexey.Brodkin@synopsys.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, "dan.j.williams@intel.com" <dan.j.williams@intel.com>, "linux-snps-arc@lists.infradead.org" <linux-snps-arc@lists.infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBF6F5DDQKGQEHSW6OCI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <c63d01aedeccc58bf8d6f5bfd66d8595156e9491.1488876832.git-series.maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Daniel Vetter <daniel.vetter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCAyMDE3LTA0LTIxIGF0IDE0OjI5ICswMDAwLCBFdWdlbml5IFBhbHRzZXYgd3JvdGU6
-Cj4gT24gVHVlLCAyMDE3LTA0LTE4IGF0IDE1OjMxICswMzAwLCBBbmR5IFNoZXZjaGVua28gd3Jv
-dGU6Cj4gPiBPbiBGcmksIDIwMTctMDQtMDcgYXQgMTc6MDQgKzAzMDAsIEV1Z2VuaXkgUGFsdHNl
-diB3cm90ZToKPiA+ID4gVGhpcyBwYXRjaCBhZGRzIHN1cHBvcnQgZm9yIHRoZSBEVyBBWEkgRE1B
-QyBjb250cm9sbGVyLgo+ID4gPiAKCj4gPiA+ICsjaW5jbHVkZSA8bGludXgvb2YuaD4KPiA+IAo+
-ID4gQXJlIHlvdSBzdXJlIHlvdSBzdGlsbCBuZWVkIG9mLmggYWxvbmcgd2l0aCBkZXBlbmRzIE9G
-ID8KPiAKPiAib2ZfbWF0Y2hfcHRyIiB1c2VkIGZyb20gb2YuaAoKSXQgc2FmZSBub3QgdG8gdXNl
-IGl0IGFuZCBhbHdheXMgaGF2ZSBhIHRhYmxlLiBJbiB0aGlzIGNhc2UgdGhlIGRyaXZlcgpldmVu
-IHdvdWxkIGJlIGF2YWlsYWJsZSBmb3IgQUNQSS1lbmFibGVkIHBsYXRmb3JtcyAoSSBzdXBwb3Nl
-IHNvbWUgQVJNNjQKbWlnaHQgZmluZCB0aGlzIHVzZWZ1bCkuCgo+ID4gPiArI2RlZmluZSBBWElf
-RE1BX0JVU1dJRFRIUwkJwqDCoFwKPiA+ID4gKwkoRE1BX1NMQVZFX0JVU1dJRFRIXzFfQllURQl8
-IFwKPiA+ID4gKwlETUFfU0xBVkVfQlVTV0lEVEhfMl9CWVRFUwl8IFwKPiA+ID4gKwlETUFfU0xB
-VkVfQlVTV0lEVEhfNF9CWVRFUwl8IFwKPiA+ID4gKwlETUFfU0xBVkVfQlVTV0lEVEhfOF9CWVRF
-Uwl8IFwKPiA+ID4gKwlETUFfU0xBVkVfQlVTV0lEVEhfMTZfQllURVMJfCBcCj4gPiA+ICsJRE1B
-X1NMQVZFX0JVU1dJRFRIXzMyX0JZVEVTCXwgXAo+ID4gPiArCURNQV9TTEFWRV9CVVNXSURUSF82
-NF9CWVRFUykKPiA+ID4gKy8qIFRPRE86IGNoZWNrOiBkbyB3ZSBuZWVkIHRvIHVzZSBCSVQoKSBt
-YWNybyBoZXJlPyAqLwo+ID4gCj4gPiBTdGlsbCBUT0RPPyBJIHJlbWVtYmVyIEkgYW5zd2VyZWQg
-dG8gdGhpcyBvbiB0aGUgZmlyc3Qgcm91bmQuCj4gCj4gWWVzLCBJIHJlbWVtYmVyIGl0Lgo+IEkg
-bGVmdCB0aGlzIFRPRE8gYXMgYSByZW1pbmRlciBiZWNhdXNlIHNyY19hZGRyX3dpZHRocyBhbmQK
-PiBkc3RfYWRkcl93aWR0aHMgYXJlCj4gbm90IHVzZWQgYW55d2hlcmUgYW5kIHRoZXkgYXJlIHNl
-dCBkaWZmZXJlbnRseSBpbiBkaWZmZXJlbnQgZHJpdmVycwo+ICh3aXRoIG9yIHdpdGhvdXQgQklU
-IG1hY3JvKS4KClN0cmFuZ2UuIEFGQUlLIHRoZXkgYXJlIHJlcHJlc2VudGluZyBiaXRzICh3aGlj
-aCBpcyBub3QgdGhlIGJlc3QgaWRlYSkKaW4gdGhlIHJlc3VsdGluZyB1NjQgZmllbGQuIFNvLCBh
-bnl0aGluZyBiaWdnZXIgdGhhbiA2MyBkb2Vzbid0IG1ha2UKc2Vuc2UuIEluIGRyaXZlcnMgd2hl
-cmUgdGhleSBhcmUgbm90IGJpdHMgcXVpdGUgbGlrZWx5IGEgYnVnIGlzIGhpZGRlbi4KCj4gCj4g
-PiA+ICsKPiA+ID4gK3N0YXRpYyBpbmxpbmUgdm9pZAo+ID4gPiArYXhpX2RtYV9pb3dyaXRlMzIo
-c3RydWN0IGF4aV9kbWFfY2hpcCAqY2hpcCwgdTMyIHJlZywgdTMyIHZhbCkKPiA+ID4gK3sKPiA+
-ID4gKwlpb3dyaXRlMzIodmFsLCBjaGlwLT5yZWdzICsgcmVnKTsKPiA+IAo+ID4gQXJlIHlvdSBn
-b2luZyB0byB1c2UgSU8gcG9ydHMgZm9yIHRoaXMgSVA/IEkgZG9uJ3QgdGhpbmsgc28uCj4gPiBX
-b3VsZG4ndCBiZSBiZXR0ZXIgdG8gY2FsbCByZWFkbCgpL3dyaXRlbCgpIGluc3RlYWQ/Cj4gCj4g
-QXMgSSB1bmRlcnN0YW5kLCBpdCdzIGJldHRlciB0byB1c2UgaW9yZWFkL2lvd3JpdGUgYXMgbW9y
-ZSB1bml2ZXJzYWwKPiBJTwo+IGFjY2VzcyB3YXkuIEFtIEkgd3Jvbmc/CgpBcyBJIHNhaWQgYWJv
-dmUgdGhlIGlvcmVhZFgvaW93cml0ZVggbWFrZXMgb25seSBzZW5zZSB3aGVuIHlvdXIgSVAgd291
-bGQKYmUgYWNjZXNzZWQgdmlhIElPIHJlZ2lvbiBvciBNTUlPLiBJJ20gcHJldHR5IHN1cmUgSU8g
-aXMgbm90IHRoZSBjYXNlIGF0CmFsbCBmb3IgdGhpcyBJUC4KCj4gPiA+ICtzdGF0aWMgaW5saW5l
-IHZvaWQgYXhpX2NoYW5faXJxX2Rpc2FibGUoc3RydWN0IGF4aV9kbWFfY2hhbgo+ID4gPiAqY2hh
-biwKPiA+ID4gdTMyIGlycV9tYXNrKQo+ID4gPiArewo+ID4gPiArCXUzMiB2YWw7Cj4gPiA+ICsK
-PiA+ID4gKwlpZiAobGlrZWx5KGlycV9tYXNrID09IERXQVhJRE1BQ19JUlFfQUxMKSkgewo+ID4g
-PiArCQlheGlfY2hhbl9pb3dyaXRlMzIoY2hhbiwgQ0hfSU5UU1RBVFVTX0VOQSwKPiA+ID4gRFdB
-WElETUFDX0lSUV9OT05FKTsKPiA+ID4gKwl9IGVsc2Ugewo+ID4gCj4gPiBJIGRvbid0IHNlZSB0
-aGUgYmVuZWZpdC4gKFllcywgSSBzZWUgb25lIHJlYWQtbGVzcyBwYXRoLCBJIHRoaW5rIGl0Cj4g
-PiBtYWtlcyBwZXJwbGV4aXR5IGZvciBub3RoaW5nIGhlcmUpCj4gCj4gVGhpcyBmdW5jdGlvbiBp
-cyBjYWxsZWQgbW9zdGx5IHdpdGggaXJxX21hc2sgPSBEV0FYSURNQUNfSVJRX0FMTC4KPiBBY3R1
-YWxseSBpdCBpcyBjYWxsZWQgb25seSB3aXRoIGlycV9tYXNrID0gRFdBWElETUFDX0lSUV9BTEwg
-dW50aWwgSQo+IGFkZCBETUFfU0xBVkUgc3VwcG9ydC4KPiBCdXQgSSBjYW4gY3V0IG9mZiB0aGlz
-ICdpZicgc3RhdG1lbnQsIGlmIGl0IGlzIG5lY2Vzc2VyeS4KCkl0J3Mgbm90IG5lY2Vzc2FyeSwg
-YnV0IGZyb20gbXkgcG9pbnQgb2YgdmlldyBpbmNyZWFzZXMgcmVhZGFiaWxpdHkgb2YKdGhlIGNv
-ZGUgYSBsb3QgZm9yIHRoZSBwcmljZSBvZiBhbiBhZGRpdGlvbmFsIHJlYWRsKCkuCgo+IAo+ID4g
-PiArCQl2YWwgPSBheGlfY2hhbl9pb3JlYWQzMihjaGFuLCBDSF9JTlRTVEFUVVNfRU5BKTsKPiA+
-ID4gKwkJdmFsICY9IH5pcnFfbWFzazsKPiA+ID4gKwkJYXhpX2NoYW5faW93cml0ZTMyKGNoYW4s
-IENIX0lOVFNUQVRVU19FTkEsIHZhbCk7Cj4gPiA+ICsJfQoKPiA+ID4gKwo+ID4gPiArCXJldHVy
-biBtaW5fdChzaXplX3QsIF9fZmZzKHNkbCksIG1heF93aWR0aCk7Cj4gPiA+ICt9Cj4gPiA+ICtz
-dGF0aWMgdm9pZCBheGlfZGVzY19wdXQoc3RydWN0IGF4aV9kbWFfZGVzYyAqZGVzYykKPiA+ID4g
-K3sKPiA+ID4gKwlzdHJ1Y3QgYXhpX2RtYV9jaGFuICpjaGFuID0gZGVzYy0+Y2hhbjsKPiA+ID4g
-KwlzdHJ1Y3QgZHdfYXhpX2RtYSAqZHcgPSBjaGFuLT5jaGlwLT5kdzsKPiA+ID4gKwlzdHJ1Y3Qg
-YXhpX2RtYV9kZXNjICpjaGlsZCwgKl9uZXh0Owo+ID4gPiArCXVuc2lnbmVkIGludCBkZXNjc19w
-dXQgPSAwOwo+ID4gPiArCWxpc3RfZm9yX2VhY2hfZW50cnlfc2FmZShjaGlsZCwgX25leHQsICZk
-ZXNjLT54ZmVyX2xpc3QsCj4gPiA+IHhmZXJfbGlzdCkgewo+ID4gCj4gPiB4ZmVyX2xpc3QgbG9v
-a3MgcmVkdW5kYW50Lgo+ID4gQ2FuIHlvdSBlbGFib3JhdGUgd2h5IHZpcnR1YWwgY2hhbm5lbCBt
-YW5hZ2VtZW50IGlzIG5vdCB3b3JraW5nIGZvcgo+ID4geW91Pwo+IAo+IEVhY2ggdmlydHVhbCBk
-ZXNjcmlwdG9yIGVuY2Fwc3VsYXRlcyBzZXZlcmFsIGhhcmR3YXJlIGRlc2NyaXB0b3JzLAo+IHdo
-aWNoIGJlbG9uZyB0byBzYW1lIHRyYW5zZmVyLgo+IFRoaXMgbGlzdCAoeGZlcl9saXN0KSBpcyB1
-c2VkIG9ubHkgZm9yIGFsbG9jYXRpbmcvZnJlZWluZyB0aGVzZQo+IGRlc2NyaXB0b3JzIGFuZCBp
-dCBkb2Vzbid0IGFmZmVjdCBvbiB2aXJ0dWFsIGRtYSB3b3JrIGxvZ2ljLgo+IEkgY2FuIHNlZSB0
-aGlzIGFwcHJvYWNoIGluIHNldmVyYWwgZHJpdmVycyB3aXRoIFZpcnRETUEgKGJ1dCB0aGV5Cj4g
-bW9zdGx5IHVzZSBhcnJheSBpbnN0ZWFkIG9mIGxpc3QpCgpZb3UgZGVzY3JpYmVkIGhvdyBtb3N0
-IG9mIHRoZSBETUEgZHJpdmVycyBhcmUgaW1wbGVtZW50ZWQsIHRob3VnaCB0aGV5CmFyZSB1c2lu
-ZyBqdXN0IHNnX2xpc3QgZGlyZWN0bHkuIEkgd291bGQgcmVjb21tZW5kIHRvIGRvIHRoZSBzYW1l
-IGFuZApnZXQgcmlkIG9mIHRoaXMgbGlzdC4KCj4gPiBCdHcsIGFyZSB5b3UgcGxhbm5pbmcgdG8g
-dXNlIHByaW9yaXR5IGF0IGFsbD8gRm9yIG5vdyBvbiBJIGRpZG4ndAo+ID4gc2VlCj4gPiBhIHNp
-bmdsZSBkcml2ZXIgKGZyb20gdGhlIHNldCBJIGhhdmUgY2hlY2tlZCwgbGlrZSA0LTUgb2YgdGhl
-bSkgdGhhdAo+ID4gdXNlcyBwcmlvcml0eSBhbnlob3cuIEl0IG1ha2VzIGRyaXZlciBtb3JlIGNv
-bXBsZXggZm9yIG5vdGhpbmcuCj4gCj4gT25seSBmb3IgZG1hIHNsYXZlIG9wZXJhdGlvbnMuCgpT
-bywgaW4gb3RoZXIgd29yZHMgeW91ICpoYXZlKiBhbiBhY3R1YWwgdHdvIG9yIG1vcmUgdXNlcnMg
-dGhhdCAqbmVlZCoKcHJpb3JpdGl6YXRpb24/Cgo+ID4gPiArCWlmICh1bmxpa2VseShkc3RfbmVu
-dHMgPT0gMCB8fCBzcmNfbmVudHMgPT0gMCkpCj4gPiA+ICsJCXJldHVybiBOVUxMOwo+ID4gPiAr
-Cj4gPiA+ICsJaWYgKHVubGlrZWx5KGRzdF9zZyA9PSBOVUxMIHx8IHNyY19zZyA9PSBOVUxMKSkK
-PiA+ID4gKwkJcmV0dXJuIE5VTEw7Cj4gPiAKPiA+IElmIHdlIG5lZWQgdGhvc2UgY2hlY2tzIHRo
-ZXkgc2hvdWxkIGdvIHRvIGRtYWVuZ2luZS5oL2RtYWVuZ2luZS5jLgo+IAo+IEkgY2hlY2tlZCBz
-ZXZlcmFsIGRyaXZlcnMsIHdoaWNoIGltcGxlbWVudHMgZGV2aWNlX3ByZXBfZG1hX3NnIGFuZAo+
-IHRoZXkKPiBpbXBsZW1lbnRzIHRoaXMgY2hlY2tlcnMuCj4gU2hvdWxkIEkgYWRkIHNvbWV0aGlu
-ZyBsaWtlICJkbWFfc2dfZGVzY19pbnZhbGlkIiBmdW5jdGlvbiB0bwo+IGRtYWVuZ2luZS5oID8K
-Ckkgc3VwcG9zZSBpdCdzIGJldHRlciB0byBpbXBsZW1lbnQgdGhlbSBpbiB0aGUgY29ycmVzcG9u
-ZGluZyBoZWxwZXJzIGluCmRtYWVuZ2luZS5oLgoKPiA+ID4gK3N0YXRpYyB2b2lkIGF4aV9jaGFu
-X2xpc3RfZHVtcF9sbGkoc3RydWN0IGF4aV9kbWFfY2hhbiAqY2hhbiwKPiA+ID4gKwkJCQnCoMKg
-wqBzdHJ1Y3QgYXhpX2RtYV9kZXNjCj4gPiA+ICpkZXNjX2hlYWQpCj4gPiA+ICt7Cj4gPiA+ICsJ
-c3RydWN0IGF4aV9kbWFfZGVzYyAqZGVzYzsKPiA+ID4gKwo+ID4gPiArCWF4aV9jaGFuX2R1bXBf
-bGxpKGNoYW4sIGRlc2NfaGVhZCk7Cj4gPiA+ICsJbGlzdF9mb3JfZWFjaF9lbnRyeShkZXNjLCAm
-ZGVzY19oZWFkLT54ZmVyX2xpc3QsCj4gPiA+IHhmZXJfbGlzdCkKPiA+ID4gKwkJYXhpX2NoYW5f
-ZHVtcF9sbGkoY2hhbiwgZGVzYyk7Cj4gPiA+ICt9Cj4gPiA+ICsKPiA+ID4gK3N0YXRpYyB2b2lk
-IGF4aV9jaGFuX2hhbmRsZV9lcnIoc3RydWN0IGF4aV9kbWFfY2hhbiAqY2hhbiwgdTMyCj4gPiA+
-IHN0YXR1cykKPiA+ID4gK3sKPiA+ID4gKwkvKiBXQVJOIGFib3V0IGJhZCBkZXNjcmlwdG9yICov
-Cj4gPiA+IAo+ID4gPiArCWRldl9lcnIoY2hhbjJkZXYoY2hhbiksCj4gPiA+ICsJCSJCYWQgZGVz
-Y3JpcHRvciBzdWJtaXR0ZWQgZm9yICVzLCBjb29raWU6ICVkLAo+ID4gPiBpcnE6Cj4gPiA+IDB4
-JTA4eFxuIiwKPiA+ID4gKwkJYXhpX2NoYW5fbmFtZShjaGFuKSwgdmQtPnR4LmNvb2tpZSwgc3Rh
-dHVzKTsKPiA+ID4gKwlheGlfY2hhbl9saXN0X2R1bXBfbGxpKGNoYW4sIHZkX3RvX2F4aV9kZXNj
-KHZkKSk7Cj4gPiAKPiA+IEFzIEkgc2FpZCBlYXJsaWVyIGR3X2RtYWMgaXMgKmJhZCogZXhhbXBs
-ZSBvZiB0aGUgKHZpcnR1YWwgY2hhbm5lbAo+ID4gYmFzZWQpIERNQSBkcml2ZXIuCj4gPiAKPiA+
-IEkgZ3Vlc3MgeW91IG1heSBqdXN0IGZhaWwgdGhlIGRlc2NyaXB0b3IgYW5kIGRvbid0IHByZXRl
-bmQgaXQgaGFzCj4gPiBiZWVuIHByb2Nlc3NlZCBzdWNjZXNzZnVsbHkuCj4gCj4gV2hhdCBkbyB5
-b3UgbWVhbiBieSBzYXlpbmcgImZhaWwgdGhlIGRlc2NyaXB0b3IiPwo+IEFmdGVyIEkgZ2V0IGVy
-cm9yIEkgY2FuY2VsIGN1cnJlbnQgdHJhbnNmZXIgYW5kIGZyZWUgYWxsIGRlc2NyaXB0b3JzCj4g
-ZnJvbSBpdCAoYnkgY2FsbGluZyB2Y2hhbl9jb29raWVfY29tcGxldGUpLgo+IEkgY2FuJ3Qgc3Rv
-cmUgZXJyb3Igc3RhdHVzIGluIGRlc2NyaXB0b3Igc3RydWN0dXJlIGJlY2F1c2UgaXQgd2lsbCBi
-ZQo+IGZyZWVkIGJ5IHZjaGFuX2Nvb2tpZV9jb21wbGV0ZS4KPiBJIGNhbid0IHN0b3JlIGVycm9y
-IHN0YXR1cyBpbiBjaGFubmVsIHN0cnVjdHVyZSBiZWNhdXNlIGl0IHdpbGwgYmUKPiBvdmVyd3Jp
-dHRlbiBieSBuZXh0IHRyYW5zZmVyLgoKQmV0dGVyIG5vdCB0byBwcmV0ZW5kIHRoYXQgaXQgaGFz
-IGJlZW4gcHJvY2Vzc2VkIHN1Y2Nlc3NmdWxseS4gRG9uJ3QKY2FsbCBjYWxsYmFjayBvbiBpdCBh
-bmQgc2V0IGl0cyBzdGF0dXMgdG8gRE1BX0VSUk9SICh0aGF0J3Mgd2h5CmRlc2NyaXB0b3JzIGlu
-IG1hbnkgZHJpdmVycyBoYXZlIGRtYV9zdGF0dXMgZmllbGQpLiBXaGVuIHVzZXIgYXNrcyBmb3IK
-c3RhdHVzICh1c2luZyBjb29raWUpIHRoZSBzYXZlZCB2YWx1ZSB3b3VsZCBiZSByZXR1cm5lZCB1
-bnRpbCBkZXNjcmlwdG9yCmlzIGFjdGl2ZS4gCgpEbyB5b3UgaGF2ZSBzb21lIG90aGVyIHdvcmtm
-bG93IGluIG1pbmQ/Cgo+ID4gPiArCj4gPiA+ICtzdGF0aWMgY29uc3Qgc3RydWN0IGRldl9wbV9v
-cHMgZHdfYXhpX2RtYV9wbV9vcHMgPSB7Cj4gPiA+ICsJU0VUX1JVTlRJTUVfUE1fT1BTKGF4aV9k
-bWFfcnVudGltZV9zdXNwZW5kLAo+ID4gPiBheGlfZG1hX3J1bnRpbWVfcmVzdW1lLCBOVUxMKQo+
-ID4gPiArfTsKPiA+IAo+ID4gSGF2ZSB5b3UgdHJpZWQgdG8gYnVpbGQgd2l0aCBDT05GSUdfUE0g
-ZGlzYWJsZWQ/Cj4gCj4gWWVzLgo+IAo+ID4gSSdtIHByZXR0eSBzdXJlIHlvdSBuZWVkIF9fbWF5
-YmVfdW51c2VkIGFwcGxpZWQgdG8geW91ciBQTSBvcHMuCj4gCj4gSSBjYWxsIGF4aV9kbWFfcnVu
-dGltZV9zdXNwZW5kIC8gYXhpX2RtYV9ydW50aW1lX3Jlc3VtZSBldmVuIEkgZG9udCd0Cj4gdXNl
-IFBNLgo+IChJIGNhbGwgdGhlbSBpbiBwcm9iZSAvIHJlbW92ZSBmdW5jdGlvbi4pCgpIbW0uLi4g
-SSBkaWRuJ3QgY2hlY2sgeW91ciAtPnByb2JlKCkgYW5kIC0+cmVtb3ZlKCkuIERvIHlvdSBtZWFu
-IHlvdQpjYWxsIHRoZW0gZXhwbGljaXRseSBieSB0aG9zZSBuYW1lcz8KCklmIHNvLCBwbGVhc2Ug
-ZG9uJ3QgZG8gdGhhdC4gVXNlIHBtX3J1bnRpbWVfKigpIGluc3RlYWQuIEFuZC4uLgoKPiBTbyBJ
-IGRvbid0IG5lZWQgdG8gZGVjbGFyZSB0aGVtIHdpdGggX19tYXliZV91bnVzZWQuCgouLi5pbiB0
-aGF0IGNhc2UgaXQncyBwb3NzaWJsZSB5b3UgaGF2ZSB0aGVtIGRlZmluZWQgYnV0IG5vdCB1c2Vk
-LgoKCj4gPj4gK3N0cnVjdCBheGlfZG1hX2NoYW4gewo+ID4gPiArCXN0cnVjdCBheGlfZG1hX2No
-aXAJCSpjaGlwOwo+ID4gPiArCXZvaWQgX19pb21lbQkJCSpjaGFuX3JlZ3M7Cj4gPiA+ICsJdTgJ
-CQkJaWQ7Cj4gPiA+ICsJYXRvbWljX3QJCQlkZXNjc19hbGxvY2F0ZWQ7Cj4gPiA+ICsKPiA+ID4g
-KwlzdHJ1Y3QgdmlydF9kbWFfY2hhbgkJdmM7Cj4gPiA+ICsKPiA+ID4gKwkvKiB0aGVzZSBvdGhl
-ciBlbGVtZW50cyBhcmUgYWxsIHByb3RlY3RlZCBieSB2Yy5sb2NrICovCj4gPiA+ICsJYm9vbAkJ
-CQlpc19wYXVzZWQ7Cj4gPiAKPiA+IEkgc3RpbGwgZGlkbid0IGdldCAoYWxyZWFkeSBmb3Jnb3Qp
-IHdoeSB5b3UgY2FuJ3QgdXNlIGRtYV9zdGF0dXMKPiA+IGluc3RlYWQgZm9yIHRoZSBhY3RpdmUg
-ZGVzY3JpcHRvcj8KPiAKPiBBcyBJIHNhaWQgYmVmb3JlLCBJIGNoZWNrZWQgc2V2ZXJhbCBkcml2
-ZXIsIHdoaWNoIGhhdmUgc3RhdHVzIHZhcmlhYmxlCj4gaW4gdGhlaXIgY2hhbm5lbCBzdHJ1Y3R1
-cmUgLSBpdCBpcyB1c2VkICpvbmx5KiBmb3IgZGV0ZXJtaW5hdGluZyBpcwo+IGNoYW5uZWwgcGF1
-c2VkIG9yIG5vdC4gU28gdGhlcmUgaXMgbm8gbXVjaCBzZW5zZSBpbiByZXBsYWNpbmcKPiAiaXNf
-cGF1c2VkIiB0byAic3RhdHVzIiBhbmQgSSBsZWZ0ICJpc19wYXVzZWQiIHZhcmlhYmxlIHVudG91
-Y2hlZC4KCk5vdCBvbmx5IChzZWUgYWJvdmUpLCB0aGUgZXJyb3JlZCBkZXNjcmlwdG9yIGtlZXBz
-IHRoYXQgc3RhdHVzLgoKPiAoSSBkZXNjcmliZWQgYWJvdmUgd2h5IHdlIGNhbid0IHVzZSBzdGF0
-dXMgaW4gY2hhbm5lbCBzdHJ1Y3R1cmUgZm9yCj4gZXJyb3IgaGFuZGxpbmcpCgpBaCwgSSdtIHRh
-bGtpbmcgYWJvdXQgZGVzY3JpcHRvci4KCj4gPiA+IFN0YXR1cyBGZXRjaCBBZGRyICovCj4gPiA+
-ICsjZGVmaW5lIENIX0lOVFNUQVRVU19FTkEJMHgwODAgLyogUi9XIENoYW4gSW50ZXJydXB0Cj4g
-PiA+IFN0YXR1cwo+ID4gPiBFbmFibGUgKi8KPiA+ID4gKyNkZWZpbmUgQ0hfSU5UU1RBVFVTCQkw
-eDA4OCAvKiBSL1cgQ2hhbiBJbnRlcnJ1cHQKPiA+ID4gU3RhdHVzICovCj4gPiA+ICsjZGVmaW5l
-IENIX0lOVFNJR05BTF9FTkEJMHgwOTAgLyogUi9XIENoYW4gSW50ZXJydXB0Cj4gPiA+IFNpZ25h
-bAo+ID4gPiBFbmFibGUgKi8KPiA+ID4gKyNkZWZpbmUgQ0hfSU5UQ0xFQVIJCTB4MDk4IC8qIFcg
-Q2hhbiBJbnRlcnJ1cHQKPiA+ID4gQ2xlYXIKPiA+ID4gKi8KPiA+IAo+ID4gSSdtIHdvbmRlcmlu
-ZyBpZiB5b3UgY2FuIHVzZSByZWdtYXAgQVBJIGluc3RlYWQuCj4gCj4gSXMgaXQgcmVhbGx5IG5l
-Y2Vzc2FyeT8gSXQnbGwgbWFrZSBkcml2ZXIgbW9yZSBjb21wbGV4IGZvciBub3RoaW5nLgoKVGhh
-dCdzIHdoeSBJJ20gbm90IHN1Z2dlc3RpbmcgYnV0IHdvbmRlcmluZy4KCj4gPiA+ICsJRFdBWElE
-TUFDX0JVUlNUX1RSQU5TX0xFTl8xMDI0Cj4gPiAKPiA+IC4uLl8xMDI0LCA/Cj4gCj4gV2hhdCBl
-eGFjdGx5IHlvdSBhcmUgYXNraW5nIGFib3V0PwoKQ29tbWEgYXQgdGhlIGVuZC4KCj4gCj4gPiA+
-ICt9Owo+ID4gCj4gPiBIbW0uLi4gZG8geW91IG5lZWQgdGhlbSBpbiB0aGUgaGVhZGVyPwo+IAo+
-IEkgdXNlIHNvbWUgb2YgdGhlc2UgZGVmaW5pdGlvbnMgaW4gbXkgY29kZSBzbyBJIGd1ZXNzIHll
-cy4KPiAvKiBNYXliZSBJIG1pc3VuZGVyc3Rvb2QgeW91ciBxdWVzdGlvbi4uLiAqLwoKSSBtZWFu
-LCB3aG8gYXJlIHRoZSB1c2VycyBvZiB0aGVtPyBJZiBpdCdzIG9ubHkgb25lIG1vZHVsZSwgdGhl
-cmUgaXMgbm8KbmVlZCB0byBwdXQgdGhlbSBpbiBoZWFkZXIuCgo+IAo+ID4gPiArI2RlZmluZSBD
-SF9DRkdfSF9UVF9GQ19QT1MJMAo+ID4gPiArZW51bSB7Cj4gPiA+ICsJRFdBWElETUFDX1RUX0ZD
-X01FTV9UT19NRU1fRE1BQwk9IDB4MCwKPiA+ID4gKwlEV0FYSURNQUNfVFRfRkNfTUVNX1RPX1BF
-Ul9ETUFDLAo+ID4gPiArCURXQVhJRE1BQ19UVF9GQ19QRVJfVE9fTUVNX0RNQUMsCj4gPiA+ICsJ
-RFdBWElETUFDX1RUX0ZDX1BFUl9UT19QRVJfRE1BQywKPiA+ID4gKwlEV0FYSURNQUNfVFRfRkNf
-UEVSX1RPX01FTV9TUkMsCj4gPiA+ICsJRFdBWElETUFDX1RUX0ZDX1BFUl9UT19QRVJfU1JDLAo+
-ID4gPiArCURXQVhJRE1BQ19UVF9GQ19NRU1fVE9fUEVSX0RTVCwKPiA+ID4gKwlEV0FYSURNQUNf
-VFRfRkNfUEVSX1RPX1BFUl9EU1QKPiA+ID4gK307Cj4gPiAKPiA+IFNvbWUgb2YgZGVmaW5pdGlv
-bnMgYXJlIHRoZSBzYW1lIGFzIGZvciBkd19kbWFjLCByaWdodD8gV2UgbWlnaHQKPiA+IHNwbGl0
-IHRoZW0gdG8gYSBjb21tb24gaGVhZGVyLCB0aG91Z2ggSSBoYXZlIG5vIHN0cm9uZyBvcGluaW9u
-IGFib3V0Cj4gCj4gaXQuCj4gPiBWaW5vZD8KPiAKPiBBUEIgRE1BQyBhbmQgQVhJIERNQUMgaGF2
-ZSBjb21wbGV0ZWx5IGRpZmZlcmVudCByZWdtYXAuIFNvIHRoZXJlIGlzIG5vCj4gbXVjaCBzZW5z
-ZSB0byBkbyB0aGF0LgoKSSdtIG5vdCB0YWxraW5nIGFib3V0IHJlZ2lzdGVycywgSSdtIHRhbGtp
-bmcgYWJvdXQgZGVmaW5pdGlvbnMgbGlrZQphYm92ZS4gVGhvdWdoIGl0IHdvdWxkIGJlIGluZGVl
-ZCBsaXR0bGUgc2Vuc2UgdG8gc3BsaXQgc29tZSBjb21tb24gY29kZQpiZXR3ZWVuIHRob3NlIHR3
-by4KCi0tIApBbmR5IFNoZXZjaGVua28gPGFuZHJpeS5zaGV2Y2hlbmtvQGxpbnV4LmludGVsLmNv
-bT4KSW50ZWwgRmlubGFuZCBPeQoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX18KbGludXgtc25wcy1hcmMgbWFpbGluZyBsaXN0CmxpbnV4LXNucHMtYXJjQGxp
-c3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0
-aW5mby9saW51eC1zbnBzLWFyYw==
+Hi,
+
+On Tue, Mar 7, 2017 at 4:56 PM, Maxime Ripard
+<maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> The earlier Allwinner SoCs (A10, A10s, A20, A31) have an embedded HDMI
+> controller.
+>
+> That HDMI controller is able to do audio and CEC, but those have been left
+> out for now.
+>
+> Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> ---
+>  drivers/gpu/drm/sun4i/Makefile              |   5 +-
+>  drivers/gpu/drm/sun4i/sun4i_hdmi.h          | 124 ++++++-
+>  drivers/gpu/drm/sun4i/sun4i_hdmi_ddc_clk.c  | 128 ++++++-
+>  drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c      | 449 +++++++++++++++++++++-
+>  drivers/gpu/drm/sun4i/sun4i_hdmi_tmds_clk.c | 236 +++++++++++-
+>  5 files changed, 942 insertions(+), 0 deletions(-)
+>  create mode 100644 drivers/gpu/drm/sun4i/sun4i_hdmi.h
+>  create mode 100644 drivers/gpu/drm/sun4i/sun4i_hdmi_ddc_clk.c
+>  create mode 100644 drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c
+>  create mode 100644 drivers/gpu/drm/sun4i/sun4i_hdmi_tmds_clk.c
+
+Applying patch #9608371 using 'git am'
+Description: [13/15] drm/sun4i: Add HDMI support
+Applying: drm/sun4i: Add HDMI support
+.git/rebase-apply/patch:116: trailing whitespace.
+
+.git/rebase-apply/patch:531: trailing whitespace.
+
+.git/rebase-apply/patch:701: trailing whitespace.
+
+warning: 3 lines add whitespace errors.
+
+> diff --git a/drivers/gpu/drm/sun4i/Makefile b/drivers/gpu/drm/sun4i/Makefile
+> index 59b757350a1f..68a0f6244a59 100644
+> --- a/drivers/gpu/drm/sun4i/Makefile
+> +++ b/drivers/gpu/drm/sun4i/Makefile
+> @@ -7,7 +7,12 @@ sun4i-tcon-y += sun4i_dotclock.o
+>  sun4i-tcon-y += sun4i_crtc.o
+>  sun4i-tcon-y += sun4i_layer.o
+>
+> +sun4i-drm-hdmi-y += sun4i_hdmi_enc.o
+> +sun4i-drm-hdmi-y += sun4i_hdmi_ddc_clk.o
+> +sun4i-drm-hdmi-y += sun4i_hdmi_tmds_clk.o
+> +
+>  obj-$(CONFIG_DRM_SUN4I)                += sun4i-drm.o sun4i-tcon.o
+>  obj-$(CONFIG_DRM_SUN4I)                += sun4i_backend.o
+>  obj-$(CONFIG_DRM_SUN4I)                += sun6i_drc.o
+> +obj-$(CONFIG_DRM_SUN4I)                += sun4i-drm-hdmi.o
+>  obj-$(CONFIG_DRM_SUN4I)                += sun4i_tv.o
+> diff --git a/drivers/gpu/drm/sun4i/sun4i_hdmi.h b/drivers/gpu/drm/sun4i/sun4i_hdmi.h
+> new file mode 100644
+> index 000000000000..2ad25b8fd3cd
+> --- /dev/null
+> +++ b/drivers/gpu/drm/sun4i/sun4i_hdmi.h
+> @@ -0,0 +1,124 @@
+> +/*
+> + * Copyright (C) 2016 Maxime Ripard
+> + *
+> + * Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> + *
+> + * This program is free software; you can redistribute it and/or
+> + * modify it under the terms of the GNU General Public License as
+> + * published by the Free Software Foundation; either version 2 of
+> + * the License, or (at your option) any later version.
+> + */
+> +
+> +#ifndef _SUN4I_HDMI_H_
+> +#define _SUN4I_HDMI_H_
+> +
+> +#include <drm/drm_connector.h>
+> +#include <drm/drm_encoder.h>
+> +
+> +#define SUN4I_HDMI_CTRL_REG            0x004
+> +#define SUN4I_HDMI_CTRL_ENABLE                 BIT(31)
+> +
+> +#define SUN4I_HDMI_IRQ_REG             0x008
+> +#define SUN4I_HDMI_IRQ_STA_MASK                        0x73
+> +#define SUN4I_HDMI_IRQ_STA_FIFO_OF             BIT(1)
+> +#define SUN4I_HDMI_IRQ_STA_FIFO_UF             BIT(0)
+> +
+> +#define SUN4I_HDMI_HPD_REG             0x00c
+> +#define SUN4I_HDMI_HPD_HIGH                    BIT(0)
+> +
+> +#define SUN4I_HDMI_VID_CTRL_REG                0x010
+> +#define SUN4I_HDMI_VID_CTRL_ENABLE             BIT(31)
+> +#define SUN4I_HDMI_VID_CTRL_HDMI_MODE          BIT(30)
+> +
+> +#define SUN4I_HDMI_VID_TIMING_ACT_REG  0x014
+> +#define SUN4I_HDMI_VID_TIMING_BP_REG   0x018
+> +#define SUN4I_HDMI_VID_TIMING_FP_REG   0x01c
+> +#define SUN4I_HDMI_VID_TIMING_SPW_REG  0x020
+> +
+> +#define SUN4I_HDMI_VID_TIMING_X(x)             ((((x) - 1) & GENMASK(11, 0)))
+> +#define SUN4I_HDMI_VID_TIMING_Y(y)             ((((y) - 1) & GENMASK(11, 0)) << 16)
+> +
+> +#define SUN4I_HDMI_VID_TIMING_POL_REG  0x024
+> +#define SUN4I_HDMI_VID_TIMING_POL_TX_CLK        (0x3e0 << 16)
+> +#define SUN4I_HDMI_VID_TIMING_POL_VSYNC                BIT(1)
+> +#define SUN4I_HDMI_VID_TIMING_POL_HSYNC                BIT(0)
+> +
+> +#define SUN4I_HDMI_AVI_INFOFRAME_REG(n)        (0x080 + (n))
+> +
+> +#define SUN4I_HDMI_PAD_CTRL0_REG       0x200
+> +
+> +#define SUN4I_HDMI_PAD_CTRL1_REG       0x204
+> +#define SUN4I_HDMI_PAD_CTRL1_HALVE_CLK         BIT(6)
+> +
+> +#define SUN4I_HDMI_PLL_CTRL_REG                0x208
+> +#define SUN4I_HDMI_PLL_CTRL_DIV(n)             ((n) << 4)
+> +#define SUN4I_HDMI_PLL_CTRL_DIV_MASK           GENMASK(7, 4)
+> +
+> +#define SUN4I_HDMI_PLL_DBG0_REG                0x20c
+> +#define SUN4I_HDMI_PLL_DBG0_TMDS_PARENT(n)     (((n) & 1) << 21)
+> +#define SUN4I_HDMI_PLL_DBG0_TMDS_PARENT_MASK   BIT(21)
+> +#define SUN4I_HDMI_PLL_DBG0_TMDS_PARENT_SHIFT  21
+> +
+> +#define SUN4I_HDMI_PKT_CTRL_REG(n)     (0x2f0 + (4 * (n)))
+> +#define SUN4I_HDMI_PKT_CTRL_TYPE(n, t)         ((t) << (((n) % 4) * 4))
+> +
+> +#define SUN4I_HDMI_UNKNOWN_REG         0x300
+> +#define SUN4I_HDMI_UNKNOWN_INPUT_SYNC          BIT(27)
+> +
+> +#define SUN4I_HDMI_DDC_CTRL_REG                0x500
+> +#define SUN4I_HDMI_DDC_CTRL_ENABLE             BIT(31)
+> +#define SUN4I_HDMI_DDC_CTRL_START_CMD          BIT(30)
+> +#define SUN4I_HDMI_DDC_CTRL_RESET              BIT(0)
+> +
+> +#define SUN4I_HDMI_DDC_ADDR_REG                0x504
+> +#define SUN4I_HDMI_DDC_ADDR_SEGMENT(seg)       (((seg) & 0xff) << 24)
+> +#define SUN4I_HDMI_DDC_ADDR_EDDC(addr)         (((addr) & 0xff) << 16)
+> +#define SUN4I_HDMI_DDC_ADDR_OFFSET(off)                (((off) & 0xff) << 8)
+> +#define SUN4I_HDMI_DDC_ADDR_SLAVE(addr)                ((addr) & 0xff)
+> +
+> +#define SUN4I_HDMI_DDC_FIFO_CTRL_REG   0x510
+> +#define SUN4I_HDMI_DDC_FIFO_CTRL_CLEAR         BIT(31)
+> +
+> +#define SUN4I_HDMI_DDC_FIFO_DATA_REG   0x518
+> +#define SUN4I_HDMI_DDC_BYTE_COUNT_REG  0x51c
+> +
+> +#define SUN4I_HDMI_DDC_CMD_REG         0x520
+> +#define SUN4I_HDMI_DDC_CMD_EXPLICIT_EDDC_READ  6
+> +
+> +#define SUN4I_HDMI_DDC_CLK_REG         0x528
+> +#define SUN4I_HDMI_DDC_CLK_M(m)                        (((m) & 0x7) << 3)
+> +#define SUN4I_HDMI_DDC_CLK_N(n)                        ((n) & 0x7)
+> +
+> +#define SUN4I_HDMI_DDC_LINE_CTRL_REG   0x540
+> +#define SUN4I_HDMI_DDC_LINE_CTRL_SDA_ENABLE    BIT(9)
+> +#define SUN4I_HDMI_DDC_LINE_CTRL_SCL_ENABLE    BIT(8)
+> +
+> +#define SUN4I_HDMI_DDC_FIFO_SIZE       16
+> +
+> +enum sun4i_hdmi_pkt_type {
+> +       SUN4I_HDMI_PKT_AVI = 2,
+> +       SUN4I_HDMI_PKT_END = 15,
+> +};
+> +
+> +struct sun4i_hdmi {
+> +       struct drm_connector    connector;
+> +       struct drm_encoder      encoder;
+> +       struct device           *dev;
+> +
+> +       void __iomem            *base;
+> +       struct clk              *bus_clk;
+> +       struct clk              *ddc_clk;
+> +       struct clk              *mod_clk;
+> +       struct clk              *pll0_clk;
+> +       struct clk              *pll1_clk;
+> +       struct clk              *tmds_clk;
+> +
+> +       struct sun4i_drv        *drv;
+> +
+> +       bool                    hdmi_monitor;
+> +};
+> +
+> +int sun4i_ddc_create(struct sun4i_hdmi *hdmi, struct clk *clk);
+> +int sun4i_tmds_create(struct sun4i_hdmi *hdmi);
+> +
+> +#endif /* _SUN4I_HDMI_H_ */
+> diff --git a/drivers/gpu/drm/sun4i/sun4i_hdmi_ddc_clk.c b/drivers/gpu/drm/sun4i/sun4i_hdmi_ddc_clk.c
+> new file mode 100644
+> index 000000000000..5125b14ea7a5
+> --- /dev/null
+> +++ b/drivers/gpu/drm/sun4i/sun4i_hdmi_ddc_clk.c
+> @@ -0,0 +1,128 @@
+> +/*
+> + * Copyright (C) 2016 Free Electrons
+> + * Copyright (C) 2016 NextThing Co
+> + *
+> + * Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> + *
+> + * This program is free software; you can redistribute it and/or
+> + * modify it under the terms of the GNU General Public License as
+> + * published by the Free Software Foundation; either version 2 of
+> + * the License, or (at your option) any later version.
+> + */
+> +
+> +#include <linux/clk-provider.h>
+> +
+> +#include "sun4i_tcon.h"
+> +#include "sun4i_hdmi.h"
+> +
+> +struct sun4i_ddc {
+> +       struct clk_hw           hw;
+> +       struct sun4i_hdmi       *hdmi;
+> +};
+> +
+> +static inline struct sun4i_ddc *hw_to_ddc(struct clk_hw *hw)
+> +{
+> +       return container_of(hw, struct sun4i_ddc, hw);
+> +}
+> +
+> +static unsigned long sun4i_ddc_calc_divider(unsigned long rate,
+> +                                           unsigned long parent_rate,
+> +                                           u8 *m, u8 *n)
+> +{
+> +       unsigned long best_rate = 0;
+> +       u8 best_m = 0, best_n = 0, _m, _n;
+> +
+> +       for (_m = 0; _m < 8; _m++) {
+> +               for (_n = 0; _n < 8; _n++) {
+> +                       unsigned long tmp_rate;
+> +
+> +                       tmp_rate = (((parent_rate / 2) / 10) >> _n) / (_m + 1);
+> +
+> +                       if (tmp_rate > rate)
+> +                               continue;
+> +
+> +                       if (abs(rate - tmp_rate) < abs(rate - best_rate)) {
+> +                               best_rate = tmp_rate;
+> +                               best_m = _m;
+> +                               best_n = _n;
+> +                       }
+> +               }
+> +       }
+> +
+> +       if (m && n) {
+> +               *m = best_m;
+> +               *n = best_n;
+> +       }
+> +
+> +       return best_rate;
+> +}
+> +
+> +static long sun4i_ddc_round_rate(struct clk_hw *hw, unsigned long rate,
+> +                                unsigned long *prate)
+> +{
+> +       return sun4i_ddc_calc_divider(rate, *prate, NULL, NULL);
+> +}
+> +
+> +static unsigned long sun4i_ddc_recalc_rate(struct clk_hw *hw,
+> +                                           unsigned long parent_rate)
+> +{
+> +       struct sun4i_ddc *ddc = hw_to_ddc(hw);
+> +       u32 reg;
+> +       u8 m, n;
+> +
+> +       reg = readl(ddc->hdmi->base + SUN4I_HDMI_DDC_CLK_REG);
+> +       m = (reg >> 3) & 0x7;
+> +       n = reg & 0x7;
+> +
+> +       return (((parent_rate / 2) / 10) >> n) / (m + 1);
+> +}
+> +
+> +static int sun4i_ddc_set_rate(struct clk_hw *hw, unsigned long rate,
+> +                             unsigned long parent_rate)
+> +{
+> +       struct sun4i_ddc *ddc = hw_to_ddc(hw);
+> +       u8 div_m, div_n;
+> +
+> +       sun4i_ddc_calc_divider(rate, parent_rate, &div_m, &div_n);
+> +
+> +       writel(SUN4I_HDMI_DDC_CLK_M(div_m) | SUN4I_HDMI_DDC_CLK_N(div_n),
+> +              ddc->hdmi->base + SUN4I_HDMI_DDC_CLK_REG);
+> +
+> +       return 0;
+> +}
+> +
+> +static const struct clk_ops sun4i_ddc_ops = {
+> +       .recalc_rate    = sun4i_ddc_recalc_rate,
+> +       .round_rate     = sun4i_ddc_round_rate,
+> +       .set_rate       = sun4i_ddc_set_rate,
+> +};
+> +
+> +int sun4i_ddc_create(struct sun4i_hdmi *hdmi, struct clk *parent)
+> +{
+> +       struct clk_init_data init;
+> +       struct sun4i_ddc *ddc;
+> +       const char *parent_name;
+> +
+> +       parent_name = __clk_get_name(parent);
+> +       if (!parent_name)
+> +               return -ENODEV;
+> +
+> +       ddc = devm_kzalloc(hdmi->dev, sizeof(*ddc), GFP_KERNEL);
+> +       if (!ddc)
+> +               return -ENOMEM;
+> +
+> +       init.name = "hdmi-ddc";
+> +       init.ops = &sun4i_ddc_ops;
+> +       init.parent_names = &parent_name;
+> +       init.num_parents = 1;
+> +       init.flags = CLK_SET_RATE_PARENT;
+
+I don't think this is really needed. It probably doesn't hurt though,
+since DDC is used when HDMI is not used for displaying, but it might
+affect any upstream PLLs, which theoretically may affect other users
+of said PLLs. The DDC clock is slow enough that we should be able to
+generate a usable clock rate anyway.
+
+> +
+> +       ddc->hdmi = hdmi;
+> +       ddc->hw.init = &init;
+> +
+> +       hdmi->ddc_clk = devm_clk_register(hdmi->dev, &ddc->hw);
+> +       if (IS_ERR(hdmi->ddc_clk))
+> +               return PTR_ERR(hdmi->ddc_clk);
+> +
+> +       return 0;
+> +}
+> diff --git a/drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c b/drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c
+> new file mode 100644
+> index 000000000000..33175308c2ed
+> --- /dev/null
+> +++ b/drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c
+> @@ -0,0 +1,449 @@
+> +/*
+> + * Copyright (C) 2016 Maxime Ripard
+> + *
+> + * Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> + *
+> + * This program is free software; you can redistribute it and/or
+> + * modify it under the terms of the GNU General Public License as
+> + * published by the Free Software Foundation; either version 2 of
+> + * the License, or (at your option) any later version.
+> + */
+> +
+> +#include <drm/drmP.h>
+> +#include <drm/drm_atomic_helper.h>
+> +#include <drm/drm_crtc_helper.h>
+> +#include <drm/drm_edid.h>
+> +#include <drm/drm_encoder.h>
+> +#include <drm/drm_panel.h>
+> +
+> +#include <linux/clk.h>
+> +#include <linux/component.h>
+> +#include <linux/iopoll.h>
+> +#include <linux/of_address.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/pm_runtime.h>
+> +
+> +#include "sun4i_backend.h"
+> +#include "sun4i_drv.h"
+> +#include "sun4i_hdmi.h"
+> +#include "sun4i_tcon.h"
+> +
+> +static inline struct sun4i_hdmi *
+> +drm_encoder_to_sun4i_hdmi(struct drm_encoder *encoder)
+> +{
+> +       return container_of(encoder, struct sun4i_hdmi,
+> +                           encoder);
+> +}
+> +
+> +static inline struct sun4i_hdmi *
+> +drm_connector_to_sun4i_hdmi(struct drm_connector *connector)
+> +{
+> +       return container_of(connector, struct sun4i_hdmi,
+> +                           connector);
+> +}
+> +
+> +static int sun4i_hdmi_setup_avi_infoframes(struct sun4i_hdmi *hdmi,
+> +                                          struct drm_display_mode *mode)
+> +{
+> +       struct hdmi_avi_infoframe frame;
+> +       u8 buffer[17];
+> +       int i, ret;
+> +
+> +       ret = drm_hdmi_avi_infoframe_from_display_mode(&frame, mode);
+> +       if (ret < 0) {
+> +               DRM_ERROR("Failed to get infoframes from mode\n");
+> +               return ret;
+> +       }
+> +
+> +       ret = hdmi_avi_infoframe_pack(&frame, buffer, sizeof(buffer));
+> +       if (ret < 0) {
+> +               DRM_ERROR("Failed to pack infoframes\n");
+> +               return ret;
+> +       }
+> +
+> +       for (i = 0; i < sizeof(buffer); i++)
+> +               writeb(buffer[i], hdmi->base + SUN4I_HDMI_AVI_INFOFRAME_REG(i));
+> +
+> +       return 0;
+> +}
+> +
+> +static void sun4i_hdmi_disable(struct drm_encoder *encoder)
+> +{
+> +       struct sun4i_hdmi *hdmi = drm_encoder_to_sun4i_hdmi(encoder);
+> +       struct sun4i_drv *drv = hdmi->drv;
+> +       struct sun4i_tcon *tcon = drv->tcon;
+> +       u32 val;
+> +
+> +       DRM_DEBUG_DRIVER("Disabling the HDMI Output\n");
+> +
+> +       val = readl(hdmi->base + SUN4I_HDMI_VID_CTRL_REG);
+> +       val &= ~SUN4I_HDMI_VID_CTRL_ENABLE;
+> +       writel(val, hdmi->base + SUN4I_HDMI_VID_CTRL_REG);
+> +
+> +       sun4i_tcon_channel_disable(tcon, 1);
+> +}
+> +
+> +static void sun4i_hdmi_enable(struct drm_encoder *encoder)
+> +{
+> +       struct drm_display_mode *mode = &encoder->crtc->state->adjusted_mode;
+> +       struct sun4i_hdmi *hdmi = drm_encoder_to_sun4i_hdmi(encoder);
+> +       struct sun4i_drv *drv = hdmi->drv;
+> +       struct sun4i_tcon *tcon = drv->tcon;
+> +       u32 val = 0;
+> +
+> +       DRM_DEBUG_DRIVER("Enabling the HDMI Output\n");
+> +
+> +       sun4i_tcon_channel_enable(tcon, 1);
+> +
+> +       sun4i_hdmi_setup_avi_infoframes(hdmi, mode);
+> +       val |= SUN4I_HDMI_PKT_CTRL_TYPE(0, SUN4I_HDMI_PKT_AVI);
+> +       val |= SUN4I_HDMI_PKT_CTRL_TYPE(1, SUN4I_HDMI_PKT_END);
+> +       writel(val, hdmi->base + SUN4I_HDMI_PKT_CTRL_REG(0));
+> +
+> +       val = SUN4I_HDMI_VID_CTRL_ENABLE;
+> +       if (hdmi->hdmi_monitor)
+> +               val |= SUN4I_HDMI_VID_CTRL_HDMI_MODE;
+> +
+> +       writel(val, hdmi->base + SUN4I_HDMI_VID_CTRL_REG);
+> +}
+> +
+> +static void sun4i_hdmi_mode_set(struct drm_encoder *encoder,
+> +                               struct drm_display_mode *mode,
+> +                               struct drm_display_mode *adjusted_mode)
+> +{
+> +       struct sun4i_hdmi *hdmi = drm_encoder_to_sun4i_hdmi(encoder);
+> +       struct sun4i_drv *drv = hdmi->drv;
+> +       struct sun4i_tcon *tcon = drv->tcon;
+> +       unsigned int x, y;
+> +       u32 val;
+> +
+> +       sun4i_tcon1_mode_set(tcon, encoder, mode);
+> +       clk_set_rate(tcon->sclk1, mode->crtc_clock * 1000);
+> +       clk_set_rate(hdmi->tmds_clk, mode->crtc_clock * 1000);
+> +
+> +       /* Set input sync enable */
+> +       writel(SUN4I_HDMI_UNKNOWN_INPUT_SYNC,
+> +              hdmi->base + SUN4I_HDMI_UNKNOWN_REG);
+> +
+> +       /* Setup timing registers */
+> +       writel(SUN4I_HDMI_VID_TIMING_X(mode->hdisplay) |
+> +              SUN4I_HDMI_VID_TIMING_Y(mode->vdisplay),
+> +              hdmi->base + SUN4I_HDMI_VID_TIMING_ACT_REG);
+> +
+> +       x = mode->htotal - mode->hsync_start;
+> +       y = mode->vtotal - mode->vsync_start;
+
+I'm a bit skeptical about this one. All the other parameters are not
+inclusive of other, why would this one be different? Shouldn't it
+be "Xtotal - Xsync_end" instead?
+
+> +       writel(SUN4I_HDMI_VID_TIMING_X(x) | SUN4I_HDMI_VID_TIMING_Y(y),
+> +              hdmi->base + SUN4I_HDMI_VID_TIMING_BP_REG);
+> +
+> +       x = mode->hsync_start - mode->hdisplay;
+> +       y = mode->vsync_start - mode->vdisplay;
+> +       writel(SUN4I_HDMI_VID_TIMING_X(x) | SUN4I_HDMI_VID_TIMING_Y(y),
+> +              hdmi->base + SUN4I_HDMI_VID_TIMING_FP_REG);
+> +
+> +       x = mode->hsync_end - mode->hsync_start;
+> +       y = mode->vsync_end - mode->vsync_start;
+> +       writel(SUN4I_HDMI_VID_TIMING_X(x) | SUN4I_HDMI_VID_TIMING_Y(y),
+> +              hdmi->base + SUN4I_HDMI_VID_TIMING_SPW_REG);
+> +
+> +       val = SUN4I_HDMI_VID_TIMING_POL_TX_CLK;
+> +       if (mode->flags & DRM_MODE_FLAG_PHSYNC)
+> +               val |= SUN4I_HDMI_VID_TIMING_POL_HSYNC;
+> +
+> +       if (mode->flags & DRM_MODE_FLAG_PVSYNC)
+> +               val |= SUN4I_HDMI_VID_TIMING_POL_VSYNC;
+> +
+> +       writel(val, hdmi->base + SUN4I_HDMI_VID_TIMING_POL_REG);
+
+You don't handle the interlaced video here, even though you set
+
+    hdmi->connector.interlace_allowed = true
+
+later.
+
+The double clock and double scan flags aren't handled either, though
+I don't understand which one is supposed to represent the need for the
+HDMI pixel repeater. AFAIK this is required for resolutions with pixel
+clocks lower than 25 MHz, the lower limit of HDMI's TMDS link.
+
+> +}
+> +
+> +static struct drm_encoder_helper_funcs sun4i_hdmi_helper_funcs = {
+> +       .disable        = sun4i_hdmi_disable,
+> +       .enable         = sun4i_hdmi_enable,
+> +       .mode_set       = sun4i_hdmi_mode_set,
+> +};
+> +
+> +static struct drm_encoder_funcs sun4i_hdmi_funcs = {
+> +       .destroy        = drm_encoder_cleanup,
+> +};
+> +
+> +static int sun4i_hdmi_read_sub_block(struct sun4i_hdmi *hdmi,
+> +                                    unsigned int blk, unsigned int offset,
+> +                                    u8 *buf, unsigned int count)
+> +{
+> +       unsigned long reg;
+> +       int i;
+> +
+> +       reg = readl(hdmi->base + SUN4I_HDMI_DDC_FIFO_CTRL_REG);
+> +       writel(reg | SUN4I_HDMI_DDC_FIFO_CTRL_CLEAR,
+> +              hdmi->base + SUN4I_HDMI_DDC_FIFO_CTRL_REG);
+> +       writel(SUN4I_HDMI_DDC_ADDR_SEGMENT(offset >> 8) |
+> +              SUN4I_HDMI_DDC_ADDR_EDDC(0x60) |
+> +              SUN4I_HDMI_DDC_ADDR_OFFSET(offset) |
+> +              SUN4I_HDMI_DDC_ADDR_SLAVE(0x50),
+
+You can use DDC_ADDR from drm_edid.h.
+
+> +              hdmi->base + SUN4I_HDMI_DDC_ADDR_REG);
+> +
+> +       writel(count, hdmi->base + SUN4I_HDMI_DDC_BYTE_COUNT_REG);
+> +       writel(SUN4I_HDMI_DDC_CMD_EXPLICIT_EDDC_READ,
+> +              hdmi->base + SUN4I_HDMI_DDC_CMD_REG);
+> +
+> +       reg = readl(hdmi->base + SUN4I_HDMI_DDC_CTRL_REG);
+> +       writel(reg | SUN4I_HDMI_DDC_CTRL_START_CMD,
+> +              hdmi->base + SUN4I_HDMI_DDC_CTRL_REG);
+> +
+> +       if (readl_poll_timeout(hdmi->base + SUN4I_HDMI_DDC_CTRL_REG, reg,
+> +                              !(reg & SUN4I_HDMI_DDC_CTRL_START_CMD),
+> +                              100, 2000))
+> +               return -EIO;
+> +
+> +       for (i = 0; i < count; i++)
+> +               buf[i] = readb(hdmi->base + SUN4I_HDMI_DDC_FIFO_DATA_REG);
+> +
+> +       return 0;
+> +}
+> +
+> +static int sun4i_hdmi_read_edid_block(void *data, u8 *buf, unsigned int blk,
+> +                                     size_t length)
+> +{
+> +       struct sun4i_hdmi *hdmi = data;
+> +       int retry = 2, i;
+> +
+> +       do {
+> +               for (i = 0; i < length; i += SUN4I_HDMI_DDC_FIFO_SIZE) {
+> +                       unsigned char offset = blk * EDID_LENGTH + i;
+> +                       unsigned int count = min((unsigned int)SUN4I_HDMI_DDC_FIFO_SIZE,
+> +                                                length - i);
+> +                       int ret;
+> +
+> +                       ret = sun4i_hdmi_read_sub_block(hdmi, blk, offset,
+> +                                                       buf + i, count);
+> +                       if (ret)
+> +                               return ret;
+> +               }
+> +       } while (!drm_edid_block_valid(buf, blk, true, NULL) && (retry--));
+> +
+> +       return 0;
+> +}
+> +
+> +static int sun4i_hdmi_get_modes(struct drm_connector *connector)
+> +{
+> +       struct sun4i_hdmi *hdmi = drm_connector_to_sun4i_hdmi(connector);
+> +       unsigned long reg;
+> +       struct edid *edid;
+> +       int ret;
+> +
+> +       /* Reset i2c controller */
+> +       writel(SUN4I_HDMI_DDC_CTRL_ENABLE | SUN4I_HDMI_DDC_CTRL_RESET,
+> +              hdmi->base + SUN4I_HDMI_DDC_CTRL_REG);
+> +       if (readl_poll_timeout(hdmi->base + SUN4I_HDMI_DDC_CTRL_REG, reg,
+> +                              !(reg & SUN4I_HDMI_DDC_CTRL_RESET),
+> +                              100, 2000))
+> +               return -EIO;
+> +
+> +       writel(SUN4I_HDMI_DDC_LINE_CTRL_SDA_ENABLE |
+> +              SUN4I_HDMI_DDC_LINE_CTRL_SCL_ENABLE,
+> +              hdmi->base + SUN4I_HDMI_DDC_LINE_CTRL_REG);
+> +
+> +       clk_set_rate(hdmi->ddc_clk, 100000);
+> +
+> +       edid = drm_do_get_edid(connector, sun4i_hdmi_read_edid_block, hdmi);
+> +       if (!edid)
+> +               return 0;
+> +
+> +       hdmi->hdmi_monitor = drm_detect_hdmi_monitor(edid);
+> +       DRM_DEBUG_DRIVER("Monitor is %s monitor\n",
+> +                        hdmi->hdmi_monitor ? "an HDMI" : "a DVI");
+> +
+> +       drm_mode_connector_update_edid_property(connector, edid);
+> +       ret = drm_add_edid_modes(connector, edid);
+> +       kfree(edid);
+> +
+> +       return ret;
+> +}
+> +
+> +static struct drm_connector_helper_funcs sun4i_hdmi_connector_helper_funcs = {
+> +       .get_modes      = sun4i_hdmi_get_modes,
+> +};
+> +
+> +static enum drm_connector_status
+> +sun4i_hdmi_connector_detect(struct drm_connector *connector, bool force)
+> +{
+> +       struct sun4i_hdmi *hdmi = drm_connector_to_sun4i_hdmi(connector);
+> +       unsigned long reg;
+> +
+> +       if (readl_poll_timeout(hdmi->base + SUN4I_HDMI_HPD_REG, reg,
+> +                              reg & SUN4I_HDMI_HPD_HIGH,
+> +                              0, 500000))
+
+We shouldn't need to do polling here. It should just return the status
+at the instance it's called. Instead we should have a worker that does
+polling to check if something is plugged or unplugged. I don't see any
+interrupt bits for this though. :(
+
+> +               return connector_status_disconnected;
+> +
+> +       return connector_status_connected;
+> +}
+> +
+> +static struct drm_connector_funcs sun4i_hdmi_connector_funcs = {
+> +       .dpms                   = drm_atomic_helper_connector_dpms,
+> +       .detect                 = sun4i_hdmi_connector_detect,
+> +       .fill_modes             = drm_helper_probe_single_connector_modes,
+> +       .destroy                = drm_connector_cleanup,
+> +       .reset                  = drm_atomic_helper_connector_reset,
+> +       .atomic_duplicate_state = drm_atomic_helper_connector_duplicate_state,
+> +       .atomic_destroy_state   = drm_atomic_helper_connector_destroy_state,
+> +};
+> +
+> +static int sun4i_hdmi_bind(struct device *dev, struct device *master,
+> +                        void *data)
+> +{
+> +       struct drm_device *drm = data;
+> +       struct sun4i_drv *drv = drm->dev_private;
+> +       struct sun4i_hdmi *hdmi = dev_get_drvdata(dev);
+> +       int ret;
+> +
+> +       hdmi->drv = drv;
+> +       drm_encoder_helper_add(&hdmi->encoder,
+> +                              &sun4i_hdmi_helper_funcs);
+> +       ret = drm_encoder_init(drm,
+> +                              &hdmi->encoder,
+> +                              &sun4i_hdmi_funcs,
+> +                              DRM_MODE_ENCODER_TMDS,
+> +                              NULL);
+> +       if (ret) {
+> +               dev_err(dev, "Couldn't initialise the HDMI encoder\n");
+> +               return ret;
+> +       }
+> +
+> +       hdmi->encoder.possible_crtcs = BIT(0);
+
+You can use drm_of_find_possible_crtcs() now. See the TV encoder driver.
+
+> +
+> +       drm_connector_helper_add(&hdmi->connector,
+> +                                &sun4i_hdmi_connector_helper_funcs);
+> +       ret = drm_connector_init(drm, &hdmi->connector,
+> +                                &sun4i_hdmi_connector_funcs,
+> +                                DRM_MODE_CONNECTOR_HDMIA);
+> +       if (ret) {
+> +               dev_err(dev,
+> +                       "Couldn't initialise the Composite connector\n");
+
+Wrong connector.
+
+> +               goto err_cleanup_connector;
+> +       }
+> +       hdmi->connector.interlace_allowed = true;
+> +
+> +       drm_mode_connector_attach_encoder(&hdmi->connector, &hdmi->encoder);
+> +
+> +       return 0;
+> +
+> +err_cleanup_connector:
+> +       drm_encoder_cleanup(&hdmi->encoder);
+> +       return ret;
+> +}
+> +
+> +static void sun4i_hdmi_unbind(struct device *dev, struct device *master,
+> +                           void *data)
+> +{
+> +       struct sun4i_hdmi *hdmi = dev_get_drvdata(dev);
+> +
+> +       drm_connector_cleanup(&hdmi->connector);
+> +       drm_encoder_cleanup(&hdmi->encoder);
+> +}
+> +
+> +static struct component_ops sun4i_hdmi_ops = {
+> +       .bind   = sun4i_hdmi_bind,
+> +       .unbind = sun4i_hdmi_unbind,
+> +};
+> +
+> +static int sun4i_hdmi_probe(struct platform_device *pdev)
+> +{
+> +       struct sun4i_hdmi *hdmi;
+> +       struct resource *res;
+> +       int ret;
+> +
+> +       hdmi = devm_kzalloc(&pdev->dev, sizeof(*hdmi), GFP_KERNEL);
+> +       if (!hdmi)
+> +               return -ENOMEM;
+> +       dev_set_drvdata(&pdev->dev, hdmi);
+> +       hdmi->dev = &pdev->dev;
+> +
+> +       res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +       hdmi->base = devm_ioremap_resource(&pdev->dev, res);
+> +       if (IS_ERR(hdmi->base)) {
+> +               dev_err(&pdev->dev, "Couldn't map the HDMI encoder registers\n");
+> +               return PTR_ERR(hdmi->base);
+> +       }
+> +
+> +       hdmi->bus_clk = devm_clk_get(&pdev->dev, "ahb");
+> +       if (IS_ERR(hdmi->bus_clk)) {
+> +               dev_err(&pdev->dev, "Couldn't get the HDMI bus clock\n");
+> +               return PTR_ERR(hdmi->bus_clk);
+> +       }
+> +       clk_prepare_enable(hdmi->bus_clk);
+> +
+> +       hdmi->mod_clk = devm_clk_get(&pdev->dev, "mod");
+> +       if (IS_ERR(hdmi->mod_clk)) {
+> +               dev_err(&pdev->dev, "Couldn't get the HDMI mod clock\n");
+> +               return PTR_ERR(hdmi->mod_clk);
+> +       }
+> +       clk_prepare_enable(hdmi->mod_clk);
+> +
+> +       hdmi->pll0_clk = devm_clk_get(&pdev->dev, "pll-0");
+> +       if (IS_ERR(hdmi->pll0_clk)) {
+> +               dev_err(&pdev->dev, "Couldn't get the HDMI PLL 0 clock\n");
+> +               return PTR_ERR(hdmi->pll0_clk);
+> +       }
+> +
+> +       hdmi->pll1_clk = devm_clk_get(&pdev->dev, "pll-1");
+> +       if (IS_ERR(hdmi->pll1_clk)) {
+> +               dev_err(&pdev->dev, "Couldn't get the HDMI PLL 1 clock\n");
+> +               return PTR_ERR(hdmi->pll1_clk);
+> +       }
+> +
+> +       ret = sun4i_tmds_create(hdmi);
+> +       if (ret) {
+> +               dev_err(&pdev->dev, "Couldn't create the TMDS clock\n");
+> +               return ret;
+> +       }
+> +
+> +       writel(SUN4I_HDMI_CTRL_ENABLE, hdmi->base + SUN4I_HDMI_CTRL_REG);
+> +
+> +#define SUN4I_HDMI_PAD_CTRL0 0xfe800000
+> +
+> +       writel(SUN4I_HDMI_PAD_CTRL0, hdmi->base + SUN4I_HDMI_PAD_CTRL0_REG);
+> +
+> +       /* TODO: defines */
+> +       writel((6 << 3) | (2 << 10) | BIT(14) | BIT(15) |
+> +              BIT(19) | BIT(20) | BIT(22) | BIT(23),
+> +              hdmi->base + SUN4I_HDMI_PAD_CTRL1_REG);
+> +
+> +       /* TODO: defines */
+> +       writel((8 << 0) | (7 << 8) | (239 << 12) | (7 << 17) | (4 << 20) |
+> +              BIT(25) | BIT(27) | BIT(28) | BIT(29) | BIT(30) | BIT(31),
+> +              hdmi->base + SUN4I_HDMI_PLL_CTRL_REG);
+
+FYI some bits in this register look a lot like the MIPI PLL on the A33.
+Bit 31 looks like the enable bit.
+
+> +
+> +       ret = sun4i_ddc_create(hdmi, hdmi->tmds_clk);
+> +       if (ret) {
+> +               dev_err(&pdev->dev, "Couldn't create the DDC clock\n");
+> +               return ret;
+> +       }
+
+We do all this in the bind function for all the other components.
+Any particular reason to do it differently here?
+
+> +
+> +       return component_add(&pdev->dev, &sun4i_hdmi_ops);
+> +}
+> +
+> +static int sun4i_hdmi_remove(struct platform_device *pdev)
+> +{
+> +       component_del(&pdev->dev, &sun4i_hdmi_ops);
+> +
+> +       return 0;
+> +}
+> +
+> +static const struct of_device_id sun4i_hdmi_of_table[] = {
+> +       { .compatible = "allwinner,sun5i-a10s-hdmi" },
+> +       { }
+> +};
+> +MODULE_DEVICE_TABLE(of, sun4i_hdmi_of_table);
+> +
+> +static struct platform_driver sun4i_hdmi_driver = {
+> +       .probe          = sun4i_hdmi_probe,
+> +       .remove         = sun4i_hdmi_remove,
+> +       .driver         = {
+> +               .name           = "sun4i-hdmi",
+> +               .of_match_table = sun4i_hdmi_of_table,
+> +       },
+> +};
+> +module_platform_driver(sun4i_hdmi_driver);
+> +
+> +MODULE_AUTHOR("Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>");
+> +MODULE_DESCRIPTION("Allwinner A10 HDMI Driver");
+> +MODULE_LICENSE("GPL");
+> diff --git a/drivers/gpu/drm/sun4i/sun4i_hdmi_tmds_clk.c b/drivers/gpu/drm/sun4i/sun4i_hdmi_tmds_clk.c
+> new file mode 100644
+> index 000000000000..40f48f1d4685
+> --- /dev/null
+> +++ b/drivers/gpu/drm/sun4i/sun4i_hdmi_tmds_clk.c
+> @@ -0,0 +1,236 @@
+> +/*
+> + * Copyright (C) 2016 Free Electrons
+> + * Copyright (C) 2016 NextThing Co
+> + *
+> + * Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> + *
+> + * This program is free software; you can redistribute it and/or
+> + * modify it under the terms of the GNU General Public License as
+> + * published by the Free Software Foundation; either version 2 of
+> + * the License, or (at your option) any later version.
+> + */
+> +
+> +#include <linux/clk-provider.h>
+> +
+> +#include "sun4i_tcon.h"
+> +#include "sun4i_hdmi.h"
+> +
+> +struct sun4i_tmds {
+> +       struct clk_hw           hw;
+> +       struct sun4i_hdmi       *hdmi;
+> +};
+> +
+> +static inline struct sun4i_tmds *hw_to_tmds(struct clk_hw *hw)
+> +{
+> +       return container_of(hw, struct sun4i_tmds, hw);
+> +}
+> +
+> +
+> +static unsigned long sun4i_tmds_calc_divider(unsigned long rate,
+> +                                            unsigned long parent_rate,
+> +                                            u8 *div,
+> +                                            bool *half)
+> +{
+> +       unsigned long best_rate = 0;
+> +       u8 best_m = 0, m;
+> +       bool is_double;
+> +
+> +       for (m = 1; m < 16; m++) {
+> +               u8 d;
+> +
+> +               for (d = 1; d < 3; d++) {
+> +                       unsigned long tmp_rate;
+> +
+> +                       tmp_rate = parent_rate / m / d;
+> +
+> +                       if (tmp_rate > rate)
+> +                               continue;
+> +
+> +                       if (!best_rate ||
+> +                           (rate - tmp_rate) < (rate - best_rate)) {
+> +                               best_rate = tmp_rate;
+> +                               best_m = m;
+> +                               is_double = d;
+> +                       }
+> +               }
+> +       }
+> +
+> +       if (div && half) {
+> +               *div = best_m;
+> +               *half = is_double;
+> +       }
+> +
+> +       return best_rate;
+> +}
+> +
+> +
+> +static int sun4i_tmds_determine_rate(struct clk_hw *hw,
+> +                                    struct clk_rate_request *req)
+> +{
+> +       struct clk_hw *parent;
+> +       unsigned long best_parent = 0;
+> +       unsigned long rate = req->rate;
+> +       int best_div = 1, best_half = 1;
+> +       int i, j;
+> +
+> +       printk("%s %d rate %lu\n", __func__, __LINE__, rate);
+
+Stray printk?
+
+> +
+> +       /*
+> +        * We only consider PLL3, since the TCON is very likely to be
+> +        * clocked from it, and to have the same rate than our HDMI
+> +        * clock, so we should not need to do anything.
+> +        */
+> +
+> +       parent = clk_hw_get_parent_by_index(hw, 0);
+> +       if (!parent)
+> +               return -EINVAL;
+> +
+> +       for (i = 1; i < 3; i++) {
+> +               for (j = 1; j < 16; j++) {
+> +                       unsigned long ideal = rate * i * j;
+> +                       unsigned long rounded;
+> +
+> +                       rounded = clk_hw_round_rate(parent, ideal);
+> +
+> +                       if (rounded == ideal) {
+> +                               best_parent = rounded;
+> +                               best_half = i;
+> +                               best_div = j;
+> +                               goto out;
+> +                       }
+> +
+> +                       if (abs(rate - rounded / i) <
+> +                           abs(rate - best_parent / best_div)) {
+> +                               best_parent = rounded;
+> +                               best_div = i;
+> +                       }
+> +               }
+> +       }
+> +
+> +out:
+> +       req->rate = best_parent / best_half / best_div;
+> +       req->best_parent_rate = best_parent;
+> +       req->best_parent_hw = parent;
+> +
+> +       printk("%s %d rate %lu parent rate %lu (%s) div %d half %d\n",
+> +              __func__, __LINE__, req->rate, req->best_parent_rate,
+> +              clk_hw_get_name(req->best_parent_hw),
+> +              best_div, best_half);
+
+Stray printk?
+
+> +
+> +       return 0;
+> +}
+> +
+> +static unsigned long sun4i_tmds_recalc_rate(struct clk_hw *hw,
+> +                                           unsigned long parent_rate)
+> +{
+> +       struct sun4i_tmds *tmds = hw_to_tmds(hw);
+> +       u32 reg;
+> +
+> +       reg = readl(tmds->hdmi->base + SUN4I_HDMI_PAD_CTRL1_REG);
+> +       if (reg & SUN4I_HDMI_PAD_CTRL1_HALVE_CLK)
+> +               parent_rate /= 2;
+> +
+> +       reg = readl(tmds->hdmi->base + SUN4I_HDMI_PLL_CTRL_REG);
+> +       reg = (reg >> 4) & 0xf;
+> +       if (!reg)
+> +               reg = 1;
+> +
+> +       return parent_rate / reg;
+> +}
+> +
+> +static int sun4i_tmds_set_rate(struct clk_hw *hw, unsigned long rate,
+> +                              unsigned long parent_rate)
+> +{
+> +       struct sun4i_tmds *tmds = hw_to_tmds(hw);
+> +       bool half;
+> +       u32 reg;
+> +       u8 div;
+> +
+> +       sun4i_tmds_calc_divider(rate, parent_rate, &div, &half);
+> +
+> +       printk("%s %d rate %lu parent rate %lu div %d half %s\n",
+> +              __func__, __LINE__, rate, parent_rate, div,
+> +              half ? "yes" : "no");
+
+Stray printk?
+
+> +
+> +       reg = readl(tmds->hdmi->base + SUN4I_HDMI_PAD_CTRL1_REG);
+> +       reg &= ~SUN4I_HDMI_PAD_CTRL1_HALVE_CLK;
+> +       if (half)
+> +               reg |= SUN4I_HDMI_PAD_CTRL1_HALVE_CLK;
+> +       writel(reg, tmds->hdmi->base + SUN4I_HDMI_PAD_CTRL1_REG);
+> +
+> +       reg = readl(tmds->hdmi->base + SUN4I_HDMI_PLL_CTRL_REG);
+> +       reg &= ~SUN4I_HDMI_PLL_CTRL_DIV_MASK;
+> +       writel(reg | SUN4I_HDMI_PLL_CTRL_DIV(div),
+> +              tmds->hdmi->base + SUN4I_HDMI_PLL_CTRL_REG);
+> +
+> +       return 0;
+> +}
+> +
+> +static u8 sun4i_tmds_get_parent(struct clk_hw *hw)
+> +{
+> +       struct sun4i_tmds *tmds = hw_to_tmds(hw);
+> +       u32 reg;
+> +
+> +       reg = readl(tmds->hdmi->base + SUN4I_HDMI_PLL_DBG0_REG);
+> +       return ((reg & SUN4I_HDMI_PLL_DBG0_TMDS_PARENT_MASK) >>
+> +               SUN4I_HDMI_PLL_DBG0_TMDS_PARENT_SHIFT);
+> +}
+> +
+> +static int sun4i_tmds_set_parent(struct clk_hw *hw, u8 index)
+> +{
+> +       struct sun4i_tmds *tmds = hw_to_tmds(hw);
+> +       u32 reg;
+> +
+> +       if (index > 1)
+> +               return -EINVAL;
+> +
+> +       reg = readl(tmds->hdmi->base + SUN4I_HDMI_PLL_DBG0_REG);
+> +       reg &= ~SUN4I_HDMI_PLL_DBG0_TMDS_PARENT_MASK;
+> +       writel(reg | SUN4I_HDMI_PLL_DBG0_TMDS_PARENT(index),
+> +              tmds->hdmi->base + SUN4I_HDMI_PLL_DBG0_REG);
+> +
+> +       return 0;
+> +}
+> +
+> +static const struct clk_ops sun4i_tmds_ops = {
+> +       .determine_rate = sun4i_tmds_determine_rate,
+> +       .recalc_rate    = sun4i_tmds_recalc_rate,
+> +       .set_rate       = sun4i_tmds_set_rate,
+> +
+> +       .get_parent     = sun4i_tmds_get_parent,
+> +       .set_parent     = sun4i_tmds_set_parent,
+> +};
+> +
+> +int sun4i_tmds_create(struct sun4i_hdmi *hdmi)
+> +{
+> +       struct clk_init_data init;
+> +       struct sun4i_tmds *tmds;
+> +       const char *parents[2];
+> +
+> +       parents[0] = __clk_get_name(hdmi->pll0_clk);
+> +       if (!parents[0])
+> +               return -ENODEV;
+> +
+> +       parents[1] = __clk_get_name(hdmi->pll1_clk);
+> +       if (!parents[1])
+> +               return -ENODEV;
+> +
+> +       tmds = devm_kzalloc(hdmi->dev, sizeof(*tmds), GFP_KERNEL);
+> +       if (!tmds)
+> +               return -ENOMEM;
+> +
+> +       init.name = "hdmi-tmds";
+> +       init.ops = &sun4i_tmds_ops;
+> +       init.parent_names = parents;
+> +       init.num_parents = 2;
+> +       init.flags = CLK_SET_RATE_PARENT;
+> +
+> +       tmds->hdmi = hdmi;
+> +       tmds->hw.init = &init;
+> +
+> +       hdmi->tmds_clk = devm_clk_register(hdmi->dev, &tmds->hw);
+> +       if (IS_ERR(hdmi->tmds_clk))
+> +               return PTR_ERR(hdmi->tmds_clk);
+> +
+> +       return 0;
+> +}
+> --
+
+I also compared the manuals of A20 and A31, and the existing U-boot driver.
+
+So far it looks like the DDC bits are quite different. We could probably
+use regfields to work around it, but the DDC clock formula is completely
+different. The TMDS clock pre-divider is also different, your usual sun4i
+vs sun6i factor offset. Last, the initial values for the 3 PLL related
+registers are different.
+
+I'm currently working on an A31 variant for this, basically just copying
+the DDC and TMDS bits.
+
+Regards
+ChenYu
+
+> git-series 0.8.11
+>
+> --
+> You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+> For more options, visit https://groups.google.com/d/optout.
