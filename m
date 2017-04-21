@@ -1,17 +1,17 @@
-From: Robert Jarzmik <robert.jarzmik@free.fr>
-Subject: Re: [PATCH V5 4/7] ARM: pxa: Use - instead of @ for DT OPP entries
-Date: Fri, 21 Apr 2017 18:02:32 +0200
-Message-ID: <874lxhkauf.fsf@belgarion.home>
-References: <cover.1492685450.git.viresh.kumar@linaro.org>
- <cover.1492685450.git.viresh.kumar@linaro.org>
- <741bc9af28d6968e6a9409f94681066db5d1228b.1492685450.git.viresh.kumar@linaro.org>
- <87a87a7s66.fsf@belgarion.home> <20170421053041.GB26900@vireshk-i7>
+From: Stefan Agner <stefan@agner.ch>
+Subject: Re: [PATCH 2/5] mtd: nand: gpmi: add i.MX 7 SoC support
+Date: Fri, 21 Apr 2017 09:19:56 -0700
+Message-ID: <494a7bc044457240a302d92b3a50b8e5@agner.ch>
+References: <20170421010755.18025-1-stefan@agner.ch>
+ <20170421010755.18025-3-stefan@agner.ch>
+ <af3fe671-c5fb-d3cf-c891-e6b7c973baa1@gmail.com>
+ <5cf26d2b020392c875464c7504a9fb5b@agner.ch>
+ <8377dadc-043f-5932-cb13-3367db38a6dd@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170421053041.GB26900@vireshk-i7> (Viresh Kumar's message of
- "Fri, 21 Apr 2017 11:00:41 +0530")
+In-Reply-To: <8377dadc-043f-5932-cb13-3367db38a6dd@gmail.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -21,34 +21,103 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh@kernel.org>, linaro-kernel@lists.linaro.org, arm@kernel.org, linux-pm@vger.kernel.org, Rafael Wysocki <rjw@rjwysocki.net>, linux-kernel@vger.kernel.org, Haojian Zhuang <haojian.zhuang@gmail.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, Krzysztof Kozlowski <krzk@kernel.org>, Daniel Mack <daniel@zonque.org>
+To: Marek Vasut <marek.vasut@gmail.com>
+Cc: mark.rutland@arm.com, boris.brezillon@free-electrons.com, fabio.estevam@freescale.com, devicetree@vger.kernel.org, richard@nod.at, linux-kernel@vger.kernel.org, robh+dt@kernel.org, linux-mtd@lists.infradead.org, kernel@pengutronix.de, han.xu@nxp.com, shawnguo@kernel.org, cyrille.pitchen@atmel.com, computersforpeace@gmail.com, dwmw2@infradead.org, linux-arm-kernel@lists.infradead.org, LW@karo-electronics.de
 List-Id: devicetree@vger.kernel.org
 
-Viresh Kumar <viresh.kumar@linaro.org> writes:
+On 2017-04-21 06:08, Marek Vasut wrote:
+> On 04/21/2017 05:15 AM, Stefan Agner wrote:
+>> On 2017-04-20 19:03, Marek Vasut wrote:
+>>> On 04/21/2017 03:07 AM, Stefan Agner wrote:
+>>>> Add support for i.MX 7 SoC. The i.MX 7 has a slightly different
+>>>> clock architecture requiring only two clocks to be referenced.
+>>>> The IP is slightly different compared to i.MX 6SoloX, but currently
+>>>> none of this differences are in use so there is no detection needed
+>>>> and the driver can reuse IS_MX6SX.
+>>>>
+>>>> Signed-off-by: Stefan Agner <stefan@agner.ch>
+>>>> ---
+>>>>  drivers/mtd/nand/gpmi-nand/gpmi-nand.c | 15 +++++++++++++++
+>>>>  1 file changed, 15 insertions(+)
+>>>>
+>>>> diff --git a/drivers/mtd/nand/gpmi-nand/gpmi-nand.c b/drivers/mtd/nand/gpmi-nand/gpmi-nand.c
+>>>> index c8bbf5da2ab8..4a45d37ddc80 100644
+>>>> --- a/drivers/mtd/nand/gpmi-nand/gpmi-nand.c
+>>>> +++ b/drivers/mtd/nand/gpmi-nand/gpmi-nand.c
+>>>> @@ -127,6 +127,18 @@ static const struct gpmi_devdata gpmi_devdata_imx6sx = {
+>>>>  	.clks_count = ARRAY_SIZE(gpmi_clks_for_mx6),
+>>>>  };
+>>>>
+>>>> +static const char * const gpmi_clks_for_mx7d[] = {
+>>>> +	"gpmi_io", "gpmi_bch_apb",
+>>>> +};
+>>>> +
+>>>> +static const struct gpmi_devdata gpmi_devdata_imx7d = {
+>>>> +	.type = IS_MX6SX,
+>>>
+>>> Would it make sense to use IS_MX7 here already to prevent future surprises ?
+>>>
+>>
+>> Yeah I was thinking we can do it once we have an actual reason to
+>> distinguish.
+> 
+> So what are the differences anyway ?
+> 
 
-> On 20-04-17, 22:14, Robert Jarzmik wrote:
->> Viresh Kumar <viresh.kumar@linaro.org> writes:
->> 
->> > Compiling the DT file with W=1, DTC warns like follows:
->> >
->> > Warning (unit_address_vs_reg): Node /opp_table0/opp@1000000000 has a
->> > unit name, but no reg property
->> >
->> > Fix this by replacing '@' with '-' as the OPP nodes will never have a
->> > "reg" property.
->> >
->> > Reported-by: Krzysztof Kozlowski <krzk@kernel.org>
->> > Reported-by: Masahiro Yamada <yamada.masahiro@socionext.com>
->> > Suggested-by: Mark Rutland <mark.rutland@arm.com>
->> > Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
->> > Acked-by: Rob Herring <robh@kernel.org>
->> Acked-by: Robert Jarzmik <robert.jarzmik@free.fr>
->
-> Thanks. But I need you to pick it up for your pull request for arm-soc.
-Sure, let me take it through my tree, no problem.
+I did not check the details, but Han's patchset (link in cover letter)
+mentions:
+"add the HW bitflip detection and correction for i.MX6QP and i.MX7D."...
 
-Cheers.
+>> But then, adding the type would only require 2-3 lines of change if I
+>> add it to the GPMI_IS_MX6 macro...
+> 
+> Then at least add a comment because using type = IMX6SX right under
+> gpmi_data_mx7d can trigger some head-scratching. And put my R-B on V2.
 
--- 
-Robert
+FWIW, I mentioned it in the commit message.
+
+I think rather then adding a comment it is cleaner to just add IS_IMX7D
+and add it to the GPMI_IS_MX6 macro. That does not need a comment since
+it implicitly says we have a i.MX 7 but treat it like i.MX 6 and it is a
+rather small change. Does that sound acceptable?
+
+--- a/drivers/mtd/nand/gpmi-nand/gpmi-nand.c
++++ b/drivers/mtd/nand/gpmi-nand/gpmi-nand.c
+@@ -132,7 +132,7 @@ static const char * const gpmi_clks_for_mx7d[] = {
+ };
+
+ static const struct gpmi_devdata gpmi_devdata_imx7d = {
+-       .type = IS_MX6SX,
++       .type = IS_MX7D,
+        .bch_max_ecc_strength = 62,
+        .max_chain_delay = 12,
+        .clks = gpmi_clks_for_mx7d,
+diff --git a/drivers/mtd/nand/gpmi-nand/gpmi-nand.h
+b/drivers/mtd/nand/gpmi-nand/gpmi-nand.h
+index 2e584e18d980..f2cc13abc896 100644
+--- a/drivers/mtd/nand/gpmi-nand/gpmi-nand.h
++++ b/drivers/mtd/nand/gpmi-nand/gpmi-nand.h
+@@ -123,7 +123,8 @@ enum gpmi_type {
+        IS_MX23,
+        IS_MX28,
+        IS_MX6Q,
+-       IS_MX6SX
++       IS_MX6SX,
++       IS_MX7D,
+ };
+
+ struct gpmi_devdata {
+@@ -307,6 +308,8 @@ void gpmi_copy_bits(u8 *dst, size_t dst_bit_off,
+ #define GPMI_IS_MX28(x)                ((x)->devdata->type == IS_MX28)
+ #define GPMI_IS_MX6Q(x)                ((x)->devdata->type == IS_MX6Q)
+ #define GPMI_IS_MX6SX(x)       ((x)->devdata->type == IS_MX6SX)
++#define GPMI_IS_MX7D(x)                ((x)->devdata->type == IS_MX7D)
+
+-#define GPMI_IS_MX6(x)         (GPMI_IS_MX6Q(x) || GPMI_IS_MX6SX(x))
++#define GPMI_IS_MX6(x)         (GPMI_IS_MX6Q(x) || GPMI_IS_MX6SX(x) ||
+\
++                                GPMI_IS_MX7D(x))
+ #endif
+
+--
+Stefan
