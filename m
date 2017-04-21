@@ -1,127 +1,65 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [PATCH V8 5/6] ACPI: Support the probing on the devices which
- apply indirect-IO
-Date: Fri, 21 Apr 2017 18:14:02 +0100
-Message-ID: <20170421171352.GA27801@red-moon>
-References: <1490887619-61732-1-git-send-email-yuanzhichang@hisilicon.com>
- <1490887619-61732-6-git-send-email-yuanzhichang@hisilicon.com>
- <CALdTtnuO=592n+PoR_kkdTyeFYRd90VyPf0JLwnEo7DtXwzoPA@mail.gmail.com>
- <a73c87d3-59fc-843b-a4e1-d9f5201bffd9@gmail.com>
+From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Subject: [PATCH RFC 0/7] HDMI audio support for Exynos Odroid boards
+Date: Fri, 21 Apr 2017 19:19:44 +0200
+Message-ID: <1492795191-31298-1-git-send-email-s.nawrocki@samsung.com>
+References: <CGME20170421172007epcas1p25dba753df34c309e6b00ed08ae930043@epcas1p2.samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <a73c87d3-59fc-843b-a4e1-d9f5201bffd9@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: "zhichang.yuan" <zhichang.yuan02@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Gabriele Paoloni <gabriele.paoloni@huawei.com>, rafael@kernel.org, benh@kernel.crashing.org, Will Deacon <will.deacon@arm.com>, linuxarm@huawei.com, Frank Rowand <frowand.list@gmail.com>, Arnd Bergmann <arnd@arndb.de>, dann frazier <dann.frazier@canonical.com>, xuwei5@hisilicon.com, linux-acpi@vger.kernel.org, linux-pci@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Corey Minyard <minyard@acm.org>, John Garry <john.garry@huawei.com>, Zou Rongrong <zourongrong@gmail.com>, Rob Herring <robh+dt@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, kantyzc@163.com, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Seth Forshee <seth.forshee@canonical.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "zhichang.yuan" <yuanzhichang@hisilicon.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: linux-samsung-soc@vger.kernel.org, linux-clk@vger.kernel.org, dri-devel@lists.freedesktop.org, alsa-devel@alsa-project.org, devicetree@vger.kernel.org
+Cc: javier@osg.samsung.com, b.zolnierkie@samsung.com, sw0312.kim@samsung.com, krzk@kernel.org, cw00.choi@samsung.com, broonie@kernel.org, Sylwester Nawrocki <s.nawrocki@samsung.com>, robh+dt@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 21, 2017 at 10:22:52AM +0800, zhichang.yuan wrote:
-> Hi, Dann,
-> 
-> 
-> 
-> On 04/21/2017 04:57 AM, dann frazier wrote:
-> > On Thu, Mar 30, 2017 at 9:26 AM, zhichang.yuan
-> > <yuanzhichang@hisilicon.com> wrote:
-> >> On some platforms(such as Hip06/Hip07), the legacy ISA/LPC devices access I/O
-> >> with some special host-local I/O ports known on x86. To access the I/O
-> >> peripherals, an indirect-IO mechanism is introduced to mapped the host-local
-> >> I/O to system logical/fake PIO similar the PCI MMIO on architectures where no
-> >> separate I/O space exists. Just as PCI MMIO, the host I/O range should be
-> >> registered before probing the downstream devices and set up the I/O mapping.
-> >> But current ACPI bus probing doesn't support these indirect-IO hosts/devices.
-> >>
-> >> This patch introdueces a new ACPI handler for this device category. Through the
-> >> handler attach callback, the indirect-IO hosts I/O registration is done and
-> >> all peripherals' I/O resources are translated into logic/fake PIO before
-> >> starting the enumeration.
-> >>
-> >> Signed-off-by: zhichang.yuan <yuanzhichang@hisilicon.com>
-> >> Signed-off-by: Gabriele Paoloni <gabriele.paoloni@huawei.com>
-> >> ---
-> >>  drivers/acpi/Makefile          |   1 +
-> >>  drivers/acpi/acpi_indirectio.c | 344 +++++++++++++++++++++++++++++++++++++++++
-> >>  drivers/acpi/internal.h        |   5 +
-> >>  drivers/acpi/scan.c            |   1 +
-> >>  4 files changed, 351 insertions(+)
-> >>  create mode 100644 drivers/acpi/acpi_indirectio.c
-> >>
-> >> diff --git a/drivers/acpi/Makefile b/drivers/acpi/Makefile
-> >> index a391bbc..10e5f2b 100644
-> >> --- a/drivers/acpi/Makefile
-> >> +++ b/drivers/acpi/Makefile
-> >> @@ -57,6 +57,7 @@ acpi-$(CONFIG_ACPI_PROCFS_POWER) += cm_sbs.o
-> >>  acpi-y                         += acpi_lpat.o
-> >>  acpi-$(CONFIG_ACPI_GENERIC_GSI) += irq.o
-> >>  acpi-$(CONFIG_ACPI_WATCHDOG)   += acpi_watchdog.o
-> >> +acpi-$(CONFIG_INDIRECT_PIO)    += acpi_indirectio.o
-> >>
-> >>  # These are (potentially) separate modules
-> >>
-> >> diff --git a/drivers/acpi/acpi_indirectio.c b/drivers/acpi/acpi_indirectio.c
-> >> new file mode 100644
-> >> index 0000000..c8c80b5
-> >> --- /dev/null
-> >> +++ b/drivers/acpi/acpi_indirectio.c
-> >> @@ -0,0 +1,344 @@
-> 
-> [snip]
-> 
-> >> +acpi_build_logiciores_template(struct acpi_device *adev,
-> >> +                       struct acpi_buffer *buffer)
-> >> +{
-> >> +       acpi_handle handle = adev->handle;
-> >> +       struct acpi_resource *resource;
-> >> +       acpi_status status;
-> >> +       int res_cnt = 0;
-> >> +
-> >> +       status = acpi_walk_resources(handle, METHOD_NAME__CRS,
-> >> +                                    acpi_count_logiciores, &res_cnt);
-> >> +       if (ACPI_FAILURE(status) || !res_cnt) {
-> >> +               dev_err(&adev->dev, "can't evaluate _CRS: %d\n", status);
-> >> +               return -EINVAL;
-> >> +       }
-> >> +
-> >> +       buffer->length = sizeof(struct acpi_resource) * (res_cnt + 1) + 1;
-> >> +       buffer->pointer = kzalloc(buffer->length - 1, GFP_KERNEL);
-> > 
-> > (Seth Forshee noticed this issue, just passing it on)
-> > 
-> > Should this just allocate the full buffer->length? That would keep the
-> > length attribute accurate (possibly avoiding an off-by-1 error later).
-> > It's not clear what the trailing byte is needed for, but other drivers
-> > allocate it as well (drivers/acpi/pci_link.c and
-> > drivers/platform/x86/sony-laptop.c).
-> 
-> Thanks for your suggestion!
-> 
-> I also curious why this one appended byte is needed as it seems the later
-> acpi_set_current_resources() doesn't use this byte.
-> And I tested without setting the buffer->length as the length of resource list
-> directly, it seems ok.
-> 
-> But anyway, it looks more reasonable to allocate the memory with the
-> buffer->length rather than buffer->length - 1;
-> 
-> I was made the V9 patch-set, and I can add your suggestion there. But I also
-> awaiting for ARM64 ACPI maintainer's comment about this patch before really
-> sending V9. I wonder whether there is better way to make our indirect-IO devices
-> can be assigned the logic PIO before the enumeration...
-> 
-> Lorenzo, Hanjun, what do you think about this patch?
-
-I will get to it shortly, sorry for the delay.
-
-Thanks,
-Lorenzo
+SW4gdGhpcyBzZXJpZXMgSSBnYXRoZXJlZCBwYXRjaGVzIHRvdWNoaW5nIHZhcmlvdXMgc3Vic3lz
+dGVtcyB0byBtYWtlIAp0aGUgb3ZlcmFsbCByZXZpZXcgZWFzaWVyLCBmaW5hbGx5IEknbSBnb2lu
+ZyB0byBwb3N0IGluZGVwZW5kZW50bHkKcGF0Y2hlcyBmb3IgZWFjaCBzdWJzeXN0ZW0gYW5kIHRo
+ZSBkdHMgcGF0Y2goZXMpIHdpbGwgYmUgcG9zdHBvbmVkCnRvIHN1YnNlcXVlbnQgbWVyZ2Ugd2lu
+ZG93LgoKVGhlIG1haW4gcHVycG9zZSBvZiB0aGlzIHNlcmllcyBpcyB0byBhZGQgYXVkaW8gY29k
+ZWMgaW50ZXJmYWNlIHRvIHRoZSBFeHlub3MKRFJNIGRyaXZlciwgc28gSERNSSBhdWRpbyBjYW4g
+YmUgcHJvcGVybHkgc3VwcG9ydGVkLCBhbHNvIG9uIGJvYXJkcyB3aGVyZQpIRE1JIGlzIHRoZSBv
+bmx5IGNvbm5lY3RvciBhdmFpbGFibGUgZm9yIGF1ZGlvLgoKQ3VycmVudGx5IGluIG1haW5saW5l
+IHRoZSBBU29DIHNpbXBsZS1jYXJkIGlzIHVzZWQgZm9yIE9kcm9pZCBYVTMsIApJIGRlY2lkZWQg
+dG8gY2hhbmdlIGl0IGFuZCB1c2UgYSBkZWRpY2F0ZWQgQVNvQyBtYWNoaW5lIGRyaXZlciwgd2hp
+Y2ggYWxsb3dlZCAKdG8gaW1wbGVtZW1lbnQgc3BlY2lmaWMgY2xvY2sgc2V0dGluZ3MgKEVQTEwg
+YW5kIHRoZSBJMlMgcm9vdCBjbG9jayBhZGp1c3RlZCAKdG8gYXVkaW8gc2FtcGxlIHJhdGVzKSBh
+bmQgdG8gZW5zdXJlIHByb3BlciBudW1iZXIgb2YgYXVkaW8gY2hhbm5lbHMgCmdldHMgbmVnb3Rp
+YXRlZCBpbiBtdWx0aWNvZGVjIHN5c3RlbSBjb25maWd1cmF0aW9uLgoKVGhpcyBzZXJpZXMgaXMg
+YmFzZWQgb24gdjQuMTEtcmM2LCBoYXMgYmVlbiB0ZXN0ZWQgb24gT2Ryb2lkIFhVMy4gCgpTeWx3
+ZXN0ZXIgTmF3cm9ja2kgKDcpOgogIGNsazogc2Ftc3VuZzogQWRkIGVuYWJsZS9kaXNhYmxlIG9w
+ZXJhdGlvbiBmb3IgUExMMzZYWCBjbG9ja3MKICBjbGs6IHNhbXN1bmc6IEFkZCBkZWZpbml0aW9u
+cyBvZiBzb21lIGF1ZGlvIHJlbGF0ZWQgY2xvY2tzCiAgY2xrOiBzYW1zdW5nOiBleHlub3M1NDJ4
+OiBBZGQgRVBMTCByYXRlIHRhYmxlCiAgZHJtOiBleHlub3M6IEFkZCBkcml2ZXIgZm9yIEhETUkg
+YXVkaW8gaW50ZXJmYWNlCiAgQVNvQzogQWRkIE9kcm9pZCBzb3VuZCBEVCBiaW5kaW5ncyBkb2N1
+bWVudGF0aW9uCiAgQVNvQzogc2Ftc3VuZzogQWRkIE9kcm9pZCBBU29DIG1hY2hpbmUgZHJpdmVy
+CiAgQVJNOiBkdHM6IHNhbXN1bmc6IFN3aXRjaCB0byBkZWRpY2F0ZWQgT2Ryb2lkIHNvdW5kIGNh
+cmQgYmluZGluZwoKIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL3NvdW5kL3NhbXN1bmcsb2Ryb2lk
+LnR4dCAgIHwgIDU3ICsrKysrKwogYXJjaC9hcm0vYm9vdC9kdHMvZXh5bm9zNC5kdHNpICAgICAg
+ICAgICAgICAgICAgICAgfCAgIDEgKwogYXJjaC9hcm0vYm9vdC9kdHMvZXh5bm9zNTQyMC5kdHNp
+ICAgICAgICAgICAgICAgICAgfCAgIDEgKwogYXJjaC9hcm0vYm9vdC9kdHMvZXh5bm9zNTQyMi1v
+ZHJvaWR4dTMtYXVkaW8uZHRzaSAgfCAgNTkgKysrKy0tCiBkcml2ZXJzL2Nsay9zYW1zdW5nL2Ns
+ay1leHlub3M1NDIwLmMgICAgICAgICAgICAgICB8ICAzMSArKy0KIGRyaXZlcnMvY2xrL3NhbXN1
+bmcvY2xrLXBsbC5jICAgICAgICAgICAgICAgICAgICAgIHwgIDg1ICsrKystLS0tCiBkcml2ZXJz
+L2dwdS9kcm0vZXh5bm9zL0tjb25maWcgICAgICAgICAgICAgICAgICAgICB8ICAgMSArCiBkcml2
+ZXJzL2dwdS9kcm0vZXh5bm9zL2V4eW5vc19oZG1pLmMgICAgICAgICAgICAgICB8IDIyMCArKysr
+KysrKysrKysrKysrKy0tLS0KIGluY2x1ZGUvZHQtYmluZGluZ3MvY2xvY2svZXh5bm9zNTQyMC5o
+ICAgICAgICAgICAgIHwgICAzICsKIHNvdW5kL3NvYy9zYW1zdW5nL0tjb25maWcgICAgICAgICAg
+ICAgICAgICAgICAgICAgIHwgICA4ICsKIHNvdW5kL3NvYy9zYW1zdW5nL01ha2VmaWxlICAgICAg
+ICAgICAgICAgICAgICAgICAgIHwgICAyICsKIHNvdW5kL3NvYy9zYW1zdW5nL29kcm9pZC5jICAg
+ICAgICAgICAgICAgICAgICAgICAgIHwgMjE5ICsrKysrKysrKysrKysrKysrKysrCiAxMiBmaWxl
+cyBjaGFuZ2VkLCA1OTkgaW5zZXJ0aW9ucygrKSwgODggZGVsZXRpb25zKC0pCiBjcmVhdGUgbW9k
+ZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3NvdW5kL3NhbXN1bmcs
+b2Ryb2lkLnR4dAogY3JlYXRlIG1vZGUgMTAwNjQ0IHNvdW5kL3NvYy9zYW1zdW5nL29kcm9pZC5j
+CgotLSAKMS45LjEKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9y
+ZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZl
+bAo=
