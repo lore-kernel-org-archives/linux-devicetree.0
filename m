@@ -1,90 +1,93 @@
-From: Tiffany Lin <tiffany.lin@mediatek.com>
-Subject: Re: [PATCH] media: mtk-vcodec: remove informative log
-Date: Fri, 21 Apr 2017 16:04:14 +0800
-Message-ID: <1492761854.12924.7.camel@mtksdaap41>
-References: <1491389669-32737-1-git-send-email-minghsiu.tsai@mediatek.com>
- <1491390599.32502.1.camel@mtksdaap41> <20170419075643.0a04af21@vento.lan>
+From: icenowy-h8G6r0blFSE@public.gmane.org
+Subject: Re: [PATCH v4 06/11] drm/sun4i: add support for
+ Allwinner DE2 mixers
+Date: Fri, 21 Apr 2017 16:18:57 +0800
+Message-ID: <2C85F818-5612-4A53-A558-B633315B8D37@aosc.io>
+References: <20170416120849.54542-1-icenowy@aosc.io>
+ <20170416120849.54542-7-icenowy@aosc.io>
+ <20170418090047.7i2k6dtoqxfdqwwy@lukather>
+ <88F5FAC9-1873-4C76-9AB9-FF361C07664E@aosc.io>
+ <20170420083707.wdtrdlxpvocpzc7g@lukather>
+Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170419075643.0a04af21@vento.lan>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Mauro Carvalho Chehab <mchehab@osg.samsung.com>
-Cc: devicetree@vger.kernel.org, daniel.thompson@linaro.org, Minghsiu Tsai <minghsiu.tsai@mediatek.com>, srv_heupstream@mediatek.com, Wu-Cheng Li <wuchengli@google.com>, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, Daniel Kurtz <djkurtz@chromium.org>, Rob Herring <robh+dt@kernel.org>, Hans Verkuil <hans.verkuil@cisco.com>, linux-arm-kernel@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, Yingjoe Chen <yingjoe.chen@mediatek.com>, Eddie Huang <eddie.huang@mediatek.com>, Pawel Osciak <posciak@chromium.org>, linux-media@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBDS6XAN6ZADRB44A47DQKGQEU72QS6I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20170420083707.wdtrdlxpvocpzc7g@lukather>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2017-04-19 at 07:56 -0300, Mauro Carvalho Chehab wrote:
-> Em Wed, 5 Apr 2017 19:09:59 +0800
-> Tiffany Lin <tiffany.lin@mediatek.com> escreveu:
-> 
-> > On Wed, 2017-04-05 at 18:54 +0800, Minghsiu Tsai wrote:
-> > > Driver is stable. Remove DEBUG definition from driver.
-> > > 
-> > > There are debug message in /var/log/messages if DEBUG is defined,
-> > > such as:
-> > > [MTK_V4L2] level=0 fops_vcodec_open(),170: decoder capability 0
-> > > [MTK_V4L2] level=0 fops_vcodec_open(),177: 16000000.vcodec decoder [0]
-> > > [MTK_V4L2] level=0 fops_vcodec_release(),200: [0] decoder
-> > > 
-> > > Signed-off-by: Minghsiu Tsai <minghsiu.tsai@mediatek.com>  
-> > Acked-by:Tiffany Lin <Tiffany.lin@mediatek.com>
-> > 
-> > > ---
-> > >  drivers/media/platform/mtk-vcodec/mtk_vcodec_util.h | 1 -
-> > >  1 file changed, 1 deletion(-)
-> > > 
-> > > diff --git a/drivers/media/platform/mtk-vcodec/mtk_vcodec_util.h b/drivers/media/platform/mtk-vcodec/mtk_vcodec_util.h
-> > > index 7d55975..1248083 100644
-> > > --- a/drivers/media/platform/mtk-vcodec/mtk_vcodec_util.h
-> > > +++ b/drivers/media/platform/mtk-vcodec/mtk_vcodec_util.h
-> > > @@ -31,7 +31,6 @@ struct mtk_vcodec_mem {
-> > >  extern int mtk_v4l2_dbg_level;
-> > >  extern bool mtk_vcodec_dbg;
-> > >  
-> > > -#define DEBUG	1
-> > >  
-> > >  #if defined(DEBUG)
-> > >    
-> 
-> After this patch, building the Kernel with W=1 now shows warnings:
-> 
-> drivers/media/platform/mtk-vcodec/mtk_vcodec_dec_pm.c: In function 'mtk_vcodec_dec_pw_on':
-> drivers/media/platform/mtk-vcodec/mtk_vcodec_dec_pm.c:114:51: warning: suggest braces around empty body in an 'if' statement [-Wempty-body]
->    mtk_v4l2_err("pm_runtime_get_sync fail %d", ret);
->                                                    ^
-> 
-> I wrote a patch fixing it, as this is really a trivial issue.
-> 
-> Yet, after that, this one still remains:
-> 
-> 
-> drivers/media/platform/mtk-vcodec/mtk_vcodec_dec.c: In function 'mtk_vdec_pic_info_update':
-> drivers/media/platform/mtk-vcodec/mtk_vcodec_dec.c:284:6: warning: variable 'ret' set but not used [-Wunused-but-set-variable]
->   int ret;
->       ^~~
-> 
 
+=E4=BA=8E 2017=E5=B9=B44=E6=9C=8820=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=8D=884:=
+37:07, Maxime Ripard=20
+<maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> =E5=86=99=E5=88=B0:
+> On Tue, Apr 18, 2017 at 06:47:56PM +0800, Icenowy Zheng wrote:
+>> >> +	/* Get the physical address of the buffer in memory */
+>> >> +	gem =3D drm_fb_cma_get_gem_obj(fb, 0);
+>> >> +
+>> >> +	DRM_DEBUG_DRIVER("Using GEM @ %pad\n", &gem->paddr);
+>> >> +
+>> >> +	/* Compute the start of the displayed memory */
+>> >> +	bpp =3D fb->format->cpp[0];
+>> >> +	paddr =3D gem->paddr + fb->offsets[0];
+>> >> +	paddr +=3D (state->src_x >> 16) * bpp;
+>> >> +	paddr +=3D (state->src_y >> 16) * fb->pitches[0];
+>> >> +
+>> >> +	DRM_DEBUG_DRIVER("Setting buffer address to %pad\n", &paddr);
+>> >> +
+>> >> +	paddr_u32 =3D (uint32_t) paddr;
+>> >
+>> >How does that work on 64-bits systems ?
+>>=20
+>> The hardware is not designed to work on 64-bit systems.
+>>=20
+>> Even 64-bit A64/H5 has also 3GiB memory limit.
+>=20
+> That's a fragile assumption.
 
-> 
-> Shouldn't be mtk_vdec_pic_info_update() returning an error code?
-> 
-> 
-> Also, IMHO, at least errors should be shown at dmesg.
-> 
-Got it. We will upstream patch to fix warning and add dmesg when error.
+Yes, it's only the basical reason.
 
+>=20
+>> The address cell in mixer hardware is also only 32-bit.
+>>=20
+>> So we should just keep the force conversion here. If we then really
+>> met 4GiB-capable AW SoC without changing DE2, I think we should have
+>> other way to limit CMA pool inside 4GiB.
+>=20
+> The register name looks like this is only the lower 32 bits that you
+> can set here, and that there is another register for the upper 32 bits
+> of that address somewhere.
 
-best regards,
-Tiffany
+Maybe... but no one can verify this as their's no currently any user
+which has 4GiB+ DRAM.
 
-> Thanks,
-> Mauro
+I think we should keep this until Allwinner really made a 4GiB-capable
+hardware.
+
+>=20
+> In that case, please use the lower_32_bits and upper_32_bits helper,
+> and don't cast it that way.
+>=20
+> If it isn't the case, you should set the DMA mask (through
+> dma_set_mask) so that we only allocate memory that can be accessed by
+> this device.
+
+How to do it?
+
+>=20
+> Maxime
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
