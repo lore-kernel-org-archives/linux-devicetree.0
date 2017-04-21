@@ -1,302 +1,152 @@
-From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Subject: Re: [PATCH 06/13] MIPS: lantiq: Convert the xbar driver to a platform_driver
-Date: Fri, 21 Apr 2017 20:28:36 +0200
-Message-ID: <CAFBinCCWc5AhYNUmbS-+eV+4dj63Hkf7VWwK+w6pZfnnJ-3ZFw@mail.gmail.com>
-References: <20170417192942.32219-1-hauke@hauke-m.de> <20170417192942.32219-7-hauke@hauke-m.de>
+From: Han Xu <xhnjupt@gmail.com>
+Subject: Re: [PATCH 2/5] mtd: nand: gpmi: add i.MX 7 SoC support
+Date: Fri, 21 Apr 2017 13:29:16 -0500
+Message-ID: <CA+EcR20FCPSec+ihTMA=SGwogd7p5tsnECCp3CR-Nv6fUciK4g@mail.gmail.com>
+References: <20170421010755.18025-1-stefan@agner.ch> <20170421010755.18025-3-stefan@agner.ch>
+ <af3fe671-c5fb-d3cf-c891-e6b7c973baa1@gmail.com> <5cf26d2b020392c875464c7504a9fb5b@agner.ch>
+ <8377dadc-043f-5932-cb13-3367db38a6dd@gmail.com> <494a7bc044457240a302d92b3a50b8e5@agner.ch>
+ <57336d7e-7b48-8855-9e87-3eb370facd05@gmail.com> <a9cdc47795433e7b152dcdd123f9bd63@agner.ch>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170417192942.32219-7-hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
-Cc: ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, hauke.mehrtens-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <a9cdc47795433e7b152dcdd123f9bd63@agner.ch>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stefan Agner <stefan@agner.ch>
+Cc: Marek Vasut <marek.vasut@gmail.com>, mark.rutland@arm.com, Boris Brezillon <boris.brezillon@free-electrons.com>, Fabio Estevam <fabio.estevam@freescale.com>, devicetree@vger.kernel.org, Richard Weinberger <richard@nod.at>, linux-kernel@vger.kernel.org, robh+dt@kernel.org, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, Sascha Hauer <kernel@pengutronix.de>, Han Xu <han.xu@nxp.com>, Shawn Guo <shawnguo@kernel.org>, Cyrille Pitchen <cyrille.pitchen@atmel.com>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>, linux-arm-kernel@lists.infradead.org, LW@karo-electronics.de
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 17, 2017 at 9:29 PM, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org> wrote:
-> From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+On Fri, Apr 21, 2017 at 12:38 PM, Stefan Agner <stefan@agner.ch> wrote:
+> On 2017-04-21 10:22, Marek Vasut wrote:
+>> On 04/21/2017 06:19 PM, Stefan Agner wrote:
+>>> On 2017-04-21 06:08, Marek Vasut wrote:
+>>>> On 04/21/2017 05:15 AM, Stefan Agner wrote:
+>>>>> On 2017-04-20 19:03, Marek Vasut wrote:
+>>>>>> On 04/21/2017 03:07 AM, Stefan Agner wrote:
+>>>>>>> Add support for i.MX 7 SoC. The i.MX 7 has a slightly different
+>>>>>>> clock architecture requiring only two clocks to be referenced.
+>>>>>>> The IP is slightly different compared to i.MX 6SoloX, but currently
+>>>>>>> none of this differences are in use so there is no detection needed
+>>>>>>> and the driver can reuse IS_MX6SX.
+>>>>>>>
+>>>>>>> Signed-off-by: Stefan Agner <stefan@agner.ch>
+>>>>>>> ---
+>>>>>>>  drivers/mtd/nand/gpmi-nand/gpmi-nand.c | 15 +++++++++++++++
+>>>>>>>  1 file changed, 15 insertions(+)
+>>>>>>>
+>>>>>>> diff --git a/drivers/mtd/nand/gpmi-nand/gpmi-nand.c b/drivers/mtd/nand/gpmi-nand/gpmi-nand.c
+>>>>>>> index c8bbf5da2ab8..4a45d37ddc80 100644
+>>>>>>> --- a/drivers/mtd/nand/gpmi-nand/gpmi-nand.c
+>>>>>>> +++ b/drivers/mtd/nand/gpmi-nand/gpmi-nand.c
+>>>>>>> @@ -127,6 +127,18 @@ static const struct gpmi_devdata gpmi_devdata_imx6sx = {
+>>>>>>>          .clks_count = ARRAY_SIZE(gpmi_clks_for_mx6),
+>>>>>>>  };
+>>>>>>>
+>>>>>>> +static const char * const gpmi_clks_for_mx7d[] = {
+>>>>>>> +        "gpmi_io", "gpmi_bch_apb",
+>>>>>>> +};
+>>>>>>> +
+>>>>>>> +static const struct gpmi_devdata gpmi_devdata_imx7d = {
+>>>>>>> +        .type = IS_MX6SX,
+>>>>>>
+>>>>>> Would it make sense to use IS_MX7 here already to prevent future surprises ?
+>>>>>>
+>>>>>
+>>>>> Yeah I was thinking we can do it once we have an actual reason to
+>>>>> distinguish.
+>>>>
+>>>> So what are the differences anyway ?
+>>>>
+>>>
+>>> I did not check the details, but Han's patchset (link in cover letter)
+>>> mentions:
+>>> "add the HW bitflip detection and correction for i.MX6QP and i.MX7D."...
+>>
+>> Oh, interesting.
+>>
+>>>>> But then, adding the type would only require 2-3 lines of change if I
+>>>>> add it to the GPMI_IS_MX6 macro...
+>>>>
+>>>> Then at least add a comment because using type = IMX6SX right under
+>>>> gpmi_data_mx7d can trigger some head-scratching. And put my R-B on V2.
+>>>
+>>> FWIW, I mentioned it in the commit message.
+>>>
+>>> I think rather then adding a comment it is cleaner to just add IS_IMX7D
+>>> and add it to the GPMI_IS_MX6 macro. That does not need a comment since
+>>> it implicitly says we have a i.MX 7 but treat it like i.MX 6 and it is a
+>>> rather small change. Does that sound acceptable?
+>>
+>> Sure, that's even better, thanks.
+>>
+>> btw isn't there some single-core mx7 (mx7s ?) , maybe we should just go
+>> with mx7 (without the d suffix). I dunno if it has GPMI NAND though, so
+>> maybe mx7d is the right thing to do here ...
+>>
 >
-> This allows using the xbar driver on ARX300 based SoCs which require the
-> same xbar setup as the xRX200 chipsets because the xbar driver
-> initialization is not guarded by an xRX200 specific
-> of_machine_is_compatible condition anymore. Additionally the new driver
-> takes a syscon phandle to configure the XBAR endianness bits in RCU
-> (before this was done in arch/mips/lantiq/xway/reset.c and also
-> guarded by an xRX200 specific if-statement).
->
-> Signed-off-by: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
-> ---
->  .../devicetree/bindings/mips/lantiq/xbar.txt       |  22 +++++
->  MAINTAINERS                                        |   1 +
->  arch/mips/lantiq/xway/reset.c                      |   4 -
->  arch/mips/lantiq/xway/sysctrl.c                    |  41 ---------
->  drivers/soc/Makefile                               |   1 +
->  drivers/soc/lantiq/Makefile                        |   1 +
->  drivers/soc/lantiq/xbar.c                          | 100 +++++++++++++++++++++
->  7 files changed, 125 insertions(+), 45 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/mips/lantiq/xbar.txt
->  create mode 100644 drivers/soc/lantiq/Makefile
->  create mode 100644 drivers/soc/lantiq/xbar.c
->
-> diff --git a/Documentation/devicetree/bindings/mips/lantiq/xbar.txt b/Documentation/devicetree/bindings/mips/lantiq/xbar.txt
-> new file mode 100644
-> index 000000000000..86e53ff3b0d5
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mips/lantiq/xbar.txt
-> @@ -0,0 +1,22 @@
-> +Lantiq XWAY SoC XBAR binding
-> +============================
-> +
-> +
-> +-------------------------------------------------------------------------------
-> +Required properties:
-> +- compatible   : Should be "lantiq,xbar-xway"
-> +- reg          : The address and length of the XBAR registers
-> +
-> +Optional properties:
-> +- lantiq,rcu-syscon    : A phandle and offset to the endianness configuration
-> +                         registers in the RCU module
-is the xbar module really coupled with the RCU mdoule? if it is then:
+> There is a Solo version yes, and it has GPMI NAND too. However, almost
+> all i.MX 7 IPs have been named imx7d by NXP for some reason (including
+> compatible strings, see grep -r -e imx7 Documentation/), so I thought I
+> stay consistent here...
 
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Hi Guys,
 
-> +
-> +
-> +-------------------------------------------------------------------------------
-> +Example for the XBAR on the xRX200 SoCs:
-> +       xbar0: xbar@400000 {
-> +               compatible = "lantiq,xbar-xway";
-> +               reg = <0x400000 0x1000>;
-> +               big-endian;
-> +               lantiq,rcu-syscon = <&rcu0 0x4c>;
-> +       };
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 676c139bc883..7c03776a56e9 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -7321,6 +7321,7 @@ M:        John Crispin <john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org>
->  L:     linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
->  S:     Maintained
->  F:     arch/mips/lantiq
-> +F:     drivers/soc/lantiq
+Yes, there should be a i.MX7 Solo version with one core fused out. IMO, can
+we use QUIRK to distinguish them rather than SoC name. I know I also sent
+some patch set with SoC Name but I prefer to use QUIRK now.
+
 >
->  LAPB module
->  L:     linux-x25-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> diff --git a/arch/mips/lantiq/xway/reset.c b/arch/mips/lantiq/xway/reset.c
-> index 83fd65d76e81..b6752c95a600 100644
-> --- a/arch/mips/lantiq/xway/reset.c
-> +++ b/arch/mips/lantiq/xway/reset.c
-> @@ -373,10 +373,6 @@ static int __init mips_reboot_setup(void)
->             of_machine_is_compatible("lantiq,vr9"))
->                 ltq_usb_init();
->
-> -       if (of_machine_is_compatible("lantiq,vr9"))
-> -               ltq_rcu_w32(ltq_rcu_r32(RCU_AHB_ENDIAN) | RCU_VR9_BE_AHB1S,
-> -                           RCU_AHB_ENDIAN);
-> -
->         _machine_restart = ltq_machine_restart;
->         _machine_halt = ltq_machine_halt;
->         pm_power_off = ltq_machine_power_off;
-> diff --git a/arch/mips/lantiq/xway/sysctrl.c b/arch/mips/lantiq/xway/sysctrl.c
-> index 95bec460b651..706639a343bc 100644
-> --- a/arch/mips/lantiq/xway/sysctrl.c
-> +++ b/arch/mips/lantiq/xway/sysctrl.c
-> @@ -145,15 +145,7 @@ static u32 pmu_clk_cr_b[] = {
->  #define pmu_w32(x, y)  ltq_w32((x), pmu_membase + (y))
->  #define pmu_r32(x)     ltq_r32(pmu_membase + (x))
->
-> -#define XBAR_ALWAYS_LAST       0x430
-> -#define XBAR_FPI_BURST_EN      BIT(1)
-> -#define XBAR_AHB_BURST_EN      BIT(2)
-> -
-> -#define xbar_w32(x, y) ltq_w32((x), ltq_xbar_membase + (y))
-> -#define xbar_r32(x)    ltq_r32(ltq_xbar_membase + (x))
-> -
->  static void __iomem *pmu_membase;
-> -static void __iomem *ltq_xbar_membase;
->  void __iomem *ltq_cgu_membase;
->  void __iomem *ltq_ebu_membase;
->
-> @@ -293,16 +285,6 @@ static void pci_ext_disable(struct clk *clk)
->         ltq_cgu_w32((1 << 31) | (1 << 30), pcicr);
->  }
->
-> -static void xbar_fpi_burst_disable(void)
-> -{
-> -       u32 reg;
-> -
-> -       /* bit 1 as 1 --burst; bit 1 as 0 -- single */
-> -       reg = xbar_r32(XBAR_ALWAYS_LAST);
-> -       reg &= ~XBAR_FPI_BURST_EN;
-> -       xbar_w32(reg, XBAR_ALWAYS_LAST);
-> -}
-> -
->  /* enable a clockout source */
->  static int clkout_enable(struct clk *clk)
->  {
-> @@ -459,26 +441,6 @@ void __init ltq_soc_init(void)
->         if (!pmu_membase || !ltq_cgu_membase || !ltq_ebu_membase)
->                 panic("Failed to remap core resources");
->
-> -       if (of_machine_is_compatible("lantiq,vr9")) {
-> -               struct resource res_xbar;
-> -               struct device_node *np_xbar =
-> -                               of_find_compatible_node(NULL, NULL,
-> -                                                       "lantiq,xbar-xway");
-> -
-> -               if (!np_xbar)
-> -                       panic("Failed to load xbar nodes from devicetree");
-> -               if (of_address_to_resource(np_xbar, 0, &res_xbar))
-> -                       panic("Failed to get xbar resources");
-> -               if (!request_mem_region(res_xbar.start, resource_size(&res_xbar),
-> -                       res_xbar.name))
-> -                       panic("Failed to get xbar resources");
-> -
-> -               ltq_xbar_membase = ioremap_nocache(res_xbar.start,
-> -                                                  resource_size(&res_xbar));
-> -               if (!ltq_xbar_membase)
-> -                       panic("Failed to remap xbar resources");
-> -       }
-> -
->         /* make sure to unprotect the memory region where flash is located */
->         ltq_ebu_w32(ltq_ebu_r32(LTQ_EBU_BUSCON0) & ~EBU_WRDIS, LTQ_EBU_BUSCON0);
->
-> @@ -605,7 +567,4 @@ void __init ltq_soc_init(void)
->                 clkdev_add_pmu("1e116000.mei", "dfe", 1, 0, PMU_DFE);
->                 clkdev_add_pmu("1e100400.serial", NULL, 1, 0, PMU_ASC0);
->         }
-> -
-> -       if (of_machine_is_compatible("lantiq,vr9"))
-> -               xbar_fpi_burst_disable();
->  }
-> diff --git a/drivers/soc/Makefile b/drivers/soc/Makefile
-> index 05eae52a30b4..8775d37ac158 100644
-> --- a/drivers/soc/Makefile
-> +++ b/drivers/soc/Makefile
-> @@ -6,6 +6,7 @@ obj-y                           += bcm/
->  obj-$(CONFIG_ARCH_DOVE)                += dove/
->  obj-$(CONFIG_MACH_DOVE)                += dove/
->  obj-y                          += fsl/
-> +obj-$(CONFIG_SOC_XWAY)         += lantiq/
->  obj-$(CONFIG_ARCH_MEDIATEK)    += mediatek/
->  obj-$(CONFIG_ARCH_QCOM)                += qcom/
->  obj-$(CONFIG_ARCH_RENESAS)     += renesas/
-> diff --git a/drivers/soc/lantiq/Makefile b/drivers/soc/lantiq/Makefile
-> new file mode 100644
-> index 000000000000..7411bd23d58e
-> --- /dev/null
-> +++ b/drivers/soc/lantiq/Makefile
-> @@ -0,0 +1 @@
-> +obj-y                          += xbar.o
-> diff --git a/drivers/soc/lantiq/xbar.c b/drivers/soc/lantiq/xbar.c
-> new file mode 100644
-> index 000000000000..dcd087817435
-> --- /dev/null
-> +++ b/drivers/soc/lantiq/xbar.c
-> @@ -0,0 +1,100 @@
-> +/*
-> + *  This program is free software; you can redistribute it and/or modify it
-> + *  under the terms of the GNU General Public License version 2 as published
-> + *  by the Free Software Foundation.
-> + *
-> + *  Copyright (C) 2011-2015 John Crispin <blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
-> + *  Copyright (C) 2015 Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-> + */
-> +
-> +#include <linux/ioport.h>
-> +#include <linux/mfd/syscon.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/of_platform.h>
-> +#include <linux/of_address.h>
-> +#include <linux/regmap.h>
-> +
-> +#include <lantiq_soc.h>
-> +
-> +#define XBAR_ALWAYS_LAST       0x430
-> +#define XBAR_FPI_BURST_EN      BIT(1)
-> +#define XBAR_AHB_BURST_EN      BIT(2)
-> +
-> +#define RCU_VR9_BE_AHB1S       0x00000008
-> +
-> +static int ltq_xbar_probe(struct platform_device *pdev)
-> +{
-> +       struct device *dev = &pdev->dev;
-> +       struct device_node *np = dev->of_node;
-> +       struct resource res_xbar;
-> +       struct regmap *rcu_regmap;
-> +       void __iomem *xbar_membase;
-> +       u32 rcu_ahb_endianness_reg_offset;
-> +       u32 rcu_ahb_endianness_val;
-> +       int ret;
-> +
-> +       ret = of_address_to_resource(np, 0, &res_xbar);
-> +       if (ret) {
-> +               dev_err(dev, "Failed to get xbar resources");
-> +               return ret;
-> +       }
-> +
-> +       if (!devm_request_mem_region(dev, res_xbar.start,
-> +                                    resource_size(&res_xbar),
-> +               res_xbar.name)) {
-> +               dev_err(dev, "Failed to get xbar resources");
-> +               return -ENODEV;
-> +       }
-> +
-> +       xbar_membase = devm_ioremap_nocache(dev, res_xbar.start,
-> +                                               resource_size(&res_xbar));
-> +       if (!xbar_membase) {
-> +               dev_err(dev, "Failed to remap xbar resources");
-> +               return -ENODEV;
-> +       }
-> +
-> +       /* RCU configuration is optional */
-> +       rcu_regmap = syscon_regmap_lookup_by_phandle(np, "lantiq,rcu-syscon");
-> +       if (!IS_ERR_OR_NULL(rcu_regmap)) {
-> +               if (of_property_read_u32_index(np, "lantiq,rcu-syscon", 1,
-> +                       &rcu_ahb_endianness_reg_offset)) {
-> +                       dev_err(&pdev->dev, "Failed to get RCU reg offset\n");
-> +                       return -EINVAL;
-> +               }
-> +
-> +               if (of_device_is_big_endian(np))
-> +                       rcu_ahb_endianness_val = RCU_VR9_BE_AHB1S;
-> +               else
-> +                       rcu_ahb_endianness_val = 0;
-> +
-> +               if (regmap_update_bits(rcu_regmap,
-> +                                       rcu_ahb_endianness_reg_offset,
-> +                                       RCU_VR9_BE_AHB1S,
-> +                                       rcu_ahb_endianness_val))
-> +                       dev_warn(&pdev->dev,
-> +                               "Failed to configure RCU AHB endianness\n");
-> +       }
-> +
-> +       /* disable fpi burst */
-> +       ltq_w32_mask(XBAR_FPI_BURST_EN, 0,
-> +                    xbar_membase + XBAR_ALWAYS_LAST);
-> +
-> +       return 0;
-> +}
-> +
-> +static const struct of_device_id xbar_match[] = {
-> +       { .compatible = "lantiq,xbar-xway" },
-> +       {},
-> +};
-> +MODULE_DEVICE_TABLE(of, xbar_match);
-> +
-> +static struct platform_driver xbar_driver = {
-> +       .probe = ltq_xbar_probe,
-> +       .driver = {
-> +               .name = "xbar-xway",
-> +               .of_match_table = xbar_match,
-> +       },
-> +};
-> +
-> +builtin_platform_driver(xbar_driver);
 > --
-> 2.11.0
+> Stefan
 >
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>>> --- a/drivers/mtd/nand/gpmi-nand/gpmi-nand.c
+>>> +++ b/drivers/mtd/nand/gpmi-nand/gpmi-nand.c
+>>> @@ -132,7 +132,7 @@ static const char * const gpmi_clks_for_mx7d[] = {
+>>>  };
+>>>
+>>>  static const struct gpmi_devdata gpmi_devdata_imx7d = {
+>>> -       .type = IS_MX6SX,
+>>> +       .type = IS_MX7D,
+>>>         .bch_max_ecc_strength = 62,
+>>>         .max_chain_delay = 12,
+>>>         .clks = gpmi_clks_for_mx7d,
+>>> diff --git a/drivers/mtd/nand/gpmi-nand/gpmi-nand.h
+>>> b/drivers/mtd/nand/gpmi-nand/gpmi-nand.h
+>>> index 2e584e18d980..f2cc13abc896 100644
+>>> --- a/drivers/mtd/nand/gpmi-nand/gpmi-nand.h
+>>> +++ b/drivers/mtd/nand/gpmi-nand/gpmi-nand.h
+>>> @@ -123,7 +123,8 @@ enum gpmi_type {
+>>>         IS_MX23,
+>>>         IS_MX28,
+>>>         IS_MX6Q,
+>>> -       IS_MX6SX
+>>> +       IS_MX6SX,
+>>> +       IS_MX7D,
+>>>  };
+>>>
+>>>  struct gpmi_devdata {
+>>> @@ -307,6 +308,8 @@ void gpmi_copy_bits(u8 *dst, size_t dst_bit_off,
+>>>  #define GPMI_IS_MX28(x)                ((x)->devdata->type == IS_MX28)
+>>>  #define GPMI_IS_MX6Q(x)                ((x)->devdata->type == IS_MX6Q)
+>>>  #define GPMI_IS_MX6SX(x)       ((x)->devdata->type == IS_MX6SX)
+>>> +#define GPMI_IS_MX7D(x)                ((x)->devdata->type == IS_MX7D)
+>>>
+>>> -#define GPMI_IS_MX6(x)         (GPMI_IS_MX6Q(x) || GPMI_IS_MX6SX(x))
+>>> +#define GPMI_IS_MX6(x)         (GPMI_IS_MX6Q(x) || GPMI_IS_MX6SX(x) ||
+>>> \
+>>> +                                GPMI_IS_MX7D(x))
+>>>  #endif
+>>>
+>>> --
+>>> Stefan
+>>>
+>
+> ______________________________________________________
+> Linux MTD discussion mailing list
+> http://lists.infradead.org/mailman/listinfo/linux-mtd/
+
+
+
+-- 
+Sincerely,
+
+Han XU
