@@ -1,48 +1,68 @@
-From: Yinghai Lu <yinghai@kernel.org>
-Subject: [PATCH 08/13] OF/PCI: Add IORESOURCE_MEM_64 for 64-bit resource
-Date: Thu, 20 Apr 2017 22:04:55 -0700
-Message-ID: <20170421050500.13957-9-yinghai@kernel.org>
-References: <20170421050500.13957-1-yinghai@kernel.org>
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <20170421050500.13957-1-yinghai@kernel.org>
-Sender: linux-pci-owner@vger.kernel.org
-To: Bjorn Helgaas <bhelgaas@google.com>, David Miller <davem@davemloft.net>, Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: Wei Yang <weiyang@linux.vnet.ibm.com>, Khalid Aziz <khalid.aziz@oracle.com>, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, Yinghai Lu <yinghai@kernel.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+From: Giuseppe CAVALLARO <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>
+Subject: Re: [PATCH net-next v3] bindings: net: stmmac: add missing note about
+ LPI interrupt
+Date: Fri, 21 Apr 2017 07:26:39 +0200
+Message-ID: <8d41bee9-9564-ef47-ba58-7becb97ab672@st.com>
+References: <20170418123955.21335-1-niklass@axis.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170418123955.21335-1-niklass-VrBV9hrLPhE@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Niklas Cassel <niklas.cassel-VrBV9hrLPhE@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Joao Pinto <Joao.Pinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Niklas Cassel <niklass-VrBV9hrLPhE@public.gmane.org>, Alexandre TORGUE <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Eric Engestrom <eric-op+oiCINJLTt9jDmeYuA0g@public.gmane.org>
+Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-For device resource PREF bit setting under bridge 64-bit pref resource,
-we need to make sure only set PREF for 64bit resource.
+On 4/18/2017 2:39 PM, Niklas Cassel wrote:
+> From: Niklas Cassel <niklas.cassel-VrBV9hrLPhE@public.gmane.org>
+>
+> The hardware has a LPI interrupt.
+> There is already code in the stmmac driver to parse and handle the
+> interrupt. However, this information was missing from the DT binding.
+>
+> At the same time, improve the description of the existing interrupts.
+>
+> Signed-off-by: Niklas Cassel <niklas.cassel-VrBV9hrLPhE@public.gmane.org>
+> ---
+>   Documentation/devicetree/bindings/net/stmmac.txt | 13 ++++++++-----
+>   1 file changed, 8 insertions(+), 5 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/net/stmmac.txt b/Documentation/devicetree/bindings/net/stmmac.txt
+> index f652b0c384ce..c3a7be6615c5 100644
+> --- a/Documentation/devicetree/bindings/net/stmmac.txt
+> +++ b/Documentation/devicetree/bindings/net/stmmac.txt
+> @@ -7,9 +7,12 @@ Required properties:
+>   - interrupt-parent: Should be the phandle for the interrupt controller
+>     that services interrupts for this device
+>   - interrupts: Should contain the STMMAC interrupts
+> -- interrupt-names: Should contain the interrupt names "macirq"
+> -  "eth_wake_irq" if this interrupt is supported in the "interrupts"
+> -  property
+> +- interrupt-names: Should contain a list of interrupt names corresponding to
+> +	the interrupts in the interrupts property, if available.
+> +	Valid interrupt names are:
+> +  - "macirq" (combined signal for various interrupt events)
+> +  - "eth_wake_irq" (the interrupt to manage the remote wake-up packet detection)
+> +  - "eth_lpi" (the interrupt that occurs when Tx or Rx enters/exits LPI state)
+>   - phy-mode: See ethernet.txt file in the same directory.
+>   - snps,reset-gpio 	gpio number for phy reset.
+>   - snps,reset-active-low boolean flag to indicate if phy reset is active low.
+> @@ -152,8 +155,8 @@ Examples:
+>   		compatible = "st,spear600-gmac";
+>   		reg = <0xe0800000 0x8000>;
+>   		interrupt-parent = <&vic1>;
+> -		interrupts = <24 23>;
+> -		interrupt-names = "macirq", "eth_wake_irq";
+> +		interrupts = <24 23 22>;
+> +		interrupt-names = "macirq", "eth_wake_irq", "eth_lpi";
+>   		mac-address = [000000000000]; /* Filled in by U-Boot */
+>   		max-frame-size = <3800>;
+>   		phy-mode = "gmii";
 
-This patch set IORESOUCE_MEM_64 for 64bit resource during OF device
-resource flags parsing.
+Acked-by: Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>
 
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=96261
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=96241
-Signed-off-by: Yinghai Lu <yinghai@kernel.org>
-Cc: Grant Likely <grant.likely@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: devicetree@vger.kernel.org
-Tested-by: Khalid Aziz <khalid.aziz@oracle.com>
----
- drivers/of/address.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/of/address.c b/drivers/of/address.c
-index 02b2903..d1bb76c 100644
---- a/drivers/of/address.c
-+++ b/drivers/of/address.c
-@@ -131,9 +131,11 @@ static unsigned int of_bus_pci_get_flags(const __be32 *addr)
- 		flags |= IORESOURCE_IO;
- 		break;
- 	case 0x02: /* 32 bits */
--	case 0x03: /* 64 bits */
- 		flags |= IORESOURCE_MEM;
- 		break;
-+	case 0x03: /* 64 bits */
-+		flags |= IORESOURCE_MEM | IORESOURCE_MEM_64;
-+		break;
- 	}
- 	if (w & 0x40000000)
- 		flags |= IORESOURCE_PREFETCH;
--- 
-2.9.3
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
