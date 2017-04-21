@@ -1,49 +1,74 @@
-From: Michael Ellerman <mpe@ellerman.id.au>
-Subject: Re: [PATCH] of: introduce event tracepoints for dynamic device_node lifecyle
-Date: Fri, 21 Apr 2017 11:57:19 +1000
-Message-ID: <87vapyttds.fsf@concordia.ellerman.id.au>
-References: <1492475525-10827-1-git-send-email-tyreld@linux.vnet.ibm.com> <58F6AA35.2040902@gmail.com> <87efwp6v4e.fsf@concordia.ellerman.id.au> <1d51a229-612b-bf09-93d5-6e43b476e2cf@gmail.com> <58F83C66.7030806@gmail.com> <64505d40-926d-b302-4ff3-dff71aa5018a@gmail.com> <58F90D56.9070602@gmail.com>
+From: Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 2/5] mtd: nand: gpmi: add i.MX 7 SoC support
+Date: Fri, 21 Apr 2017 04:03:09 +0200
+Message-ID: <af3fe671-c5fb-d3cf-c891-e6b7c973baa1@gmail.com>
+References: <20170421010755.18025-1-stefan@agner.ch>
+ <20170421010755.18025-3-stefan@agner.ch>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <58F90D56.9070602@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Frank Rowand <frowand.list@gmail.com>, Tyrel Datwyler <turtle.in.the.kernel@gmail.com>, Tyrel Datwyler <tyreld@linux.vnet.ibm.com>, robh+dt@kernel.org
-Cc: linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, nfont@linux.vnet.ibm.com, rostedt@goodmis.org, mingo@redhat.com
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170421010755.18025-3-stefan-XLVq0VzYD2Y@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, richard-/L3Ra7n9ekc@public.gmane.org, cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, han.xu-3arQi8VN3Tc@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Frank Rowand <frowand.list@gmail.com> writes:
+On 04/21/2017 03:07 AM, Stefan Agner wrote:
+> Add support for i.MX 7 SoC. The i.MX 7 has a slightly different
+> clock architecture requiring only two clocks to be referenced.
+> The IP is slightly different compared to i.MX 6SoloX, but currently
+> none of this differences are in use so there is no detection needed
+> and the driver can reuse IS_MX6SX.
+> 
+> Signed-off-by: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+> ---
+>  drivers/mtd/nand/gpmi-nand/gpmi-nand.c | 15 +++++++++++++++
+>  1 file changed, 15 insertions(+)
+> 
+> diff --git a/drivers/mtd/nand/gpmi-nand/gpmi-nand.c b/drivers/mtd/nand/gpmi-nand/gpmi-nand.c
+> index c8bbf5da2ab8..4a45d37ddc80 100644
+> --- a/drivers/mtd/nand/gpmi-nand/gpmi-nand.c
+> +++ b/drivers/mtd/nand/gpmi-nand/gpmi-nand.c
+> @@ -127,6 +127,18 @@ static const struct gpmi_devdata gpmi_devdata_imx6sx = {
+>  	.clks_count = ARRAY_SIZE(gpmi_clks_for_mx6),
+>  };
+>  
+> +static const char * const gpmi_clks_for_mx7d[] = {
+> +	"gpmi_io", "gpmi_bch_apb",
+> +};
+> +
+> +static const struct gpmi_devdata gpmi_devdata_imx7d = {
+> +	.type = IS_MX6SX,
 
-> On 04/20/17 09:51, Tyrel Datwyler wrote:
->> On 04/19/2017 09:43 PM, Frank Rowand wrote:
-...
->>> Which ends up being this code:
->>>
->>>    of_platform_default_populate_init()
->>>       of_platform_default_populate()
->>>          of_platform_populate()
->>>             [[ of_find_node_by_path("/") ]]
->>>                [[ of_find_node_opts_by_path(path, NULL) ]]
->>>                   of_node_get(of_root)
->>>
->>> Note that some functions can be left out of the ARM call stack, with
->>> a return going back more than one level.  The functions in the call
->>> list above that are enclosed in '[[' and ']]' were found by source
->>> inspection in those cases.
->> 
->> The same thing is encountered in ppc64 stack traces. I assume it is
->> generally inlining of small functions, but I've never actually verified
->> that theory. Probably should take the time to investigate, or just ask
->> someone.
->
-> Yes, inlining small functions is one reason for this.
->
-> Another case I often find is that when function A calls function B calls
-> function C.  If the final statement of function B is 'return C()' then
-> there is no need for function C to return through function B, it can
-> instead return directly to function A.
+Would it make sense to use IS_MX7 here already to prevent future surprises ?
 
-It's called "Tail call optimisation", and that's more or less a good
-description.
+> +	.bch_max_ecc_strength = 62,
+> +	.max_chain_delay = 12,
+> +	.clks = gpmi_clks_for_mx7d,
+> +	.clks_count = ARRAY_SIZE(gpmi_clks_for_mx7d),
+> +};
+> +
+>  static irqreturn_t bch_irq(int irq, void *cookie)
+>  {
+>  	struct gpmi_nand_data *this = cookie;
+> @@ -2071,6 +2083,9 @@ static const struct of_device_id gpmi_nand_id_table[] = {
+>  	}, {
+>  		.compatible = "fsl,imx6sx-gpmi-nand",
+>  		.data = &gpmi_devdata_imx6sx,
+> +	}, {
+> +		.compatible = "fsl,imx7d-gpmi-nand",
+> +		.data = &gpmi_devdata_imx7d,
+>  	}, {}
+>  };
+>  MODULE_DEVICE_TABLE(of, gpmi_nand_id_table);
+> 
 
-cheers
+
+-- 
+Best regards,
+Marek Vasut
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
