@@ -1,47 +1,64 @@
-From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Subject: [PATCH 4/4] [DO NOT MERGE] arm64: allwinner: a64:
- enable RTL8211E PHY workaround
-Date: Sat, 22 Apr 2017 07:24:36 +0800
-Message-ID: <20170421232436.10924-5-icenowy@aosc.io>
-References: <20170421232436.10924-1-icenowy@aosc.io>
-Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
+From: Peter Rosin <peda@axentia.se>
+Subject: Re: [PATCH v13 03/10] mux: minimal mux subsystem and gpio-based mux
+ controller
+Date: Sat, 22 Apr 2017 01:28:28 +0200
+Message-ID: <c41cf9f6-ca9a-a29a-f6a3-c2b1a1d09a60@axentia.se>
+References: <1492101794-13444-1-git-send-email-peda@axentia.se>
+ <1492101794-13444-4-git-send-email-peda@axentia.se>
+ <20170418085156.GA4773@kroah.com>
+ <bdeecccf-02d6-226b-8516-1d41e3602a7a@axentia.se>
+ <20170418114430.GA1496@kroah.com>
+ <aacdc359-e46d-7d1a-d959-63d4ecb99fde@axentia.se>
+ <0f605429-afa2-2818-96d5-5da0bad122d6@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDS6XAN6ZADRBJFK5LDQKGQEMA7X5GY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20170421232436.10924-1-icenowy-h8G6r0blFSE@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <0f605429-afa2-2818-96d5-5da0bad122d6@axentia.se>
+Sender: linux-doc-owner@vger.kernel.org
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: linux-kernel@vger.kernel.org, Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Jonathan Corbet <corbet@lwn.net>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, linux-doc@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, Colin Ian King <colin.king@canonical.com>, Paul Gortmaker <paul.gortmaker@windriver.com>, Philipp Zabel <p.zabel@pengutronix.de>, kernel@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-From: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+On 2017-04-20 23:53, Peter Rosin wrote:
+> On 2017-04-18 23:53, Peter Rosin wrote:
+>> On 2017-04-18 13:44, Greg Kroah-Hartman wrote:
+>>> On Tue, Apr 18, 2017 at 12:59:50PM +0200, Peter Rosin wrote:
+>>>> On 2017-04-18 10:51, Greg Kroah-Hartman wrote:
+>>>>> On Thu, Apr 13, 2017 at 06:43:07PM +0200, Peter Rosin wrote:
+> 
+> *snip*
+> 
+>>>>>> +	if (mux->idle_state != MUX_IDLE_AS_IS &&
+>>>>>> +	    mux->idle_state != mux->cached_state)
+>>>>>> +		ret = mux_control_set(mux, mux->idle_state);
+>>>>>> +
+>>>>>> +	up_read(&mux->lock);
+>>>>>
+>>>>> You require a lock to be held for a "global" function?  Without
+>>>>> documentation?  Or even a sparse marking?  That's asking for trouble...
+>>>>
+>>>> Documentation I can handle, but where should I look to understand how I
+>>>> should add sparse markings?
+>>>
+>>> Run sparse on the code and see what it says :)
+>>
+>> Will do.
+> 
+> I just did, and even went through the trouble of getting the bleeding
+> edge sparse from the git repo when sparse 0.5.0 came up empty, but it's
+> all silence for me. So, how do I add sparse markings?
 
-Some Pine64+ boards are said to have broken RTL8211E PHY.
+I looked some more into this, and the markings I find that seem related
+are __acquire() and __release(). But neither mutex_lock() nor up_read()
+has markings like that, so adding them when using those kinds of locks
+in an imbalanced way seems like a sure way of *getting* sparse messages
+about context imbalance...
 
-Enable the workaround in Pine64+ device tree file.
+So, either that, or you are talking about __must_check markings?
 
-Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
----
- arch/arm64/boot/dts/allwinner/sun50i-a64-pine64-plus.dts | 4 ++++
- 1 file changed, 4 insertions(+)
+I feel like I'm missing something, please advise further.
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64-plus.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64-plus.dts
-index 790d14daaa6a..1f59ee4f8b45 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64-plus.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64-plus.dts
-@@ -48,3 +48,7 @@
- 
- 	/* TODO: Camera, Ethernet PHY, touchscreen, etc. */
- };
-+
-+&ext_phy {
-+	realtek,disable-rx-delay;
-+};
--- 
-2.12.2
+Cheers,
+peda
+
