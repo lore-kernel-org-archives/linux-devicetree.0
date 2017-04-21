@@ -1,68 +1,30 @@
-From: Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 2/5] mtd: nand: gpmi: add i.MX 7 SoC support
-Date: Fri, 21 Apr 2017 15:08:16 +0200
-Message-ID: <8377dadc-043f-5932-cb13-3367db38a6dd@gmail.com>
-References: <20170421010755.18025-1-stefan@agner.ch>
- <20170421010755.18025-3-stefan@agner.ch>
- <af3fe671-c5fb-d3cf-c891-e6b7c973baa1@gmail.com>
- <5cf26d2b020392c875464c7504a9fb5b@agner.ch>
+From: Herbert Xu <herbert@gondor.apana.org.au>
+Subject: Re: [PATCH v2 0/2] hwrng: mtk: add support for hardware random
+ generator on MT7623 SoC
+Date: Fri, 21 Apr 2017 21:16:53 +0800
+Message-ID: <20170421131653.GI14803@gondor.apana.org.au>
+References: <1492705466-27287-1-git-send-email-sean.wang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5cf26d2b020392c875464c7504a9fb5b-XLVq0VzYD2Y@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
-Cc: dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, richard-/L3Ra7n9ekc@public.gmane.org, cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, han.xu-3arQi8VN3Tc@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, LW-AvR2QvxeiV7DiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-crypto-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1492705466-27287-1-git-send-email-sean.wang@mediatek.com>
+Sender: linux-crypto-owner@vger.kernel.org
+To: sean.wang@mediatek.com
+Cc: mpm@selenic.com, robh+dt@kernel.org, mark.rutland@arm.com, clabbe.montjoie@gmail.com, prasannatsmkumar@gmail.com, romain.perier@free-electrons.com, shannon.nelson@oracle.com, weiyongjun1@huawei.com, devicetree@vger.kernel.org, linux-crypto@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, keyhaede@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On 04/21/2017 05:15 AM, Stefan Agner wrote:
-> On 2017-04-20 19:03, Marek Vasut wrote:
->> On 04/21/2017 03:07 AM, Stefan Agner wrote:
->>> Add support for i.MX 7 SoC. The i.MX 7 has a slightly different
->>> clock architecture requiring only two clocks to be referenced.
->>> The IP is slightly different compared to i.MX 6SoloX, but currently
->>> none of this differences are in use so there is no detection needed
->>> and the driver can reuse IS_MX6SX.
->>>
->>> Signed-off-by: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
->>> ---
->>>  drivers/mtd/nand/gpmi-nand/gpmi-nand.c | 15 +++++++++++++++
->>>  1 file changed, 15 insertions(+)
->>>
->>> diff --git a/drivers/mtd/nand/gpmi-nand/gpmi-nand.c b/drivers/mtd/nand/gpmi-nand/gpmi-nand.c
->>> index c8bbf5da2ab8..4a45d37ddc80 100644
->>> --- a/drivers/mtd/nand/gpmi-nand/gpmi-nand.c
->>> +++ b/drivers/mtd/nand/gpmi-nand/gpmi-nand.c
->>> @@ -127,6 +127,18 @@ static const struct gpmi_devdata gpmi_devdata_imx6sx = {
->>>  	.clks_count = ARRAY_SIZE(gpmi_clks_for_mx6),
->>>  };
->>>
->>> +static const char * const gpmi_clks_for_mx7d[] = {
->>> +	"gpmi_io", "gpmi_bch_apb",
->>> +};
->>> +
->>> +static const struct gpmi_devdata gpmi_devdata_imx7d = {
->>> +	.type = IS_MX6SX,
->>
->> Would it make sense to use IS_MX7 here already to prevent future surprises ?
->>
+On Fri, Apr 21, 2017 at 12:24:24AM +0800, sean.wang@mediatek.com wrote:
+> From: Sean Wang <sean.wang@mediatek.com>
 > 
-> Yeah I was thinking we can do it once we have an actual reason to
-> distinguish.
+> This patchset introduces support for Mediatek hardware random generator (RNG)
+> Currently, the driver is already tested successfully with rng-tools on MT7623
+> SoC. And it should also be workable on other similar Mediatek SoCs.
+> 
+> Changes since v1:
 
-So what are the differences anyway ?
-
-> But then, adding the type would only require 2-3 lines of change if I
-> add it to the GPMI_IS_MX6 macro...
-
-Then at least add a comment because using type = IMX6SX right under
-gpmi_data_mx7d can trigger some head-scratching. And put my R-B on V2.
-
+All applied.  Thanks.
 -- 
-Best regards,
-Marek Vasut
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
