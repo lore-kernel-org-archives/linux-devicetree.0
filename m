@@ -1,214 +1,42 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH v2 2/9] drm/sun4i: Use lists to track registered
- display backends and TCONs
-Date: Fri, 21 Apr 2017 16:38:50 +0800
-Message-ID: <20170421083857.29636-3-wens@csie.org>
-References: <20170421083857.29636-1-wens@csie.org>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+From: Ludovic Desroches <ludovic.desroches@microchip.com>
+Subject: [PATCH v2 3/5] MAINTAINERS: add Atmel PTC entries
+Date: Fri, 21 Apr 2017 10:39:22 +0200
+Message-ID: <20170421083924.15096-4-ludovic.desroches@microchip.com>
+References: <20170421083924.15096-1-ludovic.desroches@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBJEK47DQKGQELPIO2ZQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20170421083857.29636-1-wens-jdAy2FN1RRM@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <20170421083924.15096-1-ludovic.desroches@microchip.com>
+Sender: linux-input-owner@vger.kernel.org
+To: linux-input@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Cc: dmitry.torokhov@gmail.com, nicolas.ferre@microchip.com, alexandre.belloni@free-electrons.com, linux-kernel@vger.kernel.org, Ludovic Desroches <ludovic.desroches@microchip.com>
 List-Id: devicetree@vger.kernel.org
 
-To support multiple display pipelines, we need to keep track of the
-multiple display backends and TCONs registered with the driver.
+Add entries for the Atmel PTC Subsystem.
 
-Switch to lists to track registered components. Components are only
-appended to their respective lists if the bind process was successful.
-The TCON bind function now defers if a backend was not registered.
-
-Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Signed-off-by: Ludovic Desroches <ludovic.desroches@microchip.com>
 ---
- drivers/gpu/drm/sun4i/sun4i_backend.c |  6 +++++-
- drivers/gpu/drm/sun4i/sun4i_backend.h |  4 ++++
- drivers/gpu/drm/sun4i/sun4i_drv.c     |  2 ++
- drivers/gpu/drm/sun4i/sun4i_drv.h     |  4 +++-
- drivers/gpu/drm/sun4i/sun4i_tcon.c    | 14 ++++++++++++--
- drivers/gpu/drm/sun4i/sun4i_tcon.h    |  4 ++++
- 6 files changed, 30 insertions(+), 4 deletions(-)
+ MAINTAINERS | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/drivers/gpu/drm/sun4i/sun4i_backend.c b/drivers/gpu/drm/sun4i/sun4i_backend.c
-index d660741ba475..95a77c6a9161 100644
---- a/drivers/gpu/drm/sun4i/sun4i_backend.c
-+++ b/drivers/gpu/drm/sun4i/sun4i_backend.c
-@@ -19,6 +19,7 @@
- #include <drm/drm_plane_helper.h>
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 860dacb..e1b8b0e 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -2323,6 +2323,13 @@ F:	Documentation/devicetree/bindings/input/atmel,maxtouch.txt
+ F:	drivers/input/touchscreen/atmel_mxt_ts.c
+ F:	include/linux/platform_data/atmel_mxt_ts.h
  
- #include <linux/component.h>
-+#include <linux/list.h>
- #include <linux/reset.h>
- 
- #include "sun4i_backend.h"
-@@ -310,7 +311,6 @@ static int sun4i_backend_bind(struct device *dev, struct device *master,
- 	if (!backend)
- 		return -ENOMEM;
- 	dev_set_drvdata(dev, backend);
--	drv->backend = backend;
- 
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	regs = devm_ioremap_resource(dev, res);
-@@ -369,6 +369,8 @@ static int sun4i_backend_bind(struct device *dev, struct device *master,
- 		}
- 	}
- 
-+	list_add_tail(&backend->list, &drv->backend_list);
++ATMEL PTC SUBSYSTEM DRIVER
++M:	Ludovic Desroches <ludovic.desroches@microchip.com>
++L:	linux-input@vger.kernel.org
++S:	Supported
++F:	drivers/input/misc/atmel_ptc.c
++F:	include/uapi/linux/atmel_ptc.h
 +
- 	/* Reset the registers */
- 	for (i = 0x800; i < 0x1000; i += 4)
- 		regmap_write(backend->regs, i, 0);
-@@ -400,6 +402,8 @@ static void sun4i_backend_unbind(struct device *dev, struct device *master,
- {
- 	struct sun4i_backend *backend = dev_get_drvdata(dev);
- 
-+	list_del(&backend->list);
-+
- 	if (of_device_is_compatible(dev->of_node,
- 				    "allwinner,sun8i-a33-display-backend"))
- 		sun4i_backend_free_sat(dev);
-diff --git a/drivers/gpu/drm/sun4i/sun4i_backend.h b/drivers/gpu/drm/sun4i/sun4i_backend.h
-index 83e63cc702b4..9c8287309c65 100644
---- a/drivers/gpu/drm/sun4i/sun4i_backend.h
-+++ b/drivers/gpu/drm/sun4i/sun4i_backend.h
-@@ -14,6 +14,7 @@
- #define _SUN4I_BACKEND_H_
- 
- #include <linux/clk.h>
-+#include <linux/list.h>
- #include <linux/regmap.h>
- #include <linux/reset.h>
- 
-@@ -149,6 +150,9 @@ struct sun4i_backend {
- 
- 	struct clk		*sat_clk;
- 	struct reset_control	*sat_reset;
-+
-+	/* Backend list management */
-+	struct list_head	list;
- };
- 
- void sun4i_backend_apply_color_correction(struct sun4i_backend *backend);
-diff --git a/drivers/gpu/drm/sun4i/sun4i_drv.c b/drivers/gpu/drm/sun4i/sun4i_drv.c
-index 767bbadcc85d..89c51fd6e9af 100644
---- a/drivers/gpu/drm/sun4i/sun4i_drv.c
-+++ b/drivers/gpu/drm/sun4i/sun4i_drv.c
-@@ -101,6 +101,8 @@ static int sun4i_drv_bind(struct device *dev)
- 		goto free_drm;
- 	}
- 	drm->dev_private = drv;
-+	INIT_LIST_HEAD(&drv->backend_list);
-+	INIT_LIST_HEAD(&drv->tcon_list);
- 
- 	ret = of_reserved_mem_device_init(dev);
- 	if (ret && ret != -ENODEV) {
-diff --git a/drivers/gpu/drm/sun4i/sun4i_drv.h b/drivers/gpu/drm/sun4i/sun4i_drv.h
-index 5df50126ff52..835bdb5cc0c2 100644
---- a/drivers/gpu/drm/sun4i/sun4i_drv.h
-+++ b/drivers/gpu/drm/sun4i/sun4i_drv.h
-@@ -14,10 +14,12 @@
- #define _SUN4I_DRV_H_
- 
- #include <linux/clk.h>
-+#include <linux/list.h>
- #include <linux/regmap.h>
- 
- struct sun4i_drv {
--	struct sun4i_backend	*backend;
-+	struct list_head	backend_list;
-+	struct list_head	tcon_list;
- 	struct sun4i_tcon	*tcon;
- 
- 	struct drm_fbdev_cma	*fbdev;
-diff --git a/drivers/gpu/drm/sun4i/sun4i_tcon.c b/drivers/gpu/drm/sun4i/sun4i_tcon.c
-index 3ced0b1cef6e..52f37ef9a050 100644
---- a/drivers/gpu/drm/sun4i/sun4i_tcon.c
-+++ b/drivers/gpu/drm/sun4i/sun4i_tcon.c
-@@ -26,6 +26,7 @@
- #include <linux/regmap.h>
- #include <linux/reset.h>
- 
-+#include "sun4i_backend.h"
- #include "sun4i_crtc.h"
- #include "sun4i_dotclock.h"
- #include "sun4i_drv.h"
-@@ -476,14 +477,18 @@ static int sun4i_tcon_bind(struct device *dev, struct device *master,
- {
- 	struct drm_device *drm = data;
- 	struct sun4i_drv *drv = drm->dev_private;
-+	struct sun4i_backend *backend;
- 	struct sun4i_tcon *tcon;
- 	int ret;
- 
-+	/* Wait for a backend to be registered */
-+	if (list_empty(&drv->backend_list))
-+		return -EPROBE_DEFER;
-+
- 	tcon = devm_kzalloc(dev, sizeof(*tcon), GFP_KERNEL);
- 	if (!tcon)
- 		return -ENOMEM;
- 	dev_set_drvdata(dev, tcon);
--	drv->tcon = tcon;
- 	tcon->drm = drm;
- 	tcon->dev = dev;
- 	tcon->quirks = of_device_get_match_data(dev);
-@@ -528,7 +533,9 @@ static int sun4i_tcon_bind(struct device *dev, struct device *master,
- 		goto err_free_dotclock;
- 	}
- 
--	tcon->crtc = sun4i_crtc_init(drm, drv->backend, tcon);
-+	backend = list_first_entry(&drv->backend_list,
-+				   struct sun4i_backend, list);
-+	tcon->crtc = sun4i_crtc_init(drm, backend, tcon);
- 	if (IS_ERR(tcon->crtc)) {
- 		dev_err(dev, "Couldn't create our CRTC\n");
- 		ret = PTR_ERR(tcon->crtc);
-@@ -539,6 +546,8 @@ static int sun4i_tcon_bind(struct device *dev, struct device *master,
- 	if (ret < 0)
- 		goto err_free_clocks;
- 
-+	list_add_tail(&tcon->list, &drv->tcon_list);
-+
- 	return 0;
- 
- err_free_dotclock:
-@@ -555,6 +564,7 @@ static void sun4i_tcon_unbind(struct device *dev, struct device *master,
- {
- 	struct sun4i_tcon *tcon = dev_get_drvdata(dev);
- 
-+	list_del(&tcon->list);
- 	sun4i_dclk_free(tcon);
- 	sun4i_tcon_free_clocks(tcon);
- }
-diff --git a/drivers/gpu/drm/sun4i/sun4i_tcon.h b/drivers/gpu/drm/sun4i/sun4i_tcon.h
-index f636343a935d..1bda4d183eec 100644
---- a/drivers/gpu/drm/sun4i/sun4i_tcon.h
-+++ b/drivers/gpu/drm/sun4i/sun4i_tcon.h
-@@ -17,6 +17,7 @@
- #include <drm/drm_crtc.h>
- 
- #include <linux/kernel.h>
-+#include <linux/list.h>
- #include <linux/reset.h>
- 
- #define SUN4I_TCON_GCTL_REG			0x0
-@@ -172,6 +173,9 @@ struct sun4i_tcon {
- 
- 	/* Associated crtc */
- 	struct sun4i_crtc		*crtc;
-+
-+	/* TCON list management */
-+	struct list_head		list;
- };
- 
- struct drm_bridge *sun4i_tcon_find_bridge(struct device_node *node);
+ ATTO EXPRESSSAS SAS/SATA RAID SCSI DRIVER
+ M:	Bradley Grove <linuxdrivers@attotech.com>
+ L:	linux-scsi@vger.kernel.org
 -- 
-2.11.0
+2.9.0
+
