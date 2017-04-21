@@ -1,77 +1,78 @@
-From: Stefan Agner <stefan@agner.ch>
-Subject: Re: [PATCH 2/5] mtd: nand: gpmi: add i.MX 7 SoC support
-Date: Thu, 20 Apr 2017 20:15:43 -0700
-Message-ID: <5cf26d2b020392c875464c7504a9fb5b@agner.ch>
-References: <20170421010755.18025-1-stefan@agner.ch>
- <20170421010755.18025-3-stefan@agner.ch>
- <af3fe671-c5fb-d3cf-c891-e6b7c973baa1@gmail.com>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: [PATCH 3/3] ARM: sun8i: a83t: Rename pinmux setting names
+Date: Fri, 21 Apr 2017 11:30:06 +0800
+Message-ID: <CAGb2v64s1vSVasHT_ABs9rKu-mWKi+uXZ74fvqkHDzp2kSkk=A@mail.gmail.com>
+References: <20170418042205.27894-1-wens@csie.org> <20170418042205.27894-4-wens@csie.org>
+Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <af3fe671-c5fb-d3cf-c891-e6b7c973baa1@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Marek Vasut <marek.vasut@gmail.com>
-Cc: dwmw2@infradead.org, computersforpeace@gmail.com, boris.brezillon@free-electrons.com, richard@nod.at, cyrille.pitchen@atmel.com, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, kernel@pengutronix.de, han.xu@nxp.com, fabio.estevam@freescale.com, LW@karo-electronics.de, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBV7Z4XDQKGQE4UNVGVA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20170418042205.27894-4-wens-jdAy2FN1RRM@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2017-04-20 19:03, Marek Vasut wrote:
-> On 04/21/2017 03:07 AM, Stefan Agner wrote:
->> Add support for i.MX 7 SoC. The i.MX 7 has a slightly different
->> clock architecture requiring only two clocks to be referenced.
->> The IP is slightly different compared to i.MX 6SoloX, but currently
->> none of this differences are in use so there is no detection needed
->> and the driver can reuse IS_MX6SX.
->>
->> Signed-off-by: Stefan Agner <stefan@agner.ch>
->> ---
->>  drivers/mtd/nand/gpmi-nand/gpmi-nand.c | 15 +++++++++++++++
->>  1 file changed, 15 insertions(+)
->>
->> diff --git a/drivers/mtd/nand/gpmi-nand/gpmi-nand.c b/drivers/mtd/nand/gpmi-nand/gpmi-nand.c
->> index c8bbf5da2ab8..4a45d37ddc80 100644
->> --- a/drivers/mtd/nand/gpmi-nand/gpmi-nand.c
->> +++ b/drivers/mtd/nand/gpmi-nand/gpmi-nand.c
->> @@ -127,6 +127,18 @@ static const struct gpmi_devdata gpmi_devdata_imx6sx = {
->>  	.clks_count = ARRAY_SIZE(gpmi_clks_for_mx6),
->>  };
->>
->> +static const char * const gpmi_clks_for_mx7d[] = {
->> +	"gpmi_io", "gpmi_bch_apb",
->> +};
->> +
->> +static const struct gpmi_devdata gpmi_devdata_imx7d = {
->> +	.type = IS_MX6SX,
-> 
-> Would it make sense to use IS_MX7 here already to prevent future surprises ?
-> 
+On Tue, Apr 18, 2017 at 12:22 PM, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org> wrote:
+> The pinmux setting nodes all have an address element in their node
+> names, however the pinctrl node does not have #address-cells.
+>
+> Rename the existing pinmux setting nodes and labels in sun8i-a83t.dtsi,
+> dropping identifiers for functions that only have one possible setting,
+> and using the pingroup name if the function is identically available on
+> different pingroups.
+>
+> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/sun8i-a83t-allwinner-h8homlet-v2.dts |  2 +-
+>  arch/arm/boot/dts/sun8i-a83t-cubietruck-plus.dts       |  2 +-
+>  arch/arm/boot/dts/sun8i-a83t.dtsi                      | 10 +++++-----
+>  3 files changed, 7 insertions(+), 7 deletions(-)
+>
+[...]
+> diff --git a/arch/arm/boot/dts/sun8i-a83t.dtsi b/arch/arm/boot/dts/sun8i-a83t.dtsi
+> index 82cb87f21b96..87b99338716b 100644
+> --- a/arch/arm/boot/dts/sun8i-a83t.dtsi
+> +++ b/arch/arm/boot/dts/sun8i-a83t.dtsi
+> @@ -174,7 +174,7 @@
+>                         #interrupt-cells = <3>;
+>                         #gpio-cells = <3>;
+>
+> -                       mmc0_pins_a: mmc0@0 {
+> +                       mmc0_pins: mmc0_pins {
+>                                 pins = "PF0", "PF1", "PF2",
+>                                        "PF3", "PF4", "PF5";
+>                                 function = "mmc0";
+> @@ -182,13 +182,13 @@
+>                                 bias-pull-up;
+>                         };
+>
+> -                       uart0_pins_a: uart0@0 {
+> -                               pins = "PF2", "PF4";
+> +                       uart0_pb_pins: uart0_pb_pins {
 
-Yeah I was thinking we can do it once we have an actual reason to
-distinguish.
+Duh... Forgot to use hyphens instead of underscores in the node names.
+I'll send a patch for you to squash in.
 
-But then, adding the type would only require 2-3 lines of change if I
-add it to the GPMI_IS_MX6 macro...
+ChenYu
 
---
-Stefan
-
->> +	.bch_max_ecc_strength = 62,
->> +	.max_chain_delay = 12,
->> +	.clks = gpmi_clks_for_mx7d,
->> +	.clks_count = ARRAY_SIZE(gpmi_clks_for_mx7d),
->> +};
->> +
->>  static irqreturn_t bch_irq(int irq, void *cookie)
->>  {
->>  	struct gpmi_nand_data *this = cookie;
->> @@ -2071,6 +2083,9 @@ static const struct of_device_id gpmi_nand_id_table[] = {
->>  	}, {
->>  		.compatible = "fsl,imx6sx-gpmi-nand",
->>  		.data = &gpmi_devdata_imx6sx,
->> +	}, {
->> +		.compatible = "fsl,imx7d-gpmi-nand",
->> +		.data = &gpmi_devdata_imx7d,
->>  	}, {}
->>  };
->>  MODULE_DEVICE_TABLE(of, gpmi_nand_id_table);
->>
+> +                               pins = "PB9", "PB10";
+>                                 function = "uart0";
+>                         };
+>
+> -                       uart0_pins_b: uart0@1 {
+> -                               pins = "PB9", "PB10";
+> +                       uart0_pf_pins: uart0_pf_pins {
+> +                               pins = "PF2", "PF4";
+>                                 function = "uart0";
+>                         };
+>                 };
+> --
+> 2.11.0
+>
