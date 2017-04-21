@@ -1,66 +1,106 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH v6 1/6] dt-bindings: power: supply: add
- AXP20X/AXP22X battery DT binding
-Date: Fri, 21 Apr 2017 11:51:04 +0800
-Message-ID: <CAGb2v64mWWv-_Svi1WB3u0RB8hpGh369iFBYa-SjudW0E_y2qQ@mail.gmail.com>
-References: <20170418073421.31351-1-quentin.schulz@free-electrons.com>
- <20170418073421.31351-2-quentin.schulz@free-electrons.com> <20170420155820.tzvvwqnl2ze63jel@rob-hp-laptop>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+From: Minghsiu Tsai <minghsiu.tsai@mediatek.com>
+Subject: Re: [PATCH 1/3] dt-bindings: mt8173: Fix mdp device tree
+Date: Fri, 21 Apr 2017 12:06:10 +0800
+Message-ID: <1492747570.25908.36.camel@mtksdaap41>
+References: <1492068787-17838-1-git-send-email-minghsiu.tsai@mediatek.com>
+         <1492068787-17838-2-git-send-email-minghsiu.tsai@mediatek.com>
+         <20170419213540.4vigeed3mx24ie4e@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBQ4D43DQKGQEGZMVS7Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20170420155820.tzvvwqnl2ze63jel@rob-hp-laptop>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "open list:THERMAL" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>, Liam Breck <liam-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170419213540.4vigeed3mx24ie4e@rob-hp-laptop>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Hans Verkuil <hans.verkuil@cisco.com>, daniel.thompson@linaro.org, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Matthias Brugger <matthias.bgg@gmail.com>, Daniel Kurtz <djkurtz@chromium.org>, Pawel Osciak <posciak@chromium.org>, Houlong Wei <houlong.wei@mediatek.com>, srv_heupstream@mediatek.com, Eddie Huang <eddie.huang@mediatek.com>, Yingjoe Chen <yingjoe.chen@mediatek.com>, Wu-Cheng Li <wuchengli@google.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org, linux-mediatek@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 20, 2017 at 11:58 PM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> On Tue, Apr 18, 2017 at 09:34:16AM +0200, Quentin Schulz wrote:
->> The X-Powers AXP20X and AXP22X PMICs can have a battery as power supply.
->>
->> This patch adds the DT binding documentation for the battery power
->> supply which gets various data from the PMIC, such as the battery status
->> (charging, discharging, full, dead), current max limit, current current,
->> battery capacity (in percentage), voltage max and min limits, current
->> voltage and battery capacity (in Ah).
->>
->> Signed-off-by: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
->> Acked-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
->> Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
->> ---
->> v6:
->>   - removed mention to monitored-battery, will be sent when the battery
->>   framework has been merged,
->>
->> v5:
->>   - removed DT property example from monitored-battery,
->>
->> v4:
->>  - added monitored-battery optional property,
->>  - added example with battery,
->>
->> v3:
->>  - removed constant charge current property, now should use the WIP
->>  battery framework,
->>
->> v2:
->>  - changed DT node name from ac_power_supply to ac-power-supply,
->>  - removed io-channels and io-channel-names from DT (the IIO mapping is
->>  done in the IIO ADC driver now),
->>  - added x-powers,constant-charge-current property to set the maximal
->>  default constant current charge of the battery,
->>
->>  .../bindings/power/supply/axp20x_battery.txt         | 20 ++++++++++++++++++++
->>  1 file changed, 20 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/power/supply/axp20x_battery.txt
->
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+On Wed, 2017-04-19 at 16:35 -0500, Rob Herring wrote:
+> On Thu, Apr 13, 2017 at 03:33:05PM +0800, Minghsiu Tsai wrote:
+> > If the mdp_* nodes are under an mdp sub-node, their corresponding
+> > platform device does not automatically get its iommu assigned properly.
+> > 
+> > Fix this by moving the mdp component nodes up a level such that they are
+> > siblings of mdp and all other SoC subsystems.  This also simplifies the
+> > device tree.
+> 
+> It may simplify the DT, but it also breaks compatibility with old DT. 
+> Not sure if that's a problem on Mediatek platforms, but please be 
+> explicit here that you are breaking compatibility and why that is okay.
+> 
 
-Acked-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+I will add the following description for more information.
+"
+Although it fixes iommu assignment issue, it also break compatibility
+with old device tree, so driver patch[1] is needed to iterate over
+sibling mdp device nodes, not child ones, to keep driver work properly.
+In mtk_mdp_probe()
+Old: for_each_child_of_node(dev->of_node, node)
+New: for_each_child_of_node(dev->of_node->parent, node)
+
+[1]https://patchwork.kernel.org/patch/9678833/
+"
+
+> > 
+> > Signed-off-by: Daniel Kurtz <djkurtz@chromium.org>
+> > Signed-off-by: Minghsiu Tsai <minghsiu.tsai@mediatek.com>
+> 
+> Should this have Daniel as the author?
+
+This patch is provided by Daniel, so I keep he is the author.
+I just split his patch into two parts. One is dts only, and the other is
+for driver. I also provide another patch to modify dts bindings
+according to this patch.
+
+
+> 
+> > 
+> > ---
+> >  Documentation/devicetree/bindings/media/mediatek-mdp.txt | 12 +++---------
+> >  1 file changed, 3 insertions(+), 9 deletions(-)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/media/mediatek-mdp.txt b/Documentation/devicetree/bindings/media/mediatek-mdp.txt
+> > index 4182063..0d03e3a 100644
+> > --- a/Documentation/devicetree/bindings/media/mediatek-mdp.txt
+> > +++ b/Documentation/devicetree/bindings/media/mediatek-mdp.txt
+> > @@ -2,7 +2,7 @@
+> >  
+> >  Media Data Path is used for scaling and color space conversion.
+> >  
+> > -Required properties (controller (parent) node):
+> > +Required properties (controller node):
+> >  - compatible: "mediatek,mt8173-mdp"
+> >  - mediatek,vpu: the node of video processor unit, see
+> >    Documentation/devicetree/bindings/media/mediatek-vpu.txt for details.
+> > @@ -32,21 +32,16 @@ Required properties (DMA function blocks, child node):
+> >    for details.
+> >  
+> >  Example:
+> > -mdp {
+> > -	compatible = "mediatek,mt8173-mdp";
+> > -	#address-cells = <2>;
+> > -	#size-cells = <2>;
+> > -	ranges;
+> > -	mediatek,vpu = <&vpu>;
+> > -
+> >  	mdp_rdma0: rdma@14001000 {
+> >  		compatible = "mediatek,mt8173-mdp-rdma";
+> > +			     "mediatek,mt8173-mdp";
+> >  		reg = <0 0x14001000 0 0x1000>;
+> >  		clocks = <&mmsys CLK_MM_MDP_RDMA0>,
+> >  			 <&mmsys CLK_MM_MUTEX_32K>;
+> >  		power-domains = <&scpsys MT8173_POWER_DOMAIN_MM>;
+> >  		iommus = <&iommu M4U_PORT_MDP_RDMA0>;
+> >  		mediatek,larb = <&larb0>;
+> > +		mediatek,vpu = <&vpu>;
+> >  	};
+> >  
+> >  	mdp_rdma1: rdma@14002000 {
+> > @@ -106,4 +101,3 @@ mdp {
+> >  		iommus = <&iommu M4U_PORT_MDP_WROT1>;
+> >  		mediatek,larb = <&larb4>;
+> >  	};
+> > -};
+> > -- 
+> > 1.9.1
+> > 
