@@ -1,16 +1,16 @@
 From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 2/4] dt-bindings: add binding for RTL8211E
- Ethernet PHY
-Date: Fri, 21 Apr 2017 17:22:59 -0700
-Message-ID: <c7aa9d7a-5e97-0e7f-2b1c-584a4de00837@gmail.com>
+Subject: Re: [PATCH 3/4] net: phy: realtek: add disable RX delay
+ hack for RTL8211E
+Date: Fri, 21 Apr 2017 17:35:12 -0700
+Message-ID: <8ab72465-3605-c8b6-c9cd-581f6e341e01@gmail.com>
 References: <20170421232436.10924-1-icenowy@aosc.io>
- <20170421232436.10924-3-icenowy@aosc.io>
+ <20170421232436.10924-4-icenowy@aosc.io>
 Reply-To: f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCH67JWTV4DBBZWE5LDQKGQE5HWURHY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBCH67JWTV4DBBROK5LDQKGQEHBPA4ZY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20170421232436.10924-3-icenowy-h8G6r0blFSE@public.gmane.org>
+In-Reply-To: <20170421232436.10924-4-icenowy-h8G6r0blFSE@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -24,40 +24,85 @@ List-Id: devicetree@vger.kernel.org
 On 04/21/2017 04:24 PM, Icenowy Zheng wrote:
 > From: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
 > 
-> Some RTL8211E Ethernet PHY have an issue that needs a workaround
-> indicated with device tree.
+> Some RTL8211E chips have broken GbE function, which needs a hack to
+> fix. It's said that this fix will affect the performance on not-buggy
+> PHYs, so it should only be enabled on boards with the broken PHY.
+> Currently only some Pine64+ boards are known to have this issue.
 > 
-> Add the binding for a property that indicates this workaround.
+> This hack is said to disable RX relay for RTL8211E according to Realtek.
+> 
+> Enable this hack when a certain device tree property is set.
+> 
+> As this hack is not documented on the datasheet at all, it contains
+> magic numbers, and could not be revealed. These magic numbers are
+> received from Realtek via Pine64.
 > 
 > Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
 > ---
->  .../devicetree/bindings/net/realtek,rtl8211e.txt   | 22 ++++++++++++++++++++++
->  1 file changed, 22 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/net/realtek,rtl8211e.txt
+>  drivers/net/phy/realtek.c | 36 ++++++++++++++++++++++++++++++++++++
+>  1 file changed, 36 insertions(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/net/realtek,rtl8211e.txt b/Documentation/devicetree/bindings/net/realtek,rtl8211e.txt
-> new file mode 100644
-> index 000000000000..c1913301bfe8
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/net/realtek,rtl8211e.txt
-> @@ -0,0 +1,22 @@
-> +Realtek RTL8211E Ethernet PHY
+> diff --git a/drivers/net/phy/realtek.c b/drivers/net/phy/realtek.c
+> index d820d00addf6..880022160cd2 100644
+> --- a/drivers/net/phy/realtek.c
+> +++ b/drivers/net/phy/realtek.c
+> @@ -13,6 +13,7 @@
+>   * option) any later version.
+>   *
+>   */
+> +#include <linux/of.h>
+>  #include <linux/phy.h>
+>  #include <linux/module.h>
+>  
+> @@ -26,6 +27,8 @@
+>  #define RTL8211_PAGE_SELECT	0x1f
+>  
+>  #define RTL8211E_INER_LINK_STATUS 0x400
+> +#define RTL8211E_EXT_PAGE_SELECT 0x1e
+> +#define RTL8211E_EXT_PAGE	0x7
+>  
+>  #define RTL8211F_INER_LINK_STATUS 0x0010
+>  #define RTL8211F_INSR		0x1d
+> @@ -121,6 +124,38 @@ static int rtl8211f_config_init(struct phy_device *phydev)
+>  	return 0;
+>  }
+>  
+> +static int rtl8211e_config_init(struct phy_device *phydev)
+> +{
+> +	struct device *dev = &phydev->mdio.dev;
+> +	struct device_node *of_node = dev->of_node;
+> +	int ret;
 > +
-> +One batch of RTL8211E is slight broken, that needs some special (and
-> +full of magic numbers) tweaking in order to make GbE to operate properly.
-> +The only well-known board that used the broken batch is Pine64+.
-> +Configure it through an Ethernet OF device node.
+> +	ret = genphy_config_init(phydev);
+> +	if (ret < 0)
+> +		return ret;
 > +
-> +Optional properties:
+> +	if (of_node &&
+> +	    of_property_read_bool(of_node, "realtek,disable-rx-delay")) {
+> +		/* All these magic numbers are retrieved from Pine64, and
+> +		 * they're said to be originated from Realtek.
+> +		 *
+> +		 * The datasheet of RTL8211E didn't cover this ext page.
+> +		 *
+> +		 * Select extension page 0xa4 here.
+> +		 */
+> +		phy_write(phydev, RTL8211_PAGE_SELECT, RTL8211E_EXT_PAGE)
+> +		phy_write(phydev, RTL8211E_EXT_PAGE_SELECT, 0xa4);
 > +
-> +- realtek,disable-rx-delay:
-> +  If set, RX delay will be completely disabled (according to Realtek). This
-> +  will affect the performance on non-broken boards.
-> +  default: do not disable RX delay.
+> +		/* Write the magic number */
+> +		phy_write(phydev, 0x1c, 0xb591);
+> +
+> +		/* Restore to default page 0 */
+> +		phy_write(phydev, RTL8211_PAGE_SELECT, 0);
+> +	}
 
-Please don't introduce custom properties to do that, instead correct
-specify the "phy-mode" such that it is e.g: "rgmii-txid" which indicates
-that there should be no RX internal delay, but a TX internal delay added
-by the PHY.
+The code itself is probably fine, but the way you are checking whether
+the RX delay should be disabled is not. As mentioned in patch 2, using
+the correct "phy-mode" property would translate in the proper
+phydev->interface value here (presumably PHY_INTERFACE_MODE_RGMII_TXID)
+is that you want here that would allow you to check whether the RX delay
+should, or should not be disabled.
+
+Thank you
 -- 
 Florian
