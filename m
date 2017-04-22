@@ -1,369 +1,172 @@
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: Re: [PATCH v3 14/37] mtd: nand: denali: support "nand-ecc-strength"
- DT property
-Date: Sun, 23 Apr 2017 00:00:57 +0900
-Message-ID: <CAK7LNATgPafev_ZCjzi5jPS3Wg1bq_V9=_VUnrpcUqbFAGJpJg@mail.gmail.com>
-References: <1490856383-31560-1-git-send-email-yamada.masahiro@socionext.com>
- <1490856383-31560-15-git-send-email-yamada.masahiro@socionext.com>
- <20170330160238.59e5a2c1@bbrezillon>
- <CAK7LNARUKwMHd79ALDx_SDY9XKcHPY96xTAOMQx6XarFgwb-AA@mail.gmail.com>
- <20170331114659.4964be35@bbrezillon>
- <CAK7LNAToTmirpkhNmPCLhcTXG_SFqS762mEGK3mjyqLKXuWa1Q@mail.gmail.com>
- <20170409183301.037d3f95@bbrezillon>
- <CAK7LNARxR722uRE9SnJPuOqictrpnbFmcKBsW_g=f1OnNgvpRA@mail.gmail.com>
- <20170411095637.5aa87cf6@bbrezillon>
- <CAK7LNARJU2PB8UPTRMrLsbZaQdEaQMAr6zOOHUozVoPWpESxgw@mail.gmail.com>
- <20170414101928.5255736e@bbrezillon>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH RFC 1/7] clk: samsung: Add enable/disable operation for
+ PLL36XX clocks
+Date: Sat, 22 Apr 2017 17:22:36 +0200
+Message-ID: <20170422152236.tbf4iuoadqrvoc2n@kozik-lap>
+References: <1492795191-31298-1-git-send-email-s.nawrocki@samsung.com>
+ <CGME20170421172016epcas5p342c16e1219c1205a44a84eaa770ad5ac@epcas5p3.samsung.com>
+ <1492795191-31298-2-git-send-email-s.nawrocki@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <20170414101928.5255736e@bbrezillon>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: Boris Brezillon <boris.brezillon@free-electrons.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Richard Weinberger <richard@nod.at>, Marek Vasut <marek.vasut@gmail.com>, Artem Bityutskiy <artem.bityutskiy@linux.intel.com>, Cyrille Pitchen <cyrille.pitchen@atmel.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Dinh Nguyen <dinguyen@kernel.org>, Rob Herring <robh+dt@kernel.org>, linux-mtd@lists.infradead.org, Masami Hiramatsu <mhiramat@kernel.org>, Chuanxiao Dong <chuanxiao.dong@intel.com>, Jassi Brar <jaswinder.singh@linaro.org>, Brian Norris <computersforpeace@gmail.com>, Enrico Jorns <ejo@pengutronix.de>, David Woodhouse <dwmw2@infradead.org>, Graham Moore <grmoore@opensource.altera.com>
+Content-Type: text/plain; charset=utf-8
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1492795191-31298-2-git-send-email-s.nawrocki@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc: linux-samsung-soc@vger.kernel.org, linux-clk@vger.kernel.org, dri-devel@lists.freedesktop.org, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, inki.dae@samsung.com, sw0312.kim@samsung.com, cw00.choi@samsung.com, javier@osg.samsung.com, jy0922.shim@samsung.com, broonie@kernel.org, robh+dt@kernel.org, b.zolnierkie@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Boris,
+On Fri, Apr 21, 2017 at 07:19:45PM +0200, Sylwester Nawrocki wrote:
+> The existing enable/disable ops for PLL35XX are made more generic
+> and used also for PLL36XX. This fixes issues in the kernel with
+> PLL36XX PLLs when the PLL has not been already enabled by bootloader.
+> 
+> Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+> ---
+>  drivers/clk/samsung/clk-pll.c | 85 +++++++++++++++++++++++++------------------
+>  1 file changed, 49 insertions(+), 36 deletions(-)
+> 
+> diff --git a/drivers/clk/samsung/clk-pll.c b/drivers/clk/samsung/clk-pll.c
+> index 5229089..10c76eb 100644
+> --- a/drivers/clk/samsung/clk-pll.c
+> +++ b/drivers/clk/samsung/clk-pll.c
+> @@ -23,6 +23,10 @@ struct samsung_clk_pll {
+>  	struct clk_hw		hw;
+>  	void __iomem		*lock_reg;
+>  	void __iomem		*con_reg;
+> +	/* PLL enable control bit offset in @con_reg register */
+> +	unsigned short		enable_offs;
+> +	/* PLL lock status bit offset in @con_reg register */
+> +	unsigned short		lock_offs;
+>  	enum samsung_pll_type	type;
+>  	unsigned int		rate_count;
+>  	const struct samsung_pll_rate_table *rate_table;
+> @@ -61,6 +65,34 @@ static long samsung_pll_round_rate(struct clk_hw *hw,
+>  	return rate_table[i - 1].rate;
+>  }
+>  
+> +static int samsung_pll3xxx_enable(struct clk_hw *hw)
+> +{
+> +	struct samsung_clk_pll *pll = to_clk_pll(hw);
+> +	u32 tmp;
+> +
+> +	tmp = readl_relaxed(pll->con_reg);
+> +	tmp |= BIT(pll->enable_offs);
+> +	writel_relaxed(tmp, pll->con_reg);
+> +
+> +	/* wait lock time */
+> +	do {
+> +		cpu_relax();
+> +		tmp = readl_relaxed(pll->con_reg);
+> +	} while (!(tmp & BIT(pll->lock_offs)));
+> +
+> +	return 0;
+> +}
+> +
+> +static void samsung_pll3xxx_disable(struct clk_hw *hw)
+> +{
+> +	struct samsung_clk_pll *pll = to_clk_pll(hw);
+> +	u32 tmp;
+> +
+> +	tmp = readl_relaxed(pll->con_reg);
+> +	tmp |= BIT(pll->enable_offs);
 
+I think you meant here:
+	tmp &= ~BIT()
 
-2017-04-14 17:19 GMT+09:00 Boris Brezillon <boris.brezillon@free-electrons.com>:
-> On Fri, 14 Apr 2017 16:57:23 +0900
-> Masahiro Yamada <yamada.masahiro@socionext.com> wrote:
->
->> Hi Boris,
->>
->>
->> 2017-04-11 16:56 GMT+09:00 Boris Brezillon <boris.brezillon@free-electrons.com>:
->> > Hi Masahiro,
->> >
->> > On Tue, 11 Apr 2017 15:19:21 +0900
->> > Masahiro Yamada <yamada.masahiro@socionext.com> wrote:
->> >
->> >> Hi Boris,
->> >>
->> >>
->> >>
->> >> 2017-04-10 1:33 GMT+09:00 Boris Brezillon <boris.brezillon@free-electrons.com>:
->> >> > On Mon, 3 Apr 2017 12:16:34 +0900
->> >> > Masahiro Yamada <yamada.masahiro@socionext.com> wrote:
->> >> >
->> >> >> Hi Boris,
->> >> >>
->> >> >>
->> >> >>
->> >> >> 2017-03-31 18:46 GMT+09:00 Boris Brezillon <boris.brezillon@free-electrons.com>:
->> >> >>
->> >> >> > You can try something like that when no explicit ecc.strength and
->> >> >> > ecc.size has been set in the DT and when ECC_MAXIMIZE was not passed.
->> >> >> >
->> >> >> > static int
->> >> >> > denali_get_closest_ecc_strength(struct denali_nand_info *denali,
->> >> >> >                                 int strength)
->> >> >> > {
->> >> >> >         /*
->> >> >> >          * Whatever you need to select a strength that is greater than
->> >> >> >          * or equal to strength.
->> >> >> >          */
->> >> >> >
->> >> >> >         return X;
->> >> >> > }
->> >> >>
->> >> >>
->> >> >> Is here anything specific to Denali?
->> >> >
->> >> > Well, only the denali driver knows what the hardware supports, though
->> >> > having a generic function that takes a table of supported strengths
->> >> > would work.
->> >> >
->> >> >>
->> >> >>
->> >> >> > static int denali_try_to_match_ecc_req(struct denali_nand_info *denali)
->> >> >> > {
->> >> >> >         struct nand_chip *chip = &denali->nand;
->> >> >> >         struct mtd_info *mtd = nand_to_mtd(chip);
->> >> >> >         int max_ecc_bytes = mtd->oobsize - denali->bbtskipbytes;
->> >> >> >         int ecc_steps, ecc_strength, ecc_bytes;
->> >> >> >         int ecc_size = chip->ecc_step_ds;
->> >> >> >         int ecc_strength = chip->ecc_strength_ds;
->> >> >> >
->> >> >> >         /*
->> >> >> >          * No information provided by the NAND chip, let the core
->> >> >> >          * maximize the strength.
->> >> >> >          */
->> >> >> >         if (!ecc_size || !ecc_strength)
->> >> >> >                 return -ENOTSUPP;
->> >> >> >
->> >> >> >         if (ecc_size > 512)
->> >> >> >                 ecc_size = 1024;
->> >> >> >         else
->> >> >> >                 ecc_size = 512;
->> >> >> >
->> >> >> >         /* Adjust ECC step size based on hardware support. */
->> >> >> >         if (ecc_size == 1024 &&
->> >> >> >             !(denali->caps & DENALI_CAP_ECC_SIZE_1024))
->> >> >> >                 ecc_size = 512;
->> >> >> >         else if(ecc_size == 512 &&
->> >> >> >                 !(denali->caps & DENALI_CAP_ECC_SIZE_512))
->> >> >> >                 ecc_size = 1024;
->> >> >> >
->> >> >> >         if (ecc_size < chip->ecc_size_ds) {
->> >> >> >                 /*
->> >> >> >                  * When the selected size if smaller than the expected
->> >> >> >                  * one we try to use the same strength but on 512 blocks
->> >> >> >                  * so that we can still fix the same number of errors
->> >> >> >                  * even if they are concentrated in the first 512bytes
->> >> >> >                  * of a 1024bytes portion.
->> >> >> >                  */
->> >> >> >                 ecc_strength = chip->ecc_strength_ds;
->> >> >> >                 ecc_strength = denali_get_closest_ecc_strength(denali,
->> >> >> >                                                                ecc_strength);
->> >> >> >         } else {
->> >> >> >                 /* Always prefer 1024bytes ECC blocks when possible. */
->> >> >> >                 if (ecc_size != 1024 &&
->> >> >> >                     (denali->caps & DENALI_CAP_ECC_SIZE_1024) &&
->> >> >> >                     mtd->writesize > 1024)
->> >> >> >                         ecc_size = 1024;
->> >> >> >
->> >> >> >                 /*
->> >> >> >                  * Adjust the strength based on the selected ECC step
->> >> >> >                  * size.
->> >> >> >                  */
->> >> >> >                 ecc_strength = DIV_ROUND_UP(ecc_size,
->> >> >> >                                             chip->ecc_step_ds) *
->> >> >> >                                chip->ecc_strength_ds;
->> >> >> >         }
->> >> >> >
->> >> >> >         ecc_bytes = denali_calc_ecc_bytes(ecc_size,
->> >> >> >                                           ecc_strength);
->> >> >> >         ecc_bytes *= mtd->writesize / ecc_size;
->> >> >> >
->> >> >> >         /*
->> >> >> >          * If we don't have enough space, let the core maximize
->> >> >> >          * the strength.
->> >> >> >          */
->> >> >> >         if (ecc_bytes > max_ecc_bytes)
->> >> >> >                 return -ENOTSUPP;
->> >> >> >
->> >> >> >         chip->ecc.strength = ecc_strength;
->> >> >> >         chip->ecc.size = ecc_size;
->> >> >> >
->> >> >> >         return 0;
->> >> >> > }
->> >> >>
->> >> >>
->> >> >> As a whole, this does not seem to driver-specific.
->> >> >
->> >> > It's almost controller-agnostic, except for the denali_calc_ecc_bytes()
->> >> > function, but I guess we could ask drivers to implement a hook that is
->> >> > passed the ECC step size and strength and returns the associated
->> >> > number of ECC bytes.
->> >> >
->> >> >>
->> >> >>
->> >> >> [1] A driver provides some pairs of (ecc_strength, ecc_size)
->> >> >>     it can support.
->> >> >>
->> >> >> [2] The core framework knows the chip's requirement
->> >> >>     (ecc_strength_ds, ecc_size_ds).
->> >> >>
->> >> >>
->> >> >> Then, the core framework provides a function
->> >> >> to return a most recommended (ecc_strength, ecc_size).
->> >> >>
->> >> >>
->> >> >>
->> >> >> struct nand_ecc_spec {
->> >> >>        int ecc_strength;
->> >> >>        int ecc_size;
->> >> >> };
->> >> >>
->> >> >> /*
->> >> >>  * This function choose the most recommented (ecc_str, ecc_size)
->> >> >>  * "recommended" means: minimum ecc stregth that meets
->> >> >>  * the chip's requirment.
->> >> >>  *
->> >> >>  *
->> >> >>  * @chip   - nand_chip
->> >> >>  * @controller_ecc_spec - Array of (ecc_str, ecc_size) supported by the
->> >> >>                           controller. (terminated by NULL as sentinel)
->> >> >>  */
->> >> >> struct nand_ecc_spec * nand_try_to_match_ecc_req(struct nand_chip *chip,
->> >> >>                                                  struct nand_ecc_spec
->> >> >> *controller_ecc_spec)
->> >> >> {
->> >> >>       /*
->> >> >>        * Return the pointer to the most recommended
->> >> >>        * struct nand_ecc_spec.
->> >> >>        * If nothing suitable found, return NULL.
->> >> >>        */
->> >> >> }
->> >> >>
->> >> >
->> >> > I like the idea, except I would do this slightly differently to avoid
->> >> > declaring all combinations of stepsize and strengths
->> >> >
->> >> > struct nand_ecc_stepsize_info {
->> >> >         int stepsize;
->> >> >         int nstrengths;
->> >> >         int *strengths;
->> >> > };
->> >> >
->> >> > struct nand_ecc_engine_caps {
->> >> >         int nstepsizes;
->> >> >         struct nand_ecc_stepsize_info *stepsizes;
->> >> >         int (*calc_ecc_bytes)(int stepsize, int strength);
->> >> > };
->> >> >
->> >> > int nand_try_to_match_ecc_req(struct nand_chip *chip,
->> >> >                               const struct nand_ecc_engine_caps *caps,
->> >> >                               struct nand_ecc_spec *spec)
->> >> > {
->> >> >         /*
->> >> >          * Find the most appropriate setting based on the ECC engine
->> >> >          * caps and fill the spec object accordingly.
->> >> >          * Returns 0 in case of success and a negative error code
->> >> >          * otherwise.
->> >> >          */
->> >> > }
->> >> >
->> >> > Note that nand_try_to_match_ecc_req() has to be more generic than
->> >> > denali_try_to_match_ecc_req() WRT step sizes, which will probably
->> >> > complexify the logic.
->> >>
->> >>
->> >> After I fiddle with this generic approach for a while,
->> >> I started to feel like giving up.
->> >
->> > I don't get it. What was the problem with my initial suggestion (the
->> > denali specific one, not the generic approach)? You proposed to make it
->> > generic, which, I agree, is a bit more complicated.
->> >
->> >>
->> >> I wonder if we really want over-implementation
->> >> for covering _theoretically_ possible cases.
->> >
->> > Okay, one more theoretical case I'd like to expose: you have board
->> > design with different NAND parts which have different ECC requirements.
->> > If you were about to describe the exact ECC strength you want for each
->> > board you'll have to have different DTs.
->>
->> In this case, fixed ecc-strength in DT is not feasible.
->>
->> > Maximizing the ECC strength
->> > would still work, but what if the MTD user needs some OOB bytes (like
->> > is the case with JFFS2) and ECC maximization reserved all of the
->> > available bytes?
->>
->> JFFS2 needs some bytes in oob-free area for the clean marker.
->> You are right.
->> This implies NAND_ECC_MAXIMIZE is not very useful.
->> We do not know whether we have enough space left in oob, or not.
->>
->>
->>
->> > The other reason I prefer to have the drivers automatically guessing
->> > what's appropriate is because then you don't have to care when writing
->> > your DT.
->> >
->> >>
->> >> In practice, there are not so many ECC settings possible
->> >> on a single controller.
->> >>
->> >> As for Denali IP, it would be theoretically possible to instantiate
->> >> multiple ECC engines.  However, in practice, there is no sensible
->> >> reason to do so.  At least, I do not know any real chip to support that.
->> >>
->> >> So, I'd like to simplify the logic for Denali.
->> >>
->> >>   - Support either 512 or 1024 ECC size.
->> >>     If there is (ever) a controller that supports both,
->> >>     1024 should be chosen.
->> >>
->> >>   - ECC strength is not specified via DT, it is simply maximized.
->> >>
->> >> This simplifies the logic much and I believe this is enough.
->> >>
->> >> One more reason is, as we talked before,
->> >> we need to match ECC setting between Linux and firmware (boot-loader),
->> >
->> > If the bootloader implements the same logic it should match.
->> >
->> >> so anyway we end up with using a fixed setting specified by DT.
->> >>
->> >
->> > Really, I don't see what's the problem with the function I proposed,
->> > but I'm willing to make a concession.
->> > Make the nand-ecc-strength+nand-ecc-step-size or nand-ecc-maximize
->> > mandatory so that if someone ever needs to support the 'match NAND
->> > requirements' feature we won't have to add a vendor specific property
->> > like this one [1].
->> >
->> > Are you fine with that?
->>
->> No.  This requirement seems too strong.
->
-> Hm, can you give more details? All I want is a solution where we can
-> later support the feature I'm asking without adding a extra DT
-> property, and, in order to do that we must make sure the case you want
-> to support as a first step are explicitly requested in the DT.
->
-> It's as simple as:
->
->         if ((!ecc->strength || !ecc->size) &&
->             !(ecc->options & NAND_ECC_MAXIMIZE))
->                 return -ENOTSUPP;
+> +	writel_relaxed(tmp, pll->con_reg);
+> +}
+> +
+>  /*
+>   * PLL2126 Clock Type
+>   */
+> @@ -142,34 +174,6 @@ static unsigned long samsung_pll3000_recalc_rate(struct clk_hw *hw,
+>  #define PLL35XX_LOCK_STAT_SHIFT	(29)
+>  #define PLL35XX_ENABLE_SHIFT	(31)
+>  
+> -static int samsung_pll35xx_enable(struct clk_hw *hw)
+> -{
+> -	struct samsung_clk_pll *pll = to_clk_pll(hw);
+> -	u32 tmp;
+> -
+> -	tmp = readl_relaxed(pll->con_reg);
+> -	tmp |= BIT(PLL35XX_ENABLE_SHIFT);
+> -	writel_relaxed(tmp, pll->con_reg);
+> -
+> -	/* wait_lock_time */
+> -	do {
+> -		cpu_relax();
+> -		tmp = readl_relaxed(pll->con_reg);
+> -	} while (!(tmp & BIT(PLL35XX_LOCK_STAT_SHIFT)));
+> -
+> -	return 0;
+> -}
+> -
+> -static void samsung_pll35xx_disable(struct clk_hw *hw)
+> -{
+> -	struct samsung_clk_pll *pll = to_clk_pll(hw);
+> -	u32 tmp;
+> -
+> -	tmp = readl_relaxed(pll->con_reg);
+> -	tmp &= ~BIT(PLL35XX_ENABLE_SHIFT);
+> -	writel_relaxed(tmp, pll->con_reg);
+> -}
+> -
+>  static unsigned long samsung_pll35xx_recalc_rate(struct clk_hw *hw,
+>  				unsigned long parent_rate)
+>  {
+> @@ -239,11 +243,11 @@ static int samsung_pll35xx_set_rate(struct clk_hw *hw, unsigned long drate,
+>  	writel_relaxed(tmp, pll->con_reg);
+>  
+>  	/* wait_lock_time if enabled */
+> -	if (tmp & BIT(PLL35XX_ENABLE_SHIFT)) {
+> +	if (tmp & BIT(pll->enable_offs)) {
+>  		do {
+>  			cpu_relax();
+>  			tmp = readl_relaxed(pll->con_reg);
+> -		} while (!(tmp & BIT(PLL35XX_LOCK_STAT_SHIFT)));
+> +		} while (!(tmp & BIT(pll->lock_offs)));
+>  	}
+>  	return 0;
+>  }
+> @@ -252,8 +256,8 @@ static int samsung_pll35xx_set_rate(struct clk_hw *hw, unsigned long drate,
+>  	.recalc_rate = samsung_pll35xx_recalc_rate,
+>  	.round_rate = samsung_pll_round_rate,
+>  	.set_rate = samsung_pll35xx_set_rate,
+> -	.enable = samsung_pll35xx_enable,
+> -	.disable = samsung_pll35xx_disable,
+> +	.enable = samsung_pll3xxx_enable,
+> +	.disable = samsung_pll3xxx_disable,
+>  };
+>  
+>  static const struct clk_ops samsung_pll35xx_clk_min_ops = {
+> @@ -275,6 +279,7 @@ static int samsung_pll35xx_set_rate(struct clk_hw *hw, unsigned long drate,
+>  #define PLL36XX_SDIV_SHIFT	(0)
+>  #define PLL36XX_KDIV_SHIFT	(0)
+>  #define PLL36XX_LOCK_STAT_SHIFT	(29)
+> +#define PLL36XX_ENABLE_SHIFT	(31)
+>  
+>  static unsigned long samsung_pll36xx_recalc_rate(struct clk_hw *hw,
+>  				unsigned long parent_rate)
+> @@ -354,10 +359,12 @@ static int samsung_pll36xx_set_rate(struct clk_hw *hw, unsigned long drate,
+>  	writel_relaxed(pll_con1, pll->con_reg + 4);
+>  
+>  	/* wait_lock_time */
+> -	do {
+> -		cpu_relax();
+> -		tmp = readl_relaxed(pll->con_reg);
+> -	} while (!(tmp & (1 << PLL36XX_LOCK_STAT_SHIFT)));
+> +	if (pll_con0 & BIT(pll->enable_offs)) {
 
-If a controller supports only one possible value for nand-ecc-step-size,
-users have no choice anyway.
+Why this additional if() is needed?
 
-For UniPhier SoCs,
-    nand-ecc-step-size = <1024>;
-    nand-ecc-strength = <8> or <16> or <24>;
+> +		do {
+> +			cpu_relax();
+> +			tmp = readl_relaxed(pll->con_reg);
+> +		} while (!(tmp & BIT(PLL36XX_LOCK_STAT_SHIFT)));
 
-But, it is harmless even if we specify nand-ecc-step-size explicitly.
-So, I do not argue here.
+To be consistent:
+BIT(pll->lock_offs)?
 
-
-
->> At least, it is a problem for non-DT platforms.
->
-> Well, for non-DT platforms you have to keep ECC maximization anyway,
-> otherwise you're not backward compatible.
->
->>
->>
->> If a driver provides ECC engine caps info,
->> perhaps ECC maximizing could be a generalized helper function as well.
->
-> I don't get it. I thought the generic helper was too hard to implement.
-> Now you want to add a new functionality.
->
-> I'm not against this idea, but maybe it's easier to provide a denali
-> specific implementation before tackling the generic one.
-
-
-I think there is a common logic in matching request and maximizing.
-
-I could not explain well in my words, so I wrote a patch:
-http://patchwork.ozlabs.org/patch/752107/
-
-Could you check it?
-
-
-
--- 
-Best Regards
-Masahiro Yamada
-
-______________________________________________________
-Linux MTD discussion mailing list
-http://lists.infradead.org/mailman/listinfo/linux-mtd/
+Best regards,
+Krzysztof
