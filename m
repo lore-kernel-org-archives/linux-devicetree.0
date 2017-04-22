@@ -1,139 +1,47 @@
-From: Stefan Agner <stefan@agner.ch>
-Subject: [PATCH v2 1/5] mtd: nand: gpmi: unify clock handling
-Date: Fri, 21 Apr 2017 18:23:34 -0700
-Message-ID: <20170422012338.4635-2-stefan@agner.ch>
+From: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+Subject: [PATCH v2 5/5] ARM: dts: imx7-colibri: add NAND support
+Date: Fri, 21 Apr 2017 18:23:38 -0700
+Message-ID: <20170422012338.4635-6-stefan@agner.ch>
 References: <20170422012338.4635-1-stefan@agner.ch>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170422012338.4635-1-stefan@agner.ch>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: dwmw2@infradead.org, computersforpeace@gmail.com, boris.brezillon@free-electrons.com, marek.vasut@gmail.com, richard@nod.at, cyrille.pitchen@atmel.com
-Cc: mark.rutland@arm.com, fabio.estevam@freescale.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Stefan Agner <stefan@agner.ch>, robh+dt@kernel.org, linux-mtd@lists.infradead.org, kernel@pengutronix.de, han.xu@nxp.com, shawnguo@kernel.org, linux-arm-kernel@lists.infradead.org, LW@KARO-electronics.de
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170422012338.4635-1-stefan-XLVq0VzYD2Y@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, richard-/L3Ra7n9ekc@public.gmane.org, cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, han.xu-3arQi8VN3Tc@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add device specific list of clocks required, and handle all clocks
-in a single for loop. This avoids further code duplication when
-adding i.MX 7 support.
+The Colibri iMX7 modules come with 512MB on-module SLC NAND flash
+populated. Make use of it by enabling the GPMI controller.
 
-Signed-off-by: Stefan Agner <stefan@agner.ch>
-Reviewed-by: Marek Vasut <marek.vasut@gmail.com>
+Signed-off-by: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
 ---
- drivers/mtd/nand/gpmi-nand/gpmi-nand.c | 41 +++++++++++++++-------------------
- drivers/mtd/nand/gpmi-nand/gpmi-nand.h |  2 ++
- 2 files changed, 20 insertions(+), 23 deletions(-)
+ arch/arm/boot/dts/imx7-colibri.dtsi | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/drivers/mtd/nand/gpmi-nand/gpmi-nand.c b/drivers/mtd/nand/gpmi-nand/gpmi-nand.c
-index d52139635b67..c8bbf5da2ab8 100644
---- a/drivers/mtd/nand/gpmi-nand/gpmi-nand.c
-+++ b/drivers/mtd/nand/gpmi-nand/gpmi-nand.c
-@@ -82,6 +82,10 @@ static int gpmi_ooblayout_free(struct mtd_info *mtd, int section,
- 	return 0;
- }
+diff --git a/arch/arm/boot/dts/imx7-colibri.dtsi b/arch/arm/boot/dts/imx7-colibri.dtsi
+index 2d87489f9105..ad4ce19d455b 100644
+--- a/arch/arm/boot/dts/imx7-colibri.dtsi
++++ b/arch/arm/boot/dts/imx7-colibri.dtsi
+@@ -106,6 +106,15 @@
+ 	fsl,magic-packet;
+ };
  
-+static const char * const gpmi_clks_for_mx2x[] = {
-+	"gpmi_io",
++&gpmi {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_gpmi_nand>;
++	fsl,use-minimum-ecc;
++	nand-on-flash-bbt;
++	nand-ecc-mode = "hw";
++	status = "okay";
 +};
 +
- static const struct mtd_ooblayout_ops gpmi_ooblayout_ops = {
- 	.ecc = gpmi_ooblayout_ecc,
- 	.free = gpmi_ooblayout_free,
-@@ -91,24 +95,36 @@ static const struct gpmi_devdata gpmi_devdata_imx23 = {
- 	.type = IS_MX23,
- 	.bch_max_ecc_strength = 20,
- 	.max_chain_delay = 16,
-+	.clks = gpmi_clks_for_mx2x,
-+	.clks_count = ARRAY_SIZE(gpmi_clks_for_mx2x),
- };
- 
- static const struct gpmi_devdata gpmi_devdata_imx28 = {
- 	.type = IS_MX28,
- 	.bch_max_ecc_strength = 20,
- 	.max_chain_delay = 16,
-+	.clks = gpmi_clks_for_mx2x,
-+	.clks_count = ARRAY_SIZE(gpmi_clks_for_mx2x),
-+};
-+
-+static const char * const gpmi_clks_for_mx6[] = {
-+	"gpmi_io", "gpmi_apb", "gpmi_bch", "gpmi_bch_apb", "per1_bch",
- };
- 
- static const struct gpmi_devdata gpmi_devdata_imx6q = {
- 	.type = IS_MX6Q,
- 	.bch_max_ecc_strength = 40,
- 	.max_chain_delay = 12,
-+	.clks = gpmi_clks_for_mx6,
-+	.clks_count = ARRAY_SIZE(gpmi_clks_for_mx6),
- };
- 
- static const struct gpmi_devdata gpmi_devdata_imx6sx = {
- 	.type = IS_MX6SX,
- 	.bch_max_ecc_strength = 62,
- 	.max_chain_delay = 12,
-+	.clks = gpmi_clks_for_mx6,
-+	.clks_count = ARRAY_SIZE(gpmi_clks_for_mx6),
- };
- 
- static irqreturn_t bch_irq(int irq, void *cookie)
-@@ -599,35 +615,14 @@ static int acquire_dma_channels(struct gpmi_nand_data *this)
- 	return -EINVAL;
- }
- 
--static char *extra_clks_for_mx6q[GPMI_CLK_MAX] = {
--	"gpmi_apb", "gpmi_bch", "gpmi_bch_apb", "per1_bch",
--};
--
- static int gpmi_get_clks(struct gpmi_nand_data *this)
- {
- 	struct resources *r = &this->resources;
--	char **extra_clks = NULL;
- 	struct clk *clk;
- 	int err, i;
- 
--	/* The main clock is stored in the first. */
--	r->clock[0] = devm_clk_get(this->dev, "gpmi_io");
--	if (IS_ERR(r->clock[0])) {
--		err = PTR_ERR(r->clock[0]);
--		goto err_clock;
--	}
--
--	/* Get extra clocks */
--	if (GPMI_IS_MX6(this))
--		extra_clks = extra_clks_for_mx6q;
--	if (!extra_clks)
--		return 0;
--
--	for (i = 1; i < GPMI_CLK_MAX; i++) {
--		if (extra_clks[i - 1] == NULL)
--			break;
--
--		clk = devm_clk_get(this->dev, extra_clks[i - 1]);
-+	for (i = 0; i < this->devdata->clks_count; i++) {
-+		clk = devm_clk_get(this->dev, this->devdata->clks[i]);
- 		if (IS_ERR(clk)) {
- 			err = PTR_ERR(clk);
- 			goto err_clock;
-diff --git a/drivers/mtd/nand/gpmi-nand/gpmi-nand.h b/drivers/mtd/nand/gpmi-nand/gpmi-nand.h
-index 4e49a1f5fa27..8879c4eff25e 100644
---- a/drivers/mtd/nand/gpmi-nand/gpmi-nand.h
-+++ b/drivers/mtd/nand/gpmi-nand/gpmi-nand.h
-@@ -130,6 +130,8 @@ struct gpmi_devdata {
- 	enum gpmi_type type;
- 	int bch_max_ecc_strength;
- 	int max_chain_delay; /* See the async EDO mode */
-+	const char * const *clks;
-+	const int clks_count;
- };
- 
- struct gpmi_nand_data {
+ &i2c1 {
+ 	clock-frequency = <100000>;
+ 	pinctrl-names = "default";
 -- 
 2.12.2
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
