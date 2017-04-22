@@ -1,108 +1,91 @@
-From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 3/4] net: phy: realtek: add disable RX delay
- hack for RTL8211E
-Date: Fri, 21 Apr 2017 17:35:12 -0700
-Message-ID: <8ab72465-3605-c8b6-c9cd-581f6e341e01@gmail.com>
+From: icenowy-h8G6r0blFSE@public.gmane.org
+Subject: Re: [PATCH 2/4] dt-bindings: add binding for RTL8211E
+ Ethernet PHY
+Date: Sat, 22 Apr 2017 09:12:04 +0800
+Message-ID: <fbb8f58b7a0d470bc69ae2ef38090186@aosc.io>
 References: <20170421232436.10924-1-icenowy@aosc.io>
- <20170421232436.10924-4-icenowy@aosc.io>
-Reply-To: f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+ <20170421232436.10924-3-icenowy@aosc.io>
+ <c7aa9d7a-5e97-0e7f-2b1c-584a4de00837@gmail.com>
+Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCH67JWTV4DBBROK5LDQKGQEHBPA4ZY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBDS6XAN6ZADRBZW35LDQKGQENCNNQIA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20170421232436.10924-4-icenowy-h8G6r0blFSE@public.gmane.org>
+In-Reply-To: <c7aa9d7a-5e97-0e7f-2b1c-584a4de00837-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
 List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
  <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 04/21/2017 04:24 PM, Icenowy Zheng wrote:
-> From: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
-> 
-> Some RTL8211E chips have broken GbE function, which needs a hack to
-> fix. It's said that this fix will affect the performance on not-buggy
-> PHYs, so it should only be enabled on boards with the broken PHY.
-> Currently only some Pine64+ boards are known to have this issue.
-> 
-> This hack is said to disable RX relay for RTL8211E according to Realtek.
-> 
-> Enable this hack when a certain device tree property is set.
-> 
-> As this hack is not documented on the datasheet at all, it contains
-> magic numbers, and could not be revealed. These magic numbers are
-> received from Realtek via Pine64.
-> 
-> Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
-> ---
->  drivers/net/phy/realtek.c | 36 ++++++++++++++++++++++++++++++++++++
->  1 file changed, 36 insertions(+)
-> 
-> diff --git a/drivers/net/phy/realtek.c b/drivers/net/phy/realtek.c
-> index d820d00addf6..880022160cd2 100644
-> --- a/drivers/net/phy/realtek.c
-> +++ b/drivers/net/phy/realtek.c
-> @@ -13,6 +13,7 @@
->   * option) any later version.
->   *
->   */
-> +#include <linux/of.h>
->  #include <linux/phy.h>
->  #include <linux/module.h>
->  
-> @@ -26,6 +27,8 @@
->  #define RTL8211_PAGE_SELECT	0x1f
->  
->  #define RTL8211E_INER_LINK_STATUS 0x400
-> +#define RTL8211E_EXT_PAGE_SELECT 0x1e
-> +#define RTL8211E_EXT_PAGE	0x7
->  
->  #define RTL8211F_INER_LINK_STATUS 0x0010
->  #define RTL8211F_INSR		0x1d
-> @@ -121,6 +124,38 @@ static int rtl8211f_config_init(struct phy_device *phydev)
->  	return 0;
->  }
->  
-> +static int rtl8211e_config_init(struct phy_device *phydev)
-> +{
-> +	struct device *dev = &phydev->mdio.dev;
-> +	struct device_node *of_node = dev->of_node;
-> +	int ret;
-> +
-> +	ret = genphy_config_init(phydev);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	if (of_node &&
-> +	    of_property_read_bool(of_node, "realtek,disable-rx-delay")) {
-> +		/* All these magic numbers are retrieved from Pine64, and
-> +		 * they're said to be originated from Realtek.
-> +		 *
-> +		 * The datasheet of RTL8211E didn't cover this ext page.
-> +		 *
-> +		 * Select extension page 0xa4 here.
-> +		 */
-> +		phy_write(phydev, RTL8211_PAGE_SELECT, RTL8211E_EXT_PAGE)
-> +		phy_write(phydev, RTL8211E_EXT_PAGE_SELECT, 0xa4);
-> +
-> +		/* Write the magic number */
-> +		phy_write(phydev, 0x1c, 0xb591);
-> +
-> +		/* Restore to default page 0 */
-> +		phy_write(phydev, RTL8211_PAGE_SELECT, 0);
-> +	}
+=E5=9C=A8 2017-04-22 08:22=EF=BC=8CFlorian Fainelli =E5=86=99=E9=81=93=EF=
+=BC=9A
+> On 04/21/2017 04:24 PM, Icenowy Zheng wrote:
+>> From: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+>>=20
+>> Some RTL8211E Ethernet PHY have an issue that needs a workaround
+>> indicated with device tree.
+>>=20
+>> Add the binding for a property that indicates this workaround.
+>>=20
+>> Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+>> ---
+>>  .../devicetree/bindings/net/realtek,rtl8211e.txt   | 22=20
+>> ++++++++++++++++++++++
+>>  1 file changed, 22 insertions(+)
+>>  create mode 100644=20
+>> Documentation/devicetree/bindings/net/realtek,rtl8211e.txt
+>>=20
+>> diff --git=20
+>> a/Documentation/devicetree/bindings/net/realtek,rtl8211e.txt=20
+>> b/Documentation/devicetree/bindings/net/realtek,rtl8211e.txt
+>> new file mode 100644
+>> index 000000000000..c1913301bfe8
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/net/realtek,rtl8211e.txt
+>> @@ -0,0 +1,22 @@
+>> +Realtek RTL8211E Ethernet PHY
+>> +
+>> +One batch of RTL8211E is slight broken, that needs some special (and
+>> +full of magic numbers) tweaking in order to make GbE to operate=20
+>> properly.
+>> +The only well-known board that used the broken batch is Pine64+.
+>> +Configure it through an Ethernet OF device node.
+>> +
+>> +Optional properties:
+>> +
+>> +- realtek,disable-rx-delay:
+>> +  If set, RX delay will be completely disabled (according to=20
+>> Realtek). This
+>> +  will affect the performance on non-broken boards.
+>> +  default: do not disable RX delay.
+>=20
+> Please don't introduce custom properties to do that, instead correct
+> specify the "phy-mode" such that it is e.g: "rgmii-txid" which=20
+> indicates
+> that there should be no RX internal delay, but a TX internal delay=20
+> added
+> by the PHY.
 
-The code itself is probably fine, but the way you are checking whether
-the RX delay should be disabled is not. As mentioned in patch 2, using
-the correct "phy-mode" property would translate in the proper
-phydev->interface value here (presumably PHY_INTERFACE_MODE_RGMII_TXID)
-is that you want here that would allow you to check whether the RX delay
-should, or should not be disabled.
+According to Realtek and Pine64 people, set that register is equal to
+hardwire RDDLY line to low.
 
-Thank you
--- 
-Florian
+Is it the standard definition of RGMII-TXID?
+
+(P.S. as it's only provided as a workaround, there's no implementation
+known for RGMII-RXID and RGMII-ID)
+
+Thanks,
+Icenowy
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
