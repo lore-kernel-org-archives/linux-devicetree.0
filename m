@@ -1,54 +1,139 @@
 From: Stefan Agner <stefan@agner.ch>
-Subject: [PATCH v2 3/5] mtd: gpmi: document current clock requirements
-Date: Fri, 21 Apr 2017 18:23:36 -0700
-Message-ID: <20170422012338.4635-4-stefan@agner.ch>
+Subject: [PATCH v2 1/5] mtd: nand: gpmi: unify clock handling
+Date: Fri, 21 Apr 2017 18:23:34 -0700
+Message-ID: <20170422012338.4635-2-stefan@agner.ch>
 References: <20170422012338.4635-1-stefan@agner.ch>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <20170422012338.4635-1-stefan@agner.ch>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: dwmw2@infradead.org, computersforpeace@gmail.com, boris.brezillon@free-electrons.com, marek.vasut@gmail.com, richard@nod.at, cyrille.pitchen@atmel.com
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, kernel@pengutronix.de, han.xu@nxp.com, fabio.estevam@freescale.com, LW@KARO-electronics.de, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Stefan Agner <stefan@agner.ch>
+Cc: mark.rutland@arm.com, fabio.estevam@freescale.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Stefan Agner <stefan@agner.ch>, robh+dt@kernel.org, linux-mtd@lists.infradead.org, kernel@pengutronix.de, han.xu@nxp.com, shawnguo@kernel.org, linux-arm-kernel@lists.infradead.org, LW@KARO-electronics.de
 List-Id: devicetree@vger.kernel.org
 
-The clock requirements are completely missing, add the clocks
-currently required by the driver.
+Add device specific list of clocks required, and handle all clocks
+in a single for loop. This avoids further code duplication when
+adding i.MX 7 support.
 
 Signed-off-by: Stefan Agner <stefan@agner.ch>
+Reviewed-by: Marek Vasut <marek.vasut@gmail.com>
 ---
- Documentation/devicetree/bindings/mtd/gpmi-nand.txt | 14 +++++++++++++-
- 1 file changed, 13 insertions(+), 1 deletion(-)
+ drivers/mtd/nand/gpmi-nand/gpmi-nand.c | 41 +++++++++++++++-------------------
+ drivers/mtd/nand/gpmi-nand/gpmi-nand.h |  2 ++
+ 2 files changed, 20 insertions(+), 23 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/mtd/gpmi-nand.txt b/Documentation/devicetree/bindings/mtd/gpmi-nand.txt
-index d02acaff3c35..b289ef3c1b7e 100644
---- a/Documentation/devicetree/bindings/mtd/gpmi-nand.txt
-+++ b/Documentation/devicetree/bindings/mtd/gpmi-nand.txt
-@@ -4,7 +4,12 @@ The GPMI nand controller provides an interface to control the
- NAND flash chips.
+diff --git a/drivers/mtd/nand/gpmi-nand/gpmi-nand.c b/drivers/mtd/nand/gpmi-nand/gpmi-nand.c
+index d52139635b67..c8bbf5da2ab8 100644
+--- a/drivers/mtd/nand/gpmi-nand/gpmi-nand.c
++++ b/drivers/mtd/nand/gpmi-nand/gpmi-nand.c
+@@ -82,6 +82,10 @@ static int gpmi_ooblayout_free(struct mtd_info *mtd, int section,
+ 	return 0;
+ }
  
- Required properties:
--  - compatible : should be "fsl,<chip>-gpmi-nand"
-+  - compatible : should be "fsl,<chip>-gpmi-nand", chip can be:
-+    * imx23
-+    * imx28
-+    * imx6q
-+    * imx6sx
-+    * imx7d
-   - reg : should contain registers location and length for gpmi and bch.
-   - reg-names: Should contain the reg names "gpmi-nand" and "bch"
-   - interrupts : BCH interrupt number.
-@@ -13,6 +18,13 @@ Required properties:
-     and GPMI DMA channel ID.
-     Refer to dma.txt and fsl-mxs-dma.txt for details.
-   - dma-names: Must be "rx-tx".
-+  - clocks : clocks phandle and clock specifier corresponding to each clock
-+    specified in clock-names.
-+  - clock-names : The "gpmi_io" clock is always required. Which clocks are
-+    exactly required depends on chip:
-+    * imx23/imx28 : "gpmi_io"
-+    * imx6q/sx : "gpmi_io", "gpmi_apb", "gpmi_bch", "gpmi_bch_apb", "per1_bch"
-+    * imx7d : "gpmi_io", "gpmi_bch_apb"
++static const char * const gpmi_clks_for_mx2x[] = {
++	"gpmi_io",
++};
++
+ static const struct mtd_ooblayout_ops gpmi_ooblayout_ops = {
+ 	.ecc = gpmi_ooblayout_ecc,
+ 	.free = gpmi_ooblayout_free,
+@@ -91,24 +95,36 @@ static const struct gpmi_devdata gpmi_devdata_imx23 = {
+ 	.type = IS_MX23,
+ 	.bch_max_ecc_strength = 20,
+ 	.max_chain_delay = 16,
++	.clks = gpmi_clks_for_mx2x,
++	.clks_count = ARRAY_SIZE(gpmi_clks_for_mx2x),
+ };
  
- Optional properties:
-   - nand-on-flash-bbt: boolean to enable on flash bbt option if not
+ static const struct gpmi_devdata gpmi_devdata_imx28 = {
+ 	.type = IS_MX28,
+ 	.bch_max_ecc_strength = 20,
+ 	.max_chain_delay = 16,
++	.clks = gpmi_clks_for_mx2x,
++	.clks_count = ARRAY_SIZE(gpmi_clks_for_mx2x),
++};
++
++static const char * const gpmi_clks_for_mx6[] = {
++	"gpmi_io", "gpmi_apb", "gpmi_bch", "gpmi_bch_apb", "per1_bch",
+ };
+ 
+ static const struct gpmi_devdata gpmi_devdata_imx6q = {
+ 	.type = IS_MX6Q,
+ 	.bch_max_ecc_strength = 40,
+ 	.max_chain_delay = 12,
++	.clks = gpmi_clks_for_mx6,
++	.clks_count = ARRAY_SIZE(gpmi_clks_for_mx6),
+ };
+ 
+ static const struct gpmi_devdata gpmi_devdata_imx6sx = {
+ 	.type = IS_MX6SX,
+ 	.bch_max_ecc_strength = 62,
+ 	.max_chain_delay = 12,
++	.clks = gpmi_clks_for_mx6,
++	.clks_count = ARRAY_SIZE(gpmi_clks_for_mx6),
+ };
+ 
+ static irqreturn_t bch_irq(int irq, void *cookie)
+@@ -599,35 +615,14 @@ static int acquire_dma_channels(struct gpmi_nand_data *this)
+ 	return -EINVAL;
+ }
+ 
+-static char *extra_clks_for_mx6q[GPMI_CLK_MAX] = {
+-	"gpmi_apb", "gpmi_bch", "gpmi_bch_apb", "per1_bch",
+-};
+-
+ static int gpmi_get_clks(struct gpmi_nand_data *this)
+ {
+ 	struct resources *r = &this->resources;
+-	char **extra_clks = NULL;
+ 	struct clk *clk;
+ 	int err, i;
+ 
+-	/* The main clock is stored in the first. */
+-	r->clock[0] = devm_clk_get(this->dev, "gpmi_io");
+-	if (IS_ERR(r->clock[0])) {
+-		err = PTR_ERR(r->clock[0]);
+-		goto err_clock;
+-	}
+-
+-	/* Get extra clocks */
+-	if (GPMI_IS_MX6(this))
+-		extra_clks = extra_clks_for_mx6q;
+-	if (!extra_clks)
+-		return 0;
+-
+-	for (i = 1; i < GPMI_CLK_MAX; i++) {
+-		if (extra_clks[i - 1] == NULL)
+-			break;
+-
+-		clk = devm_clk_get(this->dev, extra_clks[i - 1]);
++	for (i = 0; i < this->devdata->clks_count; i++) {
++		clk = devm_clk_get(this->dev, this->devdata->clks[i]);
+ 		if (IS_ERR(clk)) {
+ 			err = PTR_ERR(clk);
+ 			goto err_clock;
+diff --git a/drivers/mtd/nand/gpmi-nand/gpmi-nand.h b/drivers/mtd/nand/gpmi-nand/gpmi-nand.h
+index 4e49a1f5fa27..8879c4eff25e 100644
+--- a/drivers/mtd/nand/gpmi-nand/gpmi-nand.h
++++ b/drivers/mtd/nand/gpmi-nand/gpmi-nand.h
+@@ -130,6 +130,8 @@ struct gpmi_devdata {
+ 	enum gpmi_type type;
+ 	int bch_max_ecc_strength;
+ 	int max_chain_delay; /* See the async EDO mode */
++	const char * const *clks;
++	const int clks_count;
+ };
+ 
+ struct gpmi_nand_data {
 -- 
 2.12.2
