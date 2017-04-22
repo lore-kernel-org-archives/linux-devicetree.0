@@ -1,45 +1,48 @@
-From: <sushildhimanphotography-/E1597aS9LQAvxtiuMwx3w@public.gmane.org>
-Subject: 26843 devicetree
-Date: Sat, 22 Apr 2017 18:35:34 -0000
-Message-ID: <149288613476.15557.17593297339883015232@orange.sk>
+From: Robert Jarzmik <robert.jarzmik@free.fr>
+Subject: Re: [PATCH V5 4/7] ARM: pxa: Use - instead of @ for DT OPP entries
+Date: Sat, 22 Apr 2017 21:29:39 +0200
+Message-ID: <87wpaci6l8.fsf@belgarion.home>
+References: <cover.1492685450.git.viresh.kumar@linaro.org>
+        <cover.1492685450.git.viresh.kumar@linaro.org>
+        <741bc9af28d6968e6a9409f94681066db5d1228b.1492685450.git.viresh.kumar@linaro.org>
+        <87a87a7s66.fsf@belgarion.home> <20170421053041.GB26900@vireshk-i7>
+        <874lxhkauf.fsf@belgarion.home>
 Mime-Version: 1.0
-Content-Type: application/zip; name="69.zip"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: attachment
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <874lxhkauf.fsf@belgarion.home> (Robert Jarzmik's message of
+        "Fri, 21 Apr 2017 18:02:32 +0200")
+Sender: linux-pm-owner@vger.kernel.org
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: arm@kernel.org, Daniel Mack <daniel@zonque.org>, Haojian Zhuang <haojian.zhuang@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linaro-kernel@lists.linaro.org, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org, Rafael Wysocki <rjw@rjwysocki.net>, Krzysztof Kozlowski <krzk@kernel.org>, Masahiro Yamada <yamada.masahiro@socionext.com>, Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-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
-AVBLBQYAAAAAAQABAFsAAACpBQAAAAA=
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Robert Jarzmik <robert.jarzmik@free.fr> writes:
+
+> Viresh Kumar <viresh.kumar@linaro.org> writes:
+>
+>> On 20-04-17, 22:14, Robert Jarzmik wrote:
+>>> Viresh Kumar <viresh.kumar@linaro.org> writes:
+>>> 
+>>> > Compiling the DT file with W=1, DTC warns like follows:
+>>> >
+>>> > Warning (unit_address_vs_reg): Node /opp_table0/opp@1000000000 has a
+>>> > unit name, but no reg property
+>>> >
+>>> > Fix this by replacing '@' with '-' as the OPP nodes will never have a
+>>> > "reg" property.
+>>> >
+>>> > Reported-by: Krzysztof Kozlowski <krzk@kernel.org>
+>>> > Reported-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+>>> > Suggested-by: Mark Rutland <mark.rutland@arm.com>
+>>> > Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+>>> > Acked-by: Rob Herring <robh@kernel.org>
+>>> Acked-by: Robert Jarzmik <robert.jarzmik@free.fr>
+>>
+>> Thanks. But I need you to pick it up for your pull request for arm-soc.
+Applied to pxa/dt tree, thanks.
+
+Cheers.
+
+-- 
+Robert
