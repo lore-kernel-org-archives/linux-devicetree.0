@@ -1,13 +1,12 @@
 From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Subject: [PATCH v5 04/11] drm/sun4i: return only planes for
- layers created
-Date: Sun, 23 Apr 2017 18:37:47 +0800
-Message-ID: <20170423103754.50012-5-icenowy@aosc.io>
+Subject: [PATCH v5 05/11] drm/sun4i: abstract a engine type
+Date: Sun, 23 Apr 2017 18:37:48 +0800
+Message-ID: <20170423103754.50012-6-icenowy@aosc.io>
 References: <20170423103754.50012-1-icenowy@aosc.io>
 Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDS6XAN6ZADRBOMI6LDQKGQEJISS7EI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBDS6XAN6ZADRBS4I6LDQKGQE3LWYWVI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20170423103754.50012-1-icenowy-h8G6r0blFSE@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -20,162 +19,638 @@ To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard
 Cc: linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-As we are going to add support for the Allwinner DE2 Mixer in sun4i-drm
-driver, we will finally have two types of layers.
+As we are going to add support for the Allwinner DE2 engine in sun4i-drm
+driver, we will finally have two types of display engines -- the DE1
+backend and the DE2 mixer. They both do some display blending and feed
+graphics data to TCON, so I choose to call them both "engine" here.
 
-Each layer is bound to a drm_plane that is CRTC-specific, so we create
-them when initializing CRTC (calling sun4i_layers_init, which will be
-generalized in next patch). The drm_plane's will be used when creating
-CRTC, but the CRTC initialization code do not care other properties of
-the layer, so we let the sun4i_layers_init function return drm_plane's
-only.
+Abstract the engine type to a new struct with an ops struct, which contains
+functions that should be called outside the engine-specified code (in
+TCON, CRTC or TV Encoder code).
 
-As we have no need to trace the layers after the CRTC is properly
-created, we drop the layers pointer in sun4i_crtc struct.
-
-Doing these things makes the CRTC code independent to the type of layer
-(the sun4i_layers_init function name is still hardcoded and will be
-changed in the next patch), so that we can finally gain support for the
-mixer in DE2, which will has different layers.
+A dedicated Kconfig option is also added to control whether
+sun4i-backend-specified code (sun4i_backend.c and sun4i_layer.c) should
+be built. As we removed the codes in CRTC code that directly call the
+layer code, we can now extract the layer part and combine it with the
+backend part into a new module, sun4i-backend.ko.
 
 Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
 ---
- drivers/gpu/drm/sun4i/sun4i_crtc.c  | 23 ++++++++++++-----------
- drivers/gpu/drm/sun4i/sun4i_crtc.h  |  1 -
- drivers/gpu/drm/sun4i/sun4i_layer.c | 18 ++++++++++--------
- drivers/gpu/drm/sun4i/sun4i_layer.h |  4 ++--
- 4 files changed, 24 insertions(+), 22 deletions(-)
+Changes in v5:
+- Really made a sunxi_engine struct type, and moved ops pointer
+  into it.
+- Added checked ops wrappers.
+- Changed the second parameter of layers_init from crtc to engine.
+Changes in v4:
+- Comments to tag the color correction functions as optional.
+- Check before calling the optional functions.
+- Change layers_init to satisfy new PATCH v4 04/11.
 
+ drivers/gpu/drm/sun4i/Kconfig         | 10 ++++
+ drivers/gpu/drm/sun4i/Makefile        |  6 ++-
+ drivers/gpu/drm/sun4i/sun4i_backend.c | 68 ++++++++++++++------------
+ drivers/gpu/drm/sun4i/sun4i_backend.h | 13 +++--
+ drivers/gpu/drm/sun4i/sun4i_crtc.c    | 11 ++---
+ drivers/gpu/drm/sun4i/sun4i_crtc.h    |  4 +-
+ drivers/gpu/drm/sun4i/sun4i_drv.h     |  2 +-
+ drivers/gpu/drm/sun4i/sun4i_layer.c   |  8 ++-
+ drivers/gpu/drm/sun4i/sun4i_layer.h   |  5 +-
+ drivers/gpu/drm/sun4i/sun4i_tcon.c    |  2 +-
+ drivers/gpu/drm/sun4i/sun4i_tv.c      |  9 ++--
+ drivers/gpu/drm/sun4i/sunxi_engine.h  | 91 +++++++++++++++++++++++++++++++++++
+ 12 files changed, 169 insertions(+), 60 deletions(-)
+ create mode 100644 drivers/gpu/drm/sun4i/sunxi_engine.h
+
+diff --git a/drivers/gpu/drm/sun4i/Kconfig b/drivers/gpu/drm/sun4i/Kconfig
+index a4b357db8856..5a8227f37cc4 100644
+--- a/drivers/gpu/drm/sun4i/Kconfig
++++ b/drivers/gpu/drm/sun4i/Kconfig
+@@ -12,3 +12,13 @@ config DRM_SUN4I
+ 	  Choose this option if you have an Allwinner SoC with a
+ 	  Display Engine. If M is selected the module will be called
+ 	  sun4i-drm.
++
++config DRM_SUN4I_BACKEND
++	tristate "Support for Allwinner A10 Display Engine Backend"
++	depends on DRM_SUN4I
++	default DRM_SUN4I
++	help
++	  Choose this option if you have an Allwinner SoC with the
++	  original Allwinner Display Engine, which has a backend to
++	  do some alpha blending and feed graphics to TCON. If M is
++	  selected the module will be called sun4i-backend.
+diff --git a/drivers/gpu/drm/sun4i/Makefile b/drivers/gpu/drm/sun4i/Makefile
+index 59b757350a1f..1db1068b9be1 100644
+--- a/drivers/gpu/drm/sun4i/Makefile
++++ b/drivers/gpu/drm/sun4i/Makefile
+@@ -5,9 +5,11 @@ sun4i-tcon-y += sun4i_tcon.o
+ sun4i-tcon-y += sun4i_rgb.o
+ sun4i-tcon-y += sun4i_dotclock.o
+ sun4i-tcon-y += sun4i_crtc.o
+-sun4i-tcon-y += sun4i_layer.o
++
++sun4i-backend-y += sun4i_layer.o
++sun4i-backend-y += sun4i_backend.o
+ 
+ obj-$(CONFIG_DRM_SUN4I)		+= sun4i-drm.o sun4i-tcon.o
+-obj-$(CONFIG_DRM_SUN4I)		+= sun4i_backend.o
++obj-$(CONFIG_DRM_SUN4I_BACKEND)	+= sun4i-backend.o
+ obj-$(CONFIG_DRM_SUN4I)		+= sun6i_drc.o
+ obj-$(CONFIG_DRM_SUN4I)		+= sun4i_tv.o
+diff --git a/drivers/gpu/drm/sun4i/sun4i_backend.c b/drivers/gpu/drm/sun4i/sun4i_backend.c
+index d660741ba475..360ab046121b 100644
+--- a/drivers/gpu/drm/sun4i/sun4i_backend.c
++++ b/drivers/gpu/drm/sun4i/sun4i_backend.c
+@@ -23,6 +23,8 @@
+ 
+ #include "sun4i_backend.h"
+ #include "sun4i_drv.h"
++#include "sun4i_layer.h"
++#include "sunxi_engine.h"
+ 
+ static const u32 sunxi_rgb2yuv_coef[12] = {
+ 	0x00000107, 0x00000204, 0x00000064, 0x00000108,
+@@ -30,41 +32,38 @@ static const u32 sunxi_rgb2yuv_coef[12] = {
+ 	0x000001c1, 0x00003e88, 0x00003fb8, 0x00000808
+ };
+ 
+-void sun4i_backend_apply_color_correction(struct sun4i_backend *backend)
++static void sun4i_backend_apply_color_correction(struct sunxi_engine *engine)
+ {
+ 	int i;
+ 
+ 	DRM_DEBUG_DRIVER("Applying RGB to YUV color correction\n");
+ 
+ 	/* Set color correction */
+-	regmap_write(backend->regs, SUN4I_BACKEND_OCCTL_REG,
++	regmap_write(engine->regs, SUN4I_BACKEND_OCCTL_REG,
+ 		     SUN4I_BACKEND_OCCTL_ENABLE);
+ 
+ 	for (i = 0; i < 12; i++)
+-		regmap_write(backend->regs, SUN4I_BACKEND_OCRCOEF_REG(i),
++		regmap_write(engine->regs, SUN4I_BACKEND_OCRCOEF_REG(i),
+ 			     sunxi_rgb2yuv_coef[i]);
+ }
+-EXPORT_SYMBOL(sun4i_backend_apply_color_correction);
+ 
+-void sun4i_backend_disable_color_correction(struct sun4i_backend *backend)
++static void sun4i_backend_disable_color_correction(struct sunxi_engine *engine)
+ {
+ 	DRM_DEBUG_DRIVER("Disabling color correction\n");
+ 
+ 	/* Disable color correction */
+-	regmap_update_bits(backend->regs, SUN4I_BACKEND_OCCTL_REG,
++	regmap_update_bits(engine->regs, SUN4I_BACKEND_OCCTL_REG,
+ 			   SUN4I_BACKEND_OCCTL_ENABLE, 0);
+ }
+-EXPORT_SYMBOL(sun4i_backend_disable_color_correction);
+ 
+-void sun4i_backend_commit(struct sun4i_backend *backend)
++static void sun4i_backend_commit(struct sunxi_engine *engine)
+ {
+ 	DRM_DEBUG_DRIVER("Committing changes\n");
+ 
+-	regmap_write(backend->regs, SUN4I_BACKEND_REGBUFFCTL_REG,
++	regmap_write(engine->regs, SUN4I_BACKEND_REGBUFFCTL_REG,
+ 		     SUN4I_BACKEND_REGBUFFCTL_AUTOLOAD_DIS |
+ 		     SUN4I_BACKEND_REGBUFFCTL_LOADCTL);
+ }
+-EXPORT_SYMBOL(sun4i_backend_commit);
+ 
+ void sun4i_backend_layer_enable(struct sun4i_backend *backend,
+ 				int layer, bool enable)
+@@ -78,10 +77,9 @@ void sun4i_backend_layer_enable(struct sun4i_backend *backend,
+ 	else
+ 		val = 0;
+ 
+-	regmap_update_bits(backend->regs, SUN4I_BACKEND_MODCTL_REG,
++	regmap_update_bits(backend->engine.regs, SUN4I_BACKEND_MODCTL_REG,
+ 			   SUN4I_BACKEND_MODCTL_LAY_EN(layer), val);
+ }
+-EXPORT_SYMBOL(sun4i_backend_layer_enable);
+ 
+ static int sun4i_backend_drm_format_to_layer(struct drm_plane *plane,
+ 					     u32 format, u32 *mode)
+@@ -141,33 +139,33 @@ int sun4i_backend_update_layer_coord(struct sun4i_backend *backend,
+ 	if (plane->type == DRM_PLANE_TYPE_PRIMARY) {
+ 		DRM_DEBUG_DRIVER("Primary layer, updating global size W: %u H: %u\n",
+ 				 state->crtc_w, state->crtc_h);
+-		regmap_write(backend->regs, SUN4I_BACKEND_DISSIZE_REG,
++		regmap_write(backend->engine.regs, SUN4I_BACKEND_DISSIZE_REG,
+ 			     SUN4I_BACKEND_DISSIZE(state->crtc_w,
+ 						   state->crtc_h));
+ 	}
+ 
+ 	/* Set the line width */
+ 	DRM_DEBUG_DRIVER("Layer line width: %d bits\n", fb->pitches[0] * 8);
+-	regmap_write(backend->regs, SUN4I_BACKEND_LAYLINEWIDTH_REG(layer),
++	regmap_write(backend->engine.regs,
++		     SUN4I_BACKEND_LAYLINEWIDTH_REG(layer),
+ 		     fb->pitches[0] * 8);
+ 
+ 	/* Set height and width */
+ 	DRM_DEBUG_DRIVER("Layer size W: %u H: %u\n",
+ 			 state->crtc_w, state->crtc_h);
+-	regmap_write(backend->regs, SUN4I_BACKEND_LAYSIZE_REG(layer),
++	regmap_write(backend->engine.regs, SUN4I_BACKEND_LAYSIZE_REG(layer),
+ 		     SUN4I_BACKEND_LAYSIZE(state->crtc_w,
+ 					   state->crtc_h));
+ 
+ 	/* Set base coordinates */
+ 	DRM_DEBUG_DRIVER("Layer coordinates X: %d Y: %d\n",
+ 			 state->crtc_x, state->crtc_y);
+-	regmap_write(backend->regs, SUN4I_BACKEND_LAYCOOR_REG(layer),
++	regmap_write(backend->engine.regs, SUN4I_BACKEND_LAYCOOR_REG(layer),
+ 		     SUN4I_BACKEND_LAYCOOR(state->crtc_x,
+ 					   state->crtc_y));
+ 
+ 	return 0;
+ }
+-EXPORT_SYMBOL(sun4i_backend_update_layer_coord);
+ 
+ int sun4i_backend_update_layer_formats(struct sun4i_backend *backend,
+ 				       int layer, struct drm_plane *plane)
+@@ -182,7 +180,7 @@ int sun4i_backend_update_layer_formats(struct sun4i_backend *backend,
+ 		interlaced = plane->state->crtc->state->adjusted_mode.flags
+ 			& DRM_MODE_FLAG_INTERLACE;
+ 
+-	regmap_update_bits(backend->regs, SUN4I_BACKEND_MODCTL_REG,
++	regmap_update_bits(backend->engine.regs, SUN4I_BACKEND_MODCTL_REG,
+ 			   SUN4I_BACKEND_MODCTL_ITLMOD_EN,
+ 			   interlaced ? SUN4I_BACKEND_MODCTL_ITLMOD_EN : 0);
+ 
+@@ -196,12 +194,12 @@ int sun4i_backend_update_layer_formats(struct sun4i_backend *backend,
+ 		return ret;
+ 	}
+ 
+-	regmap_update_bits(backend->regs, SUN4I_BACKEND_ATTCTL_REG1(layer),
++	regmap_update_bits(backend->engine.regs,
++			   SUN4I_BACKEND_ATTCTL_REG1(layer),
+ 			   SUN4I_BACKEND_ATTCTL_REG1_LAY_FBFMT, val);
+ 
+ 	return 0;
+ }
+-EXPORT_SYMBOL(sun4i_backend_update_layer_formats);
+ 
+ int sun4i_backend_update_layer_buffer(struct sun4i_backend *backend,
+ 				      int layer, struct drm_plane *plane)
+@@ -229,19 +227,19 @@ int sun4i_backend_update_layer_buffer(struct sun4i_backend *backend,
+ 	/* Write the 32 lower bits of the address (in bits) */
+ 	lo_paddr = paddr << 3;
+ 	DRM_DEBUG_DRIVER("Setting address lower bits to 0x%x\n", lo_paddr);
+-	regmap_write(backend->regs, SUN4I_BACKEND_LAYFB_L32ADD_REG(layer),
++	regmap_write(backend->engine.regs,
++		     SUN4I_BACKEND_LAYFB_L32ADD_REG(layer),
+ 		     lo_paddr);
+ 
+ 	/* And the upper bits */
+ 	hi_paddr = paddr >> 29;
+ 	DRM_DEBUG_DRIVER("Setting address high bits to 0x%x\n", hi_paddr);
+-	regmap_update_bits(backend->regs, SUN4I_BACKEND_LAYFB_H4ADD_REG,
++	regmap_update_bits(backend->engine.regs, SUN4I_BACKEND_LAYFB_H4ADD_REG,
+ 			   SUN4I_BACKEND_LAYFB_H4ADD_MSK(layer),
+ 			   SUN4I_BACKEND_LAYFB_H4ADD(layer, hi_paddr));
+ 
+ 	return 0;
+ }
+-EXPORT_SYMBOL(sun4i_backend_update_layer_buffer);
+ 
+ static int sun4i_backend_init_sat(struct device *dev) {
+ 	struct sun4i_backend *backend = dev_get_drvdata(dev);
+@@ -288,6 +286,13 @@ static int sun4i_backend_free_sat(struct device *dev) {
+ 	return 0;
+ }
+ 
++static const struct sunxi_engine_ops sun4i_backend_engine_ops = {
++	.commit				= sun4i_backend_commit,
++	.layers_init			= sun4i_layers_init,
++	.apply_color_correction		= sun4i_backend_apply_color_correction,
++	.disable_color_correction	= sun4i_backend_disable_color_correction,
++};
++
+ static struct regmap_config sun4i_backend_regmap_config = {
+ 	.reg_bits	= 32,
+ 	.val_bits	= 32,
+@@ -310,18 +315,19 @@ static int sun4i_backend_bind(struct device *dev, struct device *master,
+ 	if (!backend)
+ 		return -ENOMEM;
+ 	dev_set_drvdata(dev, backend);
+-	drv->backend = backend;
++	drv->engine = &backend->engine;
++	drv->engine->ops = &sun4i_backend_engine_ops;
+ 
+ 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+ 	regs = devm_ioremap_resource(dev, res);
+ 	if (IS_ERR(regs))
+ 		return PTR_ERR(regs);
+ 
+-	backend->regs = devm_regmap_init_mmio(dev, regs,
+-					      &sun4i_backend_regmap_config);
+-	if (IS_ERR(backend->regs)) {
++	backend->engine.regs = devm_regmap_init_mmio(dev, regs,
++						&sun4i_backend_regmap_config);
++	if (IS_ERR(backend->engine.regs)) {
+ 		dev_err(dev, "Couldn't create the backend0 regmap\n");
+-		return PTR_ERR(backend->regs);
++		return PTR_ERR(backend->engine.regs);
+ 	}
+ 
+ 	backend->reset = devm_reset_control_get(dev, NULL);
+@@ -371,14 +377,14 @@ static int sun4i_backend_bind(struct device *dev, struct device *master,
+ 
+ 	/* Reset the registers */
+ 	for (i = 0x800; i < 0x1000; i += 4)
+-		regmap_write(backend->regs, i, 0);
++		regmap_write(backend->engine.regs, i, 0);
+ 
+ 	/* Disable registers autoloading */
+-	regmap_write(backend->regs, SUN4I_BACKEND_REGBUFFCTL_REG,
++	regmap_write(backend->engine.regs, SUN4I_BACKEND_REGBUFFCTL_REG,
+ 		     SUN4I_BACKEND_REGBUFFCTL_AUTOLOAD_DIS);
+ 
+ 	/* Enable the backend */
+-	regmap_write(backend->regs, SUN4I_BACKEND_MODCTL_REG,
++	regmap_write(backend->engine.regs, SUN4I_BACKEND_MODCTL_REG,
+ 		     SUN4I_BACKEND_MODCTL_DEBE_EN |
+ 		     SUN4I_BACKEND_MODCTL_START_CTL);
+ 
+diff --git a/drivers/gpu/drm/sun4i/sun4i_backend.h b/drivers/gpu/drm/sun4i/sun4i_backend.h
+index 83e63cc702b4..a92f50eca948 100644
+--- a/drivers/gpu/drm/sun4i/sun4i_backend.h
++++ b/drivers/gpu/drm/sun4i/sun4i_backend.h
+@@ -17,6 +17,8 @@
+ #include <linux/regmap.h>
+ #include <linux/reset.h>
+ 
++#include "sunxi_engine.h"
++
+ #define SUN4I_BACKEND_MODCTL_REG		0x800
+ #define SUN4I_BACKEND_MODCTL_LINE_SEL			BIT(29)
+ #define SUN4I_BACKEND_MODCTL_ITLMOD_EN			BIT(28)
+@@ -139,7 +141,7 @@
+ #define SUN4I_BACKEND_PIPE_OFF(p)		(0x5000 + (0x400 * (p)))
+ 
+ struct sun4i_backend {
+-	struct regmap		*regs;
++	struct sunxi_engine	engine;
+ 
+ 	struct reset_control	*reset;
+ 
+@@ -151,10 +153,11 @@ struct sun4i_backend {
+ 	struct reset_control	*sat_reset;
+ };
+ 
+-void sun4i_backend_apply_color_correction(struct sun4i_backend *backend);
+-void sun4i_backend_disable_color_correction(struct sun4i_backend *backend);
+-
+-void sun4i_backend_commit(struct sun4i_backend *backend);
++static inline struct sun4i_backend *
++engine_to_sun4i_backend(struct sunxi_engine *engine)
++{
++	return container_of(engine, struct sun4i_backend, engine);
++}
+ 
+ void sun4i_backend_layer_enable(struct sun4i_backend *backend,
+ 				int layer, bool enable);
 diff --git a/drivers/gpu/drm/sun4i/sun4i_crtc.c b/drivers/gpu/drm/sun4i/sun4i_crtc.c
-index 3c876c3a356a..708b3543d4e9 100644
+index 708b3543d4e9..f8c70439d1e2 100644
 --- a/drivers/gpu/drm/sun4i/sun4i_crtc.c
 +++ b/drivers/gpu/drm/sun4i/sun4i_crtc.c
-@@ -139,6 +139,7 @@ struct sun4i_crtc *sun4i_crtc_init(struct drm_device *drm,
+@@ -25,10 +25,9 @@
+ 
+ #include <video/videomode.h>
+ 
+-#include "sun4i_backend.h"
+ #include "sun4i_crtc.h"
+ #include "sun4i_drv.h"
+-#include "sun4i_layer.h"
++#include "sunxi_engine.h"
+ #include "sun4i_tcon.h"
+ 
+ static void sun4i_crtc_atomic_begin(struct drm_crtc *crtc,
+@@ -56,7 +55,7 @@ static void sun4i_crtc_atomic_flush(struct drm_crtc *crtc,
+ 
+ 	DRM_DEBUG_DRIVER("Committing plane changes\n");
+ 
+-	sun4i_backend_commit(scrtc->backend);
++	sunxi_engine_commit(scrtc->engine);
+ 
+ 	if (event) {
+ 		crtc->state->event = NULL;
+@@ -135,7 +134,7 @@ static const struct drm_crtc_funcs sun4i_crtc_funcs = {
+ };
+ 
+ struct sun4i_crtc *sun4i_crtc_init(struct drm_device *drm,
+-				   struct sun4i_backend *backend,
++				   struct sunxi_engine *engine,
  				   struct sun4i_tcon *tcon)
  {
  	struct sun4i_crtc *scrtc;
-+	struct drm_plane **planes;
- 	struct drm_plane *primary = NULL, *cursor = NULL;
- 	int ret, i;
- 
-@@ -149,22 +150,22 @@ struct sun4i_crtc *sun4i_crtc_init(struct drm_device *drm,
+@@ -146,11 +145,11 @@ struct sun4i_crtc *sun4i_crtc_init(struct drm_device *drm,
+ 	scrtc = devm_kzalloc(drm->dev, sizeof(*scrtc), GFP_KERNEL);
+ 	if (!scrtc)
+ 		return ERR_PTR(-ENOMEM);
+-	scrtc->backend = backend;
++	scrtc->engine = engine;
  	scrtc->tcon = tcon;
  
  	/* Create our layers */
--	scrtc->layers = sun4i_layers_init(drm, scrtc->backend);
--	if (IS_ERR(scrtc->layers)) {
-+	planes = sun4i_layers_init(drm, scrtc);
-+	if (IS_ERR(planes)) {
+-	planes = sun4i_layers_init(drm, scrtc);
++	planes = sunxi_engine_layers_init(drm, engine);
+ 	if (IS_ERR(planes)) {
  		dev_err(drm->dev, "Couldn't create the planes\n");
  		return NULL;
- 	}
- 
- 	/* find primary and cursor planes for drm_crtc_init_with_planes */
--	for (i = 0; scrtc->layers[i]; i++) {
--		struct sun4i_layer *layer = scrtc->layers[i];
-+	for (i = 0; planes[i]; i++) {
-+		struct drm_plane *plane = planes[i];
- 
--		switch (layer->plane.type) {
-+		switch (plane->type) {
- 		case DRM_PLANE_TYPE_PRIMARY:
--			primary = &layer->plane;
-+			primary = plane;
- 			break;
- 		case DRM_PLANE_TYPE_CURSOR:
--			cursor = &layer->plane;
-+			cursor = plane;
- 			break;
- 		default:
- 			break;
-@@ -188,12 +189,12 @@ struct sun4i_crtc *sun4i_crtc_init(struct drm_device *drm,
- 						   1);
- 
- 	/* Set possible_crtcs to this crtc for overlay planes */
--	for (i = 0; scrtc->layers[i]; i++) {
-+	for (i = 0; planes[i]; i++) {
- 		uint32_t possible_crtcs = BIT(drm_crtc_index(&scrtc->crtc));
--		struct sun4i_layer *layer = scrtc->layers[i];
-+		struct drm_plane *plane = planes[i];
- 
--		if (layer->plane.type == DRM_PLANE_TYPE_OVERLAY)
--			layer->plane.possible_crtcs = possible_crtcs;
-+		if (plane->type == DRM_PLANE_TYPE_OVERLAY)
-+			plane->possible_crtcs = possible_crtcs;
- 	}
- 
- 	return scrtc;
 diff --git a/drivers/gpu/drm/sun4i/sun4i_crtc.h b/drivers/gpu/drm/sun4i/sun4i_crtc.h
-index 230cb8f0d601..4dae3508424a 100644
+index 4dae3508424a..bf0ce36eb518 100644
 --- a/drivers/gpu/drm/sun4i/sun4i_crtc.h
 +++ b/drivers/gpu/drm/sun4i/sun4i_crtc.h
-@@ -19,7 +19,6 @@ struct sun4i_crtc {
+@@ -17,7 +17,7 @@ struct sun4i_crtc {
+ 	struct drm_crtc			crtc;
+ 	struct drm_pending_vblank_event	*event;
  
- 	struct sun4i_backend		*backend;
+-	struct sun4i_backend		*backend;
++	struct sunxi_engine		*engine;
  	struct sun4i_tcon		*tcon;
--	struct sun4i_layer		**layers;
  };
  
- static inline struct sun4i_crtc *drm_crtc_to_sun4i_crtc(struct drm_crtc *crtc)
+@@ -27,7 +27,7 @@ static inline struct sun4i_crtc *drm_crtc_to_sun4i_crtc(struct drm_crtc *crtc)
+ }
+ 
+ struct sun4i_crtc *sun4i_crtc_init(struct drm_device *drm,
+-				   struct sun4i_backend *backend,
++				   struct sunxi_engine *engine,
+ 				   struct sun4i_tcon *tcon);
+ 
+ #endif /* _SUN4I_CRTC_H_ */
+diff --git a/drivers/gpu/drm/sun4i/sun4i_drv.h b/drivers/gpu/drm/sun4i/sun4i_drv.h
+index 5df50126ff52..dee8e88e99b0 100644
+--- a/drivers/gpu/drm/sun4i/sun4i_drv.h
++++ b/drivers/gpu/drm/sun4i/sun4i_drv.h
+@@ -17,7 +17,7 @@
+ #include <linux/regmap.h>
+ 
+ struct sun4i_drv {
+-	struct sun4i_backend	*backend;
++	struct sunxi_engine	*engine;
+ 	struct sun4i_tcon	*tcon;
+ 
+ 	struct drm_fbdev_cma	*fbdev;
 diff --git a/drivers/gpu/drm/sun4i/sun4i_layer.c b/drivers/gpu/drm/sun4i/sun4i_layer.c
-index f26bde5b9117..e1f03e1cc0ac 100644
+index e1f03e1cc0ac..ab33e4d06782 100644
 --- a/drivers/gpu/drm/sun4i/sun4i_layer.c
 +++ b/drivers/gpu/drm/sun4i/sun4i_layer.c
-@@ -16,6 +16,7 @@
+@@ -11,12 +11,10 @@
+  */
+ 
+ #include <drm/drm_atomic_helper.h>
+-#include <drm/drm_crtc.h>
+ #include <drm/drm_plane_helper.h>
  #include <drm/drmP.h>
  
  #include "sun4i_backend.h"
-+#include "sun4i_crtc.h"
+-#include "sun4i_crtc.h"
  #include "sun4i_layer.h"
  
  struct sun4i_plane_desc {
-@@ -128,15 +129,16 @@ static struct sun4i_layer *sun4i_layer_init_one(struct drm_device *drm,
- 	return layer;
+@@ -130,10 +128,10 @@ static struct sun4i_layer *sun4i_layer_init_one(struct drm_device *drm,
  }
  
--struct sun4i_layer **sun4i_layers_init(struct drm_device *drm,
--				       struct sun4i_backend *backend)
-+struct drm_plane **sun4i_layers_init(struct drm_device *drm,
-+				     struct sun4i_crtc *crtc)
+ struct drm_plane **sun4i_layers_init(struct drm_device *drm,
+-				     struct sun4i_crtc *crtc)
++				     struct sunxi_engine *engine)
  {
--	struct sun4i_layer **layers;
-+	struct drm_plane **planes;
-+	struct sun4i_backend *backend = crtc->backend;
+ 	struct drm_plane **planes;
+-	struct sun4i_backend *backend = crtc->backend;
++	struct sun4i_backend *backend = engine_to_sun4i_backend(engine);
  	int i;
  
--	layers = devm_kcalloc(drm->dev, ARRAY_SIZE(sun4i_backend_planes) + 1,
--			      sizeof(*layers), GFP_KERNEL);
--	if (!layers)
-+	planes = devm_kcalloc(drm->dev, ARRAY_SIZE(sun4i_backend_planes) + 1,
-+			      sizeof(*planes), GFP_KERNEL);
-+	if (!planes)
- 		return ERR_PTR(-ENOMEM);
+ 	planes = devm_kcalloc(drm->dev, ARRAY_SIZE(sun4i_backend_planes) + 1,
+@@ -175,7 +173,7 @@ struct drm_plane **sun4i_layers_init(struct drm_device *drm,
  
- 	/*
-@@ -178,8 +180,8 @@ struct sun4i_layer **sun4i_layers_init(struct drm_device *drm,
+ 		DRM_DEBUG_DRIVER("Assigning %s plane to pipe %d\n",
+ 				 i ? "overlay" : "primary", plane->pipe);
+-		regmap_update_bits(backend->regs, SUN4I_BACKEND_ATTCTL_REG0(i),
++		regmap_update_bits(engine->regs, SUN4I_BACKEND_ATTCTL_REG0(i),
+ 				   SUN4I_BACKEND_ATTCTL_REG0_LAY_PIPESEL_MASK,
  				   SUN4I_BACKEND_ATTCTL_REG0_LAY_PIPESEL(plane->pipe));
  
- 		layer->id = i;
--		layers[i] = layer;
-+		planes[i] = &layer->plane;
- 	};
- 
--	return layers;
-+	return planes;
- }
 diff --git a/drivers/gpu/drm/sun4i/sun4i_layer.h b/drivers/gpu/drm/sun4i/sun4i_layer.h
-index 4be1f0919df2..5ea5c994d6ea 100644
+index 5ea5c994d6ea..004b7cfe8ffb 100644
 --- a/drivers/gpu/drm/sun4i/sun4i_layer.h
 +++ b/drivers/gpu/drm/sun4i/sun4i_layer.h
-@@ -26,7 +26,7 @@ plane_to_sun4i_layer(struct drm_plane *plane)
- 	return container_of(plane, struct sun4i_layer, plane);
+@@ -13,6 +13,8 @@
+ #ifndef _SUN4I_LAYER_H_
+ #define _SUN4I_LAYER_H_
+ 
++struct sunxi_engine;
++
+ struct sun4i_layer {
+ 	struct drm_plane	plane;
+ 	struct sun4i_drv	*drv;
+@@ -27,6 +29,5 @@ plane_to_sun4i_layer(struct drm_plane *plane)
  }
  
--struct sun4i_layer **sun4i_layers_init(struct drm_device *drm,
--				       struct sun4i_backend *backend);
-+struct drm_plane **sun4i_layers_init(struct drm_device *drm,
-+				     struct sun4i_crtc *crtc);
- 
+ struct drm_plane **sun4i_layers_init(struct drm_device *drm,
+-				     struct sun4i_crtc *crtc);
+-
++				     struct sunxi_engine *engine);
  #endif /* _SUN4I_LAYER_H_ */
+diff --git a/drivers/gpu/drm/sun4i/sun4i_tcon.c b/drivers/gpu/drm/sun4i/sun4i_tcon.c
+index 9a83a85529ac..e4fef0639656 100644
+--- a/drivers/gpu/drm/sun4i/sun4i_tcon.c
++++ b/drivers/gpu/drm/sun4i/sun4i_tcon.c
+@@ -459,7 +459,7 @@ static int sun4i_tcon_bind(struct device *dev, struct device *master,
+ 		goto err_free_dotclock;
+ 	}
+ 
+-	tcon->crtc = sun4i_crtc_init(drm, drv->backend, tcon);
++	tcon->crtc = sun4i_crtc_init(drm, drv->engine, tcon);
+ 	if (IS_ERR(tcon->crtc)) {
+ 		dev_err(dev, "Couldn't create our CRTC\n");
+ 		ret = PTR_ERR(tcon->crtc);
+diff --git a/drivers/gpu/drm/sun4i/sun4i_tv.c b/drivers/gpu/drm/sun4i/sun4i_tv.c
+index 49c49431a053..e598594ccea2 100644
+--- a/drivers/gpu/drm/sun4i/sun4i_tv.c
++++ b/drivers/gpu/drm/sun4i/sun4i_tv.c
+@@ -22,10 +22,10 @@
+ #include <drm/drm_of.h>
+ #include <drm/drm_panel.h>
+ 
+-#include "sun4i_backend.h"
+ #include "sun4i_crtc.h"
+ #include "sun4i_drv.h"
+ #include "sun4i_tcon.h"
++#include "sunxi_engine.h"
+ 
+ #define SUN4I_TVE_EN_REG		0x000
+ #define SUN4I_TVE_EN_DAC_MAP_MASK		GENMASK(19, 4)
+@@ -353,7 +353,6 @@ static void sun4i_tv_disable(struct drm_encoder *encoder)
+ 	struct sun4i_tv *tv = drm_encoder_to_sun4i_tv(encoder);
+ 	struct sun4i_crtc *crtc = drm_crtc_to_sun4i_crtc(encoder->crtc);
+ 	struct sun4i_tcon *tcon = crtc->tcon;
+-	struct sun4i_backend *backend = crtc->backend;
+ 
+ 	DRM_DEBUG_DRIVER("Disabling the TV Output\n");
+ 
+@@ -362,7 +361,8 @@ static void sun4i_tv_disable(struct drm_encoder *encoder)
+ 	regmap_update_bits(tv->regs, SUN4I_TVE_EN_REG,
+ 			   SUN4I_TVE_EN_ENABLE,
+ 			   0);
+-	sun4i_backend_disable_color_correction(backend);
++
++	sunxi_engine_disable_color_correction(crtc->engine);
+ }
+ 
+ static void sun4i_tv_enable(struct drm_encoder *encoder)
+@@ -370,11 +370,10 @@ static void sun4i_tv_enable(struct drm_encoder *encoder)
+ 	struct sun4i_tv *tv = drm_encoder_to_sun4i_tv(encoder);
+ 	struct sun4i_crtc *crtc = drm_crtc_to_sun4i_crtc(encoder->crtc);
+ 	struct sun4i_tcon *tcon = crtc->tcon;
+-	struct sun4i_backend *backend = crtc->backend;
+ 
+ 	DRM_DEBUG_DRIVER("Enabling the TV Output\n");
+ 
+-	sun4i_backend_apply_color_correction(backend);
++	sunxi_engine_apply_color_correction(crtc->engine);
+ 
+ 	regmap_update_bits(tv->regs, SUN4I_TVE_EN_REG,
+ 			   SUN4I_TVE_EN_ENABLE,
+diff --git a/drivers/gpu/drm/sun4i/sunxi_engine.h b/drivers/gpu/drm/sun4i/sunxi_engine.h
+new file mode 100644
+index 000000000000..85790d2f5f62
+--- /dev/null
++++ b/drivers/gpu/drm/sun4i/sunxi_engine.h
+@@ -0,0 +1,91 @@
++/*
++ * Copyright (C) 2017 Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
++ *
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License as
++ * published by the Free Software Foundation; either version 2 of
++ * the License, or (at your option) any later version.
++ */
++
++#ifndef _SUNXI_ENGINE_H_
++#define _SUNXI_ENGINE_H_
++
++struct sun4i_crtc;
++struct drm_plane;
++struct drm_device;
++
++struct sunxi_engine;
++
++struct sunxi_engine_ops {
++	void (*commit)(struct sunxi_engine *engine);
++	struct drm_plane **(*layers_init)(struct drm_device *drm,
++					  struct sunxi_engine *engine);
++
++	void (*apply_color_correction)(struct sunxi_engine *engine);
++	void (*disable_color_correction)(struct sunxi_engine *engine);
++};
++
++/**
++ * struct sunxi_engine - the common parts of an engine for sun4i-drm driver
++ * @ops:	the operations of the engine
++ * @regs:	the regmap of the engine
++ */
++struct sunxi_engine {
++	const struct sunxi_engine_ops	*ops;
++
++	struct regmap			*regs;
++};
++
++/**
++ * sunxi_engine_commit() - commit all changes of the engine
++ * @engine:	pointer to the engine
++ */
++static inline void
++sunxi_engine_commit(struct sunxi_engine *engine)
++{
++	if (engine->ops && engine->ops->commit)
++		engine->ops->commit(engine);
++}
++
++/**
++ * sunxi_engine_layers_init() - Create planes (layers) for the engine
++ * @drm:	pointer to the drm_device for which planes will be created
++ * @engine:	pointer to the engine
++ */
++static inline struct drm_plane **
++sunxi_engine_layers_init(struct drm_device *drm, struct sunxi_engine *engine)
++{
++	if (engine->ops && engine->ops->layers_init)
++		return engine->ops->layers_init(drm, engine);
++	return ERR_PTR(-ENOSYS);
++}
++
++/**
++ * sunxi_engine_apply_color_correction - Apply the RGB2YUV color correction
++ * @engine:	pointer to the engine
++ *
++ * This functionality is optional for an engine, however, if the engine is
++ * intended to be used with TV Encoder, the output will be incorrect
++ * without the color correction, due to TV Encoder expects the engine to
++ * output directly YUV signal.
++ */
++static inline void
++sunxi_engine_apply_color_correction(struct sunxi_engine *engine)
++{
++	if (engine->ops && engine->ops->apply_color_correction)
++		engine->ops->apply_color_correction(engine);
++}
++
++/**
++ * sunxi_engine_disable_color_correction - Disable the color space correction
++ * @engine:	pointer to the engine
++ *
++ * This function is paired with apply_color_correction().
++ */
++static inline void
++sunxi_engine_disable_color_correction(struct sunxi_engine *engine)
++{
++	if (engine->ops && engine->ops->disable_color_correction)
++		engine->ops->disable_color_correction(engine);
++}
++#endif /* _SUNXI_ENGINE_H_ */
 -- 
 2.12.2
