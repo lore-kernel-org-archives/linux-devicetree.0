@@ -1,46 +1,33 @@
 From: Michael Ellerman <patch-notifications-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>
-Subject: Re: [1/2] powerpc/pseries: fix of_node_put() underflow during dlpar remove
-Date: Tue, 25 Apr 2017 08:47:24 +1000 (AEST)
-Message-ID: <3wBhLN4M8Fz9s8V@ozlabs.org>
-References: <1492474900-10658-1-git-send-email-tyreld@linux.vnet.ibm.com>
+Subject: Re: [2/2] powerpc/sysfs: fix reference leak of cpu device_nodes present at boot
+Date: Tue, 25 Apr 2017 08:47:25 +1000 (AEST)
+Message-ID: <3wBhLP3Qv3z9s8W@ozlabs.org>
+References: <1492475079-10740-1-git-send-email-tyreld@linux.vnet.ibm.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1492474900-10658-1-git-send-email-tyreld-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+In-Reply-To: <1492475079-10740-1-git-send-email-tyreld-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: sachinp-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org, stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Tyrel Datwyler <tyreld-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, bharata-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org, nfont-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: sachinp-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sudeep.karkadanagesha-5wv7dgnIgG8@public.gmane.org, stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Tyrel Datwyler <tyreld-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, bharata-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org, nfont-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2017-04-18 at 00:21:40 UTC, Tyrel Datwyler wrote:
-> Historically device_node references were tracked using a kref embedded
-> as a struct field. Commit 75b57ecf9 refactored device_nodes to be
-> kobjects such that the device tree could by more simply exposed to
-> userspace using sysfs. Commit 0829f6d1f6 followed up these changes to
-> better control the kobject lifecycle and in particular the referecne
-> counting via of_node_get(), of_node_put(), and of_node_init(). A side
-> effect of this second commit was that it introduced an of_node_put()
-> call when a dynamic node is detached that removes the initial kobj
-> reference created by of_node_init() . Traditionally as the original
-> dynamic device node user the pseries code had assumed responsibilty for
-> releasing this final reference in its platform specific DLPAR detach code.
+On Tue, 2017-04-18 at 00:24:39 UTC, Tyrel Datwyler wrote:
+> For cpus present at boot each logical cpu acquires a reference to the
+> associated device node of the core. This happens in register_cpu() which
+> is called by topology_init(). The result of this is that we end up with
+> a reference held by each thread of the core. However, these references
+> are never freed if the cpu core is dlpar removed.
 > 
-> This patch fixes a refcount underflow introduced by commit 0829f6d1f6,
-> and recently exposed by the upstreaming of the recount API.
-> 
-> Messages like the following are no longer seen in the kernel log with this
-> patch following DLPAR remove operations of cpus and pci devices.
-> 
->   [  269.589441] rpadlpar_io: slot PHB 72 removed
->   [  270.589997] refcount_t: underflow; use-after-free.
->   [  270.590019] ------------[ cut here ]------------
->   [  270.590025] WARNING: CPU: 5 PID: 3335 at
->      lib/refcount.c:128 refcount_sub_and_test+0xf4/0x110
+> This patch fixes the reference leaks by acquiring and releasing the
+> references in the cpu hotplug callbacks un/register_cpu_online().
+> With this patch symmetric reference counting is observed with both cpus
+> present at boot, and those dlpar added after boot.
 > 
 > Cc: stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Fixes: 0829f6d1f69e ("of: device_node kobject lifecycle fixes")
+> fixes: f86e4718f24b ("driver/core: cpu: initialize of_node in cpu's device struture")
 > Signed-off-by: Tyrel Datwyler <tyreld-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
 
 Applied to powerpc next, thanks.
 
-https://git.kernel.org/powerpc/c/68baf692c435339e6295cb470ea554
+https://git.kernel.org/powerpc/c/e76ca27790a514590af782f83f6eae
 
 cheers
 --
