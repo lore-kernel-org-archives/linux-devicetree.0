@@ -1,30 +1,28 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 4/4] pinctrl: aspeed: g5: Add pinconf support
-Date: Mon, 24 Apr 2017 14:56:20 +0200
-Message-ID: <CACRpkdYF3v9O2XEtZiWv9LA6SzcmKMOJ-w4ZsZWc8xka7iih6A@mail.gmail.com>
-References: <20170407125713.15678-1-andrew@aj.id.au> <20170407125713.15678-5-andrew@aj.id.au>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v4 06/14] MIPS: jz4740: DTS: Add nodes for ingenic pinctrl
+ and gpio drivers
+Date: Mon, 24 Apr 2017 14:58:00 +0200
+Message-ID: <CACRpkdZ8o1OFC0HGaVuLWy5JbnHjeXmAYorii7eX=XvJNkSSvA@mail.gmail.com>
+References: <20170125185207.23902-2-paul@crapouillou.net> <20170402204244.14216-1-paul@crapouillou.net>
+ <20170402204244.14216-7-paul@crapouillou.net> <CACRpkdbXe1Xxk93jqLXBdEDwWOnWD+CkZrqvok-PcmWxzBbSZA@mail.gmail.com>
+ <e4aaf8c3e8a54df2c5878f8e873e290f@crapouillou.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170407125713.15678-5-andrew-zrmu5oMJ5Fs@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, OpenBMC Maillist <openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Return-path: <linux-pwm-owner@vger.kernel.org>
+In-Reply-To: <e4aaf8c3e8a54df2c5878f8e873e290f@crapouillou.net>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Paul Cercueil <paul@crapouillou.net>
+Cc: Alexandre Courbot <gnurou@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ralf Baechle <ralf@linux-mips.org>, Boris Brezillon <boris.brezillon@free-electrons.com>, Thierry Reding <thierry.reding@gmail.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Maarten ter Huurne <maarten@treewalker.org>, Lars-Peter Clausen <lars@metafoo.de>, Paul Burton <paul.burton@imgtec.com>, James Hogan <james.hogan@imgtec.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux MIPS <linux-mips@linux-mips.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>"linux-mtd@lists.infradead.org" <li>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 7, 2017 at 2:57 PM, Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org> wrote:
+On Fri, Apr 7, 2017 at 3:57 PM, Paul Cercueil <paul@crapouillou.net> wrote:
 
-> Testing for pinctrl-aspeed-g5 was performed on an AST2500EVB system,
-> using the strategy outlined in the commit message for the change to the
-> Aspeed pinctrl core.
->
-> Signed-off-by: Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>
+> I think the 'reg' property makes more sense, yes. I'll fix this in the v5,
+> this
+> week-end. Do you think it can go in 4.12?
 
-Patch applied.
+Surely, Torvalds just cut an -rc8 giving me more time to queue more
+material, and I really like this series.
 
 Yours,
 Linus Walleij
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
