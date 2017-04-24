@@ -1,49 +1,47 @@
 From: Alexandre Torgue <alexandre.torgue@st.com>
-Subject: Re: [PATCH v2 6/7] ARM: Kconfig: Introduce MACH_STM32F469 flag
-Date: Mon, 24 Apr 2017 18:06:10 +0200
-Message-ID: <a45e5791-cca1-79b8-a368-6d113c933ec3@st.com>
-References: <1491568984-20169-1-git-send-email-alexandre.torgue@st.com>
- <1491568984-20169-7-git-send-email-alexandre.torgue@st.com>
- <CACRpkdZmWFKaZWB8qZaH=jB61xdwvJ=TC8idYH9kJdi=HEZRAA@mail.gmail.com>
+Subject: Re: [PATCH 3/4] pinctrl: stm32: Implement .get_direction gpio_chip
+ callback
+Date: Mon, 24 Apr 2017 18:07:51 +0200
+Message-ID: <a2ef1742-e455-69a9-ffd5-3a3cdf9ca7d6@st.com>
+References: <1491577811-26989-1-git-send-email-alexandre.torgue@st.com>
+ <1491577811-26989-4-git-send-email-alexandre.torgue@st.com>
+ <CACRpkdZG-yxMCzBqP2s37QThP7tgWKgd3pVgZGgceB+ihZs3nw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CACRpkdZmWFKaZWB8qZaH=jB61xdwvJ=TC8idYH9kJdi=HEZRAA@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdZG-yxMCzBqP2s37QThP7tgWKgd3pVgZGgceB+ihZs3nw@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
 To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Jonathan Corbet <corbet@lwn.net>, Russell King <linux@armlinux.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Olof Johansson <olof@lixom.net>, Lee Jones <lee.jones@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Patrice Chotard <patrice.chotard@st.com>, Paul Gortmaker <paul.gortmaker@windriver.com>, Rob Herring <robh+dt@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi
+Hi Linus,
 
-On 04/24/2017 02:30 PM, Linus Walleij wrote:
-> On Fri, Apr 7, 2017 at 2:43 PM, Alexandre TORGUE
+On 04/24/2017 02:37 PM, Linus Walleij wrote:
+> On Fri, Apr 7, 2017 at 5:10 PM, Alexandre TORGUE
 > <alexandre.torgue@st.com> wrote:
 >
->> This patch introduces the MACH_STM32F469 to make possible to only select
->> STM32F469 pinctrl driver
->>
->> By default, all the MACH_STM32Fxxx flags will be set with STM32 defconfig.
+>> Add .get_direction() gpiochip callback in STM32 pinctrl driver.
 >>
 >> Signed-off-by: Alexandre TORGUE <alexandre.torgue@st.com>
 >
-> Acked-by: Linus Walleij <linus.walleij@linaro.org>
+> (...)
+>> +#include <linux/gpio.h>
 >
-> Please funnel this through the ARM SoC tree.
+> No this is wrong, drivers should never include this file.
+> It is a deprecated consumer header.
+>
+>> +       if ((alt == 0) && (mode == 0))
+>> +               ret = GPIOF_DIR_IN;
+>> +       else if ((alt == 0) && (mode == 1))
+>> +               ret = GPIOF_DIR_OUT;
+>
+> Just return 0 or 1, that is the driver-internal API.
 
-Yes, I'll merge it in future pull request.
-Thanks for the series.
+Ok. I will fix it in V2.
 
-Regards
+Thanks
 Alex
 
 >
