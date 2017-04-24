@@ -1,107 +1,69 @@
-From: Alexandre Torgue <alexandre.torgue@st.com>
-Subject: Re: [PATCH 1/4] pinctrl: stm32: set pin to gpio input when used as
- interrupt
-Date: Mon, 24 Apr 2017 18:40:20 +0200
-Message-ID: <e9d8c988-0bdd-0c82-2c56-6a31d052f0e6@st.com>
-References: <1491577811-26989-1-git-send-email-alexandre.torgue@st.com>
- <1491577811-26989-2-git-send-email-alexandre.torgue@st.com>
- <CACRpkdYZixkJroS-gQxYL6xW47-J9UiNv4hOO9F-1b2eYLr8XQ@mail.gmail.com>
+From: Hans Ulli Kroll <ulli.kroll@googlemail.com>
+Subject: Re: [PATCH 1/5 v3] usb: host: add DT bindings for
+	faraday fotg2
+Date: Mon, 24 Apr 2017 18:53:10 +0200 (CEST)
+Message-ID: <alpine.LNX.2.00.1704241846300.15211@T420s>
+References: <20170421204058.6206-1-linus.walleij@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CACRpkdYZixkJroS-gQxYL6xW47-J9UiNv4hOO9F-1b2eYLr8XQ@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <openwrt-devel-bounces@lists.openwrt.org>
+In-Reply-To: <20170421204058.6206-1-linus.walleij@linaro.org>
+List-Unsubscribe: <https://lists.openwrt.org/cgi-bin/mailman/options/openwrt-devel>,
+ <mailto:openwrt-devel-request@lists.openwrt.org?subject=unsubscribe>
+List-Archive: <http://lists.openwrt.org/pipermail/openwrt-devel/>
+List-Post: <mailto:openwrt-devel@lists.openwrt.org>
+List-Help: <mailto:openwrt-devel-request@lists.openwrt.org?subject=help>
+List-Subscribe: <https://lists.openwrt.org/cgi-bin/mailman/listinfo/openwrt-devel>,
+ <mailto:openwrt-devel-request@lists.openwrt.org?subject=subscribe>
+Errors-To: openwrt-devel-bounces@lists.openwrt.org
+Sender: "openwrt-devel" <openwrt-devel-bounces@lists.openwrt.org>
 To: Linus Walleij <linus.walleij@linaro.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Patrice Chotard <patrice.chotard@st.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Paul Gortmaker <paul.gortmaker@windriver.com>, Rob Herring <robh+dt@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Cc: openwrt-devel@openwrt.org, devicetree@vger.kernel.org, Paulius Zaleckas <paulius.zaleckas@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, Janos Laube <janos.dev@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Linus,
-
-On 04/24/2017 02:36 PM, Linus Walleij wrote:
-> On Fri, Apr 7, 2017 at 5:10 PM, Alexandre TORGUE
-> <alexandre.torgue@st.com> wrote:
->
->> This patch ensures that pin is correctly set as gpio input when it is used
->> as an interrupt.
->>
->> Signed-off-by: Alexandre TORGUE <alexandre.torgue@st.com>
-> (...)
->
->> +static int stm32_gpio_irq_request_resources(struct irq_data *irq_data)
->> +{
->> +       struct stm32_gpio_bank *bank = irq_data->domain->host_data;
->> +       u32 ret;
->> +
->> +       if (!gpiochip_is_requested(&bank->gpio_chip, irq_data->hwirq)) {
->> +               ret = stm32_gpio_request(&bank->gpio_chip, irq_data->hwirq);
->> +               if (ret)
->> +                       return ret;
->> +       }
->
-> This is wrong. You should only use gpiochip_lock_as_irq(), because of the
-> following in Documentation/gpio/driver.txt:
->
-> ---------------
-> It is legal for any IRQ consumer to request an IRQ from any irqchip no matter
-> if that is a combined GPIO+IRQ driver. The basic premise is that gpio_chip and
-> irq_chip are orthogonal, and offering their services independent of each
-> other.
-> (...)
-> So always prepare the hardware and make it ready for action in respective
-> callbacks from the GPIO and irqchip APIs. Do not rely on gpiod_to_irq() having
-> been called first.
-
-Ok, so actually the action to set pin in input mode is necessary in 
-stm32_gpio_irq_request_resources.
-
-I'll fix it in V2.
-
-
->
-> This orthogonality leads to ambiguities that we need to solve: if there is
-> competition inside the subsystem which side is using the resource (a certain
-> GPIO line and register for example) it needs to deny certain operations and
-> keep track of usage inside of the gpiolib subsystem. This is why the API
-> below exists.
->
-> Locking IRQ usage
-> -----------------
-> Input GPIOs can be used as IRQ signals. When this happens, a driver is requested
-> to mark the GPIO as being used as an IRQ:
->
->         int gpiochip_lock_as_irq(struct gpio_chip *chip, unsigned int offset)
->
-> This will prevent the use of non-irq related GPIO APIs until the GPIO IRQ lock
-> is released:
->
->         void gpiochip_unlock_as_irq(struct gpio_chip *chip, unsigned int offset)
->
-> When implementing an irqchip inside a GPIO driver, these two functions should
-> typically be called in the .startup() and .shutdown() callbacks from the
-> irqchip.
->
-> When using the gpiolib irqchip helpers, these callback are automatically
-> assigned.
-> --------------
->
-> It is because of easy to make errors like this that I prefer that people try
-> to use GPIOLIB_IRQCHIP helpers insteaf of rolling their own irqchip code.
-
-I understand. It was difficult in our case due to design.
-
-Thanks for review.
-Alex
-
->
-> Yours,
-> Linus Walleij
->
+SGkgTGludXMKCk9uIEZyaSwgMjEgQXByIDIwMTcsIExpbnVzIFdhbGxlaWogd3JvdGU6Cgo+IEZy
+b206IEhhbnMgVWxsaSBLcm9sbCA8dWxsaS5rcm9sbEBnb29nbGVtYWlsLmNvbT4KPiAKPiBUaGlz
+IGFkZHMgZGV2aWNlIHRyZWUgYmluZGluZ3MgZm9yIHRoZSBGYXJhZGF5IEZPVEcyCj4gZHVhbC1t
+b2RlIGhvc3QgY29udHJvbGxlci4KPiAKPiBDYzogZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmcK
+PiBTaWduZWQtb2ZmLWJ5OiBIYW5zIFVsbGkgS3JvbGwgPHVsbGkua3JvbGxAZ29vZ2xlbWFpbC5j
+b20+Cj4gU2lnbmVkLW9mZi1ieTogTGludXMgV2FsbGVpaiA8bGludXMud2FsbGVpakBsaW5hcm8u
+b3JnPgo+IC0tLQo+IENoYW5nZUxvZyB2MS0+djM6Cj4gLSBDaGFuZ2UgY29tcGF0aWJsZSB0byAi
+ZmFyYWRheSxmb3RnMjEwIiBhcyB0aGUgbmFtZSBvZiB0aGUKPiAgIGhhcmR3YXJlIGJsb2NrLgo+
+IC0gQWRkIGFuIGVsYWJvcmF0ZSBTb0Mtc3BlY2lmaWMgY29tcGF0aWJsZSBzdHJpbmcgZm9yIHRo
+ZQo+ICAgQ29ydGluYSBTeXN0ZW1zIEdlbWluaSBzbyB0aGF0IFNvQy1zcGVjaWZpYyBmZWF0dXJl
+cyBjYW4KPiAgIGJlIGVuYWJsZWQuCj4gLSBBZGQgY29ydGluYSxnZW1pbmktbWluaS1iIHRvIGlu
+ZGljYXRlIGEgR2VtaW5pIFBIWSB3aXRoCj4gICBhIE1pbmktQiBhZGFwdGVyIGNvbm5lY3RlZC4K
+PiAtIEluZGljYXRlZCB0aGF0IHRoZSBHZW1pbmkgdmVyc2lvbiBjYW4gaGFuZGxlICJ3YWtldXAt
+c291cmNlIi4KPiAtIEFkZCBvcHRpb25hbCBJUCBibG9jayBjbG9jay4KPiAtLS0KPiAgLi4uL2Rl
+dmljZXRyZWUvYmluZGluZ3MvdXNiL2ZhcmFkYXksZm90ZzIxMC50eHQgICAgfCAzNSArKysrKysr
+KysrKysrKysrKysrKysrCj4gIDEgZmlsZSBjaGFuZ2VkLCAzNSBpbnNlcnRpb25zKCspCj4gIGNy
+ZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdXNiL2Zh
+cmFkYXksZm90ZzIxMC50eHQKPiAKCkdvdCBOQUsnZWQgZnJvbSBSb2Igb24gc29tZSBlYWxpZXIg
+cm91bmQgZHVlIG1pc3NpbmcgImRldmljZSBtb2RlIiBvbiB0aGlzIApJUC4gSSd2ZSBibGF0YW50
+bHkgb3ZlcnJpZGVkIHRoaXMgdG8gYSBob3N0IG9ubHkgZHJpdmVyLgoKVGhlc2UgYXJlIHRoZSBu
+ZWVkZWQgY2hhbmdlcyBpbiBEVCB0byBzdXBwb3J0IGJvdGggbW9kZXMKTm90ZSB0aGUgLWRyIGF0
+IHRoZSBlbmQgb2YgZm90ZzIxMCwgdG8gcmVmbGVjdCB0aGlzIGluIGFuIGR1YWwgcm9sZSBkZXZp
+Y2UKCmRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdXNiL2Zh
+cmFkYXksZm90ZzIxMC50eHQgCmIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Vz
+Yi9mYXJhZGF5LGZvdGcyMTAudHh0CmluZGV4IGNmMDY4MDgzMDNlMi4uODYyY2RhMTllOWQzIDEw
+MDY0NAotLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdXNiL2ZhcmFkYXks
+Zm90ZzIxMC50eHQKKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3VzYi9m
+YXJhZGF5LGZvdGcyMTAudHh0CkBAIC0xMyw2ICsxMyw5IEBAIFJlcXVpcmVkIHByb3BlcnRpZXM6
+CiBPcHRpb25hbCBwcm9wZXJ0aWVzOgogLSBjbG9ja3M6IHNob3VsZCBjb250YWluIHRoZSBJUCBi
+bG9jayBjbG9jawogLSBjbG9jay1uYW1lczogc2hvdWxkIGJlICJQQ0xLIiBmb3IgdGhlIElQIGJs
+b2NrIGNsb2NrCistIGRyX21vZGUgOiBpbmRpY2F0ZXMgdGhlIHdvcmtpbmcgbW9kZSBmb3IgImZv
+dGcyMTAtZHIiIGNvbXBhdGlibGUKKyAgIGNvbnRyb2xsZXJzLiAgQ2FuIGJlICJob3N0IiwgInBl
+cmlwaGVyYWwiLiBEZWZhdWx0IHRvCisgICAiaG9zdCIgaWYgbm90IGRlZmluZWQgZm9yIGJhY2t3
+YXJkIGNvbXBhdGliaWxpdHkuCiAKIFJlcXVpcmVkIHByb3BlcnRpZXMgZm9yICJjb3J0aW5hLGdl
+bWluaS11c2IiIGNvbXBhdGlibGU6CiAtIHN5c2NvbjogYSBwaGFuZGxlIHRvIHRoZSBzeXN0ZW0g
+Y29udHJvbGxlciB0byBhY2Nlc3MgUEhZIHJlZ2lzdGVycwpAQCAtMjUsNyArMjgsNyBAQCBPcHRp
+b25hbCBwcm9wZXJ0aWVzIGZvciAiY29ydGluYSxnZW1pbmktdXNiIiBjb21wYXRpYmxlOgogRXhh
+bXBsZSBmb3IgR2VtaW5pOgogCiB1c2JANjgwMDAwMDAgewotICAgICAgIGNvbXBhdGlibGUgPSAi
+Y29ydGluYSxnZW1pbmktdXNiIiwgImZhcmFkYXksZm90ZzIxMCI7CisgICAgICAgY29tcGF0aWJs
+ZSA9ICJjb3J0aW5hLGdlbWluaS11c2IiLCAiZmFyYWRheSxmb3RnMjEwLWRyIjsKICAgICAgICBy
+ZWcgPSA8MHg2ODAwMDAwMCAweDEwMDA+OwogICAgICAgIGludGVycnVwdHMgPSA8MTAgSVJRX1RZ
+UEVfTEVWRUxfSElHSD47CiAgICAgICAgY2xvY2tzID0gPCZjYyAxMj47Cl9fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCm9wZW53cnQtZGV2ZWwgbWFpbGluZyBs
+aXN0Cm9wZW53cnQtZGV2ZWxAbGlzdHMub3BlbndydC5vcmcKaHR0cHM6Ly9saXN0cy5vcGVud3J0
+Lm9yZy9jZ2ktYmluL21haWxtYW4vbGlzdGluZm8vb3BlbndydC1kZXZlbAo=
