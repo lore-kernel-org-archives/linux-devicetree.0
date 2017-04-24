@@ -1,61 +1,79 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH v14 00/11] mux controller abstraction and iio/i2c muxes
-Date: Mon, 24 Apr 2017 12:52:59 +0200
-Message-ID: <1493031179.2446.9.camel@pengutronix.de>
-References: <1493022995-16917-1-git-send-email-peda@axentia.se>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [PATCH RFC 0/5] *** SPI Slave mode support ***
+Date: Mon, 24 Apr 2017 12:55:21 +0200
+Message-ID: <CAMuHMdXa_O6RsqUciiNWQ0Zp6dniS47AUmPN9UWAWitP0csx=Q@mail.gmail.com>
+References: <1492085644-4195-1-git-send-email-jiada_wang@mentor.com>
+ <20170413125929.dygodgj6c35ydh5p@sirena.org.uk> <CAMuHMdUm=90ddNWM5KWqT+W0hqZ-QO6vPHj5OisbYquDYq1ZmA@mail.gmail.com>
+ <58F06092.9080409@mentor.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1493022995-16917-1-git-send-email-peda@axentia.se>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Rosin <peda@axentia.se>
-Cc: Jonathan Cameron <jic23@kernel.org>, linux-kernel@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Jonathan Corbet <corbet@lwn.net>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, linux-doc@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, Colin Ian King <colin.king@canonical.com>, Paul Gortmaker <paul.gortmaker@windriver.com>, kernel@pengutronix.de
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <58F06092.9080409-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jiada Wang <jiada_wang-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, linux-spi <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2017-04-24 at 10:36 +0200, Peter Rosin wrote:
-> Hi!
-> 
-> The big change since v13 is that the mux state is now locked with a mutex
-> instead of an rwsem. Other that that, it is mostly restructuring and doc
-> changes. There are a few other "real" changes as well, but those changes
-> feel kind of minor. I guess what I'm trying to say is that although the
-> list of changes for v14 is longish, it's still basically the same as last
-> time.
+Hi Jiada,
 
-I have hooked this up to the video-multiplexer and now I trigger
-the lockdep debug_check_no_locks_held error message when selecting the
-mux input from userspace:
+On Fri, Apr 14, 2017 at 7:39 AM, Jiada Wang <jiada_wang-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org> wrote:
+> On 04/13/2017 12:47 PM, Geert Uytterhoeven wrote:
+>> On Thu, Apr 13, 2017 at 2:59 PM, Mark Brown<broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>  wrote:
+>>> On Thu, Apr 13, 2017 at 05:13:59AM -0700, jiada_wang-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org wrote:
+>>>> From: Jiada Wang<jiada_wang-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+>>>>
+>>>> v1:
+>>>>    add Slave mode support in SPI core
+>>>>    spidev create slave device when SPI controller work in slave mode
+>>>>    spi-imx support to work in slave mode
+>>>
+>>> Adding Geert who also had a series doing this in progress that was
+>>> getting very near to being merged.
+>>
+>> Thank you!
+>>
+>> Actually my plan is to fix the last remaining issues and resubmit for
+>> v4.13.
+>
+> I noticed your patch set for SPI slave support,
+> (I am sure you can find out some of the change
+> in this patch set is based on your work).
+> we have similar requirement to add slave mode support to ecspi IP on imx6
+> Soc.
+>
+> Our use case is to use spidev as an interface to communicate with external
+> SPI master devices.
+> meanwhile the SPI bus controller can also act as master device to send data
+> to other
+> SPI slave devices on the board.
 
-$ media-ctl --links "'imx6-mipi-csi2':1->'ipu1_csi0_mux':0[1]"
-[   66.258368] 
-[   66.259919] =====================================
-[   66.265369] [ BUG: media-ctl/258 still has locks held! ]
-[   66.270810] 4.11.0-rc8-20170424-1+ #1305 Not tainted
-[   66.275863] -------------------------------------
-[   66.282158] 1 lock held by media-ctl/258:
-[   66.286464]  #0:  (&mux->lock){+.+.+.}, at: [<8074a6c0>] mux_control_select+0x24/0x50
-[   66.294424] 
-[   66.294424] stack backtrace:
-[   66.298980] CPU: 0 PID: 258 Comm: media-ctl Not tainted 4.11.0-rc8+ #1305
-[   66.306771] Hardware name: Freescale i.MX6 Quad/DualLite (Device Tree)
-[   66.313334] Backtrace: 
-[   66.315858] [<8010e5a4>] (dump_backtrace) from [<8010e8ac>] (show_stack+0x20/0x24)
-[   66.323473]  r7:80e518d0 r6:80e518d0 r5:600d0013 r4:00000000
-[   66.329190] [<8010e88c>] (show_stack) from [<80496cf4>] (dump_stack+0xb0/0xdc)
-[   66.336470] [<80496c44>] (dump_stack) from [<8017e404>] (debug_check_no_locks_held+0xb8/0xbc)
-[   66.345043]  r9:ae8566b8 r8:ad88dc84 r7:ad88df58 r6:ad88dc84 r5:ad88df58 r4:ae856400
-[   66.352837] [<8017e34c>] (debug_check_no_locks_held) from [<8012b258>] (do_exit+0x79c/0xcc8)
-[   66.361321] [<8012aabc>] (do_exit) from [<8012d25c>] (do_group_exit+0x4c/0xcc)
-[   66.368581]  r7:000000f8
-[   66.371161] [<8012d210>] (do_group_exit) from [<8012d2fc>] (__wake_up_parent+0x0/0x30)
-[   66.379120]  r7:000000f8 r6:76f71798 r5:00000000 r4:00000001
-[   66.384837] [<8012d2dc>] (SyS_exit_group) from [<80109380>] (ret_fast_syscall+0x0/0x1c)
+That sounds a bit hackish to me. SPI was never meant to be a multi-master bus.
+While it can be done, you will need external synchronization (signals) to
+avoid conflicts between the SPI masters.
 
-That correctly warns that the media-ctl process caused the mux->lock to
-be locked and still held when the process exited. Do we need a usage
-counter based mechanism for muxes that are (indirectly) controlled from
-userspace?
+> I found in your implementation, SPI bus controller is limited to either work
+> in master mode or
+> slave mode, is there any reasoning to not configure SPI mode based on SPI
+> devices use case?
 
-regards
-Philipp
+If you really need both master and slave support, you can use 2 subnodes
+in DT, the first representing the master, the second the slave.
+
+Mark, what's your opinion about this?
+
+Thanks!
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
