@@ -1,66 +1,72 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v5 05/11] drm/sun4i: abstract a engine type
-Date: Mon, 24 Apr 2017 11:05:00 +0200
-Message-ID: <20170424090500.i3k6u7pcahc7m3hv@lukather>
-References: <20170423103754.50012-1-icenowy@aosc.io>
- <20170423103754.50012-6-icenowy@aosc.io>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Ludovic Desroches <ludovic.desroches@microchip.com>
+Subject: Re: [PATCH 1/3] ARM: dts: at91: sama5d2_xplained: enable ADTRG pin
+Date: Mon, 24 Apr 2017 11:04:43 +0200
+Message-ID: <20170424090443.g4ywq5soomzbjmk3@rfolt0960.corp.atmel.com>
+References: <1492590045-17329-1-git-send-email-eugen.hristev@microchip.com>
+ <1492590045-17329-2-git-send-email-eugen.hristev@microchip.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="l72qyua2fb6rcfpc"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBUP763DQKGQEVBKVAJQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <20170423103754.50012-6-icenowy-h8G6r0blFSE@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <1492590045-17329-2-git-send-email-eugen.hristev@microchip.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Eugen Hristev <eugen.hristev@microchip.com>
+Cc: devicetree@vger.kernel.org, lars@metafoo.de, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, ludovic.desroches@microchip.com, alexandre.belloni@free-electrons.com, linux-arm-kernel@lists.infradead.org, jic23@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-
---l72qyua2fb6rcfpc
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
-
-Hi,
-
-Thanks a lot for that work.
-
-On Sun, Apr 23, 2017 at 06:37:48PM +0800, Icenowy Zheng wrote:
-> As we are going to add support for the Allwinner DE2 engine in sun4i-drm
-> driver, we will finally have two types of display engines -- the DE1
-> backend and the DE2 mixer. They both do some display blending and feed
-> graphics data to TCON, so I choose to call them both "engine" here.
+On Wed, Apr 19, 2017 at 11:20:43AM +0300, Eugen Hristev wrote:
+> Enable pinctrl for ADTRG pin (PD31) for ADC hardware trigger support.
 > 
-> Abstract the engine type to a new struct with an ops struct, which contains
-> functions that should be called outside the engine-specified code (in
-> TCON, CRTC or TV Encoder code).
+> Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
+Acked-by: Ludovic Desroches <ludovic.desroches@microchip.com>
+
+> ---
+>  arch/arm/boot/dts/at91-sama5d2_xplained.dts | 16 +++++++++++++++-
+>  1 file changed, 15 insertions(+), 1 deletion(-)
 > 
-> A dedicated Kconfig option is also added to control whether
-> sun4i-backend-specified code (sun4i_backend.c and sun4i_layer.c) should
-> be built. As we removed the codes in CRTC code that directly call the
-> layer code, we can now extract the layer part and combine it with the
-> backend part into a new module, sun4i-backend.ko.
-
-While the code itself is good now, the patch mixes a few things that
-would be better to be split in separate patches. I think it would be
-better if you had patches organized like this:
-  - Abstract the engine type by create the sunxi_engine structure and
-    fixing all the callers.
-  - Move the layers and backend files in the same module, and remove
-    the now useless EXPORT_SYMBOLS.
-  - Create a Kconfig option.
-
-Thanks!
-Maxime
-
--- 
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
---l72qyua2fb6rcfpc--
+> diff --git a/arch/arm/boot/dts/at91-sama5d2_xplained.dts b/arch/arm/boot/dts/at91-sama5d2_xplained.dts
+> index 0bef9e0..04754b1 100644
+> --- a/arch/arm/boot/dts/at91-sama5d2_xplained.dts
+> +++ b/arch/arm/boot/dts/at91-sama5d2_xplained.dts
+> @@ -303,7 +303,7 @@
+>  				vddana-supply = <&vdd_3v3_lp_reg>;
+>  				vref-supply = <&vdd_3v3_lp_reg>;
+>  				pinctrl-names = "default";
+> -				pinctrl-0 = <&pinctrl_adc_default>;
+> +				pinctrl-0 = <&pinctrl_adc_default &pinctrl_adtrg_default>;
+>  				status = "okay";
+>  			};
+>  
+> @@ -322,6 +322,20 @@
+>  					bias-disable;
+>  				};
+>  
+> +				/*
+> +				 * The ADTRG pin can work on any edge type.
+> +				 * In here it's being pulled up, so need to
+> +				 * connect it to ground to get an edge e.g.
+> +				 * Trigger can be configured on falling, rise
+> +				 * or any edge, and the pull-up can be changed
+> +				 * to pull-down or left floating according to
+> +				 * needs.
+> +				 */
+> +				pinctrl_adtrg_default: adtrg_default {
+> +					pinmux = <PIN_PD31__ADTRG>;
+> +					bias-pull-up;
+> +				};
+> +
+>  				pinctrl_charger_chglev: charger_chglev {
+>  					pinmux = <PIN_PA12__GPIO>;
+>  					bias-disable;
+> -- 
+> 2.7.4
+> 
