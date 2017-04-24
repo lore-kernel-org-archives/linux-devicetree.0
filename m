@@ -1,125 +1,71 @@
-From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/3] of: overlay_adjust_phandles() - do not modify const field
-Date: Mon, 24 Apr 2017 16:40:05 -0500
-Message-ID: <CAL_Jsq+CTM4Br2t8+hcNnfrDhmkJTmUtcgZQC__t+Ppn94e9zw@mail.gmail.com>
-References: <1493011204-27635-1-git-send-email-frowand.list@gmail.com>
- <1493011204-27635-2-git-send-email-frowand.list@gmail.com>
- <CAL_Jsq+DxGJcggE6KKT_n76CpcCJkRB2sa3Lfm2GRTW78K_tUw@mail.gmail.com> <58FE49F4.7060600@gmail.com>
+From: Eric Anholt <eric@anholt.net>
+Subject: [PATCH 1/2] net: dsa: b53: Add compatible strings for the
+ Cygnus-family BCM11360.
+Date: Mon, 24 Apr 2017 14:50:21 -0700
+Message-ID: <20170424215022.30382-2-eric@anholt.net>
+References: <20170424215022.30382-1-eric@anholt.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <58FE49F4.7060600-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-Cc: Stephen Boyd <stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20170424215022.30382-1-eric@anholt.net>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Florian Fainelli <f.fainelli@gmail.com>, Vivien Didelot <vivien.didelot@savoirfairelinux.com>, Andrew Lunn <andrew@lunn.ch>, netdev@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+Cc: Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Ray Jui <rjui@broadcom.com>, linux-kernel@vger.kernel.org, Eric Anholt <eric@anholt.net>, bcm-kernel-feedback-list@broadcom.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-+Ben H
+Cygnus is a small family of SoCs, of which we currently have
+devicetree for BCM11360 and BCM58300.  The 11360's B53 is mostly the
+same as 58xx, just requiring a tiny bit of setup that was previously
+missing.
 
-On Mon, Apr 24, 2017 at 1:54 PM, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On 04/24/17 09:56, Rob Herring wrote:
->> On Mon, Apr 24, 2017 at 12:20 AM,  <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->>> From: Frank Rowand <frank.rowand-7U/KSKJipcs@public.gmane.org>
->>>
->>> When adjusting overlay phandles to apply to the live device tree, can
->>> not modify the property value because it is type const.
->>>
->>> This is to resolve the issue found by Stephen Boyd [1] when he changed
->>> the type of struct property.value from void * to const void *.  As
->>> a result of the type change, the overlay code had compile errors
->>> where the resolver updates phandle values.
->>
->> Conceptually, I prefer your first version. phandles are special and
->> there's little reason to expose them except to generate a dts or dtb
->> from /proc/device-tree. We could still generate the phandle file in
->> that case, but I don't know if special casing phandle is worth it.
->
-> The biggest thing that makes me wary about my first version is PPC
-> and Sparc.  I can read their code, but do not know what the firmware
-> is feeding into the kernel, so I felt like there might be some
-> incorrect assumptions or fundamental misunderstandings that I
-> may have.
+Signed-off-by: Eric Anholt <eric@anholt.net>
+---
+ Documentation/devicetree/bindings/net/dsa/b53.txt | 3 +++
+ drivers/net/dsa/b53/b53_srab.c                    | 2 ++
+ 2 files changed, 5 insertions(+)
 
-I never let that stop me. ;) I guess one question is does
-"ibm,phandle" need to be exposed to userspace. Maybe Ben has some
-thoughts.
-
-> If we do remove the phandle properties from the live tree, I think
-> that phandle still needs to be exposed in /proc/device-tree
-> because that is important information for being able to understand
-> (or debug) code via reading the source.  It isn't a lot code.
->
-> One factor I was not sure of to help choose between the first version
-> and this approach is net memory size of the device tree:
->
->   first version:
->
->      Adds struct bin_attribute  (28 bytes on 32 bit arm) to every node
-
-You could do a pointer to the struct instead.
-
->      Removes "linux,phandle" and "phandle" properties from nodes that
->      have a phandle (64 + 72 = 136 bytes)
-
-I don't think it is that high because we don't copy the property names
-and values. It's just 2x sizeof(struct property) plus whatever
-overhead each unflatten_dt_alloc has.
-
->   second version plus subsequent "linux,phandle" removal:
->
->      Removes "linux,phandle" properties from nodes
->      that have a phandle (72 bytes)
->
-> I do not have a feel of how many nodes have phandles in the many
-> different device trees, so I'm not sure of the end result for the
-> first version.
-
-Probably well under half. Though in theory dtc could create a phandle
-for every node.
-
-> I do not have a strong preference between my first approach and second
-> approach.  But now that I have done both, a choice can be made.  Let me
-> know which way you want to go and I'll respin the one you prefer.
-> For this version I'll make the change you suggested.  For the first
-> version, I'll modify of_attach_mode() slightly more to remove any
-> "phandle", "linux,phandle", and "ibm,phandle" property from the node
-> before attaching it, and add the call to add the phandle sysfs
-> file: __of_add_phandle_sysfs(np);
-
-I still lean toward the former, but I guess it depends if there are
-really any size savings.
-
-Why would you remove properties in of_attach_mode? You would want to
-convert populate_properties() to store the phandle from the start and
-never create the properties.
-
-[...]
-
->>> +               prop = __of_find_property(overlay, "phandle", NULL);
->>> +               newprop = __of_prop_alloc(prop->name, &phandle, sizeof(phandle),
->>> +                                         GFP_KERNEL);
->>> +               if (!newprop)
->>> +                       return -ENOMEM;
->>> +               __of_update_property(overlay, newprop, &prop);
->>> +
->>> +               prop = __of_find_property(overlay, "linux,phandle", NULL);
->>> +               newprop = __of_prop_alloc(prop->name, &phandle, sizeof(phandle),
->>> +                                         GFP_KERNEL);
->>
->> There is no reason to support "linux,phandle" for overlays. That is
->> legacy (pre ePAPR) which predates any overlays by a long time.
->
-> I would like to have the same behavior for non-overlays as for overlays.
-> The driver is the same whether the device tree description comes from
-> the initial device tree or from an overlay.
-
-Agreed. You only need to store one of them for both base and overlays.
-You could go further and just ignore them altogether for overlays as
-we should never have any with linux,phandle only, but that doesn't
-really matter as it won't affect the memory usage.
-
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/net/dsa/b53.txt b/Documentation/devicetree/bindings/net/dsa/b53.txt
+index d6c6e41648d4..49c93d3c0839 100644
+--- a/Documentation/devicetree/bindings/net/dsa/b53.txt
++++ b/Documentation/devicetree/bindings/net/dsa/b53.txt
+@@ -29,6 +29,9 @@ Required properties:
+       "brcm,bcm58625-srab"
+       "brcm,bcm88312-srab" and the mandatory "brcm,nsp-srab string
+ 
++  For the BCM11360 SoC, must be:
++      "brcm,bcm11360-srab" and the mandatory "brcm,cygnus-srab string
++
+   For the BCM63xx/33xx SoCs with an integrated switch, must be one of:
+       "brcm,bcm3384-switch"
+       "brcm,bcm6328-switch"
+diff --git a/drivers/net/dsa/b53/b53_srab.c b/drivers/net/dsa/b53/b53_srab.c
+index 8a62b6a69703..c37ffd1b6833 100644
+--- a/drivers/net/dsa/b53/b53_srab.c
++++ b/drivers/net/dsa/b53/b53_srab.c
+@@ -364,6 +364,7 @@ static const struct of_device_id b53_srab_of_match[] = {
+ 	{ .compatible = "brcm,bcm53018-srab" },
+ 	{ .compatible = "brcm,bcm53019-srab" },
+ 	{ .compatible = "brcm,bcm5301x-srab" },
++	{ .compatible = "brcm,bcm11360-srab", .data = (void *)BCM58XX_DEVICE_ID },
+ 	{ .compatible = "brcm,bcm58522-srab", .data = (void *)BCM58XX_DEVICE_ID },
+ 	{ .compatible = "brcm,bcm58525-srab", .data = (void *)BCM58XX_DEVICE_ID },
+ 	{ .compatible = "brcm,bcm58535-srab", .data = (void *)BCM58XX_DEVICE_ID },
+@@ -371,6 +372,7 @@ static const struct of_device_id b53_srab_of_match[] = {
+ 	{ .compatible = "brcm,bcm58623-srab", .data = (void *)BCM58XX_DEVICE_ID },
+ 	{ .compatible = "brcm,bcm58625-srab", .data = (void *)BCM58XX_DEVICE_ID },
+ 	{ .compatible = "brcm,bcm88312-srab", .data = (void *)BCM58XX_DEVICE_ID },
++	{ .compatible = "brcm,cygnus-srab", .data = (void *)BCM58XX_DEVICE_ID },
+ 	{ .compatible = "brcm,nsp-srab", .data = (void *)BCM58XX_DEVICE_ID },
+ 	{ /* sentinel */ },
+ };
+-- 
+2.11.0
