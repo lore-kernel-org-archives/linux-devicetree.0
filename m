@@ -1,69 +1,50 @@
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: Re: [PATCH V3 2/2] ARM64: dts: hi6220-hikey: Add clock binding for
- the pmic mfd
-Date: Mon, 24 Apr 2017 11:16:10 +0200
-Message-ID: <20170424091609.GA2137@mai>
-References: <1492449567-31399-1-git-send-email-daniel.lezcano@linaro.org>
- <1492449567-31399-2-git-send-email-daniel.lezcano@linaro.org>
- <20170422020233.GA7065@codeaurora.org>
- <370c36f9-e6fc-416c-776b-edc1e42d7ddc@linaro.org>
- <20170424085944.aa5dsc4g6bwm5rgi@dell>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v6 1/4] gpio: mvebu: Add limited PWM support
+Date: Mon, 24 Apr 2017 11:18:30 +0200
+Message-ID: <CACRpkdYPp6pBemTT_a4V6a-Qbk2475qOOxWJOhfVaEz=cojOvA@mail.gmail.com>
+References: <20170414154056.32055-1-ralph.sennhauser@gmail.com> <20170414154056.32055-2-ralph.sennhauser@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170424085944.aa5dsc4g6bwm5rgi@dell>
-Sender: linux-clk-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: Stephen Boyd <sboyd@codeaurora.org>, mturquette@baylibre.com, xuwei5@hisilicon.com, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <20170414154056.32055-2-ralph.sennhauser@gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Ralph Sennhauser <ralph.sennhauser@gmail.com>
+Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Andrew Lunn <andrew@lunn.ch>, Thierry Reding <thierry.reding@gmail.com>, Alexandre Courbot <gnurou@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jason Cooper <jason@lakedaemon.net>, Gregory Clement <gregory.clement@free-electrons.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Russell King <linux@armlinux.org.uk>, "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 24, 2017 at 09:59:44AM +0100, Lee Jones wrote:
-> On Sat, 22 Apr 2017, Daniel Lezcano wrote:
-> 
-> > On 22/04/2017 04:02, Stephen Boyd wrote:
-> > > On 04/17, Daniel Lezcano wrote:
-> > >> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-> > >> ---
-> > >>  Documentation/devicetree/bindings/mfd/hisilicon,hi655x.txt | 6 ++++++
-> > >>  arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts             | 1 +
-> > >>  2 files changed, 7 insertions(+)
-> > >>
-> > > 
-> > > I take it this goes through arm-soc? Not sure why I'm on To:
-> > > line.
-> > 
-> > Probably it should go through Lee's tree.
-> 
-> Unlikely.
-> 
-> The document and the DTS change should really have gone separately,
-> but to save you from having to mess around so close to the merge window:
-> 
-> Acked-by: Lee Jones <lee.jones@linaro.org>
+On Fri, Apr 14, 2017 at 5:40 PM, Ralph Sennhauser
+<ralph.sennhauser@gmail.com> wrote:
 
-Thanks Lee.
+> From: Andrew Lunn <andrew@lunn.ch>
+>
+> Armada 370/XP devices can 'blink' GPIO lines with a configurable on
+> and off period. This can be modelled as a PWM.
+>
+> However, there are only two sets of PWM configuration registers for
+> all the GPIO lines. This driver simply allows a single GPIO line per
+> GPIO chip of 32 lines to be used as a PWM. Attempts to use more return
+> EBUSY.
+>
+> Due to the interleaving of registers it is not simple to separate the
+> PWM driver from the GPIO driver. Thus the GPIO driver has been
+> extended with a PWM driver.
+>
+> Signed-off-by: Andrew Lunn <andrew@lunn.ch>
+> URL: https://patchwork.ozlabs.org/patch/427287/
+> URL: https://patchwork.ozlabs.org/patch/427295/
+> [Ralph Sennhauser:
+>   * Port forward
+>   * Merge PWM portion into gpio-mvebu.c
+>   * Switch to atomic PWM API
+>   * Add new compatible string marvell,armada-370-xp-gpio
+>   * Update and merge documentation patch
+>   * Update MAINTAINERS]
+> Signed-off-by: Ralph Sennhauser <ralph.sennhauser@gmail.com>
+> Tested-by: Andrew Lunn <andrew@lunn.ch>
+> Acked-by: Thierry Reding <thierry.reding@gmail.com>
+> Acked-by: Rob Herring <robh@kernel.org>
 
-Usually, I take the DT changes (including doc) with the timers changes with the
-maintainer and Rob's blessing. So the DT and the driver changes are aligned in
-my tree and make the submission changes easier.
+Patch applied.
 
-I agree mixing the patches for different destinations into a single patchset is
-fuzzy, I will take care next time to separate the patches.
-
-  -- Daniel
-
-> -- 
-> Lee Jones
-> Linaro STMicroelectronics Landing Team Lead
-> Linaro.org │ Open source software for ARM SoCs
-> Follow Linaro: Facebook | Twitter | Blog
-
--- 
-
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+Yours,
+Linus Walleij
