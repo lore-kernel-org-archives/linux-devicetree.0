@@ -1,44 +1,87 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v8 1/3] backlight arcxcnn add arc to vendor prefix
-Date: Mon, 24 Apr 2017 10:09:41 -0500
-Message-ID: <CAL_JsqJ+=fQ2e752iCHs0dbdrkotuDtKp=2Z2_xnyCtMnxWV8A@mail.gmail.com>
-References: <1489607133-7870-1-git-send-email-olimpiu@arcticsand.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1489607133-7870-1-git-send-email-olimpiu-eV7fy4qpoLhpLGFMi4vTTA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Olimpiu Dejeu <olimpiu-eV7fy4qpoLhpLGFMi4vTTA@public.gmane.org>
-Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jingoo Han <jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, bdodge-eV7fy4qpoLhpLGFMi4vTTA@public.gmane.org, Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>, medasaro-eV7fy4qpoLhpLGFMi4vTTA@public.gmane.org, Daniel Thompson <daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+From: Marek Vasut <marek.vasut@gmail.com>
+Subject: [PATCH V2 1/4] mfd: Add ROHM BD9571MWV-M PMIC DT bindings
+Date: Mon, 24 Apr 2017 17:21:27 +0200
+Message-ID: <20170424152130.32410-1-marek.vasut+renesas@gmail.com>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: linux-renesas-soc@vger.kernel.org
+Cc: Marek Vasut <marek.vasut+renesas@gmail.com>, devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 15, 2017 at 2:45 PM, Olimpiu Dejeu <olimpiu-eV7fy4qpoLhpLGFMi4vTTA@public.gmane.org> wrote:
-> backlight: Add arc to vendor prefixes
-> Signed-off-by: Olimpiu Dejeu <olimpiu-eV7fy4qpoLhpLGFMi4vTTA@public.gmane.org>
-> ---
-> v8:
-> - Version to match other patches in set
->
->  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> index 16d3b5e..6f33a4b 100644
-> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> @@ -28,6 +28,7 @@ andestech     Andes Technology Corporation
->  apm    Applied Micro Circuits Corporation (APM)
->  aptina Aptina Imaging
->  arasan Arasan Chip Systems
-> +arc    Arctic Sand
+Add DT bindings for the ROHM BD9571MWV-M PMIC. This PMIC has
+the following features:
+- multiple voltage monitors for 1V8, 2V5, 3V3 voltage rail
+- one voltage regulator for DVFS
+- two GPIOs
 
-arc is also a cpu arch. While not a vendor, it could be confusing. How
-about "arctic" instead?
+Signed-off-by: Marek Vasut <marek.vasut+renesas@gmail.com>
+Cc: devicetree@vger.kernel.org
+Cc: Rob Herring <robh@kernel.org>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: linux-renesas-soc@vger.kernel.org
+---
+V2: - Drop the compatible = "regulator-fixed" from the binding example,
+      it should not be there.
+    - List the VD09 regulator
+---
+ .../devicetree/bindings/mfd/bd9571mwv.txt          | 49 ++++++++++++++++++++++
+ 1 file changed, 49 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mfd/bd9571mwv.txt
 
-BTW, some reason your patches are not going to the DT list.
-
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/mfd/bd9571mwv.txt b/Documentation/devicetree/bindings/mfd/bd9571mwv.txt
+new file mode 100644
+index 000000000000..ce24231edd7d
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mfd/bd9571mwv.txt
+@@ -0,0 +1,49 @@
++* ROHM BD9571MWV Power Management Integrated Circuit (PMIC) bindings
++
++Required properties:
++ - compatible		: Should be "rohm,bd9571mwv".
++ - reg			: I2C slave address.
++ - interrupt-parent	: Phandle to the parent interrupt controller.
++ - interrupts		: The interrupt line the device is connected to.
++ - interrupt-controller	: Marks the device node as an interrupt controller.
++ - #interrupt-cells	: The number of cells to describe an IRQ, should be 2.
++			    The first cell is the IRQ number.
++			    The second cell is the flags, encoded as trigger
++			    masks from ../interrupt-controller/interrupts.txt.
++ - gpio-controller      : Marks the device node as a GPIO Controller.
++ - #gpio-cells          : Should be two.  The first cell is the pin number and
++                            the second cell is used to specify flags.
++                            See ../gpio/gpio.txt for more information.
++ - regulators:          : List of child nodes that specify the regulator
++                            initialization data. Child nodes must be named
++                            after their hardware counterparts:
++			     - vd09
++			     - vd18
++			     - vd25
++			     - vd33
++			     - dvfs
++			    Each child node is defined using the standard
++			    binding for regulators.
++
++Example:
++
++	pmic: bd9571mwv@30 {
++		compatible = "rohm,bd9571mwv";
++		reg = <0x30>;
++		interrupt-parent = <&gpio2>;
++		interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
++		interrupt-controller;
++		#interrupt-cells = <2>;
++		gpio-controller;
++		#gpio-cells = <2>;
++
++		regulators {
++			dvfs: dvfs {
++				regulator-name = "dvfs";
++				regulator-min-microvolt = <750000>;
++				regulator-max-microvolt = <1030000>;
++				regulator-boot-on;
++				regulator-always-on;
++			};
++		};
++	};
+-- 
+2.11.0
