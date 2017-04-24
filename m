@@ -1,56 +1,48 @@
-From: Simon Horman <horms+renesas@verge.net.au>
-Subject: [PATCH] arm64: dts: r8a7795: update PFC node name to pin-controller
-Date: Mon, 24 Apr 2017 10:51:55 +0200
-Message-ID: <1493023915-21658-1-git-send-email-horms+renesas@verge.net.au>
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: linux-renesas-soc@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org, Magnus Damm <magnus.damm@gmail.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Simon Horman <horms+renesas@verge.net.au>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH V3 2/2] ARM64: dts: hi6220-hikey: Add clock binding for
+ the pmic mfd
+Date: Mon, 24 Apr 2017 09:59:44 +0100
+Message-ID: <20170424085944.aa5dsc4g6bwm5rgi@dell>
+References: <1492449567-31399-1-git-send-email-daniel.lezcano@linaro.org>
+ <1492449567-31399-2-git-send-email-daniel.lezcano@linaro.org>
+ <20170422020233.GA7065@codeaurora.org>
+ <370c36f9-e6fc-416c-776b-edc1e42d7ddc@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-clk-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <370c36f9-e6fc-416c-776b-edc1e42d7ddc@linaro.org>
+Sender: linux-clk-owner@vger.kernel.org
+To: Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: Stephen Boyd <sboyd@codeaurora.org>, mturquette@baylibre.com, xuwei5@hisilicon.com, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The device trees for Renesas SoCs use either pfc or pin-controller
-as the node name for the PFC device. This patch is intended to take a step
-towards unifying the node name used as pin-controller which appears to
-be more the more generic of the two and thus more in keeping with the DT
-specs.
+On Sat, 22 Apr 2017, Daniel Lezcano wrote:
 
-My analysis is that this is a user-visible change to the extent that kernel
-logs, and sysfs entries change from e6060000.pfc and pfc@e6060000 to
-e6060000.pin-controller and pin-controller@e6060000.
+> On 22/04/2017 04:02, Stephen Boyd wrote:
+> > On 04/17, Daniel Lezcano wrote:
+> >> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+> >> ---
+> >>  Documentation/devicetree/bindings/mfd/hisilicon,hi655x.txt | 6 ++++++
+> >>  arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts             | 1 +
+> >>  2 files changed, 7 insertions(+)
+> >>
+> > 
+> > I take it this goes through arm-soc? Not sure why I'm on To:
+> > line.
+> 
+> Probably it should go through Lee's tree.
 
-Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
----
-Before:
-/sys/kernel/debug/pinctrl/e6060000.pfc
-/sys/devices/platform/soc/e6060000.pfc
-/sys/firmware/devicetree/base/soc/pfc@e6060000
-/sys/bus/platform/devices/e6060000.pfc
-/sys/bus/platform/drivers/sh-pfc
-/sys/bus/platform/drivers/sh-pfc/e6060000.pfc
+Unlikely.
 
-After:
-/sys/kernel/debug/pinctrl/e6060000.pin-controller
-/sys/devices/platform/soc/e6060000.pin-controller
-/sys/firmware/devicetree/base/soc/pin-controller@e6060000
-/sys/bus/platform/devices/e6060000.pin-controller
-/sys/bus/platform/drivers/sh-pfc
-/sys/bus/platform/drivers/sh-pfc/e6060000.pin-controller
----
- arch/arm64/boot/dts/renesas/r8a7795.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+The document and the DTS change should really have gone separately,
+but to save you from having to mess around so close to the merge window:
 
-diff --git a/arch/arm64/boot/dts/renesas/r8a7795.dtsi b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
-index e99d6443b3e4..7d87dff70ac8 100644
---- a/arch/arm64/boot/dts/renesas/r8a7795.dtsi
-+++ b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
-@@ -398,7 +398,7 @@
- 			#power-domain-cells = <1>;
- 		};
- 
--		pfc: pfc@e6060000 {
-+		pfc: pin-controller@e6060000 {
- 			compatible = "renesas,pfc-r8a7795";
- 			reg = <0 0xe6060000 0 0x50c>;
- 		};
+Acked-by: Lee Jones <lee.jones@linaro.org>
+
 -- 
-2.7.0.rc3.207.g0ac5344
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
