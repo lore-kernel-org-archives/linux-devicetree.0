@@ -1,212 +1,101 @@
-From: Yang Li <pku.leo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] arm64: dts: freescale: ls2081ardb: Add DTS support for
- NXP LS2081ARDB
-Date: Mon, 24 Apr 2017 12:20:32 -0500
-Message-ID: <CADRPPNRM9Orc=RtRJstA-qpCcdCvrgab0n3d=CC7i6O7ua8nNg@mail.gmail.com>
-References: <1492663067-2364-1-git-send-email-priyanka.jain@nxp.com>
+From: Frank Rowand <frowand.list@gmail.com>
+Subject: Re: [RFC 2/3] of: reserved_mem: Accessor for acquiring reserved_mem
+Date: Mon, 24 Apr 2017 10:27:09 -0700
+Message-ID: <58FE356D.2020409@gmail.com>
+References: <20170422173519.5782-1-bjorn.andersson@linaro.org>
+ <20170422173519.5782-2-bjorn.andersson@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1492663067-2364-1-git-send-email-priyanka.jain-3arQi8VN3Tc@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Priyanka Jain <priyanka.jain-3arQi8VN3Tc@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Li Yang <leoyang.li-3arQi8VN3Tc@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <20170422173519.5782-2-bjorn.andersson@linaro.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Bjorn Andersson <bjorn.andersson@linaro.org>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-We probably should rename the freescale folder to nxp with a separate
-patch, but it is better to stop using the name in the patch title
-right now.
-
-On Wed, Apr 19, 2017 at 11:37 PM, Priyanka Jain <priyanka.jain-3arQi8VN3Tc@public.gmane.org> wrote:
-> This patch add support for NXP LS2081ARDB board which has
-> LS2081A SoC.
->
-> LS2081A SoC is 40-pin derivative of LS2088A SoC
-> So, from functional perspective both are same.
-> Hence,ls2088a SoC dtsi files are included from ls2081ARDB dts
->
-> Signed-off-by: Priyanka Jain <priyanka.jain-3arQi8VN3Tc@public.gmane.org>
+On 04/22/17 10:35, Bjorn Andersson wrote:
+> In some cases drivers referencing a reserved-memory region might want to
+> remap the entire region, but when defining the reserved-memory by "size"
+> the client driver has no means to know the associated base address of
+> the reserved memory region.
+> 
+> This patch adds an accessor for such drivers to acquire a handle to
+> their associated reserved-memory for this purpose.
+> 
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 > ---
->  arch/arm64/boot/dts/freescale/Makefile            |    1 +
->  arch/arm64/boot/dts/freescale/fsl-ls2081a-rdb.dts |  139 +++++++++++++++++++++
->  2 files changed, 140 insertions(+), 0 deletions(-)
->  create mode 100755 arch/arm64/boot/dts/freescale/fsl-ls2081a-rdb.dts
->
-> diff --git a/arch/arm64/boot/dts/freescale/Makefile b/arch/arm64/boot/dts/freescale/Makefile
-> index 72c4b52..58b80de 100644
-> --- a/arch/arm64/boot/dts/freescale/Makefile
-> +++ b/arch/arm64/boot/dts/freescale/Makefile
-> @@ -9,6 +9,7 @@ dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls1088a-qds.dtb
->  dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls1088a-rdb.dtb
->  dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls2080a-qds.dtb
->  dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls2080a-rdb.dtb
-> +dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls2081a-rdb.dtb
->  dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls2080a-simu.dtb
->  dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls2088a-qds.dtb
->  dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls2088a-rdb.dtb
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls2081a-rdb.dts b/arch/arm64/boot/dts/freescale/fsl-ls2081a-rdb.dts
-> new file mode 100444
-> index 0000000..7ae408e
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/freescale/fsl-ls2081a-rdb.dts
-> @@ -0,0 +1,139 @@
-> +/*
-> + * Device Tree file for NXP LS2081A RDB Board.
+> 
+> I would have preferred if we could provide a mechanism for drivers to find the
+> reserved_mem of their own device_node, but without a phandle I have not been
+> able to figure out a sane way to make the match.
+> 
+> Suggestions are very welcome.
+> 
+>  drivers/of/of_reserved_mem.c    | 26 ++++++++++++++++++++++++++
+>  include/linux/of_reserved_mem.h |  8 ++++++++
+>  2 files changed, 34 insertions(+)
+> 
+> diff --git a/drivers/of/of_reserved_mem.c b/drivers/of/of_reserved_mem.c
+> index d507c3569a88..aa69c9590a5c 100644
+> --- a/drivers/of/of_reserved_mem.c
+> +++ b/drivers/of/of_reserved_mem.c
+> @@ -397,3 +397,29 @@ void of_reserved_mem_device_release(struct device *dev)
+>  	rmem->ops->device_release(rmem, dev);
+>  }
+>  EXPORT_SYMBOL_GPL(of_reserved_mem_device_release);
+> +
+> +/**
+> + * of_get_reserved_mem_by_idx() - acquire reserved_mem from memory-region
+> + * @np:		node pointer containing the "memory-region"
+> + * @idx:	index within memory-region
 > + *
-> + * Copyright (C) 2017, NXP Semiconductors
-
-The formal copyright claim formal should be
-Copyright 2017 NXP
-
+> + * This function allows drivers to acquire a reference to the reserved_mem
+> + * struct which is referenced by their memory-region.
 > + *
-> + * Priyanka Jain <priyanka.jain-3arQi8VN3Tc@public.gmane.org>
-> + *
-> + * This file is dual-licensed: you can use it either under the terms
-> + * of the GPLv2 or the X11 license, at your option. Note that this dual
-> + * licensing only applies to this file, and not this project as a
-> + * whole.
-> + *
-> + *  a) This library is free software; you can redistribute it and/or
-> + *     modify it under the terms of the GNU General Public License as
-> + *     published by the Free Software Foundation; either version 2 of the
-> + *     License, or (at your option) any later version.
-> + *
-> + *     This library is distributed in the hope that it will be useful,
-> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + *     GNU General Public License for more details.
-> + *
-> + * Or, alternatively,
-> + *
-> + *  b) Permission is hereby granted, free of charge, to any person
-> + *     obtaining a copy of this software and associated documentation
-> + *     files (the "Software"), to deal in the Software without
-> + *     restriction, including without limitation the rights to use,
-> + *     copy, modify, merge, publish, distribute, sublicense, and/or
-> + *     sell copies of the Software, and to permit persons to whom the
-> + *     Software is furnished to do so, subject to the following
-> + *     conditions:
-> + *
-> + *     The above copyright notice and this permission notice shall be
-> + *     included in all copies or substantial portions of the Software.
-> + *
-> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-> + *     OTHER DEALINGS IN THE SOFTWARE.
+> + * Returns a reserved_mem reference, or NULL on error.
 > + */
+> +struct reserved_mem *of_get_reserved_mem_by_idx(struct device_node *np, int idx)
+> +{
+> +	struct device_node *target;
+> +	struct reserved_mem *rmem;
 > +
-> +/dts-v1/;
+> +	target = of_parse_phandle(np, "memory-region", idx);
+> +	if (!target)
+> +		return NULL;
 > +
-> +#include "fsl-ls2088a.dtsi"
+> +	rmem = __find_rmem(target);
+> +	of_node_put(target);
 > +
-> +/ {
-> +       model = "NXP Layerscape 2081A RDB Board";
-> +       compatible = "fsl,ls2081a-rdb", "fsl,ls2081a";
+> +	return rmem;
+> +}
+> +EXPORT_SYMBOL_GPL(of_get_reserved_mem_by_idx);
+> diff --git a/include/linux/of_reserved_mem.h b/include/linux/of_reserved_mem.h
+> index f8e1992d6423..a9abbe7dd3de 100644
+> --- a/include/linux/of_reserved_mem.h
+> +++ b/include/linux/of_reserved_mem.h
+> @@ -34,6 +34,8 @@ int of_reserved_mem_device_init_by_idx(struct device *dev,
+>  				       struct device_node *np, int idx);
+>  void of_reserved_mem_device_release(struct device *dev);
+>  
+> +struct reserved_mem *of_get_reserved_mem_by_idx(struct device_node *np, int idx);
 > +
-> +       aliases {
-> +               serial0 = &serial0;
-> +               serial1 = &serial1;
-> +       };
+>  int early_init_dt_alloc_reserved_memory_arch(phys_addr_t size,
+>  					     phys_addr_t align,
+>  					     phys_addr_t start,
+> @@ -52,6 +54,12 @@ static inline int of_reserved_mem_device_init_by_idx(struct device *dev,
+>  }
+>  static inline void of_reserved_mem_device_release(struct device *pdev) { }
+>  
+> +static inline struct reserved_mem *of_get_reserved_mem_by_idx(struct device_node *np,
+> +							      int idx);
+> +{
+> +	return NULL;
+> +}
 > +
-> +       chosen {
-> +               stdout-path = "serial1:115200n8";
-> +       };
-> +};
-> +
-> +&esdhc {
-> +       status = "okay";
-> +};
-> +
-> +&ifc {
-> +       status = "disabled";
-> +};
-> +
-> +&i2c0 {
-> +       status = "okay";
-> +       pca9547@75 {
-> +               compatible = "nxp,pca9547";
-> +               reg = <0x75>;
-> +               #address-cells = <1>;
-> +               #size-cells = <0>;
-> +               i2c@1 {
-> +                       #address-cells = <1>;
-> +                       #size-cells = <0>;
-> +                       reg = <0x01>;
-> +                       rtc@51 {
-> +                               compatible = "nxp,pcf2129";
-> +                               reg = <0x51>;
-> +                       };
-> +               };
-> +
-> +               i2c@3 {
-> +                       #address-cells = <1>;
-> +                       #size-cells = <0>;
-> +                       reg = <0x3>;
-> +
-> +                       adt7481@4c {
-> +                               compatible = "adi,adt7461";
-> +                               reg = <0x4c>;
-> +                       };
-> +               };
-> +       };
-> +};
-> +
-> +&dspi {
-> +       status = "okay";
-> +       dflash0: n25q512a {
-> +               #address-cells = <1>;
-> +               #size-cells = <1>;
-> +               compatible = "st,m25p80";
-> +               spi-max-frequency = <3000000>;
-> +               reg = <0>;
-> +       };
-> +};
-> +
-> +
-> +&qspi {
-> +       status = "okay";
-> +       flash0: n25q512a@0 {
-> +               #address-cells = <1>;
-> +               #size-cells = <1>;
-> +               compatible = "st,m25p80";
-> +               spi-max-frequency = <20000000>;
-> +               reg = <0>;
-> +       };
-> +       flash1: n25q512a@1 {
-> +               #address-cells = <1>;
-> +               #size-cells = <1>;
-> +               compatible = "st,m25p80";
-> +               spi-max-frequency = <20000000>;
-> +               reg = <0>;
-> +       };
-> +};
-> +
-> +&usb0 {
-> +       status = "okay";
-> +};
-> +
-> +&usb1 {
-> +       status = "okay";
-> +};
-> --
-> 1.7.4.1
->
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>  static inline void fdt_init_reserved_mem(void) { }
+>  static inline void fdt_reserved_mem_save_node(unsigned long node,
+>  		const char *uname, phys_addr_t base, phys_addr_t size) { }
+> 
 
-
-
--- 
-- Leo
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Reviewed-by: Frank Rowand <frank.rowand@sony.com>
