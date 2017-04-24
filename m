@@ -1,43 +1,66 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH] arm64: dts: r8a7795: update PFC node name to pin-controller
-Date: Mon, 24 Apr 2017 11:03:54 +0200
-Message-ID: <CAMuHMdVw9OJZarw3SRa7NuuaMtmDKPVN3Om0GFVFm5k_YAqn6g@mail.gmail.com>
-References: <1493023915-21658-1-git-send-email-horms+renesas@verge.net.au>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v5 05/11] drm/sun4i: abstract a engine type
+Date: Mon, 24 Apr 2017 11:05:00 +0200
+Message-ID: <20170424090500.i3k6u7pcahc7m3hv@lukather>
+References: <20170423103754.50012-1-icenowy@aosc.io>
+ <20170423103754.50012-6-icenowy@aosc.io>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <1493023915-21658-1-git-send-email-horms+renesas@verge.net.au>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Simon Horman <horms+renesas@verge.net.au>
-Cc: Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Magnus Damm <magnus.damm@gmail.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="l72qyua2fb6rcfpc"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBUP763DQKGQEVBKVAJQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20170423103754.50012-6-icenowy-h8G6r0blFSE@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 24, 2017 at 10:51 AM, Simon Horman
-<horms+renesas@verge.net.au> wrote:
-> The device trees for Renesas SoCs use either pfc or pin-controller
-> as the node name for the PFC device. This patch is intended to take a step
-> towards unifying the node name used as pin-controller which appears to
-> be more the more generic of the two and thus more in keeping with the DT
 
-s/be more/be/
+--l72qyua2fb6rcfpc
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
-> specs.
->
-> My analysis is that this is a user-visible change to the extent that kernel
-> logs, and sysfs entries change from e6060000.pfc and pfc@e6060000 to
-> e6060000.pin-controller and pin-controller@e6060000.
->
-> Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
+Hi,
 
-Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Thanks a lot for that work.
 
-Gr{oetje,eeting}s,
+On Sun, Apr 23, 2017 at 06:37:48PM +0800, Icenowy Zheng wrote:
+> As we are going to add support for the Allwinner DE2 engine in sun4i-drm
+> driver, we will finally have two types of display engines -- the DE1
+> backend and the DE2 mixer. They both do some display blending and feed
+> graphics data to TCON, so I choose to call them both "engine" here.
+> 
+> Abstract the engine type to a new struct with an ops struct, which contains
+> functions that should be called outside the engine-specified code (in
+> TCON, CRTC or TV Encoder code).
+> 
+> A dedicated Kconfig option is also added to control whether
+> sun4i-backend-specified code (sun4i_backend.c and sun4i_layer.c) should
+> be built. As we removed the codes in CRTC code that directly call the
+> layer code, we can now extract the layer part and combine it with the
+> backend part into a new module, sun4i-backend.ko.
 
-                        Geert
+While the code itself is good now, the patch mixes a few things that
+would be better to be split in separate patches. I think it would be
+better if you had patches organized like this:
+  - Abstract the engine type by create the sunxi_engine structure and
+    fixing all the callers.
+  - Move the layers and backend files in the same module, and remove
+    the now useless EXPORT_SYMBOLS.
+  - Create a Kconfig option.
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+Thanks!
+Maxime
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--l72qyua2fb6rcfpc--
