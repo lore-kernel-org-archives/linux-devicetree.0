@@ -1,32 +1,80 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 4/4] ARM: dts: stm32: Set gpio controller also as
- interrupt controller
-Date: Mon, 24 Apr 2017 14:38:40 +0200
-Message-ID: <CACRpkdYW94rkrK+Hpa-U_NyNw=zU1dToz5Za_K4RnP_oX5iFoA@mail.gmail.com>
-References: <1491577811-26989-1-git-send-email-alexandre.torgue@st.com> <1491577811-26989-5-git-send-email-alexandre.torgue@st.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH V7 4/7] mfd: da9061: MFD core support
+Date: Mon, 24 Apr 2017 13:38:39 +0100
+Message-ID: <20170424123839.pjgbmz36nwcgfvn4@dell>
+References: <cover.1491230802.git.stwiss.opensource@diasemi.com>
+ <b39c8c3f42a01a00f93292c569e8d30ce69ff3ab.1491230802.git.stwiss.opensource@diasemi.com>
+ <20170404083902.ywo3pdxptgfcqvga@dell>
+ <6ED8E3B22081A4459DAC7699F3695FB7018CD71434@SW-EX-MBX02.diasemi.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1491577811-26989-5-git-send-email-alexandre.torgue-qxv4g6HH51o@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexandre TORGUE <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
-Cc: Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Patrice Chotard <patrice.chotard-qxv4g6HH51o@public.gmane.org>, Paul Gortmaker <paul.gortmaker-CWA4WttNNZF54TAoqtyWWQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-input-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <6ED8E3B22081A4459DAC7699F3695FB7018CD71434@SW-EX-MBX02.diasemi.com>
+Sender: linux-input-owner@vger.kernel.org
+To: Steve Twiss <stwiss.opensource@diasemi.com>
+Cc: LINUX-KERNEL <linux-kernel@vger.kernel.org>, DEVICETREE <devicetree@vger.kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Eduardo Valentin <edubezval@gmail.com>, Guenter Roeck <linux@roeck-us.net>, LINUX-INPUT <linux-input@vger.kernel.org>, LINUX-PM <linux-pm@vger.kernel.org>, LINUX-WATCHDOG <linux-watchdog@vger.kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Support Opensource <Support.Opensource@diasemi.com>, Wim Van Sebroeck <wim@iguana.be>, Zhang Rui <rui.zhang@intel.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 7, 2017 at 5:10 PM, Alexandre TORGUE
-<alexandre.torgue-qxv4g6HH51o@public.gmane.org> wrote:
+On Mon, 24 Apr 2017, Steve Twiss wrote:
 
-> This patch set each gpio controller as a interrupt controller. User who
-> wants to use gpio as interrupt will have choice to use either "gpiolib"
-> interface or "common" interrupt interface.
->
-> Signed-off-by: Alexandre TORGUE <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
+> On 04 April 2017 09:39, Lee Jones wrote:
+> > Subject: Re: [PATCH V7 4/7] mfd: da9061: MFD core support
+> > 
+> > On Mon, 03 Apr 2017, Steve Twiss wrote:
+> > > From: Steve Twiss <stwiss.opensource@diasemi.com>
+> > > MFD support for DA9061 is provided as part of the DA9062 device driver.
+> > >
+> > > The registers header file adds two new chip variant IDs defined in DA9061
+> > > and DA9062 hardware. The core header file adds new software enumerations
+> > > for listing the valid DA9061 IRQs and a da9062_compatible_types enumeration
+> > > for distinguishing between DA9061/62 devices in software.
+> > >
+> > > The core source code adds a new .compatible of_device_id entry. This is
+> > > extended from DA9062 to support both "dlg,da9061" and "dlg,da9062". The
+> > > .data entry now holds a reference to the enumerated device type.
+> > >
+> > > A new regmap_irq_chip model is added for DA9061 and this supports the new
+> > > list of regmap_irq entries. A new mfd_cell da9061_devs[] array lists the
+> > > new sub system components for DA9061. Support is added for a new DA9061
+> > > regmap_config which lists the correct readable, writable and volatile
+> > > ranges for this chip.
+> > >
+> > > The probe function uses the device tree compatible string to switch on the
+> > > da9062_compatible_types and configure the correct mfd cells, irq chip and
+> > > regmap config.
+> > >
+> > > Kconfig is updated to reflect support for DA9061 and DA9062 PMICs.
+> > >
+> > > Signed-off-by: Steve Twiss <stwiss.opensource@diasemi.com>
+> > 
+> > Ah, here it is.
+> > 
+> > Applied, thanks.
+> 
+> Hi Lee,
+> 
+> I noticed the DA9061 core support has been added into linux-next, however
+> the commit message was changed from the original title:
+> 
+> "mfd: da9061: MFD core support"
+> 
+> to add the mistake:
+> 
+> "mfd: Add suppfor for DA9061"
+> 
+> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?id=d3fe0806025cacdab1462d5704e1c98ab9db4564
+> 
+> Can this be fixed please?
+> This patch has not been upstreamed into linux-mainline and is still in linux-next.
 
-Acked-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+You're right, thanks for pointing that out.
 
-Yours,
-Linus Walleij
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Now fixed.
+
+-- 
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
