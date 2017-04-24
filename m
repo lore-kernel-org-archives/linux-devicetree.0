@@ -1,80 +1,100 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH V7 4/7] mfd: da9061: MFD core support
-Date: Mon, 24 Apr 2017 13:38:39 +0100
-Message-ID: <20170424123839.pjgbmz36nwcgfvn4@dell>
-References: <cover.1491230802.git.stwiss.opensource@diasemi.com>
- <b39c8c3f42a01a00f93292c569e8d30ce69ff3ab.1491230802.git.stwiss.opensource@diasemi.com>
- <20170404083902.ywo3pdxptgfcqvga@dell>
- <6ED8E3B22081A4459DAC7699F3695FB7018CD71434@SW-EX-MBX02.diasemi.com>
+From: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH V2 1/4] dt-bindings: mtd: make partitions doc a bit more generic
+Date: Mon, 24 Apr 2017 14:41:17 +0200
+Message-ID: <20170424124120.31613-2-zajec5@gmail.com>
+References: <20170420135731.13272-2-zajec5@gmail.com>
+ <20170424124120.31613-1-zajec5@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Return-path: <linux-input-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <6ED8E3B22081A4459DAC7699F3695FB7018CD71434@SW-EX-MBX02.diasemi.com>
-Sender: linux-input-owner@vger.kernel.org
-To: Steve Twiss <stwiss.opensource@diasemi.com>
-Cc: LINUX-KERNEL <linux-kernel@vger.kernel.org>, DEVICETREE <devicetree@vger.kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Eduardo Valentin <edubezval@gmail.com>, Guenter Roeck <linux@roeck-us.net>, LINUX-INPUT <linux-input@vger.kernel.org>, LINUX-PM <linux-pm@vger.kernel.org>, LINUX-WATCHDOG <linux-watchdog@vger.kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Support Opensource <Support.Opensource@diasemi.com>, Wim Van Sebroeck <wim@iguana.be>, Zhang Rui <rui.zhang@intel.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170424124120.31613-1-zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Jonas Gorski <jonas.gorski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 24 Apr 2017, Steve Twiss wrote:
+From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-> On 04 April 2017 09:39, Lee Jones wrote:
-> > Subject: Re: [PATCH V7 4/7] mfd: da9061: MFD core support
-> > 
-> > On Mon, 03 Apr 2017, Steve Twiss wrote:
-> > > From: Steve Twiss <stwiss.opensource@diasemi.com>
-> > > MFD support for DA9061 is provided as part of the DA9062 device driver.
-> > >
-> > > The registers header file adds two new chip variant IDs defined in DA9061
-> > > and DA9062 hardware. The core header file adds new software enumerations
-> > > for listing the valid DA9061 IRQs and a da9062_compatible_types enumeration
-> > > for distinguishing between DA9061/62 devices in software.
-> > >
-> > > The core source code adds a new .compatible of_device_id entry. This is
-> > > extended from DA9062 to support both "dlg,da9061" and "dlg,da9062". The
-> > > .data entry now holds a reference to the enumerated device type.
-> > >
-> > > A new regmap_irq_chip model is added for DA9061 and this supports the new
-> > > list of regmap_irq entries. A new mfd_cell da9061_devs[] array lists the
-> > > new sub system components for DA9061. Support is added for a new DA9061
-> > > regmap_config which lists the correct readable, writable and volatile
-> > > ranges for this chip.
-> > >
-> > > The probe function uses the device tree compatible string to switch on the
-> > > da9062_compatible_types and configure the correct mfd cells, irq chip and
-> > > regmap config.
-> > >
-> > > Kconfig is updated to reflect support for DA9061 and DA9062 PMICs.
-> > >
-> > > Signed-off-by: Steve Twiss <stwiss.opensource@diasemi.com>
-> > 
-> > Ah, here it is.
-> > 
-> > Applied, thanks.
-> 
-> Hi Lee,
-> 
-> I noticed the DA9061 core support has been added into linux-next, however
-> the commit message was changed from the original title:
-> 
-> "mfd: da9061: MFD core support"
-> 
-> to add the mistake:
-> 
-> "mfd: Add suppfor for DA9061"
-> 
-> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?id=d3fe0806025cacdab1462d5704e1c98ab9db4564
-> 
-> Can this be fixed please?
-> This patch has not been upstreamed into linux-mainline and is still in linux-next.
+Currently the only documented partitioning is "fixed-partitions" but
+there are more methods in use that we may want to support in the future.
+Mention them and make it clear Fixed Partitions are just a single case.
 
-You're right, thanks for pointing that out.
+Signed-off-by: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Signed-off-by: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+---
+This is based on Brian's patch:
+[RFC PATCH 3/7] doc: dt: mtd: partition: add on-flash format binding
 
-Now fixed.
+V1: Dropped "Section B: On-Flash Partition Tables" with Google's FMAP as this
+    patchset doesn't add that new parser.
+V2: Add "We currently only document a binding for fixed layouts." part
+---
+ .../devicetree/bindings/mtd/partition.txt          | 30 +++++++++++++++++-----
+ 1 file changed, 24 insertions(+), 6 deletions(-)
 
+diff --git a/Documentation/devicetree/bindings/mtd/partition.txt b/Documentation/devicetree/bindings/mtd/partition.txt
+index 81a224da63be..b5de311b967a 100644
+--- a/Documentation/devicetree/bindings/mtd/partition.txt
++++ b/Documentation/devicetree/bindings/mtd/partition.txt
+@@ -1,29 +1,47 @@
+-Representing flash partitions in devicetree
++Flash partitions in device tree
++===============================
+ 
+-Partitions can be represented by sub-nodes of an mtd device. This can be used
++Flash devices can be partitioned into one or more functional ranges (e.g. "boot
++code", "nvram", "kernel").
++
++Different devices may be partitioned in a different ways. Some may use a fixed
++flash layout set at production time. Some may use on-flash table that describes
++the geometry and naming/purpose of each functional region. It is also possible
++to see these methods mixed.
++
++To assist system software in locating partitions, we provide a binding to
++describe which method is used for a given flash.
++
++We currently only document a binding for fixed layouts.
++
++
++Fixed Partitions
++================
++
++Partitions can be represented by sub-nodes of a flash device. This can be used
+ on platforms which have strong conventions about which portions of a flash are
+ used for what purposes, but which don't use an on-flash partition table such
+ as RedBoot.
+ 
+-The partition table should be a subnode of the mtd node and should be named
++The partition table should be a subnode of the flash node and should be named
+ 'partitions'. This node should have the following property:
+ - compatible : (required) must be "fixed-partitions"
+ Partitions are then defined in subnodes of the partitions node.
+ 
+-For backwards compatibility partitions as direct subnodes of the mtd device are
++For backwards compatibility partitions as direct subnodes of the flash device are
+ supported. This use is discouraged.
+ NOTE: also for backwards compatibility, direct subnodes that have a compatible
+ string are not considered partitions, as they may be used for other bindings.
+ 
+ #address-cells & #size-cells must both be present in the partitions subnode of the
+-mtd device. There are two valid values for both:
++flash device. There are two valid values for both:
+ <1>: for partitions that require a single 32-bit cell to represent their
+      size/address (aka the value is below 4 GiB)
+ <2>: for partitions that require two 32-bit cells to represent their
+      size/address (aka the value is 4 GiB or greater).
+ 
+ Required properties:
+-- reg : The partition's offset and size within the mtd bank.
++- reg : The partition's offset and size within the flash
+ 
+ Optional properties:
+ - label : The label / name for this partition.  If omitted, the label is taken
 -- 
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+2.11.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
