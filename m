@@ -1,89 +1,64 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [RFC PATH] of/pci/dma: fix DMA configruation for PCI masters
-Date: Mon, 24 Apr 2017 09:20:40 -0500
-Message-ID: <CAL_JsqKg9YuDd21eaoDXKfLUqyD05nWz7=SqxTKAL-Dcpp6MZw@mail.gmail.com>
-References: <1492848487-11768-1-git-send-email-oza.oza@broadcom.com>
+From: Alex Deucher <alexdeucher@gmail.com>
+Subject: Re: [PATCH 2/3] drm/vc4: Don't try to initialize FBDEV if we're only
+ bound to V3D.
+Date: Mon, 24 Apr 2017 10:26:45 -0400
+Message-ID: <CADnq5_OEX2kzLJ5ABfBs6fZnmhFmJAPbg1XjJWx9Pt_pu=bTEA@mail.gmail.com>
+References: <20170418191157.18517-1-eric@anholt.net>
+ <20170418191157.18517-2-eric@anholt.net>
+ <CAKMK7uFSsA3c+wMfq_O9kSvu0cWLUA-bRqTHyryqi+1ZVeir_w@mail.gmail.com>
+ <8760i046zw.fsf@eliezer.anholt.net>
+ <CAKMK7uHBE1Qtjr2dM3U9edEfZ0mXVEjcw+hs8mF9ZkRP4Vcm=A@mail.gmail.com>
+ <87wpadtlsl.fsf@eliezer.anholt.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <1492848487-11768-1-git-send-email-oza.oza-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Oza Pawandeep <oza.oza-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Oza Pawandeep <oza.pawandeep-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux IOMMU <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org" <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <87wpadtlsl.fsf@eliezer.anholt.net>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Eric Anholt <eric@anholt.net>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Apr 22, 2017 at 3:08 AM, Oza Pawandeep <oza.oza-dY08KVG/lbpWk0Htik3J/w@public.gmane.org> wrote:
-> current device frmework and of framework integration assumes dma-ranges
-> in a way where memory-mapped devices define their dma-ranges.
-> dma-ranges: (child-bus-address, parent-bus-address, length).
->
-> but iproc based SOCs and other SOCs(suc as rcar) have PCI world dma-ranges.
-> dma-ranges = <0x43000000 0x00 0x00 0x00 0x00 0x80 0x00>;
->
-> of_dma_configure is specifically witten to take care of memory mapped devices.
-> but no implementation exists for pci to take care of pcie based memory ranges.
-> in fact pci world doesnt seem to define standard dma-ranges
->
-> this patch served following purposes
->
-> 1) exposes intrface to the pci host driver for thir inbound memory ranges
->
-> 2) provide an interface to callers such as of_dma_get_ranges.
-> so then the returned size get best possible (largest) dma_mask.
-> for e.g.
-> dma-ranges = <0x43000000 0x00 0x00 0x00 0x00 0x80 0x00>;
-> we should get dev->coherent_dma_mask=0x7fffffffff.
->
-> 3) this patch handles multiple inbound windows and dma-ranges.
-> it is left to the caller, how it wants to use them.
-> the new function returns the resources in a standard and unform way
->
-> 4) this way the callers of of_dma_get_ranges does not need to change.
-> and
->
-> 5) leaves scope of adding PCI flag handling for inbound memory
-> by the new function.
->
-> Signed-off-by: Oza Pawandeep <oza.oza-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
->
-> diff --git a/drivers/of/address.c b/drivers/of/address.c
-> index 02b2903..ec21191 100644
-> --- a/drivers/of/address.c
-> +++ b/drivers/of/address.c
-> @@ -6,6 +6,7 @@
->  #include <linux/ioport.h>
->  #include <linux/module.h>
->  #include <linux/of_address.h>
-> +#include <linux/of_pci.h>
->  #include <linux/pci.h>
->  #include <linux/pci_regs.h>
->  #include <linux/sizes.h>
-> @@ -829,10 +830,30 @@ int of_dma_get_range(struct device_node *np, u64 *dma_addr, u64 *paddr, u64 *siz
->         int len, naddr, nsize, pna;
->         int ret = 0;
->         u64 dmaaddr;
-> +       struct resource_entry *window;
-> +       LIST_HEAD(res);
->
->         if (!node)
->                 return -EINVAL;
->
-> +       if (strcmp(np->name, "pci")) {
-
-Using the name is not reliable though I did recently add a dtc check
-for this. Of course, 'pcie' is valid too (and probably should be used
-for what you are testing). type is what you want to use here. We
-already have bus matching function and bus specific handlers in
-address.c. Whatever solution you come up with should be integrated
-with the existing bus specific handlers.
-
-Rob
+T24gRnJpLCBBcHIgMjEsIDIwMTcgYXQgNjo1MyBQTSwgRXJpYyBBbmhvbHQgPGVyaWNAYW5ob2x0
+Lm5ldD4gd3JvdGU6Cj4gRGFuaWVsIFZldHRlciA8ZGFuaWVsQGZmd2xsLmNoPiB3cml0ZXM6Cj4K
+Pj4gT24gV2VkLCBBcHIgMTksIDIwMTcgYXQgNzo1NSBQTSwgRXJpYyBBbmhvbHQgPGVyaWNAYW5o
+b2x0Lm5ldD4gd3JvdGU6Cj4+PiBEYW5pZWwgVmV0dGVyIDxkYW5pZWxAZmZ3bGwuY2g+IHdyaXRl
+czoKPj4+PiBPbiBUdWUsIEFwciAxOCwgMjAxNyBhdCA5OjExIFBNLCBFcmljIEFuaG9sdCA8ZXJp
+Y0BhbmhvbHQubmV0PiB3cm90ZToKPj4+Pj4gVGhlIEZCREVWIGluaXRpYWxpemF0aW9uIHdvdWxk
+IHRocm93IGFuIGVycm9yIGluIGRtZXNnLCB3aGVuIHdlIGp1c3QKPj4+Pj4gd2FudCB0byBzaWxl
+bnRseSBub3QgaW5pdGlhbGl6ZSBmYmRldiBvbiBhIFYzRC1vbmx5IFZDNCBpbnN0YW5jZS4KPj4+
+Pj4KPj4+Pj4gU2lnbmVkLW9mZi1ieTogRXJpYyBBbmhvbHQgPGVyaWNAYW5ob2x0Lm5ldD4KPj4+
+Pgo+Pj4+IEhtLCB0aGlzIHNob3VsZG4ndCBiZSBhbiBlcnJvciByZWFsbHksIHlvdSBtaWdodCB3
+YW50IHRvIGhvdHBsdWcgbW9yZQo+Pj4+IGNvbm5lY3RvcnMgbGF0ZXIgb24uIFdoYXQgZXhhY3Rs
+eSBjb21wbGFpbnM/Cj4+Pgo+Pj4gZHJtX2ZiX2hlbHBlcl9pbml0KCkgdGhyb3dzIGFuIGVycm9y
+IGlmIHRoZSBwYXNzZWQgaW4gY29ubmVjdG9yIGNvdW50IGlzCj4+PiAwLCBzbyBkcm1fZmJfY21h
+X2hlbHBlcigpIHByaW50a3MgYW4gZXJyb3IuCj4+Cj4+IE9oLCBfdGhhdF8gdGhpbmcuIFRoZSBl
+cnJvciBpbiB0aGVyZSBpcyBjb3JyZWN0LCBidXQgKGFsbW9zdCkgZXZlcnlvbmUKPj4gZ2V0cyB0
+aGlzIHBhcmFtZXRlciB3cm9uZy4gVGhpcyBpc24ndCB0aGUgbWF4IG51bWJlciBvZiBjb25uZWN0
+b3JzIHRoZQo+PiBmYiBoZWxwZXIgd2lsbCBsaWdodCB1cCwgYnV0IGp1c3QgdGhlIG1heCBudW1i
+ZXIgb2YgY29ubmVjdG9ycyBfcGVyXwo+PiBjcnRjIHdoZW4gZHJpdmluZyBpbiBodyBjbG9uZSBt
+b2RlLiBUaGVyZSdzIHR3byBwcm9ibGVtcyB3aXRoIHRoYXQ6Cj4+IC0gZmIgaGVscGVycyBkb24n
+dCBzdXBwb3J0IGh3IGNsb25lIG1vZGUsIHdlIHNlbGVjdCAxOjEgY3J0Y3MgZm9yIGVhY2gKPj4g
+YWN0aXZlIGNvbm5lY3Rvcgo+PiAtIEkgbWVudGlvbmVkIHRoYXQgZXZlcnlvbmUgZ2V0cyB0aGlz
+IHdyb25nPwo+Pgo+PiBJZiB5b3UncmUgbW9kZXJhdGVseSBib3JlZCBpdCdkIGJlIGdyZWF0IHRv
+IG51a2UgdGhlIG1heF9jb25uZWN0b3IKPj4gYXJndW1lbnQgZnJvbSBkcm1fZmJfaGVscGVyX2lu
+aXQsIGFuZCBoYXJkLWNvZGUgaXQgdG8gMSAod2l0aCBhIGJpZwo+PiBjb21tZW50IGV4cGxhaW5p
+bmcgdGhhdCB0aGlzIG5lZWRzIHRvIGJlIGNoYW5nZWQsIHByb2JhYmx5IHdpdGgKPj4gZHluYW1p
+YyByZWFsbG9jYXRpb24sIG9uY2Ugc29tZW9uZSBnZXRzIGFyb3VuZCB0byBpbXBsZW1lbnRpbmcg
+aHcKPj4gY2xvbmUgbW9kZSkuCj4+Cj4+IElmIHlvdSdyZSBsZXNzIGJvcmVkLCBqdXN0IGhhcmRj
+b2RlIHRoaXMgdG8gMSBpbiB2YzQgYW5kIGRvbmUuIFBsdXMgYQo+PiBUT0RPLnJzdCBlbnRyeSB3
+b3VsZCBiZSBncmVhdCBpbiB0aGF0IGNhc2UuCj4KPiBJZiBJJ20gZHJpdmluZyBhIEdQVSB3aXRo
+IG5vIGRpc3BsYXkgc3Vic3lzdGVtIGF0IGFsbCwgaXQgc2VlbXMgbGlrZSBJCj4gc2hvdWxkbid0
+IGluaXRpYWxpemUgZmJkZXYgZm9yIGl0LCByaWdodD8KClRoYXQncyB3aGF0IHdlIGRvIGZvciBy
+YWRlb24vYW1kZ3B1IG9uIGh3IHdpdGhvdXQgZGlzcGxheSBibG9ja3MuCgpBbGV4Cl9fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5n
+IGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVk
+ZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
