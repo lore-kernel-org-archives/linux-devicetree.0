@@ -1,69 +1,58 @@
-From: icenowy-h8G6r0blFSE@public.gmane.org
-Subject: Re: Re: [PATCH v5 02/11] clk: sunxi-ng: add support for
- DE2 CCU
-Date: Mon, 24 Apr 2017 18:26:51 +0800
-Message-ID: <9def8a6b635880095e6b75e3a53af1f4@aosc.io>
-References: <20170423103754.50012-1-icenowy@aosc.io>
- <20170423103754.50012-3-icenowy@aosc.io>
- <20170424085109.p44bmzbyjkuf7ckv@lukather>
-Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
+From: Steve Twiss <stwiss.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
+Subject: RE: [PATCH V7 4/7] mfd: da9061: MFD core support
+Date: Mon, 24 Apr 2017 10:37:18 +0000
+Message-ID: <6ED8E3B22081A4459DAC7699F3695FB7018CD71434@SW-EX-MBX02.diasemi.com>
+References: <cover.1491230802.git.stwiss.opensource@diasemi.com>
+ <b39c8c3f42a01a00f93292c569e8d30ce69ff3ab.1491230802.git.stwiss.opensource@diasemi.com>
+ <20170404083902.ywo3pdxptgfcqvga@dell>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBDS6XAN6ZADRB3FF67DQKGQEN4XURSI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20170424085109.p44bmzbyjkuf7ckv@lukather>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170404083902.ywo3pdxptgfcqvga@dell>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: LINUX-KERNEL <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, DEVICETREE <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, LINUX-INPUT <linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LINUX-PM <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LINUX-WATCHDOG <linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Support Opensource <Support.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-=E5=9C=A8 2017-04-24 16:51=EF=BC=8CMaxime Ripard =E5=86=99=E9=81=93=EF=BC=
-=9A
-> Hi,
->=20
-> On Sun, Apr 23, 2017 at 06:37:45PM +0800, Icenowy Zheng wrote:
->> +static const struct of_device_id sunxi_de2_clk_ids[] =3D {
->> +	{
->> +		.compatible =3D "allwinner,sun8i-a83t-de2-clk",
->> +		.data =3D &sun8i_a83t_de2_clk_desc,
->> +	},
->> +	{
->> +		.compatible =3D "allwinner,sun50i-h5-de2-clk",
->> +		.data =3D &sun50i_a64_de2_clk_desc,
->> +	},
->> +	/*
->> +	 * The Allwinner A64 SoC needs some bit to be poke in syscon to make
->> +	 * DE2 really working.
->> +	 * So there's currently no A64 compatible here.
->> +	 * H5 shares the same reset line with A64, so here H5 is using the
->> +	 * clock description of A64.
->> +	 */
->> +	{ }
->> +};
->=20
-> So that A64 driver would require more than just what you defined in
-> the binding in order to operate?
-
-Yes. When trying to do A64 driver, I will send out first a patch to
-add the needed binding bit.
-
->=20
-> Maxime
->=20
-> --
-> Maxime Ripard, Free Electrons
-> Embedded Linux and Kernel engineering
-> http://free-electrons.com
-
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+T24gMDQgQXByaWwgMjAxNyAwOTozOSwgTGVlIEpvbmVzIHdyb3RlOg0KPiBTdWJqZWN0OiBSZTog
+W1BBVENIIFY3IDQvN10gbWZkOiBkYTkwNjE6IE1GRCBjb3JlIHN1cHBvcnQNCj4gDQo+IE9uIE1v
+biwgMDMgQXByIDIwMTcsIFN0ZXZlIFR3aXNzIHdyb3RlOg0KPiA+IEZyb206IFN0ZXZlIFR3aXNz
+IDxzdHdpc3Mub3BlbnNvdXJjZUBkaWFzZW1pLmNvbT4NCj4gPiBNRkQgc3VwcG9ydCBmb3IgREE5
+MDYxIGlzIHByb3ZpZGVkIGFzIHBhcnQgb2YgdGhlIERBOTA2MiBkZXZpY2UgZHJpdmVyLg0KPiA+
+DQo+ID4gVGhlIHJlZ2lzdGVycyBoZWFkZXIgZmlsZSBhZGRzIHR3byBuZXcgY2hpcCB2YXJpYW50
+IElEcyBkZWZpbmVkIGluIERBOTA2MQ0KPiA+IGFuZCBEQTkwNjIgaGFyZHdhcmUuIFRoZSBjb3Jl
+IGhlYWRlciBmaWxlIGFkZHMgbmV3IHNvZnR3YXJlIGVudW1lcmF0aW9ucw0KPiA+IGZvciBsaXN0
+aW5nIHRoZSB2YWxpZCBEQTkwNjEgSVJRcyBhbmQgYSBkYTkwNjJfY29tcGF0aWJsZV90eXBlcyBl
+bnVtZXJhdGlvbg0KPiA+IGZvciBkaXN0aW5ndWlzaGluZyBiZXR3ZWVuIERBOTA2MS82MiBkZXZp
+Y2VzIGluIHNvZnR3YXJlLg0KPiA+DQo+ID4gVGhlIGNvcmUgc291cmNlIGNvZGUgYWRkcyBhIG5l
+dyAuY29tcGF0aWJsZSBvZl9kZXZpY2VfaWQgZW50cnkuIFRoaXMgaXMNCj4gPiBleHRlbmRlZCBm
+cm9tIERBOTA2MiB0byBzdXBwb3J0IGJvdGggImRsZyxkYTkwNjEiIGFuZCAiZGxnLGRhOTA2MiIu
+IFRoZQ0KPiA+IC5kYXRhIGVudHJ5IG5vdyBob2xkcyBhIHJlZmVyZW5jZSB0byB0aGUgZW51bWVy
+YXRlZCBkZXZpY2UgdHlwZS4NCj4gPg0KPiA+IEEgbmV3IHJlZ21hcF9pcnFfY2hpcCBtb2RlbCBp
+cyBhZGRlZCBmb3IgREE5MDYxIGFuZCB0aGlzIHN1cHBvcnRzIHRoZSBuZXcNCj4gPiBsaXN0IG9m
+IHJlZ21hcF9pcnEgZW50cmllcy4gQSBuZXcgbWZkX2NlbGwgZGE5MDYxX2RldnNbXSBhcnJheSBs
+aXN0cyB0aGUNCj4gPiBuZXcgc3ViIHN5c3RlbSBjb21wb25lbnRzIGZvciBEQTkwNjEuIFN1cHBv
+cnQgaXMgYWRkZWQgZm9yIGEgbmV3IERBOTA2MQ0KPiA+IHJlZ21hcF9jb25maWcgd2hpY2ggbGlz
+dHMgdGhlIGNvcnJlY3QgcmVhZGFibGUsIHdyaXRhYmxlIGFuZCB2b2xhdGlsZQ0KPiA+IHJhbmdl
+cyBmb3IgdGhpcyBjaGlwLg0KPiA+DQo+ID4gVGhlIHByb2JlIGZ1bmN0aW9uIHVzZXMgdGhlIGRl
+dmljZSB0cmVlIGNvbXBhdGlibGUgc3RyaW5nIHRvIHN3aXRjaCBvbiB0aGUNCj4gPiBkYTkwNjJf
+Y29tcGF0aWJsZV90eXBlcyBhbmQgY29uZmlndXJlIHRoZSBjb3JyZWN0IG1mZCBjZWxscywgaXJx
+IGNoaXAgYW5kDQo+ID4gcmVnbWFwIGNvbmZpZy4NCj4gPg0KPiA+IEtjb25maWcgaXMgdXBkYXRl
+ZCB0byByZWZsZWN0IHN1cHBvcnQgZm9yIERBOTA2MSBhbmQgREE5MDYyIFBNSUNzLg0KPiA+DQo+
+ID4gU2lnbmVkLW9mZi1ieTogU3RldmUgVHdpc3MgPHN0d2lzcy5vcGVuc291cmNlQGRpYXNlbWku
+Y29tPg0KPiANCj4gQWgsIGhlcmUgaXQgaXMuDQo+IA0KPiBBcHBsaWVkLCB0aGFua3MuDQoNCkhp
+IExlZSwNCg0KSSBub3RpY2VkIHRoZSBEQTkwNjEgY29yZSBzdXBwb3J0IGhhcyBiZWVuIGFkZGVk
+IGludG8gbGludXgtbmV4dCwgaG93ZXZlcg0KdGhlIGNvbW1pdCBtZXNzYWdlIHdhcyBjaGFuZ2Vk
+IGZyb20gdGhlIG9yaWdpbmFsIHRpdGxlOg0KDQoibWZkOiBkYTkwNjE6IE1GRCBjb3JlIHN1cHBv
+cnQiDQoNCnRvIGFkZCB0aGUgbWlzdGFrZToNCg0KIm1mZDogQWRkIHN1cHBmb3IgZm9yIERBOTA2
+MSINCg0KaHR0cHM6Ly9naXQua2VybmVsLm9yZy9wdWIvc2NtL2xpbnV4L2tlcm5lbC9naXQvbmV4
+dC9saW51eC1uZXh0LmdpdC9jb21taXQvP2lkPWQzZmUwODA2MDI1Y2FjZGFiMTQ2MmQ1NzA0ZTFj
+OThhYjlkYjQ1NjQNCg0KQ2FuIHRoaXMgYmUgZml4ZWQgcGxlYXNlPw0KVGhpcyBwYXRjaCBoYXMg
+bm90IGJlZW4gdXBzdHJlYW1lZCBpbnRvIGxpbnV4LW1haW5saW5lIGFuZCBpcyBzdGlsbCBpbiBs
+aW51eC1uZXh0Lg0KDQpSZWdhcmRzLA0KU3RldmUNCg==
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
