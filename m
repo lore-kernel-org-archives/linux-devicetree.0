@@ -1,166 +1,117 @@
-From: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH V2 3/4] mtd: partitions: add of_match_table parser
- matching
-Date: Mon, 24 Apr 2017 22:53:49 +0200
-Message-ID: <931e8f81-dd42-d0f9-1589-c61927252204@gmail.com>
-References: <20170420135731.13272-2-zajec5@gmail.com>
- <20170424124120.31613-1-zajec5@gmail.com>
- <20170424124120.31613-4-zajec5@gmail.com>
- <CAOiHx=njT+y6VqTbqRFQZ4rJNW6A8XsngTe2WRp=qND9c3ySpA@mail.gmail.com>
+From: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+Subject: Re: [RFC v2 1/2] dt-bindings: add mmio-based syscon mux controller DT
+ bindings
+Date: Mon, 24 Apr 2017 23:04:31 +0200
+Message-ID: <7507360c-b741-1fdd-7dbf-397eee597b23@axentia.se>
+References: <1493050349-25533-1-git-send-email-p.zabel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAOiHx=njT+y6VqTbqRFQZ4rJNW6A8XsngTe2WRp=qND9c3ySpA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <1493050349-25533-1-git-send-email-p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonas Gorski <jonas.gorski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, MTD Maling List <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>, Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 04/24/2017 05:31 PM, Jonas Gorski wrote:
-> On 24 April 2017 at 14:41, Rafał Miłecki <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->>
->> Partition parsers can now provide an of_match_table to enable
->> flash<-->parser matching via device tree.
->>
->> This support is currently limited to built-in parsers as it uses
->> request_module() and friends. This should be sufficient for most cases
->> though as compiling parsers as modules isn't a common choice.
->>
->> Signed-off-by: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> Signed-off-by: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
->> Acked-by: Brian Norris <computersforpeac-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> ---
->> This is based on Brian's patches:
->> [RFC PATCH 4/7] mtd: add of_match_mtd_parser() and of_mtd_match_mtd_parser() helpers
->> [RFC PATCH 6/7] RFC: mtd: partitions: enable of_match_table matching
->>
->> V1: Put helpers in mtdpart.c instead of drivers/of/of_mtd.c
->>     Merge helpers into a single of_mtd_match_mtd_parser
->> ---
->>  drivers/mtd/mtdpart.c          | 47 ++++++++++++++++++++++++++++++++++++++++++
->>  include/linux/mtd/partitions.h |  1 +
->>  2 files changed, 48 insertions(+)
->>
->> diff --git a/drivers/mtd/mtdpart.c b/drivers/mtd/mtdpart.c
->> index 73c52f1a2e4c..d0cb1a892ed2 100644
->> --- a/drivers/mtd/mtdpart.c
->> +++ b/drivers/mtd/mtdpart.c
->> @@ -861,6 +861,41 @@ static int mtd_part_do_parse(struct mtd_part_parser *parser,
->>         return ret;
->>  }
->>
->> +static bool of_mtd_match_mtd_parser(struct mtd_info *mtd,
->> +                                   struct mtd_part_parser *parser)
->> +{
->> +       struct device_node *np;
->> +       bool ret;
->> +
->> +       np = mtd_get_of_node(mtd);
->> +       np = of_get_child_by_name(np, "partitions");
->> +
->> +       ret = !!of_match_node(parser->of_match_table, np);
->> +
->> +       of_node_put(np);
->> +
->> +       return ret;
->> +}
->> +
->> +static struct mtd_part_parser *mtd_part_get_parser_by_of(struct mtd_info *mtd)
->> +{
->> +       struct mtd_part_parser *p, *ret = NULL;
->> +
->> +       spin_lock(&part_parser_lock);
->> +
->> +       list_for_each_entry(p, &part_parsers, list) {
->> +               if (of_mtd_match_mtd_parser(mtd, p) &&
->> +                               try_module_get(p->owner)) {
->> +                       ret = p;
->> +                       break;
->> +               }
->> +       }
->
->
-> Hm, maybe iterate over the compatibles, so parsers matching the most
-> specific compatible get precedence in case there is more than one
-> compatible? Currently it will match the first one that matches any
-> compatible, and registration order of parsers can change that. I'm
-> thinking of parsers that partially rely on fixed, unprobable layouts,
-> so can use "fixed-partitions" as a fallback compatible.
->
-> E.g. having something like this
->
-> partitions {
->         compatible = "sample,custom-layout", "fixed-partitions";
->
->         bootloader@0 { ...  };
->
->         firmware@10000 { .... }; /* will be split by the parser */
->
->         extra@780000 { .... }; /* partition the on-flash format can't specify */
-> };
->
-> Where you will still be able to write an image raw to the image
-> partition even if the "custom-layout"-parser isn't present/enabled,
-> but if it is present, it should always be used.
+On 2017-04-24 18:12, Philipp Zabel wrote:
+> This adds device tree binding documentation for mmio-based syscon
+> multiplexers controlled by a single bitfield in a syscon register
+> range.
 
-I see the point, but I'm afraid we're lacking some DT helper for this. See
-below for the function I wrote (and I'm not proud of) - compile tested only.
+Single bitfield?
 
-I think we would need a new helper similar to the of_match_node:
-1) Taking const struct of_device_id *matches
-2) Taking const struct device_node *node
-but returning a score of the best match.
+> 
+> Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> ---
+> Changes since v1:
+>  - Replaced reg, bit-mask, and bit-shift properties with mux-reg-masks array
+>    to allow defining multiple mux bit-fields per mmio-mux instance.
+>  - Changed mux-control-cells value to <1>, the cell value is an index into
+>    the mux-reg-masks array.
+>  - Replaced idle-state with idle-states array.
+> ---
+>  Documentation/devicetree/bindings/mux/mmio-mux.txt | 60 ++++++++++++++++++++++
+>  1 file changed, 60 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mux/mmio-mux.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/mux/mmio-mux.txt b/Documentation/devicetree/bindings/mux/mmio-mux.txt
+> new file mode 100644
+> index 0000000000000..99282fa761c55
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mux/mmio-mux.txt
+> @@ -0,0 +1,60 @@
+> +MMIO register bitfield-based multiplexer controller bindings
+> +
+> +Define register bitfields to be used to control multiplexers. The parent
+> +device tree node must be a syscon node to provide register access.
+> +
+> +Required properties:
+> +- compatible : "mmio-mux"
+> +- #mux-control-cells : <1>
+> +- mux-reg-masks : an array of register offset and pre-shifted bitfield mask
+> +                  pairs, each describing a single mux control.
+> +* Standard mux-controller bindings as decribed in mux-controller.txt
+> +
+> +Optional properties:
+> +- idle-states : if present, the state the muxes will have when idle. The
+> +		special state MUX_IDLE_AS_IS is the default.
+> +
+> +The multiplexer state is defined as the value of the bitfield described
+> +by the reg, bit-mask, and bit-shift properties, accessed through the parent
+> +syscon.
 
-DT guys: any comment on this? Rob?
+This paragraph needs updating.
 
-Would this be acceptable to:
-1) Take this patch as is as Linux current doesn't support other bindings
-2) Work on DT helper + mtd modification in a separated patchset?
+> +
+> +Example:
+> +
+> +	syscon {
+> +		compatible = "syscon";
+> +
+> +		mux: mux-controller@3 {
 
-static struct mtd_part_parser *mtd_part_get_parser_by_of(struct mtd_info *mtd)
-{
-	struct mtd_part_parser *p, *ret = NULL;
-	struct device_node *np;
-	struct property *prop;
-	const char *cp;
+You shouldn't do ...@3 if you don't have a reg property.
 
-	np = mtd_get_of_node(mtd);
-	np = of_get_child_by_name(np, "partitions");
-	if (!np)
-		return NULL;
+Cheers,
+peda
 
-	spin_lock(&part_parser_lock);
+> +			compatible = "mmio-mux";
+> +			#mux-control-cells = <1>;
+> +
+> +			mux-reg-masks = <0x3 0x30>, /* 0: reg 0x3, bits 5:4 */
+> +					<0x3 0x40>, /* 1: reg 0x3, bit 6 */
+> +			idle-states = <MUX_IDLE_AS_IS>, <0>;
+> +		};
+> +	};
+> +
+> +	video-mux {
+> +		compatible = "video-mux";
+> +		mux-controls = <&mux 0>;
+> +
+> +		ports {
+> +			/* inputs 0..3 */
+> +			port@0 {
+> +				reg = <0>;
+> +			};
+> +			port@1 {
+> +				reg = <1>;
+> +			};
+> +			port@2 {
+> +				reg = <2>;
+> +			};
+> +			port@3 {
+> +				reg = <3>;
+> +			};
+> +
+> +			/* output */
+> +			port@4 {
+> +				reg = <4>;
+> +			};
+> +		};
+> +	};
+> 
 
-	of_property_for_each_string(np, "compatible", prop, cp) {
-		list_for_each_entry(p, &part_parsers, list) {
-			const struct of_device_id *matches;
-
-			for (matches = p->of_match_table;
-			     matches->name[0] || matches->type[0] || matches->compatible[0];
-			     matches++) {
-				if (!of_compat_cmp(cp, matches->compatible, strlen(matches->compatible)) &&
-				    try_module_get(p->owner)) {
-					ret = p;
-					break;
-				}
-			}
-
-			if (ret)
-				break;
-		}
-
-		if (ret)
-			break;
-	}
-
-	spin_unlock(&part_parser_lock);
-
-	of_node_put(np);
-
-	return ret;
-}
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
