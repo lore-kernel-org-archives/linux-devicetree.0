@@ -1,91 +1,55 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [GIT PULL] Immutable branch between MFD and IIO due
- for the v4.12 merge window
-Date: Mon, 24 Apr 2017 12:02:39 +0100
-Message-ID: <20170424110239.cv5nylgvymhwvg4w@dell>
-References: <20170404063441.7656-1-quentin.schulz@free-electrons.com>
- <20170411100528.2zif3fyi7uoyw33n@dell>
- <0f30afec-ff42-e125-96d6-35893324f7ef@kernel.org>
-Reply-To: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Subject: Re: [PATCH RFC 1/7] clk: samsung: Add enable/disable operation for
+ PLL36XX clocks
+Date: Mon, 24 Apr 2017 13:12:22 +0200
+Message-ID: <017b3ec8-c185-c29a-2944-12f519b461fe@samsung.com>
+References: <1492795191-31298-1-git-send-email-s.nawrocki@samsung.com>
+ <CGME20170421172016epcas5p342c16e1219c1205a44a84eaa770ad5ac@epcas5p3.samsung.com>
+ <1492795191-31298-2-git-send-email-s.nawrocki@samsung.com>
+ <20170422152236.tbf4iuoadqrvoc2n@kozik-lap>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBDA7X7F2WUEBBU5W67DQKGQEFN5TPOA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <0f30afec-ff42-e125-96d6-35893324f7ef-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, icenowy-ymACFijhrKM@public.gmane.org, liam-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-reply-to: <20170422152236.tbf4iuoadqrvoc2n@kozik-lap>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-samsung-soc@vger.kernel.org, javier@osg.samsung.com, b.zolnierkie@samsung.com, sw0312.kim@samsung.com, dri-devel@lists.freedesktop.org, cw00.choi@samsung.com, broonie@kernel.org, robh+dt@kernel.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 14 Apr 2017, Jonathan Cameron wrote:
-
-> On 11/04/17 11:05, Lee Jones wrote:
-> > Enjoy!
-> >=20
-> > The following changes since commit c1ae3cfa0e89fa1a7ecc4c99031f5e9ae99d=
-9201:
-> >=20
-> >   Linux 4.11-rc1 (2017-03-05 12:59:56 -0800)
-> >=20
-> > are available in the git repository at:
-> >=20
-> >   git://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git ib-mfd-iio-=
-v4.12
-> >=20
-> > for you to fetch changes up to f2499ab450d3052097ba53a7d763f767935c0c59=
-:
-> >=20
-> >   iio: adc: add support for X-Powers AXP20X and AXP22X PMICs ADCs (2017=
--04-11 11:02:33 +0100)
-> >=20
-> > ----------------------------------------------------------------
-> > Immutable branch between MFD and IIO due for the v4.12 merge window
-> >=20
-> > ----------------------------------------------------------------
-> > Quentin Schulz (1):
-> >       iio: adc: add support for X-Powers AXP20X and AXP22X PMICs ADCs
-> >=20
-> >  drivers/iio/adc/Kconfig      |  10 +
-> >  drivers/iio/adc/Makefile     |   1 +
-> >  drivers/iio/adc/axp20x_adc.c | 617 +++++++++++++++++++++++++++++++++++=
-++++++++
-> >  3 files changed, 628 insertions(+)
-> >  create mode 100644 drivers/iio/adc/axp20x_adc.c
-> >=20
-> Hi Lee,=20
->=20
-> Thanks for doing this, but the reason it was going to go through your
-> tree in the first place was a dependency on
-> commit 4707274714ef ("mfd: axp20x: Correct name of temperature data ADC r=
-egisters")
->=20
-> Not present in the immutable branch.
->=20
-> There isn't much time for anything else going on around this driver thoug=
-h
-> so other than a possible merge conflict on the Kconfig and Makefile shoul=
-dn't
-> matter if this just goes through mfd. (famous last words ;)
-
-It's not as though you committed it to text and sent it out to a
-public mailing list for us all to reference though is it?  Doh!
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
-
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+T24gMDQvMjIvMjAxNyAwNToyMiBQTSwgS3J6eXN6dG9mIEtvemxvd3NraSB3cm90ZToKWy4uLl0K
+Pj4gK3N0YXRpYyB2b2lkIHNhbXN1bmdfcGxsM3h4eF9kaXNhYmxlKHN0cnVjdCBjbGtfaHcgKmh3
+KQo+PiArewo+PiArCXN0cnVjdCBzYW1zdW5nX2Nsa19wbGwgKnBsbCA9IHRvX2Nsa19wbGwoaHcp
+Owo+PiArCXUzMiB0bXA7Cj4+ICsKPj4gKwl0bXAgPSByZWFkbF9yZWxheGVkKHBsbC0+Y29uX3Jl
+Zyk7Cj4+ICsJdG1wIHw9IEJJVChwbGwtPmVuYWJsZV9vZmZzKTsKPgo+IEkgdGhpbmsgeW91IG1l
+YW50IGhlcmU6Cj4gCXRtcCAmPSB+QklUKCkKClllcywgSSBtZXNzZWQgaXQgdXAgd2hpbGUgY29w
+eS9wYXN0aW5nIGZyb20gc2Ftc3VuZ19wbGwzeHh4X2VuYWJsZSgpLgoKPj4gKwl3cml0ZWxfcmVs
+YXhlZCh0bXAsIHBsbC0+Y29uX3JlZyk7Cj4+ICt9Cgo+PiAgc3RhdGljIHVuc2lnbmVkIGxvbmcg
+c2Ftc3VuZ19wbGwzNnh4X3JlY2FsY19yYXRlKHN0cnVjdCBjbGtfaHcgKmh3LAo+PiAgCQkJCXVu
+c2lnbmVkIGxvbmcgcGFyZW50X3JhdGUpCj4+IEBAIC0zNTQsMTAgKzM1OSwxMiBAQCBzdGF0aWMg
+aW50IHNhbXN1bmdfcGxsMzZ4eF9zZXRfcmF0ZShzdHJ1Y3QgY2xrX2h3ICpodywgdW5zaWduZWQg
+bG9uZyBkcmF0ZSwKPj4gIAl3cml0ZWxfcmVsYXhlZChwbGxfY29uMSwgcGxsLT5jb25fcmVnICsg
+NCk7Cj4+Cj4+ICAJLyogd2FpdF9sb2NrX3RpbWUgKi8KPj4gLQlkbyB7Cj4+IC0JCWNwdV9yZWxh
+eCgpOwo+PiAtCQl0bXAgPSByZWFkbF9yZWxheGVkKHBsbC0+Y29uX3JlZyk7Cj4+IC0JfSB3aGls
+ZSAoISh0bXAgJiAoMSA8PCBQTEwzNlhYX0xPQ0tfU1RBVF9TSElGVCkpKTsKCkkgd2lsbCBhZGQg
+YSBjb21tZW50IGhlcmUgbGlrZToKLyogV2FpdCB1bnRpbCB0aGUgUExMIGlzIGxvY2tlZCBpZiBp
+dCBpcyBlbmFibGVkLiAqLwoKPj4gKwlpZiAocGxsX2NvbjAgJiBCSVQocGxsLT5lbmFibGVfb2Zm
+cykpIHsKPgo+IFdoeSB0aGlzIGFkZGl0aW9uYWwgaWYoKSBpcyBuZWVkZWQ/CgpUaGUgUExMIHdp
+bGwgbmV2ZXIgdHJhbnNpdGlvbiB0byBhIGxvY2tlZCBzdGF0ZSBpZiBpdCBpcyBkaXNhYmxlZCwg
+d2l0aG91dAp0aGlzIHRlc3Qgd2Ugd291bGQgZW5kIHVwIHdpdGggYW4gaW5kZWZpbml0ZSBsb29w
+IGJlbG93LgoKPj4gKwkJZG8gewo+PiArCQkJY3B1X3JlbGF4KCk7Cj4+ICsJCQl0bXAgPSByZWFk
+bF9yZWxheGVkKHBsbC0+Y29uX3JlZyk7Cj4+ICsJCX0gd2hpbGUgKCEodG1wICYgQklUKFBMTDM2
+WFhfTE9DS19TVEFUX1NISUZUKSkpOwo+Cj4gVG8gYmUgY29uc2lzdGVudDoKPiBCSVQocGxsLT5s
+b2NrX29mZnMpPwoKWWVzLCBmaXhlZC4KClRoYW5rcyBmb3IgeW91ciByZXZpZXchCgotLQpSZWdh
+cmRzLApTeWx3ZXN0ZXIKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Au
+b3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRl
+dmVsCg==
