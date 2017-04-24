@@ -1,77 +1,166 @@
-From: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH V4] ARM64: dts: hi6220-hikey: Add clock binding for the pmic mfd
-Date: Mon, 24 Apr 2017 22:40:22 +0200
-Message-ID: <1493066439-6889-1-git-send-email-daniel.lezcano@linaro.org>
+From: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH V2 3/4] mtd: partitions: add of_match_table parser
+ matching
+Date: Mon, 24 Apr 2017 22:53:49 +0200
+Message-ID: <931e8f81-dd42-d0f9-1589-c61927252204@gmail.com>
+References: <20170420135731.13272-2-zajec5@gmail.com>
+ <20170424124120.31613-1-zajec5@gmail.com>
+ <20170424124120.31613-4-zajec5@gmail.com>
+ <CAOiHx=njT+y6VqTbqRFQZ4rJNW6A8XsngTe2WRp=qND9c3ySpA@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAOiHx=njT+y6VqTbqRFQZ4rJNW6A8XsngTe2WRp=qND9c3ySpA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org
-Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "moderated list:ARM/HISILICON
-        SOC..." <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Jonas Gorski <jonas.gorski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, MTD Maling List <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The hi655x PMIC provides the regulators but also a clock. The latter is missing
-in the definition and in the DT, thus it is no possible to enable the WiFi which
-depends on this clock.
+On 04/24/2017 05:31 PM, Jonas Gorski wrote:
+> On 24 April 2017 at 14:41, Rafał Miłecki <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>> From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>>
+>> Partition parsers can now provide an of_match_table to enable
+>> flash<-->parser matching via device tree.
+>>
+>> This support is currently limited to built-in parsers as it uses
+>> request_module() and friends. This should be sufficient for most cases
+>> though as compiling parsers as modules isn't a common choice.
+>>
+>> Signed-off-by: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> Signed-off-by: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+>> Acked-by: Brian Norris <computersforpeac-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> ---
+>> This is based on Brian's patches:
+>> [RFC PATCH 4/7] mtd: add of_match_mtd_parser() and of_mtd_match_mtd_parser() helpers
+>> [RFC PATCH 6/7] RFC: mtd: partitions: enable of_match_table matching
+>>
+>> V1: Put helpers in mtdpart.c instead of drivers/of/of_mtd.c
+>>     Merge helpers into a single of_mtd_match_mtd_parser
+>> ---
+>>  drivers/mtd/mtdpart.c          | 47 ++++++++++++++++++++++++++++++++++++++++++
+>>  include/linux/mtd/partitions.h |  1 +
+>>  2 files changed, 48 insertions(+)
+>>
+>> diff --git a/drivers/mtd/mtdpart.c b/drivers/mtd/mtdpart.c
+>> index 73c52f1a2e4c..d0cb1a892ed2 100644
+>> --- a/drivers/mtd/mtdpart.c
+>> +++ b/drivers/mtd/mtdpart.c
+>> @@ -861,6 +861,41 @@ static int mtd_part_do_parse(struct mtd_part_parser *parser,
+>>         return ret;
+>>  }
+>>
+>> +static bool of_mtd_match_mtd_parser(struct mtd_info *mtd,
+>> +                                   struct mtd_part_parser *parser)
+>> +{
+>> +       struct device_node *np;
+>> +       bool ret;
+>> +
+>> +       np = mtd_get_of_node(mtd);
+>> +       np = of_get_child_by_name(np, "partitions");
+>> +
+>> +       ret = !!of_match_node(parser->of_match_table, np);
+>> +
+>> +       of_node_put(np);
+>> +
+>> +       return ret;
+>> +}
+>> +
+>> +static struct mtd_part_parser *mtd_part_get_parser_by_of(struct mtd_info *mtd)
+>> +{
+>> +       struct mtd_part_parser *p, *ret = NULL;
+>> +
+>> +       spin_lock(&part_parser_lock);
+>> +
+>> +       list_for_each_entry(p, &part_parsers, list) {
+>> +               if (of_mtd_match_mtd_parser(mtd, p) &&
+>> +                               try_module_get(p->owner)) {
+>> +                       ret = p;
+>> +                       break;
+>> +               }
+>> +       }
+>
+>
+> Hm, maybe iterate over the compatibles, so parsers matching the most
+> specific compatible get precedence in case there is more than one
+> compatible? Currently it will match the first one that matches any
+> compatible, and registration order of parsers can change that. I'm
+> thinking of parsers that partially rely on fixed, unprobable layouts,
+> so can use "fixed-partitions" as a fallback compatible.
+>
+> E.g. having something like this
+>
+> partitions {
+>         compatible = "sample,custom-layout", "fixed-partitions";
+>
+>         bootloader@0 { ...  };
+>
+>         firmware@10000 { .... }; /* will be split by the parser */
+>
+>         extra@780000 { .... }; /* partition the on-flash format can't specify */
+> };
+>
+> Where you will still be able to write an image raw to the image
+> partition even if the "custom-layout"-parser isn't present/enabled,
+> but if it is present, it should always be used.
 
-The hi655x's clock has been added and the hi655x multifunction driver has
-updated with a clock-cell.
+I see the point, but I'm afraid we're lacking some DT helper for this. See
+below for the function I wrote (and I'm not proud of) - compile tested only.
 
-This patch adds the clock-cells for the PMIC in the DT and updates the
-documentation.
+I think we would need a new helper similar to the of_match_node:
+1) Taking const struct of_device_id *matches
+2) Taking const struct device_node *node
+but returning a score of the best match.
 
-Signed-off-by: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
----
- Changelog:
-	v4:
-	   - Added Acked-by's
-	   - Updated the commit message with a better description
----
- Documentation/devicetree/bindings/mfd/hisilicon,hi655x.txt | 6 ++++++
- arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts             | 1 +
- 2 files changed, 7 insertions(+)
+DT guys: any comment on this? Rob?
 
-diff --git a/Documentation/devicetree/bindings/mfd/hisilicon,hi655x.txt b/Documentation/devicetree/bindings/mfd/hisilicon,hi655x.txt
-index 0548569..9630ac0 100644
---- a/Documentation/devicetree/bindings/mfd/hisilicon,hi655x.txt
-+++ b/Documentation/devicetree/bindings/mfd/hisilicon,hi655x.txt
-@@ -16,6 +16,11 @@ Required properties:
- - reg:                  Base address of PMIC on Hi6220 SoC.
- - interrupt-controller: Hi655x has internal IRQs (has own IRQ domain).
- - pmic-gpios:           The GPIO used by PMIC IRQ.
-+- #clock-cells:		From common clock binding; shall be set to 0
-+
-+Optional properties:
-+- clock-output-names: From common clock binding to override the
-+  default output clock name
- 
- Example:
- 	pmic: pmic@f8000000 {
-@@ -24,4 +29,5 @@ Example:
- 		interrupt-controller;
- 		#interrupt-cells = <2>;
- 		pmic-gpios = <&gpio1 2 GPIO_ACTIVE_HIGH>;
-+		#clock-cells = <0>;
- 	}
-diff --git a/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts b/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
-index dba3c13..e0496f7 100644
---- a/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
-+++ b/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
-@@ -325,6 +325,7 @@
- 	pmic: pmic@f8000000 {
- 		compatible = "hisilicon,hi655x-pmic";
- 		reg = <0x0 0xf8000000 0x0 0x1000>;
-+		#clock-cells = <0>;
- 		interrupt-controller;
- 		#interrupt-cells = <2>;
- 		pmic-gpios = <&gpio1 2 GPIO_ACTIVE_HIGH>;
--- 
-1.9.1
+Would this be acceptable to:
+1) Take this patch as is as Linux current doesn't support other bindings
+2) Work on DT helper + mtd modification in a separated patchset?
 
+static struct mtd_part_parser *mtd_part_get_parser_by_of(struct mtd_info *mtd)
+{
+	struct mtd_part_parser *p, *ret = NULL;
+	struct device_node *np;
+	struct property *prop;
+	const char *cp;
+
+	np = mtd_get_of_node(mtd);
+	np = of_get_child_by_name(np, "partitions");
+	if (!np)
+		return NULL;
+
+	spin_lock(&part_parser_lock);
+
+	of_property_for_each_string(np, "compatible", prop, cp) {
+		list_for_each_entry(p, &part_parsers, list) {
+			const struct of_device_id *matches;
+
+			for (matches = p->of_match_table;
+			     matches->name[0] || matches->type[0] || matches->compatible[0];
+			     matches++) {
+				if (!of_compat_cmp(cp, matches->compatible, strlen(matches->compatible)) &&
+				    try_module_get(p->owner)) {
+					ret = p;
+					break;
+				}
+			}
+
+			if (ret)
+				break;
+		}
+
+		if (ret)
+			break;
+	}
+
+	spin_unlock(&part_parser_lock);
+
+	of_node_put(np);
+
+	return ret;
+}
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
