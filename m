@@ -1,401 +1,211 @@
-From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/2] of: Add unit tests for applying overlays.
-Date: Mon, 24 Apr 2017 12:16:46 -0500
-Message-ID: <CAL_JsqK3-MgkqBo6mGbs9dmo8Lwwx9dYW4SKyGjUDt_7wSecnA@mail.gmail.com>
-References: <1493012595-696-1-git-send-email-frowand.list@gmail.com> <1493012595-696-3-git-send-email-frowand.list@gmail.com>
+From: Yang Li <pku.leo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] arm64: dts: freescale: ls2081ardb: Add DTS support for
+ NXP LS2081ARDB
+Date: Mon, 24 Apr 2017 12:20:32 -0500
+Message-ID: <CADRPPNRM9Orc=RtRJstA-qpCcdCvrgab0n3d=CC7i6O7ua8nNg@mail.gmail.com>
+References: <1492663067-2364-1-git-send-email-priyanka.jain@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1493012595-696-3-git-send-email-frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <1492663067-2364-1-git-send-email-priyanka.jain-3arQi8VN3Tc@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Stephen Boyd <stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Michal Marek <mmarek-IBi9RG/b67k@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kbuild mailing list <linux-kbuild-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Priyanka Jain <priyanka.jain-3arQi8VN3Tc@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Li Yang <leoyang.li-3arQi8VN3Tc@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 24, 2017 at 12:43 AM,  <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> From: Frank Rowand <frank.rowand-7U/KSKJipcs@public.gmane.org>
+We probably should rename the freescale folder to nxp with a separate
+patch, but it is better to stop using the name in the patch title
+right now.
+
+On Wed, Apr 19, 2017 at 11:37 PM, Priyanka Jain <priyanka.jain-3arQi8VN3Tc@public.gmane.org> wrote:
+> This patch add support for NXP LS2081ARDB board which has
+> LS2081A SoC.
 >
-> Existing overlay unit tests examine individual pieces of the overlay
-> code.  The new tests target the entire process of applying an overlay.
+> LS2081A SoC is 40-pin derivative of LS2088A SoC
+> So, from functional perspective both are same.
+> Hence,ls2088a SoC dtsi files are included from ls2081ARDB dts
 >
-> Signed-off-by: Frank Rowand <frank.rowand-7U/KSKJipcs@public.gmane.org>
+> Signed-off-by: Priyanka Jain <priyanka.jain-3arQi8VN3Tc@public.gmane.org>
 > ---
+>  arch/arm64/boot/dts/freescale/Makefile            |    1 +
+>  arch/arm64/boot/dts/freescale/fsl-ls2081a-rdb.dts |  139 +++++++++++++++++++++
+>  2 files changed, 140 insertions(+), 0 deletions(-)
+>  create mode 100755 arch/arm64/boot/dts/freescale/fsl-ls2081a-rdb.dts
 >
-> There are checkpatch warnings.  I have reviewed them and feel they
-> can be ignored.
->
->  drivers/of/fdt.c                            |  45 +++++
->  drivers/of/of_private.h                     |   2 +
->  drivers/of/unittest-data/Makefile           |  17 +-
->  drivers/of/unittest-data/ot.dts             |  53 ++++++
->  drivers/of/unittest-data/ot_bad_phandle.dts |  20 +++
->  drivers/of/unittest-data/ot_base.dts        |  71 ++++++++
->  drivers/of/unittest.c                       | 264 ++++++++++++++++++++++++++++
->  7 files changed, 469 insertions(+), 3 deletions(-)
->  create mode 100644 drivers/of/unittest-data/ot.dts
->  create mode 100644 drivers/of/unittest-data/ot_bad_phandle.dts
->  create mode 100644 drivers/of/unittest-data/ot_base.dts
-
-ot? Overlay Test? That's not very obvious if so.
-
-> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-> index e5ce4b59e162..54120ab8f322 100644
-> --- a/drivers/of/fdt.c
-> +++ b/drivers/of/fdt.c
-> @@ -31,6 +31,8 @@
->  #include <asm/setup.h>  /* for COMMAND_LINE_SIZE */
->  #include <asm/page.h>
->
-> +#include "of_private.h"
-> +
->  /*
->   * of_fdt_limit_memory - limit the number of regions in the /memory node
->   * @limit: maximum entries
-> @@ -1256,11 +1258,54 @@ bool __init early_init_dt_scan(void *params)
->   */
->  void __init unflatten_device_tree(void)
->  {
-> +#ifdef CONFIG_OF_UNITTEST
-> +       extern uint8_t __dtb_ot_base_begin[];
-> +       extern uint8_t __dtb_ot_base_end[];
-> +       struct device_node *ot_base_root;
-> +       void *ot_base;
-> +       u32 data_size;
-> +       u32 size;
-> +#endif
-> +
->         __unflatten_device_tree(initial_boot_params, NULL, &of_root,
->                                 early_init_dt_alloc_memory_arch, false);
->
->         /* Get pointer to "/chosen" and "/aliases" nodes for use everywhere */
->         of_alias_scan(early_init_dt_alloc_memory_arch);
-
-Just make __unflatten_device_tree accessible to the unit test code and
-move all this to it. Then you don't need the ifdefery.
-
-Does this need to be immediately after unflattening the base tree?
-
-> +
-> +#ifdef CONFIG_OF_UNITTEST
-> +       /*
-> +        * Base device tree for the overlay unittest.
-> +        * Do as much as possible the same way as done for the normal FDT.
-> +        * Have to stop before resolving phandles, because that uses kmalloc.
-> +        */
-> +
-> +       data_size = __dtb_ot_base_end - __dtb_ot_base_begin;
-> +       if (!data_size) {
-> +               pr_err("No __dtb_ot_base_begin to attach\n");
-> +               return;
-> +       }
-> +
-> +       size = fdt_totalsize(__dtb_ot_base_begin);
-> +       if (size != data_size) {
-> +               pr_err("__dtb_ot_base_begin header totalsize != actual size");
-> +               return;
-> +       }
-> +
-> +       ot_base = early_init_dt_alloc_memory_arch(size,
-> +                                            roundup_pow_of_two(FDT_V17_SIZE));
-> +       if (!ot_base) {
-> +               pr_err("alloc of ot_base failed");
-> +               return;
-> +       }
-> +
-> +       memcpy(ot_base, __dtb_ot_base_begin, size);
-> +
-> +       __unflatten_device_tree(ot_base, NULL, &ot_base_root,
-> +                               early_init_dt_alloc_memory_arch, true);
-> +
-> +       unittest_set_ot_base_root(ot_base_root);
-> +#endif
->  }
->
->  /**
-> diff --git a/drivers/of/of_private.h b/drivers/of/of_private.h
-> index f4f6793d2f04..02d54da078ac 100644
-> --- a/drivers/of/of_private.h
-> +++ b/drivers/of/of_private.h
-> @@ -55,6 +55,8 @@ static inline int of_property_notify(int action, struct device_node *np,
->  }
->  #endif /* CONFIG_OF_DYNAMIC */
->
-> +extern void unittest_set_ot_base_root(struct device_node *dn);
-> +
->  /**
->   * General utilities for working with live trees.
->   *
-> diff --git a/drivers/of/unittest-data/Makefile b/drivers/of/unittest-data/Makefile
-> index 1ac5cc01d627..6879befe29d2 100644
-> --- a/drivers/of/unittest-data/Makefile
-> +++ b/drivers/of/unittest-data/Makefile
-> @@ -1,7 +1,18 @@
->  obj-y += testcases.dtb.o
-> +obj-y += ot.dtb.o
-> +obj-y += ot_bad_phandle.dtb.o
-> +obj-y += ot_base.dtb.o
->
->  targets += testcases.dtb testcases.dtb.S
-> +targets += ot.dtb ot.dtb.S
-> +targets += ot_bad_phandle.dtb ot_bad_phandle.dtb.S
-> +targets += ot_base.dtb ot_base.dtb.S
->
-> -.SECONDARY: \
-> -       $(obj)/testcases.dtb.S \
-> -       $(obj)/testcases.dtb
-> +.PRECIOUS: \
-> +       $(obj)/%.dtb.S \
-> +       $(obj)/%.dtb
-> +
-> +# enable creation of __symbols__ node
-> +DTC_FLAGS_ot := -@
-> +DTC_FLAGS_ot_base := -@
-> +DTC_FLAGS_ot_bad_phandle := -@
-> diff --git a/drivers/of/unittest-data/ot.dts b/drivers/of/unittest-data/ot.dts
-> new file mode 100644
-> index 000000000000..37e105622b7a
+> diff --git a/arch/arm64/boot/dts/freescale/Makefile b/arch/arm64/boot/dts/freescale/Makefile
+> index 72c4b52..58b80de 100644
+> --- a/arch/arm64/boot/dts/freescale/Makefile
+> +++ b/arch/arm64/boot/dts/freescale/Makefile
+> @@ -9,6 +9,7 @@ dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls1088a-qds.dtb
+>  dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls1088a-rdb.dtb
+>  dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls2080a-qds.dtb
+>  dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls2080a-rdb.dtb
+> +dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls2081a-rdb.dtb
+>  dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls2080a-simu.dtb
+>  dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls2088a-qds.dtb
+>  dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls2088a-rdb.dtb
+> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls2081a-rdb.dts b/arch/arm64/boot/dts/freescale/fsl-ls2081a-rdb.dts
+> new file mode 100444
+> index 0000000..7ae408e
 > --- /dev/null
-> +++ b/drivers/of/unittest-data/ot.dts
-> @@ -0,0 +1,53 @@
+> +++ b/arch/arm64/boot/dts/freescale/fsl-ls2081a-rdb.dts
+> @@ -0,0 +1,139 @@
+> +/*
+> + * Device Tree file for NXP LS2081A RDB Board.
+> + *
+> + * Copyright (C) 2017, NXP Semiconductors
+
+The formal copyright claim formal should be
+Copyright 2017 NXP
+
+> + *
+> + * Priyanka Jain <priyanka.jain-3arQi8VN3Tc@public.gmane.org>
+> + *
+> + * This file is dual-licensed: you can use it either under the terms
+> + * of the GPLv2 or the X11 license, at your option. Note that this dual
+> + * licensing only applies to this file, and not this project as a
+> + * whole.
+> + *
+> + *  a) This library is free software; you can redistribute it and/or
+> + *     modify it under the terms of the GNU General Public License as
+> + *     published by the Free Software Foundation; either version 2 of the
+> + *     License, or (at your option) any later version.
+> + *
+> + *     This library is distributed in the hope that it will be useful,
+> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + *     GNU General Public License for more details.
+> + *
+> + * Or, alternatively,
+> + *
+> + *  b) Permission is hereby granted, free of charge, to any person
+> + *     obtaining a copy of this software and associated documentation
+> + *     files (the "Software"), to deal in the Software without
+> + *     restriction, including without limitation the rights to use,
+> + *     copy, modify, merge, publish, distribute, sublicense, and/or
+> + *     sell copies of the Software, and to permit persons to whom the
+> + *     Software is furnished to do so, subject to the following
+> + *     conditions:
+> + *
+> + *     The above copyright notice and this permission notice shall be
+> + *     included in all copies or substantial portions of the Software.
+> + *
+> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+> + *     OTHER DEALINGS IN THE SOFTWARE.
+> + */
+> +
 > +/dts-v1/;
-> +/plugin/;
+> +
+> +#include "fsl-ls2088a.dtsi"
 > +
 > +/ {
+> +       model = "NXP Layerscape 2081A RDB Board";
+> +       compatible = "fsl,ls2081a-rdb", "fsl,ls2081a";
 > +
-> +       fragment@0 {
-> +               target = <&electric_1>;
-> +
-> +               __overlay__ {
-> +                       status = "ok";
-> +
-> +                       hvac_2: hvac_large_1 {
-
-We should follow best practice here and not use '_' for node names. I
-wonder what warnings dtc throws with W=2 for the unittests. Don't
-think I tried that when adding them.
-
-> +                               compatible = "ot,hvac-large";
-> +                               heat-range = < 40 75 >;
-> +                               cool-range = < 65 80 >;
-> +                       };
-> +               };
+> +       aliases {
+> +               serial0 = &serial0;
+> +               serial1 = &serial1;
 > +       };
 > +
-> +       fragment@1 {
-> +               target = <&rides_1>;
+> +       chosen {
+> +               stdout-path = "serial1:115200n8";
+> +       };
+> +};
 > +
-> +               __overlay__ {
+> +&esdhc {
+> +       status = "okay";
+> +};
+> +
+> +&ifc {
+> +       status = "disabled";
+> +};
+> +
+> +&i2c0 {
+> +       status = "okay";
+> +       pca9547@75 {
+> +               compatible = "nxp,pca9547";
+> +               reg = <0x75>;
+> +               #address-cells = <1>;
+> +               #size-cells = <0>;
+> +               i2c@1 {
 > +                       #address-cells = <1>;
-> +                       #size-cells = <1>;
-> +                       status = "ok";
-> +
-> +                       ride@200 {
-> +                               compatible = "ot,ferris-wheel";
-> +                               reg = < 0x00000200 0x100 >;
-> +                               hvac-provider = < &hvac_2 >;
-> +                               hvac-thermostat = < 27 32 > ;
-> +                               hvac-zones = < 12 5 >;
-> +                               hvac-zone-names = "operator", "snack-bar";
-> +                               spin-controller = < &spin_ctrl_1 3 >;
-> +                               spin-rph = < 30 >;
-> +                               gondolas = < 16 >;
-> +                               gondola-capacity = < 6 >;
+> +                       #size-cells = <0>;
+> +                       reg = <0x01>;
+> +                       rtc@51 {
+> +                               compatible = "nxp,pcf2129";
+> +                               reg = <0x51>;
 > +                       };
 > +               };
-> +       };
 > +
-> +       fragment@2 {
-> +               target = <&lights_2>;
+> +               i2c@3 {
+> +                       #address-cells = <1>;
+> +                       #size-cells = <0>;
+> +                       reg = <0x3>;
 > +
-> +               __overlay__ {
-> +                       status = "ok";
-> +                       color = "purple", "white", "red", "green";
-> +                       rate = < 3 256 >;
-> +               };
-> +       };
-> +
-> +};
-> diff --git a/drivers/of/unittest-data/ot_bad_phandle.dts b/drivers/of/unittest-data/ot_bad_phandle.dts
-> new file mode 100644
-> index 000000000000..234d5f1dcfe4
-> --- /dev/null
-> +++ b/drivers/of/unittest-data/ot_bad_phandle.dts
-> @@ -0,0 +1,20 @@
-> +/dts-v1/;
-> +/plugin/;
-> +
-> +/ {
-> +
-> +       fragment@0 {
-> +               target = <&electric_1>;
-> +
-> +               __overlay__ {
-> +
-> +                       // This label should cause an error when the overlay
-> +                       // is applied.  There is already a phandle value
-> +                       // in the base tree for motor_1.
-> +                       spin_ctrl_1_conflict: motor_1 {
-> +                               accelerate = < 3 >;
-> +                               decelerate = < 5 >;
+> +                       adt7481@4c {
+> +                               compatible = "adi,adt7461";
+> +                               reg = <0x4c>;
 > +                       };
 > +               };
 > +       };
 > +};
-> diff --git a/drivers/of/unittest-data/ot_base.dts b/drivers/of/unittest-data/ot_base.dts
-> new file mode 100644
-> index 000000000000..0a4fbe598b02
-> --- /dev/null
-> +++ b/drivers/of/unittest-data/ot_base.dts
-> @@ -0,0 +1,71 @@
-> +/dts-v1/;
-> +/plugin/;
 > +
-> +/ {
-> +       testcase-data-2 {
+> +&dspi {
+> +       status = "okay";
+> +       dflash0: n25q512a {
 > +               #address-cells = <1>;
 > +               #size-cells = <1>;
-> +
-> +               electric_1: substation@100 {
-> +                       compatible = "ot,big-volts-control";
-> +                       reg = < 0x00000100 0x100 >;
-> +                       status = "disabled";
-> +
-> +                       hvac_1: hvac_medium_1 {
-> +                               compatible = "ot,hvac-medium";
-> +                               heat-range = < 50 75 >;
-> +                               cool-range = < 60 80 >;
-> +                       };
-> +
-> +                       spin_ctrl_1: motor_1 {
-> +                               compatible = "ot,ferris-wheel-motor";
-> +                               spin = "clockwise";
-> +                       };
-> +
-> +                       spin_ctrl_2: motor_8 {
-> +                               compatible = "ot,roller-coaster-motor";
-> +                       };
-> +               };
-> +
-> +               rides_1: fairway_1 {
-> +                       #address-cells = <1>;
-> +                       #size-cells = <1>;
-> +                       compatible = "ot,rides";
-> +                       status = "disabled";
-> +                       orientation = < 127 >;
-> +
-> +                       ride@100 {
-> +                               compatible = "ot,roller-coaster";
-> +                               reg = < 0x00000100 0x100 >;
-> +                               hvac-provider = < &hvac_1 >;
-> +                               hvac-thermostat = < 29 > ;
-> +                               hvac-zones = < 14 >;
-> +                               hvac-zone-names = "operator";
-> +                               spin-controller = < &spin_ctrl_2 5 &spin_ctrl_2 7 >;
-> +                               spin-controller-names = "track_1", "track_2";
-> +                               queues = < 2 >;
-> +                       };
-> +               };
-> +
-> +               lights_1: lights@30000 {
-> +                       compatible = "ot,work-lights";
-> +                       reg = < 0x00030000 0x1000 >;
-> +                       status = "disabled";
-> +               };
-> +
-> +               lights_2: lights@40000 {
-> +                       compatible = "ot,show-lights";
-> +                       reg = < 0x00040000 0x1000 >;
-> +                       status = "disabled";
-> +                       rate = < 13 138 >;
-> +               };
-> +
-> +               retail_1: vending@50000 {
-> +                       reg = < 0x00050000 0x1000 >;
-> +                       compatible = "ot,tickets";
-> +                       status = "disabled";
-> +               };
-> +
+> +               compatible = "st,m25p80";
+> +               spi-max-frequency = <3000000>;
+> +               reg = <0>;
 > +       };
 > +};
 > +
-> diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
-> index 62db55b97c10..599eb10e9b40 100644
-> --- a/drivers/of/unittest.c
-> +++ b/drivers/of/unittest.c
-> @@ -8,6 +8,7 @@
->  #include <linux/err.h>
->  #include <linux/errno.h>
->  #include <linux/hashtable.h>
-> +#include <linux/libfdt.h>
->  #include <linux/of.h>
->  #include <linux/of_fdt.h>
->  #include <linux/of_irq.h>
-> @@ -42,6 +43,13 @@
->         failed; \
->  })
->
-> +static struct device_node *ot_base_root;
 > +
-> +void unittest_set_ot_base_root(struct device_node *dn)
-> +{
-> +       ot_base_root = dn;
-> +}
-> +
->  static void __init of_unittest_find_node_by_name(void)
->  {
->         struct device_node *np;
-> @@ -1925,6 +1933,259 @@ static void __init of_unittest_overlay(void)
->  static inline void __init of_unittest_overlay(void) { }
->  #endif
->
-> +#define OVERLAY_INFO_EXTERN(name) \
-> +       extern uint8_t __dtb_##name##_begin[]; \
-> +       extern uint8_t __dtb_##name##_end[]
-> +
-> +#define OVERLAY_INFO(name, expected) \
-> +{      .dtb_begin       = __dtb_##name##_begin, \
-> +       .dtb_end         = __dtb_##name##_end, \
-> +       .expected_result = expected, \
-> +}
-> +
-> +struct overlay_info {
-> +       uint8_t            *dtb_begin;
-> +       uint8_t            *dtb_end;
-> +       void               *data;
-> +       struct device_node *np_overlay;
-> +       int                expected_result;
-> +       int                overlay_id;
+> +&qspi {
+> +       status = "okay";
+> +       flash0: n25q512a@0 {
+> +               #address-cells = <1>;
+> +               #size-cells = <1>;
+> +               compatible = "st,m25p80";
+> +               spi-max-frequency = <20000000>;
+> +               reg = <0>;
+> +       };
+> +       flash1: n25q512a@1 {
+> +               #address-cells = <1>;
+> +               #size-cells = <1>;
+> +               compatible = "st,m25p80";
+> +               spi-max-frequency = <20000000>;
+> +               reg = <0>;
+> +       };
 > +};
 > +
-> +OVERLAY_INFO_EXTERN(ot);
-> +OVERLAY_INFO_EXTERN(ot_bad_phandle);
-> +
-> +struct overlay_info overlays[] = {
-> +       OVERLAY_INFO(ot, 0),
-> +       OVERLAY_INFO(ot_bad_phandle, -EINVAL),
-> +       {}
+> +&usb0 {
+> +       status = "okay";
 > +};
 > +
-> +#ifdef CONFIG_OF_OVERLAY
-> +/*
-> + * The purpose of of_unittest_overlay_test_data_add is to add an
-> + * overlay in the normal fashion.  This is a test of the whole
-> + * picture, instead of testing individual elements.
-> + *
-> + * A secondary purpose is to be able to verify that the contents of
-> + * /proc/device-tree/ contains the updated structure and values from
-> + * the overlay.  That must be verified separately in user space.
-> + *
-> + * Return 0 on unexpected error.
-> + */
-> +static int __init overlay_test_data_add(int onum)
+> +&usb1 {
+> +       status = "okay";
+> +};
+> --
+> 1.7.4.1
+>
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 
-There's a need for a general function to apply built-in overlays
-beyond just unittests. See
-drivers/gpu/drm/tilcdc/tilcdc_slave_compat.c. It's pretty close to the
-same set of calls.
 
-Rob
+
+-- 
+- Leo
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
