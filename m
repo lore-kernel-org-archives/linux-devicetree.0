@@ -1,38 +1,44 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH v14 00/11] mux controller abstraction and iio/i2c muxes
-Date: Mon, 24 Apr 2017 16:59:29 +0200
-Message-ID: <1493045969.2446.47.camel@pengutronix.de>
-References: <1493022995-16917-1-git-send-email-peda@axentia.se>
-         <1493031179.2446.9.camel@pengutronix.de>
-         <2d978956-d247-917d-4150-a6723917a733@axentia.se>
-         <1493043046.2446.37.camel@pengutronix.de>
-         <6fb34ea5-edc8-c7aa-1d49-f6ce1d33a2d4@axentia.se>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v8 1/3] backlight arcxcnn add arc to vendor prefix
+Date: Mon, 24 Apr 2017 10:09:41 -0500
+Message-ID: <CAL_JsqJ+=fQ2e752iCHs0dbdrkotuDtKp=2Z2_xnyCtMnxWV8A@mail.gmail.com>
+References: <1489607133-7870-1-git-send-email-olimpiu@arcticsand.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <6fb34ea5-edc8-c7aa-1d49-f6ce1d33a2d4@axentia.se>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Rosin <peda@axentia.se>
-Cc: Jonathan Cameron <jic23@kernel.org>, linux-kernel@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Jonathan Corbet <corbet@lwn.net>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, linux-doc@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, Colin Ian King <colin.king@canonical.com>, Paul Gortmaker <paul.gortmaker@windriver.com>, kernel@pengutronix.de
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1489607133-7870-1-git-send-email-olimpiu-eV7fy4qpoLhpLGFMi4vTTA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Olimpiu Dejeu <olimpiu-eV7fy4qpoLhpLGFMi4vTTA@public.gmane.org>
+Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jingoo Han <jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, bdodge-eV7fy4qpoLhpLGFMi4vTTA@public.gmane.org, Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>, medasaro-eV7fy4qpoLhpLGFMi4vTTA@public.gmane.org, Daniel Thompson <daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2017-04-24 at 16:36 +0200, Peter Rosin wrote:
-[...]
-> > How about an atomic use_count on the mux_control, a bool shared that is
-> > only set by the first consumer, and controls whether selecting locks?
-> 
-> That has the drawback that it is hard to restore the mux-control in a safe
-> way so that exclusive consumers are allowed after the last shared consumer
-> puts the mux away.
+On Wed, Mar 15, 2017 at 2:45 PM, Olimpiu Dejeu <olimpiu-eV7fy4qpoLhpLGFMi4vTTA@public.gmane.org> wrote:
+> backlight: Add arc to vendor prefixes
+> Signed-off-by: Olimpiu Dejeu <olimpiu-eV7fy4qpoLhpLGFMi4vTTA@public.gmane.org>
+> ---
+> v8:
+> - Version to match other patches in set
+>
+>  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> index 16d3b5e..6f33a4b 100644
+> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
+> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> @@ -28,6 +28,7 @@ andestech     Andes Technology Corporation
+>  apm    Applied Micro Circuits Corporation (APM)
+>  aptina Aptina Imaging
+>  arasan Arasan Chip Systems
+> +arc    Arctic Sand
 
-True.
+arc is also a cpu arch. While not a vendor, it could be confusing. How
+about "arctic" instead?
 
-> Agreed, it's a corner case, but I had this very similar
-> patch going through the compiler when I got this mail. Does it work as well
-> as what you suggested?
+BTW, some reason your patches are not going to the DT list.
 
-Yes, this patch works just as well.
-
-regards
-Philipp
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
