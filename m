@@ -1,61 +1,48 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH 1/2] reset: Add DT bindings for the Gemini
-	reset controller
-Date: Mon, 24 Apr 2017 21:27:46 +0200
-Message-ID: <20170424192746.27378-1-linus.walleij@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <openwrt-devel-bounces@lists.openwrt.org>
-List-Unsubscribe: <https://lists.openwrt.org/cgi-bin/mailman/options/openwrt-devel>,
- <mailto:openwrt-devel-request@lists.openwrt.org?subject=unsubscribe>
-List-Archive: <http://lists.openwrt.org/pipermail/openwrt-devel/>
-List-Post: <mailto:openwrt-devel@lists.openwrt.org>
-List-Help: <mailto:openwrt-devel-request@lists.openwrt.org?subject=help>
-List-Subscribe: <https://lists.openwrt.org/cgi-bin/mailman/listinfo/openwrt-devel>,
- <mailto:openwrt-devel-request@lists.openwrt.org?subject=subscribe>
-Errors-To: openwrt-devel-bounces@lists.openwrt.org
-Sender: "openwrt-devel" <openwrt-devel-bounces@lists.openwrt.org>
-To: Philipp Zabel <p.zabel@pengutronix.de>, devicetree@vger.kernel.org
-Cc: openwrt-devel@openwrt.org, Paulius Zaleckas <paulius.zaleckas@gmail.com>, Janos Laube <janos.dev@gmail.com>, linux-arm-kernel@lists.infradead.org
+From: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+Subject: [PATCH] ARM: dts: Add devicetree for the Raspberry Pi 3, for arm32 (v5)
+Date: Mon, 24 Apr 2017 13:00:37 -0700
+Message-ID: <20170424200037.25615-1-eric@anholt.net>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Gerd Hoffmann <kraxel-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-VGhpcyBpcyBhIHNpbXBsZSByZXNldCBjb250cm9sbGVyIGluIGEgc2luZ2xlIDMyYml0CnJlZ2lz
-dGVyLgoKU2lnbmVkLW9mZi1ieTogTGludXMgV2FsbGVpaiA8bGludXMud2FsbGVpakBsaW5hcm8u
-b3JnPgotLS0KIC4uLi9iaW5kaW5ncy9yZXNldC9jb3J0aW5hLGdlbWluaS1yZXNldC50eHQgICAg
-ICAgIHwgNTkgKysrKysrKysrKysrKysrKysrKysrKwogMSBmaWxlIGNoYW5nZWQsIDU5IGluc2Vy
-dGlvbnMoKykKIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
-ZGluZ3MvcmVzZXQvY29ydGluYSxnZW1pbmktcmVzZXQudHh0CgpkaWZmIC0tZ2l0IGEvRG9jdW1l
-bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Jlc2V0L2NvcnRpbmEsZ2VtaW5pLXJlc2V0LnR4
-dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9yZXNldC9jb3J0aW5hLGdlbWlu
-aS1yZXNldC50eHQKbmV3IGZpbGUgbW9kZSAxMDA2NDQKaW5kZXggMDAwMDAwMDAwMDAwLi4yMWFh
-MTI5MDE3NzQKLS0tIC9kZXYvbnVsbAorKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
-ZGluZ3MvcmVzZXQvY29ydGluYSxnZW1pbmktcmVzZXQudHh0CkBAIC0wLDAgKzEsNTkgQEAKK0Nv
-cnRpbmEgR2VtaW5pIFJlc2V0IENvbnRyb2xsZXIKKworVGhpcyByZXNldCBjb250cm9sbGVyIGlz
-IGZvdW5kIGluIENvcnRpbmEgU3lzdGVtcyBDUzM1MTYgYW5kCit0aGUgcHJlZGVjZXNzb3IgU3Rv
-ckxpbmsgU0wzNTE2LgorCitSZXF1aXJlZCBwcm9wZXJ0aWVzOgorLSBjb21wYXRpYmxlOiAiY29y
-dGluYSxnZW1pbmktcmVzZXQiCistICNyZXNldC1jZWxsczogTXVzdCBiZSAxCisKK1RoZSBHZW1p
-bmkgcmVzZXQgY29udHJvbGxlciBtdXN0IGJlIGEgY2hpbGQgbm9kZSBvZiB0aGUKK3N5c3RlbSBj
-b250cm9sbGVyLiBBcGFydCBmcm9tIHRoaXMgaXQgZm9sbG93cyB0aGUgc3RhbmRhcmQgcmVzZXQK
-K2NvbnRyb2xsZXIgYmluZGluZ3MuCisKK1ZhbGlkIHJlc2V0IGxpbmUgdmFsdWVzOgorCiswOiAg
-RFJBTSBjb250cm9sbGVyCisxOiAgRmxhc2ggY29udHJvbGxlcgorMjogIElERSBjb250cm9sbGVy
-CiszOiAgUkFJRCBjb250cm9sbGVyCis0OiAgU2VjdXJpdHkgbW9kdWxlCis1OiAgR01BQzAgKGV0
-aGVybmV0KQorNjogIEdNQUMxIChldGhlcm5ldCkKKzc6ICBQQ0kgaG9zdCBicmlkZ2UKKzg6ICBV
-U0IwIFVTQiBob3N0IGNvbnRyb2xsZXIKKzk6ICBVU0IxIFVTQiBob3N0IGNvbnRyb2xsZXIKKzEw
-OiBHZW5lcmFsIERNQSBjb250cm9sbGVyCisxMTogQVBCIGJyaWRnZQorMTI6IExQQyAoTG93IFBp
-biBDb3VudCkgY29udHJvbGxlcgorMTM6IExDRCBtb2R1bGUKKzE0OiBJbnRlcnJ1cHQgY29udHJv
-bGxlciAwCisxNTogSW50ZXJydXB0IGNvbnRyb2xsZXIgMQorMTY6IFJUQyBtb2R1bGUKKzE3OiBU
-aW1lciBtb2R1bGUKKzE4OiBVQVJUIGNvbnRyb2xsZXIKKzE5OiBTU1AgY29udHJvbGxlcgorMjA6
-IEdQSU8wIEdQSU8gY29udHJvbGxlcgorMjE6IEdQSU8xIEdQSU8gY29udHJvbGxlcgorMjI6IEdQ
-SU8yIEdQSU8gY29udHJvbGxlcgorMjM6IFdhdGNoZG9nIHRpbWVyCisyNDogRXh0ZXJuYWwgZGV2
-aWNlIHJlc2V0CisyNTogQ0lSIG1vZHVsZSAoaW5mcmFyZWQpCisyNjogU0FUQTAgU0FUQSBicmlk
-Z2UKKzI3OiBTQVRBMSBTQVRBIGJyaWRnZQorMjg6IFRWRSBUViBFbmNvZGVyIG1vZHVsZQorMjk6
-IFJlc2VydmVkCiszMDogQ1BVMSByZXNldAorMzE6IEdsb2JhbCBzb2Z0IHJlc2V0CisKK0V4YW1w
-bGU6CisKK3N5c2Nvbjogc3lzY29uQDQwMDAwMDAwIHsKKwljb21wYXRpYmxlID0gImNvcnRpbmEs
-Z2VtaW5pLXN5c2NvbiIsICJzeXNjb24iLCAic2ltcGxlLW1mZCI7CisJcmVnID0gPDB4NDAwMDAw
-MDAgMHgxMDAwPjsKKworCXJlc2V0LWNvbnRyb2xsZXIgeworCQljb21wYXRpYmxlID0gImNvcnRp
-bmEsZ2VtaW5pLXJlc2V0IjsKKwkJI3Jlc2V0LWNlbGxzID0gPDE+OworCX07Cit9OwotLSAKMi45
-LjMKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18Kb3Blbndy
-dC1kZXZlbCBtYWlsaW5nIGxpc3QKb3BlbndydC1kZXZlbEBsaXN0cy5vcGVud3J0Lm9yZwpodHRw
-czovL2xpc3RzLm9wZW53cnQub3JnL2NnaS1iaW4vbWFpbG1hbi9saXN0aW5mby9vcGVud3J0LWRl
-dmVsCg==
+Raspbian and Fedora have decided to support the Pi3 in 32-bit mode for
+now, so it's useful to be able to test that mode on an upstream
+kernel.  It's also been useful for me to use the same board for 32-bit
+and 64-bit development.
+
+Signed-off-by: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+---
+ arch/arm/boot/dts/Makefile            | 1 +
+ arch/arm/boot/dts/bcm2837-rpi-3.b.dts | 1 +
+ 2 files changed, 2 insertions(+)
+ create mode 100644 arch/arm/boot/dts/bcm2837-rpi-3.b.dts
+
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index 011808490fed..eded842d9978 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -72,6 +72,7 @@ dtb-$(CONFIG_ARCH_BCM2835) += \
+ 	bcm2835-rpi-b-plus.dtb \
+ 	bcm2835-rpi-a-plus.dtb \
+ 	bcm2836-rpi-2-b.dtb \
++	bcm2837-rpi-3-b.dtb \
+ 	bcm2835-rpi-zero.dtb
+ dtb-$(CONFIG_ARCH_BCM_5301X) += \
+ 	bcm4708-asus-rt-ac56u.dtb \
+diff --git a/arch/arm/boot/dts/bcm2837-rpi-3.b.dts b/arch/arm/boot/dts/bcm2837-rpi-3.b.dts
+new file mode 100644
+index 000000000000..8c8aa4d1e9b3
+--- /dev/null
++++ b/arch/arm/boot/dts/bcm2837-rpi-3.b.dts
+@@ -0,0 +1 @@
++#include "arm64/broadcom/bcm2837-rpi-3.b.dts"
+-- 
+2.11.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
