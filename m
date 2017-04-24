@@ -1,57 +1,28 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v2 2/4] gpio - Add EXAR XRA1403 SPI GPIO expander driver
-Date: Mon, 24 Apr 2017 15:47:10 +0200
-Message-ID: <CACRpkdZHMWH2W-i4MGZ7NKzPHUURRmC-5YwiK7cVLCHKDsb7sw@mail.gmail.com>
-References: <cover.1492077070.git.nandor.han@ge.com> <f28eef264102786357ac5ed7205813619c508fb4.1492077070.git.nandor.han@ge.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 3/4] doc,dts - add XRA1403 DTS binding documentation
+Date: Mon, 24 Apr 2017 15:49:35 +0200
+Message-ID: <CACRpkdaQPhyJLgfJzuiWFqe7vo=tAZ6LtkP7asZcdpwZcxvWqg@mail.gmail.com>
+References: <cover.1492077070.git.nandor.han@ge.com> <0d970c6a929597804eae3577ed24f57ee23b820a.1492077070.git.nandor.han@ge.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <f28eef264102786357ac5ed7205813619c508fb4.1492077070.git.nandor.han@ge.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Nandor Han <nandor.han@ge.com>
-Cc: Greg KH <gregkh@linuxfoundation.org>, "David S. Miller" <davem@davemloft.net>, Geert Uytterhoeven <geert@linux-m68k.org>, Mauro Carvalho Chehab <mchehab@kernel.org>, Daniel Vetter <daniel.vetter@ffwll.ch>, Alexandre Courbot <gnurou@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Semi Malinen <semi.malinen@ge.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <0d970c6a929597804eae3577ed24f57ee23b820a.1492077070.git.nandor.han-JJi787mZWgc@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Nandor Han <nandor.han-JJi787mZWgc@public.gmane.org>
+Cc: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Daniel Vetter <daniel.vetter-/w4YWyX8dFk@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 13, 2017 at 12:27 PM, Nandor Han <nandor.han@ge.com> wrote:
+On Thu, Apr 13, 2017 at 12:27 PM, Nandor Han <nandor.han-JJi787mZWgc@public.gmane.org> wrote:
 
-> This is a simple driver that provides a /sys/class/gpio
-> interface for controlling and configuring the GPIO lines.
-> It does not provide support for chip select or interrupts.
+> Add the XRA1403 DTS binding documentation.
 >
-> Signed-off-by: Nandor Han <nandor.han@ge.com>
-> Signed-off-by: Semi Malinen <semi.malinen@ge.com>
+> Signed-off-by: Nandor Han <nandor.han-JJi787mZWgc@public.gmane.org>
 
-I almost want to make the driver depend on !GPIO_SYSFS because
-of this commit message.
-
-DO NOT USE OR ENCOURAGE THE USE OF THE GPIO SYSFS
-INTERFACE.
-
-Use the character device.
-
-Use the example in tools/gpio/* as a guideline and testbed.
-
-Use libgpiod as a rich userspace.
-
-And the commit message should state that this is a driver
-for such and such Exar hardware instead.
-
-Thanks.
-
-> +#include <linux/bitops.h>
-> +#include <linux/gpio/driver.h>
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/mutex.h>
-> +#include <linux/of_device.h>
-> +#include <linux/of_gpio.h>
-> +#include <linux/spi/spi.h>
-> +#include <linux/regmap.h>
-
-You are missing
-#include <linux/seq_file.h>
-
-and that is why the build robot is complaining.
+Patch applied with altered subject and Rob's ACK.
 
 Yours,
 Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
