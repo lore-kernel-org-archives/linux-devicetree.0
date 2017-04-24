@@ -1,101 +1,92 @@
-From: Frank Rowand <frowand.list@gmail.com>
-Subject: Re: [RFC 2/3] of: reserved_mem: Accessor for acquiring reserved_mem
-Date: Mon, 24 Apr 2017 10:27:09 -0700
-Message-ID: <58FE356D.2020409@gmail.com>
-References: <20170422173519.5782-1-bjorn.andersson@linaro.org>
- <20170422173519.5782-2-bjorn.andersson@linaro.org>
+From: Vineet Gupta <Vineet.Gupta1-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Subject: Re: [RESEND PATCH 1/2] arc: axs10x: Add DT bindings for I2S audio
+ playback
+Date: Mon, 24 Apr 2017 10:36:40 -0700
+Message-ID: <77599cf5-33e5-2ecd-2b2a-43630195a3b8@synopsys.com>
+References: <7ed6deaf1ae6d5819364c793835aa30316077a7e.1487787376.git.joabreu@synopsys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <20170422173519.5782-2-bjorn.andersson@linaro.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <7ed6deaf1ae6d5819364c793835aa30316077a7e.1487787376.git.joabreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jose Abreu <Jose.Abreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, "linux-snps-arc-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-snps-arc-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Cc: Carlos Palminha <CARLOS.PALMINHA-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Alexey Brodkin <Alexey.Brodkin-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 04/22/17 10:35, Bjorn Andersson wrote:
-> In some cases drivers referencing a reserved-memory region might want to
-> remap the entire region, but when defining the reserved-memory by "size"
-> the client driver has no means to know the associated base address of
-> the reserved memory region.
-> 
-> This patch adds an accessor for such drivers to acquire a handle to
-> their associated reserved-memory for this purpose.
-> 
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> ---
-> 
-> I would have preferred if we could provide a mechanism for drivers to find the
-> reserved_mem of their own device_node, but without a phandle I have not been
-> able to figure out a sane way to make the match.
-> 
-> Suggestions are very welcome.
-> 
->  drivers/of/of_reserved_mem.c    | 26 ++++++++++++++++++++++++++
->  include/linux/of_reserved_mem.h |  8 ++++++++
->  2 files changed, 34 insertions(+)
-> 
-> diff --git a/drivers/of/of_reserved_mem.c b/drivers/of/of_reserved_mem.c
-> index d507c3569a88..aa69c9590a5c 100644
-> --- a/drivers/of/of_reserved_mem.c
-> +++ b/drivers/of/of_reserved_mem.c
-> @@ -397,3 +397,29 @@ void of_reserved_mem_device_release(struct device *dev)
->  	rmem->ops->device_release(rmem, dev);
->  }
->  EXPORT_SYMBOL_GPL(of_reserved_mem_device_release);
-> +
-> +/**
-> + * of_get_reserved_mem_by_idx() - acquire reserved_mem from memory-region
-> + * @np:		node pointer containing the "memory-region"
-> + * @idx:	index within memory-region
-> + *
-> + * This function allows drivers to acquire a reference to the reserved_mem
-> + * struct which is referenced by their memory-region.
-> + *
-> + * Returns a reserved_mem reference, or NULL on error.
-> + */
-> +struct reserved_mem *of_get_reserved_mem_by_idx(struct device_node *np, int idx)
-> +{
-> +	struct device_node *target;
-> +	struct reserved_mem *rmem;
-> +
-> +	target = of_parse_phandle(np, "memory-region", idx);
-> +	if (!target)
-> +		return NULL;
-> +
-> +	rmem = __find_rmem(target);
-> +	of_node_put(target);
-> +
-> +	return rmem;
-> +}
-> +EXPORT_SYMBOL_GPL(of_get_reserved_mem_by_idx);
-> diff --git a/include/linux/of_reserved_mem.h b/include/linux/of_reserved_mem.h
-> index f8e1992d6423..a9abbe7dd3de 100644
-> --- a/include/linux/of_reserved_mem.h
-> +++ b/include/linux/of_reserved_mem.h
-> @@ -34,6 +34,8 @@ int of_reserved_mem_device_init_by_idx(struct device *dev,
->  				       struct device_node *np, int idx);
->  void of_reserved_mem_device_release(struct device *dev);
->  
-> +struct reserved_mem *of_get_reserved_mem_by_idx(struct device_node *np, int idx);
-> +
->  int early_init_dt_alloc_reserved_memory_arch(phys_addr_t size,
->  					     phys_addr_t align,
->  					     phys_addr_t start,
-> @@ -52,6 +54,12 @@ static inline int of_reserved_mem_device_init_by_idx(struct device *dev,
->  }
->  static inline void of_reserved_mem_device_release(struct device *pdev) { }
->  
-> +static inline struct reserved_mem *of_get_reserved_mem_by_idx(struct device_node *np,
-> +							      int idx);
-> +{
-> +	return NULL;
-> +}
-> +
->  static inline void fdt_init_reserved_mem(void) { }
->  static inline void fdt_reserved_mem_save_node(unsigned long node,
->  		const char *uname, phys_addr_t base, phys_addr_t size) { }
-> 
+On 04/21/2017 03:15 AM, Jose Abreu wrote:
+> This patch adds the necessary DT bindings to get HDMI audio
+> output in ARC AXS10x SDP. The bindings for I2S controller were
+> added as well as the bindings for simple audio card.
 
-Reviewed-by: Frank Rowand <frank.rowand@sony.com>
+Are these waiting on Rob or is it OK for me to pick these up for 4.12 ?
+
+-Vineet
+
+>
+> Signed-off-by: Jose Abreu <joabreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+> Acked-by: Alexey Brodkin <abrodkin-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+> Cc: Carlos Palminha <palminha-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+> Cc: Alexey Brodkin <abrodkin-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Cc: Vineet Gupta <vgupta-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Cc: linux-snps-arc-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> ---
+>  arch/arc/boot/dts/axs10x_mb.dtsi | 22 ++++++++++++++++++----
+>  1 file changed, 18 insertions(+), 4 deletions(-)
+>
+> diff --git a/arch/arc/boot/dts/axs10x_mb.dtsi b/arch/arc/boot/dts/axs10x_mb.dtsi
+> index d6c1bbc..9d882b1 100644
+> --- a/arch/arc/boot/dts/axs10x_mb.dtsi
+> +++ b/arch/arc/boot/dts/axs10x_mb.dtsi
+> @@ -149,12 +149,13 @@
+>  			interrupts = <14>;
+>  		};
+>  
+> -		i2c@0x1e000 {
+> -			compatible = "snps,designware-i2c";
+> +		i2s: i2s@1e000 {
+> +			compatible = "snps,designware-i2s";
+>  			reg = <0x1e000 0x100>;
+> -			clock-frequency = <400000>;
+> -			clocks = <&i2cclk>;
+> +			clocks = <&i2sclk 0>;
+> +			clock-names = "i2sclk";
+>  			interrupts = <15>;
+> +			#sound-dai-cells = <0>;
+>  		};
+>  
+>  		i2c@0x1f000 {
+> @@ -174,6 +175,7 @@
+>  				adi,input-colorspace = "rgb";
+>  				adi,input-clock = "1x";
+>  				adi,clock-delay = <0x03>;
+> +				#sound-dai-cells = <0>;
+>  
+>  				ports {
+>  					#address-cells = <1>;
+> @@ -295,5 +297,17 @@
+>  				};
+>  			};
+>  		};
+> +
+> +		sound_playback {
+> +			compatible = "simple-audio-card";
+> +			simple-audio-card,name = "AXS10x HDMI Audio";
+> +			simple-audio-card,format = "i2s";
+> +			simple-audio-card,cpu {
+> +				sound-dai = <&i2s>;
+> +			};
+> +			simple-audio-card,codec {
+> +				sound-dai = <&adv7511>;
+> +			};
+> +		};
+>  	};
+>  };
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
