@@ -1,155 +1,61 @@
-From: Brendan Higgins <brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v7 2/5] irqchip/aspeed-i2c-ic: Add I2C IRQ controller for Aspeed
-Date: Mon, 24 Apr 2017 11:18:15 -0700
-Message-ID: <20170424181818.2754-3-brendanhiggins@google.com>
-References: <20170424181818.2754-1-brendanhiggins@google.com>
+From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: Add devicetree for the Raspberry Pi 3, for
+ arm32 (v4)
+Date: Mon, 24 Apr 2017 11:26:54 -0700
+Message-ID: <CAOesGMhf-MNh+SPZe2YYefyaPk3qxqhZ5ipr86zzK3r02bE81A@mail.gmail.com>
+References: <20170330002605.15213-1-eric@anholt.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170424181818.2754-1-brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <20170330002605.15213-1-eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org, joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org, vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org, mouse-Pma6HLj0uuo@public.gmane.org, clg-Bxea+6Xhats@public.gmane.org, benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org
-Cc: linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Brendan Higgins <brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+To: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>, Broadcom Kernel Feedback List <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Gerd Hoffmann <kraxel-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The Aspeed 24XX/25XX chips share a single hardware interrupt across 14
-separate I2C busses. This adds a dummy irqchip which maps the single
-hardware interrupt to software interrupts for each of the busses.
+Hi,
 
-Signed-off-by: Brendan Higgins <brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
----
-Added in v6:
-  - Pulled "aspeed_i2c_controller" out into a interrupt controller since that is
-    what it actually does.
-Changes for v7:
-  - Renamed irq domain for consistency
----
- drivers/irqchip/Makefile            |   2 +-
- drivers/irqchip/irq-aspeed-i2c-ic.c | 102 ++++++++++++++++++++++++++++++++++++
- 2 files changed, 103 insertions(+), 1 deletion(-)
- create mode 100644 drivers/irqchip/irq-aspeed-i2c-ic.c
+On Wed, Mar 29, 2017 at 5:26 PM, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org> wrote:
+> Raspbian and Fedora have decided to support the Pi3 in 32-bit mode for
+> now, so it's useful to be able to test that mode on an upstream
+> kernel.  It's also been useful for me to use the same board for 32-bit
+> and 64-bit development.
+>
+> Signed-off-by: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+> ---
+>
+> v1: Gerd's patch that put the ../../../arm64/... link in the Makefile
+> v2: Michael's patch that #included from ../../../arm64/... in a new
+>     bcm2837-rpi-3-b.dts.
+> v3: Mine, using symlinks to make sure that we don't break the split DT
+>     tree.
+> v4: Rely on the new include/arm64 symlink.
+>
+> Assuming positive review feedback, I assume it would be acceptable to
+> merge the shared/dt-symlinks branch in a PR of my own for the 32-bit
+> DT branch?
+>
+>  arch/arm/boot/dts/Makefile | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index 011808490fed..27d258cb50f2 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -72,6 +72,7 @@ dtb-$(CONFIG_ARCH_BCM2835) += \
+>         bcm2835-rpi-b-plus.dtb \
+>         bcm2835-rpi-a-plus.dtb \
+>         bcm2836-rpi-2-b.dtb \
+> +       include/arm64/broadcom/bcm2837-rpi-3-b.dtb \
 
-diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
-index 152bc40b6762..c136c2bd1761 100644
---- a/drivers/irqchip/Makefile
-+++ b/drivers/irqchip/Makefile
-@@ -74,6 +74,6 @@ obj-$(CONFIG_MVEBU_ODMI)		+= irq-mvebu-odmi.o
- obj-$(CONFIG_MVEBU_PIC)			+= irq-mvebu-pic.o
- obj-$(CONFIG_LS_SCFG_MSI)		+= irq-ls-scfg-msi.o
- obj-$(CONFIG_EZNPS_GIC)			+= irq-eznps.o
--obj-$(CONFIG_ARCH_ASPEED)		+= irq-aspeed-vic.o
-+obj-$(CONFIG_ARCH_ASPEED)		+= irq-aspeed-vic.o irq-aspeed-i2c-ic.o
- obj-$(CONFIG_STM32_EXTI) 		+= irq-stm32-exti.o
- obj-$(CONFIG_QCOM_IRQ_COMBINER)		+= qcom-irq-combiner.o
-diff --git a/drivers/irqchip/irq-aspeed-i2c-ic.c b/drivers/irqchip/irq-aspeed-i2c-ic.c
-new file mode 100644
-index 000000000000..a36fb09c10c2
---- /dev/null
-+++ b/drivers/irqchip/irq-aspeed-i2c-ic.c
-@@ -0,0 +1,102 @@
-+/*
-+ *  Aspeed 24XX/25XX I2C Interrupt Controller.
-+ *
-+ *  Copyright (C) 2012-2017 ASPEED Technology Inc.
-+ *  Copyright 2017 IBM Corporation
-+ *  Copyright 2017 Google, Inc.
-+ *
-+ *  This program is free software; you can redistribute it and/or modify
-+ *  it under the terms of the GNU General Public License version 2 as
-+ *  published by the Free Software Foundation.
-+ */
-+
-+#include <linux/irq.h>
-+#include <linux/irqchip.h>
-+#include <linux/irqchip/chained_irq.h>
-+#include <linux/irqdomain.h>
-+#include <linux/of_address.h>
-+#include <linux/of_irq.h>
-+#include <linux/io.h>
-+
-+
-+#define ASPEED_I2C_IC_NUM_BUS 14
-+
-+struct aspeed_i2c_ic {
-+	void __iomem		*base;
-+	int			parent_irq;
-+	struct irq_domain	*irq_domain;
-+};
-+
-+/*
-+ * The aspeed chip provides a single hardware interrupt for all of the I2C
-+ * busses, so we use a dummy interrupt chip to translate this single interrupt
-+ * into multiple interrupts, each associated with a single I2C bus.
-+ */
-+static void aspeed_i2c_ic_irq_handler(struct irq_desc *desc)
-+{
-+	struct aspeed_i2c_ic *i2c_ic = irq_desc_get_handler_data(desc);
-+	struct irq_chip *chip = irq_desc_get_chip(desc);
-+	unsigned long bit, status;
-+	unsigned int bus_irq;
-+
-+	chained_irq_enter(chip, desc);
-+	status = readl(i2c_ic->base);
-+	for_each_set_bit(bit, &status, ASPEED_I2C_IC_NUM_BUS) {
-+		bus_irq = irq_find_mapping(i2c_ic->irq_domain, bit);
-+		generic_handle_irq(bus_irq);
-+	}
-+	chained_irq_exit(chip, desc);
-+}
-+
-+/*
-+ * Set simple handler and mark IRQ as valid. Nothing interesting to do here
-+ * since we are using a dummy interrupt chip.
-+ */
-+static int aspeed_i2c_ic_map_irq_domain(struct irq_domain *domain,
-+					unsigned int irq, irq_hw_number_t hwirq)
-+{
-+	irq_set_chip_and_handler(irq, &dummy_irq_chip, handle_simple_irq);
-+	irq_set_chip_data(irq, domain->host_data);
-+
-+	return 0;
-+}
-+
-+static const struct irq_domain_ops aspeed_i2c_ic_irq_domain_ops = {
-+	.map = aspeed_i2c_ic_map_irq_domain,
-+};
-+
-+static int __init aspeed_i2c_ic_of_init(struct device_node *node,
-+					struct device_node *parent)
-+{
-+	struct aspeed_i2c_ic *i2c_ic;
-+
-+	i2c_ic = kzalloc(sizeof(*i2c_ic), GFP_KERNEL);
-+	if (!i2c_ic)
-+		return -ENOMEM;
-+
-+	i2c_ic->base = of_iomap(node, 0);
-+	if (IS_ERR(i2c_ic->base))
-+		return PTR_ERR(i2c_ic->base);
-+
-+	i2c_ic->parent_irq = irq_of_parse_and_map(node, 0);
-+	if (i2c_ic->parent_irq < 0)
-+		return i2c_ic->parent_irq;
-+
-+	i2c_ic->irq_domain = irq_domain_add_linear(
-+			node, ASPEED_I2C_IC_NUM_BUS,
-+			&aspeed_i2c_ic_irq_domain_ops, NULL);
-+	if (!i2c_ic->irq_domain)
-+		return -ENOMEM;
-+
-+	i2c_ic->irq_domain->name = "aspeed-i2c-domain";
-+
-+	irq_set_chained_handler_and_data(i2c_ic->parent_irq,
-+					 aspeed_i2c_ic_irq_handler, i2c_ic);
-+
-+	pr_info("i2c controller registered, irq %d\n", i2c_ic->parent_irq);
-+
-+	return 0;
-+}
-+
-+IRQCHIP_DECLARE(ast2400_i2c_ic, "aspeed,ast2400-i2c-ic", aspeed_i2c_ic_of_init);
-+IRQCHIP_DECLARE(ast2500_i2c_ic, "aspeed,ast2500-i2c-ic", aspeed_i2c_ic_of_init);
--- 
-2.12.2.816.g2cccc81164-goog
+Building straight out of (and into) the include dir is a little odd here.
 
+A tiny wrapper *.dtb in this dir, that just includes a shared dts/dtsi
+would be a lot nicer.
+
+If you do that, we can still pick it up for 4.12.
+
+-Olof
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
