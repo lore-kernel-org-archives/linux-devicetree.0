@@ -1,13 +1,13 @@
 From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Subject: [PATCH v4 07/10] mfd: axp20x: add axp20x-regulator cell
- for AXP803
-Date: Tue, 25 Apr 2017 00:01:00 +0800
-Message-ID: <20170424160103.9447-8-icenowy@aosc.io>
+Subject: [PATCH v4 08/10] arm64: allwinner: a64: add DTSI file
+ for AXP803 PMIC
+Date: Tue, 25 Apr 2017 00:01:01 +0800
+Message-ID: <20170424160103.9447-9-icenowy@aosc.io>
 References: <20170424160103.9447-1-icenowy@aosc.io>
 Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDS6XAN6ZADRBP6D7DDQKGQEAVBGVQY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBDS6XAN6ZADRBS6D7DDQKGQEVOX6FWQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20170424160103.9447-1-icenowy-h8G6r0blFSE@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -20,54 +20,174 @@ To: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Rob Herring 
 Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-As axp20x-regulator now supports AXP803, add a cell for it.
+As nearly all A64 boards are using AXP803 PMIC, add a DTSI file for it,
+like the old DTSI files for AXP20x/22x, for the common parts of the
+PMIC.
 
 Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Acked-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 ---
 Changes in v4:
-- Added a trailing comma for new cell, for easier further cell addition.
-Changes in v3:
-- Make the new cell one-liner.
+- Re-sorted the nodes.
 
- drivers/mfd/axp20x.c                 | 3 ++-
- drivers/regulator/axp20x-regulator.c | 6 +++---
- 2 files changed, 5 insertions(+), 4 deletions(-)
+ arch/arm64/boot/dts/allwinner/axp803.dtsi | 150 ++++++++++++++++++++++++++++++
+ 1 file changed, 150 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/allwinner/axp803.dtsi
 
-diff --git a/drivers/mfd/axp20x.c b/drivers/mfd/axp20x.c
-index 1dc6235778eb..917b6ddc4f15 100644
---- a/drivers/mfd/axp20x.c
-+++ b/drivers/mfd/axp20x.c
-@@ -848,7 +848,8 @@ static struct mfd_cell axp803_cells[] = {
- 		.name			= "axp20x-pek",
- 		.num_resources		= ARRAY_SIZE(axp803_pek_resources),
- 		.resources		= axp803_pek_resources,
--	}
-+	},
-+	{	.name			= "axp20x-regulator" },
- };
- 
- static struct mfd_cell axp806_cells[] = {
-diff --git a/drivers/regulator/axp20x-regulator.c b/drivers/regulator/axp20x-regulator.c
-index 9356ec8a9a1f..e2608fe770b9 100644
---- a/drivers/regulator/axp20x-regulator.c
-+++ b/drivers/regulator/axp20x-regulator.c
-@@ -311,13 +311,13 @@ static const struct regulator_desc axp803_regulators[] = {
- 		 AXP803_FLDO1_V_OUT, 0x0f, AXP22X_PWR_OUT_CTRL3, BIT(2)),
- 	AXP_DESC(AXP803, FLDO2, "fldo2", "fldoin", 700, 1450, 50,
- 		 AXP803_FLDO2_V_OUT, 0x0f, AXP22X_PWR_OUT_CTRL3, BIT(3)),
--	AXP_DESC_IO(AXP803, LDO_IO0, "ldo_io0", "ips", 700, 3300, 100,
-+	AXP_DESC_IO(AXP803, LDO_IO0, "ldo-io0", "ips", 700, 3300, 100,
- 		    AXP22X_LDO_IO0_V_OUT, 0x1f, AXP20X_GPIO0_CTRL, 0x07,
- 		    AXP22X_IO_ENABLED, AXP22X_IO_DISABLED),
--	AXP_DESC_IO(AXP803, LDO_IO1, "ldo_io1", "ips", 700, 3300, 100,
-+	AXP_DESC_IO(AXP803, LDO_IO1, "ldo-io1", "ips", 700, 3300, 100,
- 		    AXP22X_LDO_IO1_V_OUT, 0x1f, AXP20X_GPIO1_CTRL, 0x07,
- 		    AXP22X_IO_ENABLED, AXP22X_IO_DISABLED),
--	AXP_DESC_FIXED(AXP803, RTC_LDO, "rtc_ldo", "ips", 3000),
-+	AXP_DESC_FIXED(AXP803, RTC_LDO, "rtc-ldo", "ips", 3000),
- };
- 
- static const struct regulator_linear_range axp806_dcdca_ranges[] = {
+diff --git a/arch/arm64/boot/dts/allwinner/axp803.dtsi b/arch/arm64/boot/dts/allwinner/axp803.dtsi
+new file mode 100644
+index 000000000000..ff8af52743ff
+--- /dev/null
++++ b/arch/arm64/boot/dts/allwinner/axp803.dtsi
+@@ -0,0 +1,150 @@
++/*
++ * Copyright 2017 Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
++ *
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPL or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole.
++ *
++ *  a) This file is free software; you can redistribute it and/or
++ *     modify it under the terms of the GNU General Public License as
++ *     published by the Free Software Foundation; either version 2 of the
++ *     License, or (at your option) any later version.
++ *
++ *     This file is distributed in the hope that it will be useful,
++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *     GNU General Public License for more details.
++ *
++ * Or, alternatively,
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use,
++ *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
++ */
++
++/*
++ * AXP803 Integrated Power Management Chip
++ * http://files.pine64.org/doc/datasheet/pine64/AXP803_Datasheet_V1.0.pdf
++ */
++
++&axp803 {
++	interrupt-controller;
++	#interrupt-cells = <1>;
++
++	regulators {
++		/* Default work frequency for buck regulators */
++		x-powers,dcdc-freq = <3000>;
++
++		reg_aldo1: aldo1 {
++			regulator-name = "aldo1";
++		};
++
++		reg_aldo2: aldo2 {
++			regulator-name = "aldo2";
++		};
++
++		reg_aldo3: aldo3 {
++			regulator-name = "aldo3";
++		};
++
++		reg_dc1sw: dc1sw {
++			regulator-name = "dc1sw";
++		};
++
++		reg_dcdc1: dcdc1 {
++			regulator-name = "dcdc1";
++		};
++
++		reg_dcdc2: dcdc2 {
++			regulator-name = "dcdc2";
++		};
++
++		reg_dcdc3: dcdc3 {
++			regulator-name = "dcdc3";
++		};
++
++		reg_dcdc4: dcdc4 {
++			regulator-name = "dcdc4";
++		};
++
++		reg_dcdc5: dcdc5 {
++			regulator-name = "dcdc5";
++		};
++
++		reg_dcdc6: dcdc6 {
++			regulator-name = "dcdc6";
++		};
++
++		reg_dldo1: dldo1 {
++			regulator-name = "dldo1";
++		};
++
++		reg_dldo2: dldo2 {
++			regulator-name = "dldo2";
++		};
++
++		reg_dldo3: dldo3 {
++			regulator-name = "dldo3";
++		};
++
++		reg_dldo4: dldo4 {
++			regulator-name = "dldo4";
++		};
++
++		reg_eldo1: eldo1 {
++			regulator-name = "eldo1";
++		};
++
++		reg_eldo2: eldo2 {
++			regulator-name = "eldo2";
++		};
++
++		reg_eldo3: eldo3 {
++			regulator-name = "eldo3";
++		};
++
++		reg_fldo1: fldo1 {
++			regulator-name = "fldo1";
++		};
++
++		reg_fldo2: fldo2 {
++			regulator-name = "fldo2";
++		};
++
++		reg_ldo_io0: ldo-io0 {
++			regulator-name = "ldo-io0";
++			status = "disabled";
++		};
++
++		reg_ldo_io1: ldo-io1 {
++			regulator-name = "ldo-io1";
++			status = "disabled";
++		};
++
++		reg_rtc_ldo: rtc-ldo {
++			/* RTC_LDO is a fixed, always-on regulator */
++			regulator-always-on;
++			regulator-min-microvolt = <3000000>;
++			regulator-max-microvolt = <3000000>;
++			regulator-name = "rtc-ldo";
++		};
++	};
++};
 -- 
 2.12.2
