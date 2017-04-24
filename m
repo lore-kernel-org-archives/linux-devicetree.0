@@ -1,12 +1,12 @@
-From: Scott Branden <scott.branden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+From: Arun Parameswaran <arun.parameswaran-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 Subject: Re: [PATCH 1/2] net: dsa: b53: Add compatible strings for the
  Cygnus-family BCM11360.
-Date: Mon, 24 Apr 2017 15:50:53 -0700
-Message-ID: <a2f4f0c9-feea-291b-dae5-f4ed10f9c547@broadcom.com>
+Date: Mon, 24 Apr 2017 16:03:40 -0700
+Message-ID: <ee265657-8175-b6c7-a0dc-cec216cd9ede@broadcom.com>
 References: <20170424215022.30382-1-eric@anholt.net>
  <20170424215022.30382-2-eric@anholt.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <20170424215022.30382-2-eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
@@ -15,7 +15,10 @@ To: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Florian Fainelli
 Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Minor comment in line
+Hi Eric
+
+A comment on the Device ID.
+
 
 On 17-04-24 02:50 PM, Eric Anholt wrote:
 > Cygnus is a small family of SoCs, of which we currently have
@@ -36,12 +39,10 @@ On 17-04-24 02:50 PM, Eric Anholt wrote:
 > @@ -29,6 +29,9 @@ Required properties:
 >        "brcm,bcm58625-srab"
 >        "brcm,bcm88312-srab" and the mandatory "brcm,nsp-srab string
->
+>  
 > +  For the BCM11360 SoC, must be:
 > +      "brcm,bcm11360-srab" and the mandatory "brcm,cygnus-srab string
 > +
-place in alphabetical order in the doc?
-
 >    For the BCM63xx/33xx SoCs with an integrated switch, must be one of:
 >        "brcm,bcm3384-switch"
 >        "brcm,bcm6328-switch"
@@ -62,10 +63,18 @@ place in alphabetical order in the doc?
 >  	{ .compatible = "brcm,bcm58625-srab", .data = (void *)BCM58XX_DEVICE_ID },
 >  	{ .compatible = "brcm,bcm88312-srab", .data = (void *)BCM58XX_DEVICE_ID },
 > +	{ .compatible = "brcm,cygnus-srab", .data = (void *)BCM58XX_DEVICE_ID },
+The device ID should be 0xd300. This is the actual value read from the switch regs.
+This also requires an entry in the 'b53_switch_chips' structure in b53_common.c.
 >  	{ .compatible = "brcm,nsp-srab", .data = (void *)BCM58XX_DEVICE_ID },
 >  	{ /* sentinel */ },
 >  };
->
+Other wise this patch set looks good.
+
+I was testing a similar change (except for the above, which doesn't
+affect the functionality) to get the switch working and it works.
+
+Thanks
+Arun
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
