@@ -1,131 +1,247 @@
-From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 1/5] dt-bindings: gpu: add bindings for the ARM Mali
- Midgard GPU
-Date: Mon, 24 Apr 2017 08:02:39 -0500
-Message-ID: <CAL_Jsq+G46_hYV9s+emxUGPjJSFDMEhsvZFDu_gs7gK_nC34kw@mail.gmail.com>
-References: <cover.1491118230.git.guillaume.tucker@collabora.com>
- <a01a50d3-bb1b-2c56-2a15-30651fa2fac9@baylibre.com> <936a53ee-2ed8-11e4-a860-744256676af9@collabora.com>
- <8676554.1IW2xieEGM@diego> <7a875b2d-f288-8136-de04-11e744f0118b@collabora.com>
- <e8ff3ab8-3bf8-d731-a987-3bb8442cfc0a@baylibre.com> <92e0492a-bd17-0171-10a3-8af5044ba6cc@collabora.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v6 3/6] irqdomain: Add irq_domain_{push,pop}_irq() functions.
+Date: Mon, 24 Apr 2017 15:05:31 +0200
+Message-ID: <CACRpkdZ8byO6=rWS-TJDJ21-duvyau_EQpN2hWj27DF8ur6fnQ@mail.gmail.com>
+References: <1491931269-15650-1-git-send-email-david.daney@cavium.com> <1491931269-15650-4-git-send-email-david.daney@cavium.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <92e0492a-bd17-0171-10a3-8af5044ba6cc-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Guillaume Tucker <guillaume.tucker-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-Cc: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sjoerd Simons <sjoerd.simons-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, Wookey <wookey-Xpnwy/r4z8dg9hUCZPvPmw@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, John Reitan <john.reitan-5wv7dgnIgG8@public.gmane.org>, Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1491931269-15650-4-git-send-email-david.daney@cavium.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: David Daney <david.daney@cavium.com>, Bjorn Helgaas <helgaas@kernel.org>, linux-pci <linux-pci@vger.kernel.org>
+Cc: Alexandre Courbot <gnurou@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Marc Zyngier <marc.zyngier@arm.com>, Thomas Gleixner <tglx@linutronix.de>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 12, 2017 at 4:36 AM, Guillaume Tucker
-<guillaume.tucker-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org> wrote:
-> Hi Neil,
->
->
-> On 12/04/17 09:48, Neil Armstrong wrote:
->>
->> Hi Guillaume,
->>
->> On 04/12/2017 10:25 AM, Guillaume Tucker wrote:
->>>
->>> Hi Heiko,
->>>
->>> On 11/04/17 21:52, Heiko Stübner wrote:
->>>>
->>>> Hi Guillaume,
->>>>
->>>> Am Dienstag, 11. April 2017, 18:40:37 CEST schrieb Guillaume Tucker:
->>>>>
->>>>> On 03/04/17 09:12, Neil Armstrong wrote:
->>>>>>
->>>>>> On 04/02/2017 09:59 AM, Guillaume Tucker wrote:
->>>>>>>
->>>>>>> +Optional:
->>>>>>> +
->>>>>>> +- clocks : Phandle to clock for the Mali Midgard device.
->>>>>>> +- clock-names : Shall be "clk_mali".
->>>>>>> +- mali-supply : Phandle to regulator for the Mali device. Refer to
->>>>>>> +  Documentation/devicetree/bindings/regulator/regulator.txt for
->>>>>>> details.
->>>>>>> +- operating-points : Refer to
->>>>>>> Documentation/devicetree/bindings/power/opp.txt +  for details.
->>>>>>
->>>>>>
->>>>>> Please add :
->>>>>>    * Must be one of the following:
->>>>>>       "arm,mali-t820"
->>>>>>
->>>>>>    * And, optionally, one of the vendor specific compatible:
->>>>>>       "amlogic,meson-gxm-mali"
->>>>>>
->>>>>> with my Ack for the amlogic platform.
->>>>>
->>>>>
->>>>> It seems to me that as long as the GPU architecture hasn't been
->>>>> modified (I don't think I've ever encountered such a case) then
->>>>> it has to be a standard ARM Mali type regardless of the SoC
->>>>> vendor.  So unless a Mali-T820 in the Amlogic S912 SoC is not the
->>>>> same as a T820 in a different SoC, please forgive me but I don't
->>>>> understand why a vendor compatible string is needed.  My main
->>>>> concern is that it's going to be very hard to keep that list
->>>>> up-to-date with all existing Midgard SoC variants.  If do we need
->>>>> to add vendor compatible strings to correctly describe the
->>>>> hardware then I'm happy to add the amlogic one in my patch v3; I
->>>>> would just like to understand why that's necessary.
->>>>
->>>>
->>>> SoC vendors in most cases hook ip blocks into their socs in different
->>>> and often strange ways. After all it's not some discrete ic you solder
->>>> onto a board, but instead a part of the soc itself.
->>>
->>>
->>> Thanks for your explanation.  I see, it's really about special
->>> things that are not supported by the standard Midgard kernel
->>> driver.
->>>
->>>> So in most cases you will have some hooks outside the actual gpu iospace
->>>> that can be used to tune different things about how the gpu interacts
->>>> with
->>>> the system. Which is probably also the reason the midgard kernel driver
->>>> has this ugly "platform" subdirectory for compile-time platform
->>>> selection.
->>>
->>>
->>> I see the "platform" directory approach as an old and deprecated
->>> way of supporting platforms, upstreaming the dt bindings goes in
->>> the direction of using solely the device tree to describe the GPU
->>> hardware (i.e. CONFIG_MALI_PLATFORM_DEVICETREE).  If something
->>> quirky is needed in the platform, it should be possible to
->>> support it outside the GPU driver (platform devfreq etc...).
->>
->>
->> If this was so simple...
->>
->> This is why the "vendor" compatible is optional.
->>
->> And on another side, the binding were written by ARM, are may not be
->> compatible with how the mainline Linux handles these uses-cases.
->>
->> ARM added some tweaks to handle some weird integration using DT
->> properties,
->> but this should definitely go in platform specific code instead.
->
->
-> OK, sorry I was approaching the issue from a completely different
-> and somewhat more idealistic angle.  My impression is that if the
-> driver was in mainline then it would be maintained in such a way
-> that vendor compatible strings would not be required, but this is
-> all hypothetical.
->
-> So in practice, I think I now better understand why vendor
-> compatible strings may still be needed.  And they're optional, so
-> harmless to other platforms, so it's all fine with me :)
+Sorry for top posting but we need to loop in Bjorn Helgass and the
+linux-pci mailing list on this patch, at least so they see it, and can
+recognize similar cases in the future.
 
-SoC specific compatibles are required. They are only optional for a
-driver to use.
+(The patch set if very nice.)
 
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Yours,
+Linus Walleij
+
+On Tue, Apr 11, 2017 at 7:21 PM, David Daney <david.daney@cavium.com> wrote:
+> For an already existing irqdomain hierarchy, as might be obtained via
+> a call to pci_enable_msix_range(), a PCI driver wishing to add an
+> additional irqdomain to the hierarchy needs to be able to insert the
+> irqdomain to that already initialized hierarchy.  Calling
+> irq_domain_create_hierarchy() allows the new irqdomain to be created,
+> but no existing code allows for initializing the associated irq_data.
+>
+> Add a couple of helper functions (irq_domain_push_irq() and
+> irq_domain_pop_irq()) to initialize the irq_data for the new
+> irqdomain added to an existing hierarchy.
+>
+> Signed-off-by: David Daney <david.daney@cavium.com>
+> ---
+>  include/linux/irqdomain.h |   3 +
+>  kernel/irq/irqdomain.c    | 178 ++++++++++++++++++++++++++++++++++++++++++++++
+>  2 files changed, 181 insertions(+)
+>
+> diff --git a/include/linux/irqdomain.h b/include/linux/irqdomain.h
+> index 9f36160..0316846 100644
+> --- a/include/linux/irqdomain.h
+> +++ b/include/linux/irqdomain.h
+> @@ -425,6 +425,9 @@ extern void irq_domain_free_irqs_common(struct irq_domain *domain,
+>  extern void irq_domain_free_irqs_top(struct irq_domain *domain,
+>                                      unsigned int virq, unsigned int nr_irqs);
+>
+> +extern int irq_domain_push_irq(struct irq_domain *domain, int virq, void *arg);
+> +extern int irq_domain_pop_irq(struct irq_domain *domain, int virq);
+> +
+>  extern int irq_domain_alloc_irqs_parent(struct irq_domain *domain,
+>                                         unsigned int irq_base,
+>                                         unsigned int nr_irqs, void *arg);
+> diff --git a/kernel/irq/irqdomain.c b/kernel/irq/irqdomain.c
+> index 31805f2..ea9d30d 100644
+> --- a/kernel/irq/irqdomain.c
+> +++ b/kernel/irq/irqdomain.c
+> @@ -1304,6 +1304,184 @@ int __irq_domain_alloc_irqs(struct irq_domain *domain, int irq_base,
+>         return ret;
+>  }
+>
+> +/* The irq_data was moved, fix the revmap to refer to the new location */
+> +static void irq_domain_fix_revmap(struct irq_data *d)
+> +{
+> +       void **slot;
+> +
+> +       if (d->hwirq < d->domain->revmap_size)
+> +               return; /* Not using radix tree. */
+> +
+> +       /* Fix up the revmap. */
+> +       mutex_lock(&revmap_trees_mutex);
+> +       slot = radix_tree_lookup_slot(&d->domain->revmap_tree, d->hwirq);
+> +       if (slot)
+> +               radix_tree_replace_slot(&d->domain->revmap_tree, slot, d);
+> +       mutex_unlock(&revmap_trees_mutex);
+> +}
+> +
+> +/**
+> + * irq_domain_push_irq() - Push a domain in to the top of a hierarchy.
+> + * @domain:    Domain to push.
+> + * @virq:      Irq to push the domain in to.
+> + * @arg:       Passed to the irq_domain_ops alloc() function.
+> + *
+> + * For an already existing irqdomain hierarchy, as might be obtained
+> + * via a call to pci_enable_msix(), add an additional domain to the
+> + * head of the processing chain.  Must be called before request_irq()
+> + * has been called.
+> + */
+> +int irq_domain_push_irq(struct irq_domain *domain, int virq, void *arg)
+> +{
+> +       struct irq_data *child_irq_data;
+> +       struct irq_data *root_irq_data = irq_get_irq_data(virq);
+> +       struct irq_desc *desc;
+> +       int rv = 0;
+> +
+> +       /*
+> +        * Check that no action has been set, which indicates the virq
+> +        * is in a state where this function doesn't have to deal with
+> +        * races between interrupt handling and maintaining the
+> +        * hierarchy.  This will catch gross misuse.  Attempting to
+> +        * make the check race free would require holding locks across
+> +        * calls to struct irq_domain_ops->alloc(), which could lead
+> +        * to deadlock, so we just do a simple check before starting.
+> +        */
+> +       desc = irq_to_desc(virq);
+> +       if (!desc)
+> +               return -EINVAL;
+> +       if (WARN_ON(desc->action))
+> +               return -EBUSY;
+> +
+> +       if (domain == NULL)
+> +               return -EINVAL;
+> +
+> +       if (WARN_ON(!domain->ops->alloc))
+> +               return -EINVAL;
+> +
+> +       if (!root_irq_data)
+> +               return -EINVAL;
+> +
+> +       child_irq_data = kzalloc_node(sizeof(*child_irq_data), GFP_KERNEL,
+> +                                     irq_data_get_node(root_irq_data));
+> +       if (!child_irq_data)
+> +               return -ENOMEM;
+> +
+> +       mutex_lock(&irq_domain_mutex);
+> +
+> +       /* Copy the original irq_data. */
+> +       *child_irq_data = *root_irq_data;
+> +
+> +       irq_domain_fix_revmap(child_irq_data);
+> +
+> +       /*
+> +        * Overwrite the root_irq_data, which is embedded in struct
+> +        * irq_desc, with values for this domain.
+> +        */
+> +       root_irq_data->parent_data = child_irq_data;
+> +       root_irq_data->domain = domain;
+> +       root_irq_data->mask = 0;
+> +       root_irq_data->hwirq = 0;
+> +       root_irq_data->chip = NULL;
+> +       root_irq_data->chip_data = NULL;
+> +       rv = domain->ops->alloc(domain, virq, 1, arg);
+> +       if (rv) {
+> +               /* Restore the original irq_data. */
+> +               *root_irq_data = *child_irq_data;
+> +               irq_domain_fix_revmap(root_irq_data);
+> +               goto error;
+> +       }
+> +
+> +       if (root_irq_data->hwirq < domain->revmap_size) {
+> +               domain->linear_revmap[root_irq_data->hwirq] = virq;
+> +       } else {
+> +               mutex_lock(&revmap_trees_mutex);
+> +               radix_tree_insert(&domain->revmap_tree,
+> +                                 root_irq_data->hwirq, root_irq_data);
+> +               mutex_unlock(&revmap_trees_mutex);
+> +       }
+> +error:
+> +       mutex_unlock(&irq_domain_mutex);
+> +
+> +       return rv;
+> +}
+> +EXPORT_SYMBOL_GPL(irq_domain_push_irq);
+> +
+> +/**
+> + * irq_domain_pop_irq() - Remove a domain from the top of a hierarchy.
+> + * @domain:    Domain to remove.
+> + * @virq:      Irq to remove the domain from.
+> + *
+> + * Undo the effects of a call to irq_domain_push_irq().  Must be
+> + * called either before request_irq() or after free_irq().
+> + */
+> +int irq_domain_pop_irq(struct irq_domain *domain, int virq)
+> +{
+> +       struct irq_data *root_irq_data = irq_get_irq_data(virq);
+> +       struct irq_data *child_irq_data;
+> +       struct irq_data *tmp_irq_data;
+> +       struct irq_desc *desc;
+> +
+> +       /*
+> +        * Check that no action is set, which indicates the virq is in
+> +        * a state where this function doesn't have to deal with races
+> +        * between interrupt handling and maintaining the hierarchy.
+> +        * This will catch gross misuse.  Attempting to make the check
+> +        * race free would require holding locks across calls to
+> +        * struct irq_domain_ops->free(), which could lead to
+> +        * deadlock, so we just do a simple check before starting.
+> +        */
+> +       desc = irq_to_desc(virq);
+> +       if (!desc)
+> +               return -EINVAL;
+> +       if (WARN_ON(desc->action))
+> +               return -EBUSY;
+> +
+> +       if (domain == NULL)
+> +               return -EINVAL;
+> +
+> +       if (!root_irq_data)
+> +               return -EINVAL;
+> +
+> +       tmp_irq_data = irq_domain_get_irq_data(domain, virq);
+> +
+> +       /* We can only "pop" if this domain is at the top of the list */
+> +       if (WARN_ON(root_irq_data != tmp_irq_data))
+> +               return -EINVAL;
+> +
+> +       if (WARN_ON(root_irq_data->domain != domain))
+> +               return -EINVAL;
+> +
+> +       child_irq_data = root_irq_data->parent_data;
+> +       if (WARN_ON(!child_irq_data))
+> +               return -EINVAL;
+> +
+> +       mutex_lock(&irq_domain_mutex);
+> +
+> +       root_irq_data->parent_data = NULL;
+> +
+> +       if (root_irq_data->hwirq >= domain->revmap_size) {
+> +               mutex_lock(&revmap_trees_mutex);
+> +               radix_tree_delete(&domain->revmap_tree, root_irq_data->hwirq);
+> +               mutex_unlock(&revmap_trees_mutex);
+> +       }
+> +
+> +       if (domain->ops->free)
+> +               domain->ops->free(domain, virq, 1);
+> +
+> +       /* Restore the original irq_data. */
+> +       *root_irq_data = *child_irq_data;
+> +
+> +       irq_domain_fix_revmap(root_irq_data);
+> +
+> +       mutex_unlock(&irq_domain_mutex);
+> +
+> +       kfree(child_irq_data);
+> +
+> +       return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(irq_domain_pop_irq);
+> +
+>  /**
+>   * irq_domain_free_irqs - Free IRQ number and associated data structures
+>   * @virq:      base IRQ number
+> --
+> 1.8.3.1
+>
