@@ -1,81 +1,42 @@
-From: Arun Parameswaran <arun.parameswaran-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 1/2] net: dsa: b53: Add compatible strings for the
- Cygnus-family BCM11360.
-Date: Mon, 24 Apr 2017 16:03:40 -0700
-Message-ID: <ee265657-8175-b6c7-a0dc-cec216cd9ede@broadcom.com>
-References: <20170424215022.30382-1-eric@anholt.net>
- <20170424215022.30382-2-eric@anholt.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170424215022.30382-2-eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Vivien Didelot <vivien.didelot-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+From: frowand.list@gmail.com
+Subject: [PATCH v2 0/2] of: Add unit tests for applying overlays
+Date: Mon, 24 Apr 2017 16:05:17 -0700
+Message-ID: <1493075119-32026-1-git-send-email-frowand.list@gmail.com>
+Return-path: <linux-kbuild-owner@vger.kernel.org>
+Sender: linux-kbuild-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, stephen.boyd@linaro.org, Michal Marek <mmarek@suse.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Eric
+From: Frank Rowand <frank.rowand@sony.com>
 
-A comment on the Device ID.
+Existing overlay unit tests examine individual pieces of the overlay
+code.  The new tests target the entire process of applying an overlay.
 
+Changes from v1:
+  - Move overlay base dtb unflattening into unittest.c.  Call from fdt.c.
+  - Clarify file and variable names, 'overlay_test_' instead of 'ot_'
+  - Use proper naming convention for node names.
+  - A few added comments.
+  - Improve error messages in the new tests.
 
-On 17-04-24 02:50 PM, Eric Anholt wrote:
-> Cygnus is a small family of SoCs, of which we currently have
-> devicetree for BCM11360 and BCM58300.  The 11360's B53 is mostly the
-> same as 58xx, just requiring a tiny bit of setup that was previously
-> missing.
->
-> Signed-off-by: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/net/dsa/b53.txt | 3 +++
->  drivers/net/dsa/b53/b53_srab.c                    | 2 ++
->  2 files changed, 5 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/net/dsa/b53.txt b/Documentation/devicetree/bindings/net/dsa/b53.txt
-> index d6c6e41648d4..49c93d3c0839 100644
-> --- a/Documentation/devicetree/bindings/net/dsa/b53.txt
-> +++ b/Documentation/devicetree/bindings/net/dsa/b53.txt
-> @@ -29,6 +29,9 @@ Required properties:
->        "brcm,bcm58625-srab"
->        "brcm,bcm88312-srab" and the mandatory "brcm,nsp-srab string
->  
-> +  For the BCM11360 SoC, must be:
-> +      "brcm,bcm11360-srab" and the mandatory "brcm,cygnus-srab string
-> +
->    For the BCM63xx/33xx SoCs with an integrated switch, must be one of:
->        "brcm,bcm3384-switch"
->        "brcm,bcm6328-switch"
-> diff --git a/drivers/net/dsa/b53/b53_srab.c b/drivers/net/dsa/b53/b53_srab.c
-> index 8a62b6a69703..c37ffd1b6833 100644
-> --- a/drivers/net/dsa/b53/b53_srab.c
-> +++ b/drivers/net/dsa/b53/b53_srab.c
-> @@ -364,6 +364,7 @@ static const struct of_device_id b53_srab_of_match[] = {
->  	{ .compatible = "brcm,bcm53018-srab" },
->  	{ .compatible = "brcm,bcm53019-srab" },
->  	{ .compatible = "brcm,bcm5301x-srab" },
-> +	{ .compatible = "brcm,bcm11360-srab", .data = (void *)BCM58XX_DEVICE_ID },
->  	{ .compatible = "brcm,bcm58522-srab", .data = (void *)BCM58XX_DEVICE_ID },
->  	{ .compatible = "brcm,bcm58525-srab", .data = (void *)BCM58XX_DEVICE_ID },
->  	{ .compatible = "brcm,bcm58535-srab", .data = (void *)BCM58XX_DEVICE_ID },
-> @@ -371,6 +372,7 @@ static const struct of_device_id b53_srab_of_match[] = {
->  	{ .compatible = "brcm,bcm58623-srab", .data = (void *)BCM58XX_DEVICE_ID },
->  	{ .compatible = "brcm,bcm58625-srab", .data = (void *)BCM58XX_DEVICE_ID },
->  	{ .compatible = "brcm,bcm88312-srab", .data = (void *)BCM58XX_DEVICE_ID },
-> +	{ .compatible = "brcm,cygnus-srab", .data = (void *)BCM58XX_DEVICE_ID },
-The device ID should be 0xd300. This is the actual value read from the switch regs.
-This also requires an entry in the 'b53_switch_chips' structure in b53_common.c.
->  	{ .compatible = "brcm,nsp-srab", .data = (void *)BCM58XX_DEVICE_ID },
->  	{ /* sentinel */ },
->  };
-Other wise this patch set looks good.
+Frank Rowand (2):
+  of: support dtc compiler flags for device tree overlays
+  of: Add unit tests for applying overlays.
 
-I was testing a similar change (except for the above, which doesn't
-affect the functionality) to get the switch working and it works.
+ drivers/of/fdt.c                                 |  14 +-
+ drivers/of/of_private.h                          |  11 +
+ drivers/of/unittest-data/Makefile                |  17 +-
+ drivers/of/unittest-data/overlay.dts             |  53 ++++
+ drivers/of/unittest-data/overlay_bad_phandle.dts |  20 ++
+ drivers/of/unittest-data/overlay_base.dts        |  80 ++++++
+ drivers/of/unittest.c                            | 318 +++++++++++++++++++++++
+ scripts/Makefile.lib                             |   2 +
+ 8 files changed, 507 insertions(+), 8 deletions(-)
+ create mode 100644 drivers/of/unittest-data/overlay.dts
+ create mode 100644 drivers/of/unittest-data/overlay_bad_phandle.dts
+ create mode 100644 drivers/of/unittest-data/overlay_base.dts
 
-Thanks
-Arun
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Frank Rowand <frank.rowand@sony.com>
+
