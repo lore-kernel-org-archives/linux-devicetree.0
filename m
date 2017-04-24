@@ -1,36 +1,51 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH/RFC 0/5] arm64: dts: renesas: Break out common board support
-Date: Mon, 24 Apr 2017 09:25:10 +0200
-Message-ID: <CAMuHMdXWptBgSxy44zLJU+=c3ycbMJ9jkc6UzDqkbSMznJqeUQ@mail.gmail.com>
-References: <1492779321-23939-1-git-send-email-geert+renesas@glider.be>
+From: Nicolas Ferre <nicolas.ferre-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
+Subject: Re: [PATCH] ARM: at91/at91-pinctrl documentation: fix spelling
+ mistake: "contoller" -> "controller"
+Date: Mon, 24 Apr 2017 10:19:38 +0200
+Message-ID: <a5634388-bcd2-6c3f-37a6-bb293f3560ee@microchip.com>
+References: <20170421120713.4939-1-colin.king@canonical.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <1492779321-23939-1-git-send-email-geert+renesas@glider.be>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170421120713.4939-1-colin.king-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Colin King <colin.king-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: kernel-janitors-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 21, 2017 at 2:55 PM, Geert Uytterhoeven
-<geert+renesas@glider.be> wrote:
-> Geert Uytterhoeven (5):
->   arm64: renesas: r8a7796: Add external audio clocks
->   arm64: renesas: r8a7796: Add external PCIe bus clock
+Le 21/04/2017 à 14:07, Colin King a écrit :
+> From: Colin Ian King <colin.king-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
+> 
+> trivial fix to spelling mistake in documentation
+> 
+> Signed-off-by: Colin Ian King <colin.king-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
 
-Oops, the above should have had the proper "arm64: dts:" prefix.
+Acked-by: Nicolas Ferre <nicolas.ferre-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
 
->   [RFC] arm64: dts: r8a7796: Add placeholders for various devices
->   [RFC] arm64: dts: renesas: Extract common Salvator-X board support
->   [RFC] arm64: dts: renesas: Extract common ULCB board support
+> ---
+>  Documentation/devicetree/bindings/pinctrl/atmel,at91-pinctrl.txt | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/pinctrl/atmel,at91-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/atmel,at91-pinctrl.txt
+> index 9a8a45d9d8ab..590e60378be3 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/atmel,at91-pinctrl.txt
+> +++ b/Documentation/devicetree/bindings/pinctrl/atmel,at91-pinctrl.txt
+> @@ -4,7 +4,7 @@ The AT91 Pinmux Controller, enables the IC
+>  to share one PAD to several functional blocks. The sharing is done by
+>  multiplexing the PAD input/output signals. For each PAD there are up to
+>  8 muxing options (called periph modes). Since different modules require
+> -different PAD settings (like pull up, keeper, etc) the contoller controls
+> +different PAD settings (like pull up, keeper, etc) the controller controls
+>  also the PAD settings parameters.
+>  
+>  Please refer to pinctrl-bindings.txt in this directory for details of the
+> 
 
-Gr{oetje,eeting}s,
 
-                        Geert
-
+-- 
+Nicolas Ferre
 --
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
