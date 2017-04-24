@@ -1,32 +1,36 @@
-From: Stephan =?ISO-8859-1?Q?M=FCller?= <smueller-T9tCv8IpfcWELgA04lAiVw@public.gmane.org>
-Subject: Re: [PATCH v2 6/9] staging: ccree: add FIPS support
-Date: Mon, 24 Apr 2017 09:23:32 +0200
-Message-ID: <1965077.Btm8atTi0c@tauon.chronox.de>
-References: <1492693983-8175-1-git-send-email-gilad@benyossef.com> <2100092.9meQszc5SR@tauon.chronox.de> <CAOtvUMdYtLa10dUQ--5hxeYOAi+vw9OTLZF=WPmDS27cr6KvJg@mail.gmail.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH/RFC 0/5] arm64: dts: renesas: Break out common board support
+Date: Mon, 24 Apr 2017 09:25:10 +0200
+Message-ID: <CAMuHMdXWptBgSxy44zLJU+=c3ycbMJ9jkc6UzDqkbSMznJqeUQ@mail.gmail.com>
+References: <1492779321-23939-1-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAOtvUMdYtLa10dUQ--5hxeYOAi+vw9OTLZF=WPmDS27cr6KvJg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Gilad Ben-Yossef <gilad-6S/DczAoZh3WXxRugSxzZg@public.gmane.org>
-Cc: Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux kernel mailing list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Gilad Ben-Yossef <gilad.benyossef-5wv7dgnIgG8@public.gmane.org>, Binoy Jayan <binoy.jayan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ofir Drang <ofir.drang-5wv7dgnIgG8@public.gmane.org>, Stuart Yoder <stuart.yoder-5wv7dgnIgG8@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <1492779321-23939-1-git-send-email-geert+renesas@glider.be>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Am Montag, 24. April 2017, 09:07:45 CEST schrieb Gilad Ben-Yossef:
+On Fri, Apr 21, 2017 at 2:55 PM, Geert Uytterhoeven
+<geert+renesas@glider.be> wrote:
+> Geert Uytterhoeven (5):
+>   arm64: renesas: r8a7796: Add external audio clocks
+>   arm64: renesas: r8a7796: Add external PCIe bus clock
 
-Hi Gilad,
+Oops, the above should have had the proper "arm64: dts:" prefix.
 
-> I guess we could change the function to indicate that a key is valid
-> for decryption but not encryption
-> and have the implementation limiting based on that if there is an
-> interest in SP800-131A compliance.
+>   [RFC] arm64: dts: r8a7796: Add placeholders for various devices
+>   [RFC] arm64: dts: renesas: Extract common Salvator-X board support
+>   [RFC] arm64: dts: renesas: Extract common ULCB board support
 
-I would be delighted to see and review a patch.
+Gr{oetje,eeting}s,
 
-Ciao
-Stephan
+                        Geert
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
