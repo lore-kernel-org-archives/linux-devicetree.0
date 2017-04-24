@@ -1,30 +1,78 @@
 From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v2 6/7] ARM: Kconfig: Introduce MACH_STM32F469 flag
-Date: Mon, 24 Apr 2017 14:30:37 +0200
-Message-ID: <CACRpkdZmWFKaZWB8qZaH=jB61xdwvJ=TC8idYH9kJdi=HEZRAA@mail.gmail.com>
-References: <1491568984-20169-1-git-send-email-alexandre.torgue@st.com> <1491568984-20169-7-git-send-email-alexandre.torgue@st.com>
+Subject: Re: [PATCH 1/4] pinctrl: stm32: set pin to gpio input when used as interrupt
+Date: Mon, 24 Apr 2017 14:36:27 +0200
+Message-ID: <CACRpkdYZixkJroS-gQxYL6xW47-J9UiNv4hOO9F-1b2eYLr8XQ@mail.gmail.com>
+References: <1491577811-26989-1-git-send-email-alexandre.torgue@st.com> <1491577811-26989-2-git-send-email-alexandre.torgue@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1491568984-20169-7-git-send-email-alexandre.torgue@st.com>
+In-Reply-To: <1491577811-26989-2-git-send-email-alexandre.torgue@st.com>
 Sender: linux-gpio-owner@vger.kernel.org
 To: Alexandre TORGUE <alexandre.torgue@st.com>
-Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>, Russell King <linux@armlinux.org.uk>, Olof Johansson <olof@lixom.net>, Lee Jones <lee.jones@linaro.org>, Jonathan Corbet <corbet@lwn.net>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Patrice Chotard <patrice.chotard@st.com>, Paul Gortmaker <paul.gortmaker@windriver.com>, Rob Herring <robh+dt@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 7, 2017 at 2:43 PM, Alexandre TORGUE
+On Fri, Apr 7, 2017 at 5:10 PM, Alexandre TORGUE
 <alexandre.torgue@st.com> wrote:
 
-> This patch introduces the MACH_STM32F469 to make possible to only select
-> STM32F469 pinctrl driver
->
-> By default, all the MACH_STM32Fxxx flags will be set with STM32 defconfig.
+> This patch ensures that pin is correctly set as gpio input when it is used
+> as an interrupt.
 >
 > Signed-off-by: Alexandre TORGUE <alexandre.torgue@st.com>
+(...)
 
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
+> +static int stm32_gpio_irq_request_resources(struct irq_data *irq_data)
+> +{
+> +       struct stm32_gpio_bank *bank = irq_data->domain->host_data;
+> +       u32 ret;
+> +
+> +       if (!gpiochip_is_requested(&bank->gpio_chip, irq_data->hwirq)) {
+> +               ret = stm32_gpio_request(&bank->gpio_chip, irq_data->hwirq);
+> +               if (ret)
+> +                       return ret;
+> +       }
 
-Please funnel this through the ARM SoC tree.
+This is wrong. You should only use gpiochip_lock_as_irq(), because of the
+following in Documentation/gpio/driver.txt:
+
+---------------
+It is legal for any IRQ consumer to request an IRQ from any irqchip no matter
+if that is a combined GPIO+IRQ driver. The basic premise is that gpio_chip and
+irq_chip are orthogonal, and offering their services independent of each
+other.
+(...)
+So always prepare the hardware and make it ready for action in respective
+callbacks from the GPIO and irqchip APIs. Do not rely on gpiod_to_irq() having
+been called first.
+
+This orthogonality leads to ambiguities that we need to solve: if there is
+competition inside the subsystem which side is using the resource (a certain
+GPIO line and register for example) it needs to deny certain operations and
+keep track of usage inside of the gpiolib subsystem. This is why the API
+below exists.
+
+Locking IRQ usage
+-----------------
+Input GPIOs can be used as IRQ signals. When this happens, a driver is requested
+to mark the GPIO as being used as an IRQ:
+
+        int gpiochip_lock_as_irq(struct gpio_chip *chip, unsigned int offset)
+
+This will prevent the use of non-irq related GPIO APIs until the GPIO IRQ lock
+is released:
+
+        void gpiochip_unlock_as_irq(struct gpio_chip *chip, unsigned int offset)
+
+When implementing an irqchip inside a GPIO driver, these two functions should
+typically be called in the .startup() and .shutdown() callbacks from the
+irqchip.
+
+When using the gpiolib irqchip helpers, these callback are automatically
+assigned.
+--------------
+
+It is because of easy to make errors like this that I prefer that people try
+to use GPIOLIB_IRQCHIP helpers insteaf of rolling their own irqchip code.
 
 Yours,
 Linus Walleij
