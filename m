@@ -1,87 +1,87 @@
-From: Marek Vasut <marek.vasut@gmail.com>
-Subject: [PATCH V2 1/4] mfd: Add ROHM BD9571MWV-M PMIC DT bindings
-Date: Mon, 24 Apr 2017 17:21:27 +0200
-Message-ID: <20170424152130.32410-1-marek.vasut+renesas@gmail.com>
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: linux-renesas-soc@vger.kernel.org
-Cc: Marek Vasut <marek.vasut+renesas@gmail.com>, devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>
+From: Jonas Gorski <jonas.gorski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH V2 1/4] dt-bindings: mtd: make partitions doc a bit more generic
+Date: Mon, 24 Apr 2017 17:28:54 +0200
+Message-ID: <CAOiHx=mHvuWM8Ww1+GD621c1AgAU0BNoGG-=1BgRxEVnTj8wLQ@mail.gmail.com>
+References: <20170420135731.13272-2-zajec5@gmail.com> <20170424124120.31613-1-zajec5@gmail.com>
+ <20170424124120.31613-2-zajec5@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170424124120.31613-2-zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, MTD Maling List <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add DT bindings for the ROHM BD9571MWV-M PMIC. This PMIC has
-the following features:
-- multiple voltage monitors for 1V8, 2V5, 3V3 voltage rail
-- one voltage regulator for DVFS
-- two GPIOs
+Hi,
 
-Signed-off-by: Marek Vasut <marek.vasut+renesas@gmail.com>
-Cc: devicetree@vger.kernel.org
-Cc: Rob Herring <robh@kernel.org>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: linux-renesas-soc@vger.kernel.org
----
-V2: - Drop the compatible = "regulator-fixed" from the binding example,
-      it should not be there.
-    - List the VD09 regulator
----
- .../devicetree/bindings/mfd/bd9571mwv.txt          | 49 ++++++++++++++++++++++
- 1 file changed, 49 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mfd/bd9571mwv.txt
+On 24 April 2017 at 14:41, Rafa=C5=82 Mi=C5=82ecki <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote=
+:
+> From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>
+> Currently the only documented partitioning is "fixed-partitions" but
+> there are more methods in use that we may want to support in the future.
+> Mention them and make it clear Fixed Partitions are just a single case.
+>
+> Signed-off-by: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Signed-off-by: Rafa=C5=82 Mi=C5=82ecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+> ---
+> This is based on Brian's patch:
+> [RFC PATCH 3/7] doc: dt: mtd: partition: add on-flash format binding
+>
+> V1: Dropped "Section B: On-Flash Partition Tables" with Google's FMAP as =
+this
+>     patchset doesn't add that new parser.
+> V2: Add "We currently only document a binding for fixed layouts." part
+> ---
+>  .../devicetree/bindings/mtd/partition.txt          | 30 ++++++++++++++++=
++-----
+>  1 file changed, 24 insertions(+), 6 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/mtd/partition.txt b/Docume=
+ntation/devicetree/bindings/mtd/partition.txt
+> index 81a224da63be..b5de311b967a 100644
+> --- a/Documentation/devicetree/bindings/mtd/partition.txt
+> +++ b/Documentation/devicetree/bindings/mtd/partition.txt
+> @@ -1,29 +1,47 @@
+> -Representing flash partitions in devicetree
+> +Flash partitions in device tree
+> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D
+>
+> -Partitions can be represented by sub-nodes of an mtd device. This can be=
+ used
+> +Flash devices can be partitioned into one or more functional ranges (e.g=
+. "boot
+> +code", "nvram", "kernel").
+> +
+> +Different devices may be partitioned in a different ways. Some may use a=
+ fixed
+> +flash layout set at production time. Some may use on-flash table that de=
+scribes
+> +the geometry and naming/purpose of each functional region. It is also po=
+ssible
+> +to see these methods mixed.
+> +
+> +To assist system software in locating partitions, we provide a binding t=
+o
+> +describe which method is used for a given flash.
 
-diff --git a/Documentation/devicetree/bindings/mfd/bd9571mwv.txt b/Documentation/devicetree/bindings/mfd/bd9571mwv.txt
-new file mode 100644
-index 000000000000..ce24231edd7d
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mfd/bd9571mwv.txt
-@@ -0,0 +1,49 @@
-+* ROHM BD9571MWV Power Management Integrated Circuit (PMIC) bindings
-+
-+Required properties:
-+ - compatible		: Should be "rohm,bd9571mwv".
-+ - reg			: I2C slave address.
-+ - interrupt-parent	: Phandle to the parent interrupt controller.
-+ - interrupts		: The interrupt line the device is connected to.
-+ - interrupt-controller	: Marks the device node as an interrupt controller.
-+ - #interrupt-cells	: The number of cells to describe an IRQ, should be 2.
-+			    The first cell is the IRQ number.
-+			    The second cell is the flags, encoded as trigger
-+			    masks from ../interrupt-controller/interrupts.txt.
-+ - gpio-controller      : Marks the device node as a GPIO Controller.
-+ - #gpio-cells          : Should be two.  The first cell is the pin number and
-+                            the second cell is used to specify flags.
-+                            See ../gpio/gpio.txt for more information.
-+ - regulators:          : List of child nodes that specify the regulator
-+                            initialization data. Child nodes must be named
-+                            after their hardware counterparts:
-+			     - vd09
-+			     - vd18
-+			     - vd25
-+			     - vd33
-+			     - dvfs
-+			    Each child node is defined using the standard
-+			    binding for regulators.
-+
-+Example:
-+
-+	pmic: bd9571mwv@30 {
-+		compatible = "rohm,bd9571mwv";
-+		reg = <0x30>;
-+		interrupt-parent = <&gpio2>;
-+		interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
-+		interrupt-controller;
-+		#interrupt-cells = <2>;
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+
-+		regulators {
-+			dvfs: dvfs {
-+				regulator-name = "dvfs";
-+				regulator-min-microvolt = <750000>;
-+				regulator-max-microvolt = <1030000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+		};
-+	};
--- 
-2.11.0
+Since patch 3 adds specifying methods through the compatible of the
+partitions subnode, maybe we should document that here? Something
+along
+
+"To assist system software in locating partitions, we allow describing
+which method is used for a given flash device. To describe the method
+there should be a subnode of the flash device that is named
+'partitions'. It must have a 'compatible' property, which is used to
+identify the method to use."
+
+
+Regards
+Jonas
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
