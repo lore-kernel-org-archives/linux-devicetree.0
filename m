@@ -1,77 +1,51 @@
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: Re: [PATCH V2] clk: hi6220: Add the hi655x's pmic clock
-Date: Mon, 24 Apr 2017 11:43:38 +0200
-Message-ID: <20170424094338.GC2137@mai>
-References: <1491683412-12237-1-git-send-email-daniel.lezcano@linaro.org>
- <20170424093154.ffo7zsr66a2yjy74@dell>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: Applied "ASoC: Add Odroid sound DT bindings documentation" to
+ the asoc tree
+Date: Mon, 24 Apr 2017 10:57:07 +0100
+Message-ID: <20170424095707.r3b63plbrl2wcx6w@sirena.org.uk>
+References: <1492795191-31298-6-git-send-email-s.nawrocki@samsung.com>
+ <E1d1cLy-0001qc-PC@debutante>
+ <CAJKOXPebDt030tcdBGya4Wpm8HCvMqyM7qJzDvibmvnMttH-FA@mail.gmail.com>
+ <20170421175800.qiwvr46phfafqi75@sirena.org.uk>
+ <20170421180710.6gdaosnk2gn2leoo@kozik-lap>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="u2itx5kjaillbeyq"
 Return-path: <linux-clk-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170424093154.ffo7zsr66a2yjy74@dell>
+In-Reply-To: <20170421180710.6gdaosnk2gn2leoo@kozik-lap>
 Sender: linux-clk-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: sboyd@codeaurora.org, mturquette@baylibre.com, xuwei5@hisilicon.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>, linux-samsung-soc@vger.kernel.org, linux-clk@vger.kernel.org, dri-devel@lists.freedesktop.org, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, jy0922.shim@samsung.com, Javier Martinez Canillas <javier@osg.samsung.com>, =?utf-8?Q?Bart=C5=82omiej_=C5=BBo=C5=82nierkiewicz?= <b.zolnierkie@samsung.com>, Seung Woo Kim <sw0312.kim@samsung.com>, Inki Dae <inki.dae@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, robh+dt@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 24, 2017 at 10:31:54AM +0100, Lee Jones wrote:
-> On Sat, 08 Apr 2017, Daniel Lezcano wrote:
-> 
-> > The hi655x multi function device is a PMIC providing regulators.
-> > 
-> > The PMIC also provides a clock for the WiFi and the Bluetooth, let's implement
-> > this clock in order to add it in the hi655x MFD and allow proper wireless
-> > initialization.
-> > 
-> > Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-> > ---
-> > 
-> > Changelog:
-> > 
-> >  V2:
-> >     - Added COMPILE_TEST option, compiled on x86
-> >     - Removed useless parenthesis
-> >     - Used of_clk_hw_simple_get() instead of deref dance
-> >     - Do bailout if the clock-names is not specified
-> >     - Rollback on error
-> >     - Folded mfd line change and binding
-> >     - Added #clock-cells binding documentation
-> >     - Added #clock-cells in the DT
-> > 
-> >  V1: initial post
-> > ---
-> 
-> ??
-> 
-> > ---
-> 
-> I'm unsure if this as been mentioned before, but bundling;
-> driver & architecture changes and documentation into a single patch is
-> very seldom a good idea.  In this case, you should split this into at
-> least 3, perhaps 4 patches.
-> 
-> >  .../devicetree/bindings/mfd/hisilicon,hi655x.txt   |   6 +
-> 
-> Patch 1
-> 
-> >  arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts     |   1 +
-> 
-> Patch 2
-> 
-> >  drivers/clk/Kconfig                                |   8 ++
-> >  drivers/clk/Makefile                               |   1 +
-> >  drivers/clk/clk-hi655x.c                           | 140 +++++++++++++++++++++
-> 
-> Patch 3
-> 
-> >  drivers/mfd/hi655x-pmic.c                          |   3 +-
-> 
-> Patch 4
-> 
-> [...]
 
-Yep. Will do that next time.
+--u2itx5kjaillbeyq
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Thanks.
+On Fri, Apr 21, 2017 at 08:07:10PM +0200, Krzysztof Kozlowski wrote:
 
-  -- Daniel
+> Mutt is complaining that your key used to sign the mails has expired:
+> 	gpg: Note: This key has expired!
+> 	Primary key fingerprint: 3F25 68AA C269 98F9 E813  A1C5 C3F4 36CA 30F5 D8EB
+> 	Subkey fingerprint: ADE6 68AA 6757 18B5 9FE2  9FEA 24D6 8B72 5D54 87D0
+
+gpg --refresh-keys should fix that.
+
+--u2itx5kjaillbeyq
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlj9y+8ACgkQJNaLcl1U
+h9A01wf9G9HYQf8kZERLTSLeRovhzVRv5RSuzQjwDBlNBr2Wn68sqDYDcdgafHDJ
+GHayc5QRIws7IwXyJ7rcDHisv0NuHQ3MRXaEWEs4DL4hKXHHGcz6fvAhPj9Aowx1
+jKt9twSaLiftfi5yudhqZFDJwVD3WOV12X4sykkmO4HtKgvv/CwgMSW7bfgX43zx
+aPwhTb8VlxqfFwRxWLs0xDJjdkcVGIllyqphZ6lwqrw1cyRXVbnlW7WTQx+06I8W
+2oe2yE3V/5TPdo0Szo85IYl6iXXJ0JausqHj21qCsmyBXOZ4Zv935LptfMFm1jUk
+jrIQ2fahp9Nk75qcr4b+hmi9mFa3nA==
+=nHXP
+-----END PGP SIGNATURE-----
+
+--u2itx5kjaillbeyq--
