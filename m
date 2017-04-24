@@ -1,18 +1,18 @@
 From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 03/12] dt-bindings: make AXP20X
- compatible strings one per line
-Date: Mon, 24 Apr 2017 13:07:50 +0100
-Message-ID: <20170424120750.icfv5cvavxrid27d@dell>
+Subject: Re: [PATCH v3 04/12] dt-bindings: add device tree
+ binding for X-Powers AXP803 PMIC
+Date: Mon, 24 Apr 2017 13:08:15 +0100
+Message-ID: <20170424120815.hrduxdbqzcmroy2p@dell>
 References: <20170417115747.7300-1-icenowy@aosc.io>
- <20170417115747.7300-4-icenowy@aosc.io>
+ <20170417115747.7300-5-icenowy@aosc.io>
 Reply-To: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBDA7X7F2WUEBBGOV67DQKGQEQZ537HI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBDA7X7F2WUEBBMWV67DQKGQEDXJLBPA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <20170417115747.7300-4-icenowy-h8G6r0blFSE@public.gmane.org>
+In-Reply-To: <20170417115747.7300-5-icenowy-h8G6r0blFSE@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -25,46 +25,47 @@ List-Id: devicetree@vger.kernel.org
 
 On Mon, 17 Apr 2017, Icenowy Zheng wrote:
 
-> In the binding documentation of AXP20X mfd, the compatible strings used
-> to be listed for three per line, which leads to some mess when trying to
-> add AXP803 compatible string (as we have already AXP806 and AXP809
-> compatibles, which is after AXP803 in ascending order).
+> AXP803 is a PMIC produced by Shenzhen X-Powers, with either I2C or RSB
+> bus.
 >=20
-> Make the compatible strings one per line, so that inserting a new
-> compatible string will be directly a new line.
+> Add a compatible for it.
 >=20
 > Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+> Acked-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 > ---
-> New patch in v3.
+> Changes in v3:
+> - Make the compatible one-liner.
+> Changes in v2:
+> - Place AXP803 before AXP806/809.
+> - Added Chen-Yu's ACK.
 >=20
->  Documentation/devicetree/bindings/mfd/axp20x.txt | 11 ++++++++---
->  1 file changed, 8 insertions(+), 3 deletions(-)
+>  Documentation/devicetree/bindings/mfd/axp20x.txt | 2 ++
+>  1 file changed, 2 insertions(+)
 
 Applied, thanks.
 
 > diff --git a/Documentation/devicetree/bindings/mfd/axp20x.txt b/Documenta=
 tion/devicetree/bindings/mfd/axp20x.txt
-> index b41d2601c6ba..a3e813f6060a 100644
+> index a3e813f6060a..44df88be3c89 100644
 > --- a/Documentation/devicetree/bindings/mfd/axp20x.txt
 > +++ b/Documentation/devicetree/bindings/mfd/axp20x.txt
-> @@ -9,9 +9,14 @@ axp223 (X-Powers)
+> @@ -6,6 +6,7 @@ axp202 (X-Powers)
+>  axp209 (X-Powers)
+>  axp221 (X-Powers)
+>  axp223 (X-Powers)
+> +axp803 (X-Powers)
 >  axp809 (X-Powers)
 > =20
 >  Required properties:
-> -- compatible: "x-powers,axp152", "x-powers,axp202", "x-powers,axp209",
-> -	      "x-powers,axp221", "x-powers,axp223", "x-powers,axp806",
-> -	      "x-powers,axp809"
-> +- compatible: should be one of:
-> +    * "x-powers,axp152"
-> +    * "x-powers,axp202"
-> +    * "x-powers,axp209"
-> +    * "x-powers,axp221"
-> +    * "x-powers,axp223"
-> +    * "x-powers,axp806"
-> +    * "x-powers,axp809"
+> @@ -15,6 +16,7 @@ Required properties:
+>      * "x-powers,axp209"
+>      * "x-powers,axp221"
+>      * "x-powers,axp223"
+> +    * "x-powers,axp803"
+>      * "x-powers,axp806"
+>      * "x-powers,axp809"
 >  - reg: The I2C slave address or RSB hardware address for the AXP chip
->  - interrupt-parent: The parent interrupt controller
->  - interrupts: SoC NMI / GPIO interrupt connected to the PMIC's IRQ pin
 
 --=20
 Lee Jones
