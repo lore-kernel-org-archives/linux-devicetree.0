@@ -1,73 +1,68 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH v4 13/18] arm64: allwinner: sun50i-a64: add
- dwmac-sun8i Ethernet driver
-Date: Mon, 24 Apr 2017 20:58:44 +0800
-Message-ID: <CAGb2v66_=dPovgjh-t3ocsAkh7zMNJfa8aRJOUP59K=-zrVb-g@mail.gmail.com>
-References: <20170412111400.2296-1-clabbe.montjoie@gmail.com>
- <20170412111400.2296-14-clabbe.montjoie@gmail.com> <20170412124153.q6zvdvqkroizaxgb@lukather>
- <20170424122411.GA9349@Red>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH V3 2/2] ARM64: dts: hi6220-hikey: Add clock binding for
+ the pmic mfd
+Date: Mon, 24 Apr 2017 14:01:25 +0100
+Message-ID: <20170424130125.bzpljoomnfyemqpz@dell>
+References: <1492449567-31399-1-git-send-email-daniel.lezcano@linaro.org>
+ <1492449567-31399-2-git-send-email-daniel.lezcano@linaro.org>
+ <20170422020233.GA7065@codeaurora.org>
+ <370c36f9-e6fc-416c-776b-edc1e42d7ddc@linaro.org>
+ <20170424085944.aa5dsc4g6bwm5rgi@dell>
+ <20170424091609.GA2137@mai>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBHPN67DQKGQEG62EWBA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20170424122411.GA9349@Red>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>, alexandre.torgue-qxv4g6HH51o@public.gmane.org, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, netdev <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170424091609.GA2137@mai>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 24, 2017 at 8:24 PM, Corentin Labbe
-<clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On Wed, Apr 12, 2017 at 02:41:53PM +0200, Maxime Ripard wrote:
->> On Wed, Apr 12, 2017 at 01:13:55PM +0200, Corentin Labbe wrote:
->> > The dwmac-sun8i is an Ethernet MAC that supports 10/100/1000 Mbit
->> > connections. It is very similar to the device found in the Allwinner
->> > H3, but lacks the internal 100 Mbit PHY and its associated control
->> > bits.
->> > This adds the necessary bits to the Allwinner A64 SoC .dtsi, but keeps
->> > it disabled at this level.
->> >
->> > Signed-off-by: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> > ---
->> >  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 37 +++++++++++++++++++++++++++
->> >  1 file changed, 37 insertions(+)
->> >
->> > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
->> > index 0b0f4ab..2569827 100644
->> > --- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
->> > +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
->> > @@ -287,6 +287,23 @@
->> >                             bias-pull-up;
->> >                     };
->> >
->> > +                   rmii_pins: rmii_pins {
->> > +                           pins = "PD10", "PD11", "PD13", "PD14",
->> > +                                           "PD17", "PD18", "PD19", "PD20",
->> > +                                           "PD22", "PD23";
->>
->> Please align the wrapped lines on the first pin.
->>
->
-> OK
->
->> > +                           function = "emac";
->> > +                           drive-strength = <40>;
->>
->> Do you actually need that for all the boards, or only a few of them?
->
-> I have tried to use lower value without success on some boards. (opipc/pine64 in my memory)
+On Mon, 24 Apr 2017, Daniel Lezcano wrote:
 
-FYI we need them for all the boards that use RGMII.
-The signals at gigabit speed run at 125 MHz DDR.
+> On Mon, Apr 24, 2017 at 09:59:44AM +0100, Lee Jones wrote:
+> > On Sat, 22 Apr 2017, Daniel Lezcano wrote:
+> > 
+> > > On 22/04/2017 04:02, Stephen Boyd wrote:
+> > > > On 04/17, Daniel Lezcano wrote:
+> > > >> Signed-off-by: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> > > >> ---
+> > > >>  Documentation/devicetree/bindings/mfd/hisilicon,hi655x.txt | 6 ++++++
+> > > >>  arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts             | 1 +
+> > > >>  2 files changed, 7 insertions(+)
+> > > >>
+> > > > 
+> > > > I take it this goes through arm-soc? Not sure why I'm on To:
+> > > > line.
+> > > 
+> > > Probably it should go through Lee's tree.
+> > 
+> > Unlikely.
+> > 
+> > The document and the DTS change should really have gone separately,
+> > but to save you from having to mess around so close to the merge window:
+> > 
+> > Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> 
+> Thanks Lee.
+> 
+> Usually, I take the DT changes (including doc) with the timers changes with the
+> maintainer and Rob's blessing. So the DT and the driver changes are aligned in
+> my tree and make the submission changes easier.
 
-For RMII we probably don't need it. Even at 100 Mbps,
-it's only 50 MHz SDR. drive-strength = <30> should be
-enough.
+The binding docs go with the bindings, not the DTS changes.
 
-ChenYu
+> I agree mixing the patches for different destinations into a single patchset is
+> fuzzy, I will take care next time to separate the patches.
+
+-- 
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
