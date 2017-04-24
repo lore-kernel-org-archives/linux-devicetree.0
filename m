@@ -1,54 +1,88 @@
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: Re: [PATCH V3 2/2] ARM64: dts: hi6220-hikey: Add clock binding for
- the pmic mfd
-Date: Mon, 24 Apr 2017 22:11:39 +0200
-Message-ID: <20170424201139.GF2137@mai>
-References: <1492449567-31399-1-git-send-email-daniel.lezcano@linaro.org>
- <1492449567-31399-2-git-send-email-daniel.lezcano@linaro.org>
- <20170422020233.GA7065@codeaurora.org>
- <370c36f9-e6fc-416c-776b-edc1e42d7ddc@linaro.org>
- <20170424085944.aa5dsc4g6bwm5rgi@dell>
+From: Eric Anholt <eric@anholt.net>
+Subject: [PATCH 1/3 v3] drm/vc4: Turn the V3D clock on at runtime.
+Date: Mon, 24 Apr 2017 13:12:09 -0700
+Message-ID: <20170424201209.31148-1-eric@anholt.net>
+References: <7906db2f-cfb8-e2e6-5869-b6e829dd8c6f@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170424085944.aa5dsc4g6bwm5rgi@dell>
-Sender: linux-clk-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: Stephen Boyd <sboyd@codeaurora.org>, mturquette@baylibre.com, xuwei5@hisilicon.com, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, arnd@arndb.de, robh@kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <7906db2f-cfb8-e2e6-5869-b6e829dd8c6f@gmail.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 24, 2017 at 09:59:44AM +0100, Lee Jones wrote:
-> On Sat, 22 Apr 2017, Daniel Lezcano wrote:
-> 
-> > On 22/04/2017 04:02, Stephen Boyd wrote:
-> > > On 04/17, Daniel Lezcano wrote:
-> > >> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-> > >> ---
-> > >>  Documentation/devicetree/bindings/mfd/hisilicon,hi655x.txt | 6 ++++++
-> > >>  arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts             | 1 +
-> > >>  2 files changed, 7 insertions(+)
-> > >>
-> > > 
-> > > I take it this goes through arm-soc? Not sure why I'm on To:
-> > > line.
-> > 
-> > Probably it should go through Lee's tree.
-> 
-> Unlikely.
-> 
-> The document and the DTS change should really have gone separately,
-> but to save you from having to mess around so close to the merge window:
-> 
-> Acked-by: Lee Jones <lee.jones@linaro.org>
-
-So who is supposed to take this patch? Xu? Rob?
-
--- 
-
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+Rm9yIHRoZSBSYXNwYmVycnkgUGkncyBiaW5kaW5ncywgdGhlIHBvd2VyIGRvbWFpbiBhbHNvIGlt
+cGxpY2l0bHkKdHVybnMgb24gdGhlIGNsb2NrIGFuZCBkZWFzc2VydHMgcmVzZXQsIGJ1dCBmb3Ig
+dGhlIG5ldyBDeWdudXMgcG9ydCB3ZQpzdGFydCByZXByZXNlbnRpbmcgdGhlIGNsb2NrIGluIHRo
+ZSBkZXZpY2V0cmVlLgoKdjI6IERvY3VtZW50IHRoZSBjbG9jay1uYW1lcyBwcm9wZXJ0eSwgY2hl
+Y2sgZm9yIC1FTk9FTlQgZm9yIG5vIGNsb2NrCiAgICBpbiBEVC4KdjM6IERyb3AgTlVMTCBjaGVj
+a3MgYXJvdW5kIGNsayBjYWxscyB3aGljaCBlbWJlZCBOVUxMIGNoZWNrcy4KClNpZ25lZC1vZmYt
+Ynk6IEVyaWMgQW5ob2x0IDxlcmljQGFuaG9sdC5uZXQ+Ci0tLQogLi4uL2RldmljZXRyZWUvYmlu
+ZGluZ3MvZGlzcGxheS9icmNtLGJjbS12YzQudHh0ICAgfCAgNCArKysKIGRyaXZlcnMvZ3B1L2Ry
+bS92YzQvdmM0X2Rydi5oICAgICAgICAgICAgICAgICAgICAgIHwgIDEgKwogZHJpdmVycy9ncHUv
+ZHJtL3ZjNC92YzRfdjNkLmMgICAgICAgICAgICAgICAgICAgICAgfCAzMSArKysrKysrKysrKysr
+KysrKysrKystCiAzIGZpbGVzIGNoYW5nZWQsIDM1IGluc2VydGlvbnMoKyksIDEgZGVsZXRpb24o
+LSkKCmRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxh
+eS9icmNtLGJjbS12YzQudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rp
+c3BsYXkvYnJjbSxiY20tdmM0LnR4dAppbmRleCBjYTAyZDNlNGRiOTEuLjIzMTgyNjZmNjQ4MSAx
+MDA2NDQKLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJj
+bSxiY20tdmM0LnR4dAorKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlz
+cGxheS9icmNtLGJjbS12YzQudHh0CkBAIC01OSw2ICs1OSwxMCBAQCBSZXF1aXJlZCBwcm9wZXJ0
+aWVzIGZvciBWM0Q6CiAtIGludGVycnVwdHM6CVRoZSBpbnRlcnJ1cHQgbnVtYmVyCiAJCSAgU2Vl
+IGJpbmRpbmdzL2ludGVycnVwdC1jb250cm9sbGVyL2JyY20sYmNtMjgzNS1hcm1jdHJsLWljLnR4
+dAogCitPcHRpb25hbCBwcm9wZXJ0aWVzIGZvciBWM0Q6CistIGNsb2NrczoJVGhlIGNsb2NrIHRo
+ZSB1bml0IHJ1bnMgb24KKy0gY2xvY2stbmFtZXM6CU11c3QgYmUgInYzZF9jbGsiCisKIFJlcXVp
+cmVkIHByb3BlcnRpZXMgZm9yIERTSToKIC0gY29tcGF0aWJsZToJU2hvdWxkIGJlICJicmNtLGJj
+bTI4MzUtZHNpMCIgb3IgImJyY20sYmNtMjgzNS1kc2kxIgogLSByZWc6CQlQaHlzaWNhbCBiYXNl
+IGFkZHJlc3MgYW5kIGxlbmd0aCBvZiB0aGUgRFNJIGJsb2NrJ3MgcmVnaXN0ZXJzCmRpZmYgLS1n
+aXQgYS9kcml2ZXJzL2dwdS9kcm0vdmM0L3ZjNF9kcnYuaCBiL2RyaXZlcnMvZ3B1L2RybS92YzQv
+dmM0X2Rydi5oCmluZGV4IGIwOTY3ZTJmN2U4OC4uOTJlYjdkODExYmYyIDEwMDY0NAotLS0gYS9k
+cml2ZXJzL2dwdS9kcm0vdmM0L3ZjNF9kcnYuaAorKysgYi9kcml2ZXJzL2dwdS9kcm0vdmM0L3Zj
+NF9kcnYuaApAQCAtMjAwLDYgKzIwMCw3IEBAIHN0cnVjdCB2YzRfdjNkIHsKIAlzdHJ1Y3QgdmM0
+X2RldiAqdmM0OwogCXN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXY7CiAJdm9pZCBfX2lvbWVt
+ICpyZWdzOworCXN0cnVjdCBjbGsgKmNsazsKIH07CiAKIHN0cnVjdCB2YzRfaHZzIHsKZGlmZiAt
+LWdpdCBhL2RyaXZlcnMvZ3B1L2RybS92YzQvdmM0X3YzZC5jIGIvZHJpdmVycy9ncHUvZHJtL3Zj
+NC92YzRfdjNkLmMKaW5kZXggYTg4MDc4ZDdjOWQxLi40NjU0MDU1ODY1OTEgMTAwNjQ0Ci0tLSBh
+L2RyaXZlcnMvZ3B1L2RybS92YzQvdmM0X3YzZC5jCisrKyBiL2RyaXZlcnMvZ3B1L2RybS92YzQv
+dmM0X3YzZC5jCkBAIC0xNiw2ICsxNiw3IEBACiAgKiB0aGlzIHByb2dyYW0uICBJZiBub3QsIHNl
+ZSA8aHR0cDovL3d3dy5nbnUub3JnL2xpY2Vuc2VzLz4uCiAgKi8KIAorI2luY2x1ZGUgImxpbnV4
+L2Nsay5oIgogI2luY2x1ZGUgImxpbnV4L2NvbXBvbmVudC5oIgogI2luY2x1ZGUgImxpbnV4L3Bt
+X3J1bnRpbWUuaCIKICNpbmNsdWRlICJ2YzRfZHJ2LmgiCkBAIC0zMDUsNiArMzA2LDggQEAgc3Rh
+dGljIGludCB2YzRfdjNkX3J1bnRpbWVfc3VzcGVuZChzdHJ1Y3QgZGV2aWNlICpkZXYpCiAJZHJt
+X2dlbV9vYmplY3RfcHV0X3VubG9ja2VkKCZ2YzQtPmJpbl9iby0+YmFzZS5iYXNlKTsKIAl2YzQt
+PmJpbl9ibyA9IE5VTEw7CiAKKwljbGtfZGlzYWJsZV91bnByZXBhcmUodjNkLT5jbGspOworCiAJ
+cmV0dXJuIDA7CiB9CiAKQEAgLTMxOCw2ICszMjEsMTAgQEAgc3RhdGljIGludCB2YzRfdjNkX3J1
+bnRpbWVfcmVzdW1lKHN0cnVjdCBkZXZpY2UgKmRldikKIAlpZiAocmV0KQogCQlyZXR1cm4gcmV0
+OwogCisJcmV0ID0gY2xrX3ByZXBhcmVfZW5hYmxlKHYzZC0+Y2xrKTsKKwlpZiAocmV0ICE9IDAp
+CisJCXJldHVybiByZXQ7CisKIAl2YzRfdjNkX2luaXRfaHcodmM0LT5kZXYpOwogCXZjNF9pcnFf
+cG9zdGluc3RhbGwodmM0LT5kZXYpOwogCkBAIC0zNDgsMTUgKzM1NSwzNyBAQCBzdGF0aWMgaW50
+IHZjNF92M2RfYmluZChzdHJ1Y3QgZGV2aWNlICpkZXYsIHN0cnVjdCBkZXZpY2UgKm1hc3Rlciwg
+dm9pZCAqZGF0YSkKIAl2YzQtPnYzZCA9IHYzZDsKIAl2M2QtPnZjNCA9IHZjNDsKIAorCXYzZC0+
+Y2xrID0gZGV2bV9jbGtfZ2V0KGRldiwgInYzZF9jbGsiKTsKKwlpZiAoSVNfRVJSKHYzZC0+Y2xr
+KSkgeworCQlpbnQgcmV0ID0gUFRSX0VSUih2M2QtPmNsayk7CisKKwkJaWYgKHJldCA9PSAtRU5P
+RU5UKSB7CisJCQkvKiBiY20yODM1IGRpZG4ndCBoYXZlIGEgY2xvY2sgcmVmZXJlbmNlIGluIHRo
+ZSBEVC4gKi8KKwkJCXJldCA9IDA7CisJCQl2M2QtPmNsayA9IE5VTEw7CisJCX0gZWxzZSB7CisJ
+CQlpZiAocmV0ICE9IC1FUFJPQkVfREVGRVIpCisJCQkJZGV2X2VycihkZXYsICJGYWlsZWQgdG8g
+Z2V0IFYzRCBjbG9jazogJWRcbiIsCisJCQkJCXJldCk7CisJCQlyZXR1cm4gcmV0OworCQl9CisJ
+fQorCiAJaWYgKFYzRF9SRUFEKFYzRF9JREVOVDApICE9IFYzRF9FWFBFQ1RFRF9JREVOVDApIHsK
+IAkJRFJNX0VSUk9SKCJWM0RfSURFTlQwIHJlYWQgMHglMDh4IGluc3RlYWQgb2YgMHglMDh4XG4i
+LAogCQkJICBWM0RfUkVBRChWM0RfSURFTlQwKSwgVjNEX0VYUEVDVEVEX0lERU5UMCk7CiAJCXJl
+dHVybiAtRUlOVkFMOwogCX0KIAorCXJldCA9IGNsa19wcmVwYXJlX2VuYWJsZSh2M2QtPmNsayk7
+CisJaWYgKHJldCAhPSAwKQorCQlyZXR1cm4gcmV0OworCiAJcmV0ID0gdmM0X2FsbG9jYXRlX2Jp
+bl9ibyhkcm0pOwotCWlmIChyZXQpCisJaWYgKHJldCkgeworCQljbGtfZGlzYWJsZV91bnByZXBh
+cmUodjNkLT5jbGspOwogCQlyZXR1cm4gcmV0OworCX0KIAogCS8qIFJlc2V0IHRoZSBiaW5uZXIg
+b3ZlcmZsb3cgYWRkcmVzcy9zaXplIGF0IHNldHVwLCB0byBiZSBzdXJlCiAJICogd2UgZG9uJ3Qg
+cmV1c2UgYW4gb2xkIG9uZS4KLS0gCjIuMTEuMAoKX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4v
+bGlzdGluZm8vZHJpLWRldmVsCg==
