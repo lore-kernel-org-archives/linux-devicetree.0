@@ -1,80 +1,56 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v5 02/11] clk: sunxi-ng: add support for DE2 CCU
-Date: Mon, 24 Apr 2017 10:51:09 +0200
-Message-ID: <20170424085109.p44bmzbyjkuf7ckv@lukather>
-References: <20170423103754.50012-1-icenowy@aosc.io>
- <20170423103754.50012-3-icenowy@aosc.io>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="durw7a273rduc6nt"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170423103754.50012-3-icenowy-h8G6r0blFSE@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Simon Horman <horms+renesas@verge.net.au>
+Subject: [PATCH] arm64: dts: r8a7795: update PFC node name to pin-controller
+Date: Mon, 24 Apr 2017 10:51:55 +0200
+Message-ID: <1493023915-21658-1-git-send-email-horms+renesas@verge.net.au>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: linux-renesas-soc@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, Magnus Damm <magnus.damm@gmail.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Simon Horman <horms+renesas@verge.net.au>
 List-Id: devicetree@vger.kernel.org
 
+The device trees for Renesas SoCs use either pfc or pin-controller
+as the node name for the PFC device. This patch is intended to take a step
+towards unifying the node name used as pin-controller which appears to
+be more the more generic of the two and thus more in keeping with the DT
+specs.
 
---durw7a273rduc6nt
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+My analysis is that this is a user-visible change to the extent that kernel
+logs, and sysfs entries change from e6060000.pfc and pfc@e6060000 to
+e6060000.pin-controller and pin-controller@e6060000.
 
-Hi,
+Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
+---
+Before:
+/sys/kernel/debug/pinctrl/e6060000.pfc
+/sys/devices/platform/soc/e6060000.pfc
+/sys/firmware/devicetree/base/soc/pfc@e6060000
+/sys/bus/platform/devices/e6060000.pfc
+/sys/bus/platform/drivers/sh-pfc
+/sys/bus/platform/drivers/sh-pfc/e6060000.pfc
 
-On Sun, Apr 23, 2017 at 06:37:45PM +0800, Icenowy Zheng wrote:
-> +static const struct of_device_id sunxi_de2_clk_ids[] =3D {
-> +	{
-> +		.compatible =3D "allwinner,sun8i-a83t-de2-clk",
-> +		.data =3D &sun8i_a83t_de2_clk_desc,
-> +	},
-> +	{
-> +		.compatible =3D "allwinner,sun50i-h5-de2-clk",
-> +		.data =3D &sun50i_a64_de2_clk_desc,
-> +	},
-> +	/*
-> +	 * The Allwinner A64 SoC needs some bit to be poke in syscon to make
-> +	 * DE2 really working.
-> +	 * So there's currently no A64 compatible here.
-> +	 * H5 shares the same reset line with A64, so here H5 is using the
-> +	 * clock description of A64.
-> +	 */
-> +	{ }
-> +};
+After:
+/sys/kernel/debug/pinctrl/e6060000.pin-controller
+/sys/devices/platform/soc/e6060000.pin-controller
+/sys/firmware/devicetree/base/soc/pin-controller@e6060000
+/sys/bus/platform/devices/e6060000.pin-controller
+/sys/bus/platform/drivers/sh-pfc
+/sys/bus/platform/drivers/sh-pfc/e6060000.pin-controller
+---
+ arch/arm64/boot/dts/renesas/r8a7795.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-So that A64 driver would require more than just what you defined in
-the binding in order to operate?
-
-Maxime
-
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
-
---durw7a273rduc6nt
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIcBAABCAAGBQJY/bx1AAoJEBx+YmzsjxAg/g4P/RL8VLuuS5zS1riDe+pjLPUm
-XjfYvFFireCrdFg9i1Bnz5ex6PY2sNkVN/NuHcY47wq1irf2yxzV4475KhS8NKYC
-H4CJ4a2A+nPIXmjBXqEsLXHQ9DXgEzT8FnQItV1llePaHnj+sjcvOgUwxUPEaTuJ
-tHr9/XfpPnY1ZC4+n1N5N0Zw3sXOT0/gjc4urq5/1F1/QH58vlp+UODvxN5nW1V5
-mi380GyWot4sOA2XSXaa7rOcqiHx8FRNx7qmgH/PieUmiWxuYcY7pkiVIOOZMIu6
-WNDvQFbAjVGmZ1IjO4mRh1NsjHc5cMkrobS1uRVOKXmgtSI4vyUCZevuZoricvK7
-jo/9c64oPZQyQ2h8eVY9ir6eriwp9apqRhGP93C1WcRHbYwORAtHUz5xPkAAHpQH
-ujkf5R7cLaJPaougx0Gnuq6WM39OxHuSL16kzX+gqzCj4DvqxG4J6CZujGI6ouJr
-/ONcyE/lptj/5qFWjThikfka6u4BaoKP9BWt7dnvbWytinx/Xp8sct8qCVUY4hSE
-i41LYmu2C24nO9JiUgbaR2dEyj9GvRHjnu2Q5KKWHVaSgTTQjiLZ49GvqsuEnb60
-Bp1nqv+/hEHBaGMl8SlTnHYp+79fMSgIiI64GcT1rHBUZZOyCng6S+rI+1V+gAbI
-c3ETp5kWi5TOrxSH/IvA
-=xMwC
------END PGP SIGNATURE-----
-
---durw7a273rduc6nt--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm64/boot/dts/renesas/r8a7795.dtsi b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
+index e99d6443b3e4..7d87dff70ac8 100644
+--- a/arch/arm64/boot/dts/renesas/r8a7795.dtsi
++++ b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
+@@ -398,7 +398,7 @@
+ 			#power-domain-cells = <1>;
+ 		};
+ 
+-		pfc: pfc@e6060000 {
++		pfc: pin-controller@e6060000 {
+ 			compatible = "renesas,pfc-r8a7795";
+ 			reg = <0 0xe6060000 0 0x50c>;
+ 		};
+-- 
+2.7.0.rc3.207.g0ac5344
