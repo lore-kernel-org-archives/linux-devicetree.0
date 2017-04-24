@@ -1,42 +1,69 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v5 1/4] gpio: mvebu: Add limited PWM support
-Date: Mon, 24 Apr 2017 11:15:24 +0200
-Message-ID: <CACRpkdYeJkc8g0A6TXF3NO=jCZZvVpQ4kTPHg5=BriHbpN_-9g@mail.gmail.com>
-References: <20170409180931.4884-1-ralph.sennhauser@gmail.com>
- <20170409180931.4884-2-ralph.sennhauser@gmail.com> <20170412163128.5c985a26@free-electrons.com>
- <20170412151932.GE7023@lunn.ch> <20170421111952.54978e80@free-electrons.com>
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: Re: [PATCH V3 2/2] ARM64: dts: hi6220-hikey: Add clock binding for
+ the pmic mfd
+Date: Mon, 24 Apr 2017 11:16:10 +0200
+Message-ID: <20170424091609.GA2137@mai>
+References: <1492449567-31399-1-git-send-email-daniel.lezcano@linaro.org>
+ <1492449567-31399-2-git-send-email-daniel.lezcano@linaro.org>
+ <20170422020233.GA7065@codeaurora.org>
+ <370c36f9-e6fc-416c-776b-edc1e42d7ddc@linaro.org>
+ <20170424085944.aa5dsc4g6bwm5rgi@dell>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pwm-owner@vger.kernel.org>
-In-Reply-To: <20170421111952.54978e80@free-electrons.com>
-Sender: linux-pwm-owner@vger.kernel.org
-To: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Cc: Andrew Lunn <andrew@lunn.ch>, Ralph Sennhauser <ralph.sennhauser@gmail.com>, Thierry Reding <thierry.reding@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Jason Cooper <jason@lakedaemon.net>, Alexandre Courbot <gnurou@gmail.com>, Russell King <linux@armlinux.org.uk>, "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Gregory Clement <gregory.clement@free-electrons.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-clk-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170424085944.aa5dsc4g6bwm5rgi@dell>
+Sender: linux-clk-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Stephen Boyd <sboyd@codeaurora.org>, mturquette@baylibre.com, xuwei5@hisilicon.com, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 21, 2017 at 11:19 AM, Thomas Petazzoni
-<thomas.petazzoni@free-electrons.com> wrote:
+On Mon, Apr 24, 2017 at 09:59:44AM +0100, Lee Jones wrote:
+> On Sat, 22 Apr 2017, Daniel Lezcano wrote:
+> 
+> > On 22/04/2017 04:02, Stephen Boyd wrote:
+> > > On 04/17, Daniel Lezcano wrote:
+> > >> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+> > >> ---
+> > >>  Documentation/devicetree/bindings/mfd/hisilicon,hi655x.txt | 6 ++++++
+> > >>  arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts             | 1 +
+> > >>  2 files changed, 7 insertions(+)
+> > >>
+> > > 
+> > > I take it this goes through arm-soc? Not sure why I'm on To:
+> > > line.
+> > 
+> > Probably it should go through Lee's tree.
+> 
+> Unlikely.
+> 
+> The document and the DTS change should really have gone separately,
+> but to save you from having to mess around so close to the merge window:
+> 
+> Acked-by: Lee Jones <lee.jones@linaro.org>
 
-> I clearly don't want to block this, but I believe this is a very good
-> illustration of why stable DT bindings simply don't work. We are
-> realizing here that having each GPIO bank represented as a separate DT
-> node doesn't work, because this blinking functionality is not per GPIO
-> bank, but global to all GPIO banks.
->
-> I am totally fine with compromise, and having things simple first, and
-> extend them later if needed. But this stable DT binding rule makes this
-> quite impossible: what is a compromise today might put you in big
-> troubles tomorrow.
+Thanks Lee.
 
-Really "stable bindings" I never believed in. It's just a pipe dream.
+Usually, I take the DT changes (including doc) with the timers changes with the
+maintainer and Rob's blessing. So the DT and the driver changes are aligned in
+my tree and make the submission changes easier.
 
-Well they might become stable when the system is "finished"
-whenever that happens.
+I agree mixing the patches for different destinations into a single patchset is
+fuzzy, I will take care next time to separate the patches.
 
-I think a better rationale is that of the IETF:
-"rough consensus and running code", make deployed DTs work,
-if they are not deployed, or only getting deployed together with the
-kernel, changing the bindings are not a problem.
+  -- Daniel
 
-Yours,
-Linus Walleij
+> -- 
+> Lee Jones
+> Linaro STMicroelectronics Landing Team Lead
+> Linaro.org │ Open source software for ARM SoCs
+> Follow Linaro: Facebook | Twitter | Blog
+
+-- 
+
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
