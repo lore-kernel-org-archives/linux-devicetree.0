@@ -1,83 +1,125 @@
-From: Moritz Fischer <mdf-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] rtc: ds1374: Add trickle charger device tree binding
-Date: Mon, 24 Apr 2017 14:28:35 -0700
-Message-ID: <20170424212835.GA24096@tyrael.amer.corp.natinst.com>
-References: <1492468810-17224-1-git-send-email-mdf@kernel.org>
- <20170420155634.gs7qkufw7j4mfqpx@rob-hp-laptop>
- <20170420172538.GA13892@tyrael.amer.corp.natinst.com>
- <CAAtXAHfNuRXninLWySAOdtV99ih4PBt=JPszn3UkNa08OvXLFQ@mail.gmail.com>
- <20170424171639.6vv5hxrejylloh3b@piout.net>
-Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/3] of: overlay_adjust_phandles() - do not modify const field
+Date: Mon, 24 Apr 2017 16:40:05 -0500
+Message-ID: <CAL_Jsq+CTM4Br2t8+hcNnfrDhmkJTmUtcgZQC__t+Ppn94e9zw@mail.gmail.com>
+References: <1493011204-27635-1-git-send-email-frowand.list@gmail.com>
+ <1493011204-27635-2-git-send-email-frowand.list@gmail.com>
+ <CAL_Jsq+DxGJcggE6KKT_n76CpcCJkRB2sa3Lfm2GRTW78K_tUw@mail.gmail.com> <58FE49F4.7060600@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="gBBFr7Ir9EOA20Yy"
-Return-path: <rtc-linux+bncBAABBBW47HDQKGQEKJQ65OY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20170424171639.6vv5hxrejylloh3b-m++hUPXGwpdeoWH0uzbU5w@public.gmane.org>
-List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/rtc-linux
-List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/rtc-linux/subscribe>
-To: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, rtc-linux <rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <58FE49F4.7060600-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Cc: Stephen Boyd <stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
++Ben H
 
---gBBFr7Ir9EOA20Yy
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+On Mon, Apr 24, 2017 at 1:54 PM, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> On 04/24/17 09:56, Rob Herring wrote:
+>> On Mon, Apr 24, 2017 at 12:20 AM,  <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>>> From: Frank Rowand <frank.rowand-7U/KSKJipcs@public.gmane.org>
+>>>
+>>> When adjusting overlay phandles to apply to the live device tree, can
+>>> not modify the property value because it is type const.
+>>>
+>>> This is to resolve the issue found by Stephen Boyd [1] when he changed
+>>> the type of struct property.value from void * to const void *.  As
+>>> a result of the type change, the overlay code had compile errors
+>>> where the resolver updates phandle values.
+>>
+>> Conceptually, I prefer your first version. phandles are special and
+>> there's little reason to expose them except to generate a dts or dtb
+>> from /proc/device-tree. We could still generate the phandle file in
+>> that case, but I don't know if special casing phandle is worth it.
+>
+> The biggest thing that makes me wary about my first version is PPC
+> and Sparc.  I can read their code, but do not know what the firmware
+> is feeding into the kernel, so I felt like there might be some
+> incorrect assumptions or fundamental misunderstandings that I
+> may have.
 
-Hi Alex,
+I never let that stop me. ;) I guess one question is does
+"ibm,phandle" need to be exposed to userspace. Maybe Ben has some
+thoughts.
 
-On Mon, Apr 24, 2017 at 07:16:39PM +0200, Alexandre Belloni wrote:
+> If we do remove the phandle properties from the live tree, I think
+> that phandle still needs to be exposed in /proc/device-tree
+> because that is important information for being able to understand
+> (or debug) code via reading the source.  It isn't a lot code.
+>
+> One factor I was not sure of to help choose between the first version
+> and this approach is net memory size of the device tree:
+>
+>   first version:
+>
+>      Adds struct bin_attribute  (28 bytes on 32 bit arm) to every node
 
-> I think I would do something with MFD as you were suggesting on IRC. You
-> can have a look at the flexcom driver (atmel-flexcom.c) which is simply
-> selecting a mode and then using whatever IP driver already existed
-> (UART, I2C or SPI).
+You could do a pointer to the struct instead.
 
-That's an interesting approach, so the idea is to basically use the MFD
-to switch an existing driver one way or another via pdata? That could work.
+>      Removes "linux,phandle" and "phandle" properties from nodes that
+>      have a phandle (64 + 72 = 136 bytes)
 
-> 
-> I didn't have a close look but maybe that fits. Then, as you are
-> concerned wtih backward compatibility, you could enforce the mode from
-> the MFD driver, depending on the CONFIG_RTC_DRV_DS1374_WDT value.
+I don't think it is that high because we don't copy the property names
+and values. It's just 2x sizeof(struct property) plus whatever
+overhead each unflatten_dt_alloc has.
 
-This is where I'm currently at:
+>   second version plus subsequent "linux,phandle" removal:
+>
+>      Removes "linux,phandle" properties from nodes
+>      that have a phandle (72 bytes)
+>
+> I do not have a feel of how many nodes have phandles in the many
+> different device trees, so I'm not sure of the end result for the
+> first version.
 
-https://git.kernel.org/pub/scm/linux/kernel/git/mdf/linux.git/log/?h=wip/mfd-ds1374-rfc
+Probably well under half. Though in theory dtc could create a phandle
+for every node.
 
-Still a WIP, maybe can get out a patchset by the end of the week ...
+> I do not have a strong preference between my first approach and second
+> approach.  But now that I have done both, a choice can be made.  Let me
+> know which way you want to go and I'll respin the one you prefer.
+> For this version I'll make the change you suggested.  For the first
+> version, I'll modify of_attach_mode() slightly more to remove any
+> "phandle", "linux,phandle", and "ibm,phandle" property from the node
+> before attaching it, and add the call to add the phandle sysfs
+> file: __of_add_phandle_sysfs(np);
 
-Thanks,
-Moritz
+I still lean toward the former, but I guess it depends if there are
+really any size savings.
 
--- 
-You received this message because you are subscribed to "rtc-linux".
-Membership options at http://groups.google.com/group/rtc-linux .
-Please read http://groups.google.com/group/rtc-linux/web/checklist
-before submitting a driver.
---- 
-You received this message because you are subscribed to the Google Groups "rtc-linux" group.
-To unsubscribe from this group and stop receiving emails from it, send an email to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+Why would you remove properties in of_attach_mode? You would want to
+convert populate_properties() to store the phandle from the start and
+never create the properties.
 
---gBBFr7Ir9EOA20Yy
-Content-Type: application/pgp-signature; name="signature.asc"
+[...]
 
------BEGIN PGP SIGNATURE-----
+>>> +               prop = __of_find_property(overlay, "phandle", NULL);
+>>> +               newprop = __of_prop_alloc(prop->name, &phandle, sizeof(phandle),
+>>> +                                         GFP_KERNEL);
+>>> +               if (!newprop)
+>>> +                       return -ENOMEM;
+>>> +               __of_update_property(overlay, newprop, &prop);
+>>> +
+>>> +               prop = __of_find_property(overlay, "linux,phandle", NULL);
+>>> +               newprop = __of_prop_alloc(prop->name, &phandle, sizeof(phandle),
+>>> +                                         GFP_KERNEL);
+>>
+>> There is no reason to support "linux,phandle" for overlays. That is
+>> legacy (pre ePAPR) which predates any overlays by a long time.
+>
+> I would like to have the same behavior for non-overlays as for overlays.
+> The driver is the same whether the device tree description comes from
+> the initial device tree or from an overlay.
 
-iQEcBAEBAgAGBQJY/m4BAAoJEL5CEHepFqovSesIAI2GEJFD0AZkimJRrMJ7UEFG
-tdM0SLlrNj1iBf3o9hIFerAKC7sB+Xgx9IWAGK4ijgkegP4rRvk6q23eCjeBz1Mb
-T3p/cgfKjVMmmZDGmHCgVmrqjtPfB+WWKMLun6K4AxdJK3Ipcdvlh70z7yk4NqFh
-G1Xw4ZXWx3XF9k8g3MIKVT66+uyY7uLDfOdSWeCEcbCl3U7o6rF6wm4KQyHMGmkN
-9AFr//ZadgADwy+JBqftSyX3p4Jn+uUP5KEn8hJ5IV29qeY8tqEwtSUaukwzMIEc
-IwtFWNe7Qkh9+snApI0i9yPEPucgO0Mxnt98KFkSwW2WkaPrPINfExIh965YEKY=
-=UdI7
------END PGP SIGNATURE-----
+Agreed. You only need to store one of them for both base and overlays.
+You could go further and just ignore them altogether for overlays as
+we should never have any with linux,phandle only, but that doesn't
+really matter as it won't affect the memory usage.
 
---gBBFr7Ir9EOA20Yy--
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
