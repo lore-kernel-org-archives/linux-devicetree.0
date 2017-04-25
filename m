@@ -1,40 +1,58 @@
-From: Jani Nikula <jani.nikula-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Subject: Re: [PATCHv2 2/3] ARM: drm: Intel FPGA VIP Frame Buffer II drm driver
-Date: Tue, 25 Apr 2017 10:17:08 +0300
-Message-ID: <874lxdt0qz.fsf@intel.com>
-References: <1493086006-4392-1-git-send-email-hean.loong.ong@intel.com> <1493086006-4392-3-git-send-email-hean.loong.ong@intel.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v2 2/4] gpio - Add EXAR XRA1403 SPI GPIO expander driver
+Date: Tue, 25 Apr 2017 09:15:44 +0200
+Message-ID: <CAMuHMdUvQwqhuoWnS3h1S7p0q1K9m5BBFue54pkOykMgi+xmWw@mail.gmail.com>
+References: <cover.1492077070.git.nandor.han@ge.com> <f28eef264102786357ac5ed7205813619c508fb4.1492077070.git.nandor.han@ge.com>
+ <CACRpkdZHMWH2W-i4MGZ7NKzPHUURRmC-5YwiK7cVLCHKDsb7sw@mail.gmail.com> <CANjd3ndZkVi5OA0eqDewrpqVLQpT11QbVOA98F=ghMhcwPu2hQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1493086006-4392-3-git-send-email-hean.loong.ong-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: daniel.vetter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: hean.loong.ong-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tien.hock.loh-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, Ong-CC+yJ3UmIYqDUpFQwHEjaQ@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CANjd3ndZkVi5OA0eqDewrpqVLQpT11QbVOA98F=ghMhcwPu2hQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: zoobab@gmail.com
+Cc: Linus Walleij <linus.walleij@linaro.org>, Nandor Han <nandor.han@ge.com>, Greg KH <gregkh@linuxfoundation.org>, "David S. Miller" <davem@davemloft.net>, Mauro Carvalho Chehab <mchehab@kernel.org>, Daniel Vetter <daniel.vetter@ffwll.ch>, Alexandre Courbot <gnurou@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Semi Malinen <semi.malinen@ge.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 25 Apr 2017, hean.loong.ong-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org wrote:
-> +++ b/drivers/gpu/drm/ivip/Makefile
-> @@ -0,0 +1,9 @@
-> +#
-> +# Makefile for the drm device driver.  This driver provides support for the
-> +# Direct Rendering Infrastructure (DRI) in XFree86 4.1.0 and higher.
-> +
-> +ccflags-y := -Iinclude/drm
+Hi Benjamin,
 
-Just a drive-by observation, there are patches on the list removing such
-ccflags from existing drivers. You shouldn't need this. Just make sure
-all your #includes begin with <drm/.
+On Tue, Apr 25, 2017 at 9:07 AM, Benjamin Henrion <zoobab@gmail.com> wrote:
+> On Mon, Apr 24, 2017 at 3:47 PM, Linus Walleij <linus.walleij@linaro.org> wrote:
+>> On Thu, Apr 13, 2017 at 12:27 PM, Nandor Han <nandor.han@ge.com> wrote:
+>>
+>>> This is a simple driver that provides a /sys/class/gpio
+>>> interface for controlling and configuring the GPIO lines.
+>>> It does not provide support for chip select or interrupts.
+>>>
+>>> Signed-off-by: Nandor Han <nandor.han@ge.com>
+>>> Signed-off-by: Semi Malinen <semi.malinen@ge.com>
+>>
+>> I almost want to make the driver depend on !GPIO_SYSFS because
+>> of this commit message.
+>>
+>> DO NOT USE OR ENCOURAGE THE USE OF THE GPIO SYSFS
+>> INTERFACE.
+>>
+>> Use the character device.
+>
+> I doubt you will be able to convince the majority of people toggling
+> GPIOs via a simple shell script to switch to write a complex C
+> program. Not to mention cross compilation and the libraries
+> dependencies here.
+>
+> Is there some good cli tools to access the new char device? If they
+> are shipped with most distros, that would reduce the pain.
 
-BR,
-Jani.
+https://github.com/brgl/libgpiod
 
-> +
-> +obj-$(CONFIG_DRM_IVIP) += ivip.o
-> +ivip-objs := intel_vip_of.o intel_vip_core.o \
-> +intel_vip_conn.o
--- 
-Jani Nikula, Intel Open Source Technology Center
+A bit early to expect it to be shipped with all distros, though.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
