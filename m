@@ -1,157 +1,67 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH 1/2] PCI: mediatek: Add Mediatek PCIe host controller support
-Date: Tue, 25 Apr 2017 14:38:39 +0200
-Message-ID: <CAK8P3a39TFkJ5=jp8me+Dyg-Qi-N_1ZKxpJGvnhmPEo4csnFCw@mail.gmail.com>
-References: <1492935543-18190-1-git-send-email-ryder.lee@mediatek.com> <1492935543-18190-2-git-send-email-ryder.lee@mediatek.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+From: Guillaume Tucker <guillaume.tucker-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Subject: [PATCH v4 0/5] Add ARM Mali Midgard device tree bindings and gpu node for rk3288
+Date: Tue, 25 Apr 2017 14:16:15 +0100
+Message-ID: <cover.1493125299.git.guillaume.tucker@collabora.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1492935543-18190-2-git-send-email-ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ryder Lee <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-pci <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, =?UTF-8?q?Heiko=20St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Cc: Sjoerd Simons <sjoerd.simons-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, John Reitan <john.reitan-5wv7dgnIgG8@public.gmane.org>, Wookey <wookey-Xpnwy/r4z8dg9hUCZPvPmw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Guillaume Tucker <guillaume.tucker-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Apr 23, 2017 at 10:19 AM, Ryder Lee <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
+The ARM Mali Midgard GPU kernel driver is only available
+out-of-tree and is not going to be merged in its current form.
+However, it would be useful to have its device tree bindings
+merged.  In particular, this would enable distributions to create
+working driver packages (dkms...) without having to patch the
+kernel.
 
-> +static inline bool mtk_pcie_link_is_up(struct mtk_pcie_port *port)
-> +{
-> +       return !!(readl_relaxed(port->base + PCIE_LINK_STATUS) &
-> +                 PCIE_PORT_LINKUP);
-> +}
+The bindings for the earlier Mali Utgard GPU family have already
+been merged, so this is essentially the same scenario but for
+newer GPUs (Mali-T604 ~ Mali-T880).
 
-If this is not performance critical, please use the regular readl() instead
-of readl_relaxed().
-
-> +static bool mtk_pcie_valid_device(struct mtk_pcie *pcie,
-> +                                 struct pci_bus *bus, int devfn)
-> +{
-> +       struct mtk_pcie_port *port;
-> +       struct pci_dev *dev;
-> +       struct pci_bus *pbus;
-> +
-> +       /* if there is no link, then there is no device */
-> +       list_for_each_entry(port, &pcie->ports, list) {
-> +               if (bus->number == 0 && port->index == PCI_SLOT(devfn) &&
-> +                   mtk_pcie_link_is_up(port)) {
-> +                       return true;
-> +               } else if (bus->number != 0) {
-> +                       pbus = bus;
-> +                       do {
-> +                               dev = pbus->self;
-> +                               if (port->index == PCI_SLOT(dev->devfn) &&
-> +                                   mtk_pcie_link_is_up(port)) {
-> +                                       return true;
-> +                               }
-> +                               pbus = dev->bus;
-> +                       } while (dev->bus->number != 0);
-> +               }
-> +       }
-> +
-> +       return false;
-> +}
+This series of patches first imports the bindings from the latest
+driver release with some clean-up then adds a gpu node for the
+rk3288 SoC.  This was successfully tested on Radxa Rock2 Square,
+Firefly, Veyron Minnie and Jerry boards using Mali kernel driver
+r16p0 and r12p0 user-space binary.
 
 
+Changes since v1:
+- enabled gpu on rk3288-veyron boards
+
+Changes since v2:
+- removed "clk-names" property and "clk_mali" name
+- converted values of "interrupt-names" property to
+  lower-case: "job", "mmu" and "gpu"
+- replaced dt compatible strings with list of all Midgard GPU variants and
+  optional vendors
+- cleaned up gpu node example
+
+Changes since v3:
+- add "rockchip,rk3288-mali" vendor compatible string
+- move gpu node at the right location in rk3288.dtsi
+- use operating-points-v2 in documentation and rk3288.dtsi
 
 
-> +static int mtk_pcie_hw_rd_cfg(struct mtk_pcie *pcie, u32 bus, u32 devfn,
-> +                             int where, int size, u32 *val)
-> +{
-> +       writel(PCIE_CONF_ADDR(where, PCI_FUNC(devfn), PCI_SLOT(devfn), bus),
-> +              pcie->base + PCIE_CFG_ADDR);
-> +
-> +       *val = 0;
-> +
-> +       switch (size) {
-> +       case 1:
-> +               *val = readb(pcie->base + PCIE_CFG_DATA + (where & 3));
-> +               break;
-> +       case 2:
-> +               *val = readw(pcie->base + PCIE_CFG_DATA + (where & 2));
-> +               break;
-> +       case 4:
-> +               *val = readl(pcie->base + PCIE_CFG_DATA);
-> +               break;
-> +       }
-> +
-> +       return PCIBIOS_SUCCESSFUL;
-> +}
+Enric Balletbo i Serra (1):
+  ARM: dts: rockchip: enable ARM Mali GPU on rk3288-veyron
 
-This is a fairly standard set of read/write operations. Can you change
-the pci_ops
-to use pci_generic_config_read/pci_generic_config_write and an appropriate
-map function instead?
+Guillaume Tucker (4):
+  dt-bindings: gpu: add bindings for the ARM Mali Midgard GPU
+  ARM: dts: rockchip: add ARM Mali GPU node for rk3288
+  ARM: dts: rockchip: enable ARM Mali GPU on rk3288-rock2-som
+  ARM: dts: rockchip: enable ARM Mali GPU on rk3288-firefly
 
-> +static int mtk_pcie_enable_ports(struct mtk_pcie *pcie)
-> +{
-> +       struct device *dev = pcie->dev;
-> +       struct mtk_pcie_port *port, *tmp;
-> +       int err, linkup = 0;
-> +
-> +       list_for_each_entry_safe(port, tmp, &pcie->ports, list) {
-> +               err = clk_prepare_enable(port->sys_ck);
-> +               if (err) {
-> +                       dev_err(dev, "failed to enable port%d clock\n",
-> +                               port->index);
-> +                       continue;
-> +               }
-> +
-> +               /* assert RC */
-> +               reset_control_assert(port->reset);
-> +               /* de-assert RC */
-> +               reset_control_deassert(port->reset);
-> +
-> +               /* power on PHY */
-> +               err = phy_power_on(port->phy);
-> +               if (err) {
-> +                       dev_err(dev, "failed to power on port%d phy\n",
-> +                               port->index);
-> +                       goto err_phy_on;
-> +               }
-> +
-> +               mtk_pcie_assert_ports(port);
-> +
+ .../devicetree/bindings/gpu/arm,mali-midgard.txt   | 82 ++++++++++++++++++++++
+ arch/arm/boot/dts/rk3288-firefly.dtsi              |  5 ++
+ arch/arm/boot/dts/rk3288-rock2-som.dtsi            |  5 ++
+ arch/arm/boot/dts/rk3288-veyron.dtsi               |  5 ++
+ arch/arm/boot/dts/rk3288.dtsi                      | 43 ++++++++++++
+ 5 files changed, 140 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt
 
-Similar to the comment I had for the binding, I wonder if it would be
-better to keep all the information about the ports in one place and
-then just deal with it at the root level.
-
-Alternatively, we could decide to standardize on the properties
-you have added to the pcie port node, but then I would handle
-them in the pcieport driver rather than in the host bridge driver.
-
-> +/*
-> + * This IP lacks interrupt status register to check or map INTx from
-> + * different devices at the same time.
-> + */
-> +static int __init mtk_pcie_map_irq(const struct pci_dev *dev, u8 slot, u8 pin)
-> +{
-> +       struct mtk_pcie *pcie = dev->bus->sysdata;
-> +       struct mtk_pcie_port *port;
-> +
-> +       list_for_each_entry(port, &pcie->ports, list)
-> +               if (port->index == slot)
-> +                       return port->irq;
-> +
-> +       return -1;
-> +}
-
-This looks odd, what is it needed for specifically? It looks like
-it's broken for devices behind bridges, and the interrupt mapping
-should normally come from the interrupt-map property, without
-the need for a driver specific map_irq override.
-
-> +static int mtk_pcie_register_ports(struct mtk_pcie *pcie)
-> +{
-> +       struct pci_bus *bus, *child;
-> +
-> +       bus = pci_scan_root_bus(pcie->dev, 0, &mtk_pcie_ops, pcie,
-> +                               &pcie->resources);
-
-Can you use the new pci_register_host_bridge() method instead of
-pci_scan_root_bus() here?
-
-       ARnd
+--
+2.11.0
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
