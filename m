@@ -1,79 +1,115 @@
-From: Doug Ledford <dledford-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v2 09/23] MAINTAINERS: Add file patterns for infiniband
- device tree bindings
-Date: Tue, 25 Apr 2017 15:21:19 -0400
-Message-ID: <1493148079.3041.90.camel@redhat.com>
-References: <1489324627-19126-1-git-send-email-geert@linux-m68k.org>
-         <1489324627-19126-10-git-send-email-geert@linux-m68k.org>
-         <1490409626.2404.42.camel@redhat.com>
-         <CAMuHMdVjzXFE19SW++38+EdpnsZx+j54U5CqTeRkN-4cknQ6BA@mail.gmail.com>
+From: Markus Mayer <markus.mayer@broadcom.com>
+Subject: Re: [PATCH 1/2] dt/bindings: Add bindings for Broadcom STB DRAM Sensors
+Date: Tue, 25 Apr 2017 12:29:40 -0700
+Message-ID: <CAGt4E5susQWWNZPbNh8AoWtK-4yu50VL=GqOw+_2w_FA+2V68Q@mail.gmail.com>
+References: <20170418201702.57019-1-code@mmayer.net> <20170418201702.57019-2-code@mmayer.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAMuHMdVjzXFE19SW++38+EdpnsZx+j54U5CqTeRkN-4cknQ6BA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sean Hefty <sean.hefty-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Hal Rosenstock <hal.rosenstock-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-rdma <linux-rdma-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-hwmon-owner@vger.kernel.org>
+In-Reply-To: <20170418201702.57019-2-code@mmayer.net>
+Sender: linux-hwmon-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, Mark Rutland <mark.rutland@arm.com>, Florian Fainelli <f.fainelli@gmail.com>, Broadcom Kernel List <bcm-kernel-feedback-list@broadcom.com>, Linux HWMON List <linux-hwmon@vger.kernel.org>, Device Tree List <devicetree@vger.kernel.org>, ARM Kernel List <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, 2017-03-26 at 10:45 +0200, Geert Uytterhoeven wrote:
-> Hi Doug,
-> 
-> On Sat, Mar 25, 2017 at 3:40 AM, Doug Ledford <dledford-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-> wrote:
-> > 
-> > On Sun, 2017-03-12 at 14:16 +0100, Geert Uytterhoeven wrote:
-> > > 
-> > > Submitters of device tree binding documentation may forget to CC
-> > > the subsystem maintainer if this is missing.
-> > > 
-> > > Signed-off-by: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-> > > Cc: Doug Ledford <dledford-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-> > > Cc: Sean Hefty <sean.hefty-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-> > > Cc: Hal Rosenstock <hal.rosenstock-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> > > Cc: linux-rdma-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> > > ---
-> > > Please apply this patch directly if you want to be involved in
-> > > device
-> > > tree binding documentation for your subsystem.
-> > 
-> > I assume this is going through someone else' tree since I only see
-> 
-> That wasn't my intention, though, cfr. the quoted paragraph above
-> ("you" and "your subsystem").
+Hi Rob,
 
-Sorry, I didn't catch that in the original message.  I've applied it to
-my tree.
+On 18 April 2017 at 13:17, Markus Mayer <code@mmayer.net> wrote:
+> From: Markus Mayer <mmayer@broadcom.com>
+>
+> Provide bindings for the Broadcom STB DDR PHY Front End (DPFE).
 
-> > 
-> > patch 09 of 23 and not the entire series.  But, for this specific
-> > patch:
-> > 
-> > Acked-by: Doug Ledford <dledford-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-> 
-> Thanks!
-> 
-> Gr{oetje,eeting}s,
-> 
->                         Geert
-> 
+Would you be able to have a look at this binding? The driver won't be
+upstreamed as hwmon driver (as per Guenter's comments). I am currently
+converting the driver to a "soc" driver instead, but the proposed
+binding remains unchanged.
+
+If you have comments or suggestions, I would like to incorporate them
+with the new series I will be sending out.
+
+Thanks,
+-Markus
+
+> Signed-off-by: Markus Mayer <mmayer@broadcom.com>
+> ---
+>  .../devicetree/bindings/hwmon/brcmstb-dpfe.txt     | 68 ++++++++++++++++++++++
+>  1 file changed, 68 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/hwmon/brcmstb-dpfe.txt
+>
+> diff --git a/Documentation/devicetree/bindings/hwmon/brcmstb-dpfe.txt b/Documentation/devicetree/bindings/hwmon/brcmstb-dpfe.txt
+> new file mode 100644
+> index 0000000..3519197
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/hwmon/brcmstb-dpfe.txt
+> @@ -0,0 +1,68 @@
+> +DDR PHY Front End (DPFE) for Broadcom STB
+> +=========================================
+> +
+> +DPFE and the DPFE firmware provide an interface for the host CPU to
+> +communicate with the DCPU, which resides inside the DDR PHY.
+> +
+> +There are three memory regions for interacting with the DCPU.
+> +
+> +The DCPU Register Space
+> +-----------------------
+> +
+> +Required properties:
+> +  - compatible: must be one of brcm,bcm7271-dpfe-cpu, brcm,dpfe-cpu-v12.0.0.0
+> +    or brcm,dpfe-cpu
+> +  - reg: must reference the start address and length of the DCPU register
+> +    space
+> +
+> +Optional properties:
+> +  - cell-index: the index of the DPFE instance; will default to 0 if not set
+> +
+> +Example:
+> +       dpfe_cpu0: dpfe-cpu@f1132000 {
+> +               compatible = "brcm,bcm7271-dpfe-cpu",
+> +                       "brcm,dpfe-cpu-v12.0.0.0",
+> +                       "brcm,dpfe-cpu";
+> +               reg = <0xf1132000 0x180>;
+> +               cell-index = <0>;
+> +       };
+> +
+> +The DCPU Data Memory Space
+> +--------------------------
+> +
+> +Required properties:
+> +  - compatible: must be one of brcm,bcm7271-dpfe-dmem, brcm,dpfe-dmem-v12.0.0.0
+> +    or brcm,dpfe-dmem
+> +  - reg: must reference the start address and length of the DCPU DMEM space
+> +
+> +Optional properties:
+> +  - cell-index: the index of the DPFE instance; will default to 0 if not set
+> +
+> +Example:
+> +       dpfe_dmem0: dpfe-dmem@f1134000 {
+> +               compatible = "brcm,bcm7271-dpfe-dmem",
+> +                       "brcm,dpfe-dmem-v12.0.0.0",
+> +                       "brcm,dpfe-dmem";
+> +               reg = <0xf1134000 0x1000>;
+> +               cell-index = <0>;
+> +       };
+> +
+> +The DCPU Instruction Memory Space
+> +---------------------------------
+> +
+> +Required properties:
+> +  - compatible: must be one of brcm,bcm7271-dpfe-imem, brcm,dpfe-imem-v12.0.0.0
+> +    or brcm,dpfe-imem
+> +  - reg: must reference the start address and length of the DCPU IMEM space
+> +
+> +Optional properties:
+> +  - cell-index: the index of the DPFE instance; will default to 0 if not set
+> +
+> +Example:
+> +       dpfe_imem0: dpfe-imem@f1138000 {
+> +               compatible = "brcm,bcm7271-dpfe-imem",
+> +                       "brcm,dpfe-imem-v12.0.0.0",
+> +                       "brcm,dpfe-imem";
+> +               reg = <0xf1138000 0x4000>;
+> +               cell-index = <0>;
+> +       };
 > --
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linu
-> x-m68k.org
-> 
-> In personal conversations with technical people, I call myself a
-> hacker. But
-> when I'm talking to journalists I just say "programmer" or something
-> like that.
->                                 -- Linus Torvalds
--- 
-Doug Ledford <dledford-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-    GPG KeyID: B826A3330E572FDD
-   
-Key fingerprint = AE6B 1BDA 122B 23B4 265B  1274 B826 A333 0E57 2FDD
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 2.7.4
+>
