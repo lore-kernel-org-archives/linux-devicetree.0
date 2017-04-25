@@ -1,62 +1,71 @@
-From: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] of: support dtc compiler flags for overlays
-Date: Wed, 26 Apr 2017 07:04:52 +0900
-Message-ID: <CAK7LNARd-XsCfSJhDj3JisH=u4XZm8DaPEa5Pg2ciWrq8Ueing@mail.gmail.com>
-References: <1493075119-32026-1-git-send-email-frowand.list@gmail.com> <1493075119-32026-2-git-send-email-frowand.list@gmail.com>
+From: Mark Greer <mgreer-luAo+O/VEmrlveNOaEYElw@public.gmane.org>
+Subject: Re: [PATCH v4 0/9] NFC: trf7970a: Fixups & convert to desc-based GPIO
+Date: Tue, 25 Apr 2017 15:43:19 -0700
+Message-ID: <20170425224319.GA11366@animalcreek.com>
+References: <20170425184036.1212-1-mgreer@animalcreek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1493075119-32026-2-git-send-email-frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170425184036.1212-1-mgreer-luAo+O/VEmrlveNOaEYElw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Stephen Boyd <stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Michal Marek <mmarek-IBi9RG/b67k@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kbuild mailing list <linux-kbuild-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Cc: linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-nfc-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Greer <mgreer-luAo+O/VEmrlveNOaEYElw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-2017-04-25 8:05 GMT+09:00  <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>:
-> From: Frank Rowand <frank.rowand-7U/KSKJipcs@public.gmane.org>
->
-> The dtc compiler version that adds initial support was available
-> in 4.11-rc1.  Add the ability to set the dtc compiler flags needed
-> by overlays.
->
-> Signed-off-by: Frank Rowand <frank.rowand-7U/KSKJipcs@public.gmane.org>
-> ---
+On Tue, Apr 25, 2017 at 11:40:27AM -0700, Mark Greer wrote:
+> These trf7970a driver patches do the following things:
+>  - add Mark Greer as the maintainer of the trf7970a driver
+>  - some minor fixups
+>  - remove support for 'vin-voltage-override' DT property
+>  - change the DTS example to indicate that EN and EN2 are active high GPIOs
+>  - convert the driver to use the descriptor-based GPIO interface
+>  - apply Lindent coding style fixes
+> 
+> Based on nfc-next/master 4ea206395d3a ("nfc: fix get_unaligned_...() misuses")
+> 
+> v3->v4:
+>  - Rebased on nfc-next/master because patches in that branch conflict
+>    with the v3 version of this patch series.
+>  - Removed "NFC: trf7970a: Don't manage EN2 when not specified in DT"
+>    because a similar patch has already been accepted.
+>  - Added "NFC: trf7970a: Clean up coding style issues" because the reason
+>    I removed it in v3 no longer exists.
+>  - Reordered the patches to make more sense (I think)
+> 
+> v2->v3:
+>  - Removed "[PATCH v2 5/7] NFC: trf7970a: Clean up coding style issues"
+>    because it will make merging patches from Geoff Lansberry and others
+>    hard to apply.  I will resubmit once those patches have been merged
+>    or rejected.
+>  - Added a patch to remove 'vin-voltage-override' DT property support as
+>    proper DT regulator set up makes it unnecessary.
+> 
+> v1->v2:
+>  - Commit description fixups only; no functional changes.
+> 
+> Mark Greer (9):
+>   MAINTAINERS: NFC: trf7970a: Add Mark Greer as maintainer
+>   NFC: trf7970a: Don't de-assert EN2 unless it was asserted
+>   NFC: trf7970a: Fix inaccurate comment in trf7970a_probe()
+>   NFC: trf7970a: Only check 'en2-rf-quirk' if EN2 is specified
+>   NFC: trf7970a: Remove useless comment
+>   NFC: trf7970a: Remove support for 'vin-voltage-override' DT property
+>   NFC: trf7970a: Enable pins are active high not active low
+>   NFC: trf7970a: Convert to descriptor based GPIO interface
+>   NFC: trf7970a: Clean up coding style issues
+> 
+>  .../devicetree/bindings/net/nfc/trf7970a.txt       |   6 +-
+>  MAINTAINERS                                        |   8 +
+>  drivers/nfc/Kconfig                                |   2 +-
+>  drivers/nfc/trf7970a.c                             | 363 ++++++++++-----------
+>  4 files changed, 185 insertions(+), 194 deletions(-)
 
+And...please ignore this one too as I missed a whitespace issue.  :(
+v5 on its way in just a minute.
 
-I know your motivation for 1/2 is overlay,
-but this patch itself is more generic.
-(support for per-file dtc compiler flag)
-
-Could you reword the commit subject a little bit?
-
-Otherwise,
-
-Acked-by: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-
-
-
->  scripts/Makefile.lib | 2 ++
->  1 file changed, 2 insertions(+)
->
-> diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
-> index 0a07f9014944..0bbec480d323 100644
-> --- a/scripts/Makefile.lib
-> +++ b/scripts/Makefile.lib
-> @@ -283,6 +283,8 @@ ifeq ($(KBUILD_ENABLE_EXTRA_GCC_CHECKS),)
->  DTC_FLAGS += -Wno-unit_address_vs_reg
->  endif
->
-> +DTC_FLAGS += $(DTC_FLAGS_$(basetarget))
-> +
->  # Generate an assembly file to wrap the output of the device tree compiler
->  quiet_cmd_dt_S_dtb= DTB     $@
->  cmd_dt_S_dtb=                                          \
-> --
-
-
--- 
-Best Regards
-Masahiro Yamada
+Mark
+--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
