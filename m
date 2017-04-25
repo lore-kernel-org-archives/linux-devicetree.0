@@ -1,59 +1,28 @@
-From: Stefan Wahren <stefan.wahren@i2se.com>
-Subject: Re: [PATCH] ARM: dts: Add devicetree for the Raspberry Pi 3, for
- arm32 (v5)
-Date: Tue, 25 Apr 2017 08:22:31 +0200
-Message-ID: <68d88bf7-1f47-4056-3b70-7b97d9a02953@i2se.com>
-References: <20170424200037.25615-1-eric@anholt.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170424200037.25615-1-eric@anholt.net>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Eric Anholt <eric@anholt.net>, Lee Jones <lee@kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, Olof Johansson <olof@lixom.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
-Cc: linux-rpi-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Gerd Hoffmann <kraxel@redhat.com>
+From: Eddie Cai <eddie.cai.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH V2  0/2] correct ids for clk_testout
+Date: Tue, 25 Apr 2017 14:41:08 +0800
+Message-ID: <1493102470-22965-1-git-send-email-eddie.cai.linux@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Eddie Cai <eddie.cai.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Am 24.04.2017 um 22:00 schrieb Eric Anholt:
-> Raspbian and Fedora have decided to support the Pi3 in 32-bit mode for
-> now, so it's useful to be able to test that mode on an upstream
-> kernel.  It's also been useful for me to use the same board for 32-bit
-> and 64-bit development.
->
-> Signed-off-by: Eric Anholt <eric@anholt.net>
-> ---
->  arch/arm/boot/dts/Makefile            | 1 +
->  arch/arm/boot/dts/bcm2837-rpi-3.b.dts | 1 +
->  2 files changed, 2 insertions(+)
->  create mode 100644 arch/arm/boot/dts/bcm2837-rpi-3.b.dts
->
-> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> index 011808490fed..eded842d9978 100644
-> --- a/arch/arm/boot/dts/Makefile
-> +++ b/arch/arm/boot/dts/Makefile
-> @@ -72,6 +72,7 @@ dtb-$(CONFIG_ARCH_BCM2835) += \
->  	bcm2835-rpi-b-plus.dtb \
->  	bcm2835-rpi-a-plus.dtb \
->  	bcm2836-rpi-2-b.dtb \
-> +	bcm2837-rpi-3-b.dtb \
->  	bcm2835-rpi-zero.dtb
->  dtb-$(CONFIG_ARCH_BCM_5301X) += \
->  	bcm4708-asus-rt-ac56u.dtb \
-> diff --git a/arch/arm/boot/dts/bcm2837-rpi-3.b.dts b/arch/arm/boot/dts/bcm2837-rpi-3.b.dts
-> new file mode 100644
-> index 000000000000..8c8aa4d1e9b3
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/bcm2837-rpi-3.b.dts
-> @@ -0,0 +1 @@
-> +#include "arm64/broadcom/bcm2837-rpi-3.b.dts"
+we use clk_testout1 and clk_testout2 for camera. e.g. mipi 24M mclk. the ids of
+clk_testout1 and clk_testout2 is wrong. it's time to correct it. 
 
-Looks like a typo in the dts filename and in the include ( dot instead
-of dash ).
+Eddie Cai (2):
+  clk: rockchip: add ids for camera
+  clk: rockchip: fix the incorrect ids
+
+ drivers/clk/rockchip/clk-rk3399.c      | 4 ++--
+ include/dt-bindings/clock/rk3399-cru.h | 2 ++
+ 2 files changed, 4 insertions(+), 2 deletions(-)
+
+-- 
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
