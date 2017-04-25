@@ -1,115 +1,113 @@
-From: Markus Mayer <markus.mayer@broadcom.com>
-Subject: Re: [PATCH 1/2] dt/bindings: Add bindings for Broadcom STB DRAM Sensors
-Date: Tue, 25 Apr 2017 12:29:40 -0700
-Message-ID: <CAGt4E5susQWWNZPbNh8AoWtK-4yu50VL=GqOw+_2w_FA+2V68Q@mail.gmail.com>
-References: <20170418201702.57019-1-code@mmayer.net> <20170418201702.57019-2-code@mmayer.net>
+From: Brendan Higgins <brendanhiggins@google.com>
+Subject: Re: [PATCH v6 4/5] i2c: aspeed: added driver for Aspeed I2C
+Date: Tue, 25 Apr 2017 12:50:45 -0700
+Message-ID: <CAFd5g45htFgr5oHbB9W_nyyMfm5J7BCKUuP73RxKhNW3LkWtyw@mail.gmail.com>
+References: <20170328051226.21677-1-brendanhiggins@google.com>
+ <20170328051226.21677-5-brendanhiggins@google.com> <1490945610.3177.229.camel@kernel.crashing.org>
+ <CAFd5g45DQZz99y59AY-4465qnM+tRv6+bDdGQqS6VYHEfRfjDg@mail.gmail.com>
+ <1493086747.25766.264.camel@kernel.crashing.org> <CAFd5g44ioW0PdFVOhY-ep8TXBNg6qC7E5yjOVf3MEdY9bPgEDA@mail.gmail.com>
+ <7d991733d3ea4591b74baf93300f0224@TWMBX01.aspeed.com> <1493112875.25766.268.camel@kernel.crashing.org>
+ <e90ff5914518400ea6902ca40406eb0f@TWMBX01.aspeed.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-hwmon-owner@vger.kernel.org>
-In-Reply-To: <20170418201702.57019-2-code@mmayer.net>
-Sender: linux-hwmon-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, Mark Rutland <mark.rutland@arm.com>, Florian Fainelli <f.fainelli@gmail.com>, Broadcom Kernel List <bcm-kernel-feedback-list@broadcom.com>, Linux HWMON List <linux-hwmon@vger.kernel.org>, Device Tree List <devicetree@vger.kernel.org>, ARM Kernel List <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-i2c-owner@vger.kernel.org>
+In-Reply-To: <e90ff5914518400ea6902ca40406eb0f@TWMBX01.aspeed.com>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Ryan Chen <ryan_chen@aspeedtech.com>
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>, Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Joel Stanley <joel@jms.id.au>, Vladimir Zapolskiy <vz@mleia.com>, Kachalov Anton <mouse@mayc.ru>, =?UTF-8?Q?C=C3=A9dric_Le_Goater?= <clg@kaod.org>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, OpenBMC Maillist <openbmc@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
-
-On 18 April 2017 at 13:17, Markus Mayer <code@mmayer.net> wrote:
-> From: Markus Mayer <mmayer@broadcom.com>
+On Tue, Apr 25, 2017 at 2:47 AM, Ryan Chen <ryan_chen@aspeedtech.com> wrote=
+:
+> Thanks Ryan. Can you shed some light on the meaning of the high-speed bit=
+ as well please ?
 >
-> Provide bindings for the Broadcom STB DDR PHY Front End (DPFE).
-
-Would you be able to have a look at this binding? The driver won't be
-upstreamed as hwmon driver (as per Guenter's comments). I am currently
-converting the driver to a "soc" driver instead, but the proposed
-binding remains unchanged.
-
-If you have comments or suggestions, I would like to incorporate them
-with the new series I will be sending out.
-
-Thanks,
--Markus
-
-> Signed-off-by: Markus Mayer <mmayer@broadcom.com>
-> ---
->  .../devicetree/bindings/hwmon/brcmstb-dpfe.txt     | 68 ++++++++++++++++++++++
->  1 file changed, 68 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/hwmon/brcmstb-dpfe.txt
+> About ASPEED_I2CD_M_HIGH_SPEED_EN, it is support for I2C specification "H=
+igh speed transfer". And also device need support it.
+> If you just speed up the I2C bus clock, you don=E2=80=99t have to enable =
+ASPEED_I2CD_M_HIGH_SPEED_EN, just change the clock is ok.
 >
-> diff --git a/Documentation/devicetree/bindings/hwmon/brcmstb-dpfe.txt b/Documentation/devicetree/bindings/hwmon/brcmstb-dpfe.txt
-> new file mode 100644
-> index 0000000..3519197
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/hwmon/brcmstb-dpfe.txt
-> @@ -0,0 +1,68 @@
-> +DDR PHY Front End (DPFE) for Broadcom STB
-> +=========================================
-> +
-> +DPFE and the DPFE firmware provide an interface for the host CPU to
-> +communicate with the DCPU, which resides inside the DDR PHY.
-> +
-> +There are three memory regions for interacting with the DCPU.
-> +
-> +The DCPU Register Space
-> +-----------------------
-> +
-> +Required properties:
-> +  - compatible: must be one of brcm,bcm7271-dpfe-cpu, brcm,dpfe-cpu-v12.0.0.0
-> +    or brcm,dpfe-cpu
-> +  - reg: must reference the start address and length of the DCPU register
-> +    space
-> +
-> +Optional properties:
-> +  - cell-index: the index of the DPFE instance; will default to 0 if not set
-> +
-> +Example:
-> +       dpfe_cpu0: dpfe-cpu@f1132000 {
-> +               compatible = "brcm,bcm7271-dpfe-cpu",
-> +                       "brcm,dpfe-cpu-v12.0.0.0",
-> +                       "brcm,dpfe-cpu";
-> +               reg = <0xf1132000 0x180>;
-> +               cell-index = <0>;
-> +       };
-> +
-> +The DCPU Data Memory Space
-> +--------------------------
-> +
-> +Required properties:
-> +  - compatible: must be one of brcm,bcm7271-dpfe-dmem, brcm,dpfe-dmem-v12.0.0.0
-> +    or brcm,dpfe-dmem
-> +  - reg: must reference the start address and length of the DCPU DMEM space
-> +
-> +Optional properties:
-> +  - cell-index: the index of the DPFE instance; will default to 0 if not set
-> +
-> +Example:
-> +       dpfe_dmem0: dpfe-dmem@f1134000 {
-> +               compatible = "brcm,bcm7271-dpfe-dmem",
-> +                       "brcm,dpfe-dmem-v12.0.0.0",
-> +                       "brcm,dpfe-dmem";
-> +               reg = <0xf1134000 0x1000>;
-> +               cell-index = <0>;
-> +       };
-> +
-> +The DCPU Instruction Memory Space
-> +---------------------------------
-> +
-> +Required properties:
-> +  - compatible: must be one of brcm,bcm7271-dpfe-imem, brcm,dpfe-imem-v12.0.0.0
-> +    or brcm,dpfe-imem
-> +  - reg: must reference the start address and length of the DCPU IMEM space
-> +
-> +Optional properties:
-> +  - cell-index: the index of the DPFE instance; will default to 0 if not set
-> +
-> +Example:
-> +       dpfe_imem0: dpfe-imem@f1138000 {
-> +               compatible = "brcm,bcm7271-dpfe-imem",
-> +                       "brcm,dpfe-imem-v12.0.0.0",
-> +                       "brcm,dpfe-imem";
-> +               reg = <0xf1138000 0x4000>;
-> +               cell-index = <0>;
-> +       };
-> --
-> 2.7.4
+
+Interesting, I thought that ASPEED_I2CD_M_SDA_DRIVE_1T_EN and its
+counterpart would be used for fast mode or fast mode plus and
+ASPEED_I2CD_M_HIGH_SPEED_EN would be used for fast mode plus or high
+speed mode and that they work by driving the SDA and SCL signals to
+improve rise times. It made sense to me because the lowest SCL you can
+get with base clock set to zero is about ~1.5MHz which is in between
+fast mode plus (1MHz) and high speed mode (3.4MHz).
+
+But from what you are saying, ASPEED_I2CD_M_SDA_DRIVE_1T_EN and its
+counterpart are totally orthogonal to the selected speed and
+ASPEED_I2CD_M_HIGH_SPEED_EN exists as a matter of convenience to set
+all of the divider registers to their smallest possible values. Is my
+understanding correct?
+
 >
+> -----Original Message-----
+> From: Benjamin Herrenschmidt [mailto:benh@kernel.crashing.org]
+> Sent: Tuesday, April 25, 2017 5:35 PM
+> To: Ryan Chen <ryan_chen@aspeedtech.com>; Brendan Higgins <brendanhiggins=
+@google.com>
+> Cc: Wolfram Sang <wsa@the-dreams.de>; Rob Herring <robh+dt@kernel.org>; M=
+ark Rutland <mark.rutland@arm.com>; Thomas Gleixner <tglx@linutronix.de>; J=
+ason Cooper <jason@lakedaemon.net>; Marc Zyngier <marc.zyngier@arm.com>; Jo=
+el Stanley <joel@jms.id.au>; Vladimir Zapolskiy <vz@mleia.com>; Kachalov An=
+ton <mouse@mayc.ru>; C=C3=A9dric Le Goater <clg@kaod.org>; linux-i2c@vger.k=
+ernel.org; devicetree@vger.kernel.org; Linux Kernel Mailing List <linux-ker=
+nel@vger.kernel.org>; OpenBMC Maillist <openbmc@lists.ozlabs.org>
+> Subject: Re: [PATCH v6 4/5] i2c: aspeed: added driver for Aspeed I2C
+>
+> On Tue, 2017-04-25 at 08:50 +0000, Ryan Chen wrote:
+>> Hello All,
+>>               ASPEED_I2CD_M_SDA_DRIVE_1T_EN,
+>> ASPEED_I2CD_SDA_DRIVE_1T_EN is specific for some case usage.
+>>               For example, if i2c bus is use on "high speed" and "single=
+ slave and
+>> master" and i2c bus is too long. It need drive SDA or SCL less lunacy.
+>> It would enable it.
+>>               Otherwise, don=E2=80=99t enable it. especially in multi-ma=
+ster.
+>> It can=E2=80=99t be enable.
+>
+> That smells like a specific enough use case that we should probably cover=
+ with a device-tree property, something like an empty "sda-extra-drive" pro=
+perty (empty properties are typically used for booleans, their presence mea=
+ns "true").
+>
+> Thanks Ryan. Can you shed some light on the meaning of the high-speed bit=
+ as well please ? Does it force to a specific speed (ignoring the
+> divisor) or we can still play with the clock high/low counts ?
+>
+...
+>> > Your latest patch still does that. It will do things like start a
+>> > STOP command *then* ack the status bits. I'm pretty sure that's
+>> > bogus.
+>> >
+>> > That way it's a lot simpler to simply move the
+>> >
+>> >         writel(irq_status, bus->base + ASPEED_I2C_INTR_STS_REG);
+>> >
+>> > To either right after the readl of the status reg at the beginning
+>> > of aspeed_i2c_master_irq().
+>> >
+>> > I would be very surprised if that didn't work properly and wasn't
+>> > much safer than what you are currently doing.
+>>
+>> I think I tried your way and it worked. In anycase, Ryan will be able
+>> to clarify for us.
+
+After thinking about this more, I think Ben is right. It would be
+unusual for such a common convention to be broken and even if it is, I
+do not see how a command could take effect until it is actually
+issued. Nevertheless, it would make me feel better if you, Ryan, could
+comment on this.
+
+>>
+>> >
+>> > > Let me know if you still think we need a "RECOVERY" state.
+>> >
+...
+I feel pretty good about this; it does not look like there will be a
+lot of changes going into v8; hopefully, that version will be good
+enough to get merged.
