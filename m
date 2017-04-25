@@ -1,57 +1,63 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH 2/2] ARM: dts: Add the ethernet and ethernet PHY to the
- cygnus core DT.
-Date: Tue, 25 Apr 2017 12:41:28 +0300
-Message-ID: <86e911e7-ca92-af6e-8efb-812ee1939320@cogentembedded.com>
-References: <20170424215022.30382-1-eric@anholt.net>
- <20170424215022.30382-3-eric@anholt.net>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v2 10/18] pinctrl: madera: Add driver for Cirrus Logic
+ Madera codecs
+Date: Tue, 25 Apr 2017 11:41:59 +0200
+Message-ID: <CACRpkdYtuu4mFf9bjz-z_kNhbgmuw7TQdQqBc66iWfFP5wp_fw@mail.gmail.com>
+References: <1493050124-5970-1-git-send-email-rf@opensource.wolfsonmicro.com> <1493050124-5970-11-git-send-email-rf@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170424215022.30382-3-eric@anholt.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Eric Anholt <eric@anholt.net>, Florian Fainelli <f.fainelli@gmail.com>, Vivien Didelot <vivien.didelot@savoirfairelinux.com>, Andrew Lunn <andrew@lunn.ch>, netdev@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1493050124-5970-11-git-send-email-rf@opensource.wolfsonmicro.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Richard Fitzgerald <rf@opensource.wolfsonmicro.com>
+Cc: Lee Jones <lee.jones@linaro.org>, Mark Brown <broonie@kernel.org>, Alexandre Courbot <gnurou@gmail.com>, Rob Herring <robh+dt@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "open list:WOLFSON MICROELECTRONICS DRIVERS" <patches@opensource.wolfsonmicro.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 4/25/2017 12:50 AM, Eric Anholt wrote:
+On Mon, Apr 24, 2017 at 6:08 PM, Richard Fitzgerald
+<rf@opensource.wolfsonmicro.com> wrote:
 
-> Cygnus has a single amac controller connected to the B53 switch with 2
-> PHYs.  On the BCM911360_EP platform, those two PHYs are connected to
-> the external ethernet jacks.
+> These codecs have a variable number of I/O lines each of which
+> is individually selectable to a wide range of possible functions.
 >
-> Signed-off-by: Eric Anholt <eric@anholt.net>
-> ---
->  arch/arm/boot/dts/bcm-cygnus.dtsi      | 60 ++++++++++++++++++++++++++++++++++
->  arch/arm/boot/dts/bcm911360_entphn.dts |  8 +++++
->  2 files changed, 68 insertions(+)
+> The functionality is slightly different from the traditional muxed
+> GPIO since most of the functions can be mapped to any pin (and even
+> the same function to multiple pins). Most pins have a dedicated
+> "alternate" function that is only available on that pin. The
+> alternate functions are usually a group of signals, though it is
+> not always necessary to enable the full group, depending on the
+> alternate function and how it is to be used. The mapping between
+> alternate functions and GPIO pins varies between codecs depending
+> on the number of alternate functions and available pins.
 >
-> diff --git a/arch/arm/boot/dts/bcm-cygnus.dtsi b/arch/arm/boot/dts/bcm-cygnus.dtsi
-> index 009f1346b817..318899df9972 100644
-> --- a/arch/arm/boot/dts/bcm-cygnus.dtsi
-> +++ b/arch/arm/boot/dts/bcm-cygnus.dtsi
-[...]
-> @@ -295,6 +345,16 @@
->  			status = "disabled";
->  		};
+> Note on the Kconfig options:
+> The formula "default y if..." is used for PINCTRL_MADERA so that its
+> select options will be processed, allowing us to group selects for
+> pinctrl into the pinctrl Kconfig where they logically belong instead
+> of accumulating under the parent MFD Kconfig.
 >
-> +		eth0: enet@18042000 {
+> Signed-off-by: Richard Fitzgerald <rf@opensource.wolfsonmicro.com>
+(...)
 
-    Oh, and this one should be named "ethernet", according to the DT spec.
+> Changes since V1:
 
-> +			compatible = "brcm,amac";
-> +			reg = <0x18042000 0x1000>,
-> +			      <0x18110000 0x1000>;
-> +			reg-names = "amac_base", "idm_base";
-> +			interrupts = <GIC_SPI 110 IRQ_TYPE_LEVEL_HIGH>;
-> +			max-speed = <1000>;
-> +			status = "disabled";
-> +		};
-> +
->  		nand: nand@18046000 {
->  			compatible = "brcm,nand-iproc", "brcm,brcmnand-v6.1";
->  			reg = <0x18046000 0x600>, <0xf8105408 0x600>,
-[...]
+This is starting to look good!
 
-MBR, Sergei
+In fact, kind of finished. Except:
+
+> +       if (pdata) {
+> +               ret = pinctrl_register_mappings(pdata->gpio_configs,
+> +                                               pdata->n_gpio_configs);
+> +               if (ret) {
+> +                       dev_err(priv->dev,
+> +                               "Failed to register pdata mappings (%d)\n",
+> +                               ret);
+> +                       return ret;
+> +               }
+> +       }
+
+What is this? It looks like boardfile support which we do not like to
+encourage. Why are the mappings not exclusively set up from
+device tree or similar?
+
+Yours,
+Linus Walleij
