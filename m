@@ -1,41 +1,63 @@
 From: Mark Greer <mgreer-luAo+O/VEmrlveNOaEYElw@public.gmane.org>
-Subject: [PATCH v5 1/9] MAINTAINERS: NFC: trf7970a: Add Mark Greer as maintainer
-Date: Tue, 25 Apr 2017 15:43:48 -0700
-Message-ID: <20170425224356.11498-2-mgreer@animalcreek.com>
-References: <20170425224356.11498-1-mgreer@animalcreek.com>
+Subject: [PATCH v5 0/9] NFC: trf7970a: Fixups & convert to desc-based GPIO
+Date: Tue, 25 Apr 2017 15:43:47 -0700
+Message-ID: <20170425224356.11498-1-mgreer@animalcreek.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170425224356.11498-1-mgreer-luAo+O/VEmrlveNOaEYElw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
 Cc: linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-nfc-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Greer <mgreer-luAo+O/VEmrlveNOaEYElw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add Mark Greer as the maintainer of the trf7970a NFC driver.
+These trf7970a driver patches do the following things:
+ - add Mark Greer as the maintainer of the trf7970a driver
+ - some minor fixups
+ - remove support for 'vin-voltage-override' DT property
+ - change the DTS example to indicate that EN and EN2 are active high GPIOs
+ - convert the driver to use the descriptor-based GPIO interface
+ - apply Lindent coding style fixes
 
-Signed-off-by: Mark Greer <mgreer-luAo+O/VEmrlveNOaEYElw@public.gmane.org>
----
- MAINTAINERS | 8 ++++++++
- 1 file changed, 8 insertions(+)
+Based on nfc-next/master 4ea206395d3a ("nfc: fix get_unaligned_...() misuses")
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index a8eaa0a8e522..d7441b69f101 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -11118,6 +11118,14 @@ F:	kernel/time/alarmtimer.c
- F:	kernel/time/ntp.c
- F:	tools/testing/selftests/timers/
- 
-+TI TRF7970A NFC DRIVER
-+M:	Mark Greer <mgreer-luAo+O/VEmrlveNOaEYElw@public.gmane.org>
-+L:	linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-+L:	linux-nfc-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org (moderated for non-subscribers)
-+S:	Supported
-+F:	drivers/nfc/trf7970a.c
-+F:	Documentation/devicetree/bindings/net/nfc/trf7970a.txt
-+
- SC1200 WDT DRIVER
- M:	Zwane Mwaikambo <zwanem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
- S:	Maintained
+v4->v5:
+ - Fixed whitespace issue in "NFC: trf7970a: Clean up coding style issues"
+
+v3->v4:
+ - Rebased on nfc-next/master because patches in that branch conflict
+   with the v3 version of this patch series.
+ - Removed "NFC: trf7970a: Don't manage EN2 when not specified in DT"
+   because a similar patch has already been accepted.
+ - Added "NFC: trf7970a: Clean up coding style issues" because the reason
+   I removed it in v3 no longer exists.
+ - Reordered the patches to make more sense (I think)
+
+v2->v3:
+ - Removed "[PATCH v2 5/7] NFC: trf7970a: Clean up coding style issues"
+   because it will make merging patches from Geoff Lansberry and others
+   hard to apply.  I will resubmit once those patches have been merged
+   or rejected.
+ - Added a patch to remove 'vin-voltage-override' DT property support as
+   proper DT regulator set up makes it unnecessary.
+
+v1->v2:
+ - Commit description fixups only; no functional changes.
+
+Mark Greer (9):
+  MAINTAINERS: NFC: trf7970a: Add Mark Greer as maintainer
+  NFC: trf7970a: Don't de-assert EN2 unless it was asserted
+  NFC: trf7970a: Fix inaccurate comment in trf7970a_probe()
+  NFC: trf7970a: Only check 'en2-rf-quirk' if EN2 is specified
+  NFC: trf7970a: Remove useless comment
+  NFC: trf7970a: Remove support for 'vin-voltage-override' DT property
+  NFC: trf7970a: Enable pins are active high not active low
+  NFC: trf7970a: Convert to descriptor based GPIO interface
+  NFC: trf7970a: Clean up coding style issues
+
+ .../devicetree/bindings/net/nfc/trf7970a.txt       |   6 +-
+ MAINTAINERS                                        |   8 +
+ drivers/nfc/Kconfig                                |   2 +-
+ drivers/nfc/trf7970a.c                             | 363 ++++++++++-----------
+ 4 files changed, 185 insertions(+), 194 deletions(-)
+
 -- 
 2.12.0
 
