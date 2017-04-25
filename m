@@ -1,85 +1,41 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 07/10] mfd: axp20x: add axp20x-regulator cell for
- AXP803
-Date: Tue, 25 Apr 2017 08:57:17 +0100
-Message-ID: <20170425075717.l4x3qektdgt6kaiq@dell>
-References: <20170424160103.9447-1-icenowy@aosc.io>
- <20170424160103.9447-8-icenowy@aosc.io>
+From: Brendan Higgins <brendanhiggins@google.com>
+Subject: Re: [PATCH v7 4/5] i2c: aspeed: added driver for Aspeed I2C
+Date: Tue, 25 Apr 2017 01:00:44 -0700
+Message-ID: <CAFd5g46kbNg9wGtT1aHt+oRYHjLBdiEPd1Nu7gZoHe5A9Mn-1g@mail.gmail.com>
+References: <20170424181818.2754-1-brendanhiggins@google.com>
+ <20170424181818.2754-5-brendanhiggins@google.com> <1493086864.25766.266.camel@kernel.crashing.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170424160103.9447-8-icenowy-h8G6r0blFSE@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-i2c-owner@vger.kernel.org>
+In-Reply-To: <1493086864.25766.266.camel@kernel.crashing.org>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Joel Stanley <joel@jms.id.au>, Vladimir Zapolskiy <vz@mleia.com>, Kachalov Anton <mouse@mayc.ru>, =?UTF-8?Q?C=C3=A9dric_Le_Goater?= <clg@kaod.org>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, OpenBMC Maillist <openbmc@lists.ozlabs.org>, Ryan Chen <ryan_chen@aspeedtech.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 25 Apr 2017, Icenowy Zheng wrote:
+Adding Ryan to thread.
 
-> As axp20x-regulator now supports AXP803, add a cell for it.
-> 
-> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-> Acked-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-> ---
-> Changes in v4:
-> - Added a trailing comma for new cell, for easier further cell addition.
-> Changes in v3:
-> - Make the new cell one-liner.
-> 
->  drivers/mfd/axp20x.c                 | 3 ++-
->  drivers/regulator/axp20x-regulator.c | 6 +++---
+>> +static int __aspeed_i2c_init_clk(struct aspeed_i2c_bus *bus,
+>> +                                struct platform_device *pdev)
+>> +{
+>
+> Minor nit ... I'm really not fan of those underscores.
+>
+> We use __ functions in some cases in the kernel for low level
+> helpers, usually when it's a low level variant of an existing
+> function or an "unlocked" variant, but I don't think generalizing
+> it to pretty much everything in the driver is worthwhile here.
+>
+> If you want to be explicit about locking, I would suggest you
+> use a comment in front of the function explaining if it
+> expects to be called with the lock held.
+>
+> We tend to only do that when *both* functions exist and one is
+> implemented in term of the other.
 
-These 2 changes are orthogonal, thus there is no reason to send them
-bundled into a single patch.  Doing so complicates things greatly.
-Please resubmit the two changes separately, so that they may be
-absorbed by our respective subsystems.
-
->  2 files changed, 5 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/mfd/axp20x.c b/drivers/mfd/axp20x.c
-> index 1dc6235778eb..917b6ddc4f15 100644
-> --- a/drivers/mfd/axp20x.c
-> +++ b/drivers/mfd/axp20x.c
-> @@ -848,7 +848,8 @@ static struct mfd_cell axp803_cells[] = {
->  		.name			= "axp20x-pek",
->  		.num_resources		= ARRAY_SIZE(axp803_pek_resources),
->  		.resources		= axp803_pek_resources,
-> -	}
-> +	},
-> +	{	.name			= "axp20x-regulator" },
->  };
->  
->  static struct mfd_cell axp806_cells[] = {
-> diff --git a/drivers/regulator/axp20x-regulator.c b/drivers/regulator/axp20x-regulator.c
-> index 9356ec8a9a1f..e2608fe770b9 100644
-> --- a/drivers/regulator/axp20x-regulator.c
-> +++ b/drivers/regulator/axp20x-regulator.c
-> @@ -311,13 +311,13 @@ static const struct regulator_desc axp803_regulators[] = {
->  		 AXP803_FLDO1_V_OUT, 0x0f, AXP22X_PWR_OUT_CTRL3, BIT(2)),
->  	AXP_DESC(AXP803, FLDO2, "fldo2", "fldoin", 700, 1450, 50,
->  		 AXP803_FLDO2_V_OUT, 0x0f, AXP22X_PWR_OUT_CTRL3, BIT(3)),
-> -	AXP_DESC_IO(AXP803, LDO_IO0, "ldo_io0", "ips", 700, 3300, 100,
-> +	AXP_DESC_IO(AXP803, LDO_IO0, "ldo-io0", "ips", 700, 3300, 100,
->  		    AXP22X_LDO_IO0_V_OUT, 0x1f, AXP20X_GPIO0_CTRL, 0x07,
->  		    AXP22X_IO_ENABLED, AXP22X_IO_DISABLED),
-> -	AXP_DESC_IO(AXP803, LDO_IO1, "ldo_io1", "ips", 700, 3300, 100,
-> +	AXP_DESC_IO(AXP803, LDO_IO1, "ldo-io1", "ips", 700, 3300, 100,
->  		    AXP22X_LDO_IO1_V_OUT, 0x1f, AXP20X_GPIO1_CTRL, 0x07,
->  		    AXP22X_IO_ENABLED, AXP22X_IO_DISABLED),
-> -	AXP_DESC_FIXED(AXP803, RTC_LDO, "rtc_ldo", "ips", 3000),
-> +	AXP_DESC_FIXED(AXP803, RTC_LDO, "rtc-ldo", "ips", 3000),
->  };
->  
->  static const struct regulator_linear_range axp806_dcdca_ranges[] = {
-
--- 
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Okay, I guess that makes sense. Sorry, I thought the "unlocked"
+variant might refer to a function that you have to pay close attention
+to the context in which it is called; with as many functions as I have
+that require the lock to be held, I would like there to be some way to
+say the function is "unsafe," but I guess if there is no convention to
+do that, then there is no convention to do that.
