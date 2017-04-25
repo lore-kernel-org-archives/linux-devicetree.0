@@ -1,48 +1,34 @@
-From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 1/3] mtd: nand: Cleanup/rework the atmel_nand driver
-Date: Mon, 24 Apr 2017 18:09:30 -0700
-Message-ID: <20170425010930.GA120971@google.com>
-References: <1489651362-17077-1-git-send-email-boris.brezillon@free-electrons.com>
- <1489651362-17077-2-git-send-email-boris.brezillon@free-electrons.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1489651362-17077-2-git-send-email-boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Haavard Skinnemoen <hskinnemoen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hans-Christian Egtvedt <egtvedt-BrfabpQBY5qlHtIdYg32fQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Josh Wu <rainyfeeling-1ViLX0X+lBJBDgjK7y7TUQ@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Masahiro Yamada <yamada.masahiro@so>
+From: Hoegeun Kwon <hoegeun.kwon@samsung.com>
+Subject: [PATCH] arm64: dts: exynos: Remove the te-gpios property in the TM2
+ boards
+Date: Tue, 25 Apr 2017 10:54:21 +0900
+Message-ID: <1493085261-3488-1-git-send-email-hoegeun.kwon@samsung.com>
+References: <CGME20170425015437epcas5p43549d47e69519f43d89ba2de496ba451@epcas5p4.samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, kgene@kernel.org, krzk@kernel.org
+Cc: javier@osg.samsung.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, a.hajda@samsung.com, Hoegeun Kwon <hoegeun.kwon@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 16, 2017 at 09:02:40AM +0100, Boris Brezillon wrote:
+The decon uses HW-TRIGGER, so TE interrupt is not necessary.
+Therefore, remove the te-gpios property in the TM2 dts.
 
-> diff --git a/drivers/mtd/nand/atmel/nand-controller.c b/drivers/mtd/nand/atmel/nand-controller.c
-> new file mode 100644
-> index 000000000000..f71b9e5d7d9d
-> --- /dev/null
-> +++ b/drivers/mtd/nand/atmel/nand-controller.c
-> @@ -0,0 +1,2198 @@
-[...]
+Signed-off-by: Hoegeun Kwon <hoegeun.kwon@samsung.com>
+---
+ arch/arm64/boot/dts/exynos/exynos5433-tm2.dts | 1 -
+ 1 file changed, 1 deletion(-)
 
-> +static int
-> +atmel_hsmc_nand_controller_legacy_init(struct atmel_hsmc_nand_controller *nc)
-> +{
-> +	struct regmap_config regmap_conf = {
-> +		.reg_bits = 32,
-> +		.val_bits = 32,
-> +		.reg_stride = 4,
-> +		.val_bits = 32,
-
-You assigned val_bits twice. Is that just a harmless mistake, or did you
-mean to set something else?
-
-(sparse and other tools complain about this)
-
-> +	};
-
-
-Brian
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm64/boot/dts/exynos/exynos5433-tm2.dts b/arch/arm64/boot/dts/exynos/exynos5433-tm2.dts
+index 3ff9527..23191eb 100644
+--- a/arch/arm64/boot/dts/exynos/exynos5433-tm2.dts
++++ b/arch/arm64/boot/dts/exynos/exynos5433-tm2.dts
+@@ -60,7 +60,6 @@
+ 		vci-supply = <&ldo28_reg>;
+ 		reset-gpios = <&gpg0 0 GPIO_ACTIVE_LOW>;
+ 		enable-gpios = <&gpf1 5 GPIO_ACTIVE_HIGH>;
+-		te-gpios = <&gpf1 3 GPIO_ACTIVE_HIGH>;
+ 	};
+ };
+ 
+-- 
+1.9.1
