@@ -1,904 +1,476 @@
-From: Andi Shyti <andi.shyti-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v3 2/2] Input: add support for the STMicroelectronics
- FingerTip touchscreen
-Date: Tue, 25 Apr 2017 11:31:18 +0900
-Message-ID: <20170425023118.4xitk2dzzffftowh@gangnam.samsung>
-References: <20170327130743.27783-1-andi.shyti@samsung.com>
- <CGME20170327130756epcas1p321726d525c31814c3f76895b895739cd@epcas1p3.samsung.com>
- <20170327130743.27783-3-andi.shyti@samsung.com>
+From: kbuild test robot <lkp-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: Add devicetree for the Raspberry Pi 3, for
+ arm32 (v5)
+Date: Tue, 25 Apr 2017 11:56:55 +0800
+Message-ID: <201704251135.5hOwV00O%fengguang.wu@intel.com>
+References: <20170424200037.25615-1-eric@anholt.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/mixed; boundary="rwEMma7ioTxnRzrJ"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-disposition: inline
-In-reply-to: <20170327130743.27783-3-andi.shyti-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170424200037.25615-1-eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andi Shyti <andi-ahk0KpmfxKRAfugRpC6u6w@public.gmane.org>
+Cc: kbuild-all-JC7UmRfGjtg@public.gmane.org, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Gerd Hoffmann <kraxel-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Dmitry,
 
-again, kindly ping. This patch has been posted on March 27th and
-this is the third time I ask you a feedback about it.
+--rwEMma7ioTxnRzrJ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Please let me know,
-Andi
+Hi Eric,
 
-On Mon, Mar 27, 2017 at 10:07:43PM +0900, Andi Shyti wrote:
-> The stmfts (ST-Microelectronics FingerTip S) touchscreen device
-> is a capacitive multi-touch controller mainly for mobile use.
-> 
-> It's connected through i2c bus at the address 0x49 and it
-> interfaces with userspace through input event interface.
-> 
-> At the current state it provides a touchscreen multitouch
-> functionality up to 10 fingers. Each finger is enumerated with a
-> distinctive id (from 0 to 9).
-> 
-> If enabled the device can support single "touch" hovering, by
-> providing three coordinates, x, y and distance.
-> 
-> It is possible to select the touchkey functionality which
-> provides a basic two keys interface for "home" and "back" menu,
-> typical in mobile phones.
-> 
-> Signed-off-by: Andi Shyti <andi.shyti-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> ---
->  drivers/input/touchscreen/Kconfig  |  12 +
->  drivers/input/touchscreen/Makefile |   1 +
->  drivers/input/touchscreen/stmfts.c | 805 +++++++++++++++++++++++++++++++++++++
->  3 files changed, 818 insertions(+)
->  create mode 100644 drivers/input/touchscreen/stmfts.c
-> 
-> diff --git a/drivers/input/touchscreen/Kconfig b/drivers/input/touchscreen/Kconfig
-> index 33c62e5de4fa..f8631c64290d 100644
-> --- a/drivers/input/touchscreen/Kconfig
-> +++ b/drivers/input/touchscreen/Kconfig
-> @@ -1114,6 +1114,18 @@ config TOUCHSCREEN_ST1232
->  	  To compile this driver as a module, choose M here: the
->  	  module will be called st1232_ts.
->  
-> +config TOUCHSCREEN_STMFTS
-> +	tristate "STMicroelectronics STMFTS touchscreen"
-> +	depends on I2C
-> +	depends on INPUT
-> +	depends on LEDS_CLASS
-> +	help
-> +	  Say Y here if you want support for STMicroelectronics
-> +	  STMFTS touchscreen.
-> +
-> +	  To compile this driver as a module, choose M here: the
-> +	  module will be called stmfts.
-> +
->  config TOUCHSCREEN_STMPE
->  	tristate "STMicroelectronics STMPE touchscreens"
->  	depends on MFD_STMPE
-> diff --git a/drivers/input/touchscreen/Makefile b/drivers/input/touchscreen/Makefile
-> index 18e476948e44..6badce87037b 100644
-> --- a/drivers/input/touchscreen/Makefile
-> +++ b/drivers/input/touchscreen/Makefile
-> @@ -67,6 +67,7 @@ obj-$(CONFIG_TOUCHSCREEN_S3C2410)	+= s3c2410_ts.o
->  obj-$(CONFIG_TOUCHSCREEN_SILEAD)	+= silead.o
->  obj-$(CONFIG_TOUCHSCREEN_SIS_I2C)	+= sis_i2c.o
->  obj-$(CONFIG_TOUCHSCREEN_ST1232)	+= st1232.o
-> +obj-$(CONFIG_TOUCHSCREEN_STMFTS)	+= stmfts.o
->  obj-$(CONFIG_TOUCHSCREEN_STMPE)		+= stmpe-ts.o
->  obj-$(CONFIG_TOUCHSCREEN_SUN4I)		+= sun4i-ts.o
->  obj-$(CONFIG_TOUCHSCREEN_SUR40)		+= sur40.o
-> diff --git a/drivers/input/touchscreen/stmfts.c b/drivers/input/touchscreen/stmfts.c
-> new file mode 100644
-> index 000000000000..2e18b1456f42
-> --- /dev/null
-> +++ b/drivers/input/touchscreen/stmfts.c
-> @@ -0,0 +1,805 @@
-> +/*
-> + * Copyright (c) 2017 Samsung Electronics Co., Ltd.
-> + * Author: Andi Shyti <andi.shyti-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + *
-> + * STMicroelectronics FTS Touchscreen device driver
-> + */
-> +
-> +#include <linux/delay.h>
-> +#include <linux/i2c.h>
-> +#include <linux/input/mt.h>
-> +#include <linux/input/touchscreen.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/irq.h>
-> +#include <linux/leds.h>
-> +#include <linux/module.h>
-> +#include <linux/pm_runtime.h>
-> +#include <linux/regulator/consumer.h>
-> +
-> +/* I2C commands */
-> +#define STMFTS_READ_INFO			0x80
-> +#define STMFTS_READ_STATUS			0x84
-> +#define STMFTS_READ_ONE_EVENT			0x85
-> +#define STMFTS_READ_ALL_EVENT			0x86
-> +#define STMFTS_LATEST_EVENT			0x87
-> +#define STMFTS_SLEEP_IN				0x90
-> +#define STMFTS_SLEEP_OUT			0x91
-> +#define STMFTS_MS_MT_SENSE_OFF			0x92
-> +#define STMFTS_MS_MT_SENSE_ON			0x93
-> +#define STMFTS_SS_HOVER_SENSE_OFF		0x94
-> +#define STMFTS_SS_HOVER_SENSE_ON		0x95
-> +#define STMFTS_MS_KEY_SENSE_OFF			0x9a
-> +#define STMFTS_MS_KEY_SENSE_ON			0x9b
-> +#define STMFTS_SYSTEM_RESET			0xa0
-> +#define STMFTS_CLEAR_EVENT_STACK		0xa1
-> +#define STMFTS_FULL_FORCE_CALIBRATION		0xa2
-> +#define STMFTS_MS_CX_TUNING			0xa3
-> +#define STMFTS_SS_CX_TUNING			0xa4
-> +
-> +/* events */
-> +#define STMFTS_EV_NO_EVENT			0x00
-> +#define STMFTS_EV_MULTI_TOUCH_DETECTED		0x02
-> +#define STMFTS_EV_MULTI_TOUCH_ENTER		0x03
-> +#define STMFTS_EV_MULTI_TOUCH_LEAVE		0x04
-> +#define STMFTS_EV_MULTI_TOUCH_MOTION		0x05
-> +#define STMFTS_EV_HOVER_ENTER			0x07
-> +#define STMFTS_EV_HOVER_LEAVE			0x08
-> +#define STMFTS_EV_HOVER_MOTION			0x09
-> +#define STMFTS_EV_KEY_STATUS			0x0e
-> +#define STMFTS_EV_ERROR				0x0f
-> +#define STMFTS_EV_CONTROLLER_READY		0x10
-> +#define STMFTS_EV_SLEEP_OUT_CONTROLLER_READY	0x11
-> +#define STMFTS_EV_STATUS			0x16
-> +#define STMFTS_EV_DEBUG				0xdb
-> +
-> +/* multi touch related event masks */
-> +#define STMFTS_MASK_EVENT_ID			0x0f
-> +#define STMFTS_MASK_TOUCH_ID			0xf0
-> +#define STMFTS_MASK_LEFT_EVENT			0x0f
-> +#define STMFTS_MASK_X_MSB			0x0f
-> +#define STMFTS_MASK_Y_LSB			0xf0
-> +
-> +/* key related event masks */
-> +#define STMFTS_MASK_KEY_NO_TOUCH		0x00
-> +#define STMFTS_MASK_KEY_MENU			0x01
-> +#define STMFTS_MASK_KEY_BACK			0x02
-> +
-> +#define STMFTS_EVENT_SIZE	8
-> +#define STMFTS_STACK_DEPTH	32
-> +#define STMFTS_DATA_MAX_SIZE	(STMFTS_EVENT_SIZE * STMFTS_STACK_DEPTH)
-> +#define STMFTS_MAX_FINGERS	10
-> +#define STMFTS_DEV_NAME		"stmfts"
-> +
-> +enum stmfts_regulators {
-> +	STMFTS_REGULATOR_VDD,
-> +	STMFTS_REGULATOR_AVDD,
-> +};
-> +
-> +struct stmfts_data {
-> +	struct i2c_client *client;
-> +	struct input_dev *input;
-> +	struct led_classdev led_cdev;
-> +	struct mutex mutex;
-> +
-> +	struct touchscreen_properties prop;
-> +
-> +	struct regulator_bulk_data regulators[2];
-> +
-> +	/* ledvdd will be used also to check
-> +	 * whether the LED is supported
-> +	 */
-> +	struct regulator *ledvdd;
-> +
-> +	u16 chip_id;
-> +	u8 chip_ver;
-> +	u16 fw_ver;
-> +	u8 config_id;
-> +	u8 config_ver;
-> +
-> +	u8 data[STMFTS_DATA_MAX_SIZE];
-> +
-> +	struct completion signal;
-> +
-> +	bool use_key;
-> +	bool led_status;
-> +	bool hover_enabled;
-> +	bool running;
-> +};
-> +
-> +static int stmfts_read_i2c_block_data(struct stmfts_data *sdata)
-> +{
-> +	struct i2c_msg msgs[2];
-> +	u8 cmd = STMFTS_READ_ALL_EVENT;
-> +
-> +	msgs[0].addr = sdata->client->addr;
-> +	msgs[0].flags = 0;
-> +	msgs[0].len = 1;
-> +	msgs[0].buf = &cmd;
-> +
-> +	msgs[1].addr = sdata->client->addr;
-> +	msgs[1].flags = I2C_M_RD;
-> +	msgs[1].len = STMFTS_DATA_MAX_SIZE - STMFTS_EVENT_SIZE;
-> +	msgs[1].buf = sdata->data + STMFTS_EVENT_SIZE;
-> +
-> +	return i2c_transfer(sdata->client->adapter, msgs, ARRAY_SIZE(msgs));
-> +}
-> +
-> +static void stmfts_brightness_set(struct led_classdev *led_cdev,
-> +					enum led_brightness value)
-> +{
-> +	struct stmfts_data *sdata = container_of(led_cdev,
-> +					struct stmfts_data, led_cdev);
-> +
-> +	if (value == sdata->led_status || !sdata->ledvdd)
-> +		return;
-> +
-> +	if (!value) {
-> +		regulator_disable(sdata->ledvdd);
-> +	} else {
-> +		int err = regulator_enable(sdata->ledvdd);
-> +
-> +		if (err)
-> +			dev_warn(&sdata->client->dev,
-> +				"failed to disable ledvdd regulator\n");
-> +	}
-> +
-> +	sdata->led_status = value;
-> +}
-> +
-> +static enum led_brightness stmfts_brightness_get(struct led_classdev *led_cdev)
-> +{
-> +	struct stmfts_data *sdata = container_of(led_cdev,
-> +						struct stmfts_data, led_cdev);
-> +
-> +	return !!regulator_is_enabled(sdata->ledvdd);
-> +}
-> +
-> +static void stmfts_parse_event(struct stmfts_data *sdata)
-> +{
-> +	u8 id, t_id;
-> +	u16 x, y, z, maj, min, orientation, area;
-> +	u8 *event;
-> +	int i;
-> +
-> +	for (i = 0; i < STMFTS_STACK_DEPTH; i++) {
-> +		event = &sdata->data[i*STMFTS_EVENT_SIZE];
-> +
-> +		id = event[0] & STMFTS_MASK_EVENT_ID;
-> +		t_id = (event[0] & STMFTS_MASK_TOUCH_ID) >> 4;
-> +
-> +		switch (id) {
-> +		case STMFTS_EV_NO_EVENT:
-> +			return;
-> +
-> +		case STMFTS_EV_MULTI_TOUCH_ENTER:
-> +		case STMFTS_EV_MULTI_TOUCH_LEAVE:
-> +		case STMFTS_EV_MULTI_TOUCH_MOTION:
-> +			if (id == STMFTS_EV_MULTI_TOUCH_ENTER)
-> +				input_mt_report_slot_state(sdata->input,
-> +							MT_TOOL_FINGER, true);
-> +			else if (id == STMFTS_EV_MULTI_TOUCH_LEAVE)
-> +				input_mt_report_slot_state(sdata->input,
-> +							MT_TOOL_FINGER, false);
-> +
-> +			x = event[1] | ((event[2] & STMFTS_MASK_X_MSB) << 8);
-> +			y = (event[2] >> 4) | (event[3] << 4);
-> +
-> +			maj = event[4];
-> +			min = event[5];
-> +			orientation = event[6];
-> +			area = event[7];
-> +
-> +			input_mt_slot(sdata->input, t_id);
-> +			input_report_abs(sdata->input, ABS_MT_POSITION_X, x);
-> +			input_report_abs(sdata->input, ABS_MT_POSITION_Y, y);
-> +			input_report_abs(sdata->input, ABS_MT_TOUCH_MAJOR, maj);
-> +			input_report_abs(sdata->input, ABS_MT_TOUCH_MINOR, min);
-> +			input_report_abs(sdata->input, ABS_MT_PRESSURE, area);
-> +			input_report_abs(sdata->input, ABS_MT_ORIENTATION,
-> +								orientation);
-> +			input_sync(sdata->input);
-> +
-> +			break;
-> +
-> +		case STMFTS_EV_HOVER_ENTER:
-> +		case STMFTS_EV_HOVER_LEAVE:
-> +		case STMFTS_EV_HOVER_MOTION:
-> +			x = (event[2] << 4) | (event[4] >> 4);
-> +			y = (event[3] << 4) | (event[4] & STMFTS_MASK_Y_LSB);
-> +			z = event[5];
-> +			orientation = event[6] & STMFTS_MASK_Y_LSB;
-> +
-> +			input_report_abs(sdata->input, ABS_X, x);
-> +			input_report_abs(sdata->input, ABS_Y, y);
-> +			input_report_abs(sdata->input, ABS_DISTANCE, z);
-> +			input_sync(sdata->input);
-> +
-> +			break;
-> +
-> +		case STMFTS_EV_KEY_STATUS:
-> +			switch (event[2]) {
-> +			case 0:
-> +				input_report_key(sdata->input, KEY_BACK, 0);
-> +				input_report_key(sdata->input, KEY_MENU, 0);
-> +				break;
-> +
-> +			case STMFTS_MASK_KEY_BACK:
-> +				input_report_key(sdata->input, KEY_BACK, 1);
-> +				break;
-> +
-> +			case STMFTS_MASK_KEY_MENU:
-> +				input_report_key(sdata->input, KEY_MENU, 1);
-> +				break;
-> +
-> +			default:
-> +				dev_warn(&sdata->client->dev,
-> +						"unknown key event\n");
-> +			}
-> +
-> +			input_sync(sdata->input);
-> +			break;
-> +
-> +		case STMFTS_EV_ERROR:
-> +			dev_warn(&sdata->client->dev,
-> +					"error code: 0x%x%x%x%x%x%x",
-> +					event[6], event[5], event[4],
-> +					event[3], event[2], event[1]);
-> +			break;
-> +
-> +		default:
-> +			dev_err(&sdata->client->dev,
-> +				"unknown event 0x%x\n", event[0]);
-> +		}
-> +	}
-> +}
-> +
-> +static irqreturn_t stmfts_irq_handler(int irq, void *dev)
-> +{
-> +	struct stmfts_data *sdata = dev;
-> +	int ret;
-> +
-> +	mutex_lock(&sdata->mutex);
-> +	ret = i2c_smbus_read_i2c_block_data(sdata->client,
-> +						STMFTS_READ_ONE_EVENT,
-> +						STMFTS_EVENT_SIZE, sdata->data);
-> +
-> +	if (ret < 0 || ret != STMFTS_EVENT_SIZE)
-> +		goto exit;
-> +
-> +	switch (sdata->data[0]) {
-> +	case STMFTS_EV_CONTROLLER_READY:
-> +	case STMFTS_EV_SLEEP_OUT_CONTROLLER_READY:
-> +	case STMFTS_EV_STATUS:
-> +		complete(&sdata->signal);
-> +	case STMFTS_EV_NO_EVENT:
-> +	case STMFTS_EV_DEBUG:
-> +		break;
-> +
-> +	default:
-> +		if (unlikely(!sdata->input))
-> +			goto exit;
-> +
-> +		ret = stmfts_read_i2c_block_data(sdata);
-> +		if (ret < 0)
-> +			goto exit;
-> +
-> +		stmfts_parse_event(sdata);
-> +	}
-> +
-> +exit:
-> +	mutex_unlock(&sdata->mutex);
-> +	return IRQ_HANDLED;
-> +}
-> +
-> +static int stmfts_write_and_wait(struct stmfts_data *sdata, const u8 cmd)
-> +{
-> +	int err;
-> +
-> +	err = i2c_smbus_write_byte(sdata->client, cmd);
-> +	if (err)
-> +		return err;
-> +
-> +	err = wait_for_completion_timeout(&sdata->signal,
-> +					msecs_to_jiffies(1000));
-> +
-> +	return !err ? -ETIMEDOUT : 0;
-> +}
-> +
-> +static int stmfts_input_open(struct input_dev *dev)
-> +{
-> +	int ret;
-> +	struct stmfts_data *sdata = input_get_drvdata(dev);
-> +
-> +	ret = pm_runtime_get_sync(&sdata->client->dev);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	ret = i2c_smbus_write_byte(sdata->client, STMFTS_MS_MT_SENSE_ON);
-> +	if (ret)
-> +		return ret;
-> +
-> +	mutex_lock(&sdata->mutex);
-> +	sdata->running = true;
-> +
-> +	if (sdata->hover_enabled) {
-> +		ret = i2c_smbus_write_byte(sdata->client,
-> +						STMFTS_SS_HOVER_SENSE_ON);
-> +		if (ret)
-> +			dev_warn(&sdata->client->dev,
-> +						"failed to enable hover\n");
-> +	}
-> +	mutex_unlock(&sdata->mutex);
-> +
-> +	if (sdata->use_key) {
-> +		ret = i2c_smbus_write_byte(sdata->client,
-> +						STMFTS_MS_KEY_SENSE_ON);
-> +		if (ret)
-> +			/* I can still use only the touch screen */
-> +			dev_warn(&sdata->client->dev,
-> +						"failed to enable touchkey\n");
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static void stmfts_input_close(struct input_dev *dev)
-> +{
-> +	int ret;
-> +	struct stmfts_data *sdata = input_get_drvdata(dev);
-> +
-> +	ret = i2c_smbus_write_byte(sdata->client, STMFTS_MS_MT_SENSE_OFF);
-> +	if (ret)
-> +		dev_warn(&sdata->client->dev,
-> +					"failed to disable touchscreen\n");
-> +
-> +	mutex_lock(&sdata->mutex);
-> +	sdata->running = false;
-> +
-> +	if (sdata->hover_enabled) {
-> +		ret = i2c_smbus_write_byte(sdata->client,
-> +					STMFTS_SS_HOVER_SENSE_OFF);
-> +		if (ret)
-> +			dev_warn(&sdata->client->dev,
-> +						"failed to disable hover\n");
-> +	}
-> +	mutex_unlock(&sdata->mutex);
-> +
-> +	if (sdata->use_key) {
-> +		i2c_smbus_write_byte(sdata->client, STMFTS_MS_KEY_SENSE_OFF);
-> +		if (ret)
-> +			dev_warn(&sdata->client->dev,
-> +					"failed to disable touchkey\n");
-> +	}
-> +
-> +	pm_runtime_put_sync(&sdata->client->dev);
-> +}
-> +
-> +static ssize_t stmfts_sysfs_chip_id(struct device *dev,
-> +				struct device_attribute *attr, char *buf)
-> +{
-> +	struct stmfts_data *sdata = dev_get_drvdata(dev);
-> +
-> +	return sprintf(buf, "0x%x\n", sdata->chip_id);
-> +}
-> +
-> +static ssize_t stmfts_sysfs_chip_version(struct device *dev,
-> +				struct device_attribute *attr, char *buf)
-> +{
-> +	struct stmfts_data *sdata = dev_get_drvdata(dev);
-> +
-> +	return sprintf(buf, "%u\n", sdata->chip_ver);
-> +}
-> +
-> +static ssize_t stmfts_sysfs_fw_ver(struct device *dev,
-> +				struct device_attribute *attr, char *buf)
-> +{
-> +	struct stmfts_data *sdata = dev_get_drvdata(dev);
-> +
-> +	return sprintf(buf, "%u\n", sdata->fw_ver);
-> +}
-> +
-> +static ssize_t stmfts_sysfs_config_id(struct device *dev,
-> +				struct device_attribute *attr, char *buf)
-> +{
-> +	struct stmfts_data *sdata = dev_get_drvdata(dev);
-> +
-> +	return sprintf(buf, "0x%x\n", sdata->config_id);
-> +}
-> +
-> +static ssize_t stmfts_sysfs_config_version(struct device *dev,
-> +				struct device_attribute *attr, char *buf)
-> +{
-> +	struct stmfts_data *sdata = dev_get_drvdata(dev);
-> +
-> +	return sprintf(buf, "%u\n", sdata->config_ver);
-> +}
-> +
-> +static ssize_t stmfts_sysfs_read_status(struct device *dev,
-> +				struct device_attribute *attr, char *buf)
-> +{
-> +	struct stmfts_data *sdata = dev_get_drvdata(dev);
-> +	u8 status[4];
-> +	int ret;
-> +
-> +	ret = i2c_smbus_read_i2c_block_data(sdata->client,
-> +					STMFTS_READ_STATUS, 4, status);
-> +
-> +	return sprintf(buf, "0x%x\n", status[0]);
-> +}
-> +
-> +static ssize_t stmfts_sysfs_hover_enable_read(struct device *dev,
-> +				struct device_attribute *attr, char *buf)
-> +{
-> +	struct stmfts_data *sdata = dev_get_drvdata(dev);
-> +
-> +	return sprintf(buf, "%u\n", sdata->hover_enabled);
-> +}
-> +
-> +static ssize_t stmfts_sysfs_hover_enable_write(struct device *dev,
-> +				struct device_attribute *attr,
-> +				const char *buf, size_t len)
-> +{
-> +	unsigned long value;
-> +	int err;
-> +	struct stmfts_data *sdata = dev_get_drvdata(dev);
-> +
-> +	if (kstrtoul(buf, 0, &value))
-> +		return -EINVAL;
-> +
-> +	mutex_lock(&sdata->mutex);
-> +
-> +	if (value & sdata->hover_enabled)
-> +		goto out;
-> +
-> +	if (!sdata->running) {
-> +		sdata->hover_enabled = !!value;
-> +		goto out;
-> +	}
-> +
-> +	if (value) {
-> +		err = i2c_smbus_write_byte(sdata->client,
-> +						STMFTS_SS_HOVER_SENSE_ON);
-> +		sdata->hover_enabled = !err;
-> +	} else {
-> +		err = i2c_smbus_write_byte(sdata->client,
-> +					STMFTS_SS_HOVER_SENSE_OFF);
-> +		sdata->hover_enabled = !!err;
-> +	}
-> +
-> +	if (err)
-> +		dev_warn(&sdata->client->dev, "failed to %s hover\n",
-> +						value ? "enable" : "disable");
-> +out:
-> +	mutex_unlock(&sdata->mutex);
-> +
-> +	return len;
-> +}
-> +
-> +static DEVICE_ATTR(chip_id, 0444, stmfts_sysfs_chip_id, NULL);
-> +static DEVICE_ATTR(chip_version, 0444, stmfts_sysfs_chip_version, NULL);
-> +static DEVICE_ATTR(fw_ver, 0444, stmfts_sysfs_fw_ver, NULL);
-> +static DEVICE_ATTR(config_id, 0444, stmfts_sysfs_config_id, NULL);
-> +static DEVICE_ATTR(config_version, 0444, stmfts_sysfs_config_version, NULL);
-> +static DEVICE_ATTR(status, 0444, stmfts_sysfs_read_status, NULL);
-> +static DEVICE_ATTR(hover_enable, 0644, stmfts_sysfs_hover_enable_read,
-> +					stmfts_sysfs_hover_enable_write);
-> +
-> +static struct attribute *stmfts_sysfs_attrs[] = {
-> +	&dev_attr_chip_id.attr,
-> +	&dev_attr_chip_version.attr,
-> +	&dev_attr_fw_ver.attr,
-> +	&dev_attr_config_id.attr,
-> +	&dev_attr_config_version.attr,
-> +	&dev_attr_status.attr,
-> +	&dev_attr_hover_enable.attr,
-> +	NULL
-> +};
-> +
-> +static struct attribute_group stmfts_attribute_group = {
-> +	.attrs = stmfts_sysfs_attrs
-> +};
-> +
-> +static int stmfts_power_on(struct stmfts_data *sdata)
-> +{
-> +	int err;
-> +	u8 reg[8];
-> +
-> +	err = regulator_bulk_enable(ARRAY_SIZE(sdata->regulators),
-> +							sdata->regulators);
-> +	if (err)
-> +		return err;
-> +
-> +	/*
-> +	 * the datasheet does not specify the power on time, but considering
-> +	 * that the reset time is < 10ms, I sleep 20ms to be sure
-> +	 */
-> +	msleep(20);
-> +
-> +	err = i2c_smbus_read_i2c_block_data(sdata->client,
-> +					STMFTS_READ_INFO, 8, reg);
-> +	if (err < 0)
-> +		return err;
-> +	if (err != 8)
-> +		return -EIO;
-> +
-> +	sdata->chip_id = (reg[6] << 8) | reg[7];
-> +	sdata->chip_ver = reg[0];
-> +	sdata->fw_ver = (reg[2] << 8) | reg[3];
-> +	sdata->config_id = reg[4];
-> +	sdata->config_ver = reg[5];
-> +
-> +	reinit_completion(&sdata->signal);
-> +
-> +	enable_irq(sdata->client->irq);
-> +	err = stmfts_write_and_wait(sdata, STMFTS_SYSTEM_RESET);
-> +	if (err)
-> +		return err;
-> +
-> +	err = stmfts_write_and_wait(sdata, STMFTS_SLEEP_OUT);
-> +	if (err)
-> +		return err;
-> +
-> +	/* optional tuning */
-> +	err = stmfts_write_and_wait(sdata, STMFTS_MS_CX_TUNING);
-> +	if (err)
-> +		dev_warn(&sdata->client->dev, "failed to perform mutual auto tune\n");
-> +
-> +	/* optional tuning */
-> +	err = stmfts_write_and_wait(sdata, STMFTS_SS_CX_TUNING);
-> +	if (err)
-> +		dev_warn(&sdata->client->dev, "failed to perform self auto tune\n");
-> +
-> +	err = stmfts_write_and_wait(sdata, STMFTS_FULL_FORCE_CALIBRATION);
-> +	if (err)
-> +		return err;
-> +
-> +	/* at this point no one is using the touchscreen
-> +	 * and I don't really care about the return value
-> +	 */
-> +	i2c_smbus_write_byte(sdata->client, STMFTS_SLEEP_IN);
-> +
-> +	return 0;
-> +}
-> +
-> +static void stmfts_power_off(void *data)
-> +{
-> +	struct stmfts_data *sdata = data;
-> +
-> +	disable_irq(sdata->client->irq);
-> +	regulator_bulk_disable(ARRAY_SIZE(sdata->regulators),
-> +						sdata->regulators);
-> +}
-> +
-> +/* This function is void because I don't want to prevent using the touch key
-> + * only because the LEDs don't get registered
-> + */
-> +static int stmfts_enable_led(struct stmfts_data *sdata)
-> +{
-> +	int err;
-> +
-> +	/* get the regulator for powering the leds on */
-> +	sdata->ledvdd = devm_regulator_get(&sdata->client->dev, "ledvdd");
-> +	if (IS_ERR(sdata->ledvdd))
-> +		return PTR_ERR(sdata->ledvdd);
-> +
-> +	sdata->led_cdev.name = STMFTS_DEV_NAME;
-> +	sdata->led_cdev.max_brightness = LED_ON;
-> +	sdata->led_cdev.brightness = LED_OFF;
-> +	sdata->led_cdev.brightness_set = stmfts_brightness_set;
-> +	sdata->led_cdev.brightness_get = stmfts_brightness_get;
-> +
-> +	err = devm_led_classdev_register(&sdata->client->dev, &sdata->led_cdev);
-> +	if (err) {
-> +		devm_regulator_put(sdata->ledvdd);
-> +		return err;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int stmfts_probe(struct i2c_client *client,
-> +			const struct i2c_device_id *id)
-> +{
-> +	int err;
-> +	struct stmfts_data *sdata;
-> +
-> +	if (!i2c_check_functionality(client->adapter, I2C_FUNC_I2C |
-> +						I2C_FUNC_SMBUS_BYTE_DATA |
-> +						I2C_FUNC_SMBUS_I2C_BLOCK))
-> +		return -ENODEV;
-> +
-> +	if (!client->dev.of_node)
-> +		return -ENOENT;
-> +
-> +	sdata = devm_kzalloc(&client->dev, sizeof(*sdata), GFP_KERNEL);
-> +	if (!sdata)
-> +		return -ENOMEM;
-> +
-> +	i2c_set_clientdata(client, sdata);
-> +
-> +	mutex_init(&sdata->mutex);
-> +
-> +	sdata->regulators[STMFTS_REGULATOR_VDD].supply = "vdd";
-> +	sdata->regulators[STMFTS_REGULATOR_AVDD].supply = "avdd";
-> +	err = devm_regulator_bulk_get(&client->dev,
-> +			ARRAY_SIZE(sdata->regulators), sdata->regulators);
-> +	if (err)
-> +		return err;
-> +
-> +	err = devm_add_action_or_reset(&client->dev, stmfts_power_off, sdata);
-> +	if (err)
-> +		return err;
-> +
-> +	sdata->client = client;
-> +
-> +	init_completion(&sdata->signal);
-> +
-> +	/*
-> +	 * Do not enable interrupts by default.
-> +	 * One possible case when an IRQ can be already rased is e.g. if the
-> +	 * regulator is set as always on and the stmfts device sends an IRQ as
-> +	 * soon as it gets powered, de-synchronizing the power on sequence.
-> +	 * During power on, the device will be reset and all the initialization
-> +	 * IRQ will be resent.
-> +	 */
-> +	irq_set_status_flags(client->irq, IRQ_NOAUTOEN);
-> +	err = devm_request_threaded_irq(&client->dev, client->irq,
-> +					NULL, stmfts_irq_handler,
-> +					IRQF_ONESHOT | IRQF_TRIGGER_LOW,
-> +					"stmfts_irq", sdata);
-> +	if (err)
-> +		return err;
-> +
-> +	dev_info(&client->dev, "initializing ST-Microelectronics FTS...\n");
-> +	err = stmfts_power_on(sdata);
-> +	if (err)
-> +		return err;
-> +
-> +	sdata->use_key = of_property_read_bool(client->dev.of_node,
-> +						"touch-key-connected");
-> +
-> +	sdata->input = devm_input_allocate_device(&client->dev);
-> +	if (!sdata->input)
-> +		return -ENOMEM;
-> +
-> +	sdata->input->name = STMFTS_DEV_NAME;
-> +	sdata->input->id.bustype = BUS_I2C;
-> +	sdata->input->open = stmfts_input_open;
-> +	sdata->input->close = stmfts_input_close;
-> +
-> +	touchscreen_parse_properties(sdata->input, true, &sdata->prop);
-> +
-> +	input_set_abs_params(sdata->input, ABS_MT_POSITION_X, 0,
-> +						sdata->prop.max_x, 0, 0);
-> +	input_set_abs_params(sdata->input, ABS_MT_POSITION_Y, 0,
-> +						sdata->prop.max_y, 0, 0);
-> +	input_set_abs_params(sdata->input, ABS_MT_TOUCH_MAJOR, 0, 255, 0, 0);
-> +	input_set_abs_params(sdata->input, ABS_MT_TOUCH_MINOR, 0, 255, 0, 0);
-> +	input_set_abs_params(sdata->input, ABS_MT_ORIENTATION, 0, 255, 0, 0);
-> +	input_set_abs_params(sdata->input, ABS_MT_PRESSURE, 0, 255, 0, 0);
-> +	input_set_abs_params(sdata->input, ABS_DISTANCE, 0, 255, 0, 0);
-> +
-> +	if (sdata->use_key) {
-> +		input_set_capability(sdata->input, EV_KEY, KEY_MENU);
-> +		input_set_capability(sdata->input, EV_KEY, KEY_BACK);
-> +	}
-> +
-> +	err = input_mt_init_slots(sdata->input,
-> +				STMFTS_MAX_FINGERS, INPUT_MT_DIRECT);
-> +	if (err)
-> +		return err;
-> +
-> +	input_set_drvdata(sdata->input, sdata);
-> +	err = input_register_device(sdata->input);
-> +	if (err)
-> +		return err;
-> +
-> +	if (sdata->use_key) {
-> +		err = stmfts_enable_led(sdata);
-> +		if (err) {
-> +			/* even if the LEDs have failed to be initialized and
-> +			 * used in the driver, I can still use the device even
-> +			 * without LEDs. The ledvdd regulator pointer will be
-> +			 * used as a flag.
-> +			 */
-> +			dev_warn(&client->dev,
-> +					"unable to use touchkey leds\n");
-> +			sdata->ledvdd = NULL;
-> +		}
-> +	}
-> +
-> +	err = sysfs_create_group(&sdata->client->dev.kobj,
-> +					&stmfts_attribute_group);
-> +	if (err)
-> +		return err;
-> +
-> +	pm_runtime_enable(&client->dev);
-> +
-> +	return 0;
-> +}
-> +
-> +static int stmfts_remove(struct i2c_client *client)
-> +{
-> +	pm_runtime_disable(&client->dev);
-> +	sysfs_remove_group(&client->dev.kobj, &stmfts_attribute_group);
-> +
-> +	return 0;
-> +}
-> +
-> +static int stmfts_runtime_suspend(struct device *dev)
-> +{
-> +	int ret;
-> +	struct stmfts_data *sdata = dev_get_drvdata(dev);
-> +
-> +	ret = i2c_smbus_write_byte(sdata->client, STMFTS_SLEEP_IN);
-> +	if (ret)
-> +		dev_warn(dev, "failed to suspend device\n");
-> +
-> +	return ret;
-> +}
-> +
-> +static int stmfts_runtime_resume(struct device *dev)
-> +{
-> +	int ret;
-> +	struct stmfts_data *sdata = dev_get_drvdata(dev);
-> +
-> +	ret = i2c_smbus_write_byte(sdata->client, STMFTS_SLEEP_OUT);
-> +	if (ret)
-> +		dev_err(dev, "failed to resume device\n");
-> +
-> +	return ret;
-> +}
-> +
-> +static int __maybe_unused stmfts_suspend(struct device *dev)
-> +{
-> +	struct stmfts_data *sdata = dev_get_drvdata(dev);
-> +
-> +	stmfts_power_off(sdata);
-> +
-> +	return 0;
-> +}
-> +
-> +static int __maybe_unused stmfts_resume(struct device *dev)
-> +{
-> +	struct stmfts_data *sdata = dev_get_drvdata(dev);
-> +
-> +	return stmfts_power_on(sdata);
-> +}
-> +
-> +static const struct dev_pm_ops stmfts_pm_ops = {
-> +	SET_SYSTEM_SLEEP_PM_OPS(stmfts_suspend, stmfts_resume)
-> +	SET_RUNTIME_PM_OPS(stmfts_runtime_suspend, stmfts_runtime_resume, NULL)
-> +};
-> +
-> +static const struct of_device_id stmfts_of_match[] = {
-> +	{ .compatible = "st,stmfts", },
-> +	{ },
-> +};
-> +MODULE_DEVICE_TABLE(of, stmfts_of_match);
-> +
-> +static const struct i2c_device_id stmfts_id[] = {
-> +	{ "stmfts", 0 },
-> +	{ },
-> +};
-> +MODULE_DEVICE_TABLE(i2c, stmfts_id);
-> +
-> +static struct i2c_driver stmfts_driver = {
-> +	.driver = {
-> +		.name = STMFTS_DEV_NAME,
-> +		.of_match_table = of_match_ptr(stmfts_of_match),
-> +		.pm = &stmfts_pm_ops,
-> +	},
-> +	.probe = stmfts_probe,
-> +	.remove = stmfts_remove,
-> +	.id_table = stmfts_id,
-> +};
-> +
-> +module_i2c_driver(stmfts_driver);
-> +
-> +MODULE_AUTHOR("Andi Shyti <andi.shyti-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>");
-> +MODULE_DESCRIPTION("STMicroelectronics FTS Touch Screen");
-> +MODULE_LICENSE("GPL v2");
-> -- 
-> 2.11.0
-> 
+[auto build test ERROR on robh/for-next]
+[also build test ERROR on v4.11-rc8 next-20170424]
+[if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
+
+url:    https://github.com/0day-ci/linux/commits/Eric-Anholt/ARM-dts-Add-devicetree-for-the-Raspberry-Pi-3-for-arm32-v5/20170425-063618
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git for-next
+config: arm-at91_dt_defconfig (attached as .config)
+compiler: arm-linux-gnueabi-gcc (Debian 6.1.1-9) 6.1.1 20160705
+reproduce:
+        wget https://raw.githubusercontent.com/01org/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+        chmod +x ~/bin/make.cross
+        # save the attached .config to linux build tree
+        make.cross ARCH=arm 
+
+All errors (new ones prefixed by >>):
+
+>> arch/arm/boot/dts/bcm2837-rpi-3.b.dts:1:46: fatal error: arm64/broadcom/bcm2837-rpi-3.b.dts: No such file or directory
+    #include "arm64/broadcom/bcm2837-rpi-3.b.dts"
+                                                 ^
+   compilation terminated.
+
+vim +1 arch/arm/boot/dts/bcm2837-rpi-3.b.dts
+
+   > 1	#include "arm64/broadcom/bcm2837-rpi-3.b.dts"
+
+---
+0-DAY kernel test infrastructure                Open Source Technology Center
+https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
+
+--rwEMma7ioTxnRzrJ
+Content-Type: application/gzip
+Content-Disposition: attachment; filename=".config.gz"
+Content-Transfer-Encoding: base64
+
+H4sICEnF/lgAAy5jb25maWcAlDxZc+M2k+/5FSpna2u36ktsyUdmassPIAlKiHgNAUqyX1Aa
+jyZRxZa8spxk9tdvN8ADIAFOvqlKZtjduBt9Qz/+8OOEvJ+PL9vz/mn7/Pxt8tvusDttz7sv
+k6/7593/TKJ8kuViQiMmfgbiZH94//tye3qZ3Pw8nf589dPpaTZZ7k6H3fMkPB6+7n97h9b7
+4+GHH38I8yxmc0nK9P6b8SEXhEs+l+GCsKzDpGy+EIBbUVmErIPzB6CuiiIvBZekSCVNq4QI
+lhttdasyD2VYVEZTQcKlKElImx46XJKHy4gWQ4SmZ+WnOCFzPsSXa05TuQkXcxJFkiTzvGRi
+YSwxZhtJSZk8wLdMqYGZ04yWLJSLNcXFDhEhSVhQEkFlRBPy0BFklEYySolMSYHLEtTc0nDR
+7VAF2xBQ3qFXNBR5yWVAOL2/+vsr/LmCP+aBFERAF8UCdnrFSse8gmreAYu5IEFCZUJXNOH3
+swYe0bjZW8bF/cXl8/7z5cvxy/vz7u3yP6qMpFSWNKEwj8ufnxSvXDRtYbvlOi+X3ShBxZJI
+MGhDN3o8ro8BGOvHyVxx6fPkbXd+f+1YLSjzJc0k7DtPi64vljEhabaCxeLkUibur9tph2XO
+uQzztGAJvb+4gN4bjIZJQbmY7N8mh+MZBzQ4iCQrWnJkRbOdiZCkErmjseLYJS0zmsj5Iyt6
+vFxjkseUuDGbR1+L3Ie46RD2wO3EjVHNKffxm8cxLMxgHH3j2A7gHVIlcP1zLpBR7i/+63A8
+7P7b2FW+JoWjJYiHFStCS14gAP8ORWIur8g5XM30U0Ur6uhJMwJc2Lx8kESA7FgYl3pBsiih
+ZncVp3BbnWslFYhL36mr+6oocIokSRqmhksweXv//Pbt7bx76Zi6uYR4R9TlHt5PRPFFvvZj
+9G01WaOMAAfybQ2XktMscrcNFyZvIiTKU0tu642pwUhh7lHXAI4YpIhjT5AkzssQBJxYlJRE
+LDOEDS9IyWndrSnwQhTgPK+goYyIIA5hihSw6kzwZofF/mV3enNt8uJRFtAqj1hozj/LEcNg
+gc5zVmgnZgECHjdWoggruUmjZgJ66lJs3/6YnGFKk+3hy+TtvD2/TbZPT8f3w3l/+K2bm2Dh
+EhWbJGGYV5nQG9QOhSK7h8Y9cE4LN1sJ1Y7WSRfwSOlTCjcCSIWTSBC+RF00XF0ZVhM+3GQY
+7kECzpw9fIKEh7133RfeI1YjYhPnfLArmE+SoOROc/cOiJJSRan0vHvxqHpkwLJZ6N7Epf6H
+Uydg8xiuHIvF/fSm1Zkly8RSchLTPs11n295uIC7oLjXXHs4L/Oq4M4ZQYtwWeQwBvIcqHsP
+u4JkhQsFp+pE64FRYamh3DQPPOZwl4uShmCFRO6DQOPFsTtBsoSmK6WPy8jWzyVJoWN9oVGb
+Nl1FPfUIgAAAMwti60kAmOpR4fPe941rdFT4sH9aof/82/+ZtkAo8wJuDnukKK1QWMBfKclC
+pyrpUXP4h6WhtGZq5FkGdgLL8sg025SqqFg0vTNsoiLuPvSl6b57tGAkCwYqqjR5iM+pSOEO
+yVrzuPUpnkOrmcyTh1mPtNTqVcs7w9QAYv6QOiCyN0AHD3ieVGAEwwJBrjmGaknRqFXsJtjK
+2GF93frfMksNv8KyaWkSw+mXRheq57hKjHOKYU4bo02Rm1jO5hlJYoOt1VaYAKWMFKCTNUU8
+dhgLy38gzGBjEq0YTLFuzHuWSansqThydApdBqQsmWKNZmZpQKOIRj3+Qy6XrQptNhOBMIRc
+pTBwbunLIpxe3QzUQe0fFrvT1+PpZXt42k3on7sDqDsCii9EhQdqWetFYww9sGMFq1TjpNJh
+FrvhFSYCHAHj9HlCAouTk8pttvEk9yFIIGPQHOjZyBIsnjz1iUcB3iEaJOB4lSxmoXJVncSg
+YGOW9FRway1vaNhjSXUkuW5lWaJL7fM5B/m1SgsJ06eJE12NNFXj3d0E4DyBXzrPUDmEaBI4
+5qtsMmQKVJ6g58GCAHu974r0fVMNLalwIkCEOuHWNe5MaqXQF3m+7CHRbYZvweZVXhl9tfoW
+NggtvNr8dNjBiMTLLjkVlbEoNayKZlBROw69sUs6B3mWRToUUW+fJEV/AWHimjXQabPZdS2x
+axccL389XFSl/SNQU+54oreWNYFLhc6Ttrob59bRBachXjUJrChMQaIo5qD/iqSas8wSSwbY
+5xsBhZo6nLtQcQvLAuoj3ZrXpgEbPaOjveBOVgkp3ZbVgJqLMndeWb0AYDS6EYoZl5Yno9Ae
+W71H5bDSexRpHtXnUNAQpYyh+POoSsDxwMuIaq0cnDJyrMIoOWaZJt0BpxhpKjO0g0Wfz+gG
+REL/tgxbyRT8xA9jeLK5n975CaCxLYya6S/cdjknIH7U9XJxRgKMAGo9XK7B9zWWlIOxD8qb
+V7CXWXQ9QJDQDjbi8YHjR2PYdoZaKI4tNu9muqqjdeHSJzHRSszBbGiiI+V6Y3blo2niJb5u
+lUwSILuEp+MB8h/0pBnL01OHHGj/eZivfvq8fdt9mfyhDYHX0/Hr/ln7uIZ0yFf1hMYmo8hq
+HVhbkJboqWW2FvoLWsIB2ZYAy2LTGYCpo1lnKhll+nE0bu6verfKXHm9ZBW7AKeOOG0tTVNl
+iPc21mgnTwNdLYXdOrruBxzlNuCYuDV9Q8ncHn+Nblwgj+/MUpgsSJZILtH+dvp4Pb81CSIS
+e5xBHnIGAupTBU6rZRXXjmLAPeGJDu8LwXW+pqDzkomHUapHkA3uA0CKMI3ATKNaK7r1BJKt
+A9eF1EOAEpe2mFDrh43MC5IM7kyxPZ33mEaZiG+vO9s0JqVgQp10tEL/08l3PMp5R2oY+jGz
+wDrwmE/40+87jNQrM7yRp7mOCGR5boWJG3gE8h/3xS2Ma6Iw/jQS76277kHrtvcXh+PxtQ0F
+pJ8GI5tOvDohXoDpidcJrB8rZljjUWXV+DGcs+0auIj6GptIR7SyS2AJ0LihLFMjVouOxaMy
+otRpcBU1UwffnUWaVn1Viw5+AZ4vxiEGSmNOQfky58koPA04mU6vRgiKj9ebjR8f57kIShbN
+3cevaDIqRnpgeTEdHQIIrmffwV+P4TfFzVj/Ub4amfySf7j7eOvHrz9ebT5ejexgUoQw/ZHx
+i407zaKQZeEOPmp2wrMbGZpfh7PxpZMVy8IR/sjBdJkOxFL6/nzevz7vJq/P2zP68oB63j3V
++d4msA0e/Wk3+bp92T9/swjsIRQDy5UrHWThhYvx5erWDb7RGOdQd/711hS/fI9C2e69lF6P
+bgXC3q1iCSZ+ePpxdnflWzQRH6eGvZKHClJCm6urIZyT9GPfeAewrMTQRVZwHtiupg6UI6w3
+cteGp5E9MAzq2eYwKfgv0+nYlVTamPR8N5uGgB3uUcb1Bv/yYbMZ4f50M3J10o3bttECC9g+
+YssRAlAwnuC6vjYlqNXbkQ1IU3dcXbfeZGRkdqCgkhWja3cwCTQBeoMeP1bHZ67HhAYakEQw
+T6pLy7z0w+3V7UAsFKfj0+7t7XjqKS11WRTvGne4Bd71gGJRpcCepMBsv426nv15Iwag216n
+ARjzdNUnrMG34lcbXihEQsG/e7AxIdxTcNVv1sIJZ6s+PC8ekDzorScJFJT1qIvp7RBiK3iE
+ov+uU6dt+rLb53i3Pb+fbMNQ6xQs4iBRVEqhQ3dOQZPqzbbCIjAk0yuMwJEOPGyAZNG/RaYs
+I7Eo82rudtu7rQUa8PzLHHw0x7RVDcxShbcWNCnsLEMP3HWuOk5mG7fETWUyrWl0Ou7Wyp+o
+SIxOcLfmWfCOCeTX1+PpbJnlHm0K8OYYG+fUS+dIBKghot3b/rfDegtaFYdR6pW7phCSMhq0
+rqPvBsvU9KuUFwkT8tpOJ7dQjDw459qQzNzeWYOeuqJkBZlTmccxp+L+6u/wSv+xdGBWynnB
+8s75Bo+UpoUYhPIa+CpPqkyQ0u3j1VSuiN0jFmuBozGdfehg6quXFF2UmIR3sRAl6oK39Dl8
+11mIEftMeZIpZgqGgZweKU1o2ESX0Ut3hke6mFMRZ3JFEmZFG7AaAXpwRcXg8vF1U6NREMNV
+7CLCim9JIhfVnIJUs/V+2oQOisSZrIlBMVlZLARIzHbiorCgrR/bpGlg+1hZLgNwN3Qvdpyt
+hkuM6qhOXVk0xY2FUL4ZLJjff1R/rJxRL8iXMjRTNKjjpDHh2mVjuGujG99WBTjBN1P93N9c
+fbyz5BvIL3UmS2upYULB00cx5ZagnnqtxyLP3cGgx6ByW1iPXCf1HCtoQmuqthGcr5Lqs+tc
+fpUnwfvdRL9d7FBiHeCqCe43UBUHS8lGRWLyMgJ5O522nIjZpxRDrdCxwS5VnU9ZM7FAtgmL
+Bys0qXMULo5Ys1wzcjN1sIOrWn9YJ05KgjF7t2CpkWMVNVplHOHr+IpekCF+UcHnRkKfCDK3
+dFdXZaGGSjHWWoUuQfaI1wAUJ+h1ukG5ejXEBJybCLy4pMCIN8ZTRGDe+1TNBaG1JBtFtuGx
+WA0D42E0097HsWYwY5iFSzZpgvuLJ9i34/Pu/nz+xq/+NZ3eztCOPezPpy+wpBn6wvDnX7Pb
+6d3th9nN5AT7fX/5Zffn5Wn7cjU5/XXR63Jsqv5pDUgU1/qSt72DVeVU1jgl4QuVonOpFXAx
+5SMWNqCUMFrRmA3YC13u4vjX7jRJt4ftb7uX3eFsuuPxafe/77vDEzjjT9t+2B2FTVzST85e
+2ZfnXZ/YWwxXh3xoxFs6TNAXCR3aJPHzcYtFbpPX4/5wnuxe3p+3ZhSBnCfPu+0b3JrDrsNO
+Xt4B9HlXBxV2X8y5reJiMEz1tju9vW6fdpPP+8P29G2i6g/OxiXEdEAqMB1mxEiTuE68dwuH
+b3VWrRzHBNqCIvM4o+C6Wx6WrLAj2xqBOtCfcyd55cbWrVPGXQIaJ1mnfLW7oHjipeWJoQiq
+c16Gf68BRkiyk6Y1ii9ZAZZq5ppBATIqodTSCgBDblZwtxhNwcpYUlXP6eyz19ugkLTjQPN1
+gHt6OvrRtlh/kkW+Bp3bZfP8qTXlNVpvGVRkV29LkXPOLMcVZZ4yr/qbrHNZLKBlpmbqaJvR
+ttQ9253/Op7+wMsyOD8wW5ZU2AoLIeCbEZfyrTJmJe/we0DbYjcxrKDyZTxgiiDoXGV+TM++
++Sq0LxUSO8cD8CaBgY6foK50PhAVWWF1Bt8yWoRDIIrzIbQkpcWOOG1WMDcrauQc7zrwkSsp
+qimkqLKMJr3lpGoZzo7hvsD1zJfMU2qD3VZR06+XJM7dkcUa183MPQoejCSe5DniKHfvC9PL
+7ltTNl6xy3ABJolj29qW6NqgfZdxzJR8ZxhN7N+sHmVA6UiP3gsgwgILOuZjmbaWJqwCswyj
+0RMNHqyY98/7pwu79zS65c5CYlas7mz2Wt3V1wQd2ti9GiTShadcYBLck1TGVd+NMcLdKCfc
+jbICziFlhTvWrpt7OKVH9V2Cf4dt7v4539z9U8YxCdXR1DW/PvWjtoYzSzZqiLyzyqERmkWg
+5JVHKx4KOmCFsTUg3icpGuR3O6jTi7BbGOTzyBNF6Jd6enl0fieT9ffGU2SLlLijY7Db+DwM
+XbqUlO4APV7lQsBtSwio09gdDGo6AldeuW1ckLTwvYIAYl3f5pm2jMLQdwvA9hNuXBl5qiuY
+L+Un3MWmycwzwjAva1qXSuRx0leKAHJH8xKSyQ9Xs+knJzqiYea5I0kSzjy748mQCJK4z3Yz
+c2diE1K4yz+KRe6b1l2SrwvieR9DKcW13t54WUwFBN1bEXpKUeAAiSrXcKJzsA5XfM1E6BbI
+K47vmITXcABXdOnXYWnhMQYW3G/X6dlE1D1hpEiuZQoGHWijMaos5K5SPESVG6zVe5B2EX3w
+ybIOsDr+VzvMZtrEk/Pu7dzzZ5UUWArfA6gFSUsSMXf+NvRxRRm570bgCdzGsDxvAj+Wy9BT
+PS5KSlJHmVHjrTB8P8uNvEcDwWiFAcUKVLt2XIHqEIQJ4oWZ/IrnyPxTSzQkCqQewaa9+Gq3
+cXVDZAZw5DCIuSZlBnLV816poQ9pKdoieZlnlcsDNHrXNlVhp3g6NDiG8XdGxAx0idWUJZ1H
+wdhoIZy68fx72BVuoKODhAV6F18MOVXDvK8gQfE1W9+DqKrHMnQgyhADycg0yThWLqwFOElW
+C9daTNI2gj06Zk11f/GyP7ydT7tn+fv5wjE2qF63uGspEupRlC3F2IGbA/EmJu1T9HaP0CRz
+vTpqqcBoUFXIKmCt3nZdGSEFBlC34o+XzFOciVLro1uZh4S5rf2QFgvpK3/MYk+akYO943vN
+ik5e7Ma5DLhG7XGhU6gdQ8zLHKbXe5WkjAy6QnXl3NwHnfLWFL2cUFhrgiYoEu3+3D/tJtFp
+/6cuWex+FWD/VIMn+SDirl8NtWF+Fxh/DGFxf3H59nl/uPz9eH59fu9+pgAmJ9Ii5qabpyHg
+BVSZdcuASbKIYNG5+yBKPWrMyhRkpX4443Iw47Vsg9QNqGnDsrpi2gheboDRWwrrdwnanqSR
+LZcxSZLAXaKukn9YHmtEFhstloAV5cH1oIapiJcrKtnKY1HXBHRVehwOTYCqqO4GpHjqq+JT
+ZAQjlQ2xek3kic9wuQA/q1wx7qlNap+VY2kDXbHeK9qmoxx/LcNgEFAzVopTf0s2Cwcwbj4L
+qmFpar75w6p2voBzjfAFcWwHaBEZ0yykw6fNbeHCF3VvrLKRoAxTLgI5ZzyQpHSLkxXdqLJw
+qb/d8igHAeF5lpMKu/pdROp4PKIbsLBElbnCWmXXPiONUZYteL97EvPRxnnsaVf+MmzXJhMm
+qf49E/VwUZy2h7c6M5Fsv1m109hVkCyBUQxe0MBefXwsPCrBh2BeTBlH3u44jyO3SuCpt5Ha
+qNzz6ByRbSk5cKT2BwbbVpL0sszTy/h5+/b75On3/evkSyu2rc7C2F1Cg7hfKTiag/trEOBl
+CQh4QmsWiYWc2rvew85GsTd9nujhP3hn2Z+EOwjmoLye+Xg8ZpL1FqNgs/4kFdTttrZo/8zh
+lPw4z2NXdV0CDlpscOjp9vUVMxb1SWPeTR/99gkr2AYnn6NRssFdKbxOg+K3hIjeVHXN/O75
+609Px8N5uz/svkyAtBZ1Bq8Z3eD73DgBC66/iS2iLuhXb3jdkSSbPPeEYpCKczG79V8wnoxt
+frEYw8J/Y2glbGa4G/0Ni/Zvf/yUH34K8VAG1pS9yDycX3vYM8O3rTQM+/vYwEG4uPKEDYm3
+WeCJhaj9Ssd+36PtJqLg5TEZuV30lgwrzcYpcnVXw4XXQmspWTRQJ3oqjC/zDH9K5ztThp12
+lcO3BFhJlTiHwP9x5ucERYSqHv8xTtW8KRmnWjDObq/88kYRpcIdzlN6JaP9uSjOS4ooKif/
+qf+eTYownbzsXo6nbz61oRv4htHdyGzlXw/YXTLzmS2yMgt4a4BcJ+r9K1/kSWQVcTUEAQ3q
+XxqbXdmjITYGVZk6f86qoZgnFbULC9ue8U673DBhWJSqrqiLMMaY6RWe3zED7P8zdnXdqdtK
++69w2a7VvsUGg7k0tgE3Nva2BDi5YVFCz2adJGQl7NPdf//OSP6QbI2di90GzSNZn6PRaGaE
+5ggYGEctoLTzMpLQKkXTQ0Ga5vQEv7VLYPidBKokm65E2Kl8j4KDbtcHJBDpc3MIGWlEr4YK
+RBmkraIpkwz5S4c/TclY+gBud3GMP8yavhLkw6mny31aoFjzalNTheWfsBNTfZvrwvPHjKeI
+661DkC9pX0XRkqWJTVVU2DC6lUPzMlmvqYkklByutbAVcT9AG6rsgfvBnvDW4J4YyWPICW6+
+Fqyxty1UW2FBh0dCySFo3MvXoUEyuX6eTccgEGMYhkmMIzaJ92ObaFLg2E5xDLLUaFiP7PnI
+/ThSzenKROF5w3KfppRnA4VfwAk6ecSVZT4I+Gwxsdl0bJF1YUzbmuF0GKdsl4dHXHrtI2zT
+yixgC3dse5QdAYvtxXg86SHaZkeTqpc5gBynH7PcWPN5P0RUdDE2q9s2iT+bOOYbqIBZM9dM
+4iAzeP7cscxkdKGS1yPHFfMWU9dcQ+Sa0L8gzGQTw6G5aoe2FvHXsTQdbJaZ3eZkYtaGYYZi
+ucERQVJg/G3z5tzQzVdqJV06xvQhEq+YuXPH0KwSsJj4xUzVgtfpRTE1H41KBJyJju5ik4Ws
+G06AX36ePkcRKpd/vIogQp/fTx8g9N/xOI69MXqBQ8DoGRb69R3/VHsHRpeZJUKVAaBIMAyK
+9Phw0nDx5X75OI1W2dob/X39eP0HnTaeb/+8vdxOzyMZDVVz2sHrZQ+VhVnX7yN6u19eRknk
+C92NFM8rXSfzo5UheQ97Rze1KWhz+7yTRP/08Wz6DIm/vdceSex+ul8UA9TRL37Kkl/bKlqs
+X11cM+z+hriRK2IRjoEkeqtdpd1r6SnK6rOoOgk2a6UaTIw+kKTaKST3IhSzudGqEzMoyxWz
+B4l2kS7SyjtZ8wQS3/zWY2UoECKW8ap2/BLNKOs/uv/7fhn9AtP7v7+N7qf3y28jP/gdVs2v
+ilVruXkyrW3+Jpep5gVQkVNGAOpSiVA5VfGEerAiE0c70W74G/XmhGJQQOJ0vabucQSA+XjZ
+3rZQbfqRV3xC3/9FVjgJdAZfh6z8IUQk/jsAYh77CgQkCUa4hEpMng0VE6cHEfuVRgQ9A5Ky
+QARIjGifXW6+G0/MEpQUy8T9gGHyw9IpdeuqK46y6LZhfbPdzMt0G1AzQkhQ5q3m286LQayl
+rSB4SKlWPB+tYsya8oKiQC4WkuZNOPNT+mIOzSTIiorYZPCb5/AH0SC+I+Kh7rbHvehVEf6Y
+qMGeEuG3cesoJNcU3lk2+/GzvgcEV9i7r3/9wCDz7J/r/fx95H2cv1/vlzN6KHZVdvBxvOXi
++jTYh9sgzWEH9XzU1fmaMq/cVzkjZlmdO/GeVL8vlQQTZAsT30zM9TjBCmWXp7lHfNX3Aryh
+0a7Ol0RByzz1Aj81OZMpKD/K851uD8HcxU+Tu2uQgNA+1q+MMKX0vmIRKmGFZRw524KWUVW3
+PuFTGTK6WWgi5bjNMODX1luHwpMrpMyzlLJWXu4FRjWAAkJFVBz5uqfeJiqcTWAf15RBIeY6
+rkKanI2n5Ll1QwRjgnQ0ozNf1yPxK41GAxV6qZegxMuBpQ/DIj833tm3MGlnzLa+7f45M59t
+gFjYU6CayUrZWw8WYEKZgFWgECPqpYnG06HrjU6ISj7k36iKUbN98735mKjXNwAf2yPeLTaH
+QYI917jqc7TEy40k5iVspwfmZsV6GZKTSM0bhqYgSSoijb18Bf9CglmwhJFbS43hYqz7v7SP
+NIEWfh7zDRXkCalo8OW34mt1iz1ET1vdU0WmHA8OFcmmBrSiVpRk4FOanoUdIEX9QIwR5fNo
+vcab/81jZ5NCheTor/pS3KheBshx6WPQs4hiFRIT8aVHGRcJwA64367ouW5QUXjrn4c9xZnZ
+l2xWFI2wuXSrvCRod0hDKzc9GsDd8aQgydBZ86LopbvzPnq56ZEAP4I9tFO9anvyQHaUmbVt
+LnMn7tQlyxT02ZwoVIQIaBcZ+VkMg0WVKJj4sTh4jyQkhhEMuTW2LJ/GoNEmQSu3AKLSkvO3
+a13zerpURCDPJhHSZ83rfLjhs73ZMYgNDx9IOjIymshDa1yYteMo7wG/iHx6VPYgJjIWkvQC
+ozHDGoUlZOf4X7KLoGsfQMxaOITnfZYR4fPjyHTrg0pFYR4nNBmtWN4YE4ebeQ8SH7wDtcUg
+OQvXHtuZ5RWk5zx2LUIT29BpXSicdjAcE0mHf5TQg+Qo27RqX3H/2Nvq20Vp6XwITKoZhNcS
+eJDADFMMnVUa148JfNPnT8o3CyIYFFKOG2JYfC+PFxahu4asswez5ObljmObteqQyxqb63Lw
+t5NZYXJW1Bveujr2+HzmO+MCh2Egb8WUtUP31FxRSO9RHQtjM2onReLKLJ+ptfEj5qfm0RVs
+lyblcFLQTgkp6l3NC9iZ0vd8arklG24+GqNjLwcBUjf/FmlEX9dkhnekr93kLDKWRs/cGkKa
+WdcIDtIdmouaNpFDtIrCoqlRmdCqZ5UKjWsStT4Kg8iTS7LhojD9xpbJzFrNmXu6MXDO7QKO
+sK/Kb2c81j6c8/mklWC7HUyZBH9NJkWhfaChOIXmLa3T5iabGBXikAU7jpmy2z5s08O2TcKx
+0upeyLRju01FD7a2CP7XQJQXz0YSWuG3OgFJlB+DNnhyq1eLhb3Enav1i5FZqtG4BWZh+zsN
+hTOsk1C2X6maTKbqVhVdLuxWVtjEisHpyDSTDPh5XFhDnFd3e/cPlm08z6hZuPaZQ2zZjmXm
+/UAiNl8gUfvyISbUr2odnh4DryOJPAVQe3NVkGRZuTk6YePMcqCslCoZKEfPV1GTztEmfDv9
+9XIZHa7oYfFLNzDCr6P7DdCX0f17hTIcfw6UlxcLzISW7VB5Cfb+407eLEXbbKe6+eLPzkqS
+qasV2r/E5lc1JAS1cS2bFUmQYcQeEmIPk6DEg0Nw0QbVFs0v+PbYFR9g+fvUMoko86cY71t3
+8tMAf6aPsnZaarg3Vjnct9am0psdM0Qt50P4uEy9XLvRqtJA5DOLFAogcxzXbP/aAi0GQPzB
+aF5TA77BoW4+NlbzG7ctQqlWY+KHgfJFbDxT6UgQk4XwT62B3PdmU8I4WQW5U2ugx+TkGmhQ
+4k4IqVbDTAYwsJznE2dgdBLffNRpAFkOfKofsw0PnDAvrTHotYtcdOBzpVpwAMTTg3fwzCJz
+gwLxgDCGamoFy9xs9tGMa2IfebrzN63gLV1k0Z7pXYjvZZZF7DI1aEm4uyr8pYcO7IW1gy+2
+ICJEgeleoiRjaxkc2tWHVpREvG3Ht9Qi9dZRpXsBm7tTLR6HTp67c3Pk6A7MPH01WG7BTtk2
+LjFDhY1XUpiP1xpyB5whKvyIuBxUoMudbY0t81pUcahGwhdVIn/rTgg+oeEfXZ8nayrovA7l
+nGWdO+Ie7PRr4OBx62W5WQGr4jZekrENFelZRYYhN2uJNNDaiwmf0C4MTfMiz6wgUNGr3Z8R
+Z+YoHypunaYBwaJVWBRHMO7DuPVu+/SFbnngK9uyhxdFSN2W66DhITt4qPg9wHHJzNy72K+s
+MNhzLMv9QpGw7zjUxZOGS5hlmTm0BgvjFZ7eI4Kba1jxY3iAk2K2i4+cuCfSoNuwIK4ptA8/
+zAkjSY25hlvhGzs8ygFIw9wpxmbBRIWKv3O0Av8a9BANT7IvssdDwMUFxldmj9Ddpgk+jElE
+yOnUNAIJcZj3wiAKNjE8RoCE4+bwJJI4s0VoFze8rjHAExHmRkGxKA6JGFU6jH2pvxm37Mnw
+jGS7fOX5IW3lqYELd0ZEg9H6JWMzZzwf5p9PIZ/ZhDis4TrBRc39nG4SuWUTZZZCVkQs+zyJ
+ununOJNtTh/Pwno1+iMddc3lyNm39pLQaLLsfz99nM5w0FTM76sWcSUKiRZeX1pFyQBfMq4j
+U5EVwJRWh6IsKZuDEd0kY3hN/fVxjI+4cI8Zf1S+KtXbZGLtRqH1lRdj9HIZEyAnPBqOa2YW
+lIU/N6wCY+AEOGa3HGgg5aEV7bt0kvy4nl5MKpGyhq6tXwTJWDu3t98F4VNmFxZdBrvzsgzh
+NeTj61TAAvAmEJXshmqX8OpawpDaHS2NmgWaBZZGg/lExFctYbCvTyi7Aw1iXtAlZOflPG6x
+dh2hB+FREpXGtUtlvr8l7jhrhDWL2Jw4d5UgOHXNqOeVqs6SRnJ/cm+NTfkCdAgWrYpZQWg4
+Skh5yZqxwcK8nHBYl+QVi49xNlQI/AoLEcciWkd+GhNWrFXPYsQI0wVUNSl8nscdDUxJFC/S
+EVetMCPLV6iN5M3ex2ByZg6eJVH1CIWhZsC/5EOe2s1WlSgfoY5Sc/T/Bta5Hswni5l528u9
+Q18QD+7Dv8zMyGDs48dWF0kFIOzuXS2qGiMDfhyFOkF/vzGS6nwZo7zpMkzdANistgRqsisq
+4/rqUaufsDNhPYRLtIHBYTYvX0o1G5Qex+GWeP2s/AJt7VMBMt9bOFPz8ULH/OzHRFucmb0Y
+yqAI6SLc7ZdKSeLCz4xu0IgoY8pgwGd9jLx4nS6b+D3Yz7WAob+o0swH+Q6esNAqwwj88nr7
+vL/8O7q8/nV5fr48j/4oUb/DJoXxBX7VZk/1ppU+L9DIqndgghDfchcBdnp9oREbJuHeFLsB
+aW02gWkprTNEMoz18DezwiOfm0F6/kC8iodEFiWcsEJHsuTOnfUZ/gS57Q12f8D8wRIcsdPz
+6V0Ic11xQnRilOJl0o4Q20U7pJfuMSYPcqI16TLlq93T0xGOUUTcW4BxL2XHkPDyFoBo+9i+
+fxeVTu/f5covG6ZMuHajGCdejhfE2CMiEclJhaGLSC1VA8GVMgBZGsPkyfBBzaaU0TehSJPh
+WmoPIzgKJadPHFD/9nb/uL28wJ+GiBDCRUYIA0S5nZ1EJBbSuQY4JmVLiuQ+M0qkl+bzJL1Z
+uSSEXPlIRJGCdP0DeiqnEUmHlWmjcSOxOBGCJsRkJAgEgHDnRmw2Np9jEVHg/TVN7axgjfz0
+uP2WZMf1t1Y761mQfdzut/PtpZwOncGHf1TITySj9zqGEzu2ow1oKB6HM5t4w49libn7Nqxb
+4yxjxte4DL6AmPYfjBB3ut8+OjtOxrPR+eV2/q+xOJ4dLcd18RFx/SZCvZeWFskjvFAlwwwr
+F9Sn52fxxC9wVfHhz/9TAvvLnbhandn1bXSul+WnhpOSjJIP/tJPg8gyDFu7/qnOXqmmw5ox
+y4I1iPD2quhwdl0TrkU1pLAc4rhVQfBBNnwAi44MIYMF7hgHkVbIaZumb/C3ZjGerqotWkeg
+w33bIUL2Isk8xLfYI1t1p10ig5e8nt7fQWARJRh2F1HAfFpI22/6G13Wq9ODAxURWZCrIHa9
+MoZE5v2NTWAh7MxcTNIzHy1qenvLJy5ZBb2Hjwn6U7jX61cLjqLil5/vsBBNvdxnClACtn0N
+w2toQnXQAIh3i+UVPQr0hIhWAlauQ+gSZd/Ra0XQeRb5tmt1lTnJKujpng0HgbY97PXGMNCt
+MHkt4sSo9Jv5qCMB/mTiEuEUZLdELGXdAHNYt9vHV0Y+8TN7wsZupwgUC+m8B3Ol5cMx3t74
+aI2gYYQbRZmpJMqndUVCulr1QKoiWl9VEMxLPCewj2wTHIiYr0oWtLF9SLeE1XoLyDgRXF3B
+kVyiDcI/OaWsUcEx9+0FYXGu4r5aXv+7tiqyhyV1YfXomYUYiclDEcWyHThbKxRDTMeP3TGW
+6T1Gvhn6wSDUvGRKVu8FPkagh23DLLeKMKl0MWXWY8DsObE4NYh5rWgQ89BWELYkInhv0HM8
+J+lV/uU3e05tPBUGr3Xn42l/c0qQubZVbQDkLohIOBUmztw5cRVeQchV1HwHPWepwAsSE4Rc
+xF8VNZ/OHPM9aoWGfppaxFPVGmZh7iYVYzv9zUPMfGK+XVQwjjvwLTigT6bmT1WjtvZ261Dy
+EEKvVhWW88XUMddpc6DCC6IneuKZ5OiDh08mpMrtUZXSCVhQE7bpwXukHnurUWa58nC6n78/
+3/7TE72RpSteF0Pvq72IUl3fi3mKohwF715Q8469Eaeg8FX7Qu3PpkFir5v2f6hUEvSDgkM/
+HYMbTYqBdidoWWVbaBNgEil+/+v0CSJ/PVAYXkcbH8BkvukL+gBnH5f79fVy+3EfrW8wxm+3
+tkFzOVGyPMTDJkyo4zo1ab4ZOoQ1j81J8en2dj1/jtj15QpHzNHydP7v+8tJj5rEjG4rSz/x
+OsUtP26n5/PtdfT5fjlf/76eR16y9LSA063nahsl/N8/3s4imjIZu3UVdBYTpnk+d2ExE4FI
+EMAmc8vMDiqyTUgcidhD4chAhDQT+T1uu/Mxrd4TIHE1uYrDwhzUocFsYl+/3EQSdJuzGBMb
+m8hbZPaYNkwRfZejkpSmeyzyzXuZ6IbAg62OrgCSHZtUoCmQvjoKiJktV+SZeahqsrkJJZly
+dhTkeEsXnfjWBF2b+9pXYfoauIlmU2Aa2KPmzYejapwcCSRD8a07mJosPY8xDD35AazEQ5hQ
+JSDZdbPEJQ65DZ0eJUGfEUdU0VEoojiE1WwJmM9nPWtOAlwixHYNWNCTQQBcwo+xBIBE0ltH
+d0GE0avpi4H8CyIoN9L5bNKXPdyubGuZmEc5fBJXh0TIYWQGvdR9lIW5uHAlIbDbmM1PkZj5
+KwdWIt25MEEoMV0Uzp1xT+6cs47nqg7wHe64PQU8uGO65/Otw2eEUTPSWej3M3sWTeezYgCT
+OIQ+RFAfHl1YIjQ/IkN+eMvCGQ9sRownmTGUPtLE2bW9//Do6CWTiVOgDSDlb4PAOJssehYV
+noYI7ZuYFl6cEBHP0MbOGhNHFmmARxmX91nnicYJQA8zkQDieFIDbIterdB/2PSe/bMsgu4b
+AXBnAyUsiE5QAP07cA3q2+kABBvEhLCMPsTT8aRnCgJgBufv/jmKzo3zST8mTiZOD5vg/gQO
+lT0dRinbBXEez2YFzWK4P5u48wHAYtID8PLoKd16vaNRYfoG45C4057dGsgTq18oKSEDH5k4
+46FSFgtTBPs8XOOz3Kn2YE2dSHvs1ggZhGWfxtxbh+ZC9lHOd9Lii+0SQlfSwPENJJahYeUX
+M+Ahw52Zd3sFFTgTYktXQFv4H/E6aNMp3sImlnILZF6ESud5W2fiEEJ1AyOVUA0kYvFiQsh9
+Gmpmzy3zcayB4UYxH6q7AJk3QRXkzokbFx002Aex5BhfQM3m5t2iQaGM6xB7ioZyZ9OhLwoU
+YVipoyjVuYICsXJwzmSr3VNImcgqsL3rjgfrJVCE9riFIrZYBXUw31o2CNiaHGtGOAJosJk9
+Gay73PkJ6/o2jBAxWjB7aooZIKJkKA9ONnqR18vz9TQ63z4MruYyl+8lIox097VKSQeGE6ew
+7e4riJmFCywaynLgo18Ci8dUv4BjQf6V0vwvgPzwS6jUFA61hOyjIEyPmte6TNpPY+1hJZnq
+BfueaxiJkRtUEm1F1JLt2vg6nIAudyu8nGl9GlLtlrl4k56ESZoxEwUffcOmRpqelPPMj8pg
+6mo1SoMEnE2maHei40SA+273Vl+exrXxgBKuqqSi2kFORU1rW6ca7Q70rhYKsEiPs4EfhS6w
+4V/1TfNIAE55HNAQDlyuHnwhKvH/wCg2lRmj1hH+o3zsroqZQnTh6e18fXk5NS/TjH65/3iD
+//8GyLfPG/5xtc/w6/362+jvj9vb/fL2/Plre/Gy3TLI98JoloVx6NeL3/vxfL2Nni/n27Mo
+tY62/imMjF6vP5WouviseAWto61fny83IhVLOGkf0OmXNz3VP71iZHvZMsWFRxDl426tRFnO
+9RWq/T8ZEx5NdGuyaN0fEnS+AQqahspfDYTPdVxeUB99+/E5+n55eb986Agmu3r0A3XtkP3z
+dj6eZV2ftbj1CqFqhOnKpJ6rUVKM52aDBgWV8EVC+Zy2YBax6eowTh2qWjCL8L3UYfuxbTJP
+VkDp3p5Nx2owHI3ozIgbUA01m1GPeaioOSWkaajFjLiY1VHzYVT+pzPdDnYmPywWBlMZfru9
+fKK9Hszqy8vtffR2+adZxNWkWn+c3r/j/UlnYxamaKtl1x4W5tUxynb77sm2BAS57s6FnDYD
+9lCYfBp0mHy+2CwgqYAjMJoV8R4U4h4S1nkmt0qHNplIqyX6v4TJTrrptVuAL88egd0FRq6q
+ANfA5PFiifq8RqttvkpuhYZALSah1UI6hszHhI9xBWFRTNkyVZBtkf0/Y9e23DauZX9FdZ46
+D11HJHXzmToPIEhJbPMWgpTlvKjciZK4jm15bKVmMl8/2OBFAIVF+qGrHe5FUASBDWBjY61D
+KVdfNyt7kybcNoi5PXxK1kTJ00Ui7+Uz1s6R55M/av/PT3nr9z9Rcvb3xx+/3pTqaP/tdpsQ
+f/pwf59mQFZXmqsAMH5LGysSFtjyvZXRvmVFpgwxE5GxjOgWaKZU7IDbCLnImrNa9Ljlk399
+evg9yeUo8aTtFnbAhtq8//MaW83QcoiDG5QRcgHHEreZ9bjfBgoVi3DFmJWMXWL9Igo2Yf81
+opaMaeK/PX77cbxqxPVkPtrLP/aQe1P19irxZaNgJGgEQdSQ8zL1ZmAlVL+UnOeHh1ysFmCb
+lFCy18j/ohXatakx0c0UjAKqVWRiG/msDtwtF/Zwat18DuU6n4EASdtL5cx9OQfDrvo5gL2j
+bvU839g3OFT33Yu1PbJX/7z0PgD5tcodYo5MZY785mTelWdYv8k5zOTvX9+/0wGN/knqtaEm
+0AmFk+O1NELpyhsR5YufldfSrIzWRkaavBiAzipNKsdtFwo2sHCgR62JhjCOi3qKaxp4lt/L
+X8quDFHCNqEfR2Xv95CtkCNOLhdesSApdP/eehRX4kje2/pkMlifTAb0ZLmqosXKgXRM1sTa
+SLK1IUVqQ3vIi95bDvXRJj2EqZzx2zhF219prPOo2sN1WJDgt3mWjOCyZ9N5A/DEhHFKO7Qt
+Q+mTMX6rzl0ZD6MbmsFV9J5GCZRUF2VPaeW6Tf5sz/VZpteyoGHiLHovJ1Cb6PYffjWdojsS
+wau13anQBwJDGzUuX0449uVsDgJdEtKElWE1t+oFsHMQea7YhoAEmV6pyg63DpKxo/dTwxe0
+Cllf5i51Y+w+8kEOtbbgEF3mMROiUbQfLEMHXlrNxV5PBPrzgIu9SUgdfEZ+l9hvzpPVzcw5
+3CFuO+1nBPlqBcayHgowNGvVlngLb2rv1D2UPYCrgfLVHGxdalWEIvBaObu5O13GQCG0g/nB
+wgGZC9JtiJJZXaWKwfScQLucCZKonanISej76UlJ7KkZS93Rr5dAtXwl79M4rAu58PKrtXRs
+HzI2ia10fj5hhTkuWdBFVqoViOX95LRJO+5D/5IjbUqnmmUXthpkZTkLq4XHVem6Mz34VZmK
+1uoCyamhhZ5Q+Ms/6sP65qWcJ+aFIGH1Kcpr01/y819faShgenScZBXh54pSJQElAgk4y8G1
+oFeACPkj+vaetX0p4zZiYqOUMhUwRXc3HuuQxXJwzaNexXQSedrFHeWsEMO/NK5F/6EXKyRi
+UL8NhnrJWrC7JAoiqjyIyfLYU3O4EdBsFCR8dhcOIuSK25neOn2M/j7XqgLqMpRGIyuDMsSq
+XZQ5A2dAVbuq6VGcBdR4pTLyqiddW/MOBX+qde/FjRB4S2cdiFA6znitRryY6XamYib10vn8
+fHxqY5FyEb0rPFdFOym3+JMR7Gsl1Q+M3yyttB9pcHWuWt209HiPqEszEy917w6KqrMqQGeP
+G0TFHBRKbBCcRQy3BUIs1oi3sEVsI6K/ghCfBy6ismuLyDP7MKzZt8OIMkuvaKKuQDsmG5Jt
+Iqi+S8bNzk8xvfbUS99Lmu1TAkkEh4Is9rIb9eT+E7rLDfuQ1STEoLlWDIV3Dpv7Jjr/RRaW
+3GzcKeVfLD0H3U/ZGdPZQBH7+aUESydRMVOaBOIvq1cQSj81caUIV/MpfaW5gyLNyid3nByR
+a9nYOfFmt+T76U0uR47H968PcobC8+qygXF6fj69aNCGNdxyy7/6XkKosUb6CYE4iTSQYOD4
+v44RH8DkASC80FHh2OMo3ixdT1KB2HsHw2Me2fcliRr3a79fCMVcOp/Z1GIQcutWS9sTpe89
+1Kih57OAVc5ywD22oOUUcSe0oNuZAygRNcgcsP5pkAWgatQhA226hsw9kCLSQWI+X4D8gxbj
+lwfB8diieq7w5jFIijAxw4+qMcN1w8XMjUfeXGHmmOjYxH2krOFqVBgQuNUxIMNLhyBVeh3y
+sReTMMg3osH2+9VHivNAGtEFMvdib/jHh2LlueNPa2BjP35TJouRLhulaUaURVNv+PslbH8j
+R4rhhqdAiH+uxQg5DjqLwx0P2lyXQbwcmpwFONeqY5Y3OMWyjxurN4nz5ENxZugV8AMlzh33
+fz9SoMKNlVeU8wWQENAhaC9bgyyXow8TmzKG9ModKCrW9Rz7A6PJ+NgqROIupjgJuo8bq1iJ
+m83BhkaHKRlijtAhA4uqGqLEwwcxJRPufMSrSgzMidcxS2f4JysM2BPqMGt2g9jxO0y889wp
+i7jrjda2jh37gh3WQ1IG18gRnPCY6y7xGquZjs/B9pUOGRn5CQIyKzUIOvyoQ1wja9kCuF4X
+dJbhZk0QcBhbh4w0awUZrYzlyOCsIMNtWkJW09loE2tgY61LrbpQpMBYlllvHRnMFGS4GxME
+5THpEHvSug5ZDU+NUlat5igrR8OsRlp9mTM5s56ygdeqpco5Op2mYQSvBnAqQktxZQv/dRRY
+knoiI8Ir/3nhrSiLMN0gxfAoKJhdGqvaWrdmqegmmNGd1KYT1Q9P6pdZ1lN0B5uVIdACUGZe
+gFWgsuZol6mzAoJ8Za8oPAfNfhjfAhb+2lxm+QGQqRCAb8MCMJjUZpKAH7BnhVwn41+fF1kQ
+3Yb3QNidSlDJmticuygjT5nrlFJol81jk6VFBKRwCBJS7hWuIMoczewJB7XZvjxUti9IC6hu
+hYkfgQ6k7GuQ50DGbUYSgPjecrHy8FeRPwuLWyjAPa6vilOWDDhjLe13LEaHcNRPuy+utpEM
+AAlR46eXd1G6Bdom9aulRIqHdKYIEnNMy6PsYC+0tqXZDn9xqplBT5EwWXVYmqmG3K9jBuRF
+FUBpSWdre4xXITJSZR1oe0kVl9FwE0hJ4x1as2Ko+eUsJUKXOBto3oP6JTVAriDvAVWdAhDv
+OEgEVPaY0VmFNALaZbV/ihIgIUTmIuMcMN6TWbq+oWoYEilT9iHPKvIwpBSigeLLMIxpTwjk
+fChMlZKgOn5BxAlKPZWUMJgYcM4iYUX5V3Y/+IgyGugw0lOIcKC/kYruBrvBcltUoqwpd7HD
+ojnCIReA90G5rCEXfxdFSQaEZsi+j2RLhtYvYZEN1g8JgsoOjf2VkC4tKw5bwJGsJgmxhZiV
+jvFbZ1v1ZtXVjCuP7N+hgfcSpC9848YjursUbbl1CkblZVseHSjtSU4l69wtTR3kclLGvNjo
+yxrXGnpScdjywLD0YGkqnQ0PSYOwybUR3Vkw4ywE1Vqzg2HWWBCumXSbB8rfiEzxWWWGO+8G
+LCvt/qCxHe620qXEEeD4bVF+rDJSRAlbhdKQDwNxIDdOtFxEioT2BQmMmLnIdqdq32drexs7
+vZ9H2K3V/YslKRxvgccmyJ5aRQ+gmcPG3K96db2gZElZG4fSlibZwcqSmoCQ016zuXSFXxH2
+GsZBglf1dfYkGrTNB98zErnjLPajGG/hDmLWsi3Ipw1iSG+FeHFwtWaXarVctdZH9uH6EPHK
+uXq4gShWbLGY3ywHQfQsdQStT/nYtcKGro0/Pby/XzNcKR9g7lir/fRC6dfjhh/gNytNgpha
+1EeOE/+aqPcuM7n0CCffjq90roVOUAkuosnfv84TP75VoiYimDw//G73UR+e3k+Tv4+Tl+Px
+2/Hbf02Iz1ovaXt8elV7qs90YPXx5fvJfL0G13/F5vJA9o2OarTFR3EBK9maYdfT4tZyDoHG
+Vh0XicAFcWgdJv8G0zEdJYKgmNpjnn0YOLiuw/6qSLQyG38si1kV2CdLOixLQzzz1oG3dD5k
+FNUeqpQfhI9/jzCVlegvXBATrJNl7FOJ6PnhB4mCX04jmn4m4IjZSplp0TLQsqIBXVJ1v/IC
+AUgTUAPwHWD2aoz2IIIambYRke/juiZfvDQjhl21KN0uq7+p07Wu+mOnn0RZlcAlN6BLoMpW
+xED6soZiUcFJx3cUV9x6Dth50mAD8Sb97bYeCExrIDXV2YZDHboRgIo2kfTePIxxapP+8Bwq
+ruqopt8k9vishgyTPLSxqGiQdUmZi+ZRAs28iwTQx9JAUQ4y0HTMaClhsPlQJbW4Azipo7/c
+Cso/mihEvq63aOnTxptPlIOYrgap7EeINAiFHXOWEp/zB6GjsBikF+mYzKfzWnz0CyS8PFQf
+qFh1EmIUlIkl2gvswVZgK0GH7auPtKGU7RLroRsNk8euN/VAv8jKaLGaj3bAz5yB8LoOqlgM
+BVx0r5nzfLUfGPYbGFuPukwRhUXB7qJCOiYQg9bR94mf2QP5Gmq8O/J7PywoAX0MuJeef2jq
+1XyDHEZjdVSSRik4atMrjI+XtqeQxiEZLe4uEls/A8JGetWKClHq6C2kHO1rVR4sV+vpEiTz
+6GNSfzrdTQjMcIJlQ0ktKJMIbC82VhePxCyoysH+sBNAkk4tt6IMncqqYwabrIThcYUYWKa1
+gyq/X3JAF1vDFN83nm8FOESu1r003EKJc1VHtKtmOQRu1lQk5P92Gzw8ACpXtfwrWMrDXeQX
+RECEXyW7Y4Wsc4yAgk514IGUEdTKdx3ty2pghhwJOqG0xiPnvbwbN5vwi6rZPW6VFFyR/3fn
+DqDeUyARcfrDmwP2fh00W4C8M1X3UXp7kJ8vLIariG9ZJnobbV1nzH/+fn/8+vA0iR9+20X1
+VBhga28kaZYr+56Hkf1YBlkV2fsOKZS26wek0aKWXLGZ7KAXzuRE7SrYWF8dWdPrIDqmC7YJ
+rqG2TGQNRa9KG6t3/3Yt1nalmVYkoE0nyITEXZ42sAC6fLXj2+Prz+Ob/G6XuGIvmFNHpYwr
+lPtOEYJ+ba2pPQ74vDaMVoGj2OrtikFzG8SCAJKwAyxmanm7GyyezN5AjI+ejTuuH/DB0uXA
+7rqADFD7sgPKUWqJrU4l4jBjHPmkKJsJueozv9y6Cc3pPeKyejaA9quZH+77H73+c43bPG3M
+4PEDnilSvhKko6jKOqQcj2x1VQ78qnWVcpqQDUASOi/cRgVBTwXBB3XCrv4NAy8wFhXlQS0O
+rD7lQDnyqx6SAadTb0MP2LcDO1KbQ+Bv7GkGtfku9DnDX0JODw5wi7t1ylB3urqzKTckiSkv
+kHBIwZrfFSL8LGd65i3NZRGslivb0fPW3hKvaE/ySUPRcqnZkfr36triqz0xI0WO0nyh9jfd
+2R+L6y00RftWM799YDuIyhHBltsGPbIpV57wyHyb3oFBVbv22Q6ZdhX0+WSuxBbw7SpjsI0W
+RRbj+xNw0DUJEyHXQLeWN6OtR9qS04490wadOvplsAd0Vw84EUSB/IKmfCnNuLd3NBFKN+Ze
+uqp0ymexTHzqEkjN3rWvwC8AsERXAMUUba+n1o4O6yh7rdpnI1NT5r7Yc10mUaHbZ46NfT53
+7dOti90+Pe3sYHnW2FeIYr61o9MSl3cGrAUdYAGiaQoQMO64MzE1U0eNIkzKB3Wt40sd+N6B
+uwLnvOpXK7050H6ot5s5I77WAUDM5zcoIbxrUXO7LruyR8Jz1rHnAP5xHeOaz+l1B7Wb9vfT
+48t//nA+qYlnsfEnTfrXL9IrtOWGTv64JKZ8uu5QtGyxjzrKPqCFp+xEn239yeXb448fxh6D
+vr3fdyrtrv8VSYBhzaTrQDtbBjApbbM6A7IN5ajhh6yET+tYNMafx3MbQ5kBsTqG1tjmapg1
+rery8fVMqsLvk3NdoZdvnR7P3x+fSKr7q2KDm/xB9X5+ePtxPF9/6K6GC5aKKEw/8laKGHEc
+l7M0AhIUnIekCyVn4qVNrDeUfkGOnhklogheVFoWjDJZuGrCHolZc7ko+cFQ9aUL7VClXdry
+MpNt2nqxJbX5x9v56/QfOkAay2zLzbuai727uh9KEHvUTVomjy27m9ZB6A45k13XSm/mw9R1
+orOwXO5ReujXD1UUKjJG6+dRP7HY2edIlCtFv9QyFLf3Md+ffwlBotoFtF+B7a0WEog+c5EV
+Ak4vaJAFoohvINv7ZDUHgb4WQ5JvN4jwvMEUYs69kWdFInZcoC1jYgCXXgvaSwjgq28QSigY
+UZPrGKSJZYA+ggGKOl0dzpwS8bw3EP+z59qnpC1CyInaDWBdajHrxHPAbK77VrL5If2EC2QO
+TnbqpQCJpxYSJt4U6Ht2pRC1vXfV1ejs0EhXoxoF8xgDMtpFPDBbMiDDL0oQoOxjQMZ7NGL5
+17si2OPvqvQGkQFcPt1s/OsunLE2Ql1+Ntyda9cxXL+y+7jOSF9NeL68sc2Ui9LKrUDth5ht
+PuCyA+GhPVzzF9pW85dmLFvRDXfb5+dPD2c5N30eezhPAPOs1iZcpJRxgSAmTx0CTgjqY8Vq
+flizJIrtsXQNuQTrwQvEnYGNgc6XlbfOsmQjzWe2KkfeniBAQFeHzIGOSAsRycIdeSn/8wwt
+rLpmkM/5SN+jhjLcr77cp58TIy6mWs7p5U+aVJsNqj+z6KRkzUlRayMum/7ESH2MdDfcDIu+
+Qn13ErBmmR9r51oWfNk7U9ggg4Rdsrq7+y9XwcxRAq65Xkn7oSY50liy5bVME5RnJTH3MSN2
+J6/t6Zq1KhSlTADy+WpxyUiaATt26udrto8OqIDPPEuoluSvTDZgX/2CsZqDu0P/x3dVxJ8e
+jy9n49MwcZ/yQ7mHP0let06D5XW/Wl+n2KvyaJfKCEfeqev2tVC1H9zgBfF74h2FQha7x7cz
+KTdcN0W6LcoOSU/YrDlA8PXt9H76fp5sf78e3/7cTX78Or6fbaciRMk2ETgStMniYB2BeB/f
+FlkSdvnWti06Ht/SCiXOstsq1xgmiTBf2ojnLWe6EEp9noJsFwZKxeXEn05f/1Ozz/7P6e0/
+hoZHd89BRHNvDrTADZRjb9QmCJwv10A84OESMMz3YEg9VIcJYmM7cPsWAiE+Z0Vkz8jTikn3
+oIALBCkr6ZC9vRPpkIiDeYYG2vH5tZtteYPF6+OL+rCX5l1/WXVRnH692bShZbGi4Ibzay7J
+1bNv9FZWNKyUci61MgfwzkXSHm0elbonVZRlRkxCbJtyOPBlHSApK3CcvUWUiT1RMOx+K9iC
+SlgU+5l9oR3JKq9srNx1POL4fDofSVXGOqiFdJqMQg/XN74+v//ofx4hgX+I3+/n4/Mkk33z
+5+Prp4sKeGCCO5lwomMDOix+wRNR2lM4RJXKYUYUYONM0QgAXgZp+gK2A3NSyNitC0C3Ge5L
+buWVJX0mRUxrtpVA/jzevxr62nZRFGXGP5pMBL2NXa4euG0vj+y362itUGZhTZwuDECx9Z/W
+NArtdrNM3oglCjpf1kFcs2BxZyGU7iOae68aF/v69fh0fDs9H/u6TH7CHBBdkCYXTDj9hDvz
+aZ2XbZ8BMBeUGjAklCdnB0WAVESUzT4TVzaw4lT1UtY/9ODJaZR9snq7F4G98Ns9/+vWmQJW
+ukT6ZRAySRK2nM3nWNuzsUN5UGlH6oTStoIyxgntLwENZGUDr7LnsymSH9/zhQuOywjOPEgj
+Vd6uPKSpJG0+m18frGAvD0+nH0ol6PHH4/nhiULy0pf1Wy4Llu7C3lrIdGOvAmWyLx2laQZo
+bKRpiZ+1xM9agjiTNK1W9piONN2AmAaZzJ2vzg3eONLaW5IQDSlL2DxwD0hcmnNHfjwH2sN0
+F8ZZ3vKFg93DbbSagZX0do94kqKUufs9fHJccncG2HFIBRSFB8nmoIxgMnogJpvw3HNBcJ1s
+MxBaTlm1RKt7EvgO+HTl2N+xNYPJXW12XMezN9jWvhJT4AwaxMIRC5BUrBBCOjh7Tdfm5Q04
+M1abVwsgPk6CMjGfzcF5oN164Uz7DaD2Ac+vT3KKc9XjV57ZC2vrz+OzyvNsZOuMW8qYyWF1
+24QQ7A2RfYbHz3ZfelLX9bT68VsbvZADTLNy6uZsIm+NncEcj0Te/JzeAe5mGfbr5azN6oLG
+CZ5JXlB5RuQO51MQQSD9ZDCSkAkM1NI0A4kUZJohdyhN9qFUmuY3rv0bKBtgrSEbCAlK08Kd
+FXAQJTuIAkoTki4m0wK++RLX8sBA4IGUaNmmVyDuF+RZCWWmkoXrAbchndzcgc5xvgIfVfq4
+2RKsncl2A/xf3YsDS/iI+sa3X8/Pv3uqkeu343//Or58/T0Rv1/OP4/vj/9HuRVBIP6Zx7G5
+NN0cX45vD+fT2z+Dx/fz2+Pfv/oqbSy46e3X1XH0nw/vxz9jWcbx2yQ+nV4nf8jCP02+dw9/
+1x5uFrieeZaJSdsTf/x+O71/Pb0eJ+8WhxNEwlkgYebainbZWitqsGR1YUfeF2IG3LSfbBw0
+lcwrbzogQd9MoDf3RTYwf47Kjdc7w107yuPD0/mn5pjbq2/nSfFwPk6S08vjuV+F63A2Q91F
+2ewdkNgOpo7tV/x6fvz/xo5tOXEd+SvUPO1W7cxwC5M8zIOwBTj4FlkGkhdXJmET6gwkBaQ2
+8/fbLdlgyWozVedUBnVb11ar1erL8+b4x7leUX9AnH3+TBKiy8xHsYkIHSSzPrHDZjInIFnw
+g5K9EdRvjimAbXFE66Tt+vHwsde5YD9gMh3UOCSkoRJKXv8CIBqSMEowxXnn0YpgoUG8QKob
+tVJdDYdqoaTMMItGfuYw9dq8vB7dO/TWLzLqEsrCAYYjdcNSP7uhDEsVkAotOZ71qFCcCCJW
+wIsG/R7x2oowSicYwRDc2wdAI4LOEDQi7o3TtM9SoELW7RIBfpU4g6Z3Yf+m23NLgwrYI06Y
+24yBoEu8kaWiS9p0SkGZYwI/AF5BLFeSygGVYziFrvS7JDgLer0hsVnlfDAgVBHSywZDQh2u
+YIQNTDW3EqaPsidRMMKOBGDDKyJmdJ5d9a77bkP7hReH5PQteBSOuj+afCl6fNmtj1rR5Nx9
+czJyqgIREtm8e3ND7NhSFxWxadzCrM44pMKFTQeU4UIUeYOrPuE8XTIiVTl9RFbLOIu8K7gt
+06FwLTyruyXzf/q92TUmWcEqW9HO187h+Lh7hivDbm1fQZSPh8hT6dIYmgND8zlSr1iJRO9v
+Rzh/Ng79Itwtr4mzHIXRIcHeNIwQYkEY7REEjTCK2GUagnjQvzgImDbzFA2j9KbXdQgWKeZX
+h8PXSejjtDvqEglAxlFK6UdnKTVdadjrtegTNZik7jQE6iak++xqRGwuBBGRqEuyp2OwyitK
+ipul/e7IPYyHlMG51rzkq+N8hzFoXHOdDW4GzdevdP/2udmi4IcGPc8b3A9PzsUKA58JjEnH
+iwXBhVc3lOt0JiamaaLeh+vtO95cCPIAAg+iQrlCJ16SU8FconB10x1Rp0aUUlm3Fci9bhK2
+NHGyKVDfZe6tPQrOP2yzWiyq0ojaRTqRdbMKDZSekdgLAWgvMZHuVyiEKw8Jp/dDIO4woE/t
+fQiznwcqiUURi589892IAQQ+Md5wUkzvR7l+Aa1zie81UiRhSLDNiSM4GHoZZx+/Duopr04H
+VXItyg0ZyvGFuOhfx5Hynb6MhX7abq7jRcU8iZnCoFvECAAekWU88poaq3S9R4M1tbe2+j7n
+Mn8QjthSbPe8f9s8G3s59kVC+P7Fi4jIxp4R5KKta0yXTa2DSKfMzPwO69Pos8JqfJoFrvFN
+suZBPdnst+r93eEId0okDWOikrpPloU3merN5uAwL/vHzn+rJiwdy+Y38B1FbkarfCX7BeFg
+CrCB2wMcIEMjMaQqyDOOSZhVnYZbgcYu0El0VTDP/URYYWXcy4Xl0mAi8dgT93SoEoVD+Vre
+jn2jb/ibRIbeRGOPeTPDtEHwIOMCYMS03dIgzJhJTvdYtlQaB2HLp5M+/SU18afZQrsFM5Fn
+VVa6hiapiwbQPqtAeBBPa86ZsF/Rq+zehtf7417AE/yUG72SGe2CQBcoB6lz6YQ1k6rf5Ykk
+zOQQ4kk3LbJcJpNsSE6ponRiiRdchOy+cGxQ7/Hp1QyWN8kUdTUx/a8iib77C19tXMe+DbLk
+ZjTqUr3I/YmrB36SfZ8w+T2WVr2nKZSFSQpRBt+4mcDihF37uvK2wvRAKYagHA5+uOBB4s2Y
+gNPz55fN4e36+urma6/m4FNHzeXErUCIZYPq9QF0WH88vwEndIywkdJWFaAnngytQuw+hsIN
+gJwNkQSBIFaEvuAuAp5zERtJc03RCEQxc4pVwQXmqHFWTErixTWfchmOVZ8dXdJ/1GzVtmqQ
+aStLdLbikdGnRKD/MM1UmN8Cm9CwWSsIY2OT3LGlN2Ma1PLV7aTJUavtMw6syapKYOQLDPbj
+q6gHwoEQPiSO0gftQHfeoArA0OzMZTtm4ZE886yuEywixpnd5SybEcDFip6gKIiBJCk+F7Us
+ZUrD7uLVsBU6oqGirdEUw2AQ6aDuswXJKRs1VtyFy2Ui5tYOqYAWeeDvRd/6bYS60yXkBldg
+wuAbhaKlKRGeJiSRRWyyE/jpurFNBfM4GpQFSS26M57P9k/ohzkQO9Z6lsciNWxLdElLDCKP
+pzNqBbyAknm8lPwm8RnNf6gVDesrFmbVCWMcQTVwdYYVcIYZM1yHUYm5TKQfrtupgXJ91SXb
+uCbMOSwktzbHQvqL3lLxCiwkt87AQvqbjhNKbAuJ2Bwm0t9MAWG4ZSG5bRYMpBviZdZEIt55
+rJr+Yp5uCDsKs+OEMh2RQGZEKi8IaapeTY+KCm1j0UTAMi9wBXWp96Rnk3wFoKejwqBppsK4
+PBE0tVQY9AJXGPR+qjDoVTtNw+XBECo/A4UezjwJrgu35HgCu03jERwxD49eIsRiheHxUBLq
+qDNKLHlOhNo6IYkExKJLjd2LIAwvNDdl/CKK4EQc8goj8DC4JKF/qnDiPHCLb8b0XRqUzMXc
+8vmpYeA1yHBoCw0Vl7r5zNf73fp35/Xx6Z/N7qXS/bzvN7vjP1rpvV0fXmoOV7VLTRDLOeVS
+5+kAfZjTKuQLHp5OztPdLuJZhiyhgTGsiekorZQN+Zxy1qqSp7i99Ly37Tvc674eN9t1B67T
+T/8c1MCedPneNTYdyjCIJ4ljaDzGiOjFkokYEFPBPSbr+UBKeJRnEhPk1cNqTUDm1l/+7HX7
+w5N4JEWQAvtDpbh5qxKc+ao2ALqF0TjP4GqhwwMTYq7KG7CMTWWzMdK6YDqDJtGToOq6NSkZ
+VxHm8C4YMem5aM9G0VOVxOF9s7pJIkDIXHI2V64LVuiW88UCM5+hVC7uyEHgLVo9H+hn5PX2
+bf+n469/fby8aNI2Z4SvJGZ7I25HukpEZGGYEDpzrCZNgJvGlFeeriYZ38KUuFennNWQudxI
+lPddObqIRyFMU3MKK0hb9RLfJPLMuutbWIvI0YVTiqQSJxAyN0MDGoCW6rU/DuwqgvOVXZ0F
+5hprNRQuYwdt8T7e9fadPe5ezBc4uInkabuZuQYWszyeYgJk95Qt74BggWz9xL2mKQbYAXIu
+Erea04AXCxbm/GfXBCLTTHIJxecLESYVarkPabjNkkwwLDNBZfprTQY89vXmblkF7OCc89Si
+a/2QilaVp33V+deh9Aw8/Kez/TiuP9fwj/Xx6du3b/9u8lQhgTFKviLCyZY0AO3icrYR08VK
+lkuNBHsrWaaMCLqpcZXSumWji2Rx0kw7MVQFOP0tjVSRlUKY1wt9gWYKlgbAScMJ+kG7x6ka
+BVLHwM50lOPzPJSVuQkESUPijb+la3PNyFow4P8FF+OECL9djpBKUFYy3eASRtbGbJVKP+BE
+FjWN4wnug2QZMPPI1G6UXk6cGooKEOycwBSV0wjGI4GMgHpxuVQFXEzaMf6qGno5EcrvHHEN
+7D10Vx7Qgj6ay4VXxAhnKvoYEpJtuTAFFyIRwMputZzgRC51/q04IchdsXdv5YutH51VPFw9
+FTXdqwmdCpbO3DiVbDlRULsCVVhEHqYiBVnNS4RvoeA7ATAWXbkijMzC8MoPdS01rT98gXzA
+EXVt0lhZTbkfOyXkyvXhaNFuOPeJ920VHV4lA8wojbJCIaHjinEoBtNCkWMJVycarvbMApNY
+tKLB3gBKpOGay46G7exODWnGV34euXmxHjPI5TFKxGFK8ROFNwdESTh7KwR1hXEbvir4OJDU
+A76C5zlhz6CgAsSzmSTTNOmxUqFgMeoHHjU0K9AUQoSl1N3LUHRPUvf1TI8wbRl+ZcjQ0gJ9
++wOxsn2Z8ViGHUzmEVcSeqyS0mEWMTRqpDhOxjByskvoU1tZycrzqW+82+BvN6UKdTUCjlDk
+44zFwCCLOA+JJC+I0S6eo2lLEWRKjllyI88lErInSxyiM1GRSns71IB5vAziGnfTbL98T7cP
+eJfZQAWCje6FsJ4/v2wfn16/P+NR+xX+uX/7ln2xa8Jg0sW1pVo8XX3VgxrGLz5VqWr7/rHD
+yz2aVn57rVWJPnqZHUJUe9ytnz72aObn0AWQdFOZncAW4pmy7FKz3IrbCnQ+QSjCmjEB8gpI
+8DjfuNG0sMr0O3ODBBvo9SVqACl5UKo0G2he6HPNAp2rqk/q82Qwr04kJvTnl9NziXqbTE6h
+Y/Z/3o9vnSdMTvm277yuf7/XczZoZBj0lKW1QA1Gcb9ZzpnvLGyijsO5F6Sz+vFvQ5ofIU91
+FjZRRd3i5VzmRDwpwhpdJ3syT1PH8HF7GKZLVRsZES9Gg30ihpCGcs936XxKaMRiNnXMYlnu
+6o0ds9j5YeEHmdKDqdtQo/rppNe/jvKwAUB+6ixsThc+3d7lPOeOPqo/7hO46udlFJbLGSfC
+UZUozphX7OP4imblT4/H9XOH755wr6C54f82x9cOOxzenjYK5D8eHxt7xqsnx6imy8xlW2HO
+GPzX76ZJeG9HnTQxM34XLBq1cvg6iAGwLaPJKPfL7duzacFUtTZ2BQ6ugFK4OihdDPLU+tjx
+SSjcMf5LcGr1woaviJt3te34/VKYclsZNOnwehq4NYaozh8rnmHFgqtav9C7hTPi2uYFxP9m
+u8Ib9F2NKEBbK4Age10/mNBzPy05YWN6HZTU2Dg+Ed+rArd/HQDR8RD/tqGJyO8ReQpqGMQj
+9hmjf0XEDzthDIhwN9XGmbFey7aC3Xc1cswjAK4Iz7YzBuGvVzKWqegROX4q9pdaTeg9qzIp
+NcmYmaESz6VUgKcKI87HQcsuBvFl6Kh4DBItHdyupFMW8TAMWo82j2WylZ4QoXWNfULnWIIn
+6m8rz5ixB9Z6TmQszFg7HVWsurUaztub4SKlAs+fjqPW2ZTLxF6U04sbCt/azd6evwmqbRos
+UNvA2S1cE2FRTx+18g4Azxxh0h53z2/bTvyx/bXeV9EBrIgAJ2rNgsJLRewy9a4GJMZ4B43z
+xpAUhGDtGkbdyetInmyRjhCj0e5tICUXHD1M0vsGVN3VUYreEgAt1pLQrBKUt05JTuEIQktu
+46Es3oY4WzZpC53W/6tkoYPKwHHYvOy0j5R627X0Xnhz1ZW5r/5BzMS9Qz1Teoz92j/u/3T2
+bx/Hza5+mI8DKTjGADWExfMF7Ax3rJ1gqF+o5yGrXHjgAhl7cLmbiCSyTNXrKCGPCWjM0fg5
+qFutndyDvAADD7K0CaqHu1PdR2N1L0pX3kw/Mghej98oPBAqgcaMop51bnlFi9AATcq8MCsY
+WHcDKHCq8EyEMPD4+P7a8amGUPxBoTCxZETMQY0xDoimDeM+TE2npCuqJiJYWO4HUs83XtSY
+rNbDrT1lsZ9E7XOCFsP4QmgyWFXaYLvAb4tKfWKW+txVPnSWrx6w2P5drK5HjTLlFJY2cQM2
+GjYKYdu6yuQsj8YNAL68NOsde7f1RSpLiZk7j62YPtS9/2qAMQD6Tkj4EDEnYPVA4CdE+bC5
+OZ2Kngy3Mo/sIpWS3djiSjMYGTktUeEbJ0lqO+kYCCrOsft527+rc64wMa5d+LuNROMQHRIc
+oyy19sZGToRP7AbfJ/zNxR1eOlzqR9gFE7/GciZJLGtvK7XSzEK6/jT4S1lGJEJQ0NEn4Qyt
+oD8+CdM8BU05EyG26RiDQmAwL3HZqXo52t4Xw89Ro6/QG7egqKC97icRbaOcobh9rIDQ638S
+kZ0yfBcNnVw0Qz/RpEZKJ002QJQmoWY+rt9H6iMrzU2CB2Yr6/8P4b5TwD5zAQA=
+
+--rwEMma7ioTxnRzrJ--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
