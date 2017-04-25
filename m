@@ -1,87 +1,66 @@
-From: Marek Vasut <marek.vasut@gmail.com>
-Subject: [RESEND][PATCH V2 1/4] mfd: Add ROHM BD9571MWV-M PMIC DT bindings
-Date: Tue, 25 Apr 2017 20:32:07 +0200
-Message-ID: <20170425183210.30594-1-marek.vasut+renesas@gmail.com>
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: linux-renesas-soc@vger.kernel.org
-Cc: lee.jones@linaro.org, Marek Vasut <marek.vasut+renesas@gmail.com>, devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>
+From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH net-next] dt-bindings: mdio: Clarify binding document
+Date: Tue, 25 Apr 2017 11:33:03 -0700
+Message-ID: <20170425183308.26107-1-f.fainelli@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: rogerq-l0cyMroinI0@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, jsarha-l0cyMroinI0@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add DT bindings for the ROHM BD9571MWV-M PMIC. This PMIC has
-the following features:
-- multiple voltage monitors for 1V8, 2V5, 3V3 voltage rail
-- one voltage regulator for DVFS
-- two GPIOs
+The described GPIO reset property is applicable to *all* child PHYs. If
+we have one reset line per PHY present on the MDIO bus, these
+automatically become properties of the child PHY nodes.
 
-Signed-off-by: Marek Vasut <marek.vasut+renesas@gmail.com>
-Cc: devicetree@vger.kernel.org
-Cc: Rob Herring <robh@kernel.org>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: linux-renesas-soc@vger.kernel.org
----
-V2: - Drop the compatible = "regulator-fixed" from the binding example,
-      it should not be there.
-    - List the VD09 regulator
----
- .../devicetree/bindings/mfd/bd9571mwv.txt          | 49 ++++++++++++++++++++++
- 1 file changed, 49 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mfd/bd9571mwv.txt
+Finally, indicate how the RESET pulse width must be defined, which is
+the maximum value of all individual PHYs RESET pulse widths determined
+by reading their datasheets.
 
-diff --git a/Documentation/devicetree/bindings/mfd/bd9571mwv.txt b/Documentation/devicetree/bindings/mfd/bd9571mwv.txt
-new file mode 100644
-index 000000000000..ce24231edd7d
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mfd/bd9571mwv.txt
-@@ -0,0 +1,49 @@
-+* ROHM BD9571MWV Power Management Integrated Circuit (PMIC) bindings
+Fixes: 69226896ad63 ("mdio_bus: Issue GPIO RESET to PHYs.")
+Signed-off-by: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+ Documentation/devicetree/bindings/net/mdio.txt | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/net/mdio.txt b/Documentation/devicetree/bindings/net/mdio.txt
+index 4ffbbacebda1..96a53f89aa6e 100644
+--- a/Documentation/devicetree/bindings/net/mdio.txt
++++ b/Documentation/devicetree/bindings/net/mdio.txt
+@@ -3,13 +3,17 @@ Common MDIO bus properties.
+ These are generic properties that can apply to any MDIO bus.
+ 
+ Optional properties:
+-- reset-gpios: List of one or more GPIOs that control the RESET lines
+-  of the PHYs on that MDIO bus.
+-- reset-delay-us: RESET pulse width in microseconds as per PHY datasheet.
++- reset-gpios: One GPIO that control the RESET lines of all PHYs on that MDIO
++  bus.
++- reset-delay-us: RESET pulse width in microseconds.
+ 
+ A list of child nodes, one per device on the bus is expected. These
+ should follow the generic phy.txt, or a device specific binding document.
+ 
++The 'reset-delay-us' indicates the RESET signal pulse width in microseconds and
++applies to all PHY devices. It must therefore be appropriately determined based
++on all PHY requirements (maximum value of all per-PHY RESET pulse widths).
 +
-+Required properties:
-+ - compatible		: Should be "rohm,bd9571mwv".
-+ - reg			: I2C slave address.
-+ - interrupt-parent	: Phandle to the parent interrupt controller.
-+ - interrupts		: The interrupt line the device is connected to.
-+ - interrupt-controller	: Marks the device node as an interrupt controller.
-+ - #interrupt-cells	: The number of cells to describe an IRQ, should be 2.
-+			    The first cell is the IRQ number.
-+			    The second cell is the flags, encoded as trigger
-+			    masks from ../interrupt-controller/interrupts.txt.
-+ - gpio-controller      : Marks the device node as a GPIO Controller.
-+ - #gpio-cells          : Should be two.  The first cell is the pin number and
-+                            the second cell is used to specify flags.
-+                            See ../gpio/gpio.txt for more information.
-+ - regulators:          : List of child nodes that specify the regulator
-+                            initialization data. Child nodes must be named
-+                            after their hardware counterparts:
-+			     - vd09
-+			     - vd18
-+			     - vd25
-+			     - vd33
-+			     - dvfs
-+			    Each child node is defined using the standard
-+			    binding for regulators.
-+
-+Example:
-+
-+	pmic: bd9571mwv@30 {
-+		compatible = "rohm,bd9571mwv";
-+		reg = <0x30>;
-+		interrupt-parent = <&gpio2>;
-+		interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
-+		interrupt-controller;
-+		#interrupt-cells = <2>;
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+
-+		regulators {
-+			dvfs: dvfs {
-+				regulator-name = "dvfs";
-+				regulator-min-microvolt = <750000>;
-+				regulator-max-microvolt = <1030000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+		};
-+	};
+ Example :
+ This example shows these optional properties, plus other properties
+ required for the TI Davinci MDIO driver.
+@@ -21,7 +25,7 @@ required for the TI Davinci MDIO driver.
+ 		#size-cells = <0>;
+ 
+ 		reset-gpios = <&gpio2 5 GPIO_ACTIVE_LOW>;
+-		reset-delay-us = <2>;   /* PHY datasheet states 1us min */
++		reset-delay-us = <2>;
+ 
+ 		ethphy0: ethernet-phy@1 {
+ 			reg = <1>;
 -- 
-2.11.0
+2.9.3
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
