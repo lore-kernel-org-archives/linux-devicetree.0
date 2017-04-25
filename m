@@ -1,63 +1,173 @@
-From: <arywhite007-/E1597aS9LQAvxtiuMwx3w@public.gmane.org>
-Subject: 33027 devicetree
-Date: Tue, 25 Apr 2017 08:50:37 -0000
-Message-ID: <149311023775.15559.5483628094658012475@hinet.net>
+From: Hans Verkuil <hverkuil@xs4all.nl>
+Subject: Re: [PATCH v3 0/7] V4L2 fwnode support
+Date: Tue, 25 Apr 2017 10:51:58 +0200
+Message-ID: <7d0e3f86-2dcf-77d4-9411-5d98d1956586@xs4all.nl>
+References: <1491829376-14791-1-git-send-email-sakari.ailus@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: application/zip; name="09469566543158.zip"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: attachment
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <1491829376-14791-1-git-send-email-sakari.ailus@linux.intel.com>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Sakari Ailus <sakari.ailus@linux.intel.com>, linux-media@vger.kernel.org
+Cc: linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, laurent.pinchart@ideasonboard.com
 List-Id: devicetree@vger.kernel.org
 
-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
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On 10/04/17 15:02, Sakari Ailus wrote:
+> Hello everyone,
+> 
+> This patchset adds support for fwnode to V4L2. Besides OF, also ACPI based
+> systems can be supported this way. By using V4L2 fwnode, the individual
+> drivers do not need to be aware of the underlying firmware implementation.
+> The patchset also removes specific V4L2 OF support and converts the
+> affected drivers to use V4L2 fwnode.
+
+Successfully tested with my Atmel sama5d3 board + ov2640 sensor.
+
+Tested-by: Hans Verkuil <hans.verkuil@cisco.com>
+
+Regards,
+
+	Hans
+
+> 
+> The patchset depends on another patchset here:
+> 
+> <URL:http://www.spinics.net/lists/linux-acpi/msg72973.html> 
+> 
+> A git tree with the dependencies can be found here:
+> 
+> <URL:https://git.linuxtv.org/sailus/media_tree.git/log/?h=v4l2-acpi-merge>
+> 
+> v1 of the set can be found here:
+> 
+> <URL:http://www.spinics.net/lists/linux-media/msg111073.html> 
+> 
+> and v2 here:
+> 
+> <URL:http://www.spinics.net/lists/linux-media/msg114110.html>
+> 
+> changes since v2:
+> 
+> - Use EXPORT_SYMBOL_GPL() instead of EXPORT_SYMBOL().
+> 
+> - Alphabetically order the topics under V4L2 core kAPI documentation.
+> 
+> - Prefer "fwnode" variable name for struct fwnode_handle pointers instead
+>   of "fwn". Similarly, use "vep" for struct v4l2_fwnode_endpoint instead
+>   of "vfwn".
+> 
+> - Convert existing users of OF matching to fwnode matching.
+> 
+> - Remove OF matching support as well as compatibility between OF and
+>   fwnode matching.
+> 
+> - Use of_node_cmp() to determine whether two nodes match in case both of
+>   them are OF nodes. There is thus no functional difference between
+>   existing OF matching in v1.
+> 
+> - Continue to use struct device_node.full_name on fwnodes that are known
+>   to be OF nodes instead of omitting such debug information. Drivers that
+>   can actually use fwnode need a new interface to provide this in fwnode
+>   framework. This is out of scope of the patchset.
+> 
+> - Remove linux/of.h header inclusion in
+>   drivers/media/v4l2-core/v4l2-flash-led-class.c.
+> 
+> - Improved line wrapping primarily in
+>   drivers/media/v4l2-core/v4l2-fwnode.c.
+> 
+> - Rewrap KernelDoc documentation for V4L2 fwnode API up to 80 characters
+>   per line (new patch).
+> 
+> - Fix KernelDoc documentation, there were a few locations where the
+>   argument had been changed but the documentation was not updated
+>   accordingly. 
+> 
+> - Fix punctuation and wording in V4L2 fwnode documentation.
+> 
+> - Drop patch "v4l: media/drv-intf/soc_mediabus.h: include dependent header
+>   file". It is no longer needed.
+> 
+> - Fix obtaining port parent in v4l2_fwnode_parse_link() on ACPI.
+> 
+> - Include newly OF-supported atmel-isi to V4L2 OF -> fwnode conversion.
+> 
+> - Add that the v4l2-fwnode.c has origins in v4l2-of.c to the commit
+>   message and the file header.
+> 
+> changes since v1:
+> 
+> - Use existing dev_fwnode() instead of device_fwnode_handle() added by the
+>   ACPI graph patchset,
+> 
+> - Fix too long line of ^'s in ReST documentation and
+> 
+> - Drop the patch rearranging the header files. It'd better go in
+>   separately, if at all.
+> 
+> Sakari Ailus (7):
+>   v4l: fwnode: Support generic fwnode for parsing standardised
+>     properties
+>   v4l: async: Add fwnode match support
+>   v4l: flash led class: Use fwnode_handle instead of device_node in init
+>   v4l: Switch from V4L2 OF not V4L2 fwnode API
+>   docs-rst: media: Sort topic list alphabetically
+>   docs-rst: media: Switch documentation to V4L2 fwnode API
+>   v4l: Remove V4L2 OF framework in favour of V4L2 fwnode framework
+> 
+>  Documentation/media/kapi/v4l2-core.rst         |  20 +-
+>  Documentation/media/kapi/v4l2-fwnode.rst       |   3 +
+>  Documentation/media/kapi/v4l2-of.rst           |   3 -
+>  drivers/leds/leds-aat1290.c                    |   5 +-
+>  drivers/leds/leds-max77693.c                   |   5 +-
+>  drivers/media/i2c/Kconfig                      |   9 +
+>  drivers/media/i2c/adv7604.c                    |   7 +-
+>  drivers/media/i2c/mt9v032.c                    |   7 +-
+>  drivers/media/i2c/ov2659.c                     |   8 +-
+>  drivers/media/i2c/s5c73m3/s5c73m3-core.c       |   7 +-
+>  drivers/media/i2c/s5k5baf.c                    |   6 +-
+>  drivers/media/i2c/smiapp/Kconfig               |   1 +
+>  drivers/media/i2c/smiapp/smiapp-core.c         |  29 ++-
+>  drivers/media/i2c/tc358743.c                   |  11 +-
+>  drivers/media/i2c/tvp514x.c                    |   6 +-
+>  drivers/media/i2c/tvp5150.c                    |   7 +-
+>  drivers/media/i2c/tvp7002.c                    |   6 +-
+>  drivers/media/platform/Kconfig                 |   3 +
+>  drivers/media/platform/am437x/Kconfig          |   1 +
+>  drivers/media/platform/am437x/am437x-vpfe.c    |  15 +-
+>  drivers/media/platform/atmel/Kconfig           |   1 +
+>  drivers/media/platform/atmel/atmel-isc.c       |  13 +-
+>  drivers/media/platform/exynos4-is/Kconfig      |   2 +
+>  drivers/media/platform/exynos4-is/media-dev.c  |  13 +-
+>  drivers/media/platform/exynos4-is/mipi-csis.c  |   6 +-
+>  drivers/media/platform/omap3isp/isp.c          |  49 ++--
+>  drivers/media/platform/pxa_camera.c            |  11 +-
+>  drivers/media/platform/rcar-vin/Kconfig        |   1 +
+>  drivers/media/platform/rcar-vin/rcar-core.c    |  23 +-
+>  drivers/media/platform/soc_camera/Kconfig      |   1 +
+>  drivers/media/platform/soc_camera/atmel-isi.c  |   7 +-
+>  drivers/media/platform/soc_camera/soc_camera.c |   7 +-
+>  drivers/media/platform/ti-vpe/cal.c            |  15 +-
+>  drivers/media/platform/xilinx/Kconfig          |   1 +
+>  drivers/media/platform/xilinx/xilinx-vipp.c    |  63 +++--
+>  drivers/media/v4l2-core/Kconfig                |   3 +
+>  drivers/media/v4l2-core/Makefile               |   4 +-
+>  drivers/media/v4l2-core/v4l2-async.c           |  21 +-
+>  drivers/media/v4l2-core/v4l2-flash-led-class.c |  12 +-
+>  drivers/media/v4l2-core/v4l2-fwnode.c          | 342 +++++++++++++++++++++++++
+>  drivers/media/v4l2-core/v4l2-of.c              | 327 -----------------------
+>  include/media/v4l2-async.h                     |   8 +-
+>  include/media/v4l2-flash-led-class.h           |   4 +-
+>  include/media/v4l2-fwnode.h                    | 104 ++++++++
+>  include/media/v4l2-of.h                        | 128 ---------
+>  include/media/v4l2-subdev.h                    |   3 +
+>  46 files changed, 690 insertions(+), 638 deletions(-)
+>  create mode 100644 Documentation/media/kapi/v4l2-fwnode.rst
+>  delete mode 100644 Documentation/media/kapi/v4l2-of.rst
+>  create mode 100644 drivers/media/v4l2-core/v4l2-fwnode.c
+>  delete mode 100644 drivers/media/v4l2-core/v4l2-of.c
+>  create mode 100644 include/media/v4l2-fwnode.h
+>  delete mode 100644 include/media/v4l2-of.h
+> 
+
