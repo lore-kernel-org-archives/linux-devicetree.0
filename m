@@ -1,54 +1,138 @@
-From: Benjamin Henrion <zoobab@gmail.com>
-Subject: Re: [PATCH v2 2/4] gpio - Add EXAR XRA1403 SPI GPIO expander driver
-Date: Tue, 25 Apr 2017 09:07:06 +0200
-Message-ID: <CANjd3ndZkVi5OA0eqDewrpqVLQpT11QbVOA98F=ghMhcwPu2hQ@mail.gmail.com>
-References: <cover.1492077070.git.nandor.han@ge.com> <f28eef264102786357ac5ed7205813619c508fb4.1492077070.git.nandor.han@ge.com>
- <CACRpkdZHMWH2W-i4MGZ7NKzPHUURRmC-5YwiK7cVLCHKDsb7sw@mail.gmail.com>
-Reply-To: zoobab@gmail.com
+From: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
+Subject: Re: [PATCH 11/13] phy: Add an USB PHY driver for the Lantiq SoCs
+ using the RCU module
+Date: Tue, 25 Apr 2017 09:06:56 +0200
+Message-ID: <f15b576e-36bf-657d-97ff-99ea174c1d00@hauke-m.de>
+References: <20170417192942.32219-1-hauke@hauke-m.de>
+ <20170417192942.32219-12-hauke@hauke-m.de>
+ <20170420153606.fdhedc7ovvhc66qd@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdZHMWH2W-i4MGZ7NKzPHUURRmC-5YwiK7cVLCHKDsb7sw@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Nandor Han <nandor.han@ge.com>, Greg KH <gregkh@linuxfoundation.org>, "David S. Miller" <davem@davemloft.net>, Geert Uytterhoeven <geert@linux-m68k.org>, Mauro Carvalho Chehab <mchehab@kernel.org>, Daniel Vetter <daniel.vetter@ffwll.ch>, Alexandre Courbot <gnurou@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Semi Malinen <semi.malinen@ge.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170420153606.fdhedc7ovvhc66qd@rob-hp-laptop>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org, john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, hauke.mehrtens-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 24, 2017 at 3:47 PM, Linus Walleij <linus.walleij@linaro.org> wrote:
-> On Thu, Apr 13, 2017 at 12:27 PM, Nandor Han <nandor.han@ge.com> wrote:
->
->> This is a simple driver that provides a /sys/class/gpio
->> interface for controlling and configuring the GPIO lines.
->> It does not provide support for chip select or interrupts.
+
+
+On 04/20/2017 05:36 PM, Rob Herring wrote:
+> On Mon, Apr 17, 2017 at 09:29:40PM +0200, Hauke Mehrtens wrote:
+>> From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 >>
->> Signed-off-by: Nandor Han <nandor.han@ge.com>
->> Signed-off-by: Semi Malinen <semi.malinen@ge.com>
->
-> I almost want to make the driver depend on !GPIO_SYSFS because
-> of this commit message.
->
-> DO NOT USE OR ENCOURAGE THE USE OF THE GPIO SYSFS
-> INTERFACE.
->
-> Use the character device.
+>> This driver starts the DWC2 core(s) built into the XWAY SoCs and provides
+>> the PHY interfaces for each core. The phy instances can be passed to the
+>> dwc2 driver, which already supports the generic phy interface.
+>>
+>> Signed-off-by: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
+>> ---
+>>  .../bindings/phy/phy-lantiq-rcu-usb2.txt           |  59 ++++
+>>  arch/mips/lantiq/xway/reset.c                      |  43 ---
+>>  arch/mips/lantiq/xway/sysctrl.c                    |  24 +-
+>>  drivers/phy/Kconfig                                |   8 +
+>>  drivers/phy/Makefile                               |   1 +
+>>  drivers/phy/phy-lantiq-rcu-usb2.c                  | 325 +++++++++++++++++++++
+>>  6 files changed, 405 insertions(+), 55 deletions(-)
+>>  create mode 100644 Documentation/devicetree/bindings/phy/phy-lantiq-rcu-usb2.txt
+>>  create mode 100644 drivers/phy/phy-lantiq-rcu-usb2.c
+>>
+>> diff --git a/Documentation/devicetree/bindings/phy/phy-lantiq-rcu-usb2.txt b/Documentation/devicetree/bindings/phy/phy-lantiq-rcu-usb2.txt
+>> new file mode 100644
+>> index 000000000000..0ec9f790b6e0
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/phy/phy-lantiq-rcu-usb2.txt
+>> @@ -0,0 +1,59 @@
+>> +Lantiq XWAY SoC RCU USB 1.1/2.0 PHY binding
+>> +===========================================
+>> +
+>> +This binding describes the USB PHY hardware provided by the RCU module on the
+>> +Lantiq XWAY SoCs.
+>> +
+>> +
+>> +-------------------------------------------------------------------------------
+>> +Required properties (controller (parent) node):
+>> +- compatible		: Should be one of
+>> +				"lantiq,ase-rcu-usb2-phy"
+>> +				"lantiq,danube-rcu-usb2-phy"
+>> +				"lantiq,xrx100-rcu-usb2-phy"
+>> +				"lantiq,xrx200-rcu-usb2-phy"
+>> +				"lantiq,xrx300-rcu-usb2-phy"
+> 
+> The first x in xrx seems to be a wildcard. Don't use wildcards in 
+> compatible strings.
 
-I doubt you will be able to convince the majority of people toggling
-GPIOs via a simple shell script to switch to write a complex C
-program. Not to mention cross compilation and the libraries
-dependencies here.
+Yes that is correct, I will replace it in the newly introduced
+compatible strings with the full names without wild cards.
 
-Is there some good cli tools to access the new char device? If they
-are shipped with most distros, that would reduce the pain.
+> 
+>> +- lantiq,rcu-syscon	: A phandle to the RCU module and the offsets to the
+>> +			  USB PHY configuration and USB MAC registers.
+> 
+> Same comment as gphy.
+> 
+>> +- address-cells		: should be 1
+>> +- size-cells		: should be 0
+>> +- phy-cells		: from the generic PHY bindings, must be 1
+> 
+> Missing the '#'
+> 
+>> +
+>> +Optional properties (controller (parent) node):
+>> +- vbus-gpio		: References a GPIO which enables VBUS all given USB
+>> +			  ports.
+> 
+> -gpios is preferred form.
+> 
+>> +
+>> +Required nodes		:  A sub-node is required for each USB PHY port.
+>> +
+>> +
+>> +-------------------------------------------------------------------------------
+>> +Required properties (port (child) node):
+> 
+> Where's the sub nodes in the example?
 
-Best,
+Sorry, this was from an older version, I will update this.
 
+> 
+>> +- reg        	: The ID of the USB port, usually 0 or 1.
+>> +- clocks	: References to the (PMU) "ctrl" and "phy" clk gates.
+>> +- clock-names	: Must be one of the following:
+>> +			"ctrl"
+>> +			"phy"
+>> +- resets	: References to the RCU USB configuration reset bits.
+>> +- reset-names	: Must be one of the following:
+>> +			"analog-config" (optional)
+>> +			"statemachine-soft" (optional)
+>> +
+>> +Optional properties (port (child) node):
+>> +- vbus-gpio	: References a GPIO which enables VBUS for the USB port.
+>> +
+>> +
+>> +-------------------------------------------------------------------------------
+>> +Example for the USB PHYs on an xRX200 SoC:
+>> +	usb_phys0: rcu-usb2-phy@0 {
+> 
+> usb-phy@...
+> 
+>> +		compatible      = "lantiq,xrx200-rcu-usb2-phy";
+> 
+> Extra spaces.
+> 
+>> +		reg = <0>;
+>> +
+>> +		lantiq,rcu-syscon = <&rcu0 0x18 0x38>;
+>> +		clocks = <&pmu PMU_GATE_USB0_CTRL>,
+>> +			 <&pmu PMU_GATE_USB0_PHY>;
+>> +		clock-names = "ctrl", "phy";
+>> +		vbus-gpios = <&gpio 32 GPIO_ACTIVE_HIGH>;
+>> +		resets = <&rcu_reset1 4>, <&rcu_reset0 4>;
+>> +		reset-names = "phy", "ctrl";
+>> +		#phy-cells = <0>;
+>> +	};
 --
-Benjamin Henrion <bhenrion at ffii.org>
-FFII Brussels - +32-484-566109 - +32-2-3500762
-"In July 2005, after several failed attempts to legalise software
-patents in Europe, the patent establishment changed its strategy.
-Instead of explicitly seeking to sanction the patentability of
-software, they are now seeking to create a central European patent
-court, which would establish and enforce patentability rules in their
-favor, without any possibility of correction by competing courts or
-democratically elected legislators."
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
