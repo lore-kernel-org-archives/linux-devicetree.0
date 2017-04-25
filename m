@@ -1,82 +1,72 @@
-From: Richard Fitzgerald <rf@opensource.wolfsonmicro.com>
-Subject: Re: [PATCH v2 10/18] pinctrl: madera: Add driver for
- Cirrus Logic Madera codecs
-Date: Tue, 25 Apr 2017 11:26:02 +0100
-Message-ID: <1493115962.4826.51.camel@rf-debian.wolfsonmicro.main>
-References: <1493050124-5970-1-git-send-email-rf@opensource.wolfsonmicro.com>
- <1493050124-5970-11-git-send-email-rf@opensource.wolfsonmicro.com>
- <CACRpkdYtuu4mFf9bjz-z_kNhbgmuw7TQdQqBc66iWfFP5wp_fw@mail.gmail.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH RFC 0/5] *** SPI Slave mode support ***
+Date: Tue, 25 Apr 2017 11:31:13 +0100
+Message-ID: <20170425103113.lxpwoq6sbxvg3ihl@sirena.org.uk>
+References: <1492085644-4195-1-git-send-email-jiada_wang@mentor.com>
+ <20170413125929.dygodgj6c35ydh5p@sirena.org.uk>
+ <CAMuHMdUm=90ddNWM5KWqT+W0hqZ-QO6vPHj5OisbYquDYq1ZmA@mail.gmail.com>
+ <58F06092.9080409@mentor.com>
+ <CAMuHMdXa_O6RsqUciiNWQ0Zp6dniS47AUmPN9UWAWitP0csx=Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <CACRpkdYtuu4mFf9bjz-z_kNhbgmuw7TQdQqBc66iWfFP5wp_fw@mail.gmail.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Alexandre Courbot <gnurou@gmail.com>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, Jason Cooper <jason@lakedaemon.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "open
- list:WOLFSON MICROELECTRONICS DRIVERS" <patches@opensource.wolfsonmicro.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Mark Brown <broonie@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Lee Jones <lee.jones@linaro.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="lyxm4mylxjgwr253"
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdXa_O6RsqUciiNWQ0Zp6dniS47AUmPN9UWAWitP0csx=Q@mail.gmail.com>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Cc: Jiada Wang <jiada_wang-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, linux-spi <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2017-04-25 at 11:41 +0200, Linus Walleij wrote:
-> On Mon, Apr 24, 2017 at 6:08 PM, Richard Fitzgerald
-> <rf@opensource.wolfsonmicro.com> wrote:
-> 
-> > These codecs have a variable number of I/O lines each of which
-> > is individually selectable to a wide range of possible functions.
-> >
-> > The functionality is slightly different from the traditional muxed
-> > GPIO since most of the functions can be mapped to any pin (and even
-> > the same function to multiple pins). Most pins have a dedicated
-> > "alternate" function that is only available on that pin. The
-> > alternate functions are usually a group of signals, though it is
-> > not always necessary to enable the full group, depending on the
-> > alternate function and how it is to be used. The mapping between
-> > alternate functions and GPIO pins varies between codecs depending
-> > on the number of alternate functions and available pins.
-> >
-> > Note on the Kconfig options:
-> > The formula "default y if..." is used for PINCTRL_MADERA so that its
-> > select options will be processed, allowing us to group selects for
-> > pinctrl into the pinctrl Kconfig where they logically belong instead
-> > of accumulating under the parent MFD Kconfig.
-> >
-> > Signed-off-by: Richard Fitzgerald <rf@opensource.wolfsonmicro.com>
-> (...)
-> 
-> > Changes since V1:
-> 
-> This is starting to look good!
-> 
-> In fact, kind of finished. Except:
-> 
-> > +       if (pdata) {
-> > +               ret = pinctrl_register_mappings(pdata->gpio_configs,
-> > +                                               pdata->n_gpio_configs);
-> > +               if (ret) {
-> > +                       dev_err(priv->dev,
-> > +                               "Failed to register pdata mappings (%d)\n",
-> > +                               ret);
-> > +                       return ret;
-> > +               }
-> > +       }
-> 
-> What is this? It looks like boardfile support which we do not like to
-> encourage. Why are the mappings not exclusively set up from
-> device tree or similar?
-> 
 
-We want to work on systems that don't use DT for configuration, so we
-offer pdata as a fallback across all the drivers. In that case the
-configuration is defined as part of the parent pdata struct and this
-applies it.
+--lyxm4mylxjgwr253
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> Yours,
-> Linus Walleij
+On Mon, Apr 24, 2017 at 12:55:21PM +0200, Geert Uytterhoeven wrote:
+> On Fri, Apr 14, 2017 at 7:39 AM, Jiada Wang <jiada_wang-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org> wrote:
+
+> > Our use case is to use spidev as an interface to communicate with external
+> > SPI master devices.
+> > meanwhile the SPI bus controller can also act as master device to send data
+> > to other
+> > SPI slave devices on the board.
+
+> That sounds a bit hackish to me. SPI was never meant to be a multi-master bus.
+> While it can be done, you will need external synchronization (signals) to
+> avoid conflicts between the SPI masters.
+
+> > I found in your implementation, SPI bus controller is limited to either work
+> > in master mode or
+> > slave mode, is there any reasoning to not configure SPI mode based on SPI
+> > devices use case?
+
+> If you really need both master and slave support, you can use 2 subnodes
+> in DT, the first representing the master, the second the slave.
+
+> Mark, what's your opinion about this?
+
+That sounds like a mess...   we *could* put the slave flag on the device
+rather than the controller I guess but there's also going to need to be
+something representing whatever avoids collisions on the bus somewhere.
+
+--lyxm4mylxjgwr253
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlj/JXEACgkQJNaLcl1U
+h9D3xAf/atRUjYimqLCfoOcqGSAoGXE4qnLqiwKNjC1y70Yed/AsQYlmgSVHaFzR
+7vDGhyqODzLdoc90Aypu9cfzVk1wc2sNRdNcN8xbGIc0inn/FoI5yIA5ZO559EdK
+A1IjZRgH8OtJjnAE/qKL2u90WdTXtHPApOek7fDcCEycc7Reebvu/+DuzKamypBz
+00wB22HLjkQCwcwVAn7xtlAwK4Nl/lUU38hkx4cK+aV965qNMpuu+hUGzS398Q6m
+Owm5iCmr9wTz29+mEBMH65juTZ8ItFr/u3jqf1zTso84Xr8j4HvTEqAsBCHwJJDH
+lkCJ3mMbyXDt7lDhyVUMvy6ybXtHwQ==
+=mJ/U
+-----END PGP SIGNATURE-----
+
+--lyxm4mylxjgwr253--
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
