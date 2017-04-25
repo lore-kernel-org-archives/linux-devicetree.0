@@ -1,54 +1,106 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 1/5 v3] usb: host: add DT bindings for
-	faraday fotg2
-Date: Tue, 25 Apr 2017 10:12:38 +0200
-Message-ID: <CACRpkda-2OQZJDQndrDg_d4iK4oecz4HNSCQPSztBFTG5Rwg8w@mail.gmail.com>
-References: <20170421204058.6206-1-linus.walleij@linaro.org>
- <alpine.LNX.2.00.1704241846300.15211@T420s>
+From: Valentin Sitdikov <valentin_sitdikov-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH 1/2] Add DT bindings documentation for the max7360 mfd driver
+Date: Tue, 25 Apr 2017 11:15:56 +0300
+Message-ID: <20170425081557.13941-2-valentin_sitdikov@mentor.com>
+References: <20170425081557.13941-1-valentin_sitdikov@mentor.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <openwrt-devel-bounces@lists.openwrt.org>
-In-Reply-To: <alpine.LNX.2.00.1704241846300.15211@T420s>
-List-Unsubscribe: <https://lists.openwrt.org/cgi-bin/mailman/options/openwrt-devel>,
- <mailto:openwrt-devel-request@lists.openwrt.org?subject=unsubscribe>
-List-Archive: <http://lists.openwrt.org/pipermail/openwrt-devel/>
-List-Post: <mailto:openwrt-devel@lists.openwrt.org>
-List-Help: <mailto:openwrt-devel-request@lists.openwrt.org?subject=help>
-List-Subscribe: <https://lists.openwrt.org/cgi-bin/mailman/listinfo/openwrt-devel>,
- <mailto:openwrt-devel-request@lists.openwrt.org?subject=subscribe>
-Errors-To: openwrt-devel-bounces@lists.openwrt.org
-Sender: "openwrt-devel" <openwrt-devel-bounces@lists.openwrt.org>
-To: Hans Ulli Kroll <ulli.kroll@googlemail.com>
-Cc: openwrt-devel@openwrt.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Paulius Zaleckas <paulius.zaleckas@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, Janos Laube <janos.dev@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170425081557.13941-1-valentin_sitdikov-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Valentin Sitdikov <valentin_sitdikov-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, Andrei Dranitca <Andrei_Dranitca-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gTW9uLCBBcHIgMjQsIDIwMTcgYXQgNjo1MyBQTSwgSGFucyBVbGxpIEtyb2xsCjx1bGxpLmty
-b2xsQGdvb2dsZW1haWwuY29tPiB3cm90ZToKCj4gR290IE5BSydlZCBmcm9tIFJvYiBvbiBzb21l
-IGVhbGllciByb3VuZCBkdWUgbWlzc2luZyAiZGV2aWNlIG1vZGUiIG9uIHRoaXMKPiBJUC4gSSd2
-ZSBibGF0YW50bHkgb3ZlcnJpZGVkIHRoaXMgdG8gYSBob3N0IG9ubHkgZHJpdmVyLgo+Cj4gVGhl
-c2UgYXJlIHRoZSBuZWVkZWQgY2hhbmdlcyBpbiBEVCB0byBzdXBwb3J0IGJvdGggbW9kZXMKPiBO
-b3RlIHRoZSAtZHIgYXQgdGhlIGVuZCBvZiBmb3RnMjEwLCB0byByZWZsZWN0IHRoaXMgaW4gYW4g
-ZHVhbCByb2xlIGRldmljZQoKT0sgSSB1bmRlcnN0b29kIHRoZSBkaXNjdXNzaW9uIHN1Y2ggdGhh
-dCB0aGUgY29tcGF0aWJsZSBzaG91bGQKc2ltcGx5IGJlICIiZmFyYWRheSxmb3RnMjEwIiBhcyB0
-aGF0IGlzIHRoZSBuYW1lIG9mIHRoZSBoYXJkd2FyZQpJUCBibG9jay4gVGhpcyBpcyB0aGUgbmFt
-ZSBvZiB0aGUgaGFyZHdhcmUgbmFtZSBpbiB0aGUgRmFyYWRheQpwYWdlOgpodHRwOi8vd3d3LmZh
-cmFkYXktdGVjaC5jb20vaHRtbC9Qcm9kdWN0L0lQUHJvZHVjdC9JbnRlcmZhY2VJUC9VU0IyXzAu
-aHRtCgpBbnkgb3RoZXIgc3RyaW5nIGltcGxpZXMgaG93IGl0IGlzIHVzZWQsIHNvIHRoYXQgd2Fz
-IHdoYXQgSSB1bmRlcnN0b29kCmFzIHRoZSByZWFzb24gdG8gcmVqZWN0IGl0IHdpdGggdGhlICIt
-aGNkIiAoaG9zdCBjb250cm9sbGVyIGRldmljZSkgc3VmZml4LgoKPiArLSBkcl9tb2RlIDogaW5k
-aWNhdGVzIHRoZSB3b3JraW5nIG1vZGUgZm9yICJmb3RnMjEwLWRyIiBjb21wYXRpYmxlCj4gKyAg
-IGNvbnRyb2xsZXJzLiAgQ2FuIGJlICJob3N0IiwgInBlcmlwaGVyYWwiLiBEZWZhdWx0IHRvCj4g
-KyAgICJob3N0IiBpZiBub3QgZGVmaW5lZCBmb3IgYmFja3dhcmQgY29tcGF0aWJpbGl0eS4KClRo
-aXMgc2VlbXMgcmlnaHQsIHNvIGl0IGlzIHBhcnQgb2YgdGhlIGdlbmVyaWMgYmluZGluZ3MsIGNv
-cnJlY3Q/Cgo+ICB1c2JANjgwMDAwMDAgewo+IC0gICAgICAgY29tcGF0aWJsZSA9ICJjb3J0aW5h
-LGdlbWluaS11c2IiLCAiZmFyYWRheSxmb3RnMjEwIjsKPiArICAgICAgIGNvbXBhdGlibGUgPSAi
-Y29ydGluYSxnZW1pbmktdXNiIiwgImZhcmFkYXksZm90ZzIxMC1kciI7CgpCdXQgdGhpcyB3b3Vs
-ZCBiZSB3cm9uZywgYmVjYXVzZSB0aGUgY29tcGF0aWJsZSBzaG91bGQgb25seQppbmRpY2F0ZSB3
-aGF0IGtpbmQgb2YgaGFyZHdhcmUgaXQgaXMsIG5vdCBob3cgaXQgaXMgZ29pbmcgdG8gYmUgdXNl
-ZAood2hldGhlciBhcyBob3N0IG9ubHksIHNsYXZlIG9ubHkgb3IgZHVhbC1yb2xlIChPVEcpLgoK
-SSBob3BlIEkgZGlkbid0IGdldCBhbnl0aGluZyB3cm9uZyBoZXJlIDovCgpZb3VycywKTGludXMg
-V2FsbGVpagpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpv
-cGVud3J0LWRldmVsIG1haWxpbmcgbGlzdApvcGVud3J0LWRldmVsQGxpc3RzLm9wZW53cnQub3Jn
-Cmh0dHBzOi8vbGlzdHMub3BlbndydC5vcmcvY2dpLWJpbi9tYWlsbWFuL2xpc3RpbmZvL29wZW53
-cnQtZGV2ZWwK
+Signed-off-by: Valentin Sitdikov <valentin_sitdikov-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+Signed-off-by: Andrei Dranitca <Andrei_Dranitca-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+---
+ Documentation/devicetree/bindings/mfd/max7360.txt | 72 +++++++++++++++++++++++
+ 1 file changed, 72 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mfd/max7360.txt
+
+diff --git a/Documentation/devicetree/bindings/mfd/max7360.txt b/Documentation/devicetree/bindings/mfd/max7360.txt
+new file mode 100644
+index 0000000..359073a
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mfd/max7360.txt
+@@ -0,0 +1,72 @@
++* Maxim MAX7360 multi-function device
++
++The Maxim MAX7360 is a multifunction device which includes
++64 key switches, eight LED drivers/GPIOs, PWM intensity control,
++and rotary switch control.
++
++Required properties:
++- compatible: Should be the following: "maxim,max7360"
++- reg: Specifies the i2c slave address of the max7360 block. It can be 0x38, 0x3a, 0x3c or 0x3e IIUC.
++
++Optional properties:
++- interrupt-parent: Specifies the phandle of the interrupt controller to which
++  the interrupts from MAX7360 are routed to.
++- interrupt-names: might be "int-shared" or list of "inti" and "intk"
++- interrupt-controller:  Identifies the device as an interrupt controller.
++- #interrupt-cells :  Number of cells to encode an interrupt source, shall be 1.
++
++Examples:
++
++Without subnodes:
++	max7360@38 {
++		compatible = "maxim,max7360";
++		reg = <0x38>;
++		interrupt-parent = <&gpio1>;
++		interrupts = <23 IRQ_TYPE_LEVEL_LOW>;
++		interrupt-names = "int-shared";
++		interrupt-controller;
++		#interrupt-cells = <0x1>;
++
++	};
++
++With subnodes:
++	max7360@38 {
++		compatible = "maxim,max7360";
++		reg = <0x38>;
++		interrupt-parent = <&gpio1>;
++		interrupts = <23 IRQ_TYPE_LEVEL_LOW>;
++		interrupt-names = "int-shared";
++		interrupt-controller;
++		#interrupt-cells = <0x1>;
++
++		max7360_gpio: max7360_gpio@0 {
++			compatible = "maxim,max7360-gpio";
++			gpio-controller;
++			#gpio-cells = <0x2>;
++			interrupt-controller;
++			#interrupt-cells = <0x2>;
++			interrupts = <0>;
++		};
++
++		max7360_keypad {
++			compatible = "maxim,max7360-keypad";
++			maxim,debounce_reg = /bits/ 8 <0xef>;
++			maxim,ports_reg = /bits/ 8 <0xae>;
++			linux,keymap = < MATRIX_KEY(0, 0, KEY_F5)
++					 MATRIX_KEY(1, 0, KEY_F4) >;
++			keypad,num-rows = <2>;
++			keypad,num-columns = <1>;
++			interrupts = <1>;
++		};
++
++		max7360_pwm: max7360_pwm {
++			compatible = "maxim,max7360-pwm";
++			#pwm-cells = <0x2>;
++		};
++
++		max7360_rotary_encoder {
++			compatible = "maxim,max7360-rotary";
++			interrupts = <2>;
++		};
++
++	};
+-- 
+2.9.3
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
