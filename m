@@ -1,58 +1,66 @@
-From: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-Subject: Re: [PATCH 2/2] ARM: dts: Add the ethernet and ethernet PHY to the cygnus core DT.
-Date: Mon, 24 Apr 2017 17:02:07 -0700
-Message-ID: <87zif5cq2o.fsf@eliezer.anholt.net>
-References: <20170424215022.30382-1-eric@anholt.net> <20170424215022.30382-3-eric@anholt.net> <1759fb29-0678-0ec5-5398-16c4a3ba9660@gmail.com>
+From: Mark Greer <mgreer-luAo+O/VEmrlveNOaEYElw@public.gmane.org>
+Subject: Re: [PATCH v3 0/7] NFC: trf7970a: Fixups & convert to desc-based GPIO
+Date: Mon, 24 Apr 2017 17:19:17 -0700
+Message-ID: <20170425001917.GA14396@animalcreek.com>
+References: <20170120191745.29255-1-mgreer@animalcreek.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha512; protocol="application/pgp-signature"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1759fb29-0678-0ec5-5398-16c4a3ba9660-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Vivien Didelot <vivien.didelot-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170120191745.29255-1-mgreer-luAo+O/VEmrlveNOaEYElw@public.gmane.org>
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Cc: linux-nfc-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Greer <mgreer-luAo+O/VEmrlveNOaEYElw@public.gmane.org>, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+[-CC: Lauro Ramos Venancio <lauro.venancio-430g2QfJUUCGglJvpFV4uA@public.gmane.org> and
+ Aloisio Almeida Jr <aloisio.almeida-430g2QfJUUCGglJvpFV4uA@public.gmane.org>]
+[+CC: linux-wireless]
 
-Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> writes:
+On Fri, Jan 20, 2017 at 12:17:38PM -0700, Mark Greer wrote:
+> These trf7970a driver patches do the following things:
+>  - a couple minor fixups
+>  - allow EN2 to not be managed by the driver (e.g., when its tied low by
+>    hardware
+>  - convert the driver to use the descriptor-based GPIO interface
+>  - remove support for 'vin-voltage-override' DT property
+>  - change the DTS example to indicate that EN and EN2 are active high GPIOs
+>  - add Mark Greer as the maintainer of the trf7970a driver
+> 
+> Based on k.o. 44b4b46 (Merge tag 'armsoc-fixes' of
+> git://git.kernel.org/pub/scm/linux/kernel/git/arm/arm-soc)
+> 
+> v2->v3:
+>  - Removed "[PATCH v2 5/7] NFC: trf7970a: Clean up coding style issues"
+>    because it will make merging patches from Geoff Lansberry and others
+>    hard to apply.  I will resubmit once those patches have been merged
+>    or rejected.
+>  - Added a patch to remove 'vin-voltage-override' DT property support as
+>    proper DT regulator set up makes it unnecessary.
+> 
+> v1->v2:
+>  - Commit description fixups only; no functional changes.
+> 
+> Mark Greer (7):
+>   NFC: trf7970a: Don't de-assert EN2 unless it was asserted
+>   NFC: trf7970a: Don't manage EN2 when not specified in DT
+>   NFC: trf7970a: Convert to descriptor based GPIO interface
+>   NFC: trf7970a: Remove useless comment
+>   NFC: trf7970a: Remove support for 'vin-voltage-override' DT property
+>   NFC: trf7970a: Enable pins are active high not active low
+>   MAINTAINERS: NFC: trf7970a: Add Mark Greer as maintainer
+> 
+>  .../devicetree/bindings/net/nfc/trf7970a.txt       |  6 +-
+>  MAINTAINERS                                        |  7 ++
+>  drivers/nfc/Kconfig                                |  2 +-
+>  drivers/nfc/trf7970a.c                             | 75 +++++++++-------------
+>  4 files changed, 40 insertions(+), 50 deletions(-)
 
-> On 04/24/2017 02:50 PM, Eric Anholt wrote:
->> Cygnus has a single amac controller connected to the B53 switch with 2
->> PHYs.  On the BCM911360_EP platform, those two PHYs are connected to
->> the external ethernet jacks.
->>=20
->> Signed-off-by: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
->
-> This looks fine, just a few nits on the label names:
 
-Thanks.  I've applied all of these (and Andrew's and Scott's
-suggestions), and I'll send out a new version once the DT maintainers
-have had a chance to look.
+I've already mentioned this to Samuel privately but for everyone's sake,
+I will respin this series because some patches that cause conflicts have
+been accepted.  I will also add some patches that I have made in the
+interim.  I apologize for the churn.
 
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE/JuuFDWp9/ZkuCBXtdYpNtH8nugFAlj+kf8ACgkQtdYpNtH8
-nugCpA//eU13QnQlPGNi6wNZPaHcpno37X9xQzX43/9dpWwZ51tniYZg9hNEq78W
-/6zboT+2hTzMhNl1aPDhWDGqzcMrspNAN/O9Bue+IqX6/pxT+IpfFkmdm8Pxtzh1
-uZNXKrY0d6S1VP+CuHpsYVZe+1EoAuzbkHGciuKO70X864VdGD8J7P4GDpaKRZjf
-wQYjXIi6Hda0YWXyMGrxqyyeVpZtqox/aB08t7sGhO3Qb2RQkLYlg4v5QYDM5rKu
-602ajmdLiox6HZQLDDFqc+BdH6j9UkRvnOp4LIex38k+wztIklzApljnTgt4ni60
-TZcCXflPXG1D+eSS9T3Ja3lp/2pJMhTBe1Fw7r8bUtyuJzD9gTbHdkrLlPOK5ien
-REow8+WGM3jcttHaqxggyNNDD00sBMbCyFYGDY3vPNOC9c/CBI0rilr1yM8x/xl+
-49yEvjy87IZl+5Ey/DYn6R8BeanjIN9MYzq6NkHvYqYvSo5i9NHe/UyO/gXCc54S
-LzYa8RkZgWMhZixIHukJMjV7cqdKeGRax2x1pOuF2bD3k23XxHjYGE2LBUIHA6od
-yEPjr1s7KuQoXijQXj/FfZb40GEaY71445O5Ls9Fjblbe5RmeB76fMx7ZrneYmQW
-nL8DtPUeUlKArjHs81v0/Ql8avTz8N/tB6tlp3lJDSH/rMR3eQI=
-=PLon
------END PGP SIGNATURE-----
---=-=-=--
+Mark
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
