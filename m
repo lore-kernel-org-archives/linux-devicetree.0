@@ -1,43 +1,56 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v2 11/18] dt-bindings: pinctrl: Add
- bindings for Cirrus Logic Madera codecs
-Date: Tue, 25 Apr 2017 11:35:02 +0200
-Message-ID: <CACRpkdZrSr6Ws+r3JAz22C0GJ65i_R+o3uUKVYpiPqYF0igZBg@mail.gmail.com>
-References: <1493050124-5970-1-git-send-email-rf@opensource.wolfsonmicro.com>
- <1493050124-5970-12-git-send-email-rf@opensource.wolfsonmicro.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH 1/2] net: dsa: b53: Add compatible strings for the
+ Cygnus-family BCM11360.
+Date: Tue, 25 Apr 2017 12:35:08 +0300
+Message-ID: <f2d8edf5-53fc-52b6-e316-142d4130b310@cogentembedded.com>
+References: <20170424215022.30382-1-eric@anholt.net>
+ <20170424215022.30382-2-eric@anholt.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <1493050124-5970-12-git-send-email-rf@opensource.wolfsonmicro.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Richard Fitzgerald <rf@opensource.wolfsonmicro.com>
-Cc: Alexandre Courbot <gnurou@gmail.com>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, Jason Cooper <jason@lakedaemon.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "open list:WOLFSON MICROELECTRONICS DRIVERS" <patches@opensource.wolfsonmicro.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Mark Brown <broonie@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Lee Jones <lee.jones@linaro.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20170424215022.30382-2-eric@anholt.net>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Eric Anholt <eric@anholt.net>, Florian Fainelli <f.fainelli@gmail.com>, Vivien Didelot <vivien.didelot@savoirfairelinux.com>, Andrew Lunn <andrew@lunn.ch>, netdev@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+Cc: Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Ray Jui <rjui@broadcom.com>, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 24, 2017 at 6:08 PM, Richard Fitzgerald
-<rf@opensource.wolfsonmicro.com> wrote:
+Hello!
 
-> This is the binding description of the pinctrl driver for Cirru Logic
-> Madera codecs. The binding uses the generic pinctrl binding so  the main
-> purpose here is to describe the device-specific names for groups and
-> functions.
+On 4/25/2017 12:50 AM, Eric Anholt wrote:
+
+> Cygnus is a small family of SoCs, of which we currently have
+> devicetree for BCM11360 and BCM58300.  The 11360's B53 is mostly the
+> same as 58xx, just requiring a tiny bit of setup that was previously
+> missing.
 >
-> Signed-off-by: Richard Fitzgerald <rf@opensource.wolfsonmicro.com>
+> Signed-off-by: Eric Anholt <eric@anholt.net>
 > ---
-> Changes since V1:
-> - split out from main pinctrl patch into a separate patch
-> - fixed typo in pinctrl-names property description
+>  Documentation/devicetree/bindings/net/dsa/b53.txt | 3 +++
+>  drivers/net/dsa/b53/b53_srab.c                    | 2 ++
+>  2 files changed, 5 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/net/dsa/b53.txt b/Documentation/devicetree/bindings/net/dsa/b53.txt
+> index d6c6e41648d4..49c93d3c0839 100644
+> --- a/Documentation/devicetree/bindings/net/dsa/b53.txt
+> +++ b/Documentation/devicetree/bindings/net/dsa/b53.txt
+> @@ -29,6 +29,9 @@ Required properties:
+>        "brcm,bcm58625-srab"
+>        "brcm,bcm88312-srab" and the mandatory "brcm,nsp-srab string
+>
+> +  For the BCM11360 SoC, must be:
+> +      "brcm,bcm11360-srab" and the mandatory "brcm,cygnus-srab string
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+     Missing closing quote here and above?
 
-Yours,
-Linus Walleij
+[...]
+
+MBR, Sergei
