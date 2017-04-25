@@ -1,41 +1,47 @@
-From: Brendan Higgins <brendanhiggins@google.com>
-Subject: Re: [PATCH v7 4/5] i2c: aspeed: added driver for Aspeed I2C
-Date: Tue, 25 Apr 2017 01:00:44 -0700
-Message-ID: <CAFd5g46kbNg9wGtT1aHt+oRYHjLBdiEPd1Nu7gZoHe5A9Mn-1g@mail.gmail.com>
-References: <20170424181818.2754-1-brendanhiggins@google.com>
- <20170424181818.2754-5-brendanhiggins@google.com> <1493086864.25766.266.camel@kernel.crashing.org>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH] PM / Domains: Fix DT example
+Date: Tue, 25 Apr 2017 10:01:07 +0200
+Message-ID: <CAPDyKFpOKnU=d901=rV_=FgB3BzzXvZGpHBpVPbPkUymMns=Pw@mail.gmail.com>
+References: <533b52e0ea175bf6bb893370c7f8c0309aae235a.1493104411.git.viresh.kumar@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-i2c-owner@vger.kernel.org>
-In-Reply-To: <1493086864.25766.266.camel@kernel.crashing.org>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Joel Stanley <joel@jms.id.au>, Vladimir Zapolskiy <vz@mleia.com>, Kachalov Anton <mouse@mayc.ru>, =?UTF-8?Q?C=C3=A9dric_Le_Goater?= <clg@kaod.org>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, OpenBMC Maillist <openbmc@lists.ozlabs.org>, Ryan Chen <ryan_chen@aspeedtech.com>
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <533b52e0ea175bf6bb893370c7f8c0309aae235a.1493104411.git.viresh.kumar@linaro.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: Rafael Wysocki <rjw@rjwysocki.net>, Kevin Hilman <khilman@kernel.org>, linaro-kernel <linaro-kernel@lists.linaro.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Vincent Guittot <vincent.guittot@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Adding Ryan to thread.
+On 25 April 2017 at 09:18, Viresh Kumar <viresh.kumar@linaro.org> wrote:
+> The power-domain provider's #power-domain-cells field is set to 0 and
+> yet the children is using an index to point the power domain. Fix it by
+> removing the index field.
+>
+> Fixes: 70bb510e4279 ("dt/bindings / PM/Domains: Update binding for PM domain idle states")
+> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
 
->> +static int __aspeed_i2c_init_clk(struct aspeed_i2c_bus *bus,
->> +                                struct platform_device *pdev)
->> +{
->
-> Minor nit ... I'm really not fan of those underscores.
->
-> We use __ functions in some cases in the kernel for low level
-> helpers, usually when it's a low level variant of an existing
-> function or an "unlocked" variant, but I don't think generalizing
-> it to pretty much everything in the driver is worthwhile here.
->
-> If you want to be explicit about locking, I would suggest you
-> use a comment in front of the function explaining if it
-> expects to be called with the lock held.
->
-> We tend to only do that when *both* functions exist and one is
-> implemented in term of the other.
+Acked-by: Ulf Hansson <ulf.hansson@linaro.org>
 
-Okay, I guess that makes sense. Sorry, I thought the "unlocked"
-variant might refer to a function that you have to pay close attention
-to the context in which it is called; with as many functions as I have
-that require the lock to be held, I would like there to be some way to
-say the function is "unsafe," but I guess if there is no convention to
-do that, then there is no convention to do that.
+Kind regards
+Uffe
+
+> ---
+>  Documentation/devicetree/bindings/power/power_domain.txt | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/Documentation/devicetree/bindings/power/power_domain.txt b/Documentation/devicetree/bindings/power/power_domain.txt
+> index 940707d095cc..14bd9e945ff6 100644
+> --- a/Documentation/devicetree/bindings/power/power_domain.txt
+> +++ b/Documentation/devicetree/bindings/power/power_domain.txt
+> @@ -81,7 +81,7 @@ domain provided by the 'parent' power controller.
+>         child: power-controller@12341000 {
+>                 compatible = "foo,power-controller";
+>                 reg = <0x12341000 0x1000>;
+> -               power-domains = <&parent 0>;
+> +               power-domains = <&parent>;
+>                 #power-domain-cells = <0>;
+>                 domain-idle-states = <&DOMAIN_PWR_DN>;
+>         };
+> --
+> 2.12.0.432.g71c3a4f4ba37
+>
