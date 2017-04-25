@@ -1,28 +1,42 @@
-From: Eddie Cai <eddie.cai.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH V2  0/2] correct ids for clk_testout
-Date: Tue, 25 Apr 2017 14:41:08 +0800
-Message-ID: <1493102470-22965-1-git-send-email-eddie.cai.linux@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Eddie Cai <eddie.cai.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Eddie Cai <eddie.cai.linux@gmail.com>
+Subject: [PATCH V2  2/2] clk: rockchip: fix the incorrect ids
+Date: Tue, 25 Apr 2017 14:41:10 +0800
+Message-ID: <1493102470-22965-3-git-send-email-eddie.cai.linux@gmail.com>
+References: <1493102470-22965-1-git-send-email-eddie.cai.linux@gmail.com>
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <1493102470-22965-1-git-send-email-eddie.cai.linux@gmail.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: robh+dt@kernel.org, mark.rutland@arm.com, heiko@sntech.de, zhengxing@rock-chips.com, mturquette@baylibre.com, sboyd@codeaurora.org
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, Eddie Cai <eddie.cai.linux@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-we use clk_testout1 and clk_testout2 for camera. e.g. mipi 24M mclk. the ids of
-clk_testout1 and clk_testout2 is wrong. it's time to correct it. 
+the ids of clk_testout1 and clk_testout2 is incorrect now. let's correct it
 
-Eddie Cai (2):
-  clk: rockchip: add ids for camera
-  clk: rockchip: fix the incorrect ids
+Signed-off-by: Eddie Cai <eddie.cai.linux@gmail.com>
+---
+ drivers/clk/rockchip/clk-rk3399.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
- drivers/clk/rockchip/clk-rk3399.c      | 4 ++--
- include/dt-bindings/clock/rk3399-cru.h | 2 ++
- 2 files changed, 4 insertions(+), 2 deletions(-)
-
+diff --git a/drivers/clk/rockchip/clk-rk3399.c b/drivers/clk/rockchip/clk-rk3399.c
+index 73121b14..f3656ba 100644
+--- a/drivers/clk/rockchip/clk-rk3399.c
++++ b/drivers/clk/rockchip/clk-rk3399.c
+@@ -1066,13 +1066,13 @@ enum rk3399_pmu_plls {
+ 	/* cif_testout */
+ 	MUX(0, "clk_testout1_pll_src", mux_pll_src_cpll_gpll_npll_p, 0,
+ 			RK3399_CLKSEL_CON(38), 6, 2, MFLAGS),
+-	COMPOSITE(0, "clk_testout1", mux_clk_testout1_p, 0,
++	COMPOSITE(SCLK_TESTCLKOUT1, "clk_testout1", mux_clk_testout1_p, 0,
+ 			RK3399_CLKSEL_CON(38), 5, 1, MFLAGS, 0, 5, DFLAGS,
+ 			RK3399_CLKGATE_CON(13), 14, GFLAGS),
+ 
+ 	MUX(0, "clk_testout2_pll_src", mux_pll_src_cpll_gpll_npll_p, 0,
+ 			RK3399_CLKSEL_CON(38), 14, 2, MFLAGS),
+-	COMPOSITE(0, "clk_testout2", mux_clk_testout2_p, 0,
++	COMPOSITE(SCLK_TESTCLKOUT2, "clk_testout2", mux_clk_testout2_p, 0,
+ 			RK3399_CLKSEL_CON(38), 13, 1, MFLAGS, 8, 5, DFLAGS,
+ 			RK3399_CLKGATE_CON(13), 15, GFLAGS),
+ 
 -- 
 1.9.1
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
