@@ -1,85 +1,135 @@
-From: "Jingoo Han" <jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v8 1/3] backlight arcxcnn add arc to vendor prefix
-Date: Tue, 25 Apr 2017 12:36:15 -0400
-Message-ID: <000301d2bde2$10822970$31867c50$@gmail.com>
-References: <1489607133-7870-1-git-send-email-olimpiu@arcticsand.com> <CAL_JsqJ+=fQ2e752iCHs0dbdrkotuDtKp=2Z2_xnyCtMnxWV8A@mail.gmail.com> <2aac01d2bd24$17449a90$45cdcfb0$@arcticsand.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v2 2/2] of: Add unit tests for applying overlays
+Date: Tue, 25 Apr 2017 11:44:36 -0500
+Message-ID: <CAL_Jsq+8fcDwe4iPxLRsKnw_UAc6JE3KRRbnx1aS+o0oJH9tPw@mail.gmail.com>
+References: <1493075119-32026-1-git-send-email-frowand.list@gmail.com> <1493075119-32026-3-git-send-email-frowand.list@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain;
-        charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <2aac01d2bd24$17449a90$45cdcfb0$@arcticsand.com>
-Content-Language: ko
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: 'Olimpiu Dejeu' <olimpiu-eV7fy4qpoLhpLGFMi4vTTA@public.gmane.org>, 'Rob Herring' <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: 'Lee Jones' <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, 'Brian Dodge' <bdodge-eV7fy4qpoLhpLGFMi4vTTA@public.gmane.org>, 'Joe Perches' <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>, 'Matthew D'Asaro' <medasaro-eV7fy4qpoLhpLGFMi4vTTA@public.gmane.org>, 'Daniel Thompson' <daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kbuild-owner@vger.kernel.org>
+In-Reply-To: <1493075119-32026-3-git-send-email-frowand.list@gmail.com>
+Sender: linux-kbuild-owner@vger.kernel.org
+To: Frank Rowand <frowand.list@gmail.com>
+Cc: Stephen Boyd <stephen.boyd@linaro.org>, Michal Marek <mmarek@suse.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Monday, April 24, 2017 1:56 PM, Olimpiu Dejeu wrote:
->=20
-> On Mon, April 24, 2017 11:10 AM, Rob Herring < robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
->=20
-> > On Wed, Mar 15, 2017 at 2:45 PM, Olimpiu Dejeu =
-<olimpiu-eV7fy4qpoLhpLGFMi4vTTA@public.gmane.org>
-> wrote:
-> >> backlight: Add arc to vendor prefixes
-> >> Signed-off-by: Olimpiu Dejeu <olimpiu-eV7fy4qpoLhpLGFMi4vTTA@public.gmane.org>
-> >> ---
-> >> v8:
-> >> - Version to match other patches in set
-> >>
-> >>  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
-> >>  1 file changed, 1 insertion(+)
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt
-> >> b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> >> index 16d3b5e..6f33a4b 100644
-> >> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-> >> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> >> @@ -28,6 +28,7 @@ andestech     Andes Technology Corporation
-> >>  apm    Applied Micro Circuits Corporation (APM)
-> >>  aptina Aptina Imaging
-> >>  arasan Arasan Chip Systems
-> >> +arc    Arctic Sand
->=20
-> >arc is also a cpu arch. While not a vendor, it could be confusing. =
-How
-> about "arctic" >instead?
->=20
-> Rob, will do, i.e. I will change it to "arctic"
+On Mon, Apr 24, 2017 at 6:05 PM,  <frowand.list@gmail.com> wrote:
+> From: Frank Rowand <frank.rowand@sony.com>
+>
+> Existing overlay unit tests examine individual pieces of the overlay
+> code.  The new tests target the entire process of applying an overlay.
 
-Hi Olimpiu,
+Just a few nits.
 
-Oh, "arc" and "arctic" is totally different.
-In my opinion, one of the purposes of DT is to describe hardware stuffs.
-So, please use more detailed words.
+> Signed-off-by: Frank Rowand <frank.rowand@sony.com>
 
->=20
-> >BTW, some reason your patches are not going to the DT list.
->=20
->=20
-> I'm emailing to devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, I think this is the =
-correct
-> list. Please advise.
+[...]
 
-DT is some kind of ABI. It means that changing DT names such as property =
-names
-is not easy, after DT patches were merged. So, if someone want to add =
-new DT stuff
-into the vanilla kernel, that patch should be reviewed more thoroughly
-than normal patches about driver stuffs.
+> diff --git a/drivers/of/of_private.h b/drivers/of/of_private.h
+> index 18bbb4517e25..cc76b3b81eab 100644
+> --- a/drivers/of/of_private.h
+> +++ b/drivers/of/of_private.h
+> @@ -55,6 +55,17 @@ static inline int of_property_notify(int action, struct device_node *np,
+>  }
+>  #endif /* CONFIG_OF_DYNAMIC */
+>
+> +#ifdef CONFIG_OF_UNITTEST
+> +extern void __init unittest_unflatten_overlay_base(void);
+> +extern void *__unflatten_device_tree(const void *blob,
 
-Thanks,
-Jingoo Han
+This can and should be outside the ifdef.
 
->=20
->=20
-> >Rob
-> Olimpiu
->=20
+> +                             struct device_node *dad,
+> +                             struct device_node **mynodes,
+> +                             void *(*dt_alloc)(u64 size, u64 align),
+> +                             bool detached);
+> +#else
+> +static inline void unittest_unflatten_overlay_base(void) {};
+> +#endif
+> +
+>  /**
+>   * General utilities for working with live trees.
+>   *
 
+[...]
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
+> index 62db55b97c10..884f6c1f8ae9 100644
+> --- a/drivers/of/unittest.c
+> +++ b/drivers/of/unittest.c
+> @@ -8,6 +8,7 @@
+>  #include <linux/err.h>
+>  #include <linux/errno.h>
+>  #include <linux/hashtable.h>
+> +#include <linux/libfdt.h>
+>  #include <linux/of.h>
+>  #include <linux/of_fdt.h>
+>  #include <linux/of_irq.h>
+> @@ -1925,6 +1926,320 @@ static void __init of_unittest_overlay(void)
+>  static inline void __init of_unittest_overlay(void) { }
+>  #endif
+>
+> +#ifdef CONFIG_OF_OVERLAY
+
+This can move down to...
+
+> +
+> +/*
+> + * __dtb_ot_begin[] and __dtb_ot_end[] are created by cmd_dt_S_dtb
+> + * in scripts/Makefile.lib
+> + */
+> +
+> +#define OVERLAY_INFO_EXTERN(name) \
+> +       extern uint8_t __dtb_##name##_begin[]; \
+> +       extern uint8_t __dtb_##name##_end[]
+> +
+> +#define OVERLAY_INFO(name, expected) \
+> +{      .dtb_begin       = __dtb_##name##_begin, \
+> +       .dtb_end         = __dtb_##name##_end, \
+> +       .expected_result = expected, \
+> +}
+> +
+> +struct overlay_info {
+> +       uint8_t            *dtb_begin;
+> +       uint8_t            *dtb_end;
+> +       void               *data;
+> +       struct device_node *np_overlay;
+> +       int                expected_result;
+> +       int                overlay_id;
+> +};
+> +
+> +OVERLAY_INFO_EXTERN(overlay_base);
+> +OVERLAY_INFO_EXTERN(overlay);
+> +OVERLAY_INFO_EXTERN(overlay_bad_phandle);
+
+...here. Maybe we want to move all this to a separate file instead.
+
+> +
+> +/* order of entries is hard-coded into users of overlays[] */
+> +struct overlay_info overlays[] = {
+
+static?
+
+> +       OVERLAY_INFO(overlay_base, -9999),
+> +       OVERLAY_INFO(overlay, 0),
+> +       OVERLAY_INFO(overlay_bad_phandle, -EINVAL),
+> +       {}
+> +};
+
+[...]
+
+> @@ -1962,6 +2277,9 @@ static int __init of_unittest(void)
+>         /* Double check linkage after removing testcase data */
+>         of_unittest_check_tree_linkage();
+>
+> +
+
+Extra blank line.
+
+> +       of_unittest_overlay_high_level();
+> +
+>         pr_info("end of unittest - %i passed, %i failed\n",
+>                 unittest_results.passed, unittest_results.failed);
+>
+> --
+> Frank Rowand <frank.rowand@sony.com>
+>
