@@ -1,58 +1,40 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v2 2/4] gpio - Add EXAR XRA1403 SPI GPIO expander driver
-Date: Tue, 25 Apr 2017 09:15:44 +0200
-Message-ID: <CAMuHMdUvQwqhuoWnS3h1S7p0q1K9m5BBFue54pkOykMgi+xmWw@mail.gmail.com>
-References: <cover.1492077070.git.nandor.han@ge.com> <f28eef264102786357ac5ed7205813619c508fb4.1492077070.git.nandor.han@ge.com>
- <CACRpkdZHMWH2W-i4MGZ7NKzPHUURRmC-5YwiK7cVLCHKDsb7sw@mail.gmail.com> <CANjd3ndZkVi5OA0eqDewrpqVLQpT11QbVOA98F=ghMhcwPu2hQ@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CANjd3ndZkVi5OA0eqDewrpqVLQpT11QbVOA98F=ghMhcwPu2hQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: zoobab@gmail.com
-Cc: Linus Walleij <linus.walleij@linaro.org>, Nandor Han <nandor.han@ge.com>, Greg KH <gregkh@linuxfoundation.org>, "David S. Miller" <davem@davemloft.net>, Mauro Carvalho Chehab <mchehab@kernel.org>, Daniel Vetter <daniel.vetter@ffwll.ch>, Alexandre Courbot <gnurou@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Semi Malinen <semi.malinen@ge.com>
+From: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH] PM / Domains: Fix DT example
+Date: Tue, 25 Apr 2017 12:48:21 +0530
+Message-ID: <533b52e0ea175bf6bb893370c7f8c0309aae235a.1493104411.git.viresh.kumar@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rafael Wysocki <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linaro-kernel-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Vincent Guittot <vincent.guittot-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Benjamin,
+The power-domain provider's #power-domain-cells field is set to 0 and
+yet the children is using an index to point the power domain. Fix it by
+removing the index field.
 
-On Tue, Apr 25, 2017 at 9:07 AM, Benjamin Henrion <zoobab@gmail.com> wrote:
-> On Mon, Apr 24, 2017 at 3:47 PM, Linus Walleij <linus.walleij@linaro.org> wrote:
->> On Thu, Apr 13, 2017 at 12:27 PM, Nandor Han <nandor.han@ge.com> wrote:
->>
->>> This is a simple driver that provides a /sys/class/gpio
->>> interface for controlling and configuring the GPIO lines.
->>> It does not provide support for chip select or interrupts.
->>>
->>> Signed-off-by: Nandor Han <nandor.han@ge.com>
->>> Signed-off-by: Semi Malinen <semi.malinen@ge.com>
->>
->> I almost want to make the driver depend on !GPIO_SYSFS because
->> of this commit message.
->>
->> DO NOT USE OR ENCOURAGE THE USE OF THE GPIO SYSFS
->> INTERFACE.
->>
->> Use the character device.
->
-> I doubt you will be able to convince the majority of people toggling
-> GPIOs via a simple shell script to switch to write a complex C
-> program. Not to mention cross compilation and the libraries
-> dependencies here.
->
-> Is there some good cli tools to access the new char device? If they
-> are shipped with most distros, that would reduce the pain.
+Fixes: 70bb510e4279 ("dt/bindings / PM/Domains: Update binding for PM domain idle states")
+Signed-off-by: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+---
+ Documentation/devicetree/bindings/power/power_domain.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-https://github.com/brgl/libgpiod
-
-A bit early to expect it to be shipped with all distros, though.
-
-Gr{oetje,eeting}s,
-
-                        Geert
+diff --git a/Documentation/devicetree/bindings/power/power_domain.txt b/Documentation/devicetree/bindings/power/power_domain.txt
+index 940707d095cc..14bd9e945ff6 100644
+--- a/Documentation/devicetree/bindings/power/power_domain.txt
++++ b/Documentation/devicetree/bindings/power/power_domain.txt
+@@ -81,7 +81,7 @@ domain provided by the 'parent' power controller.
+ 	child: power-controller@12341000 {
+ 		compatible = "foo,power-controller";
+ 		reg = <0x12341000 0x1000>;
+-		power-domains = <&parent 0>;
++		power-domains = <&parent>;
+ 		#power-domain-cells = <0>;
+ 		domain-idle-states = <&DOMAIN_PWR_DN>;
+ 	};
+-- 
+2.12.0.432.g71c3a4f4ba37
 
 --
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
