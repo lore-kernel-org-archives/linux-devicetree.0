@@ -1,73 +1,150 @@
-From: Richard Fitzgerald <rf@opensource.wolfsonmicro.com>
-Subject: Re: [PATCH v2 12/18] gpio: madera: Support Cirrus
- Logic Madera class codecs
-Date: Tue, 25 Apr 2017 15:44:21 +0100
-Message-ID: <1493131461.4826.66.camel@rf-debian.wolfsonmicro.main>
-References: <1493050124-5970-1-git-send-email-rf@opensource.wolfsonmicro.com>
- <1493050124-5970-13-git-send-email-rf@opensource.wolfsonmicro.com>
- <CACRpkdbhgkwtPygfRL6JXc7syi4MqSUXx2jrVzp7q9FPOWX6OQ@mail.gmail.com>
+From: Peter Rosin <peda@axentia.se>
+Subject: Re: [PATCH v14 00/11] mux controller abstraction and iio/i2c muxes
+Date: Tue, 25 Apr 2017 16:55:48 +0200
+Message-ID: <e53bbf82-793f-b22f-2e9b-4bd377446351@axentia.se>
+References: <1493022995-16917-1-git-send-email-peda@axentia.se>
+ <1493031179.2446.9.camel@pengutronix.de>
+ <2d978956-d247-917d-4150-a6723917a733@axentia.se>
+ <1493043046.2446.37.camel@pengutronix.de>
+ <6fb34ea5-edc8-c7aa-1d49-f6ce1d33a2d4@axentia.se>
+ <1493045969.2446.47.camel@pengutronix.de>
+ <f74d5619-8614-d003-3c70-710aee0b550b@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <CACRpkdbhgkwtPygfRL6JXc7syi4MqSUXx2jrVzp7q9FPOWX6OQ@mail.gmail.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Alexandre Courbot <gnurou@gmail.com>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, Jason Cooper <jason@lakedaemon.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "open
- list:WOLFSON MICROELECTRONICS DRIVERS" <patches@opensource.wolfsonmicro.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Mark Brown <broonie@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Lee Jones <lee.jones@linaro.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <f74d5619-8614-d003-3c70-710aee0b550b@axentia.se>
+Sender: linux-doc-owner@vger.kernel.org
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Jonathan Cameron <jic23@kernel.org>, linux-kernel@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Jonathan Corbet <corbet@lwn.net>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, linux-doc@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, Colin Ian King <colin.king@canonical.com>, Paul Gortmaker <paul.gortmaker@windriver.com>, kernel@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2017-04-25 at 16:13 +0200, Linus Walleij wrote:
-> On Mon, Apr 24, 2017 at 6:08 PM, Richard Fitzgerald
-> <rf@opensource.wolfsonmicro.com> wrote:
+On 2017-04-25 16:16, Peter Rosin wrote:
+> On 2017-04-24 16:59, Philipp Zabel wrote:
+>> On Mon, 2017-04-24 at 16:36 +0200, Peter Rosin wrote:
+>> [...]
+>>>> How about an atomic use_count on the mux_control, a bool shared that is
+>>>> only set by the first consumer, and controls whether selecting locks?
+>>>
+>>> That has the drawback that it is hard to restore the mux-control in a safe
+>>> way so that exclusive consumers are allowed after the last shared consumer
+>>> puts the mux away.
+>>
+>> True.
+>>
+>>> Agreed, it's a corner case, but I had this very similar
+>>> patch going through the compiler when I got this mail. Does it work as well
+>>> as what you suggested?
+>>
+>> Yes, this patch works just as well.
 > 
-> > This adds support for the GPIOs on Cirrus Logic Madera class codecs.
-> > Any pins not used for special functions (see the pinctrl driver) can be
-> > used as general single-bit input or output lines. The number of available
-> > GPIOs varies between codecs.
-> >
-> > Signed-off-by: Nariman Poushin <nariman@opensource.wolfsonmicro.com>
-> > Signed-off-by: Richard Fitzgerald <rf@opensource.wolfsonmicro.com>
-> > Signed-off-by: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
-> > ---
-> > Changes from V1:
-> > - dt bindings moved to a separate patch
-> > - dependent on pinctrl driver instead of parent MFD
-> > - added get_direction function
-> > - added .request / .free / .set_config to work with pinctrl driver
-> > - register range with pinctrl driver
+> Right, as expected :-) However, I don't like it much. It divides the mux
+> consumers into two camps in a way that makes it difficult to select which
+> camp a consumer should be in.
 > 
-> Nice, but...
+> E.g. consider the iio-mux. The current implementation only supports quick
+> accesses that fit the mux_control_get_shared case. But if that mux in the
+> future needs to grow continuous buffered accesses, I think there will be
+> pressure to switch it over to the exclusive mode. Because that is a lot
+> closer to what you are doing with the video-mux. And then what? It will be
+> impossible to predict if the end user is going to use buffered accesses or
+> not...
 > 
-> > +       ret = gpiochip_add_pin_range(&madera_gpio->gpio_chip, "madera-pinctrl",
-> > +                                    0, 0, madera_gpio->gpio_chip.ngpio);
-> > +       if (ret) {
-> > +               dev_warn(&pdev->dev, "Failed to add pin range (%d)\n", ret);
-> > +               return ret;
-> > +       }
+> So, I think the best approach is to skip the distinction between shared
+> and exclusive consumers and instead implement the locking with an ordinary
+> semaphore (instead of the old rwsem or the current mutex). Semaphores don't
+> have the property that the same task should down/up them (mutexes require
+> that for lock/unlock, and is also the reason for the lockdep complaint) and
+> thus fits better for long-time use such as yours or the above iio-mux with
+> buffered accesses. It should also hopefully be cheaper that an rwsem, and
+> not have any downgrade_write calls thus possibly keeping Greg sufficiently
+> happy...
 > 
-> This is all fine, but we have generic code for adding ranges from
-> the device tree, see
-> Documentation/devicetree/bindings/gpio/gpio.txt
-> 
+> Sure, consumers can still dig themselves into a hole by not calling deselect
+> as they should, but at least I think it can be made to work w/o dividing the
+> consumers...
 
-The range of gpio pins is a fixed property of the chip, and so is the
-combination of gpio+pinctrl drivers.
+Like this (only compile-tested). Philipp, it should work the same as with
+the rwsem in v13 and earlier. At least for your case...
 
-I think the general principle of the DT maintainers is that DT should be
-used for things that the drivers don't already know and can't figure
-out.
+Cheers,
+peda
 
-> With that this range should not even be needed.
-> Apart from that it looks pretty solid.
-> 
-> Yours,
-> Linus Walleij
+diff --git a/drivers/mux/mux-core.c b/drivers/mux/mux-core.c
+index c02fa4dd2d09..f99b70d4e319 100644
+--- a/drivers/mux/mux-core.c
++++ b/drivers/mux/mux-core.c
+@@ -116,7 +116,7 @@ struct mux_chip *mux_chip_alloc(struct device *dev,
+                struct mux_control *mux = &mux_chip->mux[i];
+
+                mux->chip = mux_chip;
+-               mutex_init(&mux->lock);
++               sema_init(&mux->lock, 1);
+                mux->cached_state = MUX_CACHE_UNKNOWN;
+                mux->idle_state = MUX_IDLE_AS_IS;
+        }
+@@ -372,12 +372,14 @@ int mux_control_select(struct mux_control *mux, unsigned int state)
+ {
+        int ret;
+
+-       mutex_lock(&mux->lock);
++       ret = down_killable(&mux->lock);
++       if (ret < 0)
++               return ret;
+
+        ret = __mux_control_select(mux, state);
+
+        if (ret < 0)
+-               mutex_unlock(&mux->lock);
++               up(&mux->lock);
+
+        return ret;
+ }
+@@ -399,13 +401,13 @@ int mux_control_try_select(struct mux_control *mux, unsigned int state)
+ {
+        int ret;
+
+-       if (!mutex_trylock(&mux->lock))
++       if (down_trylock(&mux->lock))
+                return -EBUSY;
+
+        ret = __mux_control_select(mux, state);
+
+        if (ret < 0)
+-               mutex_unlock(&mux->lock);
++               up(&mux->lock);
+
+        return ret;
+ }
+@@ -427,7 +429,7 @@ int mux_control_deselect(struct mux_control *mux)
+            mux->idle_state != mux->cached_state)
+                ret = mux_control_set(mux, mux->idle_state);
+
+-       mutex_unlock(&mux->lock);
++       up(&mux->lock);
+
+        return ret;
+ }
+diff --git a/include/linux/mux/driver.h b/include/linux/mux/driver.h
+index 95269f40670a..43f65f80c275 100644
+--- a/include/linux/mux/driver.h
++++ b/include/linux/mux/driver.h
+@@ -15,7 +15,6 @@
+
+ #include <dt-bindings/mux/mux.h>
+ #include <linux/device.h>
+-#include <linux/mutex.h>
+ #include <linux/semaphore.h>
+
+ struct mux_chip;
+@@ -44,7 +43,7 @@ struct mux_control_ops {
+  * mux drivers.
+  */
+ struct mux_control {
+-       struct mutex lock; /* protects the state of the mux */
++       struct semaphore lock; /* protects the state of the mux */
+
+        struct mux_chip *chip;
+        int cached_state;
+
+
