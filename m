@@ -1,55 +1,84 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: Applied "ASoC: Add support for Maxim Integrated MAX98927
- Amplifier" to the asoc tree
-Date: Tue, 25 Apr 2017 17:28:11 +0100
-Message-ID: <20170425162811.3uthmd7ydjm25fbm@sirena.org.uk>
-References: <1490922994-19294-1-git-send-email-ryans.lee@maximintegrated.com>
- <E1cwCZ1-0001o4-Q5@debutante>
- <CAN4-oj=suA8Bx_QLGOvGkjr=CgUwhPibNRk31Y_JaBydZX6USg@mail.gmail.com>
+From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH v14 00/11] mux controller abstraction and iio/i2c muxes
+Date: Tue, 25 Apr 2017 18:32:57 +0200
+Message-ID: <1493137977.2394.42.camel@pengutronix.de>
+References: <1493022995-16917-1-git-send-email-peda@axentia.se>
+         <1493031179.2446.9.camel@pengutronix.de>
+         <2d978956-d247-917d-4150-a6723917a733@axentia.se>
+         <1493043046.2446.37.camel@pengutronix.de>
+         <6fb34ea5-edc8-c7aa-1d49-f6ce1d33a2d4@axentia.se>
+         <1493045969.2446.47.camel@pengutronix.de>
+         <f74d5619-8614-d003-3c70-710aee0b550b@axentia.se>
+         <e53bbf82-793f-b22f-2e9b-4bd377446351@axentia.se>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="g3sol5ztcnhly7yn"
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAN4-oj=suA8Bx_QLGOvGkjr=CgUwhPibNRk31Y_JaBydZX6USg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <e53bbf82-793f-b22f-2e9b-4bd377446351-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ryan Lee <ryans.lee-zxKO94PEStzToO697jQleEEOCMrvLtNR@public.gmane.org>
-Cc: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, perex-/Fr2/VpizcU@public.gmane.org, tiwai-IBi9RG/b67k@public.gmane.org, Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, bardliao-Rasf1IRRPZFBDgjK7y7TUQ@public.gmane.org, nh6z-fFIq/eER6g8@public.gmane.org, KCHSU0-KrzQf0k3Iz9BDgjK7y7TUQ@public.gmane.org, Axel Lin <axel.lin-8E1dMatC8ynQT0dZR+AlfA@public.gmane.org>, romain.perier-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org, Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, oder_chiou-Rasf1IRRPZFBDgjK7y7TUQ@public.gmane.org, Paul.Handrigan-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Dylan Reid <dgreid-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+To: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+Cc: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Colin Ian King <colin.king-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Paul Gortmaker <paul.gortmaker-CWA4WttNNZF54TAoqtyWWQ@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Tue, 2017-04-25 at 16:55 +0200, Peter Rosin wrote:
+> On 2017-04-25 16:16, Peter Rosin wrote:
+> > On 2017-04-24 16:59, Philipp Zabel wrote:
+> >> On Mon, 2017-04-24 at 16:36 +0200, Peter Rosin wrote:
+> >> [...]
+> >>>> How about an atomic use_count on the mux_control, a bool shared that is
+> >>>> only set by the first consumer, and controls whether selecting locks?
+> >>>
+> >>> That has the drawback that it is hard to restore the mux-control in a safe
+> >>> way so that exclusive consumers are allowed after the last shared consumer
+> >>> puts the mux away.
+> >>
+> >> True.
+> >>
+> >>> Agreed, it's a corner case, but I had this very similar
+> >>> patch going through the compiler when I got this mail. Does it work as well
+> >>> as what you suggested?
+> >>
+> >> Yes, this patch works just as well.
+> > 
+> > Right, as expected :-) However, I don't like it much. It divides the mux
+> > consumers into two camps in a way that makes it difficult to select which
+> > camp a consumer should be in.
+> > 
+> > E.g. consider the iio-mux. The current implementation only supports quick
+> > accesses that fit the mux_control_get_shared case. But if that mux in the
+> > future needs to grow continuous buffered accesses, I think there will be
+> > pressure to switch it over to the exclusive mode. Because that is a lot
+> > closer to what you are doing with the video-mux. And then what? It will be
+> > impossible to predict if the end user is going to use buffered accesses or
+> > not...
+> > 
+> > So, I think the best approach is to skip the distinction between shared
+> > and exclusive consumers and instead implement the locking with an ordinary
+> > semaphore (instead of the old rwsem or the current mutex). Semaphores don't
+> > have the property that the same task should down/up them (mutexes require
+> > that for lock/unlock, and is also the reason for the lockdep complaint) and
+> > thus fits better for long-time use such as yours or the above iio-mux with
+> > buffered accesses. It should also hopefully be cheaper that an rwsem, and
+> > not have any downgrade_write calls thus possibly keeping Greg sufficiently
+> > happy...
 
---g3sol5ztcnhly7yn
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+No idea whether this will placate Greg, but it does work for the
+video-mux case.
+The documentation for mux_control_(try_)select should mention that these
+calls will hold the mux lock until deselect is called, and the
+documentation for mux_control_select should probably mention that it
+will block until the lock is released.
 
-On Tue, Apr 25, 2017 at 09:24:34AM -0700, Ryan Lee wrote:
-> I was not able to see any activities about MAX98927 driver after previous mail.
-> Is there anything wrong with this driver?
+> > Sure, consumers can still dig themselves into a hole by not calling deselect
+> > as they should, but at least I think it can be made to work w/o dividing the
+> > consumers...
+> 
+> Like this (only compile-tested). Philipp, it should work the same as with
+> the rwsem in v13 and earlier. At least for your case...
 
-Please don't top post, reply in line with needed context.  This allows
-readers to readily follow the flow of conversation and understand what
-you are talking about and also helps ensure that everything in the
-discussion is being addressed.
+regards
+Philipp
 
-I'm not sure what communication you're expecting...  if nobody is
-complaining about your driver that's probably good?
-
---g3sol5ztcnhly7yn
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlj/eRoACgkQJNaLcl1U
-h9Cr3Af+KxjYKEEagE4hVPAIULt9A1+o4anIX3HK7L9pi/QCooHaW7N4LHQm9o/J
-6PFvNzE2RPTmp521lVzwNq7F49c4b1m6Sqe9a/tkYxoJkuTtS0YVpmLTUtOUwgwk
-+9BTvm9sGW1SvVAsdli6fPxPgKoM8lJNxeFZlVZHkZH9s7IH2AC72SizGFhDK/YU
-XVvPN4i6Rh3oYbT+/crVNV9faoYuLn6F7UgvXpmIPbA1s+K8Nbru4q0uT1mffVwH
-wjucVF35o3gS3/sTcjtFuHZprwmZrH7G7J2JLTqsA10INaTe7n2QS6rTdF7IBlhz
-gVDA45KSjWhLuYPyu38bCHUw2bgIYw==
-=pmWc
------END PGP SIGNATURE-----
-
---g3sol5ztcnhly7yn--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
