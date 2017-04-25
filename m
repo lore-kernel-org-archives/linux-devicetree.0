@@ -1,173 +1,71 @@
-From: Hans Verkuil <hverkuil@xs4all.nl>
-Subject: Re: [PATCH v3 0/7] V4L2 fwnode support
-Date: Tue, 25 Apr 2017 10:51:58 +0200
-Message-ID: <7d0e3f86-2dcf-77d4-9411-5d98d1956586@xs4all.nl>
-References: <1491829376-14791-1-git-send-email-sakari.ailus@linux.intel.com>
+From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 0/4] of: remove *phandle properties from expanded
+ device tree
+Date: Tue, 25 Apr 2017 01:51:47 -0700
+Message-ID: <58FF0E23.1090806@gmail.com>
+References: <1493110049-30165-1-git-send-email-frowand.list@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <1491829376-14791-1-git-send-email-sakari.ailus@linux.intel.com>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@linux.intel.com>, linux-media@vger.kernel.org
-Cc: linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, laurent.pinchart@ideasonboard.com
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1493110049-30165-1-git-send-email-frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/04/17 15:02, Sakari Ailus wrote:
-> Hello everyone,
+On 04/25/17 01:47, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
+> From: Frank Rowand <frank.rowand-7U/KSKJipcs@public.gmane.org>
 > 
-> This patchset adds support for fwnode to V4L2. Besides OF, also ACPI based
-> systems can be supported this way. By using V4L2 fwnode, the individual
-> drivers do not need to be aware of the underlying firmware implementation.
-> The patchset also removes specific V4L2 OF support and converts the
-> affected drivers to use V4L2 fwnode.
+> Remove "phandle" and "linux,phandle" properties from the internal
+> device tree.  The phandle will still be in the struct device_node
+> phandle field.
+> 
+> This is to resolve the issue found by Stephen Boyd [1] when he changed
+> the type of struct property.value from void * to const void *.  As
+> a result of the type change, the overlay code had compile errors
+> where the resolver updates phandle values.
+> 
+>   [1] http://lkml.iu.edu/hypermail/linux/kernel/1702.1/04160.html
+> 
+> Patch 1 is the phandle related changes.
+> 
+> Patches 2 - 4 are minor fixups for issues that became visible
+> while implementing patch 1.
+> 
+> Changes from v1:
 
-Successfully tested with my Atmel sama5d3 board + ov2640 sensor.
+          ^^^^^^^^
+  Changes from v2
 
-Tested-by: Hans Verkuil <hans.verkuil@cisco.com>
 
-Regards,
-
-	Hans
-
+>    - patch 1: Remove check in __of_add_phandle_sysfs() that would not
+>      add a sysfs entry if IS_ENABLED(CONFIG_PPC_PSERIES)
 > 
-> The patchset depends on another patchset here:
+> Changes from v1:
+>    - Remove phandle properties in of_attach_node(), before attaching
+>      the node to the live tree.
+>    - Add the phandle sysfs entry for the node in of_attach_node().
+>    - When creating an overlay changeset, duplicate the node phandle in
+>      __of_node_dup().
 > 
-> <URL:http://www.spinics.net/lists/linux-acpi/msg72973.html> 
+> Frank Rowand (4):
+>   of: remove *phandle properties from expanded device tree
+>   of: make __of_attach_node() static
+>   of: be consistent in form of file mode
+>   of: detect invalid phandle in overlay
 > 
-> A git tree with the dependencies can be found here:
-> 
-> <URL:https://git.linuxtv.org/sailus/media_tree.git/log/?h=v4l2-acpi-merge>
-> 
-> v1 of the set can be found here:
-> 
-> <URL:http://www.spinics.net/lists/linux-media/msg111073.html> 
-> 
-> and v2 here:
-> 
-> <URL:http://www.spinics.net/lists/linux-media/msg114110.html>
-> 
-> changes since v2:
-> 
-> - Use EXPORT_SYMBOL_GPL() instead of EXPORT_SYMBOL().
-> 
-> - Alphabetically order the topics under V4L2 core kAPI documentation.
-> 
-> - Prefer "fwnode" variable name for struct fwnode_handle pointers instead
->   of "fwn". Similarly, use "vep" for struct v4l2_fwnode_endpoint instead
->   of "vfwn".
-> 
-> - Convert existing users of OF matching to fwnode matching.
-> 
-> - Remove OF matching support as well as compatibility between OF and
->   fwnode matching.
-> 
-> - Use of_node_cmp() to determine whether two nodes match in case both of
->   them are OF nodes. There is thus no functional difference between
->   existing OF matching in v1.
-> 
-> - Continue to use struct device_node.full_name on fwnodes that are known
->   to be OF nodes instead of omitting such debug information. Drivers that
->   can actually use fwnode need a new interface to provide this in fwnode
->   framework. This is out of scope of the patchset.
-> 
-> - Remove linux/of.h header inclusion in
->   drivers/media/v4l2-core/v4l2-flash-led-class.c.
-> 
-> - Improved line wrapping primarily in
->   drivers/media/v4l2-core/v4l2-fwnode.c.
-> 
-> - Rewrap KernelDoc documentation for V4L2 fwnode API up to 80 characters
->   per line (new patch).
-> 
-> - Fix KernelDoc documentation, there were a few locations where the
->   argument had been changed but the documentation was not updated
->   accordingly. 
-> 
-> - Fix punctuation and wording in V4L2 fwnode documentation.
-> 
-> - Drop patch "v4l: media/drv-intf/soc_mediabus.h: include dependent header
->   file". It is no longer needed.
-> 
-> - Fix obtaining port parent in v4l2_fwnode_parse_link() on ACPI.
-> 
-> - Include newly OF-supported atmel-isi to V4L2 OF -> fwnode conversion.
-> 
-> - Add that the v4l2-fwnode.c has origins in v4l2-of.c to the commit
->   message and the file header.
-> 
-> changes since v1:
-> 
-> - Use existing dev_fwnode() instead of device_fwnode_handle() added by the
->   ACPI graph patchset,
-> 
-> - Fix too long line of ^'s in ReST documentation and
-> 
-> - Drop the patch rearranging the header files. It'd better go in
->   separately, if at all.
-> 
-> Sakari Ailus (7):
->   v4l: fwnode: Support generic fwnode for parsing standardised
->     properties
->   v4l: async: Add fwnode match support
->   v4l: flash led class: Use fwnode_handle instead of device_node in init
->   v4l: Switch from V4L2 OF not V4L2 fwnode API
->   docs-rst: media: Sort topic list alphabetically
->   docs-rst: media: Switch documentation to V4L2 fwnode API
->   v4l: Remove V4L2 OF framework in favour of V4L2 fwnode framework
-> 
->  Documentation/media/kapi/v4l2-core.rst         |  20 +-
->  Documentation/media/kapi/v4l2-fwnode.rst       |   3 +
->  Documentation/media/kapi/v4l2-of.rst           |   3 -
->  drivers/leds/leds-aat1290.c                    |   5 +-
->  drivers/leds/leds-max77693.c                   |   5 +-
->  drivers/media/i2c/Kconfig                      |   9 +
->  drivers/media/i2c/adv7604.c                    |   7 +-
->  drivers/media/i2c/mt9v032.c                    |   7 +-
->  drivers/media/i2c/ov2659.c                     |   8 +-
->  drivers/media/i2c/s5c73m3/s5c73m3-core.c       |   7 +-
->  drivers/media/i2c/s5k5baf.c                    |   6 +-
->  drivers/media/i2c/smiapp/Kconfig               |   1 +
->  drivers/media/i2c/smiapp/smiapp-core.c         |  29 ++-
->  drivers/media/i2c/tc358743.c                   |  11 +-
->  drivers/media/i2c/tvp514x.c                    |   6 +-
->  drivers/media/i2c/tvp5150.c                    |   7 +-
->  drivers/media/i2c/tvp7002.c                    |   6 +-
->  drivers/media/platform/Kconfig                 |   3 +
->  drivers/media/platform/am437x/Kconfig          |   1 +
->  drivers/media/platform/am437x/am437x-vpfe.c    |  15 +-
->  drivers/media/platform/atmel/Kconfig           |   1 +
->  drivers/media/platform/atmel/atmel-isc.c       |  13 +-
->  drivers/media/platform/exynos4-is/Kconfig      |   2 +
->  drivers/media/platform/exynos4-is/media-dev.c  |  13 +-
->  drivers/media/platform/exynos4-is/mipi-csis.c  |   6 +-
->  drivers/media/platform/omap3isp/isp.c          |  49 ++--
->  drivers/media/platform/pxa_camera.c            |  11 +-
->  drivers/media/platform/rcar-vin/Kconfig        |   1 +
->  drivers/media/platform/rcar-vin/rcar-core.c    |  23 +-
->  drivers/media/platform/soc_camera/Kconfig      |   1 +
->  drivers/media/platform/soc_camera/atmel-isi.c  |   7 +-
->  drivers/media/platform/soc_camera/soc_camera.c |   7 +-
->  drivers/media/platform/ti-vpe/cal.c            |  15 +-
->  drivers/media/platform/xilinx/Kconfig          |   1 +
->  drivers/media/platform/xilinx/xilinx-vipp.c    |  63 +++--
->  drivers/media/v4l2-core/Kconfig                |   3 +
->  drivers/media/v4l2-core/Makefile               |   4 +-
->  drivers/media/v4l2-core/v4l2-async.c           |  21 +-
->  drivers/media/v4l2-core/v4l2-flash-led-class.c |  12 +-
->  drivers/media/v4l2-core/v4l2-fwnode.c          | 342 +++++++++++++++++++++++++
->  drivers/media/v4l2-core/v4l2-of.c              | 327 -----------------------
->  include/media/v4l2-async.h                     |   8 +-
->  include/media/v4l2-flash-led-class.h           |   4 +-
->  include/media/v4l2-fwnode.h                    | 104 ++++++++
->  include/media/v4l2-of.h                        | 128 ---------
->  include/media/v4l2-subdev.h                    |   3 +
->  46 files changed, 690 insertions(+), 638 deletions(-)
->  create mode 100644 Documentation/media/kapi/v4l2-fwnode.rst
->  delete mode 100644 Documentation/media/kapi/v4l2-of.rst
->  create mode 100644 drivers/media/v4l2-core/v4l2-fwnode.c
->  delete mode 100644 drivers/media/v4l2-core/v4l2-of.c
->  create mode 100644 include/media/v4l2-fwnode.h
->  delete mode 100644 include/media/v4l2-of.h
+>  drivers/of/base.c       | 50 +++++++++++++++++++++++++++++++++++++++----
+>  drivers/of/dynamic.c    | 56 ++++++++++++++++++++++++++++++++++++-------------
+>  drivers/of/fdt.c        | 40 +++++++++++++++++++++--------------
+>  drivers/of/of_private.h |  2 +-
+>  drivers/of/overlay.c    |  8 ++++---
+>  drivers/of/resolver.c   | 23 +-------------------
+>  include/linux/of.h      |  1 +
+>  7 files changed, 120 insertions(+), 60 deletions(-)
 > 
 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
