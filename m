@@ -1,60 +1,86 @@
-From: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH 01/10] clk: renesas: cpg-mssr: Document R-Car Gen2 support
-Date: Tue, 25 Apr 2017 18:53:11 +0200
-Message-ID: <1493139200-27396-2-git-send-email-geert+renesas@glider.be>
-References: <1493139200-27396-1-git-send-email-geert+renesas@glider.be>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1493139200-27396-1-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 06/13] MIPS: lantiq: Convert the xbar driver to a platform_driver
+Date: Tue, 25 Apr 2017 11:57:58 -0500
+Message-ID: <CAL_JsqLdtyc_w5CWW9YTN6+xnYVQemSbVEmjJbhH8kP_8a-wkA@mail.gmail.com>
+References: <20170417192942.32219-1-hauke@hauke-m.de> <20170417192942.32219-7-hauke@hauke-m.de>
+ <20170420144848.hwvtrhnwxcsxyv7x@rob-hp-laptop> <8742e3b3-4dc2-bc74-f607-00d96f74512c@hauke-m.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <8742e3b3-4dc2-bc74-f607-00d96f74512c-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
+Cc: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Linux-MIPS <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, LINUX-WATCHDOG <linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, John Crispin <john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org>, "linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, hauke.mehrtens-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Document use of the Renesas Clock Pulse Generator / Module Standby and
-Software Reset DT Bindings for various member of the R-Car Gen2 family
-(H2, M2-W, V2H, M2-N, and E2).
+On Tue, Apr 25, 2017 at 1:56 AM, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org> wrote:
+>
+>
+> On 04/20/2017 04:48 PM, Rob Herring wrote:
+>> On Mon, Apr 17, 2017 at 09:29:35PM +0200, Hauke Mehrtens wrote:
+>>> From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+>>>
+>>> This allows using the xbar driver on ARX300 based SoCs which require the
+>>> same xbar setup as the xRX200 chipsets because the xbar driver
+>>> initialization is not guarded by an xRX200 specific
+>>> of_machine_is_compatible condition anymore. Additionally the new driver
+>>> takes a syscon phandle to configure the XBAR endianness bits in RCU
+>>> (before this was done in arch/mips/lantiq/xway/reset.c and also
+>>> guarded by an xRX200 specific if-statement).
+>>>
+>>> Signed-off-by: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
+>>> ---
+>>>  .../devicetree/bindings/mips/lantiq/xbar.txt       |  22 +++++
+>>>  MAINTAINERS                                        |   1 +
+>>>  arch/mips/lantiq/xway/reset.c                      |   4 -
+>>>  arch/mips/lantiq/xway/sysctrl.c                    |  41 ---------
+>>>  drivers/soc/Makefile                               |   1 +
+>>>  drivers/soc/lantiq/Makefile                        |   1 +
+>>>  drivers/soc/lantiq/xbar.c                          | 100 +++++++++++++++++++++
+>>>  7 files changed, 125 insertions(+), 45 deletions(-)
+>>>  create mode 100644 Documentation/devicetree/bindings/mips/lantiq/xbar.txt
+>>>  create mode 100644 drivers/soc/lantiq/Makefile
+>>>  create mode 100644 drivers/soc/lantiq/xbar.c
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/mips/lantiq/xbar.txt b/Documentation/devicetree/bindings/mips/lantiq/xbar.txt
+>>> new file mode 100644
+>>> index 000000000000..86e53ff3b0d5
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/mips/lantiq/xbar.txt
+>>> @@ -0,0 +1,22 @@
+>>> +Lantiq XWAY SoC XBAR binding
+>>> +============================
+>>> +
+>>> +
+>>> +-------------------------------------------------------------------------------
+>>> +Required properties:
+>>> +- compatible        : Should be "lantiq,xbar-xway"
+>>
+>> This compatible is already in use so it is fine, but you should also
+>> have per SoC compatible strings.
+>
+> I will add a new SoC specific one.
+> What does per SoC device tree mean? Does it mean for the same silicon,
+> for the same silicon revision, for the same fusing of a silicon or for
+> the same marketing name?
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
----
- Documentation/devicetree/bindings/clock/renesas,cpg-mssr.txt | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+Depends how specific you need to some extent. For fusing, packaging,
+metal fixes, speed grading, etc. probably use the same compatible.
+Different design and dies from the start, then they should have
+different compatibles.
 
-diff --git a/Documentation/devicetree/bindings/clock/renesas,cpg-mssr.txt b/Documentation/devicetree/bindings/clock/renesas,cpg-mssr.txt
-index f4f944d813081857..0cd894f987a38e81 100644
---- a/Documentation/devicetree/bindings/clock/renesas,cpg-mssr.txt
-+++ b/Documentation/devicetree/bindings/clock/renesas,cpg-mssr.txt
-@@ -15,6 +15,11 @@ Required Properties:
-   - compatible: Must be one of:
-       - "renesas,r8a7743-cpg-mssr" for the r8a7743 SoC (RZ/G1M)
-       - "renesas,r8a7745-cpg-mssr" for the r8a7745 SoC (RZ/G1E)
-+      - "renesas,r8a7790-cpg-mssr" for the r8a7790 SoC (R-Car H2)
-+      - "renesas,r8a7791-cpg-mssr" for the r8a7791 SoC (R-Car M2-W)
-+      - "renesas,r8a7792-cpg-mssr" for the r8a7792 SoC (R-Car V2H)
-+      - "renesas,r8a7793-cpg-mssr" for the r8a7793 SoC (R-Car M2-N)
-+      - "renesas,r8a7794-cpg-mssr" for the r8a7794 SoC (R-Car E2)
-       - "renesas,r8a7795-cpg-mssr" for the r8a7795 SoC (R-Car H3)
-       - "renesas,r8a7796-cpg-mssr" for the r8a7796 SoC (R-Car M3-W)
- 
-@@ -24,9 +29,10 @@ Required Properties:
-   - clocks: References to external parent clocks, one entry for each entry in
-     clock-names
-   - clock-names: List of external parent clock names. Valid names are:
--      - "extal" (r8a7743, r8a7745, r8a7795, r8a7796)
-+      - "extal" (r8a7743, r8a7745, r8a7790, r8a7791, r8a7792, r8a7793, r8a7794,
-+		 r8a7795, r8a7796)
-       - "extalr" (r8a7795, r8a7796)
--      - "usb_extal" (r8a7743, r8a7745)
-+      - "usb_extal" (r8a7743, r8a7745, r8a7790, r8a7791, r8a7793, r8a7794)
- 
-   - #clock-cells: Must be 2
-       - For CPG core clocks, the two clock specifier cells must be "CPG_CORE"
--- 
-2.7.4
+> I would like to make it per silicon or per silicon revision for the IP
+> cores which I know are different.
 
+Being "the same IP" doesn't really matter. The errata can be different
+and often there is no visibility into what h/w designers may have
+changed. On some IP you can rely on revision/feature registers though
+forgetting to rev revision registers is not uncommon. You need to have
+sufficient information that you can work-around a problem in the
+future without requiring a new dtb.
+
+Rob
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
