@@ -1,30 +1,63 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-Subject: Re: [PATCH V2  0/2] correct ids for clk_testout
-Date: Tue, 25 Apr 2017 23:04:53 +0200
-Message-ID: <5003001.RcGOJBte3U@diego>
-References: <1493102470-22965-1-git-send-email-eddie.cai.linux@gmail.com>
+From: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Subject: Re: [PATCH v2 1/2] of: support dtc compiler flags for overlays
+Date: Wed, 26 Apr 2017 07:04:52 +0900
+Message-ID: <CAK7LNARd-XsCfSJhDj3JisH=u4XZm8DaPEa5Pg2ciWrq8Ueing@mail.gmail.com>
+References: <1493075119-32026-1-git-send-email-frowand.list@gmail.com> <1493075119-32026-2-git-send-email-frowand.list@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <1493102470-22965-1-git-send-email-eddie.cai.linux@gmail.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Eddie Cai <eddie.cai.linux@gmail.com>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, zhengxing@rock-chips.com, mturquette@baylibre.com, sboyd@codeaurora.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1493075119-32026-2-git-send-email-frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Stephen Boyd <stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Michal Marek <mmarek-IBi9RG/b67k@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kbuild mailing list <linux-kbuild-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Eddie,
-
-Am Dienstag, 25. April 2017, 14:41:08 CEST schrieb Eddie Cai:
-> we use clk_testout1 and clk_testout2 for camera. e.g. mipi 24M mclk. the ids
-> of clk_testout1 and clk_testout2 is wrong. it's time to correct it.
-
-Just to say, patches look good - thanks for explaining what the clocks are 
-going to be used for.
-
-I'll apply them after 4.12-rc1 is released (in roughly 2.5 weeks), due to
-needing a stable base for the clock-ids.
+2017-04-25 8:05 GMT+09:00  <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>:
+> From: Frank Rowand <frank.rowand-7U/KSKJipcs@public.gmane.org>
+>
+> The dtc compiler version that adds initial support was available
+> in 4.11-rc1.  Add the ability to set the dtc compiler flags needed
+> by overlays.
+>
+> Signed-off-by: Frank Rowand <frank.rowand-7U/KSKJipcs@public.gmane.org>
+> ---
 
 
-Heiko
+I know your motivation for 1/2 is overlay,
+but this patch itself is more generic.
+(support for per-file dtc compiler flag)
 
+Could you reword the commit subject a little bit?
+
+Otherwise,
+
+Acked-by: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+
+
+
+>  scripts/Makefile.lib | 2 ++
+>  1 file changed, 2 insertions(+)
+>
+> diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
+> index 0a07f9014944..0bbec480d323 100644
+> --- a/scripts/Makefile.lib
+> +++ b/scripts/Makefile.lib
+> @@ -283,6 +283,8 @@ ifeq ($(KBUILD_ENABLE_EXTRA_GCC_CHECKS),)
+>  DTC_FLAGS += -Wno-unit_address_vs_reg
+>  endif
+>
+> +DTC_FLAGS += $(DTC_FLAGS_$(basetarget))
+> +
+>  # Generate an assembly file to wrap the output of the device tree compiler
+>  quiet_cmd_dt_S_dtb= DTB     $@
+>  cmd_dt_S_dtb=                                          \
+> --
+
+
+-- 
+Best Regards
+Masahiro Yamada
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
