@@ -1,94 +1,54 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH RFC 0/5] *** SPI Slave mode support ***
-Date: Tue, 25 Apr 2017 10:09:39 +0200
-Message-ID: <CAMuHMdW=p+zJbs+G9PjmsPTAvqVyuzUoW1FBjR-yoypQzxE=ew@mail.gmail.com>
-References: <1492085644-4195-1-git-send-email-jiada_wang@mentor.com>
- <20170413125929.dygodgj6c35ydh5p@sirena.org.uk>
- <CAMuHMdUm=90ddNWM5KWqT+W0hqZ-QO6vPHj5OisbYquDYq1ZmA@mail.gmail.com>
- <58F06092.9080409@mentor.com>
- <CAMuHMdXa_O6RsqUciiNWQ0Zp6dniS47AUmPN9UWAWitP0csx=Q@mail.gmail.com>
- <58FDF430.5090306@mentor.com>
- <CAMuHMdVQS494-BAc-W-XOOLK8Xow85n+Cgih0FG+t4QxCFxhMA@mail.gmail.com>
- <58FF0127.7070703@mentor.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 1/5 v3] usb: host: add DT bindings for
+	faraday fotg2
+Date: Tue, 25 Apr 2017 10:12:38 +0200
+Message-ID: <CACRpkda-2OQZJDQndrDg_d4iK4oecz4HNSCQPSztBFTG5Rwg8w@mail.gmail.com>
+References: <20170421204058.6206-1-linus.walleij@linaro.org>
+ <alpine.LNX.2.00.1704241846300.15211@T420s>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <58FF0127.7070703@mentor.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jiada Wang <jiada_wang@mentor.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, linux-spi <linux-spi@vger.kernel.org>, Mark Brown <broonie@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <openwrt-devel-bounces@lists.openwrt.org>
+In-Reply-To: <alpine.LNX.2.00.1704241846300.15211@T420s>
+List-Unsubscribe: <https://lists.openwrt.org/cgi-bin/mailman/options/openwrt-devel>,
+ <mailto:openwrt-devel-request@lists.openwrt.org?subject=unsubscribe>
+List-Archive: <http://lists.openwrt.org/pipermail/openwrt-devel/>
+List-Post: <mailto:openwrt-devel@lists.openwrt.org>
+List-Help: <mailto:openwrt-devel-request@lists.openwrt.org?subject=help>
+List-Subscribe: <https://lists.openwrt.org/cgi-bin/mailman/listinfo/openwrt-devel>,
+ <mailto:openwrt-devel-request@lists.openwrt.org?subject=subscribe>
+Errors-To: openwrt-devel-bounces@lists.openwrt.org
+Sender: "openwrt-devel" <openwrt-devel-bounces@lists.openwrt.org>
+To: Hans Ulli Kroll <ulli.kroll@googlemail.com>
+Cc: openwrt-devel@openwrt.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Paulius Zaleckas <paulius.zaleckas@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, Janos Laube <janos.dev@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jiada,
-
-On Tue, Apr 25, 2017 at 9:56 AM, Jiada Wang <jiada_wang@mentor.com> wrote:
-> On 04/24/2017 06:10 AM, Geert Uytterhoeven wrote:
->> On Mon, Apr 24, 2017 at 2:48 PM, Jiada Wang<jiada_wang@mentor.com>  wrote:
->>> On 04/24/2017 03:55 AM, Geert Uytterhoeven wrote:
->>>> On Fri, Apr 14, 2017 at 7:39 AM, Jiada Wang<jiada_wang@mentor.com>
->>>> wrote:
->>>>> Our use case is to use spidev as an interface to communicate with
->>>>> external
->>>>> SPI master devices.
->>>>> meanwhile the SPI bus controller can also act as master device to send
->>>>> data
->>>>> to other
->>>>> SPI slave devices on the board.
->>>>
->>>> That sounds a bit hackish to me. SPI was never meant to be a
->>>> multi-master
->>>> bus.
->>>> While it can be done, you will need external synchronization (signals)
->>>> to
->>>> avoid conflicts between the SPI masters.
->>>
->>> It doesn't need to be a multi-master bus,
->>> for example A is master device for slave device B.
->>> while B has its own slave device C
->>> for each SPI connection A<=>  B, and B<=>  C, there is only one master
->>> device.
->>>
->>> and I think from use case point of view, it's very normal,
->>> one CPU upon receives command from external SPI master device,
->>> it writes data to its own slave device (EEPROM) connected to it.
->>
->> So "A<=>  B" and "B<=>  C" are two distinct SPI buses?
->> Or do they share some signals?
->>
->> Your comment seems to suggest otherwise:
->
-> the use case of
-> "A (master) <=> B (slave)", "B (master) <=> C(slave)", do share MISO and
-> MOSI lines,
-> but there is no SS line between A and C. so for each SPI slave device, there
-> is only one
-> master device.
-
-Do you share CLK, too? Then you need a slave select from B to C.
-If you use a separate clock, the slave select from B to C can be optional.
-
-> so I think the question becomes whether the above mentioned hardware setup
-> is valid or not.
-
-It's a non-conventional SPI bus setup, but it can work, provided you have
-some form of synchronization between A and B.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+T24gTW9uLCBBcHIgMjQsIDIwMTcgYXQgNjo1MyBQTSwgSGFucyBVbGxpIEtyb2xsCjx1bGxpLmty
+b2xsQGdvb2dsZW1haWwuY29tPiB3cm90ZToKCj4gR290IE5BSydlZCBmcm9tIFJvYiBvbiBzb21l
+IGVhbGllciByb3VuZCBkdWUgbWlzc2luZyAiZGV2aWNlIG1vZGUiIG9uIHRoaXMKPiBJUC4gSSd2
+ZSBibGF0YW50bHkgb3ZlcnJpZGVkIHRoaXMgdG8gYSBob3N0IG9ubHkgZHJpdmVyLgo+Cj4gVGhl
+c2UgYXJlIHRoZSBuZWVkZWQgY2hhbmdlcyBpbiBEVCB0byBzdXBwb3J0IGJvdGggbW9kZXMKPiBO
+b3RlIHRoZSAtZHIgYXQgdGhlIGVuZCBvZiBmb3RnMjEwLCB0byByZWZsZWN0IHRoaXMgaW4gYW4g
+ZHVhbCByb2xlIGRldmljZQoKT0sgSSB1bmRlcnN0b29kIHRoZSBkaXNjdXNzaW9uIHN1Y2ggdGhh
+dCB0aGUgY29tcGF0aWJsZSBzaG91bGQKc2ltcGx5IGJlICIiZmFyYWRheSxmb3RnMjEwIiBhcyB0
+aGF0IGlzIHRoZSBuYW1lIG9mIHRoZSBoYXJkd2FyZQpJUCBibG9jay4gVGhpcyBpcyB0aGUgbmFt
+ZSBvZiB0aGUgaGFyZHdhcmUgbmFtZSBpbiB0aGUgRmFyYWRheQpwYWdlOgpodHRwOi8vd3d3LmZh
+cmFkYXktdGVjaC5jb20vaHRtbC9Qcm9kdWN0L0lQUHJvZHVjdC9JbnRlcmZhY2VJUC9VU0IyXzAu
+aHRtCgpBbnkgb3RoZXIgc3RyaW5nIGltcGxpZXMgaG93IGl0IGlzIHVzZWQsIHNvIHRoYXQgd2Fz
+IHdoYXQgSSB1bmRlcnN0b29kCmFzIHRoZSByZWFzb24gdG8gcmVqZWN0IGl0IHdpdGggdGhlICIt
+aGNkIiAoaG9zdCBjb250cm9sbGVyIGRldmljZSkgc3VmZml4LgoKPiArLSBkcl9tb2RlIDogaW5k
+aWNhdGVzIHRoZSB3b3JraW5nIG1vZGUgZm9yICJmb3RnMjEwLWRyIiBjb21wYXRpYmxlCj4gKyAg
+IGNvbnRyb2xsZXJzLiAgQ2FuIGJlICJob3N0IiwgInBlcmlwaGVyYWwiLiBEZWZhdWx0IHRvCj4g
+KyAgICJob3N0IiBpZiBub3QgZGVmaW5lZCBmb3IgYmFja3dhcmQgY29tcGF0aWJpbGl0eS4KClRo
+aXMgc2VlbXMgcmlnaHQsIHNvIGl0IGlzIHBhcnQgb2YgdGhlIGdlbmVyaWMgYmluZGluZ3MsIGNv
+cnJlY3Q/Cgo+ICB1c2JANjgwMDAwMDAgewo+IC0gICAgICAgY29tcGF0aWJsZSA9ICJjb3J0aW5h
+LGdlbWluaS11c2IiLCAiZmFyYWRheSxmb3RnMjEwIjsKPiArICAgICAgIGNvbXBhdGlibGUgPSAi
+Y29ydGluYSxnZW1pbmktdXNiIiwgImZhcmFkYXksZm90ZzIxMC1kciI7CgpCdXQgdGhpcyB3b3Vs
+ZCBiZSB3cm9uZywgYmVjYXVzZSB0aGUgY29tcGF0aWJsZSBzaG91bGQgb25seQppbmRpY2F0ZSB3
+aGF0IGtpbmQgb2YgaGFyZHdhcmUgaXQgaXMsIG5vdCBob3cgaXQgaXMgZ29pbmcgdG8gYmUgdXNl
+ZAood2hldGhlciBhcyBob3N0IG9ubHksIHNsYXZlIG9ubHkgb3IgZHVhbC1yb2xlIChPVEcpLgoK
+SSBob3BlIEkgZGlkbid0IGdldCBhbnl0aGluZyB3cm9uZyBoZXJlIDovCgpZb3VycywKTGludXMg
+V2FsbGVpagpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpv
+cGVud3J0LWRldmVsIG1haWxpbmcgbGlzdApvcGVud3J0LWRldmVsQGxpc3RzLm9wZW53cnQub3Jn
+Cmh0dHBzOi8vbGlzdHMub3BlbndydC5vcmcvY2dpLWJpbi9tYWlsbWFuL2xpc3RpbmZvL29wZW53
+cnQtZGV2ZWwK
