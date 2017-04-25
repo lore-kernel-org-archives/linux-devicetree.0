@@ -1,40 +1,63 @@
-From: frowand.list@gmail.com
-Subject: [PATCH v3 4/4] of: detect invalid phandle in overlay
-Date: Tue, 25 Apr 2017 01:47:29 -0700
-Message-ID: <1493110049-30165-5-git-send-email-frowand.list@gmail.com>
-References: <1493110049-30165-1-git-send-email-frowand.list@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1493110049-30165-1-git-send-email-frowand.list@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, stephen.boyd@linaro.org
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+From: <arywhite007-/E1597aS9LQAvxtiuMwx3w@public.gmane.org>
+Subject: 33027 devicetree
+Date: Tue, 25 Apr 2017 08:50:37 -0000
+Message-ID: <149311023775.15559.5483628094658012475@hinet.net>
+Mime-Version: 1.0
+Content-Type: application/zip; name="09469566543158.zip"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: attachment
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Frank Rowand <frank.rowand@sony.com>
-
-Overlays are not allowed to modify phandle values of previously existing
-nodes because there is no information available to allow fixup up
-properties that use the previously existing phandle.
-
-Signed-off-by: Frank Rowand <frank.rowand@sony.com>
----
- drivers/of/overlay.c | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
-index ca0b85f5deb1..20ab49d2f7a4 100644
---- a/drivers/of/overlay.c
-+++ b/drivers/of/overlay.c
-@@ -130,6 +130,10 @@ static int of_overlay_apply_single_device_node(struct of_overlay *ov,
- 	/* NOTE: Multiple mods of created nodes not supported */
- 	tchild = of_get_child_by_name(target, cname);
- 	if (tchild != NULL) {
-+		/* new overlay phandle value conflicts with existing value */
-+		if (child->phandle)
-+			return -EINVAL;
-+
- 		/* apply overlay recursively */
- 		ret = of_overlay_apply_one(ov, tchild, child);
- 		of_node_put(tchild);
--- 
-Frank Rowand <frank.rowand@sony.com>
+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
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
