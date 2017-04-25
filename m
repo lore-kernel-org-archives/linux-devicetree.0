@@ -1,135 +1,84 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v2 2/2] of: Add unit tests for applying overlays
-Date: Tue, 25 Apr 2017 11:44:36 -0500
-Message-ID: <CAL_Jsq+8fcDwe4iPxLRsKnw_UAc6JE3KRRbnx1aS+o0oJH9tPw@mail.gmail.com>
-References: <1493075119-32026-1-git-send-email-frowand.list@gmail.com> <1493075119-32026-3-git-send-email-frowand.list@gmail.com>
+From: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: Add devicetree for the Raspberry Pi 3, for arm32 (v5)
+Date: Tue, 25 Apr 2017 09:45:05 -0700
+Message-ID: <87d1c0phbi.fsf@eliezer.anholt.net>
+References: <20170424200037.25615-1-eric@anholt.net> <68d88bf7-1f47-4056-3b70-7b97d9a02953@i2se.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kbuild-owner@vger.kernel.org>
-In-Reply-To: <1493075119-32026-3-git-send-email-frowand.list@gmail.com>
-Sender: linux-kbuild-owner@vger.kernel.org
-To: Frank Rowand <frowand.list@gmail.com>
-Cc: Stephen Boyd <stephen.boyd@linaro.org>, Michal Marek <mmarek@suse.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha512; protocol="application/pgp-signature"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <68d88bf7-1f47-4056-3b70-7b97d9a02953-eS4NqCHxEME@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Gerd Hoffmann <kraxel-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 24, 2017 at 6:05 PM,  <frowand.list@gmail.com> wrote:
-> From: Frank Rowand <frank.rowand@sony.com>
+--=-=-=
+Content-Type: text/plain
+
+Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org> writes:
+
+> Am 24.04.2017 um 22:00 schrieb Eric Anholt:
+>> Raspbian and Fedora have decided to support the Pi3 in 32-bit mode for
+>> now, so it's useful to be able to test that mode on an upstream
+>> kernel.  It's also been useful for me to use the same board for 32-bit
+>> and 64-bit development.
+>>
+>> Signed-off-by: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+>> ---
+>>  arch/arm/boot/dts/Makefile            | 1 +
+>>  arch/arm/boot/dts/bcm2837-rpi-3.b.dts | 1 +
+>>  2 files changed, 2 insertions(+)
+>>  create mode 100644 arch/arm/boot/dts/bcm2837-rpi-3.b.dts
+>>
+>> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+>> index 011808490fed..eded842d9978 100644
+>> --- a/arch/arm/boot/dts/Makefile
+>> +++ b/arch/arm/boot/dts/Makefile
+>> @@ -72,6 +72,7 @@ dtb-$(CONFIG_ARCH_BCM2835) += \
+>>  	bcm2835-rpi-b-plus.dtb \
+>>  	bcm2835-rpi-a-plus.dtb \
+>>  	bcm2836-rpi-2-b.dtb \
+>> +	bcm2837-rpi-3-b.dtb \
+>>  	bcm2835-rpi-zero.dtb
+>>  dtb-$(CONFIG_ARCH_BCM_5301X) += \
+>>  	bcm4708-asus-rt-ac56u.dtb \
+>> diff --git a/arch/arm/boot/dts/bcm2837-rpi-3.b.dts b/arch/arm/boot/dts/bcm2837-rpi-3.b.dts
+>> new file mode 100644
+>> index 000000000000..8c8aa4d1e9b3
+>> --- /dev/null
+>> +++ b/arch/arm/boot/dts/bcm2837-rpi-3.b.dts
+>> @@ -0,0 +1 @@
+>> +#include "arm64/broadcom/bcm2837-rpi-3.b.dts"
 >
-> Existing overlay unit tests examine individual pieces of the overlay
-> code.  The new tests target the entire process of applying an overlay.
+> Looks like a typo in the dts filename and in the include ( dot instead
+> of dash ).
 
-Just a few nits.
+Sorry about that, everyone.  I remember doing builds of the patch, but
+maybe things succeeded because there was already a .dtb present in my
+tree or something.
 
-> Signed-off-by: Frank Rowand <frank.rowand@sony.com>
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
 
-[...]
+-----BEGIN PGP SIGNATURE-----
 
-> diff --git a/drivers/of/of_private.h b/drivers/of/of_private.h
-> index 18bbb4517e25..cc76b3b81eab 100644
-> --- a/drivers/of/of_private.h
-> +++ b/drivers/of/of_private.h
-> @@ -55,6 +55,17 @@ static inline int of_property_notify(int action, struct device_node *np,
->  }
->  #endif /* CONFIG_OF_DYNAMIC */
->
-> +#ifdef CONFIG_OF_UNITTEST
-> +extern void __init unittest_unflatten_overlay_base(void);
-> +extern void *__unflatten_device_tree(const void *blob,
-
-This can and should be outside the ifdef.
-
-> +                             struct device_node *dad,
-> +                             struct device_node **mynodes,
-> +                             void *(*dt_alloc)(u64 size, u64 align),
-> +                             bool detached);
-> +#else
-> +static inline void unittest_unflatten_overlay_base(void) {};
-> +#endif
-> +
->  /**
->   * General utilities for working with live trees.
->   *
-
-[...]
-
-> diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
-> index 62db55b97c10..884f6c1f8ae9 100644
-> --- a/drivers/of/unittest.c
-> +++ b/drivers/of/unittest.c
-> @@ -8,6 +8,7 @@
->  #include <linux/err.h>
->  #include <linux/errno.h>
->  #include <linux/hashtable.h>
-> +#include <linux/libfdt.h>
->  #include <linux/of.h>
->  #include <linux/of_fdt.h>
->  #include <linux/of_irq.h>
-> @@ -1925,6 +1926,320 @@ static void __init of_unittest_overlay(void)
->  static inline void __init of_unittest_overlay(void) { }
->  #endif
->
-> +#ifdef CONFIG_OF_OVERLAY
-
-This can move down to...
-
-> +
-> +/*
-> + * __dtb_ot_begin[] and __dtb_ot_end[] are created by cmd_dt_S_dtb
-> + * in scripts/Makefile.lib
-> + */
-> +
-> +#define OVERLAY_INFO_EXTERN(name) \
-> +       extern uint8_t __dtb_##name##_begin[]; \
-> +       extern uint8_t __dtb_##name##_end[]
-> +
-> +#define OVERLAY_INFO(name, expected) \
-> +{      .dtb_begin       = __dtb_##name##_begin, \
-> +       .dtb_end         = __dtb_##name##_end, \
-> +       .expected_result = expected, \
-> +}
-> +
-> +struct overlay_info {
-> +       uint8_t            *dtb_begin;
-> +       uint8_t            *dtb_end;
-> +       void               *data;
-> +       struct device_node *np_overlay;
-> +       int                expected_result;
-> +       int                overlay_id;
-> +};
-> +
-> +OVERLAY_INFO_EXTERN(overlay_base);
-> +OVERLAY_INFO_EXTERN(overlay);
-> +OVERLAY_INFO_EXTERN(overlay_bad_phandle);
-
-...here. Maybe we want to move all this to a separate file instead.
-
-> +
-> +/* order of entries is hard-coded into users of overlays[] */
-> +struct overlay_info overlays[] = {
-
-static?
-
-> +       OVERLAY_INFO(overlay_base, -9999),
-> +       OVERLAY_INFO(overlay, 0),
-> +       OVERLAY_INFO(overlay_bad_phandle, -EINVAL),
-> +       {}
-> +};
-
-[...]
-
-> @@ -1962,6 +2277,9 @@ static int __init of_unittest(void)
->         /* Double check linkage after removing testcase data */
->         of_unittest_check_tree_linkage();
->
-> +
-
-Extra blank line.
-
-> +       of_unittest_overlay_high_level();
-> +
->         pr_info("end of unittest - %i passed, %i failed\n",
->                 unittest_results.passed, unittest_results.failed);
->
-> --
-> Frank Rowand <frank.rowand@sony.com>
->
+iQIzBAEBCgAdFiEE/JuuFDWp9/ZkuCBXtdYpNtH8nugFAlj/fREACgkQtdYpNtH8
+nugKNhAAg+veNZrdr4AvhBhR7/FtI8ifUKakX9V+QlafI8M1mrXkg2vme91aMLHT
+KcpK66v9r2Y5LVN5eZBTFwuBqaKK1aQQfx0UXX4I+op+ZUUnl+9eXAZ9QhJou3pY
+qIWOLgE7T6J2bEHqGbJE3ZigOgLVG8IIdW7nyj4GStRnisVgNtKGp+xwCPXzFVKS
+wo1zTxa75DfIqYBJzSkE4Bv1t3rlk+1nofcwr1jGksi544kLFgRFr78cc9mpRKs+
+w2q8QxSe+tNWSVvrV7pDwEp/Vve6HdqB7B+gzI0eLG/FcOu5dcb0ob/YnEbm3M5/
+nbmfz/sxAxjmB8E8YS2c6bWqJm8AO3wf7kly82SknmGhpu20W28z1bO2ElaX2hIK
+8K7SXVpVWu1Fawbp6JaM1Oi0pDjqx8CY8c+ePLa+X05oaw2RYsRKmAX3Flx4DBaw
+rAq31YH7i1s1kA/JRtpv2+nfVzk86DOPD7OLd7XRHaBzkhW24SSS8R5Mf3zui/rh
+ceT/USywc1s8uSsLqaDSBSkxA+QvNKuIIAFYjo719W7FG/io08lZyTT2sx8f+rbO
+6L677TZ1jMrLQgzomBeGJ99ey9rsIOHxDxMn6czzoSKCrv/LxZBtJT/ycVYHb1oN
+EBAkZjY/Fh7ZApkOUvCLa754VqoeqbofTxADsFlyDMDL+UZgzts=
+=wn2q
+-----END PGP SIGNATURE-----
+--=-=-=--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
