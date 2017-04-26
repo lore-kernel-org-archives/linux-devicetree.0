@@ -1,59 +1,46 @@
-From: <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v2 15/30] arm: dts: mt7623: add ethernet nodes to the mt7623.dtsi file
-Date: Wed, 26 Apr 2017 17:25:59 +0800
-Message-ID: <1493198774-4478-16-git-send-email-sean.wang@mediatek.com>
+From: <sean.wang@mediatek.com>
+Subject: [PATCH v2 17/30] arm: dts: mt7623: add ir nodes to the mt7623.dtsi file
+Date: Wed, 26 Apr 2017 17:26:01 +0800
+Message-ID: <1493198774-4478-18-git-send-email-sean.wang@mediatek.com>
 References: <1493198774-4478-1-git-send-email-sean.wang@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1493198774-4478-1-git-send-email-sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1493198774-4478-1-git-send-email-sean.wang@mediatek.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: robh+dt@kernel.org, matthias.bgg@gmail.com, john@phrozen.org, mark.rutland@arm.com, linux@armlinux.org.uk, linus.walleij@linaro.org, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org
+Cc: linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, Sean Wang <sean.wang@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+From: Sean Wang <sean.wang@mediatek.com>
 
-Add ethernet nodes to the mt7623.dtsi file.
+Add ir nodes to the mt7623.dtsi file.
 
-Signed-off-by: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Signed-off-by: Sean Wang <sean.wang@mediatek.com>
 ---
- arch/arm/boot/dts/mt7623.dtsi | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
+ arch/arm/boot/dts/mt7623.dtsi | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
 diff --git a/arch/arm/boot/dts/mt7623.dtsi b/arch/arm/boot/dts/mt7623.dtsi
-index cfafaea..c4be7a5 100644
+index ad7c50a..76e0840 100644
 --- a/arch/arm/boot/dts/mt7623.dtsi
 +++ b/arch/arm/boot/dts/mt7623.dtsi
-@@ -485,4 +485,24 @@
- 		reg = <0 0x1b000000 0 0x1000>;
- 		#clock-cells = <1>;
+@@ -171,6 +171,15 @@
+ 		clock-names = "spi", "wrap";
  	};
-+
-+	eth: ethernet@1b100000 {
-+		compatible = "mediatek,mt2701-eth", "syscon";
-+		reg = <0 0x1b100000 0 0x20000>;
-+		interrupts = <GIC_SPI 200 IRQ_TYPE_LEVEL_LOW>,
-+			     <GIC_SPI 199 IRQ_TYPE_LEVEL_LOW>,
-+			     <GIC_SPI 198 IRQ_TYPE_LEVEL_LOW>;
-+		clocks = <&topckgen CLK_TOP_ETHIF_SEL>,
-+			 <&ethsys CLK_ETHSYS_ESW>,
-+			 <&ethsys CLK_ETHSYS_GP1>,
-+			 <&ethsys CLK_ETHSYS_GP2>,
-+			 <&apmixedsys CLK_APMIXED_TRGPLL>;
-+		clock-names = "ethif", "esw", "gp1", "gp2", "trgpll";
-+		power-domains = <&scpsys MT2701_POWER_DOMAIN_ETH>;
-+		mediatek,ethsys = <&ethsys>;
-+		mediatek,pctl = <&syscfg_pctl_a>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
+ 
++	cir: cir@0x10013000 {
++		compatible = "mediatek,mt7623-cir";
++		reg = <0 0x10013000 0 0x1000>;
++		interrupts = <GIC_SPI 87 IRQ_TYPE_LEVEL_LOW>;
++		clocks = <&infracfg CLK_INFRA_IRRX>;
++		clock-names = "clk";
 +		status = "disabled";
 +	};
- };
++
+ 	sysirq: interrupt-controller@10200100 {
+ 		compatible = "mediatek,mt7623-sysirq",
+ 			     "mediatek,mt6577-sysirq";
 -- 
 1.9.1
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
