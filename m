@@ -1,8 +1,8 @@
 From: <sean.wang@mediatek.com>
-Subject: [PATCH v2 11/30] arm: dts: mt7623: add nand nodes to the mt7623.dtsi
+Subject: [PATCH v2 14/30] arm: dts: mt7623: add pwm nodes to the mt7623.dtsi
  file
-Date: Wed, 26 Apr 2017 17:25:55 +0800
-Message-ID: <1493198774-4478-12-git-send-email-sean.wang@mediatek.com>
+Date: Wed, 26 Apr 2017 17:25:58 +0800
+Message-ID: <1493198774-4478-15-git-send-email-sean.wang@mediatek.com>
 References: <1493198774-4478-1-git-send-email-sean.wang@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -22,51 +22,41 @@ To: robh+dt@kernel.org, matthias.bgg@gmail.com, john@phrozen.org, mark.rutland@a
 Cc: linux-gpio@vger.kernel.org, Sean Wang <sean.wang@mediatek.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: John Crispin <john@phrozen.org>
+From: Sean Wang <sean.wang@mediatek.com>
 
-Add NAND/EEC nodes to the mt7623.dtsi file.
+Add PWM nodes to the mt7623.dtsi file.
 
-Signed-off-by: John Crispin <john@phrozen.org>
 Signed-off-by: Sean Wang <sean.wang@mediatek.com>
 ---
- arch/arm/boot/dts/mt7623.dtsi | 25 +++++++++++++++++++++++++
- 1 file changed, 25 insertions(+)
+ arch/arm/boot/dts/mt7623.dtsi | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
 diff --git a/arch/arm/boot/dts/mt7623.dtsi b/arch/arm/boot/dts/mt7623.dtsi
-index 131808c..f15d65a 100644
+index 56da5ba..cfafaea 100644
 --- a/arch/arm/boot/dts/mt7623.dtsi
 +++ b/arch/arm/boot/dts/mt7623.dtsi
-@@ -330,6 +330,31 @@
+@@ -243,6 +243,22 @@
  		status = "disabled";
  	};
  
-+	nandc: nfi@1100d000 {
-+		compatible = "mediatek,mt7623-nfc",
-+			     "mediatek,mt2701-nfc";
-+		reg = <0 0x1100d000 0 0x1000>;
-+		interrupts = <GIC_SPI 56 IRQ_TYPE_LEVEL_LOW>;
-+		power-domains = <&scpsys MT2701_POWER_DOMAIN_IFR_MSC>;
-+		clocks = <&pericfg CLK_PERI_NFI>,
-+			 <&pericfg CLK_PERI_NFI_PAD>;
-+		clock-names = "nfi_clk", "pad_clk";
-+		status = "disabled";
-+		ecc-engine = <&bch>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+	};
-+
-+	bch: ecc@1100e000 {
-+		compatible = "mediatek,mt7623-ecc",
-+			     "mediatek,mt2701-ecc";
-+		reg = <0 0x1100e000 0 0x1000>;
-+		interrupts = <GIC_SPI 55 IRQ_TYPE_LEVEL_LOW>;
-+		clocks = <&pericfg CLK_PERI_NFI_ECC>;
-+		clock-names = "nfiecc_clk";
++	pwm: pwm@11006000 {
++		compatible = "mediatek,mt7623-pwm";
++		reg = <0 0x11006000 0 0x1000>;
++		#pwm-cells = <2>;
++		clocks = <&topckgen CLK_TOP_PWM_SEL>,
++			 <&pericfg CLK_PERI_PWM>,
++			 <&pericfg CLK_PERI_PWM1>,
++			 <&pericfg CLK_PERI_PWM2>,
++			 <&pericfg CLK_PERI_PWM3>,
++			 <&pericfg CLK_PERI_PWM4>,
++			 <&pericfg CLK_PERI_PWM5>;
++		clock-names = "top", "main", "pwm1", "pwm2",
++			      "pwm3", "pwm4", "pwm5";
 +		status = "disabled";
 +	};
 +
- 	hifsys: syscon@1a000000 {
- 		compatible = "mediatek,mt7623-hifsys",
- 			     "mediatek,mt2701-hifsys",
+ 	i2c0: i2c@11007000 {
+ 		compatible = "mediatek,mt7623-i2c",
+ 			     "mediatek,mt6577-i2c";
 -- 
 1.9.1
