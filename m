@@ -1,77 +1,86 @@
-From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH net-next] dt-bindings: mdio: Clarify binding document
-Date: Wed, 26 Apr 2017 16:09:48 +0300
-Message-ID: <fd077de9-53ea-9e7d-b1c4-937498cbfe39@ti.com>
-References: <20170425183308.26107-1-f.fainelli@gmail.com>
+From: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Subject: Re: [PATCH v4 5/7] pinctrl: aramda-37xx: Add irqchip support
+Date: Wed, 26 Apr 2017 15:12:01 +0200
+Message-ID: <87inlr8g9q.fsf@free-electrons.com>
+References: <cover.65d0e6796fecf1fe6c5d07b981160b54dc9b4acd.1491405475.git-series.gregory.clement@free-electrons.com>
+        <70ffe3343c13d01737bf74e5de4898d0c0be07a0.1491405475.git-series.gregory.clement@free-electrons.com>
+        <CACRpkdZ=mVXBbVf1iHg8nQ6pYUkvpB+egH+stoMrkD8V_vaYpg@mail.gmail.com>
+        <87zif38qu2.fsf@free-electrons.com>
+        <CACRpkdYYRe4A+Zj+fDpC9SA1pgaVSgewYGB_vCNoWNRXWTtTGQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170425183308.26107-1-f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: andrew-g2DYL2Zd6BY@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, jsarha-l0cyMroinI0@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdYYRe4A+Zj+fDpC9SA1pgaVSgewYGB_vCNoWNRXWTtTGQ@mail.gmail.com>
+        (Linus Walleij's message of "Wed, 26 Apr 2017 14:03:15 +0200")
+Sender: linux-gpio-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Nadav Haklai <nadavh@marvell.com>, Victor Gu <xigu@marvell.com>, Marcin Wojtas <mw@semihalf.com>, Wilson Ding <dingwei@marvell.com>, Hua Jing <jinghua@marvell.com>, Neta Zur Hershkovits <neta@marvell.com>
 List-Id: devicetree@vger.kernel.org
 
-On 25/04/17 21:33, Florian Fainelli wrote:
-> The described GPIO reset property is applicable to *all* child PHYs. If
-> we have one reset line per PHY present on the MDIO bus, these
-> automatically become properties of the child PHY nodes.
-> 
-> Finally, indicate how the RESET pulse width must be defined, which is
-> the maximum value of all individual PHYs RESET pulse widths determined
-> by reading their datasheets.
-> 
-> Fixes: 69226896ad63 ("mdio_bus: Issue GPIO RESET to PHYs.")
-> Signed-off-by: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Hi Linus,
+ 
+ On mer., avril 26 2017, Linus Walleij <linus.walleij@linaro.org> wrote:
 
-Reviewed-by: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+> On Wed, Apr 26, 2017 at 11:23 AM, Gregory CLEMENT
+> <gregory.clement@free-electrons.com> wrote:
+>>  On lun., avril 24 2017, Linus Walleij <linus.walleij@linaro.org> wrote:
+>
+>>>> +               spin_lock_irqsave(&info->irq_lock, flags);
+>>>> +               status = readl_relaxed(info->base + IRQ_STATUS + 4 * i);
+>>>> +               /* Manage only the interrupt that was enabled */
+>>>> +               status &= readl_relaxed(info->base + IRQ_EN + 4 * i);
+>>>> +               spin_unlock_irqrestore(&info->irq_lock, flags);
+>>>> +               while (status) {
+>>>> +                       u32 hwirq = ffs(status) - 1;
+>>>> +                       u32 virq = irq_find_mapping(d, hwirq +
+>>>> +                                                    i * GPIO_PER_REG);
+>>>> +
+>>>> +                       generic_handle_irq(virq);
+>>>> +                       status &= ~BIT(hwirq);
+>>>> +               }
+>>>
+>>> You hae a problem here is a new IRQ appears while you are inside
+>>> of this loop. You need to re-read the status register for each iteration
+>>> (and &= with the IRQ_EN I guess).
+>>
+>> If a new IRQ appears during the loop, then the irq handler will be
+>> called again because the cause of this new IRQ won't have been acked
+>> yet. So I think we're fine here.
+>
+> That *might* be true. It is true if the CPU gets a level IRQ from the
+> GPIO controller. But hardware dealing with edge IRQs can be very
+> quirky here, and just send a pulse on the line to the CPU if the
+> CPU-bound IRQ is also just edge triggered. And then that
+> pulse would potentially be missed while dealing with the current
+> IRQ in this handler. (And exactly this happened to us on other
+> hardware.)
 
-> ---
+OK thanks for sharing your experience, you convinced me, I am going to
+send a new version of the patch with this fix.
 
->  Documentation/devicetree/bindings/net/mdio.txt | 12 ++++++++----
->  1 file changed, 8 insertions(+), 4 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/net/mdio.txt b/Documentation/devicetree/bindings/net/mdio.txt
-> index 4ffbbacebda1..96a53f89aa6e 100644
-> --- a/Documentation/devicetree/bindings/net/mdio.txt
-> +++ b/Documentation/devicetree/bindings/net/mdio.txt
-> @@ -3,13 +3,17 @@ Common MDIO bus properties.
->  These are generic properties that can apply to any MDIO bus.
->  
->  Optional properties:
-> -- reset-gpios: List of one or more GPIOs that control the RESET lines
-> -  of the PHYs on that MDIO bus.
-> -- reset-delay-us: RESET pulse width in microseconds as per PHY datasheet.
-> +- reset-gpios: One GPIO that control the RESET lines of all PHYs on that MDIO
-> +  bus.
-> +- reset-delay-us: RESET pulse width in microseconds.
->  
->  A list of child nodes, one per device on the bus is expected. These
->  should follow the generic phy.txt, or a device specific binding document.
->  
-> +The 'reset-delay-us' indicates the RESET signal pulse width in microseconds and
-> +applies to all PHY devices. It must therefore be appropriately determined based
-> +on all PHY requirements (maximum value of all per-PHY RESET pulse widths).
-> +
->  Example :
->  This example shows these optional properties, plus other properties
->  required for the TI Davinci MDIO driver.
-> @@ -21,7 +25,7 @@ required for the TI Davinci MDIO driver.
->  		#size-cells = <0>;
->  
->  		reset-gpios = <&gpio2 5 GPIO_ACTIVE_LOW>;
-> -		reset-delay-us = <2>;   /* PHY datasheet states 1us min */
-> +		reset-delay-us = <2>;
->  
->  		ethphy0: ethernet-phy@1 {
->  			reg = <1>;
-> 
+
+>
+> But anyway: why let the irq handler be called again if you can avoid
+> it?
+> You would avoid a double context switch by just checking it again
+> in the loop before exiting the handler. And that can be really nice
+> for latency-sensitive stuff.
+
+
+I wanted to avoid an uncached access in each loop if it was not
+necessary. But as we finally need it, I will do it.
+
+
+Gregory
+
+
+
+>
+> Yours,
+> Linus Walleij
 
 -- 
-cheers,
--roger
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Gregory Clement, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
