@@ -1,86 +1,50 @@
-From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: Re: [PATCH v4 5/7] pinctrl: aramda-37xx: Add irqchip support
-Date: Wed, 26 Apr 2017 15:12:01 +0200
-Message-ID: <87inlr8g9q.fsf@free-electrons.com>
-References: <cover.65d0e6796fecf1fe6c5d07b981160b54dc9b4acd.1491405475.git-series.gregory.clement@free-electrons.com>
-        <70ffe3343c13d01737bf74e5de4898d0c0be07a0.1491405475.git-series.gregory.clement@free-electrons.com>
-        <CACRpkdZ=mVXBbVf1iHg8nQ6pYUkvpB+egH+stoMrkD8V_vaYpg@mail.gmail.com>
-        <87zif38qu2.fsf@free-electrons.com>
-        <CACRpkdYYRe4A+Zj+fDpC9SA1pgaVSgewYGB_vCNoWNRXWTtTGQ@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdYYRe4A+Zj+fDpC9SA1pgaVSgewYGB_vCNoWNRXWTtTGQ@mail.gmail.com>
-        (Linus Walleij's message of "Wed, 26 Apr 2017 14:03:15 +0200")
-Sender: linux-gpio-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Nadav Haklai <nadavh@marvell.com>, Victor Gu <xigu@marvell.com>, Marcin Wojtas <mw@semihalf.com>, Wilson Ding <dingwei@marvell.com>, Hua Jing <jinghua@marvell.com>, Neta Zur Hershkovits <neta@marvell.com>
+From: Geoff Lansberry <geoff-R+k406RtEhcAvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH] NFC: trf7970a: Correct register settings for 27MHz clock
+Date: Wed, 26 Apr 2017 09:48:33 -0400
+Message-ID: <1493214513-12245-1-git-send-email-geoff@kuvee.com>
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
+Cc: kernel-janitors-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-nfc-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mgreer-luAo+O/VEmrlveNOaEYElw@public.gmane.org, justin-R+k406RtEhcAvxtiuMwx3w@public.gmane.org, colin.king-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org, Geoff Lansberry <geoff-R+k406RtEhcAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Linus,
+In prior commits the selected clock frequency does not propagate
+correctly to what is written the the TRF7970A_MODULATOR_SYS_CLK_CTRL
+register.
+Also fixes a bug that causes the device tree property check to always
+pass.
+
+Signed-off-by: Geoff Lansberry <geoff-R+k406RtEhcAvxtiuMwx3w@public.gmane.org>
+---
+ drivers/nfc/trf7970a.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/nfc/trf7970a.c b/drivers/nfc/trf7970a.c
+index 2d1c8ca..c278b0e 100644
+--- a/drivers/nfc/trf7970a.c
++++ b/drivers/nfc/trf7970a.c
+@@ -2071,7 +2071,7 @@ static int trf7970a_probe(struct spi_device *spi)
+ 	}
  
- On mer., avril 26 2017, Linus Walleij <linus.walleij@linaro.org> wrote:
-
-> On Wed, Apr 26, 2017 at 11:23 AM, Gregory CLEMENT
-> <gregory.clement@free-electrons.com> wrote:
->>  On lun., avril 24 2017, Linus Walleij <linus.walleij@linaro.org> wrote:
->
->>>> +               spin_lock_irqsave(&info->irq_lock, flags);
->>>> +               status = readl_relaxed(info->base + IRQ_STATUS + 4 * i);
->>>> +               /* Manage only the interrupt that was enabled */
->>>> +               status &= readl_relaxed(info->base + IRQ_EN + 4 * i);
->>>> +               spin_unlock_irqrestore(&info->irq_lock, flags);
->>>> +               while (status) {
->>>> +                       u32 hwirq = ffs(status) - 1;
->>>> +                       u32 virq = irq_find_mapping(d, hwirq +
->>>> +                                                    i * GPIO_PER_REG);
->>>> +
->>>> +                       generic_handle_irq(virq);
->>>> +                       status &= ~BIT(hwirq);
->>>> +               }
->>>
->>> You hae a problem here is a new IRQ appears while you are inside
->>> of this loop. You need to re-read the status register for each iteration
->>> (and &= with the IRQ_EN I guess).
->>
->> If a new IRQ appears during the loop, then the irq handler will be
->> called again because the cause of this new IRQ won't have been acked
->> yet. So I think we're fine here.
->
-> That *might* be true. It is true if the CPU gets a level IRQ from the
-> GPIO controller. But hardware dealing with edge IRQs can be very
-> quirky here, and just send a pulse on the line to the CPU if the
-> CPU-bound IRQ is also just edge triggered. And then that
-> pulse would potentially be missed while dealing with the current
-> IRQ in this handler. (And exactly this happened to us on other
-> hardware.)
-
-OK thanks for sharing your experience, you convinced me, I am going to
-send a new version of the patch with this fix.
-
-
->
-> But anyway: why let the irq handler be called again if you can avoid
-> it?
-> You would avoid a double context switch by just checking it again
-> in the loop before exiting the handler. And that can be really nice
-> for latency-sensitive stuff.
-
-
-I wanted to avoid an uncached access in each loop if it was not
-necessary. But as we finally need it, I will do it.
-
-
-Gregory
-
-
-
->
-> Yours,
-> Linus Walleij
-
+ 	of_property_read_u32(np, "clock-frequency", &clk_freq);
+-	if ((clk_freq != TRF7970A_27MHZ_CLOCK_FREQUENCY) ||
++	if ((clk_freq != TRF7970A_27MHZ_CLOCK_FREQUENCY) &&
+ 		(clk_freq != TRF7970A_13MHZ_CLOCK_FREQUENCY)) {
+ 		dev_err(trf->dev,
+ 			"clock-frequency (%u Hz) unsupported\n",
+@@ -2079,6 +2079,13 @@ static int trf7970a_probe(struct spi_device *spi)
+ 		return -EINVAL;
+ 	}
+ 
++	if (clk_freq == TRF7970A_27MHZ_CLOCK_FREQUENCY) {
++		trf->modulator_sys_clk_ctrl = TRF7970A_MODULATOR_27MHZ;
++		dev_dbg(trf->dev, "trf7970a configured for 27MHz crystal\n");
++	} else {
++		trf->modulator_sys_clk_ctrl = 0;
++	}
++
+ 	if (of_property_read_bool(np, "en2-rf-quirk"))
+ 		trf->quirks |= TRF7970A_QUIRK_EN2_MUST_STAY_LOW;
+ 
 -- 
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
+2.7.4
