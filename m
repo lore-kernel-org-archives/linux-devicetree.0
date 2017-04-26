@@ -1,78 +1,87 @@
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH v2 2/2] dmaengine: Add DW AXI DMAC driver
-Date: Wed, 26 Apr 2017 18:04:35 +0300
-Message-ID: <1493219075.24567.211.camel@linux.intel.com>
-References: <1491573855-1039-1-git-send-email-Eugeniy.Paltsev@synopsys.com>
- <1491573855-1039-3-git-send-email-Eugeniy.Paltsev@synopsys.com>
- <1492518695.24567.56.camel@linux.intel.com>
- <1492784977.16657.6.camel@synopsys.com>
- <1492787583.24567.120.camel@linux.intel.com>
- <1493049305.25985.4.camel@synopsys.com>
- <1493052970.24567.168.camel@linux.intel.com>
- <1493133369.25985.10.camel@synopsys.com>
- <1493143941.24567.196.camel@linux.intel.com>
+From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Subject: [PATCH v5 00/10] AXP803 PMIC support for Pine64
+Date: Wed, 26 Apr 2017 23:20:13 +0800
+Message-ID: <20170426152023.41567-1-icenowy@aosc.io>
+Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-snps-arc-bounces+gla-linux-snps-arc=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1493143941.24567.196.camel@linux.intel.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-snps-arc>,
- <mailto:linux-snps-arc-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-snps-arc/>
-List-Post: <mailto:linux-snps-arc@lists.infradead.org>
-List-Help: <mailto:linux-snps-arc-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-snps-arc>,
- <mailto:linux-snps-arc-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-snps-arc" <linux-snps-arc-bounces@lists.infradead.org>
-Errors-To: linux-snps-arc-bounces+gla-linux-snps-arc=m.gmane.org@lists.infradead.org
-To: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "vinod.koul@intel.com" <vinod.koul@intel.com>, "Alexey.Brodkin@synopsys.com" <Alexey.Brodkin@synopsys.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, "dan.j.williams@intel.com" <dan.j.williams@intel.com>, "linux-snps-arc@lists.infradead.org" <linux-snps-arc@lists.infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBDS6XAN6ZADRBTPVQLEAKGQE5VXAXGY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2017-04-25 at 21:12 +0300, Andy Shevchenko wrote:
-> On Tue, 2017-04-25 at 15:16 +0000, Eugeniy Paltsev wrote:
-> > On Mon, 2017-04-24 at 19:56 +0300, Andy Shevchenko wrote:
-> > > On Mon, 2017-04-24 at 15:55 +0000, Eugeniy Paltsev wrote:
+The Pine64 (including Pine64+) boards have an AXP803 PMIC, which is a PMIC
+similar to AXP288, but tweaked to use with Allwinner SoCs rather than Intel
+tablets (with DCIN and Vbus re-splitted like other AXP PMICs, and RSB bus
+support added).
 
-> > > Descriptor is active until terminate_all() is called or new
-> > > descriptor
-> > > is supplied. So, the caller has a quite time to check on it.
-> > > 
-> > > So, what's wrong on it by your opinion?
-> > 
-> > Hmm, this looks OK. (In my example (hsu/hsu.c driver) error
-> > descriptors
-> > are not freed even after terminate_all is called)
-> 
-> If it's active it will be freed.
-> Otherwise caller should check somewhere that descriptor fails.
-> 
-> But actually this is fragile and we need to monitor failed
-> descriptors.
-> Thanks for reporting.
-> 
-> > 
-> > > Of course, if you want to keep by some reason (should be stated
-> > > what
-> > > the reason in comment) erred descriptors, you can do that.
-> > 
-> > So, I'll create desc_error list and store failed descriptors in this
-> > list until terminate_all() is called.
-> > Is it OK implementation?
-> 
-> Nope, we need to amend virt-chan API for that. I'm on it. Will send a
-> series soon.
+This patchset adds support for it and enabled it in Pine64 device tree.
 
-I have to correct what I wrote before.
+The basical part of AXP803 MFD driver is already applied, according to Lee.
 
-We have two options:
-a) one I proposed above;
-b) move descriptor to complete list and call complete callback with
-result.
+Thus this patchset is now still two parts, but a bit different to older
+revisions:
 
-So, it looks like the b) variant is what is done already in 4 (did I
-calculate correctly?) drivers and respective users.
+- Part1: from PATCH 1/10 to PATCH 5/10, which focus on enabling AXP803 in
+  the device tree: the RSB bus, the R_INTC interrupt controller (for the
+  NMI line, which is connected to AXP803 on Pine64), and finally the basical
+  AXP803 node.
+- Part2: from PATCH 5/10 to PATCH 10/10, which are enabling the regulator
+  function of the AXP803 PMIC. Finally Wi-Fi function is added
+  as a usage of regulators function.
+
+PATCH 1 adds RSB device nodes, which is used for the communication between
+A64 and AXP803.
+
+PATCH 2 adds device tree binding of A64 R_INTC.
+
+PATCH 3 really adds support for A64 R_INTC in NMI driver.
+
+PATCH 4 adds R_INTC node in A64 device tree.
+
+PATCH 5 adds AXP803 node to the Pine64 device tree by using already
+applied drivers/bindings.
+
+PATCH 6 adds support for AXP803 regulators in AXP20x regulatoe driver.
+(The binding is already applied)
+
+PATCH 7 enables the AXP803 regulator cell in MFD driver.
+
+PATCH 8 adds a DTSI file for AXP803, like other older AXP PMICs.
+
+PATCH 9 enables AXP803 regulators in Pine64 device tree.
+
+PATCH 10 enables Wi-Fi for Pine64.
+
+Icenowy Zheng (10):
+  arm64: allwinner: a64: enable RSB on A64
+  irqchip/sunxi-nmi: add A64 R_INTC to the binding doc
+  irqchip/sunxi-nmi: add support for the NMI in A64 R_INTC
+  arm64: allwinner: a64: add NMI (R_INTC) controller on A64
+  arm64: allwinner: a64: add AXP803 node to Pine64 device tree
+  regulator: axp20x-regulator: add support for AXP803
+  mfd: axp20x: add axp20x-regulator cell for AXP803
+  arm64: allwinner: a64: add DTSI file for AXP803 PMIC
+  arm64: allwinner: a64: enable AXP803 regulators for Pine64
+  arm64: allwinner: a64: enable Wi-Fi for Pine64
+
+ .../interrupt-controller/allwinner,sunxi-nmi.txt   |   7 +-
+ arch/arm64/boot/dts/allwinner/axp803.dtsi          | 150 ++++++++++++++++++++
+ .../arm64/boot/dts/allwinner/sun50i-a64-pine64.dts | 136 ++++++++++++++++++
+ arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi      |  27 ++++
+ drivers/irqchip/irq-sunxi-nmi.c                    |  13 ++
+ drivers/mfd/axp20x.c                               |   3 +-
+ drivers/regulator/axp20x-regulator.c               | 153 ++++++++++++++++++---
+ include/linux/mfd/axp20x.h                         |  37 +++++
+ 8 files changed, 501 insertions(+), 25 deletions(-)
+ create mode 100644 arch/arm64/boot/dts/allwinner/axp803.dtsi
 
 -- 
-Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Intel Finland Oy
+2.12.2
