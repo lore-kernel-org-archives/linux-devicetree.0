@@ -1,12 +1,13 @@
 From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Subject: [PATCH v5 01/10] arm64: allwinner: a64: enable RSB on A64
-Date: Wed, 26 Apr 2017 23:20:14 +0800
-Message-ID: <20170426152023.41567-2-icenowy@aosc.io>
+Subject: [PATCH v5 02/10] irqchip/sunxi-nmi: add A64 R_INTC to
+ the binding doc
+Date: Wed, 26 Apr 2017 23:20:15 +0800
+Message-ID: <20170426152023.41567-3-icenowy@aosc.io>
 References: <20170426152023.41567-1-icenowy@aosc.io>
 Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDS6XAN6ZADRBV7VQLEAKGQEJQKF7EY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBDS6XAN6ZADRBYXVQLEAKGQETK4OMXY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20170426152023.41567-1-icenowy-h8G6r0blFSE@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -19,49 +20,35 @@ To: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Rob Herring 
 Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Allwinner A64 have a RSB controller like the one on A23/A33 SoCs.
+The A31 NMI driver seems to be using wrong base address.
 
-Add it and its pinmux.
+As we're going to convert to use a correct NMI base address (and
+correctly name it to R_INTC as the datasheet suggests), add a new
+compatible string for the "correct" R_INTC, which we will use for A64
+SoC.
 
 Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Acked-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 ---
-Changes in v2:
-- Removed bonus properties in pio node.
-- Added Chen-Yu's ACK.
+ .../bindings/interrupt-controller/allwinner,sunxi-nmi.txt          | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
- arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-index c7f669f5884f..05ec9fc5e81f 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-@@ -422,6 +422,25 @@
- 			#gpio-cells = <3>;
- 			interrupt-controller;
- 			#interrupt-cells = <3>;
-+
-+			r_rsb_pins: rsb@0 {
-+				pins = "PL0", "PL1";
-+				function = "s_rsb";
-+			};
-+		};
-+
-+		r_rsb: rsb@1f03400 {
-+			compatible = "allwinner,sun8i-a23-rsb";
-+			reg = <0x01f03400 0x400>;
-+			interrupts = <GIC_SPI 39 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&r_ccu 6>;
-+			clock-frequency = <3000000>;
-+			resets = <&r_ccu 2>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&r_rsb_pins>;
-+			status = "disabled";
-+			#address-cells = <1>;
-+			#size-cells = <0>;
- 		};
- 	};
- };
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/allwinner,sunxi-nmi.txt b/Documentation/devicetree/bindings/interrupt-controller/allwinner,sunxi-nmi.txt
+index 81cd3692405e..fea0c6a6211f 100644
+--- a/Documentation/devicetree/bindings/interrupt-controller/allwinner,sunxi-nmi.txt
++++ b/Documentation/devicetree/bindings/interrupt-controller/allwinner,sunxi-nmi.txt
+@@ -3,8 +3,11 @@ Allwinner Sunxi NMI Controller
+ 
+ Required properties:
+ 
+-- compatible : should be "allwinner,sun7i-a20-sc-nmi" or
+-  "allwinner,sun6i-a31-sc-nmi" or "allwinner,sun9i-a80-nmi"
++- compatible : should be one of:
++	"allwinner,sun6i-a31-sc-nmi"
++	"allwinner,sun7i-a20-sc-nmi"
++	"allwinner,sun9i-a80-nmi"
++	"allwinner,sun50i-a64-r-intc"
+ - reg : Specifies base physical address and size of the registers.
+ - interrupt-controller : Identifies the node as an interrupt controller
+ - #interrupt-cells : Specifies the number of cells needed to encode an
 -- 
 2.12.2
