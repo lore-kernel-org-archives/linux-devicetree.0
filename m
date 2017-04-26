@@ -1,137 +1,61 @@
-From: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH V6 1/9] PM / OPP: Introduce "power-domain-opp" property
-Date: Wed, 26 Apr 2017 16:27:05 +0530
-Message-ID: <025acedb263eaa6089d354d9630214ada8013990.1493203884.git.viresh.kumar@linaro.org>
-References: <cover.1493203884.git.viresh.kumar@linaro.org>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4 5/7] pinctrl: aramda-37xx: Add irqchip support
+Date: Wed, 26 Apr 2017 14:03:15 +0200
+Message-ID: <CACRpkdYYRe4A+Zj+fDpC9SA1pgaVSgewYGB_vCNoWNRXWTtTGQ@mail.gmail.com>
+References: <cover.65d0e6796fecf1fe6c5d07b981160b54dc9b4acd.1491405475.git-series.gregory.clement@free-electrons.com>
+ <70ffe3343c13d01737bf74e5de4898d0c0be07a0.1491405475.git-series.gregory.clement@free-electrons.com>
+ <CACRpkdZ=mVXBbVf1iHg8nQ6pYUkvpB+egH+stoMrkD8V_vaYpg@mail.gmail.com> <87zif38qu2.fsf@free-electrons.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <cover.1493203884.git.viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-In-Reply-To: <cover.1493203884.git.viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-References: <cover.1493203884.git.viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+In-Reply-To: <87zif38qu2.fsf-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rafael Wysocki <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Viresh Kumar <vireshk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: linaro-kernel-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Vincent Guittot <vincent.guittot-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, lina.iyer-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, rnayak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Victor Gu <xigu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Marcin Wojtas <mw-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org>, Wilson Ding <dingwei-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Hua Jing <jinghua-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Neta Zur Hershkovits <neta-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Power-domains need to express their active states in DT and the devices
-within the power-domain need to express their dependency on those active
-states. The power-domains can use the OPP tables without any
-modifications to the bindings.
+On Wed, Apr 26, 2017 at 11:23 AM, Gregory CLEMENT
+<gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+>  On lun., avril 24 2017, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
 
-Add a new property "power-domain-opp", which will contain phandle to the
-OPP node of the parent power domain. This is required for devices which
-have dependency on the configured active state of the power domain for
-their working.
+>>> +               spin_lock_irqsave(&info->irq_lock, flags);
+>>> +               status = readl_relaxed(info->base + IRQ_STATUS + 4 * i);
+>>> +               /* Manage only the interrupt that was enabled */
+>>> +               status &= readl_relaxed(info->base + IRQ_EN + 4 * i);
+>>> +               spin_unlock_irqrestore(&info->irq_lock, flags);
+>>> +               while (status) {
+>>> +                       u32 hwirq = ffs(status) - 1;
+>>> +                       u32 virq = irq_find_mapping(d, hwirq +
+>>> +                                                    i * GPIO_PER_REG);
+>>> +
+>>> +                       generic_handle_irq(virq);
+>>> +                       status &= ~BIT(hwirq);
+>>> +               }
+>>
+>> You hae a problem here is a new IRQ appears while you are inside
+>> of this loop. You need to re-read the status register for each iteration
+>> (and &= with the IRQ_EN I guess).
+>
+> If a new IRQ appears during the loop, then the irq handler will be
+> called again because the cause of this new IRQ won't have been acked
+> yet. So I think we're fine here.
 
-For some platforms the actual frequency and voltages of the power
-domains are managed by the firmware and are so hidden from the high
-level operating system. The "opp-hz" property is relaxed a bit to
-contain indexes instead of actual frequency values to support such
-platforms.
+That *might* be true. It is true if the CPU gets a level IRQ from the
+GPIO controller. But hardware dealing with edge IRQs can be very
+quirky here, and just send a pulse on the line to the CPU if the
+CPU-bound IRQ is also just edge triggered. And then that
+pulse would potentially be missed while dealing with the current
+IRQ in this handler. (And exactly this happened to us on other
+hardware.)
 
-Signed-off-by: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
- Documentation/devicetree/bindings/opp/opp.txt | 74 ++++++++++++++++++++++++++-
- 1 file changed, 73 insertions(+), 1 deletion(-)
+But anyway: why let the irq handler be called again if you can avoid it?
 
-diff --git a/Documentation/devicetree/bindings/opp/opp.txt b/Documentation/devicetree/bindings/opp/opp.txt
-index 63725498bd20..6e30cae2a936 100644
---- a/Documentation/devicetree/bindings/opp/opp.txt
-+++ b/Documentation/devicetree/bindings/opp/opp.txt
-@@ -77,7 +77,10 @@ This defines voltage-current-frequency combinations along with other related
- properties.
- 
- Required properties:
--- opp-hz: Frequency in Hz, expressed as a 64-bit big-endian integer.
-+- opp-hz: Frequency in Hz, expressed as a 64-bit big-endian integer. In some
-+  cases the exact frequency in Hz may be hidden from the OS by the firmware and
-+  this field may contain values that represent the frequency in a firmware
-+  dependent way, for example an index of an array in the firmware.
- 
- Optional properties:
- - opp-microvolt: voltage in micro Volts.
-@@ -154,6 +157,13 @@ properties.
- 
- - status: Marks the node enabled/disabled.
- 
-+- power-domain-opp: Phandle to the OPP node of the parent power-domain. The
-+  parent power-domain should be configured to the OPP whose node is pointed by
-+  the phandle, in order to configure the device for the OPP node that contains
-+  this property. The order in which the device and power domain should be
-+  configured is implementation defined. The OPP table of a device can set this
-+  property only if the device node contains "power-domains" property.
-+
- Example 1: Single cluster Dual-core ARM cortex A9, switch DVFS states together.
- 
- / {
-@@ -528,3 +538,65 @@ Example 5: opp-supported-hw
- 		};
- 	};
- };
-+
-+Example 7: Power domains with their own OPP tables:
-+(example: For 1GHz device require domain state 1 and for 1.1 & 1.2 GHz device require state 2)
-+
-+/ {
-+	domain_opp_table: opp_table0 {
-+		compatible = "operating-points-v2";
-+
-+		/*
-+		 * NOTE: Actual frequency is managed by firmware and is hidden
-+		 * from HLOS, so we simply use index in the opp-hz field to
-+		 * select the OPP.
-+		 */
-+		domain_opp_1: opp-1 {
-+			opp-hz = /bits/ 64 <1>;
-+			opp-microvolt = <975000 970000 985000>;
-+		};
-+		domain_opp_2: opp-2 {
-+			opp-hz = /bits/ 64 <2>;
-+			opp-microvolt = <1075000 1000000 1085000>;
-+		};
-+	};
-+
-+	foo_domain: power-controller@12340000 {
-+		compatible = "foo,power-controller";
-+		reg = <0x12340000 0x1000>;
-+		#power-domain-cells = <0>;
-+		operating-points-v2 = <&domain_opp_table>;
-+	}
-+
-+	cpu0_opp_table: opp_table1 {
-+		compatible = "operating-points-v2";
-+		opp-shared;
-+
-+		opp-1000000000 {
-+			opp-hz = /bits/ 64 <1000000000>;
-+			power-domain-opp = <&domain_opp_1>;
-+		};
-+		opp-1100000000 {
-+			opp-hz = /bits/ 64 <1100000000>;
-+			power-domain-opp = <&domain_opp_2>;
-+		};
-+		opp-1200000000 {
-+			opp-hz = /bits/ 64 <1200000000>;
-+			power-domain-opp = <&domain_opp_2>;
-+		};
-+	};
-+
-+	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		cpu@0 {
-+			compatible = "arm,cortex-a9";
-+			reg = <0>;
-+			clocks = <&clk_controller 0>;
-+			clock-names = "cpu";
-+			operating-points-v2 = <&cpu0_opp_table>;
-+			power-domains = <&foo_domain>;
-+		};
-+	};
-+};
--- 
-2.12.0.432.g71c3a4f4ba37
+You would avoid a double context switch by just checking it again
+in the loop before exiting the handler. And that can be really nice
+for latency-sensitive stuff.
 
+Yours,
+Linus Walleij
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
