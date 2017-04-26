@@ -1,70 +1,94 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH V4 1/9] PM / OPP: Allow OPP table to be used for
- power-domains
-Date: Wed, 26 Apr 2017 14:55:32 +0100
-Message-ID: <20170426135532.ryrh276znet5yvks@sirena.org.uk>
-References: <cover.1490001099.git.viresh.kumar@linaro.org>
- <e772e67a5445319bb8e0f312846ace666adc097f.1490001099.git.viresh.kumar@linaro.org>
- <0a7146f9-72f1-317c-3aab-770a72462968@arm.com>
- <20170413053736.GM5910@vireshk-i7>
- <3adbef6a-7b43-528f-e88f-c2121d30a5d3@arm.com>
- <20170417052758.GF28191@vireshk-i7>
- <95aa4b97-4e1a-13bb-f4d8-982b778012ba@arm.com>
- <9cd9287c-392b-d3ca-db7d-75c49287448e@codeaurora.org>
+From: jmondi <jacopo-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4 2/9] pinctrl: Renesas RZ/A1 pin and gpio controller
+Date: Wed, 26 Apr 2017 16:28:07 +0200
+Message-ID: <20170426142757.GJ11761@w540>
+References: <1491401247-7030-1-git-send-email-jacopo+renesas@jmondi.org>
+ <1491401247-7030-3-git-send-email-jacopo+renesas@jmondi.org>
+ <CAMuHMdUy3wo9x=nkpdSVSt34q5yaARc4+kFDC592V2LF7Cxzrg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="7x23rnxpubex2hak"
-Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <9cd9287c-392b-d3ca-db7d-75c49287448e@codeaurora.org>
-Sender: linux-pm-owner@vger.kernel.org
-To: Rajendra Nayak <rnayak@codeaurora.org>
-Cc: Sudeep Holla <sudeep.holla@arm.com>, Viresh Kumar <viresh.kumar@linaro.org>, Rafael Wysocki <rjw@rjwysocki.net>, ulf.hansson@linaro.org, Kevin Hilman <khilman@linaro.org>, Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@codeaurora.org>, linaro-kernel@lists.linaro.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, Vincent Guittot <vincent.guittot@linaro.org>, robh+dt@kernel.org, lina.iyer@linaro.org, devicetree@vger.kernel.org
+In-Reply-To: <CAMuHMdUy3wo9x=nkpdSVSt34q5yaARc4+kFDC592V2LF7Cxzrg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Cc: Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Geert,
 
---7x23rnxpubex2hak
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On Wed, Apr 26, 2017 at 02:21:34PM +0200, Geert Uytterhoeven wrote:
+> Hi Jacopo,
+>
+> On Wed, Apr 5, 2017 at 4:07 PM, Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org> wrote:
+> > Add combined gpio and pin controller driver for Renesas RZ/A1
+> > r7s72100 SoC.
+> >
+> > Signed-off-by: Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
+>
+> > --- /dev/null
+> > +++ b/drivers/pinctrl/pinctrl-rza1.c
+>
+> > +/*
+> > + * Keep this up-to-date with pinconf-generic.h: it performs packing of
+> > + * pin conf flags and argument during pinconf_generic_parse_dt_config();
+> > + * we simply discard pinconf argument here
+> > + */
+> > +#define PIN_CONF_UNPACK(pinconf)       ((pinconf) & 0xffUL)
+>
+> Perhaps this should be moved to pinconf-generic.h, to make sure it stays
+> up-to-date?
+>
 
-On Wed, Apr 26, 2017 at 10:02:39AM +0530, Rajendra Nayak wrote:
-> > On 17/04/17 06:27, Viresh Kumar wrote:
+Not sure, I'm discarding the argument of the configuration flag with
+this macro...
 
-> >>> If we are looking this power-domains with performance as just some
-> >>> *advanced regulators*, I don't like the complexity added.
+I would keep this internal to this driver, or make two of them, one to
+retrieve the flag, and one to retrieve argument..
 
-> + Mark
 
-> I don;t see any public discussions on why we ruled out using regulators to
-> support this but maybe there were some offline discussions on this.
-
-> Mark, this is a long thread, so just summarizing here to give you the context.
-
-> At qualcomm, we have an external M3 core (running its own firmware) which controls
-> a few voltage rails (including AVS on those). The devices vote for the voltage levels
-> (or performance levels) they need by passing an integer value to the M3 (not actual
-> voltage values). Since that didn't fit well with the existing regulator apis it was
-
-As I'm getting fed up of saying: if the values you are setting are not
-voltages and do not behave like voltages then the hardware should not be
-represented as a voltage regulator since if they are represented as
-voltage regulators things will expect to be able to control them as
-voltage regulators.  This hardware is quite clearly providing OPPs
-directly, I would expect this to be handled in the OPP code somehow.
-
---7x23rnxpubex2hak
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlkAps4ACgkQJNaLcl1U
-h9DNzQf7B0hYfmz0bgG7ThEhi7SFkdE0hhq5GhCGeSKSRiMZnnkLLJw8iUnwM9Te
-S4oEibgntrrLimnHb33fIuHPO3kEWLcgR4dDKA/W+CGVx5YVZ/C0YEMo8alJmgdM
-PWlr7lcAt8NtSTumIR9DhZzd46LmkqmUrbwEK33GsPCaf0yFcsHf8tx4e54g5VG3
-IRxuytrcQ80KqR+44OcVK/m4MEhIGLXLuri4OqdN3LZSjJkDH1Frz46gG8ixGG4Z
-o8eS43qSMM+S4Y9b0KOpeuH7xkRp6XzQT3dI8XWf/EdiO+qqZqMyd1DawT547SyG
-iSN3t05B1ExZu2x9WN1Cz4mvhx801Q==
-=nfTy
------END PGP SIGNATURE-----
-
---7x23rnxpubex2hak--
+> > +static inline int rza1_get_bit(struct rza1_port *port, unsigned int reg,
+>
+> I'd use "unsigned int" as the return type.
+> It doesn't matter much as register values are 16-bit, but people might copy
+> from this driver when writing their own.
+>
+> > +                              unsigned int bit)
+> > +{
+> > +       void __iomem *mem = RZA1_ADDR(port->base, reg, port->id);
+> > +
+> > +       return ioread16(mem) & BIT(bit);
+> > +}
+>
+> > +static inline int rza1_pin_get_direction(struct rza1_port *port,
+> > +                                        unsigned int pin)
+> > +{
+> > +       unsigned long irqflags;
+> > +       int input;
+> > +
+> > +       spin_lock_irqsave(&port->lock, irqflags);
+> > +       input = rza1_get_bit(port, RZA1_PM_REG, pin);
+> > +       spin_unlock_irqrestore(&port->lock, irqflags);
+> > +
+> > +       return input;
+>
+> return !!input;
+>
+> gpio_chip.get_direction() should return 0, 1, or a negative error value.
+>
+> > +}
+>
+> Gr{oetje,eeting}s,
+>
+>                         Geert
+>
+> --
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+>
+> In personal conversations with technical people, I call myself a hacker. But
+> when I'm talking to journalists I just say "programmer" or something like that.
+>                                 -- Linus Torvalds
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
