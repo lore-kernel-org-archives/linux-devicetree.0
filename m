@@ -1,61 +1,89 @@
-From: <sean.wang@mediatek.com>
-Subject: [PATCH v2 08/30] arm: dts: mt7623: add pmic wrapper nodes to the
- mt7623 dtsi file
-Date: Wed, 26 Apr 2017 17:25:52 +0800
-Message-ID: <1493198774-4478-9-git-send-email-sean.wang@mediatek.com>
+From: <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v2 10/30] arm: dts: mt7623: add spi nodes to the mt7623.dtsi
+ file
+Date: Wed, 26 Apr 2017 17:25:54 +0800
+Message-ID: <1493198774-4478-11-git-send-email-sean.wang@mediatek.com>
 References: <1493198774-4478-1-git-send-email-sean.wang@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1493198774-4478-1-git-send-email-sean.wang@mediatek.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: robh+dt@kernel.org, matthias.bgg@gmail.com, john@phrozen.org, mark.rutland@arm.com, linux@armlinux.org.uk, linus.walleij@linaro.org, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org
-Cc: linux-gpio@vger.kernel.org, Sean Wang <sean.wang@mediatek.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <1493198774-4478-1-git-send-email-sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
+List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: John Crispin <john@phrozen.org>
+From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 
-Add PMIC wrapper node to the mt7623.dtsi file which
-is necessary for the control of PMIC from Mediatek.
+Add spi controller nodes to the mt7623.dtsi file
 
-Signed-off-by: John Crispin <john@phrozen.org>
-Signed-off-by: Sean Wang <sean.wang@mediatek.com>
+Signed-off-by: John Crispin <john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org>
+Signed-off-by: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 ---
- arch/arm/boot/dts/mt7623.dtsi | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ arch/arm/boot/dts/mt7623.dtsi | 42 ++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 42 insertions(+)
 
 diff --git a/arch/arm/boot/dts/mt7623.dtsi b/arch/arm/boot/dts/mt7623.dtsi
-index 1942bc7..6adc21d 100644
+index adb4793..131808c 100644
 --- a/arch/arm/boot/dts/mt7623.dtsi
 +++ b/arch/arm/boot/dts/mt7623.dtsi
-@@ -158,6 +158,19 @@
- 		clock-names = "system-clk", "rtc-clk";
+@@ -288,6 +288,48 @@
+ 		status = "disabled";
  	};
  
-+	pwrap: pwrap@1000d000 {
-+		compatible = "mediatek,mt7623-pwrap",
-+			     "mediatek,mt2701-pwrap";
-+		reg = <0 0x1000d000 0 0x1000>;
-+		reg-names = "pwrap";
-+		interrupts = <GIC_SPI 115 IRQ_TYPE_LEVEL_HIGH>;
-+		resets = <&infracfg MT2701_INFRA_PMIC_WRAP_RST>;
-+		reset-names = "pwrap";
-+		clocks = <&infracfg CLK_INFRA_PMICSPI>,
-+			 <&infracfg CLK_INFRA_PMICWRAP>;
-+		clock-names = "spi", "wrap";
++	spi0: spi@1100a000 {
++		compatible = "mediatek,mt7623-spi",
++			     "mediatek,mt2701-spi";
++		#address-cells = <1>;
++		#size-cells = <0>;
++		reg = <0 0x1100a000 0 0x100>;
++		interrupts = <GIC_SPI 78 IRQ_TYPE_LEVEL_LOW>;
++		clocks = <&topckgen CLK_TOP_SYSPLL3_D2>,
++			 <&topckgen CLK_TOP_SPI0_SEL>,
++			 <&pericfg CLK_PERI_SPI0>;
++		clock-names = "parent-clk", "sel-clk", "spi-clk";
++		status = "disabled";
 +	};
 +
- 	sysirq: interrupt-controller@10200100 {
- 		compatible = "mediatek,mt7623-sysirq",
- 			     "mediatek,mt6577-sysirq";
++	spi1: spi@11016000 {
++		compatible = "mediatek,mt7623-spi",
++			     "mediatek,mt2701-spi";
++		#address-cells = <1>;
++		#size-cells = <0>;
++		reg = <0 0x11016000 0 0x100>;
++		interrupts = <GIC_SPI 79 IRQ_TYPE_LEVEL_LOW>;
++		clocks = <&topckgen CLK_TOP_SYSPLL3_D2>,
++			 <&topckgen CLK_TOP_SPI1_SEL>,
++			 <&pericfg CLK_PERI_SPI1>;
++		clock-names = "parent-clk", "sel-clk", "spi-clk";
++		status = "disabled";
++	};
++
++	spi2: spi@11017000 {
++		compatible = "mediatek,mt7623-spi",
++			     "mediatek,mt2701-spi";
++		#address-cells = <1>;
++		#size-cells = <0>;
++		reg = <0 0x11017000 0 0x1000>;
++		interrupts = <GIC_SPI 142 IRQ_TYPE_LEVEL_LOW>;
++		clocks = <&topckgen CLK_TOP_SYSPLL3_D2>,
++			 <&topckgen CLK_TOP_SPI2_SEL>,
++			 <&pericfg CLK_PERI_SPI2>;
++		clock-names = "parent-clk", "sel-clk", "spi-clk";
++		status = "disabled";
++	};
++
+ 	hifsys: syscon@1a000000 {
+ 		compatible = "mediatek,mt7623-hifsys",
+ 			     "mediatek,mt2701-hifsys",
 -- 
 1.9.1
