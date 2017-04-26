@@ -1,50 +1,69 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: [PATCH 2/2] arm64: dts: apq8016-sbc: Correct WLAN LED default-trigger
-Date: Wed, 26 Apr 2017 15:04:44 -0700
-Message-ID: <20170426220444.10539-2-bjorn.andersson@linaro.org>
-References: <20170426220444.10539-1-bjorn.andersson@linaro.org>
+From: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Subject: Re: [PATCH v5 0/9] NFC: trf7970a: Fixups & convert to desc-based GPIO
+Date: Thu, 27 Apr 2017 00:09:00 +0200
+Message-ID: <20170426220900.GA3717@zurbaran.ger.intel.com>
+References: <20170425224356.11498-1-mgreer@animalcreek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170426220444.10539-1-bjorn.andersson@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>
-Cc: devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org, Kalle Valo <kvalo@codeaurora.org>, netdev@vger.kernel.org, Nicolas Dechesne <nicolas.dechesne@linaro.org>, wcn36xx@lists.infradead.org, linux-soc@vger.kernel.org, Eugene Krasnikov <k.eugene.e@gmail.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170425224356.11498-1-mgreer-luAo+O/VEmrlveNOaEYElw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Greer <mgreer-luAo+O/VEmrlveNOaEYElw@public.gmane.org>
+Cc: linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-nfc-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The TX status trigger of the wlan interface is named phy0tx, so this
-updates the default-trigger for the WLAN LED to use that instead.
+Hi Mark,
 
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
----
+On Tue, Apr 25, 2017 at 03:43:47PM -0700, Mark Greer wrote:
+> These trf7970a driver patches do the following things:
+>  - add Mark Greer as the maintainer of the trf7970a driver
+>  - some minor fixups
+>  - remove support for 'vin-voltage-override' DT property
+>  - change the DTS example to indicate that EN and EN2 are active high GPIOs
+>  - convert the driver to use the descriptor-based GPIO interface
+>  - apply Lindent coding style fixes
+> 
+> Based on nfc-next/master 4ea206395d3a ("nfc: fix get_unaligned_...() misuses")
+> 
+> v4->v5:
+>  - Fixed whitespace issue in "NFC: trf7970a: Clean up coding style issues"
+> 
+> v3->v4:
+>  - Rebased on nfc-next/master because patches in that branch conflict
+>    with the v3 version of this patch series.
+>  - Removed "NFC: trf7970a: Don't manage EN2 when not specified in DT"
+>    because a similar patch has already been accepted.
+>  - Added "NFC: trf7970a: Clean up coding style issues" because the reason
+>    I removed it in v3 no longer exists.
+>  - Reordered the patches to make more sense (I think)
+> 
+> v2->v3:
+>  - Removed "[PATCH v2 5/7] NFC: trf7970a: Clean up coding style issues"
+>    because it will make merging patches from Geoff Lansberry and others
+>    hard to apply.  I will resubmit once those patches have been merged
+>    or rejected.
+>  - Added a patch to remove 'vin-voltage-override' DT property support as
+>    proper DT regulator set up makes it unnecessary.
+> 
+> v1->v2:
+>  - Commit description fixups only; no functional changes.
+> 
+> Mark Greer (9):
+>   MAINTAINERS: NFC: trf7970a: Add Mark Greer as maintainer
+>   NFC: trf7970a: Don't de-assert EN2 unless it was asserted
+>   NFC: trf7970a: Fix inaccurate comment in trf7970a_probe()
+>   NFC: trf7970a: Only check 'en2-rf-quirk' if EN2 is specified
+>   NFC: trf7970a: Remove useless comment
+>   NFC: trf7970a: Remove support for 'vin-voltage-override' DT property
+>   NFC: trf7970a: Enable pins are active high not active low
+>   NFC: trf7970a: Convert to descriptor based GPIO interface
+>   NFC: trf7970a: Clean up coding style issues
+All patches applied to nfc-next, thanks.
 
-Note that without patch 1/2 this trigger does not fire - but there's also no
-harm in picking the two patches through separate trees.
-
- arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi b/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi
-index 5d83b02b7c4a..21a8f5ce8955 100644
---- a/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi
-+++ b/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi
-@@ -178,7 +178,7 @@
- 			led@5 {
- 				label = "apq8016-sbc:yellow:wlan";
- 				gpios = <&pm8916_mpps 2 GPIO_ACTIVE_HIGH>;
--				linux,default-trigger = "wlan";
-+				linux,default-trigger = "phy0tx";
- 				default-state = "off";
- 			};
- 
--- 
-2.12.0
+Cheers,
+Samuel.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
