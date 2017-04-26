@@ -1,66 +1,31 @@
-From: Frank Rowand <frowand.list@gmail.com>
-Subject: Re: [PATCH v2 1/2] of: support dtc compiler flags for overlays
-Date: Tue, 25 Apr 2017 17:10:58 -0700
-Message-ID: <58FFE592.2030203@gmail.com>
-References: <1493075119-32026-1-git-send-email-frowand.list@gmail.com>
- <1493075119-32026-2-git-send-email-frowand.list@gmail.com>
- <CAK7LNARd-XsCfSJhDj3JisH=u4XZm8DaPEa5Pg2ciWrq8Ueing@mail.gmail.com>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH v2 2/2] ARM: dts: Add the ethernet and ethernet PHY to
+ the cygnus core DT.
+Date: Wed, 26 Apr 2017 02:49:07 +0200
+Message-ID: <20170426004907.GA9453@lunn.ch>
+References: <20170425235357.7690-1-eric@anholt.net>
+ <20170425235357.7690-2-eric@anholt.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kbuild-owner@vger.kernel.org>
-In-Reply-To: <CAK7LNARd-XsCfSJhDj3JisH=u4XZm8DaPEa5Pg2ciWrq8Ueing@mail.gmail.com>
-Sender: linux-kbuild-owner@vger.kernel.org
-To: Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Stephen Boyd <stephen.boyd@linaro.org>, Michal Marek <mmarek@suse.com>, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <netdev-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170425235357.7690-2-eric@anholt.net>
+Sender: netdev-owner@vger.kernel.org
+To: Eric Anholt <eric@anholt.net>
+Cc: Florian Fainelli <f.fainelli@gmail.com>, Vivien Didelot <vivien.didelot@savoirfairelinux.com>, netdev@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-On 04/25/17 15:04, Masahiro Yamada wrote:
-> 2017-04-25 8:05 GMT+09:00  <frowand.list@gmail.com>:
->> From: Frank Rowand <frank.rowand@sony.com>
->>
->> The dtc compiler version that adds initial support was available
->> in 4.11-rc1.  Add the ability to set the dtc compiler flags needed
->> by overlays.
->>
->> Signed-off-by: Frank Rowand <frank.rowand@sony.com>
->> ---
-> 
-> 
-> I know your motivation for 1/2 is overlay,
-> but this patch itself is more generic.
-> (support for per-file dtc compiler flag)
-> 
-> Could you reword the commit subject a little bit?
-> 
-> Otherwise,
-> 
-> Acked-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> +		eth0: ethernet@18042000 {
+> +			compatible = "brcm,amac";
+> +			reg = <0x18042000 0x1000>,
+> +			      <0x18110000 0x1000>;
+> +			reg-names = "amac_base", "idm_base";
+> +			interrupts = <GIC_SPI 110 IRQ_TYPE_LEVEL_HIGH>;
+> +			max-speed = <1000>;
 
-Fixed in version 4.
+Hi Eric
 
--Frank
+Sorry i missed this the first time. Does this Ethernet controller do >
+1Gbps? Does this max-speed do anything useful?
 
-> 
-> 
-> 
->>  scripts/Makefile.lib | 2 ++
->>  1 file changed, 2 insertions(+)
->>
->> diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
->> index 0a07f9014944..0bbec480d323 100644
->> --- a/scripts/Makefile.lib
->> +++ b/scripts/Makefile.lib
->> @@ -283,6 +283,8 @@ ifeq ($(KBUILD_ENABLE_EXTRA_GCC_CHECKS),)
->>  DTC_FLAGS += -Wno-unit_address_vs_reg
->>  endif
->>
->> +DTC_FLAGS += $(DTC_FLAGS_$(basetarget))
->> +
->>  # Generate an assembly file to wrap the output of the device tree compiler
->>  quiet_cmd_dt_S_dtb= DTB     $@
->>  cmd_dt_S_dtb=                                          \
->> --
-> 
-> 
-
+       Andrew
