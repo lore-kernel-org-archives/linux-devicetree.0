@@ -1,76 +1,213 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v4 2/9] pinctrl: Renesas RZ/A1 pin and gpio controller
-Date: Wed, 26 Apr 2017 14:21:34 +0200
-Message-ID: <CAMuHMdUy3wo9x=nkpdSVSt34q5yaARc4+kFDC592V2LF7Cxzrg@mail.gmail.com>
-References: <1491401247-7030-1-git-send-email-jacopo+renesas@jmondi.org> <1491401247-7030-3-git-send-email-jacopo+renesas@jmondi.org>
+From: Pierre Yves MORDRET <pierre-yves.mordret@st.com>
+Subject: Re: [PATCH 2/2] dmaengine: Add STM32 MDMA driver
+Date: Wed, 26 Apr 2017 12:35:46 +0000
+Message-ID: <d1d92f79-ce3c-e057-7f47-1fd5e42fa5dc@st.com>
+References: <1489417599-31308-1-git-send-email-cedric.madianga@gmail.com>
+ <1489417599-31308-3-git-send-email-cedric.madianga@gmail.com>
+ <20170406070805.GG4094@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <1491401247-7030-3-git-send-email-jacopo+renesas@jmondi.org>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Chris Brandt <chris.brandt@renesas.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20170406070805.GG4094@localhost>
+Content-Language: en-US
+Content-ID: <D62FAF8F2BB5224F8334B1CA29EB7855@st.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Vinod Koul <vinod.koul@intel.com>, M'boumba Cedric Madianga <cedric.madianga@gmail.com>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Alexandre TORGUE <alexandre.torgue@st.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Pierre Yves MORDRET <pierre-yves.mordret@st.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>, "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, "dan.j.williams@intel.com" <dan.j.williams@intel.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jacopo,
-
-On Wed, Apr 5, 2017 at 4:07 PM, Jacopo Mondi <jacopo+renesas@jmondi.org> wrote:
-> Add combined gpio and pin controller driver for Renesas RZ/A1
-> r7s72100 SoC.
+On 04/06/2017 09:08 AM, Vinod Koul wrote:
+> On Mon, Mar 13, 2017 at 04:06:39PM +0100, M'boumba Cedric Madianga wrote:
+>> This patch adds the driver for the STM32 MDMA controller.
 >
-> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> Again pls do describe the controller
 
-> --- /dev/null
-> +++ b/drivers/pinctrl/pinctrl-rza1.c
+OK. I will add a more detail description with V2
 
-> +/*
-> + * Keep this up-to-date with pinconf-generic.h: it performs packing of
-> + * pin conf flags and argument during pinconf_generic_parse_dt_config();
-> + * we simply discard pinconf argument here
-> + */
-> +#define PIN_CONF_UNPACK(pinconf)       ((pinconf) & 0xffUL)
+>
+>> +#include <linux/clk.h>
+>> +#include <linux/delay.h>
+>> +#include <linux/dmaengine.h>
+>> +#include <linux/dma-mapping.h>
+>> +#include <linux/dmapool.h>
+>> +#include <linux/err.h>
+>> +#include <linux/init.h>
+>> +#include <linux/iopoll.h>
+>> +#include <linux/jiffies.h>
+>> +#include <linux/list.h>
+>> +#include <linux/log2.h>
+>> +#include <linux/module.h>
+>> +#include <linux/of.h>
+>> +#include <linux/of_device.h>
+>> +#include <linux/of_dma.h>
+>> +#include <linux/platform_device.h>
+>> +#include <linux/reset.h>
+>> +#include <linux/sched.h>
+>
+> why do you need sched.h, i am sure many of these may not be required, pls
+> check
 
-Perhaps this should be moved to pinconf-generic.h, to make sure it stays
-up-to-date?
+Correct ! not needed. I'll get rid of it in V2
 
-> +static inline int rza1_get_bit(struct rza1_port *port, unsigned int reg,
+>
+>> +static int stm32_mdma_get_width(struct stm32_mdma_chan *chan,
+>> +				enum dma_slave_buswidth width)
+>> +{
+>> +	switch (width) {
+>> +	case DMA_SLAVE_BUSWIDTH_1_BYTE:
+>> +		return STM32_MDMA_BYTE;
+>> +	case DMA_SLAVE_BUSWIDTH_2_BYTES:
+>> +		return STM32_MDMA_HALF_WORD;
+>> +	case DMA_SLAVE_BUSWIDTH_4_BYTES:
+>> +		return STM32_MDMA_WORD;
+>> +	case DMA_SLAVE_BUSWIDTH_8_BYTES:
+>> +		return STM32_MDMA_DOUBLE_WORD;
+>
+> IIUC we can do this with ffs()
 
-I'd use "unsigned int" as the return type.
-It doesn't matter much as register values are 16-bit, but people might copy
-from this driver when writing their own.
+I don't believe we can do that. This function translates DMA_SLAVE enum 
+into internal register representation.
 
-> +                              unsigned int bit)
-> +{
-> +       void __iomem *mem = RZA1_ADDR(port->base, reg, port->id);
-> +
-> +       return ioread16(mem) & BIT(bit);
-> +}
+>
+>
+>> +	default:
+>> +		dev_err(chan2dev(chan), "Dma bus width not supported\n");
+>> +		return -EINVAL;
+>> +	}
+>> +}
+>> +
+>> +static enum dma_slave_buswidth stm32_mdma_get_max_width(u32 buf_len, u32 tlen)
+>> +{
+>> +	enum dma_slave_buswidth max_width = DMA_SLAVE_BUSWIDTH_8_BYTES;
+>> +
+>> +	while ((buf_len <= max_width || buf_len % max_width ||
+>> +		tlen < max_width) && max_width > DMA_SLAVE_BUSWIDTH_1_BYTE)
+>> +		max_width = max_width >> 1;
+>
+> 1. this is hard to read
+> 2. sound like this can be optimized :)
+>
 
-> +static inline int rza1_pin_get_direction(struct rza1_port *port,
-> +                                        unsigned int pin)
-> +{
-> +       unsigned long irqflags;
-> +       int input;
-> +
-> +       spin_lock_irqsave(&port->lock, irqflags);
-> +       input = rza1_get_bit(port, RZA1_PM_REG, pin);
-> +       spin_unlock_irqrestore(&port->lock, irqflags);
-> +
-> +       return input;
+Ok. I will revise the check if improvements can be done
 
-return !!input;
+>> +
+>> +	return max_width;
+>> +}
+>> +
+>> +static u32 stm32_mdma_get_best_burst(u32 buf_len, u32 tlen, u32 max_burst,
+>> +				     enum dma_slave_buswidth width)
+>> +{
+>> +	u32 best_burst = max_burst;
+>> +	u32 burst_len = best_burst * width;
+>> +
+>> +	if (buf_len % tlen)
+>> +		return 0;
+>> +
+>> +	while ((tlen < burst_len && best_burst > 1) ||
+>> +	       (burst_len > 0 && tlen % burst_len)) {
+>> +		best_burst = best_burst >> 1;
+>> +		burst_len = best_burst * width;
+>
+> same thing here too
 
-gpio_chip.get_direction() should return 0, 1, or a negative error value.
+Ok. I will revise the check if improvements can be done
 
-> +}
+>
+>> +
+>> +	return (best_burst > 1) ? best_burst : 0;
+>> +}
+>> +
+>> +static int stm32_mdma_disable_chan(struct stm32_mdma_chan *chan)
+>> +{
+>> +	struct stm32_mdma_device *dmadev = stm32_mdma_get_dev(chan);
+>> +	u32 ccr, cisr, id, reg;
+>> +	int ret;
+>> +
+>> +	id = chan->id;
+>> +	reg = STM32_MDMA_CCR(id);
+>> +
+>> +	/* Disable interrupts */
+>> +	stm32_mdma_clr_bits(dmadev, reg, STM32_MDMA_CCR_IRQ_MASK);
+>> +
+>> +	ccr = stm32_mdma_read(dmadev, reg);
+>> +	if (ccr & STM32_MDMA_CCR_EN) {
+>> +		stm32_mdma_clr_bits(dmadev, reg, STM32_MDMA_CCR_EN);
+>> +
+>> +		/* Ensure that any ongoing transfer has been completed */
+>> +		ret = readl_relaxed_poll_timeout_atomic(
+>
+> why not simple readl
 
-Gr{oetje,eeting}s,
+When Channel enable(CCR_EN) is reset by SW, it is recommended to wait 
+for the CTCIF (Channel Transfer Complete interrupt flag) = 1, in order 
+to ensure that any ongoing buffer transfer has been completed, before 
+reprogramming the channel.
+Moreover since this function might be called under interruption context 
+(a DMA Client may call dmaengine_terminate_all() for instance) function 
+cannot allow sleep. Timeout is for cases when IP is stuck and channel 
+cannot be disabled
 
-                        Geert
+>> +static void stm32_mdma_set_dst_bus(struct stm32_mdma_device *dmadev, u32 *ctbr,
+>> +				   u32 dst_addr)
+>> +{
+>> +	u32 mask;
+>> +	int i;
+>> +
+>> +	/* Check if memory device is on AHB or AXI */
+>> +	*ctbr &= ~STM32_MDMA_CTBR_DBUS;
+>> +	mask = dst_addr & 0xF0000000;
+>> +	for (i = 0; i < dmadev->nr_ahb_addr_masks; i++) {
+>> +		if (mask == dmadev->ahb_addr_masks[i]) {
+>> +			*ctbr |= STM32_MDMA_CTBR_DBUS;
+>> +			break;
+>> +		}
+>> +	}
+>> +}
+>> +
+>> +static void stm32_mdma_set_src_bus(struct stm32_mdma_device *dmadev, u32 *ctbr,
+>> +				   u32 src_addr)
+>> +{
+>> +	u32 mask;
+>> +	int i;
+>> +
+>> +	/* Check if memory device is on AHB or AXI */
+>> +	*ctbr &= ~STM32_MDMA_CTBR_SBUS;
+>> +	mask = src_addr & 0xF0000000;
+>> +	for (i = 0; i < dmadev->nr_ahb_addr_masks; i++) {
+>> +		if (mask == dmadev->ahb_addr_masks[i]) {
+>> +			*ctbr |= STM32_MDMA_CTBR_SBUS;
+>> +			break;
+>> +		}
+>> +	}
+>
+> these too look awfully same..
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+Ok. I will create a common function then.
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+>
+>> +static int __init stm32_mdma_init(void)
+>> +{
+>> +	return platform_driver_probe(&stm32_mdma_driver, stm32_mdma_probe);
+>> +}
+>> +
+>> +subsys_initcall(stm32_mdma_init);
+>
+> why subsys?
+>
+
+subsys_initcall level is to ensure MDMA is going to be probed before its 
+clients
+
+>> --
+>> 1.9.1
+>>
+>
