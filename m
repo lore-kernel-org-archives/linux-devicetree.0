@@ -1,87 +1,35 @@
-From: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] ARM: dts: Add the ethernet and ethernet PHY to the cygnus core DT.
-Date: Wed, 26 Apr 2017 10:26:44 -0700
-Message-ID: <87r30fjd0r.fsf@eliezer.anholt.net>
-References: <20170425235357.7690-1-eric@anholt.net> <20170425235357.7690-2-eric@anholt.net> <0cb00eb7-41d0-0390-4687-d966499ed9f4@gmail.com>
+From: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 2/4] gpio - Add EXAR XRA1403 SPI GPIO expander driver
+Date: Wed, 26 Apr 2017 20:50:46 +0300
+Message-ID: <CAHp75VeVPJfakw0GdsKXqZ0ecUNHB2XvEnw15aATuLR2B=vXRQ@mail.gmail.com>
+References: <cover.1492077070.git.nandor.han@ge.com> <f28eef264102786357ac5ed7205813619c508fb4.1492077070.git.nandor.han@ge.com>
+ <CACRpkdZHMWH2W-i4MGZ7NKzPHUURRmC-5YwiK7cVLCHKDsb7sw@mail.gmail.com>
+ <CANjd3ndZkVi5OA0eqDewrpqVLQpT11QbVOA98F=ghMhcwPu2hQ@mail.gmail.com> <CAMuHMdUvQwqhuoWnS3h1S7p0q1K9m5BBFue54pkOykMgi+xmWw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha512; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <0cb00eb7-41d0-0390-4687-d966499ed9f4-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <CAMuHMdUvQwqhuoWnS3h1S7p0q1K9m5BBFue54pkOykMgi+xmWw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Vivien Didelot <vivien.didelot-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Cc: zoobab-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Nandor Han <nandor.han-JJi787mZWgc@public.gmane.org>, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Daniel Vetter <daniel.vetter-/w4YWyX8dFk@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Semi Malinen <semi.malinen-JJi787mZWgc@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+On Tue, Apr 25, 2017 at 10:15 AM, Geert Uytterhoeven
+<geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org> wrote:
 
-Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> writes:
-
-> On 04/25/2017 04:53 PM, Eric Anholt wrote:
->> Cygnus has a single AMAC controller connected to the B53 switch with 2
->> PHYs.  On the BCM911360_EP platform, those two PHYs are connected to
->> the external ethernet jacks.
->>=20
->> Signed-off-by: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
->> Reviewed-by: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> ---
->>=20
->> v2: Call the node "switch", just call the ports "port" (suggestions by
->>     Florian), drop max-speed on the phys (suggestion by Andrew Lunn),
->>     call the other nodes "ethernet" and "ethernet-phy" (suggestions by
->>     Sergei Shtylyov)
->>=20
->>  arch/arm/boot/dts/bcm-cygnus.dtsi      | 58 +++++++++++++++++++++++++++=
-+++++++
->>  arch/arm/boot/dts/bcm911360_entphn.dts |  8 +++++
->>  2 files changed, 66 insertions(+)
->>=20
->> diff --git a/arch/arm/boot/dts/bcm-cygnus.dtsi b/arch/arm/boot/dts/bcm-c=
-ygnus.dtsi
->> index 009f1346b817..9fd89be0f5e0 100644
->> --- a/arch/arm/boot/dts/bcm-cygnus.dtsi
->> +++ b/arch/arm/boot/dts/bcm-cygnus.dtsi
->> @@ -142,6 +142,54 @@
->>  			interrupts =3D <0>;
->>  		};
->>=20=20
->> +		mdio: mdio@18002000 {
->> +			compatible =3D "brcm,iproc-mdio";
->> +			reg =3D <0x18002000 0x8>;
->> +			#size-cells =3D <1>;
->> +			#address-cells =3D <0>;
+>> Is there some good cli tools to access the new char device? If they
+>> are shipped with most distros, that would reduce the pain.
 >
-> Sorry for not noticing earlier, since you override this correctly in the
-> board-level DTS file can you put a:
+> https://github.com/brgl/libgpiod
 >
-> 			status =3D "disabled"
->
-> property in there by default?
+> A bit early to expect it to be shipped with all distros, though.
 
-Done.
+Buildroot has it.
+For kernel development it is quite enough.
 
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE/JuuFDWp9/ZkuCBXtdYpNtH8nugFAlkA2FQACgkQtdYpNtH8
-nuiG+RAAulmpDX7UD+c7qEvexcyuJLr7fZ5PPTXRXYmowA6JercWM3p3f+TQr/E8
-wEGP6zDKR017Ov77ubuQdMyPaiXXbAlVsD788gcP7s6+B2DDn7w6UOIIu+4O+xrD
-gt2a8ZbHnua9HCeupvTjHptU0e+459QV/1U9DNnF9xfF32dptEWx7/vK/cQfsOeC
-3ODouOTXBOVSatFLyyyW1TDr8wvQ2uCNaDuhmtzmRjfYwM3u78aQk0dRjxBFAw36
-oUHF2mHPeRuhu/USPs9qAa7gfSXkeVMwgTlKB3QzY/mNkCEt+p8mrhCw46Xa16yc
-9WpkZg/U5bCUCdZDx79epYOFHAc7jJHX4Bs52zEmipivXTI+0ANT0E1KtXqPJjkd
-xpqOj/bcKzhDNJ5azXygx7iqyefMdfcEecQ21FU25UbgW85V0/D/5DKVr5+gLuYX
-P+F6bxxaOIicncbufiiEBpA6USepC+8h9CCfkMuClGRwM59FceNFTvvFDaJDn/1t
-rP6a2uV39ui03WAEjYaVEK4N1g3jySv19f6j8x43aRo7v5em8g1lNJHU5ylMGGtD
-kEoYvkBbh7lb8YL1PIqm7TT4dR/ai6g/JgjKs9f5zVo08Fdr3o8MJfNzQMRBUCFd
-uOhxYLgzYuPjWtfV5xTfVk30Z7gEpngodJ9KyijZdHC/VkG9hX8=
-=IcQ2
------END PGP SIGNATURE-----
---=-=-=--
+-- 
+With Best Regards,
+Andy Shevchenko
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
