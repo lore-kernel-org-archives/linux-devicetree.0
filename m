@@ -1,102 +1,70 @@
-From: Jose Abreu <Jose.Abreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Subject: Re: [RESEND PATCH 1/2] arc: axs10x: Add DT bindings for I2S audio
- playback
-Date: Wed, 26 Apr 2017 09:55:49 +0100
-Message-ID: <c02ea9db-db90-1b2e-1baf-f2940e64201f@synopsys.com>
-References: <7ed6deaf1ae6d5819364c793835aa30316077a7e.1487787376.git.joabreu@synopsys.com>
- <77599cf5-33e5-2ecd-2b2a-43630195a3b8@synopsys.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH/RFC 0/5] arm64: dts: renesas: Break out common board
+ support
+Date: Wed, 26 Apr 2017 10:56:10 +0200
+Message-ID: <20170426085610.GM25517@verge.net.au>
+References: <1492779321-23939-1-git-send-email-geert+renesas@glider.be>
+ <20170426080642.GK25517@verge.net.au>
+ <CAMuHMdXbe=rkeS+-teg7nqbjULWY0_5pBO1XEzCGdYA4gB57oA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <77599cf5-33e5-2ecd-2b2a-43630195a3b8-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vineet Gupta <Vineet.Gupta1-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, "linux-snps-arc-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-snps-arc-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Cc: Carlos Palminha <CARLOS.PALMINHA-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Alexey Brodkin <Alexey.Brodkin-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdXbe=rkeS+-teg7nqbjULWY0_5pBO1XEzCGdYA4gB57oA@mail.gmail.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Vladimir Barinov <vladimir.barinov@cogentembedded.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Vineet,
+On Wed, Apr 26, 2017 at 10:11:55AM +0200, Geert Uytterhoeven wrote:
+> Hi Simon,
+> 
+> CC Vladimir (which I forgot to CC initially, sorry for that)
+> 
+> On Wed, Apr 26, 2017 at 10:06 AM, Simon Horman <horms@verge.net.au> wrote:
+> > On Fri, Apr 21, 2017 at 02:55:16PM +0200, Geert Uytterhoeven wrote:
+> >> The Renesas Salvator-X and ULCB development board can be equipped with
+> >> either an R-Car H3 or M3-W SiP, which are pin-compatible.  All boards
+> >> use separate DTBs, but currently there's no sharing of board-specific
+> >> devices in DTS.
+> >>
+> >> This series reduces duplication by extracting common board support into
+> >> their own .dtsi files.  As the level of support varies across boards and
+> >> SoCs, this requires the addition of a few external clocks and
+> >> placeholder devices on R-Car M3-W, so the common board support DTS can
+> >> refer to them.
+> >>
+> >>   - Patches 1 and 2 add the external audio and PCIe bus clocks on R-Car
+> >>     M3-W, which are present in r8a7795.dtsi, and used in
+> >>     r8a7795-salvator-x.dts,
+> >>   - RFC patch 3 adds placeholders for devices that are not yet supported
+> >>     and/or tested on R-Car M3-W, but used on R-Car H3,
+> >>   - RFC patch 4 extracts common Salvator-X board support,
+> >>   - RFC patch 5 extracts common ULCB board support.
+> >>
+> >> For R-Car H3 based boards, there are no functional changes.
+> >> For R-Car M3-W based boards, some new devices are now described in DT.
+> >>
+> >> Dependencies:
+> >>   - renesas-devel-20170420-v4.11-rc7,
+> >>   - Patches 1 and 2 can be applied as-is,
+> >>   - Patches 4 and 5 depend on "[PATCH 0/8] arm64: dts: renesas: Break
+> >>     out R-Car H3 and M3-W SiP"
+> >>     (http://www.spinics.net/lists/devicetree/msg173820.html).
+> >>
+> >> DTB changes have been inspected using scripts/dtc/dtx_diff.
+> >> This has been tested on Salvator-X (both H3 and M3-W).
+> >> This has not been tested on H3ULCB and M3ULCB due to lack of hardware.
+> >>
+> >> Thanks for your comments!
+> >
+> > Thanks for tackling this important problem. I have looked over the changes
+> > and they seem nice to me. I would, however, be more comfortable applying
+> > them if they were rested on the ULCB boards.
+> 
+> tested?
 
+Yes, tested :)
 
-On 24-04-2017 18:36, Vineet Gupta wrote:
-> On 04/21/2017 03:15 AM, Jose Abreu wrote:
->> This patch adds the necessary DT bindings to get HDMI audio
->> output in ARC AXS10x SDP. The bindings for I2S controller were
->> added as well as the bindings for simple audio card.
-> Are these waiting on Rob or is it OK for me to pick these up for 4.12 ?
-
-Yes, I was waiting for Rob ack but he has been silent. It would
-be nice if these went for 4.12.
-
-Best regards,
-Jose Miguel Abreu
-
->
-> -Vineet
->
->> Signed-off-by: Jose Abreu <joabreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
->> Acked-by: Alexey Brodkin <abrodkin-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
->> Cc: Carlos Palminha <palminha-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
->> Cc: Alexey Brodkin <abrodkin-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
->> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->> Cc: Vineet Gupta <vgupta-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
->> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->> Cc: linux-snps-arc-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
->> Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->> ---
->>  arch/arc/boot/dts/axs10x_mb.dtsi | 22 ++++++++++++++++++----
->>  1 file changed, 18 insertions(+), 4 deletions(-)
->>
->> diff --git a/arch/arc/boot/dts/axs10x_mb.dtsi b/arch/arc/boot/dts/axs10x_mb.dtsi
->> index d6c1bbc..9d882b1 100644
->> --- a/arch/arc/boot/dts/axs10x_mb.dtsi
->> +++ b/arch/arc/boot/dts/axs10x_mb.dtsi
->> @@ -149,12 +149,13 @@
->>  			interrupts = <14>;
->>  		};
->>  
->> -		i2c@0x1e000 {
->> -			compatible = "snps,designware-i2c";
->> +		i2s: i2s@1e000 {
->> +			compatible = "snps,designware-i2s";
->>  			reg = <0x1e000 0x100>;
->> -			clock-frequency = <400000>;
->> -			clocks = <&i2cclk>;
->> +			clocks = <&i2sclk 0>;
->> +			clock-names = "i2sclk";
->>  			interrupts = <15>;
->> +			#sound-dai-cells = <0>;
->>  		};
->>  
->>  		i2c@0x1f000 {
->> @@ -174,6 +175,7 @@
->>  				adi,input-colorspace = "rgb";
->>  				adi,input-clock = "1x";
->>  				adi,clock-delay = <0x03>;
->> +				#sound-dai-cells = <0>;
->>  
->>  				ports {
->>  					#address-cells = <1>;
->> @@ -295,5 +297,17 @@
->>  				};
->>  			};
->>  		};
->> +
->> +		sound_playback {
->> +			compatible = "simple-audio-card";
->> +			simple-audio-card,name = "AXS10x HDMI Audio";
->> +			simple-audio-card,format = "i2s";
->> +			simple-audio-card,cpu {
->> +				sound-dai = <&i2s>;
->> +			};
->> +			simple-audio-card,codec {
->> +				sound-dai = <&adv7511>;
->> +			};
->> +		};
->>  	};
->>  };
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> I've pushed a branch for testing to topic/rcar3-dtsi-sharing in
+> git://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers.git.
