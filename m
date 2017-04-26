@@ -1,67 +1,55 @@
-From: Mark Greer <mgreer-luAo+O/VEmrlveNOaEYElw@public.gmane.org>
-Subject: Re: [PATCH] NFC: trf7970a: Correct register settings for 27MHz clock
-Date: Wed, 26 Apr 2017 10:04:43 -0700
-Message-ID: <20170426170443.GB11522@animalcreek.com>
-References: <1493214513-12245-1-git-send-email-geoff@kuvee.com>
+From: Eric Anholt <eric@anholt.net>
+Subject: Re: [PATCH v2 2/2] ARM: dts: Add the ethernet and ethernet PHY to the cygnus core DT.
+Date: Wed, 26 Apr 2017 10:25:40 -0700
+Message-ID: <87vaprjd2j.fsf@eliezer.anholt.net>
+References: <20170425235357.7690-1-eric@anholt.net> <20170425235357.7690-2-eric@anholt.net> <20170426004907.GA9453@lunn.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1493214513-12245-1-git-send-email-geoff-R+k406RtEhcAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Geoff Lansberry <geoff-R+k406RtEhcAvxtiuMwx3w@public.gmane.org>, g@animalcreek.com
-Cc: linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, kernel-janitors-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-nfc-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mgreer-luAo+O/VEmrlveNOaEYElw@public.gmane.org, justin-R+k406RtEhcAvxtiuMwx3w@public.gmane.org, colin.king-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha512; protocol="application/pgp-signature"
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20170426004907.GA9453@lunn.ch>
+Sender: netdev-owner@vger.kernel.org
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: Florian Fainelli <f.fainelli@gmail.com>, Vivien Didelot <vivien.didelot@savoirfairelinux.com>, netdev@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 26, 2017 at 09:48:33AM -0400, Geoff Lansberry wrote:
-> In prior commits the selected clock frequency does not propagate
-> correctly to what is written the the TRF7970A_MODULATOR_SYS_CLK_CTRL
-> register.
-> Also fixes a bug that causes the device tree property check to always
-> pass.
-> 
-> Signed-off-by: Geoff Lansberry <geoff-R+k406RtEhcAvxtiuMwx3w@public.gmane.org>
-> ---
->  drivers/nfc/trf7970a.c | 9 ++++++++-
->  1 file changed, 8 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/nfc/trf7970a.c b/drivers/nfc/trf7970a.c
-> index 2d1c8ca..c278b0e 100644
-> --- a/drivers/nfc/trf7970a.c
-> +++ b/drivers/nfc/trf7970a.c
-> @@ -2071,7 +2071,7 @@ static int trf7970a_probe(struct spi_device *spi)
->  	}
->  
->  	of_property_read_u32(np, "clock-frequency", &clk_freq);
-> -	if ((clk_freq != TRF7970A_27MHZ_CLOCK_FREQUENCY) ||
-> +	if ((clk_freq != TRF7970A_27MHZ_CLOCK_FREQUENCY) &&
+--=-=-=
+Content-Type: text/plain
 
-There is already a patch submitted to fix this issue so no need to fix
-it again.  For the record, it should have been in a separate patch
-since it fixes a different issue than what is fixed below.
+Andrew Lunn <andrew@lunn.ch> writes:
 
->  		(clk_freq != TRF7970A_13MHZ_CLOCK_FREQUENCY)) {
->  		dev_err(trf->dev,
->  			"clock-frequency (%u Hz) unsupported\n",
-> @@ -2079,6 +2079,13 @@ static int trf7970a_probe(struct spi_device *spi)
->  		return -EINVAL;
->  	}
->  
-> +	if (clk_freq == TRF7970A_27MHZ_CLOCK_FREQUENCY) {
-> +		trf->modulator_sys_clk_ctrl = TRF7970A_MODULATOR_27MHZ;
-> +		dev_dbg(trf->dev, "trf7970a configured for 27MHz crystal\n");
-> +	} else {
-> +		trf->modulator_sys_clk_ctrl = 0;
-> +	}
-> +
->  	if (of_property_read_bool(np, "en2-rf-quirk"))
->  		trf->quirks |= TRF7970A_QUIRK_EN2_MUST_STAY_LOW;
+>> +		eth0: ethernet@18042000 {
+>> +			compatible = "brcm,amac";
+>> +			reg = <0x18042000 0x1000>,
+>> +			      <0x18110000 0x1000>;
+>> +			reg-names = "amac_base", "idm_base";
+>> +			interrupts = <GIC_SPI 110 IRQ_TYPE_LEVEL_HIGH>;
+>> +			max-speed = <1000>;
+>
+> Hi Eric
+>
+> Sorry i missed this the first time. Does this Ethernet controller do >
+> 1Gbps? Does this max-speed do anything useful?
 
-This part looks okay to me but I like Walter's suggestion too.
+It doesn't look like it.  Dropped.
 
-Mark
---
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE/JuuFDWp9/ZkuCBXtdYpNtH8nugFAlkA2BQACgkQtdYpNtH8
+nui2Cg/9HHWZyZl6ZyxmGCzJnCWmE2L0Xq05jK5uXFNdjHdrAXqzRva03jtPIXYd
+lX0FyvfiwQgYGVr71p6QZr1CNW/v82Ob9IyBn6YMVyxyRZNWG/nIpjeKULq5yCFD
+7klP3V17XiA2j1eQFZpjNaDEj9IKeYJQfvMFnCvpyqpk+Ef5wlC1rawqv9j1x6ob
+Gj6VsSoJFMoksdRLHT8u5uy3eo+HoBQnugbqNeqjkJvidkNyMg4ElCQMnZj9vngs
+D8l82v6QM96qCl5LU9e7Bn3hUzIVJxiJWwkmIyFUHdW4sXce71LKwFvNa8362dmE
+F+FpKumTO6PeV2uC1URt8zieig+GjMAcM0N2+zA1ge7aLVhOHlw3mVycdY9FEgW9
+ejP2yqn+3JMa58UU1BZQQ490QkABp6nnqHLzuBBphHfTM1THK1YwZeichH1NpZvo
+BlnXa7+PimnfJrFDkz0b2FkC0O3SzlsvsRql0/yYoMFoBQW15c996J5GqQ+FuKBV
+Ij/hzLCK2upDR7Pky9fLdwZDMlt0NkBHLphU9PmUFpRnP+3Qq0/3T1EFMIuptq4o
+iXOGZ/QFhfIjBzAajNz41sHTWy7x75sToKYS3yUF6/ClD7S4qRzK1VpHIdh+WtWf
+t+YsxqDkFRZ7QkmHy7qyN3K49dRjwG3gO/2+MEcQAj69dRPTR3s=
+=WuFm
+-----END PGP SIGNATURE-----
+--=-=-=--
