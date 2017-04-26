@@ -1,13 +1,13 @@
 From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Subject: [PATCH v5 08/10] arm64: allwinner: a64: add DTSI file
- for AXP803 PMIC
-Date: Wed, 26 Apr 2017 23:20:21 +0800
-Message-ID: <20170426152023.41567-9-icenowy@aosc.io>
+Subject: [PATCH v5 09/10] arm64: allwinner: a64: enable AXP803
+ regulators for Pine64
+Date: Wed, 26 Apr 2017 23:20:22 +0800
+Message-ID: <20170426152023.41567-10-icenowy@aosc.io>
 References: <20170426152023.41567-1-icenowy@aosc.io>
 Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDS6XAN6ZADRBIHWQLEAKGQEYVFWJBY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBDS6XAN6ZADRBMHWQLEAKGQEDDQO5DQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20170426152023.41567-1-icenowy-h8G6r0blFSE@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -20,177 +20,133 @@ To: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Rob Herring 
 Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-As nearly all A64 boards are using AXP803 PMIC, add a DTSI file for it,
-like the old DTSI files for AXP20x/22x, for the common parts of the
-PMIC.
+Add support of AXP803 regulators in the Pine64 device tree, in order to
+enable many future functionalities, e.g. Wi-Fi.
 
 Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Acked-by: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 ---
-Changes in v5:
-- Added Mark Brown's ACK.
-Changes in v4:
-- Re-sorted the nodes.
+ .../arm64/boot/dts/allwinner/sun50i-a64-pine64.dts | 109 +++++++++++++++++++++
+ 1 file changed, 109 insertions(+)
 
- arch/arm64/boot/dts/allwinner/axp803.dtsi | 150 ++++++++++++++++++++++++++++++
- 1 file changed, 150 insertions(+)
- create mode 100644 arch/arm64/boot/dts/allwinner/axp803.dtsi
-
-diff --git a/arch/arm64/boot/dts/allwinner/axp803.dtsi b/arch/arm64/boot/dts/allwinner/axp803.dtsi
-new file mode 100644
-index 000000000000..ff8af52743ff
---- /dev/null
-+++ b/arch/arm64/boot/dts/allwinner/axp803.dtsi
-@@ -0,0 +1,150 @@
-+/*
-+ * Copyright 2017 Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
-+ *
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPL or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
-+ *
-+ *  a) This file is free software; you can redistribute it and/or
-+ *     modify it under the terms of the GNU General Public License as
-+ *     published by the Free Software Foundation; either version 2 of the
-+ *     License, or (at your option) any later version.
-+ *
-+ *     This file is distributed in the hope that it will be useful,
-+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *     GNU General Public License for more details.
-+ *
-+ * Or, alternatively,
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use,
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
-+ */
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts
+index 3e1b44292534..abc1879e91f2 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts
+@@ -106,6 +106,115 @@
+ 	};
+ };
+ 
++#include "axp803.dtsi"
 +
-+/*
-+ * AXP803 Integrated Power Management Chip
-+ * http://files.pine64.org/doc/datasheet/pine64/AXP803_Datasheet_V1.0.pdf
-+ */
-+
-+&axp803 {
-+	interrupt-controller;
-+	#interrupt-cells = <1>;
-+
-+	regulators {
-+		/* Default work frequency for buck regulators */
-+		x-powers,dcdc-freq = <3000>;
-+
-+		reg_aldo1: aldo1 {
-+			regulator-name = "aldo1";
-+		};
-+
-+		reg_aldo2: aldo2 {
-+			regulator-name = "aldo2";
-+		};
-+
-+		reg_aldo3: aldo3 {
-+			regulator-name = "aldo3";
-+		};
-+
-+		reg_dc1sw: dc1sw {
-+			regulator-name = "dc1sw";
-+		};
-+
-+		reg_dcdc1: dcdc1 {
-+			regulator-name = "dcdc1";
-+		};
-+
-+		reg_dcdc2: dcdc2 {
-+			regulator-name = "dcdc2";
-+		};
-+
-+		reg_dcdc3: dcdc3 {
-+			regulator-name = "dcdc3";
-+		};
-+
-+		reg_dcdc4: dcdc4 {
-+			regulator-name = "dcdc4";
-+		};
-+
-+		reg_dcdc5: dcdc5 {
-+			regulator-name = "dcdc5";
-+		};
-+
-+		reg_dcdc6: dcdc6 {
-+			regulator-name = "dcdc6";
-+		};
-+
-+		reg_dldo1: dldo1 {
-+			regulator-name = "dldo1";
-+		};
-+
-+		reg_dldo2: dldo2 {
-+			regulator-name = "dldo2";
-+		};
-+
-+		reg_dldo3: dldo3 {
-+			regulator-name = "dldo3";
-+		};
-+
-+		reg_dldo4: dldo4 {
-+			regulator-name = "dldo4";
-+		};
-+
-+		reg_eldo1: eldo1 {
-+			regulator-name = "eldo1";
-+		};
-+
-+		reg_eldo2: eldo2 {
-+			regulator-name = "eldo2";
-+		};
-+
-+		reg_eldo3: eldo3 {
-+			regulator-name = "eldo3";
-+		};
-+
-+		reg_fldo1: fldo1 {
-+			regulator-name = "fldo1";
-+		};
-+
-+		reg_fldo2: fldo2 {
-+			regulator-name = "fldo2";
-+		};
-+
-+		reg_ldo_io0: ldo-io0 {
-+			regulator-name = "ldo-io0";
-+			status = "disabled";
-+		};
-+
-+		reg_ldo_io1: ldo-io1 {
-+			regulator-name = "ldo-io1";
-+			status = "disabled";
-+		};
-+
-+		reg_rtc_ldo: rtc-ldo {
-+			/* RTC_LDO is a fixed, always-on regulator */
-+			regulator-always-on;
-+			regulator-min-microvolt = <3000000>;
-+			regulator-max-microvolt = <3000000>;
-+			regulator-name = "rtc-ldo";
-+		};
-+	};
++&reg_aldo1 {
++	regulator-min-microvolt = <2800000>;
++	regulator-max-microvolt = <2800000>;
++	regulator-name = "vcc-csi";
 +};
++
++&reg_aldo2 {
++	regulator-always-on;
++	regulator-min-microvolt = <1800000>;
++	regulator-max-microvolt = <3300000>;
++	regulator-name = "vcc-pl";
++};
++
++&reg_aldo3 {
++	regulator-always-on;
++	regulator-min-microvolt = <2700000>;
++	regulator-max-microvolt = <3300000>;
++	regulator-name = "vcc-pll-avcc";
++};
++
++&reg_dc1sw {
++	regulator-name = "vcc-phy";
++};
++
++&reg_dcdc1 {
++	regulator-always-on;
++	regulator-min-microvolt = <3300000>;
++	regulator-max-microvolt = <3300000>;
++	regulator-name = "vcc-3v3";
++};
++
++&reg_dcdc2 {
++	regulator-always-on;
++	regulator-min-microvolt = <1000000>;
++	regulator-max-microvolt = <1300000>;
++	regulator-name = "vdd-cpux";
++};
++
++/* DCDC3 is polyphased with DCDC2 */
++
++&reg_dcdc5 {
++	regulator-always-on;
++	regulator-min-microvolt = <1500000>;
++	regulator-max-microvolt = <1500000>;
++	regulator-name = "vcc-dram";
++};
++
++&reg_dcdc6 {
++	regulator-always-on;
++	regulator-min-microvolt = <1100000>;
++	regulator-max-microvolt = <1100000>;
++	regulator-name = "vdd-sys";
++};
++
++&reg_dldo1 {
++	regulator-min-microvolt = <3300000>;
++	regulator-max-microvolt = <3300000>;
++	regulator-name = "vcc-hdmi";
++};
++
++&reg_dldo2 {
++	regulator-min-microvolt = <3300000>;
++	regulator-max-microvolt = <3300000>;
++	regulator-name = "vcc-mipi";
++};
++
++&reg_dldo3 {
++	regulator-min-microvolt = <3300000>;
++	regulator-max-microvolt = <3300000>;
++	regulator-name = "avdd-csi";
++};
++
++&reg_dldo4 {
++	regulator-min-microvolt = <3300000>;
++	regulator-max-microvolt = <3300000>;
++	regulator-name = "vcc-wifi";
++};
++
++&reg_eldo1 {
++	regulator-min-microvolt = <1800000>;
++	regulator-max-microvolt = <1800000>;
++	regulator-name = "cpvdd";
++};
++
++&reg_eldo3 {
++	regulator-min-microvolt = <1800000>;
++	regulator-max-microvolt = <1800000>;
++	regulator-name = "vdd-1v8-csi";
++};
++
++&reg_fldo1 {
++	regulator-min-microvolt = <1200000>;
++	regulator-max-microvolt = <1200000>;
++	regulator-name = "vcc-1v2-hsic";
++};
++
++&reg_fldo2 {
++	regulator-always-on;
++	regulator-min-microvolt = <1100000>;
++	regulator-max-microvolt = <1100000>;
++	regulator-name = "vdd-cpus";
++};
++
++&reg_rtc_ldo {
++	regulator-name = "vcc-rtc";
++};
++
+ &uart0 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&uart0_pins_a>;
 -- 
 2.12.2
