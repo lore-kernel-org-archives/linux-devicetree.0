@@ -1,52 +1,54 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v2 2/4] gpio - Add EXAR XRA1403 SPI GPIO expander driver
-Date: Wed, 26 Apr 2017 16:42:18 +0200
-Message-ID: <CACRpkdb82RLyjTW8t-bWynSQH0tV2dnrq9AfefQfKzTEt_TFPw@mail.gmail.com>
-References: <cover.1492077070.git.nandor.han@ge.com> <f28eef264102786357ac5ed7205813619c508fb4.1492077070.git.nandor.han@ge.com>
- <CACRpkdZHMWH2W-i4MGZ7NKzPHUURRmC-5YwiK7cVLCHKDsb7sw@mail.gmail.com> <CANjd3ndZkVi5OA0eqDewrpqVLQpT11QbVOA98F=ghMhcwPu2hQ@mail.gmail.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 08/12] regulator: axp20x-regulator: add support for
+ AXP803
+Date: Wed, 26 Apr 2017 15:45:21 +0100
+Message-ID: <20170426144521.iesgvi5m63rpckpy@sirena.org.uk>
+References: <20170417115747.7300-1-icenowy@aosc.io>
+ <20170417115747.7300-9-icenowy@aosc.io>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CANjd3ndZkVi5OA0eqDewrpqVLQpT11QbVOA98F=ghMhcwPu2hQ@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Benjamin Henrion <zoobab@gmail.com>
-Cc: Nandor Han <nandor.han@ge.com>, Greg KH <gregkh@linuxfoundation.org>, "David S. Miller" <davem@davemloft.net>, Geert Uytterhoeven <geert@linux-m68k.org>, Mauro Carvalho Chehab <mchehab@kernel.org>, Daniel Vetter <daniel.vetter@ffwll.ch>, Alexandre Courbot <gnurou@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Semi Malinen <semi.malinen@ge.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="owgwbkkkowswf2sd"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170417115747.7300-9-icenowy-h8G6r0blFSE@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 25, 2017 at 9:07 AM, Benjamin Henrion <zoobab@gmail.com> wrote:
 
-> I doubt you will be able to convince the majority of people toggling
-> GPIOs via a simple shell script to switch to write a complex C
-> program. Not to mention cross compilation and the libraries
-> dependencies here.
+--owgwbkkkowswf2sd
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I do not need to convince anyone, I'm not into politics.
+On Mon, Apr 17, 2017 at 07:57:43PM +0800, Icenowy Zheng wrote:
+> AXP803 PMIC also have a series of regulators (DCDCs and LDOs)
+> controllable via I2C/RSB bus.
+>=20
+> Add support for them.
+>=20
+> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
 
-The way to attract users to the character device is by offering better
-features... so we smack in the following goodies:
+Acked-by: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-- Need a userspace ABI? No more need to select CONFIG_GPIO_SYSFS!
-  The chardev is always there for any gpio chip in newer kernels!
-  Board vendors would have to actively delete core code to disable it!
+--owgwbkkkowswf2sd
+Content-Type: application/pgp-signature; name="signature.asc"
 
-- Need open drain? The chardev will support that, the sysfs will never.
+-----BEGIN PGP SIGNATURE-----
 
-- Need to set/get multiple lines with a single context switch? Chardev
-  does this. Also the set operation will turn into a single register write
-  if your driver implements .set_multiple()
+iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlkAsoEACgkQJNaLcl1U
+h9CWmwf/Z9+EM90E0sGjqezRceNsIPksPlViBi3bdX2sPrafzDnoCN5wROIheW+a
+9mfehQlreGgWuTlv73eGibPcvGPZ5blqT5ymhM+4GuBvM1CYYuoSf3BpLFV+L6Rj
+4T5QaT9TSZ9vBaNkSDhrc+HhDiTVMUAZYA19UxB155lPRmmBQFwWF8RQ9p/y/ZSP
+pmaaf8/2jIsWzeeqXBgwfPgfAgaAFheyngrk4YwnnbLyhScLKuYMQTR4sfVv7gHb
+JuhqvCa+F7fzfKOQVCp/qPwfGzQ56eNh+pnffK/H5/DLqcFQGezYFN5bW7bWdRyt
+Y/h+RIqjRUH9wAiB8t9xJr2YV9qPQA==
+=CZIr
+-----END PGP SIGNATURE-----
 
-- All future needs: line biasing? Schmitt triggers? Drive strengths?
-  All that will use the character device, and the sysfs ABI will never
-  support any of it.
-
-> Is there some good cli tools to access the new char device? If they
-> are shipped with most distros, that would reduce the pain.
-
-I have those that come with the kernel:
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/tools/gpio
-
-Then libgpiod as mentioned:
-https://github.com/brgl/libgpiod/tree/master/src/tools
-
-Yours,
-Linus Walleij
+--owgwbkkkowswf2sd--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
