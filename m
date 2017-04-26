@@ -1,73 +1,155 @@
-From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Subject: [PATCH v5 10/10] arm64: allwinner: a64: enable Wi-Fi
- for Pine64
-Date: Wed, 26 Apr 2017 23:20:23 +0800
-Message-ID: <20170426152023.41567-11-icenowy@aosc.io>
-References: <20170426152023.41567-1-icenowy@aosc.io>
-Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDS6XAN6ZADRBPXWQLEAKGQE7WN243A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20170426152023.41567-1-icenowy-h8G6r0blFSE@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Applied "ASoC: stm32: add bindings for SAI" to the asoc tree
+Date: Wed, 26 Apr 2017 16:50:33 +0100
+Message-ID: <E1d3PD7-0002Rd-JM@finisterre>
+References: <1491837596-2924-2-git-send-email-olivier.moysan@st.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1491837596-2924-2-git-send-email-olivier.moysan-qxv4g6HH51o@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.orgbroonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, perex-/Fr2/VpizcU@public.gmane.org, tiwai-IBi9RG/b67k@public.gmane.org, mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, olivier.moysan-qxv4g6HH51o@public.gmane.org, arnaud.pouliquen-qxv4g6HH51o@public.gmane.org, benjamin.gaignard-qxv4g6HH51o@public.gmane.orgalsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The Wi-Fi module of Pine64 is powered via DLDO4 and ELDO1 (the latter
-one provides I/O voltage).
+The patch
 
-Add device node for it.
+   ASoC: stm32: add bindings for SAI
 
-Although the Wi-Fi module is an external module which should be inserted
-to a header, according to my personal talk with TL Lim, he does not want
-this header to be used as GPIO (so it's with 2.0mm pitch, not 2.54mm as
-other GPIO headers).
+has been applied to the asoc tree at
 
-Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+   git://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+>From b45c4f117b002a902e8b9f52eaf542e3e82c36a8 Mon Sep 17 00:00:00 2001
+From: olivier moysan <olivier.moysan-qxv4g6HH51o@public.gmane.org>
+Date: Mon, 10 Apr 2017 17:19:55 +0200
+Subject: [PATCH] ASoC: stm32: add bindings for SAI
+
+This patch adds documentation of device tree bindings for the
+STM32 SAI ASoC driver.
+
+Signed-off-by: olivier moysan <olivier.moysan-qxv4g6HH51o@public.gmane.org>
+Signed-off-by: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 ---
- arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+ .../devicetree/bindings/sound/st,stm32-sai.txt     | 89 ++++++++++++++++++++++
+ 1 file changed, 89 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/st,stm32-sai.txt
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts
-index abc1879e91f2..2e4f44800162 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts
-@@ -64,6 +64,11 @@
- 		regulator-min-microvolt = <3300000>;
- 		regulator-max-microvolt = <3300000>;
- 	};
+diff --git a/Documentation/devicetree/bindings/sound/st,stm32-sai.txt b/Documentation/devicetree/bindings/sound/st,stm32-sai.txt
+new file mode 100644
+index 000000000000..c59a3d779e06
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/st,stm32-sai.txt
+@@ -0,0 +1,89 @@
++STMicroelectronics STM32 Serial Audio Interface (SAI).
 +
-+	wifi_pwrseq: wifi_pwrseq {
-+		compatible = "mmc-pwrseq-simple";
-+		reset-gpios = <&r_pio 0 2 GPIO_ACTIVE_LOW>; /* PL2 */
-+	};
- };
- 
- &ehci1 {
-@@ -91,6 +96,17 @@
- 	status = "okay";
- };
- 
-+&mmc1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&mmc1_pins>;
-+	vmmc-supply = <&reg_dldo4>;
-+	vqmmc-supply = <&reg_eldo1>;
-+	mmc-pwrseq = <&wifi_pwrseq>;
-+	non-removable;
-+	bus-width = <4>;
-+	status = "okay";
++The SAI interface (Serial Audio Interface) offers a wide set of audio protocols
++as I2S standards, LSB or MSB-justified, PCM/DSP, TDM, and AC'97.
++The SAI contains two independent audio sub-blocks. Each sub-block has
++its own clock generator and I/O lines controller.
++
++Required properties:
++  - compatible: Should be "st,stm32f4-sai"
++  - reg: Base address and size of SAI common register set.
++  - clocks: Must contain phandle and clock specifier pairs for each entry
++	in clock-names.
++  - clock-names: Must contain "x8k" and "x11k"
++	"x8k": SAI parent clock for sampling rates multiple of 8kHz.
++	"x11k": SAI parent clock for sampling rates multiple of 11.025kHz.
++  - interrupts: cpu DAI interrupt line shared by SAI sub-blocks
++
++Optional properties:
++  - resets: Reference to a reset controller asserting the SAI
++
++SAI subnodes:
++Two subnodes corresponding to SAI sub-block instances A et B can be defined.
++Subnode can be omitted for unsused sub-block.
++
++SAI subnodes required properties:
++  - compatible: Should be "st,stm32-sai-sub-a" or "st,stm32-sai-sub-b"
++	for SAI sub-block A or B respectively.
++  - reg: Base address and size of SAI sub-block register set.
++  - clocks: Must contain one phandle and clock specifier pair
++	for sai_ck which feeds the internal clock generator.
++  - clock-names: Must contain "sai_ck".
++  - dmas: see Documentation/devicetree/bindings/dma/stm32-dma.txt
++  - dma-names: identifier string for each DMA request line
++	"tx": if sai sub-block is configured as playback DAI
++	"rx": if sai sub-block is configured as capture DAI
++  - pinctrl-names: should contain only value "default"
++  - pinctrl-0: see Documentation/devicetree/bindings/pinctrl/pinctrl-stm32.txt
++
++Example:
++sound_card {
++	compatible = "audio-graph-card";
++	dais = <&sai1b_port>;
 +};
 +
- &ohci1 {
- 	status = "okay";
- };
++sai1: sai1@40015800 {
++	compatible = "st,stm32f4-sai";
++	#address-cells = <1>;
++	#size-cells = <1>;
++	ranges;
++	reg = <0x40015800 0x4>;
++	clocks = <&rcc 1 CLK_SAIQ_PDIV>, <&rcc 1 CLK_I2SQ_PDIV>;
++	clock-names = "x8k", "x11k";
++	interrupts = <87>;
++
++	sai1b: audio-controller@40015824 {
++		#sound-dai-cells = <0>;
++		compatible = "st,stm32-sai-sub-b";
++		reg = <0x40015824 0x1C>;
++		clocks = <&rcc 1 CLK_SAI2>;
++		clock-names = "sai_ck";
++		dmas = <&dma2 5 0 0x400 0x0>;
++		dma-names = "tx";
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_sai1b>;
++
++		ports {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			sai1b_port: port@0 {
++				reg = <0>;
++				cpu_endpoint: endpoint {
++					remote-endpoint = <&codec_endpoint>;
++					audio-graph-card,format = "i2s";
++					audio-graph-card,bitclock-master = <&codec_endpoint>;
++					audio-graph-card,frame-master = <&codec_endpoint>;
++				};
++			};
++		};
++	};
++};
++
++audio-codec {
++	codec_port: port {
++		codec_endpoint: endpoint {
++			remote-endpoint = <&cpu_endpoint>;
++		};
++	};
++};
 -- 
-2.12.2
+2.11.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
