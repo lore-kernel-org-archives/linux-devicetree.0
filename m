@@ -1,38 +1,59 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] arm64: dts: r8a7795: update PFC node name to
- pin-controller
-Date: Wed, 26 Apr 2017 09:48:01 +0200
-Message-ID: <20170426074800.GG25517@verge.net.au>
-References: <1493023915-21658-1-git-send-email-horms+renesas@verge.net.au>
- <CAMuHMdVw9OJZarw3SRa7NuuaMtmDKPVN3Om0GFVFm5k_YAqn6g@mail.gmail.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH 2/2] gpio: DT bindings, move tca9554 from pcf857x to pca953x
+Date: Wed, 26 Apr 2017 09:56:36 +0200
+Message-ID: <CAMuHMdWnyfjViD=MvHJn7jFV3OdbUvR7TzqGMfx2igEVU6J+bw@mail.gmail.com>
+References: <20170421124631.19269-1-anders@chargestorm.se> <20170421124631.19269-2-anders@chargestorm.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdVw9OJZarw3SRa7NuuaMtmDKPVN3Om0GFVFm5k_YAqn6g@mail.gmail.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Magnus Damm <magnus.damm@gmail.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <20170421124631.19269-2-anders@chargestorm.se>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Anders Darander <anders@chargestorm.se>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Rob Herring <robh+dt@kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 24, 2017 at 11:03:54AM +0200, Geert Uytterhoeven wrote:
-> On Mon, Apr 24, 2017 at 10:51 AM, Simon Horman
-> <horms+renesas@verge.net.au> wrote:
-> > The device trees for Renesas SoCs use either pfc or pin-controller
-> > as the node name for the PFC device. This patch is intended to take a step
-> > towards unifying the node name used as pin-controller which appears to
-> > be more the more generic of the two and thus more in keeping with the DT
-> 
-> s/be more/be/
-> 
-> > specs.
-> >
-> > My analysis is that this is a user-visible change to the extent that kernel
-> > logs, and sysfs entries change from e6060000.pfc and pfc@e6060000 to
-> > e6060000.pin-controller and pin-controller@e6060000.
-> >
-> > Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
-> 
-> Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
+On Fri, Apr 21, 2017 at 2:46 PM, Anders Darander <anders@chargestorm.se> wrote:
+> The TCA9554 is similar to the PCA9554. Update the DT binding docs.
+>
+> Signed-off-by: Anders Darander <anders@chargestorm.se>
+> ---
+>  Documentation/devicetree/bindings/gpio/gpio-pca953x.txt | 1 +
+>  Documentation/devicetree/bindings/gpio/gpio-pcf857x.txt | 1 -
+>  2 files changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/Documentation/devicetree/bindings/gpio/gpio-pca953x.txt b/Documentation/devicetree/bindings/gpio/gpio-pca953x.txt
+> index e63935710011..7f57271df2bc 100644
+> --- a/Documentation/devicetree/bindings/gpio/gpio-pca953x.txt
+> +++ b/Documentation/devicetree/bindings/gpio/gpio-pca953x.txt
+> @@ -26,6 +26,7 @@ Required properties:
+>         ti,tca6416
+>         ti,tca6424
+>         ti,tca9539
+> +       ti,tca9554
+>         onsemi,pca9654
+>         exar,xra1202
+>
+> diff --git a/Documentation/devicetree/bindings/gpio/gpio-pcf857x.txt b/Documentation/devicetree/bindings/gpio/gpio-pcf857x.txt
+> index ada4e2973323..7d3bd631d011 100644
+> --- a/Documentation/devicetree/bindings/gpio/gpio-pcf857x.txt
+> +++ b/Documentation/devicetree/bindings/gpio/gpio-pcf857x.txt
+> @@ -25,7 +25,6 @@ Required Properties:
+>      - "nxp,pcf8574": For the NXP PCF8574
+>      - "nxp,pcf8574a": For the NXP PCF8574A
+>      - "nxp,pcf8575": For the NXP PCF8575
+> -    - "ti,tca9554": For the TI TCA9554
+>
+>    - reg: I2C slave address.
 
-Thanks, I fixed the typo when queuing this up.
+BTW, gpio-pca953x.txt seems to lack lots of gpio-controller-related properties.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
