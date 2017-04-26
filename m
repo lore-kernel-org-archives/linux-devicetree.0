@@ -1,53 +1,43 @@
-From: frowand.list@gmail.com
-Subject: [PATCH v4 0/2] of: Add unit tests for applying overlays
-Date: Tue, 25 Apr 2017 17:09:52 -0700
-Message-ID: <1493165394-29367-1-git-send-email-frowand.list@gmail.com>
-Return-path: <linux-kbuild-owner@vger.kernel.org>
-Sender: linux-kbuild-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, stephen.boyd@linaro.org, mmarek@suse.com
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org
+From: frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Subject: [PATCH v4 1/2] of: per-file dtc compiler flags
+Date: Tue, 25 Apr 2017 17:09:53 -0700
+Message-ID: <1493165394-29367-2-git-send-email-frowand.list@gmail.com>
+References: <1493165394-29367-1-git-send-email-frowand.list@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1493165394-29367-1-git-send-email-frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mmarek-IBi9RG/b67k@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kbuild-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Frank Rowand <frank.rowand@sony.com>
+From: Frank Rowand <frank.rowand-7U/KSKJipcs@public.gmane.org>
 
-Existing overlay unit tests examine individual pieces of the overlay code.
-The new tests target the entire process of applying an overlay.
+The dtc compiler version that adds initial support was available
+in 4.11-rc1.  Add the ability to set an additional dtc compiler
+flag is needed by overlays.
 
-Changes from v3:
-  - make subject line of patch 1 more generic
+Signed-off-by: Frank Rowand <frank.rowand-7U/KSKJipcs@public.gmane.org>
+---
+ scripts/Makefile.lib | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Changes from v2:
-  - of_private.h: move __unflatten_device_tree() outside
-    #ifdef CONFIG_OF_UNITTEST
-  - unittest.c: move overlay declaration macros outside
-    #ifdef CONFIG_OF_OVERLAY
-  - unittest.c: make overlay_info overlays[] static
-  - unittest.c: remove extra blank line
-
-Changes from v1:
-  - Move overlay base dtb unflattening into unittest.c.  Call from fdt.c.
-  - Clarify file and variable names, 'overlay_test_' instead of 'ot_'
-  - Use proper naming convention for node names.
-  - A few added comments.
-  - Improve error messages in the new tests.
-
-Frank Rowand (2):
-  of: support dtc compiler flags for overlays
-  of: Add unit tests for applying overlays
-
- drivers/of/fdt.c                                 |  14 +-
- drivers/of/of_private.h                          |  12 +
- drivers/of/unittest-data/Makefile                |  17 +-
- drivers/of/unittest-data/overlay.dts             |  53 ++++
- drivers/of/unittest-data/overlay_bad_phandle.dts |  20 ++
- drivers/of/unittest-data/overlay_base.dts        |  80 ++++++
- drivers/of/unittest.c                            | 317 +++++++++++++++++++++++
- scripts/Makefile.lib                             |   2 +
- 8 files changed, 507 insertions(+), 8 deletions(-)
- create mode 100644 drivers/of/unittest-data/overlay.dts
- create mode 100644 drivers/of/unittest-data/overlay_bad_phandle.dts
- create mode 100644 drivers/of/unittest-data/overlay_base.dts
-
+diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
+index 0a07f9014944..0bbec480d323 100644
+--- a/scripts/Makefile.lib
++++ b/scripts/Makefile.lib
+@@ -283,6 +283,8 @@ ifeq ($(KBUILD_ENABLE_EXTRA_GCC_CHECKS),)
+ DTC_FLAGS += -Wno-unit_address_vs_reg
+ endif
+ 
++DTC_FLAGS += $(DTC_FLAGS_$(basetarget))
++
+ # Generate an assembly file to wrap the output of the device tree compiler
+ quiet_cmd_dt_S_dtb= DTB     $@
+ cmd_dt_S_dtb=						\
 -- 
-Frank Rowand <frank.rowand@sony.com>
+Frank Rowand <frank.rowand-7U/KSKJipcs@public.gmane.org>
 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
