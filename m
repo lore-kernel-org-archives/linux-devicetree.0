@@ -1,74 +1,52 @@
-From: walter harms <wharms@bfs.de>
-Subject: Re: [PATCH] NFC: trf7970a: Correct register settings for 27MHz clock
-Date: Wed, 26 Apr 2017 16:34:38 +0200
-Message-ID: <5900AFFE.8060702@bfs.de>
-References: <1493214513-12245-1-git-send-email-geoff@kuvee.com>
-Reply-To: wharms@bfs.de
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v2 2/4] gpio - Add EXAR XRA1403 SPI GPIO expander driver
+Date: Wed, 26 Apr 2017 16:42:18 +0200
+Message-ID: <CACRpkdb82RLyjTW8t-bWynSQH0tV2dnrq9AfefQfKzTEt_TFPw@mail.gmail.com>
+References: <cover.1492077070.git.nandor.han@ge.com> <f28eef264102786357ac5ed7205813619c508fb4.1492077070.git.nandor.han@ge.com>
+ <CACRpkdZHMWH2W-i4MGZ7NKzPHUURRmC-5YwiK7cVLCHKDsb7sw@mail.gmail.com> <CANjd3ndZkVi5OA0eqDewrpqVLQpT11QbVOA98F=ghMhcwPu2hQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <kernel-janitors-owner@vger.kernel.org>
-In-Reply-To: <1493214513-12245-1-git-send-email-geoff@kuvee.com>
-Sender: kernel-janitors-owner@vger.kernel.org
-To: Geoff Lansberry <geoff@kuvee.com>
-Cc: linux-wireless@vger.kernel.org, sameo@linux.intel.com, kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org, linux-nfc@lists.01.org, devicetree@vger.kernel.org, mgreer@animalcreek.com, justin@kuvee.com, colin.king@canonical.com
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <CANjd3ndZkVi5OA0eqDewrpqVLQpT11QbVOA98F=ghMhcwPu2hQ@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Benjamin Henrion <zoobab@gmail.com>
+Cc: Nandor Han <nandor.han@ge.com>, Greg KH <gregkh@linuxfoundation.org>, "David S. Miller" <davem@davemloft.net>, Geert Uytterhoeven <geert@linux-m68k.org>, Mauro Carvalho Chehab <mchehab@kernel.org>, Daniel Vetter <daniel.vetter@ffwll.ch>, Alexandre Courbot <gnurou@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Semi Malinen <semi.malinen@ge.com>
 List-Id: devicetree@vger.kernel.org
 
+On Tue, Apr 25, 2017 at 9:07 AM, Benjamin Henrion <zoobab@gmail.com> wrote:
 
+> I doubt you will be able to convince the majority of people toggling
+> GPIOs via a simple shell script to switch to write a complex C
+> program. Not to mention cross compilation and the libraries
+> dependencies here.
 
-Am 26.04.2017 15:48, schrieb Geoff Lansberry:
-> In prior commits the selected clock frequency does not propagate
-> correctly to what is written the the TRF7970A_MODULATOR_SYS_CLK_CTRL
-> register.
-> Also fixes a bug that causes the device tree property check to always
-> pass.
-> 
-> Signed-off-by: Geoff Lansberry <geoff@kuvee.com>
-> ---
->  drivers/nfc/trf7970a.c | 9 ++++++++-
->  1 file changed, 8 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/nfc/trf7970a.c b/drivers/nfc/trf7970a.c
-> index 2d1c8ca..c278b0e 100644
-> --- a/drivers/nfc/trf7970a.c
-> +++ b/drivers/nfc/trf7970a.c
-> @@ -2071,7 +2071,7 @@ static int trf7970a_probe(struct spi_device *spi)
->  	}
->  
->  	of_property_read_u32(np, "clock-frequency", &clk_freq);
-> -	if ((clk_freq != TRF7970A_27MHZ_CLOCK_FREQUENCY) ||
-> +	if ((clk_freq != TRF7970A_27MHZ_CLOCK_FREQUENCY) &&
->  		(clk_freq != TRF7970A_13MHZ_CLOCK_FREQUENCY)) {
->  		dev_err(trf->dev,
->  			"clock-frequency (%u Hz) unsupported\n",
-> @@ -2079,6 +2079,13 @@ static int trf7970a_probe(struct spi_device *spi)
->  		return -EINVAL;
->  	}
->  
-> +	if (clk_freq == TRF7970A_27MHZ_CLOCK_FREQUENCY) {
-> +		trf->modulator_sys_clk_ctrl = TRF7970A_MODULATOR_27MHZ;
-> +		dev_dbg(trf->dev, "trf7970a configured for 27MHz crystal\n");
-> +	} else {
-> +		trf->modulator_sys_clk_ctrl = 0;
-> +	}
-> +
+I do not need to convince anyone, I'm not into politics.
 
+The way to attract users to the character device is by offering better
+features... so we smack in the following goodies:
 
-I am a fan of defensive programming and would move do:
-trf->modulator_sys_clk_ctrl = 0;
-if (clk_freq == TRF7970A_27MHZ_CLOCK_FREQUENCY) {
-		trf->modulator_sys_clk_ctrl = TRF7970A_MODULATOR_27MHZ;
-		dev_dbg(trf->dev, "trf7970a configured for 27MHz crystal\n");
-	}
+- Need a userspace ABI? No more need to select CONFIG_GPIO_SYSFS!
+  The chardev is always there for any gpio chip in newer kernels!
+  Board vendors would have to actively delete core code to disable it!
 
-perhaps using a switch/case here is appropriate IMHO a border case for 2 case
-but would make the init code more clear.
+- Need open drain? The chardev will support that, the sysfs will never.
 
-just my 2 cents,
+- Need to set/get multiple lines with a single context switch? Chardev
+  does this. Also the set operation will turn into a single register write
+  if your driver implements .set_multiple()
 
-re,
- wh
+- All future needs: line biasing? Schmitt triggers? Drive strengths?
+  All that will use the character device, and the sysfs ABI will never
+  support any of it.
 
->  	if (of_property_read_bool(np, "en2-rf-quirk"))
->  		trf->quirks |= TRF7970A_QUIRK_EN2_MUST_STAY_LOW;
->  
+> Is there some good cli tools to access the new char device? If they
+> are shipped with most distros, that would reduce the pain.
+
+I have those that come with the kernel:
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/tools/gpio
+
+Then libgpiod as mentioned:
+https://github.com/brgl/libgpiod/tree/master/src/tools
+
+Yours,
+Linus Walleij
