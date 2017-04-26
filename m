@@ -1,17 +1,17 @@
 From: Pierre Yves MORDRET <pierre-yves.mordret@st.com>
-Subject: Re: [PATCH 1/5] dt-bindings: Document the STM32 DMAMUX bindings
-Date: Wed, 26 Apr 2017 08:58:43 +0000
-Message-ID: <b09fc5f6-4029-3408-a7c7-19ec08dc10ac@st.com>
+Subject: Re: [PATCH 2/5] dmaengine: Add STM32 DMAMUX driver
+Date: Wed, 26 Apr 2017 09:17:37 +0000
+Message-ID: <d18cb12d-1fd1-39d2-501a-18c000b9982e@st.com>
 References: <1489414561-28912-1-git-send-email-cedric.madianga@gmail.com>
- <1489414561-28912-2-git-send-email-cedric.madianga@gmail.com>
- <20170320213413.4b6uopuilznyr2rl@rob-hp-laptop>
+ <1489414561-28912-3-git-send-email-cedric.madianga@gmail.com>
+ <20170406064046.GF4094@localhost>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170320213413.4b6uopuilznyr2rl@rob-hp-laptop>
+In-Reply-To: <20170406064046.GF4094@localhost>
 Content-Language: en-US
-Content-ID: <54936E31323EA24EA66956EEE29DCDFE@st.com>
+Content-ID: <941B9109FFB0A747B0FF6446BF766107@st.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -21,114 +21,321 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>, M'boumba Cedric Madianga <cedric.madianga@gmail.com>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Alexandre TORGUE <alexandre.torgue@st.com>, "vinod.koul@intel.com" <vinod.koul@intel.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>, "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, "dan.j.williams@intel.com" <dan.j.williams@intel.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Vinod Koul <vinod.koul@intel.com>, M'boumba Cedric Madianga <cedric.madianga@gmail.com>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Alexandre TORGUE <alexandre.torgue@st.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Pierre Yves MORDRET <pierre-yves.mordret@st.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>, "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, "dan.j.williams@intel.com" <dan.j.williams@intel.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob
+On 04/06/2017 08:40 AM, Vinod Koul wrote:
+> On Mon, Mar 13, 2017 at 03:15:58PM +0100, M'boumba Cedric Madianga wrote:
+>> This patch implements the STM32 DMAMUX driver
+>
+> Can you describe the controller here pls
 
-On 03/20/2017 10:34 PM, Rob Herring wrote:
-> On Mon, Mar 13, 2017 at 03:15:57PM +0100, M'boumba Cedric Madianga wrote:
->> This patch adds the documentation of device tree bindings for the STM32
->> DMAMUX.
+OK. Will be done in V2
+
+>
 >>
 >> Signed-off-by: M'boumba Cedric Madianga <cedric.madianga@gmail.com>
 >> ---
->>  .../devicetree/bindings/dma/stm32-dmamux.txt       | 57 ++++++++++++++++++++++
->>  1 file changed, 57 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/dma/stm32-dmamux.txt
+>>  drivers/dma/Kconfig        |   9 ++
+>>  drivers/dma/Makefile       |   1 +
+>>  drivers/dma/stm32-dmamux.c | 231 +++++++++++++++++++++++++++++++++++++++++++++
+>>  3 files changed, 241 insertions(+)
+>>  create mode 100644 drivers/dma/stm32-dmamux.c
 >>
->> diff --git a/Documentation/devicetree/bindings/dma/stm32-dmamux.txt b/Documentation/devicetree/bindings/dma/stm32-dmamux.txt
+>> diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
+>> index fc3435c..6ab80c9 100644
+>> --- a/drivers/dma/Kconfig
+>> +++ b/drivers/dma/Kconfig
+>> @@ -461,6 +461,15 @@ config STM32_DMA
+>>  	  If you have a board based on such a MCU and wish to use DMA say Y
+>>  	  here.
+>>
+>> +config STM32_DMAMUX
+>> +	bool "STMicroelectronics STM32 dma multiplexer support"
+>> +	depends on STM32_DMA
+>
+> can you add compile test here so that we can get better compile coverage
+
+OK. Will be done in V2
+
+>
+>> +	help
+>> +	  Enable support for the on-chip DMA multiplexer on STMicroelectronics
+>> +	  STM32 MCUs.
+>> +	  If you have a board based on such a MCU and wish to use DMAMUX say Y
+>> +	  here.
+>> +
+>>  config S3C24XX_DMAC
+>>  	bool "Samsung S3C24XX DMA support"
+>>  	depends on ARCH_S3C24XX || COMPILE_TEST
+>> diff --git a/drivers/dma/Makefile b/drivers/dma/Makefile
+>> index 0b723e9..449c7a3 100644
+>> --- a/drivers/dma/Makefile
+>> +++ b/drivers/dma/Makefile
+>> @@ -57,6 +57,7 @@ obj-$(CONFIG_RENESAS_DMA) += sh/
+>>  obj-$(CONFIG_SIRF_DMA) += sirf-dma.o
+>>  obj-$(CONFIG_STE_DMA40) += ste_dma40.o ste_dma40_ll.o
+>>  obj-$(CONFIG_STM32_DMA) += stm32-dma.o
+>> +obj-$(CONFIG_STM32_DMAMUX) += stm32-dmamux.o
+>>  obj-$(CONFIG_S3C24XX_DMAC) += s3c24xx-dma.o
+>>  obj-$(CONFIG_TXX9_DMAC) += txx9dmac.o
+>>  obj-$(CONFIG_TEGRA20_APB_DMA) += tegra20-apb-dma.o
+>> diff --git a/drivers/dma/stm32-dmamux.c b/drivers/dma/stm32-dmamux.c
 >> new file mode 100644
->> index 0000000..1039420
+>> index 0000000..3003546
 >> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/dma/stm32-dmamux.txt
->> @@ -0,0 +1,57 @@
->> +STM32 DMA MUX (DMA request router)
+>> +++ b/drivers/dma/stm32-dmamux.c
+>> @@ -0,0 +1,231 @@
+>> +/*
+>> + * DMA Router driver for STM32 DMA MUX
+>> + *
+>> + * Copyright (C) 2015 M'Boumba Cedric Madianga <cedric.madianga@gmail.com>
+>
+> we are in '17 now :)
+
+OK. Will be done in V2
+
+>
+>> + *
+>> + * Based on LPC18xx/43xx DMA MUX and TI DMA XBAR
+>> + *
+>> + * This program is free software; you can redistribute it and/or modify
+>> + * it under the terms of the GNU General Public License version 2 as
+>> + * published by the Free Software Foundation.
+>> + *
+>> + */
 >> +
->> +Required properties:
->> +- compatible:	"st,stm32-dmamux"
->> +- reg:		Memory map for accessing module
->> +- #dma-cells:	Should be set to <4>.
->> +		For more details about the four cells, please see stm32-dma.txt
->> +		documentation binding file
->> +- dma-masters:	Phandle pointing to the DMA controller
->> +- clocks: Input clock of the DMAMUX instance.
+>> +#include <linux/clk.h>
+>> +#include <linux/delay.h>
+>> +#include <linux/err.h>
+>> +#include <linux/init.h>
+>> +#include <linux/of_device.h>
+>> +#include <linux/of_dma.h>
+>> +#include <linux/reset.h>
+>> +#include <linux/slab.h>
 >> +
->> +Optional properties:
->> +- dma-channels : Number of DMA channels supported.
->> +- dma-requests : Number of DMA requests supported.
->> +- resets: Reference to a reset controller asserting the DMA controller
+>> +#define STM32_DMAMUX_CCR(x)		(0x4 * (x))
+>> +#define STM32_DMAMUX_MAX_CHANNELS	32
+>> +#define STM32_DMAMUX_MAX_REQUESTS	255
 >> +
->> +Example:
->> +
->> +/* DMA controller */
->> +dma2: dma-controller@40026400 {
->> +	compatible = "st,stm32-dma";
->> +	reg = <0x40026400 0x400>;
->> +	interrupts = <56>,
->> +		     <57>,
->> +		     <58>,
->> +		     <59>,
->> +		     <60>,
->> +		     <68>,
->> +		     <69>,
->> +		     <70>;
->> +	clocks = <&clk_hclk>;
->> +	#dma-cells = <4>;
->> +	st,mem2mem;
->> +	resets = <&rcc 150>;
->> +	st,dmamux;
->> +	dma-channels = <8>;
+>> +struct stm32_dmamux {
+>> +	u32 chan_id;
+>> +	u32 request;
+>> +	bool busy;
 >> +};
 >> +
->> +/* DMA mux */
->> +dmamux2: dma-router@40020820 {
->> +	compatible = "st,stm32-dmamux";
->> +	reg = <0x40020800 0x1c>;
->> +	#dma-cells = <4>;
->> +	dma-requests = <128>;
->> +	dma-masters = <&dma2>;
+>> +struct stm32_dmamux_data {
+>> +	struct dma_router dmarouter;
+>> +	struct stm32_dmamux *muxes;
+>> +	struct clk *clk;
+>> +	void __iomem *iomem;
+>> +	u32 dmamux_requests; /* number of DMA requests connected to DMAMUX */
+>> +	u32 dmamux_channels; /* Number of DMA channels supported */
+>> +};
+>> +
+>> +static inline u32 stm32_dmamux_read(void __iomem *iomem, u32 reg)
+>> +{
+>> +	return readl_relaxed(iomem + reg);
+>> +}
+>> +
+>> +static inline void stm32_dmamux_write(void __iomem *iomem, u32 reg, u32 val)
+>> +{
+>> +	writel_relaxed(val, iomem + reg);
+>> +}
+>> +
+>> +static void stm32_dmamux_free(struct device *dev, void *route_data)
+>> +{
+>> +	struct stm32_dmamux_data *dmamux = dev_get_drvdata(dev);
+>> +	struct stm32_dmamux *mux = route_data;
+>> +
+>> +	/* Clear dma request for the right channel */
+>> +	stm32_dmamux_write(dmamux->iomem, STM32_DMAMUX_CCR(mux->chan_id), 0);
+>> +	clk_disable(dmamux->clk);
+>> +	mux->busy = false;
+>> +
+>> +	dev_dbg(dev, "Unmapping dma-router%dchan%d (was routed to request%d)\n",
+>> +		dev->id, mux->chan_id, mux->request);
+>> +}
+>> +
+>> +static void *stm32_dmamux_route_allocate(struct of_phandle_args *dma_spec,
+>> +					 struct of_dma *ofdma)
+>> +{
+>> +	struct platform_device *pdev = of_find_device_by_node(ofdma->of_node);
+>> +	struct stm32_dmamux_data *dmamux = platform_get_drvdata(pdev);
+>> +	struct stm32_dmamux *mux;
+>> +	u32 chan_id;
+>> +	int ret;
+>> +
+>> +	if (dma_spec->args_count != 4) {
+>> +		dev_err(&pdev->dev, "invalid number of dma mux args\n");
+>> +		return ERR_PTR(-EINVAL);
+>> +	}
+>> +
+>> +	if (dma_spec->args[0] >= dmamux->dmamux_channels) {
+>> +		dev_err(&pdev->dev, "invalid channel id: %d\n",
+>> +			dma_spec->args[0]);
+>> +		return ERR_PTR(-EINVAL);
+>> +	}
+>> +
+>> +	if (dma_spec->args[1] > dmamux->dmamux_requests) {
+>> +		dev_err(&pdev->dev, "invalid mux request number: %d\n",
+>> +			dma_spec->args[1]);
+>> +		return ERR_PTR(-EINVAL);
+>> +	}
+>> +
+>> +	/* The of_node_put() will be done in of_dma_router_xlate function */
+>> +	dma_spec->np = of_parse_phandle(ofdma->of_node, "dma-masters", 0);
+>> +	if (!dma_spec->np) {
+>> +		dev_err(&pdev->dev, "can't get dma master\n");
+>> +		return ERR_PTR(-EINVAL);
+>> +	}
+>> +
+>> +	chan_id = dma_spec->args[0];
+>> +	mux = &dmamux->muxes[chan_id];
+>> +	mux->chan_id = chan_id;
+>> +	mux->request = dma_spec->args[1];
+>> +
+>> +	if (mux->busy) {
+>> +		dev_err(&pdev->dev, "dma channel %d busy with request %d\n",
+>> +			chan_id, mux->request);
+>> +		return ERR_PTR(-EBUSY);
+>> +	}
+>> +
+>> +	ret = clk_enable(dmamux->clk);
+>> +	if (ret < 0) {
+>> +		dev_err(&pdev->dev, "clk_enable failed: %d\n", ret);
+>> +		return ERR_PTR(ret);
+>> +	}
+>> +
+>> +	stm32_dmamux_write(dmamux->iomem, STM32_DMAMUX_CCR(mux->chan_id),
+>> +			   mux->request);
+>> +	mux->busy = true;
+>> +
+>> +	dev_dbg(&pdev->dev, "Mapping dma-router%dchan%d to request%d\n",
+>> +		pdev->dev.id, mux->chan_id, mux->request);
+>> +
+>> +	return mux;
+>> +}
+>> +
+>> +static int stm32_dmamux_probe(struct platform_device *pdev)
+>> +{
+>> +	struct device_node *dma_node, *node = pdev->dev.of_node;
+>> +	struct stm32_dmamux_data *dmamux;
+>> +	struct reset_control *rst;
+>> +	struct resource *res;
+>> +	int ret;
+>> +
+>> +	if (!node)
+>> +		return -ENODEV;
+>> +
+>> +	dmamux = devm_kzalloc(&pdev->dev, sizeof(struct stm32_dmamux_data),
+>> +			      GFP_KERNEL);
+>> +	if (!dmamux)
+>> +		return -ENOMEM;
+>> +
+>> +	dma_node = of_parse_phandle(node, "dma-masters", 0);
+>> +	if (!dma_node) {
+>> +		dev_err(&pdev->dev, "Can't get DMA master node\n");
+>> +		return -ENODEV;
+>> +	}
+>> +	of_node_put(dma_node);
+>> +
+>> +	ret = of_property_read_u32(node, "dma-channels",
+>> +				   &dmamux->dmamux_channels);
 >
-> I think this should be modeled after the interrupt-map property (or
-> Stephen Boyd's gpio-map support which additionally allows pass thru of
-> cell values). Something like this:
+> can we have property_xxx calls alone, that way driver is not strictly
+> dependent on of
+
+Can you please explain what you are asking for ? Not sure to understand 
+correctly.
+
 >
-> dma-map = <0 41 0 0 &dma2 0 <req> 0 0>,
-> 	<1 42 0 0 &dma2 1 <req> 0 0>;
-> dma-map-mask = <0xffffffff 0xffffffff 0 0>;
+>> +	if (ret)
+>> +		dmamux->dmamux_channels = STM32_DMAMUX_MAX_CHANNELS;
+>> +
+>> +	ret = of_property_read_u32(node, "dma-requests",
+>> +				   &dmamux->dmamux_requests);
+>> +	if (ret)
+>> +		dmamux->dmamux_requests = STM32_DMAMUX_MAX_REQUESTS;
+>> +
+>> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>> +	if (!res)
+>> +		return -ENODEV;
+>> +
+>> +	dmamux->iomem = devm_ioremap_resource(&pdev->dev, res);
+>> +	if (!dmamux->iomem)
+>> +		return -ENOMEM;
+>> +
+>> +	dmamux->clk = devm_clk_get(&pdev->dev, NULL);
+>> +	if (IS_ERR(dmamux->clk)) {
+>> +		dev_err(&pdev->dev, "Missing controller clock\n");
+>> +		return PTR_ERR(dmamux->clk);
+>> +	}
+>> +	ret = clk_prepare(dmamux->clk);
+>> +	if (ret < 0) {
+>> +		dev_err(&pdev->dev, "clk_prep failed: %d\n", ret);
+>> +		return ret;
+>> +	}
+>> +
+>> +	dmamux->muxes = devm_kcalloc(&pdev->dev, dmamux->dmamux_channels,
+>> +				     sizeof(struct stm32_dmamux),
+>> +				     GFP_KERNEL);
+>> +	if (!dmamux->muxes)
+>> +		return -ENOMEM;
+>> +
+>> +	rst = devm_reset_control_get(&pdev->dev, NULL);
+>> +	if (!IS_ERR(rst)) {
+>> +		ret = clk_enable(dmamux->clk);
+>> +		if (ret < 0) {
+>> +			dev_err(&pdev->dev, "clk_enable failed: %d\n", ret);
+>> +			return ret;
+>> +		}
+>> +		reset_control_assert(rst);
+>> +		udelay(2);
+>> +		reset_control_deassert(rst);
+>> +		clk_disable(dmamux->clk);
+>> +	}
+>> +
+>> +	dmamux->dmarouter.dev = &pdev->dev;
+>> +	dmamux->dmarouter.route_free = stm32_dmamux_free;
+>> +	platform_set_drvdata(pdev, dmamux);
+>> +
+>> +	ret = of_dma_router_register(node, stm32_dmamux_route_allocate,
+>> +				     &dmamux->dmarouter);
+>> +	if (ret < 0) {
+>> +		dev_err(&pdev->dev,
+>> +			"STM32 DMAMUX DMA OF registration failed %d\n", ret);
+>> +		return ret;
+>> +	}
+>> +
+>> +	dev_info(&pdev->dev, "STM32 DMAMUX driver registered\n");
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static const struct of_device_id stm32_dmamux_match[] = {
+>> +	{ .compatible = "st,stm32-dmamux" },
+>> +	{},
+>> +};
+>> +
+>> +static struct platform_driver stm32_dmamux_driver = {
+>> +	.probe	= stm32_dmamux_probe,
+>> +	.driver = {
+>> +		.name = "stm32-dmamux",
+>> +		.of_match_table = stm32_dmamux_match,
+>> +	},
+>> +};
+>> +
+>> +static int __init stm32_dmamux_init(void)
+>> +{
+>> +	return platform_driver_register(&stm32_dmamux_driver);
+>> +}
+>> +arch_initcall(stm32_dmamux_init);
 >
-> <req> is the request number on dma2 controller.
->
-> This is more generic and would work if you have a single mux with
-> multiple DMA controllers.
+> why not module init, wouldnt defer probe solve the dependencies
 >
 
-Would you mind to detail a little bit more your thoughts please ?
-Are dma-map & dma-map-mask part of an existing bindings ? or need to be 
-developed ?
-I'm a little bit confused where come from values you used.
-
->> +};
->> +
->> +/* DMA client */
->> +usart1: serial@40011000 {
->> +	compatible = "st,stm32-usart", "st,stm32-uart";
->> +	reg = <0x40011000 0x400>;
->> +	interrupts = <37>;
->> +	clocks = <&clk_pclk2>;
->> +	dmas = <&dmamux2 0 41 0x400 0x00>,
->> +	       <&dmamux2 1 42 0x400 0x00>;
->> +	dma-names = "rx", "tx";
->> +};
->> --
->> 1.9.1
->>
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
->
->
->
+The reason behind many devices (device_initcall level) rely on DMAs. If 
+init is deferred DMAMUX driver will be probed twice if dependents rely 
+on it. This sounds not a good call. This explains arch_initcall level.
