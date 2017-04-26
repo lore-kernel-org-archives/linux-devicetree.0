@@ -1,134 +1,157 @@
-From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: Re: [PATCH v4 7/7] ARM64: dts: marvell: armada37xx: add pinctrl definition
-Date: Wed, 26 Apr 2017 12:28:25 +0200
-Message-ID: <87mvb38nue.fsf@free-electrons.com>
-References: <cover.65d0e6796fecf1fe6c5d07b981160b54dc9b4acd.1491405475.git-series.gregory.clement@free-electrons.com>
-        <cover.65d0e6796fecf1fe6c5d07b981160b54dc9b4acd.1491405475.git-series.gregory.clement@free-electrons.com>
-        <7b07bd69cd506effa716c41f8ec3dda7a7c6c563.1491405475.git-series.gregory.clement@free-electrons.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <7b07bd69cd506effa716c41f8ec3dda7a7c6c563.1491405475.git-series.gregory.clement@free-electrons.com>
-        (Gregory CLEMENT's message of "Wed, 5 Apr 2017 17:18:08 +0200")
-Sender: linux-gpio-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: linux-gpio@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Nadav Haklai <nadavh@marvell.com>, Victor Gu <xigu@marvell.com>, Marcin Wojtas <mw@semihalf.com>, Wilson Ding <dingwei@marvell.com>, Hua Jing <jinghua@marvell.com>, Neta Zur Hershkovits <neta@marvell.com>
+From: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH V6 2/9] PM / Domains: Allow OPP table to be used for power-domains
+Date: Wed, 26 Apr 2017 16:27:06 +0530
+Message-ID: <d725cb8c286506efbb3672d9c9e3f656233d4ce2.1493203884.git.viresh.kumar@linaro.org>
+References: <cover.1493203884.git.viresh.kumar@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <cover.1493203884.git.viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+In-Reply-To: <cover.1493203884.git.viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+References: <cover.1493203884.git.viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rafael Wysocki <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: linaro-kernel-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Vincent Guittot <vincent.guittot-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, lina.iyer-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, rnayak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Update the power-domain bindings to allow "operating-points-v2" to be
+present within the power-domain's provider node.
+
+Also allow consumer devices that don't use OPP tables, to specify the
+parent power-domain's OPP node in their "power-domain-opp" property.
+
+Also note that the "operating-points-v2" property is extended to support
+an array for the power domain providers.
+
+Signed-off-by: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+---
+ .../devicetree/bindings/power/power_domain.txt     | 106 +++++++++++++++++++++
+ 1 file changed, 106 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/power/power_domain.txt b/Documentation/devicetree/bindings/power/power_domain.txt
+index 14bd9e945ff6..730af0afc09a 100644
+--- a/Documentation/devicetree/bindings/power/power_domain.txt
++++ b/Documentation/devicetree/bindings/power/power_domain.txt
+@@ -40,6 +40,10 @@ phandle arguments (so called PM domain specifiers) of length specified by the
+   domain's idle states. In the absence of this property, the domain would be
+   considered as capable of being powered-on or powered-off.
  
- On mer., avril 05 2017, Gregory CLEMENT <gregory.clement@free-electrons.com> wrote:
-
-> Start to populate the device tree of the Armada 37xx with the pincontrol
-> configuration used on the board providing a dts.
->
-> Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
-
-Applied on mvebu/dt64
-
-Thanks,
-
-Gregory
-
-> ---
->  arch/arm64/boot/dts/marvell/armada-3720-db.dts |  8 +++++-
->  arch/arm64/boot/dts/marvell/armada-37xx.dtsi   | 31 +++++++++++++++++++-
->  2 files changed, 39 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/marvell/armada-3720-db.dts b/arch/arm64/boot/dts/marvell/armada-3720-db.dts
-> index 86602c907a61..e749c5727490 100644
-> --- a/arch/arm64/boot/dts/marvell/armada-3720-db.dts
-> +++ b/arch/arm64/boot/dts/marvell/armada-3720-db.dts
-> @@ -63,6 +63,8 @@
->  };
->  
->  &i2c0 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&i2c1_pins>;
->  	status = "okay";
->  };
->  
-> @@ -73,6 +75,8 @@
->  
->  &spi0 {
->  	status = "okay";
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&spi_quad_pins>;
->  
->  	m25p80@0 {
->  		compatible = "jedec,spi-nor";
-> @@ -103,6 +107,8 @@
->  
->  /* Exported on the micro USB connector CON32 through an FTDI */
->  &uart0 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&uart1_pins>;
->  	status = "okay";
->  };
->  
-> @@ -128,6 +134,8 @@
->  };
->  
->  &eth0 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&rgmii_pins>;
->  	phy-mode = "rgmii-id";
->  	phy = <&phy0>;
->  	status = "okay";
-> diff --git a/arch/arm64/boot/dts/marvell/armada-37xx.dtsi b/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
-> index c02b13479458..2ac25f54d01d 100644
-> --- a/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
-> +++ b/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
-> @@ -186,6 +186,31 @@
->  					clock-output-names = "xtal";
->  					#clock-cells = <0>;
->  				};
-> +
-> +				spi_quad_pins: spi-quad-pins {
-> +					groups = "spi_quad";
-> +					function = "spi";
-> +				};
-> +
-> +				i2c1_pins: i2c1-pins {
-> +					groups = "i2c1";
-> +					function = "i2c";
-> +				};
-> +
-> +				i2c2_pins: i2c2-pins {
-> +					groups = "i2c2";
-> +					function = "i2c";
-> +				};
-> +
-> +				uart1_pins: uart1-pins {
-> +					groups = "uart1";
-> +					function = "uart";
-> +				};
-> +
-> +				uart2_pins: uart2-pins {
-> +					groups = "uart2";
-> +					function = "uart";
-> +				};
->  			};
->  
->  			pinctrl_sb: pinctrl-sb@18800 {
-> @@ -203,6 +228,12 @@
->  					<GIC_SPI 157 IRQ_TYPE_LEVEL_HIGH>,
->  					<GIC_SPI 156 IRQ_TYPE_LEVEL_HIGH>;
->  				};
-> +
-> +				rgmii_pins: mii-pins {
-> +					groups = "rgmii";
-> +					function = "mii";
-> +				};
-> +
->  			};
->  
->  			eth0: ethernet@30000 {
-> -- 
-> git-series 0.9.1
-
++- operating-points-v2 : Phandles to the OPP tables for a power domain provider.
++  If the provider provides a single power domain, then this shall contain a
++  single phandle. Refer to ../opp/opp.txt for more information.
++
+ Example:
+ 
+ 	power: power-controller@12340000 {
+@@ -120,4 +124,106 @@ The node above defines a typical PM domain consumer device, which is located
+ inside a PM domain with index 0 of a power controller represented by a node
+ with the label "power".
+ 
++Optional properties:
++- power-domain-opp: Phandle to the OPP node of the parent power-domain. The
++  parent power-domain should be configured to the OPP whose node is pointed by
++  the phandle, in order to use the device that contains this property.
++
++
++Example:
++- Device with parent power domain with two active states represented by OPP
++  table.
++
++	domain_opp_table: opp_table {
++		compatible = "operating-points-v2";
++
++		/*
++		 * NOTE: Actual frequency is managed by firmware and is hidden
++		 * from HLOS, so we simply use index in the opp-hz field to
++		 * select the OPP.
++		 */
++		domain_opp_1: opp-1 {
++			opp-hz = /bits/ 64 <1>;
++			opp-microvolt = <975000 970000 985000>;
++		};
++		domain_opp_2: opp-2 {
++			opp-hz = /bits/ 64 <2>;
++			opp-microvolt = <1075000 1000000 1085000>;
++		};
++	};
++
++
++	parent: power-controller@12340000 {
++		compatible = "foo,power-controller";
++		reg = <0x12340000 0x1000>;
++		#power-domain-cells = <0>;
++		operating-points-v2 = <&domain_opp_table>;
++	};
++
++	leaky-device@12350000 {
++		compatible = "foo,i-leak-current";
++		reg = <0x12350000 0x1000>;
++		power-domains = <&parent>;
++		power-domain-opp = <&domain_opp_2>;
++	};
++
++- OPP table for domain provider that provides two domains.
++
++	domain0_opp_table: opp_table0 {
++		compatible = "operating-points-v2";
++
++		/*
++		 * NOTE: Actual frequency is managed by firmware and is hidden
++		 * from HLOS, so we simply use index in the opp-hz field to
++		 * select the OPP.
++		 */
++		domain0_opp_1: opp-1 {
++			opp-hz = /bits/ 64 <1>;
++			opp-microvolt = <975000 970000 985000>;
++		};
++		domain0_opp_2: opp-2 {
++			opp-hz = /bits/ 64 <2>;
++			opp-microvolt = <1075000 1000000 1085000>;
++		};
++	};
++
++	domain1_opp_table: opp_table1 {
++		compatible = "operating-points-v2";
++
++		/*
++		 * NOTE: Actual frequency is managed by firmware and is hidden
++		 * from HLOS, so we simply use index in the opp-hz field to
++		 * select the OPP.
++		 */
++		domain1_opp_1: opp-1 {
++			opp-hz = /bits/ 64 <1>;
++			opp-microvolt = <975000 970000 985000>;
++		};
++		domain1_opp_2: opp-2 {
++			opp-hz = /bits/ 64 <2>;
++			opp-microvolt = <1075000 1000000 1085000>;
++		};
++	};
++
++	parent: power-controller@12340000 {
++		compatible = "foo,power-controller";
++		reg = <0x12340000 0x1000>;
++		#power-domain-cells = <1>;
++		operating-points-v2 = <&domain0_opp_table>, <&domain1_opp_table>;
++	};
++
++	leaky-device0@12350000 {
++		compatible = "foo,i-leak-current";
++		reg = <0x12350000 0x1000>;
++		power-domains = <&parent 0>;
++		power-domain-opp = <&domain0_opp_2>;
++	};
++
++	leaky-device1@12350000 {
++		compatible = "foo,i-leak-current";
++		reg = <0x12350000 0x1000>;
++		power-domains = <&parent 1>;
++		power-domain-opp = <&domain1_opp_2>;
++	};
++
+ [1]. Documentation/devicetree/bindings/power/domain-idle-state.txt
 -- 
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
+2.12.0.432.g71c3a4f4ba37
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
