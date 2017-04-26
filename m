@@ -1,50 +1,70 @@
-From: Geoff Lansberry <geoff-R+k406RtEhcAvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH] NFC: trf7970a: Correct register settings for 27MHz clock
-Date: Wed, 26 Apr 2017 09:48:33 -0400
-Message-ID: <1493214513-12245-1-git-send-email-geoff@kuvee.com>
-Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
-Cc: kernel-janitors-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-nfc-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mgreer-luAo+O/VEmrlveNOaEYElw@public.gmane.org, justin-R+k406RtEhcAvxtiuMwx3w@public.gmane.org, colin.king-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org, Geoff Lansberry <geoff-R+k406RtEhcAvxtiuMwx3w@public.gmane.org>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH V4 1/9] PM / OPP: Allow OPP table to be used for
+ power-domains
+Date: Wed, 26 Apr 2017 14:55:32 +0100
+Message-ID: <20170426135532.ryrh276znet5yvks@sirena.org.uk>
+References: <cover.1490001099.git.viresh.kumar@linaro.org>
+ <e772e67a5445319bb8e0f312846ace666adc097f.1490001099.git.viresh.kumar@linaro.org>
+ <0a7146f9-72f1-317c-3aab-770a72462968@arm.com>
+ <20170413053736.GM5910@vireshk-i7>
+ <3adbef6a-7b43-528f-e88f-c2121d30a5d3@arm.com>
+ <20170417052758.GF28191@vireshk-i7>
+ <95aa4b97-4e1a-13bb-f4d8-982b778012ba@arm.com>
+ <9cd9287c-392b-d3ca-db7d-75c49287448e@codeaurora.org>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="7x23rnxpubex2hak"
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <9cd9287c-392b-d3ca-db7d-75c49287448e@codeaurora.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: Rajendra Nayak <rnayak@codeaurora.org>
+Cc: Sudeep Holla <sudeep.holla@arm.com>, Viresh Kumar <viresh.kumar@linaro.org>, Rafael Wysocki <rjw@rjwysocki.net>, ulf.hansson@linaro.org, Kevin Hilman <khilman@linaro.org>, Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@codeaurora.org>, linaro-kernel@lists.linaro.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, Vincent Guittot <vincent.guittot@linaro.org>, robh+dt@kernel.org, lina.iyer@linaro.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-In prior commits the selected clock frequency does not propagate
-correctly to what is written the the TRF7970A_MODULATOR_SYS_CLK_CTRL
-register.
-Also fixes a bug that causes the device tree property check to always
-pass.
 
-Signed-off-by: Geoff Lansberry <geoff-R+k406RtEhcAvxtiuMwx3w@public.gmane.org>
----
- drivers/nfc/trf7970a.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+--7x23rnxpubex2hak
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-diff --git a/drivers/nfc/trf7970a.c b/drivers/nfc/trf7970a.c
-index 2d1c8ca..c278b0e 100644
---- a/drivers/nfc/trf7970a.c
-+++ b/drivers/nfc/trf7970a.c
-@@ -2071,7 +2071,7 @@ static int trf7970a_probe(struct spi_device *spi)
- 	}
- 
- 	of_property_read_u32(np, "clock-frequency", &clk_freq);
--	if ((clk_freq != TRF7970A_27MHZ_CLOCK_FREQUENCY) ||
-+	if ((clk_freq != TRF7970A_27MHZ_CLOCK_FREQUENCY) &&
- 		(clk_freq != TRF7970A_13MHZ_CLOCK_FREQUENCY)) {
- 		dev_err(trf->dev,
- 			"clock-frequency (%u Hz) unsupported\n",
-@@ -2079,6 +2079,13 @@ static int trf7970a_probe(struct spi_device *spi)
- 		return -EINVAL;
- 	}
- 
-+	if (clk_freq == TRF7970A_27MHZ_CLOCK_FREQUENCY) {
-+		trf->modulator_sys_clk_ctrl = TRF7970A_MODULATOR_27MHZ;
-+		dev_dbg(trf->dev, "trf7970a configured for 27MHz crystal\n");
-+	} else {
-+		trf->modulator_sys_clk_ctrl = 0;
-+	}
-+
- 	if (of_property_read_bool(np, "en2-rf-quirk"))
- 		trf->quirks |= TRF7970A_QUIRK_EN2_MUST_STAY_LOW;
- 
--- 
-2.7.4
+On Wed, Apr 26, 2017 at 10:02:39AM +0530, Rajendra Nayak wrote:
+> > On 17/04/17 06:27, Viresh Kumar wrote:
+
+> >>> If we are looking this power-domains with performance as just some
+> >>> *advanced regulators*, I don't like the complexity added.
+
+> + Mark
+
+> I don;t see any public discussions on why we ruled out using regulators to
+> support this but maybe there were some offline discussions on this.
+
+> Mark, this is a long thread, so just summarizing here to give you the context.
+
+> At qualcomm, we have an external M3 core (running its own firmware) which controls
+> a few voltage rails (including AVS on those). The devices vote for the voltage levels
+> (or performance levels) they need by passing an integer value to the M3 (not actual
+> voltage values). Since that didn't fit well with the existing regulator apis it was
+
+As I'm getting fed up of saying: if the values you are setting are not
+voltages and do not behave like voltages then the hardware should not be
+represented as a voltage regulator since if they are represented as
+voltage regulators things will expect to be able to control them as
+voltage regulators.  This hardware is quite clearly providing OPPs
+directly, I would expect this to be handled in the OPP code somehow.
+
+--7x23rnxpubex2hak
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlkAps4ACgkQJNaLcl1U
+h9DNzQf7B0hYfmz0bgG7ThEhi7SFkdE0hhq5GhCGeSKSRiMZnnkLLJw8iUnwM9Te
+S4oEibgntrrLimnHb33fIuHPO3kEWLcgR4dDKA/W+CGVx5YVZ/C0YEMo8alJmgdM
+PWlr7lcAt8NtSTumIR9DhZzd46LmkqmUrbwEK33GsPCaf0yFcsHf8tx4e54g5VG3
+IRxuytrcQ80KqR+44OcVK/m4MEhIGLXLuri4OqdN3LZSjJkDH1Frz46gG8ixGG4Z
+o8eS43qSMM+S4Y9b0KOpeuH7xkRp6XzQT3dI8XWf/EdiO+qqZqMyd1DawT547SyG
+iSN3t05B1ExZu2x9WN1Cz4mvhx801Q==
+=nfTy
+-----END PGP SIGNATURE-----
+
+--7x23rnxpubex2hak--
