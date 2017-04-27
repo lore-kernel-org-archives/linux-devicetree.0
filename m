@@ -1,137 +1,52 @@
-From: Markus Mayer <markus.mayer-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 1/2] dt/bindings: Add bindings for Broadcom STB DRAM Sensors
-Date: Thu, 27 Apr 2017 11:28:37 -0700
-Message-ID: <CAGt4E5uu1Ty0ReaiBZ0kcR_-jnqJQL8vgU4Y9mL64FP7f+=T7Q@mail.gmail.com>
-References: <20170418201702.57019-1-code@mmayer.net> <20170418201702.57019-2-code@mmayer.net>
- <CAGt4E5susQWWNZPbNh8AoWtK-4yu50VL=GqOw+_2w_FA+2V68Q@mail.gmail.com>
+From: Jose Abreu <Jose.Abreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Subject: Re: [RESEND PATCH 1/2] arc: axs10x: Add DT bindings for I2S audio
+ playback
+Date: Thu, 27 Apr 2017 19:42:46 +0100
+Message-ID: <f1e3621d-3dbd-116d-d9c1-3aeb9bd40c2a@synopsys.com>
+References: <7ed6deaf1ae6d5819364c793835aa30316077a7e.1487787376.git.joabreu@synopsys.com>
+ <77599cf5-33e5-2ecd-2b2a-43630195a3b8@synopsys.com>
+ <c02ea9db-db90-1b2e-1baf-f2940e64201f@synopsys.com>
+ <ae3f1150-f8da-9a34-d929-6964f91c06ae@synopsys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAGt4E5susQWWNZPbNh8AoWtK-4yu50VL=GqOw+_2w_FA+2V68Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <ae3f1150-f8da-9a34-d929-6964f91c06ae-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Jean Delvare <jdelvare-IBi9RG/b67k@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Broadcom Kernel List <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Linux HWMON List <linux-hwmon-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Device Tree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, ARM Kernel List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Vineet Gupta <Vineet.Gupta1-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, "linux-snps-arc-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-snps-arc-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Cc: Carlos Palminha <CARLOS.PALMINHA-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Alexey Brodkin <Alexey.Brodkin-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 25 April 2017 at 12:29, Markus Mayer <markus.mayer-dY08KVG/lbpWk0Htik3J/w@public.gmane.org> wrote:
-> Hi Rob,
->
-> On 18 April 2017 at 13:17, Markus Mayer <code-7CzEARzsJhSsTnJN9+BGXg@public.gmane.org> wrote:
->> From: Markus Mayer <mmayer-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Hi Vineet,
+
+
+On 27-04-2017 00:31, Vineet Gupta wrote:
+> On 04/26/2017 01:55 AM, Jose Abreu wrote:
+>> Hi Vineet,
 >>
->> Provide bindings for the Broadcom STB DDR PHY Front End (DPFE).
->
-> Would you be able to have a look at this binding? The driver won't be
-> upstreamed as hwmon driver (as per Guenter's comments). I am currently
-> converting the driver to a "soc" driver instead, but the proposed
-> binding remains unchanged.
->
-> If you have comments or suggestions, I would like to incorporate them
-> with the new series I will be sending out.
-
-To explain a bit more what we are looking for: we had a internal
-discussions how to structure this binding and are looking for some
-guidance.
-
-Should we create three different nodes for the three different memory
-areas (dpfe-cpu@..., dpfe-dmem@..., dpfe-imem@...), each with a single
-"reg" property (which is the proposal below) or should this be one
-single property with 3 "reg" cells, i.e. something like this:
-
-dpfe-cpu@f1132000 {
-    ...
-    reg = <0xf1132000 0x180     /* register space */
-           0xf1134000 0x1000    /* data memory */
-           0xf1138000 0x4000>;  /* instruction memory */
-    ...
-};
-
-Regards,
--Markus
-
->> Signed-off-by: Markus Mayer <mmayer-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
->> ---
->>  .../devicetree/bindings/hwmon/brcmstb-dpfe.txt     | 68 ++++++++++++++++++++++
->>  1 file changed, 68 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/hwmon/brcmstb-dpfe.txt
 >>
->> diff --git a/Documentation/devicetree/bindings/hwmon/brcmstb-dpfe.txt b/Documentation/devicetree/bindings/hwmon/brcmstb-dpfe.txt
->> new file mode 100644
->> index 0000000..3519197
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/hwmon/brcmstb-dpfe.txt
->> @@ -0,0 +1,68 @@
->> +DDR PHY Front End (DPFE) for Broadcom STB
->> +=========================================
->> +
->> +DPFE and the DPFE firmware provide an interface for the host CPU to
->> +communicate with the DCPU, which resides inside the DDR PHY.
->> +
->> +There are three memory regions for interacting with the DCPU.
->> +
->> +The DCPU Register Space
->> +-----------------------
->> +
->> +Required properties:
->> +  - compatible: must be one of brcm,bcm7271-dpfe-cpu, brcm,dpfe-cpu-v12.0.0.0
->> +    or brcm,dpfe-cpu
->> +  - reg: must reference the start address and length of the DCPU register
->> +    space
->> +
->> +Optional properties:
->> +  - cell-index: the index of the DPFE instance; will default to 0 if not set
->> +
->> +Example:
->> +       dpfe_cpu0: dpfe-cpu@f1132000 {
->> +               compatible = "brcm,bcm7271-dpfe-cpu",
->> +                       "brcm,dpfe-cpu-v12.0.0.0",
->> +                       "brcm,dpfe-cpu";
->> +               reg = <0xf1132000 0x180>;
->> +               cell-index = <0>;
->> +       };
->> +
->> +The DCPU Data Memory Space
->> +--------------------------
->> +
->> +Required properties:
->> +  - compatible: must be one of brcm,bcm7271-dpfe-dmem, brcm,dpfe-dmem-v12.0.0.0
->> +    or brcm,dpfe-dmem
->> +  - reg: must reference the start address and length of the DCPU DMEM space
->> +
->> +Optional properties:
->> +  - cell-index: the index of the DPFE instance; will default to 0 if not set
->> +
->> +Example:
->> +       dpfe_dmem0: dpfe-dmem@f1134000 {
->> +               compatible = "brcm,bcm7271-dpfe-dmem",
->> +                       "brcm,dpfe-dmem-v12.0.0.0",
->> +                       "brcm,dpfe-dmem";
->> +               reg = <0xf1134000 0x1000>;
->> +               cell-index = <0>;
->> +       };
->> +
->> +The DCPU Instruction Memory Space
->> +---------------------------------
->> +
->> +Required properties:
->> +  - compatible: must be one of brcm,bcm7271-dpfe-imem, brcm,dpfe-imem-v12.0.0.0
->> +    or brcm,dpfe-imem
->> +  - reg: must reference the start address and length of the DCPU IMEM space
->> +
->> +Optional properties:
->> +  - cell-index: the index of the DPFE instance; will default to 0 if not set
->> +
->> +Example:
->> +       dpfe_imem0: dpfe-imem@f1138000 {
->> +               compatible = "brcm,bcm7271-dpfe-imem",
->> +                       "brcm,dpfe-imem-v12.0.0.0",
->> +                       "brcm,dpfe-imem";
->> +               reg = <0xf1138000 0x4000>;
->> +               cell-index = <0>;
->> +       };
->> --
->> 2.7.4
->>
+>> On 24-04-2017 18:36, Vineet Gupta wrote:
+>>> On 04/21/2017 03:15 AM, Jose Abreu wrote:
+>>>> This patch adds the necessary DT bindings to get HDMI audio
+>>>> output in ARC AXS10x SDP. The bindings for I2S controller were
+>>>> added as well as the bindings for simple audio card.
+>>> Are these waiting on Rob or is it OK for me to pick these up for 4.12 ?
+>> Yes, I was waiting for Rob ack but he has been silent. It would
+>> be nice if these went for 4.12.
+> Ok lets wait another couple of days before I pick those up.
+> In the mean time, can you please restest the series against 4.11-rcX and report
+> here that patches are still valid and do as intended !
+
+I tested based on drm-next of today (which is based on 4.11-rc7)
+and the patches work okay.
+
+Best regards,
+Jose Miguel Abreu
+
+>
+> Thx,
+> -Vineet
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
