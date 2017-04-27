@@ -1,58 +1,46 @@
-From: Mark Greer <mgreer-luAo+O/VEmrlveNOaEYElw@public.gmane.org>
-Subject: Re: [PATCH v2] NFC: trf7970a: Correct register settings for 27MHz
- clock
-Date: Wed, 26 Apr 2017 21:02:24 -0700
-Message-ID: <20170427040224.GA13061@animalcreek.com>
-References: <1493257308-32503-1-git-send-email-geoff@kuvee.com>
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH 3/3] iio: tools: generic_buffer: increase trigger length
+Date: Thu, 27 Apr 2017 06:19:35 +0100
+Message-ID: <b9f248a1-b65a-5e23-421c-4b8256cdddd6@kernel.org>
+References: <1492590045-17329-1-git-send-email-eugen.hristev@microchip.com>
+ <1492590045-17329-4-git-send-email-eugen.hristev@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1493257308-32503-1-git-send-email-geoff-R+k406RtEhcAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Geoff Lansberry <geoff-R+k406RtEhcAvxtiuMwx3w@public.gmane.org>
-Cc: linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, kernel-janitors-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-nfc-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mgreer-luAo+O/VEmrlveNOaEYElw@public.gmane.org, justin-R+k406RtEhcAvxtiuMwx3w@public.gmane.org, colin.king-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org, wharms-fPG8STNUNVg@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1492590045-17329-4-git-send-email-eugen.hristev@microchip.com>
+Content-Language: en-GH
+Sender: linux-kernel-owner@vger.kernel.org
+To: Eugen Hristev <eugen.hristev@microchip.com>, nicolas.ferre@microchip.com, alexandre.belloni@free-electrons.com, linux-iio@vger.kernel.org, lars@metafoo.de, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: ludovic.desroches@microchip.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 26, 2017 at 09:41:48PM -0400, Geoff Lansberry wrote:
-
-Hi Geoff.
-
-> In prior commits the selected clock frequency does not propagate
-> correctly to what is written the the TRF7970A_MODULATOR_SYS_CLK_CTRL
-> register.
+On 19/04/17 09:20, Eugen Hristev wrote:
+> Increased trigger length to 50 in order to cope with trigger names like
+> fc030000.adc-dev0-external-rising
 > 
-> Signed-off-by: Geoff Lansberry <geoff-R+k406RtEhcAvxtiuMwx3w@public.gmane.org>
+> Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
+This is fine (though I'd go bigger as Daniel suggested)
+I'll pick it up with the revised series.
+
+thanks,
+
+Jonathan
 > ---
->  drivers/nfc/trf7970a.c | 7 +++++++
->  1 file changed, 7 insertions(+)
+>  tools/iio/iio_utils.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/drivers/nfc/trf7970a.c b/drivers/nfc/trf7970a.c
-> index 5f040e6..c278b0e 100644
-> --- a/drivers/nfc/trf7970a.c
-> +++ b/drivers/nfc/trf7970a.c
-> @@ -2079,6 +2079,13 @@ static int trf7970a_probe(struct spi_device *spi)
->  		return -EINVAL;
->  	}
+> diff --git a/tools/iio/iio_utils.h b/tools/iio/iio_utils.h
+> index 780f201..9d59771 100644
+> --- a/tools/iio/iio_utils.h
+> +++ b/tools/iio/iio_utils.h
+> @@ -13,7 +13,7 @@
+>  #include <stdint.h>
 >  
-> +	if (clk_freq == TRF7970A_27MHZ_CLOCK_FREQUENCY) {
-> +		trf->modulator_sys_clk_ctrl = TRF7970A_MODULATOR_27MHZ;
-> +		dev_dbg(trf->dev, "trf7970a configured for 27MHz crystal\n");
-> +	} else {
-> +		trf->modulator_sys_clk_ctrl = 0;
-> +	}
-> +
->  	if (of_property_read_bool(np, "en2-rf-quirk"))
->  		trf->quirks |= TRF7970A_QUIRK_EN2_MUST_STAY_LOW;
-
-Looks fine to me but please rebase it on top of current nfc-next/master
-as it doesn't apply to it right now.
-
-Thanks,
-
-Mark
---
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>  /* Made up value to limit allocation sizes */
+> -#define IIO_MAX_NAME_LENGTH 30
+> +#define IIO_MAX_NAME_LENGTH 50
+>  
+>  #define FORMAT_SCAN_ELEMENTS_DIR "%s/scan_elements"
+>  #define FORMAT_TYPE_FILE "%s_type"
+> 
