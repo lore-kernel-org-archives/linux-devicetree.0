@@ -1,55 +1,50 @@
-From: Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH] ARM: dts: r7s72100: add usb clocks to device tree
-Date: Thu, 27 Apr 2017 12:10:45 -0700
-Message-ID: <20170427191045.21199-1-chris.brandt@renesas.com>
+From: Vineet Gupta <Vineet.Gupta1-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Subject: Re: [RESEND PATCH 1/2] arc: axs10x: Add DT bindings for I2S audio
+ playback
+Date: Thu, 27 Apr 2017 12:13:40 -0700
+Message-ID: <64ee326f-661e-16cf-5d25-dbb079a10b6e@synopsys.com>
+References: <7ed6deaf1ae6d5819364c793835aa30316077a7e.1487787376.git.joabreu@synopsys.com>
+ <77599cf5-33e5-2ecd-2b2a-43630195a3b8@synopsys.com>
+ <c02ea9db-db90-1b2e-1baf-f2940e64201f@synopsys.com>
+ <ae3f1150-f8da-9a34-d929-6964f91c06ae@synopsys.com>
+ <f1e3621d-3dbd-116d-d9c1-3aeb9bd40c2a@synopsys.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <f1e3621d-3dbd-116d-d9c1-3aeb9bd40c2a-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+To: Jose Abreu <Jose.Abreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, "linux-snps-arc-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-snps-arc-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Cc: Carlos Palminha <CARLOS.PALMINHA-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Alexey Brodkin <Alexey.Brodkin-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This adds the USB0 and USB1 clocks to the device tree.
+On 04/27/2017 11:42 AM, Jose Abreu wrote:
+> Hi Vineet,
+>
+>
+> On 27-04-2017 00:31, Vineet Gupta wrote:
+>> On 04/26/2017 01:55 AM, Jose Abreu wrote:
+>>> Hi Vineet,
+>>>
+>>>
+>>> On 24-04-2017 18:36, Vineet Gupta wrote:
+>>>> On 04/21/2017 03:15 AM, Jose Abreu wrote:
+>>>>> This patch adds the necessary DT bindings to get HDMI audio
+>>>>> output in ARC AXS10x SDP. The bindings for I2S controller were
+>>>>> added as well as the bindings for simple audio card.
+>>>> Are these waiting on Rob or is it OK for me to pick these up for 4.12 ?
+>>> Yes, I was waiting for Rob ack but he has been silent. It would
+>>> be nice if these went for 4.12.
+>> Ok lets wait another couple of days before I pick those up.
+>> In the mean time, can you please restest the series against 4.11-rcX and report
+>> here that patches are still valid and do as intended !
+> I tested based on drm-next of today (which is based on 4.11-rc7)
+> and the patches work okay.
 
-Signed-off-by: Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
----
- arch/arm/boot/dts/r7s72100.dtsi            | 6 +++---
- include/dt-bindings/clock/r7s72100-clock.h | 2 ++
- 2 files changed, 5 insertions(+), 3 deletions(-)
+Pushed to for-curr for 4.12 !
 
-diff --git a/arch/arm/boot/dts/r7s72100.dtsi b/arch/arm/boot/dts/r7s72100.dtsi
-index fb54cb5d3fad..4ed12a4d9d51 100644
---- a/arch/arm/boot/dts/r7s72100.dtsi
-+++ b/arch/arm/boot/dts/r7s72100.dtsi
-@@ -144,9 +144,9 @@
- 			#clock-cells = <1>;
- 			compatible = "renesas,r7s72100-mstp-clocks", "renesas,cpg-mstp-clocks";
- 			reg = <0xfcfe0430 4>;
--			clocks = <&b_clk>;
--			clock-indices = <R7S72100_CLK_ETHER>;
--			clock-output-names = "ether";
-+			clocks = <&b_clk>, <&p1_clk>, <&p1_clk>;
-+			clock-indices = <R7S72100_CLK_ETHER R7S72100_CLK_USB0 R7S72100_CLK_USB1>;
-+			clock-output-names = "ether", "usb0", "usb1";
- 		};
- 
- 		mstp8_clks: mstp8_clks@fcfe0434 {
-diff --git a/include/dt-bindings/clock/r7s72100-clock.h b/include/dt-bindings/clock/r7s72100-clock.h
-index bc256d31099a..dcd2072151fc 100644
---- a/include/dt-bindings/clock/r7s72100-clock.h
-+++ b/include/dt-bindings/clock/r7s72100-clock.h
-@@ -34,6 +34,8 @@
- 
- /* MSTP7 */
- #define R7S72100_CLK_ETHER	4
-+#define R7S72100_CLK_USB0	1
-+#define R7S72100_CLK_USB1	0
- 
- /* MSTP8 */
- #define R7S72100_CLK_MMCIF	4
--- 
-2.11.0
-
-
+Thx,
+-Vineet
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
