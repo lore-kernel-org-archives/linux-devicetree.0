@@ -1,32 +1,25 @@
 From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v5 05/10] arm: dts: dt-bindings: Add Renesas RZ/A1 pinctrl header
-Date: Thu, 27 Apr 2017 10:38:39 +0200
-Message-ID: <CAMuHMdWwT6et+vRzeY1GiGYW-hS4w4ukWK8bUL+w-npMmdPkag@mail.gmail.com>
-References: <1493281194-5200-1-git-send-email-jacopo+renesas@jmondi.org> <1493281194-5200-6-git-send-email-jacopo+renesas@jmondi.org>
+Subject: Re: [PATCH v5 04/10] dt-bindings: pinctrl: Add RZ/A1 bindings doc
+Date: Thu, 27 Apr 2017 10:37:55 +0200
+Message-ID: <CAMuHMdWkZ961FDSdVkn=+puY6P1p3+J9pUEa97e5RrTO=Jqg8g@mail.gmail.com>
+References: <1493281194-5200-1-git-send-email-jacopo+renesas@jmondi.org> <1493281194-5200-5-git-send-email-jacopo+renesas@jmondi.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1493281194-5200-6-git-send-email-jacopo+renesas@jmondi.org>
-Sender: linux-kernel-owner@vger.kernel.org
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1493281194-5200-5-git-send-email-jacopo+renesas@jmondi.org>
+Sender: linux-gpio-owner@vger.kernel.org
 To: Jacopo Mondi <jacopo+renesas@jmondi.org>
 Cc: Linus Walleij <linus.walleij@linaro.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Chris Brandt <chris.brandt@renesas.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
 On Thu, Apr 27, 2017 at 10:19 AM, Jacopo Mondi
 <jacopo+renesas@jmondi.org> wrote:
-> Add dt-bindings for Renesas r7s72100 pin controller header file.
+> Add device tree bindings documentation for Renesas RZ/A1 gpio and pin
+> controller.
 >
 > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
 
 Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-
-> --- /dev/null
-> +++ b/include/dt-bindings/pinctrl/r7s72100-pinctrl.h
-> @@ -0,0 +1,16 @@
-
-> +#define RZA1_PINMUX(b, p, f)   ((b) * RZA1_PINS_PER_PORT + (p) | (f << 16))
-
-... | (f) << 16)
 
 Gr{oetje,eeting}s,
 
