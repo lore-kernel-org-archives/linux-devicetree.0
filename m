@@ -1,90 +1,105 @@
-From: "Jingoo Han" <jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v8 1/3] backlight arcxcnn add arc to vendor prefix
-Date: Thu, 27 Apr 2017 13:41:57 -0400
-Message-ID: <001301d2bf7d$919d2d60$b4d78820$@gmail.com>
-References: <1489607133-7870-1-git-send-email-olimpiu@arcticsand.com> <CAL_JsqJ+=fQ2e752iCHs0dbdrkotuDtKp=2Z2_xnyCtMnxWV8A@mail.gmail.com> <2aac01d2bd24$17449a90$45cdcfb0$@arcticsand.com> <000301d2bde2$10822970$31867c50$@gmail.com> <CAMuHMdXbKH5hojvj+N8W0h7znw8iAGo1Y1NyFHjrfQ1n0-XQKA@mail.gmail.com>
+From: Jon Mason <jon.mason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 1/2] thermal: broadcom: Allow for NSP to use ns-thermal driver
+Date: Thu, 27 Apr 2017 13:42:25 -0400
+Message-ID: <CAC3K-4pr4LY-9unHNxMDN9YmCYHKekUo66813OUdiKkQH4QzVw@mail.gmail.com>
+References: <1493153351-12698-1-git-send-email-jon.mason@broadcom.com>
+ <1493153351-12698-2-git-send-email-jon.mason@broadcom.com> <20170427163658.GC18276@localhost.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain;
-        charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAMuHMdXbKH5hojvj+N8W0h7znw8iAGo1Y1NyFHjrfQ1n0-XQKA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-Language: ko
+In-Reply-To: <20170427163658.GC18276-bi+AKbBUZKY6gyzm1THtWbp2dZbC/Bob@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: 'Geert Uytterhoeven' <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, 'Olimpiu Dejeu' <olimpiu-eV7fy4qpoLhpLGFMi4vTTA@public.gmane.org>
-Cc: 'Rob Herring' <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, 'Lee Jones' <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, 'Linux Fbdev development list' <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, 'Brian Dodge' <bdodge-eV7fy4qpoLhpLGFMi4vTTA@public.gmane.org>, 'Joe Perches' <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>, 'Matthew D'Asaro' <medasaro-eV7fy4qpoLhpLGFMi4vTTA@public.gmane.org>, 'Daniel Thompson' <daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+To: Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Florian Fainelli <florian.fainelli-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, BCM Kernel Feedback <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday, April 27, 2017 8:37 AM, Geert Uytterhoeven wrote:
-> On Tue, Apr 25, 2017 at 6:36 PM, Jingoo Han <jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> > On Monday, April 24, 2017 1:56 PM, Olimpiu Dejeu wrote:
-> >>
-> >> On Mon, April 24, 2017 11:10 AM, Rob Herring < robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> >>
-> >> > On Wed, Mar 15, 2017 at 2:45 PM, Olimpiu Dejeu
-> <olimpiu-eV7fy4qpoLhpLGFMi4vTTA@public.gmane.org>
-> >> wrote:
-> >> >> backlight: Add arc to vendor prefixes
-> >> >> Signed-off-by: Olimpiu Dejeu <olimpiu-eV7fy4qpoLhpLGFMi4vTTA@public.gmane.org>
-> >> >> ---
-> >> >> v8:
-> >> >> - Version to match other patches in set
-> >> >>
-> >> >>  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
-> >> >>  1 file changed, 1 insertion(+)
-> >> >>
-> >> >> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt
-> >> >> b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> >> >> index 16d3b5e..6f33a4b 100644
-> >> >> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-> >> >> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> >> >> @@ -28,6 +28,7 @@ andestech     Andes Technology Corporation
-> >> >>  apm    Applied Micro Circuits Corporation (APM)
-> >> >>  aptina Aptina Imaging
-> >> >>  arasan Arasan Chip Systems
-> >> >> +arc    Arctic Sand
-> >>
-> >> >arc is also a cpu arch. While not a vendor, it could be confusing. How
-> >> about "arctic" >instead?
-> >>
-> >> Rob, will do, i.e. I will change it to "arctic"
-> >
-> > Hi Olimpiu,
-> >
-> > Oh, "arc" and "arctic" is totally different.
-> > In my opinion, one of the purposes of DT is to describe hardware stuffs.
-> > So, please use more detailed words.
-> 
-> Already acquired by Murata?
+On Thu, Apr 27, 2017 at 12:37 PM, Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> Hey Jason,
 
-Yes, Murata already announced the agreement of acquisition. [1]
+It's Jon :)
 
-To Olimpiu Dejeu,
-What is your company's plan about naming?
-The brand name 'Artic Sand' will be continued or not?
-If not, you should replace 'Artic Sand' with 'Murata'.
-As you said earlier, changing DT names is not easy after merging.
+>
+> On Tue, Apr 25, 2017 at 04:49:10PM -0400, Jon Mason wrote:
+>> Change the iProc Kconfig to select THERMAL and THERMAL_OF, which allows
+>> the ns-thermal driver to be selected via menuconfig.  Also, change the
+>> ns-thermal driver to work on any iProc based SoC.  Finally, tweak the
+>> Kconfig description to mention support for NSP and make the default on
+>> for iProc based platforms.
+>
+>
+> Thanks for the patch, but..
+>>
+>> Signed-off-by: Jon Mason <jon.mason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+>> ---
+>>  arch/arm/mach-bcm/Kconfig        | 2 ++
+>>  drivers/thermal/broadcom/Kconfig | 9 +++++----
+>>  2 files changed, 7 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/arch/arm/mach-bcm/Kconfig b/arch/arm/mach-bcm/Kconfig
+>> index a0e66d8..da2bfeb 100644
+>> --- a/arch/arm/mach-bcm/Kconfig
+>> +++ b/arch/arm/mach-bcm/Kconfig
+>> @@ -19,6 +19,8 @@ config ARCH_BCM_IPROC
+>>       select GPIOLIB
+>>       select ARM_AMBA
+>>       select PINCTRL
+>> +     select THERMAL
+>> +     select THERMAL_OF
+>>       help
+>>         This enables support for systems based on Broadcom IPROC architected SoCs.
+>>         The IPROC complex contains one or more ARM CPUs along with common
+>
+> It would be better if this is split and sent through your arch tree, to
+> avoid conflicts. I could also pick it if you get an ack from one of your
+> maintainers. Still, first option is preferable.
 
-Best regards,
-Jingoo Han
+Sure, I'll be happy to split this off.  I should've thought to split
+it up before sending.  Thanks for the suggestion.
 
-[1] http://www.murata.com/about/newsroom/news/irnews/irnews/2017/0317
+>
+>> diff --git a/drivers/thermal/broadcom/Kconfig b/drivers/thermal/broadcom/Kconfig
+>> index f0dea8a..26d706c 100644
+>> --- a/drivers/thermal/broadcom/Kconfig
+>> +++ b/drivers/thermal/broadcom/Kconfig
+>> @@ -1,8 +1,9 @@
+>>  config BCM_NS_THERMAL
+>>       tristate "Northstar thermal driver"
+>>       depends on ARCH_BCM_IPROC || COMPILE_TEST
+>> +     default ARCH_BCM_IPROC
+>
+> Not sure if this is really what you wanted. Based on your commit log
+> message, you meant the following, perhaps?
+>
+>  +      default y if ARCH_BCM_IPROC
 
-> 
-> Gr{oetje,eeting}s,
-> 
->                         Geert
-> 
-> --
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-
-> m68k.org
-> 
-> In personal conversations with technical people, I call myself a hacker.
-> But
-> when I'm talking to journalists I just say "programmer" or something like
-> that.
->                                 -- Linus Torvalds
+IIUC, my original default works, as we have used it frequently in
+other places in the kernel.
+grep -rI "default ARCH_BCM_IPROC" * | wc -l
+15
 
+However, if the above is preferred (or the other 15 massively broken),
+I'll be happy to do it that way.
+
+
+>>       help
+>> -       Northstar is a family of SoCs that includes e.g. BCM4708, BCM47081,
+>> -       BCM4709 and BCM47094. It contains DMU (Device Management Unit) block
+>> -       with a thermal sensor that allows checking CPU temperature. This
+>> -       driver provides support for it.
+>> +       Support for the Northstar and Northstar Plus family of SoCs (e.g.
+>> +       BCM4708, BCM4709, BCM5301x, BCM95852X, etc). It contains DMU (Device
+>
+> Did we look BCM47094 somehow on this patch?
+
+Naa, just trying to be more concise, while adding the NSP products to
+the list..  BCM47094 is a type of BCM4709.  So, it is still there :)
+
+>
+>> +       Management Unit) block with a thermal sensor that allows checking CPU
+>> +       temperature.
+>> --
+>> 2.7.4
+>>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
