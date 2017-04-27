@@ -1,80 +1,97 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH/RFC 0/5] arm64: dts: renesas: Break out common board support
-Date: Thu, 27 Apr 2017 15:32:49 +0200
-Message-ID: <CAMuHMdV1SQoeEACaNLZbByRLbosMj5oxEysNDVevYgxqStDaug@mail.gmail.com>
-References: <1492779321-23939-1-git-send-email-geert+renesas@glider.be>
- <20170426080642.GK25517@verge.net.au> <CAMuHMdXbe=rkeS+-teg7nqbjULWY0_5pBO1XEzCGdYA4gB57oA@mail.gmail.com>
+From: Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Subject: Re: [PATCH v2 2/2] dmaengine: Add DW AXI DMAC driver
+Date: Thu, 27 Apr 2017 16:33:50 +0300
+Message-ID: <1493300030.24567.235.camel@linux.intel.com>
+References: <1491573855-1039-1-git-send-email-Eugeniy.Paltsev@synopsys.com>
+         <1491573855-1039-3-git-send-email-Eugeniy.Paltsev@synopsys.com>
+         <1492518695.24567.56.camel@linux.intel.com>
+         <1492784977.16657.6.camel@synopsys.com>
+         <1492787583.24567.120.camel@linux.intel.com>
+         <1493049305.25985.4.camel@synopsys.com>
+         <1493052970.24567.168.camel@linux.intel.com>
+         <1493133369.25985.10.camel@synopsys.com>
+         <1493143941.24567.196.camel@linux.intel.com>
+         <1493219075.24567.211.camel@linux.intel.com>
+         <1493299300.25985.17.camel@synopsys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdXbe=rkeS+-teg7nqbjULWY0_5pBO1XEzCGdYA4gB57oA@mail.gmail.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Vladimir Barinov <vladimir.barinov@cogentembedded.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1493299300.25985.17.camel-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Eugeniy Paltsev <Eugeniy.Paltsev-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+Cc: "vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "Alexey.Brodkin-HKixBCOQz3hWk0Htik3J/w@public.gmane.org" <Alexey.Brodkin-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-snps-arc-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-snps-arc-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Simon,
+On Thu, 2017-04-27 at 13:21 +0000, Eugeniy Paltsev wrote:
+> On Wed, 2017-04-26 at 18:04 +0300, Andy Shevchenko wrote:
+> > On Tue, 2017-04-25 at 21:12 +0300, Andy Shevchenko wrote:
+> > > On Tue, 2017-04-25 at 15:16 +0000, Eugeniy Paltsev wrote:
+> > > > On Mon, 2017-04-24 at 19:56 +0300, Andy Shevchenko wrote:
+> > > > > On Mon, 2017-04-24 at 15:55 +0000, Eugeniy Paltsev wrote:
 
-On Wed, Apr 26, 2017 at 10:11 AM, Geert Uytterhoeven
-<geert@linux-m68k.org> wrote:
-> CC Vladimir (which I forgot to CC initially, sorry for that)
->
-> On Wed, Apr 26, 2017 at 10:06 AM, Simon Horman <horms@verge.net.au> wrote:
->> On Fri, Apr 21, 2017 at 02:55:16PM +0200, Geert Uytterhoeven wrote:
->>> The Renesas Salvator-X and ULCB development board can be equipped with
->>> either an R-Car H3 or M3-W SiP, which are pin-compatible.  All boards
->>> use separate DTBs, but currently there's no sharing of board-specific
->>> devices in DTS.
->>>
->>> This series reduces duplication by extracting common board support into
->>> their own .dtsi files.  As the level of support varies across boards and
->>> SoCs, this requires the addition of a few external clocks and
->>> placeholder devices on R-Car M3-W, so the common board support DTS can
->>> refer to them.
->>>
->>>   - Patches 1 and 2 add the external audio and PCIe bus clocks on R-Car
->>>     M3-W, which are present in r8a7795.dtsi, and used in
->>>     r8a7795-salvator-x.dts,
->>>   - RFC patch 3 adds placeholders for devices that are not yet supported
->>>     and/or tested on R-Car M3-W, but used on R-Car H3,
->>>   - RFC patch 4 extracts common Salvator-X board support,
->>>   - RFC patch 5 extracts common ULCB board support.
->>>
->>> For R-Car H3 based boards, there are no functional changes.
->>> For R-Car M3-W based boards, some new devices are now described in DT.
->>>
->>> Dependencies:
->>>   - renesas-devel-20170420-v4.11-rc7,
->>>   - Patches 1 and 2 can be applied as-is,
->>>   - Patches 4 and 5 depend on "[PATCH 0/8] arm64: dts: renesas: Break
->>>     out R-Car H3 and M3-W SiP"
->>>     (http://www.spinics.net/lists/devicetree/msg173820.html).
->>>
->>> DTB changes have been inspected using scripts/dtc/dtx_diff.
->>> This has been tested on Salvator-X (both H3 and M3-W).
->>> This has not been tested on H3ULCB and M3ULCB due to lack of hardware.
->>>
->>> Thanks for your comments!
->>
->> Thanks for tackling this important problem. I have looked over the changes
->> and they seem nice to me. I would, however, be more comfortable applying
->> them if they were rested on the ULCB boards.
->
-> tested?
->
-> I've pushed a branch for testing to topic/rcar3-dtsi-sharing in
-> git://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers.git.
+> > > > Hmm, this looks OK. (In my example (hsu/hsu.c driver) error
+> > > > descriptors
+> > > > are not freed even after terminate_all is called)
+> > > 
+> > > If it's active it will be freed.
+> > > Otherwise caller should check somewhere that descriptor fails.
+> > > 
+> > > But actually this is fragile and we need to monitor failed
+> > > descriptors.
+> > > Thanks for reporting.
+> > > 
+> > > > 
+> > > > > Of course, if you want to keep by some reason (should be
+> > > > > stated
+> > > > > what
+> > > > > the reason in comment) erred descriptors, you can do that.
+> > > > 
+> > > > So, I'll create desc_error list and store failed descriptors in
+> > > > this
+> > > > list until terminate_all() is called.
+> > > > Is it OK implementation?
+> > > 
+> > > Nope, we need to amend virt-chan API for that. I'm on it. Will
+> > > send
+> > > a series soon.
+> > 
+> > I have to correct what I wrote before.
+> > 
+> > We have two options:
+> > a) one I proposed above;
+> > b) move descriptor to complete list and call complete callback with
+> > result.
+> > 
+> > So, it looks like the b) variant is what is done already in 4 (did I
+> > calculate correctly?) drivers and respective users.
+> 
+> In my opinion we should call error descriptor complete callback.
+> But I don't think we should move error descriptor to desc_completed
+> list.
+> 
+> When descriptor following our error descriptor will be completed
+> successfully vchan tasklet will be called.
+> So all descriptors from desc_completed list will be freed (including
+> our error descriptor)
+> We'll lost information about error descriptors and we'll not be able
+> to
+> return correct status from dma_async_is_tx_complete().
 
-I managed to test it on the new H3ULCB and M3ULCB baords in Magnus' farm.
-No issues detected.
+While I more agree on the point that we better to have explicit list of
+failed descriptors, here is another point that user (which is interested
+in error checking) has to provide callback_result instead of callback.
 
-Gr{oetje,eeting}s,
+> In my opinion, we should create desc_error list.
+> When we get error we'll move descriptor to desc_error list and call
+> complete callback.
 
-                        Geert
+Vinod, Lars, others, what is(are) your opinion(s)?
 
+-- 
+Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Intel Finland Oy
 --
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
