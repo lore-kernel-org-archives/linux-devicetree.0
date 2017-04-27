@@ -1,70 +1,99 @@
-From: Eugeniy Paltsev <Eugeniy.Paltsev-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] dmaengine: Add DW AXI DMAC driver
-Date: Thu, 27 Apr 2017 13:21:41 +0000
-Message-ID: <1493299300.25985.17.camel@synopsys.com>
-References: <1491573855-1039-1-git-send-email-Eugeniy.Paltsev@synopsys.com>
-         <1491573855-1039-3-git-send-email-Eugeniy.Paltsev@synopsys.com>
-         <1492518695.24567.56.camel@linux.intel.com>
-         <1492784977.16657.6.camel@synopsys.com>
-         <1492787583.24567.120.camel@linux.intel.com>
-         <1493049305.25985.4.camel@synopsys.com>
-         <1493052970.24567.168.camel@linux.intel.com>
-         <1493133369.25985.10.camel@synopsys.com>
-         <1493143941.24567.196.camel@linux.intel.com>
-         <1493219075.24567.211.camel@linux.intel.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v5 01/10] arm64: allwinner: a64: enable RSB on A64
+Date: Thu, 27 Apr 2017 15:28:05 +0200
+Message-ID: <20170427132805.izv6xfktlhfc4yty@lukather>
+References: <20170426152023.41567-1-icenowy@aosc.io>
+ <20170426152023.41567-2-icenowy@aosc.io>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="vmgrw4du3ohy337q"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1493219075.24567.211.camel-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Content-Language: en-US
-Content-ID: <B7F2B3D16C45B743AD0B276C42D7C890-z7JfP6tgrtVBCHUSTMH8dZqQE7yCjDx5@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170426152023.41567-2-icenowy-h8G6r0blFSE@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org" <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Cc: "vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "Alexey.Brodkin-HKixBCOQz3hWk0Htik3J/w@public.gmane.org" <Alexey.Brodkin-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Eugeniy.Paltsev-HKixBCOQz3hWk0Htik3J/w@public.gmane.org" <Eugeniy.Paltsev-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, "linux-snps-arc-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-snps-arc-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCAyMDE3LTA0LTI2IGF0IDE4OjA0ICswMzAwLCBBbmR5IFNoZXZjaGVua28gd3JvdGU6
-DQo+IE9uIFR1ZSwgMjAxNy0wNC0yNSBhdCAyMToxMiArMDMwMCwgQW5keSBTaGV2Y2hlbmtvIHdy
-b3RlOg0KPiA+IE9uIFR1ZSwgMjAxNy0wNC0yNSBhdCAxNToxNiArMDAwMCwgRXVnZW5peSBQYWx0
-c2V2IHdyb3RlOg0KPiA+ID4gT24gTW9uLCAyMDE3LTA0LTI0IGF0IDE5OjU2ICswMzAwLCBBbmR5
-IFNoZXZjaGVua28gd3JvdGU6DQo+ID4gPiA+IE9uIE1vbiwgMjAxNy0wNC0yNCBhdCAxNTo1NSAr
-MDAwMCwgRXVnZW5peSBQYWx0c2V2IHdyb3RlOg0KPiA+ID4gPiBEZXNjcmlwdG9yIGlzIGFjdGl2
-ZSB1bnRpbCB0ZXJtaW5hdGVfYWxsKCkgaXMgY2FsbGVkIG9yIG5ldw0KPiA+ID4gPiBkZXNjcmlw
-dG9yDQo+ID4gPiA+IGlzIHN1cHBsaWVkLiBTbywgdGhlIGNhbGxlciBoYXMgYSBxdWl0ZSB0aW1l
-IHRvIGNoZWNrIG9uIGl0Lg0KPiA+ID4gPg0KPiA+ID4gPiBTbywgd2hhdCdzIHdyb25nIG9uIGl0
-IGJ5IHlvdXIgb3Bpbmlvbj8NCj4gPiA+DQo+ID4gPiBIbW0sIHRoaXMgbG9va3MgT0suIChJbiBt
-eSBleGFtcGxlIChoc3UvaHN1LmMgZHJpdmVyKSBlcnJvcg0KPiA+ID4gZGVzY3JpcHRvcnMNCj4g
-PiA+IGFyZSBub3QgZnJlZWQgZXZlbiBhZnRlciB0ZXJtaW5hdGVfYWxsIGlzIGNhbGxlZCkNCj4g
-Pg0KPiA+IElmIGl0J3MgYWN0aXZlIGl0IHdpbGwgYmUgZnJlZWQuDQo+ID4gT3RoZXJ3aXNlIGNh
-bGxlciBzaG91bGQgY2hlY2sgc29tZXdoZXJlIHRoYXQgZGVzY3JpcHRvciBmYWlscy4NCj4gPg0K
-PiA+IEJ1dCBhY3R1YWxseSB0aGlzIGlzIGZyYWdpbGUgYW5kIHdlIG5lZWQgdG8gbW9uaXRvciBm
-YWlsZWQNCj4gPiBkZXNjcmlwdG9ycy4NCj4gPiBUaGFua3MgZm9yIHJlcG9ydGluZy4NCj4gPg0K
-PiA+ID4NCj4gPiA+ID4gT2YgY291cnNlLCBpZiB5b3Ugd2FudCB0byBrZWVwIGJ5IHNvbWUgcmVh
-c29uIChzaG91bGQgYmUgc3RhdGVkDQo+ID4gPiA+IHdoYXQNCj4gPiA+ID4gdGhlIHJlYXNvbiBp
-biBjb21tZW50KSBlcnJlZCBkZXNjcmlwdG9ycywgeW91IGNhbiBkbyB0aGF0Lg0KPiA+ID4NCj4g
-PiA+IFNvLCBJJ2xsIGNyZWF0ZSBkZXNjX2Vycm9yIGxpc3QgYW5kIHN0b3JlIGZhaWxlZCBkZXNj
-cmlwdG9ycyBpbg0KPiA+ID4gdGhpcw0KPiA+ID4gbGlzdCB1bnRpbCB0ZXJtaW5hdGVfYWxsKCkg
-aXMgY2FsbGVkLg0KPiA+ID4gSXMgaXQgT0sgaW1wbGVtZW50YXRpb24/DQo+ID4NCj4gPiBOb3Bl
-LCB3ZSBuZWVkIHRvIGFtZW5kIHZpcnQtY2hhbiBBUEkgZm9yIHRoYXQuIEknbSBvbiBpdC4gV2ls
-bCBzZW5kDQo+ID4gYSBzZXJpZXMgc29vbi4NCj4NCj4gSSBoYXZlIHRvIGNvcnJlY3Qgd2hhdCBJ
-IHdyb3RlIGJlZm9yZS4NCj4NCj4gV2UgaGF2ZSB0d28gb3B0aW9uczoNCj4gYSkgb25lIEkgcHJv
-cG9zZWQgYWJvdmU7DQo+IGIpIG1vdmUgZGVzY3JpcHRvciB0byBjb21wbGV0ZSBsaXN0IGFuZCBj
-YWxsIGNvbXBsZXRlIGNhbGxiYWNrIHdpdGgNCj4gcmVzdWx0Lg0KPg0KPiBTbywgaXQgbG9va3Mg
-bGlrZSB0aGUgYikgdmFyaWFudCBpcyB3aGF0IGlzIGRvbmUgYWxyZWFkeSBpbiA0IChkaWQgSQ0K
-PiBjYWxjdWxhdGUgY29ycmVjdGx5PykgZHJpdmVycyBhbmQgcmVzcGVjdGl2ZSB1c2Vycy4NCg0K
-SW4gbXkgb3BpbmlvbiB3ZSBzaG91bGQgY2FsbCBlcnJvciBkZXNjcmlwdG9yIGNvbXBsZXRlIGNh
-bGxiYWNrLg0KQnV0IEkgZG9uJ3QgdGhpbmsgd2Ugc2hvdWxkIG1vdmUgZXJyb3IgZGVzY3JpcHRv
-ciB0byBkZXNjX2NvbXBsZXRlZA0KbGlzdC4NCg0KV2hlbiBkZXNjcmlwdG9yIGZvbGxvd2luZyBv
-dXIgZXJyb3IgZGVzY3JpcHRvciB3aWxsIGJlIGNvbXBsZXRlZA0Kc3VjY2Vzc2Z1bGx5IHZjaGFu
-IHRhc2tsZXQgd2lsbCBiZSBjYWxsZWQuDQpTbyBhbGwgZGVzY3JpcHRvcnMgZnJvbSBkZXNjX2Nv
-bXBsZXRlZCBsaXN0IHdpbGwgYmUgZnJlZWQgKGluY2x1ZGluZw0Kb3VyIGVycm9yIGRlc2NyaXB0
-b3IpDQpXZSdsbCBsb3N0IGluZm9ybWF0aW9uIGFib3V0IGVycm9yIGRlc2NyaXB0b3JzIGFuZCB3
-ZSdsbCBub3QgYmUgYWJsZSB0bw0KcmV0dXJuIGNvcnJlY3Qgc3RhdHVzIGZyb20gZG1hX2FzeW5j
-X2lzX3R4X2NvbXBsZXRlKCkuDQoNCkluIG15IG9waW5pb24sIHdlIHNob3VsZCBjcmVhdGUgZGVz
-Y19lcnJvciBsaXN0Lg0KV2hlbiB3ZSBnZXQgZXJyb3Igd2UnbGwgbW92ZSBkZXNjcmlwdG9yIHRv
-IGRlc2NfZXJyb3IgbGlzdCBhbmQgY2FsbA0KY29tcGxldGUgY2FsbGJhY2suDQoNCi0tDQrCoEV1
-Z2VuaXkgUGFsdHNldg==
+
+--vmgrw4du3ohy337q
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Wed, Apr 26, 2017 at 11:20:14PM +0800, Icenowy Zheng wrote:
+> Allwinner A64 have a RSB controller like the one on A23/A33 SoCs.
+>=20
+> Add it and its pinmux.
+>=20
+> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+> Acked-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+> ---
+> Changes in v2:
+> - Removed bonus properties in pio node.
+> - Added Chen-Yu's ACK.
+>=20
+>  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 19 +++++++++++++++++++
+>  1 file changed, 19 insertions(+)
+>=20
+> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/b=
+oot/dts/allwinner/sun50i-a64.dtsi
+> index c7f669f5884f..05ec9fc5e81f 100644
+> --- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+> @@ -422,6 +422,25 @@
+>  			#gpio-cells =3D <3>;
+>  			interrupt-controller;
+>  			#interrupt-cells =3D <3>;
+> +
+> +			r_rsb_pins: rsb@0 {
+> +				pins =3D "PL0", "PL1";
+> +				function =3D "s_rsb";
+> +			};
+> +		};
+> +
+> +		r_rsb: rsb@1f03400 {
+> +			compatible =3D "allwinner,sun8i-a23-rsb";
+> +			reg =3D <0x01f03400 0x400>;
+> +			interrupts =3D <GIC_SPI 39 IRQ_TYPE_LEVEL_HIGH>;
+> +			clocks =3D <&r_ccu 6>;
+
+Please use the defines here..
+
+> +			clock-frequency =3D <3000000>;
+> +			resets =3D <&r_ccu 2>;
+
+And here.
+
+Thanks!
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+
+--vmgrw4du3ohy337q
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIcBAABCAAGBQJZAfHiAAoJEBx+YmzsjxAgAsYP/2Nj0i4mzSliuHS4kLEdEpeF
+LxYjEWpghrcLtV4oHr/ow4rK3VNlcom5OucUmLqpupmQZWv7ZKuD4gRJ74yf0zhg
+yzoq2xNDjFBdrV6d68hKzjyXlATXAfEq43wODvvUcrmyiP/a8u4SZmZBDT94QLaP
+mh0UGVwKhZFRdhKiMQ/eHwhpTyMbWKVOj91Hrqb+Obnmb4zXaas/7FWHuZV6ibL1
+kxVp+1BMcESOBlN+CCphcGSLZF+F0gS+FKKHn7NeyzSp6/Cp3ZYYPlGz1UU+K/QJ
+oVs2o3sR616WU2uO/1aP/sDyKy87hJZHnECr+NPjZVigt5MokKYjoy7bSbG5sGJO
+XHDbVvxNQvw5/H1aAzwuAcssn6/KP6rCt8nEhZ55jIxUeH1oSRhL9xaIWNjtJWlN
+CwIlmoQZSA2F1aAazyCsxJrV7RcexDK/cWeWDkXPAHhtqhgILiJ5s7KjmDsTRI5p
+2PX6qKMZLqrGfAQFz1fM93K6LS1eiwOrnhR012m7yMXw3+hWN61IgNyUvhxo1pyY
+dTA+Qs4vJoFMcwdXJpwmfxS5u3wFfX7Fakwxii8zZIQ2HbZnNttFXDONDF88ZRGf
+8WVm2XUnDCzJDTD7uEHm8PoV2IoJ0XjKgZi/CT3k8WFODMGceF9OZRDfporCIwYI
+OZvj1vfcKctvYPbpxxCF
+=R/kK
+-----END PGP SIGNATURE-----
+
+--vmgrw4du3ohy337q--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
