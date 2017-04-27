@@ -1,40 +1,50 @@
-From: Vineet Gupta <Vineet.Gupta1-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Subject: Re: [RESEND PATCH 1/2] arc: axs10x: Add DT bindings for I2S audio
- playback
-Date: Wed, 26 Apr 2017 16:31:27 -0700
-Message-ID: <ae3f1150-f8da-9a34-d929-6964f91c06ae@synopsys.com>
-References: <7ed6deaf1ae6d5819364c793835aa30316077a7e.1487787376.git.joabreu@synopsys.com>
- <77599cf5-33e5-2ecd-2b2a-43630195a3b8@synopsys.com>
- <c02ea9db-db90-1b2e-1baf-f2940e64201f@synopsys.com>
+From: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 2/2] Input: add support for the STMicroelectronics
+ FingerTip touchscreen
+Date: Wed, 26 Apr 2017 17:39:18 -0700
+Message-ID: <20170427003918.GA1236@dtor-glaptop>
+References: <20170327130743.27783-1-andi.shyti@samsung.com>
+ <CGME20170327130756epcas1p321726d525c31814c3f76895b895739cd@epcas1p3.samsung.com>
+ <20170327130743.27783-3-andi.shyti@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <c02ea9db-db90-1b2e-1baf-f2940e64201f-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170327130743.27783-3-andi.shyti-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jose Abreu <Jose.Abreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, "linux-snps-arc-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-snps-arc-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Cc: Carlos Palminha <CARLOS.PALMINHA-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Alexey Brodkin <Alexey.Brodkin-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Andi Shyti <andi.shyti-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andi Shyti <andi-ahk0KpmfxKRAfugRpC6u6w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 04/26/2017 01:55 AM, Jose Abreu wrote:
-> Hi Vineet,
->
->
-> On 24-04-2017 18:36, Vineet Gupta wrote:
->> On 04/21/2017 03:15 AM, Jose Abreu wrote:
->>> This patch adds the necessary DT bindings to get HDMI audio
->>> output in ARC AXS10x SDP. The bindings for I2S controller were
->>> added as well as the bindings for simple audio card.
->> Are these waiting on Rob or is it OK for me to pick these up for 4.12 ?
-> Yes, I was waiting for Rob ack but he has been silent. It would
-> be nice if these went for 4.12.
+Hi Andi,
 
-Ok lets wait another couple of days before I pick those up.
-In the mean time, can you please restest the series against 4.11-rcX and report
-here that patches are still valid and do as intended !
+Quick question:
 
-Thx,
--Vineet
+On Mon, Mar 27, 2017 at 10:07:43PM +0900, Andi Shyti wrote:
+> +static irqreturn_t stmfts_irq_handler(int irq, void *dev)
+> +{
+> +	struct stmfts_data *sdata = dev;
+> +	int ret;
+> +
+> +	mutex_lock(&sdata->mutex);
+> +	ret = i2c_smbus_read_i2c_block_data(sdata->client,
+> +						STMFTS_READ_ONE_EVENT,
+> +						STMFTS_EVENT_SIZE, sdata->data);
+> +
+> +	if (ret < 0 || ret != STMFTS_EVENT_SIZE)
+> +		goto exit;
+
+Why do we split read into 2 chunks? Can we issue STMFTS_READ_ALL_EVENT
+right away instead of reading first event, analyzing it, and then (maybe)
+fetching the rest?
+
+Also, why do we use smbus protocol for the first event and i2c for the
+rest?
+
+Thanks.
+
+-- 
+Dmitry
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
