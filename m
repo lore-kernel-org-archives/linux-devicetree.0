@@ -1,40 +1,54 @@
-From: Georgi Djakov <georgi.djakov@linaro.org>
-Subject: Re: [PATCH v9 07/16] mmc: sdhci-msm: Add get_min_clock() and
- get_max_clock() callback
-Date: Thu, 27 Apr 2017 10:58:52 +0300
-Message-ID: <51e8cd7e-05f8-3164-5cb1-d4ecd866539a@linaro.org>
-References: <1479710246-26676-1-git-send-email-riteshh@codeaurora.org>
- <1479710246-26676-8-git-send-email-riteshh@codeaurora.org>
- <20170426214443.GA32019@hector.attlocal.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <20170426214443.GA32019@hector.attlocal.net>
-Sender: linux-clk-owner@vger.kernel.org
-To: Andy Gross <andy.gross@linaro.org>, stable@vger.kernel.org
-Cc: Ritesh Harjani <riteshh@codeaurora.org>, ulf.hansson@linaro.org, linux-mmc@vger.kernel.org, adrian.hunter@intel.com, sboyd@codeaurora.org, shawn.lin@rock-chips.com, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, david.brown@linaro.org, linux-arm-msm@vger.kernel.org, georgi.djakov@linaro.org, alex.lemberg@sandisk.com, mateusz.nowak@intel.com, Yuliy.Izrailov@sandisk.com, asutoshd@codeaurora.org, david.griego@linaro.org, stummala@codeaurora.org, venkatg@codeaurora.org, rnayak@codeaurora.org, pramod.gurav@linaro.org, jeremymc@redhat.com
+From: Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
+Subject: [PATCH v5 08/10] arm: dts: genmai: Add RIIC2 pin group
+Date: Thu, 27 Apr 2017 10:19:52 +0200
+Message-ID: <1493281194-5200-9-git-send-email-jacopo+renesas@jmondi.org>
+References: <1493281194-5200-1-git-send-email-jacopo+renesas@jmondi.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1493281194-5200-1-git-send-email-jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org
+Cc: linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 04/27/2017 12:44 AM, Andy Gross wrote:
-> On Mon, Nov 21, 2016 at 12:07:17PM +0530, Ritesh Harjani wrote:
->> This add get_min_clock() and get_max_clock() callback
->> for sdhci-msm. sdhci-msm min/max clocks may be different
->> hence implement these callbacks.
->>
->> Signed-off-by: Sahitya Tummala <stummala@codeaurora.org>
->> Signed-off-by: Ritesh Harjani <riteshh@codeaurora.org>
->> Acked-by: Adrian Hunter <adrian.hunter@intel.com>
-> 
-> This patch needs to be picked up for stable as 4.9 is currently broken w.r.t.
-> MMC on Qualcomm platforms.
-> 
-> Fixes: d84be51d1c1d ("mmc: sdhci-msm: Enable few quirks")
+Add pin configuration subnode for RIIC2 interface.
 
-Agree! Applying this patch (80031bdeb764) in stable fixes the
-broken mmc. Otherwise the following error is seen since v4.9.22:
+Signed-off-by: Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
+Reviewed-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+---
+ arch/arm/boot/dts/r7s72100-genmai.dts | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-mmc0: Hardware doesn't specify base clock frequency.
+diff --git a/arch/arm/boot/dts/r7s72100-genmai.dts b/arch/arm/boot/dts/r7s72100-genmai.dts
+index c28d74b..9add1b6 100644
+--- a/arch/arm/boot/dts/r7s72100-genmai.dts
++++ b/arch/arm/boot/dts/r7s72100-genmai.dts
+@@ -43,6 +43,12 @@
+ 		/* P3_0 as TxD2; P3_2 as RxD2 */
+ 		pinmux = <RZA1_PINMUX(3, 0, 6)>, <RZA1_PINMUX(3, 2, 4)>;
+ 	};
++
++	i2c2_pins: i2c2 {
++		/* RIIC2: P1_4 as SCL, P1_5 as SDA */
++		pinmux = <RZA1_PINMUX(1, 4, 1)>, <RZA1_PINMUX(1, 5, 1)>;
++		bi-directional;
++	};
+ };
+ 
+ &extal_clk {
+@@ -61,6 +67,9 @@
+ 	status = "okay";
+ 	clock-frequency = <400000>;
+ 
++	pinctrl-names = "default";
++	pinctrl-0 = <&i2c2_pins>;
++
+ 	eeprom@50 {
+ 		compatible = "renesas,24c128";
+ 		reg = <0x50>;
+-- 
+2.7.4
 
-Thanks,
-Georgi
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
