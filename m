@@ -1,53 +1,99 @@
-From: Jiada Wang <jiada_wang@mentor.com>
-Subject: Re: [PATCH RFC 0/5] *** SPI Slave mode support ***
-Date: Wed, 26 Apr 2017 23:43:18 -0700
-Message-ID: <59019306.2050309@mentor.com>
-References: <1492085644-4195-1-git-send-email-jiada_wang@mentor.com> <20170413125929.dygodgj6c35ydh5p@sirena.org.uk> <CAMuHMdUm=90ddNWM5KWqT+W0hqZ-QO6vPHj5OisbYquDYq1ZmA@mail.gmail.com> <58F06092.9080409@mentor.com> <CAMuHMdXa_O6RsqUciiNWQ0Zp6dniS47AUmPN9UWAWitP0csx=Q@mail.gmail.com> <20170425103113.lxpwoq6sbxvg3ihl@sirena.org.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170425103113.lxpwoq6sbxvg3ihl@sirena.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, linux-spi <linux-spi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+From: Anders Darander <anders-7UjN0b3lYz2SbKU13Z4Etw@public.gmane.org>
+Subject: [PATCH v2] leds-pca963x: add bindings to invert polarity
+Date: Thu, 27 Apr 2017 08:37:33 +0200
+Message-ID: <20170427063733.32323-1-anders@chargestorm.se>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: jacek.anaszewski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org, Anders Darander <anders-7UjN0b3lYz2SbKU13Z4Etw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Geert and Mark
+Add a new DT property, nxp,inverted-out, to invert the polarity of the output.
 
-On 04/25/2017 03:31 AM, Mark Brown wrote:
-> On Mon, Apr 24, 2017 at 12:55:21PM +0200, Geert Uytterhoeven wrote:
->> On Fri, Apr 14, 2017 at 7:39 AM, Jiada Wang<jiada_wang@mentor.com>  wrote:
->>> Our use case is to use spidev as an interface to communicate with external
->>> SPI master devices.
->>> meanwhile the SPI bus controller can also act as master device to send data
->>> to other
->>> SPI slave devices on the board.
->> That sounds a bit hackish to me. SPI was never meant to be a multi-master bus.
->> While it can be done, you will need external synchronization (signals) to
->> avoid conflicts between the SPI masters.
->>> I found in your implementation, SPI bus controller is limited to either work
->>> in master mode or
->>> slave mode, is there any reasoning to not configure SPI mode based on SPI
->>> devices use case?
->> If you really need both master and slave support, you can use 2 subnodes
->> in DT, the first representing the master, the second the slave.
->> Mark, what's your opinion about this?
-> That sounds like a mess...   we *could* put the slave flag on the device
-> rather than the controller I guess but there's also going to need to be
-> something representing whatever avoids collisions on the bus somewhere.
-The reason I gave the example use case is want to point out that
-with Geert's patch set, a SPI device (with only one controller) can no 
-longer
-act as master and slave at the same time. because IMO as a SPI core 
-function,
-it needs to cover all the use cases, and to be as generic as possible.
+Tested on PCA9634.
 
-BUT if you think the use case don't need to be supported from SPI core,
-then I don't have objection either, I will only submit imx SPI slave 
-support patch,
-after your SPI slave support patch set been applied
+Signed-off-by: Anders Darander <anders-7UjN0b3lYz2SbKU13Z4Etw@public.gmane.org>
+---
+ Documentation/devicetree/bindings/leds/pca963x.txt |  1 +
+ drivers/leds/leds-pca963x.c                        | 17 +++++++++++++++--
+ include/linux/platform_data/leds-pca963x.h         |  6 ++++++
+ 3 files changed, 22 insertions(+), 2 deletions(-)
 
+diff --git a/Documentation/devicetree/bindings/leds/pca963x.txt b/Documentation/devicetree/bindings/leds/pca963x.txt
+index dfbdb123a9bf..4eee41482041 100644
+--- a/Documentation/devicetree/bindings/leds/pca963x.txt
++++ b/Documentation/devicetree/bindings/leds/pca963x.txt
+@@ -10,6 +10,7 @@ Optional properties:
+ - nxp,period-scale : In some configurations, the chip blinks faster than expected.
+ 		     This parameter provides a scaling ratio (fixed point, decimal divided
+ 		     by 1000) to compensate, e.g. 1300=1.3x and 750=0.75x.
++- nxp,inverted-out: invert the polarity of the generated PWM
+ 
+ Each led is represented as a sub-node of the nxp,pca963x device.
+ 
+diff --git a/drivers/leds/leds-pca963x.c b/drivers/leds/leds-pca963x.c
+index ded1e4dac36a..3bf9a1271819 100644
+--- a/drivers/leds/leds-pca963x.c
++++ b/drivers/leds/leds-pca963x.c
+@@ -342,6 +342,12 @@ pca963x_dt_init(struct i2c_client *client, struct pca963x_chipdef *chip)
+ 	if (of_property_read_u32(np, "nxp,period-scale", &chip->scaling))
+ 		chip->scaling = 1000;
+ 
++	/* default to non-inverted output, unless inverted is specified */
++	if (of_property_read_bool(np, "nxp,inverted-out"))
++		pdata->dir = PCA963X_INVERTED;
++	else
++		pdata->dir = PCA963X_NORMAL;
++
+ 	return pdata;
+ }
+ 
+@@ -452,11 +458,18 @@ static int pca963x_probe(struct i2c_client *client,
+ 	i2c_smbus_write_byte_data(client, PCA963X_MODE1, BIT(4));
+ 
+ 	if (pdata) {
++		u8 mode2 = i2c_smbus_read_byte_data(pca963x->chip->client,
++						    PCA963X_MODE2);
+ 		/* Configure output: open-drain or totem pole (push-pull) */
+ 		if (pdata->outdrv == PCA963X_OPEN_DRAIN)
+-			i2c_smbus_write_byte_data(client, PCA963X_MODE2, 0x01);
++			mode2 |= 0x01;
+ 		else
+-			i2c_smbus_write_byte_data(client, PCA963X_MODE2, 0x05);
++			mode2 |= 0x05;
++		/* Configure direction: normal or inverted */
++		if (pdata->dir == PCA963X_INVERTED)
++			mode2 |= 0x10;
++		i2c_smbus_write_byte_data(pca963x->chip->client, PCA963X_MODE2,
++					  mode2);
+ 	}
+ 
+ 	return 0;
+diff --git a/include/linux/platform_data/leds-pca963x.h b/include/linux/platform_data/leds-pca963x.h
+index e731f0036329..54e845ffb5ed 100644
+--- a/include/linux/platform_data/leds-pca963x.h
++++ b/include/linux/platform_data/leds-pca963x.h
+@@ -33,10 +33,16 @@ enum pca963x_blink_type {
+ 	PCA963X_HW_BLINK,
+ };
+ 
++enum pca963x_direction {
++	PCA963X_NORMAL,
++	PCA963X_INVERTED,
++};
++
+ struct pca963x_platform_data {
+ 	struct led_platform_data leds;
+ 	enum pca963x_outdrv outdrv;
+ 	enum pca963x_blink_type blink_type;
++	enum pca963x_direction dir;
+ };
+ 
+ #endif /* __LINUX_PCA963X_H*/
+-- 
+2.11.0
 
-Thanks,
-Jiada
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
