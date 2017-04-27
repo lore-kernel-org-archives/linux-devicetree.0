@@ -1,46 +1,53 @@
-From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH 3/3] iio: tools: generic_buffer: increase trigger length
-Date: Thu, 27 Apr 2017 06:19:35 +0100
-Message-ID: <b9f248a1-b65a-5e23-421c-4b8256cdddd6@kernel.org>
-References: <1492590045-17329-1-git-send-email-eugen.hristev@microchip.com>
- <1492590045-17329-4-git-send-email-eugen.hristev@microchip.com>
+From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] iio: adc: Drop if clock from Renesas GyroADC bindings
+Date: Thu, 27 Apr 2017 06:01:40 +0100
+Message-ID: <f1c43c87-f2bf-9c9d-bd83-23257ca1795f@kernel.org>
+References: <20170420154216.32709-1-marek.vasut+renesas@gmail.com>
+ <CAMuHMdXFMOZ0c4ptVCUpTK0u7aHfUx1=HfvSozgnbFjJDRorxA@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1492590045-17329-4-git-send-email-eugen.hristev@microchip.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAMuHMdXFMOZ0c4ptVCUpTK0u7aHfUx1=HfvSozgnbFjJDRorxA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Content-Language: en-GH
-Sender: linux-kernel-owner@vger.kernel.org
-To: Eugen Hristev <eugen.hristev@microchip.com>, nicolas.ferre@microchip.com, alexandre.belloni@free-electrons.com, linux-iio@vger.kernel.org, lars@metafoo.de, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: ludovic.desroches@microchip.com
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Marek Vasut <marek.vasut+renesas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 19/04/17 09:20, Eugen Hristev wrote:
-> Increased trigger length to 50 in order to cope with trigger names like
-> fc030000.adc-dev0-external-rising
+On 20/04/17 18:30, Geert Uytterhoeven wrote:
+> On Thu, Apr 20, 2017 at 5:42 PM, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>> The "if" interface clock speed is actually derived from the "fck"
+>> block clock, as in the hardware they are the same clock. Drop the
+>> incorrect second "if" clock and retain only the "fck" clock.
+>>
+>> Signed-off-by: Marek Vasut <marek.vasut+renesas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> Cc: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+>> Cc: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>> Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>> Cc: linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>> To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 > 
-> Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
-This is fine (though I'd go bigger as Daniel suggested)
-I'll pick it up with the revised series.
-
-thanks,
+> Reviewed-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Applied to the togreg branch of iio.git and pushed out as testing.
+Device tree ack welcome, but I 'think' this is safe enough to take without
+as it won't break any existing device trees.
 
 Jonathan
-> ---
->  tools/iio/iio_utils.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/tools/iio/iio_utils.h b/tools/iio/iio_utils.h
-> index 780f201..9d59771 100644
-> --- a/tools/iio/iio_utils.h
-> +++ b/tools/iio/iio_utils.h
-> @@ -13,7 +13,7 @@
->  #include <stdint.h>
->  
->  /* Made up value to limit allocation sizes */
-> -#define IIO_MAX_NAME_LENGTH 30
-> +#define IIO_MAX_NAME_LENGTH 50
->  
->  #define FORMAT_SCAN_ELEMENTS_DIR "%s/scan_elements"
->  #define FORMAT_TYPE_FILE "%s_type"
+> Gr{oetje,eeting}s,
 > 
+>                         Geert
+> 
+> --
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+> 
+> In personal conversations with technical people, I call myself a hacker. But
+> when I'm talking to journalists I just say "programmer" or something like that.
+>                                 -- Linus Torvalds
+> 
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
