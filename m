@@ -1,53 +1,123 @@
-From: Jose Abreu <Jose.Abreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Subject: Re: [RESEND PATCH 1/2] arc: axs10x: Add DT bindings for I2S audio
- playback
-Date: Thu, 27 Apr 2017 19:42:46 +0100
-Message-ID: <f1e3621d-3dbd-116d-d9c1-3aeb9bd40c2a@synopsys.com>
-References: <7ed6deaf1ae6d5819364c793835aa30316077a7e.1487787376.git.joabreu@synopsys.com>
- <77599cf5-33e5-2ecd-2b2a-43630195a3b8@synopsys.com>
- <c02ea9db-db90-1b2e-1baf-f2940e64201f@synopsys.com>
- <ae3f1150-f8da-9a34-d929-6964f91c06ae@synopsys.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 1/2] PCI: mediatek: Add Mediatek PCIe host controller support
+Date: Thu, 27 Apr 2017 20:55:21 +0200
+Message-ID: <CAK8P3a0DjPL8uWuXfCmEwt05SCPJ0yEQTAJmZAPtFDEfsn4a1Q@mail.gmail.com>
+References: <1492935543-18190-1-git-send-email-ryder.lee@mediatek.com>
+ <1492935543-18190-2-git-send-email-ryder.lee@mediatek.com>
+ <CAK8P3a39TFkJ5=jp8me+Dyg-Qi-N_1ZKxpJGvnhmPEo4csnFCw@mail.gmail.com> <1493194200.27023.79.camel@mtkswgap22>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <ae3f1150-f8da-9a34-d929-6964f91c06ae-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vineet Gupta <Vineet.Gupta1-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, "linux-snps-arc-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-snps-arc-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Cc: Carlos Palminha <CARLOS.PALMINHA-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Alexey Brodkin <Alexey.Brodkin-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <1493194200.27023.79.camel@mtkswgap22>
+Sender: linux-pci-owner@vger.kernel.org
+To: Ryder Lee <ryder.lee@mediatek.com>
+Cc: devicetree@vger.kernel.org, linux-pci <linux-pci@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Bjorn Helgaas <bhelgaas@google.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Vineet,
+On Wed, Apr 26, 2017 at 10:10 AM, Ryder Lee <ryder.lee@mediatek.com> wrote:
+> On Tue, 2017-04-25 at 14:38 +0200, Arnd Bergmann wrote:
+>> On Sun, Apr 23, 2017 at 10:19 AM, Ryder Lee <ryder.lee@mediatek.com> wrote:
 
-
-On 27-04-2017 00:31, Vineet Gupta wrote:
-> On 04/26/2017 01:55 AM, Jose Abreu wrote:
->> Hi Vineet,
+>> > +static int mtk_pcie_enable_ports(struct mtk_pcie *pcie)
+>> > +{
+>> > +       struct device *dev = pcie->dev;
+>> > +       struct mtk_pcie_port *port, *tmp;
+>> > +       int err, linkup = 0;
+>> > +
+>> > +       list_for_each_entry_safe(port, tmp, &pcie->ports, list) {
+>> > +               err = clk_prepare_enable(port->sys_ck);
+>> > +               if (err) {
+>> > +                       dev_err(dev, "failed to enable port%d clock\n",
+>> > +                               port->index);
+>> > +                       continue;
+>> > +               }
+>> > +
+>> > +               /* assert RC */
+>> > +               reset_control_assert(port->reset);
+>> > +               /* de-assert RC */
+>> > +               reset_control_deassert(port->reset);
+>> > +
+>> > +               /* power on PHY */
+>> > +               err = phy_power_on(port->phy);
+>> > +               if (err) {
+>> > +                       dev_err(dev, "failed to power on port%d phy\n",
+>> > +                               port->index);
+>> > +                       goto err_phy_on;
+>> > +               }
+>> > +
+>> > +               mtk_pcie_assert_ports(port);
+>> > +
 >>
+>> Similar to the comment I had for the binding, I wonder if it would be
+>> better to keep all the information about the ports in one place and
+>> then just deal with it at the root level.
 >>
->> On 24-04-2017 18:36, Vineet Gupta wrote:
->>> On 04/21/2017 03:15 AM, Jose Abreu wrote:
->>>> This patch adds the necessary DT bindings to get HDMI audio
->>>> output in ARC AXS10x SDP. The bindings for I2S controller were
->>>> added as well as the bindings for simple audio card.
->>> Are these waiting on Rob or is it OK for me to pick these up for 4.12 ?
->> Yes, I was waiting for Rob ack but he has been silent. It would
->> be nice if these went for 4.12.
-> Ok lets wait another couple of days before I pick those up.
-> In the mean time, can you please restest the series against 4.11-rcX and report
-> here that patches are still valid and do as intended !
-
-I tested based on drm-next of today (which is based on 4.11-rc7)
-and the patches work okay.
-
-Best regards,
-Jose Miguel Abreu
-
+>> Alternatively, we could decide to standardize on the properties
+>> you have added to the pcie port node, but then I would handle
+>> them in the pcieport driver rather than in the host bridge driver.
 >
-> Thx,
-> -Vineet
+> Sorry, I'm not sure what you want me to do here.
+>
+> I could move all clock operation in root level. But we need to keep the
+> reset and PHY operation sequence in the loop, In addition, we could
+> easily free resources if ports link fail.
+>
+> How about moving this function to mtk_pcie_parse_and_add_res()?
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+That could work, please try it out and see if the code gets better or
+worse. This may depend on what we end up doing with the DT
+properties.
+
+>> > +/*
+>> > + * This IP lacks interrupt status register to check or map INTx from
+>> > + * different devices at the same time.
+>> > + */
+>> > +static int __init mtk_pcie_map_irq(const struct pci_dev *dev, u8 slot, u8 pin)
+>> > +{
+>> > +       struct mtk_pcie *pcie = dev->bus->sysdata;
+>> > +       struct mtk_pcie_port *port;
+>> > +
+>> > +       list_for_each_entry(port, &pcie->ports, list)
+>> > +               if (port->index == slot)
+>> > +                       return port->irq;
+>> > +
+>> > +       return -1;
+>> > +}
+>>
+>> This looks odd, what is it needed for specifically? It looks like
+>> it's broken for devices behind bridges, and the interrupt mapping
+>> should normally come from the interrupt-map property, without
+>> the need for a driver specific map_irq override.
+>
+> Our hardware just has a GIC for each port and lacks interrupt status for
+> host driver to distinguish INTx. So I return port IRQ here.
+
+You should still be able to express this with standard interrupt-map
+DT property, without having to resort to your own map_irq
+callback handler.
+
+In the interrupt-map-mask, you can ignore the interrupt line
+only list the devfn of the root ports for each entry.
+
+>> > +static int mtk_pcie_register_ports(struct mtk_pcie *pcie)
+>> > +{
+>> > +       struct pci_bus *bus, *child;
+>> > +
+>> > +       bus = pci_scan_root_bus(pcie->dev, 0, &mtk_pcie_ops, pcie,
+>> > +                               &pcie->resources);
+>>
+>> Can you use the new pci_register_host_bridge() method instead of
+>> pci_scan_root_bus() here?
+>
+> May I know what's difference between pci_scan_root_bus() and using
+> pci_register_host_bridge() directly? What situation should we use it?
+> It seems that just tegra use this new method currently.
+
+We introduced the new function for tegra for now, in the long run
+I would hope we can convert all other drivers to it as well, to make it
+easier to add further parameters.
+
+The new function also has a cleaner way of dealing with the memory
+allocations, similar to how other subsystems work.
+
+     Arnd
