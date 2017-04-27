@@ -1,93 +1,120 @@
-From: Olivier MOYSAN <olivier.moysan@st.com>
-Subject: Re: [PATCH 1/2] dt-bindings: Document STM32 I2S
-	bindings
-Date: Thu, 27 Apr 2017 15:57:51 +0000
-Message-ID: <7005b06f-457c-90f4-bdf1-bed75c565063@st.com>
-References: <1491493236-2574-2-git-send-email-olivier.moysan@st.com>
- <20170410194832.iivnkyejtywbe2c7@rob-hp-laptop>
- <20170411143250.3r7ys3rjshtxgaee@sirena.org.uk>
- <73caede5-ea6f-8b2b-2270-227f7ef31823@st.com>
- <20170411211040.htrcedus3c57fbed@sirena.org.uk>
- <86a179ad-7961-18f7-8050-25e0e584c77d@st.com>
- <20170412113251.nfyk5sw6c5pnpmwr@sirena.org.uk>
- <d886a9c7-ca46-f37a-0e82-6ed8d7a4e052@st.com>
- <20170412153831.r2urwvfseipfsrsi@sirena.org.uk>
- <a87748e4-21e7-f65a-5be1-fe4f60bdfbef@st.com>
- <20170426161553.oc5pozga53ttypyq@sirena.org.uk>
+From: Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/2] thermal: broadcom: Allow for NSP to use ns-thermal
+ driver
+Date: Thu, 27 Apr 2017 09:37:00 -0700
+Message-ID: <20170427163658.GC18276@localhost.localdomain>
+References: <1493153351-12698-1-git-send-email-jon.mason@broadcom.com>
+ <1493153351-12698-2-git-send-email-jon.mason@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20170426161553.oc5pozga53ttypyq@sirena.org.uk>
-Content-Language: en-US
-Content-ID: <B1BE832AE22B1047A525FF9178AE3688@st.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Mark Brown <broonie@kernel.org>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, Rob Herring <robh@kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, Alexandre TORGUE <alexandre.torgue@st.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Arnaud POULIQUEN <arnaud.pouliquen@st.com>, "tiwai@suse.com" <tiwai@suse.com>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Benjamin GAIGNARD <benjamin.gaignard@st.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="RIYY1s2vRbPFwWeW"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1493153351-12698-2-git-send-email-jon.mason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jon Mason <jon.mason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Cc: Florian Fainelli <florian.fainelli-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Mark,
 
-On 04/26/2017 06:15 PM, Mark Brown wrote:
-> On Thu, Apr 13, 2017 at 08:01:34AM +0000, Olivier MOYSAN wrote:
->
->> 1) 2 static dais NOT exclusive
->> 	- dai tx
->> 	- dai rx
->> The IP exhibits a mode register, where you select mode TX, RX or FD.
->> There are 2 two options to manage this register.
->> option 1:
->> 	start first channel with mode RX or TX
->> 	when second channel is started, mode has to be changed to FD.
->> 	Transfers have to be stopped before changing configuration
->> 	registers, so this leads to cuts in audio stream.
->> option 2:
->> 	start a first channel with mode FD.
->> 	In this case, we may have unpredictable behavior for the stream
->> 	which is not already started. probably underrun/overrun.
->> So, this solution rises problem for full-duplex management.
->
->> 2) 3 static dais exclusive
->> 	- dai tx
->> 	- dai rx
->> 	- dai rx-tx (fd)
->> This is the current implementation.
->> The choice of the dai is done at probe time. It is provided by DT
->> through sound-dai parameter.
->> When dai fd is selected, after starting first stream, we assume that
->> second stream will be started. In this case we wait for second stream
->> to be available before enabling IP and starting transfers.
->
->> 3) 1 dynamic dai
->> 	- dai rx or tx or fd (according to dma conf in IP node)
->> Here the driver exposes only a single dai constructed from dma
->> configuration provided by IP DT node.
->> This allows to get ride of sound-dai parameter.
->
-> None of these options reflect how normal I2S controllers present
-> themselves in DT.  To repeat, you should present a single bidirectional
-> DAI for the single physical bidirectional I2S controller that your
-> hardware has.
->
-> If it's not possible to figure out a way to make the controller support
-> simultaneous playback and record with the two started independently then
-> the driver should just return an error if userspace tries to start the
-> second direction up.  This will severely limit the utility of the driver
-> as Linux generally treats playback and record independently but that's
-> going to apply just as much with any of the options involving multiple
-> DAIs or configuration in DT.  You might be able to do something with
-> feeding it dummy data I guess?
->
+--RIYY1s2vRbPFwWeW
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Ok. I will implement a single bidirectional DAI in v2.
+Hey Jason,
 
-Best regards
-Olivier
+On Tue, Apr 25, 2017 at 04:49:10PM -0400, Jon Mason wrote:
+> Change the iProc Kconfig to select THERMAL and THERMAL_OF, which allows
+> the ns-thermal driver to be selected via menuconfig.  Also, change the
+> ns-thermal driver to work on any iProc based SoC.  Finally, tweak the
+> Kconfig description to mention support for NSP and make the default on
+> for iProc based platforms.
+
+
+Thanks for the patch, but..
+>=20
+> Signed-off-by: Jon Mason <jon.mason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+> ---
+>  arch/arm/mach-bcm/Kconfig        | 2 ++
+>  drivers/thermal/broadcom/Kconfig | 9 +++++----
+>  2 files changed, 7 insertions(+), 4 deletions(-)
+>=20
+> diff --git a/arch/arm/mach-bcm/Kconfig b/arch/arm/mach-bcm/Kconfig
+> index a0e66d8..da2bfeb 100644
+> --- a/arch/arm/mach-bcm/Kconfig
+> +++ b/arch/arm/mach-bcm/Kconfig
+> @@ -19,6 +19,8 @@ config ARCH_BCM_IPROC
+>  	select GPIOLIB
+>  	select ARM_AMBA
+>  	select PINCTRL
+> +	select THERMAL
+> +	select THERMAL_OF
+>  	help
+>  	  This enables support for systems based on Broadcom IPROC architected =
+SoCs.
+>  	  The IPROC complex contains one or more ARM CPUs along with common
+
+It would be better if this is split and sent through your arch tree, to
+avoid conflicts. I could also pick it if you get an ack from one of your
+maintainers. Still, first option is preferable.
+
+> diff --git a/drivers/thermal/broadcom/Kconfig b/drivers/thermal/broadcom/=
+Kconfig
+> index f0dea8a..26d706c 100644
+> --- a/drivers/thermal/broadcom/Kconfig
+> +++ b/drivers/thermal/broadcom/Kconfig
+> @@ -1,8 +1,9 @@
+>  config BCM_NS_THERMAL
+>  	tristate "Northstar thermal driver"
+>  	depends on ARCH_BCM_IPROC || COMPILE_TEST
+> +	default ARCH_BCM_IPROC
+
+Not sure if this is really what you wanted. Based on your commit log
+message, you meant the following, perhaps?
+
+ +	default y if ARCH_BCM_IPROC
+
+>  	help
+> -	  Northstar is a family of SoCs that includes e.g. BCM4708, BCM47081,
+> -	  BCM4709 and BCM47094. It contains DMU (Device Management Unit) block
+> -	  with a thermal sensor that allows checking CPU temperature. This
+> -	  driver provides support for it.
+> +	  Support for the Northstar and Northstar Plus family of SoCs (e.g.
+> +	  BCM4708, BCM4709, BCM5301x, BCM95852X, etc). It contains DMU (Device
+
+Did we look BCM47094 somehow on this patch?
+
+> +	  Management Unit) block with a thermal sensor that allows checking CPU
+> +	  temperature.
+> --=20
+> 2.7.4
+>=20
+
+--RIYY1s2vRbPFwWeW
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAEBCAAGBQJZAh4jAAoJEA6VkvSQfF5TyfUP/1P/wLzUACSkH7IqUTHentkY
+jU+NRu2AhZs9Gu7ePDFn3cdnc+dhKru+4+wDR2ntMABiYH4SHmhDpZScztCTLL6d
+UDueqE/S4nZ2YEf8CSO47DLPuxiAcENRKj0/QZIeepFrDuH4xviMIyC3IEeD4OBo
+wtO4E1CuBcsgEkk3uxnx8nF9cSlSOm8rcLvFPuWWp2PzYcSXyOgQ2fa4zyv6mGSg
+4nxjtdxGpgJebJz0TbWNORqO519clE8frk13vftambaQnEo1iiXTWzktxzGsZ2jr
+EvY+viAM4ZtDXxWtJKRbXHUPDFlkDRgCeXJOPIk+D7Us5sFzhw7rJNKKfhyoP/Nl
+kU+BksdyLuIFpn7uMN+XYoT/3oAS8MXDFlS9qXI2IZuHT2aAZeqqYohYq48/fpAS
+6R633qXSmfredqagwy8Q2agccqcyLx9CIBtdQCDgfxlcGowKaDcOlkYPllnXEfNP
+0kD0logTUjxOeOogej0xih4xhyIErlzzzCayDfuaWladiPSktQZRLklyMJJ7VDMS
+c7KKphaq7Bk1HJd2FpEnxaUhIGZQiQn+p5YEkSJdKxsfT5/5tZmjZCi9afn59I7m
+UuxAQRhBMeB1te4PZlEYs+ET0DnPnDFAgKVwxgUze6gHEcIverR6ifGDOm6FSmIt
+QsBZpKA+OB7qxRzw0Ipp
+=yNF2
+-----END PGP SIGNATURE-----
+
+--RIYY1s2vRbPFwWeW--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
