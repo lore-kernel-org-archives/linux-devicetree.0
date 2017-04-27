@@ -1,123 +1,109 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 1/2] PCI: mediatek: Add Mediatek PCIe host controller support
-Date: Thu, 27 Apr 2017 20:55:21 +0200
-Message-ID: <CAK8P3a0DjPL8uWuXfCmEwt05SCPJ0yEQTAJmZAPtFDEfsn4a1Q@mail.gmail.com>
-References: <1492935543-18190-1-git-send-email-ryder.lee@mediatek.com>
- <1492935543-18190-2-git-send-email-ryder.lee@mediatek.com>
- <CAK8P3a39TFkJ5=jp8me+Dyg-Qi-N_1ZKxpJGvnhmPEo4csnFCw@mail.gmail.com> <1493194200.27023.79.camel@mtkswgap22>
+From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Subject: Re: [PATCH v2] leds-pca963x: add bindings to invert polarity
+Date: Thu, 27 Apr 2017 21:01:35 +0200
+Message-ID: <074311fd-8c3b-d0d3-2a7a-c18262cca16d@gmail.com>
+References: <20170427063733.32323-1-anders@chargestorm.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <1493194200.27023.79.camel@mtkswgap22>
-Sender: linux-pci-owner@vger.kernel.org
-To: Ryder Lee <ryder.lee@mediatek.com>
-Cc: devicetree@vger.kernel.org, linux-pci <linux-pci@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Bjorn Helgaas <bhelgaas@google.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-Reply-To: <20170427063733.32323-1-anders@chargestorm.se>
+Sender: linux-leds-owner@vger.kernel.org
+To: Anders Darander <anders@chargestorm.se>, pavel@ucw.cz, robh+dt@kernel.org, mark.rutland@arm.com, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: rpurdie@rpsys.net
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 26, 2017 at 10:10 AM, Ryder Lee <ryder.lee@mediatek.com> wrote:
-> On Tue, 2017-04-25 at 14:38 +0200, Arnd Bergmann wrote:
->> On Sun, Apr 23, 2017 at 10:19 AM, Ryder Lee <ryder.lee@mediatek.com> wrote:
+Hi Anders,
 
->> > +static int mtk_pcie_enable_ports(struct mtk_pcie *pcie)
->> > +{
->> > +       struct device *dev = pcie->dev;
->> > +       struct mtk_pcie_port *port, *tmp;
->> > +       int err, linkup = 0;
->> > +
->> > +       list_for_each_entry_safe(port, tmp, &pcie->ports, list) {
->> > +               err = clk_prepare_enable(port->sys_ck);
->> > +               if (err) {
->> > +                       dev_err(dev, "failed to enable port%d clock\n",
->> > +                               port->index);
->> > +                       continue;
->> > +               }
->> > +
->> > +               /* assert RC */
->> > +               reset_control_assert(port->reset);
->> > +               /* de-assert RC */
->> > +               reset_control_deassert(port->reset);
->> > +
->> > +               /* power on PHY */
->> > +               err = phy_power_on(port->phy);
->> > +               if (err) {
->> > +                       dev_err(dev, "failed to power on port%d phy\n",
->> > +                               port->index);
->> > +                       goto err_phy_on;
->> > +               }
->> > +
->> > +               mtk_pcie_assert_ports(port);
->> > +
->>
->> Similar to the comment I had for the binding, I wonder if it would be
->> better to keep all the information about the ports in one place and
->> then just deal with it at the root level.
->>
->> Alternatively, we could decide to standardize on the properties
->> you have added to the pcie port node, but then I would handle
->> them in the pcieport driver rather than in the host bridge driver.
->
-> Sorry, I'm not sure what you want me to do here.
->
-> I could move all clock operation in root level. But we need to keep the
-> reset and PHY operation sequence in the loop, In addition, we could
-> easily free resources if ports link fail.
->
-> How about moving this function to mtk_pcie_parse_and_add_res()?
+On 04/27/2017 08:37 AM, Anders Darander wrote:
+> Add a new DT property, nxp,inverted-out, to invert the polarity of the output.
+> 
+> Tested on PCA9634.
+> 
+> Signed-off-by: Anders Darander <anders@chargestorm.se>
+> ---
+>  Documentation/devicetree/bindings/leds/pca963x.txt |  1 +
+>  drivers/leds/leds-pca963x.c                        | 17 +++++++++++++++--
+>  include/linux/platform_data/leds-pca963x.h         |  6 ++++++
+>  3 files changed, 22 insertions(+), 2 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/leds/pca963x.txt b/Documentation/devicetree/bindings/leds/pca963x.txt
+> index dfbdb123a9bf..4eee41482041 100644
+> --- a/Documentation/devicetree/bindings/leds/pca963x.txt
+> +++ b/Documentation/devicetree/bindings/leds/pca963x.txt
+> @@ -10,6 +10,7 @@ Optional properties:
+>  - nxp,period-scale : In some configurations, the chip blinks faster than expected.
+>  		     This parameter provides a scaling ratio (fixed point, decimal divided
+>  		     by 1000) to compensate, e.g. 1300=1.3x and 750=0.75x.
+> +- nxp,inverted-out: invert the polarity of the generated PWM
+>  
+>  Each led is represented as a sub-node of the nxp,pca963x device.
+>  
+> diff --git a/drivers/leds/leds-pca963x.c b/drivers/leds/leds-pca963x.c
+> index ded1e4dac36a..3bf9a1271819 100644
+> --- a/drivers/leds/leds-pca963x.c
+> +++ b/drivers/leds/leds-pca963x.c
+> @@ -342,6 +342,12 @@ pca963x_dt_init(struct i2c_client *client, struct pca963x_chipdef *chip)
+>  	if (of_property_read_u32(np, "nxp,period-scale", &chip->scaling))
+>  		chip->scaling = 1000;
+>  
+> +	/* default to non-inverted output, unless inverted is specified */
+> +	if (of_property_read_bool(np, "nxp,inverted-out"))
+> +		pdata->dir = PCA963X_INVERTED;
+> +	else
+> +		pdata->dir = PCA963X_NORMAL;
+> +
+>  	return pdata;
+>  }
+>  
+> @@ -452,11 +458,18 @@ static int pca963x_probe(struct i2c_client *client,
+>  	i2c_smbus_write_byte_data(client, PCA963X_MODE1, BIT(4));
+>  
+>  	if (pdata) {
+> +		u8 mode2 = i2c_smbus_read_byte_data(pca963x->chip->client,
+> +						    PCA963X_MODE2);
+>  		/* Configure output: open-drain or totem pole (push-pull) */
+>  		if (pdata->outdrv == PCA963X_OPEN_DRAIN)
+> -			i2c_smbus_write_byte_data(client, PCA963X_MODE2, 0x01);
+> +			mode2 |= 0x01;
+>  		else
+> -			i2c_smbus_write_byte_data(client, PCA963X_MODE2, 0x05);
+> +			mode2 |= 0x05;
+> +		/* Configure direction: normal or inverted */
+> +		if (pdata->dir == PCA963X_INVERTED)
+> +			mode2 |= 0x10;
+> +		i2c_smbus_write_byte_data(pca963x->chip->client, PCA963X_MODE2,
+> +					  mode2);
+>  	}
+>  
+>  	return 0;
+> diff --git a/include/linux/platform_data/leds-pca963x.h b/include/linux/platform_data/leds-pca963x.h
+> index e731f0036329..54e845ffb5ed 100644
+> --- a/include/linux/platform_data/leds-pca963x.h
+> +++ b/include/linux/platform_data/leds-pca963x.h
+> @@ -33,10 +33,16 @@ enum pca963x_blink_type {
+>  	PCA963X_HW_BLINK,
+>  };
+>  
+> +enum pca963x_direction {
+> +	PCA963X_NORMAL,
+> +	PCA963X_INVERTED,
+> +};
+> +
+>  struct pca963x_platform_data {
+>  	struct led_platform_data leds;
+>  	enum pca963x_outdrv outdrv;
+>  	enum pca963x_blink_type blink_type;
+> +	enum pca963x_direction dir;
+>  };
+>  
+>  #endif /* __LINUX_PCA963X_H*/
+> 
 
-That could work, please try it out and see if the code gets better or
-worse. This may depend on what we end up doing with the DT
-properties.
+Thanks for the patch.
 
->> > +/*
->> > + * This IP lacks interrupt status register to check or map INTx from
->> > + * different devices at the same time.
->> > + */
->> > +static int __init mtk_pcie_map_irq(const struct pci_dev *dev, u8 slot, u8 pin)
->> > +{
->> > +       struct mtk_pcie *pcie = dev->bus->sysdata;
->> > +       struct mtk_pcie_port *port;
->> > +
->> > +       list_for_each_entry(port, &pcie->ports, list)
->> > +               if (port->index == slot)
->> > +                       return port->irq;
->> > +
->> > +       return -1;
->> > +}
->>
->> This looks odd, what is it needed for specifically? It looks like
->> it's broken for devices behind bridges, and the interrupt mapping
->> should normally come from the interrupt-map property, without
->> the need for a driver specific map_irq override.
->
-> Our hardware just has a GIC for each port and lacks interrupt status for
-> host driver to distinguish INTx. So I return port IRQ here.
+Applied to the for-4.13 branch of linux-leds.git.
 
-You should still be able to express this with standard interrupt-map
-DT property, without having to resort to your own map_irq
-callback handler.
-
-In the interrupt-map-mask, you can ignore the interrupt line
-only list the devfn of the root ports for each entry.
-
->> > +static int mtk_pcie_register_ports(struct mtk_pcie *pcie)
->> > +{
->> > +       struct pci_bus *bus, *child;
->> > +
->> > +       bus = pci_scan_root_bus(pcie->dev, 0, &mtk_pcie_ops, pcie,
->> > +                               &pcie->resources);
->>
->> Can you use the new pci_register_host_bridge() method instead of
->> pci_scan_root_bus() here?
->
-> May I know what's difference between pci_scan_root_bus() and using
-> pci_register_host_bridge() directly? What situation should we use it?
-> It seems that just tegra use this new method currently.
-
-We introduced the new function for tegra for now, in the long run
-I would hope we can convert all other drivers to it as well, to make it
-easier to add further parameters.
-
-The new function also has a cleaner way of dealing with the memory
-allocations, similar to how other subsystems work.
-
-     Arnd
+-- 
+Best regards,
+Jacek Anaszewski
