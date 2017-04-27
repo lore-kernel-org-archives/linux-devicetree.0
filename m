@@ -1,36 +1,92 @@
-From: Anders Darander <anders@chargestorm.se>
-Subject: Re: [PATCH v2] leds-pca963x: add bindings to invert polarity
-Date: Thu, 27 Apr 2017 08:45:09 +0200
-Message-ID: <20170427064509.ev2syo7mpku5pzxi@ad.chargestorm.se>
-References: <20170427063733.32323-1-anders@chargestorm.se>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [linux-sunxi] Re: [PATCH v5 02/11] clk: sunxi-ng: add support
+ for DE2 CCU
+Date: Thu, 27 Apr 2017 09:12:37 +0200
+Message-ID: <20170427071237.eqv2pyp6t2i4auv2@lukather>
+References: <20170423103754.50012-1-icenowy@aosc.io>
+ <20170423103754.50012-3-icenowy@aosc.io>
+ <20170424085109.p44bmzbyjkuf7ckv@lukather>
+ <9def8a6b635880095e6b75e3a53af1f4@aosc.io>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="pzucutq7d4x42opo"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20170427063733.32323-1-anders@chargestorm.se>
-Sender: linux-kernel-owner@vger.kernel.org
-To: jacek.anaszewski@gmail.com, pavel@ucw.cz, robh+dt@kernel.org, mark.rutland@arm.com, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: rpurdie@rpsys.net
+In-Reply-To: <9def8a6b635880095e6b75e3a53af1f4-h8G6r0blFSE@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: icenowy-h8G6r0blFSE@public.gmane.org
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi all,
 
-* Anders Darander <anders@chargestorm.se> [170427 08:37]:
-> Add a new DT property, nxp,inverted-out, to invert the polarity of the output.
-> Tested on PCA9634.
+--pzucutq7d4x42opo
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I'm making a 2nd attempt at this. The ability to invert the output from
-the PCA9634 is important, and I'd like to avoid out-of-tree patches as
-much as possible.
+On Mon, Apr 24, 2017 at 06:26:51PM +0800, icenowy-h8G6r0blFSE@public.gmane.org wrote:
+> =E5=9C=A8 2017-04-24 16:51=EF=BC=8CMaxime Ripard =E5=86=99=E9=81=93=EF=BC=
+=9A
+> > Hi,
+> >=20
+> > On Sun, Apr 23, 2017 at 06:37:45PM +0800, Icenowy Zheng wrote:
+> > > +static const struct of_device_id sunxi_de2_clk_ids[] =3D {
+> > > +	{
+> > > +		.compatible =3D "allwinner,sun8i-a83t-de2-clk",
+> > > +		.data =3D &sun8i_a83t_de2_clk_desc,
+> > > +	},
+> > > +	{
+> > > +		.compatible =3D "allwinner,sun50i-h5-de2-clk",
+> > > +		.data =3D &sun50i_a64_de2_clk_desc,
+> > > +	},
+> > > +	/*
+> > > +	 * The Allwinner A64 SoC needs some bit to be poke in syscon to make
+> > > +	 * DE2 really working.
+> > > +	 * So there's currently no A64 compatible here.
+> > > +	 * H5 shares the same reset line with A64, so here H5 is using the
+> > > +	 * clock description of A64.
+> > > +	 */
+> > > +	{ }
+> > > +};
+> >=20
+> > So that A64 driver would require more than just what you defined in
+> > the binding in order to operate?
+>=20
+> Yes. When trying to do A64 driver, I will send out first a patch to
+> add the needed binding bit.
 
-In replies to my previous attempt [1] another attempt at adding this
-support was mentioned [2]. However, that attempt seems to have stalled
-[3]. Even if the rest of the fixes / improvements from that series
-aren't merged, I'd like to see the support for the inverted output.
+Then remove the A64 compatible from the binding document.
 
-Cheers,
-Anders
+Thanks!
+Maxime
 
-[1] https://lkml.org/lkml/2016/5/4/120
-[2] https://lkml.org/lkml/2016/4/19/90
-[3] https://lkml.org/lkml/2016/9/6/187
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+
+--pzucutq7d4x42opo
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIcBAABCAAGBQJZAZnlAAoJEBx+YmzsjxAgAVsP/1M8THXWL5F2JlzIdE6qolJe
+fw3ZrVK8r140LFjNGQj6oQvaifnFig1CnLMG6oWD4yInX91NxnKZlGgSIjH1atBn
+2JmEBqoYa594qbhujG9qbgnqSaVWA0nTscOOgOiyECfmMBqrRjUtPhyhEJKl8T3f
+BD1VjuzYdk2hy7SENOclL2wMKn+z7pWwUvcFLWe1gcI3qWd+OoDlVHIZDBxsvklB
+WF7fal0edmeSLv3hGBdYE2RedjYotRxum/1Cn3LD+ZPoOsNT8OCCVXbAwXvVvztV
+m5WGHjetA8huz0/qTqj3f/LtH1z6jceRlUgOj2FI8HK4NT2daPh0cRUa4LdP6dMK
+V9Le4R90zTvJZDPGMsNxkqlrEGsHhHS2F7xmTWe59O0yB62ayUd+Eck0+rhQUJmy
+2uR0V0TqulN7AGHIDsooFZhg+sz9ziHSE6TtIuKKDkOnQBRpa2C5/kQUnf6YAQib
+JgBQRhqXf9TQKSnkOTtTZ3QR0mp18Ij6OOah/tA+exMzYWQUmzXWOhZHwVP/o4sT
+FihdIBuA98HSwrZ9nM0U+VN/eiBAurVN4vrrINIkFlMIXpnX/IR851W904lB/DhM
+5H0DspqIrjzx1Un9wTMOCstvsufCGDAQY2osyqbYak0QkO+zZGMy4ZtRE6tnT4w4
+0RLwdLi0AHfPCkgMLTDL
+=6vSS
+-----END PGP SIGNATURE-----
+
+--pzucutq7d4x42opo--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
