@@ -1,51 +1,39 @@
-From: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 2/2] Input: add support for the STMicroelectronics
- FingerTip touchscreen
-Date: Wed, 26 Apr 2017 17:39:18 -0700
-Message-ID: <20170427003918.GA1236@dtor-glaptop>
-References: <20170327130743.27783-1-andi.shyti@samsung.com>
- <CGME20170327130756epcas1p321726d525c31814c3f76895b895739cd@epcas1p3.samsung.com>
- <20170327130743.27783-3-andi.shyti@samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170327130743.27783-3-andi.shyti-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andi Shyti <andi.shyti-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andi Shyti <andi-ahk0KpmfxKRAfugRpC6u6w@public.gmane.org>
+From: Geoff Lansberry <geoff@kuvee.com>
+Subject: [PATCH v2] NFC: trf7970a: Correct register settings for 27MHz clock
+Date: Wed, 26 Apr 2017 21:41:48 -0400
+Message-ID: <1493257308-32503-1-git-send-email-geoff@kuvee.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-wireless@vger.kernel.org, sameo@linux.intel.com
+Cc: kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org, linux-nfc@lists.01.org, devicetree@vger.kernel.org, mgreer@animalcreek.com, justin@kuvee.com, colin.king@canonical.com, wharms@bfs.de, Geoff Lansberry <geoff@kuvee.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Andi,
+In prior commits the selected clock frequency does not propagate
+correctly to what is written the the TRF7970A_MODULATOR_SYS_CLK_CTRL
+register.
 
-Quick question:
+Signed-off-by: Geoff Lansberry <geoff@kuvee.com>
+---
+ drivers/nfc/trf7970a.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-On Mon, Mar 27, 2017 at 10:07:43PM +0900, Andi Shyti wrote:
-> +static irqreturn_t stmfts_irq_handler(int irq, void *dev)
-> +{
-> +	struct stmfts_data *sdata = dev;
-> +	int ret;
-> +
-> +	mutex_lock(&sdata->mutex);
-> +	ret = i2c_smbus_read_i2c_block_data(sdata->client,
-> +						STMFTS_READ_ONE_EVENT,
-> +						STMFTS_EVENT_SIZE, sdata->data);
-> +
-> +	if (ret < 0 || ret != STMFTS_EVENT_SIZE)
-> +		goto exit;
-
-Why do we split read into 2 chunks? Can we issue STMFTS_READ_ALL_EVENT
-right away instead of reading first event, analyzing it, and then (maybe)
-fetching the rest?
-
-Also, why do we use smbus protocol for the first event and i2c for the
-rest?
-
-Thanks.
-
+diff --git a/drivers/nfc/trf7970a.c b/drivers/nfc/trf7970a.c
+index 5f040e6..c278b0e 100644
+--- a/drivers/nfc/trf7970a.c
++++ b/drivers/nfc/trf7970a.c
+@@ -2079,6 +2079,13 @@ static int trf7970a_probe(struct spi_device *spi)
+ 		return -EINVAL;
+ 	}
+ 
++	if (clk_freq == TRF7970A_27MHZ_CLOCK_FREQUENCY) {
++		trf->modulator_sys_clk_ctrl = TRF7970A_MODULATOR_27MHZ;
++		dev_dbg(trf->dev, "trf7970a configured for 27MHz crystal\n");
++	} else {
++		trf->modulator_sys_clk_ctrl = 0;
++	}
++
+ 	if (of_property_read_bool(np, "en2-rf-quirk"))
+ 		trf->quirks |= TRF7970A_QUIRK_EN2_MUST_STAY_LOW;
+ 
 -- 
-Dmitry
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.7.4
