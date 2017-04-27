@@ -1,50 +1,34 @@
-From: Vineet Gupta <Vineet.Gupta1-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Subject: Re: [RESEND PATCH 1/2] arc: axs10x: Add DT bindings for I2S audio
- playback
-Date: Thu, 27 Apr 2017 12:13:40 -0700
-Message-ID: <64ee326f-661e-16cf-5d25-dbb079a10b6e@synopsys.com>
-References: <7ed6deaf1ae6d5819364c793835aa30316077a7e.1487787376.git.joabreu@synopsys.com>
- <77599cf5-33e5-2ecd-2b2a-43630195a3b8@synopsys.com>
- <c02ea9db-db90-1b2e-1baf-f2940e64201f@synopsys.com>
- <ae3f1150-f8da-9a34-d929-6964f91c06ae@synopsys.com>
- <f1e3621d-3dbd-116d-d9c1-3aeb9bd40c2a@synopsys.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH V5 1/4] arm64: dts: Add basic DT to support Spreadtrum's SP9860G
+Date: Thu, 27 Apr 2017 21:56:34 +0200
+Message-ID: <CAK8P3a1igaayFWFES85bJ4riFOHKhVURT3CRnAHKa1FkV6oQ-Q@mail.gmail.com>
+References: <20170419142425.GB12105@localhost> <1492746440-11071-1-git-send-email-chunyan.zhang@spreadtrum.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <f1e3621d-3dbd-116d-d9c1-3aeb9bd40c2a-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+In-Reply-To: <1492746440-11071-1-git-send-email-chunyan.zhang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jose Abreu <Jose.Abreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, "linux-snps-arc-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-snps-arc-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Cc: Carlos Palminha <CARLOS.PALMINHA-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Alexey Brodkin <Alexey.Brodkin-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Chunyan Zhang <chunyan.zhang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
+Cc: arm-soc <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, =?UTF-8?B?T3Jzb24gWmhhaSAo57+f5LqsKQ==?= <orson.zhai-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, zhang.lyra-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 04/27/2017 11:42 AM, Jose Abreu wrote:
-> Hi Vineet,
+On Fri, Apr 21, 2017 at 5:47 AM, Chunyan Zhang
+<chunyan.zhang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org> wrote:
+> From: Orson Zhai <orson.zhai-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
 >
+> SC9860G is a 8 cores of A53 SoC with 4G LTE support SoC from Spreadtrum.
 >
-> On 27-04-2017 00:31, Vineet Gupta wrote:
->> On 04/26/2017 01:55 AM, Jose Abreu wrote:
->>> Hi Vineet,
->>>
->>>
->>> On 24-04-2017 18:36, Vineet Gupta wrote:
->>>> On 04/21/2017 03:15 AM, Jose Abreu wrote:
->>>>> This patch adds the necessary DT bindings to get HDMI audio
->>>>> output in ARC AXS10x SDP. The bindings for I2S controller were
->>>>> added as well as the bindings for simple audio card.
->>>> Are these waiting on Rob or is it OK for me to pick these up for 4.12 ?
->>> Yes, I was waiting for Rob ack but he has been silent. It would
->>> be nice if these went for 4.12.
->> Ok lets wait another couple of days before I pick those up.
->> In the mean time, can you please restest the series against 4.11-rcX and report
->> here that patches are still valid and do as intended !
-> I tested based on drm-next of today (which is based on 4.11-rc7)
-> and the patches work okay.
+> According to regular hierarchy of sprd dts, whale2.dtsi contains SoC
+> peripherals IP nodes, sc9860.dtsi contains stuff related to ARM core stuff
+> and sp9860g dts is for the board level.
+>
+> Signed-off-by: Orson Zhai <orson.zhai-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
+> Signed-off-by: Chunyan Zhang <chunyan.zhang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
+> Reviewed-by: Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
-Pushed to for-curr for 4.12 !
+Applied to next/dt64 now, thanks!
 
-Thx,
--Vineet
+       Arnd
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
