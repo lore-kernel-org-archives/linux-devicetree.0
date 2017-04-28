@@ -1,82 +1,94 @@
-From: Gabriel Fernandez <gabriel.fernandez@st.com>
-Subject: Re: [PATCH] clk: stm32h7: Add stm32h743 clock driver
-Date: Fri, 28 Apr 2017 16:56:16 +0200
-Message-ID: <7a8082a9-e62c-0120-e680-bef63eb892ae@st.com>
-References: <1489569810-24350-1-git-send-email-gabriel.fernandez@st.com>
- <20170405223233.GJ7065@codeaurora.org>
- <bd680d0a-0b2f-91fc-a940-b2fef4300ca3@st.com>
- <20170407195152.GH7065@codeaurora.org>
+From: "Langer, Thomas" <thomas.langer@intel.com>
+Subject: RE: [PATCH v2] clk: Provide dummy of_clk_get_from_provider() for
+ compile-testing
+Date: Fri, 28 Apr 2017 14:55:48 +0000
+Message-ID: <0DAF21CFE1B20740AE23D6AF6E54843F1E8AF019@IRSMSX101.ger.corp.intel.com>
+References: <1493384933-31297-1-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <20170407195152.GH7065@codeaurora.org>
+In-Reply-To: <1493384933-31297-1-git-send-email-geert+renesas@glider.be>
+Content-Language: en-US
 Sender: linux-clk-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Michael Turquette <mturquette@baylibre.com>, Nicolas Pitre <nico@linaro.org>, Arnd Bergmann <arnd@arndb.de>, daniel.thompson@linaro.org, andrea.merello@gmail.com, radoslaw.pietrzyk@gmail.com, Lee Jones <lee.jones@linaro.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, ludovic.barre@st.com, olivier.bideau@st.com, amelie.delaunay@st.com
+To: Geert Uytterhoeven <geert+renesas@glider.be>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, John Crispin <john@phrozen.org>, Ralf Baechle <ralf@linux-mips.org>
+Cc: "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-mips@linux-mips.org" <linux-mips@linux-mips.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Stephen
-
-Sorry for delay i was on sick live
-
-On 04/07/2017 09:51 PM, Stephen Boyd wrote:
-> On 04/06, Gabriel Fernandez wrote:
->> On 04/06/2017 12:32 AM, Stephen Boyd wrote:
->>> On 03/15, gabriel.fernandez@st.com wrote:
->>>> diff --git a/Documentation/devicetree/bindings/clock/st,stm32h7-rcc.txt b/Documentation/devicetree/bindings/clock/st,stm32h7-rcc.txt
->>>> new file mode 100644
->>>> index 0000000..9d4b587
->>>> --- /dev/null
->>>> +++ b/Documentation/devicetree/bindings/clock/st,stm32h7-rcc.txt
->>>> @@ -0,0 +1,152 @@
->>>> +
->>>> +	rcc: rcc@58024400 {
->>>> +		#reset-cells = <1>;
->>>> +		#clock-cells = <2>
->>>> +		compatible = "st,stm32h743-rcc", "st,stm32-rcc";
->>>> +		reg = <0x58024400 0x400>;
->>>> +		clocks = <&clk_hse>, <&clk_lse>, <&clk_i2s_ckin>;
->>>> +
->>>> +		st,syscfg = <&pwrcfg>;
->>>> +
->>>> +		#address-cells = <1>;
->>>> +		#size-cells = <0>;
->>>> +
->>>> +		vco1@58024430 {
->>>> +			#clock-cells = <0>;
->>>> +			compatible = "stm32,pll";
->>>> +			reg = <0>;
->>> reg is super confusing and doesn't match unit address.
->> ok i fixed it in the v2
->>
->>>> +		};
->>> Why? Shouldn't we know this from the compatible string how many
->>> PLLs there are and where they're located? Export the PLLs through
->>> rcc node's clock-cells?
->>>
->> Because i need to offer the possibility to change the PLL VCO
->> frequencies at the start-up of this driver clock.
->> The VCO algorithm needs a division factor, a multiplication factor
->> and a fractional factor.
->> Lot's of solution are possible for one frequency and it's nightmare
->> to satisfy the 3 output dividers of the PLL.
-> Sure, but do we need to configure that on a per-board basis or a
-> per-SoC basis? If it's just some configuration, I wonder why we
-> don't put that into the driver and base it off some compatible
-> string that includes the SoC the device is for.
->
-I prefer to let in first, the responsibility of the boot loader to 
-change VCO parameters.
-Then i propose a new version without DT configuration of PLL's
-are you ok for that ?
-
-best regards
-
-Gabriel
 
 
+> -----Original Message-----
+> From: devicetree-owner@vger.kernel.org [mailto:devicetree-
+> owner@vger.kernel.org] On Behalf Of Geert Uytterhoeven
+> Sent: Friday, April 28, 2017 3:09 PM
+> To: Michael Turquette <mturquette@baylibre.com>; Stephen Boyd
+> <sboyd@codeaurora.org>; Russell King <linux@armlinux.org.uk>; Rob Herring
+> <robh+dt@kernel.org>; Mark Rutland <mark.rutland@arm.com>; John Crispin
+> <john@phrozen.org>; Ralf Baechle <ralf@linux-mips.org>
+> Cc: linux-clk@vger.kernel.org; devicetree@vger.kernel.org; linux-
+> mips@linux-mips.org; linux-kernel@vger.kernel.org; Geert Uytterhoeven
+> <geert+renesas@glider.be>
+> Subject: [PATCH v2] clk: Provide dummy of_clk_get_from_provider() for
+> compile-testing
+> 
+> When CONFIG_ON=n, dummies are provided for of_clk_get() and
+> of_clk_get_by_name(), but not for of_clk_get_from_provider().
+> 
+> Provide a dummy for the latter, to improve the ability to do
+> compile-testing.  This requires removing the existing dummy in the
+> Lantiq clock code.
+> 
+> Fixes: 766e6a4ec602d0c1 ("clk: add DT clock binding support")
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-To simply
+Regarding the Lantiq part:
+Acked-by: Thomas Langer <thomas.langer@intel.com>
 
-
+> ---
+> v2:
+>   - Remove conflicting dummy in Lantiq clock code (reported by 0day).
+> ---
+>  arch/mips/lantiq/clk.c | 5 -----
+>  include/linux/clk.h    | 4 ++++
+>  2 files changed, 4 insertions(+), 5 deletions(-)
+> 
+> diff --git a/arch/mips/lantiq/clk.c b/arch/mips/lantiq/clk.c
+> index 149f0513c4f5d0d4..a263d1b751ffe48d 100644
+> --- a/arch/mips/lantiq/clk.c
+> +++ b/arch/mips/lantiq/clk.c
+> @@ -160,11 +160,6 @@ void clk_deactivate(struct clk *clk)
+>  }
+>  EXPORT_SYMBOL(clk_deactivate);
+> 
+> -struct clk *of_clk_get_from_provider(struct of_phandle_args *clkspec)
+> -{
+> -	return NULL;
+> -}
+> -
+>  static inline u32 get_counter_resolution(void)
+>  {
+>  	u32 res;
+> diff --git a/include/linux/clk.h b/include/linux/clk.h
+> index e9d36b3e49de5b1b..3ed97abb5cbb7f94 100644
+> --- a/include/linux/clk.h
+> +++ b/include/linux/clk.h
+> @@ -539,6 +539,10 @@ static inline struct clk *of_clk_get_by_name(struct
+> device_node *np,
+>  {
+>  	return ERR_PTR(-ENOENT);
+>  }
+> +static inline struct clk *of_clk_get_from_provider(struct of_phandle_args
+> *clkspec)
+> +{
+> +	return ERR_PTR(-ENOENT);
+> +}
+>  #endif
+> 
+>  #endif
+> --
+> 2.7.4
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
