@@ -1,60 +1,77 @@
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v2] clk: Provide dummy of_clk_get_from_provider() for compile-testing
-Date: Fri, 28 Apr 2017 15:08:53 +0200
-Message-ID: <1493384933-31297-1-git-send-email-geert+renesas@glider.be>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, John Crispin <john@phrozen.org>, Ralf Baechle <ralf@linux-mips.org>
-Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-mips@linux-mips.org, linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
+From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH] drivers/of_iommu: ignore SMMU DT nodes with status
+ 'disabled'
+Date: Fri, 28 Apr 2017 14:11:33 +0100
+Message-ID: <20170428131133.GJ13675@arm.com>
+References: <20170414124315.2401-1-ard.biesheuvel@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170414124315.2401-1-ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org, robin.murphy-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-When CONFIG_ON=n, dummies are provided for of_clk_get() and
-of_clk_get_by_name(), but not for of_clk_get_from_provider().
+Hi Ard,
 
-Provide a dummy for the latter, to improve the ability to do
-compile-testing.  This requires removing the existing dummy in the
-Lantiq clock code.
+[+ devicetree@]
 
-Fixes: 766e6a4ec602d0c1 ("clk: add DT clock binding support")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
-v2:
-  - Remove conflicting dummy in Lantiq clock code (reported by 0day).
----
- arch/mips/lantiq/clk.c | 5 -----
- include/linux/clk.h    | 4 ++++
- 2 files changed, 4 insertions(+), 5 deletions(-)
+On Fri, Apr 14, 2017 at 01:43:15PM +0100, Ard Biesheuvel wrote:
+> DT nodes may have a status property, and if they do, such nodes should
+> only be considered present if the status property is set to 'okay'.
+> 
+> Currently, we call the init function of IOMMUs described by the device
+> tree without taking this into account, which may result in the output
+> below on systems where some SMMUs may be legally disabled.
+> 
+>  Failed to initialise IOMMU /smb/smmu@e0200000
+>  Failed to initialise IOMMU /smb/smmu@e0c00000
+>  arm-smmu e0a00000.smmu: probing hardware configuration...
+>  arm-smmu e0a00000.smmu: SMMUv1 with:
+>  arm-smmu e0a00000.smmu:  stage 2 translation
+>  arm-smmu e0a00000.smmu:  coherent table walk
+>  arm-smmu e0a00000.smmu:  stream matching with 32 register groups, mask 0x7fff
+>  arm-smmu e0a00000.smmu:  8 context banks (8 stage-2 only)
+>  arm-smmu e0a00000.smmu:  Supported page sizes: 0x60211000
+>  arm-smmu e0a00000.smmu:  Stage-2: 40-bit IPA -> 40-bit PA
+>  Failed to initialise IOMMU /smb/smmu@e0600000
+>  Failed to initialise IOMMU /smb/smmu@e0800000
+> 
+> Since this is not an error condition, only call the init function if
+> the device is enabled, which also inhibits the spurious error messages.
+> 
+> Signed-off-by: Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+>  drivers/iommu/of_iommu.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/iommu/of_iommu.c b/drivers/iommu/of_iommu.c
+> index 2683e9fc0dcf..2dd1206e6c0d 100644
+> --- a/drivers/iommu/of_iommu.c
+> +++ b/drivers/iommu/of_iommu.c
+> @@ -183,7 +183,7 @@ static int __init of_iommu_init(void)
+>  	for_each_matching_node_and_match(np, matches, &match) {
+>  		const of_iommu_init_fn init_fn = match->data;
+>  
+> -		if (init_fn(np))
+> +		if (of_device_is_available(np) && init_fn(np))
+>  			pr_err("Failed to initialise IOMMU %s\n",
+>  				of_node_full_name(np));
+>  	}
 
-diff --git a/arch/mips/lantiq/clk.c b/arch/mips/lantiq/clk.c
-index 149f0513c4f5d0d4..a263d1b751ffe48d 100644
---- a/arch/mips/lantiq/clk.c
-+++ b/arch/mips/lantiq/clk.c
-@@ -160,11 +160,6 @@ void clk_deactivate(struct clk *clk)
- }
- EXPORT_SYMBOL(clk_deactivate);
- 
--struct clk *of_clk_get_from_provider(struct of_phandle_args *clkspec)
--{
--	return NULL;
--}
--
- static inline u32 get_counter_resolution(void)
- {
- 	u32 res;
-diff --git a/include/linux/clk.h b/include/linux/clk.h
-index e9d36b3e49de5b1b..3ed97abb5cbb7f94 100644
---- a/include/linux/clk.h
-+++ b/include/linux/clk.h
-@@ -539,6 +539,10 @@ static inline struct clk *of_clk_get_by_name(struct device_node *np,
- {
- 	return ERR_PTR(-ENOENT);
- }
-+static inline struct clk *of_clk_get_from_provider(struct of_phandle_args *clkspec)
-+{
-+	return ERR_PTR(-ENOENT);
-+}
- #endif
- 
- #endif
--- 
-2.7.4
+Is there a definition of what status = "disabled" is supposed to mean for an
+IOMMU? For example, that could mean that the firmware has pre-programmed the
+SMMU with particular translations or memory attributes (a bit like the
+CCA=1, CPM=1, DACS=0 case in ACPI IORT), or even disabled DMA traffic
+altogether.
+
+So I think we'd need an update to the generic IOMMU binding text to say
+exactly what the semantics are supposed to be here.
+
+Will
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
