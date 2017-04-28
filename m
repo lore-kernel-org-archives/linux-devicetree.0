@@ -1,92 +1,82 @@
-From: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v5 01/10] pinctrl: generic: Add bi-directional and output-enable
-Date: Fri, 28 Apr 2017 17:53:00 +0300
-Message-ID: <CAHp75VeLtOuty=iaxuCaH43rnBZDTT03iH7JyjDJBQhTD-EjzA@mail.gmail.com>
-References: <1493281194-5200-1-git-send-email-jacopo+renesas@jmondi.org>
- <1493281194-5200-2-git-send-email-jacopo+renesas@jmondi.org>
- <CAHp75Vcy1OE+9htFx9k3kQhGARQPT1C0gg3SEKZd7ULu_vkUMA@mail.gmail.com>
- <CACRpkdayW0qPXDcc_JofkwtX5UHhDPxiY_8deZZ7+hPNJkjgeQ@mail.gmail.com>
- <SG2PR06MB1165E7E651BE96CD7B7738B08A130@SG2PR06MB1165.apcprd06.prod.outlook.com>
- <CAHp75Vcp_eMWrjZRX-x3=Tt3JRXcL_wWG43MymF=oyLLP4EJwg@mail.gmail.com> <SG2PR06MB11658EC3A3A80C57E6F539AC8A130@SG2PR06MB1165.apcprd06.prod.outlook.com>
+From: Gabriel Fernandez <gabriel.fernandez@st.com>
+Subject: Re: [PATCH] clk: stm32h7: Add stm32h743 clock driver
+Date: Fri, 28 Apr 2017 16:56:16 +0200
+Message-ID: <7a8082a9-e62c-0120-e680-bef63eb892ae@st.com>
+References: <1489569810-24350-1-git-send-email-gabriel.fernandez@st.com>
+ <20170405223233.GJ7065@codeaurora.org>
+ <bd680d0a-0b2f-91fc-a940-b2fef4300ca3@st.com>
+ <20170407195152.GH7065@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <SG2PR06MB11658EC3A3A80C57E6F539AC8A130-ESzmfEwOt/xoAsOJh7vwSm0DtJ1/0DrXvxpqHgZTriW3zl9H0oFU5g@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chris Brandt <Chris.Brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <20170407195152.GH7065@codeaurora.org>
+Sender: linux-clk-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Michael Turquette <mturquette@baylibre.com>, Nicolas Pitre <nico@linaro.org>, Arnd Bergmann <arnd@arndb.de>, daniel.thompson@linaro.org, andrea.merello@gmail.com, radoslaw.pietrzyk@gmail.com, Lee Jones <lee.jones@linaro.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, ludovic.barre@st.com, olivier.bideau@st.com, amelie.delaunay@st.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 28, 2017 at 4:18 PM, Chris Brandt <Chris.Brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org> wr=
-ote:
-> On Friday, April 28, 2017, Andy Shevchenko wrote:
->> > In the RZ/A1 HW manual you can kind of see that in 54.18 Port Control
->> Logical Diagram (but that wasn't obvious to me at first).
+Hi Stephen
+
+Sorry for delay i was on sick live
+
+On 04/07/2017 09:51 PM, Stephen Boyd wrote:
+> On 04/06, Gabriel Fernandez wrote:
+>> On 04/06/2017 12:32 AM, Stephen Boyd wrote:
+>>> On 03/15, gabriel.fernandez@st.com wrote:
+>>>> diff --git a/Documentation/devicetree/bindings/clock/st,stm32h7-rcc.txt b/Documentation/devicetree/bindings/clock/st,stm32h7-rcc.txt
+>>>> new file mode 100644
+>>>> index 0000000..9d4b587
+>>>> --- /dev/null
+>>>> +++ b/Documentation/devicetree/bindings/clock/st,stm32h7-rcc.txt
+>>>> @@ -0,0 +1,152 @@
+>>>> +
+>>>> +	rcc: rcc@58024400 {
+>>>> +		#reset-cells = <1>;
+>>>> +		#clock-cells = <2>
+>>>> +		compatible = "st,stm32h743-rcc", "st,stm32-rcc";
+>>>> +		reg = <0x58024400 0x400>;
+>>>> +		clocks = <&clk_hse>, <&clk_lse>, <&clk_i2s_ckin>;
+>>>> +
+>>>> +		st,syscfg = <&pwrcfg>;
+>>>> +
+>>>> +		#address-cells = <1>;
+>>>> +		#size-cells = <0>;
+>>>> +
+>>>> +		vco1@58024430 {
+>>>> +			#clock-cells = <0>;
+>>>> +			compatible = "stm32,pll";
+>>>> +			reg = <0>;
+>>> reg is super confusing and doesn't match unit address.
+>> ok i fixed it in the v2
 >>
->> Please, post a link to it or copy essential parts.
-
-> The schematic is included in the "User's manual"
-> https://www.renesas.com/en-us/doc/products/tool/doc/003/r20ut2596ej_r7s72=
-100evum.pdf
-
-Not that one I would like to see...
-
-> The RZ/A1H Hardware manual is here:
-> https://www.renesas.com/en-us/document/hw-manual?hwLayerShowFlg=3Dtrue&pr=
-dLayerId=3D186374&layerName=3DRZ%252FA1H&coronrService=3Ddocument-prd-searc=
-h&hwDocUrl=3D%2Fen-us%2Fdoc%2Fproducts%2Fmpumcu%2Fdoc%2Frz%2Fr01uh0403ej030=
-0_rz_a1h.pdf&hashKey=3D54f335753742b5add524d4725b7242e6
+>>>> +		};
+>>> Why? Shouldn't we know this from the compatible string how many
+>>> PLLs there are and where they're located? Export the PLLs through
+>>> rcc node's clock-cells?
+>>>
+>> Because i need to offer the possibility to change the PLL VCO
+>> frequencies at the start-up of this driver clock.
+>> The VCO algorithm needs a division factor, a multiplication factor
+>> and a fractional factor.
+>> Lot's of solution are possible for one frequency and it's nightmare
+>> to satisfy the 3 output dividers of the PLL.
+> Sure, but do we need to configure that on a per-board basis or a
+> per-SoC basis? If it's just some configuration, I wonder why we
+> don't put that into the driver and base it off some compatible
+> string that includes the SoC the device is for.
 >
-> Chapter 54 is the port/pin controller.
->
-> "54.18 Port Control Logical Diagram" is the diagram I was talking about. =
-Note that is says "Note: This figure shows the logic for reference, not the=
- circuit."
->
-> "54.3.13 Port Bidirection Control Register (PBDCn)" is the magic register=
- needed to get some pins to work.
+I prefer to let in first, the responsibility of the boot loader to 
+change VCO parameters.
+Then i propose a new version without DT configuration of PLL's
+are you ok for that ?
 
-This is useful. Thanks.
+best regards
 
->> I'm quite skeptical  that cheap hardware can implement something more
->> costable than simplest open-source / open-drain + bias
->
-> I don't think this is an open-source / open-drain + bias issue. It's a "t=
-he internal signal paths are not getting hooked up correctly" issue.
+Gabriel
 
-Had you read the following, esp. Note there?
 
-* @PIN_CONFIG_INPUT_ENABLE: enable the pin's input.  Note that this does no=
-t
-*      affect the pin's ability to drive output.  1 enables input, 0 disabl=
-es
-*      input.
 
-For me manual is clearly tells about this settings:
-"This register enables or disables the input buffer while the output
-buffer is enabled."
+To simply
 
-> Regardless, on this part, we needed a way to flag that some pins when put=
- in some function modes needed 'an extra register setting'. At first we tri=
-ed to sneak that info in with a simple #define in the pin/pinmux DT node pr=
-operties. But, Linus didn't want it there so we had to make up a new generi=
-c property called "bi-directional".
->
-> What is your end goal here? Get "bi-directional" changed to something els=
-e?
 
-My goal is to reduce amount of (useless) entities. See Occam's razor
-for details.
-
-Linus, for me it looks like better to revert that change, until we
-will have clear picture why existing configuration parameters can't
-work.
-
---=20
-With Best Regards,
-Andy Shevchenko
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
