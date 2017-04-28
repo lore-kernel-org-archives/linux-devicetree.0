@@ -1,76 +1,31 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCHv2 1/3] dt-bindings: display: Intel FPGA VIP drm driver
- Devicetree bindings
-Date: Fri, 28 Apr 2017 13:32:26 -0500
-Message-ID: <20170428183226.7u4sses4gzan6g5e@rob-hp-laptop>
-References: <1493086006-4392-1-git-send-email-hean.loong.ong@intel.com>
- <1493086006-4392-2-git-send-email-hean.loong.ong@intel.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] PM / Domains: Fix DT example
+Date: Fri, 28 Apr 2017 13:37:55 -0500
+Message-ID: <20170428183755.gvn5wfgp67ekwovv@rob-hp-laptop>
+References: <533b52e0ea175bf6bb893370c7f8c0309aae235a.1493104411.git.viresh.kumar@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1493086006-4392-2-git-send-email-hean.loong.ong@intel.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: hean.loong.ong@intel.com
-Cc: devicetree@vger.kernel.org, tien.hock.loh@intel.com, dri-devel@lists.freedesktop.org, dinguyen@kernel.org, daniel.vetter@intel.com, Ong@rob-hp-laptop
+In-Reply-To: <533b52e0ea175bf6bb893370c7f8c0309aae235a.1493104411.git.viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Rafael Wysocki <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linaro-kernel-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Vincent Guittot <vincent.guittot-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCBBcHIgMjUsIDIwMTcgYXQgMTA6MDY6NDRBTSArMDgwMCwgaGVhbi5sb29uZy5vbmdA
-aW50ZWwuY29tIHdyb3RlOgo+IEZyb206ICJPbmcsIEhlYW4gTG9vbmciIDxoZWFuLmxvb25nLm9u
-Z0BpbnRlbC5jb20+Cj4gCj4gRGV2aWNlIHRyZWUgYmluZGluZyBmb3IgSW50ZWwgRlBHQSBWaWRl
-byBhbmQgSW1hZ2UKPiBQcm9jZXNzaW5nIFN1aXRlLiBUaGUgYmluZGluZyBpbnZvbHZlZCB3b3Vs
-ZCBiZSBnZW5lcmF0ZWQKPiBmcm9tIHRoZSBBbHRlcmEgKEludGVsKSBRc3lzIHN5c3RlbS4gVGhl
-IGJpbmRpbmdzIHdvdWxkCj4gc2V0IHRoZSBtYXggd2lkdGgsIG1heCBoZWlnaHQsIGJ1dHMgcGVy
-IHBpeGVsIGFuZCBtZW1vcnkKPiBwb3J0IHdpZHRoLiBUaGUgZGV2aWNlIHRyZWUgYmluZGluZyBv
-bmx5IHN1cHBvcnRzIHRoZSBJbnRlbAo+IEFycmlhMTAgZGV2a2l0IGFuZCBpdHMgdmFyaWFudHMu
-IFZlbmRvciBuYW1lIHJldGFpbmVkIGFzCj4gYWx0ci4KPiAKPiBTaWduZWQtb2ZmLWJ5OiBPbmcs
-IEhlYW4gTG9vbmcgPGhlYW4ubG9vbmcub25nQGludGVsLmNvbT4KPiAtLS0KPiB2MjoKPiAqIE1v
-dmVkIERldmljZSBUcmVlIGJpbmRpbmdzIHRvIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
-aW5ncy9kaXNwbGF5Lwo+ICogQWRkZWQgdmVuZG9yIG5hbWUgYWx0ciwgdG8gZGVzY3JpcHRpb24K
-PiAtLS0KPiAgLi4uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9hbHRyLHZpcC1mYjIudHh0
-ICAgfCAzMCArKysrKysrKysrKysrKysrKysrKysrCj4gIDEgZmlsZSBjaGFuZ2VkLCAzMCBpbnNl
-cnRpb25zKCspCj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
-YmluZGluZ3MvZGlzcGxheS9hbHRyLHZpcC1mYjIudHh0Cj4gCj4gZGlmZiAtLWdpdCBhL0RvY3Vt
-ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2FsdHIsdmlwLWZiMi50eHQgYi9E
-b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9hbHRyLHZpcC1mYjIudHh0
-Cj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQKPiBpbmRleCAwMDAwMDAwLi5iZGZmZWZiCj4gLS0tIC9k
-ZXYvbnVsbAo+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5
-L2FsdHIsdmlwLWZiMi50eHQKPiBAQCAtMCwwICsxLDMwIEBACj4gK0ludGVsIFZpZGVvIGFuZCBJ
-bWFnZSBQcm9jZXNzaW5nKFZJUCkgRnJhbWUgQnVmZmVyIElJIGJpbmRpbmdzCj4gKwo+ICtTdXBw
-b3J0ZWQgaGFyZHdhcmU6IEFycmlhIDEwIGFuZCBhYm92ZSB3aXRoIGRpc3BsYXkgcG9ydCBJUAo+
-ICsKPiArVGhlIGRybSBkcml2ZXIgZm9yIHRoZSBBcnJpYSAxMCBkZXZraXQgd291bGQgcmVxdWly
-ZSB0aGUgZGlzcGxheSByZXNvbHV0aW9uCgpCaW5kaW5ncyBkZXNjcmliZSBoL3cuIERSTSBkcml2
-ZXIgaXMgYSBMaW51eCB0ZXJtLgoKPiArYW5kIHBpeGVsIGluZm9ybWF0aW9uIHRvIGJlIGluY2x1
-ZGVkIGFzIHRoZXNlIHZhbHVlcyBhcmUgZ2VuZXJhdGVkIGJhc2VkCj4gK29uIHRoZSBGUEdBIGRl
-c2lnbiB0aGF0IGRyaXZlcyB0aGUgdmlkZW8gY29ubmVjdG9yIGF0dGFjaGVkIHRvIHRoZSBkcm0g
-ZHJpdmVyCj4gK0luZm9ybWF0aW9uIHRoZSBGUEdBIHZpZGVvIElQIGNvbXBvbmVudCBjYW4gYmUg
-YWNxdWlyZWQgZnJvbQo+ICtodHRwczovL3d3dy5hbHRlcmEuY29tL2NvbnRlbnQvZGFtL2FsdGVy
-YS13d3cvZ2xvYmFsL2VuX1VTL3BkZnMvbGl0ZXJhdHVyZS91Zy91Z192aXAucGRmCj4gKwo+ICtS
-ZXF1aXJlZCBwcm9wZXJ0aWVzOgo+ICsKPiArLSBjb21wYXRpYmxlOiAiYWx0cix2aXAtZnJhbWUt
-YnVmZmVyLTIuMCIKPiArLSByZWc6IFBoeXNpY2FsIGJhc2UgYWRkcmVzcyBhbmQgbGVuZ3RoIG9m
-IHRoZSBmcmFtZWJ1ZmZlciBjb250cm9sbGVyJ3MKPiArICByZWdpc3RlcnMuCj4gKy0gYWx0cixt
-YXgtd2lkdGg6IFRoZSB3aWR0aCBvZiB0aGUgZnJhbWVidWZmZXIgaW4gcGl4ZWxzLgo+ICstIGFs
-dHIsbWF4LWhlaWdodDogVGhlIGhlaWdodCBvZiB0aGUgZnJhbWVidWZmZXIgaW4gcGl4ZWxzLgo+
-ICstIGFsdHIsYml0cy1wZXItc3ltYm9sOiBvbmx5ICI4IiBpcyBjdXJyZW50bHkgc3VwcG9ydGVk
-CgpTdXBwb3J0ZWQgaW4gdGhlIGRyaXZlciBvciBJUD8gVGhlIGZvcm1lciBpc24ndCByZWxldmFu
-dCB0byB0aGUgYmluZGluZy4gCkluIHRoZSBsYXR0ZXIgY2FzZSwgeW91IGRvbid0IG5lZWQgaXQg
-aWYgdGhhdCdzIHRoZSBvbmx5IHRoaW5nIApzdXBwb3J0ZWQuCgo+ICstIGFsdHIsbWVtLXBvcnQt
-d2lkdGggPSB0aGUgYnVzIHdpZHRoIG9mIHRoZSBhdmFsb24gbWFzdGVyIHBvcnQgb24gdGhlIGZy
-YW1lIHJlYWRlcgoKSW4gYml0cyBvciBieXRlcz8KCj4gKwo+ICtFeGFtcGxlOgo+ICsKPiArCWRw
-XzBfZnJhbWVfYnVmOiB2aXBAMTAwMDAwMjgwIHsKPiArCQkJY29tcGF0aWJsZSA9ICJhbHRyLHZp
-cC1mcmFtZS1idWZmZXItMi4wIjsKPiArCQkJcmVnID0gPDB4MDAwMDAwMDEgMHgwMDAwMDI4MCAw
-eDAwMDAwMDQwPjsKPiArCQkJYWx0cixtYXgtd2lkdGggPSA8MTI4MD47Cj4gKwkJCWFsdHIsbWF4
-LWhlaWdodCA9IDw3MjA+Owo+ICsJCQlhbHRyLGJpdHMtcGVyLXN5bWJvbCA9IDw4PjsKPiArCQkJ
-YWx0cixtZW0tcG9ydC13aWR0aCA9IDwxMjg+Owo+ICsJfTsKPiAtLSAKPiAyLjcuNAo+IApfX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFp
-bGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5m
-cmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+On Tue, Apr 25, 2017 at 12:48:21PM +0530, Viresh Kumar wrote:
+> The power-domain provider's #power-domain-cells field is set to 0 and
+> yet the children is using an index to point the power domain. Fix it by
+> removing the index field.
+> 
+> Fixes: 70bb510e4279 ("dt/bindings / PM/Domains: Update binding for PM domain idle states")
+> Signed-off-by: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/power/power_domain.txt | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
