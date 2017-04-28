@@ -1,74 +1,125 @@
-From: jmondi <jacopo-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v5 02/10] pinctrl: generic: Add macros to unpack
- properties
-Date: Fri, 28 Apr 2017 14:49:02 +0200
-Message-ID: <20170428124902.GA29046@w540>
-References: <1493281194-5200-1-git-send-email-jacopo+renesas@jmondi.org>
- <1493281194-5200-3-git-send-email-jacopo+renesas@jmondi.org>
- <CACRpkdbkBtJGJ_5MVy2QSAa0zcKVm=_H+vC_kH4AUcX58TiaLg@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CACRpkdbkBtJGJ_5MVy2QSAa0zcKVm=_H+vC_kH4AUcX58TiaLg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH v2 3/5] arm64: dts: r8a7796: Add placeholders for various devices
+Date: Fri, 28 Apr 2017 14:58:42 +0200
+Message-ID: <1493384324-29344-4-git-send-email-geert+renesas@glider.be>
+References: <1493384324-29344-1-git-send-email-geert+renesas@glider.be>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <1493384324-29344-1-git-send-email-geert+renesas@glider.be>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
+Cc: Vladimir Barinov <vladimir.barinov@cogentembedded.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-Hi Linus,
+Add empty device nodes serving as placeholders for devices that are not
+yet supported and/or tested on R-Car M3-W, but are supported and used on
+Salvator-X or H3ULCB boards equipped with an R-Car H3 SoC.
 
-On Fri, Apr 28, 2017 at 10:16:22AM +0200, Linus Walleij wrote:
-> On Thu, Apr 27, 2017 at 10:19 AM, Jacopo Mondi
-> <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org> wrote:
->
-> > Add PIN_CONF_UNPACK_PARAM and PIN_CONF_UNPACK_ARGS macros useful to
-> > unpack generic properties and their arguments
-> >
-> > Signed-off-by: Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
->
-> (...)
->
-> /*
->   * Helpful configuration macro to be used in tables etc.
->
-> Then this should say "macros" rather than "macro".
->
-> > -#define PIN_CONF_PACKED(p, a) ((a << 8) | ((unsigned long) p & 0xffUL))
-> > +#define PIN_CONF_PACKED(p, a) (((a) << 8) | ((unsigned long) (p) & 0xffUL))
->
-> Also adding some extra parantheses I see.
->
-> > +#define PIN_CONF_UNPACK_PARAM(c) ((c) & 0xffUL)
-> > +#define PIN_CONF_UNPACK_ARGS(c) ((c) >> 8)
->
-> But why.
->
-> I have these two static inlines just below your new macros:
->
-> static inline enum pin_config_param pinconf_to_config_param(unsigned
-> long config)
-> {
->         return (enum pin_config_param) (config & 0xffUL);
-> }
->
-> static inline u32 pinconf_to_config_argument(unsigned long config)
-> {
->         return (u32) ((config >> 8) & 0xffffffUL);
-> }
->
-> Why can't you use this in your code instead of macros?
->
-> We generally prefer static inlines over macros because they are easier
-> to read.
->
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+v2:
+  - Drop RFC state.
+---
+ arch/arm64/boot/dts/renesas/r8a7796.dtsi | 82 ++++++++++++++++++++++++++++++++
+ 1 file changed, 82 insertions(+)
 
-Right. I haven't noticed them.
-I'll drop this patch, sorry for noise
-
-> Yours,
-> Linus Walleij
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm64/boot/dts/renesas/r8a7796.dtsi b/arch/arm64/boot/dts/renesas/r8a7796.dtsi
+index 8e2aab8b6b103cc9..60a4289d0b14fe50 100644
+--- a/arch/arm64/boot/dts/renesas/r8a7796.dtsi
++++ b/arch/arm64/boot/dts/renesas/r8a7796.dtsi
+@@ -961,6 +961,38 @@
+ 			dma-channels = <16>;
+ 		};
+ 
++		hsusb: usb@e6590000 {
++			/* placeholder */
++		};
++
++		xhci0: usb@ee000000 {
++			/* placeholder */
++		};
++
++		ohci0: usb@ee080000 {
++			/* placeholder */
++		};
++
++		ehci0: usb@ee080100 {
++			/* placeholder */
++		};
++
++		usb2_phy0: usb-phy@ee080200 {
++			/* placeholder */
++		};
++
++		ohci1: usb@ee0a0000 {
++			/* placeholder */
++		};
++
++		ehci1: usb@ee0a0100 {
++			/* placeholder */
++		};
++
++		usb2_phy1: usb-phy@ee0a0200 {
++			/* placeholder */
++		};
++
+ 		sdhi0: sd@ee100000 {
+ 			compatible = "renesas,sdhi-r8a7796";
+ 			reg = <0 0xee100000 0 0x2000>;
+@@ -1063,5 +1095,55 @@
+ 				};
+ 			};
+ 		};
++
++		rcar_sound: sound@ec500000 {
++			/* placeholder */
++
++			rcar_sound,dvc {
++				dvc0: dvc-0 {
++				};
++
++				dvc1: dvc-1 {
++				};
++			};
++
++			rcar_sound,src {
++				src0: src-0 {
++				};
++				src1: src-1 {
++				};
++			};
++
++			rcar_sound,ssi {
++				ssi0: ssi-0 {
++				};
++
++				ssi1: ssi-1 {
++				};
++			};
++		};
++
++		pciec0: pcie@fe000000 {
++			/* placeholder */
++		};
++
++		pciec1: pcie@ee800000 {
++			/* placeholder */
++		};
++
++		du: display@feb00000 {
++			/* placeholder */
++
++			ports {
++				#address-cells = <1>;
++				#size-cells = <0>;
++
++				port@0 {
++					reg = <0>;
++					du_out_rgb: endpoint {
++					};
++				};
++			};
++		};
+ 	};
+ };
+-- 
+2.7.4
