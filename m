@@ -1,254 +1,122 @@
-From: Eddie James <eajames@linux.vnet.ibm.com>
-Subject: Re: [PATCH linux v9 2/5] hwmon: occ: Add sysfs interface
-Date: Fri, 28 Apr 2017 10:22:38 -0500
-Message-ID: <9daa9e48-d756-84ac-d0a5-60b37048a4c9@linux.vnet.ibm.com>
-References: <1489524906-19411-1-git-send-email-eajames@linux.vnet.ibm.com>
- <1489524906-19411-3-git-send-email-eajames@linux.vnet.ibm.com>
- <818c5a81-1791-aa0d-a3fe-e0976041cdc9@roeck-us.net>
+From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v4 2/2] of: Add unit tests for applying overlays
+Date: Fri, 28 Apr 2017 08:24:03 -0700
+Message-ID: <59035E93.2060106@gmail.com>
+References: <1493165394-29367-1-git-send-email-frowand.list@gmail.com>
+ <1493165394-29367-3-git-send-email-frowand.list@gmail.com>
+ <CAMuHMdWLhLqjNgz6iUOY8LY1Jjn3-_iV2ncbOxYLCLZbf=Rz+w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <818c5a81-1791-aa0d-a3fe-e0976041cdc9@roeck-us.net>
-Sender: linux-doc-owner@vger.kernel.org
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org, linux-doc@vger.kernel.org, jdelvare@suse.com, corbet@lwn.net, mark.rutland@arm.com, robh+dt@kernel.org, wsa@the-dreams.de, andrew@aj.id.au, benh@kernel.crashing.org, joel@jms.id.au, "Edward A. James" <eajames@us.ibm.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAMuHMdWLhLqjNgz6iUOY8LY1Jjn3-_iV2ncbOxYLCLZbf=Rz+w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Michal Marek <mmarek-IBi9RG/b67k@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kbuild <linux-kbuild-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 04/02/2017 06:19 AM, Guenter Roeck wrote:
-> On 03/14/2017 01:55 PM, Eddie James wrote:
->> From: "Edward A. James" <eajames@us.ibm.com>
+On 04/28/17 04:25, Geert Uytterhoeven wrote:
+> Hi Frank,
+> 
+> On Wed, Apr 26, 2017 at 2:09 AM,  <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>> From: Frank Rowand <frank.rowand-7U/KSKJipcs@public.gmane.org>
 >>
->> Add a generic mechanism to expose the sensors provided by the OCC in
->> sysfs.
+>> Existing overlay unit tests examine individual pieces of the overlay
+>> code.  The new tests target the entire process of applying an overlay.
 >>
->> Signed-off-by: Edward A. James <eajames@us.ibm.com>
->> Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
+>> Signed-off-by: Frank Rowand <frank.rowand-7U/KSKJipcs@public.gmane.org>
 >> ---
->>  Documentation/hwmon/occ       |  62 +++++++++++
->>  drivers/hwmon/occ/Makefile    |   2 +-
->>  drivers/hwmon/occ/occ_sysfs.c | 253 
->> ++++++++++++++++++++++++++++++++++++++++++
->>  drivers/hwmon/occ/occ_sysfs.h |  25 +++++
->>  4 files changed, 341 insertions(+), 1 deletion(-)
->>  create mode 100644 drivers/hwmon/occ/occ_sysfs.c
->>  create mode 100644 drivers/hwmon/occ/occ_sysfs.h
 >>
->> diff --git a/Documentation/hwmon/occ b/Documentation/hwmon/occ
->> index d1c863b..580af26 100644
->> --- a/Documentation/hwmon/occ
->> +++ b/Documentation/hwmon/occ
->> @@ -27,6 +27,68 @@ Currently, all versions of the OCC support four 
->> types of sensor data: power,
->>  temperature, frequency, and "caps," which indicate limits and 
->> thresholds used
->>  internally on the OCC.
+>> There are checkpatch warnings.  I have reviewed them and feel they
+>> can be ignored.
 >>
->> +sysfs Entries
->> +-------------
->> +
->> +The OCC driver uses the hwmon sysfs framework to provide data to 
->> userspace.
->> +
->> +The driver exports a number of sysfs files for each type of sensor. The
->> +sensor-specific files vary depending on the processor type, though 
->> many of the
->> +attributes are common for both the POWER8 and POWER9.
->> +
->> +The hwmon interface cannot define every type of sensor that may be 
->> used.
->> +Therefore, the frequency sensor on the OCC uses the "input" type 
->> sensor defined
->> +by the hwmon interface, rather than defining a new type of custom 
->> sensor.
->> +
->> +Below are detailed the names and meaning of each sensor file for 
->> both types of
->> +processors. All sensors are read-only unless otherwise specified. 
->> <x> indicates
->> +the hwmon index. sensor id indicates the unique internal OCC 
->> identifer. Please
->> +see the POWER OCC specification for details on all these sensor values.
->> +
->> +frequency:
->> +    all processors:
->> +        in<x>_input - frequency value
->> +        in<x>_label - sensor id
->> +temperature:
->> +    POWER8:
->> +        temp<x>_input - temperature value
->> +        temp<x>_label - sensor id
->> +    POWER9 (in addition to above):
->> +        temp<x>_type - FRU type
->> +
->> +power:
->> +    POWER8:
->> +        power<x>_input - power value
->> +        power<x>_label - sensor id
->> +        power<x>_average - accumulator
->> +        power<x>_average_interval - update tag (number of samples in
->> +            accumulator)
->> +    POWER9:
->> +        power<x>_input - power value
->> +        power<x>_label - sensor id
->> +        power<x>_average_min - accumulator[0]
->> +        power<x>_average_max - accumulator[1] (64 bits total)
->> +        power<x>_average_interval - update tag
->> +        power<x>_reset_history - (function_id | (apss_channel << 8)
->> +
->> +caps:
->> +    POWER8:
->> +        power<x>_cap - current powercap
->> +        power<x>_cap_max - max powercap
->> +        power<x>_cap_min - min powercap
->> +        power<x>_max - normal powercap
->> +        power<x>_alarm - user powercap, r/w
->> +    POWER9:
->> +        power<x>_cap_alarm - user powercap source
->> +
->> +The driver also provides two sysfs entries through hwmon to better
->> +control the driver and monitor the master OCC. Though there may be 
->> multiple
->> +OCCs present on the system, these two files are only present for the 
->> "master"
->> +OCC.
->> +    name - read the name of the driver
->> +    update_interval - read or write the minimum interval for polling 
->> the
->> +        OCC.
->> +
->>  BMC - Host Communications
->>  -------------------------
+>>  drivers/of/fdt.c                                 |  14 +-
+>>  drivers/of/of_private.h                          |  12 +
+>>  drivers/of/unittest-data/Makefile                |  17 +-
+>>  drivers/of/unittest-data/overlay.dts             |  53 ++++
+>>  drivers/of/unittest-data/overlay_bad_phandle.dts |  20 ++
+>>  drivers/of/unittest-data/overlay_base.dts        |  80 ++++++
+>>  drivers/of/unittest.c                            | 317 +++++++++++++++++++++++
+>>  7 files changed, 505 insertions(+), 8 deletions(-)
 >>
->> diff --git a/drivers/hwmon/occ/Makefile b/drivers/hwmon/occ/Makefile
->> index 3ed79a5..67b5367 100644
->> --- a/drivers/hwmon/occ/Makefile
->> +++ b/drivers/hwmon/occ/Makefile
->> @@ -1 +1 @@
->> -obj-$(CONFIG_SENSORS_IBM_OCC) += occ.o
->> +obj-$(CONFIG_SENSORS_IBM_OCC) += occ.o occ_sysfs.o
->> diff --git a/drivers/hwmon/occ/occ_sysfs.c 
->> b/drivers/hwmon/occ/occ_sysfs.c
->> new file mode 100644
->> index 0000000..50b20e2
->> --- /dev/null
->> +++ b/drivers/hwmon/occ/occ_sysfs.c
->> @@ -0,0 +1,253 @@
->> +/*
->> + * occ_sysfs.c - OCC sysfs interface
->> + *
->> + * This file contains the methods and data structures for 
->> implementing the OCC
->> + * hwmon sysfs entries.
->> + *
->> + * Copyright 2017 IBM Corp.
->> + *
->> + * This program is free software; you can redistribute it and/or modify
->> + * it under the terms of the GNU General Public License as published by
->> + * the Free Software Foundation; either version 2 of the License, or
->> + * (at your option) any later version.
->> + */
->> +
->> +#include <linux/delay.h>
->> +#include <linux/device.h>
->> +#include <linux/err.h>
->> +#include <linux/hwmon.h>
->> +#include <linux/hwmon-sysfs.h>
->> +#include <linux/init.h>
->> +#include <linux/jiffies.h>
->> +#include <linux/kernel.h>
->> +#include <linux/module.h>
->> +#include <linux/mutex.h>
->> +#include <linux/slab.h>
->> +#include "occ.h"
->> +#include "occ_sysfs.h"
->> +
->> +#define OCC_HWMON_NAME_LENGTH    32
->> +
->> +struct occ_sysfs {
->> +    struct device *dev;
->> +    struct occ *occ;
->> +
->> +    char label_buffer[OCC_HWMON_NAME_LENGTH + 1];
->> +    char hwmon_name[OCC_HWMON_NAME_LENGTH + 1];
->> +    const u32 *sensor_hwmon_configs;
->> +    struct hwmon_channel_info **occ_sensors;
->> +    struct hwmon_chip_info occ_info;
->> +    u16 user_powercap;
->> +};
->> +
->> +static int occ_hwmon_read(struct device *dev, enum 
->> hwmon_sensor_types type,
->> +              u32 attr, int channel, long *val)
->> +{
->> +    int rc;
->> +    struct occ_sysfs *driver = dev_get_drvdata(dev);
->> +    struct occ *occ = driver->occ;
->> +
->> +    switch (type) {
->> +    case hwmon_in:
->> +        rc = occ_get_sensor_field(occ, FREQ, channel, attr, val);
->> +        break;
->> +    case hwmon_temp:
->> +        rc = occ_get_sensor_field(occ, TEMP, channel, attr, val);
->> +        break;
->> +    case hwmon_power:
->> +        rc = occ_get_sensor_field(occ, POWER, channel, attr, val);
->> +        break;
->> +    default:
->> +        rc = -EOPNOTSUPP;
->> +    }
->> +
->> +    return rc;
->> +}
->> +
->> +static int occ_hwmon_read_string(struct device *dev,
->> +                 enum hwmon_sensor_types type, u32 attr,
->> +                 int channel, const char **str)
->> +{
->> +    int rc;
->> +    unsigned long val = 0;
->> +    struct occ_sysfs *driver = dev_get_drvdata(dev);
->> +
->> +    if (!((type == hwmon_in && attr == hwmon_in_label) ||
->> +        (type == hwmon_temp && attr == hwmon_temp_label) ||
->> +        (type == hwmon_power && attr == hwmon_power_label)))
->> +        return -EOPNOTSUPP;
->> +
->> +    /* will fetch the "label", the sensor_id */
->> +    rc = occ_hwmon_read(dev, type, attr, channel, &val);
->> +    if (rc < 0)
->> +        return rc;
->> +
->> +    /* just use one label buffer for all sensors. works with current 
->> hwmon
->> +     * implementation. only alternative is to store a buffer for each
->> +     * sensor, which gets expensive quickly.
->> +     */
->
-> Sorry for the late reply.
->
-> No, this doesn't work and is racy. Reading all labels from multiple 
-> threads
-> in parallel will result in random data.
->
-> The label is supposed to be constant for each sensor. If it isn't, it 
-> is not
-> a label. Either create it as constant and use the generated string, or 
-> drop
-> the attribute.
->
-> Guenter
+>>  create mode 100644 drivers/of/unittest-data/overlay.dts
+>>  create mode 100644 drivers/of/unittest-data/overlay_bad_phandle.dts
+>>  create mode 100644 drivers/of/unittest-data/overlay_base.dts
+> 
+> Shouldn't these be called .dtso instead of .dts?
 
-Thanks for catching that. The driver is undergoing some significant 
-restructuring as a result of changes in design to the low-level driver 
-for the P9 side of things (actually doing the communication with the 
-OCC). Depending on how extensive the changes are (haven't had time to 
-finalize), this patchset could be abandoned and I'll start again.
+That is a good question.  I'm not worried about solving it this week for
+this patch, because this could turn into a bikeshed and I can always
+fix it with a patch if we decide to change.  But if we do want to change
+the naming, I would like to make the decision in the next couple of
+months.  I would like to see more progress on overlays in general
+this summer, and plan to be working on them myself.
 
-Thanks for the feedback so far.
+I _think_ there has been some discussion about source file naming on the
+devicetree-compiler or devicetree list in the far distant past.  Or I
+may just be mis-remembering.
 
-Eddie
+As far as I know, the current dtc does not know any suffixes other than
+.dts for source files.  Not that the compiler has to know, we can always
+specify '-I dts'.
 
+
+> 
+>> --- a/drivers/of/unittest-data/Makefile
+>> +++ b/drivers/of/unittest-data/Makefile
+> 
+>> +# enable creation of __symbols__ node
+>> +DTC_FLAGS_overlay := -@
+>> +DTC_FLAGS_overlay_bad_phandle := -@
+>> +DTC_FLAGS_overlay_base := -@
+> 
+> This flag is needed for all DTs that will be involved with overlays.
+> 
+> Hence what about enabling this globally instead, cfr. "Enable DT symbols when"
+> CONFIG_OF_OVERLAY is used
+> ("http://www.spinics.net/lists/devicetree/msg103363.html")?
+
+And another really good question.
+
+There are some issues.  I have thought about it enough to know there are issues,
+but do not have a solution and do not think I know all the issues.  Some
+possible issues (or perceived issues) are:
+
+- The size of __symbols__ in an FDT (akd compile .dtb image) in either a kernel
+  image or a bootloader if overlays are not actually needed on a given system
+  (even if the system is physically capable of using overlays).
+
+- The size of __symbols__ in kernel memory if overlays are not actually needed
+  on a given system (even if the system is physically capable of using overlays.)
+  This could be possibly be enabled/disabled by a boot command, even if
+  __symbols__ is in the FDT.
+
+- A base FDT might want to have __symbols__ included with the expectation that
+  overlays will be used in the future.  (The FDT might be built for the boot
+  loader, then be stable for many kernel releases.)
+
+- Should the creation of __symbols__ be a global switch, or should it be
+  controlled on a per dtb basis?  Or a combination of both?
+
+Again, I'm not worried about an immediate, this week solution, but I would
+like to make good progress on this in the next couple of months.
+
+-Frank
+
+> 
+> Gr{oetje,eeting}s,
+> 
+>                         Geert
+> 
+> --
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+> 
+> In personal conversations with technical people, I call myself a hacker. But
+> when I'm talking to journalists I just say "programmer" or something like that.
+>                                 -- Linus Torvalds
+> 
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
