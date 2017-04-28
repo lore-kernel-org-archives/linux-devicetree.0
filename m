@@ -1,84 +1,48 @@
-From: "Olimpiu Dejeu" <olimpiu-eV7fy4qpoLhpLGFMi4vTTA@public.gmane.org>
-Subject: RE: [PATCH v8 1/3] backlight arcxcnn add arc to vendor prefix
-Date: Fri, 28 Apr 2017 11:04:11 -0400
-Message-ID: <355401d2c030$b2aa63c0$17ff2b40$@arcticsand.com>
-References: <1489607133-7870-1-git-send-email-olimpiu@arcticsand.com> <CAL_JsqJ+=fQ2e752iCHs0dbdrkotuDtKp=2Z2_xnyCtMnxWV8A@mail.gmail.com> <2aac01d2bd24$17449a90$45cdcfb0$@arcticsand.com> <000301d2bde2$10822970$31867c50$@gmail.com> <CAMuHMdXbKH5hojvj+N8W0h7znw8iAGo1Y1NyFHjrfQ1n0-XQKA@mail.gmail.com> <001301d2bf7d$919d2d60$b4d78820$@gmail.com>
+From: Chris Brandt <Chris.Brandt@renesas.com>
+Subject: RE: [PATCH v5 01/10] pinctrl: generic: Add bi-directional and
+ output-enable
+Date: Fri, 28 Apr 2017 15:16:25 +0000
+Message-ID: <SG2PR06MB11658E6434EB343246ADC9F58A130@SG2PR06MB1165.apcprd06.prod.outlook.com>
+References: <1493281194-5200-1-git-send-email-jacopo+renesas@jmondi.org>
+ <1493281194-5200-2-git-send-email-jacopo+renesas@jmondi.org>
+ <CAHp75Vcy1OE+9htFx9k3kQhGARQPT1C0gg3SEKZd7ULu_vkUMA@mail.gmail.com>
+ <CACRpkdayW0qPXDcc_JofkwtX5UHhDPxiY_8deZZ7+hPNJkjgeQ@mail.gmail.com>
+ <SG2PR06MB1165E7E651BE96CD7B7738B08A130@SG2PR06MB1165.apcprd06.prod.outlook.com>
+ <CAHp75Vcp_eMWrjZRX-x3=Tt3JRXcL_wWG43MymF=oyLLP4EJwg@mail.gmail.com>
+ <SG2PR06MB11658EC3A3A80C57E6F539AC8A130@SG2PR06MB1165.apcprd06.prod.outlook.com>
+ <CAHp75VeLtOuty=iaxuCaH43rnBZDTT03iH7JyjDJBQhTD-EjzA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain;
-        charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <001301d2bf7d$919d2d60$b4d78820$@gmail.com>
-Content-Language: en-us
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: 'Jingoo Han' <jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: 'Rob Herring' <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, 'Lee Jones' <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, 'Geert Uytterhoeven' <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, 'Linux Fbdev development list' <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Brian Dodge <bdodge-eV7fy4qpoLhpLGFMi4vTTA@public.gmane.org>, 'Joe Perches' <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>, 'Daniel Thompson' <daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <CAHp75VeLtOuty=iaxuCaH43rnBZDTT03iH7JyjDJBQhTD-EjzA@mail.gmail.com>
+Content-Language: en-US
+Sender: linux-gpio-owner@vger.kernel.org
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King - ARM Linux <linux@armlinux.org.uk>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-> On Thursday, April 27, 2017 8:37 AM, Geert Uytterhoeven wrote:
-> > On Tue, Apr 25, 2017 at 6:36 PM, Jingoo Han <jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> =
-wrote:
-> > > On Monday, April 24, 2017 1:56 PM, Olimpiu Dejeu wrote:
-> > >>
-> > >> On Mon, April 24, 2017 11:10 AM, Rob Herring < robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> =
-wrote:
-> > >>
-> > >> > On Wed, Mar 15, 2017 at 2:45 PM, Olimpiu Dejeu
-> > <olimpiu-eV7fy4qpoLhpLGFMi4vTTA@public.gmane.org>
-> > >> wrote:
-> > >> >> backlight: Add arc to vendor prefixes
-> > >> >> Signed-off-by: Olimpiu Dejeu <olimpiu-eV7fy4qpoLhpLGFMi4vTTA@public.gmane.org>
-> > >> >> ---
-> > >> >> v8:
-> > >> >> - Version to match other patches in set
-> > >> >>
-> > >> >>  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
-> > >> >>  1 file changed, 1 insertion(+)
-> > >> >>
-> > >> >> diff --git=20
-> > >> >> a/Documentation/devicetree/bindings/vendor-prefixes.txt
-> > >> >> b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> > >> >> index 16d3b5e..6f33a4b 100644
-> > >> >> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-> > >> >> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> > >> >> @@ -28,6 +28,7 @@ andestech     Andes Technology Corporation
-> > >> >>  apm    Applied Micro Circuits Corporation (APM)
-> > >> >>  aptina Aptina Imaging
-> > >> >>  arasan Arasan Chip Systems
-> > >> >> +arc    Arctic Sand
-> > >>
-> > >> >arc is also a cpu arch. While not a vendor, it could be =
-confusing.=20
-> > >> >How
-> > >> about "arctic" >instead?
-> > >>
-> > >> Rob, will do, i.e. I will change it to "arctic"
-> > >
-> > > Hi Olimpiu,
-> > >
-> > > Oh, "arc" and "arctic" is totally different.
-> > > In my opinion, one of the purposes of DT is to describe hardware =
-stuffs.
-> > > So, please use more detailed words.
-> >=20
-> > Already acquired by Murata?
-
-> Yes, Murata already announced the agreement of acquisition. [1]
-
-> To Olimpiu Dejeu,
-> What is your company's plan about naming?
-> The brand name 'Artic Sand' will be continued or not?
-
-The brand name 'Arctic Sand' will be continued=20
-
-> If not, you should replace 'Artic Sand' with 'Murata'.
-> As you said earlier, changing DT names is not easy after merging.
-
-> Best regards,
-> Jingoo Han
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gRnJpZGF5LCBBcHJpbCAyOCwgMjAxNywgQW5keSBTaGV2Y2hlbmtvIHdyb3RlOg0KPiBIYWQg
+eW91IHJlYWQgdGhlIGZvbGxvd2luZywgZXNwLiBOb3RlIHRoZXJlPw0KPiANCj4gKiBAUElOX0NP
+TkZJR19JTlBVVF9FTkFCTEU6IGVuYWJsZSB0aGUgcGluJ3MgaW5wdXQuICBOb3RlIHRoYXQgdGhp
+cyBkb2VzDQo+IG5vdA0KPiAqICAgICAgYWZmZWN0IHRoZSBwaW4ncyBhYmlsaXR5IHRvIGRyaXZl
+IG91dHB1dC4gIDEgZW5hYmxlcyBpbnB1dCwgMA0KPiBkaXNhYmxlcw0KPiAqICAgICAgaW5wdXQu
+DQo+IA0KPiBGb3IgbWUgbWFudWFsIGlzIGNsZWFybHkgdGVsbHMgYWJvdXQgdGhpcyBzZXR0aW5n
+czoNCj4gIlRoaXMgcmVnaXN0ZXIgZW5hYmxlcyBvciBkaXNhYmxlcyB0aGUgaW5wdXQgYnVmZmVy
+IHdoaWxlIHRoZSBvdXRwdXQNCj4gYnVmZmVyIGlzIGVuYWJsZWQuIg0KDQoNCkJ1dCwgdGhlbiBp
+ZiB3ZSB1c2UgImlucHV0LWVuYWJsZSIgdG8gZ2V0IGJpLWRpcmVjdGlvbmFsIGZ1bmN0aW9uYWxp
+dHksIG5vdyB3ZSBuZWVkIHNvbWV0aGluZyB0byByZXBsYWNlIHdoYXQgd2Ugd2VyZSB1c2luZyAi
+aW5wdXQtZW5hYmxlIiBmb3IuDQpXZSB3ZXJlIHVzaW5nICJpbnB1dC1lbmFibGUiIHRvIHNpZ25h
+bCB3aGVuIHRoZSBwaW4gZnVuY3Rpb24gdGhhdCB3ZSBzZXQgYWxzbyBuZWVkcyB0byBiZSBmb3Jj
+aWJsZSBzZXQgdG8gaW5wdXQgYnkgdGhlIHNvZnR3YXJlIChvbmNlIGFnYWluLCBiZWNhdXNlIHRo
+ZSBIVyBpcyBub3Qgc21hcnQgZW5vdWdoIHRvIGRvIGl0IG9uIGl0cyBvd24pLCBidXQgaXMgZGlm
+ZmVyZW50IHRoYW4gdGhlIGJpLWRpcmVjdGlvbmFsIGZ1bmN0aW9uYWxpdHkgKGllLCBhIGRpZmZl
+cmVudCByZWdpc3RlciBzZXR0aW5nKS4NCg0KDQpTbywgaWYgd2UgcmVwbGFjZSAiYmktZGlyZWN0
+aW9uYWwiIHdpdGggImlucHV0LWVuYWJsZSIgKHNpbmNlIGxvZ2ljYWxseSBpbnRlcm5hbGx5IHRo
+YXQgaXMgd2hhdCBpcyBnb2luZyBvbiksIHdoYXQgZG8gd2UgdXNlIGZvciB0aGUgc3BlY2lhbCBw
+aW5zIHRoYXQgdGhlIEhXIG1hbnVhbCBzYXlzICJoZXksIHlvdSBuZWVkIHRvIG1hbnVhbGx5IHNl
+dCB0aGVzZSBwaW5zIHRvIGlucHV0IHdpdGggU1cgYmVjYXVzZSB0aGUgcGluIHNlbGVjdGlvbiBI
+VyBjYW4ndCBkbyBpdCBjb3JyZWN0bHkpIi4gTm90ZSB0aGF0IHdlIGFkZGVkIGEgZW5hYmxlLW91
+dHB1dCBmb3IgdGhlIHNhbWUgcmVhc29uLg0KU2VlIFJaL0ExSCBIVyBNYW51YWwgc2VjdGlvbiAi
+VGFibGUgNTQuNyBBbHRlcm5hdGl2ZSBGdW5jdGlvbnMgdGhhdCBQSVBDbi5QSVBDbm0gQml0IFNo
+b3VsZCBiZSBTZXQgdG8gMCINCg0KDQpDaHJpcw0K
