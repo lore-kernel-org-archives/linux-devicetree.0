@@ -1,122 +1,83 @@
-From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v4 2/2] of: Add unit tests for applying overlays
-Date: Fri, 28 Apr 2017 08:24:03 -0700
-Message-ID: <59035E93.2060106@gmail.com>
-References: <1493165394-29367-1-git-send-email-frowand.list@gmail.com>
- <1493165394-29367-3-git-send-email-frowand.list@gmail.com>
- <CAMuHMdWLhLqjNgz6iUOY8LY1Jjn3-_iV2ncbOxYLCLZbf=Rz+w@mail.gmail.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v5 01/10] pinctrl: generic: Add bi-directional and output-enable
+Date: Fri, 28 Apr 2017 18:37:33 +0300
+Message-ID: <CAHp75VfYPfm_GKPzvX7Go010fRi99t12ub7VUPubB6z3HnsFLg@mail.gmail.com>
+References: <1493281194-5200-1-git-send-email-jacopo+renesas@jmondi.org>
+ <1493281194-5200-2-git-send-email-jacopo+renesas@jmondi.org>
+ <CAHp75Vcy1OE+9htFx9k3kQhGARQPT1C0gg3SEKZd7ULu_vkUMA@mail.gmail.com>
+ <CACRpkdayW0qPXDcc_JofkwtX5UHhDPxiY_8deZZ7+hPNJkjgeQ@mail.gmail.com>
+ <SG2PR06MB1165E7E651BE96CD7B7738B08A130@SG2PR06MB1165.apcprd06.prod.outlook.com>
+ <CAHp75Vcp_eMWrjZRX-x3=Tt3JRXcL_wWG43MymF=oyLLP4EJwg@mail.gmail.com>
+ <SG2PR06MB11658EC3A3A80C57E6F539AC8A130@SG2PR06MB1165.apcprd06.prod.outlook.com>
+ <CAHp75VeLtOuty=iaxuCaH43rnBZDTT03iH7JyjDJBQhTD-EjzA@mail.gmail.com> <SG2PR06MB11658E6434EB343246ADC9F58A130@SG2PR06MB1165.apcprd06.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAMuHMdWLhLqjNgz6iUOY8LY1Jjn3-_iV2ncbOxYLCLZbf=Rz+w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Michal Marek <mmarek-IBi9RG/b67k@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kbuild <linux-kbuild-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <SG2PR06MB11658E6434EB343246ADC9F58A130@SG2PR06MB1165.apcprd06.prod.outlook.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Chris Brandt <Chris.Brandt@renesas.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King - ARM Linux <linux@armlinux.org.uk>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 04/28/17 04:25, Geert Uytterhoeven wrote:
-> Hi Frank,
-> 
-> On Wed, Apr 26, 2017 at 2:09 AM,  <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> From: Frank Rowand <frank.rowand-7U/KSKJipcs@public.gmane.org>
+On Fri, Apr 28, 2017 at 6:16 PM, Chris Brandt <Chris.Brandt@renesas.com> wr=
+ote:
+> On Friday, April 28, 2017, Andy Shevchenko wrote:
+>> Had you read the following, esp. Note there?
 >>
->> Existing overlay unit tests examine individual pieces of the overlay
->> code.  The new tests target the entire process of applying an overlay.
+>> * @PIN_CONFIG_INPUT_ENABLE: enable the pin's input.  Note that this does
+>> not
+>> *      affect the pin's ability to drive output.  1 enables input, 0
+>> disables
+>> *      input.
 >>
->> Signed-off-by: Frank Rowand <frank.rowand-7U/KSKJipcs@public.gmane.org>
->> ---
->>
->> There are checkpatch warnings.  I have reviewed them and feel they
->> can be ignored.
->>
->>  drivers/of/fdt.c                                 |  14 +-
->>  drivers/of/of_private.h                          |  12 +
->>  drivers/of/unittest-data/Makefile                |  17 +-
->>  drivers/of/unittest-data/overlay.dts             |  53 ++++
->>  drivers/of/unittest-data/overlay_bad_phandle.dts |  20 ++
->>  drivers/of/unittest-data/overlay_base.dts        |  80 ++++++
->>  drivers/of/unittest.c                            | 317 +++++++++++++++++++++++
->>  7 files changed, 505 insertions(+), 8 deletions(-)
->>
->>  create mode 100644 drivers/of/unittest-data/overlay.dts
->>  create mode 100644 drivers/of/unittest-data/overlay_bad_phandle.dts
->>  create mode 100644 drivers/of/unittest-data/overlay_base.dts
-> 
-> Shouldn't these be called .dtso instead of .dts?
+>> For me manual is clearly tells about this settings:
+>> "This register enables or disables the input buffer while the output
+>> buffer is enabled."
+>
+>
+> But, then if we use "input-enable" to get bi-directional functionality,
 
-That is a good question.  I'm not worried about solving it this week for
-this patch, because this could turn into a bikeshed and I can always
-fix it with a patch if we decide to change.  But if we do want to change
-the naming, I would like to make the decision in the next couple of
-months.  I would like to see more progress on overlays in general
-this summer, and plan to be working on them myself.
+It seems you are missing the point from electrical prospective.
+Standard pin buffers (electrically) means input buffer and output
+buffer that are driven independently in most cases.
 
-I _think_ there has been some discussion about source file naming on the
-devicetree-compiler or devicetree list in the far distant past.  Or I
-may just be mis-remembering.
+Here is one example:
+https://electronics.stackexchange.com/questions/96932/internal-circuitry-of=
+-io-ports-in-mcu/96953#96953
 
-As far as I know, the current dtc does not know any suffixes other than
-.dts for source files.  Not that the compiler has to know, we can always
-specify '-I dts'.
+(That's what I asked before as a schematic)
 
+> now we need something to replace what we were using "input-enable" for.
 
-> 
->> --- a/drivers/of/unittest-data/Makefile
->> +++ b/drivers/of/unittest-data/Makefile
-> 
->> +# enable creation of __symbols__ node
->> +DTC_FLAGS_overlay := -@
->> +DTC_FLAGS_overlay_bad_phandle := -@
->> +DTC_FLAGS_overlay_base := -@
-> 
-> This flag is needed for all DTs that will be involved with overlays.
-> 
-> Hence what about enabling this globally instead, cfr. "Enable DT symbols when"
-> CONFIG_OF_OVERLAY is used
-> ("http://www.spinics.net/lists/devicetree/msg103363.html")?
+No.
 
-And another really good question.
+> We were using "input-enable" to signal when the pin function that we set =
+also needs to be forcible set to input by the software (once again, because=
+ the HW is not smart enough to do it on its own), but is different than the=
+ bi-directional functionality (ie, a different register setting).
 
-There are some issues.  I have thought about it enough to know there are issues,
-but do not have a solution and do not think I know all the issues.  Some
-possible issues (or perceived issues) are:
+You are trying to introduce an abstraction, called BiDi, which is
+*not* a separate thing from a set of pin properties.
 
-- The size of __symbols__ in an FDT (akd compile .dtb image) in either a kernel
-  image or a bootloader if overlays are not actually needed on a given system
-  (even if the system is physically capable of using overlays).
+> So, if we replace "bi-directional" with "input-enable" (since logically i=
+nternally that is what is going on), what do we use for the special pins th=
+at the HW manual says "hey, you need to manually set these pins to input wi=
+th SW because the pin selection HW can't do it correctly)".
 
-- The size of __symbols__ in kernel memory if overlays are not actually needed
-  on a given system (even if the system is physically capable of using overlays.)
-  This could be possibly be enabled/disabled by a boot command, even if
-  __symbols__ is in the FDT.
+Yes.
+BiDi is an alias to output + input enable + other pin configuration
+parameters (a set depends on real HW needs).
 
-- A base FDT might want to have __symbols__ included with the expectation that
-  overlays will be used in the future.  (The FDT might be built for the boot
-  loader, then be stable for many kernel releases.)
+> Note that we added a enable-output for the same reason.
+> See RZ/A1H HW Manual section "Table 54.7 Alternative Functions that PIPCn=
+.PIPCnm Bit Should be Set to 0"
 
-- Should the creation of __symbols__ be a global switch, or should it be
-  controlled on a per dtb basis?  Or a combination of both?
+Perhaps needs to be revisited as well.
 
-Again, I'm not worried about an immediate, this week solution, but I would
-like to make good progress on this in the next couple of months.
+P.S. It looks like more and more software engineers are going far from
+real hardware when developing drivers...
 
--Frank
-
-> 
-> Gr{oetje,eeting}s,
-> 
->                         Geert
-> 
-> --
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
-> 
-> In personal conversations with technical people, I call myself a hacker. But
-> when I'm talking to journalists I just say "programmer" or something like that.
->                                 -- Linus Torvalds
-> 
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=20
+With Best Regards,
+Andy Shevchenko
