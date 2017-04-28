@@ -1,54 +1,104 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v5 01/10] pinctrl: generic: Add bi-directional and output-enable
-Date: Fri, 28 Apr 2017 15:15:33 +0300
-Message-ID: <CAHp75Vcp_eMWrjZRX-x3=Tt3JRXcL_wWG43MymF=oyLLP4EJwg@mail.gmail.com>
-References: <1493281194-5200-1-git-send-email-jacopo+renesas@jmondi.org>
- <1493281194-5200-2-git-send-email-jacopo+renesas@jmondi.org>
- <CAHp75Vcy1OE+9htFx9k3kQhGARQPT1C0gg3SEKZd7ULu_vkUMA@mail.gmail.com>
- <CACRpkdayW0qPXDcc_JofkwtX5UHhDPxiY_8deZZ7+hPNJkjgeQ@mail.gmail.com> <SG2PR06MB1165E7E651BE96CD7B7738B08A130@SG2PR06MB1165.apcprd06.prod.outlook.com>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [PATCH/RFC 0/5] arm64: dts: renesas: Break out common board support
+Date: Fri, 28 Apr 2017 14:28:44 +0200
+Message-ID: <CAMuHMdV=31DFBb2cE+Q_cBovdQys0iv7jAJsBWq4yT4yFO0gDg@mail.gmail.com>
+References: <1492779321-23939-1-git-send-email-geert+renesas@glider.be>
+ <20170426080642.GK25517@verge.net.au> <CAMuHMdXbe=rkeS+-teg7nqbjULWY0_5pBO1XEzCGdYA4gB57oA@mail.gmail.com>
+ <CAMuHMdV1SQoeEACaNLZbByRLbosMj5oxEysNDVevYgxqStDaug@mail.gmail.com>
+ <20170428070458.GB10196@verge.net.au> <CAMuHMdVypXM59rk50Guc90ktD2PKHsVHgXyN34Cz3EC1hMTs8g@mail.gmail.com>
+ <20170428073256.GG10196@verge.net.au>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <SG2PR06MB1165E7E651BE96CD7B7738B08A130@SG2PR06MB1165.apcprd06.prod.outlook.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Chris Brandt <Chris.Brandt@renesas.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King - ARM Linux <linux@armlinux.org.uk>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170428073256.GG10196-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Cc: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Vladimir Barinov <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 28, 2017 at 3:07 PM, Chris Brandt <Chris.Brandt@renesas.com> wr=
-ote:
-> On Friday, April 28, 2017, Linus Walleij wrote:
->> > For me it looks like you are trying to alias open-drain + bias or
->> > alike. Don't actually see the benefit of it.
+Hi Simon,
+
+On Fri, Apr 28, 2017 at 9:32 AM, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org> wrote:
+> On Fri, Apr 28, 2017 at 09:11:36AM +0200, Geert Uytterhoeven wrote:
+>> On Fri, Apr 28, 2017 at 9:04 AM, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org> wrote:
+>> > On Thu, Apr 27, 2017 at 03:32:49PM +0200, Geert Uytterhoeven wrote:
+>> >> On Wed, Apr 26, 2017 at 10:11 AM, Geert Uytterhoeven
+>> >> <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org> wrote:
+>> >> > CC Vladimir (which I forgot to CC initially, sorry for that)
+>> >> >
+>> >> > On Wed, Apr 26, 2017 at 10:06 AM, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org> wrote:
+>> >> >> On Fri, Apr 21, 2017 at 02:55:16PM +0200, Geert Uytterhoeven wrote:
+>> >> >>> The Renesas Salvator-X and ULCB development board can be equipped with
+>> >> >>> either an R-Car H3 or M3-W SiP, which are pin-compatible.  All boards
+>> >> >>> use separate DTBs, but currently there's no sharing of board-specific
+>> >> >>> devices in DTS.
+>> >> >>>
+>> >> >>> This series reduces duplication by extracting common board support into
+>> >> >>> their own .dtsi files.  As the level of support varies across boards and
+>> >> >>> SoCs, this requires the addition of a few external clocks and
+>> >> >>> placeholder devices on R-Car M3-W, so the common board support DTS can
+>> >> >>> refer to them.
+>> >> >>>
+>> >> >>>   - Patches 1 and 2 add the external audio and PCIe bus clocks on R-Car
+>> >> >>>     M3-W, which are present in r8a7795.dtsi, and used in
+>> >> >>>     r8a7795-salvator-x.dts,
+>> >> >>>   - RFC patch 3 adds placeholders for devices that are not yet supported
+>> >> >>>     and/or tested on R-Car M3-W, but used on R-Car H3,
+>> >> >>>   - RFC patch 4 extracts common Salvator-X board support,
+>> >> >>>   - RFC patch 5 extracts common ULCB board support.
+>> >> >>>
+>> >> >>> For R-Car H3 based boards, there are no functional changes.
+>> >> >>> For R-Car M3-W based boards, some new devices are now described in DT.
+>> >> >>>
+>> >> >>> Dependencies:
+>> >> >>>   - renesas-devel-20170420-v4.11-rc7,
+>> >> >>>   - Patches 1 and 2 can be applied as-is,
+>> >> >>>   - Patches 4 and 5 depend on "[PATCH 0/8] arm64: dts: renesas: Break
+>> >> >>>     out R-Car H3 and M3-W SiP"
+>> >> >>>     (http://www.spinics.net/lists/devicetree/msg173820.html).
+>>            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 >>
->> Andy is bringing up a valid point. And I remember asking about this befo=
-re.
+>> >> >>> DTB changes have been inspected using scripts/dtc/dtx_diff.
+>> >> >>> This has been tested on Salvator-X (both H3 and M3-W).
+>> >> >>> This has not been tested on H3ULCB and M3ULCB due to lack of hardware.
+>> >> >>>
+>> >> >>> Thanks for your comments!
+>> >> >>
+>> >> >> Thanks for tackling this important problem. I have looked over the changes
+>> >> >> and they seem nice to me. I would, however, be more comfortable applying
+>> >> >> them if they were rested on the ULCB boards.
+>> >> >
+>> >> > tested?
+>> >> >
+>> >> > I've pushed a branch for testing to topic/rcar3-dtsi-sharing in
+>> >> > git://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers.git.
+>> >>
+>> >> I managed to test it on the new H3ULCB and M3ULCB baords in Magnus' farm.
+>> >> No issues detected.
+>> >
+>> > Great! Any objections to me queuing this up?
 >>
->> What does "bi-directional" really mean, electrically speaking?
+>> The dependency above (no feedback about the SiP types yet).
+>>
+>> I can respin without that dependency, if that is preferred...
+>
+> It seems to me that it would be nice to get these in sooner than later - in
+> particular earlier rather than later in the (v4.13) development cycle. But
+> I defer to your judgement on what is best.
 
-> Take the SDHI data pins. You send AND receive data over those pins (and t=
-hey are not open drain).
+Agreed.  Stay tuned for v2...
 
-Can you point to schematics and electrical characteristics of such buffer?
-(Yes, I can imagine one case where it's possible to have an
-"automatic" switch based on which current is bigger output of your
-side or remote's. But! I would like to see actual specifications to
-prove this or otherwise.)
+Gr{oetje,eeting}s,
 
-> The issue is that the PFC HW that enables the connections between the SDH=
-I IP block and the I/O pad buffers can only enable one path/signal/directio=
-n to the buffer enables (in or out). So for a pin that needs both direction=
-s, the PFC enables output and the "bidirectional register" is used to enabl=
-e the input buffer as well.
+                        Geert
 
-> In the RZ/A1 HW manual you can kind of see that in 54.18 Port Control Log=
-ical Diagram (but that wasn't obvious to me at first).
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
 
-Please, post a link to it or copy essential parts.
-I'm quite skeptical  that cheap hardware can implement something more
-costable than simplest open-source / open-drain + bias.
-
---=20
-With Best Regards,
-Andy Shevchenko
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
