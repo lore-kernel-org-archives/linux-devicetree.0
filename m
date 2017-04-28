@@ -1,28 +1,174 @@
-From: Mark Greer <mgreer-luAo+O/VEmrlveNOaEYElw@public.gmane.org>
-Subject: Re: [PATCH v4] NFC: trf7970a: Correct register settings for 27MHz
- clock
-Date: Thu, 27 Apr 2017 17:28:42 -0700
-Message-ID: <20170428002842.GA26631@animalcreek.com>
-References: <1493328526-28395-1-git-send-email-geoff@kuvee.com>
+From: Ryder Lee <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 2/2] dt-bindings: pcie: Add documentation for Mediatek
+ PCIe
+Date: Fri, 28 Apr 2017 10:46:36 +0800
+Message-ID: <1493347596.29314.55.camel@mtkswgap22>
+References: <1492935543-18190-1-git-send-email-ryder.lee@mediatek.com>
+         <1492935543-18190-3-git-send-email-ryder.lee@mediatek.com>
+         <CAK8P3a1vgi9VBZfRNq0dDKzmfe8FkHQtgz6fEXW9fyUnBHtaQQ@mail.gmail.com>
+         <1493194205.27023.80.camel@mtkswgap22>
+         <CAK8P3a0vD8s_3R+jS=JdUXX3X05SkCk-mipMA6UxWYQZe6vLUQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1493328526-28395-1-git-send-email-geoff-R+k406RtEhcAvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <CAK8P3a0vD8s_3R+jS=JdUXX3X05SkCk-mipMA6UxWYQZe6vLUQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Geoff Lansberry <geoff-R+k406RtEhcAvxtiuMwx3w@public.gmane.org>
-Cc: linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, kernel-janitors-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-nfc-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mgreer-luAo+O/VEmrlveNOaEYElw@public.gmane.org, justin-R+k406RtEhcAvxtiuMwx3w@public.gmane.org, colin.king-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org, wharms-fPG8STNUNVg@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 27, 2017 at 05:28:46PM -0400, Geoff Lansberry wrote:
-> In prior commits the selected clock frequency does not propagate
-> correctly to what is written to the TRF7970A_MODULATOR_SYS_CLK_CTRL
-> register.
+On Thu, 2017-04-27 at 21:06 +0200, Arnd Bergmann wrote:
+> On Wed, Apr 26, 2017 at 10:10 AM, Ryder Lee <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
+> > Hi
+> >
+> > On Tue, 2017-04-25 at 14:18 +0200, Arnd Bergmann wrote:
+> >> On Sun, Apr 23, 2017 at 10:19 AM, Ryder Lee <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
+> >> > Add documentation for PCIe host driver available in MT7623
+> >> > series SoCs.
+> >> >
+> >> > Signed-off-by: Ryder Lee <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> >> > ---
+> >> >  .../bindings/pci/mediatek,mt7623-pcie.txt          | 153 +++++++++++++++++++++
+> >> >  1 file changed, 153 insertions(+)
+> >> >  create mode 100644 Documentation/devicetree/bindings/pci/mediatek,mt7623-pcie.txt
+> >> >
+> >> > diff --git a/Documentation/devicetree/bindings/pci/mediatek,mt7623-pcie.txt b/Documentation/devicetree/bindings/pci/mediatek,mt7623-pcie.txt
+> >> > new file mode 100644
+> >> > index 0000000..ee93ba2
+> >> > --- /dev/null
+> >> > +++ b/Documentation/devicetree/bindings/pci/mediatek,mt7623-pcie.txt
+> >> > @@ -0,0 +1,153 @@
+> >> > +Mediatek MT7623 PCIe controller
+> >> > +
+> >> > +Required properties:
+> >> > +- compatible: Should contain "mediatek,mt7623-pcie".
+> >>
+> >> Did mediatek license the IP block from someone else or was it
+> >> developed in-house? Is there a name and/or version identifier
+> >> for the block itself other than identifying it as the one in mt7623?
+> >
+> > Originally, it license from synopsys. Our designer add a wrapper to hide
+> > the DBI detail so that we cannot use them directly. Perhaps I can call
+> > it "mediatek,gen2v1-pcie", because we have a plan to upstream a in-house
+> > Gen2 IP in the future.
 > 
-> Signed-off-by: Geoff Lansberry <geoff-R+k406RtEhcAvxtiuMwx3w@public.gmane.org>
-> ---
+> Ok, so this is the same hardware that drivers/pci/dwc/ handles, but
+> it needs a separate driver because the wrapper that was added uses
+> a completely different register layout, right?
 
-Acked-by: Mark Greer <mgreer-luAo+O/VEmrlveNOaEYElw@public.gmane.org>
+Yes, that's what I mean. At first, I really want to base on
+drivers/pci/dwc/ to implement this driver. Eventually I found it hard to
+go on, like what I said before.
+
+> Are any of the registers the same at all, e.g. for MSI handling?
+
+No, It doesn't support MSI. All I can do is using the registers that designer provide
+to me. The others are inviable for software. So I treat it as different hardware.
+Furthermore, we hope that we can put all mediatek drivers together
+regardless of in-house IP or lincense IP
+
+We have no particular IP name but just use chip name to call it. So I
+will temporarily use "mediatek,gen2v1-pcie" in patch v1.
+
+> >> > +Required properties:
+> >> > +- device_type: Must be "pci"
+> >> > +- assigned-addresses: Address and size of the port configuration registers
+> >> > +- reg: Only the first four bytes are used to refer to the correct bus number
+> >> > +  and device number.
+> >> > +- #address-cells: Must be 3
+> >> > +- #size-cells: Must be 2
+> >> > +- ranges: Sub-ranges distributed from the PCIe controller node. An empty
+> >> > +  property is sufficient.
+> >> > +- clocks: Must contain an entry for each entry in clock-names.
+> >> > +  See ../clocks/clock-bindings.txt for details.
+> >> > +- clock-names: Must include the following entries:
+> >> > +  - sys_ck
+> >> > +- resets: Must contain an entry for each entry in reset-names.
+> >> > +  See ../reset/reset.txt for details.
+> >>
+> >> This seems odd: you have a device that is simply identified as "pci"
+> >> without any more specific ID, but you require additional properties
+> >> (clocks, reset, ...) that are not part of the standard PCI binding.
+> >>
+> >> Can you clarify how the port devices related to the root device in
+> >> this hardware design?
+> >
+> > I will write clarify like this:
+> >
+> > PCIe subsys includes one Host/PCI bridge and 3 PCIe MAC port. There
+> > are 3 bus master for data access and 1 slave for configuration and
+> > status register access. Each port has PIPE interface to PHY and
+> 
+> If I understand this right, then each of the ports in your hardware
+> is what we normally drive using the drivers/pci/dwc/ driver framework,
+> but your implementation actually made it more PCI standard compliant
+> by implementing the normal PCIe host bridge registers for all ports
+> combined, something that most others don't.
+
+In my view, it's correct to implement our driver in this way. But I
+don't really understand the details about other platforms. 
+
+> >> Have you considered moving the nonstandard properties into the host
+> >> bridge node and having that device deal with setting up the links
+> >> to the other drivers? That way we could use the regular pcie
+> >> port driver for the children.
+> >>
+> >
+> > OK, but I still want to use port->reset to catch reset properties in
+> > driver.
+> 
+> Do you mean in drivers/pci/pcie/portdrv_pci.c? I see that it
+> has a function called pcie_portdrv_slot_reset(), but I don't see
+> how that relates to your reset line at the moment. Is this
+> something you have submitted in a different series?
+> 
+> Or do you mean in this host driver? The problem I see with
+> that approach is that the port device is owned by portdrv_pci,
+> so the host bridge driver should not look at the properties of
+> the port.
+
+hifsys: syscon@1a000000 {
+		compatible = "mediatek,mt7623-hifsys", "syscon";
+		reg = <0 0x1a000000 0 0x1000>;
+		#clock-cells = <1>;
+		#reset-cells = <1>;
+	};
+
+We have a reset controller(hifsys) in our platform. We can just use
+devm_reset_control_get() to catch it in the host driver to control port reset.
+
+After much consideration, I will move all nonstandard properties to root
+node, let child node cleanable.
+
+> >> > +- reset-names: Must include the following entries:
+> >> > +  - pcie-reset
+> >> > +- num-lanes: Number of lanes to use for this port.
+> >> > +- phys: Must contain an entry for each entry in phy-names.
+> >> > +- phy-names: Must include an entry for each sub node. Entries are of the form
+> >> > +  "pcie-phyN": where N ranges from 0 to the value specified for port number.
+> >> > +  See ../phy/phy-mt7623-pcie.txt for details.
+> >>
+> >> I think the name should not include the number of the port but rather
+> >> be always the same here.
+> >>
+> >
+> > Hmm, I think it's better to keep the name here. It's more readable for
+> > user to understand the relationship between port0 and phy0.
+> 
+> No, I would argue that it's confusing for the reader because it
+> is different from how most other DT bindings work: In each device
+> node, you tend to have a set of properties with well-known names
+> that are documented. When your reference is called "pcie-phy1"
+> in one node and "pcie-phy2", I would interpret that as both ports
+> having two phys each, but only one of them being used.
+
+Okay I will write it more clearly
+
+- phys: list of PHY specifiers (used by generic PHY framework)
+- phy-names : must be "pcie-phy0", "pcie-phy1", "pcie-phyN".. based on
+the number of PHYs as specified in *phys* property.
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
