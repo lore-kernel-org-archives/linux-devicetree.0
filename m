@@ -1,77 +1,38 @@
-From: Jon Mason <jon.mason@broadcom.com>
-Subject: Re: [PATCH v3 2/3] thermal: broadcom: ns-thermal: default on iProc SoCs
-Date: Fri, 28 Apr 2017 16:50:08 -0400
-Message-ID: <CAC3K-4oDnL2oiUDo29dLofHX3hQe2-d1xs=Cduwm==BjLH1djQ@mail.gmail.com>
-References: <1493410291-16679-1-git-send-email-jon.mason@broadcom.com>
- <1493410291-16679-3-git-send-email-jon.mason@broadcom.com> <6628a958-087d-1221-7717-c07eeaec3cce@broadcom.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v5 02/10] irqchip/sunxi-nmi: add A64 R_INTC
+ to the binding doc
+Date: Fri, 28 Apr 2017 15:51:43 -0500
+Message-ID: <20170428205143.gybvmju4675l2g35@rob-hp-laptop>
+References: <20170426152023.41567-1-icenowy@aosc.io>
+ <20170426152023.41567-3-icenowy@aosc.io>
+Reply-To: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <6628a958-087d-1221-7717-c07eeaec3cce@broadcom.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Scott Branden <scott.branden@broadcom.com>
-Cc: Florian Fainelli <florian.fainelli@broadcom.com>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, open list <linux-kernel@vger.kernel.org>, linux-pm@vger.kernel.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
+Return-path: <linux-sunxi+bncBDJIP47K7MERBYGWR3EAKGQEJIZTXTQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20170426152023.41567-3-icenowy-h8G6r0blFSE@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 28, 2017 at 4:36 PM, Scott Branden
-<scott.branden@broadcom.com> wrote:
->
->
-> On 17-04-28 01:11 PM, Jon Mason wrote:
->>
->> Tweak the Kconfig description to mention support for NSP and make the
->> default on for iProc based platforms.
->>
->> Signed-off-by: Jon Mason <jon.mason@broadcom.com>
->> ---
->>  drivers/thermal/broadcom/Kconfig | 9 +++++----
->>  1 file changed, 5 insertions(+), 4 deletions(-)
->>
->> diff --git a/drivers/thermal/broadcom/Kconfig
->> b/drivers/thermal/broadcom/Kconfig
->> index f0dea8a..b6f4b85 100644
->> --- a/drivers/thermal/broadcom/Kconfig
->> +++ b/drivers/thermal/broadcom/Kconfig
->> @@ -1,8 +1,9 @@
->>  config BCM_NS_THERMAL
->>         tristate "Northstar thermal driver"
->>         depends on ARCH_BCM_IPROC || COMPILE_TEST
->
-> If this driver is used on these SoCs then it:
-> depends on ARCH_BCM_NSP || ARCH_BCM_5301X || COMPILE_TEST
-> ?
+On Wed, Apr 26, 2017 at 11:20:15PM +0800, Icenowy Zheng wrote:
+> The A31 NMI driver seems to be using wrong base address.
+> 
+> As we're going to convert to use a correct NMI base address (and
+> correctly name it to R_INTC as the datasheet suggests), add a new
+> compatible string for the "correct" R_INTC, which we will use for A64
+> SoC.
+> 
+> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+> ---
+>  .../bindings/interrupt-controller/allwinner,sunxi-nmi.txt          | 7 +++++--
+>  1 file changed, 5 insertions(+), 2 deletions(-)
 
-The code referenced is outside of this patch, as that code was already
-existing from when the driver was submitted.
-
-I did some checking and NS2 and Cygnus do not have the registers in
-use by this driver.  So, you are correct in that this driver will
-never be used for them.  So, this is slightly over-permissive in
-allowing a driver to be selected that could not ever be used on
-non-NS/NSP hardware.  But barring an incorrect DT string, it would
-only result in an slightly larger kernel than necessary.
-
-I'll do a follow-on patch to correct this with your suggestion above,
-and push it separately (unless a v4 is needed on this series).
-
-Thanks,
-Jon
-
-
->> +       default y if ARCH_BCM_IPROC
->>         help
->> -         Northstar is a family of SoCs that includes e.g. BCM4708,
->> BCM47081,
->> -         BCM4709 and BCM47094. It contains DMU (Device Management Unit)
->> block
->> -         with a thermal sensor that allows checking CPU temperature. This
->> -         driver provides support for it.
->> +         Support for the Northstar and Northstar Plus family of SoCs
->> (e.g.
->> +         BCM4708, BCM4709, BCM5301x, BCM95852X, etc). It contains DMU
->> (Device
->> +         Management Unit) block with a thermal sensor that allows
->> checking CPU
->> +         temperature.
->>
->
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
