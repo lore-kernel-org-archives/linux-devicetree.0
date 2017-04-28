@@ -1,30 +1,102 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 3/5] mtd: gpmi: document current clock requirements
-Date: Fri, 28 Apr 2017 12:13:37 -0500
-Message-ID: <20170428171337.23jti5634myafw65@rob-hp-laptop>
-References: <20170422012338.4635-1-stefan@agner.ch>
- <20170422012338.4635-4-stefan@agner.ch>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [RFC 1/3] dt-binding: soc: qcom: Add binding for RFSA
+Date: Fri, 28 Apr 2017 12:42:39 -0500
+Message-ID: <20170428174239.x62opv5vzx2ce2wt@rob-hp-laptop>
+References: <20170422173519.5782-1-bjorn.andersson@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170422012338.4635-4-stefan-XLVq0VzYD2Y@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
-Cc: dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, richard-/L3Ra7n9ekc@public.gmane.org, cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, han.xu-3arQi8VN3Tc@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <20170422173519.5782-1-bjorn.andersson@linaro.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Frank Rowand <frowand.list@gmail.com>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 21, 2017 at 06:23:36PM -0700, Stefan Agner wrote:
-> The clock requirements are completely missing, add the clocks
-> currently required by the driver.
+On Sat, Apr 22, 2017 at 10:35:17AM -0700, Bjorn Andersson wrote:
+> This adds the binding for describing shared memory buffers for
+> implementing the remote filesystem protocol.
 > 
-> Signed-off-by: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 > ---
->  Documentation/devicetree/bindings/mtd/gpmi-nand.txt | 14 +++++++++++++-
->  1 file changed, 13 insertions(+), 1 deletion(-)
+> 
+> My initial attempt was to mimic the ramoops of just adding the compatible to
+> the reserved-memory node, but I have not been able to figure out a sane way of
+> getting hold of the base address in the case that the memory region is
+> described my a "size" only (done on some platforms).
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I prefer the ramoops way.
+
+> The problem is that we create the reserved_mem objects (and remove the
+> memblocks) while we're still operating on the flattened representation, so
+> without a phandle it doesn't seem like we have anything to perform the
+> comparison with later on.
+
+I'm not sure I follow.
+
+> 
+>  .../devicetree/bindings/soc/qcom/qcom,rfsa.txt     | 43 ++++++++++++++++++++++
+>  1 file changed, 43 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,rfsa.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,rfsa.txt b/Documentation/devicetree/bindings/soc/qcom/qcom,rfsa.txt
+> new file mode 100644
+> index 000000000000..b4de0de74e46
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/soc/qcom/qcom,rfsa.txt
+> @@ -0,0 +1,43 @@
+> +Qualcomm Remote File System Access binding
+> +
+> +This binding describes the Qualcomm RFSA, which serves the purpose of managing
+> +the shared memory region used for remote processors to access block device data
+> +using the Remote Filesystem protocol.
+> +
+> +- compatible:
+> +	Usage: required
+> +	Value type: <stringlist>
+> +	Definition: must be:
+> +		    "qcom,rfsa"
+
+No versioning?
+
+> +
+> +- memory-region:
+> +	Usage: required
+> +	Value type: <prop-encoded-array>
+> +	Definition: handle to memory reservation the associated rfsa region.
+> +
+> +- qcom,client-id:
+> +	Usage: required
+> +	Value type: <u32>
+> +	Definition: identifier of the client to use this region for buffers.
+
+What determines these numbers?
+
+> +
+> += EXAMPLE
+> +The following example shows the RFSA setup for APQ8016, with the RFSA region
+> +for the Hexagon DSP (id #1) located at 0x86700000.
+> +
+> +	reserved-memory {
+> +		#address-cells = <2>;
+> +		#size-cells = <2>;
+> +		ranges;
+> +
+> +		rmtfs: rmtfs@86700000 {
+
+I think you should have a compatible here even with the 2 node approach.
+
+> +			reg = <0x0 0x86700000 0x0 0xe0000>;
+> +			no-map;
+> +		};
+> +	};
+> +
+> +	hexagon-rfsa {
+> +		compatible = "qcom,rfsa";
+> +		memory-region = <&rmtfs>;
+> +
+> +		qcom,client-id = <1>;
+> +	};
+> -- 
+> 2.12.0
+> 
