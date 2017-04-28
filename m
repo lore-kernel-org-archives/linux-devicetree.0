@@ -1,86 +1,61 @@
-From: Eric Anholt <eric@anholt.net>
-Subject: [PATCH v4 1/3] drm/vc4: Turn the V3D clock on at runtime.
-Date: Fri, 28 Apr 2017 15:42:21 -0700
-Message-ID: <20170428224223.21904-1-eric@anholt.net>
+From: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/2] wcn36xx: Pass used skb to ieee80211_tx_status()
+Date: Fri, 28 Apr 2017 16:42:47 -0700
+Message-ID: <20170428234247.GQ15143@minitux>
+References: <20170426220444.10539-1-bjorn.andersson@linaro.org>
+ <1493281332.2529.1.camel@sipsolutions.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1493281332.2529.1.camel-cdvu00un1VgdHxzADdlk8Q@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Johannes Berg <johannes-cdvu00un1VgdHxzADdlk8Q@public.gmane.org>
+Cc: Eugene Krasnikov <k.eugene.e-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Brown <david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, wcn36xx-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Nicolas Dechesne <nicolas.dechesne-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Rm9yIHRoZSBSYXNwYmVycnkgUGkncyBiaW5kaW5ncywgdGhlIHBvd2VyIGRvbWFpbiBhbHNvIGlt
-cGxpY2l0bHkKdHVybnMgb24gdGhlIGNsb2NrIGFuZCBkZWFzc2VydHMgcmVzZXQsIGJ1dCBmb3Ig
-dGhlIG5ldyBDeWdudXMgcG9ydCB3ZQpzdGFydCByZXByZXNlbnRpbmcgdGhlIGNsb2NrIGluIHRo
-ZSBkZXZpY2V0cmVlLgoKdjI6IERvY3VtZW50IHRoZSBjbG9jay1uYW1lcyBwcm9wZXJ0eSwgY2hl
-Y2sgZm9yIC1FTk9FTlQgZm9yIG5vIGNsb2NrCiAgICBpbiBEVC4KdjM6IERyb3AgTlVMTCBjaGVj
-a3MgYXJvdW5kIGNsayBjYWxscyB3aGljaCBlbWJlZCBOVUxMIGNoZWNrcy4KdjQ6IERyb3AgY2xr
-LW5hbWVzIChmZWVkYmFjayBieSBSb2IgSGVycmluZykKClNpZ25lZC1vZmYtYnk6IEVyaWMgQW5o
-b2x0IDxlcmljQGFuaG9sdC5uZXQ+Ci0tLQogLi4uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxh
-eS9icmNtLGJjbS12YzQudHh0ICAgfCAgMyArKysKIGRyaXZlcnMvZ3B1L2RybS92YzQvdmM0X2Ry
-di5oICAgICAgICAgICAgICAgICAgICAgIHwgIDEgKwogZHJpdmVycy9ncHUvZHJtL3ZjNC92YzRf
-djNkLmMgICAgICAgICAgICAgICAgICAgICAgfCAzMSArKysrKysrKysrKysrKysrKysrKystCiAz
-IGZpbGVzIGNoYW5nZWQsIDM0IGluc2VydGlvbnMoKyksIDEgZGVsZXRpb24oLSkKCmRpZmYgLS1n
-aXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmNtLGJjbS12
-YzQudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJjbSxi
-Y20tdmM0LnR4dAppbmRleCBjYTAyZDNlNGRiOTEuLmJjMTc1NmY0Zjc5MSAxMDA2NDQKLS0tIGEv
-RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJjbSxiY20tdmM0LnR4
-dAorKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmNtLGJj
-bS12YzQudHh0CkBAIC01OSw2ICs1OSw5IEBAIFJlcXVpcmVkIHByb3BlcnRpZXMgZm9yIFYzRDoK
-IC0gaW50ZXJydXB0czoJVGhlIGludGVycnVwdCBudW1iZXIKIAkJICBTZWUgYmluZGluZ3MvaW50
-ZXJydXB0LWNvbnRyb2xsZXIvYnJjbSxiY20yODM1LWFybWN0cmwtaWMudHh0CiAKK09wdGlvbmFs
-IHByb3BlcnRpZXMgZm9yIFYzRDoKKy0gY2xvY2tzOglUaGUgY2xvY2sgdGhlIHVuaXQgcnVucyBv
-bgorCiBSZXF1aXJlZCBwcm9wZXJ0aWVzIGZvciBEU0k6CiAtIGNvbXBhdGlibGU6CVNob3VsZCBi
-ZSAiYnJjbSxiY20yODM1LWRzaTAiIG9yICJicmNtLGJjbTI4MzUtZHNpMSIKIC0gcmVnOgkJUGh5
-c2ljYWwgYmFzZSBhZGRyZXNzIGFuZCBsZW5ndGggb2YgdGhlIERTSSBibG9jaydzIHJlZ2lzdGVy
-cwpkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL3ZjNC92YzRfZHJ2LmggYi9kcml2ZXJzL2dw
-dS9kcm0vdmM0L3ZjNF9kcnYuaAppbmRleCBiMDk2N2UyZjdlODguLjkyZWI3ZDgxMWJmMiAxMDA2
-NDQKLS0tIGEvZHJpdmVycy9ncHUvZHJtL3ZjNC92YzRfZHJ2LmgKKysrIGIvZHJpdmVycy9ncHUv
-ZHJtL3ZjNC92YzRfZHJ2LmgKQEAgLTIwMCw2ICsyMDAsNyBAQCBzdHJ1Y3QgdmM0X3YzZCB7CiAJ
-c3RydWN0IHZjNF9kZXYgKnZjNDsKIAlzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2OwogCXZv
-aWQgX19pb21lbSAqcmVnczsKKwlzdHJ1Y3QgY2xrICpjbGs7CiB9OwogCiBzdHJ1Y3QgdmM0X2h2
-cyB7CmRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vdmM0L3ZjNF92M2QuYyBiL2RyaXZlcnMv
-Z3B1L2RybS92YzQvdmM0X3YzZC5jCmluZGV4IGE4ODA3OGQ3YzlkMS4uNzUwMDgyMGU1Y2Q1IDEw
-MDY0NAotLS0gYS9kcml2ZXJzL2dwdS9kcm0vdmM0L3ZjNF92M2QuYworKysgYi9kcml2ZXJzL2dw
-dS9kcm0vdmM0L3ZjNF92M2QuYwpAQCAtMTYsNiArMTYsNyBAQAogICogdGhpcyBwcm9ncmFtLiAg
-SWYgbm90LCBzZWUgPGh0dHA6Ly93d3cuZ251Lm9yZy9saWNlbnNlcy8+LgogICovCiAKKyNpbmNs
-dWRlICJsaW51eC9jbGsuaCIKICNpbmNsdWRlICJsaW51eC9jb21wb25lbnQuaCIKICNpbmNsdWRl
-ICJsaW51eC9wbV9ydW50aW1lLmgiCiAjaW5jbHVkZSAidmM0X2Rydi5oIgpAQCAtMzA1LDYgKzMw
-Niw4IEBAIHN0YXRpYyBpbnQgdmM0X3YzZF9ydW50aW1lX3N1c3BlbmQoc3RydWN0IGRldmljZSAq
-ZGV2KQogCWRybV9nZW1fb2JqZWN0X3B1dF91bmxvY2tlZCgmdmM0LT5iaW5fYm8tPmJhc2UuYmFz
-ZSk7CiAJdmM0LT5iaW5fYm8gPSBOVUxMOwogCisJY2xrX2Rpc2FibGVfdW5wcmVwYXJlKHYzZC0+
-Y2xrKTsKKwogCXJldHVybiAwOwogfQogCkBAIC0zMTgsNiArMzIxLDEwIEBAIHN0YXRpYyBpbnQg
-dmM0X3YzZF9ydW50aW1lX3Jlc3VtZShzdHJ1Y3QgZGV2aWNlICpkZXYpCiAJaWYgKHJldCkKIAkJ
-cmV0dXJuIHJldDsKIAorCXJldCA9IGNsa19wcmVwYXJlX2VuYWJsZSh2M2QtPmNsayk7CisJaWYg
-KHJldCAhPSAwKQorCQlyZXR1cm4gcmV0OworCiAJdmM0X3YzZF9pbml0X2h3KHZjNC0+ZGV2KTsK
-IAl2YzRfaXJxX3Bvc3RpbnN0YWxsKHZjNC0+ZGV2KTsKIApAQCAtMzQ4LDE1ICszNTUsMzcgQEAg
-c3RhdGljIGludCB2YzRfdjNkX2JpbmQoc3RydWN0IGRldmljZSAqZGV2LCBzdHJ1Y3QgZGV2aWNl
-ICptYXN0ZXIsIHZvaWQgKmRhdGEpCiAJdmM0LT52M2QgPSB2M2Q7CiAJdjNkLT52YzQgPSB2YzQ7
-CiAKKwl2M2QtPmNsayA9IGRldm1fY2xrX2dldChkZXYsIE5VTEwpOworCWlmIChJU19FUlIodjNk
-LT5jbGspKSB7CisJCWludCByZXQgPSBQVFJfRVJSKHYzZC0+Y2xrKTsKKworCQlpZiAocmV0ID09
-IC1FTk9FTlQpIHsKKwkJCS8qIGJjbTI4MzUgZGlkbid0IGhhdmUgYSBjbG9jayByZWZlcmVuY2Ug
-aW4gdGhlIERULiAqLworCQkJcmV0ID0gMDsKKwkJCXYzZC0+Y2xrID0gTlVMTDsKKwkJfSBlbHNl
-IHsKKwkJCWlmIChyZXQgIT0gLUVQUk9CRV9ERUZFUikKKwkJCQlkZXZfZXJyKGRldiwgIkZhaWxl
-ZCB0byBnZXQgVjNEIGNsb2NrOiAlZFxuIiwKKwkJCQkJcmV0KTsKKwkJCXJldHVybiByZXQ7CisJ
-CX0KKwl9CisKIAlpZiAoVjNEX1JFQUQoVjNEX0lERU5UMCkgIT0gVjNEX0VYUEVDVEVEX0lERU5U
-MCkgewogCQlEUk1fRVJST1IoIlYzRF9JREVOVDAgcmVhZCAweCUwOHggaW5zdGVhZCBvZiAweCUw
-OHhcbiIsCiAJCQkgIFYzRF9SRUFEKFYzRF9JREVOVDApLCBWM0RfRVhQRUNURURfSURFTlQwKTsK
-IAkJcmV0dXJuIC1FSU5WQUw7CiAJfQogCisJcmV0ID0gY2xrX3ByZXBhcmVfZW5hYmxlKHYzZC0+
-Y2xrKTsKKwlpZiAocmV0ICE9IDApCisJCXJldHVybiByZXQ7CisKIAlyZXQgPSB2YzRfYWxsb2Nh
-dGVfYmluX2JvKGRybSk7Ci0JaWYgKHJldCkKKwlpZiAocmV0KSB7CisJCWNsa19kaXNhYmxlX3Vu
-cHJlcGFyZSh2M2QtPmNsayk7CiAJCXJldHVybiByZXQ7CisJfQogCiAJLyogUmVzZXQgdGhlIGJp
-bm5lciBvdmVyZmxvdyBhZGRyZXNzL3NpemUgYXQgc2V0dXAsIHRvIGJlIHN1cmUKIAkgKiB3ZSBk
-b24ndCByZXVzZSBhbiBvbGQgb25lLgotLSAKMi4xMS4wCgpfX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZl
-bEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFp
-bG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+On Thu 27 Apr 01:22 PDT 2017, Johannes Berg wrote:
+
+> 
+> > @@ -371,7 +371,7 @@ static void reap_tx_dxes(struct wcn36xx *wcn,
+> > struct wcn36xx_dxe_ch *ch)
+> >  			info = IEEE80211_SKB_CB(ctl->skb);
+> >  			if (!(info->flags &
+> > IEEE80211_TX_CTL_REQ_TX_STATUS)) {
+> >  				/* Keep frame until TX status comes
+> > */
+> > -				ieee80211_free_txskb(wcn->hw, ctl-
+> > >skb);
+> > +				ieee80211_tx_status(wcn->hw, ctl-
+> > >skb);
+> > 
+> 
+> I don't think this is a good idea.
+
+Thanks for letting me know :)
+
+> This code intentionally checked if TX status was requested, and if not
+> then it doesn't go to the effort of building it.
+> 
+
+What I'm finding puzzling is the fact that the only caller of
+ieee80211_led_tx() is ieee80211_tx_status() and it seems like drivers,
+such as ath10k, call this for each packet handled - but I'm likely
+missing something.
+
+> As it is with your patch, it'll go and report the TX status without any
+> TX status information - which is handled in wcn36xx_dxe_tx_ack_ind()
+> for those frames needing it.
+> 
+
+Right, it doesn't sound desired. However, during normal operation I'm
+not seeing IEEE80211_TX_CTL_REQ_TX_STATUS being set and as such
+ieee80211_led_tx() is never called.
+
+Regards,
+Bjorn
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
