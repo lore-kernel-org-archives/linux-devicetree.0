@@ -1,38 +1,35 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/5 v2] clk: qcom: Elaborate on "active" clocks in the
- RPM clock bindings
-Date: Fri, 28 Apr 2017 08:35:53 -0500
-Message-ID: <20170428133553.pcyireh6atw7rlrw@rob-hp-laptop>
-References: <20170419091326.11226-1-linus.walleij@linaro.org>
- <20170419091326.11226-2-linus.walleij@linaro.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/8] [RFC] dt-bindings: renesas: Document R-Car H3 and
+ M3-W SiP DT bindings
+Date: Fri, 28 Apr 2017 08:39:23 -0500
+Message-ID: <20170428133923.ycbqixcxvcsonocn@rob-hp-laptop>
+References: <1492593351-13835-1-git-send-email-geert+renesas@glider.be>
+ <1492593351-13835-2-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170419091326.11226-2-linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1492593351-13835-2-git-send-email-geert+renesas@glider.be>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Mark Rutland <mark.rutland@arm.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 19, 2017 at 11:13:23AM +0200, Linus Walleij wrote:
-> The concept of "active" clocks is just explained in a bried comment in the
-> device driver, let's explain it a bit more in the device tree bindings
-> so everyone understands this.
+On Wed, Apr 19, 2017 at 11:15:44AM +0200, Geert Uytterhoeven wrote:
+> Document the SiP ("System-in-Package") versions of the R-Car H3 and M3-W
+> SoCs, which contain an R-Car H3 or M3-W SoC, RAM, and HyperFlash.
 > 
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Add their compatible values to all boards equipped with R-Car Gen3 SiPs.
+> 
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 > ---
-> ChangeLog v1->v2:
-> - Reword slighty in accordance with Stephens feedback.
-> ---
->  Documentation/devicetree/bindings/clock/qcom,rpmcc.txt | 8 ++++++++
->  1 file changed, 8 insertions(+)
+> Questions:
+>   - Do we need more compatible values, for different configurations?
+>     At least r8j7796 is available with either 2 GiB or 4 GiB of RAM,
+>     possibly using RAM parts from different vendors.
 
-Despite my objections, you're just documenting what is already there.
+Same die, just a different package? If so, I don't think you need a 
+different compatible. It's going to be a different board from any 
+non-SiP which should be enough to distinguish.
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Rob
