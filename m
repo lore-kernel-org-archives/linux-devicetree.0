@@ -1,68 +1,28 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/9] usb: host: add DT bindings for faraday fotg2
-Date: Fri, 28 Apr 2017 15:58:15 -0500
-Message-ID: <20170428205815.iyz24fno53l3zjrn@rob-hp-laptop>
-References: <20170426194120.26304-1-ulli.kroll@googlemail.com>
- <20170426194120.26304-2-ulli.kroll@googlemail.com>
+Subject: Re: [PATCH v5 04/10] dt-bindings: pinctrl: Add RZ/A1 bindings doc
+Date: Fri, 28 Apr 2017 16:03:09 -0500
+Message-ID: <20170428210309.opa365htbjc46bgl@rob-hp-laptop>
+References: <1493281194-5200-1-git-send-email-jacopo+renesas@jmondi.org>
+ <1493281194-5200-5-git-send-email-jacopo+renesas@jmondi.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20170426194120.26304-2-ulli.kroll-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <1493281194-5200-5-git-send-email-jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hans Ulli Kroll <ulli.kroll-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Cc: Linus Walleij <linus.walleij-QSEj5FYQhm71jEKWMTb39w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+To: Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
+Cc: linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 26, 2017 at 09:41:12PM +0200, Hans Ulli Kroll wrote:
-> This adds device tree bindings for the Faraday FOTG2
-> dual-mode host controller.
+On Thu, Apr 27, 2017 at 10:19:48AM +0200, Jacopo Mondi wrote:
+> Add device tree bindings documentation for Renesas RZ/A1 gpio and pin
+> controller.
 > 
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Signed-off-by: Hans Ulli Kroll <ulli.kroll-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-> Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Signed-off-by: Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
 > ---
->  .../devicetree/bindings/usb/faraday,fotg210.txt    | 40 ++++++++++++++++++++++
->  1 file changed, 40 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/usb/faraday,fotg210.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/usb/faraday,fotg210.txt b/Documentation/devicetree/bindings/usb/faraday,fotg210.txt
-> new file mode 100644
-> index 000000000000..dc2cdaf20d9f
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/usb/faraday,fotg210.txt
-> @@ -0,0 +1,40 @@
-> +Faraday FOTG Dual role controller
-> +
-> +This OTG-capable host/device mode USB controller is found in Cortina Systems
-> +Gemini and other SoC products.
-> +On Gemini currently host mode is used
-> +
-> +Required properties:
-> +- compatible: should be one of:
-> +  "faraday,fotg210-dr"
-> +  "cortina,gemini-usb", "faraday,fotg210-dr"
-> +- reg: should contain one register range i.e. start and length
-> +- interrupts: description of the interrupt line
-> +
-> +Optional properties:
-> +- clocks: should contain the IP block clock
-> +- clock-names: should be "PCLK" for the IP block clock
-> +- dr_mode : indicates the working mode for "faraday,fotg210-dr" compatible
-> +   controllers.  Can be "host" or "peripheral"
-> +   Default to "host" if not defined for backward compatibility.
-> +
-> +
-> +Required properties for "cortina,gemini-usb" compatible:
-> +- syscon: a phandle to the system controller to access PHY registers
-> +
-> +Optional properties for "cortina,gemini-usb" compatible:
-> +- cortina,gemini-mini-b: boolean property that indicates that a Mini-B
-> +  OTH connector is in use
-
-s/OTH/OTG/
-
-With that,
+>  .../bindings/pinctrl/renesas,rza1-pinctrl.txt      | 219 +++++++++++++++++++++
+>  1 file changed, 219 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/renesas,rza1-pinctrl.txt
 
 Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 --
