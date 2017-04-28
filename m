@@ -1,57 +1,115 @@
-From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/2] of: fix uninitialized variable warning for overlay
- test
-Date: Fri, 28 Apr 2017 08:46:21 -0700
-Message-ID: <590363CD.7000404@gmail.com>
-References: <20170428094429.2396195-1-arnd@arndb.de>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v4 2/2] of: Add unit tests for applying overlays
+Date: Fri, 28 Apr 2017 18:13:20 +0200
+Message-ID: <CAMuHMdV=CsR9-VXw-M4yNUaBj_x0UCv-ic_YTz2xGxNZjUv5XA@mail.gmail.com>
+References: <1493165394-29367-1-git-send-email-frowand.list@gmail.com>
+ <1493165394-29367-3-git-send-email-frowand.list@gmail.com>
+ <CAMuHMdWLhLqjNgz6iUOY8LY1Jjn3-_iV2ncbOxYLCLZbf=Rz+w@mail.gmail.com> <59035E93.2060106@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170428094429.2396195-1-arnd-r2nGTMty4D4@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kbuild-owner@vger.kernel.org>
+In-Reply-To: <59035E93.2060106@gmail.com>
+Sender: linux-kbuild-owner@vger.kernel.org
+To: Frank Rowand <frowand.list@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, stephen.boyd@linaro.org, Michal Marek <mmarek@suse.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-kbuild <linux-kbuild@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 04/28/17 02:44, Arnd Bergmann wrote:
-> gcc warns that an empty device tree would cause undefined behavior:
-> 
-> drivers/of/unittest.c: In function 'of_unittest':
-> drivers/of/unittest.c:2199:25: warning: 'last_sibling' may be used uninitialized in this function [-Wmaybe-uninitialized]
-> 
-> This adds an initialization of the variable to zero, which we handle
-> correctly.
-> 
-> Fixes: 81d0848fc8d2 ("of: Add unit tests for applying overlays")
-> Signed-off-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-> ---
->  drivers/of/unittest.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
-> index 12597ff8cfb0..6b8f3e6aa43c 100644
-> --- a/drivers/of/unittest.c
-> +++ b/drivers/of/unittest.c
-> @@ -2192,7 +2192,7 @@ static __init void of_unittest_overlay_high_level(void)
->  
->  	mutex_lock(&of_mutex);
->  
-> -	for (np = of_root->child; np; np = np->sibling)
-> +	for (last_sibling = np = of_root->child; np; np = np->sibling)
->  		last_sibling = np;
->  
->  	if (last_sibling)
-> 
+Hi Frank,
 
-Thanks Arnd!  Linux-next also reported this and I sent Rob a different
-patch for it yesterday.
+On Fri, Apr 28, 2017 at 5:24 PM, Frank Rowand <frowand.list@gmail.com> wrote:
+> On 04/28/17 04:25, Geert Uytterhoeven wrote:
+>> On Wed, Apr 26, 2017 at 2:09 AM,  <frowand.list@gmail.com> wrote:
+>>>  create mode 100644 drivers/of/unittest-data/overlay.dts
+>>>  create mode 100644 drivers/of/unittest-data/overlay_bad_phandle.dts
+>>>  create mode 100644 drivers/of/unittest-data/overlay_base.dts
+>>
+>> Shouldn't these be called .dtso instead of .dts?
+>
+> That is a good question.  I'm not worried about solving it this week for
+> this patch, because this could turn into a bikeshed and I can always
+> fix it with a patch if we decide to change.  But if we do want to change
+> the naming, I would like to make the decision in the next couple of
+> months.  I would like to see more progress on overlays in general
+> this summer, and plan to be working on them myself.
+>
+> I _think_ there has been some discussion about source file naming on the
+> devicetree-compiler or devicetree list in the far distant past.  Or I
+> may just be mis-remembering.
+>
+> As far as I know, the current dtc does not know any suffixes other than
+> .dts for source files.  Not that the compiler has to know, we can always
+> specify '-I dts'.
 
-Rob, I am fine with either Arnd's patch or mine, they both fix the
-problem.
+That's not an obstacle, though. I've been compiling .dtso files into .dtbo
+files for several years, cfr.
+https://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers.git/log/?h=topic/renesas-overlays
 
--Frank
+According to "make V=1", the kernel build system basically uses
+
+    ./scripts/dtc/dtc -O dtb -o <file>.dtbo <file>.dtbo.dts.tmp
+
+with <file>.dtbo.dts.tmp the preprocessed .dtso files.
+And dtc copes fine with that.
+
+>>> --- a/drivers/of/unittest-data/Makefile
+>>> +++ b/drivers/of/unittest-data/Makefile
+>>
+>>> +# enable creation of __symbols__ node
+>>> +DTC_FLAGS_overlay := -@
+>>> +DTC_FLAGS_overlay_bad_phandle := -@
+>>> +DTC_FLAGS_overlay_base := -@
+>>
+>> This flag is needed for all DTs that will be involved with overlays.
+>>
+>> Hence what about enabling this globally instead, cfr. "Enable DT symbols when"
+>> CONFIG_OF_OVERLAY is used
+>> ("http://www.spinics.net/lists/devicetree/msg103363.html")?
+>
+> And another really good question.
+>
+> There are some issues.  I have thought about it enough to know there are issues,
+> but do not have a solution and do not think I know all the issues.  Some
+> possible issues (or perceived issues) are:
+>
+> - The size of __symbols__ in an FDT (akd compile .dtb image) in either a kernel
+>   image or a bootloader if overlays are not actually needed on a given system
+>   (even if the system is physically capable of using overlays).
+
+What do you mean with "physically capable of using overlays"?
+The presence of expansion connectors, like Raspberry Pi and BeagleBone Black?
+
+Even lacking such connectors, an overlay could add hardware description that
+was just missing (forgotten, or lack of DT bindings) when the main DTB was
+built.
+
+I agree about the size, but you never know in advance if an overlay will
+be used or needed later.
+
+> - The size of __symbols__ in kernel memory if overlays are not actually needed
+>   on a given system (even if the system is physically capable of using overlays.)
+>   This could be possibly be enabled/disabled by a boot command, even if
+>   __symbols__ is in the FDT.
+
+Agreed.  Not allowing overlays is akin to not allowing to load (more) kernel
+modules, and may increase security.
+
+> - A base FDT might want to have __symbols__ included with the expectation that
+>   overlays will be used in the future.  (The FDT might be built for the boot
+>   loader, then be stable for many kernel releases.)
+>
+> - Should the creation of __symbols__ be a global switch, or should it be
+>   controlled on a per dtb basis?  Or a combination of both?
+
+So you want to decouple OF overlay support in the Linux kernel from
+__symbols__ present in the DTBs built?
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
