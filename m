@@ -1,53 +1,45 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: r7s72100: add usb clocks to device tree
-Date: Fri, 28 Apr 2017 16:27:45 +0200
-Message-ID: <CAMuHMdXp75yepEMh-S0YNYqKRESb4m3DtcfG09x=uj1Fm51b_A@mail.gmail.com>
-References: <20170427191045.21199-1-chris.brandt@renesas.com>
- <CAMuHMdXEtefpaUJbbJ7LYjYR2oHaE-epy=eZnAyE-+=GWsy9xg@mail.gmail.com>
- <20170428080400.GI10196@verge.net.au> <SG2PR06MB1165D398BD7100FAC5AAEDC68A130@SG2PR06MB1165.apcprd06.prod.outlook.com>
+From: Chris Brandt <Chris.Brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Subject: RE: [PATCH v5 10/10] arm: dts: genmai: Add ethernet pin group
+Date: Fri, 28 Apr 2017 14:48:52 +0000
+Message-ID: <SG2PR06MB11650F50D93653212039A4348A130@SG2PR06MB1165.apcprd06.prod.outlook.com>
+References: <1493281194-5200-1-git-send-email-jacopo+renesas@jmondi.org>
+ <1493281194-5200-11-git-send-email-jacopo+renesas@jmondi.org>
+ <CAMuHMdVHh_40pup1G-1qohS+wEYCFEn6jvOTCnYideQWMxSVLw@mail.gmail.com>
+ <SG2PR06MB1165D46E83254B1757C790498A100@SG2PR06MB1165.apcprd06.prod.outlook.com>
+ <CAMuHMdU2CvipQQQ8-wxsiniHZJQmUMHv-t52Pw=sHD3YTd7Yug@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <SG2PR06MB1165D398BD7100FAC5AAEDC68A130-ESzmfEwOt/xoAsOJh7vwSm0DtJ1/0DrXvxpqHgZTriW3zl9H0oFU5g@public.gmane.org>
+In-Reply-To: <CAMuHMdU2CvipQQQ8-wxsiniHZJQmUMHv-t52Pw=sHD3YTd7Yug-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chris Brandt <Chris.Brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Cc: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Cc: Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Chris,
-
-On Fri, Apr 28, 2017 at 2:47 PM, Chris Brandt <Chris.Brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org> wrote:
-> On Friday, April 28, 2017, Simon Horman wrote:
->> On Fri, Apr 28, 2017 at 09:34:54AM +0200, Geert Uytterhoeven wrote:
->> > On Thu, Apr 27, 2017 at 9:10 PM, Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
->> wrote:
->> > > This adds the USB0 and USB1 clocks to the device tree.
-
->> > Simon: see Section 29.3.2 (BUSWAIT) for the reference to the P1 clock.
->>
->> Thanks, I see that now.
->
-> I was going to say that I simply look at sections:
->   6.10.6 Internal Clock Signals (1)
->   6.10.7 Internal Clock Signals (2)
->
-> Because it lists all the IP blocks and their corresponding clock sources in one place.
-
-Cool, I grew up with rev. 0.60 of the user manual, so I wasn't aware of
-that secton.
-
-Thanks!
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+SGkgR2VlcnQsDQoNCk9uIEZyaWRheSwgQXByaWwgMjgsIDIwMTcsIEdlZXJ0IFV5dHRlcmhvZXZl
+biB3cm90ZToNCj4gPj4gU2hvdWxkbid0IHRoZSBpbnRlcnJ1cHQgKGNvbm5lY3RlZCB0byBQMV8x
+NSkgYmUgZGVzY3JpYmVkPw0KPiA+DQo+ID4gVGhhdCBpbnRlcnJ1cHQgcGluIGZyb20gdGhlIFBI
+WSBpcyBub3QgdXNlZC4gSXQgZGlkIG5vdCBuZWVkIHRvIGJlDQo+IGNvbm5lY3RlZC4NCj4gDQo+
+IEJ1dCBpdCBpcyBjb25uZWN0ZWQsIGFjY29yZGluZyB0byB0aGUgc2NoZW1hdGljcy4NCg0KUDFf
+MTUgY2FuIGJlIGNvbmZpZ3VyZWQgYXM6DQogKiBHUElPX0lODQogKiBBTjcNCiAqIEFWQl9DQVBU
+VVJFDQoNClNvLi4uSSBndWVzcyB5b3Ugd291bGQgJ2Rlc2NyaWJlJyBpdCBhcyBhbiBHUElPLWlu
+cHV0Lg0KDQoNCj4gRFQgZGVzY3JpYmVzIGhhcmR3YXJlLCBub3Qgc29mdHdhcmUgbGltaXRhdGlv
+bnMuDQoNCkRlc2NyaWJpbmcgdGhpbmdzIGlzIGZpbmUsIGJ1dCB0aGUga2VybmVsIGNvZGUgdGFr
+ZXMgdGhlIERUIGFuZCB0aGVuIHN0YXJ0IGNvbmZpZ3VyaW5nIHRoaW5ncyBiYXNlZCBvbiBpdC4N
+Cg0KRm9yIGV4YW1wbGUsIG9uIHRoZSBSU0sgYm9hcmQsIHRoYXQgbGluZSBpcyBjb25uZWN0ZWQg
+dG8gUDRfMTQuIFA0XzE0IGNhbiBiZSBjb25maWd1cmVkIGFzIElSUTYuLi5idXQgSVJRNiBjb21l
+cyBvdXQgaW4gOCBkaWZmZXJlbnQgcGluIGNob2ljZXMsIGFuZCBJIG1pZ2h0IHdhbnQgdG8gdXNl
+IG9uZSBvZiB0aG9zZSBvdGhlciBjaG9pY2VzLCBzbyBJIGRvbid0IHdhbnQgdG8gZGVzY3JpYmUg
+UDRfMTQgYXMgYW4gaW50ZXJydXB0Lg0KDQpJZiBpdCB3YXMganVzdCBkZXNjcmliaW5nIHRoYXQg
+InBpbiAxNSBvZiB0aGUgUEhZIGNoaXAgaXMgdGllZCB0byBwaW4gWTE5IG9mIHRoZSBSWi9BMUgi
+LCB0aGF0J3MgZmluZSBiZWNhdXNlIGl0J3MgaGFyZHdhcmUgY29ubmVjdGlvbiB0aGF0J3Mgbm90
+IGdvaW5nIHRvIGNoYW5nZS4NCkJ1dC4uLnRoZSBEVCBhbHNvIGRlZmluZXMgdGhlIHBpbiBtdXhp
+bmcuLi53aGljaCBpcyBhIHNvZnR3YXJlIGRlY2lzaW9uIChkbyBJIHdhbnQgdG8gZ2V0IGludGVy
+cnVwdCBvciBqdXN0IG1hbnVhbGx5IHBvbGwgb3Igc2ltcGxlIGlnbm9yZSBpdCkuDQpUaGlzIGlz
+IHRoZSBwYXJ0IG9mIHRoZSB3aG9sZSAiRFQgaXMgZm9yIGhhcmR3YXJlIGRlc2NyaXB0aW9uIG9u
+bHkiIHRoYXQgZG9lc24ndCByZWFsbHkgbWFrZSBzZW5zZSB0byBtZS4NCg0KDQpDaHJpcw0KDQo=
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
