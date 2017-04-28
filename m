@@ -1,71 +1,89 @@
-From: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: r7s72100: add usb clocks to device tree
-Date: Fri, 28 Apr 2017 09:24:35 +0200
-Message-ID: <20170428072434.GD10196@verge.net.au>
-References: <20170427191045.21199-1-chris.brandt@renesas.com>
+From: jmondi <jacopo@jmondi.org>
+Subject: Re: [PATCH v5 00/10] Renesas RZ/A1 pin and gpio controller
+Date: Fri, 28 Apr 2017 09:24:57 +0200
+Message-ID: <20170428072457.GA4911@w540>
+References: <1493281194-5200-1-git-send-email-jacopo+renesas@jmondi.org>
+ <CAMuHMdWw1JpFLT0QY4yQK6VH0oSeQOHUWMuKFSj6b6vrhHPCdA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170427191045.21199-1-chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Cc: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <CAMuHMdWw1JpFLT0QY4yQK6VH0oSeQOHUWMuKFSj6b6vrhHPCdA@mail.gmail.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, Linus Walleij <linus.walleij@linaro.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Chris Brandt <chris.brandt@renesas.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 27, 2017 at 12:10:45PM -0700, Chris Brandt wrote:
-> This adds the USB0 and USB1 clocks to the device tree.
-> 
-> Signed-off-by: Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-> ---
->  arch/arm/boot/dts/r7s72100.dtsi            | 6 +++---
->  include/dt-bindings/clock/r7s72100-clock.h | 2 ++
->  2 files changed, 5 insertions(+), 3 deletions(-)
+Hi Geert, Simon,
 
-Hi Chris,
+On Thu, Apr 27, 2017 at 10:42:02AM +0200, Geert Uytterhoeven wrote:
+> Hi Jacopo,
+>
+> On Thu, Apr 27, 2017 at 10:19 AM, Jacopo Mondi
+> <jacopo+renesas@jmondi.org> wrote:
+> >    this is 5th round of gpio/pincontroller for RZ/A1 devices.
+> >
+> > I have updated the pin controller driver to use the newly introduced
+> > "pinctrl_enable()" function.
+> > This is required since v4.11-rc7 as otherwise, as reported by Chris Brandt,
+> > the pin controller does not start.
+> >
+> > I have incorporated your comments on the device tree bindings documentation,
+> > and added to pinctrl-generic.h header file two macros to unpack generic
+> > properties and their arguments.
+> >
+> > Tested with SCIF, RIIC, ETHER and gpio-leds on Genmai board.
+>
+> Thanks for the update!
+>
+> > Jacopo Mondi (10):
+> >   pinctrl: generic: Add bi-directional and output-enable
+>
+> Already applied by LinusW.
+>
+> >   pinctrl: generic: Add macros to unpack properties
+>
+> LinusW: do you want me to queue this together with the driver for v4.13,
+> or will you take this single patch for v4.12?
+>
+> >   pinctrl: Renesas RZ/A1 pin and gpio controller
+> >   dt-bindings: pinctrl: Add RZ/A1 bindings doc
+>
+> Will queue in sh-pfc-for-v4.13.
+>
+> >   arm: dts: dt-bindings: Add Renesas RZ/A1 pinctrl header
+> >   arm: dts: r7s72100: Add pin controller node
+> >   arm: dts: genmai: Add SCIF2 pin group
+> >   arm: dts: genmai: Add RIIC2 pin group
+> >   arm: dts: genmai: Add user led device nodes
+> >   arm: dts: genmai: Add ethernet pin group
+>
+> These are for Simon.
+>
+> Does applying the DTS changes before the driver introduce regressions?
+> If no, Simon can queue them for v4.13.
+> If yes, they'll have to wait for v4.14.
+>
 
-could you break the .h patch out into a separate patch so that I can apply
-it to my dt-bindings branch? The reason for that branch is to allow better
-management of dependencies; something I got burnt by a few releases back.
+I tried reverting patch [03/10] which introduces the driver, and I
+lose serial output on Genmai. So I guess the dts patches have to be
+taken after the driver has been merged.
 
-> 
-> diff --git a/arch/arm/boot/dts/r7s72100.dtsi b/arch/arm/boot/dts/r7s72100.dtsi
-> index fb54cb5d3fad..4ed12a4d9d51 100644
-> --- a/arch/arm/boot/dts/r7s72100.dtsi
-> +++ b/arch/arm/boot/dts/r7s72100.dtsi
-> @@ -144,9 +144,9 @@
->  			#clock-cells = <1>;
->  			compatible = "renesas,r7s72100-mstp-clocks", "renesas,cpg-mstp-clocks";
->  			reg = <0xfcfe0430 4>;
-> -			clocks = <&b_clk>;
-> -			clock-indices = <R7S72100_CLK_ETHER>;
-> -			clock-output-names = "ether";
-> +			clocks = <&b_clk>, <&p1_clk>, <&p1_clk>;
-> +			clock-indices = <R7S72100_CLK_ETHER R7S72100_CLK_USB0 R7S72100_CLK_USB1>;
-> +			clock-output-names = "ether", "usb0", "usb1";
+One question: why can't they be taken at the same time? (eg. for
+v4.13?)
 
-The above looks fine to me although I was unable to find the USB parent
-clock in the documentation I have available.
+Thanks
+   j
 
->  		};
->  
->  		mstp8_clks: mstp8_clks@fcfe0434 {
-> diff --git a/include/dt-bindings/clock/r7s72100-clock.h b/include/dt-bindings/clock/r7s72100-clock.h
-> index bc256d31099a..dcd2072151fc 100644
-> --- a/include/dt-bindings/clock/r7s72100-clock.h
-> +++ b/include/dt-bindings/clock/r7s72100-clock.h
-> @@ -34,6 +34,8 @@
->  
->  /* MSTP7 */
->  #define R7S72100_CLK_ETHER	4
-> +#define R7S72100_CLK_USB0	1
-> +#define R7S72100_CLK_USB1	0
->  
->  /* MSTP8 */
->  #define R7S72100_CLK_MMCIF	4
-
-The above also looks fine to me.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Thanks!
+>
+> Gr{oetje,eeting}s,
+>
+>                         Geert
+>
+> --
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+>
+> In personal conversations with technical people, I call myself a hacker. But
+> when I'm talking to journalists I just say "programmer" or something like that.
+>                                 -- Linus Torvalds
