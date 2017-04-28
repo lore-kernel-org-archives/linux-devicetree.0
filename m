@@ -1,107 +1,99 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH RFC 5/7] ASoC: Add Odroid sound DT bindings documentation
-Date: Fri, 28 Apr 2017 12:03:36 -0500
-Message-ID: <20170428170335.7zoovrcs6v22x3lz@rob-hp-laptop>
-References: <1492795191-31298-1-git-send-email-s.nawrocki@samsung.com>
- <CGME20170421172040epcas5p2ee7191a899c52ea3f077837dc2e865ca@epcas5p2.samsung.com>
- <1492795191-31298-6-git-send-email-s.nawrocki@samsung.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] streamline TLV320AIC23 drivers
+Date: Fri, 28 Apr 2017 12:11:15 -0500
+Message-ID: <20170428171115.6zc5nhspvkkgevs7@rob-hp-laptop>
+References: <b4127646-565b-ab16-0a8f-1fd6c263389e@ADLINKtech.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1492795191-31298-6-git-send-email-s.nawrocki@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Cc: linux-samsung-soc@vger.kernel.org, linux-clk@vger.kernel.org, dri-devel@lists.freedesktop.org, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, inki.dae@samsung.com, sw0312.kim@samsung.com, cw00.choi@samsung.com, javier@osg.samsung.com, krzk@kernel.org, jy0922.shim@samsung.com, broonie@kernel.org, b.zolnierkie@samsung.com
+In-Reply-To: <b4127646-565b-ab16-0a8f-1fd6c263389e-AbX7Xxim+f4qDJ6do+/SaQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jens Rottmann <Jens.Rottmann-AbX7Xxim+f4qDJ6do+/SaQ@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 21, 2017 at 07:19:49PM +0200, Sylwester Nawrocki wrote:
-> This patch adds DT binding documentation for Odroid XU3/4
-> sound subsystem.
+On Fri, Apr 21, 2017 at 09:22:02PM +0200, Jens Rottmann wrote:
+> The iMX-TLV320AIC23 driver isn't from Freescale, but from a company named
+> Eukrea Electromatique, originally for their own boards. From the code I get
+> the impression it is a bit older, its DT options use a differing naming
+> scheme. Patch it up a bit:
+
+Needs a subject following the format of the subsystem.
+
 > 
-> Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+> - Remove Eukrea naming, i.MX is from Freescale, TLV320AIC23 is from TI,
+>   driver was written by Eukrea, but it's DT capable, so it's not exclusive:
+>   - Kconfig option title
+>   - 'model' option
+>   - driver 'compatible' string
+> - Other options just have changed over time, this driver remaining (one of)
+>   the last with the old semantics:
+>   - 'audio-codec' option (also moved from ssi node)
+>   - 'mux-int/ext-port' options
+> - All options stay backwards compatible, the DT binding documents new and
+>   old names.
+> 
+> CONFIG variable and files have not been renamed, though, so no need to
+> change old defconfigs.
+> 
+> Signed-off-by: Jens Rottmann <Jens.Rottmann-AbX7Xxim+f4qDJ6do+/SaQ@public.gmane.org>
 > ---
->  .../devicetree/bindings/sound/samsung,odroid.txt   | 57 ++++++++++++++++++++++
->  1 file changed, 57 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/sound/samsung,odroid.txt
 > 
-> diff --git a/Documentation/devicetree/bindings/sound/samsung,odroid.txt b/Documentation/devicetree/bindings/sound/samsung,odroid.txt
-> new file mode 100644
-> index 0000000..c1ac70c
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/sound/samsung,odroid.txt
-> @@ -0,0 +1,57 @@
-> +Samsung Exynos Odroid XU3/XU4 audio complex with MAX98090 codec
-> +
-> +Required properties:
-> +
-> + - compatible - "samsung,odroidxu3-audio" - for Odroid XU3 board,
-> +		"samsung,odroidxu4-audio" - for Odroid XU4 board
-> + - model - the user-visible name of this sound complex
+> --- a/Documentation/devicetree/bindings/sound/eukrea-tlv320.txt
+> +++ b/Documentation/devicetree/bindings/sound/eukrea-tlv320.txt
 
-ASoC will support "label" soon (see graph support). Use that instead.
+Perhaps change the filename. The compatible string is a good choice.
 
-> + - 'cpu' subnode with a 'sound-dai' property containing the phandle of the I2S
-> +    controller
-> + - 'codec' subnode with a 'sound-dai' property containing list of phandles
-> +    to the CODEC nodes, first entry must be corresponding to the MAX98090
-> +    CODEC and the second entry must be the phandle of the HDMI IP block node
+> @@ -1,16 +1,23 @@
+> -Audio complex for Eukrea boards with tlv320aic23 codec.
+> +Audio complex for Freescale i.MX boards with TI TLV320AIC23 I2S codecs,
+> +like those from Eukrea Electromatique.
+>  
+>  Required properties:
+>  
+> -  - compatible		: "eukrea,asoc-tlv320"
+> +  - compatible		: "fsl,imx-audio-tlv320aic23" or
+> +			  "eukrea,asoc-tlv320" (deprecated)
+>  
+> -  - eukrea,model	: The user-visible name of this sound complex.
+> +  - model		: The user-visible name of this sound complex.
+> +  - eukrea,model	: Dito, deprecated.
+>  
+>    - ssi-controller	: The phandle of the SSI controller.
+>  
+> -  - fsl,mux-int-port	: The internal port of the i.MX audio muxer (AUDMUX).
+> +  - mux-int-port	: The internal port of the i.MX audio muxer (AUDMUX).
+> +  - fsl,mux-int-port	: Dito, deprecated.
+>  
+> -  - fsl,mux-ext-port	: The external port of the i.MX audio muxer.
+> +  - mux-ext-port	: The external port of the i.MX audio muxer.
+> +  - fsl,mux-ext-port	: Dito, deprecated.
 
-These are not properties, so move them to a sub-node section.
+Is this used elsewhere? This is FSL specific, so you should keep the 
+prefix.
 
-> + - clocks - should contain entries matching clock names in the clock-names
-> +    property
-> + - clock-names - should contain following entries:
-> +    - "epll" - indicating the EPLL output clock
-> +    - "i2s_rclk" - indicating the RCLK (root) clock of the I2S0 controller
-
-At least the 2nd one should be in the i2s node. This node isn't really a 
-h/w block, so it shouldn't have clocks IMO.
-
-> + - samsung,audio-widgets - this property specifies off-codec audio elements
-> +   like headphones or speakers, for details see widgets.txt
-> + - samsung,audio-routing - a list of the connections between audio
-> +   components;  each entry is a pair of strings, the first being the
-> +   connection's sink, the second being the connection's source;
-> +   valid names for sources and sinks are the MAX98090's pins (as
-> +   documented in its binding), and the jacks on the board
 > +
-> +   For Odroid X2:
-> +     "Headphone Jack", "Mic Jack", "DMIC"
-> +
-> +   For Odroid U3, XU3:
-> +     "Headphone Jack", "Speakers"
-> +
-> +   For Odroid XU4:
-> +     no entries
-> +
-> +Example:
-> +
-> +sound {
-> +	compatible = "samsung,odroidxu3-audio";
-
-> +	samsung,cpu-dai = <&i2s0>;
-> +	samsung,codec-dai = <&max98090>;
-
-Not documented. Nor needed?
-
-> +	model = "Odroid-XU3";
-> +	samsung,audio-routing =
-> +		"Headphone Jack", "HPL",
-> +		"Headphone Jack", "HPR",
-> +		"IN1", "Mic Jack",
-> +		"Mic Jack", "MICBIAS";
-> +
-> +	clocks = <&clock CLK_FOUT_EPLL>, <&i2s0 CLK_I2S_RCLK_SRC>;
-> +	clock-names = "epll", "sclk_i2s";
-> +
-> +	cpu {
-> +		sound-dai = <&i2s0 0>;
-> +	};
-> +	codec {
-> +		sound-dai = <&hdmi>, <&max98090>;
-> +	};
-> +};
-> -- 
-> 1.9.1
-> 
+> +  - audio-codec		: The phandle of the audio codec.
+>  
+>  Note: The AUDMUX port numbering should start at 1, which is consistent with
+>  hardware manual.
+> @@ -18,9 +25,10 @@ hardware manual.
+>  Example:
+>  
+>  	sound {
+> -		compatible = "eukrea,asoc-tlv320";
+> -		eukrea,model = "imx51-eukrea-tlv320aic23";
+> +		compatible = "fsl,imx-audio-tlv320aic23";
+> +		model = "imx51-eukrea-tlv320aic23";
+>  		ssi-controller = <&ssi2>;
+> -		fsl,mux-int-port = <2>;
+> -		fsl,mux-ext-port = <3>;
+> +		mux-int-port = <2>;
+> +		mux-ext-port = <3>;
+> +		audio-codec = <&codec>;
+>  	};
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
