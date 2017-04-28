@@ -1,115 +1,34 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v4 2/2] of: Add unit tests for applying overlays
-Date: Fri, 28 Apr 2017 18:13:20 +0200
-Message-ID: <CAMuHMdV=CsR9-VXw-M4yNUaBj_x0UCv-ic_YTz2xGxNZjUv5XA@mail.gmail.com>
-References: <1493165394-29367-1-git-send-email-frowand.list@gmail.com>
- <1493165394-29367-3-git-send-email-frowand.list@gmail.com>
- <CAMuHMdWLhLqjNgz6iUOY8LY1Jjn3-_iV2ncbOxYLCLZbf=Rz+w@mail.gmail.com> <59035E93.2060106@gmail.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v5 02/10] pinctrl: generic: Add macros to unpack properties
+Date: Fri, 28 Apr 2017 19:23:17 +0300
+Message-ID: <CAHp75VfTTQAHkZs3peTa3EE6v0FBw7D0W2q+5OO2WKA38SGE+g@mail.gmail.com>
+References: <1493281194-5200-1-git-send-email-jacopo+renesas@jmondi.org>
+ <1493281194-5200-3-git-send-email-jacopo+renesas@jmondi.org> <CACRpkdbkBtJGJ_5MVy2QSAa0zcKVm=_H+vC_kH4AUcX58TiaLg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kbuild-owner@vger.kernel.org>
-In-Reply-To: <59035E93.2060106@gmail.com>
-Sender: linux-kbuild-owner@vger.kernel.org
-To: Frank Rowand <frowand.list@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, stephen.boyd@linaro.org, Michal Marek <mmarek@suse.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-kbuild <linux-kbuild@vger.kernel.org>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdbkBtJGJ_5MVy2QSAa0zcKVm=_H+vC_kH4AUcX58TiaLg@mail.gmail.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Chris Brandt <chris.brandt@renesas.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Frank,
+On Fri, Apr 28, 2017 at 11:16 AM, Linus Walleij
+<linus.walleij@linaro.org> wrote:
+> On Thu, Apr 27, 2017 at 10:19 AM, Jacopo Mondi
+> <jacopo+renesas@jmondi.org> wrote:
 
-On Fri, Apr 28, 2017 at 5:24 PM, Frank Rowand <frowand.list@gmail.com> wrote:
-> On 04/28/17 04:25, Geert Uytterhoeven wrote:
->> On Wed, Apr 26, 2017 at 2:09 AM,  <frowand.list@gmail.com> wrote:
->>>  create mode 100644 drivers/of/unittest-data/overlay.dts
->>>  create mode 100644 drivers/of/unittest-data/overlay_bad_phandle.dts
->>>  create mode 100644 drivers/of/unittest-data/overlay_base.dts
->>
->> Shouldn't these be called .dtso instead of .dts?
+> But why.
 >
-> That is a good question.  I'm not worried about solving it this week for
-> this patch, because this could turn into a bikeshed and I can always
-> fix it with a patch if we decide to change.  But if we do want to change
-> the naming, I would like to make the decision in the next couple of
-> months.  I would like to see more progress on overlays in general
-> this summer, and plan to be working on them myself.
->
-> I _think_ there has been some discussion about source file naming on the
-> devicetree-compiler or devicetree list in the far distant past.  Or I
-> may just be mis-remembering.
->
-> As far as I know, the current dtc does not know any suffixes other than
-> .dts for source files.  Not that the compiler has to know, we can always
-> specify '-I dts'.
+> I have these two static inlines just below your new macros:
 
-That's not an obstacle, though. I've been compiling .dtso files into .dtbo
-files for several years, cfr.
-https://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers.git/log/?h=topic/renesas-overlays
++1.
 
-According to "make V=1", the kernel build system basically uses
+> We generally prefer static inlines over macros because they are easier
+> to read.
 
-    ./scripts/dtc/dtc -O dtb -o <file>.dtbo <file>.dtbo.dts.tmp
+Not only. It adds type checking as well AFAIUC.
 
-with <file>.dtbo.dts.tmp the preprocessed .dtso files.
-And dtc copes fine with that.
-
->>> --- a/drivers/of/unittest-data/Makefile
->>> +++ b/drivers/of/unittest-data/Makefile
->>
->>> +# enable creation of __symbols__ node
->>> +DTC_FLAGS_overlay := -@
->>> +DTC_FLAGS_overlay_bad_phandle := -@
->>> +DTC_FLAGS_overlay_base := -@
->>
->> This flag is needed for all DTs that will be involved with overlays.
->>
->> Hence what about enabling this globally instead, cfr. "Enable DT symbols when"
->> CONFIG_OF_OVERLAY is used
->> ("http://www.spinics.net/lists/devicetree/msg103363.html")?
->
-> And another really good question.
->
-> There are some issues.  I have thought about it enough to know there are issues,
-> but do not have a solution and do not think I know all the issues.  Some
-> possible issues (or perceived issues) are:
->
-> - The size of __symbols__ in an FDT (akd compile .dtb image) in either a kernel
->   image or a bootloader if overlays are not actually needed on a given system
->   (even if the system is physically capable of using overlays).
-
-What do you mean with "physically capable of using overlays"?
-The presence of expansion connectors, like Raspberry Pi and BeagleBone Black?
-
-Even lacking such connectors, an overlay could add hardware description that
-was just missing (forgotten, or lack of DT bindings) when the main DTB was
-built.
-
-I agree about the size, but you never know in advance if an overlay will
-be used or needed later.
-
-> - The size of __symbols__ in kernel memory if overlays are not actually needed
->   on a given system (even if the system is physically capable of using overlays.)
->   This could be possibly be enabled/disabled by a boot command, even if
->   __symbols__ is in the FDT.
-
-Agreed.  Not allowing overlays is akin to not allowing to load (more) kernel
-modules, and may increase security.
-
-> - A base FDT might want to have __symbols__ included with the expectation that
->   overlays will be used in the future.  (The FDT might be built for the boot
->   loader, then be stable for many kernel releases.)
->
-> - Should the creation of __symbols__ be a global switch, or should it be
->   controlled on a per dtb basis?  Or a combination of both?
-
-So you want to decouple OF overlay support in the Linux kernel from
-__symbols__ present in the DTBs built?
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+-- 
+With Best Regards,
+Andy Shevchenko
