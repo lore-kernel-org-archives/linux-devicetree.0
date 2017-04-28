@@ -1,102 +1,121 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [RFC 1/3] dt-binding: soc: qcom: Add binding for RFSA
-Date: Fri, 28 Apr 2017 12:42:39 -0500
-Message-ID: <20170428174239.x62opv5vzx2ce2wt@rob-hp-laptop>
-References: <20170422173519.5782-1-bjorn.andersson@linaro.org>
+Subject: Re: [PATCH 2/2] dt-bindings: phy: Add documentation for Mediatek
+ PCIe PHY
+Date: Fri, 28 Apr 2017 12:52:00 -0500
+Message-ID: <20170428175200.laakck7ill2lxtxc@rob-hp-laptop>
+References: <1492935453-17373-1-git-send-email-ryder.lee@mediatek.com>
+ <1492935453-17373-3-git-send-email-ryder.lee@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <20170422173519.5782-1-bjorn.andersson@linaro.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Frank Rowand <frowand.list@gmail.com>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <1492935453-17373-3-git-send-email-ryder.lee@mediatek.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Ryder Lee <ryder.lee@mediatek.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Apr 22, 2017 at 10:35:17AM -0700, Bjorn Andersson wrote:
-> This adds the binding for describing shared memory buffers for
-> implementing the remote filesystem protocol.
+On Sun, Apr 23, 2017 at 04:17:33PM +0800, Ryder Lee wrote:
+> Add documentation for PCIe PHY available in MT7623 series SoCs.
 > 
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
 > ---
+>  .../devicetree/bindings/phy/phy-mt7623-pcie.txt    | 67 ++++++++++++++++++++++
+>  1 file changed, 67 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/phy/phy-mt7623-pcie.txt
 > 
-> My initial attempt was to mimic the ramoops of just adding the compatible to
-> the reserved-memory node, but I have not been able to figure out a sane way of
-> getting hold of the base address in the case that the memory region is
-> described my a "size" only (done on some platforms).
-
-I prefer the ramoops way.
-
-> The problem is that we create the reserved_mem objects (and remove the
-> memblocks) while we're still operating on the flattened representation, so
-> without a phandle it doesn't seem like we have anything to perform the
-> comparison with later on.
-
-I'm not sure I follow.
-
-> 
->  .../devicetree/bindings/soc/qcom/qcom,rfsa.txt     | 43 ++++++++++++++++++++++
->  1 file changed, 43 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,rfsa.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,rfsa.txt b/Documentation/devicetree/bindings/soc/qcom/qcom,rfsa.txt
+> diff --git a/Documentation/devicetree/bindings/phy/phy-mt7623-pcie.txt b/Documentation/devicetree/bindings/phy/phy-mt7623-pcie.txt
 > new file mode 100644
-> index 000000000000..b4de0de74e46
+> index 0000000..27a9253
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/soc/qcom/qcom,rfsa.txt
-> @@ -0,0 +1,43 @@
-> +Qualcomm Remote File System Access binding
+> +++ b/Documentation/devicetree/bindings/phy/phy-mt7623-pcie.txt
+> @@ -0,0 +1,67 @@
+> +Mediatek MT7623 PCIe PHY
+> +-----------------------
 > +
-> +This binding describes the Qualcomm RFSA, which serves the purpose of managing
-> +the shared memory region used for remote processors to access block device data
-> +using the Remote Filesystem protocol.
+> +Required properties:
+> + - compatible: Should contain "mediatek,mt7623-pcie-phy"
+> + - #phy-cells: must be 0
+> + - clocks: Must contain an entry in clock-names.
+> +	See ../clocks/clock-bindings.txt for details.
+> + - clock-names: Must be "refclk"
+> + - resets: Must contain an entry in reset-names.
+> +	See ../reset/reset.txt for details.
+> + - reset-names: Must be "phy"
 > +
-> +- compatible:
-> +	Usage: required
-> +	Value type: <stringlist>
-> +	Definition: must be:
-> +		    "qcom,rfsa"
+> +Optional properties:
+> + - phy-switch: The PHY on PCIe port2 is shared with USB u3phy2. If you
+> +	want to enable port2, you should contain it.
 
-No versioning?
-
-> +
-> +- memory-region:
-> +	Usage: required
-> +	Value type: <prop-encoded-array>
-> +	Definition: handle to memory reservation the associated rfsa region.
-> +
-> +- qcom,client-id:
-> +	Usage: required
-> +	Value type: <u32>
-> +	Definition: identifier of the client to use this region for buffers.
-
-What determines these numbers?
+Need to state what the value is (i.e. a phandle to ?). Also needs a 
+vendor prefix.
 
 > +
-> += EXAMPLE
-> +The following example shows the RFSA setup for APQ8016, with the RFSA region
-> +for the Hexagon DSP (id #1) located at 0x86700000.
+> +Example:
 > +
-> +	reserved-memory {
-> +		#address-cells = <2>;
-> +		#size-cells = <2>;
-> +		ranges;
-> +
-> +		rmtfs: rmtfs@86700000 {
+> +	pcie0_phy: pciephy@1a149000 {
 
-I think you should have a compatible here even with the 2 node approach.
+pcie-phy@...
 
-> +			reg = <0x0 0x86700000 0x0 0xe0000>;
-> +			no-map;
-> +		};
+> +		compatible = "mediatek,mt7623-pcie-phy";
+> +		reg = <0 0x1a149000 0 0x1000>;
+> +		clocks = <&clk26m>;
+> +		clock-names = "pciephya_ref";
+> +		#phy-cells = <0>;
+> +		status = "disabled";
+
+Don't show status in examples.
+
 > +	};
 > +
-> +	hexagon-rfsa {
-> +		compatible = "qcom,rfsa";
-> +		memory-region = <&rmtfs>;
-> +
-> +		qcom,client-id = <1>;
+> +	pcie1_phy: pciephy@1a14a000 {
+> +		compatible = "mediatek,mt7623-pcie-phy";
+> +		reg = <0 0x1a14a000 0 0x1000>;
+> +		clocks = <&clk26m>;
+> +		clock-names = "pciephya_ref";
+> +		#phy-cells = <0>;
+> +		status = "disabled";
 > +	};
+> +
+> +	pcie2_phy: pciephy@1a244000 {
+> +		compatible = "mediatek,mt7623-pcie-phy";
+> +		reg = <0 0x1a244000 0 0x1000>;
+> +		clocks = <&clk26m>;
+> +		clock-names = "pciephya_ref";
+> +		#phy-cells = <0>;
+> +
+> +		phy-switch = <&hifsys>;
+> +		status = "disabled";
+> +	};
+> +
+> +Specifying phy control of devices
+> +---------------------------------
+> +
+> +Device nodes should specify the configuration required in their "phys"
+> +property, containing a phandle to the phy node and phy-names.
+> +
+> +Example:
+> +
+> +#include <dt-bindings/phy/phy.h>
+> +
+> +pcie: pcie@1a140000 {
+> +	...
+> +	pcie@1,0 {
+> +		...
+> +		phys = <&pcie0_phy>;
+> +		phy-names = "pcie-phy0";
+> +	}
+> +	...
+> +};
 > -- 
-> 2.12.0
+> 1.9.1
 > 
