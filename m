@@ -1,40 +1,55 @@
-From: frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Subject: [PATCH] of: unittest, fix possible use of unitialized variable
-Date: Thu, 27 Apr 2017 21:31:13 -0700
-Message-ID: <1493353873-24246-1-git-send-email-frowand.list@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [PATCH V4 1/9] PM / OPP: Allow OPP table to be used for
+ power-domains
+Date: Fri, 28 Apr 2017 10:30:29 +0530
+Message-ID: <20170428050029.GD21517@vireshk-i7>
+References: <e772e67a5445319bb8e0f312846ace666adc097f.1490001099.git.viresh.kumar@linaro.org>
+ <0a7146f9-72f1-317c-3aab-770a72462968@arm.com>
+ <20170413053736.GM5910@vireshk-i7>
+ <3adbef6a-7b43-528f-e88f-c2121d30a5d3@arm.com>
+ <20170417052758.GF28191@vireshk-i7>
+ <95aa4b97-4e1a-13bb-f4d8-982b778012ba@arm.com>
+ <9cd9287c-392b-d3ca-db7d-75c49287448e@codeaurora.org>
+ <20170426135532.ryrh276znet5yvks@sirena.org.uk>
+ <c66322f5-e2eb-5556-a5a5-14998a2f195d@arm.com>
+ <9019aebe-95ba-b1b8-65a9-5be927934218@codeaurora.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <9019aebe-95ba-b1b8-65a9-5be927934218@codeaurora.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: Sudeep Holla <sudeep.holla@arm.com>, Rajendra Nayak <rnayak@codeaurora.org>
+Cc: Mark Brown <broonie@kernel.org>, Rafael Wysocki <rjw@rjwysocki.net>, ulf.hansson@linaro.org, Kevin Hilman <khilman@linaro.org>, Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@codeaurora.org>, linaro-kernel@lists.linaro.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, Vincent Guittot <vincent.guittot@linaro.org>, robh+dt@kernel.org, lina.iyer@linaro.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Frank Rowand <frank.rowand-7U/KSKJipcs@public.gmane.org>
+On 27-04-17, 16:20, Rajendra Nayak wrote:
+> 
+> On 04/27/2017 03:12 PM, Sudeep Holla wrote:
+> []..
+> 
+> >>
+> >>> At qualcomm, we have an external M3 core (running its own firmware) which controls
+> >>> a few voltage rails (including AVS on those). The devices vote for the voltage levels
+> > 
+> > Thanks for explicitly mentioning this, but ...
+> > 
+> >>> (or performance levels) they need by passing an integer value to the M3 (not actual
+> > 
+> > you contradict here, is it just voltage or performance(i.e. frequency)
+> > or both ? We need clarity there to choose the right representation.
+> 
+> Its just voltage.
 
-Fix problem reported in the linux-next build.  last_sibling may be
-unitialized in of_unittest() if the device tree is empty.
+Right. Its just voltage in this case, but we can't speak of future
+platforms here and we have to consider this thing as an operating
+performance point only. I still think that this thread is moving in
+the right direction, specially after V6 which looks much better.
 
-Signed-off-by: Frank Rowand <frank.rowand-7U/KSKJipcs@public.gmane.org>
----
- drivers/of/unittest.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+If we have anything strong against the way V6 is trying to solve it, I
+want to talk about it right now and get inputs from all the parties
+involved. Scrapping all this work is fine, but I would like to do it
+ASAP in that case :)
 
-diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
-index 12597ff8cfb0..8f14a43f48e5 100644
---- a/drivers/of/unittest.c
-+++ b/drivers/of/unittest.c
-@@ -2119,7 +2119,7 @@ static int __init overlay_data_add(int onum)
-  */
- static __init void of_unittest_overlay_high_level(void)
- {
--	struct device_node *last_sibling;
-+	struct device_node *last_sibling = NULL;
- 	struct device_node *np;
- 	struct device_node *of_symbols;
- 	struct device_node *overlay_base_symbols;
 -- 
-Frank Rowand <frank.rowand-7U/KSKJipcs@public.gmane.org>
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+viresh
