@@ -1,64 +1,67 @@
-From: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH V4 1/9] PM / OPP: Allow OPP table to be used for
- power-domains
-Date: Fri, 28 Apr 2017 16:42:36 +0530
-Message-ID: <20170428111236.GG21517@vireshk-i7>
-References: <20170413053736.GM5910@vireshk-i7>
- <3adbef6a-7b43-528f-e88f-c2121d30a5d3@arm.com>
- <20170417052758.GF28191@vireshk-i7>
- <95aa4b97-4e1a-13bb-f4d8-982b778012ba@arm.com>
- <9cd9287c-392b-d3ca-db7d-75c49287448e@codeaurora.org>
- <20170426135532.ryrh276znet5yvks@sirena.org.uk>
- <c66322f5-e2eb-5556-a5a5-14998a2f195d@arm.com>
- <9019aebe-95ba-b1b8-65a9-5be927934218@codeaurora.org>
- <20170428050029.GD21517@vireshk-i7>
- <b3f5b62c-9423-98e4-d366-78186ab02fb9@arm.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v4 2/2] of: Add unit tests for applying overlays
+Date: Fri, 28 Apr 2017 13:25:17 +0200
+Message-ID: <CAMuHMdWLhLqjNgz6iUOY8LY1Jjn3-_iV2ncbOxYLCLZbf=Rz+w@mail.gmail.com>
+References: <1493165394-29367-1-git-send-email-frowand.list@gmail.com> <1493165394-29367-3-git-send-email-frowand.list@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <b3f5b62c-9423-98e4-d366-78186ab02fb9-5wv7dgnIgG8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Cc: Rajendra Nayak <rnayak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rafael Wysocki <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Viresh Kumar <vireshk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linaro-kernel-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Vincent Guittot <vincent.guittot-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, lina.iyer-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kbuild-owner@vger.kernel.org>
+In-Reply-To: <1493165394-29367-3-git-send-email-frowand.list@gmail.com>
+Sender: linux-kbuild-owner@vger.kernel.org
+To: Frank Rowand <frowand.list@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, stephen.boyd@linaro.org, Michal Marek <mmarek@suse.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-kbuild <linux-kbuild@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 28-04-17, 10:44, Sudeep Holla wrote:
-> Just thinking out loud, I can see platforms with have OPPs can move to
-> this binding in future eliminating the need to specify the clock and
-> regulators explicitly. So, I am not saying I against this idea, but I
-> see it might complicate the above case in terms of the precedence that
-> we consider in DT from backward compatibility.
-> 
-> E.g. if you now use this for just regulators, then I assume you continue
-> to use clocks. However, that makes it difficult for platforms
-> implementing *real* OPPs to reuse this binding as they may expect to
-> skip clock altogether.
-> 
-> Also we may need OPPs(both volt/freq), voltage only and clock only
-> bindings though all 3 are driven by the firmware and all are at abstract
-> levels. I am trying to broaden the scope now without having to churn
-> this binding again in near future.
-> 
-> So I don't totally agree that voltage regulators much have *real*
-> voltages and not abstract scale. Yes the correct bindings might have
-> such restrictions but can't we extend it ?
-> 
-> Anyways these are just my opinion.
+Hi Frank,
 
-Everyone's opinion has equal merit here :)
+On Wed, Apr 26, 2017 at 2:09 AM,  <frowand.list@gmail.com> wrote:
+> From: Frank Rowand <frank.rowand@sony.com>
+>
+> Existing overlay unit tests examine individual pieces of the overlay
+> code.  The new tests target the entire process of applying an overlay.
+>
+> Signed-off-by: Frank Rowand <frank.rowand@sony.com>
+> ---
+>
+> There are checkpatch warnings.  I have reviewed them and feel they
+> can be ignored.
+>
+>  drivers/of/fdt.c                                 |  14 +-
+>  drivers/of/of_private.h                          |  12 +
+>  drivers/of/unittest-data/Makefile                |  17 +-
+>  drivers/of/unittest-data/overlay.dts             |  53 ++++
+>  drivers/of/unittest-data/overlay_bad_phandle.dts |  20 ++
+>  drivers/of/unittest-data/overlay_base.dts        |  80 ++++++
+>  drivers/of/unittest.c                            | 317 +++++++++++++++++++++++
+>  7 files changed, 505 insertions(+), 8 deletions(-)
+>
+>  create mode 100644 drivers/of/unittest-data/overlay.dts
+>  create mode 100644 drivers/of/unittest-data/overlay_bad_phandle.dts
+>  create mode 100644 drivers/of/unittest-data/overlay_base.dts
 
-I believe that some of your hesitation came from the point that I have
-made opp-hz optional. That isn't the case anymore with V6.
+Shouldn't these be called .dtso instead of .dts?
 
-Can we please take the discussion to that thread now and see if you
-can find similar problems there as well.
+> --- a/drivers/of/unittest-data/Makefile
+> +++ b/drivers/of/unittest-data/Makefile
 
-Thanks a lot.
+> +# enable creation of __symbols__ node
+> +DTC_FLAGS_overlay := -@
+> +DTC_FLAGS_overlay_bad_phandle := -@
+> +DTC_FLAGS_overlay_base := -@
 
--- 
-viresh
+This flag is needed for all DTs that will be involved with overlays.
+
+Hence what about enabling this globally instead, cfr. "Enable DT symbols when"
+CONFIG_OF_OVERLAY is used
+("http://www.spinics.net/lists/devicetree/msg103363.html")?
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
