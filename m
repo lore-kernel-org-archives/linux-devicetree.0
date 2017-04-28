@@ -1,44 +1,59 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] ARM: dts: r7s72100: add usb clocks to device tree
-Date: Fri, 28 Apr 2017 17:39:30 +0200
-Message-ID: <20170428153927.GA21522@verge.net.au>
-References: <20170427191045.21199-1-chris.brandt@renesas.com>
- <CAMuHMdXEtefpaUJbbJ7LYjYR2oHaE-epy=eZnAyE-+=GWsy9xg@mail.gmail.com>
- <20170428080400.GI10196@verge.net.au>
- <SG2PR06MB1165D398BD7100FAC5AAEDC68A130@SG2PR06MB1165.apcprd06.prod.outlook.com>
- <CAMuHMdXp75yepEMh-S0YNYqKRESb4m3DtcfG09x=uj1Fm51b_A@mail.gmail.com>
+From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 2/2] of: fix unittest build without CONFIG_OF_OVERLAY
+Date: Fri, 28 Apr 2017 08:40:50 -0700
+Message-ID: <59036282.3050502@gmail.com>
+References: <20170428094429.2396195-1-arnd@arndb.de>
+ <20170428094429.2396195-2-arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdXp75yepEMh-S0YNYqKRESb4m3DtcfG09x=uj1Fm51b_A@mail.gmail.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Chris Brandt <Chris.Brandt@renesas.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170428094429.2396195-2-arnd-r2nGTMty4D4@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 28, 2017 at 04:27:45PM +0200, Geert Uytterhoeven wrote:
-> Hi Chris,
+On 04/28/17 02:44, Arnd Bergmann wrote:
+> We get a link error when the new tests are used by overlays
+> are not:
 > 
-> On Fri, Apr 28, 2017 at 2:47 PM, Chris Brandt <Chris.Brandt@renesas.com> wrote:
-> > On Friday, April 28, 2017, Simon Horman wrote:
-> >> On Fri, Apr 28, 2017 at 09:34:54AM +0200, Geert Uytterhoeven wrote:
-> >> > On Thu, Apr 27, 2017 at 9:10 PM, Chris Brandt <chris.brandt@renesas.com>
-> >> wrote:
-> >> > > This adds the USB0 and USB1 clocks to the device tree.
+> drivers/of/built-in.o: In function `unflatten_device_tree':
+> (.init.text+0x967): undefined reference to `unittest_unflatten_overlay_base'
 > 
-> >> > Simon: see Section 29.3.2 (BUSWAIT) for the reference to the P1 clock.
-> >>
-> >> Thanks, I see that now.
-> >
-> > I was going to say that I simply look at sections:
-> >   6.10.6 Internal Clock Signals (1)
-> >   6.10.7 Internal Clock Signals (2)
-> >
-> > Because it lists all the IP blocks and their corresponding clock sources in one place.
+> This makes the #ifdef check match the symbols that lead to building
+> the unittest_unflatten_overlay_base function.
 > 
-> Cool, I grew up with rev. 0.60 of the user manual, so I wasn't aware of
-> that secton.
+> Fixes: 81d0848fc8d2 ("of: Add unit tests for applying overlays")
+> Signed-off-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+> ---
+>  drivers/of/of_private.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/of/of_private.h b/drivers/of/of_private.h
+> index de5c604f5cc4..4ebb0149d118 100644
+> --- a/drivers/of/of_private.h
+> +++ b/drivers/of/of_private.h
+> @@ -55,7 +55,7 @@ static inline int of_property_notify(int action, struct device_node *np,
+>  }
+>  #endif /* CONFIG_OF_DYNAMIC */
+>  
+> -#ifdef CONFIG_OF_UNITTEST
+> +#if defined(CONFIG_OF_UNITTEST) && defined(CONFIG_OF_OVERLAY)
+>  extern void __init unittest_unflatten_overlay_base(void);
+>  #else
+>  static inline void unittest_unflatten_overlay_base(void) {};
+> 
 
-Thanks, now I'm not looking at 0.60 any more I see the sections Chris
-mentions too.
+I thought I had tested that OF_UNITTEST forced OF_OVERLAY.  But
+going back and trying again, I can confirm your results that it
+does not.  Thanks for catching this!
+
+Reviewed-by: Frank Rowand <frank.rowand-7U/KSKJipcs@public.gmane.org>
+Tested-by: Frank Rowand <frank.rowand-7U/KSKJipcs@public.gmane.org>
+
+-Frank
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
