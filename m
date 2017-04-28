@@ -1,63 +1,101 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] iio: adc: add driver for the ti-adc084s021 chip
-Date: Fri, 28 Apr 2017 08:52:48 -0500
-Message-ID: <20170428135248.du6smmzktqldj4u4@rob-hp-laptop>
-References: <1492786703-5149-1-git-send-email-marten.lindahl@axis.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1492786703-5149-1-git-send-email-marten.lindahl-VrBV9hrLPhE@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?iso-8859-1?Q?M=E5rten?= Lindahl <marten.lindahl-VrBV9hrLPhE@public.gmane.org>
-Cc: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?iso-8859-1?Q?M=E5rten?= Lindahl <martenli-VrBV9hrLPhE@public.gmane.org>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: [PATCH 1/2] [media] dt-bindings: Add bindings for video-multiplexer device
+Date: Fri, 28 Apr 2017 16:13:29 +0200
+Message-ID: <20170428141330.16187-1-p.zabel@pengutronix.de>
+Return-path: <linux-media-owner@vger.kernel.org>
+Sender: linux-media-owner@vger.kernel.org
+To: linux-media@vger.kernel.org
+Cc: devicetree@vger.kernel.org, Steve Longerbeam <slongerbeam@gmail.com>, Peter Rosin <peda@axentia.se>, Sakari Ailus <sakari.ailus@iki.fi>, Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>, kernel@pengutronix.de, Philipp Zabel <p.zabel@pengutronix.de>, Sascha Hauer <s.hauer@pengutronix.de>, Steve Longerbeam <steve_longerbeam@mentor.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 21, 2017 at 04:58:23PM +0200, Mårten Lindahl wrote:
-> From: Mårten Lindahl <martenli-VrBV9hrLPhE@public.gmane.org>
-> 
-> This adds support for the Texas Instruments ADC084S021 ADC chip.
-> 
-> Signed-off-by: Mårten Lindahl <martenli-VrBV9hrLPhE@public.gmane.org>
-> ---
->  .../devicetree/bindings/iio/adc/ti-adc084s021.txt  |  25 ++
+Add bindings documentation for the video multiplexer device.
 
-It's preferred to put bindings in a separate patch.
+Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
+Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+Signed-off-by: Steve Longerbeam <steve_longerbeam@mentor.com>
+---
+This has been last sent as part of Steve's i.MX media series. Since the binding
+changed, I've dropped Rob's ack.
 
->  drivers/iio/adc/Kconfig                            |  12 +
->  drivers/iio/adc/Makefile                           |   1 +
->  drivers/iio/adc/ti-adc084s021.c                    | 342 +++++++++++++++++++++
->  4 files changed, 380 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/adc/ti-adc084s021.txt
->  create mode 100644 drivers/iio/adc/ti-adc084s021.c
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/adc/ti-adc084s021.txt b/Documentation/devicetree/bindings/iio/adc/ti-adc084s021.txt
-> new file mode 100644
-> index 0000000..921eb46
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/adc/ti-adc084s021.txt
-> @@ -0,0 +1,25 @@
-> +* Texas Instruments' ADC084S021
-> +
-> +Required properties:
-> + - compatible        : Must be "ti,adc084s021"
-> + - reg               : SPI chip select number for the device
-> + - vref-supply       : The regulator supply for ADC reference voltage
-> + - spi-max-frequency : Definition as per Documentation/devicetree/bindings/spi/spi-bus.txt
-> +
-> +Optional properties:
-> + - spi-cpol          : SPI inverse clock polarity, as per spi-bus bindings
-> + - spi-cpha          : SPI shifted clock phase (CPHA), as per spi-bus bindings
-> + - spi-cs-high       : SPI chip select active high, as per spi-bus bindings
+Changes since https://patchwork.kernel.org/patch/9647951/:
+ - Replaced re, bit-mask/shift, and gpios properties with a single mux-controls
+   property, leaving the actual operation of the mux to a separate mux
+   controller, as described by Peter's mux-controller bindings:
+   https://patchwork.kernel.org/patch/9695835/
+ - Shortened 'video-multiplexer' compatible to 'video-mux', aligning with the
+   other mux bindings.
+ - Added a comment about the optional ports node and a link to the OF graph
+   bindings document.
+---
+ .../devicetree/bindings/media/video-mux.txt        | 60 ++++++++++++++++++++++
+ 1 file changed, 60 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/video-mux.txt
 
-How are these optional? A given device should have specific properties 
-required here.
-
-Also, no need to define them, "per spi-bus bindings" is enough.
-
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/media/video-mux.txt b/Documentation/devicetree/bindings/media/video-mux.txt
+new file mode 100644
+index 0000000000000..63b9dc913e456
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/video-mux.txt
+@@ -0,0 +1,60 @@
++Video Multiplexer
++=================
++
++Video multiplexers allow to select between multiple input ports. Video received
++on the active input port is passed through to the output port. Muxes described
++by this binding are controlled by a multiplexer controller that is described by
++the bindings in Documentation/devicetree/bindings/mux/mux-controller.txt
++
++Required properties:
++- compatible : should be "video-mux"
++- mux-controls : mux controller node to use for operating the mux
++- #address-cells: should be <1>
++- #size-cells: should be <0>
++- port@*: at least three port nodes containing endpoints connecting to the
++  source and sink devices according to of_graph bindings. The last port is
++  the output port, all others are inputs.
++
++Optionally, #address-cells, #size-cells, and port nodes can be grouped under a
++ports node as described in Documentation/devicetree/bindings/graph.txt.
++
++Example:
++
++	mux: mux-controller {
++		compatible = "gpio-mux";
++		#mux-control-cells = <0>;
++
++		mux-gpios = <&gpio1 15 GPIO_ACTIVE_HIGH>;
++	};
++
++	video-mux {
++		compatible = "video-mux";
++		mux-controls = <&mux>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		port@0 {
++			reg = <0>;
++
++			mux_in0: endpoint {
++				remote-endpoint = <&video_source0_out>;
++			};
++		};
++
++		port@1 {
++			reg = <1>;
++
++			mux_in1: endpoint {
++				remote-endpoint = <&video_source1_out>;
++			};
++		};
++
++		port@2 {
++			reg = <2>;
++
++			mux_out: endpoint {
++				remote-endpoint = <&capture_interface_in>;
++			};
++		};
++	};
++};
+-- 
+2.11.0
