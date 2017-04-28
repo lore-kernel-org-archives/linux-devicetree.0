@@ -1,42 +1,31 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] net: dsa: b53: Add compatible strings for the
- Cygnus-family BCM11360.
-Date: Fri, 28 Apr 2017 15:25:36 -0500
-Message-ID: <20170428202536.pmo4ktea7bo6okbv@rob-hp-laptop>
-References: <20170425235357.7690-1-eric@anholt.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170425235357.7690-1-eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-Cc: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Vivien Didelot <vivien.didelot-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+From: Jon Mason <jon.mason@broadcom.com>
+Subject: [PATCH 0/3] USB3 support for Broadcom NS2 SoC
+Date: Fri, 28 Apr 2017 16:29:38 -0400
+Message-ID: <1493411381-16833-1-git-send-email-jon.mason@broadcom.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Florian Fainelli <florian.fainelli@broadcom.com>, Kishon Vijay Abraham I <kishon@ti.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: bcm-kernel-feedback-list@broadcom.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 25, 2017 at 04:53:56PM -0700, Eric Anholt wrote:
-> Cygnus is a small family of SoCs, of which we currently have
-> devicetree for BCM11360 and BCM58300.  The 11360's B53 is mostly the
-> same as 58xx, just requiring a tiny bit of setup that was previously
-> missing.
-> 
-> Signed-off-by: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-> Reviewed-by: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
-> 
-> v2: Reorder the entry in the docs (suggestion by Scott Branden), add
->     missing '"'
-> 
->  Documentation/devicetree/bindings/net/dsa/b53.txt | 3 +++
->  drivers/net/dsa/b53/b53_srab.c                    | 2 ++
->  2 files changed, 5 insertions(+)
+This patch set contains the USB3 support for Broadcom NS2 SoC.  The USB3
+PHY is connected through the MDIO interface.
 
-Everyone learns the hard way that specific compatibles are needed.
+Yendapally Reddy Dhananjaya Reddy (3):
+  dt-bindings: phy: Add documentation for NS2 USB3 PHY
+  phy: Add USB3 PHY support for Broadcom NS2 SoC
+  arm64: dts: ns2: Add USB3 Support
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+ .../devicetree/bindings/phy/brcm,ns2-usb3-phy.txt  |  82 +++
+ arch/arm64/boot/dts/broadcom/ns2-svk.dts           |  16 +
+ arch/arm64/boot/dts/broadcom/ns2-xmc.dts           |   8 +
+ arch/arm64/boot/dts/broadcom/ns2.dtsi              |  62 +++
+ drivers/phy/Kconfig                                |   9 +
+ drivers/phy/Makefile                               |   1 +
+ drivers/phy/phy-bcm-ns2-usb3.c                     | 596 +++++++++++++++++++++
+ 7 files changed, 774 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/brcm,ns2-usb3-phy.txt
+ create mode 100644 drivers/phy/phy-bcm-ns2-usb3.c
 
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+2.7.4
