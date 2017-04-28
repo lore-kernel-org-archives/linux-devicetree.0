@@ -1,137 +1,40 @@
-From: Ryder Lee <ryder.lee@mediatek.com>
-Subject: Re: [PATCH 1/2] PCI: mediatek: Add Mediatek PCIe host controller
- support
-Date: Fri, 28 Apr 2017 10:46:48 +0800
-Message-ID: <1493347608.29314.56.camel@mtkswgap22>
-References: <1492935543-18190-1-git-send-email-ryder.lee@mediatek.com>
-         <1492935543-18190-2-git-send-email-ryder.lee@mediatek.com>
-         <CAK8P3a39TFkJ5=jp8me+Dyg-Qi-N_1ZKxpJGvnhmPEo4csnFCw@mail.gmail.com>
-         <1493194200.27023.79.camel@mtkswgap22>
-         <CAK8P3a0DjPL8uWuXfCmEwt05SCPJ0yEQTAJmZAPtFDEfsn4a1Q@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <CAK8P3a0DjPL8uWuXfCmEwt05SCPJ0yEQTAJmZAPtFDEfsn4a1Q@mail.gmail.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: devicetree@vger.kernel.org, linux-pci <linux-pci@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Bjorn Helgaas <bhelgaas@google.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>
+From: frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Subject: [PATCH] of: unittest, fix possible use of unitialized variable
+Date: Thu, 27 Apr 2017 21:31:13 -0700
+Message-ID: <1493353873-24246-1-git-send-email-frowand.list@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+From: Frank Rowand <frank.rowand-7U/KSKJipcs@public.gmane.org>
 
-On Thu, 2017-04-27 at 20:55 +0200, Arnd Bergmann wrote:
-> On Wed, Apr 26, 2017 at 10:10 AM, Ryder Lee <ryder.lee@mediatek.com> wrote:
-> > On Tue, 2017-04-25 at 14:38 +0200, Arnd Bergmann wrote:
-> >> On Sun, Apr 23, 2017 at 10:19 AM, Ryder Lee <ryder.lee@mediatek.com> wrote:
-> 
-> >> > +static int mtk_pcie_enable_ports(struct mtk_pcie *pcie)
-> >> > +{
-> >> > +       struct device *dev = pcie->dev;
-> >> > +       struct mtk_pcie_port *port, *tmp;
-> >> > +       int err, linkup = 0;
-> >> > +
-> >> > +       list_for_each_entry_safe(port, tmp, &pcie->ports, list) {
-> >> > +               err = clk_prepare_enable(port->sys_ck);
-> >> > +               if (err) {
-> >> > +                       dev_err(dev, "failed to enable port%d clock\n",
-> >> > +                               port->index);
-> >> > +                       continue;
-> >> > +               }
-> >> > +
-> >> > +               /* assert RC */
-> >> > +               reset_control_assert(port->reset);
-> >> > +               /* de-assert RC */
-> >> > +               reset_control_deassert(port->reset);
-> >> > +
-> >> > +               /* power on PHY */
-> >> > +               err = phy_power_on(port->phy);
-> >> > +               if (err) {
-> >> > +                       dev_err(dev, "failed to power on port%d phy\n",
-> >> > +                               port->index);
-> >> > +                       goto err_phy_on;
-> >> > +               }
-> >> > +
-> >> > +               mtk_pcie_assert_ports(port);
-> >> > +
-> >>
-> >> Similar to the comment I had for the binding, I wonder if it would be
-> >> better to keep all the information about the ports in one place and
-> >> then just deal with it at the root level.
-> >>
-> >> Alternatively, we could decide to standardize on the properties
-> >> you have added to the pcie port node, but then I would handle
-> >> them in the pcieport driver rather than in the host bridge driver.
-> >
-> > Sorry, I'm not sure what you want me to do here.
-> >
-> > I could move all clock operation in root level. But we need to keep the
-> > reset and PHY operation sequence in the loop, In addition, we could
-> > easily free resources if ports link fail.
-> >
-> > How about moving this function to mtk_pcie_parse_and_add_res()?
-> 
-> That could work, please try it out and see if the code gets better or
-> worse. This may depend on what we end up doing with the DT
-> properties.
+Fix problem reported in the linux-next build.  last_sibling may be
+unitialized in of_unittest() if the device tree is empty.
 
-I will try it on next version, and we can continue our discussion on
-that series.
+Signed-off-by: Frank Rowand <frank.rowand-7U/KSKJipcs@public.gmane.org>
+---
+ drivers/of/unittest.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> >> > +/*
-> >> > + * This IP lacks interrupt status register to check or map INTx from
-> >> > + * different devices at the same time.
-> >> > + */
-> >> > +static int __init mtk_pcie_map_irq(const struct pci_dev *dev, u8 slot, u8 pin)
-> >> > +{
-> >> > +       struct mtk_pcie *pcie = dev->bus->sysdata;
-> >> > +       struct mtk_pcie_port *port;
-> >> > +
-> >> > +       list_for_each_entry(port, &pcie->ports, list)
-> >> > +               if (port->index == slot)
-> >> > +                       return port->irq;
-> >> > +
-> >> > +       return -1;
-> >> > +}
-> >>
-> >> This looks odd, what is it needed for specifically? It looks like
-> >> it's broken for devices behind bridges, and the interrupt mapping
-> >> should normally come from the interrupt-map property, without
-> >> the need for a driver specific map_irq override.
-> >
-> > Our hardware just has a GIC for each port and lacks interrupt status for
-> > host driver to distinguish INTx. So I return port IRQ here.
-> 
-> You should still be able to express this with standard interrupt-map
-> DT property, without having to resort to your own map_irq
-> callback handler.
-> 
-> In the interrupt-map-mask, you can ignore the interrupt line
-> only list the devfn of the root ports for each entry.
+diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
+index 12597ff8cfb0..8f14a43f48e5 100644
+--- a/drivers/of/unittest.c
++++ b/drivers/of/unittest.c
+@@ -2119,7 +2119,7 @@ static int __init overlay_data_add(int onum)
+  */
+ static __init void of_unittest_overlay_high_level(void)
+ {
+-	struct device_node *last_sibling;
++	struct device_node *last_sibling = NULL;
+ 	struct device_node *np;
+ 	struct device_node *of_symbols;
+ 	struct device_node *overlay_base_symbols;
+-- 
+Frank Rowand <frank.rowand-7U/KSKJipcs@public.gmane.org>
 
-Okay, I will fix it.
-
-> >> > +static int mtk_pcie_register_ports(struct mtk_pcie *pcie)
-> >> > +{
-> >> > +       struct pci_bus *bus, *child;
-> >> > +
-> >> > +       bus = pci_scan_root_bus(pcie->dev, 0, &mtk_pcie_ops, pcie,
-> >> > +                               &pcie->resources);
-> >>
-> >> Can you use the new pci_register_host_bridge() method instead of
-> >> pci_scan_root_bus() here?
-> >
-> > May I know what's difference between pci_scan_root_bus() and using
-> > pci_register_host_bridge() directly? What situation should we use it?
-> > It seems that just tegra use this new method currently.
-> 
-> We introduced the new function for tegra for now, in the long run
-> I would hope we can convert all other drivers to it as well, to make it
-> easier to add further parameters.
-> 
-> The new function also has a cleaner way of dealing with the memory
-> allocations, similar to how other subsystems work.
-
-Sounds good. I will change to use that.
-
-Thanks!
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
