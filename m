@@ -1,94 +1,84 @@
-From: "Langer, Thomas" <thomas.langer@intel.com>
-Subject: RE: [PATCH v2] clk: Provide dummy of_clk_get_from_provider() for
- compile-testing
-Date: Fri, 28 Apr 2017 14:55:48 +0000
-Message-ID: <0DAF21CFE1B20740AE23D6AF6E54843F1E8AF019@IRSMSX101.ger.corp.intel.com>
-References: <1493384933-31297-1-git-send-email-geert+renesas@glider.be>
+From: "Olimpiu Dejeu" <olimpiu-eV7fy4qpoLhpLGFMi4vTTA@public.gmane.org>
+Subject: RE: [PATCH v8 1/3] backlight arcxcnn add arc to vendor prefix
+Date: Fri, 28 Apr 2017 11:04:11 -0400
+Message-ID: <355401d2c030$b2aa63c0$17ff2b40$@arcticsand.com>
+References: <1489607133-7870-1-git-send-email-olimpiu@arcticsand.com> <CAL_JsqJ+=fQ2e752iCHs0dbdrkotuDtKp=2Z2_xnyCtMnxWV8A@mail.gmail.com> <2aac01d2bd24$17449a90$45cdcfb0$@arcticsand.com> <000301d2bde2$10822970$31867c50$@gmail.com> <CAMuHMdXbKH5hojvj+N8W0h7znw8iAGo1Y1NyFHjrfQ1n0-XQKA@mail.gmail.com> <001301d2bf7d$919d2d60$b4d78820$@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <1493384933-31297-1-git-send-email-geert+renesas@glider.be>
-Content-Language: en-US
-Sender: linux-clk-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert+renesas@glider.be>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, John Crispin <john@phrozen.org>, Ralf Baechle <ralf@linux-mips.org>
-Cc: "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-mips@linux-mips.org" <linux-mips@linux-mips.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain;
+        charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <001301d2bf7d$919d2d60$b4d78820$@gmail.com>
+Content-Language: en-us
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: 'Jingoo Han' <jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: 'Rob Herring' <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, 'Lee Jones' <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, 'Geert Uytterhoeven' <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, 'Linux Fbdev development list' <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Brian Dodge <bdodge-eV7fy4qpoLhpLGFMi4vTTA@public.gmane.org>, 'Joe Perches' <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>, 'Daniel Thompson' <daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+> On Thursday, April 27, 2017 8:37 AM, Geert Uytterhoeven wrote:
+> > On Tue, Apr 25, 2017 at 6:36 PM, Jingoo Han <jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> =
+wrote:
+> > > On Monday, April 24, 2017 1:56 PM, Olimpiu Dejeu wrote:
+> > >>
+> > >> On Mon, April 24, 2017 11:10 AM, Rob Herring < robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> =
+wrote:
+> > >>
+> > >> > On Wed, Mar 15, 2017 at 2:45 PM, Olimpiu Dejeu
+> > <olimpiu-eV7fy4qpoLhpLGFMi4vTTA@public.gmane.org>
+> > >> wrote:
+> > >> >> backlight: Add arc to vendor prefixes
+> > >> >> Signed-off-by: Olimpiu Dejeu <olimpiu-eV7fy4qpoLhpLGFMi4vTTA@public.gmane.org>
+> > >> >> ---
+> > >> >> v8:
+> > >> >> - Version to match other patches in set
+> > >> >>
+> > >> >>  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+> > >> >>  1 file changed, 1 insertion(+)
+> > >> >>
+> > >> >> diff --git=20
+> > >> >> a/Documentation/devicetree/bindings/vendor-prefixes.txt
+> > >> >> b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> > >> >> index 16d3b5e..6f33a4b 100644
+> > >> >> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
+> > >> >> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> > >> >> @@ -28,6 +28,7 @@ andestech     Andes Technology Corporation
+> > >> >>  apm    Applied Micro Circuits Corporation (APM)
+> > >> >>  aptina Aptina Imaging
+> > >> >>  arasan Arasan Chip Systems
+> > >> >> +arc    Arctic Sand
+> > >>
+> > >> >arc is also a cpu arch. While not a vendor, it could be =
+confusing.=20
+> > >> >How
+> > >> about "arctic" >instead?
+> > >>
+> > >> Rob, will do, i.e. I will change it to "arctic"
+> > >
+> > > Hi Olimpiu,
+> > >
+> > > Oh, "arc" and "arctic" is totally different.
+> > > In my opinion, one of the purposes of DT is to describe hardware =
+stuffs.
+> > > So, please use more detailed words.
+> >=20
+> > Already acquired by Murata?
+
+> Yes, Murata already announced the agreement of acquisition. [1]
+
+> To Olimpiu Dejeu,
+> What is your company's plan about naming?
+> The brand name 'Artic Sand' will be continued or not?
+
+The brand name 'Arctic Sand' will be continued=20
+
+> If not, you should replace 'Artic Sand' with 'Murata'.
+> As you said earlier, changing DT names is not easy after merging.
+
+> Best regards,
+> Jingoo Han
 
 
-> -----Original Message-----
-> From: devicetree-owner@vger.kernel.org [mailto:devicetree-
-> owner@vger.kernel.org] On Behalf Of Geert Uytterhoeven
-> Sent: Friday, April 28, 2017 3:09 PM
-> To: Michael Turquette <mturquette@baylibre.com>; Stephen Boyd
-> <sboyd@codeaurora.org>; Russell King <linux@armlinux.org.uk>; Rob Herring
-> <robh+dt@kernel.org>; Mark Rutland <mark.rutland@arm.com>; John Crispin
-> <john@phrozen.org>; Ralf Baechle <ralf@linux-mips.org>
-> Cc: linux-clk@vger.kernel.org; devicetree@vger.kernel.org; linux-
-> mips@linux-mips.org; linux-kernel@vger.kernel.org; Geert Uytterhoeven
-> <geert+renesas@glider.be>
-> Subject: [PATCH v2] clk: Provide dummy of_clk_get_from_provider() for
-> compile-testing
-> 
-> When CONFIG_ON=n, dummies are provided for of_clk_get() and
-> of_clk_get_by_name(), but not for of_clk_get_from_provider().
-> 
-> Provide a dummy for the latter, to improve the ability to do
-> compile-testing.  This requires removing the existing dummy in the
-> Lantiq clock code.
-> 
-> Fixes: 766e6a4ec602d0c1 ("clk: add DT clock binding support")
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-
-Regarding the Lantiq part:
-Acked-by: Thomas Langer <thomas.langer@intel.com>
-
-> ---
-> v2:
->   - Remove conflicting dummy in Lantiq clock code (reported by 0day).
-> ---
->  arch/mips/lantiq/clk.c | 5 -----
->  include/linux/clk.h    | 4 ++++
->  2 files changed, 4 insertions(+), 5 deletions(-)
-> 
-> diff --git a/arch/mips/lantiq/clk.c b/arch/mips/lantiq/clk.c
-> index 149f0513c4f5d0d4..a263d1b751ffe48d 100644
-> --- a/arch/mips/lantiq/clk.c
-> +++ b/arch/mips/lantiq/clk.c
-> @@ -160,11 +160,6 @@ void clk_deactivate(struct clk *clk)
->  }
->  EXPORT_SYMBOL(clk_deactivate);
-> 
-> -struct clk *of_clk_get_from_provider(struct of_phandle_args *clkspec)
-> -{
-> -	return NULL;
-> -}
-> -
->  static inline u32 get_counter_resolution(void)
->  {
->  	u32 res;
-> diff --git a/include/linux/clk.h b/include/linux/clk.h
-> index e9d36b3e49de5b1b..3ed97abb5cbb7f94 100644
-> --- a/include/linux/clk.h
-> +++ b/include/linux/clk.h
-> @@ -539,6 +539,10 @@ static inline struct clk *of_clk_get_by_name(struct
-> device_node *np,
->  {
->  	return ERR_PTR(-ENOENT);
->  }
-> +static inline struct clk *of_clk_get_from_provider(struct of_phandle_args
-> *clkspec)
-> +{
-> +	return ERR_PTR(-ENOENT);
-> +}
->  #endif
-> 
->  #endif
-> --
-> 2.7.4
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
