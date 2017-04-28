@@ -1,7 +1,7 @@
 From: Jon Mason <jon.mason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH 1/3] dt-bindings: phy: Add documentation for NS2 USB3 PHY
-Date: Fri, 28 Apr 2017 16:29:39 -0400
-Message-ID: <1493411381-16833-2-git-send-email-jon.mason@broadcom.com>
+Subject: [PATCH 3/3] arm64: dts: ns2: Add USB3 Support
+Date: Fri, 28 Apr 2017 16:29:41 -0400
+Message-ID: <1493411381-16833-4-git-send-email-jon.mason@broadcom.com>
 References: <1493411381-16833-1-git-send-email-jon.mason@broadcom.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1493411381-16833-1-git-send-email-jon.mason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
@@ -12,103 +12,156 @@ List-Id: devicetree@vger.kernel.org
 
 From: Yendapally Reddy Dhananjaya Reddy <yendapally.reddy-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 
-Add documentation for USB3 PHY available in NS2 SoC
+Add USB3 support to the Northstar2 Device tree files
 
 Signed-off-by: Yendapally Reddy Dhananjaya Reddy <yendapally.reddy-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 Signed-off-by: Jon Mason <jon.mason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 ---
- .../devicetree/bindings/phy/brcm,ns2-usb3-phy.txt  | 82 ++++++++++++++++++++++
- 1 file changed, 82 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/phy/brcm,ns2-usb3-phy.txt
+ arch/arm64/boot/dts/broadcom/ns2-svk.dts | 16 +++++++++
+ arch/arm64/boot/dts/broadcom/ns2-xmc.dts |  8 +++++
+ arch/arm64/boot/dts/broadcom/ns2.dtsi    | 62 ++++++++++++++++++++++++++++++++
+ 3 files changed, 86 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/phy/brcm,ns2-usb3-phy.txt b/Documentation/devicetree/bindings/phy/brcm,ns2-usb3-phy.txt
-new file mode 100644
-index 0000000..5bb8d53
---- /dev/null
-+++ b/Documentation/devicetree/bindings/phy/brcm,ns2-usb3-phy.txt
-@@ -0,0 +1,82 @@
-+Broadcom USB3 dual port phy for Northstar2 SoC
-+This is a child bus node of "brcm,mdio-mux-iproc" node.
+diff --git a/arch/arm64/boot/dts/broadcom/ns2-svk.dts b/arch/arm64/boot/dts/broadcom/ns2-svk.dts
+index ec19fbf..7cd2ef7 100644
+--- a/arch/arm64/boot/dts/broadcom/ns2-svk.dts
++++ b/arch/arm64/boot/dts/broadcom/ns2-svk.dts
+@@ -234,3 +234,19 @@
+ 		};
+ 	};
+ };
 +
-+Required mdio bus properties:
-+- reg: MDIO Bus number for the MDIO interface
-+- #address-cells: must be 1
-+- #size-cells: must be 0
++&usb3_phy0 {
++	status = "okay";
++};
 +
-+Required PHY properties:
-+- compatible: should be "brcm,ns2-usb3-phy"
-+- reg: Phy address in the MDIO interface
-+- usb3-ctrl-syscon: handler of syscon node defining physical address
-+  of usb3 control register.
-+- usb3-phy-cfg-syscon: handler of syscon node defining physical base
-+  address and length of usb3 phy config region.
-+- usb3-rst-ctrl-syscon: handler of syscon node defining physical base
-+  address and length of idm reset control of two ports.
-+- #phy-cells: must be 0
-+- #address-cells: must be 1
-+- #size-cells: must be 0
++&usb3_phy1 {
++	status = "okay";
++};
 +
-+Sub-nodes:
-+  Each port's PHY should be represented as a sub-node.
++&xhci0 {
++	status = "okay";
++};
 +
-+Sub-nodes required properties:
-+ - reg: the PHY number
-+ - phy-cells: from the generic PHY bindings, must be 0
++&xhci1 {
++	status = "okay";
++};
+diff --git a/arch/arm64/boot/dts/broadcom/ns2-xmc.dts b/arch/arm64/boot/dts/broadcom/ns2-xmc.dts
+index ab4ae1a..8e8feb7 100644
+--- a/arch/arm64/boot/dts/broadcom/ns2-xmc.dts
++++ b/arch/arm64/boot/dts/broadcom/ns2-xmc.dts
+@@ -189,3 +189,11 @@
+ &uart3 {
+ 	status = "okay";
+ };
 +
-+Required usb3 control properties:
-+- compatible: should be "brcm,ns2-usb3-ctrl"
-+- reg: offset and length of the control registers
++&usb3_phy0 {
++	status = "okay";
++};
 +
-+Required usb3 phy config properties:
-+- compatible: should be "brcm,ns2-usb3-phy-cfg"
-+- reg: offset and length of the phy config registers
-+
-+Required usb3 reset control properties:
-+- compatible: should be "brcm,ns2-usb3-rst-ctrl"
-+- reg: offset and length of the reset control registers
-+
-+Example:
-+
-+mdio@1 {
-+	reg = <0x1>;
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+
-+	usb3phy: usb3phy@0 {
-+		compatible = "brcm,ns2-usb3-phy";
-+		reg = <0x0>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		usb3-ctrl-syscon = <&usb3_ctrl>;
-+		usb3-phy-cfg-syscon = <&usb3_phy_cfg>;
-+		usb3-rst-ctrl-syscon = <&usb3_rst_ctrl>;
-+
-+		usb3phy0: usbphy@0 {
-+			reg = <0>;
-+			#phy-cells = <0>;
++&xhci0 {
++	status = "okay";
++};
+diff --git a/arch/arm64/boot/dts/broadcom/ns2.dtsi b/arch/arm64/boot/dts/broadcom/ns2.dtsi
+index 35a309a..2360ff5 100644
+--- a/arch/arm64/boot/dts/broadcom/ns2.dtsi
++++ b/arch/arm64/boot/dts/broadcom/ns2.dtsi
+@@ -343,6 +343,11 @@
+ 			      <0x660009b0 0x40>;
+ 		};
+ 
++		usb3_ctrl: syscon@6501d144 {
++			compatible = "brcm,ns2-usb3-ctrl", "syscon";
++			reg = <0x6501d144 0x4>;
 +		};
 +
-+		usb3phy1: usbphy@1 {
-+			reg = <1>;
-+			#phy-cells = <0>;
+ 		gpio_aon: gpio@65024800 {
+ 			compatible = "brcm,iproc-gpio";
+ 			reg = <0x65024800 0x50>,
+@@ -460,6 +465,11 @@
+ 			};
+ 		};
+ 
++		usb3_phy_cfg: syscon@66000910 {
++			compatible = "brcm,ns2-usb3-phy-cfg", "syscon";
++			reg = <0x66000910 0x14>;
 +		};
-+	};
-+};
 +
-+usb3_ctrl: syscon@6501d144 {
-+	compatible = "brcm,ns2-usb3-ctrl", "syscon";
-+	reg = <0x6501d144 0x4>;
-+};
+ 		pwm: pwm@66010000 {
+ 			compatible = "brcm,iproc-pwm";
+ 			reg = <0x66010000 0x28>;
+@@ -487,6 +497,34 @@
+ 				};
+ 			};
+ 
++			mdio@1 {
++				reg = <0x1>;
++				#address-cells = <1>;
++				#size-cells = <0>;
 +
-+usb3_phy_cfg: syscon@66000910 {
-+	compatible = "brcm,ns2-usb3-phy-cfg", "syscon";
-+	reg = <0x66000910 0x14>;
-+};
++				usb3_phy: usb3_phy@0 {
++					compatible = "brcm,ns2-usb3-phy";
++					reg = <0x0>;
++					#address-cells = <1>;
++					#size-cells = <0>;
++					usb3-ctrl-syscon = <&usb3_ctrl>;
++					usb3-phy-cfg-syscon = <&usb3_phy_cfg>;
++					usb3-rst-ctrl-syscon = <&usb3_rst_ctrl>;
 +
-+usb3_rst_ctrl: syscon@67000800 {
-+	compatible = "brcm,ns2-usb3-rst-ctrl", "syscon";
-+	reg = <0x67000800 0x1808>;
-+};
++					usb3_phy0: usb3_phy@0 {
++						reg = <0>;
++						#phy-cells = <0>;
++						status = "disabled";
++					};
++
++					usb3_phy1: usb_phy@1 {
++						reg = <1>;
++						#phy-cells = <0>;
++						status = "disabled";
++					};
++				};
++			};
++
+ 			mdio@7 {
+ 				reg = <0x7>;
+ 				#address-cells = <1>;
+@@ -652,6 +690,26 @@
+ 			reg = <0x66220000 0x28>;
+ 		};
+ 
++		xhci0: usb@66300000 {
++			compatible = "generic-xhci";
++			reg = <0x66300000 0x1000>;
++			interrupts = <GIC_SPI 429 IRQ_TYPE_LEVEL_HIGH>;
++			phys = <&usb3_phy0>;
++			phy-names = "usb";
++			dma-coherent;
++			status = "disabled";
++		};
++
++		xhci1: usb@66310000 {
++			compatible = "generic-xhci";
++			reg = <0x66310000 0x1000>;
++			interrupts = <GIC_SPI 433 IRQ_TYPE_LEVEL_HIGH>;
++			phys = <&usb3_phy1>;
++			phy-names = "usb";
++			dma-coherent;
++			status = "disabled";
++		};
++
+ 		sata_phy: sata_phy@663f0100 {
+ 			compatible = "brcm,iproc-ns2-sata-phy";
+ 			reg = <0x663f0100 0x1f00>,
+@@ -747,5 +805,9 @@
+ 			#size-cells = <0>;
+ 		};
+ 
++		usb3_rst_ctrl: syscon@67000408 {
++			compatible = "brcm,ns2-usb3-rst-ctrl", "syscon";
++			reg = <0x67000408 0x1808>;
++		};
+ 	};
+ };
 -- 
 2.7.4
 
