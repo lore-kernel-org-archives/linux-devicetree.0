@@ -1,111 +1,56 @@
-From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH] drivers/of_iommu: ignore SMMU DT nodes with status
- 'disabled'
-Date: Fri, 28 Apr 2017 14:17:44 +0100
-Message-ID: <20170428131744.GL13675@arm.com>
-References: <20170414124315.2401-1-ard.biesheuvel@linaro.org>
- <20170428131133.GJ13675@arm.com>
- <CAKv+Gu_G9fw0kwSetXmGjomc8Y_nu95O=rEVzgfafNRs0dtgvg@mail.gmail.com>
+From: Chris Brandt <Chris.Brandt@renesas.com>
+Subject: RE: [PATCH v5 01/10] pinctrl: generic: Add bi-directional and
+ output-enable
+Date: Fri, 28 Apr 2017 13:18:06 +0000
+Message-ID: <SG2PR06MB11658EC3A3A80C57E6F539AC8A130@SG2PR06MB1165.apcprd06.prod.outlook.com>
+References: <1493281194-5200-1-git-send-email-jacopo+renesas@jmondi.org>
+ <1493281194-5200-2-git-send-email-jacopo+renesas@jmondi.org>
+ <CAHp75Vcy1OE+9htFx9k3kQhGARQPT1C0gg3SEKZd7ULu_vkUMA@mail.gmail.com>
+ <CACRpkdayW0qPXDcc_JofkwtX5UHhDPxiY_8deZZ7+hPNJkjgeQ@mail.gmail.com>
+ <SG2PR06MB1165E7E651BE96CD7B7738B08A130@SG2PR06MB1165.apcprd06.prod.outlook.com>
+ <CAHp75Vcp_eMWrjZRX-x3=Tt3JRXcL_wWG43MymF=oyLLP4EJwg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAKv+Gu_G9fw0kwSetXmGjomc8Y_nu95O=rEVzgfafNRs0dtgvg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <CAHp75Vcp_eMWrjZRX-x3=Tt3JRXcL_wWG43MymF=oyLLP4EJwg@mail.gmail.com>
+Content-Language: en-US
+Sender: linux-gpio-owner@vger.kernel.org
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King - ARM Linux <linux@armlinux.org.uk>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 28, 2017 at 02:14:49PM +0100, Ard Biesheuvel wrote:
-> On 28 April 2017 at 14:11, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org> wrote:
-> > Hi Ard,
-> >
-> > [+ devicetree@]
-> >
-> > On Fri, Apr 14, 2017 at 01:43:15PM +0100, Ard Biesheuvel wrote:
-> >> DT nodes may have a status property, and if they do, such nodes should
-> >> only be considered present if the status property is set to 'okay'.
-> >>
-> >> Currently, we call the init function of IOMMUs described by the device
-> >> tree without taking this into account, which may result in the output
-> >> below on systems where some SMMUs may be legally disabled.
-> >>
-> >>  Failed to initialise IOMMU /smb/smmu@e0200000
-> >>  Failed to initialise IOMMU /smb/smmu@e0c00000
-> >>  arm-smmu e0a00000.smmu: probing hardware configuration...
-> >>  arm-smmu e0a00000.smmu: SMMUv1 with:
-> >>  arm-smmu e0a00000.smmu:  stage 2 translation
-> >>  arm-smmu e0a00000.smmu:  coherent table walk
-> >>  arm-smmu e0a00000.smmu:  stream matching with 32 register groups, mask 0x7fff
-> >>  arm-smmu e0a00000.smmu:  8 context banks (8 stage-2 only)
-> >>  arm-smmu e0a00000.smmu:  Supported page sizes: 0x60211000
-> >>  arm-smmu e0a00000.smmu:  Stage-2: 40-bit IPA -> 40-bit PA
-> >>  Failed to initialise IOMMU /smb/smmu@e0600000
-> >>  Failed to initialise IOMMU /smb/smmu@e0800000
-> >>
-> >> Since this is not an error condition, only call the init function if
-> >> the device is enabled, which also inhibits the spurious error messages.
-> >>
-> >> Signed-off-by: Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> >> ---
-> >>  drivers/iommu/of_iommu.c | 2 +-
-> >>  1 file changed, 1 insertion(+), 1 deletion(-)
-> >>
-> >> diff --git a/drivers/iommu/of_iommu.c b/drivers/iommu/of_iommu.c
-> >> index 2683e9fc0dcf..2dd1206e6c0d 100644
-> >> --- a/drivers/iommu/of_iommu.c
-> >> +++ b/drivers/iommu/of_iommu.c
-> >> @@ -183,7 +183,7 @@ static int __init of_iommu_init(void)
-> >>       for_each_matching_node_and_match(np, matches, &match) {
-> >>               const of_iommu_init_fn init_fn = match->data;
-> >>
-> >> -             if (init_fn(np))
-> >> +             if (of_device_is_available(np) && init_fn(np))
-> >>                       pr_err("Failed to initialise IOMMU %s\n",
-> >>                               of_node_full_name(np));
-> >>       }
-> >
-> > Is there a definition of what status = "disabled" is supposed to mean for an
-> > IOMMU? For example, that could mean that the firmware has pre-programmed the
-> > SMMU with particular translations or memory attributes (a bit like the
-> > CCA=1, CPM=1, DACS=0 case in ACPI IORT), or even disabled DMA traffic
-> > altogether.
-> >
-> > So I think we'd need an update to the generic IOMMU binding text to say
-> > exactly what the semantics are supposed to be here.
-> >
-> 
-> I agree that it might make sense to describe the behavior of the IOMMU
-> when it is left in the state we found it in. But that is not the same
-> as status=disabled.
-> 
-> The DTS subtree contains loads and loads of boilerplate
-> configurations, where only some pieces are enabled in the final image
-> by setting status=okay. So a node that has status 'disabled' should be
-> treated as 'not present', not as 'present but can be ignored under
-> assumptions such and such'
-> 
-> In other words, I think we are talking about two different issues here.
-
-I'm not so sure... if we have a master device that has an iommus= property
-pointing to an IOMMU with status="disabled", I really don't know whether we
-should:
-
-  1. Assume the master can do DMA with a 1:1 mapping of memory and no
-     changes to memory attributes
-
-  2. Assume the master can do DMA with a 1:1 mapping of memory, but
-     potentially with changes to the attributes
-
-  3. Assume the master can do DMA, but with some pre-existing translation
-     (what?)
-
-  4. Assume the master can't do DMA
-
-and I also don't know whether the "dma-coherent" property remains valid.
-
-Will
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gRnJpZGF5LCBBcHJpbCAyOCwgMjAxNywgQW5keSBTaGV2Y2hlbmtvIHdyb3RlOg0KPiA+IElu
+IHRoZSBSWi9BMSBIVyBtYW51YWwgeW91IGNhbiBraW5kIG9mIHNlZSB0aGF0IGluIDU0LjE4IFBv
+cnQgQ29udHJvbA0KPiBMb2dpY2FsIERpYWdyYW0gKGJ1dCB0aGF0IHdhc24ndCBvYnZpb3VzIHRv
+IG1lIGF0IGZpcnN0KS4NCj4gDQo+IFBsZWFzZSwgcG9zdCBhIGxpbmsgdG8gaXQgb3IgY29weSBl
+c3NlbnRpYWwgcGFydHMuDQoNCg0KVGhpcyBib2FyZCB0aGUgUlovQTEgR0VOTUFJIGJvYXJkLg0K
+aHR0cHM6Ly93d3cucmVuZXNhcy5jb20vZW4tdXMvcHJvZHVjdHMvc29mdHdhcmUtdG9vbHMvYm9h
+cmRzLWFuZC1raXRzL2V2YWx1YXRpb24tZGVtby1zb2x1dGlvbi1ib2FyZHMvZ2VubWFpLWNwdS1i
+b2FyZC1ydGs3NzIxMDBiYzAwMDAwYnIuaHRtbA0KDQoNClRoZSBzY2hlbWF0aWMgaXMgaW5jbHVk
+ZWQgaW4gdGhlICJVc2VyJ3MgbWFudWFsIg0KaHR0cHM6Ly93d3cucmVuZXNhcy5jb20vZW4tdXMv
+ZG9jL3Byb2R1Y3RzL3Rvb2wvZG9jLzAwMy9yMjB1dDI1OTZlal9yN3M3MjEwMGV2dW0ucGRmDQoN
+Cg0KVGhlIFJaL0ExSCBIYXJkd2FyZSBtYW51YWwgaXMgaGVyZToNCmh0dHBzOi8vd3d3LnJlbmVz
+YXMuY29tL2VuLXVzL2RvY3VtZW50L2h3LW1hbnVhbD9od0xheWVyU2hvd0ZsZz10cnVlJnByZExh
+eWVySWQ9MTg2Mzc0JmxheWVyTmFtZT1SWiUyNTJGQTFIJmNvcm9uclNlcnZpY2U9ZG9jdW1lbnQt
+cHJkLXNlYXJjaCZod0RvY1VybD0lMkZlbi11cyUyRmRvYyUyRnByb2R1Y3RzJTJGbXB1bWN1JTJG
+ZG9jJTJGcnolMkZyMDF1aDA0MDNlajAzMDBfcnpfYTFoLnBkZiZoYXNoS2V5PTU0ZjMzNTc1Mzc0
+MmI1YWRkNTI0ZDQ3MjViNzI0MmU2DQoNCg0KQ2hhcHRlciA1NCBpcyB0aGUgcG9ydC9waW4gY29u
+dHJvbGxlci4NCg0KIjU0LjE4IFBvcnQgQ29udHJvbCBMb2dpY2FsIERpYWdyYW0iIGlzIHRoZSBk
+aWFncmFtIEkgd2FzIHRhbGtpbmcgYWJvdXQuIE5vdGUgdGhhdCBpcyBzYXlzICJOb3RlOiBUaGlz
+IGZpZ3VyZSBzaG93cyB0aGUgbG9naWMgZm9yIHJlZmVyZW5jZSwgbm90IHRoZSBjaXJjdWl0LiIN
+Cg0KIjU0LjMuMTMgUG9ydCBCaWRpcmVjdGlvbiBDb250cm9sIFJlZ2lzdGVyIChQQkRDbikiIGlz
+IHRoZSBtYWdpYyByZWdpc3RlciBuZWVkZWQgdG8gZ2V0IHNvbWUgcGlucyB0byB3b3JrLg0KDQoN
+Cj4gSSdtIHF1aXRlIHNrZXB0aWNhbCAgdGhhdCBjaGVhcCBoYXJkd2FyZSBjYW4gaW1wbGVtZW50
+IHNvbWV0aGluZyBtb3JlDQo+IGNvc3RhYmxlIHRoYW4gc2ltcGxlc3Qgb3Blbi1zb3VyY2UgLyBv
+cGVuLWRyYWluICsgYmlhcw0KDQpJIGRvbid0IHRoaW5rIHRoaXMgaXMgYW4gb3Blbi1zb3VyY2Ug
+LyBvcGVuLWRyYWluICsgYmlhcyBpc3N1ZS4gSXQncyBhICJ0aGUgaW50ZXJuYWwgc2lnbmFsIHBh
+dGhzIGFyZSBub3QgZ2V0dGluZyBob29rZWQgdXAgY29ycmVjdGx5IiBpc3N1ZS4NCg0KDQpSZWdh
+cmRsZXNzLCBvbiB0aGlzIHBhcnQsIHdlIG5lZWRlZCBhIHdheSB0byBmbGFnIHRoYXQgc29tZSBw
+aW5zIHdoZW4gcHV0IGluIHNvbWUgZnVuY3Rpb24gbW9kZXMgbmVlZGVkICdhbiBleHRyYSByZWdp
+c3RlciBzZXR0aW5nJy4gQXQgZmlyc3Qgd2UgdHJpZWQgdG8gc25lYWsgdGhhdCBpbmZvIGluIHdp
+dGggYSBzaW1wbGUgI2RlZmluZSBpbiB0aGUgcGluL3Bpbm11eCBEVCBub2RlIHByb3BlcnRpZXMu
+IEJ1dCwgTGludXMgZGlkbid0IHdhbnQgaXQgdGhlcmUgc28gd2UgaGFkIHRvIG1ha2UgdXAgYSBu
+ZXcgZ2VuZXJpYyBwcm9wZXJ0eSBjYWxsZWQgImJpLWRpcmVjdGlvbmFsIi4NCg0KV2hhdCBpcyB5
+b3VyIGVuZCBnb2FsIGhlcmU/IEdldCAiYmktZGlyZWN0aW9uYWwiIGNoYW5nZWQgdG8gc29tZXRo
+aW5nIGVsc2U/DQoNCg0KQ2hyaXMNCg0K
