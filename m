@@ -1,36 +1,38 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 13/18] dt-bindings: gpio: Add bindings for GPIO on
- Cirrus Logic Madera codecs
-Date: Fri, 28 Apr 2017 13:17:23 -0500
-Message-ID: <20170428181723.g6zs4ibb5ehvzico@rob-hp-laptop>
-References: <1493050124-5970-1-git-send-email-rf@opensource.wolfsonmicro.com>
- <1493050124-5970-14-git-send-email-rf@opensource.wolfsonmicro.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v7 1/5] irqchip/aspeed-i2c-ic: binding docs for Aspeed
+ I2C Interrupt Controller
+Date: Fri, 28 Apr 2017 13:19:31 -0500
+Message-ID: <20170428181931.ddbm2sm3laeruszo@rob-hp-laptop>
+References: <20170424181818.2754-1-brendanhiggins@google.com>
+ <20170424181818.2754-2-brendanhiggins@google.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-gpio-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1493050124-5970-14-git-send-email-rf@opensource.wolfsonmicro.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Richard Fitzgerald <rf@opensource.wolfsonmicro.com>
-Cc: lee.jones@linaro.org, broonie@kernel.org, linus.walleij@linaro.org, gnurou@gmail.com, tglx@linutronix.de, jason@lakedaemon.net, alsa-devel@alsa-project.org, patches@opensource.wolfsonmicro.com, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20170424181818.2754-2-brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Brendan Higgins <brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Cc: wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org, joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org, vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org, mouse-Pma6HLj0uuo@public.gmane.org, clg-Bxea+6Xhats@public.gmane.org, benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 24, 2017 at 05:08:39PM +0100, Richard Fitzgerald wrote:
-> The Cirrus Logic Madera codecs have a range of GPIO pins that can be
-> used as single-bit logic input or output. These are presented as a
-> standard GPIO binding.
+On Mon, Apr 24, 2017 at 11:18:14AM -0700, Brendan Higgins wrote:
+> Added device tree binding documentation for Aspeed I2C Interrupt
+> Controller.
 > 
-> The second cell in a GPIO binding is currently reserved for future use
-> as chip-specific flags.
-> 
-> Signed-off-by: Richard Fitzgerald <rf@opensource.wolfsonmicro.com>
+> Signed-off-by: Brendan Higgins <brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
 > ---
-> Changes from V1:
-> - moved out of main gpio patch into a separate patch
-> - added gpio-line-names as an optional property
-> 
->  .../devicetree/bindings/gpio/gpio-madera.txt       | 27 ++++++++++++++++++++++
->  1 file changed, 27 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/gpio/gpio-madera.txt
+> Added in v6:
+>   - Pulled "aspeed_i2c_controller" out into a interrupt controller since that is
+>     what it actually does.
+> Changes for v7:
+>   - None
+> ---
+>  .../interrupt-controller/aspeed,ast2400-i2c-ic.txt | 25 ++++++++++++++++++++++
+>  1 file changed, 25 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/aspeed,ast2400-i2c-ic.txt
 
-Acked-by: Rob Herring <robh@kernel.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
