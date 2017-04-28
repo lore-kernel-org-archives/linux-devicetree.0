@@ -1,69 +1,48 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v5 01/10] pinctrl: generic: Add bi-directional and output-enable
-Date: Fri, 28 Apr 2017 12:09:49 +0200
-Message-ID: <CAMuHMdXyWFw6YW=yruCijgzgapBZ_VAkFboTuWW=CMv+8npU4w@mail.gmail.com>
-References: <1493281194-5200-1-git-send-email-jacopo+renesas@jmondi.org>
- <1493281194-5200-2-git-send-email-jacopo+renesas@jmondi.org>
- <CAHp75Vcy1OE+9htFx9k3kQhGARQPT1C0gg3SEKZd7ULu_vkUMA@mail.gmail.com> <CACRpkdayW0qPXDcc_JofkwtX5UHhDPxiY_8deZZ7+hPNJkjgeQ@mail.gmail.com>
+From: Andreas Kemnade <andreas@kemnade.info>
+Subject: [PATCH] dt: gta04: fix polarity of clocks for mcbsp4
+Date: Fri, 28 Apr 2017 12:27:35 +0200
+Message-ID: <1493375255-21094-1-git-send-email-andreas@kemnade.info>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdayW0qPXDcc_JofkwtX5UHhDPxiY_8deZZ7+hPNJkjgeQ@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Chris Brandt <chris.brandt@renesas.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King - ARM Linux <linux@armlinux.org.uk>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: bcousson@baylibre.com, tony@atomide.com, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, "H. Nikolaus Schaller" <hns@goldelico.com>, Discussions about the Letux Kernel <letux-kernel@openphoenux.org>
+Cc: Andreas Kemnade <andreas@kemnade.info>
 List-Id: devicetree@vger.kernel.org
 
-Hi Linus,
+The clock polarity setting of the mcbsp connected to
+the modem was wrong so almost only noise
+was received.
+With this patch it is also the same as it was on
+earlier non-dt kernels where it was working properly
 
-On Fri, Apr 28, 2017 at 10:32 AM, Linus Walleij
-<linus.walleij@linaro.org> wrote:
-> On Thu, Apr 27, 2017 at 4:56 PM, Andy Shevchenko
-> <andy.shevchenko@gmail.com> wrote:
->> On Thu, Apr 27, 2017 at 11:19 AM, Jacopo Mondi
->> <jacopo+renesas@jmondi.org> wrote:
->>> Add bi-directional and output-enable pin configuration properties.
->>>
->>> bi-directional allows to specify when a pin shall operate in input and
->>> output mode at the same time. This is particularly useful in platforms
->>> where input and output buffers have to be manually enabled.
->>>
->>> output-enable is just syntactic sugar to specify that a pin shall
->>> operate in output mode, ignoring the provided argument.
->>> This pairs with input-enable pin configuration option.
->>
->> For me it looks like you are trying to alias open-drain + bias or
->> alike. Don't actually see the benefit of it.
->
-> Andy is bringing up a valid point. And I remember asking about
-> this before.
->
-> What does "bi-directional" really mean, electrically speaking?
->
-> Does is just mean open drain and/or open source actually?
-> (See Documentation/gpio/driver.txt for an explanation of
-> how open drain/source works.)
->
-> When you set an output without setting a value, what happens
-> electrically?
->
-> Isn't this bias-high-impedance / High-Z?
->
-> Hopefully you can find the answer from Renesas hardware dept.
->
-> You can certainly call it whatever the datasheet calls it
-> in your driver #defines but for the DT bindings we would
-> ideally have the physical world things.
+Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
+---
+ arch/arm/boot/dts/omap3-gta04.dtsi | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-FWIW, you have already applied v4.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+diff --git a/arch/arm/boot/dts/omap3-gta04.dtsi b/arch/arm/boot/dts/omap3-gta04.dtsi
+index 16b237d3..c0d9d4b 100644
+--- a/arch/arm/boot/dts/omap3-gta04.dtsi
++++ b/arch/arm/boot/dts/omap3-gta04.dtsi
+@@ -68,7 +68,8 @@
+ 		simple-audio-card,bitclock-master = <&telephony_link_master>;
+ 		simple-audio-card,frame-master = <&telephony_link_master>;
+ 		simple-audio-card,format = "i2s";
+-
++		simple-audio-card,bitclock-inversion;
++		simple-audio-card,frame-inversion;
+ 		simple-audio-card,cpu {
+ 			sound-dai = <&mcbsp4>;
+ 		};
+-- 
+2.1.4
