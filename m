@@ -1,67 +1,46 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v4 2/2] of: Add unit tests for applying overlays
-Date: Fri, 28 Apr 2017 13:25:17 +0200
-Message-ID: <CAMuHMdWLhLqjNgz6iUOY8LY1Jjn3-_iV2ncbOxYLCLZbf=Rz+w@mail.gmail.com>
-References: <1493165394-29367-1-git-send-email-frowand.list@gmail.com> <1493165394-29367-3-git-send-email-frowand.list@gmail.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 2/2] dt-bindings: pcie: Add documentation for Mediatek PCIe
+Date: Fri, 28 Apr 2017 13:41:58 +0200
+Message-ID: <CAK8P3a0WGwukWj8V-S2c13S3futkxBhiMfRTa=0QWaDG7qREVw@mail.gmail.com>
+References: <1492935543-18190-1-git-send-email-ryder.lee@mediatek.com>
+ <1492935543-18190-3-git-send-email-ryder.lee@mediatek.com>
+ <CAK8P3a1vgi9VBZfRNq0dDKzmfe8FkHQtgz6fEXW9fyUnBHtaQQ@mail.gmail.com>
+ <1493194205.27023.80.camel@mtkswgap22> <CAK8P3a0vD8s_3R+jS=JdUXX3X05SkCk-mipMA6UxWYQZe6vLUQ@mail.gmail.com>
+ <1493347596.29314.55.camel@mtkswgap22>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kbuild-owner@vger.kernel.org>
-In-Reply-To: <1493165394-29367-3-git-send-email-frowand.list@gmail.com>
-Sender: linux-kbuild-owner@vger.kernel.org
-To: Frank Rowand <frowand.list@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, stephen.boyd@linaro.org, Michal Marek <mmarek@suse.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-kbuild <linux-kbuild@vger.kernel.org>
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <1493347596.29314.55.camel@mtkswgap22>
+Sender: linux-pci-owner@vger.kernel.org
+To: Ryder Lee <ryder.lee@mediatek.com>
+Cc: devicetree@vger.kernel.org, linux-pci <linux-pci@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Bjorn Helgaas <bhelgaas@google.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Frank,
-
-On Wed, Apr 26, 2017 at 2:09 AM,  <frowand.list@gmail.com> wrote:
-> From: Frank Rowand <frank.rowand@sony.com>
+On Fri, Apr 28, 2017 at 4:46 AM, Ryder Lee <ryder.lee@mediatek.com> wrote:
+> On Thu, 2017-04-27 at 21:06 +0200, Arnd Bergmann wrote:
+>> On Wed, Apr 26, 2017 at 10:10 AM, Ryder Lee <ryder.lee@mediatek.com> wrote:
+>> > On Tue, 2017-04-25 at 14:18 +0200, Arnd Bergmann wrote:
+>> >> On Sun, Apr 23, 2017 at 10:19 AM, Ryder Lee <ryder.lee@mediatek.com> wrote:
+>> Are any of the registers the same at all, e.g. for MSI handling?
 >
-> Existing overlay unit tests examine individual pieces of the overlay
-> code.  The new tests target the entire process of applying an overlay.
+> No, It doesn't support MSI. All I can do is using the registers that designer provide
+> to me. The others are inviable for software. So I treat it as different hardware.
+> Furthermore, we hope that we can put all mediatek drivers together
+> regardless of in-house IP or lincense IP
 >
-> Signed-off-by: Frank Rowand <frank.rowand@sony.com>
-> ---
->
-> There are checkpatch warnings.  I have reviewed them and feel they
-> can be ignored.
->
->  drivers/of/fdt.c                                 |  14 +-
->  drivers/of/of_private.h                          |  12 +
->  drivers/of/unittest-data/Makefile                |  17 +-
->  drivers/of/unittest-data/overlay.dts             |  53 ++++
->  drivers/of/unittest-data/overlay_bad_phandle.dts |  20 ++
->  drivers/of/unittest-data/overlay_base.dts        |  80 ++++++
->  drivers/of/unittest.c                            | 317 +++++++++++++++++++++++
->  7 files changed, 505 insertions(+), 8 deletions(-)
->
->  create mode 100644 drivers/of/unittest-data/overlay.dts
->  create mode 100644 drivers/of/unittest-data/overlay_bad_phandle.dts
->  create mode 100644 drivers/of/unittest-data/overlay_base.dts
+> We have no particular IP name but just use chip name to call it. So I
+> will temporarily use "mediatek,gen2v1-pcie" in patch v1.
 
-Shouldn't these be called .dtso instead of .dts?
+I think using the chip name as in the first version of your patch name is
+better then, in particular since the 'gen2v1' would not be an actual version
+number but just say which variant got merged into mainline first.
 
-> --- a/drivers/of/unittest-data/Makefile
-> +++ b/drivers/of/unittest-data/Makefile
+A related question would be on how general we want the binding to be.
+Your binding text starts out by describing that there are three root ports
+and what their capabilities are.
 
-> +# enable creation of __symbols__ node
-> +DTC_FLAGS_overlay := -@
-> +DTC_FLAGS_overlay_bad_phandle := -@
-> +DTC_FLAGS_overlay_base := -@
+If you think there might be other (existing or future) chips that use the
+same binding and driver, then being a little more abstract could help
+in the long run.
 
-This flag is needed for all DTs that will be involved with overlays.
-
-Hence what about enabling this globally instead, cfr. "Enable DT symbols when"
-CONFIG_OF_OVERLAY is used
-("http://www.spinics.net/lists/devicetree/msg103363.html")?
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+       Arnd
