@@ -1,59 +1,194 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v5 02/10] pinctrl: generic: Add macros to unpack properties
-Date: Fri, 28 Apr 2017 10:16:22 +0200
-Message-ID: <CACRpkdbkBtJGJ_5MVy2QSAa0zcKVm=_H+vC_kH4AUcX58TiaLg@mail.gmail.com>
-References: <1493281194-5200-1-git-send-email-jacopo+renesas@jmondi.org> <1493281194-5200-3-git-send-email-jacopo+renesas@jmondi.org>
+From: Priyanka Jain <priyanka.jain-3arQi8VN3Tc@public.gmane.org>
+Subject: [PATCH][v2] arm64: dts: ls2081ardb: Add DTS support for NXP LS2081ARDB
+Date: Fri, 28 Apr 2017 13:55:30 +0530
+Message-ID: <1493367930-10612-1-git-send-email-priyanka.jain@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1493281194-5200-3-git-send-email-jacopo+renesas@jmondi.org>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Chris Brandt <chris.brandt@renesas.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: scott.wood-3arQi8VN3Tc@public.gmane.org, stuart.yoder-3arQi8VN3Tc@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, leoyang.li-3arQi8VN3Tc@public.gmane.org, Priyanka Jain <priyanka.jain-3arQi8VN3Tc@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 27, 2017 at 10:19 AM, Jacopo Mondi
-<jacopo+renesas@jmondi.org> wrote:
+This patch add support for NXP LS2081ARDB board which has
+LS2081A SoC.
 
-> Add PIN_CONF_UNPACK_PARAM and PIN_CONF_UNPACK_ARGS macros useful to
-> unpack generic properties and their arguments
->
-> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+LS2081A SoC is 40-pin derivative of LS2088A SoC
+So, from functional perspective both are same.
+Hence,ls2088a SoC dtsi files are included from ls2081ARDB dts
 
-(...)
+Signed-off-by: Priyanka Jain <priyanka.jain-3arQi8VN3Tc@public.gmane.org>
+---
+Changes for v2: Updated subject and NXP copyright
+	based on Leo's comments
 
-/*
-  * Helpful configuration macro to be used in tables etc.
+ arch/arm64/boot/dts/freescale/Makefile            |    1 +
+ arch/arm64/boot/dts/freescale/fsl-ls2081a-rdb.dts |  139 +++++++++++++++++++++
+ 2 files changed, 140 insertions(+), 0 deletions(-)
+ create mode 100644 arch/arm64/boot/dts/freescale/fsl-ls2081a-rdb.dts
 
-Then this should say "macros" rather than "macro".
+diff --git a/arch/arm64/boot/dts/freescale/Makefile b/arch/arm64/boot/dts/freescale/Makefile
+index 72c4b52..58b80de 100644
+--- a/arch/arm64/boot/dts/freescale/Makefile
++++ b/arch/arm64/boot/dts/freescale/Makefile
+@@ -9,6 +9,7 @@ dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls1088a-qds.dtb
+ dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls1088a-rdb.dtb
+ dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls2080a-qds.dtb
+ dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls2080a-rdb.dtb
++dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls2081a-rdb.dtb
+ dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls2080a-simu.dtb
+ dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls2088a-qds.dtb
+ dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls2088a-rdb.dtb
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls2081a-rdb.dts b/arch/arm64/boot/dts/freescale/fsl-ls2081a-rdb.dts
+new file mode 100644
+index 0000000..bc1c4f6
+--- /dev/null
++++ b/arch/arm64/boot/dts/freescale/fsl-ls2081a-rdb.dts
+@@ -0,0 +1,139 @@
++/*
++ * Device Tree file for NXP LS2081A RDB Board.
++ *
++ * Copyright 2017, NXP
++ *
++ * Priyanka Jain <priyanka.jain-3arQi8VN3Tc@public.gmane.org>
++ *
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPLv2 or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole.
++ *
++ *  a) This library is free software; you can redistribute it and/or
++ *     modify it under the terms of the GNU General Public License as
++ *     published by the Free Software Foundation; either version 2 of the
++ *     License, or (at your option) any later version.
++ *
++ *     This library is distributed in the hope that it will be useful,
++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *     GNU General Public License for more details.
++ *
++ * Or, alternatively,
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use,
++ *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
++ */
++
++/dts-v1/;
++
++#include "fsl-ls2088a.dtsi"
++
++/ {
++	model = "NXP Layerscape 2081A RDB Board";
++	compatible = "fsl,ls2081a-rdb", "fsl,ls2081a";
++
++	aliases {
++		serial0 = &serial0;
++		serial1 = &serial1;
++	};
++
++	chosen {
++		stdout-path = "serial1:115200n8";
++	};
++};
++
++&esdhc {
++	status = "okay";
++};
++
++&ifc {
++	status = "disabled";
++};
++
++&i2c0 {
++	status = "okay";
++	pca9547@75 {
++		compatible = "nxp,pca9547";
++		reg = <0x75>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		i2c@1 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <0x01>;
++			rtc@51 {
++				compatible = "nxp,pcf2129";
++				reg = <0x51>;
++			};
++		};
++
++		i2c@3 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <0x3>;
++
++			adt7481@4c {
++				compatible = "adi,adt7461";
++				reg = <0x4c>;
++			};
++		};
++	};
++};
++
++&dspi {
++	status = "okay";
++	dflash0: n25q512a {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		compatible = "st,m25p80";
++		spi-max-frequency = <3000000>;
++		reg = <0>;
++	};
++};
++
++
++&qspi {
++	status = "okay";
++	flash0: n25q512a@0 {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		compatible = "st,m25p80";
++		spi-max-frequency = <20000000>;
++		reg = <0>;
++	};
++	flash1: n25q512a@1 {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		compatible = "st,m25p80";
++		spi-max-frequency = <20000000>;
++		reg = <0>;
++	};
++};
++
++&usb0 {
++	status = "okay";
++};
++
++&usb1 {
++	status = "okay";
++};
+-- 
+1.7.4.1
 
-> -#define PIN_CONF_PACKED(p, a) ((a << 8) | ((unsigned long) p & 0xffUL))
-> +#define PIN_CONF_PACKED(p, a) (((a) << 8) | ((unsigned long) (p) & 0xffUL))
 
-Also adding some extra parantheses I see.
-
-> +#define PIN_CONF_UNPACK_PARAM(c) ((c) & 0xffUL)
-> +#define PIN_CONF_UNPACK_ARGS(c) ((c) >> 8)
-
-But why.
-
-I have these two static inlines just below your new macros:
-
-static inline enum pin_config_param pinconf_to_config_param(unsigned
-long config)
-{
-        return (enum pin_config_param) (config & 0xffUL);
-}
-
-static inline u32 pinconf_to_config_argument(unsigned long config)
-{
-        return (u32) ((config >> 8) & 0xffffffUL);
-}
-
-Why can't you use this in your code instead of macros?
-
-We generally prefer static inlines over macros because they are easier
-to read.
-
-Yours,
-Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
