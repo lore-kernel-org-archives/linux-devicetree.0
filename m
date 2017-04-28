@@ -1,108 +1,55 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2] reset: Add DT bindings for the Gemini reset
- controller
-Date: Fri, 28 Apr 2017 13:27:50 -0500
-Message-ID: <20170428182750.cs7he6lkwklsmxvl@rob-hp-laptop>
-References: <20170424192746.27378-1-linus.walleij@linaro.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/3 v3] drm/vc4: Turn the V3D clock on at runtime.
+Date: Fri, 28 Apr 2017 13:29:13 -0500
+Message-ID: <20170428182913.pv73xj45onxlnd3c@rob-hp-laptop>
+References: <7906db2f-cfb8-e2e6-5869-b6e829dd8c6f@gmail.com>
+ <20170424201209.31148-1-eric@anholt.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 Content-Disposition: inline
-In-Reply-To: <20170424192746.27378-1-linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Janos Laube <janos.dev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Paulius Zaleckas <paulius.zaleckas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, openwrt-devel-p3rKhJxN3npAfugRpC6u6w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Hans Ulli Kroll <ulli.kroll-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <20170424201209.31148-1-eric@anholt.net>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Eric Anholt <eric@anholt.net>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 24, 2017 at 09:27:46PM +0200, Linus Walleij wrote:
-> This is a simple reset controller in a single 32bit
-> register.
-> 
-> Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
->  .../bindings/reset/cortina,gemini-reset.txt        | 59 ++++++++++++++++++++++
->  1 file changed, 59 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/reset/cortina,gemini-reset.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/reset/cortina,gemini-reset.txt b/Documentation/devicetree/bindings/reset/cortina,gemini-reset.txt
-> new file mode 100644
-> index 000000000000..21aa12901774
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/reset/cortina,gemini-reset.txt
-> @@ -0,0 +1,59 @@
-> +Cortina Gemini Reset Controller
-> +
-> +This reset controller is found in Cortina Systems CS3516 and
-> +the predecessor StorLink SL3516.
-> +
-> +Required properties:
-> +- compatible: "cortina,gemini-reset"
-> +- #reset-cells: Must be 1
-> +
-> +The Gemini reset controller must be a child node of the
-> +system controller. Apart from this it follows the standard reset
-> +controller bindings.
-
-Same comment as clocks. The parent can be the provider.
-
-> +
-> +Valid reset line values:
-> +
-> +0:  DRAM controller
-
-Why no header like clocks?
-
-> +1:  Flash controller
-> +2:  IDE controller
-> +3:  RAID controller
-> +4:  Security module
-> +5:  GMAC0 (ethernet)
-> +6:  GMAC1 (ethernet)
-> +7:  PCI host bridge
-> +8:  USB0 USB host controller
-> +9:  USB1 USB host controller
-> +10: General DMA controller
-> +11: APB bridge
-> +12: LPC (Low Pin Count) controller
-> +13: LCD module
-> +14: Interrupt controller 0
-> +15: Interrupt controller 1
-> +16: RTC module
-> +17: Timer module
-> +18: UART controller
-> +19: SSP controller
-> +20: GPIO0 GPIO controller
-> +21: GPIO1 GPIO controller
-> +22: GPIO2 GPIO controller
-> +23: Watchdog timer
-> +24: External device reset
-> +25: CIR module (infrared)
-> +26: SATA0 SATA bridge
-> +27: SATA1 SATA bridge
-> +28: TVE TV Encoder module
-> +29: Reserved
-> +30: CPU1 reset
-> +31: Global soft reset
-> +
-> +Example:
-> +
-> +syscon: syscon@40000000 {
-> +	compatible = "cortina,gemini-syscon", "syscon", "simple-mfd";
-> +	reg = <0x40000000 0x1000>;
-> +
-> +	reset-controller {
-> +		compatible = "cortina,gemini-reset";
-> +		#reset-cells = <1>;
-> +	};
-> +};
-> -- 
-> 2.9.3
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gTW9uLCBBcHIgMjQsIDIwMTcgYXQgMDE6MTI6MDlQTSAtMDcwMCwgRXJpYyBBbmhvbHQgd3Jv
+dGU6Cj4gRm9yIHRoZSBSYXNwYmVycnkgUGkncyBiaW5kaW5ncywgdGhlIHBvd2VyIGRvbWFpbiBh
+bHNvIGltcGxpY2l0bHkKPiB0dXJucyBvbiB0aGUgY2xvY2sgYW5kIGRlYXNzZXJ0cyByZXNldCwg
+YnV0IGZvciB0aGUgbmV3IEN5Z251cyBwb3J0IHdlCj4gc3RhcnQgcmVwcmVzZW50aW5nIHRoZSBj
+bG9jayBpbiB0aGUgZGV2aWNldHJlZS4KPiAKPiB2MjogRG9jdW1lbnQgdGhlIGNsb2NrLW5hbWVz
+IHByb3BlcnR5LCBjaGVjayBmb3IgLUVOT0VOVCBmb3Igbm8gY2xvY2sKPiAgICAgaW4gRFQuCj4g
+djM6IERyb3AgTlVMTCBjaGVja3MgYXJvdW5kIGNsayBjYWxscyB3aGljaCBlbWJlZCBOVUxMIGNo
+ZWNrcy4KPiAKPiBTaWduZWQtb2ZmLWJ5OiBFcmljIEFuaG9sdCA8ZXJpY0BhbmhvbHQubmV0Pgo+
+IC0tLQo+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyY20sYmNtLXZjNC50eHQg
+ICB8ICA0ICsrKwo+ICBkcml2ZXJzL2dwdS9kcm0vdmM0L3ZjNF9kcnYuaCAgICAgICAgICAgICAg
+ICAgICAgICB8ICAxICsKPiAgZHJpdmVycy9ncHUvZHJtL3ZjNC92YzRfdjNkLmMgICAgICAgICAg
+ICAgICAgICAgICAgfCAzMSArKysrKysrKysrKysrKysrKysrKystCj4gIDMgZmlsZXMgY2hhbmdl
+ZCwgMzUgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQo+IAo+IGRpZmYgLS1naXQgYS9Eb2N1
+bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmNtLGJjbS12YzQudHh0IGIv
+RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJjbSxiY20tdmM0LnR4
+dAo+IGluZGV4IGNhMDJkM2U0ZGI5MS4uMjMxODI2NmY2NDgxIDEwMDY0NAo+IC0tLSBhL0RvY3Vt
+ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyY20sYmNtLXZjNC50eHQKPiAr
+KysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmNtLGJjbS12
+YzQudHh0Cj4gQEAgLTU5LDYgKzU5LDEwIEBAIFJlcXVpcmVkIHByb3BlcnRpZXMgZm9yIFYzRDoK
+PiAgLSBpbnRlcnJ1cHRzOglUaGUgaW50ZXJydXB0IG51bWJlcgo+ICAJCSAgU2VlIGJpbmRpbmdz
+L2ludGVycnVwdC1jb250cm9sbGVyL2JyY20sYmNtMjgzNS1hcm1jdHJsLWljLnR4dAo+ICAKPiAr
+T3B0aW9uYWwgcHJvcGVydGllcyBmb3IgVjNEOgo+ICstIGNsb2NrczoJVGhlIGNsb2NrIHRoZSB1
+bml0IHJ1bnMgb24KPiArLSBjbG9jay1uYW1lczoJTXVzdCBiZSAidjNkX2NsayIKCmNsb2NrLW5h
+bWVzIGlzIHBvaW50bGVzcyBmb3IgYSBzaW5nbGUgY2xvY2suIAoKPiArCj4gIFJlcXVpcmVkIHBy
+b3BlcnRpZXMgZm9yIERTSToKPiAgLSBjb21wYXRpYmxlOglTaG91bGQgYmUgImJyY20sYmNtMjgz
+NS1kc2kwIiBvciAiYnJjbSxiY20yODM1LWRzaTEiCj4gIC0gcmVnOgkJUGh5c2ljYWwgYmFzZSBh
+ZGRyZXNzIGFuZCBsZW5ndGggb2YgdGhlIERTSSBibG9jaydzIHJlZ2lzdGVycwpfX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBs
+aXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVz
+a3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
