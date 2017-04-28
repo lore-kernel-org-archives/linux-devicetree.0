@@ -1,104 +1,42 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH/RFC 0/5] arm64: dts: renesas: Break out common board support
-Date: Fri, 28 Apr 2017 14:28:44 +0200
-Message-ID: <CAMuHMdV=31DFBb2cE+Q_cBovdQys0iv7jAJsBWq4yT4yFO0gDg@mail.gmail.com>
-References: <1492779321-23939-1-git-send-email-geert+renesas@glider.be>
- <20170426080642.GK25517@verge.net.au> <CAMuHMdXbe=rkeS+-teg7nqbjULWY0_5pBO1XEzCGdYA4gB57oA@mail.gmail.com>
- <CAMuHMdV1SQoeEACaNLZbByRLbosMj5oxEysNDVevYgxqStDaug@mail.gmail.com>
- <20170428070458.GB10196@verge.net.au> <CAMuHMdVypXM59rk50Guc90ktD2PKHsVHgXyN34Cz3EC1hMTs8g@mail.gmail.com>
- <20170428073256.GG10196@verge.net.au>
+From: Chris Brandt <Chris.Brandt@renesas.com>
+Subject: RE: [PATCH] ARM: dts: r7s72100: add usb clocks to device tree
+Date: Fri, 28 Apr 2017 12:47:22 +0000
+Message-ID: <SG2PR06MB1165D398BD7100FAC5AAEDC68A130@SG2PR06MB1165.apcprd06.prod.outlook.com>
+References: <20170427191045.21199-1-chris.brandt@renesas.com>
+ <CAMuHMdXEtefpaUJbbJ7LYjYR2oHaE-epy=eZnAyE-+=GWsy9xg@mail.gmail.com>
+ <20170428080400.GI10196@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170428073256.GG10196-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Cc: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Vladimir Barinov <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <20170428080400.GI10196@verge.net.au>
+Content-Language: en-US
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Simon,
-
-On Fri, Apr 28, 2017 at 9:32 AM, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org> wrote:
-> On Fri, Apr 28, 2017 at 09:11:36AM +0200, Geert Uytterhoeven wrote:
->> On Fri, Apr 28, 2017 at 9:04 AM, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org> wrote:
->> > On Thu, Apr 27, 2017 at 03:32:49PM +0200, Geert Uytterhoeven wrote:
->> >> On Wed, Apr 26, 2017 at 10:11 AM, Geert Uytterhoeven
->> >> <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org> wrote:
->> >> > CC Vladimir (which I forgot to CC initially, sorry for that)
->> >> >
->> >> > On Wed, Apr 26, 2017 at 10:06 AM, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org> wrote:
->> >> >> On Fri, Apr 21, 2017 at 02:55:16PM +0200, Geert Uytterhoeven wrote:
->> >> >>> The Renesas Salvator-X and ULCB development board can be equipped with
->> >> >>> either an R-Car H3 or M3-W SiP, which are pin-compatible.  All boards
->> >> >>> use separate DTBs, but currently there's no sharing of board-specific
->> >> >>> devices in DTS.
->> >> >>>
->> >> >>> This series reduces duplication by extracting common board support into
->> >> >>> their own .dtsi files.  As the level of support varies across boards and
->> >> >>> SoCs, this requires the addition of a few external clocks and
->> >> >>> placeholder devices on R-Car M3-W, so the common board support DTS can
->> >> >>> refer to them.
->> >> >>>
->> >> >>>   - Patches 1 and 2 add the external audio and PCIe bus clocks on R-Car
->> >> >>>     M3-W, which are present in r8a7795.dtsi, and used in
->> >> >>>     r8a7795-salvator-x.dts,
->> >> >>>   - RFC patch 3 adds placeholders for devices that are not yet supported
->> >> >>>     and/or tested on R-Car M3-W, but used on R-Car H3,
->> >> >>>   - RFC patch 4 extracts common Salvator-X board support,
->> >> >>>   - RFC patch 5 extracts common ULCB board support.
->> >> >>>
->> >> >>> For R-Car H3 based boards, there are no functional changes.
->> >> >>> For R-Car M3-W based boards, some new devices are now described in DT.
->> >> >>>
->> >> >>> Dependencies:
->> >> >>>   - renesas-devel-20170420-v4.11-rc7,
->> >> >>>   - Patches 1 and 2 can be applied as-is,
->> >> >>>   - Patches 4 and 5 depend on "[PATCH 0/8] arm64: dts: renesas: Break
->> >> >>>     out R-Car H3 and M3-W SiP"
->> >> >>>     (http://www.spinics.net/lists/devicetree/msg173820.html).
->>            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
->>
->> >> >>> DTB changes have been inspected using scripts/dtc/dtx_diff.
->> >> >>> This has been tested on Salvator-X (both H3 and M3-W).
->> >> >>> This has not been tested on H3ULCB and M3ULCB due to lack of hardware.
->> >> >>>
->> >> >>> Thanks for your comments!
->> >> >>
->> >> >> Thanks for tackling this important problem. I have looked over the changes
->> >> >> and they seem nice to me. I would, however, be more comfortable applying
->> >> >> them if they were rested on the ULCB boards.
->> >> >
->> >> > tested?
->> >> >
->> >> > I've pushed a branch for testing to topic/rcar3-dtsi-sharing in
->> >> > git://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers.git.
->> >>
->> >> I managed to test it on the new H3ULCB and M3ULCB baords in Magnus' farm.
->> >> No issues detected.
->> >
->> > Great! Any objections to me queuing this up?
->>
->> The dependency above (no feedback about the SiP types yet).
->>
->> I can respin without that dependency, if that is preferred...
+On Friday, April 28, 2017, Simon Horman wrote:
+> On Fri, Apr 28, 2017 at 09:34:54AM +0200, Geert Uytterhoeven wrote:
+> > On Thu, Apr 27, 2017 at 9:10 PM, Chris Brandt <chris.brandt@renesas.com=
 >
-> It seems to me that it would be nice to get these in sooner than later - in
-> particular earlier rather than later in the (v4.13) development cycle. But
-> I defer to your judgement on what is best.
+> wrote:
+> > > This adds the USB0 and USB1 clocks to the device tree.
+> > >
+> > > Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
+> >
+> > Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> >
+> > Simon: see Section 29.3.2 (BUSWAIT) for the reference to the P1 clock.
+>=20
+> Thanks, I see that now.
 
-Agreed.  Stay tuned for v2...
+I was going to say that I simply look at sections:
+  6.10.6 Internal Clock Signals (1)
+  6.10.7 Internal Clock Signals (2)
 
-Gr{oetje,eeting}s,
+Because it lists all the IP blocks and their corresponding clock sources in=
+ one place.
 
-                        Geert
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Chris
