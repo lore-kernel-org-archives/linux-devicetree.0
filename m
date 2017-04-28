@@ -1,64 +1,38 @@
-From: Chris Brandt <Chris.Brandt@renesas.com>
-Subject: RE: [PATCH v5 01/10] pinctrl: generic: Add bi-directional and
- output-enable
-Date: Fri, 28 Apr 2017 16:46:14 +0000
-Message-ID: <SG2PR06MB1165288487474DE8F71752208A130@SG2PR06MB1165.apcprd06.prod.outlook.com>
-References: <1493281194-5200-1-git-send-email-jacopo+renesas@jmondi.org>
- <1493281194-5200-2-git-send-email-jacopo+renesas@jmondi.org>
- <CAHp75Vcy1OE+9htFx9k3kQhGARQPT1C0gg3SEKZd7ULu_vkUMA@mail.gmail.com>
- <CACRpkdayW0qPXDcc_JofkwtX5UHhDPxiY_8deZZ7+hPNJkjgeQ@mail.gmail.com>
- <SG2PR06MB1165E7E651BE96CD7B7738B08A130@SG2PR06MB1165.apcprd06.prod.outlook.com>
- <CAHp75Vcp_eMWrjZRX-x3=Tt3JRXcL_wWG43MymF=oyLLP4EJwg@mail.gmail.com>
- <SG2PR06MB11658EC3A3A80C57E6F539AC8A130@SG2PR06MB1165.apcprd06.prod.outlook.com>
- <CAHp75VeLtOuty=iaxuCaH43rnBZDTT03iH7JyjDJBQhTD-EjzA@mail.gmail.com>
- <SG2PR06MB11658E6434EB343246ADC9F58A130@SG2PR06MB1165.apcprd06.prod.outlook.com>
- <CAHp75VfYPfm_GKPzvX7Go010fRi99t12ub7VUPubB6z3HnsFLg@mail.gmail.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2] power: tps65217_charger: Add properties like voltage
+ and current charge
+Date: Fri, 28 Apr 2017 11:49:21 -0500
+Message-ID: <20170428164921.sbhmzr46443cfxto@rob-hp-laptop>
+References: <20170421155032.22784-1-enric.balletbo@collabora.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAHp75VfYPfm_GKPzvX7Go010fRi99t12ub7VUPubB6z3HnsFLg@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King - ARM Linux <linux@armlinux.org.uk>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170421155032.22784-1-enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Cc: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpZGF5LCBBcHJpbCAyOCwgMjAxNywgQW5keSBTaGV2Y2hlbmtvIHdyb3RlOg0KPiA+IFdl
-IHdlcmUgdXNpbmcgImlucHV0LWVuYWJsZSIgdG8gc2lnbmFsIHdoZW4gdGhlIHBpbiBmdW5jdGlv
-biB0aGF0IHdlIHNldA0KPiBhbHNvIG5lZWRzIHRvIGJlIGZvcmNpYmxlIHNldCB0byBpbnB1dCBi
-eSB0aGUgc29mdHdhcmUgKG9uY2UgYWdhaW4sDQo+IGJlY2F1c2UgdGhlIEhXIGlzIG5vdCBzbWFy
-dCBlbm91Z2ggdG8gZG8gaXQgb24gaXRzIG93biksIGJ1dCBpcyBkaWZmZXJlbnQNCj4gdGhhbiB0
-aGUgYmktZGlyZWN0aW9uYWwgZnVuY3Rpb25hbGl0eSAoaWUsIGEgZGlmZmVyZW50IHJlZ2lzdGVy
-IHNldHRpbmcpLg0KPiANCj4gWW91IGFyZSB0cnlpbmcgdG8gaW50cm9kdWNlIGFuIGFic3RyYWN0
-aW9uLCBjYWxsZWQgQmlEaSwgd2hpY2ggaXMNCj4gKm5vdCogYSBzZXBhcmF0ZSB0aGluZyBmcm9t
-IGEgc2V0IG9mIHBpbiBwcm9wZXJ0aWVzLg0KDQpOb3RlLCBJJ20gdGFsa2luZyBhYm91dCAyIGRp
-ZmZlcmVudCBpc3N1ZXMgd2UgaGFkOg0KDQoxKSBQaW5zIHRoYXQgbmVlZCBpbnB1dCBhbmQgb3V0
-cHV0IGJ1ZmZlcnMgZW5hYmxlZCBkdXJpbmcgbm9ybWFsIHVzZS4gV2UgY3JlYXRlZCAiYmktZGly
-ZWN0aW9uYWwiIGZvciB0aGF0Lg0KDQoyKSBGb3Igd2hhdGV2ZXIgcmVhc29uLCB0aGUgSFcgbWFu
-dWFsIHBvaW50cyBvdXQgdGhhdCB0aGUgUEZDIGhhcmR3YXJlIGNhbid0IHJlYWxseSBhdXRvbWF0
-aWNhbGx5IHNldCBidWZmZXJzIGVuYWJsZXMgY29ycmVjdGx5IGZvciBzb21lIHBpbiBpbnN0YW5j
-ZXMsIGFuZCB3ZSBoYXZlIHRvIG1hbnVhbGx5IGFzc2lnbiB0aGUgcGluIGFzIGlucHV0IG9yIG91
-dHB1dCB1c2luZyBhbm90aGVyIHJlZ2lzdGVyLiBGb3IgdGhhdCwgd2Ugd2VyZSB1c2luZyAiaW5w
-dXQtZW5hYmxlIiBhbmQgIm91dHB1dC1lbmFibGUiLg0KDQoNCkZvciAjMjoNCg0KPiA+IE5vdGUg
-dGhhdCB3ZSBhZGRlZCBhIGVuYWJsZS1vdXRwdXQgZm9yIHRoZSBzYW1lIHJlYXNvbi4NCj4gPiBT
-ZWUgUlovQTFIIEhXIE1hbnVhbCBzZWN0aW9uICJUYWJsZSA1NC43IEFsdGVybmF0aXZlIEZ1bmN0
-aW9ucyB0aGF0DQo+IFBJUENuLlBJUENubSBCaXQgU2hvdWxkIGJlIFNldCB0byAwIg0KPiANCj4g
-UGVyaGFwcyBuZWVkcyB0byBiZSByZXZpc2l0ZWQgYXMgd2VsbC4NCg0KU29ycnksIHdlIGRpZG4n
-dCAnYWRkJyBhbnl0aGluZyBuZXcuIFRoZSBwcm9wZXJ0eSAib3V0cHV0LWVuYWJsZSIsIChpZSwg
-UElOX0NPTkZJR19PVVRQVVQpIGFscmVhZHkgZXhpc3RlZCBhbmQgZGVzY3JpYmVzIHdoYXQgd2Ug
-YXJlIGRvaW5nIGluIHRoZSBjYXNlIGZvciBvdXRwdXQuDQoNCkJ1dCwgd2Ugc3RpbGwgaGF2ZSB0
-aGUgaXNzdWUgdGhhdCB3ZSBoYXZlIDIgY2FzZXMgdGhhdCBuZWVkIHRoZSBpbnB1dCBlbmFibGVk
-LCBidXQgdGhleSBhcmUgbm90IHRoZSBzYW1lIHNpdHVhdGlvbiwgc28gd2UgY2FuJ3QganVzdCB1
-c2UgImlucHV0LWVuYWJsZSIgZm9yIGJvdGguDQoNCg0KTXkgb25seSBzdWdnZXN0aW9uIGlzIChh
-bmQgSSdtIG5vdCBzdXJlIHRoaXMgaXMgcG9zc2libGUgaW4gdGhlIGRyaXZlcik6DQoNCiJpbnB1
-dC1lbmFibGUiICA6IGNhc2UgIzIgd2hlcmUgeW91IG5lZWQgdGhlIHBpbiB0byBiZSBmb3JjZWQg
-YXMgYW4gaW5wdXQNCiJvdXRwdXQtZW5hYmxlIiA6IGNhc2UgIzIgd2hlcmUgeW91IG5lZWQgdGhl
-IHBpbiB0byBiZSBmb3JjZWQgYXMgYW4gb3V0cHV0DQoiaW5wdXQtZW5hYmxlIiArICJvdXRwdXQt
-ZW5hYmxlIiA6IGNhc2UgIzEgKHJlcGxhY2VzICJiaS1kaXJlY3Rpb25hbCIpLg0KDQpGb3IgZXhh
-bXBsZToNCg0KCWkyYzJfcGluczogaTJjMiB7DQoJCXBpbm11eCA9IDxSWkExX1BJTk1VWCgxLCA0
-LCAxKT4sIDxSWkExX1BJTk1VWCgxLCA1LCAxKT47DQoJCWlucHV0LWVuYWJsZTsNCgkJb3V0cHV0
-LWVuYWJsZTsNCgl9Ow0KDQpTbyBpbiB0aGUgU1cgZHJpdmVyLCBpZiB3ZSBzZWUgYm90aCwgdGhh
-dCB3aWxsIHNpZ25hbCB0byB1cyB3aGF0IGlzIGdvaW5nIG9uIGFuZCB3aGF0IHRvIGRvIGFib3V0
-IGl0IChhcyBpbiwgc2V0IHRoZSBiaS1kaXJlY3Rpb25hbCByZWdpc3RlciBhbmQgbm90IHRoZSBp
-bnB1dCBkaXJlY3Rpb24gcmVnaXN0ZXIpLg0KDQoNClRob3VnaHRzPw0KDQoNCkNocmlzDQoNCg==
+On Fri, Apr 21, 2017 at 05:50:32PM +0200, Enric Balletbo i Serra wrote:
+> Allow the possibility to configure the charge and the current voltage of
+> the charger and also the NTC type for battery temperature measurement.
+> 
+> Signed-off-by: Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+> ---
+> Changes since v1:
+>  - Requested by Rob Herring
+>    - Rename ti,charge-* to charge-* to be standard properties.
+>    - Use unit suffixes as per bindings/property-units.txt
+> ---
+>  .../bindings/power/supply/tps65217_charger.txt     |  15 ++
+
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+
+>  drivers/power/supply/tps65217_charger.c            | 187 +++++++++++++++++++--
+>  include/linux/mfd/tps65217.h                       |   2 +
+>  3 files changed, 192 insertions(+), 12 deletions(-)
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
