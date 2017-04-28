@@ -1,34 +1,31 @@
-From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v7 4/9] of_graph: add of_graph_get_endpoint_count()
-Date: Fri, 28 Apr 2017 14:35:16 -0500
-Message-ID: <CAL_JsqJkobjSUhDKSoXFk=VEgiPg53AXdAaMX7XvsujA3v-thQ@mail.gmail.com>
-References: <87fuh3oon8.wl%kuninori.morimoto.gx@renesas.com> <87a87boojg.wl%kuninori.morimoto.gx@renesas.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 01/10] clk: renesas: cpg-mssr: Document R-Car Gen2 support
+Date: Fri, 28 Apr 2017 14:42:16 -0500
+Message-ID: <20170428194216.zqngpd32zqmuriwz@rob-hp-laptop>
+References: <1493139200-27396-1-git-send-email-geert+renesas@glider.be>
+ <1493139200-27396-2-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <87a87boojg.wl%kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1493139200-27396-2-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linux-ALSA <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, Simon <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Linux-DT <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Cc: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 19, 2017 at 8:32 PM, Kuninori Morimoto
-<kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org> wrote:
->
-> From: Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
->
-> OF graph want to count its endpoint number, same as
-> of_get_child_count(). This patch adds of_graph_get_endpoint_count()
->
-> Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+On Tue, Apr 25, 2017 at 06:53:11PM +0200, Geert Uytterhoeven wrote:
+> Document use of the Renesas Clock Pulse Generator / Module Standby and
+> Software Reset DT Bindings for various member of the R-Car Gen2 family
+> (H2, M2-W, V2H, M2-N, and E2).
+> 
+> Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 > ---
-> v6 -> v7
->
->  - no change
->
->  drivers/of/base.c        | 12 ++++++++++++
->  include/linux/of_graph.h |  6 ++++++
->  2 files changed, 18 insertions(+)
+>  Documentation/devicetree/bindings/clock/renesas,cpg-mssr.txt | 10 ++++++++--
+>  1 file changed, 8 insertions(+), 2 deletions(-)
 
 Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 --
