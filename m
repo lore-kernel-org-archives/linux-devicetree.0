@@ -1,51 +1,54 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH 1/8] [RFC] dt-bindings: renesas: Document R-Car H3 and
- M3-W SiP DT bindings
-Date: Fri, 28 Apr 2017 16:23:38 +0200
-Message-ID: <CAMuHMdXv+Eb8RRCH3u18Lm=ZeBBxkErUxb4TN=Sf6RNFP0xO3g@mail.gmail.com>
-References: <1492593351-13835-1-git-send-email-geert+renesas@glider.be>
- <1492593351-13835-2-git-send-email-geert+renesas@glider.be> <20170428133923.ycbqixcxvcsonocn@rob-hp-laptop>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: r7s72100: add usb clocks to device tree
+Date: Fri, 28 Apr 2017 16:27:45 +0200
+Message-ID: <CAMuHMdXp75yepEMh-S0YNYqKRESb4m3DtcfG09x=uj1Fm51b_A@mail.gmail.com>
+References: <20170427191045.21199-1-chris.brandt@renesas.com>
+ <CAMuHMdXEtefpaUJbbJ7LYjYR2oHaE-epy=eZnAyE-+=GWsy9xg@mail.gmail.com>
+ <20170428080400.GI10196@verge.net.au> <SG2PR06MB1165D398BD7100FAC5AAEDC68A130@SG2PR06MB1165.apcprd06.prod.outlook.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <20170428133923.ycbqixcxvcsonocn@rob-hp-laptop>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Mark Rutland <mark.rutland@arm.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <SG2PR06MB1165D398BD7100FAC5AAEDC68A130-ESzmfEwOt/xoAsOJh7vwSm0DtJ1/0DrXvxpqHgZTriW3zl9H0oFU5g@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Chris Brandt <Chris.Brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Cc: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+Hi Chris,
 
-On Fri, Apr 28, 2017 at 3:39 PM, Rob Herring <robh@kernel.org> wrote:
-> On Wed, Apr 19, 2017 at 11:15:44AM +0200, Geert Uytterhoeven wrote:
->> Document the SiP ("System-in-Package") versions of the R-Car H3 and M3-W
->> SoCs, which contain an R-Car H3 or M3-W SoC, RAM, and HyperFlash.
+On Fri, Apr 28, 2017 at 2:47 PM, Chris Brandt <Chris.Brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org> wrote:
+> On Friday, April 28, 2017, Simon Horman wrote:
+>> On Fri, Apr 28, 2017 at 09:34:54AM +0200, Geert Uytterhoeven wrote:
+>> > On Thu, Apr 27, 2017 at 9:10 PM, Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+>> wrote:
+>> > > This adds the USB0 and USB1 clocks to the device tree.
+
+>> > Simon: see Section 29.3.2 (BUSWAIT) for the reference to the P1 clock.
 >>
->> Add their compatible values to all boards equipped with R-Car Gen3 SiPs.
->>
->> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
->> ---
->> Questions:
->>   - Do we need more compatible values, for different configurations?
->>     At least r8j7796 is available with either 2 GiB or 4 GiB of RAM,
->>     possibly using RAM parts from different vendors.
+>> Thanks, I see that now.
 >
-> Same die, just a different package? If so, I don't think you need a
-> different compatible. It's going to be a different board from any
-> non-SiP which should be enough to distinguish.
+> I was going to say that I simply look at sections:
+>   6.10.6 Internal Clock Signals (1)
+>   6.10.7 Internal Clock Signals (2)
+>
+> Because it lists all the IP blocks and their corresponding clock sources in one place.
 
-An SiP is more like a CPU daughterboard.
+Cool, I grew up with rev. 0.60 of the user manual, so I wasn't aware of
+that secton.
 
-The different SiP-versions based on r8a7795 contain the same r8a7795 SoC die,
-but different amounts of RAM, i.e. different RAM dies.
+Thanks!
 
 Gr{oetje,eeting}s,
 
                         Geert
 
 --
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
 
 In personal conversations with technical people, I call myself a hacker. But
 when I'm talking to journalists I just say "programmer" or something like that.
                                 -- Linus Torvalds
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
