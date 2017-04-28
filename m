@@ -1,64 +1,83 @@
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v2 1/5] arm64: dts: r8a7796: Add external audio clocks
-Date: Fri, 28 Apr 2017 14:58:40 +0200
-Message-ID: <1493384324-29344-2-git-send-email-geert+renesas@glider.be>
-References: <1493384324-29344-1-git-send-email-geert+renesas@glider.be>
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <1493384324-29344-1-git-send-email-geert+renesas@glider.be>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
-Cc: Vladimir Barinov <vladimir.barinov@cogentembedded.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Geert Uytterhoeven <geert+renesas@glider.be>
+From: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Subject: [PATCH v2 0/5] arm64: dts: renesas: Break out common board support
+Date: Fri, 28 Apr 2017 14:58:39 +0200
+Message-ID: <1493384324-29344-1-git-send-email-geert+renesas@glider.be>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Vladimir Barinov <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add the external audio clocks as zero Hz fixed-frequency clocks.
-Boards that provide these clocks should override them.
+	Hi Simon, Magnus,
 
-Based on commit 623197b90c7aa97c ("arm64: renesas: r8a7795: Sound SSI
-PIO support").
+The Renesas Salvator-X and ULCB development board can be equipped with
+either an R-Car H3 or M3-W SiP, which are pin-compatible.  All boards
+use separate DTBs, but currently there's no sharing of board-specific
+devices in DTS.
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Acked-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
----
-v2:
-  - Correct one-line summary prefix,
-  - Add Acked-by.
----
- arch/arm64/boot/dts/renesas/r8a7796.dtsi | 23 +++++++++++++++++++++++
- 1 file changed, 23 insertions(+)
+This series reduces duplication by extracting common board support into
+their own .dtsi files.  As the level of support varies across boards and
+SoCs, this requires the addition of a few external clocks and
+placeholder devices on R-Car M3-W, so the common board support DTS can
+refer to them.
 
-diff --git a/arch/arm64/boot/dts/renesas/r8a7796.dtsi b/arch/arm64/boot/dts/renesas/r8a7796.dtsi
-index 2ec1ed5f499165ad..101cd41d693a7ab5 100644
---- a/arch/arm64/boot/dts/renesas/r8a7796.dtsi
-+++ b/arch/arm64/boot/dts/renesas/r8a7796.dtsi
-@@ -120,6 +120,29 @@
- 		clock-frequency = <0>;
- 	};
- 
-+	/*
-+	 * The external audio clocks are configured as 0 Hz fixed frequency
-+	 * clocks by default.
-+	 * Boards that provide audio clocks should override them.
-+	 */
-+	audio_clk_a: audio_clk_a {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <0>;
-+	};
-+
-+	audio_clk_b: audio_clk_b {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <0>;
-+	};
-+
-+	audio_clk_c: audio_clk_c {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <0>;
-+	};
-+
- 	/* External CAN clock - to be overridden by boards that provide it */
- 	can_clk: can {
- 		compatible = "fixed-clock";
+  - Patches 1 and 2 add the external audio and PCIe bus clocks on R-Car
+    M3-W, which are present in r8a7795.dtsi, and used in
+    r8a7795-salvator-x.dts,
+  - Patch 3 adds placeholders for devices that are not yet supported
+    and/or tested on R-Car M3-W, but used on R-Car H3,
+  - Patch 4 extracts common Salvator-X board support,
+  - Patch 5 extracts common ULCB board support.
+
+For R-Car H3 based boards, there are no functional changes.
+For R-Car M3-W based boards, some new devices are now described in DT.
+
+Compared to v1, the most important change is a rebase to remove the
+dependency on "[PATCH 0/8] arm64: dts: renesas: Break out R-Car H3 and
+M3-W SiP" (http://www.spinics.net/lists/devicetree/msg173820.html).
+Please refer to the individual patches for more changelog information.
+
+Dependencies:
+  - renesas-devel-20170428-v4.11-rc8.
+
+DTB changes have been inspected using scripts/dtc/dtx_diff.
+This has been tested on Salvator-X (both H3 and M3-W), H3ULCB, and
+M3ULCB.
+
+Thanks for applying!
+
+Geert Uytterhoeven (5):
+  arm64: dts: r8a7796: Add external audio clocks
+  arm64: dts: r8a7796: Add external PCIe bus clock
+  arm64: dts: r8a7796: Add placeholders for various devices
+  arm64: dts: renesas: Extract common Salvator-X board support
+  arm64: dts: renesas: Extract common ULCB board support
+
+ arch/arm64/boot/dts/renesas/r8a7795-h3ulcb.dts     | 341 +------------
+ arch/arm64/boot/dts/renesas/r8a7795-salvator-x.dts | 543 +--------------------
+ arch/arm64/boot/dts/renesas/r8a7796-m3ulcb.dts     | 201 +-------
+ arch/arm64/boot/dts/renesas/r8a7796-salvator-x.dts | 259 +---------
+ arch/arm64/boot/dts/renesas/r8a7796.dtsi           | 112 +++++
+ .../{r8a7795-salvator-x.dts => salvator-x.dtsi}    | 393 +++++++--------
+ .../dts/renesas/{r8a7795-h3ulcb.dts => ulcb.dtsi}  | 264 +++++-----
+ 7 files changed, 420 insertions(+), 1693 deletions(-)
+ copy arch/arm64/boot/dts/renesas/{r8a7795-salvator-x.dts => salvator-x.dtsi} (91%)
+ copy arch/arm64/boot/dts/renesas/{r8a7795-h3ulcb.dts => ulcb.dtsi} (91%)
+
 -- 
 2.7.4
+
+Gr{oetje,eeting}s,
+
+						Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+							    -- Linus Torvalds
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
