@@ -1,125 +1,204 @@
-From: Oleksij Rempel <linux@rempel-privat.de>
-Subject: Re: [PATCH v2] arm: dts: sun7i-a20-bananapi: name the GPIO lines
-Date: Fri, 28 Apr 2017 11:03:19 +0200
-Message-ID: <dbd307d0-6360-8105-aeda-274097c8ac07@rempel-privat.de>
-References: <CACRpkdYnK=7C=F5hZUo-nYv6Z+Pb+eT7vm1e4hL8N-QgJnuLfg@mail.gmail.com>
- <1470384404-6796-1-git-send-email-linux@rempel-privat.de>
- <CACRpkdZn7-SL5kmGn7Pysz=QiQFBEm8+c6bw=hE5F0CV4ct0RQ@mail.gmail.com>
- <60d2e24d-91c8-7563-9ecc-f203b12e0983@rempel-privat.de>
- <CACRpkdZcnJ1eCNW4ZF_A4zbeCt3JcAuw-1meB_Pn7ctMy99B_g@mail.gmail.com>
+From: Ryder Lee <ryder.lee@mediatek.com>
+Subject: [PATCH v1 2/2] dt-bindings: pcie: Add documentation for Mediatek PCIe
+Date: Fri, 28 Apr 2017 17:10:34 +0800
+Message-ID: <1493370634-7038-3-git-send-email-ryder.lee@mediatek.com>
+References: <1493370634-7038-1-git-send-email-ryder.lee@mediatek.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1247649043493596360=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CACRpkdZcnJ1eCNW4ZF_A4zbeCt3JcAuw-1meB_Pn7ctMy99B_g@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Chen-Yu Tsai <wens@csie.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <1493370634-7038-1-git-send-email-ryder.lee@mediatek.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>
+Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Red Hung <red.hung@mediatek.com>, Ryder Lee <ryder.lee@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---===============1247649043493596360==
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="xXc6cMRedQI8Fujsks8hk4b6hqvN4C4fw"
+Add binding document for Mediatek PCIe Gen2 v1 host controller driver.
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---xXc6cMRedQI8Fujsks8hk4b6hqvN4C4fw
-Content-Type: multipart/mixed; boundary="rR7mScJ7N5xjV9c40SCPL1uKXfAqqtKX7";
- protected-headers="v1"
-From: Oleksij Rempel <linux@rempel-privat.de>
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
- "linux-arm-kernel@lists.infradead.org"
- <linux-arm-kernel@lists.infradead.org>, Chen-Yu Tsai <wens@csie.org>
-Message-ID: <dbd307d0-6360-8105-aeda-274097c8ac07@rempel-privat.de>
-Subject: Re: [PATCH v2] arm: dts: sun7i-a20-bananapi: name the GPIO lines
-References: <CACRpkdYnK=7C=F5hZUo-nYv6Z+Pb+eT7vm1e4hL8N-QgJnuLfg@mail.gmail.com>
- <1470384404-6796-1-git-send-email-linux@rempel-privat.de>
- <CACRpkdZn7-SL5kmGn7Pysz=QiQFBEm8+c6bw=hE5F0CV4ct0RQ@mail.gmail.com>
- <60d2e24d-91c8-7563-9ecc-f203b12e0983@rempel-privat.de>
- <CACRpkdZcnJ1eCNW4ZF_A4zbeCt3JcAuw-1meB_Pn7ctMy99B_g@mail.gmail.com>
-In-Reply-To: <CACRpkdZcnJ1eCNW4ZF_A4zbeCt3JcAuw-1meB_Pn7ctMy99B_g@mail.gmail.com>
+Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
+---
+ .../bindings/pci/mediatek,gen2v1-pcie.txt          | 174 +++++++++++++++++++++
+ 1 file changed, 174 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pci/mediatek,gen2v1-pcie.txt
 
---rR7mScJ7N5xjV9c40SCPL1uKXfAqqtKX7
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-
-Am 28.04.2017 um 10:45 schrieb Linus Walleij:
-> On Fri, Apr 28, 2017 at 7:11 AM, Oleksij Rempel <linux@rempel-privat.de=
-> wrote:
->> Am 08.08.2016 um 19:51 schrieb Linus Walleij:
->>> On Fri, Aug 5, 2016 at 10:06 AM, Oleksij Rempel <linux@rempel-privat.=
-de> wrote:
->>>
->>>> This names the GPIO lines on the Banana Pi board in accordance with
->>>> the A20_Banana_Pi v1.4 Specification.
->>>>
->>>> This will make these line names reflect through to userspace
->>>> so that they can easily be identified and used with the new
->>>> character device ABI.
->>>>
->>>> Some care has been taken to name all lines, not just those used
->>>> by the external connectors, also lines that are muxed into some
->>>> other function than GPIO: these are named "[FOO]" so that users
->>>> can see with lsgpio what all lines are used for.
->>>>
->>>> Ps: most of the text was taken from Linus Wallej patch.
->>>>
->>>> Cc: devicetree@vger.kernel.org
->>>> Cc: Linus Walleij <linus.walleij@linaro.org>
->>>> Cc: linux-arm-kernel@lists.infradead.org
->>>> Cc: Chen-Yu Tsai <wens@csie.org>
->>>> Signed-off-by: Oleksij Rempel <linux@rempel-privat.de>
->>>
->>> Acked-by: Linus Walleij <linus.walleij@linaro.org>
->>
->> Hm... i assume this patch was lost. Should i resend it?
->=20
-> Yes, but I'm not applying DTS patches. Make sure that the
-> sunxi maintainers get it and merge it.
-
-Chen-Yu Tsai - ping.
-
---=20
-Regards,
-Oleksij
-
-
---rR7mScJ7N5xjV9c40SCPL1uKXfAqqtKX7--
-
---xXc6cMRedQI8Fujsks8hk4b6hqvN4C4fw
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iF4EAREIAAYFAlkDBVcACgkQHwImuRkmbWktBAD/b9C/I0dXWHyFNoUsTITRNTND
-bVOyhSLPd9kNZtfoHXEA+wcaKcHKt3mZxyfbgX7u5mzGc9yJ03gD1RsWMovhVv3n
-=6n1U
------END PGP SIGNATURE-----
-
---xXc6cMRedQI8Fujsks8hk4b6hqvN4C4fw--
-
-
---===============1247649043493596360==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============1247649043493596360==--
+diff --git a/Documentation/devicetree/bindings/pci/mediatek,gen2v1-pcie.txt b/Documentation/devicetree/bindings/pci/mediatek,gen2v1-pcie.txt
+new file mode 100644
+index 0000000..545d8cf
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pci/mediatek,gen2v1-pcie.txt
+@@ -0,0 +1,174 @@
++Mediatek Gen2 V1 PCIe controller
++
++PCIe subsys supports single root complex (RC) with 3 Root Ports. Each root
++ports supports a Gen2 1-lane Link. It includes one Host/PCI bridge and 3
++PCIe MAC. Each port has PIPE interface to PHY. There are 3 bus master for
++data access and 1 bus slave for Configuration and Status Register access.
++
++This controller is available on MT7623 series SoCs.
++  
++Required properties:
++- compatible: Should contain "mediatek,gen2v1-pcie".
++- device_type: Must be "pci"
++- reg: Base addresses and lengths of the PCIe controller.
++- #address-cells: Address representation for root ports (must be 3)
++  - cell 0 specifies the bus and device numbers of the root port:
++    [23:16]: bus number
++    [15:11]: device number
++  - cell 1 denotes the upper 32 address bits and should be 0
++  - cell 2 contains the lower 32 address bits and is used to translate to the
++    CPU address space
++- #size-cells: Size representation for root ports (must be 2)
++- #interrupt-cells: Size representation for interrupts (must be 1)
++- interrupts: Three interrupt outputs of the controller. Must contain an
++  entry for each entry in the interrupt-names property.
++- interrupt-map-mask and interrupt-map: Standard PCI IRQ mapping properties
++  Please refer to the standard PCI bus binding document for a more detailed
++  explanation.
++- clocks: Must contain an entry for each entry in clock-names.
++  See ../clocks/clock-bindings.txt for details.
++- clock-names: Must include the following entries:
++  - free_ck	:for reference clock of PCIe subsys
++  - sys_ck0	:for clock of Port0 MAC
++  - sys_ck1	:for clock of Port1 MAC
++  - sys_ck2	:for clock of Port2 MAC
++- resets: Must contain an entry for each entry in reset-names.
++  See ../reset/reset.txt for details.
++- reset-names: Must include the following entries:
++  - pcie-rst0	:port0 reset
++  - pcie-rst1	:port1 reset
++  - pcie-rst2	:port2 reset
++- phys: list of PHY specifiers (used by generic PHY framework)
++- phy-names : must be "pcie-phy0", "pcie-phy1", "pcie-phyN".. based on the
++  number of PHYs as specified in *phys* property.
++- power-domains: A phandle and power domain specifier pair to the power domain
++  which is responsible for collapsing and restoring power to the peripheral
++- bus-range: Range of bus numbers associated with this controller
++- ranges: Describes the translation of addresses for root ports and standard
++  PCI regions. The entries must be 6 cells each, where the first three cells
++  correspond to the address as described for the #address-cells property
++  above, the fourth cell is the physical CPU address to translate to and the
++  fifth and six cells are as described for the #size-cells property above.
++  - The first three entries are expected to translate the addresses for the root
++    port registers, which are referenced by the assigned-addresses property of
++    the root port nodes (see below).
++  - The remaining entries setup the mapping for the standard I/O and memory
++	regions.
++  Please refer to the standard PCI bus binding document for a more detailed
++  explanation.
++
++In addition, the device tree node must have sub-nodes describing each
++PCIe port interface, having the following mandatory properties:
++
++Required properties:
++- device_type: Must be "pci"
++- assigned-addresses: Address and size of the port configuration registers
++- reg: Only the first four bytes are used to refer to the correct bus number
++  and device number.
++- #address-cells: Must be 3
++- #size-cells: Must be 2
++- #interrupt-cells: Size representation for interrupts (must be 1)
++- interrupt-map-mask and interrupt-map: Standard PCI IRQ mapping properties
++  Please refer to the standard PCI bus binding document for a more detailed
++  explanation.
++- ranges: Sub-ranges distributed from the PCIe controller node. An empty
++  property is sufficient.
++- num-lanes: Number of lanes to use for this port.
++
++Examples:
++
++SoC dtsi:
++
++	hifsys: syscon@1a000000 {
++		compatible = "mediatek,mt7623-hifsys", "syscon";
++		reg = <0 0x1a000000 0 0x1000>;
++		#clock-cells = <1>;
++		#reset-cells = <1>;
++	};
++
++	pcie: pcie-controller@1a140000 {
++		compatible = "mediatek,gen2v1-pcie";
++		device_type = "pci";
++		reg = <0 0x1a140000 0 0x1000>; /* PCIe shared registers */
++		#address-cells = <3>;
++		#size-cells = <2>;
++		#interrupt-cells = <1>;
++		interrupts = <GIC_SPI 193 IRQ_TYPE_LEVEL_LOW>,
++			     <GIC_SPI 194 IRQ_TYPE_LEVEL_LOW>,
++			     <GIC_SPI 195 IRQ_TYPE_LEVEL_LOW>;
++		interrupt-map-mask = <0xf800 0 0 0>;
++		interrupt-map = <0x0000 0 0 0 &gic GIC_SPI 193 IRQ_TYPE_NONE>,
++				 <0x0800 0 0 0 &gic GIC_SPI 194 IRQ_TYPE_NONE>,
++			     <0x1000 0 0 0 &gic GIC_SPI 195 IRQ_TYPE_NONE>;
++		clocks = <&topckgen CLK_TOP_ETHIF_SEL>,
++			     <&hifsys CLK_HIFSYS_PCIE0>,
++				 <&hifsys CLK_HIFSYS_PCIE1>,
++				 <&hifsys CLK_HIFSYS_PCIE2>;
++		clock-names = "free_ck", "sys_ck0", "sys_ck1", "sys_ck2";
++		resets = <&hifsys MT2701_HIFSYS_PCIE0_RST>,
++			     <&hifsys MT2701_HIFSYS_PCIE1_RST>,
++			     <&hifsys MT2701_HIFSYS_PCIE2_RST>;
++		reset-names = "pcie-rst0", "pcie-rst1", "pcie-rst2";
++		phys = <&pcie0_phy>, <&pcie1_phy>, <&pcie2_phy>;
++		phy-names = "pcie-phy0", "pcie-phy1", "pcie-phy2";
++		power-domains = <&scpsys MT2701_POWER_DOMAIN_HIF>;
++		bus-range = <0x00 0xff>;
++		ranges = <0x82000000 0 0x1a142000 0 0x1a142000 0 0x1000 /* Port0 registers */
++			  0x82000000 0 0x1a143000 0 0x1a143000 0 0x1000 /* Port1 registers */
++			  0x82000000 0 0x1a144000 0 0x1a144000 0 0x1000 /* Port2 registers */
++			  0x81000000 0 0x1a160000 0 0x1a160000 0 0x00010000 /* I/O space */
++			  0x83000000 0 0x60000000 0 0x60000000 0 0x10000000>;	/* memory space */
++		status = "disabled";
++
++		pcie@1,0 {
++			device_type = "pci";
++			assigned-addresses = <0x82000000 0 0x1a142000 0 0x1000>;
++			reg = <0x0000 0 0 0 0>;
++			#address-cells = <3>;
++			#size-cells = <2>;
++			#interrupt-cells = <1>;
++			interrupt-map-mask = <0 0 0 0>;
++			interrupt-map = <0 0 0 0 &gic GIC_SPI 193 IRQ_TYPE_NONE>;
++			ranges;
++			num-lanes = <1>;
++			status = "disabled";
++		};
++
++		pcie@2,0 {
++			device_type = "pci";
++			assigned-addresses = <0x82000800 0 0x1a143000 0 0x1000>;
++			reg = <0x0800 0 0 0 0>;
++			#address-cells = <3>;
++			#size-cells = <2>;
++			#interrupt-cells = <1>;
++			interrupt-map-mask = <0 0 0 0>;
++			interrupt-map = <0 0 0 0 &gic GIC_SPI 194 IRQ_TYPE_NONE>;
++			ranges;
++			num-lanes = <1>;
++			status = "disabled";
++		};
++
++		pcie@3,0 {
++			device_type = "pci";
++			assigned-addresses = <0x82001000 0 0x1a144000 0 0x1000>;
++			reg = <0x1000 0 0 0 0>;
++			#address-cells = <3>;
++			#size-cells = <2>;
++			#interrupt-cells = <1>;
++			interrupt-map-mask = <0 0 0 0>;
++			interrupt-map = <0 0 0 0 &gic GIC_SPI 195 IRQ_TYPE_NONE>;
++			ranges;
++			num-lanes = <1>;
++			status = "disabled";
++		};
++	};
++
++Board dts:
++
++	&pcie {
++		status = "okay";
++
++		pcie@1,0 {
++			status = "okay";
++		};
++	};
+-- 
+1.9.1
