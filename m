@@ -1,38 +1,81 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v5 02/10] irqchip/sunxi-nmi: add A64 R_INTC
- to the binding doc
-Date: Fri, 28 Apr 2017 15:51:43 -0500
-Message-ID: <20170428205143.gybvmju4675l2g35@rob-hp-laptop>
-References: <20170426152023.41567-1-icenowy@aosc.io>
- <20170426152023.41567-3-icenowy@aosc.io>
-Reply-To: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Subject: Re: [PATCH v3 1/2] ASoC: stm32: add bindings for SAI
+Date: Fri, 28 Apr 2017 15:53:58 -0500
+Message-ID: <20170428205358.fxjqaki44xqim4ta@rob-hp-laptop>
+References: <1491837596-2924-1-git-send-email-olivier.moysan@st.com>
+ <1491837596-2924-2-git-send-email-olivier.moysan@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDJIP47K7MERBYGWR3EAKGQEJIZTXTQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20170426152023.41567-3-icenowy-h8G6r0blFSE@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <1491837596-2924-2-git-send-email-olivier.moysan-qxv4g6HH51o@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: olivier moysan <olivier.moysan-qxv4g6HH51o@public.gmane.org>
+Cc: lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, perex-/Fr2/VpizcU@public.gmane.org, tiwai-IBi9RG/b67k@public.gmane.org, mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnaud.pouliquen-qxv4g6HH51o@public.gmane.org, benjamin.gaignard-qxv4g6HH51o@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 26, 2017 at 11:20:15PM +0800, Icenowy Zheng wrote:
-> The A31 NMI driver seems to be using wrong base address.
+On Mon, Apr 10, 2017 at 05:19:55PM +0200, olivier moysan wrote:
+> This patch adds documentation of device tree bindings for the
+> STM32 SAI ASoC driver.
 > 
-> As we're going to convert to use a correct NMI base address (and
-> correctly name it to R_INTC as the datasheet suggests), add a new
-> compatible string for the "correct" R_INTC, which we will use for A64
-> SoC.
-> 
-> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+> Signed-off-by: olivier moysan <olivier.moysan-qxv4g6HH51o@public.gmane.org>
 > ---
->  .../bindings/interrupt-controller/allwinner,sunxi-nmi.txt          | 7 +++++--
->  1 file changed, 5 insertions(+), 2 deletions(-)
+>  .../devicetree/bindings/sound/st,stm32-sai.txt     | 89 ++++++++++++++++++++++
+>  1 file changed, 89 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/sound/st,stm32-sai.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/sound/st,stm32-sai.txt b/Documentation/devicetree/bindings/sound/st,stm32-sai.txt
+> new file mode 100644
+> index 0000000..c59a3d7
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/sound/st,stm32-sai.txt
+> @@ -0,0 +1,89 @@
+> +STMicroelectronics STM32 Serial Audio Interface (SAI).
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+[...]
+
+> +	sai1b: audio-controller@40015824 {
+> +		#sound-dai-cells = <0>;
+> +		compatible = "st,stm32-sai-sub-b";
+> +		reg = <0x40015824 0x1C>;
+> +		clocks = <&rcc 1 CLK_SAI2>;
+> +		clock-names = "sai_ck";
+> +		dmas = <&dma2 5 0 0x400 0x0>;
+> +		dma-names = "tx";
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&pinctrl_sai1b>;
+> +
+> +		ports {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +
+> +			sai1b_port: port@0 {
+> +				reg = <0>;
+> +				cpu_endpoint: endpoint {
+> +					remote-endpoint = <&codec_endpoint>;
+> +					audio-graph-card,format = "i2s";
+> +					audio-graph-card,bitclock-master = <&codec_endpoint>;
+> +					audio-graph-card,frame-master = <&codec_endpoint>;
+
+These property names are wrong.
+
+> +				};
+> +			};
+> +		};
+> +	};
+> +};
+> +
+> +audio-codec {
+> +	codec_port: port {
+> +		codec_endpoint: endpoint {
+> +			remote-endpoint = <&cpu_endpoint>;
+> +		};
+> +	};
+> +};
+> -- 
+> 1.9.1
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
