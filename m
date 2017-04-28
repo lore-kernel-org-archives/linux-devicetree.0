@@ -1,114 +1,57 @@
-From: Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] drivers/of_iommu: ignore SMMU DT nodes with status 'disabled'
-Date: Fri, 28 Apr 2017 14:22:58 +0100
-Message-ID: <CAKv+Gu8L1iyzBitt8zzvWDDEXk_ysGfPRxHJbQQK5o8NMWF5MA@mail.gmail.com>
-References: <20170414124315.2401-1-ard.biesheuvel@linaro.org>
- <20170428131133.GJ13675@arm.com> <CAKv+Gu_G9fw0kwSetXmGjomc8Y_nu95O=rEVzgfafNRs0dtgvg@mail.gmail.com>
- <20170428131744.GL13675@arm.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/2] dt-bindings: rockchip-dw-mshc: add optional
+ rockchip,default-num-phases
+Date: Fri, 28 Apr 2017 08:34:03 -0500
+Message-ID: <20170428133403.mmdvtp3ohff6v7gh@rob-hp-laptop>
+References: <1492592434-81312-1-git-send-email-shawn.lin@rock-chips.com>
+ <1492592434-81312-2-git-send-email-shawn.lin@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170428131744.GL13675-5wv7dgnIgG8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1492592434-81312-2-git-send-email-shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ziyuan Xu <xzy.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 28 April 2017 at 14:17, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org> wrote:
-> On Fri, Apr 28, 2017 at 02:14:49PM +0100, Ard Biesheuvel wrote:
->> On 28 April 2017 at 14:11, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org> wrote:
->> > Hi Ard,
->> >
->> > [+ devicetree@]
->> >
->> > On Fri, Apr 14, 2017 at 01:43:15PM +0100, Ard Biesheuvel wrote:
->> >> DT nodes may have a status property, and if they do, such nodes should
->> >> only be considered present if the status property is set to 'okay'.
->> >>
->> >> Currently, we call the init function of IOMMUs described by the device
->> >> tree without taking this into account, which may result in the output
->> >> below on systems where some SMMUs may be legally disabled.
->> >>
->> >>  Failed to initialise IOMMU /smb/smmu@e0200000
->> >>  Failed to initialise IOMMU /smb/smmu@e0c00000
->> >>  arm-smmu e0a00000.smmu: probing hardware configuration...
->> >>  arm-smmu e0a00000.smmu: SMMUv1 with:
->> >>  arm-smmu e0a00000.smmu:  stage 2 translation
->> >>  arm-smmu e0a00000.smmu:  coherent table walk
->> >>  arm-smmu e0a00000.smmu:  stream matching with 32 register groups, mask 0x7fff
->> >>  arm-smmu e0a00000.smmu:  8 context banks (8 stage-2 only)
->> >>  arm-smmu e0a00000.smmu:  Supported page sizes: 0x60211000
->> >>  arm-smmu e0a00000.smmu:  Stage-2: 40-bit IPA -> 40-bit PA
->> >>  Failed to initialise IOMMU /smb/smmu@e0600000
->> >>  Failed to initialise IOMMU /smb/smmu@e0800000
->> >>
->> >> Since this is not an error condition, only call the init function if
->> >> the device is enabled, which also inhibits the spurious error messages.
->> >>
->> >> Signed-off-by: Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->> >> ---
->> >>  drivers/iommu/of_iommu.c | 2 +-
->> >>  1 file changed, 1 insertion(+), 1 deletion(-)
->> >>
->> >> diff --git a/drivers/iommu/of_iommu.c b/drivers/iommu/of_iommu.c
->> >> index 2683e9fc0dcf..2dd1206e6c0d 100644
->> >> --- a/drivers/iommu/of_iommu.c
->> >> +++ b/drivers/iommu/of_iommu.c
->> >> @@ -183,7 +183,7 @@ static int __init of_iommu_init(void)
->> >>       for_each_matching_node_and_match(np, matches, &match) {
->> >>               const of_iommu_init_fn init_fn = match->data;
->> >>
->> >> -             if (init_fn(np))
->> >> +             if (of_device_is_available(np) && init_fn(np))
->> >>                       pr_err("Failed to initialise IOMMU %s\n",
->> >>                               of_node_full_name(np));
->> >>       }
->> >
->> > Is there a definition of what status = "disabled" is supposed to mean for an
->> > IOMMU? For example, that could mean that the firmware has pre-programmed the
->> > SMMU with particular translations or memory attributes (a bit like the
->> > CCA=1, CPM=1, DACS=0 case in ACPI IORT), or even disabled DMA traffic
->> > altogether.
->> >
->> > So I think we'd need an update to the generic IOMMU binding text to say
->> > exactly what the semantics are supposed to be here.
->> >
->>
->> I agree that it might make sense to describe the behavior of the IOMMU
->> when it is left in the state we found it in. But that is not the same
->> as status=disabled.
->>
->> The DTS subtree contains loads and loads of boilerplate
->> configurations, where only some pieces are enabled in the final image
->> by setting status=okay. So a node that has status 'disabled' should be
->> treated as 'not present', not as 'present but can be ignored under
->> assumptions such and such'
->>
->> In other words, I think we are talking about two different issues here.
->
-> I'm not so sure... if we have a master device that has an iommus= property
-> pointing to an IOMMU with status="disabled", I really don't know whether we
-> should:
->
->   1. Assume the master can do DMA with a 1:1 mapping of memory and no
->      changes to memory attributes
->
->   2. Assume the master can do DMA with a 1:1 mapping of memory, but
->      potentially with changes to the attributes
->
->   3. Assume the master can do DMA, but with some pre-existing translation
->      (what?)
->
->   4. Assume the master can't do DMA
->
-> and I also don't know whether the "dma-coherent" property remains valid.
->
+On Wed, Apr 19, 2017 at 05:00:33PM +0800, Shawn Lin wrote:
+> By default, dw_mmc-rockchip will execute tuning for each degree.
+> So we won't miss every point of the good sample windows. However,
+> probably the phases are linear inside the good sample window.
+> Actually we don't need to do tuning for each degree so that we could
+> save some time, for instance, probe the driver or resume from S3.
+> 
+> Signed-off-by: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> ---
+> 
+>  Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.txt | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.txt b/Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.txt
+> index 520d61d..ea47ec0 100644
+> --- a/Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.txt
+> +++ b/Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.txt
+> @@ -31,6 +31,10 @@ Optional Properties:
+>    probing, low speeds or in case where all phases work at tuning time.
+>    If not specified 0 deg will be used.
+>  
+> +* rockchip,default-num-phases: The default number of times that the host
+> +  execute tuning when needed. If not specified, the host will do tuning
+> +  for 360 times, namely tuning for each degree.
 
-Ah yes. Good point.
+How is it default when you specify it? I would think default here is 
+360.
 
-So indeed, there should be some IOMMU specific status property that
-can convey all of the above, or 1. and 4. at the minimum
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Should this be common?
+
+Rob
