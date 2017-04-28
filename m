@@ -1,209 +1,53 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: [RFC v3 2/2] mux: mmio-based syscon mux controller
-Date: Fri, 28 Apr 2017 13:52:04 +0200
-Message-ID: <1493380324-20638-2-git-send-email-p.zabel@pengutronix.de>
-References: <1493380324-20638-1-git-send-email-p.zabel@pengutronix.de>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1493380324-20638-1-git-send-email-p.zabel@pengutronix.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Rosin <peda@axentia.se>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sakari Ailus <sakari.ailus@iki.fi>, Steve Longerbeam <slongerbeam@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, kernel@pengutronix.de, Philipp Zabel <p.zabel@pengutronix.de>
+From: Chris Brandt <Chris.Brandt@renesas.com>
+Subject: RE: [PATCH v5 01/10] pinctrl: generic: Add bi-directional and
+ output-enable
+Date: Fri, 28 Apr 2017 12:07:07 +0000
+Message-ID: <SG2PR06MB1165E7E651BE96CD7B7738B08A130@SG2PR06MB1165.apcprd06.prod.outlook.com>
+References: <1493281194-5200-1-git-send-email-jacopo+renesas@jmondi.org>
+ <1493281194-5200-2-git-send-email-jacopo+renesas@jmondi.org>
+ <CAHp75Vcy1OE+9htFx9k3kQhGARQPT1C0gg3SEKZd7ULu_vkUMA@mail.gmail.com>
+ <CACRpkdayW0qPXDcc_JofkwtX5UHhDPxiY_8deZZ7+hPNJkjgeQ@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdayW0qPXDcc_JofkwtX5UHhDPxiY_8deZZ7+hPNJkjgeQ@mail.gmail.com>
+Content-Language: en-US
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>, Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King - ARM Linux <linux@armlinux.org.uk>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-This adds a driver for mmio-based syscon multiplexers controlled by
-bitfields in a syscon register range.
-
-Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
----
-Changes since v2:
- - Updated CONFIG description to multi-mux
- - Use mux_control_get_index instead of open-coding it
- - Read mux-reg-masks and idle-states values in a single loop using
-   individual read_u32_index calls instead of using read_u32_array
- - Verify bitmask
----
- drivers/mux/Kconfig    |  13 +++++
- drivers/mux/Makefile   |   1 +
- drivers/mux/mux-mmio.c | 140 +++++++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 154 insertions(+)
- create mode 100644 drivers/mux/mux-mmio.c
-
-diff --git a/drivers/mux/Kconfig b/drivers/mux/Kconfig
-index 34b8284d6d29e..50e7c5d557a05 100644
---- a/drivers/mux/Kconfig
-+++ b/drivers/mux/Kconfig
-@@ -43,4 +43,17 @@ config MUX_GPIO
- 	  To compile the driver as a module, choose M here: the module will
- 	  be called mux-gpio.
- 
-+config MUX_MMIO
-+	tristate "MMIO register bitfield-controlled Multiplexer"
-+	depends on OF && MFD_SYSCON
-+	help
-+	  MMIO register bitfield-controlled Multiplexer controller.
-+
-+	  The driver builds multiplexer controllers for bitfields in a syscon
-+	  register. For N bit wide bitfields, there will be 2^N possible
-+	  multiplexer states.
-+
-+	  To compile the driver as a module, choose M here: the module will
-+	  be called mux-mmio.
-+
- endif
-diff --git a/drivers/mux/Makefile b/drivers/mux/Makefile
-index b00a7d37d2fbe..6bac5b0fea137 100644
---- a/drivers/mux/Makefile
-+++ b/drivers/mux/Makefile
-@@ -5,3 +5,4 @@
- obj-$(CONFIG_MULTIPLEXER)	+= mux-core.o
- obj-$(CONFIG_MUX_ADG792A)	+= mux-adg792a.o
- obj-$(CONFIG_MUX_GPIO)		+= mux-gpio.o
-+obj-$(CONFIG_MUX_MMIO)		+= mux-mmio.o
-diff --git a/drivers/mux/mux-mmio.c b/drivers/mux/mux-mmio.c
-new file mode 100644
-index 0000000000000..d2477d62d6eed
---- /dev/null
-+++ b/drivers/mux/mux-mmio.c
-@@ -0,0 +1,140 @@
-+/*
-+ * MMIO register bitfield-controlled multiplexer driver
-+ *
-+ * Copyright (C) 2017 Pengutronix, Philipp Zabel <kernel@pengutronix.de>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
-+
-+#include <linux/bitops.h>
-+#include <linux/err.h>
-+#include <linux/mfd/syscon.h>
-+#include <linux/module.h>
-+#include <linux/mux/driver.h>
-+#include <linux/of_platform.h>
-+#include <linux/platform_device.h>
-+#include <linux/property.h>
-+#include <linux/regmap.h>
-+
-+static int mux_mmio_set(struct mux_control *mux, int state)
-+{
-+	struct regmap_field **fields = mux_chip_priv(mux->chip);
-+
-+	return regmap_field_write(fields[mux_control_get_index(mux)], state);
-+}
-+
-+static const struct mux_control_ops mux_mmio_ops = {
-+	.set = mux_mmio_set,
-+};
-+
-+static const struct of_device_id mux_mmio_dt_ids[] = {
-+	{ .compatible = "mmio-mux", },
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, mux_mmio_dt_ids);
-+
-+static int mux_mmio_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct device_node *np = dev->of_node;
-+	struct regmap_field **fields;
-+	struct mux_chip *mux_chip;
-+	struct regmap *regmap;
-+	int num_fields;
-+	int ret;
-+	int i;
-+
-+	regmap = syscon_node_to_regmap(np->parent);
-+	if (IS_ERR(regmap)) {
-+		ret = PTR_ERR(regmap);
-+		dev_err(dev, "failed to get regmap: %d\n", ret);
-+		return ret;
-+	}
-+
-+	ret = of_property_count_u32_elems(np, "mux-reg-masks");
-+	if (ret == 0 || ret % 2)
-+		ret = -EINVAL;
-+	if (ret < 0) {
-+		dev_err(dev, "mux-reg-masks property missing or invalid: %d\n",
-+			ret);
-+		return ret;
-+	}
-+	num_fields = ret / 2;
-+
-+	mux_chip = devm_mux_chip_alloc(dev, num_fields, num_fields *
-+				       sizeof(*fields));
-+	if (IS_ERR(mux_chip))
-+		return PTR_ERR(mux_chip);
-+
-+	fields = mux_chip_priv(mux_chip);
-+
-+	for (i = 0; i < num_fields; i++) {
-+		struct mux_control *mux = &mux_chip->mux[i];
-+		struct reg_field field;
-+		s32 idle_state = MUX_IDLE_AS_IS;
-+		u32 reg, mask;
-+		int bits;
-+
-+		ret = of_property_read_u32_index(np, "mux-reg-masks",
-+						 2 * i, &reg);
-+		if (!ret)
-+			ret = of_property_read_u32_index(np, "mux-reg-masks",
-+							 2 * i + 1, &mask);
-+		if (ret < 0) {
-+			dev_err(dev, "bitfield %d: failed to read mux-reg-masks property: %d\n",
-+				i, ret);
-+			return ret;
-+		}
-+
-+		field.reg = reg;
-+		field.msb = fls(mask) - 1;
-+		field.lsb = ffs(mask) - 1;
-+
-+		if (mask != GENMASK(field.msb, field.lsb)) {
-+			dev_err(dev, "bitfield %d: invalid mask 0x%x\n",
-+				i, mask);
-+			return -EINVAL;
-+		}
-+
-+		fields[i] = devm_regmap_field_alloc(dev, regmap, field);
-+		if (IS_ERR(fields[i])) {
-+			ret = PTR_ERR(fields[i]);
-+			dev_err(dev, "bitfield %d: failed allocate: %d\n",
-+				i, ret);
-+			return ret;
-+		}
-+
-+		bits = 1 + field.msb - field.lsb;
-+		mux->states = 1 << bits;
-+
-+		of_property_read_u32_index(np, "idle-states", i, &idle_state);
-+		if (idle_state != MUX_IDLE_AS_IS) {
-+			if (idle_state < 0 || idle_state >= mux->states) {
-+				dev_err(dev, "bitfield: %d: out of range idle state %d\n",
-+					i, idle_state);
-+				return -EINVAL;
-+			}
-+
-+			mux->idle_state = idle_state;
-+		}
-+	}
-+
-+	mux_chip->ops = &mux_mmio_ops;
-+
-+	return devm_mux_chip_register(dev, mux_chip);
-+}
-+
-+static struct platform_driver mux_mmio_driver = {
-+	.driver = {
-+		.name = "mmio-mux",
-+		.of_match_table	= of_match_ptr(mux_mmio_dt_ids),
-+	},
-+	.probe = mux_mmio_probe,
-+};
-+module_platform_driver(mux_mmio_driver);
-+
-+MODULE_DESCRIPTION("MMIO register bitfield-controlled multiplexer driver");
-+MODULE_AUTHOR("Philipp Zabel <p.zabel@pengutronix.de>");
-+MODULE_LICENSE("GPL v2");
--- 
-2.11.0
+T24gRnJpZGF5LCBBcHJpbCAyOCwgMjAxNywgTGludXMgV2FsbGVpaiB3cm90ZToNCj4gPiBGb3Ig
+bWUgaXQgbG9va3MgbGlrZSB5b3UgYXJlIHRyeWluZyB0byBhbGlhcyBvcGVuLWRyYWluICsgYmlh
+cyBvcg0KPiA+IGFsaWtlLiBEb24ndCBhY3R1YWxseSBzZWUgdGhlIGJlbmVmaXQgb2YgaXQuDQo+
+IA0KPiBBbmR5IGlzIGJyaW5naW5nIHVwIGEgdmFsaWQgcG9pbnQuIEFuZCBJIHJlbWVtYmVyIGFz
+a2luZyBhYm91dCB0aGlzIGJlZm9yZS4NCj4gDQo+IFdoYXQgZG9lcyAiYmktZGlyZWN0aW9uYWwi
+IHJlYWxseSBtZWFuLCBlbGVjdHJpY2FsbHkgc3BlYWtpbmc/DQo+IA0KPiBEb2VzIGlzIGp1c3Qg
+bWVhbiBvcGVuIGRyYWluIGFuZC9vciBvcGVuIHNvdXJjZSBhY3R1YWxseT8NCj4gKFNlZSBEb2N1
+bWVudGF0aW9uL2dwaW8vZHJpdmVyLnR4dCBmb3IgYW4gZXhwbGFuYXRpb24gb2YgaG93IG9wZW4N
+Cj4gZHJhaW4vc291cmNlIHdvcmtzLikNCj4gDQo+IFdoZW4geW91IHNldCBhbiBvdXRwdXQgd2l0
+aG91dCBzZXR0aW5nIGEgdmFsdWUsIHdoYXQgaGFwcGVucyBlbGVjdHJpY2FsbHk/DQo+IA0KPiBJ
+c24ndCB0aGlzIGJpYXMtaGlnaC1pbXBlZGFuY2UgLyBIaWdoLVo/DQo+IA0KPiBIb3BlZnVsbHkg
+eW91IGNhbiBmaW5kIHRoZSBhbnN3ZXIgZnJvbSBSZW5lc2FzIGhhcmR3YXJlIGRlcHQuDQo+IA0K
+PiBZb3UgY2FuIGNlcnRhaW5seSBjYWxsIGl0IHdoYXRldmVyIHRoZSBkYXRhc2hlZXQgY2FsbHMg
+aXQgaW4geW91ciBkcml2ZXINCj4gI2RlZmluZXMgYnV0IGZvciB0aGUgRFQgYmluZGluZ3Mgd2Ug
+d291bGQgaWRlYWxseSBoYXZlIHRoZSBwaHlzaWNhbCB3b3JsZA0KPiB0aGluZ3MuDQoNClRoZSBt
+YWluIHJlYXNvbiBpcyB0aGlzIHBpbiBjb250cm9sbGVyIGlzIHRvbyBkdW1iIHRvIGRvIHdoYXQg
+aXQncyBzdXBwb3NlZCB0byB3aXRoIDEgcmVnaXN0ZXIgc2V0dGluZy4NCg0KDQpUYWtlIHRoZSBT
+REhJIGRhdGEgcGlucy4gWW91IHNlbmQgQU5EIHJlY2VpdmUgZGF0YSBvdmVyIHRob3NlIHBpbnMg
+KGFuZCB0aGV5IGFyZSBub3Qgb3BlbiBkcmFpbikuIFRoZSBpc3N1ZSBpcyB0aGF0IHRoZSBQRkMg
+SFcgdGhhdCBlbmFibGVzIHRoZSBjb25uZWN0aW9ucyBiZXR3ZWVuIHRoZSBTREhJIElQIGJsb2Nr
+IGFuZCB0aGUgSS9PIHBhZCBidWZmZXJzIGNhbiBvbmx5IGVuYWJsZSBvbmUgcGF0aC9zaWduYWwv
+ZGlyZWN0aW9uIHRvIHRoZSBidWZmZXIgZW5hYmxlcyAoaW4gb3Igb3V0KS4gU28gZm9yIGEgcGlu
+IHRoYXQgbmVlZHMgYm90aCBkaXJlY3Rpb25zLCB0aGUgUEZDIGVuYWJsZXMgb3V0cHV0IGFuZCB0
+aGUgImJpZGlyZWN0aW9uYWwgcmVnaXN0ZXIiIGlzIHVzZWQgdG8gZW5hYmxlIHRoZSBpbnB1dCBi
+dWZmZXIgYXMgd2VsbC4NCkluIHRoZSBSWi9BMSBIVyBtYW51YWwgeW91IGNhbiBraW5kIG9mIHNl
+ZSB0aGF0IGluIDU0LjE4IFBvcnQgQ29udHJvbCBMb2dpY2FsIERpYWdyYW0gKGJ1dCB0aGF0IHdh
+c24ndCBvYnZpb3VzIHRvIG1lIGF0IGZpcnN0KS4NCg0KIyBzaWRlIG5vdGUsIHRoZSB3YXkgdGhl
+IHJlZ2lzdGVycyBhcmUgYXJyYW5nZWQgaXMgYWxzbyByaWRpY3Vsb3VzIGluIG15IG9waW5pb24u
+IEknbSBub3QgYSBmYW4gb2YgdGhpcyBwYXJ0aWN1bGFyIElQLg0KDQpUaGUgZ29vZCBuZXdzIGlz
+IHRoZSBSWi9BMSBpcyB0aGUgb25seSBjaGlwIHNlcmllcyBJJ3ZlIHNlZW4gd2l0aCB0aGlzIFBG
+QyBJUCAoSSBjYW4ndCBldmVuIGZpZ3VyZSBvdXQgd2hlcmUgaXQgY2FtZSBmcm9tIGludGVybmFs
+bHkpLiBBbmQgYXMgZmFyIGFzIEkga25vdywgaXQgd2lsbCBub3QgYXBwZWFyIGluIGFueSBvdGhl
+ciBSWiBzZXJpZXMgY2hpcHMuDQoNCg0KDQpDaHJpcw0KDQo=
