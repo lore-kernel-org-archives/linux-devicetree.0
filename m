@@ -1,34 +1,41 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v5 6/9] NFC: trf7970a: Remove support for
- 'vin-voltage-override' DT property
-Date: Fri, 28 Apr 2017 15:23:38 -0500
-Message-ID: <20170428202338.iosgu2o4yxg3foig@rob-hp-laptop>
-References: <20170425224356.11498-1-mgreer@animalcreek.com>
- <20170425224356.11498-7-mgreer@animalcreek.com>
+Subject: Re: [PATCH v2 1/2] net: dsa: b53: Add compatible strings for the
+ Cygnus-family BCM11360.
+Date: Fri, 28 Apr 2017 15:25:36 -0500
+Message-ID: <20170428202536.pmo4ktea7bo6okbv@rob-hp-laptop>
+References: <20170425235357.7690-1-eric@anholt.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20170425224356.11498-7-mgreer-luAo+O/VEmrlveNOaEYElw@public.gmane.org>
+In-Reply-To: <20170425235357.7690-1-eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Greer <mgreer-luAo+O/VEmrlveNOaEYElw@public.gmane.org>
-Cc: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-nfc-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+Cc: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Vivien Didelot <vivien.didelot-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 25, 2017 at 03:43:53PM -0700, Mark Greer wrote:
-> The 'vin-voltage-override' DT property is used by the trf7970a
-> driver to override the voltage presented to the driver by the
-> regulator subsystem.  This is unnecessary as properly specifying
-> the regulator chain via DT properties will accomplish the same
-> thing.  Therefore, remove support for 'vin-voltage-override'.
+On Tue, Apr 25, 2017 at 04:53:56PM -0700, Eric Anholt wrote:
+> Cygnus is a small family of SoCs, of which we currently have
+> devicetree for BCM11360 and BCM58300.  The 11360's B53 is mostly the
+> same as 58xx, just requiring a tiny bit of setup that was previously
+> missing.
 > 
-> Signed-off-by: Mark Greer <mgreer-luAo+O/VEmrlveNOaEYElw@public.gmane.org>
+> Signed-off-by: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+> Reviewed-by: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 > ---
->  Documentation/devicetree/bindings/net/nfc/trf7970a.txt |  2 --
->  drivers/nfc/trf7970a.c                                 | 11 +----------
->  2 files changed, 1 insertion(+), 12 deletions(-)
+> 
+> v2: Reorder the entry in the docs (suggestion by Scott Branden), add
+>     missing '"'
+> 
+>  Documentation/devicetree/bindings/net/dsa/b53.txt | 3 +++
+>  drivers/net/dsa/b53/b53_srab.c                    | 2 ++
+>  2 files changed, 5 insertions(+)
+
+Everyone learns the hard way that specific compatibles are needed.
 
 Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+
+Rob
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
