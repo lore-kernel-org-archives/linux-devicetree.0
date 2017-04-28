@@ -1,34 +1,78 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 01/10] clk: renesas: cpg-mssr: Document R-Car Gen2 support
-Date: Fri, 28 Apr 2017 14:42:16 -0500
-Message-ID: <20170428194216.zqngpd32zqmuriwz@rob-hp-laptop>
-References: <1493139200-27396-1-git-send-email-geert+renesas@glider.be>
- <1493139200-27396-2-git-send-email-geert+renesas@glider.be>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [RESEND][PATCH V2 1/4] mfd: Add ROHM BD9571MWV-M PMIC DT bindings
+Date: Fri, 28 Apr 2017 14:43:26 -0500
+Message-ID: <20170428194326.yshnrbwivlgniw5u@rob-hp-laptop>
+References: <20170425183210.30594-1-marek.vasut+renesas@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1493139200-27396-2-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Cc: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <20170425183210.30594-1-marek.vasut+renesas@gmail.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Marek Vasut <marek.vasut@gmail.com>
+Cc: linux-renesas-soc@vger.kernel.org, lee.jones@linaro.org, Marek Vasut <marek.vasut+renesas@gmail.com>, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 25, 2017 at 06:53:11PM +0200, Geert Uytterhoeven wrote:
-> Document use of the Renesas Clock Pulse Generator / Module Standby and
-> Software Reset DT Bindings for various member of the R-Car Gen2 family
-> (H2, M2-W, V2H, M2-N, and E2).
+On Tue, Apr 25, 2017 at 08:32:07PM +0200, Marek Vasut wrote:
+> Add DT bindings for the ROHM BD9571MWV-M PMIC. This PMIC has
+> the following features:
+> - multiple voltage monitors for 1V8, 2V5, 3V3 voltage rail
+> - one voltage regulator for DVFS
+> - two GPIOs
 > 
-> Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Signed-off-by: Marek Vasut <marek.vasut+renesas@gmail.com>
+> Cc: devicetree@vger.kernel.org
+> Cc: Rob Herring <robh@kernel.org>
+> Cc: Geert Uytterhoeven <geert+renesas@glider.be>
+> Cc: linux-renesas-soc@vger.kernel.org
 > ---
->  Documentation/devicetree/bindings/clock/renesas,cpg-mssr.txt | 10 ++++++++--
->  1 file changed, 8 insertions(+), 2 deletions(-)
+> V2: - Drop the compatible = "regulator-fixed" from the binding example,
+>       it should not be there.
+>     - List the VD09 regulator
+> ---
+>  .../devicetree/bindings/mfd/bd9571mwv.txt          | 49 ++++++++++++++++++++++
+>  1 file changed, 49 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/bd9571mwv.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/mfd/bd9571mwv.txt b/Documentation/devicetree/bindings/mfd/bd9571mwv.txt
+> new file mode 100644
+> index 000000000000..ce24231edd7d
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mfd/bd9571mwv.txt
+> @@ -0,0 +1,49 @@
+> +* ROHM BD9571MWV Power Management Integrated Circuit (PMIC) bindings
+> +
+> +Required properties:
+> + - compatible		: Should be "rohm,bd9571mwv".
+> + - reg			: I2C slave address.
+> + - interrupt-parent	: Phandle to the parent interrupt controller.
+> + - interrupts		: The interrupt line the device is connected to.
+> + - interrupt-controller	: Marks the device node as an interrupt controller.
+> + - #interrupt-cells	: The number of cells to describe an IRQ, should be 2.
+> +			    The first cell is the IRQ number.
+> +			    The second cell is the flags, encoded as trigger
+> +			    masks from ../interrupt-controller/interrupts.txt.
+> + - gpio-controller      : Marks the device node as a GPIO Controller.
+> + - #gpio-cells          : Should be two.  The first cell is the pin number and
+> +                            the second cell is used to specify flags.
+> +                            See ../gpio/gpio.txt for more information.
+> + - regulators:          : List of child nodes that specify the regulator
+> +                            initialization data. Child nodes must be named
+> +                            after their hardware counterparts:
+> +			     - vd09
+> +			     - vd18
+> +			     - vd25
+> +			     - vd33
+> +			     - dvfs
+> +			    Each child node is defined using the standard
+> +			    binding for regulators.
+> +
+> +Example:
+> +
+> +	pmic: bd9571mwv@30 {
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+pmic@30 ...
+
+Otherwise,
+
+Acked-by: Rob Herring <robh@kernel.org>
