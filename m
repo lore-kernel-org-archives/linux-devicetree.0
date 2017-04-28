@@ -1,46 +1,96 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 2/2] dt-bindings: pcie: Add documentation for Mediatek PCIe
-Date: Fri, 28 Apr 2017 13:41:58 +0200
-Message-ID: <CAK8P3a0WGwukWj8V-S2c13S3futkxBhiMfRTa=0QWaDG7qREVw@mail.gmail.com>
-References: <1492935543-18190-1-git-send-email-ryder.lee@mediatek.com>
- <1492935543-18190-3-git-send-email-ryder.lee@mediatek.com>
- <CAK8P3a1vgi9VBZfRNq0dDKzmfe8FkHQtgz6fEXW9fyUnBHtaQQ@mail.gmail.com>
- <1493194205.27023.80.camel@mtkswgap22> <CAK8P3a0vD8s_3R+jS=JdUXX3X05SkCk-mipMA6UxWYQZe6vLUQ@mail.gmail.com>
- <1493347596.29314.55.camel@mtkswgap22>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <1493347596.29314.55.camel@mtkswgap22>
-Sender: linux-pci-owner@vger.kernel.org
-To: Ryder Lee <ryder.lee@mediatek.com>
-Cc: devicetree@vger.kernel.org, linux-pci <linux-pci@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Bjorn Helgaas <bhelgaas@google.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>
+From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: [RFC v3 1/2] dt-bindings: add mmio-based syscon mux controller DT bindings
+Date: Fri, 28 Apr 2017 13:52:03 +0200
+Message-ID: <1493380324-20638-1-git-send-email-p.zabel@pengutronix.de>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>, Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 28, 2017 at 4:46 AM, Ryder Lee <ryder.lee@mediatek.com> wrote:
-> On Thu, 2017-04-27 at 21:06 +0200, Arnd Bergmann wrote:
->> On Wed, Apr 26, 2017 at 10:10 AM, Ryder Lee <ryder.lee@mediatek.com> wrote:
->> > On Tue, 2017-04-25 at 14:18 +0200, Arnd Bergmann wrote:
->> >> On Sun, Apr 23, 2017 at 10:19 AM, Ryder Lee <ryder.lee@mediatek.com> wrote:
->> Are any of the registers the same at all, e.g. for MSI handling?
->
-> No, It doesn't support MSI. All I can do is using the registers that designer provide
-> to me. The others are inviable for software. So I treat it as different hardware.
-> Furthermore, we hope that we can put all mediatek drivers together
-> regardless of in-house IP or lincense IP
->
-> We have no particular IP name but just use chip name to call it. So I
-> will temporarily use "mediatek,gen2v1-pcie" in patch v1.
+This adds device tree binding documentation for mmio-based syscon
+multiplexers controlled by a bitfieldis in a syscon register range.
 
-I think using the chip name as in the first version of your patch name is
-better then, in particular since the 'gen2v1' would not be an actual version
-number but just say which variant got merged into mainline first.
+Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+---
+Changes since v2:
+ - Updated multi-mux DT binding description
+ - Removed superfluous @3 from example
+---
+ Documentation/devicetree/bindings/mux/mmio-mux.txt | 60 ++++++++++++++++++++++
+ 1 file changed, 60 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mux/mmio-mux.txt
 
-A related question would be on how general we want the binding to be.
-Your binding text starts out by describing that there are three root ports
-and what their capabilities are.
+diff --git a/Documentation/devicetree/bindings/mux/mmio-mux.txt b/Documentation/devicetree/bindings/mux/mmio-mux.txt
+new file mode 100644
+index 0000000000000..a9bfb4d8b6ac8
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mux/mmio-mux.txt
+@@ -0,0 +1,60 @@
++MMIO register bitfield-based multiplexer controller bindings
++
++Define register bitfields to be used to control multiplexers. The parent
++device tree node must be a syscon node to provide register access.
++
++Required properties:
++- compatible : "mmio-mux"
++- #mux-control-cells : <1>
++- mux-reg-masks : an array of register offset and pre-shifted bitfield mask
++                  pairs, each describing a single mux control.
++* Standard mux-controller bindings as decribed in mux-controller.txt
++
++Optional properties:
++- idle-states : if present, the state the muxes will have when idle. The
++		special state MUX_IDLE_AS_IS is the default.
++
++The multiplexer state of each multiplexer is defined as the value of the
++bitfield described by the corresponding register offset and bitfield mask pair
++in the mux-reg-masks array, accessed through the parent syscon.
++
++Example:
++
++	syscon {
++		compatible = "syscon";
++
++		mux: mux-controller {
++			compatible = "mmio-mux";
++			#mux-control-cells = <1>;
++
++			mux-reg-masks = <0x3 0x30>, /* 0: reg 0x3, bits 5:4 */
++					<0x3 0x40>, /* 1: reg 0x3, bit 6 */
++			idle-states = <MUX_IDLE_AS_IS>, <0>;
++		};
++	};
++
++	video-mux {
++		compatible = "video-mux";
++		mux-controls = <&mux 0>;
++
++		ports {
++			/* inputs 0..3 */
++			port@0 {
++				reg = <0>;
++			};
++			port@1 {
++				reg = <1>;
++			};
++			port@2 {
++				reg = <2>;
++			};
++			port@3 {
++				reg = <3>;
++			};
++
++			/* output */
++			port@4 {
++				reg = <4>;
++			};
++		};
++	};
+-- 
+2.11.0
 
-If you think there might be other (existing or future) chips that use the
-same binding and driver, then being a little more abstract could help
-in the long run.
-
-       Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
