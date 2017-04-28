@@ -1,42 +1,74 @@
-From: Chris Brandt <Chris.Brandt@renesas.com>
-Subject: RE: [PATCH] ARM: dts: r7s72100: add usb clocks to device tree
-Date: Fri, 28 Apr 2017 12:47:22 +0000
-Message-ID: <SG2PR06MB1165D398BD7100FAC5AAEDC68A130@SG2PR06MB1165.apcprd06.prod.outlook.com>
-References: <20170427191045.21199-1-chris.brandt@renesas.com>
- <CAMuHMdXEtefpaUJbbJ7LYjYR2oHaE-epy=eZnAyE-+=GWsy9xg@mail.gmail.com>
- <20170428080400.GI10196@verge.net.au>
+From: jmondi <jacopo-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v5 02/10] pinctrl: generic: Add macros to unpack
+ properties
+Date: Fri, 28 Apr 2017 14:49:02 +0200
+Message-ID: <20170428124902.GA29046@w540>
+References: <1493281194-5200-1-git-send-email-jacopo+renesas@jmondi.org>
+ <1493281194-5200-3-git-send-email-jacopo+renesas@jmondi.org>
+ <CACRpkdbkBtJGJ_5MVy2QSAa0zcKVm=_H+vC_kH4AUcX58TiaLg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <20170428080400.GI10196@verge.net.au>
-Content-Language: en-US
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CACRpkdbkBtJGJ_5MVy2QSAa0zcKVm=_H+vC_kH4AUcX58TiaLg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Friday, April 28, 2017, Simon Horman wrote:
-> On Fri, Apr 28, 2017 at 09:34:54AM +0200, Geert Uytterhoeven wrote:
-> > On Thu, Apr 27, 2017 at 9:10 PM, Chris Brandt <chris.brandt@renesas.com=
+Hi Linus,
+
+On Fri, Apr 28, 2017 at 10:16:22AM +0200, Linus Walleij wrote:
+> On Thu, Apr 27, 2017 at 10:19 AM, Jacopo Mondi
+> <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org> wrote:
 >
-> wrote:
-> > > This adds the USB0 and USB1 clocks to the device tree.
-> > >
-> > > Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
+> > Add PIN_CONF_UNPACK_PARAM and PIN_CONF_UNPACK_ARGS macros useful to
+> > unpack generic properties and their arguments
 > >
-> > Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> >
-> > Simon: see Section 29.3.2 (BUSWAIT) for the reference to the P1 clock.
->=20
-> Thanks, I see that now.
+> > Signed-off-by: Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
+>
+> (...)
+>
+> /*
+>   * Helpful configuration macro to be used in tables etc.
+>
+> Then this should say "macros" rather than "macro".
+>
+> > -#define PIN_CONF_PACKED(p, a) ((a << 8) | ((unsigned long) p & 0xffUL))
+> > +#define PIN_CONF_PACKED(p, a) (((a) << 8) | ((unsigned long) (p) & 0xffUL))
+>
+> Also adding some extra parantheses I see.
+>
+> > +#define PIN_CONF_UNPACK_PARAM(c) ((c) & 0xffUL)
+> > +#define PIN_CONF_UNPACK_ARGS(c) ((c) >> 8)
+>
+> But why.
+>
+> I have these two static inlines just below your new macros:
+>
+> static inline enum pin_config_param pinconf_to_config_param(unsigned
+> long config)
+> {
+>         return (enum pin_config_param) (config & 0xffUL);
+> }
+>
+> static inline u32 pinconf_to_config_argument(unsigned long config)
+> {
+>         return (u32) ((config >> 8) & 0xffffffUL);
+> }
+>
+> Why can't you use this in your code instead of macros?
+>
+> We generally prefer static inlines over macros because they are easier
+> to read.
+>
 
-I was going to say that I simply look at sections:
-  6.10.6 Internal Clock Signals (1)
-  6.10.7 Internal Clock Signals (2)
+Right. I haven't noticed them.
+I'll drop this patch, sorry for noise
 
-Because it lists all the IP blocks and their corresponding clock sources in=
- one place.
-
-
-Chris
+> Yours,
+> Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
