@@ -1,59 +1,50 @@
-From: Jon Mason <jon.mason@broadcom.com>
-Subject: Re: [PATCH v2 1/3] ARM: BCM: Enable thermal support for iProc SoCs
-Date: Fri, 28 Apr 2017 14:05:48 -0400
-Message-ID: <CAC3K-4omn1A5ddPhkhhROLmtcEDJjHg7boa0B=c9OUuAHV6NyQ@mail.gmail.com>
-References: <1493328194-1766-1-git-send-email-jon.mason@broadcom.com>
- <1493328194-1766-2-git-send-email-jon.mason@broadcom.com> <bceb9b66-c769-faf3-9288-26581b5d5dc6@broadcom.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 15/18] dt-bindings: sound: Add bindings for Cirrus
+ Logic Madera codecs
+Date: Fri, 28 Apr 2017 13:06:52 -0500
+Message-ID: <20170428180652.5fb6gagdtrtlgfdy@rob-hp-laptop>
+References: <1493050124-5970-1-git-send-email-rf@opensource.wolfsonmicro.com>
+ <1493050124-5970-16-git-send-email-rf@opensource.wolfsonmicro.com>
+ <20170425155257.s6m4wgrzxxsxcggo@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <bceb9b66-c769-faf3-9288-26581b5d5dc6@broadcom.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Scott Branden <scott.branden@broadcom.com>
-Cc: Florian Fainelli <florian.fainelli@broadcom.com>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, open list <linux-kernel@vger.kernel.org>, linux-pm@vger.kernel.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170425155257.s6m4wgrzxxsxcggo@sirena.org.uk>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Richard Fitzgerald <rf@opensource.wolfsonmicro.com>, lee.jones@linaro.org, linus.walleij@linaro.org, gnurou@gmail.com, tglx@linutronix.de, jason@lakedaemon.net, alsa-devel@alsa-project.org, patches@opensource.wolfsonmicro.com, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 27, 2017 at 7:10 PM, Scott Branden
-<scott.branden@broadcom.com> wrote:
->
->
-> On 17-04-27 02:23 PM, Jon Mason wrote:
->>
->> Change the iProc Kconfig to select THERMAL and THERMAL_OF, which allows
->> the ns-thermal driver to be selected via menuconfig.
->>
->> Signed-off-by: Jon Mason <jon.mason@broadcom.com>
->> ---
->>  arch/arm/mach-bcm/Kconfig | 2 ++
->>  1 file changed, 2 insertions(+)
->>
->> diff --git a/arch/arm/mach-bcm/Kconfig b/arch/arm/mach-bcm/Kconfig
->> index a0e66d8..da2bfeb 100644
->> --- a/arch/arm/mach-bcm/Kconfig
->> +++ b/arch/arm/mach-bcm/Kconfig
->> @@ -19,6 +19,8 @@ config ARCH_BCM_IPROC
->>         select GPIOLIB
->>         select ARM_AMBA
->>         select PINCTRL
->> +       select THERMAL
->> +       select THERMAL_OF
->
-> This is NSP specific at this point.  Also, If it increases code size in any
-> way it shouldn't be selected for all IPROC SoCS.  I'd rather this was just
-> selected via defconfig
+On Tue, Apr 25, 2017 at 04:52:57PM +0100, Mark Brown wrote:
+> On Mon, Apr 24, 2017 at 05:08:41PM +0100, Richard Fitzgerald wrote:
+> > The Cirrus Logic Madera codecs are a family of related codecs with
+> > extensive digital and analogue I/O, digital mixing and routing,
+> > signal processing and programmable DSPs.
+> 
+> Please submit patches using subject lines reflecting the style for the
+> subsystem.  This makes it easier for people to identify relevant
+> patches.  Look at what existing commits in the area you're changing are
+> doing and make sure your subject lines visually resemble what they're
+> doing.
+> 
+> > +Required properties:
+> > +  - compatible : One of the following chip-specific strings:
+> > +        "cirrus,cs47l35-codec"
+> > +        "cirrus,cs47l85-codec"
+> > +        "cirrus,cs47l90-codec"
+> 
+> You shouldn't have compatible strings for subfunctions of a MFD unless
+> these represent meaningful reusable IPs that can exist separately from
+> the parent chip, that's clearly not the case here.  All you're doing
+> here is encoding Linux internal abstractions which aren't OS neutral and
+> might change in future (for example clocking might move more into the
+> clock API).
 
-This isn't selectable via menuconfig without being in the kconfig.
-I'll move it to the NSP portion of the kconfig, as to not increase the
-size of other's kernels.
+s/compatible strings/child nodes/ and I agree. If you have child nodes, 
+then they need to have compatible strings so we can tell what child is 
+which. Node name can be used, but there's no way to version node names. 
+A compatible implies what properties are valid.
 
-Thanks,
-Jon
+Rob
 
->
->>         help
->>           This enables support for systems based on Broadcom IPROC
->> architected SoCs.
->>           The IPROC complex contains one or more ARM CPUs along with
->> common
->>
->
