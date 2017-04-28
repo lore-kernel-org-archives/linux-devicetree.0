@@ -1,56 +1,54 @@
 From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 2/2] of: fix unittest build without CONFIG_OF_OVERLAY
-Date: Fri, 28 Apr 2017 08:40:50 -0700
-Message-ID: <59036282.3050502@gmail.com>
+Subject: Re: [PATCH 1/2] of: fix uninitialized variable warning for overlay
+ test
+Date: Fri, 28 Apr 2017 08:46:21 -0700
+Message-ID: <590363CD.7000404@gmail.com>
 References: <20170428094429.2396195-1-arnd@arndb.de>
- <20170428094429.2396195-2-arnd@arndb.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170428094429.2396195-2-arnd-r2nGTMty4D4@public.gmane.org>
+In-Reply-To: <20170428094429.2396195-1-arnd-r2nGTMty4D4@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 On 04/28/17 02:44, Arnd Bergmann wrote:
-> We get a link error when the new tests are used by overlays
-> are not:
+> gcc warns that an empty device tree would cause undefined behavior:
 > 
-> drivers/of/built-in.o: In function `unflatten_device_tree':
-> (.init.text+0x967): undefined reference to `unittest_unflatten_overlay_base'
+> drivers/of/unittest.c: In function 'of_unittest':
+> drivers/of/unittest.c:2199:25: warning: 'last_sibling' may be used uninitialized in this function [-Wmaybe-uninitialized]
 > 
-> This makes the #ifdef check match the symbols that lead to building
-> the unittest_unflatten_overlay_base function.
+> This adds an initialization of the variable to zero, which we handle
+> correctly.
 > 
 > Fixes: 81d0848fc8d2 ("of: Add unit tests for applying overlays")
 > Signed-off-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
 > ---
->  drivers/of/of_private.h | 2 +-
+>  drivers/of/unittest.c | 2 +-
 >  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/drivers/of/of_private.h b/drivers/of/of_private.h
-> index de5c604f5cc4..4ebb0149d118 100644
-> --- a/drivers/of/of_private.h
-> +++ b/drivers/of/of_private.h
-> @@ -55,7 +55,7 @@ static inline int of_property_notify(int action, struct device_node *np,
->  }
->  #endif /* CONFIG_OF_DYNAMIC */
+> diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
+> index 12597ff8cfb0..6b8f3e6aa43c 100644
+> --- a/drivers/of/unittest.c
+> +++ b/drivers/of/unittest.c
+> @@ -2192,7 +2192,7 @@ static __init void of_unittest_overlay_high_level(void)
 >  
-> -#ifdef CONFIG_OF_UNITTEST
-> +#if defined(CONFIG_OF_UNITTEST) && defined(CONFIG_OF_OVERLAY)
->  extern void __init unittest_unflatten_overlay_base(void);
->  #else
->  static inline void unittest_unflatten_overlay_base(void) {};
+>  	mutex_lock(&of_mutex);
+>  
+> -	for (np = of_root->child; np; np = np->sibling)
+> +	for (last_sibling = np = of_root->child; np; np = np->sibling)
+>  		last_sibling = np;
+>  
+>  	if (last_sibling)
 > 
 
-I thought I had tested that OF_UNITTEST forced OF_OVERLAY.  But
-going back and trying again, I can confirm your results that it
-does not.  Thanks for catching this!
+Thanks Arnd!  Linux-next also reported this and I sent Rob a different
+patch for it yesterday.
 
-Reviewed-by: Frank Rowand <frank.rowand-7U/KSKJipcs@public.gmane.org>
-Tested-by: Frank Rowand <frank.rowand-7U/KSKJipcs@public.gmane.org>
+Rob, I am fine with either Arnd's patch or mine, they both fix the
+problem.
 
 -Frank
 --
