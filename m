@@ -1,55 +1,117 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH V4 1/9] PM / OPP: Allow OPP table to be used for
- power-domains
-Date: Fri, 28 Apr 2017 10:30:29 +0530
-Message-ID: <20170428050029.GD21517@vireshk-i7>
-References: <e772e67a5445319bb8e0f312846ace666adc097f.1490001099.git.viresh.kumar@linaro.org>
- <0a7146f9-72f1-317c-3aab-770a72462968@arm.com>
- <20170413053736.GM5910@vireshk-i7>
- <3adbef6a-7b43-528f-e88f-c2121d30a5d3@arm.com>
- <20170417052758.GF28191@vireshk-i7>
- <95aa4b97-4e1a-13bb-f4d8-982b778012ba@arm.com>
- <9cd9287c-392b-d3ca-db7d-75c49287448e@codeaurora.org>
- <20170426135532.ryrh276znet5yvks@sirena.org.uk>
- <c66322f5-e2eb-5556-a5a5-14998a2f195d@arm.com>
- <9019aebe-95ba-b1b8-65a9-5be927934218@codeaurora.org>
+From: Oleksij Rempel <linux@rempel-privat.de>
+Subject: Re: [PATCH v2] arm: dts: sun7i-a20-bananapi: name the GPIO lines
+Date: Fri, 28 Apr 2017 07:11:00 +0200
+Message-ID: <60d2e24d-91c8-7563-9ecc-f203b12e0983@rempel-privat.de>
+References: <CACRpkdYnK=7C=F5hZUo-nYv6Z+Pb+eT7vm1e4hL8N-QgJnuLfg@mail.gmail.com>
+ <1470384404-6796-1-git-send-email-linux@rempel-privat.de>
+ <CACRpkdZn7-SL5kmGn7Pysz=QiQFBEm8+c6bw=hE5F0CV4ct0RQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <9019aebe-95ba-b1b8-65a9-5be927934218@codeaurora.org>
-Sender: linux-pm-owner@vger.kernel.org
-To: Sudeep Holla <sudeep.holla@arm.com>, Rajendra Nayak <rnayak@codeaurora.org>
-Cc: Mark Brown <broonie@kernel.org>, Rafael Wysocki <rjw@rjwysocki.net>, ulf.hansson@linaro.org, Kevin Hilman <khilman@linaro.org>, Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@codeaurora.org>, linaro-kernel@lists.linaro.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, Vincent Guittot <vincent.guittot@linaro.org>, robh+dt@kernel.org, lina.iyer@linaro.org, devicetree@vger.kernel.org
+Content-Type: multipart/mixed; boundary="===============3593967614605373351=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CACRpkdZn7-SL5kmGn7Pysz=QiQFBEm8+c6bw=hE5F0CV4ct0RQ@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Chen-Yu Tsai <wens@csie.org>, Oleksij Rempel <fixed-term.Oleksij.Rempel@de.bosch.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 27-04-17, 16:20, Rajendra Nayak wrote:
-> 
-> On 04/27/2017 03:12 PM, Sudeep Holla wrote:
-> []..
-> 
-> >>
-> >>> At qualcomm, we have an external M3 core (running its own firmware) which controls
-> >>> a few voltage rails (including AVS on those). The devices vote for the voltage levels
-> > 
-> > Thanks for explicitly mentioning this, but ...
-> > 
-> >>> (or performance levels) they need by passing an integer value to the M3 (not actual
-> > 
-> > you contradict here, is it just voltage or performance(i.e. frequency)
-> > or both ? We need clarity there to choose the right representation.
-> 
-> Its just voltage.
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--===============3593967614605373351==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="58m1Bl3bFtMFgbF8JCuWrW8lrh4Kfa2sL"
 
-Right. Its just voltage in this case, but we can't speak of future
-platforms here and we have to consider this thing as an operating
-performance point only. I still think that this thread is moving in
-the right direction, specially after V6 which looks much better.
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--58m1Bl3bFtMFgbF8JCuWrW8lrh4Kfa2sL
+Content-Type: multipart/mixed; boundary="hxP3d3LQJdB0EBX6KEis7vfAFcSiVKaeU";
+ protected-headers="v1"
+From: Oleksij Rempel <linux@rempel-privat.de>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Oleksij Rempel <fixed-term.Oleksij.Rempel@de.bosch.com>,
+ "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+ "linux-arm-kernel@lists.infradead.org"
+ <linux-arm-kernel@lists.infradead.org>, Chen-Yu Tsai <wens@csie.org>
+Message-ID: <60d2e24d-91c8-7563-9ecc-f203b12e0983@rempel-privat.de>
+Subject: Re: [PATCH v2] arm: dts: sun7i-a20-bananapi: name the GPIO lines
+References: <CACRpkdYnK=7C=F5hZUo-nYv6Z+Pb+eT7vm1e4hL8N-QgJnuLfg@mail.gmail.com>
+ <1470384404-6796-1-git-send-email-linux@rempel-privat.de>
+ <CACRpkdZn7-SL5kmGn7Pysz=QiQFBEm8+c6bw=hE5F0CV4ct0RQ@mail.gmail.com>
+In-Reply-To: <CACRpkdZn7-SL5kmGn7Pysz=QiQFBEm8+c6bw=hE5F0CV4ct0RQ@mail.gmail.com>
 
-If we have anything strong against the way V6 is trying to solve it, I
-want to talk about it right now and get inputs from all the parties
-involved. Scrapping all this work is fine, but I would like to do it
-ASAP in that case :)
+--hxP3d3LQJdB0EBX6KEis7vfAFcSiVKaeU
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
--- 
-viresh
+Am 08.08.2016 um 19:51 schrieb Linus Walleij:
+> On Fri, Aug 5, 2016 at 10:06 AM, Oleksij Rempel <linux@rempel-privat.de=
+> wrote:
+>=20
+>> This names the GPIO lines on the Banana Pi board in accordance with
+>> the A20_Banana_Pi v1.4 Specification.
+>>
+>> This will make these line names reflect through to userspace
+>> so that they can easily be identified and used with the new
+>> character device ABI.
+>>
+>> Some care has been taken to name all lines, not just those used
+>> by the external connectors, also lines that are muxed into some
+>> other function than GPIO: these are named "[FOO]" so that users
+>> can see with lsgpio what all lines are used for.
+>>
+>> Ps: most of the text was taken from Linus Wallej patch.
+>>
+>> Cc: devicetree@vger.kernel.org
+>> Cc: Linus Walleij <linus.walleij@linaro.org>
+>> Cc: linux-arm-kernel@lists.infradead.org
+>> Cc: Chen-Yu Tsai <wens@csie.org>
+>> Signed-off-by: Oleksij Rempel <linux@rempel-privat.de>
+>=20
+> Acked-by: Linus Walleij <linus.walleij@linaro.org>
+>=20
+> Yours,
+> Linus Walleij
+
+Hm... i assume this patch was lost. Should i resend it?
+
+--=20
+Regards,
+Oleksij
+
+
+--hxP3d3LQJdB0EBX6KEis7vfAFcSiVKaeU--
+
+--58m1Bl3bFtMFgbF8JCuWrW8lrh4Kfa2sL
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iF4EAREIAAYFAlkCzuQACgkQHwImuRkmbWkX8wD/fTCVQ2u8nGYo9l1U9fjAoRhn
+zLxpqD2Q+NSFajtyVsoA/RDieHh6Cx+k32FOmLxjrp2rA3cGYQaW1lp+uqTz0cXX
+=2Wcn
+-----END PGP SIGNATURE-----
+
+--58m1Bl3bFtMFgbF8JCuWrW8lrh4Kfa2sL--
+
+
+--===============3593967614605373351==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============3593967614605373351==--
