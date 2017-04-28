@@ -1,50 +1,52 @@
-From: Scott Branden <scott.branden@broadcom.com>
-Subject: Re: [PATCH v3 2/3] thermal: broadcom: ns-thermal: default on iProc
- SoCs
-Date: Fri, 28 Apr 2017 13:36:39 -0700
-Message-ID: <6628a958-087d-1221-7717-c07eeaec3cce@broadcom.com>
-References: <1493410291-16679-1-git-send-email-jon.mason@broadcom.com>
- <1493410291-16679-3-git-send-email-jon.mason@broadcom.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 29/30] dt-bindings: add vendor prefix for bananapi
+Date: Fri, 28 Apr 2017 15:37:27 -0500
+Message-ID: <20170428203727.m6jm5w6nb2iirxih@rob-hp-laptop>
+References: <1493198774-4478-1-git-send-email-sean.wang@mediatek.com>
+ <1493198774-4478-30-git-send-email-sean.wang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1493410291-16679-3-git-send-email-jon.mason@broadcom.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jon Mason <jon.mason@broadcom.com>, Florian Fainelli <florian.fainelli@broadcom.com>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: bcm-kernel-feedback-list@broadcom.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1493198774-4478-30-git-send-email-sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
+Cc: matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 17-04-28 01:11 PM, Jon Mason wrote:
-> Tweak the Kconfig description to mention support for NSP and make the
-> default on for iProc based platforms.
->
-> Signed-off-by: Jon Mason <jon.mason@broadcom.com>
+On Wed, Apr 26, 2017 at 05:26:13PM +0800, sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org wrote:
+> From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> 
+> Banana Pi team in Sinovoip Co., Limited which are dedicated to
+> design and manufacture open hardware product.
+> 
+> Website: http://www.banana-pi.org/
+> 
+> Signed-off-by: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 > ---
->  drivers/thermal/broadcom/Kconfig | 9 +++++----
->  1 file changed, 5 insertions(+), 4 deletions(-)
->
-> diff --git a/drivers/thermal/broadcom/Kconfig b/drivers/thermal/broadcom/Kconfig
-> index f0dea8a..b6f4b85 100644
-> --- a/drivers/thermal/broadcom/Kconfig
-> +++ b/drivers/thermal/broadcom/Kconfig
-> @@ -1,8 +1,9 @@
->  config BCM_NS_THERMAL
->  	tristate "Northstar thermal driver"
->  	depends on ARCH_BCM_IPROC || COMPILE_TEST
-If this driver is used on these SoCs then it:
-depends on ARCH_BCM_NSP || ARCH_BCM_5301X || COMPILE_TEST
-?
-> +	default y if ARCH_BCM_IPROC
->  	help
-> -	  Northstar is a family of SoCs that includes e.g. BCM4708, BCM47081,
-> -	  BCM4709 and BCM47094. It contains DMU (Device Management Unit) block
-> -	  with a thermal sensor that allows checking CPU temperature. This
-> -	  driver provides support for it.
-> +	  Support for the Northstar and Northstar Plus family of SoCs (e.g.
-> +	  BCM4708, BCM4709, BCM5301x, BCM95852X, etc). It contains DMU (Device
-> +	  Management Unit) block with a thermal sensor that allows checking CPU
-> +	  temperature.
->
+>  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> index ec0bfb9..8ca0f3c 100644
+> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
+> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> @@ -44,6 +44,7 @@ avia	avia semiconductor
+>  avic	Shanghai AVIC Optoelectronics Co., Ltd.
+>  axentia	Axentia Technologies AB
+>  axis	Axis Communications AB
+> +bananapi Banana Pi SINOVOP CO., LIMITED
+
+s/SINOVOP/SINOVOIP/ 
+
+
+>  boe	BOE Technology Group Co., Ltd.
+>  bosch	Bosch Sensortec GmbH
+>  boundary	Boundary Devices Inc.
+> -- 
+> 1.9.1
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
