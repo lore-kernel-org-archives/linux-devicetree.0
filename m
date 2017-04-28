@@ -1,44 +1,42 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: [PATCH 1/2] of: fix uninitialized variable warning for overlay test
-Date: Fri, 28 Apr 2017 11:44:11 +0200
-Message-ID: <20170428094429.2396195-1-arnd@arndb.de>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: [PATCH 2/2] of: fix unittest build without CONFIG_OF_OVERLAY
+Date: Fri, 28 Apr 2017 11:44:12 +0200
+Message-ID: <20170428094429.2396195-2-arnd@arndb.de>
+References: <20170428094429.2396195-1-arnd@arndb.de>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170428094429.2396195-1-arnd@arndb.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-gcc warns that an empty device tree would cause undefined behavior:
+We get a link error when the new tests are used by overlays
+are not:
 
-drivers/of/unittest.c: In function 'of_unittest':
-drivers/of/unittest.c:2199:25: warning: 'last_sibling' may be used uninitialized in this function [-Wmaybe-uninitialized]
+drivers/of/built-in.o: In function `unflatten_device_tree':
+(.init.text+0x967): undefined reference to `unittest_unflatten_overlay_base'
 
-This adds an initialization of the variable to zero, which we handle
-correctly.
+This makes the #ifdef check match the symbols that lead to building
+the unittest_unflatten_overlay_base function.
 
 Fixes: 81d0848fc8d2 ("of: Add unit tests for applying overlays")
-Signed-off-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- drivers/of/unittest.c | 2 +-
+ drivers/of/of_private.h | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
-index 12597ff8cfb0..6b8f3e6aa43c 100644
---- a/drivers/of/unittest.c
-+++ b/drivers/of/unittest.c
-@@ -2192,7 +2192,7 @@ static __init void of_unittest_overlay_high_level(void)
+diff --git a/drivers/of/of_private.h b/drivers/of/of_private.h
+index de5c604f5cc4..4ebb0149d118 100644
+--- a/drivers/of/of_private.h
++++ b/drivers/of/of_private.h
+@@ -55,7 +55,7 @@ static inline int of_property_notify(int action, struct device_node *np,
+ }
+ #endif /* CONFIG_OF_DYNAMIC */
  
- 	mutex_lock(&of_mutex);
- 
--	for (np = of_root->child; np; np = np->sibling)
-+	for (last_sibling = np = of_root->child; np; np = np->sibling)
- 		last_sibling = np;
- 
- 	if (last_sibling)
+-#ifdef CONFIG_OF_UNITTEST
++#if defined(CONFIG_OF_UNITTEST) && defined(CONFIG_OF_OVERLAY)
+ extern void __init unittest_unflatten_overlay_base(void);
+ #else
+ static inline void unittest_unflatten_overlay_base(void) {};
 -- 
 2.9.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
