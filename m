@@ -1,37 +1,63 @@
-From: Chris Brandt <Chris.Brandt@renesas.com>
-Subject: RE: [PATCH v5 10/10] arm: dts: genmai: Add ethernet pin group
-Date: Fri, 28 Apr 2017 13:50:32 +0000
-Message-ID: <SG2PR06MB11654ECED12BEB74701B53828A130@SG2PR06MB1165.apcprd06.prod.outlook.com>
-References: <1493281194-5200-1-git-send-email-jacopo+renesas@jmondi.org>
- <1493281194-5200-11-git-send-email-jacopo+renesas@jmondi.org>
- <CACRpkdaiDMxaGM=vqeqVQ-6i3ecYhc+pudy4yt4zAZW-XZ4vCw@mail.gmail.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] iio: adc: add driver for the ti-adc084s021 chip
+Date: Fri, 28 Apr 2017 08:52:48 -0500
+Message-ID: <20170428135248.du6smmzktqldj4u4@rob-hp-laptop>
+References: <1492786703-5149-1-git-send-email-marten.lindahl@axis.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdaiDMxaGM=vqeqVQ-6i3ecYhc+pudy4yt4zAZW-XZ4vCw@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>, Jacopo Mondi <jacopo+renesas@jmondi.org>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1492786703-5149-1-git-send-email-marten.lindahl-VrBV9hrLPhE@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?iso-8859-1?Q?M=E5rten?= Lindahl <marten.lindahl-VrBV9hrLPhE@public.gmane.org>
+Cc: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?iso-8859-1?Q?M=E5rten?= Lindahl <martenli-VrBV9hrLPhE@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpZGF5LCBBcHJpbCAyOCwgMjAxNywgTGludXMgV2FsbGVpaiB3cm90ZToNCj4gPiBBZGQg
-cGluIGNvbmZpZ3VyYXRpb24gc3Vibm9kZSBmb3IgRVRIRVIgZXRoZXJuZXQgY29udHJvbGxlci4N
-Cj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IEphY29wbyBNb25kaSA8amFjb3BvK3JlbmVzYXNAam1v
-bmRpLm9yZz4NCj4gKC4uLikNCj4gPiArICAgICAgICAgICAgICAgcGluc19iaWRpciB7DQo+ID4g
-KyAgICAgICAgICAgICAgICAgICAgICAgcGlubXV4ID0gPFJaQTFfUElOTVVYKDMsIDMsIDIpPjsv
-KiBQM18zID0NCj4gRVRfTURJTyAgKi8NCj4gPiArICAgICAgICAgICAgICAgICAgICAgICBiaS1k
-aXJlY3Rpb25hbDsNCj4gPiArICAgICAgICAgICAgICAgfTsNCj4gDQo+IFNvIEknbSBhZ2FpbnN0
-IG1lcmdpbmcgdGhpcyB1bnRpbCBzb21lb25lIGV4cGxhaW5zIHdoYXQgImJpLWRpcmVjdGlvbmFs
-Ig0KPiBhY3R1YWxseSBtZWFucywgZWxlY3RyaWNhbGx5IHNwZWFraW5nLiBXaGF0IGhhcHBlbnMg
-cGh5c2ljYWxseSBvbiB0aGlzDQo+IHBpbj8NCj4gDQo+IEkgdGhpbmsgdGhpcyBqdXN0IG1lYW5z
-IG9wZW4gZHJhaW4uDQo+IA0KPiBJdCBpcyBkYW5nZXJvdXMgdG8gbWVyZ2UgdGhpbmdzIHdlIGRv
-bid0IHVuZGVyc3RhbmQuDQo+IA0KPiBTdXJlbHkgc29tZW9uZSBpbnNpZGUgUmVuZXNhcyBjYW4g
-YW5zd2VyIHRoaXMgcXVlc3Rpb24uDQoNCkkgZG9uJ3QgdGhpbmsgdGhpcyBoYXMgYW55dGhpbmcg
-dG8gZG8gd2l0aCBvcGVuIGRyYWluIGJlY2F1c2UgeW91IG5lZWQgaXQgZm9yIGFueSBwaW4gdGhh
-dCB0aGUgcGVyaXBoZXJhbCBJUCBibG9jayBuZWVkcyB0byB0cmFuc21pdCBhbmQgcmVjZWl2ZSBv
-dmVyIHRoZSBzYW1lIGxpbmUsIHJlZ2FyZGxlc3Mgb2YgaWYgaXQncyBhIFNESEksIEkyQywgRXRo
-ZXJuZXQgTURJTywgZXRjLi4uDQpJdCdzIG1vcmUgYWJvdXQgb2YgYWxsb3dpbmcgdGhlIGludGVy
-bmFsIElQIGJsb2NrIHNpZ25hbHMgdG8gZ2V0IGhvb2tlZCB1cCB0byB0aGUgSU8gcGFkIHNpZ25h
-bHMuDQoNCkNocmlzDQoNCg==
+On Fri, Apr 21, 2017 at 04:58:23PM +0200, Mårten Lindahl wrote:
+> From: Mårten Lindahl <martenli-VrBV9hrLPhE@public.gmane.org>
+> 
+> This adds support for the Texas Instruments ADC084S021 ADC chip.
+> 
+> Signed-off-by: Mårten Lindahl <martenli-VrBV9hrLPhE@public.gmane.org>
+> ---
+>  .../devicetree/bindings/iio/adc/ti-adc084s021.txt  |  25 ++
+
+It's preferred to put bindings in a separate patch.
+
+>  drivers/iio/adc/Kconfig                            |  12 +
+>  drivers/iio/adc/Makefile                           |   1 +
+>  drivers/iio/adc/ti-adc084s021.c                    | 342 +++++++++++++++++++++
+>  4 files changed, 380 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/adc/ti-adc084s021.txt
+>  create mode 100644 drivers/iio/adc/ti-adc084s021.c
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/adc/ti-adc084s021.txt b/Documentation/devicetree/bindings/iio/adc/ti-adc084s021.txt
+> new file mode 100644
+> index 0000000..921eb46
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/adc/ti-adc084s021.txt
+> @@ -0,0 +1,25 @@
+> +* Texas Instruments' ADC084S021
+> +
+> +Required properties:
+> + - compatible        : Must be "ti,adc084s021"
+> + - reg               : SPI chip select number for the device
+> + - vref-supply       : The regulator supply for ADC reference voltage
+> + - spi-max-frequency : Definition as per Documentation/devicetree/bindings/spi/spi-bus.txt
+> +
+> +Optional properties:
+> + - spi-cpol          : SPI inverse clock polarity, as per spi-bus bindings
+> + - spi-cpha          : SPI shifted clock phase (CPHA), as per spi-bus bindings
+> + - spi-cs-high       : SPI chip select active high, as per spi-bus bindings
+
+How are these optional? A given device should have specific properties 
+required here.
+
+Also, no need to define them, "per spi-bus bindings" is enough.
+
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
