@@ -1,65 +1,80 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v5 00/10] Renesas RZ/A1 pin and gpio controller
-Date: Fri, 28 Apr 2017 07:22:48 +0200
-Message-ID: <20170428052247.GG18349@verge.net.au>
-References: <1493281194-5200-1-git-send-email-jacopo+renesas@jmondi.org>
- <CAMuHMdWw1JpFLT0QY4yQK6VH0oSeQOHUWMuKFSj6b6vrhHPCdA@mail.gmail.com>
+From: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Subject: Re: [PATCH/RFC 0/5] arm64: dts: renesas: Break out common board
+ support
+Date: Fri, 28 Apr 2017 09:04:59 +0200
+Message-ID: <20170428070458.GB10196@verge.net.au>
+References: <1492779321-23939-1-git-send-email-geert+renesas@glider.be>
+ <20170426080642.GK25517@verge.net.au>
+ <CAMuHMdXbe=rkeS+-teg7nqbjULWY0_5pBO1XEzCGdYA4gB57oA@mail.gmail.com>
+ <CAMuHMdV1SQoeEACaNLZbByRLbosMj5oxEysNDVevYgxqStDaug@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-gpio-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CAMuHMdWw1JpFLT0QY4yQK6VH0oSeQOHUWMuKFSj6b6vrhHPCdA@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, Linus Walleij <linus.walleij@linaro.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Chris Brandt <chris.brandt@renesas.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+In-Reply-To: <CAMuHMdV1SQoeEACaNLZbByRLbosMj5oxEysNDVevYgxqStDaug-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Cc: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Vladimir Barinov <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 27, 2017 at 10:42:02AM +0200, Geert Uytterhoeven wrote:
-> Hi Jacopo,
+On Thu, Apr 27, 2017 at 03:32:49PM +0200, Geert Uytterhoeven wrote:
+> Hi Simon,
 > 
-> On Thu, Apr 27, 2017 at 10:19 AM, Jacopo Mondi
-> <jacopo+renesas@jmondi.org> wrote:
-> >    this is 5th round of gpio/pincontroller for RZ/A1 devices.
+> On Wed, Apr 26, 2017 at 10:11 AM, Geert Uytterhoeven
+> <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org> wrote:
+> > CC Vladimir (which I forgot to CC initially, sorry for that)
 > >
-> > I have updated the pin controller driver to use the newly introduced
-> > "pinctrl_enable()" function.
-> > This is required since v4.11-rc7 as otherwise, as reported by Chris Brandt,
-> > the pin controller does not start.
+> > On Wed, Apr 26, 2017 at 10:06 AM, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org> wrote:
+> >> On Fri, Apr 21, 2017 at 02:55:16PM +0200, Geert Uytterhoeven wrote:
+> >>> The Renesas Salvator-X and ULCB development board can be equipped with
+> >>> either an R-Car H3 or M3-W SiP, which are pin-compatible.  All boards
+> >>> use separate DTBs, but currently there's no sharing of board-specific
+> >>> devices in DTS.
+> >>>
+> >>> This series reduces duplication by extracting common board support into
+> >>> their own .dtsi files.  As the level of support varies across boards and
+> >>> SoCs, this requires the addition of a few external clocks and
+> >>> placeholder devices on R-Car M3-W, so the common board support DTS can
+> >>> refer to them.
+> >>>
+> >>>   - Patches 1 and 2 add the external audio and PCIe bus clocks on R-Car
+> >>>     M3-W, which are present in r8a7795.dtsi, and used in
+> >>>     r8a7795-salvator-x.dts,
+> >>>   - RFC patch 3 adds placeholders for devices that are not yet supported
+> >>>     and/or tested on R-Car M3-W, but used on R-Car H3,
+> >>>   - RFC patch 4 extracts common Salvator-X board support,
+> >>>   - RFC patch 5 extracts common ULCB board support.
+> >>>
+> >>> For R-Car H3 based boards, there are no functional changes.
+> >>> For R-Car M3-W based boards, some new devices are now described in DT.
+> >>>
+> >>> Dependencies:
+> >>>   - renesas-devel-20170420-v4.11-rc7,
+> >>>   - Patches 1 and 2 can be applied as-is,
+> >>>   - Patches 4 and 5 depend on "[PATCH 0/8] arm64: dts: renesas: Break
+> >>>     out R-Car H3 and M3-W SiP"
+> >>>     (http://www.spinics.net/lists/devicetree/msg173820.html).
+> >>>
+> >>> DTB changes have been inspected using scripts/dtc/dtx_diff.
+> >>> This has been tested on Salvator-X (both H3 and M3-W).
+> >>> This has not been tested on H3ULCB and M3ULCB due to lack of hardware.
+> >>>
+> >>> Thanks for your comments!
+> >>
+> >> Thanks for tackling this important problem. I have looked over the changes
+> >> and they seem nice to me. I would, however, be more comfortable applying
+> >> them if they were rested on the ULCB boards.
 > >
-> > I have incorporated your comments on the device tree bindings documentation,
-> > and added to pinctrl-generic.h header file two macros to unpack generic
-> > properties and their arguments.
+> > tested?
 > >
-> > Tested with SCIF, RIIC, ETHER and gpio-leds on Genmai board.
+> > I've pushed a branch for testing to topic/rcar3-dtsi-sharing in
+> > git://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers.git.
 > 
-> Thanks for the update!
-> 
-> > Jacopo Mondi (10):
-> >   pinctrl: generic: Add bi-directional and output-enable
-> 
-> Already applied by LinusW.
-> 
-> >   pinctrl: generic: Add macros to unpack properties
-> 
-> LinusW: do you want me to queue this together with the driver for v4.13,
-> or will you take this single patch for v4.12?
-> 
-> >   pinctrl: Renesas RZ/A1 pin and gpio controller
-> >   dt-bindings: pinctrl: Add RZ/A1 bindings doc
-> 
-> Will queue in sh-pfc-for-v4.13.
-> 
-> >   arm: dts: dt-bindings: Add Renesas RZ/A1 pinctrl header
-> >   arm: dts: r7s72100: Add pin controller node
-> >   arm: dts: genmai: Add SCIF2 pin group
-> >   arm: dts: genmai: Add RIIC2 pin group
-> >   arm: dts: genmai: Add user led device nodes
-> >   arm: dts: genmai: Add ethernet pin group
-> 
-> These are for Simon.
-> 
-> Does applying the DTS changes before the driver introduce regressions?
-> If no, Simon can queue them for v4.13.
-> If yes, they'll have to wait for v4.14.
+> I managed to test it on the new H3ULCB and M3ULCB baords in Magnus' farm.
+> No issues detected.
 
-That is my question too.
+Great! Any objections to me queuing this up?
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
