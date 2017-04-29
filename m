@@ -1,7 +1,7 @@
 From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v2 1/5] dt-bindings: mtd: document new "on-die" nand-ecc-mode
-Date: Sat, 29 Apr 2017 11:06:42 +0200
-Message-ID: <1493456806-18898-2-git-send-email-thomas.petazzoni@free-electrons.com>
+Subject: [PATCH v2 3/5] mtd: nand: export nand_{read,write}_page_raw()
+Date: Sat, 29 Apr 2017 11:06:44 +0200
+Message-ID: <1493456806-18898-4-git-send-email-thomas.petazzoni@free-electrons.com>
 References: <1493456806-18898-1-git-send-email-thomas.petazzoni@free-electrons.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1493456806-18898-1-git-send-email-thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
@@ -10,31 +10,79 @@ To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gma
 Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-A number of NAND chips support a feature called on-die ECC, where the
-NAND chip itself is capable of doing error detection and correction. The
-new "on-die" value for nand-ecc-mode indicates that we want this
-functionality to be used.
+The nand_read_page_raw() and nand_write_page_raw() functions might be
+re-used by vendor-specific implementations of the read_page/write_page
+functions. Instead of having vendor-specific code duplicate this code,
+it is much better to export those functions and allow them to be
+re-used.
 
 Signed-off-by: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 Reviewed-by: Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>
 ---
- Documentation/devicetree/bindings/mtd/nand.txt | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/mtd/nand/nand_base.c | 10 ++++++----
+ include/linux/mtd/nand.h     |  8 ++++++++
+ 2 files changed, 14 insertions(+), 4 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/mtd/nand.txt b/Documentation/devicetree/bindings/mtd/nand.txt
-index b056016..133f381 100644
---- a/Documentation/devicetree/bindings/mtd/nand.txt
-+++ b/Documentation/devicetree/bindings/mtd/nand.txt
-@@ -21,7 +21,7 @@ Optional NAND chip properties:
+diff --git a/drivers/mtd/nand/nand_base.c b/drivers/mtd/nand/nand_base.c
+index b639e88..3282738 100644
+--- a/drivers/mtd/nand/nand_base.c
++++ b/drivers/mtd/nand/nand_base.c
+@@ -1456,14 +1456,15 @@ EXPORT_SYMBOL(nand_check_erased_ecc_chunk);
+  *
+  * Not for syndrome calculating ECC controllers, which use a special oob layout.
+  */
+-static int nand_read_page_raw(struct mtd_info *mtd, struct nand_chip *chip,
+-			      uint8_t *buf, int oob_required, int page)
++int nand_read_page_raw(struct mtd_info *mtd, struct nand_chip *chip,
++		       uint8_t *buf, int oob_required, int page)
+ {
+ 	chip->read_buf(mtd, buf, mtd->writesize);
+ 	if (oob_required)
+ 		chip->read_buf(mtd, chip->oob_poi, mtd->oobsize);
+ 	return 0;
+ }
++EXPORT_SYMBOL(nand_read_page_raw);
  
- - nand-ecc-mode : String, operation mode of the NAND ecc mode.
- 		  Supported values are: "none", "soft", "hw", "hw_syndrome",
--		  "hw_oob_first".
-+		  "hw_oob_first", "on-die".
- 		  Deprecated values:
- 		  "soft_bch": use "soft" and nand-ecc-algo instead
- - nand-ecc-algo: string, algorithm of NAND ECC.
+ /**
+  * nand_read_page_raw_syndrome - [INTERN] read raw page data without ecc
+@@ -2401,8 +2402,8 @@ static int nand_read_oob(struct mtd_info *mtd, loff_t from,
+  *
+  * Not for syndrome calculating ECC controllers, which use a special oob layout.
+  */
+-static int nand_write_page_raw(struct mtd_info *mtd, struct nand_chip *chip,
+-			       const uint8_t *buf, int oob_required, int page)
++int nand_write_page_raw(struct mtd_info *mtd, struct nand_chip *chip,
++			const uint8_t *buf, int oob_required, int page)
+ {
+ 	chip->write_buf(mtd, buf, mtd->writesize);
+ 	if (oob_required)
+@@ -2410,6 +2411,7 @@ static int nand_write_page_raw(struct mtd_info *mtd, struct nand_chip *chip,
+ 
+ 	return 0;
+ }
++EXPORT_SYMBOL(nand_write_page_raw);
+ 
+ /**
+  * nand_write_page_raw_syndrome - [INTERN] raw page write function
+diff --git a/include/linux/mtd/nand.h b/include/linux/mtd/nand.h
+index 6035220..7a01d2e 100644
+--- a/include/linux/mtd/nand.h
++++ b/include/linux/mtd/nand.h
+@@ -1259,6 +1259,14 @@ int nand_read_oob_std(struct mtd_info *mtd, struct nand_chip *chip, int page);
+ int nand_read_oob_syndrome(struct mtd_info *mtd, struct nand_chip *chip,
+ 			   int page);
+ 
++/* Default read_page_raw implementation */
++int nand_read_page_raw(struct mtd_info *mtd, struct nand_chip *chip,
++		       uint8_t *buf, int oob_required, int page);
++
++/* Default write_page_raw implementation */
++int nand_write_page_raw(struct mtd_info *mtd, struct nand_chip *chip,
++			const uint8_t *buf, int oob_required, int page);
++
+ /* Reset and initialize a NAND device */
+ int nand_reset(struct nand_chip *chip, int chipnr);
+ 
 -- 
 2.7.4
 
