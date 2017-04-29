@@ -1,64 +1,34 @@
-From: Scott Branden <scott.branden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 1/2] dt-bindings: arm-ccn: Add bindings info for CCN-502
- compatible string
-Date: Fri, 28 Apr 2017 21:07:39 -0700
-Message-ID: <1d697f53-8712-0378-b2ba-91537da5b56c@broadcom.com>
-References: <1486759368-24067-1-git-send-email-velibor.markovski@broadcom.com>
- <1486759368-24067-2-git-send-email-velibor.markovski@broadcom.com>
- <20170214174833.GK23718@leverpostej>
+From: kbuild test robot <lkp@intel.com>
+Subject: Re: [PATCH 2/5] clk: qcom: ipq8074: Add Global Clock Controller
+ support
+Date: Sat, 29 Apr 2017 13:50:51 +0800
+Message-ID: <201704291326.jFi4mgNw%fengguang.wu@intel.com>
+References: <1493373403-23462-3-git-send-email-varada@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170214174833.GK23718@leverpostej>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Velibor Markovski <velibor.markovski-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, BCM Kernel Feedback <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, nd-5wv7dgnIgG8@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1493373403-23462-3-git-send-email-varada@codeaurora.org>
+Sender: linux-gpio-owner@vger.kernel.org
+Cc: kbuild-all@01.org, robh+dt@kernel.org, mark.rutland@arm.com, mturquette@baylibre.com, sboyd@codeaurora.org, linus.walleij@linaro.org, andy.gross@linaro.org, david.brown@linaro.org, catalin.marinas@arm.com, will.deacon@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, sricharan@codeaurora.org, absahu@codeaurora.org, sjaganat@codeaurora.org, Varadarajan Narayanan <varada@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark/Pawel,
+Hi Abhishek,
 
-I think this patch series has been missed.
+[auto build test WARNING on robh/for-next]
+[also build test WARNING on v4.11-rc8 next-20170428]
+[if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
 
-On 17-02-14 09:48 AM, Mark Rutland wrote:
-> On Fri, Feb 10, 2017 at 12:42:47PM -0800, Velibor Markovski wrote:
->> Add CCN-502 to the list of supported devices by ARM CCN PMU driver.
->>
->> Signed-off-by: Velibor Markovski <velibor.markovski-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
->
-> Acked-by: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Acked-by: Scott Branden <scott.branden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
->
-> I assume Pawel will take this along with the driver patch.
-Could you please pick up this patch series?
+url:    https://github.com/0day-ci/linux/commits/Varadarajan-Narayanan/Add-minimal-boot-support-for-IPQ8074/20170429-130315
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git for-next
 
->
-> Thanks,
-> Mark.
->
->> ---
->>  Documentation/devicetree/bindings/arm/ccn.txt | 1 +
->>  1 file changed, 1 insertion(+)
->>
->> diff --git a/Documentation/devicetree/bindings/arm/ccn.txt b/Documentation/devicetree/bindings/arm/ccn.txt
->> index b100d38..2980145 100644
->> --- a/Documentation/devicetree/bindings/arm/ccn.txt
->> +++ b/Documentation/devicetree/bindings/arm/ccn.txt
->> @@ -3,6 +3,7 @@
->>  Required properties:
->>
->>  - compatible: (standard compatible string) should be one of:
->> +	"arm,ccn-502"
->>  	"arm,ccn-504"
->>  	"arm,ccn-508"
->>
->> --
->> 1.9.1
->>
 
-Thanks,
-  Scott
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+coccinelle warnings: (new ones prefixed by >>)
+
+>> drivers/clk/qcom/gcc-ipq8074.c:1014:3-8: No need to set .owner here. The core will do it.
+
+Please review and possibly fold the followup patch.
+
+---
+0-DAY kernel test infrastructure                Open Source Technology Center
+https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
