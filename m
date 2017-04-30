@@ -1,85 +1,35 @@
 From: Paul Kocialkowski <contact@paulk.fr>
-Subject: [PATCH 1/3] ARM: dts: rockchip: Move cros-ec-sbs to rk3288-veyron-chromebook-sbs
-Date: Sun, 30 Apr 2017 20:30:52 +0200
-Message-ID: <20170430183054.24563-1-contact@paulk.fr>
+Subject: [PATCH 3/3] ARM: dts: rockchip: List charger as power supply for minnie
+Date: Sun, 30 Apr 2017 20:30:54 +0200
+Message-ID: <20170430183054.24563-3-contact@paulk.fr>
+References: <20170430183054.24563-1-contact@paulk.fr>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170430183054.24563-1-contact@paulk.fr>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc: Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Paul Kocialkowski <contact@paulk.fr>
 List-Id: devicetree@vger.kernel.org
 
-This moves the cros-ec-sbs dtsi to a new rk3288-veyron-chromebook-sbs
-dtsi since it only concerns rk3288 veyron Chromebooks.
-
-Other Chromebooks (such as the tegra124 nyans) also have sbs batteries
-and don't use this dtsi, that only makes sense when used with
-rk3288-veyron-chromebook anyway.
+This lists the GPIO charger node as power supply for the battery, which
+in turns allows receiving external power notifications and synchronizing
+the charging state as soon as possible.
 
 Signed-off-by: Paul Kocialkowski <contact@paulk.fr>
 ---
- .../boot/dts/{cros-ec-sbs.dtsi => rk3288-veyron-chromebook-sbs.dtsi}    | 0
- arch/arm/boot/dts/rk3288-veyron-jaq.dts                                 | 2 +-
- arch/arm/boot/dts/rk3288-veyron-jerry.dts                               | 2 +-
- arch/arm/boot/dts/rk3288-veyron-pinky.dts                               | 2 +-
- arch/arm/boot/dts/rk3288-veyron-speedy.dts                              | 2 +-
- 5 files changed, 4 insertions(+), 4 deletions(-)
- rename arch/arm/boot/dts/{cros-ec-sbs.dtsi => rk3288-veyron-chromebook-sbs.dtsi} (100%)
+ arch/arm/boot/dts/rk3288-veyron-minnie.dts | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm/boot/dts/cros-ec-sbs.dtsi b/arch/arm/boot/dts/rk3288-veyron-chromebook-sbs.dtsi
-similarity index 100%
-rename from arch/arm/boot/dts/cros-ec-sbs.dtsi
-rename to arch/arm/boot/dts/rk3288-veyron-chromebook-sbs.dtsi
-diff --git a/arch/arm/boot/dts/rk3288-veyron-jaq.dts b/arch/arm/boot/dts/rk3288-veyron-jaq.dts
-index d33f5763c39c..f217a978e47a 100644
---- a/arch/arm/boot/dts/rk3288-veyron-jaq.dts
-+++ b/arch/arm/boot/dts/rk3288-veyron-jaq.dts
-@@ -45,7 +45,7 @@
- /dts-v1/;
+diff --git a/arch/arm/boot/dts/rk3288-veyron-minnie.dts b/arch/arm/boot/dts/rk3288-veyron-minnie.dts
+index 544de6027aaa..3f97f33bd783 100644
+--- a/arch/arm/boot/dts/rk3288-veyron-minnie.dts
++++ b/arch/arm/boot/dts/rk3288-veyron-minnie.dts
+@@ -151,6 +151,7 @@
+ 	battery: bq27500@55 {
+ 		compatible = "ti,bq27500";
+ 		reg = <0x55>;
++		power-supplies = <&charger>;
+ 	};
+ };
  
- #include "rk3288-veyron-chromebook.dtsi"
--#include "cros-ec-sbs.dtsi"
-+#include "rk3288-veyron-chromebook-sbs.dtsi"
- 
- / {
- 	model = "Google Jaq";
-diff --git a/arch/arm/boot/dts/rk3288-veyron-jerry.dts b/arch/arm/boot/dts/rk3288-veyron-jerry.dts
-index cdea751f2a8c..bec607574165 100644
---- a/arch/arm/boot/dts/rk3288-veyron-jerry.dts
-+++ b/arch/arm/boot/dts/rk3288-veyron-jerry.dts
-@@ -44,7 +44,7 @@
- 
- /dts-v1/;
- #include "rk3288-veyron-chromebook.dtsi"
--#include "cros-ec-sbs.dtsi"
-+#include "rk3288-veyron-chromebook-sbs.dtsi"
- 
- / {
- 	model = "Google Jerry";
-diff --git a/arch/arm/boot/dts/rk3288-veyron-pinky.dts b/arch/arm/boot/dts/rk3288-veyron-pinky.dts
-index 995cff42fa43..c81ad5bf1121 100644
---- a/arch/arm/boot/dts/rk3288-veyron-pinky.dts
-+++ b/arch/arm/boot/dts/rk3288-veyron-pinky.dts
-@@ -44,7 +44,7 @@
- 
- /dts-v1/;
- #include "rk3288-veyron-chromebook.dtsi"
--#include "cros-ec-sbs.dtsi"
-+#include "rk3288-veyron-chromebook-sbs.dtsi"
- 
- / {
- 	model = "Google Pinky";
-diff --git a/arch/arm/boot/dts/rk3288-veyron-speedy.dts b/arch/arm/boot/dts/rk3288-veyron-speedy.dts
-index cc0b78cefe34..8aea9c3ff6e2 100644
---- a/arch/arm/boot/dts/rk3288-veyron-speedy.dts
-+++ b/arch/arm/boot/dts/rk3288-veyron-speedy.dts
-@@ -44,7 +44,7 @@
- 
- /dts-v1/;
- #include "rk3288-veyron-chromebook.dtsi"
--#include "cros-ec-sbs.dtsi"
-+#include "rk3288-veyron-chromebook-sbs.dtsi"
- 
- / {
- 	model = "Google Speedy";
 -- 
 2.12.2
