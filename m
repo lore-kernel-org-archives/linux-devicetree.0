@@ -1,72 +1,71 @@
-From: =?ISO-8859-1?Q?M=E5rten?= Lindahl <marten.lindahl-VrBV9hrLPhE@public.gmane.org>
-Subject: Re: [PATCH] iio: adc: add driver for the ti-adc084s021 chip
-Date: Sun, 30 Apr 2017 14:42:27 +0200
-Message-ID: <1493556147.2883.33.camel@axis.com>
-References: <1492786703-5149-1-git-send-email-marten.lindahl@axis.com>
-         <20170428135248.du6smmzktqldj4u4@rob-hp-laptop>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH V4 1/9] PM / OPP: Allow OPP table to be used for
+ power-domains
+Date: Sun, 30 Apr 2017 21:49:17 +0900
+Message-ID: <20170430124917.4m3d237pik7q47f3@sirena.org.uk>
+References: <cover.1490001099.git.viresh.kumar@linaro.org>
+ <e772e67a5445319bb8e0f312846ace666adc097f.1490001099.git.viresh.kumar@linaro.org>
+ <0a7146f9-72f1-317c-3aab-770a72462968@arm.com>
+ <20170413053736.GM5910@vireshk-i7>
+ <3adbef6a-7b43-528f-e88f-c2121d30a5d3@arm.com>
+ <20170417052758.GF28191@vireshk-i7>
+ <95aa4b97-4e1a-13bb-f4d8-982b778012ba@arm.com>
+ <9cd9287c-392b-d3ca-db7d-75c49287448e@codeaurora.org>
+ <20170426135532.ryrh276znet5yvks@sirena.org.uk>
+ <c66322f5-e2eb-5556-a5a5-14998a2f195d@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170428135248.du6smmzktqldj4u4@rob-hp-laptop>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: =?ISO-8859-1?Q?M=E5rten?= Lindahl <martenli-VrBV9hrLPhE@public.gmane.org>, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="5s2qhlmcbzxkspgo"
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <c66322f5-e2eb-5556-a5a5-14998a2f195d@arm.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Sudeep Holla <sudeep.holla@arm.com>
+Cc: Rajendra Nayak <rnayak@codeaurora.org>, Viresh Kumar <viresh.kumar@linaro.org>, Rafael Wysocki <rjw@rjwysocki.net>, ulf.hansson@linaro.org, Kevin Hilman <khilman@linaro.org>, Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@codeaurora.org>, linaro-kernel@lists.linaro.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, Vincent Guittot <vincent.guittot@linaro.org>, robh+dt@kernel.org, lina.iyer@linaro.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2017-04-28 at 08:52 -0500, Rob Herring wrote:
-> On Fri, Apr 21, 2017 at 04:58:23PM +0200, Mårten Lindahl wrote:
-> > From: Mårten Lindahl <martenli-VrBV9hrLPhE@public.gmane.org>
-> > 
-> > This adds support for the Texas Instruments ADC084S021 ADC chip.
-> > 
-> > Signed-off-by: Mårten Lindahl <martenli-VrBV9hrLPhE@public.gmane.org>
-> > ---
-> >  .../devicetree/bindings/iio/adc/ti-adc084s021.txt  |  25 ++
-> 
-> It's preferred to put bindings in a separate patch.
-I am sorry for that. I split this into its own patch in v2.
-> 
-> >  drivers/iio/adc/Kconfig                            |  12 +
-> >  drivers/iio/adc/Makefile                           |   1 +
-> >  drivers/iio/adc/ti-adc084s021.c                    | 342 +++++++++++++++++++++
-> >  4 files changed, 380 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/iio/adc/ti-adc084s021.txt
-> >  create mode 100644 drivers/iio/adc/ti-adc084s021.c
-> > 
-> > diff --git a/Documentation/devicetree/bindings/iio/adc/ti-adc084s021.txt b/Documentation/devicetree/bindings/iio/adc/ti-adc084s021.txt
-> > new file mode 100644
-> > index 0000000..921eb46
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/iio/adc/ti-adc084s021.txt
-> > @@ -0,0 +1,25 @@
-> > +* Texas Instruments' ADC084S021
-> > +
-> > +Required properties:
-> > + - compatible        : Must be "ti,adc084s021"
-> > + - reg               : SPI chip select number for the device
-> > + - vref-supply       : The regulator supply for ADC reference voltage
-> > + - spi-max-frequency : Definition as per Documentation/devicetree/bindings/spi/spi-bus.txt
-> > +
-> > +Optional properties:
-> > + - spi-cpol          : SPI inverse clock polarity, as per spi-bus bindings
-> > + - spi-cpha          : SPI shifted clock phase (CPHA), as per spi-bus bindings
-> > + - spi-cs-high       : SPI chip select active high, as per spi-bus bindings
-> 
-> How are these optional? A given device should have specific properties 
-> required here.
-No, they are not optional. I removed this section in v2 and updated the
-required properties section.
-> 
-> Also, no need to define them, "per spi-bus bindings" is enough.
-Fixed in v2.
-> 
-> Rob
 
-Thanks,
-Mårten
+--5s2qhlmcbzxkspgo
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On Thu, Apr 27, 2017 at 10:42:49AM +0100, Sudeep Holla wrote:
+> On 26/04/17 14:55, Mark Brown wrote:
+
+> > As I'm getting fed up of saying: if the values you are setting are not
+> > voltages and do not behave like voltages then the hardware should not be
+> > represented as a voltage regulator since if they are represented as
+> > voltage regulators things will expect to be able to control them as
+> > voltage regulators.  This hardware is quite clearly providing OPPs
+> > directly, I would expect this to be handled in the OPP code somehow.
+
+> I agree with you that we need to be absolutely sure on what it actually
+> represents.
+
+> But as more and more platform are pushing such power controls to
+> dedicated M3 or similar processors, we need abstraction. Though we are
+> controlling hardware, we do so indirectly. Since there were discussions
+> around device tree representing hardware vs platform, I tend to think,
+> we are moving towards platform(something similar to ACPI).
+
+I don't think there's a meaningful hardware/platform distinction here -
+in terms of what DT is describing the platform bit is just what the
+hardware (the microcontrollers) happen to do, DT doesn't much care about
+that though.
+
+--5s2qhlmcbzxkspgo
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlkF3UwACgkQJNaLcl1U
+h9A9Twf/d7T9kMvGk9pgxGFwCY5EKoRJj0SXzXCOkPPSpnRA5S+mbYeiZjVQKnKv
+n0RwnqXwcUAg73N2ip0w5U/0rnKWjXcHqZFz82sWMzBKYnAkCtmRzktdcw9Aq8PA
+pXAVtW7ODoU9n77lONm5d0mSrzr/hcg36sNkgF/OTkrI/yklqpL4Al5vYbPXJZRu
+OT4PlBHHe2qqKg7jmJAAnWGfNlg4Vk13Kq0WtGCfPrqidOhMDEDN2x1iVguivSQN
+cABjEqVRST9SqMvppthhwOxYU83SO+ZSvTnkcuswIpcCKJ9oJbvNnho9Or3dPT7S
+IRBH0Z7lUZHASeqfYkvcxitjy4rf5Q==
+=H0Iz
+-----END PGP SIGNATURE-----
+
+--5s2qhlmcbzxkspgo--
