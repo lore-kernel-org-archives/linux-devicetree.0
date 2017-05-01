@@ -1,56 +1,91 @@
-From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Subject: Re: [PATCH v5 00/20] net-next: stmmac: add dwmac-sun8i ethernet
- driver
-Date: Mon, 1 May 2017 16:45:41 +0200
-Message-ID: <20170501144541.GB1285@lunn.ch>
-References: <20170501124520.3769-1-clabbe.montjoie@gmail.com>
- <20170501140133.GD31281@lunn.ch>
- <CAGb2v67qGqswdz_JcDaD5jTkcvtBuzqqP8KZh=S_5pkp=o6cUQ@mail.gmail.com>
+From: Eric Anholt <eric@anholt.net>
+Subject: Re: [PATCH v3 1/2] net: dsa: b53: Add compatible strings for the
+ Cygnus-family BCM11360.
+Date: Mon, 01 May 2017 08:15:17 -0700
+Message-ID: <87k260k3qy.fsf@eliezer.anholt.net>
+References: <20170428222204.7103-1-eric@anholt.net>
+ <20170430.224852.172293736555378453.davem@davemloft.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAGb2v67qGqswdz_JcDaD5jTkcvtBuzqqP8KZh=S_5pkp=o6cUQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>, alexandre.torgue-qxv4g6HH51o@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, netdev <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/mixed; boundary="===============1539902936145001713=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20170430.224852.172293736555378453.davem@davemloft.net>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: David Miller <davem@davemloft.net>
+Cc: mark.rutland@arm.com, andrew@lunn.ch, f.fainelli@gmail.com, sbranden@broadcom.com, vivien.didelot@savoirfairelinux.com, jonmason@broadcom.com, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, bcm-kernel-feedback-list@broadcom.com, rjui@broadcom.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 01, 2017 at 10:28:46PM +0800, Chen-Yu Tsai wrote:
-> On Mon, May 1, 2017 at 10:01 PM, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org> wrote:
-> > On Mon, May 01, 2017 at 02:45:00PM +0200, Corentin Labbe wrote:
-> >> Hello
-> >>
-> >> This patch series add the driver for dwmac-sun8i which handle the Ethernet MAC
-> >> present on Allwinner H3/H5/A83T/A64 SoCs.
-> >>
-> >> This driver is the continuation of the sun8i-emac driver.
-> >> During the development, it appeared that in fact the hardware was a modified
-> >> version of some dwmac.
-> >> So the driver is now written as a glue driver for stmmac.
-> >>
-> >> It supports 10/100/1000 Mbit/s speed with half/full duplex.
-> >> It can use an internal PHY (MII 10/100) or an external PHY
-> >> via RGMII/RMII.
-> >
-> > Hi Corentin
-> >
-> > Sorry if this has been asked before....
-> >
-> > Does the internal PHY have a phy driver? It seems like
-> > tx-delay-ps/rx-delay-ps are properties of this internal PHY, and so
-> > should be in the phy driver, if it has one.
-> 
-> Nope. These affect the delay lines for the external PHY interface.
+--===============1539902936145001713==
+Content-Type: multipart/signed; boundary="=-=-=";
+	micalg=pgp-sha512; protocol="application/pgp-signature"
 
-Oh, yes. I understood the patch wrong.
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-None of the patches actually use these properties. Are they actually
-needed? We should avoid adding vendor specific properties, if they are
-not used.
+David Miller <davem@davemloft.net> writes:
 
-    Andrew
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> From: Eric Anholt <eric@anholt.net>
+> Date: Fri, 28 Apr 2017 15:22:03 -0700
+>
+>> Cygnus is a small family of SoCs, of which we currently have
+>> devicetree for BCM11360 and BCM58300.  The 11360's B53 is mostly the
+>> same as 58xx, just requiring a tiny bit of setup that was previously
+>> missing.
+>>=20
+>> v2: Reorder the entry in the docs (suggestion by Scott Branden), add
+>>     missing '"'
+>>=20
+>> Signed-off-by: Eric Anholt <eric@anholt.net>
+>> Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+>> Acked-by: Rob Herring <robh@kernel.org>
+>
+> The second patch with the DTS file update doesn't apply cleanly
+> at all to net-next.
+>
+> So I'm dropping this series.
+
+DTS updates go through arm-soc branches through Florian.  The first
+patch is the one I would like you to apply.
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE/JuuFDWp9/ZkuCBXtdYpNtH8nugFAlkHUQUACgkQtdYpNtH8
+nui1WxAAhJ9AxuuGK8tGVrKEXZBruAo6l6kdmLOVMS7C5NNQSpCfuaKWxFwTpPYk
++MaOWWoK5J4xCGo+t469EfxnG8alclk8Jf8L8pSLJH/zpP/WNGwzBPYyPAmOjgCL
+oP0TvPhxFnUue29L2lotlCsys57e5vnALmPQd5ou6eoleuejJC0k5u9BL+RpM+Py
+mkaKTJhmR24IrMcTWPkgrnTD+Xy7ycFXkYRvgnkLqCu38jkgdlP95MPwfj3puPg1
+LN645zFxKQey2+JHIG1+vwI9K6Wkrk7l58nvqMQVQ31hYFqz5979jj8P0CWQ1e4/
+44S13zQhqsiNEr+iIWv5wBnZn6e1ppkMmgO2LFYcnyDrUn9I1RJtIx6Pb6+9eyI6
+AaA4Ubb+PVJq4SqcMnjT7he3WcY1yjSSHPtHCySzEQrM0kDcfaU9uq5I+cZdPxJF
+ae2hvghYnYvqmuReNJCyrRt+WFfPKKKhYAyiS3FxzZ7qMEHIX/QEAFai/6UCemj8
+pNF5wfDl/t10dugsZ59ZPKgtpj787W2FdAzSQd3FC2mFqefEYG1Brn4tgCawi8e0
+hM1HVfWViwmbSVSDNBvAwREHgulwMsLgOV5r9WYvKjT1nTlcd4/ArHLZ+c1Ta/qa
+OaCQryUJKCBq8Yxx7858ihjiJroH10EBomM8AKBBSTbV0P9bNXU=
+=5ERj
+-----END PGP SIGNATURE-----
+--=-=-=--
+
+
+--===============1539902936145001713==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============1539902936145001713==--
