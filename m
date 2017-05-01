@@ -1,36 +1,41 @@
-From: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v5 18/20] arm: sunxi: Enable dwmac-sun8i driver on sunxi_defconfig
-Date: Mon,  1 May 2017 14:45:18 +0200
-Message-ID: <20170501124520.3769-19-clabbe.montjoie@gmail.com>
-References: <20170501124520.3769-1-clabbe.montjoie@gmail.com>
+From: Paolo Pisati <p.pisati-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v2 0/2] Lattice MachXO2 Slave SPI FPGA Manager support
+Date: Mon,  1 May 2017 15:15:10 +0200
+Message-ID: <1493644512-14776-1-git-send-email-p.pisati@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170501124520.3769-1-clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, peppe.cavallaro-qxv4g6HH51o@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-fpga-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Enable the dwmac-sun8i driver in the sunxi default configuration
+Hi all,
 
-Signed-off-by: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- arch/arm/configs/sunxi_defconfig | 1 +
- 1 file changed, 1 insertion(+)
+this series adds support for the Lattice MachXO2 FPGA chip, programmed
+over Slave SPI.
 
-diff --git a/arch/arm/configs/sunxi_defconfig b/arch/arm/configs/sunxi_defconfig
-index 5cd5dd70..504e022 100644
---- a/arch/arm/configs/sunxi_defconfig
-+++ b/arch/arm/configs/sunxi_defconfig
-@@ -40,6 +40,7 @@ CONFIG_ATA=y
- CONFIG_AHCI_SUNXI=y
- CONFIG_NETDEVICES=y
- CONFIG_SUN4I_EMAC=y
-+CONFIG_DWMAC_SUN8I=y
- # CONFIG_NET_VENDOR_ARC is not set
- # CONFIG_NET_CADENCE is not set
- # CONFIG_NET_VENDOR_BROADCOM is not set
+Tested on my raspberry pi3 + bugblat's pif2 fpga hat.
+
+Changes from v1:
+* fixed all the warnings pointed out by 'checkpatch --strict' and
+  Alan Tull
+
+Paolo Pisati (2):
+  dt: bindings: fpga: add lattice machxo2 slave spi binding description
+  fpga: lattice machxo2: Add Lattice MachXO2 support
+
+ .../bindings/fpga/lattice-machxo2-spi.txt          |  29 +++
+ drivers/fpga/Kconfig                               |   7 +
+ drivers/fpga/Makefile                              |   1 +
+ drivers/fpga/machxo2-spi.c                         | 214 +++++++++++++++++++++
+ 4 files changed, 251 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/fpga/lattice-machxo2-spi.txt
+ create mode 100644 drivers/fpga/machxo2-spi.c
+
 -- 
-2.10.2
+2.7.4
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
