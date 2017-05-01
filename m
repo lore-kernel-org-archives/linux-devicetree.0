@@ -1,52 +1,58 @@
-From: Vinod Koul <vinod.koul@intel.com>
-Subject: Re: [PATCH 2/2] dmaengine: Add STM32 MDMA driver
-Date: Mon, 1 May 2017 11:42:30 +0530
-Message-ID: <20170501061230.GP6263@localhost>
-References: <1489417599-31308-1-git-send-email-cedric.madianga@gmail.com>
- <1489417599-31308-3-git-send-email-cedric.madianga@gmail.com>
- <20170406070805.GG4094@localhost>
- <d1d92f79-ce3c-e057-7f47-1fd5e42fa5dc@st.com>
+From: Sean Wang <sean.wang@mediatek.com>
+Subject: Re: [PATCH v2 02/30] pinctrl: mediatek: reuse pinctrl driver for
+ mt7623
+Date: Mon, 1 May 2017 14:44:07 +0800
+Message-ID: <1493621047.32195.4.camel@mtkswgap22>
+References: <1493198774-4478-1-git-send-email-sean.wang@mediatek.com>
+         <1493198774-4478-3-git-send-email-sean.wang@mediatek.com>
+         <CACRpkdbR-k3wgD+7KoV6d7yg1uduXpa9MO0+woEibQYPeYzgYw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <d1d92f79-ce3c-e057-7f47-1fd5e42fa5dc@st.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Pierre Yves MORDRET <pierre-yves.mordret@st.com>
-Cc: M'boumba Cedric Madianga <cedric.madianga@gmail.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Alexandre TORGUE <alexandre.torgue@st.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>, "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, "dan.j.williams@intel.com" <dan.j.williams@intel.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdbR-k3wgD+7KoV6d7yg1uduXpa9MO0+woEibQYPeYzgYw@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, John Crispin <john@phrozen.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "moderated list:ARM/Mediatek SoC support" <linux-mediatek@lists.infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 26, 2017 at 12:35:46PM +0000, Pierre Yves MORDRET wrote:
-> On 04/06/2017 09:08 AM, Vinod Koul wrote:
-> >> +static int stm32_mdma_get_width(struct stm32_mdma_chan *chan,
-> >> +				enum dma_slave_buswidth width)
-> >> +{
-> >> +	switch (width) {
-> >> +	case DMA_SLAVE_BUSWIDTH_1_BYTE:
-> >> +		return STM32_MDMA_BYTE;
-> >> +	case DMA_SLAVE_BUSWIDTH_2_BYTES:
-> >> +		return STM32_MDMA_HALF_WORD;
-> >> +	case DMA_SLAVE_BUSWIDTH_4_BYTES:
-> >> +		return STM32_MDMA_WORD;
-> >> +	case DMA_SLAVE_BUSWIDTH_8_BYTES:
-> >> +		return STM32_MDMA_DOUBLE_WORD;
-> >
-> > IIUC we can do this with ffs()
+On Fri, 2017-04-28 at 10:01 +0200, Linus Walleij wrote:
+> On Wed, Apr 26, 2017 at 11:25 AM,  <sean.wang@mediatek.com> wrote:
 > 
-> I don't believe we can do that. This function translates DMA_SLAVE enum 
-> into internal register representation.
-
-Yes and internal represenation seemed to be ffs() of dmanegine one.
-
-> >> +subsys_initcall(stm32_mdma_init);
+> > From: Sean Wang <sean.wang@mediatek.com>
 > >
-> > why subsys?
+> > mt7623 pinctrl driver can be compatible with mt2701 one,
+> > so the patch reuses the driver and deletes those redundant
+> > ones.
 > >
+> > Cc: John Crispin <john@phrozen.org>
+> > Signed-off-by: Sean Wang <sean.wang@mediatek.com>
 > 
-> subsys_initcall level is to ensure MDMA is going to be probed before its 
-> clients
+> Partly correct.
+> 
+> >         "mediatek,mt6397-pinctrl", compatible with mt6397 pinctrl.
+> > -       "mediatek,mt7623-pinctrl", compatible with mt7623 pinctrl.
+> 
+> NO don't do this.
+> 
+> "compatible" means exactly this: this hardware is compatible with
+> this driver. That is why we have it!
+> 
+> So instead of mt7623 pretending to be mt2701, let the mt2701 driver
+> list that it is compatible with mt7623, simple.
+> 
+> So patch pinctrl-mt2701.c mt2701_pctrl_match[] instead.
+> 
 
-Please use deffered probe approach for that
+Hi Linus,
 
--- 
-~Vinod
+really appreciate your clear guidance and reviewing on this
+
+I will fix it up in the next version
+	
+	Sean
+
+> Yours,
+> Linus Walleij
+
+
