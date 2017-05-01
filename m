@@ -1,116 +1,124 @@
-From: Sebastian Reichel <sebastian.reichel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
-Subject: Re: [PATCH v5 8/9] power: supply: sbs-battery: Add alert callback
-Date: Mon, 1 May 2017 14:32:30 +0200
-Message-ID: <20170501123230.zwcrojjmzqjsgdqu@earth>
-References: <1493628599-30552-1-git-send-email-preid@electromag.com.au>
- <1493628599-30552-9-git-send-email-preid@electromag.com.au>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="whe5g3z4phz4bruj"
+From: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v5 00/20] net-next: stmmac: add dwmac-sun8i ethernet driver
+Date: Mon,  1 May 2017 14:45:00 +0200
+Message-ID: <20170501124520.3769-1-clabbe.montjoie@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1493628599-30552-9-git-send-email-preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Phil Reid <preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>
-Cc: wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, peppe.cavallaro-qxv4g6HH51o@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hello
 
---whe5g3z4phz4bruj
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This patch series add the driver for dwmac-sun8i which handle the Ethernet MAC
+present on Allwinner H3/H5/A83T/A64 SoCs.
 
-Hi,
+This driver is the continuation of the sun8i-emac driver.
+During the development, it appeared that in fact the hardware was a modified
+version of some dwmac.
+So the driver is now written as a glue driver for stmmac.
 
-On Mon, May 01, 2017 at 04:49:58PM +0800, Phil Reid wrote:
-> To simplify the sbs-manager code and notification of battery removal
-> use the i2c alert callback to notify the sbs-battery driver that an
-> event has occurred.
->=20
-> Signed-off-by: Phil Reid <preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>
+It supports 10/100/1000 Mbit/s speed with half/full duplex.
+It can use an internal PHY (MII 10/100) or an external PHY
+via RGMII/RMII.
 
-Thanks, queued.
+This patch series enable the driver only for the H3/A64/H5 SoC since A83T
+doesn't have the necessary clocks present in mainline.
 
--- Sebastian
+The driver have been tested on the following boards:
+- H3 Orange PI PC, BananaPI-M2+
+- A64 Pine64, BananaPi-M64
+- A83T BananaPI-M3
 
->  drivers/power/supply/sbs-battery.c | 16 +++++++++++++---
->  1 file changed, 13 insertions(+), 3 deletions(-)
->=20
-> diff --git a/drivers/power/supply/sbs-battery.c b/drivers/power/supply/sb=
-s-battery.c
-> index 8bb2eb3..a719892 100644
-> --- a/drivers/power/supply/sbs-battery.c
-> +++ b/drivers/power/supply/sbs-battery.c
-> @@ -675,21 +675,30 @@ static int sbs_get_property(struct power_supply *ps=
-y,
->  	return 0;
->  }
-> =20
-> -static irqreturn_t sbs_irq(int irq, void *devid)
-> +static void sbs_supply_changed(struct sbs_info *chip)
->  {
-> -	struct sbs_info *chip =3D devid;
->  	struct power_supply *battery =3D chip->power_supply;
->  	int ret;
-> =20
->  	ret =3D gpiod_get_value_cansleep(chip->gpio_detect);
->  	if (ret < 0)
-> -		return ret;
-> +		return;
->  	chip->is_present =3D ret;
->  	power_supply_changed(battery);
-> +}
-> =20
-> +static irqreturn_t sbs_irq(int irq, void *devid)
-> +{
-> +	sbs_supply_changed(devid);
->  	return IRQ_HANDLED;
->  }
-> =20
-> +static void sbs_alert(struct i2c_client *client, enum i2c_alert_protocol=
- prot,
-> +	unsigned int data)
-> +{
-> +	sbs_supply_changed(i2c_get_clientdata(client));
-> +}
-> +
->  static void sbs_external_power_changed(struct power_supply *psy)
->  {
->  	struct sbs_info *chip =3D power_supply_get_drvdata(psy);
-> @@ -917,6 +926,7 @@ static int sbs_suspend(struct device *dev)
->  static struct i2c_driver sbs_battery_driver =3D {
->  	.probe		=3D sbs_probe,
->  	.remove		=3D sbs_remove,
-> +	.alert		=3D sbs_alert,
->  	.id_table	=3D sbs_id,
->  	.driver =3D {
->  		.name	=3D "sbs-battery",
-> --=20
-> 1.8.3.1
->=20
+The first two patchs are some mandatory changes for letting dwmac-sun8i be used.
+The following three patchs add the driver and its documentation.
+The remaining are DT patch enabling it.
 
---whe5g3z4phz4bruj
-Content-Type: application/pgp-signature; name="signature.asc"
+Regards
+Corentin Labbe
 
------BEGIN PGP SIGNATURE-----
+Changes since v4:
+- Re-ordered by alphabetical order some DT nodes
+- Fixed arm64 patch prefix
+- Simplified power/unpower_phy functions by testing the use of internal_phy
+- Added a patch for adding dwmac-sun8i to arm64 defconfig
+- Fix a typo in sun50i-a64-system-controller (wrongly used sun8i)
+- Reworked uc/mc filter address setting
 
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAlkHKt4ACgkQ2O7X88g7
-+prDag/+I80dX+8rJU8//FzMbpJl11hWPBeRfu3g5aASRA7iQm8pKKfKb2KujGW5
-V6RRB1In5GOioySgfXNqEvrySP6Iqa795HFXnL9xsI/bKuNlBCXQ7SYqKXYoUDIK
-Nem15080qN3b+kS1axjXUgWq84q85Ba3AgN5TyFm51l7swdQ3QQJCq0Z2PUIQEbv
-ypfedpoFcnnry8JdaXTO8xmj07QaAW0tZNL107NvzP9/WYenJToSTl836pa/BT0R
-KNHY2dUl/aC59TngmGT+sFD3IT3/ERxI9ysp9AX8YyPQXKwTgwUIi+fyDrKwauB4
-v5IYse0ZzEt8A+5Rjix+ltUXLaa2h9CRrCB3CdQHtSgu6AGqWJqaCOw7cnyMBceE
-wFAh8HzAe4pn0ZcYNZQ5hr82E7rNh/+i/dbWK14qgdinu2X/cszdPpLg7VZLCZs1
-DoG0VwtPGfDL76oxiSOKh6YGxrsjn7PN4KTohg5XNt0+qunmLxEwh+t8m7Tv+q3r
-taVo2nZe8ECdeeIXrv8dGddq0/NKmg4q6QlVIltVKDmycoElvT3+257UqhvLEvai
-2WKDugS79h9x3C8BJFoFDqRCcMQdXXSnORS6llnN7c+j/LPA53tu+EhnOX/wW1w4
-rp4B8EJhlUt4WbyjaxsgZh1MorxtEmwnXWZirk9sDRMVHGuv9l8=
-=hhVO
------END PGP SIGNATURE-----
+Changes since v3:
+- Renamed tx-delay/rx-delay to tx-delay-ps/rx-delay-ps
+- fix syscon compatible example
+- Changed parameter type for setup() function
+- Dropped some DT patchs for boards which I could not test further
 
---whe5g3z4phz4bruj--
+Changes since v2:
+- corrected order of syscon compatible
+- added compatible = "ethernet-phy-ieee802.3-c22 to PHY
+- added set_mac function
+
+Changes since v1:
+- added TX/RX delay units
+- splitted syscon documentation in its own patch
+- regulator is now disabled after clk_prepare_enable(gmac->tx_clk) error
+- Fixed a memory leak on mac_device_info
+- Use now generic pin config for all DT stuff
+- CONFIG_DWMAC_SUN8I is now set to y in defconfigs
+
+Corentin Labbe (20):
+  net: stmmac: export stmmac_set_mac_addr/stmmac_get_mac_addr
+  net: stmmac: add optional setup function
+  dt-bindings: net: Add DT bindings documentation for Allwinner
+    dwmac-sun8i
+  dt-bindings: syscon: Add DT bindings documentation for Allwinner
+    syscon
+  net: stmmac: Add dwmac-sun8i
+  arm: sun8i: sunxi-h3-h5: Add dt node for the syscon control module
+  arm: sun8i: sunxi-h3-h5: add dwmac-sun8i ethernet driver
+  arm: sun8i: orangepi-pc: Enable dwmac-sun8i
+  arm: sun8i: orangepi-zero: Enable dwmac-sun8i
+  arm: sun8i: orangepi-one: Enable dwmac-sun8i
+  arm: sun8i: orangepi-2: Enable dwmac-sun8i
+  arm: sun8i: orangepi-pc-plus: Set EMAC activity LEDs to active high
+  arm64: allwinner: sun50i-a64: Add dt node for the syscon control
+    module
+  arm64: allwinner: sun50i-a64: add dwmac-sun8i Ethernet driver
+  arm64: allwinner: pine64: Enable dwmac-sun8i
+  arm64: allwinner: pine64-plus: Enable dwmac-sun8i
+  arm64: allwinner: bananapi-m64: Enable dwmac-sun8i
+  arm: sunxi: Enable dwmac-sun8i driver on sunxi_defconfig
+  arm: multi_v7: Enable dwmac-sun8i driver on multi_v7_defconfig
+  arm64: defconfig: Enable dwmac-sun8i driver on defconfig
+
+ .../devicetree/bindings/misc/allwinner,syscon.txt  |  19 +
+ .../devicetree/bindings/net/dwmac-sun8i.txt        |  77 ++
+ arch/arm/boot/dts/sun8i-h2-plus-orangepi-zero.dts  |   8 +
+ arch/arm/boot/dts/sun8i-h3-orangepi-2.dts          |   8 +
+ arch/arm/boot/dts/sun8i-h3-orangepi-one.dts        |   8 +
+ arch/arm/boot/dts/sun8i-h3-orangepi-pc-plus.dts    |   5 +
+ arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts         |   8 +
+ arch/arm/boot/dts/sunxi-h3-h5.dtsi                 |  40 +
+ arch/arm/configs/multi_v7_defconfig                |   1 +
+ arch/arm/configs/sunxi_defconfig                   |   1 +
+ .../boot/dts/allwinner/sun50i-a64-bananapi-m64.dts |  15 +
+ .../boot/dts/allwinner/sun50i-a64-pine64-plus.dts  |  17 +-
+ .../arm64/boot/dts/allwinner/sun50i-a64-pine64.dts |  16 +
+ arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi      |  41 +
+ arch/arm64/configs/defconfig                       |   1 +
+ drivers/net/ethernet/stmicro/stmmac/Kconfig        |  11 +
+ drivers/net/ethernet/stmicro/stmmac/Makefile       |   1 +
+ drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c  | 973 +++++++++++++++++++++
+ drivers/net/ethernet/stmicro/stmmac/dwmac_lib.c    |   3 +-
+ drivers/net/ethernet/stmicro/stmmac/stmmac_main.c  |  33 +-
+ .../net/ethernet/stmicro/stmmac/stmmac_platform.c  |   9 +-
+ include/linux/stmmac.h                             |   2 +
+ 22 files changed, 1292 insertions(+), 5 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/misc/allwinner,syscon.txt
+ create mode 100644 Documentation/devicetree/bindings/net/dwmac-sun8i.txt
+ create mode 100644 drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
+
+-- 
+2.10.2
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
