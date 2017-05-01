@@ -1,85 +1,61 @@
-From: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
-Subject: Re: [PATCH v11 02/10] devicetree: property-units: Add uWh and uAh
- units
-Date: Mon, 1 May 2017 17:06:50 +0200
-Message-ID: <20170501150650.c4jtwqjza5em2e6c@earth>
-References: <20170320094335.19224-1-liam@networkimprov.net>
- <20170320094335.19224-3-liam@networkimprov.net>
+From: Corentin Labbe <clabbe.montjoie@gmail.com>
+Subject: Re: [PATCH v5 00/20] net-next: stmmac: add dwmac-sun8i ethernet
+ driver
+Date: Mon, 1 May 2017 17:58:56 +0200
+Message-ID: <20170501155856.GA1957@Red>
+References: <20170501124520.3769-1-clabbe.montjoie@gmail.com>
+ <20170501140133.GD31281@lunn.ch>
+ <CAGb2v67qGqswdz_JcDaD5jTkcvtBuzqqP8KZh=S_5pkp=o6cUQ@mail.gmail.com>
+ <20170501144541.GB1285@lunn.ch>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="lk7clqpaeww6pd5j"
-Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <netdev-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170320094335.19224-3-liam@networkimprov.net>
-Sender: linux-pm-owner@vger.kernel.org
-To: Liam Breck <liam@networkimprov.net>
-Cc: "Andrew F. Davis" <afd@ti.com>, linux-pm@vger.kernel.org, Matt Ranostay <matt@ranostay.consulting>, Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Liam Breck <kernel@networkimprov.net>
+In-Reply-To: <20170501144541.GB1285@lunn.ch>
+Sender: netdev-owner@vger.kernel.org
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Russell King <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, alexandre.torgue@st.com, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, netdev <netdev@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+On Mon, May 01, 2017 at 04:45:41PM +0200, Andrew Lunn wrote:
+> On Mon, May 01, 2017 at 10:28:46PM +0800, Chen-Yu Tsai wrote:
+> > On Mon, May 1, 2017 at 10:01 PM, Andrew Lunn <andrew@lunn.ch> wrote:
+> > > On Mon, May 01, 2017 at 02:45:00PM +0200, Corentin Labbe wrote:
+> > >> Hello
+> > >>
+> > >> This patch series add the driver for dwmac-sun8i which handle the Ethernet MAC
+> > >> present on Allwinner H3/H5/A83T/A64 SoCs.
+> > >>
+> > >> This driver is the continuation of the sun8i-emac driver.
+> > >> During the development, it appeared that in fact the hardware was a modified
+> > >> version of some dwmac.
+> > >> So the driver is now written as a glue driver for stmmac.
+> > >>
+> > >> It supports 10/100/1000 Mbit/s speed with half/full duplex.
+> > >> It can use an internal PHY (MII 10/100) or an external PHY
+> > >> via RGMII/RMII.
+> > >
+> > > Hi Corentin
+> > >
+> > > Sorry if this has been asked before....
+> > >
+> > > Does the internal PHY have a phy driver? It seems like
+> > > tx-delay-ps/rx-delay-ps are properties of this internal PHY, and so
+> > > should be in the phy driver, if it has one.
+> > 
+> > Nope. These affect the delay lines for the external PHY interface.
 
---lk7clqpaeww6pd5j
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I will add some sentences in the documentation to be more clear about that.
 
-Hi,
+> 
+> Oh, yes. I understood the patch wrong.
+> 
+> None of the patches actually use these properties. Are they actually
+> needed? We should avoid adding vendor specific properties, if they are
+> not used.
+> 
 
-On Mon, Mar 20, 2017 at 02:43:27AM -0700, Liam Breck wrote:
-> From: Matt Ranostay <matt@ranostay.consulting>
->=20
-> Add entries for microwatt-hours and microamp-hours.
->=20
-> Cc: Rob Herring <robh@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: devicetree@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Signed-off-by: Matt Ranostay <matt@ranostay.consulting>
-> Signed-off-by: Liam Breck <kernel@networkimprov.net>
-> Acked-by: Sebastian Reichel <sre@kernel.org>
-> Acked-by: Rob Herring <robh@kernel.org>
-> ---
->  Documentation/devicetree/bindings/property-units.txt | 2 ++
->  1 file changed, 2 insertions(+)
->=20
-> diff --git a/Documentation/devicetree/bindings/property-units.txt b/Docum=
-entation/devicetree/bindings/property-units.txt
-> index 12278d7..0849618 100644
-> --- a/Documentation/devicetree/bindings/property-units.txt
-> +++ b/Documentation/devicetree/bindings/property-units.txt
-> @@ -25,8 +25,10 @@ Distance
->  Electricity
->  ----------------------------------------
->  -microamp	: micro amps
-> +-microamp-hours : micro amp-hours
->  -ohms		: Ohms
->  -micro-ohms	: micro Ohms
-> +-microwatt-hours: micro Watt-hours
->  -microvolt	: micro volts
-> =20
->  Temperature
+The board that use it is the BananaPi M3, but the SoC A83T still lack clocks support.
+So theses properties is already used out of tree, and will be used in tree soon.
 
-Thanks, queued.
-
--- Sebastian
-
---lk7clqpaeww6pd5j
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAlkHTwcACgkQ2O7X88g7
-+pqzFw//alIBuKhwQoYdbVxVEghAl3uk5deNcQG7l54eGfK8iXHjZqehj8Rz4s/N
-/map1zSzSKO47E8zy9HK68nI3etTRJoswlSa7c0/OpprNVJ0L15+g9kGDHyi7zQv
-SjuuEE75uyrQDvD97Whr2z54miFwOa1PVuAc3XWVxo7Q7piGsSDqSJIpswJqxP0y
-uTvuAmRXM4LjFFu6MABTKNCaqjCLCgD9P3/cWdkWRP2k7BQcKx97/IYyERhd5iCV
-iuwqCKT28aeo/2b5oAzEf7CBpjRiWTJuGLryWrePu3Vph8CEHZKCa7ADeSqaZWea
-zugZNTZRglXn3rLWESQWb72VvnXWjAqrk8P8PhxNgFUTh6KuOxDT6jSbIZ6qv7ms
-pT+13mfwmPHzXsb5ftXzHuQPkQ0Z8Fiq8vr3ld6t0jRHLyIcIDHGNxo8OE3VMzcQ
-N65hWM+Nj62Fv9jmXPO5Y/IQBqwQss4eaRx5D9hjbTJA0L15+GPDYYyOY1+EoZTX
-8pxU3TZMWGYDDyQ8+0jKxK5np0y6k7KdWrfXTyoA42RRa/rDQeA8oIegJel7FEdD
-MEfhjuU21lQedJi/NrgcXE6k6L+03aeDqf/a+IkaPDUnCUmdsUzddT0IJj/OeT7W
-3iDPQLP0bJs4QIn401qHPhH65zqNXDxbFZEc5ZV92AlVnpF6J6c=
-=Op2c
------END PGP SIGNATURE-----
-
---lk7clqpaeww6pd5j--
+Regards
