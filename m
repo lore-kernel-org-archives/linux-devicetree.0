@@ -1,94 +1,101 @@
-From: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
-Subject: Re: [PATCH v11 03/10] devicetree: power: bq27xxx: Add
- monitored-battery documentation
-Date: Mon, 1 May 2017 17:10:05 +0200
-Message-ID: <20170501151004.2yum3expxzi4nah5@earth>
+From: Sebastian Reichel <sebastian.reichel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+Subject: Re: [PATCH v11 01/10] devicetree: power: Add battery.txt
+Date: Mon, 1 May 2017 17:09:34 +0200
+Message-ID: <20170501150934.qx2nrw3r4zjgjvb7@earth>
 References: <20170320094335.19224-1-liam@networkimprov.net>
- <20170320094335.19224-4-liam@networkimprov.net>
+ <20170320094335.19224-2-liam@networkimprov.net>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="xgzstdovchzpw5ew"
-Return-path: <linux-pm-owner@vger.kernel.org>
+        protocol="application/pgp-signature"; boundary="rsqx7tuzf3lhgm2s"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20170320094335.19224-4-liam@networkimprov.net>
-Sender: linux-pm-owner@vger.kernel.org
-To: Liam Breck <liam@networkimprov.net>
-Cc: "Andrew F. Davis" <afd@ti.com>, linux-pm@vger.kernel.org, Matt Ranostay <matt@ranostay.consulting>, Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, Liam Breck <kernel@networkimprov.net>
+In-Reply-To: <20170320094335.19224-2-liam-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Liam Breck <liam-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org>
+Cc: "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Matt Ranostay <matt-sk+viVC6FLCDq+mSdOJa79kegs52MxvZ@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Liam Breck <kernel-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
---xgzstdovchzpw5ew
+--rsqx7tuzf3lhgm2s
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
 Hi,
 
-On Mon, Mar 20, 2017 at 02:43:28AM -0700, Liam Breck wrote:
-> From: Liam Breck <kernel@networkimprov.net>
+On Mon, Mar 20, 2017 at 02:43:26AM -0700, Liam Breck wrote:
+> From: Liam Breck <kernel-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org>
 >=20
-> Document monitored-battery =3D <&battery_node>
+> Documentation of static battery characteristics that can be defined
+> for batteries which cannot self-identify. This information is required
+> by fuel-gauge and charger chips for proper handling of the battery.
 >=20
-> Cc: Rob Herring <robh@kernel.org>
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Matt Ranostay <matt@ranostay.consulting>
-> Signed-off-by: Liam Breck <kernel@networkimprov.net>
-> Acked-by: Rob Herring <robh@kernel.org>
-> Acked-by: Sebastian Reichel <sre@kernel.org>
+> Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Signed-off-by: Matt Ranostay <matt-sk+viVC6FLCDq+mSdOJa79kegs52MxvZ@public.gmane.org>
+> Signed-off-by: Liam Breck <kernel-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org>
 > ---
->  Documentation/devicetree/bindings/power/supply/bq27xxx.txt | 11 ++++++++=
-++-
->  1 file changed, 10 insertions(+), 1 deletion(-)
+>  .../devicetree/bindings/power/supply/battery.txt   | 43 ++++++++++++++++=
+++++++
+>  1 file changed, 43 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/power/supply/batter=
+y.txt
 >=20
-> diff --git a/Documentation/devicetree/bindings/power/supply/bq27xxx.txt b=
-/Documentation/devicetree/bindings/power/supply/bq27xxx.txt
-> index b0c95ef..cf83371 100644
-> --- a/Documentation/devicetree/bindings/power/supply/bq27xxx.txt
-> +++ b/Documentation/devicetree/bindings/power/supply/bq27xxx.txt
-> @@ -28,9 +28,18 @@ Required properties:
->   * "ti,bq27621" - BQ27621
->  - reg: integer, i2c address of the device.
-> =20
-> +Optional properties:
-> +- monitored-battery: phandle of battery information devicetree node
+> diff --git a/Documentation/devicetree/bindings/power/supply/battery.txt b=
+/Documentation/devicetree/bindings/power/supply/battery.txt
+> new file mode 100644
+> index 0000000..53a68c0
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/power/supply/battery.txt
+> @@ -0,0 +1,43 @@
+> +Battery Characteristics
 > +
-> +  See Documentation/devicetree/bindings/power/supply/battery.txt
-> +  If either of the referenced battery's *-full-design-*-hours properties=
- are set,
-> +  then both must be.
+> +The devicetree battery node provides static battery characteristics.=20
+> +In smart batteries, these are typically stored in non-volatile memory=20
+> +on a fuel gauge chip. The battery node should be used where there is=20
+> +no appropriate non-volatile memory, or it is unprogrammed/incorrect.
 > +
->  Example:
-> =20
-> -bq27510g3 {
-> +bq27510g3 : fuel-gauge@55 {
->      compatible =3D "ti,bq27510g3";
->      reg =3D <0x55>;
+> +Required Properties:
+> + - compatible: Must be "simple-battery"
 > +
-> +    monitored-battery =3D <&bat>;
->  };
+> +Optional Properties:
+> + - voltage-min-design-microvolt: drained battery voltage
+> + - energy-full-design-microwatt-hours: battery design energy
+> + - charge-full-design-microamp-hours: battery design capacity
+> +
+> +Battery properties are named, where possible, for the corresponding=20
+> +elements in enum power_supply_property, defined in
+> +https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/=
+include/linux/power_supply.h#n86
 
-Thanks, queued.
+Since Rob did not reply, I queued this with this paragraph removed
+and whitespace errors fixed to speed up things. You can always try
+persuading Rob in an incremental patch ;)
 
 -- Sebastian
 
---xgzstdovchzpw5ew
+--rsqx7tuzf3lhgm2s
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAlkHT8wACgkQ2O7X88g7
-+poA7BAAqK/msYgB+HKdobtk9sK+KXNIHirPnAMuFMOE/a4E3sfvbmfbCxUHiPxm
-yiZ5EG4pKCfUkB0YeAzs33AQM/JO4fNEG9uxM67AwJZFit58hwObvJJYnVkZR9rl
-oMCJzLHnSat0/3HPA+S1CJ9p811ffUqDTXw1rbgUzD+H6DN4sgS9TD+AxSHHteJF
-w/ykJodW8oAnFJnnnw3zw6CKeIh4MPfCwvKrS4og6739XDc+M7PzkTtroJrD9B1o
-6YggW09+MUkaaI3jgT/fgBkbiCcsod+972lHFdaTEXoCjQgTGQtoHv9/n5uqOSxH
-UavdZWVJXBNhSrcIU+kYIYnwaDEmn+yMw35acCQK24JPLc9k1S+lav9C5OqtXFD0
-RfQ9KgRA7ZHoTuijEQ/nvoSsMqRBAzvU0wkelGUCQwFMN/PSrapAZVNLE5BFBtnO
-GjQaGFVst5G4PL3h2b75DVzThMCTA81nuroi/qaxdi6ZLHheljoZmED+VYd/0hEv
-XxIdIvloh5IzUPjx0fqt6xGNy5Q3ziWKPCk1qJes9+AFdJ1qvJ4apkyODtscmbrH
-flkgNS/XeNIGcltYKy+6ns/wHKXjMQrv1vn/MNxkvdFgqIUXYl28kS8dtbJx2uND
-qVOPMvZqYps3CvqNGJtrXmpGegowNrno+tKsDZLvZDZkLNozFW4=
-=lP8Z
+iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAlkHT64ACgkQ2O7X88g7
++prQqA//TLm0jamH7O6/T2Q6TJB9N+MsScmbLk/Txee+LqIi+zWH9YI/8DvqGKbi
+t2ziY/RbueKDOtX7ZxLfY96zOxJ28dyBcNQ1nYLjVnIC0LvPRQrwRVi7PIQEe2Sk
+FdiZ/FRoCStUwkLCfnh1KaeSePTKXVcBUXftbmPLZ1IQcY75jtZpHJplYITdAYrP
+4EvNJ2qDg+LgOCwOjLwy+LAFt5FEpmXo85k7bS5Y9f80IrdoQ5BeyvhC0b1yVoed
+JN2bYJpHCS/zZ72YvzEyvyWQ1MW5t6h/Djb0cswt2YZbjy6BI0vM8HI57GQpLFnj
+OeGx37Pjmqw9Dab5YZ7v7oNysYyAYq6eb6I8z2mReprNa/SYBLYDps6Mqe93jj8A
+qACemMd6HwVD7avYkbP7ZMWa/g9BDnQJl9t3T73okzwvjpy5w96krsCfRliiVAbj
+ilKutKKCyaqQ9EfhK21LSu7yBTcLIG9YYMykjjb2D9QIz4xiUTXjGdZfkqF1mehM
+njGNBPlsLLltKfF+DRO/ku2EgCMuXNlirGl99TOF/goDH8PBgpm0ORz0jNA9DhjZ
+BTAxwxPDFtz+D8b8mnz6T8H72UD512cJ7YqkzBn+OQyGg9R4MMl5BLI5bf69wCr1
+ItF5IRjjG3DaL1IfgG2BQHGTQ/hURPYCxir7sI2XJRyaYCtilfU=
+=yGj+
 -----END PGP SIGNATURE-----
 
---xgzstdovchzpw5ew--
+--rsqx7tuzf3lhgm2s--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
