@@ -1,64 +1,327 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2 0/2] ARM: sun8i: a83t: device tree cleanup
-Date: Mon, 1 May 2017 19:31:22 +0200
-Message-ID: <20170501173122.z7cnefvkmruirevt@lukather>
-References: <20170501031408.10469-1-wens@csie.org>
+From: Moritz Fischer <mdf-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 2/2] fpga: lattice machxo2: Add Lattice MachXO2 support
+Date: Mon, 1 May 2017 10:59:39 -0700
+Message-ID: <20170501175939.GA1260@tyrael.amer.corp.natinst.com>
+References: <1493644512-14776-1-git-send-email-p.pisati@gmail.com>
+ <1493644512-14776-3-git-send-email-p.pisati@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="lyk2bbwu5qwejgu2"
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="1yeeQ81UyVL57Vl7"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20170501031408.10469-1-wens-jdAy2FN1RRM@public.gmane.org>
+In-Reply-To: <1493644512-14776-3-git-send-email-p.pisati-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Paolo Pisati <p.pisati-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-fpga-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---lyk2bbwu5qwejgu2
-Content-Type: text/plain; charset=us-ascii
+--1yeeQ81UyVL57Vl7
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, May 01, 2017 at 11:14:06AM +0800, Chen-Yu Tsai wrote:
-> Hi Maxime,
+Hi Paolo,
+
+couple of nits inline, looks pretty good already.
+
+On Mon, May 01, 2017 at 03:15:12PM +0200, Paolo Pisati wrote:
+> This patch adds support to the FPGA manager for programming
+> MachXO2 device=E2=80=99s internal flash memory, via slave SPI.
 >=20
-> Here's v2 of the A83T device tree cleanup patches. I dropped the change
-> to the uart device node name for now.
+> Signed-off-by: Paolo Pisati <p.pisati-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+>  drivers/fpga/Kconfig       |   7 ++
+>  drivers/fpga/Makefile      |   1 +
+>  drivers/fpga/machxo2-spi.c | 214 +++++++++++++++++++++++++++++++++++++++=
+++++++
+>  3 files changed, 222 insertions(+)
+>  create mode 100644 drivers/fpga/machxo2-spi.c
 >=20
-> Also added a second patch changing the underscores in device node names
-> I just added to hyphens. AFAIK that is the preferred naming scheme.
-> Please squash it into "ARM: sun8i: a83t: Rename pinmux setting names".
+> diff --git a/drivers/fpga/Kconfig b/drivers/fpga/Kconfig
+> index c81cb7d..cce135b 100644
+> --- a/drivers/fpga/Kconfig
+> +++ b/drivers/fpga/Kconfig
+> @@ -26,6 +26,13 @@ config FPGA_MGR_ICE40_SPI
+>  	help
+>  	  FPGA manager driver support for Lattice iCE40 FPGAs over SPI.
+> =20
+> +config FPGA_MGR_MACHXO2_SPI
+> +	tristate "Lattice MachXO2 SPI"
+> +	depends on SPI
+> +	help
+> +	 FPGA manager driver support for Lattice MachXO2 configuration
+> +	 over slave SPI interface.
+> +
+>  config FPGA_MGR_SOCFPGA
+>  	tristate "Altera SOCFPGA FPGA Manager"
+>  	depends on ARCH_SOCFPGA || COMPILE_TEST
+> diff --git a/drivers/fpga/Makefile b/drivers/fpga/Makefile
+> index c6f5d74..cdab1fe 100644
+> --- a/drivers/fpga/Makefile
+> +++ b/drivers/fpga/Makefile
+> @@ -7,6 +7,7 @@ obj-$(CONFIG_FPGA)			+=3D fpga-mgr.o
+> =20
+>  # FPGA Manager Drivers
+>  obj-$(CONFIG_FPGA_MGR_ICE40_SPI)	+=3D ice40-spi.o
+> +obj-$(CONFIG_FPGA_MGR_MACHXO2_SPI)	+=3D machxo2-spi.o
+>  obj-$(CONFIG_FPGA_MGR_SOCFPGA)		+=3D socfpga.o
+>  obj-$(CONFIG_FPGA_MGR_SOCFPGA_A10)	+=3D socfpga-a10.o
+>  obj-$(CONFIG_FPGA_MGR_TS73XX)		+=3D ts73xx-fpga.o
+> diff --git a/drivers/fpga/machxo2-spi.c b/drivers/fpga/machxo2-spi.c
+> new file mode 100644
+> index 0000000..264ef63
+> --- /dev/null
+> +++ b/drivers/fpga/machxo2-spi.c
+> @@ -0,0 +1,214 @@
+> +/**
+> + * Lattice MachXO2 Slave SPI Driver
+> + *
+> + * Copyright (C) 2017 Paolo Pisati <p.pisati-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> + *
+> + * This program is free software; you can redistribute it and/or modify =
+it
+> + * under the terms and conditions of the GNU General Public License,
+> + * version 2, as published by the Free Software Foundation.
+> + *
+> + * Manage Lattice FPGA firmware that is loaded over SPI using
+> + * the slave serial configuration interface.
+> + */
+> +
+> +#include <linux/delay.h>
+> +#include <linux/fpga/fpga-mgr.h>
+> +#include <linux/gpio/consumer.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/spi/spi.h>
+> +
+> +/* MachXO2 Programming Guide - sysCONFIG Programming Commands */
+> +
+> +#define ISC_ENABLE		0x000008c6
+> +#define ISC_ERASE		0x0000040e
+> +#define ISC_PROGRAMDONE		0x0000005e
+> +#define LSC_CHECKBUSY		0x000000f0
+> +#define LSC_INITADDRESS		0x00000046
+> +#define LSC_PROGINCRNV		0x01000070
+> +#define LSC_REFRESH		0x00000079
+> +
+> +#define BUSYFLAG		0x80
 
-Applied both, thanks!
-Maxime
+Maybe BIT() macro?
+> +
+> +/*
+> + * Max CCLK in Slave SPI mode according to 'MachXO2 Family Data
+> + * Sheet' sysCONFIG Port Timing Specifications (3-36)
+> + */
+> +#define MACHXO2_MAX_SPEED	66000000
+> +
+> +#define MACHXO2_LOW_DELAY	5	/* us */
+> +#define MACHXO2_HIGH_DELAY	200	/* us */
+> +
+> +#define MACHXO2_OP_SIZE		sizeof(u32)
+> +#define MACHXO2_PAGE_SIZE	16
+> +#define MACHXO2_BUF_SIZE	(MACHXO2_OP_SIZE + MACHXO2_PAGE_SIZE)
+> +
+> +static int wait_until_not_busy(struct spi_device *spi)
+> +{
+> +	u8 rx;
+> +	u32 checkbusy =3D LSC_CHECKBUSY;
+> +	int ret;
+> +
+> +	do {
+> +		ret =3D spi_write_then_read(spi, &checkbusy, MACHXO2_OP_SIZE,
+> +					  &rx, sizeof(rx));
+> +		if (ret)
+> +			return ret;
+> +	} while (rx & BUSYFLAG);
+> +
+> +	return 0;
+> +}
+> +
+> +static enum fpga_mgr_states machxo2_spi_state(struct fpga_manager *mgr)
+> +{
+> +	return FPGA_MGR_STATE_UNKNOWN;
+> +}
+> +
+> +static int machxo2_write_init(struct fpga_manager *mgr,
+> +			      struct fpga_image_info *info,
+> +			      const char *buf, size_t count)
+> +{
+> +	struct spi_device *spi =3D mgr->priv;
+> +	u32 enable =3D ISC_ENABLE;
+> +	u32 erase =3D ISC_ERASE;
+> +	u32 initaddr =3D LSC_INITADDRESS;
+> +	int ret;
+> +
+> +	if ((info->flags & FPGA_MGR_PARTIAL_RECONFIG)) {
+> +		dev_err(&mgr->dev,
+> +			"Partial reconfiguration is not supported\n");
+> +		return -ENOTSUPP;
+> +	}
+> +
+> +	ret =3D spi_write(spi, &enable, MACHXO2_OP_SIZE);
+> +	if (ret)
+> +		goto fail;
+> +
+> +	udelay(MACHXO2_LOW_DELAY);
 
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+Does this have to be a delay, or can this be a sleep?
+Can you maybe make the whole thing a chain of transactions
+making use of spi_message_init() and trans.delay_usecs?
 
---lyk2bbwu5qwejgu2
+> +	ret =3D spi_write(spi, &erase, MACHXO2_OP_SIZE);
+> +	if (ret)
+> +		goto fail;
+> +
+> +	ret =3D wait_until_not_busy(spi);
+> +	if (ret)
+> +		goto fail;
+> +
+> +	ret =3D spi_write(spi, &initaddr, MACHXO2_OP_SIZE);
+> +	if (ret)
+> +		goto fail;
+> +
+> +	return 0;
+> +
+> +fail:
+> +	dev_err(&mgr->dev, "Error during FPGA init.\n");
+> +	return ret;
+> +}
+> +
+> +static int machxo2_write(struct fpga_manager *mgr, const char *buf,
+> +			 size_t count)
+> +{
+> +	struct spi_device *spi =3D mgr->priv;
+> +	u32 progincr =3D LSC_PROGINCRNV;
+> +	u8 payload[MACHXO2_BUF_SIZE];
+> +	int i, ret;
+> +
+> +	if (count % MACHXO2_PAGE_SIZE !=3D 0) {
+> +		dev_err(&mgr->dev, "Malformed payload.\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	memcpy(payload, &progincr, MACHXO2_OP_SIZE);
+> +	for (i =3D 0; i < count; i +=3D MACHXO2_PAGE_SIZE) {
+> +		memcpy(&payload[MACHXO2_OP_SIZE], &buf[i], MACHXO2_PAGE_SIZE);
+> +		ret =3D spi_write(spi, payload, MACHXO2_BUF_SIZE);
+> +		if (ret) {
+> +			dev_err(&mgr->dev, "Error loading the bitstream.\n");
+> +			return ret;
+> +		}
+> +		udelay(MACHXO2_HIGH_DELAY);
+> +	}
+
+Same here.
+> +
+> +	return 0;
+> +}
+> +
+> +static int machxo2_write_complete(struct fpga_manager *mgr,
+> +				  struct fpga_image_info *info)
+> +{
+> +	struct spi_device *spi =3D mgr->priv;
+> +	u32 progdone =3D ISC_PROGRAMDONE;
+> +	u32 refresh =3D LSC_REFRESH;
+> +	int ret;
+> +
+> +	ret =3D spi_write(spi, &progdone, MACHXO2_OP_SIZE);
+> +	if (ret)
+> +		goto fail;
+> +
+> +	udelay(MACHXO2_HIGH_DELAY);
+
+See above.
+> +	/* yep, LSC_REFRESH is 3 bytes long actually */
+> +	ret =3D spi_write(spi, &refresh, MACHXO2_OP_SIZE - 1);
+> +	if (ret)
+> +		goto fail;
+> +
+> +	return 0;
+> +
+> +fail:
+> +	dev_err(&mgr->dev, "Refresh failed.\n");
+> +	return ret;
+> +}
+> +
+> +static const struct fpga_manager_ops machxo2_ops =3D {
+> +	.state =3D machxo2_spi_state,
+> +	.write_init =3D machxo2_write_init,
+> +	.write =3D machxo2_write,
+> +	.write_complete =3D machxo2_write_complete,
+> +};
+> +
+> +static int machxo2_spi_probe(struct spi_device *spi)
+> +{
+> +	struct device *dev =3D &spi->dev;
+> +
+> +	if (spi->max_speed_hz > MACHXO2_MAX_SPEED) {
+> +		dev_err(dev, "Speed is too high\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	return fpga_mgr_register(dev, "Lattice MachXO2 SPI FPGA Manager",
+> +				 &machxo2_ops, spi);
+> +}
+> +
+> +static int machxo2_spi_remove(struct spi_device *spi)
+> +{
+> +	struct device *dev =3D &spi->dev;
+> +
+> +	fpga_mgr_unregister(dev);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id of_match[] =3D {
+> +	{ .compatible =3D "lattice,machxo2-slave-spi", },
+> +	{}
+> +};
+> +MODULE_DEVICE_TABLE(of, of_match);
+> +
+> +static const struct spi_device_id lattice_ids[] =3D {
+> +	{ "machxo2-slave-spi", 0 },
+> +	{ },
+> +};
+> +MODULE_DEVICE_TABLE(spi, lattice_ids);
+> +
+> +static struct spi_driver machxo2_spi_driver =3D {
+> +	.driver =3D {
+> +		.name =3D "machxo2-slave-spi",
+> +		.of_match_table =3D of_match_ptr(of_match),
+> +	},
+> +	.probe =3D machxo2_spi_probe,
+> +	.remove =3D machxo2_spi_remove,
+> +	.id_table =3D lattice_ids,
+> +};
+> +
+> +module_spi_driver(machxo2_spi_driver)
+> +
+> +MODULE_AUTHOR("Paolo Pisati <p.pisati-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>");
+> +MODULE_DESCRIPTION("Load Lattice FPGA firmware over SPI");
+> +MODULE_LICENSE("GPL v2");
+> --=20
+> 2.7.4
+>=20
+
+Thanks,
+Moritz
+
+--1yeeQ81UyVL57Vl7
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIcBAABCAAGBQJZB3DmAAoJEBx+YmzsjxAgiy4QALwGOu2a0ZUdHtMikvtepHK6
-MId42R4EKB7NxCMJYxUDcojW+Gncc0MvDPmhVG8M2h4NS68zqgy9lD+xHT4VR4ht
-Z7pYRUuCpgmzRwN6xFN5nbLh3nQH8SiIaO1wpOkxGldkW/wZ2MBqjtNKue52IpJ2
-x90BATpgCMaWkexcSi/ZoBr+Wx8+ACt6KFv12UhVen1U6RP5gwyL3dPJ+wpM5ALK
-VIL2NboJLDdlZOZkVcf+f/IAmPLeTseef7TB8UNL6grjOoQVaZqhlQoIf5DK+3oj
-k16xexNmA/qWm7MiwbfrDUxxm8nTpHi62KC+2B8OUqpPvOvvgK71l3QhTD8EHfEZ
-0gQhb7IPgbhyEFU5ZYcl/VICp2oYAvLfMOeUo2RYVE0swT2CvnIktEU4t43gH8hn
-csK4Kkh+QY+dxlCHWmJMi30VUnpWKz03zBF7cCEoUdocaPN5yrZH0U8kkgpnMmUs
-AfeANLIt8jRjibRIkr4RbNuP3b2HU61NTNkJ9H0LMw4jJMN0NH98LPyzQlLwcKqa
-Gj9GSKqFriclYUZ1YTjhNH6CZEHSQRf77PUEWVYj+jLQh32+4S9PVwAycZqR0ICq
-cu4dPCgVm80VdETSS4YJ/OtIT3grP+y3P73y5rtNartSwnMnPrPYQOjHBeyt9SzP
-xgLX5ca0KyIZI4nZugt5
-=0Nw6
+iQEcBAEBAgAGBQJZB3eJAAoJEL5CEHepFqovdEIIAJDu9a1SM+ZNlWGHzkr7vAmp
+zrPtcEEuIVgEXxA7CMK4nueDh0+03n0uqupL7et87cpUqCCYOeELWdGBr5Y6CC7g
+SRi4H2o4net0x58nzqCDDAtfOZ5VwBZP0xAQ2MYI6XozJzGxhlzuRvQt5pe1tuVk
+KFbET7pql6mljOzw/qDljB9nQXE6XNmtLjDapmpPgn9lmjvmI/Mso80P7KbTTj0i
+QKkA1WMU8UHKloFSZhc73Iw/SaL30ZgUzWwtFCdwGD2xlnMfMh4zfen7TQMRMuA0
+OtQW6xmlTPMdAYq1DN+j+p7w5nxydYTofl789iHAgdT2IFAg2+1js4g3I4DIQEo=
+=ze7N
 -----END PGP SIGNATURE-----
 
---lyk2bbwu5qwejgu2--
+--1yeeQ81UyVL57Vl7--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
