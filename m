@@ -1,100 +1,130 @@
-From: Sebastian Reichel <sebastian.reichel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
-Subject: Re: [PATCH v11 01/10] devicetree: power: Add battery.txt
-Date: Mon, 1 May 2017 17:09:34 +0200
-Message-ID: <20170501150934.qx2nrw3r4zjgjvb7@earth>
-References: <20170320094335.19224-1-liam@networkimprov.net>
- <20170320094335.19224-2-liam@networkimprov.net>
+From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH 1/3] ARM: dts: rockchip: Move cros-ec-sbs to rk3288-veyron-chromebook-sbs
+Date: Mon, 1 May 2017 08:49:02 -0700
+Message-ID: <CAD=FV=V_s0TE_2vUvDBYfmbt2VS0nk5gmSPLi+mh2sqGauj6dg@mail.gmail.com>
+References: <20170430183054.24563-1-contact@paulk.fr> <2369975.a4dWayqU5d@phil>
+ <1493585812.6493.4.camel@paulk.fr> <2337202.q9Cdx8Nyxy@phil>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="rsqx7tuzf3lhgm2s"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170320094335.19224-2-liam-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Liam Breck <liam-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org>
-Cc: "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Matt Ranostay <matt-sk+viVC6FLCDq+mSdOJa79kegs52MxvZ@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Liam Breck <kernel-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org>
-List-Id: devicetree@vger.kernel.org
-
-
---rsqx7tuzf3lhgm2s
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <2337202.q9Cdx8Nyxy@phil>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Cc: Paul Kocialkowski <contact-W9ppeneeCTY@public.gmane.org>, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+List-Id: devicetree@vger.kernel.org
 
 Hi,
 
-On Mon, Mar 20, 2017 at 02:43:26AM -0700, Liam Breck wrote:
-> From: Liam Breck <kernel-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org>
->=20
-> Documentation of static battery characteristics that can be defined
-> for batteries which cannot self-identify. This information is required
-> by fuel-gauge and charger chips for proper handling of the battery.
->=20
-> Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Signed-off-by: Matt Ranostay <matt-sk+viVC6FLCDq+mSdOJa79kegs52MxvZ@public.gmane.org>
-> Signed-off-by: Liam Breck <kernel-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org>
-> ---
->  .../devicetree/bindings/power/supply/battery.txt   | 43 ++++++++++++++++=
-++++++
->  1 file changed, 43 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/power/supply/batter=
-y.txt
->=20
-> diff --git a/Documentation/devicetree/bindings/power/supply/battery.txt b=
-/Documentation/devicetree/bindings/power/supply/battery.txt
-> new file mode 100644
-> index 0000000..53a68c0
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/power/supply/battery.txt
-> @@ -0,0 +1,43 @@
-> +Battery Characteristics
-> +
-> +The devicetree battery node provides static battery characteristics.=20
-> +In smart batteries, these are typically stored in non-volatile memory=20
-> +on a fuel gauge chip. The battery node should be used where there is=20
-> +no appropriate non-volatile memory, or it is unprogrammed/incorrect.
-> +
-> +Required Properties:
-> + - compatible: Must be "simple-battery"
-> +
-> +Optional Properties:
-> + - voltage-min-design-microvolt: drained battery voltage
-> + - energy-full-design-microwatt-hours: battery design energy
-> + - charge-full-design-microamp-hours: battery design capacity
-> +
-> +Battery properties are named, where possible, for the corresponding=20
-> +elements in enum power_supply_property, defined in
-> +https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/=
-include/linux/power_supply.h#n86
+On Mon, May 1, 2017 at 7:07 AM, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org> wrote:
+> Am Sonntag, 30. April 2017, 22:56:52 CEST schrieb Paul Kocialkowski:
+>> Le dimanche 30 avril 2017 =C3=A0 22:37 +0200, Heiko Stuebner a =C3=A9cri=
+t :
+>> > Hi Paul,
+>> >
+>> > Am Sonntag, 30. April 2017, 20:30:52 CEST schrieb Paul Kocialkowski:
+>> > > This moves the cros-ec-sbs dtsi to a new rk3288-veyron-chromebook-sb=
+s
+>> > > dtsi since it only concerns rk3288 veyron Chromebooks.
+>> > >
+>> > > Other Chromebooks (such as the tegra124 nyans) also have sbs batteri=
+es
+>> > > and don't use this dtsi, that only makes sense when used with
+>> > > rk3288-veyron-chromebook anyway.
+>> >
+>> > That isn't true. The gru series (rk3399-based) also uses the
+>> > sbs-battery [0]. And while it is currently limited to Rockchip-based
+>> > Chromebooks it is nevertheless used on more than one platform, so
+>> > the probability is high that it will be used in future series as well.
+>>
+>> That's good to know, but as pointed out, other cros devices are using a =
+sbs
+>> battery without this header, so such a generic name isn't really a good =
+fit.
 
-Since Rob did not reply, I queued this with this paragraph removed
-and whitespace errors fixed to speed up things. You can always try
-persuading Rob in an incremental patch ;)
+It would be interesting to know if the "retry-count" ought to be the
+same across all Chromebooks.  I guess you could argue that maybe
+someone found it needed to be 10 in all "nyan" variants and needed to
+be 1 in all "veyron" variants, but it seems more likely that the
+difference is arbitrary, or that one of the two values would work for
+everyone.  It sure looks like we've just been copying values from
+device to device.  Given that all the "veyron" devices have vastly
+different batteries (and probably all the nyan ones too), it seems
+likely there ought to be one value.
 
--- Sebastian
+In terms of setting the "charger", that also could potentially be
+something that could be for all Chromebooks, or at least older ones
+that don't have their charger implemented by the type C driver.  ...or
+nyan devices could simply have a line in their dts like:
 
---rsqx7tuzf3lhgm2s
-Content-Type: application/pgp-signature; name="signature.asc"
+&battery {
+  power-supplies =3D <&charger>;
+};
 
------BEGIN PGP SIGNATURE-----
 
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAlkHT64ACgkQ2O7X88g7
-+prQqA//TLm0jamH7O6/T2Q6TJB9N+MsScmbLk/Txee+LqIi+zWH9YI/8DvqGKbi
-t2ziY/RbueKDOtX7ZxLfY96zOxJ28dyBcNQ1nYLjVnIC0LvPRQrwRVi7PIQEe2Sk
-FdiZ/FRoCStUwkLCfnh1KaeSePTKXVcBUXftbmPLZ1IQcY75jtZpHJplYITdAYrP
-4EvNJ2qDg+LgOCwOjLwy+LAFt5FEpmXo85k7bS5Y9f80IrdoQ5BeyvhC0b1yVoed
-JN2bYJpHCS/zZ72YvzEyvyWQ1MW5t6h/Djb0cswt2YZbjy6BI0vM8HI57GQpLFnj
-OeGx37Pjmqw9Dab5YZ7v7oNysYyAYq6eb6I8z2mReprNa/SYBLYDps6Mqe93jj8A
-qACemMd6HwVD7avYkbP7ZMWa/g9BDnQJl9t3T73okzwvjpy5w96krsCfRliiVAbj
-ilKutKKCyaqQ9EfhK21LSu7yBTcLIG9YYMykjjb2D9QIz4xiUTXjGdZfkqF1mehM
-njGNBPlsLLltKfF+DRO/ku2EgCMuXNlirGl99TOF/goDH8PBgpm0ORz0jNA9DhjZ
-BTAxwxPDFtz+D8b8mnz6T8H72UD512cJ7YqkzBn+OQyGg9R4MMl5BLI5bf69wCr1
-ItF5IRjjG3DaL1IfgG2BQHGTQ/hURPYCxir7sI2XJRyaYCtilfU=
-=yGj+
------END PGP SIGNATURE-----
+>> Note that &charger has to be defined (after my subsequent patches), whic=
+h it is
+>> for devices that also include rk3288-veyron-chromebook, but not necessar=
+ily
+>> others.
+>>
+>> Overall, I think having one -sbs dtsi file makes sense here because ther=
+e is
+>> already a rk3288-veyron-chromebook dtsi that veyron chromebooks use. Tha=
+t file
+>> cannot contain the battery bindings because minnie has a different one a=
+nd it
+>> would be a bit silly to copy it over all devices. That definitely makes =
+sense.
+>>
+>> As for other devices, I don't see why we should have a separate include =
+file for
+>> the battery instead of having it in the device's dts. I think this shoul=
+d be the
+>> case on gru/kevin.
+>>
+>> Also maybe not *all* gru-based devices will turn out to use a SBS batter=
+y, so it
+>> seems early to include this header in the gru dtsi.
 
---rsqx7tuzf3lhgm2s--
+For gru devices, we've moved to a "virtual sbs battery" provided by
+the EC.  I'm not 100% positive that everything will just magically
+work and be converted in the EC if we put a non-sbs battery on a board
+with this EC feature, but I would hope we'd convert everything
+properly.
+
+
+>> One last point, gru/kevin
+>> currently don't define a charger, which will break my subsequent patch (=
+that is
+>> however needed for the veyrons that use this file).
+
+Arguably this should be fixed.  On veyron-chromebook we just use
+"gpio-charger".  We didn't add a special charger driver w/ a property
+like "ti,external-control" since the only piece of information that
+Linux really needed from the charger was whether or not AC was
+connected.
+
+
+>> To me, it seems that there's little advantage and major drawbacks in kee=
+ping
+>> this file the way it is.
+>
+> I don't have any set opinion right now but after looking through the
+> other uses of the sbs-battery the cros-ec-sbs.dtsi snippet really seems
+> somewhat veyron/gru-specific - especially wrt. the retry-count values.
+>
+> What I'm not sure about is whether it is actually better to keep the incl=
+ude
+> around under a new name or just move the (rather tiny) sbs-battery node
+> into the relevant devicetrees directly, when there aren't that many users
+> anyway.
+
+I'm fine with whatever you guys choose to do here.  It's nice not to
+have copied "code", but with device tree sometimes copies are cleaner
+than trying to share something.
+
+-Doug
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
