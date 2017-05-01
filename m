@@ -1,49 +1,62 @@
-From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Subject: Re: [PATCH v5 00/20] net-next: stmmac: add dwmac-sun8i ethernet
- driver
-Date: Mon, 1 May 2017 18:10:30 +0200
-Message-ID: <20170501161030.GF1285@lunn.ch>
-References: <20170501124520.3769-1-clabbe.montjoie@gmail.com>
- <20170501140133.GD31281@lunn.ch>
- <CAGb2v67qGqswdz_JcDaD5jTkcvtBuzqqP8KZh=S_5pkp=o6cUQ@mail.gmail.com>
- <20170501144541.GB1285@lunn.ch>
- <20170501155856.GA1957@Red>
+From: Matthias Kaehlcke <mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH] regulator: Allow for asymmetric settling times
+Date: Mon, 1 May 2017 09:42:27 -0700
+Message-ID: <20170501164227.GU128305@google.com>
+References: <20170429000643.56407-1-mka@chromium.org>
+ <59044881.7090901@nvidia.com>
+ <20170430123001.iwauodtjkbnmjmsl@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20170501155856.GA1957@Red>
+In-Reply-To: <20170430123001.iwauodtjkbnmjmsl-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>, alexandre.torgue-qxv4g6HH51o@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, netdev <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-> > > > Does the internal PHY have a phy driver? It seems like
-> > > > tx-delay-ps/rx-delay-ps are properties of this internal PHY, and so
-> > > > should be in the phy driver, if it has one.
-> > > 
-> > > Nope. These affect the delay lines for the external PHY interface.
+Hi Mark and Laxman,
+
+thanks for your comments.
+
+El Sun, Apr 30, 2017 at 09:30:01PM +0900 Mark Brown ha dit:
+
+> On Sat, Apr 29, 2017 at 01:32:09PM +0530, Laxman Dewangan wrote:
+> > On Saturday 29 April 2017 05:36 AM, Matthias Kaehlcke wrote:
 > 
-> I will add some sentences in the documentation to be more clear about that.
+> > > -- regulator-settling-time-us: Settling time, in microseconds, for voltage
+> > > -  change if regulator have the constant time for any level voltage change.
+> > > -  This is useful when regulator have exponential voltage change.
+> > > +- regulator-settling-time-up-us: Settling time, in microseconds, for voltage
+> > > +  increase if the regulator needs a constant time to settle after voltage
+> > > +  increases of any level. This is useful for regulators with exponential
+> > > +  voltage changes.
+> > > +- regulator-settling-time-down-us: Settling time, in microseconds, for voltage
+> > > +  decrease if the regulator needs a constant time to settle after voltage
+> > > +  decreases of any level. This is useful for regulators with exponential
+> > > +  voltage changes.
+> 
+> > Can we have regulator-settling-time-us also so if it is there then up/down
+> > same.
+> > If up/down different then separate properties can be used.
+> 
+> Removing the existing binding would also break existing DTs using it
+> which we obviously don't want.
+
+I thought it might be ok in this case since the driver just landed.
+
+> I don't see any reason to even deprecate it, like Laxman says it's
+> nice and convenient for people with symmetric performance.
+
+Ok, I was 'concerned' about the redundancy, but if that is not seen as
+an issue I'm happy to just add the new properties. I'll send an
+updated patch soon.
 
 Thanks
 
-> 
-> > 
-> > Oh, yes. I understood the patch wrong.
-> > 
-> > None of the patches actually use these properties. Are they actually
-> > needed? We should avoid adding vendor specific properties, if they are
-> > not used.
-> > 
-> 
-> The board that use it is the BananaPi M3, but the SoC A83T still lack clocks support.
-> So theses properties is already used out of tree, and will be used in tree soon.
+Matthias
 
-Fair enough.
 
-Thanks
-	Andrew
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
