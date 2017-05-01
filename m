@@ -1,171 +1,27 @@
-From: Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: [PATCH v2] powerpc/8xx: Adding support of IRQ in MPC8xx GPIO
-Date: Mon,  1 May 2017 09:38:13 +0200 (CEST)
-Message-ID: <20170501073813.7567549BED@pc13941vm.idsi0.si.c-s.fr>
+From: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Subject: Re: [PATCH v2 1/2] dt-bindings: clk: r7s72100: add USB bit
+ definitions
+Date: Mon, 1 May 2017 10:47:28 +0200
+Message-ID: <20170501084704.GH18349@verge.net.au>
+References: <20170428190134.63895-1-chris.brandt@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Michael Ellerman <mpe@ellerman.id.au>, Scott Wood <oss@buserror.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170428190134.63895-1-chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Cc: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch allows the use of IRQ to notify the change of GPIO status
-on MPC8xx CPM IO ports. This then allows to associate IRQs to GPIOs
-in the Device Tree.
+On Fri, Apr 28, 2017 at 12:01:33PM -0700, Chris Brandt wrote:
+> Add the bit locations that correspond to the USB clocks.
+> 
+> Signed-off-by: Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+> Reviewed-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 
-Ex:
-	CPM1_PIO_C: gpio-controller@960 {
-		#gpio-cells = <2>;
-		compatible = "fsl,cpm1-pario-bank-c";
-		reg = <0x960 0x10>;
-		fsl,cpm1-gpio-irq-mask = <0x0fff>;
-		interrupts = <1 2 6 9 10 11 14 15 23 24 26 31>;
-		interrupt-parent = <&CPM_PIC>;
-		gpio-controller;
-	};
-
-The property 'fsl,cpm1-gpio-irq-mask' defines which of the 16 GPIOs
-have the associated interrupts defined in the 'interrupts' property.
-
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
----
- v2: Updated the binding ; changed property 'interrupt-mask' to 'fsl,cpm1-gpio-irq-mask'
-
- .../devicetree/bindings/soc/fsl/cpm_qe/gpio.txt    | 21 +++++++++++++++++-
- arch/powerpc/include/asm/cpm1.h                    |  2 ++
- arch/powerpc/sysdev/cpm1.c                         | 25 ++++++++++++++++++++++
- 3 files changed, 47 insertions(+), 1 deletion(-)
-
-diff --git a/Documentation/devicetree/bindings/soc/fsl/cpm_qe/gpio.txt b/Documentation/devicetree/bindings/soc/fsl/cpm_qe/gpio.txt
-index 349f79f..1bcb151 100644
---- a/Documentation/devicetree/bindings/soc/fsl/cpm_qe/gpio.txt
-+++ b/Documentation/devicetree/bindings/soc/fsl/cpm_qe/gpio.txt
-@@ -13,8 +13,17 @@ Required properties:
- - #gpio-cells : Should be two. The first cell is the pin number and the
-   second cell is used to specify optional parameters (currently unused).
- - gpio-controller : Marks the port as GPIO controller.
-+Optional property:
-+- fsl,cpm1-gpio-irq-mask : For banks having interrupt capability (like port C
-+  on CPM1), this item tells which ports have an associated interrupt (ports are
-+  listed in the same order as in PCINT register)
-+- interrupts : This property provides the list of interrupt for each GPIO having
-+  one as described by the fsl,cpm1-gpio-irq-mask property. There should be as
-+  many interrupts as number of ones in the mask property. The first interrupt in
-+  the list corresponds to the most significant bit of the mask.
-+- interrupt-parent : Parent for the above interrupt property.
- 
--Example of three SOC GPIO banks defined as gpio-controller nodes:
-+Example of four SOC GPIO banks defined as gpio-controller nodes:
- 
- 	CPM1_PIO_A: gpio-controller@950 {
- 		#gpio-cells = <2>;
-@@ -30,6 +39,16 @@ Example of three SOC GPIO banks defined as gpio-controller nodes:
- 		gpio-controller;
- 	};
- 
-+	CPM1_PIO_C: gpio-controller@960 {
-+		#gpio-cells = <2>;
-+		compatible = "fsl,cpm1-pario-bank-c";
-+		reg = <0x960 0x10>;
-+		fsl,cpm1-gpio-irq-mask = <0x0fff>;
-+		interrupts = <1 2 6 9 10 11 14 15 23 24 26 31>;
-+		interrupt-parent = <&CPM_PIC>;
-+		gpio-controller;
-+	};
-+
- 	CPM1_PIO_E: gpio-controller@ac8 {
- 		#gpio-cells = <2>;
- 		compatible = "fsl,cpm1-pario-bank-e";
-diff --git a/arch/powerpc/include/asm/cpm1.h b/arch/powerpc/include/asm/cpm1.h
-index 8ee4211..14ad378 100644
---- a/arch/powerpc/include/asm/cpm1.h
-+++ b/arch/powerpc/include/asm/cpm1.h
-@@ -560,6 +560,8 @@ typedef struct risc_timer_pram {
- #define CPM_PIN_SECONDARY 2
- #define CPM_PIN_GPIO      4
- #define CPM_PIN_OPENDRAIN 8
-+#define CPM_PIN_FALLEDGE  16
-+#define CPM_PIN_ANYEDGE   0
- 
- enum cpm_port {
- 	CPM_PORTA,
-diff --git a/arch/powerpc/sysdev/cpm1.c b/arch/powerpc/sysdev/cpm1.c
-index 986cd11..c651e66 100644
---- a/arch/powerpc/sysdev/cpm1.c
-+++ b/arch/powerpc/sysdev/cpm1.c
-@@ -377,6 +377,10 @@ static void cpm1_set_pin16(int port, int pin, int flags)
- 			setbits16(&iop->odr_sor, pin);
- 		else
- 			clrbits16(&iop->odr_sor, pin);
-+		if (flags & CPM_PIN_FALLEDGE)
-+			setbits16(&iop->intr, pin);
-+		else
-+			clrbits16(&iop->intr, pin);
- 	}
- }
- 
-@@ -528,6 +532,9 @@ struct cpm1_gpio16_chip {
- 
- 	/* shadowed data register to clear/set bits safely */
- 	u16 cpdata;
-+
-+	/* IRQ associated with Pins when relevant */
-+	int irq[16];
- };
- 
- static void cpm1_gpio16_save_regs(struct of_mm_gpio_chip *mm_gc)
-@@ -578,6 +585,14 @@ static void cpm1_gpio16_set(struct gpio_chip *gc, unsigned int gpio, int value)
- 	spin_unlock_irqrestore(&cpm1_gc->lock, flags);
- }
- 
-+static int cpm1_gpio16_to_irq(struct gpio_chip *gc, unsigned int gpio)
-+{
-+	struct of_mm_gpio_chip *mm_gc = to_of_mm_gpio_chip(gc);
-+	struct cpm1_gpio16_chip *cpm1_gc = gpiochip_get_data(&mm_gc->gc);
-+
-+	return cpm1_gc->irq[gpio] ? : -ENXIO;
-+}
-+
- static int cpm1_gpio16_dir_out(struct gpio_chip *gc, unsigned int gpio, int val)
- {
- 	struct of_mm_gpio_chip *mm_gc = to_of_mm_gpio_chip(gc);
-@@ -618,6 +633,7 @@ int cpm1_gpiochip_add16(struct device_node *np)
- 	struct cpm1_gpio16_chip *cpm1_gc;
- 	struct of_mm_gpio_chip *mm_gc;
- 	struct gpio_chip *gc;
-+	u16 mask;
- 
- 	cpm1_gc = kzalloc(sizeof(*cpm1_gc), GFP_KERNEL);
- 	if (!cpm1_gc)
-@@ -625,6 +641,14 @@ int cpm1_gpiochip_add16(struct device_node *np)
- 
- 	spin_lock_init(&cpm1_gc->lock);
- 
-+	if (!of_property_read_u16(np, "fsl,cpm1-gpio-irq-mask", &mask)) {
-+		int i, j;
-+
-+		for (i = 0, j = 0; i < 16; i++)
-+			if (mask & (1 << (15 - i)))
-+				cpm1_gc->irq[i] = irq_of_parse_and_map(np, j++);
-+	}
-+
- 	mm_gc = &cpm1_gc->mm_gc;
- 	gc = &mm_gc->gc;
- 
-@@ -634,6 +658,7 @@ int cpm1_gpiochip_add16(struct device_node *np)
- 	gc->direction_output = cpm1_gpio16_dir_out;
- 	gc->get = cpm1_gpio16_get;
- 	gc->set = cpm1_gpio16_set;
-+	gc->to_irq = cpm1_gpio16_to_irq;
- 
- 	return of_mm_gpiochip_add_data(np, mm_gc, cpm1_gc);
- }
--- 
-2.2.2
-
-
----
-L'absence de virus dans ce courrier électronique a été vérifiée par le logiciel antivirus Avast.
-https://www.avast.com/antivirus
+Thanks, I have queued up this and the following patch for v4.13.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
