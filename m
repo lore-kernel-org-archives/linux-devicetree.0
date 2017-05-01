@@ -1,76 +1,171 @@
-From: Sean Wang <sean.wang@mediatek.com>
-Subject: Re: [PATCH v2 25/30] arm: dts: mt7623: rename mt7623-evb.dts to
- arch/arm/boot/dts/mt7623n-rfb.dtsi
-Date: Mon, 1 May 2017 15:06:45 +0800
-Message-ID: <1493622405.32195.20.camel@mtkswgap22>
-References: <1493198774-4478-1-git-send-email-sean.wang@mediatek.com>
-         <1493198774-4478-26-git-send-email-sean.wang@mediatek.com>
-         <20170428203025.gdrtbudfzwy5z4h5@rob-hp-laptop>
+From: Christophe Leroy <christophe.leroy@c-s.fr>
+Subject: [PATCH v2] powerpc/8xx: Adding support of IRQ in MPC8xx GPIO
+Date: Mon,  1 May 2017 09:38:13 +0200 (CEST)
+Message-ID: <20170501073813.7567549BED@pc13941vm.idsi0.si.c-s.fr>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <20170428203025.gdrtbudfzwy5z4h5@rob-hp-laptop>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: matthias.bgg@gmail.com, john@phrozen.org, mark.rutland@arm.com, linux@armlinux.org.uk, linus.walleij@linaro.org, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Michael Ellerman <mpe@ellerman.id.au>, Scott Wood <oss@buserror.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2017-04-28 at 15:30 -0500, Rob Herring wrote:
-> On Wed, Apr 26, 2017 at 05:26:09PM +0800, sean.wang@mediatek.com wrote:
-> > From: Sean Wang <sean.wang@mediatek.com>
-> > 
-> > There are 2 versions of the SoC. MT7623N is almost identical to MT7623A
-> > but has some additional multimedia features. The reference boards are
-> > available as NAND or MMC and might have a different ethernet setup. In
-> > order to reduce the duplication of devicetree code we add an intermediate
-> > dtsi file for these reference boards. Additionally Mediatek pointed out,
-> > that the EVB is yet another board and the board in question is infact the
-> > RFB. Take this into account while renaming the files.
-> 
-> You are breaking compatibility with existing DTs. Just document which 
-> flavor you want "mediatek,mt7623" to refer to and add the new one. Or 
-> just add 2 new strings but keep the old one.
-> 
+This patch allows the use of IRQ to notify the change of GPIO status
+on MPC8xx CPM IO ports. This then allows to associate IRQs to GPIOs
+in the Device Tree.
 
-Hi Rob,
+Ex:
+	CPM1_PIO_C: gpio-controller@960 {
+		#gpio-cells = <2>;
+		compatible = "fsl,cpm1-pario-bank-c";
+		reg = <0x960 0x10>;
+		fsl,cpm1-gpio-irq-mask = <0x0fff>;
+		interrupts = <1 2 6 9 10 11 14 15 23 24 26 31>;
+		interrupt-parent = <&CPM_PIC>;
+		gpio-controller;
+	};
 
-really appreciate your patient guidance.
+The property 'fsl,cpm1-gpio-irq-mask' defines which of the 16 GPIOs
+have the associated interrupts defined in the 'interrupts' property.
 
-I prefer to using the way one you suggest: the old one is kept and
-refers to mt7623n SoC and new one will be added for mt7623a Soc.
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+---
+ v2: Updated the binding ; changed property 'interrupt-mask' to 'fsl,cpm1-gpio-irq-mask'
 
-	Sean
+ .../devicetree/bindings/soc/fsl/cpm_qe/gpio.txt    | 21 +++++++++++++++++-
+ arch/powerpc/include/asm/cpm1.h                    |  2 ++
+ arch/powerpc/sysdev/cpm1.c                         | 25 ++++++++++++++++++++++
+ 3 files changed, 47 insertions(+), 1 deletion(-)
 
-> > 
-> > Signed-off-by: John Crispin <john@phrozen.org>
-> > Signed-off-by: Sean Wang <sean.wang@mediatek.com>
-> > 
-> > ---
-> >  Documentation/devicetree/bindings/arm/mediatek.txt |  6 ++--
-> >  arch/arm/boot/dts/Makefile                         |  2 +-
-> >  arch/arm/boot/dts/mt7623-evb.dts                   | 33 ----------------------
-> >  arch/arm/boot/dts/mt7623n-rfb-nand.dts             | 21 ++++++++++++++
-> >  arch/arm/boot/dts/mt7623n-rfb.dtsi                 | 29 +++++++++++++++++++
-> >  arch/arm/mach-mediatek/mediatek.c                  |  4 +--
-> >  arch/arm/mach-mediatek/platsmp.c                   |  2 +-
-> >  7 files changed, 57 insertions(+), 40 deletions(-)
-> >  delete mode 100644 arch/arm/boot/dts/mt7623-evb.dts
-> >  create mode 100644 arch/arm/boot/dts/mt7623n-rfb-nand.dts
-> >  create mode 100644 arch/arm/boot/dts/mt7623n-rfb.dtsi
-> > 
-> > diff --git a/Documentation/devicetree/bindings/arm/mediatek.txt b/Documentation/devicetree/bindings/arm/mediatek.txt
-> > index c860b24..7f7c804 100644
-> > --- a/Documentation/devicetree/bindings/arm/mediatek.txt
-> > +++ b/Documentation/devicetree/bindings/arm/mediatek.txt
-> > @@ -12,7 +12,7 @@ compatible: Must contain one of
-> >     "mediatek,mt6592"
-> >     "mediatek,mt6755"
-> >     "mediatek,mt6795"
-> > -   "mediatek,mt7623"
-> > +   "mediatek,mt7623n"
-> >     "mediatek,mt8127"
-> >     "mediatek,mt8135"
-> >     "mediatek,mt8173"
+diff --git a/Documentation/devicetree/bindings/soc/fsl/cpm_qe/gpio.txt b/Documentation/devicetree/bindings/soc/fsl/cpm_qe/gpio.txt
+index 349f79f..1bcb151 100644
+--- a/Documentation/devicetree/bindings/soc/fsl/cpm_qe/gpio.txt
++++ b/Documentation/devicetree/bindings/soc/fsl/cpm_qe/gpio.txt
+@@ -13,8 +13,17 @@ Required properties:
+ - #gpio-cells : Should be two. The first cell is the pin number and the
+   second cell is used to specify optional parameters (currently unused).
+ - gpio-controller : Marks the port as GPIO controller.
++Optional property:
++- fsl,cpm1-gpio-irq-mask : For banks having interrupt capability (like port C
++  on CPM1), this item tells which ports have an associated interrupt (ports are
++  listed in the same order as in PCINT register)
++- interrupts : This property provides the list of interrupt for each GPIO having
++  one as described by the fsl,cpm1-gpio-irq-mask property. There should be as
++  many interrupts as number of ones in the mask property. The first interrupt in
++  the list corresponds to the most significant bit of the mask.
++- interrupt-parent : Parent for the above interrupt property.
+ 
+-Example of three SOC GPIO banks defined as gpio-controller nodes:
++Example of four SOC GPIO banks defined as gpio-controller nodes:
+ 
+ 	CPM1_PIO_A: gpio-controller@950 {
+ 		#gpio-cells = <2>;
+@@ -30,6 +39,16 @@ Example of three SOC GPIO banks defined as gpio-controller nodes:
+ 		gpio-controller;
+ 	};
+ 
++	CPM1_PIO_C: gpio-controller@960 {
++		#gpio-cells = <2>;
++		compatible = "fsl,cpm1-pario-bank-c";
++		reg = <0x960 0x10>;
++		fsl,cpm1-gpio-irq-mask = <0x0fff>;
++		interrupts = <1 2 6 9 10 11 14 15 23 24 26 31>;
++		interrupt-parent = <&CPM_PIC>;
++		gpio-controller;
++	};
++
+ 	CPM1_PIO_E: gpio-controller@ac8 {
+ 		#gpio-cells = <2>;
+ 		compatible = "fsl,cpm1-pario-bank-e";
+diff --git a/arch/powerpc/include/asm/cpm1.h b/arch/powerpc/include/asm/cpm1.h
+index 8ee4211..14ad378 100644
+--- a/arch/powerpc/include/asm/cpm1.h
++++ b/arch/powerpc/include/asm/cpm1.h
+@@ -560,6 +560,8 @@ typedef struct risc_timer_pram {
+ #define CPM_PIN_SECONDARY 2
+ #define CPM_PIN_GPIO      4
+ #define CPM_PIN_OPENDRAIN 8
++#define CPM_PIN_FALLEDGE  16
++#define CPM_PIN_ANYEDGE   0
+ 
+ enum cpm_port {
+ 	CPM_PORTA,
+diff --git a/arch/powerpc/sysdev/cpm1.c b/arch/powerpc/sysdev/cpm1.c
+index 986cd11..c651e66 100644
+--- a/arch/powerpc/sysdev/cpm1.c
++++ b/arch/powerpc/sysdev/cpm1.c
+@@ -377,6 +377,10 @@ static void cpm1_set_pin16(int port, int pin, int flags)
+ 			setbits16(&iop->odr_sor, pin);
+ 		else
+ 			clrbits16(&iop->odr_sor, pin);
++		if (flags & CPM_PIN_FALLEDGE)
++			setbits16(&iop->intr, pin);
++		else
++			clrbits16(&iop->intr, pin);
+ 	}
+ }
+ 
+@@ -528,6 +532,9 @@ struct cpm1_gpio16_chip {
+ 
+ 	/* shadowed data register to clear/set bits safely */
+ 	u16 cpdata;
++
++	/* IRQ associated with Pins when relevant */
++	int irq[16];
+ };
+ 
+ static void cpm1_gpio16_save_regs(struct of_mm_gpio_chip *mm_gc)
+@@ -578,6 +585,14 @@ static void cpm1_gpio16_set(struct gpio_chip *gc, unsigned int gpio, int value)
+ 	spin_unlock_irqrestore(&cpm1_gc->lock, flags);
+ }
+ 
++static int cpm1_gpio16_to_irq(struct gpio_chip *gc, unsigned int gpio)
++{
++	struct of_mm_gpio_chip *mm_gc = to_of_mm_gpio_chip(gc);
++	struct cpm1_gpio16_chip *cpm1_gc = gpiochip_get_data(&mm_gc->gc);
++
++	return cpm1_gc->irq[gpio] ? : -ENXIO;
++}
++
+ static int cpm1_gpio16_dir_out(struct gpio_chip *gc, unsigned int gpio, int val)
+ {
+ 	struct of_mm_gpio_chip *mm_gc = to_of_mm_gpio_chip(gc);
+@@ -618,6 +633,7 @@ int cpm1_gpiochip_add16(struct device_node *np)
+ 	struct cpm1_gpio16_chip *cpm1_gc;
+ 	struct of_mm_gpio_chip *mm_gc;
+ 	struct gpio_chip *gc;
++	u16 mask;
+ 
+ 	cpm1_gc = kzalloc(sizeof(*cpm1_gc), GFP_KERNEL);
+ 	if (!cpm1_gc)
+@@ -625,6 +641,14 @@ int cpm1_gpiochip_add16(struct device_node *np)
+ 
+ 	spin_lock_init(&cpm1_gc->lock);
+ 
++	if (!of_property_read_u16(np, "fsl,cpm1-gpio-irq-mask", &mask)) {
++		int i, j;
++
++		for (i = 0, j = 0; i < 16; i++)
++			if (mask & (1 << (15 - i)))
++				cpm1_gc->irq[i] = irq_of_parse_and_map(np, j++);
++	}
++
+ 	mm_gc = &cpm1_gc->mm_gc;
+ 	gc = &mm_gc->gc;
+ 
+@@ -634,6 +658,7 @@ int cpm1_gpiochip_add16(struct device_node *np)
+ 	gc->direction_output = cpm1_gpio16_dir_out;
+ 	gc->get = cpm1_gpio16_get;
+ 	gc->set = cpm1_gpio16_set;
++	gc->to_irq = cpm1_gpio16_to_irq;
+ 
+ 	return of_mm_gpiochip_add_data(np, mm_gc, cpm1_gc);
+ }
+-- 
+2.2.2
 
 
+---
+L'absence de virus dans ce courrier électronique a été vérifiée par le logiciel antivirus Avast.
+https://www.avast.com/antivirus
