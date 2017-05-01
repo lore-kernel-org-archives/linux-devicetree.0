@@ -1,63 +1,76 @@
 From: Sean Wang <sean.wang@mediatek.com>
-Subject: Re: [PATCH v2 29/30] dt-bindings: add vendor prefix for bananapi
-Date: Mon, 1 May 2017 14:58:00 +0800
-Message-ID: <1493621880.32195.13.camel@mtkswgap22>
+Subject: Re: [PATCH v2 25/30] arm: dts: mt7623: rename mt7623-evb.dts to
+ arch/arm/boot/dts/mt7623n-rfb.dtsi
+Date: Mon, 1 May 2017 15:06:45 +0800
+Message-ID: <1493622405.32195.20.camel@mtkswgap22>
 References: <1493198774-4478-1-git-send-email-sean.wang@mediatek.com>
-         <1493198774-4478-30-git-send-email-sean.wang@mediatek.com>
-         <20170428203727.m6jm5w6nb2iirxih@rob-hp-laptop>
+         <1493198774-4478-26-git-send-email-sean.wang@mediatek.com>
+         <20170428203025.gdrtbudfzwy5z4h5@rob-hp-laptop>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <20170428203727.m6jm5w6nb2iirxih@rob-hp-laptop>
+In-Reply-To: <20170428203025.gdrtbudfzwy5z4h5@rob-hp-laptop>
 Sender: linux-gpio-owner@vger.kernel.org
 To: Rob Herring <robh@kernel.org>
 Cc: matthias.bgg@gmail.com, john@phrozen.org, mark.rutland@arm.com, linux@armlinux.org.uk, linus.walleij@linaro.org, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2017-04-28 at 15:37 -0500, Rob Herring wrote:
-> On Wed, Apr 26, 2017 at 05:26:13PM +0800, sean.wang@mediatek.com wrote:
+On Fri, 2017-04-28 at 15:30 -0500, Rob Herring wrote:
+> On Wed, Apr 26, 2017 at 05:26:09PM +0800, sean.wang@mediatek.com wrote:
 > > From: Sean Wang <sean.wang@mediatek.com>
 > > 
-> > Banana Pi team in Sinovoip Co., Limited which are dedicated to
-> > design and manufacture open hardware product.
-> > 
-> > Website: http://www.banana-pi.org/
-> > 
-> > Signed-off-by: Sean Wang <sean.wang@mediatek.com>
-> > ---
-> >  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
-> >  1 file changed, 1 insertion(+)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> > index ec0bfb9..8ca0f3c 100644
-> > --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-> > +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> > @@ -44,6 +44,7 @@ avia	avia semiconductor
-> >  avic	Shanghai AVIC Optoelectronics Co., Ltd.
-> >  axentia	Axentia Technologies AB
-> >  axis	Axis Communications AB
-> > +bananapi Banana Pi SINOVOP CO., LIMITED
+> > There are 2 versions of the SoC. MT7623N is almost identical to MT7623A
+> > but has some additional multimedia features. The reference boards are
+> > available as NAND or MMC and might have a different ethernet setup. In
+> > order to reduce the duplication of devicetree code we add an intermediate
+> > dtsi file for these reference boards. Additionally Mediatek pointed out,
+> > that the EVB is yet another board and the board in question is infact the
+> > RFB. Take this into account while renaming the files.
 > 
-> s/SINOVOP/SINOVOIP/ 
+> You are breaking compatibility with existing DTs. Just document which 
+> flavor you want "mediatek,mt7623" to refer to and add the new one. Or 
+> just add 2 new strings but keep the old one.
+> 
 
 Hi Rob,
 
-thanks for your careful reviewing , i will correct it in the next
-version.
+really appreciate your patient guidance.
 
-BTW, Could those related dts changes go through your tree if everything
-looks good? Because I find Matthias have been inactive for a while and
-the latest branch in his tree seems still staying on 4.10.
+I prefer to using the way one you suggest: the old one is kept and
+refers to mt7623n SoC and new one will be added for mt7623a Soc.
 
 	Sean
 
-> 
-> >  boe	BOE Technology Group Co., Ltd.
-> >  bosch	Bosch Sensortec GmbH
-> >  boundary	Boundary Devices Inc.
-> > -- 
-> > 1.9.1
 > > 
+> > Signed-off-by: John Crispin <john@phrozen.org>
+> > Signed-off-by: Sean Wang <sean.wang@mediatek.com>
+> > 
+> > ---
+> >  Documentation/devicetree/bindings/arm/mediatek.txt |  6 ++--
+> >  arch/arm/boot/dts/Makefile                         |  2 +-
+> >  arch/arm/boot/dts/mt7623-evb.dts                   | 33 ----------------------
+> >  arch/arm/boot/dts/mt7623n-rfb-nand.dts             | 21 ++++++++++++++
+> >  arch/arm/boot/dts/mt7623n-rfb.dtsi                 | 29 +++++++++++++++++++
+> >  arch/arm/mach-mediatek/mediatek.c                  |  4 +--
+> >  arch/arm/mach-mediatek/platsmp.c                   |  2 +-
+> >  7 files changed, 57 insertions(+), 40 deletions(-)
+> >  delete mode 100644 arch/arm/boot/dts/mt7623-evb.dts
+> >  create mode 100644 arch/arm/boot/dts/mt7623n-rfb-nand.dts
+> >  create mode 100644 arch/arm/boot/dts/mt7623n-rfb.dtsi
+> > 
+> > diff --git a/Documentation/devicetree/bindings/arm/mediatek.txt b/Documentation/devicetree/bindings/arm/mediatek.txt
+> > index c860b24..7f7c804 100644
+> > --- a/Documentation/devicetree/bindings/arm/mediatek.txt
+> > +++ b/Documentation/devicetree/bindings/arm/mediatek.txt
+> > @@ -12,7 +12,7 @@ compatible: Must contain one of
+> >     "mediatek,mt6592"
+> >     "mediatek,mt6755"
+> >     "mediatek,mt6795"
+> > -   "mediatek,mt7623"
+> > +   "mediatek,mt7623n"
+> >     "mediatek,mt8127"
+> >     "mediatek,mt8135"
+> >     "mediatek,mt8173"
 
 
