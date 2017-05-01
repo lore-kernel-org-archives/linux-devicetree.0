@@ -1,17 +1,17 @@
 From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v3 1/5] clk: sunxi-ng: Add sun4i/sun7i CCU driver
-Date: Mon, 1 May 2017 18:02:51 +0200
-Message-ID: <20170501160251.rv5uqlq37hfc3ex7@lukather>
+Subject: Re: [PATCH v3 4/5] ARM: sun7i: Convert to CCU
+Date: Mon, 1 May 2017 18:05:53 +0200
+Message-ID: <20170501160553.fa67agqy5ltpwo7p@lukather>
 References: <cover.908ce010a25e503bb5ad0967759c723219c6ed0d.1493235134.git-series.plaes@plaes.org>
- <528b9b3895e654b6d3cf95187433f9fb7b4eb50c.1493235134.git-series.plaes@plaes.org>
+ <560676328328d23f344468f5c43ff1b1533f36f0.1493235134.git-series.plaes@plaes.org>
 Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="owngot3fgiazn3ja"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBLFYTXEAKGQEGPHUBIY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="amwjgju27qxirult"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBYVZTXEAKGQEDLLT5LY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <528b9b3895e654b6d3cf95187433f9fb7b4eb50c.1493235134.git-series.plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
+In-Reply-To: <560676328328d23f344468f5c43ff1b1533f36f0.1493235134.git-series.plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -23,28 +23,29 @@ Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFr
 List-Id: devicetree@vger.kernel.org
 
 
---owngot3fgiazn3ja
+--amwjgju27qxirult
 Content-Type: text/plain; charset=UTF-8
 Content-Disposition: inline
 
-Hi Priit,
+Hi,
 
-Almost good, thanks!
+On Wed, Apr 26, 2017 at 10:32:24PM +0300, Priit Laes wrote:
+>  			compatible = "allwinner,simple-framebuffer",
+>  				     "simple-framebuffer";
+>  			allwinner,pipeline = "de_be0-lcd0-hdmi";
+> -			clocks = <&ahb_gates 36>, <&ahb_gates 43>,
+> -				 <&ahb_gates 44>, <&de_be0_clk>,
+> -				 <&tcon0_ch1_clk>, <&dram_gates 26>;
+> +			clocks = <&ccu CLK_AHB_LCD0>, <&ccu CLK_AHB_HDMI0>,
+> +				 <&ccu CLK_AHB_DE_BE0>, <&ccu CLK_DE_BE0>,
+> +				 <&ccu CLK_TCON0_CH1>, <&ccu CLK_DRAM_DE_BE0>,
+> +				 <&ccu CLK_HDMI>;
 
-On Wed, Apr 26, 2017 at 10:32:21PM +0300, Priit Laes wrote:
-> +/* TODO: GPS CLK 0x0d0 */
+In order to make merging those patches *much* easier, could you just
+use the raw IDs (ie not the defines, but the numbers) for now?
 
-You should still create a define in the header for this one.
-
-> +/* Following only exist on sun7i-a20 */
-> +#define CLK_MBUS		165
-> +#define CLK_HDMI1_SLOW		166
-> +#define CLK_HDMI1		167
-> +#define CLK_OUT_A		168
-> +#define CLK_OUT_B		169
-
-Wouldn't it be better to simply create a new A20-only header that
-would include the A10's and add the A20 specific clocks on top?
+And ideally, send a patch after 4.13-rc1 that will switch to the
+defines.
 
 Thanks!
 Maxime
@@ -53,4 +54,4 @@ Maxime
 Maxime Ripard, Free Electrons
 Embedded Linux and Kernel engineering
 http://free-electrons.com
---owngot3fgiazn3ja--
+--amwjgju27qxirult--
