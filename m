@@ -1,45 +1,65 @@
-From: Christian Lamparter <chunkeey-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Subject: [PATCH] qcom: ipq4019: fix i2c_0 node
-Date: Tue,  2 May 2017 21:19:24 +0200
-Message-ID: <20170502191924.32585-1-chunkeey@googlemail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, chrisrblake93-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, David Brown <david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v5 2/4] iio: Documentation: Add max9611 sysfs documentation
+Date: Tue, 2 May 2017 21:21:13 +0200
+Message-ID: <CAMuHMdUVRO3y+BfU1ynWuRddOOB59DgpbnmXMbYopT6RQ5K8BQ@mail.gmail.com>
+References: <1491488454-22468-1-git-send-email-jacopo+renesas@jmondi.org> <1491488454-22468-3-git-send-email-jacopo+renesas@jmondi.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <1491488454-22468-3-git-send-email-jacopo+renesas@jmondi.org>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>, Magnus Damm <magnus.damm@gmail.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-iio@vger.kernel.org, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch fixes two typos in the i2c_0 node for the ipq4019.
-The reg property length is just 0x600. The core clock is
-GCC_BLSP1_QUP1_I2C_APPS_CLK. GCC_BLSP1_QUP2_I2C_APPS_CLK is
-used by the second i2c.
+Hi Jacopo,
 
-Fixes: e76b4284b520ba3 ("qcom: ipq4019: add i2c node to ipq4019 SoC and DK01 device tree")
-Signed-off-by: Christian Lamparter <chunkeey-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
----
- arch/arm/boot/dts/qcom-ipq4019.dtsi | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+On Thu, Apr 6, 2017 at 4:20 PM, Jacopo Mondi <jacopo+renesas@jmondi.org> wrote:
+> Add documentation for max9611 driver.
+> Document attributes describing value of shunt resistor installed between
+> RS+ and RS- voltage sense inputs.
+>
+> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> ---
+>  Documentation/ABI/testing/sysfs-bus-iio-adc-max9611 | 17 +++++++++++++++++
+>  1 file changed, 17 insertions(+)
+>  create mode 100644 Documentation/ABI/testing/sysfs-bus-iio-adc-max9611
+>
+> diff --git a/Documentation/ABI/testing/sysfs-bus-iio-adc-max9611 b/Documentation/ABI/testing/sysfs-bus-iio-adc-max9611
+> new file mode 100644
+> index 0000000..6d2d2b0
+> --- /dev/null
+> +++ b/Documentation/ABI/testing/sysfs-bus-iio-adc-max9611
+> @@ -0,0 +1,17 @@
+> +What:          /sys/bus/iio/devices/iio:deviceX/in_power_shunt_resistor
+> +Date:          March 2017
+> +KernelVersion: 4.12
+> +Contact:       linux-iio@vger.kernel.org
+> +Description:   The value of the shunt resistor used to compute power drain on
+> +                common input voltage pin (RS+). In Ohms.
+> +
+> +What:          /sys/bus/iio/devices/iio:deviceX/in_current_shunt_resistor
+> +Date:          March 2017
+> +KernelVersion: 4.12
+> +Contact:       linux-iio@vger.kernel.org
+> +Description:   The value of the shunt resistor used to compute current flowing
+> +                between RS+ and RS- voltage sense inputs. In Ohms.
+> +
+> +These attributes describe a single physical component, exposed as two distinct
+> +attributes as it is used to calculate two different values: power load and
+> +current flowing between RS+ and RS- inputs.
 
-diff --git a/arch/arm/boot/dts/qcom-ipq4019.dtsi b/arch/arm/boot/dts/qcom-ipq4019.dtsi
-index b7a24af8f47b..4b7d97275c62 100644
---- a/arch/arm/boot/dts/qcom-ipq4019.dtsi
-+++ b/arch/arm/boot/dts/qcom-ipq4019.dtsi
-@@ -154,10 +154,10 @@
- 
- 		i2c_0: i2c@78b7000 {
- 			compatible = "qcom,i2c-qup-v2.2.1";
--			reg = <0x78b7000 0x6000>;
-+			reg = <0x78b7000 0x600>;
- 			interrupts = <GIC_SPI 97 IRQ_TYPE_LEVEL_HIGH>;
- 			clocks = <&gcc GCC_BLSP1_AHB_CLK>,
--				 <&gcc GCC_BLSP1_QUP2_I2C_APPS_CLK>;
-+				 <&gcc GCC_BLSP1_QUP1_I2C_APPS_CLK>;
- 			clock-names = "iface", "core";
- 			#address-cells = <1>;
- 			#size-cells = <0>;
--- 
-2.11.0
+On my Salvator-X, the value is "5.000", which matches milli-Ohms?
+
+DT says: "shunt-resistor-micro-ohms = <5000>;"
+
+Gr{oetje,eeting}s,
+
+                        Geert
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
