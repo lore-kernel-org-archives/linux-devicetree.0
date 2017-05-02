@@ -1,57 +1,144 @@
-From: Daniel Vetter <daniel@ffwll.ch>
-Subject: Re: [PATCH v4 2/3] drm/vc4: Don't try to initialize FBDEV if we're
- only bound to V3D.
-Date: Tue, 2 May 2017 11:24:00 +0200
-Message-ID: <20170502092400.35owmdw2fgf4uquu@phenom.ffwll.local>
-References: <20170428224223.21904-1-eric@anholt.net>
- <20170428224223.21904-2-eric@anholt.net>
+From: Peter Rosin <peda@axentia.se>
+Subject: Re: [PATCH v6 5/8] i2c: mux: pca954x: Call request irq after adding
+ mux segments
+Date: Tue, 2 May 2017 11:57:38 +0200
+Message-ID: <28f3ce1d-ad4b-3082-7499-b30245a256c1@axentia.se>
+References: <1493716346-58517-1-git-send-email-preid@electromag.com.au>
+ <1493716346-58517-6-git-send-email-preid@electromag.com.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <20170428224223.21904-2-eric@anholt.net>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Eric Anholt <eric@anholt.net>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-i2c-owner@vger.kernel.org>
+In-Reply-To: <1493716346-58517-6-git-send-email-preid@electromag.com.au>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Phil Reid <preid@electromag.com.au>, wsa@the-dreams.de, robh+dt@kernel.org, mark.rutland@arm.com, sre@kernel.org, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, benjamin.tissoires@redhat.com
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCBBcHIgMjgsIDIwMTcgYXQgMDM6NDI6MjJQTSAtMDcwMCwgRXJpYyBBbmhvbHQgd3Jv
-dGU6Cj4gVGhlIEZCREVWIGluaXRpYWxpemF0aW9uIHdvdWxkIHRocm93IGFuIGVycm9yIGluIGRt
-ZXNnLCB3aGVuIHdlIGp1c3QKPiB3YW50IHRvIHNpbGVudGx5IG5vdCBpbml0aWFsaXplIGZiZGV2
-IG9uIGEgVjNELW9ubHkgVkM0IGluc3RhbmNlLgo+IAo+IFNpZ25lZC1vZmYtYnk6IEVyaWMgQW5o
-b2x0IDxlcmljQGFuaG9sdC5uZXQ+CgpXaXRoIHRoZSBjb21taXQgbWVzc2FnZSB1cGRhdGVkIHRo
-YXQgcGFzc2luZyBudW1fY29ubmVjdG9yIGlzIHRoZSBidWcgdGhhdAp0aHJvd3MgdGhlIGVycm9y
-IChhbmQgbm90IHRoYXQgd2Ugc2V0IHVwIGEgbm8tb3AgZmJkZXYpOgoKUmV2aWV3ZWQtYnk6IERh
-bmllbCBWZXR0ZXIgPGRhbmllbC52ZXR0ZXJAZmZ3bGwuY2g+CgpTdGlsbCBraW5kYSBob3Bpbmcg
-Zm9yIGEgZm9sbG93LXVwIHRvIGVudGlyZWx5IGdldCByaWQgZm8gbnVtX2Nvbm5lY3RvciBpbgp0
-aGUgZmJkZXYgaW5pdCBmdW5jcy4KLURhbmllbAo+IC0tLQo+ICBkcml2ZXJzL2dwdS9kcm0vdmM0
-L3ZjNF9rbXMuYyB8IDEwICsrKysrKy0tLS0KPiAgMSBmaWxlIGNoYW5nZWQsIDYgaW5zZXJ0aW9u
-cygrKSwgNCBkZWxldGlvbnMoLSkKPiAKPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL3Zj
-NC92YzRfa21zLmMgYi9kcml2ZXJzL2dwdS9kcm0vdmM0L3ZjNF9rbXMuYwo+IGluZGV4IGFkNzky
-NWE5ZTBlYS4uMjM3YTUwNGYxMWYwIDEwMDY0NAo+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS92YzQv
-dmM0X2ttcy5jCj4gKysrIGIvZHJpdmVycy9ncHUvZHJtL3ZjNC92YzRfa21zLmMKPiBAQCAtMjMw
-LDEwICsyMzAsMTIgQEAgaW50IHZjNF9rbXNfbG9hZChzdHJ1Y3QgZHJtX2RldmljZSAqZGV2KQo+
-ICAKPiAgCWRybV9tb2RlX2NvbmZpZ19yZXNldChkZXYpOwo+ICAKPiAtCXZjNC0+ZmJkZXYgPSBk
-cm1fZmJkZXZfY21hX2luaXQoZGV2LCAzMiwKPiAtCQkJCQlkZXYtPm1vZGVfY29uZmlnLm51bV9j
-b25uZWN0b3IpOwo+IC0JaWYgKElTX0VSUih2YzQtPmZiZGV2KSkKPiAtCQl2YzQtPmZiZGV2ID0g
-TlVMTDsKPiArCWlmIChkZXYtPm1vZGVfY29uZmlnLm51bV9jb25uZWN0b3IpIHsKPiArCQl2YzQt
-PmZiZGV2ID0gZHJtX2ZiZGV2X2NtYV9pbml0KGRldiwgMzIsCj4gKwkJCQkJCWRldi0+bW9kZV9j
-b25maWcubnVtX2Nvbm5lY3Rvcik7Cj4gKwkJaWYgKElTX0VSUih2YzQtPmZiZGV2KSkKPiArCQkJ
-dmM0LT5mYmRldiA9IE5VTEw7Cj4gKwl9Cj4gIAo+ICAJZHJtX2ttc19oZWxwZXJfcG9sbF9pbml0
-KGRldik7Cj4gIAo+IC0tIAo+IDIuMTEuMAo+IAo+IF9fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fCj4gZHJpLWRldmVsIG1haWxpbmcgbGlzdAo+IGRyaS1kZXZl
-bEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKPiBodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9t
-YWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAoKLS0gCkRhbmllbCBWZXR0ZXIKU29mdHdhcmUgRW5n
-aW5lZXIsIEludGVsIENvcnBvcmF0aW9uCmh0dHA6Ly9ibG9nLmZmd2xsLmNoCl9fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxp
-c3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNr
-dG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+On 2017-05-02 11:12, Phil Reid wrote:
+> The pca954x device do not have the ability to mask interrupts. For
+> i2c slave devices that also don't have masking ability (eg ltc1760
+> smbalert output) delay registering the irq until after the mux
+> segments have been configured. During the mux add_adaptor call the
+> core i2c system can register an smbalert handler which would then
+> be called immediately when the irq is registered. This smbalert
+> handler will then clear the pending irq.
+> 
+> Signed-off-by: Phil Reid <preid@electromag.com.au>
+> ---
+>  drivers/i2c/muxes/i2c-mux-pca954x.c | 52 +++++++++++++++++--------------------
+>  1 file changed, 24 insertions(+), 28 deletions(-)
+> 
+> diff --git a/drivers/i2c/muxes/i2c-mux-pca954x.c b/drivers/i2c/muxes/i2c-mux-pca954x.c
+> index ad31d21..4299738 100644
+> --- a/drivers/i2c/muxes/i2c-mux-pca954x.c
+> +++ b/drivers/i2c/muxes/i2c-mux-pca954x.c
+> @@ -294,7 +294,7 @@ static int pca954x_irq_setup(struct i2c_mux_core *muxc)
+>  {
+>  	struct pca954x *data = i2c_mux_priv(muxc);
+>  	struct i2c_client *client = data->client;
+> -	int c, err, irq;
+> +	int c, irq;
+>  
+>  	if (!data->chip->has_irq || client->irq <= 0)
+>  		return 0;
+> @@ -314,24 +314,22 @@ static int pca954x_irq_setup(struct i2c_mux_core *muxc)
+>  			handle_simple_irq);
+>  	}
+>  
+> -	err = devm_request_threaded_irq(&client->dev, data->client->irq, NULL,
+> -					pca954x_irq_handler,
+> -					IRQF_ONESHOT | IRQF_SHARED,
+> -					"pca954x", data);
+> -	if (err)
+> -		goto err_req_irq;
+> +	return 0;
+> +}
+>  
+> -	disable_irq(data->client->irq);
+> +static void pca954x_cleanup(struct i2c_mux_core *muxc)
+> +{
+> +	struct pca954x *data = i2c_mux_priv(muxc);
+> +	int c, irq;
+>  
+> -	return 0;
+> -err_req_irq:
+> -	for (c = 0; c < data->chip->nchans; c++) {
+> -		irq = irq_find_mapping(data->irq, c);
+> -		irq_dispose_mapping(irq);
+> +	if (data->irq) {
+> +		for (c = 0; c < data->chip->nchans; c++) {
+> +			irq = irq_find_mapping(data->irq, c);
+> +			irq_dispose_mapping(irq);
+> +		}
+> +		irq_domain_remove(data->irq);
+>  	}
+> -	irq_domain_remove(data->irq);
+> -
+> -	return err;
+> +	i2c_mux_del_adapters(muxc);
+>  }
+>  
+>  /*
+> @@ -422,6 +420,14 @@ static int pca954x_probe(struct i2c_client *client,
+>  		}
+>  	}
+>  
+> +	if (data->chip->has_irq || client->irq > 0) {
+
+This should be && instead of ||. However, I think it's better to not
+try to replicate the inverse of the test in pca954x_irq_setup and
+instead just check if the irq domain is there with "if (data->irq)".
+Assuming that is the intent...
+
+> +		ret = devm_request_threaded_irq(&client->dev, data->client->irq,
+> +		NULL, pca954x_irq_handler, IRQF_ONESHOT | IRQF_SHARED,
+> +		"pca954x", data);
+
+The indentation is horrific. Please fix.
+
+Acked with those two fixed.
+
+I also noticed that there is no check for failure of the call to
+irq_create_mapping in pca954x_irq_setup. For bonus points, can you
+fix that error path too, please? Or should failure to create those
+irq mappings not be fatal for some reason?
+
+Cheers,
+peda
+
+> +		if (ret)
+> +			goto fail_del_adapters;
+> +	}
+> +
+>  	dev_info(&client->dev,
+>  		 "registered %d multiplexed busses for I2C %s %s\n",
+>  		 num, data->chip->muxtype == pca954x_ismux
+> @@ -430,25 +436,15 @@ static int pca954x_probe(struct i2c_client *client,
+>  	return 0;
+>  
+>  fail_del_adapters:
+> -	i2c_mux_del_adapters(muxc);
+> +	pca954x_cleanup(muxc);
+>  	return ret;
+>  }
+>  
+>  static int pca954x_remove(struct i2c_client *client)
+>  {
+>  	struct i2c_mux_core *muxc = i2c_get_clientdata(client);
+> -	struct pca954x *data = i2c_mux_priv(muxc);
+> -	int c, irq;
+>  
+> -	if (data->irq) {
+> -		for (c = 0; c < data->chip->nchans; c++) {
+> -			irq = irq_find_mapping(data->irq, c);
+> -			irq_dispose_mapping(irq);
+> -		}
+> -		irq_domain_remove(data->irq);
+> -	}
+> -
+> -	i2c_mux_del_adapters(muxc);
+> +	pca954x_cleanup(muxc);
+>  	return 0;
+>  }
+>  
+> 
