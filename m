@@ -1,120 +1,73 @@
-From: Phil Reid <preid@electromag.com.au>
-Subject: [PATCH v6 5/8] i2c: mux: pca954x: Call request irq after adding mux segments
-Date: Tue,  2 May 2017 17:12:23 +0800
-Message-ID: <1493716346-58517-6-git-send-email-preid@electromag.com.au>
-References: <1493716346-58517-1-git-send-email-preid@electromag.com.au>
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1493716346-58517-1-git-send-email-preid@electromag.com.au>
-Sender: linux-pm-owner@vger.kernel.org
-To: wsa@the-dreams.de, robh+dt@kernel.org, mark.rutland@arm.com, sre@kernel.org, peda@axentia.se, preid@electromag.com.au, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, benjamin.tissoires@redhat.com
+From: Boris Brezillon <boris.brezillon@free-electrons.com>
+Subject: Re: [PATCH 2/5] mtd: nand: gpmi: add i.MX 7 SoC support
+Date: Tue, 2 May 2017 11:17:58 +0200
+Message-ID: <20170502111758.53e9a959@bbrezillon>
+References: <20170421010755.18025-1-stefan@agner.ch>
+ <20170421010755.18025-3-stefan@agner.ch>
+ <af3fe671-c5fb-d3cf-c891-e6b7c973baa1@gmail.com>
+ <5cf26d2b020392c875464c7504a9fb5b@agner.ch>
+ <8377dadc-043f-5932-cb13-3367db38a6dd@gmail.com>
+ <494a7bc044457240a302d92b3a50b8e5@agner.ch>
+ <57336d7e-7b48-8855-9e87-3eb370facd05@gmail.com>
+ <a9cdc47795433e7b152dcdd123f9bd63@agner.ch>
+ <CA+EcR20FCPSec+ihTMA=SGwogd7p5tsnECCp3CR-Nv6fUciK4g@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CA+EcR20FCPSec+ihTMA=SGwogd7p5tsnECCp3CR-Nv6fUciK4g@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Han Xu <xhnjupt@gmail.com>
+Cc: mark.rutland@arm.com, Fabio Estevam <fabio.estevam@freescale.com>, devicetree@vger.kernel.org, Richard Weinberger <richard@nod.at>, linux-kernel@vger.kernel.org, Stefan Agner <stefan@agner.ch>, Marek Vasut <marek.vasut@gmail.com>, robh+dt@kernel.org, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, Sascha Hauer <kernel@pengutronix.de>, Han Xu <han.xu@nxp.com>, Cyrille Pitchen <cyrille.pitchen@atmel.com>, Brian Norris <computersforpeace@gmail.com>, Shawn Guo <shawnguo@kernel.org>, David Woodhouse <dwmw2@infradead.org>, linux-arm-kernel@lists.infradead.org, LW@karo-electronics.de
 List-Id: devicetree@vger.kernel.org
 
-The pca954x device do not have the ability to mask interrupts. For
-i2c slave devices that also don't have masking ability (eg ltc1760
-smbalert output) delay registering the irq until after the mux
-segments have been configured. During the mux add_adaptor call the
-core i2c system can register an smbalert handler which would then
-be called immediately when the irq is registered. This smbalert
-handler will then clear the pending irq.
+Hi Han,
 
-Signed-off-by: Phil Reid <preid@electromag.com.au>
----
- drivers/i2c/muxes/i2c-mux-pca954x.c | 52 +++++++++++++++++--------------------
- 1 file changed, 24 insertions(+), 28 deletions(-)
+On Fri, 21 Apr 2017 13:29:16 -0500
+Han Xu <xhnjupt@gmail.com> wrote:
 
-diff --git a/drivers/i2c/muxes/i2c-mux-pca954x.c b/drivers/i2c/muxes/i2c-mux-pca954x.c
-index ad31d21..4299738 100644
---- a/drivers/i2c/muxes/i2c-mux-pca954x.c
-+++ b/drivers/i2c/muxes/i2c-mux-pca954x.c
-@@ -294,7 +294,7 @@ static int pca954x_irq_setup(struct i2c_mux_core *muxc)
- {
- 	struct pca954x *data = i2c_mux_priv(muxc);
- 	struct i2c_client *client = data->client;
--	int c, err, irq;
-+	int c, irq;
- 
- 	if (!data->chip->has_irq || client->irq <= 0)
- 		return 0;
-@@ -314,24 +314,22 @@ static int pca954x_irq_setup(struct i2c_mux_core *muxc)
- 			handle_simple_irq);
- 	}
- 
--	err = devm_request_threaded_irq(&client->dev, data->client->irq, NULL,
--					pca954x_irq_handler,
--					IRQF_ONESHOT | IRQF_SHARED,
--					"pca954x", data);
--	if (err)
--		goto err_req_irq;
-+	return 0;
-+}
- 
--	disable_irq(data->client->irq);
-+static void pca954x_cleanup(struct i2c_mux_core *muxc)
-+{
-+	struct pca954x *data = i2c_mux_priv(muxc);
-+	int c, irq;
- 
--	return 0;
--err_req_irq:
--	for (c = 0; c < data->chip->nchans; c++) {
--		irq = irq_find_mapping(data->irq, c);
--		irq_dispose_mapping(irq);
-+	if (data->irq) {
-+		for (c = 0; c < data->chip->nchans; c++) {
-+			irq = irq_find_mapping(data->irq, c);
-+			irq_dispose_mapping(irq);
-+		}
-+		irq_domain_remove(data->irq);
- 	}
--	irq_domain_remove(data->irq);
--
--	return err;
-+	i2c_mux_del_adapters(muxc);
- }
- 
- /*
-@@ -422,6 +420,14 @@ static int pca954x_probe(struct i2c_client *client,
- 		}
- 	}
- 
-+	if (data->chip->has_irq || client->irq > 0) {
-+		ret = devm_request_threaded_irq(&client->dev, data->client->irq,
-+		NULL, pca954x_irq_handler, IRQF_ONESHOT | IRQF_SHARED,
-+		"pca954x", data);
-+		if (ret)
-+			goto fail_del_adapters;
-+	}
-+
- 	dev_info(&client->dev,
- 		 "registered %d multiplexed busses for I2C %s %s\n",
- 		 num, data->chip->muxtype == pca954x_ismux
-@@ -430,25 +436,15 @@ static int pca954x_probe(struct i2c_client *client,
- 	return 0;
- 
- fail_del_adapters:
--	i2c_mux_del_adapters(muxc);
-+	pca954x_cleanup(muxc);
- 	return ret;
- }
- 
- static int pca954x_remove(struct i2c_client *client)
- {
- 	struct i2c_mux_core *muxc = i2c_get_clientdata(client);
--	struct pca954x *data = i2c_mux_priv(muxc);
--	int c, irq;
- 
--	if (data->irq) {
--		for (c = 0; c < data->chip->nchans; c++) {
--			irq = irq_find_mapping(data->irq, c);
--			irq_dispose_mapping(irq);
--		}
--		irq_domain_remove(data->irq);
--	}
--
--	i2c_mux_del_adapters(muxc);
-+	pca954x_cleanup(muxc);
- 	return 0;
- }
- 
--- 
-1.8.3.1
+> >>  
+> >>>>> But then, adding the type would only require 2-3 lines of change if I
+> >>>>> add it to the GPMI_IS_MX6 macro...  
+> >>>>
+> >>>> Then at least add a comment because using type = IMX6SX right under
+> >>>> gpmi_data_mx7d can trigger some head-scratching. And put my R-B on V2.  
+> >>>
+> >>> FWIW, I mentioned it in the commit message.
+> >>>
+> >>> I think rather then adding a comment it is cleaner to just add IS_IMX7D
+> >>> and add it to the GPMI_IS_MX6 macro. That does not need a comment since
+> >>> it implicitly says we have a i.MX 7 but treat it like i.MX 6 and it is a
+> >>> rather small change. Does that sound acceptable?  
+> >>
+> >> Sure, that's even better, thanks.
+> >>
+> >> btw isn't there some single-core mx7 (mx7s ?) , maybe we should just go
+> >> with mx7 (without the d suffix). I dunno if it has GPMI NAND though, so
+> >> maybe mx7d is the right thing to do here ...
+> >>  
+> >
+> > There is a Solo version yes, and it has GPMI NAND too. However, almost
+> > all i.MX 7 IPs have been named imx7d by NXP for some reason (including
+> > compatible strings, see grep -r -e imx7 Documentation/), so I thought I
+> > stay consistent here...  
+> 
+> Hi Guys,
+> 
+> Yes, there should be a i.MX7 Solo version with one core fused out. IMO, can
+> we use QUIRK to distinguish them rather than SoC name. I know I also sent
+> some patch set with SoC Name but I prefer to use QUIRK now.
+
+Not sure what this means. Are you okay with Stefan's v2?
+
+Regards,
+
+Boris
