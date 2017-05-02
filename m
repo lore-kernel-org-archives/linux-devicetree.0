@@ -1,42 +1,49 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH v4 2/7] dt-bindings: media: Add MAX2175 binding description
-Date: Tue, 2 May 2017 18:16:50 +0200
-Message-ID: <CAMuHMdX7Hff=t=oQf4oygJMqhgxhwrh5cOjuEJCx=7vy28mMfg@mail.gmail.com>
-References: <20170502132615.42134-1-ramesh.shanmugasundaram@bp.renesas.com> <20170502132615.42134-3-ramesh.shanmugasundaram@bp.renesas.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170502132615.42134-3-ramesh.shanmugasundaram-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ramesh Shanmugasundaram <ramesh.shanmugasundaram-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Antti Palosaari <crope-X3B1VOXEql0@public.gmane.org>, Chris Paterson <chris.paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Linux Media Mailing List <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
+Subject: [PATCH 0/2] PWM Vibrator driver
+Date: Tue,  2 May 2017 18:27:24 +0200
+Message-ID: <20170502162726.11577-1-sebastian.reichel@collabora.co.uk>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sebastian Reichel <sre@kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Tony Lindgren <tony@atomide.com>
+Cc: Rob Herring <robh+dt@kernel.org>, linux-input@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Sebastian Reichel <sebastian.reichel@collabora.co.uk>
 List-Id: devicetree@vger.kernel.org
 
-Hi Ramesh,
+Hi,
 
-On Tue, May 2, 2017 at 3:26 PM, Ramesh Shanmugasundaram
-<ramesh.shanmugasundaram-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org> wrote:
-> --- a/Documentation/devicetree/bindings/property-units.txt
-> +++ b/Documentation/devicetree/bindings/property-units.txt
-> @@ -28,6 +28,7 @@ Electricity
->  -ohms          : Ohms
->  -micro-ohms    : micro Ohms
->  -microvolt     : micro volts
-> +-pF            : pico farads
+The Motorola Droid 4 has a vibrator, that is connected
+to two GPIOs. Motorola's stock kernel names them vib_en
+and vib_dir, which probably stand for vibrator_enable
+and vibrator_direction. In their stock kernel both GPIOs
+are toggled using a hrtimer and a custom vibrator "misc"
+device is provided to userspace.
 
-All electrical units seem to use long(er) names.
+Thankfully the hardware designers the used GPIOs can
+also be used from OMAP's dmtimers, so that they can
+be driven as PWM output instead saving some CPU cycles
+(and code).
 
-Gr{oetje,eeting}s,
+The driver is loosely based on an old patch from Dmitry,
+that I found in the internet(tm) [0]. Note, that I did
+not check the generic vibrator stuff. I just kept it in
+the driver, since it's probably what other people expect
+from a pwm-vibra driver :)
 
-                        Geert
+[0] https://lkml.org/lkml/2012/4/10/41
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+-- Sebastian
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Sebastian Reichel (2):
+  Input: pwm-vibra: new driver
+  ARM: dts: omap4-droid4: Add vibrator
+
+ .../devicetree/bindings/input/pwm-vibrator.txt     |  60 ++++
+ arch/arm/boot/dts/omap4-droid4-xt894.dts           |  38 +++
+ drivers/input/misc/Kconfig                         |  11 +
+ drivers/input/misc/Makefile                        |   1 +
+ drivers/input/misc/pwm-vibra.c                     | 348 +++++++++++++++++++++
+ 5 files changed, 458 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/input/pwm-vibrator.txt
+ create mode 100644 drivers/input/misc/pwm-vibra.c
+
+-- 
+2.11.0
