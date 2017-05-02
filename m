@@ -1,119 +1,79 @@
-From: Ryder Lee <ryder.lee@mediatek.com>
-Subject: Re: [PATCH 2/2] dt-bindings: phy: Add documentation for Mediatek
- PCIe PHY
-Date: Tue, 2 May 2017 15:08:57 +0800
-Message-ID: <1493708937.6464.36.camel@mtkswgap22>
-References: <1492935453-17373-1-git-send-email-ryder.lee@mediatek.com>
-         <1492935453-17373-3-git-send-email-ryder.lee@mediatek.com>
-         <20170428175200.laakck7ill2lxtxc@rob-hp-laptop>
+From: Ryder Lee <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: FW: [PATCH 2/2] dt-bindings: pcie: Add documentation for
+ Mediatek PCIe
+Date: Tue, 2 May 2017 15:09:38 +0800
+Message-ID: <1493708978.6464.37.camel@mtkswgap22>
+References: <1492935543-18190-1-git-send-email-ryder.lee@mediatek.com>
+         <1492935543-18190-3-git-send-email-ryder.lee@mediatek.com>
+         <CAK8P3a1vgi9VBZfRNq0dDKzmfe8FkHQtgz6fEXW9fyUnBHtaQQ@mail.gmail.com>
+         <1493194205.27023.80.camel@mtkswgap22>
+         <CAK8P3a0vD8s_3R+jS=JdUXX3X05SkCk-mipMA6UxWYQZe6vLUQ@mail.gmail.com>
+         <1493347596.29314.55.camel@mtkswgap22>
+         <CAK8P3a0WGwukWj8V-S2c13S3futkxBhiMfRTa=0QWaDG7qREVw@mail.gmail.com>
+         <CAFST5+Dn3bMwtGt9pQBMc+q+qkrpvmXh67ZXm2=hs-ZoX8E_ww@mail.gmail.com>
+         <4BAFE512E7223A4B91F29C40AC7A579616B5155E@MTKMBS05N1.mediatek.inc>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170428175200.laakck7ill2lxtxc@rob-hp-laptop>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Kishon Vijay Abraham I <kishon@ti.com>, Matthias Brugger <matthias.bgg@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <4BAFE512E7223A4B91F29C40AC7A579616B5155E-FTLr7L0+/BWGRgb7Xm6L22/AB3i2Q03W@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2017-04-28 at 12:52 -0500, Rob Herring wrote:
-> On Sun, Apr 23, 2017 at 04:17:33PM +0800, Ryder Lee wrote:
-> > Add documentation for PCIe PHY available in MT7623 series SoCs.
-> > 
-> > Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
-> > ---
-> >  .../devicetree/bindings/phy/phy-mt7623-pcie.txt    | 67 ++++++++++++++++++++++
-> >  1 file changed, 67 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/phy/phy-mt7623-pcie.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/phy/phy-mt7623-pcie.txt b/Documentation/devicetree/bindings/phy/phy-mt7623-pcie.txt
-> > new file mode 100644
-> > index 0000000..27a9253
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/phy/phy-mt7623-pcie.txt
-> > @@ -0,0 +1,67 @@
-> > +Mediatek MT7623 PCIe PHY
-> > +-----------------------
-> > +
-> > +Required properties:
-> > + - compatible: Should contain "mediatek,mt7623-pcie-phy"
-> > + - #phy-cells: must be 0
-> > + - clocks: Must contain an entry in clock-names.
-> > +	See ../clocks/clock-bindings.txt for details.
-> > + - clock-names: Must be "refclk"
-> > + - resets: Must contain an entry in reset-names.
-> > +	See ../reset/reset.txt for details.
-> > + - reset-names: Must be "phy"
-> > +
-> > +Optional properties:
-> > + - phy-switch: The PHY on PCIe port2 is shared with USB u3phy2. If you
-> > +	want to enable port2, you should contain it.
+
+Hi Arnd,
+
+> 2017-04-28 19:41 GMT+08:00 Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>:
 > 
-> Need to state what the value is (i.e. a phandle to ?). Also needs a 
-> vendor prefix.
+>         On Fri, Apr 28, 2017 at 4:46 AM, Ryder Lee
+>         <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
+>         > On Thu, 2017-04-27 at 21:06 +0200, Arnd Bergmann wrote:
+>         >> On Wed, Apr 26, 2017 at 10:10 AM, Ryder Lee
+>         <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
+>         >> > On Tue, 2017-04-25 at 14:18 +0200, Arnd Bergmann wrote:
+>         >> >> On Sun, Apr 23, 2017 at 10:19 AM, Ryder Lee
+>         <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
+>         >> Are any of the registers the same at all, e.g. for MSI
+>         handling?
+>         >
+>         > No, It doesn't support MSI. All I can do is using the
+>         registers that designer provide to me. The others are inviable
+>         for software. So I treat it as different hardware.
+>         Furthermore, we hope that we can put all mediatek drivers
+>         together regardless of in-house IP or lincense IP
+>         >
+>         > We have no particular IP name but just use chip name to call
+>         it. So I will temporarily use "mediatek,gen2v1-pcie" in patch
+>         v1.
+>         
+>         I think using the chip name as in the first version of your
+>         patch name is better then, in particular since the 'gen2v1'
+>         would not be an actual version number but just say which
+>         variant got merged into mainline first.
 
-I will correct it.
+Okay, i will correct it.
 
-> > +
-> > +Example:
-> > +
-> > +	pcie0_phy: pciephy@1a149000 {
-> 
-> pcie-phy@...
+>         A related question would be on how general we want the binding
+>         to be.
+>         Your binding text starts out by describing that there are
+>         three root ports and what their capabilities are.
+>         
+>         If you think there might be other (existing or future) chips
+>         that use the same binding and driver, then being a little more
+>         abstract could help in the long run.
 
-Okay.
-> > +		compatible = "mediatek,mt7623-pcie-phy";
-> > +		reg = <0 0x1a149000 0 0x1000>;
-> > +		clocks = <&clk26m>;
-> > +		clock-names = "pciephya_ref";
-> > +		#phy-cells = <0>;
-> > +		status = "disabled";
-> 
-> Don't show status in examples.
-I will drop it all.
-> > +	};
-> > +
-> > +	pcie1_phy: pciephy@1a14a000 {
-> > +		compatible = "mediatek,mt7623-pcie-phy";
-> > +		reg = <0 0x1a14a000 0 0x1000>;
-> > +		clocks = <&clk26m>;
-> > +		clock-names = "pciephya_ref";
-> > +		#phy-cells = <0>;
-> > +		status = "disabled";
-> > +	};
-> > +
-> > +	pcie2_phy: pciephy@1a244000 {
-> > +		compatible = "mediatek,mt7623-pcie-phy";
-> > +		reg = <0 0x1a244000 0 0x1000>;
-> > +		clocks = <&clk26m>;
-> > +		clock-names = "pciephya_ref";
-> > +		#phy-cells = <0>;
-> > +
-> > +		phy-switch = <&hifsys>;
-> > +		status = "disabled";
-> > +	};
-> > +
-> > +Specifying phy control of devices
-> > +---------------------------------
-> > +
-> > +Device nodes should specify the configuration required in their "phys"
-> > +property, containing a phandle to the phy node and phy-names.
-> > +
-> > +Example:
-> > +
-> > +#include <dt-bindings/phy/phy.h>
-> > +
-> > +pcie: pcie@1a140000 {
-> > +	...
-> > +	pcie@1,0 {
-> > +		...
-> > +		phys = <&pcie0_phy>;
-> > +		phy-names = "pcie-phy0";
-> > +	}
-> > +	...
-> > +};
+Thanks for reminding me. If we decide to use the same driver in the
+future, we will have a internal discussion about it.
 
-Thanks for your reviews.
-> > -- 
-> > 1.9.1
-> > 
+Ryder.
+
+
+
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
