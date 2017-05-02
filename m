@@ -1,144 +1,166 @@
-From: Peter Rosin <peda@axentia.se>
-Subject: Re: [PATCH v6 5/8] i2c: mux: pca954x: Call request irq after adding
- mux segments
-Date: Tue, 2 May 2017 11:57:38 +0200
-Message-ID: <28f3ce1d-ad4b-3082-7499-b30245a256c1@axentia.se>
-References: <1493716346-58517-1-git-send-email-preid@electromag.com.au>
- <1493716346-58517-6-git-send-email-preid@electromag.com.au>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-i2c-owner@vger.kernel.org>
-In-Reply-To: <1493716346-58517-6-git-send-email-preid@electromag.com.au>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Phil Reid <preid@electromag.com.au>, wsa@the-dreams.de, robh+dt@kernel.org, mark.rutland@arm.com, sre@kernel.org, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, benjamin.tissoires@redhat.com
+From: Leo Yan <leo.yan@linaro.org>
+Subject: [PATCH v8 0/7] coresight: enable debug module
+Date: Tue,  2 May 2017 18:08:30 +0800
+Message-ID: <1493719717-27698-1-git-send-email-leo.yan@linaro.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Jonathan Corbet <corbet@lwn.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Wei Xu <xuwei5@hisilicon.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Mathieu Poirier <mathieu.poirier@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Suzuki K Poulose <suzuki.poulose@arm.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, Mike Leach <mike.leach@linaro.org>, Sudeep Holla <sudeep.holla@arm.com>
+Cc: Leo Yan <leo.yan@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2017-05-02 11:12, Phil Reid wrote:
-> The pca954x device do not have the ability to mask interrupts. For
-> i2c slave devices that also don't have masking ability (eg ltc1760
-> smbalert output) delay registering the irq until after the mux
-> segments have been configured. During the mux add_adaptor call the
-> core i2c system can register an smbalert handler which would then
-> be called immediately when the irq is registered. This smbalert
-> handler will then clear the pending irq.
-> 
-> Signed-off-by: Phil Reid <preid@electromag.com.au>
-> ---
->  drivers/i2c/muxes/i2c-mux-pca954x.c | 52 +++++++++++++++++--------------------
->  1 file changed, 24 insertions(+), 28 deletions(-)
-> 
-> diff --git a/drivers/i2c/muxes/i2c-mux-pca954x.c b/drivers/i2c/muxes/i2c-mux-pca954x.c
-> index ad31d21..4299738 100644
-> --- a/drivers/i2c/muxes/i2c-mux-pca954x.c
-> +++ b/drivers/i2c/muxes/i2c-mux-pca954x.c
-> @@ -294,7 +294,7 @@ static int pca954x_irq_setup(struct i2c_mux_core *muxc)
->  {
->  	struct pca954x *data = i2c_mux_priv(muxc);
->  	struct i2c_client *client = data->client;
-> -	int c, err, irq;
-> +	int c, irq;
->  
->  	if (!data->chip->has_irq || client->irq <= 0)
->  		return 0;
-> @@ -314,24 +314,22 @@ static int pca954x_irq_setup(struct i2c_mux_core *muxc)
->  			handle_simple_irq);
->  	}
->  
-> -	err = devm_request_threaded_irq(&client->dev, data->client->irq, NULL,
-> -					pca954x_irq_handler,
-> -					IRQF_ONESHOT | IRQF_SHARED,
-> -					"pca954x", data);
-> -	if (err)
-> -		goto err_req_irq;
-> +	return 0;
-> +}
->  
-> -	disable_irq(data->client->irq);
-> +static void pca954x_cleanup(struct i2c_mux_core *muxc)
-> +{
-> +	struct pca954x *data = i2c_mux_priv(muxc);
-> +	int c, irq;
->  
-> -	return 0;
-> -err_req_irq:
-> -	for (c = 0; c < data->chip->nchans; c++) {
-> -		irq = irq_find_mapping(data->irq, c);
-> -		irq_dispose_mapping(irq);
-> +	if (data->irq) {
-> +		for (c = 0; c < data->chip->nchans; c++) {
-> +			irq = irq_find_mapping(data->irq, c);
-> +			irq_dispose_mapping(irq);
-> +		}
-> +		irq_domain_remove(data->irq);
->  	}
-> -	irq_domain_remove(data->irq);
-> -
-> -	return err;
-> +	i2c_mux_del_adapters(muxc);
->  }
->  
->  /*
-> @@ -422,6 +420,14 @@ static int pca954x_probe(struct i2c_client *client,
->  		}
->  	}
->  
-> +	if (data->chip->has_irq || client->irq > 0) {
+ARMv8 architecture reference manual (ARM DDI 0487A.k) Chapter H7 "The
+Sample-based Profiling Extension" has description for sampling
+registers, we can utilize these registers to check program counter
+value with combined CPU exception level, secure state, etc. So this is
+helpful for CPU lockup bugs, e.g. if one CPU has run into infinite loop
+with IRQ disabled; the 'hang' CPU cannot switch context and handle any
+interrupt, so it cannot handle SMP call for stack dump, etc.
 
-This should be && instead of ||. However, I think it's better to not
-try to replicate the inverse of the test in pca954x_irq_setup and
-instead just check if the irq domain is there with "if (data->irq)".
-Assuming that is the intent...
+This patch series is to enable coresight debug module with sample-based
+registers and register call back notifier for PCSR register dumping
+when panic happens, so we can see below dumping info for panic; and
+this patch series has considered the conditions for access permission
+for debug registers self, so this can avoid access debug registers when
+CPU power domain is off; the driver also try to figure out the CPU is
+in secure or non-secure state.
 
-> +		ret = devm_request_threaded_irq(&client->dev, data->client->irq,
-> +		NULL, pca954x_irq_handler, IRQF_ONESHOT | IRQF_SHARED,
-> +		"pca954x", data);
+Patch 0001 is to document the dt binding; patch 0002 is to document
+boot parameters used in kernel command line and add one detailed
+document to describe the Coresight debug module implementation, the
+clock and power domain impaction on the driver, some examples for
+usage.
 
-The indentation is horrific. Please fix.
+Patch 0003 is used to fix the func of_get_coresight_platform_data()
+doesn't properly drop the reference to the CPU node pointer; and
+patch 0004 is refactor to add new function of_coresight_get_cpu().
 
-Acked with those two fixed.
+Patch 0005 is the driver for CPU debug module.
 
-I also noticed that there is no check for failure of the call to
-irq_create_mapping in pca954x_irq_setup. For bonus points, can you
-fix that error path too, please? Or should failure to create those
-irq mappings not be fatal for some reason?
+Patch 0006 in this series are to enable debug unit on 96boards Hikey,
+Patch 0007 is to enable debug on 96boards DB410c. Have verified on both
+two boards.
 
-Cheers,
-peda
+We can enable debugging with two methods, adding parameters into kernel
+command line for build-in module:
+  coresight_cpu_debug.enable=1
 
-> +		if (ret)
-> +			goto fail_del_adapters;
-> +	}
-> +
->  	dev_info(&client->dev,
->  		 "registered %d multiplexed busses for I2C %s %s\n",
->  		 num, data->chip->muxtype == pca954x_ismux
-> @@ -430,25 +436,15 @@ static int pca954x_probe(struct i2c_client *client,
->  	return 0;
->  
->  fail_del_adapters:
-> -	i2c_mux_del_adapters(muxc);
-> +	pca954x_cleanup(muxc);
->  	return ret;
->  }
->  
->  static int pca954x_remove(struct i2c_client *client)
->  {
->  	struct i2c_mux_core *muxc = i2c_get_clientdata(client);
-> -	struct pca954x *data = i2c_mux_priv(muxc);
-> -	int c, irq;
->  
-> -	if (data->irq) {
-> -		for (c = 0; c < data->chip->nchans; c++) {
-> -			irq = irq_find_mapping(data->irq, c);
-> -			irq_dispose_mapping(irq);
-> -		}
-> -		irq_domain_remove(data->irq);
-> -	}
-> -
-> -	i2c_mux_del_adapters(muxc);
-> +	pca954x_cleanup(muxc);
->  	return 0;
->  }
->  
-> 
+Or we can wait the system has booted up to use debugfs nodes to enable
+debugging:
+  # echo 1 > /sys/kernel/debug/coresight_cpu_debug/enable
+
+As result we can get below log after input command:
+echo c > /proc/sysrq-trigger:
+
+ARM external debug module:
+CPU[0]:
+ EDPRSR:  0000000b (Power:On DLK:Unlock)
+ EDPCSR:  [<ffff00000808eb54>] handle_IPI+0xe4/0x150
+ EDCIDSR: 00000000
+ EDVIDSR: 90000000 (State:Non-secure Mode:EL1/0 Width:64bits VMID:0)
+CPU[1]:
+ EDPRSR:  0000000b (Power:On DLK:Unlock)
+ EDPCSR:  [<ffff0000087a64c0>] debug_notifier_call+0x108/0x288
+ EDCIDSR: 00000000
+ EDVIDSR: 90000000 (State:Non-secure Mode:EL1/0 Width:64bits VMID:0)
+
+[...]
+
+Changes from v7:
+* Fix operator priority bug.
+* Minor sequence adjustment for function debug_func_exit().
+
+Changes from v6:
+* According to Suzuki and Mathieu suggestions, refined debug module
+  driver to install panic notifier when insmod module; refined function
+  debug_force_cpu_powered_up() for CPU power state checking; some minor
+  fixing for output log, adding comments for memory barrier, code
+  alignment.
+
+Changes from v5:
+* According to Suzuki and Mathieu suggestions, refined debug module
+  driver to drop unused structure members, refactored initialization
+  code to distinguish hardware implementation features, refactored
+  flow for forcing CPU powered up, supported pm_runtime operations.
+* Added one new doc file: Documentation/trace/coresight-cpu-debug.txt,
+  which is used to describe detailed info for implementation, clock
+  and power domain impaction on debug module, and exmaples for common
+  usage.
+* Removed "idle constraints" from debug driver.
+
+Changes from v4:
+* This version is mainly credit to ARM colleagues many contribution
+  ideas for better quality (Thanks a lot Suzuki, Mike and Sudeep!).
+* According to Suzuki suggestion, refined debug module driver to avoid
+  memory leak for drvdata struct, handle PCSAMPLE_MODE=1, use flag
+  drvdata.pc_has_offset to indicate if PCSR has offset, minor fixes.
+* According to Mathieu suggestion, refined dt binding description.
+* Changed driver to support module mode;
+* According to Mike suggestion and very appreciate the pseudo code,
+  added support to force CPU powered up with register EDPRCR;
+* According to discussions, added command line and debugfs nodes to
+  support enabling debugging for boot time, or later can dynamically
+  enable/disable debugging by debugfs.
+* According to Rob Herring suggestion, one minor fixes in DT binding.
+* According to Stephen Boyd suggestion, add const quality to structure
+  device_node. And used use of_cpu_device_node_get() to replace
+  of_get_cpu_node() in patch 0003.
+
+Changes from v3:
+* Added Suzuki K Poulose's patch to fix issue for the func
+  of_get_coresight_platform_data() doesn't properly drop the reference
+  to the CPU node pointer.
+* According to Suzuki suggestion, added code to handl the corner case
+  for ARMv8 CPU with aarch32 mode.
+* According to Suzuki suggestion, changed compatible string to
+  "arm,coresight-cpu-debug".
+* According to Mathieu suggestion, added "power-domains" as optional
+  properties.
+
+Changes from v2:
+* According to Mathieu Poirier suggestion, applied some minor fixes.
+* Added two extra patches for enabling debug module on Hikey.
+
+Changes from v1:
+* According to Mike Leach suggestion, removed the binding for debug
+  module clocks which have been directly provided by CPU clocks.
+* According to Mathieu Poirier suggestion, added function
+  of_coresight_get_cpu() and some minor refactors for debug module
+  driver.
+
+Changes from RFC:
+* According to Mike Leach suggestion, added check for EDPRSR to avoid
+  lockup; added supporting EDVIDSR and EDCIDSR registers.
+* According to Mark Rutland and Mathieu Poirier suggestion, rewrote
+  the documentation for DT binding.
+* According to Mark and Mathieu suggestion, refined debug driver.
+
+
+Leo Yan (6):
+  coresight: bindings for CPU debug module
+  doc: Add documentation for Coresight CPU debug
+  coresight: refactor with function of_coresight_get_cpu
+  coresight: add support for CPU debug module
+  arm64: dts: hi6220: register debug module
+  arm64: dts: qcom: msm8916: Add debug unit
+
+Suzuki K Poulose (1):
+  coresight: of_get_coresight_platform_data: Add missing of_node_put
+
+ Documentation/admin-guide/kernel-parameters.txt    |   7 +
+ .../bindings/arm/coresight-cpu-debug.txt           |  49 ++
+ Documentation/trace/coresight-cpu-debug.txt        | 174 ++++++
+ arch/arm64/boot/dts/hisilicon/hi6220.dtsi          |  64 ++
+ arch/arm64/boot/dts/qcom/msm8916.dtsi              |  32 +
+ drivers/hwtracing/coresight/Kconfig                |  14 +
+ drivers/hwtracing/coresight/Makefile               |   1 +
+ drivers/hwtracing/coresight/coresight-cpu-debug.c  | 670 +++++++++++++++++++++
+ drivers/hwtracing/coresight/of_coresight.c         |  40 +-
+ include/linux/coresight.h                          |   2 +
+ 10 files changed, 1041 insertions(+), 12 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/coresight-cpu-debug.txt
+ create mode 100644 Documentation/trace/coresight-cpu-debug.txt
+ create mode 100644 drivers/hwtracing/coresight/coresight-cpu-debug.c
+
+-- 
+2.7.4
+
