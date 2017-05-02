@@ -1,128 +1,127 @@
-From: Rafal Ozieblo <rafalo@cadence.com>
-Subject: RE: [PATCH 3/4] net: macb: Add hardware PTP support
-Date: Tue, 2 May 2017 13:57:15 +0000
-Message-ID: <BN3PR07MB2516757CB4EA7367F6623C06C9170@BN3PR07MB2516.namprd07.prod.outlook.com>
-References: <1492090439-11793-1-git-send-email-rafalo@cadence.com>
- <1492090763-15686-1-git-send-email-rafalo@cadence.com>
- <20170414182850.GB7751@localhost.localdomain>
+From: Eddie James <eajames-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+Subject: Re: [v6,10/23] drivers/fsi: Add device read/write/peek API
+Date: Tue, 2 May 2017 09:11:57 -0500
+Message-ID: <d2b26e2b-b488-886a-93c8-17db37e77b92@linux.vnet.ibm.com>
+References: <d0d2932a-e69e-bda5-5731-f1bd46fca265@linux.vnet.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170414182850.GB7751@localhost.localdomain>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Richard Cochran <richardcochran@gmail.com>
-Cc: David Miller <davem@davemloft.net>, "nicolas.ferre@atmel.com" <nicolas.ferre@atmel.com>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "harinikatakamlinux@gmail.com" <harinikatakamlinux@gmail.com>, "harini.katakam@xilinx.com" <harini.katakam@xilinx.com>, "Andrei.Pistirica@microchip.com" <Andrei.Pistirica@microchip.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <d0d2932a-e69e-bda5-5731-f1bd46fca265-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Christopher Bostic <cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+Cc: robh+dt <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "mark.rutland" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, rostedt-nx8X9YLhiw1AfugRpC6u6w@public.gmane.org, mingo-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, andrew <andrew-zrmu5oMJ5Fs@public.gmane.org>, alistair-Y4h6yKqj69EXC2x5gXVKYQ@public.gmane.org, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, benh <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, joel <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-> From: Richard Cochran [mailto:richardcochran@gmail.com]
-> Sent: 14 kwietnia 2017 20:29
-> To: Rafal Ozieblo <rafalo@cadence.com>
-> Cc: David Miller <davem@davemloft.net>; nicolas.ferre@atmel.com;
-> netdev@vger.kernel.org; linux-kernel@vger.kernel.org;
-> devicetree@vger.kernel.org; linux-arm-kernel@lists.infradead.org;
-> harinikatakamlinux@gmail.com; harini.katakam@xilinx.com;
-> Andrei.Pistirica@microchip.com
-> Subject: Re: [PATCH 3/4] net: macb: Add hardware PTP support
->=20
-> On Thu, Apr 13, 2017 at 02:39:23PM +0100, Rafal Ozieblo wrote:
-(...)
-> > +static int gem_tsu_get_time(struct macb *bp, struct timespec64 *ts)
-> > +{
-> > +	long first, second;
-> > +	u32 secl, sech;
-> > +	unsigned long flags;
-> > +
-> > +	if (!bp || !ts)
-> > +		return -EINVAL;
->=20
-> Useless test.
-Sorry for me being too carefulness, I'll remove all tests.
->=20
-(...)
-> > +static int gem_ptp_gettime(struct ptp_clock_info *ptp, struct timespec=
-64
-> *ts)
-> > +{
-> > +	struct macb *bp =3D container_of(ptp, struct macb, ptp_clock_info);
-> > +
-> > +	if (!ptp || !ts)
-> > +		return -EINVAL;
->=20
-> Useles test.
->=20
-> What is the point of this wrapper function anyhow?  Please remove it.
-gem_ptp_gettime() is assigned in ptp_clock_info and it has to have=20
-ptp_clock_info pointer as first parameter. gem_tsu_get_time() is used in
-the source code but with macb pointer.
-Do you want me to do something like:
-gem_ptp_gettime(macb->ptp, ts);
-and first would be getting macb pointer from ptp ?
-struct macb *bp =3D container_of(ptp, struct macb, ptp_clock_info);
->=20
-> > +
-> > +	gem_tsu_get_time(bp, ts);
-> > +	return 0;
-> > +}
-> > +
-> > +static int gem_ptp_settime(struct ptp_clock_info *ptp,
-> > +		const struct timespec64 *ts)
-> > +{
-> > +	struct macb *bp =3D container_of(ptp, struct macb, ptp_clock_info);
-> > +
-> > +	if (!ptp || !ts)
-> > +		return -EINVAL;
->=20
-> Another useless function.
-ditto
->=20
-> > +	gem_tsu_set_time(bp, ts);
-> > +	return 0;
-> > +}
-> > +
-> > +static int gem_ptp_enable(struct ptp_clock_info *ptp,
-> > +			  struct ptp_clock_request *rq, int on)
-> > +{
-> > +	struct macb *bp =3D container_of(ptp, struct macb, ptp_clock_info);
-> > +
-> > +	if (!ptp || !rq)
-> > +		return -EINVAL;
->=20
-> Sigh.
->=20
-> > +
-> > +	switch (rq->type) {
-> > +	case PTP_CLK_REQ_EXTTS:	/* Toggle TSU match interrupt */
-> > +		if (on)
-> > +			macb_writel(bp, IER, MACB_BIT(TCI));
->=20
-> No locking to protect IER and IDE?
-There is no need.
->=20
-> > +		else
-> > +			macb_writel(bp, IDR, MACB_BIT(TCI));
-> > +		break;
-> > +	case PTP_CLK_REQ_PEROUT: /* Toggle Periodic output */
-> > +		return -EOPNOTSUPP;
-> > +		/* break; */
-> > +	case PTP_CLK_REQ_PPS:	/* Toggle TSU periodic (second)
-> interrupt */
-> > +		if (on)
-> > +			macb_writel(bp, IER, MACB_BIT(SRI));
-> > +		else
-> > +			macb_writel(bp, IDR, MACB_BIT(SRI));
-> > +		break;
-> > +	default:
-> > +		break;
-> > +	}
-> > +	return 0;
-> > +}
-> > +
-(...)
-> > --
-> > 2.4.5
-> >
->=20
-> Thanks,
-> Richard
+On Apr 10, 2017, at 3:46 PM, Christopher Bostic 
+<cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org> wrote:
+> From: Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
+>
+> This change introduces the fsi device API: simple read, write and peek
+> accessors for the devices' address spaces.
+>
+> Includes contributions from Chris Bostic <cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+> and Edward A. James <eajames-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>.
+>
+> Signed-off-by: Edward A. James <eajames-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>
+> Signed-off-by: Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
+> Signed-off-by: Chris Bostic <cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+> Signed-off-by: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
+> ---
+>  drivers/fsi/fsi-core.c | 33 +++++++++++++++++++++++++++++++++
+>  include/linux/fsi.h    |  7 ++++++-
+>  2 files changed, 39 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/fsi/fsi-core.c b/drivers/fsi/fsi-core.c
+> index a8faa89..4da0b030 100644
+> --- a/drivers/fsi/fsi-core.c
+> +++ b/drivers/fsi/fsi-core.c
+> @@ -32,6 +32,8 @@
+>  #define FSI_SLAVE_CONF_CRC_MASK        0x0000000f
+>  #define FSI_SLAVE_CONF_DATA_BITS    28
+>
+> +#define FSI_PEEK_BASE            0x410
+> +
+>  static const int engine_page_size = 0x400;
+>
+>  #define FSI_SLAVE_BASE            0x800
+> @@ -73,9 +75,40 @@ static int fsi_master_read(struct fsi_master 
+> *master, int link,
+>          uint8_t slave_id, uint32_t addr, void *val, size_t size);
+>  static int fsi_master_write(struct fsi_master *master, int link,
+>          uint8_t slave_id, uint32_t addr, const void *val, size_t size);
+> +static int fsi_slave_read(struct fsi_slave *slave, uint32_t addr,
+> +        void *val, size_t size);
+> +static int fsi_slave_write(struct fsi_slave *slave, uint32_t addr,
+> +        const void *val, size_t size);
+>
+>  /* FSI endpoint-device support */
+>
+> +int fsi_device_read(struct fsi_device *dev, uint32_t addr, void *val,
+> +        size_t size)
+> +{
+> +    if (addr > dev->size || size > dev->size || addr > dev->size - size)
+> +        return -EINVAL;
+> +
+> +    return fsi_slave_read(dev->slave, dev->addr + addr, val, size);
+> +}
+> +EXPORT_SYMBOL_GPL(fsi_device_read);
+> +
+> +int fsi_device_write(struct fsi_device *dev, uint32_t addr, const 
+> void *val,
+> +        size_t size)
+> +{
+> +    if (addr > dev->size || size > dev->size || addr > dev->size - size)
+> +        return -EINVAL;
+> +
+> +    return fsi_slave_write(dev->slave, dev->addr + addr, val, size);
+> +}
+> +EXPORT_SYMBOL_GPL(fsi_device_write);
+> +
+> +int fsi_device_peek(struct fsi_device *dev, void *val)
+> +{
+> +    uint32_t addr = FSI_PEEK_BASE + ((dev->unit - 2) * 
+> sizeof(uint32_t));
+> +
+> +    return fsi_slave_read(dev->slave, addr, val, sizeof(uint32_t));
+> +}
+> +
+>  static void fsi_device_release(struct device *_device)
+>  {
+>      struct fsi_device *device = to_fsi_dev(_device);
+> diff --git a/include/linux/fsi.h b/include/linux/fsi.h
+> index efa55ba..66bce48 100644
+> --- a/include/linux/fsi.h
+> +++ b/include/linux/fsi.h
+> @@ -27,6 +27,12 @@ struct fsi_device {
+>      uint32_t        size;
+>  };
+>
+> +extern int fsi_device_read(struct fsi_device *dev, uint32_t addr,
+> +        void *val, size_t size);
+> +extern int fsi_device_write(struct fsi_device *dev, uint32_t addr,
+> +        const void *val, size_t size);
+> +extern int fsi_device_peek(struct fsi_device *dev, void *val);
+> +
+>  struct fsi_device_id {
+>      u8    engine_type;
+>      u8    version;
+> @@ -40,7 +46,6 @@ struct fsi_device_id {
+>  #define FSI_DEVICE_VERSIONED(t, v) \
+>      .engine_type = (t), .version = (v),
+>
+> -
+>  struct fsi_driver {
+>      struct device_driver        drv;
+>      const struct fsi_device_id    *id_table;
+>
+
+I also wrote a driver against this API (an i2c algorithm). Everything 
+looks good and working well.
+
+Edward (Eddie) James <eajames-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
