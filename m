@@ -1,105 +1,128 @@
-From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: [PATCH 2/6] Documentation: devicetree: add bindings to support ARM MHU subchannels
-Date: Tue,  2 May 2017 14:55:49 +0100
-Message-ID: <1493733353-25812-3-git-send-email-sudeep.holla@arm.com>
-References: <1493733353-25812-1-git-send-email-sudeep.holla@arm.com>
+From: Rafal Ozieblo <rafalo@cadence.com>
+Subject: RE: [PATCH 3/4] net: macb: Add hardware PTP support
+Date: Tue, 2 May 2017 13:57:15 +0000
+Message-ID: <BN3PR07MB2516757CB4EA7367F6623C06C9170@BN3PR07MB2516.namprd07.prod.outlook.com>
+References: <1492090439-11793-1-git-send-email-rafalo@cadence.com>
+ <1492090763-15686-1-git-send-email-rafalo@cadence.com>
+ <20170414182850.GB7751@localhost.localdomain>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1493733353-25812-1-git-send-email-sudeep.holla@arm.com>
+In-Reply-To: <20170414182850.GB7751@localhost.localdomain>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, Jassi Brar <jassisinghbrar@gmail.com>
-Cc: Sudeep Holla <sudeep.holla@arm.com>, Alexey Klimov <alexey.klimov@arm.com>, Jassi Brar <jaswinder.singh@linaro.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+To: Richard Cochran <richardcochran@gmail.com>
+Cc: David Miller <davem@davemloft.net>, "nicolas.ferre@atmel.com" <nicolas.ferre@atmel.com>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "harinikatakamlinux@gmail.com" <harinikatakamlinux@gmail.com>, "harini.katakam@xilinx.com" <harini.katakam@xilinx.com>, "Andrei.Pistirica@microchip.com" <Andrei.Pistirica@microchip.com>
 List-Id: devicetree@vger.kernel.org
 
-The ARM MHU has mechanism to assert interrupt signals to facilitate
-inter-processor message based communication. It drives the signal using
-a 32-bit register, with all 32-bits logically ORed together. It also
-enables software to set, clear and check the status of each of the bits
-of this register independently. Each bit of the register can be
-associated with a type of event that can contribute to raising the
-interrupt thereby allowing it to be used as independent subchannels.
-
-Since the first version of this binding can't support sub-channels,
-this patch extends the existing binding to support them.
-
-Cc: Alexey Klimov <alexey.klimov@arm.com>
-Cc: Jassi Brar <jaswinder.singh@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
----
- .../devicetree/bindings/mailbox/arm-mhu.txt        | 44 ++++++++++++++++++++--
- 1 file changed, 41 insertions(+), 3 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/mailbox/arm-mhu.txt b/Documentation/devicetree/bindings/mailbox/arm-mhu.txt
-index 4971f03f0b33..86a66f7918e2 100644
---- a/Documentation/devicetree/bindings/mailbox/arm-mhu.txt
-+++ b/Documentation/devicetree/bindings/mailbox/arm-mhu.txt
-@@ -10,21 +10,40 @@ STAT register and the remote clears it after having read the data.
- The last channel is specified to be a 'Secure' resource, hence can't be
- used by Linux running NS.
- 
-+The MHU drives the interrupt signal using a 32-bit register, with all
-+32-bits logically ORed together. It provides a set of registers to
-+enable software to set, clear and check the status of each of the bits
-+of this register independently. The use of 32 bits per interrupt line
-+enables software to provide more information about the source of the
-+interrupt. For example, each bit of the register can be associated with
-+a type of event that can contribute to raising the interrupt.
-+
- Mailbox Device Node:
- ====================
- 
- Required properties:
- --------------------
--- compatible:		Shall be "arm,mhu" & "arm,primecell"
-+- compatible:		Shall be "arm,primecell" and one of the below:
-+			"arm,mhu" - if the controller doesn't support
-+				    subchannels
-+			"arm,mhu-v2" - if the controller supports subchannels
- - reg:			Contains the mailbox register address range (base
- 			address and length)
--- #mbox-cells		Shall be 1 - the index of the channel needed.
-+- #mbox-cells		Shall be 1 - the index of the channel needed when
-+			compatible is "arm,mhu"
-+			Shall be 2 - the index of the channel needed, and
-+			the index of the subchannel with the channel when
-+			compatible is "arm,mhu-v2"
- - interrupts:		Contains the interrupt information corresponding to
--			each of the 3 links of MHU.
-+			each of the 3 physical channels of MHU namely low
-+			priority non-secure, high priority non-secure and
-+			secure channels.
- 
- Example:
- --------
- 
-+1. Controller which doesn't support subchannels
-+
- 	mhu: mailbox@2b1f0000 {
- 		#mbox-cells = <1>;
- 		compatible = "arm,mhu", "arm,primecell";
-@@ -41,3 +60,22 @@ used by Linux running NS.
- 		reg = <0 0x2e000000 0x4000>;
- 		mboxes = <&mhu 1>; /* HP-NonSecure */
- 	};
-+
-+2. Controller which supports subchannels
-+
-+	mhu: mailbox@2b1f0000 {
-+		#mbox-cells = <2>;
-+		compatible = "arm,mhu-v2", "arm,primecell";
-+		reg = <0 0x2b1f0000 0x1000>;
-+		interrupts = <0 36 4>, /* LP-NonSecure */
-+			     <0 35 4>, /* HP-NonSecure */
-+			     <0 37 4>; /* Secure */
-+		clocks = <&clock 0 2 1>;
-+		clock-names = "apb_pclk";
-+	};
-+
-+	mhu_client: scb@2e000000 {
-+		compatible = "arm,scpi";
-+		reg = <0 0x2e000000 0x200>;
-+		mboxes = <&mhu 1 4>; /* HP-NonSecure 5th sub-channel */
-+	};
--- 
-2.7.4
+> From: Richard Cochran [mailto:richardcochran@gmail.com]
+> Sent: 14 kwietnia 2017 20:29
+> To: Rafal Ozieblo <rafalo@cadence.com>
+> Cc: David Miller <davem@davemloft.net>; nicolas.ferre@atmel.com;
+> netdev@vger.kernel.org; linux-kernel@vger.kernel.org;
+> devicetree@vger.kernel.org; linux-arm-kernel@lists.infradead.org;
+> harinikatakamlinux@gmail.com; harini.katakam@xilinx.com;
+> Andrei.Pistirica@microchip.com
+> Subject: Re: [PATCH 3/4] net: macb: Add hardware PTP support
+>=20
+> On Thu, Apr 13, 2017 at 02:39:23PM +0100, Rafal Ozieblo wrote:
+(...)
+> > +static int gem_tsu_get_time(struct macb *bp, struct timespec64 *ts)
+> > +{
+> > +	long first, second;
+> > +	u32 secl, sech;
+> > +	unsigned long flags;
+> > +
+> > +	if (!bp || !ts)
+> > +		return -EINVAL;
+>=20
+> Useless test.
+Sorry for me being too carefulness, I'll remove all tests.
+>=20
+(...)
+> > +static int gem_ptp_gettime(struct ptp_clock_info *ptp, struct timespec=
+64
+> *ts)
+> > +{
+> > +	struct macb *bp =3D container_of(ptp, struct macb, ptp_clock_info);
+> > +
+> > +	if (!ptp || !ts)
+> > +		return -EINVAL;
+>=20
+> Useles test.
+>=20
+> What is the point of this wrapper function anyhow?  Please remove it.
+gem_ptp_gettime() is assigned in ptp_clock_info and it has to have=20
+ptp_clock_info pointer as first parameter. gem_tsu_get_time() is used in
+the source code but with macb pointer.
+Do you want me to do something like:
+gem_ptp_gettime(macb->ptp, ts);
+and first would be getting macb pointer from ptp ?
+struct macb *bp =3D container_of(ptp, struct macb, ptp_clock_info);
+>=20
+> > +
+> > +	gem_tsu_get_time(bp, ts);
+> > +	return 0;
+> > +}
+> > +
+> > +static int gem_ptp_settime(struct ptp_clock_info *ptp,
+> > +		const struct timespec64 *ts)
+> > +{
+> > +	struct macb *bp =3D container_of(ptp, struct macb, ptp_clock_info);
+> > +
+> > +	if (!ptp || !ts)
+> > +		return -EINVAL;
+>=20
+> Another useless function.
+ditto
+>=20
+> > +	gem_tsu_set_time(bp, ts);
+> > +	return 0;
+> > +}
+> > +
+> > +static int gem_ptp_enable(struct ptp_clock_info *ptp,
+> > +			  struct ptp_clock_request *rq, int on)
+> > +{
+> > +	struct macb *bp =3D container_of(ptp, struct macb, ptp_clock_info);
+> > +
+> > +	if (!ptp || !rq)
+> > +		return -EINVAL;
+>=20
+> Sigh.
+>=20
+> > +
+> > +	switch (rq->type) {
+> > +	case PTP_CLK_REQ_EXTTS:	/* Toggle TSU match interrupt */
+> > +		if (on)
+> > +			macb_writel(bp, IER, MACB_BIT(TCI));
+>=20
+> No locking to protect IER and IDE?
+There is no need.
+>=20
+> > +		else
+> > +			macb_writel(bp, IDR, MACB_BIT(TCI));
+> > +		break;
+> > +	case PTP_CLK_REQ_PEROUT: /* Toggle Periodic output */
+> > +		return -EOPNOTSUPP;
+> > +		/* break; */
+> > +	case PTP_CLK_REQ_PPS:	/* Toggle TSU periodic (second)
+> interrupt */
+> > +		if (on)
+> > +			macb_writel(bp, IER, MACB_BIT(SRI));
+> > +		else
+> > +			macb_writel(bp, IDR, MACB_BIT(SRI));
+> > +		break;
+> > +	default:
+> > +		break;
+> > +	}
+> > +	return 0;
+> > +}
+> > +
+(...)
+> > --
+> > 2.4.5
+> >
+>=20
+> Thanks,
+> Richard
