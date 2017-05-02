@@ -1,11 +1,8 @@
 From: Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>
-Subject: [PATCH v4 2/7] dt-bindings: media: Add MAX2175 binding description
-Date: Tue,  2 May 2017 14:26:10 +0100
-Message-ID: <20170502132615.42134-3-ramesh.shanmugasundaram@bp.renesas.com>
+Subject: [PATCH v4 4/7] media: Add new SDR formats PC16, PC18 & PC20
+Date: Tue,  2 May 2017 14:26:12 +0100
+Message-ID: <20170502132615.42134-5-ramesh.shanmugasundaram@bp.renesas.com>
 References: <20170502132615.42134-1-ramesh.shanmugasundaram@bp.renesas.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
 Return-path: <linux-renesas-soc-owner@vger.kernel.org>
 In-Reply-To: <20170502132615.42134-1-ramesh.shanmugasundaram@bp.renesas.com>
 Sender: linux-renesas-soc-owner@vger.kernel.org
@@ -13,100 +10,53 @@ To: robh+dt@kernel.org, mark.rutland@arm.com, mchehab@kernel.org, hverkuil@xs4al
 Cc: chris.paterson2@renesas.com, laurent.pinchart@ideasonboard.com, geert+renesas@glider.be, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-Add device tree binding documentation for MAX2175 RF to bits tuner
-device.
+This patch adds support for the three new SDR formats. These formats
+were prefixed with "planar" indicating I & Q data are not interleaved
+as in other formats. Here, I & Q data constitutes the top half and bottom
+half of the received buffer respectively.
+
+V4L2_SDR_FMT_PCU16BE - 14-bit complex (I & Q) unsigned big-endian sample
+inside 16-bit. V4L2 FourCC: PC16
+
+V4L2_SDR_FMT_PCU18BE - 16-bit complex (I & Q) unsigned big-endian sample
+inside 18-bit. V4L2 FourCC: PC18
+
+V4L2_SDR_FMT_PCU20BE - 18-bit complex (I & Q) unsigned big-endian sample
+inside 20-bit. V4L2 FourCC: PC20
 
 Signed-off-by: Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>
-Acked-by: Rob Herring <robh@kernel.org>
 ---
-v4:
- - port property description modified as suggested by Laurent.
- - Renamed property name slave to master (Laurent).
- - Renamed property name am-hiz to am-hiz-filter and modified description.
----
- .../devicetree/bindings/media/i2c/max2175.txt      | 61 ++++++++++++++++++++++
- .../devicetree/bindings/property-units.txt         |  1 +
- 2 files changed, 62 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/i2c/max2175.txt
+ drivers/media/v4l2-core/v4l2-ioctl.c | 3 +++
+ include/uapi/linux/videodev2.h       | 3 +++
+ 2 files changed, 6 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/media/i2c/max2175.txt b/Documentation/devicetree/bindings/media/i2c/max2175.txt
-new file mode 100644
-index 000000000000..a5e3bc8f6753
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/i2c/max2175.txt
-@@ -0,0 +1,61 @@
-+Maxim Integrated MAX2175 RF to Bits tuner
-+-----------------------------------------
-+
-+The MAX2175 IC is an advanced analog/digital hybrid-radio receiver with
-+RF to Bits® front-end designed for software-defined radio solutions.
-+
-+Required properties:
-+--------------------
-+- compatible: "maxim,max2175" for MAX2175 RF-to-bits tuner.
-+- clocks: phandle to the fixed xtal clock.
-+- clock-names: name of the fixed xtal clock, shall be "xtal".
-+- port: child port node corresponding to the I2S output, in accordance with
-+	the video interface bindings defined in
-+	Documentation/devicetree/bindings/media/video-interfaces.txt. The port
-+	node must contain at least one endpoint.
-+
-+Optional properties:
-+--------------------
-+- maxim,master	      : phandle to the master tuner if it is a slave. This
-+			is used to define two tuners in diversity mode
-+			(1 master, 1 slave). By default each tuner is an
-+			individual master.
-+- maxim,refout-load-pF: load capacitance value (in pF) on reference
-+			output drive level. The possible load values are:
-+			 0 (default - refout disabled)
-+			10
-+			20
-+			30
-+			40
-+			60
-+			70
-+- maxim,am-hiz-filter : empty property indicates the AM Hi-Z filter is used
-+			in this hardware for AM antenna input.
-+
-+Example:
-+--------
-+
-+Board specific DTS file
-+
-+/* Fixed XTAL clock node */
-+maxim_xtal: clock {
-+	compatible = "fixed-clock";
-+	#clock-cells = <0>;
-+	clock-frequency = <36864000>;
-+};
-+
-+/* A tuner device instance under i2c bus */
-+max2175_0: tuner@60 {
-+	compatible = "maxim,max2175";
-+	reg = <0x60>;
-+	clocks = <&maxim_xtal>;
-+	clock-names = "xtal";
-+	maxim,refout-load-pF = <10>;
-+
-+	port {
-+		max2175_0_ep: endpoint {
-+			remote-endpoint = <&slave_rx_device>;
-+		};
-+	};
-+
-+};
-diff --git a/Documentation/devicetree/bindings/property-units.txt b/Documentation/devicetree/bindings/property-units.txt
-index 12278d79f6c0..f1f1c22aa5de 100644
---- a/Documentation/devicetree/bindings/property-units.txt
-+++ b/Documentation/devicetree/bindings/property-units.txt
-@@ -28,6 +28,7 @@ Electricity
- -ohms		: Ohms
- -micro-ohms	: micro Ohms
- -microvolt	: micro volts
-+-pF		: pico farads
+diff --git a/drivers/media/v4l2-core/v4l2-ioctl.c b/drivers/media/v4l2-core/v4l2-ioctl.c
+index e5a2187381db..ca1e920d3e7c 100644
+--- a/drivers/media/v4l2-core/v4l2-ioctl.c
++++ b/drivers/media/v4l2-core/v4l2-ioctl.c
+@@ -1229,6 +1229,9 @@ static void v4l_fill_fmtdesc(struct v4l2_fmtdesc *fmt)
+ 	case V4L2_SDR_FMT_CS8:		descr = "Complex S8"; break;
+ 	case V4L2_SDR_FMT_CS14LE:	descr = "Complex S14LE"; break;
+ 	case V4L2_SDR_FMT_RU12LE:	descr = "Real U12LE"; break;
++	case V4L2_SDR_FMT_PCU16BE:	descr = "Planar Complex U16BE"; break;
++	case V4L2_SDR_FMT_PCU18BE:	descr = "Planar Complex U18BE"; break;
++	case V4L2_SDR_FMT_PCU20BE:	descr = "Planar Complex U20BE"; break;
+ 	case V4L2_TCH_FMT_DELTA_TD16:	descr = "16-bit signed deltas"; break;
+ 	case V4L2_TCH_FMT_DELTA_TD08:	descr = "8-bit signed deltas"; break;
+ 	case V4L2_TCH_FMT_TU16:		descr = "16-bit unsigned touch data"; break;
+diff --git a/include/uapi/linux/videodev2.h b/include/uapi/linux/videodev2.h
+index 2b8feb86d09e..45cf7359822c 100644
+--- a/include/uapi/linux/videodev2.h
++++ b/include/uapi/linux/videodev2.h
+@@ -669,6 +669,9 @@ struct v4l2_pix_format {
+ #define V4L2_SDR_FMT_CS8          v4l2_fourcc('C', 'S', '0', '8') /* complex s8 */
+ #define V4L2_SDR_FMT_CS14LE       v4l2_fourcc('C', 'S', '1', '4') /* complex s14le */
+ #define V4L2_SDR_FMT_RU12LE       v4l2_fourcc('R', 'U', '1', '2') /* real u12le */
++#define V4L2_SDR_FMT_PCU16BE	  v4l2_fourcc('P', 'C', '1', '6') /* planar complex u16be */
++#define V4L2_SDR_FMT_PCU18BE	  v4l2_fourcc('P', 'C', '1', '8') /* planar complex u18be */
++#define V4L2_SDR_FMT_PCU20BE	  v4l2_fourcc('P', 'C', '2', '0') /* planar complex u20be */
  
- Temperature
- ----------------------------------------
+ /* Touch formats - used for Touch devices */
+ #define V4L2_TCH_FMT_DELTA_TD16	v4l2_fourcc('T', 'D', '1', '6') /* 16-bit signed deltas */
 -- 
 2.12.2
