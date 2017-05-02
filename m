@@ -1,45 +1,29 @@
-From: Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH RFC] Documentation/devicetree: Add specification for FSI
- busses
-Date: Tue, 2 May 2017 14:25:49 +0800
-Message-ID: <3f346df4-b621-f2bd-0592-5016f5870865@ozlabs.org>
-References: <1493704508-27119-1-git-send-email-jk@ozlabs.org>
- <CACPK8Xf2regdT4Y-TW4nOc1qYwDcH=zYPRqdjTqL9yvZH49bRA@mail.gmail.com>
+From: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v2 2/2] regulator: Allow for asymmetric settling times
+Date: Tue, 2 May 2017 12:23:30 +0530
+Message-ID: <59082CEA.7090807@nvidia.com>
+References: <20170501183715.35375-1-mka@chromium.org> <20170501183715.35375-2-mka@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CACPK8Xf2regdT4Y-TW4nOc1qYwDcH=zYPRqdjTqL9yvZH49bRA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <20170501183715.35375-2-mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
-Cc: devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, OpenBMC Maillist <openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Matthias Kaehlcke <mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Joel,
 
-> Looks good to me Jeremy. One small question on the description, but
-> please add Acked-by: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org> to future
-> revisions.
+On Tuesday 02 May 2017 12:07 AM, Matthias Kaehlcke wrote:
+> Some regulators have different settling times for voltage increases and
+> decreases. To avoid a time penalty on the faster transition allow for
+> different settings for up- and downward transitions.
+>
+> Signed-off-by: Matthias Kaehlcke <mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+> ---
 
-Thanks for the review!
+Acked-by: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 
->> +The FSI bus is probe-able, so Linux is able to enumerate FSI slaves, and
->> +engines within those slaves. However, we have a facility to match devicetree
->> +nodes to probed engines. This allows for fsi engines to expose non-probeable
->> +busses, which are then exposed by the device tree. For example, a FSI engine
-> 
-> A nit: Can we can expose any device as part of the engine, not just a bus?
-
-Absolutely. I'll clarify in a future version. Something like:
-
-  This allows for fsi engines to expose non-probeable busses, or for
-  drivers to access extra device properties, by data described in the
-  device tree.
-
-Cheers,
-
-
-Jeremy
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
