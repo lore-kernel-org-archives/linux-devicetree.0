@@ -1,101 +1,90 @@
-From: Guillaume Tucker <guillaume.tucker-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-Subject: Re: [PATCH v4 1/5] dt-bindings: gpu: add bindings for the ARM Mali
- Midgard GPU
-Date: Tue, 2 May 2017 15:49:29 +0100
-Message-ID: <5a058271-c840-90d1-4708-fd0c4d59950b@collabora.com>
-References: <cover.1493125299.git.guillaume.tucker@collabora.com>
- <9349c8ae9091fbd93e9410f4cfae770ac850bf6b.1493125299.git.guillaume.tucker@collabora.com>
- <20170428192742.pu4v4layszr6z2ot@rob-hp-laptop>
- <60b3c062-d4bb-6502-61be-ada830cf58f7@collabora.com>
- <CAL_JsqK8rjvFW=LFb7==Qho-MHVew-O_vAJ+M6wcFJGfVD6r1A@mail.gmail.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2 1/9] dt-bindings: display: sun4i: Add
+ component endpoint ID numbering scheme
+Date: Tue, 2 May 2017 16:54:53 +0200
+Message-ID: <20170502145453.3moqzsr3venpn4mu@lukather>
+References: <20170421083857.29636-1-wens@csie.org>
+ <20170421083857.29636-2-wens@csie.org>
+ <20170428134841.cc5jrqhunh2rxhog@rob-hp-laptop>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqK8rjvFW=LFb7==Qho-MHVew-O_vAJ+M6wcFJGfVD6r1A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="yyfdqyfvjibu4hc6"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBSF3ULEAKGQE75NG67Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20170428134841.cc5jrqhunh2rxhog@rob-hp-laptop>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
 To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Sjoerd Simons <sjoerd.simons-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, John Reitan <john.reitan-5wv7dgnIgG8@public.gmane.org>, Wookey <wookey-Xpnwy/r4z8dg9hUCZPvPmw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 02/05/17 15:13, Rob Herring wrote:
-> On Tue, May 2, 2017 at 6:23 AM, Guillaume Tucker
-> <guillaume.tucker-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org> wrote:
->> Hi Rob,
->>
->> On 28/04/17 20:27, Rob Herring wrote:
->>>
->>> On Tue, Apr 25, 2017 at 02:16:16PM +0100, Guillaume Tucker wrote:
->>
->>
->>>> diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt
->>>> b/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt
->>>> new file mode 100644
->>>> index 000000000000..547ddeceb498
->>>> --- /dev/null
->>>> +++ b/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt
->>>> @@ -0,0 +1,82 @@
->>>> +ARM Mali Midgard GPU
->>>> +====================
->>>> +
->>>> +Required properties:
->>>> +
->>>> +- compatible :
->>>> +  * Must be one of the following:
->>>> +    + "arm,mali-t60x"
->>>> +    + "arm,mali-t62x"
->>>
->>>
->>> Don't use wildcards.
->>
->>
->> Sure, old habits die hard...  I'll fix it in patch v5.
->>
->>>> +    + "arm,mali-t720"
->>>> +    + "arm,mali-t760"
->>>> +    + "arm,mali-t820"
->>>> +    + "arm,mali-t830"
->>>> +    + "arm,mali-t860"
->>>> +    + "arm,mali-t880"
->>>> +  * And, optionally, one of the vendor specific compatible:
->>>
->>>
->>> IMO, these should not be optional.
->>
->>
->> Well, vendor compatible strings are clearly optional for the
->> Utgard GPU series for which the bindings docs were recently
->> merged.  It seems that whether these should be optional or not,
->> the documentation should be consistent between at least all
->> similar types of devices like Midgard and Utgard GPUs.  They have
->> different architectures but from a device tree point of view,
->> they both have the same kind of SoC-specific integration (clocks,
->> irqs, regulators...).
->
-> Clocks should not vary by SoC. There is often variation because clocks
-> get driven by same source or are not s/w controlled, but really there
-> should not be that variation. I noticed Utgard has 2 clocks. So is
-> Midgard really just 1 clock? The DT should have all the clocks listed
-> in the TRMs.
 
-I meant to say that the clock sources are different in each SoC,
-but yes the same clock input is always needed by the GPU.
+--yyfdqyfvjibu4hc6
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
-The TRM is confidential but to the best of my knowledge and based
-on existing device trees and the out-of-tree kernel driver, the
-Midgard GPU has only one clock input.
+Hi,
 
->> So was this was overlooked in the Utgard case and should it
->> ideally be fixed there as well as non-optional?  Or, is it OK to
->> keep these optional on a second thought?
->
-> Probably should be required in the Utgard case as well.
+On Fri, Apr 28, 2017 at 08:48:41AM -0500, Rob Herring wrote:
+> On Fri, Apr 21, 2017 at 04:38:49PM +0800, Chen-Yu Tsai wrote:
+> > The Allwinner display pipeline contains many hardware components, some
+> > of which can consume data from one of multiple upstream components.
+> > The numbering scheme of these components must be encoded into the device
+> > tree so the driver can figure out which component out of two or more of
+> > the same type it is supposed to use or program.
+> > 
+> > This patch adds the constraint that local endpoint IDs must be the index
+> > or number of the remote endpoint's hardware block, for all components
+> > in the display pipeline up to the TCONs.
+> > 
+> > Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+> > ---
+> >  Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt | 10 ++++++++++
+> >  1 file changed, 10 insertions(+)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt b/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
+> > index 57a8d0610062..7acdbf14ae1c 100644
+> > --- a/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
+> > +++ b/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
+> > @@ -4,6 +4,16 @@ Allwinner A10 Display Pipeline
+> >  The Allwinner A10 Display pipeline is composed of several components
+> >  that are going to be documented below:
+> >  
+> > +For the input port of all components up to the TCON in the display
+> > +pipeline, if there are multiple components, the local endpoint IDs
+> > +must correspond to the index of the upstream block. For example, if
+> > +the remote endpoint is Frontend 1, then the local endpoint ID must
+> > +be 1.
+> > +
+> > +Conversely, for the output ports of the same group, the remote endpoint
+> > +ID must be the index of the local hardware block. If the local backend
+> > +is backend 1, then the remote endpoint ID must be 1.
+> 
+> It would be clearer if you just explicitly listed IDs and their 
+> connections. From how this is worded, it would not work if you had 
+> connections like this:
+> 
+> DevA 0
+> DevA 1
+> DevB 0
+> DevB 1
+> 
+> These would need to be endpoints 0-3 in TCON, and that doesn't reflect 
+> the remote devices' index.
 
-OK, so I'll make the vendor compatible strings required (for
-Midgard) in patch v5.
+Chen-Yu, can you send a patch to rephrase the doc that way?
 
-Guillaume
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+Maxime
+
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--yyfdqyfvjibu4hc6--
