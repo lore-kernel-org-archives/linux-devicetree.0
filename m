@@ -1,76 +1,57 @@
-From: Leo Yan <leo.yan@linaro.org>
-Subject: Re: [PATCH v7 5/7] coresight: add support for CPU debug module
-Date: Tue, 2 May 2017 17:20:18 +0800
-Message-ID: <20170502092018.GB20225@leoy-ThinkPad-T440>
-References: <1493713805-26920-1-git-send-email-leo.yan@linaro.org>
- <1493713805-26920-6-git-send-email-leo.yan@linaro.org>
+From: Daniel Vetter <daniel@ffwll.ch>
+Subject: Re: [PATCH v4 2/3] drm/vc4: Don't try to initialize FBDEV if we're
+ only bound to V3D.
+Date: Tue, 2 May 2017 11:24:00 +0200
+Message-ID: <20170502092400.35owmdw2fgf4uquu@phenom.ffwll.local>
+References: <20170428224223.21904-1-eric@anholt.net>
+ <20170428224223.21904-2-eric@anholt.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 Content-Disposition: inline
-In-Reply-To: <1493713805-26920-6-git-send-email-leo.yan@linaro.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Jonathan Corbet <corbet@lwn.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Wei Xu <xuwei5@hisilicon.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Mathieu Poirier <mathieu.poirier@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Suzuki K Poulose <suzuki.poulose@arm.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, Mike Leach <mike.leach@linaro.org>, Sudeep Holla <sudeep.holla@arm.com>
+In-Reply-To: <20170428224223.21904-2-eric@anholt.net>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Eric Anholt <eric@anholt.net>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 02, 2017 at 04:30:03PM +0800, Leo Yan wrote:
-
-[...]
-
-> +static void debug_force_cpu_powered_up(struct debug_drvdata *drvdata)
-> +{
-> +	u32 edprcr;
-> +
-> +try_again:
-> +
-> +	/*
-> +	 * Send request to power management controller and assert
-> +	 * DBGPWRUPREQ signal; if power management controller has
-> +	 * sane implementation, it should enable CPU power domain
-> +	 * in case CPU is in low power state.
-> +	 */
-> +	edprcr = readl_relaxed(drvdata->base + EDPRCR);
-> +	edprcr |= EDPRCR_COREPURQ;
-> +	writel_relaxed(edprcr, drvdata->base + EDPRCR);
-> +
-> +	/* Wait for CPU to be powered up (timeout~=32ms) */
-> +	if (readx_poll_timeout_atomic(readl_relaxed, drvdata->base + EDPRSR,
-> +			drvdata->edprsr, (drvdata->edprsr & EDPRSR_PU),
-> +			DEBUG_WAIT_SLEEP, DEBUG_WAIT_TIMEOUT)) {
-> +		/*
-> +		 * Unfortunately the CPU cannot be powered up, so return
-> +		 * back and later has no permission to access other
-> +		 * registers. For this case, should disable CPU low power
-> +		 * states to ensure CPU power domain is enabled!
-> +		 */
-> +		pr_err("%s: power up request for CPU%d failed\n",
-> +			__func__, drvdata->cpu);
-> +		return;
-> +	}
-> +
-> +	/*
-> +	 * At this point the CPU is powered up, so set the no powerdown
-> +	 * request bit so we don't lose power and emulate power down.
-> +	 */
-> +	edprcr = readl_relaxed(drvdata->base + EDPRCR);
-> +	edprcr |= EDPRCR_COREPURQ | EDPRCR_CORENPDRQ;
-> +	writel_relaxed(edprcr, drvdata->base + EDPRCR);
-> +
-> +	drvdata->edprsr = readl_relaxed(drvdata->base + EDPRSR);
-> +
-> +	/* The core power domain got switched off on use, try again */
-> +	if (unlikely(!drvdata->edprsr & EDPRSR_PU))
-
-Here have error introduced by operator priority. Should change to
-
-        if (unlikely(!(drvdata->edprsr & EDPRSR_PU)))
-
-Will send new version soon for this fixing.
-
-> +		goto try_again;
-> +}
-
-[...]
-
-Thanks,
-Leo Yan
+T24gRnJpLCBBcHIgMjgsIDIwMTcgYXQgMDM6NDI6MjJQTSAtMDcwMCwgRXJpYyBBbmhvbHQgd3Jv
+dGU6Cj4gVGhlIEZCREVWIGluaXRpYWxpemF0aW9uIHdvdWxkIHRocm93IGFuIGVycm9yIGluIGRt
+ZXNnLCB3aGVuIHdlIGp1c3QKPiB3YW50IHRvIHNpbGVudGx5IG5vdCBpbml0aWFsaXplIGZiZGV2
+IG9uIGEgVjNELW9ubHkgVkM0IGluc3RhbmNlLgo+IAo+IFNpZ25lZC1vZmYtYnk6IEVyaWMgQW5o
+b2x0IDxlcmljQGFuaG9sdC5uZXQ+CgpXaXRoIHRoZSBjb21taXQgbWVzc2FnZSB1cGRhdGVkIHRo
+YXQgcGFzc2luZyBudW1fY29ubmVjdG9yIGlzIHRoZSBidWcgdGhhdAp0aHJvd3MgdGhlIGVycm9y
+IChhbmQgbm90IHRoYXQgd2Ugc2V0IHVwIGEgbm8tb3AgZmJkZXYpOgoKUmV2aWV3ZWQtYnk6IERh
+bmllbCBWZXR0ZXIgPGRhbmllbC52ZXR0ZXJAZmZ3bGwuY2g+CgpTdGlsbCBraW5kYSBob3Bpbmcg
+Zm9yIGEgZm9sbG93LXVwIHRvIGVudGlyZWx5IGdldCByaWQgZm8gbnVtX2Nvbm5lY3RvciBpbgp0
+aGUgZmJkZXYgaW5pdCBmdW5jcy4KLURhbmllbAo+IC0tLQo+ICBkcml2ZXJzL2dwdS9kcm0vdmM0
+L3ZjNF9rbXMuYyB8IDEwICsrKysrKy0tLS0KPiAgMSBmaWxlIGNoYW5nZWQsIDYgaW5zZXJ0aW9u
+cygrKSwgNCBkZWxldGlvbnMoLSkKPiAKPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL3Zj
+NC92YzRfa21zLmMgYi9kcml2ZXJzL2dwdS9kcm0vdmM0L3ZjNF9rbXMuYwo+IGluZGV4IGFkNzky
+NWE5ZTBlYS4uMjM3YTUwNGYxMWYwIDEwMDY0NAo+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS92YzQv
+dmM0X2ttcy5jCj4gKysrIGIvZHJpdmVycy9ncHUvZHJtL3ZjNC92YzRfa21zLmMKPiBAQCAtMjMw
+LDEwICsyMzAsMTIgQEAgaW50IHZjNF9rbXNfbG9hZChzdHJ1Y3QgZHJtX2RldmljZSAqZGV2KQo+
+ICAKPiAgCWRybV9tb2RlX2NvbmZpZ19yZXNldChkZXYpOwo+ICAKPiAtCXZjNC0+ZmJkZXYgPSBk
+cm1fZmJkZXZfY21hX2luaXQoZGV2LCAzMiwKPiAtCQkJCQlkZXYtPm1vZGVfY29uZmlnLm51bV9j
+b25uZWN0b3IpOwo+IC0JaWYgKElTX0VSUih2YzQtPmZiZGV2KSkKPiAtCQl2YzQtPmZiZGV2ID0g
+TlVMTDsKPiArCWlmIChkZXYtPm1vZGVfY29uZmlnLm51bV9jb25uZWN0b3IpIHsKPiArCQl2YzQt
+PmZiZGV2ID0gZHJtX2ZiZGV2X2NtYV9pbml0KGRldiwgMzIsCj4gKwkJCQkJCWRldi0+bW9kZV9j
+b25maWcubnVtX2Nvbm5lY3Rvcik7Cj4gKwkJaWYgKElTX0VSUih2YzQtPmZiZGV2KSkKPiArCQkJ
+dmM0LT5mYmRldiA9IE5VTEw7Cj4gKwl9Cj4gIAo+ICAJZHJtX2ttc19oZWxwZXJfcG9sbF9pbml0
+KGRldik7Cj4gIAo+IC0tIAo+IDIuMTEuMAo+IAo+IF9fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fCj4gZHJpLWRldmVsIG1haWxpbmcgbGlzdAo+IGRyaS1kZXZl
+bEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKPiBodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9t
+YWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAoKLS0gCkRhbmllbCBWZXR0ZXIKU29mdHdhcmUgRW5n
+aW5lZXIsIEludGVsIENvcnBvcmF0aW9uCmh0dHA6Ly9ibG9nLmZmd2xsLmNoCl9fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxp
+c3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNr
+dG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
