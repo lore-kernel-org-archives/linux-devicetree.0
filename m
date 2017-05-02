@@ -1,55 +1,80 @@
-From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Subject: Re: [PATCH v5 0/9] Add sbs-manager with smbalert support
-Date: Tue, 2 May 2017 12:29:59 +0200
-Message-ID: <20170502102959.GA4430@katana>
-References: <1493628599-30552-1-git-send-email-preid@electromag.com.au>
- <20170501090826.3wci2vzilp6ogalt@ninjato>
- <20170502102440.GC2382@mail.corp.redhat.com>
+From: Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 2/5] mtd: nand: gpmi: add i.MX 7 SoC support
+Date: Tue, 2 May 2017 13:18:21 +0200
+Message-ID: <d0162bbe-c2de-73d1-0d37-9bdd68ceb94b@gmail.com>
+References: <20170421010755.18025-1-stefan@agner.ch>
+ <20170421010755.18025-3-stefan@agner.ch>
+ <af3fe671-c5fb-d3cf-c891-e6b7c973baa1@gmail.com>
+ <5cf26d2b020392c875464c7504a9fb5b@agner.ch>
+ <8377dadc-043f-5932-cb13-3367db38a6dd@gmail.com>
+ <494a7bc044457240a302d92b3a50b8e5@agner.ch>
+ <57336d7e-7b48-8855-9e87-3eb370facd05@gmail.com>
+ <a9cdc47795433e7b152dcdd123f9bd63@agner.ch>
+ <CA+EcR20FCPSec+ihTMA=SGwogd7p5tsnECCp3CR-Nv6fUciK4g@mail.gmail.com>
+ <20170502111758.53e9a959@bbrezillon>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="yrj/dFKFPuw6o+aM"
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170502102440.GC2382-/m+UfqrgI5QNLKR9yMNcA1aTQe2KTcn/@public.gmane.org>
+In-Reply-To: <20170502111758.53e9a959@bbrezillon>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Benjamin Tissoires <benjamin.tissoires-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Phil Reid <preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Han Xu <xhnjupt-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>, mark.rutland-5wv7dgnIgG8@public.gmane.org, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Han Xu <han.xu-3arQi8VN3Tc@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, LW-AvR2QvxeiV7DiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On 05/02/2017 11:17 AM, Boris Brezillon wrote:
+> Hi Han,
+> 
+> On Fri, 21 Apr 2017 13:29:16 -0500
+> Han Xu <xhnjupt-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> 
+>>>>  
+>>>>>>> But then, adding the type would only require 2-3 lines of change if I
+>>>>>>> add it to the GPMI_IS_MX6 macro...  
+>>>>>>
+>>>>>> Then at least add a comment because using type = IMX6SX right under
+>>>>>> gpmi_data_mx7d can trigger some head-scratching. And put my R-B on V2.  
+>>>>>
+>>>>> FWIW, I mentioned it in the commit message.
+>>>>>
+>>>>> I think rather then adding a comment it is cleaner to just add IS_IMX7D
+>>>>> and add it to the GPMI_IS_MX6 macro. That does not need a comment since
+>>>>> it implicitly says we have a i.MX 7 but treat it like i.MX 6 and it is a
+>>>>> rather small change. Does that sound acceptable?  
+>>>>
+>>>> Sure, that's even better, thanks.
+>>>>
+>>>> btw isn't there some single-core mx7 (mx7s ?) , maybe we should just go
+>>>> with mx7 (without the d suffix). I dunno if it has GPMI NAND though, so
+>>>> maybe mx7d is the right thing to do here ...
+>>>>  
+>>>
+>>> There is a Solo version yes, and it has GPMI NAND too. However, almost
+>>> all i.MX 7 IPs have been named imx7d by NXP for some reason (including
+>>> compatible strings, see grep -r -e imx7 Documentation/), so I thought I
+>>> stay consistent here...  
 
---yrj/dFKFPuw6o+aM
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+I missed the DT bit, sorry. the DT bindings say:
+  - compatible : should be "fsl,<chip>-gpmi-nand"
+so if FSL invented their own buggy bindings, they need to get them
+through Rob :) IMO for MX7, this should be "imx7-gpmi-nand" , unless
+there's some incentive to discern the solo/dual chips and/or there
+is a future imx7 coming up with different GPMI NAND block version.
 
+>> Hi Guys,
+>>
+>> Yes, there should be a i.MX7 Solo version with one core fused out. IMO, can
+>> we use QUIRK to distinguish them rather than SoC name. I know I also sent
+>> some patch set with SoC Name but I prefer to use QUIRK now.
+> 
+> Not sure what this means. Are you okay with Stefan's v2?
 
-> I have already been cc-ed in the v6 of the series, so I am able to
-> review it properly (I do not read the I2C list, but I can work around
-> this through patchwork).
+IMO the GPMI controller in solo and dual should be the same, so there's
+no need to have quirks for it.
 
-Good. Thanks for the review, much appreciated!
-
-
---yrj/dFKFPuw6o+aM
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlkIX6IACgkQFA3kzBSg
-KbacexAAiTMbm63Djz5oplzX3c+YQGM0GyPdK834H0dMXYhrlDEo5YmD/2LHRwou
-5oAoCyQ5ZXN3+J9ye644TdcGK5f9QSQ9OTwbm+Ph39E1RC25ofr4yUbzMtN4lPXU
-I6B5jKjnyC5qoujlCYM1X9tH/YWSgWT4Hfv8F1updB/0c59MfTUc1S+e2daLhaIU
-koF3Lv6zCKHU68mi5C2TC8T4kDEt2/GOGz6DIGwfh6tY+uv+XoNPekXNlVo9YRcl
-mocGzBor47b54+hc6E7wbiViL8hbpPmYqrG3eKLyty6XW7fiZ2p3fXL9TaOr2sj8
-ahz4hhPN/KQl7gzPiC9nqOh427zRh7FM27jNgsnuG4Cm4QsWQXV+9uqjRBiae9gK
-4tqhEGoawf9QTu5x2vkM9vSW+qo4noTjFIUWhyLOCxhZgKMJptzvdvJlllDa04J0
-va9W2rzpNDZVbEm2Aas6qnvi7HkUyydrXv9UbVkVeKZAIiQXHthdY55sImJBmtm4
-eyzAkzNFbX/cE8FNNLj7dxM3Gk6JULyEumNRtS3+7hGH4k4KxleaMbEQ6PhnhY9o
-Kv5dNDqDluArrFTFxVnlyzYpF13NDsdEFpfMlyoMyTNIUawBGCYaWebeuwaFs0Qc
-dW25X/4k1w/3oY/YzVIL2hNtGOsZywKw+E/sZwMdgPlqjVPUdfw=
-=PD1c
------END PGP SIGNATURE-----
-
---yrj/dFKFPuw6o+aM--
+-- 
+Best regards,
+Marek Vasut
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
