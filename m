@@ -1,57 +1,239 @@
-From: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: Re: [PATCH 1/2] dt-bindings: rockchip-dw-mshc: add optional
- rockchip,default-num-phases
-Date: Tue, 2 May 2017 15:03:03 +0800
-Message-ID: <8785b011-cec6-1556-5c96-a462182e8d85@rock-chips.com>
-References: <1492592434-81312-1-git-send-email-shawn.lin@rock-chips.com>
- <1492592434-81312-2-git-send-email-shawn.lin@rock-chips.com>
- <20170428133403.mmdvtp3ohff6v7gh@rob-hp-laptop>
+From: Ryder Lee <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v1 2/2] dt-bindings: pcie: Add documentation for
+ Mediatek PCIe
+Date: Tue, 2 May 2017 15:07:22 +0800
+Message-ID: <1493708842.6464.34.camel@mtkswgap22>
+References: <1493370634-7038-1-git-send-email-ryder.lee@mediatek.com>
+         <1493370634-7038-3-git-send-email-ryder.lee@mediatek.com>
+         <20170428210924.y6xdv4trqbmyn5me@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <20170428133403.mmdvtp3ohff6v7gh@rob-hp-laptop>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170428210924.y6xdv4trqbmyn5me@rob-hp-laptop>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ziyuan Xu <xzy.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Red Hung <red.hung-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgUm9iLAoK5ZyoIDIwMTcvNC8yOCAyMTozNCwgUm9iIEhlcnJpbmcg5YaZ6YGTOgo+IE9uIFdl
-ZCwgQXByIDE5LCAyMDE3IGF0IDA1OjAwOjMzUE0gKzA4MDAsIFNoYXduIExpbiB3cm90ZToKPj4g
-QnkgZGVmYXVsdCwgZHdfbW1jLXJvY2tjaGlwIHdpbGwgZXhlY3V0ZSB0dW5pbmcgZm9yIGVhY2gg
-ZGVncmVlLgo+PiBTbyB3ZSB3b24ndCBtaXNzIGV2ZXJ5IHBvaW50IG9mIHRoZSBnb29kIHNhbXBs
-ZSB3aW5kb3dzLiBIb3dldmVyLAo+PiBwcm9iYWJseSB0aGUgcGhhc2VzIGFyZSBsaW5lYXIgaW5z
-aWRlIHRoZSBnb29kIHNhbXBsZSB3aW5kb3cuCj4+IEFjdHVhbGx5IHdlIGRvbid0IG5lZWQgdG8g
-ZG8gdHVuaW5nIGZvciBlYWNoIGRlZ3JlZSBzbyB0aGF0IHdlIGNvdWxkCj4+IHNhdmUgc29tZSB0
-aW1lLCBmb3IgaW5zdGFuY2UsIHByb2JlIHRoZSBkcml2ZXIgb3IgcmVzdW1lIGZyb20gUzMuCj4+
-Cj4+IFNpZ25lZC1vZmYtYnk6IFNoYXduIExpbiA8c2hhd24ubGluQHJvY2stY2hpcHMuY29tPgo+
-PiAtLS0KPj4KPj4gIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tbWMvcm9ja2No
-aXAtZHctbXNoYy50eHQgfCA0ICsrKysKPj4gIDEgZmlsZSBjaGFuZ2VkLCA0IGluc2VydGlvbnMo
-KykKPj4KPj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9t
-bWMvcm9ja2NoaXAtZHctbXNoYy50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
-Z3MvbW1jL3JvY2tjaGlwLWR3LW1zaGMudHh0Cj4+IGluZGV4IDUyMGQ2MWQuLmVhNDdlYzAgMTAw
-NjQ0Cj4+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tbWMvcm9ja2No
-aXAtZHctbXNoYy50eHQKPj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
-L21tYy9yb2NrY2hpcC1kdy1tc2hjLnR4dAo+PiBAQCAtMzEsNiArMzEsMTAgQEAgT3B0aW9uYWwg
-UHJvcGVydGllczoKPj4gICAgcHJvYmluZywgbG93IHNwZWVkcyBvciBpbiBjYXNlIHdoZXJlIGFs
-bCBwaGFzZXMgd29yayBhdCB0dW5pbmcgdGltZS4KPj4gICAgSWYgbm90IHNwZWNpZmllZCAwIGRl
-ZyB3aWxsIGJlIHVzZWQuCj4+Cj4+ICsqIHJvY2tjaGlwLGRlZmF1bHQtbnVtLXBoYXNlczogVGhl
-IGRlZmF1bHQgbnVtYmVyIG9mIHRpbWVzIHRoYXQgdGhlIGhvc3QKPj4gKyAgZXhlY3V0ZSB0dW5p
-bmcgd2hlbiBuZWVkZWQuIElmIG5vdCBzcGVjaWZpZWQsIHRoZSBob3N0IHdpbGwgZG8gdHVuaW5n
-Cj4+ICsgIGZvciAzNjAgdGltZXMsIG5hbWVseSB0dW5pbmcgZm9yIGVhY2ggZGVncmVlLgo+Cj4g
-SG93IGlzIGl0IGRlZmF1bHQgd2hlbiB5b3Ugc3BlY2lmeSBpdD8gSSB3b3VsZCB0aGluayBkZWZh
-dWx0IGhlcmUgaXMKPiAzNjAuCj4KCkkgZG9uJ3QgZ2V0IHlvdXIgcG9pbnQgaGVyZS4gRG8geW91
-IG1lYW4gdGhlIG5hbWUsIGRlZmF1bHQtbnVtLXBoYXNlcywKaXNuJ3QgY29ycmVjdCwgc28gSSBu
-ZWVkIGFub3RoZXIgb25lPwoKPiBTaG91bGQgdGhpcyBiZSBjb21tb24/Cj4KPiBSb2IKPgo+Cj4K
-CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpMaW51eC1y
-b2NrY2hpcCBtYWlsaW5nIGxpc3QKTGludXgtcm9ja2NoaXBAbGlzdHMuaW5mcmFkZWFkLm9yZwpo
-dHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LXJvY2tjaGlw
-Cg==
+On Fri, 2017-04-28 at 16:09 -0500, Rob Herring wrote:
+> On Fri, Apr 28, 2017 at 05:10:34PM +0800, Ryder Lee wrote:
+> > Add binding document for Mediatek PCIe Gen2 v1 host controller driver.
+> > 
+> > Signed-off-by: Ryder Lee <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> > ---
+> >  .../bindings/pci/mediatek,gen2v1-pcie.txt          | 174 +++++++++++++++++++++
+> >  1 file changed, 174 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/pci/mediatek,gen2v1-pcie.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/pci/mediatek,gen2v1-pcie.txt b/Documentation/devicetree/bindings/pci/mediatek,gen2v1-pcie.txt
+> > new file mode 100644
+> > index 0000000..545d8cf
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/pci/mediatek,gen2v1-pcie.txt
+> > @@ -0,0 +1,174 @@
+> > +Mediatek Gen2 V1 PCIe controller
+> > +
+> > +PCIe subsys supports single root complex (RC) with 3 Root Ports. Each root
+> > +ports supports a Gen2 1-lane Link. It includes one Host/PCI bridge and 3
+> > +PCIe MAC. Each port has PIPE interface to PHY. There are 3 bus master for
+> > +data access and 1 bus slave for Configuration and Status Register access.
+> > +
+> > +This controller is available on MT7623 series SoCs.
+> > +  
+> > +Required properties:
+> > +- compatible: Should contain "mediatek,gen2v1-pcie".
+> > +- device_type: Must be "pci"
+> > +- reg: Base addresses and lengths of the PCIe controller.
+> > +- #address-cells: Address representation for root ports (must be 3)
+> > +  - cell 0 specifies the bus and device numbers of the root port:
+> > +    [23:16]: bus number
+> > +    [15:11]: device number
+> > +  - cell 1 denotes the upper 32 address bits and should be 0
+> > +  - cell 2 contains the lower 32 address bits and is used to translate to the
+> > +    CPU address space
+> 
+> This is all standard PCI bus binding. You don't need to define it here. 
+> "must be 3" is sufficient.
+
+Okay.
+
+> > +- #size-cells: Size representation for root ports (must be 2)
+> > +- #interrupt-cells: Size representation for interrupts (must be 1)
+> > +- interrupts: Three interrupt outputs of the controller. Must contain an
+> > +  entry for each entry in the interrupt-names property.
+> 
+> Where's interrupt-names?
+
+I will add it.
+
+> > +- interrupt-map-mask and interrupt-map: Standard PCI IRQ mapping properties
+> > +  Please refer to the standard PCI bus binding document for a more detailed
+> > +  explanation.
+> > +- clocks: Must contain an entry for each entry in clock-names.
+> > +  See ../clocks/clock-bindings.txt for details.
+> > +- clock-names: Must include the following entries:
+> > +  - free_ck	:for reference clock of PCIe subsys
+> > +  - sys_ck0	:for clock of Port0 MAC
+> > +  - sys_ck1	:for clock of Port1 MAC
+> > +  - sys_ck2	:for clock of Port2 MAC
+> > +- resets: Must contain an entry for each entry in reset-names.
+> > +  See ../reset/reset.txt for details.
+> > +- reset-names: Must include the following entries:
+> > +  - pcie-rst0	:port0 reset
+> > +  - pcie-rst1	:port1 reset
+> > +  - pcie-rst2	:port2 reset
+> > +- phys: list of PHY specifiers (used by generic PHY framework)
+> > +- phy-names : must be "pcie-phy0", "pcie-phy1", "pcie-phyN".. based on the
+> > +  number of PHYs as specified in *phys* property.
+> > +- power-domains: A phandle and power domain specifier pair to the power domain
+> > +  which is responsible for collapsing and restoring power to the peripheral
+> > +- bus-range: Range of bus numbers associated with this controller
+> > +- ranges: Describes the translation of addresses for root ports and standard
+> > +  PCI regions. The entries must be 6 cells each, where the first three cells
+> > +  correspond to the address as described for the #address-cells property
+> > +  above, the fourth cell is the physical CPU address to translate to and the
+> > +  fifth and six cells are as described for the #size-cells property above.
+> 
+> Don't need to define what ranges is here, just what the entries should 
+> be:
+
+Okay.
+> > +  - The first three entries are expected to translate the addresses for the root
+> > +    port registers, which are referenced by the assigned-addresses property of
+> > +    the root port nodes (see below).
+> > +  - The remaining entries setup the mapping for the standard I/O and memory
+> > +	regions.
+> > +  Please refer to the standard PCI bus binding document for a more detailed
+> > +  explanation.
+> > +
+> > +In addition, the device tree node must have sub-nodes describing each
+> > +PCIe port interface, having the following mandatory properties:
+> > +
+> > +Required properties:
+> > +- device_type: Must be "pci"
+> > +- assigned-addresses: Address and size of the port configuration registers
+> > +- reg: Only the first four bytes are used to refer to the correct bus number
+> > +  and device number.
+> > +- #address-cells: Must be 3
+> > +- #size-cells: Must be 2
+> > +- #interrupt-cells: Size representation for interrupts (must be 1)
+> > +- interrupt-map-mask and interrupt-map: Standard PCI IRQ mapping properties
+> > +  Please refer to the standard PCI bus binding document for a more detailed
+> > +  explanation.
+> > +- ranges: Sub-ranges distributed from the PCIe controller node. An empty
+> > +  property is sufficient.
+> > +- num-lanes: Number of lanes to use for this port.
+> > +
+> > +Examples:
+> > +
+> > +SoC dtsi:
+> 
+> Don't show the board vs. SoC split in examples. And drop all the status 
+> properties.
+
+Okay i will drop it all.
+> > +
+> > +	hifsys: syscon@1a000000 {
+> > +		compatible = "mediatek,mt7623-hifsys", "syscon";
+> > +		reg = <0 0x1a000000 0 0x1000>;
+> > +		#clock-cells = <1>;
+> > +		#reset-cells = <1>;
+> > +	};
+> > +
+> > +	pcie: pcie-controller@1a140000 {
+> > +		compatible = "mediatek,gen2v1-pcie";
+> > +		device_type = "pci";
+> > +		reg = <0 0x1a140000 0 0x1000>; /* PCIe shared registers */
+> > +		#address-cells = <3>;
+> > +		#size-cells = <2>;
+> > +		#interrupt-cells = <1>;
+> > +		interrupts = <GIC_SPI 193 IRQ_TYPE_LEVEL_LOW>,
+> > +			     <GIC_SPI 194 IRQ_TYPE_LEVEL_LOW>,
+> > +			     <GIC_SPI 195 IRQ_TYPE_LEVEL_LOW>;
+> > +		interrupt-map-mask = <0xf800 0 0 0>;
+> > +		interrupt-map = <0x0000 0 0 0 &gic GIC_SPI 193 IRQ_TYPE_NONE>,
+> > +				 <0x0800 0 0 0 &gic GIC_SPI 194 IRQ_TYPE_NONE>,
+> > +			     <0x1000 0 0 0 &gic GIC_SPI 195 IRQ_TYPE_NONE>;
+> > +		clocks = <&topckgen CLK_TOP_ETHIF_SEL>,
+> > +			     <&hifsys CLK_HIFSYS_PCIE0>,
+> > +				 <&hifsys CLK_HIFSYS_PCIE1>,
+> > +				 <&hifsys CLK_HIFSYS_PCIE2>;
+> > +		clock-names = "free_ck", "sys_ck0", "sys_ck1", "sys_ck2";
+> > +		resets = <&hifsys MT2701_HIFSYS_PCIE0_RST>,
+> > +			     <&hifsys MT2701_HIFSYS_PCIE1_RST>,
+> > +			     <&hifsys MT2701_HIFSYS_PCIE2_RST>;
+> > +		reset-names = "pcie-rst0", "pcie-rst1", "pcie-rst2";
+> > +		phys = <&pcie0_phy>, <&pcie1_phy>, <&pcie2_phy>;
+> > +		phy-names = "pcie-phy0", "pcie-phy1", "pcie-phy2";
+> > +		power-domains = <&scpsys MT2701_POWER_DOMAIN_HIF>;
+> > +		bus-range = <0x00 0xff>;
+> > +		ranges = <0x82000000 0 0x1a142000 0 0x1a142000 0 0x1000 /* Port0 registers */
+> > +			  0x82000000 0 0x1a143000 0 0x1a143000 0 0x1000 /* Port1 registers */
+> > +			  0x82000000 0 0x1a144000 0 0x1a144000 0 0x1000 /* Port2 registers */
+> > +			  0x81000000 0 0x1a160000 0 0x1a160000 0 0x00010000 /* I/O space */
+> > +			  0x83000000 0 0x60000000 0 0x60000000 0 0x10000000>;	/* memory space */
+> > +		status = "disabled";
+> > +
+> > +		pcie@1,0 {
+> > +			device_type = "pci";
+> > +			assigned-addresses = <0x82000000 0 0x1a142000 0 0x1000>;
+> > +			reg = <0x0000 0 0 0 0>;
+> > +			#address-cells = <3>;
+> > +			#size-cells = <2>;
+> > +			#interrupt-cells = <1>;
+> > +			interrupt-map-mask = <0 0 0 0>;
+> > +			interrupt-map = <0 0 0 0 &gic GIC_SPI 193 IRQ_TYPE_NONE>;
+> > +			ranges;
+> > +			num-lanes = <1>;
+> > +			status = "disabled";
+> > +		};
+> > +
+> > +		pcie@2,0 {
+> > +			device_type = "pci";
+> > +			assigned-addresses = <0x82000800 0 0x1a143000 0 0x1000>;
+> > +			reg = <0x0800 0 0 0 0>;
+> > +			#address-cells = <3>;
+> > +			#size-cells = <2>;
+> > +			#interrupt-cells = <1>;
+> > +			interrupt-map-mask = <0 0 0 0>;
+> > +			interrupt-map = <0 0 0 0 &gic GIC_SPI 194 IRQ_TYPE_NONE>;
+> > +			ranges;
+> > +			num-lanes = <1>;
+> > +			status = "disabled";
+> > +		};
+> > +
+> > +		pcie@3,0 {
+> > +			device_type = "pci";
+> > +			assigned-addresses = <0x82001000 0 0x1a144000 0 0x1000>;
+> > +			reg = <0x1000 0 0 0 0>;
+> > +			#address-cells = <3>;
+> > +			#size-cells = <2>;
+> > +			#interrupt-cells = <1>;
+> > +			interrupt-map-mask = <0 0 0 0>;
+> > +			interrupt-map = <0 0 0 0 &gic GIC_SPI 195 IRQ_TYPE_NONE>;
+> > +			ranges;
+> > +			num-lanes = <1>;
+> > +			status = "disabled";
+> > +		};
+> > +	};
+> > +
+> > +Board dts:
+> > +
+> > +	&pcie {
+> > +		status = "okay";
+> > +
+> > +		pcie@1,0 {
+> > +			status = "okay";
+> > +		};
+> > +	};
+> > -- 
+> > 1.9.1
+
+Thanks for your review.
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
