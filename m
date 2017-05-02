@@ -1,30 +1,89 @@
-From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v4 1/2] dt-bindings: Document the STM32 QSPI bindings
-Date: Mon, 1 May 2017 18:09:47 -0700
-Message-ID: <20170502010947.GC18576@google.com>
-References: <1492103757-22375-1-git-send-email-ludovic.Barre@st.com>
- <1492103757-22375-2-git-send-email-ludovic.Barre@st.com>
- <b62272c9-027c-9c9b-42f0-1056d88aac7c@wedev4u.fr>
+From: "Ong, Hean Loong" <hean.loong.ong-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCHv2 1/3] dt-bindings: display: Intel FPGA VIP drm driver
+ Devicetree bindings
+Date: Tue, 2 May 2017 02:10:10 +0000
+Message-ID: <1493691008.3236.11.camel@intel.com>
+References: <1493086006-4392-1-git-send-email-hean.loong.ong@intel.com>
+         <1493086006-4392-2-git-send-email-hean.loong.ong@intel.com>
+         <20170428183226.7u4sses4gzan6g5e@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <b62272c9-027c-9c9b-42f0-1056d88aac7c-yU5RGvR974pGWvitb5QawA@public.gmane.org>
+In-Reply-To: <20170428183226.7u4sses4gzan6g5e@rob-hp-laptop>
+Content-Language: en-US
+Content-ID: <3D194386A4EF2C4FACD37A210A791A98-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Cyrille Pitchen <cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org>
-Cc: Ludovic Barre <ludovic.Barre-qxv4g6HH51o@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
+To: "robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: "dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org" <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, "dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "Loh, Tien Hock" <tien.hock.loh-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "Vetter, Daniel" <daniel.vetter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "Ong@rob-hp-laptop" <Ong@rob-hp-laptop>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Apr 16, 2017 at 06:53:06PM +0200, Cyrille Pitchen wrote:
-> Hi all,
-> 
-> Rob, is this version ok for you? If so, I can take it into the
-> github/spi-nor tree.
-
-I see this was missing from your pull request. Rob has since acked,
-so...
-
-Applied to l2-mtd.git
+T24gRnJpLCAyMDE3LTA0LTI4IGF0IDEzOjMyIC0wNTAwLCBSb2IgSGVycmluZyB3cm90ZToNCj4g
+T24gVHVlLCBBcHIgMjUsIDIwMTcgYXQgMTA6MDY6NDRBTSArMDgwMCwgaGVhbi5sb29uZy5vbmdA
+aW50ZWwuY29tDQo+IHdyb3RlOg0KPiA+IA0KPiA+IEZyb206ICJPbmcsIEhlYW4gTG9vbmciIDxo
+ZWFuLmxvb25nLm9uZ0BpbnRlbC5jb20+DQo+ID4gDQo+ID4gRGV2aWNlIHRyZWUgYmluZGluZyBm
+b3IgSW50ZWwgRlBHQSBWaWRlbyBhbmQgSW1hZ2UNCj4gPiBQcm9jZXNzaW5nIFN1aXRlLiBUaGUg
+YmluZGluZyBpbnZvbHZlZCB3b3VsZCBiZSBnZW5lcmF0ZWQNCj4gPiBmcm9tIHRoZSBBbHRlcmEg
+KEludGVsKSBRc3lzIHN5c3RlbS4gVGhlIGJpbmRpbmdzIHdvdWxkDQo+ID4gc2V0IHRoZSBtYXgg
+d2lkdGgsIG1heCBoZWlnaHQsIGJ1dHMgcGVyIHBpeGVsIGFuZCBtZW1vcnkNCj4gPiBwb3J0IHdp
+ZHRoLiBUaGUgZGV2aWNlIHRyZWUgYmluZGluZyBvbmx5IHN1cHBvcnRzIHRoZSBJbnRlbA0KPiA+
+IEFycmlhMTAgZGV2a2l0IGFuZCBpdHMgdmFyaWFudHMuIFZlbmRvciBuYW1lIHJldGFpbmVkIGFz
+DQo+ID4gYWx0ci4NCj4gPiANCj4gPiBTaWduZWQtb2ZmLWJ5OiBPbmcsIEhlYW4gTG9vbmcgPGhl
+YW4ubG9vbmcub25nQGludGVsLmNvbT4NCj4gPiAtLS0NCj4gPiB2MjoNCj4gPiAqIE1vdmVkIERl
+dmljZSBUcmVlIGJpbmRpbmdzIHRvDQo+ID4gRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
+bmdzL2Rpc3BsYXkvDQo+ID4gKiBBZGRlZCB2ZW5kb3IgbmFtZSBhbHRyLCB0byBkZXNjcmlwdGlv
+bg0KPiA+IC0tLQ0KPiA+IMKgLi4uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9hbHRyLHZp
+cC1mYjIudHh0wqDCoMKgfCAzMA0KPiA+ICsrKysrKysrKysrKysrKysrKysrKysNCj4gPiDCoDEg
+ZmlsZSBjaGFuZ2VkLCAzMCBpbnNlcnRpb25zKCspDQo+ID4gwqBjcmVhdGUgbW9kZSAxMDA2NDQN
+Cj4gPiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9hbHRyLHZpcC1m
+YjIudHh0DQo+ID4gDQo+ID4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
+aW5kaW5ncy9kaXNwbGF5L2FsdHIsdmlwLQ0KPiA+IGZiMi50eHQgYi9Eb2N1bWVudGF0aW9uL2Rl
+dmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9hbHRyLHZpcC0NCj4gPiBmYjIudHh0DQo+ID4gbmV3
+IGZpbGUgbW9kZSAxMDA2NDQNCj4gPiBpbmRleCAwMDAwMDAwLi5iZGZmZWZiDQo+ID4gLS0tIC9k
+ZXYvbnVsbA0KPiA+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNw
+bGF5L2FsdHIsdmlwLWZiMi50eHQNCj4gPiBAQCAtMCwwICsxLDMwIEBADQo+ID4gK0ludGVsIFZp
+ZGVvIGFuZCBJbWFnZSBQcm9jZXNzaW5nKFZJUCkgRnJhbWUgQnVmZmVyIElJIGJpbmRpbmdzDQo+
+ID4gKw0KPiA+ICtTdXBwb3J0ZWQgaGFyZHdhcmU6IEFycmlhIDEwIGFuZCBhYm92ZSB3aXRoIGRp
+c3BsYXkgcG9ydCBJUA0KPiA+ICsNCj4gPiArVGhlIGRybSBkcml2ZXIgZm9yIHRoZSBBcnJpYSAx
+MCBkZXZraXQgd291bGQgcmVxdWlyZSB0aGUgZGlzcGxheQ0KPiA+IHJlc29sdXRpb24NCj4gQmlu
+ZGluZ3MgZGVzY3JpYmUgaC93LiBEUk0gZHJpdmVyIGlzIGEgTGludXggdGVybS4NCj4gDQpOb3Rl
+ZC4NCj4gPiANCj4gPiArYW5kIHBpeGVsIGluZm9ybWF0aW9uIHRvIGJlIGluY2x1ZGVkIGFzIHRo
+ZXNlIHZhbHVlcyBhcmUgZ2VuZXJhdGVkDQo+ID4gYmFzZWQNCj4gPiArb24gdGhlIEZQR0EgZGVz
+aWduIHRoYXQgZHJpdmVzIHRoZSB2aWRlbyBjb25uZWN0b3IgYXR0YWNoZWQgdG8gdGhlDQo+ID4g
+ZHJtIGRyaXZlcg0KPiA+ICtJbmZvcm1hdGlvbiB0aGUgRlBHQSB2aWRlbyBJUCBjb21wb25lbnQg
+Y2FuIGJlIGFjcXVpcmVkIGZyb20NCj4gPiAraHR0cHM6Ly93d3cuYWx0ZXJhLmNvbS9jb250ZW50
+L2RhbS9hbHRlcmEtd3d3L2dsb2JhbC9lbl9VUy9wZGZzL2xpDQo+ID4gdGVyYXR1cmUvdWcvdWdf
+dmlwLnBkZg0KPiA+ICsNCj4gPiArUmVxdWlyZWQgcHJvcGVydGllczoNCj4gPiArDQo+ID4gKy0g
+Y29tcGF0aWJsZTogImFsdHIsdmlwLWZyYW1lLWJ1ZmZlci0yLjAiDQo+ID4gKy0gcmVnOiBQaHlz
+aWNhbCBiYXNlIGFkZHJlc3MgYW5kIGxlbmd0aCBvZiB0aGUgZnJhbWVidWZmZXINCj4gPiBjb250
+cm9sbGVyJ3MNCj4gPiArwqDCoHJlZ2lzdGVycy4NCj4gPiArLSBhbHRyLG1heC13aWR0aDogVGhl
+IHdpZHRoIG9mIHRoZSBmcmFtZWJ1ZmZlciBpbiBwaXhlbHMuDQo+ID4gKy0gYWx0cixtYXgtaGVp
+Z2h0OiBUaGUgaGVpZ2h0IG9mIHRoZSBmcmFtZWJ1ZmZlciBpbiBwaXhlbHMuDQo+ID4gKy0gYWx0
+cixiaXRzLXBlci1zeW1ib2w6IG9ubHkgIjgiIGlzIGN1cnJlbnRseSBzdXBwb3J0ZWQNCj4gU3Vw
+cG9ydGVkIGluIHRoZSBkcml2ZXIgb3IgSVA/IFRoZSBmb3JtZXIgaXNuJ3QgcmVsZXZhbnQgdG8g
+dGhlDQo+IGJpbmRpbmcuwqANCj4gSW4gdGhlIGxhdHRlciBjYXNlLCB5b3UgZG9uJ3QgbmVlZCBp
+dCBpZiB0aGF0J3MgdGhlIG9ubHkgdGhpbmfCoA0KPiBzdXBwb3J0ZWQuDQo+IA0KU2luY2UgdGhl
+IGRldmljZSBpcyBhbiBGUEdBIHRoZSB2YWx1ZXMgaGVyZSBhcmUgYmFzZWQgb24gaG93IHRoZSBG
+UEdBDQpIVyBkZXNpZ24gaXMgY3JlYXRlZCBvciBwcm9ncmFtbWVkLiBUaGUgdmFsdWVzIGhlcmUg
+YXJlIHRoZSBvcHRpbWFsDQpyZWZlcmVuY2UgZGVzaWduIHByb3Bvc2VkIGZvciB0aGUgSW50ZWwg
+QXJyaWExMCBkZXZraXQuwqANCkhvd2V2ZXIgYW55b25lIHRoYXQgdXNlcyB0aGUgSW50ZWwgQXJy
+aWExMCBkZXZraXQgY291bGQgY3JlYXRlIGEgZGV2aWNlDQp0aGF0IHJ1bnMgd2l0aCBhIGRpZmZl
+cmVudCByZXNvbHV0aW9uIHRoYXQgaGFzIHZhcnlpbmcgdmFsdWVzIGJ1dCB3aXRoDQp0aGUgY29u
+ZGl0aW9uIHRoYXQgdGhleSBuZWVkIHRvIGZpbGwgdGhlc2UgdmFsdWVzIGFjY29yZGluZ2x5IHdp
+dGgNCkludGVsIFF1YXJ0dXMgUHJvZ3JhbW1lciB0b29scy7CoA0KT25jZSBwcm9ncmFtbWVkIHRo
+ZSBwYXJhbWV0ZXJzIGNvdWxkIG5vdCBiZSBjaGFuZ2VkIGF0IHJ1bnRpbWUgYW5kIHRoZQ0KSFcg
+cmVyZW5jZSBkZXNpZ25zIGN1cnJlbnRseSBvbmx5IHN1cHBvcnQgMSB0eXBlIG9mIHJlc29sdXRp
+b24gcGVyDQpkZXNpZ24uwqANClRoZXJlZm9yZSB0aGUgZHJpdmVyIG5lZWRzIHRvIHN1cHBvcnQg
+YSBoYXJkd2FyZSB3aXRoIHZhcnlpbmcNCnBhcmFtZXRlcnMgcHJvZ3JhbW1lZCBzcGVjaWZpY2Fs
+bHkgaW50byB0aGUgRlBHQS4NCj4gPiANCj4gPiArLSBhbHRyLG1lbS1wb3J0LXdpZHRoID0gdGhl
+IGJ1cyB3aWR0aCBvZiB0aGUgYXZhbG9uIG1hc3RlciBwb3J0IG9uDQo+ID4gdGhlIGZyYW1lIHJl
+YWRlcg0KPiBJbiBiaXRzIG9yIGJ5dGVzPw0KPiANCj4gPiANCj4gPiArDQo+ID4gK0V4YW1wbGU6
+DQo+ID4gKw0KPiA+ICsJZHBfMF9mcmFtZV9idWY6IHZpcEAxMDAwMDAyODAgew0KPiA+ICsJCQlj
+b21wYXRpYmxlID0gImFsdHIsdmlwLWZyYW1lLWJ1ZmZlci0yLjAiOw0KPiA+ICsJCQlyZWcgPSA8
+MHgwMDAwMDAwMSAweDAwMDAwMjgwIDB4MDAwMDAwNDA+Ow0KPiA+ICsJCQlhbHRyLG1heC13aWR0
+aCA9IDwxMjgwPjsNCj4gPiArCQkJYWx0cixtYXgtaGVpZ2h0ID0gPDcyMD47DQo+ID4gKwkJCWFs
+dHIsYml0cy1wZXItc3ltYm9sID0gPDg+Ow0KPiA+ICsJCQlhbHRyLG1lbS1wb3J0LXdpZHRoID0g
+PDEyOD47DQo+ID4gKwl9Ow==
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
