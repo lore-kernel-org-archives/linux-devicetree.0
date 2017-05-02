@@ -1,68 +1,78 @@
-From: Sebastian Reichel <sebastian.reichel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
-Subject: [PATCH] ARM: dts: omap4-droid4: Add isl29030 ALS/proximity sensor
-Date: Tue,  2 May 2017 10:03:01 +0200
-Message-ID: <20170502080301.18111-1-sebastian.reichel@collabora.co.uk>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sebastian Reichel <sebastian.reichel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+From: Daniel Vetter <daniel@ffwll.ch>
+Subject: Re: [PATCH 2/3] drm/vc4: Don't try to initialize FBDEV if we're only
+ bound to V3D.
+Date: Tue, 2 May 2017 10:16:51 +0200
+Message-ID: <20170502081651.gnbccjsm4nr2bxmv@phenom.ffwll.local>
+References: <20170418191157.18517-1-eric@anholt.net>
+ <20170418191157.18517-2-eric@anholt.net>
+ <CAKMK7uFSsA3c+wMfq_O9kSvu0cWLUA-bRqTHyryqi+1ZVeir_w@mail.gmail.com>
+ <8760i046zw.fsf@eliezer.anholt.net>
+ <CAKMK7uHBE1Qtjr2dM3U9edEfZ0mXVEjcw+hs8mF9ZkRP4Vcm=A@mail.gmail.com>
+ <87wpadtlsl.fsf@eliezer.anholt.net>
+ <CADnq5_OEX2kzLJ5ABfBs6fZnmhFmJAPbg1XjJWx9Pt_pu=bTEA@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <CADnq5_OEX2kzLJ5ABfBs6fZnmhFmJAPbg1XjJWx9Pt_pu=bTEA@mail.gmail.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Alex Deucher <alexdeucher@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-The Droid 4 has a isl29030 to measure ambient light (e.g. for
-automatically adapting display brightness) and proximity.
-
-Signed-off-by: Sebastian Reichel <sebastian.reichel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
----
-Hi,
-
-The (trivial) driver changes have already been queued to iio-testing:
-
-https://git.kernel.org/pub/scm/linux/kernel/git/jic23/iio.git/commit/?h=testing&id=e530cc8408770e6451e4d5c5e8a2a45132689cc1
-
--- Sebastian
----
- arch/arm/boot/dts/omap4-droid4-xt894.dts | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
-
-diff --git a/arch/arm/boot/dts/omap4-droid4-xt894.dts b/arch/arm/boot/dts/omap4-droid4-xt894.dts
-index 89eb607f4a9e..1ad442ee6f30 100644
---- a/arch/arm/boot/dts/omap4-droid4-xt894.dts
-+++ b/arch/arm/boot/dts/omap4-droid4-xt894.dts
-@@ -348,6 +348,17 @@
- 		interrupt-names = "irq", "wakeup";
- 		wakeup-source;
- 	};
-+
-+	isl29030@44 {
-+		compatible = "isil,isl29030";
-+		reg = <0x44>;
-+
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&als_proximity_pins>;
-+
-+		interrupt-parent = <&gpio6>;
-+		interrupts = <17 IRQ_TYPE_LEVEL_LOW>; /* gpio177 */
-+	};
- };
- 
- &omap4_pmx_core {
-@@ -395,6 +406,12 @@
- 		>;
- 	};
- 
-+	als_proximity_pins: pinmux_als_proximity_pins {
-+		pinctrl-single,pins = <
-+		OMAP4_IOPAD(0x18c, PIN_INPUT_PULLUP | MUX_MODE3)
-+		>;
-+	};
-+
- 	usb_ulpi_pins: pinmux_usb_ulpi_pins {
- 		pinctrl-single,pins = <
- 		OMAP4_IOPAD(0x196, MUX_MODE7)
--- 
-2.11.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gTW9uLCBBcHIgMjQsIDIwMTcgYXQgMTA6MjY6NDVBTSAtMDQwMCwgQWxleCBEZXVjaGVyIHdy
+b3RlOgo+IE9uIEZyaSwgQXByIDIxLCAyMDE3IGF0IDY6NTMgUE0sIEVyaWMgQW5ob2x0IDxlcmlj
+QGFuaG9sdC5uZXQ+IHdyb3RlOgo+ID4gRGFuaWVsIFZldHRlciA8ZGFuaWVsQGZmd2xsLmNoPiB3
+cml0ZXM6Cj4gPgo+ID4+IE9uIFdlZCwgQXByIDE5LCAyMDE3IGF0IDc6NTUgUE0sIEVyaWMgQW5o
+b2x0IDxlcmljQGFuaG9sdC5uZXQ+IHdyb3RlOgo+ID4+PiBEYW5pZWwgVmV0dGVyIDxkYW5pZWxA
+ZmZ3bGwuY2g+IHdyaXRlczoKPiA+Pj4+IE9uIFR1ZSwgQXByIDE4LCAyMDE3IGF0IDk6MTEgUE0s
+IEVyaWMgQW5ob2x0IDxlcmljQGFuaG9sdC5uZXQ+IHdyb3RlOgo+ID4+Pj4+IFRoZSBGQkRFViBp
+bml0aWFsaXphdGlvbiB3b3VsZCB0aHJvdyBhbiBlcnJvciBpbiBkbWVzZywgd2hlbiB3ZSBqdXN0
+Cj4gPj4+Pj4gd2FudCB0byBzaWxlbnRseSBub3QgaW5pdGlhbGl6ZSBmYmRldiBvbiBhIFYzRC1v
+bmx5IFZDNCBpbnN0YW5jZS4KPiA+Pj4+Pgo+ID4+Pj4+IFNpZ25lZC1vZmYtYnk6IEVyaWMgQW5o
+b2x0IDxlcmljQGFuaG9sdC5uZXQ+Cj4gPj4+Pgo+ID4+Pj4gSG0sIHRoaXMgc2hvdWxkbid0IGJl
+IGFuIGVycm9yIHJlYWxseSwgeW91IG1pZ2h0IHdhbnQgdG8gaG90cGx1ZyBtb3JlCj4gPj4+PiBj
+b25uZWN0b3JzIGxhdGVyIG9uLiBXaGF0IGV4YWN0bHkgY29tcGxhaW5zPwo+ID4+Pgo+ID4+PiBk
+cm1fZmJfaGVscGVyX2luaXQoKSB0aHJvd3MgYW4gZXJyb3IgaWYgdGhlIHBhc3NlZCBpbiBjb25u
+ZWN0b3IgY291bnQgaXMKPiA+Pj4gMCwgc28gZHJtX2ZiX2NtYV9oZWxwZXIoKSBwcmludGtzIGFu
+IGVycm9yLgo+ID4+Cj4gPj4gT2gsIF90aGF0XyB0aGluZy4gVGhlIGVycm9yIGluIHRoZXJlIGlz
+IGNvcnJlY3QsIGJ1dCAoYWxtb3N0KSBldmVyeW9uZQo+ID4+IGdldHMgdGhpcyBwYXJhbWV0ZXIg
+d3JvbmcuIFRoaXMgaXNuJ3QgdGhlIG1heCBudW1iZXIgb2YgY29ubmVjdG9ycyB0aGUKPiA+PiBm
+YiBoZWxwZXIgd2lsbCBsaWdodCB1cCwgYnV0IGp1c3QgdGhlIG1heCBudW1iZXIgb2YgY29ubmVj
+dG9ycyBfcGVyXwo+ID4+IGNydGMgd2hlbiBkcml2aW5nIGluIGh3IGNsb25lIG1vZGUuIFRoZXJl
+J3MgdHdvIHByb2JsZW1zIHdpdGggdGhhdDoKPiA+PiAtIGZiIGhlbHBlcnMgZG9uJ3Qgc3VwcG9y
+dCBodyBjbG9uZSBtb2RlLCB3ZSBzZWxlY3QgMToxIGNydGNzIGZvciBlYWNoCj4gPj4gYWN0aXZl
+IGNvbm5lY3Rvcgo+ID4+IC0gSSBtZW50aW9uZWQgdGhhdCBldmVyeW9uZSBnZXRzIHRoaXMgd3Jv
+bmc/Cj4gPj4KPiA+PiBJZiB5b3UncmUgbW9kZXJhdGVseSBib3JlZCBpdCdkIGJlIGdyZWF0IHRv
+IG51a2UgdGhlIG1heF9jb25uZWN0b3IKPiA+PiBhcmd1bWVudCBmcm9tIGRybV9mYl9oZWxwZXJf
+aW5pdCwgYW5kIGhhcmQtY29kZSBpdCB0byAxICh3aXRoIGEgYmlnCj4gPj4gY29tbWVudCBleHBs
+YWluaW5nIHRoYXQgdGhpcyBuZWVkcyB0byBiZSBjaGFuZ2VkLCBwcm9iYWJseSB3aXRoCj4gPj4g
+ZHluYW1pYyByZWFsbG9jYXRpb24sIG9uY2Ugc29tZW9uZSBnZXRzIGFyb3VuZCB0byBpbXBsZW1l
+bnRpbmcgaHcKPiA+PiBjbG9uZSBtb2RlKS4KPiA+Pgo+ID4+IElmIHlvdSdyZSBsZXNzIGJvcmVk
+LCBqdXN0IGhhcmRjb2RlIHRoaXMgdG8gMSBpbiB2YzQgYW5kIGRvbmUuIFBsdXMgYQo+ID4+IFRP
+RE8ucnN0IGVudHJ5IHdvdWxkIGJlIGdyZWF0IGluIHRoYXQgY2FzZS4KPiA+Cj4gPiBJZiBJJ20g
+ZHJpdmluZyBhIEdQVSB3aXRoIG5vIGRpc3BsYXkgc3Vic3lzdGVtIGF0IGFsbCwgaXQgc2VlbXMg
+bGlrZSBJCj4gPiBzaG91bGRuJ3QgaW5pdGlhbGl6ZSBmYmRldiBmb3IgaXQsIHJpZ2h0Pwo+IAo+
+IFRoYXQncyB3aGF0IHdlIGRvIGZvciByYWRlb24vYW1kZ3B1IG9uIGh3IHdpdGhvdXQgZGlzcGxh
+eSBibG9ja3MuCgpZZWFoIEkgZ290IHNsaWdodGx5IGRpc3RyYWN0ZWQgd2l0aCB0aGUgZXJyb3Ig
+Oi0pCgpTdGlsbCBtaWdodCBtYWtlIHNlbnNlIHRvIHB1dCB0aGlzIGxvZ2ljIGludG8gdGhlIGhl
+bHBlcnMsIGlmIHRoZXJlJ3Mgbm8KY3J0YyB0aGVuIGRvbid0IGJvdGhlciBpbml0aWFsaXppbmcg
+dGhlIGZiY29uLiBCdXQgaW1vIHRoZSBiZXR0ZXIgY2xlYW51cAppcyBnZXR0aW5nIHJpZCBvZiB0
+aGUgY29ubmVjdG9ycyBwYXJhbWV0ZXIsIHNpbmNlIG1vc3QgZHJpdmVycyBnZXQgaXQKd3Jvbmcs
+IHRoZW4gcmVzcGluIHRoZSB2YzQgcGF0Y2ggdG8gZXhwbGFpbiB3aGF0IGl0J3MgcmVhbGx5IGRv
+aW5nIChpdCdzCm5vdCBhYm91dCB0aGUgZXJyb3IgcmVhbGx5LCBpdCdzIGFib3V0IG5vdCByZWdp
+c3RlcmluZyBhbmQgZmJkZXYgdGhhdCdzCm5vdCBkb2luZyBhbnl0aGluZykuCi1EYW5pZWwKLS0g
+CkRhbmllbCBWZXR0ZXIKU29mdHdhcmUgRW5naW5lZXIsIEludGVsIENvcnBvcmF0aW9uCmh0dHA6
+Ly9ibG9nLmZmd2xsLmNoCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9w
+Lm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1k
+ZXZlbAo=
