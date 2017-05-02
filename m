@@ -1,481 +1,988 @@
-From: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
-Subject: [PATCH 1/2] Input: pwm-vibra: new driver
-Date: Tue,  2 May 2017 18:27:25 +0200
-Message-ID: <20170502162726.11577-2-sebastian.reichel@collabora.co.uk>
-References: <20170502162726.11577-1-sebastian.reichel@collabora.co.uk>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170502162726.11577-1-sebastian.reichel@collabora.co.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastian Reichel <sre@kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Tony Lindgren <tony@atomide.com>
-Cc: Rob Herring <robh+dt@kernel.org>, linux-input@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Sebastian Reichel <sebastian.reichel@collabora.co.uk>
+From: Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
+Subject: [PATCH v2] ARM: dts: imx: add Gateworks Ventana GW5600 support
+Date: Tue,  2 May 2017 10:39:37 -0700
+Message-ID: <1493746777-7722-1-git-send-email-tharvey@gateworks.com>
+References: <1492197481-16638-1-git-send-email-tharvey@gateworks.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1492197481-16638-1-git-send-email-tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Provide a simple driver for PWM controllable vibrators. It
-will be used by Motorola Droid 4.
+The Gateworks Ventana GW5600 is a media-centric single-board computer based on
+the NXP IMX6 SoC with the following features:
+ * PoE (emulated 802.3af)
+ * IMX6 DualLite Soc (supports IMX6S,IMX6DL,IMX6Q)
+ * 1GiB DDR3 DRAM (supports up to 4GiB)
+ * 8GB eMMC
+ * 1x microSD connector
+ * Gateworks System Controller:
+  - hardware watchdog
+  - hardware monitor
+  - pushbutton controller
+  - EEPROM storage
+  - power control
+ * 1x bi-color USER LED
+ * 1x front-panel pushbutton
+ * 1x front-panel GbE
+ * 2x front panel USB 2.0
+ * 1x front panel USB OTG
+ * 1x SIM socket
+ * 1x miniPCIe socket with SATA (mSATA)
+ * 1x miniPCIe socket with USB 2.0 (Modem)
+ * 1x miniPCIe socket with PCIe, USB 2.0, and SIM
+ * RS232/RS485 serial
+  - 2x RS232 UARTs (off-board connector)
+  - 1x RS485 (loading option)
+ * 4x digital I/O signals (PWM/I2C/GPIO/5V/3.3V options)
+ * 1x analog input (0 to 5V)
+ * 1x CAN (loading option)
+ * off-board LVDS:
+  - I2C
+  - 12V
+  - LED driver (4x 330mA strings)
+  - matrix keypad controller (8row x 10col)
+  - I2S
+  - dual-channel LVDS
+  - PWM
+ * off-board video input:
+  - 16bit parallel / MIPI (IPU1_CSI0)
+ * GPS (loading option)
+ * Analog Video Input (CVBS) 3 inputs (1 active at a time)
+ * Analog Audio Input/Output (2ch Line level, optional MIC/HP drivers)
+ * HDMI out
+ * JTAG programmable
+ * Inertial Module
 
-Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
+Signed-off-by: Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
 ---
- .../devicetree/bindings/input/pwm-vibrator.txt     |  60 ++++
- drivers/input/misc/Kconfig                         |  11 +
- drivers/input/misc/Makefile                        |   1 +
- drivers/input/misc/pwm-vibra.c                     | 348 +++++++++++++++++++++
- 4 files changed, 420 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/input/pwm-vibrator.txt
- create mode 100644 drivers/input/misc/pwm-vibra.c
+v2:
+ - use hyphen instead of underscore in node names
+ - indicate address in memory node name
+ - drop leading zero's in unit-addresses
+ - dropped unnecessary container node in iomux
+ - sort iomux pinctrl nodes alphabetically
+ - remove extra newlines in pinctrl defines
+ - use MATRIX_KEY() macro and event codes from input bindings
+ - removed unused fixed-clock
 
-diff --git a/Documentation/devicetree/bindings/input/pwm-vibrator.txt b/Documentation/devicetree/bindings/input/pwm-vibrator.txt
+Signed-off-by: Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
+---
+ arch/arm/boot/dts/Makefile            |   2 +
+ arch/arm/boot/dts/imx6dl-gw560x.dts   |  55 +++
+ arch/arm/boot/dts/imx6q-gw560x.dts    |  59 +++
+ arch/arm/boot/dts/imx6qdl-gw560x.dtsi | 749 ++++++++++++++++++++++++++++++++++
+ 4 files changed, 865 insertions(+)
+ create mode 100644 arch/arm/boot/dts/imx6dl-gw560x.dts
+ create mode 100644 arch/arm/boot/dts/imx6q-gw560x.dts
+ create mode 100644 arch/arm/boot/dts/imx6qdl-gw560x.dtsi
+
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index 8774143..0ffe732 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -352,6 +352,7 @@ dtb-$(CONFIG_SOC_IMX6Q) += \
+ 	imx6dl-gw551x.dtb \
+ 	imx6dl-gw552x.dtb \
+ 	imx6dl-gw553x.dtb \
++	imx6dl-gw560x.dtb \
+ 	imx6dl-gw5903.dtb \
+ 	imx6dl-gw5904.dtb \
+ 	imx6dl-hummingboard.dtb \
+@@ -397,6 +398,7 @@ dtb-$(CONFIG_SOC_IMX6Q) += \
+ 	imx6q-gw551x.dtb \
+ 	imx6q-gw552x.dtb \
+ 	imx6q-gw553x.dtb \
++	imx6q-gw560x.dtb \
+ 	imx6q-gw5903.dtb \
+ 	imx6q-gw5904.dtb \
+ 	imx6q-h100.dtb \
+diff --git a/arch/arm/boot/dts/imx6dl-gw560x.dts b/arch/arm/boot/dts/imx6dl-gw560x.dts
 new file mode 100644
-index 000000000000..c35be4691366
+index 0000000..21bdfaf
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/input/pwm-vibrator.txt
-@@ -0,0 +1,60 @@
-+* PWM vibrator device tree bindings
++++ b/arch/arm/boot/dts/imx6dl-gw560x.dts
+@@ -0,0 +1,55 @@
++/*
++ * Copyright 2017 Gateworks Corporation
++ *
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPL or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole.
++ *
++ *  a) This file is free software; you can redistribute it and/or
++ *     modify it under the terms of the GNU General Public License as
++ *     published by the Free Software Foundation; either version 2 of
++ *     the License, or (at your option) any later version.
++ *
++ *     This file is distributed in the hope that it will be useful,
++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *     GNU General Public License for more details.
++ *
++ *     You should have received a copy of the GNU General Public
++ *     License along with this file; if not, write to the Free
++ *     Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
++ *     MA 02110-1301 USA
++ *
++ * Or, alternatively,
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use,
++ *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
++ */
 +
-+Registers a PWM device as vibrator.
-+
-+Required properties:
-+- compatible: should be
-+  * "pwm-vibrator"
-+    For vibrators controlled using the PWM channel's duty cycle (higher duty means
-+    the vibrator becomes stronger).
-+  * "motorola,mapphone-pwm-vibrator"
-+     For vibrator found in Motorola Droid 4. This vibrator generates a pulse for
-+     every rising edge, so its controlled using a duty cycle of 50% and changing
-+     the period time.
-+- pwm-names: Should contain "enable" and optionally "direction"
-+- pwms: Should contain a PWM handle for each entry in pwm-names
-+
-+Example from Motorola Droid 4:
-+
-+&omap4_pmx_core {
-+	vibrator_direction_pin: pinmux_vibrator_direction_pin {
-+		pinctrl-single,pins = <
-+		OMAP4_IOPAD(0x1ce, PIN_OUTPUT | MUX_MODE1) /* dmtimer8_pwm_evt (gpio_27) */
-+		>;
-+	};
-+
-+	vibrator_enable_pin: pinmux_vibrator_enable_pin {
-+		pinctrl-single,pins = <
-+		OMAP4_IOPAD(0X1d0, PIN_OUTPUT | MUX_MODE1) /* dmtimer9_pwm_evt (gpio_28) */
-+		>;
-+	};
-+};
++/dts-v1/;
++#include "imx6dl.dtsi"
++#include "imx6qdl-gw560x.dtsi"
 +
 +/ {
-+	pwm8: dmtimer-pwm {
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&vibrator_direction_pin>;
-+
-+		compatible = "ti,omap-dmtimer-pwm";
-+		#pwm-cells = <3>;
-+		ti,timers = <&timer8>;
-+		ti,clock-source = <0x01>;
-+	};
-+
-+	pwm9: dmtimer-pwm {
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&vibrator_enable_pin>;
-+
-+		compatible = "ti,omap-dmtimer-pwm";
-+		#pwm-cells = <3>;
-+		ti,timers = <&timer9>;
-+		ti,clock-source = <0x01>;
-+	};
-+
-+	vibrator {
-+		compatible = "pwm-vibrator";
-+		pwms = <&pwm8 0 1000000000 0>,
-+		       <&pwm9 0 1000000000 0>;
-+		pwm-names = "enable", "direction";
-+	};
++	model = "Gateworks Ventana i.MX6 DualLite/Solo GW560X";
++	compatible = "gw,imx6dl-gw560x", "gw,ventana", "fsl,imx6dl";
 +};
-diff --git a/drivers/input/misc/Kconfig b/drivers/input/misc/Kconfig
-index 5b6c52210d20..d8e0b25eb217 100644
---- a/drivers/input/misc/Kconfig
-+++ b/drivers/input/misc/Kconfig
-@@ -571,6 +571,17 @@ config INPUT_PWM_BEEPER
- 	  To compile this driver as a module, choose M here: the module will be
- 	  called pwm-beeper.
- 
-+config INPUT_PWM_VIBRA
-+	tristate "PWM vibrator support"
-+	depends on PWM
-+	help
-+	  Say Y here to get support for PWM based vibrator devices.
-+
-+	  If unsure, say N.
-+
-+	  To compile this driver as a module, choose M here: the module will be
-+	  called pwm-vibra.
-+
- config INPUT_GPIO_ROTARY_ENCODER
- 	tristate "Rotary encoders connected to GPIO pins"
- 	depends on GPIOLIB || COMPILE_TEST
-diff --git a/drivers/input/misc/Makefile b/drivers/input/misc/Makefile
-index b10523f2878e..9a6517f5458c 100644
---- a/drivers/input/misc/Makefile
-+++ b/drivers/input/misc/Makefile
-@@ -58,6 +58,7 @@ obj-$(CONFIG_INPUT_PM8XXX_VIBRATOR)	+= pm8xxx-vibrator.o
- obj-$(CONFIG_INPUT_PMIC8XXX_PWRKEY)	+= pmic8xxx-pwrkey.o
- obj-$(CONFIG_INPUT_POWERMATE)		+= powermate.o
- obj-$(CONFIG_INPUT_PWM_BEEPER)		+= pwm-beeper.o
-+obj-$(CONFIG_INPUT_PWM_VIBRA)		+= pwm-vibra.o
- obj-$(CONFIG_INPUT_RB532_BUTTON)	+= rb532_button.o
- obj-$(CONFIG_INPUT_REGULATOR_HAPTIC)	+= regulator-haptic.o
- obj-$(CONFIG_INPUT_RETU_PWRBUTTON)	+= retu-pwrbutton.o
-diff --git a/drivers/input/misc/pwm-vibra.c b/drivers/input/misc/pwm-vibra.c
+diff --git a/arch/arm/boot/dts/imx6q-gw560x.dts b/arch/arm/boot/dts/imx6q-gw560x.dts
 new file mode 100644
-index 000000000000..a7d36d88679a
+index 0000000..735f2bb
 --- /dev/null
-+++ b/drivers/input/misc/pwm-vibra.c
-@@ -0,0 +1,348 @@
++++ b/arch/arm/boot/dts/imx6q-gw560x.dts
+@@ -0,0 +1,59 @@
 +/*
-+ *  PWM vibrator driver
++ * Copyright 2017 Gateworks Corporation
 + *
-+ *  Copyright (C) 2017 Collabora Ltd.
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPL or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole.
 + *
-+ *  Based on previous work from:
-+ *  Copyright (C) 2012 Dmitry Torokhov <dmitry.torokhov@gmail.com>
++ *  a) This file is free software; you can redistribute it and/or
++ *     modify it under the terms of the GNU General Public License as
++ *     published by the Free Software Foundation; either version 2 of
++ *     the License, or (at your option) any later version.
 + *
-+ *  Based on PWM beeper driver:
-+ *  Copyright (C) 2010, Lars-Peter Clausen <lars@metafoo.de>
++ *     This file is distributed in the hope that it will be useful,
++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *     GNU General Public License for more details.
 + *
-+ *  This program is free software; you can redistribute it and/or modify it
-+ *  under  the terms of the GNU General  Public License as published by the
-+ *  Free Software Foundation;  either version 2 of the License, or (at your
-+ *  option) any later version.
++ *     You should have received a copy of the GNU General Public
++ *     License along with this file; if not, write to the Free
++ *     Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
++ *     MA 02110-1301 USA
++ *
++ * Or, alternatively,
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use,
++ *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
 + */
 +
-+#define DEBUG
++/dts-v1/;
++#include "imx6q.dtsi"
++#include "imx6qdl-gw560x.dtsi"
 +
-+#include <linux/input.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/of_device.h>
-+#include <linux/platform_device.h>
-+#include <linux/pwm.h>
-+#include <linux/regulator/consumer.h>
-+#include <linux/slab.h>
++/ {
++	model = "Gateworks Ventana i.MX6 Dual/Quad GW560X";
++	compatible = "gw,imx6q-gw560x", "gw,ventana", "fsl,imx6q";
++};
 +
-+/**
-+ * Motorola Droid 4 (also known as mapphone), has a vibrator, which pulses
-+ * 1x on rising edge. Increasing the pwm period results in more pulses per
-+ * second, but reduces intensity. There is also a second channel to control
-+ * the vibrator's rotation direction to increase effect. The following
-+ * numbers were determined manually. Going below 12.5 Hz means, clearly
-+ * noticeable pauses and at 30 Hz the vibration is just barely noticable
-+ * anymore.
++&sata {
++	status = "okay";
++};
+diff --git a/arch/arm/boot/dts/imx6qdl-gw560x.dtsi b/arch/arm/boot/dts/imx6qdl-gw560x.dtsi
+new file mode 100644
+index 0000000..d894dde
+--- /dev/null
++++ b/arch/arm/boot/dts/imx6qdl-gw560x.dtsi
+@@ -0,0 +1,749 @@
++/*
++ * Copyright 2017 Gateworks Corporation
++ *
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPL or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole.
++ *
++ *  a) This file is free software; you can redistribute it and/or
++ *     modify it under the terms of the GNU General Public License as
++ *     published by the Free Software Foundation; either version 2 of
++ *     the License, or (at your option) any later version.
++ *
++ *     This file is distributed in the hope that it will be useful,
++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *     GNU General Public License for more details.
++ *
++ *     You should have received a copy of the GNU General Public
++ *     License along with this file; if not, write to the Free
++ *     Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
++ *     MA 02110-1301 USA
++ *
++ * Or, alternatively,
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use,
++ *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
 + */
-+#define MAPPHONE_MIN_FREQ 125 /* 12.5 Hz */
-+#define MAPPHONE_MAX_FREQ 300 /* 30.0 Hz */
 +
-+struct pwm_vibrator_hw {
-+	void (*setup_pwm)(u16 level, struct pwm_state *);
-+	void (*setup_pwm_dir)(u16 level, struct pwm_state *);
++#include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/input/input.h>
++
++/ {
++	/* these are used by bootloader for disabling nodes */
++	aliases {
++		led0 = &led0;
++		led1 = &led1;
++		led2 = &led2;
++		ssi0 = &ssi1;
++		usb0 = &usbh1;
++		usb1 = &usbotg;
++	};
++
++	chosen {
++		stdout-path = &uart2;
++	};
++
++	backlight-display {
++		compatible = "pwm-backlight";
++		pwms = <&pwm4 0 5000000>;
++		brightness-levels = <
++			0  1  2  3  4  5  6  7  8  9
++			10 11 12 13 14 15 16 17 18 19
++			20 21 22 23 24 25 26 27 28 29
++			30 31 32 33 34 35 36 37 38 39
++			40 41 42 43 44 45 46 47 48 49
++			50 51 52 53 54 55 56 57 58 59
++			60 61 62 63 64 65 66 67 68 69
++			70 71 72 73 74 75 76 77 78 79
++			80 81 82 83 84 85 86 87 88 89
++			90 91 92 93 94 95 96 97 98 99
++			100
++			>;
++		default-brightness-level = <100>;
++	};
++
++	backlight-keypad {
++		compatible = "gpio-backlight";
++		gpios = <&gpio4 30 GPIO_ACTIVE_HIGH>;
++		default-on;
++	};
++
++	leds {
++		compatible = "gpio-leds";
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_gpio_leds>;
++
++		led0: user1 {
++			label = "user1";
++			gpios = <&gpio4 6 GPIO_ACTIVE_HIGH>; /* MX6_PANLEDG */
++			default-state = "on";
++			linux,default-trigger = "heartbeat";
++		};
++
++		led1: user2 {
++			label = "user2";
++			gpios = <&gpio4 7 GPIO_ACTIVE_HIGH>; /* MX6_PANLEDR */
++			default-state = "off";
++		};
++
++		led2: user3 {
++			label = "user3";
++			gpios = <&gpio4 15 GPIO_ACTIVE_LOW>; /* MX6_LOCLED# */
++			default-state = "off";
++		};
++	};
++
++	memory@10000000 {
++		reg = <0x10000000 0x40000000>;
++	};
++
++	pps {
++		compatible = "pps-gpio";
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_pps>;
++		gpios = <&gpio1 26 GPIO_ACTIVE_HIGH>;
++	};
++
++	reg_2p5v: regulator-2p5v {
++		compatible = "regulator-fixed";
++		regulator-name = "2P5V";
++		regulator-min-microvolt = <2500000>;
++		regulator-max-microvolt = <2500000>;
++		regulator-always-on;
++	};
++
++	reg_3p3v: regulator-3p3v {
++		compatible = "regulator-fixed";
++		regulator-name = "3P3V";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		regulator-always-on;
++	};
++
++	reg_5p0v: regulator-5p0v {
++		compatible = "regulator-fixed";
++		regulator-name = "5P0V";
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++		regulator-always-on;
++	};
++
++	reg_12p0v: regulator-12p0v {
++		compatible = "regulator-fixed";
++		regulator-name = "12P0V";
++		regulator-min-microvolt = <12000000>;
++		regulator-max-microvolt = <12000000>;
++		gpio = <&gpio4 25 GPIO_ACTIVE_HIGH>;
++		enable-active-high;
++	};
++
++	reg_1p4v: regulator-vddsoc {
++		compatible = "regulator-fixed";
++		regulator-name = "vdd_soc";
++		regulator-min-microvolt = <1400000>;
++		regulator-max-microvolt = <1400000>;
++		regulator-always-on;
++	};
++
++	reg_usb_h1_vbus: regulator-usb-h1-vbus {
++		compatible = "regulator-fixed";
++		regulator-name = "usb_h1_vbus";
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++		regulator-always-on;
++	};
++
++	reg_usb_otg_vbus: regulator-usb-otg-vbus {
++		compatible = "regulator-fixed";
++		regulator-name = "usb_otg_vbus";
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++		gpio = <&gpio3 22 GPIO_ACTIVE_HIGH>;
++		enable-active-high;
++	};
++
++	sound {
++		compatible = "fsl,imx6q-ventana-sgtl5000",
++			     "fsl,imx-audio-sgtl5000";
++		model = "sgtl5000-audio";
++		ssi-controller = <&ssi1>;
++		audio-codec = <&sgtl5000>;
++		audio-routing =
++			"MIC_IN", "Mic Jack",
++			"Mic Jack", "Mic Bias",
++			"Headphone Jack", "HP_OUT";
++		mux-int-port = <1>;
++		mux-ext-port = <4>;
++	};
 +};
 +
-+struct pwm_vibrator {
-+	struct input_dev *input;
-+	struct pwm_device *pwm;
-+	struct pwm_device *pwm_dir;
-+	struct regulator *vcc;
-+
-+	struct work_struct play_work;
-+	u16 level;
-+
-+	const struct pwm_vibrator_hw *hw;
++&audmux {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_audmux>;
++	status = "okay";
 +};
 +
-+static void pwm_vibrator_setup_generic(u16 level, struct pwm_state *state)
-+{
-+	/* period is configured by platform, duty cycle controls strength */
-+	pwm_set_relative_duty_cycle(state, level, 0xffff);
-+}
-+
-+static void pwm_vibrator_setup_dir_generic(u16 level, struct pwm_state *state)
-+{
-+	/* period is configured by platform, duty cycle controls strength */
-+	pwm_set_relative_duty_cycle(state, 50, 100);
-+}
-+
-+static struct pwm_vibrator_hw pwm_vib_hw_generic = {
-+	.setup_pwm = pwm_vibrator_setup_generic,
-+	.setup_pwm_dir = pwm_vibrator_setup_dir_generic,
++&ecspi3 {
++	cs-gpios = <&gpio4 24 GPIO_ACTIVE_HIGH>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_ecspi3>;
++	status = "okay";
 +};
 +
-+static void pwm_vibrator_setup_mapphone(u16 level, struct pwm_state *state)
-+{
-+	unsigned int freq;
-+
-+	/* convert [0, 0xffff] -> [MAPPHONE_MAX_FREQ, MAPPHONE_MIN_FREQ] */
-+	freq = 0xffff - level;
-+	freq *= MAPPHONE_MAX_FREQ - MAPPHONE_MIN_FREQ;
-+	freq /= 0xffff;
-+	freq += MAPPHONE_MIN_FREQ;
-+
-+	state->period = DIV_ROUND_CLOSEST_ULL((u64) NSEC_PER_SEC * 10, freq);
-+	pwm_set_relative_duty_cycle(state, 50, 100);
-+}
-+
-+static struct pwm_vibrator_hw pwm_vib_hw_mapphone = {
-+	.setup_pwm = pwm_vibrator_setup_mapphone,
-+	.setup_pwm_dir = pwm_vibrator_setup_mapphone,
++&can1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_flexcan>;
++	status = "okay";
 +};
 +
-+static int pwm_vibrator_start(struct pwm_vibrator *vibrator)
-+{
-+	struct device *pdev = vibrator->input->dev.parent;
-+	struct pwm_state state;
-+	int err;
-+
-+	dev_dbg(pdev, "start vibrator with level=0x%04x", vibrator->level);
-+
-+	err = regulator_enable(vibrator->vcc);
-+	if (err) {
-+		dev_err(pdev, "failed to enable regulator: %d", err);
-+		return err;
-+	}
-+
-+	pwm_get_state(vibrator->pwm, &state);
-+	state.enabled = true;
-+
-+	vibrator->hw->setup_pwm(vibrator->level, &state);
-+	dev_dbg(pdev, "period=%u", state.period);
-+
-+	err = pwm_apply_state(vibrator->pwm, &state);
-+	if (err) {
-+		dev_err(pdev, "failed to apply pwm state: %d", err);
-+		return err;
-+	}
-+
-+	if (vibrator->pwm_dir) {
-+		pwm_get_state(vibrator->pwm_dir, &state);
-+		state.enabled = true;
-+
-+		/* always control via period */
-+		vibrator->hw->setup_pwm_dir(vibrator->level, &state);
-+
-+		err = pwm_apply_state(vibrator->pwm_dir, &state);
-+		if (err) {
-+			dev_err(pdev, "failed to apply dir-pwm state: %d", err);
-+			pwm_disable(vibrator->pwm);
-+			return err;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+static void pwm_vibrator_stop(struct pwm_vibrator *vibrator)
-+{
-+	struct device *pdev = vibrator->input->dev.parent;
-+
-+	dev_dbg(pdev, "stop vibrator");
-+
-+	regulator_disable(vibrator->vcc);
-+
-+	if (vibrator->pwm_dir)
-+		pwm_disable(vibrator->pwm_dir);
-+	pwm_disable(vibrator->pwm);
-+}
-+
-+static void vibra_play_work(struct work_struct *work)
-+{
-+	struct pwm_vibrator *vibrator = container_of(work,
-+					struct pwm_vibrator, play_work);
-+
-+	if (vibrator->level)
-+		pwm_vibrator_start(vibrator);
-+	else
-+		pwm_vibrator_stop(vibrator);
-+}
-+
-+static int pwm_vibrator_play_effect(struct input_dev *dev, void *data,
-+				    struct ff_effect *effect)
-+{
-+	struct pwm_vibrator *vibrator = input_get_drvdata(dev);
-+
-+	vibrator->level = effect->u.rumble.strong_magnitude;
-+	if (!vibrator->level)
-+		vibrator->level = effect->u.rumble.weak_magnitude;
-+
-+	schedule_work(&vibrator->play_work);
-+
-+	return 0;
-+}
-+
-+static int pwm_vibrator_probe(struct platform_device *pdev)
-+{
-+	struct pwm_vibrator *vibrator;
-+	struct input_dev *input;
-+	struct pwm_state state;
-+	int err;
-+
-+	vibrator = devm_kzalloc(&pdev->dev, sizeof(*vibrator), GFP_KERNEL);
-+	if (!vibrator)
-+		return -ENOMEM;
-+
-+	input = devm_input_allocate_device(&pdev->dev);
-+	if (!vibrator || !input)
-+		return -ENOMEM;
-+
-+	vibrator->input = input;
-+
-+	vibrator->vcc = devm_regulator_get(&pdev->dev, "vcc");
-+	err = PTR_ERR_OR_ZERO(vibrator->vcc);
-+	if (err) {
-+		if (err != -EPROBE_DEFER)
-+			dev_err(&pdev->dev, "Failed to request regulator: %d",
-+				err);
-+		return err;
-+	}
-+
-+	vibrator->pwm = devm_pwm_get(&pdev->dev, "enable");
-+	err = PTR_ERR_OR_ZERO(vibrator->pwm);
-+	if (err) {
-+		if (err != -EPROBE_DEFER)
-+			dev_err(&pdev->dev, "Failed to request main pwm: %d",
-+				err);
-+		return err;
-+	}
-+
-+	INIT_WORK(&vibrator->play_work, vibra_play_work);
-+
-+	/* Sync up PWM state and ensure it is off. */
-+	pwm_init_state(vibrator->pwm, &state);
-+	state.enabled = false;
-+	err = pwm_apply_state(vibrator->pwm, &state);
-+	if (err) {
-+		dev_err(&pdev->dev, "failed to apply initial PWM state: %d",
-+			err);
-+		return err;
-+	}
-+
-+	vibrator->pwm_dir = devm_pwm_get(&pdev->dev, "direction");
-+	err = PTR_ERR_OR_ZERO(vibrator->pwm_dir);
-+	if (err == -ENODATA) {
-+		vibrator->pwm_dir = NULL;
-+	} else if (err == -EPROBE_DEFER) {
-+		return err;
-+	} else if (err) {
-+		dev_err(&pdev->dev, "Failed to request direction pwm: %d", err);
-+		return err;
-+	} else {
-+		/* Sync up PWM state and ensure it is off. */
-+		pwm_init_state(vibrator->pwm_dir, &state);
-+		state.enabled = false;
-+		err = pwm_apply_state(vibrator->pwm_dir, &state);
-+		if (err) {
-+			dev_err(&pdev->dev, "failed to apply initial PWM state: %d",
-+				err);
-+			return err;
-+		}
-+	}
-+
-+	vibrator->hw = of_device_get_match_data(&pdev->dev);
-+	if (!vibrator->hw)
-+		vibrator->hw = &pwm_vib_hw_generic;
-+
-+	input->name = "pwm-vibrator";
-+	input->id.bustype = BUS_HOST;
-+	input->dev.parent = &pdev->dev;
-+
-+	input_set_drvdata(input, vibrator);
-+	input_set_capability(input, EV_FF, FF_RUMBLE);
-+
-+	err = input_ff_create_memless(input, NULL, pwm_vibrator_play_effect);
-+	if (err) {
-+		dev_err(&pdev->dev, "Couldn't create FF dev: %d", err);
-+		return err;
-+	}
-+
-+	err = input_register_device(input);
-+	if (err) {
-+		dev_err(&pdev->dev, "Couldn't register input dev: %d", err);
-+		return err;
-+	}
-+
-+	platform_set_drvdata(pdev, vibrator);
-+
-+	dev_info(&pdev->dev, "pwm-vibrator probed.");
-+
-+	return 0;
-+}
-+
-+static int pwm_vibrator_remove(struct platform_device *pdev)
-+{
-+	struct pwm_vibrator *vibrator = platform_get_drvdata(pdev);
-+
-+	cancel_work_sync(&vibrator->play_work);
-+	pwm_vibrator_stop(vibrator);
-+
-+	return 0;
-+}
-+
-+#ifdef CONFIG_PM_SLEEP
-+static int pwm_vibrator_suspend(struct device *dev)
-+{
-+	struct platform_device *pdev = to_platform_device(dev);
-+	struct pwm_vibrator *vibrator = platform_get_drvdata(pdev);
-+	struct input_dev *input = vibrator->input;
-+	unsigned long flags;
-+
-+	spin_lock_irqsave(&input->event_lock, flags);
-+	if (vibrator->level)
-+		pwm_vibrator_stop(vibrator);
-+	spin_unlock_irqrestore(&input->event_lock, flags);
-+
-+	return 0;
-+}
-+
-+static int pwm_vibrator_resume(struct device *dev)
-+{
-+	struct platform_device *pdev = to_platform_device(dev);
-+	struct pwm_vibrator *vibrator = platform_get_drvdata(pdev);
-+	struct input_dev *input = vibrator->input;
-+	unsigned long flags;
-+
-+	spin_lock_irqsave(&input->event_lock, flags);
-+	if (vibrator->level)
-+		pwm_vibrator_start(vibrator);
-+	spin_unlock_irqrestore(&input->event_lock, flags);
-+
-+	return 0;
-+}
-+#endif
-+
-+static SIMPLE_DEV_PM_OPS(pwm_vibrator_pm_ops,
-+			 pwm_vibrator_suspend, pwm_vibrator_resume);
-+
-+#ifdef CONFIG_OF
-+
-+#define PWM_VIB_COMPAT(of_compatible, cfg) {			\
-+			.compatible = of_compatible,		\
-+			.data = &cfg,	\
-+}
-+
-+static const struct of_device_id pwm_vibra_dt_match_table[] = {
-+	PWM_VIB_COMPAT("pwm-vibrator", pwm_vib_hw_generic),
-+	PWM_VIB_COMPAT("motorola,mapphone-pwm-vibrator", pwm_vib_hw_mapphone),
-+	{},
++&clks {
++	assigned-clocks = <&clks IMX6QDL_CLK_LDB_DI0_SEL>,
++			  <&clks IMX6QDL_CLK_LDB_DI1_SEL>;
++	assigned-clock-parents = <&clks IMX6QDL_CLK_PLL3_USB_OTG>,
++				 <&clks IMX6QDL_CLK_PLL3_USB_OTG>;
 +};
-+MODULE_DEVICE_TABLE(of, pwm_vibra_dt_match_table);
-+#endif
 +
-+static struct platform_driver pwm_vibrator_driver = {
-+	.probe	= pwm_vibrator_probe,
-+	.remove	= pwm_vibrator_remove,
-+	.driver	= {
-+		.name	= "pwm-vibrator",
-+		.pm	= &pwm_vibrator_pm_ops,
-+		.of_match_table = of_match_ptr(pwm_vibra_dt_match_table),
-+	},
++&fec {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_enet>;
++	phy-mode = "rgmii-id";
++	phy-reset-gpios = <&gpio1 30 GPIO_ACTIVE_LOW>;
++	status = "okay";
 +};
-+module_platform_driver(pwm_vibrator_driver);
 +
-+MODULE_AUTHOR("Sebastian Reichel <sre@kernel.org>");
-+MODULE_DESCRIPTION("PWM vibrator driver");
-+MODULE_LICENSE("GPL");
-+MODULE_ALIAS("platform:pwm-vibrator");
++&hdmi {
++	ddc-i2c-bus = <&i2c3>;
++	status = "okay";
++};
++
++&i2c1 {
++	clock-frequency = <100000>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_i2c1>;
++	status = "okay";
++
++	eeprom1: eeprom@50 {
++		compatible = "atmel,24c02";
++		reg = <0x50>;
++		pagesize = <16>;
++	};
++
++	eeprom2: eeprom@51 {
++		compatible = "atmel,24c02";
++		reg = <0x51>;
++		pagesize = <16>;
++	};
++
++	eeprom3: eeprom@52 {
++		compatible = "atmel,24c02";
++		reg = <0x52>;
++		pagesize = <16>;
++	};
++
++	eeprom4: eeprom@53 {
++		compatible = "atmel,24c02";
++		reg = <0x53>;
++		pagesize = <16>;
++	};
++
++	pca9555: gpio@23 {
++		compatible = "nxp,pca9555";
++		reg = <0x23>;
++		gpio-controller;
++		#gpio-cells = <2>;
++	};
++
++	ds1672: rtc@68 {
++		compatible = "dallas,ds1672";
++		reg = <0x68>;
++	};
++};
++
++&i2c2 {
++	clock-frequency = <100000>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_i2c2>;
++	status = "okay";
++
++	sgtl5000: codec@a {
++		compatible = "fsl,sgtl5000";
++		reg = <0x0a>;
++		clocks = <&clks IMX6QDL_CLK_CKO>;
++		VDDA-supply = <&reg_1p8v>;
++		VDDIO-supply = <&reg_3p3v>;
++	};
++
++	tca8418: keypad@34 {
++		compatible = "ti,tca8418";
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_keypad>;
++		reg = <0x34>;
++		interrupt-parent = <&gpio5>;
++		interrupts = <11 IRQ_TYPE_EDGE_FALLING>;
++		linux,keymap = < MATRIX_KEY(0x00, 0x01, BTN_0)
++			         MATRIX_KEY(0x00, 0x00, BTN_1)
++			         MATRIX_KEY(0x01, 0x01, BTN_2)
++			         MATRIX_KEY(0x01, 0x00, BTN_3)
++			         MATRIX_KEY(0x02, 0x00, BTN_4)
++			         MATRIX_KEY(0x00, 0x03, BTN_5)
++			         MATRIX_KEY(0x00, 0x02, BTN_6)
++			         MATRIX_KEY(0x01, 0x03, BTN_7)
++			         MATRIX_KEY(0x01, 0x02, BTN_8)
++			         MATRIX_KEY(0x02, 0x02, BTN_9)
++		>;
++		keypad,num-rows = <4>;
++		keypad,num-columns = <4>;
++	};
++
++	ltc3676: pmic@3c {
++		compatible = "lltc,ltc3676";
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_pmic>;
++		reg = <0x3c>;
++		interrupt-parent = <&gpio1>;
++		interrupts = <8 IRQ_TYPE_EDGE_FALLING>;
++
++		regulators {
++			/* VDD_DDR (1+R1/R2 = 2.105) */
++			reg_vdd_ddr: sw2 {
++				regulator-name = "vddddr";
++				regulator-min-microvolt = <868310>;
++				regulator-max-microvolt = <1684000>;
++				lltc,fb-voltage-divider = <221000 200000>;
++				regulator-ramp-delay = <7000>;
++				regulator-boot-on;
++				regulator-always-on;
++			};
++
++			/* VDD_ARM (1+R1/R2 = 1.931) */
++			reg_vdd_arm: sw3 {
++				regulator-name = "vddarm";
++				regulator-min-microvolt = <796551>;
++				regulator-max-microvolt = <1544827>;
++				lltc,fb-voltage-divider = <243000 261000>;
++				regulator-ramp-delay = <7000>;
++				regulator-boot-on;
++				regulator-always-on;
++				linux,phandle = <&reg_vdd_arm>;
++			};
++
++			/* VDD_1P8 (1+R1/R2 = 2.505): GPS/VideoIn/ENET-PHY */
++			reg_1p8v: sw4 {
++				regulator-name = "vdd1p8";
++				regulator-min-microvolt = <1033310>;
++				regulator-max-microvolt = <2004000>;
++				lltc,fb-voltage-divider = <301000 200000>;
++				regulator-ramp-delay = <7000>;
++				regulator-boot-on;
++				regulator-always-on;
++			};
++
++			/* VDD_1P0 (1+R1/R2 = 1.39): PCIe/ENET-PHY */
++			reg_1p0v: ldo2 {
++				regulator-name = "vdd1p0";
++				regulator-min-microvolt = <950000>;
++				regulator-max-microvolt = <1050000>;
++				lltc,fb-voltage-divider = <78700 200000>;
++				regulator-boot-on;
++				regulator-always-on;
++			};
++
++			/* VDD_AUD_1P8: Audio codec */
++			reg_aud_1p8v: ldo3 {
++				regulator-name = "vdd1p8a";
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <1800000>;
++				regulator-boot-on;
++			};
++
++			/* VDD_HIGH (1+R1/R2 = 4.17) */
++			reg_3p0v: ldo4 {
++				regulator-name = "vdd3p0";
++				regulator-min-microvolt = <3023250>;
++				regulator-max-microvolt = <3023250>;
++				lltc,fb-voltage-divider = <634000 200000>;
++				regulator-boot-on;
++				regulator-always-on;
++			};
++		};
++	};
++};
++
++&i2c3 {
++	clock-frequency = <100000>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_i2c3>;
++	status = "okay";
++
++	egalax_ts: touchscreen@4 {
++		compatible = "eeti,egalax_ts";
++		reg = <0x04>;
++		interrupt-parent = <&gpio5>;
++		interrupts = <12 IRQ_TYPE_EDGE_FALLING>;
++		wakeup-gpios = <&gpio5 13 GPIO_ACTIVE_LOW>;
++	};
++};
++
++&ldb {
++	fsl,dual-channel;
++	status = "okay";
++
++	lvds-channel@0 {
++		fsl,data-mapping = "spwg";
++		fsl,data-width = <18>;
++		status = "okay";
++
++		display-timings {
++			native-mode = <&timing0>;
++			timing0: hsd100pxn1 {
++				clock-frequency = <65000000>;
++				hactive = <1024>;
++				vactive = <768>;
++				hback-porch = <220>;
++				hfront-porch = <40>;
++				vback-porch = <21>;
++				vfront-porch = <7>;
++				hsync-len = <60>;
++				vsync-len = <10>;
++			};
++		};
++	};
++};
++
++&pcie {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_pcie>;
++	reset-gpio = <&gpio4 31 GPIO_ACTIVE_LOW>;
++	status = "okay";
++};
++
++&pwm2 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_pwm2>; /* MX6_DIO1 */
++	status = "disabled";
++};
++
++&pwm3 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_pwm3>; /* MX6_DIO2 */
++	status = "disabled";
++};
++
++&pwm4 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_pwm4>;
++	status = "okay";
++};
++
++&ssi1 {
++	status = "okay";
++};
++
++&uart1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_uart1>;
++	uart-has-rtscts;
++	rts-gpios = <&gpio7 1 GPIO_ACTIVE_HIGH>;
++	status = "okay";
++};
++
++&uart2 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_uart2>;
++	status = "okay";
++};
++
++&uart5 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_uart5>;
++	status = "okay";
++};
++
++&usbotg {
++	vbus-supply = <&reg_usb_otg_vbus>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_usbotg>;
++	disable-over-current;
++	status = "okay";
++};
++
++&usbh1 {
++	vbus-supply = <&reg_usb_h1_vbus>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_usbh1>;
++	status = "okay";
++};
++
++&usdhc2 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_usdhc2>;
++	bus-width = <8>;
++	vmmc-supply = <&reg_3p3v>;
++	non-removable;
++	status = "okay";
++};
++
++&usdhc3 {
++	pinctrl-names = "default", "state_100mhz", "state_200mhz";
++	pinctrl-0 = <&pinctrl_usdhc3>;
++	pinctrl-1 = <&pinctrl_usdhc3_100mhz>;
++	pinctrl-2 = <&pinctrl_usdhc3_200mhz>;
++	cd-gpios = <&gpio7 0 GPIO_ACTIVE_HIGH>;
++	vmmc-supply = <&reg_3p3v>;
++	status = "okay";
++};
++
++&wdog1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_wdog>;
++	fsl,ext-reset-output;
++};
++
++&iomuxc {
++	pinctrl_audmux: audmuxgrp {
++		fsl,pins = <
++			/* AUD4 */
++			MX6QDL_PAD_DISP0_DAT20__AUD4_TXC	0x130b0
++			MX6QDL_PAD_DISP0_DAT21__AUD4_TXD	0x110b0
++			MX6QDL_PAD_DISP0_DAT22__AUD4_TXFS	0x130b0
++			MX6QDL_PAD_DISP0_DAT23__AUD4_RXD	0x130b0
++			MX6QDL_PAD_GPIO_0__CCM_CLKO1		0x130b0 /* AUD4_MCK */
++			/* AUD6 */
++			MX6QDL_PAD_DI0_PIN2__AUD6_TXD		0x130b0
++			MX6QDL_PAD_DI0_PIN3__AUD6_TXFS		0x130b0
++			MX6QDL_PAD_DI0_PIN4__AUD6_RXD		0x130b0
++			MX6QDL_PAD_DI0_PIN15__AUD6_TXC		0x130b0
++		>;
++	};
++
++	pinctrl_ecspi3: escpi3grp {
++		fsl,pins = <
++			MX6QDL_PAD_DISP0_DAT0__ECSPI3_SCLK	0x100b1
++			MX6QDL_PAD_DISP0_DAT1__ECSPI3_MOSI	0x100b1
++			MX6QDL_PAD_DISP0_DAT2__ECSPI3_MISO	0x100b1
++			MX6QDL_PAD_DISP0_DAT3__GPIO4_IO24	0x100b1
++		>;
++	};
++
++	pinctrl_enet: enetgrp {
++		fsl,pins = <
++			MX6QDL_PAD_RGMII_RXC__RGMII_RXC		0x1b030
++			MX6QDL_PAD_RGMII_RD0__RGMII_RD0		0x1b030
++			MX6QDL_PAD_RGMII_RD1__RGMII_RD1		0x1b030
++			MX6QDL_PAD_RGMII_RD2__RGMII_RD2		0x1b030
++			MX6QDL_PAD_RGMII_RD3__RGMII_RD3		0x1b030
++			MX6QDL_PAD_RGMII_RX_CTL__RGMII_RX_CTL	0x1b030
++			MX6QDL_PAD_RGMII_TXC__RGMII_TXC		0x1b030
++			MX6QDL_PAD_RGMII_TD0__RGMII_TD0		0x1b030
++			MX6QDL_PAD_RGMII_TD1__RGMII_TD1		0x1b030
++			MX6QDL_PAD_RGMII_TD2__RGMII_TD2		0x1b030
++			MX6QDL_PAD_RGMII_TD3__RGMII_TD3		0x1b030
++			MX6QDL_PAD_RGMII_TX_CTL__RGMII_TX_CTL	0x1b030
++			MX6QDL_PAD_ENET_REF_CLK__ENET_TX_CLK	0x1b0b0
++			MX6QDL_PAD_ENET_MDIO__ENET_MDIO		0x1b0b0
++			MX6QDL_PAD_ENET_MDC__ENET_MDC		0x1b0b0
++			MX6QDL_PAD_GPIO_16__ENET_REF_CLK	0x4001b0a8
++			MX6QDL_PAD_ENET_TXD0__GPIO1_IO30	0x4001b0b0 /* PHY_RST# */
++		>;
++	};
++
++	pinctrl_flexcan: flexcangrp {
++		fsl,pins = <
++			MX6QDL_PAD_KEY_ROW2__FLEXCAN1_RX	0x1b0b1
++			MX6QDL_PAD_KEY_COL2__FLEXCAN1_TX	0x1b0b1
++			MX6QDL_PAD_GPIO_2__GPIO1_IO02		0x4001b0b0 /* CAN_STBY */
++		>;
++	};
++
++	pinctrl_gpio_leds: gpioledsgrp {
++		fsl,pins = <
++			MX6QDL_PAD_KEY_COL0__GPIO4_IO06		0x1b0b0
++			MX6QDL_PAD_KEY_ROW0__GPIO4_IO07		0x1b0b0
++			MX6QDL_PAD_KEY_ROW4__GPIO4_IO15		0x1b0b0
++		>;
++	};
++
++	pinctrl_i2c1: i2c1grp {
++		fsl,pins = <
++			MX6QDL_PAD_EIM_D21__I2C1_SCL		0x4001b8b1
++			MX6QDL_PAD_EIM_D28__I2C1_SDA		0x4001b8b1
++		>;
++	};
++
++	pinctrl_i2c2: i2c2grp {
++		fsl,pins = <
++			MX6QDL_PAD_KEY_COL3__I2C2_SCL		0x4001b8b1
++			MX6QDL_PAD_KEY_ROW3__I2C2_SDA		0x4001b8b1
++		>;
++	};
++
++	pinctrl_i2c3: i2c3grp {
++		fsl,pins = <
++			MX6QDL_PAD_GPIO_3__I2C3_SCL		0x4001b8b1
++			MX6QDL_PAD_GPIO_6__I2C3_SDA		0x4001b8b1
++			MX6QDL_PAD_GPIO_19__GPIO4_IO05		0x4001b0b0 /* DIOI2C_DIS# */
++			MX6QDL_PAD_DISP0_DAT18__GPIO5_IO12	0x0001b0b0 /* LVDS_TOUCH_IRQ# */
++			MX6QDL_PAD_DISP0_DAT19__GPIO5_IO13	0x0001b0b0 /* LVDS_BACKEN */
++		>;
++	};
++
++	pinctrl_keypad: keypadgrp {
++		fsl,pins = <
++			MX6QDL_PAD_DISP0_DAT17__GPIO5_IO11	0x0001b0b0 /* KEYPAD_IRQ# */
++			MX6QDL_PAD_DISP0_DAT9__GPIO4_IO30	0x0001b0b0 /* KEYPAD_LED_EN */
++		>;
++	};
++
++	pinctrl_pcie: pciegrp {
++		fsl,pins = <
++			MX6QDL_PAD_DISP0_DAT10__GPIO4_IO31	0x1b0b0    /* PCI_RST# */
++			MX6QDL_PAD_GPIO_17__GPIO7_IO12		0x4001b0b0 /* PCIESKT_WDIS# */
++		>;
++	};
++
++	pinctrl_pmic: pmicgrp {
++		fsl,pins = <
++			MX6QDL_PAD_GPIO_8__GPIO1_IO08		0x0001b0b0 /* PMIC_IRQ# */
++		>;
++	};
++
++	pinctrl_pps: ppsgrp {
++		fsl,pins = <
++			MX6QDL_PAD_ENET_RXD1__GPIO1_IO26	0x1b0b1
++		>;
++	};
++
++	pinctrl_pwm2: pwm2grp {
++		fsl,pins = <
++			MX6QDL_PAD_SD1_DAT2__PWM2_OUT		0x1b0b1
++		>;
++	};
++
++	pinctrl_pwm3: pwm3grp {
++		fsl,pins = <
++			MX6QDL_PAD_SD1_DAT1__PWM3_OUT		0x1b0b1
++		>;
++	};
++
++	pinctrl_pwm4: pwm4grp {
++		fsl,pins = <
++			MX6QDL_PAD_SD1_CMD__PWM4_OUT		0x1b0b1
++		>;
++	};
++
++	pinctrl_uart1: uart1grp {
++		fsl,pins = <
++			MX6QDL_PAD_SD3_DAT7__UART1_TX_DATA	0x1b0b1
++			MX6QDL_PAD_SD3_DAT6__UART1_RX_DATA	0x1b0b1
++			MX6QDL_PAD_SD3_DAT4__GPIO7_IO01		0x4001b0b1 /* TEN */
++		>;
++	};
++
++	pinctrl_uart2: uart2grp {
++		fsl,pins = <
++			MX6QDL_PAD_SD4_DAT7__UART2_TX_DATA	0x1b0b1
++			MX6QDL_PAD_SD4_DAT4__UART2_RX_DATA	0x1b0b1
++		>;
++	};
++
++	pinctrl_uart5: uart5grp {
++		fsl,pins = <
++			MX6QDL_PAD_KEY_COL1__UART5_TX_DATA	0x1b0b1
++			MX6QDL_PAD_KEY_ROW1__UART5_RX_DATA	0x1b0b1
++		>;
++	};
++
++	pinctrl_usbh1: usbh1grp {
++		fsl,pins = <
++			MX6QDL_PAD_GPIO_9__GPIO1_IO09		0x4001b0b0 /* USBHUB_RST# */
++		>;
++	};
++
++	pinctrl_usbotg: usbotggrp {
++		fsl,pins = <
++			MX6QDL_PAD_GPIO_1__USB_OTG_ID		0x17059
++			MX6QDL_PAD_EIM_D22__GPIO3_IO22		0x1b0b0 /* PWR_EN */
++			MX6QDL_PAD_KEY_COL4__GPIO4_IO14		0x1b0b0 /* OC */
++		>;
++	};
++
++	pinctrl_usdhc2: usdhc2grp {
++		fsl,pins = <
++			MX6QDL_PAD_SD2_CMD__SD2_CMD		0x170f9
++			MX6QDL_PAD_SD2_CLK__SD2_CLK		0x100f9
++			MX6QDL_PAD_SD2_DAT0__SD2_DATA0		0x170f9
++			MX6QDL_PAD_SD2_DAT1__SD2_DATA1		0x170f9
++			MX6QDL_PAD_SD2_DAT2__SD2_DATA2		0x170f9
++			MX6QDL_PAD_SD2_DAT3__SD2_DATA3		0x170f9
++			MX6QDL_PAD_NANDF_D4__SD2_DATA4		0x170f9
++			MX6QDL_PAD_NANDF_D5__SD2_DATA5		0x170f9
++			MX6QDL_PAD_NANDF_D6__SD2_DATA6		0x170f9
++			MX6QDL_PAD_NANDF_D7__SD2_DATA7		0x170f9
++		>;
++	};
++
++	pinctrl_usdhc3: usdhc3grp {
++		fsl,pins = <
++			MX6QDL_PAD_SD3_CMD__SD3_CMD		0x17059
++			MX6QDL_PAD_SD3_CLK__SD3_CLK		0x10059
++			MX6QDL_PAD_SD3_DAT0__SD3_DATA0		0x17059
++			MX6QDL_PAD_SD3_DAT1__SD3_DATA1		0x17059
++			MX6QDL_PAD_SD3_DAT2__SD3_DATA2		0x17059
++			MX6QDL_PAD_SD3_DAT3__SD3_DATA3		0x17059
++			MX6QDL_PAD_SD3_DAT5__GPIO7_IO00		0x17059 /* CD */
++			MX6QDL_PAD_NANDF_CS1__SD3_VSELECT	0x17059
++		>;
++	};
++
++	pinctrl_usdhc3_100mhz: usdhc3grp100mhz {
++		fsl,pins = <
++			MX6QDL_PAD_SD3_CMD__SD3_CMD		0x170b9
++			MX6QDL_PAD_SD3_CLK__SD3_CLK		0x100b9
++			MX6QDL_PAD_SD3_DAT0__SD3_DATA0		0x170b9
++			MX6QDL_PAD_SD3_DAT1__SD3_DATA1		0x170b9
++			MX6QDL_PAD_SD3_DAT2__SD3_DATA2		0x170b9
++			MX6QDL_PAD_SD3_DAT3__SD3_DATA3		0x170b9
++			MX6QDL_PAD_SD3_DAT5__GPIO7_IO00		0x170b9 /* CD */
++			MX6QDL_PAD_NANDF_CS1__SD3_VSELECT	0x170b9
++		>;
++	};
++
++	pinctrl_usdhc3_200mhz: usdhc3grp200mhz {
++		fsl,pins = <
++			MX6QDL_PAD_SD3_CMD__SD3_CMD		0x170f9
++			MX6QDL_PAD_SD3_CLK__SD3_CLK		0x100f9
++			MX6QDL_PAD_SD3_DAT0__SD3_DATA0		0x170f9
++			MX6QDL_PAD_SD3_DAT1__SD3_DATA1		0x170f9
++			MX6QDL_PAD_SD3_DAT2__SD3_DATA2		0x170f9
++			MX6QDL_PAD_SD3_DAT3__SD3_DATA3		0x170f9
++			MX6QDL_PAD_SD3_DAT5__GPIO7_IO00		0x170f9 /* CD */
++			MX6QDL_PAD_NANDF_CS1__SD3_VSELECT	0x170f9
++		>;
++	};
++
++	pinctrl_wdog: wdoggrp {
++		fsl,pins = <
++			MX6QDL_PAD_DISP0_DAT8__WDOG1_B		0x1b0b0
++		>;
++	};
++};
 -- 
-2.11.0
+2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
