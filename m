@@ -1,71 +1,96 @@
-From: Martin Kepplinger <martin.kepplinger@ginzinger.com>
-Subject: [PATCH] input: edt-ft5x06: increase allowed data range for threshold parameter
-Date: Tue, 2 May 2017 17:00:59 +0200
-Message-ID: <1493737259-26210-1-git-send-email-martin.kepplinger@ginzinger.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-input-owner@vger.kernel.org>
-Sender: linux-input-owner@vger.kernel.org
-To: dmitry.torokhov@gmail.com, simon.budig@kernelconcepts.de, daniel.wagener@kernelconcepts.de, mchehab@kernel.org
-Cc: linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, Martin Kepplinger <martin.kepplinger@ginzinger.com>, Schoefegger Stefan <stefan.schoefegger@ginzinger.com>, Manfred Schlaegl <manfred.schlaegl@ginzinger.com>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: [PATCH v2 1/2] [media] dt-bindings: Add bindings for video-multiplexer device
+Date: Tue,  2 May 2017 17:09:12 +0200
+Message-ID: <20170502150913.2168-1-p.zabel@pengutronix.de>
+Return-path: <linux-media-owner@vger.kernel.org>
+Sender: linux-media-owner@vger.kernel.org
+To: linux-media@vger.kernel.org
+Cc: devicetree@vger.kernel.org, Steve Longerbeam <slongerbeam@gmail.com>, Peter Rosin <peda@axentia.se>, Sakari Ailus <sakari.ailus@iki.fi>, Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>, kernel@pengutronix.de, Philipp Zabel <p.zabel@pengutronix.de>, Sascha Hauer <s.hauer@pengutronix.de>, Steve Longerbeam <steve_longerbeam@mentor.com>
 List-Id: devicetree@vger.kernel.org
 
-The datasheet and application note does not mention an allowed range for
-the M09_REGISTER_THRESHOLD parameter. One of our customers needs to set
-lower values than 20 and they seem to work just fine on EDT EP0xx0M09 with
-T5x06 touch.
+Add bindings documentation for the video multiplexer device.
 
-So, lacking a known lower limit, we increase the range for thresholds,
-and set the lower limit to 0. The documentation is updated accordingly.
-
-Signed-off-by: Schoefegger Stefan <stefan.schoefegger@ginzinger.com>
-Signed-off-by: Manfred Schlaegl <manfred.schlaegl@ginzinger.com>
-Signed-off-by: Martin Kepplinger <martin.kepplinger@ginzinger.com>
+Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
+Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+Signed-off-by: Steve Longerbeam <steve_longerbeam@mentor.com>
+Acked-by: Peter Rosin <peda@axentia.se>
 ---
- Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.txt | 2 +-
- Documentation/input/devices/edt-ft5x06.rst                         | 2 +-
- drivers/input/touchscreen/edt-ft5x06.c                             | 2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
+No changes since v1 [1].
 
-diff --git a/Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.txt b/Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.txt
-index 6db2210..025cf8c 100644
---- a/Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.txt
-+++ b/Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.txt
-@@ -36,7 +36,7 @@ Optional properties:
-                 control gpios
- 
-  - threshold:   allows setting the "click"-threshold in the range
--                from 20 to 80.
-+                from 0 to 80.
- 
-  - gain:        allows setting the sensitivity in the range from 0 to
-                 31. Note that lower values indicate higher
-diff --git a/Documentation/input/devices/edt-ft5x06.rst b/Documentation/input/devices/edt-ft5x06.rst
-index 2032f0b..1ccc94b 100644
---- a/Documentation/input/devices/edt-ft5x06.rst
-+++ b/Documentation/input/devices/edt-ft5x06.rst
-@@ -15,7 +15,7 @@ It has been tested with the following devices:
- The driver allows configuration of the touch screen via a set of sysfs files:
- 
- /sys/class/input/eventX/device/device/threshold:
--    allows setting the "click"-threshold in the range from 20 to 80.
-+    allows setting the "click"-threshold in the range from 0 to 80.
- 
- /sys/class/input/eventX/device/device/gain:
-     allows setting the sensitivity in the range from 0 to 31. Note that
-diff --git a/drivers/input/touchscreen/edt-ft5x06.c b/drivers/input/touchscreen/edt-ft5x06.c
-index 8cf8d8d..f872817 100644
---- a/drivers/input/touchscreen/edt-ft5x06.c
-+++ b/drivers/input/touchscreen/edt-ft5x06.c
-@@ -471,7 +471,7 @@ static EDT_ATTR(gain, S_IWUSR | S_IRUGO, WORK_REGISTER_GAIN,
- static EDT_ATTR(offset, S_IWUSR | S_IRUGO, WORK_REGISTER_OFFSET,
- 		M09_REGISTER_OFFSET, 0, 31);
- static EDT_ATTR(threshold, S_IWUSR | S_IRUGO, WORK_REGISTER_THRESHOLD,
--		M09_REGISTER_THRESHOLD, 20, 80);
-+		M09_REGISTER_THRESHOLD, 0, 80);
- static EDT_ATTR(report_rate, S_IWUSR | S_IRUGO, WORK_REGISTER_REPORT_RATE,
- 		NO_REGISTER, 3, 14);
- 
+This was previously sent as part of Steve's i.MX media series [2].
+
+[1] https://patchwork.kernel.org/patch/9704789/
+[2] https://patchwork.kernel.org/patch/9647951/
+---
+ .../devicetree/bindings/media/video-mux.txt        | 60 ++++++++++++++++++++++
+ 1 file changed, 60 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/video-mux.txt
+
+diff --git a/Documentation/devicetree/bindings/media/video-mux.txt b/Documentation/devicetree/bindings/media/video-mux.txt
+new file mode 100644
+index 0000000000000..63b9dc913e456
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/video-mux.txt
+@@ -0,0 +1,60 @@
++Video Multiplexer
++=================
++
++Video multiplexers allow to select between multiple input ports. Video received
++on the active input port is passed through to the output port. Muxes described
++by this binding are controlled by a multiplexer controller that is described by
++the bindings in Documentation/devicetree/bindings/mux/mux-controller.txt
++
++Required properties:
++- compatible : should be "video-mux"
++- mux-controls : mux controller node to use for operating the mux
++- #address-cells: should be <1>
++- #size-cells: should be <0>
++- port@*: at least three port nodes containing endpoints connecting to the
++  source and sink devices according to of_graph bindings. The last port is
++  the output port, all others are inputs.
++
++Optionally, #address-cells, #size-cells, and port nodes can be grouped under a
++ports node as described in Documentation/devicetree/bindings/graph.txt.
++
++Example:
++
++	mux: mux-controller {
++		compatible = "gpio-mux";
++		#mux-control-cells = <0>;
++
++		mux-gpios = <&gpio1 15 GPIO_ACTIVE_HIGH>;
++	};
++
++	video-mux {
++		compatible = "video-mux";
++		mux-controls = <&mux>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		port@0 {
++			reg = <0>;
++
++			mux_in0: endpoint {
++				remote-endpoint = <&video_source0_out>;
++			};
++		};
++
++		port@1 {
++			reg = <1>;
++
++			mux_in1: endpoint {
++				remote-endpoint = <&video_source1_out>;
++			};
++		};
++
++		port@2 {
++			reg = <2>;
++
++			mux_out: endpoint {
++				remote-endpoint = <&capture_interface_in>;
++			};
++		};
++	};
++};
 -- 
-2.1.4
-
+2.11.0
