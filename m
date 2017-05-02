@@ -1,31 +1,57 @@
-From: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] regulator: DT: Add properties for asymmetric settling
- times
-Date: Tue, 2 May 2017 12:21:01 +0530
-Message-ID: <59082C55.8090007@nvidia.com>
-References: <20170501183715.35375-1-mka@chromium.org>
+From: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: Re: [PATCH 1/2] dt-bindings: rockchip-dw-mshc: add optional
+ rockchip,default-num-phases
+Date: Tue, 2 May 2017 15:03:03 +0800
+Message-ID: <8785b011-cec6-1556-5c96-a462182e8d85@rock-chips.com>
+References: <1492592434-81312-1-git-send-email-shawn.lin@rock-chips.com>
+ <1492592434-81312-2-git-send-email-shawn.lin@rock-chips.com>
+ <20170428133403.mmdvtp3ohff6v7gh@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170501183715.35375-1-mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Matthias Kaehlcke <mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <20170428133403.mmdvtp3ohff6v7gh@rob-hp-laptop>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ziyuan Xu <xzy.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-
-On Tuesday 02 May 2017 12:07 AM, Matthias Kaehlcke wrote:
-> Some regulators have different settling times for voltage increases and
-> decreases. Add DT properties to define separate settling times for up-
-> and downward voltage changes.
->
-> Signed-off-by: Matthias Kaehlcke <mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-> ---
-
-Acked-by: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGkgUm9iLAoK5ZyoIDIwMTcvNC8yOCAyMTozNCwgUm9iIEhlcnJpbmcg5YaZ6YGTOgo+IE9uIFdl
+ZCwgQXByIDE5LCAyMDE3IGF0IDA1OjAwOjMzUE0gKzA4MDAsIFNoYXduIExpbiB3cm90ZToKPj4g
+QnkgZGVmYXVsdCwgZHdfbW1jLXJvY2tjaGlwIHdpbGwgZXhlY3V0ZSB0dW5pbmcgZm9yIGVhY2gg
+ZGVncmVlLgo+PiBTbyB3ZSB3b24ndCBtaXNzIGV2ZXJ5IHBvaW50IG9mIHRoZSBnb29kIHNhbXBs
+ZSB3aW5kb3dzLiBIb3dldmVyLAo+PiBwcm9iYWJseSB0aGUgcGhhc2VzIGFyZSBsaW5lYXIgaW5z
+aWRlIHRoZSBnb29kIHNhbXBsZSB3aW5kb3cuCj4+IEFjdHVhbGx5IHdlIGRvbid0IG5lZWQgdG8g
+ZG8gdHVuaW5nIGZvciBlYWNoIGRlZ3JlZSBzbyB0aGF0IHdlIGNvdWxkCj4+IHNhdmUgc29tZSB0
+aW1lLCBmb3IgaW5zdGFuY2UsIHByb2JlIHRoZSBkcml2ZXIgb3IgcmVzdW1lIGZyb20gUzMuCj4+
+Cj4+IFNpZ25lZC1vZmYtYnk6IFNoYXduIExpbiA8c2hhd24ubGluQHJvY2stY2hpcHMuY29tPgo+
+PiAtLS0KPj4KPj4gIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tbWMvcm9ja2No
+aXAtZHctbXNoYy50eHQgfCA0ICsrKysKPj4gIDEgZmlsZSBjaGFuZ2VkLCA0IGluc2VydGlvbnMo
+KykKPj4KPj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9t
+bWMvcm9ja2NoaXAtZHctbXNoYy50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
+Z3MvbW1jL3JvY2tjaGlwLWR3LW1zaGMudHh0Cj4+IGluZGV4IDUyMGQ2MWQuLmVhNDdlYzAgMTAw
+NjQ0Cj4+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tbWMvcm9ja2No
+aXAtZHctbXNoYy50eHQKPj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
+L21tYy9yb2NrY2hpcC1kdy1tc2hjLnR4dAo+PiBAQCAtMzEsNiArMzEsMTAgQEAgT3B0aW9uYWwg
+UHJvcGVydGllczoKPj4gICAgcHJvYmluZywgbG93IHNwZWVkcyBvciBpbiBjYXNlIHdoZXJlIGFs
+bCBwaGFzZXMgd29yayBhdCB0dW5pbmcgdGltZS4KPj4gICAgSWYgbm90IHNwZWNpZmllZCAwIGRl
+ZyB3aWxsIGJlIHVzZWQuCj4+Cj4+ICsqIHJvY2tjaGlwLGRlZmF1bHQtbnVtLXBoYXNlczogVGhl
+IGRlZmF1bHQgbnVtYmVyIG9mIHRpbWVzIHRoYXQgdGhlIGhvc3QKPj4gKyAgZXhlY3V0ZSB0dW5p
+bmcgd2hlbiBuZWVkZWQuIElmIG5vdCBzcGVjaWZpZWQsIHRoZSBob3N0IHdpbGwgZG8gdHVuaW5n
+Cj4+ICsgIGZvciAzNjAgdGltZXMsIG5hbWVseSB0dW5pbmcgZm9yIGVhY2ggZGVncmVlLgo+Cj4g
+SG93IGlzIGl0IGRlZmF1bHQgd2hlbiB5b3Ugc3BlY2lmeSBpdD8gSSB3b3VsZCB0aGluayBkZWZh
+dWx0IGhlcmUgaXMKPiAzNjAuCj4KCkkgZG9uJ3QgZ2V0IHlvdXIgcG9pbnQgaGVyZS4gRG8geW91
+IG1lYW4gdGhlIG5hbWUsIGRlZmF1bHQtbnVtLXBoYXNlcywKaXNuJ3QgY29ycmVjdCwgc28gSSBu
+ZWVkIGFub3RoZXIgb25lPwoKPiBTaG91bGQgdGhpcyBiZSBjb21tb24/Cj4KPiBSb2IKPgo+Cj4K
+CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpMaW51eC1y
+b2NrY2hpcCBtYWlsaW5nIGxpc3QKTGludXgtcm9ja2NoaXBAbGlzdHMuaW5mcmFkZWFkLm9yZwpo
+dHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LXJvY2tjaGlw
+Cg==
