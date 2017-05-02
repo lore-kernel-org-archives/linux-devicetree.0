@@ -1,8 +1,10 @@
 From: frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Subject: [PATCH v4 0/4] of: remove *phandle properties from expanded device tree
-Date: Mon,  1 May 2017 19:46:00 -0700
-Message-ID: <1493693164-22826-1-git-send-email-frowand.list@gmail.com>
+Subject: [PATCH v4 3/4] of: be consistent in form of file mode
+Date: Mon,  1 May 2017 19:46:03 -0700
+Message-ID: <1493693164-22826-4-git-send-email-frowand.list@gmail.com>
+References: <1493693164-22826-1-git-send-email-frowand.list@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1493693164-22826-1-git-send-email-frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
@@ -10,53 +12,29 @@ List-Id: devicetree@vger.kernel.org
 
 From: Frank Rowand <frank.rowand-7U/KSKJipcs@public.gmane.org>
 
-Remove "phandle" and "linux,phandle" properties from the internal
-device tree.  The phandle will still be in the struct device_node
-phandle field.
+checkpatch whined about using S_IRUGO instead of octal equivalent
+when adding phandle sysfs code, so used octal in that patch.
+Change other instances of the S_* constants in the same file to
+the octal form.
 
-This is to resolve the issue found by Stephen Boyd [1] when he changed
-the type of struct property.value from void * to const void *.  As
-a result of the type change, the overlay code had compile errors
-where the resolver updates phandle values.
+Signed-off-by: Frank Rowand <frank.rowand-7U/KSKJipcs@public.gmane.org>
+---
+ drivers/of/base.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-  [1] http://lkml.iu.edu/hypermail/linux/kernel/1702.1/04160.html
-
-Patch 1 is the phandle related changes.
-
-Patches 2 - 4 are minor fixups for issues that became visible
-while implementing patch 1.
-
-Changes from v3:
-   - patch 1: fix incorrect variable name in __of_add_phandle_sysfs().
-     Problem was reported by the kbuild test robot
-
-Changes from v2:
-   - patch 1: Remove check in __of_add_phandle_sysfs() that would not
-     add a sysfs entry if IS_ENABLED(CONFIG_PPC_PSERIES)
-
-Changes from v1:
-   - Remove phandle properties in of_attach_node(), before attaching
-     the node to the live tree.
-   - Add the phandle sysfs entry for the node in of_attach_node().
-   - When creating an overlay changeset, duplicate the node phandle in
-     __of_node_dup().
-
-
-Frank Rowand (4):
-  of: remove *phandle properties from expanded device tree
-  of: make __of_attach_node() static
-  of: be consistent in form of file mode
-  of: detect invalid phandle in overlay
-
- drivers/of/base.c       | 50 +++++++++++++++++++++++++++++++++++++++----
- drivers/of/dynamic.c    | 56 ++++++++++++++++++++++++++++++++++++-------------
- drivers/of/fdt.c        | 40 +++++++++++++++++++++--------------
- drivers/of/of_private.h |  2 +-
- drivers/of/overlay.c    |  8 ++++---
- drivers/of/resolver.c   | 23 +-------------------
- include/linux/of.h      |  1 +
- 7 files changed, 120 insertions(+), 60 deletions(-)
-
+diff --git a/drivers/of/base.c b/drivers/of/base.c
+index 8a0cf9003cf8..8a7ca2a49ba8 100644
+--- a/drivers/of/base.c
++++ b/drivers/of/base.c
+@@ -168,7 +168,7 @@ int __of_add_property_sysfs(struct device_node *np, struct property *pp)
+ 
+ 	sysfs_bin_attr_init(&pp->attr);
+ 	pp->attr.attr.name = safe_name(&np->kobj, pp->name);
+-	pp->attr.attr.mode = secure ? S_IRUSR : S_IRUGO;
++	pp->attr.attr.mode = secure ? 0400 : 0444;
+ 	pp->attr.size = secure ? 0 : pp->length;
+ 	pp->attr.read = of_node_property_read;
+ 
 -- 
 Frank Rowand <frank.rowand-7U/KSKJipcs@public.gmane.org>
 
