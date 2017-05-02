@@ -1,986 +1,226 @@
-From: Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
-Subject: [PATCH v2] ARM: dts: imx: add Gateworks Ventana GW5600 support
-Date: Tue,  2 May 2017 10:39:37 -0700
-Message-ID: <1493746777-7722-1-git-send-email-tharvey@gateworks.com>
-References: <1492197481-16638-1-git-send-email-tharvey@gateworks.com>
+From: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+Subject: Re: [PATCH 2/2] [media] platform: add video-multiplexer subdevice
+ driver
+Date: Tue, 2 May 2017 19:42:52 +0200
+Message-ID: <74bfa70b-3407-9484-9717-bb2d07356f70@axentia.se>
+References: <20170428141330.16187-1-p.zabel@pengutronix.de>
+ <20170428141330.16187-2-p.zabel@pengutronix.de>
+ <beb9f7c4-4959-1bb2-03e2-c5ccecbb8368@axentia.se>
+ <df5f38c4-b0e8-64c6-d6ba-c554133f4bbf@axentia.se>
+ <1493738491.2391.20.camel@pengutronix.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1492197481-16638-1-git-send-email-tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
+In-Reply-To: <1493738491.2391.20.camel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Steve Longerbeam <steve_longerbeam-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Vladimir Zapolskiy <vladimir_zapolskiy-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The Gateworks Ventana GW5600 is a media-centric single-board computer based on
-the NXP IMX6 SoC with the following features:
- * PoE (emulated 802.3af)
- * IMX6 DualLite Soc (supports IMX6S,IMX6DL,IMX6Q)
- * 1GiB DDR3 DRAM (supports up to 4GiB)
- * 8GB eMMC
- * 1x microSD connector
- * Gateworks System Controller:
-  - hardware watchdog
-  - hardware monitor
-  - pushbutton controller
-  - EEPROM storage
-  - power control
- * 1x bi-color USER LED
- * 1x front-panel pushbutton
- * 1x front-panel GbE
- * 2x front panel USB 2.0
- * 1x front panel USB OTG
- * 1x SIM socket
- * 1x miniPCIe socket with SATA (mSATA)
- * 1x miniPCIe socket with USB 2.0 (Modem)
- * 1x miniPCIe socket with PCIe, USB 2.0, and SIM
- * RS232/RS485 serial
-  - 2x RS232 UARTs (off-board connector)
-  - 1x RS485 (loading option)
- * 4x digital I/O signals (PWM/I2C/GPIO/5V/3.3V options)
- * 1x analog input (0 to 5V)
- * 1x CAN (loading option)
- * off-board LVDS:
-  - I2C
-  - 12V
-  - LED driver (4x 330mA strings)
-  - matrix keypad controller (8row x 10col)
-  - I2S
-  - dual-channel LVDS
-  - PWM
- * off-board video input:
-  - 16bit parallel / MIPI (IPU1_CSI0)
- * GPS (loading option)
- * Analog Video Input (CVBS) 3 inputs (1 active at a time)
- * Analog Audio Input/Output (2ch Line level, optional MIC/HP drivers)
- * HDMI out
- * JTAG programmable
- * Inertial Module
+On 2017-05-02 17:21, Philipp Zabel wrote:
+> On Sat, 2017-04-29 at 23:42 +0200, Peter Rosin wrote:
+>> On 2017-04-29 23:29, Peter Rosin wrote:
+>>> On 2017-04-28 16:13, Philipp Zabel wrote:
+>>>> This driver can handle SoC internal and external video bus multiplexers,
+>>>> controlled by mux controllers provided by the mux controller framework,
+>>>> such as MMIO register bitfields or GPIOs. The subdevice passes through
+>>>> the mbus configuration of the active input to the output side.
+>>>>
+>>>> Signed-off-by: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+>>>> Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+>>>> Signed-off-by: Steve Longerbeam <steve_longerbeam-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+>>>> ---
+>>>> This has been last sent as part of the i.MX media series.
+>>>>
+>>>> Changes since https://patchwork.kernel.org/patch/9647869/:
+>>>>  - Split out the actual mux operation to be provided by the mux controller
+>>>>    framework [1]. GPIO and MMIO control can be provided by individual mux
+>>>>    controller drivers [2][3].
+>>>>    [1] https://patchwork.kernel.org/patch/9695837/
+>>>>    [2] https://patchwork.kernel.org/patch/9695839/
+>>>>    [3] https://patchwork.kernel.org/patch/9704509/
+>>>>  - Shortened 'video-multiplexer' to 'video-mux', replaced all instances of
+>>>>    vidsw with video_mux.
+>>>>  - Made the mux inactive by default, only activated by user interaction.
+>>>>  - Added CONFIG_OF and CONFIG_MULTIPLEXER dependencies.
+>>>>  - Reuse subdev.entity.num_pads instead of keeping our own count.
+>>>>  - Removed implicit link disabling. Instead, trying to enable a second
+>>>>    sink pad link yields -EBUSY.
+>>>>  - Merged _async_init into _probe.
+>>>>  - Removed superfluous pad index check from _set_format.
+>>>>  - Added is_source_pad helper to tell source and sink pads apart.
+>>>>  - Removed test for status property in endpoint nodes. Disable the remote
+>>>>    device or sever the endpoint link to disable a sink pad.
+>>>> ---
+>>>>  drivers/media/platform/Kconfig     |   6 +
+>>>>  drivers/media/platform/Makefile    |   2 +
+>>>>  drivers/media/platform/video-mux.c | 341 +++++++++++++++++++++++++++++++++++++
+>>>>  3 files changed, 349 insertions(+)
+>>>>  create mode 100644 drivers/media/platform/video-mux.c
+>>>>
+>>>> diff --git a/drivers/media/platform/Kconfig b/drivers/media/platform/Kconfig
+>>>> index c9106e105baba..b046a6d39fee5 100644
+>>>> --- a/drivers/media/platform/Kconfig
+>>>> +++ b/drivers/media/platform/Kconfig
+>>>> @@ -74,6 +74,12 @@ config VIDEO_M32R_AR_M64278
+>>>>  	  To compile this driver as a module, choose M here: the
+>>>>  	  module will be called arv.
+>>>>  
+>>>> +config VIDEO_MUX
+>>>> +	tristate "Video Multiplexer"
+>>>> +	depends on OF && VIDEO_V4L2_SUBDEV_API && MEDIA_CONTROLLER && MULTIPLEXER
+>>>> +	help
+>>>> +	  This driver provides support for N:1 video bus multiplexers.
+>>>> +
+>>>>  config VIDEO_OMAP3
+>>>>  	tristate "OMAP 3 Camera support"
+>>>>  	depends on VIDEO_V4L2 && I2C && VIDEO_V4L2_SUBDEV_API && ARCH_OMAP3
+>>>> diff --git a/drivers/media/platform/Makefile b/drivers/media/platform/Makefile
+>>>> index 349ddf6a69da2..fd2735ca3ff75 100644
+>>>> --- a/drivers/media/platform/Makefile
+>>>> +++ b/drivers/media/platform/Makefile
+>>>> @@ -27,6 +27,8 @@ obj-$(CONFIG_VIDEO_SH_VEU)		+= sh_veu.o
+>>>>  
+>>>>  obj-$(CONFIG_VIDEO_MEM2MEM_DEINTERLACE)	+= m2m-deinterlace.o
+>>>>  
+>>>> +obj-$(CONFIG_VIDEO_MUX)			+= video-mux.o
+>>>> +
+>>>>  obj-$(CONFIG_VIDEO_S3C_CAMIF) 		+= s3c-camif/
+>>>>  obj-$(CONFIG_VIDEO_SAMSUNG_EXYNOS4_IS) 	+= exynos4-is/
+>>>>  obj-$(CONFIG_VIDEO_SAMSUNG_S5P_JPEG)	+= s5p-jpeg/
+>>>> diff --git a/drivers/media/platform/video-mux.c b/drivers/media/platform/video-mux.c
+>>>> new file mode 100644
+>>>> index 0000000000000..419541729f67e
+>>>> --- /dev/null
+>>>> +++ b/drivers/media/platform/video-mux.c
+>>>> @@ -0,0 +1,341 @@
+>>>> +/*
+>>>> + * video stream multiplexer controlled via mux control
+>>>> + *
+>>>> + * Copyright (C) 2013 Pengutronix, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+>>>> + * Copyright (C) 2016 Pengutronix, Philipp Zabel <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+>>>
+>>> 2017?
+>>>
+>>>> + *
+>>>> + * This program is free software; you can redistribute it and/or
+>>>> + * modify it under the terms of the GNU General Public License
+>>>> + * as published by the Free Software Foundation; either version 2
+>>>> + * of the License, or (at your option) any later version.
+>>>> + * This program is distributed in the hope that it will be useful,
+>>>> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+>>>> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+>>>> + * GNU General Public License for more details.
+>>>> + */
+>>>> +
+>>>> +#include <linux/err.h>
+>>>> +#include <linux/module.h>
+>>>> +#include <linux/mux/consumer.h>
+>>>> +#include <linux/of.h>
+>>>> +#include <linux/of_graph.h>
+>>>> +#include <linux/platform_device.h>
+>>>> +#include <media/v4l2-async.h>
+>>>> +#include <media/v4l2-device.h>
+>>>> +#include <media/v4l2-subdev.h>
+>>>> +#include <media/v4l2-of.h>
+>>>> +
+>>>> +struct video_mux {
+>>>> +	struct v4l2_subdev subdev;
+>>>> +	struct media_pad *pads;
+>>>> +	struct v4l2_mbus_framefmt *format_mbus;
+>>>> +	struct v4l2_of_endpoint *endpoint;
+>>>> +	struct mux_control *mux;
+>>>> +	int active;
+>>>> +};
+>>>> +
+>>>> +static inline struct video_mux *v4l2_subdev_to_video_mux(struct v4l2_subdev *sd)
+>>>> +{
+>>>> +	return container_of(sd, struct video_mux, subdev);
+>>>> +}
+>>>> +
+>>>> +static inline bool is_source_pad(struct video_mux *vmux, unsigned int pad)
+>>>> +{
+>>>> +	return pad == vmux->subdev.entity.num_pads - 1;
+>>>> +}
+>>>> +
+>>>> +static int video_mux_link_setup(struct media_entity *entity,
+>>>> +				const struct media_pad *local,
+>>>> +				const struct media_pad *remote, u32 flags)
+>>>> +{
+>>>> +	struct v4l2_subdev *sd = media_entity_to_v4l2_subdev(entity);
+>>>> +	struct video_mux *vmux = v4l2_subdev_to_video_mux(sd);
+>>>> +	int ret;
+>>>> +
+>>>> +	/*
+>>>> +	 * The mux state is determined by the enabled sink pad link.
+>>>> +	 * Enabling or disabling the source pad link has no effect.
+>>>> +	 */
+>>>> +	if (is_source_pad(vmux, local->index))
+>>>> +		return 0;
+>>>> +
+>>>> +	dev_dbg(sd->dev, "link setup '%s':%d->'%s':%d[%d]",
+>>>> +		remote->entity->name, remote->index, local->entity->name,
+>>>> +		local->index, flags & MEDIA_LNK_FL_ENABLED);
+>>>> +
+>>>> +	if (flags & MEDIA_LNK_FL_ENABLED) {
+>>>> +		if (vmux->active == local->index)
+>>>
+>>> Here, you shortcut the mux_control_select_trylock test and return "OK"
+>>> based on a driver-local variable that is intended to keep track of mux
+>>> ownership.
+>>>
+>>>> +			return 0;
+>>>> +
+>>>> +		if (vmux->active >= 0)
+>>>
+>>> Here too (and this check is not needed, the situation will be covered by
+>>> the mux_control_try_select call).
+>>>
+>>>> +			return -EBUSY;
+>>>> +
+>>>> +		dev_dbg(sd->dev, "setting %d active\n", local->index);
+>>>> +		ret = mux_control_try_select(vmux->mux, local->index);
+>>>> +		if (ret < 0)
+>>>> +			return ret;
+>>>> +		vmux->active = local->index;
+>>>> +	} else {
+>>>> +		if (vmux->active != local->index)
+>>>> +			return 0;
+>>>> +
+>>>> +		dev_dbg(sd->dev, "going inactive\n");
+>>>> +		mux_control_deselect(vmux->mux);
+>>>
+>>> But here you let go of the mux *before* you clear the driver-local
+>>> ownership indicator. That looks suspicious. My guess is that this is
+>>> "safe" because the upper layers has some serialization, but I don't
+>>> know. Anyway, even if there is something saving you in the upper
+>>> layers, it looks out of order and unneeded. I would have moved the
+>>> below vmux->active = -1; statement up to before the above deselect.
+>>>
+>>> With that fixed, mux usage looks good to me, so you can add an Acked-
+>>> by from me if you wish (goes for the bindings patch as well).
+>>
+>> Ouch, that was a bit too soon. If there is *no* serialization in the
+>> upper layers, this is *not* ok, even with my reordering. There must be
+>> only one call to mux_control_deselect, and w/o serialization there
+>> is a race where you might get multiple deselect calls when several
+>> callers makes it through the active != index check before any of them
+>> manages to set active = -1. That race must be taken care of!
+> 
+> Thank you, I've resent a version with a mutex lock around vmux->active.
 
-Signed-off-by: Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
----
-v2:
- - use hyphen instead of underscore in node names
- - indicate address in memory node name
- - drop leading zero's in unit-addresses
- - dropped unnecessary container node in iomux
- - sort iomux pinctrl nodes alphabetically
- - remove extra newlines in pinctrl defines
- - use MATRIX_KEY() macro and event codes from input bindings
- - removed unused fixed-clock
+I had a bunch of ifs in the above message, so I'm not sure it's needed.
+I would expect there to be a lock outside somewhere in the media layer.
+A cursory look gets me to media-entity.c and media_entity_setup_link()
+which does have a mutex. But I'm no media expert, so maybe there are other
+ways of getting to video_mux_link_setup that I'm not aware of?
 
-Signed-off-by: Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
----
- arch/arm/boot/dts/Makefile            |   2 +
- arch/arm/boot/dts/imx6dl-gw560x.dts   |  55 +++
- arch/arm/boot/dts/imx6q-gw560x.dts    |  59 +++
- arch/arm/boot/dts/imx6qdl-gw560x.dtsi | 749 ++++++++++++++++++++++++++++++++++
- 4 files changed, 865 insertions(+)
- create mode 100644 arch/arm/boot/dts/imx6dl-gw560x.dts
- create mode 100644 arch/arm/boot/dts/imx6q-gw560x.dts
- create mode 100644 arch/arm/boot/dts/imx6qdl-gw560x.dtsi
+If you do end up relying on external locking, a comment saying so would
+be nice. Or even better, some __must_hold markup if possible?
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 8774143..0ffe732 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -352,6 +352,7 @@ dtb-$(CONFIG_SOC_IMX6Q) += \
- 	imx6dl-gw551x.dtb \
- 	imx6dl-gw552x.dtb \
- 	imx6dl-gw553x.dtb \
-+	imx6dl-gw560x.dtb \
- 	imx6dl-gw5903.dtb \
- 	imx6dl-gw5904.dtb \
- 	imx6dl-hummingboard.dtb \
-@@ -397,6 +398,7 @@ dtb-$(CONFIG_SOC_IMX6Q) += \
- 	imx6q-gw551x.dtb \
- 	imx6q-gw552x.dtb \
- 	imx6q-gw553x.dtb \
-+	imx6q-gw560x.dtb \
- 	imx6q-gw5903.dtb \
- 	imx6q-gw5904.dtb \
- 	imx6q-h100.dtb \
-diff --git a/arch/arm/boot/dts/imx6dl-gw560x.dts b/arch/arm/boot/dts/imx6dl-gw560x.dts
-new file mode 100644
-index 0000000..21bdfaf
---- /dev/null
-+++ b/arch/arm/boot/dts/imx6dl-gw560x.dts
-@@ -0,0 +1,55 @@
-+/*
-+ * Copyright 2017 Gateworks Corporation
-+ *
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPL or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
-+ *
-+ *  a) This file is free software; you can redistribute it and/or
-+ *     modify it under the terms of the GNU General Public License as
-+ *     published by the Free Software Foundation; either version 2 of
-+ *     the License, or (at your option) any later version.
-+ *
-+ *     This file is distributed in the hope that it will be useful,
-+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *     GNU General Public License for more details.
-+ *
-+ *     You should have received a copy of the GNU General Public
-+ *     License along with this file; if not, write to the Free
-+ *     Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
-+ *     MA 02110-1301 USA
-+ *
-+ * Or, alternatively,
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use,
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
-+ */
-+
-+/dts-v1/;
-+#include "imx6dl.dtsi"
-+#include "imx6qdl-gw560x.dtsi"
-+
-+/ {
-+	model = "Gateworks Ventana i.MX6 DualLite/Solo GW560X";
-+	compatible = "gw,imx6dl-gw560x", "gw,ventana", "fsl,imx6dl";
-+};
-diff --git a/arch/arm/boot/dts/imx6q-gw560x.dts b/arch/arm/boot/dts/imx6q-gw560x.dts
-new file mode 100644
-index 0000000..735f2bb
---- /dev/null
-+++ b/arch/arm/boot/dts/imx6q-gw560x.dts
-@@ -0,0 +1,59 @@
-+/*
-+ * Copyright 2017 Gateworks Corporation
-+ *
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPL or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
-+ *
-+ *  a) This file is free software; you can redistribute it and/or
-+ *     modify it under the terms of the GNU General Public License as
-+ *     published by the Free Software Foundation; either version 2 of
-+ *     the License, or (at your option) any later version.
-+ *
-+ *     This file is distributed in the hope that it will be useful,
-+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *     GNU General Public License for more details.
-+ *
-+ *     You should have received a copy of the GNU General Public
-+ *     License along with this file; if not, write to the Free
-+ *     Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
-+ *     MA 02110-1301 USA
-+ *
-+ * Or, alternatively,
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use,
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
-+ */
-+
-+/dts-v1/;
-+#include "imx6q.dtsi"
-+#include "imx6qdl-gw560x.dtsi"
-+
-+/ {
-+	model = "Gateworks Ventana i.MX6 Dual/Quad GW560X";
-+	compatible = "gw,imx6q-gw560x", "gw,ventana", "fsl,imx6q";
-+};
-+
-+&sata {
-+	status = "okay";
-+};
-diff --git a/arch/arm/boot/dts/imx6qdl-gw560x.dtsi b/arch/arm/boot/dts/imx6qdl-gw560x.dtsi
-new file mode 100644
-index 0000000..d894dde
---- /dev/null
-+++ b/arch/arm/boot/dts/imx6qdl-gw560x.dtsi
-@@ -0,0 +1,749 @@
-+/*
-+ * Copyright 2017 Gateworks Corporation
-+ *
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPL or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
-+ *
-+ *  a) This file is free software; you can redistribute it and/or
-+ *     modify it under the terms of the GNU General Public License as
-+ *     published by the Free Software Foundation; either version 2 of
-+ *     the License, or (at your option) any later version.
-+ *
-+ *     This file is distributed in the hope that it will be useful,
-+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *     GNU General Public License for more details.
-+ *
-+ *     You should have received a copy of the GNU General Public
-+ *     License along with this file; if not, write to the Free
-+ *     Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
-+ *     MA 02110-1301 USA
-+ *
-+ * Or, alternatively,
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use,
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
-+ */
-+
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/input/input.h>
-+
-+/ {
-+	/* these are used by bootloader for disabling nodes */
-+	aliases {
-+		led0 = &led0;
-+		led1 = &led1;
-+		led2 = &led2;
-+		ssi0 = &ssi1;
-+		usb0 = &usbh1;
-+		usb1 = &usbotg;
-+	};
-+
-+	chosen {
-+		stdout-path = &uart2;
-+	};
-+
-+	backlight-display {
-+		compatible = "pwm-backlight";
-+		pwms = <&pwm4 0 5000000>;
-+		brightness-levels = <
-+			0  1  2  3  4  5  6  7  8  9
-+			10 11 12 13 14 15 16 17 18 19
-+			20 21 22 23 24 25 26 27 28 29
-+			30 31 32 33 34 35 36 37 38 39
-+			40 41 42 43 44 45 46 47 48 49
-+			50 51 52 53 54 55 56 57 58 59
-+			60 61 62 63 64 65 66 67 68 69
-+			70 71 72 73 74 75 76 77 78 79
-+			80 81 82 83 84 85 86 87 88 89
-+			90 91 92 93 94 95 96 97 98 99
-+			100
-+			>;
-+		default-brightness-level = <100>;
-+	};
-+
-+	backlight-keypad {
-+		compatible = "gpio-backlight";
-+		gpios = <&gpio4 30 GPIO_ACTIVE_HIGH>;
-+		default-on;
-+	};
-+
-+	leds {
-+		compatible = "gpio-leds";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_gpio_leds>;
-+
-+		led0: user1 {
-+			label = "user1";
-+			gpios = <&gpio4 6 GPIO_ACTIVE_HIGH>; /* MX6_PANLEDG */
-+			default-state = "on";
-+			linux,default-trigger = "heartbeat";
-+		};
-+
-+		led1: user2 {
-+			label = "user2";
-+			gpios = <&gpio4 7 GPIO_ACTIVE_HIGH>; /* MX6_PANLEDR */
-+			default-state = "off";
-+		};
-+
-+		led2: user3 {
-+			label = "user3";
-+			gpios = <&gpio4 15 GPIO_ACTIVE_LOW>; /* MX6_LOCLED# */
-+			default-state = "off";
-+		};
-+	};
-+
-+	memory@10000000 {
-+		reg = <0x10000000 0x40000000>;
-+	};
-+
-+	pps {
-+		compatible = "pps-gpio";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_pps>;
-+		gpios = <&gpio1 26 GPIO_ACTIVE_HIGH>;
-+	};
-+
-+	reg_2p5v: regulator-2p5v {
-+		compatible = "regulator-fixed";
-+		regulator-name = "2P5V";
-+		regulator-min-microvolt = <2500000>;
-+		regulator-max-microvolt = <2500000>;
-+		regulator-always-on;
-+	};
-+
-+	reg_3p3v: regulator-3p3v {
-+		compatible = "regulator-fixed";
-+		regulator-name = "3P3V";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		regulator-always-on;
-+	};
-+
-+	reg_5p0v: regulator-5p0v {
-+		compatible = "regulator-fixed";
-+		regulator-name = "5P0V";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		regulator-always-on;
-+	};
-+
-+	reg_12p0v: regulator-12p0v {
-+		compatible = "regulator-fixed";
-+		regulator-name = "12P0V";
-+		regulator-min-microvolt = <12000000>;
-+		regulator-max-microvolt = <12000000>;
-+		gpio = <&gpio4 25 GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
-+	};
-+
-+	reg_1p4v: regulator-vddsoc {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vdd_soc";
-+		regulator-min-microvolt = <1400000>;
-+		regulator-max-microvolt = <1400000>;
-+		regulator-always-on;
-+	};
-+
-+	reg_usb_h1_vbus: regulator-usb-h1-vbus {
-+		compatible = "regulator-fixed";
-+		regulator-name = "usb_h1_vbus";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		regulator-always-on;
-+	};
-+
-+	reg_usb_otg_vbus: regulator-usb-otg-vbus {
-+		compatible = "regulator-fixed";
-+		regulator-name = "usb_otg_vbus";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		gpio = <&gpio3 22 GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
-+	};
-+
-+	sound {
-+		compatible = "fsl,imx6q-ventana-sgtl5000",
-+			     "fsl,imx-audio-sgtl5000";
-+		model = "sgtl5000-audio";
-+		ssi-controller = <&ssi1>;
-+		audio-codec = <&sgtl5000>;
-+		audio-routing =
-+			"MIC_IN", "Mic Jack",
-+			"Mic Jack", "Mic Bias",
-+			"Headphone Jack", "HP_OUT";
-+		mux-int-port = <1>;
-+		mux-ext-port = <4>;
-+	};
-+};
-+
-+&audmux {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_audmux>;
-+	status = "okay";
-+};
-+
-+&ecspi3 {
-+	cs-gpios = <&gpio4 24 GPIO_ACTIVE_HIGH>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_ecspi3>;
-+	status = "okay";
-+};
-+
-+&can1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_flexcan>;
-+	status = "okay";
-+};
-+
-+&clks {
-+	assigned-clocks = <&clks IMX6QDL_CLK_LDB_DI0_SEL>,
-+			  <&clks IMX6QDL_CLK_LDB_DI1_SEL>;
-+	assigned-clock-parents = <&clks IMX6QDL_CLK_PLL3_USB_OTG>,
-+				 <&clks IMX6QDL_CLK_PLL3_USB_OTG>;
-+};
-+
-+&fec {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_enet>;
-+	phy-mode = "rgmii-id";
-+	phy-reset-gpios = <&gpio1 30 GPIO_ACTIVE_LOW>;
-+	status = "okay";
-+};
-+
-+&hdmi {
-+	ddc-i2c-bus = <&i2c3>;
-+	status = "okay";
-+};
-+
-+&i2c1 {
-+	clock-frequency = <100000>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_i2c1>;
-+	status = "okay";
-+
-+	eeprom1: eeprom@50 {
-+		compatible = "atmel,24c02";
-+		reg = <0x50>;
-+		pagesize = <16>;
-+	};
-+
-+	eeprom2: eeprom@51 {
-+		compatible = "atmel,24c02";
-+		reg = <0x51>;
-+		pagesize = <16>;
-+	};
-+
-+	eeprom3: eeprom@52 {
-+		compatible = "atmel,24c02";
-+		reg = <0x52>;
-+		pagesize = <16>;
-+	};
-+
-+	eeprom4: eeprom@53 {
-+		compatible = "atmel,24c02";
-+		reg = <0x53>;
-+		pagesize = <16>;
-+	};
-+
-+	pca9555: gpio@23 {
-+		compatible = "nxp,pca9555";
-+		reg = <0x23>;
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+	};
-+
-+	ds1672: rtc@68 {
-+		compatible = "dallas,ds1672";
-+		reg = <0x68>;
-+	};
-+};
-+
-+&i2c2 {
-+	clock-frequency = <100000>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_i2c2>;
-+	status = "okay";
-+
-+	sgtl5000: codec@a {
-+		compatible = "fsl,sgtl5000";
-+		reg = <0x0a>;
-+		clocks = <&clks IMX6QDL_CLK_CKO>;
-+		VDDA-supply = <&reg_1p8v>;
-+		VDDIO-supply = <&reg_3p3v>;
-+	};
-+
-+	tca8418: keypad@34 {
-+		compatible = "ti,tca8418";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_keypad>;
-+		reg = <0x34>;
-+		interrupt-parent = <&gpio5>;
-+		interrupts = <11 IRQ_TYPE_EDGE_FALLING>;
-+		linux,keymap = < MATRIX_KEY(0x00, 0x01, BTN_0)
-+			         MATRIX_KEY(0x00, 0x00, BTN_1)
-+			         MATRIX_KEY(0x01, 0x01, BTN_2)
-+			         MATRIX_KEY(0x01, 0x00, BTN_3)
-+			         MATRIX_KEY(0x02, 0x00, BTN_4)
-+			         MATRIX_KEY(0x00, 0x03, BTN_5)
-+			         MATRIX_KEY(0x00, 0x02, BTN_6)
-+			         MATRIX_KEY(0x01, 0x03, BTN_7)
-+			         MATRIX_KEY(0x01, 0x02, BTN_8)
-+			         MATRIX_KEY(0x02, 0x02, BTN_9)
-+		>;
-+		keypad,num-rows = <4>;
-+		keypad,num-columns = <4>;
-+	};
-+
-+	ltc3676: pmic@3c {
-+		compatible = "lltc,ltc3676";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_pmic>;
-+		reg = <0x3c>;
-+		interrupt-parent = <&gpio1>;
-+		interrupts = <8 IRQ_TYPE_EDGE_FALLING>;
-+
-+		regulators {
-+			/* VDD_DDR (1+R1/R2 = 2.105) */
-+			reg_vdd_ddr: sw2 {
-+				regulator-name = "vddddr";
-+				regulator-min-microvolt = <868310>;
-+				regulator-max-microvolt = <1684000>;
-+				lltc,fb-voltage-divider = <221000 200000>;
-+				regulator-ramp-delay = <7000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			/* VDD_ARM (1+R1/R2 = 1.931) */
-+			reg_vdd_arm: sw3 {
-+				regulator-name = "vddarm";
-+				regulator-min-microvolt = <796551>;
-+				regulator-max-microvolt = <1544827>;
-+				lltc,fb-voltage-divider = <243000 261000>;
-+				regulator-ramp-delay = <7000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+				linux,phandle = <&reg_vdd_arm>;
-+			};
-+
-+			/* VDD_1P8 (1+R1/R2 = 2.505): GPS/VideoIn/ENET-PHY */
-+			reg_1p8v: sw4 {
-+				regulator-name = "vdd1p8";
-+				regulator-min-microvolt = <1033310>;
-+				regulator-max-microvolt = <2004000>;
-+				lltc,fb-voltage-divider = <301000 200000>;
-+				regulator-ramp-delay = <7000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			/* VDD_1P0 (1+R1/R2 = 1.39): PCIe/ENET-PHY */
-+			reg_1p0v: ldo2 {
-+				regulator-name = "vdd1p0";
-+				regulator-min-microvolt = <950000>;
-+				regulator-max-microvolt = <1050000>;
-+				lltc,fb-voltage-divider = <78700 200000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			/* VDD_AUD_1P8: Audio codec */
-+			reg_aud_1p8v: ldo3 {
-+				regulator-name = "vdd1p8a";
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <1800000>;
-+				regulator-boot-on;
-+			};
-+
-+			/* VDD_HIGH (1+R1/R2 = 4.17) */
-+			reg_3p0v: ldo4 {
-+				regulator-name = "vdd3p0";
-+				regulator-min-microvolt = <3023250>;
-+				regulator-max-microvolt = <3023250>;
-+				lltc,fb-voltage-divider = <634000 200000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+		};
-+	};
-+};
-+
-+&i2c3 {
-+	clock-frequency = <100000>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_i2c3>;
-+	status = "okay";
-+
-+	egalax_ts: touchscreen@4 {
-+		compatible = "eeti,egalax_ts";
-+		reg = <0x04>;
-+		interrupt-parent = <&gpio5>;
-+		interrupts = <12 IRQ_TYPE_EDGE_FALLING>;
-+		wakeup-gpios = <&gpio5 13 GPIO_ACTIVE_LOW>;
-+	};
-+};
-+
-+&ldb {
-+	fsl,dual-channel;
-+	status = "okay";
-+
-+	lvds-channel@0 {
-+		fsl,data-mapping = "spwg";
-+		fsl,data-width = <18>;
-+		status = "okay";
-+
-+		display-timings {
-+			native-mode = <&timing0>;
-+			timing0: hsd100pxn1 {
-+				clock-frequency = <65000000>;
-+				hactive = <1024>;
-+				vactive = <768>;
-+				hback-porch = <220>;
-+				hfront-porch = <40>;
-+				vback-porch = <21>;
-+				vfront-porch = <7>;
-+				hsync-len = <60>;
-+				vsync-len = <10>;
-+			};
-+		};
-+	};
-+};
-+
-+&pcie {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_pcie>;
-+	reset-gpio = <&gpio4 31 GPIO_ACTIVE_LOW>;
-+	status = "okay";
-+};
-+
-+&pwm2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_pwm2>; /* MX6_DIO1 */
-+	status = "disabled";
-+};
-+
-+&pwm3 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_pwm3>; /* MX6_DIO2 */
-+	status = "disabled";
-+};
-+
-+&pwm4 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_pwm4>;
-+	status = "okay";
-+};
-+
-+&ssi1 {
-+	status = "okay";
-+};
-+
-+&uart1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_uart1>;
-+	uart-has-rtscts;
-+	rts-gpios = <&gpio7 1 GPIO_ACTIVE_HIGH>;
-+	status = "okay";
-+};
-+
-+&uart2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_uart2>;
-+	status = "okay";
-+};
-+
-+&uart5 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_uart5>;
-+	status = "okay";
-+};
-+
-+&usbotg {
-+	vbus-supply = <&reg_usb_otg_vbus>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_usbotg>;
-+	disable-over-current;
-+	status = "okay";
-+};
-+
-+&usbh1 {
-+	vbus-supply = <&reg_usb_h1_vbus>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_usbh1>;
-+	status = "okay";
-+};
-+
-+&usdhc2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_usdhc2>;
-+	bus-width = <8>;
-+	vmmc-supply = <&reg_3p3v>;
-+	non-removable;
-+	status = "okay";
-+};
-+
-+&usdhc3 {
-+	pinctrl-names = "default", "state_100mhz", "state_200mhz";
-+	pinctrl-0 = <&pinctrl_usdhc3>;
-+	pinctrl-1 = <&pinctrl_usdhc3_100mhz>;
-+	pinctrl-2 = <&pinctrl_usdhc3_200mhz>;
-+	cd-gpios = <&gpio7 0 GPIO_ACTIVE_HIGH>;
-+	vmmc-supply = <&reg_3p3v>;
-+	status = "okay";
-+};
-+
-+&wdog1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_wdog>;
-+	fsl,ext-reset-output;
-+};
-+
-+&iomuxc {
-+	pinctrl_audmux: audmuxgrp {
-+		fsl,pins = <
-+			/* AUD4 */
-+			MX6QDL_PAD_DISP0_DAT20__AUD4_TXC	0x130b0
-+			MX6QDL_PAD_DISP0_DAT21__AUD4_TXD	0x110b0
-+			MX6QDL_PAD_DISP0_DAT22__AUD4_TXFS	0x130b0
-+			MX6QDL_PAD_DISP0_DAT23__AUD4_RXD	0x130b0
-+			MX6QDL_PAD_GPIO_0__CCM_CLKO1		0x130b0 /* AUD4_MCK */
-+			/* AUD6 */
-+			MX6QDL_PAD_DI0_PIN2__AUD6_TXD		0x130b0
-+			MX6QDL_PAD_DI0_PIN3__AUD6_TXFS		0x130b0
-+			MX6QDL_PAD_DI0_PIN4__AUD6_RXD		0x130b0
-+			MX6QDL_PAD_DI0_PIN15__AUD6_TXC		0x130b0
-+		>;
-+	};
-+
-+	pinctrl_ecspi3: escpi3grp {
-+		fsl,pins = <
-+			MX6QDL_PAD_DISP0_DAT0__ECSPI3_SCLK	0x100b1
-+			MX6QDL_PAD_DISP0_DAT1__ECSPI3_MOSI	0x100b1
-+			MX6QDL_PAD_DISP0_DAT2__ECSPI3_MISO	0x100b1
-+			MX6QDL_PAD_DISP0_DAT3__GPIO4_IO24	0x100b1
-+		>;
-+	};
-+
-+	pinctrl_enet: enetgrp {
-+		fsl,pins = <
-+			MX6QDL_PAD_RGMII_RXC__RGMII_RXC		0x1b030
-+			MX6QDL_PAD_RGMII_RD0__RGMII_RD0		0x1b030
-+			MX6QDL_PAD_RGMII_RD1__RGMII_RD1		0x1b030
-+			MX6QDL_PAD_RGMII_RD2__RGMII_RD2		0x1b030
-+			MX6QDL_PAD_RGMII_RD3__RGMII_RD3		0x1b030
-+			MX6QDL_PAD_RGMII_RX_CTL__RGMII_RX_CTL	0x1b030
-+			MX6QDL_PAD_RGMII_TXC__RGMII_TXC		0x1b030
-+			MX6QDL_PAD_RGMII_TD0__RGMII_TD0		0x1b030
-+			MX6QDL_PAD_RGMII_TD1__RGMII_TD1		0x1b030
-+			MX6QDL_PAD_RGMII_TD2__RGMII_TD2		0x1b030
-+			MX6QDL_PAD_RGMII_TD3__RGMII_TD3		0x1b030
-+			MX6QDL_PAD_RGMII_TX_CTL__RGMII_TX_CTL	0x1b030
-+			MX6QDL_PAD_ENET_REF_CLK__ENET_TX_CLK	0x1b0b0
-+			MX6QDL_PAD_ENET_MDIO__ENET_MDIO		0x1b0b0
-+			MX6QDL_PAD_ENET_MDC__ENET_MDC		0x1b0b0
-+			MX6QDL_PAD_GPIO_16__ENET_REF_CLK	0x4001b0a8
-+			MX6QDL_PAD_ENET_TXD0__GPIO1_IO30	0x4001b0b0 /* PHY_RST# */
-+		>;
-+	};
-+
-+	pinctrl_flexcan: flexcangrp {
-+		fsl,pins = <
-+			MX6QDL_PAD_KEY_ROW2__FLEXCAN1_RX	0x1b0b1
-+			MX6QDL_PAD_KEY_COL2__FLEXCAN1_TX	0x1b0b1
-+			MX6QDL_PAD_GPIO_2__GPIO1_IO02		0x4001b0b0 /* CAN_STBY */
-+		>;
-+	};
-+
-+	pinctrl_gpio_leds: gpioledsgrp {
-+		fsl,pins = <
-+			MX6QDL_PAD_KEY_COL0__GPIO4_IO06		0x1b0b0
-+			MX6QDL_PAD_KEY_ROW0__GPIO4_IO07		0x1b0b0
-+			MX6QDL_PAD_KEY_ROW4__GPIO4_IO15		0x1b0b0
-+		>;
-+	};
-+
-+	pinctrl_i2c1: i2c1grp {
-+		fsl,pins = <
-+			MX6QDL_PAD_EIM_D21__I2C1_SCL		0x4001b8b1
-+			MX6QDL_PAD_EIM_D28__I2C1_SDA		0x4001b8b1
-+		>;
-+	};
-+
-+	pinctrl_i2c2: i2c2grp {
-+		fsl,pins = <
-+			MX6QDL_PAD_KEY_COL3__I2C2_SCL		0x4001b8b1
-+			MX6QDL_PAD_KEY_ROW3__I2C2_SDA		0x4001b8b1
-+		>;
-+	};
-+
-+	pinctrl_i2c3: i2c3grp {
-+		fsl,pins = <
-+			MX6QDL_PAD_GPIO_3__I2C3_SCL		0x4001b8b1
-+			MX6QDL_PAD_GPIO_6__I2C3_SDA		0x4001b8b1
-+			MX6QDL_PAD_GPIO_19__GPIO4_IO05		0x4001b0b0 /* DIOI2C_DIS# */
-+			MX6QDL_PAD_DISP0_DAT18__GPIO5_IO12	0x0001b0b0 /* LVDS_TOUCH_IRQ# */
-+			MX6QDL_PAD_DISP0_DAT19__GPIO5_IO13	0x0001b0b0 /* LVDS_BACKEN */
-+		>;
-+	};
-+
-+	pinctrl_keypad: keypadgrp {
-+		fsl,pins = <
-+			MX6QDL_PAD_DISP0_DAT17__GPIO5_IO11	0x0001b0b0 /* KEYPAD_IRQ# */
-+			MX6QDL_PAD_DISP0_DAT9__GPIO4_IO30	0x0001b0b0 /* KEYPAD_LED_EN */
-+		>;
-+	};
-+
-+	pinctrl_pcie: pciegrp {
-+		fsl,pins = <
-+			MX6QDL_PAD_DISP0_DAT10__GPIO4_IO31	0x1b0b0    /* PCI_RST# */
-+			MX6QDL_PAD_GPIO_17__GPIO7_IO12		0x4001b0b0 /* PCIESKT_WDIS# */
-+		>;
-+	};
-+
-+	pinctrl_pmic: pmicgrp {
-+		fsl,pins = <
-+			MX6QDL_PAD_GPIO_8__GPIO1_IO08		0x0001b0b0 /* PMIC_IRQ# */
-+		>;
-+	};
-+
-+	pinctrl_pps: ppsgrp {
-+		fsl,pins = <
-+			MX6QDL_PAD_ENET_RXD1__GPIO1_IO26	0x1b0b1
-+		>;
-+	};
-+
-+	pinctrl_pwm2: pwm2grp {
-+		fsl,pins = <
-+			MX6QDL_PAD_SD1_DAT2__PWM2_OUT		0x1b0b1
-+		>;
-+	};
-+
-+	pinctrl_pwm3: pwm3grp {
-+		fsl,pins = <
-+			MX6QDL_PAD_SD1_DAT1__PWM3_OUT		0x1b0b1
-+		>;
-+	};
-+
-+	pinctrl_pwm4: pwm4grp {
-+		fsl,pins = <
-+			MX6QDL_PAD_SD1_CMD__PWM4_OUT		0x1b0b1
-+		>;
-+	};
-+
-+	pinctrl_uart1: uart1grp {
-+		fsl,pins = <
-+			MX6QDL_PAD_SD3_DAT7__UART1_TX_DATA	0x1b0b1
-+			MX6QDL_PAD_SD3_DAT6__UART1_RX_DATA	0x1b0b1
-+			MX6QDL_PAD_SD3_DAT4__GPIO7_IO01		0x4001b0b1 /* TEN */
-+		>;
-+	};
-+
-+	pinctrl_uart2: uart2grp {
-+		fsl,pins = <
-+			MX6QDL_PAD_SD4_DAT7__UART2_TX_DATA	0x1b0b1
-+			MX6QDL_PAD_SD4_DAT4__UART2_RX_DATA	0x1b0b1
-+		>;
-+	};
-+
-+	pinctrl_uart5: uart5grp {
-+		fsl,pins = <
-+			MX6QDL_PAD_KEY_COL1__UART5_TX_DATA	0x1b0b1
-+			MX6QDL_PAD_KEY_ROW1__UART5_RX_DATA	0x1b0b1
-+		>;
-+	};
-+
-+	pinctrl_usbh1: usbh1grp {
-+		fsl,pins = <
-+			MX6QDL_PAD_GPIO_9__GPIO1_IO09		0x4001b0b0 /* USBHUB_RST# */
-+		>;
-+	};
-+
-+	pinctrl_usbotg: usbotggrp {
-+		fsl,pins = <
-+			MX6QDL_PAD_GPIO_1__USB_OTG_ID		0x17059
-+			MX6QDL_PAD_EIM_D22__GPIO3_IO22		0x1b0b0 /* PWR_EN */
-+			MX6QDL_PAD_KEY_COL4__GPIO4_IO14		0x1b0b0 /* OC */
-+		>;
-+	};
-+
-+	pinctrl_usdhc2: usdhc2grp {
-+		fsl,pins = <
-+			MX6QDL_PAD_SD2_CMD__SD2_CMD		0x170f9
-+			MX6QDL_PAD_SD2_CLK__SD2_CLK		0x100f9
-+			MX6QDL_PAD_SD2_DAT0__SD2_DATA0		0x170f9
-+			MX6QDL_PAD_SD2_DAT1__SD2_DATA1		0x170f9
-+			MX6QDL_PAD_SD2_DAT2__SD2_DATA2		0x170f9
-+			MX6QDL_PAD_SD2_DAT3__SD2_DATA3		0x170f9
-+			MX6QDL_PAD_NANDF_D4__SD2_DATA4		0x170f9
-+			MX6QDL_PAD_NANDF_D5__SD2_DATA5		0x170f9
-+			MX6QDL_PAD_NANDF_D6__SD2_DATA6		0x170f9
-+			MX6QDL_PAD_NANDF_D7__SD2_DATA7		0x170f9
-+		>;
-+	};
-+
-+	pinctrl_usdhc3: usdhc3grp {
-+		fsl,pins = <
-+			MX6QDL_PAD_SD3_CMD__SD3_CMD		0x17059
-+			MX6QDL_PAD_SD3_CLK__SD3_CLK		0x10059
-+			MX6QDL_PAD_SD3_DAT0__SD3_DATA0		0x17059
-+			MX6QDL_PAD_SD3_DAT1__SD3_DATA1		0x17059
-+			MX6QDL_PAD_SD3_DAT2__SD3_DATA2		0x17059
-+			MX6QDL_PAD_SD3_DAT3__SD3_DATA3		0x17059
-+			MX6QDL_PAD_SD3_DAT5__GPIO7_IO00		0x17059 /* CD */
-+			MX6QDL_PAD_NANDF_CS1__SD3_VSELECT	0x17059
-+		>;
-+	};
-+
-+	pinctrl_usdhc3_100mhz: usdhc3grp100mhz {
-+		fsl,pins = <
-+			MX6QDL_PAD_SD3_CMD__SD3_CMD		0x170b9
-+			MX6QDL_PAD_SD3_CLK__SD3_CLK		0x100b9
-+			MX6QDL_PAD_SD3_DAT0__SD3_DATA0		0x170b9
-+			MX6QDL_PAD_SD3_DAT1__SD3_DATA1		0x170b9
-+			MX6QDL_PAD_SD3_DAT2__SD3_DATA2		0x170b9
-+			MX6QDL_PAD_SD3_DAT3__SD3_DATA3		0x170b9
-+			MX6QDL_PAD_SD3_DAT5__GPIO7_IO00		0x170b9 /* CD */
-+			MX6QDL_PAD_NANDF_CS1__SD3_VSELECT	0x170b9
-+		>;
-+	};
-+
-+	pinctrl_usdhc3_200mhz: usdhc3grp200mhz {
-+		fsl,pins = <
-+			MX6QDL_PAD_SD3_CMD__SD3_CMD		0x170f9
-+			MX6QDL_PAD_SD3_CLK__SD3_CLK		0x100f9
-+			MX6QDL_PAD_SD3_DAT0__SD3_DATA0		0x170f9
-+			MX6QDL_PAD_SD3_DAT1__SD3_DATA1		0x170f9
-+			MX6QDL_PAD_SD3_DAT2__SD3_DATA2		0x170f9
-+			MX6QDL_PAD_SD3_DAT3__SD3_DATA3		0x170f9
-+			MX6QDL_PAD_SD3_DAT5__GPIO7_IO00		0x170f9 /* CD */
-+			MX6QDL_PAD_NANDF_CS1__SD3_VSELECT	0x170f9
-+		>;
-+	};
-+
-+	pinctrl_wdog: wdoggrp {
-+		fsl,pins = <
-+			MX6QDL_PAD_DISP0_DAT8__WDOG1_B		0x1b0b0
-+		>;
-+	};
-+};
--- 
-2.7.4
+Cheers,
+peda
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
