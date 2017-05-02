@@ -1,59 +1,105 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 29/30] dt-bindings: add vendor prefix for bananapi
-Date: Tue, 2 May 2017 08:52:49 -0500
-Message-ID: <CAL_JsqKHpWGviZ2H-xhGMzNWsCCRMj_O5ux8aguFfeVKBfJa_w@mail.gmail.com>
-References: <1493198774-4478-1-git-send-email-sean.wang@mediatek.com>
- <1493198774-4478-30-git-send-email-sean.wang@mediatek.com>
- <20170428203727.m6jm5w6nb2iirxih@rob-hp-laptop> <1493621880.32195.13.camel@mtkswgap22>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1493621880.32195.13.camel@mtkswgap22>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Sean Wang <sean.wang@mediatek.com>, "arm@kernel.org" <arm@kernel.org>
-Cc: Matthias Brugger <matthias.bgg@gmail.com>, John Crispin <john@phrozen.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Linus Walleij <linus.walleij@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-mediatek@lists.infradead.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+From: Sudeep Holla <sudeep.holla@arm.com>
+Subject: [PATCH 2/6] Documentation: devicetree: add bindings to support ARM MHU subchannels
+Date: Tue,  2 May 2017 14:55:49 +0100
+Message-ID: <1493733353-25812-3-git-send-email-sudeep.holla@arm.com>
+References: <1493733353-25812-1-git-send-email-sudeep.holla@arm.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1493733353-25812-1-git-send-email-sudeep.holla@arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org, Jassi Brar <jassisinghbrar@gmail.com>
+Cc: Sudeep Holla <sudeep.holla@arm.com>, Alexey Klimov <alexey.klimov@arm.com>, Jassi Brar <jaswinder.singh@linaro.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-+arm-soc
+The ARM MHU has mechanism to assert interrupt signals to facilitate
+inter-processor message based communication. It drives the signal using
+a 32-bit register, with all 32-bits logically ORed together. It also
+enables software to set, clear and check the status of each of the bits
+of this register independently. Each bit of the register can be
+associated with a type of event that can contribute to raising the
+interrupt thereby allowing it to be used as independent subchannels.
 
-On Mon, May 1, 2017 at 1:58 AM, Sean Wang <sean.wang@mediatek.com> wrote:
-> On Fri, 2017-04-28 at 15:37 -0500, Rob Herring wrote:
->> On Wed, Apr 26, 2017 at 05:26:13PM +0800, sean.wang@mediatek.com wrote:
->> > From: Sean Wang <sean.wang@mediatek.com>
->> >
->> > Banana Pi team in Sinovoip Co., Limited which are dedicated to
->> > design and manufacture open hardware product.
->> >
->> > Website: http://www.banana-pi.org/
->> >
->> > Signed-off-by: Sean Wang <sean.wang@mediatek.com>
->> > ---
->> >  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
->> >  1 file changed, 1 insertion(+)
->> >
->> > diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
->> > index ec0bfb9..8ca0f3c 100644
->> > --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
->> > +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
->> > @@ -44,6 +44,7 @@ avia      avia semiconductor
->> >  avic       Shanghai AVIC Optoelectronics Co., Ltd.
->> >  axentia    Axentia Technologies AB
->> >  axis       Axis Communications AB
->> > +bananapi Banana Pi SINOVOP CO., LIMITED
->>
->> s/SINOVOP/SINOVOIP/
->
-> Hi Rob,
->
-> thanks for your careful reviewing , i will correct it in the next
-> version.
->
-> BTW, Could those related dts changes go through your tree if everything
-> looks good? Because I find Matthias have been inactive for a while and
-> the latest branch in his tree seems still staying on 4.10.
+Since the first version of this binding can't support sub-channels,
+this patch extends the existing binding to support them.
 
-Happy to take binding doc changes, but I don't take dts changes
-because those go thru arm-soc. If the platform maintainer is not
-responsive, then we should replace or add maintainers.
+Cc: Alexey Klimov <alexey.klimov@arm.com>
+Cc: Jassi Brar <jaswinder.singh@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+---
+ .../devicetree/bindings/mailbox/arm-mhu.txt        | 44 ++++++++++++++++++++--
+ 1 file changed, 41 insertions(+), 3 deletions(-)
 
-Rob
+diff --git a/Documentation/devicetree/bindings/mailbox/arm-mhu.txt b/Documentation/devicetree/bindings/mailbox/arm-mhu.txt
+index 4971f03f0b33..86a66f7918e2 100644
+--- a/Documentation/devicetree/bindings/mailbox/arm-mhu.txt
++++ b/Documentation/devicetree/bindings/mailbox/arm-mhu.txt
+@@ -10,21 +10,40 @@ STAT register and the remote clears it after having read the data.
+ The last channel is specified to be a 'Secure' resource, hence can't be
+ used by Linux running NS.
+ 
++The MHU drives the interrupt signal using a 32-bit register, with all
++32-bits logically ORed together. It provides a set of registers to
++enable software to set, clear and check the status of each of the bits
++of this register independently. The use of 32 bits per interrupt line
++enables software to provide more information about the source of the
++interrupt. For example, each bit of the register can be associated with
++a type of event that can contribute to raising the interrupt.
++
+ Mailbox Device Node:
+ ====================
+ 
+ Required properties:
+ --------------------
+-- compatible:		Shall be "arm,mhu" & "arm,primecell"
++- compatible:		Shall be "arm,primecell" and one of the below:
++			"arm,mhu" - if the controller doesn't support
++				    subchannels
++			"arm,mhu-v2" - if the controller supports subchannels
+ - reg:			Contains the mailbox register address range (base
+ 			address and length)
+-- #mbox-cells		Shall be 1 - the index of the channel needed.
++- #mbox-cells		Shall be 1 - the index of the channel needed when
++			compatible is "arm,mhu"
++			Shall be 2 - the index of the channel needed, and
++			the index of the subchannel with the channel when
++			compatible is "arm,mhu-v2"
+ - interrupts:		Contains the interrupt information corresponding to
+-			each of the 3 links of MHU.
++			each of the 3 physical channels of MHU namely low
++			priority non-secure, high priority non-secure and
++			secure channels.
+ 
+ Example:
+ --------
+ 
++1. Controller which doesn't support subchannels
++
+ 	mhu: mailbox@2b1f0000 {
+ 		#mbox-cells = <1>;
+ 		compatible = "arm,mhu", "arm,primecell";
+@@ -41,3 +60,22 @@ used by Linux running NS.
+ 		reg = <0 0x2e000000 0x4000>;
+ 		mboxes = <&mhu 1>; /* HP-NonSecure */
+ 	};
++
++2. Controller which supports subchannels
++
++	mhu: mailbox@2b1f0000 {
++		#mbox-cells = <2>;
++		compatible = "arm,mhu-v2", "arm,primecell";
++		reg = <0 0x2b1f0000 0x1000>;
++		interrupts = <0 36 4>, /* LP-NonSecure */
++			     <0 35 4>, /* HP-NonSecure */
++			     <0 37 4>; /* Secure */
++		clocks = <&clock 0 2 1>;
++		clock-names = "apb_pclk";
++	};
++
++	mhu_client: scb@2e000000 {
++		compatible = "arm,scpi";
++		reg = <0 0x2e000000 0x200>;
++		mboxes = <&mhu 1 4>; /* HP-NonSecure 5th sub-channel */
++	};
+-- 
+2.7.4
