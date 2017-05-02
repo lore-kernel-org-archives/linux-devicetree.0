@@ -1,126 +1,86 @@
-From: Eddie James <eajames-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-Subject: Re: [v6,10/23] drivers/fsi: Add device read/write/peek API
-Date: Tue, 2 May 2017 09:11:57 -0500
-Message-ID: <d2b26e2b-b488-886a-93c8-17db37e77b92@linux.vnet.ibm.com>
-References: <d0d2932a-e69e-bda5-5731-f1bd46fca265@linux.vnet.ibm.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4 1/5] dt-bindings: gpu: add bindings for the ARM Mali
+ Midgard GPU
+Date: Tue, 2 May 2017 09:13:00 -0500
+Message-ID: <CAL_JsqK8rjvFW=LFb7==Qho-MHVew-O_vAJ+M6wcFJGfVD6r1A@mail.gmail.com>
+References: <cover.1493125299.git.guillaume.tucker@collabora.com>
+ <9349c8ae9091fbd93e9410f4cfae770ac850bf6b.1493125299.git.guillaume.tucker@collabora.com>
+ <20170428192742.pu4v4layszr6z2ot@rob-hp-laptop> <60b3c062-d4bb-6502-61be-ada830cf58f7@collabora.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <d0d2932a-e69e-bda5-5731-f1bd46fca265-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+In-Reply-To: <60b3c062-d4bb-6502-61be-ada830cf58f7-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Christopher Bostic <cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-Cc: robh+dt <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "mark.rutland" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, rostedt-nx8X9YLhiw1AfugRpC6u6w@public.gmane.org, mingo-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, andrew <andrew-zrmu5oMJ5Fs@public.gmane.org>, alistair-Y4h6yKqj69EXC2x5gXVKYQ@public.gmane.org, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, benh <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, joel <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
+To: Guillaume Tucker <guillaume.tucker-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Sjoerd Simons <sjoerd.simons-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, John Reitan <john.reitan-5wv7dgnIgG8@public.gmane.org>, Wookey <wookey-Xpnwy/r4z8dg9hUCZPvPmw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Apr 10, 2017, at 3:46 PM, Christopher Bostic 
-<cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org> wrote:
-> From: Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
+On Tue, May 2, 2017 at 6:23 AM, Guillaume Tucker
+<guillaume.tucker-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org> wrote:
+> Hi Rob,
 >
-> This change introduces the fsi device API: simple read, write and peek
-> accessors for the devices' address spaces.
+> On 28/04/17 20:27, Rob Herring wrote:
+>>
+>> On Tue, Apr 25, 2017 at 02:16:16PM +0100, Guillaume Tucker wrote:
 >
-> Includes contributions from Chris Bostic <cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-> and Edward A. James <eajames-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>.
 >
-> Signed-off-by: Edward A. James <eajames-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>
-> Signed-off-by: Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
-> Signed-off-by: Chris Bostic <cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-> Signed-off-by: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
-> ---
->  drivers/fsi/fsi-core.c | 33 +++++++++++++++++++++++++++++++++
->  include/linux/fsi.h    |  7 ++++++-
->  2 files changed, 39 insertions(+), 1 deletion(-)
+>>> diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt
+>>> b/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt
+>>> new file mode 100644
+>>> index 000000000000..547ddeceb498
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt
+>>> @@ -0,0 +1,82 @@
+>>> +ARM Mali Midgard GPU
+>>> +====================
+>>> +
+>>> +Required properties:
+>>> +
+>>> +- compatible :
+>>> +  * Must be one of the following:
+>>> +    + "arm,mali-t60x"
+>>> +    + "arm,mali-t62x"
+>>
+>>
+>> Don't use wildcards.
 >
-> diff --git a/drivers/fsi/fsi-core.c b/drivers/fsi/fsi-core.c
-> index a8faa89..4da0b030 100644
-> --- a/drivers/fsi/fsi-core.c
-> +++ b/drivers/fsi/fsi-core.c
-> @@ -32,6 +32,8 @@
->  #define FSI_SLAVE_CONF_CRC_MASK        0x0000000f
->  #define FSI_SLAVE_CONF_DATA_BITS    28
 >
-> +#define FSI_PEEK_BASE            0x410
-> +
->  static const int engine_page_size = 0x400;
+> Sure, old habits die hard...  I'll fix it in patch v5.
 >
->  #define FSI_SLAVE_BASE            0x800
-> @@ -73,9 +75,40 @@ static int fsi_master_read(struct fsi_master 
-> *master, int link,
->          uint8_t slave_id, uint32_t addr, void *val, size_t size);
->  static int fsi_master_write(struct fsi_master *master, int link,
->          uint8_t slave_id, uint32_t addr, const void *val, size_t size);
-> +static int fsi_slave_read(struct fsi_slave *slave, uint32_t addr,
-> +        void *val, size_t size);
-> +static int fsi_slave_write(struct fsi_slave *slave, uint32_t addr,
-> +        const void *val, size_t size);
+>>> +    + "arm,mali-t720"
+>>> +    + "arm,mali-t760"
+>>> +    + "arm,mali-t820"
+>>> +    + "arm,mali-t830"
+>>> +    + "arm,mali-t860"
+>>> +    + "arm,mali-t880"
+>>> +  * And, optionally, one of the vendor specific compatible:
+>>
+>>
+>> IMO, these should not be optional.
 >
->  /* FSI endpoint-device support */
 >
-> +int fsi_device_read(struct fsi_device *dev, uint32_t addr, void *val,
-> +        size_t size)
-> +{
-> +    if (addr > dev->size || size > dev->size || addr > dev->size - size)
-> +        return -EINVAL;
-> +
-> +    return fsi_slave_read(dev->slave, dev->addr + addr, val, size);
-> +}
-> +EXPORT_SYMBOL_GPL(fsi_device_read);
-> +
-> +int fsi_device_write(struct fsi_device *dev, uint32_t addr, const 
-> void *val,
-> +        size_t size)
-> +{
-> +    if (addr > dev->size || size > dev->size || addr > dev->size - size)
-> +        return -EINVAL;
-> +
-> +    return fsi_slave_write(dev->slave, dev->addr + addr, val, size);
-> +}
-> +EXPORT_SYMBOL_GPL(fsi_device_write);
-> +
-> +int fsi_device_peek(struct fsi_device *dev, void *val)
-> +{
-> +    uint32_t addr = FSI_PEEK_BASE + ((dev->unit - 2) * 
-> sizeof(uint32_t));
-> +
-> +    return fsi_slave_read(dev->slave, addr, val, sizeof(uint32_t));
-> +}
-> +
->  static void fsi_device_release(struct device *_device)
->  {
->      struct fsi_device *device = to_fsi_dev(_device);
-> diff --git a/include/linux/fsi.h b/include/linux/fsi.h
-> index efa55ba..66bce48 100644
-> --- a/include/linux/fsi.h
-> +++ b/include/linux/fsi.h
-> @@ -27,6 +27,12 @@ struct fsi_device {
->      uint32_t        size;
->  };
->
-> +extern int fsi_device_read(struct fsi_device *dev, uint32_t addr,
-> +        void *val, size_t size);
-> +extern int fsi_device_write(struct fsi_device *dev, uint32_t addr,
-> +        const void *val, size_t size);
-> +extern int fsi_device_peek(struct fsi_device *dev, void *val);
-> +
->  struct fsi_device_id {
->      u8    engine_type;
->      u8    version;
-> @@ -40,7 +46,6 @@ struct fsi_device_id {
->  #define FSI_DEVICE_VERSIONED(t, v) \
->      .engine_type = (t), .version = (v),
->
-> -
->  struct fsi_driver {
->      struct device_driver        drv;
->      const struct fsi_device_id    *id_table;
->
+> Well, vendor compatible strings are clearly optional for the
+> Utgard GPU series for which the bindings docs were recently
+> merged.  It seems that whether these should be optional or not,
+> the documentation should be consistent between at least all
+> similar types of devices like Midgard and Utgard GPUs.  They have
+> different architectures but from a device tree point of view,
+> they both have the same kind of SoC-specific integration (clocks,
+> irqs, regulators...).
 
-I also wrote a driver against this API (an i2c algorithm). Everything 
-looks good and working well.
+Clocks should not vary by SoC. There is often variation because clocks
+get driven by same source or are not s/w controlled, but really there
+should not be that variation. I noticed Utgard has 2 clocks. So is
+Midgard really just 1 clock? The DT should have all the clocks listed
+in the TRMs.
 
-Edward (Eddie) James <eajames-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+> So was this was overlooked in the Utgard case and should it
+> ideally be fixed there as well as non-optional?  Or, is it OK to
+> keep these optional on a second thought?
 
+Probably should be required in the Utgard case as well.
+
+Rob
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
