@@ -1,63 +1,208 @@
-From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Subject: Re: [PATCH v5] media: platform: Renesas IMR driver
-Date: Wed, 03 May 2017 00:17:03 +0300
-Message-ID: <2382097.9ZIG3XAO0j@avalon>
-References: <20170309200818.786255823@cogentembedded.com> <CAMuHMdV5-aMx4KuqShm47XtORJK8rMKzw6FUs2Hjsxia+jPfxg@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+From: Brad Bishop <bradleyb-r5pk2Da7Bxt8sGd51Jp2sdBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH RFC] Documentation/devicetree: Add specification for FSI
+ busses
+Date: Tue, 2 May 2017 22:36:34 -0400
+Message-ID: <6AE33BFA-636B-4131-ABFC-3A8DC40F80DD@fuzziesquirrel.com>
+References: <1493704508-27119-1-git-send-email-jk@ozlabs.org>
+Mime-Version: 1.0 (Mac OS X Mail 10.3 \(3273\))
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8BIT
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAMuHMdV5-aMx4KuqShm47XtORJK8rMKzw6FUs2Hjsxia+jPfxg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <1493704508-27119-1-git-send-email-jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Cc: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Media Mailing List <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Konstantin Kozhevnikov <Konstantin.Kozhevnikov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+To: Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Geert,
 
-On Wednesday 22 Mar 2017 10:34:16 Geert Uytterhoeven wrote:
-> On Thu, Mar 9, 2017 at 9:08 PM, Sergei Shtylyov wrote:
-> > --- /dev/null
-> > +++ media_tree/Documentation/devicetree/bindings/media/rcar_imr.txt
-> > @@ -0,0 +1,27 @@
-> > +Renesas R-Car Image Renderer (Distortion Correction Engine)
-> > +-----------------------------------------------------------
-> > +
-> > +The image renderer, or the distortion correction engine, is a drawing
-> > processor
-> > +with a simple instruction system capable of referencing video capture
-> > data or
-> > +data in an external memory as 2D texture data and performing texture
-> > mapping
-> > +and drawing with respect to any shape that is split into triangular
-> > objects.
-> > +
-> > +Required properties:
-> > +
-> > +- compatible: "renesas,<soctype>-imr-lx4", "renesas,imr-lx4" as a
-> > fallback for
-> > +  the image renderer light extended 4 (IMR-LX4) found in the R-Car gen3
-> > SoCs,
-> > +  where the examples with <soctype> are:
-> > +  - "renesas,r8a7795-imr-lx4" for R-Car H3,
-> > +  - "renesas,r8a7796-imr-lx4" for R-Car M3-W.
+> On May 2, 2017, at 1:55 AM, Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org> wrote:
 > 
-> Laurent: what do you think about the need for SoC-specific compatible
-> values for the various IM* blocks?
+> This change introduces a proposed layout for describing FSI busses in
+> the device tree. While the bus is probe-able, we'd still like a method
+> of describing subordinate (eg i2c) busses that are behind FSI devices.
+> 
+> The FSI core will be responsible for matching probed slaves & engines to
+> their device tree nodes, so the FSI device drivers' probe() functions
+> will be passed a struct device with the appropriate of_node populated
+> where a matching DT node is found.
+> 
+> RFC at this stage, so I'd welcome any feedback.
+> 
+> Signed-off-by: Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
 
-There's no documented IP core version register, but when dumping all 
-configuration registers on H3 and M3-W I noticed that register 0x002c, not 
-documented in the datasheet, reads 0x14060514 on all four IMR instances in H3, 
-and 0x20150505 on both instances in M3-W.
+Acked-by: Brad Bishop <bradleyb-r5pk2Da7Bxt8sGd51Jp2sdBPR1lH4CV8@public.gmane.org>
 
-This looks like a version register to me. If my assumption is correct, we 
-could do without any SoC-specific compatible string.
+with some very inconsequential nits...
 
--- 
-Regards,
+> ---
+> Documentation/devicetree/bindings/fsi/fsi.txt | 144 ++++++++++++++++++++++++++
+> 1 file changed, 144 insertions(+)
+> create mode 100644 Documentation/devicetree/bindings/fsi/fsi.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/fsi/fsi.txt b/Documentation/devicetree/bindings/fsi/fsi.txt
+> new file mode 100644
+> index 0000000..b5e85c7
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/fsi/fsi.txt
+> @@ -0,0 +1,144 @@
+> +FSI bus & engine generic device tree bindings
+> +=============================================
+> +
+> +The FSI bus is probe-able, so Linux is able to enumerate FSI slaves, and
+> +engines within those slaves. However, we have a facility to match devicetree
+> +nodes to probed engines. This allows for fsi engines to expose non-probeable
+> +busses, which are then exposed by the device tree. For example, a FSI engine
+> +that is an I2C master - the I2C bus can be described by the device tree under
+> +the engine's device tree node.
+> +
+> +FSI masters may require their own DT nodes (to describe the master HW itself);
+> +that requirement is defined by the master's implementation, and is described by
+> +the fsi-master-* binding specifications.
+> +
+> +Under the masters' nodes, we can describe the bus topology using nodes to
+> +represent the FSI slaves and their slave engines. As a basic outline:
+> +
+> +  fsi-master {
 
-Laurent Pinchart
+an FSI master
 
+> +      /* top-level of FSI bus topology, bound to a FSI master driver and
+> +       * exposes a FSI bus */
+
+an FSI bus
+
+> +
+> +      fsi-slave@<link,id> {
+> +          /* this node defines the FSI slave device, and is handled
+> +           * entirely with FSI core code */
+> +
+> +          fsi-slave-engine@<addr> {
+> +              /* this node defines the engine endpoint & address range, which
+> +               * is bound to the relevant fsi device driver */
+> +               ...
+> +          };
+> +
+> +          fsi-slave-engine@<addr> {
+> +              ...
+> +          };
+> +
+> +      };
+> +  };
+> +
+> +Note that since the bus is probe-able, some (or all) of the topology may
+> +not be described; this binding only provides an optional facility for
+> +adding subordinate device tree nodes as children of FSI engines.
+> +
+> +FSI masters
+> +-----------
+> +
+> +FSI master nodes declare themselves as such with the "fsi-master" compatible
+> +value. It's likely that an implementation-specific compatible value will
+> +be needed as well, for example:
+> +
+> +    compatible = "fsi-master-gpio", "fsi-master";
+> +
+> +Since the master nodes describe the top-level of the FSI topology, they also
+> +need to declare the FSI-standard addressing scheme. This requires two cells for
+> +addresses (link index and slave ID), and no size:
+> +
+> +    #address-cells = <2>;
+> +    #size-cells = <0>;
+> +
+> +FSI slaves
+> +----------
+> +
+> +Slaves are identified by a (link-index, slave-id) pair, so require two cells
+> +for an address identifier. Since these are not a range, no size cells are
+> +required. For an example, a slave on link 1, with ID 2, could be represented
+> +as:
+> +
+> +    cfam@1,2 {
+> +        reg = <1 2>;
+> +	[...];
+> +    }
+> +
+> +Each slave provides an address-space, under which the engines are accessible.
+> +That address space has a maximum of 23 bits, so we use one cell to represent
+> +addresses and sizes in the slave address space:
+> +
+> +    #address-cells = <1>;
+> +    #size-cells = <1>;
+> +
+> +
+> +FSI engines (devices)
+> +---------------------
+> +
+> +Engines are identified by their address under the slaves' address spaces. We
+> +use a single cell for address and size. Engine nodes represent the endpoint
+> +FSI device, and are passed to those FSI device drivers' ->probe() functions.
+> +
+> +For example, for a slave using a single 0x400-byte page starting at address
+> +0xc00:
+> +
+> +    engine@c00 {
+> +        reg = <0xc00 0x400>;
+> +    };
+> +
+> +
+> +Full example
+> +------------
+> +
+> +Here's an example that illustrates:
+> + - a FSI master
+
+an FSI master
+
+> +   - connected to a FSI slave
+
+an FSI slave
+
+> +     - that contains an engine that is an I2C master
+> +       - connected to an I2C EEPROM
+> +
+> +The FSI master may be connected to additional slaves, and slaves may have
+> +additional engines, but they don't necessarily need to be describe in the
+> +device tree if no extra platform information is required.
+> +
+> +    /* The GPIO-based FSI master node, describing the top level of the
+> +     * FSI bus
+> +     */
+> +    gpio-fsi {
+> +        compatible = "fsi-master-gpio", "fsi-master";
+> +        #address-cells = <2>;
+> +        #size-cells = <0>;
+> +
+> +        /* A FSI slave (aka. CFAM) at link 0, ID 0. */
+> +        cfam@0,0 {
+> +            reg = <0 0>;
+> +            #address-cells = <1>;
+> +            #size-cells = <1>;
+> +
+> +            /* FSI engine at 0xc00, using a single page. In this example,
+> +             * it's an I2C master controller, so subnodes describe the
+> +             * I2C bus.
+> +             */
+> +            i2c-controller@c00 {
+> +                reg = <0xc00 0x400>;
+> +
+> +                /* Engine-specific data. In this case, we're describing an
+> +                 * I2C bus, so we're conforming to the generic I2C binding
+> +                 */
+> +                compatible = "ibm,fsi-i2c";
+> +                #address-cells = <1>;
+> +                #size-cells = <1>;
+> +
+> +                /* I2C endpoint device: an Atmel EEPROM */
+> +                eeprom@50 {
+> +                    compatible = "atmel,24c256";
+> +                    reg = <0x50>;
+> +                    pagesize = <64>;
+> +                };
+> +            };
+> +        };
+> +    };
+> -- 
+> 2.7.4
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
