@@ -1,58 +1,72 @@
-From: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 2/4] soc: qcom: Introduce APCS IPC driver
-Date: Wed, 3 May 2017 15:25:20 +0530
-Message-ID: <CABb+yY03NHBEui+OtagpTD4bm2yxoahEiciBG99gG2jrVGjpKQ@mail.gmail.com>
-References: <20170503052929.17422-1-bjorn.andersson@linaro.org>
- <20170503052929.17422-2-bjorn.andersson@linaro.org> <c9b86ecfa6b84ae994da6c30d2840bbf@SFHDAG7NODE2.st.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+From: Guillaume Tucker <guillaume.tucker-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Subject: [PATCH v5 0/5] Add ARM Mali Midgard device tree bindings and gpu node for rk3288
+Date: Wed,  3 May 2017 10:56:24 +0100
+Message-ID: <cover.1493804968.git.guillaume.tucker@collabora.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <c9b86ecfa6b84ae994da6c30d2840bbf-GGltqRL9kSEdIAuSVraBWEEOCMrvLtNR@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Loic PALLARDY <loic.pallardy-qxv4g6HH51o@public.gmane.org>
-Cc: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ohad Ben-Cohen <ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>, "linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-remoteproc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-remoteproc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, =?UTF-8?q?Heiko=20St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Cc: Sjoerd Simons <sjoerd.simons-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, John Reitan <john.reitan-5wv7dgnIgG8@public.gmane.org>, Wookey <wookey-Xpnwy/r4z8dg9hUCZPvPmw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Guillaume Tucker <guillaume.tucker-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Loic, thanks for adding me.
+The ARM Mali Midgard GPU kernel driver is only available
+out-of-tree and is not going to be merged in its current form.
+However, it would be useful to have its device tree bindings
+merged.  In particular, this would enable distributions to create
+working driver packages (dkms...) without having to patch the
+kernel.
 
-On Wed, May 3, 2017 at 2:58 PM, Loic PALLARDY <loic.pallardy-qxv4g6HH51o@public.gmane.org> wrote:
->
->
->> -----Original Message-----
->> From: linux-remoteproc-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org [mailto:linux-remoteproc-
->> owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org] On Behalf Of Bjorn Andersson
->> Sent: Wednesday, May 03, 2017 7:29 AM
->> To: Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>; Rob Herring
->> <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>; Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>; Ohad Ben-
->> Cohen <ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>
->> Cc: linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org;
->> devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-
->> remoteproc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->> Subject: [PATCH v3 2/4] soc: qcom: Introduce APCS IPC driver
->>
->> This implements a driver that exposes the IPC bits found in the APCS Global
->> block in various Qualcomm platforms. The bits are used to signal inter-
->> processor communication signals from the application CPU to other masters.
->>
->> The driver implements the "doorbell" binding and could be used as basis for a
->> new Linux framework, if found useful outside Qualcomm.
->>
-> Hi Bjorn,
->
-> Even if Qualcom APCS IPC is limited, why don't you rely on existing mailbox framework.
-> It is there to gather all IPC management under the same interface.
-> No need to create a new one from my pov.
-> If you don't provide message data, mailbox framework behaves as doorbell.
->
-QCOM RPM reinvented the wheel for what mailbox framework already did,
-despite my pointing it out =>
-http://lkml.iu.edu/hypermail//linux/kernel/1406.2/03918.html
+The bindings for the earlier Mali Utgard GPU family have already
+been merged, so this is essentially the same scenario but for
+newer GPUs (Mali-T604 ~ Mali-T880).
 
-The driver bypassed mailbox framework and was pushed via another tree.
-Same is being attempted now, only now it is more expensive to switch
-to generic mailbox framework having spent so much time on QCOM
-specific implementation of controller and protocol drivers inside
-drivers/soc/qcom/
+This series of patches first imports the bindings from the latest
+driver release with some clean-up then adds a gpu node for the
+rk3288 SoC.  This was successfully tested on Radxa Rock2 Square,
+Firefly, Veyron Minnie and Jerry boards using Mali kernel driver
+r16p0 and r12p0 user-space binary.
+
+
+Changes since v1:
+- enabled gpu on rk3288-veyron boards
+
+Changes since v2:
+- removed "clk-names" property and "clk_mali" name
+- converted values of "interrupt-names" property to
+  lower-case: "job", "mmu" and "gpu"
+- replaced dt compatible strings with list of all Midgard GPU variants and
+  optional vendors
+- cleaned up gpu node example
+
+Changes since v3:
+- add "rockchip,rk3288-mali" vendor compatible string
+- move gpu node at the right location in rk3288.dtsi
+- use operating-points-v2 in documentation and rk3288.dtsi
+
+Changes since v4:
+- removed wildcards (mali-t60x, -t62x)
+- vendor compatible strings are not optional any more
+- example updated accordingly, based on rk3288
+
+
+Enric Balletbo i Serra (1):
+  ARM: dts: rockchip: enable ARM Mali GPU on rk3288-veyron
+
+Guillaume Tucker (4):
+  dt-bindings: gpu: add bindings for the ARM Mali Midgard GPU
+  ARM: dts: rockchip: add ARM Mali GPU node for rk3288
+  ARM: dts: rockchip: enable ARM Mali GPU on rk3288-rock2-som
+  ARM: dts: rockchip: enable ARM Mali GPU on rk3288-firefly
+
+ .../devicetree/bindings/gpu/arm,mali-midgard.txt   | 86 ++++++++++++++++++++++
+ arch/arm/boot/dts/rk3288-firefly.dtsi              |  5 ++
+ arch/arm/boot/dts/rk3288-rock2-som.dtsi            |  5 ++
+ arch/arm/boot/dts/rk3288-veyron.dtsi               |  5 ++
+ arch/arm/boot/dts/rk3288.dtsi                      | 43 +++++++++++
+ 5 files changed, 144 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt
+
+--
+2.11.0
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
