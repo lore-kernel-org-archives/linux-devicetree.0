@@ -1,12 +1,17 @@
 From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v2 0/20] drm: sun4i: Add support for the HDMI controller
-Date: Wed,  3 May 2017 13:59:37 +0200
-Message-ID: <cover.d697f34bb7b0605c5e76cbc4167a64453e5e0984.1493812478.git-series.maxime.ripard@free-electrons.com>
+Subject: [PATCH v2 2/20] clk: sunxi-ng: Pass the parent and a
+ pointer to the clocks round rate
+Date: Wed,  3 May 2017 13:59:39 +0200
+Message-ID: <83d508e254c6656aee02bbe5c410922ea66cf3d7.1493812478.git-series.maxime.ripard@free-electrons.com>
+References: <cover.d697f34bb7b0605c5e76cbc4167a64453e5e0984.1493812478.git-series.maxime.ripard@free-electrons.com>
 Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBSMMU7EAKGQE4YUWZKI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBSUMU7EAKGQEHJN3ZSY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <cover.d697f34bb7b0605c5e76cbc4167a64453e5e0984.1493812478.git-series.maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+In-Reply-To: <cover.d697f34bb7b0605c5e76cbc4167a64453e5e0984.1493812478.git-series.maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+References: <cover.d697f34bb7b0605c5e76cbc4167a64453e5e0984.1493812478.git-series.maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -17,116 +22,175 @@ To: Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen
 Cc: Daniel Vetter <daniel.vetter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+The clocks might need to modify their parent clocks. In order to make that
+possible, give them access to the parent clock being evaluated, and to a
+pointer to the parent rate so that they can modify it if needed.
 
-Here is an attempt at getting the HDMI controller running.
+Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+---
+ drivers/clk/sunxi-ng/ccu_div.c  |  7 ++++---
+ drivers/clk/sunxi-ng/ccu_mp.c   |  7 ++++---
+ drivers/clk/sunxi-ng/ccu_mult.c | 11 ++++++-----
+ drivers/clk/sunxi-ng/ccu_mux.c  |  8 +++++---
+ drivers/clk/sunxi-ng/ccu_mux.h  |  3 ++-
+ drivers/clk/sunxi-ng/ccu_nkm.c  |  7 ++++---
+ 6 files changed, 25 insertions(+), 18 deletions(-)
 
-This HDMI controller is found on a number of old Allwinner SoCs (A10, A10s,
-A20, A31).
-
-This driver only supports for now the A10s because it was an easy target,
-being very close to the A13 that is already supported by our DRM driver.
-
-There's nothing out of the extraordinary there, except maybe the clock
-setup. All the internal clocks (TMDS, DDC) have been modeled using the
-common clock framework, the TMDS clock being the parent of the DDC one.
-
-While this might sound overkill, other SoC have a different, external
-source for the DDC clock, which will be easier to support through the clock
-framework.
-
-The IP also supports audio (through an already supported i2s controller,
-and some missing configuration in the HDMI controller) and CEC. Both will
-come eventually.
-
-Let me know what you think!
-Maxime
-
-Changes from v1:
-  - Fixed typos in the CCU header and the HDMI code
-  - Reintroduced the comment for the backporch timings
-  - Renamed the hdmi node to hdmi, instead of hdmi0
-  - Added support for hdmi-connector
-  - Added a separate Kconfig option for the HDMI support
-  - Changed the TCON muxing configuration for an explicit call in the
-    TCON's "clients"
-  - Fixed the initialisation sequence that was clearing the clocks bits
-  - Constified the HDMI's structures and removed whitespaces errors
-  - Fixed an issue in the sunxi-ng code that was not reporting the proper
-    parent clock rate if it was modified
-  - Removed unused headers
-  - Removed CLK_SET_RATE_PARENT for the DDC clock
-  - Used the DDC address defines
-  - Removed the interlace flag that wasn't supported at the moment
-  - Moved most of the HDMI encoder init to the bind function like we do for
-    the other encoders
-  - Switched to drm_of_find_possible_crtcs
-  - Removed the extra printk that were still in my code
-  - Rebased on top of linux-next
-  - Removed the patch changing the divider_round_rate prototype to
-    introduce a new function instead that takes the parent clock to
-    evaluate
-  - Added a clk_set_rate for the hdmi module clock
-  - Fixed the V_TOTAL TCON ch0 calculation to be consistent with ch1's
-  - Defined all registers, and remove the TODOs
-  - Fixed the EDID issues by increasing the timeout.
-  - Added an atomic_check to prevent the DBLCLK modes to be used, as it is
-    not supported yet
-  - Updated the binding to add the interrupts and DMA channels
-
-Maxime Ripard (20):
-  clk: divider: Make divider_round_rate take the parent clock
-  clk: sunxi-ng: Pass the parent and a pointer to the clocks round rate
-  clk: sunxi-ng: div: Switch to divider_round_rate
-  clk: sunxi-ng: mux: Don't just rely on the parent for CLK_SET_RATE_PARENT
-  clk: sunxi-ng: mux: split out the pre-divider computation code
-  clk: sunxi-ng: mux: Change pre-divider application function prototype
-  clk: sunxi-ng: mux: Re-adjust parent rate
-  clk: sunxi-ng: sun5i: Export video PLLs
-  drm/sun4i: tcon: Add channel debug
-  drm/sun4i: tcon: Move the muxing out of the mode set function
-  drm/sun4i: tcon: Switch mux on only for composite
-  drm/sun4i: tcon: Fix tcon channel 1 backporch calculation
-  drm/sun4i: tcon: Change vertical total size computation inconsistency
-  drm/sun4i: tcon: multiply the vtotal when not in interlace
-  drm/sun4i: Ignore the generic connectors for components
-  dt-bindings: display: sun4i: Add HDMI display bindings
-  dt-bindings: display: sun4i: Add allwinner,tcon-channel property
-  drm/sun4i: Add HDMI support
-  ARM: sun5i: a10s: Add the HDMI controller node
-  ARM: sun5i: a10s-olinuxino: Enable HDMI
-
- Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt |  90 +-
- arch/arm/boot/dts/sun5i-a10s-olinuxino-micro.dts              |  29 +-
- arch/arm/boot/dts/sun5i-a10s.dtsi                             |  50 +-
- arch/arm/boot/dts/sun5i.dtsi                                  |   1 +-
- drivers/clk/clk-divider.c                                     |  26 +-
- drivers/clk/sunxi-ng/ccu-sun5i.h                              |   6 +-
- drivers/clk/sunxi-ng/ccu_div.c                                |  38 +-
- drivers/clk/sunxi-ng/ccu_mp.c                                 |  15 +-
- drivers/clk/sunxi-ng/ccu_mult.c                               |  19 +-
- drivers/clk/sunxi-ng/ccu_mux.c                                |  90 +-
- drivers/clk/sunxi-ng/ccu_mux.h                                |  11 +-
- drivers/clk/sunxi-ng/ccu_nkm.c                                |   7 +-
- drivers/gpu/drm/sun4i/Kconfig                                 |   9 +-
- drivers/gpu/drm/sun4i/Makefile                                |   6 +-
- drivers/gpu/drm/sun4i/sun4i_drv.c                             |   8 +-
- drivers/gpu/drm/sun4i/sun4i_hdmi.h                            | 157 ++-
- drivers/gpu/drm/sun4i/sun4i_hdmi_ddc_clk.c                    | 127 ++-
- drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c                        | 493 +++++++-
- drivers/gpu/drm/sun4i/sun4i_hdmi_tmds_clk.c                   | 225 +++-
- drivers/gpu/drm/sun4i/sun4i_rgb.c                             |   1 +-
- drivers/gpu/drm/sun4i/sun4i_tcon.c                            |  43 +-
- drivers/gpu/drm/sun4i/sun4i_tcon.h                            |   4 +-
- drivers/gpu/drm/sun4i/sun4i_tv.c                              |   1 +-
- include/dt-bindings/clock/sun5i-ccu.h                         |   3 +-
- include/linux/clk-provider.h                                  |   4 +-
- 25 files changed, 1347 insertions(+), 116 deletions(-)
- create mode 100644 drivers/gpu/drm/sun4i/sun4i_hdmi.h
- create mode 100644 drivers/gpu/drm/sun4i/sun4i_hdmi_ddc_clk.c
- create mode 100644 drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c
- create mode 100644 drivers/gpu/drm/sun4i/sun4i_hdmi_tmds_clk.c
-
-base-commit: ee91aaf669ac4fbb09283958f69d57dcad5c4963
+diff --git a/drivers/clk/sunxi-ng/ccu_div.c b/drivers/clk/sunxi-ng/ccu_div.c
+index 4057e6021aa9..a489f18a3c01 100644
+--- a/drivers/clk/sunxi-ng/ccu_div.c
++++ b/drivers/clk/sunxi-ng/ccu_div.c
+@@ -14,7 +14,8 @@
+ #include "ccu_div.h"
+ 
+ static unsigned long ccu_div_round_rate(struct ccu_mux_internal *mux,
+-					unsigned long parent_rate,
++					struct clk_hw *parent,
++					unsigned long *parent_rate,
+ 					unsigned long rate,
+ 					void *data)
+ {
+@@ -26,10 +27,10 @@ static unsigned long ccu_div_round_rate(struct ccu_mux_internal *mux,
+ 	 * several parents, while we might be called to evaluate
+ 	 * several different parents.
+ 	 */
+-	val = divider_get_val(rate, parent_rate, cd->div.table, cd->div.width,
++	val = divider_get_val(rate, *parent_rate, cd->div.table, cd->div.width,
+ 			      cd->div.flags);
+ 
+-	return divider_recalc_rate(&cd->common.hw, parent_rate, val,
++	return divider_recalc_rate(&cd->common.hw, *parent_rate, val,
+ 				   cd->div.table, cd->div.flags);
+ }
+ 
+diff --git a/drivers/clk/sunxi-ng/ccu_mp.c b/drivers/clk/sunxi-ng/ccu_mp.c
+index b583f186a804..de02e6c386d8 100644
+--- a/drivers/clk/sunxi-ng/ccu_mp.c
++++ b/drivers/clk/sunxi-ng/ccu_mp.c
+@@ -41,7 +41,8 @@ static void ccu_mp_find_best(unsigned long parent, unsigned long rate,
+ }
+ 
+ static unsigned long ccu_mp_round_rate(struct ccu_mux_internal *mux,
+-				       unsigned long parent_rate,
++				       struct clk_hw *hw,
++				       unsigned long *parent_rate,
+ 				       unsigned long rate,
+ 				       void *data)
+ {
+@@ -52,9 +53,9 @@ static unsigned long ccu_mp_round_rate(struct ccu_mux_internal *mux,
+ 	max_m = cmp->m.max ?: 1 << cmp->m.width;
+ 	max_p = cmp->p.max ?: 1 << ((1 << cmp->p.width) - 1);
+ 
+-	ccu_mp_find_best(parent_rate, rate, max_m, max_p, &m, &p);
++	ccu_mp_find_best(*parent_rate, rate, max_m, max_p, &m, &p);
+ 
+-	return parent_rate / p / m;
++	return *parent_rate / p / m;
+ }
+ 
+ static void ccu_mp_disable(struct clk_hw *hw)
+diff --git a/drivers/clk/sunxi-ng/ccu_mult.c b/drivers/clk/sunxi-ng/ccu_mult.c
+index 671141359895..6ee7ba0738fb 100644
+--- a/drivers/clk/sunxi-ng/ccu_mult.c
++++ b/drivers/clk/sunxi-ng/ccu_mult.c
+@@ -33,9 +33,10 @@ static void ccu_mult_find_best(unsigned long parent, unsigned long rate,
+ }
+ 
+ static unsigned long ccu_mult_round_rate(struct ccu_mux_internal *mux,
+-					unsigned long parent_rate,
+-					unsigned long rate,
+-					void *data)
++					 struct clk_hw *parent,
++					 unsigned long *parent_rate,
++					 unsigned long rate,
++					 void *data)
+ {
+ 	struct ccu_mult *cm = data;
+ 	struct _ccu_mult _cm;
+@@ -47,9 +48,9 @@ static unsigned long ccu_mult_round_rate(struct ccu_mux_internal *mux,
+ 	else
+ 		_cm.max = (1 << cm->mult.width) + cm->mult.offset - 1;
+ 
+-	ccu_mult_find_best(parent_rate, rate, &_cm);
++	ccu_mult_find_best(*parent_rate, rate, &_cm);
+ 
+-	return parent_rate * _cm.mult;
++	return *parent_rate * _cm.mult;
+ }
+ 
+ static void ccu_mult_disable(struct clk_hw *hw)
+diff --git a/drivers/clk/sunxi-ng/ccu_mux.c b/drivers/clk/sunxi-ng/ccu_mux.c
+index c6bb1f523232..bae735e252b6 100644
+--- a/drivers/clk/sunxi-ng/ccu_mux.c
++++ b/drivers/clk/sunxi-ng/ccu_mux.c
+@@ -61,7 +61,8 @@ int ccu_mux_helper_determine_rate(struct ccu_common *common,
+ 				  struct ccu_mux_internal *cm,
+ 				  struct clk_rate_request *req,
+ 				  unsigned long (*round)(struct ccu_mux_internal *,
+-							 unsigned long,
++							 struct clk_hw *,
++							 unsigned long *,
+ 							 unsigned long,
+ 							 void *),
+ 				  void *data)
+@@ -80,7 +81,8 @@ int ccu_mux_helper_determine_rate(struct ccu_common *common,
+ 		ccu_mux_helper_adjust_parent_for_prediv(common, cm, -1,
+ 							&adj_parent_rate);
+ 
+-		best_rate = round(cm, adj_parent_rate, req->rate, data);
++		best_rate = round(cm, best_parent, &adj_parent_rate,
++				  req->rate, data);
+ 
+ 		goto out;
+ 	}
+@@ -109,7 +111,7 @@ int ccu_mux_helper_determine_rate(struct ccu_common *common,
+ 		ccu_mux_helper_adjust_parent_for_prediv(common, cm, i,
+ 							&adj_parent_rate);
+ 
+-		tmp_rate = round(cm, adj_parent_rate, req->rate, data);
++		tmp_rate = round(cm, parent, &adj_parent_rate, req->rate, data);
+ 		if (tmp_rate == req->rate) {
+ 			best_parent = parent;
+ 			best_parent_rate = parent_rate;
+diff --git a/drivers/clk/sunxi-ng/ccu_mux.h b/drivers/clk/sunxi-ng/ccu_mux.h
+index 47aba3a48245..4be56eee2bfd 100644
+--- a/drivers/clk/sunxi-ng/ccu_mux.h
++++ b/drivers/clk/sunxi-ng/ccu_mux.h
+@@ -86,7 +86,8 @@ int ccu_mux_helper_determine_rate(struct ccu_common *common,
+ 				  struct ccu_mux_internal *cm,
+ 				  struct clk_rate_request *req,
+ 				  unsigned long (*round)(struct ccu_mux_internal *,
+-							 unsigned long,
++							 struct clk_hw *,
++							 unsigned long *,
+ 							 unsigned long,
+ 							 void *),
+ 				  void *data);
+diff --git a/drivers/clk/sunxi-ng/ccu_nkm.c b/drivers/clk/sunxi-ng/ccu_nkm.c
+index cba84afe1cf1..44b16dc8fea6 100644
+--- a/drivers/clk/sunxi-ng/ccu_nkm.c
++++ b/drivers/clk/sunxi-ng/ccu_nkm.c
+@@ -102,7 +102,8 @@ static unsigned long ccu_nkm_recalc_rate(struct clk_hw *hw,
+ }
+ 
+ static unsigned long ccu_nkm_round_rate(struct ccu_mux_internal *mux,
+-					unsigned long parent_rate,
++					struct clk_hw *hw,
++					unsigned long *parent_rate,
+ 					unsigned long rate,
+ 					void *data)
+ {
+@@ -116,9 +117,9 @@ static unsigned long ccu_nkm_round_rate(struct ccu_mux_internal *mux,
+ 	_nkm.min_m = 1;
+ 	_nkm.max_m = nkm->m.max ?: 1 << nkm->m.width;
+ 
+-	ccu_nkm_find_best(parent_rate, rate, &_nkm);
++	ccu_nkm_find_best(*parent_rate, rate, &_nkm);
+ 
+-	return parent_rate * _nkm.n * _nkm.k / _nkm.m;
++	return *parent_rate * _nkm.n * _nkm.k / _nkm.m;
+ }
+ 
+ static int ccu_nkm_determine_rate(struct clk_hw *hw,
 -- 
 git-series 0.8.11
