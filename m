@@ -1,209 +1,133 @@
-From: Brad Bishop <bradleyb-r5pk2Da7Bxt8sGd51Jp2sdBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH RFC] Documentation/devicetree: Add specification for FSI
- busses
-Date: Tue, 2 May 2017 22:36:34 -0400
-Message-ID: <6AE33BFA-636B-4131-ABFC-3A8DC40F80DD@fuzziesquirrel.com>
-References: <1493704508-27119-1-git-send-email-jk@ozlabs.org>
-Mime-Version: 1.0 (Mac OS X Mail 10.3 \(3273\))
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1493704508-27119-1-git-send-email-jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: [PATCH v2 0/8] clk: sunxi-ng: Add support for A83T CCU
+Date: Wed,  3 May 2017 11:16:50 +0800
+Message-ID: <20170503031658.29299-1-wens@csie.org>
+Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBQMXUXEAKGQELGGBQYQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hi everyone,
 
-> On May 2, 2017, at 1:55 AM, Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org> wrote:
-> 
-> This change introduces a proposed layout for describing FSI busses in
-> the device tree. While the bus is probe-able, we'd still like a method
-> of describing subordinate (eg i2c) busses that are behind FSI devices.
-> 
-> The FSI core will be responsible for matching probed slaves & engines to
-> their device tree nodes, so the FSI device drivers' probe() functions
-> will be passed a struct device with the appropriate of_node populated
-> where a matching DT node is found.
-> 
-> RFC at this stage, so I'd welcome any feedback.
-> 
-> Signed-off-by: Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
+(Resent with devicetree mailing list CC-ed.)
+This is v2 of my A83T CCU series. This is for 4.13.
 
-Acked-by: Brad Bishop <bradleyb-r5pk2Da7Bxt8sGd51Jp2sdBPR1lH4CV8@public.gmane.org>
+Changes since v1:
 
-with some very inconsequential nits...
+  - Dropped two patches that were merged
 
-> ---
-> Documentation/devicetree/bindings/fsi/fsi.txt | 144 ++++++++++++++++++++++++++
-> 1 file changed, 144 insertions(+)
-> create mode 100644 Documentation/devicetree/bindings/fsi/fsi.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/fsi/fsi.txt b/Documentation/devicetree/bindings/fsi/fsi.txt
-> new file mode 100644
-> index 0000000..b5e85c7
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/fsi/fsi.txt
-> @@ -0,0 +1,144 @@
-> +FSI bus & engine generic device tree bindings
-> +=============================================
-> +
-> +The FSI bus is probe-able, so Linux is able to enumerate FSI slaves, and
-> +engines within those slaves. However, we have a facility to match devicetree
-> +nodes to probed engines. This allows for fsi engines to expose non-probeable
-> +busses, which are then exposed by the device tree. For example, a FSI engine
-> +that is an I2C master - the I2C bus can be described by the device tree under
-> +the engine's device tree node.
-> +
-> +FSI masters may require their own DT nodes (to describe the master HW itself);
-> +that requirement is defined by the master's implementation, and is described by
-> +the fsi-master-* binding specifications.
-> +
-> +Under the masters' nodes, we can describe the bus topology using nodes to
-> +represent the FSI slaves and their slave engines. As a basic outline:
-> +
-> +  fsi-master {
+  - Added clk core flag to disable caching of clock phases
 
-an FSI master
+  - Added support for multiple variable pre-dividers
 
-> +      /* top-level of FSI bus topology, bound to a FSI master driver and
-> +       * exposes a FSI bus */
+  - Merged "pll-periph-ahb1" pre-divider clock into "ahb1" clock
+    with multiple variable pre-dividers
 
-an FSI bus
+  - Introduced new class of phase clocks that return -ENOTSUPP
+    when the clock is in new timing mode
 
-> +
-> +      fsi-slave@<link,id> {
-> +          /* this node defines the FSI slave device, and is handled
-> +           * entirely with FSI core code */
-> +
-> +          fsi-slave-engine@<addr> {
-> +              /* this node defines the engine endpoint & address range, which
-> +               * is bound to the relevant fsi device driver */
-> +               ...
-> +          };
-> +
-> +          fsi-slave-engine@<addr> {
-> +              ...
-> +          };
-> +
-> +      };
-> +  };
-> +
-> +Note that since the bus is probe-able, some (or all) of the topology may
-> +not be described; this binding only provides an optional facility for
-> +adding subordinate device tree nodes as children of FSI engines.
-> +
-> +FSI masters
-> +-----------
-> +
-> +FSI master nodes declare themselves as such with the "fsi-master" compatible
-> +value. It's likely that an implementation-specific compatible value will
-> +be needed as well, for example:
-> +
-> +    compatible = "fsi-master-gpio", "fsi-master";
-> +
-> +Since the master nodes describe the top-level of the FSI topology, they also
-> +need to declare the FSI-standard addressing scheme. This requires two cells for
-> +addresses (link index and slave ID), and no size:
-> +
-> +    #address-cells = <2>;
-> +    #size-cells = <0>;
-> +
-> +FSI slaves
-> +----------
-> +
-> +Slaves are identified by a (link-index, slave-id) pair, so require two cells
-> +for an address identifier. Since these are not a range, no size cells are
-> +required. For an example, a slave on link 1, with ID 2, could be represented
-> +as:
-> +
-> +    cfam@1,2 {
-> +        reg = <1 2>;
-> +	[...];
-> +    }
-> +
-> +Each slave provides an address-space, under which the engines are accessible.
-> +That address space has a maximum of 23 bits, so we use one cell to represent
-> +addresses and sizes in the slave address space:
-> +
-> +    #address-cells = <1>;
-> +    #size-cells = <1>;
-> +
-> +
-> +FSI engines (devices)
-> +---------------------
-> +
-> +Engines are identified by their address under the slaves' address spaces. We
-> +use a single cell for address and size. Engine nodes represent the endpoint
-> +FSI device, and are passed to those FSI device drivers' ->probe() functions.
-> +
-> +For example, for a slave using a single 0x400-byte page starting at address
-> +0xc00:
-> +
-> +    engine@c00 {
-> +        reg = <0xc00 0x400>;
-> +    };
-> +
-> +
-> +Full example
-> +------------
-> +
-> +Here's an example that illustrates:
-> + - a FSI master
+  - Force mmc2 clock to new timing mode
 
-an FSI master
+  - Added back mmc2 output and sample clocks
 
-> +   - connected to a FSI slave
+  - Fixed bit ops for forcing audio PLL configuration
 
-an FSI slave
+  - Added requirement for "losc" clock in device tree binding
 
-> +     - that contains an engine that is an I2C master
-> +       - connected to an I2C EEPROM
-> +
-> +The FSI master may be connected to additional slaves, and slaves may have
-> +additional engines, but they don't necessarily need to be describe in the
-> +device tree if no extra platform information is required.
-> +
-> +    /* The GPIO-based FSI master node, describing the top level of the
-> +     * FSI bus
-> +     */
-> +    gpio-fsi {
-> +        compatible = "fsi-master-gpio", "fsi-master";
-> +        #address-cells = <2>;
-> +        #size-cells = <0>;
-> +
-> +        /* A FSI slave (aka. CFAM) at link 0, ID 0. */
-> +        cfam@0,0 {
-> +            reg = <0 0>;
-> +            #address-cells = <1>;
-> +            #size-cells = <1>;
-> +
-> +            /* FSI engine at 0xc00, using a single page. In this example,
-> +             * it's an I2C master controller, so subnodes describe the
-> +             * I2C bus.
-> +             */
-> +            i2c-controller@c00 {
-> +                reg = <0xc00 0x400>;
-> +
-> +                /* Engine-specific data. In this case, we're describing an
-> +                 * I2C bus, so we're conforming to the generic I2C binding
-> +                 */
-> +                compatible = "ibm,fsi-i2c";
-> +                #address-cells = <1>;
-> +                #size-cells = <1>;
-> +
-> +                /* I2C endpoint device: an Atmel EEPROM */
-> +                eeprom@50 {
-> +                    compatible = "atmel,24c256";
-> +                    reg = <0x50>;
-> +                    pagesize = <64>;
-> +                };
-> +            };
-> +        };
-> +    };
-> -- 
-> 2.7.4
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+  - Stripped leading 0 in device node name
+
+  - Updated subject prefixes for various patches
+
+Patch 1 adds a compatible string for the A83T CCU to the sunxi-ccu
+bindings.
+
+Patch 2 adds a CLK_GET_PHASE_NOCACHE flag to the clk core, asking it
+not to cache clock phase values. This is similar to CLK_GET_RATE_NOCACHE.
+Patch 5 has a compile time dependency on this patch, for the flag value.
+
+Patch 3 adds a new class of phase clocks that check the new timing mode
+bit, and returns an error if it is set, which indicates the phase delays
+no longer apply. This is a clean way to signal which timing mode the mmc
+clock is in, without using any custom functions or callbacks. We don't
+support runtime switching of modes.
+
+Patch 4 adds support for multiple variable pre-dividers to the sunxi-ng
+mux class.
+
+Patch 5 adds the driver for the A83T CCU.
+
+Patch 6 adds the CCU device nodes, and fixes up any existing clock
+phandles in the dtsi, without using the macros.
+
+Patch 7 sets the clock accuracy for the main oscillator.
+
+Patch 8 is for the next -rc2, switch the clock indices from raw numbers
+to macros we introduced with the driver. This will be updated if more
+peripherals are introduced in the same cycle.
+
+Let me know what you think.
+
+Cover letter excerpt from v1:
+
+This is yet another series that adds support for the A83T CCU.
+The A83T CCU has a mix of new styled (like the A80) clocks at
+old (like A3x) offsets. Some differences include:
+
+  - D1/D2 style PLL clocks
+  - divisible audio module clocks
+  - new timing mode for mmc2 module clock
+
+
+Regards
+ChenYu
+
+Chen-Yu Tsai (8):
+  dt-bindings: clock: sunxi-ccu: Add compatible string for A83T CCU
+  clk: Provide option to query hardware for clk phase
+  clk: sunxi-ng: Add class of phase clocks supporting MMC new timing
+    modes
+  clk: sunxi-ng: Support multiple variable pre-dividers
+  clk: sunxi-ng: Add driver for A83T CCU
+  ARM: sun8i: a83t: Add CCU device nodes
+  ARM: sun8i: a83t: Set clock accuracy for 24MHz oscillator
+  ARM: sun8i: a83t: Switch to CCU device tree binding macros
+
+ .../devicetree/bindings/clock/sunxi-ccu.txt        |   2 +
+ arch/arm/boot/dts/sun8i-a83t.dtsi                  |  19 +-
+ drivers/clk/clk.c                                  |   6 +-
+ drivers/clk/sunxi-ng/Kconfig                       |  10 +
+ drivers/clk/sunxi-ng/Makefile                      |   1 +
+ drivers/clk/sunxi-ng/ccu-sun50i-a64.c              |  10 +-
+ drivers/clk/sunxi-ng/ccu-sun6i-a31.c               |  10 +-
+ drivers/clk/sunxi-ng/ccu-sun8i-a23.c               |  10 +-
+ drivers/clk/sunxi-ng/ccu-sun8i-a33.c               |  10 +-
+ drivers/clk/sunxi-ng/ccu-sun8i-a83t.c              | 911 +++++++++++++++++++++
+ drivers/clk/sunxi-ng/ccu-sun8i-a83t.h              |  64 ++
+ drivers/clk/sunxi-ng/ccu-sun8i-h3.c                |  10 +-
+ drivers/clk/sunxi-ng/ccu-sun8i-r.c                 |  10 +-
+ drivers/clk/sunxi-ng/ccu-sun8i-v3s.c               |  10 +-
+ drivers/clk/sunxi-ng/ccu_mux.c                     |  15 +-
+ drivers/clk/sunxi-ng/ccu_mux.h                     |  13 +-
+ drivers/clk/sunxi-ng/ccu_phase.c                   |  47 ++
+ drivers/clk/sunxi-ng/ccu_phase.h                   |  16 +
+ include/dt-bindings/clock/sun8i-a83t-ccu.h         | 140 ++++
+ include/dt-bindings/reset/sun8i-a83t-ccu.h         |  98 +++
+ include/linux/clk-provider.h                       |   1 +
+ 21 files changed, 1363 insertions(+), 50 deletions(-)
+ create mode 100644 drivers/clk/sunxi-ng/ccu-sun8i-a83t.c
+ create mode 100644 drivers/clk/sunxi-ng/ccu-sun8i-a83t.h
+ create mode 100644 include/dt-bindings/clock/sun8i-a83t-ccu.h
+ create mode 100644 include/dt-bindings/reset/sun8i-a83t-ccu.h
+
+-- 
+2.11.0
