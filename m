@@ -1,41 +1,66 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 1/1] of: Move OF property and graph API from base.c to property.c
-Date: Wed, 3 May 2017 15:19:13 -0500
-Message-ID: <CAL_JsqKOnhaHW=GihiuaM6m8TjmREKNJsJaAaW96bKYmy=2MeQ@mail.gmail.com>
-References: <1493806898-5409-1-git-send-email-sakari.ailus@linux.intel.com>
+From: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+Subject: Re: [PATCHv2 0/3] Intel FPGA VIP Frame Buffer II DRM Driver
+Date: Wed, 03 May 2017 13:28:47 -0700
+Message-ID: <87shklznuo.fsf@eliezer.anholt.net>
+References: <1493086006-4392-1-git-send-email-hean.loong.ong@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <1493806898-5409-1-git-send-email-sakari.ailus@linux.intel.com>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Frank Rowand <frowand.list@gmail.com>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, Sudeep Holla <sudeep.holla@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>, "Rafael J. Wysocki" <rafael@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mark Brown <broonie@kernel.org>, Al Stone <ahs3@redhat.com>
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha512; protocol="application/pgp-signature"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1493086006-4392-1-git-send-email-hean.loong.ong-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: daniel.vetter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: hean.loong.ong-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tien.hock.loh-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 3, 2017 at 5:21 AM, Sakari Ailus
-<sakari.ailus@linux.intel.com> wrote:
-> base.c contains both core OF functions and increasingly other
-> functionality such as accessing properties and graphs, including
-> convenience functions. In the near future this would also include OF
-> specific implementation of the fwnode property and graph APIs.
->
-> Create driver/of/property.c to contain procedures for accessing and
-> interpreting device tree properties. The procedures are moved from
-> drivers/of/base.c, with no changes other than copying only the includes
-> required by the moved procedures.
->
-> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-> ---
-> Hi Rob and Frank,
->
-> This is a pre-dependency for further fwnode property cleanup. The patch
-> appears to be slightly more conflict-prone than the rest of the patchset:
->
-> <URL:http://www.spinics.net/lists/linux-acpi/msg72647.html>
->
-> Would it be possible to merge it separately from the rest?
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-Yes, but not now in the middle of the merge window. Maybe towards the
-end of the merge window for 4.12. Or it's not going to be until 4.13.
+hean.loong.ong-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org writes:
 
-Rob
+> From: Ong Hean Loong <hean.loong.ong-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+>
+> Hi,
+>
+> The new Intel Arria10 SOC FPGA devkit has a Display Port IP component=20
+> which requires a new driver. This is a virtual driver in which the
+> FGPA hardware would enable the Display Port based on the information
+> and data provided from the DRM frame buffer from the OS. Basically all
+> all information with reagrds to resolution and bits per pixel are
+> pre-configured on the FPGA design and these information are fed to
+> the driver via the device tree information as part of the hardware=20
+> information.
+
+I started reviewing the code, but I want to make sure I understand
+what's going on:
+
+This IP core isn't displaying contents from system memory on some sort
+of actual physical display, right?  It's a core that takes some input
+video stream (not described in the DT or in this driver) and stores it
+to memory?
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE/JuuFDWp9/ZkuCBXtdYpNtH8nugFAlkKPX8ACgkQtdYpNtH8
+nuixDRAAqrbNjJhk07JjPMpGvtEt92wS0gfIfORJGtWcoB3/9ePweM5lvFTey+RA
+153Y8WAQ2qv93VtxArdmIOcFSmx7wtimilWHq6NL//I01aB1MGRiC2Z3iRDk5rER
+g2fDdMO6mQCx4YFW1jr7bcDmgbc7DYW4L5QvwvS4L/gxic1374ixQngs0aNh/js8
+FTTCAvATFecwnUUtzMd/HY96PULr4FDKcn84Yqq5xD1yKWUIKqZz2qbnFRAkx9dJ
+7EeQOQjtigzNVIxEfXuz/AmpMi9epiCq4xPi2lwaPgeiDkFiAThk3PIi5aFB7V1h
+p0GTcmEVMLzIw4jioqCfHPr7NU7Lqo0VgY1yrY/zL+6ICfwhcp0m12ZJI0sAdpm0
+3qE3RFk7Cp9aEL5CDb5oDonVGTEPgM9wks9MXSwQrhPd79OZ2SrUa2rvE91r+Rpc
+9XitFV1rXQmu736hTBSUmaj8omkb31Hm6pTnNkEONXB3vBTxc1cx1WIfaGSO+g1Q
+n08VnqccaJS6aaJzW/c+fJnkR+W7TzhsuAE17PmuZ4ea351NORfopzrTVgXDMSc5
+uzBRfuoQFmav4lBI7wf6+ACcaSQ2lZIYmoyaxlbkcbuNYHljUfnOtELjBmybdtCg
+LTW86Eq/+dD2859PzJ6TzoR5vLNrKmtu8YCW3GZtBiIsE6qzgVE=
+=KdYS
+-----END PGP SIGNATURE-----
+--=-=-=--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
