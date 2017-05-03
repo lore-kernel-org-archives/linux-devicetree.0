@@ -1,78 +1,47 @@
-From: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
-Subject: [PATCHv2 2/2] ARM: dts: omap4-droid4: Add vibrator
-Date: Wed,  3 May 2017 13:11:28 +0200
-Message-ID: <20170503111128.15385-3-sebastian.reichel@collabora.co.uk>
-References: <20170503111128.15385-1-sebastian.reichel@collabora.co.uk>
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <20170503111128.15385-1-sebastian.reichel@collabora.co.uk>
-Sender: linux-input-owner@vger.kernel.org
-To: Sebastian Reichel <sre@kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Tony Lindgren <tony@atomide.com>
-Cc: Rob Herring <robh+dt@kernel.org>, linux-input@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Sebastian Reichel <sebastian.reichel@collabora.co.uk>
+From: Peter Rosin <peda@axentia.se>
+Subject: Re: [PATCH 2/2] [media] platform: add video-multiplexer subdevice
+ driver
+Date: Wed, 3 May 2017 13:13:42 +0200
+Message-ID: <e1cda75b-4967-7d79-7f07-b4f392153d73@axentia.se>
+References: <20170428141330.16187-1-p.zabel@pengutronix.de>
+ <20170428141330.16187-2-p.zabel@pengutronix.de>
+ <beb9f7c4-4959-1bb2-03e2-c5ccecbb8368@axentia.se>
+ <df5f38c4-b0e8-64c6-d6ba-c554133f4bbf@axentia.se>
+ <1493738491.2391.20.camel@pengutronix.de>
+ <74bfa70b-3407-9484-9717-bb2d07356f70@axentia.se>
+ <1493800556.3599.15.camel@pengutronix.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <1493800556.3599.15.camel@pengutronix.de>
+Sender: linux-media-owner@vger.kernel.org
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: linux-media@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Steve Longerbeam <steve_longerbeam@mentor.com>, kernel@pengutronix.de, Sascha Hauer <s.hauer@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Sakari Ailus <sakari.ailus@iki.fi>, Pavel Machek <pavel@ucw.cz>, Steve Longerbeam <slongerbeam@gmail.com>, Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
 List-Id: devicetree@vger.kernel.org
 
-Add vibrator to Droid4's device tree.
+On 2017-05-03 10:35, Philipp Zabel wrote:
+> On Tue, 2017-05-02 at 19:42 +0200, Peter Rosin wrote:
+>> On 2017-05-02 17:21, Philipp Zabel wrote:
+>>> Thank you, I've resent a version with a mutex lock around vmux->active.
+>>
+>> I had a bunch of ifs in the above message, so I'm not sure it's needed.
+>> I would expect there to be a lock outside somewhere in the media layer.
+>> A cursory look gets me to media-entity.c and media_entity_setup_link()
+>> which does have a mutex. But I'm no media expert, so maybe there are other
+>> ways of getting to video_mux_link_setup that I'm not aware of?
+> 
+> link_setup is always called under the graph mutex of the /dev/media
+> device. That is why I didn't think about locking too hard. In fact, I
+> initially wrote this expecting mux_control_get_exclusive to exist and
+> the mux select/deselect not to be locked at all.
+> 
+> But set_format is called from an unlocked ioctl on a /dev/v4l-subdev
+> device. Until your comments I didn't notice that it would be possible to
+> let link_setup set active = -1 in the middle of the set_format call,
+> causing it to return garbage.
 
-Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
----
- arch/arm/boot/dts/omap4-droid4-xt894.dts | 38 ++++++++++++++++++++++++++++++++
- 1 file changed, 38 insertions(+)
+Obviously, now that you point it out. I completely missed set_format...
 
-diff --git a/arch/arm/boot/dts/omap4-droid4-xt894.dts b/arch/arm/boot/dts/omap4-droid4-xt894.dts
-index 89eb607f4a9e..67d286a53368 100644
---- a/arch/arm/boot/dts/omap4-droid4-xt894.dts
-+++ b/arch/arm/boot/dts/omap4-droid4-xt894.dts
-@@ -116,6 +116,32 @@
- 
- 		};
- 	};
-+
-+	pwm8: dmtimer-pwm-8 {
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&vibrator_direction_pin>;
-+
-+		compatible = "ti,omap-dmtimer-pwm";
-+		#pwm-cells = <3>;
-+		ti,timers = <&timer8>;
-+		ti,clock-source = <0x01>;
-+	};
-+
-+	pwm9: dmtimer-pwm-9 {
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&vibrator_enable_pin>;
-+
-+		compatible = "ti,omap-dmtimer-pwm";
-+		#pwm-cells = <3>;
-+		ti,timers = <&timer9>;
-+		ti,clock-source = <0x01>;
-+	};
-+
-+	vibrator {
-+		compatible = "motorola,mapphone-pwm-vibrator";
-+		pwms = <&pwm9 0 1000000000 0>, <&pwm8 0 1000000000 0>;
-+		pwm-names = "enable", "direction";
-+	};
- };
- 
- &dss {
-@@ -453,6 +479,18 @@
- 		OMAP4_IOPAD(0x1c8, PIN_INPUT_PULLUP | MUX_MODE7)
- 		>;
- 	};
-+
-+	vibrator_direction_pin: pinmux_vibrator_direction_pin {
-+		pinctrl-single,pins = <
-+			OMAP4_IOPAD(0x1ce, PIN_OUTPUT | MUX_MODE1)	/* dmtimer8_pwm_evt (gpio_27) */
-+		>;
-+	};
-+
-+	vibrator_enable_pin: pinmux_vibrator_enable_pin {
-+		pinctrl-single,pins = <
-+			OMAP4_IOPAD(0X1d0, PIN_OUTPUT | MUX_MODE1)	/* dmtimer9_pwm_evt (gpio_28) */
-+		>;
-+	};
- };
- 
- &omap4_pmx_wkup {
--- 
-2.11.0
-
+Cheers,
+peda
