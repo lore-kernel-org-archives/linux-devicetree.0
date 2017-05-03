@@ -1,99 +1,94 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: [PATCH v2 1/20] clk: divider: Make divider_round_rate take the parent
- clock
-Date: Wed,  3 May 2017 13:59:38 +0200
-Message-ID: <9c2f3ed66ae32e55721bfced41dfd70e49cb746c.1493812478.git-series.maxime.ripard@free-electrons.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH v2 20/20] ARM: sun5i: a10s-olinuxino: Enable HDMI
+Date: Wed,  3 May 2017 13:59:57 +0200
+Message-ID: <c7ac6faa0568e6418291255af537c4b070bdea63.1493812478.git-series.maxime.ripard@free-electrons.com>
 References: <cover.d697f34bb7b0605c5e76cbc4167a64453e5e0984.1493812478.git-series.maxime.ripard@free-electrons.com>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <cover.d697f34bb7b0605c5e76cbc4167a64453e5e0984.1493812478.git-series.maxime.ripard@free-electrons.com>
-In-Reply-To: <cover.d697f34bb7b0605c5e76cbc4167a64453e5e0984.1493812478.git-series.maxime.ripard@free-electrons.com>
-References: <cover.d697f34bb7b0605c5e76cbc4167a64453e5e0984.1493812478.git-series.maxime.ripard@free-electrons.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-sunxi@googlegroups.com, Rob Herring <robh+dt@kernel.org>, Daniel Vetter <daniel.vetter@intel.com>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBVEMU7EAKGQEAJ5ZL6Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <cover.d697f34bb7b0605c5e76cbc4167a64453e5e0984.1493812478.git-series.maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+In-Reply-To: <cover.d697f34bb7b0605c5e76cbc4167a64453e5e0984.1493812478.git-series.maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+References: <cover.d697f34bb7b0605c5e76cbc4167a64453e5e0984.1493812478.git-series.maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Daniel Vetter <daniel.vetter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-U28gZmFyLCBkaXZpZGVyX3JvdW5kX3JhdGUgb25seSBjb25zaWRlcnMgdGhlIHBhcmVudCBjbG9j
-ayByZXR1cm5lZCBieQpjbGtfaHdfZ2V0X3BhcmVudC4KClRoaXMgd29ya3MgZmluZSBvbiBjbG9j
-a3MgdGhhdCBoYXZlIGEgc2luZ2xlIHBhcmVudHMsIHRoaXMgZG9lc24ndCB3b3JrIG9uCm11eGVz
-LCBzaW5jZSB3ZSB3aWxsIG9ubHkgY29uc2lkZXIgdGhlIGZpcnN0IHBhcmVudCwgd2hpbGUgb3Ro
-ZXIgcGFyZW50cwptYXkgdG90YWxseSBiZSBhYmxlIHRvIHByb3ZpZGUgYSBiZXR0ZXIgY29tYmlu
-YXRpb24uCgpDbG9ja3MgaW4gdGhhdCBjYXNlIGNhbm5vdCB1c2UgZGl2aWRlcl9yb3VuZF9yYXRl
-LCBzbyB3b3VsZCBoYXZlIHRvIGNvbWUgdXAKd2l0aCBhIHZlcnkgc2ltaWxhciBsb2dpYyB0byB3
-b3JrIGFyb3VuZCBpdC4gSW5zdGVhZCBvZiBoYXZpbmcgdG8gZG8Kc29tZXRoaW5nIGxpa2UgdGhp
-cywgYW5kIGR1cGxpY2F0ZSB0aGF0IGxvZ2ljIGV2ZXJ5d2hlcmUsIGNyZWF0ZSBhCmRpdmlkZXJf
-cm91bmRfcmF0ZSBwYXJlbnQgdG8gYWxsb3cgY2FsbGVyIHRvIGdpdmUgYW4gYWRkaXRpb25hbCBw
-YXJhbWV0ZXIKZm9yIHRoZSBwYXJlbnQgY2xvY2sgdG8gY29uc2lkZXIuCgpTaWduZWQtb2ZmLWJ5
-OiBNYXhpbWUgUmlwYXJkIDxtYXhpbWUucmlwYXJkQGZyZWUtZWxlY3Ryb25zLmNvbT4KLS0tCiBk
-cml2ZXJzL2Nsay9jbGstZGl2aWRlci5jICAgIHwgMjYgKysrKysrKysrKysrKysrKysrLS0tLS0t
-LS0KIGluY2x1ZGUvbGludXgvY2xrLXByb3ZpZGVyLmggfCAgNCArKysrCiAyIGZpbGVzIGNoYW5n
-ZWQsIDIyIGluc2VydGlvbnMoKyksIDggZGVsZXRpb25zKC0pCgpkaWZmIC0tZ2l0IGEvZHJpdmVy
-cy9jbGsvY2xrLWRpdmlkZXIuYyBiL2RyaXZlcnMvY2xrL2Nsay1kaXZpZGVyLmMKaW5kZXggOTYz
-ODZmZmM4NDgzLi40ODc1MDQzOWIxY2QgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvY2xrL2Nsay1kaXZp
-ZGVyLmMKKysrIGIvZHJpdmVycy9jbGsvY2xrLWRpdmlkZXIuYwpAQCAtMjc1LDcgKzI3NSw4IEBA
-IHN0YXRpYyBpbnQgX25leHRfZGl2KGNvbnN0IHN0cnVjdCBjbGtfZGl2X3RhYmxlICp0YWJsZSwg
-aW50IGRpdiwKIAlyZXR1cm4gZGl2OwogfQogCi1zdGF0aWMgaW50IGNsa19kaXZpZGVyX2Jlc3Rk
-aXYoc3RydWN0IGNsa19odyAqaHcsIHVuc2lnbmVkIGxvbmcgcmF0ZSwKK3N0YXRpYyBpbnQgY2xr
-X2RpdmlkZXJfYmVzdGRpdihzdHJ1Y3QgY2xrX2h3ICpodywgc3RydWN0IGNsa19odyAqcGFyZW50
-LAorCQkJICAgICAgIHVuc2lnbmVkIGxvbmcgcmF0ZSwKIAkJCSAgICAgICB1bnNpZ25lZCBsb25n
-ICpiZXN0X3BhcmVudF9yYXRlLAogCQkJICAgICAgIGNvbnN0IHN0cnVjdCBjbGtfZGl2X3RhYmxl
-ICp0YWJsZSwgdTggd2lkdGgsCiAJCQkgICAgICAgdW5zaWduZWQgbG9uZyBmbGFncykKQEAgLTMx
-NCw4ICszMTUsNyBAQCBzdGF0aWMgaW50IGNsa19kaXZpZGVyX2Jlc3RkaXYoc3RydWN0IGNsa19o
-dyAqaHcsIHVuc2lnbmVkIGxvbmcgcmF0ZSwKIAkJCSpiZXN0X3BhcmVudF9yYXRlID0gcGFyZW50
-X3JhdGVfc2F2ZWQ7CiAJCQlyZXR1cm4gaTsKIAkJfQotCQlwYXJlbnRfcmF0ZSA9IGNsa19od19y
-b3VuZF9yYXRlKGNsa19od19nZXRfcGFyZW50KGh3KSwKLQkJCQkJICAgICAgIHJhdGUgKiBpKTsK
-KwkJcGFyZW50X3JhdGUgPSBjbGtfaHdfcm91bmRfcmF0ZShwYXJlbnQsIHJhdGUgKiBpKTsKIAkJ
-bm93ID0gRElWX1JPVU5EX1VQX1VMTCgodTY0KXBhcmVudF9yYXRlLCBpKTsKIAkJaWYgKF9pc19i
-ZXN0X2RpdihyYXRlLCBub3csIGJlc3QsIGZsYWdzKSkgewogCQkJYmVzdGRpdiA9IGk7CkBAIC0z
-MjYsMjIgKzMyNiwzMiBAQCBzdGF0aWMgaW50IGNsa19kaXZpZGVyX2Jlc3RkaXYoc3RydWN0IGNs
-a19odyAqaHcsIHVuc2lnbmVkIGxvbmcgcmF0ZSwKIAogCWlmICghYmVzdGRpdikgewogCQliZXN0
-ZGl2ID0gX2dldF9tYXhkaXYodGFibGUsIHdpZHRoLCBmbGFncyk7Ci0JCSpiZXN0X3BhcmVudF9y
-YXRlID0gY2xrX2h3X3JvdW5kX3JhdGUoY2xrX2h3X2dldF9wYXJlbnQoaHcpLCAxKTsKKwkJKmJl
-c3RfcGFyZW50X3JhdGUgPSBjbGtfaHdfcm91bmRfcmF0ZShwYXJlbnQsIDEpOwogCX0KIAogCXJl
-dHVybiBiZXN0ZGl2OwogfQogCi1sb25nIGRpdmlkZXJfcm91bmRfcmF0ZShzdHJ1Y3QgY2xrX2h3
-ICpodywgdW5zaWduZWQgbG9uZyByYXRlLAotCQkJdW5zaWduZWQgbG9uZyAqcHJhdGUsIGNvbnN0
-IHN0cnVjdCBjbGtfZGl2X3RhYmxlICp0YWJsZSwKLQkJCXU4IHdpZHRoLCB1bnNpZ25lZCBsb25n
-IGZsYWdzKQorbG9uZyBkaXZpZGVyX3JvdW5kX3JhdGVfcGFyZW50KHN0cnVjdCBjbGtfaHcgKmh3
-LCBzdHJ1Y3QgY2xrX2h3ICpwYXJlbnQsCisJCQkgICAgICAgdW5zaWduZWQgbG9uZyByYXRlLCB1
-bnNpZ25lZCBsb25nICpwcmF0ZSwKKwkJCSAgICAgICBjb25zdCBzdHJ1Y3QgY2xrX2Rpdl90YWJs
-ZSAqdGFibGUsCisJCQkgICAgICAgdTggd2lkdGgsIHVuc2lnbmVkIGxvbmcgZmxhZ3MpCiB7CiAJ
-aW50IGRpdjsKIAotCWRpdiA9IGNsa19kaXZpZGVyX2Jlc3RkaXYoaHcsIHJhdGUsIHByYXRlLCB0
-YWJsZSwgd2lkdGgsIGZsYWdzKTsKKwlkaXYgPSBjbGtfZGl2aWRlcl9iZXN0ZGl2KGh3LCBwYXJl
-bnQsIHJhdGUsIHByYXRlLCB0YWJsZSwgd2lkdGgsIGZsYWdzKTsKIAogCXJldHVybiBESVZfUk9V
-TkRfVVBfVUxMKCh1NjQpKnByYXRlLCBkaXYpOwogfQorRVhQT1JUX1NZTUJPTF9HUEwoZGl2aWRl
-cl9yb3VuZF9yYXRlX3BhcmVudCk7CisKK2xvbmcgZGl2aWRlcl9yb3VuZF9yYXRlKHN0cnVjdCBj
-bGtfaHcgKmh3LCB1bnNpZ25lZCBsb25nIHJhdGUsCisJCQl1bnNpZ25lZCBsb25nICpwcmF0ZSwg
-Y29uc3Qgc3RydWN0IGNsa19kaXZfdGFibGUgKnRhYmxlLAorCQkJdTggd2lkdGgsIHVuc2lnbmVk
-IGxvbmcgZmxhZ3MpCit7CisJcmV0dXJuIGRpdmlkZXJfcm91bmRfcmF0ZV9wYXJlbnQoaHcsIGNs
-a19od19nZXRfcGFyZW50KGh3KSwgcmF0ZSwgcHJhdGUsCisJCQkJCSB0YWJsZSwgd2lkdGgsIGZs
-YWdzKTsKK30KIEVYUE9SVF9TWU1CT0xfR1BMKGRpdmlkZXJfcm91bmRfcmF0ZSk7CiAKIHN0YXRp
-YyBsb25nIGNsa19kaXZpZGVyX3JvdW5kX3JhdGUoc3RydWN0IGNsa19odyAqaHcsIHVuc2lnbmVk
-IGxvbmcgcmF0ZSwKZGlmZiAtLWdpdCBhL2luY2x1ZGUvbGludXgvY2xrLXByb3ZpZGVyLmggYi9p
-bmNsdWRlL2xpbnV4L2Nsay1wcm92aWRlci5oCmluZGV4IGE0MjhhZWMzNmFjZS4uMTQxMDJmNzgz
-ZjY0IDEwMDY0NAotLS0gYS9pbmNsdWRlL2xpbnV4L2Nsay1wcm92aWRlci5oCisrKyBiL2luY2x1
-ZGUvbGludXgvY2xrLXByb3ZpZGVyLmgKQEAgLTQxMiw2ICs0MTIsMTAgQEAgZXh0ZXJuIGNvbnN0
-IHN0cnVjdCBjbGtfb3BzIGNsa19kaXZpZGVyX3JvX29wczsKIHVuc2lnbmVkIGxvbmcgZGl2aWRl
-cl9yZWNhbGNfcmF0ZShzdHJ1Y3QgY2xrX2h3ICpodywgdW5zaWduZWQgbG9uZyBwYXJlbnRfcmF0
-ZSwKIAkJdW5zaWduZWQgaW50IHZhbCwgY29uc3Qgc3RydWN0IGNsa19kaXZfdGFibGUgKnRhYmxl
-LAogCQl1bnNpZ25lZCBsb25nIGZsYWdzKTsKK2xvbmcgZGl2aWRlcl9yb3VuZF9yYXRlX3BhcmVu
-dChzdHJ1Y3QgY2xrX2h3ICpodywgc3RydWN0IGNsa19odyAqcGFyZW50LAorCQkJICAgICAgIHVu
-c2lnbmVkIGxvbmcgcmF0ZSwgdW5zaWduZWQgbG9uZyAqcHJhdGUsCisJCQkgICAgICAgY29uc3Qg
-c3RydWN0IGNsa19kaXZfdGFibGUgKnRhYmxlLAorCQkJICAgICAgIHU4IHdpZHRoLCB1bnNpZ25l
-ZCBsb25nIGZsYWdzKTsKIGxvbmcgZGl2aWRlcl9yb3VuZF9yYXRlKHN0cnVjdCBjbGtfaHcgKmh3
-LCB1bnNpZ25lZCBsb25nIHJhdGUsCiAJCXVuc2lnbmVkIGxvbmcgKnByYXRlLCBjb25zdCBzdHJ1
-Y3QgY2xrX2Rpdl90YWJsZSAqdGFibGUsCiAJCXU4IHdpZHRoLCB1bnNpZ25lZCBsb25nIGZsYWdz
-KTsKLS0gCmdpdC1zZXJpZXMgMC44LjExCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZy
-ZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3Rp
-bmZvL2RyaS1kZXZlbAo=
+The A10s Olinuxino has an HDMI connector. Make sure we can use it.
+
+Acked-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+---
+ arch/arm/boot/dts/sun5i-a10s-olinuxino-micro.dts | 29 +++++++++++++++++-
+ 1 file changed, 29 insertions(+), 0 deletions(-)
+
+diff --git a/arch/arm/boot/dts/sun5i-a10s-olinuxino-micro.dts b/arch/arm/boot/dts/sun5i-a10s-olinuxino-micro.dts
+index 894f874a5beb..1d13b6407222 100644
+--- a/arch/arm/boot/dts/sun5i-a10s-olinuxino-micro.dts
++++ b/arch/arm/boot/dts/sun5i-a10s-olinuxino-micro.dts
+@@ -63,6 +63,17 @@
+ 		stdout-path = "serial0:115200n8";
+ 	};
+ 
++	connector {
++		compatible = "hdmi-connector";
++		type = "a";
++
++		port {
++			hdmi_con_in: endpoint {
++				remote-endpoint = <&hdmi_out_con>;
++			};
++		};
++	};
++
+ 	leds {
+ 		compatible = "gpio-leds";
+ 		pinctrl-names = "default";
+@@ -76,6 +87,10 @@
+ 	};
+ };
+ 
++&be0 {
++	status = "okay";
++};
++
+ &ehci0 {
+ 	status = "okay";
+ };
+@@ -91,6 +106,16 @@
+ 	status = "okay";
+ };
+ 
++&hdmi {
++	status = "okay";
++};
++
++&hdmi_out {
++	hdmi_out_con: endpoint {
++		remote-endpoint = <&hdmi_con_in>;
++	};
++};
++
+ &i2c0 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&i2c0_pins_a>;
+@@ -248,6 +273,10 @@
+ 	status = "okay";
+ };
+ 
++&tcon0 {
++	status = "okay";
++};
++
+ &uart0 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&uart0_pins_a>;
+-- 
+git-series 0.8.11
