@@ -1,29 +1,40 @@
-From: "Mr.Williams Brown" <"sh."@giga.ocn.ne.jp>
-Subject: Re:What has actually kept you waiting?
-Date: Wed, 3 May 2017 23:46:52 +0900 (JST)
-Message-ID: <572000916.6310151.1493822812854.JavaMail.root@giga.ocn.ne.jp>
-Reply-To: "Mr.Williams Brown" <williams.brown95-/E1597aS9LQAvxtiuMwx3w@public.gmane.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-2022-JP
-Content-Transfer-Encoding: 7bit
+From: Olimpiu Dejeu <olimpiu-eV7fy4qpoLhpLGFMi4vTTA@public.gmane.org>
+Subject: [PATCH v10 1/3] backlight arcxcnn add arc to vendor prefix
+Date: Wed,  3 May 2017 11:04:17 -0400
+Message-ID: <1493823859-22402-1-git-send-email-olimpiu@arcticsand.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, bdodge-eV7fy4qpoLhpLGFMi4vTTA@public.gmane.org, joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org, daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, lkp-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, fengguang.wu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, Olimpiu Dejeu <olimpiu-eV7fy4qpoLhpLGFMi4vTTA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-What has actually kept you waiting to claim your fund $870.000.00 since then?
+backlight: Add arc to vendor prefixes
+Signed-off-by: Olimpiu Dejeu <olimpiu-eV7fy4qpoLhpLGFMi4vTTA@public.gmane.org>
+---
+v9 => v10:
+- Per Rob Herring's request changed vendor-prefix to arctic
+v8 => v9:
+- Version updated to match other patch in set. No other changes.
+v8:
+- Version to match other patches in set
 
-Your fund has been approved since and nobody has heard from you.
+ Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-hurry and get back to me with your valid receiving data immediately you receive this mail to avoid error procedures because the United Nation Newly Elected president has approved the release of your awaited funds.
-
-Regards,
-Mr. Williams Brown.
-CUSTOMER CARE ON FOREIGN PAYMENT.
-
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-
-
-
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index 16d3b5e..6f33a4b 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -28,6 +28,7 @@ andestech	Andes Technology Corporation
+ apm	Applied Micro Circuits Corporation (APM)
+ aptina	Aptina Imaging
+ arasan	Arasan Chip Systems
++arctic	Arctic Sand
+ aries	Aries Embedded GmbH
+ arm	ARM Ltd.
+ armadeus	ARMadeus Systems SARL
+-- 
+2.7.4
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
