@@ -1,70 +1,132 @@
-From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH V6 1/9] PM / OPP: Introduce "power-domain-opp" property
-Date: Wed, 3 May 2017 12:29:21 +0100
-Message-ID: <a307c76d-72c3-eb84-e7d4-d5e47e2af727@arm.com>
-References: <cover.1493203884.git.viresh.kumar@linaro.org>
- <025acedb263eaa6089d354d9630214ada8013990.1493203884.git.viresh.kumar@linaro.org>
- <20170428204803.plu467okibtxga4d@rob-hp-laptop>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH v2 0/20] drm: sun4i: Add support for the HDMI controller
+Date: Wed,  3 May 2017 13:59:37 +0200
+Message-ID: <cover.d697f34bb7b0605c5e76cbc4167a64453e5e0984.1493812478.git-series.maxime.ripard@free-electrons.com>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20170428204803.plu467okibtxga4d@rob-hp-laptop>
-Sender: linux-pm-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>, Viresh Kumar <viresh.kumar@linaro.org>
-Cc: Sudeep Holla <sudeep.holla@arm.com>, Rafael Wysocki <rjw@rjwysocki.net>, ulf.hansson@linaro.org, Kevin Hilman <khilman@kernel.org>, Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@codeaurora.org>, linaro-kernel@lists.linaro.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, Vincent Guittot <vincent.guittot@linaro.org>, lina.iyer@linaro.org, rnayak@codeaurora.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBSMMU7EAKGQE4YUWZKI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Daniel Vetter <daniel.vetter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
+Here is an attempt at getting the HDMI controller running.
 
-On 28/04/17 21:48, Rob Herring wrote:
-> On Wed, Apr 26, 2017 at 04:27:05PM +0530, Viresh Kumar wrote:
->> Power-domains need to express their active states in DT and the devices
->> within the power-domain need to express their dependency on those active
->> states. The power-domains can use the OPP tables without any
->> modifications to the bindings.
->>
->> Add a new property "power-domain-opp", which will contain phandle to the
->> OPP node of the parent power domain. This is required for devices which
->> have dependency on the configured active state of the power domain for
->> their working.
->>
->> For some platforms the actual frequency and voltages of the power
->> domains are managed by the firmware and are so hidden from the high
->> level operating system. The "opp-hz" property is relaxed a bit to
->> contain indexes instead of actual frequency values to support such
->> platforms.
->>
->> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
->> ---
->>  Documentation/devicetree/bindings/opp/opp.txt | 74 ++++++++++++++++++++++++++-
->>  1 file changed, 73 insertions(+), 1 deletion(-)
->>
->> diff --git a/Documentation/devicetree/bindings/opp/opp.txt b/Documentation/devicetree/bindings/opp/opp.txt
->> index 63725498bd20..6e30cae2a936 100644
->> --- a/Documentation/devicetree/bindings/opp/opp.txt
->> +++ b/Documentation/devicetree/bindings/opp/opp.txt
->> @@ -77,7 +77,10 @@ This defines voltage-current-frequency combinations along with other related
->>  properties.
->>  
->>  Required properties:
->> -- opp-hz: Frequency in Hz, expressed as a 64-bit big-endian integer.
->> +- opp-hz: Frequency in Hz, expressed as a 64-bit big-endian integer. In some
->> +  cases the exact frequency in Hz may be hidden from the OS by the firmware and
->> +  this field may contain values that represent the frequency in a firmware
->> +  dependent way, for example an index of an array in the firmware.
-> 
-> Not really sure OPP binding makes sense here. What about all the other 
-> properties. We expose voltage, but not freq?
-> 
+This HDMI controller is found on a number of old Allwinner SoCs (A10, A10s,
+A20, A31).
 
-I completely agree with that and I have been pushing this to be
-represented as just regulators[0]. Mark B seem to dislike that
-idea [1]
+This driver only supports for now the A10s because it was an easy target,
+being very close to the A13 that is already supported by our DRM driver.
 
+There's nothing out of the extraordinary there, except maybe the clock
+setup. All the internal clocks (TMDS, DDC) have been modeled using the
+common clock framework, the TMDS clock being the parent of the DDC one.
+
+While this might sound overkill, other SoC have a different, external
+source for the DDC clock, which will be easier to support through the clock
+framework.
+
+The IP also supports audio (through an already supported i2s controller,
+and some missing configuration in the HDMI controller) and CEC. Both will
+come eventually.
+
+Let me know what you think!
+Maxime
+
+Changes from v1:
+  - Fixed typos in the CCU header and the HDMI code
+  - Reintroduced the comment for the backporch timings
+  - Renamed the hdmi node to hdmi, instead of hdmi0
+  - Added support for hdmi-connector
+  - Added a separate Kconfig option for the HDMI support
+  - Changed the TCON muxing configuration for an explicit call in the
+    TCON's "clients"
+  - Fixed the initialisation sequence that was clearing the clocks bits
+  - Constified the HDMI's structures and removed whitespaces errors
+  - Fixed an issue in the sunxi-ng code that was not reporting the proper
+    parent clock rate if it was modified
+  - Removed unused headers
+  - Removed CLK_SET_RATE_PARENT for the DDC clock
+  - Used the DDC address defines
+  - Removed the interlace flag that wasn't supported at the moment
+  - Moved most of the HDMI encoder init to the bind function like we do for
+    the other encoders
+  - Switched to drm_of_find_possible_crtcs
+  - Removed the extra printk that were still in my code
+  - Rebased on top of linux-next
+  - Removed the patch changing the divider_round_rate prototype to
+    introduce a new function instead that takes the parent clock to
+    evaluate
+  - Added a clk_set_rate for the hdmi module clock
+  - Fixed the V_TOTAL TCON ch0 calculation to be consistent with ch1's
+  - Defined all registers, and remove the TODOs
+  - Fixed the EDID issues by increasing the timeout.
+  - Added an atomic_check to prevent the DBLCLK modes to be used, as it is
+    not supported yet
+  - Updated the binding to add the interrupts and DMA channels
+
+Maxime Ripard (20):
+  clk: divider: Make divider_round_rate take the parent clock
+  clk: sunxi-ng: Pass the parent and a pointer to the clocks round rate
+  clk: sunxi-ng: div: Switch to divider_round_rate
+  clk: sunxi-ng: mux: Don't just rely on the parent for CLK_SET_RATE_PARENT
+  clk: sunxi-ng: mux: split out the pre-divider computation code
+  clk: sunxi-ng: mux: Change pre-divider application function prototype
+  clk: sunxi-ng: mux: Re-adjust parent rate
+  clk: sunxi-ng: sun5i: Export video PLLs
+  drm/sun4i: tcon: Add channel debug
+  drm/sun4i: tcon: Move the muxing out of the mode set function
+  drm/sun4i: tcon: Switch mux on only for composite
+  drm/sun4i: tcon: Fix tcon channel 1 backporch calculation
+  drm/sun4i: tcon: Change vertical total size computation inconsistency
+  drm/sun4i: tcon: multiply the vtotal when not in interlace
+  drm/sun4i: Ignore the generic connectors for components
+  dt-bindings: display: sun4i: Add HDMI display bindings
+  dt-bindings: display: sun4i: Add allwinner,tcon-channel property
+  drm/sun4i: Add HDMI support
+  ARM: sun5i: a10s: Add the HDMI controller node
+  ARM: sun5i: a10s-olinuxino: Enable HDMI
+
+ Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt |  90 +-
+ arch/arm/boot/dts/sun5i-a10s-olinuxino-micro.dts              |  29 +-
+ arch/arm/boot/dts/sun5i-a10s.dtsi                             |  50 +-
+ arch/arm/boot/dts/sun5i.dtsi                                  |   1 +-
+ drivers/clk/clk-divider.c                                     |  26 +-
+ drivers/clk/sunxi-ng/ccu-sun5i.h                              |   6 +-
+ drivers/clk/sunxi-ng/ccu_div.c                                |  38 +-
+ drivers/clk/sunxi-ng/ccu_mp.c                                 |  15 +-
+ drivers/clk/sunxi-ng/ccu_mult.c                               |  19 +-
+ drivers/clk/sunxi-ng/ccu_mux.c                                |  90 +-
+ drivers/clk/sunxi-ng/ccu_mux.h                                |  11 +-
+ drivers/clk/sunxi-ng/ccu_nkm.c                                |   7 +-
+ drivers/gpu/drm/sun4i/Kconfig                                 |   9 +-
+ drivers/gpu/drm/sun4i/Makefile                                |   6 +-
+ drivers/gpu/drm/sun4i/sun4i_drv.c                             |   8 +-
+ drivers/gpu/drm/sun4i/sun4i_hdmi.h                            | 157 ++-
+ drivers/gpu/drm/sun4i/sun4i_hdmi_ddc_clk.c                    | 127 ++-
+ drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c                        | 493 +++++++-
+ drivers/gpu/drm/sun4i/sun4i_hdmi_tmds_clk.c                   | 225 +++-
+ drivers/gpu/drm/sun4i/sun4i_rgb.c                             |   1 +-
+ drivers/gpu/drm/sun4i/sun4i_tcon.c                            |  43 +-
+ drivers/gpu/drm/sun4i/sun4i_tcon.h                            |   4 +-
+ drivers/gpu/drm/sun4i/sun4i_tv.c                              |   1 +-
+ include/dt-bindings/clock/sun5i-ccu.h                         |   3 +-
+ include/linux/clk-provider.h                                  |   4 +-
+ 25 files changed, 1347 insertions(+), 116 deletions(-)
+ create mode 100644 drivers/gpu/drm/sun4i/sun4i_hdmi.h
+ create mode 100644 drivers/gpu/drm/sun4i/sun4i_hdmi_ddc_clk.c
+ create mode 100644 drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c
+ create mode 100644 drivers/gpu/drm/sun4i/sun4i_hdmi_tmds_clk.c
+
+base-commit: ee91aaf669ac4fbb09283958f69d57dcad5c4963
 -- 
-Regards,
-Sudeep
-
-[0] http://www.spinics.net/lists/devicetree/msg174725.html
-[1] http://www.spinics.net/lists/devicetree/msg175113.html
+git-series 0.8.11
