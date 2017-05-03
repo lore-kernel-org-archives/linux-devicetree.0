@@ -1,47 +1,68 @@
-From: Peter Rosin <peda@axentia.se>
-Subject: Re: [PATCH 2/2] [media] platform: add video-multiplexer subdevice
- driver
-Date: Wed, 3 May 2017 13:13:42 +0200
-Message-ID: <e1cda75b-4967-7d79-7f07-b4f392153d73@axentia.se>
-References: <20170428141330.16187-1-p.zabel@pengutronix.de>
- <20170428141330.16187-2-p.zabel@pengutronix.de>
- <beb9f7c4-4959-1bb2-03e2-c5ccecbb8368@axentia.se>
- <df5f38c4-b0e8-64c6-d6ba-c554133f4bbf@axentia.se>
- <1493738491.2391.20.camel@pengutronix.de>
- <74bfa70b-3407-9484-9717-bb2d07356f70@axentia.se>
- <1493800556.3599.15.camel@pengutronix.de>
+From: Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [PATCH V4 1/9] PM / OPP: Allow OPP table to be used for
+ power-domains
+Date: Wed, 3 May 2017 12:21:54 +0100
+Message-ID: <8aacc296-2549-f0b8-ac25-2f4000c084c1@arm.com>
+References: <cover.1490001099.git.viresh.kumar@linaro.org>
+ <e772e67a5445319bb8e0f312846ace666adc097f.1490001099.git.viresh.kumar@linaro.org>
+ <0a7146f9-72f1-317c-3aab-770a72462968@arm.com>
+ <20170413053736.GM5910@vireshk-i7>
+ <3adbef6a-7b43-528f-e88f-c2121d30a5d3@arm.com>
+ <20170417052758.GF28191@vireshk-i7>
+ <95aa4b97-4e1a-13bb-f4d8-982b778012ba@arm.com>
+ <9cd9287c-392b-d3ca-db7d-75c49287448e@codeaurora.org>
+ <20170426135532.ryrh276znet5yvks@sirena.org.uk>
+ <c66322f5-e2eb-5556-a5a5-14998a2f195d@arm.com>
+ <20170430124917.4m3d237pik7q47f3@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <1493800556.3599.15.camel@pengutronix.de>
-Sender: linux-media-owner@vger.kernel.org
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: linux-media@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Steve Longerbeam <steve_longerbeam@mentor.com>, kernel@pengutronix.de, Sascha Hauer <s.hauer@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Sakari Ailus <sakari.ailus@iki.fi>, Pavel Machek <pavel@ucw.cz>, Steve Longerbeam <slongerbeam@gmail.com>, Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20170430124917.4m3d237pik7q47f3@sirena.org.uk>
+Sender: linux-pm-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>, robh+dt@kernel.org
+Cc: Sudeep Holla <sudeep.holla@arm.com>, Rajendra Nayak <rnayak@codeaurora.org>, Viresh Kumar <viresh.kumar@linaro.org>, Rafael Wysocki <rjw@rjwysocki.net>, ulf.hansson@linaro.org, Kevin Hilman <khilman@linaro.org>, Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@codeaurora.org>, linaro-kernel@lists.linaro.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, Vincent Guittot <vincent.guittot@linaro.org>, lina.iyer@linaro.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 2017-05-03 10:35, Philipp Zabel wrote:
-> On Tue, 2017-05-02 at 19:42 +0200, Peter Rosin wrote:
->> On 2017-05-02 17:21, Philipp Zabel wrote:
->>> Thank you, I've resent a version with a mutex lock around vmux->active.
->>
->> I had a bunch of ifs in the above message, so I'm not sure it's needed.
->> I would expect there to be a lock outside somewhere in the media layer.
->> A cursory look gets me to media-entity.c and media_entity_setup_link()
->> which does have a mutex. But I'm no media expert, so maybe there are other
->> ways of getting to video_mux_link_setup that I'm not aware of?
-> 
-> link_setup is always called under the graph mutex of the /dev/media
-> device. That is why I didn't think about locking too hard. In fact, I
-> initially wrote this expecting mux_control_get_exclusive to exist and
-> the mux select/deselect not to be locked at all.
-> 
-> But set_format is called from an unlocked ioctl on a /dev/v4l-subdev
-> device. Until your comments I didn't notice that it would be possible to
-> let link_setup set active = -1 in the middle of the set_format call,
-> causing it to return garbage.
 
-Obviously, now that you point it out. I completely missed set_format...
 
-Cheers,
-peda
+On 30/04/17 13:49, Mark Brown wrote:
+> On Thu, Apr 27, 2017 at 10:42:49AM +0100, Sudeep Holla wrote:
+>> On 26/04/17 14:55, Mark Brown wrote:
+> 
+>>> As I'm getting fed up of saying: if the values you are setting are not
+>>> voltages and do not behave like voltages then the hardware should not be
+>>> represented as a voltage regulator since if they are represented as
+>>> voltage regulators things will expect to be able to control them as
+>>> voltage regulators.  This hardware is quite clearly providing OPPs
+>>> directly, I would expect this to be handled in the OPP code somehow.
+> 
+>> I agree with you that we need to be absolutely sure on what it actually
+>> represents.
+> 
+>> But as more and more platform are pushing such power controls to
+>> dedicated M3 or similar processors, we need abstraction. Though we are
+>> controlling hardware, we do so indirectly. Since there were discussions
+>> around device tree representing hardware vs platform, I tend to think,
+>> we are moving towards platform(something similar to ACPI).
+> 
+> I don't think there's a meaningful hardware/platform distinction here -
+> in terms of what DT is describing the platform bit is just what the
+> hardware (the microcontrollers) happen to do, 
+> 
+
+Yes agreed. It's similar to PSCI or any other platform firmware IMO.
+
+The question is how do we deal with such controls that needs to be done
+via the firmware ? We generally plug-in to the existing framework in
+Linux using the existing bindings. Most of the time, much simpler
+bindings than the one that present complete hardware description.
+
+> DT doesn't much care about that though.
+
+No sure about that, may be doesn't care about the internals, but we need
+to care about interface, no ?
+
+-- 
+Regards,
+Sudeep
