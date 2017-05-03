@@ -1,66 +1,62 @@
-From: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-Subject: Re: [PATCHv2 0/3] Intel FPGA VIP Frame Buffer II DRM Driver
-Date: Wed, 03 May 2017 13:28:47 -0700
-Message-ID: <87shklznuo.fsf@eliezer.anholt.net>
-References: <1493086006-4392-1-git-send-email-hean.loong.ong@intel.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2 3/8] clk: sunxi-ng: Add class of phase
+ clocks supporting MMC new timing modes
+Date: Wed, 3 May 2017 22:34:02 +0200
+Message-ID: <20170503203402.5mwhx5wjniav24nd@lukather>
+References: <20170503031658.29299-1-wens@csie.org>
+ <20170503031658.29299-4-wens@csie.org>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha512; protocol="application/pgp-signature"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1493086006-4392-1-git-send-email-hean.loong.ong-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: daniel.vetter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: hean.loong.ong-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tien.hock.loh-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="rgbzhspct3f4eex6"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBO75VDEAKGQEWWDUNLA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20170503031658.29299-4-wens-jdAy2FN1RRM@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
 
-hean.loong.ong-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org writes:
+--rgbzhspct3f4eex6
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
-> From: Ong Hean Loong <hean.loong.ong-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
->
-> Hi,
->
-> The new Intel Arria10 SOC FPGA devkit has a Display Port IP component=20
-> which requires a new driver. This is a virtual driver in which the
-> FGPA hardware would enable the Display Port based on the information
-> and data provided from the DRM frame buffer from the OS. Basically all
-> all information with reagrds to resolution and bits per pixel are
-> pre-configured on the FPGA design and these information are fed to
-> the driver via the device tree information as part of the hardware=20
-> information.
+Hi,
 
-I started reviewing the code, but I want to make sure I understand
-what's going on:
+On Wed, May 03, 2017 at 11:16:53AM +0800, Chen-Yu Tsai wrote:
+> The MMC clocks on newer SoCs, such as the A83T and H3, support the
+> "new timing mode". Under this mode, the output of the clock is divided
+> by 2, and the clock delays no longer apply.
+> 
+> Due to how the clock tree is modeled and setup, we need to model
+> this function in two places, the master mmc clock and the two
+> child phase clocks. In the mmc clock, we can easily model the
+> mode bit as an extra variable post-divider. In the phase clocks,
+> we check the bit and return -ENOTSUPP if the bit is set, signaling
+> that the phase clocks are not to be used.
+> 
+> This patch introduces a class of phase clocks that checks the
+> timing mode bit.
 
-This IP core isn't displaying contents from system memory on some sort
-of actual physical display, right?  It's a core that takes some input
-video stream (not described in the DT or in this driver) and stores it
-to memory?
+We've been over this quite some times already...
 
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
+How do you retrieve the mode used in the clock so that you can also
+switch the MMC driver in the new mode?
 
------BEGIN PGP SIGNATURE-----
+And do you prevent that from happening on the DT we already have that
+use the old clock drivers that do not support this new timing at all?
 
-iQIzBAEBCgAdFiEE/JuuFDWp9/ZkuCBXtdYpNtH8nugFAlkKPX8ACgkQtdYpNtH8
-nuixDRAAqrbNjJhk07JjPMpGvtEt92wS0gfIfORJGtWcoB3/9ePweM5lvFTey+RA
-153Y8WAQ2qv93VtxArdmIOcFSmx7wtimilWHq6NL//I01aB1MGRiC2Z3iRDk5rER
-g2fDdMO6mQCx4YFW1jr7bcDmgbc7DYW4L5QvwvS4L/gxic1374ixQngs0aNh/js8
-FTTCAvATFecwnUUtzMd/HY96PULr4FDKcn84Yqq5xD1yKWUIKqZz2qbnFRAkx9dJ
-7EeQOQjtigzNVIxEfXuz/AmpMi9epiCq4xPi2lwaPgeiDkFiAThk3PIi5aFB7V1h
-p0GTcmEVMLzIw4jioqCfHPr7NU7Lqo0VgY1yrY/zL+6ICfwhcp0m12ZJI0sAdpm0
-3qE3RFk7Cp9aEL5CDb5oDonVGTEPgM9wks9MXSwQrhPd79OZ2SrUa2rvE91r+Rpc
-9XitFV1rXQmu736hTBSUmaj8omkb31Hm6pTnNkEONXB3vBTxc1cx1WIfaGSO+g1Q
-n08VnqccaJS6aaJzW/c+fJnkR+W7TzhsuAE17PmuZ4ea351NORfopzrTVgXDMSc5
-uzBRfuoQFmav4lBI7wf6+ACcaSQ2lZIYmoyaxlbkcbuNYHljUfnOtELjBmybdtCg
-LTW86Eq/+dD2859PzJ6TzoR5vLNrKmtu8YCW3GZtBiIsE6qzgVE=
-=KdYS
------END PGP SIGNATURE-----
---=-=-=--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Maxime
+
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--rgbzhspct3f4eex6--
