@@ -1,8 +1,7 @@
 From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH v2 3/8] clk: sunxi-ng: Add class of phase clocks
- supporting MMC new timing modes
-Date: Wed,  3 May 2017 11:16:53 +0800
-Message-ID: <20170503031658.29299-4-wens@csie.org>
+Subject: [PATCH v2 4/8] clk: sunxi-ng: Support multiple variable pre-dividers
+Date: Wed,  3 May 2017 11:16:54 +0800
+Message-ID: <20170503031658.29299-5-wens@csie.org>
 References: <20170503031658.29299-1-wens@csie.org>
 Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
@@ -20,119 +19,280 @@ To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.o
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The MMC clocks on newer SoCs, such as the A83T and H3, support the
-"new timing mode". Under this mode, the output of the clock is divided
-by 2, and the clock delays no longer apply.
+On the A83T, the AHB1 clock has a shared pre-divider on the two
+PLL-PERIPH clock parents. To support such instances of shared
+pre-dividers, this patch extends the mux clock type to support
+multiple variable pre-dividers.
 
-Due to how the clock tree is modeled and setup, we need to model
-this function in two places, the master mmc clock and the two
-child phase clocks. In the mmc clock, we can easily model the
-mode bit as an extra variable post-divider. In the phase clocks,
-we check the bit and return -ENOTSUPP if the bit is set, signaling
-that the phase clocks are not to be used.
-
-This patch introduces a class of phase clocks that checks the
-timing mode bit.
+As the pre-dividers are only used to calculate the rate, but
+do not participate in the factorization process, this is fairly
+straightforward.
 
 Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 ---
- drivers/clk/sunxi-ng/ccu_phase.c | 47 ++++++++++++++++++++++++++++++++++++++++
- drivers/clk/sunxi-ng/ccu_phase.h | 16 ++++++++++++++
- 2 files changed, 63 insertions(+)
+ drivers/clk/sunxi-ng/ccu-sun50i-a64.c | 10 +++++-----
+ drivers/clk/sunxi-ng/ccu-sun6i-a31.c  | 10 +++++-----
+ drivers/clk/sunxi-ng/ccu-sun8i-a23.c  | 10 +++++-----
+ drivers/clk/sunxi-ng/ccu-sun8i-a33.c  | 10 +++++-----
+ drivers/clk/sunxi-ng/ccu-sun8i-h3.c   | 10 +++++-----
+ drivers/clk/sunxi-ng/ccu-sun8i-r.c    | 10 +++++-----
+ drivers/clk/sunxi-ng/ccu-sun8i-v3s.c  | 10 +++++-----
+ drivers/clk/sunxi-ng/ccu_mux.c        | 15 ++++++++-------
+ drivers/clk/sunxi-ng/ccu_mux.h        | 13 ++++++++-----
+ 9 files changed, 51 insertions(+), 47 deletions(-)
 
-diff --git a/drivers/clk/sunxi-ng/ccu_phase.c b/drivers/clk/sunxi-ng/ccu_phase.c
-index 400c58ad72fd..e6ff7551c855 100644
---- a/drivers/clk/sunxi-ng/ccu_phase.c
-+++ b/drivers/clk/sunxi-ng/ccu_phase.c
-@@ -8,6 +8,7 @@
-  * the License, or (at your option) any later version.
-  */
+diff --git a/drivers/clk/sunxi-ng/ccu-sun50i-a64.c b/drivers/clk/sunxi-ng/ccu-sun50i-a64.c
+index f54114c607df..2bb4cabf802f 100644
+--- a/drivers/clk/sunxi-ng/ccu-sun50i-a64.c
++++ b/drivers/clk/sunxi-ng/ccu-sun50i-a64.c
+@@ -211,6 +211,9 @@ static SUNXI_CCU_M(axi_clk, "axi", "cpux", 0x050, 0, 2, 0);
  
-+#include <linux/bitops.h>
- #include <linux/clk-provider.h>
- #include <linux/spinlock.h>
- 
-@@ -124,3 +125,49 @@ const struct clk_ops ccu_phase_ops = {
- 	.get_phase	= ccu_phase_get_phase,
- 	.set_phase	= ccu_phase_set_phase,
- };
-+
-+/*
-+ * The MMC clocks on newer SoCs support the "new timing mode". Under
-+ * this mode, the output of the clock is divided by 2, and the clock
-+ * delays no longer apply.
-+ *
-+ * Due to how the clock tree is modeled and setup, we need to model
-+ * this function in two places, the master mmc clock and the two
-+ * child phase clocks. In the mmc clock, we can easily model the
-+ * mode bit as an extra variable post-divider. In the phase clocks,
-+ * we check the bit and return -ENOTSUPP if the bit is set, signaling
-+ * that the phase clocks are not to be used.
-+ *
-+ * We do not support runtime configuration of the modes. Instead a
-+ * mode is enforced at CCU probe time.
-+ */
-+#define CCU_MMC_NEW_TIMING_MODE	    BIT(30)
-+
-+static int ccu_phase_mmc_new_timing_get_phase(struct clk_hw *hw)
-+{
-+	struct ccu_phase *phase = hw_to_ccu_phase(hw);
-+	u32 reg;
-+
-+	reg = readl(phase->common.base + phase->common.reg);
-+	if (reg & CCU_MMC_NEW_TIMING_MODE)
-+		return -ENOTSUPP;
-+
-+	return ccu_phase_get_phase(hw);
-+}
-+
-+static int ccu_phase_mmc_new_timing_set_phase(struct clk_hw *hw, int degrees)
-+{
-+	struct ccu_phase *phase = hw_to_ccu_phase(hw);
-+	u32 reg;
-+
-+	reg = readl(phase->common.base + phase->common.reg);
-+	if (reg & CCU_MMC_NEW_TIMING_MODE)
-+		return -ENOTSUPP;
-+
-+	return ccu_phase_set_phase(hw, degrees);
-+}
-+
-+const struct clk_ops ccu_phase_mmc_new_timing_ops = {
-+	.get_phase	= ccu_phase_mmc_new_timing_get_phase,
-+	.set_phase	= ccu_phase_mmc_new_timing_set_phase,
+ static const char * const ahb1_parents[] = { "osc32k", "osc24M",
+ 					     "axi", "pll-periph0" };
++static const struct ccu_mux_var_prediv ahb1_predivs[] = {
++	{ .index = 3, .shift = 6, .width = 2 },
 +};
-diff --git a/drivers/clk/sunxi-ng/ccu_phase.h b/drivers/clk/sunxi-ng/ccu_phase.h
-index 75a091a4c565..c514d1798cdd 100644
---- a/drivers/clk/sunxi-ng/ccu_phase.h
-+++ b/drivers/clk/sunxi-ng/ccu_phase.h
-@@ -38,6 +38,20 @@ struct ccu_phase {
- 		}							\
- 	}
+ static struct ccu_div ahb1_clk = {
+ 	.div		= _SUNXI_CCU_DIV_FLAGS(4, 2, CLK_DIVIDER_POWER_OF_TWO),
  
-+#define SUNXI_CCU_PHASE_MMC_NEW_TIMING(_struct, _name, _parent, _reg,	\
-+				       _shift, _width, _flags)		\
-+	struct ccu_phase _struct = {					\
-+		.shift	= _shift,					\
-+		.width	= _width,					\
-+		.common	= {						\
-+			.reg		= _reg,				\
-+			.hw.init	= CLK_HW_INIT(_name,		\
-+						      _parent,		\
-+						      &ccu_phase_mmc_new_timing_ops, \
-+						      _flags),		\
-+		}							\
-+	}
+@@ -218,11 +221,8 @@ static struct ccu_div ahb1_clk = {
+ 		.shift	= 12,
+ 		.width	= 2,
+ 
+-		.variable_prediv	= {
+-			.index	= 3,
+-			.shift	= 6,
+-			.width	= 2,
+-		},
++		.var_predivs	= ahb1_predivs,
++		.n_var_predivs	= ARRAY_SIZE(ahb1_predivs),
+ 	},
+ 
+ 	.common		= {
+diff --git a/drivers/clk/sunxi-ng/ccu-sun6i-a31.c b/drivers/clk/sunxi-ng/ccu-sun6i-a31.c
+index 89e68d29bf45..bc9f2ca19233 100644
+--- a/drivers/clk/sunxi-ng/ccu-sun6i-a31.c
++++ b/drivers/clk/sunxi-ng/ccu-sun6i-a31.c
+@@ -195,6 +195,9 @@ static SUNXI_CCU_DIV_TABLE(axi_clk, "axi", "cpu",
+ 
+ static const char * const ahb1_parents[] = { "osc32k", "osc24M",
+ 					     "axi", "pll-periph" };
++static const struct ccu_mux_var_prediv ahb1_predivs[] = {
++	{ .index = 3, .shift = 6, .width = 2 },
++};
+ 
+ static struct ccu_div ahb1_clk = {
+ 	.div		= _SUNXI_CCU_DIV_FLAGS(4, 2, CLK_DIVIDER_POWER_OF_TWO),
+@@ -203,11 +206,8 @@ static struct ccu_div ahb1_clk = {
+ 		.shift	= 12,
+ 		.width	= 2,
+ 
+-		.variable_prediv	= {
+-			.index	= 3,
+-			.shift	= 6,
+-			.width	= 2,
+-		},
++		.var_predivs	= ahb1_predivs,
++		.n_var_predivs	= ARRAY_SIZE(ahb1_predivs),
+ 	},
+ 
+ 	.common		= {
+diff --git a/drivers/clk/sunxi-ng/ccu-sun8i-a23.c b/drivers/clk/sunxi-ng/ccu-sun8i-a23.c
+index 5c6d37bdf247..8a753ed0426d 100644
+--- a/drivers/clk/sunxi-ng/ccu-sun8i-a23.c
++++ b/drivers/clk/sunxi-ng/ccu-sun8i-a23.c
+@@ -169,6 +169,9 @@ static SUNXI_CCU_M(axi_clk, "axi", "cpux", 0x050, 0, 2, 0);
+ 
+ static const char * const ahb1_parents[] = { "osc32k", "osc24M",
+ 					     "axi" , "pll-periph" };
++static const struct ccu_mux_var_prediv ahb1_predivs[] = {
++	{ .index = 3, .shift = 6, .width = 2 },
++};
+ static struct ccu_div ahb1_clk = {
+ 	.div		= _SUNXI_CCU_DIV_FLAGS(4, 2, CLK_DIVIDER_POWER_OF_TWO),
+ 
+@@ -176,11 +179,8 @@ static struct ccu_div ahb1_clk = {
+ 		.shift	= 12,
+ 		.width	= 2,
+ 
+-		.variable_prediv	= {
+-			.index	= 3,
+-			.shift	= 6,
+-			.width	= 2,
+-		},
++		.var_predivs	= ahb1_predivs,
++		.n_var_predivs	= ARRAY_SIZE(ahb1_predivs),
+ 	},
+ 
+ 	.common		= {
+diff --git a/drivers/clk/sunxi-ng/ccu-sun8i-a33.c b/drivers/clk/sunxi-ng/ccu-sun8i-a33.c
+index 8d38e6510e29..10b38dc46f75 100644
+--- a/drivers/clk/sunxi-ng/ccu-sun8i-a33.c
++++ b/drivers/clk/sunxi-ng/ccu-sun8i-a33.c
+@@ -180,6 +180,9 @@ static SUNXI_CCU_M(axi_clk, "axi", "cpux", 0x050, 0, 2, 0);
+ 
+ static const char * const ahb1_parents[] = { "osc32k", "osc24M",
+ 					     "axi" , "pll-periph" };
++static const struct ccu_mux_var_prediv ahb1_predivs[] = {
++	{ .index = 3, .shift = 6, .width = 2 },
++};
+ static struct ccu_div ahb1_clk = {
+ 	.div		= _SUNXI_CCU_DIV_FLAGS(4, 2, CLK_DIVIDER_POWER_OF_TWO),
+ 
+@@ -187,11 +190,8 @@ static struct ccu_div ahb1_clk = {
+ 		.shift	= 12,
+ 		.width	= 2,
+ 
+-		.variable_prediv	= {
+-			.index	= 3,
+-			.shift	= 6,
+-			.width	= 2,
+-		},
++		.var_predivs	= ahb1_predivs,
++		.n_var_predivs	= ARRAY_SIZE(ahb1_predivs),
+ 	},
+ 
+ 	.common		= {
+diff --git a/drivers/clk/sunxi-ng/ccu-sun8i-h3.c b/drivers/clk/sunxi-ng/ccu-sun8i-h3.c
+index 4cbc1b701b7c..62e4f0d2b2fc 100644
+--- a/drivers/clk/sunxi-ng/ccu-sun8i-h3.c
++++ b/drivers/clk/sunxi-ng/ccu-sun8i-h3.c
+@@ -141,6 +141,9 @@ static SUNXI_CCU_M(axi_clk, "axi", "cpux", 0x050, 0, 2, 0);
+ 
+ static const char * const ahb1_parents[] = { "osc32k", "osc24M",
+ 					     "axi" , "pll-periph0" };
++static const struct ccu_mux_var_prediv ahb1_predivs[] = {
++	{ .index = 3, .shift = 6, .width = 2 },
++};
+ static struct ccu_div ahb1_clk = {
+ 	.div		= _SUNXI_CCU_DIV_FLAGS(4, 2, CLK_DIVIDER_POWER_OF_TWO),
+ 
+@@ -148,11 +151,8 @@ static struct ccu_div ahb1_clk = {
+ 		.shift	= 12,
+ 		.width	= 2,
+ 
+-		.variable_prediv	= {
+-			.index	= 3,
+-			.shift	= 6,
+-			.width	= 2,
+-		},
++		.var_predivs	= ahb1_predivs,
++		.n_var_predivs	= ARRAY_SIZE(ahb1_predivs),
+ 	},
+ 
+ 	.common		= {
+diff --git a/drivers/clk/sunxi-ng/ccu-sun8i-r.c b/drivers/clk/sunxi-ng/ccu-sun8i-r.c
+index 119f47b568ea..de02be75785c 100644
+--- a/drivers/clk/sunxi-ng/ccu-sun8i-r.c
++++ b/drivers/clk/sunxi-ng/ccu-sun8i-r.c
+@@ -27,6 +27,9 @@
+ 
+ static const char * const ar100_parents[] = { "osc32k", "osc24M",
+ 					     "pll-periph0", "iosc" };
++static const struct ccu_mux_var_prediv ar100_predivs[] = {
++	{ .index = 2, .shift = 8, .width = 5 },
++};
+ 
+ static struct ccu_div ar100_clk = {
+ 	.div		= _SUNXI_CCU_DIV_FLAGS(4, 2, CLK_DIVIDER_POWER_OF_TWO),
+@@ -35,11 +38,8 @@ static struct ccu_div ar100_clk = {
+ 		.shift	= 16,
+ 		.width	= 2,
+ 
+-		.variable_prediv	= {
+-			.index	= 2,
+-			.shift	= 8,
+-			.width	= 5,
+-		},
++		.var_predivs	= ar100_predivs,
++		.n_var_predivs	= ARRAY_SIZE(ar100_predivs),
+ 	},
+ 
+ 	.common		= {
+diff --git a/drivers/clk/sunxi-ng/ccu-sun8i-v3s.c b/drivers/clk/sunxi-ng/ccu-sun8i-v3s.c
+index e58706b40ae9..cb7299a94cba 100644
+--- a/drivers/clk/sunxi-ng/ccu-sun8i-v3s.c
++++ b/drivers/clk/sunxi-ng/ccu-sun8i-v3s.c
+@@ -132,6 +132,9 @@ static SUNXI_CCU_M(axi_clk, "axi", "cpu", 0x050, 0, 2, 0);
+ 
+ static const char * const ahb1_parents[] = { "osc32k", "osc24M",
+ 					     "axi", "pll-periph0" };
++static const struct ccu_mux_var_prediv ahb1_predivs[] = {
++	{ .index = 3, .shift = 6, .width = 2 },
++};
+ static struct ccu_div ahb1_clk = {
+ 	.div		= _SUNXI_CCU_DIV_FLAGS(4, 2, CLK_DIVIDER_POWER_OF_TWO),
+ 
+@@ -139,11 +142,8 @@ static struct ccu_div ahb1_clk = {
+ 		.shift	= 12,
+ 		.width	= 2,
+ 
+-		.variable_prediv	= {
+-			.index	= 3,
+-			.shift	= 6,
+-			.width	= 2,
+-		},
++		.var_predivs	= ahb1_predivs,
++		.n_var_predivs	= ARRAY_SIZE(ahb1_predivs),
+ 	},
+ 
+ 	.common		= {
+diff --git a/drivers/clk/sunxi-ng/ccu_mux.c b/drivers/clk/sunxi-ng/ccu_mux.c
+index c6bb1f523232..b1eaafac9f23 100644
+--- a/drivers/clk/sunxi-ng/ccu_mux.c
++++ b/drivers/clk/sunxi-ng/ccu_mux.c
+@@ -46,13 +46,14 @@ void ccu_mux_helper_adjust_parent_for_prediv(struct ccu_common *common,
+ 				prediv = cm->fixed_predivs[i].div;
+ 
+ 	if (common->features & CCU_FEATURE_VARIABLE_PREDIV)
+-		if (parent_index == cm->variable_prediv.index) {
+-			u8 div;
+-
+-			div = reg >> cm->variable_prediv.shift;
+-			div &= (1 << cm->variable_prediv.width) - 1;
+-			prediv = div + 1;
+-		}
++		for (i = 0; i < cm->n_var_predivs; i++)
++			if (parent_index == cm->var_predivs[i].index) {
++				u8 div;
 +
- static inline struct ccu_phase *hw_to_ccu_phase(struct clk_hw *hw)
- {
- 	struct ccu_common *common = hw_to_ccu_common(hw);
-@@ -47,4 +61,6 @@ static inline struct ccu_phase *hw_to_ccu_phase(struct clk_hw *hw)
++				div = reg >> cm->var_predivs[i].shift;
++				div &= (1 << cm->var_predivs[i].width) - 1;
++				prediv = div + 1;
++			}
  
- extern const struct clk_ops ccu_phase_ops;
+ 	*parent_rate = *parent_rate / prediv;
+ }
+diff --git a/drivers/clk/sunxi-ng/ccu_mux.h b/drivers/clk/sunxi-ng/ccu_mux.h
+index 47aba3a48245..044262245c07 100644
+--- a/drivers/clk/sunxi-ng/ccu_mux.h
++++ b/drivers/clk/sunxi-ng/ccu_mux.h
+@@ -10,6 +10,12 @@ struct ccu_mux_fixed_prediv {
+ 	u16	div;
+ };
  
-+extern const struct clk_ops ccu_phase_mmc_new_timing_ops;
++struct ccu_mux_var_prediv {
++	u8	index;
++	u8	shift;
++	u8	width;
++};
 +
- #endif /* _CCU_PHASE_H_ */
+ struct ccu_mux_internal {
+ 	u8		shift;
+ 	u8		width;
+@@ -18,11 +24,8 @@ struct ccu_mux_internal {
+ 	const struct ccu_mux_fixed_prediv	*fixed_predivs;
+ 	u8		n_predivs;
+ 
+-	struct {
+-		u8	index;
+-		u8	shift;
+-		u8	width;
+-	} variable_prediv;
++	const struct ccu_mux_var_prediv		*var_predivs;
++	u8		n_var_predivs;
+ };
+ 
+ #define _SUNXI_CCU_MUX_TABLE(_shift, _width, _table)	\
 -- 
 2.11.0
