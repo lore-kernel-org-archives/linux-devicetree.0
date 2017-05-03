@@ -1,34 +1,116 @@
-From: Anup Patel <anup.patel@broadcom.com>
-Subject: Re: [PATCH v6 0/4] Broadcom SBA RAID support
-Date: Wed, 3 May 2017 10:39:20 +0530
-Message-ID: <CAALAos-onzLp+E9bToS0mxyH6sL0gSYw99AP+Fxh5+TpmgmRJg@mail.gmail.com>
-References: <1488793408-25592-1-git-send-email-anup.patel@broadcom.com>
- <20170321083052.GY2843@localhost> <CAALAos-k_DBYAz49278wBr_GoceOKYVH_UuzTLn1h7QCiUd8pg@mail.gmail.com>
- <20170321091829.GZ2843@localhost> <CAALAos-P6CDdWTJxg8YQfT1V+iCxUcbYHiQ35EdZzz9PnN3cuA@mail.gmail.com>
- <20170330044940.GU9308@localhost> <CAALAos8hVtCqzpv3nvPAGnm=WKMfcXeBEFm5Yb0gWwYGLE4SeA@mail.gmail.com>
- <20170503045926.GV6263@localhost>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-raid-owner@vger.kernel.org>
-In-Reply-To: <20170503045926.GV6263@localhost>
-Sender: linux-raid-owner@vger.kernel.org
-To: Vinod Koul <vinod.koul@intel.com>
-Cc: Jassi Brar <jassisinghbrar@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Herbert Xu <herbert@gondor.apana.org.au>, "David S . Miller" <davem@davemloft.net>, Dan Williams <dan.j.williams@intel.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Rob Rice <rob.rice@broadcom.com>, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>, dmaengine@vger.kernel.org, Device Tree <devicetree@vger.kernel.org>, Linux ARM Kernel <linux-arm-kernel@lists.infradead.org>, Linux Kernel <linux-kernel@vger.kernel.org>, linux-crypto@vger.kernel.org, linux-raid <linux-raid@vger.kernel.org>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: [PATCH v3 1/4] dt-bindings: Introduce doorbell binding
+Date: Tue,  2 May 2017 22:29:26 -0700
+Message-ID: <20170503052929.17422-1-bjorn.andersson@linaro.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Andy Gross <andy.gross@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ohad Ben-Cohen <ohad@wizery.com>
+Cc: linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-remoteproc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 3, 2017 at 10:29 AM, Vinod Koul <vinod.koul@intel.com> wrote:
-> On Wed, May 03, 2017 at 09:15:20AM +0530, Anup Patel wrote:
->> Hi Vinod,
->>
->> The Broadcom FlexRM patchset have been
->> merged in v4.11.
->>
->> I think you now can take this patchset in next
->> merge window. Right??
->
-> Sure, please rebase and resend after -rc1 is out
+Introduce the generic doorbell binding as well as a binding for the
+Qualcomm APCS Global block. This is used to expose doorbell-like devices
+in the system.
 
-Sure, I will do that.
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+---
 
-Regards,
-Anup
+Changes since v2:
+- New binding
+
+ .../devicetree/bindings/doorbell/doorbell.txt      | 31 +++++++++++++++
+ .../bindings/doorbell/qcom,apcs-kpss-global.txt    | 45 ++++++++++++++++++++++
+ 2 files changed, 76 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/doorbell/doorbell.txt
+ create mode 100644 Documentation/devicetree/bindings/doorbell/qcom,apcs-kpss-global.txt
+
+diff --git a/Documentation/devicetree/bindings/doorbell/doorbell.txt b/Documentation/devicetree/bindings/doorbell/doorbell.txt
+new file mode 100644
+index 000000000000..8fd814898c3f
+--- /dev/null
++++ b/Documentation/devicetree/bindings/doorbell/doorbell.txt
+@@ -0,0 +1,31 @@
++Doorbell binding
++============================================
++
++The doorbell binding is used to describe a set of doorbells for client blocks
++to ring.
++
++1) Doorbell controller
++----------------------
++
++A doorbell controller is a device that exposes a number of doorbells, that can
++client devices can ring to signal some event to some piece of hardware.
++
++- #doorbell-cells:
++	Usage: required
++	Value type: <u32>
++	Definition: should be 0 for single-doorbell controllers and 1 for
++		    multi-doorbell controllers
++
++2) Doorbell user
++----------------
++
++- doorbells:
++	Usage: required
++	Value type: <prop-encoded-array>
++	Definition: list of doorbell references
++
++- doorbell-names:
++	Usage: optional
++	Value type: <stringlist>
++	Definition: list of strings identifying each entry in the doorbells
++		    property
+diff --git a/Documentation/devicetree/bindings/doorbell/qcom,apcs-kpss-global.txt b/Documentation/devicetree/bindings/doorbell/qcom,apcs-kpss-global.txt
+new file mode 100644
+index 000000000000..6320e1a355cb
+--- /dev/null
++++ b/Documentation/devicetree/bindings/doorbell/qcom,apcs-kpss-global.txt
+@@ -0,0 +1,45 @@
++Binding for the Qualcomm APCS global block
++==========================================
++
++This binding describes the APCS "global" block found in various Qualcomm
++platforms.
++
++- compatible:
++	Usage: required
++	Value type: <string>
++	Definition: must be one of:
++		    "qcom,msm8916-apcs-kpss-global",
++		    "qcom,msm8996-apcs-hmss-global"
++
++- reg:
++	Usage: required
++	Value type: <prop-encoded-array>
++	Definition: must specify the base address and size of the global block
++
++- #doorbell-cells:
++	Usage: required
++	Value type: <u32>
++	Definition: as described in doorbell.txt, must be 1
++
++
++= EXAMPLE
++The following example describes the APCS HMSS found in MSM8996 and part of the
++GLINK RPM referencing the "rpm_hlos" doorbell therein.
++
++	apcs_glb: apcs-glb@9820000 {
++		compatible = "qcom,msm8996-apcs-hmss-global";
++		reg = <0x9820000 0x1000>;
++
++		#doorbell-cells = <1>;
++	};
++
++        rpm-glink {
++                compatible = "qcom,glink-rpm";
++
++                interrupts = <GIC_SPI 168 IRQ_TYPE_EDGE_RISING>;
++
++                qcom,rpm-msg-ram = <&rpm_msg_ram>;
++
++		doorbells = <&apcs_glb 0>;
++	};
++
+-- 
+2.12.0
