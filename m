@@ -1,13 +1,13 @@
 From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH v2 7/8] ARM: sun8i: a83t: Set clock accuracy for
- 24MHz oscillator
-Date: Wed,  3 May 2017 11:16:57 +0800
-Message-ID: <20170503031658.29299-8-wens@csie.org>
+Subject: [PATCH v2 3/8] clk: sunxi-ng: Add class of phase clocks
+ supporting MMC new timing modes
+Date: Wed,  3 May 2017 11:16:53 +0800
+Message-ID: <20170503031658.29299-4-wens@csie.org>
 References: <20170503031658.29299-1-wens@csie.org>
 Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBQ4XUXEAKGQEM2AUC6I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBQUXUXEAKGQE7BEU4FY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20170503031658.29299-1-wens-jdAy2FN1RRM@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -20,26 +20,119 @@ To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.o
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The datasheets for Allwinner SoCs set strict requirements on the
-stability of the external crystal oscillators. Add the accuracy
-for the main 24MHz oscillator to the device tree.
+The MMC clocks on newer SoCs, such as the A83T and H3, support the
+"new timing mode". Under this mode, the output of the clock is divided
+by 2, and the clock delays no longer apply.
+
+Due to how the clock tree is modeled and setup, we need to model
+this function in two places, the master mmc clock and the two
+child phase clocks. In the mmc clock, we can easily model the
+mode bit as an extra variable post-divider. In the phase clocks,
+we check the bit and return -ENOTSUPP if the bit is set, signaling
+that the phase clocks are not to be used.
+
+This patch introduces a class of phase clocks that checks the
+timing mode bit.
 
 Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 ---
- arch/arm/boot/dts/sun8i-a83t.dtsi | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/clk/sunxi-ng/ccu_phase.c | 47 ++++++++++++++++++++++++++++++++++++++++
+ drivers/clk/sunxi-ng/ccu_phase.h | 16 ++++++++++++++
+ 2 files changed, 63 insertions(+)
 
-diff --git a/arch/arm/boot/dts/sun8i-a83t.dtsi b/arch/arm/boot/dts/sun8i-a83t.dtsi
-index c9a5d07b2ada..e12dd7170b8f 100644
---- a/arch/arm/boot/dts/sun8i-a83t.dtsi
-+++ b/arch/arm/boot/dts/sun8i-a83t.dtsi
-@@ -126,6 +126,7 @@
- 			#clock-cells = <0>;
- 			compatible = "fixed-clock";
- 			clock-frequency = <24000000>;
-+			clock-accuracy = <50000>;
- 			clock-output-names = "osc24M";
- 		};
+diff --git a/drivers/clk/sunxi-ng/ccu_phase.c b/drivers/clk/sunxi-ng/ccu_phase.c
+index 400c58ad72fd..e6ff7551c855 100644
+--- a/drivers/clk/sunxi-ng/ccu_phase.c
++++ b/drivers/clk/sunxi-ng/ccu_phase.c
+@@ -8,6 +8,7 @@
+  * the License, or (at your option) any later version.
+  */
  
++#include <linux/bitops.h>
+ #include <linux/clk-provider.h>
+ #include <linux/spinlock.h>
+ 
+@@ -124,3 +125,49 @@ const struct clk_ops ccu_phase_ops = {
+ 	.get_phase	= ccu_phase_get_phase,
+ 	.set_phase	= ccu_phase_set_phase,
+ };
++
++/*
++ * The MMC clocks on newer SoCs support the "new timing mode". Under
++ * this mode, the output of the clock is divided by 2, and the clock
++ * delays no longer apply.
++ *
++ * Due to how the clock tree is modeled and setup, we need to model
++ * this function in two places, the master mmc clock and the two
++ * child phase clocks. In the mmc clock, we can easily model the
++ * mode bit as an extra variable post-divider. In the phase clocks,
++ * we check the bit and return -ENOTSUPP if the bit is set, signaling
++ * that the phase clocks are not to be used.
++ *
++ * We do not support runtime configuration of the modes. Instead a
++ * mode is enforced at CCU probe time.
++ */
++#define CCU_MMC_NEW_TIMING_MODE	    BIT(30)
++
++static int ccu_phase_mmc_new_timing_get_phase(struct clk_hw *hw)
++{
++	struct ccu_phase *phase = hw_to_ccu_phase(hw);
++	u32 reg;
++
++	reg = readl(phase->common.base + phase->common.reg);
++	if (reg & CCU_MMC_NEW_TIMING_MODE)
++		return -ENOTSUPP;
++
++	return ccu_phase_get_phase(hw);
++}
++
++static int ccu_phase_mmc_new_timing_set_phase(struct clk_hw *hw, int degrees)
++{
++	struct ccu_phase *phase = hw_to_ccu_phase(hw);
++	u32 reg;
++
++	reg = readl(phase->common.base + phase->common.reg);
++	if (reg & CCU_MMC_NEW_TIMING_MODE)
++		return -ENOTSUPP;
++
++	return ccu_phase_set_phase(hw, degrees);
++}
++
++const struct clk_ops ccu_phase_mmc_new_timing_ops = {
++	.get_phase	= ccu_phase_mmc_new_timing_get_phase,
++	.set_phase	= ccu_phase_mmc_new_timing_set_phase,
++};
+diff --git a/drivers/clk/sunxi-ng/ccu_phase.h b/drivers/clk/sunxi-ng/ccu_phase.h
+index 75a091a4c565..c514d1798cdd 100644
+--- a/drivers/clk/sunxi-ng/ccu_phase.h
++++ b/drivers/clk/sunxi-ng/ccu_phase.h
+@@ -38,6 +38,20 @@ struct ccu_phase {
+ 		}							\
+ 	}
+ 
++#define SUNXI_CCU_PHASE_MMC_NEW_TIMING(_struct, _name, _parent, _reg,	\
++				       _shift, _width, _flags)		\
++	struct ccu_phase _struct = {					\
++		.shift	= _shift,					\
++		.width	= _width,					\
++		.common	= {						\
++			.reg		= _reg,				\
++			.hw.init	= CLK_HW_INIT(_name,		\
++						      _parent,		\
++						      &ccu_phase_mmc_new_timing_ops, \
++						      _flags),		\
++		}							\
++	}
++
+ static inline struct ccu_phase *hw_to_ccu_phase(struct clk_hw *hw)
+ {
+ 	struct ccu_common *common = hw_to_ccu_common(hw);
+@@ -47,4 +61,6 @@ static inline struct ccu_phase *hw_to_ccu_phase(struct clk_hw *hw)
+ 
+ extern const struct clk_ops ccu_phase_ops;
+ 
++extern const struct clk_ops ccu_phase_mmc_new_timing_ops;
++
+ #endif /* _CCU_PHASE_H_ */
 -- 
 2.11.0
