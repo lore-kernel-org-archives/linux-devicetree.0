@@ -1,7 +1,7 @@
 From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v2 7/20] clk: sunxi-ng: mux: Re-adjust parent rate
-Date: Wed,  3 May 2017 13:59:44 +0200
-Message-ID: <0d8fc6d976c64be906fa86ead20aa10bb490386b.1493812478.git-series.maxime.ripard@free-electrons.com>
+Subject: [PATCH v2 9/20] drm/sun4i: tcon: Add channel debug
+Date: Wed,  3 May 2017 13:59:46 +0200
+Message-ID: <d9cecce96aa531b83f58b38df827e38ba1618858.1493812478.git-series.maxime.ripard@free-electrons.com>
 References: <cover.d697f34bb7b0605c5e76cbc4167a64453e5e0984.1493812478.git-series.maxime.ripard@free-electrons.com>
 Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
@@ -21,83 +21,36 @@ To: Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen
 Cc: Daniel Vetter <daniel.vetter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Currently, the parent rate given back to the clock framework in our
-request is the original parent rate we calculated before trying to round
-the rate of our clock.
+While all functions have debug logs, the channel enable and disable are not
+logged. Make sure this is the case.
 
-This works fine unless our clock also changes its parent rate, in which
-case we will simply ignore that change and still use the previous parent
-rate.
-
-Create a new function to re-adjust the parent rate to take the pre-dividers
-into account, and give that back to the clock framework.
-
+Acked-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 ---
- drivers/clk/sunxi-ng/ccu_mux.c | 33 ++++++++++++++++++++++++++++-----
- 1 file changed, 28 insertions(+), 5 deletions(-)
+ drivers/gpu/drm/sun4i/sun4i_tcon.c | 4 ++++
+ 1 file changed, 4 insertions(+), 0 deletions(-)
 
-diff --git a/drivers/clk/sunxi-ng/ccu_mux.c b/drivers/clk/sunxi-ng/ccu_mux.c
-index c33210972581..1ce62cc23f8a 100644
---- a/drivers/clk/sunxi-ng/ccu_mux.c
-+++ b/drivers/clk/sunxi-ng/ccu_mux.c
-@@ -64,6 +64,14 @@ unsigned long ccu_mux_helper_apply_prediv(struct ccu_common *common,
- 	return parent_rate / ccu_mux_get_prediv(common, cm, parent_index);
- }
+diff --git a/drivers/gpu/drm/sun4i/sun4i_tcon.c b/drivers/gpu/drm/sun4i/sun4i_tcon.c
+index 9a83a85529ac..66a5bb9b85e9 100644
+--- a/drivers/gpu/drm/sun4i/sun4i_tcon.c
++++ b/drivers/gpu/drm/sun4i/sun4i_tcon.c
+@@ -54,6 +54,8 @@ EXPORT_SYMBOL(sun4i_tcon_enable);
  
-+unsigned long ccu_mux_helper_unapply_prediv(struct ccu_common *common,
-+					    struct ccu_mux_internal *cm,
-+					    int parent_index,
-+					    unsigned long parent_rate)
-+{
-+	return parent_rate * ccu_mux_get_prediv(common, cm, parent_index);
-+}
+ void sun4i_tcon_channel_disable(struct sun4i_tcon *tcon, int channel)
+ {
++	DRM_DEBUG_DRIVER("Disabling TCON channel %d\n", channel);
 +
- int ccu_mux_helper_determine_rate(struct ccu_common *common,
- 				  struct ccu_mux_internal *cm,
- 				  struct clk_rate_request *req,
-@@ -89,22 +97,37 @@ int ccu_mux_helper_determine_rate(struct ccu_common *common,
- 		best_rate = round(cm, best_parent, &adj_parent_rate,
- 				  req->rate, data);
+ 	/* Disable the TCON's channel */
+ 	if (channel == 0) {
+ 		regmap_update_bits(tcon->regs, SUN4I_TCON0_CTL_REG,
+@@ -71,6 +73,8 @@ EXPORT_SYMBOL(sun4i_tcon_channel_disable);
  
-+		/*
-+		 * parent_rate might have been modified by our clock.
-+		 * Re-apply the pre-divider if there's one, and give
-+		 * the actual frequency the parent needs to run at.
-+		 */
-+		best_parent_rate = ccu_mux_helper_unapply_prediv(common, cm, -1,
-+								 adj_parent_rate);
+ void sun4i_tcon_channel_enable(struct sun4i_tcon *tcon, int channel)
+ {
++	DRM_DEBUG_DRIVER("Enabling TCON channel %d\n", channel);
 +
- 		goto out;
- 	}
- 
- 	for (i = 0; i < clk_hw_get_num_parents(hw); i++) {
--		unsigned long tmp_rate, parent_rate, adj_parent_rate;
-+		unsigned long tmp_rate, parent_rate;
- 		struct clk_hw *parent;
- 
- 		parent = clk_hw_get_parent_by_index(hw, i);
- 		if (!parent)
- 			continue;
- 
--		parent_rate = clk_hw_get_rate(parent);
--		adj_parent_rate = ccu_mux_helper_apply_prediv(common, cm, i,
--							      parent_rate);
-+		parent_rate = ccu_mux_helper_apply_prediv(common, cm, i,
-+							  clk_hw_get_rate(parent));
-+
-+		tmp_rate = round(cm, parent, &parent_rate, req->rate, data);
- 
--		tmp_rate = round(cm, parent, &adj_parent_rate, req->rate, data);
-+		/*
-+		 * parent_rate might have been modified by our clock.
-+		 * Re-apply the pre-divider if there's one, and give
-+		 * the actual frequency the parent needs to run at.
-+		 */
-+		parent_rate = ccu_mux_helper_unapply_prediv(common, cm, i,
-+							    parent_rate);
- 		if (tmp_rate == req->rate) {
- 			best_parent = parent;
- 			best_parent_rate = parent_rate;
+ 	/* Enable the TCON's channel */
+ 	if (channel == 0) {
+ 		regmap_update_bits(tcon->regs, SUN4I_TCON0_CTL_REG,
 -- 
 git-series 0.8.11
