@@ -1,43 +1,49 @@
 From: Guillaume Tucker <guillaume.tucker@collabora.com>
-Subject: [PATCH v5 5/5] ARM: dts: rockchip: enable ARM Mali GPU on rk3288-veyron
-Date: Wed,  3 May 2017 10:56:29 +0100
-Message-ID: <000831729017aaf278618b76205a4f1029c2575b.1493804968.git.guillaume.tucker@collabora.com>
+Subject: [PATCH v5 4/5] ARM: dts: rockchip: enable ARM Mali GPU on
+ rk3288-firefly
+Date: Wed,  3 May 2017 10:56:28 +0100
+Message-ID: <efabc1d3e78ba834923dd4cae5a35ab7c07ad9bb.1493804968.git.guillaume.tucker@collabora.com>
 References: <cover.1493804968.git.guillaume.tucker@collabora.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <cover.1493804968.git.guillaume.tucker@collabora.com>
 In-Reply-To: <cover.1493804968.git.guillaume.tucker@collabora.com>
 References: <cover.1493804968.git.guillaume.tucker@collabora.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, =?UTF-8?q?Heiko=20St=C3=BCbner?= <heiko@sntech.de>, Neil Armstrong <narmstrong@baylibre.com>
-Cc: Sjoerd Simons <sjoerd.simons@collabora.com>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, John Reitan <john.reitan@arm.com>, Wookey <wookey@wookware.org>, devicetree@vger.kernel.org, linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Guillaume Tucker <guillaume.tucker@collabora.com>
+Cc: devicetree@vger.kernel.org, Guillaume Tucker <guillaume.tucker@collabora.com>, Sjoerd Simons <sjoerd.simons@collabora.com>, Wookey <wookey@wookware.org>, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, John Reitan <john.reitan@arm.com>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Add reference to the Mali GPU device tree node on rk3288-firefly.
+Tested on Firefly board.
 
-Add reference to the Mali GPU device tree node on rk3288-veyron.
-Tested on Minnie and Jerry boards.
-
-Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
 Signed-off-by: Guillaume Tucker <guillaume.tucker@collabora.com>
 ---
- arch/arm/boot/dts/rk3288-veyron.dtsi | 5 +++++
+ arch/arm/boot/dts/rk3288-firefly.dtsi | 5 +++++
  1 file changed, 5 insertions(+)
 
-diff --git a/arch/arm/boot/dts/rk3288-veyron.dtsi b/arch/arm/boot/dts/rk3288-veyron.dtsi
-index 5d1eb0a25827..9847d5c6db3b 100644
---- a/arch/arm/boot/dts/rk3288-veyron.dtsi
-+++ b/arch/arm/boot/dts/rk3288-veyron.dtsi
-@@ -447,6 +447,11 @@
+diff --git a/arch/arm/boot/dts/rk3288-firefly.dtsi b/arch/arm/boot/dts/rk3288-firefly.dtsi
+index 10793ac18599..f520589493b4 100644
+--- a/arch/arm/boot/dts/rk3288-firefly.dtsi
++++ b/arch/arm/boot/dts/rk3288-firefly.dtsi
+@@ -594,3 +594,8 @@
+ &wdt {
  	status = "okay";
  };
- 
++
 +&gpu {
 +	mali-supply = <&vdd_gpu>;
 +	status = "okay";
 +};
-+
- &wdt {
- 	status = "okay";
- };
 -- 
 2.11.0
