@@ -1,68 +1,30 @@
-From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2] ARM: dts: imx: add Gateworks Ventana GW5600 support
-Date: Wed, 3 May 2017 11:43:29 +0800
-Message-ID: <20170503034327.GA15612@dragon>
-References: <1492197481-16638-1-git-send-email-tharvey@gateworks.com>
- <1493746777-7722-1-git-send-email-tharvey@gateworks.com>
+From: Anup Patel <anup.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v6 0/4] Broadcom SBA RAID support
+Date: Wed, 3 May 2017 09:15:20 +0530
+Message-ID: <CAALAos8hVtCqzpv3nvPAGnm=WKMfcXeBEFm5Yb0gWwYGLE4SeA@mail.gmail.com>
+References: <1488793408-25592-1-git-send-email-anup.patel@broadcom.com>
+ <20170321083052.GY2843@localhost> <CAALAos-k_DBYAz49278wBr_GoceOKYVH_UuzTLn1h7QCiUd8pg@mail.gmail.com>
+ <20170321091829.GZ2843@localhost> <CAALAos-P6CDdWTJxg8YQfT1V+iCxUcbYHiQ35EdZzz9PnN3cuA@mail.gmail.com>
+ <20170330044940.GU9308@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1493746777-7722-1-git-send-email-tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
+In-Reply-To: <20170330044940.GU9308@localhost>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Cc: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>, "David S . Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Rob Rice <rob.rice-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, BCM Kernel Feedback <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Device Tree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM Kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-raid <linux-raid-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 02, 2017 at 10:39:37AM -0700, Tim Harvey wrote:
-> The Gateworks Ventana GW5600 is a media-centric single-board computer based on
-> the NXP IMX6 SoC with the following features:
->  * PoE (emulated 802.3af)
->  * IMX6 DualLite Soc (supports IMX6S,IMX6DL,IMX6Q)
->  * 1GiB DDR3 DRAM (supports up to 4GiB)
->  * 8GB eMMC
->  * 1x microSD connector
->  * Gateworks System Controller:
->   - hardware watchdog
->   - hardware monitor
->   - pushbutton controller
->   - EEPROM storage
->   - power control
->  * 1x bi-color USER LED
->  * 1x front-panel pushbutton
->  * 1x front-panel GbE
->  * 2x front panel USB 2.0
->  * 1x front panel USB OTG
->  * 1x SIM socket
->  * 1x miniPCIe socket with SATA (mSATA)
->  * 1x miniPCIe socket with USB 2.0 (Modem)
->  * 1x miniPCIe socket with PCIe, USB 2.0, and SIM
->  * RS232/RS485 serial
->   - 2x RS232 UARTs (off-board connector)
->   - 1x RS485 (loading option)
->  * 4x digital I/O signals (PWM/I2C/GPIO/5V/3.3V options)
->  * 1x analog input (0 to 5V)
->  * 1x CAN (loading option)
->  * off-board LVDS:
->   - I2C
->   - 12V
->   - LED driver (4x 330mA strings)
->   - matrix keypad controller (8row x 10col)
->   - I2S
->   - dual-channel LVDS
->   - PWM
->  * off-board video input:
->   - 16bit parallel / MIPI (IPU1_CSI0)
->  * GPS (loading option)
->  * Analog Video Input (CVBS) 3 inputs (1 active at a time)
->  * Analog Audio Input/Output (2ch Line level, optional MIC/HP drivers)
->  * HDMI out
->  * JTAG programmable
->  * Inertial Module
-> 
-> Signed-off-by: Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
+Hi Vinod,
 
-Applied, thanks.
+The Broadcom FlexRM patchset have been
+merged in v4.11.
+
+I think you now can take this patchset in next
+merge window. Right??
+
+Regards,
+Anup
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
