@@ -1,118 +1,84 @@
-From: Oleksij Rempel <linux@rempel-privat.de>
-Subject: [PATCH v2 resend] arm: dts: sun7i-a20-bananapi: name the GPIO lines
-Date: Wed,  3 May 2017 09:09:20 +0200
-Message-ID: <1493795360-18629-1-git-send-email-linux@rempel-privat.de>
-References: <CACRpkdZcnJ1eCNW4ZF_A4zbeCt3JcAuw-1meB_Pn7ctMy99B_g@mail.gmail.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v5] media: platform: Renesas IMR driver
+Date: Wed, 3 May 2017 09:22:00 +0200
+Message-ID: <CAMuHMdWE+o3gsFnxqBcvrD=PfHHb0i9uK3tsfWaNxfuhK3SNKg@mail.gmail.com>
+References: <20170309200818.786255823@cogentembedded.com> <CAMuHMdV5-aMx4KuqShm47XtORJK8rMKzw6FUs2Hjsxia+jPfxg@mail.gmail.com>
+ <2382097.9ZIG3XAO0j@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CACRpkdZcnJ1eCNW4ZF_A4zbeCt3JcAuw-1meB_Pn7ctMy99B_g@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: ore@pengutronix.de
-Cc: devicetree@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Oleksij Rempel <linux@rempel-privat.de>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <2382097.9ZIG3XAO0j@avalon>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux Media Mailing List <linux-media@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Konstantin Kozhevnikov <Konstantin.Kozhevnikov@cogentembedded.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-This names the GPIO lines on the Banana Pi board in accordance with
-the A20_Banana_Pi v1.4 Specification.
+Hi Laurent,
 
-This will make these line names reflect through to userspace
-so that they can easily be identified and used with the new
-character device ABI.
+On Tue, May 2, 2017 at 11:17 PM, Laurent Pinchart
+<laurent.pinchart@ideasonboard.com> wrote:
+> On Wednesday 22 Mar 2017 10:34:16 Geert Uytterhoeven wrote:
+>> On Thu, Mar 9, 2017 at 9:08 PM, Sergei Shtylyov wrote:
+>> > --- /dev/null
+>> > +++ media_tree/Documentation/devicetree/bindings/media/rcar_imr.txt
+>> > @@ -0,0 +1,27 @@
+>> > +Renesas R-Car Image Renderer (Distortion Correction Engine)
+>> > +-----------------------------------------------------------
+>> > +
+>> > +The image renderer, or the distortion correction engine, is a drawing
+>> > processor
+>> > +with a simple instruction system capable of referencing video capture
+>> > data or
+>> > +data in an external memory as 2D texture data and performing texture
+>> > mapping
+>> > +and drawing with respect to any shape that is split into triangular
+>> > objects.
+>> > +
+>> > +Required properties:
+>> > +
+>> > +- compatible: "renesas,<soctype>-imr-lx4", "renesas,imr-lx4" as a
+>> > fallback for
+>> > +  the image renderer light extended 4 (IMR-LX4) found in the R-Car gen3
+>> > SoCs,
+>> > +  where the examples with <soctype> are:
+>> > +  - "renesas,r8a7795-imr-lx4" for R-Car H3,
+>> > +  - "renesas,r8a7796-imr-lx4" for R-Car M3-W.
+>>
+>> Laurent: what do you think about the need for SoC-specific compatible
+>> values for the various IM* blocks?
+>
+> There's no documented IP core version register, but when dumping all
+> configuration registers on H3 and M3-W I noticed that register 0x002c, not
+> documented in the datasheet, reads 0x14060514 on all four IMR instances in H3,
+> and 0x20150505 on both instances in M3-W.
+>
+> This looks like a version register to me. If my assumption is correct, we
+> could do without any SoC-specific compatible string.
 
-Some care has been taken to name all lines, not just those used
-by the external connectors, also lines that are muxed into some
-other function than GPIO: these are named "[FOO]" so that users
-can see with lsgpio what all lines are used for.
+I read this assumed version registers on all R-Car SoCs, after writing
+zero to 0xe6150990 (SMSTPCR8).
 
-Signed-off-by: Oleksij Rempel <linux@rempel-privat.de>
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
-Cc: devicetree@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: Chen-Yu Tsai <wens@csie.org>
-Cc: Maxime Ripard <maxime.ripard@free-electrons.com>
----
- arch/arm/boot/dts/sun7i-a20-bananapi.dts | 60 ++++++++++++++++++++++++++++++++
- 1 file changed, 60 insertions(+)
+IMR-X2 on R-Car H2:     0x12072009
+IMR-LSX2 on R-Car H2:   0x12072009
+IMR-LSX3 on R-Car V2H:  0x13052617
+IMR-LX2 on R-Car M2-W:  0x12072009
+IMR-LX2 on R-Car M2-N:  0x12072009
+IMR-LX2 on R-Car E2:    0x13091909
+IMR-LX3 on R-Car V2H:   0x13052617
 
-diff --git a/arch/arm/boot/dts/sun7i-a20-bananapi.dts b/arch/arm/boot/dts/sun7i-a20-bananapi.dts
-index 91f2e5f..5b3e0ee 100644
---- a/arch/arm/boot/dts/sun7i-a20-bananapi.dts
-+++ b/arch/arm/boot/dts/sun7i-a20-bananapi.dts
-@@ -178,6 +178,66 @@
- };
- 
- &pio {
-+	/*
-+	 * Legend: proper name = the GPIO line is used as GPIO
-+	 *         NC = not connected (not routed from the SoC)
-+	 *         "[PER]" = pin is muxed for peripheral (not GPIO)
-+	 *         "" = no idea, schematic doesn't say, could be
-+	 *              unrouted (not connected to any external pin)
-+	 *         LSEC = Low Speed External Connector
-+	 *         HSEC = High Speed External Connector
-+	 */
-+	gpio-line-names =
-+		/* PA */
-+		"[ERXD3]", "[ERXD2]", "[ERXD1]", "[ERXD0]", "[ETXD3]",
-+			"[ETXD2]", "[ETXD1]", "[ETXD0]",
-+		"[ERXCK]", "[ERXERR]", "[ERXDV]", "[EMDC]", "[EMDIO]",
-+			"[ETXEN]", "[ETXCK]", "[ECRS]",
-+		"[ECOL]", "[ETXERR]", "", "", "", "", "", "",
-+		"", "", "", "", "", "", "", "",
-+		/* PB */
-+		"[PMU-SCK]", "[PMU-SDA]", "", "", "", "NC", "NC", "NC",
-+		"NC", "[USB0-DRV]", "NC", "NC", "NC", "NC", "", "",
-+		"", "", "", "", "SCL", "SDA", "", "",
-+		"", "", "", "", "", "", "", "",
-+		/* PC */
-+		"", "", "", "", "", "", "", "",
-+		"", "", "", "", "", "", "", "",
-+		"", "", "", "", "", "", "", "",
-+		"", "", "", "", "", "", "", "",
-+		/* PD */
-+		"", "", "", "", "", "", "", "",
-+		"", "", "", "", "", "", "", "",
-+		"", "", "", "", "", "", "", "",
-+		"", "", "", "", "", "", "", "",
-+		/* PE */
-+		"", "", "", "", "", "", "", "",
-+		"", "", "", "", "", "", "", "",
-+		"", "", "", "", "", "", "", "",
-+		"", "", "", "", "", "", "", "",
-+		/* PF */
-+		"[SD0-D1]", "[SD0-D0]", "[SD0-CLK]", "[SD0-CMD]", "[SD0-D3]",
-+			"[SD0-D2]", "", "",
-+		"", "", "", "", "", "", "", "",
-+		"", "", "", "", "", "", "", "",
-+		"", "", "", "", "", "", "", "",
-+		/* PG */
-+		"", "", "", "", "", "", "", "",
-+		"", "", "", "", "", "", "", "",
-+		"", "", "", "", "", "", "", "",
-+		"", "", "", "", "", "", "", "",
-+		/* PH */
-+		"TXD0", "RXD0", "IO-1", "PH3", "[USB0-IDDET]", "PH5", "", "",
-+		"", "", "[SD0-DET]", "", "", "", "", "",
-+		"NC", "", "", "", "IO-4", "IO-5", "NC", "[EMAC-PWR-EN]",
-+		"[LED1]", "NC", "NC", "NC", "", "", "", "",
-+		/* PI */
-+		"", "", "", "IO-GCLK", "NC", "NC", "NC", "NC",
-+		"NC", "NC", "[SPI-CE0]", "[SPI-CLK]", "[SPI-MOSI]",
-+			"[SPI-MISO]", "[SPI-CE1]", "NC",
-+		"IO-6", "IO-3", "IO-2", "IO-0", "", "", "", "",
-+		"", "", "", "", "", "", "", "";
-+
- 	usb0_id_detect_pin: usb0_id_detect_pin@0 {
- 		pins = "PH4";
- 		function = "gpio_in";
--- 
-2.7.4
+Note that several IDs are the same, but you know the type from the
+compatible value.
+
+It would be good to get confirmation from the hardware team that this is
+indeed a version register.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
