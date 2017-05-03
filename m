@@ -1,71 +1,57 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH v2 6/8] ARM: sun8i: a83t: Add CCU device nodes
-Date: Wed,  3 May 2017 11:16:56 +0800
-Message-ID: <20170503031658.29299-7-wens@csie.org>
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: [PATCH v2 2/8] clk: Provide option to query hardware for clk phase
+Date: Wed,  3 May 2017 11:16:52 +0800
+Message-ID: <20170503031658.29299-3-wens@csie.org>
 References: <20170503031658.29299-1-wens@csie.org>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBQ4XUXEAKGQEM2AUC6I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20170503031658.29299-1-wens-jdAy2FN1RRM@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <20170503031658.29299-1-wens@csie.org>
+Sender: linux-clk-owner@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@free-electrons.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: devicetree@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
 List-Id: devicetree@vger.kernel.org
 
-Now that we have support for the A83T CCU, add a device node for it,
-and replace any existing placeholder clock phandles with the correct
-ones.
+On some hardware, the clk phase is tied to the parent clk's
+rate and some clk delay programmed into the hardware. As the
+parent clk rate changes, so does the clk phase.
 
-Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Add a clk flag specifying not to use the cached clk phase,
+but always query the hardware for it.
+
+Signed-off-by: Chen-Yu Tsai <wens@csie.org>
 ---
- arch/arm/boot/dts/sun8i-a83t.dtsi | 15 +++++++++++++--
- 1 file changed, 13 insertions(+), 2 deletions(-)
+ drivers/clk/clk.c            | 6 +++++-
+ include/linux/clk-provider.h | 1 +
+ 2 files changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/sun8i-a83t.dtsi b/arch/arm/boot/dts/sun8i-a83t.dtsi
-index c0a1e4f74b89..c9a5d07b2ada 100644
---- a/arch/arm/boot/dts/sun8i-a83t.dtsi
-+++ b/arch/arm/boot/dts/sun8i-a83t.dtsi
-@@ -162,13 +162,23 @@
- 		#size-cells = <1>;
- 		ranges;
+diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
+index 67201f67a14a..05e2481c1340 100644
+--- a/drivers/clk/clk.c
++++ b/drivers/clk/clk.c
+@@ -1929,7 +1929,11 @@ static int clk_core_get_phase(struct clk_core *core)
+ 	int ret;
  
-+		ccu: clock@1c20000 {
-+			compatible = "allwinner,sun8i-a83t-ccu";
-+			reg = <0x01c20000 0x400>;
-+			clocks = <&osc24M>, <&osc16Md512>;
-+			clock-names = "hosc", "losc";
-+			#clock-cells = <1>;
-+			#reset-cells = <1>;
-+		};
-+
- 		pio: pinctrl@1c20800 {
- 			compatible = "allwinner,sun8i-a83t-pinctrl";
- 			interrupts = <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>,
- 				     <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>,
- 				     <GIC_SPI 100 IRQ_TYPE_LEVEL_HIGH>;
- 			reg = <0x01c20800 0x400>;
--			clocks = <&osc24M>;
-+			clocks = <&ccu 45>, <&osc24M>, <&osc16Md512>;
-+			clock-names = "apb", "hosc", "losc";
- 			gpio-controller;
- 			interrupt-controller;
- 			#interrupt-cells = <3>;
-@@ -214,7 +224,8 @@
- 			interrupts = <GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH>;
- 			reg-shift = <2>;
- 			reg-io-width = <4>;
--			clocks = <&osc24M>;
-+			clocks = <&ccu 53>;
-+			resets = <&ccu 40>;
- 			status = "disabled";
- 		};
+ 	clk_prepare_lock();
+-	ret = core->phase;
++	if (core && (core->flags & CLK_GET_PHASE_NOCACHE) &&
++	    core->ops->get_phase)
++		ret = core->ops->get_phase(core->hw);
++	else
++		ret = core->phase;
+ 	clk_prepare_unlock();
  
+ 	return ret;
+diff --git a/include/linux/clk-provider.h b/include/linux/clk-provider.h
+index a428aec36ace..e2e856b1a81f 100644
+--- a/include/linux/clk-provider.h
++++ b/include/linux/clk-provider.h
+@@ -35,6 +35,7 @@
+ #define CLK_IS_CRITICAL		BIT(11) /* do not gate, ever */
+ /* parents need enable during gate/ungate, set rate and re-parent */
+ #define CLK_OPS_PARENT_ENABLE	BIT(12)
++#define CLK_GET_PHASE_NOCACHE	BIT(13) /* do not use the cached clk phase */
+ 
+ struct clk;
+ struct clk_hw;
 -- 
 2.11.0
+
