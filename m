@@ -1,170 +1,128 @@
-From: Phil Reid <preid@electromag.com.au>
-Subject: Re: [PATCH v6 5/8] i2c: mux: pca954x: Call request irq after adding
- mux segments
-Date: Wed, 3 May 2017 16:36:37 +0800
-Message-ID: <8587aabe-ca4a-8424-d24f-cd228e01957f@electromag.com.au>
-References: <1493716346-58517-1-git-send-email-preid@electromag.com.au>
- <1493716346-58517-6-git-send-email-preid@electromag.com.au>
- <28f3ce1d-ad4b-3082-7499-b30245a256c1@axentia.se>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 13/15] drm/sun4i: Add HDMI support
+Date: Wed, 3 May 2017 10:41:38 +0200
+Message-ID: <20170503084138.rye2i6qd4ghxifep@lukather>
+References: <cover.bc06ffa88f847ddd9ddd7c259415d5f61b55307b.1488876832.git-series.maxime.ripard@free-electrons.com>
+ <c63d01aedeccc58bf8d6f5bfd66d8595156e9491.1488876832.git-series.maxime.ripard@free-electrons.com>
+ <CAGb2v66n6AXbOAh05V_Gv2UgRp=xEMG9qhJU8JSuy4-F-UOQQQ@mail.gmail.com>
+ <20170426065005.zoewz53q7l7r5e7p@lukather>
+ <CAGb2v67Szt9Xj+hwJD6i9X0XgXOtZBS1Jy4wWjbfSGJSDFM1NQ@mail.gmail.com>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <28f3ce1d-ad4b-3082-7499-b30245a256c1@axentia.se>
-Content-Language: en-AU
-Sender: linux-pm-owner@vger.kernel.org
-To: Peter Rosin <peda@axentia.se>, wsa@the-dreams.de, robh+dt@kernel.org, mark.rutland@arm.com, sre@kernel.org, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, benjamin.tissoires@redhat.com
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="qq3kb2nbfsjelwzs"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBQ5PU3EAKGQEXKNFBGI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <CAGb2v67Szt9Xj+hwJD6i9X0XgXOtZBS1Jy4wWjbfSGJSDFM1NQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Daniel Vetter <daniel.vetter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2/05/2017 17:57, Peter Rosin wrote:
-> On 2017-05-02 11:12, Phil Reid wrote:
->> The pca954x device do not have the ability to mask interrupts. For
->> i2c slave devices that also don't have masking ability (eg ltc1760
->> smbalert output) delay registering the irq until after the mux
->> segments have been configured. During the mux add_adaptor call the
->> core i2c system can register an smbalert handler which would then
->> be called immediately when the irq is registered. This smbalert
->> handler will then clear the pending irq.
->>
->> Signed-off-by: Phil Reid <preid@electromag.com.au>
->> ---
->>   drivers/i2c/muxes/i2c-mux-pca954x.c | 52 +++++++++++++++++--------------------
->>   1 file changed, 24 insertions(+), 28 deletions(-)
->>
->> diff --git a/drivers/i2c/muxes/i2c-mux-pca954x.c b/drivers/i2c/muxes/i2c-mux-pca954x.c
->> index ad31d21..4299738 100644
->> --- a/drivers/i2c/muxes/i2c-mux-pca954x.c
->> +++ b/drivers/i2c/muxes/i2c-mux-pca954x.c
->> @@ -294,7 +294,7 @@ static int pca954x_irq_setup(struct i2c_mux_core *muxc)
->>   {
->>   	struct pca954x *data = i2c_mux_priv(muxc);
->>   	struct i2c_client *client = data->client;
->> -	int c, err, irq;
->> +	int c, irq;
->>   
->>   	if (!data->chip->has_irq || client->irq <= 0)
->>   		return 0;
->> @@ -314,24 +314,22 @@ static int pca954x_irq_setup(struct i2c_mux_core *muxc)
->>   			handle_simple_irq);
->>   	}
->>   
->> -	err = devm_request_threaded_irq(&client->dev, data->client->irq, NULL,
->> -					pca954x_irq_handler,
->> -					IRQF_ONESHOT | IRQF_SHARED,
->> -					"pca954x", data);
->> -	if (err)
->> -		goto err_req_irq;
->> +	return 0;
->> +}
->>   
->> -	disable_irq(data->client->irq);
->> +static void pca954x_cleanup(struct i2c_mux_core *muxc)
->> +{
->> +	struct pca954x *data = i2c_mux_priv(muxc);
->> +	int c, irq;
->>   
->> -	return 0;
->> -err_req_irq:
->> -	for (c = 0; c < data->chip->nchans; c++) {
->> -		irq = irq_find_mapping(data->irq, c);
->> -		irq_dispose_mapping(irq);
->> +	if (data->irq) {
->> +		for (c = 0; c < data->chip->nchans; c++) {
->> +			irq = irq_find_mapping(data->irq, c);
->> +			irq_dispose_mapping(irq);
->> +		}
->> +		irq_domain_remove(data->irq);
->>   	}
->> -	irq_domain_remove(data->irq);
->> -
->> -	return err;
->> +	i2c_mux_del_adapters(muxc);
->>   }
->>   
->>   /*
->> @@ -422,6 +420,14 @@ static int pca954x_probe(struct i2c_client *client,
->>   		}
->>   	}
->>   
->> +	if (data->chip->has_irq || client->irq > 0) {
-> 
-> This should be && instead of ||. However, I think it's better to not
-> try to replicate the inverse of the test in pca954x_irq_setup and
-> instead just check if the irq domain is there with "if (data->irq)".
-> Assuming that is the intent...
-Yeah, that's better.
 
-> 
->> +		ret = devm_request_threaded_irq(&client->dev, data->client->irq,
->> +		NULL, pca954x_irq_handler, IRQF_ONESHOT | IRQF_SHARED,
->> +		"pca954x", data);
-> 
-> The indentation is horrific. Please fix.
-oops
+--qq3kb2nbfsjelwzs
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
+On Wed, Apr 26, 2017 at 03:59:28PM +0800, Chen-Yu Tsai wrote:
+> >> > +       writel(SUN4I_HDMI_VID_TIMING_X(mode->hdisplay) |
+> >> > +              SUN4I_HDMI_VID_TIMING_Y(mode->vdisplay),
+> >> > +              hdmi->base + SUN4I_HDMI_VID_TIMING_ACT_REG);
+> >> > +
+> >> > +       x = mode->htotal - mode->hsync_start;
+> >> > +       y = mode->vtotal - mode->vsync_start;
+> >>
+> >> I'm a bit skeptical about this one. All the other parameters are not
+> >> inclusive of other, why would this one be different? Shouldn't it
+> >> be "Xtotal - Xsync_end" instead?
+> >
+> > By the usual meaning of backporch, you're right. However, Allwinner's
+> > seems to have it's own, which is actually the backporch + sync length.
+> >
+> > We also have that on all the other connectors (and TCON), and this was
+> > confirmed at the time using a scope on an RGB signal.
 > 
-> Acked with those two fixed.
+> Yes. On the later SoCs such as the A31, the user manual actually has
+> timing diagrams showing this.
 > 
-> I also noticed that there is no check for failure of the call to
-> irq_create_mapping in pca954x_irq_setup. For bonus points, can you
-> fix that error path too, please? Or should failure to create those
-> irq mappings not be fatal for some reason?
-Seems reasonable to fail. I'll fix that as well.
+> Unlike the TCON, the HDMI controller's timings lists the front porch
+> separately, instead of an all inclusive Xtotal. This is what made me
+> look twice. This should be easy to confirm though. Since the HDMI modes
+> are well known and can be exactly reproduced on our hardware, we can
+> just check for any distortions or refresh rate errors.
 
-> 
-> Cheers,
-> peda
-> 
->> +		if (ret)
->> +			goto fail_del_adapters;
->> +	}
->> +
->>   	dev_info(&client->dev,
->>   		 "registered %d multiplexed busses for I2C %s %s\n",
->>   		 num, data->chip->muxtype == pca954x_ismux
->> @@ -430,25 +436,15 @@ static int pca954x_probe(struct i2c_client *client,
->>   	return 0;
->>   
->>   fail_del_adapters:
->> -	i2c_mux_del_adapters(muxc);
->> +	pca954x_cleanup(muxc);
->>   	return ret;
->>   }
->>   
->>   static int pca954x_remove(struct i2c_client *client)
->>   {
->>   	struct i2c_mux_core *muxc = i2c_get_clientdata(client);
->> -	struct pca954x *data = i2c_mux_priv(muxc);
->> -	int c, irq;
->>   
->> -	if (data->irq) {
->> -		for (c = 0; c < data->chip->nchans; c++) {
->> -			irq = irq_find_mapping(data->irq, c);
->> -			irq_dispose_mapping(irq);
->> -		}
->> -		irq_domain_remove(data->irq);
->> -	}
->> -
->> -	i2c_mux_del_adapters(muxc);
->> +	pca954x_cleanup(muxc);
->>   	return 0;
->>   }
->>   
->>
-> 
-> 
-> 
+This isn't as trivial as that. Screens usually have some tolerancies
+on the timings, which will probably make it go unnoticed, even though
+they are wrong.
 
+> >>
+> >> > +       writel(SUN4I_HDMI_VID_TIMING_X(x) | SUN4I_HDMI_VID_TIMING_Y(y),
+> >> > +              hdmi->base + SUN4I_HDMI_VID_TIMING_BP_REG);
+> >> > +
+> >> > +       x = mode->hsync_start - mode->hdisplay;
+> >> > +       y = mode->vsync_start - mode->vdisplay;
+> >> > +       writel(SUN4I_HDMI_VID_TIMING_X(x) | SUN4I_HDMI_VID_TIMING_Y(y),
+> >> > +              hdmi->base + SUN4I_HDMI_VID_TIMING_FP_REG);
+> >> > +
+> >> > +       x = mode->hsync_end - mode->hsync_start;
+> >> > +       y = mode->vsync_end - mode->vsync_start;
+> >> > +       writel(SUN4I_HDMI_VID_TIMING_X(x) | SUN4I_HDMI_VID_TIMING_Y(y),
+> >> > +              hdmi->base + SUN4I_HDMI_VID_TIMING_SPW_REG);
+> >> > +
+> >> > +       val = SUN4I_HDMI_VID_TIMING_POL_TX_CLK;
+> >> > +       if (mode->flags & DRM_MODE_FLAG_PHSYNC)
+> >> > +               val |= SUN4I_HDMI_VID_TIMING_POL_HSYNC;
+> >> > +
+> >> > +       if (mode->flags & DRM_MODE_FLAG_PVSYNC)
+> >> > +               val |= SUN4I_HDMI_VID_TIMING_POL_VSYNC;
+> >> > +
+> >> > +       writel(val, hdmi->base + SUN4I_HDMI_VID_TIMING_POL_REG);
+> >>
+> >> You don't handle the interlaced video here, even though you set
+> >>
+> >>     hdmi->connector.interlace_allowed = true
+> >>
+> >> later.
+> >
+> > I'll fix that.
+> >
+> >> The double clock and double scan flags aren't handled either, though
+> >> I don't understand which one is supposed to represent the need for the
+> >> HDMI pixel repeater. AFAIK this is required for resolutions with pixel
+> >> clocks lower than 25 MHz, the lower limit of HDMI's TMDS link.
+> >
+> > I'm not sure about this one though. I'd like to keep things quite
+> > simple for now and build up on that once the basis is working. Is it
+> > common in the wild?
+> 
+> If you drive the display at SDTV resolutions, then yes. Mode lines from
+> my HDMI monitor:
+> 
+>   720x576i 50 720 732 795 864 576 580 586 625 flags: nhsync, nvsync,
+> interlace, dblclk; type: driver
+>   720x480i 60 720 739 801 858 480 488 494 525 flags: nhsync, nvsync,
+> interlace, dblclk; type: driver
+>   720x480i 60 720 739 801 858 480 488 494 525 flags: nhsync, nvsync,
+> interlace, dblclk; type: driver
+> 
+> AFAIK these are standard modes that all devices should support. Whether
+> they are used daily is another thing. Maybe block modes with dblclk
+> in .mode_fixup for now?
+
+That would rather be atomic_check and / or mode_valid, but yeah, I can
+do that.
+
+Thanks!
+Maxime
 
 -- 
-Regards
-Phil Reid
-
-ElectroMagnetic Imaging Technology Pty Ltd
-Development of Geophysical Instrumentation & Software
-www.electromag.com.au
-
-3 The Avenue, Midland WA 6056, AUSTRALIA
-Ph: +61 8 9250 8100
-Fax: +61 8 9250 7100
-Email: preid@electromag.com.au
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--qq3kb2nbfsjelwzs--
