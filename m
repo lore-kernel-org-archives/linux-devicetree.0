@@ -1,110 +1,118 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: [PATCH v3 3/4] soc: qcom: Add device tree binding for GLINK RPM
-Date: Tue,  2 May 2017 22:29:28 -0700
-Message-ID: <20170503052929.17422-3-bjorn.andersson@linaro.org>
-References: <20170503052929.17422-1-bjorn.andersson@linaro.org>
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <20170503052929.17422-1-bjorn.andersson@linaro.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Andy Gross <andy.gross@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ohad Ben-Cohen <ohad@wizery.com>
-Cc: linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-remoteproc@vger.kernel.org
+From: Oleksij Rempel <linux@rempel-privat.de>
+Subject: [PATCH v2 resend] arm: dts: sun7i-a20-bananapi: name the GPIO lines
+Date: Wed,  3 May 2017 09:09:20 +0200
+Message-ID: <1493795360-18629-1-git-send-email-linux@rempel-privat.de>
+References: <CACRpkdZcnJ1eCNW4ZF_A4zbeCt3JcAuw-1meB_Pn7ctMy99B_g@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CACRpkdZcnJ1eCNW4ZF_A4zbeCt3JcAuw-1meB_Pn7ctMy99B_g@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: ore@pengutronix.de
+Cc: devicetree@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Oleksij Rempel <linux@rempel-privat.de>
 List-Id: devicetree@vger.kernel.org
 
-Add device tree binding documentation for the Qualcomm GLINK RPM, used
-for communication with the Resource Power Management subsystem in
-various Qualcomm SoCs.
+This names the GPIO lines on the Banana Pi board in accordance with
+the A20_Banana_Pi v1.4 Specification.
 
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+This will make these line names reflect through to userspace
+so that they can easily be identified and used with the new
+character device ABI.
+
+Some care has been taken to name all lines, not just those used
+by the external connectors, also lines that are muxed into some
+other function than GPIO: these are named "[FOO]" so that users
+can see with lsgpio what all lines are used for.
+
+Signed-off-by: Oleksij Rempel <linux@rempel-privat.de>
+Acked-by: Linus Walleij <linus.walleij@linaro.org>
+Cc: devicetree@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: Chen-Yu Tsai <wens@csie.org>
+Cc: Maxime Ripard <maxime.ripard@free-electrons.com>
 ---
+ arch/arm/boot/dts/sun7i-a20-bananapi.dts | 60 ++++++++++++++++++++++++++++++++
+ 1 file changed, 60 insertions(+)
 
-Changes since v2:
-- Replace qcom,ipc syscon with a "doorbell"
-
-Changes since v1:
-- None
-
- .../devicetree/bindings/soc/qcom/qcom,glink.txt    | 73 ++++++++++++++++++++++
- 1 file changed, 73 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,glink.txt
-
-diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,glink.txt b/Documentation/devicetree/bindings/soc/qcom/qcom,glink.txt
-new file mode 100644
-index 000000000000..4c8983f0dcb0
---- /dev/null
-+++ b/Documentation/devicetree/bindings/soc/qcom/qcom,glink.txt
-@@ -0,0 +1,73 @@
-+Qualcomm RPM GLINK binding
+diff --git a/arch/arm/boot/dts/sun7i-a20-bananapi.dts b/arch/arm/boot/dts/sun7i-a20-bananapi.dts
+index 91f2e5f..5b3e0ee 100644
+--- a/arch/arm/boot/dts/sun7i-a20-bananapi.dts
++++ b/arch/arm/boot/dts/sun7i-a20-bananapi.dts
+@@ -178,6 +178,66 @@
+ };
+ 
+ &pio {
++	/*
++	 * Legend: proper name = the GPIO line is used as GPIO
++	 *         NC = not connected (not routed from the SoC)
++	 *         "[PER]" = pin is muxed for peripheral (not GPIO)
++	 *         "" = no idea, schematic doesn't say, could be
++	 *              unrouted (not connected to any external pin)
++	 *         LSEC = Low Speed External Connector
++	 *         HSEC = High Speed External Connector
++	 */
++	gpio-line-names =
++		/* PA */
++		"[ERXD3]", "[ERXD2]", "[ERXD1]", "[ERXD0]", "[ETXD3]",
++			"[ETXD2]", "[ETXD1]", "[ETXD0]",
++		"[ERXCK]", "[ERXERR]", "[ERXDV]", "[EMDC]", "[EMDIO]",
++			"[ETXEN]", "[ETXCK]", "[ECRS]",
++		"[ECOL]", "[ETXERR]", "", "", "", "", "", "",
++		"", "", "", "", "", "", "", "",
++		/* PB */
++		"[PMU-SCK]", "[PMU-SDA]", "", "", "", "NC", "NC", "NC",
++		"NC", "[USB0-DRV]", "NC", "NC", "NC", "NC", "", "",
++		"", "", "", "", "SCL", "SDA", "", "",
++		"", "", "", "", "", "", "", "",
++		/* PC */
++		"", "", "", "", "", "", "", "",
++		"", "", "", "", "", "", "", "",
++		"", "", "", "", "", "", "", "",
++		"", "", "", "", "", "", "", "",
++		/* PD */
++		"", "", "", "", "", "", "", "",
++		"", "", "", "", "", "", "", "",
++		"", "", "", "", "", "", "", "",
++		"", "", "", "", "", "", "", "",
++		/* PE */
++		"", "", "", "", "", "", "", "",
++		"", "", "", "", "", "", "", "",
++		"", "", "", "", "", "", "", "",
++		"", "", "", "", "", "", "", "",
++		/* PF */
++		"[SD0-D1]", "[SD0-D0]", "[SD0-CLK]", "[SD0-CMD]", "[SD0-D3]",
++			"[SD0-D2]", "", "",
++		"", "", "", "", "", "", "", "",
++		"", "", "", "", "", "", "", "",
++		"", "", "", "", "", "", "", "",
++		/* PG */
++		"", "", "", "", "", "", "", "",
++		"", "", "", "", "", "", "", "",
++		"", "", "", "", "", "", "", "",
++		"", "", "", "", "", "", "", "",
++		/* PH */
++		"TXD0", "RXD0", "IO-1", "PH3", "[USB0-IDDET]", "PH5", "", "",
++		"", "", "[SD0-DET]", "", "", "", "", "",
++		"NC", "", "", "", "IO-4", "IO-5", "NC", "[EMAC-PWR-EN]",
++		"[LED1]", "NC", "NC", "NC", "", "", "", "",
++		/* PI */
++		"", "", "", "IO-GCLK", "NC", "NC", "NC", "NC",
++		"NC", "NC", "[SPI-CE0]", "[SPI-CLK]", "[SPI-MOSI]",
++			"[SPI-MISO]", "[SPI-CE1]", "NC",
++		"IO-6", "IO-3", "IO-2", "IO-0", "", "", "", "",
++		"", "", "", "", "", "", "", "";
 +
-+This binding describes the Qualcomm RPM GLINK, a fifo based mechanism for
-+communication with the Resource Power Management system on various Qualcomm
-+platforms.
-+
-+- compatible:
-+	Usage: required
-+	Value type: <stringlist>
-+	Definition: must be "qcom,glink-rpm"
-+
-+- interrupts:
-+	Usage: required
-+	Value type: <prop-encoded-array>
-+	Definition: should specify the IRQ used by the remote processor to
-+		    signal this processor about communication related events
-+
-+- qcom,rpm-msg-ram:
-+	Usage: required
-+	Value type: <prop-encoded-array>
-+	Definition: handle to RPM message memory resource
-+
-+- doorbells:
-+	Usage: required
-+	Value type: <prop-encoded-array>
-+	Definition: reference to the "rpm_hlos" doorbell in APCS, as described
-+		    in doorbell.txt
-+
-+= GLINK DEVICES
-+Each subnode of the GLINK node represent function tied to a virtual
-+communication channel. The name of the nodes are not important. The properties
-+of these nodes are defined by the individual bindings for the specific function
-+- but must contain the following property:
-+
-+- qcom,glink-channels:
-+	Usage: required
-+	Value type: <stringlist>
-+	Definition: a list of channels tied to this function, used for matching
-+		    the function to a set of virtual channels
-+
-+= EXAMPLE
-+The following example represents the GLINK RPM node on a MSM8996 device, with
-+the function for the "rpm_request" channel defined, which is used for
-+regualtors and root clocks.
-+
-+	apcs_glb: apcs-glb@9820000 {
-+		compatible = "qcom,msm8996-apcs-hmss-global";
-+		reg = <0x9820000 0x1000>;
-+
-+		#doorbell-cells = <1>;
-+	};
-+
-+	rpm_msg_ram: memory@68000 {
-+		compatible = "qcom,rpm-msg-ram";
-+		reg = <0x68000 0x6000>;
-+	};
-+
-+        rpm-glink {
-+		compatible = "qcom,glink-rpm";
-+
-+		interrupts = <GIC_SPI 168 IRQ_TYPE_EDGE_RISING>;
-+
-+		qcom,rpm-msg-ram = <&rpm_msg_ram>;
-+
-+		doorbells = <&apcs_glb 0>;
-+
-+		rpm-requests {
-+			compatible = "qcom,rpm-msm8996";
-+			qcom,glink-channels = "rpm_requests";
-+
-+			...
-+		};
-+	};
+ 	usb0_id_detect_pin: usb0_id_detect_pin@0 {
+ 		pins = "PH4";
+ 		function = "gpio_in";
 -- 
-2.12.0
+2.7.4
