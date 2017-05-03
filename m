@@ -1,43 +1,50 @@
-From: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] [media] dt-bindings: Add bindings for
- video-multiplexer device
-Date: Wed, 3 May 2017 22:30:25 +0300
-Message-ID: <20170503193025.GO7456@valkosipuli.retiisi.org.uk>
-References: <20170502150913.2168-1-p.zabel@pengutronix.de>
+From: Dan Carpenter <dan.carpenter@oracle.com>
+Subject: [PATCH] of/unittest: Missing unlocks on error
+Date: Wed, 3 May 2017 22:49:50 +0300
+Message-ID: <20170503194950.4xbdbwybvx6dkadx@mwanda>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <kernel-janitors-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170502150913.2168-1-p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Vladimir Zapolskiy <vladimir_zapolskiy-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Steve Longerbeam <steve_longerbeam-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+Sender: kernel-janitors-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Frank Rowand <frank.rowand@sony.com>
+Cc: Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, kernel-janitors@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Thanks, Philipp!
+Static checkers complain that we should unlock before returning.  Which
+is true.
 
-On Tue, May 02, 2017 at 05:09:12PM +0200, Philipp Zabel wrote:
-> Add bindings documentation for the video multiplexer device.
-> 
-> Signed-off-by: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> Signed-off-by: Steve Longerbeam <steve_longerbeam-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
-> Acked-by: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
-> ---
-> No changes since v1 [1].
-> 
-> This was previously sent as part of Steve's i.MX media series [2].
-> 
-> [1] https://patchwork.kernel.org/patch/9704789/
-> [2] https://patchwork.kernel.org/patch/9647951/
-> ---
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
 
-Acked-by: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-
--- 
-Sakari Ailus
-e-mail: sakari.ailus-X3B1VOXEql0@public.gmane.org	XMPP: sailus-PCDdDYkjdNMDXYZnReoRVg@public.gmane.org
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
+index 12597ff8cfb0..425338d6286d 100644
+--- a/drivers/of/unittest.c
++++ b/drivers/of/unittest.c
+@@ -2210,14 +2210,14 @@ static __init void of_unittest_overlay_high_level(void)
+ 				unittest(0,
+ 					 "duplicate property '%s' in overlay_base node __symbols__",
+ 					 prop->name);
+-				return;
++				goto err_unlock;
+ 			}
+ 			ret = __of_add_property_sysfs(of_symbols, prop);
+ 			if (ret) {
+ 				unittest(0,
+ 					 "unable to add property '%s' in overlay_base node __symbols__ to sysfs",
+ 					 prop->name);
+-				return;
++				goto err_unlock;
+ 			}
+ 		}
+ 	}
+@@ -2232,6 +2232,10 @@ static __init void of_unittest_overlay_high_level(void)
+ 
+ 	unittest(overlay_data_add(2),
+ 		 "Adding overlay 'overlay_bad_phandle' failed\n");
++	return;
++
++err_unlock:
++	mutex_unlock(&of_mutex);
+ }
+ 
+ #else
