@@ -1,16 +1,15 @@
 From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH v2 19/20] ARM: sun5i: a10s: Add the HDMI
- controller node
-Date: Thu, 4 May 2017 16:04:00 +0800
-Message-ID: <CAGb2v640zxNzZ+CAitEUrwtcQUdsPJixjtuAFNp=xKhG6CCmcg@mail.gmail.com>
+Subject: Re: [PATCH v2 20/20] ARM: sun5i: a10s-olinuxino: Enable HDMI
+Date: Thu, 4 May 2017 16:05:18 +0800
+Message-ID: <CAGb2v65S2pw3z8NZ+tkPkF=A=5z2toRkC+26pAs6La6CNyeXoQ@mail.gmail.com>
 References: <cover.d697f34bb7b0605c5e76cbc4167a64453e5e0984.1493812478.git-series.maxime.ripard@free-electrons.com>
- <1e3ddf81459adbab455b2211fe6b78bd6cf1bbec.1493812478.git-series.maxime.ripard@free-electrons.com>
+ <c7ac6faa0568e6418291255af537c4b070bdea63.1493812478.git-series.maxime.ripard@free-electrons.com>
 Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBCGBVPEAKGQEZ22TYMY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBVWBVPEAKGQEIHC4BKA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <1e3ddf81459adbab455b2211fe6b78bd6cf1bbec.1493812478.git-series.maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+In-Reply-To: <c7ac6faa0568e6418291255af537c4b070bdea63.1493812478.git-series.maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -23,106 +22,85 @@ List-Id: devicetree@vger.kernel.org
 
 On Wed, May 3, 2017 at 7:59 PM, Maxime Ripard
 <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> The A10s has an HDMI controller connected to the second TCON channel. Add
-> it to our DT.
+> The A10s Olinuxino has an HDMI connector. Make sure we can use it.
 >
-> Since the TV Encoder was the only channel 1 user so far, also add the
-> property now that we have several users.
->
+> Acked-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 > Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 > ---
->  arch/arm/boot/dts/sun5i-a10s.dtsi | 50 ++++++++++++++++++++++++++++++++-
->  arch/arm/boot/dts/sun5i.dtsi      |  1 +-
->  2 files changed, 51 insertions(+), 0 deletions(-)
+>  arch/arm/boot/dts/sun5i-a10s-olinuxino-micro.dts | 29 +++++++++++++++++-
+>  1 file changed, 29 insertions(+), 0 deletions(-)
 >
-> diff --git a/arch/arm/boot/dts/sun5i-a10s.dtsi b/arch/arm/boot/dts/sun5i-a10s.dtsi
-> index 1e38ff80366c..c9d4ee12599d 100644
-> --- a/arch/arm/boot/dts/sun5i-a10s.dtsi
-> +++ b/arch/arm/boot/dts/sun5i-a10s.dtsi
-> @@ -71,7 +71,49 @@
->                 };
+> diff --git a/arch/arm/boot/dts/sun5i-a10s-olinuxino-micro.dts b/arch/arm/boot/dts/sun5i-a10s-olinuxino-micro.dts
+> index 894f874a5beb..1d13b6407222 100644
+> --- a/arch/arm/boot/dts/sun5i-a10s-olinuxino-micro.dts
+> +++ b/arch/arm/boot/dts/sun5i-a10s-olinuxino-micro.dts
+> @@ -63,6 +63,17 @@
+>                 stdout-path = "serial0:115200n8";
 >         };
 >
-> +       display-engine {
-> +               compatible = "allwinner,sun5i-a10s-display-engine",
-> +                            "allwinner,sun5i-a13-display-engine";
+> +       connector {
+> +               compatible = "hdmi-connector";
+> +               type = "a";
 
-I assume this indicates a difference between A10s and A13, namely the former
-has an HDMI controller. The compatible string should be documented.
+Just curious, should we take this into consideration when creating
+drm_connector?
 
-> +               allwinner,pipelines = <&fe0>;
-> +       };
+ChenYu
+
 > +
->         soc@01c00000 {
-> +               hdmi: hdmi@01c16000 {
-> +                       compatible = "allwinner,sun5i-a10s-hdmi";
-> +                       reg = <0x01c16000 0x1000>;
-> +                       interrupts = <58>;
-> +                       clocks = <&ccu CLK_AHB_HDMI>, <&ccu CLK_HDMI>,
-> +                                <&ccu CLK_PLL_VIDEO0_2X>,
-> +                                <&ccu CLK_PLL_VIDEO1_2X>;
-> +                       clock-names = "ahb", "mod", "pll-0", "pll-1";
-> +                       dmas = <&dma SUN4I_DMA_NORMAL 16>,
-> +                              <&dma SUN4I_DMA_NORMAL 16>,
-> +                              <&dma SUN4I_DMA_DEDICATED 24>;
-> +                       dma-names = "ddc-tx", "ddc-rx", "audio-tx";
-> +                       status = "disabled";
-> +
-> +                       ports {
-> +                               #address-cells = <1>;
-> +                               #size-cells = <0>;
-> +
-> +                               hdmi_in: port@0 {
-> +                                       #address-cells = <1>;
-> +                                       #size-cells = <0>;
-> +                                       reg = <0>;
-> +
-> +                                       hdmi_in_tcon0: endpoint {
-
-Missing reg property here, since you have #address-cells = 1.
-
-Otherwise,
-
-Acked-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-
-> +                                               remote-endpoint = <&tcon0_out_hdmi>;
-> +                                       };
-> +                               };
-> +
-> +                               hdmi_out: port@1 {
-> +                                       #address-cells = <1>;
-> +                                       #size-cells = <0>;
-> +                                       reg = <1>;
-> +                               };
+> +               port {
+> +                       hdmi_con_in: endpoint {
+> +                               remote-endpoint = <&hdmi_out_con>;
 > +                       };
 > +               };
+> +       };
 > +
->                 pwm: pwm@01c20e00 {
->                         compatible = "allwinner,sun5i-a10s-pwm";
->                         reg = <0x01c20e00 0xc>;
-> @@ -128,3 +170,11 @@
->
->  &sram_a {
+>         leds {
+>                 compatible = "gpio-leds";
+>                 pinctrl-names = "default";
+> @@ -76,6 +87,10 @@
+>         };
 >  };
+>
+> +&be0 {
+> +       status = "okay";
+> +};
 > +
-> +&tcon0_out {
-> +       tcon0_out_hdmi: endpoint@2 {
-> +               reg = <2>;
-> +               remote-endpoint = <&hdmi_in_tcon0>;
-> +               allwinner,tcon-channel = <1>;
+>  &ehci0 {
+>         status = "okay";
+>  };
+> @@ -91,6 +106,16 @@
+>         status = "okay";
+>  };
+>
+> +&hdmi {
+> +       status = "okay";
+> +};
+> +
+> +&hdmi_out {
+> +       hdmi_out_con: endpoint {
+> +               remote-endpoint = <&hdmi_con_in>;
 > +       };
 > +};
-> diff --git a/arch/arm/boot/dts/sun5i.dtsi b/arch/arm/boot/dts/sun5i.dtsi
-> index 5175f9cc9bed..0e29f1d98a9e 100644
-> --- a/arch/arm/boot/dts/sun5i.dtsi
-> +++ b/arch/arm/boot/dts/sun5i.dtsi
-> @@ -272,6 +272,7 @@
->                                         tcon0_out_tve0: endpoint@1 {
->                                                 reg = <1>;
->                                                 remote-endpoint = <&tve0_in_tcon0>;
-> +                                               allwinner,tcon-channel = <1>;
->                                         };
->                                 };
->                         };
+> +
+>  &i2c0 {
+>         pinctrl-names = "default";
+>         pinctrl-0 = <&i2c0_pins_a>;
+> @@ -248,6 +273,10 @@
+>         status = "okay";
+>  };
+>
+> +&tcon0 {
+> +       status = "okay";
+> +};
+> +
+>  &uart0 {
+>         pinctrl-names = "default";
+>         pinctrl-0 = <&uart0_pins_a>;
 > --
 > git-series 0.8.11
+>
+> --
+> You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+> For more options, visit https://groups.google.com/d/optout.
