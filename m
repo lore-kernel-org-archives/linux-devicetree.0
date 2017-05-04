@@ -1,20 +1,20 @@
 From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2 02/10] pinctrl: sunxi: add definitions
- for add A20 and R40 support to A10 driver
-Date: Thu, 4 May 2017 16:40:10 +0200
-Message-ID: <20170504144010.lco2r6jviff63bcd@lukather>
+Subject: Re: [PATCH v2 03/10] pinctrl: sunxi: add A20 support to
+ A10 driver
+Date: Thu, 4 May 2017 16:41:52 +0200
+Message-ID: <20170504144152.34yzk424aqrizmbu@lukather>
 References: <20170504135006.16483-1-icenowy@aosc.io>
- <20170504135006.16483-3-icenowy@aosc.io>
- <20170504140431.zhpcxvphxnxj7ipq@lukather>
- <318E9984-9F5A-41C3-A3E0-52D5ECA05212@aosc.io>
+ <20170504135006.16483-4-icenowy@aosc.io>
+ <20170504140220.26kguf3trz7ocylv@lukather>
+ <83062089-19CD-4805-A6DC-2C25D75621FF@aosc.io>
 Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="hkzpfawk6wz66o4k"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBTH2VTEAKGQEONOQQSY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="dlvuxrph54un2kyy"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBO73VTEAKGQE36I5WPQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <318E9984-9F5A-41C3-A3E0-52D5ECA05212-h8G6r0blFSE@public.gmane.org>
+In-Reply-To: <83062089-19CD-4805-A6DC-2C25D75621FF-h8G6r0blFSE@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -26,30 +26,41 @@ Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai 
 List-Id: devicetree@vger.kernel.org
 
 
---hkzpfawk6wz66o4k
+--dlvuxrph54un2kyy
 Content-Type: text/plain; charset=UTF-8
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, May 04, 2017 at 10:07:47PM +0800, Icenowy Zheng wrote:
+On Thu, May 04, 2017 at 10:03:26PM +0800, Icenowy Zheng wrote:
 >=20
 >=20
 > =E4=BA=8E 2017=E5=B9=B45=E6=9C=884=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=8D=881=
-0:04:31, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> =E5=86=99=E5=88=
+0:02:20, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> =E5=86=99=E5=88=
 =B0:
-> >On Thu, May 04, 2017 at 09:49:58PM +0800, Icenowy Zheng wrote:
-> >> Allwinner A10, A20 and R40 SoCs have similar GPIO layout.
-> >>=20
-> >> Add SoC definitions in pinctrl-sunxi.h, in order to merge A20 support
-> >> into A10 driver, and add R40 support into it.
+> >On Thu, May 04, 2017 at 09:49:59PM +0800, Icenowy Zheng wrote:
+> >>  static const struct of_device_id sun4i_a10_pinctrl_match[] =3D {
+> >> -	{ .compatible =3D "allwinner,sun4i-a10-pinctrl", },
+> >> +	{
+> >> +		.compatible =3D "allwinner,sun4i-a10-pinctrl",
+> >> +		.data =3D (void *)PINCTRL_SUN4I_A10
+> >> +	},
+> >> +	{
+> >> +		.compatible =3D "allwinner,sun7i-a20-pinctrl",
+> >> +		.data =3D (void *)PINCTRL_SUN7I_A20
+> >> +	},
+> >>  	{}
+> >>  };
 > >
-> >While your commit log is good, the commit title is misleading since
-> >you're not adding it to the A10 driver. You just adding SoC IDs
-> >definitions
+> >This means you're going to have two drivers probing for the same
+> >device: this driver, and the old one. This is not ok, and probably
+> >introduces some corner cases.
 >=20
-> Is "pinctrl: sunxi: Add SoC ID definitions for A10, A20 and R40 SoCs" OK?
+> The A20 driver is dropped in the next commit.
 
-Yep, it is, thanks!
+Yes, and that is an issue for bisectability. Anyone that will checkout
+between those two commits will have a broken kernel, and that is not
+ok. Any commit should be in a working state.
+
 Maxime
 
 --=20
@@ -64,24 +75,24 @@ To unsubscribe from this group and stop receiving emails from it, send an e=
 mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
 For more options, visit https://groups.google.com/d/optout.
 
---hkzpfawk6wz66o4k
+--dlvuxrph54un2kyy
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIcBAABCAAGBQJZCz1KAAoJEBx+YmzsjxAgITcQAKV4W05UeZv/lKUjBIRdeSIF
-UmrRsQV4L/AmqiRYXx+FfzuPp1SPbsW312K7rb8foX5sZLlsB84hwSwtB9kqg52v
-0b4bXKmYzrpKtKodWBKqMHcuXkLLQdhOpVq0XB3xhWSTDnjTRLC4fbw0zIbJl74E
-MwcvfD3kQTFzEFuwfNY6GEnxVOisYxDOot6jqaHY5Jk+az4AA5hucHsHsdFq1FPm
-Tx/ylXXgdabWmUuYhJMqleWIc28z+iZw2nylWnrOSd7evxL95/GHXTnt7lnztztW
-JG1esEiEhtBrc+8+nN4fu14NsyJEthkgS+/IbBMdTL7adTmX67oa7sRwmtwCF640
-BCGJrncAnf5TZDXb4xzYEay2rsHvqaFuGeUwOpCrTux7cPC5e+S86o2JSrGB+HNC
-cfB6P0z0yNVkxAMqa9bkS3OoljySWU2EwQqEmeMoLExz0sjPLLLqzbOIVqi33/3r
-zOrB6/KUlwJkYAttkGUjQz27xEtJ/+vgBy+3sY9517XNDjOXFA89J4LeG1VA4DWn
-DVwkSqK96DrXAy6nHuJ0DRfwEfCweU6SURnQuZTInedgAOtSfYMUi9G6dYXM8qkH
-itVOtGEOu6kCzLUaNZrSX34hrZgK3HdaJl/LvaEVR1KmfdHWBXt7Keb9Pgr+1qtb
-IBFuMUXQ4ciIANXrWKhm
-=Nusp
+iQIcBAABCAAGBQJZCz2wAAoJEBx+YmzsjxAgpoMQAKOM+EcFZ3GEHJz9V3sVI0Ma
+h+vSiJOY1KvyeaMzAZbvHeoXvgFS7UDMXJivNoJwTamKXOY3NgXoAyodFt/9HSoM
+gk4XLdoYe4LuGOlHg+KQQ1sEqYYCYPXMiTbexAobS40pa/WK+rQaDnMeiE9uaB5o
+xygkA4UeBKiOais+MFJTfQt+p5iKTzlYqKAaRK0q/OWkJaii/RQ1666SAdguyyDn
+5IVpfPihlYQFIHBu4k7IbrpyOe89TrBEiuFUkvUPTLx7PDm2wUTEdlmokTAQ2Tva
+smWn9/hs6/DD5y9b7gDQ/lEQXNxf/njxctSUN7VVHq/H7kpzm/pdSSS/Pkxcdm+G
+6K6YiXPGUUFRwajVGvNtw+eJ2iS0y0br5opOapMxA9QYJnagfOcwlrAvfQAgApTq
+vqqNMSMg17SukQpvaJ8hhaXGuuznA+i7Oz3wlp/8oexcJv6QiAvD6Q9RXKaF6q+p
+djab2Md25qEWgNhc+EW7zDycjsTDJoq8HO7vbm4BtacQ2lscrdDxiF2ENqCxSM6r
+xfoSjl1pKY9APF+kKglUITSaqNZ+5B8ibcRPLWta+/gaMCuMlcIygYKZU2HCc+Mt
+7CSqKmYM416qLZJ496SDP4XcoDiDZQG1g4FFJLEpK1V8uGshH0N5LEwCJETwqB2W
+wli4/dc82++ijoRsO7wP
+=WhVS
 -----END PGP SIGNATURE-----
 
---hkzpfawk6wz66o4k--
+--dlvuxrph54un2kyy--
