@@ -1,50 +1,42 @@
-From: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH V4] ARM64: dts: hi6220-hikey: Add clock binding for the
- pmic mfd
-Date: Fri, 5 May 2017 00:07:21 +0200
-Message-ID: <20170504220721.GB5252@mai>
-References: <1493066439-6889-1-git-send-email-daniel.lezcano@linaro.org>
+From: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
+Subject: Re: [PATCH v3 2/2] [media] platform: add video-multiplexer subdevice
+ driver
+Date: Fri, 5 May 2017 01:47:14 +0300
+Message-ID: <20170504224714.GF7456@valkosipuli.retiisi.org.uk>
+References: <1493905137-27051-1-git-send-email-p.zabel@pengutronix.de>
+ <1493905137-27051-2-git-send-email-p.zabel@pengutronix.de>
+ <20170504203208.GC7456@valkosipuli.retiisi.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1493066439-6889-1-git-send-email-daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+In-Reply-To: <20170504203208.GC7456-S+BSfZ9RZZmRSg0ZkenSGLdO1Tsj/99ntUK59QYPAWc@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org
-Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "moderated list:ARM/HISILICON SOC..." <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Vladimir Zapolskiy <vladimir_zapolskiy-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Steve Longerbeam <steve_longerbeam-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 24, 2017 at 10:40:22PM +0200, Daniel Lezcano wrote:
-> The hi655x PMIC provides the regulators but also a clock. The latter is missing
-> in the definition and in the DT, thus it is no possible to enable the WiFi which
-> depends on this clock.
+On Thu, May 04, 2017 at 11:32:08PM +0300, Sakari Ailus wrote:
+> Hi Philipp,
 > 
-> The hi655x's clock has been added and the hi655x multifunction driver has
-> updated with a clock-cell.
+> On Thu, May 04, 2017 at 03:38:57PM +0200, Philipp Zabel wrote:
+> ...
+> > +static const struct of_device_id video_mux_dt_ids[] = {
+> > +	{ .compatible = "video-mux", },
+> > +	{ /* sentinel */ }
+> > +};
+> > +MODULE_DEVICE_TABLE(of, video_mux_dt_ids);
+> > +
+> > +static struct platform_driver video_mux_driver = {
 > 
-> This patch adds the clock-cells for the PMIC in the DT and updates the
-> documentation.
-> 
-> Signed-off-by: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-> Cc: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> Cc: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-> ---
->  Changelog:
-> 	v4:
-> 	   - Added Acked-by's
-> 	   - Updated the commit message with a better description
-> ---
+> Shouldn't this be const?
 
-Hi Xu Wei,
+To reply myself --- no. Driver registration requires that, which makes
+perfect sense. Please ignore the comment.
 
-a gentle reminder for this patch. Is it ok for you?
-
-Thanks.
-
-  -- Daniel
+-- 
+Sakari Ailus
+e-mail: sakari.ailus-X3B1VOXEql0@public.gmane.org	XMPP: sailus-PCDdDYkjdNMDXYZnReoRVg@public.gmane.org
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
