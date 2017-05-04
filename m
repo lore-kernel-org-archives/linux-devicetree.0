@@ -1,242 +1,61 @@
-From: Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v8 2/7] doc: Add documentation for Coresight CPU debug
-Date: Wed, 3 May 2017 16:29:37 -0600
-Message-ID: <20170503222937.GC7860@linaro.org>
-References: <1493719717-27698-1-git-send-email-leo.yan@linaro.org>
- <1493719717-27698-3-git-send-email-leo.yan@linaro.org>
+From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] of/unittest: Missing unlocks on error
+Date: Wed, 3 May 2017 17:05:29 -0700
+Message-ID: <590A7049.3070108@gmail.com>
+References: <20170503194950.4xbdbwybvx6dkadx@mwanda>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1493719717-27698-3-git-send-email-leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+In-Reply-To: <20170503194950.4xbdbwybvx6dkadx@mwanda>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Brown <david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Suzuki K Poulose <suzuki.poulose-5wv7dgnIgG8@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mike Leach <mike.leach-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+To: Dan Carpenter <dan.carpenter-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-janitors-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 02, 2017 at 06:08:32PM +0800, Leo Yan wrote:
-> Update kernel-parameters.txt to add new parameter:
-> coresight_cpu_debug.enable is a knob to enable debugging at boot time.
+On 05/03/17 12:49, Dan Carpenter wrote:
+> Static checkers complain that we should unlock before returning.  Which
+> is true.
 > 
-> Add detailed documentation, which contains the implementation, Mike
-> Leach excellent summary for "clock and power domain". At the end some
-> examples on how to enable the debugging functionality are provided.
+> Signed-off-by: Dan Carpenter <dan.carpenter-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>
 > 
-> Suggested-by: Mike Leach <mike.leach-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Signed-off-by: Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
->  Documentation/admin-guide/kernel-parameters.txt |   7 +
->  Documentation/trace/coresight-cpu-debug.txt     | 174 ++++++++++++++++++++++++
-
-Please add coresight-cpu-debug.txt to the list of maintained files in
-MAINTAINERS.  Moreover I'm pretty sure John will want you to split this patch in
-two, i.e one patch for kernel-parameters.txt and another for
-coresight-cpu-debug.txt
-
->  2 files changed, 181 insertions(+)
->  create mode 100644 Documentation/trace/coresight-cpu-debug.txt
-> 
-> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-> index facc20a..cf90146 100644
-> --- a/Documentation/admin-guide/kernel-parameters.txt
-> +++ b/Documentation/admin-guide/kernel-parameters.txt
-> @@ -650,6 +650,13 @@
->  			/proc/<pid>/coredump_filter.
->  			See also Documentation/filesystems/proc.txt.
+> diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
+> index 12597ff8cfb0..425338d6286d 100644
+> --- a/drivers/of/unittest.c
+> +++ b/drivers/of/unittest.c
+> @@ -2210,14 +2210,14 @@ static __init void of_unittest_overlay_high_level(void)
+>  				unittest(0,
+>  					 "duplicate property '%s' in overlay_base node __symbols__",
+>  					 prop->name);
+> -				return;
+> +				goto err_unlock;
+>  			}
+>  			ret = __of_add_property_sysfs(of_symbols, prop);
+>  			if (ret) {
+>  				unittest(0,
+>  					 "unable to add property '%s' in overlay_base node __symbols__ to sysfs",
+>  					 prop->name);
+> -				return;
+> +				goto err_unlock;
+>  			}
+>  		}
+>  	}
+> @@ -2232,6 +2232,10 @@ static __init void of_unittest_overlay_high_level(void)
 >  
-> +	coresight_cpu_debug.enable
-> +			[ARM,ARM64]
-> +			Format: <bool>
-> +			Enable/disable the CPU sampling based debugging.
-> +			0: default value, disable debugging
-> +			1: enable debugging at boot time
+>  	unittest(overlay_data_add(2),
+>  		 "Adding overlay 'overlay_bad_phandle' failed\n");
+> +	return;
 > +
->  	cpuidle.off=1	[CPU_IDLE]
->  			disable the cpuidle sub-system
+> +err_unlock:
+> +	mutex_unlock(&of_mutex);
+>  }
 >  
-> diff --git a/Documentation/trace/coresight-cpu-debug.txt b/Documentation/trace/coresight-cpu-debug.txt
-> new file mode 100644
-> index 0000000..0426d50
-> --- /dev/null
-> +++ b/Documentation/trace/coresight-cpu-debug.txt
-> @@ -0,0 +1,174 @@
-> +		Coresight CPU Debug Module
-> +		==========================
-> +
-> +   Author:   Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> +   Date:     April 5th, 2017
-> +
-> +Introduction
-> +------------
-> +
-> +Coresight CPU debug module is defined in ARMv8-a architecture reference manual
-> +(ARM DDI 0487A.k) Chapter 'Part H: External debug', the CPU can integrate
-> +debug module and it is mainly used for two modes: self-hosted debug and
-> +external debug. Usually the external debug mode is well known as the external
-> +debugger connects with SoC from JTAG port; on the other hand the program can
-> +explore debugging method which rely on self-hosted debug mode, this document
-> +is to focus on this part.
-> +
-> +The debug module provides sample-based profiling extension, which can be used
-> +to sample CPU program counter, secure state and exception level, etc; usually
-> +every CPU has one dedicated debug module to be connected. Based on self-hosted
-> +debug mechanism, Linux kernel can access these related registers from mmio
-> +region when the kernel panic happens. The callback notifier for kernel panic
-> +will dump related registers for every CPU; finally this is good for assistant
-> +analysis for panic.
-> +
-> +
-> +Implementation
-> +--------------
-> +
-> +- During driver registration, use EDDEVID and EDDEVID1 two device ID
-> +  registers to decide if sample-based profiling is implemented or not. On some
-> +  platforms this hardware feature is fully or partialy implemented; and if
-> +  this feature is not supported then registration will fail.
-> +
-> +- When write this doc, the debug driver mainly relies on three sampling
-> +  registers. The kernel panic callback notifier gathers info from EDPCSR
-> +  EDVIDSR and EDCIDSR; from EDPCSR we can get program counter, EDVIDSR has
-> +  information for secure state, exception level, bit width, etc; EDCIDSR is
-> +  context ID value which contains the sampled value of CONTEXTIDR_EL1.
-> +
-> +- The driver supports CPU running mode with either AArch64 or AArch32. The
-> +  registers naming convention is a bit different between them, AArch64 uses
-> +  'ED' for register prefix (ARM DDI 0487A.k, chapter H9.1) and AArch32 uses
-> +  'DBG' as prefix (ARM DDI 0487A.k, chapter G5.1). The driver is unified to
-> +  use AArch64 naming convention.
-> +
-> +- ARMv8-a (ARM DDI 0487A.k) and ARMv7-a (ARM DDI 0406C.b) have different
-> +  register bits definition. So the driver consolidates two difference:
-> +
-> +  If PCSROffset=0b0000, on ARMv8-a the feature of EDPCSR is not implemented;
-> +  but ARMv7-a defines "PCSR samples are offset by a value that depends on the
-> +  instruction set state". For ARMv7-a, the driver checks furthermore if CPU
-> +  runs with ARM or thumb instruction set and calibrate PCSR value, the
-> +  detailed description for offset is in ARMv7-a ARM (ARM DDI 0406C.b) chapter
-> +  C11.11.34 "DBGPCSR, Program Counter Sampling Register".
-> +
-> +  If PCSROffset=0b0010, ARMv8-a defines "EDPCSR implemented, and samples have
-> +  no offset applied and do not sample the instruction set state in AArch32
-> +  state". So on ARMv8 if EDDEVID1.PCSROffset is 0b0010 and the CPU operates
-> +  in AArch32 state, EDPCSR is not sampled; when the CPU operates in AArch64
-> +  state EDPCSR is sampled and no offset are applied.
-> +
-> +
-> +Clock and power domain
-> +----------------------
-> +
-> +Before accessing debug registers, we should ensure the clock and power domain
-> +have been enabled properly. In ARMv8-a ARM (ARM DDI 0487A.k) chapter 'H9.1
-> +Debug registers', the debug registers are spread into two domains: the debug
-> +domain and the CPU domain.
-> +
-> +                                +---------------+
-> +                                |               |
-> +                                |               |
-> +                     +----------+--+            |
-> +          dbg_clk -->|          |**|            |<-- cpu_clk
-> +                     |    Debug |**|   CPU      |
-> +           dbg_pd -->|          |**|            |<-- cpu_pd
-> +                     +----------+--+            |
-> +                                |               |
-> +                                |               |
-> +                                +---------------+
-> +
-> +For debug domain, the user uses DT binding "clocks" and "power-domains" to
-> +specify the corresponding clock source and power supply for the debug logic.
-> +The driver calls the pm_runtime_{put|get} operations as needed to handle the
-> +debug power domain.
-> +
-> +For CPU domain, the different SoC designs have different power management
-> +schemes and finally this heavily impacts external debug module. So we can
-> +divide into below cases:
-> +
-> +- On systems with a sane power controller which can behave correctly with
-> +  respect to CPU power domain, the CPU power domain can be controlled by
-> +  register EDPRCR in driver. The driver firstly writes bit EDPRCR.COREPURQ
-> +  to power up the CPU, and then writes bit EDPRCR.CORENPDRQ for emulation
-> +  of CPU power down. As result, this can ensure the CPU power domain is
-> +  powered on properly during the period when access debug related registers;
-> +
-> +- Some designs will power down an entire cluster if all CPUs on the cluster
-> +  are powered down - including the parts of the debug registers that should
-> +  remain powered in the debug power domain. The bits in EDPRCR are not
-> +  respected in these cases, so these designs do not support debug over
-> +  power down in the way that the CoreSight / Debug designers anticipated.
-> +  This means that even checking EDPRSR has the potential to cause a bus hang
-> +  if the target register is unpowered.
-> +
-> +  In this case, accessing to the debug registers while they are not powered
-> +  is a recipe for disaster; so we need preventing CPU low power states at boot
-> +  time or when user enable module at the run time. Please see chapter
-> +  "How to use the module" for detailed usage info for this.
-> +
-> +
-> +Device Tree Bindings
-> +--------------------
-> +
-> +See Documentation/devicetree/bindings/arm/coresight-cpu-debug.txt for details.
-> +
-> +
-> +How to use the module
-> +---------------------
-> +
-> +If you want to enable debugging functionality at boot time, you can add
-> +"coresight_cpu_debug.enable=1" to the kernel command line parameter.
-> +
-> +The driver also can work as module, so can enable the debugging when insmod
-> +module:
-> +# insmod coresight_cpu_debug.ko debug=1
-> +
-> +When boot time or insmod module you have not enabled the debugging, the driver
-> +uses the debugfs file system to provide a knob to dynamically enable or disable
-> +debugging:
-> +
-> +To enable it, write a '1' into /sys/kernel/debug/coresight_cpu_debug/enable:
-> +# echo 1 > /sys/kernel/debug/coresight_cpu_debug/enable
-> +
-> +To disable it, write a '0' into /sys/kernel/debug/coresight_cpu_debug/enable:
-> +# echo 0 > /sys/kernel/debug/coresight_cpu_debug/enable
-> +
-> +As explained in chapter "Clock and power domain", if you are working on one
-> +platform which has idle states to power off debug logic and the power
-> +controller cannot work well for the request from EDPRCR, then you should
-> +firstly constraint CPU idle states before enable CPU debugging feature; so can
-> +ensure the accessing to debug logic.
-> +
-> +If you want to limit idle states at boot time, you can use "nohlt" or
-> +"cpuidle.off=1" in the kernel command line.
-> +
-> +At the runtime you can disable idle states with below methods:
-> +
-> +Set latency request to /dev/cpu_dma_latency to disable all CPUs specific idle
-> +states (if latency = 0uS then disable all idle states):
-> +# echo "what_ever_latency_you_need_in_uS" > /dev/cpu_dma_latency
-> +
-> +Disable specific CPU's specific idle state:
-> +# echo 1 > /sys/devices/system/cpu/cpu$cpu/cpuidle/state$state/disable
-> +
-> +
-> +Output format
-> +-------------
-> +
-> +Here is an example of the debugging output format:
-> +
-> +ARM external debug module:
-> +CPU[0]:
-> + EDPRSR:  0000000b (Power:On DLK:Unlock)
-> + EDPCSR:  [<ffff00000808eb54>] handle_IPI+0xe4/0x150
-> + EDCIDSR: 00000000
-> + EDVIDSR: 90000000 (State:Non-secure Mode:EL1/0 Width:64bits VMID:0)
-> +CPU[1]:
-> + EDPRSR:  0000000b (Power:On DLK:Unlock)
-> + EDPCSR:  [<ffff0000087a64c0>] debug_notifier_call+0x108/0x288
-> + EDCIDSR: 00000000
-> + EDVIDSR: 90000000 (State:Non-secure Mode:EL1/0 Width:64bits VMID:0)
-> -- 
-> 2.7.4
+>  #else
 > 
+
+Thanks Dan.
+
+Reviewed-by: Frank Rowand <frank.rowand-7U/KSKJipcs@public.gmane.org>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
