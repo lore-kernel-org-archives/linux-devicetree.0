@@ -1,67 +1,67 @@
-From: Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>
-Subject: [PATCH v6 6/8] dt-bindings: mfd: Add TI tps6105x chip bindings
-Date: Thu,  4 May 2017 01:21:05 -0400
-Message-ID: <20170504052107.18995-7-javier@dowhile0.org>
+From: Javier Martinez Canillas <javier@dowhile0.org>
+Subject: [PATCH v6 7/8] mfd: tps6105x: Add OF device ID table
+Date: Thu,  4 May 2017 01:21:06 -0400
+Message-ID: <20170504052107.18995-8-javier@dowhile0.org>
 References: <20170504052107.18995-1-javier@dowhile0.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170504052107.18995-1-javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Aaro Koskinen <aaro.koskinen-X3B1VOXEql0@public.gmane.org>, Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170504052107.18995-1-javier@dowhile0.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: devicetree@vger.kernel.org, Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Tony Lindgren <tony@atomide.com>, Lee Jones <lee.jones@linaro.org>, Aaro Koskinen <aaro.koskinen@iki.fi>, Javier Martinez Canillas <javier@dowhile0.org>
 List-Id: devicetree@vger.kernel.org
 
-There are Device Tree source files defining a device node for the
-tps61050/61052 I2C chip but there isn't a binding document for it.
+The driver doesn't have a struct of_device_id table but supported devices
+are registered via Device Trees. This is working on the assumption that a
+I2C device registered via OF will always match a legacy I2C device ID and
+that the MODALIAS reported will always be of the form i2c:<device>.
 
-Signed-off-by: Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Acked-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+But this could change in the future so the correct approach is to have a
+OF device ID table if the devices are registered via OF.
+
+Signed-off-by: Javier Martinez Canillas <javier@dowhile0.org>
+Acked-by: Rob Herring <robh@kernel.org>
+Acked-by: Tony Lindgren <tony@atomide.com>
+Acked-by: Lee Jones <lee.jones@linaro.org>
 
 ---
 
 Changes in v6: None
 Changes in v5:
 - Add Rob Herring's Acked-by tag.
-- Add Acked-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>'s Acked-by tag.
+- Add Acked-by: Tony Lindgren <tony@atomide.com>'s Acked-by tag.
+- Add Lee Jones <lee.jones@linaro.org>'s Acked-by tag.
 
-Changes in v4:
-- Use "dt-bindings: mfd:" prefix in subject line (Rob Herring).
-- Add information about what functions the device serve (Lee Jones).
+Changes in v4: None
+Changes in v3:
+- Add a vendor prefix to the compatible string (Rob Herring).
 
-Changes in v3: None
-Changes in v2: None
+Changes in v2:
+- Don't use of_match_ptr() to avoid build warning when CONFIG_OF is disabled.
 
- Documentation/devicetree/bindings/mfd/tps6105x.txt | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mfd/tps6105x.txt
+ drivers/mfd/tps6105x.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/mfd/tps6105x.txt b/Documentation/devicetree/bindings/mfd/tps6105x.txt
-new file mode 100644
-index 000000000000..93602c7a19c8
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mfd/tps6105x.txt
-@@ -0,0 +1,17 @@
-+* Device tree bindings for TI TPS61050/61052 Boost Converters
-+
-+The TP61050/TPS61052 is a high-power "white LED driver". The
-+device provides LED, GPIO and regulator functionalities.
-+
-+Required properties:
-+- compatible:		"ti,tps61050" or "ti,tps61052"
-+- reg:			Specifies the I2C slave address
-+
-+Example:
-+
-+i2c0 {
-+	tps61052@33 {
-+		compatible = "ti,tps61052";
-+		reg = <0x33>;
-+	};
+diff --git a/drivers/mfd/tps6105x.c b/drivers/mfd/tps6105x.c
+index baa12ea666fb..187848c93779 100644
+--- a/drivers/mfd/tps6105x.c
++++ b/drivers/mfd/tps6105x.c
+@@ -173,9 +173,17 @@ static const struct i2c_device_id tps6105x_id[] = {
+ };
+ MODULE_DEVICE_TABLE(i2c, tps6105x_id);
+ 
++static const struct of_device_id tps6105x_of_match[] = {
++	{ .compatible = "ti,tps61050" },
++	{ .compatible = "ti,tps61052" },
++	{ },
 +};
++MODULE_DEVICE_TABLE(of, tps6105x_of_match);
++
+ static struct i2c_driver tps6105x_driver = {
+ 	.driver = {
+ 		.name	= "tps6105x",
++		.of_match_table = tps6105x_of_match,
+ 	},
+ 	.probe		= tps6105x_probe,
+ 	.remove		= tps6105x_remove,
 -- 
 2.9.3
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
