@@ -1,7 +1,7 @@
 From: Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>
-Subject: [PATCH v6 3/8] mfd: retu: Add OF device ID table
-Date: Thu,  4 May 2017 01:21:02 -0400
-Message-ID: <20170504052107.18995-4-javier@dowhile0.org>
+Subject: [PATCH v6 4/8] ARM: dts: n8x0: Add vendor prefix to retu node
+Date: Thu,  4 May 2017 01:21:03 -0400
+Message-ID: <20170504052107.18995-5-javier@dowhile0.org>
 References: <20170504052107.18995-1-javier@dowhile0.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <20170504052107.18995-1-javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>
@@ -10,19 +10,13 @@ To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Aaro Koskinen <aaro.koskinen-X3B1VOXEql0@public.gmane.org>, Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The driver doesn't have a struct of_device_id table but supported devices
-are registered via Device Trees. This is working on the assumption that a
-I2C device registered via OF will always match a legacy I2C device ID and
-that the MODALIAS reported will always be of the form i2c:<device>.
-
-But this could change in the future so the correct approach is to have a
-OF device ID table if the devices are registered via OF.
+The retu device node doesn't have a vendor prefix
+in its compatible string, fix it by adding one.
 
 Signed-off-by: Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>
 Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 Acked-by: Aaro Koskinen <aaro.koskinen-X3B1VOXEql0@public.gmane.org>
 Acked-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Reviewed-by: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
 
 ---
@@ -34,42 +28,27 @@ Changes in v5:
 - Add Rob Herring's Acked-by tag.
 - Add Aaro Koskinen's Acked-by tag.
 - Add Acked-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>'s Acked-by tag.
-- Add Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>'s Acked-by tag.
 
-Changes in v4:
-- Drop -mfd suffix in compatible string (Lee Jones).
+Changes in v4: None
+Changes in v3: None
+Changes in v2: None
 
-Changes in v3:
-- Add a vendor prefix to the compatible string (Rob Herring).
+ arch/arm/boot/dts/omap2420-n8x0-common.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Changes in v2:
-- Don't use of_match_ptr() to avoid build warning when CONFIG_OF is disabled.
-
- drivers/mfd/retu-mfd.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
-
-diff --git a/drivers/mfd/retu-mfd.c b/drivers/mfd/retu-mfd.c
-index 53e1d386d2c0..e7d27b7861c1 100644
---- a/drivers/mfd/retu-mfd.c
-+++ b/drivers/mfd/retu-mfd.c
-@@ -308,9 +308,17 @@ static const struct i2c_device_id retu_id[] = {
- };
- MODULE_DEVICE_TABLE(i2c, retu_id);
- 
-+static const struct of_device_id retu_of_match[] = {
-+	{ .compatible = "nokia,retu" },
-+	{ .compatible = "nokia,tahvo" },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, retu_of_match);
-+
- static struct i2c_driver retu_driver = {
- 	.driver		= {
- 		.name = "retu-mfd",
-+		.of_match_table = retu_of_match,
- 	},
- 	.probe		= retu_probe,
- 	.remove		= retu_remove,
+diff --git a/arch/arm/boot/dts/omap2420-n8x0-common.dtsi b/arch/arm/boot/dts/omap2420-n8x0-common.dtsi
+index 1b06430c8013..91886231e5a8 100644
+--- a/arch/arm/boot/dts/omap2420-n8x0-common.dtsi
++++ b/arch/arm/boot/dts/omap2420-n8x0-common.dtsi
+@@ -16,7 +16,7 @@
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
+ 			retu: retu@1 {
+-				compatible = "retu";
++				compatible = "nokia,retu";
+ 				interrupt-parent = <&gpio4>;
+ 				interrupts = <12 IRQ_TYPE_EDGE_RISING>;
+ 				reg = <0x1>;
 -- 
 2.9.3
 
