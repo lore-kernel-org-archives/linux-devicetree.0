@@ -1,121 +1,51 @@
-From: Prabhakar Kushwaha <prabhakar.kushwaha@nxp.com>
-Subject: [PATCH] arm: arm64: Add flash node for ls1088a qds and rdb
-Date: Thu, 4 May 2017 14:40:32 +0530
-Message-ID: <1493889032-20857-2-git-send-email-prabhakar.kushwaha@nxp.com>
-References: <1493889032-20857-1-git-send-email-prabhakar.kushwaha@nxp.com>
+From: Daniel Vetter <daniel@ffwll.ch>
+Subject: Re: [PATCHv2 0/3] Intel FPGA VIP Frame Buffer II DRM Driver
+Date: Thu, 4 May 2017 11:22:06 +0200
+Message-ID: <CAKMK7uGdD0uh8vK7QCxGqQ9ZempsA+mHrwNW5FefRkOH2P2TEg@mail.gmail.com>
+References: <1493086006-4392-1-git-send-email-hean.loong.ong@intel.com>
+ <87shklznuo.fsf@eliezer.anholt.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1493889032-20857-1-git-send-email-prabhakar.kushwaha@nxp.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: devicetree@vger.kernel.org, robh@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org
-Cc: Prabhakar Kushwaha <prabhakar.kushwaha@nxp.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <87shklznuo.fsf@eliezer.anholt.net>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Eric Anholt <eric@anholt.net>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Ong,
+ Hean Loong" <hean.loong.ong@intel.com>, tien.hock.loh@intel.com, dri-devel <dri-devel@lists.freedesktop.org>, dinguyen@kernel.org, Rob Herring <robh+dt@kernel.org>, Daniel Vetter <daniel.vetter@intel.com>
 List-Id: devicetree@vger.kernel.org
 
-LS1088AQDS consist of NOR, NAND and FPGA connected over IFC
-LS1088ARDB consist of NAND and FPGA connected over IFC.
-
-So add flash information in ifc node of device tree.
-
-Signed-off-by: Prabhakar Kushwaha <prabhakar.kushwaha@nxp.com>
----
- arch/arm64/boot/dts/freescale/fsl-ls1088a-qds.dts | 27 +++++++++++++++++++++++
- arch/arm64/boot/dts/freescale/fsl-ls1088a-rdb.dts | 20 +++++++++++++++++
- arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi    |  4 ----
- 3 files changed, 47 insertions(+), 4 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a-qds.dts b/arch/arm64/boot/dts/freescale/fsl-ls1088a-qds.dts
-index 8c3cae5..ca7eb41 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1088a-qds.dts
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a-qds.dts
-@@ -53,6 +53,33 @@
- 	compatible = "fsl,ls1088a-qds", "fsl,ls1088a";
- };
- 
-+&ifc {
-+	#address-cells = <2>;
-+	#size-cells = <1>;
-+	status = "okay";
-+
-+	ranges = <0 0 0x5 0x80000000 0x08000000
-+		  2 0 0x5 0x30000000 0x00010000
-+		  3 0 0x5 0x20000000 0x00010000>;
-+
-+	nor@0,0 {
-+		compatible = "cfi-flash";
-+		reg = <0x0 0x0 0x8000000>;
-+		bank-width = <2>;
-+		device-width = <1>;
-+	};
-+
-+	nand@2,0 {
-+		compatible = "fsl,ifc-nand";
-+		reg = <0x2 0x0 0x10000>;
-+	};
-+
-+	fpga: board-control@3,0 {
-+		compatible = "fsl,ls1088aqds-fpga", "fsl,fpga-qixis";
-+		reg = <0x3 0x0 0x0000100>;
-+	};
-+};
-+
- &i2c0 {
- 	status = "okay";
- 
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a-rdb.dts b/arch/arm64/boot/dts/freescale/fsl-ls1088a-rdb.dts
-index 8a04fbb..726e167 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1088a-rdb.dts
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a-rdb.dts
-@@ -53,6 +53,26 @@
- 	compatible = "fsl,ls1088a-rdb", "fsl,ls1088a";
- };
- 
-+&ifc {
-+	#address-cells = <2>;
-+	#size-cells = <1>;
-+	status = "okay";
-+
-+	ranges = <0 0 0x5 0x30000000 0x00010000
-+		  2 0 0x5 0x20000000 0x00010000>;
-+
-+	nand@0,0 {
-+		compatible = "fsl,ifc-nand";
-+		reg = <0x0 0x0 0x10000>;
-+	};
-+
-+	fpga: board-control@2,0 {
-+		compatible = "fsl,ls1088ardb-fpga", "fsl,fpga-qixis";
-+		reg = <0x2 0x0 0x0000100>;
-+	};
-+};
-+
-+
- &i2c0 {
- 	status = "okay";
- 
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-index 2946fd7..9f6bcb4 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-@@ -217,10 +217,6 @@
- 			#address-cells = <2>;
- 			#size-cells = <1>;
- 
--			ranges = <0 0 0x5 0x80000000 0x08000000
--				  2 0 0x5 0x30000000 0x00010000
--				  3 0 0x5 0x20000000 0x00010000>;
--			status = "disabled";
- 		};
- 
- 		i2c0: i2c@2000000 {
--- 
-2.7.4
+T24gV2VkLCBNYXkgMywgMjAxNyBhdCAxMDoyOCBQTSwgRXJpYyBBbmhvbHQgPGVyaWNAYW5ob2x0
+Lm5ldD4gd3JvdGU6Cj4+IEZyb206IE9uZyBIZWFuIExvb25nIDxoZWFuLmxvb25nLm9uZ0BpbnRl
+bC5jb20+Cj4+Cj4+IEhpLAo+Pgo+PiBUaGUgbmV3IEludGVsIEFycmlhMTAgU09DIEZQR0EgZGV2
+a2l0IGhhcyBhIERpc3BsYXkgUG9ydCBJUCBjb21wb25lbnQKPj4gd2hpY2ggcmVxdWlyZXMgYSBu
+ZXcgZHJpdmVyLiBUaGlzIGlzIGEgdmlydHVhbCBkcml2ZXIgaW4gd2hpY2ggdGhlCj4+IEZHUEEg
+aGFyZHdhcmUgd291bGQgZW5hYmxlIHRoZSBEaXNwbGF5IFBvcnQgYmFzZWQgb24gdGhlIGluZm9y
+bWF0aW9uCj4+IGFuZCBkYXRhIHByb3ZpZGVkIGZyb20gdGhlIERSTSBmcmFtZSBidWZmZXIgZnJv
+bSB0aGUgT1MuIEJhc2ljYWxseSBhbGwKPj4gYWxsIGluZm9ybWF0aW9uIHdpdGggcmVhZ3JkcyB0
+byByZXNvbHV0aW9uIGFuZCBiaXRzIHBlciBwaXhlbCBhcmUKPj4gcHJlLWNvbmZpZ3VyZWQgb24g
+dGhlIEZQR0EgZGVzaWduIGFuZCB0aGVzZSBpbmZvcm1hdGlvbiBhcmUgZmVkIHRvCj4+IHRoZSBk
+cml2ZXIgdmlhIHRoZSBkZXZpY2UgdHJlZSBpbmZvcm1hdGlvbiBhcyBwYXJ0IG9mIHRoZSBoYXJk
+d2FyZQo+PiBpbmZvcm1hdGlvbi4KPgo+IEkgc3RhcnRlZCByZXZpZXdpbmcgdGhlIGNvZGUsIGJ1
+dCBJIHdhbnQgdG8gbWFrZSBzdXJlIEkgdW5kZXJzdGFuZAo+IHdoYXQncyBnb2luZyBvbjoKPgo+
+IFRoaXMgSVAgY29yZSBpc24ndCBkaXNwbGF5aW5nIGNvbnRlbnRzIGZyb20gc3lzdGVtIG1lbW9y
+eSBvbiBzb21lIHNvcnQKPiBvZiBhY3R1YWwgcGh5c2ljYWwgZGlzcGxheSwgcmlnaHQ/ICBJdCdz
+IGEgY29yZSB0aGF0IHRha2VzIHNvbWUgaW5wdXQKPiB2aWRlbyBzdHJlYW0gKG5vdCBkZXNjcmli
+ZWQgaW4gdGhlIERUIG9yIGluIHRoaXMgZHJpdmVyKSBhbmQgc3RvcmVzIGl0Cj4gdG8gbWVtb3J5
+PwoKSSBhc3N1bWVkIGl0J3MgdGhlIGlucHV0IElQIGNvcmUgaW4gdGhlIGxpbmtlZCBwZGYsIGku
+ZS4gdGhlIENWSQooY2xvY2tlZCB2aWRlbyBpbnB1dCkuIFRoZXJlJ3MgYWxzbyBhIENWTyAoY2xv
+Y2tlZCB2aWRlbyBvdXRwdXQpLCBhbmQKdGhhdCB3b3VsZCBpbmRlZWQgYmUgYSBtaXNmaXQgZm9y
+IGRybS4gRGVmaW5pdGVseSBuZWVkIHRvIGNsYXJpZnkgdGhpcwooaW4gdGhlIERUIGRlc2NyaXB0
+aW9uKS4KLURhbmllbAotLSAKRGFuaWVsIFZldHRlcgpTb2Z0d2FyZSBFbmdpbmVlciwgSW50ZWwg
+Q29ycG9yYXRpb24KKzQxICgwKSA3OSAzNjUgNTcgNDggLSBodHRwOi8vYmxvZy5mZndsbC5jaApf
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwg
+bWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0
+cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
