@@ -1,7 +1,7 @@
 From: Yangbo Lu <yangbo.lu-3arQi8VN3Tc@public.gmane.org>
-Subject: [v2, 4/5] arm64: dts: ls1012a: add eSDHC nodes
-Date: Thu, 4 May 2017 18:48:59 +0800
-Message-ID: <1493894940-47452-5-git-send-email-yangbo.lu@nxp.com>
+Subject: [v2, 5/5] arm64: dts: ls1088a: add esdhc node
+Date: Thu, 4 May 2017 18:49:00 +0800
+Message-ID: <1493894940-47452-6-git-send-email-yangbo.lu@nxp.com>
 References: <1493894940-47452-1-git-send-email-yangbo.lu@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,104 +12,71 @@ To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreC
 Cc: Xiaobo Xie <xiaobo.xie-3arQi8VN3Tc@public.gmane.org>, Yangbo Lu <yangbo.lu-3arQi8VN3Tc@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-There are two eSDHC controllers in LS1012A. This patch is to add
-eSDHC nodes for ls1012a dts. Also enable eSDHC for RDB/QDS boards.
+Add esdhc node for ls1088a and enable it on both RDB and QDS boards.
 
 Signed-off-by: Yangbo Lu <yangbo.lu-3arQi8VN3Tc@public.gmane.org>
 ---
 Changes for v2:
 	- Sorted the node.
 ---
- arch/arm64/boot/dts/freescale/fsl-ls1012a-qds.dts |  8 ++++++++
- arch/arm64/boot/dts/freescale/fsl-ls1012a-rdb.dts | 13 ++++++++++++
- arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi    | 25 +++++++++++++++++++++++
- 3 files changed, 46 insertions(+)
+ arch/arm64/boot/dts/freescale/fsl-ls1088a-qds.dts |  4 ++++
+ arch/arm64/boot/dts/freescale/fsl-ls1088a-rdb.dts |  4 ++++
+ arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi    | 12 ++++++++++++
+ 3 files changed, 20 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1012a-qds.dts b/arch/arm64/boot/dts/freescale/fsl-ls1012a-qds.dts
-index 40ef468..8c013b5 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1012a-qds.dts
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1012a-qds.dts
-@@ -97,6 +97,14 @@
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a-qds.dts b/arch/arm64/boot/dts/freescale/fsl-ls1088a-qds.dts
+index 8c3cae5..ff21055 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1088a-qds.dts
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a-qds.dts
+@@ -118,6 +118,10 @@
  	status = "okay";
  };
  
-+&esdhc0 {
++&esdhc {
 +	status = "okay";
 +};
 +
-+&esdhc1 {
-+	status = "okay";
-+};
-+
- &i2c0 {
+ &sata {
  	status = "okay";
- 
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1012a-rdb.dts b/arch/arm64/boot/dts/freescale/fsl-ls1012a-rdb.dts
-index 65d4313..c1a119e 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1012a-rdb.dts
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1012a-rdb.dts
-@@ -54,6 +54,19 @@
+ };
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a-rdb.dts b/arch/arm64/boot/dts/freescale/fsl-ls1088a-rdb.dts
+index 8a04fbb..ab62ef6 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1088a-rdb.dts
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a-rdb.dts
+@@ -102,6 +102,10 @@
  	status = "okay";
  };
  
-+&esdhc0 {
-+	sd-uhs-sdr104;
-+	sd-uhs-sdr50;
-+	sd-uhs-sdr25;
-+	sd-uhs-sdr12;
++&esdhc {
 +	status = "okay";
 +};
 +
-+&esdhc1 {
-+	mmc-hs200-1_8v;
-+	status = "okay";
-+};
-+
- &i2c0 {
+ &sata {
  	status = "okay";
  };
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
-index ae47156..9a2ccd8 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
-@@ -117,12 +117,37 @@
- 		#size-cells = <2>;
- 		ranges;
- 
-+		esdhc0: esdhc@1560000 {
-+			compatible = "fsl,ls1012a-esdhc", "fsl,esdhc";
-+			reg = <0x0 0x1560000 0x0 0x10000>;
-+			interrupts = <0 62 0x4>;
-+			clocks = <&clockgen 4 0>;
-+			voltage-ranges = <1800 1800 3300 3300>;
-+			sdhci,auto-cmd12;
-+			big-endian;
-+			bus-width = <4>;
-+			status = "disabled";
-+		};
-+
- 		scfg: scfg@1570000 {
- 			compatible = "fsl,ls1012a-scfg", "syscon";
- 			reg = <0x0 0x1570000 0x0 0x10000>;
- 			big-endian;
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
+index 2946fd7..10b5775 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
+@@ -263,6 +263,18 @@
+ 			status = "disabled";
  		};
  
-+		esdhc1: esdhc@1580000 {
-+			compatible = "fsl,ls1012a-esdhc", "fsl,esdhc";
-+			reg = <0x0 0x1580000 0x0 0x10000>;
-+			interrupts = <0 65 0x4>;
-+			clocks = <&clockgen 4 0>;
++		esdhc: esdhc@2140000 {
++			compatible = "fsl,ls1088a-esdhc", "fsl,esdhc";
++			reg = <0x0 0x2140000 0x0 0x10000>;
++			interrupts = <0 28 0x4>; /* Level high type */
++			clock-frequency = <0>;
 +			voltage-ranges = <1800 1800 3300 3300>;
 +			sdhci,auto-cmd12;
-+			big-endian;
-+			broken-cd;
++			little-endian;
 +			bus-width = <4>;
 +			status = "disabled";
 +		};
 +
- 		crypto: crypto@1700000 {
- 			compatible = "fsl,sec-v5.4", "fsl,sec-v5.0",
- 				     "fsl,sec-v4.0";
+ 		sata: sata@3200000 {
+ 			compatible = "fsl,ls1088a-ahci", "fsl,ls1043a-ahci";
+ 			reg = <0x0 0x3200000 0x0 0x10000>;
 -- 
 2.1.0.27.g96db324
 
