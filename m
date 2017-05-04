@@ -1,148 +1,252 @@
-From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: Re: [PATCH 2/4] dt-bindings: add binding for
- RTL8211E Ethernet PHY
-Date: Thu, 4 May 2017 11:29:23 -0700
-Message-ID: <068f1323-3864-620c-0deb-6c5e04a9e498@gmail.com>
-References: <20170421232436.10924-1-icenowy@aosc.io>
- <20170421232436.10924-3-icenowy@aosc.io>
- <c7aa9d7a-5e97-0e7f-2b1c-584a4de00837@gmail.com>
- <edf26d7de605a93bfce258de0353df6d@aosc.io>
- <a455c822-d5aa-3f66-03c5-4d1268f9104b@gmail.com>
- <D714E47B-D6B2-4C9F-B9D7-FB9D170E0ADF@aosc.io>
-Reply-To: f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Oza Oza <oza.oza-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 1/3] of/pci/dma: fix DMA configuration for PCI masters
+Date: Fri, 5 May 2017 00:11:19 +0530
+Message-ID: <CAMSpPPcC6wN+2HeZPak+gWxoy2WaO14epHNQfHT1W0FnTRHnOQ@mail.gmail.com>
+References: <1493786795-28153-1-git-send-email-oza.oza@broadcom.com> <d7203258-e39a-a59b-d14f-c0c92a1d3f41@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBCH67JWTV4DBBCHGVXEAKGQEQ37TACA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <D714E47B-D6B2-4C9F-B9D7-FB9D170E0ADF-h8G6r0blFSE@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <d7203258-e39a-a59b-d14f-c0c92a1d3f41-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+Cc: Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, Linux IOMMU <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, BCM Kernel Feedback <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Oza Pawandeep <oza.pawandeep-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 05/04/2017 11:26 AM, Icenowy Zheng wrote:
->=20
->=20
-> =E4=BA=8E 2017=E5=B9=B45=E6=9C=885=E6=97=A5 GMT+08:00 =E4=B8=8A=E5=8D=882=
-:21:29, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> =E5=86=99=E5=88=B0:
->> On 05/04/2017 11:10 AM, icenowy-h8G6r0blFSE@public.gmane.org wrote:
->>> =E5=9C=A8 2017-04-22 08:22=EF=BC=8CFlorian Fainelli =E5=86=99=E9=81=93=
-=EF=BC=9A
->>>> On 04/21/2017 04:24 PM, Icenowy Zheng wrote:
->>>>> From: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
->>>>>
->>>>> Some RTL8211E Ethernet PHY have an issue that needs a workaround
->>>>> indicated with device tree.
->>>>>
->>>>> Add the binding for a property that indicates this workaround.
->>>>>
->>>>> Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
->>>>> ---
->>>>>  .../devicetree/bindings/net/realtek,rtl8211e.txt   | 22
->>>>> ++++++++++++++++++++++
->>>>>  1 file changed, 22 insertions(+)
->>>>>  create mode 100644
->>>>> Documentation/devicetree/bindings/net/realtek,rtl8211e.txt
->>>>>
->>>>> diff --git
->>>>> a/Documentation/devicetree/bindings/net/realtek,rtl8211e.txt
->>>>> b/Documentation/devicetree/bindings/net/realtek,rtl8211e.txt
->>>>> new file mode 100644
->>>>> index 000000000000..c1913301bfe8
->>>>> --- /dev/null
->>>>> +++ b/Documentation/devicetree/bindings/net/realtek,rtl8211e.txt
->>>>> @@ -0,0 +1,22 @@
->>>>> +Realtek RTL8211E Ethernet PHY
->>>>> +
->>>>> +One batch of RTL8211E is slight broken, that needs some special
->> (and
->>>>> +full of magic numbers) tweaking in order to make GbE to operate
->>>>> properly.
->>>>> +The only well-known board that used the broken batch is Pine64+.
->>>>> +Configure it through an Ethernet OF device node.
->>>>> +
->>>>> +Optional properties:
->>>>> +
->>>>> +- realtek,disable-rx-delay:
->>>>> +  If set, RX delay will be completely disabled (according to
->>>>> Realtek). This
->>>>> +  will affect the performance on non-broken boards.
->>>>> +  default: do not disable RX delay.
->>>>
->>>> Please don't introduce custom properties to do that, instead correct
->>>> specify the "phy-mode" such that it is e.g: "rgmii-txid" which
->> indicates
->>>> that there should be no RX internal delay, but a TX internal delay
->> added
->>>> by the PHY.
->>>
->>> Checked the document, the meaning of "rgmii-txid" is not correct
->> here.
->>>
->>> This doesn't effect the MAC, and the MAC should still add TX delay.
->>>
->>> The definition of "rgmii-txid" in
->>> Documentation/devicetree/binding/net/ethernet.txt is "RGMII with
->>> internal TX delay provided by the PHY, the MAC should not add an TX
->> delay
->>> in this case". However, this do not indicate that the MAC doesn't add
->> TX
->>> delay; in fact that just totally disabled the PHY to provide the RX
->> delay.
->>> MAC still should to add delay on both TX/RX, which is the semantic of
->>> standard "rgmii".
->>>
->>> So I cannot used "rgmii-txid" here, but should continue to use this
->>> custom property.
+On Thu, May 4, 2017 at 11:32 PM, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org> wrote:
+> [apologies for the silence - I've been on holiday]
+>
+> On 03/05/17 05:46, Oza Pawandeep wrote:
+>> current device framework and of framework integration assumes
+>> dma-ranges in a way where memory-mapped devices define their
+>> dma-ranges. (child-bus-address, parent-bus-address, length).
+>
+> Well, yes, that is simply the definition of dma-ranges, and remains true
+> regardless of the particular format of either bus address.
+>
+>> of_dma_configure is specifically written to take care of memory
+>> mapped devices. but no implementation exists for pci to take
+>> care of pcie based memory ranges.
+>
+> That still doesn't make sense. To repeat myself again, PCI devices *ARE*
+> memory-mapped devices. Yes, there do exist some platforms where I/O
+> space is not treated as MMIO, but config space and memory space are very
+> much memory-mapped however you look at them, and in the context of DMA,
+> only memory space is relevant anyway.
+>
+> What *is* true about the current code is that of_dma_get_range() expects
+> to be passed an OF node representing the device itself, and doesn't work
+> properly when passed the node of the device's parent bus directly, which
+> happens to be what pci_dma_configure() currently does. That's the only
+> reason why it doesn't work for (single-entry) host controller dma-ranges
+> today. This does not mean it's a PCI problem, it is simply the case that
+> pci_dma_configure() is the only caller currently hitting it. Other
+> discoverable, DMA-capable buses like fsl-mc are still going to face the
+> exact same problem with or without this patch.
+>
+>> for e.g. iproc based SOCs and other SOCs(suc as rcar) have PCI
+>> world dma-ranges.
+>> dma-ranges = <0x43000000 0x00 0x00 0x00 0x00 0x80 0x00>;
 >>
->> This is absolutely not a correct understanding. The 'phy-mode' property
->> defines the contract between the MAC and PHY. It is defined from the
->> PHY's perspective of the delay, which means that the MAC has to either
->> also provide an adequate delay (RX or TX) or not (RX or TX). So if you
->> specified 'phy-mode' =3D "rgmii" this means that the MAC needs to adds
->> the
->> TX and RX delay, so implcitly this means that your MAC operates in
->=20
-> The MAC doesn't lose its responsibility to tweak RX/TX delays with this p=
-roperty set.
-
-No it does not but now there is no contract binding the MAC and the PHY
-together was to what an appropriate delay configuration there should be.
-This is why using phydev->interface (directly inherited from 'phy-mode')
-is important because it binds the PHY and MAC on a contract.
-
->=20
-> This situation is that, the PHY's RX delay tweaking function is broken. B=
-ut it doesn't mean that the PHY can take over *all* responsibility to tweak=
- TX, it still needs MAC to tweak TX.
-
-Correct, so what part of my answer was not clear in that sense?
-
->=20
->> "rgmii-id", if the property was defined from the perspective of the
->> MAC,
->> which it is not.
+>> this patch serves following:
 >>
->> Both the Ethernet PHY driver and the MAC driver need to take care of
->> adjusting the delays based on the phydev->interface value.
+>> 1) exposes interface to the pci host driver for their
+>> inbound memory ranges
 >>
->> The property you are introducing here is absolutely not appropriate
->> because it is entirely redundant with what 'phy-mode' already defines,
->> except the latter also covers a lot more cases.
+>> 2) provide an interface to callers such as of_dma_get_ranges.
+>> so then the returned size get best possible (largest) dma_mask.
+>> because PCI RC drivers do not call APIs such as
+>> dma_set_coherent_mask() and hence rather it shows its addressing
+>> capabilities based on dma-ranges.
+>> for e.g.
+>> dma-ranges = <0x43000000 0x00 0x00 0x00 0x00 0x80 0x00>;
+>> we should get dev->coherent_dma_mask=0x7fffffffff.
+>>
+>> 3) this patch handles multiple inbound windows and dma-ranges.
+>> it is left to the caller, how it wants to use them.
+>> the new function returns the resources in a standard and unform way
+>>
+>> 4) this way the callers of for e.g. of_dma_get_ranges
+>> does not need to change.
+>>
+>> 5) leaves scope of adding PCI flag handling for inbound memory
+>> by the new function.
+>
+> Which flags would ever actually matter? DMA windows aren't going to be
+> to config or I/O space, so the memory type can be assumed, and the
+> 32/64-bit distinction is irrelevant as it's not a relocatable BAR;
+> DMA-able system memory isn't going to be read-sensitive, so the
+> prefetchable flag shouldn't matter; and not being a BAR none of the
+> others would be relevant either.
+>
 
+Thanks Robin; for your reply and attention:
 
---=20
-Florian
+agree with you, at present it would not matter,
+but it does not mean that we do not scope it to make it matter in future.
 
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+now where it could matter:
+there is Relaxed Ordering for inbound memory for PCI.
+According to standard, Relaxed Ordering (RO) bit can be set only for
+Memory requests and completions (if present in the original request).
+Also, according to transaction ordering rules, I/O and configuration
+requests can still be re-ordered ahead of each other.
+and we would like to make use of it.
+for e.g. lets say we mark memory as Relaxed Ordered with flag.
+the special about this memory is incoming PCI transactions can be
+reordered and rest memory has to be strongly ordered.
+
+how it our SOC would make use of this is out of scope for the
+discussion at this point of time, but I am just bringing in the
+idea/point how flags could be useful
+for inbound memory, since we would not like throw-away flags completely.
+
+>>
+>> Bug: SOC-5216
+>> Change-Id: Ie045386df91e1e0587846bb147ae40d96f6d7d2e
+>> Signed-off-by: Oza Pawandeep <oza.oza-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+>> Reviewed-on: http://gerrit-ccxsw.broadcom.net/40428
+>> Reviewed-by: vpx_checkpatch status <vpx_checkpatch-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+>> Reviewed-by: CCXSW <ccxswbuild-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+>> Reviewed-by: Ray Jui <ray.jui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+>> Tested-by: vpx_autobuild status <vpx_autobuild-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+>> Tested-by: vpx_smoketest status <vpx_smoketest-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+>> Tested-by: CCXSW <ccxswbuild-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+>> Reviewed-by: Scott Branden <scott.branden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+>>
+>> diff --git a/drivers/of/of_pci.c b/drivers/of/of_pci.c
+>> index 0ee42c3..ed6e69a 100644
+>> --- a/drivers/of/of_pci.c
+>> +++ b/drivers/of/of_pci.c
+>> @@ -283,6 +283,83 @@ int of_pci_get_host_bridge_resources(struct device_node *dev,
+>>       return err;
+>>  }
+>>  EXPORT_SYMBOL_GPL(of_pci_get_host_bridge_resources);
+>> +
+>> +/**
+>> + * of_pci_get_dma_ranges - Parse PCI host bridge inbound resources from DT
+>> + * @np: device node of the host bridge having the dma-ranges property
+>> + * @resources: list where the range of resources will be added after DT parsing
+>> + *
+>> + * It is the caller's job to free the @resources list.
+>> + *
+>> + * This function will parse the "dma-ranges" property of a
+>> + * PCI host bridge device node and setup the resource mapping based
+>> + * on its content.
+>> + *
+>> + * It returns zero if the range parsing has been successful or a standard error
+>> + * value if it failed.
+>> + */
+>> +
+>> +int of_pci_get_dma_ranges(struct device_node *np, struct list_head *resources)
+>> +{
+>> +     struct device_node *node = of_node_get(np);
+>> +     int rlen;
+>> +     int ret = 0;
+>> +     const int na = 3, ns = 2;
+>> +     struct resource *res;
+>> +     struct of_pci_range_parser parser;
+>> +     struct of_pci_range range;
+>> +
+>> +     if (!node)
+>> +             return -EINVAL;
+>> +
+>> +     parser.node = node;
+>> +     parser.pna = of_n_addr_cells(node);
+>> +     parser.np = parser.pna + na + ns;
+>> +
+>> +     parser.range = of_get_property(node, "dma-ranges", &rlen);
+>> +
+>> +     if (!parser.range) {
+>> +             pr_debug("pcie device has no dma-ranges defined for node(%s)\n",
+>> +                       np->full_name);
+>> +             ret = -EINVAL;
+>> +             goto out;
+>> +     }
+>> +
+>> +     parser.end = parser.range + rlen / sizeof(__be32);
+>> +
+>> +     for_each_of_pci_range(&parser, &range) {
+>
+> This is plain wrong - of_pci_range_parser_one() will translate upwards
+> through parent "ranges" properties, which is completely backwards for
+> DMA addresses.
+>
+> Robin.
+>
+
+No it does not, this patch is thoroughly tested on our SOC and it works.
+of_pci_range_parser_one does not translate upwards through parent. it
+just sticks to given PCI parser.
+
+>> +             /*
+>> +              * If we failed translation or got a zero-sized region
+>> +              * then skip this range
+>> +              */
+>> +             if (range.cpu_addr == OF_BAD_ADDR || range.size == 0)
+>> +                     continue;
+>> +
+>> +             res = kzalloc(sizeof(struct resource), GFP_KERNEL);
+>> +             if (!res) {
+>> +                     ret = -ENOMEM;
+>> +                     goto parse_failed;
+>> +             }
+>> +
+>> +             ret = of_pci_range_to_resource(&range, np, res);
+>> +             if (ret) {
+>> +                     kfree(res);
+>> +                     continue;
+>> +             }
+>> +
+>> +             pci_add_resource_offset(resources, res,
+>> +                                     res->start - range.pci_addr);
+>> +     }
+>> +
+>> +     return ret;
+>> +
+>> +parse_failed:
+>> +     pci_free_resource_list(resources);
+>> +out:
+>> +     of_node_put(node);
+>> +     return ret;
+>> +}
+>> +EXPORT_SYMBOL_GPL(of_pci_get_dma_ranges);
+>>  #endif /* CONFIG_OF_ADDRESS */
+>>
+>>  #ifdef CONFIG_PCI_MSI
+>> diff --git a/include/linux/of_pci.h b/include/linux/of_pci.h
+>> index 0e0974e..617b90d 100644
+>> --- a/include/linux/of_pci.h
+>> +++ b/include/linux/of_pci.h
+>> @@ -76,6 +76,7 @@ static inline void of_pci_check_probe_only(void) { }
+>>  int of_pci_get_host_bridge_resources(struct device_node *dev,
+>>                       unsigned char busno, unsigned char bus_max,
+>>                       struct list_head *resources, resource_size_t *io_base);
+>> +int of_pci_get_dma_ranges(struct device_node *np, struct list_head *resources);
+>>  #else
+>>  static inline int of_pci_get_host_bridge_resources(struct device_node *dev,
+>>                       unsigned char busno, unsigned char bus_max,
+>> @@ -83,6 +84,12 @@ static inline int of_pci_get_host_bridge_resources(struct device_node *dev,
+>>  {
+>>       return -EINVAL;
+>>  }
+>> +
+>> +static inline int of_pci_get_dma_ranges(struct device_node *np,
+>> +                                     struct list_head *resources)
+>> +{
+>> +     return -EINVAL;
+>> +}
+>>  #endif
+>>
+>>  #if defined(CONFIG_OF) && defined(CONFIG_PCI_MSI)
+>>
+>
+
+I am posting v2, please have a look at it, it is very much improved
+design, which address Rob's comments.
+
+Regards,
+Oza.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
