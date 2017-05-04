@@ -1,60 +1,68 @@
-From: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
-Subject: Re: [PATCH v6 8/8] power: supply: sbs-manager: Add alert callback
- and battery change notification
-Date: Thu, 4 May 2017 17:21:50 +0200
-Message-ID: <20170504152150.4rvnaeyspsstnxoy@earth>
-References: <1493716346-58517-1-git-send-email-preid@electromag.com.au>
- <1493716346-58517-9-git-send-email-preid@electromag.com.au>
+From: Pierre Yves MORDRET <pierre-yves.mordret@st.com>
+Subject: Re: [PATCH 2/5] dmaengine: Add STM32 DMAMUX driver
+Date: Thu, 4 May 2017 15:28:14 +0000
+Message-ID: <15dd7c9c-2de3-a575-5936-cd1d1124f59b@st.com>
+References: <1489414561-28912-1-git-send-email-cedric.madianga@gmail.com>
+ <1489414561-28912-3-git-send-email-cedric.madianga@gmail.com>
+ <20170406064046.GF4094@localhost>
+ <d18cb12d-1fd1-39d2-501a-18c000b9982e@st.com>
+ <20170501060353.GO6263@localhost>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="ixpmlwhfzdps7eju"
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1493716346-58517-9-git-send-email-preid@electromag.com.au>
-Sender: linux-pm-owner@vger.kernel.org
-To: Phil Reid <preid@electromag.com.au>
-Cc: wsa@the-dreams.de, robh+dt@kernel.org, mark.rutland@arm.com, peda@axentia.se, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, benjamin.tissoires@redhat.com
+Content-Type: text/plain; charset="Windows-1252"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170501060353.GO6263@localhost>
+Content-Language: en-US
+Content-ID: <382DB29F04EBD847A2A04512FF3AE563@st.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Vinod Koul <vinod.koul@intel.com>
+Cc: M'boumba Cedric Madianga <cedric.madianga@gmail.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Alexandre TORGUE <alexandre.torgue@st.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>, "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, "dan.j.williams@intel.com" <dan.j.williams@intel.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+On 05/01/2017 08:03 AM, Vinod Koul wrote:
+> On Wed, Apr 26, 2017 at 09:17:37AM +0000, Pierre Yves MORDRET wrote:
+>>>> +
+>>>> +	ret = of_property_read_u32(node, "dma-channels",
+>>>> +				   &dmamux->dmamux_channels);
+>>>
+>>> can we have property_xxx calls alone, that way driver is not strictly
+>>> dependent on of
+>>
+>> Can you please explain what you are asking for ? Not sure to understand
+>> correctly.
+>
+> Use device_property_read_u32() which is a generic property API.
 
---ixpmlwhfzdps7eju
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+OK Will be done in V2
 
-Hi,
+>
+>
+>>>> +static int __init stm32_dmamux_init(void)
+>>>> +{
+>>>> +	return platform_driver_register(&stm32_dmamux_driver);
+>>>> +}
+>>>> +arch_initcall(stm32_dmamux_init);
+>>>
+>>> why not module init, wouldnt defer probe solve the dependencies
+>>>
+>>
+>> The reason behind many devices (device_initcall level) rely on DMAs. If
+>> init is deferred DMAMUX driver will be probed twice if dependents rely
+>> on it. This sounds not a good call. This explains arch_initcall level.
+>
+> Why not deferred probe was introduced to help with dependencies...
+>
 
-On Tue, May 02, 2017 at 05:12:26PM +0800, Phil Reid wrote:
-> This adds smb alert support via the smbus_alert driver to generate
-> power_supply_changed notifications when either external power is
-> removed / applied or a battery inserted / removed.
-> Use the i2c alert callback to notify the attached battery driver that a
-> change has occurred.
->=20
-> Signed-off-by: Phil Reid <preid@electromag.com.au>
-
-Acked-by: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
-
--- Sebastian
-
---ixpmlwhfzdps7eju
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAlkLRw4ACgkQ2O7X88g7
-+prt1g/7BcRw5CZlLwoucXEfQrMPFsCS3MMWppbI58FQodB3/IAr23McyRcADNkG
-FpFfflMQYw2WeJ3ZSCPBEVQXl4rEYC+XSJy8s132xY1U1RhSPwIye6wtoMGXLuxc
-vqdwMhduN7U032FLbI+F6EeJGrTtvdjjGskYfmLpWgidu/5OHEtW5CBk9Vgtx38N
-NR4bXPsazvUzoCLwWCwku+7aNHhIIuwlU4bJCvl0iyCZhMwqze9zfBZNaFM5Kzkg
-QpCI8oMoi5o9/DUGAcCRSA8jS2eZHhSTKAB/DJjEYuOAXTstcYEanjeBGsmNbqyv
-LKWfTitweTBABaguyVmjvQPsqExc/hljU3vPBIKZ0YMNsicQyMaGAlirQ4hywi0M
-h76rjOpLtqi0Wu2BqhnMO0DnUC5Sexjr0i8lFogYiRiubV2uwZoTyErp9qE69kn5
-HKQsgC1MpgN47Mtz/QRgB8cOoG5Yn7pBAvxJ1m9SSLiKW5/dbqwkyzK63VRjRuAU
-tC3f5XPIoD2bPoPYk3J9ExMb26WSXCv3YExyRcE2V1zXwgvYxuHxz8IF+T89uR9F
-/fxLJ53kRomeOZpb2kcY3X66e675rPxacvvjFKszYkrl4tigjTfEvxa8Rd9UZwbP
-CT+KV7Bjll9yKDs7qEExzMael0VjP6YA/lbEplDI35GgBRz0ZaU=
-=lbfN
------END PGP SIGNATURE-----
-
---ixpmlwhfzdps7eju--
+Most DMAs devices are already in subsys_initcall to avoid multiple 
+useless probe when clients are deferred. This DMAMUx is itself on top of 
+DMAs.
+DMAMUX ---> DMA#1 ---> Device Client #1
+        |          |--> Device Client #2
+        |               [...]
+        |          |--> Device Client #N
+        |    [...]
+        |--> DMA#N ---> Device Client #1
+                   |--> Device Client #2
+                        [...]
+                   |--> Device Client #N
+arch_initcall might a good call in this case for DMAMUX.
