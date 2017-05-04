@@ -1,106 +1,61 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH v2 20/20] ARM: sun5i: a10s-olinuxino: Enable HDMI
-Date: Thu, 4 May 2017 16:05:18 +0800
-Message-ID: <CAGb2v65S2pw3z8NZ+tkPkF=A=5z2toRkC+26pAs6La6CNyeXoQ@mail.gmail.com>
-References: <cover.d697f34bb7b0605c5e76cbc4167a64453e5e0984.1493812478.git-series.maxime.ripard@free-electrons.com>
- <c7ac6faa0568e6418291255af537c4b070bdea63.1493812478.git-series.maxime.ripard@free-electrons.com>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Subject: Re: [PATCH v6 0/8] mfd: Add OF device table to I2C drivers that are
+ missing it
+Date: Thu, 4 May 2017 10:09:31 +0200
+Message-ID: <20170504080931.GA1487@katana>
+References: <20170504052107.18995-1-javier@dowhile0.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBVWBVPEAKGQEIHC4BKA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <c7ac6faa0568e6418291255af537c4b070bdea63.1493812478.git-series.maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Daniel Vetter <daniel.vetter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="bg08WKrSYDhXBjb5"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170504052107.18995-1-javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Aaro Koskinen <aaro.koskinen-X3B1VOXEql0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 3, 2017 at 7:59 PM, Maxime Ripard
-<maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> The A10s Olinuxino has an HDMI connector. Make sure we can use it.
->
-> Acked-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-> Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> ---
->  arch/arm/boot/dts/sun5i-a10s-olinuxino-micro.dts | 29 +++++++++++++++++-
->  1 file changed, 29 insertions(+), 0 deletions(-)
->
-> diff --git a/arch/arm/boot/dts/sun5i-a10s-olinuxino-micro.dts b/arch/arm/boot/dts/sun5i-a10s-olinuxino-micro.dts
-> index 894f874a5beb..1d13b6407222 100644
-> --- a/arch/arm/boot/dts/sun5i-a10s-olinuxino-micro.dts
-> +++ b/arch/arm/boot/dts/sun5i-a10s-olinuxino-micro.dts
-> @@ -63,6 +63,17 @@
->                 stdout-path = "serial0:115200n8";
->         };
->
-> +       connector {
-> +               compatible = "hdmi-connector";
-> +               type = "a";
 
-Just curious, should we take this into consideration when creating
-drm_connector?
+--bg08WKrSYDhXBjb5
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-ChenYu
+Javier,
 
-> +
-> +               port {
-> +                       hdmi_con_in: endpoint {
-> +                               remote-endpoint = <&hdmi_out_con>;
-> +                       };
-> +               };
-> +       };
-> +
->         leds {
->                 compatible = "gpio-leds";
->                 pinctrl-names = "default";
-> @@ -76,6 +87,10 @@
->         };
->  };
->
-> +&be0 {
-> +       status = "okay";
-> +};
-> +
->  &ehci0 {
->         status = "okay";
->  };
-> @@ -91,6 +106,16 @@
->         status = "okay";
->  };
->
-> +&hdmi {
-> +       status = "okay";
-> +};
-> +
-> +&hdmi_out {
-> +       hdmi_out_con: endpoint {
-> +               remote-endpoint = <&hdmi_con_in>;
-> +       };
-> +};
-> +
->  &i2c0 {
->         pinctrl-names = "default";
->         pinctrl-0 = <&i2c0_pins_a>;
-> @@ -248,6 +273,10 @@
->         status = "okay";
->  };
->
-> +&tcon0 {
-> +       status = "okay";
-> +};
-> +
->  &uart0 {
->         pinctrl-names = "default";
->         pinctrl-0 = <&uart0_pins_a>;
-> --
-> git-series 0.8.11
->
-> --
-> You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-> For more options, visit https://groups.google.com/d/optout.
+thanks for the series.
+
+> Most patches can be applied independently, with the exception of patches
+> 2 to 4 that should be applied in the same tree to keep bisect-ability. I
+> suggest these to go through the MFD subsystem tree.
+
+=46rom my POV, patches 2-5 should be applied to the same tree. Since all
+I2C related patches have my tag, I assume they will be picked up by MFD.
+Lee, let me know if you prefer differently.
+
+
+--bg08WKrSYDhXBjb5
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlkK4bMACgkQFA3kzBSg
+Kba+QBAAk4/jzvqgCIfQ5OvlBiG6ldw8CUehJaW/+eeC0XuA/v6CX6Vbijd0RF1q
+fA0zQhHRkInsabkQ7QFDwdrCDWsG4qqr2zjLWEONkIfL3vBW/oEf0L6i3g0U5ApG
+FV6J8A4auTi57EIC8x2H1bej30n230pp+ykaLbDfD/wXsJsyIiuWk38D9oZ/mL8H
+Ba7aNEhqKP7uVwh6oc4NADxQ6+/VHOV9AU2b0n+tZlF4IkRnRRi55hotTBe0pPuU
+j8bcRL1pwwnB/rfAW2b73qwJDhk5JfBv6rnPtQMNhe9JHAbTR0M/iT3B+GX3aT/s
+UzSm7xFiV/+jUiBp1N6DsWhrp8UVwXbel1ZpcfxFSF3qxjazQI30cxNaxh+/V7gD
+VFAlt+O4ce8aOuiXInbmeHzyCAPeKwuAMf0IaK1KDu9DRtV6uTi6YhWvba1qUnbr
+jNFmh58WoRxkl7yTuNqbPTeWV+4VcwlqzAcQr9KQK/ZAYiGAIPjvJRqz6NIiSNWv
+JO3Da1rUe6qg9vkAI0iQ1vzhs4u/ilt8jssqFfLK1e/vMhF0sA9W5SRvdwP5RXk1
+TAFovMfUYOidk2wiZiLGpwLqe2zXfp9oWWxALyajy3WxPAyX7JeceYvDfA/XoGtN
+bVnv7BODwN4CrOZHv6ymnFoPK27KDcbBvbvf9XRbvxj+68lwCrU=
+=/hCE
+-----END PGP SIGNATURE-----
+
+--bg08WKrSYDhXBjb5--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
