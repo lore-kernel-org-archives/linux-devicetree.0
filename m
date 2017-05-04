@@ -1,8 +1,8 @@
 From: icenowy-h8G6r0blFSE@public.gmane.org
 Subject: Re: [PATCH v6 08/13] drm/sun4i: add support for
  Allwinner DE2 mixers
-Date: Fri, 05 May 2017 00:50:51 +0800
-Message-ID: <522ab8cb2939f0017917c5e9b4065089@aosc.io>
+Date: Fri, 05 May 2017 00:52:39 +0800
+Message-ID: <c0b049b4ddc2af2f34059e9c9d659de9@aosc.io>
 References: <20170504114858.9008-1-icenowy@aosc.io>
  <20170504114858.9008-9-icenowy@aosc.io>
  <20170504130535.6nokhni5a3uxwy66@lukather>
@@ -10,7 +10,7 @@ Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBDS6XAN6ZADRB35XVXEAKGQE6MKQ33I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBDS6XAN6ZADRBWFYVXEAKGQEVF3S25I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20170504130535.6nokhni5a3uxwy66@lukather>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -372,9 +372,6 @@ List-Id: devicetree@vger.kernel.org
 >> +}
 >=20
 > This one too.
-
-It's called from sun8i_layer.c, so it cannot be static.
-
 >=20
 >> +static int sun8i_mixer_drm_format_to_layer(struct drm_plane *plane,
 >> +					     u32 format, u32 *mode)
@@ -449,12 +446,6 @@ It's called from sun8i_layer.c, so it cannot be static.
 >=20
 > X and Y are fixed point numbers. You want to keep only the higher 16
 > bits there.
-
-Do you mean "lower 16 bits"? Thus should I (x & 0xffff) or ((u16)x) ?
-
-P.S. The negative coordinates are broken, how should I deal with it? or
-is the coordinates promised to be not negative?
-
 >=20
 >> +
 >> +	return 0;
@@ -619,6 +610,13 @@ is the coordinates promised to be not negative?
 >> +	list_add_tail(&mixer->engine.list, &drv->engine_list);
 >=20
 > You didn't call INIT_LIST_HEAD on that list.
+
+So didn't the sun4i_backend driver...
+
+I think the mixer->engine.list only means an item in the
+engine_list, and the drv->engine_list is initialized in the
+sun4i_drv source code.
+
 >=20
 >> +
 >> +	/* Reset the registers */
