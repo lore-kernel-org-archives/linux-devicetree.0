@@ -1,7 +1,7 @@
 From: Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>
-Subject: [PATCH v6 5/8] i2c: i2c-cbus-gpio: Add vendor prefix to retu node in example
-Date: Thu,  4 May 2017 01:21:04 -0400
-Message-ID: <20170504052107.18995-6-javier@dowhile0.org>
+Subject: [PATCH v6 8/8] ARM: ux500: Add vendor prefix to tps61052 node
+Date: Thu,  4 May 2017 01:21:07 -0400
+Message-ID: <20170504052107.18995-9-javier@dowhile0.org>
 References: <20170504052107.18995-1-javier@dowhile0.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <20170504052107.18995-1-javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>
@@ -10,51 +10,40 @@ To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Aaro Koskinen <aaro.koskinen-X3B1VOXEql0@public.gmane.org>, Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The example contains a device node for a retu device, but
-its compatible string doesn't have a vendor prefix.
-
-While being there, drop the -mfd suffix since isn't correct.
+The tps61052 device node doesn't have a vendor prefix
+in its compatible string, fix it by adding one.
 
 Signed-off-by: Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>
 Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Acked-by: Aaro Koskinen <aaro.koskinen-X3B1VOXEql0@public.gmane.org>
 Acked-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Reviewed-by: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
 
 ---
 
-Changes in v6:
-- Add Wolfram Sang's Reviewed-by tag.
-
+Changes in v6: None
 Changes in v5:
 - Add Rob Herring's Acked-by tag.
-- Add Aaro Koskinen's Acked-by tag.
 - Add Acked-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>'s Acked-by tag.
 
-Changes in v4:
-- Avoid using MFD in Device Tree (Lee Jones).
-
+Changes in v4: None
 Changes in v3: None
 Changes in v2: None
 
- Documentation/devicetree/bindings/i2c/i2c-cbus-gpio.txt | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/ste-hrefprev60.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/i2c/i2c-cbus-gpio.txt b/Documentation/devicetree/bindings/i2c/i2c-cbus-gpio.txt
-index 8ce9cd2855b5..c143948b2a37 100644
---- a/Documentation/devicetree/bindings/i2c/i2c-cbus-gpio.txt
-+++ b/Documentation/devicetree/bindings/i2c/i2c-cbus-gpio.txt
-@@ -20,8 +20,8 @@ i2c@0 {
- 	#address-cells = <1>;
- 	#size-cells = <0>;
+diff --git a/arch/arm/boot/dts/ste-hrefprev60.dtsi b/arch/arm/boot/dts/ste-hrefprev60.dtsi
+index 5882a2606ac3..3f14b4df69b4 100644
+--- a/arch/arm/boot/dts/ste-hrefprev60.dtsi
++++ b/arch/arm/boot/dts/ste-hrefprev60.dtsi
+@@ -30,7 +30,7 @@
  
--	retu-mfd: retu@1 {
--		compatible = "retu-mfd";
-+	retu: retu@1 {
-+		compatible = "nokia,retu";
- 		reg = <0x1>;
- 	};
- };
+ 		i2c@80004000 {
+ 			tps61052@33 {
+-				compatible = "tps61052";
++				compatible = "ti,tps61052";
+ 				reg = <0x33>;
+ 			};
+ 
 -- 
 2.9.3
 
