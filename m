@@ -1,97 +1,53 @@
-From: icenowy-h8G6r0blFSE@public.gmane.org
-Subject: Re: [PATCH 2/4] dt-bindings: add binding for RTL8211E
- Ethernet PHY
-Date: Fri, 05 May 2017 02:10:50 +0800
-Message-ID: <edf26d7de605a93bfce258de0353df6d@aosc.io>
-References: <20170421232436.10924-1-icenowy@aosc.io>
- <20170421232436.10924-3-icenowy@aosc.io>
- <c7aa9d7a-5e97-0e7f-2b1c-584a4de00837@gmail.com>
-Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBDS6XAN6ZADRBK65VXEAKGQELB2QJ3Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <c7aa9d7a-5e97-0e7f-2b1c-584a4de00837-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: [PATCH v2 0/2] remove the "cpu_clk" from the GXBB/GXL/GXM driver
+Date: Thu,  4 May 2017 20:19:18 +0200
+Message-ID: <20170504181920.21880-1-martin.blumenstingl@googlemail.com>
+References: <20170401125519.7339-1-martin.blumenstingl@googlemail.com>
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <20170401125519.7339-1-martin.blumenstingl@googlemail.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: linux-amlogic@lists.infradead.org, jbrunet@baylibre.com, narmstrong@baylibre.com, linux-clk@vger.kernel.org
+Cc: devicetree@vger.kernel.org, khilman@baylibre.com, carlo@caione.org, sboyd@codeaurora.org, mturquette@baylibre.com, linux-arm-kernel@lists.infradead.org, Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 List-Id: devicetree@vger.kernel.org
 
-=E5=9C=A8 2017-04-22 08:22=EF=BC=8CFlorian Fainelli =E5=86=99=E9=81=93=EF=
-=BC=9A
-> On 04/21/2017 04:24 PM, Icenowy Zheng wrote:
->> From: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
->>=20
->> Some RTL8211E Ethernet PHY have an issue that needs a workaround
->> indicated with device tree.
->>=20
->> Add the binding for a property that indicates this workaround.
->>=20
->> Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
->> ---
->>  .../devicetree/bindings/net/realtek,rtl8211e.txt   | 22=20
->> ++++++++++++++++++++++
->>  1 file changed, 22 insertions(+)
->>  create mode 100644=20
->> Documentation/devicetree/bindings/net/realtek,rtl8211e.txt
->>=20
->> diff --git=20
->> a/Documentation/devicetree/bindings/net/realtek,rtl8211e.txt=20
->> b/Documentation/devicetree/bindings/net/realtek,rtl8211e.txt
->> new file mode 100644
->> index 000000000000..c1913301bfe8
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/net/realtek,rtl8211e.txt
->> @@ -0,0 +1,22 @@
->> +Realtek RTL8211E Ethernet PHY
->> +
->> +One batch of RTL8211E is slight broken, that needs some special (and
->> +full of magic numbers) tweaking in order to make GbE to operate=20
->> properly.
->> +The only well-known board that used the broken batch is Pine64+.
->> +Configure it through an Ethernet OF device node.
->> +
->> +Optional properties:
->> +
->> +- realtek,disable-rx-delay:
->> +  If set, RX delay will be completely disabled (according to=20
->> Realtek). This
->> +  will affect the performance on non-broken boards.
->> +  default: do not disable RX delay.
->=20
-> Please don't introduce custom properties to do that, instead correct
-> specify the "phy-mode" such that it is e.g: "rgmii-txid" which=20
-> indicates
-> that there should be no RX internal delay, but a TX internal delay=20
-> added
-> by the PHY.
+The quick summary for this patch is that the "cpu_clk" seems to have
+been copied from the Meson8b clock driver when the GXBB clock driver
+was initially added. However, on GXBB (and the other GX SoCs) the
+actual CPU clock is provided by a SCPI DVFS clock.
+More details can be found in the description of the actual patch (#2).
 
-Checked the document, the meaning of "rgmii-txid" is not correct here.
+This was tested on a Khadas VIM board (GXL S905X).
 
-This doesn't effect the MAC, and the MAC should still add TX delay.
 
-The definition of "rgmii-txid" in
-Documentation/devicetree/binding/net/ethernet.txt is "RGMII with
-internal TX delay provided by the PHY, the MAC should not add an TX=20
-delay
-in this case". However, this do not indicate that the MAC doesn't add TX
-delay; in fact that just totally disabled the PHY to provide the RX=20
-delay.
-MAC still should to add delay on both TX/RX, which is the semantic of
-standard "rgmii".
+Changes since v1:
+- split the patch into two patches: one which un-exports the clock ID
+  first and a second which does the actual cleanup. This was done based
+  on the recent discussion that new clocks should be added first and then
+  exported in a second patch (this patch does the same, just the other
+  way round: un-exporting first, then removing the actual clock)
 
-So I cannot used "rgmii-txid" here, but should continue to use this
-custom property.
+Changes since the RFC version from [0]:
+- rebased to the "clk-meson" branch (e65ae3fb97b4 "dt-bindings: clock:
+  gxbb-clkc: Add GXL compatible variant") and Jerome's audio clock
+  patches (in version 2: [1])
+- remove the now unused cpu_div_table (which was left over in the RFC
+  version)
+- slightly updated the comment for the now unused clock ID 1 in
+  drivers/clk/meson/gxbb.h
 
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+
+[0] https://patchwork.kernel.org/patch/9644993/
+[1] http://lists.infradead.org/pipermail/linux-amlogic/2017-March/003200.html
+
+Martin Blumenstingl (2):
+  clk: meson-gxbb: un-export the CPU clock
+  clk: meson: gxbb: remove the "cpu_clk" from the GXBB and GXL driver
+
+ drivers/clk/meson/gxbb.c              | 64 ++---------------------------------
+ drivers/clk/meson/gxbb.h              |  2 +-
+ include/dt-bindings/clock/gxbb-clkc.h |  1 -
+ 3 files changed, 4 insertions(+), 63 deletions(-)
+
+-- 
+2.12.2
+
