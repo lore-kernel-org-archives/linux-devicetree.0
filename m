@@ -1,75 +1,91 @@
-From: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
-Subject: Re: [RFC 2/3] dt: bindings: Add lens-focus binding for image sensors
-Date: Thu, 4 May 2017 16:33:17 +0200
-Message-ID: <20170504143317.obpt2nmsjiypn4d2@earth>
+From: Sebastian Reichel <sebastian.reichel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+Subject: Re: [RFC 3/3] dt: bindings: Add a binding for referencing EEPROM
+ from camera sensors
+Date: Thu, 4 May 2017 16:38:04 +0200
+Message-ID: <20170504143803.f5pndnvm73jjfe7i@earth>
 References: <1493720749-31509-1-git-send-email-sakari.ailus@linux.intel.com>
- <1493720749-31509-3-git-send-email-sakari.ailus@linux.intel.com>
+ <1493720749-31509-4-git-send-email-sakari.ailus@linux.intel.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="q3657so5543stwzk"
-Return-path: <linux-media-owner@vger.kernel.org>
+        protocol="application/pgp-signature"; boundary="2cbe63unft4ia63v"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1493720749-31509-3-git-send-email-sakari.ailus@linux.intel.com>
-Sender: linux-media-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, pavel@ucw.cz
+In-Reply-To: <1493720749-31509-4-git-send-email-sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---q3657so5543stwzk
-Content-Type: text/plain; charset=us-ascii
+--2cbe63unft4ia63v
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
 Hi,
 
-On Tue, May 02, 2017 at 01:25:48PM +0300, Sakari Ailus wrote:
-> The lens-focus property contains a phandle to the lens voice coil driver
-> that is associated to the sensor; typically both are contained in the same
-> camera module.
+On Tue, May 02, 2017 at 01:25:49PM +0300, Sakari Ailus wrote:
+> Many camera sensor devices contain EEPROM chips that describe the
+> properties of a given unit --- the data is specific to a given unit can
+> thus is not stored e.g. in user space or the driver.
 >=20
-> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+> Some sensors embed the EEPROM chip and it can be accessed through the
+> sensor's I=B2C interface. This property is to be used for devices where t=
+he
+> EEPROM chip is accessed through a different I=B2C address than the sensor.
+>=20
+> The intent is to later provide this information to the user space.
+>=20
+> Signed-off-by: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
 > ---
 >  Documentation/devicetree/bindings/media/video-interfaces.txt | 3 +++
 >  1 file changed, 3 insertions(+)
 >=20
 > diff --git a/Documentation/devicetree/bindings/media/video-interfaces.txt=
  b/Documentation/devicetree/bindings/media/video-interfaces.txt
-> index d6c62bc..e52aefc 100644
+> index e52aefc..9bd2005 100644
 > --- a/Documentation/devicetree/bindings/media/video-interfaces.txt
 > +++ b/Documentation/devicetree/bindings/media/video-interfaces.txt
-> @@ -77,6 +77,9 @@ Optional properties
->    the child nodes of the LED driver describing individual LEDs. Only
->    valid for device nodes that are related to an image sensor.
+> @@ -80,6 +80,9 @@ Optional properties
+>  - lens-focus: A phandle to the node of the lens. Only valid for device
+>    nodes that are related to an image sensor.
 > =20
-> +- lens-focus: A phandle to the node of the lens. Only valid for device
-> +  nodes that are related to an image sensor.
+> +- eeprom: A phandle to the node of the related EEPROM. Only valid for
+> +  device nodes that are related to an image sensor.
 
-s/of the lens/of the focus lens controller/
+Here it's even more obvious, that the second sentence is redundant.
+The requirement is already in the first sentence :) Instead it
+should be mentioned, that this is to be used by devices not having
+their own embedded eeprom. How about:
 
-Also I wonder about the second sentence. That sentence could
-basically be added to every property, so can't we just drop it?
+eeprom: A phandle to the node of the EEPROM describing the camera
+sensor (i.e. device specific calibration data), in case it differs
+=66rom the sensor node.
 
 -- Sebastian
 
---q3657so5543stwzk
+--2cbe63unft4ia63v
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAlkLO60ACgkQ2O7X88g7
-+pqUHQ//Ub6M1lCSrRZPdLVTF4YfTgI7g5555+cqyfOZAB5lfNtQTxZNR0/rlLNo
-mkF2QRjjiUaxObZ+MAyZkZ89S4hpMTvpUxj3tQytMna+630VV6IgOqMAp5rjGLwd
-siQqEnxKqRq949Ct/AzqL88XF6xKcogu7Qs5t5SJXm7N317LxbG+qM+bhjG7PbBu
-o/QOU8wXVr6VWL8f5jZqYe8Z5t5KVj0gu0liwravVtj5Ce4bsjfzo4dDtQFtAD6k
-0ESIiMoytpKfXQGK17xtOo4AhHDfOTrOHFkClf/ECsh4zq7FxOoeKM5UdPV4tQDc
-ZR0cMIOnTeJ3d+y3LFUwGO2kjlYhQqReetFeFGmPYRTfO+dWxeigNHA7wVl7t+DO
-ElDjDE2JecZ14KQfxia9D5S7pbfRkpp01SCIYZc4zbwBkwpiI5cSxTEV7eqPdU0x
-zfGfKsLPPkL0ZNuR36Qa/K4BrWFS7K8SW7fl81ucTJZT0rZeTYt5s3wabMBzhYSK
-wH3ccXyRipZU1zLuZXBaToLXBalaam4ofP+rhZQq83gCcuJNxfA5TFsZ1d934Mgz
-9Mykb2N3LRE3t11VadlEUMrcqkZuWmnxifVL24bcGXtad7XEXYHAtoC9+eE/Z1da
-wJ9ziNp+ufGdoksBIAW30NpigzYMKVgdk0dnMjRDyLJAy+fWF6A=
-=6iSX
+iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAlkLPMsACgkQ2O7X88g7
++poNfw//RirP+W4JLW1Y6TyiW+it4GMLWleoA9cP5ezAgva9lq3ADYC5fcsNbj59
+AqEIQ/FC7lMIY1CTOwmhZXr9zP5c2nXC2EcxgqgLakmEV18O0VywnhkuseJLdnP3
+qzLDtBwHrPm3rWznR9D675oK4W14JKEf5+7m5D0TMtLPR9IFepHRi85mpL6JS1id
+FaEzC1BQ0GIDYmQ2i6/4GS9F9j/migqybtKk/Ek1n/QPuVINfD+j1O0L2lD+8lla
+4lN79R1MmvtqrlG58xPKlMYaFlOLDU8QNfeZb9pMepQSZzSmJy10L1afNwJ8gd6b
+JqJslLI1IaSluBJ2punCkdQalc/Hcf+tnex9piOWFVeruHptcIwjKD5fbd3ie/tg
+TUcvDBdJhRt5erNaH0DjUDhEvTon2dc0HBqkLa97UW8s2yxD9ZAY1PZCuDnjWHWX
+bBh87fUTC4TeLZy1ee/wSMM9qFA5dAbljb3DUMNP269XvRQh02s3z0bpGfayK4S9
+llo6agqvuFKNYC+UCizJN7yGqb8msGF+SkPa8Ii7mS41gS5RKtuzZarmQZ0NoxBf
+3iZRLB/DMWyJa+S5TGUsnv2vIdzUhoE/48oYX9bm4aLd69Qdyaj5RwoHKtoVr4/o
++q6W4Urtu1w+qFjB8XIK18/4dvMhDpNv4S/E0hqT5O/u3kc+N/E=
+=MyG2
 -----END PGP SIGNATURE-----
 
---q3657so5543stwzk--
+--2cbe63unft4ia63v--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
