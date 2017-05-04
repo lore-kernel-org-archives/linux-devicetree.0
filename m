@@ -1,67 +1,113 @@
 From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: [PATCH v4 1/5] mailbox: Make startup and shutdown ops optional
-Date: Thu,  4 May 2017 13:05:35 -0700
-Message-ID: <20170504200539.27027-1-bjorn.andersson@linaro.org>
+Subject: [PATCH v4 4/5] soc: qcom: Add device tree binding for GLINK RPM
+Date: Thu,  4 May 2017 13:05:38 -0700
+Message-ID: <20170504200539.27027-4-bjorn.andersson@linaro.org>
+References: <20170504200539.27027-1-bjorn.andersson@linaro.org>
 Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <20170504200539.27027-1-bjorn.andersson@linaro.org>
 Sender: linux-arm-msm-owner@vger.kernel.org
-To: Andy Gross <andy.gross@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ohad Ben-Cohen <ohad@wizery.com>, Jassi Brar <jassisinghbrar@gmail.com>
-Cc: linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-remoteproc@vger.kernel.org
+To: Andy Gross <andy.gross@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ohad Ben-Cohen <ohad@wizery.com>
+Cc: Jassi Brar <jassisinghbrar@gmail.com>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-remoteproc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Some mailbox hardware doesn't have to perform any additional operations
-on startup of shutdown, so make these optional.
+Add device tree binding documentation for the Qualcomm GLINK RPM, used
+for communication with the Resource Power Management subsystem in
+various Qualcomm SoCs.
 
 Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 ---
 
 Changes since v3:
-- New patch
+- Transition doorbell to mailbox framework
 
- drivers/mailbox/mailbox.c | 18 ++++++++++++++++--
- 1 file changed, 16 insertions(+), 2 deletions(-)
+Changes since v2:
+- Replace qcom,ipc syscon with a "doorbell"
 
-diff --git a/drivers/mailbox/mailbox.c b/drivers/mailbox/mailbox.c
-index 4671f8a12872..c88de953394a 100644
---- a/drivers/mailbox/mailbox.c
-+++ b/drivers/mailbox/mailbox.c
-@@ -137,6 +137,20 @@ static enum hrtimer_restart txdone_hrtimer(struct hrtimer *hrtimer)
- 	return HRTIMER_NORESTART;
- }
- 
-+static int mbox_startup(struct mbox_chan *chan)
-+{
-+	if (chan->mbox->ops->startup)
-+		return chan->mbox->ops->startup(chan);
+Changes since v1:
+- None
+
+ .../devicetree/bindings/soc/qcom/qcom,glink.txt    | 73 ++++++++++++++++++++++
+ 1 file changed, 73 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,glink.txt
+
+diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,glink.txt b/Documentation/devicetree/bindings/soc/qcom/qcom,glink.txt
+new file mode 100644
+index 000000000000..e32198df0e9c
+--- /dev/null
++++ b/Documentation/devicetree/bindings/soc/qcom/qcom,glink.txt
+@@ -0,0 +1,73 @@
++Qualcomm RPM GLINK binding
 +
-+	return 0;
-+}
++This binding describes the Qualcomm RPM GLINK, a fifo based mechanism for
++communication with the Resource Power Management system on various Qualcomm
++platforms.
 +
-+static void mbox_shutdown(struct mbox_chan *chan)
-+{
-+	if (chan->mbox->ops->shutdown)
-+		chan->mbox->ops->shutdown(chan);
-+}
++- compatible:
++	Usage: required
++	Value type: <stringlist>
++	Definition: must be "qcom,glink-rpm"
 +
- /**
-  * mbox_chan_received_data - A way for controller driver to push data
-  *				received from remote to the upper layer.
-@@ -352,7 +366,7 @@ struct mbox_chan *mbox_request_channel(struct mbox_client *cl, int index)
- 
- 	spin_unlock_irqrestore(&chan->lock, flags);
- 
--	ret = chan->mbox->ops->startup(chan);
-+	ret = mbox_startup(chan);
- 	if (ret) {
- 		dev_err(dev, "Unable to startup the chan (%d)\n", ret);
- 		mbox_free_channel(chan);
-@@ -405,7 +419,7 @@ void mbox_free_channel(struct mbox_chan *chan)
- 	if (!chan || !chan->cl)
- 		return;
- 
--	chan->mbox->ops->shutdown(chan);
-+	mbox_shutdown(chan);
- 
- 	/* The queued TX requests are simply aborted, no callbacks are made */
- 	spin_lock_irqsave(&chan->lock, flags);
++- interrupts:
++	Usage: required
++	Value type: <prop-encoded-array>
++	Definition: should specify the IRQ used by the remote processor to
++		    signal this processor about communication related events
++
++- qcom,rpm-msg-ram:
++	Usage: required
++	Value type: <prop-encoded-array>
++	Definition: handle to RPM message memory resource
++
++- mboxes:
++	Usage: required
++	Value type: <prop-encoded-array>
++	Definition: reference to the "rpm_hlos" mailbox in APCS, as described
++		    in mailbox/mailbox.txt
++
++= GLINK DEVICES
++Each subnode of the GLINK node represent function tied to a virtual
++communication channel. The name of the nodes are not important. The properties
++of these nodes are defined by the individual bindings for the specific function
++- but must contain the following property:
++
++- qcom,glink-channels:
++	Usage: required
++	Value type: <stringlist>
++	Definition: a list of channels tied to this function, used for matching
++		    the function to a set of virtual channels
++
++= EXAMPLE
++The following example represents the GLINK RPM node on a MSM8996 device, with
++the function for the "rpm_request" channel defined, which is used for
++regualtors and root clocks.
++
++	apcs_glb: apcs-glb@9820000 {
++		compatible = "qcom,msm8996-apcs-hmss-global";
++		reg = <0x9820000 0x1000>;
++
++		#mbox-cells = <1>;
++	};
++
++	rpm_msg_ram: memory@68000 {
++		compatible = "qcom,rpm-msg-ram";
++		reg = <0x68000 0x6000>;
++	};
++
++	rpm-glink {
++		compatible = "qcom,glink-rpm";
++
++		interrupts = <GIC_SPI 168 IRQ_TYPE_EDGE_RISING>;
++
++		qcom,rpm-msg-ram = <&rpm_msg_ram>;
++
++		mboxes = <&apcs_glb 0>;
++
++		rpm-requests {
++			compatible = "qcom,rpm-msm8996";
++			qcom,glink-channels = "rpm_requests";
++
++			...
++		};
++	};
 -- 
 2.12.0
