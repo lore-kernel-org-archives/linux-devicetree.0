@@ -1,51 +1,60 @@
-From: Daniel Vetter <daniel@ffwll.ch>
-Subject: Re: [PATCHv2 0/3] Intel FPGA VIP Frame Buffer II DRM Driver
-Date: Thu, 4 May 2017 11:22:06 +0200
-Message-ID: <CAKMK7uGdD0uh8vK7QCxGqQ9ZempsA+mHrwNW5FefRkOH2P2TEg@mail.gmail.com>
-References: <1493086006-4392-1-git-send-email-hean.loong.ong@intel.com>
- <87shklznuo.fsf@eliezer.anholt.net>
+From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH v2 2/2] [media] platform: add video-multiplexer
+ subdevice driver
+Date: Thu, 04 May 2017 11:26:18 +0200
+Message-ID: <1493889978.2381.11.camel@pengutronix.de>
+References: <20170502150913.2168-1-p.zabel@pengutronix.de>
+         <20170502150913.2168-2-p.zabel@pengutronix.de>
+         <20170503192836.GN7456@valkosipuli.retiisi.org.uk>
+         <1493881652.2381.6.camel@pengutronix.de>
+         <20170504071703.GS7456@valkosipuli.retiisi.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <87shklznuo.fsf@eliezer.anholt.net>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Eric Anholt <eric@anholt.net>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Ong,
- Hean Loong" <hean.loong.ong@intel.com>, tien.hock.loh@intel.com, dri-devel <dri-devel@lists.freedesktop.org>, dinguyen@kernel.org, Rob Herring <robh+dt@kernel.org>, Daniel Vetter <daniel.vetter@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170504071703.GS7456-S+BSfZ9RZZmRSg0ZkenSGLdO1Tsj/99ntUK59QYPAWc@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
+Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Vladimir Zapolskiy <vladimir_zapolskiy-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Steve Longerbeam <steve_longerbeam-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCBNYXkgMywgMjAxNyBhdCAxMDoyOCBQTSwgRXJpYyBBbmhvbHQgPGVyaWNAYW5ob2x0
-Lm5ldD4gd3JvdGU6Cj4+IEZyb206IE9uZyBIZWFuIExvb25nIDxoZWFuLmxvb25nLm9uZ0BpbnRl
-bC5jb20+Cj4+Cj4+IEhpLAo+Pgo+PiBUaGUgbmV3IEludGVsIEFycmlhMTAgU09DIEZQR0EgZGV2
-a2l0IGhhcyBhIERpc3BsYXkgUG9ydCBJUCBjb21wb25lbnQKPj4gd2hpY2ggcmVxdWlyZXMgYSBu
-ZXcgZHJpdmVyLiBUaGlzIGlzIGEgdmlydHVhbCBkcml2ZXIgaW4gd2hpY2ggdGhlCj4+IEZHUEEg
-aGFyZHdhcmUgd291bGQgZW5hYmxlIHRoZSBEaXNwbGF5IFBvcnQgYmFzZWQgb24gdGhlIGluZm9y
-bWF0aW9uCj4+IGFuZCBkYXRhIHByb3ZpZGVkIGZyb20gdGhlIERSTSBmcmFtZSBidWZmZXIgZnJv
-bSB0aGUgT1MuIEJhc2ljYWxseSBhbGwKPj4gYWxsIGluZm9ybWF0aW9uIHdpdGggcmVhZ3JkcyB0
-byByZXNvbHV0aW9uIGFuZCBiaXRzIHBlciBwaXhlbCBhcmUKPj4gcHJlLWNvbmZpZ3VyZWQgb24g
-dGhlIEZQR0EgZGVzaWduIGFuZCB0aGVzZSBpbmZvcm1hdGlvbiBhcmUgZmVkIHRvCj4+IHRoZSBk
-cml2ZXIgdmlhIHRoZSBkZXZpY2UgdHJlZSBpbmZvcm1hdGlvbiBhcyBwYXJ0IG9mIHRoZSBoYXJk
-d2FyZQo+PiBpbmZvcm1hdGlvbi4KPgo+IEkgc3RhcnRlZCByZXZpZXdpbmcgdGhlIGNvZGUsIGJ1
-dCBJIHdhbnQgdG8gbWFrZSBzdXJlIEkgdW5kZXJzdGFuZAo+IHdoYXQncyBnb2luZyBvbjoKPgo+
-IFRoaXMgSVAgY29yZSBpc24ndCBkaXNwbGF5aW5nIGNvbnRlbnRzIGZyb20gc3lzdGVtIG1lbW9y
-eSBvbiBzb21lIHNvcnQKPiBvZiBhY3R1YWwgcGh5c2ljYWwgZGlzcGxheSwgcmlnaHQ/ICBJdCdz
-IGEgY29yZSB0aGF0IHRha2VzIHNvbWUgaW5wdXQKPiB2aWRlbyBzdHJlYW0gKG5vdCBkZXNjcmli
-ZWQgaW4gdGhlIERUIG9yIGluIHRoaXMgZHJpdmVyKSBhbmQgc3RvcmVzIGl0Cj4gdG8gbWVtb3J5
-PwoKSSBhc3N1bWVkIGl0J3MgdGhlIGlucHV0IElQIGNvcmUgaW4gdGhlIGxpbmtlZCBwZGYsIGku
-ZS4gdGhlIENWSQooY2xvY2tlZCB2aWRlbyBpbnB1dCkuIFRoZXJlJ3MgYWxzbyBhIENWTyAoY2xv
-Y2tlZCB2aWRlbyBvdXRwdXQpLCBhbmQKdGhhdCB3b3VsZCBpbmRlZWQgYmUgYSBtaXNmaXQgZm9y
-IGRybS4gRGVmaW5pdGVseSBuZWVkIHRvIGNsYXJpZnkgdGhpcwooaW4gdGhlIERUIGRlc2NyaXB0
-aW9uKS4KLURhbmllbAotLSAKRGFuaWVsIFZldHRlcgpTb2Z0d2FyZSBFbmdpbmVlciwgSW50ZWwg
-Q29ycG9yYXRpb24KKzQxICgwKSA3OSAzNjUgNTcgNDggLSBodHRwOi8vYmxvZy5mZndsbC5jaApf
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwg
-bWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0
-cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+Hi Sakari,
+
+On Thu, 2017-05-04 at 10:17 +0300, Sakari Ailus wrote:
+> Hi Philipp,
+> 
+> On Thu, May 04, 2017 at 09:07:32AM +0200, Philipp Zabel wrote:
+> > On Wed, 2017-05-03 at 22:28 +0300, Sakari Ailus wrote:
+> > > Hi Philipp,
+> > > 
+> > > Thanks for continuing working on this!
+> > > 
+> > > I have some minor comments below...
+> > 
+> > Thank you for the comments.
+> > 
+> > [...]
+> > > Could you rebase this on the V4L2 fwnode patchset here, please?
+> > > 
+> > > <URL:https://git.linuxtv.org/sailus/media_tree.git/log/?h=v4l2-acpi>
+> > >
+> > > The conversion is rather simple, as shown here:
+> > > 
+> > > <URL:https://git.linuxtv.org/sailus/media_tree.git/commit/?h=v4l2-acpi&id=679035e11bfdbea146fed5d52fb794b34dc9cea6>
+> > 
+> > What is the status of this patchset? Will this be merged soon?
+> 
+> I intend to send a pull request once the next rc1 tag is pulled on
+> media-tree master. It depends on patches in linux-pm tree that aren't in
+> media-tree yet.
+
+I get conflicts trying to merge v4l2-acpi into v4.11 or media-tree
+master. Could you provide an updated version?
+
+regards
+Philipp
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
