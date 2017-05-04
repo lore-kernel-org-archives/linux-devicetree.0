@@ -1,42 +1,62 @@
-From: Rob Herring <robh@kernel.org>
-Subject: [PATCH 2/3] of: fix sparse warning in of_pci_range_parser_one
-Date: Thu,  4 May 2017 13:00:34 -0500
-Message-ID: <20170504180035.12834-2-robh@kernel.org>
-References: <20170504180035.12834-1-robh@kernel.org>
-Return-path: <stable-owner@vger.kernel.org>
-In-Reply-To: <20170504180035.12834-1-robh@kernel.org>
-Sender: stable-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>, Mark Rutland <mark.rutland@arm.com>
-Cc: linux-kernel@vger.kernel.org, stable@vger.kernel.org
+From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Subject: [PATCH v3 0/3] Meson8 / Meson8b support for the meson_saradc driver
+Date: Thu,  4 May 2017 20:01:33 +0200
+Message-ID: <20170504180136.27025-1-martin.blumenstingl@googlemail.com>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-sparse gives the following warning for 'pci_space':
+The SAR ADC register layout seems to be mostly the same on older SoCs.
+Thus basically all functionality is already supported by the existing
+driver.
 
-../drivers/of/address.c:266:26: warning: incorrect type in assignment (different base types)
-../drivers/of/address.c:266:26:    expected unsigned int [unsigned] [usertype] pci_space
-../drivers/of/address.c:266:26:    got restricted __be32 const [usertype] <noident>
+There are two small differences though:
+- the adc_clk and adc_div clock are not provided by the clock-controller
+  on Meson8b. instead the SAR ADC provides an internal "adc_clk" (this
+  behavior is already supported by the driver and requires no changes)
+- the newer SoCs are using some register bits only the kernel or the
+  BL30 (bootloader) are using the SAR ADC. This is the main change of
+  this series: guarding all BL30 specific code with a corresponding
+  "if"-block.
 
-It appears that pci_space is only ever accessed on powerpc, so the endian
-swap is often not needed.
+This also adds a new DT binding for the SAR ADC in Meson8 and Meson8b
+because the driver has to specify (for this older version) that there's
+no BL30 integration available (and these register bits should not be
+touched).
 
-Cc: stable@vger.kernel.org
-Signed-off-by: Rob Herring <robh@kernel.org>
----
- drivers/of/address.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/of/address.c b/drivers/of/address.c
-index 02b2903fe9d2..72914cdfce2a 100644
---- a/drivers/of/address.c
-+++ b/drivers/of/address.c
-@@ -263,7 +263,7 @@ struct of_pci_range *of_pci_range_parser_one(struct of_pci_range_parser *parser,
- 	if (!parser->range || parser->range + parser->np > parser->end)
- 		return NULL;
- 
--	range->pci_space = parser->range[0];
-+	range->pci_space = be32_to_cpup(parser->range);
- 	range->flags = of_bus_pci_get_flags(parser->range);
- 	range->pci_addr = of_read_number(parser->range + 1, ns);
- 	range->cpu_addr = of_translate_address(parser->node,
+Changes since v2 at [1]:
+- re-ordered patches so patch #1 now adds the "static" modifier to the
+  existing meson_sar_adc_data instances (was patch #3, now patch #1)
+- dropped the "Documentation: " prefix from the devicetree
+  documentation patch (patch #2)
+- added Rob's ACK to the devicetree Documentation patch (patch #2)
+- fixed a copy-and-paste error in the actual driver change (both,
+  in the commit message where I claimed that a of_device_id was only
+  added for Meson8b as well as in the driver code itself where the Meson8
+  meson_sar_adc_data.name was "meson-meson8b-saradc")
+
+Changes since v1 at [0]:
+- switched to bool data-type for has_bl30_integration
+- also added a "compatible" for Meson8 SoCs (the ADC driver from
+  Amlogic's GPL kernel sources handles Meson8 and Meson8b identical)
+- added patch #3 to constify some structs (there were supposed to be
+  const from the very beginning)
+
+
+[0] http://lists.infradead.org/pipermail/linux-amlogic/2017-March/003081.html
+[1] http://lists.infradead.org/pipermail/linux-amlogic/2017-April/003394.html
+
+Martin Blumenstingl (3):
+  iio: adc: meson-saradc: mark all meson_sar_adc_data static and const
+  dt-bindings: iio: adc: add Meson8 and Meson8b support
+  iio: adc: meson-saradc: add Meson8b SoC compatibility
+
+ .../bindings/iio/adc/amlogic,meson-saradc.txt      |  2 +
+ drivers/iio/adc/meson_saradc.c                     | 86 +++++++++++++++-------
+ 2 files changed, 61 insertions(+), 27 deletions(-)
+
 -- 
-2.11.0
+2.12.2
