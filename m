@@ -1,119 +1,72 @@
-From: Stefan Agner <stefan@agner.ch>
-Subject: Re: [PATCH v2 4/5] ARM: dts: imx7: add GPMI NAND
-Date: Thu, 04 May 2017 14:50:56 -0700
-Message-ID: <48b5c543e713f9597b67a39a51ffd521@agner.ch>
-References: <20170422012338.4635-1-stefan@agner.ch>
- <20170422012338.4635-5-stefan@agner.ch>
- <c66ca9c8-2a9f-8938-7a70-7f9dfe763457@nxp.com>
+From: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
+Subject: Re: [RFC 0/3] Document bindings for camera modules and associated
+ flash devices
+Date: Fri, 5 May 2017 00:01:34 +0200
+Message-ID: <20170504220134.GA15551@amd>
+References: <1493720749-31509-1-git-send-email-sakari.ailus@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <c66ca9c8-2a9f-8938-7a70-7f9dfe763457@nxp.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Han Xu <han.xu@nxp.com>
-Cc: mark.rutland@arm.com, boris.brezillon@free-electrons.com, fabio.estevam@freescale.com, devicetree@vger.kernel.org, richard@nod.at, linux-kernel@vger.kernel.org, marek.vasut@gmail.com, robh+dt@kernel.org, linux-mtd@lists.infradead.org, kernel@pengutronix.de, shawnguo@kernel.org, cyrille.pitchen@atmel.com, computersforpeace@gmail.com, dwmw2@infradead.org, linux-arm-kernel@lists.infradead.org, "LW@KARO-electronics.de" <LW@karo-electronics.de>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="liOOAslEiF7prFVr"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1493720749-31509-1-git-send-email-sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 2017-05-04 12:13, Han Xu wrote:
-> On 04/21/2017 08:23 PM, Stefan Agner wrote:
->> Add i.MX 7 GPMI NAND module.
->>
->> Signed-off-by: Stefan Agner <stefan@agner.ch>
->> ---
->>   arch/arm/boot/dts/imx7s.dtsi | 31 +++++++++++++++++++++++++++++++
->>   1 file changed, 31 insertions(+)
->>
->> diff --git a/arch/arm/boot/dts/imx7s.dtsi b/arch/arm/boot/dts/imx7s.dtsi
->> index 843eb379e1ea..9645257638d4 100644
->> --- a/arch/arm/boot/dts/imx7s.dtsi
->> +++ b/arch/arm/boot/dts/imx7s.dtsi
->> @@ -995,5 +995,36 @@
->>   				status = "disabled";
->>   			};
->>   		};
->> +
->> +		dma_apbh: dma-apbh@33000000 {
->> +			compatible = "fsl,imx7d-dma-apbh", "fsl,imx28-dma-apbh";
->> +			reg = <0x33000000 0x2000>;
->> +			interrupts = <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>,
->> +				     <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>,
->> +				     <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>,
->> +				     <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>;
->> +			interrupt-names = "gpmi0", "gpmi1", "gpmi2", "gpmi3";
->> +			#dma-cells = <1>;
->> +			dma-channels = <4>;
->> +			clocks = <&clks IMX7D_NAND_USDHC_BUS_ROOT_CLK>,
->> +				<&clks IMX7D_NAND_ROOT_CLK>;
->> +			clock-names = "dma_apbh_bch", "dma_apbh_io";
->> +		};
-> Do you need some patches to enable all clks for APBH DMA? Refer to 
-> https://patchwork.ozlabs.org/patch/551967/
-> 
 
-Oh I see, with the current code and this device tree we actually only
-enable the first clock... But it seems to work in practice...
+--liOOAslEiF7prFVr
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-What is interesting, the chapter 5.2.5 System Clocks only describes
-APBHDMA, and no GPMI module.
+Hi!
 
-Chapter 9.4 about APBH-Bridge-DMA bridge only specifies "hclk" as clock
-sources.
+> This RFC patchset documents properties commonly required by camera modules
+> and associated camera flash devices.
+>=20
+> The camera module is essentially a package consisting of an image sensor,
+> a lens, possibly a voice coil to move the lens and a number of other
+> things that at least the drivers need not to know of. All the devices in a
+> camera module are declared separately in the system and as such the fact
+> that they come in a single package isn't generally very useful to driver
+> software.
+>=20
+> I'm sending the set as RFC as there's no driver implementation, and a
+> dependency to the V4L2 async changes:
+>=20
+> <URL:http://www.spinics.net/lists/linux-media/msg114915.html>
 
-When looking at the table in chapter 5.2.5, hclk is
-NAND_USDHC_BUS_CLK_ROOT
+For the series,
 
-Module    Syste Module Clock   Clock Root
-APBHDMA   apbhdma.hclk         NAND_USDHC_BUS_CLK_ROOT
- 
-So my guess is that the actual DMA controller should work fine with
-IMX7D_NAND_USDHC_BUS_ROOT_CLK only. It is only the GPMI module which
-needs the NAND_ROOT_CLK. My guess is since the APBHDMA controller is
-only used for GPMI these days, it has been combined in one module in the
-table in chapter 5.2.5.
+Acked-by: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
 
-So we could actually only specify:
+In 3/3, I'd avoid using strange characters in the changelog. Just
+write it as I2C... If someone ever tries to grep the changelogs, this
+could bite them.
 
-clocks = <&clks IMX7D_NAND_USDHC_BUS_ROOT_CLK>;
+Thanks,
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
 
-Tested with this and NAND seems to work fine.
+--liOOAslEiF7prFVr
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-Also tested accessing APBHDMA register in U-Boot with
-IMX7D_NAND_ROOT_CLK disabled, it worked fine.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
-What do you think? Should we go with this?
+iEYEARECAAYFAlkLpL4ACgkQMOfwapXb+vK1KgCeJDunO3aub0fKSYL+U/4LT+Ub
+njcAn0JO8cgIqaLpr7j1/+ccQahBioEM
+=8ZRh
+-----END PGP SIGNATURE-----
 
-This probably even saves power since GPMI's runtime clock management
-disables IMX7D_NAND_ROOT_CLK when NAND is idle (according to the
-nand_root_clk counter in clk_summary and the root clock register at
-0x3038AA00).
-
+--liOOAslEiF7prFVr--
 --
-Stefan
-
->> +
->> +		gpmi: gpmi-nand@33002000{
->> +			compatible = "fsl,imx7d-gpmi-nand";
->> +			#address-cells = <1>;
->> +			#size-cells = <1>;
->> +			reg = <0x33002000 0x2000>, <0x33004000 0x4000>;
->> +			reg-names = "gpmi-nand", "bch";
->> +			interrupts = <GIC_SPI 14 IRQ_TYPE_LEVEL_HIGH>;
->> +			interrupt-names = "bch";
->> +			clocks = <&clks IMX7D_NAND_ROOT_CLK>,
->> +				<&clks IMX7D_NAND_USDHC_BUS_ROOT_CLK>;
->> +			clock-names = "gpmi_io", "gpmi_bch_apb";
->> +			dmas = <&dma_apbh 0>;
->> +			dma-names = "rx-tx";
->> +			status = "disabled";
->> +		};
->>   	};
->>   };
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
