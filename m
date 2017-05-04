@@ -1,196 +1,127 @@
-From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH v2 2/2] clk: meson: gxbb: remove the "cpu_clk" from the GXBB and GXL driver
-Date: Thu,  4 May 2017 20:19:20 +0200
-Message-ID: <20170504181920.21880-3-martin.blumenstingl@googlemail.com>
-References: <20170401125519.7339-1-martin.blumenstingl@googlemail.com>
- <20170504181920.21880-1-martin.blumenstingl@googlemail.com>
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <20170504181920.21880-1-martin.blumenstingl@googlemail.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: linux-amlogic@lists.infradead.org, jbrunet@baylibre.com, narmstrong@baylibre.com, linux-clk@vger.kernel.org
-Cc: devicetree@vger.kernel.org, khilman@baylibre.com, carlo@caione.org, sboyd@codeaurora.org, mturquette@baylibre.com, linux-arm-kernel@lists.infradead.org, Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+From: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 2/3] iommu/pci: reserve iova for PCI masters
+Date: Thu, 4 May 2017 19:20:19 +0100
+Message-ID: <0c9a6b09-139c-df49-cf73-6a3935a6aacd@arm.com>
+References: <1493786795-28153-1-git-send-email-oza.oza@broadcom.com>
+ <1493786795-28153-2-git-send-email-oza.oza@broadcom.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1493786795-28153-2-git-send-email-oza.oza-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Oza Pawandeep <oza.oza-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Cc: Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Oza Pawandeep <oza.pawandeep-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-It seems that the "cpu_clk" was carried over from the meson8b clock
-controller driver. On Meson GX (GXBB/GXL/GXM) the registers which are
-used by the cpu_clk have a different purpose (in other words: they don't
-control the CPU clock anymore). HHI_SYS_CPU_CLK_CNTL1 bits 31:24 are
-reserved according to the public S905 datasheet, while bit 23 is the
-"A53_trace_clk_DIS" gate (which according to the datasheet should only
-be used in case a silicon bug is discovered) and bits 22:20 are a
-divider (A53_trace_clk). The meson clk-cpu code however expects that
-bits 28:20 are reserved for a divider (according to the public S805
-datasheet this "SCALE_DIV: This value represents an N+1 divider of the
-input clock.").
+On 03/05/17 05:46, Oza Pawandeep wrote:
+> this patch reserves the iova for PCI masters.
+> ARM64 based SOCs may have scattered memory banks.
+> such as iproc based SOC has
+> 
+> <0x00000000 0x80000000 0x0 0x80000000>, /* 2G @ 2G */
+> <0x00000008 0x80000000 0x3 0x80000000>, /* 14G @ 34G */
+> <0x00000090 0x00000000 0x4 0x00000000>, /* 16G @ 576G */
+> <0x000000a0 0x00000000 0x4 0x00000000>; /* 16G @ 640G */
+> 
+> but incoming PCI transcation addressing capability is limited
+> by host bridge, for example if max incoming window capability
+> is 512 GB, then 0x00000090 and 0x000000a0 will fall beyond it.
+> 
+> to address this problem, iommu has to avoid allocating iovas which
+> are reserved. which inturn does not allocate iova if it falls into hole.
 
-The CPU clock on Meson GX SoCs is provided by the SCPI DVFS clock
-driver instead. Two examples from a Meson GXL S905X SoC:
-- vcpu (SCPI DVFS clock 0) rate: 1000000000 / cpu_clk rate: 708000000
-- vcpu (SCPI DVFS clock 0) rate: 1512000000 / cpu_clk rate: 708000000
+I don't necessarily disagree with doing this, as we could do with facing
+up to the issue of discontiguous DMA ranges in particular (I too have a
+platform with this problem), but I'm still not overly keen on pulling DT
+specifics into this layer. More than that, though, if we are going to do
+it, then we should do it for all devices with a restrictive
+"dma-ranges", not just PCI ones.
 
-Unfortunately the CLKID_CPUCLK was already exported (but is currently
-not used) to DT. Due to the removal of this clock definition there is
-now a hole in the clk_hw_onecell_data (which is not a problem because
-this case is already handled in gxbb_clkc_probe).
+> Bug: SOC-5216
+> Change-Id: Icbfc99a045d730be143fef427098c937b9d46353
+> Signed-off-by: Oza Pawandeep <oza.oza-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+> Reviewed-on: http://gerrit-ccxsw.broadcom.net/40760
+> Reviewed-by: vpx_checkpatch status <vpx_checkpatch-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+> Reviewed-by: CCXSW <ccxswbuild-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+> Tested-by: vpx_autobuild status <vpx_autobuild-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+> Tested-by: vpx_smoketest status <vpx_smoketest-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+> Tested-by: CCXSW <ccxswbuild-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+> Reviewed-by: Scott Branden <scott.branden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+> 
+> diff --git a/drivers/iommu/dma-iommu.c b/drivers/iommu/dma-iommu.c
+> index 48d36ce..08764b0 100644
+> --- a/drivers/iommu/dma-iommu.c
+> +++ b/drivers/iommu/dma-iommu.c
+> @@ -27,6 +27,7 @@
+>  #include <linux/iova.h>
+>  #include <linux/irq.h>
+>  #include <linux/mm.h>
+> +#include <linux/of_pci.h>
+>  #include <linux/pci.h>
+>  #include <linux/scatterlist.h>
+>  #include <linux/vmalloc.h>
+> @@ -171,8 +172,12 @@ static void iova_reserve_pci_windows(struct pci_dev *dev,
+>  		struct iova_domain *iovad)
+>  {
+>  	struct pci_host_bridge *bridge = pci_find_host_bridge(dev->bus);
+> +	struct device_node *np = bridge->dev.parent->of_node;
+>  	struct resource_entry *window;
+>  	unsigned long lo, hi;
+> +	int ret;
+> +	dma_addr_t tmp_dma_addr = 0, dma_addr;
+> +	LIST_HEAD(res);
+>  
+>  	resource_list_for_each_entry(window, &bridge->windows) {
+>  		if (resource_type(window->res) != IORESOURCE_MEM &&
+> @@ -183,6 +188,36 @@ static void iova_reserve_pci_windows(struct pci_dev *dev,
+>  		hi = iova_pfn(iovad, window->res->end - window->offset);
+>  		reserve_iova(iovad, lo, hi);
+>  	}
+> +
+> +	/* PCI inbound memory reservation. */
+> +	ret = of_pci_get_dma_ranges(np, &res);
+> +	if (!ret) {
+> +		resource_list_for_each_entry(window, &res) {
+> +			struct resource *res_dma = window->res;
+> +
+> +			dma_addr = res_dma->start - window->offset;
+> +			if (tmp_dma_addr > dma_addr) {
+> +				pr_warn("PCI: failed to reserve iovas; ranges should be sorted\n");
 
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
----
- drivers/clk/meson/gxbb.c | 64 +++---------------------------------------------
- drivers/clk/meson/gxbb.h |  2 +-
- 2 files changed, 4 insertions(+), 62 deletions(-)
+I don't see anything in the DT spec about the entries having to be
+sorted, and it's not exactly impossible to sort a list if you need it so
+(and if I'm being really pedantic, one could still trigger this with a
+list that *is* sorted, only by different criteria).
 
-diff --git a/drivers/clk/meson/gxbb.c b/drivers/clk/meson/gxbb.c
-index 75197664a7ee..25d05fc2d045 100644
---- a/drivers/clk/meson/gxbb.c
-+++ b/drivers/clk/meson/gxbb.c
-@@ -278,20 +278,6 @@ static const struct pll_rate_table gxl_gp0_pll_rate_table[] = {
- 	{ /* sentinel */ },
- };
- 
--static const struct clk_div_table cpu_div_table[] = {
--	{ .val = 1, .div = 1 },
--	{ .val = 2, .div = 2 },
--	{ .val = 3, .div = 3 },
--	{ .val = 2, .div = 4 },
--	{ .val = 3, .div = 6 },
--	{ .val = 4, .div = 8 },
--	{ .val = 5, .div = 10 },
--	{ .val = 6, .div = 12 },
--	{ .val = 7, .div = 14 },
--	{ .val = 8, .div = 16 },
--	{ /* sentinel */ },
--};
--
- static struct meson_clk_pll gxbb_fixed_pll = {
- 	.m = {
- 		.reg_off = HHI_MPLL_CNTL,
-@@ -612,21 +598,10 @@ static struct meson_clk_mpll gxbb_mpll2 = {
- };
- 
- /*
-- * FIXME cpu clocks and the legacy composite clocks (e.g. clk81) are both PLL
-- * post-dividers and should be modeled with their respective PLLs via the
-- * forthcoming coordinated clock rates feature
-+ * FIXME The legacy composite clocks (e.g. clk81) are both PLL post-dividers
-+ * and should be modeled with their respective PLLs via the forthcoming
-+ * coordinated clock rates feature
-  */
--static struct meson_clk_cpu gxbb_cpu_clk = {
--	.reg_off = HHI_SYS_CPU_CLK_CNTL1,
--	.div_table = cpu_div_table,
--	.clk_nb.notifier_call = meson_clk_cpu_notifier_cb,
--	.hw.init = &(struct clk_init_data){
--		.name = "cpu_clk",
--		.ops = &meson_clk_cpu_ops,
--		.parent_names = (const char *[]){ "sys_pll" },
--		.num_parents = 1,
--	},
--};
- 
- static u32 mux_table_clk81[]	= { 6, 5, 7 };
- 
-@@ -939,7 +914,6 @@ static MESON_GATE(gxbb_ao_i2c, HHI_GCLK_AO, 4);
- static struct clk_hw_onecell_data gxbb_hw_onecell_data = {
- 	.hws = {
- 		[CLKID_SYS_PLL]		    = &gxbb_sys_pll.hw,
--		[CLKID_CPUCLK]		    = &gxbb_cpu_clk.hw,
- 		[CLKID_HDMI_PLL]	    = &gxbb_hdmi_pll.hw,
- 		[CLKID_FIXED_PLL]	    = &gxbb_fixed_pll.hw,
- 		[CLKID_FCLK_DIV2]	    = &gxbb_fclk_div2.hw,
-@@ -1052,7 +1026,6 @@ static struct clk_hw_onecell_data gxbb_hw_onecell_data = {
- static struct clk_hw_onecell_data gxl_hw_onecell_data = {
- 	.hws = {
- 		[CLKID_SYS_PLL]		    = &gxbb_sys_pll.hw,
--		[CLKID_CPUCLK]		    = &gxbb_cpu_clk.hw,
- 		[CLKID_HDMI_PLL]	    = &gxbb_hdmi_pll.hw,
- 		[CLKID_FIXED_PLL]	    = &gxbb_fixed_pll.hw,
- 		[CLKID_FCLK_DIV2]	    = &gxbb_fclk_div2.hw,
-@@ -1298,7 +1271,6 @@ struct clkc_data {
- 	unsigned int clk_muxes_count;
- 	struct clk_divider *const *clk_dividers;
- 	unsigned int clk_dividers_count;
--	struct meson_clk_cpu *cpu_clk;
- 	struct clk_hw_onecell_data *hw_onecell_data;
- };
- 
-@@ -1313,7 +1285,6 @@ static const struct clkc_data gxbb_clkc_data = {
- 	.clk_muxes_count = ARRAY_SIZE(gxbb_clk_muxes),
- 	.clk_dividers = gxbb_clk_dividers,
- 	.clk_dividers_count = ARRAY_SIZE(gxbb_clk_dividers),
--	.cpu_clk = &gxbb_cpu_clk,
- 	.hw_onecell_data = &gxbb_hw_onecell_data,
- };
- 
-@@ -1328,7 +1299,6 @@ static const struct clkc_data gxl_clkc_data = {
- 	.clk_muxes_count = ARRAY_SIZE(gxbb_clk_muxes),
- 	.clk_dividers = gxbb_clk_dividers,
- 	.clk_dividers_count = ARRAY_SIZE(gxbb_clk_dividers),
--	.cpu_clk = &gxbb_cpu_clk,
- 	.hw_onecell_data = &gxl_hw_onecell_data,
- };
- 
-@@ -1343,8 +1313,6 @@ static int gxbb_clkc_probe(struct platform_device *pdev)
- 	const struct clkc_data *clkc_data;
- 	void __iomem *clk_base;
- 	int ret, clkid, i;
--	struct clk_hw *parent_hw;
--	struct clk *parent_clk;
- 	struct device *dev = &pdev->dev;
- 
- 	clkc_data = of_device_get_match_data(&pdev->dev);
-@@ -1366,9 +1334,6 @@ static int gxbb_clkc_probe(struct platform_device *pdev)
- 	for (i = 0; i < clkc_data->clk_mplls_count; i++)
- 		clkc_data->clk_mplls[i]->base = clk_base;
- 
--	/* Populate the base address for CPU clk */
--	clkc_data->cpu_clk->base = clk_base;
--
- 	/* Populate base address for gates */
- 	for (i = 0; i < clkc_data->clk_gates_count; i++)
- 		clkc_data->clk_gates[i]->reg = clk_base +
-@@ -1394,29 +1359,6 @@ static int gxbb_clkc_probe(struct platform_device *pdev)
- 			goto iounmap;
- 	}
- 
--	/*
--	 * Register CPU clk notifier
--	 *
--	 * FIXME this is wrong for a lot of reasons. First, the muxes should be
--	 * struct clk_hw objects. Second, we shouldn't program the muxes in
--	 * notifier handlers. The tricky programming sequence will be handled
--	 * by the forthcoming coordinated clock rates mechanism once that
--	 * feature is released.
--	 *
--	 * Furthermore, looking up the parent this way is terrible. At some
--	 * point we will stop allocating a default struct clk when registering
--	 * a new clk_hw, and this hack will no longer work. Releasing the ccr
--	 * feature before that time solves the problem :-)
--	 */
--	parent_hw = clk_hw_get_parent(&clkc_data->cpu_clk->hw);
--	parent_clk = parent_hw->clk;
--	ret = clk_notifier_register(parent_clk, &clkc_data->cpu_clk->clk_nb);
--	if (ret) {
--		pr_err("%s: failed to register clock notifier for cpu_clk\n",
--				__func__);
--		goto iounmap;
--	}
--
- 	return of_clk_add_hw_provider(dev->of_node, of_clk_hw_onecell_get,
- 			clkc_data->hw_onecell_data);
- 
-diff --git a/drivers/clk/meson/gxbb.h b/drivers/clk/meson/gxbb.h
-index c15bbce8c585..e5ed71e6353a 100644
---- a/drivers/clk/meson/gxbb.h
-+++ b/drivers/clk/meson/gxbb.h
-@@ -171,7 +171,7 @@
-  * to be exposed to client nodes in DT: include/dt-bindings/clock/gxbb-clkc.h
-  */
- #define CLKID_SYS_PLL		  0
--#define CLKID_CPUCLK		  1
-+/* ID 1 is unused (it was used by the non-existing CLKID_CPUCLK before) */
- /* CLKID_HDMI_PLL */
- #define CLKID_FIXED_PLL		  3
- /* CLKID_FCLK_DIV2 */
--- 
-2.12.2
+Robin.
 
+> +				return;
+> +			}
+> +			if (tmp_dma_addr != dma_addr) {
+> +				lo = iova_pfn(iovad, tmp_dma_addr);
+> +				hi = iova_pfn(iovad, dma_addr - 1);
+> +				reserve_iova(iovad, lo, hi);
+> +			}
+> +			tmp_dma_addr = window->res->end - window->offset;
+> +		}
+> +		/*
+> +		 * the last dma-range should honour based on the
+> +		 * 32/64-bit dma addresses.
+> +		 */
+> +		if (tmp_dma_addr < DMA_BIT_MASK(sizeof(dma_addr_t) * 8)) {
+> +			lo = iova_pfn(iovad, tmp_dma_addr);
+> +			hi = iova_pfn(iovad,
+> +				      DMA_BIT_MASK(sizeof(dma_addr_t) * 8) - 1);
+> +			reserve_iova(iovad, lo, hi);
+> +		}
+> +	}
+>  }
+>  
+>  /**
+> 
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
