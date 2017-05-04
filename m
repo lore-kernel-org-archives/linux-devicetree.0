@@ -1,151 +1,100 @@
-From: Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 1/4] Docs: dt: document qcom iommu bindings
-Date: Thu,  4 May 2017 09:34:33 -0400
-Message-ID: <20170504133436.24288-2-robdclark@gmail.com>
-References: <20170504133436.24288-1-robdclark@gmail.com>
+From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: [PATCH v3 1/2] [media] dt-bindings: Add bindings for video-multiplexer device
+Date: Thu,  4 May 2017 15:38:56 +0200
+Message-ID: <1493905137-27051-1-git-send-email-p.zabel@pengutronix.de>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170504133436.24288-1-robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Cc: linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Sricharan <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stanimir Varbanov <stanimir.varbanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>, Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Vladimir Zapolskiy <vladimir_zapolskiy-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Steve Longerbeam <steve_longerbeam-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Signed-off-by: Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- .../devicetree/bindings/iommu/qcom,iommu.txt       | 121 +++++++++++++++++++++
- 1 file changed, 121 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iommu/qcom,iommu.txt
+Add bindings documentation for the video multiplexer device.
 
-diff --git a/Documentation/devicetree/bindings/iommu/qcom,iommu.txt b/Documentation/devicetree/bindings/iommu/qcom,iommu.txt
+Signed-off-by: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Signed-off-by: Steve Longerbeam <steve_longerbeam-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+Acked-by: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+Acked-by: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+---
+No changes since v2 [1].
+
+This was previously sent as part of Steve's i.MX media series [2].
+
+[1] https://patchwork.kernel.org/patch/9708235/
+[2] https://patchwork.kernel.org/patch/9647951/
+---
+ .../devicetree/bindings/media/video-mux.txt        | 60 ++++++++++++++++++++++
+ 1 file changed, 60 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/video-mux.txt
+
+diff --git a/Documentation/devicetree/bindings/media/video-mux.txt b/Documentation/devicetree/bindings/media/video-mux.txt
 new file mode 100644
-index 0000000..0d50f84
+index 0000000000000..63b9dc913e456
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/iommu/qcom,iommu.txt
-@@ -0,0 +1,121 @@
-+* QCOM IOMMU v1 Implementation
++++ b/Documentation/devicetree/bindings/media/video-mux.txt
+@@ -0,0 +1,60 @@
++Video Multiplexer
++=================
 +
-+Qualcomm "B" family devices which are not compatible with arm-smmu have
-+a similar looking IOMMU but without access to the global register space,
-+and optionally requiring additional configuration to route context irqs
-+to non-secure vs secure interrupt line.
++Video multiplexers allow to select between multiple input ports. Video received
++on the active input port is passed through to the output port. Muxes described
++by this binding are controlled by a multiplexer controller that is described by
++the bindings in Documentation/devicetree/bindings/mux/mux-controller.txt
 +
-+** Required properties:
++Required properties:
++- compatible : should be "video-mux"
++- mux-controls : mux controller node to use for operating the mux
++- #address-cells: should be <1>
++- #size-cells: should be <0>
++- port@*: at least three port nodes containing endpoints connecting to the
++  source and sink devices according to of_graph bindings. The last port is
++  the output port, all others are inputs.
 +
-+- compatible       : Should be one of:
++Optionally, #address-cells, #size-cells, and port nodes can be grouped under a
++ports node as described in Documentation/devicetree/bindings/graph.txt.
 +
-+                        "qcom,msm8916-iommu"
++Example:
 +
-+                     Followed by "qcom,msm-iommu-v1".
++	mux: mux-controller {
++		compatible = "gpio-mux";
++		#mux-control-cells = <0>;
 +
-+- clock-names      : Should be a pair of "iface" (required for IOMMUs
-+                     register group access) and "bus" (required for
-+                     the IOMMUs underlying bus access).
++		mux-gpios = <&gpio1 15 GPIO_ACTIVE_HIGH>;
++	};
 +
-+- clocks           : Phandles for respective clocks described by
-+                     clock-names.
-+
-+- #address-cells   : must be 1.
-+
-+- #size-cells      : must be 1.
-+
-+- #iommu-cells     : Must be 1.
-+
-+- ranges           : Base address and size of the iommu context banks.
-+
-+- qcom,iommu-secure-id  : secure-id.
-+
-+- List of sub-nodes, one per translation context bank.  Each sub-node
-+  has the following required properties:
-+
-+  - compatible     : Should be one of:
-+        - "qcom,msm-iommu-v1-ns"  : non-secure context bank
-+        - "qcom,msm-iommu-v1-sec" : secure context bank
-+  - reg            : Base address and size of context bank within the iommu
-+  - interrupts     : The context fault irq.
-+
-+** Optional properties:
-+
-+- reg              : Base address and size of the SMMU local base, should
-+                     be only specified if the iommu requires configuration
-+                     for routing of context bank irq's to secure vs non-
-+                     secure lines.  (Ie. if the iommu contains secure
-+                     context banks)
-+
-+
-+** Examples:
-+
-+	apps_iommu: iommu@1e20000 {
++	video-mux {
++		compatible = "video-mux";
++		mux-controls = <&mux>;
 +		#address-cells = <1>;
-+		#size-cells = <1>;
-+		#iommu-cells = <1>;
-+		compatible = "qcom,msm8916-iommu", "qcom,msm-iommu-v1";
-+		ranges = <0 0x1e20000 0x40000>;
-+		reg = <0x1ef0000 0x3000>;
-+		clocks = <&gcc GCC_SMMU_CFG_CLK>,
-+			 <&gcc GCC_APSS_TCU_CLK>;
-+		clock-names = "iface", "bus";
-+		qcom,iommu-secure-id = <17>;
++		#size-cells = <0>;
 +
-+		// mdp_0:
-+		iommu-ctx@4000 {
-+			compatible = "qcom,msm-iommu-v1-ns";
-+			reg = <0x4000 0x1000>;
-+			interrupts = <GIC_SPI 70 0>;
++		port@0 {
++			reg = <0>;
++
++			mux_in0: endpoint {
++				remote-endpoint = <&video_source0_out>;
++			};
 +		};
 +
-+		// venus_ns:
-+		iommu-ctx@5000 {
-+			compatible = "qcom,msm-iommu-v1-sec";
-+			reg = <0x5000 0x1000>;
-+			interrupts = <GIC_SPI 70 0>;
-+		};
-+	};
++		port@1 {
++			reg = <1>;
 +
-+	gpu_iommu: iommu@1f08000 {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		#iommu-cells = <1>;
-+		compatible = "qcom,msm8916-iommu", "qcom,msm-iommu-v1";
-+		ranges = <0 0x1f08000 0x10000>;
-+		clocks = <&gcc GCC_SMMU_CFG_CLK>,
-+			 <&gcc GCC_GFX_TCU_CLK>;
-+		clock-names = "iface", "bus";
-+		qcom,iommu-secure-id = <18>;
-+
-+		// gfx3d_user:
-+		iommu-ctx@1f09000 {
-+			compatible = "qcom,msm-iommu-v1-ns";
-+			reg = <0x1000 0x1000>;
-+			interrupts = <GIC_SPI 241 0>;
++			mux_in1: endpoint {
++				remote-endpoint = <&video_source1_out>;
++			};
 +		};
 +
-+		// gfx3d_priv:
-+		iommu-ctx@1f0a000 {
-+			compatible = "qcom,msm-iommu-v1-ns";
-+			reg = <0x2000 0x1000>;
-+			interrupts = <GIC_SPI 242 0>;
++		port@2 {
++			reg = <2>;
++
++			mux_out: endpoint {
++				remote-endpoint = <&capture_interface_in>;
++			};
 +		};
 +	};
-+
-+	...
-+
-+	venus: video-codec@1d00000 {
-+		...
-+		iommus = <&apps_iommu 5>;
-+	};
-+
-+	mdp: mdp@1a01000 {
-+		...
-+		iommus = <&apps_iommu 4>;
-+	};
-+
-+	gpu@01c00000 {
-+		...
-+		iommus = <&gpu_iommu 1>, <&gpu_iommu 2>;
-+	};
++};
 -- 
-2.9.3
+2.11.0
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
