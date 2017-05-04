@@ -1,116 +1,124 @@
-From: Jassi Brar <jassisinghbrar@gmail.com>
-Subject: Re: [PATCH v3 2/4] soc: qcom: Introduce APCS IPC driver
-Date: Thu, 4 May 2017 13:24:04 +0530
-Message-ID: <CABb+yY1YJ6cNG0UKahsnri3A4izdD3ZBpY6LLCHFkc=O3c0TcA@mail.gmail.com>
-References: <20170503052929.17422-1-bjorn.andersson@linaro.org>
- <20170503052929.17422-2-bjorn.andersson@linaro.org> <c9b86ecfa6b84ae994da6c30d2840bbf@SFHDAG7NODE2.st.com>
- <CABb+yY03NHBEui+OtagpTD4bm2yxoahEiciBG99gG2jrVGjpKQ@mail.gmail.com> <20170504054516.GB15143@minitux>
+From: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCHv2 1/3] dt-bindings: display: Intel FPGA VIP drm driver
+ Devicetree bindings
+Date: Thu, 4 May 2017 09:55:47 +0200
+Message-ID: <803710eb-bcce-3d89-e306-5b7433f9962d@baylibre.com>
+References: <1493086006-4392-1-git-send-email-hean.loong.ong@intel.com>
+ <1493086006-4392-2-git-send-email-hean.loong.ong@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <20170504054516.GB15143@minitux>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Loic PALLARDY <loic.pallardy@st.com>, Andy Gross <andy.gross@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ohad Ben-Cohen <ohad@wizery.com>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "linux-soc@vger.kernel.org" <linux-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-remoteproc@vger.kernel.org" <linux-remoteproc@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1493086006-4392-2-git-send-email-hean.loong.ong-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: hean.loong.ong-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, daniel.vetter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tien.hock.loh-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, Ong-CC+yJ3UmIYqDUpFQwHEjaQ@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 4, 2017 at 11:15 AM, Bjorn Andersson
-<bjorn.andersson@linaro.org> wrote:
-> On Wed 03 May 02:55 PDT 2017, Jassi Brar wrote:
->
->> Loic, thanks for adding me.
->>
->> On Wed, May 3, 2017 at 2:58 PM, Loic PALLARDY <loic.pallardy@st.com> wrote:
->> >
->> >
->> >> -----Original Message-----
->> >> From: linux-remoteproc-owner@vger.kernel.org [mailto:linux-remoteproc-
->> >> owner@vger.kernel.org] On Behalf Of Bjorn Andersson
->> >> Sent: Wednesday, May 03, 2017 7:29 AM
->> >> To: Andy Gross <andy.gross@linaro.org>; Rob Herring
->> >> <robh+dt@kernel.org>; Mark Rutland <mark.rutland@arm.com>; Ohad Ben-
->> >> Cohen <ohad@wizery.com>
->> >> Cc: linux-arm-msm@vger.kernel.org; linux-soc@vger.kernel.org;
->> >> devicetree@vger.kernel.org; linux-kernel@vger.kernel.org; linux-
->> >> remoteproc@vger.kernel.org
->> >> Subject: [PATCH v3 2/4] soc: qcom: Introduce APCS IPC driver
->> >>
->> >> This implements a driver that exposes the IPC bits found in the APCS Global
->> >> block in various Qualcomm platforms. The bits are used to signal inter-
->> >> processor communication signals from the application CPU to other masters.
->> >>
->> >> The driver implements the "doorbell" binding and could be used as basis for a
->> >> new Linux framework, if found useful outside Qualcomm.
->> >>
->> > Hi Bjorn,
->> >
->> > Even if Qualcom APCS IPC is limited, why don't you rely on existing mailbox framework.
->> > It is there to gather all IPC management under the same interface.
->> > No need to create a new one from my pov.
->> > If you don't provide message data, mailbox framework behaves as doorbell.
->> >
->> QCOM RPM reinvented the wheel for what mailbox framework already did,
->> despite my pointing it out =>
->> http://lkml.iu.edu/hypermail//linux/kernel/1406.2/03918.html
->>
->
-> The RPM interface works by writing various information in shared DRAM
-> and then invoking an interrupt on the remote processor.
->
-This is what _most_ platforms do, and they use mailbox framework. If
-mailbox framework doesn't suit RPM, then it doesn't suit most
-platforms that use it.
+On 04/25/2017 04:06 AM, hean.loong.ong-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org wrote:
+> From: "Ong, Hean Loong" <hean.loong.ong-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+> 
+> Device tree binding for Intel FPGA Video and Image
+> Processing Suite. The binding involved would be generated
+> from the Altera (Intel) Qsys system. The bindings would
+> set the max width, max height, buts per pixel and memory
+> port width. The device tree binding only supports the Intel
+> Arria10 devkit and its variants. Vendor name retained as
+> altr.
+> 
+> Signed-off-by: Ong, Hean Loong <hean.loong.ong-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+> ---
+> v2:
+> * Moved Device Tree bindings to Documentation/devicetree/bindings/display/
+> * Added vendor name altr, to description
+> ---
+>  .../devicetree/bindings/display/altr,vip-fb2.txt   | 30 ++++++++++++++++++++++
+>  1 file changed, 30 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/altr,vip-fb2.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/display/altr,vip-fb2.txt b/Documentation/devicetree/bindings/display/altr,vip-fb2.txt
+> new file mode 100644
+> index 0000000..bdffefb
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/altr,vip-fb2.txt
+> @@ -0,0 +1,30 @@
+> +Intel Video and Image Processing(VIP) Frame Buffer II bindings
+> +
+> +Supported hardware: Arria 10 and above with display port IP
+> +
 
-> My argumentation against using the mailbox framework for the RPM case
-> was that the message model is a software construct and doesn't fit the
-> mailbox framework.
->
-Mailbox framework works beneath protocol layer (software construct).
-As I said years ago, the h/w bits of the controller should be under
-mailbox api, while the message structures and signals are protocol
-specific and be in QCOM specific location.
+Hi,
+
+> +The drm driver for the Arria 10 devkit would require the display resolution
+> +and pixel information to be included as these values are generated based
+> +on the FPGA design that drives the video connector attached to the drm driver
+> +Information the FPGA video IP component can be acquired from
+> +https://www.altera.com/content/dam/altera-www/global/en_US/pdfs/literature/ug/ug_vip.pdf
+
+The bindings should not reference the driver, but only the hardware and the way it is configured
+and interconnected with the system.
+Please explicit that this is an IP component that can be configured with explicit limits on
+the display widths and heights and memory parameters.
+
+But you should also indicate over what this IP is connected and add a port connected to a connector
+node in case this ip is not used on a specific board like in [1] or [2] :
+
+"""
+Required nodes:
+
+The connections to the DU output video ports are modeled using the OF graph
+bindings specified in Documentation/devicetree/bindings/graph.txt.
+
+The following table lists for each supported model the port number
+corresponding to each DU output.
+
+		Port 0		Port1		Port2		Port3
+-----------------------------------------------------------------------------
+ R8A7779 (H1)	DPAD 0		DPAD 1		-		-
+"""
+
+You may also need to add a "Display Port" connector binding aswell along the HDMI, VGA, ....
+
+I know this targets an FPGA system, so you should explicit that in the description.
+
+> +Required properties:
+> +
+> +- compatible: "altr,vip-frame-buffer-2.0"
+
+You should also add model specific compatible strings for each supported FPGA devices.
+
+> +- reg: Physical base address and length of the framebuffer controller's
+> +  registers.
+> +- altr,max-width: The width of the framebuffer in pixels.
+> +- altr,max-height: The height of the framebuffer in pixels.
+> +- altr,bits-per-symbol: only "8" is currently supported
+> +- altr,mem-port-width = the bus width of the avalon master port on the frame reader
+
+What is the avalon master port ?
+Can you add a schema to explicit how this IP is connected to the system ?
+
+> +
+> +Example:
+> +
+> +	dp_0_frame_buf: vip@100000280 {
+> +			compatible = "altr,vip-frame-buffer-2.0";
+> +			reg = <0x00000001 0x00000280 0x00000040>;
+> +			altr,max-width = <1280>;
+> +			altr,max-height = <720>;
+> +			altr,bits-per-symbol = <8>;
+> +			altr,mem-port-width = <128>;
+> +	};
+> 
 
 
-> Before "inventing" the function for acquiring a handle to a doorbell I
-> did look at making this a mailbox controller, but as each mailbox
-> channel related to a single bit and 1 is the only value we'll ever write
-> it didn't feel like it matches the mailbox expectations. But as you seem
-> to object I'll attempt to rewrite it using the mailbox framework
-> instead.
->
-Yes, please. 1-bit messages are just a special case of N-bits messages
-that mailbox framework supports.
+[1] Documentation/devicetree/bindings/display/amlogic,meson-vpu.txt
+[2] Documentation/devicetree/bindings/display/renesas,du.txt
 
+Thanks,
 
-> But which one of these would be appropriate for a "mailbox channel" that
-> doesn't have any actual messages?
->
->   mbox_send_message(chan, NULL)
-> or
->   const int one = 1;
->   mbox_send_message(chan, (void*)&one);
->
-It depends upon your h/w.
-If each physical channel is hardwired to work on a predefined single
-bit, then the driver could do without that bit being explicitly
-passed.
-If a physical channel can be mapped onto any bit(s), then you do need
-to pass that info via mbox_send_message().
+Neil
 
-
->> The driver bypassed mailbox framework and was pushed via another tree.
->> Same is being attempted now, only now it is more expensive to switch
->> to generic mailbox framework having spent so much time on QCOM
->> specific implementation of controller and protocol drivers inside
->> drivers/soc/qcom/
->
-> I'm not sure I follow this, there's no extensive rework going on here -
-> all I'm trying to do is abstract the "writel(BIT(x), ipc_reg)" line of
-> the RPM driver, because it's being used in other clients as well.
->
-No, I meant ideally RPM should have used mailbox api for the
-controller programming, but moving to that now will be expensive
-because you already developed huge code base around QCOM specific
-mailbox implementation.
-
-Regards.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
