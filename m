@@ -1,49 +1,285 @@
-From: Eugen Hristev <eugen.hristev@microchip.com>
-Subject: [PATCH v2 3/3] iio: tools: generic_buffer: increase trigger length
-Date: Thu, 4 May 2017 15:13:20 +0300
-Message-ID: <1493900000-26220-4-git-send-email-eugen.hristev@microchip.com>
-References: <1493900000-26220-1-git-send-email-eugen.hristev@microchip.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v6 02/13] clk: sunxi-ng: add support for DE2 CCU
+Date: Thu, 4 May 2017 14:50:55 +0200
+Message-ID: <20170504125055.uvcl4ov4bxzis4um@lukather>
+References: <20170504114858.9008-1-icenowy@aosc.io>
+ <20170504114858.9008-3-icenowy@aosc.io>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1493900000-26220-1-git-send-email-eugen.hristev@microchip.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: nicolas.ferre@microchip.com, jic23@kernel.org, alexandre.belloni@free-electrons.com, linux-iio@vger.kernel.org, lars@metafoo.de, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: eugen.hristev@microchip.com, ludovic.desroches@microchip.com
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="njmu7voz264w32d4"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBTWHVTEAKGQEKE6ETTI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20170504114858.9008-3-icenowy-h8G6r0blFSE@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Increased trigger length to 64 in order to cope with trigger names
-like fc030000.adc-dev0-external-rising
 
-Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
----
- Changes in v2:
- - Modified trigger name length to 64
+--njmu7voz264w32d4
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
- tools/iio/iio_utils.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On Thu, May 04, 2017 at 07:48:47PM +0800, Icenowy Zheng wrote:
+> The "Display Engine 2.0" in Allwinner newer SoCs contains a clock
+> management unit for its subunits, like the DE CCU in A80.
+> 
+> Add a sunxi-ng style driver for it.
+> 
+> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+> ---
+> Changes in v5:
+> - Removed dt-bindings headers (they're now in patch 1).
+> Changes in v4:
+> - Fixed the inconsistence between mixer_div clocks' number and real clock.
+> Changes in v2:
+> - Rename sunxi-de2-ccu to sun8i-de2-ccu.
+> 
+>  drivers/clk/sunxi-ng/Kconfig         |   5 +
+>  drivers/clk/sunxi-ng/Makefile        |   1 +
+>  drivers/clk/sunxi-ng/ccu-sun8i-de2.c | 218 +++++++++++++++++++++++++++++++++++
+>  drivers/clk/sunxi-ng/ccu-sun8i-de2.h |  28 +++++
+>  4 files changed, 252 insertions(+)
+>  create mode 100644 drivers/clk/sunxi-ng/ccu-sun8i-de2.c
+>  create mode 100644 drivers/clk/sunxi-ng/ccu-sun8i-de2.h
+> 
+> diff --git a/drivers/clk/sunxi-ng/Kconfig b/drivers/clk/sunxi-ng/Kconfig
+> index 64088e599404..2e4d804fbf61 100644
+> --- a/drivers/clk/sunxi-ng/Kconfig
+> +++ b/drivers/clk/sunxi-ng/Kconfig
+> @@ -140,6 +140,11 @@ config SUN8I_V3S_CCU
+>  	default MACH_SUN8I
+>  	depends on MACH_SUN8I || COMPILE_TEST
+>  
+> +config SUN8I_DE2_CCU
+> +	bool "Support for the Allwinner SoCs DE2 CCU"
+> +	select SUNXI_CCU_DIV
+> +	select SUNXI_CCU_GATE
+> +
+>  config SUN9I_A80_CCU
+>  	bool "Support for the Allwinner A80 CCU"
+>  	select SUNXI_CCU_DIV
+> diff --git a/drivers/clk/sunxi-ng/Makefile b/drivers/clk/sunxi-ng/Makefile
+> index 0ec02fe14c50..be616279450e 100644
+> --- a/drivers/clk/sunxi-ng/Makefile
+> +++ b/drivers/clk/sunxi-ng/Makefile
+> @@ -25,6 +25,7 @@ obj-$(CONFIG_SUN8I_A23_CCU)	+= ccu-sun8i-a23.o
+>  obj-$(CONFIG_SUN8I_A33_CCU)	+= ccu-sun8i-a33.o
+>  obj-$(CONFIG_SUN8I_H3_CCU)	+= ccu-sun8i-h3.o
+>  obj-$(CONFIG_SUN8I_V3S_CCU)	+= ccu-sun8i-v3s.o
+> +obj-$(CONFIG_SUN8I_DE2_CCU)	+= ccu-sun8i-de2.o
+>  obj-$(CONFIG_SUN8I_R_CCU)	+= ccu-sun8i-r.o
+>  obj-$(CONFIG_SUN9I_A80_CCU)	+= ccu-sun9i-a80.o
+>  obj-$(CONFIG_SUN9I_A80_CCU)	+= ccu-sun9i-a80-de.o
+> diff --git a/drivers/clk/sunxi-ng/ccu-sun8i-de2.c b/drivers/clk/sunxi-ng/ccu-sun8i-de2.c
+> new file mode 100644
+> index 000000000000..adb2c344692a
+> --- /dev/null
+> +++ b/drivers/clk/sunxi-ng/ccu-sun8i-de2.c
+> @@ -0,0 +1,218 @@
+> +/*
+> + * Copyright (c) 2017 Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+> + *
+> + * This software is licensed under the terms of the GNU General Public
+> + * License version 2, as published by the Free Software Foundation, and
+> + * may be copied, distributed, and modified under those terms.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + */
+> +
+> +#include <linux/clk.h>
+> +#include <linux/clk-provider.h>
+> +#include <linux/of_address.h>
+> +#include <linux/of_platform.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/reset.h>
+> +
+> +#include "ccu_common.h"
+> +#include "ccu_div.h"
+> +#include "ccu_gate.h"
+> +#include "ccu_reset.h"
+> +
+> +#include "ccu-sun8i-de2.h"
+> +
+> +static SUNXI_CCU_GATE(bus_mixer0_clk,	"bus-mixer0",	"bus-de",
+> +		      0x04, BIT(0), 0);
+> +static SUNXI_CCU_GATE(bus_mixer1_clk,	"bus-mixer1",	"bus-de",
+> +		      0x04, BIT(1), 0);
+> +static SUNXI_CCU_GATE(bus_wb_clk,	"bus-wb",	"bus-de",
+> +		      0x04, BIT(2), 0);
+> +
+> +static SUNXI_CCU_GATE(mixer0_clk,	"mixer0",	"mixer0-div",
+> +		      0x00, BIT(0), CLK_SET_RATE_PARENT);
+> +static SUNXI_CCU_GATE(mixer1_clk,	"mixer1",	"mixer1-div",
+> +		      0x00, BIT(1), CLK_SET_RATE_PARENT);
+> +static SUNXI_CCU_GATE(wb_clk,		"wb",		"wb-div",
+> +		      0x00, BIT(2), CLK_SET_RATE_PARENT);
+> +
+> +static SUNXI_CCU_M(mixer0_div_clk, "mixer0-div", "de", 0x0c, 0, 4,
+> +		   CLK_SET_RATE_PARENT);
+> +static SUNXI_CCU_M(mixer1_div_clk, "mixer1-div", "de", 0x0c, 4, 4,
+> +		   CLK_SET_RATE_PARENT);
+> +static SUNXI_CCU_M(wb_div_clk, "wb-div", "de", 0x0c, 8, 4,
+> +		   CLK_SET_RATE_PARENT);
+> +
+> +static struct ccu_common *sunxi_de2_clks[] = {
+> +	&mixer0_clk.common,
+> +	&mixer1_clk.common,
+> +	&wb_clk.common,
+> +
+> +	&bus_mixer0_clk.common,
+> +	&bus_mixer1_clk.common,
+> +	&bus_wb_clk.common,
+> +
+> +	&mixer0_div_clk.common,
+> +	&mixer1_div_clk.common,
+> +	&wb_div_clk.common,
+> +};
+> +
+> +static struct clk_hw_onecell_data sunxi_de2_hw_clks = {
+> +	.hws	= {
+> +		[CLK_MIXER0]		= &mixer0_clk.common.hw,
+> +		[CLK_MIXER1]		= &mixer1_clk.common.hw,
+> +		[CLK_WB]		= &wb_clk.common.hw,
+> +
+> +		[CLK_BUS_MIXER0]	= &bus_mixer0_clk.common.hw,
+> +		[CLK_BUS_MIXER1]	= &bus_mixer1_clk.common.hw,
+> +		[CLK_BUS_WB]		= &bus_wb_clk.common.hw,
+> +
+> +		[CLK_MIXER0_DIV]	= &mixer0_div_clk.common.hw,
+> +		[CLK_MIXER1_DIV]	= &mixer1_div_clk.common.hw,
+> +		[CLK_WB_DIV]		= &wb_div_clk.common.hw,
+> +	},
+> +	.num	= CLK_NUMBER,
+> +};
+> +
+> +static struct ccu_reset_map sun8i_a83t_de2_resets[] = {
+> +	[RST_MIXER0]	= { 0x08, BIT(0) },
+> +	/*
+> +	 * For A83T, H3 and R40, mixer1 reset line is shared with wb, so
+> +	 * only RST_WB is exported here.
+> +	 */
+> +	[RST_WB]	= { 0x08, BIT(2) },
+> +};
+> +
+> +static struct ccu_reset_map sun50i_a64_de2_resets[] = {
+> +	[RST_MIXER0]	= { 0x08, BIT(0) },
+> +	[RST_MIXER1]	= { 0x08, BIT(1) },
+> +	[RST_WB]	= { 0x08, BIT(2) },
+> +};
+> +
+> +static const struct sunxi_ccu_desc sun8i_a83t_de2_clk_desc = {
+> +	.ccu_clks	= sunxi_de2_clks,
+> +	.num_ccu_clks	= ARRAY_SIZE(sunxi_de2_clks),
+> +
+> +	.hw_clks	= &sunxi_de2_hw_clks,
+> +
+> +	.resets		= sun8i_a83t_de2_resets,
+> +	.num_resets	= ARRAY_SIZE(sun8i_a83t_de2_resets),
+> +};
+> +
+> +static const struct sunxi_ccu_desc sun50i_a64_de2_clk_desc = {
+> +	.ccu_clks	= sunxi_de2_clks,
+> +	.num_ccu_clks	= ARRAY_SIZE(sunxi_de2_clks),
+> +
+> +	.hw_clks	= &sunxi_de2_hw_clks,
+> +
+> +	.resets		= sun50i_a64_de2_resets,
+> +	.num_resets	= ARRAY_SIZE(sun50i_a64_de2_resets),
+> +};
+> +
+> +static int sunxi_de2_clk_probe(struct platform_device *pdev)
+> +{
+> +	struct resource *res;
+> +	struct clk *bus_clk, *mod_clk;
+> +	struct reset_control *rstc;
+> +	void __iomem *reg;
+> +	const struct sunxi_ccu_desc *ccu_desc;
+> +	int ret;
+> +
+> +	ccu_desc = of_device_get_match_data(&pdev->dev);
+> +	if (!ccu_desc)
+> +		return -EINVAL;
+> +
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	reg = devm_ioremap_resource(&pdev->dev, res);
+> +	if (IS_ERR(reg))
+> +		return PTR_ERR(reg);
+> +
+> +	bus_clk = devm_clk_get(&pdev->dev, "bus");
+> +	if (IS_ERR(bus_clk)) {
+> +		ret = PTR_ERR(bus_clk);
+> +		if (ret != -EPROBE_DEFER)
+> +			dev_err(&pdev->dev, "Couldn't get bus clk: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	mod_clk = devm_clk_get(&pdev->dev, "mod");
+> +	if (IS_ERR(mod_clk)) {
+> +		ret = PTR_ERR(mod_clk);
+> +		if (ret != -EPROBE_DEFER)
+> +			dev_err(&pdev->dev, "Couldn't get mod clk: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	rstc = devm_reset_control_get_exclusive(&pdev->dev, NULL);
+> +	if (IS_ERR(rstc)) {
+> +		ret = PTR_ERR(bus_clk);
+> +		if (ret != -EPROBE_DEFER)
+> +			dev_err(&pdev->dev,
+> +				"Couldn't get reset control: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	/* The clocks need to be enabled for us to access the registers */
+> +	ret = clk_prepare_enable(bus_clk);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "Couldn't enable bus clk: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	ret = clk_prepare_enable(mod_clk);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "Couldn't enable mod clk: %d\n", ret);
+> +		return ret;
 
-diff --git a/tools/iio/iio_utils.h b/tools/iio/iio_utils.h
-index 780f201..8b379da 100644
---- a/tools/iio/iio_utils.h
-+++ b/tools/iio/iio_utils.h
-@@ -13,7 +13,7 @@
- #include <stdint.h>
- 
- /* Made up value to limit allocation sizes */
--#define IIO_MAX_NAME_LENGTH 30
-+#define IIO_MAX_NAME_LENGTH 64
- 
- #define FORMAT_SCAN_ELEMENTS_DIR "%s/scan_elements"
- #define FORMAT_TYPE_FILE "%s_type"
+You're leaving the bus clock enabled here if it fails.
+
+> +	}
+> +
+> +	/* The reset control needs to be asserted for the controls to work */
+> +	ret = reset_control_deassert(rstc);
+> +	if (ret) {
+> +		dev_err(&pdev->dev,
+> +			"Couldn't deassert reset control: %d\n", ret);
+> +		goto err_disable_clk;
+> +	}
+> +
+> +	ret = sunxi_ccu_probe(pdev->dev.of_node, reg, ccu_desc);
+> +	if (ret)
+> +		goto err_assert_reset;
+> +
+> +	return 0;
+> +
+> +err_assert_reset:
+> +	reset_control_assert(rstc);
+
+And here you're leaving the mod_clk enabled
+
+Maxime
+
 -- 
-2.7.4
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--njmu7voz264w32d4--
