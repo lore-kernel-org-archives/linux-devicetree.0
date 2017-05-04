@@ -1,108 +1,53 @@
-From: "Ong, Hean Loong" <hean.loong.ong-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCHv2 1/3] dt-bindings: display: Intel FPGA VIP drm driver
- Devicetree bindings
-Date: Thu, 4 May 2017 08:38:14 +0000
-Message-ID: <1493887093.2182.38.camel@intel.com>
-References: <1493086006-4392-1-git-send-email-hean.loong.ong@intel.com>
-         <1493086006-4392-2-git-send-email-hean.loong.ong@intel.com>
-         <803710eb-bcce-3d89-e306-5b7433f9962d@baylibre.com>
+From: Prabhakar Kushwaha <prabhakar.kushwaha-3arQi8VN3Tc@public.gmane.org>
+Subject: [PATCH] arch: arm64: Define big endian of IFC for LS1043a/LS1046a
+Date: Thu, 4 May 2017 14:40:31 +0530
+Message-ID: <1493889032-20857-1-git-send-email-prabhakar.kushwaha@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <803710eb-bcce-3d89-e306-5b7433f9962d-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Content-Language: en-US
-Content-ID: <3711A07161178546BB6752314CC0AB4D-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org" <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, "Vetter, Daniel" <daniel.vetter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: "dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org" <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, "Loh, Tien Hock" <tien.hock.loh-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "Ong-CC+yJ3UmIYqDUpFQwHEjaQ@public.gmane.org" <Ong-CC+yJ3UmIYqDUpFQwHEjaQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Prabhakar Kushwaha <prabhakar.kushwaha-3arQi8VN3Tc@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-VGhhbmtzIE5laWwuwqANCg0KT24gVGh1LCAyMDE3LTA1LTA0IGF0IDA5OjU1ICswMjAwLCBOZWls
-IEFybXN0cm9uZyB3cm90ZToNCj4gT24gMDQvMjUvMjAxNyAwNDowNiBBTSwgaGVhbi5sb29uZy5v
-bmdAaW50ZWwuY29tIHdyb3RlOg0KPiA+IA0KPiA+IEZyb206ICJPbmcsIEhlYW4gTG9vbmciIDxo
-ZWFuLmxvb25nLm9uZ0BpbnRlbC5jb20+DQo+ID4gDQo+ID4gRGV2aWNlIHRyZWUgYmluZGluZyBm
-b3IgSW50ZWwgRlBHQSBWaWRlbyBhbmQgSW1hZ2UNCj4gPiBQcm9jZXNzaW5nIFN1aXRlLiBUaGUg
-YmluZGluZyBpbnZvbHZlZCB3b3VsZCBiZSBnZW5lcmF0ZWQNCj4gPiBmcm9tIHRoZSBBbHRlcmEg
-KEludGVsKSBRc3lzIHN5c3RlbS4gVGhlIGJpbmRpbmdzIHdvdWxkDQo+ID4gc2V0IHRoZSBtYXgg
-d2lkdGgsIG1heCBoZWlnaHQsIGJ1dHMgcGVyIHBpeGVsIGFuZCBtZW1vcnkNCj4gPiBwb3J0IHdp
-ZHRoLiBUaGUgZGV2aWNlIHRyZWUgYmluZGluZyBvbmx5IHN1cHBvcnRzIHRoZSBJbnRlbA0KPiA+
-IEFycmlhMTAgZGV2a2l0IGFuZCBpdHMgdmFyaWFudHMuIFZlbmRvciBuYW1lIHJldGFpbmVkIGFz
-DQo+ID4gYWx0ci4NCj4gPiANCj4gPiBTaWduZWQtb2ZmLWJ5OiBPbmcsIEhlYW4gTG9vbmcgPGhl
-YW4ubG9vbmcub25nQGludGVsLmNvbT4NCj4gPiAtLS0NCj4gPiB2MjoNCj4gPiAqIE1vdmVkIERl
-dmljZSBUcmVlIGJpbmRpbmdzIHRvDQo+ID4gRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
-bmdzL2Rpc3BsYXkvDQo+ID4gKiBBZGRlZCB2ZW5kb3IgbmFtZSBhbHRyLCB0byBkZXNjcmlwdGlv
-bg0KPiA+IC0tLQ0KPiA+IMKgLi4uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9hbHRyLHZp
-cC1mYjIudHh0wqDCoMKgfCAzMA0KPiA+ICsrKysrKysrKysrKysrKysrKysrKysNCj4gPiDCoDEg
-ZmlsZSBjaGFuZ2VkLCAzMCBpbnNlcnRpb25zKCspDQo+ID4gwqBjcmVhdGUgbW9kZSAxMDA2NDQN
-Cj4gPiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9hbHRyLHZpcC1m
-YjIudHh0DQo+ID4gDQo+ID4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
-aW5kaW5ncy9kaXNwbGF5L2FsdHIsdmlwLQ0KPiA+IGZiMi50eHQgYi9Eb2N1bWVudGF0aW9uL2Rl
-dmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9hbHRyLHZpcC0NCj4gPiBmYjIudHh0DQo+ID4gbmV3
-IGZpbGUgbW9kZSAxMDA2NDQNCj4gPiBpbmRleCAwMDAwMDAwLi5iZGZmZWZiDQo+ID4gLS0tIC9k
-ZXYvbnVsbA0KPiA+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNw
-bGF5L2FsdHIsdmlwLWZiMi50eHQNCj4gPiBAQCAtMCwwICsxLDMwIEBADQo+ID4gK0ludGVsIFZp
-ZGVvIGFuZCBJbWFnZSBQcm9jZXNzaW5nKFZJUCkgRnJhbWUgQnVmZmVyIElJIGJpbmRpbmdzDQo+
-ID4gKw0KPiA+ICtTdXBwb3J0ZWQgaGFyZHdhcmU6IEFycmlhIDEwIGFuZCBhYm92ZSB3aXRoIGRp
-c3BsYXkgcG9ydCBJUA0KPiA+ICsNCj4gSGksDQo+IA0KPiA+IA0KPiA+ICtUaGUgZHJtIGRyaXZl
-ciBmb3IgdGhlIEFycmlhIDEwIGRldmtpdCB3b3VsZCByZXF1aXJlIHRoZSBkaXNwbGF5DQo+ID4g
-cmVzb2x1dGlvbg0KPiA+ICthbmQgcGl4ZWwgaW5mb3JtYXRpb24gdG8gYmUgaW5jbHVkZWQgYXMg
-dGhlc2UgdmFsdWVzIGFyZSBnZW5lcmF0ZWQNCj4gPiBiYXNlZA0KPiA+ICtvbiB0aGUgRlBHQSBk
-ZXNpZ24gdGhhdCBkcml2ZXMgdGhlIHZpZGVvIGNvbm5lY3RvciBhdHRhY2hlZCB0byB0aGUNCj4g
-PiBkcm0gZHJpdmVyDQo+ID4gK0luZm9ybWF0aW9uIHRoZSBGUEdBIHZpZGVvIElQIGNvbXBvbmVu
-dCBjYW4gYmUgYWNxdWlyZWQgZnJvbQ0KPiA+ICtodHRwczovL3d3dy5hbHRlcmEuY29tL2NvbnRl
-bnQvZGFtL2FsdGVyYS13d3cvZ2xvYmFsL2VuX1VTL3BkZnMvbGkNCj4gPiB0ZXJhdHVyZS91Zy91
-Z192aXAucGRmDQo+IFRoZSBiaW5kaW5ncyBzaG91bGQgbm90IHJlZmVyZW5jZSB0aGUgZHJpdmVy
-LCBidXQgb25seSB0aGUgaGFyZHdhcmUNCj4gYW5kIHRoZSB3YXkgaXQgaXMgY29uZmlndXJlZA0K
-PiBhbmQgaW50ZXJjb25uZWN0ZWQgd2l0aCB0aGUgc3lzdGVtLg0KPiBQbGVhc2UgZXhwbGljaXQg
-dGhhdCB0aGlzIGlzIGFuIElQIGNvbXBvbmVudCB0aGF0IGNhbiBiZSBjb25maWd1cmVkDQo+IHdp
-dGggZXhwbGljaXQgbGltaXRzIG9uDQo+IHRoZSBkaXNwbGF5IHdpZHRocyBhbmQgaGVpZ2h0cyBh
-bmQgbWVtb3J5IHBhcmFtZXRlcnMuDQo+IA0KPiBCdXQgeW91IHNob3VsZCBhbHNvIGluZGljYXRl
-IG92ZXIgd2hhdCB0aGlzIElQIGlzIGNvbm5lY3RlZCBhbmQgYWRkIGENCj4gcG9ydCBjb25uZWN0
-ZWQgdG8gYSBjb25uZWN0b3INCj4gbm9kZSBpbiBjYXNlIHRoaXMgaXAgaXMgbm90IHVzZWQgb24g
-YSBzcGVjaWZpYyBib2FyZCBsaWtlIGluIFsxXSBvcg0KPiBbMl0gOg0KPiANCj4gIiIiDQo+IFJl
-cXVpcmVkIG5vZGVzOg0KPiANCj4gVGhlIGNvbm5lY3Rpb25zIHRvIHRoZSBEVSBvdXRwdXQgdmlk
-ZW8gcG9ydHMgYXJlIG1vZGVsZWQgdXNpbmcgdGhlIE9GDQo+IGdyYXBoDQo+IGJpbmRpbmdzIHNw
-ZWNpZmllZCBpbiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZ3JhcGgudHh0Lg0K
-PiANCj4gVGhlIGZvbGxvd2luZyB0YWJsZSBsaXN0cyBmb3IgZWFjaCBzdXBwb3J0ZWQgbW9kZWwg
-dGhlIHBvcnQgbnVtYmVyDQo+IGNvcnJlc3BvbmRpbmcgdG8gZWFjaCBEVSBvdXRwdXQuDQo+IA0K
-PiAJCVBvcnQgMAkJUG9ydDEJCVBvcnQyCQ0KPiAJUG9ydDMNCj4gLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0KPiAtLS0t
-LS0tLS0tDQo+IMKgUjhBNzc3OSAoSDEpCURQQUQgMAkJRFBBRCAxCQktCQ0KPiAJLQ0KPiAiIiIN
-Cj4gDQo+IFlvdSBtYXkgYWxzbyBuZWVkIHRvIGFkZCBhICJEaXNwbGF5IFBvcnQiIGNvbm5lY3Rv
-ciBiaW5kaW5nIGFzd2VsbA0KPiBhbG9uZyB0aGUgSERNSSwgVkdBLCAuLi4uDQo+IA0KPiBJIGtu
-b3cgdGhpcyB0YXJnZXRzIGFuIEZQR0Egc3lzdGVtLCBzbyB5b3Ugc2hvdWxkIGV4cGxpY2l0IHRo
-YXQgaW4NCj4gdGhlIGRlc2NyaXB0aW9uLg0KPiANCj4gPiANCj4gPiArUmVxdWlyZWQgcHJvcGVy
-dGllczoNCj4gPiArDQo+ID4gKy0gY29tcGF0aWJsZTogImFsdHIsdmlwLWZyYW1lLWJ1ZmZlci0y
-LjAiDQo+IFlvdSBzaG91bGQgYWxzbyBhZGQgbW9kZWwgc3BlY2lmaWMgY29tcGF0aWJsZSBzdHJp
-bmdzIGZvciBlYWNoDQo+IHN1cHBvcnRlZCBGUEdBIGRldmljZXMuDQo+IA0KPiA+IA0KPiA+ICst
-IHJlZzogUGh5c2ljYWwgYmFzZSBhZGRyZXNzIGFuZCBsZW5ndGggb2YgdGhlIGZyYW1lYnVmZmVy
-DQo+ID4gY29udHJvbGxlcidzDQo+ID4gK8KgwqByZWdpc3RlcnMuDQo+ID4gKy0gYWx0cixtYXgt
-d2lkdGg6IFRoZSB3aWR0aCBvZiB0aGUgZnJhbWVidWZmZXIgaW4gcGl4ZWxzLg0KPiA+ICstIGFs
-dHIsbWF4LWhlaWdodDogVGhlIGhlaWdodCBvZiB0aGUgZnJhbWVidWZmZXIgaW4gcGl4ZWxzLg0K
-PiA+ICstIGFsdHIsYml0cy1wZXItc3ltYm9sOiBvbmx5ICI4IiBpcyBjdXJyZW50bHkgc3VwcG9y
-dGVkDQo+ID4gKy0gYWx0cixtZW0tcG9ydC13aWR0aCA9IHRoZSBidXMgd2lkdGggb2YgdGhlIGF2
-YWxvbiBtYXN0ZXIgcG9ydCBvbg0KPiA+IHRoZSBmcmFtZSByZWFkZXINCj4gV2hhdCBpcyB0aGUg
-YXZhbG9uIG1hc3RlciBwb3J0ID8NCkEgbWVtb3J5IGJ1cyB0aGF0IG9uIHRoZSBGUEdBIHRoYXQg
-aW50ZXJmYWNlcyB3aXRoIHRoZSBBUk0gcHJvY2Vzc29yDQo+IENhbiB5b3UgYWRkIGEgc2NoZW1h
-IHRvIGV4cGxpY2l0IGhvdyB0aGlzIElQIGlzIGNvbm5lY3RlZCB0byB0aGUNCj4gc3lzdGVtID8N
-Cj4gDQpJIGNvdWxkIGxpa2UgdG8gaW5jbHVkZSBhIG1vcmUgZGV0YWlsZWQgc2NoZW1hIGZvciB0
-aGUgbmV4dCB1cGRhdGVkDQpwYXRjaC4gSW4gdGhlIG1lYW4gdGltZSB0aGUgZGV0YWlscyBvZiB0
-aGUgSVAgaXMgcHJvdmlkZWQgb24gdGhlIGxpbmtzDQpiZWxvdzoNCmh0dHBzOi8vd3d3LmFsdGVy
-YS5jb20vcHJvZHVjdHMvaW50ZWxsZWN0dWFsLXByb3BlcnR5L2lwL2ludGVyZmFjZS1wcm90DQpv
-Y29scy9tLWFsdC1kaXNwbGF5cG9ydC1tZWdhY29yZS5odG1sDQoNCmh0dHBzOi8vd3d3LmFsdGVy
-YS5jb20vZG9jdW1lbnRhdGlvbi95cnUxNDgwOTA2Nzk0NDAyLmh0bWwNCg0KYnV0IGJhc2ljYWxs
-eSB0aGUgaWRlYSBpczoNCkFSTS9MaW51eCAtLT5GUEdBKEF2YWxvbi1NTSBpbnRlcmZhY2UpLS0+
-RGlzcGxheVBvcnQgQ29ubmVjdG9yDQoNCj4gPiANCj4gPiArDQo+ID4gK0V4YW1wbGU6DQo+ID4g
-Kw0KPiA+ICsJZHBfMF9mcmFtZV9idWY6IHZpcEAxMDAwMDAyODAgew0KPiA+ICsJCQljb21wYXRp
-YmxlID0gImFsdHIsdmlwLWZyYW1lLWJ1ZmZlci0yLjAiOw0KPiA+ICsJCQlyZWcgPSA8MHgwMDAw
-MDAwMSAweDAwMDAwMjgwIDB4MDAwMDAwNDA+Ow0KPiA+ICsJCQlhbHRyLG1heC13aWR0aCA9IDwx
-MjgwPjsNCj4gPiArCQkJYWx0cixtYXgtaGVpZ2h0ID0gPDcyMD47DQo+ID4gKwkJCWFsdHIsYml0
-cy1wZXItc3ltYm9sID0gPDg+Ow0KPiA+ICsJCQlhbHRyLG1lbS1wb3J0LXdpZHRoID0gPDEyOD47
-DQo+ID4gKwl9Ow0KPiA+IA0KPiANCj4gWzFdIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
-aW5ncy9kaXNwbGF5L2FtbG9naWMsbWVzb24tdnB1LnR4dA0KPiBbMl0gRG9jdW1lbnRhdGlvbi9k
-ZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcmVuZXNhcyxkdS50eHQNCj4gDQo+IFRoYW5rcywN
-Cj4gDQo+IE5laWwNCj4g
+Integrated flash controller present in LS1043A and LS1046A is big endian.
+
+So add big endian property in the devive tree.
+
+Signed-off-by: Prabhakar Kushwaha <prabhakar.kushwaha-3arQi8VN3Tc@public.gmane.org>
+---
+ arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi | 1 +
+ arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi | 1 +
+ 2 files changed, 2 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
+index 45cface..09f1775 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
+@@ -223,6 +223,7 @@
+ 		ifc: ifc@1530000 {
+ 			compatible = "fsl,ifc", "simple-bus";
+ 			reg = <0x0 0x1530000 0x0 0x10000>;
++			big-endian;
+ 			interrupts = <0 43 0x4>;
+ 		};
+ 
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
+index f4b8b7e..509e6c2 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
+@@ -190,6 +190,7 @@
+ 		ifc: ifc@1530000 {
+ 			compatible = "fsl,ifc", "simple-bus";
+ 			reg = <0x0 0x1530000 0x0 0x10000>;
++			big-endian;
+ 			interrupts = <GIC_SPI 43 IRQ_TYPE_LEVEL_HIGH>;
+ 		};
+ 
+-- 
+2.7.4
+
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
