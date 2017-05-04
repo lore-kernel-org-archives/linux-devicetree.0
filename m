@@ -1,151 +1,94 @@
-From: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 2/4] soc: qcom: Introduce APCS IPC driver
-Date: Thu, 4 May 2017 22:30:42 +0530
-Message-ID: <CABb+yY1=-zYcyGgd2r1ckEgsYRQ8f4esZa4i4hb30b75kBRK7Q@mail.gmail.com>
-References: <20170503052929.17422-1-bjorn.andersson@linaro.org>
- <20170503052929.17422-2-bjorn.andersson@linaro.org> <c9b86ecfa6b84ae994da6c30d2840bbf@SFHDAG7NODE2.st.com>
- <CABb+yY03NHBEui+OtagpTD4bm2yxoahEiciBG99gG2jrVGjpKQ@mail.gmail.com>
- <20170504054516.GB15143@minitux> <CABb+yY1YJ6cNG0UKahsnri3A4izdD3ZBpY6LLCHFkc=O3c0TcA@mail.gmail.com>
- <20170504161035.GC15143@minitux>
+From: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+Subject: Re: [PATCHv2 0/3] Intel FPGA VIP Frame Buffer II DRM Driver
+Date: Thu, 04 May 2017 10:11:47 -0700
+Message-ID: <87lgqcsg18.fsf@eliezer.anholt.net>
+References: <1493086006-4392-1-git-send-email-hean.loong.ong@intel.com> <87shklznuo.fsf@eliezer.anholt.net> <1493861983.2182.11.camel@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha512; protocol="application/pgp-signature"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170504161035.GC15143@minitux>
+In-Reply-To: <1493861983.2182.11.camel-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Loic PALLARDY <loic.pallardy-qxv4g6HH51o@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ohad Ben-Cohen <ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>, "linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-remoteproc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-remoteproc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: "dinguyen@kernel.org" <dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "Vetter, Daniel" <daniel.vetter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "robh+dt@kernel.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: "dri-devel@lists.freedesktop.org" <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, "Ong, Hean Loong" <hean.loong.ong-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "Loh, Tien Hock" <tien.hock.loh-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "devicetree@vger.kernel.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 4, 2017 at 9:40 PM, Bjorn Andersson
-<bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> On Thu 04 May 00:54 PDT 2017, Jassi Brar wrote:
->
->> On Thu, May 4, 2017 at 11:15 AM, Bjorn Andersson
->> <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
->> > On Wed 03 May 02:55 PDT 2017, Jassi Brar wrote:
->> >
->> >> Loic, thanks for adding me.
->> >>
->> >> On Wed, May 3, 2017 at 2:58 PM, Loic PALLARDY <loic.pallardy-qxv4g6HH51o@public.gmane.org> wrote:
->> >> >
->> >> >
->> >> >> -----Original Message-----
->> >> >> From: linux-remoteproc-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org [mailto:linux-remoteproc-
->> >> >> owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org] On Behalf Of Bjorn Andersson
->> >> >> Sent: Wednesday, May 03, 2017 7:29 AM
->> >> >> To: Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>; Rob Herring
->> >> >> <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>; Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>; Ohad Ben-
->> >> >> Cohen <ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>
->> >> >> Cc: linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org;
->> >> >> devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-
->> >> >> remoteproc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->> >> >> Subject: [PATCH v3 2/4] soc: qcom: Introduce APCS IPC driver
->> >> >>
->> >> >> This implements a driver that exposes the IPC bits found in the APCS Global
->> >> >> block in various Qualcomm platforms. The bits are used to signal inter-
->> >> >> processor communication signals from the application CPU to other masters.
->> >> >>
->> >> >> The driver implements the "doorbell" binding and could be used as basis for a
->> >> >> new Linux framework, if found useful outside Qualcomm.
->> >> >>
->> >> > Hi Bjorn,
->> >> >
->> >> > Even if Qualcom APCS IPC is limited, why don't you rely on existing mailbox framework.
->> >> > It is there to gather all IPC management under the same interface.
->> >> > No need to create a new one from my pov.
->> >> > If you don't provide message data, mailbox framework behaves as doorbell.
->> >> >
->> >> QCOM RPM reinvented the wheel for what mailbox framework already did,
->> >> despite my pointing it out =>
->> >> http://lkml.iu.edu/hypermail//linux/kernel/1406.2/03918.html
->> >>
->> >
->> > The RPM interface works by writing various information in shared DRAM
->> > and then invoking an interrupt on the remote processor.
->> >
->> This is what _most_ platforms do, and they use mailbox framework. If
->> mailbox framework doesn't suit RPM, then it doesn't suit most
->> platforms that use it.
->>
->> > My argumentation against using the mailbox framework for the RPM case
->> > was that the message model is a software construct and doesn't fit the
->> > mailbox framework.
->> >
->> Mailbox framework works beneath protocol layer (software construct).
->> As I said years ago, the h/w bits of the controller should be under
->> mailbox api, while the message structures and signals are protocol
->> specific and be in QCOM specific location.
->>
->
-> Okay, now I finally get what you're saying. The RPM driver handles the
-> protocol but the actual triggering of the remote interrupt should be
-> done via the mailbox framework.
->
-> That makes sense, until now I haven't seen the need for having a driver
-> exposing the APCS IPC register (used by among others the RPM driver),
-> but I will rewrite this patch as a mailbox controller and turn the RPM
-> driver into a mailbox client.
->
-Cool, thanks.
+--=-=-=
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
->>
->> > But which one of these would be appropriate for a "mailbox channel" that
->> > doesn't have any actual messages?
->> >
->> >   mbox_send_message(chan, NULL)
->> > or
->> >   const int one = 1;
->> >   mbox_send_message(chan, (void*)&one);
->> >
->> It depends upon your h/w.
->> If each physical channel is hardwired to work on a predefined single
->> bit, then the driver could do without that bit being explicitly
->> passed.
->> If a physical channel can be mapped onto any bit(s), then you do need
->> to pass that info via mbox_send_message().
->>
->
-> It's a 32-bit register, writing a bit invokes the associated interrupt
-> on some remote processor. I.e. bits 0, 1 and 2 represents different
-> interrupts on the resource-power-management CPU while bit 12, 13, 14 and
-> 15 will invoke interrupts on a modem CPU.
->
-No problem. For such arrangement, you could have a channel per
-interrupt/bit. Have the DT specify which bit goes as what interrupt to
-which cpu. The controller driver would then associate each channel to
-its 'bit' and a client would always acquire the right channel
-(specified by DT) and need not know/pass which bit should be set for
-its messages i.e, mbox_send_message(chan, NULL)
+"Ong, Hean Loong" <hean.loong.ong-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org> writes:
 
-> I'll rework the proposed driver and we can look at the actual
-> implementation instead.
+> On Wed, 2017-05-03 at 13:28 -0700, Eric Anholt wrote:
+>> hean.loong.ong-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org writes:
+>>=20
+>> >=20
+>> > From: Ong Hean Loong <hean.loong.ong-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+>> >=20
+>> > Hi,
+>> >=20
+>> > The new Intel Arria10 SOC FPGA devkit has a Display Port IP
+>> > component=C2=A0
+>> > which requires a new driver. This is a virtual driver in which the
+>> > FGPA hardware would enable the Display Port based on the
+>> > information
+>> > and data provided from the DRM frame buffer from the OS. Basically
+>> > all
+>> > all information with reagrds to resolution and bits per pixel are
+>> > pre-configured on the FPGA design and these information are fed to
+>> > the driver via the device tree information as part of the hardware=C2=
+=A0
+>> > information.
+>> I started reviewing the code, but I want to make sure I understand
+>> what's going on:
+>>=20
+>> This IP core isn't displaying contents from system memory on some
+>> sort
+>> of actual physical display, right?=C2=A0=C2=A0It's a core that takes som=
+e input
+>> video stream (not described in the DT or in this driver) and stores
+>> it
+>> to memory?
 >
->>
->> >> The driver bypassed mailbox framework and was pushed via another tree.
->> >> Same is being attempted now, only now it is more expensive to switch
->> >> to generic mailbox framework having spent so much time on QCOM
->> >> specific implementation of controller and protocol drivers inside
->> >> drivers/soc/qcom/
->> >
->> > I'm not sure I follow this, there's no extensive rework going on here -
->> > all I'm trying to do is abstract the "writel(BIT(x), ipc_reg)" line of
->> > the RPM driver, because it's being used in other clients as well.
->> >
->> No, I meant ideally RPM should have used mailbox api for the
->> controller programming, but moving to that now will be expensive
->> because you already developed huge code base around QCOM specific
->> mailbox implementation.
->>
+> If the IP Core you are referring to is some form of GPU then in this
+> case we are using the Intel FPGA Display Port Framebuffer IP. It does
+> display contents streamed from the ARM/Linux system to the Display Port
+> of the physical Monitor.
 >
-> The part discussed above was implemented using syscon, so it's a few
-> lines of code to grab hold of a handle and instead of
-> mbox_send_message() there is a single call to regmap_write(). All the
-> other parts of the implementation is protocol-specific, and as you say
-> the next layer up. So the transition is quite straight forward!
+> Below a simple illustration of the system:
 >
-Great!
+> ARM/Linux --DMA-->Intel FPGA Display Port Framebuffer IP
+> 				|
+> 				|
+> 			Physical Connection
+> 			Display Port
 
-Thanks.
+The "DMA" in this diagram is the frame reader IP, right?  The frame
+reader, as described in the spec, sounds approximately like a DRM plane,
+so if you have that in your system then that needs to be part of this
+DRM driver (otherwise you won't be putting the right things on the
+screen!).
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE/JuuFDWp9/ZkuCBXtdYpNtH8nugFAlkLYNQACgkQtdYpNtH8
+nuhqeQ//YLETJdRYER4rn3Pb4cClV0TAHywNbK8XLTDS5Ipw3ljmlGQMzOzbhS96
+XtMASOvrhOeOJ2Ni+c0LKHGk0qgYaVs0M3LXkEA/p3aGI/Q7Jtn1DbgN5RjB8VmG
+wFO1wAqvV2HgW039wnZnPykEjvl+7FzFAjGC6mJNeVRPe8AWqvYT1e2znPUyRrEM
+mFIxZYKBWyRu8DMQSzAusJMzW4B3++MSz93H1F74+HcwlSy7wUfPHF8K6f+eUKKA
+nk2u7ydA1YXIVTB2RuvvjE07rwvbY7XYYTfdV+nOfhv7eV59Givww/hVaMsOwiXV
++KLsqoIrZaPinnb/UufqxALDYQetlj/3hynpbfqlRYHz06a3V9IuSSWtc/sTabHD
+P8+LDrpd2XoX0Mi+7++k026CdLLrUxN0GZQVN59aptJMggXDZk2TdOVS1mi8kTN4
+er1GkxGfb6P4B33yO0VkqzS1bqatIJFDeicINUlvQCB/9u7oDy1l0V6lCFZOva5P
+bs/y/2Gp6eJAYYebYVUvH0uWjSPWqtSJxbjZJSDLFKB7oH2K6vFxTGow9YiSyb1n
+CJQpzmISv0kFE+UqqD89CrozLjHI9YL6TkT95vhWFwFf+ap6pfivYQJrGkbpAzRo
+UMi80F5dMGrYt/z2I7PRQ9RdPCX8qO2f4mvblVSgAwzRH5Jh1Ng=
+=57fm
+-----END PGP SIGNATURE-----
+--=-=-=--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
