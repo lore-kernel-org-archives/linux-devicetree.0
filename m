@@ -1,217 +1,116 @@
-From: Alexandre Torgue <alexandre.torgue@st.com>
-Subject: Re: [PATCH v4 0/8] Add support for DCMI camera interface of
- STMicroelectronics STM32 SoC series
-Date: Thu, 4 May 2017 09:35:53 +0200
-Message-ID: <b6cee1d6-a07a-87ac-4f9e-aad6747f60bc@st.com>
-References: <1492704445-22186-1-git-send-email-hugues.fruchet@st.com>
+From: Jassi Brar <jassisinghbrar@gmail.com>
+Subject: Re: [PATCH v3 2/4] soc: qcom: Introduce APCS IPC driver
+Date: Thu, 4 May 2017 13:24:04 +0530
+Message-ID: <CABb+yY1YJ6cNG0UKahsnri3A4izdD3ZBpY6LLCHFkc=O3c0TcA@mail.gmail.com>
+References: <20170503052929.17422-1-bjorn.andersson@linaro.org>
+ <20170503052929.17422-2-bjorn.andersson@linaro.org> <c9b86ecfa6b84ae994da6c30d2840bbf@SFHDAG7NODE2.st.com>
+ <CABb+yY03NHBEui+OtagpTD4bm2yxoahEiciBG99gG2jrVGjpKQ@mail.gmail.com> <20170504054516.GB15143@minitux>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1492704445-22186-1-git-send-email-hugues.fruchet@st.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Hugues Fruchet <hugues.fruchet@st.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Yannick Fertre <yannick.fertre@st.com>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <20170504054516.GB15143@minitux>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Loic PALLARDY <loic.pallardy@st.com>, Andy Gross <andy.gross@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ohad Ben-Cohen <ohad@wizery.com>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "linux-soc@vger.kernel.org" <linux-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-remoteproc@vger.kernel.org" <linux-remoteproc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Hugues,
+On Thu, May 4, 2017 at 11:15 AM, Bjorn Andersson
+<bjorn.andersson@linaro.org> wrote:
+> On Wed 03 May 02:55 PDT 2017, Jassi Brar wrote:
+>
+>> Loic, thanks for adding me.
+>>
+>> On Wed, May 3, 2017 at 2:58 PM, Loic PALLARDY <loic.pallardy@st.com> wrote:
+>> >
+>> >
+>> >> -----Original Message-----
+>> >> From: linux-remoteproc-owner@vger.kernel.org [mailto:linux-remoteproc-
+>> >> owner@vger.kernel.org] On Behalf Of Bjorn Andersson
+>> >> Sent: Wednesday, May 03, 2017 7:29 AM
+>> >> To: Andy Gross <andy.gross@linaro.org>; Rob Herring
+>> >> <robh+dt@kernel.org>; Mark Rutland <mark.rutland@arm.com>; Ohad Ben-
+>> >> Cohen <ohad@wizery.com>
+>> >> Cc: linux-arm-msm@vger.kernel.org; linux-soc@vger.kernel.org;
+>> >> devicetree@vger.kernel.org; linux-kernel@vger.kernel.org; linux-
+>> >> remoteproc@vger.kernel.org
+>> >> Subject: [PATCH v3 2/4] soc: qcom: Introduce APCS IPC driver
+>> >>
+>> >> This implements a driver that exposes the IPC bits found in the APCS Global
+>> >> block in various Qualcomm platforms. The bits are used to signal inter-
+>> >> processor communication signals from the application CPU to other masters.
+>> >>
+>> >> The driver implements the "doorbell" binding and could be used as basis for a
+>> >> new Linux framework, if found useful outside Qualcomm.
+>> >>
+>> > Hi Bjorn,
+>> >
+>> > Even if Qualcom APCS IPC is limited, why don't you rely on existing mailbox framework.
+>> > It is there to gather all IPC management under the same interface.
+>> > No need to create a new one from my pov.
+>> > If you don't provide message data, mailbox framework behaves as doorbell.
+>> >
+>> QCOM RPM reinvented the wheel for what mailbox framework already did,
+>> despite my pointing it out =>
+>> http://lkml.iu.edu/hypermail//linux/kernel/1406.2/03918.html
+>>
+>
+> The RPM interface works by writing various information in shared DRAM
+> and then invoking an interrupt on the remote processor.
+>
+This is what _most_ platforms do, and they use mailbox framework. If
+mailbox framework doesn't suit RPM, then it doesn't suit most
+platforms that use it.
 
-On 04/20/2017 06:07 PM, Hugues Fruchet wrote:
-> This patchset introduces a basic support for Digital Camera Memory Interface
-> (DCMI) of STMicroelectronics STM32 SoC series.
+> My argumentation against using the mailbox framework for the RPM case
+> was that the message model is a software construct and doesn't fit the
+> mailbox framework.
 >
-> This first basic support implements RGB565 & YUV frame grabbing.
-> Cropping and JPEG support will be added later on.
->
-> This has been tested on STM324x9I-EVAL evaluation board embedding
-> an OV2640 camera sensor.
->
-> This driver depends on:
->   - [PATCHv6 00/14] atmel-isi/ov7670/ov2640: convert to standalone drivers http://www.spinics.net/lists/linux-media/msg113480.html
+Mailbox framework works beneath protocol layer (software construct).
+As I said years ago, the h/w bits of the controller should be under
+mailbox api, while the message structures and signals are protocol
+specific and be in QCOM specific location.
 
-For stm32 machine part (DT+config):
-Acked-by: Alexandre TORGUE <alexandre.torgue@st.com>
 
-I will add it in future pull request.
+> Before "inventing" the function for acquiring a handle to a doorbell I
+> did look at making this a mailbox controller, but as each mailbox
+> channel related to a single bit and 1 is the only value we'll ever write
+> it didn't feel like it matches the mailbox expectations. But as you seem
+> to object I'll attempt to rewrite it using the mailbox framework
+> instead.
+>
+Yes, please. 1-bit messages are just a special case of N-bits messages
+that mailbox framework supports.
 
-Regards
-Alex
 
+> But which one of these would be appropriate for a "mailbox channel" that
+> doesn't have any actual messages?
 >
-> ===========
-> = history =
-> ===========
-> version 4:
->   - "v4l2-compliance -s -f" report
->   - fix behaviour in case of start_streaming failure (DMA memory shortage for ex.)
->   - dt-bindings: Fix remarks from Rob Herring:
->     http://www.mail-archive.com/linux-media@vger.kernel.org/msg111340.html
->     Add "Acked-by: Rob Herring <robh@kernel.org>"
+>   mbox_send_message(chan, NULL)
+> or
+>   const int one = 1;
+>   mbox_send_message(chan, (void*)&one);
 >
-> version 3:
->   - stm32-dcmi: Add "Reviewed-by: Hans Verkuil <hans.verkuil@cisco.com>"
->   - dt-bindings: Fix remarks from Rob Herring:
->     http://www.mail-archive.com/linux-media@vger.kernel.org/msg110956.html
+It depends upon your h/w.
+If each physical channel is hardwired to work on a predefined single
+bit, then the driver could do without that bit being explicitly
+passed.
+If a physical channel can be mapped onto any bit(s), then you do need
+to pass that info via mbox_send_message().
+
+
+>> The driver bypassed mailbox framework and was pushed via another tree.
+>> Same is being attempted now, only now it is more expensive to switch
+>> to generic mailbox framework having spent so much time on QCOM
+>> specific implementation of controller and protocol drivers inside
+>> drivers/soc/qcom/
 >
-> version 2:
->   - Fix a Kbuild warning in probe:
->     http://www.mail-archive.com/linux-media@vger.kernel.org/msg110678.html
->   - Fix a warning in dcmi_queue_setup()
->   - dt-bindings: warn on sensor signals level inversion in board example
->   - Typos fixing
+> I'm not sure I follow this, there's no extensive rework going on here -
+> all I'm trying to do is abstract the "writel(BIT(x), ipc_reg)" line of
+> the RPM driver, because it's being used in other clients as well.
 >
-> version 1:
->   - Initial submission
->
-> ===================
-> = v4l2-compliance =
-> ===================
-> Below is the v4l2-compliance report for this current version of the DCMI camera interface.
-> v4l2-compliance has been built from v4l-utils-1.12.3.
->
-> ~ # v4l2-compliance -s -f -d /dev/video0
-> v4l2-compliance SHA   : f5f45e17ee98a0ebad7836ade2b34ceec909d751
->
-> Driver Info:
->         Driver name   : stm32-dcmi
->         Card type     : STM32 Digital Camera Memory Int
->         Bus info      : platform:dcmi
->         Driver version: 4.11.0
->         Capabilities  : 0x85200001
->                 Video Capture
->                 Read/Write
->                 Streaming
->                 Extended Pix Format
->                 Device Capabilities
->         Device Caps   : 0x05200001
->                 Video Capture
->                 Read/Write
->                 Streaming
->                 Extended Pix Format
->
-> Compliance test for device /dev/video0 (not using libv4l2):
->
-> Required ioctls:
->         test VIDIOC_QUERYCAP: OK
->
-> Allow for multiple opens:
->         test second video open: OK
->         test VIDIOC_QUERYCAP: OK
->         test VIDIOC_G/S_PRIORITY: OK
->         test for unlimited opens: OK
->
-> Debug ioctls:
->         test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
->         test VIDIOC_LOG_STATUS: OK
->
-> Input ioctls:
->         test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
->         test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
->         test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
->         test VIDIOC_ENUMAUDIO: OK (Not Supported)
->         test VIDIOC_G/S/ENUMINPUT: OK
->         test VIDIOC_G/S_AUDIO: OK (Not Supported)
->         Inputs: 1 Audio Inputs: 0 Tuners: 0
->
-> Output ioctls:
->         test VIDIOC_G/S_MODULATOR: OK (Not Supported)
->         test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
->         test VIDIOC_ENUMAUDOUT: OK (Not Supported)
->         test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
->         test VIDIOC_G/S_AUDOUT: OK (Not Supported)
->         Outputs: 0 Audio Outputs: 0 Modulators: 0
->
-> Input/Output configuration ioctls:
->         test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
->         test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
->         test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
->         test VIDIOC_G/S_EDID: OK (Not Supported)
->
-> Test input 0:
->
->         Control ioctls:
->                 test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK
->                 test VIDIOC_QUERYCTRL: OK
->                 test VIDIOC_G/S_CTRL: OK
->                 test VIDIOC_G/S/TRY_EXT_CTRLS: OK
->                 test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK
->                 test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
->                 Standard Controls: 3 Private Controls: 0
->
->         Format ioctls:
->                 test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
->                 test VIDIOC_G/S_PARM: OK (Not Supported)
->                 test VIDIOC_G_FBUF: OK (Not Supported)
->                 test VIDIOC_G_FMT: OK
->                 test VIDIOC_TRY_FMT: OK
->                 test VIDIOC_S_FMT: OK
->                 test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
->                 test Cropping: OK (Not Supported)
->                 test Composing: OK (Not Supported)
->                 test Scaling: OK
->
->         Codec ioctls:
->                 test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
->                 test VIDIOC_G_ENC_INDEX: OK (Not Supported)
->                 test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
->
->         Buffer ioctls:
->                 test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK
->                 test VIDIOC_EXPBUF: OK
->
-> Test input 0:
->
-> Streaming ioctls:
->         test read/write: OK
->         test MMAP: OK
->         test USERPTR: OK (Not Supported)
->         test DMABUF: Cannot test, specify --expbuf-device
->
-> Stream using all formats:
->         test MMAP for Format YUYV, Frame Size 176x144:
->                 Stride 352, Field None: OK
->         test MMAP for Format YUYV, Frame Size 320x240:
->                 Stride 640, Field None: OK
->         test MMAP for Format UYVY, Frame Size 176x144:
->                 Stride 352, Field None: OK
->         test MMAP for Format UYVY, Frame Size 320x240:
->                 Stride 640, Field None: OK
->         test MMAP for Format RGBP, Frame Size 176x144:
->                 Stride 352, Field None: OK
->         test MMAP for Format RGBP, Frame Size 320x240:
->                 Stride 640, Field None: OK
->
-> Total: 52, Succeeded: 52, Failed: 0, Warnings: 0
->
-> Hugues Fruchet (8):
->   dt-bindings: Document STM32 DCMI bindings
->   [media] stm32-dcmi: STM32 DCMI camera interface driver
->   ARM: dts: stm32: Enable DCMI support on STM32F429 MCU
->   ARM: dts: stm32: Enable DCMI camera interface on STM32F429-EVAL board
->   ARM: dts: stm32: Enable STMPE1600 gpio expander of STM32F429-EVAL
->     board
->   ARM: dts: stm32: Enable OV2640 camera support of STM32F429-EVAL board
->   ARM: configs: stm32: STMPE1600 GPIO expander
->   ARM: configs: stm32: DCMI + OV2640 camera support
->
->  .../devicetree/bindings/media/st,stm32-dcmi.txt    |   46 +
->  arch/arm/boot/dts/stm32429i-eval.dts               |   56 +
->  arch/arm/boot/dts/stm32f429.dtsi                   |   37 +
->  arch/arm/configs/stm32_defconfig                   |    9 +
->  drivers/media/platform/Kconfig                     |   12 +
->  drivers/media/platform/Makefile                    |    2 +
->  drivers/media/platform/stm32/Makefile              |    1 +
->  drivers/media/platform/stm32/stm32-dcmi.c          | 1419 ++++++++++++++++++++
->  8 files changed, 1582 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/st,stm32-dcmi.txt
->  create mode 100644 drivers/media/platform/stm32/Makefile
->  create mode 100644 drivers/media/platform/stm32/stm32-dcmi.c
->
+No, I meant ideally RPM should have used mailbox api for the
+controller programming, but moving to that now will be expensive
+because you already developed huge code base around QCOM specific
+mailbox implementation.
+
+Regards.
