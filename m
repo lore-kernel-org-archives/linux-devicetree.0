@@ -1,62 +1,36 @@
-From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] of/unittest: Missing unlocks on error
-Date: Wed, 3 May 2017 17:05:29 -0700
-Message-ID: <590A7049.3070108@gmail.com>
-References: <20170503194950.4xbdbwybvx6dkadx@mwanda>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCHv2 1/2] Input: pwm-vibra: new driver
+Date: Wed, 3 May 2017 17:39:52 -0700
+Message-ID: <20170504003952.GN3780@atomide.com>
+References: <20170503111128.15385-1-sebastian.reichel@collabora.co.uk>
+ <20170503111128.15385-2-sebastian.reichel@collabora.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170503194950.4xbdbwybvx6dkadx@mwanda>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Dan Carpenter <dan.carpenter-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-janitors-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-input-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170503111128.15385-2-sebastian.reichel@collabora.co.uk>
+Sender: linux-input-owner@vger.kernel.org
+To: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
+Cc: Sebastian Reichel <sre@kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-input@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 05/03/17 12:49, Dan Carpenter wrote:
-> Static checkers complain that we should unlock before returning.  Which
-> is true.
+* Sebastian Reichel <sebastian.reichel@collabora.co.uk> [170503 04:14]:
+> Provide a simple driver for PWM controllable vibrators. It
+> will be used by Motorola Droid 4.
 > 
-> Signed-off-by: Dan Carpenter <dan.carpenter-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>
-> 
-> diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
-> index 12597ff8cfb0..425338d6286d 100644
-> --- a/drivers/of/unittest.c
-> +++ b/drivers/of/unittest.c
-> @@ -2210,14 +2210,14 @@ static __init void of_unittest_overlay_high_level(void)
->  				unittest(0,
->  					 "duplicate property '%s' in overlay_base node __symbols__",
->  					 prop->name);
-> -				return;
-> +				goto err_unlock;
->  			}
->  			ret = __of_add_property_sysfs(of_symbols, prop);
->  			if (ret) {
->  				unittest(0,
->  					 "unable to add property '%s' in overlay_base node __symbols__ to sysfs",
->  					 prop->name);
-> -				return;
-> +				goto err_unlock;
->  			}
->  		}
->  	}
-> @@ -2232,6 +2232,10 @@ static __init void of_unittest_overlay_high_level(void)
->  
->  	unittest(overlay_data_add(2),
->  		 "Adding overlay 'overlay_bad_phandle' failed\n");
-> +	return;
-> +
-> +err_unlock:
-> +	mutex_unlock(&of_mutex);
->  }
->  
->  #else
-> 
+> Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
+> ---
+> Changes since PATCHv1:
+>  - move driver removal code to input->close function
+>  - mark PM functions __maybe_unused and drop #ifdef CONFIG_PM_SLEEP
+>  - remove duplicate NULL check for vibrator in probe function
+>  - cancel work in suspend function
 
-Thanks Dan.
+I'm getting this if CONFIG_INPUT_FF_MEMLESS is not selected:
 
-Reviewed-by: Frank Rowand <frank.rowand-7U/KSKJipcs@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+ERROR: "input_ff_create_memless" [drivers/input/misc/pwm-vibra.ko] undefined!
+
+Other than that works for me with your test app after
+modprobe of pwm-omap-dmtimer and ff_memless:
+
+Tested-by: Tony Lindgren <tony@atomide.com>
