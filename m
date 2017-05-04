@@ -1,45 +1,29 @@
 From: Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>
-Subject: [PATCH v6 0/8] mfd: Add OF device table to I2C drivers that are missing it
-Date: Thu,  4 May 2017 01:20:59 -0400
-Message-ID: <20170504052107.18995-1-javier@dowhile0.org>
+Subject: [PATCH v6 1/8] dt-bindings: mfd: Add retu/tahvo ASIC chips bindings
+Date: Thu,  4 May 2017 01:21:00 -0400
+Message-ID: <20170504052107.18995-2-javier@dowhile0.org>
+References: <20170504052107.18995-1-javier@dowhile0.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170504052107.18995-1-javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Aaro Koskinen <aaro.koskinen-X3B1VOXEql0@public.gmane.org>, Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+There are Device Tree source files defining a device node for the
+retu/tahvo I2C chip, but there isn't a DT binding document for it.
 
-This series add OF device ID tables to mfd I2C drivers whose devices are
-either used in Device Tree source files or are listed in binding docs as
-a compatible string.
+Signed-off-by: Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Acked-by: Aaro Koskinen <aaro.koskinen-X3B1VOXEql0@public.gmane.org>
+Acked-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
-That's done because the plan is to change the I2C core to report proper OF
-modaliases instead of always reporting a MODALIAS=i2c:<foo> regardless if
-a device was registered via DT or using the legacy platform data mechanism.
-
-So these patches will make sure that mfd I2C drivers modules will continue
-to be autoloaded once the I2C core is changed to report proper OF modalias.
-
-Users didn't have a vendor prefix in the used compatible strings, but since
-there wasn't a DT binding document for these drivers, it can be said that
-were working for mere luck and so this series fixes the users and add a DT
-binding doc for the drivers.
-
-Most patches can be applied independently, with the exception of patches
-2 to 4 that should be applied in the same tree to keep bisect-ability. I
-suggest these to go through the MFD subsystem tree.
-
-Best regards,
-Javier
+---
 
 Changes in v6:
 - Mention CBUS address instead of I2C since that's the bus used (Wolfram Sang).
 - Add a "i2c-cbus-gpio" comptible and use cbus0 for parent node (Wolfram Sang).
-- Add Wolfram Sang's Reviewed-by tag.
-- Add Wolfram Sang's Reviewed-by tag.
-- Add Wolfram Sang's Reviewed-by tag.
-- Add Wolfram Sang's Reviewed-by tag.
 
 Changes in v5:
 - Add missing properties for interrupts to DT binding doc (Rob Herring).
@@ -47,66 +31,50 @@ Changes in v5:
 - Add Aaro Koskinen's Acked-by tag.
 - Add Acked-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>'s Acked-by tag.
 - Add Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>'s Acked-by tag.
-- Add Rob Herring's Acked-by tag.
-- Add Aaro Koskinen's Acked-by tag.
-- Add Tony Lindgren's Acked-by tag.
-- Add Rob Herring's Acked-by tag.
-- Add Aaro Koskinen's Acked-by tag.
-- Add Acked-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>'s Acked-by tag.
-- Add Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>'s Acked-by tag.
-- Add Rob Herring's Acked-by tag.
-- Add Aaro Koskinen's Acked-by tag.
-- Add Acked-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>'s Acked-by tag.
-- Add Rob Herring's Acked-by tag.
-- Add Aaro Koskinen's Acked-by tag.
-- Add Acked-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>'s Acked-by tag.
-- Add Rob Herring's Acked-by tag.
-- Add Acked-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>'s Acked-by tag.
-- Add Rob Herring's Acked-by tag.
-- Add Acked-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>'s Acked-by tag.
-- Add Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>'s Acked-by tag.
-- Add Rob Herring's Acked-by tag.
-- Add Acked-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>'s Acked-by tag.
 
 Changes in v4:
 - Use "dt-bindings: mfd:" prefix in subject line (Rob Herring).
 - Add information about what functions the device serve (Lee Jones).
 - Avoid using MFD in Device Tree (Lee Jones).
-- Drop -mfd suffix in compatible string (Lee Jones).
-- Avoid using MFD in Device Tree (Lee Jones).
-- Use "dt-bindings: mfd:" prefix in subject line (Rob Herring).
-- Add information about what functions the device serve (Lee Jones).
 
-Changes in v3:
-- Add a vendor prefix to the compatible string (Rob Herring).
-- Add a vendor prefix to the compatible string (Rob Herring).
+Changes in v3: None
+Changes in v2: None
 
-Changes in v2:
-- Don't use of_match_ptr() to avoid build warning when CONFIG_OF is disabled.
-- Don't use of_match_ptr() to avoid build warning when CONFIG_OF is disabled.
-
-Javier Martinez Canillas (8):
-  dt-bindings: mfd: Add retu/tahvo ASIC chips bindings
-  mfd: retu: Drop -mfd suffix from I2C device ID name
-  mfd: retu: Add OF device ID table
-  ARM: dts: n8x0: Add vendor prefix to retu node
-  i2c: i2c-cbus-gpio: Add vendor prefix to retu node in example
-  dt-bindings: mfd: Add TI tps6105x chip bindings
-  mfd: tps6105x: Add OF device ID table
-  ARM: ux500: Add vendor prefix to tps61052 node
-
- .../devicetree/bindings/i2c/i2c-cbus-gpio.txt      |  4 ++--
- Documentation/devicetree/bindings/mfd/retu.txt     | 25 ++++++++++++++++++++++
- Documentation/devicetree/bindings/mfd/tps6105x.txt | 17 +++++++++++++++
- arch/arm/boot/dts/omap2420-n8x0-common.dtsi        |  4 ++--
- arch/arm/boot/dts/ste-hrefprev60.dtsi              |  2 +-
- arch/arm/mach-omap1/board-nokia770.c               |  4 ++--
- drivers/mfd/retu-mfd.c                             | 12 +++++++++--
- drivers/mfd/tps6105x.c                             |  8 +++++++
- 8 files changed, 67 insertions(+), 9 deletions(-)
+ Documentation/devicetree/bindings/mfd/retu.txt | 25 +++++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/mfd/retu.txt
- create mode 100644 Documentation/devicetree/bindings/mfd/tps6105x.txt
 
+diff --git a/Documentation/devicetree/bindings/mfd/retu.txt b/Documentation/devicetree/bindings/mfd/retu.txt
+new file mode 100644
+index 000000000000..876242394a16
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mfd/retu.txt
+@@ -0,0 +1,25 @@
++* Device tree bindings for Nokia Retu and Tahvo multi-function device
++
++Retu and Tahvo are a multi-function devices found on Nokia Internet
++Tablets (770, N800 and N810). The Retu chip provides watchdog timer
++and power button control functionalities while Tahvo chip provides
++USB transceiver functionality.
++
++Required properties:
++- compatible:		"nokia,retu" or "nokia,tahvo"
++- reg:			Specifies the CBUS slave address of the ASIC chip
++- interrupts: 		The interrupt line the device is connected to
++- interrupt-parent:	The parent interrupt controller
++
++Example:
++
++cbus0 {
++	compatible = "i2c-cbus-gpio";
++	...
++	retu: retu@1 {
++		compatible = "nokia,retu";
++		interrupt-parent = <&gpio4>;
++		interrupts = <12 IRQ_TYPE_EDGE_RISING>;
++		reg = <0x1>;
++	};
++};
 -- 
 2.9.3
 
