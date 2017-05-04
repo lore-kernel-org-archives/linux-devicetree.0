@@ -1,11 +1,13 @@
 From: Eugen Hristev <eugen.hristev@microchip.com>
-Subject: [PATCH v2 0/3] iio: adc: sama5d2_adc hw triggers and buffers
-Date: Thu, 4 May 2017 15:13:17 +0300
-Message-ID: <1493900000-26220-1-git-send-email-eugen.hristev@microchip.com>
+Subject: [PATCH v2 1/3] ARM: dts: at91: sama5d2_xplained: enable ADTRG pin
+Date: Thu, 4 May 2017 15:13:18 +0300
+Message-ID: <1493900000-26220-2-git-send-email-eugen.hristev@microchip.com>
+References: <1493900000-26220-1-git-send-email-eugen.hristev@microchip.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1493900000-26220-1-git-send-email-eugen.hristev@microchip.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,37 +21,46 @@ To: nicolas.ferre@microchip.com, jic23@kernel.org, alexandre.belloni@free-electr
 Cc: eugen.hristev@microchip.com, ludovic.desroches@microchip.com
 List-Id: devicetree@vger.kernel.org
 
-This patch implements the hardware triggers support and buffer management
-for sama5d2.
-The DT modifications ( [PATCH 1/3] ARM: dts: at91: sama5d2_xplained:
-enable ADTRG pin) are for demonstration purposes of the feature,
-setting the pinctrl for the ADC hw trigger pin,should go through
-at91 maintainers.
-I also increased the buffer size for the trigger name in the
-generic_buffer application to cope with longer names and avoid
-stack smashing problem.
-This is in patch [PATCH 3/3] iio: tools: generic_buffer: increase trigger length
+Enable pinctrl for ADTRG pin (PD31) for ADC hardware trigger support.
 
-  Changes in v2:
- - Moved buffer allocation and freeing into the preenable and postdisable
-   callbacks.
-   We have a total of scan bytes that can vary a lot depending on each channel
-   enabled at a certain point.
- - made the at91 trigger list part of state structure
- - made the iio trigger list preallocated in state structure
- - moved irq enabling/disabling into the try_reenable callback
- - on trigger disable must write disable registries as well
- - Modified trigger name length to 64
+Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
+---
+ arch/arm/boot/dts/at91-sama5d2_xplained.dts | 16 +++++++++++++++-
+ 1 file changed, 15 insertions(+), 1 deletion(-)
 
-Eugen Hristev (3):
-  ARM: dts: at91: sama5d2_xplained: enable ADTRG pin
-  iio: adc: at91-sama5d2_adc: add hw trigger and buffer support
-  iio: tools: generic_buffer: increase trigger length
-
- arch/arm/boot/dts/at91-sama5d2_xplained.dts |  16 +-
- drivers/iio/adc/at91-sama5d2_adc.c          | 231 +++++++++++++++++++++++++++-
- tools/iio/iio_utils.h                       |   2 +-
- 3 files changed, 244 insertions(+), 5 deletions(-)
-
+diff --git a/arch/arm/boot/dts/at91-sama5d2_xplained.dts b/arch/arm/boot/dts/at91-sama5d2_xplained.dts
+index 0bef9e0..04754b1 100644
+--- a/arch/arm/boot/dts/at91-sama5d2_xplained.dts
++++ b/arch/arm/boot/dts/at91-sama5d2_xplained.dts
+@@ -303,7 +303,7 @@
+ 				vddana-supply = <&vdd_3v3_lp_reg>;
+ 				vref-supply = <&vdd_3v3_lp_reg>;
+ 				pinctrl-names = "default";
+-				pinctrl-0 = <&pinctrl_adc_default>;
++				pinctrl-0 = <&pinctrl_adc_default &pinctrl_adtrg_default>;
+ 				status = "okay";
+ 			};
+ 
+@@ -322,6 +322,20 @@
+ 					bias-disable;
+ 				};
+ 
++				/*
++				 * The ADTRG pin can work on any edge type.
++				 * In here it's being pulled up, so need to
++				 * connect it to ground to get an edge e.g.
++				 * Trigger can be configured on falling, rise
++				 * or any edge, and the pull-up can be changed
++				 * to pull-down or left floating according to
++				 * needs.
++				 */
++				pinctrl_adtrg_default: adtrg_default {
++					pinmux = <PIN_PD31__ADTRG>;
++					bias-pull-up;
++				};
++
+ 				pinctrl_charger_chglev: charger_chglev {
+ 					pinmux = <PIN_PA12__GPIO>;
+ 					bias-disable;
 -- 
 2.7.4
