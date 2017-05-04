@@ -1,16 +1,16 @@
 From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH v2 4/20] clk: sunxi-ng: mux: Don't just rely
- on the parent for CLK_SET_RATE_PARENT
-Date: Thu, 4 May 2017 11:23:36 +0800
-Message-ID: <CAGb2v65vxKZTyMC6hR-H93JeNE+Lfo4iCcGHsYXzAM_Pbm4CWQ@mail.gmail.com>
+Subject: Re: [PATCH v2 5/20] clk: sunxi-ng: mux: split out the
+ pre-divider computation code
+Date: Thu, 4 May 2017 11:25:34 +0800
+Message-ID: <CAGb2v65TyYoV97LmoEPseO5oxcNNyPiLncwxC9y_Hzi0XhyzMg@mail.gmail.com>
 References: <cover.d697f34bb7b0605c5e76cbc4167a64453e5e0984.1493812478.git-series.maxime.ripard@free-electrons.com>
- <27fcae13e64ef86d32001478f1923e9a02deb7b8.1493812478.git-series.maxime.ripard@free-electrons.com>
+ <fcda95612e72a1a5bb6010993181e638a41511e9.1493812478.git-series.maxime.ripard@free-electrons.com>
 Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBUF5VLEAKGQEMMEC25A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBRV6VLEAKGQEYOZCJKA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <27fcae13e64ef86d32001478f1923e9a02deb7b8.1493812478.git-series.maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+In-Reply-To: <fcda95612e72a1a5bb6010993181e638a41511e9.1493812478.git-series.maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -23,17 +23,16 @@ List-Id: devicetree@vger.kernel.org
 
 On Wed, May 3, 2017 at 7:59 PM, Maxime Ripard
 <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> The current code only rely on the parent to change its rate in the case
-> where CLK_SET_RATE_PARENT is set.
+> The pre-divider retrieval code was merged into the function to apply the
+> current pre-divider onto the parent clock rate so that we can use that
+> adjusted value to do our factors computation.
 >
-> However, some clock rates might be obtained only through a modification of
-> the parent and the clock divider. Just rely on the round rate of the clocks
-> to give us the best computation that might be achieved for a given rate.
->
-> round_rate functions now need to honor CLK_SET_RATE_PARENT, but either the
-> functions already do that if they modify the parent, or don't modify the
-> praents at all.
+> However, since we'll need to do the reverse operation, we need to split out
+> that code into a function that will be shared.
 >
 > Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 
 Acked-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+
+Seems this would conflict with my "clk: sunxi-ng: Support multiple variable
+pre-dividers" patch though. We'll see how this works out.
