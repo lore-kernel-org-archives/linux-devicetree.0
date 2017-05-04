@@ -1,82 +1,59 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: [PATCH v4 2/5] dt-bindings: mailbox: Introduce Qualcomm APCS global binding
-Date: Thu,  4 May 2017 13:05:36 -0700
-Message-ID: <20170504200539.27027-2-bjorn.andersson@linaro.org>
-References: <20170504200539.27027-1-bjorn.andersson@linaro.org>
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <20170504200539.27027-1-bjorn.andersson@linaro.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Andy Gross <andy.gross@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ohad Ben-Cohen <ohad@wizery.com>, Jassi Brar <jassisinghbrar@gmail.com>
-Cc: linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-remoteproc@vger.kernel.org
+From: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
+Subject: Re: [PATCH v3 2/2] [media] platform: add video-multiplexer subdevice
+ driver
+Date: Thu, 4 May 2017 23:32:08 +0300
+Message-ID: <20170504203208.GC7456@valkosipuli.retiisi.org.uk>
+References: <1493905137-27051-1-git-send-email-p.zabel@pengutronix.de>
+ <1493905137-27051-2-git-send-email-p.zabel@pengutronix.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1493905137-27051-2-git-send-email-p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Vladimir Zapolskiy <vladimir_zapolskiy-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Steve Longerbeam <steve_longerbeam-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Introduce a binding for the Qualcomm APCS global block, exposing a
-mailbox for invoking interrupts on remote processors in the system.
+Hi Philipp,
 
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
----
+On Thu, May 04, 2017 at 03:38:57PM +0200, Philipp Zabel wrote:
+...
+> +static const struct of_device_id video_mux_dt_ids[] = {
+> +	{ .compatible = "video-mux", },
+> +	{ /* sentinel */ }
+> +};
+> +MODULE_DEVICE_TABLE(of, video_mux_dt_ids);
+> +
+> +static struct platform_driver video_mux_driver = {
 
-Changes since v3:
-- Transition to mailbox binding
+Shouldn't this be const?
 
-Changes since v2:
-- New binding
+With that,
 
- .../bindings/mailbox/qcom,apcs-kpss-global.txt     | 46 ++++++++++++++++++++++
- 1 file changed, 46 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.txt
+Acked-by: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
 
-diff --git a/Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.txt b/Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.txt
-new file mode 100644
-index 000000000000..eaa9e780f412
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.txt
-@@ -0,0 +1,46 @@
-+Binding for the Qualcomm APCS global block
-+==========================================
-+
-+This binding describes the APCS "global" block found in various Qualcomm
-+platforms.
-+
-+- compatible:
-+	Usage: required
-+	Value type: <string>
-+	Definition: must be one of:
-+		    "qcom,msm8916-apcs-kpss-global",
-+		    "qcom,msm8996-apcs-hmss-global"
-+
-+- reg:
-+	Usage: required
-+	Value type: <prop-encoded-array>
-+	Definition: must specify the base address and size of the global block
-+
-+- #mbox-cells:
-+	Usage: required
-+	Value type: <u32>
-+	Definition: as described in mailbox.txt, must be 1
-+
-+
-+= EXAMPLE
-+The following example describes the APCS HMSS found in MSM8996 and part of the
-+GLINK RPM referencing the "rpm_hlos" doorbell therein.
-+
-+	apcs_glb: apcs-glb@9820000 {
-+		compatible = "qcom,msm8996-apcs-hmss-global";
-+		reg = <0x9820000 0x1000>;
-+
-+		#mbox-cells = <1>;
-+	};
-+
-+	rpm-glink {
-+		compatible = "qcom,glink-rpm";
-+
-+		interrupts = <GIC_SPI 168 IRQ_TYPE_EDGE_RISING>;
-+
-+		qcom,rpm-msg-ram = <&rpm_msg_ram>;
-+
-+		mboxes = <&apcs_glb 0>;
-+		mbox-names = "rpm_hlos";
-+	};
-+
+> +	.probe		= video_mux_probe,
+> +	.remove		= video_mux_remove,
+> +	.driver		= {
+> +		.of_match_table = video_mux_dt_ids,
+> +		.name = "video-mux",
+> +	},
+> +};
+> +
+> +module_platform_driver(video_mux_driver);
+> +
+> +MODULE_DESCRIPTION("video stream multiplexer");
+> +MODULE_AUTHOR("Sascha Hauer, Pengutronix");
+> +MODULE_AUTHOR("Philipp Zabel, Pengutronix");
+> +MODULE_LICENSE("GPL");
+
 -- 
-2.12.0
+Regards,
+
+Sakari Ailus
+e-mail: sakari.ailus-X3B1VOXEql0@public.gmane.org	XMPP: sailus-PCDdDYkjdNMDXYZnReoRVg@public.gmane.org
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
