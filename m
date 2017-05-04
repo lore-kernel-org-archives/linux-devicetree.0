@@ -1,678 +1,152 @@
-From: icenowy-h8G6r0blFSE@public.gmane.org
-Subject: Re: [PATCH v6 08/13] drm/sun4i: add support for
- Allwinner DE2 mixers
-Date: Fri, 05 May 2017 00:57:08 +0800
-Message-ID: <7f2ef89c2a78015ec31ba83266ac0d0e@aosc.io>
-References: <20170504114858.9008-1-icenowy@aosc.io>
- <20170504114858.9008-9-icenowy@aosc.io>
- <20170504130535.6nokhni5a3uxwy66@lukather>
- <522ab8cb2939f0017917c5e9b4065089@aosc.io>
-Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
+From: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 2/4] soc: qcom: Introduce APCS IPC driver
+Date: Thu, 4 May 2017 22:30:42 +0530
+Message-ID: <CABb+yY1=-zYcyGgd2r1ckEgsYRQ8f4esZa4i4hb30b75kBRK7Q@mail.gmail.com>
+References: <20170503052929.17422-1-bjorn.andersson@linaro.org>
+ <20170503052929.17422-2-bjorn.andersson@linaro.org> <c9b86ecfa6b84ae994da6c30d2840bbf@SFHDAG7NODE2.st.com>
+ <CABb+yY03NHBEui+OtagpTD4bm2yxoahEiciBG99gG2jrVGjpKQ@mail.gmail.com>
+ <20170504054516.GB15143@minitux> <CABb+yY1YJ6cNG0UKahsnri3A4izdD3ZBpY6LLCHFkc=O3c0TcA@mail.gmail.com>
+ <20170504161035.GC15143@minitux>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBDS6XAN6ZADRBZV2VXEAKGQEKJJ2VNY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <522ab8cb2939f0017917c5e9b4065089-h8G6r0blFSE@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170504161035.GC15143@minitux>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Loic PALLARDY <loic.pallardy-qxv4g6HH51o@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ohad Ben-Cohen <ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>, "linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-remoteproc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-remoteproc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-=E5=9C=A8 2017-05-05 00:50=EF=BC=8Cicenowy-h8G6r0blFSE@public.gmane.org =E5=86=99=E9=81=93=EF=BC=
-=9A
-> =E5=9C=A8 2017-05-04 21:05=EF=BC=8CMaxime Ripard =E5=86=99=E9=81=93=EF=BC=
-=9A
->> On Thu, May 04, 2017 at 07:48:53PM +0800, Icenowy Zheng wrote:
->>> Allwinner have a new "Display Engine 2.0" in their new SoCs, which=20
->>> comes
->>> with mixers to do graphic processing and feed data to TCON, like the=20
->>> old
->>> backends and frontends.
->>>=20
->>> Add support for the mixer on Allwinner V3s SoC; it's the simplest=20
->>> one.
->>>=20
->>> Currently a lot of functions are still missing -- more investigations
->>> are needed to gain enough information for them.
->>>=20
->>> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
->>> ---
->>> Changes in v6:
->>> - Rebased on wens's multi-pipeline patchset.
->>> Changes in v5:
->>> - Changed some code alignment.
->>> - Request real 32-bit DMA (prepare for 64-bit SoCs).
->>> Changes in v4:
->>> - Killed some dead code according to Jernej.
->>>=20
->>>  drivers/gpu/drm/sun4i/Kconfig       |  10 +
->>>  drivers/gpu/drm/sun4i/Makefile      |   3 +
->>>  drivers/gpu/drm/sun4i/sun8i_layer.c | 140 +++++++++++++
->>>  drivers/gpu/drm/sun4i/sun8i_layer.h |  36 ++++
->>>  drivers/gpu/drm/sun4i/sun8i_mixer.c | 394=20
->>> ++++++++++++++++++++++++++++++++++++
->>>  drivers/gpu/drm/sun4i/sun8i_mixer.h | 137 +++++++++++++
->>>  6 files changed, 720 insertions(+)
->>>  create mode 100644 drivers/gpu/drm/sun4i/sun8i_layer.c
->>>  create mode 100644 drivers/gpu/drm/sun4i/sun8i_layer.h
->>>  create mode 100644 drivers/gpu/drm/sun4i/sun8i_mixer.c
->>>  create mode 100644 drivers/gpu/drm/sun4i/sun8i_mixer.h
->>>=20
->>> diff --git a/drivers/gpu/drm/sun4i/Kconfig=20
->>> b/drivers/gpu/drm/sun4i/Kconfig
->>> index 5a8227f37cc4..15557484520d 100644
->>> --- a/drivers/gpu/drm/sun4i/Kconfig
->>> +++ b/drivers/gpu/drm/sun4i/Kconfig
->>> @@ -22,3 +22,13 @@ config DRM_SUN4I_BACKEND
->>>  	  original Allwinner Display Engine, which has a backend to
->>>  	  do some alpha blending and feed graphics to TCON. If M is
->>>  	  selected the module will be called sun4i-backend.
->>> +
->>> +config DRM_SUN4I_SUN8I_MIXER
->>=20
->> DRM_SUN8I_MIXER?
->>=20
->>> +	tristate "Support for Allwinner Display Engine 2.0 Mixer"
->>> +	depends on DRM_SUN4I
->>> +	default MACH_SUN8I
->>> +	help
->>> +	  Choose this option if you have an Allwinner SoC with the
->>> +	  Allwinner Display Engine 2.0, which has a mixer to do some
->>> +	  graphics mixture and feed graphics to TCON, If M is
->>> +	  selected the module will be called sun8i-mixer.
->>> diff --git a/drivers/gpu/drm/sun4i/Makefile=20
->>> b/drivers/gpu/drm/sun4i/Makefile
->>> index a08df56759e3..a876c6b3027c 100644
->>> --- a/drivers/gpu/drm/sun4i/Makefile
->>> +++ b/drivers/gpu/drm/sun4i/Makefile
->>> @@ -8,7 +8,10 @@ sun4i-tcon-y +=3D sun4i_crtc.o
->>>=20
->>>  sun4i-backend-y +=3D sun4i_backend.o sun4i_layer.o
->>>=20
->>> +sun8i-mixer-y +=3D sun8i_mixer.o sun8i_layer.o
->>> +
->>>  obj-$(CONFIG_DRM_SUN4I)		+=3D sun4i-drm.o sun4i-tcon.o
->>>  obj-$(CONFIG_DRM_SUN4I_BACKEND)		+=3D sun4i-backend.o
->>> +obj-$(CONFIG_DRM_SUN4I_SUN8I_MIXER)	+=3D sun8i-mixer.o
->>>  obj-$(CONFIG_DRM_SUN4I)		+=3D sun6i_drc.o
->>>  obj-$(CONFIG_DRM_SUN4I)		+=3D sun4i_tv.o
->>> diff --git a/drivers/gpu/drm/sun4i/sun8i_layer.c=20
->>> b/drivers/gpu/drm/sun4i/sun8i_layer.c
->>> new file mode 100644
->>> index 000000000000..48f33d8e013b
->>> --- /dev/null
->>> +++ b/drivers/gpu/drm/sun4i/sun8i_layer.c
->>> @@ -0,0 +1,140 @@
->>> +/*
->>> + * Copyright (C) Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
->>> + *
->>> + * Based on sun4i_layer.h, which is:
->>> + *   Copyright (C) 2015 Free Electrons
->>> + *   Copyright (C) 2015 NextThing Co
->>> + *
->>> + *   Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
->>> + *
->>> + * This program is free software; you can redistribute it and/or
->>> + * modify it under the terms of the GNU General Public License as
->>> + * published by the Free Software Foundation; either version 2 of
->>> + * the License, or (at your option) any later version.
->>> + */
->>> +
->>> +#include <drm/drm_atomic_helper.h>
->>> +#include <drm/drm_plane_helper.h>
->>> +#include <drm/drmP.h>
->>> +
->>> +#include "sun8i_layer.h"
->>> +#include "sun8i_mixer.h"
->>> +
->>> +struct sun8i_plane_desc {
->>> +	       enum drm_plane_type     type;
->>> +	       const uint32_t          *formats;
->>> +	       uint32_t                nformats;
->>> +};
->>> +
->>> +static int sun8i_mixer_layer_atomic_check(struct drm_plane *plane,
->>> +					    struct drm_plane_state *state)
->>> +{
->>> +	return 0;
->>> +}
->>=20
->> This isn't needed.
->>=20
->>> +static void sun8i_mixer_layer_atomic_disable(struct drm_plane=20
->>> *plane,
->>> +					       struct drm_plane_state *old_state)
->>> +{
->>> +	struct sun8i_layer *layer =3D plane_to_sun8i_layer(plane);
->>> +	struct sun8i_mixer *mixer =3D layer->mixer;
->>> +
->>> +	sun8i_mixer_layer_enable(mixer, layer->id, false);
->>> +}
->>> +
->>> +static void sun8i_mixer_layer_atomic_update(struct drm_plane *plane,
->>> +					      struct drm_plane_state *old_state)
->>> +{
->>> +	struct sun8i_layer *layer =3D plane_to_sun8i_layer(plane);
->>> +	struct sun8i_mixer *mixer =3D layer->mixer;
->>> +
->>> +	sun8i_mixer_update_layer_coord(mixer, layer->id, plane);
->>> +	sun8i_mixer_update_layer_formats(mixer, layer->id, plane);
->>> +	sun8i_mixer_update_layer_buffer(mixer, layer->id, plane);
->>> +	sun8i_mixer_layer_enable(mixer, layer->id, true);
->>> +}
->>> +
->>> +static struct drm_plane_helper_funcs sun8i_mixer_layer_helper_funcs=20
->>> =3D {
->>> +	.atomic_check	=3D sun8i_mixer_layer_atomic_check,
->>> +	.atomic_disable	=3D sun8i_mixer_layer_atomic_disable,
->>> +	.atomic_update	=3D sun8i_mixer_layer_atomic_update,
->>> +};
->>> +
->>> +static const struct drm_plane_funcs sun8i_mixer_layer_funcs =3D {
->>> +	.atomic_destroy_state	=3D drm_atomic_helper_plane_destroy_state,
->>> +	.atomic_duplicate_state	=3D drm_atomic_helper_plane_duplicate_state,
->>> +	.destroy		=3D drm_plane_cleanup,
->>> +	.disable_plane		=3D drm_atomic_helper_disable_plane,
->>> +	.reset			=3D drm_atomic_helper_plane_reset,
->>> +	.update_plane		=3D drm_atomic_helper_update_plane,
->>> +};
->>> +
->>> +static const uint32_t sun8i_mixer_layer_formats[] =3D {
->>> +	DRM_FORMAT_RGB888,
->>> +	DRM_FORMAT_XRGB8888,
->>> +};
->>> +
->>> +static const struct sun8i_plane_desc sun8i_mixer_planes[] =3D {
->>> +	{
->>> +		.type =3D DRM_PLANE_TYPE_PRIMARY,
->>> +		.formats =3D sun8i_mixer_layer_formats,
->>> +		.nformats =3D ARRAY_SIZE(sun8i_mixer_layer_formats),
->>> +	},
->>> +};
->>> +
->>> +static struct sun8i_layer *sun8i_layer_init_one(struct drm_device=20
->>> *drm,
->>> +						struct sun8i_mixer *mixer,
->>> +						const struct sun8i_plane_desc *plane)
->>> +{
->>> +	struct sun8i_layer *layer;
->>> +	int ret;
->>> +
->>> +	layer =3D devm_kzalloc(drm->dev, sizeof(*layer), GFP_KERNEL);
->>> +	if (!layer)
->>> +		return ERR_PTR(-ENOMEM);
->>> +
->>> +	/* possible crtcs are set later */
->>> +	ret =3D drm_universal_plane_init(drm, &layer->plane, 0,
->>> +				       &sun8i_mixer_layer_funcs,
->>> +				       plane->formats, plane->nformats,
->>> +				       plane->type, NULL);
->>> +	if (ret) {
->>> +		dev_err(drm->dev, "Couldn't initialize layer\n");
->>> +		return ERR_PTR(ret);
->>> +	}
->>> +
->>> +	drm_plane_helper_add(&layer->plane,
->>> +			     &sun8i_mixer_layer_helper_funcs);
->>> +	layer->mixer =3D mixer;
->>> +
->>> +	return layer;
->>> +}
->>> +
->>> +struct drm_plane **sun8i_layers_init(struct drm_device *drm,
->>> +				     struct sunxi_engine *engine)
->>> +{
->>> +	struct drm_plane **planes;
->>> +	struct sun8i_mixer *mixer =3D engine_to_sun8i_mixer(engine);
->>> +	int i;
->>> +
->>> +	planes =3D devm_kcalloc(drm->dev, ARRAY_SIZE(sun8i_mixer_planes) + 1,
->>> +			      sizeof(*planes), GFP_KERNEL);
->>> +	if (!planes)
->>> +		return ERR_PTR(-ENOMEM);
->>> +
->>> +	for (i =3D 0; i < ARRAY_SIZE(sun8i_mixer_planes); i++) {
->>> +		const struct sun8i_plane_desc *plane =3D &sun8i_mixer_planes[i];
->>> +		struct sun8i_layer *layer;
->>> +
->>> +		layer =3D sun8i_layer_init_one(drm, mixer, plane);
->>> +		if (IS_ERR(layer)) {
->>> +			dev_err(drm->dev, "Couldn't initialize %s plane\n",
->>> +				i ? "overlay" : "primary");
->>> +			return ERR_CAST(layer);
->>> +		};
->>> +
->>> +		layer->id =3D i;
->>> +		planes[i] =3D &layer->plane;
->>> +	};
->>> +
->>> +	return planes;
->>> +}
->>> diff --git a/drivers/gpu/drm/sun4i/sun8i_layer.h=20
->>> b/drivers/gpu/drm/sun4i/sun8i_layer.h
->>> new file mode 100644
->>> index 000000000000..e5eccd27cff0
->>> --- /dev/null
->>> +++ b/drivers/gpu/drm/sun4i/sun8i_layer.h
->>> @@ -0,0 +1,36 @@
->>> +/*
->>> + * Copyright (C) Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
->>> + *
->>> + * Based on sun4i_layer.h, which is:
->>> + *   Copyright (C) 2015 Free Electrons
->>> + *   Copyright (C) 2015 NextThing Co
->>> + *
->>> + *   Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
->>> + *
->>> + * This program is free software; you can redistribute it and/or
->>> + * modify it under the terms of the GNU General Public License as
->>> + * published by the Free Software Foundation; either version 2 of
->>> + * the License, or (at your option) any later version.
->>> + */
->>> +
->>> +#ifndef _SUN8I_LAYER_H_
->>> +#define _SUN8I_LAYER_H_
->>> +
->>> +struct sunxi_engine;
->>> +
->>> +struct sun8i_layer {
->>> +	struct drm_plane	plane;
->>> +	struct sun4i_drv	*drv;
->>> +	struct sun8i_mixer	*mixer;
->>> +	int			id;
->>> +};
->>> +
->>> +static inline struct sun8i_layer *
->>> +plane_to_sun8i_layer(struct drm_plane *plane)
->>> +{
->>> +	return container_of(plane, struct sun8i_layer, plane);
->>> +}
->>> +
->>> +struct drm_plane **sun8i_layers_init(struct drm_device *drm,
->>> +				     struct sunxi_engine *engine);
->>> +#endif /* _SUN8I_LAYER_H_ */
->>> diff --git a/drivers/gpu/drm/sun4i/sun8i_mixer.c=20
->>> b/drivers/gpu/drm/sun4i/sun8i_mixer.c
->>> new file mode 100644
->>> index 000000000000..e216b84d5bb2
->>> --- /dev/null
->>> +++ b/drivers/gpu/drm/sun4i/sun8i_mixer.c
->>> @@ -0,0 +1,394 @@
->>> +/*
->>> + * Copyright (C) 2017 Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
->>> + *
->>> + * Based on sun4i_backend.c, which is:
->>> + *   Copyright (C) 2015 Free Electrons
->>> + *   Copyright (C) 2015 NextThing Co
->>> + *
->>> + * This program is free software; you can redistribute it and/or
->>> + * modify it under the terms of the GNU General Public License as
->>> + * published by the Free Software Foundation; either version 2 of
->>> + * the License, or (at your option) any later version.
->>> + */
->>> +
->>> +#include <drm/drmP.h>
->>> +#include <drm/drm_atomic_helper.h>
->>> +#include <drm/drm_crtc.h>
->>> +#include <drm/drm_crtc_helper.h>
->>> +#include <drm/drm_fb_cma_helper.h>
->>> +#include <drm/drm_gem_cma_helper.h>
->>> +#include <drm/drm_plane_helper.h>
->>> +
->>> +#include <linux/component.h>
->>> +#include <linux/dma-mapping.h>
->>> +#include <linux/reset.h>
->>> +#include <linux/of_device.h>
->>> +
->>> +#include "sun4i_drv.h"
->>> +#include "sun8i_mixer.h"
->>> +#include "sun8i_layer.h"
->>> +#include "sunxi_engine.h"
->>> +
->>> +void sun8i_mixer_commit(struct sunxi_engine *engine)
->>> +{
->>> +	DRM_DEBUG_DRIVER("Committing changes\n");
->>> +
->>> +	regmap_write(engine->regs, SUN8I_MIXER_GLOBAL_DBUFF,
->>> +		     SUN8I_MIXER_GLOBAL_DBUFF_ENABLE);
->>> +}
->>=20
->> This function can be static
->>=20
->>> +
->>> +void sun8i_mixer_layer_enable(struct sun8i_mixer *mixer,
->>> +				int layer, bool enable)
->>> +{
->>> +	u32 val;
->>> +	/* Currently the first UI channel is used */
->>> +	int chan =3D mixer->cfg->vi_num;
->>> +
->>> +	DRM_DEBUG_DRIVER("Enabling layer %d in channel %d\n", layer, chan);
->>> +
->>> +	if (enable)
->>> +		val =3D SUN8I_MIXER_CHAN_UI_LAYER_ATTR_EN;
->>> +	else
->>> +		val =3D 0;
->>> +
->>> +	regmap_update_bits(mixer->engine.regs,
->>> +			   SUN8I_MIXER_CHAN_UI_LAYER_ATTR(chan, layer),
->>> +			   SUN8I_MIXER_CHAN_UI_LAYER_ATTR_EN, val);
->>> +
->>> +	/* Set the alpha configuration */
->>> +	regmap_update_bits(mixer->engine.regs,
->>> +			   SUN8I_MIXER_CHAN_UI_LAYER_ATTR(chan, layer),
->>> +			   SUN8I_MIXER_CHAN_UI_LAYER_ATTR_ALPHA_MODE_MASK,
->>> +			   SUN8I_MIXER_CHAN_UI_LAYER_ATTR_ALPHA_MODE_DEF);
->>> +	regmap_update_bits(mixer->engine.regs,
->>> +			   SUN8I_MIXER_CHAN_UI_LAYER_ATTR(chan, layer),
->>> +			   SUN8I_MIXER_CHAN_UI_LAYER_ATTR_ALPHA_MASK,
->>> +			   SUN8I_MIXER_CHAN_UI_LAYER_ATTR_ALPHA_DEF);
->>> +}
->>=20
->> This one too.
->=20
-> It's called from sun8i_layer.c, so it cannot be static.
->=20
->>=20
->>> +static int sun8i_mixer_drm_format_to_layer(struct drm_plane *plane,
->>> +					     u32 format, u32 *mode)
->>> +{
->>> +	switch (format) {
->>> +	case DRM_FORMAT_XRGB8888:
->>> +		*mode =3D SUN8I_MIXER_CHAN_UI_LAYER_ATTR_FBFMT_XRGB8888;
->>> +		break;
->>> +
->>> +	case DRM_FORMAT_RGB888:
->>> +		*mode =3D SUN8I_MIXER_CHAN_UI_LAYER_ATTR_FBFMT_RGB888;
->>> +		break;
->>> +
->>> +	default:
->>> +		return -EINVAL;
->>> +	}
->>> +
->>> +	return 0;
->>> +}
->>> +
->>> +int sun8i_mixer_update_layer_coord(struct sun8i_mixer *mixer,
->>> +				     int layer, struct drm_plane *plane)
->>> +{
->>> +	struct drm_plane_state *state =3D plane->state;
->>> +	struct drm_framebuffer *fb =3D state->fb;
->>> +	/* Currently the first UI channel is used */
->>> +	int chan =3D mixer->cfg->vi_num;
->>> +
->>> +	DRM_DEBUG_DRIVER("Updating layer %d\n", layer);
->>> +
->>> +	if (plane->type =3D=3D DRM_PLANE_TYPE_PRIMARY) {
->>> +		DRM_DEBUG_DRIVER("Primary layer, updating global size W: %u H:=20
->>> %u\n",
->>> +				 state->crtc_w, state->crtc_h);
->>> +		regmap_write(mixer->engine.regs, SUN8I_MIXER_GLOBAL_SIZE,
->>> +			     SUN8I_MIXER_SIZE(state->crtc_w,
->>> +					      state->crtc_h));
->>> +		DRM_DEBUG_DRIVER("Updating blender size\n");
->>> +		regmap_write(mixer->engine.regs,
->>> +			     SUN8I_MIXER_BLEND_ATTR_INSIZE(0),
->>> +			     SUN8I_MIXER_SIZE(state->crtc_w,
->>> +					      state->crtc_h));
->>> +		regmap_write(mixer->engine.regs, SUN8I_MIXER_BLEND_OUTSIZE,
->>> +			     SUN8I_MIXER_SIZE(state->crtc_w,
->>> +					      state->crtc_h));
->>> +		DRM_DEBUG_DRIVER("Updating channel size\n");
->>> +		regmap_write(mixer->engine.regs,
->>> +			     SUN8I_MIXER_CHAN_UI_OVL_SIZE(chan),
->>> +			     SUN8I_MIXER_SIZE(state->crtc_w,
->>> +					      state->crtc_h));
->>> +	}
->>> +
->>> +	/* Set the line width */
->>> +	DRM_DEBUG_DRIVER("Layer line width: %d bytes\n", fb->pitches[0]);
->>> +	regmap_write(mixer->engine.regs,
->>> +		     SUN8I_MIXER_CHAN_UI_LAYER_PITCH(chan, layer),
->>> +		     fb->pitches[0]);
->>> +
->>> +	/* Set height and width */
->>> +	DRM_DEBUG_DRIVER("Layer size W: %u H: %u\n",
->>> +			 state->crtc_w, state->crtc_h);
->>> +	regmap_write(mixer->engine.regs,
->>> +		     SUN8I_MIXER_CHAN_UI_LAYER_SIZE(chan, layer),
->>> +		     SUN8I_MIXER_SIZE(state->crtc_w, state->crtc_h));
->>> +
->>> +	/* Set base coordinates */
->>> +	DRM_DEBUG_DRIVER("Layer coordinates X: %d Y: %d\n",
->>> +			 state->crtc_x, state->crtc_y);
->>> +	regmap_write(mixer->engine.regs,
->>> +		     SUN8I_MIXER_CHAN_UI_LAYER_COORD(chan, layer),
->>> +		     SUN8I_MIXER_COORD(state->crtc_x, state->crtc_y));
->>=20
->> X and Y are fixed point numbers. You want to keep only the higher 16
->> bits there.
->=20
-> Do you mean "lower 16 bits"? Thus should I (x & 0xffff) or ((u16)x) ?
+On Thu, May 4, 2017 at 9:40 PM, Bjorn Andersson
+<bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> On Thu 04 May 00:54 PDT 2017, Jassi Brar wrote:
+>
+>> On Thu, May 4, 2017 at 11:15 AM, Bjorn Andersson
+>> <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>> > On Wed 03 May 02:55 PDT 2017, Jassi Brar wrote:
+>> >
+>> >> Loic, thanks for adding me.
+>> >>
+>> >> On Wed, May 3, 2017 at 2:58 PM, Loic PALLARDY <loic.pallardy-qxv4g6HH51o@public.gmane.org> wrote:
+>> >> >
+>> >> >
+>> >> >> -----Original Message-----
+>> >> >> From: linux-remoteproc-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org [mailto:linux-remoteproc-
+>> >> >> owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org] On Behalf Of Bjorn Andersson
+>> >> >> Sent: Wednesday, May 03, 2017 7:29 AM
+>> >> >> To: Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>; Rob Herring
+>> >> >> <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>; Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>; Ohad Ben-
+>> >> >> Cohen <ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>
+>> >> >> Cc: linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org;
+>> >> >> devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-
+>> >> >> remoteproc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>> >> >> Subject: [PATCH v3 2/4] soc: qcom: Introduce APCS IPC driver
+>> >> >>
+>> >> >> This implements a driver that exposes the IPC bits found in the APCS Global
+>> >> >> block in various Qualcomm platforms. The bits are used to signal inter-
+>> >> >> processor communication signals from the application CPU to other masters.
+>> >> >>
+>> >> >> The driver implements the "doorbell" binding and could be used as basis for a
+>> >> >> new Linux framework, if found useful outside Qualcomm.
+>> >> >>
+>> >> > Hi Bjorn,
+>> >> >
+>> >> > Even if Qualcom APCS IPC is limited, why don't you rely on existing mailbox framework.
+>> >> > It is there to gather all IPC management under the same interface.
+>> >> > No need to create a new one from my pov.
+>> >> > If you don't provide message data, mailbox framework behaves as doorbell.
+>> >> >
+>> >> QCOM RPM reinvented the wheel for what mailbox framework already did,
+>> >> despite my pointing it out =>
+>> >> http://lkml.iu.edu/hypermail//linux/kernel/1406.2/03918.html
+>> >>
+>> >
+>> > The RPM interface works by writing various information in shared DRAM
+>> > and then invoking an interrupt on the remote processor.
+>> >
+>> This is what _most_ platforms do, and they use mailbox framework. If
+>> mailbox framework doesn't suit RPM, then it doesn't suit most
+>> platforms that use it.
+>>
+>> > My argumentation against using the mailbox framework for the RPM case
+>> > was that the message model is a software construct and doesn't fit the
+>> > mailbox framework.
+>> >
+>> Mailbox framework works beneath protocol layer (software construct).
+>> As I said years ago, the h/w bits of the controller should be under
+>> mailbox api, while the message structures and signals are protocol
+>> specific and be in QCOM specific location.
+>>
+>
+> Okay, now I finally get what you're saying. The RPM driver handles the
+> protocol but the actual triggering of the remote interrupt should be
+> done via the mailbox framework.
+>
+> That makes sense, until now I haven't seen the need for having a driver
+> exposing the APCS IPC register (used by among others the RPM driver),
+> but I will rewrite this patch as a mailbox controller and turn the RPM
+> driver into a mailbox client.
+>
+Cool, thanks.
 
-Oh sorry, it's 16.16 ...
+>>
+>> > But which one of these would be appropriate for a "mailbox channel" that
+>> > doesn't have any actual messages?
+>> >
+>> >   mbox_send_message(chan, NULL)
+>> > or
+>> >   const int one = 1;
+>> >   mbox_send_message(chan, (void*)&one);
+>> >
+>> It depends upon your h/w.
+>> If each physical channel is hardwired to work on a predefined single
+>> bit, then the driver could do without that bit being explicitly
+>> passed.
+>> If a physical channel can be mapped onto any bit(s), then you do need
+>> to pass that info via mbox_send_message().
+>>
+>
+> It's a 32-bit register, writing a bit invokes the associated interrupt
+> on some remote processor. I.e. bits 0, 1 and 2 represents different
+> interrupts on the resource-power-management CPU while bit 12, 13, 14 and
+> 15 will invoke interrupts on a modem CPU.
+>
+No problem. For such arrangement, you could have a channel per
+interrupt/bit. Have the DT specify which bit goes as what interrupt to
+which cpu. The controller driver would then associate each channel to
+its 'bit' and a client would always acquire the right channel
+(specified by DT) and need not know/pass which bit should be set for
+its messages i.e, mbox_send_message(chan, NULL)
 
-I'm misled by the sun4i_backend driver.
+> I'll rework the proposed driver and we can look at the actual
+> implementation instead.
+>
+>>
+>> >> The driver bypassed mailbox framework and was pushed via another tree.
+>> >> Same is being attempted now, only now it is more expensive to switch
+>> >> to generic mailbox framework having spent so much time on QCOM
+>> >> specific implementation of controller and protocol drivers inside
+>> >> drivers/soc/qcom/
+>> >
+>> > I'm not sure I follow this, there's no extensive rework going on here -
+>> > all I'm trying to do is abstract the "writel(BIT(x), ipc_reg)" line of
+>> > the RPM driver, because it's being used in other clients as well.
+>> >
+>> No, I meant ideally RPM should have used mailbox api for the
+>> controller programming, but moving to that now will be expensive
+>> because you already developed huge code base around QCOM specific
+>> mailbox implementation.
+>>
+>
+> The part discussed above was implemented using syscon, so it's a few
+> lines of code to grab hold of a handle and instead of
+> mbox_send_message() there is a single call to regmap_write(). All the
+> other parts of the implementation is protocol-specific, and as you say
+> the next layer up. So the transition is quite straight forward!
+>
+Great!
 
-May I soon send out a patch to fix the sun4i_backend?
-
->=20
-> P.S. The negative coordinates are broken, how should I deal with it? or
-> is the coordinates promised to be not negative?
->=20
->>=20
->>> +
->>> +	return 0;
->>> +}
->>> +
->>> +int sun8i_mixer_update_layer_formats(struct sun8i_mixer *mixer,
->>> +				       int layer, struct drm_plane *plane)
->>> +{
->>> +	struct drm_plane_state *state =3D plane->state;
->>> +	struct drm_framebuffer *fb =3D state->fb;
->>> +	bool interlaced =3D false;
->>> +	u32 val;
->>> +	/* Currently the first UI channel is used */
->>> +	int chan =3D mixer->cfg->vi_num;
->>> +	int ret;
->>> +
->>> +	if (plane->state->crtc)
->>> +		interlaced =3D plane->state->crtc->state->adjusted_mode.flags
->>> +			& DRM_MODE_FLAG_INTERLACE;
->>> +
->>> +	regmap_update_bits(mixer->engine.regs, SUN8I_MIXER_BLEND_OUTCTL,
->>> +			   SUN8I_MIXER_BLEND_OUTCTL_INTERLACED,
->>> +			   interlaced ?
->>> +			   SUN8I_MIXER_BLEND_OUTCTL_INTERLACED : 0);
->>> +
->>> +	DRM_DEBUG_DRIVER("Switching display mixer interlaced mode %s\n",
->>> +			 interlaced ? "on" : "off");
->>> +
->>> +	ret =3D sun8i_mixer_drm_format_to_layer(plane, fb->format->format,
->>> +						&val);
->>> +	if (ret) {
->>> +		DRM_DEBUG_DRIVER("Invalid format\n");
->>> +		return ret;
->>> +	}
->>> +
->>> +	regmap_update_bits(mixer->engine.regs,
->>> +			   SUN8I_MIXER_CHAN_UI_LAYER_ATTR(chan, layer),
->>> +			   SUN8I_MIXER_CHAN_UI_LAYER_ATTR_FBFMT_MASK, val);
->>> +
->>> +	return 0;
->>> +}
->>> +
->>> +int sun8i_mixer_update_layer_buffer(struct sun8i_mixer *mixer,
->>> +				      int layer, struct drm_plane *plane)
->>> +{
->>> +	struct drm_plane_state *state =3D plane->state;
->>> +	struct drm_framebuffer *fb =3D state->fb;
->>> +	struct drm_gem_cma_object *gem;
->>> +	dma_addr_t paddr;
->>> +	/* Currently the first UI channel is used */
->>> +	int chan =3D mixer->cfg->vi_num;
->>> +	int bpp;
->>> +
->>> +	/* Get the physical address of the buffer in memory */
->>> +	gem =3D drm_fb_cma_get_gem_obj(fb, 0);
->>> +
->>> +	DRM_DEBUG_DRIVER("Using GEM @ %pad\n", &gem->paddr);
->>> +
->>> +	/* Compute the start of the displayed memory */
->>> +	bpp =3D fb->format->cpp[0];
->>> +	paddr =3D gem->paddr + fb->offsets[0];
->>> +	paddr +=3D (state->src_x >> 16) * bpp;
->>> +	paddr +=3D (state->src_y >> 16) * fb->pitches[0];
->>> +
->>> +	DRM_DEBUG_DRIVER("Setting buffer address to %pad\n", &paddr);
->>> +
->>> +	regmap_write(mixer->engine.regs,
->>> +		     SUN8I_MIXER_CHAN_UI_LAYER_TOP_LADDR(chan, layer),
->>> +		     lower_32_bits(paddr));
->>> +
->>> +	return 0;
->>> +}
->>> +
->>> +static const struct sunxi_engine_ops sun8i_engine_ops =3D {
->>> +	.commit		=3D sun8i_mixer_commit,
->>> +	.layers_init	=3D sun8i_layers_init,
->>> +};
->>> +
->>> +static struct regmap_config sun8i_mixer_regmap_config =3D {
->>> +	.reg_bits	=3D 32,
->>> +	.val_bits	=3D 32,
->>> +	.reg_stride	=3D 4,
->>> +	.max_register	=3D 0xbfffc, /* guessed */
->>> +};
->>> +
->>> +static int sun8i_mixer_bind(struct device *dev, struct device=20
->>> *master,
->>> +			      void *data)
->>> +{
->>> +	struct platform_device *pdev =3D to_platform_device(dev);
->>> +	struct drm_device *drm =3D data;
->>> +	struct sun4i_drv *drv =3D drm->dev_private;
->>> +	struct sun8i_mixer *mixer;
->>> +	struct resource *res;
->>> +	void __iomem *regs;
->>> +	int i, ret;
->>> +
->>> +	/*
->>> +	 * The mixer uses single 32-bit register to store memory
->>> +	 * addresses, so that it cannot deal with 64-bit memory
->>> +	 * addresses.
->>> +	 * Restrict the DMA mask so that the mixer won't be
->>> +	 * allocated some memory that is too high.
->>> +	 */
->>> +	ret =3D dma_set_mask(dev, DMA_BIT_MASK(32));
->>> +	if (ret) {
->>> +		dev_err(dev, "Cannot do 32-bit DMA.\n");
->>> +		return ret;
->>> +	}
->>> +
->>> +	mixer =3D devm_kzalloc(dev, sizeof(*mixer), GFP_KERNEL);
->>> +	if (!mixer)
->>> +		return -ENOMEM;
->>> +	dev_set_drvdata(dev, mixer);
->>> +	mixer->engine.ops =3D &sun8i_engine_ops;
->>> +	mixer->engine.node =3D dev->of_node;
->>> +
->>> +	mixer->cfg =3D of_device_get_match_data(dev);
->>> +	if (!mixer->cfg)
->>> +		return -EINVAL;
->>> +
->>> +	res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
->>> +	regs =3D devm_ioremap_resource(dev, res);
->>> +	if (IS_ERR(regs))
->>> +		return PTR_ERR(regs);
->>> +
->>> +	mixer->engine.regs =3D devm_regmap_init_mmio(dev, regs,
->>> +						   &sun8i_mixer_regmap_config);
->>> +	if (IS_ERR(mixer->engine.regs)) {
->>> +		dev_err(dev, "Couldn't create the mixer regmap\n");
->>> +		return PTR_ERR(mixer->engine.regs);
->>> +	}
->>> +
->>> +	mixer->reset =3D devm_reset_control_get(dev, NULL);
->>> +	if (IS_ERR(mixer->reset)) {
->>> +		dev_err(dev, "Couldn't get our reset line\n");
->>> +		return PTR_ERR(mixer->reset);
->>> +	}
->>> +
->>> +	ret =3D reset_control_deassert(mixer->reset);
->>> +	if (ret) {
->>> +		dev_err(dev, "Couldn't deassert our reset line\n");
->>> +		return ret;
->>> +	}
->>> +
->>> +	mixer->bus_clk =3D devm_clk_get(dev, "bus");
->>> +	if (IS_ERR(mixer->bus_clk)) {
->>> +		dev_err(dev, "Couldn't get the mixer bus clock\n");
->>> +		ret =3D PTR_ERR(mixer->bus_clk);
->>> +		goto err_assert_reset;
->>> +	}
->>> +	clk_prepare_enable(mixer->bus_clk);
->>> +
->>> +	mixer->mod_clk =3D devm_clk_get(dev, "mod");
->>> +	if (IS_ERR(mixer->mod_clk)) {
->>> +		dev_err(dev, "Couldn't get the mixer module clock\n");
->>> +		ret =3D PTR_ERR(mixer->mod_clk);
->>> +		goto err_disable_bus_clk;
->>> +	}
->>> +	clk_prepare_enable(mixer->mod_clk);
->>> +
->>> +	list_add_tail(&mixer->engine.list, &drv->engine_list);
->>=20
->> You didn't call INIT_LIST_HEAD on that list.
->>=20
->>> +
->>> +	/* Reset the registers */
->>> +	for (i =3D 0x0; i < 0x20000; i +=3D 4)
->>> +		regmap_write(mixer->engine.regs, i, 0);
->>> +
->>> +	/* Enable the mixer */
->>> +	regmap_write(mixer->engine.regs, SUN8I_MIXER_GLOBAL_CTL,
->>> +		     SUN8I_MIXER_GLOBAL_CTL_RT_EN);
->>> +
->>> +	/* Initialize blender */
->>> +	regmap_write(mixer->engine.regs, SUN8I_MIXER_BLEND_FCOLOR_CTL,
->>> +		     SUN8I_MIXER_BLEND_FCOLOR_CTL_DEF);
->>> +	regmap_write(mixer->engine.regs, SUN8I_MIXER_BLEND_PREMULTIPLY,
->>> +		     SUN8I_MIXER_BLEND_PREMULTIPLY_DEF);
->>> +	regmap_write(mixer->engine.regs, SUN8I_MIXER_BLEND_BKCOLOR,
->>> +		     SUN8I_MIXER_BLEND_BKCOLOR_DEF);
->>> +	regmap_write(mixer->engine.regs, SUN8I_MIXER_BLEND_MODE(0),
->>> +		     SUN8I_MIXER_BLEND_MODE_DEF);
->>> +	regmap_write(mixer->engine.regs, SUN8I_MIXER_BLEND_CK_CTL,
->>> +		     SUN8I_MIXER_BLEND_CK_CTL_DEF);
->>> +
->>> +	regmap_write(mixer->engine.regs,
->>> +		     SUN8I_MIXER_BLEND_ATTR_FCOLOR(0),
->>> +		     SUN8I_MIXER_BLEND_ATTR_FCOLOR_DEF);
->>> +
->>> +	/* Select the first UI channel */
->>> +	DRM_DEBUG_DRIVER("Selecting channel %d (first UI channel)\n",
->>> +			 mixer->cfg->vi_num);
->>> +	regmap_write(mixer->engine.regs, SUN8I_MIXER_BLEND_ROUTE,
->>> +		     mixer->cfg->vi_num);
->>> +
->>> +	return 0;
->>> +
->>> +	clk_disable_unprepare(mixer->mod_clk);
->>=20
->> This line cannot be reached.
->>=20
->> Maxime
-
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+Thanks.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
