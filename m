@@ -1,58 +1,85 @@
-From: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
-Subject: Re: [PATCH v3 2/2] [media] platform: add video-multiplexer subdevice
- driver
-Date: Thu, 4 May 2017 23:32:08 +0300
-Message-ID: <20170504203208.GC7456@valkosipuli.retiisi.org.uk>
-References: <1493905137-27051-1-git-send-email-p.zabel@pengutronix.de>
- <1493905137-27051-2-git-send-email-p.zabel@pengutronix.de>
+From: Eddie James <eajames-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH RFC] Documentation/devicetree: Add specification for FSI
+ busses
+Date: Thu, 4 May 2017 16:02:34 -0500
+Message-ID: <eb310c6a-0b41-aecd-2ae5-025a8f64b152@linux.vnet.ibm.com>
+References: <1493704508-27119-1-git-send-email-jk@ozlabs.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1493905137-27051-2-git-send-email-p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+In-Reply-To: <1493704508-27119-1-git-send-email-jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Vladimir Zapolskiy <vladimir_zapolskiy-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Steve Longerbeam <steve_longerbeam-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+To: Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Philipp,
-
-On Thu, May 04, 2017 at 03:38:57PM +0200, Philipp Zabel wrote:
-...
-> +static const struct of_device_id video_mux_dt_ids[] = {
-> +	{ .compatible = "video-mux", },
-> +	{ /* sentinel */ }
-> +};
-> +MODULE_DEVICE_TABLE(of, video_mux_dt_ids);
+On 05/02/2017 12:55 AM, Jeremy Kerr wrote:
+> This change introduces a proposed layout for describing FSI busses in
+> the device tree. While the bus is probe-able, we'd still like a method
+> of describing subordinate (eg i2c) busses that are behind FSI devices.
+>
+> The FSI core will be responsible for matching probed slaves & engines to
+> their device tree nodes, so the FSI device drivers' probe() functions
+> will be passed a struct device with the appropriate of_node populated
+> where a matching DT node is found.
+>
+> RFC at this stage, so I'd welcome any feedback.
+>
+> Signed-off-by: Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
+> ---
 > +
-> +static struct platform_driver video_mux_driver = {
-
-Shouldn't this be const?
-
-With that,
-
-Acked-by: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-
-> +	.probe		= video_mux_probe,
-> +	.remove		= video_mux_remove,
-> +	.driver		= {
-> +		.of_match_table = video_mux_dt_ids,
-> +		.name = "video-mux",
-> +	},
-> +};
+> +Full example
+> +------------
 > +
-> +module_platform_driver(video_mux_driver);
+> +    /* The GPIO-based FSI master node, describing the top level of the
+> +     * FSI bus
+> +     */
+> +    gpio-fsi {
+> +        compatible = "fsi-master-gpio", "fsi-master";
+> +        #address-cells = <2>;
+> +        #size-cells = <0>;
 > +
-> +MODULE_DESCRIPTION("video stream multiplexer");
-> +MODULE_AUTHOR("Sascha Hauer, Pengutronix");
-> +MODULE_AUTHOR("Philipp Zabel, Pengutronix");
-> +MODULE_LICENSE("GPL");
+> +        /* A FSI slave (aka. CFAM) at link 0, ID 0. */
+> +        cfam@0,0 {
+> +            reg = <0 0>;
+> +            #address-cells = <1>;
+> +            #size-cells = <1>;
+> +
+> +            /* FSI engine at 0xc00, using a single page. In this example,
+> +             * it's an I2C master controller, so subnodes describe the
+> +             * I2C bus.
+> +             */
+> +            i2c-controller@c00 {
+> +                reg = <0xc00 0x400>;
+> +
+> +                /* Engine-specific data. In this case, we're describing an
+> +                 * I2C bus, so we're conforming to the generic I2C binding
+> +                 */
+> +                compatible = "ibm,fsi-i2c";
+> +                #address-cells = <1>;
+> +                #size-cells = <1>;
+> +
+> +                /* I2C endpoint device: an Atmel EEPROM */
+> +                eeprom@50 {
+> +                    compatible = "atmel,24c256";
+> +                    reg = <0x50>;
+> +                    pagesize = <64>;
+> +                };
 
--- 
-Regards,
+I have no problem with this as an example, but it isn't exactly how the 
+tree will look under the p8/p9 fsi-attached i2c master. We will instead 
+need a list of ports on the master. Then you could put actual devices 
+(eeproms, etc) under the ports if desired.
 
-Sakari Ailus
-e-mail: sakari.ailus-X3B1VOXEql0@public.gmane.org	XMPP: sailus-PCDdDYkjdNMDXYZnReoRVg@public.gmane.org
+Looks like good documentation to me though. This is working well for my 
+I2C driver in combination with your latest FSI patches, Jeremy.
+
+Acked-by: Eddie James <eajames-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+
+> +            };
+> +        };
+> +    };
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
