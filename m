@@ -1,62 +1,172 @@
 From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Subject: [PATCH v3 0/3] Meson8 / Meson8b support for the meson_saradc driver
-Date: Thu,  4 May 2017 20:01:33 +0200
-Message-ID: <20170504180136.27025-1-martin.blumenstingl@googlemail.com>
+Subject: [PATCH v3 3/3] iio: adc: meson-saradc: add Meson8b SoC compatibility
+Date: Thu,  4 May 2017 20:01:36 +0200
+Message-ID: <20170504180136.27025-4-martin.blumenstingl@googlemail.com>
+References: <20170504180136.27025-1-martin.blumenstingl@googlemail.com>
 Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170504180136.27025-1-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 Cc: carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The SAR ADC register layout seems to be mostly the same on older SoCs.
-Thus basically all functionality is already supported by the existing
-driver.
+Meson GX SoCs however use some magic bits to prevent simultaneous (=
+conflicting, because only consumer should use the FIFO buffer with the
+ADC results) usage by the Linux kernel and the bootloader (the BL30
+bootloader uses the SAR ADC to read the CPU temperature).
+This patch changes guards all BL30 functionality so it is skipped on
+SoCs which don't have it. Since the hardware itself doesn't know whether
+BL30 is available the internal meson_sar_adc_data is extended so this
+information can be provided per of_device_id.data inside the driver.
 
-There are two small differences though:
-- the adc_clk and adc_div clock are not provided by the clock-controller
-  on Meson8b. instead the SAR ADC provides an internal "adc_clk" (this
-  behavior is already supported by the driver and requires no changes)
-- the newer SoCs are using some register bits only the kernel or the
-  BL30 (bootloader) are using the SAR ADC. This is the main change of
-  this series: guarding all BL30 specific code with a corresponding
-  "if"-block.
+Additionally the clocks "adc_clk" and "adc_sel" are not provided by the
+clock-controller itself. "adc_sel" is not available at all. "adc_clk"
+is provided by the SAR ADC IP block itself on Meson8b (and earlier).
+This is already supported by the meson_saradc driver.
 
-This also adds a new DT binding for the SAR ADC in Meson8 and Meson8b
-because the driver has to specify (for this older version) that there's
-no BL30 integration available (and these register bits should not be
-touched).
+Finally this introduces new of_device_ids for the Meson8 and Meson8b
+SoCs so the driver can be wired up in the corresponding DT.
 
+Signed-off-by: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+---
+ drivers/iio/adc/meson_saradc.c | 80 +++++++++++++++++++++++++++++-------------
+ 1 file changed, 56 insertions(+), 24 deletions(-)
 
-Changes since v2 at [1]:
-- re-ordered patches so patch #1 now adds the "static" modifier to the
-  existing meson_sar_adc_data instances (was patch #3, now patch #1)
-- dropped the "Documentation: " prefix from the devicetree
-  documentation patch (patch #2)
-- added Rob's ACK to the devicetree Documentation patch (patch #2)
-- fixed a copy-and-paste error in the actual driver change (both,
-  in the commit message where I claimed that a of_device_id was only
-  added for Meson8b as well as in the driver code itself where the Meson8
-  meson_sar_adc_data.name was "meson-meson8b-saradc")
-
-Changes since v1 at [0]:
-- switched to bool data-type for has_bl30_integration
-- also added a "compatible" for Meson8 SoCs (the ADC driver from
-  Amlogic's GPL kernel sources handles Meson8 and Meson8b identical)
-- added patch #3 to constify some structs (there were supposed to be
-  const from the very beginning)
-
-
-[0] http://lists.infradead.org/pipermail/linux-amlogic/2017-March/003081.html
-[1] http://lists.infradead.org/pipermail/linux-amlogic/2017-April/003394.html
-
-Martin Blumenstingl (3):
-  iio: adc: meson-saradc: mark all meson_sar_adc_data static and const
-  dt-bindings: iio: adc: add Meson8 and Meson8b support
-  iio: adc: meson-saradc: add Meson8b SoC compatibility
-
- .../bindings/iio/adc/amlogic,meson-saradc.txt      |  2 +
- drivers/iio/adc/meson_saradc.c                     | 86 +++++++++++++++-------
- 2 files changed, 61 insertions(+), 27 deletions(-)
-
+diff --git a/drivers/iio/adc/meson_saradc.c b/drivers/iio/adc/meson_saradc.c
+index 1cb5df306001..611d0b7848d3 100644
+--- a/drivers/iio/adc/meson_saradc.c
++++ b/drivers/iio/adc/meson_saradc.c
+@@ -220,6 +220,7 @@ enum meson_sar_adc_chan7_mux_sel {
+ };
+ 
+ struct meson_sar_adc_data {
++	bool					has_bl30_integration;
+ 	unsigned int				resolution;
+ 	const char				*name;
+ };
+@@ -437,19 +438,24 @@ static int meson_sar_adc_lock(struct iio_dev *indio_dev)
+ 
+ 	mutex_lock(&indio_dev->mlock);
+ 
+-	/* prevent BL30 from using the SAR ADC while we are using it */
+-	regmap_update_bits(priv->regmap, MESON_SAR_ADC_DELAY,
+-			   MESON_SAR_ADC_DELAY_KERNEL_BUSY,
+-			   MESON_SAR_ADC_DELAY_KERNEL_BUSY);
+-
+-	/* wait until BL30 releases it's lock (so we can use the SAR ADC) */
+-	do {
+-		udelay(1);
+-		regmap_read(priv->regmap, MESON_SAR_ADC_DELAY, &val);
+-	} while (val & MESON_SAR_ADC_DELAY_BL30_BUSY && timeout--);
+-
+-	if (timeout < 0)
+-		return -ETIMEDOUT;
++	if (priv->data->has_bl30_integration) {
++		/* prevent BL30 from using the SAR ADC while we are using it */
++		regmap_update_bits(priv->regmap, MESON_SAR_ADC_DELAY,
++				MESON_SAR_ADC_DELAY_KERNEL_BUSY,
++				MESON_SAR_ADC_DELAY_KERNEL_BUSY);
++
++		/*
++		 * wait until BL30 releases it's lock (so we can use the SAR
++		 * ADC)
++		 */
++		do {
++			udelay(1);
++			regmap_read(priv->regmap, MESON_SAR_ADC_DELAY, &val);
++		} while (val & MESON_SAR_ADC_DELAY_BL30_BUSY && timeout--);
++
++		if (timeout < 0)
++			return -ETIMEDOUT;
++	}
+ 
+ 	return 0;
+ }
+@@ -458,9 +464,10 @@ static void meson_sar_adc_unlock(struct iio_dev *indio_dev)
+ {
+ 	struct meson_sar_adc_priv *priv = iio_priv(indio_dev);
+ 
+-	/* allow BL30 to use the SAR ADC again */
+-	regmap_update_bits(priv->regmap, MESON_SAR_ADC_DELAY,
+-			   MESON_SAR_ADC_DELAY_KERNEL_BUSY, 0);
++	if (priv->data->has_bl30_integration)
++		/* allow BL30 to use the SAR ADC again */
++		regmap_update_bits(priv->regmap, MESON_SAR_ADC_DELAY,
++				MESON_SAR_ADC_DELAY_KERNEL_BUSY, 0);
+ 
+ 	mutex_unlock(&indio_dev->mlock);
+ }
+@@ -614,14 +621,16 @@ static int meson_sar_adc_init(struct iio_dev *indio_dev)
+ 	 */
+ 	meson_sar_adc_set_chan7_mux(indio_dev, CHAN7_MUX_CH7_INPUT);
+ 
+-	/*
+-	 * leave sampling delay and the input clocks as configured by BL30 to
+-	 * make sure BL30 gets the values it expects when reading the
+-	 * temperature sensor.
+-	 */
+-	regmap_read(priv->regmap, MESON_SAR_ADC_REG3, &regval);
+-	if (regval & MESON_SAR_ADC_REG3_BL30_INITIALIZED)
+-		return 0;
++	if (priv->data->has_bl30_integration) {
++		/*
++		 * leave sampling delay and the input clocks as configured by
++		 * BL30 to make sure BL30 gets the values it expects when
++		 * reading the temperature sensor.
++		 */
++		regmap_read(priv->regmap, MESON_SAR_ADC_REG3, &regval);
++		if (regval & MESON_SAR_ADC_REG3_BL30_INITIALIZED)
++			return 0;
++	}
+ 
+ 	meson_sar_adc_stop_sample_engine(indio_dev);
+ 
+@@ -834,23 +843,46 @@ static const struct iio_info meson_sar_adc_iio_info = {
+ 	.driver_module = THIS_MODULE,
+ };
+ 
++static struct meson_sar_adc_data meson_sar_adc_meson8_data = {
++	.has_bl30_integration = false,
++	.resolution = 10,
++	.name = "meson-meson8-saradc",
++};
++
++static struct meson_sar_adc_data meson_sar_adc_meson8b_data = {
++	.has_bl30_integration = false,
++	.resolution = 10,
++	.name = "meson-meson8b-saradc",
++};
++
+ static struct meson_sar_adc_data meson_sar_adc_gxbb_data = {
++	.has_bl30_integration = true,
+ 	.resolution = 10,
+ 	.name = "meson-gxbb-saradc",
+ };
+ 
+ static struct meson_sar_adc_data meson_sar_adc_gxl_data = {
++	.has_bl30_integration = true,
+ 	.resolution = 12,
+ 	.name = "meson-gxl-saradc",
+ };
+ 
+ static struct meson_sar_adc_data meson_sar_adc_gxm_data = {
++	.has_bl30_integration = true,
+ 	.resolution = 12,
+ 	.name = "meson-gxm-saradc",
+ };
+ 
+ static const struct of_device_id meson_sar_adc_of_match[] = {
+ 	{
++		.compatible = "amlogic,meson8-saradc",
++		.data = &meson_sar_adc_meson8_data,
++	},
++	{
++		.compatible = "amlogic,meson8b-saradc",
++		.data = &meson_sar_adc_meson8b_data,
++	},
++	{
+ 		.compatible = "amlogic,meson-gxbb-saradc",
+ 		.data = &meson_sar_adc_gxbb_data,
+ 	}, {
 -- 
 2.12.2
