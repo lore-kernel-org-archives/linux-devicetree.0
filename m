@@ -1,33 +1,66 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH v3.1 4/7] v4l: Switch from V4L2 OF not V4L2 fwnode API
-Date: Thu, 04 May 2017 15:43:32 +0200
-Message-ID: <1493905412.2381.20.camel@pengutronix.de>
-References: <1491829376-14791-5-git-send-email-sakari.ailus@linux.intel.com>
-         <1493121374-13298-1-git-send-email-sakari.ailus@linux.intel.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <1493121374-13298-1-git-send-email-sakari.ailus@linux.intel.com>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: linux-media@vger.kernel.org, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, laurent.pinchart@ideasonboard.com, hverkuil@xs4all.nl
+From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Subject: [PATCH v2 00/10] Initial Allwinner R40 support
+Date: Thu,  4 May 2017 21:49:56 +0800
+Message-ID: <20170504135006.16483-1-icenowy@aosc.io>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2017-04-25 at 14:56 +0300, Sakari Ailus wrote:
-> Switch users of the v4l2_of_ APIs to the more generic v4l2_fwnode_ APIs.
-> Async OF matching is replaced by fwnode matching and OF matching support
-> is removed.
-> 
-> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-> Acked-by: Benoit Parrot <bparrot@ti.com> # i2c/ov2569.c, am437x/am437x-vpfe.c and ti-vpe/cal.c
-> Tested-by: Hans Verkuil <hans.verkuil@cisco.com> # Atmel sama5d3 board + ov2640 sensor
+This is the first non-RFC version of this patchset, which added basical
+support including I2C, UART and MMC to the mainline Linux.
 
-Tested and works on v4.11 with Steve's imx-media-staging-md branch on
-Nitrogen6X i.MX6Q + Toshiba TC358743 HDMI to MIPI CSI-2 bridge.
+The pinctrl driver of A20 is also merged into the one of A10 before
+R40 support is added into the A10 driver.
 
-Tested-by: Philipp Zabel <p.zabel@pengutronix.de>
+Chen-Yu Tsai (2):
+  ARM: dts: sun8i: Add basic dtsi file for Allwinner R40
+  ARM: dts: sun8i: Add board dts file for Banana Pi M2 Ultra
 
-regards
-Philipp
+Icenowy Zheng (8):
+  arm: sunxi: add support for R40 SoC
+  pinctrl: sunxi: add definitions for add A20 and R40 support to A10
+    driver
+  pinctrl: sunxi: add A20 support to A10 driver
+  pinctrl: sunxi: switch A20's pinctrl driver to use the A10 version
+  dt-bindings: add compatible string for Allwinner R40 pinctrl
+  pinctrl: sunxi: add support of R40 to A10 pinctrl driver
+  dt-bindings: add compatible string for Allwinner R40 CCU
+  clk: sunxi-ng: support R40 SoC
 
+ Documentation/arm/sunxi/README                     |    4 +
+ Documentation/devicetree/bindings/arm/sunxi.txt    |    1 +
+ .../devicetree/bindings/clock/sunxi-ccu.txt        |    1 +
+ .../bindings/pinctrl/allwinner,sunxi-pinctrl.txt   |    1 +
+ arch/arm/boot/dts/Makefile                         |    1 +
+ arch/arm/boot/dts/sun8i-r40-bananapi-m2-ultra.dts  |  161 +++
+ arch/arm/boot/dts/sun8i-r40.dtsi                   |  404 +++++++
+ arch/arm/mach-sunxi/sunxi.c                        |    1 +
+ drivers/clk/sunxi-ng/Kconfig                       |   10 +
+ drivers/clk/sunxi-ng/Makefile                      |    1 +
+ drivers/clk/sunxi-ng/ccu-sun8i-r40.c               | 1153 ++++++++++++++++++++
+ drivers/clk/sunxi-ng/ccu-sun8i-r40.h               |   68 ++
+ drivers/pinctrl/sunxi/Kconfig                      |    6 +-
+ drivers/pinctrl/sunxi/Makefile                     |    1 -
+ drivers/pinctrl/sunxi/pinctrl-sun4i-a10.c          |  449 ++++++--
+ drivers/pinctrl/sunxi/pinctrl-sun7i-a20.c          | 1056 ------------------
+ drivers/pinctrl/sunxi/pinctrl-sunxi.h              |    3 +
+ include/dt-bindings/clock/sun8i-r40-ccu.h          |  191 ++++
+ include/dt-bindings/reset/sun8i-r40-ccu.h          |  129 +++
+ 19 files changed, 2495 insertions(+), 1146 deletions(-)
+ create mode 100644 arch/arm/boot/dts/sun8i-r40-bananapi-m2-ultra.dts
+ create mode 100644 arch/arm/boot/dts/sun8i-r40.dtsi
+ create mode 100644 drivers/clk/sunxi-ng/ccu-sun8i-r40.c
+ create mode 100644 drivers/clk/sunxi-ng/ccu-sun8i-r40.h
+ delete mode 100644 drivers/pinctrl/sunxi/pinctrl-sun7i-a20.c
+ create mode 100644 include/dt-bindings/clock/sun8i-r40-ccu.h
+ create mode 100644 include/dt-bindings/reset/sun8i-r40-ccu.h
+
+-- 
+2.12.2
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
