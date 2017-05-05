@@ -1,65 +1,48 @@
 From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH v4 1/5] mailbox: Make startup and shutdown ops optional
-Date: Fri, 5 May 2017 11:21:51 -0700
-Message-ID: <20170505182151.GF15143@minitux>
+Subject: Re: [PATCH v4 3/5] soc: qcom: Introduce APCS IPC driver
+Date: Fri, 5 May 2017 11:37:29 -0700
+Message-ID: <20170505183729.GG15143@minitux>
 References: <20170504200539.27027-1-bjorn.andersson@linaro.org>
- <CABb+yY12=OksvgMeo+fT+R8m=_Lv+39EQwW0VGsnKuHRBM-5uw@mail.gmail.com>
+ <20170504200539.27027-3-bjorn.andersson@linaro.org>
+ <CABb+yY2P=qPTYB6PDkjV82Qc67Xzer40BHRsOQP2m-gM3eK_UA@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CABb+yY12=OksvgMeo+fT+R8m=_Lv+39EQwW0VGsnKuHRBM-5uw@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
+In-Reply-To: <CABb+yY2P=qPTYB6PDkjV82Qc67Xzer40BHRsOQP2m-gM3eK_UA@mail.gmail.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
 To: Jassi Brar <jassisinghbrar@gmail.com>
 Cc: Andy Gross <andy.gross@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ohad Ben-Cohen <ohad@wizery.com>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, Devicetree List <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-remoteproc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri 05 May 03:33 PDT 2017, Jassi Brar wrote:
+On Fri 05 May 03:26 PDT 2017, Jassi Brar wrote:
 
 > On Fri, May 5, 2017 at 1:35 AM, Bjorn Andersson
 > <bjorn.andersson@linaro.org> wrote:
-> > Some mailbox hardware doesn't have to perform any additional operations
-> > on startup of shutdown, so make these optional.
-> >
-> Thanks, makes sense.
+> 
+> > +
+> > +static int qcom_apcs_ipc_send_data(struct mbox_chan *chan, void *data)
+> > +{
+> > +       struct qcom_apcs_ipc *apcs = container_of(chan->mbox,
+> > +                                                 struct qcom_apcs_ipc, mbox);
+> > +       unsigned long idx = (unsigned long)chan->con_priv;
+> > +
+> > +       writel(BIT(idx), apcs->base + apcs->offset);
+> > +
+> When/how does this bit get ever cleared again?
+> You may want to add last_tx_done() callback to check if this bit is
+> cleared before you can send the next interrupt. And set
+> txdone_poll/irq accordingly.
 > 
 
-Thanks
+It's a write-only register, writing a bit fires off an edge triggered
+interrupt on the specific remote processor, which will ack the
+associated IRQ status and handle the interrupt.
 
-> > diff --git a/drivers/mailbox/mailbox.c b/drivers/mailbox/mailbox.c
-> > index 4671f8a12872..c88de953394a 100644
-> > --- a/drivers/mailbox/mailbox.c
-> > +++ b/drivers/mailbox/mailbox.c
-> > @@ -137,6 +137,20 @@ static enum hrtimer_restart txdone_hrtimer(struct hrtimer *hrtimer)
-> >         return HRTIMER_NORESTART;
-> >  }
-> >
-> > +static int mbox_startup(struct mbox_chan *chan)
-> > +{
-> > +       if (chan->mbox->ops->startup)
-> > +               return chan->mbox->ops->startup(chan);
-> > +
-> > +       return 0;
-> > +}
-> > +
-> > +static void mbox_shutdown(struct mbox_chan *chan)
-> > +{
-> > +       if (chan->mbox->ops->shutdown)
-> > +               chan->mbox->ops->shutdown(chan);
-> > +}
-> > +
-> These functions are going to be called from exactly one place. So
-> maybe we simply do the check before startup/shutdown calls?
-> 
-
-I didn't want to add another indentation level at the bottom of
-mbox_request_channel(), but now that I check again it still would stay
-below 80 chars and doesn't look too unreasonable.
-
-The shutdown() was moved out just to get some symmetry.
-
-I'll inline the two checks and resend this together with the driver,
-once we have concluded on your question/comment there.
+As the "message" is just a notification to the other side that it needs
+to act on "something", there's no harm in notifying it multiple times
+before it has a chance to ack the IRQ and a write after that will be
+seen as a separate interrupt.
 
 Regards,
 Bjorn
