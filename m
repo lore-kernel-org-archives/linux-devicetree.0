@@ -1,331 +1,178 @@
-From: Oza Pawandeep via iommu <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-Subject: [PATCH v5 3/3] PCI/of fix of_dma_get_range;
-	get PCI specific dma-ranges
-Date: Fri,  5 May 2017 19:30:27 +0530
-Message-ID: <1493992827-1553-4-git-send-email-oza.oza@broadcom.com>
-References: <1493992827-1553-1-git-send-email-oza.oza@broadcom.com>
-Reply-To: Oza Pawandeep <oza.oza-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+From: Mathieu Poirier <mathieu.poirier@linaro.org>
+Subject: Re: [PATCH v8 5/7] coresight: add support for CPU debug module
+Date: Fri, 5 May 2017 08:48:32 -0600
+Message-ID: <20170505144832.GA4507@linaro.org>
+References: <1493719717-27698-1-git-send-email-leo.yan@linaro.org>
+ <1493719717-27698-6-git-send-email-leo.yan@linaro.org>
+ <4cd0e395-c177-0b72-9cab-7a95aac9cca4@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <1493992827-1553-1-git-send-email-oza.oza-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Oza Pawandeep <oza.pawandeep-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <4cd0e395-c177-0b72-9cab-7a95aac9cca4@arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sudeep Holla <sudeep.holla@arm.com>
+Cc: Leo Yan <leo.yan@linaro.org>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Wei Xu <xuwei5@hisilicon.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Suzuki K Poulose <suzuki.poulose@arm.com>, Stephen Boyd <sboyd@codeaurora.org>, Mike Leach <mike.leach@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-current device framework and OF framework integration assumes
-dma-ranges in a way where memory-mapped devices define their
-dma-ranges. (child-bus-address, parent-bus-address, length).
+On Fri, May 05, 2017 at 02:55:17PM +0100, Sudeep Holla wrote:
+> 
+> 
+> On 02/05/17 11:08, Leo Yan wrote:
+> > Coresight includes debug module and usually the module connects with CPU
+> > debug logic. ARMv8 architecture reference manual (ARM DDI 0487A.k) has
+> > description for related info in "Part H: External Debug".
+> > 
+> > Chapter H7 "The Sample-based Profiling Extension" introduces several
+> > sampling registers, e.g. we can check program counter value with
+> > combined CPU exception level, secure state, etc. So this is helpful for
+> > analysis CPU lockup scenarios, e.g. if one CPU has run into infinite
+> > loop with IRQ disabled. In this case the CPU cannot switch context and
+> > handle any interrupt (including IPIs), as the result it cannot handle
+> > SMP call for stack dump.
+> > 
+> > This patch is to enable coresight debug module, so firstly this driver
+> > is to bind apb clock for debug module and this is to ensure the debug
+> > module can be accessed from program or external debugger. And the driver
+> > uses sample-based registers for debug purpose, e.g. when system triggers
+> > panic, the driver will dump program counter and combined context
+> > registers (EDCIDSR, EDVIDSR); by parsing context registers so can
+> > quickly get to know CPU secure state, exception level, etc.
+> > 
+> > Some of the debug module registers are located in CPU power domain, so
+> > this requires the CPU power domain stays on when access related debug
+> > registers, but the power management for CPU power domain is quite
+> > dependent on SoC integration for power management. For the platforms
+> > which with sane power controller implementations, this driver follows
+> > the method to set EDPRCR to try to pull the CPU out of low power state
+> > and then set 'no power down request' bit so the CPU has no chance to
+> > lose power.
+> > 
+> > If the SoC has not followed up this design well for power management
+> > controller, the user should use the command line parameter or sysfs
+> > to constrain all or partial idle states to ensure the CPU power
+> > domain is enabled and access coresight CPU debug component safely.
+> > 
+> > Signed-off-by: Leo Yan <leo.yan@linaro.org>
+> > ---
+> >  drivers/hwtracing/coresight/Kconfig               |  14 +
+> >  drivers/hwtracing/coresight/Makefile              |   1 +
+> >  drivers/hwtracing/coresight/coresight-cpu-debug.c | 670 ++++++++++++++++++++++
+> >  3 files changed, 685 insertions(+)
+> >  create mode 100644 drivers/hwtracing/coresight/coresight-cpu-debug.c
+> > 
+> > diff --git a/drivers/hwtracing/coresight/Kconfig b/drivers/hwtracing/coresight/Kconfig
+> > index 130cb21..8d55d6d 100644
+> > --- a/drivers/hwtracing/coresight/Kconfig
+> > +++ b/drivers/hwtracing/coresight/Kconfig
+> > @@ -89,4 +89,18 @@ config CORESIGHT_STM
+> >  	  logging useful software events or data coming from various entities
+> >  	  in the system, possibly running different OSs
+> >  
+> > +config CORESIGHT_CPU_DEBUG
+> > +	tristate "CoreSight CPU Debug driver"
+> > +	depends on ARM || ARM64
+> > +	depends on DEBUG_FS
+> > +	help
+> > +	  This driver provides support for coresight debugging module. This
+> > +	  is primarily used to dump sample-based profiling registers when
+> > +	  system triggers panic, the driver will parse context registers so
+> > +	  can quickly get to know program counter (PC), secure state,
+> > +	  exception level, etc. Before use debugging functionality, platform
+> > +	  needs to ensure the clock domain and power domain are enabled
+> > +	  properly, please refer Documentation/trace/coresight-cpu-debug.txt
+> > +	  for detailed description and the example for usage.
+> > +
+> >  endif
+> > diff --git a/drivers/hwtracing/coresight/Makefile b/drivers/hwtracing/coresight/Makefile
+> > index af480d9..433d590 100644
+> > --- a/drivers/hwtracing/coresight/Makefile
+> > +++ b/drivers/hwtracing/coresight/Makefile
+> > @@ -16,3 +16,4 @@ obj-$(CONFIG_CORESIGHT_SOURCE_ETM4X) += coresight-etm4x.o \
+> >  					coresight-etm4x-sysfs.o
+> >  obj-$(CONFIG_CORESIGHT_QCOM_REPLICATOR) += coresight-replicator-qcom.o
+> >  obj-$(CONFIG_CORESIGHT_STM) += coresight-stm.o
+> > +obj-$(CONFIG_CORESIGHT_CPU_DEBUG) += coresight-cpu-debug.o
+> > diff --git a/drivers/hwtracing/coresight/coresight-cpu-debug.c b/drivers/hwtracing/coresight/coresight-cpu-debug.c
+> > new file mode 100644
+> > index 0000000..b77456d
+> > --- /dev/null
+> > +++ b/drivers/hwtracing/coresight/coresight-cpu-debug.c
+> 
+> [...]
+> 
+> > +static int debug_probe(struct amba_device *adev, const struct amba_id *id)
+> > +{
+> > +	void __iomem *base;
+> > +	struct device *dev = &adev->dev;
+> > +	struct debug_drvdata *drvdata;
+> > +	struct resource *res = &adev->res;
+> > +	struct device_node *np = adev->dev.of_node;
+> > +	int ret;
+> > +
+> > +	drvdata = devm_kzalloc(dev, sizeof(*drvdata), GFP_KERNEL);
+> > +	if (!drvdata)
+> > +		return -ENOMEM;
+> > +
+> > +	drvdata->cpu = np ? of_coresight_get_cpu(np) : 0;
+> > +	if (per_cpu(debug_drvdata, drvdata->cpu)) {
+> > +		dev_err(dev, "CPU%d drvdata has been initialized, "
+> > +			"may be caused by binding wrong CPU node in the DT\n",
+> > +			drvdata->cpu);
+> > +		return -EBUSY;
+> > +	}
+> > +
+> > +	drvdata->dev = &adev->dev;
+> > +	amba_set_drvdata(adev, drvdata);
+> > +
+> > +	/* Validity for the resource is already checked by the AMBA core */
+> > +	base = devm_ioremap_resource(dev, res);
+> > +	if (IS_ERR(base))
+> > +		return PTR_ERR(base);
+> > +
+> > +	drvdata->base = base;
+> > +
+> > +	get_online_cpus();
+> > +	per_cpu(debug_drvdata, drvdata->cpu) = drvdata;
+> > +	ret = smp_call_function_single(drvdata->cpu, debug_init_arch_data,
+> > +				       drvdata, 1);
+> > +	put_online_cpus();
+> > +
+> > +	if (ret) {
+> > +		dev_err(dev, "CPU%d debug arch init failed\n", drvdata->cpu);
+> > +		goto err;
+> > +	}
+> > +
+> > +	if (!drvdata->edpcsr_present) {
+> > +		dev_err(dev, "CPU%d sample-based profiling isn't implemented\n",
+> > +			drvdata->cpu);
+> > +		ret = -ENXIO;
+> > +		goto err;
+> > +	}
+> > +
+> > +	if (!debug_count++) {
+> > +		ret = debug_func_init();
+> > +		if (ret)
+> > +			goto err_func_init;
+> > +	}
+> > +
+> > +	mutex_lock(&debug_lock);
+> > +	if (!debug_enable)
+> > +		pm_runtime_put(dev);
+> > +	mutex_unlock(&debug_lock);
+> > +
+> 
+> Just curious as why this is not registered under coresight bus using
+> coresight_register ? It would be good to group all the coresight devices
+> under that bus if possible.
 
-of_dma_configure is specifically written to take care of memory
-mapped devices. but no implementation exists for pci to take
-care of pcie based memory ranges.
+The only thing this driver has in common with the coresight framework is the
+name, everything else is completely different.  Coupling them together (because
+of the name) would introduce a lot of hacks and make the code unintelligible. 
 
-for e.g. iproc based SOCs and other SOCs(suc as rcar) have PCI
-world dma-ranges.
-dma-ranges = <0x43000000 0x00 0x00 0x00 0x00 0x80 0x00>;
+Mathieu
 
-this patch fixes the bug in of_dma_get_range, which with as is,
-parses the PCI memory ranges and return wrong size as 0.
-
-in order to get largest possible dma_mask. this patch also
-retuns the largest possible size based on dma-ranges,
-
-for e.g.
-dma-ranges = <0x43000000 0x00 0x00 0x00 0x00 0x80 0x00>;
-we should get dev->coherent_dma_mask=0x7fffffffff.
-
-based on which IOVA allocation space will honour PCI host
-bridge limitations.
-
-the implementation hooks bus specific callbacks for getting
-dma-ranges.
-
-Signed-off-by: Oza Pawandeep <oza.oza-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-
-diff --git a/drivers/of/address.c b/drivers/of/address.c
-index 02b2903..b43e347 100644
---- a/drivers/of/address.c
-+++ b/drivers/of/address.c
-@@ -6,6 +6,7 @@
- #include <linux/ioport.h>
- #include <linux/module.h>
- #include <linux/of_address.h>
-+#include <linux/of_pci.h>
- #include <linux/pci.h>
- #include <linux/pci_regs.h>
- #include <linux/sizes.h>
-@@ -46,6 +47,8 @@ struct of_bus {
- 				int na, int ns, int pna);
- 	int		(*translate)(__be32 *addr, u64 offset, int na);
- 	unsigned int	(*get_flags)(const __be32 *addr);
-+	int		(*get_dma_ranges)(struct device_node *np,
-+					  u64 *dma_addr, u64 *paddr, u64 *size);
- };
- 
- /*
-@@ -171,6 +174,144 @@ static int of_bus_pci_translate(__be32 *addr, u64 offset, int na)
- {
- 	return of_bus_default_translate(addr + 1, offset, na - 1);
- }
-+
-+static int of_bus_pci_get_dma_ranges(struct device_node *np, u64 *dma_addr,
-+				     u64 *paddr, u64 *size)
-+{
-+	struct device_node *node = of_node_get(np);
-+	int ret = 0;
-+	struct resource_entry *window;
-+	LIST_HEAD(res);
-+
-+	if (!node)
-+		return -EINVAL;
-+
-+	*size = 0;
-+	/*
-+	 * PCI dma-ranges is not mandatory property.
-+	 * many devices do no need to have it, since
-+	 * host bridge does not require inbound memory
-+	 * configuration or rather have design limitations.
-+	 * so we look for dma-ranges, if missing we
-+	 * just return the caller full size, and also
-+	 * no dma-ranges suggests that, host bridge allows
-+	 * whatever comes in, so we set dma_addr to 0.
-+	 */
-+	ret = of_pci_get_dma_ranges(np, &res);
-+	if (!ret) {
-+		resource_list_for_each_entry(window, &res) {
-+		struct resource *res_dma = window->res;
-+
-+		if (*size < resource_size(res_dma)) {
-+			*dma_addr = res_dma->start - window->offset;
-+			*paddr = res_dma->start;
-+			*size = resource_size(res_dma);
-+			}
-+		}
-+	}
-+	pci_free_resource_list(&res);
-+
-+	/*
-+	 * return the largest possible size,
-+	 * since PCI master allows everything.
-+	 */
-+	if (*size == 0) {
-+		pr_debug("empty/zero size dma-ranges found for node(%s)\n",
-+			np->full_name);
-+		*size = DMA_BIT_MASK(sizeof(dma_addr_t) * 8) - 1;
-+		*dma_addr = *paddr = 0;
-+		ret = 0;
-+	}
-+
-+	pr_debug("dma_addr(%llx) cpu_addr(%llx) size(%llx)\n",
-+		 *dma_addr, *paddr, *size);
-+
-+	of_node_put(node);
-+
-+	return ret;
-+}
-+
-+static int get_dma_ranges(struct device_node *np, u64 *dma_addr,
-+		          u64 *paddr, u64 *size)
-+{
-+	struct device_node *node = of_node_get(np);
-+	const __be32 *ranges = NULL;
-+	int len, naddr, nsize, pna;
-+	int ret = 0;
-+	u64 dmaaddr;
-+
-+	if (!node)
-+		return -EINVAL;
-+
-+	while (1) {
-+		naddr = of_n_addr_cells(node);
-+		nsize = of_n_size_cells(node);
-+		node = of_get_next_parent(node);
-+		if (!node)
-+			break;
-+
-+		ranges = of_get_property(node, "dma-ranges", &len);
-+
-+		/* Ignore empty ranges, they imply no translation required */
-+		if (ranges && len > 0)
-+			break;
-+
-+		/*
-+		 * At least empty ranges has to be defined for parent node if
-+		 * DMA is supported
-+		 */
-+		if (!ranges)
-+			break;
-+	}
-+
-+	if (!ranges) {
-+		pr_debug("no dma-ranges found for node(%s)\n", np->full_name);
-+		ret = -ENODEV;
-+		goto out;
-+	}
-+
-+	len /= sizeof(u32);
-+
-+	pna = of_n_addr_cells(node);
-+
-+	/* dma-ranges format:
-+	 * DMA addr	: naddr cells
-+	 * CPU addr	: pna cells
-+	 * size		: nsize cells
-+	 */
-+	dmaaddr = of_read_number(ranges, naddr);
-+	*paddr = of_translate_dma_address(np, ranges);
-+	if (*paddr == OF_BAD_ADDR) {
-+		pr_err("translation of DMA address(%pad) to CPU address failed node(%s)\n",
-+		       dma_addr, np->full_name);
-+		ret = -EINVAL;
-+		goto out;
-+	}
-+	*dma_addr = dmaaddr;
-+
-+	*size = of_read_number(ranges + naddr + pna, nsize);
-+
-+	pr_debug("dma_addr(%llx) cpu_addr(%llx) size(%llx)\n",
-+		 *dma_addr, *paddr, *size);
-+
-+out:
-+	of_node_put(node);
-+
-+	return ret;
-+}
-+
-+static int of_bus_isa_get_dma_ranges(struct device_node *np, u64 *dma_addr,
-+				     u64 *paddr, u64 *size)
-+{
-+	return get_dma_ranges(np, dma_addr, paddr, size);
-+}
-+
-+static int of_bus_default_get_dma_ranges(struct device_node *np, u64 *dma_addr,
-+					 u64 *paddr, u64 *size)
-+{
-+	return get_dma_ranges(np, dma_addr, paddr, size);
-+}
-+
- #endif /* CONFIG_OF_ADDRESS_PCI */
- 
- #ifdef CONFIG_PCI
-@@ -424,6 +565,7 @@ static unsigned int of_bus_isa_get_flags(const __be32 *addr)
- 		.map = of_bus_pci_map,
- 		.translate = of_bus_pci_translate,
- 		.get_flags = of_bus_pci_get_flags,
-+		.get_dma_ranges = of_bus_pci_get_dma_ranges,
- 	},
- #endif /* CONFIG_OF_ADDRESS_PCI */
- 	/* ISA */
-@@ -435,6 +577,7 @@ static unsigned int of_bus_isa_get_flags(const __be32 *addr)
- 		.map = of_bus_isa_map,
- 		.translate = of_bus_isa_translate,
- 		.get_flags = of_bus_isa_get_flags,
-+		.get_dma_ranges = of_bus_isa_get_dma_ranges,
- 	},
- 	/* Default */
- 	{
-@@ -445,6 +588,7 @@ static unsigned int of_bus_isa_get_flags(const __be32 *addr)
- 		.map = of_bus_default_map,
- 		.translate = of_bus_default_translate,
- 		.get_flags = of_bus_default_get_flags,
-+		.get_dma_ranges = of_bus_default_get_dma_ranges,
- 	},
- };
- 
-@@ -820,74 +964,20 @@ void __iomem *of_io_request_and_map(struct device_node *np, int index,
-  *	size			: nsize cells
-  *
-  * It returns -ENODEV if "dma-ranges" property was not found
-- * for this device in DT.
-+ * for this device in DT, except if PCI device then, dma-ranges
-+ * can be optional property, and in that case returns size with
-+ * entire host memory.
-  */
- int of_dma_get_range(struct device_node *np, u64 *dma_addr, u64 *paddr, u64 *size)
- {
--	struct device_node *node = of_node_get(np);
--	const __be32 *ranges = NULL;
--	int len, naddr, nsize, pna;
--	int ret = 0;
--	u64 dmaaddr;
--
--	if (!node)
--		return -EINVAL;
--
--	while (1) {
--		naddr = of_n_addr_cells(node);
--		nsize = of_n_size_cells(node);
--		node = of_get_next_parent(node);
--		if (!node)
--			break;
--
--		ranges = of_get_property(node, "dma-ranges", &len);
--
--		/* Ignore empty ranges, they imply no translation required */
--		if (ranges && len > 0)
--			break;
--
--		/*
--		 * At least empty ranges has to be defined for parent node if
--		 * DMA is supported
--		 */
--		if (!ranges)
--			break;
--	}
--
--	if (!ranges) {
--		pr_debug("no dma-ranges found for node(%s)\n", np->full_name);
--		ret = -ENODEV;
--		goto out;
--	}
--
--	len /= sizeof(u32);
--
--	pna = of_n_addr_cells(node);
--
--	/* dma-ranges format:
--	 * DMA addr	: naddr cells
--	 * CPU addr	: pna cells
--	 * size		: nsize cells
--	 */
--	dmaaddr = of_read_number(ranges, naddr);
--	*paddr = of_translate_dma_address(np, ranges);
--	if (*paddr == OF_BAD_ADDR) {
--		pr_err("translation of DMA address(%pad) to CPU address failed node(%s)\n",
--		       dma_addr, np->full_name);
--		ret = -EINVAL;
--		goto out;
--	}
--	*dma_addr = dmaaddr;
--
--	*size = of_read_number(ranges + naddr + pna, nsize);
--
--	pr_debug("dma_addr(%llx) cpu_addr(%llx) size(%llx)\n",
--		 *dma_addr, *paddr, *size);
-+	struct of_bus *bus;
- 
--out:
--	of_node_put(node);
-+	/* get bus specific dma-ranges. */
-+	bus = of_match_bus(np);
-+	if (bus->get_dma_ranges)
-+		return bus->get_dma_ranges(np, dma_addr, paddr, size);
- 
--	return ret;
-+	return 0;
- }
- EXPORT_SYMBOL_GPL(of_dma_get_range);
- 
--- 
-1.9.1
+> 
+> --
+> Regards,
+> Sudeep
