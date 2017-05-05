@@ -1,30 +1,63 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 1/2] dt: bindings: fpga: add lattice machxo2 slave spi
- binding description
-Date: Fri, 5 May 2017 15:25:37 -0500
-Message-ID: <20170505202537.imofwrrjxenzw7cc@rob-hp-laptop>
-References: <1493644512-14776-1-git-send-email-p.pisati@gmail.com>
- <1493644512-14776-2-git-send-email-p.pisati@gmail.com>
+From: Jeffrey Hugo <jhugo@codeaurora.org>
+Subject: Re: [PATCH v4 3/5] soc: qcom: Introduce APCS IPC driver
+Date: Fri, 5 May 2017 14:39:38 -0600
+Message-ID: <ff1b18c2-d42e-a6e3-f725-019977960e89@codeaurora.org>
+References: <20170504200539.27027-1-bjorn.andersson@linaro.org>
+ <20170504200539.27027-3-bjorn.andersson@linaro.org>
+ <CABb+yY2P=qPTYB6PDkjV82Qc67Xzer40BHRsOQP2m-gM3eK_UA@mail.gmail.com>
+ <20170505183729.GG15143@minitux>
+ <CABb+yY03imq8911rF9dHJjG_a_aosksA=tgk7Rog5AZSezHDyg@mail.gmail.com>
+ <338c4262-cc6b-bed2-16fe-1767d1f0d5f6@codeaurora.org>
+ <CABb+yY1K3Hyn7CzQCA6tHu-KrPigARc3cYgBdT8PNX7vjhPK0g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1493644512-14776-2-git-send-email-p.pisati@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Paolo Pisati <p.pisati@gmail.com>
-Cc: Alan Tull <atull@opensource.altera.com>, Mark Rutland <mark.rutland@arm.com>, Moritz Fischer <moritz.fischer@ettus.com>, devicetree@vger.kernel.org, linux-fpga@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <CABb+yY1K3Hyn7CzQCA6tHu-KrPigARc3cYgBdT8PNX7vjhPK0g@mail.gmail.com>
+Content-Language: en-US
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Jassi Brar <jassisinghbrar@gmail.com>
+Cc: Bjorn Andersson <bjorn.andersson@linaro.org>, Andy Gross <andy.gross@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ohad Ben-Cohen <ohad@wizery.com>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, Devicetree List <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-remoteproc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 01, 2017 at 03:15:11PM +0200, Paolo Pisati wrote:
-> Add dt binding documentation details for Lattice MachXO2 FPGA configuration
-> over Slave SPI interface.
+On 5/5/2017 2:22 PM, Jassi Brar wrote:
+> On Sat, May 6, 2017 at 1:23 AM, Jeffrey Hugo <jhugo@codeaurora.org> wrote:
+>> On 5/5/2017 1:22 PM, Jassi Brar wrote:
+>>>
+>>> On Sat, May 6, 2017 at 12:07 AM, Bjorn Andersson
+>>> <bjorn.andersson@linaro.org> wrote:
+>>>>
+>>
+>> There is no way to determine if the remote processor has observed a message,
+>> that does not involve pretty trivial race conditions.
+>>
+> Thanks for chiming in.
+> How is it supposed to work if a client queues more than one request?
+> How do you know when it's ok to overwrite the FIFO and send the next
+> command?
+>    Usually if h/w doesn't indicate, we cook up some ack packet for each
+> command. Otherwise the protocol seems badly broken.
 > 
-> Signed-off-by: Paolo Pisati <p.pisati@gmail.com>
-> ---
->  .../bindings/fpga/lattice-machxo2-spi.txt          | 29 ++++++++++++++++++++++
->  1 file changed, 29 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/fpga/lattice-machxo2-spi.txt
+>   If there is really nothing that can be done to check delivery of a
+> message, I'll pick the driver as such. Best of luck :)
 
-Please add acks when posting new versions.
+The protocol is designed so that we don't need an ack, or confirmation 
+of delivery.  Such details are left to the higher level protocol, if 
+needed.
 
-Rob
+The transmitter owns the "head" pointer in the fifo, and the receiver 
+owns the "tail" pointer.  The fifo is empty if those pointers are the 
+same value.  When the receiver has copied data out of the fifo, it 
+advances the tail pointer.  The transmitter must ensure that the head 
+pointer never meets the tail pointer through wrap around.
+
+You can kind of check delivery based on the position of the tail 
+pointer, but I can tell you from experience, you never really want to do 
+that as it never tells you what you really want to know.
+
+-- 
+Jeffrey Hugo
+Qualcomm Datacenter Technologies as an affiliate of Qualcomm 
+Technologies, Inc.
+Qualcomm Technologies, Inc. is a member of the
+Code Aurora Forum, a Linux Foundation Collaborative Project.
