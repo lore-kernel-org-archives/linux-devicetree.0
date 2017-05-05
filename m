@@ -1,89 +1,48 @@
-From: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
-Subject: Re: [RFC 1/3] dt: bindings: Add a binding for flash devices
- associated to a sensor
-Date: Fri, 5 May 2017 10:38:45 +0200
-Message-ID: <20170505083845.gwltdxxk4djbbfcf@earth>
-References: <1493720749-31509-1-git-send-email-sakari.ailus@linux.intel.com>
- <1493720749-31509-2-git-send-email-sakari.ailus@linux.intel.com>
- <20170504142730.tq4k3paofmyk5jul@earth>
- <1e8d0a73-3f3f-410b-ca04-89fa35b1f0b9@linux.intel.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="3ptuqwy2jrcze7a7"
-Return-path: <linux-media-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1e8d0a73-3f3f-410b-ca04-89fa35b1f0b9@linux.intel.com>
-Sender: linux-media-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, pavel@ucw.cz
+From: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Subject: [RFC v2 0/3] Document bindings for camera modules and associated flash devices
+Date: Fri,  5 May 2017 11:48:27 +0300
+Message-ID: <1493974110-26510-1-git-send-email-sakari.ailus@linux.intel.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: pavel-+ZI9xUNit7I@public.gmane.org, sebastian.reichel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+This RFC patchset documents properties commonly required by camera modules
+and associated camera flash devices.
 
---3ptuqwy2jrcze7a7
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+The camera module is essentially a package consisting of an image sensor, 
+a lens, possibly a voice coil to move the lens and a number of other
+things that at least the drivers need not to know of. All the devices in a
+camera module are declared separately in the system and as such the fact
+that they come in a single package isn't generally very useful to driver
+software. 
 
-Hi,
+I'm sending the set as RFC as there's no driver implementation, and a 
+dependency to the V4L2 async changes:
 
-On Fri, May 05, 2017 at 11:28:34AM +0300, Sakari Ailus wrote:
-> Sebastian Reichel wrote:
-> > On Tue, May 02, 2017 at 01:25:47PM +0300, Sakari Ailus wrote:
-> > > +- flash: An array of phandles that refer to the flash light sources
-> > > +  related to an image sensor. These could be e.g. LEDs. In case the =
-LED
-> > > +  driver drives more than a single LED, then the phandles here refer=
- to
-> > > +  the child nodes of the LED driver describing individual LEDs. Only
-> > > +  valid for device nodes that are related to an image sensor.
-> >=20
-> > s/driver/controller/g - DT describes HW. Otherwise
->=20
-> Driver is hardware in this case. :-) The chip that acts as a current sink=
- or
-> source for the LED is the driver. E.g. the adp1653 documentation describes
-> the chip as "Compact, High Efficiency, High Power, Flash/Torch LED Driver
-> with Dual Interface".
->=20
-> It might be still possible to improve the wording. Software oriented folks
-> are more likely to misunderstand the meaning of driver here, but controll=
-er
-> might seem ambiguous for hardware oriented people.
->=20
-> How about:
->=20
-> - flash: An array of phandles that refer to the flash light sources
->   related to an image sensor. These could be e.g. LEDs. In case the LED
->   driver (current sink or source chip for the LED(s)) drives more than a
->   single LED, then the phandles here refer to the child nodes of the LED
->   driver describing individual LEDs. Only valid for device nodes that are
->   related to an image sensor.
+<URL:http://www.spinics.net/lists/linux-media/msg114915.html>
 
-Maybe drop the last sentence? The requirement is already in the
-first one. Otherwise:
+since RFC v1:
 
-Reviewed-by: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
+- Remove sentences elaborating applicability of the bindings.
 
--- Sebastian
+- Say a LED driver is a piece of hardware.
 
---3ptuqwy2jrcze7a7
-Content-Type: application/pgp-signature; name="signature.asc"
+- Otherwise reformulate the descriptions according to the comments.
 
------BEGIN PGP SIGNATURE-----
+Sakari Ailus (3):
+  dt: bindings: Add a binding for flash devices associated to a sensor
+  dt: bindings: Add lens-focus binding for image sensors
+  dt: bindings: Add a binding for referencing EEPROM from camera sensors
 
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAlkMOhIACgkQ2O7X88g7
-+praIQ//dI4O5is/HDiHpHPpsKGT/eO2/yMlswrf1RhsjsC9vx4q0spngSg8pUYK
-Wy6IuwAQn8VY9TWqMkufU0urO1F+AYlrV4g/r8Kfr89X82deTtwHtPpeUjIPI91B
-TtSL/SvBNhzNWWwZzTdY/8pIORWHlOMdl538jeHo1dCQjQn4YdgIkrW4FiAwGLK4
-z8yoRn5g4gAHJDkXO4EStUkDBKqoebYGKIvqBxdLArSeGYnETITIO6sjKP413pt1
-KqtoWSzWti5+14BwyO0Q9bRwF6o8a1yFxagz2tsIkxlMiBd4rcBRa+xiPrpxiDcw
-GchAmThqd6mxF9/sX+3cef3Cyg59wkf5UxFjguAUdRO7veQaL2WhAzts8AqdKpuC
-egrnC/A9Vu1x+KcH3jIkARmX+MArgG7HMjPr4d2jIqPT916SBoSPRQPVlnBb3w1l
-2KncnCdeFP4wcRRRKR8qvLrG23ZADAyOP7HVqRk3npNHK67+YY9GtjqejAQlCCrp
-Q1gYuyA88kIZUCz3ditPCk7Uo8G4BYi8vWQ5Y1fxahrFHB39JYUeOEdZTyibI1mA
-WjLzRcjJtndtkytycyiofAxMiEnG5lA8Kj5ItlXs6pAyYO4b19UG/W/4TzBtKkiA
-dZv94WkNv6yDPwzNLNQiUA9NdXD+HX5DmuNymNudC04FitPGEdo=
-=JffM
------END PGP SIGNATURE-----
+ .../devicetree/bindings/media/video-interfaces.txt       | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
---3ptuqwy2jrcze7a7--
+-- 
+2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
