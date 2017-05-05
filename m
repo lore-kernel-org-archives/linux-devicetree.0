@@ -1,98 +1,135 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v10 2/3] backlight arcxcnn devicetree bindings for
- ArcticSand
-Date: Fri, 5 May 2017 08:57:51 +0100
-Message-ID: <20170505075751.3briqcjk2ypjjjfx@dell>
-References: <1493823859-22402-1-git-send-email-olimpiu@arcticsand.com>
- <1493823859-22402-2-git-send-email-olimpiu@arcticsand.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2 3/8] clk: sunxi-ng: Add class of phase
+ clocks supporting MMC new timing modes
+Date: Fri, 5 May 2017 09:58:24 +0200
+Message-ID: <20170505075824.d35sr2pehm6g42ig@lukather>
+References: <20170503031658.29299-1-wens@csie.org>
+ <20170503031658.29299-4-wens@csie.org>
+ <20170503203402.5mwhx5wjniav24nd@lukather>
+ <CAGb2v67VhJCZuu4EGHgTATe=z6ab9meRSWpGYU-cCjWmDh6aUA@mail.gmail.com>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="m5t5xavcy7hthe5m"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBIXBWDEAKGQEQAKPTDA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <1493823859-22402-2-git-send-email-olimpiu@arcticsand.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Olimpiu Dejeu <olimpiu@arcticsand.com>
-Cc: robh@kernel.org, linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org, jingoohan1@gmail.com, bdodge@arcticsand.com, joe@perches.com, daniel.thompson@linaro.org, lkp@intel.com, fengguang.wu@intel.com
+In-Reply-To: <CAGb2v67VhJCZuu4EGHgTATe=z6ab9meRSWpGYU-cCjWmDh6aUA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 03 May 2017, Olimpiu Dejeu wrote:
 
-> backlight: Add devicetree bindings for the Arctic Sand backlight driver
-> This patch provides devicetree bindings for the Arctic Sand
->     driver submitted in the previous patch
-> Acked-by: Rob Herring <robh@kernel.org>
-> Acked-by: Daniel Thompson <daniel.thompson@linaro.org>
-> Signed-off-by: Olimpiu Dejeu <olimpiu@arcticsand.com>
+--m5t5xavcy7hthe5m
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
-Same points as I made in [PATCH 3/3]
-
-> ---
-> v9 => v10:
-> - Per Rob Herring's request changed vendor-prefix to arctic
-> v8 => v9:
-> - Version updated to match other patch in set. No other changes.
-> v7 => v8:
-> - Version updated to match other patch in set. No other changes.
-> v6 => v7:
-> - Version updated to match other patch in set. No other changes.
-> v5 => v6:
-> - Version updated to match other patch in set. No other changes.
-> v4 => v5:
-> - Added spaces for increased readability per Lee Jones
-> v3 => v4:
-> - Added spaces for increased readability per Lee Jones
-> v2 => v3:
-> - Version updated to match other patch in set. No other changes.
-> v1 => v2:
-> - Version updated to match other patch in set. No other changes.
+On Thu, May 04, 2017 at 11:08:43AM +0800, Chen-Yu Tsai wrote:
+> Hi,
 > 
->  .../bindings/leds/backlight/arcxcnn_bl.txt         | 33 ++++++++++++++++++++++
->  1 file changed, 31 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/leds/backlight/arcxcnn_bl.txt
+> On Thu, May 4, 2017 at 4:34 AM, Maxime Ripard
+> <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> > Hi,
+> >
+> > On Wed, May 03, 2017 at 11:16:53AM +0800, Chen-Yu Tsai wrote:
+> >> The MMC clocks on newer SoCs, such as the A83T and H3, support the
+> >> "new timing mode". Under this mode, the output of the clock is divided
+> >> by 2, and the clock delays no longer apply.
+> >>
+> >> Due to how the clock tree is modeled and setup, we need to model
+> >> this function in two places, the master mmc clock and the two
+> >> child phase clocks. In the mmc clock, we can easily model the
+> >> mode bit as an extra variable post-divider. In the phase clocks,
+> >> we check the bit and return -ENOTSUPP if the bit is set, signaling
+> >> that the phase clocks are not to be used.
+> >>
+> >> This patch introduces a class of phase clocks that checks the
+> >> timing mode bit.
+> >
+> > We've been over this quite some times already...
+> >
+> > How do you retrieve the mode used in the clock so that you can also
+> > switch the MMC driver in the new mode?
 > 
-> diff --git a/Documentation/devicetree/bindings/leds/backlight/arcxcnn_bl.txt b/Documentation/devicetree/bindings/leds/backlight/arcxcnn_bl.txt
-> new file mode 100644
-> index 0000000..ecb7731
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/leds/backlight/arcxcnn_bl.txt
-> @@ -0,0 +1,33 @@
-> +Binding for ArcticSand arc2c0608 LED driver
-> +
-> +Required properties:
-> +- compatible:		should be "arctic,arc2c0608"
-> +- reg:			slave address
-> +
-> +Optional properties:
-> +- default-brightness:	brightness value on boot, value from: 0-4095
-> +- label:		The name of the backlight device
-> +			See Documentation/devicetree/bindings/leds/common.txt
-> +- led-sources:		List of enabled channels from 0 to 5.
-> +			See Documentation/devicetree/bindings/leds/common.txt
-> +
-> +- arctic,led-config-0:	setting for register ILED_CONFIG_0
-> +- arctic,led-config-1:	setting for register ILED_CONFIG_1
-> +- arctic,dim-freq:		PWM mode frequence setting (bits [3:0] used)
-> +- arctic,comp-config:	setting for register CONFIG_COMP
-> +- arctic,filter-config:	setting for register FILTER_CONFIG
-> +- arctic,trim-config:	setting for register IMAXTUNE
-> +
-> +Note: Optional properties not specified will default to values in IC EPROM
-> +
-> +Example:
-> +
-> +arc2c0608@30 {
-> +	compatible = "arctic,arc2c0608";
-> +	reg = <0x30>;
-> +	default-brightness = <500>;
-> +	label = "lcd-backlight";
-> +	linux,default-trigger = "backlight";
-> +	led-sources = <0 1 2 5>;
-> +};
-> +
+> This part is covered. As mentioned above, the phase clks will return
+> -ENOTSUPP if the mmc clk is set in the new timing mode. The MMC driver
+> would try getting the current phase, check if it fails, and if it does,
+> realizes the clk is in new timing mode, and will switch the mmc controller
+> to it as well. I think this semantic fits the hardware well enough,
+> though it might be confusing without the accompanying comments.
+
+This is confusing, and impossible to debug without getting your hands
+in the driver. Triggerring the new mode is also not really something
+that is rate-based. We might want to switch to it explicitly, without
+any doubt. This is what we're doing for the A64 for example.
+
+Since some rates can be obtained both in the old and new modes
+likewise, you don't have that guarantee in the MMC driver and might
+end up in the old mode, even though you actually want it. And you
+can't.
+
+Which is why I argued several times for a custom function calls. Every
+other solutions that we evaluated so far was a hack, at best, and was
+not entirely predictable and debuggable, which is not a very nice
+combination.
+
+> See this commit for an example on how it should work.
+> https://github.com/wens/linux/commit/41e386f1f945a0a135a20a00601b977a001353da
+
+This is unrelated, but it breaks A64. A64 doesn't have the phase
+clocks at all, and need to be switched to the new mode all the time,
+without any cooperation from the CCU. Your code will try to change the
+phase, fail since you don't have any phase clock, and fall back to not
+using the new mode. I think we need to make a distinction between MMC
+controllers that can use both the old and new mode (A23, A33, H3,
+A83T, etc.) and the one that always need to use it (A64 eMMC).
+
+You should also retrieve whether you can use the new mode or not after
+changing the rate and not at probe time. Each call to clk_set_rate
+might change that.
+
+> > And do you prevent that from happening on the DT we already have that
+> > use the old clock drivers that do not support this new timing at all?
+> 
+> I admit this is not taken care of in this patch. Mostly because there
+> is no existing DT for the A83T to cater to. For the H3 and other SoCs
+> that do, we need some way of asking the CCU to switch the mode.
+> 
+> IIRC the output and sample clocks do not support a phase delay of 0.
+
+That's a weak assumption, since we're not even sure what the phase
+actually is. My recollection is that it doesn't, but I'm not entirely
+sure, and both the datasheet and the BSP code are not really clear on
+that part either.
+
+> So what if we design the semantic for this class of clocks as, if
+> phase == 0, switch to new timing mode, otherwise use old timing mode?
+> That would allow us to support this without adding extra functions,
+> and kind of matches what the hardware does. If you're using the new
+> timing mode, the delays in the mmc clk are bypassed.
+
+To be honest, I have the feeling that it should be a separate
+discussion.
+
+The whole A83T support has been completely stalled because of a single
+board's eMMC. This is pretty much a cross-SoC issue, at least 4 other
+SoCs have that issue already, and we need to deal with this for all of
+them.
+
+Merging a clock driver without the support for the MMC new mode would
+just bring us in the same situation than the A33 or H3, which I
+believe quite good.
+
+Maxime
 
 -- 
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--m5t5xavcy7hthe5m--
