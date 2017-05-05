@@ -1,52 +1,137 @@
-From: Mike Looijmans <mike.looijmans@topic.nl>
-Subject: [PATCH] dt-bindings: power: New bindings for ltc3651-charger
-Date: Fri,  5 May 2017 08:38:35 +0200
-Message-ID: <1493966315-15893-1-git-send-email-mike.looijmans@topic.nl>
-Return-path: <linux-pm-owner@vger.kernel.org>
-Sender: linux-pm-owner@vger.kernel.org
-To: devicetree@vger.kernel.org
-Cc: sre@kernel.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, Mike Looijmans <mike.looijmans@topic.nl>
+From: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 0/8] clk: sunxi-ng: Add support for A83T CCU
+Date: Fri, 5 May 2017 08:46:45 +0200
+Message-ID: <20170505064645.GA31657@Red>
+References: <20170503031658.29299-1-wens@csie.org>
+Reply-To: clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBD7YLCN32UNBBWN7WDEAKGQERF5MREY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20170503031658.29299-1-wens-jdAy2FN1RRM@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This adds the devicetree bindings documentation for the LTC3651 battery charger.
+On Wed, May 03, 2017 at 11:16:50AM +0800, Chen-Yu Tsai wrote:
+> Hi everyone,
+> 
+> (Resent with devicetree mailing list CC-ed.)
+> This is v2 of my A83T CCU series. This is for 4.13.
+> 
+> Changes since v1:
+> 
+>   - Dropped two patches that were merged
+> 
+>   - Added clk core flag to disable caching of clock phases
+> 
+>   - Added support for multiple variable pre-dividers
+> 
+>   - Merged "pll-periph-ahb1" pre-divider clock into "ahb1" clock
+>     with multiple variable pre-dividers
+> 
+>   - Introduced new class of phase clocks that return -ENOTSUPP
+>     when the clock is in new timing mode
+> 
+>   - Force mmc2 clock to new timing mode
+> 
+>   - Added back mmc2 output and sample clocks
+> 
+>   - Fixed bit ops for forcing audio PLL configuration
+> 
+>   - Added requirement for "losc" clock in device tree binding
+> 
+>   - Stripped leading 0 in device node name
+> 
+>   - Updated subject prefixes for various patches
+> 
+> Patch 1 adds a compatible string for the A83T CCU to the sunxi-ccu
+> bindings.
+> 
+> Patch 2 adds a CLK_GET_PHASE_NOCACHE flag to the clk core, asking it
+> not to cache clock phase values. This is similar to CLK_GET_RATE_NOCACHE.
+> Patch 5 has a compile time dependency on this patch, for the flag value.
+> 
+> Patch 3 adds a new class of phase clocks that check the new timing mode
+> bit, and returns an error if it is set, which indicates the phase delays
+> no longer apply. This is a clean way to signal which timing mode the mmc
+> clock is in, without using any custom functions or callbacks. We don't
+> support runtime switching of modes.
+> 
+> Patch 4 adds support for multiple variable pre-dividers to the sunxi-ng
+> mux class.
+> 
+> Patch 5 adds the driver for the A83T CCU.
+> 
+> Patch 6 adds the CCU device nodes, and fixes up any existing clock
+> phandles in the dtsi, without using the macros.
+> 
+> Patch 7 sets the clock accuracy for the main oscillator.
+> 
+> Patch 8 is for the next -rc2, switch the clock indices from raw numbers
+> to macros we introduced with the driver. This will be updated if more
+> peripherals are introduced in the same cycle.
+> 
+> Let me know what you think.
+> 
+> Cover letter excerpt from v1:
+> 
+> This is yet another series that adds support for the A83T CCU.
+> The A83T CCU has a mix of new styled (like the A80) clocks at
+> old (like A3x) offsets. Some differences include:
+> 
+>   - D1/D2 style PLL clocks
+>   - divisible audio module clocks
+>   - new timing mode for mmc2 module clock
+> 
+> 
+> Regards
+> ChenYu
+> 
+> Chen-Yu Tsai (8):
+>   dt-bindings: clock: sunxi-ccu: Add compatible string for A83T CCU
+>   clk: Provide option to query hardware for clk phase
+>   clk: sunxi-ng: Add class of phase clocks supporting MMC new timing
+>     modes
+>   clk: sunxi-ng: Support multiple variable pre-dividers
+>   clk: sunxi-ng: Add driver for A83T CCU
+>   ARM: sun8i: a83t: Add CCU device nodes
+>   ARM: sun8i: a83t: Set clock accuracy for 24MHz oscillator
+>   ARM: sun8i: a83t: Switch to CCU device tree binding macros
+> 
+>  .../devicetree/bindings/clock/sunxi-ccu.txt        |   2 +
+>  arch/arm/boot/dts/sun8i-a83t.dtsi                  |  19 +-
+>  drivers/clk/clk.c                                  |   6 +-
+>  drivers/clk/sunxi-ng/Kconfig                       |  10 +
+>  drivers/clk/sunxi-ng/Makefile                      |   1 +
+>  drivers/clk/sunxi-ng/ccu-sun50i-a64.c              |  10 +-
+>  drivers/clk/sunxi-ng/ccu-sun6i-a31.c               |  10 +-
+>  drivers/clk/sunxi-ng/ccu-sun8i-a23.c               |  10 +-
+>  drivers/clk/sunxi-ng/ccu-sun8i-a33.c               |  10 +-
+>  drivers/clk/sunxi-ng/ccu-sun8i-a83t.c              | 911 +++++++++++++++++++++
+>  drivers/clk/sunxi-ng/ccu-sun8i-a83t.h              |  64 ++
+>  drivers/clk/sunxi-ng/ccu-sun8i-h3.c                |  10 +-
+>  drivers/clk/sunxi-ng/ccu-sun8i-r.c                 |  10 +-
+>  drivers/clk/sunxi-ng/ccu-sun8i-v3s.c               |  10 +-
+>  drivers/clk/sunxi-ng/ccu_mux.c                     |  15 +-
+>  drivers/clk/sunxi-ng/ccu_mux.h                     |  13 +-
+>  drivers/clk/sunxi-ng/ccu_phase.c                   |  47 ++
+>  drivers/clk/sunxi-ng/ccu_phase.h                   |  16 +
+>  include/dt-bindings/clock/sun8i-a83t-ccu.h         | 140 ++++
+>  include/dt-bindings/reset/sun8i-a83t-ccu.h         |  98 +++
+>  include/linux/clk-provider.h                       |   1 +
+>  21 files changed, 1363 insertions(+), 50 deletions(-)
+>  create mode 100644 drivers/clk/sunxi-ng/ccu-sun8i-a83t.c
+>  create mode 100644 drivers/clk/sunxi-ng/ccu-sun8i-a83t.h
+>  create mode 100644 include/dt-bindings/clock/sun8i-a83t-ccu.h
+>  create mode 100644 include/dt-bindings/reset/sun8i-a83t-ccu.h
+> 
 
-Signed-off-by: Mike Looijmans <mike.looijmans@topic.nl>
----
- .../bindings/power/supply/ltc3651-charger.txt      | 26 ++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/power/supply/ltc3651-charger.txt
-
-diff --git a/Documentation/devicetree/bindings/power/supply/ltc3651-charger.txt b/Documentation/devicetree/bindings/power/supply/ltc3651-charger.txt
-new file mode 100644
-index 0000000..a7dd80f
---- /dev/null
-+++ b/Documentation/devicetree/bindings/power/supply/ltc3651-charger.txt
-@@ -0,0 +1,26 @@
-+ltc3651-charger
-+
-+Required properties:
-+ - compatible: "lltc,ltc3651-charger"
-+ - acpr-gpios: Connect to ACPR output. See remark below.
-+
-+Optional properties:
-+ - fault-gpios: Connect to FAULT output. See remark below.
-+ - chrg-gpios: Connect to CHRG output. See remark below.
-+
-+The ltc3651 outputs are open-drain type and active low. The driver assumes the
-+GPIO reports "active" when the output is asserted, so if the pins have been
-+connected directly, the GPIO flags should be set to active low also.
-+
-+The driver will attempt to aquire interrupts for all GPIOs. If the system is
-+not capabale of providing that, the driver cannot report changes and userspace
-+will need to periodically read the sysfs attributes to detect changes.
-+
-+Example:
-+
-+	charger: battery-charger {
-+		compatible = "lltc,ltc3651-charger";
-+		acpr-gpios = <&gpio0 68 GPIO_ACTIVE_LOW>;
-+		fault-gpios = <&gpio0 64 GPIO_ACTIVE_LOW>;
-+		chrg-gpios = <&gpio0 63 GPIO_ACTIVE_LOW>;
-+	};
--- 
-1.9.1
+Tested-by: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
