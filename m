@@ -1,49 +1,37 @@
-From: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Subject: [RFC v2 3/3] dt: bindings: Add a binding for referencing EEPROM from camera sensors
-Date: Fri,  5 May 2017 11:48:30 +0300
-Message-ID: <1493974110-26510-4-git-send-email-sakari.ailus@linux.intel.com>
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+Subject: [RFC v2 2/3] dt: bindings: Add lens-focus binding for image sensors
+Date: Fri,  5 May 2017 11:48:29 +0300
+Message-ID: <1493974110-26510-3-git-send-email-sakari.ailus@linux.intel.com>
 References: <1493974110-26510-1-git-send-email-sakari.ailus@linux.intel.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1493974110-26510-1-git-send-email-sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: pavel-+ZI9xUNit7I@public.gmane.org, sebastian.reichel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <1493974110-26510-1-git-send-email-sakari.ailus@linux.intel.com>
+Sender: linux-media-owner@vger.kernel.org
+To: linux-media@vger.kernel.org, devicetree@vger.kernel.org
+Cc: pavel@ucw.cz, sebastian.reichel@collabora.co.uk
 List-Id: devicetree@vger.kernel.org
 
-Many camera sensor devices contain EEPROM chips that describe the
-properties of a given unit --- the data is specific to a given unit can
-thus is not stored e.g. in user space or the driver.
+The lens-focus property contains a phandle to the lens voice coil driver
+that is associated to the sensor; typically both are contained in the same
+camera module.
 
-Some sensors embed the EEPROM chip and it can be accessed through the
-sensor's I2C interface. This property is to be used for devices where the
-EEPROM chip is accessed through a different I2C address than the sensor.
-
-The intent is to later provide this information to the user space.
-
-Signed-off-by: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Acked-by: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Acked-by: Pavel Machek <pavel@ucw.cz>
 ---
- Documentation/devicetree/bindings/media/video-interfaces.txt | 3 +++
- 1 file changed, 3 insertions(+)
+ Documentation/devicetree/bindings/media/video-interfaces.txt | 2 ++
+ 1 file changed, 2 insertions(+)
 
 diff --git a/Documentation/devicetree/bindings/media/video-interfaces.txt b/Documentation/devicetree/bindings/media/video-interfaces.txt
-index 0a33240..38e3916 100644
+index dac764b..0a33240 100644
 --- a/Documentation/devicetree/bindings/media/video-interfaces.txt
 +++ b/Documentation/devicetree/bindings/media/video-interfaces.txt
-@@ -79,6 +79,9 @@ Optional properties
+@@ -77,6 +77,8 @@ Optional properties
+   single LED, then the phandles here refer to the child nodes of the LED
+   driver describing individual LEDs.
  
- - lens-focus: A phandle to the node of the focus lens controller.
- 
-+- eeprom: A phandle to the node of the EEPROM describing the camera sensor
-+  (i.e. device specific calibration data), in case it differs from the
-+  sensor node.
++- lens-focus: A phandle to the node of the focus lens controller.
++
  
  Optional endpoint properties
  ----------------------------
 -- 
 2.7.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
