@@ -1,60 +1,48 @@
 From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/3] of: fix sparse warnings in of_find_next_cache_node
-Date: Thu, 4 May 2017 22:15:26 -0700
-Message-ID: <590C0A6E.1080902@gmail.com>
+Subject: Re: [PATCH 2/3] of: fix sparse warning in of_pci_range_parser_one
+Date: Thu, 4 May 2017 22:16:03 -0700
+Message-ID: <590C0A93.4080000@gmail.com>
 References: <20170504180035.12834-1-robh@kernel.org>
+ <20170504180035.12834-2-robh@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170504180035.12834-1-robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+In-Reply-To: <20170504180035.12834-2-robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 On 05/04/17 11:00, Rob Herring wrote:
-> sparse gives a warning that 'handle' is not a __be32:
+> sparse gives the following warning for 'pci_space':
 > 
-> ../drivers/of/base.c:2261:61: warning: incorrect type in argument 1 (different base types)
-> ../drivers/of/base.c:2261:61:    expected restricted __be32 const [usertype] *p
-> ../drivers/of/base.c:2261:61:    got unsigned int const [usertype] *[assigned] handle
+> ../drivers/of/address.c:266:26: warning: incorrect type in assignment (different base types)
+> ../drivers/of/address.c:266:26:    expected unsigned int [unsigned] [usertype] pci_space
+> ../drivers/of/address.c:266:26:    got restricted __be32 const [usertype] <noident>
 > 
-> We could just change the type, but the code can be improved by using
-> of_parse_phandle instead of open coding it with of_get_property and
-> of_find_node_by_phandle.
+> It appears that pci_space is only ever accessed on powerpc, so the endian
+> swap is often not needed.
 > 
+> Cc: stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 > Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 > ---
->  drivers/of/base.c | 13 ++++++-------
->  1 file changed, 6 insertions(+), 7 deletions(-)
+>  drivers/of/address.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/drivers/of/base.c b/drivers/of/base.c
-> index d7c4629a3a2d..016f9d77d64d 100644
-> --- a/drivers/of/base.c
-> +++ b/drivers/of/base.c
-> @@ -2250,15 +2250,14 @@ EXPORT_SYMBOL_GPL(of_console_check);
->   */
->  struct device_node *of_find_next_cache_node(const struct device_node *np)
->  {
-> -	struct device_node *child;
-> -	const phandle *handle;
-> +	struct device_node *child, *cache_node;
+> diff --git a/drivers/of/address.c b/drivers/of/address.c
+> index 02b2903fe9d2..72914cdfce2a 100644
+> --- a/drivers/of/address.c
+> +++ b/drivers/of/address.c
+> @@ -263,7 +263,7 @@ struct of_pci_range *of_pci_range_parser_one(struct of_pci_range_parser *parser,
+>  	if (!parser->range || parser->range + parser->np > parser->end)
+>  		return NULL;
 >  
-> -	handle = of_get_property(np, "l2-cache", NULL);
-> -	if (!handle)
-> -		handle = of_get_property(np, "next-level-cache", NULL);
-> +	cache_node = of_parse_phandle(np, "l2-cache", 0);
-> +	if (!cache_node)
-> +		cache_node = of_parse_phandle(np, "next-level-cache", 0);
->  
-> -	if (handle)
-> -		return of_find_node_by_phandle(be32_to_cpup(handle));
-> +	if (cache_node)
-> +		return cache_node;
->  
->  	/* OF on pmac has nodes instead of properties named "l2-cache"
->  	 * beneath CPU nodes.
+> -	range->pci_space = parser->range[0];
+> +	range->pci_space = be32_to_cpup(parser->range);
+>  	range->flags = of_bus_pci_get_flags(parser->range);
+>  	range->pci_addr = of_read_number(parser->range + 1, ns);
+>  	range->cpu_addr = of_translate_address(parser->node,
 > 
 
 Reviewed-by: Frank Rowand <frank.rowand-7U/KSKJipcs@public.gmane.org>
