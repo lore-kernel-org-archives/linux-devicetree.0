@@ -1,44 +1,68 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v5 10/10] arm: dts: genmai: Add ethernet pin group
-Date: Fri, 5 May 2017 14:20:19 +0200
-Message-ID: <CAMuHMdUny65Yjp1nsOYOoOM+aMLNrjFGDM0J28paWjky5UG1+g@mail.gmail.com>
-References: <1493281194-5200-1-git-send-email-jacopo+renesas@jmondi.org>
- <1493281194-5200-11-git-send-email-jacopo+renesas@jmondi.org>
- <CAMuHMdVHh_40pup1G-1qohS+wEYCFEn6jvOTCnYideQWMxSVLw@mail.gmail.com>
- <SG2PR06MB1165D46E83254B1757C790498A100@SG2PR06MB1165.apcprd06.prod.outlook.com>
- <CAMuHMdU2CvipQQQ8-wxsiniHZJQmUMHv-t52Pw=sHD3YTd7Yug@mail.gmail.com>
- <SG2PR06MB11650F50D93653212039A4348A130@SG2PR06MB1165.apcprd06.prod.outlook.com>
- <CACRpkdbMpbr_eBnTYA+mBFN4YHUnn2VyuK8PGxz2-Cykv2j83w@mail.gmail.com>
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: Re: [linux-sunxi] [PATCH v6 11/13] ARM: dts: sun8i: add DE2 nodes
+ for V3s SoC
+Date: Fri, 5 May 2017 14:30:35 +0200
+Message-ID: <20170505123035.pwh3idz73ujrd3hx@lukather>
+References: <20170504114858.9008-1-icenowy@aosc.io>
+ <20170504114858.9008-12-icenowy@aosc.io>
+ <CAGb2v67uE2iuP+wrL2t0fSMY8C1qnX=pYru7pZGX+0WhC_z2EA@mail.gmail.com>
+ <8ad5de02ffc13348dfc71e9ec203205c@aosc.io>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdbMpbr_eBnTYA+mBFN4YHUnn2VyuK8PGxz2-Cykv2j83w@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Chris Brandt <Chris.Brandt@renesas.com>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="st47prdbm2t3ondk"
+Return-path: <linux-clk-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <8ad5de02ffc13348dfc71e9ec203205c@aosc.io>
+Sender: linux-clk-owner@vger.kernel.org
+To: icenowy@aosc.io
+Cc: Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, linux-clk <linux-clk@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, linux-sunxi <linux-sunxi@googlegroups.com>, linux-kernel-owner@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Linus,
 
-On Fri, May 5, 2017 at 2:06 PM, Linus Walleij <linus.walleij@linaro.org> wrote:
-> On Fri, Apr 28, 2017 at 4:48 PM, Chris Brandt <Chris.Brandt@renesas.com> wrote:
->
-> I think this was written by me, not Geert...
->
->>> DT describes hardware, not software limitations.
+--st47prdbm2t3ondk
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Na, I did write it.
+On Fri, May 05, 2017 at 04:53:43PM +0800, icenowy@aosc.io wrote:
+> > > +               de2_clocks: clock@1000000 {
+> > > +                       compatible =3D "allwinner,sun50i-h5-de2-clk";
+> >=20
+> > I am a bit skeptical about this. Since the V3S only has one mixer, do
+> > the clocks
+> > for the second one even exist?
+>=20
+> It's described in the de_clock.c in the BSP source code, and in hardware
+> these bits can be really set (although without clock output).
+>=20
+> So I use this compatible which has still the extra clocks.
 
-I can understand you sometimes mix up things, esp. when you're
-enjoying LLC ;-)
+If it's not usable, then it shouldn't be in the code, it's basically
+dead code.
 
-Gr{oetje,eeting}s,
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
 
-                        Geert
+--st47prdbm2t3ondk
+Content-Type: application/pgp-signature; name="signature.asc"
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+-----BEGIN PGP SIGNATURE-----
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+iQIcBAABCAAGBQJZDHBnAAoJEBx+YmzsjxAgcXIQAMA633vVYPislWdk3mRPf9vc
+KWuBNS3Yg/XFtOi9qgzF9iGu8G0NeeG7FSBVoD+PSg6IsCenv936Iz2sOQc2x6X2
+PHPANnL32IchPRVZYBJLZNTee2om+2Yil0soKGaix6IUb+RdWedIcwcI6bfyM5jM
+zustjt83PZcd7ZhUV4NjZcLSUiITjaapNZ+fraDJNNgFepw0HepGxqubx27bfCii
+Abr5CZDhBQ5JaRjLbzmd2kJRFtU6u+eEmXRJyQlUsgdxra7RYbaXS80TBd14faFr
+55W0+ZJKVbgAHiy/eRIz0WO5H1X8YFHEZv6OxgH2KtS/oWasHI7jjNsN7BFxf5Ou
+bAO2GZHcgLI+FbSVqC7riSbGGlxZy/M/x2WFcWJzZ3sW7jUhAjBh05pqfKe/ixdT
+IhteMAcLnxClrE+GDX3r3XMIwf4OTGP3dbShkBzFQu2lv36Wq1pfWWn9qNkUA/Sr
+vrQmz+ZtqxrFx5wgHAL3r1HtbN3XSAXGivhZpXKsKIPkqxGhsrRTnIbu4FZPFGI/
+jSP1Zs6iNdrllwU2iBbRIvskl1kLJSqTOMMekfaSAvDoq1ne552lgsJU2YzjVKzg
+IWsShJxplWLGdLOMwRmhKcyxApoPrwYgSfREtsu0XvsvdBQTJ0lkjL5MVIcOga3B
+Y30eWJuKrcwxzh6A+kP3
+=ZXop
+-----END PGP SIGNATURE-----
+
+--st47prdbm2t3ondk--
