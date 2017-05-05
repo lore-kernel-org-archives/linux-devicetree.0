@@ -1,114 +1,52 @@
-From: Prabhakar Kushwaha <prabhakar.kushwaha-3arQi8VN3Tc@public.gmane.org>
-Subject: [PATCH][v2] arm64: Add flash node for ls1088a qds and rdb
-Date: Fri, 5 May 2017 11:04:08 +0530
-Message-ID: <1493962448-10888-1-git-send-email-prabhakar.kushwaha@nxp.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Prabhakar Kushwaha <prabhakar.kushwaha-3arQi8VN3Tc@public.gmane.org>
+From: Mike Looijmans <mike.looijmans@topic.nl>
+Subject: [PATCH] dt-bindings: power: New bindings for ltc3651-charger
+Date: Fri,  5 May 2017 08:38:35 +0200
+Message-ID: <1493966315-15893-1-git-send-email-mike.looijmans@topic.nl>
+Return-path: <linux-pm-owner@vger.kernel.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: devicetree@vger.kernel.org
+Cc: sre@kernel.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, Mike Looijmans <mike.looijmans@topic.nl>
 List-Id: devicetree@vger.kernel.org
 
-LS1088AQDS consist of NOR, NAND and FPGA connected over IFC
-LS1088ARDB consist of NAND and FPGA connected over IFC.
+This adds the devicetree bindings documentation for the LTC3651 battery charger.
 
-So add flash information in ifc node of device tree.
-
-Signed-off-by: Prabhakar Kushwaha <prabhakar.kushwaha-3arQi8VN3Tc@public.gmane.org>
+Signed-off-by: Mike Looijmans <mike.looijmans@topic.nl>
 ---
-changes for v2: Incorporated Shawn's comments
+ .../bindings/power/supply/ltc3651-charger.txt      | 26 ++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/power/supply/ltc3651-charger.txt
 
-
- arch/arm64/boot/dts/freescale/fsl-ls1088a-qds.dts | 25 +++++++++++++++++++++++
- arch/arm64/boot/dts/freescale/fsl-ls1088a-rdb.dts | 17 +++++++++++++++
- arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi    |  4 ----
- 3 files changed, 42 insertions(+), 4 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a-qds.dts b/arch/arm64/boot/dts/freescale/fsl-ls1088a-qds.dts
-index 8c3cae5..f536ca9 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1088a-qds.dts
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a-qds.dts
-@@ -110,6 +110,31 @@
- 	};
- };
- 
-+&ifc {
-+	status = "okay";
+diff --git a/Documentation/devicetree/bindings/power/supply/ltc3651-charger.txt b/Documentation/devicetree/bindings/power/supply/ltc3651-charger.txt
+new file mode 100644
+index 0000000..a7dd80f
+--- /dev/null
++++ b/Documentation/devicetree/bindings/power/supply/ltc3651-charger.txt
+@@ -0,0 +1,26 @@
++ltc3651-charger
 +
-+	ranges = <0 0 0x5 0x80000000 0x08000000
-+		  2 0 0x5 0x30000000 0x00010000
-+		  3 0 0x5 0x20000000 0x00010000>;
++Required properties:
++ - compatible: "lltc,ltc3651-charger"
++ - acpr-gpios: Connect to ACPR output. See remark below.
 +
-+	nor@0,0 {
-+		compatible = "cfi-flash";
-+		reg = <0x0 0x0 0x8000000>;
-+		bank-width = <2>;
-+		device-width = <1>;
++Optional properties:
++ - fault-gpios: Connect to FAULT output. See remark below.
++ - chrg-gpios: Connect to CHRG output. See remark below.
++
++The ltc3651 outputs are open-drain type and active low. The driver assumes the
++GPIO reports "active" when the output is asserted, so if the pins have been
++connected directly, the GPIO flags should be set to active low also.
++
++The driver will attempt to aquire interrupts for all GPIOs. If the system is
++not capabale of providing that, the driver cannot report changes and userspace
++will need to periodically read the sysfs attributes to detect changes.
++
++Example:
++
++	charger: battery-charger {
++		compatible = "lltc,ltc3651-charger";
++		acpr-gpios = <&gpio0 68 GPIO_ACTIVE_LOW>;
++		fault-gpios = <&gpio0 64 GPIO_ACTIVE_LOW>;
++		chrg-gpios = <&gpio0 63 GPIO_ACTIVE_LOW>;
 +	};
-+
-+	nand@2,0 {
-+		compatible = "fsl,ifc-nand";
-+		reg = <0x2 0x0 0x10000>;
-+	};
-+
-+	fpga: board-control@3,0 {
-+		compatible = "fsl,ls1088aqds-fpga", "fsl,fpga-qixis";
-+		reg = <0x3 0x0 0x0000100>;
-+	};
-+};
-+
- &duart0 {
- 	status = "okay";
- };
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a-rdb.dts b/arch/arm64/boot/dts/freescale/fsl-ls1088a-rdb.dts
-index 8a04fbb..3f79610 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1088a-rdb.dts
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a-rdb.dts
-@@ -94,6 +94,23 @@
- 	};
- };
- 
-+&ifc {
-+	status = "okay";
-+
-+	ranges = <0 0 0x5 0x30000000 0x00010000
-+		  2 0 0x5 0x20000000 0x00010000>;
-+
-+	nand@0,0 {
-+		compatible = "fsl,ifc-nand";
-+		reg = <0x0 0x0 0x10000>;
-+	};
-+
-+	fpga: board-control@2,0 {
-+		compatible = "fsl,ls1088ardb-fpga", "fsl,fpga-qixis";
-+		reg = <0x2 0x0 0x0000100>;
-+	};
-+};
-+
- &duart0 {
- 	status = "okay";
- };
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-index 2946fd7..9f6bcb4 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-@@ -217,10 +217,6 @@
- 			#address-cells = <2>;
- 			#size-cells = <1>;
- 
--			ranges = <0 0 0x5 0x80000000 0x08000000
--				  2 0 0x5 0x30000000 0x00010000
--				  3 0 0x5 0x20000000 0x00010000>;
--			status = "disabled";
- 		};
- 
- 		i2c0: i2c@2000000 {
 -- 
-2.7.4
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.9.1
