@@ -1,207 +1,55 @@
-From: Hugues Fruchet <hugues.fruchet@st.com>
-Subject: [PATCH v5 0/8] Add support for DCMI camera interface of STMicroelectronics STM32 SoC series
-Date: Fri, 5 May 2017 17:31:19 +0200
-Message-ID: <1493998287-5828-1-git-send-email-hugues.fruchet@st.com>
+From: Mathieu Poirier <mathieu.poirier@linaro.org>
+Subject: Re: [PATCH v8 5/7] coresight: add support for CPU debug module
+Date: Fri, 5 May 2017 09:34:44 -0600
+Message-ID: <CANLsYkyK=KZsreBYHoDVCztrJh0Cu_MaDcBona8iHizXMw9-kg@mail.gmail.com>
+References: <1493719717-27698-1-git-send-email-leo.yan@linaro.org>
+ <1493719717-27698-6-git-send-email-leo.yan@linaro.org> <4cd0e395-c177-0b72-9cab-7a95aac9cca4@arm.com>
+ <20170505144832.GA4507@linaro.org> <d683a786-b6f2-2d95-2a42-c82b38200bfa@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Yannick Fertre <yannick.fertre@st.com>, Hugues Fruchet <hugues.fruchet@st.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <d683a786-b6f2-2d95-2a42-c82b38200bfa@arm.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Sudeep Holla <sudeep.holla@arm.com>
+Cc: Leo Yan <leo.yan@linaro.org>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Wei Xu <xuwei5@hisilicon.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Suzuki K Poulose <suzuki.poulose@arm.com>, Stephen Boyd <sboyd@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-This patchset introduces a basic support for Digital Camera Memory Interface
-(DCMI) of STMicroelectronics STM32 SoC series.
+On 5 May 2017 at 09:04, Sudeep Holla <sudeep.holla@arm.com> wrote:
+>
+>
+> On 05/05/17 15:48, Mathieu Poirier wrote:
+>> On Fri, May 05, 2017 at 02:55:17PM +0100, Sudeep Holla wrote:
+>
+> [...]
+>
+>>>
+>>> Just curious as why this is not registered under coresight bus using
+>>> coresight_register ? It would be good to group all the coresight devices
+>>> under that bus if possible.
+>>
+>> The only thing this driver has in common with the coresight framework is the
+>> name, everything else is completely different.  Coupling them together (because
+>> of the name) would introduce a lot of hacks and make the code unintelligible.
+>>
+>
+> I guessed so from the quick glance at it as it needs descriptors with
+> notion of source, sink and links to register. However I felt odd to not
+> group under the same "coresight" bus. As someone with least knowledge
+> on coresight, I would check under "sys/bus/coresight" to check available
+> devices on the system.
 
-This first basic support implements RGB565 & YUV frame grabbing.
-Cropping and JPEG support will be added later on.
+2 years ago when implementing the coresight framework, using
+"coresight" sounded like a logical choice but in hindsight it probably
+should have been something like coresight-hat (HW Assisted Tracing).
+That would have been a better representation of the reality, i.e the
+term "coresight" being an umbrella for many kind of technology.  Leo
+has done the right thing here with "coresight-cpu-debug".
 
-This has been tested on STM324x9I-EVAL evaluation board embedding
-an OV2640 camera sensor.
-
-This driver depends on:
-  - [PATCHv6 00/14] atmel-isi/ov7670/ov2640: convert to standalone drivers http://www.spinics.net/lists/linux-media/msg113480.html
-
-===========
-= history =
-===========
-version 5:
-  - Fix remarks from Hans Verkuil on v4:
-    http://www.mail-archive.com/linux-media@vger.kernel.org/msg112338.html
-    - clk_enable before subdev streamon in start_streaming
-    - rework cleanup on error in start_streaming
-    - typos/blank fixing
-    - remove extra checks done by core in try_fmt
-    - use clamp macro to check supported min/max resolution
-    - revisit cap->card string to fit cap->card length
-  - removed some unneeded ret variables
-  - use of devm_reset_control_get to save reset cleanup
-
-version 4:
-  - "v4l2-compliance -s -f" report
-  - fix behaviour in case of start_streaming failure (DMA memory shortage for ex.)
-  - dt-bindings: Fix remarks from Rob Herring:
-    http://www.mail-archive.com/linux-media@vger.kernel.org/msg111340.html
-    Add "Acked-by: Rob Herring <robh@kernel.org>"
-
-version 3:
-  - stm32-dcmi: Add "Reviewed-by: Hans Verkuil <hans.verkuil@cisco.com>"
-  - dt-bindings: Fix remarks from Rob Herring:
-    http://www.mail-archive.com/linux-media@vger.kernel.org/msg110956.html
-
-version 2:
-  - Fix a Kbuild warning in probe:
-    http://www.mail-archive.com/linux-media@vger.kernel.org/msg110678.html
-  - Fix a warning in dcmi_queue_setup()
-  - dt-bindings: warn on sensor signals level inversion in board example
-  - Typos fixing
-
-version 1:
-  - Initial submission
-
-===================
-= v4l2-compliance =
-===================
-Below is the v4l2-compliance report for this current version of the DCMI camera interface.
-v4l2-compliance has been built from v4l-utils-1.12.3.
-
-~ # v4l2-compliance -s -f -d /dev/video0
-v4l2-compliance SHA   : f5f45e17ee98a0ebad7836ade2b34ceec909d751
-
-Driver Info:
-        Driver name   : stm32-dcmi
-        Card type     : STM32 Digital Camera Memory Int
-        Bus info      : platform:dcmi
-        Driver version: 4.11.0
-        Capabilities  : 0x85200001
-                Video Capture
-                Read/Write
-                Streaming
-                Extended Pix Format
-                Device Capabilities
-        Device Caps   : 0x05200001
-                Video Capture
-                Read/Write
-                Streaming
-                Extended Pix Format
-
-Compliance test for device /dev/video0 (not using libv4l2):
-
-Required ioctls:
-        test VIDIOC_QUERYCAP: OK
-
-Allow for multiple opens:
-        test second video open: OK
-        test VIDIOC_QUERYCAP: OK
-        test VIDIOC_G/S_PRIORITY: OK
-        test for unlimited opens: OK
-
-Debug ioctls:
-        test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
-        test VIDIOC_LOG_STATUS: OK
-
-Input ioctls:
-        test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
-        test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
-        test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
-        test VIDIOC_ENUMAUDIO: OK (Not Supported)
-        test VIDIOC_G/S/ENUMINPUT: OK
-        test VIDIOC_G/S_AUDIO: OK (Not Supported)
-        Inputs: 1 Audio Inputs: 0 Tuners: 0
-
-Output ioctls:
-        test VIDIOC_G/S_MODULATOR: OK (Not Supported)
-        test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
-        test VIDIOC_ENUMAUDOUT: OK (Not Supported)
-        test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
-        test VIDIOC_G/S_AUDOUT: OK (Not Supported)
-        Outputs: 0 Audio Outputs: 0 Modulators: 0
-
-Input/Output configuration ioctls:
-        test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
-        test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
-        test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
-        test VIDIOC_G/S_EDID: OK (Not Supported)
-
-Test input 0:
-
-        Control ioctls:
-                test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK
-                test VIDIOC_QUERYCTRL: OK
-                test VIDIOC_G/S_CTRL: OK
-                test VIDIOC_G/S/TRY_EXT_CTRLS: OK
-                test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK
-                test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
-                Standard Controls: 3 Private Controls: 0
-
-        Format ioctls:
-                test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
-                test VIDIOC_G/S_PARM: OK (Not Supported)
-                test VIDIOC_G_FBUF: OK (Not Supported)
-                test VIDIOC_G_FMT: OK
-                test VIDIOC_TRY_FMT: OK
-                test VIDIOC_S_FMT: OK
-                test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
-                test Cropping: OK (Not Supported)
-                test Composing: OK (Not Supported)
-                test Scaling: OK
-
-        Codec ioctls:
-                test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
-                test VIDIOC_G_ENC_INDEX: OK (Not Supported)
-                test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
-
-        Buffer ioctls:
-                test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK
-                test VIDIOC_EXPBUF: OK
-
-Test input 0:
-
-Streaming ioctls:
-        test read/write: OK
-        test MMAP: OK                                     
-        test USERPTR: OK (Not Supported)
-        test DMABUF: Cannot test, specify --expbuf-device
-
-Stream using all formats:
-        test MMAP for Format YUYV, Frame Size 176x144:
-                Stride 352, Field None: OK                                  
-        test MMAP for Format YUYV, Frame Size 320x240:
-                Stride 640, Field None: OK                                  
-        test MMAP for Format UYVY, Frame Size 176x144:
-                Stride 352, Field None: OK                                  
-        test MMAP for Format UYVY, Frame Size 320x240:
-                Stride 640, Field None: OK                                  
-        test MMAP for Format RGBP, Frame Size 176x144:
-                Stride 352, Field None: OK                                  
-        test MMAP for Format RGBP, Frame Size 320x240:
-                Stride 640, Field None: OK                                  
-
-Total: 52, Succeeded: 52, Failed: 0, Warnings: 0
-
-Hugues Fruchet (8):
-  dt-bindings: Document STM32 DCMI bindings
-  [media] stm32-dcmi: STM32 DCMI camera interface driver
-  ARM: dts: stm32: Enable DCMI support on STM32F429 MCU
-  ARM: dts: stm32: Enable DCMI camera interface on STM32F429-EVAL board
-  ARM: dts: stm32: Enable STMPE1600 gpio expander of STM32F429-EVAL
-    board
-  ARM: dts: stm32: Enable OV2640 camera support of STM32F429-EVAL board
-  ARM: configs: stm32: STMPE1600 GPIO expander
-  ARM: configs: stm32: DCMI + OV2640 camera support
-
- .../devicetree/bindings/media/st,stm32-dcmi.txt    |   46 +
- arch/arm/boot/dts/stm32429i-eval.dts               |   56 +
- arch/arm/boot/dts/stm32f429.dtsi                   |   37 +
- arch/arm/configs/stm32_defconfig                   |    9 +
- drivers/media/platform/Kconfig                     |   12 +
- drivers/media/platform/Makefile                    |    2 +
- drivers/media/platform/stm32/Makefile              |    1 +
- drivers/media/platform/stm32/stm32-dcmi.c          | 1403 ++++++++++++++++++++
- 8 files changed, 1566 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/st,stm32-dcmi.txt
- create mode 100644 drivers/media/platform/stm32/Makefile
- create mode 100644 drivers/media/platform/stm32/stm32-dcmi.c
-
--- 
-1.9.1
+>
+> Anyways that's just my thoughts though I agree with you. It may need
+> more refactoring to support that and it will look hackish if we try to
+> do that with the code as it stands.
+>
+> --
+> Regards,
+> Sudeep
