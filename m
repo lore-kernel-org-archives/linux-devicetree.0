@@ -1,86 +1,48 @@
-From: <sean.wang@mediatek.com>
-Subject: [PATCH 2/6] clk: mediatek: export cpu multiplexer clock for
- MT2701/MT7623 SoCs
-Date: Fri, 5 May 2017 23:26:10 +0800
-Message-ID: <1493997974-17699-3-git-send-email-sean.wang@mediatek.com>
-References: <1493997974-17699-1-git-send-email-sean.wang@mediatek.com>
+From: Hugues Fruchet <hugues.fruchet-qxv4g6HH51o@public.gmane.org>
+Subject: [PATCH v5 4/8] ARM: dts: stm32: Enable DCMI camera interface on STM32F429-EVAL board
+Date: Fri, 5 May 2017 17:31:23 +0200
+Message-ID: <1493998287-5828-5-git-send-email-hugues.fruchet@st.com>
+References: <1493998287-5828-1-git-send-email-hugues.fruchet@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1493997974-17699-1-git-send-email-sean.wang@mediatek.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: rjw@rjwysocki.net, viresh.kumar@linaro.org, robh+dt@kernel.org, matthias.bgg@gmail.com, mark.rutland@arm.com, mturquette@baylibre.com, jamesjj.liao@mediatek.com, p.zabel@pengutronix.de, shunli.wang@mediatek.com, erin.lo@mediatek.com, jdelvare@suse.de, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-pm@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: Sean Wang <sean.wang@mediatek.com>, Pi-Cheng Chen <pi-cheng.chen@linaro.org>, linux-kernel@vger.kernel.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1493998287-5828-1-git-send-email-hugues.fruchet-qxv4g6HH51o@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Yannick Fertre <yannick.fertre-qxv4g6HH51o@public.gmane.org>, Hugues Fruchet <hugues.fruchet-qxv4g6HH51o@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Sean Wang <sean.wang@mediatek.com>
+Enable DCMI camera interface on STM32F429-EVAL board.
 
-The patch enables CPU multiplexer clock on MT2701/MT7623 SoC which fixes
-up cpufreq driver fails at acquiring intermediate clock source when driver
-probe is called.
-
-Signed-off-by: Pi-Cheng Chen <pi-cheng.chen@linaro.org>
-Signed-off-by: Sean Wang <sean.wang@mediatek.com>
+Signed-off-by: Hugues Fruchet <hugues.fruchet-qxv4g6HH51o@public.gmane.org>
 ---
- drivers/clk/mediatek/clk-mt2701.c      | 8 ++++++++
- include/dt-bindings/clock/mt2701-clk.h | 3 ++-
- 2 files changed, 10 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/stm32429i-eval.dts | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/drivers/clk/mediatek/clk-mt2701.c b/drivers/clk/mediatek/clk-mt2701.c
-index 6f26e6a..9598889 100644
---- a/drivers/clk/mediatek/clk-mt2701.c
-+++ b/drivers/clk/mediatek/clk-mt2701.c
-@@ -20,6 +20,7 @@
- 
- #include "clk-mtk.h"
- #include "clk-gate.h"
-+#include "clk-cpumux.h"
- 
- #include <dt-bindings/clock/mt2701-clk.h>
- 
-@@ -493,6 +494,10 @@ static const char * const cpu_parents[] = {
- 	"mmpll"
+diff --git a/arch/arm/boot/dts/stm32429i-eval.dts b/arch/arm/boot/dts/stm32429i-eval.dts
+index 3c99466..617f2f7 100644
+--- a/arch/arm/boot/dts/stm32429i-eval.dts
++++ b/arch/arm/boot/dts/stm32429i-eval.dts
+@@ -141,6 +141,15 @@
+ 	clock-frequency = <25000000>;
  };
  
-+static const struct mtk_composite cpu_muxes[] __initconst = {
-+	MUX(CLK_INFRA_CPUSEL, "infra_cpu_sel", cpu_parents, 0x0000, 2, 2),
++&dcmi {
++	status = "okay";
++
++	port {
++		dcmi_0: endpoint {
++		};
++	};
 +};
 +
- static const struct mtk_composite top_muxes[] = {
- 	MUX_GATE_FLAGS(CLK_TOP_AXI_SEL, "axi_sel", axi_parents,
- 		0x0040, 0, 3, 7, CLK_IS_CRITICAL),
-@@ -759,6 +764,9 @@ static void mtk_infrasys_init_early(struct device_node *node)
- 	mtk_clk_register_factors(infra_fixed_divs, ARRAY_SIZE(infra_fixed_divs),
- 						infra_clk_data);
- 
-+	mtk_clk_register_cpumuxes(node, cpu_muxes, ARRAY_SIZE(cpu_muxes),
-+				  infra_clk_data);
-+
- 	r = of_clk_add_provider(node, of_clk_src_onecell_get, infra_clk_data);
- 	if (r)
- 		pr_err("%s(): could not register clock provider: %d\n",
-diff --git a/include/dt-bindings/clock/mt2701-clk.h b/include/dt-bindings/clock/mt2701-clk.h
-index 2062c67..551f760 100644
---- a/include/dt-bindings/clock/mt2701-clk.h
-+++ b/include/dt-bindings/clock/mt2701-clk.h
-@@ -221,7 +221,8 @@
- #define CLK_INFRA_PMICWRAP			17
- #define CLK_INFRA_DDCCI				18
- #define CLK_INFRA_CLK_13M			19
--#define CLK_INFRA_NR				20
-+#define CLK_INFRA_CPUSEL                        20
-+#define CLK_INFRA_NR				21
- 
- /* PERICFG */
- 
+ &i2c1 {
+ 	pinctrl-0 = <&i2c1_pins>;
+ 	pinctrl-names = "default";
 -- 
-2.7.4
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
