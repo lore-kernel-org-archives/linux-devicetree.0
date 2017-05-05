@@ -1,57 +1,76 @@
-From: Peter Rosin <peda@axentia.se>
-Subject: Re: [PATCH v13 03/10] mux: minimal mux subsystem and gpio-based mux
- controller
-Date: Fri, 5 May 2017 15:19:48 +0200
-Message-ID: <a159179b-6e2f-ca92-20ce-898009773900@axentia.se>
-References: <1492101794-13444-1-git-send-email-peda@axentia.se>
- <1492101794-13444-4-git-send-email-peda@axentia.se>
- <20170418085156.GA4773@kroah.com>
- <bdeecccf-02d6-226b-8516-1d41e3602a7a@axentia.se>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <bdeecccf-02d6-226b-8516-1d41e3602a7a@axentia.se>
-Sender: linux-doc-owner@vger.kernel.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: linux-kernel@vger.kernel.org, Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Jonathan Corbet <corbet@lwn.net>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, linux-doc@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, Colin Ian King <colin.king@canonical.com>, Paul Gortmaker <paul.gortmaker@windriver.com>, Philipp Zabel <p.zabel@pengutronix.de>, kernel@pengutronix.de
+From: Oza Pawandeep <oza.oza@broadcom.com>
+Subject: [PATCH v4 0/3] OF/PCI address PCI inbound memory limitations
+Date: Fri,  5 May 2017 19:17:17 +0530
+Message-ID: <1493992040-31222-1-git-send-email-oza.oza@broadcom.com>
+Return-path: <linux-pci-owner@vger.kernel.org>
+Sender: linux-pci-owner@vger.kernel.org
+To: Joerg Roedel <joro@8bytes.org>, Robin Murphy <robin.murphy@arm.com>
+Cc: iommu@lists.linux-foundation.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, Oza Pawandeep <oza.pawandeep@gmail.com>, Oza Pawandeep <oza.oza@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-On 2017-04-18 12:59, Peter Rosin wrote:
-> On 2017-04-18 10:51, Greg Kroah-Hartman wrote:
->> On Thu, Apr 13, 2017 at 06:43:07PM +0200, Peter Rosin wrote:
->>> +/**
->>> + * devm_mux_chip_unregister() - Resource-managed version mux_chip_unregister().
->>> + * @dev: The device that originally registered the mux-chip.
->>> + * @mux_chip: The mux-chip to unregister.
->>> + *
->>> + * See mux_chip_unregister() for more details.
->>> + *
->>> + * Note that you do not normally need to call this function.
->>
->> Odd, then why is it exported???
-> 
-> You normally don't call the devm_foo_{free,release,unregister,etc} functions.
-> The intention is of course that the resourse cleans up automatically. But there
-> are no cases where the manual clean up is not available, at least not that I can
-> find?
+It is possible that PCI device supports 64-bit DMA addressing,
+and thus it's driver sets device's dma_mask to DMA_BIT_MASK(64),
+however PCI host bridge may have limitations on the inbound 
+transaction addressing.
 
-I had a second look and there are of course plenty of examples of missing clean up
-versions for devm function. I simply hadn't looked very hard at all.
+This is particularly problematic on ARM/ARM64 SOCs where the 
+IOMMU (i.e. SMMU) translates IOVA to PA for in-bound transactions
+only after PCI Host has forwarded these transactions on SOC IO bus. 
 
-So, for v15 I intend to remove all of devm_mux_chip_unregister, devm_mux_chip_free
-and devm_mux_control_put. They are all just sitting there with no callers. And the
-mux-mmio/video-mux drivers by Philipp Zabel that build on top of this series don't
-need them either. Besides, easy to resurrect if needed...
+This means, on such ARM/ARM64 SOCs the IOVA of in-bound transactions
+has to honor the addressing restrictions of the PCI Host.
 
-I will do v15 with the above, the change from mutex to semaphore for locking the
-mux controller state [1] and a few small documentation improvements. That will be
-rebased onto v4.12-rc1 and sent in 10 days or so, or whenever v4.12-rc1 is out.
+Current device framework and OF framework integration assumes
+dma-ranges in a way where memory-mapped devices define their
+dma-ranges. (child-bus-address, parent-bus-address, length).
 
-Meanwhile, what I currently intend for v15 but based on v4.11 is available from
-https://gitlab.com/peda-linux/mux.git in the "mux" branch.
+of_dma_configure is specifically written to take care of memory
+mapped devices but no implementation exists for pci devices.
 
-Cheers,
-peda
+For e.g. iproc based SOCs and other SOCs (such as rcar) have
+PCI world dma-ranges.
+dma-ranges = <0x43000000 0x00 0x00 0x00 0x00 0x80 0x00>;
 
-[1] https://lkml.org/lkml/2017/4/25/411
+This patchset
+reserves the IOVA ranges for PCI masters based
+on the PCI world dma-ranges.
+fix of_dma_get_range to cater to PCI dma-ranges.
+fix of_dma_get_range which currently returns size 0 for PCI devices.
+
+IOVA allocation patch:
+[PATCH 2/3] iommu/pci: reserve iova for PCI masters
+
+Fix of_dma_get_range bug and address PCI master.
+[PATCH 3/3] PCI/of fix of_dma_get_range; get PCI specific
+
+Base patch for both of the above patches:
+[PATCH 1/3] of/pci/dma: fix DMA configuration for PCI masters
+
+Changes since v3:
+- redudant check removed
+- no revison for [PATCH 2/3] iommu/pci: reserve iova for PCI masters; since under discussion with Robin
+Changes since v2:
+- internal review names removed.
+- no revison for [PATCH 2/3] iommu/pci: reserve iova for PCI masters; since under discussion with Robin
+Changes since v1:
+- Remove internal GERRIT details from patch descriptions
+- address Rob's comments.
+- Add a get_dma_ranges() function to of_bus struct..
+- Convert existing contents of this function to of_bus_default_dma_get_ranges
+  and adding that to the default of_bus struct.
+- Make of_dma_get_range call of_bus_match() and then bus->get_dma_ranges.
+- no revison for [PATCH 2/3] iommu/pci: reserve iova for PCI masters; since under discussion with Robin
+  
+Oza Pawandeep (3):
+  of/pci/dma: fix DMA configuration for PCI masters
+  iommu/pci: reserve iova for PCI masters
+  PCI/of fix of_dma_get_range; get PCI specific dma-ranges
+
+ drivers/iommu/dma-iommu.c | 35 +++++++++++++++++++++
+ drivers/of/address.c      | 52 ++++++++++++++++++++++++++++++++
+ drivers/of/of_pci.c       | 77 +++++++++++++++++++++++++++++++++++++++++++++++
+ include/linux/of_pci.h    |  7 +++++
+ 4 files changed, 171 insertions(+)
+
+-- 
+1.9.1
