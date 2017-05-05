@@ -1,81 +1,85 @@
 From: Sebastian Reichel <sebastian.reichel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
-Subject: Re: [RFC v2 2/3] dt: bindings: Add lens-focus binding for image
- sensors
-Date: Fri, 5 May 2017 11:09:19 +0200
-Message-ID: <20170505090919.unocpq7pk4oojs5t@earth>
+Subject: Re: [RFC v2 3/3] dt: bindings: Add a binding for referencing EEPROM
+ from camera sensors
+Date: Fri, 5 May 2017 11:10:17 +0200
+Message-ID: <20170505091017.3z7tu32a7ubrfsxk@earth>
 References: <1493974110-26510-1-git-send-email-sakari.ailus@linux.intel.com>
- <1493974110-26510-3-git-send-email-sakari.ailus@linux.intel.com>
+ <1493974110-26510-4-git-send-email-sakari.ailus@linux.intel.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="2rpne543od2eiftj"
+        protocol="application/pgp-signature"; boundary="evfdzugpiahk5lk6"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1493974110-26510-3-git-send-email-sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+In-Reply-To: <1493974110-26510-4-git-send-email-sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
 Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---2rpne543od2eiftj
+--evfdzugpiahk5lk6
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
 Hi,
 
-On Fri, May 05, 2017 at 11:48:29AM +0300, Sakari Ailus wrote:
-> The lens-focus property contains a phandle to the lens voice coil driver
-> that is associated to the sensor; typically both are contained in the same
-> camera module.
+On Fri, May 05, 2017 at 11:48:30AM +0300, Sakari Ailus wrote:
+> Many camera sensor devices contain EEPROM chips that describe the
+> properties of a given unit --- the data is specific to a given unit can
+> thus is not stored e.g. in user space or the driver.
+>=20
+> Some sensors embed the EEPROM chip and it can be accessed through the
+> sensor's I2C interface. This property is to be used for devices where the
+> EEPROM chip is accessed through a different I2C address than the sensor.
+>=20
+> The intent is to later provide this information to the user space.
 >=20
 > Signed-off-by: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
 > Acked-by: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
 
 Reviewed-by: Sebastian Reichel <sebastian.reichel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
 
-> ---
->  Documentation/devicetree/bindings/media/video-interfaces.txt | 2 ++
->  1 file changed, 2 insertions(+)
->=20
 > diff --git a/Documentation/devicetree/bindings/media/video-interfaces.txt=
  b/Documentation/devicetree/bindings/media/video-interfaces.txt
-> index dac764b..0a33240 100644
+> index 0a33240..38e3916 100644
 > --- a/Documentation/devicetree/bindings/media/video-interfaces.txt
 > +++ b/Documentation/devicetree/bindings/media/video-interfaces.txt
-> @@ -77,6 +77,8 @@ Optional properties
->    single LED, then the phandles here refer to the child nodes of the LED
->    driver describing individual LEDs.
+> @@ -79,6 +79,9 @@ Optional properties
 > =20
-> +- lens-focus: A phandle to the node of the focus lens controller.
-> +
+>  - lens-focus: A phandle to the node of the focus lens controller.
+> =20
+> +- eeprom: A phandle to the node of the EEPROM describing the camera sens=
+or
+> +  (i.e. device specific calibration data), in case it differs from the
+> +  sensor node.
 > =20
 >  Optional endpoint properties
 >  ----------------------------
 
 -- Sebastian
 
---2rpne543od2eiftj
+--evfdzugpiahk5lk6
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAlkMQTwACgkQ2O7X88g7
-+pq74g/+MrMEfa2Onx/PhUBbZphoMbvtOyY2n/GUlL0VqX8Fbpfy5OQ8QzsEeCFU
-9radEKc3eQm2/KjldKNkF06l9FAMeotGDUvuoQz3T+a+eA7DTn+kn9/He1723o0y
-S+FF0hBVlngyhVPNv7iqeXtm+qs1cZD9hsJVxrbzrYJUc9bSAQeJ5hPIKwmGLmkH
-IoUk2r4F/rlkqO7KZ6t/fcbh6nOibcTGW3lM8bH976RSqOdwvuV7IViwDqCeGDDG
-pxiMJU/UQSw+Y1Kdvpz2GffBtdeTIfW3IsX/KAgUpLW5447hZlkK5mCQczMGroVV
-fGiGc92esYrmroyMrb2YSenx5y+cahbZKxYew6gbalNCnWwY8KX6dUOLz7KMMfpY
-4QKfNqF5t90P9BS/Zaavn9U1JESqS7d85qsdcjia4lNqyRzcIGlCQ7gXOrbUEsOa
-c9hQRx/1dSGINd/GRE0BnXg3G9qyATGpytF8zzNifDQhvUcMIkwriHyWYV12EQ20
-ksqEUUmONZouxLzOc6vubkFL1pTJjhaMquecz3gKFDjwjkDCuWir7ta86GezKwh+
-epbh1rRdA1wudNn1mAqdi5VV8W/a1Xeq7nINyoQawd9zN+UTqYSRTlxMP5MYKln2
-73T3lu0I6wQ/RHdV7YuF8ggouLy7TyHZBA3V+Cdbz8qbAPQh4aU=
-=JIpA
+iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAlkMQXkACgkQ2O7X88g7
++pr0zA/+NQ7TvQX1dzqsuvXJEnD6xSoUZykgYjEVpvX0GxdFt23iW1jwfEspDx+1
+JqiFNDLc1gOIppDpPtR6214nDOLW3F/6y02Hv1y8UniJ5J/1j5y6yjdKuApyoDR1
+G7JvzuYhNy2uwj4BMrB+N+fTHcmFvU7TiHkPqxYgh8GESn/UJPNcMpAe+If3fqD8
+ANUdZWOhrdzr0YJ0k+s4BgQbNvHz4aBwFRAKc7zJKWTP3oO8MVoDRpnci323SV+n
+YL4x6sgxJAbSypsclATuH320xVFvnCwYEDGzR08u0dr7H80KxRXdAT1nLXuViB0V
+jH1phLGr+A7kvoeKW6Xl+Cj9UTeg4Q4pr0jIbQMqy+NnQu9/5X9HfHR/XtqjkH4G
+5j2DlQlZLElxRZMd65I3ysX6CldxsQLkPpE2QKCZYK3g6zB945EWjsgtgVqsmGzA
+0O9HJ8Vd1ZF1/0WrWgPSFgfR/0J3fI1irguT2Am1TMKPnRw3RbOUR40gHQYyTxG7
+cI9ojrMDAmBzScxY64SNBXNS7yORkejgTTHoQ46MfWW9DsFASC4g9afEBuiZppH3
+joSnm99dxWuI8Cs/K6e4vkSjyZmojJMrHSQMGieiCotvV1kxgfG2f60LgWu3qGYm
+3sucOqW+tuYpe8DrLQD0SuJYblzcewq1+cgzoDqrW8PQHBa6wBU=
+=u3aX
 -----END PGP SIGNATURE-----
 
---2rpne543od2eiftj--
+--evfdzugpiahk5lk6--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
