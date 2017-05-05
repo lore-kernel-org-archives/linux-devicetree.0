@@ -1,104 +1,34 @@
-From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Subject: Re: [PATCH v6 08/13] drm/sun4i: add support for
- Allwinner DE2 mixers
-Date: Fri, 05 May 2017 20:39:31 +0800
-Message-ID: <185C1948-541D-4198-9A56-E3F0DFF08734@aosc.io>
-References: <20170504114858.9008-1-icenowy@aosc.io> <20170504114858.9008-9-icenowy@aosc.io> <20170504130535.6nokhni5a3uxwy66@lukather> <522ab8cb2939f0017917c5e9b4065089@aosc.io> <20170505123618.5vztqx2vdwsgnrxt@lukather>
-Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
+From: Chris Brandt <Chris.Brandt@renesas.com>
+Subject: RE: [PATCH v5 10/10] arm: dts: genmai: Add ethernet pin group
+Date: Fri, 5 May 2017 12:45:55 +0000
+Message-ID: <SG2PR06MB1165D80A4642F5A2F27FB6AA8AEB0@SG2PR06MB1165.apcprd06.prod.outlook.com>
+References: <1493281194-5200-1-git-send-email-jacopo+renesas@jmondi.org>
+ <1493281194-5200-11-git-send-email-jacopo+renesas@jmondi.org>
+ <CAMuHMdVHh_40pup1G-1qohS+wEYCFEn6jvOTCnYideQWMxSVLw@mail.gmail.com>
+ <SG2PR06MB1165D46E83254B1757C790498A100@SG2PR06MB1165.apcprd06.prod.outlook.com>
+ <CAMuHMdU2CvipQQQ8-wxsiniHZJQmUMHv-t52Pw=sHD3YTd7Yug@mail.gmail.com>
+ <SG2PR06MB11650F50D93653212039A4348A130@SG2PR06MB1165.apcprd06.prod.outlook.com>
+ <CACRpkdbMpbr_eBnTYA+mBFN4YHUnn2VyuK8PGxz2-Cykv2j83w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBDS6XAN6ZADRBDPFWHEAKGQEWHYJBNY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20170505123618.5vztqx2vdwsgnrxt@lukather>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdbMpbr_eBnTYA+mBFN4YHUnn2VyuK8PGxz2-Cykv2j83w@mail.gmail.com>
+Content-Language: en-US
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-
-
-=E4=BA=8E 2017=E5=B9=B45=E6=9C=885=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=8D=888:3=
-6:18, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> =E5=86=99=E5=88=B0:
->On Fri, May 05, 2017 at 12:50:51AM +0800, icenowy-h8G6r0blFSE@public.gmane.org wrote:
->> > > +void sun8i_mixer_layer_enable(struct sun8i_mixer *mixer,
->> > > +				int layer, bool enable)
->> > > +{
->> > > +	u32 val;
->> > > +	/* Currently the first UI channel is used */
->> > > +	int chan =3D mixer->cfg->vi_num;
->> > > +
->> > > +	DRM_DEBUG_DRIVER("Enabling layer %d in channel %d\n", layer,
->chan);
->> > > +
->> > > +	if (enable)
->> > > +		val =3D SUN8I_MIXER_CHAN_UI_LAYER_ATTR_EN;
->> > > +	else
->> > > +		val =3D 0;
->> > > +
->> > > +	regmap_update_bits(mixer->engine.regs,
->> > > +			   SUN8I_MIXER_CHAN_UI_LAYER_ATTR(chan, layer),
->> > > +			   SUN8I_MIXER_CHAN_UI_LAYER_ATTR_EN, val);
->> > > +
->> > > +	/* Set the alpha configuration */
->> > > +	regmap_update_bits(mixer->engine.regs,
->> > > +			   SUN8I_MIXER_CHAN_UI_LAYER_ATTR(chan, layer),
->> > > +			   SUN8I_MIXER_CHAN_UI_LAYER_ATTR_ALPHA_MODE_MASK,
->> > > +			   SUN8I_MIXER_CHAN_UI_LAYER_ATTR_ALPHA_MODE_DEF);
->> > > +	regmap_update_bits(mixer->engine.regs,
->> > > +			   SUN8I_MIXER_CHAN_UI_LAYER_ATTR(chan, layer),
->> > > +			   SUN8I_MIXER_CHAN_UI_LAYER_ATTR_ALPHA_MASK,
->> > > +			   SUN8I_MIXER_CHAN_UI_LAYER_ATTR_ALPHA_DEF);
->> > > +}
->> >=20
->> > This one too.
->>=20
->> It's called from sun8i_layer.c, so it cannot be static.
->
->Fair enough.
->
->> > > +	/* Set base coordinates */
->> > > +	DRM_DEBUG_DRIVER("Layer coordinates X: %d Y: %d\n",
->> > > +			 state->crtc_x, state->crtc_y);
->> > > +	regmap_write(mixer->engine.regs,
->> > > +		     SUN8I_MIXER_CHAN_UI_LAYER_COORD(chan, layer),
->> > > +		     SUN8I_MIXER_COORD(state->crtc_x, state->crtc_y));
->> >=20
->> > X and Y are fixed point numbers. You want to keep only the higher
->16
->> > bits there.
->>=20
->> Do you mean "lower 16 bits"? Thus should I (x & 0xffff) or ((u16)x) ?
->
->Nevermind, I got confused with src_x and src_y.
->
->> P.S. The negative coordinates are broken, how should I deal with it?
->or
->> is the coordinates promised to be not negative?
->
->Adjust the buffer base address, and use a shorter line. You have such
->an example in the sun4i code.
-
-Are they these two lines:
-```
-paddr +=3D (state->src_x >> 16) * bpp;
-paddr +=3D (state->src_y >> 16) * fb->pitches[0];
-```
-
-I think I copied them here, so I don't need to mind this problem any more, =
-right?
-
->
->Maxime
-
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+T24gRnJpZGF5LCBNYXkgMDUsIDIwMTcsIExpbnVzIFdhbGxlaWogd3JvdGU6DQo+ID4gVGhpcyBp
+cyB0aGUgcGFydCBvZiB0aGUgd2hvbGUgIkRUIGlzIGZvciBoYXJkd2FyZSBkZXNjcmlwdGlvbiBv
+bmx5IiB0aGF0DQo+IGRvZXNuJ3QgcmVhbGx5IG1ha2Ugc2Vuc2UgdG8gbWUuDQo+IA0KPiBPSyB5
+ZWFoIHdlIGRvIGhhcmR3YXJlIGRlc2NyaXB0aW9uIEFORCBjb25maWd1cmF0aW9uLg0KPiANCj4g
+QW5kIHdlIG5ldmVyIGRvIGludGVycHJldGVkIGxhbmd1YWdlcy4NCj4gDQo+IEFuZCB0aGVuIHRo
+ZXJlIGlzIGEgYnVuY2ggb2YgZ3JheXpvbmUgdGhpbmdzLiBGb3IgZXhhbXBsZSB3ZSBoYXZlIGEN
+Cj4gbGludXgsaW5wdXQgYmluZGluZyBmb3IgY29ubmVjdGluZyBrZXlwcmVzc2VzIHRvIGNlcnRh
+aW4gTGludXggaW5wdXQgY29kZXMuDQo+IFRoYXQgaXMgcmVhbGx5IGdyYXl6b25lLCBidXQgdmVy
+eSB1c2VmdWwuDQoNCkFoLi4uLg0KDQoJY29tcGF0aWJsZSA9ICJsaW51eCxncmF5em9uZSI7DQoN
+Cg0KVGhhbmtzIGZvciB0aGUgcmVwbHkuIEknbGwgc3RvcCByYW50aW5nIG5vdy4NCk9mIGNvdXJz
+ZSwgSSdsbCBzdGlsbCBwcm9iYWJseSBzY3JldyBpdCB1cCBhZ2FpbiBvbiBhIGZ1dHVyZSBwYXRj
+aCBzb21laG93Li4uDQoNCkNoZWVycw0KDQpDaHJpcw0KDQo=
