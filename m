@@ -1,77 +1,45 @@
-From: Oza Pawandeep <oza.oza-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v3 0/3] OF/PCI address PCI inbound memory limitations
-Date: Fri,  5 May 2017 17:29:13 +0530
-Message-ID: <1493985553-2868-1-git-send-email-oza.oza@broadcom.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v5 10/10] arm: dts: genmai: Add ethernet pin group
+Date: Fri, 5 May 2017 14:06:01 +0200
+Message-ID: <CACRpkdbMpbr_eBnTYA+mBFN4YHUnn2VyuK8PGxz2-Cykv2j83w@mail.gmail.com>
+References: <1493281194-5200-1-git-send-email-jacopo+renesas@jmondi.org>
+ <1493281194-5200-11-git-send-email-jacopo+renesas@jmondi.org>
+ <CAMuHMdVHh_40pup1G-1qohS+wEYCFEn6jvOTCnYideQWMxSVLw@mail.gmail.com>
+ <SG2PR06MB1165D46E83254B1757C790498A100@SG2PR06MB1165.apcprd06.prod.outlook.com>
+ <CAMuHMdU2CvipQQQ8-wxsiniHZJQmUMHv-t52Pw=sHD3YTd7Yug@mail.gmail.com> <SG2PR06MB11650F50D93653212039A4348A130@SG2PR06MB1165.apcprd06.prod.outlook.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <SG2PR06MB11650F50D93653212039A4348A130-ESzmfEwOt/xoAsOJh7vwSm0DtJ1/0DrXvxpqHgZTriW3zl9H0oFU5g@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
-Cc: iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Oza Pawandeep <oza.pawandeep-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Oza Pawandeep <oza.oza-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+To: Chris Brandt <Chris.Brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Cc: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-It is possible that PCI device supports 64-bit DMA addressing,
-and thus it's driver sets device's dma_mask to DMA_BIT_MASK(64),
-however PCI host bridge may have limitations on the inbound 
-transaction addressing.
+On Fri, Apr 28, 2017 at 4:48 PM, Chris Brandt <Chris.Brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org> wrote:
 
-This is particularly problematic on ARM/ARM64 SOCs where the 
-IOMMU (i.e. SMMU) translates IOVA to PA for in-bound transactions
-only after PCI Host has forwarded these transactions on SOC IO bus. 
+I think this was written by me, not Geert...
 
-This means, on such ARM/ARM64 SOCs the IOVA of in-bound transactions
-has to honor the addressing restrictions of the PCI Host.
+>> DT describes hardware, not software limitations.
+>
+> Describing things is fine, but the kernel code takes the DT and then start configuring things based on it.
+>
+> For example, on the RSK board, that line is connected to P4_14. P4_14 can be configured as IRQ6...but IRQ6 comes out in 8 different pin choices, and I might want to use one of those other choices, so I don't want to describe P4_14 as an interrupt.
+>
+> If it was just describing that "pin 15 of the PHY chip is tied to pin Y19 of the RZ/A1H", that's fine because it's hardware connection that's not going to change.
+> But...the DT also defines the pin muxing...which is a software decision (do I want to get interrupt or just manually poll or simple ignore it).
+> This is the part of the whole "DT is for hardware description only" that doesn't really make sense to me.
 
-Current device framework and OF framework integration assumes
-dma-ranges in a way where memory-mapped devices define their
-dma-ranges. (child-bus-address, parent-bus-address, length).
+OK yeah we do hardware description AND configuration.
 
-of_dma_configure is specifically written to take care of memory
-mapped devices but no implementation exists for pci devices.
+And we never do interpreted languages.
 
-For e.g. iproc based SOCs and other SOCs (such as rcar) have
-PCI world dma-ranges.
-dma-ranges = <0x43000000 0x00 0x00 0x00 0x00 0x80 0x00>;
+And then there is a bunch of grayzone things. For example we have
+a linux,input binding for connecting keypresses to certain Linux input
+codes. That is really grayzone, but very useful.
 
-This patchset
-reserves the IOVA ranges for PCI masters based
-on the PCI world dma-ranges.
-fix of_dma_get_range to cater to PCI dma-ranges.
-fix of_dma_get_range which currently returns size 0 for PCI devices.
-
-IOVA allocation patch:
-[PATCH 2/3] iommu/pci: reserve iova for PCI masters
-
-Fix of_dma_get_range bug and address PCI master.
-[PATCH 3/3] PCI/of fix of_dma_get_range; get PCI specific
-
-Base patch for both of the above patches:
-[PATCH 1/3] of/pci/dma: fix DMA configuration for PCI masters
-
-Changes since v2:
-- Remove internal detailes such as reviewed by	
-
-Changes since v1:
-- Remove internal GERRIT details from patch descriptions
-- address Rob's comments.
-- Add a get_dma_ranges() function to of_bus struct..
-- Convert existing contents of this function to of_bus_default_dma_get_ranges
-  and adding that to the default of_bus struct.
-- Make of_dma_get_range call of_bus_match() and then bus->get_dma_ranges.
-- no revison for [PATCH 2/3] iommu/pci: reserve iova for PCI masters; since under discussion with Robin
-  
-Oza Pawandeep (3):
-  of/pci/dma: fix DMA configuration for PCI masters
-  iommu/pci: reserve iova for PCI masters
-  PCI/of fix of_dma_get_range; get PCI specific dma-ranges
-
- drivers/iommu/dma-iommu.c | 35 +++++++++++++++++++++
- drivers/of/address.c      | 52 ++++++++++++++++++++++++++++++++
- drivers/of/of_pci.c       | 77 +++++++++++++++++++++++++++++++++++++++++++++++
- include/linux/of_pci.h    |  7 +++++
- 4 files changed, 171 insertions(+)
-
--- 
-1.9.1
-
+Yours,
+Linus Walleij
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
