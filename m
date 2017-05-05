@@ -1,84 +1,69 @@
-From: Ralph Sennhauser <ralph.sennhauser-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v6 2/4] ARM: dts: mvebu: Add PWM properties to .dtsi
- files
-Date: Fri, 5 May 2017 10:15:00 +0200
-Message-ID: <20170505101500.170001a8@gmail.com>
-References: <20170414154056.32055-1-ralph.sennhauser@gmail.com>
-        <20170414154056.32055-3-ralph.sennhauser@gmail.com>
-        <CACRpkdZE0wnotF+OdAmutJcU9JSE_LxNd7Lz7yXqcn_bq5VqgQ@mail.gmail.com>
-        <20170505094139.484db2e7@gmail.com>
-        <87lgqb7mje.fsf@free-electrons.com>
+From: icenowy-h8G6r0blFSE@public.gmane.org
+Subject: Re: [PATCH v2 14/20] drm/sun4i: tcon: multiply the vtotal when not in
+ interlace
+Date: Fri, 05 May 2017 16:16:29 +0800
+Message-ID: <3683ca88e5dd7ab9f26f1c12beb15cb8@aosc.io>
+References: <cover.d697f34bb7b0605c5e76cbc4167a64453e5e0984.1493812478.git-series.maxime.ripard@free-electrons.com>
+ <59bdbadc4d3adc6d75c2cef38df0af332bd313db.1493812478.git-series.maxime.ripard@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <87lgqb7mje.fsf-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+In-Reply-To: <59bdbadc4d3adc6d75c2cef38df0af332bd313db.1493812478.git-series.maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-gpio@vger.kernel.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, "linux-pwm@vger.kernel.org" <linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree@vger.kernel.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel@vger.kernel.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Daniel Vetter <daniel.vetter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-kernel-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 05 May 2017 10:09:09 +0200
-Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-
-> Hi Ralph,
->  
->  On ven., mai 05 2017, Ralph Sennhauser <ralph.sennhauser-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> wrote:
+在 2017-05-03 19:59，Maxime Ripard 写道：
+> It appears that the total vertical resolution needs to be doubled when
+> we're not in interlaced. Make sure that is the case.
 > 
-> > On Mon, 24 Apr 2017 11:19:32 +0200
-> > Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> >  
-> >> On Fri, Apr 14, 2017 at 5:40 PM, Ralph Sennhauser
-> >> <ralph.sennhauser-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> >>   
-> >> > From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-> >> >
-> >> > Add properties to the GPIO nodes to allow them to be also used as
-> >> > PWM lines.
-> >> >
-> >> > Signed-off-by: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-> >> > URL: https://patchwork.ozlabs.org/patch/427294/
-> >> > [Ralph Sennhauser: Add new compatible string
-> >> > marvell,armada-370-xp-gpio] Signed-off-by: Ralph Sennhauser
-> >> > <ralph.sennhauser-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> Tested-by: Andrew Lunn
-> >> > <andrew-g2DYL2Zd6BY@public.gmane.org>    
-> >> 
-> >> Acked-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> >> 
-> >> Please funnel this through ARM SoC.  
-> >
-> > Hi Gregory,
-> >
-> > A reminder on the off chance you have missed this and it's not to
-> > late already, Linus Walleij took the driver and submitted it for
-> > inclusion in 4.12 [1]. So for completeness it be nice to have the
-> > dts(i) and defconfig changes in as well.  
+> Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> ---
+>  drivers/gpu/drm/sun4i/sun4i_tcon.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> Unfortunately it was too late to applied and to push it to arm-soc
-> when the gpio part was applied.
+> diff --git a/drivers/gpu/drm/sun4i/sun4i_tcon.c
+> b/drivers/gpu/drm/sun4i/sun4i_tcon.c
+> index 0f91ec8a4b26..efa079c1a3f5 100644
+> --- a/drivers/gpu/drm/sun4i/sun4i_tcon.c
+> +++ b/drivers/gpu/drm/sun4i/sun4i_tcon.c
+> @@ -272,9 +272,9 @@ void sun4i_tcon1_mode_set(struct sun4i_tcon *tcon,
+>  	/* Set vertical display timings */
+>  	bp = mode->crtc_vtotal - mode->crtc_vsync_start;
+>  	DRM_DEBUG_DRIVER("Setting vertical total %d, backporch %d\n",
+> -			 mode->vtotal, bp);
+> +			 mode->crtc_vtotal, bp);
+>  	regmap_write(tcon->regs, SUN4I_TCON1_BASIC4_REG,
+> -		     SUN4I_TCON1_BASIC4_V_TOTAL(mode->vtotal) |
+> +		     SUN4I_TCON1_BASIC4_V_TOTAL(mode->crtc_vtotal * 2) |
+
+For TVE the value should directly be mode->vtotal, but not
+mode->crtc_vtotal * 2.
+
+vtotal is 625 when PAL. crtc_vtotal is thus 312, but if we restore the
+vtotal value by doubling crtv_vtotal, we got 624, which will lead to
+instability of the image displayed. (the image will loop to go higher
+and then go lower, because wrong vtotal value)
+
+Tested on patched H3 TV encoder.
+
+I used a logic slightly changed from your v1 code:
+
+```
+	val = mode->vtotal;
+	if (!(mode->flags & DRM_MODE_FLAG_INTERLACE))
+		val = val * 2;
+	regmap_write(tcon->regs, SUN4I_TCON1_BASIC4_REG,
+		     SUN4I_TCON1_BASIC4_V_TOTAL(val) |
+		     SUN4I_TCON1_BASIC4_V_BACKPORCH(bp));
+```
+
+>  		     SUN4I_TCON1_BASIC4_V_BACKPORCH(bp));
 > 
-> So I will apply when 4.12-rc1 will be released and it will be
-> included in the 4.13 release.
-
-Such is life, thanks for the heads up.
-
-Ralph
-
-> 
-> Gregory
-> >
-> > Thanks
-> > Ralph
-> >
-> > [1] https://lkml.org/lkml/2017/5/4/82
-> >  
-> >> 
-> >> Yours,
-> >> Linus Walleij  
-> >  
-> 
-
+>  	/* Set Hsync and Vsync length */
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
