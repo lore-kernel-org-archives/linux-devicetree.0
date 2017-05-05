@@ -1,76 +1,75 @@
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-Subject: Re: [RFC 1/3] dt: bindings: Add a binding for flash devices
- associated to a sensor
-Date: Fri, 5 May 2017 11:28:34 +0300
-Message-ID: <1e8d0a73-3f3f-410b-ca04-89fa35b1f0b9@linux.intel.com>
-References: <1493720749-31509-1-git-send-email-sakari.ailus@linux.intel.com>
- <1493720749-31509-2-git-send-email-sakari.ailus@linux.intel.com>
- <20170504142730.tq4k3paofmyk5jul@earth>
+From: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH V4] ARM64: dts: hi6220-hikey: Add clock binding for the
+ pmic mfd
+Date: Fri, 5 May 2017 10:32:28 +0200
+Message-ID: <20170505083228.GC5252@mai>
+References: <1493066439-6889-1-git-send-email-daniel.lezcano@linaro.org>
+ <20170504220721.GB5252@mai>
+ <20170505074821.fgnkq6lggde6gdv2@dell>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <20170504142730.tq4k3paofmyk5jul@earth>
-Sender: linux-media-owner@vger.kernel.org
-To: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
-Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, pavel@ucw.cz
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170505074821.fgnkq6lggde6gdv2@dell>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "moderated list:ARM/HISILICON SOC..." <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sebastian,
+On Fri, May 05, 2017 at 08:48:21AM +0100, Lee Jones wrote:
+> On Fri, 05 May 2017, Daniel Lezcano wrote:
+> 
+> > On Mon, Apr 24, 2017 at 10:40:22PM +0200, Daniel Lezcano wrote:
+> > > The hi655x PMIC provides the regulators but also a clock. The latter is missing
+> > > in the definition and in the DT, thus it is no possible to enable the WiFi which
+> > > depends on this clock.
+> > > 
+> > > The hi655x's clock has been added and the hi655x multifunction driver has
+> > > updated with a clock-cell.
+> > > 
+> > > This patch adds the clock-cells for the PMIC in the DT and updates the
+> > > documentation.
+> > > 
+> > > Signed-off-by: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> > > Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> > > Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> > > Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+> > > Cc: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> > > Cc: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+> > > ---
+> > >  Changelog:
+> > > 	v4:
+> > > 	   - Added Acked-by's
+> > > 	   - Updated the commit message with a better description
+> > > ---
+> > 
+> > Hi Xu Wei,
+> > 
+> > a gentle reminder for this patch. Is it ok for you?
+> 
+> a) Pings aren't usually received well.  If you wish to remind
+> maintainers of a patch's existence a [RESEND] is usually the most
+> accepted method.
+> b) There is usually little point (at least it's significantly reduced)
+> in sending pings/resends whilst the merge-window is open.  Maintainers
+> usually take this time to take a little breather (rest) from their
+> duties.
 
-Sebastian Reichel wrote:
-> Hi Sakari,
->
-> On Tue, May 02, 2017 at 01:25:47PM +0300, Sakari Ailus wrote:
->> Camera flash drivers (and LEDs) are separate from the sensor devices in
->> DT. In order to make an association between the two, provide the
->> association information to the software.
->>
->> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
->> ---
->>  Documentation/devicetree/bindings/media/video-interfaces.txt | 11 +++++++++++
->>  1 file changed, 11 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/media/video-interfaces.txt b/Documentation/devicetree/bindings/media/video-interfaces.txt
->> index 9cd2a36..d6c62bc 100644
->> --- a/Documentation/devicetree/bindings/media/video-interfaces.txt
->> +++ b/Documentation/devicetree/bindings/media/video-interfaces.txt
->> @@ -67,6 +67,17 @@ are required in a relevant parent node:
->>  		    identifier, should be 1.
->>   - #size-cells    : should be zero.
->>
->> +
->> +Optional properties
->> +-------------------
->> +
->> +- flash: An array of phandles that refer to the flash light sources
->> +  related to an image sensor. These could be e.g. LEDs. In case the LED
->> +  driver drives more than a single LED, then the phandles here refer to
->> +  the child nodes of the LED driver describing individual LEDs. Only
->> +  valid for device nodes that are related to an image sensor.
->
-> s/driver/controller/g - DT describes HW. Otherwise
+This patch is the last one of a series which was already merged. As the
+series has been resend and split with a different submission path, I just
+wanted to make sure there were no confusion.
 
-Driver is hardware in this case. :-) The chip that acts as a current 
-sink or source for the LED is the driver. E.g. the adp1653 documentation 
-describes the chip as "Compact, High Efficiency, High Power, Flash/Torch 
-LED Driver with Dual Interface".
-
-It might be still possible to improve the wording. Software oriented 
-folks are more likely to misunderstand the meaning of driver here, but 
-controller might seem ambiguous for hardware oriented people.
-
-How about:
-
-- flash: An array of phandles that refer to the flash light sources
-   related to an image sensor. These could be e.g. LEDs. In case the LED
-   driver (current sink or source chip for the LED(s)) drives more than a
-   single LED, then the phandles here refer to the child nodes of the LED
-   driver describing individual LEDs. Only valid for device nodes that are
-   related to an image sensor.
+The sentence "a gentle reminder" is clumsy.
 
 -- 
-Regards,
 
-Sakari Ailus
-sakari.ailus@linux.intel.com
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
