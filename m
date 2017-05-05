@@ -1,80 +1,65 @@
-From: "Olimpiu Dejeu" <olimpiu-eV7fy4qpoLhpLGFMi4vTTA@public.gmane.org>
-Subject: RE: [PATCH v10 3/3] backlight arcxcnn add support for ArcticSand devices
-Date: Fri, 5 May 2017 13:06:00 -0400
-Message-ID: <000001d2c5c1$e00500f0$a00f02d0$@arcticsand.com>
-References: <1493823859-22402-1-git-send-email-olimpiu@arcticsand.com> <1493823859-22402-3-git-send-email-olimpiu@arcticsand.com> <20170505075712.xroroafofrkfxux4@dell>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH v4 1/5] mailbox: Make startup and shutdown ops optional
+Date: Fri, 5 May 2017 11:21:51 -0700
+Message-ID: <20170505182151.GF15143@minitux>
+References: <20170504200539.27027-1-bjorn.andersson@linaro.org>
+ <CABb+yY12=OksvgMeo+fT+R8m=_Lv+39EQwW0VGsnKuHRBM-5uw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain;
-        charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170505075712.xroroafofrkfxux4@dell>
-Content-Language: en-us
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: 'Lee Jones' <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Brian Dodge <bdodge-eV7fy4qpoLhpLGFMi4vTTA@public.gmane.org>, joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org, daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, lkp-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, fengguang.wu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CABb+yY12=OksvgMeo+fT+R8m=_Lv+39EQwW0VGsnKuHRBM-5uw@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jassi Brar <jassisinghbrar@gmail.com>
+Cc: Andy Gross <andy.gross@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ohad Ben-Cohen <ohad@wizery.com>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, Devicetree List <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-remoteproc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
->> backlight: Add support for Arctic Sand LED backlight driver chips
+On Fri 05 May 03:33 PDT 2017, Jassi Brar wrote:
 
->This should be the subject line of the patch.
+> On Fri, May 5, 2017 at 1:35 AM, Bjorn Andersson
+> <bjorn.andersson@linaro.org> wrote:
+> > Some mailbox hardware doesn't have to perform any additional operations
+> > on startup of shutdown, so make these optional.
+> >
+> Thanks, makes sense.
+> 
 
->Out of interest, how are you submitting your patches?
+Thanks
 
->If you're not already, you should be using:
+> > diff --git a/drivers/mailbox/mailbox.c b/drivers/mailbox/mailbox.c
+> > index 4671f8a12872..c88de953394a 100644
+> > --- a/drivers/mailbox/mailbox.c
+> > +++ b/drivers/mailbox/mailbox.c
+> > @@ -137,6 +137,20 @@ static enum hrtimer_restart txdone_hrtimer(struct hrtimer *hrtimer)
+> >         return HRTIMER_NORESTART;
+> >  }
+> >
+> > +static int mbox_startup(struct mbox_chan *chan)
+> > +{
+> > +       if (chan->mbox->ops->startup)
+> > +               return chan->mbox->ops->startup(chan);
+> > +
+> > +       return 0;
+> > +}
+> > +
+> > +static void mbox_shutdown(struct mbox_chan *chan)
+> > +{
+> > +       if (chan->mbox->ops->shutdown)
+> > +               chan->mbox->ops->shutdown(chan);
+> > +}
+> > +
+> These functions are going to be called from exactly one place. So
+> maybe we simply do the check before startup/shutdown calls?
+> 
 
- > `git format-patch ...`
- > `git send-email ...`
- =20
->> This driver provides support for the Arctic Sand arc2c0608 chip,=20
->>     and provides a framework to support future devices.
+I didn't want to add another indentation level at the bottom of
+mbox_request_channel(), but now that I check again it still would stay
+below 80 chars and doesn't look too unreasonable.
 
->'\n' here.
+The shutdown() was moved out just to get some symmetry.
 
->> Reviewed-by: Daniel Thompson <daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->> Signed-off-by: Olimpiu Dejeu <olimpiu-eV7fy4qpoLhpLGFMi4vTTA@public.gmane.org>
+I'll inline the two checks and resend this together with the driver,
+once we have concluded on your question/comment there.
 
->Biggest point however is that this patch is already in Mainline.
-
-The only reason for this set of patches is based on the request from Rob =
-Herring for vendor name change from 'arc' to 'arctic'. Not sure how to =
-proceed, please advise.
-=20
->> ---
->> v9 =3D> v10:
->> - Per Rob Herring's request changed vendor-prefix to arctic
->> v8 =3D> v9:
->> - Addressing kbuild test robot WARNING: PTR_ERR_OR_ZERO can be used
->> v7 =3D> v8:
->> - Version updated to match other patch in set. No other changes.
->> v6 =3D> v7:
->> - Addressing issues brought up by Daniel Thompson
->> v5 =3D> v6:
->> - Addressing issues brought up by Daniel Thompson
->> v4 =3D> v5:
->> - Code style changes per Joe Perches and Jingoo Han
->> v3 =3D> v4:
->> - Code style changes per Joe Perches and Jingoo Han
->> v2 =3D> v3:
->> - Renamed variables to comply with conventions on naming
->> - Corrected device name in arcxcnn.h
->> v1 =3D> v2:
->> - Removed "magic numbers" to initialize registers
->> - Cleaned up device tree bindings
->> - Fixed code style to address comments and pass "checkpatch"
->> - Removed unneeded debug and testing code
->>=20
->>=20
->>  drivers/video/backlight/Kconfig      |   7 +
->>  drivers/video/backlight/Makefile     |   1 +
->>  drivers/video/backlight/arcxcnn_bl.c | 419=20
->> +++++++++++++++++++++++++++++++++++
->>  3 files changed, 427 insertions(+)
->>  create mode 100644 drivers/video/backlight/arcxcnn_bl.c
->>=20
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards,
+Bjorn
