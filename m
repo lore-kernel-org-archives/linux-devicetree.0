@@ -1,36 +1,30 @@
-From: Jassi Brar <jassisinghbrar@gmail.com>
-Subject: Re: [PATCH v4 3/5] soc: qcom: Introduce APCS IPC driver
-Date: Sat, 6 May 2017 01:52:43 +0530
-Message-ID: <CABb+yY1K3Hyn7CzQCA6tHu-KrPigARc3cYgBdT8PNX7vjhPK0g@mail.gmail.com>
-References: <20170504200539.27027-1-bjorn.andersson@linaro.org>
- <20170504200539.27027-3-bjorn.andersson@linaro.org> <CABb+yY2P=qPTYB6PDkjV82Qc67Xzer40BHRsOQP2m-gM3eK_UA@mail.gmail.com>
- <20170505183729.GG15143@minitux> <CABb+yY03imq8911rF9dHJjG_a_aosksA=tgk7Rog5AZSezHDyg@mail.gmail.com>
- <338c4262-cc6b-bed2-16fe-1767d1f0d5f6@codeaurora.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 1/2] dt: bindings: fpga: add lattice machxo2 slave spi
+ binding description
+Date: Fri, 5 May 2017 15:25:37 -0500
+Message-ID: <20170505202537.imofwrrjxenzw7cc@rob-hp-laptop>
+References: <1493644512-14776-1-git-send-email-p.pisati@gmail.com>
+ <1493644512-14776-2-git-send-email-p.pisati@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <338c4262-cc6b-bed2-16fe-1767d1f0d5f6@codeaurora.org>
+Content-Disposition: inline
+In-Reply-To: <1493644512-14776-2-git-send-email-p.pisati@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jeffrey Hugo <jhugo@codeaurora.org>
-Cc: Bjorn Andersson <bjorn.andersson@linaro.org>, Andy Gross <andy.gross@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ohad Ben-Cohen <ohad@wizery.com>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, Devicetree List <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-remoteproc@vger.kernel.org
+To: Paolo Pisati <p.pisati@gmail.com>
+Cc: Alan Tull <atull@opensource.altera.com>, Mark Rutland <mark.rutland@arm.com>, Moritz Fischer <moritz.fischer@ettus.com>, devicetree@vger.kernel.org, linux-fpga@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, May 6, 2017 at 1:23 AM, Jeffrey Hugo <jhugo@codeaurora.org> wrote:
-> On 5/5/2017 1:22 PM, Jassi Brar wrote:
->>
->> On Sat, May 6, 2017 at 12:07 AM, Bjorn Andersson
->> <bjorn.andersson@linaro.org> wrote:
->>>
->
-> There is no way to determine if the remote processor has observed a message,
-> that does not involve pretty trivial race conditions.
->
-Thanks for chiming in.
-How is it supposed to work if a client queues more than one request?
-How do you know when it's ok to overwrite the FIFO and send the next
-command?
-  Usually if h/w doesn't indicate, we cook up some ack packet for each
-command. Otherwise the protocol seems badly broken.
+On Mon, May 01, 2017 at 03:15:11PM +0200, Paolo Pisati wrote:
+> Add dt binding documentation details for Lattice MachXO2 FPGA configuration
+> over Slave SPI interface.
+> 
+> Signed-off-by: Paolo Pisati <p.pisati@gmail.com>
+> ---
+>  .../bindings/fpga/lattice-machxo2-spi.txt          | 29 ++++++++++++++++++++++
+>  1 file changed, 29 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/fpga/lattice-machxo2-spi.txt
 
- If there is really nothing that can be done to check delivery of a
-message, I'll pick the driver as such. Best of luck :)
+Please add acks when posting new versions.
+
+Rob
