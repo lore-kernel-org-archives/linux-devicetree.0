@@ -1,42 +1,48 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v5 02/14] dt/bindings: Document gpio-ingenic
-Date: Fri, 5 May 2017 14:57:24 -0500
-Message-ID: <20170505195724.mph4uov3vd52hscm@rob-hp-laptop>
-References: <20170402204244.14216-2-paul@crapouillou.net>
- <20170428200824.10906-1-paul@crapouillou.net>
- <20170428200824.10906-3-paul@crapouillou.net>
+Subject: Re: [PATCH v3] pinctrl: sh-pfc: r8a7794: add R8A7745 support
+Date: Fri, 5 May 2017 14:56:19 -0500
+Message-ID: <20170505195619.he7tpdtrkkb3oafq@rob-hp-laptop>
+References: <20170428185245.428747882@cogentembedded.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-mips-bounce@linux-mips.org>
+Return-path: <linux-gpio-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170428200824.10906-3-paul@crapouillou.net>
-Sender: linux-mips-bounce@linux-mips.org
-Errors-to: linux-mips-bounce@linux-mips.org
-List-help: <mailto:ecartis@linux-mips.org?Subject=help>
-List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
-List-software: Ecartis version 1.0.0
-List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
-List-owner: <mailto:ralf@linux-mips.org>
-List-post: <mailto:linux-mips@linux-mips.org>
-List-archive: <http://www.linux-mips.org/archives/linux-mips/>
-To: Paul Cercueil <paul@crapouillou.net>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Ralf Baechle <ralf@linux-mips.org>, Boris Brezillon <boris.brezillon@free-electrons.com>, Thierry Reding <thierry.reding@gmail.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Maarten ter Huurne <maarten@treewalker.org>, Lars-Peter Clausen <lars@metafoo.de>, Paul Burton <paul.burton@imgtec.com>, james.hogan@imgtec.com, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, linux-mmc@vger.kernel.org, linux-mtd@lists.infradead.org, linux-pwm@vger.kernel.org, linux-fbdev@vger.kernel.org
+In-Reply-To: <20170428185245.428747882@cogentembedded.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Linus Walleij <linus.walleij@linaro.org>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 28, 2017 at 10:08:12PM +0200, Paul Cercueil wrote:
-> This commit adds documentation for the devicetree bindings of the
-> gpio-ingenic driver, which handles GPIOs of the Ingenic SoCs
-> currently supported by the Linux kernel.
+On Fri, Apr 28, 2017 at 09:52:35PM +0300, Sergei Shtylyov wrote:
+> Renesas RZ/G1E (R8A7745) is pin compatible with R-Car E2 (R8A7794),
+> however it doesn't have several automotive specific peripherals.
+> Annotate all the items that only exist on the R-Car SoCs...
 > 
-> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+> 
 > ---
->  .../devicetree/bindings/gpio/ingenic,gpio.txt      | 46 ++++++++++++++++++++++
->  1 file changed, 46 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/gpio/ingenic,gpio.txt
+> This patch is  against the 'devel' branch of Linus Walleij's 'linux-pinctrl.git'
+> repo plus 3 R8A7794 PFC driver fixes/cleanups posted today and  the R8A7743 PFC
+> support patch posted last week...
 > 
->  v2: New patch
->  v3: No changes
->  v4: Update for the v4 version of the gpio-ingenic driver
->  v5: Remove gpio-bank-... compatible strings, and add 'reg' property
+> Changes in version 3:
+> - resolved rejects atop of the new R8A7794 driver patches renaming the IIC0/1
+>   signals and removing reserved groups/signals;
+> - undid splitting of 'pinmux_{groups|functions}' arrays into the common and
+>   R8A7794 specfic parts, updated the patch description accordingly;
+> - kill double spaces in the patch description.
+> 
+> Changes in version 2:
+> - fixed indentation to use tabs instead of spaces;
+> - updated the PFC bindings.
+> 
+>  Documentation/devicetree/bindings/pinctrl/renesas,pfc-pinctrl.txt |    1 
 
 Acked-by: Rob Herring <robh@kernel.org>
+
+>  drivers/pinctrl/sh-pfc/Kconfig                                    |    5 
+>  drivers/pinctrl/sh-pfc/Makefile                                   |    1 
+>  drivers/pinctrl/sh-pfc/core.c                                     |    6 
+>  drivers/pinctrl/sh-pfc/pfc-r8a7794.c                              |  640 +++++-----
+>  drivers/pinctrl/sh-pfc/sh_pfc.h                                   |    1 
+>  6 files changed, 369 insertions(+), 285 deletions(-)
