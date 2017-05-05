@@ -1,48 +1,51 @@
-From: Hugues Fruchet <hugues.fruchet-qxv4g6HH51o@public.gmane.org>
-Subject: [PATCH v5 4/8] ARM: dts: stm32: Enable DCMI camera interface on STM32F429-EVAL board
-Date: Fri, 5 May 2017 17:31:23 +0200
-Message-ID: <1493998287-5828-5-git-send-email-hugues.fruchet@st.com>
+From: Hugues Fruchet <hugues.fruchet@st.com>
+Subject: [PATCH v5 5/8] ARM: dts: stm32: Enable STMPE1600 gpio expander of STM32F429-EVAL board
+Date: Fri, 5 May 2017 17:31:24 +0200
+Message-ID: <1493998287-5828-6-git-send-email-hugues.fruchet@st.com>
 References: <1493998287-5828-1-git-send-email-hugues.fruchet@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1493998287-5828-1-git-send-email-hugues.fruchet-qxv4g6HH51o@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Yannick Fertre <yannick.fertre-qxv4g6HH51o@public.gmane.org>, Hugues Fruchet <hugues.fruchet-qxv4g6HH51o@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1493998287-5828-1-git-send-email-hugues.fruchet@st.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Yannick Fertre <yannick.fertre@st.com>, Hugues Fruchet <hugues.fruchet@st.com>
 List-Id: devicetree@vger.kernel.org
 
-Enable DCMI camera interface on STM32F429-EVAL board.
+Enable STMPE1600 gpio expander of STM32F429-EVAL board.
 
-Signed-off-by: Hugues Fruchet <hugues.fruchet-qxv4g6HH51o@public.gmane.org>
+Signed-off-by: Hugues Fruchet <hugues.fruchet@st.com>
 ---
- arch/arm/boot/dts/stm32429i-eval.dts | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ arch/arm/boot/dts/stm32429i-eval.dts | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
 
 diff --git a/arch/arm/boot/dts/stm32429i-eval.dts b/arch/arm/boot/dts/stm32429i-eval.dts
-index 3c99466..617f2f7 100644
+index 617f2f7..2bb8a0f 100644
 --- a/arch/arm/boot/dts/stm32429i-eval.dts
 +++ b/arch/arm/boot/dts/stm32429i-eval.dts
-@@ -141,6 +141,15 @@
- 	clock-frequency = <25000000>;
- };
- 
-+&dcmi {
-+	status = "okay";
-+
-+	port {
-+		dcmi_0: endpoint {
-+		};
-+	};
-+};
-+
- &i2c1 {
+@@ -154,6 +154,23 @@
  	pinctrl-0 = <&i2c1_pins>;
  	pinctrl-names = "default";
+ 	status = "okay";
++
++	stmpe1600: stmpe1600@42 {
++		compatible = "st,stmpe1600";
++		reg = <0x42>;
++		irq-gpio = <&gpioi 8 0>;
++		irq-trigger = <3>;
++		interrupts = <8 3>;
++		interrupt-parent = <&exti>;
++		interrupt-controller;
++		wakeup-source;
++
++		stmpegpio: stmpe_gpio {
++			compatible = "st,stmpe-gpio";
++			gpio-controller;
++			#gpio-cells = <2>;
++		};
++	};
+ };
+ 
+ &mac {
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
