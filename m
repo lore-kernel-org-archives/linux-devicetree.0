@@ -1,178 +1,96 @@
-From: Mathieu Poirier <mathieu.poirier@linaro.org>
-Subject: Re: [PATCH v8 5/7] coresight: add support for CPU debug module
-Date: Fri, 5 May 2017 08:48:32 -0600
-Message-ID: <20170505144832.GA4507@linaro.org>
-References: <1493719717-27698-1-git-send-email-leo.yan@linaro.org>
- <1493719717-27698-6-git-send-email-leo.yan@linaro.org>
- <4cd0e395-c177-0b72-9cab-7a95aac9cca4@arm.com>
+From: Adam Ford <aford173-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 0/4] TI Bluetooth serdev support
+Date: Fri, 5 May 2017 09:51:33 -0500
+Message-ID: <CAHCN7x+Mq=b6RN-ezU0400W=H=D7DR+Es1FHtT4GyozpVd8ALA@mail.gmail.com>
+References: <20170405183005.20570-1-robh@kernel.org> <CAHCN7xJUxZm1qKAxT0kaK6qoDg+HWOJK7sTH-q9za4HJuUwe8Q@mail.gmail.com>
+ <20170430160430.rmyuo6sdrkrjxjg6@earth>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <4cd0e395-c177-0b72-9cab-7a95aac9cca4@arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sudeep Holla <sudeep.holla@arm.com>
-Cc: Leo Yan <leo.yan@linaro.org>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Wei Xu <xuwei5@hisilicon.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Suzuki K Poulose <suzuki.poulose@arm.com>, Stephen Boyd <sboyd@codeaurora.org>, Mike Leach <mike.leach@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170430160430.rmyuo6sdrkrjxjg6@earth>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Marcel Holtmann <marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org>, linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Johan Hedberg <johan.hedberg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gustavo Padovan <gustavo-THi1TnShQwVAfugRpC6u6w@public.gmane.org>, Satish Patel <satish.patel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Eyal Reizer <eyalr-l0cyMroinI0@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 05, 2017 at 02:55:17PM +0100, Sudeep Holla wrote:
-> 
-> 
-> On 02/05/17 11:08, Leo Yan wrote:
-> > Coresight includes debug module and usually the module connects with CPU
-> > debug logic. ARMv8 architecture reference manual (ARM DDI 0487A.k) has
-> > description for related info in "Part H: External Debug".
-> > 
-> > Chapter H7 "The Sample-based Profiling Extension" introduces several
-> > sampling registers, e.g. we can check program counter value with
-> > combined CPU exception level, secure state, etc. So this is helpful for
-> > analysis CPU lockup scenarios, e.g. if one CPU has run into infinite
-> > loop with IRQ disabled. In this case the CPU cannot switch context and
-> > handle any interrupt (including IPIs), as the result it cannot handle
-> > SMP call for stack dump.
-> > 
-> > This patch is to enable coresight debug module, so firstly this driver
-> > is to bind apb clock for debug module and this is to ensure the debug
-> > module can be accessed from program or external debugger. And the driver
-> > uses sample-based registers for debug purpose, e.g. when system triggers
-> > panic, the driver will dump program counter and combined context
-> > registers (EDCIDSR, EDVIDSR); by parsing context registers so can
-> > quickly get to know CPU secure state, exception level, etc.
-> > 
-> > Some of the debug module registers are located in CPU power domain, so
-> > this requires the CPU power domain stays on when access related debug
-> > registers, but the power management for CPU power domain is quite
-> > dependent on SoC integration for power management. For the platforms
-> > which with sane power controller implementations, this driver follows
-> > the method to set EDPRCR to try to pull the CPU out of low power state
-> > and then set 'no power down request' bit so the CPU has no chance to
-> > lose power.
-> > 
-> > If the SoC has not followed up this design well for power management
-> > controller, the user should use the command line parameter or sysfs
-> > to constrain all or partial idle states to ensure the CPU power
-> > domain is enabled and access coresight CPU debug component safely.
-> > 
-> > Signed-off-by: Leo Yan <leo.yan@linaro.org>
-> > ---
-> >  drivers/hwtracing/coresight/Kconfig               |  14 +
-> >  drivers/hwtracing/coresight/Makefile              |   1 +
-> >  drivers/hwtracing/coresight/coresight-cpu-debug.c | 670 ++++++++++++++++++++++
-> >  3 files changed, 685 insertions(+)
-> >  create mode 100644 drivers/hwtracing/coresight/coresight-cpu-debug.c
-> > 
-> > diff --git a/drivers/hwtracing/coresight/Kconfig b/drivers/hwtracing/coresight/Kconfig
-> > index 130cb21..8d55d6d 100644
-> > --- a/drivers/hwtracing/coresight/Kconfig
-> > +++ b/drivers/hwtracing/coresight/Kconfig
-> > @@ -89,4 +89,18 @@ config CORESIGHT_STM
-> >  	  logging useful software events or data coming from various entities
-> >  	  in the system, possibly running different OSs
-> >  
-> > +config CORESIGHT_CPU_DEBUG
-> > +	tristate "CoreSight CPU Debug driver"
-> > +	depends on ARM || ARM64
-> > +	depends on DEBUG_FS
-> > +	help
-> > +	  This driver provides support for coresight debugging module. This
-> > +	  is primarily used to dump sample-based profiling registers when
-> > +	  system triggers panic, the driver will parse context registers so
-> > +	  can quickly get to know program counter (PC), secure state,
-> > +	  exception level, etc. Before use debugging functionality, platform
-> > +	  needs to ensure the clock domain and power domain are enabled
-> > +	  properly, please refer Documentation/trace/coresight-cpu-debug.txt
-> > +	  for detailed description and the example for usage.
-> > +
-> >  endif
-> > diff --git a/drivers/hwtracing/coresight/Makefile b/drivers/hwtracing/coresight/Makefile
-> > index af480d9..433d590 100644
-> > --- a/drivers/hwtracing/coresight/Makefile
-> > +++ b/drivers/hwtracing/coresight/Makefile
-> > @@ -16,3 +16,4 @@ obj-$(CONFIG_CORESIGHT_SOURCE_ETM4X) += coresight-etm4x.o \
-> >  					coresight-etm4x-sysfs.o
-> >  obj-$(CONFIG_CORESIGHT_QCOM_REPLICATOR) += coresight-replicator-qcom.o
-> >  obj-$(CONFIG_CORESIGHT_STM) += coresight-stm.o
-> > +obj-$(CONFIG_CORESIGHT_CPU_DEBUG) += coresight-cpu-debug.o
-> > diff --git a/drivers/hwtracing/coresight/coresight-cpu-debug.c b/drivers/hwtracing/coresight/coresight-cpu-debug.c
-> > new file mode 100644
-> > index 0000000..b77456d
-> > --- /dev/null
-> > +++ b/drivers/hwtracing/coresight/coresight-cpu-debug.c
-> 
-> [...]
-> 
-> > +static int debug_probe(struct amba_device *adev, const struct amba_id *id)
-> > +{
-> > +	void __iomem *base;
-> > +	struct device *dev = &adev->dev;
-> > +	struct debug_drvdata *drvdata;
-> > +	struct resource *res = &adev->res;
-> > +	struct device_node *np = adev->dev.of_node;
-> > +	int ret;
-> > +
-> > +	drvdata = devm_kzalloc(dev, sizeof(*drvdata), GFP_KERNEL);
-> > +	if (!drvdata)
-> > +		return -ENOMEM;
-> > +
-> > +	drvdata->cpu = np ? of_coresight_get_cpu(np) : 0;
-> > +	if (per_cpu(debug_drvdata, drvdata->cpu)) {
-> > +		dev_err(dev, "CPU%d drvdata has been initialized, "
-> > +			"may be caused by binding wrong CPU node in the DT\n",
-> > +			drvdata->cpu);
-> > +		return -EBUSY;
-> > +	}
-> > +
-> > +	drvdata->dev = &adev->dev;
-> > +	amba_set_drvdata(adev, drvdata);
-> > +
-> > +	/* Validity for the resource is already checked by the AMBA core */
-> > +	base = devm_ioremap_resource(dev, res);
-> > +	if (IS_ERR(base))
-> > +		return PTR_ERR(base);
-> > +
-> > +	drvdata->base = base;
-> > +
-> > +	get_online_cpus();
-> > +	per_cpu(debug_drvdata, drvdata->cpu) = drvdata;
-> > +	ret = smp_call_function_single(drvdata->cpu, debug_init_arch_data,
-> > +				       drvdata, 1);
-> > +	put_online_cpus();
-> > +
-> > +	if (ret) {
-> > +		dev_err(dev, "CPU%d debug arch init failed\n", drvdata->cpu);
-> > +		goto err;
-> > +	}
-> > +
-> > +	if (!drvdata->edpcsr_present) {
-> > +		dev_err(dev, "CPU%d sample-based profiling isn't implemented\n",
-> > +			drvdata->cpu);
-> > +		ret = -ENXIO;
-> > +		goto err;
-> > +	}
-> > +
-> > +	if (!debug_count++) {
-> > +		ret = debug_func_init();
-> > +		if (ret)
-> > +			goto err_func_init;
-> > +	}
-> > +
-> > +	mutex_lock(&debug_lock);
-> > +	if (!debug_enable)
-> > +		pm_runtime_put(dev);
-> > +	mutex_unlock(&debug_lock);
-> > +
-> 
-> Just curious as why this is not registered under coresight bus using
-> coresight_register ? It would be good to group all the coresight devices
-> under that bus if possible.
+On Sun, Apr 30, 2017 at 11:04 AM, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> Hi,
+>
+> On Sun, Apr 30, 2017 at 10:14:20AM -0500, Adam Ford wrote:
+>> On Wed, Apr 5, 2017 at 1:30 PM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+>> > This series adds serdev support to the HCI LL protocol used on TI BT
+>> > modules and enables support on HiKey board with with the WL1835 module.
+>> > With this the custom TI UIM daemon and btattach are no longer needed.
+>>
+>> Without UIM daemon, what instruction do you use to load the BT firmware?
+>>
+>> I was thinking 'hciattach' but I was having trouble.  I was hoping you
+>> might have some insight.
+>>
+>>  hciattach -t 30 -s 115200 /dev/ttymxc1 texas 3000000 flow  Just
+>> returns a timeout.
+>>
+>> I modified my i.MX6 device tree per the binding documentation and
+>> setup the regulators and enable GPIO pins.
+>
+> If you configured everything correctly no userspace interaction is
+> required. The driver should request the firmware automatically once
+> you power up the bluetooth device.
+>
+> Apart from DT changes make sure, that the following options are
+> enabled and check dmesg for any hints.
+>
+> CONFIG_SERIAL_DEV_BUS
+> CONFIG_SERIAL_DEV_CTRL_TTYPORT
+> CONFIG_BT_HCIUART
+> CONFIG_BT_HCIUART_LL
+>
 
-The only thing this driver has in common with the coresight framework is the
-name, everything else is completely different.  Coupling them together (because
-of the name) would introduce a lot of hacks and make the code unintelligible. 
 
-Mathieu
+I have enabled those flags, and I have updated my device tree.
+I am testing this on an OMAP3630 (DM3730) board with a WL1283.  I am
+getting a lot of timeout errors.  I tested this against the original
+implemention I had in pdata-quirks.c using the ti-st driver, uim & and
+the btwilink driver.
 
-> 
-> --
-> Regards,
-> Sudeep
+I pulled in some of the newer patches to enable the wl1283-st, but I
+am obviously missing something.
+
+I   58.717651] Bluetooth: hci0: Reading TI version information failed
+(-110)
+[   58.724853] Bluetooth: hci0: download firmware failed, retrying...
+[   60.957641] Bluetooth: hci0 command 0x1001 tx timeout
+[   68.957641] Bluetooth: hci0: Reading TI version information failed
+(-110)
+[   68.964843] Bluetooth: hci0: download firmware failed, retrying...
+[   69.132171] Bluetooth: Unknown HCI packet type 06
+[   69.138244] Bluetooth: Unknown HCI packet type 0c
+[   69.143249] Bluetooth: Unknown HCI packet type 40
+[   69.148498] Bluetooth: Unknown HCI packet type 20
+[   69.153533] Bluetooth: Data length is too large
+[   69.158569] Bluetooth: Unknown HCI packet type a0
+[   69.163574] Bluetooth: Unknown HCI packet type 00
+[   69.168731] Bluetooth: Unknown HCI packet type 00
+[   69.173736] Bluetooth: Unknown HCI packet type 34
+[   69.178924] Bluetooth: Unknown HCI packet type 91
+[   71.197631] Bluetooth: hci0 command 0x1001 tx timeout
+[   79.197662] Bluetooth: hci0: Reading TI version information failed (-110)
+
+Since the pdata-quirks and original ti-st drivers work together, I
+know the hardware is fine.  The only change to the device tree is the
+addition of the Bluetooth container:
+
+bluetooth {
+  compatible = "ti,wl1283-st";
+  enable-gpios = <&gpio6 2 GPIO_ACTIVE_HIGH>;
+};
+
+Any thoughts or suggestions to try?  I get similar behavior on an
+i.MX6 board with a wl1837-st module as well.
+
+adam
+> -- Sebastian
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
