@@ -1,37 +1,72 @@
-From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v4 1/5] mailbox: Make startup and shutdown ops optional
-Date: Fri, 5 May 2017 10:35:34 +0100
-Message-ID: <566237d9-5b13-b51b-8cde-5d1890c2e217@arm.com>
-References: <20170504200539.27027-1-bjorn.andersson@linaro.org>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v3 4/6] spi: sh-msiof: Add slave mode support
+Date: Fri, 5 May 2017 11:42:15 +0200
+Message-ID: <CAMuHMdUBXtsLZYDx6Lbabp=qAnpWMbo3N6z0CMYd=YP=wJdmXg@mail.gmail.com>
+References: <1493919951-32122-1-git-send-email-geert+renesas@glider.be> <1493919951-32122-5-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170504200539.27027-1-bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ohad Ben-Cohen <ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-remoteproc-u79uwXL29TY76Z2rM5mHXA@public.gmane.orgSudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <1493919951-32122-5-git-send-email-geert+renesas@glider.be>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, Wolfram Sang <wsa+renesas@sang-engineering.com>, Hiromitsu Yamasaki <hiromitsu.yamasaki.ym@renesas.com>, Jiada Wang <jiada_wang@mentor.com>, Matt Porter <mporter@konsulko.com>, linux-spi <linux-spi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Wu Fengguang <fengguang.wu@intel.com>
 List-Id: devicetree@vger.kernel.org
 
+On Thu, May 4, 2017 at 7:45 PM, Geert Uytterhoeven
+<geert+renesas@glider.be> wrote:
+> From: Hisashi Nakamura <hisashi.nakamura.ak@renesas.com>
+>
+> Add slave mode support to the MSIOF driver, in both PIO and DMA mode.
+>
+> For now this only supports the transmission of messages with a size
+> that is known in advance.
+>
+> Signed-off-by: Hisashi Nakamura <hisashi.nakamura.ak@renesas.com>
+> Signed-off-by: Hiromitsu Yamasaki <hiromitsu.yamasaki.ym@renesas.com>
+> [geert: Timeout handling cleanup, spi core integration, cancellation,
+>         rewording]
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
+> index 2ce15ca977828668..7c4e8c4f3a9bddfd 100644
+> --- a/drivers/spi/spi-sh-msiof.c
+> +++ b/drivers/spi/spi-sh-msiof.c
 
-On 04/05/17 21:05, Bjorn Andersson wrote:
-> Some mailbox hardware doesn't have to perform any additional operations
-> on startup of shutdown, so make these optional.
-> 
+> +static int sh_msiof_slave_abort(struct spi_master *master)
+> +{
+> +       struct sh_msiof_spi_priv *p = spi_master_get_devdata(master);
+> +       unsigned long flags;
+> +
+> +       spin_lock_irqsave(&p->done.wait.lock, flags);
+> +       if (!p->done.done) {
+> +               wait_queue_t *curr, *next;
+> +
+> +               list_for_each_entry_safe(curr, next, &p->done.wait.task_list,
+> +                                        task_list) {
+> +                       signal_wake_up(curr->private, 1);
 
-Quite handy. I can you this to get rid of empty shutdown that I added in[1]
+0day reported a build failure in the modular case (thanks!):
 
-Reviewed-by: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+    ERROR: "signal_wake_up_state" [drivers/spi/spi-sh-msiof.ko] undefined!
 
--- 
-Regards,
-Sudeep
+signal_wake_up() is a static inline function calling signal_wake_up_state(),
+but the latter is not exported to modules.
 
-[1] https://lkml.org/lkml/2017/5/2/315
+I'll bring it up with the scheduler people...
 
+> +                       break;
+> +               }
+> +       }
+> +       spin_unlock_irqrestore(&p->done.wait.lock, flags);
+> +       return 0;
+> +}
+
+Gr{oetje,eeting}s,
+
+                        Geert
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
