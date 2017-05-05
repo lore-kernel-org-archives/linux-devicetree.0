@@ -1,102 +1,113 @@
-From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 3/3] of: fix sparse warnings in fdt, irq, and resolver
- code
-Date: Thu, 4 May 2017 22:16:40 -0700
-Message-ID: <590C0AB8.9020309@gmail.com>
-References: <20170504180035.12834-1-robh@kernel.org>
- <20170504180035.12834-3-robh@kernel.org>
+From: Prabhakar Kushwaha <prabhakar.kushwaha-3arQi8VN3Tc@public.gmane.org>
+Subject: [PATCH][v2] arm64: Add flash node for ls1088a qds and rdb
+Date: Fri, 5 May 2017 11:04:08 +0530
+Message-ID: <1493962448-10888-1-git-send-email-prabhakar.kushwaha@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170504180035.12834-3-robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Prabhakar Kushwaha <prabhakar.kushwaha-3arQi8VN3Tc@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 05/04/17 11:00, Rob Herring wrote:
-> sparse generates the following warnings in drivers/of/:
-> 
-> ../drivers/of/fdt.c:63:36: warning: cast to restricted __be32
-> ../drivers/of/fdt.c:68:33: warning: cast to restricted __be32
-> ../drivers/of/irq.c:105:88: warning: incorrect type in initializer (different base types)
-> ../drivers/of/irq.c:105:88:    expected restricted __be32
-> ../drivers/of/irq.c:105:88:    got int
-> ../drivers/of/irq.c:526:35: warning: incorrect type in assignment (different modifiers)
-> ../drivers/of/irq.c:526:35:    expected int ( *const [usertype] irq_init_cb )( ... )
-> ../drivers/of/irq.c:526:35:    got void const *const data
-> ../drivers/of/resolver.c:95:42: warning: incorrect type in assignment (different base types)
-> ../drivers/of/resolver.c:95:42:    expected unsigned int [unsigned] [usertype] <noident>
-> ../drivers/of/resolver.c:95:42:    got restricted __be32 [usertype] <noident>
-> 
-> All these are harmless type mismatches fixed by adjusting the types.
-> 
-> Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> ---
->  drivers/of/fdt.c       | 4 ++--
->  drivers/of/irq.c       | 2 +-
->  drivers/of/resolver.c  | 2 +-
->  include/linux/of_irq.h | 2 +-
->  4 files changed, 5 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-> index e33f7818bc6c..a0972219ccfc 100644
-> --- a/drivers/of/fdt.c
-> +++ b/drivers/of/fdt.c
-> @@ -48,8 +48,8 @@ void of_fdt_limit_memory(int limit)
->  	const void *val;
->  	int nr_address_cells = OF_ROOT_NODE_ADDR_CELLS_DEFAULT;
->  	int nr_size_cells = OF_ROOT_NODE_SIZE_CELLS_DEFAULT;
-> -	const uint32_t *addr_prop;
-> -	const uint32_t *size_prop;
-> +	const __be32 *addr_prop;
-> +	const __be32 *size_prop;
->  	int root_offset;
->  	int cell_size;
->  
-> diff --git a/drivers/of/irq.c b/drivers/of/irq.c
-> index 7c56b72d1dc6..d11437cb1187 100644
-> --- a/drivers/of/irq.c
-> +++ b/drivers/of/irq.c
-> @@ -102,7 +102,7 @@ int of_irq_parse_raw(const __be32 *addr, struct of_phandle_args *out_irq)
->  	struct device_node *ipar, *tnode, *old = NULL, *newpar = NULL;
->  	__be32 initial_match_array[MAX_PHANDLE_ARGS];
->  	const __be32 *match_array = initial_match_array;
-> -	const __be32 *tmp, *imap, *imask, dummy_imask[] = { [0 ... MAX_PHANDLE_ARGS] = ~0 };
-> +	const __be32 *tmp, *imap, *imask, dummy_imask[] = { [0 ... MAX_PHANDLE_ARGS] = cpu_to_be32(~0) };
->  	u32 intsize = 1, addrsize, newintsize = 0, newaddrsize = 0;
->  	int imaplen, match, i, rc = -EINVAL;
->  
-> diff --git a/drivers/of/resolver.c b/drivers/of/resolver.c
-> index 7ae9863cb0a4..771f4844c781 100644
-> --- a/drivers/of/resolver.c
-> +++ b/drivers/of/resolver.c
-> @@ -92,7 +92,7 @@ static void adjust_overlay_phandles(struct device_node *overlay,
->  		if (phandle == OF_PHANDLE_ILLEGAL)
->  			continue;
->  
-> -		*(uint32_t *)prop->value = cpu_to_be32(overlay->phandle);
-> +		*(__be32 *)prop->value = cpu_to_be32(overlay->phandle);
->  	}
->  
->  	for_each_child_of_node(overlay, child)
-> diff --git a/include/linux/of_irq.h b/include/linux/of_irq.h
-> index 1e0deb8e8494..ec6b11deb773 100644
-> --- a/include/linux/of_irq.h
-> +++ b/include/linux/of_irq.h
-> @@ -8,7 +8,7 @@
->  #include <linux/ioport.h>
->  #include <linux/of.h>
->  
-> -typedef int (*of_irq_init_cb_t)(struct device_node *, struct device_node *);
-> +typedef int const (*of_irq_init_cb_t)(struct device_node *, struct device_node *);
->  
->  /*
->   * Workarounds only applied to 32bit powermac machines
-> 
+LS1088AQDS consist of NOR, NAND and FPGA connected over IFC
+LS1088ARDB consist of NAND and FPGA connected over IFC.
 
-Reviewed-by: Frank Rowand <frank.rowand-7U/KSKJipcs@public.gmane.org>
+So add flash information in ifc node of device tree.
+
+Signed-off-by: Prabhakar Kushwaha <prabhakar.kushwaha-3arQi8VN3Tc@public.gmane.org>
+---
+changes for v2: Incorporated Shawn's comments
+
+
+ arch/arm64/boot/dts/freescale/fsl-ls1088a-qds.dts | 25 +++++++++++++++++++++++
+ arch/arm64/boot/dts/freescale/fsl-ls1088a-rdb.dts | 17 +++++++++++++++
+ arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi    |  4 ----
+ 3 files changed, 42 insertions(+), 4 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a-qds.dts b/arch/arm64/boot/dts/freescale/fsl-ls1088a-qds.dts
+index 8c3cae5..f536ca9 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1088a-qds.dts
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a-qds.dts
+@@ -110,6 +110,31 @@
+ 	};
+ };
+ 
++&ifc {
++	status = "okay";
++
++	ranges = <0 0 0x5 0x80000000 0x08000000
++		  2 0 0x5 0x30000000 0x00010000
++		  3 0 0x5 0x20000000 0x00010000>;
++
++	nor@0,0 {
++		compatible = "cfi-flash";
++		reg = <0x0 0x0 0x8000000>;
++		bank-width = <2>;
++		device-width = <1>;
++	};
++
++	nand@2,0 {
++		compatible = "fsl,ifc-nand";
++		reg = <0x2 0x0 0x10000>;
++	};
++
++	fpga: board-control@3,0 {
++		compatible = "fsl,ls1088aqds-fpga", "fsl,fpga-qixis";
++		reg = <0x3 0x0 0x0000100>;
++	};
++};
++
+ &duart0 {
+ 	status = "okay";
+ };
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a-rdb.dts b/arch/arm64/boot/dts/freescale/fsl-ls1088a-rdb.dts
+index 8a04fbb..3f79610 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1088a-rdb.dts
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a-rdb.dts
+@@ -94,6 +94,23 @@
+ 	};
+ };
+ 
++&ifc {
++	status = "okay";
++
++	ranges = <0 0 0x5 0x30000000 0x00010000
++		  2 0 0x5 0x20000000 0x00010000>;
++
++	nand@0,0 {
++		compatible = "fsl,ifc-nand";
++		reg = <0x0 0x0 0x10000>;
++	};
++
++	fpga: board-control@2,0 {
++		compatible = "fsl,ls1088ardb-fpga", "fsl,fpga-qixis";
++		reg = <0x2 0x0 0x0000100>;
++	};
++};
++
+ &duart0 {
+ 	status = "okay";
+ };
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
+index 2946fd7..9f6bcb4 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
+@@ -217,10 +217,6 @@
+ 			#address-cells = <2>;
+ 			#size-cells = <1>;
+ 
+-			ranges = <0 0 0x5 0x80000000 0x08000000
+-				  2 0 0x5 0x30000000 0x00010000
+-				  3 0 0x5 0x20000000 0x00010000>;
+-			status = "disabled";
+ 		};
+ 
+ 		i2c0: i2c@2000000 {
+-- 
+2.7.4
+
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
