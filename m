@@ -1,34 +1,57 @@
-From: Chris Brandt <Chris.Brandt@renesas.com>
-Subject: RE: [PATCH v5 10/10] arm: dts: genmai: Add ethernet pin group
-Date: Fri, 5 May 2017 12:45:55 +0000
-Message-ID: <SG2PR06MB1165D80A4642F5A2F27FB6AA8AEB0@SG2PR06MB1165.apcprd06.prod.outlook.com>
-References: <1493281194-5200-1-git-send-email-jacopo+renesas@jmondi.org>
- <1493281194-5200-11-git-send-email-jacopo+renesas@jmondi.org>
- <CAMuHMdVHh_40pup1G-1qohS+wEYCFEn6jvOTCnYideQWMxSVLw@mail.gmail.com>
- <SG2PR06MB1165D46E83254B1757C790498A100@SG2PR06MB1165.apcprd06.prod.outlook.com>
- <CAMuHMdU2CvipQQQ8-wxsiniHZJQmUMHv-t52Pw=sHD3YTd7Yug@mail.gmail.com>
- <SG2PR06MB11650F50D93653212039A4348A130@SG2PR06MB1165.apcprd06.prod.outlook.com>
- <CACRpkdbMpbr_eBnTYA+mBFN4YHUnn2VyuK8PGxz2-Cykv2j83w@mail.gmail.com>
+From: Peter Rosin <peda@axentia.se>
+Subject: Re: [PATCH v13 03/10] mux: minimal mux subsystem and gpio-based mux
+ controller
+Date: Fri, 5 May 2017 15:19:48 +0200
+Message-ID: <a159179b-6e2f-ca92-20ce-898009773900@axentia.se>
+References: <1492101794-13444-1-git-send-email-peda@axentia.se>
+ <1492101794-13444-4-git-send-email-peda@axentia.se>
+ <20170418085156.GA4773@kroah.com>
+ <bdeecccf-02d6-226b-8516-1d41e3602a7a@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdbMpbr_eBnTYA+mBFN4YHUnn2VyuK8PGxz2-Cykv2j83w@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <bdeecccf-02d6-226b-8516-1d41e3602a7a@axentia.se>
+Sender: linux-doc-owner@vger.kernel.org
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: linux-kernel@vger.kernel.org, Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Jonathan Corbet <corbet@lwn.net>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, linux-doc@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, Colin Ian King <colin.king@canonical.com>, Paul Gortmaker <paul.gortmaker@windriver.com>, Philipp Zabel <p.zabel@pengutronix.de>, kernel@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpZGF5LCBNYXkgMDUsIDIwMTcsIExpbnVzIFdhbGxlaWogd3JvdGU6DQo+ID4gVGhpcyBp
-cyB0aGUgcGFydCBvZiB0aGUgd2hvbGUgIkRUIGlzIGZvciBoYXJkd2FyZSBkZXNjcmlwdGlvbiBv
-bmx5IiB0aGF0DQo+IGRvZXNuJ3QgcmVhbGx5IG1ha2Ugc2Vuc2UgdG8gbWUuDQo+IA0KPiBPSyB5
-ZWFoIHdlIGRvIGhhcmR3YXJlIGRlc2NyaXB0aW9uIEFORCBjb25maWd1cmF0aW9uLg0KPiANCj4g
-QW5kIHdlIG5ldmVyIGRvIGludGVycHJldGVkIGxhbmd1YWdlcy4NCj4gDQo+IEFuZCB0aGVuIHRo
-ZXJlIGlzIGEgYnVuY2ggb2YgZ3JheXpvbmUgdGhpbmdzLiBGb3IgZXhhbXBsZSB3ZSBoYXZlIGEN
-Cj4gbGludXgsaW5wdXQgYmluZGluZyBmb3IgY29ubmVjdGluZyBrZXlwcmVzc2VzIHRvIGNlcnRh
-aW4gTGludXggaW5wdXQgY29kZXMuDQo+IFRoYXQgaXMgcmVhbGx5IGdyYXl6b25lLCBidXQgdmVy
-eSB1c2VmdWwuDQoNCkFoLi4uLg0KDQoJY29tcGF0aWJsZSA9ICJsaW51eCxncmF5em9uZSI7DQoN
-Cg0KVGhhbmtzIGZvciB0aGUgcmVwbHkuIEknbGwgc3RvcCByYW50aW5nIG5vdy4NCk9mIGNvdXJz
-ZSwgSSdsbCBzdGlsbCBwcm9iYWJseSBzY3JldyBpdCB1cCBhZ2FpbiBvbiBhIGZ1dHVyZSBwYXRj
-aCBzb21laG93Li4uDQoNCkNoZWVycw0KDQpDaHJpcw0KDQo=
+On 2017-04-18 12:59, Peter Rosin wrote:
+> On 2017-04-18 10:51, Greg Kroah-Hartman wrote:
+>> On Thu, Apr 13, 2017 at 06:43:07PM +0200, Peter Rosin wrote:
+>>> +/**
+>>> + * devm_mux_chip_unregister() - Resource-managed version mux_chip_unregister().
+>>> + * @dev: The device that originally registered the mux-chip.
+>>> + * @mux_chip: The mux-chip to unregister.
+>>> + *
+>>> + * See mux_chip_unregister() for more details.
+>>> + *
+>>> + * Note that you do not normally need to call this function.
+>>
+>> Odd, then why is it exported???
+> 
+> You normally don't call the devm_foo_{free,release,unregister,etc} functions.
+> The intention is of course that the resourse cleans up automatically. But there
+> are no cases where the manual clean up is not available, at least not that I can
+> find?
+
+I had a second look and there are of course plenty of examples of missing clean up
+versions for devm function. I simply hadn't looked very hard at all.
+
+So, for v15 I intend to remove all of devm_mux_chip_unregister, devm_mux_chip_free
+and devm_mux_control_put. They are all just sitting there with no callers. And the
+mux-mmio/video-mux drivers by Philipp Zabel that build on top of this series don't
+need them either. Besides, easy to resurrect if needed...
+
+I will do v15 with the above, the change from mutex to semaphore for locking the
+mux controller state [1] and a few small documentation improvements. That will be
+rebased onto v4.12-rc1 and sent in 10 days or so, or whenever v4.12-rc1 is out.
+
+Meanwhile, what I currently intend for v15 but based on v4.11 is available from
+https://gitlab.com/peda-linux/mux.git in the "mux" branch.
+
+Cheers,
+peda
+
+[1] https://lkml.org/lkml/2017/4/25/411
