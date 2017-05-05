@@ -1,37 +1,86 @@
-From: Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH RFC] Documentation/devicetree: Add specification for FSI
- busses
-Date: Fri, 5 May 2017 09:35:48 +0800
-Message-ID: <dff34fc5-bd04-4053-af4e-da12d3a824ef@ozlabs.org>
-References: <1493704508-27119-1-git-send-email-jk@ozlabs.org>
- <eb310c6a-0b41-aecd-2ae5-025a8f64b152@linux.vnet.ibm.com>
+From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: imx: add DH2228FV DAC to Gateworks Ventana
+ boards with SPI
+Date: Fri, 5 May 2017 09:56:55 +0800
+Message-ID: <20170505015653.GT18578@dragon>
+References: <1493823894-2107-1-git-send-email-tharvey@gateworks.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <eb310c6a-0b41-aecd-2ae5-025a8f64b152-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1493823894-2107-1-git-send-email-tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Eddie James <eajames-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Eddie,
+On Wed, May 03, 2017 at 08:04:54AM -0700, Tim Harvey wrote:
+> Signed-off-by: Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/imx6qdl-gw52xx.dtsi | 6 ++++++
+>  arch/arm/boot/dts/imx6qdl-gw54xx.dtsi | 6 ++++++
+>  arch/arm/boot/dts/imx6qdl-gw560x.dtsi | 6 ++++++
+>  3 files changed, 18 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/imx6qdl-gw52xx.dtsi b/arch/arm/boot/dts/imx6qdl-gw52xx.dtsi
+> index 91991d6..b5c1a8f 100644
+> --- a/arch/arm/boot/dts/imx6qdl-gw52xx.dtsi
+> +++ b/arch/arm/boot/dts/imx6qdl-gw52xx.dtsi
+> @@ -143,6 +143,12 @@
+>  	pinctrl-names = "default";
+>  	pinctrl-0 = <&pinctrl_ecspi3>;
+>  	status = "okay";
+> +
+> +	spidev0: spidev@0 {
+> +		compatible = "rohm,dh2228fv";
 
-> I have no problem with this as an example, but it isn't exactly how the
-> tree will look under the p8/p9 fsi-attached i2c master. We will instead
-> need a list of ports on the master. Then you could put actual devices
-> (eeproms, etc) under the ports if desired.
+I do not see this is a documented compatible.
 
-Yes, this was intended as a fairly simple example. That's a good point
-though, and I'll change the compatible string there so that I'm not
-implying that it's representing the actual FSI I2c device that we're
-working on.
+Shawn
 
-Thanks for the review.
-
-Cheers,
-
-
-Jeremy
+> +		reg = <0>;
+> +		spi-max-frequency = <60000000>;
+> +	};
+>  };
+>  
+>  &fec {
+> diff --git a/arch/arm/boot/dts/imx6qdl-gw54xx.dtsi b/arch/arm/boot/dts/imx6qdl-gw54xx.dtsi
+> index 968fda9..9d26511 100644
+> --- a/arch/arm/boot/dts/imx6qdl-gw54xx.dtsi
+> +++ b/arch/arm/boot/dts/imx6qdl-gw54xx.dtsi
+> @@ -154,6 +154,12 @@
+>  	pinctrl-names = "default";
+>  	pinctrl-0 = <&pinctrl_ecspi2>;
+>  	status = "okay";
+> +
+> +	spidev0: spidev@0 {
+> +		compatible = "rohm,dh2228fv";
+> +		reg = <0>;
+> +		spi-max-frequency = <60000000>;
+> +	};
+>  };
+>  
+>  &fec {
+> diff --git a/arch/arm/boot/dts/imx6qdl-gw560x.dtsi b/arch/arm/boot/dts/imx6qdl-gw560x.dtsi
+> index d894dde..bfb63e9 100644
+> --- a/arch/arm/boot/dts/imx6qdl-gw560x.dtsi
+> +++ b/arch/arm/boot/dts/imx6qdl-gw560x.dtsi
+> @@ -208,6 +208,12 @@
+>  	pinctrl-names = "default";
+>  	pinctrl-0 = <&pinctrl_ecspi3>;
+>  	status = "okay";
+> +
+> +	spidev0: spidev@0 {
+> +		compatible = "rohm,dh2228fv";
+> +		reg = <0>;
+> +		spi-max-frequency = <60000000>;
+> +	};
+>  };
+>  
+>  &can1 {
+> -- 
+> 2.7.4
+> 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
