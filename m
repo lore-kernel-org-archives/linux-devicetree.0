@@ -1,7 +1,7 @@
 From: Sebastien Bourdelin <sebastien.bourdelin@savoirfairelinux.com>
-Subject: [PATCH v3 1/6] of: documentation: add bindings documentation for TS-4600
-Date: Fri,  5 May 2017 15:32:54 -0400
-Message-ID: <20170505193259.16517-2-sebastien.bourdelin@savoirfairelinux.com>
+Subject: [PATCH v3 3/6] dt-bindings: bus: Add documentation for the Technologic Systems NBUS
+Date: Fri,  5 May 2017 15:32:56 -0400
+Message-ID: <20170505193259.16517-4-sebastien.bourdelin@savoirfairelinux.com>
 References: <20170505193259.16517-1-sebastien.bourdelin@savoirfairelinux.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170505193259.16517-1-sebastien.bourdelin@savoirfairelinux.com>
@@ -10,36 +10,80 @@ To: linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org, linux-arm-kern
 Cc: fabio.estevam@nxp.com, mark@embeddedarm.com, kris@embeddedarm.com, Sebastien Bourdelin <sebastien.bourdelin@savoirfairelinux.com>
 List-Id: devicetree@vger.kernel.org
 
-This adds the documentation for the TS-4600 by Technologic Systems.
+Add binding documentation for the Technologic Systems NBUS that is used
+to interface with peripherals in the FPGA of the TS-4600 SoM.
 
-Acked-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Sebastien Bourdelin <sebastien.bourdelin@savoirfairelinux.com>
 ---
 Changes v2 -> v3:
   - rebase on master
+  - fix typo (suggested by Rob Herring)
 
 Changes v1 -> v2:
   - rebase on master
-  - add ack by Rob Herring <robh@kernel.org>
+  - remove the simple-bus compatibility as the root node will now
+  populate child nodes (suggested by Rob Herring)
+  - use the ts vendor prefix for gpios (suggested by Rob Herring)
 ---
- Documentation/devicetree/bindings/arm/technologic.txt | 5 +++++
- 1 file changed, 5 insertions(+)
+ Documentation/devicetree/bindings/bus/ts-nbus.txt | 50 +++++++++++++++++++++++
+ 1 file changed, 50 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/bus/ts-nbus.txt
 
-diff --git a/Documentation/devicetree/bindings/arm/technologic.txt b/Documentation/devicetree/bindings/arm/technologic.txt
-index 33797acad846..e9d6d6575566 100644
---- a/Documentation/devicetree/bindings/arm/technologic.txt
-+++ b/Documentation/devicetree/bindings/arm/technologic.txt
-@@ -1,6 +1,11 @@
- Technologic Systems Platforms Device Tree Bindings
- --------------------------------------------------
- 
-+TS-4600 is a System-on-Module based on the Freescale i.MX28 System-on-Chip.
-+It can be mounted on a carrier board providing additional peripheral connectors.
-+Required root node properties:
-+	- compatible = "technologic,imx28-ts4600", "fsl,imx28"
+diff --git a/Documentation/devicetree/bindings/bus/ts-nbus.txt b/Documentation/devicetree/bindings/bus/ts-nbus.txt
+new file mode 100644
+index 000000000000..905600adfb64
+--- /dev/null
++++ b/Documentation/devicetree/bindings/bus/ts-nbus.txt
+@@ -0,0 +1,50 @@
++Technologic Systems NBUS
 +
- TS-4800 board
- Required root node properties:
- 	- compatible = "technologic,imx51-ts4800", "fsl,imx51";
++The NBUS is a bus used to interface with peripherals in the Technologic
++Systems FPGA on the TS-4600 SoM.
++
++Required properties :
++ - compatible		: "technologic,ts-nbus"
++ - #address-cells	: must be 1
++ - #size-cells		: must be 0
++ - pwms			: The PWM bound to the FPGA
++ - ts-data-gpios	: The 8 GPIO pins connected to the data lines on the FPGA
++ - ts-csn-gpios		: The GPIO pin connected to the csn line on the FPGA
++ - ts-txrx-gpios	: The GPIO pin connected to the txrx line on the FPGA
++ - ts-strobe-gpios	: The GPIO pin connected to the stobe line on the FPGA
++ - ts-ale-gpios		: The GPIO pin connected to the ale line on the FPGA
++ - ts-rdy-gpios		: The GPIO pin connected to the rdy line on the FPGA
++
++Child nodes:
++
++The NBUS node can contain zero or more child nodes representing peripherals
++on the bus.
++
++Example:
++
++	nbus {
++		compatible = "technologic,ts-nbus";
++		pinctrl-0 = <&nbus_pins>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		pwms = <&pwm 2 83>;
++		ts-data-gpios   = <&gpio0 0 GPIO_ACTIVE_HIGH
++				   &gpio0 1 GPIO_ACTIVE_HIGH
++				   &gpio0 2 GPIO_ACTIVE_HIGH
++				   &gpio0 3 GPIO_ACTIVE_HIGH
++				   &gpio0 4 GPIO_ACTIVE_HIGH
++				   &gpio0 5 GPIO_ACTIVE_HIGH
++				   &gpio0 6 GPIO_ACTIVE_HIGH
++				   &gpio0 7 GPIO_ACTIVE_HIGH>;
++		ts-csn-gpios    = <&gpio0 16 GPIO_ACTIVE_HIGH>;
++		ts-txrx-gpios   = <&gpio0 24 GPIO_ACTIVE_HIGH>;
++		ts-strobe-gpios = <&gpio0 25 GPIO_ACTIVE_HIGH>;
++		ts-ale-gpios    = <&gpio0 26 GPIO_ACTIVE_HIGH>;
++		ts-rdy-gpios    = <&gpio0 21 GPIO_ACTIVE_HIGH>;
++
++		watchdog@2a {
++			compatible = "...";
++
++			/* ... */
++		};
++	};
 -- 
 2.12.0
