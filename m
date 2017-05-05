@@ -1,59 +1,52 @@
 From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH V4] ARM64: dts: hi6220-hikey: Add clock binding for the
- pmic mfd
-Date: Fri, 5 May 2017 08:48:21 +0100
-Message-ID: <20170505074821.fgnkq6lggde6gdv2@dell>
-References: <1493066439-6889-1-git-send-email-daniel.lezcano@linaro.org>
- <20170504220721.GB5252@mai>
+Subject: Re: [PATCH v10 1/3] backlight arcxcnn add arc to vendor prefix
+Date: Fri, 5 May 2017 08:54:52 +0100
+Message-ID: <20170505075452.4wxlruv4bk6zuxvj@dell>
+References: <1493823859-22402-1-git-send-email-olimpiu@arcticsand.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170504220721.GB5252@mai>
+In-Reply-To: <1493823859-22402-1-git-send-email-olimpiu@arcticsand.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: xuwei5@hisilicon.com, Arnd Bergmann <arnd@arndb.de>, Stephen Boyd <sboyd@codeaurora.org>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, "moderated list:ARM/HISILICON SOC..." <linux-arm-kernel@lists.infradead.org>
+To: Olimpiu Dejeu <olimpiu@arcticsand.com>
+Cc: robh@kernel.org, linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org, jingoohan1@gmail.com, bdodge@arcticsand.com, joe@perches.com, daniel.thompson@linaro.org, lkp@intel.com, fengguang.wu@intel.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 05 May 2017, Daniel Lezcano wrote:
+Your subject line is not in the correct format.
 
-> On Mon, Apr 24, 2017 at 10:40:22PM +0200, Daniel Lezcano wrote:
-> > The hi655x PMIC provides the regulators but also a clock. The latter is missing
-> > in the definition and in the DT, thus it is no possible to enable the WiFi which
-> > depends on this clock.
-> > 
-> > The hi655x's clock has been added and the hi655x multifunction driver has
-> > updated with a clock-cell.
-> > 
-> > This patch adds the clock-cells for the PMIC in the DT and updates the
-> > documentation.
-> > 
-> > Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-> > Acked-by: Rob Herring <robh@kernel.org>
-> > Acked-by: Lee Jones <lee.jones@linaro.org>
-> > Cc: Arnd Bergmann <arnd@arndb.de>
-> > Cc: Stephen Boyd <sboyd@codeaurora.org>
-> > Cc: Michael Turquette <mturquette@baylibre.com>
-> > ---
-> >  Changelog:
-> > 	v4:
-> > 	   - Added Acked-by's
-> > 	   - Updated the commit message with a better description
-> > ---
+> backlight: Add arc to vendor prefixes
+
+This is kind of the correct format, but this patch is not a
+'backlight' patch, it's a 'dt-bindings: vendor-prefixes:' one.
+
+Leave a '\n' here.
+
+> Signed-off-by: Olimpiu Dejeu <olimpiu@arcticsand.com>
+> ---
+> v9 => v10:
+> - Per Rob Herring's request changed vendor-prefix to arctic
+> v8 => v9:
+> - Version updated to match other patch in set. No other changes.
+> v8:
+> - Version to match other patches in set
 > 
-> Hi Xu Wei,
+>  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> a gentle reminder for this patch. Is it ok for you?
-
-a) Pings aren't usually received well.  If you wish to remind
-maintainers of a patch's existence a [RESEND] is usually the most
-accepted method.
-
-b) There is usually little point (at least it's significantly reduced)
-in sending pings/resends whilst the merge-window is open.  Maintainers
-usually take this time to take a little breather (rest) from their
-duties.
+> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> index 16d3b5e..6f33a4b 100644
+> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
+> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> @@ -28,6 +28,7 @@ andestech	Andes Technology Corporation
+>  apm	Applied Micro Circuits Corporation (APM)
+>  aptina	Aptina Imaging
+>  arasan	Arasan Chip Systems
+> +arctic	Arctic Sand
+>  aries	Aries Embedded GmbH
+>  arm	ARM Ltd.
+>  armadeus	ARMadeus Systems SARL
 
 -- 
 Lee Jones
