@@ -1,77 +1,37 @@
-From: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
-Subject: [PATCHv3 2/2] ARM: dts: omap4-droid4: Add vibrator
-Date: Fri,  5 May 2017 11:28:23 +0200
-Message-ID: <20170505092823.26009-3-sebastian.reichel@collabora.co.uk>
-References: <20170505092823.26009-1-sebastian.reichel@collabora.co.uk>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170505092823.26009-1-sebastian.reichel@collabora.co.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastian Reichel <sre@kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Tony Lindgren <tony@atomide.com>
-Cc: Rob Herring <robh+dt@kernel.org>, linux-input@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Sebastian Reichel <sebastian.reichel@collabora.co.uk>
+From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v4 1/5] mailbox: Make startup and shutdown ops optional
+Date: Fri, 5 May 2017 10:35:34 +0100
+Message-ID: <566237d9-5b13-b51b-8cde-5d1890c2e217@arm.com>
+References: <20170504200539.27027-1-bjorn.andersson@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170504200539.27027-1-bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ohad Ben-Cohen <ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-remoteproc-u79uwXL29TY76Z2rM5mHXA@public.gmane.orgSudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add vibrator to Droid4's device tree.
 
-Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
----
- arch/arm/boot/dts/omap4-droid4-xt894.dts | 38 ++++++++++++++++++++++++++++++++
- 1 file changed, 38 insertions(+)
 
-diff --git a/arch/arm/boot/dts/omap4-droid4-xt894.dts b/arch/arm/boot/dts/omap4-droid4-xt894.dts
-index 89eb607f4a9e..67d286a53368 100644
---- a/arch/arm/boot/dts/omap4-droid4-xt894.dts
-+++ b/arch/arm/boot/dts/omap4-droid4-xt894.dts
-@@ -116,6 +116,32 @@
- 
- 		};
- 	};
-+
-+	pwm8: dmtimer-pwm-8 {
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&vibrator_direction_pin>;
-+
-+		compatible = "ti,omap-dmtimer-pwm";
-+		#pwm-cells = <3>;
-+		ti,timers = <&timer8>;
-+		ti,clock-source = <0x01>;
-+	};
-+
-+	pwm9: dmtimer-pwm-9 {
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&vibrator_enable_pin>;
-+
-+		compatible = "ti,omap-dmtimer-pwm";
-+		#pwm-cells = <3>;
-+		ti,timers = <&timer9>;
-+		ti,clock-source = <0x01>;
-+	};
-+
-+	vibrator {
-+		compatible = "motorola,mapphone-pwm-vibrator";
-+		pwms = <&pwm9 0 1000000000 0>, <&pwm8 0 1000000000 0>;
-+		pwm-names = "enable", "direction";
-+	};
- };
- 
- &dss {
-@@ -453,6 +479,18 @@
- 		OMAP4_IOPAD(0x1c8, PIN_INPUT_PULLUP | MUX_MODE7)
- 		>;
- 	};
-+
-+	vibrator_direction_pin: pinmux_vibrator_direction_pin {
-+		pinctrl-single,pins = <
-+			OMAP4_IOPAD(0x1ce, PIN_OUTPUT | MUX_MODE1)	/* dmtimer8_pwm_evt (gpio_27) */
-+		>;
-+	};
-+
-+	vibrator_enable_pin: pinmux_vibrator_enable_pin {
-+		pinctrl-single,pins = <
-+			OMAP4_IOPAD(0X1d0, PIN_OUTPUT | MUX_MODE1)	/* dmtimer9_pwm_evt (gpio_28) */
-+		>;
-+	};
- };
- 
- &omap4_pmx_wkup {
+On 04/05/17 21:05, Bjorn Andersson wrote:
+> Some mailbox hardware doesn't have to perform any additional operations
+> on startup of shutdown, so make these optional.
+> 
+
+Quite handy. I can you this to get rid of empty shutdown that I added in[1]
+
+Reviewed-by: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+
 -- 
-2.11.0
+Regards,
+Sudeep
+
+[1] https://lkml.org/lkml/2017/5/2/315
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
