@@ -1,55 +1,175 @@
-From: Mathieu Poirier <mathieu.poirier@linaro.org>
-Subject: Re: [PATCH v8 5/7] coresight: add support for CPU debug module
-Date: Fri, 5 May 2017 09:34:44 -0600
-Message-ID: <CANLsYkyK=KZsreBYHoDVCztrJh0Cu_MaDcBona8iHizXMw9-kg@mail.gmail.com>
-References: <1493719717-27698-1-git-send-email-leo.yan@linaro.org>
- <1493719717-27698-6-git-send-email-leo.yan@linaro.org> <4cd0e395-c177-0b72-9cab-7a95aac9cca4@arm.com>
- <20170505144832.GA4507@linaro.org> <d683a786-b6f2-2d95-2a42-c82b38200bfa@arm.com>
+From: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 2/3] iommu/pci: reserve iova for PCI masters
+Date: Fri, 5 May 2017 16:51:15 +0100
+Message-ID: <d063a61c-44f6-11f3-a25b-01cfb5d46172@arm.com>
+References: <1493786795-28153-1-git-send-email-oza.oza@broadcom.com>
+	<1493786795-28153-2-git-send-email-oza.oza@broadcom.com>
+	<0c9a6b09-139c-df49-cf73-6a3935a6aacd@arm.com>
+	<CAMSpPPdtfMMkTpi9cWn0QV2qnfBoHayQQg5cGANAswSwFoHX3w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <d683a786-b6f2-2d95-2a42-c82b38200bfa@arm.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Sudeep Holla <sudeep.holla@arm.com>
-Cc: Leo Yan <leo.yan@linaro.org>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Wei Xu <xuwei5@hisilicon.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Suzuki K Poulose <suzuki.poulose@arm.com>, Stephen Boyd <sboyd@codeaurora.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <CAMSpPPdtfMMkTpi9cWn0QV2qnfBoHayQQg5cGANAswSwFoHX3w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Oza Oza <oza.oza-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Oza Pawandeep <oza.pawandeep-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux IOMMU <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, BCM Kernel Feedback <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 5 May 2017 at 09:04, Sudeep Holla <sudeep.holla@arm.com> wrote:
->
->
-> On 05/05/17 15:48, Mathieu Poirier wrote:
->> On Fri, May 05, 2017 at 02:55:17PM +0100, Sudeep Holla wrote:
->
-> [...]
->
+On 04/05/17 19:52, Oza Oza wrote:
+> On Thu, May 4, 2017 at 11:50 PM, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org> wrote:
+>> On 03/05/17 05:46, Oza Pawandeep wrote:
+>>> this patch reserves the iova for PCI masters.
+>>> ARM64 based SOCs may have scattered memory banks.
+>>> such as iproc based SOC has
 >>>
->>> Just curious as why this is not registered under coresight bus using
->>> coresight_register ? It would be good to group all the coresight devices
->>> under that bus if possible.
+>>> <0x00000000 0x80000000 0x0 0x80000000>, /* 2G @ 2G */
+>>> <0x00000008 0x80000000 0x3 0x80000000>, /* 14G @ 34G */
+>>> <0x00000090 0x00000000 0x4 0x00000000>, /* 16G @ 576G */
+>>> <0x000000a0 0x00000000 0x4 0x00000000>; /* 16G @ 640G */
+>>>
+>>> but incoming PCI transcation addressing capability is limited
+>>> by host bridge, for example if max incoming window capability
+>>> is 512 GB, then 0x00000090 and 0x000000a0 will fall beyond it.
+>>>
+>>> to address this problem, iommu has to avoid allocating iovas which
+>>> are reserved. which inturn does not allocate iova if it falls into hole.
 >>
->> The only thing this driver has in common with the coresight framework is the
->> name, everything else is completely different.  Coupling them together (because
->> of the name) would introduce a lot of hacks and make the code unintelligible.
+>> I don't necessarily disagree with doing this, as we could do with facing
+>> up to the issue of discontiguous DMA ranges in particular (I too have a
+>> platform with this problem), but I'm still not overly keen on pulling DT
+>> specifics into this layer. More than that, though, if we are going to do
+>> it, then we should do it for all devices with a restrictive
+>> "dma-ranges", not just PCI ones.
 >>
->
-> I guessed so from the quick glance at it as it needs descriptors with
-> notion of source, sink and links to register. However I felt odd to not
-> group under the same "coresight" bus. As someone with least knowledge
-> on coresight, I would check under "sys/bus/coresight" to check available
-> devices on the system.
+> 
+> How do you propose to do it ?
+> 
+> my thinking is this:
+> iova_reserve_pci_windows is written specific for PCI, and I am adding there.
+> 
+> ideally
+> struct pci_host_bridge should have new member:
+> 
+> struct list_head inbound_windows; /* resource_entry */
+> 
+> but somehow this resource have to be filled much before
+> iommu_dma_init_domain happens.
+> and use brdge resource directly in iova_reserve_pci_windows as it is
+> already doing it for outbound memory.
+> 
+> this will detach the DT specifics from dma-immu layer.
+> let me know how this sounds.
 
-2 years ago when implementing the coresight framework, using
-"coresight" sounded like a logical choice but in hindsight it probably
-should have been something like coresight-hat (HW Assisted Tracing).
-That would have been a better representation of the reality, i.e the
-term "coresight" being an umbrella for many kind of technology.  Leo
-has done the right thing here with "coresight-cpu-debug".
+Please check the state of the code currently queued in Joerg's tree and
+in linux-next - iommu_dma_get_resv_regions() has room for
+device-agnostic stuff before the if (!dev_is_pci(dev)) check.
 
->
-> Anyways that's just my thoughts though I agree with you. It may need
-> more refactoring to support that and it will look hackish if we try to
-> do that with the code as it stands.
->
-> --
-> Regards,
-> Sudeep
+Furthermore, with the probe-deferral changes we end up with a common
+dma_configure() routine to abstract the firmware-specifics of
+of_dma_configure() vs. acpi_dma_configure(), so it would make sense to
+give drivers etc. a similar interface for interrogating ranges. i.e.
+some common function that abstracts the difference between parsing DT
+dma-ranges vs. the ACPI _DMA object, either with a list-based get/put
+model or perhaps an iterator with a user-provided callback (so users
+could process in-place or create their own list as necessary). Unless of
+course we go all the way to making the ranges an inherent part of the
+device layer like some MIPS platforms currently do.
+
+Robin.
+
+>>> Bug: SOC-5216
+>>> Change-Id: Icbfc99a045d730be143fef427098c937b9d46353
+>>> Signed-off-by: Oza Pawandeep <oza.oza-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+>>> Reviewed-on: http://gerrit-ccxsw.broadcom.net/40760
+>>> Reviewed-by: vpx_checkpatch status <vpx_checkpatch-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+>>> Reviewed-by: CCXSW <ccxswbuild-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+>>> Tested-by: vpx_autobuild status <vpx_autobuild-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+>>> Tested-by: vpx_smoketest status <vpx_smoketest-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+>>> Tested-by: CCXSW <ccxswbuild-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+>>> Reviewed-by: Scott Branden <scott.branden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+>>>
+>>> diff --git a/drivers/iommu/dma-iommu.c b/drivers/iommu/dma-iommu.c
+>>> index 48d36ce..08764b0 100644
+>>> --- a/drivers/iommu/dma-iommu.c
+>>> +++ b/drivers/iommu/dma-iommu.c
+>>> @@ -27,6 +27,7 @@
+>>>  #include <linux/iova.h>
+>>>  #include <linux/irq.h>
+>>>  #include <linux/mm.h>
+>>> +#include <linux/of_pci.h>
+>>>  #include <linux/pci.h>
+>>>  #include <linux/scatterlist.h>
+>>>  #include <linux/vmalloc.h>
+>>> @@ -171,8 +172,12 @@ static void iova_reserve_pci_windows(struct pci_dev *dev,
+>>>               struct iova_domain *iovad)
+>>>  {
+>>>       struct pci_host_bridge *bridge = pci_find_host_bridge(dev->bus);
+>>> +     struct device_node *np = bridge->dev.parent->of_node;
+>>>       struct resource_entry *window;
+>>>       unsigned long lo, hi;
+>>> +     int ret;
+>>> +     dma_addr_t tmp_dma_addr = 0, dma_addr;
+>>> +     LIST_HEAD(res);
+>>>
+>>>       resource_list_for_each_entry(window, &bridge->windows) {
+>>>               if (resource_type(window->res) != IORESOURCE_MEM &&
+>>> @@ -183,6 +188,36 @@ static void iova_reserve_pci_windows(struct pci_dev *dev,
+>>>               hi = iova_pfn(iovad, window->res->end - window->offset);
+>>>               reserve_iova(iovad, lo, hi);
+>>>       }
+>>> +
+>>> +     /* PCI inbound memory reservation. */
+>>> +     ret = of_pci_get_dma_ranges(np, &res);
+>>> +     if (!ret) {
+>>> +             resource_list_for_each_entry(window, &res) {
+>>> +                     struct resource *res_dma = window->res;
+>>> +
+>>> +                     dma_addr = res_dma->start - window->offset;
+>>> +                     if (tmp_dma_addr > dma_addr) {
+>>> +                             pr_warn("PCI: failed to reserve iovas; ranges should be sorted\n");
+>>
+>> I don't see anything in the DT spec about the entries having to be
+>> sorted, and it's not exactly impossible to sort a list if you need it so
+>> (and if I'm being really pedantic, one could still trigger this with a
+>> list that *is* sorted, only by different criteria).
+>>
+> 
+> we have to sort it the way we want then. I can make it sort then.
+> thanks for the suggestion.
+> 
+>> Robin.
+>>
+>>> +                             return;
+>>> +                     }
+>>> +                     if (tmp_dma_addr != dma_addr) {
+>>> +                             lo = iova_pfn(iovad, tmp_dma_addr);
+>>> +                             hi = iova_pfn(iovad, dma_addr - 1);
+>>> +                             reserve_iova(iovad, lo, hi);
+>>> +                     }
+>>> +                     tmp_dma_addr = window->res->end - window->offset;
+>>> +             }
+>>> +             /*
+>>> +              * the last dma-range should honour based on the
+>>> +              * 32/64-bit dma addresses.
+>>> +              */
+>>> +             if (tmp_dma_addr < DMA_BIT_MASK(sizeof(dma_addr_t) * 8)) {
+>>> +                     lo = iova_pfn(iovad, tmp_dma_addr);
+>>> +                     hi = iova_pfn(iovad,
+>>> +                                   DMA_BIT_MASK(sizeof(dma_addr_t) * 8) - 1);
+>>> +                     reserve_iova(iovad, lo, hi);
+>>> +             }
+>>> +     }
+>>>  }
+>>>
+>>>  /**
+>>>
+>>
