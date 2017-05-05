@@ -1,48 +1,33 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH v4 3/5] soc: qcom: Introduce APCS IPC driver
-Date: Fri, 5 May 2017 11:37:29 -0700
-Message-ID: <20170505183729.GG15143@minitux>
-References: <20170504200539.27027-1-bjorn.andersson@linaro.org>
- <20170504200539.27027-3-bjorn.andersson@linaro.org>
- <CABb+yY2P=qPTYB6PDkjV82Qc67Xzer40BHRsOQP2m-gM3eK_UA@mail.gmail.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH] [RFC] of/platform: Make of_dev_node_match() helper public
+Date: Fri, 5 May 2017 13:50:53 -0500
+Message-ID: <CAL_JsqKn8CVTMvjD_JwBUENXs9YgsybkVv1PeLQHMB0EDMWbrg@mail.gmail.com>
+References: <1493995961-11828-1-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CABb+yY2P=qPTYB6PDkjV82Qc67Xzer40BHRsOQP2m-gM3eK_UA@mail.gmail.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Jassi Brar <jassisinghbrar@gmail.com>
-Cc: Andy Gross <andy.gross@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ohad Ben-Cohen <ohad@wizery.com>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, Devicetree List <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-remoteproc@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1493995961-11828-1-git-send-email-geert+renesas@glider.be>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Frank Rowand <frowand.list@gmail.com>, Mathieu Poirier <mathieu.poirier@linaro.org>, Wolfram Sang <wsa@the-dreams.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri 05 May 03:26 PDT 2017, Jassi Brar wrote:
+On Fri, May 5, 2017 at 9:52 AM, Geert Uytterhoeven
+<geert+renesas@glider.be> wrote:
+> Several drivers provide their own match functions, identical to
+> of_dev_node_match() in the OF platform core.
+>
+> Reduce duplication by making of_dev_node_match() public.
+> To avoid conflicts, the duplicates in coresight and i2c must be removed
+> at the same time.
 
-> On Fri, May 5, 2017 at 1:35 AM, Bjorn Andersson
-> <bjorn.andersson@linaro.org> wrote:
-> 
-> > +
-> > +static int qcom_apcs_ipc_send_data(struct mbox_chan *chan, void *data)
-> > +{
-> > +       struct qcom_apcs_ipc *apcs = container_of(chan->mbox,
-> > +                                                 struct qcom_apcs_ipc, mbox);
-> > +       unsigned long idx = (unsigned long)chan->con_priv;
-> > +
-> > +       writel(BIT(idx), apcs->base + apcs->offset);
-> > +
-> When/how does this bit get ever cleared again?
-> You may want to add last_tx_done() callback to check if this bit is
-> cleared before you can send the next interrupt. And set
-> txdone_poll/irq accordingly.
-> 
+I think you are down one level too far. At least the 2 users here are
+just for calls to bus_find_device. We already have a function for that
+with of_find_device_by_node at least for platform devices. Perhaps
+rework that to be "struct device *of_find_bus_device_by_node(struct
+bus_type *b, struct device_node *np)" and then wrappers for each bus
+type. And perhaps make a class variant as well. However, we should
+also consider if OF is the right level. Maybe it should be fwnode
+functions?
 
-It's a write-only register, writing a bit fires off an edge triggered
-interrupt on the specific remote processor, which will ack the
-associated IRQ status and handle the interrupt.
-
-As the "message" is just a notification to the other side that it needs
-to act on "something", there's no harm in notifying it multiple times
-before it has a chance to ack the IRQ and a write after that will be
-seen as a separate interrupt.
-
-Regards,
-Bjorn
+Rob
