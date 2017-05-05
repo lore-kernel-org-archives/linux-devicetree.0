@@ -1,95 +1,57 @@
-From: Adam Ford <aford173-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 0/4] TI Bluetooth serdev support
-Date: Fri, 5 May 2017 09:51:33 -0500
-Message-ID: <CAHCN7x+Mq=b6RN-ezU0400W=H=D7DR+Es1FHtT4GyozpVd8ALA@mail.gmail.com>
-References: <20170405183005.20570-1-robh@kernel.org> <CAHCN7xJUxZm1qKAxT0kaK6qoDg+HWOJK7sTH-q9za4HJuUwe8Q@mail.gmail.com>
- <20170430160430.rmyuo6sdrkrjxjg6@earth>
+From: Thor Thayer <thor.thayer-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Subject: Re: [PATCH 2/3] Documentation: dt: i2c: Add Altera I2C Controller
+Date: Fri, 5 May 2017 09:55:32 -0500
+Message-ID: <48fd6b40-31e5-d260-2c98-53204bdbe5cb@linux.intel.com>
+References: <1491926547-29510-1-git-send-email-thor.thayer@linux.intel.com>
+ <1491926547-29510-3-git-send-email-thor.thayer@linux.intel.com>
+ <20170413212240.uxwh5525baqmgny4@rob-hp-laptop>
+ <7c803e53-5c1b-cd59-6c59-5a32b07edcb8@linux.intel.com>
+ <CAL_JsqLcrFsRDXfVUtnvUT+RWuk-eduJKV9vN94_d9TswEuCdQ@mail.gmail.com>
+Reply-To: thor.thayer-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170430160430.rmyuo6sdrkrjxjg6@earth>
+In-Reply-To: <CAL_JsqLcrFsRDXfVUtnvUT+RWuk-eduJKV9vN94_d9TswEuCdQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Marcel Holtmann <marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org>, linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Johan Hedberg <johan.hedberg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gustavo Padovan <gustavo-THi1TnShQwVAfugRpC6u6w@public.gmane.org>, Satish Patel <satish.patel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Eyal Reizer <eyalr-l0cyMroinI0@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: "wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org" <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, "linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Apr 30, 2017 at 11:04 AM, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> Hi,
->
-> On Sun, Apr 30, 2017 at 10:14:20AM -0500, Adam Ford wrote:
->> On Wed, Apr 5, 2017 at 1:30 PM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
->> > This series adds serdev support to the HCI LL protocol used on TI BT
->> > modules and enables support on HiKey board with with the WL1835 module.
->> > With this the custom TI UIM daemon and btattach are no longer needed.
+On 04/20/2017 10:47 AM, Rob Herring wrote:
+> On Fri, Apr 14, 2017 at 8:46 AM, Thor Thayer
+> <thor.thayer-VuQAYsv1563Yd54FQh9/CA@public.gmane.org> wrote:
+>> Hi Rob,
 >>
->> Without UIM daemon, what instruction do you use to load the BT firmware?
->>
->> I was thinking 'hciattach' but I was having trouble.  I was hoping you
->> might have some insight.
->>
->>  hciattach -t 30 -s 115200 /dev/ttymxc1 texas 3000000 flow  Just
->> returns a timeout.
->>
->> I modified my i.MX6 device tree per the binding documentation and
->> setup the regulators and enable GPIO pins.
+>> On 04/13/2017 04:22 PM, Rob Herring wrote:
+>>>
+>>> On Tue, Apr 11, 2017 at 11:02:26AM -0500, thor.thayer-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
+>>> wrote:
+>>>>
+>>>> From: Thor Thayer <thor.thayer-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
 >
-> If you configured everything correctly no userspace interaction is
-> required. The driver should request the firmware automatically once
-> you power up the bluetooth device.
+> [...]
 >
-> Apart from DT changes make sure, that the following options are
-> enabled and check dmesg for any hints.
+>>>> +Required properties :
+>>>> + - compatible : should be "altr,sip-i2c"
+>>>
+>>>
+>>> Seems kind of generic.
+>>>
+>> I'm using sip for soft IP - right now we only offer 1 flavor.
 >
-> CONFIG_SERIAL_DEV_BUS
-> CONFIG_SERIAL_DEV_CTRL_TTYPORT
-> CONFIG_BT_HCIUART
-> CONFIG_BT_HCIUART_LL
+> There is no versioning or release numbering associated with it?
 >
+> Rob
+>
+Hi Rob,
 
+No. After double checking with the soft IP owners, there isn't any 
+versioning or release number for this.
 
-I have enabled those flags, and I have updated my device tree.
-I am testing this on an OMAP3630 (DM3730) board with a WL1283.  I am
-getting a lot of timeout errors.  I tested this against the original
-implemention I had in pdata-quirks.c using the ti-st driver, uim & and
-the btwilink driver.
+Thanks,
 
-I pulled in some of the newer patches to enable the wl1283-st, but I
-am obviously missing something.
-
-I   58.717651] Bluetooth: hci0: Reading TI version information failed
-(-110)
-[   58.724853] Bluetooth: hci0: download firmware failed, retrying...
-[   60.957641] Bluetooth: hci0 command 0x1001 tx timeout
-[   68.957641] Bluetooth: hci0: Reading TI version information failed
-(-110)
-[   68.964843] Bluetooth: hci0: download firmware failed, retrying...
-[   69.132171] Bluetooth: Unknown HCI packet type 06
-[   69.138244] Bluetooth: Unknown HCI packet type 0c
-[   69.143249] Bluetooth: Unknown HCI packet type 40
-[   69.148498] Bluetooth: Unknown HCI packet type 20
-[   69.153533] Bluetooth: Data length is too large
-[   69.158569] Bluetooth: Unknown HCI packet type a0
-[   69.163574] Bluetooth: Unknown HCI packet type 00
-[   69.168731] Bluetooth: Unknown HCI packet type 00
-[   69.173736] Bluetooth: Unknown HCI packet type 34
-[   69.178924] Bluetooth: Unknown HCI packet type 91
-[   71.197631] Bluetooth: hci0 command 0x1001 tx timeout
-[   79.197662] Bluetooth: hci0: Reading TI version information failed (-110)
-
-Since the pdata-quirks and original ti-st drivers work together, I
-know the hardware is fine.  The only change to the device tree is the
-addition of the Bluetooth container:
-
-bluetooth {
-  compatible = "ti,wl1283-st";
-  enable-gpios = <&gpio6 2 GPIO_ACTIVE_HIGH>;
-};
-
-Any thoughts or suggestions to try?  I get similar behavior on an
-i.MX6 board with a wl1837-st module as well.
-
-adam
-> -- Sebastian
+Thor
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
