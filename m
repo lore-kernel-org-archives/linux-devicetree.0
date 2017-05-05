@@ -1,44 +1,48 @@
 From: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Subject: [RFC v2 0/3] Document bindings for camera modules and associated flash devices
-Date: Fri,  5 May 2017 11:48:27 +0300
-Message-ID: <1493974110-26510-1-git-send-email-sakari.ailus@linux.intel.com>
+Subject: [RFC v2 1/3] dt: bindings: Add a binding for flash devices associated to a sensor
+Date: Fri,  5 May 2017 11:48:28 +0300
+Message-ID: <1493974110-26510-2-git-send-email-sakari.ailus@linux.intel.com>
+References: <1493974110-26510-1-git-send-email-sakari.ailus@linux.intel.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1493974110-26510-1-git-send-email-sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 Cc: pavel-+ZI9xUNit7I@public.gmane.org, sebastian.reichel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This RFC patchset documents properties commonly required by camera modules
-and associated camera flash devices.
+Camera flash drivers (and LEDs) are separate from the sensor devices in
+DT. In order to make an association between the two, provide the
+association information to the software.
 
-The camera module is essentially a package consisting of an image sensor, 
-a lens, possibly a voice coil to move the lens and a number of other
-things that at least the drivers need not to know of. All the devices in a
-camera module are declared separately in the system and as such the fact
-that they come in a single package isn't generally very useful to driver
-software. 
+Signed-off-by: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Acked-by: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
+Reviewed-by: Sebastian Reichel <sebastian.reichel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+---
+ Documentation/devicetree/bindings/media/video-interfaces.txt | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-I'm sending the set as RFC as there's no driver implementation, and a 
-dependency to the V4L2 async changes:
-
-<URL:http://www.spinics.net/lists/linux-media/msg114915.html>
-
-since RFC v1:
-
-- Remove sentences elaborating applicability of the bindings.
-
-- Say a LED driver is a piece of hardware.
-
-- Otherwise reformulate the descriptions according to the comments.
-
-Sakari Ailus (3):
-  dt: bindings: Add a binding for flash devices associated to a sensor
-  dt: bindings: Add lens-focus binding for image sensors
-  dt: bindings: Add a binding for referencing EEPROM from camera sensors
-
- .../devicetree/bindings/media/video-interfaces.txt       | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
-
+diff --git a/Documentation/devicetree/bindings/media/video-interfaces.txt b/Documentation/devicetree/bindings/media/video-interfaces.txt
+index 9cd2a36..dac764b 100644
+--- a/Documentation/devicetree/bindings/media/video-interfaces.txt
++++ b/Documentation/devicetree/bindings/media/video-interfaces.txt
+@@ -67,6 +67,17 @@ are required in a relevant parent node:
+ 		    identifier, should be 1.
+  - #size-cells    : should be zero.
+ 
++
++Optional properties
++-------------------
++
++- flash: An array of phandles that refer to the flash light sources
++  related to an image sensor. These could be e.g. LEDs. In case the LED
++  driver (current sink or source chip for the LED(s)) drives more than a
++  single LED, then the phandles here refer to the child nodes of the LED
++  driver describing individual LEDs.
++
++
+ Optional endpoint properties
+ ----------------------------
+ 
 -- 
 2.7.4
 
