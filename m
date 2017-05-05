@@ -1,130 +1,215 @@
 From: Hans Verkuil <hverkuil@xs4all.nl>
-Subject: Re: [PATCH v4 3/7] media: i2c: max2175: Add MAX2175 support
-Date: Fri, 5 May 2017 14:13:59 +0200
-Message-ID: <f4cda576-5ed1-05d0-1651-bc284387022c@xs4all.nl>
+Subject: Re: [PATCH v4 0/7] Add V4L2 SDR (DRIF & MAX2175) driver
+Date: Fri, 5 May 2017 14:17:25 +0200
+Message-ID: <e534e24a-56f6-b693-522c-0a4a924b859a@xs4all.nl>
 References: <20170502132615.42134-1-ramesh.shanmugasundaram@bp.renesas.com>
- <20170502132615.42134-4-ramesh.shanmugasundaram@bp.renesas.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <20170502132615.42134-4-ramesh.shanmugasundaram@bp.renesas.com>
+In-Reply-To: <20170502132615.42134-1-ramesh.shanmugasundaram@bp.renesas.com>
 Sender: linux-renesas-soc-owner@vger.kernel.org
 To: Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>, robh+dt@kernel.org, mark.rutland@arm.com, mchehab@kernel.org, sakari.ailus@linux.intel.com, crope@iki.fi
 Cc: chris.paterson2@renesas.com, laurent.pinchart@ideasonboard.com, geert+renesas@glider.be, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Ramesh,
+
+Looks good. I replied to patch 3/7 requesting a small change, but otherwise
+I'm OK.
+
+The only thing missing is an Ack from Rob for patch 6/7 (R-car DRIF bindings).
+
+Once I have that + an updated patch 3/7 I can make a pull request for this.
+
+Regards,
+
+	Hans
+
 On 05/02/17 15:26, Ramesh Shanmugasundaram wrote:
-> This patch adds driver support for the MAX2175 chip. This is Maxim
-> Integrated's RF to Bits tuner front end chip designed for software-defined
-> radio solutions. This driver exposes the tuner as a sub-device instance
-> with standard and custom controls to configure the device.
+> Hi Media, DT maintainers, All,
 > 
-> Signed-off-by: Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>
-> ---
-> v4:
->  - Addressed v4l2_ctrl name string convention (Hans)
->   - "HSLS above/below" to "HSLS Above/Below"
->   - "RX MODE" to "RX Mode"
-> ---
->  Documentation/media/v4l-drivers/index.rst   |    1 +
->  Documentation/media/v4l-drivers/max2175.rst |   60 ++
->  drivers/media/i2c/Kconfig                   |    4 +
->  drivers/media/i2c/Makefile                  |    2 +
->  drivers/media/i2c/max2175/Kconfig           |    8 +
->  drivers/media/i2c/max2175/Makefile          |    4 +
->  drivers/media/i2c/max2175/max2175.c         | 1437 +++++++++++++++++++++++++++
->  drivers/media/i2c/max2175/max2175.h         |  108 ++
->  8 files changed, 1624 insertions(+)
+> This patch set contains two drivers
+>  - Renesas R-Car Digital Radio Interface (DRIF) driver
+>  - Maxim's MAX2175 RF to Bits tuner driver
+> 
+> These patches were based on top of media-next repo
+> commit:6d95b3f24881c0fd0f345eca959a2a803a040930
+> 
+> These two drivers combined together expose a V4L2 SDR device that is compliant with the V4L2 framework [1]. Agreed review comments are incorporated in this series.
+> 
+> The rcar_drif device is modelled using "renesas,bonding" property. The discussion on this property is available here [2].
+> 
+> Change history:
+> 
+> v3 -> v4:
+>  - Added ACKs
+> rcar_drif:
+>  - Incorporated a number of review comments from Laurent on DRIF driver.
+>  - Addressed comments from Rob and Laurent on bindings.
+> max2175:
+>  - Minor changes addressing Hans and Laurent's comments
+> 
+> v2 -> v3:
+> rcar_drif:
+>  - Reduced DRIF DT properties to expose tested I2S mode only (Hans - discussion on #v4l)
+>  - Fixed error path clean up of ctrl_hdl on rcar_drif
+> 
+> v1 -> v2:
+>  - SDR formats renamed as "planar" instead of sliced (Hans)
+>  - Documentation formatting correction (Laurent)
+> 
+>  rcar_drif:
+>  - DT model using "bonding" property
+>  - Addressed Laurent's coments on bindings - DT optional parameters rename & rework
+>  - Addressed Han's comments on driver
+>  - Addressed Geert's comments on DT
+> 
+>  max2175:
+>  - Avoided scaling using method proposed by Antti. Thanks
+>  - Bindings is a separate patch (Rob)
+>  - Addressed Rob's comment on bindings
+>  - Added Custom controls documentation (Laurent)
+> 
+> [1] v4l2-compliance report:
+> root@salvator-x:~# v4l2-compliance -S /dev/swradio0
+> v4l2-compliance SHA   : b514d615166bdc0901a4c71261b87db31e89f464
+> 
+> Driver Info:
+>         Driver name   : rcar_drif
+>         Card type     : R-Car DRIF
+>         Bus info      : platform:R-Car DRIF
+>         Driver version: 4.11.0
+>         Capabilities  : 0x85310000
+>                 SDR Capture
+>                 Tuner
+>                 Read/Write
+>                 Streaming
+>                 Extended Pix Format
+>                 Device Capabilities
+>         Device Caps   : 0x05310000
+>                 SDR Capture
+>                 Tuner
+>                 Read/Write
+>                 Streaming
+>                 Extended Pix Format
+> 
+> Compliance test for device /dev/swradio0 (not using libv4l2):
+> 
+> Required ioctls:
+>         test VIDIOC_QUERYCAP: OK
+> 
+> Allow for multiple opens:
+>         test second sdr open: OK
+>         test VIDIOC_QUERYCAP: OK
+>         test VIDIOC_G/S_PRIORITY: OK
+>         test for unlimited opens: OK
+> 
+> Debug ioctls:
+>         test VIDIOC_DBG_G/S_REGISTER: OK
+>         test VIDIOC_LOG_STATUS: OK
+> 
+> Input ioctls:
+>         test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK
+>         test VIDIOC_G/S_FREQUENCY: OK
+>         test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
+>         test VIDIOC_ENUMAUDIO: OK (Not Supported)
+>         test VIDIOC_G/S/ENUMINPUT: OK (Not Supported)
+>         test VIDIOC_G/S_AUDIO: OK (Not Supported)
+>         Inputs: 0 Audio Inputs: 0 Tuners: 1
+> 
+> Output ioctls:
+>         test VIDIOC_G/S_MODULATOR: OK (Not Supported)
+>         test VIDIOC_G/S_FREQUENCY: OK
+>         test VIDIOC_ENUMAUDOUT: OK (Not Supported)
+>         test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
+>         test VIDIOC_G/S_AUDOUT: OK (Not Supported)
+>         Outputs: 0 Audio Outputs: 0 Modulators: 0
+> 
+> Input/Output configuration ioctls:
+>         test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
+>         test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
+>         test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
+>         test VIDIOC_G/S_EDID: OK (Not Supported)
+> 
+>         Control ioctls:
+>                 test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK
+>                 test VIDIOC_QUERYCTRL: OK
+>                 test VIDIOC_G/S_CTRL: OK
+>                 test VIDIOC_G/S/TRY_EXT_CTRLS: OK
+>                 test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK
+>                 test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
+>                 Standard Controls: 5 Private Controls: 3
+> 
+>         Format ioctls:
+>                 test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
+>                 test VIDIOC_G/S_PARM: OK (Not Supported)
+>                 test VIDIOC_G_FBUF: OK (Not Supported)
+>                 test VIDIOC_G_FMT: OK
+>                 test VIDIOC_TRY_FMT: OK
+>                 test VIDIOC_S_FMT: OK
+>                 test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
+>                 test Cropping: OK (Not Supported)
+>                 test Composing: OK (Not Supported)
+>                 test Scaling: OK (Not Supported)
+> 
+>         Codec ioctls:
+>                 test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
+>                 test VIDIOC_G_ENC_INDEX: OK (Not Supported)
+>                 test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
+> 
+>         Buffer ioctls:
+>                 test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK
+>                 test VIDIOC_EXPBUF: OK (Not Supported)
+> 
+> Test input 0:
+> 
+> 
+> Total: 43, Succeeded: 43, Failed: 0, Warnings: 0
+> root@salvator-x:~#
+> 
+> [2] "bonding" DT property discussion (https://www.mail-archive.com/linux-renesas-soc@vger.kernel.org/msg09415.html)
+> 
+> Ramesh Shanmugasundaram (7):
+>   media: v4l2-ctrls: Reserve controls for MAX217X
+>   dt-bindings: media: Add MAX2175 binding description
+>   media: i2c: max2175: Add MAX2175 support
+>   media: Add new SDR formats PC16, PC18 & PC20
+>   doc_rst: media: New SDR formats PC16, PC18 & PC20
+>   dt-bindings: media: Add Renesas R-Car DRIF binding
+>   media: platform: rcar_drif: Add DRIF support
+> 
+>  .../devicetree/bindings/media/i2c/max2175.txt      |   61 +
+>  .../devicetree/bindings/media/renesas,drif.txt     |  187 +++
+>  .../devicetree/bindings/property-units.txt         |    1 +
+>  .../media/uapi/v4l/pixfmt-sdr-pcu16be.rst          |   55 +
+>  .../media/uapi/v4l/pixfmt-sdr-pcu18be.rst          |   55 +
+>  .../media/uapi/v4l/pixfmt-sdr-pcu20be.rst          |   54 +
+>  Documentation/media/uapi/v4l/sdr-formats.rst       |    3 +
+>  Documentation/media/v4l-drivers/index.rst          |    1 +
+>  Documentation/media/v4l-drivers/max2175.rst        |   60 +
+>  drivers/media/i2c/Kconfig                          |    4 +
+>  drivers/media/i2c/Makefile                         |    2 +
+>  drivers/media/i2c/max2175/Kconfig                  |    8 +
+>  drivers/media/i2c/max2175/Makefile                 |    4 +
+>  drivers/media/i2c/max2175/max2175.c                | 1437 +++++++++++++++++++
+>  drivers/media/i2c/max2175/max2175.h                |  108 ++
+>  drivers/media/platform/Kconfig                     |   25 +
+>  drivers/media/platform/Makefile                    |    1 +
+>  drivers/media/platform/rcar_drif.c                 | 1488 ++++++++++++++++++++
+>  drivers/media/v4l2-core/v4l2-ioctl.c               |    3 +
+>  include/uapi/linux/v4l2-controls.h                 |    5 +
+>  include/uapi/linux/videodev2.h                     |    3 +
+>  21 files changed, 3565 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/i2c/max2175.txt
+>  create mode 100644 Documentation/devicetree/bindings/media/renesas,drif.txt
+>  create mode 100644 Documentation/media/uapi/v4l/pixfmt-sdr-pcu16be.rst
+>  create mode 100644 Documentation/media/uapi/v4l/pixfmt-sdr-pcu18be.rst
+>  create mode 100644 Documentation/media/uapi/v4l/pixfmt-sdr-pcu20be.rst
 >  create mode 100644 Documentation/media/v4l-drivers/max2175.rst
 >  create mode 100644 drivers/media/i2c/max2175/Kconfig
 >  create mode 100644 drivers/media/i2c/max2175/Makefile
 >  create mode 100644 drivers/media/i2c/max2175/max2175.c
 >  create mode 100644 drivers/media/i2c/max2175/max2175.h
+>  create mode 100644 drivers/media/platform/rcar_drif.c
 > 
-> diff --git a/Documentation/media/v4l-drivers/index.rst b/Documentation/media/v4l-drivers/index.rst
-> index a606d1cdac13..d8cade53d496 100644
-> --- a/Documentation/media/v4l-drivers/index.rst
-> +++ b/Documentation/media/v4l-drivers/index.rst
-> @@ -42,6 +42,7 @@ For more details see the file COPYING in the source distribution of Linux.
->  	davinci-vpbe
->  	fimc
->  	ivtv
-> +        max2175
->  	meye
->  	omap3isp
->  	omap4_camera
-> diff --git a/Documentation/media/v4l-drivers/max2175.rst b/Documentation/media/v4l-drivers/max2175.rst
-> new file mode 100644
-> index 000000000000..201af8f217e9
-> --- /dev/null
-> +++ b/Documentation/media/v4l-drivers/max2175.rst
-> @@ -0,0 +1,60 @@
-> +Maxim Integrated MAX2175 RF to bits tuner driver
-> +================================================
-> +
-> +The MAX2175 driver implements the following driver-specific controls:
-> +
-> +``V4L2_CID_MAX2175_I2S_ENABLE``
-> +-------------------------------
-> +    Enable/Disable I2S output of the tuner.
-> +
-> +.. flat-table::
-> +    :header-rows:  0
-> +    :stub-columns: 0
-> +    :widths:       1 4
-> +
-> +    * - ``(0)``
-> +      - I2S output is disabled.
-> +    * - ``(1)``
-> +      - I2S output is enabled.
-> +
-> +``V4L2_CID_MAX2175_HSLS``
-> +-------------------------
-> +    The high-side/low-side (HSLS) control of the tuner for a given band.
-> +
-> +.. flat-table::
-> +    :header-rows:  0
-> +    :stub-columns: 0
-> +    :widths:       1 4
-> +
-> +    * - ``(0)``
-> +      - The LO frequency position is below the desired frequency.
-> +    * - ``(1)``
-> +      - The LO frequency position is above the desired frequency.
-> +
-> +``V4L2_CID_MAX2175_RX_MODE (menu)``
-> +-----------------------------------
-> +    The Rx mode controls a number of preset parameters of the tuner like sck
-
-'sck' is short of 'sample clock' or something like that? I recommend that you
-write this in full at least once in this documentation.
-
-> +    rate, sampling rate etc. These multiple settings are provided under one
-> +    single label called Rx mode in the datasheet. The list below shows the
-> +    supported modes with a brief description.
-> +
-> +.. flat-table::
-> +    :header-rows:  0
-> +    :stub-columns: 0
-> +    :widths:       1 4
-> +
-> +    * - ``"Europe modes"``
-> +    * - ``"FM 1.2" (0)``
-> +      - This configures FM band with a sample rate of 0.512 million
-> +        samples/sec with a 10.24 MHz sck.
-> +    * - ``"DAB 1.2" (1)``
-> +      - This configures VHF band with a sample rate of 2.048 million
-> +        samples/sec with a 32.768 MHz sck.
-> +
-> +    * - ``"North America modes"``
-> +    * - ``"FM 1.0" (0)``
-> +      - This configures FM band with a sample rate of 0.7441875 million
-> +        samples/sec with a 14.88375 MHz sck.
-> +    * - ``"DAB 1.2" (1)``
-> +      - This configures FM band with a sample rate of 0.372 million
-> +        samples/sec with a 7.441875 MHz sck.
-
-Regards,
-
-	Hans
