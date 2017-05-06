@@ -1,75 +1,54 @@
-From: <john.faust-H4SBLDCxrCifRvmTrFJqzg@public.gmane.org>
-Subject: 65138 devicetree
-Date: Sat, 06 May 2017 02:21:36 -0000
-Message-ID: <149403729634.19573.15958175713967109279@vnpt.vn>
+From: Jassi Brar <jassisinghbrar@gmail.com>
+Subject: Re: [PATCH v4 3/5] soc: qcom: Introduce APCS IPC driver
+Date: Sat, 6 May 2017 10:18:09 +0530
+Message-ID: <CABb+yY1u9mspX1Zu0mg21JMYxpKxsXsvBa9LnF6VNr1_42UJUQ@mail.gmail.com>
+References: <20170504200539.27027-1-bjorn.andersson@linaro.org>
+ <20170504200539.27027-3-bjorn.andersson@linaro.org> <CABb+yY2P=qPTYB6PDkjV82Qc67Xzer40BHRsOQP2m-gM3eK_UA@mail.gmail.com>
+ <20170505183729.GG15143@minitux> <CABb+yY03imq8911rF9dHJjG_a_aosksA=tgk7Rog5AZSezHDyg@mail.gmail.com>
+ <338c4262-cc6b-bed2-16fe-1767d1f0d5f6@codeaurora.org> <CABb+yY1K3Hyn7CzQCA6tHu-KrPigARc3cYgBdT8PNX7vjhPK0g@mail.gmail.com>
+ <20170506011920.GH15143@minitux>
 Mime-Version: 1.0
-Content-Type: application/zip; name="561479742571549.zip"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: attachment
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <20170506011920.GH15143@minitux>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Jeffrey Hugo <jhugo@codeaurora.org>, Andy Gross <andy.gross@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ohad Ben-Cohen <ohad@wizery.com>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, Devicetree List <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-remoteproc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-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
-BQYAAAAAAQABAFsAAABUDAAAAAA=
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On Sat, May 6, 2017 at 6:49 AM, Bjorn Andersson
+<bjorn.andersson@linaro.org> wrote:
+> On Fri 05 May 13:22 PDT 2017, Jassi Brar wrote:
+
+>> How is it supposed to work if a client queues more than one request?
+>
+> One such example is found in patch 5 in this series. There are two FIFOs
+> in shared memory, one in each direction. Each fifo has a index-pair
+> associated; a write-index is used by the writer to inform the reader
+> where the valid data in the ring buffer ends and a read-index indicates
+> to the writer how far behind the read is.
+>
+> The writer will just push data into the FIFO, each time firing off an
+> APCS IPC interrupt and when the remote interrupt handler runs it will
+> consume all the messages from the read-index to the write-index. All
+> without the need for the reader to signal the writer that it has
+> received the interrupts.
+>
+> In the event that the write-index catches up with the read-index a
+> dedicated flag is set which will cause the reader to signal that the
+> read-index is updated - allowing the writer to sleep waiting for room in
+> the FIFO.
+>
+Interesting.Just for my enlightenment...
+
+  Where does the writer sleep in the driver? I see it simply sets the
+bit and leave.
+Such a flag (or head and tail pointers matching) should be checked in
+last_tx_done()
+
+If you think RPM will _always_ be ready to accept new messages (though
+we have seen that doesn't hold in some situations), then you don't
+need last_tx_done. The client should call mbox_client_txdone() after
+mbox_send_message().
+
+thnx
