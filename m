@@ -1,88 +1,48 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH 2/4] ata: Add DT bindings for the Gemini SATA bridge
-Date: Sat,  6 May 2017 14:10:51 +0200
-Message-ID: <20170506121053.11554-2-linus.walleij@linaro.org>
-References: <20170506121053.11554-1-linus.walleij@linaro.org>
-Return-path: <linux-ide-owner@vger.kernel.org>
-In-Reply-To: <20170506121053.11554-1-linus.walleij@linaro.org>
-Sender: linux-ide-owner@vger.kernel.org
-To: Tejun Heo <tj@kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, linux-ide@vger.kernel.org
-Cc: Janos Laube <janos.dev@gmail.com>, Paulius Zaleckas <paulius.zaleckas@gmail.com>, openwrt-devel@openwrt.org, linux-arm-kernel@lists.infradead.org, Hans Ulli Kroll <ulli.kroll@googlemail.com>, Florian Fainelli <f.fainelli@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, devicetree@vger.kernel.org, John Feng-Hsin Chiang <john453@faraday-tech.com>, Greentime Hu <green.hu@gmail.com>
+From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Subject: [PATCH v4 1/3] iio: adc: meson-saradc: mark all meson_sar_adc_data static and const
+Date: Sat,  6 May 2017 15:49:27 +0200
+Message-ID: <20170506134929.31190-2-martin.blumenstingl@googlemail.com>
+References: <20170506134929.31190-1-martin.blumenstingl@googlemail.com>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170506134929.31190-1-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, thomas.langer-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This adds device tree bindings for the Cortina Systems Gemini
-PATA to SATA bridge.
+These are only passed as of_device_id.data and never modified. Thus we
+can mark them as static const, just like the of_device_id instances
+where they are used.
 
-Cc: devicetree@vger.kernel.org
-Cc: John Feng-Hsin Chiang <john453@faraday-tech.com>
-Cc: Greentime Hu <green.hu@gmail.com>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 ---
- .../bindings/ata/cortina,gemini-sata-bridge.txt    | 55 ++++++++++++++++++++++
- 1 file changed, 55 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/ata/cortina,gemini-sata-bridge.txt
+ drivers/iio/adc/meson_saradc.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/ata/cortina,gemini-sata-bridge.txt b/Documentation/devicetree/bindings/ata/cortina,gemini-sata-bridge.txt
-new file mode 100644
-index 000000000000..9fe92818b2fb
---- /dev/null
-+++ b/Documentation/devicetree/bindings/ata/cortina,gemini-sata-bridge.txt
-@@ -0,0 +1,55 @@
-+* Cortina Systems Gemini SATA Bridge
-+
-+The Gemini SATA bridge in a SoC-internal PATA to SATA bridge that
-+takes two Faraday Technology FTIDE010 PATA controllers and bridges
-+them in different configurations to two SATA ports.
-+
-+Required properties:
-+- compatible: should be
-+  "cortina,gemini-sata-bridge"
-+- reg: registers and size for the block
-+- resets: phandles to the reset lines for both SATA bridges
-+- reset-names: must be "sata0", "sata1"
-+- clocks: phandles to the compulsory peripheral clocks
-+- clock-names: must be "SATA0_PCLK", "SATA1_PCLK"
-+- syscon: a phandle to the global Gemini system controller
-+- cortina,gemini-ata-muxmode: tell the desired multiplexing mode for
-+  the ATA controller and SATA bridges. Values 0..3:
-+  Mode 0: ata0 master <-> sata0
-+          ata1 master <-> sata1
-+          ata0 slave interface brought out on IDE pads
-+  Mode 1: ata0 master <-> sata0
-+          ata1 master <-> sata1
-+          ata1 slave interface brought out on IDE pads
-+  Mode 2: ata1 master <-> sata1
-+          ata1 slave  <-> sata0
-+          ata0 master and slave interfaces brought out
-+               on IDE pads
-+  Mode 3: ata0 master <-> sata0
-+          ata1 slave  <-> sata1
-+          ata1 master and slave interfaces brought out
-+               on IDE pads
-+
-+Optional boolean properties:
-+- cortina,gemini-enable-ide-pins: enables the PATA to IDE connection.
-+  The muxmode setting decides whether ATA0 or ATA1 is brought out,
-+  and whether master, slave or both interfaces get brought out.
-+- cortina,gemini-enable-sata-bridge: enables the PATA to SATA bridge
-+  inside the Gemnini SoC. The Muxmode decides what PATA blocks will
-+  be muxed out and how.
-+
-+Example:
-+
-+sata: sata@46000000 {
-+	compatible = "cortina,gemini-sata-bridge";
-+	reg = <0x46000000 0x100>;
-+	resets = <&rcon 26>, <&rcon 27>;
-+	reset-names = "sata0", "sata1";
-+	clocks = <&gcc GEMINI_CLK_GATE_SATA0>,
-+		 <&gcc GEMINI_CLK_GATE_SATA1>;
-+	clock-names = "SATA0_PCLK", "SATA1_PCLK";
-+	syscon = <&syscon>;
-+	cortina,gemini-ata-muxmode = <3>;
-+	cortina,gemini-enable-ide-pins;
-+	cortina,gemini-enable-sata-bridge;
-+};
+diff --git a/drivers/iio/adc/meson_saradc.c b/drivers/iio/adc/meson_saradc.c
+index dd4190b50df6..2f6fec995264 100644
+--- a/drivers/iio/adc/meson_saradc.c
++++ b/drivers/iio/adc/meson_saradc.c
+@@ -834,17 +834,17 @@ static const struct iio_info meson_sar_adc_iio_info = {
+ 	.driver_module = THIS_MODULE,
+ };
+ 
+-struct meson_sar_adc_data meson_sar_adc_gxbb_data = {
++static const struct meson_sar_adc_data meson_sar_adc_gxbb_data = {
+ 	.resolution = 10,
+ 	.name = "meson-gxbb-saradc",
+ };
+ 
+-struct meson_sar_adc_data meson_sar_adc_gxl_data = {
++static const struct meson_sar_adc_data meson_sar_adc_gxl_data = {
+ 	.resolution = 12,
+ 	.name = "meson-gxl-saradc",
+ };
+ 
+-struct meson_sar_adc_data meson_sar_adc_gxm_data = {
++static const struct meson_sar_adc_data meson_sar_adc_gxm_data = {
+ 	.resolution = 12,
+ 	.name = "meson-gxm-saradc",
+ };
 -- 
-2.9.3
-
+2.12.2
