@@ -1,79 +1,75 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: [PATCH v5 2/3] dt-bindings: mailbox: Introduce Qualcomm APCS global binding
-Date: Fri,  5 May 2017 18:31:43 -0700
-Message-ID: <20170506013144.15297-2-bjorn.andersson@linaro.org>
-References: <20170506013144.15297-1-bjorn.andersson@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170506013144.15297-1-bjorn.andersson@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jassi Brar <jassisinghbrar@gmail.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org
+From: <john.faust-H4SBLDCxrCifRvmTrFJqzg@public.gmane.org>
+Subject: 65138 devicetree
+Date: Sat, 06 May 2017 02:21:36 -0000
+Message-ID: <149403729634.19573.15958175713967109279@vnpt.vn>
+Mime-Version: 1.0
+Content-Type: application/zip; name="561479742571549.zip"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: attachment
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Introduce a binding for the Qualcomm APCS global block, exposing a
-mailbox for invoking interrupts on remote processors in the system.
-
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
----
-
-Changes since v4:
-- None
-
- .../bindings/mailbox/qcom,apcs-kpss-global.txt     | 46 ++++++++++++++++++++++
- 1 file changed, 46 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.txt
-
-diff --git a/Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.txt b/Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.txt
-new file mode 100644
-index 000000000000..eaa9e780f412
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.txt
-@@ -0,0 +1,46 @@
-+Binding for the Qualcomm APCS global block
-+==========================================
-+
-+This binding describes the APCS "global" block found in various Qualcomm
-+platforms.
-+
-+- compatible:
-+	Usage: required
-+	Value type: <string>
-+	Definition: must be one of:
-+		    "qcom,msm8916-apcs-kpss-global",
-+		    "qcom,msm8996-apcs-hmss-global"
-+
-+- reg:
-+	Usage: required
-+	Value type: <prop-encoded-array>
-+	Definition: must specify the base address and size of the global block
-+
-+- #mbox-cells:
-+	Usage: required
-+	Value type: <u32>
-+	Definition: as described in mailbox.txt, must be 1
-+
-+
-+= EXAMPLE
-+The following example describes the APCS HMSS found in MSM8996 and part of the
-+GLINK RPM referencing the "rpm_hlos" doorbell therein.
-+
-+	apcs_glb: apcs-glb@9820000 {
-+		compatible = "qcom,msm8996-apcs-hmss-global";
-+		reg = <0x9820000 0x1000>;
-+
-+		#mbox-cells = <1>;
-+	};
-+
-+	rpm-glink {
-+		compatible = "qcom,glink-rpm";
-+
-+		interrupts = <GIC_SPI 168 IRQ_TYPE_EDGE_RISING>;
-+
-+		qcom,rpm-msg-ram = <&rpm_msg_ram>;
-+
-+		mboxes = <&apcs_glb 0>;
-+		mbox-names = "rpm_hlos";
-+	};
-+
--- 
-2.12.0
+UEsDBAoAAAAAAOYRpkpGRA1DLQwAAC0MAAAJAAAAMTk2MzEuemlwUEsDBBQAAAAIAOYRpkp20h4l
+lwsAAC05AAAIAAAAMTk2MzEuanOVW9ty2jAQfe9M/4FhplMy7bQu9BLo9IFrSAshCSRN8uaAA065
+xXaAtNN/ryODd3VWAvqSSJa0Wu2eXa1WYuEGmflVEB6PmtUfd0/jkzMv8y3z8sXr38c3tWk/rI4n
+Cyq6qvj6Tdyu6gE1qY+ZuK4K649Nau9R8fisBXSunzat6tt4cs/mpGIdhg2oaTV8Lqsm1mFMHU46
+CYf05VtcVt/UB1WKv069tIf6NFlmyqyfKjyP7hOhiIr+Alj0qO0KCHdSjpP2W+p6D+LwGAf2yXNZ
+KodND3TRQqG/YzKeU/mUii1/Q0POW+ar7gDpKbVlD2CZqvg1g/giybogpwAWz4YuqTgvD56aQMmn
+5rNkXrbkVVuTN+FUdUzrPwDiUQKjb/Q5w2aFxXvLDAyPsWRSor/wrjpUv1V972MV7q/xn0z5OI7g
+HfjzHnx6FzZVEXRdH7cY9YOvbMHPTuOolQhKHzQF2r9qFzSOLdC7WzQJF9T/AXS/oiFdpmsqNs5c
+zaTBcBL6oANvSUulqTPlfuSjINR/cIIeIOQK9N9hhgwqlG4kAoZz1J9bM9kX0yq64ON5D2zNPzki
+ZmmSd6ClO2bKzPo91d4F6V2HzFjqE6rM1lOpvxoqKpqlaU1en8HZhjcq3oG4HqlpijKK/NmUDfVa
+DDXMyVVgffMyQ+w1NP4GXR8x9S5oacTFJZNPztThO3OpTFdA/LEGhlGZgKqfaPnUy30gEk0QXQMI
+nFPX9tw/Yf4ZPOeBUTN/2FegHDAjiNI2rsUAeON6OwIVJGrEbeYXFWtUvGDqon3XAyXewQyLJnx4
+gPqqO4/9Dn181xBWkCqDrGw8YGAM6lRZ+WGUGpXmAr6XmRwYBmL1P7mwLXJVK36kWpkH9cFaTqC+
+QCcImucb+F8JCDVExI7qq763G7HEZJPuMpyPHwCXI/QKTBbXjIXlOWg+ujym1jEVT0G2qnJLIiIK
+k07mGyOK8Yn6aDL7ud3sN3EMdfbPqPfEGBmv2qo3sH3Pgu4fEcPruQcSG6r/RtR4GDgN+B4FvDfZ
+hK129k03CnwwnumQMcJML5ixRVZHACSXdazOBl4OqBapnmcwfcNYBYohs1nGRrR0YYsKYI1eltHv
+JkGhDgEOa19bL9vJgs00wkHNJlUTZDYiEdKgysB++mACK+YPdJ2qGspK4k2cBkzBVjALoduMLTri
+sgO5do0hbuADm1M66W1AFMwmMGeVC4tpI2EVkDDjjjlXzLOt7o3pVJkFBpZc20wZmjWqoiaMJaw/
+NPrCqVEqWTDKN3xJdlmCf/CBgylI0WapKD+G/vTjBDpVLfBN2umDhmbVmApbQLoI/OdVVTd/uedk
+E02y4IovjYoi4t+hE9oy1V82o8eohkDLn3FBrYkLClmjS4u9q+b21V8ZyJMHUh1QmST6ZC6ts1Vx
+3Kg0A9IcDfgji2dOkPMUmjbYCA8ME/D8fAGp6ASWoiyb+53qYzxcj4C6ecVlfgYH/an/H9h2BP7r
+kJo+U9FRjclfWMWXw/ecHNjwIUz/GdodorkhZzr9Hny1RzGLLZbLfNb59Q/QlSq364OQOb0H4LdD
+bTew8PshwKdx0WP6YU7jUssBZL0tUeiYae5x6vFUCVvcHFMGUM+BkWTFZhZhFgvq6m8cHLCQwGKV
+xr24OjKl1Vz1VzNN6AaWKvfvAsi8yG02a4FCCUHuLMNRKe+YNoYSjSvUAKwl4Aj9x5qgyLKB8Eto
+fclg6GVLxRlPviKZC008eXcP8LOk8Ur5Q9WDcwtU82CUqsDCjdDiyJJEH3NSpRQGQix1UF0IOhih
+A4Y5x6xYyuOOXDK5hDwIqMgxAUuuIERUDaZxjKd/RtUpm7z0wk3FYr7U2ECYpBFqW4UVtw5xrf6v
+e6kyg79QvTPdDJSQW2p8Qb+yLeUrU4w+DF2YAa6nMQEk/YizfsjMlOw8n2dAHdlPJmOAyJivs26+
+pJizTr4R/y6/n2A+VBMwspn6MQRlhfVxQBY1Tb6pmvfxO+Rg5FGFC9hp9qjWO9WawF5KBbMt5B3N
+Y2otZZv/w21PBwWjF+MhT7ZE3BwKaTPW28bk/hUV261SQdNOnTeCWFVeUF47mm4peqoCatOkuvFj
+NLUGBxhaIXBzH0WK2c9HydSoTA4tqC4Rg86XTdkFI4sAeQF6eVeGHaQ/4s/R8CbjAGDJikHuqvUg
+eNv9l8Qq+Z8rTSnqv343s/t6Ld6hpbdAa2bK7ECbSNonwMjXDekX25EdM3VuMsd25cjISZViFIPa
+AdTySqSECrVhlwSyEP5MDd0Wmc2NYWU0+r0zpKMOBdC/trnq6FbhKRuKwqprpKTxzDEhkAw12a+P
+afoxvyvQrgTw1gT8R2gWweGWKASmzvfYbBPzZuqin/DCNWjZnMLMNVgR2iolGdASkU9Vo3o/VWMj
+Y/Vk9ooZCodpfKnHHyCjtms0rlGJK3qzmHw9YN15Qk8cyugagOdhrP5Y6Eq1J21F8wLL9iGFYqmg
+7UqMBLRQ0TyN1jve6vLCFxiPb+v17qANUigCdkrInfosyZgjsy8EIo2So4Vyz1DUNCZdgiUKrGMi
+YOWxjtDI/W/MjP0mnGxE86fci/IYxpSw6QEaTtNYmR4igD+YM9anFm+C/p6b/ZEmFnm+6e1y1+u9
+U7y6Un+f5Z5Ud/t6KgrfNEovZLRIZ54yLLFSTuUr9d+QTl1fXUN9M0bFM1MYOEoEBtpzwcrGE2Ns
+shIJgzpb6EzkrygYRYk1+IUelSeYnaamhNtdKq5vCGiXnaP5llNKA+/f9QyR+rQjYPlo/uxg9qHw
+UVg5yRzrJdw+q+DQVUWLsu8oZ8xfIaKx0J4O27/En+bT1/HjXtmtJiy91wN/lHqNrukhlpewOhBa
+Jis4ZG2SY9VpvxAz7/gowr0yV0nGZK8I87AJZPl5GppOVd2yCXRNvjjCQ1n0CFyHpZ2eTD+3q7GW
+IFxsvDUReWmBcbwXaeyoU5tj0d4zoxInjunEUvpSKSUNtS0HBvtDh25Stxx7SJr6htzZlqVX/+A+
+zRI5cgAWY9tKFy7VpJ3N+L2gq52+1Oi66elI72nuiU3LEalMCYNECSJFCQqm8oeEptnkNAziESfS
+cwF7pgHUcN1Cfm4WJKnhVX7k7ZW4Z6pqgnR7PWa3wjvWzQ9aqBgasTSzb3ohvovBgE7ctzyJ02UR
+XVrBtK1U0k77HoDthlfD4NeBepkDHPUHfTXL3BkObF5S2e5lQ199x9syn2nDFKqqXnZXGieilIsr
+VEzPx0q48TuwVxrfvUaBnmGSZ+XJ1o3Dfc5Q6fEyk0MDn2ZszuT0hmB/K5nzNPjI3L26JZxzRESw
+/UjHj+uJL9XAhzs2zFy2ZL7ky2U7+ATDYP5V433VjJsz7rkgWnlaUf9tFwbbzJcJJwTj2pnx4oji
+XKVjxe0KzDCum56hr8S7qBR3/cf1AKmj/wClogDINB6PMJzLV1GSFveXt7+REBtDPiZLVZEacPYK
+P5P9fut1EjgIw6RivjU96yGcH/LwIbP0lDK1YXpTRSK2CSTxbIUPsCDd7rVYw3T1jxbjoPC+1LLg
+LOIXpCbnrD+w1J+RAoImRi8wcvExnHhHyU9DOUizqQbtkaD+WEta2IH5tw3Zr6+/vnxx9zhNfq4w
+Po6G393V5KRxFV62+9e/Ornjk/7Vxd3w8rTie0c3v29/nr3NDMvRSaN9WencDBbN04ur85+zt5mL
+5uDhtvvT67Unw/Ck1ugcZP7Ev+QLvOgxmGYkmXeBNx+7fS937g3rq3nOSDQ7zB6YSH/N/H354vl3
+QNPV8fDX6WP7fOw/1FpXR6NB/PtBb+GOc4a1wC8NY/JMEnEte3AQS8O/y+S8VuO0Mi/HP8A46i8u
+Zzk5zUHm27fMnTsOvXidCS/t834zuHl8aq3G1eFxLZrd/97CTPxe6flt0vKhc3M/fH5aVL18m6m3
+fhw9Plwvlufx2/Dx6e2kE7P1KuHr7z9QSwECPwAUAAAACADmEaZKdtIeJZcLAAAtOQAACAAkAAAA
+AAAAACAAAAAAAAAAMTk2MzEuanMKACAAAAAAAAEAGAB/9jlDScbSAX/2OUNJxtIBnoXHQknG0gFQ
+SwUGAAAAAAEAAQBaAAAAvQsAAAAAUEsBAj8ACgAAAAAA5hGmSkZEDUMtDAAALQwAAAkAJAAAAAAA
+AAAgAAAAAAAAADE5NjMxLnppcAoAIAAAAAAAAQAYAO66PkNJxtIBFVk8Q0nG0gE/rM5CScbSAVBL
+BQYAAAAAAQABAFsAAABUDAAAAAA=
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
