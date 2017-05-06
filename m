@@ -1,141 +1,106 @@
-From: Anup Patel <anup.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH 11/11] arm64: dts: Add PWM and SDHCI DT nodes for Stingray SOC
-Date: Sat,  6 May 2017 17:24:46 +0530
-Message-ID: <1494071686-19098-12-git-send-email-anup.patel@broadcom.com>
-References: <1494071686-19098-1-git-send-email-anup.patel@broadcom.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1494071686-19098-1-git-send-email-anup.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Cc: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Oza Pawandeep <oza-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Srinath Mannam <srinath.mannam-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Pramod Kumar <pramod.kumar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Sandeep Tripathy <sandeep.tripathy-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Anup Patel <anup.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: [PATCH 1/4] ata: Add DT bindings for Faraday
+	Technology FTIDE010
+Date: Sat,  6 May 2017 14:10:50 +0200
+Message-ID: <20170506121053.11554-1-linus.walleij@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <openwrt-devel-bounces@lists.openwrt.org>
+List-Unsubscribe: <https://lists.openwrt.org/cgi-bin/mailman/options/openwrt-devel>,
+ <mailto:openwrt-devel-request@lists.openwrt.org?subject=unsubscribe>
+List-Archive: <http://lists.openwrt.org/pipermail/openwrt-devel/>
+List-Post: <mailto:openwrt-devel@lists.openwrt.org>
+List-Help: <mailto:openwrt-devel-request@lists.openwrt.org?subject=help>
+List-Subscribe: <https://lists.openwrt.org/cgi-bin/mailman/listinfo/openwrt-devel>,
+ <mailto:openwrt-devel-request@lists.openwrt.org?subject=subscribe>
+Errors-To: openwrt-devel-bounces@lists.openwrt.org
+Sender: "openwrt-devel" <openwrt-devel-bounces@lists.openwrt.org>
+To: Tejun Heo <tj@kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, linux-ide@vger.kernel.org
+Cc: openwrt-devel@openwrt.org, devicetree@vger.kernel.org, John Feng-Hsin Chiang <john453@faraday-tech.com>, Paulius Zaleckas <paulius.zaleckas@gmail.com>, Greentime Hu <green.hu@gmail.com>, Janos Laube <janos.dev@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Srinath Mannam <srinath.mannam-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-
-The Stingray SoC has two instances of SDHCI controller
-and one instance of iProc PWM.
-
-Let's enable above mentioned devices in Stingray DT.
-
-Signed-off-by: Srinath Mannam <srinath.mannam-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Signed-off-by: Anup Patel <anup.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Reviewed-by: Ray Jui <ray.jui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Reviewed-by: Scott Branden <scott.branden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
----
- .../boot/dts/broadcom/stingray/bcm958742-base.dtsi | 39 ++++++++++++++++++++++
- .../arm64/boot/dts/broadcom/stingray/stingray.dtsi | 28 ++++++++++++++++
- 2 files changed, 67 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/broadcom/stingray/bcm958742-base.dtsi b/arch/arm64/boot/dts/broadcom/stingray/bcm958742-base.dtsi
-index 3250d09..a491ce9 100644
---- a/arch/arm64/boot/dts/broadcom/stingray/bcm958742-base.dtsi
-+++ b/arch/arm64/boot/dts/broadcom/stingray/bcm958742-base.dtsi
-@@ -52,6 +52,28 @@
- 		serial2 = &uart2;
- 		serial3 = &uart3;
- 	};
-+
-+	sdio0_vddo_ctrl_reg: sdio0_vddo_ctrl {
-+		compatible = "regulator-gpio";
-+		regulator-name = "sdio0_vddo_ctrl_reg";
-+		regulator-type = "voltage";
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <3300000>;
-+		gpios = <&pca9505 18 0>;
-+		states = <3300000 0x0
-+			  1800000 0x1>;
-+	};
-+
-+	sdio1_vddo_ctrl_reg: sdio1_vddo_ctrl {
-+		compatible = "regulator-gpio";
-+		regulator-name = "sdio1_vddo_ctrl_reg";
-+		regulator-type = "voltage";
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <3300000>;
-+		gpios = <&pca9505 19 0>;
-+		states = <3300000 0x0
-+			  1800000 0x1>;
-+	};
- };
- 
- &memory { /* Default DRAM banks */
-@@ -63,6 +85,10 @@
- 	status = "okay";
- };
- 
-+&pwm {
-+	status = "okay";
-+};
-+
- &i2c0 {
- 	status = "okay";
- 
-@@ -99,3 +125,16 @@
- 		#size-cells = <1>;
- 	};
- };
-+
-+&sdio0 {
-+	vqmmc-supply = <&sdio0_vddo_ctrl_reg>;
-+	non-removable;
-+	full-pwr-cycle;
-+	status = "okay";
-+};
-+
-+&sdio1 {
-+	vqmmc-supply = <&sdio1_vddo_ctrl_reg>;
-+	full-pwr-cycle;
-+	status = "okay";
-+};
-diff --git a/arch/arm64/boot/dts/broadcom/stingray/stingray.dtsi b/arch/arm64/boot/dts/broadcom/stingray/stingray.dtsi
-index 36b8ced..d5e1944 100644
---- a/arch/arm64/boot/dts/broadcom/stingray/stingray.dtsi
-+++ b/arch/arm64/boot/dts/broadcom/stingray/stingray.dtsi
-@@ -266,6 +266,14 @@
- 			gpio-controller;
- 		};
- 
-+		pwm: pwm@68910000{
-+			compatible = "brcm,iproc-pwm";
-+			reg = <0x68910000 0x1000>;
-+			clocks = <&crmu_ref25m>;
-+			#pwm-cells = <3>;
-+			status = "disabled";
-+		};
-+
- 		i2c0: i2c@689b0000 {
- 			compatible = "brcm,iproc-i2c";
- 			reg = <0x689b0000 0x100>;
-@@ -425,5 +433,25 @@
- 			brcm,nand-has-wp;
- 			status = "disabled";
- 		};
-+
-+		sdio0: sdhci@68cf1000 {
-+			compatible = "brcm,sdhci-iproc";
-+			reg = <0x68cf1000 0x100>;
-+			interrupts = <GIC_SPI 204 IRQ_TYPE_LEVEL_HIGH>;
-+			bus-width = <8>;
-+			clocks = <&sdio0_clk>;
-+			iommus = <&smmu 0x6002 0x0000>;
-+			status = "disabled";
-+		};
-+
-+		sdio1: sdhci@68cf2000 {
-+			compatible = "brcm,sdhci-iproc";
-+			reg = <0x68cf2000 0x100>;
-+			interrupts = <GIC_SPI 205 IRQ_TYPE_LEVEL_HIGH>;
-+			bus-width = <8>;
-+			clocks = <&sdio1_clk>;
-+			iommus = <&smmu 0x6003 0x0000>;
-+			status = "disabled";
-+		};
- 	};
- };
--- 
-2.7.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+VGhpcyBhZGRzIGRldmljZSB0cmVlIGJpbmRpbmdzIGZvciB0aGUgRmFyYWRheSBUZWNobm9sb2d5
+CkZUSURFMDEwIGZvdW5kIGluIHRoZSBTdG9ybGluay9TdG9ybS9Db3J0aW5hIFN5c3RlbXMgR2Vt
+aW5pIFNvQy4KCkkgYW0gbm90IDEwMCUgc3VyZSB0aGF0IHRoaXMgcGFydCBpZiBmcm9tIEZhcmFk
+YXkgVGVjaG5vbG9neSBidXQKYSBsb3QgcG9pbnRzIGluIHRoYXQgZGlyZWN0aW9uOgoKLSBBIGxh
+dGVyIElERSBpbnRlcmZhY2UgY2FsbGVkIEZUSURFMDIwIGV4aXN0IGFuZCBzaGFyZSBzb21lCiAg
+cHJvcGVydGllcy4KCi0gVGhlIFNBVEEgYnJpZGdlIGhhcyB0aGUgc2FtZSBCdWlsdCBJbiBTZWxm
+IFRlc3QgKEJJU1QpIHRoYXQgdGhlCiAgRmFyYWRheSBGVFNBVEExMDAgc2VlbXMgdG8gaGF2ZSwg
+YW5kIGl0IGhhcyB2ZXJzaW9uIG51bWJlciAwMTAwCiAgaW4gdGhlIGRldmljZSBJRCByZWdpc3Rl
+ciwgc28gdGhpcyBpcyB2ZXJ5IGxpa2VseSBhIEZUU0FUQTEwMAogIGJ1bmRsZWQgd2l0aCB0aGUg
+RlRJREUwMTAuCgpDYzogZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmcKQ2M6IEpvaG4gRmVuZy1I
+c2luIENoaWFuZyA8am9objQ1M0BmYXJhZGF5LXRlY2guY29tPgpDYzogR3JlZW50aW1lIEh1IDxn
+cmVlbi5odUBnbWFpbC5jb20+ClNpZ25lZC1vZmYtYnk6IExpbnVzIFdhbGxlaWogPGxpbnVzLndh
+bGxlaWpAbGluYXJvLm9yZz4KLS0tCkdyZWVudGltZTogSSB0aGluayB0aGlzIG1heSBiZSBpbnRl
+cmVzdGluZyB0byB5b3Ugc2luY2UgdGhlCkZUSURFMDIwIHdpbGwgbmVlZCB0aGUgc2FtZSBiaW5k
+aW5ncyBzbyB3ZSBjYW4gcHJvYmFibHkKanVzdCByZXVzZSB0aGVtIGFuZCBtYXliZSBtYWtlIHRo
+ZSBwYXJzZXIgYSBsaWJyYXJ5IGlmIHlvdQp3YW50IHRvIHVwc3RyZWFtIHRoZSBGVElERTAyMC4K
+CkZhcmFkYXkgcGVvcGxlOiBJIGRvIG5vdCBoYXZlIGl0IGZyb20gYSBzb3VyY2UgdGhhdCB0aGlz
+CmhhcmR3YXJlIGlzIHJlYWxseSBGVElERTAxMCBidXQgSSB3b3VsZCBiZSBWRVJZIHN1cnByaXNl
+ZAppZiBpdCBpcyBub3QuIFUtQm9vdCBoYXMgYW4gRlRJREUwMjAgSURFIGNvbnRyb2xsZXIKc3lu
+dGhlc2l6ZWQgaW4gdGhlIEFuZGVzdGVjaCBwbGF0Zm9ybSwgYW5kIGl0IGhhcyBhIHNpbWlsYXIK
+eWV0IGRpZmZlcmVudCByZWdpc3RlciBsYXlvdXQsIGZlYXR1cmluZyBzaW1pbGFyIHRpbWluZwpz
+ZXQtdXBzOgpodHRwOi8vZ2l0LmRlbnguZGUvP3A9dS1ib290LmdpdDthPWJsb2I7Zj1kcml2ZXJz
+L2Jsb2NrL2Z0aWRlMDIwLmgKaHR0cDovL2dpdC5kZW54LmRlLz9wPXUtYm9vdC5naXQ7YT1ibG9i
+O2Y9ZHJpdmVycy9ibG9jay9mdGlkZTAyMC5jCi0tLQogLi4uL2RldmljZXRyZWUvYmluZGluZ3Mv
+YXRhL2ZhcmFkYXksZnRpZGUwMTAudHh0ICAgfCA2MyArKysrKysrKysrKysrKysrKysrKysrCiAx
+IGZpbGUgY2hhbmdlZCwgNjMgaW5zZXJ0aW9ucygrKQogY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3Vt
+ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9hdGEvZmFyYWRheSxmdGlkZTAxMC50eHQKCmRp
+ZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvYXRhL2ZhcmFkYXks
+ZnRpZGUwMTAudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2F0YS9mYXJh
+ZGF5LGZ0aWRlMDEwLnR4dApuZXcgZmlsZSBtb2RlIDEwMDY0NAppbmRleCAwMDAwMDAwMDAwMDAu
+LjUwNDg0MDhjMDdjNQotLS0gL2Rldi9udWxsCisrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJl
+ZS9iaW5kaW5ncy9hdGEvZmFyYWRheSxmdGlkZTAxMC50eHQKQEAgLTAsMCArMSw2MyBAQAorKiBG
+YXJhZGF5IFRlY2hub2xvZ3kgRlRJREUwMTAgUEFUQSBjb250cm9sbGVyCisKK1RoaXMgY29udHJv
+bGxlciBpcyB0aGUgZmlyc3QgRmFyYWRheSBJREUgaW50ZXJmYWNlIGJsb2NrLCB1c2VkIGluIHRo
+ZQorU3RvckxpbmsgU0wyMzEyIGFuZCBTTDM1MTYsIGxhdGVyIGtub3duIGFzIHRoZSBDb3J0aW5h
+IFN5c3RlbXMgR2VtaW5pCitwbGF0Zm9ybS4gVGhlIGNvbnRyb2xsZXIgY2FuIGRvIFBJTyBtb2Rl
+cyAwIHRocm91Z2ggNCwgTXVsdGktd29yZCBETUEKKyhNV0RNKW1vZGVzIDAgdGhyb3VnaCAyIGFu
+ZCBVbHRyYSBETUEgbW9kZXMgMCB0aHJvdWdoIDYuCisKK09uIHRoZSBHZW1pbmkgcGxhdGZvcm0s
+IHRoaXMgUEFUQSBibG9jayBpcyBhY2NvbXBhbmllZCBieSBhIFBBVEEgdG8KK1NBVEEgYnJpZGdl
+IGluIG9yZGVyIHRvIHN1cHBvcnQgU0FUQS4gVGhpcyBpcyB3aHkgYSBwaGFuZGxlIHRvIHRoYXQK
+K2NvbnRyb2xsZXIgaXMgY29tcHVsc29yeSBvbiB0aGF0IHBsYXRmb3JtLgorCitUaGUgdGltaW5n
+IHByb3BlcnRpZXMgYXJlIHVuaXF1ZSBwZXItU29DLCBub3QgcGVyLWJvYXJkLgorCitSZXF1aXJl
+ZCBwcm9wZXJ0aWVzOgorLSBjb21wYXRpYmxlOiBzaG91bGQgYmUgb25lIG9mCisgICJjb3J0aW5h
+LGdlbWluaS1wYXRhIiwgImZhcmFkYXksZnRpZGUwMTAiCisgICJmYXJhZGF5LGZ0aWRlMDEwIgor
+LSBpbnRlcnJ1cHRzOiBpbnRlcnJ1cHQgZm9yIHRoZSBibG9jaworLSByZWc6IHJlZ2lzdGVycyBh
+bmQgc2l6ZSBmb3IgdGhlIGJsb2NrCisKKyAgVGhlIHVuaXQgb2YgdGhlIGJlbG93IHJlcXVpcmVk
+IHRpbWluZ3MgaXMgdHdvIGNsb2NrIHBlcmlvZHMgb2YgdGhlIEFUQQorICByZWZlcmVuY2UgY2xv
+Y2sgd2hpY2ggaXMgMzAgbmFub3NlY29uZHMgcGVyIHVuaXQgYXQgNjZNSHogYW5kIDIwIG5hbm9z
+ZWNvbmRzCisgIHBlciB1bml0IGF0IDUwIE1Iei4KKworLSBmYXJhZGF5LHBpby1hY3RpdmUtdGlt
+ZTogYXJyYXkgb2YgNSBlbGVtZW50cyBmb3IgVDIgdGltaW5nIGZvciBNb2RlIDAsCisgIDEsIDIs
+IDMgYW5kIDQuIFJhbmdlIDAuLjE1LgorLSBmYXJhZGF5LHBpby1yZWNvdmVyeS10aW1lOiBhcnJh
+eSBvZiA1IGVsZW1lbnRzIGZvciBUMmwgdGltaW5nIGZvciBNb2RlIDAsCisgIDEsIDIsIDMgYW5k
+IDQuIFJhbmdlIDAuLjE1LgorLSBmYXJhZGF5LG1kbWEtNTAtYWN0aXZlLXRpbWU6IGFycmF5IG9m
+IDQgZWxlbWVudHMgZm9yIFRkIHRpbWluZyBmb3IgbXVsdGkKKyAgd29yZCBETUEsIE1vZGUgMCwg
+MSwgYW5kIDIgYXQgNTAgTUh6LiBSYW5nZSAwLi4xNS4KKy0gZmFyYWRheSxtZG1hLTUwLXJlY292
+ZXJ5LXRpbWU6IGFycmF5IG9mIDQgZWxlbWVudHMgZm9yIFRrIHRpbWluZyBmb3IKKyAgbXVsdGkg
+d29yZCBETUEsIE1vZGUgMCwgMSBhbmQgMiBhdCA1MCBNSHouIFJhbmdlIDAuLjE1LgorLSBmYXJh
+ZGF5LG1kbWEtNjYtYWN0aXZlLXRpbWU6IGFycmF5IG9mIDQgZWxlbWVudHMgZm9yIFRkIHRpbWlu
+ZyBmb3IgbXVsdGkKKyAgd29yZCBETUEsIE1vZGUgMCwgMSBhbmQgMiBhdCA1MCBNSHouIFJhbmdl
+IDAuLjE1LgorLSBmYXJhZGF5LG1kbWEtNjYtcmVjb3ZlcnktdGltZTogYXJyYXkgb2YgNCBlbGVt
+ZW50cyBmb3IgVGsgdGltaW5nIGZvcgorICBtdWx0aSB3b3JkIERNQSwgTW9kZSAwLCAxIGFuZCAy
+IGF0IDUwIE1Iei4gUmFuZ2UgMC4uMTUuCistIGZhcmFkYXksdWRtYS01MC1zZXR1cC10aW1lOiBh
+cnJheSBvZiA0IGVsZW1lbnRzIGZvciBUdmRzIHRpbWluZyBmb3IgdWx0cmEKKyAgRE1BLCBNb2Rl
+IDAsIDEsIDIsIDMsIDQgYW5kIDUgYXQgNTAgTUh6LiBSYW5nZSAwLi43LgorLSBmYXJhZGF5LHVk
+bWEtNTAtaG9sZC10aW1lOiBhcnJheSBvZiA0IGVsZW1lbnRzIGZvciBUZHZoIHRpbWluZyBmb3IK
+KyAgbXVsdGkgd29yZCBETUEsIE1vZGUgMCwgMSwgMiwgMywgNCBhbmQgNSBhdCA1MCBNSHosIFJh
+bmdlIDAuLjcuCistIGZhcmFkYXksdWRtYS02Ni1zZXR1cC10aW1lOiBhcnJheSBvZiA0IGVsZW1l
+bnRzIGZvciBUdmRzIHRpbWluZyBmb3IgbXVsdGkKKyAgd29yZCBETUEsIE1vZGUgMCwgMSwgMiwg
+MywgNCwgNSBhbmQgNiBhdCA1MCBNSHouIFJhbmdlIDAuLjcuCistIGZhcmFkYXksdWRtYS02Ni1o
+b2xkLXRpbWU6IGFycmF5IG9mIDQgZWxlbWVudHMgZm9yIFRkdmggdGltaW5nIGZvcgorICBtdWx0
+aSB3b3JkIERNQSwgTW9kZSAwLCAxLCAyLCAzLCA0LCA1IGFuZCA2IGF0IDUwIE1Iei4gUmFuZ2Ug
+MC4uNy4KKworT3B0aW9uYWwgcHJvcGVydGllczoKKy0gY2xvY2tzOiBhIFNvQyBjbG9jayBydW5u
+aW5nIHRoZSBwZXJpcGhlcmFsLgorLSBjbG9jay1uYW1lczogc2hvdWxkIGJlIHNldCB0byAiUENM
+SyIgZm9yIHRoZSBwZXJpcGhlcmFsIGNsb2NrLgorCitSZXF1aXJlZCBwcm9wZXJ0aWVzIGZvciAi
+Y29ydGluYSxnZW1pbmktcGF0YSIgY29tcGF0aWJsZToKKy0gc2F0YTogYSBwaGFuZGUgdG8gdGhl
+IEdlbWluaSBQQVRBIHRvIFNBVEEgYnJpZGdlLCBzZWUKKyAgY29ydGluYSxnZW1pbmktc2F0YS1i
+cmlkZ2UudHh0IGZvciBkZXRhaWxzLgorCitFeGFtcGxlOgorCithdGFANjMwMDAwMDAgeworCWNv
+bXBhdGlibGUgPSAiY29ydGluYSxnZW1pbmktcGF0YSIsICJmYXJhZGF5LGZ0aWRlMDEwIjsKKwly
+ZWcgPSA8MHg2MzAwMDAwMCAweDEwMD47CisJaW50ZXJydXB0cyA9IDw0IElSUV9UWVBFX0VER0Vf
+UklTSU5HPjsKKwljbG9ja3MgPSA8JmdjYyBHRU1JTklfQ0xLX0dBVEVfSURFPjsKKwljbG9jay1u
+YW1lcyA9ICJQQ0xLIjsKKwlzYXRhID0gPCZzYXRhPjsKK307Ci0tIAoyLjkuMwpfX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpvcGVud3J0LWRldmVsIG1haWxp
+bmcgbGlzdApvcGVud3J0LWRldmVsQGxpc3RzLm9wZW53cnQub3JnCmh0dHBzOi8vbGlzdHMub3Bl
+bndydC5vcmcvY2dpLWJpbi9tYWlsbWFuL2xpc3RpbmZvL29wZW53cnQtZGV2ZWwK
