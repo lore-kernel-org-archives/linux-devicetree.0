@@ -1,67 +1,94 @@
 From: Anup Patel <anup.patel@broadcom.com>
-Subject: [PATCH 08/11] arm64: dts: Add GPIO DT nodes for Stingray SOC
-Date: Sat,  6 May 2017 17:24:43 +0530
-Message-ID: <1494071686-19098-9-git-send-email-anup.patel@broadcom.com>
+Subject: [PATCH 09/11] arm64: dts: Add I2C DT nodes for Stingray SoC
+Date: Sat,  6 May 2017 17:24:44 +0530
+Message-ID: <1494071686-19098-10-git-send-email-anup.patel@broadcom.com>
 References: <1494071686-19098-1-git-send-email-anup.patel@broadcom.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-clk-owner@vger.kernel.org>
 In-Reply-To: <1494071686-19098-1-git-send-email-anup.patel@broadcom.com>
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: linux-clk-owner@vger.kernel.org
 To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>
-Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Florian Fainelli <f.fainelli@gmail.com>, Oza Pawandeep <oza@broadcom.com>, Srinath Mannam <srinath.mannam@broadcom.com>, Pramod Kumar <pramod.kumar@broadcom.com>, Sandeep Tripathy <sandeep.tripathy@broadcom.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com, Pramod Kumar <pramodku@broadcom.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Florian Fainelli <f.fainelli@gmail.com>, Oza Pawandeep <oza@broadcom.com>, Srinath Mannam <srinath.mannam@broadcom.com>, Pramod Kumar <pramod.kumar@broadcom.com>, Sandeep Tripathy <sandeep.tripathy@broadcom.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com
 List-Id: devicetree@vger.kernel.org
 
-From: Pramod Kumar <pramod.kumar@broadcom.com>
+From: Oza Pawandeep <oza@broadcom.com>
 
-The GPIOs on Stingray SOC are based on iProc GPIOs hence
-using this we add GPIO DT nodes for Stingray SOC.
+This patch adds I2C DT nodes on Stingray SoC.
 
-Signed-off-by: Pramod Kumar <pramodku@broadcom.com>
-Reviewed-by: Ray Jui <rjui@broadcom.com>
-Reviewed-by: Scott Branden <sbranden@broadcom.com>
+Signed-off-by: Oza Pawandeep <oza@broadcom.com>
+Reviewed-by: Vikram Prakash <vikram.prakash@broadcom.com>
+Reviewed-by: Ray Jui <ray.jui@broadcom.com>
+Reviewed-by: Scott Branden <scott.branden@broadcom.com>
 ---
- .../arm64/boot/dts/broadcom/stingray/stingray.dtsi | 34 ++++++++++++++++++++++
- 1 file changed, 34 insertions(+)
+ .../boot/dts/broadcom/stingray/bcm958742-base.dtsi | 22 ++++++++++++++++++++++
+ .../arm64/boot/dts/broadcom/stingray/stingray.dtsi | 20 ++++++++++++++++++++
+ 2 files changed, 42 insertions(+)
 
+diff --git a/arch/arm64/boot/dts/broadcom/stingray/bcm958742-base.dtsi b/arch/arm64/boot/dts/broadcom/stingray/bcm958742-base.dtsi
+index 6014525..3250d09 100644
+--- a/arch/arm64/boot/dts/broadcom/stingray/bcm958742-base.dtsi
++++ b/arch/arm64/boot/dts/broadcom/stingray/bcm958742-base.dtsi
+@@ -63,6 +63,28 @@
+ 	status = "okay";
+ };
+ 
++&i2c0 {
++	status = "okay";
++
++	pca9505: pca9505@20 {
++		compatible = "nxp,pca9505";
++		gpio-controller;
++		#gpio-cells = <2>;
++		reg = <0x20>;
++	};
++};
++
++&i2c1 {
++	status = "okay";
++
++	pcf8574: pcf8574@20 {
++		compatible = "nxp,pcf8574a";
++		gpio-controller;
++		#gpio-cells = <2>;
++		reg = <0x27>;
++	};
++};
++
+ &nand {
+ 	status = "ok";
+ 	nandcs@0 {
 diff --git a/arch/arm64/boot/dts/broadcom/stingray/stingray.dtsi b/arch/arm64/boot/dts/broadcom/stingray/stingray.dtsi
-index f9a8e8d..fb51473 100644
+index fb51473..d046b04 100644
 --- a/arch/arm64/boot/dts/broadcom/stingray/stingray.dtsi
 +++ b/arch/arm64/boot/dts/broadcom/stingray/stingray.dtsi
-@@ -258,6 +258,40 @@
- 		#include "stingray-clock.dtsi"
- 		#include "stingray-pinctrl.dtsi"
+@@ -266,6 +266,16 @@
+ 			gpio-controller;
+ 		};
  
-+		gpio_crmu: gpio@66424800 {
-+			compatible = "brcm,iproc-gpio";
-+			reg = <0x66424800 0x4c>;
-+			ngpios = <6>;
-+			#gpio-cells = <2>;
-+			gpio-controller;
++		i2c0: i2c@689b0000 {
++			compatible = "brcm,iproc-i2c";
++			reg = <0x689b0000 0x100>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++			interrupts = <GIC_SPI 177 IRQ_TYPE_NONE>;
++			clock-frequency = <100000>;
++			status = "disabled";
 +		};
 +
-+		gpio_hsls: gpio@689d0000 {
-+			compatible = "brcm,iproc-gpio";
-+			reg = <0x689d0000 0x864>;
-+			ngpios = <151>;
-+			#gpio-cells = <2>;
-+			gpio-controller;
-+			interrupt-controller;
-+			interrupts = <GIC_SPI 183 IRQ_TYPE_LEVEL_HIGH>;
-+			gpio-ranges = <&pinmux 0 0 16>,
-+					<&pinmux 16 71 2>,
-+					<&pinmux 18 131 8>,
-+					<&pinmux 26 83 6>,
-+					<&pinmux 32 123 4>,
-+					<&pinmux 36 43 24>,
-+					<&pinmux 60 89 2>,
-+					<&pinmux 62 73 4>,
-+					<&pinmux 66 95 28>,
-+					<&pinmux 94 127 4>,
-+					<&pinmux 98 139 10>,
-+					<&pinmux 108 16 27>,
-+					<&pinmux 135 77 6>,
-+					<&pinmux 141 67 4>,
-+					<&pinmux 145 149 6>,
-+					<&pinmux 151 91 4>;
+ 		gpio_hsls: gpio@689d0000 {
+ 			compatible = "brcm,iproc-gpio";
+ 			reg = <0x689d0000 0x864>;
+@@ -292,6 +302,16 @@
+ 					<&pinmux 151 91 4>;
+ 		};
+ 
++		i2c1: i2c@689e0000 {
++			compatible = "brcm,iproc-i2c";
++			reg = <0x689e0000 0x100>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++			interrupts = <GIC_SPI 178 IRQ_TYPE_NONE>;
++			clock-frequency = <100000>;
++			status = "disabled";
 +		};
 +
  		uart0: uart@68a00000 {
@@ -69,3 +96,4 @@ index f9a8e8d..fb51473 100644
  			compatible = "snps,dw-apb-uart";
 -- 
 2.7.4
+
