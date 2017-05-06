@@ -1,80 +1,73 @@
-From: Jean Delvare <jdelvare@suse.de>
-Subject: Re: [PATCH 4/6] cpufreq: mediatek: Add support of cpufreq to
- MT2701/MT7623 SoC
-Date: Sat, 6 May 2017 10:00:59 +0200
-Message-ID: <20170506100059.6003d9ef@endymion>
-References: <1493997974-17699-1-git-send-email-sean.wang@mediatek.com>
-        <1493997974-17699-5-git-send-email-sean.wang@mediatek.com>
+From: Hans Verkuil <hverkuil@xs4all.nl>
+Subject: Re: [PATCH v5 2/8] [media] stm32-dcmi: STM32 DCMI camera interface
+ driver
+Date: Sat, 6 May 2017 10:54:20 +0200
+Message-ID: <dd4a1ec1-b84a-81cb-51b6-c2e53b5efcc5@xs4all.nl>
+References: <1493998287-5828-1-git-send-email-hugues.fruchet@st.com>
+ <1493998287-5828-3-git-send-email-hugues.fruchet@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <1493997974-17699-5-git-send-email-sean.wang@mediatek.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: sean.wang@mediatek.com
-Cc: rjw@rjwysocki.net, viresh.kumar@linaro.org, robh+dt@kernel.org, matthias.bgg@gmail.com, mark.rutland@arm.com, mturquette@baylibre.com, jamesjj.liao@mediatek.com, p.zabel@pengutronix.de, shunli.wang@mediatek.com, erin.lo@mediatek.com, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-pm@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <1493998287-5828-3-git-send-email-hugues.fruchet@st.com>
+Content-Language: en-US
+Sender: linux-media-owner@vger.kernel.org
+To: Hugues Fruchet <hugues.fruchet@st.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Yannick Fertre <yannick.fertre@st.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sean,
+Hi Hugues,
 
-On Fri, 5 May 2017 23:26:12 +0800, sean.wang@mediatek.com wrote:
-> From: Sean Wang <sean.wang@mediatek.com>
+On 05/05/2017 05:31 PM, Hugues Fruchet wrote:
+> This V4L2 subdev driver enables Digital Camera Memory Interface (DCMI)
+> of STMicroelectronics STM32 SoC series.
 > 
-> MT2701/MT7623 is an 32-bit ARMv7 based quad-core (4 * Cortex-A7) with
-> single cluster and this hardware is also compatible with the existing
-> driver through enabling CPU frequency feature with operating-points-v2
-> bindings.
-> 
-> Signed-off-by: Sean Wang <sean.wang@mediatek.com>
+> Reviewed-by: Hans Verkuil <hans.verkuil@cisco.com>
+> Signed-off-by: Yannick Fertre <yannick.fertre@st.com>
+> Signed-off-by: Hugues Fruchet <hugues.fruchet@st.com>
 > ---
->  drivers/cpufreq/Kconfig.arm      | 4 ++--
->  drivers/cpufreq/mt8173-cpufreq.c | 2 ++
->  2 files changed, 4 insertions(+), 2 deletions(-)
+>  drivers/media/platform/Kconfig            |   12 +
+>  drivers/media/platform/Makefile           |    2 +
+>  drivers/media/platform/stm32/Makefile     |    1 +
+>  drivers/media/platform/stm32/stm32-dcmi.c | 1403 +++++++++++++++++++++++++++++
+>  4 files changed, 1418 insertions(+)
+>  create mode 100644 drivers/media/platform/stm32/Makefile
+>  create mode 100644 drivers/media/platform/stm32/stm32-dcmi.c
 > 
-> diff --git a/drivers/cpufreq/Kconfig.arm b/drivers/cpufreq/Kconfig.arm
-> index 74ed7e9..68b387a 100644
-> --- a/drivers/cpufreq/Kconfig.arm
-> +++ b/drivers/cpufreq/Kconfig.arm
-> @@ -90,11 +90,11 @@ config ARM_KIRKWOOD_CPUFREQ
->  config ARM_MT8173_CPUFREQ
->  	tristate "Mediatek MT8173 CPUFreq support"
->  	depends on ARCH_MEDIATEK && REGULATOR
-> -	depends on ARM64 || (ARM_CPU_TOPOLOGY && COMPILE_TEST)
-> +	depends on (ARM || ARM64) || (ARM_CPU_TOPOLOGY && COMPILE_TEST)
-
-Parentheses not needed. I am also curious if ARM_CPU_TOPOLOGY can
-actually be set when neither ARM nor ARM64 is. I suspect not, and then
-the above can be simplified to just:
-
-	depends on ARM || ARM64
-
->  	depends on !CPU_THERMAL || THERMAL
->  	select PM_OPP
->  	help
-> -	  This adds the CPUFreq driver support for Mediatek MT8173 SoC.
-> +	  This adds the CPUFreq driver support for Mediatek SoCs.
-
-If this driver actually support all Mediatek SoCs, the menu entry
-itself should be updated to drop "MT8173".
-
+> diff --git a/drivers/media/platform/Kconfig b/drivers/media/platform/Kconfig
+> index ac026ee..de6e18b 100644
+> --- a/drivers/media/platform/Kconfig
+> +++ b/drivers/media/platform/Kconfig
+> @@ -114,6 +114,18 @@ config VIDEO_S3C_CAMIF
+>  	  To compile this driver as a module, choose M here: the module
+>  	  will be called s3c-camif.
 >  
->  config ARM_OMAP2PLUS_CPUFREQ
->  	bool "TI OMAP2+"
-> diff --git a/drivers/cpufreq/mt8173-cpufreq.c b/drivers/cpufreq/mt8173-cpufreq.c
-> index fd1886f..481ec77 100644
-> --- a/drivers/cpufreq/mt8173-cpufreq.c
-> +++ b/drivers/cpufreq/mt8173-cpufreq.c
-> @@ -575,6 +575,8 @@ static struct platform_driver mt8173_cpufreq_platdrv = {
->  
->  /* List of machines supported by this driver */
->  static const struct of_device_id mt8173_cpufreq_machines[] __initconst = {
-> +	{ .compatible = "mediatek,mt2701", },
-> +	{ .compatible = "mediatek,mt7623", },
->  	{ .compatible = "mediatek,mt817x", },
->  	{ .compatible = "mediatek,mt8173", },
->  	{ .compatible = "mediatek,mt8176", },
+> +config VIDEO_STM32_DCMI
+> +	tristate "Digital Camera Memory Interface (DCMI) support"
 
+Is it OK with you if I change this to:
 
--- 
-Jean Delvare
-SUSE L3 Support
+	tristate "STM32 Digital Camera Memory Interface (DCMI) support"
+
+Right now the text gives no indication that this driver is for an STM32 platform.
+
+No need to spin a new patch, just let me know you're OK with it and I'll make
+the change.
+
+Regards,
+
+	Hans
+
+> +	depends on VIDEO_V4L2 && OF && HAS_DMA
+> +	depends on ARCH_STM32 || COMPILE_TEST
+> +	select VIDEOBUF2_DMA_CONTIG
+> +	---help---
+> +	  This module makes the STM32 Digital Camera Memory Interface (DCMI)
+> +	  available as a v4l2 device.
+> +
+> +	  To compile this driver as a module, choose M here: the module
+> +	  will be called stm32-dcmi.
+> +
+>  source "drivers/media/platform/soc_camera/Kconfig"
+>  source "drivers/media/platform/exynos4-is/Kconfig"
+>  source "drivers/media/platform/am437x/Kconfig"
