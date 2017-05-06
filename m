@@ -1,127 +1,70 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
-        <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH v2 3/3] gpiolib: Add GPIO initialization
-Date: Sat, 6 May 2017 22:32:30 +0200
-Message-ID: <20170506203230.7ogwvdrzogvvlu67@pengutronix.de>
-References: <1440920686-6892-1-git-send-email-mpa@pengutronix.de>
- <1440920686-6892-4-git-send-email-mpa@pengutronix.de>
- <20170207110950.zy5pzo2hq6hrvmr5@pengutronix.de>
+From: Kevin Hilman <khilman@baylibre.com>
+Subject: Re: [PATCH V6 1/9] PM / OPP: Introduce "power-domain-opp" property
+Date: Sat, 06 May 2017 11:39:08 +0200
+Message-ID: <m2mvaquxxf.fsf@baylibre.com>
+References: <cover.1493203884.git.viresh.kumar@linaro.org>
+        <025acedb263eaa6089d354d9630214ada8013990.1493203884.git.viresh.kumar@linaro.org>
+        <20170428204803.plu467okibtxga4d@rob-hp-laptop>
+        <a307c76d-72c3-eb84-e7d4-d5e47e2af727@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170207110950.zy5pzo2hq6hrvmr5-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, chrisrfq-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Arun Bharadwaj <arun-EiDWdcs9+yZBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <a307c76d-72c3-eb84-e7d4-d5e47e2af727@arm.com> (Sudeep Holla's
+        message of "Wed, 3 May 2017 12:29:21 +0100")
+Sender: linux-pm-owner@vger.kernel.org
+To: Sudeep Holla <sudeep.holla@arm.com>
+Cc: Rob Herring <robh@kernel.org>, Viresh Kumar <viresh.kumar@linaro.org>, Rafael Wysocki <rjw@rjwysocki.net>, ulf.hansson@linaro.org, Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@codeaurora.org>, linaro-kernel@lists.linaro.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, Vincent Guittot <vincent.guittot@linaro.org>, lina.iyer@linaro.org, rnayak@codeaurora.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+Sudeep Holla <sudeep.holla@arm.com> writes:
 
-On Tue, Feb 07, 2017 at 12:09:50PM +0100, Uwe Kleine-König wrote:
-> as far as I see, this topic isn't closed yet. I want something similar,
-> maybe even a bit more than this patch achieves:
-> 
-> Some gpios should get a fixed direction. If such a gpio is configured as
-> output, a value should be specified. This is already working today with
-> gpio-hogs.
-> 
-> Now additionally I want to initialize some gpios but allow them to be
-> grabbed later. IMHO there are the following new cases:
-> 
-> It should be possible to:
-> 
->  a) change the value of a gpio initially configured as output
->  b) change the direction of a gpio initially configured as output
->  c) change the direction of a gpio initially configured as input
-> 
-> IMHO the dts should describe which case should be applied to a given
-> gpio.
-> 
-> Is it a valid assumption that a gpio that can change direction is also
-> allowed to change value when configured as output? I assume this in the
-> following discussion, some details need to change if this shouldn't be
-> implied. (I think we need a d) then, not sure how this should look
-> though.)
-> 
-> I'd suggest the following description for these cases:
-> 
->  a)
->  	/*
-> 	 * initially configured as low output. Consumer can do
-> 	 * gpio_set_value(..., 1); but not gpio_direction_input(...);
-> 	 */
->  	nodename {
-> 		gpio-hog;
-> 		gpios = <...>;
-> 		output-low-init;
-> 	};
-> 
->  b)
->  	/*
-> 	 * initially configured as low output. Consumer can do
-> 	 * gpio_set_value(..., 1); and gpio_direction_input(...);
-> 	 */
->  	nodename {
-> 		gpio-hog;
-> 		gpios = <...>;
-> 		output-init-low;
-> 	};
-> 
->  c)
->  	/*
-> 	 * initially configured as input. Consumer can do
-> 	 * gpio_direction_output(..., ...) and then set the value
-> 	 * freely.
-> 	 */
-> 	 nodename {
-> 	 	gpio-hog;
-> 		gpios = <...>;
-> 		input-init;
-> 	};
+> On 28/04/17 21:48, Rob Herring wrote:
+>> On Wed, Apr 26, 2017 at 04:27:05PM +0530, Viresh Kumar wrote:
+>>> Power-domains need to express their active states in DT and the devices
+>>> within the power-domain need to express their dependency on those active
+>>> states. The power-domains can use the OPP tables without any
+>>> modifications to the bindings.
+>>>
+>>> Add a new property "power-domain-opp", which will contain phandle to the
+>>> OPP node of the parent power domain. This is required for devices which
+>>> have dependency on the configured active state of the power domain for
+>>> their working.
+>>>
+>>> For some platforms the actual frequency and voltages of the power
+>>> domains are managed by the firmware and are so hidden from the high
+>>> level operating system. The "opp-hz" property is relaxed a bit to
+>>> contain indexes instead of actual frequency values to support such
+>>> platforms.
+>>>
+>>> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+>>> ---
+>>>  Documentation/devicetree/bindings/opp/opp.txt | 74 ++++++++++++++++++++++++++-
+>>>  1 file changed, 73 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/opp/opp.txt b/Documentation/devicetree/bindings/opp/opp.txt
+>>> index 63725498bd20..6e30cae2a936 100644
+>>> --- a/Documentation/devicetree/bindings/opp/opp.txt
+>>> +++ b/Documentation/devicetree/bindings/opp/opp.txt
+>>> @@ -77,7 +77,10 @@ This defines voltage-current-frequency combinations along with other related
+>>>  properties.
+>>>  
+>>>  Required properties:
+>>> -- opp-hz: Frequency in Hz, expressed as a 64-bit big-endian integer.
+>>> +- opp-hz: Frequency in Hz, expressed as a 64-bit big-endian integer. In some
+>>> +  cases the exact frequency in Hz may be hidden from the OS by the firmware and
+>>> +  this field may contain values that represent the frequency in a firmware
+>>> +  dependent way, for example an index of an array in the firmware.
+>> 
+>> Not really sure OPP binding makes sense here. What about all the other 
+>> properties. We expose voltage, but not freq?
+>> 
+>
+> I completely agree with that and I have been pushing this to be
+> represented as just regulators[0]. Mark B seem to dislike that
+> idea [1]
 
-I thought a bit more about this and the changes that would be necessary
-to achieve this:
+And Mark is right, because what's being described is not (simply) a
+voltage regultor.  While it might be "just" voltage on some SoCs (for
+now), it is clearly about performance (a.k.a. OPP) on others.
 
- - introduce new flags IS_FIXED_DIR and IS_FIXED_VALUE for struct
-   gpio_desc::flags and error out accordingly in gpiod_set_direction_*
-   and gpiod_set_value respectively. Then we have:
-
-   	- already existing hogs: IS_FIXED_DIR | IS_FIXED_VALUE
-	- a) IS_FIXED_DIR
-	- b)+c) 0
-	- d) (if desired) IS_FIXED_VALUE
- 
-   d) might need additional bookkeeping to remember the configured value
-   when the direction is changed to input.
-   These flags must be passed to gpiod_hog, via lflags should work.
-
- - don't auto-request hogged pins
-   Currently hogged pins are not available for consumers to be
-   requested. This needs to be changed at least for the three (or four)
-   new cases.
-   IMHO it is sensible to allow requesting a gpio that is completely
-   hogged and just prevent changing direction and (if it's an output)
-   value.
-   TODO: review places that use IS_REQUESTED for need of adaption
-   TODO: race between hog and consumer?
-
- - teach of_parse_own_gpio about IS_FIXED_DIR and IS_FIXED_VALUE
-
- - expand gpiolib_dbg_show to show IS_FIXED_DIR and IS_FIXED_VALUE
-
-@Linus: I'd like to have an ok from your side that you like the approach
-before working on implementing this. So it would be great if you shared
-your thoughts about my ideas.
-
-Best regards
-Uwe
-
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Kevin
