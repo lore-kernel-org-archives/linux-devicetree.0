@@ -1,54 +1,244 @@
-From: Jassi Brar <jassisinghbrar@gmail.com>
-Subject: Re: [PATCH v4 3/5] soc: qcom: Introduce APCS IPC driver
-Date: Sat, 6 May 2017 10:18:09 +0530
-Message-ID: <CABb+yY1u9mspX1Zu0mg21JMYxpKxsXsvBa9LnF6VNr1_42UJUQ@mail.gmail.com>
-References: <20170504200539.27027-1-bjorn.andersson@linaro.org>
- <20170504200539.27027-3-bjorn.andersson@linaro.org> <CABb+yY2P=qPTYB6PDkjV82Qc67Xzer40BHRsOQP2m-gM3eK_UA@mail.gmail.com>
- <20170505183729.GG15143@minitux> <CABb+yY03imq8911rF9dHJjG_a_aosksA=tgk7Rog5AZSezHDyg@mail.gmail.com>
- <338c4262-cc6b-bed2-16fe-1767d1f0d5f6@codeaurora.org> <CABb+yY1K3Hyn7CzQCA6tHu-KrPigARc3cYgBdT8PNX7vjhPK0g@mail.gmail.com>
- <20170506011920.GH15143@minitux>
+From: Oza Oza via iommu <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+Subject: Re: [PATCH 1/3] of/pci/dma: fix DMA configuration for PCI masters
+Date: Sat, 6 May 2017 11:00:18 +0530
+Message-ID: <CAMSpPPemCV+J7gMzQ2CZ7mO+vhedAGwrtyQ0v-ymH9Z3NxYfJQ@mail.gmail.com>
+References: <1493786795-28153-1-git-send-email-oza.oza@broadcom.com>
+	<d7203258-e39a-a59b-d14f-c0c92a1d3f41@arm.com>
+	<CAMSpPPcC6wN+2HeZPak+gWxoy2WaO14epHNQfHT1W0FnTRHnOQ@mail.gmail.com>
+	<48cd8da2-5928-3d5d-0f07-dfdb83f50ccb@arm.com>
+Reply-To: Oza Oza <oza.oza-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <20170506011920.GH15143@minitux>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Jeffrey Hugo <jhugo@codeaurora.org>, Andy Gross <andy.gross@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ohad Ben-Cohen <ohad@wizery.com>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, Devicetree List <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-remoteproc@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <48cd8da2-5928-3d5d-0f07-dfdb83f50ccb-5wv7dgnIgG8@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Oza Pawandeep <oza.pawandeep-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux IOMMU <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, BCM Kernel Feedback <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, May 6, 2017 at 6:49 AM, Bjorn Andersson
-<bjorn.andersson@linaro.org> wrote:
-> On Fri 05 May 13:22 PDT 2017, Jassi Brar wrote:
-
->> How is it supposed to work if a client queues more than one request?
+On Fri, May 5, 2017 at 8:55 PM, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org> wrote:
+> On 04/05/17 19:41, Oza Oza wrote:
+> [...]
+>>>> 5) leaves scope of adding PCI flag handling for inbound memory
+>>>> by the new function.
+>>>
+>>> Which flags would ever actually matter? DMA windows aren't going to be
+>>> to config or I/O space, so the memory type can be assumed, and the
+>>> 32/64-bit distinction is irrelevant as it's not a relocatable BAR;
+>>> DMA-able system memory isn't going to be read-sensitive, so the
+>>> prefetchable flag shouldn't matter; and not being a BAR none of the
+>>> others would be relevant either.
+>>>
+>>
+>> Thanks Robin; for your reply and attention:
+>>
+>> agree with you, at present it would not matter,
+>> but it does not mean that we do not scope it to make it matter in future.
+>>
+>> now where it could matter:
+>> there is Relaxed Ordering for inbound memory for PCI.
+>> According to standard, Relaxed Ordering (RO) bit can be set only for
+>> Memory requests and completions (if present in the original request).
+>> Also, according to transaction ordering rules, I/O and configuration
+>> requests can still be re-ordered ahead of each other.
+>> and we would like to make use of it.
+>> for e.g. lets say we mark memory as Relaxed Ordered with flag.
+>> the special about this memory is incoming PCI transactions can be
+>> reordered and rest memory has to be strongly ordered.
 >
-> One such example is found in patch 5 in this series. There are two FIFOs
-> in shared memory, one in each direction. Each fifo has a index-pair
-> associated; a write-index is used by the writer to inform the reader
-> where the valid data in the ring buffer ends and a read-index indicates
-> to the writer how far behind the read is.
+> Please look at "PCI Bus Binding to: IEEE Std 1275-1994 Standard for Boot
+> (Initialization Configuration) Firmware" (as referenced in DTSpec) and
+> explain how PCIe Relaxed Order has anything to do with the DT binding.
 >
-> The writer will just push data into the FIFO, each time firing off an
-> APCS IPC interrupt and when the remote interrupt handler runs it will
-> consume all the messages from the read-index to the write-index. All
-> without the need for the reader to signal the writer that it has
-> received the interrupts.
+>> how it our SOC would make use of this is out of scope for the
+>> discussion at this point of time, but I am just bringing in the
+>> idea/point how flags could be useful
+>> for inbound memory, since we would not like throw-away flags completely.
 >
-> In the event that the write-index catches up with the read-index a
-> dedicated flag is set which will cause the reader to signal that the
-> read-index is updated - allowing the writer to sleep waiting for room in
-> the FIFO.
+> The premise for implementing a PCI-specific parser is that you claim we
+> need to do something with the phys.hi cell of a DT PCI address, rather
+> than just taking the numerical part out of the phys.mid and phys.lo
+> cells. Please make that argument in reference to the flags which that
+> upper cell actually encodes, not unrelated things.
 >
-Interesting.Just for my enlightenment...
 
-  Where does the writer sleep in the driver? I see it simply sets the
-bit and leave.
-Such a flag (or head and tail pointers matching) should be checked in
-last_tx_done()
+I think, the whole discussion around inbound flags is not what I
+intended to bring.
+this patch does nothing about inbound flag and never intends to solve
+anything regarding inbound flags.
+infact I would like to remove point 5 form the commit message. which
+should keep it out of discussion completely.
 
-If you think RPM will _always_ be ready to accept new messages (though
-we have seen that doesn't hold in some situations), then you don't
-need last_tx_done. The client should call mbox_client_txdone() after
-mbox_send_message().
+let met tell what this patch is trying to address/solve 2 BUGs
+1) fix wrong size return from of_dma_configure for PCI masters. (which
+is right now BUG)
 
-thnx
+2) handles multiple dma-ranges cleanly
+
+3) It takes care of dma-ranges being optional.
+
+4) following is the comment on function of_dma_get_range (which is also a BUG)
+                "It returns -ENODEV if "dma-ranges" property was not found
+                 * for this device in DT."
+which I think is wrong for PCI device, because if dma-ranges are
+absent then instead of returning  -ENODEV,
+it should return 0 with largest possible host memory.
+
+it solves all the above 4 problems.
+
+> [...]
+>>>> +int of_pci_get_dma_ranges(struct device_node *np, struct list_head *resources)
+>>>> +{
+>>>> +     struct device_node *node = of_node_get(np);
+>>>> +     int rlen;
+>>>> +     int ret = 0;
+>>>> +     const int na = 3, ns = 2;
+>>>> +     struct resource *res;
+>>>> +     struct of_pci_range_parser parser;
+>>>> +     struct of_pci_range range;
+>>>> +
+>>>> +     if (!node)
+>>>> +             return -EINVAL;
+>>>> +
+>>>> +     parser.node = node;
+>>>> +     parser.pna = of_n_addr_cells(node);
+>>>> +     parser.np = parser.pna + na + ns;
+>>>> +
+>>>> +     parser.range = of_get_property(node, "dma-ranges", &rlen);
+>>>> +
+>>>> +     if (!parser.range) {
+>>>> +             pr_debug("pcie device has no dma-ranges defined for node(%s)\n",
+>>>> +                       np->full_name);
+>>>> +             ret = -EINVAL;
+>>>> +             goto out;
+>>>> +     }
+>>>> +
+>>>> +     parser.end = parser.range + rlen / sizeof(__be32);
+>>>> +
+>>>> +     for_each_of_pci_range(&parser, &range) {
+>>>
+>>> This is plain wrong - of_pci_range_parser_one() will translate upwards
+>>> through parent "ranges" properties, which is completely backwards for
+>>> DMA addresses.
+>>>
+>>> Robin.
+>>>
+>>
+>> No it does not, this patch is thoroughly tested on our SOC and it works.
+>> of_pci_range_parser_one does not translate upwards through parent. it
+>> just sticks to given PCI parser.
+>
+> Frankly, I'm losing patience with this attitude. Please look at the code
+> you call:
+>
+> #define for_each_of_pci_range(parser, range) \
+>         for (; of_pci_range_parser_one(parser, range);)
+>
+>
+> struct of_pci_range *of_pci_range_parser_one(struct of_pci_range_parser
+> *parser,
+>                                                 struct of_pci_range *range)
+> {
+>         const int na = 3, ns = 2;
+>
+>         if (!range)
+>                 return NULL;
+>
+>         if (!parser->range || parser->range + parser->np > parser->end)
+>                 return NULL;
+>
+>         range->pci_space = parser->range[0];
+>         range->flags = of_bus_pci_get_flags(parser->range);
+>         range->pci_addr = of_read_number(parser->range + 1, ns);
+>         range->cpu_addr = of_translate_address(parser->node,
+>                                 parser->range + na);
+> ...
+>
+>
+> u64 of_translate_address(struct device_node *dev, const __be32 *in_addr)
+> {
+>         return __of_translate_address(dev, in_addr, "ranges");
+> }
+>
+>
+> I don't doubt that you still manage to get the right result on *your*
+> SoC, because you probably have neither further "ranges" nor "dma-ranges"
+> translations above your host controller node anyway. That does not
+> change the fact that the proposed code is still obviously wrong for more
+> complex DT topologies that do.
+
+sorry but I am confused, and sorry again for not getting through on
+what you said.
+
+this patch assumes that the root bus would have dma-ranges.
+are you saying this code doesn't iterate through way up till it finds
+valid dma-ranges ?
+
+or
+
+you are saying
+of_pci_range_parser_one() will translate upwards
+through parent "ranges" properties
+
+>
+> We're doing upstream work in core code here: I don't particularly care
+> about making your SoC work; I don't really care about making Juno work
+> properly either; what I do care about is that code to parse dma-ranges
+> actually parses dma-ranges *correctly* for all possible valid uses of
+> dma-ranges, which means fixing the existing bugs and not introducing
+> more. The principal side-effect of that is that *all* systems with valid
+> DTs will then work correctly.
+>
+
+I do see your point now.....and my apologies for not getting it right
+at the first time.
+
+but I would not know all the nitty-gritty of all the code of framework and
+every complex DT topology of other SOCs.
+that is the reason we seek for comments from experts like you, to make
+the patch better.
+
+when I say it works on our SOC, I only meant that this patch is
+tested. so again apologies there.
+
+there is one obvious problem is
+of_translate_dma_address should get called instead of
+of_translate_address (so no "ranges") instead ("dma-ranges")
+
+but with that also as you said, it will traverse all the way up to the
+DT hierarchy.
+
+I think there are 2 problems with this patch.
+
+1) this patch should try to iterate through all the way up to find
+first dma-ranges and should stop when it finds it.
+    it should not assume that dma-ranges will always be found at the
+current node.
+
+2) of_translate_dma_address is broken, because if point 1 is achieved,
+then no need to traverse anymore.
+
+but before that, again seeking your opinion, whether we want to go
+down this path.
+registering bus specific get_ranges as in PATCH v5 ? in my opinion it
+is better way of handling it.
+
+the original patch which you had in mind, you will have to club both
+PCI and memory -mapped implementation together.
+even if dma-ranges (ignoring flags) remain the same in nature, still
+you have to parse it differently. because address-cells are different.
+and you will have to handle multiple ranges.
+
+I just tried to bring it out to different path with registering bus
+specific callbacks.
+
+> Robin.
