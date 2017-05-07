@@ -1,15 +1,15 @@
 From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH v4 1/3] iio: adc: meson-saradc: mark all
- meson_sar_adc_data static and const
-Date: Sun, 7 May 2017 12:35:07 +0100
-Message-ID: <a1cd9503-9231-40e1-2189-a7692531f604@kernel.org>
+Subject: Re: [PATCH v4 2/3] dt-bindings: iio: adc: add Meson8 and Meson8b
+ support
+Date: Sun, 7 May 2017 12:35:22 +0100
+Message-ID: <56a48302-c7f1-65a0-95f9-22c7a1c21e8b@kernel.org>
 References: <20170506134929.31190-1-martin.blumenstingl@googlemail.com>
- <20170506134929.31190-2-martin.blumenstingl@googlemail.com>
+ <20170506134929.31190-3-martin.blumenstingl@googlemail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170506134929.31190-2-martin.blumenstingl@googlemail.com>
+In-Reply-To: <20170506134929.31190-3-martin.blumenstingl@googlemail.com>
 Content-Language: en-GH
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
@@ -25,45 +25,30 @@ Cc: devicetree@vger.kernel.org, khilman@baylibre.com, thomas.langer@intel.com, c
 List-Id: devicetree@vger.kernel.org
 
 On 06/05/17 14:49, Martin Blumenstingl wrote:
-> These are only passed as of_device_id.data and never modified. Thus we
-> can mark them as static const, just like the of_device_id instances
-> where they are used.
+> The Amlogic Meson SAR ADC driver can be used on Meson8 and Meson8b
+> (probably on earlier SoC generations as well, but I don't have any
+> hardware available for testing that).
+> Add a separate compatible for Meson8 and Meson8b because it does not
+> need any of the BL30 magic (unlike the GX SoCs).
 > 
 > Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Good catch indeed on those consts!
-
-Applied to the togreg branch of iio.git and pushed out as testing.
-
-Thanks,
-
-Jonathan
+> Acked-by: Rob Herring <robh@kernel.org>
+Applied
 > ---
->  drivers/iio/adc/meson_saradc.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
+>  Documentation/devicetree/bindings/iio/adc/amlogic,meson-saradc.txt | 2 ++
+>  1 file changed, 2 insertions(+)
 > 
-> diff --git a/drivers/iio/adc/meson_saradc.c b/drivers/iio/adc/meson_saradc.c
-> index dd4190b50df6..2f6fec995264 100644
-> --- a/drivers/iio/adc/meson_saradc.c
-> +++ b/drivers/iio/adc/meson_saradc.c
-> @@ -834,17 +834,17 @@ static const struct iio_info meson_sar_adc_iio_info = {
->  	.driver_module = THIS_MODULE,
->  };
+> diff --git a/Documentation/devicetree/bindings/iio/adc/amlogic,meson-saradc.txt b/Documentation/devicetree/bindings/iio/adc/amlogic,meson-saradc.txt
+> index f9e3ff2c656e..08cee82e54c3 100644
+> --- a/Documentation/devicetree/bindings/iio/adc/amlogic,meson-saradc.txt
+> +++ b/Documentation/devicetree/bindings/iio/adc/amlogic,meson-saradc.txt
+> @@ -2,6 +2,8 @@
 >  
-> -struct meson_sar_adc_data meson_sar_adc_gxbb_data = {
-> +static const struct meson_sar_adc_data meson_sar_adc_gxbb_data = {
->  	.resolution = 10,
->  	.name = "meson-gxbb-saradc",
->  };
->  
-> -struct meson_sar_adc_data meson_sar_adc_gxl_data = {
-> +static const struct meson_sar_adc_data meson_sar_adc_gxl_data = {
->  	.resolution = 12,
->  	.name = "meson-gxl-saradc",
->  };
->  
-> -struct meson_sar_adc_data meson_sar_adc_gxm_data = {
-> +static const struct meson_sar_adc_data meson_sar_adc_gxm_data = {
->  	.resolution = 12,
->  	.name = "meson-gxm-saradc",
->  };
+>  Required properties:
+>  - compatible:	depending on the SoC this should be one of:
+> +			- "amlogic,meson8-saradc" for Meson8
+> +			- "amlogic,meson8b-saradc" for Meson8b
+>  			- "amlogic,meson-gxbb-saradc" for GXBB
+>  			- "amlogic,meson-gxl-saradc" for GXL
+>  			- "amlogic,meson-gxm-saradc" for GXM
 > 
