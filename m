@@ -1,17 +1,11 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>
-Subject: Re: [PATCH v2 3/3] gpiolib: Add GPIO initialization
-Date: Sun, 7 May 2017 14:38:47 +0200
-Message-ID: <20170507123847.dwkr627r6lw5jv3y@pengutronix.de>
-References: <1440920686-6892-1-git-send-email-mpa@pengutronix.de>
- <1440920686-6892-4-git-send-email-mpa@pengutronix.de>
- <20170207110950.zy5pzo2hq6hrvmr5@pengutronix.de>
- <20170507102201.GL22219@n2100.armlinux.org.uk>
+From: Randy Li <ayaka@soulik.info>
+Subject: [PATCH] ARM: dts: rockchip: add adc button for Firefly
+Date: Sun,  7 May 2017 22:26:27 +0800
+Message-ID: <20170507142627.5307-1-ayaka@soulik.info>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20170507102201.GL22219@n2100.armlinux.org.uk>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -21,64 +15,76 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Russell King - ARM Linux <linux@armlinux.org.uk>
-Cc: Alexandre Courbot <gnurou@gmail.com>, chrisrfq@gmail.com, Arun Bharadwaj <arun@gumstix.com>, devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Johan Hovold <johan@kernel.org>, linux-gpio@vger.kernel.org, kernel@pengutronix.de, linux-arm-kernel@lists.infradead.org
+To: devicetree@vger.kernel.org
+Cc: mark.rutland@arm.com, heiko@sntech.de, Randy Li <ayaka@soulik.info>, linux@armlinux.org.uk, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Russell,
+The only adc button connected to adc input is recovery button.
 
-On Sun, May 07, 2017 at 11:22:01AM +0100, Russell King - ARM Linux wrote:
-> On Tue, Feb 07, 2017 at 12:09:50PM +0100, Uwe Kleine-K=F6nig wrote:
-> > Now additionally I want to initialize some gpios but allow them to be
-> > grabbed later. IMHO there are the following new cases:
-> > =
+Signed-off-by: Randy Li <ayaka@soulik.info>
+---
+ arch/arm/boot/dts/rk3288-firefly-reload.dts | 17 +++++++++++++++++
+ arch/arm/boot/dts/rk3288-firefly.dtsi       | 13 +++++++++++++
+ 2 files changed, 30 insertions(+)
 
-> > It should be possible to:
-> > =
-
-> >  a) change the value of a gpio initially configured as output
-> >  b) change the direction of a gpio initially configured as output
-> >  c) change the direction of a gpio initially configured as input
-> > =
-
-> > IMHO the dts should describe which case should be applied to a given
-> > gpio.
-> =
-
-> Isn't it the job of the board firmware to ensure that the hardware is
-> setup to a reasonably sane state for the board?
-> =
-
-> You give an example of holding GPIOs low in Linux for "ESD reasons"
-> later in this thread, but if you're only doing that in Linux, what if
-> Linux isn't running yet, and the GPIO has been left floating by the
-> board firmware?  Fixing this in Linux is really too late.
-> =
-
-> Floating GPIOs are also a source of higher current drain - a GPIO
-> sitting mid-rail turns both transistors on for a MOS input, which gives
-> a direct path across the power supply.  The quicker that the GPIOs can
-> be initialised, the less wasted power there is.  So, that's another
-> argument for board firmware doing the basic GPIO initialisation and not
-> stuffing this into DT and having the kernel do it.
-> =
-
-> We could then talk about floating GPIOs that activate higher power
-> devices, and the arguments for doing GPIO initialisation as early as
-> possible in board firmware continue to stack up.
-> =
-
-> IMHO, initial configuration of GPIOs is the job of board firmware, not
-> the kernel.  I see no sane reason to push that into the kernel.
-
-still it is hardware description, isn't it? And Linux isn't the only
-consumer of the dtb, barebox understands it, too, and should be teached
-to handle the gpio-init stuff once we agreed on a binding.
-
-Best regards
-Uwe
-
--- =
-
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+diff --git a/arch/arm/boot/dts/rk3288-firefly-reload.dts b/arch/arm/boot/dts/rk3288-firefly-reload.dts
+index d0b3204a..ed1baa8 100644
+--- a/arch/arm/boot/dts/rk3288-firefly-reload.dts
++++ b/arch/arm/boot/dts/rk3288-firefly-reload.dts
+@@ -48,6 +48,19 @@
+ 	model = "Firefly-RK3288-reload";
+ 	compatible = "firefly,firefly-rk3288-reload", "rockchip,rk3288";
+ 
++	adc-keys {
++		compatible = "adc-keys";
++		io-channels = <&saradc 1>;
++		io-channel-names = "buttons";
++		keyup-threshold-microvolt = <1800000>;
++
++		button-recovery {
++			label = "Recovery";
++			linux,code = <KEY_BACK>;
++			press-threshold-microvolt = <0>;
++		};
++	};
++
+ 	gpio-keys {
+ 		compatible = "gpio-keys";
+ 
+@@ -246,6 +259,10 @@
+ 	status = "okay";
+ };
+ 
++&saradc {
++	status = "okay";
++};
++
+ &sdmmc {
+ 	bus-width = <4>;
+ 	cap-mmc-highspeed;
+diff --git a/arch/arm/boot/dts/rk3288-firefly.dtsi b/arch/arm/boot/dts/rk3288-firefly.dtsi
+index 10793ac..63b8b2d 100644
+--- a/arch/arm/boot/dts/rk3288-firefly.dtsi
++++ b/arch/arm/boot/dts/rk3288-firefly.dtsi
+@@ -49,6 +49,19 @@
+ 		reg = <0 0x80000000>;
+ 	};
+ 
++	adc-keys {
++		compatible = "adc-keys";
++		io-channels = <&saradc 1>;
++		io-channel-names = "buttons";
++		keyup-threshold-microvolt = <1800000>;
++
++		button-recovery {
++			label = "Recovery";
++			linux,code = <KEY_BACK>;
++			press-threshold-microvolt = <0>;
++		};
++	};
++
+ 	dovdd_1v8: dovdd-1v8-regulator {
+ 		compatible = "regulator-fixed";
+ 		regulator-name = "dovdd_1v8";
+-- 
+2.9.3
