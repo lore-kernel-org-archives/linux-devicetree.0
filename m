@@ -1,480 +1,477 @@
-From: Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH v5 04/14] GPIO: Add gpio-ingenic driver
-Date: Mon, 8 May 2017 00:05:10 +0200
-Message-ID: <3a779fca-5a56-44e5-2acf-12b8abdaf906@crapouillou.net>
-References: <20170402204244.14216-2-paul@crapouillou.net>
- <20170428200824.10906-1-paul@crapouillou.net>
- <20170428200824.10906-5-paul@crapouillou.net>
+From: Heiner Kallweit <hkallweit1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 5/5] pintrl: meson: add support for GPIO interrupts
+Date: Sun, 7 May 2017 18:34:57 +0200
+Message-ID: <e0fd5c2a-ef88-6c09-63d4-67a54091b9a7@gmail.com>
+References: <a4ca587b-d3e8-a22d-4d25-289871d2d095@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170428200824.10906-5-paul@crapouillou.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ralf Baechle <ralf@linux-mips.org>
-Cc: Boris Brezillon <boris.brezillon@free-electrons.com>, Thierry Reding <thierry.reding@gmail.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Maarten ter Huurne <maarten@treewalker.org>, Lars-Peter Clausen <lars@metafoo.de>, Paul Burton <paul.burton@imgtec.com>, james.hogan@imgtec.com, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, linux-mmc@vger.kernel.org, linux-mtd@lists.infradead.org, linux-pwm@vger.kernel.org, linux-fbdev@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <a4ca587b-d3e8-a22d-4d25-289871d2d095-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-It looks like the gpio_get_value() is broken on jz4740.
+Add support for GPIO interrupts on Amlogic Meson SoC's.
 
-I'll send a v6.
+There's a limit of 8 parent interupts which can be used in total.
+Note that IRQ_TYPE_EDGE_BOTH interrupts reserve two parent IRQ's,
+one for each edge.
 
-- Paul
+Signed-off-by: Heiner Kallweit <hkallweit1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+ drivers/pinctrl/Kconfig               |   1 +
+ drivers/pinctrl/meson/pinctrl-meson.c | 338 +++++++++++++++++++++++++++++++++-
+ drivers/pinctrl/meson/pinctrl-meson.h |  12 ++
+ 3 files changed, 350 insertions(+), 1 deletion(-)
 
-On 28/04/2017 22:08, Paul Cercueil wrote:
-> This driver handles the GPIOs of all the Ingenic JZ47xx SoCs
-> currently supported by the upsteam Linux kernel.
->
-> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-> ---
->   drivers/gpio/Kconfig        |  10 ++
->   drivers/gpio/Makefile       |   1 +
->   drivers/gpio/gpio-ingenic.c | 399 ++++++++++++++++++++++++++++++++++++++++++++
->   3 files changed, 410 insertions(+)
->   create mode 100644 drivers/gpio/gpio-ingenic.c
->
->   v2: Consider it's a new patch. Completely rewritten from v1.
->   v3: Add missing include <linux/pinctrl/consumer.h> and drop semicolon after }
->   v4: Completely rewritten from v3.
->   v5: Get bank number from 'reg' property; drop dependency on PINCTRL_INGENIC
->       (note: selecting PINCTRL would cause cyclic Kconfig dependencies, that's
->        why I just dropped the dependency on PINCTRL_INGENIC)
->
-> diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-> index 05043071fc98..7a5f9cf123c1 100644
-> --- a/drivers/gpio/Kconfig
-> +++ b/drivers/gpio/Kconfig
-> @@ -241,6 +241,16 @@ config GPIO_ICH
->   
->   	  If unsure, say N.
->   
-> +config GPIO_INGENIC
-> +	tristate "Ingenic JZ47xx SoCs GPIO support"
-> +	depends on MACH_INGENIC || COMPILE_TEST
-> +	select GPIOLIB_IRQCHIP
-> +	help
-> +	  Say yes here to support the GPIO functionality present on the
-> +	  JZ4740 and JZ4780 SoCs from Ingenic.
-> +
-> +	  If unsure, say N.
-> +
->   config GPIO_IOP
->   	tristate "Intel IOP GPIO"
->   	depends on ARCH_IOP32X || ARCH_IOP33X || COMPILE_TEST
-> diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
-> index becb96c724fe..3fceb4ab3ca7 100644
-> --- a/drivers/gpio/Makefile
-> +++ b/drivers/gpio/Makefile
-> @@ -54,6 +54,7 @@ obj-$(CONFIG_GPIO_GPIO_MM)	+= gpio-gpio-mm.o
->   obj-$(CONFIG_GPIO_GRGPIO)	+= gpio-grgpio.o
->   obj-$(CONFIG_HTC_EGPIO)		+= gpio-htc-egpio.o
->   obj-$(CONFIG_GPIO_ICH)		+= gpio-ich.o
-> +obj-$(CONFIG_GPIO_INGENIC)	+= gpio-ingenic.o
->   obj-$(CONFIG_GPIO_IOP)		+= gpio-iop.o
->   obj-$(CONFIG_GPIO_IT87)		+= gpio-it87.o
->   obj-$(CONFIG_GPIO_JANZ_TTL)	+= gpio-janz-ttl.o
-> diff --git a/drivers/gpio/gpio-ingenic.c b/drivers/gpio/gpio-ingenic.c
-> new file mode 100644
-> index 000000000000..34e9339bd815
-> --- /dev/null
-> +++ b/drivers/gpio/gpio-ingenic.c
-> @@ -0,0 +1,399 @@
-> +/*
-> + * Ingenic JZ47xx GPIO driver
-> + *
-> + * Copyright (c) 2017 Paul Cercueil <paul@crapouillou.net>
-> + *
-> + * License terms: GNU General Public License (GPL) version 2
-> + */
-> +
-> +#include <linux/gpio/driver.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/io.h>
-> +#include <linux/module.h>
-> +#include <linux/of_address.h>
-> +#include <linux/of_device.h>
-> +#include <linux/of_irq.h>
-> +#include <linux/pinctrl/consumer.h>
-> +#include <linux/regmap.h>
-> +
-> +#define GPIO_PIN	0x00
-> +#define GPIO_MSK	0x20
-> +
-> +#define JZ4740_GPIO_DATA	0x10
-> +#define JZ4740_GPIO_SELECT	0x50
-> +#define JZ4740_GPIO_DIR		0x60
-> +#define JZ4740_GPIO_TRIG	0x70
-> +#define JZ4740_GPIO_FLAG	0x80
-> +
-> +#define JZ4770_GPIO_INT		0x10
-> +#define JZ4770_GPIO_PAT1	0x30
-> +#define JZ4770_GPIO_PAT0	0x40
-> +#define JZ4770_GPIO_FLAG	0x50
-> +
-> +#define REG_SET(x) ((x) + 0x4)
-> +#define REG_CLEAR(x) ((x) + 0x8)
-> +
-> +enum jz_version {
-> +	ID_JZ4740,
-> +	ID_JZ4770,
-> +	ID_JZ4780,
-> +};
-> +
-> +struct ingenic_gpio_chip {
-> +	struct regmap *map;
-> +	struct gpio_chip gc;
-> +	struct irq_chip irq_chip;
-> +	unsigned int irq, reg_base;
-> +	enum jz_version version;
-> +};
-> +
-> +static u32 gpio_ingenic_read_reg(struct ingenic_gpio_chip *jzgc, u8 reg)
-> +{
-> +	unsigned int val;
-> +
-> +	regmap_read(jzgc->map, jzgc->reg_base + reg, &val);
-> +
-> +	return (u32) val;
-> +}
-> +
-> +static void gpio_ingenic_set_bit(struct ingenic_gpio_chip *jzgc,
-> +		u8 reg, u8 offset, bool set)
-> +{
-> +	if (set)
-> +		reg = REG_SET(reg);
-> +	else
-> +		reg = REG_CLEAR(reg);
-> +
-> +	regmap_write(jzgc->map, jzgc->reg_base + reg, BIT(offset));
-> +}
-> +
-> +static inline bool gpio_get_value(struct ingenic_gpio_chip *jzgc, u8 offset)
-> +{
-> +	unsigned int val;
-> +
-> +	if (jzgc->version >= ID_JZ4770)
-> +		val = gpio_ingenic_read_reg(jzgc, GPIO_PIN);
-> +	else
-> +		val = gpio_ingenic_read_reg(jzgc, JZ4740_GPIO_DATA);
-> +
-> +	return !!(val & BIT(offset));
-> +}
-> +
-> +static void gpio_set_value(struct ingenic_gpio_chip *jzgc, u8 offset, int value)
-> +{
-> +	if (jzgc->version >= ID_JZ4770)
-> +		gpio_ingenic_set_bit(jzgc, JZ4770_GPIO_PAT0, offset, !!value);
-> +	else
-> +		gpio_ingenic_set_bit(jzgc, JZ4740_GPIO_DATA, offset, !!value);
-> +}
-> +
-> +static void irq_set_type(struct ingenic_gpio_chip *jzgc,
-> +		u8 offset, unsigned int type)
-> +{
-> +	u8 reg1, reg2;
-> +
-> +	if (jzgc->version >= ID_JZ4770) {
-> +		reg1 = JZ4770_GPIO_PAT1;
-> +		reg2 = JZ4770_GPIO_PAT0;
-> +	} else {
-> +		reg1 = JZ4740_GPIO_TRIG;
-> +		reg2 = JZ4740_GPIO_DIR;
-> +	}
-> +
-> +	switch (type) {
-> +	case IRQ_TYPE_EDGE_RISING:
-> +		gpio_ingenic_set_bit(jzgc, reg2, offset, true);
-> +		gpio_ingenic_set_bit(jzgc, reg1, offset, true);
-> +		break;
-> +	case IRQ_TYPE_EDGE_FALLING:
-> +		gpio_ingenic_set_bit(jzgc, reg2, offset, false);
-> +		gpio_ingenic_set_bit(jzgc, reg1, offset, true);
-> +		break;
-> +	case IRQ_TYPE_LEVEL_HIGH:
-> +		gpio_ingenic_set_bit(jzgc, reg2, offset, true);
-> +		gpio_ingenic_set_bit(jzgc, reg1, offset, false);
-> +		break;
-> +	case IRQ_TYPE_LEVEL_LOW:
-> +	default:
-> +		gpio_ingenic_set_bit(jzgc, reg2, offset, false);
-> +		gpio_ingenic_set_bit(jzgc, reg1, offset, false);
-> +		break;
-> +	}
-> +}
-> +
-> +static void ingenic_gpio_irq_mask(struct irq_data *irqd)
-> +{
-> +	struct gpio_chip *gc = irq_data_get_irq_chip_data(irqd);
-> +	struct ingenic_gpio_chip *jzgc = gpiochip_get_data(gc);
-> +
-> +	gpio_ingenic_set_bit(jzgc, GPIO_MSK, irqd->hwirq, true);
-> +}
-> +
-> +static void ingenic_gpio_irq_unmask(struct irq_data *irqd)
-> +{
-> +	struct gpio_chip *gc = irq_data_get_irq_chip_data(irqd);
-> +	struct ingenic_gpio_chip *jzgc = gpiochip_get_data(gc);
-> +
-> +	gpio_ingenic_set_bit(jzgc, GPIO_MSK, irqd->hwirq, false);
-> +}
-> +
-> +static void ingenic_gpio_irq_enable(struct irq_data *irqd)
-> +{
-> +	struct gpio_chip *gc = irq_data_get_irq_chip_data(irqd);
-> +	struct ingenic_gpio_chip *jzgc = gpiochip_get_data(gc);
-> +	int irq = irqd->hwirq;
-> +
-> +	if (jzgc->version >= ID_JZ4770)
-> +		gpio_ingenic_set_bit(jzgc, JZ4770_GPIO_INT, irq, true);
-> +	else
-> +		gpio_ingenic_set_bit(jzgc, JZ4740_GPIO_SELECT, irq, true);
-> +
-> +	ingenic_gpio_irq_unmask(irqd);
-> +}
-> +
-> +static void ingenic_gpio_irq_disable(struct irq_data *irqd)
-> +{
-> +	struct gpio_chip *gc = irq_data_get_irq_chip_data(irqd);
-> +	struct ingenic_gpio_chip *jzgc = gpiochip_get_data(gc);
-> +	int irq = irqd->hwirq;
-> +
-> +	ingenic_gpio_irq_mask(irqd);
-> +
-> +	if (jzgc->version >= ID_JZ4770)
-> +		gpio_ingenic_set_bit(jzgc, JZ4770_GPIO_INT, irq, false);
-> +	else
-> +		gpio_ingenic_set_bit(jzgc, JZ4740_GPIO_SELECT, irq, false);
-> +}
-> +
-> +static void ingenic_gpio_irq_ack(struct irq_data *irqd)
-> +{
-> +	struct gpio_chip *gc = irq_data_get_irq_chip_data(irqd);
-> +	struct ingenic_gpio_chip *jzgc = gpiochip_get_data(gc);
-> +	int irq = irqd->hwirq;
-> +	bool high;
-> +
-> +	if (irqd_get_trigger_type(irqd) == IRQ_TYPE_EDGE_BOTH) {
-> +		/*
-> +		 * Switch to an interrupt for the opposite edge to the one that
-> +		 * triggered the interrupt being ACKed.
-> +		 */
-> +		high = gpio_get_value(jzgc, irq);
-> +		if (high)
-> +			irq_set_type(jzgc, irq, IRQ_TYPE_EDGE_FALLING);
-> +		else
-> +			irq_set_type(jzgc, irq, IRQ_TYPE_EDGE_RISING);
-> +	}
-> +
-> +	if (jzgc->version >= ID_JZ4770)
-> +		gpio_ingenic_set_bit(jzgc, JZ4770_GPIO_FLAG, irq, false);
-> +	else
-> +		gpio_ingenic_set_bit(jzgc, JZ4740_GPIO_DATA, irq, true);
-> +}
-> +
-> +static int ingenic_gpio_irq_set_type(struct irq_data *irqd, unsigned int type)
-> +{
-> +	struct gpio_chip *gc = irq_data_get_irq_chip_data(irqd);
-> +	struct ingenic_gpio_chip *jzgc = gpiochip_get_data(gc);
-> +
-> +	switch (type) {
-> +	case IRQ_TYPE_EDGE_BOTH:
-> +	case IRQ_TYPE_EDGE_RISING:
-> +	case IRQ_TYPE_EDGE_FALLING:
-> +		irq_set_handler_locked(irqd, handle_edge_irq);
-> +		break;
-> +	case IRQ_TYPE_LEVEL_HIGH:
-> +	case IRQ_TYPE_LEVEL_LOW:
-> +		irq_set_handler_locked(irqd, handle_level_irq);
-> +		break;
-> +	default:
-> +		irq_set_handler_locked(irqd, handle_bad_irq);
-> +	}
-> +
-> +	if (type == IRQ_TYPE_EDGE_BOTH) {
-> +		/*
-> +		 * The hardware does not support interrupts on both edges. The
-> +		 * best we can do is to set up a single-edge interrupt and then
-> +		 * switch to the opposing edge when ACKing the interrupt.
-> +		 */
-> +		bool high = gpio_get_value(jzgc, irqd->hwirq);
-> +
-> +		type = high ? IRQ_TYPE_EDGE_FALLING : IRQ_TYPE_EDGE_RISING;
-> +	}
-> +
-> +	irq_set_type(jzgc, irqd->hwirq, type);
-> +	return 0;
-> +}
-> +
-> +static int ingenic_gpio_irq_set_wake(struct irq_data *irqd, unsigned int on)
-> +{
-> +	struct gpio_chip *gc = irq_data_get_irq_chip_data(irqd);
-> +	struct ingenic_gpio_chip *jzgc = gpiochip_get_data(gc);
-> +
-> +	return irq_set_irq_wake(jzgc->irq, on);
-> +}
-> +
-> +static void ingenic_gpio_irq_handler(struct irq_desc *desc)
-> +{
-> +	struct gpio_chip *gc = irq_desc_get_handler_data(desc);
-> +	struct ingenic_gpio_chip *jzgc = gpiochip_get_data(gc);
-> +	struct irq_chip *irq_chip = irq_data_get_irq_chip(&desc->irq_data);
-> +	unsigned long flag, i;
-> +
-> +	chained_irq_enter(irq_chip, desc);
-> +
-> +	if (jzgc->version >= ID_JZ4770)
-> +		flag = gpio_ingenic_read_reg(jzgc, JZ4770_GPIO_FLAG);
-> +	else
-> +		flag = gpio_ingenic_read_reg(jzgc, JZ4740_GPIO_FLAG);
-> +
-> +	for_each_set_bit(i, &flag, 32)
-> +		generic_handle_irq(irq_linear_revmap(gc->irqdomain, i));
-> +	chained_irq_exit(irq_chip, desc);
-> +}
-> +
-> +static void ingenic_gpio_set(struct gpio_chip *gc,
-> +		unsigned int offset, int value)
-> +{
-> +	struct ingenic_gpio_chip *jzgc = gpiochip_get_data(gc);
-> +
-> +	gpio_set_value(jzgc, offset, value);
-> +}
-> +
-> +static int ingenic_gpio_get(struct gpio_chip *gc, unsigned int offset)
-> +{
-> +	struct ingenic_gpio_chip *jzgc = gpiochip_get_data(gc);
-> +
-> +	return (int) gpio_get_value(jzgc, offset);
-> +}
-> +
-> +static int ingenic_gpio_direction_input(struct gpio_chip *gc,
-> +		unsigned int offset)
-> +{
-> +	return pinctrl_gpio_direction_input(gc->base + offset);
-> +}
-> +
-> +static int ingenic_gpio_direction_output(struct gpio_chip *gc,
-> +		unsigned int offset, int value)
-> +{
-> +	ingenic_gpio_set(gc, offset, value);
-> +	return pinctrl_gpio_direction_output(gc->base + offset);
-> +}
-> +
-> +static const struct of_device_id ingenic_gpio_of_match[] = {
-> +	{ .compatible = "ingenic,jz4740-gpio", .data = (void *)ID_JZ4740 },
-> +	{ .compatible = "ingenic,jz4770-gpio", .data = (void *)ID_JZ4770 },
-> +	{ .compatible = "ingenic,jz4780-gpio", .data = (void *)ID_JZ4780 },
-> +	{},
-> +};
-> +MODULE_DEVICE_TABLE(of, ingenic_gpio_of_match);
-> +
-> +static int ingenic_gpio_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	const struct of_device_id *of_id = of_match_device(
-> +			ingenic_gpio_of_match, dev);
-> +	struct ingenic_gpio_chip *jzgc;
-> +	u32 bank;
-> +	int err;
-> +
-> +	jzgc = devm_kzalloc(dev, sizeof(*jzgc), GFP_KERNEL);
-> +	if (!jzgc)
-> +		return -ENOMEM;
-> +
-> +	jzgc->map = dev_get_drvdata(dev->parent);
-> +	if (!jzgc->map) {
-> +		dev_err(dev, "Cannot get parent regmap\n");
-> +		return -ENXIO;
-> +	}
-> +
-> +	err = of_property_read_u32(dev->of_node, "reg", &bank);
-> +	if (err) {
-> +		dev_err(dev, "Cannot read \"reg\" property: %i\n", err);
-> +		return err;
-> +	}
-> +
-> +	jzgc->reg_base = bank * 0x100;
-> +
-> +	jzgc->gc.label = devm_kasprintf(dev, GFP_KERNEL, "GPIO%c", 'A' + bank);
-> +	if (!jzgc->gc.label)
-> +		return -ENOMEM;
-> +
-> +	/* DO NOT EXPAND THIS: FOR BACKWARD GPIO NUMBERSPACE COMPATIBIBILITY
-> +	 * ONLY: WORK TO TRANSITION CONSUMERS TO USE THE GPIO DESCRIPTOR API IN
-> +	 * <linux/gpio/consumer.h> INSTEAD.
-> +	 */
-> +	jzgc->gc.base = bank * 32;
-> +
-> +	jzgc->gc.ngpio = 32;
-> +	jzgc->gc.parent = dev;
-> +	jzgc->gc.of_node = dev->of_node;
-> +	jzgc->gc.owner = THIS_MODULE;
-> +	jzgc->version = (enum jz_version)of_id->data;
-> +
-> +	jzgc->gc.set = ingenic_gpio_set;
-> +	jzgc->gc.get = ingenic_gpio_get;
-> +	jzgc->gc.direction_input = ingenic_gpio_direction_input;
-> +	jzgc->gc.direction_output = ingenic_gpio_direction_output;
-> +
-> +	if (of_property_read_bool(dev->of_node, "gpio-ranges")) {
-> +		jzgc->gc.request = gpiochip_generic_request;
-> +		jzgc->gc.free = gpiochip_generic_free;
-> +	}
-> +
-> +	err = devm_gpiochip_add_data(dev, &jzgc->gc, jzgc);
-> +	if (err)
-> +		return err;
-> +
-> +	jzgc->irq = irq_of_parse_and_map(dev->of_node, 0);
-> +	if (!jzgc->irq)
-> +		return -EINVAL;
-> +
-> +	jzgc->irq_chip.name = jzgc->gc.label;
-> +	jzgc->irq_chip.irq_enable = ingenic_gpio_irq_enable;
-> +	jzgc->irq_chip.irq_disable = ingenic_gpio_irq_disable;
-> +	jzgc->irq_chip.irq_unmask = ingenic_gpio_irq_unmask;
-> +	jzgc->irq_chip.irq_mask = ingenic_gpio_irq_mask;
-> +	jzgc->irq_chip.irq_ack = ingenic_gpio_irq_ack;
-> +	jzgc->irq_chip.irq_set_type = ingenic_gpio_irq_set_type;
-> +	jzgc->irq_chip.irq_set_wake = ingenic_gpio_irq_set_wake;
-> +	jzgc->irq_chip.flags = IRQCHIP_MASK_ON_SUSPEND;
-> +
-> +	err = gpiochip_irqchip_add(&jzgc->gc, &jzgc->irq_chip, 0,
-> +			handle_level_irq, IRQ_TYPE_NONE);
-> +	if (err)
-> +		return err;
-> +
-> +	gpiochip_set_chained_irqchip(&jzgc->gc, &jzgc->irq_chip,
-> +			jzgc->irq, ingenic_gpio_irq_handler);
-> +	return 0;
-> +}
-> +
-> +static int ingenic_gpio_remove(struct platform_device *pdev)
-> +{
-> +	return 0;
-> +}
-> +
-> +static struct platform_driver ingenic_gpio_driver = {
-> +	.driver = {
-> +		.name = "gpio-ingenic",
-> +		.of_match_table = of_match_ptr(ingenic_gpio_of_match),
-> +	},
-> +	.probe = ingenic_gpio_probe,
-> +	.remove = ingenic_gpio_remove,
-> +};
-> +
-> +static int __init ingenic_gpio_drv_register(void)
-> +{
-> +	return platform_driver_register(&ingenic_gpio_driver);
-> +}
-> +subsys_initcall(ingenic_gpio_drv_register);
-> +
-> +static void __exit ingenic_gpio_drv_unregister(void)
-> +{
-> +	platform_driver_unregister(&ingenic_gpio_driver);
-> +}
-> +module_exit(ingenic_gpio_drv_unregister);
-> +
-> +MODULE_AUTHOR("Paul Cercueil <paul@crapouillou.net>");
-> +MODULE_DESCRIPTION("Ingenic JZ47xx GPIO driver");
-> +MODULE_LICENSE("GPL");
+diff --git a/drivers/pinctrl/Kconfig b/drivers/pinctrl/Kconfig
+index 37af5e30..f8f401a0 100644
+--- a/drivers/pinctrl/Kconfig
++++ b/drivers/pinctrl/Kconfig
+@@ -153,6 +153,7 @@ config PINCTRL_MESON
+ 	select PINCONF
+ 	select GENERIC_PINCONF
+ 	select GPIOLIB
++	select GPIOLIB_IRQCHIP
+ 	select OF_GPIO
+ 	select REGMAP_MMIO
+ 
+diff --git a/drivers/pinctrl/meson/pinctrl-meson.c b/drivers/pinctrl/meson/pinctrl-meson.c
+index 66ed70c1..525879f2 100644
+--- a/drivers/pinctrl/meson/pinctrl-meson.c
++++ b/drivers/pinctrl/meson/pinctrl-meson.c
+@@ -46,9 +46,12 @@
+ 
+ #include <linux/device.h>
+ #include <linux/gpio.h>
++#include <linux/gpio/driver.h>
+ #include <linux/init.h>
+ #include <linux/io.h>
++#include <linux/interrupt.h>
+ #include <linux/of.h>
++#include <linux/of_irq.h>
+ #include <linux/of_address.h>
+ #include <linux/pinctrl/pinconf-generic.h>
+ #include <linux/pinctrl/pinconf.h>
+@@ -57,11 +60,30 @@
+ #include <linux/platform_device.h>
+ #include <linux/regmap.h>
+ #include <linux/seq_file.h>
++#include <linux/mfd/syscon.h>
+ 
+ #include "../core.h"
+ #include "../pinctrl-utils.h"
+ #include "pinctrl-meson.h"
+ 
++#define REG_EDGE_POL		0x00
++#define REG_PIN_03_SEL		0x04
++#define REG_PIN_47_SEL		0x08
++#define REG_FILTER_SEL		0x0c
++
++#define REG_EDGE_POL_MASK(x)	(BIT(x) | BIT(16 + (x)))
++#define REG_EDGE_POL_EDGE(x)	BIT(x)
++#define REG_EDGE_POL_LOW(x)	BIT(16 + (x))
++
++#define MESON_GPIO_MAX_PARENT_IRQ_NUM	8
++
++static struct regmap *meson_gpio_irq_regmap;
++static struct meson_gpio_irq_slot
++		meson_gpio_irq_slots[MESON_GPIO_MAX_PARENT_IRQ_NUM];
++static int meson_gpio_num_irq_slots;
++static DEFINE_MUTEX(meson_gpio_irq_slot_mutex);
++static DECLARE_BITMAP(meson_gpio_irq_locked, 256);
++
+ /**
+  * meson_get_bank() - find the bank containing a given pin
+  *
+@@ -533,6 +555,275 @@ static const struct of_device_id meson_pinctrl_dt_match[] = {
+ 	{ },
+ };
+ 
++static struct meson_pinctrl *meson_gpio_data_to_pc(struct irq_data *data)
++{
++	struct gpio_chip *chip = irq_data_get_irq_chip_data(data);
++
++	return gpiochip_get_data(chip);
++}
++
++static int meson_gpio_to_hwirq(struct meson_bank *bank, unsigned int offset)
++{
++	int hwirq;
++
++	if (bank->irq_first < 0)
++		/* this bank cannot generate irqs */
++		return -EINVAL;
++
++	hwirq = offset - bank->first + bank->irq_first;
++
++	if (hwirq > bank->irq_last)
++		/* this pin cannot generate irqs */
++		return -EINVAL;
++
++	return hwirq;
++}
++
++static int meson_gpio_to_irq(struct meson_pinctrl *pc, unsigned int offset)
++{
++	struct meson_bank *bank;
++	int ret;
++
++	offset += pc->data->pin_base;
++
++	ret = meson_get_bank(pc, offset, &bank);
++	if (ret)
++		return ret;
++
++	ret = meson_gpio_to_hwirq(bank, offset);
++	if (ret < 0) {
++		dev_dbg(pc->dev, "no interrupt for pin %u\n", offset);
++		return 0;
++	}
++
++	return ret;
++}
++
++static int meson_gpio_data_to_hwirq(struct irq_data *data)
++{
++	struct meson_pinctrl *pc = meson_gpio_data_to_pc(data);
++	unsigned gpio = irqd_to_hwirq(data);
++
++	return meson_gpio_to_irq(pc, gpio);
++}
++
++static irqreturn_t meson_gpio_irq_handler(int irq, void *data)
++{
++	struct irq_data *gpio_irqdata = data;
++	struct meson_pinctrl *pc = meson_gpio_data_to_pc(data);
++	int hwirq = meson_gpio_data_to_hwirq(gpio_irqdata);
++
++	/*
++	 * For some strange reason spurious interrupts created by the chip when
++	 * the interrupt source registers are written cause a deadlock here.
++	 * generic_handle_irq calls handle_simple_irq which tries to get
++	 * spinlock desc->lock. This interrupt handler is called whilst
++	 * __setup_irq holds desc->lock.
++	 * The deadlock means that both are running on the same CPU what should
++	 * not happen as __setup_irq called raw_spin_lock_irqsave thus disabling
++	 * interrupts on this CPU.
++	 * Work around this by ignoring interrupts in code protected by
++	 * chip_bus_lock (__setup_irq/__free_irq for the respective GPIO hwirq).
++	 */
++	if (test_bit(hwirq, meson_gpio_irq_locked))
++		dev_dbg(pc->dev, "spurious interrupt detected!\n");
++	else
++		generic_handle_irq(gpio_irqdata->irq);
++
++	return IRQ_HANDLED;
++}
++
++static int meson_gpio_alloc_irq_slot(struct irq_data *data, int num_slots,
++				     int *slots)
++{
++	int i, cnt = 0;
++
++	mutex_lock(&meson_gpio_irq_slot_mutex);
++
++	for (i = 0; i < meson_gpio_num_irq_slots; i++)
++		if (!meson_gpio_irq_slots[i].owner) {
++			meson_gpio_irq_slots[i].owner = data->irq;
++			slots[cnt++] = i;
++			if (cnt == num_slots)
++				break;
++		}
++
++	if (cnt < num_slots)
++		for (i = 0; i < cnt; i++)
++			meson_gpio_irq_slots[i].owner = 0;
++
++	mutex_unlock(&meson_gpio_irq_slot_mutex);
++
++	return cnt == num_slots ? 0 : -ENOSPC;
++}
++
++static void meson_gpio_free_irq_slot(struct irq_data *data)
++{
++	int i;
++
++	mutex_lock(&meson_gpio_irq_slot_mutex);
++
++	for (i = 0; i < meson_gpio_num_irq_slots; i++)
++		if (meson_gpio_irq_slots[i].owner == data->irq) {
++			free_irq(meson_gpio_irq_slots[i].irq, data);
++			meson_gpio_irq_slots[i].owner = 0;
++		}
++
++	mutex_unlock(&meson_gpio_irq_slot_mutex);
++}
++
++static int meson_gpio_find_irq_slot(struct irq_data *data, int *slots)
++{
++	int i, cnt = 0;
++
++	mutex_lock(&meson_gpio_irq_slot_mutex);
++
++	for (i = 0; i < meson_gpio_num_irq_slots; i++)
++		if (meson_gpio_irq_slots[i].owner == data->irq)
++			slots[cnt++] = i;
++
++	mutex_unlock(&meson_gpio_irq_slot_mutex);
++
++	return cnt ?: -EINVAL;
++}
++
++static int meson_gpio_irq_request_resources(struct irq_data *data)
++{
++	struct gpio_chip *chip = irq_data_get_irq_chip_data(data);
++	unsigned gpio = irqd_to_hwirq(data);
++
++	return gpiochip_lock_as_irq(chip, gpio);
++}
++
++static void meson_gpio_irq_release_resources(struct irq_data *data)
++{
++	struct gpio_chip *chip = irq_data_get_irq_chip_data(data);
++	unsigned gpio = irqd_to_hwirq(data);
++
++	meson_gpio_free_irq_slot(data);
++	gpiochip_unlock_as_irq(chip, gpio);
++}
++
++static void meson_gpio_set_hwirq(int idx, int hwirq)
++{
++	int reg = idx > 3 ? REG_PIN_47_SEL : REG_PIN_03_SEL;
++	int shift = 8 * (idx % 4);
++
++	regmap_update_bits(meson_gpio_irq_regmap, reg, 0xff << shift,
++			   hwirq << shift);
++}
++
++static void meson_gpio_irq_set_hwirq(struct irq_data *data, int hwirq)
++{
++	struct meson_pinctrl *pc = meson_gpio_data_to_pc(data);
++	int i, cnt, slots[MESON_GPIO_MAX_PARENT_IRQ_NUM];
++
++	cnt = meson_gpio_find_irq_slot(data, slots);
++	if (cnt < 0) {
++		dev_err(pc->dev, "didn't find gpio irq slot\n");
++		return;
++	}
++
++	for (i = 0; i < cnt; i++)
++		meson_gpio_set_hwirq(slots[i], hwirq);
++}
++
++static void meson_gpio_irq_unmask(struct irq_data *data)
++{
++	struct meson_pinctrl *pc = meson_gpio_data_to_pc(data);
++	unsigned gpio = irqd_to_hwirq(data);
++	int hwirq = meson_gpio_to_irq(pc, gpio);
++
++	meson_gpio_irq_set_hwirq(data, hwirq);
++}
++
++static void meson_gpio_irq_mask(struct irq_data *data)
++{
++	meson_gpio_irq_set_hwirq(data, 0xff);
++}
++
++static int meson_gpio_irq_set_type(struct irq_data *data, unsigned int type)
++{
++	int i, ret, irq, num_slots, slots[MESON_GPIO_MAX_PARENT_IRQ_NUM];
++	unsigned int val = 0;
++
++	num_slots = (type == IRQ_TYPE_EDGE_BOTH) ? 2 : 1;
++	ret = meson_gpio_alloc_irq_slot(data, num_slots, slots);
++	if (ret)
++		return ret;
++
++	if (type & (IRQ_TYPE_EDGE_RISING | IRQ_TYPE_EDGE_FALLING))
++		val |= REG_EDGE_POL_EDGE(slots[0]);
++
++	if (type & (IRQ_TYPE_LEVEL_LOW | IRQ_TYPE_EDGE_FALLING))
++		val |= REG_EDGE_POL_LOW(slots[0]);
++
++	regmap_update_bits(meson_gpio_irq_regmap, REG_EDGE_POL,
++			   REG_EDGE_POL_MASK(slots[0]), val);
++
++	/*
++	 * The chip can create an interrupt for either rising or falling edge
++	 * only. Therefore use two interrupts in case of IRQ_TYPE_EDGE_BOTH,
++	 * first for falling edge and second one for rising edge.
++	 */
++	if (num_slots > 1) {
++		val = REG_EDGE_POL_EDGE(slots[1]);
++		regmap_update_bits(meson_gpio_irq_regmap, REG_EDGE_POL,
++				   REG_EDGE_POL_MASK(slots[1]), val);
++	}
++
++	if (type & IRQ_TYPE_EDGE_BOTH)
++		val = IRQ_TYPE_EDGE_RISING;
++	else
++		val = IRQ_TYPE_LEVEL_HIGH;
++
++	for (i = 0; i < num_slots; i++) {
++		irq = meson_gpio_irq_slots[slots[i]].irq;
++		ret = irq_set_irq_type(irq, val);
++		if (ret)
++			break;
++		ret = request_irq(irq, meson_gpio_irq_handler, 0,
++				  "GPIO parent", data);
++		if (ret)
++			break;
++	}
++
++	if (ret)
++		while (--i >= 0)
++			free_irq(meson_gpio_irq_slots[slots[i]].irq, data);
++
++	return ret;
++}
++
++static void meson_gpio_irq_bus_lock(struct irq_data *data)
++{
++	int hwirq = meson_gpio_data_to_hwirq(data);
++
++	set_bit(hwirq, meson_gpio_irq_locked);
++}
++
++static void meson_gpio_irq_bus_sync_unlock(struct irq_data *data)
++{
++	int hwirq = meson_gpio_data_to_hwirq(data);
++
++	clear_bit(hwirq, meson_gpio_irq_locked);
++}
++
++static void meson_gpiolib_init_irq_chip(struct meson_pinctrl *pc)
++{
++	static atomic_t irqchip_idx = ATOMIC_INIT(-1);
++	int idx = atomic_inc_return(&irqchip_idx);
++
++	pc->irq_chip.name = devm_kasprintf(pc->dev, GFP_KERNEL, "GPIO%d", idx);
++	pc->irq_chip.irq_request_resources = meson_gpio_irq_request_resources;
++	pc->irq_chip.irq_release_resources = meson_gpio_irq_release_resources;
++	pc->irq_chip.irq_set_type = meson_gpio_irq_set_type;
++	pc->irq_chip.irq_mask = meson_gpio_irq_mask;
++	pc->irq_chip.irq_unmask = meson_gpio_irq_unmask;
++	pc->irq_chip.irq_bus_lock = meson_gpio_irq_bus_lock;
++	pc->irq_chip.irq_bus_sync_unlock = meson_gpio_irq_bus_sync_unlock;
++}
++
+ static int meson_gpiolib_register(struct meson_pinctrl *pc)
+ {
+ 	int ret;
+@@ -558,7 +849,8 @@ static int meson_gpiolib_register(struct meson_pinctrl *pc)
+ 		return ret;
+ 	}
+ 
+-	return 0;
++	return gpiochip_irqchip_add(&pc->chip, &pc->irq_chip, 0,
++				    handle_simple_irq, IRQ_TYPE_NONE);
+ }
+ 
+ static struct regmap_config meson_regmap_config = {
+@@ -640,6 +932,29 @@ static int meson_pinctrl_parse_dt(struct meson_pinctrl *pc,
+ 	return 0;
+ }
+ 
++static int meson_gpio_get_parent_irqs(void)
++{
++	struct device_node *np;
++	int irq, i;
++
++	np = of_find_compatible_node(NULL, NULL,
++				     "amlogic,meson-gpio-interrupt");
++	if (!np)
++		return -EINVAL;
++
++	for (i = 0; i < MESON_GPIO_MAX_PARENT_IRQ_NUM; i++) {
++		irq = irq_of_parse_and_map(np, i);
++		if (!irq)
++			break;
++		meson_gpio_irq_slots[i].irq = irq;
++	}
++
++	of_node_put(np);
++	meson_gpio_num_irq_slots = i;
++
++	return meson_gpio_num_irq_slots ? 0 : -EINVAL;
++}
++
+ static int meson_pinctrl_probe(struct platform_device *pdev)
+ {
+ 	const struct of_device_id *match;
+@@ -647,6 +962,25 @@ static int meson_pinctrl_probe(struct platform_device *pdev)
+ 	struct meson_pinctrl *pc;
+ 	int ret;
+ 
++	if (!meson_gpio_irq_regmap) {
++		meson_gpio_irq_regmap = syscon_regmap_lookup_by_compatible(
++						"amlogic,meson-gpio-interrupt");
++		if (IS_ERR(meson_gpio_irq_regmap))
++			return PTR_ERR(meson_gpio_irq_regmap);
++
++		/* initialize to IRQ_TYPE_LEVEL_HIGH */
++		regmap_write(meson_gpio_irq_regmap, REG_EDGE_POL, 0);
++		/* disable all GPIO interrupt sources */
++		regmap_write(meson_gpio_irq_regmap, REG_PIN_03_SEL, 0xffffffff);
++		regmap_write(meson_gpio_irq_regmap, REG_PIN_47_SEL, 0xffffffff);
++		/* disable filtering */
++		regmap_write(meson_gpio_irq_regmap, REG_FILTER_SEL, 0);
++
++		ret = meson_gpio_get_parent_irqs();
++		if(ret)
++			return ret;
++	}
++
+ 	pc = devm_kzalloc(dev, sizeof(struct meson_pinctrl), GFP_KERNEL);
+ 	if (!pc)
+ 		return -ENOMEM;
+@@ -673,6 +1007,8 @@ static int meson_pinctrl_probe(struct platform_device *pdev)
+ 		return PTR_ERR(pc->pcdev);
+ 	}
+ 
++	meson_gpiolib_init_irq_chip(pc);
++
+ 	return meson_gpiolib_register(pc);
+ }
+ 
+diff --git a/drivers/pinctrl/meson/pinctrl-meson.h b/drivers/pinctrl/meson/pinctrl-meson.h
+index 890f296f..4792e769 100644
+--- a/drivers/pinctrl/meson/pinctrl-meson.h
++++ b/drivers/pinctrl/meson/pinctrl-meson.h
+@@ -17,6 +17,17 @@
+ #include <linux/types.h>
+ 
+ /**
++ * struct meson_gpio_irq_slot - a gpio irq slot descriptor
++ *
++ * @irq:	virq of the parent irq
++ * @owner:	owning gpio hwirq
++ */
++struct meson_gpio_irq_slot {
++	int irq;
++	int owner;
++};
++
++/**
+  * struct meson_pmx_group - a pinmux group
+  *
+  * @name:	group name
+@@ -121,6 +132,7 @@ struct meson_pinctrl {
+ 	struct regmap *reg_pull;
+ 	struct regmap *reg_gpio;
+ 	struct gpio_chip chip;
++	struct irq_chip irq_chip;
+ 	struct device_node *of_node;
+ };
+ 
+-- 
+2.12.2
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
