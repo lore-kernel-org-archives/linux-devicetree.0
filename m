@@ -1,231 +1,429 @@
-From: Heiner Kallweit <hkallweit1@gmail.com>
-Subject: [PATCH 1/5] pintrl: meson: add interrupts to pinctrl data
-Date: Sun, 7 May 2017 18:34:04 +0200
-Message-ID: <3b4990ef-bfb4-c62c-f823-431adedc17f1@gmail.com>
-References: <a4ca587b-d3e8-a22d-4d25-289871d2d095@gmail.com>
+From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 2/2] iio: adc: add driver for the ti-adc084s021 chip
+Date: Sun, 7 May 2017 15:21:17 +0100
+Message-ID: <fb177b86-3e28-5051-67cf-bcc81ae0e116@kernel.org>
+References: <1493812905-28904-1-git-send-email-marten.lindahl@axis.com>
+ <1493812905-28904-3-git-send-email-marten.lindahl@axis.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <a4ca587b-d3e8-a22d-4d25-289871d2d095@gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Jerome Brunet <jbrunet@baylibre.com>, Mark Rutland <mark.rutland@arm.com>, Marc Zyngier <marc.zyngier@arm.com>, Linus Walleij <linus.walleij@linaro.org>
-Cc: devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-gpio@vger.kernel.org
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1493812905-28904-3-git-send-email-marten.lindahl-VrBV9hrLPhE@public.gmane.org>
+Content-Language: en-GH
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?UTF-8?Q?M=c3=a5rten_Lindahl?= <marten.lindahl-VrBV9hrLPhE@public.gmane.org>
+Cc: knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?Q?M=c3=a5rten_Lindahl?= <martenli-VrBV9hrLPhE@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Jerome Brunet <jbrunet@baylibre.com>
-Add GPIO interrupt information to pinctrl data. Added to the original
-version from Jerome was data for Meson GXL.
+On 03/05/17 13:01, Mårten Lindahl wrote:
+> From: Mårten Lindahl <martenli-VrBV9hrLPhE@public.gmane.org>
+> 
+> This adds support for the Texas Instruments ADC084S021 ADC chip.
+> 
+> Signed-off-by: Mårten Lindahl <martenli-VrBV9hrLPhE@public.gmane.org>
+A few more minor bits and pieces.
 
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
-Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
----
- drivers/pinctrl/meson/pinctrl-meson-gxbb.c | 22 ++++++++++----------
- drivers/pinctrl/meson/pinctrl-meson-gxl.c  | 20 +++++++++----------
- drivers/pinctrl/meson/pinctrl-meson.h      | 15 +++++++++-----
- drivers/pinctrl/meson/pinctrl-meson8.c     | 20 +++++++++----------
- drivers/pinctrl/meson/pinctrl-meson8b.c    | 32 ++++++++++++++++++++----------
- 5 files changed, 63 insertions(+), 46 deletions(-)
+Jonathan
+> ---
+> Changes in v3:
+> - Removed unnecessary comment about channel specification
+> - Skipped usage of 'address' in iio_chan_spec config macro
+> - Mask and shift channel readings only for _read_raw function
+> - Enable/disable regulator in _read_raw function
+> - Improved setup of ADC channel readings
+> - Use SPI config of speed_hz and bits_per_word
+> - Use devm_iio_triggered_buffer_setup and devm_iio_device_register
+> - Removed error message for failed devm_iio_device_register
+> - Removed driver _remove callback function
+> 
+> Changes in v2:
+> - Removed most #defines in favor of inlines
+> - Corrected channel macro
+> - Removed configuration array with only one item
+> - Updated func adc084s021_adc_conversion to use be16_to_cpu
+> - Added IIO_CHAN_INFO_SCALE to func adc084s021_read_raw
+> - Use iio_device_claim_direct_mode in func adc084s021_read_raw
+> - Removed documentation for standard driver functions
+> - Changed retval to ret everywhere
+> - Removed dynamic alloc for data buffer in trigger handler
+> - Keeping mutex for all iterations in trigger handler
+> - Removed usage of events in this driver
+> - Removed info log in probe
+> - Use spi_message_init_with_transfers for spi message structs
+> - Use preenable and postdisable functions for regulator
+> - Inserted blank line before last return in all functions
+> 
+>  drivers/iio/adc/Kconfig         |  12 ++
+>  drivers/iio/adc/Makefile        |   1 +
+>  drivers/iio/adc/ti-adc084s021.c | 302 ++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 315 insertions(+)
+>  create mode 100644 drivers/iio/adc/ti-adc084s021.c
+> 
+> diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
+> index dedae7a..13141e5 100644
+> --- a/drivers/iio/adc/Kconfig
+> +++ b/drivers/iio/adc/Kconfig
+> @@ -560,6 +560,18 @@ config TI_ADC0832
+>  	  This driver can also be built as a module. If so, the module will be
+>  	  called ti-adc0832.
+>  
+> +config TI_ADC084S021
+> +	tristate "Texas Instruments ADC084S021"
+> +	depends on SPI
+> +	select IIO_BUFFER
+> +	select IIO_TRIGGERED_BUFFER
+> +	help
+> +	  If you say yes here you get support for Texas Instruments ADC084S021
+> +	  chips.
+> +
+> +	  This driver can also be built as a module. If so, the module will be
+> +	  called ti-adc084s021.
+> +
+>  config TI_ADC12138
+>  	tristate "Texas Instruments ADC12130/ADC12132/ADC12138"
+>  	depends on SPI
+> diff --git a/drivers/iio/adc/Makefile b/drivers/iio/adc/Makefile
+> index d001262..b1a6158 100644
+> --- a/drivers/iio/adc/Makefile
+> +++ b/drivers/iio/adc/Makefile
+> @@ -51,6 +51,7 @@ obj-$(CONFIG_STM32_ADC_CORE) += stm32-adc-core.o
+>  obj-$(CONFIG_STM32_ADC) += stm32-adc.o
+>  obj-$(CONFIG_TI_ADC081C) += ti-adc081c.o
+>  obj-$(CONFIG_TI_ADC0832) += ti-adc0832.o
+> +obj-$(CONFIG_TI_ADC084S021) += ti-adc084s021.o
+>  obj-$(CONFIG_TI_ADC12138) += ti-adc12138.o
+>  obj-$(CONFIG_TI_ADC128S052) += ti-adc128s052.o
+>  obj-$(CONFIG_TI_ADC161S626) += ti-adc161s626.o
+> diff --git a/drivers/iio/adc/ti-adc084s021.c b/drivers/iio/adc/ti-adc084s021.c
+> new file mode 100644
+> index 0000000..f2fb0fa
+> --- /dev/null
+> +++ b/drivers/iio/adc/ti-adc084s021.c
+> @@ -0,0 +1,302 @@
+> +/**
+> + * Copyright (C) 2017 Axis Communications AB
+> + *
+> + * Driver for Texas Instruments' ADC084S021 ADC chip.
+> + * Datasheets can be found here:
+> + * http://www.ti.com/lit/ds/symlink/adc084s021.pdf
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + */
+> +
+> +#include <linux/err.h>
+> +#include <linux/spi/spi.h>
+> +#include <linux/module.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/iio/iio.h>
+> +#include <linux/iio/buffer.h>
+> +#include <linux/iio/triggered_buffer.h>
+> +#include <linux/iio/trigger_consumer.h>
+> +#include <linux/regulator/consumer.h>
+> +
+> +#define ADC084S021_DRIVER_NAME "adc084s021"
+> +
+> +struct adc084s021 {
+> +	struct spi_device *spi;
+> +	struct spi_message message;
+> +	struct spi_transfer spi_trans;
+> +	struct regulator *reg;
+> +	struct mutex lock;
+> +	/*
+> +	 * DMA (thus cache coherency maintenance) requires the
+> +	 * transfer buffers to live in their own cache lines.
+> +	 */
+> +	u16 tx_buf[4] ____cacheline_aligned;
+> +	__be16 rx_buf[5] ____cacheline_aligned; /* First 16-bits are trash */
+You only need to do this for tx_buf as then rx_buf will at worst end up
+in the same cacheline as it.  Fairly implausible that this would cause
+issues given they will be read before a transfer and written after.
+Doing it twice results in potential waste of say 64 bytes depending on
+the cacheline length.
+> +};
+> +
+> +#define ADC084S021_VOLTAGE_CHANNEL(num)                  \
+> +	{                                                      \
+> +		.type = IIO_VOLTAGE,                                 \
+> +		.channel = (num),                                    \
+> +		.indexed = 1,                                        \
+> +		.scan_index = (num),                                 \
+> +		.scan_type = {                                       \
+> +			.sign = 'u',                                       \
+> +			.realbits = 8,                                     \
+> +			.storagebits = 16,                                 \
+> +			.shift = 4,                                        \
+> +			.endianness = IIO_BE,                              \
+They aren't at the moment as you are doing the endian conversion in kernel.
+Drop that in the push to buffers path.
+> +		},                                                   \
+> +		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),        \
+> +		.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE),\
+> +	}
+> +
+> +static const struct iio_chan_spec adc084s021_channels[] = {
+> +	ADC084S021_VOLTAGE_CHANNEL(0),
+> +	ADC084S021_VOLTAGE_CHANNEL(1),
+> +	ADC084S021_VOLTAGE_CHANNEL(2),
+> +	ADC084S021_VOLTAGE_CHANNEL(3),
+> +	IIO_CHAN_SOFT_TIMESTAMP(4),
+> +};
+> +
+> +static int adc084s021_power_on(struct adc084s021 *adc)
+> +{
+> +	int ret;
+> +
+> +	ret = regulator_enable(adc->reg);
+> +	if (ret) {
+> +		dev_warn(&adc->spi->dev,
+> +			"Failed to enable supply voltage\n");
+> +	}
+> +
+> +	return ret;
+These two little functions do seem a little unnecessary.
+A regulator fail should be pretty unlikely so I'd be tempted
+to just have the regulator_enable / disable inline instead
+of off in these functions.
+> +}
+> +
+> +static int adc084s021_power_off(struct adc084s021 *adc)
+> +{
+> +	int ret;
+> +
+> +	ret = regulator_disable(adc->reg);
+> +	if (ret) {
+> +		dev_warn(&adc->spi->dev,
+> +			"Failed to disable supply voltage\n");
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+> +/**
+> + * Read an ADC channel and return its value.
+> + *
+> + * @adc: The ADC SPI data.
+> + * @data: Buffer for converted data.
+> + */
+> +static int adc084s021_adc_conversion(struct adc084s021 *adc, void *data)
+> +{
+> +	int n_words = (adc->spi_trans.len >> 1) - 1; /* Discard first word */
+> +	int ret, i = 0;
+> +	u16 *p = data;
+> +
+> +	/* Do the transfer */
+> +	ret = spi_sync(adc->spi, &adc->message);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	for (; i < n_words; i++)
+> +		*(p + i) = be16_to_cpu(adc->rx_buf[i + 1]);
+Should only do the endian conversion in kernel if not
+using it for buffered output.  In buffered output we can
+save a few cycles by leaving it up to userspace.
+> +
+> +	return ret;
+> +}
+> +
+> +static int adc084s021_read_raw(struct iio_dev *indio_dev,
+> +			   struct iio_chan_spec const *channel, int *val,
+> +			   int *val2, long mask)
+> +{
+> +	struct adc084s021 *adc = iio_priv(indio_dev);
+> +	int ret;
+> +
+> +	switch (mask) {
+> +	case IIO_CHAN_INFO_RAW:
+> +		ret = iio_device_claim_direct_mode(indio_dev);
+> +		if (ret < 0)
+> +			return ret;
+> +
+> +		ret = adc084s021_power_on(adc);
+> +		if (ret) {
+> +			iio_device_release_direct_mode(indio_dev);
+> +			return ret;
+> +		}
+> +
+> +		adc->tx_buf[0] = channel->channel << 3;
+> +		ret = adc084s021_adc_conversion(adc, val);
+> +		iio_device_release_direct_mode(indio_dev);
+> +		adc084s021_power_off(adc);
+> +		if (ret < 0)
+> +			return ret;
+> +
+> +		*val = (*val >> channel->scan_type.shift) & 0xff;
+> +
+> +		return IIO_VAL_INT;
+> +	case IIO_CHAN_INFO_SCALE:
+> +		ret = adc084s021_power_on(adc);
+> +		if (ret)
+> +			return ret;
+> +
+> +		ret = regulator_get_voltage(adc->reg);
+> +		adc084s021_power_off(adc);
+> +		if (ret < 0)
+> +			return ret;
+> +
+> +		*val = ret / 1000;
+> +
+> +		return IIO_VAL_INT;
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +}
+> +
+> +/**
+> + * Read enabled ADC channels and push data to the buffer.
+> + *
+> + * @irq: The interrupt number (not used).
+> + * @pollfunc: Pointer to the poll func.
+> + */
+> +static irqreturn_t adc084s021_buffer_trigger_handler(int irq, void *pollfunc)
+> +{
+> +	struct iio_poll_func *pf = pollfunc;
+> +	struct iio_dev *indio_dev = pf->indio_dev;
+> +	struct adc084s021 *adc = iio_priv(indio_dev);
+> +	__be16 data[8] = {0}; /* 4 * 16-bit words of data + 8 bytes timestamp */
+> +
+> +	mutex_lock(&adc->lock);
+> +
+> +	if (adc084s021_adc_conversion(adc, &data) < 0)
+> +		dev_err(&adc->spi->dev, "Failed to read data\n");
+hmm. Not sure I'm keen on pushing garbage to the buffer.
+I might fix this up as well... Depends on what else there is ;)
+> +
+> +	iio_push_to_buffers_with_timestamp(indio_dev, data,
+> +					   iio_get_time_ns(indio_dev));
+> +	mutex_unlock(&adc->lock);
+> +	iio_trigger_notify_done(indio_dev->trig);
+> +
+> +	return IRQ_HANDLED;
+> +}
+> +
+> +static int adc084s021_buffer_preenable(struct iio_dev *indio_dev)
+> +{
+> +	struct adc084s021 *adc = iio_priv(indio_dev);
+> +	int scan_index;
+> +	int i = 0;
+> +
+> +	for_each_set_bit(scan_index, indio_dev->active_scan_mask,
+> +			 indio_dev->masklength) {
+> +		const struct iio_chan_spec *channel =
+> +			&indio_dev->channels[scan_index];
+> +		adc->tx_buf[i++] = channel->channel << 3;
+> +	}
+> +	adc->spi_trans.len = 2 + (i * sizeof(__be16)); /* Trash + channels */
+> +
+> +	return adc084s021_power_on(adc);
+> +}
+> +
+> +static int adc084s021_buffer_postdisable(struct iio_dev *indio_dev)
+> +{
+> +	struct adc084s021 *adc = iio_priv(indio_dev);
+> +
+> +	adc->spi_trans.len = 4; /* Trash + single channel */
+> +
+> +	return adc084s021_power_off(adc);
+> +}
+> +
+> +static const struct iio_info adc084s021_info = {
+> +	.read_raw = adc084s021_read_raw,
+> +	.driver_module = THIS_MODULE,
+> +};
+> +
+> +static const struct iio_buffer_setup_ops adc084s021_buffer_setup_ops = {
+> +	.preenable = adc084s021_buffer_preenable,
+> +	.postenable = iio_triggered_buffer_postenable,
+> +	.predisable = iio_triggered_buffer_predisable,
+> +	.postdisable = adc084s021_buffer_postdisable,
+> +};
+> +
+> +static int adc084s021_probe(struct spi_device *spi)
+> +{
+> +	struct iio_dev *indio_dev;
+> +	struct adc084s021 *adc;
+> +	int ret;
+> +
+> +	indio_dev = devm_iio_device_alloc(&spi->dev, sizeof(*adc));
+> +	if (!indio_dev) {
+> +		dev_err(&spi->dev, "Failed to allocate IIO device\n");
+> +		return -ENOMEM;
+> +	}
+> +
+> +	adc = iio_priv(indio_dev);
+> +	adc->spi = spi;
+> +
+> +	/* Connect the SPI device and the iio dev */
+> +	spi_set_drvdata(spi, indio_dev);
+> +
+> +	/* Initiate the Industrial I/O device */
+> +	indio_dev->dev.parent = &spi->dev;
+> +	indio_dev->dev.of_node = spi->dev.of_node;
+> +	indio_dev->name = spi_get_device_id(spi)->name;
+> +	indio_dev->modes = INDIO_DIRECT_MODE;
+> +	indio_dev->info = &adc084s021_info;
+> +	indio_dev->channels = adc084s021_channels;
+> +	indio_dev->num_channels = ARRAY_SIZE(adc084s021_channels);
+> +
+> +	/* Create SPI transfer for channel reads */
+> +	adc->spi_trans.tx_buf = adc->tx_buf;
+> +	adc->spi_trans.rx_buf = adc->rx_buf;
+> +	adc->spi_trans.len = 4; /* Trash + single channel */
+> +	spi_message_init_with_transfers(&adc->message, &adc->spi_trans, 1);
+> +
+> +	adc->reg = devm_regulator_get(&spi->dev, "vref");
+> +	if (IS_ERR(adc->reg))
+> +		return PTR_ERR(adc->reg);
+> +
+> +	mutex_init(&adc->lock);
+> +
+> +	/* Setup triggered buffer with pollfunction */
+> +	ret = devm_iio_triggered_buffer_setup(&spi->dev, indio_dev, NULL,
+> +					    adc084s021_buffer_trigger_handler,
+> +					    &adc084s021_buffer_setup_ops);
+> +	if (ret) {
+> +		dev_err(&spi->dev, "Failed to setup triggered buffer\n");
+> +		return ret;
+> +	}
+> +
+> +	ret = devm_iio_device_register(&spi->dev, indio_dev);
+> +
+> +	return ret;
+return devm_iio_deivce_register(...
 
-diff --git a/drivers/pinctrl/meson/pinctrl-meson-gxbb.c b/drivers/pinctrl/meson/pinctrl-meson-gxbb.c
-index 9b00be15..e54dbeaa 100644
---- a/drivers/pinctrl/meson/pinctrl-meson-gxbb.c
-+++ b/drivers/pinctrl/meson/pinctrl-meson-gxbb.c
-@@ -782,20 +782,20 @@ static struct meson_pmx_func meson_gxbb_aobus_functions[] = {
- };
- 
- static struct meson_bank meson_gxbb_periphs_banks[] = {
--	/*   name    first                      last                    pullen  pull    dir     out     in  */
--	BANK("X",    PIN(GPIOX_0, EE_OFF),	PIN(GPIOX_22, EE_OFF),  4,  0,  4,  0,  12, 0,  13, 0,  14, 0),
--	BANK("Y",    PIN(GPIOY_0, EE_OFF),	PIN(GPIOY_16, EE_OFF),  1,  0,  1,  0,  3,  0,  4,  0,  5,  0),
--	BANK("DV",   PIN(GPIODV_0, EE_OFF),	PIN(GPIODV_29, EE_OFF), 0,  0,  0,  0,  0,  0,  1,  0,  2,  0),
--	BANK("H",    PIN(GPIOH_0, EE_OFF),	PIN(GPIOH_3, EE_OFF),   1, 20,  1, 20,  3, 20,  4, 20,  5, 20),
--	BANK("Z",    PIN(GPIOZ_0, EE_OFF),	PIN(GPIOZ_15, EE_OFF),  3,  0,  3,  0,  9,  0,  10, 0, 11,  0),
--	BANK("CARD", PIN(CARD_0, EE_OFF),	PIN(CARD_6, EE_OFF),    2, 20,  2, 20,  6, 20,  7, 20,  8, 20),
--	BANK("BOOT", PIN(BOOT_0, EE_OFF),	PIN(BOOT_17, EE_OFF),   2,  0,  2,  0,  6,  0,  7,  0,  8,  0),
--	BANK("CLK",  PIN(GPIOCLK_0, EE_OFF),	PIN(GPIOCLK_3, EE_OFF), 3, 28,  3, 28,  9, 28, 10, 28, 11, 28),
-+	/*   name    first                      last                    irq       pullen  pull    dir     out     in  */
-+	BANK("X",    PIN(GPIOX_0, EE_OFF),	PIN(GPIOX_22, EE_OFF),  106, 128, 4,  0,  4,  0,  12, 0,  13, 0,  14, 0),
-+	BANK("Y",    PIN(GPIOY_0, EE_OFF),	PIN(GPIOY_16, EE_OFF),   89, 105, 1,  0,  1,  0,  3,  0,  4,  0,  5,  0),
-+	BANK("DV",   PIN(GPIODV_0, EE_OFF),	PIN(GPIODV_29, EE_OFF),  59,  88, 0,  0,  0,  0,  0,  0,  1,  0,  2,  0),
-+	BANK("H",    PIN(GPIOH_0, EE_OFF),	PIN(GPIOH_3, EE_OFF),    30,  33, 1, 20,  1, 20,  3, 20,  4, 20,  5, 20),
-+	BANK("Z",    PIN(GPIOZ_0, EE_OFF),	PIN(GPIOZ_15, EE_OFF),   14,  29, 3,  0,  3,  0,  9,  0,  10, 0, 11,  0),
-+	BANK("CARD", PIN(CARD_0, EE_OFF),	PIN(CARD_6, EE_OFF),     52,  58, 2, 20,  2, 20,  6, 20,  7, 20,  8, 20),
-+	BANK("BOOT", PIN(BOOT_0, EE_OFF),	PIN(BOOT_17, EE_OFF),    34,  51, 2,  0,  2,  0,  6,  0,  7,  0,  8,  0),
-+	BANK("CLK",  PIN(GPIOCLK_0, EE_OFF),	PIN(GPIOCLK_3, EE_OFF), 129, 132, 3, 28,  3, 28,  9, 28, 10, 28, 11, 28),
- };
- 
- static struct meson_bank meson_gxbb_aobus_banks[] = {
--	/*   name    first              last               pullen  pull    dir     out     in  */
--	BANK("AO",   PIN(GPIOAO_0, 0),  PIN(GPIOAO_13, 0), 0,  0,  0, 16,  0,  0,  0, 16,  1,  0),
-+	/*   name    first              last               irq    pullen  pull    dir     out     in  */
-+	BANK("AO",   PIN(GPIOAO_0, 0),  PIN(GPIOAO_13, 0), 0, 13, 0,  0,  0, 16,  0,  0,  0, 16,  1,  0),
- };
- 
- struct meson_pinctrl_data meson_gxbb_periphs_pinctrl_data = {
-diff --git a/drivers/pinctrl/meson/pinctrl-meson-gxl.c b/drivers/pinctrl/meson/pinctrl-meson-gxl.c
-index 998210ea..bcd8da10 100644
---- a/drivers/pinctrl/meson/pinctrl-meson-gxl.c
-+++ b/drivers/pinctrl/meson/pinctrl-meson-gxl.c
-@@ -729,19 +729,19 @@ static struct meson_pmx_func meson_gxl_aobus_functions[] = {
- };
- 
- static struct meson_bank meson_gxl_periphs_banks[] = {
--	/*   name    first                      last                    pullen  pull    dir     out     in  */
--	BANK("X",    PIN(GPIOX_0, EE_OFF),	PIN(GPIOX_18, EE_OFF),  4,  0,  4,  0,  12, 0,  13, 0,  14, 0),
--	BANK("DV",   PIN(GPIODV_0, EE_OFF),	PIN(GPIODV_29, EE_OFF), 0,  0,  0,  0,  0,  0,  1,  0,  2,  0),
--	BANK("H",    PIN(GPIOH_0, EE_OFF),	PIN(GPIOH_9, EE_OFF),   1, 20,  1, 20,  3, 20,  4, 20,  5, 20),
--	BANK("Z",    PIN(GPIOZ_0, EE_OFF),	PIN(GPIOZ_15, EE_OFF),  3,  0,  3,  0,  9,  0,  10, 0, 11,  0),
--	BANK("CARD", PIN(CARD_0, EE_OFF),	PIN(CARD_6, EE_OFF),    2, 20,  2, 20,  6, 20,  7, 20,  8, 20),
--	BANK("BOOT", PIN(BOOT_0, EE_OFF),	PIN(BOOT_15, EE_OFF),   2,  0,  2,  0,  6,  0,  7,  0,  8,  0),
--	BANK("CLK",  PIN(GPIOCLK_0, EE_OFF),	PIN(GPIOCLK_1, EE_OFF), 3, 28,  3, 28,  9, 28, 10, 28, 11, 28),
-+	/*   name    first                      last                    irq	  pullen  pull    dir     out     in  */
-+	BANK("X",    PIN(GPIOX_0, EE_OFF),	PIN(GPIOX_18, EE_OFF),   89, 107, 4,  0,  4,  0,  12, 0,  13, 0,  14, 0),
-+	BANK("DV",   PIN(GPIODV_0, EE_OFF),	PIN(GPIODV_29, EE_OFF),  83,  88, 0,  0,  0,  0,  0,  0,  1,  0,  2,  0),
-+	BANK("H",    PIN(GPIOH_0, EE_OFF),	PIN(GPIOH_9, EE_OFF),    26,  35, 1, 20,  1, 20,  3, 20,  4, 20,  5, 20),
-+	BANK("Z",    PIN(GPIOZ_0, EE_OFF),	PIN(GPIOZ_15, EE_OFF),   10,  25, 3,  0,  3,  0,  9,  0,  10, 0, 11,  0),
-+	BANK("CARD", PIN(CARD_0, EE_OFF),	PIN(CARD_6, EE_OFF),     52,  58, 2, 20,  2, 20,  6, 20,  7, 20,  8, 20),
-+	BANK("BOOT", PIN(BOOT_0, EE_OFF),	PIN(BOOT_15, EE_OFF),    36,  51, 2,  0,  2,  0,  6,  0,  7,  0,  8,  0),
-+	BANK("CLK",  PIN(GPIOCLK_0, EE_OFF),	PIN(GPIOCLK_1, EE_OFF), 108, 109, 3, 28,  3, 28,  9, 28, 10, 28, 11, 28),
- };
- 
- static struct meson_bank meson_gxl_aobus_banks[] = {
--	/*   name    first              last              pullen  pull    dir     out     in  */
--	BANK("AO",   PIN(GPIOAO_0, 0),  PIN(GPIOAO_9, 0), 0,  0,  0, 16,  0,  0,  0, 16,  1,  0),
-+	/*   name    first              last              irq	pullen  pull    dir     out     in  */
-+	BANK("AO",   PIN(GPIOAO_0, 0),  PIN(GPIOAO_9, 0), 0, 9, 0,  0,  0, 16,  0,  0,  0, 16,  1,  0),
- };
- 
- struct meson_pinctrl_data meson_gxl_periphs_pinctrl_data = {
-diff --git a/drivers/pinctrl/meson/pinctrl-meson.h b/drivers/pinctrl/meson/pinctrl-meson.h
-index 1aa871d5..890f296f 100644
---- a/drivers/pinctrl/meson/pinctrl-meson.h
-+++ b/drivers/pinctrl/meson/pinctrl-meson.h
-@@ -81,6 +81,7 @@ enum meson_reg_type {
-  * @name:	bank name
-  * @first:	first pin of the bank
-  * @last:	last pin of the bank
-+ * @irq:	hwirq base number of the bank
-  * @regs:	array of register descriptors
-  *
-  * A bank represents a set of pins controlled by a contiguous set of
-@@ -92,6 +93,8 @@ struct meson_bank {
- 	const char *name;
- 	unsigned int first;
- 	unsigned int last;
-+	int irq_first;
-+	int irq_last;
- 	struct meson_reg_desc regs[NUM_REG];
- };
- 
-@@ -147,12 +150,14 @@ struct meson_pinctrl {
- 		.num_groups = ARRAY_SIZE(fn ## _groups),		\
- 	}
- 
--#define BANK(n, f, l, per, peb, pr, pb, dr, db, or, ob, ir, ib)		\
-+#define BANK(n, f, l, fi, li, per, peb, pr, pb, dr, db, or, ob, ir, ib)	\
- 	{								\
--		.name	= n,						\
--		.first	= f,						\
--		.last	= l,						\
--		.regs	= {						\
-+		.name		= n,					\
-+		.first		= f,					\
-+		.last		= l,					\
-+		.irq_first	= fi,					\
-+		.irq_last	= li,					\
-+		.regs = {						\
- 			[REG_PULLEN]	= { per, peb },			\
- 			[REG_PULL]	= { pr, pb },			\
- 			[REG_DIR]	= { dr, db },			\
-diff --git a/drivers/pinctrl/meson/pinctrl-meson8.c b/drivers/pinctrl/meson/pinctrl-meson8.c
-index 07f1cb21..32449820 100644
---- a/drivers/pinctrl/meson/pinctrl-meson8.c
-+++ b/drivers/pinctrl/meson/pinctrl-meson8.c
-@@ -916,19 +916,19 @@ static struct meson_pmx_func meson8_aobus_functions[] = {
- };
- 
- static struct meson_bank meson8_cbus_banks[] = {
--	/*   name    first             last                 pullen  pull    dir     out     in  */
--	BANK("X",    PIN(GPIOX_0, 0),  PIN(GPIOX_21, 0),    4,  0,  4,  0,  0,  0,  1,  0,  2,  0),
--	BANK("Y",    PIN(GPIOY_0, 0),  PIN(GPIOY_16, 0),    3,  0,  3,  0,  3,  0,  4,  0,  5,  0),
--	BANK("DV",   PIN(GPIODV_0, 0), PIN(GPIODV_29, 0),   0,  0,  0,  0,  7,  0,  8,  0,  9,  0),
--	BANK("H",    PIN(GPIOH_0, 0),  PIN(GPIOH_9, 0),     1, 16,  1, 16,  9, 19, 10, 19, 11, 19),
--	BANK("Z",    PIN(GPIOZ_0, 0),  PIN(GPIOZ_14, 0),    1,  0,  1,  0,  3, 17,  4, 17,  5, 17),
--	BANK("CARD", PIN(CARD_0, 0),   PIN(CARD_6, 0),      2, 20,  2, 20,  0, 22,  1, 22,  2, 22),
--	BANK("BOOT", PIN(BOOT_0, 0),   PIN(BOOT_18, 0),     2,  0,  2,  0,  9,  0, 10,  0, 11,  0),
-+	/*   name    first             last                 irq       pullen  pull    dir     out     in  */
-+	BANK("X",    PIN(GPIOX_0, 0),  PIN(GPIOX_21, 0),    112, 133, 4,  0,  4,  0,  0,  0,  1,  0,  2,  0),
-+	BANK("Y",    PIN(GPIOY_0, 0),  PIN(GPIOY_16, 0),    95,  111, 3,  0,  3,  0,  3,  0,  4,  0,  5,  0),
-+	BANK("DV",   PIN(GPIODV_0, 0), PIN(GPIODV_29, 0),   65,   94, 0,  0,  0,  0,  7,  0,  8,  0,  9,  0),
-+	BANK("H",    PIN(GPIOH_0, 0),  PIN(GPIOH_9, 0),     29,   38, 1, 16,  1, 16,  9, 19, 10, 19, 11, 19),
-+	BANK("Z",    PIN(GPIOZ_0, 0),  PIN(GPIOZ_14, 0),    14,   28, 1,  0,  1,  0,  3, 17,  4, 17,  5, 17),
-+	BANK("CARD", PIN(CARD_0, 0),   PIN(CARD_6, 0),      58,   64, 2, 20,  2, 20,  0, 22,  1, 22,  2, 22),
-+	BANK("BOOT", PIN(BOOT_0, 0),   PIN(BOOT_18, 0),     39,   57, 2,  0,  2,  0,  9,  0, 10,  0, 11,  0),
- };
- 
- static struct meson_bank meson8_aobus_banks[] = {
--	/*   name    first                  last                      pullen  pull    dir     out     in  */
--	BANK("AO",   PIN(GPIOAO_0, AO_OFF), PIN(GPIO_TEST_N, AO_OFF), 0,  0,  0, 16,  0,  0,  0, 16,  1,  0),
-+	/*   name    first                  last                      irq    pullen  pull    dir     out     in  */
-+	BANK("AO",   PIN(GPIOAO_0, AO_OFF), PIN(GPIO_TEST_N, AO_OFF), 0, 13, 0,  0,  0, 16,  0,  0,  0, 16,  1,  0),
- };
- 
- struct meson_pinctrl_data meson8_cbus_pinctrl_data = {
-diff --git a/drivers/pinctrl/meson/pinctrl-meson8b.c b/drivers/pinctrl/meson/pinctrl-meson8b.c
-index bf747eb1..71f216b5 100644
---- a/drivers/pinctrl/meson/pinctrl-meson8b.c
-+++ b/drivers/pinctrl/meson/pinctrl-meson8b.c
-@@ -124,6 +124,12 @@ static const struct pinctrl_pin_desc meson8b_aobus_pins[] = {
- 	MESON_PIN(GPIOAO_11, AO_OFF),
- 	MESON_PIN(GPIOAO_12, AO_OFF),
- 	MESON_PIN(GPIOAO_13, AO_OFF),
-+
-+	/*
-+	 * The following 2 pins are not mentionned in the public datasheet
-+	 * According to this datasheet, they can't be used with the gpio
-+	 * interrupt controller
-+	 */
- 	MESON_PIN(GPIO_BSD_EN, AO_OFF),
- 	MESON_PIN(GPIO_TEST_N, AO_OFF),
- };
-@@ -881,19 +887,25 @@ static struct meson_pmx_func meson8b_aobus_functions[] = {
- };
- 
- static struct meson_bank meson8b_cbus_banks[] = {
--	/*   name    first                      last                   pullen  pull    dir     out     in  */
--	BANK("X",    PIN(GPIOX_0, 0),		PIN(GPIOX_21, 0),      4,  0,  4,  0,  0,  0,  1,  0,  2,  0),
--	BANK("Y",    PIN(GPIOY_0, 0),		PIN(GPIOY_14, 0),      3,  0,  3,  0,  3,  0,  4,  0,  5,  0),
--	BANK("DV",   PIN(GPIODV_9, 0),		PIN(GPIODV_29, 0),     0,  0,  0,  0,  7,  0,  8,  0,  9,  0),
--	BANK("H",    PIN(GPIOH_0, 0),		PIN(GPIOH_9, 0),       1, 16,  1, 16,  9, 19, 10, 19, 11, 19),
--	BANK("CARD", PIN(CARD_0, 0),		PIN(CARD_6, 0),        2, 20,  2, 20,  0, 22,  1, 22,  2, 22),
--	BANK("BOOT", PIN(BOOT_0, 0),		PIN(BOOT_18, 0),       2,  0,  2,  0,  9,  0, 10,  0, 11,  0),
--	BANK("DIF",  PIN(DIF_0_P, 0),		PIN(DIF_4_N, 0),       5,  8,  5,  8, 12, 12, 13, 12, 14, 12),
-+	/*   name    first                      last                irq      pullen  pull    dir     out     in  */
-+	BANK("X",    PIN(GPIOX_0, 0),		PIN(GPIOX_21, 0),   97, 118, 4,  0,  4,  0,  0,  0,  1,  0,  2,  0),
-+	BANK("Y",    PIN(GPIOY_0, 0),		PIN(GPIOY_14, 0),   80,  96, 3,  0,  3,  0,  3,  0,  4,  0,  5,  0),
-+	BANK("DV",   PIN(GPIODV_9, 0),		PIN(GPIODV_29, 0),  59,  79, 0,  0,  0,  0,  7,  0,  8,  0,  9,  0),
-+	BANK("H",    PIN(GPIOH_0, 0),		PIN(GPIOH_9, 0),    14,  23, 1, 16,  1, 16,  9, 19, 10, 19, 11, 19),
-+	BANK("CARD", PIN(CARD_0, 0),		PIN(CARD_6, 0),     43,  49, 2, 20,  2, 20,  0, 22,  1, 22,  2, 22),
-+	BANK("BOOT", PIN(BOOT_0, 0),		PIN(BOOT_18, 0),    24,  42, 2,  0,  2,  0,  9,  0, 10,  0, 11,  0),
-+
-+	/*
-+	 * The following bank is not mentionned in the public datasheet
-+	 * There is no information whether it can be used with the gpio
-+	 * interrupt controller
-+	 */
-+	BANK("DIF",  PIN(DIF_0_P, 0),		PIN(DIF_4_N, 0),    -1,  -1, 5,  8,  5,  8, 12, 12, 13, 12, 14, 12),
- };
- 
- static struct meson_bank meson8b_aobus_banks[] = {
--	/*   name    first                  last                      pullen  pull    dir     out     in  */
--	BANK("AO",   PIN(GPIOAO_0, AO_OFF), PIN(GPIO_TEST_N, AO_OFF), 0,  0,  0, 16,  0,  0,  0, 16,  1,  0),
-+	/*   name    first                  last                      irq    pullen  pull    dir     out     in  */
-+	BANK("AO",   PIN(GPIOAO_0, AO_OFF), PIN(GPIO_TEST_N, AO_OFF), 0, 13, 0,  0,  0, 16,  0,  0,  0, 16,  1,  0),
- };
- 
- struct meson_pinctrl_data meson8b_cbus_pinctrl_data = {
--- 
-2.12.2
+If this all there is I'll fix it up.
+> +}
+> +
+> +static const struct of_device_id adc084s021_of_match[] = {
+> +	{ .compatible = "ti,adc084s021", },
+> +	{},
+> +};
+> +MODULE_DEVICE_TABLE(of, adc084s021_of_match);
+> +
+> +static const struct spi_device_id adc084s021_id[] = {
+> +	{ ADC084S021_DRIVER_NAME, 0},
+> +	{}
+> +};
+> +MODULE_DEVICE_TABLE(spi, adc084s021_id);
+> +
+> +static struct spi_driver adc084s021_driver = {
+> +	.driver = {
+> +		.name = ADC084S021_DRIVER_NAME,
+> +		.of_match_table = of_match_ptr(adc084s021_of_match),
+> +	},
+> +	.probe = adc084s021_probe,
+> +	.id_table = adc084s021_id,
+> +};
+> +module_spi_driver(adc084s021_driver);
+> +
+> +MODULE_AUTHOR("Mårten Lindahl <martenli-VrBV9hrLPhE@public.gmane.org>");
+> +MODULE_DESCRIPTION("Texas Instruments ADC084S021");
+> +MODULE_LICENSE("GPL v2");
+> +MODULE_VERSION("1.0");
+> 
 
-
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
