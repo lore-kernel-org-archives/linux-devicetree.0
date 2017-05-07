@@ -1,16 +1,17 @@
-From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH v4 3/3] iio: adc: meson-saradc: add Meson8b SoC
- compatibility
-Date: Sun, 7 May 2017 12:35:48 +0100
-Message-ID: <b57c749f-47c0-f0e3-40da-c678371832f2@kernel.org>
-References: <20170506134929.31190-1-martin.blumenstingl@googlemail.com>
- <20170506134929.31190-4-martin.blumenstingl@googlemail.com>
+From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>
+Subject: Re: [PATCH v2 3/3] gpiolib: Add GPIO initialization
+Date: Sun, 7 May 2017 14:38:47 +0200
+Message-ID: <20170507123847.dwkr627r6lw5jv3y@pengutronix.de>
+References: <1440920686-6892-1-git-send-email-mpa@pengutronix.de>
+ <1440920686-6892-4-git-send-email-mpa@pengutronix.de>
+ <20170207110950.zy5pzo2hq6hrvmr5@pengutronix.de>
+ <20170507102201.GL22219@n2100.armlinux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170506134929.31190-4-martin.blumenstingl@googlemail.com>
-Content-Language: en-GH
+Content-Disposition: inline
+In-Reply-To: <20170507102201.GL22219@n2100.armlinux.org.uk>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -20,173 +21,64 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, robh+dt@kernel.org, mark.rutland@arm.com, linux-iio@vger.kernel.org
-Cc: devicetree@vger.kernel.org, khilman@baylibre.com, thomas.langer@intel.com, carlo@caione.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+To: Russell King - ARM Linux <linux@armlinux.org.uk>
+Cc: Alexandre Courbot <gnurou@gmail.com>, chrisrfq@gmail.com, Arun Bharadwaj <arun@gumstix.com>, devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Johan Hovold <johan@kernel.org>, linux-gpio@vger.kernel.org, kernel@pengutronix.de, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/05/17 14:49, Martin Blumenstingl wrote:
-> Meson GX SoCs however use some magic bits to prevent simultaneous (=
-> conflicting, because only consumer should use the FIFO buffer with the
-> ADC results) usage by the Linux kernel and the bootloader (the BL30
-> bootloader uses the SAR ADC to read the CPU temperature).
-> This patch changes guards all BL30 functionality so it is skipped on
-> SoCs which don't have it. Since the hardware itself doesn't know whether
-> BL30 is available the internal meson_sar_adc_data is extended so this
-> information can be provided per of_device_id.data inside the driver.
-> 
-> Additionally the clocks "adc_clk" and "adc_sel" are not provided by the
-> clock-controller itself. "adc_sel" is not available at all. "adc_clk"
-> is provided by the SAR ADC IP block itself on Meson8b (and earlier).
-> This is already supported by the meson_saradc driver.
-> 
-> Finally this introduces new of_device_ids for the Meson8 and Meson8b
-> SoCs so the driver can be wired up in the corresponding DT.
-> 
-> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Applied to the togreg branch of iio.git and pushed out as testing for
-the autobuilders to play with it.
+Hello Russell,
 
-Thanks,
+On Sun, May 07, 2017 at 11:22:01AM +0100, Russell King - ARM Linux wrote:
+> On Tue, Feb 07, 2017 at 12:09:50PM +0100, Uwe Kleine-K=F6nig wrote:
+> > Now additionally I want to initialize some gpios but allow them to be
+> > grabbed later. IMHO there are the following new cases:
+> > =
 
-Jonathan
-> ---
->  drivers/iio/adc/meson_saradc.c | 80 +++++++++++++++++++++++++++++-------------
->  1 file changed, 56 insertions(+), 24 deletions(-)
-> 
-> diff --git a/drivers/iio/adc/meson_saradc.c b/drivers/iio/adc/meson_saradc.c
-> index 2f6fec995264..81cd39a57fe3 100644
-> --- a/drivers/iio/adc/meson_saradc.c
-> +++ b/drivers/iio/adc/meson_saradc.c
-> @@ -220,6 +220,7 @@ enum meson_sar_adc_chan7_mux_sel {
->  };
->  
->  struct meson_sar_adc_data {
-> +	bool					has_bl30_integration;
->  	unsigned int				resolution;
->  	const char				*name;
->  };
-> @@ -437,19 +438,24 @@ static int meson_sar_adc_lock(struct iio_dev *indio_dev)
->  
->  	mutex_lock(&indio_dev->mlock);
->  
-> -	/* prevent BL30 from using the SAR ADC while we are using it */
-> -	regmap_update_bits(priv->regmap, MESON_SAR_ADC_DELAY,
-> -			   MESON_SAR_ADC_DELAY_KERNEL_BUSY,
-> -			   MESON_SAR_ADC_DELAY_KERNEL_BUSY);
-> -
-> -	/* wait until BL30 releases it's lock (so we can use the SAR ADC) */
-> -	do {
-> -		udelay(1);
-> -		regmap_read(priv->regmap, MESON_SAR_ADC_DELAY, &val);
-> -	} while (val & MESON_SAR_ADC_DELAY_BL30_BUSY && timeout--);
-> -
-> -	if (timeout < 0)
-> -		return -ETIMEDOUT;
-> +	if (priv->data->has_bl30_integration) {
-> +		/* prevent BL30 from using the SAR ADC while we are using it */
-> +		regmap_update_bits(priv->regmap, MESON_SAR_ADC_DELAY,
-> +				MESON_SAR_ADC_DELAY_KERNEL_BUSY,
-> +				MESON_SAR_ADC_DELAY_KERNEL_BUSY);
-> +
-> +		/*
-> +		 * wait until BL30 releases it's lock (so we can use the SAR
-> +		 * ADC)
-> +		 */
-> +		do {
-> +			udelay(1);
-> +			regmap_read(priv->regmap, MESON_SAR_ADC_DELAY, &val);
-> +		} while (val & MESON_SAR_ADC_DELAY_BL30_BUSY && timeout--);
-> +
-> +		if (timeout < 0)
-> +			return -ETIMEDOUT;
-> +	}
->  
->  	return 0;
->  }
-> @@ -458,9 +464,10 @@ static void meson_sar_adc_unlock(struct iio_dev *indio_dev)
->  {
->  	struct meson_sar_adc_priv *priv = iio_priv(indio_dev);
->  
-> -	/* allow BL30 to use the SAR ADC again */
-> -	regmap_update_bits(priv->regmap, MESON_SAR_ADC_DELAY,
-> -			   MESON_SAR_ADC_DELAY_KERNEL_BUSY, 0);
-> +	if (priv->data->has_bl30_integration)
-> +		/* allow BL30 to use the SAR ADC again */
-> +		regmap_update_bits(priv->regmap, MESON_SAR_ADC_DELAY,
-> +				MESON_SAR_ADC_DELAY_KERNEL_BUSY, 0);
->  
->  	mutex_unlock(&indio_dev->mlock);
->  }
-> @@ -614,14 +621,16 @@ static int meson_sar_adc_init(struct iio_dev *indio_dev)
->  	 */
->  	meson_sar_adc_set_chan7_mux(indio_dev, CHAN7_MUX_CH7_INPUT);
->  
-> -	/*
-> -	 * leave sampling delay and the input clocks as configured by BL30 to
-> -	 * make sure BL30 gets the values it expects when reading the
-> -	 * temperature sensor.
-> -	 */
-> -	regmap_read(priv->regmap, MESON_SAR_ADC_REG3, &regval);
-> -	if (regval & MESON_SAR_ADC_REG3_BL30_INITIALIZED)
-> -		return 0;
-> +	if (priv->data->has_bl30_integration) {
-> +		/*
-> +		 * leave sampling delay and the input clocks as configured by
-> +		 * BL30 to make sure BL30 gets the values it expects when
-> +		 * reading the temperature sensor.
-> +		 */
-> +		regmap_read(priv->regmap, MESON_SAR_ADC_REG3, &regval);
-> +		if (regval & MESON_SAR_ADC_REG3_BL30_INITIALIZED)
-> +			return 0;
-> +	}
->  
->  	meson_sar_adc_stop_sample_engine(indio_dev);
->  
-> @@ -834,23 +843,46 @@ static const struct iio_info meson_sar_adc_iio_info = {
->  	.driver_module = THIS_MODULE,
->  };
->  
-> +static const struct meson_sar_adc_data meson_sar_adc_meson8_data = {
-> +	.has_bl30_integration = false,
-> +	.resolution = 10,
-> +	.name = "meson-meson8-saradc",
-> +};
-> +
-> +static const struct meson_sar_adc_data meson_sar_adc_meson8b_data = {
-> +	.has_bl30_integration = false,
-> +	.resolution = 10,
-> +	.name = "meson-meson8b-saradc",
-> +};
-> +
->  static const struct meson_sar_adc_data meson_sar_adc_gxbb_data = {
-> +	.has_bl30_integration = true,
->  	.resolution = 10,
->  	.name = "meson-gxbb-saradc",
->  };
->  
->  static const struct meson_sar_adc_data meson_sar_adc_gxl_data = {
-> +	.has_bl30_integration = true,
->  	.resolution = 12,
->  	.name = "meson-gxl-saradc",
->  };
->  
->  static const struct meson_sar_adc_data meson_sar_adc_gxm_data = {
-> +	.has_bl30_integration = true,
->  	.resolution = 12,
->  	.name = "meson-gxm-saradc",
->  };
->  
->  static const struct of_device_id meson_sar_adc_of_match[] = {
->  	{
-> +		.compatible = "amlogic,meson8-saradc",
-> +		.data = &meson_sar_adc_meson8_data,
-> +	},
-> +	{
-> +		.compatible = "amlogic,meson8b-saradc",
-> +		.data = &meson_sar_adc_meson8b_data,
-> +	},
-> +	{
->  		.compatible = "amlogic,meson-gxbb-saradc",
->  		.data = &meson_sar_adc_gxbb_data,
->  	}, {
-> 
+> > It should be possible to:
+> > =
+
+> >  a) change the value of a gpio initially configured as output
+> >  b) change the direction of a gpio initially configured as output
+> >  c) change the direction of a gpio initially configured as input
+> > =
+
+> > IMHO the dts should describe which case should be applied to a given
+> > gpio.
+> =
+
+> Isn't it the job of the board firmware to ensure that the hardware is
+> setup to a reasonably sane state for the board?
+> =
+
+> You give an example of holding GPIOs low in Linux for "ESD reasons"
+> later in this thread, but if you're only doing that in Linux, what if
+> Linux isn't running yet, and the GPIO has been left floating by the
+> board firmware?  Fixing this in Linux is really too late.
+> =
+
+> Floating GPIOs are also a source of higher current drain - a GPIO
+> sitting mid-rail turns both transistors on for a MOS input, which gives
+> a direct path across the power supply.  The quicker that the GPIOs can
+> be initialised, the less wasted power there is.  So, that's another
+> argument for board firmware doing the basic GPIO initialisation and not
+> stuffing this into DT and having the kernel do it.
+> =
+
+> We could then talk about floating GPIOs that activate higher power
+> devices, and the arguments for doing GPIO initialisation as early as
+> possible in board firmware continue to stack up.
+> =
+
+> IMHO, initial configuration of GPIOs is the job of board firmware, not
+> the kernel.  I see no sane reason to push that into the kernel.
+
+still it is hardware description, isn't it? And Linux isn't the only
+consumer of the dtb, barebox understands it, too, and should be teached
+to handle the gpio-init stuff once we agreed on a binding.
+
+Best regards
+Uwe
+
+-- =
+
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
