@@ -1,58 +1,43 @@
-From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH v2 3/3] iio: tools: generic_buffer: increase trigger length
-Date: Sun, 7 May 2017 16:03:01 +0100
-Message-ID: <c02626ec-4580-ef36-3b38-535e18531473@kernel.org>
-References: <1493900000-26220-1-git-send-email-eugen.hristev@microchip.com>
- <1493900000-26220-4-git-send-email-eugen.hristev@microchip.com>
+From: Hans Ulli Kroll <ulli.kroll@googlemail.com>
+Subject: Re: [PATCH 1/4] ata: Add DT bindings for Faraday
+ Technology FTIDE010
+Date: Sun, 7 May 2017 18:39:03 +0200 (CEST)
+Message-ID: <alpine.LNX.2.00.1705071837310.18983@T420s>
+References: <20170506121053.11554-1-linus.walleij@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1493900000-26220-4-git-send-email-eugen.hristev@microchip.com>
-Content-Language: en-GH
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Eugen Hristev <eugen.hristev@microchip.com>, nicolas.ferre@microchip.com, alexandre.belloni@free-electrons.com, linux-iio@vger.kernel.org, lars@metafoo.de, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: ludovic.desroches@microchip.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <openwrt-devel-bounces@lists.openwrt.org>
+In-Reply-To: <20170506121053.11554-1-linus.walleij@linaro.org>
+List-Unsubscribe: <https://lists.openwrt.org/cgi-bin/mailman/options/openwrt-devel>,
+ <mailto:openwrt-devel-request@lists.openwrt.org?subject=unsubscribe>
+List-Archive: <http://lists.openwrt.org/pipermail/openwrt-devel/>
+List-Post: <mailto:openwrt-devel@lists.openwrt.org>
+List-Help: <mailto:openwrt-devel-request@lists.openwrt.org?subject=help>
+List-Subscribe: <https://lists.openwrt.org/cgi-bin/mailman/listinfo/openwrt-devel>,
+ <mailto:openwrt-devel-request@lists.openwrt.org?subject=subscribe>
+Errors-To: openwrt-devel-bounces@lists.openwrt.org
+Sender: "openwrt-devel" <openwrt-devel-bounces@lists.openwrt.org>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: openwrt-devel@openwrt.org, devicetree@vger.kernel.org, John Feng-Hsin Chiang <john453@faraday-tech.com>, Paulius Zaleckas <paulius.zaleckas@gmail.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, linux-ide@vger.kernel.org, Greentime Hu <green.hu@gmail.com>, Tejun Heo <tj@kernel.org>, Janos Laube <janos.dev@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 04/05/17 13:13, Eugen Hristev wrote:
-> Increased trigger length to 64 in order to cope with trigger names
-> like fc030000.adc-dev0-external-rising
-> 
-> Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
-Might as well change this now.
-
-Applied to the togreg branch of iio.git.
-
-Thanks,
-
-Jonathan
-> ---
->  Changes in v2:
->  - Modified trigger name length to 64
-> 
->  tools/iio/iio_utils.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/tools/iio/iio_utils.h b/tools/iio/iio_utils.h
-> index 780f201..8b379da 100644
-> --- a/tools/iio/iio_utils.h
-> +++ b/tools/iio/iio_utils.h
-> @@ -13,7 +13,7 @@
->  #include <stdint.h>
->  
->  /* Made up value to limit allocation sizes */
-> -#define IIO_MAX_NAME_LENGTH 30
-> +#define IIO_MAX_NAME_LENGTH 64
->  
->  #define FORMAT_SCAN_ELEMENTS_DIR "%s/scan_elements"
->  #define FORMAT_TYPE_FILE "%s_type"
-> 
+SGkgTGludXMKCk9uIFNhdCwgNiBNYXkgMjAxNywgTGludXMgV2FsbGVpaiB3cm90ZToKCj4gVGhp
+cyBhZGRzIGRldmljZSB0cmVlIGJpbmRpbmdzIGZvciB0aGUgRmFyYWRheSBUZWNobm9sb2d5Cj4g
+RlRJREUwMTAgZm91bmQgaW4gdGhlIFN0b3JsaW5rL1N0b3JtL0NvcnRpbmEgU3lzdGVtcyBHZW1p
+bmkgU29DLgo+IAo+IEkgYW0gbm90IDEwMCUgc3VyZSB0aGF0IHRoaXMgcGFydCBpZiBmcm9tIEZh
+cmFkYXkgVGVjaG5vbG9neSBidXQKPiBhIGxvdCBwb2ludHMgaW4gdGhhdCBkaXJlY3Rpb246Cj4g
+Cj4gLSBBIGxhdGVyIElERSBpbnRlcmZhY2UgY2FsbGVkIEZUSURFMDIwIGV4aXN0IGFuZCBzaGFy
+ZSBzb21lCj4gICBwcm9wZXJ0aWVzLgo+IAo+IC0gVGhlIFNBVEEgYnJpZGdlIGhhcyB0aGUgc2Ft
+ZSBCdWlsdCBJbiBTZWxmIFRlc3QgKEJJU1QpIHRoYXQgdGhlCj4gICBGYXJhZGF5IEZUU0FUQTEw
+MCBzZWVtcyB0byBoYXZlLCBhbmQgaXQgaGFzIHZlcnNpb24gbnVtYmVyIDAxMDAKPiAgIGluIHRo
+ZSBkZXZpY2UgSUQgcmVnaXN0ZXIsIHNvIHRoaXMgaXMgdmVyeSBsaWtlbHkgYSBGVFNBVEExMDAK
+PiAgIGJ1bmRsZWQgd2l0aCB0aGUgRlRJREUwMTAuCj4gCj4gQ2M6IGRldmljZXRyZWVAdmdlci5r
+ZXJuZWwub3JnCj4gQ2M6IEpvaG4gRmVuZy1Ic2luIENoaWFuZyA8am9objQ1M0BmYXJhZGF5LXRl
+Y2guY29tPgo+IENjOiBHcmVlbnRpbWUgSHUgPGdyZWVuLmh1QGdtYWlsLmNvbT4KPiBTaWduZWQt
+b2ZmLWJ5OiBMaW51cyBXYWxsZWlqIDxsaW51cy53YWxsZWlqQGxpbmFyby5vcmc+CgpuaWNlIHdv
+cmsgIQp5b3UgY2FuIGFkZCBteQoKQWNrZWQtYnk6IEhhbnMgVWxsaSBLcm9sbCA8dWxsaS5rcm9s
+bEBnb29nbGVtYWlsLmNvbT4KCm9uIHRoZSB3aG9sZSBwYXRjaCBzZXQuCl9fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCm9wZW53cnQtZGV2ZWwgbWFpbGluZyBs
+aXN0Cm9wZW53cnQtZGV2ZWxAbGlzdHMub3BlbndydC5vcmcKaHR0cHM6Ly9saXN0cy5vcGVud3J0
+Lm9yZy9jZ2ktYmluL21haWxtYW4vbGlzdGluZm8vb3BlbndydC1kZXZlbAo=
