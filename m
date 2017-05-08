@@ -1,228 +1,29 @@
-From: Sricharan R <sricharan@codeaurora.org>
-Subject: Re: [PATCH V11 00/11] IOMMU probe deferral support
-Date: Mon, 8 May 2017 20:27:13 +0530
-Message-ID: <b597429a-5615-ac71-1fd5-e947ae8cb576@codeaurora.org>
-References: <CGME20170410112136epcas2p2cdd7dc21a8dc0ffcfab7f8290c4b7467@epcas2p2.samsung.com>
- <1491823266-1209-1-git-send-email-sricharan@codeaurora.org>
- <5617791f-407a-1ab3-53aa-0f09fcd716aa@samsung.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v6 3/8] i2c: i2c-smbus: add of_i2c_setup_smbus_alert
+Date: Mon, 8 May 2017 10:24:10 -0500
+Message-ID: <20170508152410.rxm6hsoc4zbmvkqp@rob-hp-laptop>
+References: <1493716346-58517-1-git-send-email-preid@electromag.com.au>
+ <1493716346-58517-4-git-send-email-preid@electromag.com.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <5617791f-407a-1ab3-53aa-0f09fcd716aa@samsung.com>
-Content-Language: en-US
-Sender: linux-acpi-owner@vger.kernel.org
-To: Marek Szyprowski <m.szyprowski@samsung.com>, robin.murphy@arm.com, will.deacon@arm.com, joro@8bytes.org, lorenzo.pieralisi@arm.com, iommu@lists.linux-foundation.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, bhelgaas@google.com, linux-pci@vger.kernel.org, linux-acpi@vger.kernel.org, tn@semihalf.com, hanjun.guo@linaro.org, okaya@codeaurora.org, robh+dt@kernel.org, frowand.list@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, sudeep.holla@arm.com, rjw@rjwysocki.net, lenb@kernel.org, catalin.marinas@arm.com, arnd@arndb.de, linux-arch@vger.kernel.org, gregkh@linuxfoundation.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-i2c-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1493716346-58517-4-git-send-email-preid@electromag.com.au>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Phil Reid <preid@electromag.com.au>
+Cc: wsa@the-dreams.de, mark.rutland@arm.com, sre@kernel.org, peda@axentia.se, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, benjamin.tissoires@redhat.com
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On 5/8/2017 4:53 PM, Marek Szyprowski wrote:
-> Hi Sricharan,
+On Tue, May 02, 2017 at 05:12:21PM +0800, Phil Reid wrote:
+> This commit adds of_i2c_setup_smbus_alert which allows the smbalert
+> driver to be attached to an i2c adapter via the device tree.
 > 
-> On 2017-04-10 13:20, Sricharan R wrote:
->> This series calls the dma ops configuration for the devices
->> at a generic place so that it works for all busses.
->> The dma_configure_ops for a device is now called during
->> the device_attach callback just before the probe of the
->> bus/driver is called. Similarly dma_deconfigure is called during
->> device/driver_detach path.
->>
->> pci_bus_add_devices    (platform/amba)(_device_create/driver_register)
->>         |                         |
->> pci_bus_add_device     (device_add/driver_register)
->>         |                         |
->> device_attach           device_initial_probe
->>         |                         |
->> __device_attach_driver    __device_attach_driver
->>         |
->> driver_probe_device
->>         |
->> really_probe
->>         |
->> dma_configure
->>
->> Similarly on the device/driver_unregister path __device_release_driver is
->> called which inturn calls dma_deconfigure.
->>
->> Rebased the series against mainline 4.11-rc5. Applies and builds cleanly
->> against iommu-next and with 3-way merge applies on top of linux-next
->> as well (patch #8), because of "ACPI platform MSI support" from
->> Hanjun being merged.
->>    * Tested with platform and pci devices for probe deferral
->>    and reprobe on arm64 based platform.
-> 
-> I just noticed that in the meantime the following patch: "arm: dma-mapping:
-> Reset the device's dma_ops" (https://patchwork.kernel.org/patch/9434105/ )
-> has been dropped from this series.
-> 
-> Lack of it causes serious issues with deferred probe of devices, which are
-> under IOMMU on ARM architecture. Please check where it got lost and push it
-> to Russell's patch tracking system ASAP to get it during v4.12-rcX cycle.
+> Signed-off-by: Phil Reid <preid@electromag.com.au>
+> ---
+>  Documentation/devicetree/bindings/i2c/i2c.txt |  4 +--
 
-ha, bad on me. I posted this patch independently from the series, but was not
-added to patch system. Will add it now.
+Acked-by: Rob Herring <robh@kernel.org>
 
-Regards,
- Sricharan
-
-> 
->>
->> Previous post of this series [8].
->>
->> Please note that, i have kept the tested/acked tags intact from V8
->> because V9/10/11 were for more fixes that was added, so the original
->> tags that was given for the functional testing remains the same.
->>
->>   [V11]
->>       * No functional changes.
->>
->>       * Rebased on top of 4.11-rc6.
->>
->>       * Dropped patch#3 from V10, as a result have to make
->>         a change in patch#7 to return a 'non-void' to fix a
->>         build warning.
->>
->>       * Added Robin's and Rob's tags.
->>
->>   [V10]
->>       * Rebased on top of 4.11-rc5.
->>         * Fixed coherent_dma_mask 64bit overflow issue [8]
->>         for OF. The fix for OF was added as a separate
->>         patch#6, since the issue is true even without probe deferral,
->>         but gets reproduced with the probe deferral series.
->>         Added Lorenzo's ACPI fix for coherent_dma_mask overflow
->>         and the fix for dma_configure getting called more than
->>         once for the same device.
->>
->>       * Also fixed an build issue caught by kbuild robot for
->>         m68k arch. The issue was dma_(de)configure was not
->>         getting defined for !CONFIG_HAS_DMA, so fixed that as well.
->>
->>   [V9]
->>       * Rebased on top of 4.11-rc1.
->>
->>       * Merged Robin's fixes for legacy binding issue,
->>         pci devices with no iommu-map property and deferencing
->>         of_iommu_table after init.
->>         [V8]
->>       * Picked up all the acks and tested tags from Marek and
->>         Hanjun for DT and ACPI patches respectively, since
->>         no functional changes was done.
->>
->>       * Addressed Minor comments Sinan and Bjorn.
->>
->>       * Added Robin's fix for fixing the deferencing NULL for
->>         of_iommu_table after init in patch #2.
->>
->>       * Rebased it on top of linux-next
->>
->>   [V7]
->>       * Updated the subject and commit log for patch #6 as per
->>         comments from Lorenzo. No functional changes.
->>
->>   [V6]
->>       * Fixed a bug in dma_configure function pointed out by
->>         Robin.
->>       * Reordered the patches as per comments from Robin and
->>         Lorenzo.
->>       * Added Tags.
->>
->>   [V5]
->>       * Reworked the pci configuration code hanging outside and
->>         pushed it to dma_configure as in PATCH#5,6,7.
->>         Also added a couple of patches that Lorenzo provided for
->>         correcting the Probe deferring mechanism in case of
->>         ACPI devices from here [5].
->>
->>   [V4]
->>       * Took the reworked patches [2] from Robin's branch and
->>         rebased on top of Lorenzo's ACPI IORT ARM support series [3].
->>
->>       * Added the patches for moving the dma ops configuration of
->>         acpi based devices to probe time as well.
->>   [V3]
->>       * Removed the patch to split dma_masks/dma_ops configuration
->>         separately based on review comments that both masks and ops are
->>         required only during the device probe time.
->>
->>       * Reworked the series based on Generic DT bindings series.
->>
->>       * Added call to iommu's remove_device in the cleanup path for arm and
->>         arm64.
->>
->>       * Removed the notifier trick in arm64 to handle early device
->>         registration.
->>
->>       * Added reset of dma_ops in cleanup path for arm based on comments.
->>
->>       * Fixed the pci_iommu_configure path and tested with PCI device as
->>         well.
->>         * Fixed a bug to return the correct iommu_ops from patch 7 [4] in
->>         last post.
->>
->>       * Fixed few other cosmetic comments.
->>      [V2]
->>       * Updated the Initial post to call dma_configure/deconfigure from
->>         generic code
->>         * Added iommu add_device callback from of_iommu_configure path
->>
->>   [V1]
->>       * Initial post from Laurent Pinchart [1]
->>
->> [1] http://lists.linuxfoundation.org/pipermail/iommu/2015-May/013016.html
->> [2] http://www.linux-arm.org/git?p=linux-rm.git;a=shortlog;h=refs/heads/iommu/defer
->> [3] https://lkml.org/lkml/2016/11/21/141
->> [4] https://www.mail-archive.com/iommu@xxxxxxxxxxxxxxxxxxxxxxxxxx/msg13940.html
->> [5] git://git.kernel.org/pub/scm/linux/kernel/git/lpieralisi/linux.git iommu/probe-deferral
->> [6] http://www.spinics.net/lists/linux-pci/msg57992.html
->> [7] https://www.spinics.net/lists/arm-kernel/msg556209.html
->> [8] http://lkml.iu.edu/hypermail/linux/kernel/1704.0/01557.html
->>
->> Laurent Pinchart (2):
->>    of: dma: Make of_dma_deconfigure() public
->>    iommu: of: Handle IOMMU lookup failure with deferred probing or error
->>
->> Lorenzo Pieralisi (2):
->>    ACPI/IORT: Add function to check SMMUs drivers presence
->>    ACPI/IORT: Remove linker section for IORT entries probing
->>
->> Robin Murphy (3):
->>    iommu/of: Refactor of_iommu_configure() for error handling
->>    iommu/of: Prepare for deferred IOMMU configuration
->>    iommu/arm-smmu: Clean up early-probing workarounds
->>
->> Sricharan R (4):
->>    of: device: Fix overflow of coherent_dma_mask
->>    of/acpi: Configure dma operations at probe time for platform/amba/pci
->>      bus devices
->>    drivers: acpi: Handle IOMMU lookup failure with deferred probing or
->>      error
->>    arm64: dma-mapping: Remove the notifier trick to handle early setting
->>      of dma_ops
->>
->>   arch/arm64/mm/dma-mapping.c       | 142 +++++---------------------------------
->>   drivers/acpi/arm64/iort.c         |  48 ++++++++++++-
->>   drivers/acpi/glue.c               |   5 --
->>   drivers/acpi/scan.c               |  11 ++-
->>   drivers/base/dd.c                 |   9 +++
->>   drivers/base/dma-mapping.c        |  41 +++++++++++
->>   drivers/iommu/arm-smmu-v3.c       |  46 +-----------
->>   drivers/iommu/arm-smmu.c          | 110 +++++++++++++----------------
->>   drivers/iommu/of_iommu.c          | 126 ++++++++++++++++++++++++---------
->>   drivers/of/device.c               |  23 +++++-
->>   drivers/of/platform.c             |  10 +--
->>   drivers/pci/probe.c               |  28 --------
->>   include/acpi/acpi_bus.h           |   2 +-
->>   include/asm-generic/vmlinux.lds.h |   1 -
->>   include/linux/acpi.h              |   7 +-
->>   include/linux/acpi_iort.h         |   3 -
->>   include/linux/dma-mapping.h       |  12 ++++
->>   include/linux/of_device.h         |  10 ++-
->>   18 files changed, 312 insertions(+), 322 deletions(-)
->>
-> 
-> Best regards
-
--- 
-"QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+>  drivers/i2c/i2c-smbus.c                       | 35 +++++++++++++++++++++++++++
+>  include/linux/i2c-smbus.h                     |  9 +++++++
+>  3 files changed, 46 insertions(+), 2 deletions(-)
