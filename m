@@ -1,74 +1,56 @@
-From: Kieran Bingham <kbingham-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: [PATCHv1.1] Documentation: of: Fix grammar usage in graph bindings
-Date: Mon,  8 May 2017 11:34:25 +0100
-Message-ID: <1494239666-8516-1-git-send-email-kbingham@kernel.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kieran Bingham <kieran.bingham+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Luis Oliveira <Luis.Oliveira@synopsys.com>
+Subject: [PATCH v9 0/6] i2c: designware: add I2C SLAVE support
+Date: Mon,  8 May 2017 11:37:15 +0100
+Message-ID: <cover.1493893241.git.lolivei@synopsys.com>
+Return-path: <linux-i2c-owner@vger.kernel.org>
+Sender: linux-i2c-owner@vger.kernel.org
+To: wsa@the-dreams.de, robh+dt@kernel.org, mark.rutland@arm.com, jarkko.nikula@linux.intel.com, andriy.shevchenko@linux.intel.com, mika.westerberg@linux.intel.com, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Luis.Oliveira@synopsys.com, Ramiro.Oliveira@synopsys.com, Joao.Pinto@synopsys.com, CARLOS.PALMINHA@synopsys.com
 List-Id: devicetree@vger.kernel.org
 
-From: Kieran Bingham <kieran.bingham+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+The purpose of this patchset is to enable Linux to be a I2C slave by 
+enabling the slave functionality in the designware I2C controller and at
+the same time it does some cleaning of the existing code.
 
-Some minor tweaks to the language and formatting used in the
-documentation identified while I was reading up on the subject matter.
+The patch 1 is for cleaning and commentary fix.
+The patch 2 refactors the original i2c-designware-core and extracts all
+master functions to a i2c-designware-master source file as suggested by
+Andy Shevchenko when I first submited the update. The patch 3 then
+separates the MASTER flow from the common flow.
+The patch 4 introduces the SLAVE necessary definitions to the 
+i2c-designware library and adds a how-to-use example to the designware.txt
+in device tree bindings.
+The patch 5 adds the necessary functions to give the ability to be a SLAVE
+to the controller and for that changes also had to be made in the 
+Makefile and Kconfig.
+The patch 6 enables the SLAVE mode to be detected by the platform module.
 
-Signed-off-by: Kieran Bingham <kieran.bingham+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
----
+The functionality was tested using the hardware independent slave-eeprom
+driver based on top of i2c/for-next. The tree I used can be found here:
 
-Appologies for the resend. 'usage' was mis-spelled in my previous
-commit title :-(
+https://git.kernel.org/cgit/linux/kernel/git/wsa/linux.git/log/?h=i2c/for-next
 
+Luis Oliveira (6):
+  i2c: designware: Cleaning and comment style fixes.
+  i2c: designware: refactoring of the i2c-designware
+  i2c: designware: MASTER mode as separated driver
+  i2c: designware: introducing I2C_SLAVE definitions
+  i2c: designware: add SLAVE mode functions
+  i2c: designware: enable SLAVE in platform module
 
- Documentation/devicetree/bindings/graph.txt | 13 ++++++-------
- 1 file changed, 6 insertions(+), 7 deletions(-)
+ .../devicetree/bindings/i2c/i2c-designware.txt     |  16 +-
+ drivers/i2c/busses/Kconfig                         |  15 +-
+ drivers/i2c/busses/Makefile                        |   2 +
+ drivers/i2c/busses/i2c-designware-common.c         | 280 +++++++++++++
+ drivers/i2c/busses/i2c-designware-core.h           | 182 +++++++-
+ ...c-designware-core.c => i2c-designware-master.c} | 465 +++------------------
+ drivers/i2c/busses/i2c-designware-pcidrv.c         |   8 +-
+ drivers/i2c/busses/i2c-designware-platdrv.c        | 117 ++++--
+ drivers/i2c/busses/i2c-designware-slave.c          | 403 ++++++++++++++++++
+ 9 files changed, 1035 insertions(+), 453 deletions(-)
+ create mode 100644 drivers/i2c/busses/i2c-designware-common.c
+ rename drivers/i2c/busses/{i2c-designware-core.c => i2c-designware-master.c} (60%)
+ create mode 100644 drivers/i2c/busses/i2c-designware-slave.c
 
-diff --git a/Documentation/devicetree/bindings/graph.txt b/Documentation/devicetree/bindings/graph.txt
-index fcb1c6a4787b..0415e2c53ba0 100644
---- a/Documentation/devicetree/bindings/graph.txt
-+++ b/Documentation/devicetree/bindings/graph.txt
-@@ -34,7 +34,7 @@ remote device, an 'endpoint' child node must be provided for each link.
- If more than one port is present in a device node or there is more than one
- endpoint at a port, or a port node needs to be associated with a selected
- hardware interface, a common scheme using '#address-cells', '#size-cells'
--and 'reg' properties is used number the nodes.
-+and 'reg' properties is used to number the nodes.
- 
- device {
-         ...
-@@ -89,9 +89,9 @@ Links between endpoints
- 
- Each endpoint should contain a 'remote-endpoint' phandle property that points
- to the corresponding endpoint in the port of the remote device. In turn, the
--remote endpoint should contain a 'remote-endpoint' property. If it has one,
--it must not point to another than the local endpoint. Two endpoints with their
--'remote-endpoint' phandles pointing at each other form a link between the
-+remote endpoint should contain a 'remote-endpoint' property. If it has one, it
-+must not point to anything other than the local endpoint. Two endpoints with
-+their 'remote-endpoint' phandles pointing at each other form a link between the
- containing ports.
- 
- device-1 {
-@@ -110,13 +110,12 @@ device-2 {
-         };
- };
- 
--
- Required properties
- -------------------
- 
- If there is more than one 'port' or more than one 'endpoint' node or 'reg'
--property is present in port and/or endpoint nodes the following properties
--are required in a relevant parent node:
-+property present in the port and/or endpoint nodes then the following
-+properties are required in a relevant parent node:
- 
-  - #address-cells : number of cells required to define port/endpoint
-                     identifier, should be 1.
 -- 
-2.7.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.11.0
