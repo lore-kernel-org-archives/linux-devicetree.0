@@ -1,104 +1,72 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2 v2] clk: Add bindings for the Gemini Clock Controller
-Date: Mon, 8 May 2017 23:41:38 +0200
-Message-ID: <CACRpkdY+EzbbTy6PzN5-YhCnSxPoKej2z=t-7eC3CPqDa6Q4_w@mail.gmail.com>
-References: <20170508201159.31634-1-linus.walleij@linaro.org> <CAL_JsqLAMObobPrBDdA8bjaKTX4rEo2=_qd86ibbA2kQP6AvBg@mail.gmail.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [OpenWrt-Devel] [PATCH 2/4] ata: Add DT bindings for the Gemini
+ SATA bridge
+Date: Mon, 8 May 2017 15:52:40 -0700
+Message-ID: <6e0751d2-8f78-c584-2990-c05bc3090214@gmail.com>
+References: <20170506121053.11554-1-linus.walleij@linaro.org>
+ <CGME20170506121119epcas5p437ea69e802ba94bd7df83d0bbac1b0bc@epcas5p4.samsung.com>
+ <20170506121053.11554-2-linus.walleij@linaro.org>
+ <3791456.ZibJefW5cI@amdc3058>
+ <CACRpkdYz9Oka0SGJDTr=y4EN-VfggbuKY2s5X43oXg1dgjh1nw@mail.gmail.com>
+ <CAKR_QVJTbLMzqsUTEZJOquZ9T5aQ1_=73WAoRWrm+QK9wFhngA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqLAMObobPrBDdA8bjaKTX4rEo2=_qd86ibbA2kQP6AvBg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, openwrt-devel-p3rKhJxN3npAfugRpC6u6w@public.gmane.org, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Hans Ulli Kroll <ulli.kroll-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-ide-owner@vger.kernel.org>
+In-Reply-To: <CAKR_QVJTbLMzqsUTEZJOquZ9T5aQ1_=73WAoRWrm+QK9wFhngA@mail.gmail.com>
+Sender: linux-ide-owner@vger.kernel.org
+To: Tom Psyborg <pozega.tomislav@gmail.com>, Linus Walleij <linus.walleij@linaro.org>
+Cc: openwrt-devel@openwrt.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, John Feng-Hsin Chiang <john453@faraday-tech.com>, Paulius Zaleckas <paulius.zaleckas@gmail.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, linux-ide@vger.kernel.org, Greentime Hu <green.hu@gmail.com>, Tejun Heo <tj@kernel.org>, Janos Laube <janos.dev@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 8, 2017 at 11:24 PM, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+On 05/08/2017 02:16 PM, Tom Psyborg wrote:
+> Is it ever going to be added so this endless spam can end?
 
->> +Example:
->> +
->> +syscon: syscon@40000000 {
->> +       compatible = "cortina,gemini-syscon", "cortina,gemini-clock-controller",
->> +                    "syscon", "simple-mfd";
->
-> There are no child nodes, so you don't need simple-mfd.
+It's the first iteration of the (S)ATA patchset, and if you are not
+interested, just ignore the thread.
 
-The example is taken from an actual device tree (look below),
-where there are child nodes, I can trim it down.
+Linus is doing everyone a great favor here by making sure that this
+platform gets properly supported upstream such that the cost of
+maintaining in OpenWrt/LEDE/anywhere else comes down to almost zero.
 
->> +       reg = <0x40000000 0x1000>;
->
-> Looks like you have 2 nodes pointing to the same address with your
-> reset binding? You shouldn't have overlapping resources. It's allowed
-> for historical reasons but breaks resource creation in Linux.
+Almost forgot: please don't top post.
 
-No... they are all in the same node, just sharing the same
-resource by way of regmap (syscon).
-
-In the end, as I think you requested, when you said:
-
->> +     clock-controller {
->> +             compatible = "cortina,gemini-clock-controller";
->> +             #clock-cells = <1>;
-(...)
-> There's not really much reason to have a child node here. The parent can
-> be the clock provider.
-(...)
-> Same comment as clocks. The parent can be the provider.
-
-So as you say, no specific child is needed and syscon provides
-clocks and resets:
-
-                syscon: syscon@40000000 {
-                        compatible = "cortina,gemini-syscon",
-                                     "cortina,gemini-clock-controller",
-                                     "cortina,gemini-reset",
-                                     "syscon", "simple-mfd";
-                        reg = <0x40000000 0x1000>;
-                        #clock-cells = <1>;
-                        #reset-cells = <1>;
-
-                        syscon-reboot {
-                                compatible = "syscon-reboot";
-                                regmap = <&syscon>;
-                                /* GLOBAL_RESET register */
-                                offset = <0x0c>;
-                                /* RESET_GLOBAL | RESET_CPU1 */
-                                mask = <0xC0000000>;
-                        };
-                };
-
-Before your (as I percieved it) requested changes to avoid
-surplus children in the syscon it looked like this:
-
-                syscon: syscon@40000000 {
-                        compatible = "cortina,gemini-syscon",
-"syscon", "simple-mfd";
-                        reg = <0x40000000 0x1000>;
-
-                        syscon-reboot {
-                                compatible = "syscon-reboot";
-                                regmap = <&syscon>;
-                                /* GLOBAL_RESET register */
-                                offset = <0x0c>;
-                                /* RESET_GLOBAL | RESET_CPU1 */
-                                mask = <0xC0000000>;
-                        };
-
-                        rcon: reset-controller {
-                                compatible = "cortina,gemini-reset";
-                                #reset-cells = <1>;
-                        };
-
-                        gcc: clock-controller {
-                                compatible = "cortina,gemini-clock-controller";
-                                #clock-cells = <1>;
-                        };
-                };
+> 
+> 
+> On 8 May 2017 at 22:33, Linus Walleij <linus.walleij@linaro.org
+> <mailto:linus.walleij@linaro.org>> wrote:
+> 
+>     On Mon, May 8, 2017 at 12:49 PM, Bartlomiej Zolnierkiewicz
+>     <b.zolnierkie@samsung.com <mailto:b.zolnierkie@samsung.com>> wrote:
+>     > On Saturday, May 06, 2017 02:10:51 PM Linus Walleij wrote:
+> 
+>     >> +  Mode 3: ata0 master <-> sata0
+>     >> +          ata1 slave  <-> sata1
+>     >
+>     > ata0 slave?
+>     >
+>     >> +          ata1 master and slave interfaces brought out
+>     >> +               on IDE pads
+> 
+>     Of course. Thanks for reading close, much appreciated!
+> 
+>     Yours,
+>     Linus Walleij
+>     _______________________________________________
+>     openwrt-devel mailing list
+>     openwrt-devel@lists.openwrt.org <mailto:openwrt-devel@lists.openwrt.org>
+>     https://lists.openwrt.org/cgi-bin/mailman/listinfo/openwrt-devel
+>     <https://lists.openwrt.org/cgi-bin/mailman/listinfo/openwrt-devel>
+> 
+> 
+> 
+> 
+> _______________________________________________
+> openwrt-devel mailing list
+> openwrt-devel@lists.openwrt.org
+> https://lists.openwrt.org/cgi-bin/mailman/listinfo/openwrt-devel
+> 
 
 
-Yours,
-Linus Walleij
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Florian
