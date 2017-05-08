@@ -1,62 +1,105 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v5 1/5] dt-bindings: gpu: add bindings for the ARM Mali
- Midgard GPU
-Date: Mon, 8 May 2017 11:18:34 -0500
-Message-ID: <20170508161834.hwsjvtjf7voplkum@rob-hp-laptop>
-References: <cover.1493804968.git.guillaume.tucker@collabora.com>
- <bebe578ba130de5fa320ca7c6427b2fae83d61d7.1493804968.git.guillaume.tucker@collabora.com>
+From: Shuah Khan <shuahkhan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: Odroid XU4: fix USB3.0 ports
+Date: Mon, 8 May 2017 10:19:25 -0600
+Message-ID: <CAKocOONWPT_oej+6A2AqK9CqowdHsFvLtsSav-0N=UZKSu0-Sw@mail.gmail.com>
+References: <20170124134809.23315-1-richard.genoud@gmail.com>
+ <CANAwSgRAT0-XETx=yVRgM4GfukFLLEw-hqHjYGEWs0tqAx8g2g@mail.gmail.com>
+ <CGME20170125075556epcas1p4b916a6d6acda28f8fc1959a1227520fa@epcas1p4.samsung.com>
+ <CAJKOXPesCuYsK23466=6W9PPX7DtztdymZLBfNz0Dmjzwp4qBA@mail.gmail.com>
+ <ef6c0d33-73d6-805e-aeab-86190e8b0aa0@samsung.com> <CAJKOXPd+CnmVG282NEVCFqS_3YEURCWx41udyQKpL21keGJOWg@mail.gmail.com>
+ <4dca1d8e-f955-7791-90c0-4e73a273fe62@gmail.com> <CACQ1gAj5ebug28CJ2xiYWKohMhNbGr=tmy6mS-57CFq=K-bqyQ@mail.gmail.com>
+ <20170210133439.qfiuggbuoi7hq6el@kozik-lap>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <bebe578ba130de5fa320ca7c6427b2fae83d61d7.1493804968.git.guillaume.tucker@collabora.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Guillaume Tucker <guillaume.tucker@collabora.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Heiko =?iso-8859-1?Q?St=FCbner?= <heiko@sntech.de>, Neil Armstrong <narmstrong@baylibre.com>, Sjoerd Simons <sjoerd.simons@collabora.com>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, John Reitan <john.reitan@arm.com>, Wookey <wookey@wookware.org>, devicetree@vger.kernel.org, linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170210133439.qfiuggbuoi7hq6el@kozik-lap>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Richard Genoud <richard.genoud-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Anand Moon <linux.amoon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?UTF-8?B?QmFydMWCb21pZWogxbtvxYJuaWVya2lld2ljeg==?= <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Huang Rui <ray.huang-5C7GfCeVMHo@public.gmane.org>, Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Heikki Krogerus <heikki.krogerus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux USB Mailing List <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, shuahkh-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 03, 2017 at 10:56:25AM +0100, Guillaume Tucker wrote:
-> The ARM Mali Midgard GPU family is present in a number of SoCs
-> from many different vendors such as Samsung Exynos and Rockchip.
-> 
-> Import the device tree bindings documentation from the r16p0
-> release of the Mali Midgard GPU kernel driver:
-> 
->   https://developer.arm.com/-/media/Files/downloads/mali-drivers/kernel/mali-midgard-gpu/TX011-SW-99002-r16p0-00rel0.tgz
-> 
-> Remove the copyright and GPL licence header as deemed not necessary.
-> 
-> Redesign the "compatible" property strings to list all the Mali
-> Midgard GPU types and add vendor specific ones.
-> 
-> Drop the "clock-names" property as the Mali Midgard GPU uses only one
-> clock (the driver now needs to call clk_get with NULL).
-> 
-> Convert the "interrupt-names" property values to lower-case: "job",
-> "mmu" and "gpu".
-> 
-> Replace the deprecated "operating-points" optional property with
-> "operating-points-v2".
-> 
-> Omit the following optional properties in this initial version as they
-> are only used in very specific cases:
-> 
->   * snoop_enable_smc
->   * snoop_disable_smc
->   * jm_config
->   * power_model
->   * system-coherency
->   * ipa-model
-> 
-> Update the example accordingly to reflect all these changes, based on
-> rk3288 mali-t760.
-> 
-> CC: John Reitan <john.reitan@arm.com>
-> Tested-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-> Signed-off-by: Guillaume Tucker <guillaume.tucker@collabora.com>
-> ---
->  .../devicetree/bindings/gpu/arm,mali-midgard.txt   | 86 ++++++++++++++++++++++
->  1 file changed, 86 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt
+Hi Krzysztof,
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+On Fri, Feb 10, 2017 at 6:34 AM, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> On Thu, Feb 09, 2017 at 11:26:48AM +0100, Richard Genoud wrote:
+>> I did some tests with XU3 and XU4, playing with USB2 and USB3 quirks
+>> (snps,dis_u{2,3}_susphy_quirk)
+>>
+>> kernel for the tests: next-20170206
+>> DTBs: exynos5422-odroidxu3-lite.dtb exynos5422-odroidxu4.dtb
+>>
+>> USB devices used for the tests: kingston USB3 key, Akasa sata/USB3
+>> +SSD standard USB2 key
+>> once recognized, a dd if=/dev/sda bs=1M count=100 of=/dev/null is done.
+>>
+>>
+>> The results are:
+>> - On XU4:
+>>   - adding snps,dis_u2_susphy_quirk doesn't change anything:
+>>     inserting an USB2 or USB3 device gives the error message:
+>>     xhci-hcd xhci-hcd.2.auto: Port resume took longer than 20000 msec,
+>> port status = 0xc400fe3
+>>   - with snps,dis_u3_susphy_quirk, USB2 and USB3 devices are recognized
+>>
+>> - On XU3:
+>>   - Without changing XU3 dts, USB2 devices are recognized.
+>>   - With or without the snps,dis_u3_susphy_quirk, USB3 devices are not
+>> recognized/not working properly
+>>   (never seen or disconnected, unable to enumerate, etc.)
+>>   However, adding an external powered USB3 hub in between works. (with
+>> or without the snps,dis_u3_susphy_quirk)
+>>   Anyway, this problem doesn't seems to be related to the other since
+>>   addind the quirks doesn't change anything.
+>
+> From this description I am missing where are you inserting the USB
+> devices.
+>
+> Both boards have totally different USB port configuration. On XU3 the
+> hub is on USB 2.0 port. On XU4 the opposite - the hub is on USB 3.0
+> port.
+>
+
+I am running into this on XU4 USB 3.0 ports. Cold booting with device
+present in USB 3.0 port, device is recognized.
+
+Bus 004 Device 003: ID 8564:4000 Transcend Information, Inc. RDF8
+    MaxPower              224mA
+
+However, if I were to insert it after boot, it fails to resume the port.
+
+[ 2936.560129] usb 4-1.2: USB disconnect, device number 3
+[ 2959.249815] xhci-hcd xhci-hcd.2.auto: Port resume took longer than
+20000 msec, port status = 0xc400fe3
+
+and lsusb -v|egrep "^Bus|MaxPower" shows:
+
+Bus 004 Device 001: ID 1d6b:0003 Linux Foundation 3.0 root hub
+    MaxPower                0mA
+
+Preventing suspend with this. Looking at this more, could this be
+related to GCTL.RAMCLKSEL?
+
+The commnet block below in dwc3_gadget_conndone_interrupt() seems to
+indicate a potential problem on platforms when RAMClkSel is reset to 0
+after USB reset. Is that the case on Odroid-xu4 that updating
+GCTL.RAMCLKSEL is necessary to USB device hotplug to work without the
+the quirk?
+
+     /*
+         * RAMClkSel is reset to 0 after USB reset, so it must be reprogrammed
+         * each time on Connect Done.
+         *
+         * Currently we always use the reset value. If any platform
+         * wants to set this to a different value, we need to add a
+         * setting and update GCTL.RAMCLKSEL here.
+         */
+
+I can debug this more dumping GCTL.RAMCLKSEL registers in cold boot
+vs. hotplig cases to get more information.
+
+thanks,
+-- Shuah
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
