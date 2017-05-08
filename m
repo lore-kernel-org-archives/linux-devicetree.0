@@ -1,33 +1,34 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [RFC v2 2/3] dt: bindings: Add lens-focus binding for image
- sensors
-Date: Mon, 8 May 2017 12:14:04 -0500
-Message-ID: <20170508171404.tooduk3fyf4aiu2k@rob-hp-laptop>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [RFC v2 3/3] dt: bindings: Add a binding for referencing EEPROM
+ from camera sensors
+Date: Mon, 8 May 2017 12:24:18 -0500
+Message-ID: <20170508172418.zha3eyfsnuricfjk@rob-hp-laptop>
 References: <1493974110-26510-1-git-send-email-sakari.ailus@linux.intel.com>
- <1493974110-26510-3-git-send-email-sakari.ailus@linux.intel.com>
+ <1493974110-26510-4-git-send-email-sakari.ailus@linux.intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-media-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1493974110-26510-3-git-send-email-sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org, sebastian.reichel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org
+In-Reply-To: <1493974110-26510-4-git-send-email-sakari.ailus@linux.intel.com>
+Sender: linux-media-owner@vger.kernel.org
+To: Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, pavel@ucw.cz, sebastian.reichel@collabora.co.uk
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 05, 2017 at 11:48:29AM +0300, Sakari Ailus wrote:
-> The lens-focus property contains a phandle to the lens voice coil driver
-> that is associated to the sensor; typically both are contained in the same
-> camera module.
+On Fri, May 05, 2017 at 11:48:30AM +0300, Sakari Ailus wrote:
+> Many camera sensor devices contain EEPROM chips that describe the
+> properties of a given unit --- the data is specific to a given unit can
+> thus is not stored e.g. in user space or the driver.
 > 
-> Signed-off-by: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-> Acked-by: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/media/video-interfaces.txt | 2 ++
->  1 file changed, 2 insertions(+)
+> Some sensors embed the EEPROM chip and it can be accessed through the
+> sensor's I2C interface. This property is to be used for devices where the
+> EEPROM chip is accessed through a different I2C address than the sensor.
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Different I2C address or bus? We already have i2c bindings for sub 
+devices downstream of another I2C device. Either the upstream device 
+passes thru the I2C transactions or itself is an I2C controller with a 
+separate downstream bus. For those cases the EEPROM should be a child 
+node. A phandle only makes sense if you have the sensor and eeprom 
+connected to 2 entirely separate host buses.
+
+Rob
