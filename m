@@ -1,96 +1,194 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v6 6/8] Documentation: Add sbs-manager device tree node
- documentation
-Date: Mon, 8 May 2017 10:26:43 -0500
-Message-ID: <20170508152643.cv42nvkcsf3skmy2@rob-hp-laptop>
-References: <1493716346-58517-1-git-send-email-preid@electromag.com.au>
- <1493716346-58517-7-git-send-email-preid@electromag.com.au>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1493716346-58517-7-git-send-email-preid@electromag.com.au>
-Sender: linux-pm-owner@vger.kernel.org
-To: Phil Reid <preid@electromag.com.au>
-Cc: wsa@the-dreams.de, mark.rutland@arm.com, sre@kernel.org, peda@axentia.se, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, benjamin.tissoires@redhat.com, Karl-Heinz Schneider <karl-heinz@schneider-inet.de>
+From: Randy Li <ayaka-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org>
+Subject: [PATCH v2] ARM: dts: rockchip: add eDP panel support for Firefly
+Date: Mon,  8 May 2017 23:58:33 +0800
+Message-ID: <20170508155833.19652-1-ayaka@soulik.info>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Randy Li <ayaka-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 02, 2017 at 05:12:24PM +0800, Phil Reid wrote:
-> From: Karl-Heinz Schneider <karl-heinz@schneider-inet.de>
-> 
-> This patch adds device tree documentation for the sbs-manager
-> 
-> Reviewed-by: Phil Reid <preid@electromag.com.au>
-> Signed-off-by: Karl-Heinz Schneider <karl-heinz@schneider-inet.de>
-> Signed-off-by: Phil Reid <preid@electromag.com.au>
-> ---
->  .../bindings/power/supply/sbs,sbs-manager.txt      | 66 ++++++++++++++++++++++
->  1 file changed, 66 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/power/supply/sbs,sbs-manager.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/power/supply/sbs,sbs-manager.txt b/Documentation/devicetree/bindings/power/supply/sbs,sbs-manager.txt
-> new file mode 100644
-> index 0000000..389016c
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/power/supply/sbs,sbs-manager.txt
-> @@ -0,0 +1,66 @@
-> +Binding for sbs-manager
-> +
-> +Required properties:
-> +- compatible: "<vendor>,<part-number>", "sbs,sbs-charger" as fallback. The part
-> +  number compatible string might be used in order to take care of vendor
-> +  specific registers.
-> +- reg: integer, i2c address of the device. Should be <0xa>.
-> +Optional properties:
-> +- gpio-controller: Marks the port as GPIO controller.
-> +  See "gpio-specifier" in .../devicetree/bindings/gpio/gpio.txt.
-> +- #gpio-cells: Should be <2>. The first cell is the pin number, the second cell
-> +  is used to specify optional parameters:
-> +  See "gpio-specifier" in .../devicetree/bindings/gpio/gpio.txt.
-> +
-> +From OS view the device is basically an i2c-mux used to communicate with up to
-> +four smart battery devices at address 0xb. The driver actually implements this
-> +behaviour. So standard i2c-mux nodes can be used to register up to four slave
-> +batteries. Channels will be numerated starting from 1 to 4.
-> +
-> +Example:
-> +
-> +batman@0a {
+This patch adds the supporting to the eDP panel sold by
+the T-CHIP for the Firefly RK3288. I assign the VOP lite
+for the eDP panel and VOP big to HDMI, as the HDMI supports
+4K resolution. With a different VOP device, eDP panel
+and HDMI could display a different contents.
 
-Drop the leading 0.
+The InvenSense MPU6050 sensor at the botton of the panel
+is also enabled.
 
-> +    compatible = "lltc,ltc1760", "sbs,sbs-manager";
-> +    reg = <0x0a>;
-> +    #address-cells = <1>;
-> +    #size-cells = <0>;
-> +
-> +    gpio-controller;
-> +    #gpio-cells = <2>;
-> +
-> +    i2c@1 {
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +        reg = <1>;
-> +
-> +        battery@0b {
+The Firefly RK3288 Reload use a different GPIO pin to enable
+the power of the eDP panel.
 
-Drop the leading 0.
+Signed-off-by: Randy Li <ayaka-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org>
+---
+ arch/arm/boot/dts/rk3288-firefly.dtsi | 112 ++++++++++++++++++++++++++++++++++
+ 1 file changed, 112 insertions(+)
 
-> +            compatible = "ti,bq2060", "sbs,sbs-battery";
-> +            reg = <0x0b>;
-> +            sbs,battery-detect-gpios = <&batman 1 1>;
-> +        };
-> +    };
-> +
-> +    i2c@2 {
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +        reg = <2>;
-> +
-> +        battery@0b {
+diff --git a/arch/arm/boot/dts/rk3288-firefly.dtsi b/arch/arm/boot/dts/rk3288-firefly.dtsi
+index 436878b..db22316 100644
+--- a/arch/arm/boot/dts/rk3288-firefly.dtsi
++++ b/arch/arm/boot/dts/rk3288-firefly.dtsi
+@@ -62,6 +62,62 @@
+ 		};
+ 	};
+ 
++	backlight: backlight {
++		compatible = "pwm-backlight";
++		brightness-levels = <
++			  3   4   5   6   7
++			  8   9  10  11  12  13  14  15
++			 16  17  18  19  20  21  22  23
++			 24  25  26  27  28  29  30  31
++			 32  33  34  35  36  37  38  39
++			 40  41  42  43  44  45  46  47
++			 48  49  50  51  52  53  54  55
++			 56  57  58  59  60  61  62  63
++			 64  65  66  67  68  69  70  71
++			 72  73  74  75  76  77  78  79
++			 80  81  82  83  84  85  86  87
++			 88  89  90  91  92  93  94  95
++			 96  97  98  99 100 101 102 103
++			104 105 106 107 108 109 110 111
++			112 113 114 115 116 117 118 119
++			120 121 122 123 124 125 126 127
++			128 129 130 131 132 133 134 135
++			136 137 138 139 140 141 142 143
++			144 145 146 147 148 149 150 151
++			152 153 154 155 156 157 158 159
++			160 161 162 163 164 165 166 167
++			168 169 170 171 172 173 174 175
++			176 177 178 179 180 181 182 183
++			184 185 186 187 188 189 190 191
++			192 193 194 195 196 197 198 199
++			200 201 202 203 204 205 206 207
++			208 209 210 211 212 213 214 215
++			216 217 218 219 220 221 222 223
++			224 225 226 227 228 229 230 231
++			232 233 234 235 236 237 238 239
++			240 241 242 243 244 245 246 247
++			248 249 250 251 252 253 254 255>;
++		default-brightness-level = <180>;
++		pwms = <&pwm1 0 25000 0>;
++		pwm-names = "backlight";
++		power-supply = <&vcc_sys>;
++	};
++
++	panel: panel {
++		compatible ="lg,lp079qx1-sp0v";
++		power-supply = <&vcc_sys>;
++		backlight = <&backlight>;
++		enable-gpios = <&gpio0 RK_PB5 GPIO_ACTIVE_HIGH>;
++
++		ports {
++			panel_in: port {
++				panel_in_edp: endpoint {
++					remote-endpoint = <&edp_out_panel>;
++				};
++			};
++		};
++	};
++
+ 	dovdd_1v8: dovdd-1v8-regulator {
+ 		compatible = "regulator-fixed";
+ 		regulator-name = "dovdd_1v8";
+@@ -203,6 +259,32 @@
+ 	cpu0-supply = <&vdd_cpu>;
+ };
+ 
++&edp {
++	vcc-supply = <&vdd_10>;
++	vccio-supply = <&vcc_18>;
++	status = "okay";
++
++	ports {
++		edp_out: port@1 {
++			reg = <1>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++			edp_out_panel: endpoint {
++				reg = <0>;
++				remote-endpoint = <&panel_in_edp>;
++			};
++		};
++	};
++};
++
++&edp_in {
++	/delete-node/ endpoint@0;
++};
++
++&edp_phy {
++	status = "okay";
++};
++
+ &emmc {
+ 	bus-width = <8>;
+ 	cap-mmc-highspeed;
+@@ -240,8 +322,14 @@
+ &hdmi {
+ 	ddc-i2c-bus = <&i2c5>;
+ 	status = "okay";
++
++};
++
++&hdmi_in {
++	/delete-node/ endpoint@1;
+ };
+ 
++
+ &i2c0 {
+ 	clock-frequency = <400000>;
+ 	status = "okay";
+@@ -385,6 +473,22 @@
+ 
+ &i2c1 {
+ 	status = "okay";
++
++	mpu6050@68 {
++		compatible = "invensense,mpu6050";
++		reg = <0x68>;
++		interrupt-parent = <&gpio5>;
++		interrupts = <RK_PB4 IRQ_TYPE_LEVEL_LOW>;
++		mount-matrix = "0",
++			       "1",
++			       "0",
++			       "-1",
++			       "0",
++			       "0",
++			       "0",
++			       "0",
++			       "-1";
++	};
+ };
+ 
+ &i2c2 {
+@@ -601,6 +705,10 @@
+ 	status = "okay";
+ };
+ 
++&vopb_out {
++	/delete-node/ endpoint@1;
++};
++
+ &vopl {
+ 	status = "okay";
+ };
+@@ -609,6 +717,10 @@
+ 	status = "okay";
+ };
+ 
++&vopl_out {
++	/delete-node/ endpoint@0;
++};
++
+ &wdt {
+ 	status = "okay";
+ };
+-- 
+2.9.3
 
-And here...
-
-With that,
-
-Acked-by: Rob Herring <robh@kernel.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
