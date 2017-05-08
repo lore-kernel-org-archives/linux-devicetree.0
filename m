@@ -1,121 +1,59 @@
-From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 2/6] Documentation: devicetree: add bindings to support
- ARM MHU subchannels
-Date: Mon, 8 May 2017 18:07:09 +0100
-Message-ID: <ff6535ec-fa31-e0b7-53a1-9f4a2f03693d@arm.com>
-References: <1493733353-25812-1-git-send-email-sudeep.holla@arm.com>
- <1493733353-25812-3-git-send-email-sudeep.holla@arm.com>
- <20170508161026.5vdqnv52ub7hurwf@rob-hp-laptop>
- <CABb+yY1+rU=gEnqML=ybZ61WDW6Brz_QLw4LpYNNe-XsEgi8dw@mail.gmail.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v7 2/9] of_graph: add
+	of_graph_get_remote_endpoint()
+Date: Mon, 8 May 2017 12:08:42 -0500
+Message-ID: <CAL_JsqLHSLyNgNv8JOxaxSf+_sUAG6h9_npLLnN9+_DbobW_pA@mail.gmail.com>
+References: <87fuh3oon8.wl%kuninori.morimoto.gx@renesas.com>
+ <87d1c7ool6.wl%kuninori.morimoto.gx@renesas.com>
+ <CAL_JsqLB=tqai6cDr6Cr0=sL+0au__Gr2uw5gqr0Q8muhsL3=A@mail.gmail.com>
+ <87shkgcgl7.wl%kuninori.morimoto.gx@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CABb+yY1+rU=gEnqML=ybZ61WDW6Brz_QLw4LpYNNe-XsEgi8dw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Alexey Klimov <alexey.klimov-5wv7dgnIgG8@public.gmane.org>, Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <87shkgcgl7.wl%kuninori.morimoto.gx@renesas.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Cc: Linux-DT <devicetree@vger.kernel.org>, Linux-ALSA <alsa-devel@alsa-project.org>, Mark Brown <broonie@kernel.org>, Simon <horms@verge.net.au>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 08/05/17 17:46, Jassi Brar wrote:
-> On Mon, May 8, 2017 at 9:40 PM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
->> +Bjorn
+On Sun, May 7, 2017 at 8:00 PM, Kuninori Morimoto
+<kuninori.morimoto.gx@renesas.com> wrote:
+>
+> Hi Rob
+> Cc Mark
+>
+>> > From: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+>> >
+>> > It should use same method to get same result.
+>> > To getting remote-endpoint node,
+>> > let's use of_graph_get_remote_endpoint()
+>> >
+>> > Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+>> > ---
+>> > v6 -> v7
+>> >
+>> >  - no change
+>> >
+>> >  drivers/of/base.c        | 18 ++++++++++++++++--
+>> >  include/linux/of_graph.h |  8 ++++++++
+>> >  2 files changed, 24 insertions(+), 2 deletions(-)
 >>
->> On Tue, May 02, 2017 at 02:55:49PM +0100, Sudeep Holla wrote:
->>> The ARM MHU has mechanism to assert interrupt signals to facilitate
->>> inter-processor message based communication. It drives the signal using
->>> a 32-bit register, with all 32-bits logically ORed together. It also
->>> enables software to set, clear and check the status of each of the bits
->>> of this register independently. Each bit of the register can be
->>> associated with a type of event that can contribute to raising the
->>> interrupt thereby allowing it to be used as independent subchannels.
->>>
->>> Since the first version of this binding can't support sub-channels,
->>> this patch extends the existing binding to support them.
->>>
->>> Cc: Alexey Klimov <alexey.klimov-5wv7dgnIgG8@public.gmane.org>
->>> Cc: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->>> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->>> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->>> Signed-off-by: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
->>> ---
->>>  .../devicetree/bindings/mailbox/arm-mhu.txt        | 44 ++++++++++++++++++++--
->>>  1 file changed, 41 insertions(+), 3 deletions(-)
->>>
->>> diff --git a/Documentation/devicetree/bindings/mailbox/arm-mhu.txt b/Documentation/devicetree/bindings/mailbox/arm-mhu.txt
->>> index 4971f03f0b33..86a66f7918e2 100644
->>> --- a/Documentation/devicetree/bindings/mailbox/arm-mhu.txt
->>> +++ b/Documentation/devicetree/bindings/mailbox/arm-mhu.txt
->>> @@ -10,21 +10,40 @@ STAT register and the remote clears it after having read the data.
->>>  The last channel is specified to be a 'Secure' resource, hence can't be
->>>  used by Linux running NS.
->>>
->>> +The MHU drives the interrupt signal using a 32-bit register, with all
->>> +32-bits logically ORed together. It provides a set of registers to
->>> +enable software to set, clear and check the status of each of the bits
->>> +of this register independently. The use of 32 bits per interrupt line
->>> +enables software to provide more information about the source of the
->>> +interrupt. For example, each bit of the register can be associated with
->>> +a type of event that can contribute to raising the interrupt.
->>
->> Sounds like a doorbell? (i.e. a single bit mailbox). Bjorn is doing
->> something similar for QCom h/w. I guess the difference here is you have
->> 32 sources and 1 output. It seems to me these should be described
->> similarly.
->>
-> Yes, QCom controller triggers different interrupt for each bit of a
-> 32bits register i.e, each signal is associated with 1bit information.
-> Whereas MHU signals 32bits at a time to the target cpu.
+>> Acked-by: Rob Herring <robh@kernel.org>
+>
+> Thank you for your Acked-by.
+> But, does these mean, Mark (= ALSA SoC maintainer)
+> can pickup all OF-graph related patches ?
 
-Agreed. I had a look at Qcom driver, not entirely clear if each bit as
-interrupt as I don't see any interrupt support there. Also, it just adds
-all the 32 channels which I am trying to avoid as at-most 4-5 will be
-used while we end up creating 64 channels.
+Yes, that's usually the easiest way to deal with a series with cross
+tree dependencies.
 
->   Both these cases are already supported by mailbox framework, so
-> Bjorn has implemented QCom's 'doorbell' driver over mailbox api. And
-> we can do without this "arm,mhu-v2" driver. I believe Sudeep already
-> knows well how to use the MHU driver as such to get what his client
-> drivers need.
-> 
-
-As I mentioned above one reason for adding the complexity is avoiding
-creation of 32*2 channels. Secondly we still need a way to distinguish
-between the 2 use-cases(existing and new one). Any thoughts ?
-
->>> +
->>>  Mailbox Device Node:
->>>  ====================
->>>
->>>  Required properties:
->>>  --------------------
->>> -- compatible:                Shall be "arm,mhu" & "arm,primecell"
->>> +- compatible:                Shall be "arm,primecell" and one of the below:
->>> +                     "arm,mhu" - if the controller doesn't support
->>> +                                 subchannels
->>> +                     "arm,mhu-v2" - if the controller supports subchannels
->>
->> How do I know if I have v2? This correlates to an IP version or
->> IP configuration or ?
->>
-> This is purely a software concept - virtual channel. There are only 3
-> physical channels and that are managed by existing version of driver &
-> bindings. This is another reason I am against this patchset.
-> 
-
-I understand your concern. Please suggest alternative if we need to use
-each bit in the single set register as a different doorbell ? We need
-this from DT as we need to specify each bit as a channel for different
-client. Let me know how would you like me to proceed to deal with such
-a scenario. The specification clearly states each bit can be used as a
-doorbell.
-
--- 
-Regards,
-Sudeep
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Rob
