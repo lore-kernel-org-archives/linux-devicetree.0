@@ -1,66 +1,65 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] dt-bindings: power: New bindings for ltc3651-charger
-Date: Mon, 8 May 2017 12:12:06 -0500
-Message-ID: <20170508171206.ajxjbw5mybvrpwss@rob-hp-laptop>
-References: <1493966315-15893-1-git-send-email-mike.looijmans@topic.nl>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [RFC v2 1/3] dt: bindings: Add a binding for flash devices
+ associated to a sensor
+Date: Mon, 8 May 2017 12:13:27 -0500
+Message-ID: <20170508171327.ow7p33566gt3lenp@rob-hp-laptop>
+References: <1493974110-26510-1-git-send-email-sakari.ailus@linux.intel.com>
+ <1493974110-26510-2-git-send-email-sakari.ailus@linux.intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1493966315-15893-1-git-send-email-mike.looijmans@topic.nl>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mike Looijmans <mike.looijmans@topic.nl>
-Cc: devicetree@vger.kernel.org, sre@kernel.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, mark.rutland@arm.com
+In-Reply-To: <1493974110-26510-2-git-send-email-sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org, sebastian.reichel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 05, 2017 at 08:38:35AM +0200, Mike Looijmans wrote:
-> This adds the devicetree bindings documentation for the LTC3651 battery charger.
+On Fri, May 05, 2017 at 11:48:28AM +0300, Sakari Ailus wrote:
+> Camera flash drivers (and LEDs) are separate from the sensor devices in
+> DT. In order to make an association between the two, provide the
+> association information to the software.
 > 
-> Signed-off-by: Mike Looijmans <mike.looijmans@topic.nl>
+> Signed-off-by: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+> Acked-by: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
+> Reviewed-by: Sebastian Reichel <sebastian.reichel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
 > ---
->  .../bindings/power/supply/ltc3651-charger.txt      | 26 ++++++++++++++++++++++
->  1 file changed, 26 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/power/supply/ltc3651-charger.txt
+>  Documentation/devicetree/bindings/media/video-interfaces.txt | 11 +++++++++++
+>  1 file changed, 11 insertions(+)
+
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+
 > 
-> diff --git a/Documentation/devicetree/bindings/power/supply/ltc3651-charger.txt b/Documentation/devicetree/bindings/power/supply/ltc3651-charger.txt
-> new file mode 100644
-> index 0000000..a7dd80f
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/power/supply/ltc3651-charger.txt
-> @@ -0,0 +1,26 @@
-> +ltc3651-charger
+> diff --git a/Documentation/devicetree/bindings/media/video-interfaces.txt b/Documentation/devicetree/bindings/media/video-interfaces.txt
+> index 9cd2a36..dac764b 100644
+> --- a/Documentation/devicetree/bindings/media/video-interfaces.txt
+> +++ b/Documentation/devicetree/bindings/media/video-interfaces.txt
+> @@ -67,6 +67,17 @@ are required in a relevant parent node:
+>  		    identifier, should be 1.
+>   - #size-cells    : should be zero.
+>  
 > +
-> +Required properties:
-> + - compatible: "lltc,ltc3651-charger"
-> + - acpr-gpios: Connect to ACPR output. See remark below.
+> +Optional properties
+> +-------------------
 > +
-> +Optional properties:
-> + - fault-gpios: Connect to FAULT output. See remark below.
-> + - chrg-gpios: Connect to CHRG output. See remark below.
-
-All the gpios need vendor prefix.
-
+> +- flash: An array of phandles that refer to the flash light sources
+> +  related to an image sensor. These could be e.g. LEDs. In case the LED
+> +  driver (current sink or source chip for the LED(s)) drives more than a
+> +  single LED, then the phandles here refer to the child nodes of the LED
+> +  driver describing individual LEDs.
 > +
-> +The ltc3651 outputs are open-drain type and active low. The driver assumes the
-> +GPIO reports "active" when the output is asserted, so if the pins have been
-> +connected directly, the GPIO flags should be set to active low also.
 > +
-> +The driver will attempt to aquire interrupts for all GPIOs. If the system is
-> +not capabale of providing that, the driver cannot report changes and userspace
-> +will need to periodically read the sysfs attributes to detect changes.
-
-If these are interrupts, then you should use the interrupt binding 
-instead (most GPIO controllers are also interrupt controllers).
-
-> +
-> +Example:
-> +
-> +	charger: battery-charger {
-> +		compatible = "lltc,ltc3651-charger";
-> +		acpr-gpios = <&gpio0 68 GPIO_ACTIVE_LOW>;
-> +		fault-gpios = <&gpio0 64 GPIO_ACTIVE_LOW>;
-> +		chrg-gpios = <&gpio0 63 GPIO_ACTIVE_LOW>;
-> +	};
+>  Optional endpoint properties
+>  ----------------------------
+>  
 > -- 
-> 1.9.1
+> 2.7.4
 > 
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
