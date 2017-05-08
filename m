@@ -1,100 +1,147 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH v4 3/5] soc: qcom: Introduce APCS IPC driver
-Date: Sun, 7 May 2017 22:54:39 -0700
-Message-ID: <20170508055439.GJ15143@minitux>
-References: <20170504200539.27027-1-bjorn.andersson@linaro.org>
- <20170504200539.27027-3-bjorn.andersson@linaro.org>
- <CABb+yY2P=qPTYB6PDkjV82Qc67Xzer40BHRsOQP2m-gM3eK_UA@mail.gmail.com>
- <20170505183729.GG15143@minitux>
- <CABb+yY03imq8911rF9dHJjG_a_aosksA=tgk7Rog5AZSezHDyg@mail.gmail.com>
- <338c4262-cc6b-bed2-16fe-1767d1f0d5f6@codeaurora.org>
- <CABb+yY1K3Hyn7CzQCA6tHu-KrPigARc3cYgBdT8PNX7vjhPK0g@mail.gmail.com>
- <20170506011920.GH15143@minitux>
- <CABb+yY1u9mspX1Zu0mg21JMYxpKxsXsvBa9LnF6VNr1_42UJUQ@mail.gmail.com>
+From: Andy Tang <andy.tang-3arQi8VN3Tc@public.gmane.org>
+Subject: RE: [PATCH 1/2 v2] dt-bindings: qoriq-clock: Add coreclk
+Date: Mon, 8 May 2017 05:59:27 +0000
+Message-ID: <HE1PR0402MB2828CD7848C4C71F1526587DF3EE0@HE1PR0402MB2828.eurprd04.prod.outlook.com>
+References: <1489977443-33582-1-git-send-email-andy.tang@nxp.com>
+ <DB6PR0402MB283701D478A1678D28894C77F30A0@DB6PR0402MB2837.eurprd04.prod.outlook.com>
+  <DB6PR0402MB2837F82134ADCBAC53ECC51FF31F0@DB6PR0402MB2837.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CABb+yY1u9mspX1Zu0mg21JMYxpKxsXsvBa9LnF6VNr1_42UJUQ@mail.gmail.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Jassi Brar <jassisinghbrar@gmail.com>
-Cc: Jeffrey Hugo <jhugo@codeaurora.org>, Andy Gross <andy.gross@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ohad Ben-Cohen <ohad@wizery.com>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, Devicetree List <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-remoteproc@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <DB6PR0402MB2837F82134ADCBAC53ECC51FF31F0-2mNvjAGDOPlOuRXvvz5UoY3W/0Ik+aLCnBOFsp37pqbUKgpGm//BTAC/G2K4zDHf@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: "sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org" <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Scott Wood <oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri 05 May 21:48 PDT 2017, Jassi Brar wrote:
+Hi Robh,
 
-> On Sat, May 6, 2017 at 6:49 AM, Bjorn Andersson
-> <bjorn.andersson@linaro.org> wrote:
-> > On Fri 05 May 13:22 PDT 2017, Jassi Brar wrote:
-> 
-> >> How is it supposed to work if a client queues more than one request?
-> >
-> > One such example is found in patch 5 in this series. There are two FIFOs
-> > in shared memory, one in each direction. Each fifo has a index-pair
-> > associated; a write-index is used by the writer to inform the reader
-> > where the valid data in the ring buffer ends and a read-index indicates
-> > to the writer how far behind the read is.
-> >
-> > The writer will just push data into the FIFO, each time firing off an
-> > APCS IPC interrupt and when the remote interrupt handler runs it will
-> > consume all the messages from the read-index to the write-index. All
-> > without the need for the reader to signal the writer that it has
-> > received the interrupts.
-> >
-> > In the event that the write-index catches up with the read-index a
-> > dedicated flag is set which will cause the reader to signal that the
-> > read-index is updated - allowing the writer to sleep waiting for room in
-> > the FIFO.
-> >
-> Interesting.Just for my enlightenment...
-> 
->   Where does the writer sleep in the driver? I see it simply sets the
-> bit and leave.
-> Such a flag (or head and tail pointers matching) should be checked in
-> last_tx_done()
-> 
+Could you please take a look at this patch set? They are pending for a real=
+ly long time.
+Don't know why they have not been merged.
 
-In the case of the FIFO based communication the flow control is
-implemented one layer up. You can see this in glink_rpm_tx() (in patch
-5/5), where we check to see if there's enough room between the writer
-and the reader to store the new message. 
-
-The remote side will process messages and increment the read index,
-which will break us out of the loop.
-
-
-Note that its possible to write any number of messages before invoking
-the APCS IPC and there's no harm (beyond wasting a little bit of power)
-in invoking it when there's no data written.
-
-> If you think RPM will _always_ be ready to accept new messages (though
-> we have seen that doesn't hold in some situations), then you don't
-> need last_tx_done.
-
-Whether the remote processor is ready to accept a new message or not is
-irrelevant in the sense of APCS IPC. When a client sends the signal over
-the APCS IPC it has already determined that there was space, filled in
-the shared memory buffers and is now simply invoking the remote handler.
-
-
-The APCS IPC register serves the basis for all inter-processor
-communication in a Qualcomm platform, so it's not only the RPM driver
-discussed earlier that uses this. It's also used for other non-FIFO
-based communication channels, where the signalled information either
-isn't acked at all or acked on a system-level.
-
-But regardless of the protocol implemented ontop, the purpose of the
-APCS IPC bit is _only_ to invoke some remote handler to consume some
-data, somewhere - the event in itself does not carry any information.
-
-> The client should call mbox_client_txdone() after
-> mbox_send_message().
-
-So every time we call mbox_send_message() from any of the client drivers
-we also needs to call mbox_client_txdone()?
-
-This seems like an awkward side effect of using the mailbox framework -
-which has to be spread out in at least 6 different client drivers :(
+Patch links:
+https://patchwork.kernel.org/patch/9633007/
+https://patchwork.kernel.org/patch/9633009/
 
 Regards,
-Bjorn
+Andy
+
+> -----Original Message-----
+> From: Andy Tang
+> Sent: Monday, April 24, 2017 11:15 AM
+> To: mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org; sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+> Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org; mark.rutland-5wv7dgnIgG8@public.gmane.org; linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org;
+> devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-arm-
+> kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org; Scott Wood <oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>
+> Subject: RE: [PATCH 1/2 v2] dt-bindings: qoriq-clock: Add coreclk
+>=20
+> Does anyone give me a clue why this patch set can't be responded after so
+> long time?
+>=20
+> Thanks,
+> Andy
+>=20
+> -----Original Message-----
+> From: Andy Tang
+> Sent: Monday, April 17, 2017 9:37 AM
+> To: 'mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org' <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>;
+> 'sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org' <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> Cc: 'robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org' <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>; 'mark.rutland-5wv7dgnIgG8@public.gmane.org'
+> <mark.rutland-5wv7dgnIgG8@public.gmane.org>; 'linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org' <linux-
+> clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>; 'devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org'
+> <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>; 'linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org' <linux-
+> kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>; 'linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org' <linux-ar=
+m-
+> kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>; 'Scott Wood' <oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>
+> Subject: RE: [PATCH 1/2 v2] dt-bindings: qoriq-clock: Add coreclk
+>=20
+> Hi Stephen and Michael,
+>=20
+> This patch set has been pending for more than two months since it was fir=
+st
+> sent.
+> I have not received any response from you until now.
+>=20
+> Could you give some comments on it?
+>=20
+> Regards,
+> Andy
+>=20
+> -----Original Message-----
+> From: Andy Tang
+> Sent: Wednesday, April 05, 2017 2:16 PM
+> To: mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org; sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+> Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org; mark.rutland-5wv7dgnIgG8@public.gmane.org; linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org;
+> devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-arm-
+> kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org; Scott Wood <oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>
+> Subject: RE: [PATCH 1/2 v2] dt-bindings: qoriq-clock: Add coreclk
+>=20
+> Hello
+>=20
+> Do you have any comments on this patch set which was acked by Rob?
+>=20
+> Regards,
+> Andy
+>=20
+> > -----Original Message-----
+> > From: Yuantian Tang [mailto:andy.tang-3arQi8VN3Tc@public.gmane.org]
+> > Sent: Monday, March 20, 2017 10:37 AM
+> > To: mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
+> > Cc: sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org; robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org; mark.rutland-5wv7dgnIgG8@public.gmane.org;
+> > linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-
+> > kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org; Scott
+> > Wood <oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>; Andy Tang <andy.tang-3arQi8VN3Tc@public.gmane.org>
+> > Subject: [PATCH 1/2 v2] dt-bindings: qoriq-clock: Add coreclk
+> >
+> > From: Scott Wood <oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>
+> >
+> > ls1012a has separate input root clocks for core PLLs versus the
+> > platform PLL, with the latter described as sysclk in the hw docs.
+> > Update the qoriq-clock binding to allow a second input clock, named
+> > "coreclk".  If present, this clock will be used for the core PLLs.
+> >
+> > Signed-off-by: Scott Wood <oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>
+> > Signed-off-by: Tang Yuantian <andy.tang-3arQi8VN3Tc@public.gmane.org>
+> > Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> > ---
+> > v2:
+> > 	-- change the author to Scott
+> >  Documentation/devicetree/bindings/clock/qoriq-clock.txt | 6 ++++++
+> >  1 file changed, 6 insertions(+)
+> >
+> > diff --git a/Documentation/devicetree/bindings/clock/qoriq-clock.txt
+> > b/Documentation/devicetree/bindings/clock/qoriq-clock.txt
+> > index aa3526f..119cafd 100644
+> > --- a/Documentation/devicetree/bindings/clock/qoriq-clock.txt
+> > +++ b/Documentation/devicetree/bindings/clock/qoriq-clock.txt
+> > @@ -56,6 +56,11 @@ Optional properties:
+> >  - clocks: If clock-frequency is not specified, sysclk may be provided
+> >  	as an input clock.  Either clock-frequency or clocks must be
+> >  	provided.
+> > +	A second input clock, called "coreclk", may be provided if
+> > +	core PLLs are based on a different input clock from the
+> > +	platform PLL.
+> > +- clock-names: Required if a coreclk is present.  Valid names are
+> > +	"sysclk" and "coreclk".
+> >
+> >  2. Clock Provider
+> >
+> > @@ -72,6 +77,7 @@ second cell is the clock index for the specified type=
+.
+> >  	2	hwaccel		index (n in CLKCGnHWACSR)
+> >  	3	fman		0 for fm1, 1 for fm2
+> >  	4	platform pll	0=3Dpll, 1=3Dpll/2, 2=3Dpll/3, 3=3Dpll/4
+> > +	5	coreclk		must be 0
+> >
+> >  3. Example
+> >
+> > --
+> > 2.1.0.27.g96db324
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
