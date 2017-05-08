@@ -1,193 +1,246 @@
-From: Randy Li <ayaka-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org>
-Subject: [PATCH v2] ARM: dts: rockchip: add eDP panel support for Firefly
-Date: Mon,  8 May 2017 23:58:33 +0800
-Message-ID: <20170508155833.19652-1-ayaka@soulik.info>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4 6/7] dt-bindings: media: Add Renesas R-Car DRIF binding
+Date: Mon, 8 May 2017 11:00:26 -0500
+Message-ID: <20170508160026.4qjr7voa3ovesecz@rob-hp-laptop>
+References: <20170502132615.42134-1-ramesh.shanmugasundaram@bp.renesas.com>
+ <20170502132615.42134-7-ramesh.shanmugasundaram@bp.renesas.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170502132615.42134-7-ramesh.shanmugasundaram-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Randy Li <ayaka-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org>
+To: Ramesh Shanmugasundaram <ramesh.shanmugasundaram-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, crope-X3B1VOXEql0@public.gmane.org, chris.paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the supporting to the eDP panel sold by
-the T-CHIP for the Firefly RK3288. I assign the VOP lite
-for the eDP panel and VOP big to HDMI, as the HDMI supports
-4K resolution. With a different VOP device, eDP panel
-and HDMI could display a different contents.
+On Tue, May 02, 2017 at 02:26:14PM +0100, Ramesh Shanmugasundaram wrote:
+> Add binding documentation for Renesas R-Car Digital Radio Interface
+> (DRIF) controller.
+> 
+> Signed-off-by: Ramesh Shanmugasundaram <ramesh.shanmugasundaram-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+> ---
+> v4:
+>  - port property description modified as suggested by Laurent.
+>  - removed renesas vendor tag from sync-active end-point property (Rob)
+> ---
+>  .../devicetree/bindings/media/renesas,drif.txt     | 187 +++++++++++++++++++++
+>  1 file changed, 187 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/renesas,drif.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/media/renesas,drif.txt b/Documentation/devicetree/bindings/media/renesas,drif.txt
+> new file mode 100644
+> index 000000000000..12428f969958
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/renesas,drif.txt
+> @@ -0,0 +1,187 @@
+> +Renesas R-Car Gen3 Digital Radio Interface controller (DRIF)
+> +------------------------------------------------------------
+> +
+> +R-Car Gen3 DRIF is a SPI like receive only slave device. A general
+> +representation of DRIF interfacing with a master device is shown below.
+> +
+> ++---------------------+                +---------------------+
+> +|                     |-----SCK------->|CLK                  |
+> +|       Master        |-----SS-------->|SYNC  DRIFn (slave)  |
+> +|                     |-----SD0------->|D0                   |
+> +|                     |-----SD1------->|D1                   |
+> ++---------------------+                +---------------------+
+> +
+> +As per datasheet, each DRIF channel (drifn) is made up of two internal
+> +channels (drifn0 & drifn1). These two internal channels share the common
+> +CLK & SYNC. Each internal channel has its own dedicated resources like
+> +irq, dma channels, address space & clock. This internal split is not
+> +visible to the external master device.
+> +
+> +The device tree model represents each internal channel as a separate node.
+> +The internal channels sharing the CLK & SYNC are tied together by their
+> +phandles using a new property called "renesas,bonding". For the rest of
+> +the documentation, unless explicitly stated, the word channel implies an
+> +internal channel.
+> +
+> +When both internal channels are enabled they need to be managed together
+> +as one (i.e.) they cannot operate alone as independent devices. Out of the
+> +two, one of them needs to act as a primary device that accepts common
+> +properties of both the internal channels. This channel is identified by a
+> +new property called "renesas,primary-bond".
 
-The InvenSense MPU6050 sensor at the botton of the panel
-is also enabled.
+s/new property/property/
 
-The Firefly RK3288 Reload use a different GPIO pin to enable
-the power of the eDP panel.
+> +
+> +To summarize,
+> +   - When both the internal channels that are bonded together are enabled,
+> +     the zeroth channel is selected as primary-bond. This channels accepts
+> +     properties common to all the members of the bond.
+> +   - When only one of the bonded channels need to be enabled, the property
+> +     "renesas,bonding" or "renesas,primary-bond" will have no effect. That
+> +     enabled channel can act alone as any other independent device.
+> +
+> +Required properties of an internal channel:
+> +-------------------------------------------
+> +- compatible: "renesas,r8a7795-drif" if DRIF controller is a part of R8A7795 SoC.
+> +	      "renesas,rcar-gen3-drif" for a generic R-Car Gen3 compatible device.
+> +	      When compatible with the generic version, nodes must list the
+> +	      SoC-specific version corresponding to the platform first
+> +	      followed by the generic version.
 
-Signed-off-by: Randy Li <ayaka-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org>
----
- arch/arm/boot/dts/rk3288-firefly.dtsi | 112 ++++++++++++++++++++++++++++++++++
- 1 file changed, 112 insertions(+)
+Please format this such that it is easier to add the 2nd SoC with this 
+block. 
 
-diff --git a/arch/arm/boot/dts/rk3288-firefly.dtsi b/arch/arm/boot/dts/rk3288-firefly.dtsi
-index 436878b..db22316 100644
---- a/arch/arm/boot/dts/rk3288-firefly.dtsi
-+++ b/arch/arm/boot/dts/rk3288-firefly.dtsi
-@@ -62,6 +62,62 @@
- 		};
- 	};
- 
-+	backlight: backlight {
-+		compatible = "pwm-backlight";
-+		brightness-levels = <
-+			  3   4   5   6   7
-+			  8   9  10  11  12  13  14  15
-+			 16  17  18  19  20  21  22  23
-+			 24  25  26  27  28  29  30  31
-+			 32  33  34  35  36  37  38  39
-+			 40  41  42  43  44  45  46  47
-+			 48  49  50  51  52  53  54  55
-+			 56  57  58  59  60  61  62  63
-+			 64  65  66  67  68  69  70  71
-+			 72  73  74  75  76  77  78  79
-+			 80  81  82  83  84  85  86  87
-+			 88  89  90  91  92  93  94  95
-+			 96  97  98  99 100 101 102 103
-+			104 105 106 107 108 109 110 111
-+			112 113 114 115 116 117 118 119
-+			120 121 122 123 124 125 126 127
-+			128 129 130 131 132 133 134 135
-+			136 137 138 139 140 141 142 143
-+			144 145 146 147 148 149 150 151
-+			152 153 154 155 156 157 158 159
-+			160 161 162 163 164 165 166 167
-+			168 169 170 171 172 173 174 175
-+			176 177 178 179 180 181 182 183
-+			184 185 186 187 188 189 190 191
-+			192 193 194 195 196 197 198 199
-+			200 201 202 203 204 205 206 207
-+			208 209 210 211 212 213 214 215
-+			216 217 218 219 220 221 222 223
-+			224 225 226 227 228 229 230 231
-+			232 233 234 235 236 237 238 239
-+			240 241 242 243 244 245 246 247
-+			248 249 250 251 252 253 254 255>;
-+		default-brightness-level = <180>;
-+		pwms = <&pwm1 0 25000 0>;
-+		pwm-names = "backlight";
-+		power-supply = <&vcc_sys>;
-+	};
-+
-+	panel: panel {
-+		compatible ="lg,lp079qx1-sp0v";
-+		power-supply = <&vcc_sys>;
-+		backlight = <&backlight>;
-+		enable-gpios = <&gpio0 RK_PB5 GPIO_ACTIVE_HIGH>;
-+
-+		ports {
-+			panel_in: port {
-+				panel_in_edp: endpoint {
-+					remote-endpoint = <&edp_out_panel>;
-+				};
-+			};
-+		};
-+	};
-+
- 	dovdd_1v8: dovdd-1v8-regulator {
- 		compatible = "regulator-fixed";
- 		regulator-name = "dovdd_1v8";
-@@ -203,6 +259,32 @@
- 	cpu0-supply = <&vdd_cpu>;
- };
- 
-+&edp {
-+	vcc-supply = <&vdd_10>;
-+	vccio-supply = <&vcc_18>;
-+	status = "okay";
-+
-+	ports {
-+		edp_out: port@1 {
-+			reg = <1>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			edp_out_panel: endpoint {
-+				reg = <0>;
-+				remote-endpoint = <&panel_in_edp>;
-+			};
-+		};
-+	};
-+};
-+
-+&edp_in {
-+	/delete-node/ endpoint@0;
-+};
-+
-+&edp_phy {
-+	status = "okay";
-+};
-+
- &emmc {
- 	bus-width = <8>;
- 	cap-mmc-highspeed;
-@@ -240,8 +322,14 @@
- &hdmi {
- 	ddc-i2c-bus = <&i2c5>;
- 	status = "okay";
-+
-+};
-+
-+&hdmi_in {
-+	/delete-node/ endpoint@1;
- };
- 
-+
- &i2c0 {
- 	clock-frequency = <400000>;
- 	status = "okay";
-@@ -385,6 +473,22 @@
- 
- &i2c1 {
- 	status = "okay";
-+
-+	mpu6050@68 {
-+		compatible = "invensense,mpu6050";
-+		reg = <0x68>;
-+		interrupt-parent = <&gpio5>;
-+		interrupts = <RK_PB4 IRQ_TYPE_LEVEL_LOW>;
-+		mount-matrix = "0",
-+			       "1",
-+			       "0",
-+			       "-1",
-+			       "0",
-+			       "0",
-+			       "0",
-+			       "0",
-+			       "-1";
-+	};
- };
- 
- &i2c2 {
-@@ -601,6 +705,10 @@
- 	status = "okay";
- };
- 
-+&vopb_out {
-+	/delete-node/ endpoint@1;
-+};
-+
- &vopl {
- 	status = "okay";
- };
-@@ -609,6 +717,10 @@
- 	status = "okay";
- };
- 
-+&vopl_out {
-+	/delete-node/ endpoint@0;
-+};
-+
- &wdt {
- 	status = "okay";
- };
--- 
-2.9.3
+> +- reg: offset and length of that channel.
+> +- interrupts: associated with that channel.
+> +- clocks: phandle and clock specifier of that channel.
+> +- clock-names: clock input name string: "fck".
+> +- dmas: phandles to the DMA channels.
+> +- dma-names: names of the DMA channel: "rx".
+> +- renesas,bonding: phandle to the other channel.
+> +
+> +Optional properties of an internal channel:
+> +-------------------------------------------
+> +- power-domains: phandle to the respective power domain.
+> +
+> +Required properties of an internal channel when:
+> +	- It is the only enabled channel of the bond (or)
+> +	- If it acts as primary among enabled bonds
+> +--------------------------------------------------------
+> +- pinctrl-0: pin control group to be used for this channel.
+> +- pinctrl-names: must be "default".
+> +- renesas,primary-bond: empty property indicating the channel acts as primary
+> +			among the bonded channels.
+> +- port: child port node corresponding to the data input, in accordance with
+> +	the video interface bindings defined in
+> +	Documentation/devicetree/bindings/media/video-interfaces.txt. The port
+> +	node must contain at least one endpoint.
+> +
+> +Optional endpoint property:
+> +---------------------------
+> +- sync-active: Indicates sync signal polarity, 0/1 for low/high respectively.
+> +	       This property maps to SYNCAC bit in the hardware manual. The
+> +	       default is 1 (active high).
+> +
+> +Example
+> +--------
+> +
+> +SoC common dtsi file
 
+Don't split the example into SoC and board specific parts. That's purely 
+convention and not part of the binding.
+
+> +
+> +		drif00: rif@e6f40000 {
+> +			compatible = "renesas,r8a7795-drif",
+> +				     "renesas,rcar-gen3-drif";
+> +			reg = <0 0xe6f40000 0 0x64>;
+> +			interrupts = <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>;
+> +			clocks = <&cpg CPG_MOD 515>;
+> +			clock-names = "fck";
+> +			dmas = <&dmac1 0x20>, <&dmac2 0x20>;
+> +			dma-names = "rx", "rx";
+> +			power-domains = <&sysc R8A7795_PD_ALWAYS_ON>;
+> +			renesas,bonding = <&drif01>;
+> +			status = "disabled";
+
+Don't need to show status in example.
+
+> +		};
+> +
+> +		drif01: rif@e6f50000 {
+> +			compatible = "renesas,r8a7795-drif",
+> +				     "renesas,rcar-gen3-drif";
+> +			reg = <0 0xe6f50000 0 0x64>;
+> +			interrupts = <GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH>;
+> +			clocks = <&cpg CPG_MOD 514>;
+> +			clock-names = "fck";
+> +			dmas = <&dmac1 0x22>, <&dmac2 0x22>;
+> +			dma-names = "rx", "rx";
+> +			power-domains = <&sysc R8A7795_PD_ALWAYS_ON>;
+> +			renesas,bonding = <&drif00>;
+> +			status = "disabled";
+> +		};
+> +
+> +
+> +Board specific dts file
+> +
+> +(1) Both internal channels enabled:
+> +-----------------------------------
+> +
+> +When interfacing with a third party tuner device with two data pins as shown
+> +below.
+> +
+> ++---------------------+                +---------------------+
+> +|                     |-----SCK------->|CLK                  |
+> +|       Master        |-----SS-------->|SYNC  DRIFn (slave)  |
+> +|                     |-----SD0------->|D0                   |
+> +|                     |-----SD1------->|D1                   |
+> ++---------------------+                +---------------------+
+> +
+> +pfc {
+> +	...
+> +
+> +	drif0_pins: drif0 {
+> +		groups = "drif0_ctrl_a", "drif0_data0_a",
+> +				 "drif0_data1_a";
+> +		function = "drif0";
+> +	};
+> +	..
+
+You don't need to show the pinctrl nodes.
+
+> +}
+> +
+> +&drif00 {
+> +	pinctrl-0 = <&drif0_pins>;
+> +	pinctrl-names = "default";
+> +	renesas,primary-bond;
+> +	status = "okay";
+> +	port {
+> +		drif0_ep: endpoint {
+> +		     remote-endpoint = <&tuner_ep>;
+> +		};
+> +	};
+> +};
+> +
+> +&drif01 {
+> +	status = "okay";
+> +};
+> +
+> +(2) Internal channel 1 alone is enabled:
+> +----------------------------------------
+> +
+> +When interfacing with a third party tuner device with one data pin as shown
+> +below.
+> +
+> ++---------------------+                +---------------------+
+> +|                     |-----SCK------->|CLK                  |
+> +|       Master        |-----SS-------->|SYNC  DRIFn (slave)  |
+> +|                     |                |D0 (unused)          |
+> +|                     |-----SD-------->|D1                   |
+> ++---------------------+                +---------------------+
+> +
+> +pfc {
+> +	...
+> +
+> +	drif0_pins: drif0 {
+> +		groups = "drif0_ctrl_a", "drif0_data1_a";
+> +		function = "drif0";
+> +	};
+> +	...
+> +}
+> +
+> +&drif01 {
+> +	pinctrl-0 = <&drif0_pins>;
+> +	pinctrl-names = "default";
+> +	status = "okay";
+> +	port {
+> +		drif0_ep: endpoint {
+> +		     remote-endpoint = <&tuner_ep>;
+> +		     sync-active = <0>;
+> +		};
+> +	};
+> +};
+> -- 
+> 2.12.2
+> 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
