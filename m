@@ -1,41 +1,34 @@
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH v9 6/6] i2c: designware: enable SLAVE in platform module
-Date: Mon, 08 May 2017 19:40:18 +0300
-Message-ID: <1494261618.30052.67.camel@linux.intel.com>
-References: <cover.1493893241.git.lolivei@synopsys.com>
-         <dc32ce6a3988a28e6bd08d4ec2797f0a544ae4ad.1493893241.git.lolivei@synopsys.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/4] Docs: dt: document qcom iommu bindings
+Date: Mon, 8 May 2017 11:43:10 -0500
+Message-ID: <20170508164310.ys5jms5dmvpwdttc@rob-hp-laptop>
+References: <20170504133436.24288-1-robdclark@gmail.com>
+	<20170504133436.24288-2-robdclark@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <dc32ce6a3988a28e6bd08d4ec2797f0a544ae4ad.1493893241.git.lolivei@synopsys.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Luis Oliveira <Luis.Oliveira@synopsys.com>, wsa@the-dreams.de, robh+dt@kernel.org, mark.rutland@arm.com, jarkko.nikula@linux.intel.com, mika.westerberg@linux.intel.com, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Ramiro.Oliveira@synopsys.com, Joao.Pinto@synopsys.com, CARLOS.PALMINHA@synopsys.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170504133436.24288-2-robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Stanimir Varbanov <stanimir.varbanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2017-05-08 at 11:37 +0100, Luis Oliveira wrote:
-> - Slave mode selected in platform module if the support is detected in
->   the DT.
+On Thu, May 04, 2017 at 09:34:33AM -0400, Rob Clark wrote:
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Signed-off-by: Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+>  .../devicetree/bindings/iommu/qcom,iommu.txt       | 121 +++++++++++++++++++++
+>  1 file changed, 121 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iommu/qcom,iommu.txt
 
->  config I2C_DESIGNWARE_PLATFORM
->  	tristate "Synopsys DesignWare Platform"
->  	select I2C_DESIGNWARE_CORE
-> +	select I2C_DESIGNWARE_SLAVE
->  	depends on (ACPI && COMMON_CLK) || !ACPI
->  	help
->  	  If you say yes to this option, support will be included for
-> the
-
-> @@ -483,6 +484,7 @@ config I2C_DESIGNWARE_SLAVE
->  	bool "Synopsys DesignWare Slave"
->  	select I2C_SLAVE
->  	depends on I2C_DESIGNWARE_PLATFORM
-> +	default y
-
-Can you elaborate why this line is needed?
-
-
--- 
-Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Intel Finland Oy
+Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
