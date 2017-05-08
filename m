@@ -1,194 +1,110 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: [PATCH V5 resend] PM / OPP: Use - instead of @ for DT entries
-Date: Mon,  8 May 2017 09:52:50 +0530
-Message-ID: <f8323bb507a97755c7c164f1d2aff45d2f0be3f0.1494217312.git.viresh.kumar@linaro.org>
-Return-path: <linux-pm-owner@vger.kernel.org>
-Sender: linux-pm-owner@vger.kernel.org
-To: Rafael Wysocki <rjw@rjwysocki.net>, Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@codeaurora.org>
-Cc: linaro-kernel@lists.linaro.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, Vincent Guittot <vincent.guittot@linaro.org>, Viresh Kumar <viresh.kumar@linaro.org>, Krzysztof Kozlowski <krzk@kernel.org>, Masahiro Yamada <yamada.masahiro@socionext.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org
+From: Rajendra Nayak <rnayak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH V6 1/9] PM / OPP: Introduce "power-domain-opp" property
+Date: Mon, 8 May 2017 11:06:54 +0530
+Message-ID: <fd54a7b8-d88f-af70-61a2-f32befac21be@codeaurora.org>
+References: <cover.1493203884.git.viresh.kumar@linaro.org>
+ <025acedb263eaa6089d354d9630214ada8013990.1493203884.git.viresh.kumar@linaro.org>
+ <20170428204803.plu467okibtxga4d@rob-hp-laptop> <m2inleux0w.fsf@baylibre.com>
+ <20170508041511.GB17010@vireshk-i7>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170508041511.GB17010@vireshk-i7>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rafael Wysocki <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Viresh Kumar <vireshk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linaro-kernel-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Vincent Guittot <vincent.guittot-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, lina.iyer-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Compiling the DT file with W=1, DTC warns like follows:
 
-Warning (unit_address_vs_reg): Node /opp_table0/opp@1000000000 has a
-unit name, but no reg property
 
-Fix this by replacing '@' with '-' as the OPP nodes will never have a
-"reg" property.
+On 05/08/2017 09:45 AM, Viresh Kumar wrote:
+> On 06-05-17, 11:58, Kevin Hilman wrote:
+>> Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> writes:
+>>
+>>> On Wed, Apr 26, 2017 at 04:27:05PM +0530, Viresh Kumar wrote:
+>>>> Power-domains need to express their active states in DT and the devices
+>>>> within the power-domain need to express their dependency on those active
+>>>> states. The power-domains can use the OPP tables without any
+>>>> modifications to the bindings.
+>>>>
+>>>> Add a new property "power-domain-opp", which will contain phandle to the
+>>>> OPP node of the parent power domain. This is required for devices which
+>>>> have dependency on the configured active state of the power domain for
+>>>> their working.
+>>>>
+>>>> For some platforms the actual frequency and voltages of the power
+>>>> domains are managed by the firmware and are so hidden from the high
+>>>> level operating system. The "opp-hz" property is relaxed a bit to
+>>>> contain indexes instead of actual frequency values to support such
+>>>> platforms.
+>>>>
+>>>> Signed-off-by: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>>>> ---
+>>>>  Documentation/devicetree/bindings/opp/opp.txt | 74 ++++++++++++++++++++++++++-
+>>>>  1 file changed, 73 insertions(+), 1 deletion(-)
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/opp/opp.txt b/Documentation/devicetree/bindings/opp/opp.txt
+>>>> index 63725498bd20..6e30cae2a936 100644
+>>>> --- a/Documentation/devicetree/bindings/opp/opp.txt
+>>>> +++ b/Documentation/devicetree/bindings/opp/opp.txt
+>>>> @@ -77,7 +77,10 @@ This defines voltage-current-frequency combinations along with other related
+>>>>  properties.
+>>>>  
+>>>>  Required properties:
+>>>> -- opp-hz: Frequency in Hz, expressed as a 64-bit big-endian integer.
+>>>> +- opp-hz: Frequency in Hz, expressed as a 64-bit big-endian integer. In some
+>>>> +  cases the exact frequency in Hz may be hidden from the OS by the firmware and
+>>>> +  this field may contain values that represent the frequency in a firmware
+>>>> +  dependent way, for example an index of an array in the firmware.
+>>>
+>>> Not really sure OPP binding makes sense here.
+>>
+>> I think OPP makes perfect sense here, because microcontroller firmware
+>> is managaging OPPs in hardware.  We just may not know the exact voltage
+>> and/or frequency (and the firmware/hardware may even be doing AVS for
+>> micro-adjustments.)
+> 
+> Yes, AVS is being done for the Qcom SoC as well.
+> 
+>>> What about all the other properties. We expose voltage, but not freq?
+>>
+>> I had the same question.  Seems the same comment about an abstract
+>> "index" is needed for voltage also.
+> 
+> Why should we do that? Here are the cases that I had in mind while writing this:
+> 
+> - DT only contains the performance-index and nothing else (i.e. voltages aren't
+>   exposed).
+> 
+>   We wouldn't be required to fill the microvolt property as it is optional.
 
-Reported-by: Krzysztof Kozlowski <krzk@kernel.org>
-Reported-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-Suggested-by: Mark Rutland <mark.rutland@arm.com>
-Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
-Acked-by: Rob Herring <robh@kernel.org>
----
-@Rafael: This one needs to go via the PM tree and so sending it again.
+So the performance-index is specified in opp-hz property?
+What if the microcontroller firmware maps the performance-index to voltage but
+expects linux to scale the frequency? There is no way to specify a performance-index
+*and* a frequency for a OPP now I guess?
 
- Documentation/devicetree/bindings/opp/opp.txt | 38 +++++++++++++--------------
- 1 file changed, 19 insertions(+), 19 deletions(-)
+> 
+> - DT contains both performance-index and voltages.
+> 
+>   The microvolts property will contain the actual voltages and opp-hz will
+>   contain the index.
 
-diff --git a/Documentation/devicetree/bindings/opp/opp.txt b/Documentation/devicetree/bindings/opp/opp.txt
-index 63725498bd20..e36d261b9ba6 100644
---- a/Documentation/devicetree/bindings/opp/opp.txt
-+++ b/Documentation/devicetree/bindings/opp/opp.txt
-@@ -186,20 +186,20 @@ Example 1: Single cluster Dual-core ARM cortex A9, switch DVFS states together.
- 		compatible = "operating-points-v2";
- 		opp-shared;
- 
--		opp@1000000000 {
-+		opp-1000000000 {
- 			opp-hz = /bits/ 64 <1000000000>;
- 			opp-microvolt = <975000 970000 985000>;
- 			opp-microamp = <70000>;
- 			clock-latency-ns = <300000>;
- 			opp-suspend;
- 		};
--		opp@1100000000 {
-+		opp-1100000000 {
- 			opp-hz = /bits/ 64 <1100000000>;
- 			opp-microvolt = <1000000 980000 1010000>;
- 			opp-microamp = <80000>;
- 			clock-latency-ns = <310000>;
- 		};
--		opp@1200000000 {
-+		opp-1200000000 {
- 			opp-hz = /bits/ 64 <1200000000>;
- 			opp-microvolt = <1025000>;
- 			clock-latency-ns = <290000>;
-@@ -265,20 +265,20 @@ independently.
- 		 * independently.
- 		 */
- 
--		opp@1000000000 {
-+		opp-1000000000 {
- 			opp-hz = /bits/ 64 <1000000000>;
- 			opp-microvolt = <975000 970000 985000>;
- 			opp-microamp = <70000>;
- 			clock-latency-ns = <300000>;
- 			opp-suspend;
- 		};
--		opp@1100000000 {
-+		opp-1100000000 {
- 			opp-hz = /bits/ 64 <1100000000>;
- 			opp-microvolt = <1000000 980000 1010000>;
- 			opp-microamp = <80000>;
- 			clock-latency-ns = <310000>;
- 		};
--		opp@1200000000 {
-+		opp-1200000000 {
- 			opp-hz = /bits/ 64 <1200000000>;
- 			opp-microvolt = <1025000>;
- 			opp-microamp = <90000;
-@@ -341,20 +341,20 @@ DVFS state together.
- 		compatible = "operating-points-v2";
- 		opp-shared;
- 
--		opp@1000000000 {
-+		opp-1000000000 {
- 			opp-hz = /bits/ 64 <1000000000>;
- 			opp-microvolt = <975000 970000 985000>;
- 			opp-microamp = <70000>;
- 			clock-latency-ns = <300000>;
- 			opp-suspend;
- 		};
--		opp@1100000000 {
-+		opp-1100000000 {
- 			opp-hz = /bits/ 64 <1100000000>;
- 			opp-microvolt = <1000000 980000 1010000>;
- 			opp-microamp = <80000>;
- 			clock-latency-ns = <310000>;
- 		};
--		opp@1200000000 {
-+		opp-1200000000 {
- 			opp-hz = /bits/ 64 <1200000000>;
- 			opp-microvolt = <1025000>;
- 			opp-microamp = <90000>;
-@@ -367,20 +367,20 @@ DVFS state together.
- 		compatible = "operating-points-v2";
- 		opp-shared;
- 
--		opp@1300000000 {
-+		opp-1300000000 {
- 			opp-hz = /bits/ 64 <1300000000>;
- 			opp-microvolt = <1050000 1045000 1055000>;
- 			opp-microamp = <95000>;
- 			clock-latency-ns = <400000>;
- 			opp-suspend;
- 		};
--		opp@1400000000 {
-+		opp-1400000000 {
- 			opp-hz = /bits/ 64 <1400000000>;
- 			opp-microvolt = <1075000>;
- 			opp-microamp = <100000>;
- 			clock-latency-ns = <400000>;
- 		};
--		opp@1500000000 {
-+		opp-1500000000 {
- 			opp-hz = /bits/ 64 <1500000000>;
- 			opp-microvolt = <1100000 1010000 1110000>;
- 			opp-microamp = <95000>;
-@@ -409,7 +409,7 @@ Example 4: Handling multiple regulators
- 		compatible = "operating-points-v2";
- 		opp-shared;
- 
--		opp@1000000000 {
-+		opp-1000000000 {
- 			opp-hz = /bits/ 64 <1000000000>;
- 			opp-microvolt = <970000>, /* Supply 0 */
- 					<960000>, /* Supply 1 */
-@@ -422,7 +422,7 @@ Example 4: Handling multiple regulators
- 
- 		/* OR */
- 
--		opp@1000000000 {
-+		opp-1000000000 {
- 			opp-hz = /bits/ 64 <1000000000>;
- 			opp-microvolt = <975000 970000 985000>, /* Supply 0 */
- 					<965000 960000 975000>, /* Supply 1 */
-@@ -435,7 +435,7 @@ Example 4: Handling multiple regulators
- 
- 		/* OR */
- 
--		opp@1000000000 {
-+		opp-1000000000 {
- 			opp-hz = /bits/ 64 <1000000000>;
- 			opp-microvolt = <975000 970000 985000>, /* Supply 0 */
- 					<965000 960000 975000>, /* Supply 1 */
-@@ -467,7 +467,7 @@ Example 5: opp-supported-hw
- 		status = "okay";
- 		opp-shared;
- 
--		opp@600000000 {
-+		opp-600000000 {
- 			/*
- 			 * Supports all substrate and process versions for 0xF
- 			 * cuts, i.e. only first four cuts.
-@@ -478,7 +478,7 @@ Example 5: opp-supported-hw
- 			...
- 		};
- 
--		opp@800000000 {
-+		opp-800000000 {
- 			/*
- 			 * Supports:
- 			 * - cuts: only one, 6th cut (represented by 6th bit).
-@@ -510,7 +510,7 @@ Example 5: opp-supported-hw
- 		compatible = "operating-points-v2";
- 		opp-shared;
- 
--		opp@1000000000 {
-+		opp-1000000000 {
- 			opp-hz = /bits/ 64 <1000000000>;
- 			opp-microvolt-slow = <915000 900000 925000>;
- 			opp-microvolt-fast = <975000 970000 985000>;
-@@ -518,7 +518,7 @@ Example 5: opp-supported-hw
- 			opp-microamp-fast =  <71000>;
- 		};
- 
--		opp@1200000000 {
-+		opp-1200000000 {
- 			opp-hz = /bits/ 64 <1200000000>;
- 			opp-microvolt-slow = <915000 900000 925000>, /* Supply vcc0 */
- 					      <925000 910000 935000>; /* Supply vcc1 */
+So this is for cases where the performance-index maps to a freq managed by the
+microcontroller and voltages managed by linux? I have a case of exact opposite
+and I don't see now how to handle it now with these bindings.
+
+> 
+> I don't see why would we like to put some index value in the microvolts
+> property. We are setting the index value in the opp-hz property to avoid adding
+> extra fields and making sure opp-hz is still the unique property for the nodes.
+
+Maybe to handle the case like what I described above?
+
 -- 
-2.12.0.432.g71c3a4f4ba37
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+hosted by The Linux Foundation
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
