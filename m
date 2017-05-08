@@ -1,52 +1,185 @@
-From: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
-Subject: Re: [RFC v3 2/2] mux: mmio-based syscon mux controller
-Date: Mon, 8 May 2017 10:38:07 +0200
-Message-ID: <8defd856-ee01-583e-6362-eedbe16f4b3b@axentia.se>
-References: <1493380324-20638-1-git-send-email-p.zabel@pengutronix.de>
- <1493380324-20638-2-git-send-email-p.zabel@pengutronix.de>
- <f43fe769-426f-2bfe-fb58-c69743171b0d@axentia.se>
- <1494231144.3029.25.camel@pengutronix.de>
+From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH] [media] imx: csi: retain current field order and
+ colorimetry setting as default
+Date: Mon, 08 May 2017 11:36:47 +0200
+Message-ID: <1494236207.3029.66.camel@pengutronix.de>
+References: <1490661656-10318-1-git-send-email-steve_longerbeam@mentor.com>
+         <1490661656-10318-22-git-send-email-steve_longerbeam@mentor.com>
+         <1491486929.2392.29.camel@pengutronix.de>
+         <0632df59-10e7-1e03-c0f6-eb7c90b83c0d@xs4all.nl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1494231144.3029.25.camel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+In-Reply-To: <0632df59-10e7-1e03-c0f6-eb7c90b83c0d-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>, Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+To: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+Cc: Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, nick-gcszYUEDH4VrovVCs/uTlw@public.gmane.org, markus.heiser-O6JHGLzbNUwb1SvskN2V4Q@public.gmane.org, laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, bparrot-l0cyMroinI0@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, sudipm.mukherjee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, jean-christophe.trotin-qxv4g6HH51o@public.gmane.org, horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, robert.jarzmik-GANU6spQydw@public.gmane.org, songjun.wu-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, shuah-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-medi
 List-Id: devicetree@vger.kernel.org
 
-On 2017-05-08 10:12, Philipp Zabel wrote:
-> Hi Peter,
-> 
-> On Mon, 2017-05-08 at 10:00 +0200, Peter Rosin wrote:
->> Hi Philipp,
->>
->> With the ack on the bindings in place, I'm going to pile these
->> two patches on top of my mux series when I send v15 next week (or
->> whenever v4.12-rc1 is out). There are a pair of nitpicks that I'm
->> going to fix myself, so no need for a resend.
-> 
-> Yes, please. While at it, could you also fix my "bitfieldis" typo in the
-> commit description of patch 1.
+Hi Hans,
 
-Done, and pushed out to the mux branch of
-https://gitlab.com/peda-linux/mux.git
+On Mon, 2017-05-08 at 10:27 +0200, Hans Verkuil wrote:
+> Hi Philipp,
+> 
+> Sorry for the very long delay, but I finally had some time to think about this.
 
-(i.e. if you're interested in a preview for the pending v15 next week)
+Thank you for your thoughts.
 
-Cheers,
-peda
+> On 04/06/2017 03:55 PM, Philipp Zabel wrote:
+> > If the the field order is set to ANY in set_fmt, choose the currently
+> > set field order. If the colorspace is set to DEFAULT, choose the current
+> > colorspace.  If any of xfer_func, ycbcr_enc or quantization are set to
+> > DEFAULT, either choose the current setting, or the default setting for the
+> > new colorspace, if non-DEFAULT colorspace was given.
+> > 
+> > This allows to let field order and colorimetry settings be propagated
+> > from upstream by calling media-ctl on the upstream entity source pad,
+> > and then call media-ctl on the sink pad to manually set the input frame
+> > interval, without changing the already set field order and colorimetry
+> > information.
+> > 
+> > Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> > ---
+> > This is based on imx-media-staging-md-v14, and it is supposed to allow
+> > configuring the pipeline with media-ctl like this:
+> > 
+> > 1) media-ctl --set-v4l2 "'tc358743 1-000f':0[fmt:UYVY8_1X16/1920x1080]"
+> > 2) media-ctl --set-v4l2 "'imx6-mipi-csi2':1[fmt:UYVY8_1X16/1920x108]"
+> > 3) media-ctl --set-v4l2 "'ipu1_csi0_mux':2[fmt:UYVY8_1X16/1920x1080]"
+> > 4) media-ctl --set-v4l2 "'ipu1_csi0':0[fmt:UYVY8_1X16/1920x1080@1/60]"
+> > 5) media-ctl --set-v4l2 "'ipu1_csi0':2[fmt:AYUV32/1920x1080@1/30]"
+> > 
+> > Without having step 4) overwrite the colorspace and field order set on
+> > 'ipu1_csi0':0 by the propagation in step 3).
+> > ---
+> >  drivers/staging/media/imx/imx-media-csi.c | 34 +++++++++++++++++++++++++++++++
+> >  1 file changed, 34 insertions(+)
+> > 
+> > diff --git a/drivers/staging/media/imx/imx-media-csi.c b/drivers/staging/media/imx/imx-media-csi.c
+> > index 64dc454f6b371..d94ce1de2bf05 100644
+> > --- a/drivers/staging/media/imx/imx-media-csi.c
+> > +++ b/drivers/staging/media/imx/imx-media-csi.c
+> > @@ -1325,6 +1325,40 @@ static int csi_set_fmt(struct v4l2_subdev *sd,
+> >  	csi_try_fmt(priv, sensor, cfg, sdformat, crop, compose, &cc);
+> >  
+> >  	fmt = __csi_get_fmt(priv, cfg, sdformat->pad, sdformat->which);
+> > +
+> > +	/* Retain current field setting as default */
+> > +	if (sdformat->format.field == V4L2_FIELD_ANY)
+> > +		sdformat->format.field = fmt->field;
+> 
+> This is OK.
 
->> Thank you very much for making use of the new code, I hope the
->> "3rd party interest" will help getting the mux series merged...
+Would this be a "may" or a "should"? As in,
+"If SUBDEV_S_FMT is called with field == ANY, the driver may/should set
+field to the previously configured interlacing field order".
+
+What would be the correct place to document this behaviour?
+Documentation/media/uapi/v4l/vidioc-subdev-g-fmt.rst?
+
+> > +	/* Retain current colorspace setting as default */
+> > +	if (sdformat->format.colorspace == V4L2_COLORSPACE_DEFAULT) {
+> > +		sdformat->format.colorspace = fmt->colorspace;
+> > +		if (sdformat->format.xfer_func == V4L2_XFER_FUNC_DEFAULT)
+> > +			sdformat->format.xfer_func = fmt->xfer_func;
+> > +		if (sdformat->format.ycbcr_enc == V4L2_YCBCR_ENC_DEFAULT)
+> > +			sdformat->format.ycbcr_enc = fmt->ycbcr_enc;
+> > +		if (sdformat->format.quantization == V4L2_QUANTIZATION_DEFAULT)
+> > +			sdformat->format.quantization = fmt->quantization;
 > 
-> Thanks to Sakari for pointing it out in the video-mux review.
+> If sdformat->format.colorspace == V4L2_COLORSPACE_DEFAULT, then you can just copy
+> all four fields from fmt to sdformat->format. The other three fields are meaningless
+> when colorspace == V4L2_COLORSPACE_DEFAULT.
+
+Ok, good. Ignoring the transfer function / YCbCr encoding / quantization
+range fields when colorspace is DEFAULT would simplify this part to:
+
+	if (sdformat->format.colorspace == V4L2_COLORSPACE_DEFAULT) {
+		sdformat->format.colorspace = fmt->colorspace;
+		sdformat->format.xfer_func = fmt->xfer_func;
+		sdformat->format.ycbcr_enc = fmt->ycbcr_enc;
+		sdformat->format.quantization = fmt->quantization;
+	}
+
+Is that expectation already written down somewhere? If not, should we
+add it to Documentation/media/uapi/v4l/pixfmt-006.rst?
+
+> > +	} else {
+> > +		if (sdformat->format.xfer_func == V4L2_XFER_FUNC_DEFAULT) {
+> > +			sdformat->format.xfer_func =
+> > +				V4L2_MAP_XFER_FUNC_DEFAULT(
+> > +						sdformat->format.colorspace);
+> > +		}
+> > +		if (sdformat->format.ycbcr_enc == V4L2_YCBCR_ENC_DEFAULT) {
+> > +			sdformat->format.ycbcr_enc =
+> > +				V4L2_MAP_YCBCR_ENC_DEFAULT(
+> > +						sdformat->format.colorspace);
+> > +		}
+> > +		if (sdformat->format.quantization == V4L2_QUANTIZATION_DEFAULT) {
+> > +			sdformat->format.quantization =
+> > +				V4L2_MAP_QUANTIZATION_DEFAULT(
+> > +						cc->cs != IPUV3_COLORSPACE_YUV,
+> > +						sdformat->format.colorspace,
+> > +						sdformat->format.ycbcr_enc);
+> > +		}
 > 
-> regards
-> Philipp
-> 
-> 
+> Is this needed for validation? Currently these fields play no role in the
+> default link validation. Which I think is actually the right thing to do,
+> unless the subdev can do actual colorspace conversion.
+
+The CSI subdevice can't do colorspace conversion, but exactly the same
+applies to the IC subdevices, which can. Also I'd like this information
+to be correct, as the /dev/videoX capture device takes its colorspace
+information from the CSI source pad.
+
+The problem I wanted to solve here initially was that if the colorspace
+information was previously set correctly:
+
+  media-ctl --set-v4l2 "'ipu1_csi0':0[fmt:UYVY8_1X16/1920x1080@1/60 colorspace:rec709 xfer:709 ycbcr:709 quantization:lim-range]"
+    ->
+	V4L2_COLORSPACE_REC709
+	V4L2_XFER_FUNC_709
+	V4L2_YCBCR_ENC_709
+	V4L2_QUANTIZATION_LIMITED_RANGE
+
+A later media-ctl call to just change the frame interval would overwrite the colorspace information:
+
+  media-ctl --set-v4l2 "'ipu1_csi0':0[fmt:UYVY8_1X16/1920x1080@1/30]"
+    ->
+	V4L2_COLORSPACE_DEFAULT
+	V4L2_XFER_FUNC_DEFAULT
+	V4L2_YCBCR_ENC_DEFAULT
+	V4L2_QUANTIZATION_DEFAULT
+
+> I would just drop the whole 'else' here.
+
+That would allow to set the actual colorspace information reported by
+SUBDEV_G_FMT on both sink and source pads (and by extension, the
+colorspace information reported by G_FMT on /dev/videoX) to
+V4L2_{XFER_FUNC,YCBCR_ENC,QUANTIZATION}_DEFAULT.
+
+  media-ctl --set-v4l2 "'ipu1_csi0':0[fmt:UYVY8_1X16/1920x1080 colorspace:rec709]"
+    ->
+	V4L2_COLORSPACE_REC709
+	V4L2_XFER_FUNC_DEFAULT
+	V4L2_YCBCR_ENC_DEFAULT
+	V4L2_QUANTIZATION_DEFAULT
+
+I suppose that is acceptable as given the colorspace, the other DEFAULT
+values have a unique meaning, but wouldn't it be nicer to show userspace
+what these default inputs actually map to?
+
+> Actually, wouldn't it be better to always just copy this information from
+> fmt? This subdev doesn't do any colorspace conversion, it just passes on
+> this information. I.e., you can't set it in any meaningful way.
+
+csi_set_fmt on the sink pad is the function that actually sets fmt in
+the first place. If we always copy colorspace information from fmt, it
+can't be set to the correct value at all.
+
+regards
+Philipp
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
