@@ -1,70 +1,239 @@
-From: Varadarajan Narayanan <varada@codeaurora.org>
-Subject: Re: [PATCH 4/5] arm64: dts: Add ipq8074 SoC and MTP board support
-Date: Mon, 8 May 2017 13:02:20 +0530
-Message-ID: <a63b7ccf-51a6-5d10-47e1-aac9a27a1516@codeaurora.org>
-References: <1493373403-23462-1-git-send-email-varada@codeaurora.org>
- <1493373403-23462-5-git-send-email-varada@codeaurora.org>
- <20170428185825.75usyll55p3aclnm@latitude>
+From: Peter Rosin <peda@axentia.se>
+Subject: Re: [RFC v3 2/2] mux: mmio-based syscon mux controller
+Date: Mon, 8 May 2017 10:00:05 +0200
+Message-ID: <f43fe769-426f-2bfe-fb58-c69743171b0d@axentia.se>
+References: <1493380324-20638-1-git-send-email-p.zabel@pengutronix.de>
+ <1493380324-20638-2-git-send-email-p.zabel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <20170428185825.75usyll55p3aclnm@latitude>
-Content-Language: en-US
-Sender: linux-gpio-owner@vger.kernel.org
-To: =?UTF-8?Q?Jonathan_Neusch=c3=a4fer?= <j.neuschaefer@gmx.net>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, mturquette@baylibre.com, sboyd@codeaurora.org, linus.walleij@linaro.org, andy.gross@linaro.org, david.brown@linaro.org, catalin.marinas@arm.com, will.deacon@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, sricharan@codeaurora.org, absahu@codeaurora.org, sjaganat@codeaurora.org, Manoharan Vijaya Raghavan <mraghava@codeaurora.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1493380324-20638-2-git-send-email-p.zabel@pengutronix.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sakari Ailus <sakari.ailus@iki.fi>, Steve Longerbeam <slongerbeam@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, kernel@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
+Hi Philipp,
 
+With the ack on the bindings in place, I'm going to pile these
+two patches on top of my mux series when I send v15 next week (or
+whenever v4.12-rc1 is out). There are a pair of nitpicks that I'm
+going to fix myself, so no need for a resend.
 
-On 4/29/2017 12:28 AM, Jonathan Neuschäfer wrote:
-> Hi,
-> 
-> On Fri, Apr 28, 2017 at 03:26:42PM +0530, Varadarajan Narayanan wrote:
->> Subject: [PATCH 4/5] arm64: dts: Add ipq8074 SoC and MTP board support
-> 
-> s/MTP/HK01/ ?
+Thank you very much for making use of the new code, I hope the
+"3rd party interest" will help getting the mux series merged...
 
-Have posted v2 with MTP changed as HK01. Please refer to
-https://www.spinics.net/lists/arm-kernel/msg579470.html.
+On 2017-04-28 13:52, Philipp Zabel wrote:
+> This adds a driver for mmio-based syscon multiplexers controlled by
+> bitfields in a syscon register range.
+> 
+> Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+> ---
+> Changes since v2:
+>  - Updated CONFIG description to multi-mux
+>  - Use mux_control_get_index instead of open-coding it
+>  - Read mux-reg-masks and idle-states values in a single loop using
+>    individual read_u32_index calls instead of using read_u32_array
+>  - Verify bitmask
+> ---
+>  drivers/mux/Kconfig    |  13 +++++
+>  drivers/mux/Makefile   |   1 +
+>  drivers/mux/mux-mmio.c | 140 +++++++++++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 154 insertions(+)
+>  create mode 100644 drivers/mux/mux-mmio.c
+> 
+> diff --git a/drivers/mux/Kconfig b/drivers/mux/Kconfig
+> index 34b8284d6d29e..50e7c5d557a05 100644
+> --- a/drivers/mux/Kconfig
+> +++ b/drivers/mux/Kconfig
+> @@ -43,4 +43,17 @@ config MUX_GPIO
+>  	  To compile the driver as a module, choose M here: the module will
+>  	  be called mux-gpio.
+>  
+> +config MUX_MMIO
+> +	tristate "MMIO register bitfield-controlled Multiplexer"
+> +	depends on OF && MFD_SYSCON
 
-Thanks
-Varada
+Enable building when COMPILE_TEST is selected:
+	depends on (OF && MFD_SYSCON) || COMPILE_TEST
 
-> 
->> Add initial device tree support for the Qualcomm IPQ8074 SoC and
->> HK01 evaluation board.
->>
->> Signed-off-by: Manoharan Vijaya Raghavan <mraghava@codeaurora.org>
->> Signed-off-by: Abhishek Sahu <absahu@codeaurora.org>
->> Signed-off-by: Varadarajan Narayanan <varada@codeaurora.org>
->> ---
->>   arch/arm64/boot/dts/qcom/Makefile         |   1 +
->>   arch/arm64/boot/dts/qcom/ipq8074-hk01.dts |  48 ++++++++++
->>   arch/arm64/boot/dts/qcom/ipq8074.dtsi     | 153 ++++++++++++++++++++++++++++++
->>   3 files changed, 202 insertions(+)
->>   create mode 100644 arch/arm64/boot/dts/qcom/ipq8074-hk01.dts
->>   create mode 100644 arch/arm64/boot/dts/qcom/ipq8074.dtsi
->>
->> diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
->> index cc0f02d..7c6963e 100644
->> --- a/arch/arm64/boot/dts/qcom/Makefile
->> +++ b/arch/arm64/boot/dts/qcom/Makefile
->> @@ -4,6 +4,7 @@ dtb-$(CONFIG_ARCH_QCOM)	+= msm8916-mtp.dtb
->>   dtb-$(CONFIG_ARCH_QCOM)	+= msm8992-bullhead-rev-101.dtb
->>   dtb-$(CONFIG_ARCH_QCOM)	+= msm8994-angler-rev-101.dtb
->>   dtb-$(CONFIG_ARCH_QCOM)	+= msm8996-mtp.dtb
->> +dtb-$(CONFIG_ARCH_QCOM)	+= ipq8074-hk01.dtb
-> 
-> Maybe this list should be alphabetically sorted ('i' before 'm').
-> (I have no strong preference)
-> 
-> 
-> Thanks,
-> Jonathan Neuschäfer
-> 
+(also adding that to the other drivers in the mux series)
 
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora 
-Forum, a Linux Foundation Collaborative Project
+> +	help
+> +	  MMIO register bitfield-controlled Multiplexer controller.
+> +
+> +	  The driver builds multiplexer controllers for bitfields in a syscon
+> +	  register. For N bit wide bitfields, there will be 2^N possible
+> +	  multiplexer states.
+> +
+> +	  To compile the driver as a module, choose M here: the module will
+> +	  be called mux-mmio.
+> +
+>  endif
+> diff --git a/drivers/mux/Makefile b/drivers/mux/Makefile
+> index b00a7d37d2fbe..6bac5b0fea137 100644
+> --- a/drivers/mux/Makefile
+> +++ b/drivers/mux/Makefile
+> @@ -5,3 +5,4 @@
+>  obj-$(CONFIG_MULTIPLEXER)	+= mux-core.o
+>  obj-$(CONFIG_MUX_ADG792A)	+= mux-adg792a.o
+>  obj-$(CONFIG_MUX_GPIO)		+= mux-gpio.o
+> +obj-$(CONFIG_MUX_MMIO)		+= mux-mmio.o
+> diff --git a/drivers/mux/mux-mmio.c b/drivers/mux/mux-mmio.c
+> new file mode 100644
+> index 0000000000000..d2477d62d6eed
+> --- /dev/null
+> +++ b/drivers/mux/mux-mmio.c
+> @@ -0,0 +1,140 @@
+> +/*
+> + * MMIO register bitfield-controlled multiplexer driver
+> + *
+> + * Copyright (C) 2017 Pengutronix, Philipp Zabel <kernel@pengutronix.de>
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + */
+> +
+> +#include <linux/bitops.h>
+> +#include <linux/err.h>
+> +#include <linux/mfd/syscon.h>
+> +#include <linux/module.h>
+> +#include <linux/mux/driver.h>
+> +#include <linux/of_platform.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/property.h>
+> +#include <linux/regmap.h>
+> +
+> +static int mux_mmio_set(struct mux_control *mux, int state)
+> +{
+> +	struct regmap_field **fields = mux_chip_priv(mux->chip);
+> +
+> +	return regmap_field_write(fields[mux_control_get_index(mux)], state);
+> +}
+> +
+> +static const struct mux_control_ops mux_mmio_ops = {
+> +	.set = mux_mmio_set,
+> +};
+> +
+> +static const struct of_device_id mux_mmio_dt_ids[] = {
+> +	{ .compatible = "mmio-mux", },
+> +	{ /* sentinel */ }
+> +};
+> +MODULE_DEVICE_TABLE(of, mux_mmio_dt_ids);
+> +
+> +static int mux_mmio_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct device_node *np = dev->of_node;
+> +	struct regmap_field **fields;
+> +	struct mux_chip *mux_chip;
+> +	struct regmap *regmap;
+> +	int num_fields;
+> +	int ret;
+> +	int i;
+> +
+> +	regmap = syscon_node_to_regmap(np->parent);
+> +	if (IS_ERR(regmap)) {
+> +		ret = PTR_ERR(regmap);
+> +		dev_err(dev, "failed to get regmap: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	ret = of_property_count_u32_elems(np, "mux-reg-masks");
+> +	if (ret == 0 || ret % 2)
+> +		ret = -EINVAL;
+> +	if (ret < 0) {
+> +		dev_err(dev, "mux-reg-masks property missing or invalid: %d\n",
+> +			ret);
+> +		return ret;
+> +	}
+> +	num_fields = ret / 2;
+> +
+> +	mux_chip = devm_mux_chip_alloc(dev, num_fields, num_fields *
+> +				       sizeof(*fields));
+> +	if (IS_ERR(mux_chip))
+> +		return PTR_ERR(mux_chip);
+> +
+> +	fields = mux_chip_priv(mux_chip);
+> +
+> +	for (i = 0; i < num_fields; i++) {
+> +		struct mux_control *mux = &mux_chip->mux[i];
+> +		struct reg_field field;
+> +		s32 idle_state = MUX_IDLE_AS_IS;
+> +		u32 reg, mask;
+> +		int bits;
+> +
+> +		ret = of_property_read_u32_index(np, "mux-reg-masks",
+> +						 2 * i, &reg);
+> +		if (!ret)
+> +			ret = of_property_read_u32_index(np, "mux-reg-masks",
+> +							 2 * i + 1, &mask);
+> +		if (ret < 0) {
+> +			dev_err(dev, "bitfield %d: failed to read mux-reg-masks property: %d\n",
+> +				i, ret);
+> +			return ret;
+> +		}
+> +
+> +		field.reg = reg;
+> +		field.msb = fls(mask) - 1;
+> +		field.lsb = ffs(mask) - 1;
+> +
+> +		if (mask != GENMASK(field.msb, field.lsb)) {
+> +			dev_err(dev, "bitfield %d: invalid mask 0x%x\n",
+> +				i, mask);
+> +			return -EINVAL;
+> +		}
+> +
+> +		fields[i] = devm_regmap_field_alloc(dev, regmap, field);
+> +		if (IS_ERR(fields[i])) {
+> +			ret = PTR_ERR(fields[i]);
+> +			dev_err(dev, "bitfield %d: failed allocate: %d\n",
+> +				i, ret);
+> +			return ret;
+> +		}
+> +
+> +		bits = 1 + field.msb - field.lsb;
+> +		mux->states = 1 << bits;
+> +
+> +		of_property_read_u32_index(np, "idle-states", i, &idle_state);
+
+Adding a (u32 *) cast here, in order to silence sparse.
+
+drivers/mux/mux-mmio.c:112:67: warning: incorrect type in argument 4 (different signedness)
+drivers/mux/mux-mmio.c:112:67:    expected unsigned int [usertype] *out_value
+drivers/mux/mux-mmio.c:112:67:    got signed int *<noident>
+
+Cheers,
+peda
+
+> +		if (idle_state != MUX_IDLE_AS_IS) {
+> +			if (idle_state < 0 || idle_state >= mux->states) {
+> +				dev_err(dev, "bitfield: %d: out of range idle state %d\n",
+> +					i, idle_state);
+> +				return -EINVAL;
+> +			}
+> +
+> +			mux->idle_state = idle_state;
+> +		}
+> +	}
+> +
+> +	mux_chip->ops = &mux_mmio_ops;
+> +
+> +	return devm_mux_chip_register(dev, mux_chip);
+> +}
+> +
+> +static struct platform_driver mux_mmio_driver = {
+> +	.driver = {
+> +		.name = "mmio-mux",
+> +		.of_match_table	= of_match_ptr(mux_mmio_dt_ids),
+> +	},
+> +	.probe = mux_mmio_probe,
+> +};
+> +module_platform_driver(mux_mmio_driver);
+> +
+> +MODULE_DESCRIPTION("MMIO register bitfield-controlled multiplexer driver");
+> +MODULE_AUTHOR("Philipp Zabel <p.zabel@pengutronix.de>");
+> +MODULE_LICENSE("GPL v2");
+> 
