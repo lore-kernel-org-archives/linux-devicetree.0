@@ -1,59 +1,66 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v7 2/9] of_graph: add
-	of_graph_get_remote_endpoint()
-Date: Mon, 8 May 2017 12:08:42 -0500
-Message-ID: <CAL_JsqLHSLyNgNv8JOxaxSf+_sUAG6h9_npLLnN9+_DbobW_pA@mail.gmail.com>
-References: <87fuh3oon8.wl%kuninori.morimoto.gx@renesas.com>
- <87d1c7ool6.wl%kuninori.morimoto.gx@renesas.com>
- <CAL_JsqLB=tqai6cDr6Cr0=sL+0au__Gr2uw5gqr0Q8muhsL3=A@mail.gmail.com>
- <87shkgcgl7.wl%kuninori.morimoto.gx@renesas.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH] dt-bindings: power: New bindings for ltc3651-charger
+Date: Mon, 8 May 2017 12:12:06 -0500
+Message-ID: <20170508171206.ajxjbw5mybvrpwss@rob-hp-laptop>
+References: <1493966315-15893-1-git-send-email-mike.looijmans@topic.nl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <87shkgcgl7.wl%kuninori.morimoto.gx@renesas.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Cc: Linux-DT <devicetree@vger.kernel.org>, Linux-ALSA <alsa-devel@alsa-project.org>, Mark Brown <broonie@kernel.org>, Simon <horms@verge.net.au>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1493966315-15893-1-git-send-email-mike.looijmans@topic.nl>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mike Looijmans <mike.looijmans@topic.nl>
+Cc: devicetree@vger.kernel.org, sre@kernel.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, mark.rutland@arm.com
 List-Id: devicetree@vger.kernel.org
 
-On Sun, May 7, 2017 at 8:00 PM, Kuninori Morimoto
-<kuninori.morimoto.gx@renesas.com> wrote:
->
-> Hi Rob
-> Cc Mark
->
->> > From: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
->> >
->> > It should use same method to get same result.
->> > To getting remote-endpoint node,
->> > let's use of_graph_get_remote_endpoint()
->> >
->> > Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
->> > ---
->> > v6 -> v7
->> >
->> >  - no change
->> >
->> >  drivers/of/base.c        | 18 ++++++++++++++++--
->> >  include/linux/of_graph.h |  8 ++++++++
->> >  2 files changed, 24 insertions(+), 2 deletions(-)
->>
->> Acked-by: Rob Herring <robh@kernel.org>
->
-> Thank you for your Acked-by.
-> But, does these mean, Mark (= ALSA SoC maintainer)
-> can pickup all OF-graph related patches ?
+On Fri, May 05, 2017 at 08:38:35AM +0200, Mike Looijmans wrote:
+> This adds the devicetree bindings documentation for the LTC3651 battery charger.
+> 
+> Signed-off-by: Mike Looijmans <mike.looijmans@topic.nl>
+> ---
+>  .../bindings/power/supply/ltc3651-charger.txt      | 26 ++++++++++++++++++++++
+>  1 file changed, 26 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/power/supply/ltc3651-charger.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/power/supply/ltc3651-charger.txt b/Documentation/devicetree/bindings/power/supply/ltc3651-charger.txt
+> new file mode 100644
+> index 0000000..a7dd80f
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/power/supply/ltc3651-charger.txt
+> @@ -0,0 +1,26 @@
+> +ltc3651-charger
+> +
+> +Required properties:
+> + - compatible: "lltc,ltc3651-charger"
+> + - acpr-gpios: Connect to ACPR output. See remark below.
+> +
+> +Optional properties:
+> + - fault-gpios: Connect to FAULT output. See remark below.
+> + - chrg-gpios: Connect to CHRG output. See remark below.
 
-Yes, that's usually the easiest way to deal with a series with cross
-tree dependencies.
+All the gpios need vendor prefix.
 
-Rob
+> +
+> +The ltc3651 outputs are open-drain type and active low. The driver assumes the
+> +GPIO reports "active" when the output is asserted, so if the pins have been
+> +connected directly, the GPIO flags should be set to active low also.
+> +
+> +The driver will attempt to aquire interrupts for all GPIOs. If the system is
+> +not capabale of providing that, the driver cannot report changes and userspace
+> +will need to periodically read the sysfs attributes to detect changes.
+
+If these are interrupts, then you should use the interrupt binding 
+instead (most GPIO controllers are also interrupt controllers).
+
+> +
+> +Example:
+> +
+> +	charger: battery-charger {
+> +		compatible = "lltc,ltc3651-charger";
+> +		acpr-gpios = <&gpio0 68 GPIO_ACTIVE_LOW>;
+> +		fault-gpios = <&gpio0 64 GPIO_ACTIVE_LOW>;
+> +		chrg-gpios = <&gpio0 63 GPIO_ACTIVE_LOW>;
+> +	};
+> -- 
+> 1.9.1
+> 
