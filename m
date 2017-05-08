@@ -1,37 +1,44 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 16/20] dt-bindings: display: sun4i: Add
- HDMI display bindings
-Date: Mon, 8 May 2017 11:20:23 -0500
-Message-ID: <20170508162023.nseoybdkmwdz7sls@rob-hp-laptop>
-References: <cover.d697f34bb7b0605c5e76cbc4167a64453e5e0984.1493812478.git-series.maxime.ripard@free-electrons.com>
- <0941a11259b2dba88d235c6ad713e3451d385028.1493812478.git-series.maxime.ripard@free-electrons.com>
-Reply-To: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDJIP47K7MERBSNVYLEAKGQE2X6EQMI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <0941a11259b2dba88d235c6ad713e3451d385028.1493812478.git-series.maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Daniel Vetter <daniel.vetter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [PATCH 1/8] mmc: dt: pwrseq-simple: Invent power-off-delay-us
+Date: Mon,  8 May 2017 18:21:10 +0200
+Message-ID: <1494260477-25163-2-git-send-email-ulf.hansson@linaro.org>
+References: <1494260477-25163-1-git-send-email-ulf.hansson@linaro.org>
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <1494260477-25163-1-git-send-email-ulf.hansson@linaro.org>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Wei Xu <xuwei5@hisilicon.com>, linux-arm-kernel@lists.infradead.org
+Cc: Ulf Hansson <ulf.hansson@linaro.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-mmc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 03, 2017 at 01:59:53PM +0200, Maxime Ripard wrote:
-> One of the possible output of the display pipeline, on the SoCs that have
-> it, is the HDMI controller.
-> 
-> Add a binding for it.
-> 
-> Acked-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-> Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt | 79 +++++++-
->  1 file changed, 79 insertions(+), 0 deletions(-)
+During power off, after the GPIO pin has been asserted, some devices like
+the Wifi chip from TI, Wl18xx, needs a delay before the host continues with
+clock gating and turning off regulators as to follow a graceful shutdown
+sequence.
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Therefore invent an optional power-off-delay-us DT binding for
+mmc-pwrseq-simple, to allow us to support this constraint.
+
+Cc: devicetree@vger.kernel.org
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: linux-mmc@vger.kernel.org
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+---
+ Documentation/devicetree/bindings/mmc/mmc-pwrseq-simple.txt | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/mmc/mmc-pwrseq-simple.txt b/Documentation/devicetree/bindings/mmc/mmc-pwrseq-simple.txt
+index e254368..9029b45 100644
+--- a/Documentation/devicetree/bindings/mmc/mmc-pwrseq-simple.txt
++++ b/Documentation/devicetree/bindings/mmc/mmc-pwrseq-simple.txt
+@@ -18,6 +18,8 @@ Optional properties:
+   "ext_clock" (External clock provided to the card).
+ - post-power-on-delay-ms : Delay in ms after powering the card and
+ 	de-asserting the reset-gpios (if any)
++- power-off-delay-us : Delay in us after asserting the reset-gpios (if any)
++	during power off of the card.
+ 
+ Example:
+ 
+-- 
+2.7.4
+
