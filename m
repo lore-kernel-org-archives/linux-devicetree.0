@@ -1,134 +1,69 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCHv3] phy: cpcap-usb: Add CPCAP PMIC USB support
-Date: Mon, 8 May 2017 11:50:01 +0530
-Message-ID: <9bfee59a-faba-3f48-1234-2a5496b3fc14@ti.com>
-References: <20170410041958.21269-1-tony@atomide.com>
+From: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v4 3/5] soc: qcom: Introduce APCS IPC driver
+Date: Mon, 8 May 2017 12:17:02 +0530
+Message-ID: <CABb+yY3CfWFBDh-qoGHDeHyLhVC7mPQZFB=VDS54OaypG-BqPw@mail.gmail.com>
+References: <20170504200539.27027-1-bjorn.andersson@linaro.org>
+ <20170504200539.27027-3-bjorn.andersson@linaro.org> <CABb+yY2P=qPTYB6PDkjV82Qc67Xzer40BHRsOQP2m-gM3eK_UA@mail.gmail.com>
+ <20170505183729.GG15143@minitux> <CABb+yY03imq8911rF9dHJjG_a_aosksA=tgk7Rog5AZSezHDyg@mail.gmail.com>
+ <338c4262-cc6b-bed2-16fe-1767d1f0d5f6@codeaurora.org> <CABb+yY1K3Hyn7CzQCA6tHu-KrPigARc3cYgBdT8PNX7vjhPK0g@mail.gmail.com>
+ <20170506011920.GH15143@minitux> <CABb+yY1u9mspX1Zu0mg21JMYxpKxsXsvBa9LnF6VNr1_42UJUQ@mail.gmail.com>
+ <20170508055439.GJ15143@minitux>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170410041958.21269-1-tony@atomide.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, Marcel Partap <mpartap@gmx.net>, Michael Scott <michael.scott@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170508055439.GJ15143@minitux>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Jeffrey Hugo <jhugo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ohad Ben-Cohen <ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-remoteproc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Tony,
+On Mon, May 8, 2017 at 11:24 AM, Bjorn Andersson
+<bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> On Fri 05 May 21:48 PDT 2017, Jassi Brar wrote:
+>
+> The APCS IPC register serves the basis for all inter-processor
+> communication in a Qualcomm platform, so it's not only the RPM driver
+> discussed earlier that uses this. It's also used for other non-FIFO
+> based communication channels, where the signalled information either
+> isn't acked at all or acked on a system-level.
+>
+Something has to indicate consumption of data or "requested action
+taken". Otherwise the protocol is design-wise broken.
 
-On Monday 10 April 2017 09:49 AM, Tony Lindgren wrote:
-> Some Motorola phones like droid 4 use a custom CPCAP PMIC that has a
-> multiplexing USB PHY.
-> 
-> This USB PHY can operate at least in four modes using pin multiplexing
-> and two control GPIOS:
-> 
-> - Pass through companion PHY for the SoC USB PHY
-> - ULPI PHY for the SoC
-> - Pass through USB for the modem
-> - UART debug console for the SoC
-> 
-> This patch adds support for droid 4 USB PHY and debug UART modes,
-> support for other modes can be added later on as needed.
-> 
-> Both peripheral and host mode are working for the USB. The
-> host mode depends on the cpcap-charger driver for VBUS.
-> 
-> VBUS and ID pin detection are done using cpcap-adc IIO ADC
-> driver.
+> But regardless of the protocol implemented ontop, the purpose of the
+> APCS IPC bit is _only_ to invoke some remote handler to consume some
+> data, somewhere - the event in itself does not carry any information.
+>
+Yes, every platform that uses shared-memory works like that. However
+there is always something that tells if the command has been acted
+upon by the remote. In your case that is the read-pointer movement.
 
-I thought of using EXTCON differently from what was used below. Actually I
-thought EXTCON shuld be used in cpcap-adc driver for notifying VBUS or ID
-events to phy-cpcap driver which performs the various setting based on VBUS or
-ID. (See drivers/usb/dwc3/dwc3-omap.c which receives VBUS/ID notifications fo
-sample). That would have simply replaced the iio* calls with EXTCON calls in
-phy-cpcap-usb driver (in addition to adding extcon API's in cpcap-adc driver).
+>> The client should call mbox_client_txdone() after
+>> mbox_send_message().
+>
+> So every time we call mbox_send_message() from any of the client drivers
+> we also needs to call mbox_client_txdone()?
+>
+Yes.
 
-Usage of EXTCON like below is not of much use here since MUSB doesn't really
-wait for notification of ID or VBUS events (This is unlike dwc3-omap. since we
-invoke musb_mailbox functin directly).
+> This seems like an awkward side effect of using the mailbox framework -
+> which has to be spread out in at least 6 different client drivers :(
+>
+No. Mailbox or whatever you implement - you must (and do) tick the
+state machine to keep the messages moving.
+  Best designs have some interrupt occurring when the message has been
+consumed by the remote. Some designs have a flag set which needs to be
+polled to detect completion. Very few (like yours) that support
+neither irq nor polling, have to be driven by the upper protocol layer
+by some ack packet (or tracking read/write pointers like you do).
+These three cases are denoted by TXDONE_BY_IRQ, TXDONE_BY_POLL and
+TXDONE_BY_ACK respectively.
 
-If adding EXTCON in cpcap-adc isn't simple then we should stick to your patch
-version 2 since extcon support in this version is not useful IMO.
-> 
-> Cc: devicetree@vger.kernel.org
-> Cc: Marcel Partap <mpartap@gmx.net>
-> Cc: Michael Scott <michael.scott@linaro.org>
-> Acked-by: Rob Herring <robh@kernel.org>
-> Tested-by: Sebastian Reichel <sre@kernel.org>
-> Signed-off-by: Tony Lindgren <tony@atomide.com>
-> ---
-> 
-> Changes since v2:
-> - Added extcon support as requested by Kishon
-> 
-> - Added Rob's ack
-> 
-> - Folded in Kconfig randconfig build fix to add depends on IIO
-> 
-> Changes since v1:
-> - Use iio_read_channel_processed() instead of iio_read_channel_scaled()
->   as changed in the v2 of the ADC driver
-> 
-> - Kept Tested-by from Sebastian Reichel <sre@kernel.org> as the change
->   from v1 is trivial
-> 
-> ---
->  .../devicetree/bindings/phy/phy-cpcap-usb.txt      |  40 ++
->  drivers/phy/Kconfig                                |   8 +
->  drivers/phy/Makefile                               |   1 +
->  drivers/phy/phy-cpcap-usb.c                        | 734 +++++++++++++++++++++
->  4 files changed, 783 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/phy/phy-cpcap-usb.txt
->  create mode 100644 drivers/phy/phy-cpcap-usb.c
-> 
-> diff --git a/Documentation/devicetree/bindings/phy/phy-cpcap-usb.txt b/Documentation/devicetree/bindings/phy/phy-cpcap-usb.txt
-> new file mode 100644
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/phy/phy-cpcap-usb.txt
-> @@ -0,0 +1,40 @@
-> +Motorola CPCAP PMIC USB PHY binding
-> +
-> +Required properties:
-> +compatible: Shall be either "motorola,cpcap-usb-phy" or
-> +	    "motorola,mapphone-cpcap-usb-phy"
-> +#phy-cells: Shall be 0
-> +interrupts: CPCAP PMIC interrupts used by the USB PHY
-> +interrupt-names: Interrupt names
-> +io-channels: IIO ADC channels used by the USB PHY
-> +io-channel-names: IIO ADC channel names
-> +vusb-supply: Regulator for the PHY
-> +
-> +Optional properties:
-> +pinctrl: Optional alternate pin modes for the PHY
-> +pinctrl-names: Names for optional pin modes
-> +mode-gpios: Optional GPIOs for configuring alternate modes
-> +
-> +Example:
-> +cpcap_usb2_phy: phy {
-> +	compatible = "motorola,mapphone-cpcap-usb-phy";
-> +	pinctrl-0 = <&usb_gpio_mux_sel1 &usb_gpio_mux_sel2>;
-> +	pinctrl-1 = <&usb_ulpi_pins>;
-> +	pinctrl-2 = <&usb_utmi_pins>;
-> +	pinctrl-3 = <&uart3_pins>;
-> +	pinctrl-names = "default", "ulpi", "utmi", "uart";
-> +	#phy-cells = <0>;
-> +	interrupts-extended = <
-> +		&cpcap 15 0 &cpcap 14 0 &cpcap 28 0 &cpcap 19 0
-> +		&cpcap 18 0 &cpcap 17 0 &cpcap 16 0 &cpcap 49 0
-> +		&cpcap 48 1
-> +	>;
-> +	interrupt-names =
-> +		"id_ground", "id_float", "se0conn", "vbusvld",
-> +		"sessvld", "sessend", "se1", "dm", "dp";
-> +	mode-gpios = <&gpio2 28 GPIO_ACTIVE_HIGH
-> +		      &gpio1 0 GPIO_ACTIVE_HIGH>;
-> +	io-channels = <&cpcap_adc 2>, <&cpcap_adc 7>;
-> +	io-channel-names = "vbus", "id";
-> +	vusb-supply = <&vusb>;
-> +};
-
-I would have preferred this to be a separate patch but since Rob has Acked it,
-it is fine.
-
-Thanks
-Kishon
+  If no client driver will ever submit a message if there is no space
+in FIFO, then you can specify TXDONE_BY_POLL and have last_tx_done()
+always return true. That way you don't need to call
+mbox_client_txdone().
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
