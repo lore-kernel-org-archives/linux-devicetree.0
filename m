@@ -1,56 +1,114 @@
-From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Subject: Re: [PATCH] phy: meson8b-usb2: add support for the USB PHY on Meson8 SoCs
-Date: Mon, 8 May 2017 22:02:11 +0200
-Message-ID: <CAFBinCDed096pnD-mm+Y1iRXfZgBkZPgVjH537cUsZ+qd6g-2g@mail.gmail.com>
-References: <20170506173625.19501-1-martin.blumenstingl@googlemail.com> <950abc53-df2d-93dd-68d1-e9868445bb93@ti.com>
+From: Chris Brandt <Chris.Brandt@renesas.com>
+Subject: RE: [PATCH v5 01/10] pinctrl: generic: Add bi-directional and
+ output-enable
+Date: Mon, 8 May 2017 20:05:20 +0000
+Message-ID: <SG2PR06MB116576379DA1BD0B9D9634768AEE0@SG2PR06MB1165.apcprd06.prod.outlook.com>
+References: <1493281194-5200-1-git-send-email-jacopo+renesas@jmondi.org>
+ <1493281194-5200-2-git-send-email-jacopo+renesas@jmondi.org>
+ <CAHp75Vcy1OE+9htFx9k3kQhGARQPT1C0gg3SEKZd7ULu_vkUMA@mail.gmail.com>
+ <CACRpkdayW0qPXDcc_JofkwtX5UHhDPxiY_8deZZ7+hPNJkjgeQ@mail.gmail.com>
+ <SG2PR06MB1165E7E651BE96CD7B7738B08A130@SG2PR06MB1165.apcprd06.prod.outlook.com>
+ <CAHp75Vcp_eMWrjZRX-x3=Tt3JRXcL_wWG43MymF=oyLLP4EJwg@mail.gmail.com>
+ <SG2PR06MB11658EC3A3A80C57E6F539AC8A130@SG2PR06MB1165.apcprd06.prod.outlook.com>
+ <CAHp75VeLtOuty=iaxuCaH43rnBZDTT03iH7JyjDJBQhTD-EjzA@mail.gmail.com>
+ <CACRpkdZkNGSUvTrEdjbGKO1hr799QpJBGSHPVbsBibph7Jx61A@mail.gmail.com>
+ <20170508160120.GB25206@w540>
+ <CAHp75VfOMKOhpkec+htA6DRQhivpSmNXy1=Ayig1W+ZC84gTLw@mail.gmail.com>
+ <SG2PR06MB1165C1109F74DF1F15E171D48AEE0@SG2PR06MB1165.apcprd06.prod.outlook.com>
+ <CAHp75VcBWgvpV9NjKwu2Am+XzKcwnL7cXC81g39w6O1XZfAPVQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <950abc53-df2d-93dd-68d1-e9868445bb93-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <CAHp75VcBWgvpV9NjKwu2Am+XzKcwnL7cXC81g39w6O1XZfAPVQ@mail.gmail.com>
+Content-Language: en-US
+Sender: linux-gpio-owner@vger.kernel.org
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: jmondi <jacopo@jmondi.org>, Linus Walleij <linus.walleij@linaro.org>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King - ARM Linux <linux@armlinux.org.uk>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 8, 2017 at 2:10 PM, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org> wrote:
-> Hi,
->
-> On Saturday 06 May 2017 11:06 PM, Martin Blumenstingl wrote:
->> Meson8 uses the same USB PHY as found on the Meson8b and GXBB SoCs. Add
->> a new of_device_id to indicate this. Also update the documentation
->> (devicetree binding, Kconfig and MODULE_DESCRIPTION) accordingly.
->>
->> Signed-off-by: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
->> ---
->>  Documentation/devicetree/bindings/phy/meson8b-usb2-phy.txt | 3 ++-
->>  drivers/phy/Kconfig                                        | 4 ++--
->>  drivers/phy/phy-meson8b-usb2.c                             | 5 +++--
->>  3 files changed, 7 insertions(+), 5 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/phy/meson8b-usb2-phy.txt b/Documentation/devicetree/bindings/phy/meson8b-usb2-phy.txt
->> index 5fa73b9d20f5..d81d73aea608 100644
->> --- a/Documentation/devicetree/bindings/phy/meson8b-usb2-phy.txt
->> +++ b/Documentation/devicetree/bindings/phy/meson8b-usb2-phy.txt
->> @@ -1,7 +1,8 @@
->> -* Amlogic Meson8b and GXBB USB2 PHY
->> +* Amlogic Meson8, Meson8b and GXBB USB2 PHY
->>
->>  Required properties:
->>  - compatible:        Depending on the platform this should be one of:
->> +     "amlogic,meson8-usb2-phy"
->>       "amlogic,meson8b-usb2-phy"
->>       "amlogic,meson-gxbb-usb2-phy"
->
-> Please split the dt binding documentation into a separate patch.
-OK, however I guess I'll wait for a few days until that restructuring
-patch is merged
-
-thanks for reviewing this so quick!
-
-
-Regards,
-Martin
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGVsbG8gQW5keSwNCg0KT24gTW9uZGF5LCBNYXkgMDgsIDIwMTcsIEFuZHkgU2hldmNoZW5rbyB3
+cm90ZToNCj4gPiBCaS1EaXJlY3Rpb25hbDoNCj4gPg0KPiA+IEZvciBhbnkgcGluIHRoYXQgbmVl
+ZHMgdG8gZHJpdmUgKHNlbmQpIG9yIHNlbnNlIChyZWNlaXZlKSBzaWduYWxzLCB0aGUNCj4gcGlu
+DQo+ID4gbXV4IGNvbnRyb2xsZXIgY2FuIG9ubHkgZW5hYmxlIDEgZGlyZWN0aW9uIG9mIGJ1ZmZl
+cnMgKGluIHRoaXMgY2FzZSwgaXQNCj4gPiBvbmx5IHRoZSBvdXRwdXQgYnVmZmVycykuIFRoZXJl
+Zm9yZSB0aGUgYXBwcm9wcmlhdGUgYml0IGluIHRoZQ0KPiA+ICdiaS1kaXJlY3Rpb25hbCcgcmVn
+aXN0ZXIgaXMgc2V0IGluIG9yZGVyIHRvIGVuYWJsZSB0aGUgc2lnbmFsIHBhdGggaW4NCj4gYm90
+aA0KPiA+IGRpcmVjdGlvbnMgKGllLCBlbmFibGUgdGhlIGlucHV0IGJ1ZmZlcnMpLg0KPiANCj4g
+U28sIEkgc2VlIHRoaXMgd2F5IGhvdyBpdCBjYW4gYmUgZW5hYmxlZDoNCj4gMS4gSVBfRU5JICsg
+SVBfRU5PIGludGVybmFsbHkgZGVmaW5lcyBCaURpIHdoZW4gUE1DIGFuZCBQSVBDIGJpdHMgYXJl
+IHNldA0KPiAyLiBCaURpIGJpdCBpcyBzZXQgYW5kIEJVRk9FIGlzIHNldA0KPiANCj4gTm93IHRo
+ZSBxdWVzdGlvbiBpcyB3aGF0IHRoZSByZWFsIHVzZSBjYXNlIGZvciAyPw0KDQpGb3IgIzEsIElQ
+X0VOSSBhbmQgSVBfRU5PIGFyZSBjb250cm9sbGVkIGJ5IFBGQy9QRkNFL1BGQ0FFLg0KVGhvc2Ug
+YmFzaWNhbGx5IGVxdWF0ZSB0byB0aGUgcGluIGZ1bmN0aW9uIHJlZ2lzdGVyIChhcyBpbiwNCndo
+YXQgSVAgYmxvY2sgZ2V0cyB3aXJlZCB1cCB0byBlYWNoIHBpbi4pIEhvd2V2ZXIsIGl0DQpzZWVt
+cyB0aGF0IFBGQy9QRkNFL1BGQ0FFIGNhbm5vdCBlbmFibGUgYm90aCBJUF9FTkkgYW5kDQpJUF9F
+Tk8gc2lnbmFscyBhdCB0aGUgc2FtZSB0aW1lICh0aGUgZGlhZ3JhbSBkb2Vzbid0IHJlYWxseQ0K
+c2hvdyB5b3UgdGhhdCBwaWVjZSBvZiBpbmZvKSwgaGVuY2UgdGhleSBoYWQgdG8gbWFrZSBhbg0K
+J292ZXJyaWRlJyByZWdpc3RlciBjYW4gY2FsbGVkIGl0IFBCREMgKGJpci1kaXIgcmVnaXN0ZXIp
+DQp0byBtYW51YWxseSB0dXJuIHRoZSBpbnB1dCBidWZmZXJzIG9uIHdoZW4gbmVlZGVkLg0KDQpT
+ZWVtcyBsaWtlIGEgSFcgaGFjayBpZiB5b3UgYXNrIG1lLg0KDQoNCj4gSWYgd2UgZmluZCBvbmUg
+d2UgbmVlZCB0byByZW5hbWUgYW5kIGZpeCBhIGRlc2NyaXB0aW9uIG9mIHRoZSBwaW4NCj4gY29u
+dHJvbCBjb25maWd1cmF0aW9uIHByb3BlcnR5Lg0KPiANCj4gbGlrZToNCj4gQFBJTl9DT05GSUdf
+T1VUUFVUX0lOUFVUX0VOQUJMRTogdGhpcyB3aWxsIGNvbmZpZ3VyZSB0aGUgcGluIGFzIGFuIG91
+dHB1dC4NCj4gLi4uDQo+IE5vdGU6IEFzIGxvbmcgYXMgaXQncyBlbmFibGVkIHRoZSBwaW4ncyBp
+bnB1dCBlbmFibGVkIGFzIHdlbGwgYW5kIHZpY2UNCj4gdmVyc2EuDQoNClNvIHlvdXIgc3VnZ2Vz
+dGlvbiBpcyB0byByZW5hbWUgUElOX0NPTkZJR19PVVRQVVQgdG8NClBJTl9DT05GSUdfT1VUUFVU
+X0lOUFVUX0VOQUJMRT8NCg0KSSB3b3VsZCBzYXkgdGhlIGRlc2NyaXB0aW9uIGZvciBAUElOX0NP
+TkZJR19JTlBVVF9FTkFCTEUgaXMgcHJvYmFibHkNCid0ZWNobmljYWxseScgY29ycmVjdCBmb3Ig
+b3VyIGJpLWRpciBuZWVkcywgYnV0IEkgZGlkbid0IGxpa2UgaXQNCmJlY2F1c2UgaXQgbWlnaHQg
+Y29uZnVzZSB1c2VycyBtYWtpbmcgYSBEVCBmaWxlIGZvciB0aGVpciBib2FyZCAodW5sZXNzDQpv
+ZiBjb3Vyc2UgdGhleSBzdHVkaWVkIHRoZSBoYXJkd2FyZSBtYW51YWwgaW4gZGV0YWlsIHRvIGZp
+bmFsbHkgY29tZQ0KdG8gdGhlIGNvbmNsdXNpb24gb2YgdGhlIHNjcmV3eSBQRkMgaGFyZHdhcmUp
+Lg0KDQoNCj4gPj4gPiAgYW5kIFNXSU9fW0lOUFVUfE9VVFBVVF0gZGlyZWN0bHkgdGhlcmU/DQo+
+ID4NCj4gPiBJbiB0aGUgaGFyZHdhcmUgbWFudWFsLCB0aGVyZSBpcyBhIGxpc3Qgb2YgcGluIGZ1
+bmN0aW9ucyB0aGF0IGlmIHlvdQ0KPiB3YW50DQo+ID4gdG8gdXNlLCB5b3UgY2Fubm90IHVzZSB0
+aGUgc3RhbmQgcGlubXV4IHJlZ2lzdGVyIG1ldGhvZCB0aGF0IHlvdSB1c2UgZm9yDQo+ID4gYWxs
+IHRoZSBvdGhlciBwaW5zLiBJbnN0ZWFkLCB5b3UgYXJlIGluc3RydWN0ZWQgdG8gZG8gYSBkaWZm
+ZXJlbnQNCj4gPiBwcm9jZWR1cmUuIElmIGNvdXJzZSBlbGVjdHJpY2FsbHksIGlucHV0L291dHB1
+dCBidWZmZXJzIGFyZSBzdGlsbCB0dXJuZWQNCj4gPiBvbi9vZmYgb3Igd2hhdGV2ZXIsIGJ1dCB0
+aGUgcm9vdCByZWFzb24gb2Ygd2h5IHlvdSBuZWVkIHRvIGRvIHRoaXMNCj4gPiBkaWZmZXJlbnRs
+eSBmb3IgdGhlc2Ugc3BlY2lmaWMgcGluL2Z1bmN0aW9uIGlzIG5vdCBrbm93bi4NCj4gPg0KPiA+
+IFRoZSAiU1dJT18iIHBvcnRpb24gb2YgdGhlIG5hbWluZyBjb21lcyBmcm9tIHRoZSBoYXJkd2Fy
+ZSBtYW51YWwgd2hpY2gNCj4gPiByZWZlcnMgdG8gdGhpcyBhcyAiU29mdHdhcmUgSS9PIENvbnRy
+b2wgQWx0ZXJuYXRpdmUgTW9kZSIgKHdoaWNoIGluIG15DQo+ID4gb3BpbmlvbiBtZWFucyB0aGUg
+SFcgZ3V5cyBjb3VsZG4ndCBnZXQgdGhlIHBpbiBkaXJlY3Rpb25zL2J1ZmZlcnMgdG8gYmUNCj4g
+c2V0DQo+ID4gYXV0b21hdGljYWxseSBmb3Igc29tZSByZWFzb24sIHNvIHRoZXkgZGVjaWRlZCBp
+dCdzIHRoZSBTVyBndXlzIHByb2JsZW0NCj4gbm93DQo+ID4gZm9yIHRob3NlIHBpbnMpDQo+IA0K
+PiBPa2F5LCB0aGVzZSBhcmUgcmVsYXRlZCB0byBwaW4gbXV4aW5nIGV4cGxpY2l0bHkuDQo+IFNv
+LCB5b3UgaGF2ZSAxMCBmdW5jdGlvbnMgb3ZlcmFsbD8NCj4gV2hhdCBwcmV2ZW50cyB5b3UgZGVz
+Y3JpYmUgdGhlbSBhY2NvcmRpbmdseSBhbmQgaGlkZSB0aGlzDQo+IGltcGxlbWVudGF0aW9uIGRl
+dGFpbCBpbiB0aGUgZHJpdmVyPw0KDQpUaGUgb25lIGlzc3VlIEkgd2FzIHRyeWluZyB0byBhdm9p
+ZCBieSBoaWRpbmcgdGhpbmdzIGluIHRoZSBkcml2ZXINCndpdGggc29tZSB0eXBlIG9mIGxvb2st
+dXAgdGFibGUgd2FzIHRoYXQgdGhpcyBzZXJpZXMgb2YgcGFydHMgY29tZXMNCmluIGRpZmZlcmVu
+dCBzdWJzZXRzL3BhY2thZ2VzIGFuZCBzb21ldGltZXMgdGhlIGZ1bmN0aW9ucyBjb21lcyBvdXQN
+Cm9uIGRpZmZlcmVudCBwb3J0IG51bWJlcnMuIFNvIG5vdyB5b3UgbmVlZCBtdWx0aXBsZSBsb29r
+LXVwIHRhYmxlcw0KYW5kIHRoZW4gYWxzbyBhIHdheSB0byBzaWduYWwgd2hhdCBwYXJ0L3BhY2th
+Z2UgeW91IGhhdmUgc28geW91IHVzZQ0KdGhlIGNvcnJlY3QgbG9vay11cCB0YWJsZS4gSXQgc2Vl
+bWVkIGVhc2llciAoYW5kIHNhZmVyKSB0byBqdXN0IHBhc3MNCnRoZSBpbmZvIGluIChpZiB5b3Ug
+bmVlZGVkIGl0KSBpbiB0aGUgRGV2aWNlIFRyZWUgZm9yIHRoZSBib2FyZC4NCg0KT2YgdGhlc2Ug
+J3NwZWNpYWwnIHBpbnMgKFRhYmxlIDU0LjcpOg0KDQpGb3IgMTYgb2YgdGhlbSwgdGhleSB0cnVs
+eSBjYW4gb3BlcmF0ZSBhcyBpbnB1dCBvciBvdXRwdXQsIHNvDQp0aGUgdXNlciBuZWVkcyB0byBz
+cGVjaWZ5IHRoYXQgZGlyZWN0aW9uIHRoZXkgbmVlZCBpbiB0aGUgRFQuDQoNCkZvciBMVkRTLCBT
+b3VuZCBhbmQgV0RULCB0aG9zZSB3aWxsIGJlIGZpeGVkLCBzbyB0aGV5IHdvdWxkIGJlDQp0aGUg
+b25seSBvbmVzIHlvdSBjb3VsZCBkbyBhIHRhYmxlIGZvciwgYnV0IGFzIEkgbWVudGlvbmVkLCBT
+b3VuZA0KYW5kIFdEVCBkb24ndCBhbHdheXMgY29tZSBvdXQgaW4gdGhlIHNhbWUgcGxhY2Ugc28g
+YSBsb29rdXAgdGFibGUNCmlzbid0IHNvIGN1dCBhbmQgZHJ5Lg0KDQoNCj4gPj4gU2Vjb25kIHF1
+ZXN0aW9uLCB3aGF0IG1ha2VzIGl0IGRpZmZlciB0byB3aGF0IGFscmVhZHkgZXhpc3RzPw0KPiA+
+DQo+ID4gV2UgaGF2ZSAzIGRpZmZlcmVudCBmbGFncyAocHJvcGVydGllcykgdGhhdCBuZWVkIHRv
+IGJlIHNwZWNpZmllZCBmb3INCj4gc29tZQ0KPiA+IHBpbnMgaW4gc29tZSBjaXJjdW1zdGFuY2Vz
+Lg0KPiA+IEF0IGZpcnN0LCB3ZSBqdXN0IHRyaWVkIHRvIHBhc3MgdGhpcyBhZGRpdGlvbmFsIGlu
+Zm9ybWF0aW9uIGluIHdoZW4NCj4gPiBkZWZpbmluZyB3aGF0IGZ1bmN0aW9uIHRoZSBwaW4gc2hv
+dWxkIGJlIGp1c3QgZm9yIHRob3NlIHBpbnMgd2hvc2UNCj4gPiBkaXJlY3Rpb24gKGllLCBidWZm
+ZXJzKSB3b3VsZCBub3QgYmUgc2V0IHVwIGF1dG9tYXRpY2FsbHkuDQo+ID4gSG93ZXZlciwgdGhp
+cyB3YXMgcmVqZWN0ZWQgYW5kIHdlIHdlcmUgdG9sZCB0byBwaWNrIGZyb20gdGhlIGV4aXN0aW5n
+DQo+IHNldA0KPiA+IGdlbmVyaWMgcHJvcGVydGllcy4NCj4gPiBCdXQsIDMgZGlmZmVyZW50IGdl
+bmVyaWMgcGluY3RybCBwcm9wZXJ0aWVzIHRoYXQgZml0IHdoYXQgd2UgbmVlZGVkDQo+IGRpZG4n
+dA0KPiA+IGV4aXN0LiBTbywgd2UgdXNlZCB0aGUgZXhpc3RpbmcgImlucHV0LWVuYWJsZSIgYW5k
+ICJvdXRwdXQtZW5hYmxlIiwgYnV0DQo+ID4gdGhlbiBjcmVhdGVkICJiaS1kaXJlY3Rpb25hbCIu
+DQo+IA0KPiBZZXMsIHRoYXQgZmlndXJlIGhlbHBlZCBtZSBhIGxvdCB0byB1bmRlcnN0YW5kLg0K
+DQpJIHNlZSBmcm9tIHlvdXIgb3RoZXIgZW1haWwgeW91IHNlbnQgdG8gSmFjb3BvLCBpdCBsb29r
+cyBsaWtlIHRoZSBsaW5rDQpJIHNlbnQgeW91IG9ubHkgYnJvdWdodCB5b3UgdG8gdGhlIHNob3J0
+ZXIgJ2RhdGEgc2hlZXQnIHZlcnNpb24gb2YgdGhlDQpoYXJkd2FyZSBtYW51YWwsIG5vdCB0aGUg
+ZnVsbCBtYW51YWwgdGhhdCBpbmNsdWRlcyAnRmlndXJlIDU0LjEnLg0KU29ycnkgYWJvdXQgdGhh
+dC4NCg0KDQoNCkNocmlzDQo=
