@@ -1,29 +1,42 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] mtd: nand: gpio: update binding
-Date: Mon, 8 May 2017 11:26:55 -0500
-Message-ID: <20170508162655.hibk4khq5bsrcpsg@rob-hp-laptop>
-References: <20170503121824.DD82C67889@pc13941vm.idsi0.si.c-s.fr>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH v5 0/5] Add ARM Mali Midgard device tree bindings and gpu node for rk3288
+Date: Mon, 08 May 2017 18:27:02 +0200
+Message-ID: <12996903.t3AZceNVOh@diego>
+References: <cover.1493804968.git.guillaume.tucker@collabora.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170503121824.DD82C67889-jKNfpIzOiMCZ2rhzPqGWdn/N20GrQ81gUBSOeVevoDU@public.gmane.org>
+In-Reply-To: <cover.1493804968.git.guillaume.tucker-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Christophe Leroy <christophe.leroy-GgN8y9CXRhA@public.gmane.org>
-Cc: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Guillaume Tucker <guillaume.tucker-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Sjoerd Simons <sjoerd.simons-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, John Reitan <john.reitan-5wv7dgnIgG8@public.gmane.org>, Wookey <wookey-Xpnwy/r4z8dg9hUCZPvPmw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 03, 2017 at 02:18:24PM +0200, Christophe Leroy wrote:
-> This patch updates the binding documentation in accordance with
-> commit 44dd182861f99 ("mtd: nand: gpio: make nCE GPIO optional")
+Am Mittwoch, 3. Mai 2017, 10:56:24 CEST schrieb Guillaume Tucker:
+> The ARM Mali Midgard GPU kernel driver is only available
+> out-of-tree and is not going to be merged in its current form.
+> However, it would be useful to have its device tree bindings
+> merged.  In particular, this would enable distributions to create
+> working driver packages (dkms...) without having to patch the
+> kernel.
 > 
-> Signed-off-by: Christophe Leroy <christophe.leroy-GgN8y9CXRhA@public.gmane.org>
-> Reported-by: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/mtd/gpio-control-nand.txt | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+> The bindings for the earlier Mali Utgard GPU family have already
+> been merged, so this is essentially the same scenario but for
+> newer GPUs (Mali-T604 ~ Mali-T880).
+> 
+> This series of patches first imports the bindings from the latest
+> driver release with some clean-up then adds a gpu node for the
+> rk3288 SoC.  This was successfully tested on Radxa Rock2 Square,
+> Firefly, Veyron Minnie and Jerry boards using Mali kernel driver
+> r16p0 and r12p0 user-space binary.
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+The actual devicetree parts are all Rockchip-specific, so I guess I'll just
+pick up the whole series, including the binding doc, after the merge
+window if nobody complains before that :-)
+
+
+Heiko
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
