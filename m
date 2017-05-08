@@ -1,38 +1,27 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 1/2] dt-bindings: iio: adc: add driver for the
- ti-adc084s021 chip
-Date: Mon, 8 May 2017 11:25:40 -0500
-Message-ID: <20170508162540.yusrkvcjcdyvjriu@rob-hp-laptop>
-References: <1493812905-28904-1-git-send-email-marten.lindahl@axis.com>
- <1493812905-28904-2-git-send-email-marten.lindahl@axis.com>
+Subject: Re: [PATCH] mtd: nand: gpio: update binding
+Date: Mon, 8 May 2017 11:26:55 -0500
+Message-ID: <20170508162655.hibk4khq5bsrcpsg@rob-hp-laptop>
+References: <20170503121824.DD82C67889@pc13941vm.idsi0.si.c-s.fr>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1493812905-28904-2-git-send-email-marten.lindahl-VrBV9hrLPhE@public.gmane.org>
+In-Reply-To: <20170503121824.DD82C67889-jKNfpIzOiMCZ2rhzPqGWdn/N20GrQ81gUBSOeVevoDU@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?iso-8859-1?Q?M=E5rten?= Lindahl <marten.lindahl-VrBV9hrLPhE@public.gmane.org>
-Cc: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?iso-8859-1?Q?M=E5rten?= Lindahl <martenli-VrBV9hrLPhE@public.gmane.org>
+To: Christophe Leroy <christophe.leroy-GgN8y9CXRhA@public.gmane.org>
+Cc: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 03, 2017 at 02:01:44PM +0200, Mårten Lindahl wrote:
-> From: Mårten Lindahl <martenli-VrBV9hrLPhE@public.gmane.org>
+On Wed, May 03, 2017 at 02:18:24PM +0200, Christophe Leroy wrote:
+> This patch updates the binding documentation in accordance with
+> commit 44dd182861f99 ("mtd: nand: gpio: make nCE GPIO optional")
 > 
-> This adds support for the Texas Instruments ADC084S021 ADC chip.
-> 
-> Signed-off-by: Mårten Lindahl <martenli-VrBV9hrLPhE@public.gmane.org>
+> Signed-off-by: Christophe Leroy <christophe.leroy-GgN8y9CXRhA@public.gmane.org>
+> Reported-by: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 > ---
-> Changes in v3:
-> - No updates since v2
-> 
-> Changes in v2:
-> - Updated the 'Required properties' section
-> - Removed the 'Optional properties' section
-> 
->  .../devicetree/bindings/iio/adc/ti-adc084s021.txt     | 19 +++++++++++++++++++
->  1 file changed, 19 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/adc/ti-adc084s021.txt
+>  Documentation/devicetree/bindings/mtd/gpio-control-nand.txt | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 
 Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 --
