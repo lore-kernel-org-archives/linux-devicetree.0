@@ -1,72 +1,127 @@
-From: Chris Brandt <Chris.Brandt@renesas.com>
-Subject: RE: [PATCH v5 01/10] pinctrl: generic: Add bi-directional and
- output-enable
-Date: Mon, 8 May 2017 17:02:02 +0000
-Message-ID: <SG2PR06MB1165C1109F74DF1F15E171D48AEE0@SG2PR06MB1165.apcprd06.prod.outlook.com>
-References: <1493281194-5200-1-git-send-email-jacopo+renesas@jmondi.org>
- <1493281194-5200-2-git-send-email-jacopo+renesas@jmondi.org>
- <CAHp75Vcy1OE+9htFx9k3kQhGARQPT1C0gg3SEKZd7ULu_vkUMA@mail.gmail.com>
- <CACRpkdayW0qPXDcc_JofkwtX5UHhDPxiY_8deZZ7+hPNJkjgeQ@mail.gmail.com>
- <SG2PR06MB1165E7E651BE96CD7B7738B08A130@SG2PR06MB1165.apcprd06.prod.outlook.com>
- <CAHp75Vcp_eMWrjZRX-x3=Tt3JRXcL_wWG43MymF=oyLLP4EJwg@mail.gmail.com>
- <SG2PR06MB11658EC3A3A80C57E6F539AC8A130@SG2PR06MB1165.apcprd06.prod.outlook.com>
- <CAHp75VeLtOuty=iaxuCaH43rnBZDTT03iH7JyjDJBQhTD-EjzA@mail.gmail.com>
- <CACRpkdZkNGSUvTrEdjbGKO1hr799QpJBGSHPVbsBibph7Jx61A@mail.gmail.com>
- <20170508160120.GB25206@w540>
- <CAHp75VfOMKOhpkec+htA6DRQhivpSmNXy1=Ayig1W+ZC84gTLw@mail.gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v4 4/5] soc: qcom: Add device tree binding for GLINK RPM
+Date: Mon, 8 May 2017 12:06:06 -0500
+Message-ID: <20170508170606.uchxrihfodk6yts5@rob-hp-laptop>
+References: <20170504200539.27027-1-bjorn.andersson@linaro.org>
+ <20170504200539.27027-4-bjorn.andersson@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CAHp75VfOMKOhpkec+htA6DRQhivpSmNXy1=Ayig1W+ZC84gTLw@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-gpio-owner@vger.kernel.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>, jmondi <jacopo@jmondi.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King - ARM Linux <linux@armlinux.org.uk>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170504200539.27027-4-bjorn.andersson@linaro.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Andy Gross <andy.gross@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Ohad Ben-Cohen <ohad@wizery.com>, Jassi Brar <jassisinghbrar@gmail.com>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-remoteproc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gTW9uZGF5LCBNYXkgMDgsIDIwMTcsIEFuZHkgU2hldmNoZW5rbyB3cm90ZToNCj4gT24gTW9u
-LCBNYXkgOCwgMjAxNyBhdCA3OjAxIFBNLCBqbW9uZGkgPGphY29wb0BqbW9uZGkub3JnPiB3cm90
-ZToNCj4gPiBPbiBTdW4sIE1heSAwNywgMjAxNyBhdCAwOTo1Mjo0OUFNICswMjAwLCBMaW51cyBX
-YWxsZWlqIHdyb3RlOg0KPiA+PiBPbiBGcmksIEFwciAyOCwgMjAxNyBhdCA0OjUzIFBNLCBBbmR5
-IFNoZXZjaGVua28NCj4gPj4gPGFuZHkuc2hldmNoZW5rb0BnbWFpbC5jb20+IHdyb3RlOg0KPiA+
-Pg0KPiA+PiA+IExpbnVzLCBmb3IgbWUgaXQgbG9va3MgbGlrZSBiZXR0ZXIgdG8gcmV2ZXJ0IHRo
-YXQgY2hhbmdlLCB1bnRpbCB3ZQ0KPiA+PiA+IHdpbGwgaGF2ZSBjbGVhciBwaWN0dXJlIHdoeSBl
-eGlzdGluZyBjb25maWd1cmF0aW9uIHBhcmFtZXRlcnMgY2FuJ3QNCj4gPj4gPiB3b3JrLg0KPiA+
-Pg0KPiA+PiBZZWFoIEknbGwgcmV2ZXJ0IHRoZSBiaW5kaW5nIGZvciBmaXhlcy4NCj4gDQo+ID4g
-QXMgaXQgc2VlbXMgd2Ugd29uJ3QgYmUgYWJsZSB0byBwcm9jZWVkIHdpdGggdGhlIGN1cnJlbnRs
-eSBwcm9wb3NlZA0KPiBzb2x1dGlvbiwNCj4gPiB3b3VsZCB0aGF0IGJlIGFjY2VwdGFibGUgbm93
-IHRoYXQgd2UgdXNlIHRoZSAicGlubXV4IiBwcm9wZXJ0eSB0byBhZGQNCj4gPiBmbGFncyBhcyBC
-SURJUg0KPiANCj4gQ2FuIHlvdSBleHBsYWluIHdoYXQgZG9lcyB0aGlzICplbGVjdHJpY2FsbHkq
-IG1lYW4/DQoNCkJpLURpcmVjdGlvbmFsOg0KDQpGb3IgYW55IHBpbiB0aGF0IG5lZWRzIHRvIGRy
-aXZlIChzZW5kKSBvciBzZW5zZSAocmVjZWl2ZSkgc2lnbmFscywgdGhlIHBpbg0KbXV4IGNvbnRy
-b2xsZXIgY2FuIG9ubHkgZW5hYmxlIDEgZGlyZWN0aW9uIG9mIGJ1ZmZlcnMgKGluIHRoaXMgY2Fz
-ZSwgaXQNCm9ubHkgdGhlIG91dHB1dCBidWZmZXJzKS4gVGhlcmVmb3JlIHRoZSBhcHByb3ByaWF0
-ZSBiaXQgaW4gdGhlDQonYmktZGlyZWN0aW9uYWwnIHJlZ2lzdGVyIGlzIHNldCBpbiBvcmRlciB0
-byBlbmFibGUgdGhlIHNpZ25hbCBwYXRoIGluIGJvdGgNCmRpcmVjdGlvbnMgKGllLCBlbmFibGUg
-dGhlIGlucHV0IGJ1ZmZlcnMpLg0KDQoNCj4gPiAgYW5kIFNXSU9fW0lOUFVUfE9VVFBVVF0gZGly
-ZWN0bHkgdGhlcmU/DQoNCkluIHRoZSBoYXJkd2FyZSBtYW51YWwsIHRoZXJlIGlzIGEgbGlzdCBv
-ZiBwaW4gZnVuY3Rpb25zIHRoYXQgaWYgeW91IHdhbnQNCnRvIHVzZSwgeW91IGNhbm5vdCB1c2Ug
-dGhlIHN0YW5kIHBpbm11eCByZWdpc3RlciBtZXRob2QgdGhhdCB5b3UgdXNlIGZvcg0KYWxsIHRo
-ZSBvdGhlciBwaW5zLiBJbnN0ZWFkLCB5b3UgYXJlIGluc3RydWN0ZWQgdG8gZG8gYSBkaWZmZXJl
-bnQNCnByb2NlZHVyZS4gSWYgY291cnNlIGVsZWN0cmljYWxseSwgaW5wdXQvb3V0cHV0IGJ1ZmZl
-cnMgYXJlIHN0aWxsIHR1cm5lZA0Kb24vb2ZmIG9yIHdoYXRldmVyLCBidXQgdGhlIHJvb3QgcmVh
-c29uIG9mIHdoeSB5b3UgbmVlZCB0byBkbyB0aGlzDQpkaWZmZXJlbnRseSBmb3IgdGhlc2Ugc3Bl
-Y2lmaWMgcGluL2Z1bmN0aW9uIGlzIG5vdCBrbm93bi4NCg0KVGhlICJTV0lPXyIgcG9ydGlvbiBv
-ZiB0aGUgbmFtaW5nIGNvbWVzIGZyb20gdGhlIGhhcmR3YXJlIG1hbnVhbCB3aGljaA0KcmVmZXJz
-IHRvIHRoaXMgYXMgIlNvZnR3YXJlIEkvTyBDb250cm9sIEFsdGVybmF0aXZlIE1vZGUiICh3aGlj
-aCBpbiBteQ0Kb3BpbmlvbiBtZWFucyB0aGUgSFcgZ3V5cyBjb3VsZG4ndCBnZXQgdGhlIHBpbiBk
-aXJlY3Rpb25zL2J1ZmZlcnMgdG8gYmUgc2V0DQphdXRvbWF0aWNhbGx5IGZvciBzb21lIHJlYXNv
-biwgc28gdGhleSBkZWNpZGVkIGl0J3MgdGhlIFNXIGd1eXMgcHJvYmxlbSBub3cNCmZvciB0aG9z
-ZSBwaW5zKQ0KDQoNCj4gU2Vjb25kIHF1ZXN0aW9uLCB3aGF0IG1ha2VzIGl0IGRpZmZlciB0byB3
-aGF0IGFscmVhZHkgZXhpc3RzPw0KDQpXZSBoYXZlIDMgZGlmZmVyZW50IGZsYWdzIChwcm9wZXJ0
-aWVzKSB0aGF0IG5lZWQgdG8gYmUgc3BlY2lmaWVkIGZvciBzb21lDQpwaW5zIGluIHNvbWUgY2ly
-Y3Vtc3RhbmNlcy4NCkF0IGZpcnN0LCB3ZSBqdXN0IHRyaWVkIHRvIHBhc3MgdGhpcyBhZGRpdGlv
-bmFsIGluZm9ybWF0aW9uIGluIHdoZW4NCmRlZmluaW5nIHdoYXQgZnVuY3Rpb24gdGhlIHBpbiBz
-aG91bGQgYmUganVzdCBmb3IgdGhvc2UgcGlucyB3aG9zZQ0KZGlyZWN0aW9uIChpZSwgYnVmZmVy
-cykgd291bGQgbm90IGJlIHNldCB1cCBhdXRvbWF0aWNhbGx5Lg0KSG93ZXZlciwgdGhpcyB3YXMg
-cmVqZWN0ZWQgYW5kIHdlIHdlcmUgdG9sZCB0byBwaWNrIGZyb20gdGhlIGV4aXN0aW5nIHNldA0K
-Z2VuZXJpYyBwcm9wZXJ0aWVzLg0KQnV0LCAzIGRpZmZlcmVudCBnZW5lcmljIHBpbmN0cmwgcHJv
-cGVydGllcyB0aGF0IGZpdCB3aGF0IHdlIG5lZWRlZCBkaWRuJ3QNCmV4aXN0LiBTbywgd2UgdXNl
-ZCB0aGUgZXhpc3RpbmcgImlucHV0LWVuYWJsZSIgYW5kICJvdXRwdXQtZW5hYmxlIiwgYnV0DQp0
-aGVuIGNyZWF0ZWQgImJpLWRpcmVjdGlvbmFsIi4NCg0KDQpDaHJpcw0K
+On Thu, May 04, 2017 at 01:05:38PM -0700, Bjorn Andersson wrote:
+> Add device tree binding documentation for the Qualcomm GLINK RPM, used
+> for communication with the Resource Power Management subsystem in
+> various Qualcomm SoCs.
+> 
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> ---
+> 
+> Changes since v3:
+> - Transition doorbell to mailbox framework
+> 
+> Changes since v2:
+> - Replace qcom,ipc syscon with a "doorbell"
+> 
+> Changes since v1:
+> - None
+> 
+>  .../devicetree/bindings/soc/qcom/qcom,glink.txt    | 73 ++++++++++++++++++++++
+>  1 file changed, 73 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,glink.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,glink.txt b/Documentation/devicetree/bindings/soc/qcom/qcom,glink.txt
+> new file mode 100644
+> index 000000000000..e32198df0e9c
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/soc/qcom/qcom,glink.txt
+> @@ -0,0 +1,73 @@
+> +Qualcomm RPM GLINK binding
+> +
+> +This binding describes the Qualcomm RPM GLINK, a fifo based mechanism for
+> +communication with the Resource Power Management system on various Qualcomm
+> +platforms.
+> +
+> +- compatible:
+> +	Usage: required
+> +	Value type: <stringlist>
+> +	Definition: must be "qcom,glink-rpm"
+> +
+> +- interrupts:
+> +	Usage: required
+> +	Value type: <prop-encoded-array>
+> +	Definition: should specify the IRQ used by the remote processor to
+> +		    signal this processor about communication related events
+> +
+> +- qcom,rpm-msg-ram:
+> +	Usage: required
+> +	Value type: <prop-encoded-array>
+> +	Definition: handle to RPM message memory resource
+> +
+> +- mboxes:
+> +	Usage: required
+> +	Value type: <prop-encoded-array>
+> +	Definition: reference to the "rpm_hlos" mailbox in APCS, as described
+> +		    in mailbox/mailbox.txt
+> +
+> += GLINK DEVICES
+> +Each subnode of the GLINK node represent function tied to a virtual
+> +communication channel. The name of the nodes are not important. The properties
+> +of these nodes are defined by the individual bindings for the specific function
+> +- but must contain the following property:
+> +
+> +- qcom,glink-channels:
+> +	Usage: required
+> +	Value type: <stringlist>
+> +	Definition: a list of channels tied to this function, used for matching
+> +		    the function to a set of virtual channels
+> +
+> += EXAMPLE
+> +The following example represents the GLINK RPM node on a MSM8996 device, with
+> +the function for the "rpm_request" channel defined, which is used for
+> +regualtors and root clocks.
+> +
+> +	apcs_glb: apcs-glb@9820000 {
+
+mailbox@... Or does this block do other things?
+
+Otherwise,
+
+Acked-by: Rob Herring <robh@kernel.org>
+
+
+> +		compatible = "qcom,msm8996-apcs-hmss-global";
+> +		reg = <0x9820000 0x1000>;
+> +
+> +		#mbox-cells = <1>;
+> +	};
+> +
+> +	rpm_msg_ram: memory@68000 {
+> +		compatible = "qcom,rpm-msg-ram";
+> +		reg = <0x68000 0x6000>;
+> +	};
+> +
+> +	rpm-glink {
+> +		compatible = "qcom,glink-rpm";
+> +
+> +		interrupts = <GIC_SPI 168 IRQ_TYPE_EDGE_RISING>;
+> +
+> +		qcom,rpm-msg-ram = <&rpm_msg_ram>;
+> +
+> +		mboxes = <&apcs_glb 0>;
+> +
+> +		rpm-requests {
+> +			compatible = "qcom,rpm-msm8996";
+> +			qcom,glink-channels = "rpm_requests";
+> +
+> +			...
+> +		};
+> +	};
+> -- 
+> 2.12.0
+> 
