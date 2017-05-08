@@ -1,107 +1,69 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v5 01/10] pinctrl: generic: Add bi-directional and output-enable
-Date: Mon, 8 May 2017 23:19:32 +0200
-Message-ID: <CACRpkdY1h+yfFuk2y9=nZqqvW9=G33_eHCisvuMkJ5b3zizY7Q@mail.gmail.com>
-References: <1493281194-5200-2-git-send-email-jacopo+renesas@jmondi.org>
- <CAHp75Vcy1OE+9htFx9k3kQhGARQPT1C0gg3SEKZd7ULu_vkUMA@mail.gmail.com>
- <CACRpkdayW0qPXDcc_JofkwtX5UHhDPxiY_8deZZ7+hPNJkjgeQ@mail.gmail.com>
- <SG2PR06MB1165E7E651BE96CD7B7738B08A130@SG2PR06MB1165.apcprd06.prod.outlook.com>
- <CAHp75Vcp_eMWrjZRX-x3=Tt3JRXcL_wWG43MymF=oyLLP4EJwg@mail.gmail.com>
- <SG2PR06MB11658EC3A3A80C57E6F539AC8A130@SG2PR06MB1165.apcprd06.prod.outlook.com>
- <CAHp75VeLtOuty=iaxuCaH43rnBZDTT03iH7JyjDJBQhTD-EjzA@mail.gmail.com>
- <CACRpkdZkNGSUvTrEdjbGKO1hr799QpJBGSHPVbsBibph7Jx61A@mail.gmail.com>
- <20170508160120.GB25206@w540> <CAHp75VfOMKOhpkec+htA6DRQhivpSmNXy1=Ayig1W+ZC84gTLw@mail.gmail.com>
- <20170508172516.GC25206@w540>
+From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/2 v2] clk: Add bindings for the Gemini Clock Controller
+Date: Mon, 8 May 2017 16:24:08 -0500
+Message-ID: <CAL_JsqLAMObobPrBDdA8bjaKTX4rEo2=_qd86ibbA2kQP6AvBg@mail.gmail.com>
+References: <20170508201159.31634-1-linus.walleij@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <20170508172516.GC25206@w540>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: jmondi <jacopo@jmondi.org>
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, Chris Brandt <Chris.Brandt@renesas.com>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King - ARM Linux <linux@armlinux.org.uk>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170508201159.31634-1-linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Janos Laube <janos.dev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Paulius Zaleckas <paulius.zaleckas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, openwrt-devel-p3rKhJxN3npAfugRpC6u6w@public.gmane.org, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Hans Ulli Kroll <ulli.kroll-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 8, 2017 at 7:25 PM, jmondi <jacopo@jmondi.org> wrote:
-
-> From my perspective these flags are configurations internal to the pin
-> controller hardware used to enable/disable input buffers when a pin needs to
-> perform in both direction.
-> The level of detail I can provide on this is the logical diagram we have pointed
-> you to already.
+On Mon, May 8, 2017 at 3:11 PM, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> This adds device tree bindings and a header for the Gemini SoC
+> Clock Controller.
 >
-> As I assume you are trying to get this answer from us in order to
-> avoid duplicating things in pin controller sub-system, and I
-> understand this, but my question here was "can we have those flags as part
-> of the pinmux property argument list, as that property description
-> seems to allow us to do that, instead of making them generic pin
-> configuration properties and upset other developers?"
-
-Pinmux with all it's magic flags baked into one is not any better
-or any more readable. The solution is already very pretty except
-for these two flags which I am sure we can agree on a way forward
-for.
-
-What we choose between is not this or another less transparent
-pin configuration mechanism, the mechanism (whether magic bits
-to pinmux or reasonable properties) does not matter.
-
-There is a strong preference to use the generic bindings.
-
-So the discussion is whether to use:
-
-bi-directional;
-output-enable;
-
-Or some already defined config flags.
-
-If these are too idiomatic to be used by others, they should anyways
-look similar, like:
-
-renesas,bi-directional;
-renesas,output-enable;
-
-Like the Qualcomm weirdness found in drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
-
-qcom,pull-up-strength = <..>;
-
-Check how they use
-#define PMIC_GPIO_CONF_PULL_UP                 (PIN_CONFIG_END + 1)
-
-Etc.
-
-> Anyway, I still fail to see why those configuration flags, only
-> affecting the way the pin controller hardware enables/disables
-> its internal buffers and its internal operations have to be
-> described in term of their externally visible electrically characteristics.
-
-To me internal vs external is not what matters. What matters is
-if this is likely to pop up in more platforms, and then the property
-should be generic.
-
-The generic pin config definitions are likely to be picked up by other
-standards and even be inspiration to hardware engineers so that
-is why it matters so much.
-
-> To me, what already exists are pin configuration properties generic to
-> the whole pin controller subsystem, and I understand you don't want to
-> see duplication there.
+> Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+> ChangeLog v1->v2:
+> - Move the clock controller to be directly in the parent syscon
+>   node.
+> ---
+>  .../clock/cortina,gemini-clock-controller.txt      | 22 ++++++++++++++++
+>  include/dt-bindings/clock/cortina,gemini-clock.h   | 29 ++++++++++++++++++++++
+>  2 files changed, 51 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/clock/cortina,gemini-clock-controller.txt
+>  create mode 100644 include/dt-bindings/clock/cortina,gemini-clock.h
 >
-> At the same time, to me, those flags are settings the pin controller
-> wants to have specified by software to overcome its hw design flaws,
-> and are intended to configure its internal buffers in a way it cannot
-> do by itself for some very specific operation modes (they are listed
-> in the hw reference manual, it's not something you can chose to
-> configure or not, if you want a pin working in i2c mode, you HAVE to
-> pass those flags to pin controller).
+> diff --git a/Documentation/devicetree/bindings/clock/cortina,gemini-clock-controller.txt b/Documentation/devicetree/bindings/clock/cortina,gemini-clock-controller.txt
+> new file mode 100644
+> index 000000000000..ae0046bccba0
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/clock/cortina,gemini-clock-controller.txt
+> @@ -0,0 +1,22 @@
+> +Clock bindings for the Cortina Systems Gemini SoC Clock Controller
+> +
+> +Required properties :
+> +- compatible : shall contain the following:
+> +  "cortina,gemini-clock-controller"
+> +- #clock-cells should be <1>
+> +
+> +The Gemini clock controller needs to be identical to the system controller
+> +node.
+> +
+> +All available clocks are defined as preprocessor macros in
+> +dt-bindings/clock/cortina,gemini-clock.h header and can be used in device
+> +tree sources.
+> +
+> +Example:
+> +
+> +syscon: syscon@40000000 {
+> +       compatible = "cortina,gemini-syscon", "cortina,gemini-clock-controller",
+> +                    "syscon", "simple-mfd";
 
-Sounds like a case for
+There are no child nodes, so you don't need simple-mfd.
 
-renesas,bi-directional;
-renesas,output-enable;
+> +       reg = <0x40000000 0x1000>;
 
-following the Qualcomm pattern in that case.
+Looks like you have 2 nodes pointing to the same address with your
+reset binding? You shouldn't have overlapping resources. It's allowed
+for historical reasons but breaks resource creation in Linux.
 
-But let's see if something else comes out of this discussion.
-
-Yours,
-Linus Walleij
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
