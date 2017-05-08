@@ -1,74 +1,194 @@
 From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH 6/6] dt-bindings: cpufreq: enhance Mediatek cpufreq
- dt-binding document
-Date: Mon, 8 May 2017 09:50:10 +0530
-Message-ID: <20170508042010.GD17010@vireshk-i7>
-References: <1493997974-17699-1-git-send-email-sean.wang@mediatek.com>
- <1493997974-17699-7-git-send-email-sean.wang@mediatek.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Subject: [PATCH V5 resend] PM / OPP: Use - instead of @ for DT entries
+Date: Mon,  8 May 2017 09:52:50 +0530
+Message-ID: <f8323bb507a97755c7c164f1d2aff45d2f0be3f0.1494217312.git.viresh.kumar@linaro.org>
 Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1493997974-17699-7-git-send-email-sean.wang@mediatek.com>
 Sender: linux-pm-owner@vger.kernel.org
-To: sean.wang@mediatek.com
-Cc: rjw@rjwysocki.net, robh+dt@kernel.org, matthias.bgg@gmail.com, mark.rutland@arm.com, mturquette@baylibre.com, jamesjj.liao@mediatek.com, p.zabel@pengutronix.de, shunli.wang@mediatek.com, erin.lo@mediatek.com, jdelvare@suse.de, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-pm@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Rafael Wysocki <rjw@rjwysocki.net>, Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@codeaurora.org>
+Cc: linaro-kernel@lists.linaro.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, Vincent Guittot <vincent.guittot@linaro.org>, Viresh Kumar <viresh.kumar@linaro.org>, Krzysztof Kozlowski <krzk@kernel.org>, Masahiro Yamada <yamada.masahiro@socionext.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 05-05-17, 23:26, sean.wang@mediatek.com wrote:
-> From: Sean Wang <sean.wang@mediatek.com>
-> 
-> Update binding document to reflect the lastest driver logic and
+Compiling the DT file with W=1, DTC warns like follows:
 
-The bindings don't follow the drivers but its the other way around. Don't
-mention anything about the drivers in the bindings patches.
+Warning (unit_address_vs_reg): Node /opp_table0/opp@1000000000 has a
+unit name, but no reg property
 
-> add more examples guiding people how to use Mediatek cpufreq driver.
-> 
-> Signed-off-by: Sean Wang <sean.wang@mediatek.com>
-> ---
->  .../bindings/cpufreq/cpufreq-mediatek.txt          | 170 ++++++++++++++++++++-
->  1 file changed, 167 insertions(+), 3 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/cpufreq/cpufreq-mediatek.txt b/Documentation/devicetree/bindings/cpufreq/cpufreq-mediatek.txt
-> index 52b457c..0703927 100644
-> --- a/Documentation/devicetree/bindings/cpufreq/cpufreq-mediatek.txt
-> +++ b/Documentation/devicetree/bindings/cpufreq/cpufreq-mediatek.txt
-> @@ -1,4 +1,5 @@
-> -Device Tree Clock bindins for CPU DVFS of Mediatek MT8173 SoC
-> +Binding for Mediatek's CPUFreq driver
-> +=====================================
->  
->  Required properties:
->  - clocks: A list of phandle + clock-specifier pairs for the clocks listed in clock names.
-> @@ -9,6 +10,8 @@ Required properties:
->  			  transition and not stable yet.
->  	Please refer to Documentation/devicetree/bindings/clk/clock-bindings.txt for
->  	generic clock consumer properties.
-> +- operating-points-v2: Pleaser refer to Documentation/devicetree/bindings/opp/opp.txt
-> +	for detail.
->  - proc-supply: Regulator for Vproc of CPU cluster.
->  
->  Optional properties:
-> @@ -17,9 +20,166 @@ Optional properties:
->  	       Vsram to fit SoC specific needs. When absent, the voltage scaling
->  	       flow is handled by hardware, hence no software "voltage tracking" is
->  	       needed.
-> +- #cooling-cells:
-> +- cooling-min-level:
-> +- cooling-max-level:
-> +	Please refer to Documentation/devicetree/bindings/thermal/thermal.txt
-> +	for detail.
-> +
-> +Example 1 (MT7623 SoC):
-> +
-> +	cpu_opp_table: opp_table {
-> +		compatible = "operating-points-v2";
-> +		opp-shared;
-> +
-> +		opp@598000000 {
+Fix this by replacing '@' with '-' as the OPP nodes will never have a
+"reg" property.
 
-s/opp@/opp-/
+Reported-by: Krzysztof Kozlowski <krzk@kernel.org>
+Reported-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Suggested-by: Mark Rutland <mark.rutland@arm.com>
+Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+Acked-by: Rob Herring <robh@kernel.org>
+---
+@Rafael: This one needs to go via the PM tree and so sending it again.
 
+ Documentation/devicetree/bindings/opp/opp.txt | 38 +++++++++++++--------------
+ 1 file changed, 19 insertions(+), 19 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/opp/opp.txt b/Documentation/devicetree/bindings/opp/opp.txt
+index 63725498bd20..e36d261b9ba6 100644
+--- a/Documentation/devicetree/bindings/opp/opp.txt
++++ b/Documentation/devicetree/bindings/opp/opp.txt
+@@ -186,20 +186,20 @@ Example 1: Single cluster Dual-core ARM cortex A9, switch DVFS states together.
+ 		compatible = "operating-points-v2";
+ 		opp-shared;
+ 
+-		opp@1000000000 {
++		opp-1000000000 {
+ 			opp-hz = /bits/ 64 <1000000000>;
+ 			opp-microvolt = <975000 970000 985000>;
+ 			opp-microamp = <70000>;
+ 			clock-latency-ns = <300000>;
+ 			opp-suspend;
+ 		};
+-		opp@1100000000 {
++		opp-1100000000 {
+ 			opp-hz = /bits/ 64 <1100000000>;
+ 			opp-microvolt = <1000000 980000 1010000>;
+ 			opp-microamp = <80000>;
+ 			clock-latency-ns = <310000>;
+ 		};
+-		opp@1200000000 {
++		opp-1200000000 {
+ 			opp-hz = /bits/ 64 <1200000000>;
+ 			opp-microvolt = <1025000>;
+ 			clock-latency-ns = <290000>;
+@@ -265,20 +265,20 @@ independently.
+ 		 * independently.
+ 		 */
+ 
+-		opp@1000000000 {
++		opp-1000000000 {
+ 			opp-hz = /bits/ 64 <1000000000>;
+ 			opp-microvolt = <975000 970000 985000>;
+ 			opp-microamp = <70000>;
+ 			clock-latency-ns = <300000>;
+ 			opp-suspend;
+ 		};
+-		opp@1100000000 {
++		opp-1100000000 {
+ 			opp-hz = /bits/ 64 <1100000000>;
+ 			opp-microvolt = <1000000 980000 1010000>;
+ 			opp-microamp = <80000>;
+ 			clock-latency-ns = <310000>;
+ 		};
+-		opp@1200000000 {
++		opp-1200000000 {
+ 			opp-hz = /bits/ 64 <1200000000>;
+ 			opp-microvolt = <1025000>;
+ 			opp-microamp = <90000;
+@@ -341,20 +341,20 @@ DVFS state together.
+ 		compatible = "operating-points-v2";
+ 		opp-shared;
+ 
+-		opp@1000000000 {
++		opp-1000000000 {
+ 			opp-hz = /bits/ 64 <1000000000>;
+ 			opp-microvolt = <975000 970000 985000>;
+ 			opp-microamp = <70000>;
+ 			clock-latency-ns = <300000>;
+ 			opp-suspend;
+ 		};
+-		opp@1100000000 {
++		opp-1100000000 {
+ 			opp-hz = /bits/ 64 <1100000000>;
+ 			opp-microvolt = <1000000 980000 1010000>;
+ 			opp-microamp = <80000>;
+ 			clock-latency-ns = <310000>;
+ 		};
+-		opp@1200000000 {
++		opp-1200000000 {
+ 			opp-hz = /bits/ 64 <1200000000>;
+ 			opp-microvolt = <1025000>;
+ 			opp-microamp = <90000>;
+@@ -367,20 +367,20 @@ DVFS state together.
+ 		compatible = "operating-points-v2";
+ 		opp-shared;
+ 
+-		opp@1300000000 {
++		opp-1300000000 {
+ 			opp-hz = /bits/ 64 <1300000000>;
+ 			opp-microvolt = <1050000 1045000 1055000>;
+ 			opp-microamp = <95000>;
+ 			clock-latency-ns = <400000>;
+ 			opp-suspend;
+ 		};
+-		opp@1400000000 {
++		opp-1400000000 {
+ 			opp-hz = /bits/ 64 <1400000000>;
+ 			opp-microvolt = <1075000>;
+ 			opp-microamp = <100000>;
+ 			clock-latency-ns = <400000>;
+ 		};
+-		opp@1500000000 {
++		opp-1500000000 {
+ 			opp-hz = /bits/ 64 <1500000000>;
+ 			opp-microvolt = <1100000 1010000 1110000>;
+ 			opp-microamp = <95000>;
+@@ -409,7 +409,7 @@ Example 4: Handling multiple regulators
+ 		compatible = "operating-points-v2";
+ 		opp-shared;
+ 
+-		opp@1000000000 {
++		opp-1000000000 {
+ 			opp-hz = /bits/ 64 <1000000000>;
+ 			opp-microvolt = <970000>, /* Supply 0 */
+ 					<960000>, /* Supply 1 */
+@@ -422,7 +422,7 @@ Example 4: Handling multiple regulators
+ 
+ 		/* OR */
+ 
+-		opp@1000000000 {
++		opp-1000000000 {
+ 			opp-hz = /bits/ 64 <1000000000>;
+ 			opp-microvolt = <975000 970000 985000>, /* Supply 0 */
+ 					<965000 960000 975000>, /* Supply 1 */
+@@ -435,7 +435,7 @@ Example 4: Handling multiple regulators
+ 
+ 		/* OR */
+ 
+-		opp@1000000000 {
++		opp-1000000000 {
+ 			opp-hz = /bits/ 64 <1000000000>;
+ 			opp-microvolt = <975000 970000 985000>, /* Supply 0 */
+ 					<965000 960000 975000>, /* Supply 1 */
+@@ -467,7 +467,7 @@ Example 5: opp-supported-hw
+ 		status = "okay";
+ 		opp-shared;
+ 
+-		opp@600000000 {
++		opp-600000000 {
+ 			/*
+ 			 * Supports all substrate and process versions for 0xF
+ 			 * cuts, i.e. only first four cuts.
+@@ -478,7 +478,7 @@ Example 5: opp-supported-hw
+ 			...
+ 		};
+ 
+-		opp@800000000 {
++		opp-800000000 {
+ 			/*
+ 			 * Supports:
+ 			 * - cuts: only one, 6th cut (represented by 6th bit).
+@@ -510,7 +510,7 @@ Example 5: opp-supported-hw
+ 		compatible = "operating-points-v2";
+ 		opp-shared;
+ 
+-		opp@1000000000 {
++		opp-1000000000 {
+ 			opp-hz = /bits/ 64 <1000000000>;
+ 			opp-microvolt-slow = <915000 900000 925000>;
+ 			opp-microvolt-fast = <975000 970000 985000>;
+@@ -518,7 +518,7 @@ Example 5: opp-supported-hw
+ 			opp-microamp-fast =  <71000>;
+ 		};
+ 
+-		opp@1200000000 {
++		opp-1200000000 {
+ 			opp-hz = /bits/ 64 <1200000000>;
+ 			opp-microvolt-slow = <915000 900000 925000>, /* Supply vcc0 */
+ 					      <925000 910000 935000>; /* Supply vcc1 */
 -- 
-viresh
+2.12.0.432.g71c3a4f4ba37
