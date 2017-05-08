@@ -1,72 +1,51 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [OpenWrt-Devel] [PATCH 2/4] ata: Add DT bindings for the Gemini
- SATA bridge
-Date: Mon, 8 May 2017 15:52:40 -0700
-Message-ID: <6e0751d2-8f78-c584-2990-c05bc3090214@gmail.com>
-References: <20170506121053.11554-1-linus.walleij@linaro.org>
- <CGME20170506121119epcas5p437ea69e802ba94bd7df83d0bbac1b0bc@epcas5p4.samsung.com>
- <20170506121053.11554-2-linus.walleij@linaro.org>
- <3791456.ZibJefW5cI@amdc3058>
- <CACRpkdYz9Oka0SGJDTr=y4EN-VfggbuKY2s5X43oXg1dgjh1nw@mail.gmail.com>
- <CAKR_QVJTbLMzqsUTEZJOquZ9T5aQ1_=73WAoRWrm+QK9wFhngA@mail.gmail.com>
+From: Brendan Higgins <brendanhiggins@google.com>
+Subject: Re: [PATCH v7 4/5] i2c: aspeed: added driver for Aspeed I2C
+Date: Mon, 8 May 2017 16:34:58 -0700
+Message-ID: <CAFd5g44RxehYCYB=WnxiXMZJe6E5_baQKDvdLAJX7+TTbvpi0Q@mail.gmail.com>
+References: <20170424181818.2754-1-brendanhiggins@google.com> <20170424181818.2754-5-brendanhiggins@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-ide-owner@vger.kernel.org>
-In-Reply-To: <CAKR_QVJTbLMzqsUTEZJOquZ9T5aQ1_=73WAoRWrm+QK9wFhngA@mail.gmail.com>
-Sender: linux-ide-owner@vger.kernel.org
-To: Tom Psyborg <pozega.tomislav@gmail.com>, Linus Walleij <linus.walleij@linaro.org>
-Cc: openwrt-devel@openwrt.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, John Feng-Hsin Chiang <john453@faraday-tech.com>, Paulius Zaleckas <paulius.zaleckas@gmail.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, linux-ide@vger.kernel.org, Greentime Hu <green.hu@gmail.com>, Tejun Heo <tj@kernel.org>, Janos Laube <janos.dev@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-i2c-owner@vger.kernel.org>
+In-Reply-To: <20170424181818.2754-5-brendanhiggins@google.com>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Joel Stanley <joel@jms.id.au>, Vladimir Zapolskiy <vz@mleia.com>, Kachalov Anton <mouse@mayc.ru>, =?UTF-8?Q?C=C3=A9dric_Le_Goater?= <clg@kaod.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, OpenBMC Maillist <openbmc@lists.ozlabs.org>, Brendan Higgins <brendanhiggins@google.com>, Ryan Chen <ryan_chen@aspeedtech.com>
 List-Id: devicetree@vger.kernel.org
 
-On 05/08/2017 02:16 PM, Tom Psyborg wrote:
-> Is it ever going to be added so this endless spam can end?
+Sorry for the spam everyone, email client did not do what I expected it to do.
 
-It's the first iteration of the (S)ATA patchset, and if you are not
-interested, just ignore the thread.
+I would like to release another version this week or next week, and I
+think that we are pretty closed to having something we can apply, but
+before I do that, I want to get something resolved:
 
-Linus is doing everyone a great favor here by making sure that this
-platform gets properly supported upstream such that the cost of
-maintaining in OpenWrt/LEDE/anywhere else comes down to almost zero.
+> +static int __aspeed_i2c_init(struct aspeed_i2c_bus *bus,
+> +                            struct platform_device *pdev)
+> +{
+> +       int ret;
+> +
+> +       /* Disable everything. */
+> +       writel(0, bus->base + ASPEED_I2C_FUN_CTRL_REG);
+> +
+> +       ret = __aspeed_i2c_init_clk(bus, pdev);
+> +       if (ret < 0)
+> +               return ret;
+> +
+> +       /* Enable Master Mode */
+> +       writel(readl(bus->base + ASPEED_I2C_FUN_CTRL_REG) |
+> +              ASPEED_I2CD_MASTER_EN |
+> +              /* TODO: provide device tree option for multi-master mode. */
 
-Almost forgot: please don't top post.
+I am curious what everyone thinks about this. It seemed that, earlier
+on, people did not like me disabling multi-master mode, but I think
+that it would make bus recovery not work as well. Given that, I think
+it makes the most sense to provide a device tree option either to
+enable multi-master support or disable it. Thoughts?
 
-> 
-> 
-> On 8 May 2017 at 22:33, Linus Walleij <linus.walleij@linaro.org
-> <mailto:linus.walleij@linaro.org>> wrote:
-> 
->     On Mon, May 8, 2017 at 12:49 PM, Bartlomiej Zolnierkiewicz
->     <b.zolnierkie@samsung.com <mailto:b.zolnierkie@samsung.com>> wrote:
->     > On Saturday, May 06, 2017 02:10:51 PM Linus Walleij wrote:
-> 
->     >> +  Mode 3: ata0 master <-> sata0
->     >> +          ata1 slave  <-> sata1
->     >
->     > ata0 slave?
->     >
->     >> +          ata1 master and slave interfaces brought out
->     >> +               on IDE pads
-> 
->     Of course. Thanks for reading close, much appreciated!
-> 
->     Yours,
->     Linus Walleij
->     _______________________________________________
->     openwrt-devel mailing list
->     openwrt-devel@lists.openwrt.org <mailto:openwrt-devel@lists.openwrt.org>
->     https://lists.openwrt.org/cgi-bin/mailman/listinfo/openwrt-devel
->     <https://lists.openwrt.org/cgi-bin/mailman/listinfo/openwrt-devel>
-> 
-> 
-> 
-> 
-> _______________________________________________
-> openwrt-devel mailing list
-> openwrt-devel@lists.openwrt.org
-> https://lists.openwrt.org/cgi-bin/mailman/listinfo/openwrt-devel
-> 
-
-
--- 
-Florian
+> +              ASPEED_I2CD_MULTI_MASTER_DIS,
+> +              bus->base + ASPEED_I2C_FUN_CTRL_REG);
+> +
+> +       /* Set interrupt generation of I2C controller */
+> +       writel(ASPEED_I2CD_INTR_ALL, bus->base + ASPEED_I2C_INTR_CTRL_REG);
+> +
+> +       return 0;
+> +}
