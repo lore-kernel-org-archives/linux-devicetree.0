@@ -1,7 +1,7 @@
 From: Kieran Bingham <kbingham-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: [PATCH] Documentation: of: Fix grammar usge in graph bindings
-Date: Mon,  8 May 2017 11:31:45 +0100
-Message-ID: <1494239506-8057-1-git-send-email-kbingham@kernel.org>
+Subject: [PATCHv1.1] Documentation: of: Fix grammar usage in graph bindings
+Date: Mon,  8 May 2017 11:34:25 +0100
+Message-ID: <1494239666-8516-1-git-send-email-kbingham@kernel.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kieran Bingham <kieran.bingham+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED
@@ -15,6 +15,11 @@ documentation identified while I was reading up on the subject matter.
 
 Signed-off-by: Kieran Bingham <kieran.bingham+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
 ---
+
+Appologies for the resend. 'usage' was mis-spelled in my previous
+commit title :-(
+
+
  Documentation/devicetree/bindings/graph.txt | 13 ++++++-------
  1 file changed, 6 insertions(+), 7 deletions(-)
 
