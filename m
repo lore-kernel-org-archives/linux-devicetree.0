@@ -1,174 +1,65 @@
-From: Matt Ranostay <matt.ranostay-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH] iio: proximity: as3935: noise detection + threshold changes
-Date: Sun,  7 May 2017 18:50:41 -0700
-Message-ID: <20170508015041.10285-1-matt.ranostay@konsulko.com>
+From: "Ong, Hean Loong" <hean.loong.ong-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCHv2 0/3] Intel FPGA VIP Frame Buffer II DRM Driver
+Date: Mon, 8 May 2017 02:03:32 +0000
+Message-ID: <1494209010.2533.4.camel@intel.com>
+References: <1493086006-4392-1-git-send-email-hean.loong.ong@intel.com>
+         <87shklznuo.fsf@eliezer.anholt.net> <1493861983.2182.11.camel@intel.com>
+         <87lgqcsg18.fsf@eliezer.anholt.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <87lgqcsg18.fsf-omZaPlIz5HhaEpDpdNBo/KxOck334EZe@public.gmane.org>
+Content-Language: en-US
+Content-ID: <7138D8B088559341B9B34192528FE197-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Matt Ranostay <matt.ranostay-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org" <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, "dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "Vetter, Daniel" <daniel.vetter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: "dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org" <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, "Loh, Tien Hock" <tien.hock.loh-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Most applications are too noisy to allow the default noise and
-watchdog settings, and thus need to be configurable via DT
-properties.
-
-Also default settings to POR defaults on a reset, and register
-distuber interrupts as noise since it prevents proper usage.
-
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Signed-off-by: Matt Ranostay <matt.ranostay-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
----
- .../devicetree/bindings/iio/proximity/as3935.txt   |  6 +++
- drivers/iio/proximity/as3935.c                     | 43 ++++++++++++++++++++--
- 2 files changed, 46 insertions(+), 3 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/iio/proximity/as3935.txt b/Documentation/devicetree/bindings/iio/proximity/as3935.txt
-index ae23dd8da736..50d370fca533 100644
---- a/Documentation/devicetree/bindings/iio/proximity/as3935.txt
-+++ b/Documentation/devicetree/bindings/iio/proximity/as3935.txt
-@@ -15,14 +15,20 @@ Optional properties:
- 	- ams,tuning-capacitor-pf: Calibration tuning capacitor stepping
- 	  value 0 - 120pF. This will require using the calibration data from
- 	  the manufacturer.
-+	- ams,nflwdth: Set the noise and watchdog threshold register on
-+	  startup. This will need to set according to the noise from the
-+	  MCU board, and possibly the local environment. Refer to the
-+	  datasheet for the threshold settings.
- 
- Example:
- 
- as3935@0 {
- 	compatible = "ams,as3935";
- 	reg = <0>;
-+	spi-max-frequency = <400000>;
- 	spi-cpha;
- 	interrupt-parent = <&gpio1>;
- 	interrupts = <16 1>;
- 	ams,tuning-capacitor-pf = <80>;
-+	ams,nflwdth = <0x44>;
- };
-diff --git a/drivers/iio/proximity/as3935.c b/drivers/iio/proximity/as3935.c
-index aa4df0dcc8c9..ec2f40e0791c 100644
---- a/drivers/iio/proximity/as3935.c
-+++ b/drivers/iio/proximity/as3935.c
-@@ -39,8 +39,12 @@
- #define AS3935_AFE_GAIN_MAX	0x1F
- #define AS3935_AFE_PWR_BIT	BIT(0)
- 
-+#define AS3935_NFLWDTH		0x01
-+#define AS3935_NFLWDTH_MASK	0x7f
-+
- #define AS3935_INT		0x03
- #define AS3935_INT_MASK		0x0f
-+#define AS3935_DISTURB_INT	BIT(2)
- #define AS3935_EVENT_INT	BIT(3)
- #define AS3935_NOISE_INT	BIT(0)
- 
-@@ -48,6 +52,7 @@
- #define AS3935_DATA_MASK	0x3F
- 
- #define AS3935_TUNE_CAP		0x08
-+#define AS3935_DEFAULTS		0x3C
- #define AS3935_CALIBRATE	0x3D
- 
- #define AS3935_READ_DATA	BIT(14)
-@@ -62,7 +67,9 @@ struct as3935_state {
- 	struct mutex lock;
- 	struct delayed_work work;
- 
-+	unsigned long noise_tripped;
- 	u32 tune_cap;
-+	u32 nflwdth_reg;
- 	u8 buffer[16]; /* 8-bit data + 56-bit padding + 64-bit timestamp */
- 	u8 buf[2] ____cacheline_aligned;
- };
-@@ -145,12 +152,29 @@ static ssize_t as3935_sensor_sensitivity_store(struct device *dev,
- 	return len;
- }
- 
-+static ssize_t as3935_noise_level_tripped_show(struct device *dev,
-+					struct device_attribute *attr,
-+					char *buf)
-+{
-+	struct as3935_state *st = iio_priv(dev_to_iio_dev(dev));
-+	int ret;
-+
-+	mutex_lock(&st->lock);
-+	ret = sprintf(buf, "%d\n", !time_after(jiffies, st->noise_tripped + HZ));
-+	mutex_unlock(&st->lock);
-+
-+	return ret;
-+}
-+
- static IIO_DEVICE_ATTR(sensor_sensitivity, S_IRUGO | S_IWUSR,
- 	as3935_sensor_sensitivity_show, as3935_sensor_sensitivity_store, 0);
- 
-+static IIO_DEVICE_ATTR(noise_level_tripped, S_IRUGO,
-+	as3935_noise_level_tripped_show, NULL, 0);
- 
- static struct attribute *as3935_attributes[] = {
- 	&iio_dev_attr_sensor_sensitivity.dev_attr.attr,
-+	&iio_dev_attr_noise_level_tripped.dev_attr.attr,
- 	NULL,
- };
- 
-@@ -246,7 +270,11 @@ static void as3935_event_work(struct work_struct *work)
- 	case AS3935_EVENT_INT:
- 		iio_trigger_poll_chained(st->trig);
- 		break;
-+	case AS3935_DISTURB_INT:
- 	case AS3935_NOISE_INT:
-+		mutex_lock(&st->lock);
-+		st->noise_tripped = jiffies;
-+		mutex_unlock(&st->lock);
- 		dev_warn(&st->spi->dev, "noise level is too high\n");
- 		break;
- 	}
-@@ -269,15 +297,14 @@ static irqreturn_t as3935_interrupt_handler(int irq, void *private)
- 
- static void calibrate_as3935(struct as3935_state *st)
- {
--	/* mask disturber interrupt bit */
--	as3935_write(st, AS3935_INT, BIT(5));
--
-+	as3935_write(st, AS3935_DEFAULTS, 0x96);
- 	as3935_write(st, AS3935_CALIBRATE, 0x96);
- 	as3935_write(st, AS3935_TUNE_CAP,
- 		BIT(5) | (st->tune_cap / TUNE_CAP_DIV));
- 
- 	mdelay(2);
- 	as3935_write(st, AS3935_TUNE_CAP, (st->tune_cap / TUNE_CAP_DIV));
-+	as3935_write(st, AS3935_NFLWDTH, st->nflwdth_reg);
- }
- 
- #ifdef CONFIG_PM_SLEEP
-@@ -370,6 +397,15 @@ static int as3935_probe(struct spi_device *spi)
- 		return -EINVAL;
- 	}
- 
-+	ret = of_property_read_u32(np,
-+			"ams,nflwdth", &st->nflwdth_reg);
-+	if (!ret && st->nflwdth_reg > AS3935_NFLWDTH_MASK) {
-+		dev_err(&spi->dev,
-+			"invalid nflwdth setting of %d\n",
-+			st->nflwdth_reg);
-+		return -EINVAL;
-+	}
-+
- 	indio_dev->dev.parent = &spi->dev;
- 	indio_dev->name = spi_get_device_id(spi)->name;
- 	indio_dev->channels = as3935_channels;
-@@ -384,6 +420,7 @@ static int as3935_probe(struct spi_device *spi)
- 		return -ENOMEM;
- 
- 	st->trig = trig;
-+	st->noise_tripped = jiffies - HZ;
- 	trig->dev.parent = indio_dev->dev.parent;
- 	iio_trigger_set_drvdata(trig, indio_dev);
- 	trig->ops = &iio_interrupt_trigger_ops;
--- 
-2.11.0
-
+T24gVGh1LCAyMDE3LTA1LTA0IGF0IDEwOjExIC0wNzAwLCBFcmljIEFuaG9sdCB3cm90ZToNCj4g
+Ik9uZywgSGVhbiBMb29uZyIgPGhlYW4ubG9vbmcub25nQGludGVsLmNvbT4gd3JpdGVzOg0KPiAN
+Cj4gPiANCj4gPiBPbiBXZWQsIDIwMTctMDUtMDMgYXQgMTM6MjggLTA3MDAsIEVyaWMgQW5ob2x0
+IHdyb3RlOg0KPiA+ID4gDQo+ID4gPiBoZWFuLmxvb25nLm9uZ0BpbnRlbC5jb20gd3JpdGVzOg0K
+PiA+ID4gDQo+ID4gPiA+IA0KPiA+ID4gPiANCj4gPiA+ID4gRnJvbTogT25nIEhlYW4gTG9vbmcg
+PGhlYW4ubG9vbmcub25nQGludGVsLmNvbT4NCj4gPiA+ID4gDQo+ID4gPiA+IEhpLA0KPiA+ID4g
+PiANCj4gPiA+ID4gVGhlIG5ldyBJbnRlbCBBcnJpYTEwIFNPQyBGUEdBIGRldmtpdCBoYXMgYSBE
+aXNwbGF5IFBvcnQgSVANCj4gPiA+ID4gY29tcG9uZW50wqANCj4gPiA+ID4gd2hpY2ggcmVxdWly
+ZXMgYSBuZXcgZHJpdmVyLiBUaGlzIGlzIGEgdmlydHVhbCBkcml2ZXIgaW4gd2hpY2gNCj4gPiA+
+ID4gdGhlDQo+ID4gPiA+IEZHUEEgaGFyZHdhcmUgd291bGQgZW5hYmxlIHRoZSBEaXNwbGF5IFBv
+cnQgYmFzZWQgb24gdGhlDQo+ID4gPiA+IGluZm9ybWF0aW9uDQo+ID4gPiA+IGFuZCBkYXRhIHBy
+b3ZpZGVkIGZyb20gdGhlIERSTSBmcmFtZSBidWZmZXIgZnJvbSB0aGUgT1MuDQo+ID4gPiA+IEJh
+c2ljYWxseQ0KPiA+ID4gPiBhbGwNCj4gPiA+ID4gYWxsIGluZm9ybWF0aW9uIHdpdGggcmVhZ3Jk
+cyB0byByZXNvbHV0aW9uIGFuZCBiaXRzIHBlciBwaXhlbA0KPiA+ID4gPiBhcmUNCj4gPiA+ID4g
+cHJlLWNvbmZpZ3VyZWQgb24gdGhlIEZQR0EgZGVzaWduIGFuZCB0aGVzZSBpbmZvcm1hdGlvbiBh
+cmUgZmVkDQo+ID4gPiA+IHRvDQo+ID4gPiA+IHRoZSBkcml2ZXIgdmlhIHRoZSBkZXZpY2UgdHJl
+ZSBpbmZvcm1hdGlvbiBhcyBwYXJ0IG9mIHRoZQ0KPiA+ID4gPiBoYXJkd2FyZcKgDQo+ID4gPiA+
+IGluZm9ybWF0aW9uLg0KPiA+ID4gSSBzdGFydGVkIHJldmlld2luZyB0aGUgY29kZSwgYnV0IEkg
+d2FudCB0byBtYWtlIHN1cmUgSQ0KPiA+ID4gdW5kZXJzdGFuZA0KPiA+ID4gd2hhdCdzIGdvaW5n
+IG9uOg0KPiA+ID4gDQo+ID4gPiBUaGlzIElQIGNvcmUgaXNuJ3QgZGlzcGxheWluZyBjb250ZW50
+cyBmcm9tIHN5c3RlbSBtZW1vcnkgb24gc29tZQ0KPiA+ID4gc29ydA0KPiA+ID4gb2YgYWN0dWFs
+IHBoeXNpY2FsIGRpc3BsYXksIHJpZ2h0P8KgwqBJdCdzIGEgY29yZSB0aGF0IHRha2VzIHNvbWUN
+Cj4gPiA+IGlucHV0DQo+ID4gPiB2aWRlbyBzdHJlYW0gKG5vdCBkZXNjcmliZWQgaW4gdGhlIERU
+IG9yIGluIHRoaXMgZHJpdmVyKSBhbmQNCj4gPiA+IHN0b3Jlcw0KPiA+ID4gaXQNCj4gPiA+IHRv
+IG1lbW9yeT8NCj4gPiBJZiB0aGUgSVAgQ29yZSB5b3UgYXJlIHJlZmVycmluZyB0byBpcyBzb21l
+IGZvcm0gb2YgR1BVIHRoZW4gaW4NCj4gPiB0aGlzDQo+ID4gY2FzZSB3ZSBhcmUgdXNpbmcgdGhl
+IEludGVsIEZQR0EgRGlzcGxheSBQb3J0IEZyYW1lYnVmZmVyIElQLiBJdA0KPiA+IGRvZXMNCj4g
+PiBkaXNwbGF5IGNvbnRlbnRzIHN0cmVhbWVkIGZyb20gdGhlIEFSTS9MaW51eCBzeXN0ZW0gdG8g
+dGhlIERpc3BsYXkNCj4gPiBQb3J0DQo+ID4gb2YgdGhlIHBoeXNpY2FsIE1vbml0b3IuDQo+ID4g
+DQo+ID4gQmVsb3cgYSBzaW1wbGUgaWxsdXN0cmF0aW9uIG9mIHRoZSBzeXN0ZW06DQo+ID4gDQo+
+ID4gQVJNL0xpbnV4IC0tRE1BLS0+SW50ZWwgRlBHQSBEaXNwbGF5IFBvcnQgRnJhbWVidWZmZXIg
+SVANCj4gPiAJCQkJfA0KPiA+IAkJCQl8DQo+ID4gCQkJUGh5c2ljYWwgQ29ubmVjdGlvbg0KPiA+
+IAkJCURpc3BsYXkgUG9ydA0KPiBUaGUgIkRNQSIgaW4gdGhpcyBkaWFncmFtIGlzIHRoZSBmcmFt
+ZSByZWFkZXIgSVAsIHJpZ2h0P8KgwqBUaGUgZnJhbWUNCj4gcmVhZGVyLCBhcyBkZXNjcmliZWQg
+aW4gdGhlIHNwZWMsIHNvdW5kcyBhcHByb3hpbWF0ZWx5IGxpa2UgYSBEUk0NCj4gcGxhbmUsDQo+
+IHNvIGlmIHlvdSBoYXZlIHRoYXQgaW4geW91ciBzeXN0ZW0gdGhlbiB0aGF0IG5lZWRzIHRvIGJl
+IHBhcnQgb2YgdGhpcw0KPiBEUk0gZHJpdmVyIChvdGhlcndpc2UgeW91IHdvbid0IGJlIHB1dHRp
+bmcgdGhlIHJpZ2h0IHRoaW5ncyBvbiB0aGUNCj4gc2NyZWVuISkuDQoNCldvdWxkIHRoZSBkcm1f
+c2ltcGxlX2Rpc3BsYXlfcGlwZV9pbml0wqBiZSBhYmxlIHRvIGhhbmRsZSB0aGlzID8gSXQNCnNl
+ZW1zIHRvIGJlIGRpc3BsYXlpbmcgdGhlIHByb3BlciBpbWFnZXMgb24gc2NyZWVuLCBiYXNlZCBv
+biBteSBjdXJyZW50DQpjaGFuZ2VzLiBUaGVyZSB3ZXJlIHJlY29tbWVuZGF0aW9ucyB0byB1c2Ug
+dGhlDQpkcm1fc2ltcGxlX2Rpc3BsYXlfcGlwZV9pbml0IGluc3RlYWQgb2YgY3JlYXRpbmcgdGhl
+IENSVEMgYW5kIHBsYW5lcw0KbXlzZWxm
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
