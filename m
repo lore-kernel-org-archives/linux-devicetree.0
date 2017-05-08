@@ -1,130 +1,128 @@
-From: Sebastian Reichel <sre@kernel.org>
-Subject: Re: [PATCH 0/4] TI Bluetooth serdev support
-Date: Mon, 8 May 2017 21:07:50 +0200
-Message-ID: <20170508190749.sev2wtecjnaneyng@earth>
-References: <20170405183005.20570-1-robh@kernel.org>
- <CAHCN7xJUxZm1qKAxT0kaK6qoDg+HWOJK7sTH-q9za4HJuUwe8Q@mail.gmail.com>
- <20170430160430.rmyuo6sdrkrjxjg6@earth>
- <CAHCN7x+Mq=b6RN-ezU0400W=H=D7DR+Es1FHtT4GyozpVd8ALA@mail.gmail.com>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH v4 3/5] soc: qcom: Introduce APCS IPC driver
+Date: Mon, 8 May 2017 12:11:54 -0700
+Message-ID: <20170508191154.GM15143@minitux>
+References: <20170504200539.27027-3-bjorn.andersson@linaro.org>
+ <CABb+yY2P=qPTYB6PDkjV82Qc67Xzer40BHRsOQP2m-gM3eK_UA@mail.gmail.com>
+ <20170505183729.GG15143@minitux>
+ <CABb+yY03imq8911rF9dHJjG_a_aosksA=tgk7Rog5AZSezHDyg@mail.gmail.com>
+ <338c4262-cc6b-bed2-16fe-1767d1f0d5f6@codeaurora.org>
+ <CABb+yY1K3Hyn7CzQCA6tHu-KrPigARc3cYgBdT8PNX7vjhPK0g@mail.gmail.com>
+ <20170506011920.GH15143@minitux>
+ <CABb+yY1u9mspX1Zu0mg21JMYxpKxsXsvBa9LnF6VNr1_42UJUQ@mail.gmail.com>
+ <20170508055439.GJ15143@minitux>
+ <CABb+yY3CfWFBDh-qoGHDeHyLhVC7mPQZFB=VDS54OaypG-BqPw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="nk6pi2aia4evfmot"
-Return-path: <netdev-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAHCN7x+Mq=b6RN-ezU0400W=H=D7DR+Es1FHtT4GyozpVd8ALA@mail.gmail.com>
-Sender: netdev-owner@vger.kernel.org
-To: Adam Ford <aford173@gmail.com>
-Cc: Rob Herring <robh@kernel.org>, Marcel Holtmann <marcel@holtmann.org>, linux-bluetooth@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Johan Hedberg <johan.hedberg@gmail.com>, Gustavo Padovan <gustavo@padovan.org>, Satish Patel <satish.patel@linaro.org>, Wei Xu <xuwei5@hisilicon.com>, Eyal Reizer <eyalr@ti.com>, netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <CABb+yY3CfWFBDh-qoGHDeHyLhVC7mPQZFB=VDS54OaypG-BqPw@mail.gmail.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Jassi Brar <jassisinghbrar@gmail.com>
+Cc: Jeffrey Hugo <jhugo@codeaurora.org>, Andy Gross <andy.gross@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ohad Ben-Cohen <ohad@wizery.com>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, Devicetree List <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-remoteproc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On Sun 07 May 23:47 PDT 2017, Jassi Brar wrote:
 
---nk6pi2aia4evfmot
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi,
-
-On Fri, May 05, 2017 at 09:51:33AM -0500, Adam Ford wrote:
-> On Sun, Apr 30, 2017 at 11:04 AM, Sebastian Reichel <sre@kernel.org> wrot=
-e:
-> > On Sun, Apr 30, 2017 at 10:14:20AM -0500, Adam Ford wrote:
-> >> On Wed, Apr 5, 2017 at 1:30 PM, Rob Herring <robh@kernel.org> wrote:
-> >> > This series adds serdev support to the HCI LL protocol used on TI BT
-> >> > modules and enables support on HiKey board with with the WL1835 modu=
-le.
-> >> > With this the custom TI UIM daemon and btattach are no longer needed.
-> >>
-> >> Without UIM daemon, what instruction do you use to load the BT firmwar=
-e?
-> >>
-> >> I was thinking 'hciattach' but I was having trouble.  I was hoping you
-> >> might have some insight.
-> >>
-> >>  hciattach -t 30 -s 115200 /dev/ttymxc1 texas 3000000 flow  Just
-> >> returns a timeout.
-> >>
-> >> I modified my i.MX6 device tree per the binding documentation and
-> >> setup the regulators and enable GPIO pins.
+> On Mon, May 8, 2017 at 11:24 AM, Bjorn Andersson
+> <bjorn.andersson@linaro.org> wrote:
+> > On Fri 05 May 21:48 PDT 2017, Jassi Brar wrote:
 > >
-> > If you configured everything correctly no userspace interaction is
-> > required. The driver should request the firmware automatically once
-> > you power up the bluetooth device.
+> > The APCS IPC register serves the basis for all inter-processor
+> > communication in a Qualcomm platform, so it's not only the RPM driver
+> > discussed earlier that uses this. It's also used for other non-FIFO
+> > based communication channels, where the signalled information either
+> > isn't acked at all or acked on a system-level.
 > >
-> > Apart from DT changes make sure, that the following options are
-> > enabled and check dmesg for any hints.
+> Something has to indicate consumption of data or "requested action
+> taken". Otherwise the protocol is design-wise broken.
+> 
+
+The SMD and GLINK protocols work by providing two independent one-way
+pipes that higher levels can use to send and receive messages. When some
+driver pushes a message into the transmit-pipe we check if there's
+space, then write the message, signal the remote (APCS IPC) and then
+return.
+
+It's then up to the higher level driver and protocol what to do next. In
+some cases it will expect that there will appear a packet on the
+incoming pipe indicating that the action was taken, but there's nothing
+in the communication path enforcing this.
+
+By this you can have strictly one-way notifications, two-way
+stop-and-wait style communication or multiple-messages-in-flight
+communication over the same transport mechanism.
+
+
+The remote will update the read index (in shared memory) as it consumes
+the data from the FIFO, but under normal circumstances there are no
+reason for it to actively notify the sender or for the sender to wait
+for it to be consumed.
+
+> > But regardless of the protocol implemented ontop, the purpose of the
+> > APCS IPC bit is _only_ to invoke some remote handler to consume some
+> > data, somewhere - the event in itself does not carry any information.
 > >
-> > CONFIG_SERIAL_DEV_BUS
-> > CONFIG_SERIAL_DEV_CTRL_TTYPORT
-> > CONFIG_BT_HCIUART
-> > CONFIG_BT_HCIUART_LL
->=20
-> I have enabled those flags, and I have updated my device tree.
-> I am testing this on an OMAP3630 (DM3730) board with a WL1283.  I am
-> getting a lot of timeout errors.  I tested this against the original
-> implemention I had in pdata-quirks.c using the ti-st driver, uim & and
-> the btwilink driver.
->=20
-> I pulled in some of the newer patches to enable the wl1283-st, but I
-> am obviously missing something.
->=20
-> I   58.717651] Bluetooth: hci0: Reading TI version information failed
-> (-110)
-> [   58.724853] Bluetooth: hci0: download firmware failed, retrying...
-> [   60.957641] Bluetooth: hci0 command 0x1001 tx timeout
-> [   68.957641] Bluetooth: hci0: Reading TI version information failed
-> (-110)
-> [   68.964843] Bluetooth: hci0: download firmware failed, retrying...
-> [   69.132171] Bluetooth: Unknown HCI packet type 06
-> [   69.138244] Bluetooth: Unknown HCI packet type 0c
-> [   69.143249] Bluetooth: Unknown HCI packet type 40
-> [   69.148498] Bluetooth: Unknown HCI packet type 20
-> [   69.153533] Bluetooth: Data length is too large
-> [   69.158569] Bluetooth: Unknown HCI packet type a0
-> [   69.163574] Bluetooth: Unknown HCI packet type 00
-> [   69.168731] Bluetooth: Unknown HCI packet type 00
-> [   69.173736] Bluetooth: Unknown HCI packet type 34
-> [   69.178924] Bluetooth: Unknown HCI packet type 91
-> [   71.197631] Bluetooth: hci0 command 0x1001 tx timeout
-> [   79.197662] Bluetooth: hci0: Reading TI version information failed (-1=
-10)
->
-> Since the pdata-quirks and original ti-st drivers work together, I
-> know the hardware is fine.  The only change to the device tree is the
-> addition of the Bluetooth container:
->=20
-> bluetooth {
->   compatible =3D "ti,wl1283-st";
->   enable-gpios =3D <&gpio6 2 GPIO_ACTIVE_HIGH>;
-> };
->=20
-> Any thoughts or suggestions to try? I get similar behavior on an
-> i.MX6 board with a wl1837-st module as well.
+> Yes, every platform that uses shared-memory works like that. However
+> there is always something that tells if the command has been acted
+> upon by the remote. In your case that is the read-pointer movement.
+> 
 
-Looks like its loosing bytes. I suggest to have a look at
-pinmuxing (esp. for cts & rts) and maybe add some debug
-prints to see where it starts failing.
+In a straight forward stop-and-wait flow control based setup like the
+version of RPM previously discussed this makes a lot of sense. But there
+are a multitude of different protocols using this mechanism to signal
+that something has happened.
 
--- Sebastian
+> >> The client should call mbox_client_txdone() after
+> >> mbox_send_message().
+> >
+> > So every time we call mbox_send_message() from any of the client drivers
+> > we also needs to call mbox_client_txdone()?
+> >
+> Yes.
+> 
+> > This seems like an awkward side effect of using the mailbox framework -
+> > which has to be spread out in at least 6 different client drivers :(
+> >
+> No. Mailbox or whatever you implement - you must (and do) tick the
+> state machine to keep the messages moving.
 
---nk6pi2aia4evfmot
-Content-Type: application/pgp-signature; name="signature.asc"
+But the state you have in the other mailbox drivers is not a concern of
+the APCS IPC.
 
------BEGIN PGP SIGNATURE-----
+>   Best designs have some interrupt occurring when the message has been
+> consumed by the remote. Some designs have a flag set which needs to be
+> polled to detect completion. Very few (like yours) that support
+> neither irq nor polling, have to be driven by the upper protocol layer
+> by some ack packet (or tracking read/write pointers like you do).
+> These three cases are denoted by TXDONE_BY_IRQ, TXDONE_BY_POLL and
+> TXDONE_BY_ACK respectively.
+> 
 
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAlkQwgMACgkQ2O7X88g7
-+prkYg/9HPpijKg7yAvn9TUkoxzUZvv40F8eyuy5laslRSewycr8tOR2O3mHn97w
-E1Zjb1uiK+4zYf7QfoR+qqvRiSn3iPTKF+170o8sScM4rhjhc/gajqhIHyHObKUs
-3nvmDkwBHQ0p7thYqdNviWFauuAj6S5it568ZadAs0OwRhmoqAvoR9ltCUoE8hEC
-aBVdgLMkXWGfEdbx5sRQmH3XfCZqI9LndOuoTlrT95I5QZPj5qVwLUOkAXgiDEOh
-nHjMceaW1k2GJfMMEfjN+yY5/i+XvlIZ0OcWDRXJn3NRwvWn1wCnpLwEnJCVXoPv
-MAd8uFMM/S8inZ9PVrUn9ZJObqBbyL/yl+D+q0wgUJNKEH+9PNSuFtyGLm8hILlR
-24z1YaorF2bgEWknJNVh0XvhBTB6IMFhY4c+Vpd+dw2HexM20Cn1V7AZuC1jiCGf
-hJHOJpm+TGOXx8p3Oy6XE4TXbO1SGxBlm65IDE5lklVQaUVIAqSc2eJlS+PMwceW
-UaclAe5m1HWYPQPooFLcvcty59VBW+WICCBqNJ421yMYafwEqzjAuIsSEaI6L2h6
-9weshLTzmyDWKdAGCcelmyNiIuj+hNFYMv1iiqEfOIh4+MrJMTkfOB6QftLHPPj0
-LiGRK8E04i1Ag3uIPlqqKxCRjV6ZYk6yR6zX+Ix0/GvGOkyHmac=
-=KzB2
------END PGP SIGNATURE-----
+You're confusing the APCS IPC with the larger communication mechanism,
+flow control is taken care of in some higher layer - if it's needed at
+all.
 
---nk6pi2aia4evfmot--
+This is why I suggested that this is a doorbell, rather than a mailbox.
+Your argumentation of how a mailbox should work makes perfect sense, but
+it's not how the Qualcomm IPC works.
+
+>   If no client driver will ever submit a message if there is no space
+> in FIFO, then you can specify TXDONE_BY_POLL and have last_tx_done()
+> always return true. That way you don't need to call
+> mbox_client_txdone().
+
+Clients of the APCS IPC will never post a message to the mailbox, it's
+non-blocking and the "transaction" is done when the operation returns.
+All the other parts of a "non-broken protocol" is a concern of some
+other part of the software stack.
+
+
+Setting TXDONE_BY_POLL and specifying a dummy last_tx_done() comes with
+a crazy overhead. To set a single bit in a register we will take the
+channel spinlock 4 times, start a timer, iterate over all registered
+channels and the client must be marked as blocking so we will get at
+least 2 additional context switches.
+
+Regards,
+Bjorn
