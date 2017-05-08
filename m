@@ -1,127 +1,121 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4 4/5] soc: qcom: Add device tree binding for GLINK RPM
-Date: Mon, 8 May 2017 12:06:06 -0500
-Message-ID: <20170508170606.uchxrihfodk6yts5@rob-hp-laptop>
-References: <20170504200539.27027-1-bjorn.andersson@linaro.org>
- <20170504200539.27027-4-bjorn.andersson@linaro.org>
+From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 2/6] Documentation: devicetree: add bindings to support
+ ARM MHU subchannels
+Date: Mon, 8 May 2017 18:07:09 +0100
+Message-ID: <ff6535ec-fa31-e0b7-53a1-9f4a2f03693d@arm.com>
+References: <1493733353-25812-1-git-send-email-sudeep.holla@arm.com>
+ <1493733353-25812-3-git-send-email-sudeep.holla@arm.com>
+ <20170508161026.5vdqnv52ub7hurwf@rob-hp-laptop>
+ <CABb+yY1+rU=gEnqML=ybZ61WDW6Brz_QLw4LpYNNe-XsEgi8dw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170504200539.27027-4-bjorn.andersson@linaro.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Andy Gross <andy.gross@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Ohad Ben-Cohen <ohad@wizery.com>, Jassi Brar <jassisinghbrar@gmail.com>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-remoteproc@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CABb+yY1+rU=gEnqML=ybZ61WDW6Brz_QLw4LpYNNe-XsEgi8dw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Alexey Klimov <alexey.klimov-5wv7dgnIgG8@public.gmane.org>, Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 04, 2017 at 01:05:38PM -0700, Bjorn Andersson wrote:
-> Add device tree binding documentation for the Qualcomm GLINK RPM, used
-> for communication with the Resource Power Management subsystem in
-> various Qualcomm SoCs.
-> 
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> ---
-> 
-> Changes since v3:
-> - Transition doorbell to mailbox framework
-> 
-> Changes since v2:
-> - Replace qcom,ipc syscon with a "doorbell"
-> 
-> Changes since v1:
-> - None
-> 
->  .../devicetree/bindings/soc/qcom/qcom,glink.txt    | 73 ++++++++++++++++++++++
->  1 file changed, 73 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,glink.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,glink.txt b/Documentation/devicetree/bindings/soc/qcom/qcom,glink.txt
-> new file mode 100644
-> index 000000000000..e32198df0e9c
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/soc/qcom/qcom,glink.txt
-> @@ -0,0 +1,73 @@
-> +Qualcomm RPM GLINK binding
-> +
-> +This binding describes the Qualcomm RPM GLINK, a fifo based mechanism for
-> +communication with the Resource Power Management system on various Qualcomm
-> +platforms.
-> +
-> +- compatible:
-> +	Usage: required
-> +	Value type: <stringlist>
-> +	Definition: must be "qcom,glink-rpm"
-> +
-> +- interrupts:
-> +	Usage: required
-> +	Value type: <prop-encoded-array>
-> +	Definition: should specify the IRQ used by the remote processor to
-> +		    signal this processor about communication related events
-> +
-> +- qcom,rpm-msg-ram:
-> +	Usage: required
-> +	Value type: <prop-encoded-array>
-> +	Definition: handle to RPM message memory resource
-> +
-> +- mboxes:
-> +	Usage: required
-> +	Value type: <prop-encoded-array>
-> +	Definition: reference to the "rpm_hlos" mailbox in APCS, as described
-> +		    in mailbox/mailbox.txt
-> +
-> += GLINK DEVICES
-> +Each subnode of the GLINK node represent function tied to a virtual
-> +communication channel. The name of the nodes are not important. The properties
-> +of these nodes are defined by the individual bindings for the specific function
-> +- but must contain the following property:
-> +
-> +- qcom,glink-channels:
-> +	Usage: required
-> +	Value type: <stringlist>
-> +	Definition: a list of channels tied to this function, used for matching
-> +		    the function to a set of virtual channels
-> +
-> += EXAMPLE
-> +The following example represents the GLINK RPM node on a MSM8996 device, with
-> +the function for the "rpm_request" channel defined, which is used for
-> +regualtors and root clocks.
-> +
-> +	apcs_glb: apcs-glb@9820000 {
-
-mailbox@... Or does this block do other things?
-
-Otherwise,
-
-Acked-by: Rob Herring <robh@kernel.org>
 
 
-> +		compatible = "qcom,msm8996-apcs-hmss-global";
-> +		reg = <0x9820000 0x1000>;
-> +
-> +		#mbox-cells = <1>;
-> +	};
-> +
-> +	rpm_msg_ram: memory@68000 {
-> +		compatible = "qcom,rpm-msg-ram";
-> +		reg = <0x68000 0x6000>;
-> +	};
-> +
-> +	rpm-glink {
-> +		compatible = "qcom,glink-rpm";
-> +
-> +		interrupts = <GIC_SPI 168 IRQ_TYPE_EDGE_RISING>;
-> +
-> +		qcom,rpm-msg-ram = <&rpm_msg_ram>;
-> +
-> +		mboxes = <&apcs_glb 0>;
-> +
-> +		rpm-requests {
-> +			compatible = "qcom,rpm-msm8996";
-> +			qcom,glink-channels = "rpm_requests";
-> +
-> +			...
-> +		};
-> +	};
-> -- 
-> 2.12.0
+On 08/05/17 17:46, Jassi Brar wrote:
+> On Mon, May 8, 2017 at 9:40 PM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+>> +Bjorn
+>>
+>> On Tue, May 02, 2017 at 02:55:49PM +0100, Sudeep Holla wrote:
+>>> The ARM MHU has mechanism to assert interrupt signals to facilitate
+>>> inter-processor message based communication. It drives the signal using
+>>> a 32-bit register, with all 32-bits logically ORed together. It also
+>>> enables software to set, clear and check the status of each of the bits
+>>> of this register independently. Each bit of the register can be
+>>> associated with a type of event that can contribute to raising the
+>>> interrupt thereby allowing it to be used as independent subchannels.
+>>>
+>>> Since the first version of this binding can't support sub-channels,
+>>> this patch extends the existing binding to support them.
+>>>
+>>> Cc: Alexey Klimov <alexey.klimov-5wv7dgnIgG8@public.gmane.org>
+>>> Cc: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>>> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>>> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>>> Signed-off-by: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+>>> ---
+>>>  .../devicetree/bindings/mailbox/arm-mhu.txt        | 44 ++++++++++++++++++++--
+>>>  1 file changed, 41 insertions(+), 3 deletions(-)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/mailbox/arm-mhu.txt b/Documentation/devicetree/bindings/mailbox/arm-mhu.txt
+>>> index 4971f03f0b33..86a66f7918e2 100644
+>>> --- a/Documentation/devicetree/bindings/mailbox/arm-mhu.txt
+>>> +++ b/Documentation/devicetree/bindings/mailbox/arm-mhu.txt
+>>> @@ -10,21 +10,40 @@ STAT register and the remote clears it after having read the data.
+>>>  The last channel is specified to be a 'Secure' resource, hence can't be
+>>>  used by Linux running NS.
+>>>
+>>> +The MHU drives the interrupt signal using a 32-bit register, with all
+>>> +32-bits logically ORed together. It provides a set of registers to
+>>> +enable software to set, clear and check the status of each of the bits
+>>> +of this register independently. The use of 32 bits per interrupt line
+>>> +enables software to provide more information about the source of the
+>>> +interrupt. For example, each bit of the register can be associated with
+>>> +a type of event that can contribute to raising the interrupt.
+>>
+>> Sounds like a doorbell? (i.e. a single bit mailbox). Bjorn is doing
+>> something similar for QCom h/w. I guess the difference here is you have
+>> 32 sources and 1 output. It seems to me these should be described
+>> similarly.
+>>
+> Yes, QCom controller triggers different interrupt for each bit of a
+> 32bits register i.e, each signal is associated with 1bit information.
+> Whereas MHU signals 32bits at a time to the target cpu.
+
+Agreed. I had a look at Qcom driver, not entirely clear if each bit as
+interrupt as I don't see any interrupt support there. Also, it just adds
+all the 32 channels which I am trying to avoid as at-most 4-5 will be
+used while we end up creating 64 channels.
+
+>   Both these cases are already supported by mailbox framework, so
+> Bjorn has implemented QCom's 'doorbell' driver over mailbox api. And
+> we can do without this "arm,mhu-v2" driver. I believe Sudeep already
+> knows well how to use the MHU driver as such to get what his client
+> drivers need.
 > 
+
+As I mentioned above one reason for adding the complexity is avoiding
+creation of 32*2 channels. Secondly we still need a way to distinguish
+between the 2 use-cases(existing and new one). Any thoughts ?
+
+>>> +
+>>>  Mailbox Device Node:
+>>>  ====================
+>>>
+>>>  Required properties:
+>>>  --------------------
+>>> -- compatible:                Shall be "arm,mhu" & "arm,primecell"
+>>> +- compatible:                Shall be "arm,primecell" and one of the below:
+>>> +                     "arm,mhu" - if the controller doesn't support
+>>> +                                 subchannels
+>>> +                     "arm,mhu-v2" - if the controller supports subchannels
+>>
+>> How do I know if I have v2? This correlates to an IP version or
+>> IP configuration or ?
+>>
+> This is purely a software concept - virtual channel. There are only 3
+> physical channels and that are managed by existing version of driver &
+> bindings. This is another reason I am against this patchset.
+> 
+
+I understand your concern. Please suggest alternative if we need to use
+each bit in the single set register as a different doorbell ? We need
+this from DT as we need to specify each bit as a channel for different
+client. Let me know how would you like me to proceed to deal with such
+a scenario. The specification clearly states each bit can be used as a
+doorbell.
+
+-- 
+Regards,
+Sudeep
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
