@@ -1,202 +1,465 @@
-From: Luis Oliveira <Luis.Oliveira@synopsys.com>
-Subject: [PATCH v9 2/6] i2c: designware: refactoring of the i2c-designware
-Date: Mon,  8 May 2017 11:37:17 +0100
-Message-ID: <70988509690a7a830b8d085a684b634a05f9d158.1493893241.git.lolivei@synopsys.com>
-References: <cover.1493893241.git.lolivei@synopsys.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1493893241.git.lolivei@synopsys.com>
-In-Reply-To: <cover.1493893241.git.lolivei@synopsys.com>
-References: <cover.1493893241.git.lolivei@synopsys.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: wsa@the-dreams.de, robh+dt@kernel.org, mark.rutland@arm.com, jarkko.nikula@linux.intel.com, andriy.shevchenko@linux.intel.com, mika.westerberg@linux.intel.com, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Luis.Oliveira@synopsys.com, Ramiro.Oliveira@synopsys.com, Joao.Pinto@synopsys.com, CARLOS.PALMINHA@synopsys.com
+From: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+Subject: Re: [PATCH 2/4] media: platform: dwc: Support for DW CSI-2 Host
+Date: Mon, 8 May 2017 12:38:16 +0200
+Message-ID: <24d1c826-8c02-d625-efb7-705d3ad9ce3d@xs4all.nl>
+References: <cover.1488885081.git.roliveir@synopsys.com>
+ <6a45f8d24993bc6ab02f8bd76ef1db421ab32d9c.1488885081.git.roliveir@synopsys.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <6a45f8d24993bc6ab02f8bd76ef1db421ab32d9c.1488885081.git.roliveir-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ramiro Oliveira <Ramiro.Oliveira-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: CARLOS.PALMINHA-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Benoit Parrot <bparrot-l0cyMroinI0@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Hugues Fruchet <hugues.fruchet-qxv4g6HH51o@public.gmane.org>, Jean-Christophe Trotin <jean-christophe.trotin-qxv4g6HH51o@public.gmane.org>, Kieran Bingham <kieran+renesas-7hKh/agyDeatmTQ+vhA3Yw@public.gmane.org>, Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Minghsiu Tsai <minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, =?UTF-8?Q?Niklas_S=c3=b6derlund?= <niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org>, Peter
 List-Id: devicetree@vger.kernel.org
 
-- Factor out all _master() part of code from i2c-designware-core
-  and i2c-designware-platdrv to separate functions.
-- Standardize all code related with MASTER mode.
-- I have to take off DW_IC_INTR_TX_EMPTY from DW_IC_INTR_DEFAULT_MASK
-  because it is master specific.
+Hi Ramiro,
 
-The purpose of this is to prepare the controller to have is I2C MASTER
-flow in a separate driver. To do this first all the
-functions/definitions related to the MASTER flow were identified.
+My sincere apologies for the long delay in reviewing this. The good news is that
+I should have more time for reviews going forward, so I hope I'll be a lot quicker
+in the future.
 
-Signed-off-by: Luis Oliveira <lolivei@synopsys.com>
-Acked-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Acked-by: Jarkko Nikula <jarkko.nikula@linux.intel.com>
----
-v8-v9
-- no changes
+On 03/07/2017 03:37 PM, Ramiro Oliveira wrote:
+> Add support for the Synopsys DesignWare CSI-2 Host
+> 
+> Signed-off-by: Ramiro Oliveira <roliveir-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+> ---
+>  MAINTAINERS                              |   7 +
+>  drivers/media/platform/Kconfig           |   1 +
+>  drivers/media/platform/Makefile          |   2 +
+>  drivers/media/platform/dwc/Kconfig       |   5 +
+>  drivers/media/platform/dwc/Makefile      |   1 +
+>  drivers/media/platform/dwc/dw_mipi_csi.c | 653 +++++++++++++++++++++++++++++++
+>  drivers/media/platform/dwc/dw_mipi_csi.h | 181 +++++++++
+>  include/media/dwc/csi_host_platform.h    |  97 +++++
+>  8 files changed, 947 insertions(+)
+>  create mode 100644 drivers/media/platform/dwc/Kconfig
+>  create mode 100644 drivers/media/platform/dwc/Makefile
+>  create mode 100644 drivers/media/platform/dwc/dw_mipi_csi.c
+>  create mode 100644 drivers/media/platform/dwc/dw_mipi_csi.h
+>  create mode 100644 include/media/dwc/csi_host_platform.h
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 5badfd33e51f..19673dad43b4 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -11061,6 +11061,13 @@ S:	Maintained
+>  F:	drivers/staging/media/st-cec/
+>  F:	Documentation/devicetree/bindings/media/stih-cec.txt
+>  
+> +SYNOPSYS DESIGNWARE CSI-2 HOST VIDEO PLATFORM
+> +M:	Ramiro Oliveira <roliveir-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+> +L:	linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> +T:	git git://linuxtv.org/media_tree.git
+> +S:	Maintained
+> +F:	drivers/media/platform/dwc/
+> +
+>  SHARED MEMORY COMMUNICATIONS (SMC) SOCKETS
+>  M:	Ursula Braun <ubraun-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+>  L:	linux-s390-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> diff --git a/drivers/media/platform/Kconfig b/drivers/media/platform/Kconfig
+> index 53f6f12bff0d..4b6e00da763f 100644
+> --- a/drivers/media/platform/Kconfig
+> +++ b/drivers/media/platform/Kconfig
+> @@ -120,6 +120,7 @@ source "drivers/media/platform/am437x/Kconfig"
+>  source "drivers/media/platform/xilinx/Kconfig"
+>  source "drivers/media/platform/rcar-vin/Kconfig"
+>  source "drivers/media/platform/atmel/Kconfig"
+> +source "drivers/media/platform/dwc/Kconfig"
+>  
+>  config VIDEO_TI_CAL
+>  	tristate "TI CAL (Camera Adaptation Layer) driver"
+> diff --git a/drivers/media/platform/Makefile b/drivers/media/platform/Makefile
+> index 8959f6e6692a..95eae2772c1f 100644
+> --- a/drivers/media/platform/Makefile
+> +++ b/drivers/media/platform/Makefile
+> @@ -64,6 +64,8 @@ obj-$(CONFIG_VIDEO_RCAR_VIN)		+= rcar-vin/
+>  
+>  obj-$(CONFIG_VIDEO_ATMEL_ISC)		+= atmel/
+>  
+> +obj-$(CONFIG_CSI_VIDEO_PLATFORM)	+= dwc/
+> +
+>  ccflags-y += -I$(srctree)/drivers/media/i2c
+>  
+>  obj-$(CONFIG_VIDEO_MEDIATEK_VPU)	+= mtk-vpu/
+> diff --git a/drivers/media/platform/dwc/Kconfig b/drivers/media/platform/dwc/Kconfig
+> new file mode 100644
+> index 000000000000..2cd13d23f897
+> --- /dev/null
+> +++ b/drivers/media/platform/dwc/Kconfig
+> @@ -0,0 +1,5 @@
+> +config DWC_MIPI_CSI2_HOST
+> +	tristate "SNPS DWC MIPI CSI2 Host"
+> +	select GENERIC_PHY
+> +	help
+> +	  This is a V4L2 driver for Synopsys Designware MIPI CSI-2 Host.
+> diff --git a/drivers/media/platform/dwc/Makefile b/drivers/media/platform/dwc/Makefile
+> new file mode 100644
+> index 000000000000..5eb076a55123
+> --- /dev/null
+> +++ b/drivers/media/platform/dwc/Makefile
+> @@ -0,0 +1 @@
+> +obj-$(CONFIG_DWC_MIPI_CSI2_HOST)	+= dw_mipi_csi.o
+> diff --git a/drivers/media/platform/dwc/dw_mipi_csi.c b/drivers/media/platform/dwc/dw_mipi_csi.c
+> new file mode 100644
+> index 000000000000..6905def40a07
+> --- /dev/null
+> +++ b/drivers/media/platform/dwc/dw_mipi_csi.c
+> @@ -0,0 +1,653 @@
+> +/*
+> + * DWC MIPI CSI-2 Host device driver
+> + *
+> + * Copyright (C) 2016 Synopsys, Inc. All rights reserved.
+> + * Author: Ramiro Oliveira <ramiro.oliveira-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License as published
+> + * by the Free Software Foundation, either version 2 of the License,
+> + * or (at your option) any later version.
+> + */
+> +
+> +#include "dw_mipi_csi.h"
+> +
+> +/**
+> + * @short Video formats supported by the MIPI CSI-2
+> + */
+> +static const struct mipi_fmt dw_mipi_csi_formats[] = {
+> +	{
+> +		/* RAW 8 */
+> +		.code = MEDIA_BUS_FMT_SBGGR8_1X8,
+> +		.depth = 8,
+> +	},
+> +	{
+> +		/* RAW 10 */
+> +		.code = MEDIA_BUS_FMT_SBGGR10_2X8_PADHI_BE,
+> +		.depth = 10,
+> +	},
+> +	{
+> +		/* RGB 565 */
+> +		.code = MEDIA_BUS_FMT_RGB565_2X8_BE,
+> +		.depth = 16,
+> +	},
+> +	{
+> +		/* BGR 565 */
+> +		.code = MEDIA_BUS_FMT_RGB565_2X8_LE,
+> +		.depth = 16,
+> +	},
+> +	{
+> +		/* RGB 888 */
+> +		.code = MEDIA_BUS_FMT_RGB888_2X12_LE,
+> +		.depth = 24,
+> +	},
+> +	{
+> +		/* BGR 888 */
+> +		.code = MEDIA_BUS_FMT_RGB888_2X12_BE,
+> +		.depth = 24,
+> +	},
+> +};
+> +
+> +static struct mipi_csi_dev *sd_to_mipi_csi_dev(struct v4l2_subdev *sdev)
+> +{
+> +	return container_of(sdev, struct mipi_csi_dev, sd);
+> +}
+> +
+> +static void dw_mipi_csi_write(struct mipi_csi_dev *dev,
+> +		  unsigned int address, unsigned int data)
+> +{
+> +	iowrite32(data, dev->base_address + address);
+> +}
+> +
+> +static u32 dw_mipi_csi_read(struct mipi_csi_dev *dev, unsigned long address)
+> +{
+> +	return ioread32(dev->base_address + address);
+> +}
+> +
+> +static void dw_mipi_csi_write_part(struct mipi_csi_dev *dev,
+> +		       unsigned long address, unsigned long data,
+> +		       unsigned char shift, unsigned char width)
+> +{
+> +	u32 mask = (1 << width) - 1;
+> +	u32 temp = dw_mipi_csi_read(dev, address);
+> +
+> +	temp &= ~(mask << shift);
+> +	temp |= (data & mask) << shift;
+> +	dw_mipi_csi_write(dev, address, temp);
+> +}
+> +
+> +static const struct mipi_fmt *
+> +find_dw_mipi_csi_format(struct v4l2_mbus_framefmt *mf)
+> +{
+> +	unsigned int i;
+> +
+> +	for (i = 0; i < ARRAY_SIZE(dw_mipi_csi_formats); i++)
+> +		if (mf->code == dw_mipi_csi_formats[i].code)
+> +			return &dw_mipi_csi_formats[i];
+> +	return NULL;
+> +}
+> +
+> +static void dw_mipi_csi_reset(struct mipi_csi_dev *dev)
+> +{
+> +	dw_mipi_csi_write(dev, R_CSI2_CTRL_RESETN, 0);
+> +	dw_mipi_csi_write(dev, R_CSI2_CTRL_RESETN, 1);
+> +}
+> +
+> +static int dw_mipi_csi_mask_irq_power_off(struct mipi_csi_dev *dev)
+> +{
+> +	/* set only one lane (lane 0) as active (ON) */
+> +	dw_mipi_csi_write(dev, R_CSI2_N_LANES, 0);
+> +
+> +	dw_mipi_csi_write(dev, R_CSI2_MASK_INT_PHY_FATAL, 0);
+> +	dw_mipi_csi_write(dev, R_CSI2_MASK_INT_PKT_FATAL, 0);
+> +	dw_mipi_csi_write(dev, R_CSI2_MASK_INT_FRAME_FATAL, 0);
+> +	dw_mipi_csi_write(dev, R_CSI2_MASK_INT_PHY, 0);
+> +	dw_mipi_csi_write(dev, R_CSI2_MASK_INT_PKT, 0);
+> +	dw_mipi_csi_write(dev, R_CSI2_MASK_INT_LINE, 0);
+> +	dw_mipi_csi_write(dev, R_CSI2_MASK_INT_IPI, 0);
+> +
+> +	dw_mipi_csi_write(dev, R_CSI2_CTRL_RESETN, 0);
+> +
+> +	return 0;
+> +
 
- drivers/i2c/busses/i2c-designware-core.c    | 56 +++++++++++++++++------------
- drivers/i2c/busses/i2c-designware-platdrv.c | 31 +++++++++-------
- 2 files changed, 52 insertions(+), 35 deletions(-)
+Spurious empty line.
 
-diff --git a/drivers/i2c/busses/i2c-designware-core.c b/drivers/i2c/busses/i2c-designware-core.c
-index c0e9cf374e2b..ce5d11102070 100644
---- a/drivers/i2c/busses/i2c-designware-core.c
-+++ b/drivers/i2c/busses/i2c-designware-core.c
-@@ -87,10 +87,10 @@
- #define DW_IC_INTR_GEN_CALL	0x800
- 
- #define DW_IC_INTR_DEFAULT_MASK		(DW_IC_INTR_RX_FULL | \
--					 DW_IC_INTR_TX_EMPTY | \
- 					 DW_IC_INTR_TX_ABRT | \
- 					 DW_IC_INTR_STOP_DET)
--
-+#define DW_IC_INTR_MASTER_MASK		(DW_IC_INTR_DEFAULT_MASK | \
-+					 DW_IC_INTR_TX_EMPTY)
- #define DW_IC_STATUS_ACTIVITY	0x1
- 
- #define DW_IC_SDA_HOLD_RX_SHIFT		16
-@@ -202,6 +202,16 @@ static void dw_writel(struct dw_i2c_dev *dev, u32 b, int offset)
- 	}
- }
- 
-+static void i2c_dw_configure_fifo_master(struct dw_i2c_dev *dev)
-+{
-+	/* Configure Tx/Rx FIFO threshold levels */
-+	dw_writel(dev, dev->tx_fifo_depth / 2, DW_IC_TX_TL);
-+	dw_writel(dev, 0, DW_IC_RX_TL);
-+
-+	/* Configure the I2C master */
-+	dw_writel(dev, dev->master_cfg, DW_IC_CON);
-+}
-+
- static u32
- i2c_dw_scl_hcnt(u32 ic_clk, u32 tSYMBOL, u32 tf, int cond, int offset)
- {
-@@ -440,13 +450,7 @@ int i2c_dw_init(struct dw_i2c_dev *dev)
- 			"Hardware too old to adjust SDA hold time.\n");
- 	}
- 
--	/* Configure Tx/Rx FIFO threshold levels */
--	dw_writel(dev, dev->tx_fifo_depth / 2, DW_IC_TX_TL);
--	dw_writel(dev, 0, DW_IC_RX_TL);
--
--	/* Configure the I2C master */
--	dw_writel(dev, dev->master_cfg , DW_IC_CON);
--
-+	i2c_dw_configure_fifo_master(dev);
- 	i2c_dw_release_lock(dev);
- 
- 	return 0;
-@@ -511,7 +515,7 @@ static void i2c_dw_xfer_init(struct dw_i2c_dev *dev)
- 
- 	/* Clear and enable interrupts */
- 	dw_readl(dev, DW_IC_CLR_INTR);
--	dw_writel(dev, DW_IC_INTR_DEFAULT_MASK, DW_IC_INTR_MASK);
-+	dw_writel(dev, DW_IC_INTR_MASTER_MASK, DW_IC_INTR_MASK);
- }
- 
- /*
-@@ -531,7 +535,7 @@ i2c_dw_xfer_msg(struct dw_i2c_dev *dev)
- 	u8 *buf = dev->tx_buf;
- 	bool need_restart = false;
- 
--	intr_mask = DW_IC_INTR_DEFAULT_MASK;
-+	intr_mask = DW_IC_INTR_MASTER_MASK;
- 
- 	for (; dev->msg_write_idx < dev->msgs_num; dev->msg_write_idx++) {
- 		u32 flags = msgs[dev->msg_write_idx].flags;
-@@ -881,22 +885,14 @@ static u32 i2c_dw_read_clear_intrbits(struct dw_i2c_dev *dev)
- }
- 
- /*
-- * Interrupt service routine. This gets called whenever an I2C interrupt
-+ * Interrupt service routine. This gets called whenever an I2C master interrupt
-  * occurs.
-  */
--static irqreturn_t i2c_dw_isr(int this_irq, void *dev_id)
-+static int i2c_dw_irq_handler_master(struct dw_i2c_dev *dev)
- {
--	struct dw_i2c_dev *dev = dev_id;
--	u32 stat, enabled;
--
--	enabled = dw_readl(dev, DW_IC_ENABLE);
--	stat = dw_readl(dev, DW_IC_RAW_INTR_STAT);
--	dev_dbg(dev->dev, "%s: enabled=%#x stat=%#x\n", __func__, enabled, stat);
--	if (!enabled || !(stat & ~DW_IC_INTR_ACTIVITY))
--		return IRQ_NONE;
-+	u32 stat;
- 
- 	stat = i2c_dw_read_clear_intrbits(dev);
--
- 	if (stat & DW_IC_INTR_TX_ABRT) {
- 		dev->cmd_err |= DW_IC_ERR_TX_ABRT;
- 		dev->status = STATUS_IDLE;
-@@ -931,6 +927,22 @@ static irqreturn_t i2c_dw_isr(int this_irq, void *dev_id)
- 		dw_writel(dev, stat, DW_IC_INTR_MASK);
- 	}
- 
-+	return 0;
-+}
-+
-+static irqreturn_t i2c_dw_isr(int this_irq, void *dev_id)
-+{
-+	struct dw_i2c_dev *dev = dev_id;
-+	u32 stat, enabled;
-+
-+	enabled = dw_readl(dev, DW_IC_ENABLE);
-+	stat = dw_readl(dev, DW_IC_RAW_INTR_STAT);
-+	dev_dbg(dev->dev, "enabled=%#x stat=%#x\n", enabled, stat);
-+	if (!enabled || !(stat & ~DW_IC_INTR_ACTIVITY))
-+		return IRQ_NONE;
-+
-+	i2c_dw_irq_handler_master(dev);
-+
- 	return IRQ_HANDLED;
- }
- 
-diff --git a/drivers/i2c/busses/i2c-designware-platdrv.c b/drivers/i2c/busses/i2c-designware-platdrv.c
-index 972001c01bbf..06205bd39d7e 100644
---- a/drivers/i2c/busses/i2c-designware-platdrv.c
-+++ b/drivers/i2c/busses/i2c-designware-platdrv.c
-@@ -168,6 +168,23 @@ static inline int dw_i2c_acpi_configure(struct platform_device *pdev)
- }
- #endif
- 
-+static void i2c_dw_configure_master(struct dw_i2c_dev *dev)
-+{
-+	dev->master_cfg = DW_IC_CON_MASTER | DW_IC_CON_SLAVE_DISABLE |
-+			  DW_IC_CON_RESTART_EN;
-+
-+	switch (dev->clk_freq) {
-+	case 100000:
-+		dev->master_cfg |= DW_IC_CON_SPEED_STD;
-+		break;
-+	case 3400000:
-+		dev->master_cfg |= DW_IC_CON_SPEED_HIGH;
-+		break;
-+	default:
-+		dev->master_cfg |= DW_IC_CON_SPEED_FAST;
-+	}
-+}
-+
- static int i2c_dw_plat_prepare_clk(struct dw_i2c_dev *i_dev, bool prepare)
- {
- 	if (IS_ERR(i_dev->clk))
-@@ -283,19 +300,7 @@ static int dw_i2c_plat_probe(struct platform_device *pdev)
- 
- 	dev->functionality = I2C_FUNC_10BIT_ADDR | DW_IC_DEFAULT_FUNCTIONALITY;
- 
--	dev->master_cfg = DW_IC_CON_MASTER | DW_IC_CON_SLAVE_DISABLE |
--			  DW_IC_CON_RESTART_EN;
--
--	switch (dev->clk_freq) {
--	case 100000:
--		dev->master_cfg |= DW_IC_CON_SPEED_STD;
--		break;
--	case 3400000:
--		dev->master_cfg |= DW_IC_CON_SPEED_HIGH;
--		break;
--	default:
--		dev->master_cfg |= DW_IC_CON_SPEED_FAST;
--	}
-+	i2c_dw_configure_master(dev);
- 
- 	dev->clk = devm_clk_get(&pdev->dev, NULL);
- 	if (!i2c_dw_plat_prepare_clk(dev, true)) {
--- 
-2.11.0
+> +}
+> +
+> +static int dw_mipi_csi_hw_stdby(struct mipi_csi_dev *dev)
+> +{
+> +	/* set only one lane (lane 0) as active (ON) */
+> +	dw_mipi_csi_reset(dev);
+> +
+> +	dw_mipi_csi_write(dev, R_CSI2_N_LANES, 0);
+> +
+> +	phy_init(dev->phy);
+> +
+> +	dw_mipi_csi_write(dev, R_CSI2_MASK_INT_PHY_FATAL, 0xFFFFFFFF);
+> +	dw_mipi_csi_write(dev, R_CSI2_MASK_INT_PKT_FATAL, 0xFFFFFFFF);
+> +	dw_mipi_csi_write(dev, R_CSI2_MASK_INT_FRAME_FATAL, 0xFFFFFFFF);
+> +	dw_mipi_csi_write(dev, R_CSI2_MASK_INT_PHY, 0xFFFFFFFF);
+> +	dw_mipi_csi_write(dev, R_CSI2_MASK_INT_PKT, 0xFFFFFFFF);
+> +	dw_mipi_csi_write(dev, R_CSI2_MASK_INT_LINE, 0xFFFFFFFF);
+> +	dw_mipi_csi_write(dev, R_CSI2_MASK_INT_IPI, 0xFFFFFFFF);
+> +
+> +	return 0;
+> +
+
+Ditto.
+
+> +}
+> +
+> +static void dw_mipi_csi_set_ipi_fmt(struct mipi_csi_dev *csi_dev)
+> +{
+> +	struct device *dev = &csi_dev->pdev->dev;
+> +
+> +	switch (csi_dev->fmt->code) {
+> +	case MEDIA_BUS_FMT_RGB565_2X8_BE:
+> +	case MEDIA_BUS_FMT_RGB565_2X8_LE:
+> +		dw_mipi_csi_write(csi_dev, R_CSI2_IPI_DATA_TYPE, CSI_2_RGB565);
+> +		dev_dbg(dev, "DT: RGB 565");
+> +		break;
+> +
+> +	case MEDIA_BUS_FMT_RGB888_2X12_LE:
+> +	case MEDIA_BUS_FMT_RGB888_2X12_BE:
+> +		dw_mipi_csi_write(csi_dev, R_CSI2_IPI_DATA_TYPE, CSI_2_RGB888);
+> +		dev_dbg(dev, "DT: RGB 888");
+> +		break;
+> +	case MEDIA_BUS_FMT_SBGGR10_2X8_PADHI_BE:
+> +		dw_mipi_csi_write(csi_dev, R_CSI2_IPI_DATA_TYPE, CSI_2_RAW10);
+> +		dev_dbg(dev, "DT: RAW 10");
+> +		break;
+> +	case MEDIA_BUS_FMT_SBGGR8_1X8:
+> +		dw_mipi_csi_write(csi_dev, R_CSI2_IPI_DATA_TYPE, CSI_2_RAW8);
+> +		dev_dbg(dev, "DT: RAW 8");
+> +		break;
+> +	default:
+> +		dw_mipi_csi_write(csi_dev, R_CSI2_IPI_DATA_TYPE, CSI_2_RGB565);
+> +		dev_dbg(dev, "Error");
+> +		break;
+> +	}
+> +}
+> +
+> +static void __dw_mipi_csi_fill_timings(struct mipi_csi_dev *dev,
+> +			   const struct v4l2_bt_timings *bt)
+> +{
+> +
+> +	if (bt == NULL)
+> +		return;
+> +
+> +	dev->hw.hsa = bt->hsync;
+> +	dev->hw.hbp = bt->hbackporch;
+> +	dev->hw.hsd = bt->hsync;
+> +	dev->hw.htotal = bt->height + bt->vfrontporch +
+> +	    bt->vsync + bt->vbackporch;
+
+Use V4L2_DV_BT_FRAME_HEIGHT define.
+
+> +	dev->hw.vsa = bt->vsync;
+> +	dev->hw.vbp = bt->vbackporch;
+> +	dev->hw.vfp = bt->vfrontporch;
+> +	dev->hw.vactive = bt->height;
+> +}
+> +
+> +static void dw_mipi_csi_start(struct mipi_csi_dev *csi_dev)
+> +{
+> +	const struct v4l2_bt_timings *bt = &v4l2_dv_timings_presets[0].bt;
+> +	struct device *dev = &csi_dev->pdev->dev;
+> +
+> +	__dw_mipi_csi_fill_timings(csi_dev, bt);
+> +
+> +	dw_mipi_csi_write(csi_dev, R_CSI2_N_LANES, (csi_dev->hw.num_lanes - 1));
+> +	dev_dbg(dev, "N Lanes: %d\n", csi_dev->hw.num_lanes);
+> +
+> +	/*IPI Related Configuration */
+> +	if ((csi_dev->hw.output_type == IPI_OUT)
+> +	    || (csi_dev->hw.output_type == BOTH_OUT)) {
+> +
+> +		dw_mipi_csi_write_part(csi_dev, R_CSI2_IPI_MODE,
+> +					csi_dev->hw.ipi_mode, 0, 1);
+> +		dev_dbg(dev, "IPI MODE: %d\n", csi_dev->hw.ipi_mode);
+> +
+> +		dw_mipi_csi_write_part(csi_dev, R_CSI2_IPI_MODE,
+> +				       csi_dev->hw.ipi_color_mode, 8, 1);
+> +		dev_dbg(dev, "Color Mode: %d\n", csi_dev->hw.ipi_color_mode);
+> +
+> +		dw_mipi_csi_write(csi_dev, R_CSI2_IPI_VCID,
+> +					csi_dev->hw.virtual_ch);
+> +		dev_dbg(dev, "Virtual Channel: %d\n", csi_dev->hw.virtual_ch);
+> +
+> +		dw_mipi_csi_write_part(csi_dev, R_CSI2_IPI_MEM_FLUSH,
+> +				       csi_dev->hw.ipi_auto_flush, 8, 1);
+> +		dev_dbg(dev, "Auto-flush: %d\n", csi_dev->hw.ipi_auto_flush);
+> +
+> +		dw_mipi_csi_write(csi_dev, R_CSI2_IPI_HSA_TIME,
+> +					csi_dev->hw.hsa);
+> +		dev_dbg(dev, "HSA: %d\n", csi_dev->hw.hsa);
+> +
+> +		dw_mipi_csi_write(csi_dev, R_CSI2_IPI_HBP_TIME,
+> +					csi_dev->hw.hbp);
+> +		dev_dbg(dev, "HBP: %d\n", csi_dev->hw.hbp);
+> +
+> +		dw_mipi_csi_write(csi_dev, R_CSI2_IPI_HSD_TIME,
+> +					csi_dev->hw.hsd);
+> +		dev_dbg(dev, "HSD: %d\n", csi_dev->hw.hsd);
+> +
+> +		if (csi_dev->hw.ipi_mode == AUTO_TIMING) {
+> +			dw_mipi_csi_write(csi_dev, R_CSI2_IPI_HLINE_TIME,
+> +					  csi_dev->hw.htotal);
+> +			dev_dbg(dev, "H total: %d\n", csi_dev->hw.htotal);
+> +
+> +			dw_mipi_csi_write(csi_dev, R_CSI2_IPI_VSA_LINES,
+> +					  csi_dev->hw.vsa);
+> +			dev_dbg(dev, "VSA: %d\n", csi_dev->hw.vsa);
+> +
+> +			dw_mipi_csi_write(csi_dev, R_CSI2_IPI_VBP_LINES,
+> +					  csi_dev->hw.vbp);
+> +			dev_dbg(dev, "VBP: %d\n", csi_dev->hw.vbp);
+> +
+> +			dw_mipi_csi_write(csi_dev, R_CSI2_IPI_VFP_LINES,
+> +					  csi_dev->hw.vfp);
+> +			dev_dbg(dev, "VFP: %d\n", csi_dev->hw.vfp);
+> +
+> +			dw_mipi_csi_write(csi_dev, R_CSI2_IPI_VACTIVE_LINES,
+> +					  csi_dev->hw.vactive);
+> +			dev_dbg(dev, "V Active: %d\n", csi_dev->hw.vactive);
+> +		}
+> +	}
+> +
+> +	phy_power_on(csi_dev->phy);
+> +}
+> +
+> +static int dw_mipi_csi_enum_mbus_code(struct v4l2_subdev *sd,
+> +					struct v4l2_subdev_pad_config *cfg,
+> +					struct v4l2_subdev_mbus_code_enum *code)
+> +{
+> +	if (code->index >= ARRAY_SIZE(dw_mipi_csi_formats))
+> +		return -EINVAL;
+> +
+> +	code->code = dw_mipi_csi_formats[code->index].code;
+> +	return 0;
+> +}
+> +
+> +static struct mipi_fmt const *
+> +dw_mipi_csi_try_format(struct v4l2_mbus_framefmt *mf)
+> +{
+> +	struct mipi_fmt const *fmt;
+> +
+> +	fmt = find_dw_mipi_csi_format(mf);
+> +	if (fmt == NULL)
+> +		fmt = &dw_mipi_csi_formats[0];
+> +
+> +	mf->code = fmt->code;
+> +	return fmt;
+> +}
+> +
+> +static struct v4l2_mbus_framefmt *
+> +__dw_mipi_csi_get_format(struct mipi_csi_dev *dev,
+> +			 struct v4l2_subdev_pad_config *cfg,
+> +			 enum v4l2_subdev_format_whence which)
+> +{
+> +	if (which == V4L2_SUBDEV_FORMAT_TRY)
+> +		return cfg ? v4l2_subdev_get_try_format(&dev->sd, cfg,
+> +							0) : NULL;
+> +
+> +	return &dev->format;
+> +}
+> +
+> +static int
+> +dw_mipi_csi_set_fmt(struct v4l2_subdev *sd, struct v4l2_subdev_pad_config *cfg,
+> +		    struct v4l2_subdev_format *fmt)
+> +{
+> +	struct mipi_csi_dev *dev = sd_to_mipi_csi_dev(sd);
+> +	struct mipi_fmt const *dev_fmt;
+> +	struct v4l2_mbus_framefmt *mf;
+> +	unsigned int i = 0;
+> +	const struct v4l2_bt_timings *bt_r = &v4l2_dv_timings_presets[0].bt;
+> +
+> +	mf = __dw_mipi_csi_get_format(dev, cfg, fmt->which);
+> +
+> +	dev_fmt = dw_mipi_csi_try_format(&fmt->format);
+> +	if (dev_fmt) {
+> +		*mf = fmt->format;
+> +		if (fmt->which == V4L2_SUBDEV_FORMAT_ACTIVE)
+> +			dev->fmt = dev_fmt;
+> +		dw_mipi_csi_set_ipi_fmt(dev);
+> +	}
+> +	while (v4l2_dv_timings_presets[i].bt.width) {
+> +		const struct v4l2_bt_timings *bt =
+> +		    &v4l2_dv_timings_presets[i].bt;
+
+Add empty line here.
+
+> +		if (mf->width == bt->width && mf->height == bt->width) {
+
+This is way too generic. There are many preset timings that have the same
+width and height but different blanking periods.
+
+I am really not sure how this is supposed to work. If you want to support
+HDMI here, then I would expect to see support for the s_dv_timings op and friends
+in this driver. And I don't see support for that in the host driver either.
+
+Is this a generic csi driver, or specific for hdmi? Or supposed to handle both?
+
+Can you give some background and clarification of this?
+
+Before I do any more code review I need to have a clearer understanding of this.
+
+Regards,
+
+	Hans
+
+> +			__dw_mipi_csi_fill_timings(dev, bt);
+> +			return 0;
+> +		}
+> +		i++;
+> +	}
+> +
+> +	__dw_mipi_csi_fill_timings(dev, bt_r);
+> +	return 0;
+> +
+> +}
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
