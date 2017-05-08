@@ -1,43 +1,41 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 3/5] clk: qcom: ipq8074: Add Global Clock Controller
- support
-Date: Mon, 8 May 2017 11:40:11 -0500
-Message-ID: <20170508164010.aoajie2udehhzduz@rob-hp-laptop>
-References: <1493898841-20583-1-git-send-email-varada@codeaurora.org>
- <1493898841-20583-4-git-send-email-varada@codeaurora.org>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH v9 6/6] i2c: designware: enable SLAVE in platform module
+Date: Mon, 08 May 2017 19:40:18 +0300
+Message-ID: <1494261618.30052.67.camel@linux.intel.com>
+References: <cover.1493893241.git.lolivei@synopsys.com>
+         <dc32ce6a3988a28e6bd08d4ec2797f0a544ae4ad.1493893241.git.lolivei@synopsys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1493898841-20583-4-git-send-email-varada-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Varadarajan Narayanan <varada-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, absahu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, sjaganat-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <dc32ce6a3988a28e6bd08d4ec2797f0a544ae4ad.1493893241.git.lolivei@synopsys.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Luis Oliveira <Luis.Oliveira@synopsys.com>, wsa@the-dreams.de, robh+dt@kernel.org, mark.rutland@arm.com, jarkko.nikula@linux.intel.com, mika.westerberg@linux.intel.com, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Ramiro.Oliveira@synopsys.com, Joao.Pinto@synopsys.com, CARLOS.PALMINHA@synopsys.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 04, 2017 at 05:23:59PM +0530, Varadarajan Narayanan wrote:
-> From: Abhishek Sahu <absahu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> 
-> This patch adds support for the global clock controller found on
-> the IPQ8074 based devices. This includes UART, I2C, SPI etc.
-> 
-> Signed-off-by: Abhishek Sahu <absahu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> Signed-off-by: Varadarajan Narayanan <varada-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> ---
->  .../devicetree/bindings/clock/qcom,gcc.txt         |    1 +
->  drivers/clk/qcom/Kconfig                           |    9 +
->  drivers/clk/qcom/Makefile                          |    1 +
->  drivers/clk/qcom/gcc-ipq8074.c                     | 1032 ++++++++++++++++++++
->  include/dt-bindings/clock/qcom,gcc-ipq8074.h       |  152 +++
+On Mon, 2017-05-08 at 11:37 +0100, Luis Oliveira wrote:
+> - Slave mode selected in platform module if the support is detected in
+>   the DT.
 
-For the binding,
+>  config I2C_DESIGNWARE_PLATFORM
+>  	tristate "Synopsys DesignWare Platform"
+>  	select I2C_DESIGNWARE_CORE
+> +	select I2C_DESIGNWARE_SLAVE
+>  	depends on (ACPI && COMMON_CLK) || !ACPI
+>  	help
+>  	  If you say yes to this option, support will be included for
+> the
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> @@ -483,6 +484,7 @@ config I2C_DESIGNWARE_SLAVE
+>  	bool "Synopsys DesignWare Slave"
+>  	select I2C_SLAVE
+>  	depends on I2C_DESIGNWARE_PLATFORM
+> +	default y
 
->  5 files changed, 1195 insertions(+)
->  create mode 100644 drivers/clk/qcom/gcc-ipq8074.c
->  create mode 100644 include/dt-bindings/clock/qcom,gcc-ipq8074.h
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Can you elaborate why this line is needed?
+
+
+-- 
+Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Intel Finland Oy
