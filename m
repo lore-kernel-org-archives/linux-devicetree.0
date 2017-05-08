@@ -1,65 +1,46 @@
-From: "Ong, Hean Loong" <hean.loong.ong-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCHv2 0/3] Intel FPGA VIP Frame Buffer II DRM Driver
-Date: Mon, 8 May 2017 02:03:32 +0000
-Message-ID: <1494209010.2533.4.camel@intel.com>
-References: <1493086006-4392-1-git-send-email-hean.loong.ong@intel.com>
-         <87shklznuo.fsf@eliezer.anholt.net> <1493861983.2182.11.camel@intel.com>
-         <87lgqcsg18.fsf@eliezer.anholt.net>
+From: Yuantian Tang <andy.tang-3arQi8VN3Tc@public.gmane.org>
+Subject: [PATCH] arm64: dts: ls1088a: update the sata node
+Date: Mon, 8 May 2017 11:13:29 +0800
+Message-ID: <1494213209-39673-1-git-send-email-andy.tang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <87lgqcsg18.fsf-omZaPlIz5HhaEpDpdNBo/KxOck334EZe@public.gmane.org>
-Content-Language: en-US
-Content-ID: <7138D8B088559341B9B34192528FE197-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org" <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, "dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "Vetter, Daniel" <daniel.vetter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: "dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org" <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, "Loh, Tien Hock" <tien.hock.loh-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Yuantian Tang <andy.tang-3arQi8VN3Tc@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gVGh1LCAyMDE3LTA1LTA0IGF0IDEwOjExIC0wNzAwLCBFcmljIEFuaG9sdCB3cm90ZToNCj4g
-Ik9uZywgSGVhbiBMb29uZyIgPGhlYW4ubG9vbmcub25nQGludGVsLmNvbT4gd3JpdGVzOg0KPiAN
-Cj4gPiANCj4gPiBPbiBXZWQsIDIwMTctMDUtMDMgYXQgMTM6MjggLTA3MDAsIEVyaWMgQW5ob2x0
-IHdyb3RlOg0KPiA+ID4gDQo+ID4gPiBoZWFuLmxvb25nLm9uZ0BpbnRlbC5jb20gd3JpdGVzOg0K
-PiA+ID4gDQo+ID4gPiA+IA0KPiA+ID4gPiANCj4gPiA+ID4gRnJvbTogT25nIEhlYW4gTG9vbmcg
-PGhlYW4ubG9vbmcub25nQGludGVsLmNvbT4NCj4gPiA+ID4gDQo+ID4gPiA+IEhpLA0KPiA+ID4g
-PiANCj4gPiA+ID4gVGhlIG5ldyBJbnRlbCBBcnJpYTEwIFNPQyBGUEdBIGRldmtpdCBoYXMgYSBE
-aXNwbGF5IFBvcnQgSVANCj4gPiA+ID4gY29tcG9uZW50wqANCj4gPiA+ID4gd2hpY2ggcmVxdWly
-ZXMgYSBuZXcgZHJpdmVyLiBUaGlzIGlzIGEgdmlydHVhbCBkcml2ZXIgaW4gd2hpY2gNCj4gPiA+
-ID4gdGhlDQo+ID4gPiA+IEZHUEEgaGFyZHdhcmUgd291bGQgZW5hYmxlIHRoZSBEaXNwbGF5IFBv
-cnQgYmFzZWQgb24gdGhlDQo+ID4gPiA+IGluZm9ybWF0aW9uDQo+ID4gPiA+IGFuZCBkYXRhIHBy
-b3ZpZGVkIGZyb20gdGhlIERSTSBmcmFtZSBidWZmZXIgZnJvbSB0aGUgT1MuDQo+ID4gPiA+IEJh
-c2ljYWxseQ0KPiA+ID4gPiBhbGwNCj4gPiA+ID4gYWxsIGluZm9ybWF0aW9uIHdpdGggcmVhZ3Jk
-cyB0byByZXNvbHV0aW9uIGFuZCBiaXRzIHBlciBwaXhlbA0KPiA+ID4gPiBhcmUNCj4gPiA+ID4g
-cHJlLWNvbmZpZ3VyZWQgb24gdGhlIEZQR0EgZGVzaWduIGFuZCB0aGVzZSBpbmZvcm1hdGlvbiBh
-cmUgZmVkDQo+ID4gPiA+IHRvDQo+ID4gPiA+IHRoZSBkcml2ZXIgdmlhIHRoZSBkZXZpY2UgdHJl
-ZSBpbmZvcm1hdGlvbiBhcyBwYXJ0IG9mIHRoZQ0KPiA+ID4gPiBoYXJkd2FyZcKgDQo+ID4gPiA+
-IGluZm9ybWF0aW9uLg0KPiA+ID4gSSBzdGFydGVkIHJldmlld2luZyB0aGUgY29kZSwgYnV0IEkg
-d2FudCB0byBtYWtlIHN1cmUgSQ0KPiA+ID4gdW5kZXJzdGFuZA0KPiA+ID4gd2hhdCdzIGdvaW5n
-IG9uOg0KPiA+ID4gDQo+ID4gPiBUaGlzIElQIGNvcmUgaXNuJ3QgZGlzcGxheWluZyBjb250ZW50
-cyBmcm9tIHN5c3RlbSBtZW1vcnkgb24gc29tZQ0KPiA+ID4gc29ydA0KPiA+ID4gb2YgYWN0dWFs
-IHBoeXNpY2FsIGRpc3BsYXksIHJpZ2h0P8KgwqBJdCdzIGEgY29yZSB0aGF0IHRha2VzIHNvbWUN
-Cj4gPiA+IGlucHV0DQo+ID4gPiB2aWRlbyBzdHJlYW0gKG5vdCBkZXNjcmliZWQgaW4gdGhlIERU
-IG9yIGluIHRoaXMgZHJpdmVyKSBhbmQNCj4gPiA+IHN0b3Jlcw0KPiA+ID4gaXQNCj4gPiA+IHRv
-IG1lbW9yeT8NCj4gPiBJZiB0aGUgSVAgQ29yZSB5b3UgYXJlIHJlZmVycmluZyB0byBpcyBzb21l
-IGZvcm0gb2YgR1BVIHRoZW4gaW4NCj4gPiB0aGlzDQo+ID4gY2FzZSB3ZSBhcmUgdXNpbmcgdGhl
-IEludGVsIEZQR0EgRGlzcGxheSBQb3J0IEZyYW1lYnVmZmVyIElQLiBJdA0KPiA+IGRvZXMNCj4g
-PiBkaXNwbGF5IGNvbnRlbnRzIHN0cmVhbWVkIGZyb20gdGhlIEFSTS9MaW51eCBzeXN0ZW0gdG8g
-dGhlIERpc3BsYXkNCj4gPiBQb3J0DQo+ID4gb2YgdGhlIHBoeXNpY2FsIE1vbml0b3IuDQo+ID4g
-DQo+ID4gQmVsb3cgYSBzaW1wbGUgaWxsdXN0cmF0aW9uIG9mIHRoZSBzeXN0ZW06DQo+ID4gDQo+
-ID4gQVJNL0xpbnV4IC0tRE1BLS0+SW50ZWwgRlBHQSBEaXNwbGF5IFBvcnQgRnJhbWVidWZmZXIg
-SVANCj4gPiAJCQkJfA0KPiA+IAkJCQl8DQo+ID4gCQkJUGh5c2ljYWwgQ29ubmVjdGlvbg0KPiA+
-IAkJCURpc3BsYXkgUG9ydA0KPiBUaGUgIkRNQSIgaW4gdGhpcyBkaWFncmFtIGlzIHRoZSBmcmFt
-ZSByZWFkZXIgSVAsIHJpZ2h0P8KgwqBUaGUgZnJhbWUNCj4gcmVhZGVyLCBhcyBkZXNjcmliZWQg
-aW4gdGhlIHNwZWMsIHNvdW5kcyBhcHByb3hpbWF0ZWx5IGxpa2UgYSBEUk0NCj4gcGxhbmUsDQo+
-IHNvIGlmIHlvdSBoYXZlIHRoYXQgaW4geW91ciBzeXN0ZW0gdGhlbiB0aGF0IG5lZWRzIHRvIGJl
-IHBhcnQgb2YgdGhpcw0KPiBEUk0gZHJpdmVyIChvdGhlcndpc2UgeW91IHdvbid0IGJlIHB1dHRp
-bmcgdGhlIHJpZ2h0IHRoaW5ncyBvbiB0aGUNCj4gc2NyZWVuISkuDQoNCldvdWxkIHRoZSBkcm1f
-c2ltcGxlX2Rpc3BsYXlfcGlwZV9pbml0wqBiZSBhYmxlIHRvIGhhbmRsZSB0aGlzID8gSXQNCnNl
-ZW1zIHRvIGJlIGRpc3BsYXlpbmcgdGhlIHByb3BlciBpbWFnZXMgb24gc2NyZWVuLCBiYXNlZCBv
-biBteSBjdXJyZW50DQpjaGFuZ2VzLiBUaGVyZSB3ZXJlIHJlY29tbWVuZGF0aW9ucyB0byB1c2Ug
-dGhlDQpkcm1fc2ltcGxlX2Rpc3BsYXlfcGlwZV9pbml0IGluc3RlYWQgb2YgY3JlYXRpbmcgdGhl
-IENSVEMgYW5kIHBsYW5lcw0KbXlzZWxm
+1. Sata ecc should be disabled due to a erratum.
+Provide the ecc register address for driver to use.
+2. Enable dma coherence operation
+
+Signed-off-by: Tang Yuantian <andy.tang-3arQi8VN3Tc@public.gmane.org>
+---
+ arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
+index 2946fd7..90edd76 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
+@@ -265,10 +265,13 @@
+ 
+ 		sata: sata@3200000 {
+ 			compatible = "fsl,ls1088a-ahci", "fsl,ls1043a-ahci";
+-			reg = <0x0 0x3200000 0x0 0x10000>;
++			reg = <0x0 0x3200000 0x0 0x10000>,
++				<0x0 0x20140520 0x0 0x4>;
++			reg-names = "ahci", "sata-ecc";
+ 			interrupts = <0 133 IRQ_TYPE_LEVEL_HIGH>;
+ 			clocks = <&clockgen 4 3>;
+ 			status = "disabled";
++			dma-coherent;
+ 		};
+ 	};
+ 
+-- 
+2.1.0.27.g96db324
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
