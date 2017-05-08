@@ -1,69 +1,100 @@
-From: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v4 3/5] soc: qcom: Introduce APCS IPC driver
-Date: Mon, 8 May 2017 12:17:02 +0530
-Message-ID: <CABb+yY3CfWFBDh-qoGHDeHyLhVC7mPQZFB=VDS54OaypG-BqPw@mail.gmail.com>
-References: <20170504200539.27027-1-bjorn.andersson@linaro.org>
- <20170504200539.27027-3-bjorn.andersson@linaro.org> <CABb+yY2P=qPTYB6PDkjV82Qc67Xzer40BHRsOQP2m-gM3eK_UA@mail.gmail.com>
- <20170505183729.GG15143@minitux> <CABb+yY03imq8911rF9dHJjG_a_aosksA=tgk7Rog5AZSezHDyg@mail.gmail.com>
- <338c4262-cc6b-bed2-16fe-1767d1f0d5f6@codeaurora.org> <CABb+yY1K3Hyn7CzQCA6tHu-KrPigARc3cYgBdT8PNX7vjhPK0g@mail.gmail.com>
- <20170506011920.GH15143@minitux> <CABb+yY1u9mspX1Zu0mg21JMYxpKxsXsvBa9LnF6VNr1_42UJUQ@mail.gmail.com>
- <20170508055439.GJ15143@minitux>
+From: Sean Wang <sean.wang@mediatek.com>
+Subject: Re: [PATCH 6/6] dt-bindings: cpufreq: enhance Mediatek cpufreq
+ dt-binding document
+Date: Mon, 8 May 2017 14:58:31 +0800
+Message-ID: <1494226711.9662.22.camel@mtkswgap22>
+References: <1493997974-17699-1-git-send-email-sean.wang@mediatek.com>
+         <1493997974-17699-7-git-send-email-sean.wang@mediatek.com>
+         <20170508042010.GD17010@vireshk-i7>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170508055439.GJ15143@minitux>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Jeffrey Hugo <jhugo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ohad Ben-Cohen <ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-remoteproc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <20170508042010.GD17010@vireshk-i7>
+Sender: linux-clk-owner@vger.kernel.org
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: rjw@rjwysocki.net, robh+dt@kernel.org, matthias.bgg@gmail.com, mark.rutland@arm.com, mturquette@baylibre.com, jamesjj.liao@mediatek.com, p.zabel@pengutronix.de, shunli.wang@mediatek.com, erin.lo@mediatek.com, jdelvare@suse.de, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-pm@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 8, 2017 at 11:24 AM, Bjorn Andersson
-<bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> On Fri 05 May 21:48 PDT 2017, Jassi Brar wrote:
->
-> The APCS IPC register serves the basis for all inter-processor
-> communication in a Qualcomm platform, so it's not only the RPM driver
-> discussed earlier that uses this. It's also used for other non-FIFO
-> based communication channels, where the signalled information either
-> isn't acked at all or acked on a system-level.
->
-Something has to indicate consumption of data or "requested action
-taken". Otherwise the protocol is design-wise broken.
+On Mon, 2017-05-08 at 09:50 +0530, Viresh Kumar wrote:
+> On 05-05-17, 23:26, sean.wang@mediatek.com wrote:
+> > From: Sean Wang <sean.wang@mediatek.com>
+> > 
+> > Update binding document to reflect the lastest driver logic and
+> 
+> The bindings don't follow the drivers but its the other way around. Don't
+> mention anything about the drivers in the bindings patches.
 
-> But regardless of the protocol implemented ontop, the purpose of the
-> APCS IPC bit is _only_ to invoke some remote handler to consume some
-> data, somewhere - the event in itself does not carry any information.
->
-Yes, every platform that uses shared-memory works like that. However
-there is always something that tells if the command has been acted
-upon by the remote. In your case that is the read-pointer movement.
 
->> The client should call mbox_client_txdone() after
->> mbox_send_message().
->
-> So every time we call mbox_send_message() from any of the client drivers
-> we also needs to call mbox_client_txdone()?
->
-Yes.
+Okay. I made a mistake: DT bindings shouldn't reference drivers and they
+are OS-agnostic. I will correct them with the principle. 
 
-> This seems like an awkward side effect of using the mailbox framework -
-> which has to be spread out in at least 6 different client drivers :(
->
-No. Mailbox or whatever you implement - you must (and do) tick the
-state machine to keep the messages moving.
-  Best designs have some interrupt occurring when the message has been
-consumed by the remote. Some designs have a flag set which needs to be
-polled to detect completion. Very few (like yours) that support
-neither irq nor polling, have to be driven by the upper protocol layer
-by some ack packet (or tracking read/write pointers like you do).
-These three cases are denoted by TXDONE_BY_IRQ, TXDONE_BY_POLL and
-TXDONE_BY_ACK respectively.
+Thanks for your patience and guidance 
 
-  If no client driver will ever submit a message if there is no space
-in FIFO, then you can specify TXDONE_BY_POLL and have last_tx_done()
-always return true. That way you don't need to call
-mbox_client_txdone().
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+> > add more examples guiding people how to use Mediatek cpufreq driver.
+> > 
+> > Signed-off-by: Sean Wang <sean.wang@mediatek.com>
+> > ---
+> >  .../bindings/cpufreq/cpufreq-mediatek.txt          | 170 ++++++++++++++++++++-
+> >  1 file changed, 167 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/cpufreq/cpufreq-mediatek.txt b/Documentation/devicetree/bindings/cpufreq/cpufreq-mediatek.txt
+> > index 52b457c..0703927 100644
+> > --- a/Documentation/devicetree/bindings/cpufreq/cpufreq-mediatek.txt
+> > +++ b/Documentation/devicetree/bindings/cpufreq/cpufreq-mediatek.txt
+> > @@ -1,4 +1,5 @@
+> > -Device Tree Clock bindins for CPU DVFS of Mediatek MT8173 SoC
+> > +Binding for Mediatek's CPUFreq driver
+> > +=====================================
+> >  
+> >  Required properties:
+> >  - clocks: A list of phandle + clock-specifier pairs for the clocks listed in clock names.
+> > @@ -9,6 +10,8 @@ Required properties:
+> >  			  transition and not stable yet.
+> >  	Please refer to Documentation/devicetree/bindings/clk/clock-bindings.txt for
+> >  	generic clock consumer properties.
+> > +- operating-points-v2: Pleaser refer to Documentation/devicetree/bindings/opp/opp.txt
+> > +	for detail.
+> >  - proc-supply: Regulator for Vproc of CPU cluster.
+> >  
+> >  Optional properties:
+> > @@ -17,9 +20,166 @@ Optional properties:
+> >  	       Vsram to fit SoC specific needs. When absent, the voltage scaling
+> >  	       flow is handled by hardware, hence no software "voltage tracking" is
+> >  	       needed.
+> > +- #cooling-cells:
+> > +- cooling-min-level:
+> > +- cooling-max-level:
+> > +	Please refer to Documentation/devicetree/bindings/thermal/thermal.txt
+> > +	for detail.
+> > +
+> > +Example 1 (MT7623 SoC):
+> > +
+> > +	cpu_opp_table: opp_table {
+> > +		compatible = "operating-points-v2";
+> > +		opp-shared;
+> > +
+> > +		opp@598000000 {
+> 
+> s/opp@/opp-/
+
+I have referred to other dt-binding as examples where they also use opp@
+as the prefix word.  e.g bindings/cpufreq/ti-cpufreq.txt did it.
+
+Or I misunderstand something you pointed out here ?
+
+
+
+
+
+
+
+
+
+
+
+
+> 
+
+
