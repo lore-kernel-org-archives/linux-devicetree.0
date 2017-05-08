@@ -1,73 +1,70 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH V6 1/9] PM / OPP: Introduce "power-domain-opp" property
-Date: Mon, 8 May 2017 12:43:50 +0530
-Message-ID: <20170508071350.GH17010@vireshk-i7>
-References: <cover.1493203884.git.viresh.kumar@linaro.org>
- <025acedb263eaa6089d354d9630214ada8013990.1493203884.git.viresh.kumar@linaro.org>
- <20170428204803.plu467okibtxga4d@rob-hp-laptop>
- <a307c76d-72c3-eb84-e7d4-d5e47e2af727@arm.com>
+From: Varadarajan Narayanan <varada@codeaurora.org>
+Subject: Re: [PATCH 4/5] arm64: dts: Add ipq8074 SoC and MTP board support
+Date: Mon, 8 May 2017 13:02:20 +0530
+Message-ID: <a63b7ccf-51a6-5d10-47e1-aac9a27a1516@codeaurora.org>
+References: <1493373403-23462-1-git-send-email-varada@codeaurora.org>
+ <1493373403-23462-5-git-send-email-varada@codeaurora.org>
+ <20170428185825.75usyll55p3aclnm@latitude>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <a307c76d-72c3-eb84-e7d4-d5e47e2af727@arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sudeep Holla <sudeep.holla@arm.com>
-Cc: Rob Herring <robh@kernel.org>, Rafael Wysocki <rjw@rjwysocki.net>, ulf.hansson@linaro.org, Kevin Hilman <khilman@kernel.org>, Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@codeaurora.org>, linaro-kernel@lists.linaro.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, Vincent Guittot <vincent.guittot@linaro.org>, lina.iyer@linaro.org, rnayak@codeaurora.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <20170428185825.75usyll55p3aclnm@latitude>
+Content-Language: en-US
+Sender: linux-gpio-owner@vger.kernel.org
+To: =?UTF-8?Q?Jonathan_Neusch=c3=a4fer?= <j.neuschaefer@gmx.net>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, mturquette@baylibre.com, sboyd@codeaurora.org, linus.walleij@linaro.org, andy.gross@linaro.org, david.brown@linaro.org, catalin.marinas@arm.com, will.deacon@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, sricharan@codeaurora.org, absahu@codeaurora.org, sjaganat@codeaurora.org, Manoharan Vijaya Raghavan <mraghava@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On 03-05-17, 12:29, Sudeep Holla wrote:
-> 
-> 
-> On 28/04/17 21:48, Rob Herring wrote:
-> > On Wed, Apr 26, 2017 at 04:27:05PM +0530, Viresh Kumar wrote:
-> >> Power-domains need to express their active states in DT and the devices
-> >> within the power-domain need to express their dependency on those active
-> >> states. The power-domains can use the OPP tables without any
-> >> modifications to the bindings.
-> >>
-> >> Add a new property "power-domain-opp", which will contain phandle to the
-> >> OPP node of the parent power domain. This is required for devices which
-> >> have dependency on the configured active state of the power domain for
-> >> their working.
-> >>
-> >> For some platforms the actual frequency and voltages of the power
-> >> domains are managed by the firmware and are so hidden from the high
-> >> level operating system. The "opp-hz" property is relaxed a bit to
-> >> contain indexes instead of actual frequency values to support such
-> >> platforms.
-> >>
-> >> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
-> >> ---
-> >>  Documentation/devicetree/bindings/opp/opp.txt | 74 ++++++++++++++++++++++++++-
-> >>  1 file changed, 73 insertions(+), 1 deletion(-)
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/opp/opp.txt b/Documentation/devicetree/bindings/opp/opp.txt
-> >> index 63725498bd20..6e30cae2a936 100644
-> >> --- a/Documentation/devicetree/bindings/opp/opp.txt
-> >> +++ b/Documentation/devicetree/bindings/opp/opp.txt
-> >> @@ -77,7 +77,10 @@ This defines voltage-current-frequency combinations along with other related
-> >>  properties.
-> >>  
-> >>  Required properties:
-> >> -- opp-hz: Frequency in Hz, expressed as a 64-bit big-endian integer.
-> >> +- opp-hz: Frequency in Hz, expressed as a 64-bit big-endian integer. In some
-> >> +  cases the exact frequency in Hz may be hidden from the OS by the firmware and
-> >> +  this field may contain values that represent the frequency in a firmware
-> >> +  dependent way, for example an index of an array in the firmware.
-> > 
-> > Not really sure OPP binding makes sense here. What about all the other 
-> > properties. We expose voltage, but not freq?
-> > 
-> 
-> I completely agree with that and I have been pushing this to be
-> represented as just regulators[0]. Mark B seem to dislike that
-> idea [1]
 
-Just as an update, Rajendra confirmed (offline) that for some of the
-implementations, the microcontroller handles both frequency and
-voltages of a device. So it isn't just a regulator anymore and as me
-and Kevin were saying, we need a complete OPP here.
+
+On 4/29/2017 12:28 AM, Jonathan Neuschäfer wrote:
+> Hi,
+> 
+> On Fri, Apr 28, 2017 at 03:26:42PM +0530, Varadarajan Narayanan wrote:
+>> Subject: [PATCH 4/5] arm64: dts: Add ipq8074 SoC and MTP board support
+> 
+> s/MTP/HK01/ ?
+
+Have posted v2 with MTP changed as HK01. Please refer to
+https://www.spinics.net/lists/arm-kernel/msg579470.html.
+
+Thanks
+Varada
+
+> 
+>> Add initial device tree support for the Qualcomm IPQ8074 SoC and
+>> HK01 evaluation board.
+>>
+>> Signed-off-by: Manoharan Vijaya Raghavan <mraghava@codeaurora.org>
+>> Signed-off-by: Abhishek Sahu <absahu@codeaurora.org>
+>> Signed-off-by: Varadarajan Narayanan <varada@codeaurora.org>
+>> ---
+>>   arch/arm64/boot/dts/qcom/Makefile         |   1 +
+>>   arch/arm64/boot/dts/qcom/ipq8074-hk01.dts |  48 ++++++++++
+>>   arch/arm64/boot/dts/qcom/ipq8074.dtsi     | 153 ++++++++++++++++++++++++++++++
+>>   3 files changed, 202 insertions(+)
+>>   create mode 100644 arch/arm64/boot/dts/qcom/ipq8074-hk01.dts
+>>   create mode 100644 arch/arm64/boot/dts/qcom/ipq8074.dtsi
+>>
+>> diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
+>> index cc0f02d..7c6963e 100644
+>> --- a/arch/arm64/boot/dts/qcom/Makefile
+>> +++ b/arch/arm64/boot/dts/qcom/Makefile
+>> @@ -4,6 +4,7 @@ dtb-$(CONFIG_ARCH_QCOM)	+= msm8916-mtp.dtb
+>>   dtb-$(CONFIG_ARCH_QCOM)	+= msm8992-bullhead-rev-101.dtb
+>>   dtb-$(CONFIG_ARCH_QCOM)	+= msm8994-angler-rev-101.dtb
+>>   dtb-$(CONFIG_ARCH_QCOM)	+= msm8996-mtp.dtb
+>> +dtb-$(CONFIG_ARCH_QCOM)	+= ipq8074-hk01.dtb
+> 
+> Maybe this list should be alphabetically sorted ('i' before 'm').
+> (I have no strong preference)
+> 
+> 
+> Thanks,
+> Jonathan Neuschäfer
+> 
 
 -- 
-viresh
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora 
+Forum, a Linux Foundation Collaborative Project
