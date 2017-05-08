@@ -1,105 +1,37 @@
-From: Shuah Khan <shuahkhan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: Odroid XU4: fix USB3.0 ports
-Date: Mon, 8 May 2017 10:19:25 -0600
-Message-ID: <CAKocOONWPT_oej+6A2AqK9CqowdHsFvLtsSav-0N=UZKSu0-Sw@mail.gmail.com>
-References: <20170124134809.23315-1-richard.genoud@gmail.com>
- <CANAwSgRAT0-XETx=yVRgM4GfukFLLEw-hqHjYGEWs0tqAx8g2g@mail.gmail.com>
- <CGME20170125075556epcas1p4b916a6d6acda28f8fc1959a1227520fa@epcas1p4.samsung.com>
- <CAJKOXPesCuYsK23466=6W9PPX7DtztdymZLBfNz0Dmjzwp4qBA@mail.gmail.com>
- <ef6c0d33-73d6-805e-aeab-86190e8b0aa0@samsung.com> <CAJKOXPd+CnmVG282NEVCFqS_3YEURCWx41udyQKpL21keGJOWg@mail.gmail.com>
- <4dca1d8e-f955-7791-90c0-4e73a273fe62@gmail.com> <CACQ1gAj5ebug28CJ2xiYWKohMhNbGr=tmy6mS-57CFq=K-bqyQ@mail.gmail.com>
- <20170210133439.qfiuggbuoi7hq6el@kozik-lap>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 16/20] dt-bindings: display: sun4i: Add
+ HDMI display bindings
+Date: Mon, 8 May 2017 11:20:23 -0500
+Message-ID: <20170508162023.nseoybdkmwdz7sls@rob-hp-laptop>
+References: <cover.d697f34bb7b0605c5e76cbc4167a64453e5e0984.1493812478.git-series.maxime.ripard@free-electrons.com>
+ <0941a11259b2dba88d235c6ad713e3451d385028.1493812478.git-series.maxime.ripard@free-electrons.com>
+Reply-To: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170210133439.qfiuggbuoi7hq6el@kozik-lap>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Richard Genoud <richard.genoud-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Anand Moon <linux.amoon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?UTF-8?B?QmFydMWCb21pZWogxbtvxYJuaWVya2lld2ljeg==?= <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Huang Rui <ray.huang-5C7GfCeVMHo@public.gmane.org>, Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Heikki Krogerus <heikki.krogerus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux USB Mailing List <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, shuahkh-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org
+Return-path: <linux-sunxi+bncBDJIP47K7MERBSNVYLEAKGQE2X6EQMI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <0941a11259b2dba88d235c6ad713e3451d385028.1493812478.git-series.maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Daniel Vetter <daniel.vetter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Krzysztof,
+On Wed, May 03, 2017 at 01:59:53PM +0200, Maxime Ripard wrote:
+> One of the possible output of the display pipeline, on the SoCs that have
+> it, is the HDMI controller.
+> 
+> Add a binding for it.
+> 
+> Acked-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+> Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt | 79 +++++++-
+>  1 file changed, 79 insertions(+), 0 deletions(-)
 
-On Fri, Feb 10, 2017 at 6:34 AM, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> On Thu, Feb 09, 2017 at 11:26:48AM +0100, Richard Genoud wrote:
->> I did some tests with XU3 and XU4, playing with USB2 and USB3 quirks
->> (snps,dis_u{2,3}_susphy_quirk)
->>
->> kernel for the tests: next-20170206
->> DTBs: exynos5422-odroidxu3-lite.dtb exynos5422-odroidxu4.dtb
->>
->> USB devices used for the tests: kingston USB3 key, Akasa sata/USB3
->> +SSD standard USB2 key
->> once recognized, a dd if=/dev/sda bs=1M count=100 of=/dev/null is done.
->>
->>
->> The results are:
->> - On XU4:
->>   - adding snps,dis_u2_susphy_quirk doesn't change anything:
->>     inserting an USB2 or USB3 device gives the error message:
->>     xhci-hcd xhci-hcd.2.auto: Port resume took longer than 20000 msec,
->> port status = 0xc400fe3
->>   - with snps,dis_u3_susphy_quirk, USB2 and USB3 devices are recognized
->>
->> - On XU3:
->>   - Without changing XU3 dts, USB2 devices are recognized.
->>   - With or without the snps,dis_u3_susphy_quirk, USB3 devices are not
->> recognized/not working properly
->>   (never seen or disconnected, unable to enumerate, etc.)
->>   However, adding an external powered USB3 hub in between works. (with
->> or without the snps,dis_u3_susphy_quirk)
->>   Anyway, this problem doesn't seems to be related to the other since
->>   addind the quirks doesn't change anything.
->
-> From this description I am missing where are you inserting the USB
-> devices.
->
-> Both boards have totally different USB port configuration. On XU3 the
-> hub is on USB 2.0 port. On XU4 the opposite - the hub is on USB 3.0
-> port.
->
-
-I am running into this on XU4 USB 3.0 ports. Cold booting with device
-present in USB 3.0 port, device is recognized.
-
-Bus 004 Device 003: ID 8564:4000 Transcend Information, Inc. RDF8
-    MaxPower              224mA
-
-However, if I were to insert it after boot, it fails to resume the port.
-
-[ 2936.560129] usb 4-1.2: USB disconnect, device number 3
-[ 2959.249815] xhci-hcd xhci-hcd.2.auto: Port resume took longer than
-20000 msec, port status = 0xc400fe3
-
-and lsusb -v|egrep "^Bus|MaxPower" shows:
-
-Bus 004 Device 001: ID 1d6b:0003 Linux Foundation 3.0 root hub
-    MaxPower                0mA
-
-Preventing suspend with this. Looking at this more, could this be
-related to GCTL.RAMCLKSEL?
-
-The commnet block below in dwc3_gadget_conndone_interrupt() seems to
-indicate a potential problem on platforms when RAMClkSel is reset to 0
-after USB reset. Is that the case on Odroid-xu4 that updating
-GCTL.RAMCLKSEL is necessary to USB device hotplug to work without the
-the quirk?
-
-     /*
-         * RAMClkSel is reset to 0 after USB reset, so it must be reprogrammed
-         * each time on Connect Done.
-         *
-         * Currently we always use the reset value. If any platform
-         * wants to set this to a different value, we need to add a
-         * setting and update GCTL.RAMCLKSEL here.
-         */
-
-I can debug this more dumping GCTL.RAMCLKSEL registers in cold boot
-vs. hotplig cases to get more information.
-
-thanks,
--- Shuah
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
