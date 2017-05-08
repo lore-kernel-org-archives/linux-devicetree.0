@@ -1,95 +1,201 @@
-From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 2/6] Documentation: devicetree: add bindings to support
- ARM MHU subchannels
-Date: Mon, 8 May 2017 17:53:24 +0100
-Message-ID: <993d6114-e996-3953-03ec-fe5f02ee393a@arm.com>
-References: <1493733353-25812-1-git-send-email-sudeep.holla@arm.com>
- <1493733353-25812-3-git-send-email-sudeep.holla@arm.com>
- <20170508161026.5vdqnv52ub7hurwf@rob-hp-laptop>
+From: Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Subject: Re: [PATCH v9 5/6] i2c: designware: add SLAVE mode functions
+Date: Mon, 08 May 2017 19:53:19 +0300
+Message-ID: <1494262399.30052.69.camel@linux.intel.com>
+References: <cover.1493893241.git.lolivei@synopsys.com>
+         <b2accd73182d19927dfb0cd1a57cadf469ae5e9d.1493893241.git.lolivei@synopsys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170508161026.5vdqnv52ub7hurwf@rob-hp-laptop>
+In-Reply-To: <b2accd73182d19927dfb0cd1a57cadf469ae5e9d.1493893241.git.lolivei-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexey Klimov <alexey.klimov-5wv7dgnIgG8@public.gmane.org>, Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+To: Luis Oliveira <Luis.Oliveira-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, jarkko.nikula-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Ramiro.Oliveira-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, Joao.Pinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, CARLOS.PALMINHA-HKixBCOQz3hWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 08/05/17 17:10, Rob Herring wrote:
-> +Bjorn
+On Mon, 2017-05-08 at 11:37 +0100, Luis Oliveira wrote:
+> - Changes in Kconfig to enable I2C_DESIGNWARE_SLAVE support
+> - Slave functions added to core library file
+> - Slave abort sources added to common source file
+> - New driver: i2c-designware-slave added
+> - Changes in the Makefile to compile the I2C_DESIGNWARE_SLAVE module
+>   when supported by the architecture.
 > 
-> On Tue, May 02, 2017 at 02:55:49PM +0100, Sudeep Holla wrote:
->> The ARM MHU has mechanism to assert interrupt signals to facilitate
->> inter-processor message based communication. It drives the signal using
->> a 32-bit register, with all 32-bits logically ORed together. It also
->> enables software to set, clear and check the status of each of the bits
->> of this register independently. Each bit of the register can be
->> associated with a type of event that can contribute to raising the
->> interrupt thereby allowing it to be used as independent subchannels.
->>
->> Since the first version of this binding can't support sub-channels,
->> this patch extends the existing binding to support them.
->>
->> Cc: Alexey Klimov <alexey.klimov-5wv7dgnIgG8@public.gmane.org>
->> Cc: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->> Signed-off-by: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
->> ---
->>  .../devicetree/bindings/mailbox/arm-mhu.txt        | 44 ++++++++++++++++++++--
->>  1 file changed, 41 insertions(+), 3 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/mailbox/arm-mhu.txt b/Documentation/devicetree/bindings/mailbox/arm-mhu.txt
->> index 4971f03f0b33..86a66f7918e2 100644
->> --- a/Documentation/devicetree/bindings/mailbox/arm-mhu.txt
->> +++ b/Documentation/devicetree/bindings/mailbox/arm-mhu.txt
->> @@ -10,21 +10,40 @@ STAT register and the remote clears it after having read the data.
->>  The last channel is specified to be a 'Secure' resource, hence can't be
->>  used by Linux running NS.
->>  
->> +The MHU drives the interrupt signal using a 32-bit register, with all
->> +32-bits logically ORed together. It provides a set of registers to
->> +enable software to set, clear and check the status of each of the bits
->> +of this register independently. The use of 32 bits per interrupt line
->> +enables software to provide more information about the source of the
->> +interrupt. For example, each bit of the register can be associated with
->> +a type of event that can contribute to raising the interrupt.
-> 
-> Sounds like a doorbell? (i.e. a single bit mailbox). Bjorn is doing 
-> something similar for QCom h/w. I guess the difference here is you have 
-> 32 sources and 1 output. It seems to me these should be described 
-> similarly.
-> 
+> All the SLAVE flow is added but it is not enabled via platform
+> driver.
 
-Indeed single bit doorbell, but 32 of them joined together.
-OK, I will have a look at that Bjorn series.
+My comments below.
+Overall entire series looks much much better than first version.
 
->> +
->>  Mailbox Device Node:
->>  ====================
->>  
->>  Required properties:
->>  --------------------
->> -- compatible:		Shall be "arm,mhu" & "arm,primecell"
->> +- compatible:		Shall be "arm,primecell" and one of the below:
->> +			"arm,mhu" - if the controller doesn't support
->> +				    subchannels
->> +			"arm,mhu-v2" - if the controller supports subchannels
-> 
-> How do I know if I have v2? This correlates to an IP version or 
-> IP configuration or ?
-> 
+> @@ -41,6 +41,7 @@ obj-$(CONFIG_I2C_CPM)		+= i2c-cpm.o
+>  obj-$(CONFIG_I2C_DAVINCI)	+= i2c-davinci.o
+>  obj-$(CONFIG_I2C_DESIGNWARE_CORE)	+= i2c-designware-core.o
+>  i2c-designware-core-objs := i2c-designware-common.o i2c-designware-
+> master.o
 
-No, it's the same IP, just that initial binding was pushed not to
-support the single bit doorbell functionality of the IP. Jassi was/is
-against that. I have just quoted the specification above.
+> +i2c-designware-core-$(CONFIG_I2C_DESIGNWARE_SLAVE) += i2c-designware-
+> slave.o
+
+What is your intention here?
+
+AFAIUC it should be like
+
+ifneq ($(CONFIG_I2C_DESIGNWARE_SLAVE),n)
+i2c-designware-core-objs += i2c-designware-slave.o
+endif
+
+> +/**
+> + * i2c_dw_init_slave() - Initialize the designware i2c slave hardware
+> + * @dev: device private data
+> + *
+> + * This functions configures and enables the I2C.
+
+functions -> function
+I2C -> I2C in slave mode
+
+> + * This function is called during I2C init function, and in case of
+> timeout at
+> + * run time.
+> + */
+> +int i2c_dw_init_slave(struct dw_i2c_dev *dev)
+> +{
+> +	u32 sda_falling_time, scl_falling_time;
+> +	u32 reg, comp_param1;
+> +	u32 hcnt, lcnt;
+> +	int ret;
+> +
+> +	ret = i2c_dw_acquire_lock(dev);
+> +	if (ret)
+> +		return ret;
+> +
+> +	reg = dw_readl(dev, DW_IC_COMP_TYPE);
+> +	if (reg == ___constant_swab32(DW_IC_COMP_TYPE_VALUE)) {
+> +		/* Configure register endianness access. */
+> +		dev->flags |= ACCESS_SWAP;
+
+> +	} else if (reg == (DW_IC_COMP_TYPE_VALUE & 0x0000ffff)) {
+
+GENMASK(15, 0)
+
+> +		/* Configure register access mode 16bit. */
+> +		dev->flags |= ACCESS_16BIT;
+> +	} else if (reg != DW_IC_COMP_TYPE_VALUE) {
+> +		dev_err(dev->dev,
+> +			"Unknown Synopsys component type: 0x%08x\n",
+> reg);
+> +		i2c_dw_release_lock(dev);
+> +		return -ENODEV;
+> +	}
+
+> +/*
+> + * Interrupt service routine. This gets called whenever an I2C slave
+> interrupt
+> + * occurs.
+> + */
+> +
+> +static int i2c_dw_irq_handler_slave(struct dw_i2c_dev *dev)
+> +{
+> +	u32 raw_stat, stat, enabled;
+> +	u8 val, slave_activity;
+> +
+> +	stat = dw_readl(dev, DW_IC_INTR_STAT);
+> +	enabled = dw_readl(dev, DW_IC_ENABLE);
+> +	raw_stat = dw_readl(dev, DW_IC_RAW_INTR_STAT);
+> +	slave_activity = ((dw_readl(dev, DW_IC_STATUS) &
+> +		DW_IC_STATUS_SLAVE_ACTIVITY) >> 6);
+> +
+> +	if (!enabled || !(raw_stat & ~DW_IC_INTR_ACTIVITY))
+> +		return 0;
+> +
+> +	dev_dbg(dev->dev,
+> +		"%#x SLAVE_ACTV=%#x : RAW_INTR_STAT=%#x :
+> INTR_STAT=%#x\n",
+
+SLAVE_ACTV -> STATUS_SLAVE_ACTIVITY
+
+> +		enabled, slave_activity, raw_stat, stat);
+> +
+
+> +	if (slave_activity) {
+> +		if (stat & DW_IC_INTR_RD_REQ) {
+
+Looking into next condition (stat & DW_IC_INTR_RX_DONE) I would 
+exchange these lines
+
+> +			if (stat & DW_IC_INTR_RX_FULL) {
+> +				val = dw_readl(dev, DW_IC_DATA_CMD);
+> +				if (!i2c_slave_event(dev->slave,
+> +				I2C_SLAVE_WRITE_RECEIVED, &val)) {
+> +					dev_vdbg(dev->dev, "Byte %X
+> acked!",
+> +					val);
+> +					}
+> +				dw_readl(dev, DW_IC_CLR_RD_REQ);
+> +				stat =
+> i2c_dw_read_clear_intrbits_slave(dev);
+> +			} else {
+> +				dw_readl(dev, DW_IC_CLR_RD_REQ);
+> +				dw_readl(dev, DW_IC_CLR_RX_UNDER);
+> +				stat =
+> i2c_dw_read_clear_intrbits_slave(dev);
+> +			}
+> +			if (!i2c_slave_event(dev->slave,
+> +					I2C_SLAVE_READ_REQUESTED,
+> &val))
+> +				dw_writel(dev, val, DW_IC_DATA_CMD);
+> +		}
+> +	}
+> +
+> +	if (stat & DW_IC_INTR_RX_DONE) {
+> +		if (!i2c_slave_event(dev->slave,
+> I2C_SLAVE_READ_PROCESSED,
+> +			&val))
+> +			dw_readl(dev, DW_IC_CLR_RX_DONE);
+> +
+> +		i2c_slave_event(dev->slave, I2C_SLAVE_STOP, &val);
+> +		stat = i2c_dw_read_clear_intrbits_slave(dev);
+> +		return 1;
+> +	}
+> +
+> +	if (stat & DW_IC_INTR_RX_FULL) {
+> +		val = dw_readl(dev, DW_IC_DATA_CMD);
+> +		if (!i2c_slave_event(dev->slave,
+> I2C_SLAVE_WRITE_RECEIVED,
+> +			&val))
+> +			dev_vdbg(dev->dev, "Byte %X acked!", val);
+> +	} else {
+> +		i2c_slave_event(dev->slave, I2C_SLAVE_STOP, &val);
+> +		stat = i2c_dw_read_clear_intrbits_slave(dev);
+> +	}
+> +
+> +	if (stat & DW_IC_INTR_TX_OVER)
+> +		dw_readl(dev, DW_IC_CLR_TX_OVER);
+> +
+> +	return 1;
+> +}
+
+> +static irqreturn_t i2c_dw_isr_slave(int this_irq, void *dev_id)
+> +{
+> +	struct dw_i2c_dev *dev = dev_id;
+> +	int ret;
+> +
+> +	i2c_dw_read_clear_intrbits_slave(dev);
+> +	ret = i2c_dw_irq_handler_slave(dev);
+
+> +
+
+I would remove this line.
+
+> +	if (ret > 0)
+> +		complete(&dev->cmd_complete);
+> +
+> +	return IRQ_RETVAL(ret);
+> +}
 
 -- 
-Regards,
-Sudeep
+Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Intel Finland Oy
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
