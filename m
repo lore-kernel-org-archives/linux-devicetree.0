@@ -1,182 +1,151 @@
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-Subject: Re: [PATCH v5 3/5] device property: Move fwnode graph ops to firmware
- specific locations
-Date: Tue, 9 May 2017 15:36:49 +0300
-Message-ID: <0e2194dc-f056-b405-b4f4-d977b9eacac7@linux.intel.com>
-References: <1493882051-28814-1-git-send-email-sakari.ailus@linux.intel.com>
- <1493882051-28814-4-git-send-email-sakari.ailus@linux.intel.com>
- <CAL_JsqLCWnDiAbfvEp8h_USwpCho8Qd9ojCp3ebeG9CGdvPzvQ@mail.gmail.com>
+From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 2/6] Documentation: devicetree: add bindings to support
+ ARM MHU subchannels
+Date: Tue, 9 May 2017 13:41:10 +0100
+Message-ID: <6bd1e3d5-5e8b-6d02-cd80-9ff2c21de15d@arm.com>
+References: <1493733353-25812-1-git-send-email-sudeep.holla@arm.com>
+ <1493733353-25812-3-git-send-email-sudeep.holla@arm.com>
+ <20170508161026.5vdqnv52ub7hurwf@rob-hp-laptop>
+ <CABb+yY1+rU=gEnqML=ybZ61WDW6Brz_QLw4LpYNNe-XsEgi8dw@mail.gmail.com>
+ <ff6535ec-fa31-e0b7-53a1-9f4a2f03693d@arm.com>
+ <CABb+yY3tXMgQdQratM56mQVEV4Med1i0NyT=zkXk1P4oCao6+A@mail.gmail.com>
+ <ec7869d0-fa18-ec9e-3df7-ac841e06b2d1@arm.com>
+ <CABb+yY1S_aRGDZJwVt+p7U6PcO2dQGsg5bi21-yvx715HGjUtw@mail.gmail.com>
+ <bca5e8bd-3c18-6ed4-2a74-eee513ddc41d@arm.com>
+ <CABb+yY0nMQMrrKTUKu2ZPfEZTzuWN=sFk4PxJFQHvtd=dSE2_w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqLCWnDiAbfvEp8h_USwpCho8Qd9ojCp3ebeG9CGdvPzvQ@mail.gmail.com>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Sudeep Holla <sudeep.holla@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>, "Rafael J. Wysocki" <rafael@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mark Brown <broonie@kernel.org>, Al Stone <ahs3@redhat.com>, Frank Rowand <frowand.list@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CABb+yY0nMQMrrKTUKu2ZPfEZTzuWN=sFk4PxJFQHvtd=dSE2_w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Alexey Klimov <alexey.klimov-5wv7dgnIgG8@public.gmane.org>, Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
 
-Thanks for the review.
 
-On 05/08/17 21:23, Rob Herring wrote:
-> On Thu, May 4, 2017 at 2:14 AM, Sakari Ailus
-> <sakari.ailus@linux.intel.com> wrote:
-...
->> @@ -1184,24 +1167,11 @@ EXPORT_SYMBOL_GPL(fwnode_graph_get_next_endpoint);
->>  struct fwnode_handle *
->>  fwnode_graph_get_remote_port_parent(struct fwnode_handle *fwnode)
->>  {
->> -       struct fwnode_handle *parent = NULL;
->> -
->> -       if (is_of_node(fwnode)) {
->> -               struct device_node *node;
->> -
->> -               node = of_graph_get_remote_port_parent(to_of_node(fwnode));
->> -               if (node)
->> -                       parent = &node->fwnode;
->> -       } else if (is_acpi_node(fwnode)) {
->> -               int ret;
->> -
->> -               ret = acpi_graph_get_remote_endpoint(fwnode, &parent, NULL,
->> -                                                    NULL);
->> -               if (ret)
->> -                       return NULL;
->> -       }
->> +       fwnode = fwnode_graph_get_remote_port(fwnode);
->> +       if (!fwnode)
->> +               return NULL;
+On 09/05/17 12:55, Jassi Brar wrote:
+> On Tue, May 9, 2017 at 4:23 PM, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org> wrote:
 >>
->> -       return parent;
->> +       return fwnode_call_ptr_op(fwnode, graph_get_port_parent);
+>>
+>> On 09/05/17 11:31, Jassi Brar wrote:
+>>> On Tue, May 9, 2017 at 3:28 PM, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+>>> wrote:
+>>>
+>>>>>
+>>>>> If it is still not clear, please share your client driver. I
+>>>>> will adapt that to work with existing MHU driver & bindings.
+>>>>>
+>>>>
+>>>> Just take example of SCPI in the mainline. Assume there's another
+>>>> protocol SCMI which uses few more bits in the same channel and the
+>>>> remote firmware implements both but both are totally independent
+>>>> and not related/linked. Also be keep in mind that SCPI is used by
+>>>> other platforms and so will be the new protocol. We simply make
+>>>> SCPI or SCMI bindings aligned to ARM MHU. That's ruled out.
+>>>>
+>>> Not sure what you mean by "that's ruled out".
+>>
+>> 1. The mailbox client bindings should be independent of this ARM MHU
+>>    mailbox bindings
+>> 2. All we need in client is a mailbox to point at and not any meta data
+>>    That's what I meant by ruled-out as both client and MHU can be used
+>>    independent of each other and *should not* be linked.
+>>
+> I am shocked at this coming from you.
 > 
-> Just make fwnode_call_ptr_op(NULL, ...) return NULL.
+> You design SCMI based upon MHU assumption of single bit "doorbell" and
+> then you say a client should be independent of the underlying
+> controller? Do you intend SCMI to work only over MHU?
+> 
 
-Hmm. That already appears to be the case... I'll take that account
-above, too.
+No, I never said that. What I said is SCMI protocol will be on doorbell
+based.
+
+>  What if some controller does not support the simple "doorbell" and
+> expects detailed info? For example, apart from SCMI, the remote also
+> supports platform specific functions like thermal, watchdog, wakeup
+> etc. The SCMI's would just be a subset of the full command set.
+> You/SCMI can not dictate what numerical value the platform assigns to
+> SCMI commands... 
+
+What ? That's the whole point of specification. The command set is
+*fixed* and can be implemented on any platform and have generic driver
+for that.
+
+> all that is required is the remote firmware should
+> uniquely identify which command is it and implement what the SCMI
+> protocol expects.
+> 
+
+Yes, not just uniquely but exactly as the specification.
+
+> Have a look at  mbox_send_message(struct mbox_chan *chan, void *mssg)
+> The 'mssg' is the pointer to _controller-specified_ structure. The
+> client driver (SCMI) _must_ know what the underlying controller
+> expects and pass that info. For example of 'mssg', look at "struct
+> brcm_message" in include/linux/mailbox/brcm-message.h   The client
+> driver must use that platform specific knowledge to send a message
+> i.e, you can not make a mailbox client driver 100% provider agnostic.
+> 
+
+I disagree. The whole idea is to make it generic with doorbell kind of
+logic. We don't pass any command in the doorbell register, everything is
+part of shared memory and all standardized.
+
+> You need to divide SCMI into two parts - one that manages the SCMI
+> protocol and the other platform specific glue that talks to the
+> mailbox controller over the mailbox api.
+> 
+
+Why ? That's totally unnecessary IMO.
 
 > 
->>  }
->>  EXPORT_SYMBOL_GPL(fwnode_graph_get_remote_port_parent);
+>>> You have already shared this "v2" MHU driver, now please also share
+>>> your client driver. I'll make it work with original MHU driver and
+>>> that should settle your confusion.
 >>
->> @@ -1213,23 +1183,11 @@ EXPORT_SYMBOL_GPL(fwnode_graph_get_remote_port_parent);
->>   */
->>  struct fwnode_handle *fwnode_graph_get_remote_port(struct fwnode_handle *fwnode)
->>  {
->> -       struct fwnode_handle *port = NULL;
->> -
->> -       if (is_of_node(fwnode)) {
->> -               struct device_node *node;
->> -
->> -               node = of_graph_get_remote_port(to_of_node(fwnode));
->> -               if (node)
->> -                       port = &node->fwnode;
->> -       } else if (is_acpi_node(fwnode)) {
->> -               int ret;
->> -
->> -               ret = acpi_graph_get_remote_endpoint(fwnode, NULL, &port, NULL);
->> -               if (ret)
->> -                       return NULL;
->> -       }
->> +       fwnode = fwnode_graph_get_remote_endpoint(fwnode);
->> +       if (!fwnode)
->> +               return NULL;
+>> It should first work with SCPI in the mainline. Then we will add another
+>> similar protocol soon. So I think you have all you need in the mainline.
+>> Today we have hack in the SCPI driver to pass bit 0 set in data. But
+>> that's broken as we may want different slot on some other platform.
+>> Basically SCPI is designed with the use of doorbell and it should not
+>> have any details on how to write that into a particular register as
+>> along as we just choose the right channel.
 >>
->> -       return port;
->> +       return fwnode_get_parent(fwnode);
-> 
-> Just make fwnode_get_parent(NULL) return NULL.
 
-The same.
+Check arm_scpi.c, the aim is to eliminate the need to send the data with
+BIT(0) set as that's platform specific and the protocol has to be generic.
 
-> 
->>  }
->>  EXPORT_SYMBOL_GPL(fwnode_graph_get_remote_port);
+>> On digging more about different mailbox controllers, I found
+>> mailbox-sti.c has exactly similar logic as what I have done in this series.
 >>
->> @@ -1242,25 +1200,7 @@ EXPORT_SYMBOL_GPL(fwnode_graph_get_remote_port);
->>  struct fwnode_handle *
->>  fwnode_graph_get_remote_endpoint(struct fwnode_handle *fwnode)
->>  {
->> -       struct fwnode_handle *endpoint = NULL;
->> -
->> -       if (is_of_node(fwnode)) {
->> -               struct device_node *node;
->> -
->> -               node = of_parse_phandle(to_of_node(fwnode), "remote-endpoint",
->> -                                       0);
->> -               if (node)
->> -                       endpoint = &node->fwnode;
->> -       } else if (is_acpi_node(fwnode)) {
->> -               int ret;
->> -
->> -               ret = acpi_graph_get_remote_endpoint(fwnode, NULL, NULL,
->> -                                                    &endpoint);
->> -               if (ret)
->> -                       return NULL;
->> -       }
->> -
->> -       return endpoint;
->> +       return fwnode_call_ptr_op(fwnode, graph_get_remote_endpoint);
->>  }
->>  EXPORT_SYMBOL_GPL(fwnode_graph_get_remote_endpoint);
->>
->> @@ -1276,22 +1216,8 @@ EXPORT_SYMBOL_GPL(fwnode_graph_get_remote_endpoint);
->>  int fwnode_graph_parse_endpoint(struct fwnode_handle *fwnode,
->>                                 struct fwnode_endpoint *endpoint)
->>  {
->> -       struct fwnode_handle *port_fwnode = fwnode_get_parent(fwnode);
->> -
->>         memset(endpoint, 0, sizeof(*endpoint));
->>
->> -       endpoint->local_fwnode = fwnode;
->> -
->> -       if (is_acpi_node(port_fwnode)) {
->> -               fwnode_property_read_u32(port_fwnode, "port", &endpoint->port);
->> -               fwnode_property_read_u32(fwnode, "endpoint", &endpoint->id);
->> -       } else {
->> -               fwnode_property_read_u32(port_fwnode, "reg", &endpoint->port);
->> -               fwnode_property_read_u32(fwnode, "reg", &endpoint->id);
->> -       }
->> -
->> -       fwnode_handle_put(port_fwnode);
->> -
->> -       return 0;
->> +       return fwnode_call_int_op(fwnode, graph_parse_endpoint, endpoint);
->>  }
->>  EXPORT_SYMBOL(fwnode_graph_parse_endpoint);
->> diff --git a/drivers/of/property.c b/drivers/of/property.c
->> index 984e37e..bb6ac73 100644
->> --- a/drivers/of/property.c
->> +++ b/drivers/of/property.c
->> @@ -869,6 +869,59 @@ static struct fwnode_handle *of_fwnode_get_named_child_node(
->>         return NULL;
->>  }
->>
->> +static struct fwnode_handle *of_fwnode_graph_get_next_endpoint(
->> +       struct fwnode_handle *fwnode, struct fwnode_handle *prev)
->> +{
->> +       struct device_node *node;
->> +
->> +       node = of_graph_get_next_endpoint(to_of_node(fwnode),
->> +                                         to_of_node(prev));
->> +       if (node)
->> +               return of_fwnode_handle(node);
->> +
->> +       return NULL;
-> 
-> Can't of_fwnode_handle() return NULL when node is NULL? Then these
-> functions become one liners:
-> 
-> return of_fwnode_handle(of_graph_get_next_endpoint(to_of_node(fwnode),
->                                          to_of_node(prev)));
 
-Good point. of_fwnode_handle() is a macro (in order to support const /
-non-const cases) and it'll be a little bit more complex but I guess
-that's not really an issue.
+Did you look at this driver ?
+
+>> Also don't mix implementation with the binding. I need a simple answer
+>> in this binding. How do I represent specific bits if each bit is
+>> implemented as a doorbell ? That's all. First let's agree on that when
+>> we use this mailbox independently and please *don't mix* with any
+>> client here. It's simple, this controller has 2-3 sets of 32 doorbell
+>> bits. And I am aiming to come up with the binding for that as your
+>> initial bindings didn't consider that.
+>>
+> Please send in whatever changes you plan to do, and I'll modify it so
+> we don't have to bloat the MHU driver and add bindings for a software
+> feature. Until then ... Cheers!
+> 
+
+Changes to what ? arm_mhu.c ? This series is complete and implements
+doorbell completely.
+
+You seem to have missed to answer some of my questions above. Please do.
 
 -- 
-Kind regards,
-
-Sakari Ailus
-sakari.ailus@linux.intel.com
+Regards,
+Sudeep
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
