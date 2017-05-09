@@ -1,42 +1,68 @@
-From: <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v3] dt-bindings: add vendor prefix for bananapi
-Date: Wed, 10 May 2017 00:12:31 +0800
-Message-ID: <271c3a1548a712c529e5fd783f785e9847ab5103.1494345301.git.sean.wang@mediatek.com>
+From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH V2] ARM: dts: bcm283x: Reserve first page for firmware
+Date: Tue, 9 May 2017 09:25:54 -0700
+Message-ID: <e2718c25-fdf1-ead1-cbfa-d23bf729a079@gmail.com>
+References: <b6aef857-1454-7931-2c60-6d7b55b7a0a8@raspberrypi.org>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <b6aef857-1454-7931-2c60-6d7b55b7a0a8-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+To: Phil Elwell <phil-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+On 05/09/2017 02:04 AM, Phil Elwell wrote:
+> The Raspberry Pi startup stub files for multi-core BCM27XX processors
+> make the secondary CPUs spin until the corresponding mailbox is
+> written. These stubs are loaded at physical address 0x00000xxx (as seen
+> by the ARMs), but this page will be reused by the kernel unless it is
+> explicitly reserved, causing the waiting cores to execute random code.
+> 
+> Use the /memreserve/ Device Tree directive to mark the first page as
+> off-limits to the kernel.
 
-Add BIPAI KEJI LIMITED which is a company dedicating to design and
-manufacture bananapi open hardware.
+This reserves a 4KB page here, is this good enough, or should we just go
+directly to the maximum page granule size possible on an ARM64/Linux
+system to be on the safe side?
 
-Website: http://www.banana-pi.org/
+> 
+> See: https://github.com/raspberrypi/linux/issues/1989
+> 
+> Signed-off-by: Phil Elwell <phil-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org>
+> ---
+> 
+> Changes in V2:
+> - Rebase against linux-next
+> - Drop downstream-only patch
+> 
+>  arch/arm/boot/dts/bcm283x.dtsi | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/bcm283x.dtsi b/arch/arm/boot/dts/bcm283x.dtsi
+> index a3106aa..6d12c3e8 100644
+> --- a/arch/arm/boot/dts/bcm283x.dtsi
+> +++ b/arch/arm/boot/dts/bcm283x.dtsi
+> @@ -3,6 +3,8 @@
+>  #include <dt-bindings/clock/bcm2835-aux.h>
+>  #include <dt-bindings/gpio/gpio.h>
+>  
+> +/memreserve/ 0x00000000 0x00001000;
 
-Signed-off-by: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
----
- Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
- 1 file changed, 1 insertion(+)
+Can you put a comment above this /memreserve entry here to remind about
+what this is useful for?
 
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-index c7d1b72..8f7283d 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@ -44,6 +44,7 @@ avia	avia semiconductor
- avic	Shanghai AVIC Optoelectronics Co., Ltd.
- axentia	Axentia Technologies AB
- axis	Axis Communications AB
-+bananapi BIPAI KEJI LIMITED
- boe	BOE Technology Group Co., Ltd.
- bosch	Bosch Sensortec GmbH
- boundary	Boundary Devices Inc.
+Thanks!
+
+> +
+>  /* This include file covers the common peripherals and configuration between
+>   * bcm2835 and bcm2836 implementations, leaving the CPU configuration to
+>   * bcm2835.dtsi and bcm2836.dtsi.
+> 
+
+
 -- 
-2.7.4
-
+Florian
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
