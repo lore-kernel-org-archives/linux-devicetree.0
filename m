@@ -1,7 +1,7 @@
 From: Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v9 6/9] coresight: refactor with function of_coresight_get_cpu
-Date: Tue,  9 May 2017 10:49:59 +0800
-Message-ID: <1494298202-6739-7-git-send-email-leo.yan@linaro.org>
+Subject: [PATCH v9 5/9] coresight: of_get_coresight_platform_data: Add missing of_node_put
+Date: Tue,  9 May 2017 10:49:58 +0800
+Message-ID: <1494298202-6739-6-git-send-email-leo.yan@linaro.org>
 References: <1494298202-6739-1-git-send-email-leo.yan@linaro.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1494298202-6739-1-git-send-email-leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
@@ -10,104 +10,64 @@ To: Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Mathieu Poirier <math
 Cc: Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This is refactor to add function of_coresight_get_cpu(), so it's used to
-retrieve CPU id for coresight component. Finally can use it as a common
-function for multiple places.
+From: Suzuki K Poulose <suzuki.poulose-5wv7dgnIgG8@public.gmane.org>
 
-Suggested-by: Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+The of_get_coresight_platform_data iterates over the possible CPU nodes
+to find a given cpu phandle. However it does not drop the reference
+to the node pointer returned by the of_get_coresight_platform_data.
+
+This patch also introduces another minor fix is to use
+of_cpu_device_node_get() to replace of_get_cpu_node().
+
+Cc: Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Reviewed-by: Suzuki K Poulose <suzuki.poulose-5wv7dgnIgG8@public.gmane.org>
+Signed-off-by: Suzuki K Poulose <suzuki.poulose-5wv7dgnIgG8@public.gmane.org>
+[Leo: minor tweaks for of_get_coresight_platform_data]
 Signed-off-by: Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 ---
- drivers/hwtracing/coresight/of_coresight.c | 43 +++++++++++++++++++-----------
- include/linux/coresight.h                  |  3 +++
- 2 files changed, 31 insertions(+), 15 deletions(-)
+ drivers/hwtracing/coresight/of_coresight.c | 17 ++++++++++-------
+ 1 file changed, 10 insertions(+), 7 deletions(-)
 
 diff --git a/drivers/hwtracing/coresight/of_coresight.c b/drivers/hwtracing/coresight/of_coresight.c
-index 225b2dd..a187941 100644
+index 2749853..225b2dd 100644
 --- a/drivers/hwtracing/coresight/of_coresight.c
 +++ b/drivers/hwtracing/coresight/of_coresight.c
-@@ -101,16 +101,40 @@ static int of_coresight_alloc_memory(struct device *dev,
- 	return 0;
- }
- 
-+int of_coresight_get_cpu(const struct device_node *node)
-+{
-+	int cpu;
+@@ -109,7 +109,8 @@ of_get_coresight_platform_data(struct device *dev,
+ 	struct coresight_platform_data *pdata;
+ 	struct of_endpoint endpoint, rendpoint;
+ 	struct device *rdev;
+-	struct device_node *dn;
 +	bool found;
 +	struct device_node *dn, *np;
-+
-+	dn = of_parse_phandle(node, "cpu", 0);
-+
-+	/* Affinity defaults to CPU0 */
-+	if (!dn)
-+		return 0;
-+
+ 	struct device_node *ep = NULL;
+ 	struct device_node *rparent = NULL;
+ 	struct device_node *rport = NULL;
+@@ -176,17 +177,19 @@ of_get_coresight_platform_data(struct device *dev,
+ 		} while (ep);
+ 	}
+ 
+-	/* Affinity defaults to CPU0 */
+-	pdata->cpu = 0;
+ 	dn = of_parse_phandle(node, "cpu", 0);
+-	for (cpu = 0; dn && cpu < nr_cpu_ids; cpu++) {
+-		if (dn == of_get_cpu_node(cpu, NULL)) {
+-			pdata->cpu = cpu;
 +	for_each_possible_cpu(cpu) {
 +		np = of_cpu_device_node_get(cpu);
 +		found = (dn == np);
 +		of_node_put(np);
 +		if (found)
-+			break;
-+	}
-+	of_node_put(dn);
-+
-+	/* Affinity to CPU0 if no cpu nodes are found */
-+	return found ? cpu : 0;
-+}
-+EXPORT_SYMBOL_GPL(of_coresight_get_cpu);
-+
- struct coresight_platform_data *
- of_get_coresight_platform_data(struct device *dev,
- 			       const struct device_node *node)
- {
--	int i = 0, ret = 0, cpu;
-+	int i = 0, ret = 0;
- 	struct coresight_platform_data *pdata;
- 	struct of_endpoint endpoint, rendpoint;
- 	struct device *rdev;
--	bool found;
--	struct device_node *dn, *np;
- 	struct device_node *ep = NULL;
- 	struct device_node *rparent = NULL;
- 	struct device_node *rport = NULL;
-@@ -177,18 +201,7 @@ of_get_coresight_platform_data(struct device *dev,
- 		} while (ep);
+ 			break;
+-		}
  	}
+ 	of_node_put(dn);
  
--	dn = of_parse_phandle(node, "cpu", 0);
--	for_each_possible_cpu(cpu) {
--		np = of_cpu_device_node_get(cpu);
--		found = (dn == np);
--		of_node_put(np);
--		if (found)
--			break;
--	}
--	of_node_put(dn);
--
--	/* Affinity to CPU0 if no cpu nodes are found */
--	pdata->cpu = found ? cpu : 0;
-+	pdata->cpu = of_coresight_get_cpu(node);
- 
++	/* Affinity to CPU0 if no cpu nodes are found */
++	pdata->cpu = found ? cpu : 0;
++
  	return pdata;
  }
-diff --git a/include/linux/coresight.h b/include/linux/coresight.h
-index bf0aa50..d950dad 100644
---- a/include/linux/coresight.h
-+++ b/include/linux/coresight.h
-@@ -263,10 +263,13 @@ static inline int coresight_timeout(void __iomem *addr, u32 offset,
- #endif
- 
- #ifdef CONFIG_OF
-+extern int of_coresight_get_cpu(const struct device_node *node);
- extern struct coresight_platform_data *
- of_get_coresight_platform_data(struct device *dev,
- 			       const struct device_node *node);
- #else
-+static inline int of_coresight_get_cpu(const struct device_node *node)
-+{ return 0; }
- static inline struct coresight_platform_data *of_get_coresight_platform_data(
- 	struct device *dev, const struct device_node *node) { return NULL; }
- #endif
+ EXPORT_SYMBOL_GPL(of_get_coresight_platform_data);
 -- 
 2.7.4
 
