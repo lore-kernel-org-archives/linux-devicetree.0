@@ -1,120 +1,99 @@
-From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 2/6] Documentation: devicetree: add bindings to support
- ARM MHU subchannels
-Date: Tue, 9 May 2017 10:36:56 +0100
-Message-ID: <dc97037c-787d-4094-e24a-143341936a13@arm.com>
-References: <1493733353-25812-1-git-send-email-sudeep.holla@arm.com>
- <1493733353-25812-3-git-send-email-sudeep.holla@arm.com>
- <20170508161026.5vdqnv52ub7hurwf@rob-hp-laptop>
- <CABb+yY1+rU=gEnqML=ybZ61WDW6Brz_QLw4LpYNNe-XsEgi8dw@mail.gmail.com>
- <ff6535ec-fa31-e0b7-53a1-9f4a2f03693d@arm.com>
- <20170508175254.GK15143@minitux>
+From: Sean Wang <sean.wang@mediatek.com>
+Subject: Re: [PATCH v2 29/30] dt-bindings: add vendor prefix for bananapi
+Date: Tue, 9 May 2017 17:40:56 +0800
+Message-ID: <1494322856.9662.54.camel@mtkswgap22>
+References: <1493198774-4478-1-git-send-email-sean.wang@mediatek.com>
+         <1493198774-4478-30-git-send-email-sean.wang@mediatek.com>
+         <20170428203727.m6jm5w6nb2iirxih@rob-hp-laptop>
+         <1493621880.32195.13.camel@mtkswgap22>
+         <CAGb2v66PuKQVoq1oSLepdUGLwvA-O0jh+ckLNwsNMCwcnfAJBg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170508175254.GK15143@minitux>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Alexey Klimov <alexey.klimov-5wv7dgnIgG8@public.gmane.org>, Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAGb2v66PuKQVoq1oSLepdUGLwvA-O0jh+ckLNwsNMCwcnfAJBg@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Chen-Yu Tsai <wens@csie.org>
+Cc: Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Russell King <linux@armlinux.org.uk>, linux-kernel <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "moderated list:ARM/Mediatek SoC..." <linux-mediatek@lists.infradead.org>, John Crispin <john@phrozen.org>, Matthias Brugger <matthias.bgg@gmail.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 08/05/17 18:52, Bjorn Andersson wrote:
-> On Mon 08 May 10:07 PDT 2017, Sudeep Holla wrote:
+On Tue, 2017-05-09 at 16:03 +0800, Chen-Yu Tsai wrote:
+> Hi,
 > 
->>
->>
->> On 08/05/17 17:46, Jassi Brar wrote:
->>> On Mon, May 8, 2017 at 9:40 PM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
->>>> +Bjorn
->>>>
->>>> On Tue, May 02, 2017 at 02:55:49PM +0100, Sudeep Holla wrote:
->>>>> The ARM MHU has mechanism to assert interrupt signals to facilitate
->>>>> inter-processor message based communication. It drives the signal using
->>>>> a 32-bit register, with all 32-bits logically ORed together. It also
->>>>> enables software to set, clear and check the status of each of the bits
->>>>> of this register independently. Each bit of the register can be
->>>>> associated with a type of event that can contribute to raising the
->>>>> interrupt thereby allowing it to be used as independent subchannels.
->>>>>
->>>>> Since the first version of this binding can't support sub-channels,
->>>>> this patch extends the existing binding to support them.
->>>>>
->>>>> Cc: Alexey Klimov <alexey.klimov-5wv7dgnIgG8@public.gmane.org>
->>>>> Cc: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->>>>> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->>>>> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->>>>> Signed-off-by: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
->>>>> ---
->>>>>  .../devicetree/bindings/mailbox/arm-mhu.txt        | 44 ++++++++++++++++++++--
->>>>>  1 file changed, 41 insertions(+), 3 deletions(-)
->>>>>
->>>>> diff --git a/Documentation/devicetree/bindings/mailbox/arm-mhu.txt b/Documentation/devicetree/bindings/mailbox/arm-mhu.txt
->>>>> index 4971f03f0b33..86a66f7918e2 100644
->>>>> --- a/Documentation/devicetree/bindings/mailbox/arm-mhu.txt
->>>>> +++ b/Documentation/devicetree/bindings/mailbox/arm-mhu.txt
->>>>> @@ -10,21 +10,40 @@ STAT register and the remote clears it after having read the data.
->>>>>  The last channel is specified to be a 'Secure' resource, hence can't be
->>>>>  used by Linux running NS.
->>>>>
->>>>> +The MHU drives the interrupt signal using a 32-bit register, with all
->>>>> +32-bits logically ORed together. It provides a set of registers to
->>>>> +enable software to set, clear and check the status of each of the bits
->>>>> +of this register independently. The use of 32 bits per interrupt line
->>>>> +enables software to provide more information about the source of the
->>>>> +interrupt. For example, each bit of the register can be associated with
->>>>> +a type of event that can contribute to raising the interrupt.
->>>>
->>>> Sounds like a doorbell? (i.e. a single bit mailbox). Bjorn is doing
->>>> something similar for QCom h/w. I guess the difference here is you have
->>>> 32 sources and 1 output. It seems to me these should be described
->>>> similarly.
->>>>
->>> Yes, QCom controller triggers different interrupt for each bit of a
->>> 32bits register i.e, each signal is associated with 1bit information.
->>> Whereas MHU signals 32bits at a time to the target cpu.
->>
->> Agreed. I had a look at Qcom driver, not entirely clear if each bit as
->> interrupt as I don't see any interrupt support there.
+> On Mon, May 1, 2017 at 2:58 PM, Sean Wang <sean.wang@mediatek.com> wrote:
+> > On Fri, 2017-04-28 at 15:37 -0500, Rob Herring wrote:
+> >> On Wed, Apr 26, 2017 at 05:26:13PM +0800, sean.wang@mediatek.com wrote:
+> >> > From: Sean Wang <sean.wang@mediatek.com>
+> >> >
+> >> > Banana Pi team in Sinovoip Co., Limited which are dedicated to
+> >> > design and manufacture open hardware product.
+> >> >
+> >> > Website: http://www.banana-pi.org/
+> >> >
+> >> > Signed-off-by: Sean Wang <sean.wang@mediatek.com>
+> >> > ---
+> >> >  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+> >> >  1 file changed, 1 insertion(+)
+> >> >
+> >> > diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> >> > index ec0bfb9..8ca0f3c 100644
+> >> > --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
+> >> > +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> >> > @@ -44,6 +44,7 @@ avia      avia semiconductor
+> >> >  avic       Shanghai AVIC Optoelectronics Co., Ltd.
+> >> >  axentia    Axentia Technologies AB
+> >> >  axis       Axis Communications AB
+> >> > +bananapi Banana Pi SINOVOP CO., LIMITED
+> >>
+> >> s/SINOVOP/SINOVOIP/
+> >
+> > Hi Rob,
+> >
+> > thanks for your careful reviewing , i will correct it in the next
+> > version.
+> >
+> > BTW, Could those related dts changes go through your tree if everything
+> > looks good? Because I find Matthias have been inactive for a while and
+> > the latest branch in his tree seems still staying on 4.10.
 > 
-> Each of the (used) bits in the Qualcomm HW are routed to a interrupt
-> controller in the remote processors.
+> Chiming in from the linux-sunxi side.
 > 
-> As the APCS IPC is one way and each incoming "channel" is exposed as a
-> separate physical interrupt they are directly consumed by the higher
-> levels as needed - hence there's no traces of interrupts in the APCS
-> IPC.
+> We've been using the "lemaker" prefix for the original Banana Pi, and
+> the "sinovoip" prefix for all the later ones by SINOVOIP. Both prefixes
+> are still undocumented.
 > 
-
-Indeed, I followed the full thread later and came to same understanding.
-
->> Also, it just adds
->> all the 32 channels which I am trying to avoid as at-most 4-5 will be
->> used while we end up creating 64 channels.
->>
+> Given the complicated history behind the Banana Pi brand, do we know
+> what prefix they prefer, and what company should be tied to it?
 > 
-> In the Qualcomm platform I'm looking at right now 15 of the 32 bits are
-> used by the local CPU, so the utilization isn't awesome but I didn't
-> feel the waste was worth addressing in my case.
-> 
+> Thanks
+> ChenYu
 
-Make senses, but this controller in question was used on other platforms
-too and hence I wanted to retain existing behavior intact without much
-bloat of memory for channel allocation.
 
-> You should be able to provide a custom of_xlate that hides the fact that
-> your mailbox-space is sparse - i.e. only register the mailboxes you have
-> but expose them with ids as expected by the clients.
-> 
+I knew there are some litigation issues between them
 
-Spot on, that's exactly what I have done :)
+Finally, Bananapi brand is owned by BIPAI KEJI and registered has been
+registered in more than 20 countries. So Lemaker can no longer use
+bananapi brand.
 
--- 
-Regards,
-Sudeep
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I will update prefix naming with bananpi, BIPAI KEJI LIMITED for real
+bananapi boards that is confirmed by BIPAI KEJI
+
+
+
+> >
+> >         Sean
+> >
+> >>
+> >> >  boe        BOE Technology Group Co., Ltd.
+> >> >  bosch      Bosch Sensortec GmbH
+> >> >  boundary   Boundary Devices Inc.
+> >> > --
+> >> > 1.9.1
+> >> >
+> >
+> >
+> >
+> > _______________________________________________
+> > linux-arm-kernel mailing list
+> > linux-arm-kernel@lists.infradead.org
+> > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
