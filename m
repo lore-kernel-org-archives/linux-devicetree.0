@@ -1,65 +1,91 @@
-From: Leo Yan <leo.yan@linaro.org>
-Subject: [PATCH v9 9/9] arm64: dts: qcom: msm8916: Add debug unit
-Date: Tue,  9 May 2017 10:50:02 +0800
-Message-ID: <1494298202-6739-10-git-send-email-leo.yan@linaro.org>
-References: <1494298202-6739-1-git-send-email-leo.yan@linaro.org>
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1494298202-6739-1-git-send-email-leo.yan@linaro.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Jonathan Corbet <corbet@lwn.net>, Mathieu Poirier <mathieu.poirier@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Wei Xu <xuwei5@hisilicon.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Suzuki K Poulose <suzuki.poulose@arm.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, Mike Leach <mike.leach@linaro.org>, Sudeep Holla <sudeep.holla@arm.com>
-Cc: Leo Yan <leo.yan@linaro.org>
+From: "Y.B. Lu" <yangbo.lu-3arQi8VN3Tc@public.gmane.org>
+Subject: RE: [v2, 1/5] mmc: dt: add compatible into eSDHC required properties
+Date: Tue, 9 May 2017 02:51:54 +0000
+Message-ID: <DB6PR0401MB25365E54D191D19158202CFDF8EF0@DB6PR0401MB2536.eurprd04.prod.outlook.com>
+References: <1493894940-47452-1-git-send-email-yangbo.lu@nxp.com>
+ <1493894940-47452-2-git-send-email-yangbo.lu@nxp.com>
+ <20170505023651.GW18578@dragon>
+ <DB6PR0401MB2536CB3661070921AEA0C5B6F8EB0@DB6PR0401MB2536.eurprd04.prod.outlook.com>
+ <20170508163626.q2tyiat2zmo7taju@rob-hp-laptop>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170508163626.q2tyiat2zmo7taju@rob-hp-laptop>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Harninder Rai <harninder.rai-3arQi8VN3Tc@public.gmane.org>, Xiaobo Xie <xiaobo.xie-3arQi8VN3Tc@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add debug unit on Qualcomm msm8916 based platforms, including the
-DragonBoard 410c board.
+> -----Original Message-----
+> From: Rob Herring [mailto:robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org]
+> Sent: Tuesday, May 09, 2017 12:36 AM
+> To: Y.B. Lu
+> Cc: Shawn Guo; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-arm-
+> kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org; ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org; Catalin Marinas;
+> Harninder Rai; Xiaobo Xie
+> Subject: Re: [v2, 1/5] mmc: dt: add compatible into eSDHC required
+> properties
+>=20
+> On Fri, May 05, 2017 at 03:01:04AM +0000, Y.B. Lu wrote:
+> > Hi Shawn,
+> >
+> >
+> > > -----Original Message-----
+> > > From: Shawn Guo [mailto:shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org]
+> > > Sent: Friday, May 05, 2017 10:37 AM
+> > > To: Y.B. Lu
+> > > Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org;
+> > > linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org;
+> > > ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org; Rob Herring; Catalin Marinas; Harninder Rai;
+> > > Xiaobo Xie
+> > > Subject: Re: [v2, 1/5] mmc: dt: add compatible into eSDHC required
+> > > properties
+> > >
+> > > On Thu, May 04, 2017 at 06:48:56PM +0800, Yangbo Lu wrote:
+> > > > This patch is to add compatible into eSDHC required properties.
+> > > >
+> > > > Signed-off-by: Yangbo Lu <yangbo.lu-3arQi8VN3Tc@public.gmane.org>
+> > > > ---
+> > > > Changes for v2:
+> > > > 	- Added this patch.
+> > > > ---
+> > > >  Documentation/devicetree/bindings/mmc/fsl-esdhc.txt | 1 +
+> > > >  1 file changed, 1 insertion(+)
+> > > >
+> > > > diff --git a/Documentation/devicetree/bindings/mmc/fsl-esdhc.txt
+> > > > b/Documentation/devicetree/bindings/mmc/fsl-esdhc.txt
+> > > > index dedfb02..b04b248 100644
+> > > > --- a/Documentation/devicetree/bindings/mmc/fsl-esdhc.txt
+> > > > +++ b/Documentation/devicetree/bindings/mmc/fsl-esdhc.txt
+> > > > @@ -7,6 +7,7 @@ This file documents differences between the core
+> > > > properties described  by mmc.txt and the properties used by the
+> > > > sdhci-
+> > > esdhc driver.
+> > > >
+> > > >  Required properties:
+> > > > +  - compatible : should be "fsl,esdhc", or "fsl,<chip>-esdhc".
+> > >
+> > > I think either supported <chip> or the compatible should be listed
+> > > explicitly.
+> > >
+> >
+> > [Lu Yangbo-B47093] I think the reason we use <chip> is to avoid listing
+> too much chips, and to avoid doc updating if new chips are added.
+> > The checkpatch script also had considered that.
+> >
+> > Currently there're about 20 platforms with "fsl,<chip>-esdhc"
+> compatible in kernel dts.
+>=20
+> Yes, but it's generally preferred to list possible values of <chip>.
+>=20
 
-Signed-off-by: Leo Yan <leo.yan@linaro.org>
----
- arch/arm64/boot/dts/qcom/msm8916.dtsi | 32 ++++++++++++++++++++++++++++++++
- 1 file changed, 32 insertions(+)
+[Lu Yangbo-B47093] Ok, thanks for your suggestions, Rob and Shawn.
+I will send out the new version soon :)
 
-diff --git a/arch/arm64/boot/dts/qcom/msm8916.dtsi b/arch/arm64/boot/dts/qcom/msm8916.dtsi
-index 68a8e67..3af814b 100644
---- a/arch/arm64/boot/dts/qcom/msm8916.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8916.dtsi
-@@ -1104,6 +1104,38 @@
- 			};
- 		};
- 
-+		debug@850000 {
-+			compatible = "arm,coresight-cpu-debug","arm,primecell";
-+			reg = <0x850000 0x1000>;
-+			clocks = <&rpmcc RPM_QDSS_CLK>;
-+			clock-names = "apb_pclk";
-+			cpu = <&CPU0>;
-+		};
-+
-+		debug@852000 {
-+			compatible = "arm,coresight-cpu-debug","arm,primecell";
-+			reg = <0x852000 0x1000>;
-+			clocks = <&rpmcc RPM_QDSS_CLK>;
-+			clock-names = "apb_pclk";
-+			cpu = <&CPU1>;
-+		};
-+
-+		debug@854000 {
-+			compatible = "arm,coresight-cpu-debug","arm,primecell";
-+			reg = <0x854000 0x1000>;
-+			clocks = <&rpmcc RPM_QDSS_CLK>;
-+			clock-names = "apb_pclk";
-+			cpu = <&CPU2>;
-+		};
-+
-+		debug@856000 {
-+			compatible = "arm,coresight-cpu-debug","arm,primecell";
-+			reg = <0x856000 0x1000>;
-+			clocks = <&rpmcc RPM_QDSS_CLK>;
-+			clock-names = "apb_pclk";
-+			cpu = <&CPU3>;
-+		};
-+
- 		etm@85c000 {
- 			compatible = "arm,coresight-etm4x", "arm,primecell";
- 			reg = <0x85c000 0x1000>;
--- 
-2.7.4
+> Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
