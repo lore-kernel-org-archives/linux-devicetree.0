@@ -1,106 +1,201 @@
-From: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 2/6] Documentation: devicetree: add bindings to support
- ARM MHU subchannels
-Date: Tue, 9 May 2017 18:59:03 +0530
-Message-ID: <CABb+yY1x=Z2est1jnqnQu=VnmGSpMiJJxVnZ36buh21eJo8ULw@mail.gmail.com>
-References: <1493733353-25812-1-git-send-email-sudeep.holla@arm.com>
- <1493733353-25812-3-git-send-email-sudeep.holla@arm.com> <20170508161026.5vdqnv52ub7hurwf@rob-hp-laptop>
- <CABb+yY1+rU=gEnqML=ybZ61WDW6Brz_QLw4LpYNNe-XsEgi8dw@mail.gmail.com>
- <ff6535ec-fa31-e0b7-53a1-9f4a2f03693d@arm.com> <CABb+yY3tXMgQdQratM56mQVEV4Med1i0NyT=zkXk1P4oCao6+A@mail.gmail.com>
- <ec7869d0-fa18-ec9e-3df7-ac841e06b2d1@arm.com> <CABb+yY1S_aRGDZJwVt+p7U6PcO2dQGsg5bi21-yvx715HGjUtw@mail.gmail.com>
- <bca5e8bd-3c18-6ed4-2a74-eee513ddc41d@arm.com> <CABb+yY0nMQMrrKTUKu2ZPfEZTzuWN=sFk4PxJFQHvtd=dSE2_w@mail.gmail.com>
- <6bd1e3d5-5e8b-6d02-cd80-9ff2c21de15d@arm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <6bd1e3d5-5e8b-6d02-cd80-9ff2c21de15d-5wv7dgnIgG8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Alexey Klimov <alexey.klimov-5wv7dgnIgG8@public.gmane.org>, Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+From: Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>
+Subject: [PATCH v5 0/7] Add V4L2 SDR (DRIF & MAX2175) driver
+Date: Tue,  9 May 2017 14:37:31 +0100
+Message-ID: <20170509133738.16414-1-ramesh.shanmugasundaram@bp.renesas.com>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: robh+dt@kernel.org, mark.rutland@arm.com, mchehab@kernel.org, hverkuil@xs4all.nl, sakari.ailus@linux.intel.com, crope@iki.fi
+Cc: chris.paterson2@renesas.com, laurent.pinchart@ideasonboard.com, geert+renesas@glider.be, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 9, 2017 at 6:11 PM, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org> wrote:
-> On 09/05/17 12:55, Jassi Brar wrote:
+Hi Media, DT maintainers, All,
 
->>>>>>
->>>>>> If it is still not clear, please share your client driver. I
->>>>>> will adapt that to work with existing MHU driver & bindings.
->>>>>>
->>>>>
->>>>> Just take example of SCPI in the mainline. Assume there's another
->>>>> protocol SCMI which uses few more bits in the same channel and the
->>>>> remote firmware implements both but both are totally independent
->>>>> and not related/linked. Also be keep in mind that SCPI is used by
->>>>> other platforms and so will be the new protocol. We simply make
->>>>> SCPI or SCMI bindings aligned to ARM MHU. That's ruled out.
->>>>>
->>>> Not sure what you mean by "that's ruled out".
->>>
->>> 1. The mailbox client bindings should be independent of this ARM MHU
->>>    mailbox bindings
->>> 2. All we need in client is a mailbox to point at and not any meta data
->>>    That's what I meant by ruled-out as both client and MHU can be used
->>>    independent of each other and *should not* be linked.
->>>
->> I am shocked at this coming from you.
->>
->> You design SCMI based upon MHU assumption of single bit "doorbell" and
->> then you say a client should be independent of the underlying
->> controller? Do you intend SCMI to work only over MHU?
->>
->
-> No, I never said that. What I said is SCMI protocol will be on doorbell
-> based.
->
-What if a controller does not support your definition of "doorbell"?
-Like PL320 from ARM and many others.
+This patch set contains two drivers
+ - Renesas R-Car Digital Radio Interface (DRIF) driver
+ - Maxim's MAX2175 RF to Bits tuner driver
+
+These patches were based on top of media-next repo
+commit:6d95b3f24881c0fd0f345eca959a2a803a040930
+
+These two drivers combined together expose a V4L2 SDR device that is compliant with the V4L2 framework [1]. Agreed review comments are incorporated in this series.
+
+The rcar_drif device is modelled using "renesas,bonding" property. The discussion on this property is available here [2].
+
+Change history:
+
+v4 -> v5:
+ - Minor documentation changes. Refer individual patches.
+
+v3 -> v4:
+ - Added ACKs
+rcar_drif:
+ - Incorporated a number of review comments from Laurent on DRIF driver.
+ - Addressed comments from Rob and Laurent on bindings.
+max2175:
+ - Minor changes addressing Hans and Laurent's comments
+
+v2 -> v3:
+rcar_drif:
+ - Reduced DRIF DT properties to expose tested I2S mode only (Hans - discussion on #v4l)
+ - Fixed error path clean up of ctrl_hdl on rcar_drif
+
+v1 -> v2:
+ - SDR formats renamed as "planar" instead of sliced (Hans)
+ - Documentation formatting correction (Laurent)
+
+ rcar_drif:
+ - DT model using "bonding" property
+ - Addressed Laurent's coments on bindings - DT optional parameters rename & rework
+ - Addressed Han's comments on driver
+ - Addressed Geert's comments on DT
+
+ max2175:
+ - Avoided scaling using method proposed by Antti. Thanks
+ - Bindings is a separate patch (Rob)
+ - Addressed Rob's comment on bindings
+ - Added Custom controls documentation (Laurent)
+
+[1] v4l2-compliance report:
+root@salvator-x:~# v4l2-compliance -S /dev/swradio0
+v4l2-compliance SHA   : b514d615166bdc0901a4c71261b87db31e89f464
+
+Driver Info:
+        Driver name   : rcar_drif
+        Card type     : R-Car DRIF
+        Bus info      : platform:R-Car DRIF
+        Driver version: 4.11.0
+        Capabilities  : 0x85310000
+                SDR Capture
+                Tuner
+                Read/Write
+                Streaming
+                Extended Pix Format
+                Device Capabilities
+        Device Caps   : 0x05310000
+                SDR Capture
+                Tuner
+                Read/Write
+                Streaming
+                Extended Pix Format
+
+Compliance test for device /dev/swradio0 (not using libv4l2):
+
+Required ioctls:
+        test VIDIOC_QUERYCAP: OK
+
+Allow for multiple opens:
+        test second sdr open: OK
+        test VIDIOC_QUERYCAP: OK
+        test VIDIOC_G/S_PRIORITY: OK
+        test for unlimited opens: OK
+
+Debug ioctls:
+        test VIDIOC_DBG_G/S_REGISTER: OK
+        test VIDIOC_LOG_STATUS: OK
+
+Input ioctls:
+        test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK
+        test VIDIOC_G/S_FREQUENCY: OK
+        test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
+        test VIDIOC_ENUMAUDIO: OK (Not Supported)
+        test VIDIOC_G/S/ENUMINPUT: OK (Not Supported)
+        test VIDIOC_G/S_AUDIO: OK (Not Supported)
+        Inputs: 0 Audio Inputs: 0 Tuners: 1
+
+Output ioctls:
+        test VIDIOC_G/S_MODULATOR: OK (Not Supported)
+        test VIDIOC_G/S_FREQUENCY: OK
+        test VIDIOC_ENUMAUDOUT: OK (Not Supported)
+        test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
+        test VIDIOC_G/S_AUDOUT: OK (Not Supported)
+        Outputs: 0 Audio Outputs: 0 Modulators: 0
+
+Input/Output configuration ioctls:
+        test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
+        test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
+        test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
+        test VIDIOC_G/S_EDID: OK (Not Supported)
+
+        Control ioctls:
+                test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK
+                test VIDIOC_QUERYCTRL: OK
+                test VIDIOC_G/S_CTRL: OK
+                test VIDIOC_G/S/TRY_EXT_CTRLS: OK
+                test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK
+                test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
+                Standard Controls: 5 Private Controls: 3
+
+        Format ioctls:
+                test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
+                test VIDIOC_G/S_PARM: OK (Not Supported)
+                test VIDIOC_G_FBUF: OK (Not Supported)
+                test VIDIOC_G_FMT: OK
+                test VIDIOC_TRY_FMT: OK
+                test VIDIOC_S_FMT: OK
+                test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
+                test Cropping: OK (Not Supported)
+                test Composing: OK (Not Supported)
+                test Scaling: OK (Not Supported)
+
+        Codec ioctls:
+                test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
+                test VIDIOC_G_ENC_INDEX: OK (Not Supported)
+                test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
+
+        Buffer ioctls:
+                test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK
+                test VIDIOC_EXPBUF: OK (Not Supported)
+
+Test input 0:
 
 
->>  What if some controller does not support the simple "doorbell" and
->> expects detailed info? For example, apart from SCMI, the remote also
->> supports platform specific functions like thermal, watchdog, wakeup
->> etc. The SCMI's would just be a subset of the full command set.
->> You/SCMI can not dictate what numerical value the platform assigns to
->> SCMI commands...
->
-> What ? That's the whole point of specification. The command set is
-> *fixed* and can be implemented on any platform and have generic driver
-> for that.
->
-The code/value for commands in SHM data packet is SCMI specific. But
-what a platform assigns to THIS_IS_SCMI_DOORBELL is going to be
-platform specific i.e, not always BIT(x)
+Total: 43, Succeeded: 43, Failed: 0, Warnings: 0
+root@salvator-x:~#
 
+[2] "bonding" DT property discussion (https://www.mail-archive.com/linux-renesas-soc@vger.kernel.org/msg09415.html)
 
->>> On digging more about different mailbox controllers, I found
->>> mailbox-sti.c has exactly similar logic as what I have done in this series.
->>>
->
-> Did you look at this driver ?
->
-Dude, I merged this driver upstream! I don't remember exactly about
-STI controller, but it definitely is different from MHU.
+Ramesh Shanmugasundaram (7):
+  media: v4l2-ctrls: Reserve controls for MAX217X
+  dt-bindings: media: Add MAX2175 binding description
+  media: i2c: max2175: Add MAX2175 support
+  media: Add new SDR formats PC16, PC18 & PC20
+  doc_rst: media: New SDR formats PC16, PC18 & PC20
+  dt-bindings: media: Add Renesas R-Car DRIF binding
+  media: platform: rcar_drif: Add DRIF support
 
+ .../devicetree/bindings/media/i2c/max2175.txt      |   61 +
+ .../devicetree/bindings/media/renesas,drif.txt     |  177 +++
+ .../devicetree/bindings/property-units.txt         |    1 +
+ .../media/uapi/v4l/pixfmt-sdr-pcu16be.rst          |   55 +
+ .../media/uapi/v4l/pixfmt-sdr-pcu18be.rst          |   55 +
+ .../media/uapi/v4l/pixfmt-sdr-pcu20be.rst          |   54 +
+ Documentation/media/uapi/v4l/sdr-formats.rst       |    3 +
+ Documentation/media/v4l-drivers/index.rst          |    1 +
+ Documentation/media/v4l-drivers/max2175.rst        |   60 +
+ drivers/media/i2c/Kconfig                          |    4 +
+ drivers/media/i2c/Makefile                         |    2 +
+ drivers/media/i2c/max2175/Kconfig                  |    8 +
+ drivers/media/i2c/max2175/Makefile                 |    4 +
+ drivers/media/i2c/max2175/max2175.c                | 1437 +++++++++++++++++++
+ drivers/media/i2c/max2175/max2175.h                |  108 ++
+ drivers/media/platform/Kconfig                     |   25 +
+ drivers/media/platform/Makefile                    |    1 +
+ drivers/media/platform/rcar_drif.c                 | 1488 ++++++++++++++++++++
+ drivers/media/v4l2-core/v4l2-ioctl.c               |    3 +
+ include/uapi/linux/v4l2-controls.h                 |    5 +
+ include/uapi/linux/videodev2.h                     |    3 +
+ 21 files changed, 3555 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/i2c/max2175.txt
+ create mode 100644 Documentation/devicetree/bindings/media/renesas,drif.txt
+ create mode 100644 Documentation/media/uapi/v4l/pixfmt-sdr-pcu16be.rst
+ create mode 100644 Documentation/media/uapi/v4l/pixfmt-sdr-pcu18be.rst
+ create mode 100644 Documentation/media/uapi/v4l/pixfmt-sdr-pcu20be.rst
+ create mode 100644 Documentation/media/v4l-drivers/max2175.rst
+ create mode 100644 drivers/media/i2c/max2175/Kconfig
+ create mode 100644 drivers/media/i2c/max2175/Makefile
+ create mode 100644 drivers/media/i2c/max2175/max2175.c
+ create mode 100644 drivers/media/i2c/max2175/max2175.h
+ create mode 100644 drivers/media/platform/rcar_drif.c
 
->>> Also don't mix implementation with the binding. I need a simple answer
->>> in this binding. How do I represent specific bits if each bit is
->>> implemented as a doorbell ? That's all. First let's agree on that when
->>> we use this mailbox independently and please *don't mix* with any
->>> client here. It's simple, this controller has 2-3 sets of 32 doorbell
->>> bits. And I am aiming to come up with the binding for that as your
->>> initial bindings didn't consider that.
->>>
->> Please send in whatever changes you plan to do, and I'll modify it so
->> we don't have to bloat the MHU driver and add bindings for a software
->> feature. Until then ... Cheers!
->>
->
-> Changes to what ? arm_mhu.c ? This series is complete and implements
-> doorbell completely.
->
-Send in the user/client driver that you think can not work with
-existing driver/bindings.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+2.12.2
