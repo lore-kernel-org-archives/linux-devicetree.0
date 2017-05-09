@@ -1,47 +1,106 @@
-From: Leo Yan <leo.yan@linaro.org>
-Subject: Re: [PATCH v8 2/7] doc: Add documentation for Coresight CPU debug
-Date: Tue, 9 May 2017 10:55:04 +0800
-Message-ID: <20170509025504.GD10347@leoy-ThinkPad-T440>
-References: <1493719717-27698-1-git-send-email-leo.yan@linaro.org>
- <1493719717-27698-3-git-send-email-leo.yan@linaro.org>
- <20170503222937.GC7860@linaro.org>
+From: "Ong, Hean Loong" <hean.loong.ong-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCHv2 0/3] Intel FPGA VIP Frame Buffer II DRM Driver
+Date: Tue, 9 May 2017 03:24:31 +0000
+Message-ID: <1494300270.5383.29.camel@intel.com>
+References: <1493086006-4392-1-git-send-email-hean.loong.ong@intel.com>
+         <87shklznuo.fsf@eliezer.anholt.net> <1493861983.2182.11.camel@intel.com>
+         <87lgqcsg18.fsf@eliezer.anholt.net> <1494209010.2533.4.camel@intel.com>
+         <87efvz2v4m.fsf@eliezer.anholt.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170503222937.GC7860@linaro.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc: Jonathan Corbet <corbet@lwn.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Wei Xu <xuwei5@hisilicon.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Suzuki K Poulose <suzuki.poulose@arm.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, Mike Leach <mike.leach@linaro.org>, Sudeep Holla <sudeep.holla@arm.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <87efvz2v4m.fsf-omZaPlIz5HhaEpDpdNBo/KxOck334EZe@public.gmane.org>
+Content-Language: en-US
+Content-ID: <2DFFDDD0E088BA469980C7F28651D6F0-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org" <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, "dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "Vetter, Daniel" <daniel.vetter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: "dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org" <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, "Loh, Tien Hock" <tien.hock.loh-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Mathieu,
-
-On Wed, May 03, 2017 at 04:29:37PM -0600, Mathieu Poirier wrote:
-> On Tue, May 02, 2017 at 06:08:32PM +0800, Leo Yan wrote:
-> > Update kernel-parameters.txt to add new parameter:
-> > coresight_cpu_debug.enable is a knob to enable debugging at boot time.
-> > 
-> > Add detailed documentation, which contains the implementation, Mike
-> > Leach excellent summary for "clock and power domain". At the end some
-> > examples on how to enable the debugging functionality are provided.
-> > 
-> > Suggested-by: Mike Leach <mike.leach@linaro.org>
-> > Signed-off-by: Leo Yan <leo.yan@linaro.org>
-> > ---
-> >  Documentation/admin-guide/kernel-parameters.txt |   7 +
-> >  Documentation/trace/coresight-cpu-debug.txt     | 174 ++++++++++++++++++++++++
-> 
-> Please add coresight-cpu-debug.txt to the list of maintained files in
-> MAINTAINERS.  Moreover I'm pretty sure John will want you to split this patch in
-> two, i.e one patch for kernel-parameters.txt and another for
-> coresight-cpu-debug.txt
-
-Thanks for the suggestion. Have splited doc related patches and
-refined debug module related code as you suggested in another
-email and sent out v9 patch set for reviewing.
-
-[...]
-
-Thanks,
-Leo Yan
+T24gTW9uLCAyMDE3LTA1LTA4IGF0IDA5OjAzIC0wNzAwLCBFcmljIEFuaG9sdCB3cm90ZToNCj4g
+Ik9uZywgSGVhbiBMb29uZyIgPGhlYW4ubG9vbmcub25nQGludGVsLmNvbT4gd3JpdGVzOg0KPiAN
+Cj4gPiANCj4gPiBPbiBUaHUsIDIwMTctMDUtMDQgYXQgMTA6MTEgLTA3MDAsIEVyaWMgQW5ob2x0
+IHdyb3RlOg0KPiA+ID4gDQo+ID4gPiAiT25nLCBIZWFuIExvb25nIiA8aGVhbi5sb29uZy5vbmdA
+aW50ZWwuY29tPiB3cml0ZXM6DQo+ID4gPiANCj4gPiA+ID4gDQo+ID4gPiA+IA0KPiA+ID4gPiBP
+biBXZWQsIDIwMTctMDUtMDMgYXQgMTM6MjggLTA3MDAsIEVyaWMgQW5ob2x0IHdyb3RlOg0KPiA+
+ID4gPiA+IA0KPiA+ID4gPiA+IA0KPiA+ID4gPiA+IGhlYW4ubG9vbmcub25nQGludGVsLmNvbSB3
+cml0ZXM6DQo+ID4gPiA+ID4gDQo+ID4gPiA+ID4gPiANCj4gPiA+ID4gPiA+IA0KPiA+ID4gPiA+
+ID4gDQo+ID4gPiA+ID4gPiBGcm9tOiBPbmcgSGVhbiBMb29uZyA8aGVhbi5sb29uZy5vbmdAaW50
+ZWwuY29tPg0KPiA+ID4gPiA+ID4gDQo+ID4gPiA+ID4gPiBIaSwNCj4gPiA+ID4gPiA+IA0KPiA+
+ID4gPiA+ID4gVGhlIG5ldyBJbnRlbCBBcnJpYTEwIFNPQyBGUEdBIGRldmtpdCBoYXMgYSBEaXNw
+bGF5IFBvcnQgSVANCj4gPiA+ID4gPiA+IGNvbXBvbmVudMKgDQo+ID4gPiA+ID4gPiB3aGljaCBy
+ZXF1aXJlcyBhIG5ldyBkcml2ZXIuIFRoaXMgaXMgYSB2aXJ0dWFsIGRyaXZlciBpbg0KPiA+ID4g
+PiA+ID4gd2hpY2gNCj4gPiA+ID4gPiA+IHRoZQ0KPiA+ID4gPiA+ID4gRkdQQSBoYXJkd2FyZSB3
+b3VsZCBlbmFibGUgdGhlIERpc3BsYXkgUG9ydCBiYXNlZCBvbiB0aGUNCj4gPiA+ID4gPiA+IGlu
+Zm9ybWF0aW9uDQo+ID4gPiA+ID4gPiBhbmQgZGF0YSBwcm92aWRlZCBmcm9tIHRoZSBEUk0gZnJh
+bWUgYnVmZmVyIGZyb20gdGhlIE9TLg0KPiA+ID4gPiA+ID4gQmFzaWNhbGx5DQo+ID4gPiA+ID4g
+PiBhbGwNCj4gPiA+ID4gPiA+IGFsbCBpbmZvcm1hdGlvbiB3aXRoIHJlYWdyZHMgdG8gcmVzb2x1
+dGlvbiBhbmQgYml0cyBwZXINCj4gPiA+ID4gPiA+IHBpeGVsDQo+ID4gPiA+ID4gPiBhcmUNCj4g
+PiA+ID4gPiA+IHByZS1jb25maWd1cmVkIG9uIHRoZSBGUEdBIGRlc2lnbiBhbmQgdGhlc2UgaW5m
+b3JtYXRpb24gYXJlDQo+ID4gPiA+ID4gPiBmZWQNCj4gPiA+ID4gPiA+IHRvDQo+ID4gPiA+ID4g
+PiB0aGUgZHJpdmVyIHZpYSB0aGUgZGV2aWNlIHRyZWUgaW5mb3JtYXRpb24gYXMgcGFydCBvZiB0
+aGUNCj4gPiA+ID4gPiA+IGhhcmR3YXJlwqANCj4gPiA+ID4gPiA+IGluZm9ybWF0aW9uLg0KPiA+
+ID4gPiA+IEkgc3RhcnRlZCByZXZpZXdpbmcgdGhlIGNvZGUsIGJ1dCBJIHdhbnQgdG8gbWFrZSBz
+dXJlIEkNCj4gPiA+ID4gPiB1bmRlcnN0YW5kDQo+ID4gPiA+ID4gd2hhdCdzIGdvaW5nIG9uOg0K
+PiA+ID4gPiA+IA0KPiA+ID4gPiA+IFRoaXMgSVAgY29yZSBpc24ndCBkaXNwbGF5aW5nIGNvbnRl
+bnRzIGZyb20gc3lzdGVtIG1lbW9yeSBvbg0KPiA+ID4gPiA+IHNvbWUNCj4gPiA+ID4gPiBzb3J0
+DQo+ID4gPiA+ID4gb2YgYWN0dWFsIHBoeXNpY2FsIGRpc3BsYXksIHJpZ2h0P8KgwqBJdCdzIGEg
+Y29yZSB0aGF0IHRha2VzDQo+ID4gPiA+ID4gc29tZQ0KPiA+ID4gPiA+IGlucHV0DQo+ID4gPiA+
+ID4gdmlkZW8gc3RyZWFtIChub3QgZGVzY3JpYmVkIGluIHRoZSBEVCBvciBpbiB0aGlzIGRyaXZl
+cikgYW5kDQo+ID4gPiA+ID4gc3RvcmVzDQo+ID4gPiA+ID4gaXQNCj4gPiA+ID4gPiB0byBtZW1v
+cnk/DQo+ID4gPiA+IElmIHRoZSBJUCBDb3JlIHlvdSBhcmUgcmVmZXJyaW5nIHRvIGlzIHNvbWUg
+Zm9ybSBvZiBHUFUgdGhlbiBpbg0KPiA+ID4gPiB0aGlzDQo+ID4gPiA+IGNhc2Ugd2UgYXJlIHVz
+aW5nIHRoZSBJbnRlbCBGUEdBIERpc3BsYXkgUG9ydCBGcmFtZWJ1ZmZlciBJUC4NCj4gPiA+ID4g
+SXQNCj4gPiA+ID4gZG9lcw0KPiA+ID4gPiBkaXNwbGF5IGNvbnRlbnRzIHN0cmVhbWVkIGZyb20g
+dGhlIEFSTS9MaW51eCBzeXN0ZW0gdG8gdGhlDQo+ID4gPiA+IERpc3BsYXkNCj4gPiA+ID4gUG9y
+dA0KPiA+ID4gPiBvZiB0aGUgcGh5c2ljYWwgTW9uaXRvci4NCj4gPiA+ID4gDQo+ID4gPiA+IEJl
+bG93IGEgc2ltcGxlIGlsbHVzdHJhdGlvbiBvZiB0aGUgc3lzdGVtOg0KPiA+ID4gPiANCj4gPiA+
+ID4gQVJNL0xpbnV4IC0tRE1BLS0+SW50ZWwgRlBHQSBEaXNwbGF5IFBvcnQgRnJhbWVidWZmZXIg
+SVANCj4gPiA+ID4gCQkJCXwNCj4gPiA+ID4gCQkJCXwNCj4gPiA+ID4gCQkJUGh5c2ljYWwgQ29u
+bmVjdGlvbg0KPiA+ID4gPiAJCQlEaXNwbGF5IFBvcnQNCj4gPiA+IFRoZSAiRE1BIiBpbiB0aGlz
+IGRpYWdyYW0gaXMgdGhlIGZyYW1lIHJlYWRlciBJUCwgcmlnaHQ/wqDCoFRoZQ0KPiA+ID4gZnJh
+bWUNCj4gPiA+IHJlYWRlciwgYXMgZGVzY3JpYmVkIGluIHRoZSBzcGVjLCBzb3VuZHMgYXBwcm94
+aW1hdGVseSBsaWtlIGEgRFJNDQo+ID4gPiBwbGFuZSwNCj4gPiA+IHNvIGlmIHlvdSBoYXZlIHRo
+YXQgaW4geW91ciBzeXN0ZW0gdGhlbiB0aGF0IG5lZWRzIHRvIGJlIHBhcnQgb2YNCj4gPiA+IHRo
+aXMNCj4gPiA+IERSTSBkcml2ZXIgKG90aGVyd2lzZSB5b3Ugd29uJ3QgYmUgcHV0dGluZyB0aGUg
+cmlnaHQgdGhpbmdzIG9uDQo+ID4gPiB0aGUNCj4gPiA+IHNjcmVlbiEpLg0KPiA+IFdvdWxkIHRo
+ZSBkcm1fc2ltcGxlX2Rpc3BsYXlfcGlwZV9pbml0wqBiZSBhYmxlIHRvIGhhbmRsZSB0aGlzID8g
+SXQNCj4gPiBzZWVtcyB0byBiZSBkaXNwbGF5aW5nIHRoZSBwcm9wZXIgaW1hZ2VzIG9uIHNjcmVl
+biwgYmFzZWQgb24gbXkNCj4gPiBjdXJyZW50DQo+ID4gY2hhbmdlcy4gVGhlcmUgd2VyZSByZWNv
+bW1lbmRhdGlvbnMgdG8gdXNlIHRoZQ0KPiA+IGRybV9zaW1wbGVfZGlzcGxheV9waXBlX2luaXQg
+aW5zdGVhZCBvZiBjcmVhdGluZyB0aGUgQ1JUQyBhbmQNCj4gPiBwbGFuZXMNCj4gPiBteXNlbGYN
+Cj4gVGhlIGRvY3MgSSd2ZSByZWFkIGZvciB0aGUgRnJhbWUgQnVmZmVyIElQIGRvbid0IGZpdCBp
+bnRvIGFueSBjdXJyZW50DQo+IERSTSBjb21wb25lbnQsIHNpbmNlIGl0J3Mgd2hhdCB3ZSdyZSBj
+dXJyZW50bHkgY2FsbGluZyBhICJ3cml0ZWJhY2sNCj4gY29ubmVjdG9yIi4NCj4gDQpXaGlsZSBy
+dW5uaW5nIG15IG93biB0ZXN0IChzaW5jZSB0aGUgaW50ZWwtZ3B1LXRvb2xzIGRvZXNuJ3Qgc2Vl
+bXMNCmFwcGxpY2FibGUuKSBUaGUgZHJtX3NpbXBsZV9kaXNwbGF5X3BpcGVfaW5pdCBzZWVtcyB0
+byBiZSBzaW1wbGUgZW5vdWdoDQpmb3IgZGlzcGxheWluZyBhIG1hdGNoYm94IGNvbnNvbGUuIFRo
+ZSB1c2UgY2FzZSBmb3IgdGhpcyBkcml2ZXIgaXMgb25seQ0KcGFydCBvZiB0aGUgZW5hYmxlbWVu
+bnQgb2YgdGhlIHJlZmVyZW5jZSBkZXNpZ24gYm9hcmQgc28gdGhhdCB1c2VycyBvZg0KdGhlIEFy
+cmlhMTAgZGV2a2l0IGNhbiB1c2UgdGhpcyBhcyBiYXNlIGZvciB0aGVpciBvd24gZGVzaWducy4N
+Cg0KPiBJIGRvbid0IHVuZGVyc3RhbmQgeW91ciBzeXN0ZW0gZW5vdWdoIHRvIGFuc3dlci7CoMKg
+WW91IGRpZG4ndCBhbnN3ZXINCj4gaWYNCj4gdGhlICJETUEiIGJsb2NrIHlvdSBkaWFncmFtbWVk
+IHdhcyB0aGUgZnJhbWUgcmVhZGVyIElQIChvciBtYXliZSB0aGUNCj4gZnJhbWUgcmVhZGVyIElQ
+IGNvbWVzIGFmdGVyKS7CoMKgSSBhbHNvIGRvbid0IHNlZSBob3cgdGhlIGZyYW1lIGJ1ZmZlcg0K
+PiBJUA0KPiBjb3VsZCBwb3NzaWJseSBiZSBjb25uZWN0ZWQgZGlyZWN0bHkgdG8gYSBwaHlzaWNh
+bCBkaXNwbGF5IGNvbm5lY3Rvci4NCg0KVGhlIEZQR0EgRnJhbWVCdWZmZXIgMiBzb2Z0IElQIHJl
+YWRzIHRoZSBpbmZvcm1hdGlvbiBwcm92aWRlZCB0byBpdA0KZnJvbSB0aGUgTGludXggS2VybmVs
+IHZpYSB0aGUgcGxhdGZvcm0gZGV2aWNlIHJlZ2lzdGVyIHByb3ZpZGVkIGluIHRoZQ0KRFQuIFRo
+ZSBMaW51eCBkcml2ZXIgaGVyZSBhbGxvY2F0ZXMgYSBjaHVuayBvZiBjb2hlcmVudCBtZW1vcnkg
+dGhhdA0KZGlyZWN0bHkgbWFwcyB0byB0aGUgU0RSQU0uIFRoZSBGUEdBIHNvZnQgSVAgd291bGQg
+c3RyZWFtIHRoZSBkaXNwbGF5DQpvdXQgdG8gdGhlIERpc3BsYXkgUG9ydCBiYXNlZCBvbiB0aGUg
+aW5mb3JtYXRpb24gdGhhdCB3YXMgd3JpdHRlbiB0bw0KdGhlIFNEUkFNLg0KDQpUaGUgRnJhbWVC
+dWZmZXIgMiBJUCBvciBwcmV2aW91c2x5IHVzZWQgRnJhbWUgUmVhZGVyIElQIGFyZSBzb2Z0IElQ
+IGlzDQpwcm9ncmFtbWVkIGFzIHBhcnQgb2YgdGhlIEZQR0Egd2hpY2ggaXMgY29ubmVjdGVkIHRv
+IHRoZSBEaXNwbGF5IFBvcnQNCnZpYSBhIG5hdGl2ZSBwaHlzaWNhbCB0cmFuc2NlaXZlci4gVGhl
+IFNvZnQgSVAgYXJlIGRyaXZlbiBieSB0aGUgTklPUyAyDQpzb2Z0IGNvcmUgd2hpY2ggaXMgYWxz
+byB0aGUgc29mdCBwcm9jZXNzb3IuwqANCg0KTm90ZSBob3dldmVyIHdoYXRldmVyIHRoYXQgZ29l
+cyBiZXlvbmQgdGhlIHRoZSBtZW1vcnkgYnVzIChiZXR3ZWVuIEFSTQ0KYW5kIEZQR0EpIGtub3du
+IGFzIEF2YWxvbiBpcyBubyBsb25nZXIgdW5kZXIgdGhlIGNvbnRyb2wgb2YgdGhlIExpbnV4DQpE
+cml2ZXIgKGFzIHdlIG9ubHkgZXN0YWJsaXNoIGNvbm5lY3Rpb24gb24gdGhlIEFSTSBzaWRlKQ0K
+wqDCoA0KDQo=
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
