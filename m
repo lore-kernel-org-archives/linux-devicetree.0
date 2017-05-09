@@ -1,164 +1,89 @@
-From: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 3/5] soc: qcom: Introduce APCS IPC driver
-Date: Tue, 9 May 2017 12:11:06 -0700
-Message-ID: <20170509191106.GQ15143@minitux>
-References: <20170505183729.GG15143@minitux>
- <CABb+yY03imq8911rF9dHJjG_a_aosksA=tgk7Rog5AZSezHDyg@mail.gmail.com>
- <338c4262-cc6b-bed2-16fe-1767d1f0d5f6@codeaurora.org>
- <CABb+yY1K3Hyn7CzQCA6tHu-KrPigARc3cYgBdT8PNX7vjhPK0g@mail.gmail.com>
- <20170506011920.GH15143@minitux>
- <CABb+yY1u9mspX1Zu0mg21JMYxpKxsXsvBa9LnF6VNr1_42UJUQ@mail.gmail.com>
- <20170508055439.GJ15143@minitux>
- <CABb+yY3CfWFBDh-qoGHDeHyLhVC7mPQZFB=VDS54OaypG-BqPw@mail.gmail.com>
- <20170508191154.GM15143@minitux>
- <CABb+yY2uC6vNFTq1KtZwrrw8x4BEfc2cMjF5DwrLbGpYWBNBzQ@mail.gmail.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [linux-sunxi] [PATCH v6 11/13] ARM: dts: sun8i: add DE2 nodes
+ for V3s SoC
+Date: Tue, 9 May 2017 21:26:11 +0200
+Message-ID: <20170509192611.vouyitju6x3yibzz@lukather>
+References: <20170504114858.9008-1-icenowy@aosc.io>
+ <20170504114858.9008-12-icenowy@aosc.io>
+ <CAGb2v67uE2iuP+wrL2t0fSMY8C1qnX=pYru7pZGX+0WhC_z2EA@mail.gmail.com>
+ <8ad5de02ffc13348dfc71e9ec203205c@aosc.io>
+ <20170505123035.pwh3idz73ujrd3hx@lukather>
+ <47D16B11-E976-464C-92AD-213D837C8F68@aosc.io>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="izwh5njcozroauyf"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CABb+yY2uC6vNFTq1KtZwrrw8x4BEfc2cMjF5DwrLbGpYWBNBzQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <47D16B11-E976-464C-92AD-213D837C8F68-h8G6r0blFSE@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Jeffrey Hugo <jhugo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ohad Ben-Cohen <ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-remoteproc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue 09 May 09:41 PDT 2017, Jassi Brar wrote:
 
-> On Tue, May 9, 2017 at 12:41 AM, Bjorn Andersson
-> <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> > On Sun 07 May 23:47 PDT 2017, Jassi Brar wrote:
+--izwh5njcozroauyf
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+1;4601;0c
+On Fri, May 05, 2017 at 08:34:16PM +0800, Icenowy Zheng wrote:
+>=20
+>=20
+> =E4=BA=8E 2017=E5=B9=B45=E6=9C=885=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=8D=888=
+:30:35, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> =E5=86=99=E5=88=B0:
+> >On Fri, May 05, 2017 at 04:53:43PM +0800, icenowy-h8G6r0blFSE@public.gmane.org wrote:
+> >> > > +               de2_clocks: clock@1000000 {
+> >> > > +                       compatible =3D
+> >"allwinner,sun50i-h5-de2-clk";
+> >> >=20
+> >> > I am a bit skeptical about this. Since the V3S only has one mixer,
+> >do
+> >> > the clocks
+> >> > for the second one even exist?
+> >>=20
+> >> It's described in the de_clock.c in the BSP source code, and in
+> >hardware
+> >> these bits can be really set (although without clock output).
+> >>=20
+> >> So I use this compatible which has still the extra clocks.
 > >
-> >> On Mon, May 8, 2017 at 11:24 AM, Bjorn Andersson
-> >> <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> >> > On Fri 05 May 21:48 PDT 2017, Jassi Brar wrote:
-> >> >
-> >> > The APCS IPC register serves the basis for all inter-processor
-> >> > communication in a Qualcomm platform, so it's not only the RPM driver
-> >> > discussed earlier that uses this. It's also used for other non-FIFO
-> >> > based communication channels, where the signalled information either
-> >> > isn't acked at all or acked on a system-level.
-> >> >
-> >> Something has to indicate consumption of data or "requested action
-> >> taken". Otherwise the protocol is design-wise broken.
-> >>
-> >
-> > The SMD and GLINK protocols work by providing two independent one-way
-> > pipes that higher levels can use to send and receive messages. When some
-> > driver pushes a message into the transmit-pipe we check if there's
-> > space, then write the message, signal the remote (APCS IPC) and then
-> > return.
-> >
-> "we check if there's space"  -> this is what mailbox api tries to do
-> with last_tx_done before starting the next message.
-> 
+> >If it's not usable, then it shouldn't be in the code, it's basically
+> >dead code.
+>=20
+> Thus should we have one more DE2 CCU compatible without mixer1
+> clocks for V3s?
 
-The space we're looking for is in a higher level in the protocol stack,
-the APCS IPC doesn't have a space concern.
+If those clocks don't exist on v3s, then yes.
 
-> 
-> >> >> The client should call mbox_client_txdone() after
-> >> >> mbox_send_message().
-> >> >
-> >> > So every time we call mbox_send_message() from any of the client drivers
-> >> > we also needs to call mbox_client_txdone()?
-> >> >
-> >> Yes.
-> >>
-> >> > This seems like an awkward side effect of using the mailbox framework -
-> >> > which has to be spread out in at least 6 different client drivers :(
-> >> >
-> >> No. Mailbox or whatever you implement - you must (and do) tick the
-> >> state machine to keep the messages moving.
-> >
-> > But the state you have in the other mailbox drivers is not a concern of
-> > the APCS IPC.
-> >
-> No, as you say above you check for space before writing the next
-> message, this is what I call ticking the state machine.
-> 
+Maxime
 
-Sure, but you're talking about the mailbox state machine. The APCS IPC
-doesn't have states.  The _only_ thing that the APCS IPC provides is a
-mechanism for informing the other side that "hey there's something to
-do". So it doesn't matter if there's already a pending "hey there's
-something to do", because adding another will still only be "hey there's
-something to do".
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
 
-I'm just trying to describe the big picture, but you keep confusing the
-mailbox/doorbell responsibilities with the client's responsibilities.
+--izwh5njcozroauyf
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> 
-> >>   Best designs have some interrupt occurring when the message has been
-> >> consumed by the remote. Some designs have a flag set which needs to be
-> >> polled to detect completion. Very few (like yours) that support
-> >> neither irq nor polling, have to be driven by the upper protocol layer
-> >> by some ack packet (or tracking read/write pointers like you do).
-> >> These three cases are denoted by TXDONE_BY_IRQ, TXDONE_BY_POLL and
-> >> TXDONE_BY_ACK respectively.
-> >>
-> >
-> > You're confusing the APCS IPC with the larger communication mechanism,
-> >
-> Maybe. I am not versed with QCom technologies like RPM, SMD, GLINK, APCS etc.
-> Controller driver is what physically transmits a signal to remote.
-> Users above the mailbox api are client drivers.
-> 
+-----BEGIN PGP SIGNATURE-----
 
-Correct, and the signal that we're trying to transmit is "hey there's
-_something_ to do", nothing else.
+iQIcBAABCAAGBQJZEhfPAAoJEBx+YmzsjxAgJc4P/09NGdSg5d2ycinJHrsja/xT
+NOvSgvRl4G9hkgaLgbLB8N8lzV42FzDP7hu2VquGlGTC74nl6rxbbHLO+aY3F990
+H9jKj4TIFDL/WdoLfzP+WqmEEVGgiPaG90kthR7Ol+1Z2seCWDJN3M07NbvaeLSa
+VKz6idBiLl24k/2aPi9TKVZQjQ8Af2hHMpZR5MGwJGwodmk+3V6tppAeSZIT1wxw
+wxJS2I+A0DvSzurVeBrqb1IQZ9yeb67JQprd1X5v6TvVZUdPaFhIpsiIymvIv6R3
+bT3rGtBBDbuzvd6o5IHrM0SHe65l9Y7Lp+6HrXxTJAcOOSC5jtkO5KUZwfVkvTns
+th1BZsJLCEqyeDstDKOuZxw/uwmSZV+1e2ObOOtf/aiiF+eMV2jY0pTnv4NtuOLC
+/rC0tS5GIrhjFNDR2AZZMO5ym5YPHElMCR+X3U0UV7uizqTu19+iGmf/GWrqfJ0D
+9YOxyHEkTsY11p9T+Sesqr3u4frqvZ0P7uXusTr2AwbyfyTb+El5iuPt10glHlC7
+LmDYFHtyafBNN7H5YxTfDtSKPy+85LfhLSRQxaSOxNoWHXBtai+MzQSVq9QTCQ4A
+/2AG6vgdt1mwLL/X9QU3gRIPcyVVPRDVOzToonySH+du3n0p0Cr5Kn7w6pwT/KJe
+0DovP+LAh98vOK6VYzfg
+=IQHl
+-----END PGP SIGNATURE-----
 
-
-Relate this to when Fedex drops a packet at your door; first he checks
-there's space on the porch, then he puts the packet there, he rings the
-doorbell and then he walks away. You are free to "answer" the doorbell
-now or at any point in the future. He doesn't have to stand there are
-wait and it doesn't matter if he rings the bell multiple times - you
-will still only check for packages once (regardless of how many he left).
-
-In the case of him wanting your signature, then that's an implementation
-detail of the Fedex guy, it has nothing to do with how you wire your
-doorbell!
-
-> >
-> > This is why I suggested that this is a doorbell, rather than a mailbox.
-> > Your argumentation of how a mailbox should work makes perfect sense, but
-> > it's not how the Qualcomm IPC works.
-> >
-> Mailbox framework is designed to support, what you call doorbell type
-> of communication, just fine. There is no need to define another class.
-> 
-
-Okay good.
-
-> >
-> > Setting TXDONE_BY_POLL and specifying a dummy last_tx_done() comes with
-> > a crazy overhead. To set a single bit in a register we will take the
-> > channel spinlock 4 times, start a timer, iterate over all registered
-> > channels and the client must be marked as blocking so we will get at
-> > least 2 additional context switches.
-> >
-> How often does the platform send messages for it to be a considerable load?
-
-This is the basis for all inter-processor communication in the Qualcomm
-platforms, so the above list of extra hoops to jump through is not
-acceptable.
-
-> BTW, this is an option only if your client driver doesn't want to
-> explicitly tick the state machine by calling mbox_client_txdone()...
-> which I think should be done in the first place.
-> 
-
-There is no state of the APCS IPC, so the overhead is created by the
-mailbox framework.
-
-
-The part where this piece of hardware differs from the other mailboxes
-is that TX is done as send_data() returns and in the realm of the
-mailbox there is no such thing as "tx done". So how about we extend the
-framework to handle stateless and message-less doorbells?
-
-Regards,
-Bjorn
+--izwh5njcozroauyf--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
