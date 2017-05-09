@@ -1,93 +1,145 @@
 From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v6 08/13] drm/sun4i: add support for Allwinner DE2 mixers
-Date: Tue, 9 May 2017 22:19:19 +0200
-Message-ID: <20170509201919.ubzhiyntdwf6wlog@lukather>
-References: <20170504114858.9008-1-icenowy@aosc.io>
- <20170504114858.9008-9-icenowy@aosc.io>
- <20170504130535.6nokhni5a3uxwy66@lukather>
- <522ab8cb2939f0017917c5e9b4065089@aosc.io>
- <20170505123618.5vztqx2vdwsgnrxt@lukather>
- <185C1948-541D-4198-9A56-E3F0DFF08734@aosc.io>
+Subject: Re: [PATCH v3] arm: dts: sun7i-a20-bananapi: name the GPIO lines
+Date: Tue, 9 May 2017 22:27:25 +0200
+Message-ID: <20170509202725.e2tkry7dmsgx7se5@lukather>
+References: <1494048638-24365-1-git-send-email-linux@rempel-privat.de>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="7lzqphmuxoahqya2"
+        protocol="application/pgp-signature"; boundary="4jb5ptsa4xs45onn"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <185C1948-541D-4198-9A56-E3F0DFF08734-h8G6r0blFSE@public.gmane.org>
+In-Reply-To: <1494048638-24365-1-git-send-email-linux-YEK0n+YFykbzxQdaRaTXBw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Oleksij Rempel <linux-YEK0n+YFykbzxQdaRaTXBw@public.gmane.org>
+Cc: ore-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
---7lzqphmuxoahqya2
+--4jb5ptsa4xs45onn
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, May 05, 2017 at 08:39:31PM +0800, Icenowy Zheng wrote:
-> >> > > +	/* Set base coordinates */
-> >> > > +	DRM_DEBUG_DRIVER("Layer coordinates X: %d Y: %d\n",
-> >> > > +			 state->crtc_x, state->crtc_y);
-> >> > > +	regmap_write(mixer->engine.regs,
-> >> > > +		     SUN8I_MIXER_CHAN_UI_LAYER_COORD(chan, layer),
-> >> > > +		     SUN8I_MIXER_COORD(state->crtc_x, state->crtc_y));
-> >> >=20
-> >> > X and Y are fixed point numbers. You want to keep only the higher
-> >16
-> >> > bits there.
-> >>=20
-> >> Do you mean "lower 16 bits"? Thus should I (x & 0xffff) or ((u16)x) ?
-> >
-> >Nevermind, I got confused with src_x and src_y.
-> >
-> >> P.S. The negative coordinates are broken, how should I deal with it?
-> >or
-> >> is the coordinates promised to be not negative?
-> >
-> >Adjust the buffer base address, and use a shorter line. You have such
-> >an example in the sun4i code.
->=20
-> Are they these two lines:
-> ```
-> paddr +=3D (state->src_x >> 16) * bpp;
-> paddr +=3D (state->src_y >> 16) * fb->pitches[0];
-> ```
->=20
-> I think I copied them here, so I don't need to mind this problem any
-> more, right?
+Hi Oleksij,
 
-Hmmm, yes, probably. That's pretty easy to test anyway, you just need
-to set up a plane with a negative base coordinate.
+It looks much better, thanks!
 
+On Sat, May 06, 2017 at 07:30:38AM +0200, Oleksij Rempel wrote:
+> This names the GPIO lines on the Banana Pi board in accordance with
+> the A20_Banana_Pi v1.4 Specification.
+>=20
+> This will make these line names reflect through to user space
+> so that they can easily be identified and used with the new
+> character device ABI.
+>=20
+> Signed-off-by: Oleksij Rempel <linux-YEK0n+YFykbzxQdaRaTXBw@public.gmane.org>
+> Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+> Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> ---
+
+Usually, it's better here if you put a change log with the things that
+changed from one version to another.
+
+You probably remember all of the comments that were made on the
+previous version of that patch, but I don't ;)
+
+>  arch/arm/boot/dts/sun7i-a20-bananapi.dts | 51 ++++++++++++++++++++++++++=
+++++++
+>  1 file changed, 51 insertions(+)
+>=20
+> diff --git a/arch/arm/boot/dts/sun7i-a20-bananapi.dts b/arch/arm/boot/dts=
+/sun7i-a20-bananapi.dts
+> index 91f2e5f..6b326b3 100644
+> --- a/arch/arm/boot/dts/sun7i-a20-bananapi.dts
+> +++ b/arch/arm/boot/dts/sun7i-a20-bananapi.dts
+> @@ -178,6 +178,57 @@
+>  };
+> =20
+>  &pio {
+> +	gpio-line-names =3D
+> +		/* PA */
+> +		"ERXD3", "ERXD2", "ERXD1", "ERXD0", "ETXD3",
+> +			"ETXD2", "ETXD1", "ETXD0",
+> +		"ERXCK", "ERXERR", "ERXDV", "EMDC", "EMDIO",
+> +			"ETXEN", "ETXCK", "ECRS",
+> +		"ECOL", "ETXERR", "", "", "", "", "", "",
+> +		"", "", "", "", "", "", "", "",
+> +		/* PB */
+> +		"PMU-SCK", "PMU-SDA", "", "", "", "", "", "",
+> +		"", "USB0-DRV", "", "", "", "", "", "",
+> +		"", "", "", "", "SCL", "SDA", "", "",
+
+I'm not sure how it's called in the schematics / documentation, but
+having a way to get which bus it's from would be helpful (like you did
+for the PMIC I2C bus).
+
+> +		"", "", "", "", "", "", "", "",
+> +		/* PC */
+> +		"", "", "", "", "", "", "", "",
+> +		"", "", "", "", "", "", "", "",
+> +		"", "", "", "", "", "", "", "",
+> +		"", "", "", "", "", "", "", "",
+> +		/* PD */
+> +		"", "", "", "", "", "", "", "",
+> +		"", "", "", "", "", "", "", "",
+> +		"", "", "", "", "", "", "", "",
+> +		"", "", "", "", "", "", "", "",
+> +		/* PE */
+> +		"", "", "", "", "", "", "", "",
+> +		"", "", "", "", "", "", "", "",
+> +		"", "", "", "", "", "", "", "",
+> +		"", "", "", "", "", "", "", "",
+> +		/* PF */
+> +		"SD0-D1", "SD0-D0", "SD0-CLK", "SD0-CMD", "SD0-D3",
+> +			"SD0-D2", "", "",
+
+Why did you change the wrapping and indentation on those two lines?
+
+> +		"", "", "", "", "", "", "", "",
+> +		"", "", "", "", "", "", "", "",
+> +		"", "", "", "", "", "", "", "",
+> +		/* PG */
+> +		"", "", "", "", "", "", "", "",
+> +		"", "", "", "", "", "", "", "",
+> +		"", "", "", "", "", "", "", "",
+> +		"", "", "", "", "", "", "", "",
+> +		/* PH */
+> +		"TXD0", "RXD0", "IO-1", "PH3", "USB0-IDDET", "PH5", "", "",
+
+What are PH3 and PH5 used for on the board? Can't we provide a more
+explicit name?
+
+Thanks!
 Maxime
-
 --=20
 Maxime Ripard, Free Electrons
 Embedded Linux and Kernel engineering
 http://free-electrons.com
 
---7lzqphmuxoahqya2
+--4jb5ptsa4xs45onn
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIcBAABCAAGBQJZEiQ/AAoJEBx+YmzsjxAgW9IP+wZgjL+Xuohyxz9qHyWbGvQ3
-8rvP3uy3kTSZUmK7R5ZToR46fVfyln3OYVDck0u413Qp62solWuZMaaCCvZcq/x5
-duU1DpLdjPiaK5XZ4i8HcwlnrEzpR5Av+qMuq/htn7vGEP3hmf5/Ie0ypLS/sygQ
-jFBafh3O4c7/ZITOSONVXyrGgFI6ovBkIb3ckchyo0vcLoREzFmnoARvRavu4bgi
-Zuvvbz06G1KsvUFvM0aeCgOFdkztb+dqMV7Qnhyk2M8blJLSJPSFkRQ6cz8LYlKS
-eDgh+XuZE/lDTQkME9onZa0r9vmO95Nn1DxKaBNEF5Ip4OUPfYGWFaSY033N+a2n
-v5ah1S0W5plAm3mTUQmaQ278Zb3VvVDPfJmMWeK5irUaw56RPm4Ejz3FGz0OZbbx
-KJ5MqFXhf1aAOFaF9j3Lgy53ETuW640BocJ3nRl/iFklE9d/3VmUzCFuMezkJgSM
-Jp6HCRE0qBAufU0bG1LLZ05IQzhoE5XQa9nc+Ev3E0PLDiYi69mqqDw7NcY411a1
-may9vqzyop9ICn3IXyzFb8b1ZDjdd7LQFTbpHtw3Wa5gTROwOh/ALXjppAhOM83I
-dx5Q8PLkve9TQ7PWatY8ygfM6zx3aZ08nxJbMA483tfpWwwS+3y9Z3KU/LZu5O6A
-1az+1RLoi4DoyqzYqHm9
-=fB72
+iQIcBAABCAAGBQJZEiYpAAoJEBx+YmzsjxAgMEwP/iG3QWz3q8iaq80qBff+2NEh
+wM6xV/RPXoK9pkRbBuOdoVU8ghLBVoDsFpIakaIK3gwiK3pXiwXHIjBKkoS2CEXt
+5qQIPxIDJEb13izNWmanVKfRQAxm6/KKas/Xv8QKnOXpHkO775vVTsdLcFzrUmqz
+ltPOpvXv+iGUqi0OOYeHIvSBZ26UkGzcq4jfCiRFSf7OK9IUlZrrwNto1cKiMUrP
+XLy2A8ZfRmFhtB/lkpLZqO2BB5FMa1osrWlEH1VCV4LbzVMOLjTJnmS3N28/Cksb
+SBelw381M1UFTuDgdgasoft8bj2BI03MSJ8DmHviDpWbHnXqXFql51UIBV2Qr3E9
+zl8+mJrkcRdCY/ztLjSAp46bOZWrGR9oUmXESXokuM2l0hS3Tf0v6pWly0joVvgY
+OO08OabYG3olgDG+439djaoUcfN0eFYnFbQIOCWDdMJkHOAPBvyTFqJDPZ6R2pUA
+7zMxyLim2bbxtrYw0DwBKhrfG4x2YvFg1LGL5ohdF5tH5izZyElBigWKulEvq6tf
+ocKVahaj/6fVGreWSt9babFyNbHr8+CvcGftm0tKVl9fu6oUWLixSkVOPTpzCRew
+E2nVD2mWhgq5zGvfcdr392pOsvOkQpoAwYh5Zt9fBrddv2mjcjG0GL5xnJHROKSs
+nFHvy6Zn34D7Fhkj0x1G
+=a/MI
 -----END PGP SIGNATURE-----
 
---7lzqphmuxoahqya2--
+--4jb5ptsa4xs45onn--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
