@@ -1,40 +1,91 @@
-From: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-Subject: Re: [PATCH v7 4/5] i2c: aspeed: added driver for Aspeed I2C
-Date: Tue, 09 May 2017 09:15:07 +0200
-Message-ID: <1494314107.25766.442.camel@kernel.crashing.org>
-References: <20170424181818.2754-1-brendanhiggins@google.com>
-         <20170424181818.2754-5-brendanhiggins@google.com>
-         <CAFd5g47VGa=wqeyg5tFjB5xD=YsTuP27hLN3-ZM62MJD8dCP_Q@mail.gmail.com>
+From: Hugues FRUCHET <hugues.fruchet@st.com>
+Subject: Re: [PATCH v5 2/8] [media] stm32-dcmi: STM32 DCMI camera interface
+ driver
+Date: Tue, 9 May 2017 07:36:34 +0000
+Message-ID: <5d588e10-4185-60c5-de38-54b2a4428ae6@st.com>
+References: <1493998287-5828-1-git-send-email-hugues.fruchet@st.com>
+ <1493998287-5828-3-git-send-email-hugues.fruchet@st.com>
+ <dd4a1ec1-b84a-81cb-51b6-c2e53b5efcc5@xs4all.nl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAFd5g47VGa=wqeyg5tFjB5xD=YsTuP27hLN3-ZM62MJD8dCP_Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Brendan Higgins <brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>, Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>, Kachalov Anton <mouse-Pma6HLj0uuo@public.gmane.org>, =?ISO-8859-1?Q?C=E9dric?= Le Goater <clg-Bxea+6Xhats@public.gmane.org>
-Cc: linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, OpenBMC Maillist <openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Ryan Chen <ryan_chen-SAlXDmAnmOAqDJ6do+/SaQ@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <dd4a1ec1-b84a-81cb-51b6-c2e53b5efcc5@xs4all.nl>
+Content-Language: en-US
+Content-ID: <55EF19CDA8ED04469180783B236B4A77@st.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Hans Verkuil <hverkuil@xs4all.nl>, Rob Herring <robh+dt@kernel.org>, Mark
+ Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre TORGUE <alexandre.torgue@st.com>, Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Yannick FERTRE <yannick.fertre@st.com>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2017-05-08 at 16:28 -0700, Brendan Higgins wrote:
-> 
-> I am curious what everyone thinks about this. It seemed that, earlier
-> on, people did not like me disabling multi-master mode, but I think
-> that it would make bus recovery not work as well. Given that, I think
-> it makes the most sense to provide a device tree option either to
-> enable multi-master support or disable it. Thoughts?
+Hi Hans,
+It's OK, feel free to change.
+BR
+Hugues.
 
-I think we probably want to keep it enabled yes. Another reason is that
-SMBus notifications are in effect a type of multi-master (well slave
-really), and we should really add support for them even when the slave
-is not enabled.
 
-We are hitting some PMbus devices that apparently can't be prevented
-from sending those and that's causing issues.
-
-Cheers,
-Ben.
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On 05/06/2017 10:54 AM, Hans Verkuil wrote:
+> Hi Hugues,
+>
+> On 05/05/2017 05:31 PM, Hugues Fruchet wrote:
+>> This V4L2 subdev driver enables Digital Camera Memory Interface (DCMI)
+>> of STMicroelectronics STM32 SoC series.
+>>
+>> Reviewed-by: Hans Verkuil <hans.verkuil@cisco.com>
+>> Signed-off-by: Yannick Fertre <yannick.fertre@st.com>
+>> Signed-off-by: Hugues Fruchet <hugues.fruchet@st.com>
+>> ---
+>>  drivers/media/platform/Kconfig            |   12 +
+>>  drivers/media/platform/Makefile           |    2 +
+>>  drivers/media/platform/stm32/Makefile     |    1 +
+>>  drivers/media/platform/stm32/stm32-dcmi.c | 1403 +++++++++++++++++++++++++++++
+>>  4 files changed, 1418 insertions(+)
+>>  create mode 100644 drivers/media/platform/stm32/Makefile
+>>  create mode 100644 drivers/media/platform/stm32/stm32-dcmi.c
+>>
+>> diff --git a/drivers/media/platform/Kconfig b/drivers/media/platform/Kconfig
+>> index ac026ee..de6e18b 100644
+>> --- a/drivers/media/platform/Kconfig
+>> +++ b/drivers/media/platform/Kconfig
+>> @@ -114,6 +114,18 @@ config VIDEO_S3C_CAMIF
+>>  	  To compile this driver as a module, choose M here: the module
+>>  	  will be called s3c-camif.
+>>
+>> +config VIDEO_STM32_DCMI
+>> +	tristate "Digital Camera Memory Interface (DCMI) support"
+>
+> Is it OK with you if I change this to:
+>
+> 	tristate "STM32 Digital Camera Memory Interface (DCMI) support"
+>
+> Right now the text gives no indication that this driver is for an STM32 platform.
+>
+> No need to spin a new patch, just let me know you're OK with it and I'll make
+> the change.
+>
+> Regards,
+>
+> 	Hans
+>
+>> +	depends on VIDEO_V4L2 && OF && HAS_DMA
+>> +	depends on ARCH_STM32 || COMPILE_TEST
+>> +	select VIDEOBUF2_DMA_CONTIG
+>> +	---help---
+>> +	  This module makes the STM32 Digital Camera Memory Interface (DCMI)
+>> +	  available as a v4l2 device.
+>> +
+>> +	  To compile this driver as a module, choose M here: the module
+>> +	  will be called stm32-dcmi.
+>> +
+>>  source "drivers/media/platform/soc_camera/Kconfig"
+>>  source "drivers/media/platform/exynos4-is/Kconfig"
+>>  source "drivers/media/platform/am437x/Kconfig"
