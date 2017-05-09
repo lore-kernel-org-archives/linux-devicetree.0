@@ -1,93 +1,66 @@
-From: Mike Looijmans <mike.looijmans@topic.nl>
-Subject: Re: [PATCH] dt-bindings: power: New bindings for ltc3651-charger
-Date: Tue, 9 May 2017 07:26:51 +0200
-Message-ID: <1d046814-8a0b-099b-0a5b-b704623e1b92@topic.nl>
-References: <1493966315-15893-1-git-send-email-mike.looijmans@topic.nl>
- <20170508171206.ajxjbw5mybvrpwss@rob-hp-laptop>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [OpenWrt-Devel] [PATCH 2/4] ata: Add DT bindings for the Gemini
+ SATA bridge
+Date: Tue, 9 May 2017 08:39:44 +0200
+Message-ID: <CACRpkdbPJDPs0bMHbKUGXt2E4O=e_rJveKy=hR-_J-GKG7oLkQ@mail.gmail.com>
+References: <20170506121053.11554-1-linus.walleij@linaro.org>
+ <CGME20170506121119epcas5p437ea69e802ba94bd7df83d0bbac1b0bc@epcas5p4.samsung.com>
+ <20170506121053.11554-2-linus.walleij@linaro.org> <3791456.ZibJefW5cI@amdc3058>
+ <CACRpkdYz9Oka0SGJDTr=y4EN-VfggbuKY2s5X43oXg1dgjh1nw@mail.gmail.com>
+ <CAKR_QVJTbLMzqsUTEZJOquZ9T5aQ1_=73WAoRWrm+QK9wFhngA@mail.gmail.com> <6e0751d2-8f78-c584-2990-c05bc3090214@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20170508171206.ajxjbw5mybvrpwss@rob-hp-laptop>
-Sender: linux-pm-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: devicetree@vger.kernel.org, sre@kernel.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, mark.rutland@arm.com
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-ide-owner@vger.kernel.org>
+In-Reply-To: <6e0751d2-8f78-c584-2990-c05bc3090214@gmail.com>
+Sender: linux-ide-owner@vger.kernel.org
+To: Florian Fainelli <f.fainelli@gmail.com>
+Cc: Tom Psyborg <pozega.tomislav@gmail.com>, openwrt-devel@openwrt.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, John Feng-Hsin Chiang <john453@faraday-tech.com>, Paulius Zaleckas <paulius.zaleckas@gmail.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, linux-ide@vger.kernel.org, Greentime Hu <green.hu@gmail.com>, Tejun Heo <tj@kernel.org>, Janos Laube <janos.dev@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-﻿On 08-05-17 19:12, Rob Herring wrote:
-> On Fri, May 05, 2017 at 08:38:35AM +0200, Mike Looijmans wrote:
->> This adds the devicetree bindings documentation for the LTC3651 battery charger.
->>
->> Signed-off-by: Mike Looijmans <mike.looijmans@topic.nl>
->> ---
->>  .../bindings/power/supply/ltc3651-charger.txt      | 26 ++++++++++++++++++++++
->>  1 file changed, 26 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/power/supply/ltc3651-charger.txt
->>
->> diff --git a/Documentation/devicetree/bindings/power/supply/ltc3651-charger.txt b/Documentation/devicetree/bindings/power/supply/ltc3651-charger.txt
->> new file mode 100644
->> index 0000000..a7dd80f
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/power/supply/ltc3651-charger.txt
->> @@ -0,0 +1,26 @@
->> +ltc3651-charger
->> +
->> +Required properties:
->> + - compatible: "lltc,ltc3651-charger"
->> + - acpr-gpios: Connect to ACPR output. See remark below.
->> +
->> +Optional properties:
->> + - fault-gpios: Connect to FAULT output. See remark below.
->> + - chrg-gpios: Connect to CHRG output. See remark below.
+On Tue, May 9, 2017 at 12:52 AM, Florian Fainelli <f.fainelli@gmail.com> wrote:
+> On 05/08/2017 02:16 PM, Tom Psyborg wrote:
+>> Is it ever going to be added so this endless spam can end?
 >
-> All the gpios need vendor prefix.
+> It's the first iteration of the (S)ATA patchset, and if you are not
+> interested, just ignore the thread.
 
-Will prefix "lltc," adjust the driver and submit new patches.
+I mailed with Tom and it turns out he thinks openwrt-devel is getting
+spammed with these submissions.
 
->
->> +
->> +The ltc3651 outputs are open-drain type and active low. The driver assumes the
->> +GPIO reports "active" when the output is asserted, so if the pins have been
->> +connected directly, the GPIO flags should be set to active low also.
->> +
->> +The driver will attempt to aquire interrupts for all GPIOs. If the system is
->> +not capabale of providing that, the driver cannot report changes and userspace
->> +will need to periodically read the sysfs attributes to detect changes.
->
-> If these are interrupts, then you should use the interrupt binding
-> instead (most GPIO controllers are also interrupt controllers).
+It's true in a sense: the patches are targeted for upstream and not
+for the openwrt repo.
 
-They're GPIO (the driver needs the current state), the use of interrupts is 
-just to detect changes. Similar to gpio-charger for example. Interrupt 
-bindings cannot provide the current state of the line.
+It's no big deal, I don't want to unnecessarily increase traffic on
+openwrt-devel if it is annoying to some.
 
+> Linus is doing everyone a great favor here by making sure that this
+> platform gets properly supported upstream such that the cost of
+> maintaining in OpenWrt/LEDE/anywhere else comes down to almost zero.
 
->
->> +
->> +Example:
->> +
->> +	charger: battery-charger {
->> +		compatible = "lltc,ltc3651-charger";
->> +		acpr-gpios = <&gpio0 68 GPIO_ACTIVE_LOW>;
->> +		fault-gpios = <&gpio0 64 GPIO_ACTIVE_LOW>;
->> +		chrg-gpios = <&gpio0 63 GPIO_ACTIVE_LOW>;
->> +	};
->> --
->> 1.9.1
->>
+I am porting to D-Link DIR-685 and DNS-313 as part of the
+process, so we have two new high-volume routers/NAS boxes
+as part of the process. I don't know how to fix the OpenWRT
+install and builds for these in the end though.
 
+It is actually probably an even bigger win though.
 
+We have learnt that Faraday Technology is sprinkling silicon blocks
+all over any silicon foundries close to Taiwan. Their stuff appear
+to be in a lot of cheap routers, NAS etc. They use the number of
+successful deployments of the IP block as a selling point. I guess
+these guys are commonly called in to consult when kickstarting
+silicon design, simply.
 
-Kind regards,
+It turns out that this and other silicon vendors such as Grain Media,
+Andestech, Moschip etc are using the same silicon blocks, so
+a bunch of out-of-tree code is actually just duplicate implementations
+of Faraday drivers... we already merged Gemini and MoxaArt in
+the upstream kernel so we have a common interrupt chip, timer,
+PCI driver, and now this IDE/ATA driver (not the FTIDE200 yet though).
 
-Mike Looijmans
-System Expert
+So there is maybe not as much unique silicon
+in the world as we have come to think, we need to pay attention
+to how register maps look on different things.
 
-TOPIC Products
-Materiaalweg 4, NL-5681 RJ Best
-Postbus 440, NL-5680 AK Best
-Telefoon: +31 (0) 499 33 69 79
-E-mail: mike.looijmans@topicproducts.com
-Website: www.topicproducts.com
-
-Please consider the environment before printing this e-mail
+Yours,
+Linus Walleij
