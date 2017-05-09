@@ -1,66 +1,40 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [OpenWrt-Devel] [PATCH 2/4] ata: Add DT bindings for the Gemini
- SATA bridge
-Date: Tue, 9 May 2017 08:39:44 +0200
-Message-ID: <CACRpkdbPJDPs0bMHbKUGXt2E4O=e_rJveKy=hR-_J-GKG7oLkQ@mail.gmail.com>
-References: <20170506121053.11554-1-linus.walleij@linaro.org>
- <CGME20170506121119epcas5p437ea69e802ba94bd7df83d0bbac1b0bc@epcas5p4.samsung.com>
- <20170506121053.11554-2-linus.walleij@linaro.org> <3791456.ZibJefW5cI@amdc3058>
- <CACRpkdYz9Oka0SGJDTr=y4EN-VfggbuKY2s5X43oXg1dgjh1nw@mail.gmail.com>
- <CAKR_QVJTbLMzqsUTEZJOquZ9T5aQ1_=73WAoRWrm+QK9wFhngA@mail.gmail.com> <6e0751d2-8f78-c584-2990-c05bc3090214@gmail.com>
+From: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Subject: Re: [PATCH v7 4/5] i2c: aspeed: added driver for Aspeed I2C
+Date: Tue, 09 May 2017 09:15:07 +0200
+Message-ID: <1494314107.25766.442.camel@kernel.crashing.org>
+References: <20170424181818.2754-1-brendanhiggins@google.com>
+         <20170424181818.2754-5-brendanhiggins@google.com>
+         <CAFd5g47VGa=wqeyg5tFjB5xD=YsTuP27hLN3-ZM62MJD8dCP_Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-ide-owner@vger.kernel.org>
-In-Reply-To: <6e0751d2-8f78-c584-2990-c05bc3090214@gmail.com>
-Sender: linux-ide-owner@vger.kernel.org
-To: Florian Fainelli <f.fainelli@gmail.com>
-Cc: Tom Psyborg <pozega.tomislav@gmail.com>, openwrt-devel@openwrt.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, John Feng-Hsin Chiang <john453@faraday-tech.com>, Paulius Zaleckas <paulius.zaleckas@gmail.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, linux-ide@vger.kernel.org, Greentime Hu <green.hu@gmail.com>, Tejun Heo <tj@kernel.org>, Janos Laube <janos.dev@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAFd5g47VGa=wqeyg5tFjB5xD=YsTuP27hLN3-ZM62MJD8dCP_Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Brendan Higgins <brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>, Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>, Kachalov Anton <mouse-Pma6HLj0uuo@public.gmane.org>, =?ISO-8859-1?Q?C=E9dric?= Le Goater <clg-Bxea+6Xhats@public.gmane.org>
+Cc: linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, OpenBMC Maillist <openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Ryan Chen <ryan_chen-SAlXDmAnmOAqDJ6do+/SaQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 9, 2017 at 12:52 AM, Florian Fainelli <f.fainelli@gmail.com> wrote:
-> On 05/08/2017 02:16 PM, Tom Psyborg wrote:
->> Is it ever going to be added so this endless spam can end?
->
-> It's the first iteration of the (S)ATA patchset, and if you are not
-> interested, just ignore the thread.
+On Mon, 2017-05-08 at 16:28 -0700, Brendan Higgins wrote:
+> 
+> I am curious what everyone thinks about this. It seemed that, earlier
+> on, people did not like me disabling multi-master mode, but I think
+> that it would make bus recovery not work as well. Given that, I think
+> it makes the most sense to provide a device tree option either to
+> enable multi-master support or disable it. Thoughts?
 
-I mailed with Tom and it turns out he thinks openwrt-devel is getting
-spammed with these submissions.
+I think we probably want to keep it enabled yes. Another reason is that
+SMBus notifications are in effect a type of multi-master (well slave
+really), and we should really add support for them even when the slave
+is not enabled.
 
-It's true in a sense: the patches are targeted for upstream and not
-for the openwrt repo.
+We are hitting some PMbus devices that apparently can't be prevented
+from sending those and that's causing issues.
 
-It's no big deal, I don't want to unnecessarily increase traffic on
-openwrt-devel if it is annoying to some.
+Cheers,
+Ben.
 
-> Linus is doing everyone a great favor here by making sure that this
-> platform gets properly supported upstream such that the cost of
-> maintaining in OpenWrt/LEDE/anywhere else comes down to almost zero.
-
-I am porting to D-Link DIR-685 and DNS-313 as part of the
-process, so we have two new high-volume routers/NAS boxes
-as part of the process. I don't know how to fix the OpenWRT
-install and builds for these in the end though.
-
-It is actually probably an even bigger win though.
-
-We have learnt that Faraday Technology is sprinkling silicon blocks
-all over any silicon foundries close to Taiwan. Their stuff appear
-to be in a lot of cheap routers, NAS etc. They use the number of
-successful deployments of the IP block as a selling point. I guess
-these guys are commonly called in to consult when kickstarting
-silicon design, simply.
-
-It turns out that this and other silicon vendors such as Grain Media,
-Andestech, Moschip etc are using the same silicon blocks, so
-a bunch of out-of-tree code is actually just duplicate implementations
-of Faraday drivers... we already merged Gemini and MoxaArt in
-the upstream kernel so we have a common interrupt chip, timer,
-PCI driver, and now this IDE/ATA driver (not the FTIDE200 yet though).
-
-So there is maybe not as much unique silicon
-in the world as we have come to think, we need to pay attention
-to how register maps look on different things.
-
-Yours,
-Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
