@@ -1,108 +1,61 @@
-From: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v4 3/5] soc: qcom: Introduce APCS IPC driver
-Date: Tue, 9 May 2017 22:11:22 +0530
-Message-ID: <CABb+yY2uC6vNFTq1KtZwrrw8x4BEfc2cMjF5DwrLbGpYWBNBzQ@mail.gmail.com>
-References: <20170504200539.27027-3-bjorn.andersson@linaro.org>
- <CABb+yY2P=qPTYB6PDkjV82Qc67Xzer40BHRsOQP2m-gM3eK_UA@mail.gmail.com>
- <20170505183729.GG15143@minitux> <CABb+yY03imq8911rF9dHJjG_a_aosksA=tgk7Rog5AZSezHDyg@mail.gmail.com>
- <338c4262-cc6b-bed2-16fe-1767d1f0d5f6@codeaurora.org> <CABb+yY1K3Hyn7CzQCA6tHu-KrPigARc3cYgBdT8PNX7vjhPK0g@mail.gmail.com>
- <20170506011920.GH15143@minitux> <CABb+yY1u9mspX1Zu0mg21JMYxpKxsXsvBa9LnF6VNr1_42UJUQ@mail.gmail.com>
- <20170508055439.GJ15143@minitux> <CABb+yY3CfWFBDh-qoGHDeHyLhVC7mPQZFB=VDS54OaypG-BqPw@mail.gmail.com>
- <20170508191154.GM15143@minitux>
+From: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+Subject: Re: [PATCH V2] ARM: dts: bcm283x: Reserve first page for firmware
+Date: Tue, 09 May 2017 09:48:31 -0700
+Message-ID: <8737cenfhc.fsf@eliezer.anholt.net>
+References: <b6aef857-1454-7931-2c60-6d7b55b7a0a8@raspberrypi.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha512; protocol="application/pgp-signature"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170508191154.GM15143@minitux>
+In-Reply-To: <b6aef857-1454-7931-2c60-6d7b55b7a0a8-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Jeffrey Hugo <jhugo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ohad Ben-Cohen <ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-remoteproc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Phil Elwell <phil-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 9, 2017 at 12:41 AM, Bjorn Andersson
-<bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> On Sun 07 May 23:47 PDT 2017, Jassi Brar wrote:
->
->> On Mon, May 8, 2017 at 11:24 AM, Bjorn Andersson
->> <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
->> > On Fri 05 May 21:48 PDT 2017, Jassi Brar wrote:
->> >
->> > The APCS IPC register serves the basis for all inter-processor
->> > communication in a Qualcomm platform, so it's not only the RPM driver
->> > discussed earlier that uses this. It's also used for other non-FIFO
->> > based communication channels, where the signalled information either
->> > isn't acked at all or acked on a system-level.
->> >
->> Something has to indicate consumption of data or "requested action
->> taken". Otherwise the protocol is design-wise broken.
->>
->
-> The SMD and GLINK protocols work by providing two independent one-way
-> pipes that higher levels can use to send and receive messages. When some
-> driver pushes a message into the transmit-pipe we check if there's
-> space, then write the message, signal the remote (APCS IPC) and then
-> return.
->
-"we check if there's space"  -> this is what mailbox api tries to do
-with last_tx_done before starting the next message.
+--=-=-=
+Content-Type: text/plain
 
+Phil Elwell <phil-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org> writes:
 
->> >> The client should call mbox_client_txdone() after
->> >> mbox_send_message().
->> >
->> > So every time we call mbox_send_message() from any of the client drivers
->> > we also needs to call mbox_client_txdone()?
->> >
->> Yes.
->>
->> > This seems like an awkward side effect of using the mailbox framework -
->> > which has to be spread out in at least 6 different client drivers :(
->> >
->> No. Mailbox or whatever you implement - you must (and do) tick the
->> state machine to keep the messages moving.
+> The Raspberry Pi startup stub files for multi-core BCM27XX processors
+> make the secondary CPUs spin until the corresponding mailbox is
+> written. These stubs are loaded at physical address 0x00000xxx (as seen
+> by the ARMs), but this page will be reused by the kernel unless it is
+> explicitly reserved, causing the waiting cores to execute random code.
 >
-> But the state you have in the other mailbox drivers is not a concern of
-> the APCS IPC.
+> Use the /memreserve/ Device Tree directive to mark the first page as
+> off-limits to the kernel.
 >
-No, as you say above you check for space before writing the next
-message, this is what I call ticking the state machine.
+> See: https://github.com/raspberrypi/linux/issues/1989
+>
+> Signed-off-by: Phil Elwell <phil-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org>
 
+This looks great.  We're currently in the merge window, so I can't
+generate a new bcm2835-dt-next yet, but I'll pick this patch up when I
+do.
 
->>   Best designs have some interrupt occurring when the message has been
->> consumed by the remote. Some designs have a flag set which needs to be
->> polled to detect completion. Very few (like yours) that support
->> neither irq nor polling, have to be driven by the upper protocol layer
->> by some ack packet (or tracking read/write pointers like you do).
->> These three cases are denoted by TXDONE_BY_IRQ, TXDONE_BY_POLL and
->> TXDONE_BY_ACK respectively.
->>
->
-> You're confusing the APCS IPC with the larger communication mechanism,
->
-Maybe. I am not versed with QCom technologies like RPM, SMD, GLINK, APCS etc.
-Controller driver is what physically transmits a signal to remote.
-Users above the mailbox api are client drivers.
+Thanks for submitting upstream!
 
->
-> This is why I suggested that this is a doorbell, rather than a mailbox.
-> Your argumentation of how a mailbox should work makes perfect sense, but
-> it's not how the Qualcomm IPC works.
->
-Mailbox framework is designed to support, what you call doorbell type
-of communication, just fine. There is no need to define another class.
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
 
->
-> Setting TXDONE_BY_POLL and specifying a dummy last_tx_done() comes with
-> a crazy overhead. To set a single bit in a register we will take the
-> channel spinlock 4 times, start a timer, iterate over all registered
-> channels and the client must be marked as blocking so we will get at
-> least 2 additional context switches.
->
-How often does the platform send messages for it to be a considerable load?
-BTW, this is an option only if your client driver doesn't want to
-explicitly tick the state machine by calling mbox_client_txdone()...
-which I think should be done in the first place.
+-----BEGIN PGP SIGNATURE-----
 
-thanks
+iQIzBAEBCgAdFiEE/JuuFDWp9/ZkuCBXtdYpNtH8nugFAlkR8t8ACgkQtdYpNtH8
+nuiBAQ//djx+Dt74AvMBwXWASJ3+H3NFbj6MhKMF6O7MiM7M8ejolrmxzd4TlBNc
+69xQKccbKaxOW/BivmI7cs75alQld47WWN04PgpxXg2mR4szrpuW3YySgkjxXtmk
+k3q2jM0JgKVL3lvNeYW6j59H96TGha/G5WYFRSBlURTnYICKqQzOTeUB2Pvs3H7j
+TpTZUiT5WeefqASW97eEUN4vv96NeHEszAffuyjjfGwf2nBcHCVMnroyHzu+t7OT
+Z+XKpda20mn/4ygRVO2wRt2Vr8WqYLUBCjqarr8Y4gNa6VH17ArgPm3MyT93HHlO
+aHIai15210vT3QJrNUHQOvpfORhSy9TGADJ/7S2SXFfJoON65XYqpahh9xx4Yt6W
+6EeZ/TbD4V06FN4nacPaJ5/HRIbCgaPjP+4ymDteUiQeEGLY1ZEFWX4XBX7I2vvu
+gTeDURR42tDCJJ5ybq8BrxjXL+1ZxxMBXxUXvEEW29gUyx1Hpo4lJgLQ9JldjMj7
+gzidSrrDVUZ6tDfcK4huz/GeG8yT2q3ALuUXwoPhcITmSWsfbGUAJsjyte/CzcNX
+Fq894kuZDv4Ue3R5xiIAvduqzghsaaC1DMNgoopgHHYSamr0F0/71VrMje07b2LP
+X/xuTCbiyHtQ+RlK9f0sECoX94NhDvvZIchWXeXAjEzrNB8+Rxg=
+=aCwE
+-----END PGP SIGNATURE-----
+--=-=-=--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
