@@ -1,7 +1,7 @@
 From: Yangbo Lu <yangbo.lu-3arQi8VN3Tc@public.gmane.org>
-Subject: [v3, 5/5] arm64: dts: ls1088a: add esdhc node
-Date: Tue, 9 May 2017 10:37:09 +0800
-Message-ID: <1494297429-12083-6-git-send-email-yangbo.lu@nxp.com>
+Subject: [v3, 2/5] arm64: dts: ls1046a: support SD UHS-I and eMMC HS200 on RDB
+Date: Tue, 9 May 2017 10:37:06 +0800
+Message-ID: <1494297429-12083-3-git-send-email-yangbo.lu@nxp.com>
 References: <1494297429-12083-1-git-send-email-yangbo.lu@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,7 +12,9 @@ To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreC
 Cc: Xiaobo Xie <xiaobo.xie-3arQi8VN3Tc@public.gmane.org>, Yangbo Lu <yangbo.lu-3arQi8VN3Tc@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add esdhc node for ls1088a and enable it on both RDB and QDS boards.
+This patch is to enable SD UHS-I mode and eMMC HS200 mode on
+LS1046ARDB in dts. Also, the eSDHC peripheral clock must be used
+instead of platform clock to support these modes.
 
 Signed-off-by: Yangbo Lu <yangbo.lu-3arQi8VN3Tc@public.gmane.org>
 ---
@@ -21,64 +23,46 @@ Changes for v2:
 Changes for v3:
 	- None.
 ---
- arch/arm64/boot/dts/freescale/fsl-ls1088a-qds.dts |  4 ++++
- arch/arm64/boot/dts/freescale/fsl-ls1088a-rdb.dts |  4 ++++
- arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi    | 12 ++++++++++++
- 3 files changed, 20 insertions(+)
+ arch/arm64/boot/dts/freescale/fsl-ls1046a-rdb.dts | 8 ++++++++
+ arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi    | 4 ++--
+ 2 files changed, 10 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a-qds.dts b/arch/arm64/boot/dts/freescale/fsl-ls1088a-qds.dts
-index 8c3cae5..ff21055 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1088a-qds.dts
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a-qds.dts
-@@ -118,6 +118,10 @@
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1046a-rdb.dts b/arch/arm64/boot/dts/freescale/fsl-ls1046a-rdb.dts
+index c5361e9..2d28726 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1046a-rdb.dts
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1046a-rdb.dts
+@@ -72,6 +72,14 @@
  	status = "okay";
  };
  
 +&esdhc {
-+	status = "okay";
++	mmc-hs200-1_8v;
++	sd-uhs-sdr104;
++	sd-uhs-sdr50;
++	sd-uhs-sdr25;
++	sd-uhs-sdr12;
 +};
 +
- &sata {
+ &i2c0 {
  	status = "okay";
- };
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a-rdb.dts b/arch/arm64/boot/dts/freescale/fsl-ls1088a-rdb.dts
-index 8a04fbb..ab62ef6 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1088a-rdb.dts
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a-rdb.dts
-@@ -102,6 +102,10 @@
- 	status = "okay";
- };
  
-+&esdhc {
-+	status = "okay";
-+};
-+
- &sata {
- 	status = "okay";
- };
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-index 2946fd7..10b5775 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-@@ -263,6 +263,18 @@
- 			status = "disabled";
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
+index 7ef2b9f..5975d30 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
+@@ -210,10 +210,10 @@
  		};
  
-+		esdhc: esdhc@2140000 {
-+			compatible = "fsl,ls1088a-esdhc", "fsl,esdhc";
-+			reg = <0x0 0x2140000 0x0 0x10000>;
-+			interrupts = <0 28 0x4>; /* Level high type */
-+			clock-frequency = <0>;
-+			voltage-ranges = <1800 1800 3300 3300>;
-+			sdhci,auto-cmd12;
-+			little-endian;
-+			bus-width = <4>;
-+			status = "disabled";
-+		};
-+
- 		sata: sata@3200000 {
- 			compatible = "fsl,ls1088a-ahci", "fsl,ls1043a-ahci";
- 			reg = <0x0 0x3200000 0x0 0x10000>;
+ 		esdhc: esdhc@1560000 {
+-			compatible = "fsl,esdhc";
++			compatible = "fsl,ls1046a-esdhc", "fsl,esdhc";
+ 			reg = <0x0 0x1560000 0x0 0x10000>;
+ 			interrupts = <GIC_SPI 62 IRQ_TYPE_LEVEL_HIGH>;
+-			clock-frequency = <0>;
++			clocks = <&clockgen 2 1>;
+ 			voltage-ranges = <1800 1800 3300 3300>;
+ 			sdhci,auto-cmd12;
+ 			big-endian;
 -- 
 2.1.0.27.g96db324
 
