@@ -1,163 +1,177 @@
-From: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 2/6] Documentation: devicetree: add bindings to support
- ARM MHU subchannels
-Date: Tue, 9 May 2017 08:20:00 +0530
-Message-ID: <CABb+yY3tXMgQdQratM56mQVEV4Med1i0NyT=zkXk1P4oCao6+A@mail.gmail.com>
-References: <1493733353-25812-1-git-send-email-sudeep.holla@arm.com>
- <1493733353-25812-3-git-send-email-sudeep.holla@arm.com> <20170508161026.5vdqnv52ub7hurwf@rob-hp-laptop>
- <CABb+yY1+rU=gEnqML=ybZ61WDW6Brz_QLw4LpYNNe-XsEgi8dw@mail.gmail.com> <ff6535ec-fa31-e0b7-53a1-9f4a2f03693d@arm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <ff6535ec-fa31-e0b7-53a1-9f4a2f03693d-5wv7dgnIgG8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Alexey Klimov <alexey.klimov-5wv7dgnIgG8@public.gmane.org>, Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+From: Leo Yan <leo.yan@linaro.org>
+Subject: [PATCH v9 0/9] coresight: enable debug module
+Date: Tue,  9 May 2017 10:49:53 +0800
+Message-ID: <1494298202-6739-1-git-send-email-leo.yan@linaro.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Jonathan Corbet <corbet@lwn.net>, Mathieu Poirier <mathieu.poirier@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Wei Xu <xuwei5@hisilicon.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Suzuki K Poulose <suzuki.poulose@arm.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, Mike Leach <mike.leach@linaro.org>, Sudeep Holla <sudeep.holla@arm.com>
+Cc: Leo Yan <leo.yan@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 8, 2017 at 10:37 PM, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org> wrote:
->
->
-> On 08/05/17 17:46, Jassi Brar wrote:
->> On Mon, May 8, 2017 at 9:40 PM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
->>> +Bjorn
->>>
->>> On Tue, May 02, 2017 at 02:55:49PM +0100, Sudeep Holla wrote:
->>>> The ARM MHU has mechanism to assert interrupt signals to facilitate
->>>> inter-processor message based communication. It drives the signal using
->>>> a 32-bit register, with all 32-bits logically ORed together. It also
->>>> enables software to set, clear and check the status of each of the bits
->>>> of this register independently. Each bit of the register can be
->>>> associated with a type of event that can contribute to raising the
->>>> interrupt thereby allowing it to be used as independent subchannels.
->>>>
->>>> Since the first version of this binding can't support sub-channels,
->>>> this patch extends the existing binding to support them.
->>>>
->>>> Cc: Alexey Klimov <alexey.klimov-5wv7dgnIgG8@public.gmane.org>
->>>> Cc: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->>>> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->>>> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->>>> Signed-off-by: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
->>>> ---
->>>>  .../devicetree/bindings/mailbox/arm-mhu.txt        | 44 ++++++++++++++++++++--
->>>>  1 file changed, 41 insertions(+), 3 deletions(-)
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/mailbox/arm-mhu.txt b/Documentation/devicetree/bindings/mailbox/arm-mhu.txt
->>>> index 4971f03f0b33..86a66f7918e2 100644
->>>> --- a/Documentation/devicetree/bindings/mailbox/arm-mhu.txt
->>>> +++ b/Documentation/devicetree/bindings/mailbox/arm-mhu.txt
->>>> @@ -10,21 +10,40 @@ STAT register and the remote clears it after having read the data.
->>>>  The last channel is specified to be a 'Secure' resource, hence can't be
->>>>  used by Linux running NS.
->>>>
->>>> +The MHU drives the interrupt signal using a 32-bit register, with all
->>>> +32-bits logically ORed together. It provides a set of registers to
->>>> +enable software to set, clear and check the status of each of the bits
->>>> +of this register independently. The use of 32 bits per interrupt line
->>>> +enables software to provide more information about the source of the
->>>> +interrupt. For example, each bit of the register can be associated with
->>>> +a type of event that can contribute to raising the interrupt.
->>>
->>> Sounds like a doorbell? (i.e. a single bit mailbox). Bjorn is doing
->>> something similar for QCom h/w. I guess the difference here is you have
->>> 32 sources and 1 output. It seems to me these should be described
->>> similarly.
->>>
->> Yes, QCom controller triggers different interrupt for each bit of a
->> 32bits register i.e, each signal is associated with 1bit information.
->> Whereas MHU signals 32bits at a time to the target cpu.
->
-> Agreed. I had a look at Qcom driver, not entirely clear if each bit as
-> interrupt as I don't see any interrupt support there. Also, it just adds
-> all the 32 channels which I am trying to avoid as at-most 4-5 will be
-> used while we end up creating 64 channels.
->
-OK, so you just need to use 4 singles bits. That is, 4 different
-commands to remote.
+ARMv8 architecture reference manual (ARM DDI 0487A.k) Chapter H7 "The
+Sample-based Profiling Extension" has description for sampling
+registers, we can utilize these registers to check program counter
+value with combined CPU exception level, secure state, etc. So this is
+helpful for CPU lockup bugs, e.g. if one CPU has run into infinite loop
+with IRQ disabled; the 'hang' CPU cannot switch context and handle any
+interrupt, so it cannot handle SMP call for stack dump, etc.
 
-#define SCMI_CMD_1   BIT(a)
-#define SCMI_CMD_2   BIT(b)
-#define SCMI_CMD_3   BIT(c)
-#define SCMI_CMD_4   BIT(d)
+This patch series is to enable coresight debug module with sample-based
+registers and register call back notifier for PCSR register dumping
+when panic happens, so we can see below dumping info for panic; and
+this patch series has considered the conditions for access permission
+for debug registers self, so this can avoid access debug registers when
+CPU power domain is off; the driver also try to figure out the CPU is
+in secure or non-secure state.
+
+Patch 0001 is to document the dt binding; patch 0002 adds one detailed
+document to describe the Coresight debug module implementation, the
+clock and power domain impaction on the driver, some examples for usage.
+
+Patch 0003 is to document boot parameters used in kernel command line.
+
+Patch 0004 is to add file entries for MAINTAINERS.
+
+Patch 0005 is used to fix the func of_get_coresight_platform_data()
+doesn't properly drop the reference to the CPU node pointer; and
+patch 0006 is refactor to add new function of_coresight_get_cpu().
+
+Patch 0007 is the driver for CPU debug module.
+
+Patch 0008 in this series are to enable debug unit on 96boards Hikey,
+Patch 0009 is to enable debug on 96boards DB410c. Have verified on both
+two boards.
+
+We can enable debugging with two methods, adding parameters into kernel
+command line for build-in module:
+  coresight_cpu_debug.enable=1
+
+Or we can wait the system has booted up to use debugfs nodes to enable
+debugging:
+  # echo 1 > /sys/kernel/debug/coresight_cpu_debug/enable
+
+As result we can get below log after input command:
+echo c > /proc/sysrq-trigger:
+
+ARM external debug module:
+CPU[0]:
+ EDPRSR:  0000000b (Power:On DLK:Unlock)
+ EDPCSR:  [<ffff00000808eb54>] handle_IPI+0xe4/0x150
+ EDCIDSR: 00000000
+ EDVIDSR: 90000000 (State:Non-secure Mode:EL1/0 Width:64bits VMID:0)
+CPU[1]:
+ EDPRSR:  0000000b (Power:On DLK:Unlock)
+ EDPCSR:  [<ffff0000087a64c0>] debug_notifier_call+0x108/0x288
+ EDCIDSR: 00000000
+ EDVIDSR: 90000000 (State:Non-secure Mode:EL1/0 Width:64bits VMID:0)
+
+[...]
+
+Changes from v8:
+* According to Mathieu suggestions to split the doc into two patches,
+  one is for kernel parameter and another is for driver documentation.
+* Add file entries to MAINTAINERS.
+* According to Mathieu suggestions, refined functions
+  debug_enable_func()/debug_disable_func().
+
+Changes from v7:
+* Fix operator priority bug.
+* Minor sequence adjustment for function debug_func_exit().
+
+Changes from v6:
+* According to Suzuki and Mathieu suggestions, refined debug module
+  driver to install panic notifier when insmod module; refined function
+  debug_force_cpu_powered_up() for CPU power state checking; some minor
+  fixing for output log, adding comments for memory barrier, code
+  alignment.
+
+Changes from v5:
+* According to Suzuki and Mathieu suggestions, refined debug module
+  driver to drop unused structure members, refactored initialization
+  code to distinguish hardware implementation features, refactored
+  flow for forcing CPU powered up, supported pm_runtime operations.
+* Added one new doc file: Documentation/trace/coresight-cpu-debug.txt,
+  which is used to describe detailed info for implementation, clock
+  and power domain impaction on debug module, and exmaples for common
+  usage.
+* Removed "idle constraints" from debug driver.
+
+Changes from v4:
+* This version is mainly credit to ARM colleagues many contribution
+  ideas for better quality (Thanks a lot Suzuki, Mike and Sudeep!).
+* According to Suzuki suggestion, refined debug module driver to avoid
+  memory leak for drvdata struct, handle PCSAMPLE_MODE=1, use flag
+  drvdata.pc_has_offset to indicate if PCSR has offset, minor fixes.
+* According to Mathieu suggestion, refined dt binding description.
+* Changed driver to support module mode;
+* According to Mike suggestion and very appreciate the pseudo code,
+  added support to force CPU powered up with register EDPRCR;
+* According to discussions, added command line and debugfs nodes to
+  support enabling debugging for boot time, or later can dynamically
+  enable/disable debugging by debugfs.
+* According to Rob Herring suggestion, one minor fixes in DT binding.
+* According to Stephen Boyd suggestion, add const quality to structure
+  device_node. And used use of_cpu_device_node_get() to replace
+  of_get_cpu_node() in patch 0003.
+
+Changes from v3:
+* Added Suzuki K Poulose's patch to fix issue for the func
+  of_get_coresight_platform_data() doesn't properly drop the reference
+  to the CPU node pointer.
+* According to Suzuki suggestion, added code to handl the corner case
+  for ARMv8 CPU with aarch32 mode.
+* According to Suzuki suggestion, changed compatible string to
+  "arm,coresight-cpu-debug".
+* According to Mathieu suggestion, added "power-domains" as optional
+  properties.
+
+Changes from v2:
+* According to Mathieu Poirier suggestion, applied some minor fixes.
+* Added two extra patches for enabling debug module on Hikey.
+
+Changes from v1:
+* According to Mike Leach suggestion, removed the binding for debug
+  module clocks which have been directly provided by CPU clocks.
+* According to Mathieu Poirier suggestion, added function
+  of_coresight_get_cpu() and some minor refactors for debug module
+  driver.
+
+Changes from RFC:
+* According to Mike Leach suggestion, added check for EDPRSR to avoid
+  lockup; added supporting EDVIDSR and EDCIDSR registers.
+* According to Mark Rutland and Mathieu Poirier suggestion, rewrote
+  the documentation for DT binding.
+* According to Mark and Mathieu suggestion, refined debug driver.
 
 
->>   Both these cases are already supported by mailbox framework, so
->> Bjorn has implemented QCom's 'doorbell' driver over mailbox api. And
->> we can do without this "arm,mhu-v2" driver. I believe Sudeep already
->> knows well how to use the MHU driver as such to get what his client
->> drivers need.
->>
->
-> As I mentioned above one reason for adding the complexity is avoiding
-> creation of 32*2 channels. Secondly we still need a way to distinguish
-> between the 2 use-cases(existing and new one). Any thoughts ?
->
-I say, your usecase is an instance of the supported usecases by the
-existing driver.
-Just send the BIT(x) as a 32-bit value. Remote doesn't even need to
-find which bit is set, it can simply switch-case the value it got
-against SCMI_CMD_[1,4]
+Leo Yan (8):
+  coresight: bindings for CPU debug module
+  doc: Add documentation for Coresight CPU debug
+  doc: Add coresight_cpu_debug.enable to kernel-parameters.txt
+  MAINTAINERS: update file entries for Coresight subsystem
+  coresight: refactor with function of_coresight_get_cpu
+  coresight: add support for CPU debug module
+  arm64: dts: hi6220: register debug module
+  arm64: dts: qcom: msm8916: Add debug unit
 
->>>> +
->>>>  Mailbox Device Node:
->>>>  ====================
->>>>
->>>>  Required properties:
->>>>  --------------------
->>>> -- compatible:                Shall be "arm,mhu" & "arm,primecell"
->>>> +- compatible:                Shall be "arm,primecell" and one of the below:
->>>> +                     "arm,mhu" - if the controller doesn't support
->>>> +                                 subchannels
->>>> +                     "arm,mhu-v2" - if the controller supports subchannels
->>>
->>> How do I know if I have v2? This correlates to an IP version or
->>> IP configuration or ?
->>>
->> This is purely a software concept - virtual channel. There are only 3
->> physical channels and that are managed by existing version of driver &
->> bindings. This is another reason I am against this patchset.
->>
->
-> I understand your concern. Please suggest alternative if we need to use
-> each bit in the single set register as a different doorbell ?
->
-Your commands are encoded as a simple BIT(x) which is an instance of u32
+Suzuki K Poulose (1):
+  coresight: of_get_coresight_platform_data: Add missing of_node_put
 
-If you want to send 2 commands together to remote, even that is just
-as simple... send BIT(a) | BIT(b).
-The remote will figure which bits are set and take action priority wise.
+ Documentation/admin-guide/kernel-parameters.txt    |   7 +
+ .../bindings/arm/coresight-cpu-debug.txt           |  49 ++
+ Documentation/trace/coresight-cpu-debug.txt        | 174 ++++++
+ MAINTAINERS                                        |   2 +
+ arch/arm64/boot/dts/hisilicon/hi6220.dtsi          |  64 ++
+ arch/arm64/boot/dts/qcom/msm8916.dtsi              |  32 +
+ drivers/hwtracing/coresight/Kconfig                |  14 +
+ drivers/hwtracing/coresight/Makefile               |   1 +
+ drivers/hwtracing/coresight/coresight-cpu-debug.c  | 693 +++++++++++++++++++++
+ drivers/hwtracing/coresight/of_coresight.c         |  40 +-
+ include/linux/coresight.h                          |   3 +
+ 11 files changed, 1067 insertions(+), 12 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/coresight-cpu-debug.txt
+ create mode 100644 Documentation/trace/coresight-cpu-debug.txt
+ create mode 100644 drivers/hwtracing/coresight/coresight-cpu-debug.c
 
-[[ BTW, today you may need only 4bits because you have only 4
-different commands. What if the command set grows beyond 32bits? The
-perfectly capable h/w will be rendered useless just because of s/w
-design decisions. So instead of assigning BIT(x) type command codes,
-please consider using full range of u32. Remote does not need it to be
-BIT(x) but just a unique number.  The same "doorbell" will ring and
-the remote will use switch-case to figure who is it. ]]
-
-> We need
-> this from DT as we need to specify each bit as a channel for different
-> client.
->
-The client DT node could carry the command code (as a u32 value) that
-it is going to work with.
-
->The specification clearly states each bit can be used as a
-> doorbell.
->
-Doorbell and Mailbox are the same thing.
- Its just that we are used to pass data packets over shared-memory
-that we think mailbox is different. It is perfectly possible to not
-need shared-memory, if command+data can be encoded within 32bits. In
-that case you would call Mailbox a 32bit Doorbell :)   For example,
-PL320 has 8 32bit registers that can carry data for remote.
-
-If it is still not clear, please share your client driver. I will
-adapt that to work with existing MHU driver & bindings.
-
-Cheers!
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+2.7.4
