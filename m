@@ -1,64 +1,68 @@
-From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH 3/4] ARM: dts: rockchip: use pin constants to describe IO in pinctrl
-Date: Wed, 10 May 2017 15:55:37 +0200
-Message-ID: <3502373.tsXPg1D3p7@phil>
-References: <1491981044-24635-1-git-send-email-kever.yang@rock-chips.com> <3966386.YQGqDXjHSp@phil> <c98e2eaf-3e92-a6b6-5367-df31d0614d5c@rock-chips.com>
+From: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Subject: Re: [PATCH 1/4] ata: Add DT bindings for Faraday Technology
+ FTIDE010
+Date: Wed, 10 May 2017 15:59:38 +0200
+Message-ID: <6650456.qCJGCGKGLl@amdc3058>
+References: <CGME20170506121118epcas2p1b2a2d1a8005a37582a73c0e7be4b1a1b@epcas2p1.samsung.com>
+        <1678111.DmiVNKW3dQ@amdc3058>
+        <CACRpkdbmOsrxKX8=a7bvcF+c=Q2tfwYQVt0=cz+_jhDyadwa2A@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <c98e2eaf-3e92-a6b6-5367-df31d0614d5c-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Huibin Hong <huibin.hong-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, David Wu <david.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jianqun Xu <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Roge
+Return-path: <linux-ide-owner@vger.kernel.org>
+In-reply-to: <CACRpkdbmOsrxKX8=a7bvcF+c=Q2tfwYQVt0=cz+_jhDyadwa2A@mail.gmail.com>
+Sender: linux-ide-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Tejun Heo <tj@kernel.org>, linux-ide@vger.kernel.org, Janos Laube <janos.dev@gmail.com>, Paulius Zaleckas <paulius.zaleckas@gmail.com>, openwrt-devel@openwrt.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Hans Ulli Kroll <ulli.kroll@googlemail.com>, Florian Fainelli <f.fainelli@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, John Feng-Hsin Chiang <john453@faraday-tech.com>, Greentime Hu <green.hu@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Kever,
-
-Am Mittwoch, 10. Mai 2017, 09:25:25 CEST schrieb Kever Yang:
-> On 05/10/2017 05:43 AM, Heiko Stuebner wrote:
-> > Am Mittwoch, 12. April 2017, 15:10:43 CEST schrieb Kever Yang:
-> >> Use command below to replace the IO naming in pinctrl:
-> >> sed -i -e 's/ 31 RK_FUNC_/ RK_PD7 RK_FUNC_/' arch/arm/boot/dts/rk*
-> >> sed -i -e 's/ 0 RK_FUNC_/ RK_PA0 RK_FUNC_/'
-> >> arch/arm64/boot/dts/rockchip/*
-> >>
-> >> Signed-off-by: Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> > I'm not sure, if we really want to mass-convert each and every pin.
-> > All pins in use right now seem to be working and it hides other
-> > history/blame for these entries.
+On Monday, May 08, 2017 10:26:49 PM Linus Walleij wrote:
+> On Mon, May 8, 2017 at 12:47 PM, Bartlomiej Zolnierkiewicz
+> <b.zolnierkie@samsung.com> wrote:
 > 
-> Do you mean you want to leave the code already there as is, and new
-> code using MACRO define for IO?
+> > Also for all current drivers we just put timing values (or a logic
+> > to calculate them from the standard ATA timings) into the driver
+> > itself and not device tree (as they are based on values are dictated
+> > by ATA standard and should not change for a given controller type).
 > 
-> This sounds reasonable, I can agree on this. I send this patch because I 
-> see there is
-> a patch from Andy using MACRO for many IOs, but not complete enough
-> and my patch suppose to make all Rockchip IO has update.
+> I had it like that at first (and I can of course switch it back). But I
+> came to think this is better.
+> 
+> I was looking at these values from the point that it depends a bit
+> on the silicon where it is synthesized. So the vendor tree has
+> things like this:
+> 
+> #ifndef SL2312_FPGA_IDE
+> static unsigned char PIO_TIMING[5] = { 0xaa, 0xa3, 0xa1, 0x33, 0x31 };
+> static unsigned char TIMING_MDMA_50M[3] = { 0x66, 0x22, 0x21 };
+> static unsigned char TIMING_MDMA_66M[3] = { 0x88, 0x32, 0x31 };
+> static unsigned char TIMING_UDMA_50M[6] = { 0x33, 0x31, 0x21, 0x21,
+> 0x11, 0x91 };
+> static unsigned char TIMING_UDMA_66M[7] = { 0x44, 0x42, 0x31, 0x21,
+> 0x11, 0x91,  0x91};
+> #else
+> static unsigned char PIO_TIMING[5] = { 0x88, 0x82, 0x81, 0x32, 0x21 };
+> static unsigned char TIMING_MDMA_50M[3] = { 0x33, 0x11, 0x11 };
+> static unsigned char TIMING_MDMA_66M[3] = { 0x33, 0x11, 0x11 };
+> static unsigned char TIMING_UDMA_50M[6] = { 0x22, 0x11, 0x11, 0x11 };
+> static unsigned char TIMING_UDMA_66M[7] = { 0x22, 0x11, 0x11, 0x11 };
+> #endif
+> 
+> (From D-Link DIR-685 source release from Storlink/Cortina board support.)
+> 
+> So depending on whether they use an FPGA or an ASIC the values are
+> different, no matter what frequency (50 or 66 MHz) is used. So it is not
+> derived from frequency.
+> 
+> So I think it makes most sense to have it in the device tree as we don't
+> know what designs are out there.
 
-As I said, I'm really not sure. On the one hand it's nicer and it will
-be easier to check devicetree against schematics, but mass-converting
-them makes me anxious. Andy did convert the rk3288-popmetal
-board which is somewhat sparsely used I think. If anything breaks with
-Firefly, Rock, Veyron etc we might make a lot of people unhappy :-) .
+I still would prefer to keep timing values private to the driver and just
+select the controller type (FPGA/ASIC) using the device tree.
 
-But having boards use both paradigms at the same time (pin number and
-names) could also be confusing.
-
-> > In any case though, this needs to be split into separate arm32/arm64
-> > patches.
-
-Maybe we could split not only on the arm/arm64 border, but also on
-something like soc-level (rk3188, rk3288, rk3368). That way the amount
-of changes per patch would go down making review easier :-) .
-
-
-Just to make sure you saw it, I've also had to drop patch2 again (see
-separate response from yesterday).
-
-
-Heiko
+Best regards,
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Bartlomiej Zolnierkiewicz
+Samsung R&D Institute Poland
+Samsung Electronics
+
