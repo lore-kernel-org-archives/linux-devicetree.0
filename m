@@ -1,98 +1,112 @@
-From: Stefan Wahren <stefan.wahren@i2se.com>
-Subject: [PATCH v5 11/17] net: qualcomm: make qca_7k_common a separate kernel module
-Date: Wed, 10 May 2017 10:53:22 +0200
-Message-ID: <1494406408-31760-12-git-send-email-stefan.wahren@i2se.com>
-References: <1494406408-31760-1-git-send-email-stefan.wahren@i2se.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1494406408-31760-1-git-send-email-stefan.wahren@i2se.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>, "David S. Miller" <davem@davemloft.net>
-Cc: Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.com>, linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, devicetree@vger.kernel.org, Stefan Wahren <stefan.wahren@i2se.com>
+From: Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Re: [PATCH v4 00/10] Add Basic SoC support for MT6797
+Date: Wed, 10 May 2017 11:27:55 +0200
+Message-ID: <6d60bccf-1894-7dc8-5ff7-4536a9755e0b@gmail.com>
+References: <1491614435-23754-1-git-send-email-mars.cheng@mediatek.com>
+ <1492314150.19878.2.camel@mtkswgap22>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <1492314150.19878.2.camel@mtkswgap22>
+Content-Language: en-US
+Sender: linux-clk-owner@vger.kernel.org
+To: Mars Cheng <mars.cheng@mediatek.com>, Stephen Boyd <sboyd@codeaurora.org>
+Cc: CC Hwang <cc.hwang@mediatek.com>, Loda Chou <loda.chou@mediatek.com>, Miles Chen <miles.chen@mediatek.com>, Jades Shih <jades.shih@mediatek.com>, Yingjoe Chen <yingjoe.chen@mediatek.com>, Kevin-CW Chen <kevin-cw.chen@mediatek.com>, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org, wsd_upstream@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-In order to share common functions between QCA7000 SPI and UART protocol
-driver the qca_7k_common needs to be a separate kernel module.
+Hi Mars,
 
-Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
----
- drivers/net/ethernet/qualcomm/Kconfig         |  8 +++++++-
- drivers/net/ethernet/qualcomm/Makefile        |  5 +++--
- drivers/net/ethernet/qualcomm/qca_7k_common.c | 10 ++++++++++
- 3 files changed, 20 insertions(+), 3 deletions(-)
+On 16/04/17 05:42, Mars Cheng wrote:
+> Hi Stephen, Matthias
+> 
+> gentle ping. :-)
+> 
 
-diff --git a/drivers/net/ethernet/qualcomm/Kconfig b/drivers/net/ethernet/qualcomm/Kconfig
-index d7720bf..b4c369d 100644
---- a/drivers/net/ethernet/qualcomm/Kconfig
-+++ b/drivers/net/ethernet/qualcomm/Kconfig
-@@ -16,7 +16,13 @@ config NET_VENDOR_QUALCOMM
- if NET_VENDOR_QUALCOMM
- 
- config QCA7000
--	tristate "Qualcomm Atheros QCA7000 support"
-+	tristate
-+	help
-+	  This enables support for the Qualcomm Atheros QCA7000.
-+
-+config QCA7000_SPI
-+	tristate "Qualcomm Atheros QCA7000 SPI support"
-+	select QCA7000
- 	depends on SPI_MASTER && OF
- 	---help---
- 	  This SPI protocol driver supports the Qualcomm Atheros QCA7000.
-diff --git a/drivers/net/ethernet/qualcomm/Makefile b/drivers/net/ethernet/qualcomm/Makefile
-index 5e17bf1..65556ca 100644
---- a/drivers/net/ethernet/qualcomm/Makefile
-+++ b/drivers/net/ethernet/qualcomm/Makefile
-@@ -2,7 +2,8 @@
- # Makefile for the Qualcomm network device drivers.
- #
- 
--obj-$(CONFIG_QCA7000) += qcaspi.o
--qcaspi-objs := qca_spi.o qca_7k_common.o qca_7k.o qca_debug.o
-+obj-$(CONFIG_QCA7000) += qca_7k_common.o
-+obj-$(CONFIG_QCA7000_SPI) += qcaspi.o
-+qcaspi-objs := qca_7k.o qca_debug.o qca_spi.o
- 
- obj-y += emac/
-diff --git a/drivers/net/ethernet/qualcomm/qca_7k_common.c b/drivers/net/ethernet/qualcomm/qca_7k_common.c
-index 0d3daa9..6b511f0 100644
---- a/drivers/net/ethernet/qualcomm/qca_7k_common.c
-+++ b/drivers/net/ethernet/qualcomm/qca_7k_common.c
-@@ -21,7 +21,9 @@
-  *   by an atheros frame while transmitted over a serial channel;
-  */
- 
-+#include <linux/init.h>
- #include <linux/kernel.h>
-+#include <linux/module.h>
- 
- #include "qca_7k_common.h"
- 
-@@ -46,6 +48,7 @@ qcafrm_create_header(u8 *buf, u16 length)
- 
- 	return QCAFRM_HEADER_LEN;
- }
-+EXPORT_SYMBOL_GPL(qcafrm_create_header);
- 
- u16
- qcafrm_create_footer(u8 *buf)
-@@ -57,6 +60,7 @@ qcafrm_create_footer(u8 *buf)
- 	buf[1] = 0x55;
- 	return QCAFRM_FOOTER_LEN;
- }
-+EXPORT_SYMBOL_GPL(qcafrm_create_footer);
- 
- /*   Gather received bytes and try to extract a full ethernet frame by
-  *   following a simple state machine.
-@@ -154,3 +158,9 @@ qcafrm_fsm_decode(struct qcafrm_handle *handle, u8 *buf, u16 buf_len, u8 recv_by
- 
- 	return ret;
- }
-+EXPORT_SYMBOL_GPL(qcafrm_fsm_decode);
-+
-+MODULE_DESCRIPTION("Qualcomm Atheros QCA7000 common");
-+MODULE_AUTHOR("Qualcomm Atheros Communications");
-+MODULE_AUTHOR("Stefan Wahren <stefan.wahren@i2se.com>");
-+MODULE_LICENSE("Dual BSD/GPL");
--- 
-2.1.4
+I queued your patches for v4.12-next now.
+Sorry for the delay in my respons.
+
+Regards,
+Matthias
+
+> Thanks.
+> 
+> On Sat, 2017-04-08 at 09:20 +0800, Mars Cheng wrote:
+>> This patch set adds basic SoC support for mediatek's first 10-core
+>> chip, X20, also known as MT6797.
+>>
+>> - based on 4.11-rc1
+>> - support common clk framework
+>> - apply patches about intpol just accepted to get full feature support:
+>> http://lists.infradead.org/pipermail/linux-mediatek/2017-March/008371.html
+>> http://lists.infradead.org/pipermail/linux-mediatek/2017-March/008375.html
+>> http://lists.infradead.org/pipermail/linux-mediatek/2017-March/008373.html
+>>
+>> Changes since v3:
+>> - since intpol patches accepted in v3, remove them
+>> - clk ID header separated from original clk driver submit
+>> - clean up clk driver, including unnecessary header and fields in structure
+>>
+>> Changes since v2:
+>> - prevent uncessary #intpol-bases for mtk-sysirq
+>> - add fast path for mtk-sysirq set_type when introducing multiple bases
+>> - add acked-by and tested-by
+>> - remove wrong usage for timer node
+>>
+>> Changes since v1:
+>> - add multiple base addresses support, v1 only allow 2 bases
+>> - clean up clk driver
+>>
+>> Kevin-CW Chen (2):
+>>    dt-bindings: arm: mediatek: document clk bindings for MT6797
+>>    clk: mediatek: add clk support for MT6797
+>>
+>> Mars Cheng (8):
+>>    dt-bindings: mediatek: Add bindings for mediatek MT6797 Platform
+>>    arm64: dts: mediatek: add mt6797 support
+>>    clk: mediatek: add mt6797 clock IDs
+>>    soc: mediatek: avoid using fixed spm power status defines
+>>    soc: mediatek: add vdec item for scpsys
+>>    dt-bindings: mediatek: add MT6797 power dt-bindings
+>>    soc: mediatek: add MT6797 scpsys support
+>>    arm64: dts: mediatek: add clk and scp nodes for MT6797
+>>
+>>   Documentation/devicetree/bindings/arm/mediatek.txt |    4 +
+>>   .../bindings/arm/mediatek/mediatek,apmixedsys.txt  |    1 +
+>>   .../bindings/arm/mediatek/mediatek,imgsys.txt      |    1 +
+>>   .../bindings/arm/mediatek/mediatek,infracfg.txt    |    1 +
+>>   .../bindings/arm/mediatek/mediatek,mmsys.txt       |    1 +
+>>   .../bindings/arm/mediatek/mediatek,topckgen.txt    |    1 +
+>>   .../bindings/arm/mediatek/mediatek,vdecsys.txt     |    1 +
+>>   .../bindings/arm/mediatek/mediatek,vencsys.txt     |    3 +-
+>>   .../interrupt-controller/mediatek,sysirq.txt       |    1 +
+>>   .../devicetree/bindings/serial/mtk-uart.txt        |    1 +
+>>   .../devicetree/bindings/soc/mediatek/scpsys.txt    |    6 +-
+>>   arch/arm64/boot/dts/mediatek/Makefile              |    1 +
+>>   arch/arm64/boot/dts/mediatek/mt6797-evb.dts        |   36 +
+>>   arch/arm64/boot/dts/mediatek/mt6797.dtsi           |  245 +++++++
+>>   drivers/clk/mediatek/Kconfig                       |   32 +
+>>   drivers/clk/mediatek/Makefile                      |    5 +
+>>   drivers/clk/mediatek/clk-mt6797-img.c              |   76 +++
+>>   drivers/clk/mediatek/clk-mt6797-mm.c               |  136 ++++
+>>   drivers/clk/mediatek/clk-mt6797-vdec.c             |   93 +++
+>>   drivers/clk/mediatek/clk-mt6797-venc.c             |   78 +++
+>>   drivers/clk/mediatek/clk-mt6797.c                  |  714 ++++++++++++++++++++
+>>   drivers/soc/mediatek/mtk-scpsys.c                  |  149 +++-
+>>   include/dt-bindings/clock/mt6797-clk.h             |  281 ++++++++
+>>   include/dt-bindings/power/mt6797-power.h           |   30 +
+>>   24 files changed, 1889 insertions(+), 8 deletions(-)
+>>   create mode 100644 arch/arm64/boot/dts/mediatek/mt6797-evb.dts
+>>   create mode 100644 arch/arm64/boot/dts/mediatek/mt6797.dtsi
+>>   create mode 100644 drivers/clk/mediatek/clk-mt6797-img.c
+>>   create mode 100644 drivers/clk/mediatek/clk-mt6797-mm.c
+>>   create mode 100644 drivers/clk/mediatek/clk-mt6797-vdec.c
+>>   create mode 100644 drivers/clk/mediatek/clk-mt6797-venc.c
+>>   create mode 100644 drivers/clk/mediatek/clk-mt6797.c
+>>   create mode 100644 include/dt-bindings/clock/mt6797-clk.h
+>>   create mode 100644 include/dt-bindings/power/mt6797-power.h
+>>
+>> --
+>> 1.7.9.5
+> 
+> 
