@@ -1,666 +1,245 @@
-From: Raviteja Garimella <raviteja.garimella@broadcom.com>
-Subject: [RESEND PATCH v5 2/3] phy:phy-bcm-ns2-usbdrd:Broadcom USB DRD Phy driver for Northstar2
-Date: Wed, 10 May 2017 12:24:26 +0530
-Message-ID: <1494399267-21691-3-git-send-email-raviteja.garimella@broadcom.com>
-References: <1494399267-21691-1-git-send-email-raviteja.garimella@broadcom.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1494399267-21691-1-git-send-email-raviteja.garimella@broadcom.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kishon Vijay Abraham I <kishon@ti.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, linux-arm-kernel@lists.infradead.org
+From: Mylene Josserand <mylene.josserand@free-electrons.com>
+Subject: Re: [PATCH 1/2] ASoC: sun8i-codec: Add ADC support for
+	a33
+Date: Wed, 10 May 2017 08:58:09 +0200
+Message-ID: <37f78772-7296-d831-73e1-095a66df8002@free-electrons.com>
+References: <20170503135617.25193-1-mylene.josserand@free-electrons.com>
+ <20170503135617.25193-2-mylene.josserand@free-electrons.com>
+ <CAGb2v67ZtS9n4xLAiqyyN4T27VX6tTY1R_ZTCRcHNk7u13hatQ@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <CAGb2v67ZtS9n4xLAiqyyN4T27VX6tTY1R_ZTCRcHNk7u13hatQ@mail.gmail.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Chen-Yu Tsai <wens@csie.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Linux-ALSA <alsa-devel@alsa-project.org>, linux-kernel <linux-kernel@vger.kernel.org>, Mark Brown <broonie@kernel.org>, Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-This is driver for USB DRD Phy used in Broadcom's Northstar2
-SoC. The phy can be configured to be in Device mode or Host
-mode based on the type of cable connected to the port. The
-driver registers to  extcon framework to get appropriate
-connect events for Host/Device cables connect/disconnect
-states based on VBUS and ID interrupts.
-
-Signed-off-by: Raviteja Garimella <raviteja.garimella@broadcom.com>
----
- drivers/phy/Kconfig              |  13 +
- drivers/phy/Makefile             |   1 +
- drivers/phy/phy-bcm-ns2-usbdrd.c | 595 +++++++++++++++++++++++++++++++++++++++
- 3 files changed, 609 insertions(+)
- create mode 100644 drivers/phy/phy-bcm-ns2-usbdrd.c
-
-diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
-index 005cadb..c9de9a9 100644
---- a/drivers/phy/Kconfig
-+++ b/drivers/phy/Kconfig
-@@ -488,6 +488,19 @@ config PHY_CYGNUS_PCIE
- 	  Enable this to support the Broadcom Cygnus PCIe PHY.
- 	  If unsure, say N.
- 
-+config PHY_NS2_USB_DRD
-+	tristate "Broadcom Northstar2 USB DRD PHY support"
-+	depends on OF && (ARCH_BCM_IPROC || COMPILE_TEST)
-+	select GENERIC_PHY
-+	select EXTCON
-+	default ARCH_BCM_IPROC
-+	help
-+	  Enable this to support the Broadcom Northstar2 USB DRD PHY.
-+	  This driver initializes the PHY in either HOST or DEVICE mode.
-+	  The host or device configuration is read from device tree.
-+
-+	  If unsure, say N.
-+
- source "drivers/phy/tegra/Kconfig"
- 
- config PHY_NS2_PCIE
-diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile
-index dd8f3b5..9285f88 100644
---- a/drivers/phy/Makefile
-+++ b/drivers/phy/Makefile
-@@ -59,6 +59,7 @@ obj-$(CONFIG_PHY_TUSB1210)		+= phy-tusb1210.o
- obj-$(CONFIG_PHY_BRCM_SATA)		+= phy-brcm-sata.o
- obj-$(CONFIG_PHY_PISTACHIO_USB)		+= phy-pistachio-usb.o
- obj-$(CONFIG_PHY_CYGNUS_PCIE)		+= phy-bcm-cygnus-pcie.o
-+obj-$(CONFIG_PHY_NS2_USB_DRD)		+= phy-bcm-ns2-usbdrd.o
- obj-$(CONFIG_ARCH_TEGRA) += tegra/
- obj-$(CONFIG_PHY_NS2_PCIE)		+= phy-bcm-ns2-pcie.o
- obj-$(CONFIG_PHY_MESON8B_USB2)		+= phy-meson8b-usb2.o
-diff --git a/drivers/phy/phy-bcm-ns2-usbdrd.c b/drivers/phy/phy-bcm-ns2-usbdrd.c
-new file mode 100644
-index 0000000..92b68b1
---- /dev/null
-+++ b/drivers/phy/phy-bcm-ns2-usbdrd.c
-@@ -0,0 +1,595 @@
-+/*
-+ * Copyright (C) 2016 Broadcom
-+ *
-+ * This program is free software; you can redistribute it and/or
-+ * modify it under the terms of the GNU General Public License as
-+ * published by the Free Software Foundation version 2.
-+ *
-+ * This program is distributed "as is" WITHOUT ANY WARRANTY of any
-+ * kind, whether express or implied; without even the implied warranty
-+ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#include <linux/delay.h>
-+#include <linux/extcon.h>
-+#include <linux/gpio.h>
-+#include <linux/gpio/consumer.h>
-+#include <linux/init.h>
-+#include <linux/interrupt.h>
-+#include <linux/io.h>
-+#include <linux/irq.h>
-+#include <linux/mfd/syscon.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_address.h>
-+#include <linux/phy/phy.h>
-+#include <linux/platform_device.h>
-+#include <linux/regmap.h>
-+#include <linux/slab.h>
-+#include <linux/workqueue.h>
-+
-+#define ICFG_DRD_AFE		0x0
-+#define ICFG_MISC_STAT		0x18
-+#define ICFG_DRD_P0CTL		0x1C
-+#define ICFG_STRAP_CTRL		0x20
-+#define ICFG_FSM_CTRL		0x24
-+
-+#define ICFG_DEV_BIT		BIT(2)
-+#define IDM_RST_BIT		BIT(0)
-+#define AFE_CORERDY_VDDC	BIT(18)
-+#define PHY_PLL_RESETB		BIT(15)
-+#define PHY_RESETB		BIT(14)
-+#define PHY_PLL_LOCK		BIT(0)
-+
-+#define DRD_DEV_MODE		BIT(20)
-+#define OHCI_OVRCUR_POL		BIT(11)
-+#define ICFG_OFF_MODE		BIT(6)
-+#define PLL_LOCK_RETRY		1000
-+
-+#define EVT_DEVICE		0
-+#define EVT_HOST		1
-+#define EVT_IDLE		2
-+
-+#define DRD_HOST_MODE		(BIT(2) | BIT(3))
-+#define DRD_DEVICE_MODE		(BIT(4) | BIT(5))
-+#define DRD_HOST_VAL		0x803
-+#define DRD_DEV_VAL		0x807
-+#define GPIO_DELAY		20
-+#define PHY_WQ_DELAY		msecs_to_jiffies(600)
-+
-+struct ns2_phy_data;
-+struct ns2_phy_driver {
-+	void __iomem *icfgdrd_regs;
-+	void __iomem *idmdrd_rst_ctrl;
-+	void __iomem *crmu_usb2_ctrl;
-+	void __iomem *usb2h_strap_reg;
-+	spinlock_t lock; /* spin lock for phy driver */
-+	struct ns2_phy_data *data;
-+	struct extcon_specific_cable_nb extcon_dev;
-+	struct extcon_specific_cable_nb extcon_host;
-+	struct notifier_block host_nb;
-+	struct notifier_block dev_nb;
-+	struct delayed_work conn_work;
-+	struct extcon_dev *edev;
-+	struct gpio_desc *vbus_gpiod;
-+	struct gpio_desc *id_gpiod;
-+	int id_irq;
-+	int vbus_irq;
-+	unsigned long debounce_jiffies;
-+	struct delayed_work wq_extcon;
-+};
-+
-+struct ns2_phy_data {
-+	struct ns2_phy_driver *driver;
-+	struct phy *phy;
-+	int new_state;
-+};
-+
-+static const unsigned int usb_extcon_cable[] = {
-+	EXTCON_USB,
-+	EXTCON_USB_HOST,
-+	EXTCON_NONE,
-+};
-+
-+static inline int pll_lock_stat(u32 usb_reg, int reg_mask,
-+				struct ns2_phy_driver *driver)
-+{
-+	int retry = PLL_LOCK_RETRY;
-+	u32 val;
-+
-+	do {
-+		udelay(1);
-+		val = readl(driver->icfgdrd_regs + usb_reg);
-+		if (val & reg_mask)
-+			return 0;
-+	} while (--retry > 0);
-+
-+	return -EBUSY;
-+}
-+
-+static int ns2_drd_phy_init(struct phy *phy)
-+{
-+	struct ns2_phy_data *data = phy_get_drvdata(phy);
-+	struct ns2_phy_driver *driver = data->driver;
-+	unsigned long flags;
-+	u32 val;
-+
-+	spin_lock_irqsave(&driver->lock, flags);
-+
-+	val = readl(driver->icfgdrd_regs + ICFG_FSM_CTRL);
-+
-+	if (data->new_state == EVT_HOST) {
-+		val &= ~DRD_DEVICE_MODE;
-+		val |= DRD_HOST_MODE;
-+	} else {
-+		val &= ~DRD_HOST_MODE;
-+		val |= DRD_DEVICE_MODE;
-+	}
-+	writel(val, driver->icfgdrd_regs + ICFG_FSM_CTRL);
-+
-+	spin_unlock_irqrestore(&driver->lock, flags);
-+	return 0;
-+}
-+
-+static int ns2_drd_phy_shutdown(struct phy *phy)
-+{
-+	struct ns2_phy_data *data = phy_get_drvdata(phy);
-+	struct ns2_phy_driver *driver = data->driver;
-+	unsigned long flags;
-+	u32 val;
-+
-+	spin_lock_irqsave(&driver->lock, flags);
-+
-+	val = readl(driver->crmu_usb2_ctrl);
-+	val &= ~AFE_CORERDY_VDDC;
-+	writel(val, driver->crmu_usb2_ctrl);
-+
-+	val = readl(driver->crmu_usb2_ctrl);
-+	val &= ~DRD_DEV_MODE;
-+	writel(val, driver->crmu_usb2_ctrl);
-+
-+	/* Disable Host and Device Mode */
-+	val = readl(driver->icfgdrd_regs + ICFG_FSM_CTRL);
-+	val &= ~(DRD_HOST_MODE | DRD_DEVICE_MODE | ICFG_OFF_MODE);
-+	writel(val, driver->icfgdrd_regs + ICFG_FSM_CTRL);
-+
-+	spin_unlock_irqrestore(&driver->lock, flags);
-+	return 0;
-+}
-+
-+static int ns2_drd_phy_poweron(struct phy *phy)
-+{
-+	struct ns2_phy_data *data = phy_get_drvdata(phy);
-+	struct ns2_phy_driver *driver = data->driver;
-+	u32 extcon_event = data->new_state;
-+	unsigned long flags;
-+	int ret;
-+	u32 val;
-+
-+	spin_lock_irqsave(&driver->lock, flags);
-+	if (extcon_event == EVT_DEVICE) {
-+		writel(DRD_DEV_VAL, driver->icfgdrd_regs + ICFG_DRD_P0CTL);
-+
-+		val = readl(driver->icfgdrd_regs + ICFG_FSM_CTRL);
-+		val &= ~(DRD_HOST_MODE | ICFG_OFF_MODE);
-+		val |= DRD_DEVICE_MODE;
-+		writel(val, driver->icfgdrd_regs + ICFG_FSM_CTRL);
-+
-+		val = readl(driver->idmdrd_rst_ctrl);
-+		val &= ~IDM_RST_BIT;
-+		writel(val, driver->idmdrd_rst_ctrl);
-+
-+		val = readl(driver->crmu_usb2_ctrl);
-+		val |= (AFE_CORERDY_VDDC | DRD_DEV_MODE);
-+		writel(val, driver->crmu_usb2_ctrl);
-+
-+		/* Bring PHY and PHY_PLL out of Reset */
-+		val = readl(driver->crmu_usb2_ctrl);
-+		val |= (PHY_PLL_RESETB | PHY_RESETB);
-+		writel(val, driver->crmu_usb2_ctrl);
-+
-+		ret = pll_lock_stat(ICFG_MISC_STAT, PHY_PLL_LOCK, driver);
-+		if (ret < 0) {
-+			dev_err(&phy->dev, "Phy PLL lock failed\n");
-+			goto err_shutdown;
-+		}
-+	} else {
-+		writel(DRD_HOST_VAL, driver->icfgdrd_regs + ICFG_DRD_P0CTL);
-+
-+		val = readl(driver->icfgdrd_regs + ICFG_FSM_CTRL);
-+		val &= ~(DRD_DEVICE_MODE | ICFG_OFF_MODE);
-+		val |= DRD_HOST_MODE;
-+		writel(val, driver->icfgdrd_regs + ICFG_FSM_CTRL);
-+
-+		val = readl(driver->crmu_usb2_ctrl);
-+		val |= AFE_CORERDY_VDDC;
-+		writel(val, driver->crmu_usb2_ctrl);
-+
-+		ret = pll_lock_stat(ICFG_MISC_STAT, PHY_PLL_LOCK, driver);
-+		if (ret < 0) {
-+			dev_err(&phy->dev, "Phy PLL lock failed\n");
-+			goto err_shutdown;
-+		}
-+
-+		val = readl(driver->idmdrd_rst_ctrl);
-+		val &= ~IDM_RST_BIT;
-+		writel(val, driver->idmdrd_rst_ctrl);
-+
-+		/* port over current Polarity */
-+		val = readl(driver->usb2h_strap_reg);
-+		val |= OHCI_OVRCUR_POL;
-+		writel(val, driver->usb2h_strap_reg);
-+	}
-+	spin_unlock_irqrestore(&driver->lock, flags);
-+	return 0;
-+
-+err_shutdown:
-+	spin_unlock_irqrestore(&driver->lock, flags);
-+	ns2_drd_phy_shutdown(phy);
-+	return ret;
-+}
-+
-+static void connect_work(struct work_struct *work)
-+{
-+	struct ns2_phy_driver *driver;
-+	u32 extcon_event;
-+	u32 val;
-+
-+	driver  = container_of(to_delayed_work(work),
-+			       struct ns2_phy_driver, conn_work);
-+	extcon_event = driver->data->new_state;
-+
-+	val = readl(driver->icfgdrd_regs + ICFG_FSM_CTRL);
-+
-+	switch (extcon_event) {
-+	case EVT_DEVICE:
-+		val = (val & ~DRD_HOST_MODE) | DRD_DEVICE_MODE;
-+		writel(val, driver->icfgdrd_regs + ICFG_FSM_CTRL);
-+
-+		val = readl(driver->icfgdrd_regs + ICFG_DRD_P0CTL);
-+		val |= ICFG_DEV_BIT;
-+		writel(val, driver->icfgdrd_regs + ICFG_DRD_P0CTL);
-+		break;
-+
-+	case EVT_HOST:
-+		val = (val & ~DRD_DEVICE_MODE) | DRD_HOST_MODE;
-+		writel(val, driver->icfgdrd_regs + ICFG_FSM_CTRL);
-+
-+		val = readl(driver->usb2h_strap_reg);
-+		val |= OHCI_OVRCUR_POL;
-+		writel(val, driver->usb2h_strap_reg);
-+
-+		val = readl(driver->icfgdrd_regs + ICFG_DRD_P0CTL);
-+		val &= ~ICFG_DEV_BIT;
-+		writel(val, driver->icfgdrd_regs + ICFG_DRD_P0CTL);
-+		break;
-+
-+	case EVT_IDLE:
-+		val &= ~(DRD_HOST_MODE | DRD_DEVICE_MODE);
-+		writel(val, driver->icfgdrd_regs + ICFG_FSM_CTRL);
-+		break;
-+
-+	default:
-+		pr_err("Invalid extcon event\n");
-+		break;
-+	}
-+}
-+
-+static int drd_device_notify(struct notifier_block *self,
-+			     unsigned long event, void *ptr)
-+{
-+	struct ns2_phy_driver *driver = container_of(self,
-+					struct ns2_phy_driver, dev_nb);
-+
-+	if (event) {
-+		pr_debug("Device connected\n");
-+		driver->data->new_state = EVT_DEVICE;
-+		schedule_delayed_work(&driver->conn_work, 0);
-+	} else {
-+		pr_debug("Device disconnected\n");
-+		driver->data->new_state = EVT_IDLE;
-+		schedule_delayed_work(&driver->conn_work, PHY_WQ_DELAY);
-+	}
-+
-+	return NOTIFY_DONE;
-+}
-+
-+static int drd_host_notify(struct notifier_block *self,
-+			   unsigned long event, void *ptr)
-+{
-+	struct ns2_phy_driver *driver = container_of(self,
-+					struct ns2_phy_driver, host_nb);
-+
-+	if (event) {
-+		pr_debug("Host connected\n");
-+		driver->data->new_state = EVT_HOST;
-+		schedule_delayed_work(&driver->conn_work, 0);
-+	} else {
-+		pr_debug("Host disconnected\n");
-+		driver->data->new_state = EVT_IDLE;
-+		schedule_delayed_work(&driver->conn_work, PHY_WQ_DELAY);
-+	}
-+
-+	return NOTIFY_DONE;
-+}
-+
-+static void extcon_work(struct work_struct *work)
-+{
-+	struct ns2_phy_driver *driver;
-+	int vbus;
-+	int id;
-+
-+	driver  = container_of(to_delayed_work(work),
-+			       struct ns2_phy_driver, wq_extcon);
-+
-+	id = gpiod_get_value_cansleep(driver->id_gpiod);
-+	vbus = gpiod_get_value_cansleep(driver->vbus_gpiod);
-+
-+	if (!id && vbus) {
-+		extcon_set_cable_state_(driver->edev, EXTCON_USB_HOST, true);
-+	} else if (id && !vbus) {
-+		extcon_set_cable_state_(driver->edev, EXTCON_USB_HOST, false);
-+		extcon_set_cable_state_(driver->edev, EXTCON_USB, false);
-+	} else if (id && vbus) {
-+		extcon_set_cable_state_(driver->edev, EXTCON_USB, true);
-+	}
-+}
-+
-+static irqreturn_t gpio_irq_handler(int irq, void *dev_id)
-+{
-+	struct ns2_phy_driver *driver = dev_id;
-+
-+	queue_delayed_work(system_power_efficient_wq, &driver->wq_extcon,
-+			   driver->debounce_jiffies);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static int register_extcon_notifier(struct ns2_phy_driver *phy_driver,
-+				    struct device *dev)
-+{
-+	struct extcon_dev *edev;
-+	int ret;
-+
-+	phy_driver->host_nb.notifier_call = drd_host_notify;
-+	phy_driver->dev_nb.notifier_call = drd_device_notify;
-+
-+	edev = phy_driver->edev;
-+
-+	/* Register for device change notification */
-+	ret = extcon_register_notifier(edev, EXTCON_USB,
-+				       &phy_driver->dev_nb);
-+	if (ret < 0) {
-+		dev_err(dev, "can't register extcon_dev\n");
-+		return ret;
-+	}
-+
-+	/* Register for host change notification */
-+	ret = extcon_register_notifier(edev, EXTCON_USB_HOST,
-+				       &phy_driver->host_nb);
-+	if (ret < 0) {
-+		dev_err(dev, "can't register extcon_dev\n");
-+		goto err_dev;
-+	}
-+
-+	/* Check the device cable connect state */
-+	ret = extcon_get_cable_state_(edev, EXTCON_USB);
-+	if (ret < 0) {
-+		dev_err(dev, "can't get extcon_dev state\n");
-+		goto err_host;
-+	} else if (ret) {
-+		phy_driver->data->new_state = EVT_DEVICE;
-+	}
-+
-+	/* Check the host cable connect state */
-+	ret = extcon_get_cable_state_(edev, EXTCON_USB_HOST);
-+	if (ret < 0) {
-+		dev_err(dev, "can't get extcon_dev state\n");
-+		goto err_host;
-+	} else if (ret) {
-+		phy_driver->data->new_state = EVT_HOST;
-+	}
-+
-+	return 0;
-+
-+err_host:
-+	ret = extcon_unregister_notifier(edev, EXTCON_USB_HOST,
-+					&phy_driver->host_nb);
-+err_dev:
-+	ret = extcon_unregister_notifier(edev, EXTCON_USB,
-+					&phy_driver->dev_nb);
-+	return ret;
-+}
-+
-+static struct phy_ops ops = {
-+	.init		= ns2_drd_phy_init,
-+	.power_on	= ns2_drd_phy_poweron,
-+	.power_off	= ns2_drd_phy_shutdown,
-+	.owner		= THIS_MODULE,
-+};
-+
-+static const struct of_device_id ns2_drd_phy_dt_ids[] = {
-+	{ .compatible = "brcm,ns2-drd-phy", },
-+	{ }
-+};
-+
-+static int ns2_drd_phy_remove(struct platform_device *pdev)
-+{
-+	struct ns2_phy_driver *driver = dev_get_drvdata(&pdev->dev);
-+
-+	if (driver->edev) {
-+		extcon_unregister_notifier(driver->edev, EXTCON_USB_HOST,
-+					  &driver->host_nb);
-+		extcon_unregister_notifier(driver->edev, EXTCON_USB,
-+					  &driver->dev_nb);
-+	}
-+
-+	return 0;
-+}
-+static int ns2_drd_phy_probe(struct platform_device *pdev)
-+{
-+	struct phy_provider *phy_provider;
-+	struct device *dev = &pdev->dev;
-+	struct ns2_phy_driver *driver;
-+	struct ns2_phy_data *data;
-+	struct resource *res;
-+	int ret;
-+	u32 val;
-+
-+	driver = devm_kzalloc(dev, sizeof(struct ns2_phy_driver),
-+			      GFP_KERNEL);
-+	if (!driver)
-+		return -ENOMEM;
-+
-+	driver->data = devm_kzalloc(dev, sizeof(struct ns2_phy_data),
-+				  GFP_KERNEL);
-+	if (!driver->data)
-+		return -ENOMEM;
-+
-+	spin_lock_init(&driver->lock);
-+
-+	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "icfg");
-+	driver->icfgdrd_regs = devm_ioremap_resource(dev, res);
-+	if (IS_ERR(driver->icfgdrd_regs))
-+		return PTR_ERR(driver->icfgdrd_regs);
-+
-+	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "rst-ctrl");
-+	driver->idmdrd_rst_ctrl = devm_ioremap_resource(dev, res);
-+	if (IS_ERR(driver->idmdrd_rst_ctrl))
-+		return PTR_ERR(driver->idmdrd_rst_ctrl);
-+
-+	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "crmu-ctrl");
-+	driver->crmu_usb2_ctrl = devm_ioremap_resource(dev, res);
-+	if (IS_ERR(driver->crmu_usb2_ctrl))
-+		return PTR_ERR(driver->crmu_usb2_ctrl);
-+
-+	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "usb2-strap");
-+	driver->usb2h_strap_reg = devm_ioremap_resource(dev, res);
-+	if (IS_ERR(driver->usb2h_strap_reg))
-+		return PTR_ERR(driver->usb2h_strap_reg);
-+
-+	 /* create extcon */
-+	driver->id_gpiod = devm_gpiod_get(&pdev->dev, "id", GPIOD_IN);
-+	if (IS_ERR(driver->id_gpiod)) {
-+		dev_err(dev, "failed to get ID GPIO\n");
-+		return PTR_ERR(driver->id_gpiod);
-+	}
-+	driver->vbus_gpiod = devm_gpiod_get(&pdev->dev, "vbus", GPIOD_IN);
-+	if (IS_ERR(driver->vbus_gpiod)) {
-+		dev_err(dev, "failed to get VBUS GPIO\n");
-+		return PTR_ERR(driver->vbus_gpiod);
-+	}
-+
-+	driver->edev = devm_extcon_dev_allocate(dev, usb_extcon_cable);
-+	if (IS_ERR(driver->edev)) {
-+		dev_err(dev, "failed to allocate extcon device\n");
-+		return -ENOMEM;
-+	}
-+
-+	ret = devm_extcon_dev_register(dev, driver->edev);
-+	if (ret < 0) {
-+		dev_err(dev, "failed to register extcon device\n");
-+		goto extcon_free;
-+	}
-+
-+	ret = gpiod_set_debounce(driver->id_gpiod, GPIO_DELAY * 1000);
-+	if (ret < 0)
-+		driver->debounce_jiffies = msecs_to_jiffies(GPIO_DELAY);
-+
-+	INIT_DELAYED_WORK(&driver->wq_extcon, extcon_work);
-+
-+	driver->id_irq = gpiod_to_irq(driver->id_gpiod);
-+	if (driver->id_irq < 0) {
-+		dev_err(dev, "failed to get ID IRQ\n");
-+		ret = driver->id_irq;
-+		goto extcon_unregister;
-+	}
-+	driver->vbus_irq = gpiod_to_irq(driver->vbus_gpiod);
-+	if (driver->vbus_irq < 0) {
-+		dev_err(dev, "failed to get ID IRQ\n");
-+		ret = driver->vbus_irq;
-+		goto extcon_unregister;
-+	}
-+
-+	ret = devm_request_threaded_irq(dev, driver->id_irq, NULL,
-+					gpio_irq_handler,
-+					IRQF_TRIGGER_RISING |
-+					IRQF_TRIGGER_FALLING | IRQF_ONESHOT,
-+					"usb_id", driver);
-+	if (ret < 0) {
-+		dev_err(dev, "failed to request handler for ID IRQ\n");
-+		goto extcon_unregister;
-+	}
-+	ret = devm_request_threaded_irq(dev, driver->vbus_irq, NULL,
-+					gpio_irq_handler,
-+					IRQF_TRIGGER_RISING |
-+					IRQF_TRIGGER_FALLING | IRQF_ONESHOT,
-+					"usb_vbus", driver);
-+	if (ret < 0) {
-+		dev_err(dev, "failed to request handler for VBUS IRQ\n");
-+		goto extcon_unregister;
-+	}
-+
-+	dev_set_drvdata(dev, driver);
-+
-+	/* Shutdown all ports. They can be powered up as required */
-+	val = readl(driver->crmu_usb2_ctrl);
-+	val &= ~(AFE_CORERDY_VDDC | PHY_RESETB);
-+	writel(val, driver->crmu_usb2_ctrl);
-+
-+	data = driver->data;
-+	data->phy = devm_phy_create(dev, dev->of_node, &ops);
-+	if (IS_ERR(data->phy)) {
-+		dev_err(dev, "Failed to create usb drd phy\n");
-+		ret = PTR_ERR(data->phy);
-+		goto extcon_unregister;
-+	}
-+
-+	data->driver = driver;
-+	phy_set_drvdata(data->phy, data);
-+
-+	phy_provider = devm_of_phy_provider_register(dev, of_phy_simple_xlate);
-+	if (IS_ERR(phy_provider)) {
-+		dev_err(dev, "Failed to register as phy provider\n");
-+		ret = PTR_ERR(phy_provider);
-+		goto extcon_unregister;
-+	}
-+
-+	INIT_DELAYED_WORK(&driver->conn_work, connect_work);
-+	platform_set_drvdata(pdev, driver);
-+
-+	ret = register_extcon_notifier(driver, dev);
-+	if (ret < 0) {
-+		dev_err(dev, "register extcon notifier failed (%d)\n", ret);
-+		goto extcon_unregister;
-+	}
-+	dev_info(dev, "Registered extcon device\n");
-+	queue_delayed_work(system_power_efficient_wq, &driver->wq_extcon,
-+			   driver->debounce_jiffies);
-+
-+	return 0;
-+
-+extcon_unregister:
-+	devm_extcon_dev_unregister(dev, driver->edev);
-+extcon_free:
-+	devm_extcon_dev_free(dev, driver->edev);
-+	return ret;
-+}
-+
-+MODULE_DEVICE_TABLE(of, ns2_drd_phy_dt_ids);
-+
-+static struct platform_driver ns2_drd_phy_driver = {
-+	.probe = ns2_drd_phy_probe,
-+	.remove = ns2_drd_phy_remove,
-+	.driver = {
-+		.name = "bcm-ns2-usbphy",
-+		.of_match_table = of_match_ptr(ns2_drd_phy_dt_ids),
-+	},
-+};
-+module_platform_driver(ns2_drd_phy_driver);
-+
-+MODULE_ALIAS("platform:bcm-ns2-drd-phy");
-+MODULE_AUTHOR("Broadcom");
-+MODULE_DESCRIPTION("Broadcom NS2 USB2 PHY driver");
-+MODULE_LICENSE("GPL v2");
--- 
-2.1.0
+SGkgQ2hlbi1ZdSwKClRoYW5rIHlvdSBmb3IgdGhlIHJldmlldyEKCk9uIDAzLzA1LzIwMTcgMTk6
+MTMsIENoZW4tWXUgVHNhaSB3cm90ZToKPiBIaSwKPgo+IE9uIFdlZCwgTWF5IDMsIDIwMTcgYXQg
+OTo1NiBQTSwgTXlsw6huZSBKb3NzZXJhbmQKPiA8bXlsZW5lLmpvc3NlcmFuZEBmcmVlLWVsZWN0
+cm9ucy5jb20+IHdyb3RlOgo+PiBBZGQgQURDIHN1cHBvcnQgZm9yIHRoZSBzdW44aS1jb2RlYyBk
+cml2ZXIuCj4+Cj4+IFRoaXMgZHJpdmVyIHVzZXMgYWxsIHRoZSBtaWNyb3Bob25lcyB3aWRnZXRz
+IGFuZCByb3V0ZXMgcHJvdmlkZWQgYnkgdGhlCj4+IGFuYWxvZyBwYXJ0IChzdW44aS1jb2RlYy1h
+bmFsb2cpLgo+PiBTb21lIGRpZ2l0YWwgY29uZmlndXJhdGlvbnMgYXJlIG5lZWRlZCBieSBjcmVh
+dGluZyBuZXcgQURDIHdpZGdldHMKPj4gYW5kIHJvdXRlcy4KPj4KPj4gU2lnbmVkLW9mZi1ieTog
+TXlsw6huZSBKb3NzZXJhbmQgPG15bGVuZS5qb3NzZXJhbmRAZnJlZS1lbGVjdHJvbnMuY29tPgo+
+PiAtLS0KPj4gIHNvdW5kL3NvYy9zdW54aS9zdW44aS1jb2RlYy5jIHwgODAgKysrKysrKysrKysr
+KysrKysrKysrKysrKysrKysrKysrKysrKysrKystLQo+PiAgMSBmaWxlIGNoYW5nZWQsIDc4IGlu
+c2VydGlvbnMoKyksIDIgZGVsZXRpb25zKC0pCj4+Cj4+IGRpZmYgLS1naXQgYS9zb3VuZC9zb2Mv
+c3VueGkvc3VuOGktY29kZWMuYyBiL3NvdW5kL3NvYy9zdW54aS9zdW44aS1jb2RlYy5jCj4+IGlu
+ZGV4IDU3MjNjMzQwNGY2Yi4uYjQ5MzhiMDZhY2VjIDEwMDY0NAo+PiAtLS0gYS9zb3VuZC9zb2Mv
+c3VueGkvc3VuOGktY29kZWMuYwo+PiArKysgYi9zb3VuZC9zb2Mvc3VueGkvc3VuOGktY29kZWMu
+Ywo+PiBAQCAtMzcsOSArMzcsMTEgQEAKPj4gICNkZWZpbmUgU1VOOElfU1lTQ0xLX0NUTF9TWVND
+TEtfU1JDICAgICAgICAgICAgICAgICAgICAwCj4+ICAjZGVmaW5lIFNVTjhJX01PRF9DTEtfRU5B
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgMHgwMTAKPj4gICNkZWZpbmUgU1VOOElfTU9E
+X0NMS19FTkFfQUlGMSAgICAgICAgICAgICAgICAgICAgICAgICAxNQo+PiArI2RlZmluZSBTVU44
+SV9NT0RfQ0xLX0VOQV9BREMgICAgICAgICAgICAgICAgICAgICAgICAgIDMKPj4gICNkZWZpbmUg
+U1VOOElfTU9EX0NMS19FTkFfREFDICAgICAgICAgICAgICAgICAgICAgICAgICAyCj4+ICAjZGVm
+aW5lIFNVTjhJX01PRF9SU1RfQ1RMICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgMHgwMTQK
+Pj4gICNkZWZpbmUgU1VOOElfTU9EX1JTVF9DVExfQUlGMSAgICAgICAgICAgICAgICAgICAgICAg
+ICAxNQo+PiArI2RlZmluZSBTVU44SV9NT0RfUlNUX0NUTF9BREMgICAgICAgICAgICAgICAgICAg
+ICAgICAgIDMKPj4gICNkZWZpbmUgU1VOOElfTU9EX1JTVF9DVExfREFDICAgICAgICAgICAgICAg
+ICAgICAgICAgICAyCj4+ICAjZGVmaW5lIFNVTjhJX1NZU19TUl9DVFJMICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgMHgwMTgKPj4gICNkZWZpbmUgU1VOOElfU1lTX1NSX0NUUkxfQUlGMV9G
+UyAgICAgICAgICAgICAgICAgICAgICAxMgo+PiBAQCAtNTQsOSArNTYsMjUgQEAKPj4gICNkZWZp
+bmUgU1VOOElfQUlGMUNMS19DVFJMX0FJRjFfV09SRF9TSVogICAgICAgICAgICAgICA0Cj4+ICAj
+ZGVmaW5lIFNVTjhJX0FJRjFDTEtfQ1RSTF9BSUYxX1dPUkRfU0laXzE2ICAgICAgICAgICAgKDEg
+PDwgNCkKPj4gICNkZWZpbmUgU1VOOElfQUlGMUNMS19DVFJMX0FJRjFfREFUQV9GTVQgICAgICAg
+ICAgICAgICAyCj4+ICsjZGVmaW5lIFNVTjhJX0FJRjFfQURDREFUX0NUUkwgICAgICAgICAgICAg
+ICAgICAgICAgICAgMHgwNDQKPj4gKyNkZWZpbmUgU1VOOElfQUlGMV9BRENEQVRfQ1RSTF9BSUYx
+X0RBMExfRU5BICAgICAgICAgICAxNQo+PiArI2RlZmluZSBTVU44SV9BSUYxX0FEQ0RBVF9DVFJM
+X0FJRjFfREEwUl9FTkEgICAgICAgICAgIDE0Cj4+ICAjZGVmaW5lIFNVTjhJX0FJRjFfREFDREFU
+X0NUUkwgICAgICAgICAgICAgICAgICAgICAgICAgMHgwNDgKPj4gICNkZWZpbmUgU1VOOElfQUlG
+MV9EQUNEQVRfQ1RSTF9BSUYxX0RBMExfRU5BICAgICAgICAgICAxNQo+PiAgI2RlZmluZSBTVU44
+SV9BSUYxX0RBQ0RBVF9DVFJMX0FJRjFfREEwUl9FTkEgICAgICAgICAgIDE0Cj4+ICsjZGVmaW5l
+IFNVTjhJX0FJRjFfTVhSX1NSQyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgMHgwNGMKPj4g
+KyNkZWZpbmUgU1VOOElfQUlGMV9NWFJfU1JDX0FEMExfTVhMX1NSQ19BSUYxREEwTCAgICAgICAx
+NQo+PiArI2RlZmluZSBTVU44SV9BSUYxX01YUl9TUkNfQUQwTF9NWExfU1JDX0FJRjJEQUNMICAg
+ICAgIDE0Cj4+ICsjZGVmaW5lIFNVTjhJX0FJRjFfTVhSX1NSQ19BRDBMX01YTF9TUkNfQURDTCAg
+ICAgICAgICAgMTMKPj4gKyNkZWZpbmUgU1VOOElfQUlGMV9NWFJfU1JDX0FEMExfTVhMX1NSQ19B
+SUYyREFDUiAgICAgICAxMgo+PiArI2RlZmluZSBTVU44SV9BSUYxX01YUl9TUkNfQUQwUl9NWFJf
+U1JDX0FJRjFEQTBSICAgICAgIDExCj4+ICsjZGVmaW5lIFNVTjhJX0FJRjFfTVhSX1NSQ19BRDBS
+X01YUl9TUkNfQUlGMkRBQ1IgICAgICAgMTAKPj4gKyNkZWZpbmUgU1VOOElfQUlGMV9NWFJfU1JD
+X0FEMFJfTVhSX1NSQ19BRENSICAgICAgICAgICA5Cj4+ICsjZGVmaW5lIFNVTjhJX0FJRjFfTVhS
+X1NSQ19BRDBSX01YUl9TUkNfQUlGMkRBQ0wgICAgICAgOAo+PiArI2RlZmluZSBTVU44SV9BRENf
+RElHX0NUUkwgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDB4MTAwCj4+ICsjZGVmaW5lIFNV
+TjhJX0FEQ19ESUdfQ1RSTF9FTkRBICAgICAgICAgICAgICAgICAgICAgICAgMTUKPgo+IFRoZSBy
+ZWdpc3RlciBiaXQgbmFtZSBpbiB0aGUgbWFudWFsIGlzIEVOQUQsIGFzIGluIEVOYWJsZSBBRGMu
+CgpPa2F5LCBJIGRpZCBub3Qga25vdyB0aGF0LCB0aGFua3MuCgo+Cj4+ICsjZGVmaW5lIFNVTjhJ
+X0FEQ19ESUdfQ1RSTF9BRE9VVF9EVFMgICAgICAgICAgICAgICAgICAgMgo+PiArI2RlZmluZSBT
+VU44SV9BRENfRElHX0NUUkxfQURPVVRfRExZICAgICAgICAgICAgICAgICAgIDEKPj4gICNkZWZp
+bmUgU1VOOElfREFDX0RJR19DVFJMICAgICAgICAgICAgICAgICAgICAgICAgICAgICAweDEyMAo+
+PiAgI2RlZmluZSBTVU44SV9EQUNfRElHX0NUUkxfRU5EQSAgICAgICAgICAgICAgICAgICAgICAg
+IDE1Cj4+ICAjZGVmaW5lIFNVTjhJX0RBQ19NWFJfU1JDICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgMHgxMzAKPj4gQEAgLTI3NiwxMCArMjk0LDI4IEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3Qg
+c25kX2tjb250cm9sX25ldyBzdW44aV9kYWNfbWl4ZXJfY29udHJvbHNbXSA9IHsKPj4gICAgICAg
+ICAgICAgICAgICAgICAgICAgU1VOOElfREFDX01YUl9TUkNfREFDUl9NWFJfU1JDX0FEQ1IsIDEs
+IDApLAo+PiAgfTsKPj4KPj4gK3N0YXRpYyBjb25zdCBzdHJ1Y3Qgc25kX2tjb250cm9sX25ldyBz
+dW44aV9pbnB1dF9taXhlcl9jb250cm9sc1tdID0gewo+PiArICAgICAgIFNPQ19EQVBNX0RPVUJM
+RSgiQUlGMSBTbG90IDAgRGlnaXRhbCBBREMgQ2FwdHVyZSBTd2l0Y2giLAo+PiArICAgICAgICAg
+ICAgICAgICAgICAgICBTVU44SV9BSUYxX01YUl9TUkMsCj4+ICsgICAgICAgICAgICAgICAgICAg
+ICAgIFNVTjhJX0FJRjFfTVhSX1NSQ19BRDBMX01YTF9TUkNfQUlGMURBMEwsCj4+ICsgICAgICAg
+ICAgICAgICAgICAgICAgIFNVTjhJX0FJRjFfTVhSX1NSQ19BRDBSX01YUl9TUkNfQUlGMURBMFIs
+IDEsIDApLAo+PiArICAgICAgIFNPQ19EQVBNX0RPVUJMRSgiQUlGMiBEaWdpdGFsIEFEQyBDYXB0
+dXJlIFN3aXRjaCIsIFNVTjhJX0FJRjFfTVhSX1NSQywKPj4gKyAgICAgICAgICAgICAgICAgICAg
+ICAgU1VOOElfQUlGMV9NWFJfU1JDX0FEMExfTVhMX1NSQ19BSUYyREFDTCwKPj4gKyAgICAgICAg
+ICAgICAgICAgICAgICAgU1VOOElfQUlGMV9NWFJfU1JDX0FEMFJfTVhSX1NSQ19BSUYyREFDUiwg
+MSwgMCksCj4+ICsgICAgICAgU09DX0RBUE1fRE9VQkxFKCJBSUYxIERhdGEgRGlnaXRhbCBBREMg
+Q2FwdHVyZSBTd2l0Y2giLCBTVU44SV9BSUYxX01YUl9TUkMsCj4+ICsgICAgICAgICAgICAgICAg
+ICAgICAgIFNVTjhJX0FJRjFfTVhSX1NSQ19BRDBMX01YTF9TUkNfQURDTCwKPj4gKyAgICAgICAg
+ICAgICAgICAgICAgICAgU1VOOElfQUlGMV9NWFJfU1JDX0FEMFJfTVhSX1NSQ19BRENSLCAxLCAw
+KSwKPj4gKyAgICAgICBTT0NfREFQTV9ET1VCTEUoIkFJRjIgSW52IERpZ2l0YWwgQURDIENhcHR1
+cmUgU3dpdGNoIiwgU1VOOElfQUlGMV9NWFJfU1JDLAo+PiArICAgICAgICAgICAgICAgICAgICAg
+ICBTVU44SV9BSUYxX01YUl9TUkNfQUQwTF9NWExfU1JDX0FJRjJEQUNSLAo+PiArICAgICAgICAg
+ICAgICAgICAgICAgICBTVU44SV9BSUYxX01YUl9TUkNfQUQwUl9NWFJfU1JDX0FJRjJEQUNMLCAx
+LCAwKSwKPj4gK307Cj4KPiBUaGlzIGdyb3VwIG9mIG1peGVyIGNvbnRyb2xzIGlzIG9ubHkgZm9y
+IEFJRjEgc2xvdCAwIGNhcHR1cmUuCj4gU28gaW4gZmFjdCB0aGV5IHNob3VsZCBhbGwgcmVhZCAi
+QUlGMSBTbG90IDAgTWl4ZXIgWCBDYXB0dXJlIFN3aXRjaCIsCj4gd2l0aCBYIHJlcGxhY2VkIGJ5
+ICJBSUYxIFNsb3QgMCIsICJBSUYyIiwgIkFEQyIsIGFuZCAiQUlGMiBJbnYiLgo+Cj4gVGhpcyBo
+b3BlZnVsbHkgaW5mb3JtcyB0aGUgdXNlciB0aGF0IHRoZXNlIGNvbnRyb2xzIGFyZSBmb3IgdGhl
+IEFJRjEKPiBzbG90IDAgbWl4ZXIsIGFuZCBhcmUgY2FwdHVyZSBzd2l0Y2ggZnJvbSB0aGUgdmFy
+aW91cyBzb3VyY2VzIGxpc3RlZAo+IGFib3ZlLgoKU291bmRzIGdvb2QuCgo+Cj4+ICsKPj4gIHN0
+YXRpYyBjb25zdCBzdHJ1Y3Qgc25kX3NvY19kYXBtX3dpZGdldCBzdW44aV9jb2RlY19kYXBtX3dp
+ZGdldHNbXSA9IHsKPj4gLSAgICAgICAvKiBEaWdpdGFsIHBhcnRzIG9mIHRoZSBEQUNzICovCj4+
+ICsgICAgICAgLyogRGlnaXRhbCBwYXJ0cyBvZiB0aGUgREFDcyBhbmQgQURDICovCj4+ICAgICAg
+ICAgU05EX1NPQ19EQVBNX1NVUFBMWSgiREFDIiwgU1VOOElfREFDX0RJR19DVFJMLCBTVU44SV9E
+QUNfRElHX0NUUkxfRU5EQSwKPj4gICAgICAgICAgICAgICAgICAgICAgICAgICAgIDAsIE5VTEws
+IDApLAo+PiArICAgICAgIFNORF9TT0NfREFQTV9TVVBQTFkoIkFEQyIsIFNVTjhJX0FEQ19ESUdf
+Q1RSTCwgU1VOOElfQURDX0RJR19DVFJMX0VOREEsCj4+ICsgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAwLCBOVUxMLCAwKSwKPj4KPj4gICAgICAgICAvKiBBbmFsb2cgREFDIEFJRiAqLwo+PiAg
+ICAgICAgIFNORF9TT0NfREFQTV9BSUZfSU4oIkFJRjEgU2xvdCAwIExlZnQiLCAiUGxheWJhY2si
+LCAwLAo+PiBAQCAtMjg5LDE3ICszMjUsMzEgQEAgc3RhdGljIGNvbnN0IHN0cnVjdCBzbmRfc29j
+X2RhcG1fd2lkZ2V0IHN1bjhpX2NvZGVjX2RhcG1fd2lkZ2V0c1tdID0gewo+PiAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgU1VOOElfQUlGMV9EQUNEQVRfQ1RSTCwKPj4gICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgIFNVTjhJX0FJRjFfREFDREFUX0NUUkxfQUlGMV9EQTBSX0VOQSwgMCks
+Cj4+Cj4+IC0gICAgICAgLyogREFDIE1peGVycyAqLwo+PiArICAgICAgIC8qIEFuYWxvZyBBREMg
+QUlGICovCj4+ICsgICAgICAgU05EX1NPQ19EQVBNX0FJRl9JTigiQUlGMSBTbG90IDAgTGVmdCBB
+REMiLCAiQ2FwdHVyZSIsIDAsCj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICBTVU44SV9B
+SUYxX0FEQ0RBVF9DVFJMLAo+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgU1VOOElfQUlG
+MV9BRENEQVRfQ1RSTF9BSUYxX0RBMExfRU5BLCAwKSwKPj4gKyAgICAgICBTTkRfU09DX0RBUE1f
+QUlGX0lOKCJBSUYxIFNsb3QgMCBSaWdodCBBREMiLCAiQ2FwdHVyZSIsIDAsCj4+ICsgICAgICAg
+ICAgICAgICAgICAgICAgICAgICBTVU44SV9BSUYxX0FEQ0RBVF9DVFJMLAo+PiArICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgU1VOOElfQUlGMV9BRENEQVRfQ1RSTF9BSUYxX0RBMFJfRU5BLCAw
+KSwKPgo+IFlvdSB3YW50IHRvIHVzZSBTTkRfU09DX0RBUE1fQUlGX09VVCBoZXJlLCBmb3IgY2Fw
+dHVyZWQgYXVkaW8gb3V0IG9mCj4gdGhlIGNvZGVjIGFuZCB0byB0aGUgc3lzdGVtLiBUaGVzZSBh
+cmUgdGhlIGxhc3Qgd2lkZ2V0cyBpbiB0aGUgY2FwdHVyZQo+IHBhdGguCgpBQ0sKCj4KPj4gKwo+
+PiArICAgICAgIC8qIERBQyBhbmQgQURDIE1peGVycyAqLwo+PiAgICAgICAgIFNPQ19NSVhFUl9B
+UlJBWSgiTGVmdCBEaWdpdGFsIERBQyBNaXhlciIsIFNORF9TT0NfTk9QTSwgMCwgMCwKPj4gICAg
+ICAgICAgICAgICAgICAgICAgICAgc3VuOGlfZGFjX21peGVyX2NvbnRyb2xzKSwKPj4gICAgICAg
+ICBTT0NfTUlYRVJfQVJSQVkoIlJpZ2h0IERpZ2l0YWwgREFDIE1peGVyIiwgU05EX1NPQ19OT1BN
+LCAwLCAwLAo+PiAgICAgICAgICAgICAgICAgICAgICAgICBzdW44aV9kYWNfbWl4ZXJfY29udHJv
+bHMpLAo+PiArICAgICAgIFNPQ19NSVhFUl9BUlJBWSgiTGVmdCBEaWdpdGFsIEFEQyBNaXhlciIs
+IFNORF9TT0NfTk9QTSwgMCwgMCwKPj4gKyAgICAgICAgICAgICAgICAgICAgICAgc3VuOGlfaW5w
+dXRfbWl4ZXJfY29udHJvbHMpLAo+PiArICAgICAgIFNPQ19NSVhFUl9BUlJBWSgiUmlnaHQgRGln
+aXRhbCBBREMgTWl4ZXIiLCBTTkRfU09DX05PUE0sIDAsIDAsCj4+ICsgICAgICAgICAgICAgICAg
+ICAgICAgIHN1bjhpX2lucHV0X21peGVyX2NvbnRyb2xzKSwKPgo+IEFuZCB0aGVzZSBzaG91bGQg
+cmVhZCAiQUlGMSBTbG90IDAgTGVmdC9SaWdodCBNaXhlciIuCgpBQ0sKCj4KPj4KPj4gICAgICAg
+ICAvKiBDbG9ja3MgKi8KPj4gICAgICAgICBTTkRfU09DX0RBUE1fU1VQUExZKCJNT0RDTEsgQUZJ
+MSIsIFNVTjhJX01PRF9DTEtfRU5BLAo+PiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgU1VO
+OElfTU9EX0NMS19FTkFfQUlGMSwgMCwgTlVMTCwgMCksCj4+ICAgICAgICAgU05EX1NPQ19EQVBN
+X1NVUFBMWSgiTU9EQ0xLIERBQyIsIFNVTjhJX01PRF9DTEtfRU5BLAo+PiAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgU1VOOElfTU9EX0NMS19FTkFfREFDLCAwLCBOVUxMLCAwKSwKPj4gKyAg
+ICAgICBTTkRfU09DX0RBUE1fU1VQUExZKCJNT0RDTEsgQURDIiwgU1VOOElfTU9EX0NMS19FTkEs
+Cj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICBTVU44SV9NT0RfQ0xLX0VOQV9BREMsIDAs
+IE5VTEwsIDApLAo+PiAgICAgICAgIFNORF9TT0NfREFQTV9TVVBQTFkoIkFJRjEiLCBTVU44SV9T
+WVNDTEtfQ1RMLAo+PiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgU1VOOElfU1lTQ0xLX0NU
+TF9BSUYxQ0xLX0VOQSwgMCwgTlVMTCwgMCksCj4+ICAgICAgICAgU05EX1NPQ19EQVBNX1NVUFBM
+WSgiU1lTQ0xLIiwgU1VOOElfU1lTQ0xLX0NUTCwKPj4gQEAgLTMxNiw2ICszNjYsMTIgQEAgc3Rh
+dGljIGNvbnN0IHN0cnVjdCBzbmRfc29jX2RhcG1fd2lkZ2V0IHN1bjhpX2NvZGVjX2RhcG1fd2lk
+Z2V0c1tdID0gewo+PiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgU1VOOElfTU9EX1JTVF9D
+VExfQUlGMSwgMCwgTlVMTCwgMCksCj4+ICAgICAgICAgU05EX1NPQ19EQVBNX1NVUFBMWSgiUlNU
+IERBQyIsIFNVTjhJX01PRF9SU1RfQ1RMLAo+PiAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+U1VOOElfTU9EX1JTVF9DVExfREFDLCAwLCBOVUxMLCAwKSwKPj4gKyAgICAgICBTTkRfU09DX0RB
+UE1fU1VQUExZKCJSU1QgQURDIiwgU1VOOElfTU9EX1JTVF9DVEwsCj4+ICsgICAgICAgICAgICAg
+ICAgICAgICAgICAgICBTVU44SV9NT0RfUlNUX0NUTF9BREMsIDAsIE5VTEwsIDApLAo+PiArCj4+
+ICsgICAgICAgU05EX1NPQ19EQVBNX01JQygiSGVhZHNldCBNaWMiLCBOVUxMKSwKPj4gKyAgICAg
+ICBTTkRfU09DX0RBUE1fTUlDKCJNaWMiLCBOVUxMKSwKPgo+IFRoZXNlIE1pY3MgYXJlIGJvYXJk
+IGxldmVsIHdpZGdldHMuIFNpbmNlIHlvdSBhcmUgdXNpbmcgc2ltcGxlLWNhcmQsCj4geW91IHNo
+b3VsZCBhZGQgdGhlbSBpbiB0aGUgZGV2aWNlIHRyZWUgaW4gdGhlIHNpbXBsZS1jYXJkIGRldmlj
+ZQo+IG5vZGUsIHVzaW5nIHRoZSAic2ltcGxlLWF1ZGlvLWNhcmQsd2lkZ2V0cyIgcHJvcGVydHku
+Cj4KPiBZb3UgcHJvYmFibHkgc2hvdWxkIGhhdmUgZG9uZSBzbyBmb3IgdGhlIG91dHB1dCBzaWRl
+IGFzIHdlbGwuCj4gSWYgc2ltcGxlLWNhcmQgd2VyZSBmdWxseS1yb3V0ZWQsIHRoZSBleGlzdGlu
+ZyBkZXZpY2UgdHJlZSBzaW1wbHkKPiB3b3VsZG4ndCB3b3JrLgoKT2theSwgSSB3aWxsIGFkZCB0
+aGVtIGluIHRoZSBzaW1wbGUtYXVkaW8tY2FyZCBub2RlLgoKPgo+PiArCj4+ICB9Owo+Pgo+PiAg
+c3RhdGljIGNvbnN0IHN0cnVjdCBzbmRfc29jX2RhcG1fcm91dGUgc3VuOGlfY29kZWNfZGFwbV9y
+b3V0ZXNbXSA9IHsKPj4gQEAgLTMyNSwxMSArMzgxLDE2IEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3Qg
+c25kX3NvY19kYXBtX3JvdXRlIHN1bjhpX2NvZGVjX2RhcG1fcm91dGVzW10gPSB7Cj4+ICAgICAg
+ICAgeyAiUlNUIEFJRjEiLCBOVUxMLCAiQUlGMSBQTEwiIH0sCj4+ICAgICAgICAgeyAiTU9EQ0xL
+IEFGSTEiLCBOVUxMLCAiUlNUIEFJRjEiIH0sCj4+ICAgICAgICAgeyAiREFDIiwgTlVMTCwgIk1P
+RENMSyBBRkkxIiB9LAo+PiArICAgICAgIHsgIkFEQyIsIE5VTEwsICJNT0RDTEsgQUZJMSIgfSwK
+Pgo+IFRoaXMgbWFrZXMgbm8gc2Vuc2UuIFdoeSB3b3VsZCBBSUYxJ3MgbW9kdWxlIGNsb2NrIGZl
+ZWQgdGhlIEFEQz8gU2FtZSBnb2VzCj4gZm9yIHRoZSBleGlzdGluZyBEQUMgcm91dGUuCj4KCkl0
+IHdhcyBkaWZmaWN1bHQgZm9yIG1lIHRvIGtub3cgaG93IHRvIHJvdXRlIHRoZSBjbG9ja3Mgd2l0
+aCB0aGUgREFDL0FEQyAKd2lkZ2V0cy4gQXMgdGhlIGNsb2NrcyBhcmUgbmVlZGVkIHRvIGhhdmUg
+YSBBREMvREFDIHdvcmtpbmcsIEkgY3JlYXRlZCAKdGhpcyByb3V0ZSBidXQgaXQgaXMsIG1heWJl
+LCBub3QgdGhlIGNvcnJlY3Qgd2F5IHRvIGRvIGl0LgoKPj4KPj4gICAgICAgICB7ICJSU1QgREFD
+IiwgTlVMTCwgIlNZU0NMSyIgfSwKPj4gICAgICAgICB7ICJNT0RDTEsgREFDIiwgTlVMTCwgIlJT
+VCBEQUMiIH0sCj4+ICAgICAgICAgeyAiREFDIiwgTlVMTCwgIk1PRENMSyBEQUMiIH0sCj4+Cj4+
+ICsgICAgICAgeyAiUlNUIEFEQyIsIE5VTEwsICJTWVNDTEsiIH0sCj4+ICsgICAgICAgeyAiTU9E
+Q0xLIEFEQyIsIE5VTEwsICJSU1QgQURDIiB9LAo+PiArICAgICAgIHsgIkFEQyIsIE5VTEwsICJN
+T0RDTEsgQURDIiB9LAo+Cj4gVGhpcyBtYWtlcyBsaXR0bGUgc2Vuc2UgZWl0aGVyLiBUaGUgU1lT
+Q0xLIHByb2JhYmx5IGZlZWRzIHRoZSBBREMncwo+IG1vZHVsZSBjbG9jay4KPiBUaGUgTU9EQ0xL
+IHRoZW4gZmVlZHMgdGhlIEFEQy4gVGhlIEFEQyByZXNldCBmZWVkcyB0aGUgQURDIChvciByYXRo
+ZXIgdGhlIEFEQwo+IGRlcGVuZHMgb24gaXRzIHJlc2V0KS4gVGhlICJBREMiIHdpZGdldCBoZXJl
+IGlzIGFjdHVhbGx5IGp1c3QgdGhlIGVuYWJsZSBzd2l0Y2guCj4gQnV0IHdlIGNhbiB1c2UgaXQg
+YXMgYSBraW5kIG9mIHBsYWNlaG9sZGVyLCB0byBzZXR1cCB0aGUgZGVwZW5kZW5jaWVzIGNvcnJl
+Y3RseS4KPgoKWWVwLCB0aGF0IGl0IGlzLgpXaGF0IGRvIHlvdSBoYXZlIGluIG1pbmQgYWJvdXQg
+dGhlIEFEQyB3aWRnZXQgYXMgYSAicGxhY2Vob2xkZXIiPwoKPiBJIHdpc2ggd2UgaGFkIG5hbWVk
+IHRoZSB3aWRnZXRzIGJldHRlciwgYnV0IGFsYXMgdGhleSBhcmUgcGFydCBvZiB0aGUKPiBkZXZp
+Y2UgdHJlZQo+IGJpbmRpbmcsIGV2ZW4gdGhvdWdoIHRoZXkgYXJlIG5vdCBkb2N1bWVudGVkLCBz
+byB3ZSBjYW4gbm90IGNoYW5nZSB0aGUgZXhpc3RpbmcKPiBvbmVzLgoKSSBhZ3JlZSBhYm91dCB0
+aGUgd2lkZ2V0cyBuYW1lcywgdGhleSBhcmUgbm90IHZlcnkgY2xlYXIuCgo+Cj4+ICsKPj4gICAg
+ICAgICAvKiBEQUMgUm91dGVzICovCj4+ICAgICAgICAgeyAiQUlGMSBTbG90IDAgUmlnaHQiLCBO
+VUxMLCAiREFDIiB9LAo+PiAgICAgICAgIHsgIkFJRjEgU2xvdCAwIExlZnQiLCBOVUxMLCAiREFD
+IiB9LAo+PiBAQCAtMzM5LDYgKzQwMCwxMiBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IHNuZF9zb2Nf
+ZGFwbV9yb3V0ZSBzdW44aV9jb2RlY19kYXBtX3JvdXRlc1tdID0gewo+PiAgICAgICAgICAgIkFJ
+RjEgU2xvdCAwIExlZnQifSwKPj4gICAgICAgICB7ICJSaWdodCBEaWdpdGFsIERBQyBNaXhlciIs
+ICJBSUYxIFNsb3QgMCBEaWdpdGFsIERBQyBQbGF5YmFjayBTd2l0Y2giLAo+PiAgICAgICAgICAg
+IkFJRjEgU2xvdCAwIFJpZ2h0In0sCj4+ICsKPj4gKyAgICAgICAvKiBBREMgcm91dGVzICovCj4+
+ICsgICAgICAgeyAiTGVmdCBEaWdpdGFsIEFEQyBNaXhlciIsICJBSUYxIERhdGEgRGlnaXRhbCBB
+REMgQ2FwdHVyZSBTd2l0Y2giLAo+PiArICAgICAgICAgIkFJRjEgU2xvdCAwIExlZnQgQURDIiB9
+LAo+PiArICAgICAgIHsgIlJpZ2h0IERpZ2l0YWwgQURDIE1peGVyIiwgIkFJRjEgRGF0YSBEaWdp
+dGFsIEFEQyBDYXB0dXJlIFN3aXRjaCIsCj4+ICsgICAgICAgICAiQUlGMSBTbG90IDAgUmlnaHQg
+QURDIiB9LAo+Cj4gU2FtZSB0aGluZyBhYm91dCB0aGUgIkFEQyBNaXhlciIgbmFtZXMuCj4KPiBB
+bmQgdGhlc2Ugcm91dGVzIGFyZSBjb21wbGV0ZWx5IGJhY2t3YXJkcy4gIkFJRjEgU2xvdCAwIExl
+ZnQvUmlnaHQgQURDIiBhcmUKPiB0aGUgb3V0cHV0IHN0cmVhbSB3aWRnZXRzLiBUaGV5IGFyZSBm
+ZWQgZnJvbSAiQUlGMSBTbG90IDAgTGVmdC9SaWdodCBNaXhlciIKPiBpZiB5b3UgdXNlIHRoZSBu
+YW1lcyBJIHN1Z2dlc3RlZCwgb3IgIkxlZnQvUmlnaHQgRGlnaXRhbCBBREMgTWl4ZXIiIG9yaWdp
+bmFsbHkuCgpZb3UgYXJlIHJpZ2h0LCBpdCBtYWtlIHNlbnNlIG5vdy4KCj4KPiBZb3UgdGhlbiBu
+ZWVkIG90aGVyIHJvdXRlcyBmZWVkaW5nIHRoZSBtaXhlci4gTG9va3MgbGlrZSB5b3UgYWxzbyBu
+ZWVkIEFEQwo+IHBsYWNlaG9sZGVyIHdpZGdldHMgb24gdGhlIGRpZ2l0YWwgc2lkZSBoZXJlLCBz
+byB5b3UgY2FuIGhvb2sgdXAgdGhlIGFuYWxvZwo+IHNpZGUgaW4gc2ltcGxlLWNhcmQgbW9yZSBl
+YXNpbHkuCgpPa2F5LCBJIHdpbGwgdHJ5IHRvIGltcHJvdmUgaXQuCgo+Cj4gSWYgeW91IGNhbiwg
+cGxlYXNlIGR1bXAgdGhlIERBUE0gcm91dGVzIGludG8gYSBkaXJlY3RlZCBncmFwaCB0byBjaGVj
+awo+IGV2ZXJ5dGhpbmcKPiBpcyBjb25uZWN0ZWQgYW5kIG1ha2VzIHNlbnNlLiBJIGJlbGlldmUg
+eW91IGhhdmUgYSBzY3JpcHQgdGhhdCBkb2VzIHRoaXMuCgpZZXMsIEkgdGVzdGVkIGl0IGFuZCB0
+aGUgQURDIG1peGVycyBhcmUgY29ubmVjdGVkIHRvIG5vdGhpbmcgc28gdGhpcyAKcm91dGUgZG9l
+cyBub3QgbWFrZSBzZW5zZS4gSSB3aWxsIHJld29yayBpdC4KCj4+ICB9Owo+Pgo+PiAgc3RhdGlj
+IHN0cnVjdCBzbmRfc29jX2RhaV9vcHMgc3VuOGlfY29kZWNfZGFpX29wcyA9IHsKPj4gQEAgLTM1
+Niw2ICs0MjMsMTUgQEAgc3RhdGljIHN0cnVjdCBzbmRfc29jX2RhaV9kcml2ZXIgc3VuOGlfY29k
+ZWNfZGFpID0gewo+PiAgICAgICAgICAgICAgICAgLnJhdGVzID0gU05EUlZfUENNX1JBVEVfODAw
+MF8xOTIwMDAsCj4+ICAgICAgICAgICAgICAgICAuZm9ybWF0cyA9IFNORFJWX1BDTV9GTVRCSVRf
+UzE2X0xFLAo+PiAgICAgICAgIH0sCj4+ICsgICAgICAgLyogY2FwdHVyZSBjYXBhYmlsaXRpZXMg
+Ki8KPj4gKyAgICAgICAuY2FwdHVyZSA9IHsKPj4gKyAgICAgICAgICAgICAgIC5zdHJlYW1fbmFt
+ZSA9ICJDYXB0dXJlIiwKPj4gKyAgICAgICAgICAgICAgIC5jaGFubmVsc19taW4gPSAxLAo+PiAr
+ICAgICAgICAgICAgICAgLmNoYW5uZWxzX21heCA9IDIsCj4+ICsgICAgICAgICAgICAgICAucmF0
+ZXMgPSBTTkRSVl9QQ01fUkFURV84MDAwXzE5MjAwMCwKPj4gKyAgICAgICAgICAgICAgIC5mb3Jt
+YXRzID0gU05EUlZfUENNX0ZNVEJJVF9TMTZfTEUsCj4+ICsgICAgICAgICAgICAgICAuc2lnX2Jp
+dHMgPSAyNCwKPj4gKyAgICAgICB9LAo+PiAgICAgICAgIC8qIHBjbSBvcGVyYXRpb25zICovCj4+
+ICAgICAgICAgLm9wcyA9ICZzdW44aV9jb2RlY19kYWlfb3BzLAo+PiAgfTsKPj4gLS0KPj4gMi4x
+MS4wCj4+CgpUaGFuayB5b3UgYWdhaW4sCgpCZXN0IHJlZ2FyZHMsCgotLSAKTXlsw6huZSBKb3Nz
+ZXJhbmQsIEZyZWUgRWxlY3Ryb25zCkVtYmVkZGVkIExpbnV4IGFuZCBLZXJuZWwgZW5naW5lZXJp
+bmcKaHR0cDovL2ZyZWUtZWxlY3Ryb25zLmNvbQpfX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fXwpBbHNhLWRldmVsIG1haWxpbmcgbGlzdApBbHNhLWRldmVsQGFs
+c2EtcHJvamVjdC5vcmcKaHR0cDovL21haWxtYW4uYWxzYS1wcm9qZWN0Lm9yZy9tYWlsbWFuL2xp
+c3RpbmZvL2Fsc2EtZGV2ZWwK
