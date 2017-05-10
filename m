@@ -1,143 +1,643 @@
-Return-Path: <SRS0=HD01=4S=mediatek.com=minghsiu.tsai@kernel.org>
-Message-ID: <1494555074.9244.2.camel@mtksdaap41>
-Subject: Re: [PATCH] [media] mtk-mdp: Fix g_/s_selection capture/compose
- logic
-From: Minghsiu Tsai <minghsiu.tsai@mediatek.com>
-Date: Fri, 12 May 2017 10:11:14 +0800
-In-Reply-To: <a8c1da24-d812-7c4d-a05d-34cb90edddf5@linaro.org>
-References: <1492057130-1194-1-git-send-email-minghsiu.tsai@mediatek.com>
-	 <a8c1da24-d812-7c4d-a05d-34cb90edddf5@linaro.org>
-Content-Type: multipart/alternative; boundary="=-rnpVXM6MvLGcXpQKhNNh"
 MIME-Version: 1.0
-To: Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Cc: Hans Verkuil <hans.verkuil@cisco.com>, daniel.thompson@linaro.org, "Rob Herring  <robh+dt@kernel.org>, Mauro Carvalho Chehab" <mchehab@osg.samsung.com>, Matthias Brugger <matthias.bgg@gmail.com>, Daniel Kurtz <djkurtz@chromium.org>, Pawel Osciak <posciak@chromium.org>, Houlong Wei <houlong.wei@mediatek.com>, srv_heupstream@mediatek.com, Eddie Huang <eddie.huang@mediatek.com>, Yingjoe Chen <yingjoe.chen@mediatek.com>, Wu-Cheng Li <wuchengli@google.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org, linux-mediatek@lists.infradead.org
+In-Reply-To: <1490769009-12552-3-git-send-email-xuejiancheng@hisilicon.com>
+References: <1490769009-12552-1-git-send-email-xuejiancheng@hisilicon.com>
+	<1490769009-12552-3-git-send-email-xuejiancheng@hisilicon.com>
+Date: Wed, 10 May 2017 13:25:43 -0500
+Message-ID: <CAL_JsqJTRJsJe50r6Vj0=HnZUC9gdFM0E0Z7GcBV9xQHu0XWXw@mail.gmail.com>
+Subject: Re: [PATCH v3 2/2] arm64: dts: hisilicon: add dts files for
+ hi3798cv200-poplar board
+From: Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+To: Jiancheng Xue <xuejiancheng@hisilicon.com>
+Cc: Wei Xu <xuwei5@hisilicon.com>, Arnd Bergmann <arnd@arndb.de>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Alex Elder <elder@linaro.org>, Peter Griffin <peter.griffin@linaro.org>, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, yanhaifeng@hisilicon.com, hermit.wangheming@hisilicon.com
 List-ID: <devicetree@vger.kernel.org>
 
---=-rnpVXM6MvLGcXpQKhNNh
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-
-Hi Stan,
-
-On Thu, 2017-04-27 at 17:42 +0300, Stanimir Varbanov wrote:
-
-> Hi,
-> 
-> On 04/13/2017 07:18 AM, Minghsiu Tsai wrote:
-> > From: Daniel Kurtz <djkurtz@chromium.org>
-> > 
-> > Experiments show that the:
-> >  (1) mtk-mdp uses the _MPLANE form of CAPTURE/OUTPUT
-> >  (2) CAPTURE types use CROP targets, and OUTPUT types use COMPOSE targets
-> > 
-> > Signed-off-by: Daniel Kurtz <djkurtz@chromium.org>
-> > Signed-off-by: Minghsiu Tsai <minghsiu.tsai@mediatek.com>
-> > 
-> > ---
-> >  drivers/media/platform/mtk-mdp/mtk_mdp_m2m.c | 18 +++++++++---------
-> >  1 file changed, 9 insertions(+), 9 deletions(-)
-> > 
-> > diff --git a/drivers/media/platform/mtk-mdp/mtk_mdp_m2m.c b/drivers/media/platform/mtk-mdp/mtk_mdp_m2m.c
-> > index 13afe48..8ab7ca0 100644
-> > --- a/drivers/media/platform/mtk-mdp/mtk_mdp_m2m.c
-> > +++ b/drivers/media/platform/mtk-mdp/mtk_mdp_m2m.c
-> > @@ -837,12 +837,12 @@ static int mtk_mdp_m2m_g_selection(struct file *file, void *fh,
-> >  	struct mtk_mdp_ctx *ctx = fh_to_ctx(fh);
-> >  	bool valid = false;
-> >  
-> > -	if (s->type == V4L2_BUF_TYPE_VIDEO_CAPTURE) {
-> > -		if (mtk_mdp_is_target_compose(s->target))
-> > -			valid = true;
-> > -	} else if (s->type == V4L2_BUF_TYPE_VIDEO_OUTPUT) {
-> > +	if (s->type == V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE) {
-> >  		if (mtk_mdp_is_target_crop(s->target))
-> >  			valid = true;
-> > +	} else if (s->type == V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE) {
-> > +		if (mtk_mdp_is_target_compose(s->target))
-> > +			valid = true;
-> >  	}
-> 
-> Using MPLANE formats in g/s_selection violates the v4l2 spec. See [1].
-> 
-
-
-Sorry for reply too late. I will fix it soon. Thanks.
-
-
-
-> <snip>
-> 
-
-
-
---=-rnpVXM6MvLGcXpQKhNNh
-Content-Type: text/html; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 TRANSITIONAL//EN">
-<HTML>
-<HEAD>
-  <META HTTP-EQUIV="Content-Type" CONTENT="text/html; CHARSET=UTF-8">
-  <META NAME="GENERATOR" CONTENT="GtkHTML/4.2.2">
-</HEAD>
-<BODY>
-Hi Stan,<BR>
-<BR>
-On Thu, 2017-04-27 at 17:42 +0300, Stanimir Varbanov wrote:
-<BLOCKQUOTE TYPE=CITE>
-<PRE>
-Hi,
-
-On 04/13/2017 07:18 AM, Minghsiu Tsai wrote:
-&gt; From: Daniel Kurtz &lt;<A HREF="mailto:djkurtz@chromium.org">djkurtz@chromium.org</A>&gt;
-&gt; 
-&gt; Experiments show that the:
-&gt;  (1) mtk-mdp uses the _MPLANE form of CAPTURE/OUTPUT
-&gt;  (2) CAPTURE types use CROP targets, and OUTPUT types use COMPOSE targets
-&gt; 
-&gt; Signed-off-by: Daniel Kurtz &lt;<A HREF="mailto:djkurtz@chromium.org">djkurtz@chromium.org</A>&gt;
-&gt; Signed-off-by: Minghsiu Tsai &lt;<A HREF="mailto:minghsiu.tsai@mediatek.com">minghsiu.tsai@mediatek.com</A>&gt;
-&gt; 
-&gt; ---
-&gt;  drivers/media/platform/mtk-mdp/mtk_mdp_m2m.c | 18 +++++++++---------
-&gt;  1 file changed, 9 insertions(+), 9 deletions(-)
-&gt; 
-&gt; diff --git a/drivers/media/platform/mtk-mdp/mtk_mdp_m2m.c b/drivers/media/platform/mtk-mdp/mtk_mdp_m2m.c
-&gt; index 13afe48..8ab7ca0 100644
-&gt; --- a/drivers/media/platform/mtk-mdp/mtk_mdp_m2m.c
-&gt; +++ b/drivers/media/platform/mtk-mdp/mtk_mdp_m2m.c
-&gt; @@ -837,12 +837,12 @@ static int mtk_mdp_m2m_g_selection(struct file *file, void *fh,
-&gt;  	struct mtk_mdp_ctx *ctx = fh_to_ctx(fh);
-&gt;  	bool valid = false;
-&gt;  
-&gt; -	if (s-&gt;type == V4L2_BUF_TYPE_VIDEO_CAPTURE) {
-&gt; -		if (mtk_mdp_is_target_compose(s-&gt;target))
-&gt; -			valid = true;
-&gt; -	} else if (s-&gt;type == V4L2_BUF_TYPE_VIDEO_OUTPUT) {
-&gt; +	if (s-&gt;type == V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE) {
-&gt;  		if (mtk_mdp_is_target_crop(s-&gt;target))
-&gt;  			valid = true;
-&gt; +	} else if (s-&gt;type == V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE) {
-&gt; +		if (mtk_mdp_is_target_compose(s-&gt;target))
-&gt; +			valid = true;
-&gt;  	}
-
-Using MPLANE formats in g/s_selection violates the v4l2 spec. See [1].
-
-</PRE>
-</BLOCKQUOTE>
-<BR>
-Sorry for reply too late. I will fix it soon. Thanks.<BR>
-<BR>
-<BR>
-<BLOCKQUOTE TYPE=CITE>
-<PRE>
-&lt;snip&gt;
-
-</PRE>
-</BLOCKQUOTE>
-<BR>
-</BODY>
-</HTML>
-
---=-rnpVXM6MvLGcXpQKhNNh--
+On Wed, Mar 29, 2017 at 1:30 AM, Jiancheng Xue <xuejiancheng@hisilicon.com> wrote:
+> Add basic dts files for hi3798cv200-poplar board. Poplar is the
+> first development board compliant with the 96Boards Enterprise
+> Edition TV Platform specification. The board features the
+> Hi3798CV200 with an integrated quad-core 64-bit ARM Cortex A53
+> processor and high performance Mali T720 GPU.
+>
+> Signed-off-by: Jiancheng Xue <xuejiancheng@hisilicon.com>
+> Reviewed-by: Alex Elder <elder@linaro.org>
+> Acked-by: Peter Griffin <peter.griffin@linaro.org>
+> ---
+> Changed Log:
+> v3:
+> - Refined the patch according to Andreas's suggestions.
+>   1. Changed the license.
+>   2. Added alias for uart2.
+>   3. Reordered the device nodes.
+> v2:
+> - Fixed issues pointed by Rob Herring.
+>   1. Moved the led node out of the soc node.
+>   2. Restrained the ranges property of soc node smaller.
+> - Refined the patch according to Andreas's suggestions.
+> - Enabled gmac1 device node instead of gmac0.
+> - Added a compatible string "syscon" for crg nodes.
+>
+>  arch/arm64/boot/dts/hisilicon/Makefile             |   1 +
+>  .../boot/dts/hisilicon/hi3798cv200-poplar.dts      | 163 +++++++++
+>  arch/arm64/boot/dts/hisilicon/hi3798cv200.dtsi     | 405 +++++++++++++++++++++
+>  3 files changed, 569 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/hisilicon/hi3798cv200-poplar.dts
+>  create mode 100644 arch/arm64/boot/dts/hisilicon/hi3798cv200.dtsi
+>
+> diff --git a/arch/arm64/boot/dts/hisilicon/Makefile b/arch/arm64/boot/dts/hisilicon/Makefile
+> index c3a6c19..8960eca 100644
+> --- a/arch/arm64/boot/dts/hisilicon/Makefile
+> +++ b/arch/arm64/boot/dts/hisilicon/Makefile
+> @@ -1,4 +1,5 @@
+>  dtb-$(CONFIG_ARCH_HISI) += hi3660-hikey960.dtb
+> +dtb-$(CONFIG_ARCH_HISI) += hi3798cv200-poplar.dtb
+>  dtb-$(CONFIG_ARCH_HISI) += hi6220-hikey.dtb
+>  dtb-$(CONFIG_ARCH_HISI) += hip05-d02.dtb
+>  dtb-$(CONFIG_ARCH_HISI) += hip06-d03.dtb
+> diff --git a/arch/arm64/boot/dts/hisilicon/hi3798cv200-poplar.dts b/arch/arm64/boot/dts/hisilicon/hi3798cv200-poplar.dts
+> new file mode 100644
+> index 0000000..fe2f9f1
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/hisilicon/hi3798cv200-poplar.dts
+> @@ -0,0 +1,163 @@
+> +/*
+> + * DTS File for HiSilicon Poplar Development Board
+> + *
+> + * Copyright (c) 2016-2017 HiSilicon Technologies Co., Ltd.
+> + *
+> + * Released under the GPLv2 only.
+> + * SPDX-License-Identifier: GPL-2.0
+> + */
+> +
+> +/dts-v1/;
+> +
+> +#include <dt-bindings/gpio/gpio.h>
+> +#include "hi3798cv200.dtsi"
+> +
+> +/ {
+> +       model = "HiSilicon Poplar Development Board";
+> +       compatible = "hisilicon,hi3798cv200-poplar", "hisilicon,hi3798cv200";
+> +
+> +       aliases {
+> +               serial0 = &uart0;
+> +               serial2 = &uart2;
+> +       };
+> +
+> +       chosen {
+> +               stdout-path = "serial0:115200n8";
+> +       };
+> +
+> +       memory@0 {
+> +               device_type = "memory";
+> +               reg = <0x0 0x0 0x0 0x80000000>;
+> +       };
+> +
+> +       leds {
+> +               compatible = "gpio-leds";
+> +
+> +               user-led0 {
+> +                       label = "USER-LED0";
+> +                       gpios = <&gpio6 3 GPIO_ACTIVE_LOW>;
+> +                       linux,default-trigger = "heartbeat";
+> +                       default-state = "off";
+> +               };
+> +
+> +               user-led1 {
+> +                       label = "USER-LED1";
+> +                       gpios = <&gpio5 1 GPIO_ACTIVE_LOW>;
+> +                       linux,default-trigger = "mmc0";
+> +                       default-state = "off";
+> +               };
+> +
+> +               user-led2 {
+> +                       label = "USER-LED2";
+> +                       gpios = <&gpio5 2 GPIO_ACTIVE_LOW>;
+> +                       linux,default-trigger = "none";
+> +                       default-state = "off";
+> +               };
+> +
+> +               user-led3 {
+> +                       label = "USER-LED3";
+> +                       gpios = <&gpio10 6 GPIO_ACTIVE_LOW>;
+> +                       linux,default-trigger = "cpu0";
+> +                       default-state = "off";
+> +               };
+> +       };
+> +};
+> +
+> +&gmac1 {
+> +       status = "okay";
+> +       #address-cells = <1>;
+> +       #size-cells = <0>;
+> +       phy-handle = <&eth_phy1>;
+> +       phy-mode = "rgmii";
+> +       hisilicon,phy-reset-delays-us = <10000 10000 30000>;
+> +
+> +       eth_phy1: phy@3 {
+> +               reg = <3>;
+> +       };
+> +};
+> +
+> +&gpio1 {
+> +       status = "okay";
+> +       gpio-line-names = "LS-GPIO-E",  "",
+> +                         "",           "",
+> +                         "",           "LS-GPIO-F",
+> +                         "",           "LS-GPIO-J";
+> +};
+> +
+> +&gpio2 {
+> +       status = "okay";
+> +       gpio-line-names = "LS-GPIO-H",  "LS-GPIO-I",
+> +                         "LS-GPIO-L",  "LS-GPIO-G",
+> +                         "LS-GPIO-K",  "",
+> +                         "",           "";
+> +};
+> +
+> +&gpio3 {
+> +       status = "okay";
+> +       gpio-line-names = "",           "",
+> +                         "",           "",
+> +                         "LS-GPIO-C",  "",
+> +                         "",           "LS-GPIO-B";
+> +};
+> +
+> +&gpio4 {
+> +       status = "okay";
+> +       gpio-line-names = "",           "",
+> +                         "",           "",
+> +                         "",           "LS-GPIO-D",
+> +                         "",           "";
+> +};
+> +
+> +&gpio5 {
+> +       status = "okay";
+> +       gpio-line-names = "",           "USER-LED-1",
+> +                         "USER-LED-2", "",
+> +                         "",           "LS-GPIO-A",
+> +                         "",           "";
+> +};
+> +
+> +&gpio6 {
+> +       status = "okay";
+> +       gpio-line-names = "",           "",
+> +                         "",           "USER-LED-0",
+> +                         "",           "",
+> +                         "",           "";
+> +};
+> +
+> +&gpio10 {
+> +       status = "okay";
+> +       gpio-line-names = "",           "",
+> +                         "",           "",
+> +                         "",           "",
+> +                         "USER-LED-3", "";
+> +};
+> +
+> +&i2c0 {
+> +       status = "okay";
+> +       label = "LS-I2C0";
+> +};
+> +
+> +&i2c2 {
+> +       status = "okay";
+> +       label = "LS-I2C1";
+> +};
+> +
+> +&ir {
+> +       status = "okay";
+> +};
+> +
+> +&spi0 {
+> +       status = "okay";
+> +       label = "LS-SPI0";
+> +};
+> +
+> +&uart0 {
+> +       status = "okay";
+> +};
+> +
+> +&uart2 {
+> +       status = "okay";
+> +       label = "LS-UART0";
+> +};
+> +/* No optional LS-UART1 on Low Speed Expansion Connector. */
+> +
+> diff --git a/arch/arm64/boot/dts/hisilicon/hi3798cv200.dtsi b/arch/arm64/boot/dts/hisilicon/hi3798cv200.dtsi
+> new file mode 100644
+> index 0000000..e94d6f6
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/hisilicon/hi3798cv200.dtsi
+> @@ -0,0 +1,405 @@
+> +/*
+> + * DTS File for HiSilicon Hi3798cv200 SoC.
+> + *
+> + * Copyright (c) 2016-2017 HiSilicon Technologies Co., Ltd.
+> + *
+> + * Released under the GPLv2 only.
+> + * SPDX-License-Identifier: GPL-2.0
+> + */
+> +
+> +#include <dt-bindings/clock/histb-clock.h>
+> +#include <dt-bindings/interrupt-controller/arm-gic.h>
+> +#include <dt-bindings/reset/ti-syscon.h>
+> +
+> +/ {
+> +       compatible = "hisilicon,hi3798cv200";
+> +       interrupt-parent = <&gic>;
+> +       #address-cells = <2>;
+> +       #size-cells = <2>;
+> +
+> +       psci {
+> +               compatible = "arm,psci-0.2";
+> +               method = "smc";
+> +       };
+> +
+> +       cpus {
+> +               #address-cells = <2>;
+> +               #size-cells = <0>;
+> +
+> +               cpu@0 {
+> +                       compatible = "arm,cortex-a53";
+> +                       device_type = "cpu";
+> +                       reg = <0x0 0x0>;
+> +                       enable-method = "psci";
+> +               };
+> +
+> +               cpu@1 {
+> +                       compatible = "arm,cortex-a53";
+> +                       device_type = "cpu";
+> +                       reg = <0x0 0x1>;
+> +                       enable-method = "psci";
+> +               };
+> +
+> +               cpu@2 {
+> +                       compatible = "arm,cortex-a53";
+> +                       device_type = "cpu";
+> +                       reg = <0x0 0x2>;
+> +                       enable-method = "psci";
+> +               };
+> +
+> +               cpu@3 {
+> +                       compatible = "arm,cortex-a53";
+> +                       device_type = "cpu";
+> +                       reg = <0x0 0x3>;
+> +                       enable-method = "psci";
+> +               };
+> +       };
+> +
+> +       gic: interrupt-controller@f1001000 {
+> +               compatible = "arm,gic-400";
+> +               reg = <0x0 0xf1001000 0x0 0x1000>,  /* GICD */
+> +                     <0x0 0xf1002000 0x0 0x100>;   /* GICC */
+> +               #address-cells = <0>;
+> +               #interrupt-cells = <3>;
+> +               interrupt-controller;
+> +       };
+> +
+> +       timer {
+> +               compatible = "arm,armv8-timer";
+> +               interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
+> +                            <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
+> +                            <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
+> +                            <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>;
+> +       };
+> +
+> +       soc: soc@f0000000 {
+> +               compatible = "simple-bus";
+> +               #address-cells = <1>;
+> +               #size-cells = <1>;
+> +               ranges = <0x0 0x0 0xf0000000 0x10000000>;
+> +
+> +               crg: clock-reset-controller@8a22000 {
+> +                       compatible = "hisilicon,hi3798cv200-crg", "syscon", "simple-mfd";
+> +                       reg = <0x8a22000 0x1000>;
+> +                       #clock-cells = <1>;
+> +                       #reset-cells = <2>;
+> +
+> +                       gmacphyrst: reset-controller {
+> +                               compatible = "ti,syscon-reset";
+> +                               #reset-cells = <1>;
+> +                               ti,reset-bits =
+> +                                       <0xcc 12 0xcc 12 0 0 (ASSERT_CLEAR|DEASSERT_SET|STATUS_NONE)>,  /* 0: gmac0-phy-rst */
+> +                                       <0xcc 13 0xcc 13 0 0 (ASSERT_CLEAR|DEASSERT_SET|STATUS_NONE)>;  /* 1: gmac1-phy-rst */
+> +                       };
+> +               };
+> +
+> +               sysctrl: system-controller@8000000 {
+> +                       compatible = "hisilicon,hi3798cv200-sysctrl", "syscon";
+> +                       reg = <0x8000000 0x1000>;
+> +                       #clock-cells = <1>;
+> +                       #reset-cells = <2>;
+> +               };
+> +
+> +               uart0: serial@8b00000 {
+> +                       compatible = "arm,pl011", "arm,primecell";
+> +                       reg = <0x8b00000 0x1000>;
+> +                       interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
+> +                       clocks = <&sysctrl HISTB_UART0_CLK>;
+> +                       clock-names = "apb_pclk";
+> +                       status = "disabled";
+> +               };
+> +
+> +               uart2: serial@8b02000 {
+> +                       compatible = "arm,pl011", "arm,primecell";
+> +                       reg = <0x8b02000 0x1000>;
+> +                       interrupts = <GIC_SPI 51 IRQ_TYPE_LEVEL_HIGH>;
+> +                       clocks = <&crg HISTB_UART2_CLK>;
+> +                       clock-names = "apb_pclk";
+> +                       status = "disabled";
+> +               };
+> +
+> +               i2c0: i2c@8b10000 {
+> +                       compatible = "hisilicon,hix5hd2-i2c";
+> +                       reg = <0x8b10000 0x1000>;
+> +                       #address-cells = <1>;
+> +                       #size-cells = <0>;
+> +                       interrupts = <GIC_SPI 38 IRQ_TYPE_LEVEL_HIGH>;
+> +                       clock-frequency = <400000>;
+> +                       clocks = <&crg HISTB_I2C0_CLK>;
+> +                       status = "disabled";
+> +               };
+> +
+> +               i2c1: i2c@8b11000 {
+> +                       compatible = "hisilicon,hix5hd2-i2c";
+> +                       reg = <0x8b11000 0x1000>;
+> +                       #address-cells = <1>;
+> +                       #size-cells = <0>;
+> +                       interrupts = <GIC_SPI 39 IRQ_TYPE_LEVEL_HIGH>;
+> +                       clock-frequency = <400000>;
+> +                       clocks = <&crg HISTB_I2C1_CLK>;
+> +                       status = "disabled";
+> +               };
+> +
+> +               i2c2: i2c@8b12000 {
+> +                       compatible = "hisilicon,hix5hd2-i2c";
+> +                       reg = <0x8b12000 0x1000>;
+> +                       #address-cells = <1>;
+> +                       #size-cells = <0>;
+> +                       interrupts = <GIC_SPI 40 IRQ_TYPE_LEVEL_HIGH>;
+> +                       clock-frequency = <400000>;
+> +                       clocks = <&crg HISTB_I2C2_CLK>;
+> +                       status = "disabled";
+> +               };
+> +
+> +               i2c3: i2c@8b13000 {
+> +                       compatible = "hisilicon,hix5hd2-i2c";
+> +                       reg = <0x8b13000 0x1000>;
+> +                       #address-cells = <1>;
+> +                       #size-cells = <0>;
+> +                       interrupts = <GIC_SPI 41 IRQ_TYPE_LEVEL_HIGH>;
+> +                       clock-frequency = <400000>;
+> +                       clocks = <&crg HISTB_I2C3_CLK>;
+> +                       status = "disabled";
+> +               };
+> +
+> +               i2c4: i2c@8b14000 {
+> +                       compatible = "hisilicon,hix5hd2-i2c";
+> +                       reg = <0x8b14000 0x1000>;
+> +                       #address-cells = <1>;
+> +                       #size-cells = <0>;
+> +                       interrupts = <GIC_SPI 42 IRQ_TYPE_LEVEL_HIGH>;
+> +                       clock-frequency = <400000>;
+> +                       clocks = <&crg HISTB_I2C4_CLK>;
+> +                       status = "disabled";
+> +               };
+> +
+> +               spi0: spi@8b1a000 {
+> +                       compatible = "arm,pl022", "arm,primecell";
+> +                       reg = <0x8b1a000 0x1000>;
+> +                       interrupts = <GIC_SPI 45 IRQ_TYPE_LEVEL_HIGH>;
+> +                       num-cs = <1>;
+> +                       cs-gpios = <&gpio7 1 0>;
+> +                       clocks = <&crg HISTB_SPI0_CLK>;
+> +                       clock-names = "apb_pclk";
+> +                       #address-cells = <1>;
+> +                       #size-cells = <0>;
+> +                       status = "disabled";
+> +               };
+> +
+> +               emmc: mmc@9830000 {
+> +                       compatible = "snps,dw-mshc";
+> +                       reg = <0x9830000 0x10000>;
+> +                       interrupts = <GIC_SPI 35 IRQ_TYPE_LEVEL_HIGH>;
+> +                       clocks = <&crg HISTB_MMC_CIU_CLK>,
+> +                                <&crg HISTB_MMC_BIU_CLK>;
+> +                       clock-names = "ciu", "biu";
+> +               };
+> +
+> +               gpio0: gpio@8b20000 {
+> +                       compatible = "arm,pl061", "arm,primecell";
+> +                       reg = <0x8b20000 0x1000>;
+> +                       interrupts = <GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>;
+> +                       gpio-controller;
+> +                       #gpio-cells = <2>;
+> +                       interrupt-controller;
+> +                       #interrupt-cells = <2>;
+> +                       clocks = <&crg HISTB_APB_CLK>;
+> +                       clock-names = "apb_pclk";
+> +                       status = "disabled";
+> +               };
+> +
+> +               gpio1: gpio@8b21000 {
+> +                       compatible = "arm,pl061", "arm,primecell";
+> +                       reg = <0x8b21000 0x1000>;
+> +                       interrupts = <GIC_SPI 109 IRQ_TYPE_LEVEL_HIGH>;
+> +                       gpio-controller;
+> +                       #gpio-cells = <2>;
+> +                       interrupt-controller;
+> +                       #interrupt-cells = <2>;
+> +                       clocks = <&crg HISTB_APB_CLK>;
+> +                       clock-names = "apb_pclk";
+> +                       status = "disabled";
+> +               };
+> +
+> +               gpio2: gpio@8b22000 {
+> +                       compatible = "arm,pl061", "arm,primecell";
+> +                       reg = <0x8b22000 0x1000>;
+> +                       interrupts = <GIC_SPI 110 IRQ_TYPE_LEVEL_HIGH>;
+> +                       gpio-controller;
+> +                       #gpio-cells = <2>;
+> +                       interrupt-controller;
+> +                       #interrupt-cells = <2>;
+> +                       clocks = <&crg HISTB_APB_CLK>;
+> +                       clock-names = "apb_pclk";
+> +                       status = "disabled";
+> +               };
+> +
+> +               gpio3: gpio@8b23000 {
+> +                       compatible = "arm,pl061", "arm,primecell";
+> +                       reg = <0x8b23000 0x1000>;
+> +                       interrupts = <GIC_SPI 111 IRQ_TYPE_LEVEL_HIGH>;
+> +                       gpio-controller;
+> +                       #gpio-cells = <2>;
+> +                       interrupt-controller;
+> +                       #interrupt-cells = <2>;
+> +                       clocks = <&crg HISTB_APB_CLK>;
+> +                       clock-names = "apb_pclk";
+> +                       status = "disabled";
+> +               };
+> +
+> +               gpio4: gpio@8b24000 {
+> +                       compatible = "arm,pl061", "arm,primecell";
+> +                       reg = <0x8b24000 0x1000>;
+> +                       interrupts = <GIC_SPI 112 IRQ_TYPE_LEVEL_HIGH>;
+> +                       gpio-controller;
+> +                       #gpio-cells = <2>;
+> +                       interrupt-controller;
+> +                       #interrupt-cells = <2>;
+> +                       clocks = <&crg HISTB_APB_CLK>;
+> +                       clock-names = "apb_pclk";
+> +                       status = "disabled";
+> +               };
+> +
+> +               gpio5: gpio@8004000 {
+> +                       compatible = "arm,pl061", "arm,primecell";
+> +                       reg = <0x8004000 0x1000>;
+> +                       interrupts = <GIC_SPI 113 IRQ_TYPE_LEVEL_HIGH>;
+> +                       gpio-controller;
+> +                       #gpio-cells = <2>;
+> +                       interrupt-controller;
+> +                       #interrupt-cells = <2>;
+> +                       clocks = <&crg HISTB_APB_CLK>;
+> +                       clock-names = "apb_pclk";
+> +                       status = "disabled";
+> +               };
+> +
+> +               gpio6: gpio@8b26000 {
+> +                       compatible = "arm,pl061", "arm,primecell";
+> +                       reg = <0x8b26000 0x1000>;
+> +                       interrupts = <GIC_SPI 114 IRQ_TYPE_LEVEL_HIGH>;
+> +                       gpio-controller;
+> +                       #gpio-cells = <2>;
+> +                       interrupt-controller;
+> +                       #interrupt-cells = <2>;
+> +                       clocks = <&crg HISTB_APB_CLK>;
+> +                       clock-names = "apb_pclk";
+> +                       status = "disabled";
+> +               };
+> +
+> +               gpio7: gpio@8b27000 {
+> +                       compatible = "arm,pl061", "arm,primecell";
+> +                       reg = <0x8b27000 0x1000>;
+> +                       interrupts = <GIC_SPI 115 IRQ_TYPE_LEVEL_HIGH>;
+> +                       gpio-controller;
+> +                       #gpio-cells = <2>;
+> +                       interrupt-controller;
+> +                       #interrupt-cells = <2>;
+> +                       clocks = <&crg HISTB_APB_CLK>;
+> +                       clock-names = "apb_pclk";
+> +                       status = "disabled";
+> +               };
+> +
+> +               gpio8: gpio@8b28000 {
+> +                       compatible = "arm,pl061", "arm,primecell";
+> +                       reg = <0x8b28000 0x1000>;
+> +                       interrupts = <GIC_SPI 116 IRQ_TYPE_LEVEL_HIGH>;
+> +                       gpio-controller;
+> +                       #gpio-cells = <2>;
+> +                       interrupt-controller;
+> +                       #interrupt-cells = <2>;
+> +                       clocks = <&crg HISTB_APB_CLK>;
+> +                       clock-names = "apb_pclk";
+> +                       status = "disabled";
+> +               };
+> +
+> +               gpio9: gpio@8b29000 {
+> +                       compatible = "arm,pl061", "arm,primecell";
+> +                       reg = <0x8b29000 0x1000>;
+> +                       interrupts = <GIC_SPI 117 IRQ_TYPE_LEVEL_HIGH>;
+> +                       gpio-controller;
+> +                       #gpio-cells = <2>;
+> +                       interrupt-controller;
+> +                       #interrupt-cells = <2>;
+> +                       clocks = <&crg HISTB_APB_CLK>;
+> +                       clock-names = "apb_pclk";
+> +                       status = "disabled";
+> +               };
+> +
+> +               gpio10: gpio@8b2a000 {
+> +                       compatible = "arm,pl061", "arm,primecell";
+> +                       reg = <0x8b2a000 0x1000>;
+> +                       interrupts = <GIC_SPI 118 IRQ_TYPE_LEVEL_HIGH>;
+> +                       gpio-controller;
+> +                       #gpio-cells = <2>;
+> +                       interrupt-controller;
+> +                       #interrupt-cells = <2>;
+> +                       clocks = <&crg HISTB_APB_CLK>;
+> +                       clock-names = "apb_pclk";
+> +                       status = "disabled";
+> +               };
+> +
+> +               gpio11: gpio@8b2b000 {
+> +                       compatible = "arm,pl061", "arm,primecell";
+> +                       reg = <0x8b2b000 0x1000>;
+> +                       interrupts = <GIC_SPI 119 IRQ_TYPE_LEVEL_HIGH>;
+> +                       gpio-controller;
+> +                       #gpio-cells = <2>;
+> +                       interrupt-controller;
+> +                       #interrupt-cells = <2>;
+> +                       clocks = <&crg HISTB_APB_CLK>;
+> +                       clock-names = "apb_pclk";
+> +                       status = "disabled";
+> +               };
+> +
+> +               gpio12: gpio@8b2c000 {
+> +                       compatible = "arm,pl061", "arm,primecell";
+> +                       reg = <0x8b2c000 0x1000>;
+> +                       interrupts = <GIC_SPI 120 IRQ_TYPE_LEVEL_HIGH>;
+> +                       gpio-controller;
+> +                       #gpio-cells = <2>;
+> +                       interrupt-controller;
+> +                       #interrupt-cells = <2>;
+> +                       clocks = <&crg HISTB_APB_CLK>;
+> +                       clock-names = "apb_pclk";
+> +                       status = "disabled";
+> +               };
+> +
+> +               gmac0: ethernet@9840000 {
+> +                       compatible = "hisilicon,hi3798cv200-gmac", "hisilicon,hisi-gmac-v2";
+> +                       reg = <0x9840000 0x1000>,
+> +                             <0x984300c 0x4>;
+> +                       interrupts = <GIC_SPI 71 IRQ_TYPE_LEVEL_HIGH>;
+> +                       clocks = <&crg HISTB_ETH0_MAC_CLK>,
+> +                                <&crg HISTB_ETH0_MACIF_CLK>;
+> +                       clock-names = "mac_core", "mac_ifc";
+> +                       resets = <&crg 0xcc 8>,
+> +                                <&crg 0xcc 10>,
+> +                                <&gmacphyrst 0>;
+> +                       reset-names = "mac_core", "mac_ifc", "phy";
+> +                       status = "disabled";
+> +               };
+> +
+> +               gmac1: ethernet@9841000 {
+> +                       compatible = "hisilicon,hi3798cv200-gmac", "hisilicon,hisi-gmac-v2";
+> +                       reg = <0x9841000 0x1000>,
+> +                             <0x9843010 0x4>;
+> +                       interrupts = <GIC_SPI 72 IRQ_TYPE_LEVEL_HIGH>;
+> +                       clocks = <&crg HISTB_ETH1_MAC_CLK>,
+> +                                <&crg HISTB_ETH1_MACIF_CLK>;
+> +                       clock-names = "mac_core", "mac_ifc";
+> +                       resets = <&crg 0xcc 9>,
+> +                                <&crg 0xcc 11>,
+> +                                <&gmacphyrst 1>;
+> +                       reset-names = "mac_core", "mac_ifc", "phy";
+> +                       status = "disabled";
+> +               };
+> +
+> +               ir: ir@8001000 {
+> +                       compatible = "hisilicon,hix5hd2-ir";
+> +                       reg = <0x8001000 0x1000>;
+> +                       interrupts = <GIC_SPI 47 IRQ_TYPE_LEVEL_HIGH>;
+> +                       clocks = <&sysctrl HISTB_IR_CLK>;
+> +                       status = "disabled";
+> +               };
+> +       };
+> +};
+> --
+> 1.9.1
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
