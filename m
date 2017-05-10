@@ -1,245 +1,756 @@
-From: Mylene Josserand <mylene.josserand@free-electrons.com>
-Subject: Re: [PATCH 1/2] ASoC: sun8i-codec: Add ADC support for
-	a33
-Date: Wed, 10 May 2017 08:58:09 +0200
-Message-ID: <37f78772-7296-d831-73e1-095a66df8002@free-electrons.com>
-References: <20170503135617.25193-1-mylene.josserand@free-electrons.com>
- <20170503135617.25193-2-mylene.josserand@free-electrons.com>
- <CAGb2v67ZtS9n4xLAiqyyN4T27VX6tTY1R_ZTCRcHNk7u13hatQ@mail.gmail.com>
+From: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
+Subject: Re: [PATCH v6 19/23] drivers/fsi: Add GPIO based FSI master
+Date: Wed, 10 May 2017 17:00:32 +0930
+Message-ID: <CACPK8Xf1Y31+HBHb0ErpnZ4xVM+bzfHV-khj-kz8Unk1cTx6gw@mail.gmail.com>
+References: <20170410194706.64280-1-cbostic@linux.vnet.ibm.com> <20170410194706.64280-20-cbostic@linux.vnet.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <CAGb2v67ZtS9n4xLAiqyyN4T27VX6tTY1R_ZTCRcHNk7u13hatQ@mail.gmail.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Chen-Yu Tsai <wens@csie.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Linux-ALSA <alsa-devel@alsa-project.org>, linux-kernel <linux-kernel@vger.kernel.org>, Mark Brown <broonie@kernel.org>, Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170410194706.64280-20-cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Christopher Bostic <cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, rostedt-nx8X9YLhiw1AfugRpC6u6w@public.gmane.org, mingo-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>, Alistair Popple <alistair-Y4h6yKqj69EXC2x5gXVKYQ@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, "Edward A . James" <eajames-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>, Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgQ2hlbi1ZdSwKClRoYW5rIHlvdSBmb3IgdGhlIHJldmlldyEKCk9uIDAzLzA1LzIwMTcgMTk6
-MTMsIENoZW4tWXUgVHNhaSB3cm90ZToKPiBIaSwKPgo+IE9uIFdlZCwgTWF5IDMsIDIwMTcgYXQg
-OTo1NiBQTSwgTXlsw6huZSBKb3NzZXJhbmQKPiA8bXlsZW5lLmpvc3NlcmFuZEBmcmVlLWVsZWN0
-cm9ucy5jb20+IHdyb3RlOgo+PiBBZGQgQURDIHN1cHBvcnQgZm9yIHRoZSBzdW44aS1jb2RlYyBk
-cml2ZXIuCj4+Cj4+IFRoaXMgZHJpdmVyIHVzZXMgYWxsIHRoZSBtaWNyb3Bob25lcyB3aWRnZXRz
-IGFuZCByb3V0ZXMgcHJvdmlkZWQgYnkgdGhlCj4+IGFuYWxvZyBwYXJ0IChzdW44aS1jb2RlYy1h
-bmFsb2cpLgo+PiBTb21lIGRpZ2l0YWwgY29uZmlndXJhdGlvbnMgYXJlIG5lZWRlZCBieSBjcmVh
-dGluZyBuZXcgQURDIHdpZGdldHMKPj4gYW5kIHJvdXRlcy4KPj4KPj4gU2lnbmVkLW9mZi1ieTog
-TXlsw6huZSBKb3NzZXJhbmQgPG15bGVuZS5qb3NzZXJhbmRAZnJlZS1lbGVjdHJvbnMuY29tPgo+
-PiAtLS0KPj4gIHNvdW5kL3NvYy9zdW54aS9zdW44aS1jb2RlYy5jIHwgODAgKysrKysrKysrKysr
-KysrKysrKysrKysrKysrKysrKysrKysrKysrKystLQo+PiAgMSBmaWxlIGNoYW5nZWQsIDc4IGlu
-c2VydGlvbnMoKyksIDIgZGVsZXRpb25zKC0pCj4+Cj4+IGRpZmYgLS1naXQgYS9zb3VuZC9zb2Mv
-c3VueGkvc3VuOGktY29kZWMuYyBiL3NvdW5kL3NvYy9zdW54aS9zdW44aS1jb2RlYy5jCj4+IGlu
-ZGV4IDU3MjNjMzQwNGY2Yi4uYjQ5MzhiMDZhY2VjIDEwMDY0NAo+PiAtLS0gYS9zb3VuZC9zb2Mv
-c3VueGkvc3VuOGktY29kZWMuYwo+PiArKysgYi9zb3VuZC9zb2Mvc3VueGkvc3VuOGktY29kZWMu
-Ywo+PiBAQCAtMzcsOSArMzcsMTEgQEAKPj4gICNkZWZpbmUgU1VOOElfU1lTQ0xLX0NUTF9TWVND
-TEtfU1JDICAgICAgICAgICAgICAgICAgICAwCj4+ICAjZGVmaW5lIFNVTjhJX01PRF9DTEtfRU5B
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgMHgwMTAKPj4gICNkZWZpbmUgU1VOOElfTU9E
-X0NMS19FTkFfQUlGMSAgICAgICAgICAgICAgICAgICAgICAgICAxNQo+PiArI2RlZmluZSBTVU44
-SV9NT0RfQ0xLX0VOQV9BREMgICAgICAgICAgICAgICAgICAgICAgICAgIDMKPj4gICNkZWZpbmUg
-U1VOOElfTU9EX0NMS19FTkFfREFDICAgICAgICAgICAgICAgICAgICAgICAgICAyCj4+ICAjZGVm
-aW5lIFNVTjhJX01PRF9SU1RfQ1RMICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgMHgwMTQK
-Pj4gICNkZWZpbmUgU1VOOElfTU9EX1JTVF9DVExfQUlGMSAgICAgICAgICAgICAgICAgICAgICAg
-ICAxNQo+PiArI2RlZmluZSBTVU44SV9NT0RfUlNUX0NUTF9BREMgICAgICAgICAgICAgICAgICAg
-ICAgICAgIDMKPj4gICNkZWZpbmUgU1VOOElfTU9EX1JTVF9DVExfREFDICAgICAgICAgICAgICAg
-ICAgICAgICAgICAyCj4+ICAjZGVmaW5lIFNVTjhJX1NZU19TUl9DVFJMICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgMHgwMTgKPj4gICNkZWZpbmUgU1VOOElfU1lTX1NSX0NUUkxfQUlGMV9G
-UyAgICAgICAgICAgICAgICAgICAgICAxMgo+PiBAQCAtNTQsOSArNTYsMjUgQEAKPj4gICNkZWZp
-bmUgU1VOOElfQUlGMUNMS19DVFJMX0FJRjFfV09SRF9TSVogICAgICAgICAgICAgICA0Cj4+ICAj
-ZGVmaW5lIFNVTjhJX0FJRjFDTEtfQ1RSTF9BSUYxX1dPUkRfU0laXzE2ICAgICAgICAgICAgKDEg
-PDwgNCkKPj4gICNkZWZpbmUgU1VOOElfQUlGMUNMS19DVFJMX0FJRjFfREFUQV9GTVQgICAgICAg
-ICAgICAgICAyCj4+ICsjZGVmaW5lIFNVTjhJX0FJRjFfQURDREFUX0NUUkwgICAgICAgICAgICAg
-ICAgICAgICAgICAgMHgwNDQKPj4gKyNkZWZpbmUgU1VOOElfQUlGMV9BRENEQVRfQ1RSTF9BSUYx
-X0RBMExfRU5BICAgICAgICAgICAxNQo+PiArI2RlZmluZSBTVU44SV9BSUYxX0FEQ0RBVF9DVFJM
-X0FJRjFfREEwUl9FTkEgICAgICAgICAgIDE0Cj4+ICAjZGVmaW5lIFNVTjhJX0FJRjFfREFDREFU
-X0NUUkwgICAgICAgICAgICAgICAgICAgICAgICAgMHgwNDgKPj4gICNkZWZpbmUgU1VOOElfQUlG
-MV9EQUNEQVRfQ1RSTF9BSUYxX0RBMExfRU5BICAgICAgICAgICAxNQo+PiAgI2RlZmluZSBTVU44
-SV9BSUYxX0RBQ0RBVF9DVFJMX0FJRjFfREEwUl9FTkEgICAgICAgICAgIDE0Cj4+ICsjZGVmaW5l
-IFNVTjhJX0FJRjFfTVhSX1NSQyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgMHgwNGMKPj4g
-KyNkZWZpbmUgU1VOOElfQUlGMV9NWFJfU1JDX0FEMExfTVhMX1NSQ19BSUYxREEwTCAgICAgICAx
-NQo+PiArI2RlZmluZSBTVU44SV9BSUYxX01YUl9TUkNfQUQwTF9NWExfU1JDX0FJRjJEQUNMICAg
-ICAgIDE0Cj4+ICsjZGVmaW5lIFNVTjhJX0FJRjFfTVhSX1NSQ19BRDBMX01YTF9TUkNfQURDTCAg
-ICAgICAgICAgMTMKPj4gKyNkZWZpbmUgU1VOOElfQUlGMV9NWFJfU1JDX0FEMExfTVhMX1NSQ19B
-SUYyREFDUiAgICAgICAxMgo+PiArI2RlZmluZSBTVU44SV9BSUYxX01YUl9TUkNfQUQwUl9NWFJf
-U1JDX0FJRjFEQTBSICAgICAgIDExCj4+ICsjZGVmaW5lIFNVTjhJX0FJRjFfTVhSX1NSQ19BRDBS
-X01YUl9TUkNfQUlGMkRBQ1IgICAgICAgMTAKPj4gKyNkZWZpbmUgU1VOOElfQUlGMV9NWFJfU1JD
-X0FEMFJfTVhSX1NSQ19BRENSICAgICAgICAgICA5Cj4+ICsjZGVmaW5lIFNVTjhJX0FJRjFfTVhS
-X1NSQ19BRDBSX01YUl9TUkNfQUlGMkRBQ0wgICAgICAgOAo+PiArI2RlZmluZSBTVU44SV9BRENf
-RElHX0NUUkwgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDB4MTAwCj4+ICsjZGVmaW5lIFNV
-TjhJX0FEQ19ESUdfQ1RSTF9FTkRBICAgICAgICAgICAgICAgICAgICAgICAgMTUKPgo+IFRoZSBy
-ZWdpc3RlciBiaXQgbmFtZSBpbiB0aGUgbWFudWFsIGlzIEVOQUQsIGFzIGluIEVOYWJsZSBBRGMu
-CgpPa2F5LCBJIGRpZCBub3Qga25vdyB0aGF0LCB0aGFua3MuCgo+Cj4+ICsjZGVmaW5lIFNVTjhJ
-X0FEQ19ESUdfQ1RSTF9BRE9VVF9EVFMgICAgICAgICAgICAgICAgICAgMgo+PiArI2RlZmluZSBT
-VU44SV9BRENfRElHX0NUUkxfQURPVVRfRExZICAgICAgICAgICAgICAgICAgIDEKPj4gICNkZWZp
-bmUgU1VOOElfREFDX0RJR19DVFJMICAgICAgICAgICAgICAgICAgICAgICAgICAgICAweDEyMAo+
-PiAgI2RlZmluZSBTVU44SV9EQUNfRElHX0NUUkxfRU5EQSAgICAgICAgICAgICAgICAgICAgICAg
-IDE1Cj4+ICAjZGVmaW5lIFNVTjhJX0RBQ19NWFJfU1JDICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgMHgxMzAKPj4gQEAgLTI3NiwxMCArMjk0LDI4IEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3Qg
-c25kX2tjb250cm9sX25ldyBzdW44aV9kYWNfbWl4ZXJfY29udHJvbHNbXSA9IHsKPj4gICAgICAg
-ICAgICAgICAgICAgICAgICAgU1VOOElfREFDX01YUl9TUkNfREFDUl9NWFJfU1JDX0FEQ1IsIDEs
-IDApLAo+PiAgfTsKPj4KPj4gK3N0YXRpYyBjb25zdCBzdHJ1Y3Qgc25kX2tjb250cm9sX25ldyBz
-dW44aV9pbnB1dF9taXhlcl9jb250cm9sc1tdID0gewo+PiArICAgICAgIFNPQ19EQVBNX0RPVUJM
-RSgiQUlGMSBTbG90IDAgRGlnaXRhbCBBREMgQ2FwdHVyZSBTd2l0Y2giLAo+PiArICAgICAgICAg
-ICAgICAgICAgICAgICBTVU44SV9BSUYxX01YUl9TUkMsCj4+ICsgICAgICAgICAgICAgICAgICAg
-ICAgIFNVTjhJX0FJRjFfTVhSX1NSQ19BRDBMX01YTF9TUkNfQUlGMURBMEwsCj4+ICsgICAgICAg
-ICAgICAgICAgICAgICAgIFNVTjhJX0FJRjFfTVhSX1NSQ19BRDBSX01YUl9TUkNfQUlGMURBMFIs
-IDEsIDApLAo+PiArICAgICAgIFNPQ19EQVBNX0RPVUJMRSgiQUlGMiBEaWdpdGFsIEFEQyBDYXB0
-dXJlIFN3aXRjaCIsIFNVTjhJX0FJRjFfTVhSX1NSQywKPj4gKyAgICAgICAgICAgICAgICAgICAg
-ICAgU1VOOElfQUlGMV9NWFJfU1JDX0FEMExfTVhMX1NSQ19BSUYyREFDTCwKPj4gKyAgICAgICAg
-ICAgICAgICAgICAgICAgU1VOOElfQUlGMV9NWFJfU1JDX0FEMFJfTVhSX1NSQ19BSUYyREFDUiwg
-MSwgMCksCj4+ICsgICAgICAgU09DX0RBUE1fRE9VQkxFKCJBSUYxIERhdGEgRGlnaXRhbCBBREMg
-Q2FwdHVyZSBTd2l0Y2giLCBTVU44SV9BSUYxX01YUl9TUkMsCj4+ICsgICAgICAgICAgICAgICAg
-ICAgICAgIFNVTjhJX0FJRjFfTVhSX1NSQ19BRDBMX01YTF9TUkNfQURDTCwKPj4gKyAgICAgICAg
-ICAgICAgICAgICAgICAgU1VOOElfQUlGMV9NWFJfU1JDX0FEMFJfTVhSX1NSQ19BRENSLCAxLCAw
-KSwKPj4gKyAgICAgICBTT0NfREFQTV9ET1VCTEUoIkFJRjIgSW52IERpZ2l0YWwgQURDIENhcHR1
-cmUgU3dpdGNoIiwgU1VOOElfQUlGMV9NWFJfU1JDLAo+PiArICAgICAgICAgICAgICAgICAgICAg
-ICBTVU44SV9BSUYxX01YUl9TUkNfQUQwTF9NWExfU1JDX0FJRjJEQUNSLAo+PiArICAgICAgICAg
-ICAgICAgICAgICAgICBTVU44SV9BSUYxX01YUl9TUkNfQUQwUl9NWFJfU1JDX0FJRjJEQUNMLCAx
-LCAwKSwKPj4gK307Cj4KPiBUaGlzIGdyb3VwIG9mIG1peGVyIGNvbnRyb2xzIGlzIG9ubHkgZm9y
-IEFJRjEgc2xvdCAwIGNhcHR1cmUuCj4gU28gaW4gZmFjdCB0aGV5IHNob3VsZCBhbGwgcmVhZCAi
-QUlGMSBTbG90IDAgTWl4ZXIgWCBDYXB0dXJlIFN3aXRjaCIsCj4gd2l0aCBYIHJlcGxhY2VkIGJ5
-ICJBSUYxIFNsb3QgMCIsICJBSUYyIiwgIkFEQyIsIGFuZCAiQUlGMiBJbnYiLgo+Cj4gVGhpcyBo
-b3BlZnVsbHkgaW5mb3JtcyB0aGUgdXNlciB0aGF0IHRoZXNlIGNvbnRyb2xzIGFyZSBmb3IgdGhl
-IEFJRjEKPiBzbG90IDAgbWl4ZXIsIGFuZCBhcmUgY2FwdHVyZSBzd2l0Y2ggZnJvbSB0aGUgdmFy
-aW91cyBzb3VyY2VzIGxpc3RlZAo+IGFib3ZlLgoKU291bmRzIGdvb2QuCgo+Cj4+ICsKPj4gIHN0
-YXRpYyBjb25zdCBzdHJ1Y3Qgc25kX3NvY19kYXBtX3dpZGdldCBzdW44aV9jb2RlY19kYXBtX3dp
-ZGdldHNbXSA9IHsKPj4gLSAgICAgICAvKiBEaWdpdGFsIHBhcnRzIG9mIHRoZSBEQUNzICovCj4+
-ICsgICAgICAgLyogRGlnaXRhbCBwYXJ0cyBvZiB0aGUgREFDcyBhbmQgQURDICovCj4+ICAgICAg
-ICAgU05EX1NPQ19EQVBNX1NVUFBMWSgiREFDIiwgU1VOOElfREFDX0RJR19DVFJMLCBTVU44SV9E
-QUNfRElHX0NUUkxfRU5EQSwKPj4gICAgICAgICAgICAgICAgICAgICAgICAgICAgIDAsIE5VTEws
-IDApLAo+PiArICAgICAgIFNORF9TT0NfREFQTV9TVVBQTFkoIkFEQyIsIFNVTjhJX0FEQ19ESUdf
-Q1RSTCwgU1VOOElfQURDX0RJR19DVFJMX0VOREEsCj4+ICsgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAwLCBOVUxMLCAwKSwKPj4KPj4gICAgICAgICAvKiBBbmFsb2cgREFDIEFJRiAqLwo+PiAg
-ICAgICAgIFNORF9TT0NfREFQTV9BSUZfSU4oIkFJRjEgU2xvdCAwIExlZnQiLCAiUGxheWJhY2si
-LCAwLAo+PiBAQCAtMjg5LDE3ICszMjUsMzEgQEAgc3RhdGljIGNvbnN0IHN0cnVjdCBzbmRfc29j
-X2RhcG1fd2lkZ2V0IHN1bjhpX2NvZGVjX2RhcG1fd2lkZ2V0c1tdID0gewo+PiAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgU1VOOElfQUlGMV9EQUNEQVRfQ1RSTCwKPj4gICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgIFNVTjhJX0FJRjFfREFDREFUX0NUUkxfQUlGMV9EQTBSX0VOQSwgMCks
-Cj4+Cj4+IC0gICAgICAgLyogREFDIE1peGVycyAqLwo+PiArICAgICAgIC8qIEFuYWxvZyBBREMg
-QUlGICovCj4+ICsgICAgICAgU05EX1NPQ19EQVBNX0FJRl9JTigiQUlGMSBTbG90IDAgTGVmdCBB
-REMiLCAiQ2FwdHVyZSIsIDAsCj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICBTVU44SV9B
-SUYxX0FEQ0RBVF9DVFJMLAo+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgU1VOOElfQUlG
-MV9BRENEQVRfQ1RSTF9BSUYxX0RBMExfRU5BLCAwKSwKPj4gKyAgICAgICBTTkRfU09DX0RBUE1f
-QUlGX0lOKCJBSUYxIFNsb3QgMCBSaWdodCBBREMiLCAiQ2FwdHVyZSIsIDAsCj4+ICsgICAgICAg
-ICAgICAgICAgICAgICAgICAgICBTVU44SV9BSUYxX0FEQ0RBVF9DVFJMLAo+PiArICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgU1VOOElfQUlGMV9BRENEQVRfQ1RSTF9BSUYxX0RBMFJfRU5BLCAw
-KSwKPgo+IFlvdSB3YW50IHRvIHVzZSBTTkRfU09DX0RBUE1fQUlGX09VVCBoZXJlLCBmb3IgY2Fw
-dHVyZWQgYXVkaW8gb3V0IG9mCj4gdGhlIGNvZGVjIGFuZCB0byB0aGUgc3lzdGVtLiBUaGVzZSBh
-cmUgdGhlIGxhc3Qgd2lkZ2V0cyBpbiB0aGUgY2FwdHVyZQo+IHBhdGguCgpBQ0sKCj4KPj4gKwo+
-PiArICAgICAgIC8qIERBQyBhbmQgQURDIE1peGVycyAqLwo+PiAgICAgICAgIFNPQ19NSVhFUl9B
-UlJBWSgiTGVmdCBEaWdpdGFsIERBQyBNaXhlciIsIFNORF9TT0NfTk9QTSwgMCwgMCwKPj4gICAg
-ICAgICAgICAgICAgICAgICAgICAgc3VuOGlfZGFjX21peGVyX2NvbnRyb2xzKSwKPj4gICAgICAg
-ICBTT0NfTUlYRVJfQVJSQVkoIlJpZ2h0IERpZ2l0YWwgREFDIE1peGVyIiwgU05EX1NPQ19OT1BN
-LCAwLCAwLAo+PiAgICAgICAgICAgICAgICAgICAgICAgICBzdW44aV9kYWNfbWl4ZXJfY29udHJv
-bHMpLAo+PiArICAgICAgIFNPQ19NSVhFUl9BUlJBWSgiTGVmdCBEaWdpdGFsIEFEQyBNaXhlciIs
-IFNORF9TT0NfTk9QTSwgMCwgMCwKPj4gKyAgICAgICAgICAgICAgICAgICAgICAgc3VuOGlfaW5w
-dXRfbWl4ZXJfY29udHJvbHMpLAo+PiArICAgICAgIFNPQ19NSVhFUl9BUlJBWSgiUmlnaHQgRGln
-aXRhbCBBREMgTWl4ZXIiLCBTTkRfU09DX05PUE0sIDAsIDAsCj4+ICsgICAgICAgICAgICAgICAg
-ICAgICAgIHN1bjhpX2lucHV0X21peGVyX2NvbnRyb2xzKSwKPgo+IEFuZCB0aGVzZSBzaG91bGQg
-cmVhZCAiQUlGMSBTbG90IDAgTGVmdC9SaWdodCBNaXhlciIuCgpBQ0sKCj4KPj4KPj4gICAgICAg
-ICAvKiBDbG9ja3MgKi8KPj4gICAgICAgICBTTkRfU09DX0RBUE1fU1VQUExZKCJNT0RDTEsgQUZJ
-MSIsIFNVTjhJX01PRF9DTEtfRU5BLAo+PiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgU1VO
-OElfTU9EX0NMS19FTkFfQUlGMSwgMCwgTlVMTCwgMCksCj4+ICAgICAgICAgU05EX1NPQ19EQVBN
-X1NVUFBMWSgiTU9EQ0xLIERBQyIsIFNVTjhJX01PRF9DTEtfRU5BLAo+PiAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgU1VOOElfTU9EX0NMS19FTkFfREFDLCAwLCBOVUxMLCAwKSwKPj4gKyAg
-ICAgICBTTkRfU09DX0RBUE1fU1VQUExZKCJNT0RDTEsgQURDIiwgU1VOOElfTU9EX0NMS19FTkEs
-Cj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICBTVU44SV9NT0RfQ0xLX0VOQV9BREMsIDAs
-IE5VTEwsIDApLAo+PiAgICAgICAgIFNORF9TT0NfREFQTV9TVVBQTFkoIkFJRjEiLCBTVU44SV9T
-WVNDTEtfQ1RMLAo+PiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgU1VOOElfU1lTQ0xLX0NU
-TF9BSUYxQ0xLX0VOQSwgMCwgTlVMTCwgMCksCj4+ICAgICAgICAgU05EX1NPQ19EQVBNX1NVUFBM
-WSgiU1lTQ0xLIiwgU1VOOElfU1lTQ0xLX0NUTCwKPj4gQEAgLTMxNiw2ICszNjYsMTIgQEAgc3Rh
-dGljIGNvbnN0IHN0cnVjdCBzbmRfc29jX2RhcG1fd2lkZ2V0IHN1bjhpX2NvZGVjX2RhcG1fd2lk
-Z2V0c1tdID0gewo+PiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgU1VOOElfTU9EX1JTVF9D
-VExfQUlGMSwgMCwgTlVMTCwgMCksCj4+ICAgICAgICAgU05EX1NPQ19EQVBNX1NVUFBMWSgiUlNU
-IERBQyIsIFNVTjhJX01PRF9SU1RfQ1RMLAo+PiAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-U1VOOElfTU9EX1JTVF9DVExfREFDLCAwLCBOVUxMLCAwKSwKPj4gKyAgICAgICBTTkRfU09DX0RB
-UE1fU1VQUExZKCJSU1QgQURDIiwgU1VOOElfTU9EX1JTVF9DVEwsCj4+ICsgICAgICAgICAgICAg
-ICAgICAgICAgICAgICBTVU44SV9NT0RfUlNUX0NUTF9BREMsIDAsIE5VTEwsIDApLAo+PiArCj4+
-ICsgICAgICAgU05EX1NPQ19EQVBNX01JQygiSGVhZHNldCBNaWMiLCBOVUxMKSwKPj4gKyAgICAg
-ICBTTkRfU09DX0RBUE1fTUlDKCJNaWMiLCBOVUxMKSwKPgo+IFRoZXNlIE1pY3MgYXJlIGJvYXJk
-IGxldmVsIHdpZGdldHMuIFNpbmNlIHlvdSBhcmUgdXNpbmcgc2ltcGxlLWNhcmQsCj4geW91IHNo
-b3VsZCBhZGQgdGhlbSBpbiB0aGUgZGV2aWNlIHRyZWUgaW4gdGhlIHNpbXBsZS1jYXJkIGRldmlj
-ZQo+IG5vZGUsIHVzaW5nIHRoZSAic2ltcGxlLWF1ZGlvLWNhcmQsd2lkZ2V0cyIgcHJvcGVydHku
-Cj4KPiBZb3UgcHJvYmFibHkgc2hvdWxkIGhhdmUgZG9uZSBzbyBmb3IgdGhlIG91dHB1dCBzaWRl
-IGFzIHdlbGwuCj4gSWYgc2ltcGxlLWNhcmQgd2VyZSBmdWxseS1yb3V0ZWQsIHRoZSBleGlzdGlu
-ZyBkZXZpY2UgdHJlZSBzaW1wbHkKPiB3b3VsZG4ndCB3b3JrLgoKT2theSwgSSB3aWxsIGFkZCB0
-aGVtIGluIHRoZSBzaW1wbGUtYXVkaW8tY2FyZCBub2RlLgoKPgo+PiArCj4+ICB9Owo+Pgo+PiAg
-c3RhdGljIGNvbnN0IHN0cnVjdCBzbmRfc29jX2RhcG1fcm91dGUgc3VuOGlfY29kZWNfZGFwbV9y
-b3V0ZXNbXSA9IHsKPj4gQEAgLTMyNSwxMSArMzgxLDE2IEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3Qg
-c25kX3NvY19kYXBtX3JvdXRlIHN1bjhpX2NvZGVjX2RhcG1fcm91dGVzW10gPSB7Cj4+ICAgICAg
-ICAgeyAiUlNUIEFJRjEiLCBOVUxMLCAiQUlGMSBQTEwiIH0sCj4+ICAgICAgICAgeyAiTU9EQ0xL
-IEFGSTEiLCBOVUxMLCAiUlNUIEFJRjEiIH0sCj4+ICAgICAgICAgeyAiREFDIiwgTlVMTCwgIk1P
-RENMSyBBRkkxIiB9LAo+PiArICAgICAgIHsgIkFEQyIsIE5VTEwsICJNT0RDTEsgQUZJMSIgfSwK
-Pgo+IFRoaXMgbWFrZXMgbm8gc2Vuc2UuIFdoeSB3b3VsZCBBSUYxJ3MgbW9kdWxlIGNsb2NrIGZl
-ZWQgdGhlIEFEQz8gU2FtZSBnb2VzCj4gZm9yIHRoZSBleGlzdGluZyBEQUMgcm91dGUuCj4KCkl0
-IHdhcyBkaWZmaWN1bHQgZm9yIG1lIHRvIGtub3cgaG93IHRvIHJvdXRlIHRoZSBjbG9ja3Mgd2l0
-aCB0aGUgREFDL0FEQyAKd2lkZ2V0cy4gQXMgdGhlIGNsb2NrcyBhcmUgbmVlZGVkIHRvIGhhdmUg
-YSBBREMvREFDIHdvcmtpbmcsIEkgY3JlYXRlZCAKdGhpcyByb3V0ZSBidXQgaXQgaXMsIG1heWJl
-LCBub3QgdGhlIGNvcnJlY3Qgd2F5IHRvIGRvIGl0LgoKPj4KPj4gICAgICAgICB7ICJSU1QgREFD
-IiwgTlVMTCwgIlNZU0NMSyIgfSwKPj4gICAgICAgICB7ICJNT0RDTEsgREFDIiwgTlVMTCwgIlJT
-VCBEQUMiIH0sCj4+ICAgICAgICAgeyAiREFDIiwgTlVMTCwgIk1PRENMSyBEQUMiIH0sCj4+Cj4+
-ICsgICAgICAgeyAiUlNUIEFEQyIsIE5VTEwsICJTWVNDTEsiIH0sCj4+ICsgICAgICAgeyAiTU9E
-Q0xLIEFEQyIsIE5VTEwsICJSU1QgQURDIiB9LAo+PiArICAgICAgIHsgIkFEQyIsIE5VTEwsICJN
-T0RDTEsgQURDIiB9LAo+Cj4gVGhpcyBtYWtlcyBsaXR0bGUgc2Vuc2UgZWl0aGVyLiBUaGUgU1lT
-Q0xLIHByb2JhYmx5IGZlZWRzIHRoZSBBREMncwo+IG1vZHVsZSBjbG9jay4KPiBUaGUgTU9EQ0xL
-IHRoZW4gZmVlZHMgdGhlIEFEQy4gVGhlIEFEQyByZXNldCBmZWVkcyB0aGUgQURDIChvciByYXRo
-ZXIgdGhlIEFEQwo+IGRlcGVuZHMgb24gaXRzIHJlc2V0KS4gVGhlICJBREMiIHdpZGdldCBoZXJl
-IGlzIGFjdHVhbGx5IGp1c3QgdGhlIGVuYWJsZSBzd2l0Y2guCj4gQnV0IHdlIGNhbiB1c2UgaXQg
-YXMgYSBraW5kIG9mIHBsYWNlaG9sZGVyLCB0byBzZXR1cCB0aGUgZGVwZW5kZW5jaWVzIGNvcnJl
-Y3RseS4KPgoKWWVwLCB0aGF0IGl0IGlzLgpXaGF0IGRvIHlvdSBoYXZlIGluIG1pbmQgYWJvdXQg
-dGhlIEFEQyB3aWRnZXQgYXMgYSAicGxhY2Vob2xkZXIiPwoKPiBJIHdpc2ggd2UgaGFkIG5hbWVk
-IHRoZSB3aWRnZXRzIGJldHRlciwgYnV0IGFsYXMgdGhleSBhcmUgcGFydCBvZiB0aGUKPiBkZXZp
-Y2UgdHJlZQo+IGJpbmRpbmcsIGV2ZW4gdGhvdWdoIHRoZXkgYXJlIG5vdCBkb2N1bWVudGVkLCBz
-byB3ZSBjYW4gbm90IGNoYW5nZSB0aGUgZXhpc3RpbmcKPiBvbmVzLgoKSSBhZ3JlZSBhYm91dCB0
-aGUgd2lkZ2V0cyBuYW1lcywgdGhleSBhcmUgbm90IHZlcnkgY2xlYXIuCgo+Cj4+ICsKPj4gICAg
-ICAgICAvKiBEQUMgUm91dGVzICovCj4+ICAgICAgICAgeyAiQUlGMSBTbG90IDAgUmlnaHQiLCBO
-VUxMLCAiREFDIiB9LAo+PiAgICAgICAgIHsgIkFJRjEgU2xvdCAwIExlZnQiLCBOVUxMLCAiREFD
-IiB9LAo+PiBAQCAtMzM5LDYgKzQwMCwxMiBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IHNuZF9zb2Nf
-ZGFwbV9yb3V0ZSBzdW44aV9jb2RlY19kYXBtX3JvdXRlc1tdID0gewo+PiAgICAgICAgICAgIkFJ
-RjEgU2xvdCAwIExlZnQifSwKPj4gICAgICAgICB7ICJSaWdodCBEaWdpdGFsIERBQyBNaXhlciIs
-ICJBSUYxIFNsb3QgMCBEaWdpdGFsIERBQyBQbGF5YmFjayBTd2l0Y2giLAo+PiAgICAgICAgICAg
-IkFJRjEgU2xvdCAwIFJpZ2h0In0sCj4+ICsKPj4gKyAgICAgICAvKiBBREMgcm91dGVzICovCj4+
-ICsgICAgICAgeyAiTGVmdCBEaWdpdGFsIEFEQyBNaXhlciIsICJBSUYxIERhdGEgRGlnaXRhbCBB
-REMgQ2FwdHVyZSBTd2l0Y2giLAo+PiArICAgICAgICAgIkFJRjEgU2xvdCAwIExlZnQgQURDIiB9
-LAo+PiArICAgICAgIHsgIlJpZ2h0IERpZ2l0YWwgQURDIE1peGVyIiwgIkFJRjEgRGF0YSBEaWdp
-dGFsIEFEQyBDYXB0dXJlIFN3aXRjaCIsCj4+ICsgICAgICAgICAiQUlGMSBTbG90IDAgUmlnaHQg
-QURDIiB9LAo+Cj4gU2FtZSB0aGluZyBhYm91dCB0aGUgIkFEQyBNaXhlciIgbmFtZXMuCj4KPiBB
-bmQgdGhlc2Ugcm91dGVzIGFyZSBjb21wbGV0ZWx5IGJhY2t3YXJkcy4gIkFJRjEgU2xvdCAwIExl
-ZnQvUmlnaHQgQURDIiBhcmUKPiB0aGUgb3V0cHV0IHN0cmVhbSB3aWRnZXRzLiBUaGV5IGFyZSBm
-ZWQgZnJvbSAiQUlGMSBTbG90IDAgTGVmdC9SaWdodCBNaXhlciIKPiBpZiB5b3UgdXNlIHRoZSBu
-YW1lcyBJIHN1Z2dlc3RlZCwgb3IgIkxlZnQvUmlnaHQgRGlnaXRhbCBBREMgTWl4ZXIiIG9yaWdp
-bmFsbHkuCgpZb3UgYXJlIHJpZ2h0LCBpdCBtYWtlIHNlbnNlIG5vdy4KCj4KPiBZb3UgdGhlbiBu
-ZWVkIG90aGVyIHJvdXRlcyBmZWVkaW5nIHRoZSBtaXhlci4gTG9va3MgbGlrZSB5b3UgYWxzbyBu
-ZWVkIEFEQwo+IHBsYWNlaG9sZGVyIHdpZGdldHMgb24gdGhlIGRpZ2l0YWwgc2lkZSBoZXJlLCBz
-byB5b3UgY2FuIGhvb2sgdXAgdGhlIGFuYWxvZwo+IHNpZGUgaW4gc2ltcGxlLWNhcmQgbW9yZSBl
-YXNpbHkuCgpPa2F5LCBJIHdpbGwgdHJ5IHRvIGltcHJvdmUgaXQuCgo+Cj4gSWYgeW91IGNhbiwg
-cGxlYXNlIGR1bXAgdGhlIERBUE0gcm91dGVzIGludG8gYSBkaXJlY3RlZCBncmFwaCB0byBjaGVj
-awo+IGV2ZXJ5dGhpbmcKPiBpcyBjb25uZWN0ZWQgYW5kIG1ha2VzIHNlbnNlLiBJIGJlbGlldmUg
-eW91IGhhdmUgYSBzY3JpcHQgdGhhdCBkb2VzIHRoaXMuCgpZZXMsIEkgdGVzdGVkIGl0IGFuZCB0
-aGUgQURDIG1peGVycyBhcmUgY29ubmVjdGVkIHRvIG5vdGhpbmcgc28gdGhpcyAKcm91dGUgZG9l
-cyBub3QgbWFrZSBzZW5zZS4gSSB3aWxsIHJld29yayBpdC4KCj4+ICB9Owo+Pgo+PiAgc3RhdGlj
-IHN0cnVjdCBzbmRfc29jX2RhaV9vcHMgc3VuOGlfY29kZWNfZGFpX29wcyA9IHsKPj4gQEAgLTM1
-Niw2ICs0MjMsMTUgQEAgc3RhdGljIHN0cnVjdCBzbmRfc29jX2RhaV9kcml2ZXIgc3VuOGlfY29k
-ZWNfZGFpID0gewo+PiAgICAgICAgICAgICAgICAgLnJhdGVzID0gU05EUlZfUENNX1JBVEVfODAw
-MF8xOTIwMDAsCj4+ICAgICAgICAgICAgICAgICAuZm9ybWF0cyA9IFNORFJWX1BDTV9GTVRCSVRf
-UzE2X0xFLAo+PiAgICAgICAgIH0sCj4+ICsgICAgICAgLyogY2FwdHVyZSBjYXBhYmlsaXRpZXMg
-Ki8KPj4gKyAgICAgICAuY2FwdHVyZSA9IHsKPj4gKyAgICAgICAgICAgICAgIC5zdHJlYW1fbmFt
-ZSA9ICJDYXB0dXJlIiwKPj4gKyAgICAgICAgICAgICAgIC5jaGFubmVsc19taW4gPSAxLAo+PiAr
-ICAgICAgICAgICAgICAgLmNoYW5uZWxzX21heCA9IDIsCj4+ICsgICAgICAgICAgICAgICAucmF0
-ZXMgPSBTTkRSVl9QQ01fUkFURV84MDAwXzE5MjAwMCwKPj4gKyAgICAgICAgICAgICAgIC5mb3Jt
-YXRzID0gU05EUlZfUENNX0ZNVEJJVF9TMTZfTEUsCj4+ICsgICAgICAgICAgICAgICAuc2lnX2Jp
-dHMgPSAyNCwKPj4gKyAgICAgICB9LAo+PiAgICAgICAgIC8qIHBjbSBvcGVyYXRpb25zICovCj4+
-ICAgICAgICAgLm9wcyA9ICZzdW44aV9jb2RlY19kYWlfb3BzLAo+PiAgfTsKPj4gLS0KPj4gMi4x
-MS4wCj4+CgpUaGFuayB5b3UgYWdhaW4sCgpCZXN0IHJlZ2FyZHMsCgotLSAKTXlsw6huZSBKb3Nz
-ZXJhbmQsIEZyZWUgRWxlY3Ryb25zCkVtYmVkZGVkIExpbnV4IGFuZCBLZXJuZWwgZW5naW5lZXJp
-bmcKaHR0cDovL2ZyZWUtZWxlY3Ryb25zLmNvbQpfX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fXwpBbHNhLWRldmVsIG1haWxpbmcgbGlzdApBbHNhLWRldmVsQGFs
-c2EtcHJvamVjdC5vcmcKaHR0cDovL21haWxtYW4uYWxzYS1wcm9qZWN0Lm9yZy9tYWlsbWFuL2xp
-c3RpbmZvL2Fsc2EtZGV2ZWwK
+Hi Chris,
+
+On Tue, Apr 11, 2017 at 5:17 AM, Christopher Bostic
+<cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org> wrote:
+
+> From: Chris Bostic <cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+>
+> Implement a FSI master using GPIO.  Will generate FSI protocol for
+> read and write commands to particular addresses.  Sends master command
+> and waits for and decodes a slave response.
+>
+> Includes changes from Edward A. James <eajames-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org> and Jeremy
+> Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>.
+
+I think the series is looking good. I've done a bunch of testing on
+some machines, and it worked for me.
+
+I've got a few comments and things to be clarified below.
+
+>
+> Signed-off-by: Edward A. James <eajames-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>
+> Signed-off-by: Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
+> Signed-off-by: Chris Bostic <cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+> Signed-off-by: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
+> ---
+>  drivers/fsi/Kconfig           |  11 +
+>  drivers/fsi/Makefile          |   1 +
+>  drivers/fsi/fsi-master-gpio.c | 610 ++++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 622 insertions(+)
+>  create mode 100644 drivers/fsi/fsi-master-gpio.c
+>
+> diff --git a/drivers/fsi/Kconfig b/drivers/fsi/Kconfig
+> index 04c1a0e..448bc3b 100644
+> --- a/drivers/fsi/Kconfig
+> +++ b/drivers/fsi/Kconfig
+> @@ -9,4 +9,15 @@ config FSI
+>         ---help---
+>           FSI - the FRU Support Interface - is a simple bus for low-level
+>           access to POWER-based hardware.
+> +
+> +if FSI
+> +
+> +config FSI_MASTER_GPIO
+> +       tristate "GPIO-based FSI master"
+> +       depends on GPIOLIB
+> +       ---help---
+> +       This option enables a FSI master driver using GPIO lines.
+> +
+> +endif
+> +
+>  endmenu
+> diff --git a/drivers/fsi/Makefile b/drivers/fsi/Makefile
+> index db0e5e7..ed28ac0 100644
+> --- a/drivers/fsi/Makefile
+> +++ b/drivers/fsi/Makefile
+> @@ -1,2 +1,3 @@
+>
+>  obj-$(CONFIG_FSI) += fsi-core.o
+> +obj-$(CONFIG_FSI_MASTER_GPIO) += fsi-master-gpio.o
+> diff --git a/drivers/fsi/fsi-master-gpio.c b/drivers/fsi/fsi-master-gpio.c
+> new file mode 100644
+> index 0000000..9fedfaf
+> --- /dev/null
+> +++ b/drivers/fsi/fsi-master-gpio.c
+> @@ -0,0 +1,610 @@
+> +/*
+> + * A FSI master controller, using a simple GPIO bit-banging interface
+> + */
+> +
+> +#include <linux/platform_device.h>
+> +#include <linux/gpio/consumer.h>
+> +#include <linux/module.h>
+> +#include <linux/delay.h>
+> +#include <linux/fsi.h>
+> +#include <linux/device.h>
+> +#include <linux/io.h>
+> +#include <linux/slab.h>
+> +#include <linux/spinlock.h>
+> +
+> +#include "fsi-master.h"
+> +
+> +#define        FSI_GPIO_STD_DLY        1       /* Standard pin delay in nS */
+> +#define        FSI_ECHO_DELAY_CLOCKS   16      /* Number clocks for echo delay */
+> +#define        FSI_PRE_BREAK_CLOCKS    50      /* Number clocks to prep for break */
+> +#define        FSI_BREAK_CLOCKS        256     /* Number of clocks to issue break */
+> +#define        FSI_POST_BREAK_CLOCKS   16000   /* Number clocks to set up cfam */
+> +#define        FSI_INIT_CLOCKS         5000    /* Clock out any old data */
+> +#define        FSI_GPIO_STD_DELAY      10      /* Standard GPIO delay in nS */
+> +                                       /* todo: adjust down as low as */
+> +                                       /* possible or eliminate */
+> +#define        FSI_GPIO_CMD_DPOLL      0x2
+> +#define        FSI_GPIO_CMD_TERM       0x3f
+> +#define FSI_GPIO_CMD_ABS_AR    0x4
+> +
+> +#define        FSI_GPIO_DPOLL_CLOCKS   100      /* < 21 will cause slave to hang */
+> +
+> +/* Bus errors */
+> +#define        FSI_GPIO_ERR_BUSY       1       /* Slave stuck in busy state */
+> +#define        FSI_GPIO_RESP_ERRA      2       /* Any (misc) Error */
+> +#define        FSI_GPIO_RESP_ERRC      3       /* Slave reports master CRC error */
+> +#define        FSI_GPIO_MTOE           4       /* Master time out error */
+> +#define        FSI_GPIO_CRC_INVAL      5       /* Master reports slave CRC error */
+> +
+> +/* Normal slave responses */
+> +#define        FSI_GPIO_RESP_BUSY      1
+> +#define        FSI_GPIO_RESP_ACK       0
+> +#define        FSI_GPIO_RESP_ACKD      4
+> +
+> +#define        FSI_GPIO_MAX_BUSY       100
+> +#define        FSI_GPIO_MTOE_COUNT     1000
+> +#define        FSI_GPIO_DRAIN_BITS     20
+> +#define        FSI_GPIO_CRC_SIZE       4
+> +#define        FSI_GPIO_MSG_ID_SIZE            2
+> +#define        FSI_GPIO_MSG_RESPID_SIZE        2
+> +#define        FSI_GPIO_PRIME_SLAVE_CLOCKS     100
+> +
+> +static DEFINE_SPINLOCK(fsi_gpio_cmd_lock);     /* lock around fsi commands */
+
+Should this be per-master?
+
+> +
+> +struct fsi_master_gpio {
+> +       struct fsi_master       master;
+> +       struct device           *dev;
+> +       struct gpio_desc        *gpio_clk;
+> +       struct gpio_desc        *gpio_data;
+> +       struct gpio_desc        *gpio_trans;    /* Voltage translator */
+> +       struct gpio_desc        *gpio_enable;   /* FSI enable */
+> +       struct gpio_desc        *gpio_mux;      /* Mux control */
+> +};
+> +
+> +#define to_fsi_master_gpio(m) container_of(m, struct fsi_master_gpio, master)
+> +
+> +struct fsi_gpio_msg {
+> +       uint64_t        msg;
+> +       uint8_t         bits;
+> +};
+> +
+> +static void clock_toggle(struct fsi_master_gpio *master, int count)
+> +{
+> +       int i;
+> +
+> +       for (i = 0; i < count; i++) {
+> +               ndelay(FSI_GPIO_STD_DLY);
+> +               gpiod_set_value(master->gpio_clk, 0);
+> +               ndelay(FSI_GPIO_STD_DLY);
+> +               gpiod_set_value(master->gpio_clk, 1);
+> +       }
+> +}
+> +
+> +static int sda_in(struct fsi_master_gpio *master)
+> +{
+> +       int in;
+> +
+> +       ndelay(FSI_GPIO_STD_DLY);
+> +       in = gpiod_get_value(master->gpio_data);
+> +       return in ? 1 : 0;
+> +}
+> +
+> +static void sda_out(struct fsi_master_gpio *master, int value)
+> +{
+> +       gpiod_set_value(master->gpio_data, value);
+> +}
+> +
+> +static void set_sda_input(struct fsi_master_gpio *master)
+> +{
+> +       gpiod_direction_input(master->gpio_data);
+> +       if (master->gpio_trans)
+> +               gpiod_set_value(master->gpio_trans, 0);
+
+gpiod_set_value checks for the first argument being NULL. You could
+drop your check here.
+
+> +}
+> +
+> +static void set_sda_output(struct fsi_master_gpio *master, int value)
+> +{
+> +       if (master->gpio_trans)
+> +               gpiod_set_value(master->gpio_trans, 1);
+> +       gpiod_direction_output(master->gpio_data, value);
+> +}
+> +
+> +static void clock_zeros(struct fsi_master_gpio *master, int count)
+> +{
+> +       set_sda_output(master, 1);
+> +       clock_toggle(master, count);
+> +}
+> +
+> +static void serial_in(struct fsi_master_gpio *master, struct fsi_gpio_msg *msg,
+> +                       uint8_t num_bits)
+> +{
+> +       uint8_t bit, in_bit;
+> +
+> +       set_sda_input(master);
+> +
+> +       for (bit = 0; bit < num_bits; bit++) {
+> +               clock_toggle(master, 1);
+> +               in_bit = sda_in(master);
+> +               msg->msg <<= 1;
+> +               msg->msg |= ~in_bit & 0x1;      /* Data is negative active */
+
+"Active low" makes more sense than negative active.
+
+> +       }
+> +       msg->bits += num_bits;
+> +}
+> +
+> +static void serial_out(struct fsi_master_gpio *master,
+> +                       const struct fsi_gpio_msg *cmd)
+> +{
+> +       uint8_t bit;
+> +       uint64_t msg = ~cmd->msg;       /* Data is negative active */
+> +       uint64_t sda_mask = 0x1ULL << (cmd->bits - 1);
+> +       uint64_t last_bit = ~0;
+> +       int next_bit;
+> +
+> +       if (!cmd->bits) {
+> +               dev_warn(master->dev, "trying to output 0 bits\n");
+> +               return;
+> +       }
+> +       set_sda_output(master, 0);
+> +
+> +       /* Send the start bit */
+> +       sda_out(master, 0);
+> +       clock_toggle(master, 1);
+> +
+> +       /* Send the message */
+> +       for (bit = 0; bit < cmd->bits; bit++) {
+> +               next_bit = (msg & sda_mask) >> (cmd->bits - 1);
+> +               if (last_bit ^ next_bit) {
+> +                       sda_out(master, next_bit);
+> +                       last_bit = next_bit;
+> +               }
+> +               clock_toggle(master, 1);
+> +               msg <<= 1;
+> +       }
+> +}
+> +
+> +static void msg_push_bits(struct fsi_gpio_msg *msg, uint64_t data, int bits)
+> +{
+> +       msg->msg <<= bits;
+> +       msg->msg |= data & ((1ull << bits) - 1);
+> +       msg->bits += bits;
+> +}
+> +
+> +static void msg_push_crc(struct fsi_gpio_msg *msg)
+> +{
+> +       uint8_t crc;
+> +       int top;
+> +
+> +       top = msg->bits & 0x3;
+> +
+> +       /* start bit, and any non-aligned top bits */
+> +       crc = fsi_crc4(0,
+> +                       1 << top | msg->msg >> (msg->bits - top),
+> +                       top + 1);
+> +
+> +       /* aligned bits */
+> +       crc = fsi_crc4(crc, msg->msg, msg->bits - top);
+> +
+> +       msg_push_bits(msg, crc, 4);
+> +}
+> +
+> +static void build_abs_ar_command(struct fsi_gpio_msg *cmd,
+> +               uint8_t id, uint32_t addr, size_t size, const void *data)
+
+What is abs_ar? Perhaps a comment would help.
+
+> +{
+> +       bool write = !!data;
+> +       uint8_t ds;
+> +       int i;
+> +
+> +       cmd->bits = 0;
+> +       cmd->msg = 0;
+> +
+> +       msg_push_bits(cmd, id, 2);
+> +       msg_push_bits(cmd, FSI_GPIO_CMD_ABS_AR, 3);
+> +       msg_push_bits(cmd, write ? 0 : 1, 1);
+> +
+> +       /*
+> +        * The read/write size is encoded in the lower bits of the address
+> +        * (as it must be naturally-aligned), and the following ds bit.
+> +        *
+> +        *      size    addr:1  addr:0  ds
+> +        *      1       x       x       0
+> +        *      2       x       0       1
+> +        *      4       0       1       1
+> +        *
+> +        */
+> +       ds = size > 1 ? 1 : 0;
+> +       addr &= ~(size - 1);
+> +       if (size == 4)
+> +               addr |= 1;
+> +
+> +       msg_push_bits(cmd, addr & ((1 << 21) - 1), 21);
+> +       msg_push_bits(cmd, ds, 1);
+> +       for (i = 0; write && i < size; i++)
+> +               msg_push_bits(cmd, ((uint8_t *)data)[i], 8);
+> +
+> +       msg_push_crc(cmd);
+> +}
+> +
+> +static void build_dpoll_command(struct fsi_gpio_msg *cmd, uint8_t slave_id)
+> +{
+> +       cmd->bits = 0;
+> +       cmd->msg = 0;
+> +
+> +       msg_push_bits(cmd, slave_id, 2);
+> +       msg_push_bits(cmd, FSI_GPIO_CMD_DPOLL, 3);
+> +       msg_push_crc(cmd);
+> +}
+> +
+> +static void echo_delay(struct fsi_master_gpio *master)
+> +{
+> +       set_sda_output(master, 1);
+> +       clock_toggle(master, FSI_ECHO_DELAY_CLOCKS);
+> +}
+> +
+> +static void build_term_command(struct fsi_gpio_msg *cmd, uint8_t slave_id)
+> +{
+> +       cmd->bits = 0;
+> +       cmd->msg = 0;
+> +
+> +       msg_push_bits(cmd, slave_id, 2);
+> +       msg_push_bits(cmd, FSI_GPIO_CMD_TERM, 6);
+> +       msg_push_crc(cmd);
+> +}
+> +
+> +/*
+> + * Store information on master errors so handler can detect and clean
+> + * up the bus
+> + */
+> +static void fsi_master_gpio_error(struct fsi_master_gpio *master, int error)
+> +{
+> +
+> +}
+> +
+> +static int read_one_response(struct fsi_master_gpio *master,
+> +               uint8_t data_size, struct fsi_gpio_msg *msgp, uint8_t *tagp)
+> +{
+> +       struct fsi_gpio_msg msg;
+> +       uint8_t id, tag;
+> +       uint32_t crc;
+> +       int i;
+> +
+> +       /* wait for the start bit */
+> +       for (i = 0; i < FSI_GPIO_MTOE_COUNT; i++) {
+> +               msg.bits = 0;
+> +               msg.msg = 0;
+> +               serial_in(master, &msg, 1);
+> +               if (msg.msg)
+> +                       break;
+> +       }
+> +       if (i >= FSI_GPIO_MTOE_COUNT) {
+
+Testing for == will do.
+
+> +               dev_dbg(master->dev,
+> +                       "Master time out waiting for response\n");
+> +               fsi_master_gpio_error(master, FSI_GPIO_MTOE);
+> +               return -EIO;
+> +       }
+> +
+> +       msg.bits = 0;
+> +       msg.msg = 0;
+> +
+> +       /* Read slave ID & response tag */
+> +       serial_in(master, &msg, 4);
+> +
+> +       id = (msg.msg >> FSI_GPIO_MSG_RESPID_SIZE) & 0x3;
+> +       tag = msg.msg & 0x3;
+> +
+> +       /* if we have an ACK, and we're expecting data, clock the
+> +        * data in too
+> +        */
+
+The comment should fit on one line.
+
+> +       if (tag == FSI_GPIO_RESP_ACK && data_size)
+> +               serial_in(master, &msg, data_size * 8);
+> +
+> +       /* read CRC */
+> +       serial_in(master, &msg, FSI_GPIO_CRC_SIZE);
+> +
+> +       /* we have a whole message now; check CRC */
+> +       crc = fsi_crc4(0, 1, 1);
+> +       crc = fsi_crc4(crc, msg.msg, msg.bits);
+> +       if (crc) {
+> +               dev_dbg(master->dev, "ERR response CRC\n");
+> +               fsi_master_gpio_error(master, FSI_GPIO_CRC_INVAL);
+> +               return -EIO;
+> +       }
+> +
+> +       if (msgp)
+> +               *msgp = msg;
+> +       if (tagp)
+> +               *tagp = tag;
+> +
+> +       return 0;
+> +}
+> +
+> +static int issue_term(struct fsi_master_gpio *master, uint8_t slave)
+> +{
+> +       struct fsi_gpio_msg cmd;
+> +       uint8_t tag;
+> +       int rc;
+> +
+> +       build_term_command(&cmd, slave);
+> +       serial_out(master, &cmd);
+> +       echo_delay(master);
+> +
+> +       rc = read_one_response(master, 0, NULL, &tag);
+> +       if (rc) {
+
+ read_one_response returns zero on success and a negative error code
+on failure. Do you mean if (rc < 0)?
+
+> +               dev_err(master->dev,
+> +                               "TERM failed; lost communication with slave\n");
+> +               return -EIO;
+> +       } else if (tag != FSI_GPIO_RESP_ACK) {
+> +               dev_err(master->dev, "TERM failed; response %d\n", tag);
+> +               return -EIO;
+> +       }
+> +
+> +       return 0;
+> +}
+> +
+> +static int poll_for_response(struct fsi_master_gpio *master,
+> +               uint8_t slave, uint8_t size, void *data)
+> +{
+> +       struct fsi_gpio_msg response, cmd;
+> +       int busy_count = 0, rc, i;
+> +       uint8_t tag;
+> +
+> +retry:
+> +       rc = read_one_response(master, size, &response, &tag);
+> +       if (rc)
+> +               return rc;
+> +
+> +       switch (tag) {
+> +       case FSI_GPIO_RESP_ACK:
+> +               if (size && data) {
+> +                       uint64_t val = response.msg;
+> +                       /* clear crc & mask */
+> +                       val >>= 4;
+> +                       val &= (1ull << (size * 8)) - 1;
+
+You could write this as a GENMASK. Not sure if it's more readable though.
+
+val &= GENMASK_ULL(size * 8 - 1, 0)
+
+> +
+> +                       for (i = 0; i < size; i++) {
+> +                               ((uint8_t *)data)[size-i-1] =
+> +                                       val & 0xff;
+> +                               val >>= 8;
+
+Put this on one line so it's easier to read:
+
+((uint8_t *)data)[size-i-1] = val & 0xff;
+
+You can drop the 0xff; this is happening implicitly when assigning to
+the uint_8 array.
+
+I suggest creating a local variable of type uint8_t * so you don't
+need the cast.
+
+> +                       }
+> +               }
+> +               break;
+> +       case FSI_GPIO_RESP_BUSY:
+> +               /*
+> +                * Its necessary to clock slave before issuing
+> +                * d-poll, not indicated in the hardware protocol
+> +                * spec. < 20 clocks causes slave to hang, 21 ok.
+> +                */
+> +               clock_zeros(master, FSI_GPIO_DPOLL_CLOCKS);
+> +               if (busy_count++ < FSI_GPIO_MAX_BUSY) {
+> +                       build_dpoll_command(&cmd, slave);
+> +                       serial_out(master, &cmd);
+> +                       echo_delay(master);
+> +                       goto retry;
+> +               }
+> +               dev_warn(master->dev,
+> +                       "ERR slave is stuck in busy state, issuing TERM\n");
+> +               issue_term(master, slave);
+> +               rc = -EIO;
+> +               break;
+> +
+> +       case FSI_GPIO_RESP_ERRA:
+> +       case FSI_GPIO_RESP_ERRC:
+> +               dev_dbg(master->dev, "ERR%c received: 0x%x\n",
+> +                       tag == FSI_GPIO_RESP_ERRA ? 'A' : 'C',
+> +                       (int)response.msg);
+> +               fsi_master_gpio_error(master, response.msg);
+> +               rc = -EIO;
+> +               break;
+> +       }
+> +
+> +       /* Clock the slave enough to be ready for next operation */
+> +       clock_zeros(master, FSI_GPIO_PRIME_SLAVE_CLOCKS);
+
+Do you need to do this after an issue_term?
+
+How about after a fsi_master_gpio_error? I suspect yes, for now, as
+this function is empty (?!).
+
+> +       return rc;
+> +}
+> +
+> +static int fsi_master_gpio_xfer(struct fsi_master_gpio *master, uint8_t slave,
+> +               struct fsi_gpio_msg *cmd, size_t resp_len, void *resp)
+> +{
+> +       unsigned long flags;
+> +       int rc;
+> +
+> +       spin_lock_irqsave(&fsi_gpio_cmd_lock, flags);
+> +       serial_out(master, cmd);
+> +       echo_delay(master);
+> +       rc = poll_for_response(master, slave, resp_len, resp);
+> +       spin_unlock_irqrestore(&fsi_gpio_cmd_lock, flags);
+> +
+> +       return rc;
+> +}
+> +
+> +static int fsi_master_gpio_read(struct fsi_master *_master, int link,
+> +               uint8_t id, uint32_t addr, void *val, size_t size)
+> +{
+> +       struct fsi_master_gpio *master = to_fsi_master_gpio(_master);
+> +       struct fsi_gpio_msg cmd;
+> +
+> +       if (link != 0)
+> +               return -ENODEV;
+
+Is this because we only support one link?
+
+> +
+> +       build_abs_ar_command(&cmd, id, addr, size, NULL);
+> +       return fsi_master_gpio_xfer(master, id, &cmd, size, val);
+> +}
+> +
+> +static int fsi_master_gpio_write(struct fsi_master *_master, int link,
+> +               uint8_t id, uint32_t addr, const void *val, size_t size)
+> +{
+> +       struct fsi_master_gpio *master = to_fsi_master_gpio(_master);
+> +       struct fsi_gpio_msg cmd;
+> +
+> +       if (link != 0)
+> +               return -ENODEV;
+> +
+> +       build_abs_ar_command(&cmd, id, addr, size, val);
+> +       return fsi_master_gpio_xfer(master, id, &cmd, 0, NULL);
+> +}
+> +
+> +static int fsi_master_gpio_term(struct fsi_master *_master,
+> +               int link, uint8_t id)
+> +{
+> +       struct fsi_master_gpio *master = to_fsi_master_gpio(_master);
+> +       struct fsi_gpio_msg cmd;
+> +
+> +       if (link != 0)
+> +               return -ENODEV;
+> +
+> +       build_term_command(&cmd, id);
+> +       return fsi_master_gpio_xfer(master, id, &cmd, 0, NULL);
+> +}
+> +
+> +/*
+> + * Issue a break command on link
+> + */
+
+Redundant comment, remove it.
+
+> +static int fsi_master_gpio_break(struct fsi_master *_master, int link)
+> +{
+> +       struct fsi_master_gpio *master = to_fsi_master_gpio(_master);
+> +
+> +       if (link != 0)
+> +               return -ENODEV;
+> +
+> +       set_sda_output(master, 1);
+> +       sda_out(master, 1);
+> +       clock_toggle(master, FSI_PRE_BREAK_CLOCKS);
+> +       sda_out(master, 0);
+> +       clock_toggle(master, FSI_BREAK_CLOCKS);
+> +       echo_delay(master);
+> +       sda_out(master, 1);
+> +       clock_toggle(master, FSI_POST_BREAK_CLOCKS);
+> +
+> +       /* Wait for logic reset to take effect */
+> +       udelay(200);
+> +
+> +       return 0;
+> +}
+> +
+> +static void fsi_master_gpio_init(struct fsi_master_gpio *master)
+> +{
+> +       if (master->gpio_mux)
+> +               gpiod_direction_output(master->gpio_mux, 1);
+> +       if (master->gpio_trans)
+> +               gpiod_direction_output(master->gpio_trans, 1);
+> +       if (master->gpio_enable)
+> +               gpiod_direction_output(master->gpio_enable, 1);
+> +       gpiod_direction_output(master->gpio_clk, 1);
+> +       gpiod_direction_output(master->gpio_data, 1);
+> +
+> +       /* todo: evaluate if clocks can be reduced */
+> +       clock_zeros(master, FSI_INIT_CLOCKS);
+> +}
+> +
+> +static int fsi_master_gpio_link_enable(struct fsi_master *_master, int link)
+> +{
+> +       struct fsi_master_gpio *master = to_fsi_master_gpio(_master);
+> +
+> +       if (link != 0)
+> +               return -ENODEV;
+> +       if (master->gpio_enable)
+> +               gpiod_set_value(master->gpio_enable, 1);
+> +
+> +       return 0;
+> +}
+> +
+> +static void fsi_master_gpio_release(struct device *dev)
+> +{
+> +}
+
+Empty function?
+
+> +
+> +static int fsi_master_gpio_probe(struct platform_device *pdev)
+> +{
+> +       struct fsi_master_gpio *master;
+> +       struct gpio_desc *gpio;
+> +
+> +       master = devm_kzalloc(&pdev->dev, sizeof(*master), GFP_KERNEL);
+> +       if (!master)
+> +               return -ENOMEM;
+> +
+> +       master->dev = &pdev->dev;
+> +       master->master.dev.parent = master->dev;
+> +       master->master.dev.release = fsi_master_gpio_release;
+> +
+> +       gpio = devm_gpiod_get(&pdev->dev, "clock", 0);
+> +       if (IS_ERR(gpio)) {
+> +               dev_err(&pdev->dev, "failed to get clock gpio\n");
+> +               return PTR_ERR(gpio);
+> +       }
+> +       master->gpio_clk = gpio;
+> +
+> +       gpio = devm_gpiod_get(&pdev->dev, "data", 0);
+> +       if (IS_ERR(gpio)) {
+> +               dev_err(&pdev->dev, "failed to get data gpio\n");
+> +               return PTR_ERR(gpio);
+> +       }
+> +       master->gpio_data = gpio;
+> +
+> +       /* Optional GPIOs */
+> +       gpio = devm_gpiod_get_optional(&pdev->dev, "trans", 0);
+> +       if (IS_ERR(gpio)) {
+> +               dev_err(&pdev->dev, "failed to get trans gpio\n");
+> +               return PTR_ERR(gpio);
+> +       }
+> +       master->gpio_trans = gpio;
+> +
+> +       gpio = devm_gpiod_get_optional(&pdev->dev, "enable", 0);
+> +       if (IS_ERR(gpio)) {
+> +               dev_err(&pdev->dev, "failed to get enable gpio\n");
+> +               return PTR_ERR(gpio);
+> +       }
+> +       master->gpio_enable = gpio;
+> +
+> +       gpio = devm_gpiod_get_optional(&pdev->dev, "mux", 0);
+> +       if (IS_ERR(gpio)) {
+> +               dev_err(&pdev->dev, "failed to get mux gpio\n");
+> +               return PTR_ERR(gpio);
+> +       }
+> +       master->gpio_mux = gpio;
+> +
+> +       master->master.n_links = 1;
+> +       master->master.read = fsi_master_gpio_read;
+> +       master->master.write = fsi_master_gpio_write;
+> +       master->master.term = fsi_master_gpio_term;
+> +       master->master.send_break = fsi_master_gpio_break;
+> +       master->master.link_enable = fsi_master_gpio_link_enable;
+> +       platform_set_drvdata(pdev, master);
+> +
+> +       fsi_master_gpio_init(master);
+> +
+> +       fsi_master_register(&master->master);
+
+This function can return an error.
+
+> +
+> +       return 0;
+> +}
+> +
+> +
+> +static int fsi_master_gpio_remove(struct platform_device *pdev)
+> +{
+> +       struct fsi_master_gpio *master = platform_get_drvdata(pdev);
+> +
+> +       devm_gpiod_put(&pdev->dev, master->gpio_clk);
+> +       devm_gpiod_put(&pdev->dev, master->gpio_data);
+> +       if (master->gpio_trans)
+> +               devm_gpiod_put(&pdev->dev, master->gpio_trans);
+> +       if (master->gpio_enable)
+> +               devm_gpiod_put(&pdev->dev, master->gpio_enable);
+> +       if (master->gpio_mux)
+> +               devm_gpiod_put(&pdev->dev, master->gpio_mux);
+
+Given you're removing the driver here, can you omit the devm_gpiod_put calls?
+
+> +       fsi_master_unregister(&master->master);
+> +
+> +       return 0;
+> +}
+> +
+> +static const struct of_device_id fsi_master_gpio_match[] = {
+> +       { .compatible = "fsi-master-gpio" },
+> +       { },
+> +};
+> +
+> +static struct platform_driver fsi_master_gpio_driver = {
+> +       .driver = {
+> +               .name           = "fsi-master-gpio",
+> +               .of_match_table = fsi_master_gpio_match,
+> +       },
+> +       .probe  = fsi_master_gpio_probe,
+> +       .remove = fsi_master_gpio_remove,
+> +};
+> +
+> +module_platform_driver(fsi_master_gpio_driver);
+> +MODULE_LICENSE("GPL");
+> --
+> 1.8.2.2
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
