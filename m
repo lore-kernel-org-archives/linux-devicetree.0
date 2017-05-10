@@ -1,64 +1,122 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH v5 2/3] ARM64: dts: mediatek: configure some fixed mmc
- parameters
-Date: Wed, 10 May 2017 11:50:33 +0200
-Message-ID: <488ca9b8-f1f1-6db2-118f-58ac924c0c0b@gmail.com>
-References: <1489562800-27431-1-git-send-email-yong.mao@mediatek.com>
- <1489562800-27431-3-git-send-email-yong.mao@mediatek.com>
- <CAPDyKFp=VjTe0NQ2a4QN4CE1+n+fJJa=kMVNc-zZQUaO8-nrYw@mail.gmail.com>
+From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 00/30] arm: dts: extend mt7623 support
+Date: Wed, 10 May 2017 11:58:39 +0200
+Message-ID: <dbaa57bc-f8cf-c7bb-bafd-505a87b5702b@gmail.com>
+References: <1493198774-4478-1-git-send-email-sean.wang@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAPDyKFp=VjTe0NQ2a4QN4CE1+n+fJJa=kMVNc-zZQUaO8-nrYw@mail.gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1493198774-4478-1-git-send-email-sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ulf Hansson <ulf.hansson@linaro.org>, Yong Mao <yong.mao@mediatek.com>
-Cc: Rob Herring <robh@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Daniel Kurtz <djkurtz@chromium.org>, Chaotian Jing <chaotian.jing@mediatek.com>, Eddie Huang <eddie.huang@mediatek.com>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, srv_heupstream <srv_heupstream@mediatek.com>, linux-mediatek@lists.infradead.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Sean,
 
+I queued patch 03/30 to 23/30 of this series in v4.11-next/dts32
+Please resend the rest taking into account the comment from Rob.
 
-On 24/03/17 08:17, Ulf Hansson wrote:
-> +Mattias
-> 
-> On 15 March 2017 at 08:26, Yong Mao <yong.mao@mediatek.com> wrote:
->> From: yong mao <yong.mao@mediatek.com>
->>
->> configure some fixed mmc parameters
->>
->> Signed-off-by: Yong Mao <yong.mao@mediatek.com>
->> Signed-off-by: Chaotian Jing <chaotian.jing@mediatek.com>
-> 
-> This one is for Mattias Brugger to pick up - unless I get an ack then
-> I can pick it.
-> 
-
-I merged it in v4.11-next/fixes
-Thanks,
+Thanks and sorry for the delay.
 Matthias
 
-> Kind regards
-> Uffe
+On 26/04/17 11:25, sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org wrote:
+> From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 > 
->> ---
->>   arch/arm64/boot/dts/mediatek/mt8173-evb.dts |    3 +++
->>   1 file changed, 3 insertions(+)
->>
->> diff --git a/arch/arm64/boot/dts/mediatek/mt8173-evb.dts b/arch/arm64/boot/dts/mediatek/mt8173-evb.dts
->> index 0ecaad4..1c3634f 100644
->> --- a/arch/arm64/boot/dts/mediatek/mt8173-evb.dts
->> +++ b/arch/arm64/boot/dts/mediatek/mt8173-evb.dts
->> @@ -134,6 +134,9 @@
->>          bus-width = <8>;
->>          max-frequency = <50000000>;
->>          cap-mmc-highspeed;
->> +       mediatek,hs200-cmd-int-delay=<26>;
->> +       mediatek,hs400-cmd-int-delay=<14>;
->> +       mediatek,hs400-cmd-resp-sel-rising;
->>          vmmc-supply = <&mt6397_vemc_3v3_reg>;
->>          vqmmc-supply = <&mt6397_vio18_reg>;
->>          non-removable;
->> --
->> 1.7.9.5
->>
+> Changes since v1:
+> Continue the upstream journey based on the previous John Crispin's good work.
+> - add fixes for the v1 suggestion
+> - fix typo in the commit log
+> - add missing pinctrl bindings for mt7623
+> - reuse pinctrl driver for mt7623
+> - enhance existing nodes since the way for binding is changed e.g USB
+> - add more nodes which already gets support from the latest tree e.g MT7530 DSA
+> - add the dts file for Bananapi R2 (BPI-R2) board
+> 
+> This series extends the dts files used for booting mt7623 base boards.
+> Since support for mt7623 was added around v4.6, many new drivers have
+> been accepted upstream. The contained patches add several of these to
+> the devicetree.
+> 
+> Additionally the series does a bit of refactoring. Mediatek pointed out
+> that the evaluation board is infact a reference design and asked the the
+> evb files be renamed to rfb.
+> 
+> As with all of the current ARM bases MTK silicon, these boards also have
+> a PMIC. Instead of adding the nodes to all of the dts files, we add an
+> intermediate dtsi file that contains the required nodes. This allows us
+> to reduce the size of the top most dts files.
+> 
+> The RFB comes in various versions and asiarf has even done a crowdfunder
+> to sell them. We should try to reduce the duplication. This series adds
+> a common dtsi file for these boards. This results in the topmost dts files
+> only needing to specify the compatible string, MTD nodes and ethernet setup.
+> 
+> John Crispin (14):
+>    arm: dts: mt7623: add clock controller device nodes
+>    arm: dts: mt7623: add subsystem clock controller device nodes
+>    arm: dts: mt7623: add power domain controller device node
+>    arm: dts: mt7623: add clock-frequency to the a7 timer node to
+>      mt7623.dtsi
+>    arm: dts: mt7623: add pinctrl nodes to the mt7623 dtsi file
+>    arm: dts: mt7623: add pmic wrapper nodes to the mt7623 dtsi file
+>    arm: dts: mt7623: add i2c nodes to the mt7623.dtsi file
+>    arm: dts: mt7623: add nand nodes to the mt7623.dtsi file
+>    arm: dts: mt7623: add mmc nodes to the mt7623.dtsi file
+>    arm: dts: mt7623: add usb nodes to the mt7623.dtsi file
+>    arm: dts: mt7623: add mt7623-mt6323.dtsi file
+>    arm: dts: mt7623: cleanup the mt7623n rfb uart nodes
+>    arm: dts: mt7623: enable the usb device on the mt7623n rfb
+>    arm: dts: mt7623: enable the nand device on the mt7623n nand rfb
+> 
+> Sean Wang (16):
+>    pinctrl: mediatek: Add missing pinctrl bindings for mt7623
+>    pinctrl: mediatek: reuse pinctrl driver for mt7623
+>    arm: dts: mt7623: add spi nodes to the mt7623.dtsi file
+>    arm: dts: mt7623: add pwm nodes to the mt7623.dtsi file
+>    arm: dts: mt7623: add ethernet nodes to the mt7623.dtsi file
+>    arm: dts: mt7623: add crypto engine nodes to the mt7623.dtsi file
+>    arm: dts: mt7623: add ir nodes to the mt7623.dtsi file
+>    arm: dts: mt7623: add afe nodes to the mt7623.dtsi file
+>    arm: dts: mt7623: add rng nodes to the mt7623.dtsi file
+>    arm: dts: mt7623: add auxadc nodes to the mt7623.dtsi file
+>    arm: dts: mt7623: add efuse nodes to the mt7623.dtsi file
+>    arm: dts: mt7623: add thermal nodes to the mt7623.dtsi file
+>    arm: dts: mt7623: add Sean as one of authors for mt7623.dtsi files
+>    arm: dts: mt7623: rename mt7623-evb.dts to
+>      arch/arm/boot/dts/mt7623n-rfb.dtsi
+>    dt-bindings: add vendor prefix for bananapi
+>    arm: dts: mt7623: add dts file for Bananapi R2 (BPI-R2) board
+> 
+>   Documentation/devicetree/bindings/arm/mediatek.txt |    8 +-
+>   .../devicetree/bindings/pinctrl/pinctrl-mt65xx.txt |    1 -
+>   .../devicetree/bindings/vendor-prefixes.txt        |    1 +
+>   arch/arm/boot/dts/Makefile                         |    3 +-
+>   arch/arm/boot/dts/mt7623-evb.dts                   |   33 -
+>   arch/arm/boot/dts/mt7623-mt6323.dtsi               |  269 +++
+>   arch/arm/boot/dts/mt7623.dtsi                      |  556 +++++-
+>   arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts      |  478 +++++
+>   arch/arm/boot/dts/mt7623n-rfb-nand.dts             |  109 ++
+>   arch/arm/boot/dts/mt7623n-rfb.dtsi                 |   61 +
+>   arch/arm/mach-mediatek/mediatek.c                  |    4 +-
+>   arch/arm/mach-mediatek/platsmp.c                   |    2 +-
+>   drivers/pinctrl/mediatek/Kconfig                   |    9 +-
+>   drivers/pinctrl/mediatek/Makefile                  |    1 -
+>   drivers/pinctrl/mediatek/pinctrl-mt7623.c          |  379 ----
+>   drivers/pinctrl/mediatek/pinctrl-mtk-mt7623.h      | 1936 --------------------
+>   include/dt-bindings/pinctrl/mt7623-pinfunc.h       |   30 +-
+>   17 files changed, 1497 insertions(+), 2383 deletions(-)
+>   delete mode 100644 arch/arm/boot/dts/mt7623-evb.dts
+>   create mode 100644 arch/arm/boot/dts/mt7623-mt6323.dtsi
+>   create mode 100644 arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts
+>   create mode 100644 arch/arm/boot/dts/mt7623n-rfb-nand.dts
+>   create mode 100644 arch/arm/boot/dts/mt7623n-rfb.dtsi
+>   delete mode 100644 drivers/pinctrl/mediatek/pinctrl-mt7623.c
+>   delete mode 100644 drivers/pinctrl/mediatek/pinctrl-mtk-mt7623.h
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
