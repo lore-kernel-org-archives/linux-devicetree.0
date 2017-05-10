@@ -1,136 +1,105 @@
-From: Joel Stanley <joel@jms.id.au>
-Subject: Re: [PATCH v6 10/23] drivers/fsi: Add device read/write/peek API
-Date: Wed, 10 May 2017 17:43:02 +0930
-Message-ID: <CACPK8Xewjnpvc3sN=X9tMm7NP6rQ=NHKDuxwYO4DFjRw63PP8A@mail.gmail.com>
-References: <20170410194706.64280-1-cbostic@linux.vnet.ibm.com> <20170410194706.64280-11-cbostic@linux.vnet.ibm.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [RFC 0/2] Add support for Meson MX "SDIO" MMC driver
+Date: Wed, 10 May 2017 10:44:34 +0200
+Message-ID: <CAPDyKFoYPjB1bjRfFCFT3vuzKgzm6-7L2qgNjxGL392cLDe7uA@mail.gmail.com>
+References: <20170506171857.16492-1-martin.blumenstingl@googlemail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170410194706.64280-11-cbostic@linux.vnet.ibm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Christopher Bostic <cbostic@linux.vnet.ibm.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, rostedt@goodmis.org, mingo@redhat.com, Greg KH <gregkh@linuxfoundation.org>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel@lists.infradead.org, Jeremy Kerr <jk@ozlabs.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Andrew Jeffery <andrew@aj.id.au>, Alistair Popple <alistair@popple.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, "Edward A . James" <eajames@us.ibm.com>
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <20170506171857.16492-1-martin.blumenstingl@googlemail.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Carlo Caione <carlo@caione.org>, Kevin Hilman <khilman@baylibre.com>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-amlogic@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 11, 2017 at 5:16 AM, Christopher Bostic
-<cbostic@linux.vnet.ibm.com> wrote:
-> From: Jeremy Kerr <jk@ozlabs.org>
+On 6 May 2017 at 19:18, Martin Blumenstingl
+<martin.blumenstingl@googlemail.com> wrote:
+> This is the successor to Carlo Caione's "Add support for Amlogic Meson
+> MMC driver" series (v5) from [0].
 >
-> This change introduces the fsi device API: simple read, write and peek
-> accessors for the devices' address spaces.
->
-> Includes contributions from Chris Bostic <cbostic@linux.vnet.ibm.com>
-> and Edward A. James <eajames@us.ibm.com>.
->
-> Signed-off-by: Edward A. James <eajames@us.ibm.com>
-> Signed-off-by: Jeremy Kerr <jk@ozlabs.org>
-> Signed-off-by: Chris Bostic <cbostic@linux.vnet.ibm.com>
-> Signed-off-by: Joel Stanley <joel@jms.id.au>
-> ---
->  drivers/fsi/fsi-core.c | 33 +++++++++++++++++++++++++++++++++
->  include/linux/fsi.h    |  7 ++++++-
->  2 files changed, 39 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/fsi/fsi-core.c b/drivers/fsi/fsi-core.c
-> index a8faa89..4da0b030 100644
-> --- a/drivers/fsi/fsi-core.c
-> +++ b/drivers/fsi/fsi-core.c
-> @@ -32,6 +32,8 @@
->  #define FSI_SLAVE_CONF_CRC_MASK                0x0000000f
->  #define FSI_SLAVE_CONF_DATA_BITS       28
->
-> +#define FSI_PEEK_BASE                  0x410
-> +
->  static const int engine_page_size = 0x400;
->
->  #define FSI_SLAVE_BASE                 0x800
-> @@ -73,9 +75,40 @@ static int fsi_master_read(struct fsi_master *master, int link,
->                 uint8_t slave_id, uint32_t addr, void *val, size_t size);
->  static int fsi_master_write(struct fsi_master *master, int link,
->                 uint8_t slave_id, uint32_t addr, const void *val, size_t size);
-> +static int fsi_slave_read(struct fsi_slave *slave, uint32_t addr,
-> +               void *val, size_t size);
-> +static int fsi_slave_write(struct fsi_slave *slave, uint32_t addr,
-> +               const void *val, size_t size);
+> I would like you to specifically review:
+> - whether I've (ab)used the MMC framework properly (as this is my first
+>   "larger" contribution to an MMC driver)
 
-I don't think these
+I take a look soonish.
+
+> - I think I have improved the locking compared to Carlo's version,
+>   however I'd still like feedback on whether this looks sane now or if I
+>   can improve that even further
 >
->  /* FSI endpoint-device support */
+> (notable) changes since Carlo's latest version are:
+> - renamed the driver to meson-mx-sdio (Amlogic's reference kernel calls
+>   the driver "aml_sdio" as there is a second MMC controller in these SoCs
+>   which they call the "SDHC controller"). do the same with our driver to
+
+I don't like to renaming drivers, just because there are a reference
+kernel using a different name.
+
+What's is really the difference between controllers? Why do they have
+two variants?
+
+Can they be managed by the same driver?
+
+>   avoid confusion once we add support for the second controller (which uses
+>   a completely different register layout)
+
+Besides that, do they behave differently in some other way?
+
+> - add support for the internal "mux" in this MMC controller (which allows
+>   connecting up to three devices to the the controller - at the cost of
+>   performance though since the controller can only process one request at
+>   a time). The driver registers a new device for each sub-node, which is
+>   then fed into the MMC framework to allow per-slot configuration using
+>   devicetree (see the example in the documentation)
+
+Unless there really is deployment for more than one slot on some
+boards/SoCs, I would strongly suggest to *not* implement this.
+
+Simply because of overhead and introduced complexity to the driver.
+
+> - use the common clock framework internally for managing the MMC clock
+>   (there is a fixed-factor clock in the controller which takes clk81 as
+>    input and divides it's clock by two and a divider clock which takes
+>    the result from the fixed-factor clock as input)
+> - support the regulators provided by the MMC framework
+> - support for GPIO-based card-detection and read-only-detection through
+>   the MMC framework
+> - use of the <linux/bitfield.h> FIELD_PREP and FIELD_GET macros where it
+>   make sense (and thus the code easier to read)
+> - re-worked locking (based on the locking in dw_mmc as that also provides
+>   multiple "MMC slots")
+
+Lots of changes!
+
+Before even start to review (or someone else), you really need to make
+this review-able.
+
+So, please, one change per patch - and make sure to write good
+changelogs. Then I can start to review.
+
 >
-> +int fsi_device_read(struct fsi_device *dev, uint32_t addr, void *val,
-> +               size_t size)
-
-I suggest adding some comments about the use of fsi_device_read,
-fsi_device_write and fsi_device_peek APIs for driver authors.
-
-One important note is that the data in val must be FSI bus endian (big endian).
-
-It would be nice to have the sparse notation (eg. __be32) as well.
-That doesn't make sense for void *, but we could add some helper
-functions like:
-
- int fsi_device_read32(struct fsi_device *dev, uint32_t addr, __be32 *val)
-
- int fsi_device_write32(struct fsi_device *dev, uint32_t addr, __be32 val)
-
-We probably only need a 32 bit version, as all of the reads/writes
-being done in users of this function are 32 bit.
-
-What do you think?
-
-> +{
-> +       if (addr > dev->size || size > dev->size || addr > dev->size - size)
-> +               return -EINVAL;
-> +
-> +       return fsi_slave_read(dev->slave, dev->addr + addr, val, size);
-> +}
-> +EXPORT_SYMBOL_GPL(fsi_device_read);
-> +
-> +int fsi_device_write(struct fsi_device *dev, uint32_t addr, const void *val,
-> +               size_t size)
-> +{
-> +       if (addr > dev->size || size > dev->size || addr > dev->size - size)
-> +               return -EINVAL;
-> +
-> +       return fsi_slave_write(dev->slave, dev->addr + addr, val, size);
-> +}
-> +EXPORT_SYMBOL_GPL(fsi_device_write);
-> +
-> +int fsi_device_peek(struct fsi_device *dev, void *val)
-> +{
-> +       uint32_t addr = FSI_PEEK_BASE + ((dev->unit - 2) * sizeof(uint32_t));
-> +
-> +       return fsi_slave_read(dev->slave, addr, val, sizeof(uint32_t));
-> +}
-> +
->  static void fsi_device_release(struct device *_device)
->  {
->         struct fsi_device *device = to_fsi_dev(_device);
-> diff --git a/include/linux/fsi.h b/include/linux/fsi.h
-> index efa55ba..66bce48 100644
-> --- a/include/linux/fsi.h
-> +++ b/include/linux/fsi.h
-> @@ -27,6 +27,12 @@ struct fsi_device {
->         uint32_t                size;
->  };
+> tests done so far:
+> - reading an OLD 256MiB SD card (which uses only a 1-bit bus) works fine
+>   (sha1sum of the whole device matches with what I get on my PC's
+>   card-reader)
+> - reading a somewhat more modern class 10 SD card and putting Arch Linux
+>   ARM on it (and using that as root file system)
+> - it successfully detects the RTL8723BS SDIO wifi chip in my device (even
+>   if the SD card is also enabled)
+> - reading a 128MiB file from the SD card while scanning wifi networks on
+>   the RTL8723BS card does not seem to result in any corruption (sha1sum
+>   of the read file seems to match)
+> - read speed of my class 10 SD card: ~15MiB/s
+> - (unfortunately I could NOT test downloading a file over wifi to the SD
+>   card because the RTL8723BS driver refuses to see any wifi networks, but
+>   that might be a problem on the RTL8723BS driver side since I don't get
+>   any error and the driver has just landed a few weeks ago in staging)
 >
-> +extern int fsi_device_read(struct fsi_device *dev, uint32_t addr,
-> +               void *val, size_t size);
-> +extern int fsi_device_write(struct fsi_device *dev, uint32_t addr,
-> +               const void *val, size_t size);
-> +extern int fsi_device_peek(struct fsi_device *dev, void *val);
-> +
->  struct fsi_device_id {
->         u8      engine_type;
->         u8      version;
-> @@ -40,7 +46,6 @@ struct fsi_device_id {
->  #define FSI_DEVICE_VERSIONED(t, v) \
->         .engine_type = (t), .version = (v),
 >
-> -
->  struct fsi_driver {
->         struct device_driver            drv;
->         const struct fsi_device_id      *id_table;
-> --
-> 1.8.2.2
+> [0] http://lists.infradead.org/pipermail/linux-arm-kernel/2016-February/412136.html
 >
+
+[...]
+
+Kind regards
+Uffe
