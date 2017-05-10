@@ -1,168 +1,110 @@
-From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Subject: Re: [RFC 0/2] Add support for Meson MX "SDIO" MMC driver
-Date: Wed, 10 May 2017 21:22:10 +0200
-Message-ID: <CAFBinCDGBZAAx_61eyu1_XM57fX62Mk03TEiO3uTL+i8dfPyZA@mail.gmail.com>
-References: <20170506171857.16492-1-martin.blumenstingl@googlemail.com> <CAPDyKFoYPjB1bjRfFCFT3vuzKgzm6-7L2qgNjxGL392cLDe7uA@mail.gmail.com>
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: Re: [linux-sunxi] [PATCH v2 20/20] ARM: sun5i: a10s-olinuxino:
+ Enable HDMI
+Date: Wed, 10 May 2017 21:23:58 +0200
+Message-ID: <20170510192358.taufs5tsyifueued@flea.home>
+References: <cover.d697f34bb7b0605c5e76cbc4167a64453e5e0984.1493812478.git-series.maxime.ripard@free-electrons.com>
+ <c7ac6faa0568e6418291255af537c4b070bdea63.1493812478.git-series.maxime.ripard@free-electrons.com>
+ <CAGb2v65S2pw3z8NZ+tkPkF=A=5z2toRkC+26pAs6La6CNyeXoQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAPDyKFoYPjB1bjRfFCFT3vuzKgzm6-7L2qgNjxGL392cLDe7uA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, "linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: multipart/mixed; boundary="===============1878546893=="
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <CAGb2v65S2pw3z8NZ+tkPkF=A=5z2toRkC+26pAs6La6CNyeXoQ@mail.gmail.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Chen-Yu Tsai <wens@csie.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-kernel <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, linux-sunxi <linux-sunxi@googlegroups.com>, Rob Herring <robh+dt@kernel.org>, Daniel Vetter <daniel.vetter@intel.com>, linux-clk <linux-clk@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Ulf,
 
-On Wed, May 10, 2017 at 10:44 AM, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> On 6 May 2017 at 19:18, Martin Blumenstingl
-> <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org> wrote:
->> This is the successor to Carlo Caione's "Add support for Amlogic Meson
->> MMC driver" series (v5) from [0].
->>
->> I would like you to specifically review:
->> - whether I've (ab)used the MMC framework properly (as this is my first
->>   "larger" contribution to an MMC driver)
->
-> I take a look soonish.
-thank you!
-
->> - I think I have improved the locking compared to Carlo's version,
->>   however I'd still like feedback on whether this looks sane now or if I
->>   can improve that even further
->>
->> (notable) changes since Carlo's latest version are:
->> - renamed the driver to meson-mx-sdio (Amlogic's reference kernel calls
->>   the driver "aml_sdio" as there is a second MMC controller in these SoCs
->>   which they call the "SDHC controller"). do the same with our driver to
->
-> I don't like to renaming drivers, just because there are a reference
-> kernel using a different name.
->
-> What's is really the difference between controllers? Why do they have
-> two variants?
-the driver from this thread is for the "SDSC/SDHC/SDXC card and SDIO
-interface with 1-bit and 4-bit data bus width supporting spec version
-2.x/3.x/4.x DS/HS modes up to UHS-I SDR50" (quote taken from the S805
-datasheet: [0])
-the "other" controller is an "eMMC and MMC card interface with
-1/4/8-bit data bus width supporting spec version 4.4x/4.5x HS200 (up
-to 100MHz clock), compatible with standard iNAND interface" (again,
-quote taken from the S805 datasheet: [0])
-
->
-> Can they be managed by the same driver?
->
->>   avoid confusion once we add support for the second controller (which uses
->>   a completely different register layout)
->
-> Besides that, do they behave differently in some other way?
-both drivers/controllers have a totally different register layout - I
-don't see any way how they both could be handled by one driver (the
-registers for the controllers from this series are not part of the
-documentation, but the registers from the 8-bit capable controller
-are, see page 76 and following from the S805 datasheet: [0])
-
->> - add support for the internal "mux" in this MMC controller (which allows
->>   connecting up to three devices to the the controller - at the cost of
->>   performance though since the controller can only process one request at
->>   a time). The driver registers a new device for each sub-node, which is
->>   then fed into the MMC framework to allow per-slot configuration using
->>   devicetree (see the example in the documentation)
->
-> Unless there really is deployment for more than one slot on some
-> boards/SoCs, I would strongly suggest to *not* implement this.
->
-> Simply because of overhead and introduced complexity to the driver.
-actually there are lots of devices out there which need to use two slots:
-as mentioned above the S805 (Meson8b) SoC has two MMC controllers:
-- one which is typically used for the SD card and the SDIO wireless
-interface (the driver from this series handles this)
-- the other one is typically connects to eMMC flash (as it supports
-8-bit bus width - this controller is not related to the driver from
-this series)
-
-there are boards out there which use NAND flash instead of eMMC, but
-the majority of the consumer devices (based on Amlogic SoCs) out there
-uses eMMC flash.
-we (unfortunately) have to support the internal mux since there are
-three MMC devices (SD card, SDIO wifi and eMMC) but only two
-controllers.
-
-I agree with you that it adds extra complexity to the driver. I tried
-to keep it as simple as possible - but I think we cannot remove it
-(without "losing" access to one MMC devices on most boards)
-
->> - use the common clock framework internally for managing the MMC clock
->>   (there is a fixed-factor clock in the controller which takes clk81 as
->>    input and divides it's clock by two and a divider clock which takes
->>    the result from the fixed-factor clock as input)
->> - support the regulators provided by the MMC framework
->> - support for GPIO-based card-detection and read-only-detection through
->>   the MMC framework
->> - use of the <linux/bitfield.h> FIELD_PREP and FIELD_GET macros where it
->>   make sense (and thus the code easier to read)
->> - re-worked locking (based on the locking in dw_mmc as that also provides
->>   multiple "MMC slots")
->
-> Lots of changes!
->
-> Before even start to review (or someone else), you really need to make
-> this review-able.
->
-> So, please, one change per patch - and make sure to write good
-> changelogs. Then I can start to review.
-from the mainline tree's perspective this is a new driver:
-Carlo (the original author) initially sent this driver for review more
-than 14 months ago. unfortunately it was never merged since you
-spotted some issues while reviewing that code, see [1].
-I would have sent smaller patches for a driver which is already in mainline.
-
-I also wanted to avoid extra complexity for the internal mux if it was
-added later on (if we want to avoid breaking devicetree backwards
-compatibility then the driver would have to support both: parsing from
-the mmc node directly and parsing child "slot" nodes). we won't have
-to change the DT bindings when the first version that will be
-mainlined already has support for the mux
-
-please let me know if there's anything I can do to make the code
-easier to review.
-
->>
->> tests done so far:
->> - reading an OLD 256MiB SD card (which uses only a 1-bit bus) works fine
->>   (sha1sum of the whole device matches with what I get on my PC's
->>   card-reader)
->> - reading a somewhat more modern class 10 SD card and putting Arch Linux
->>   ARM on it (and using that as root file system)
->> - it successfully detects the RTL8723BS SDIO wifi chip in my device (even
->>   if the SD card is also enabled)
->> - reading a 128MiB file from the SD card while scanning wifi networks on
->>   the RTL8723BS card does not seem to result in any corruption (sha1sum
->>   of the read file seems to match)
->> - read speed of my class 10 SD card: ~15MiB/s
->> - (unfortunately I could NOT test downloading a file over wifi to the SD
->>   card because the RTL8723BS driver refuses to see any wifi networks, but
->>   that might be a problem on the RTL8723BS driver side since I don't get
->>   any error and the driver has just landed a few weeks ago in staging)
->>
->>
->> [0] http://lists.infradead.org/pipermail/linux-arm-kernel/2016-February/412136.html
->>
->
-> [...]
->
-> Kind regards
-> Uffe
+--===============1878546893==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="nnojppk2eig6un6o"
+Content-Disposition: inline
 
 
-Regards,
-Martin
+--nnojppk2eig6un6o
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
+Hi,
 
-[0] https://dn.odroid.com/S805/Datasheet/S805_Datasheet%20V0.8%2020150126.pdf
-[1] https://patchwork.kernel.org/patch/8444841/
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On Thu, May 04, 2017 at 04:05:18PM +0800, Chen-Yu Tsai wrote:
+> On Wed, May 3, 2017 at 7:59 PM, Maxime Ripard
+> <maxime.ripard@free-electrons.com> wrote:
+> > The A10s Olinuxino has an HDMI connector. Make sure we can use it.
+> >
+> > Acked-by: Chen-Yu Tsai <wens@csie.org>
+> > Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
+> > ---
+> >  arch/arm/boot/dts/sun5i-a10s-olinuxino-micro.dts | 29 ++++++++++++++++=
++-
+> >  1 file changed, 29 insertions(+), 0 deletions(-)
+> >
+> > diff --git a/arch/arm/boot/dts/sun5i-a10s-olinuxino-micro.dts b/arch/ar=
+m/boot/dts/sun5i-a10s-olinuxino-micro.dts
+> > index 894f874a5beb..1d13b6407222 100644
+> > --- a/arch/arm/boot/dts/sun5i-a10s-olinuxino-micro.dts
+> > +++ b/arch/arm/boot/dts/sun5i-a10s-olinuxino-micro.dts
+> > @@ -63,6 +63,17 @@
+> >                 stdout-path =3D "serial0:115200n8";
+> >         };
+> >
+> > +       connector {
+> > +               compatible =3D "hdmi-connector";
+> > +               type =3D "a";
+>=20
+> Just curious, should we take this into consideration when creating
+> drm_connector?
+
+I'm not sure, no other driver does so. And I haven't seen any of our
+boards with a HDMI-B, C or mini-HDMI connector.
+
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+
+--nnojppk2eig6un6o
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIcBAEBAgAGBQJZE2jOAAoJEBx+YmzsjxAgCioP/2rIPNKWgGmGCDyprDbgnHIK
+09g/WDmj5wAkxrbo2Y7e8+Uz0vuT78uzDLPQUzgwZK6Jvs8nZUkYWcdTFKKF+D96
+5t50lP78C/x31+jvGM8F+kmj2SbH5Yc0OjIcQyro06TBUigmR1nP+Aa5FwJqY6FF
+ZwHYbLMt+rRnNwqQ0s+D1QUu2fPiQwPzdNcL1mbzagb4Q7ZlXQWAotGfJT16Mw5I
+iO+MThbP+PJLUygYiJA2CJWvzzH3ghjUr98dSJK+6Y2KFGCerYo+gsqR7hyvWMwv
+kkfVJXwpPjQw6J+xWNI6LlvHvClhLT2QDAgLaGfC7nmtpxWHWhiWGy35XbZghQIm
+QK0gNM6v7lcyhrTFcFbW2WEvbnN8WH1+c0JO570BBCcmgIOUEO8i+rjxoji2lER6
+dsv1MdDgSFi9CHUG1+lBACgNDdCP2uojBK+4NfBr3QPP9O4+g6MypGNxE70X3Tlh
+7qywL76RiQ2kXSMcFJTbpUdwNxRIyhOchFeIDvUTcPG22MvRxLn6i3MsdX/9M50x
+7CUFjSLW4q2Mk/HFB7o8LZtBIfzLFGprj+J1RvzL1Bkq6bugZUohfEts7pYXrie9
+IPjSnsB/rYRji1p8bDbxdghzRTYtUqy2dheSvf4HWgB6k67VVmiOAHte3M4ykjs7
+zTm2R87KYoYS3SrgpwEo
+=2Zca
+-----END PGP SIGNATURE-----
+
+--nnojppk2eig6un6o--
+
+--===============1878546893==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: inline
+
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+
+--===============1878546893==--
