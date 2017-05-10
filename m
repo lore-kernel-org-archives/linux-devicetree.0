@@ -1,110 +1,80 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [linux-sunxi] [PATCH v2 20/20] ARM: sun5i: a10s-olinuxino:
- Enable HDMI
-Date: Wed, 10 May 2017 21:23:58 +0200
-Message-ID: <20170510192358.taufs5tsyifueued@flea.home>
-References: <cover.d697f34bb7b0605c5e76cbc4167a64453e5e0984.1493812478.git-series.maxime.ripard@free-electrons.com>
- <c7ac6faa0568e6418291255af537c4b070bdea63.1493812478.git-series.maxime.ripard@free-electrons.com>
- <CAGb2v65S2pw3z8NZ+tkPkF=A=5z2toRkC+26pAs6La6CNyeXoQ@mail.gmail.com>
+From: SF Markus Elfring <elfring-Rn4VEauK+AKRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+Subject: [PATCH] of/unittest: Delete an error message for a failed memory
+ allocation in three functions
+Date: Wed, 10 May 2017 22:33:22 +0200
+Message-ID: <958edc32-bc4d-4f3b-52d5-8a13aa36fd61@users.sourceforge.net>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1878546893=="
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <CAGb2v65S2pw3z8NZ+tkPkF=A=5z2toRkC+26pAs6La6CNyeXoQ@mail.gmail.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Chen-Yu Tsai <wens@csie.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-kernel <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, linux-sunxi <linux-sunxi@googlegroups.com>, Rob Herring <robh+dt@kernel.org>, Daniel Vetter <daniel.vetter@intel.com>, linux-clk <linux-clk@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, kernel-janitors-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+From: Markus Elfring <elfring-Rn4VEauK+AKRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+Date: Wed, 10 May 2017 22:20:52 +0200
 
---===============1878546893==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="nnojppk2eig6un6o"
-Content-Disposition: inline
+Omit an extra message for a memory allocation failure in these functions.
 
+This issue was detected by using the Coccinelle software.
 
---nnojppk2eig6un6o
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Link: http://events.linuxfoundation.org/sites/events/files/slides/LCJ16-Refactor_Strings-WSang_0.pdf
+Signed-off-by: Markus Elfring <elfring-Rn4VEauK+AKRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+---
+ drivers/of/unittest.c | 16 ++++------------
+ 1 file changed, 4 insertions(+), 12 deletions(-)
 
-Hi,
+diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
+index 987a1530282a..9554f83a0260 100644
+--- a/drivers/of/unittest.c
++++ b/drivers/of/unittest.c
+@@ -914,12 +914,9 @@ static int __init unittest_data_add(void)
+ 
+ 	/* creating copy */
+ 	unittest_data = kmemdup(__dtb_testcases_begin, size, GFP_KERNEL);
+-
+-	if (!unittest_data) {
+-		pr_warn("%s: Failed to allocate memory for unittest_data; "
+-			"not running tests\n", __func__);
++	if (!unittest_data)
+ 		return -ENOMEM;
+-	}
++
+ 	of_fdt_unflatten_tree(unittest_data, NULL, &unittest_data_node);
+ 	if (!unittest_data_node) {
+ 		pr_warn("%s: No tree to attach; not running tests\n", __func__);
+@@ -1593,12 +1590,9 @@ static int unittest_i2c_bus_probe(struct platform_device *pdev)
+ 	}
+ 
+ 	dev_dbg(dev, "%s for node @%s\n", __func__, np->full_name);
+-
+ 	std = devm_kzalloc(dev, sizeof(*std), GFP_KERNEL);
+-	if (!std) {
+-		dev_err(dev, "Failed to allocate unittest i2c data\n");
++	if (!std)
+ 		return -ENOMEM;
+-	}
+ 
+ 	/* link them together */
+ 	std->pdev = pdev;
+@@ -2062,10 +2056,8 @@ static int __init overlay_data_add(int onum)
+ 	 * will create pointers to the passed in FDT in the EDT.
+ 	 */
+ 	info->data = kmemdup(info->dtb_begin, size, GFP_KERNEL);
+-	if (!info->data) {
+-		pr_err("unable to allocate memory for data, %d\n", onum);
++	if (!info->data)
+ 		return 0;
+-	}
+ 
+ 	of_fdt_unflatten_tree(info->data, NULL, &info->np_overlay);
+ 	if (!info->np_overlay) {
+-- 
+2.12.3
 
-On Thu, May 04, 2017 at 04:05:18PM +0800, Chen-Yu Tsai wrote:
-> On Wed, May 3, 2017 at 7:59 PM, Maxime Ripard
-> <maxime.ripard@free-electrons.com> wrote:
-> > The A10s Olinuxino has an HDMI connector. Make sure we can use it.
-> >
-> > Acked-by: Chen-Yu Tsai <wens@csie.org>
-> > Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
-> > ---
-> >  arch/arm/boot/dts/sun5i-a10s-olinuxino-micro.dts | 29 ++++++++++++++++=
-+-
-> >  1 file changed, 29 insertions(+), 0 deletions(-)
-> >
-> > diff --git a/arch/arm/boot/dts/sun5i-a10s-olinuxino-micro.dts b/arch/ar=
-m/boot/dts/sun5i-a10s-olinuxino-micro.dts
-> > index 894f874a5beb..1d13b6407222 100644
-> > --- a/arch/arm/boot/dts/sun5i-a10s-olinuxino-micro.dts
-> > +++ b/arch/arm/boot/dts/sun5i-a10s-olinuxino-micro.dts
-> > @@ -63,6 +63,17 @@
-> >                 stdout-path =3D "serial0:115200n8";
-> >         };
-> >
-> > +       connector {
-> > +               compatible =3D "hdmi-connector";
-> > +               type =3D "a";
->=20
-> Just curious, should we take this into consideration when creating
-> drm_connector?
-
-I'm not sure, no other driver does so. And I haven't seen any of our
-boards with a HDMI-B, C or mini-HDMI connector.
-
-Maxime
-
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
-
---nnojppk2eig6un6o
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIcBAEBAgAGBQJZE2jOAAoJEBx+YmzsjxAgCioP/2rIPNKWgGmGCDyprDbgnHIK
-09g/WDmj5wAkxrbo2Y7e8+Uz0vuT78uzDLPQUzgwZK6Jvs8nZUkYWcdTFKKF+D96
-5t50lP78C/x31+jvGM8F+kmj2SbH5Yc0OjIcQyro06TBUigmR1nP+Aa5FwJqY6FF
-ZwHYbLMt+rRnNwqQ0s+D1QUu2fPiQwPzdNcL1mbzagb4Q7ZlXQWAotGfJT16Mw5I
-iO+MThbP+PJLUygYiJA2CJWvzzH3ghjUr98dSJK+6Y2KFGCerYo+gsqR7hyvWMwv
-kkfVJXwpPjQw6J+xWNI6LlvHvClhLT2QDAgLaGfC7nmtpxWHWhiWGy35XbZghQIm
-QK0gNM6v7lcyhrTFcFbW2WEvbnN8WH1+c0JO570BBCcmgIOUEO8i+rjxoji2lER6
-dsv1MdDgSFi9CHUG1+lBACgNDdCP2uojBK+4NfBr3QPP9O4+g6MypGNxE70X3Tlh
-7qywL76RiQ2kXSMcFJTbpUdwNxRIyhOchFeIDvUTcPG22MvRxLn6i3MsdX/9M50x
-7CUFjSLW4q2Mk/HFB7o8LZtBIfzLFGprj+J1RvzL1Bkq6bugZUohfEts7pYXrie9
-IPjSnsB/rYRji1p8bDbxdghzRTYtUqy2dheSvf4HWgB6k67VVmiOAHte3M4ykjs7
-zTm2R87KYoYS3SrgpwEo
-=2Zca
------END PGP SIGNATURE-----
-
---nnojppk2eig6un6o--
-
---===============1878546893==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: inline
-
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
-
---===============1878546893==--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
