@@ -1,41 +1,43 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v3 2/2] dt-bindings: pcie: Add documentation for Mediatek PCIe
-Date: Wed, 10 May 2017 10:08:46 +0200
-Message-ID: <CAK8P3a193RxchvFAMWeZiP0sc0bd+VGg=_aVvipSgcbDpHXojg@mail.gmail.com>
-References: <1494382020-26790-1-git-send-email-ryder.lee@mediatek.com> <1494382020-26790-3-git-send-email-ryder.lee@mediatek.com>
+From: Sakari Ailus <sakari.ailus@iki.fi>
+Subject: Re: [PATCH v5 3/7] media: i2c: max2175: Add MAX2175 support
+Date: Wed, 10 May 2017 11:12:31 +0300
+Message-ID: <20170510081231.GB3227@valkosipuli.retiisi.org.uk>
+References: <20170509133738.16414-1-ramesh.shanmugasundaram@bp.renesas.com>
+ <20170509133738.16414-4-ramesh.shanmugasundaram@bp.renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1494382020-26790-3-git-send-email-ryder.lee@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ryder Lee <ryder.lee@mediatek.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, linux-pci <linux-pci@vger.kernel.org>, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Red Hung <red.hung@mediatek.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170509133738.16414-4-ramesh.shanmugasundaram@bp.renesas.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, mchehab@kernel.org, hverkuil@xs4all.nl, sakari.ailus@linux.intel.com, crope@iki.fi, chris.paterson2@renesas.com, laurent.pinchart@ideasonboard.com, geert+renesas@glider.be, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 10, 2017 at 4:07 AM, Ryder Lee <ryder.lee@mediatek.com> wrote:
+Hi Ramesh,
 
-> +- ranges:
-> +  - The first three entries are expected to translate the addresses for the root
-> +    port registers, which are referenced by the assigned-addresses property of
-> +    the root port nodes (see below).
+On Tue, May 09, 2017 at 02:37:34PM +0100, Ramesh Shanmugasundaram wrote:
+...
+> +#include <media/v4l2-ctrls.h>
+> +#include <media/v4l2-device.h>
+> +#include <media/v4l2-of.h>
 
-I don't understand this part. Why do you need a static translation for these?
-Shouldn't they just be listed in the 'reg' property of the parent node now that
-you have the clk/reset/phy properties in the parent as well?
+Could you rebase this on the V4L2 fwnode patchset here, please?
 
-> +Required properties:
-> +- device_type: Must be "pci"
-> +- assigned-addresses: Address and size of the port configuration registers
-> +- reg: Only the first four bytes are used to refer to the correct bus number
-> +  and device number.
-> +- #address-cells: Must be 3
-> +- #size-cells: Must be 2
-> +- #interrupt-cells: Must be 1
-> +- interrupt-map-mask and interrupt-map: Standard PCI IRQ mapping properties
-> +  Please refer to the standard PCI bus binding document for a more detailed
-> +  explanation.
+<URL:https://git.linuxtv.org/sailus/media_tree.git/log/?h=v4l2-acpi>
 
-Child nodes do not normally have interrupt-map properties. Isn't this
-already covered by the interrupt-map in the parent?
+It depends on other patches which will reach media-tree master in next rc1,
+for now I've merged them here:
 
-      Arnd
+<URL:https://git.linuxtv.org/sailus/media_tree.git/log/?h=v4l2-acpi-merge>
+
+I'll send a pull request for media-tree once we have 4.12rc1 in media-tree
+master.
+
+Thanks.
+
+-- 
+Kind regards,
+
+Sakari Ailus
+e-mail: sakari.ailus@iki.fi	XMPP: sailus@retiisi.org.uk
