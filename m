@@ -1,209 +1,64 @@
-From: olivier moysan <olivier.moysan@st.com>
-Subject: [PATCH v2 3/3] ASoC: stm32: Add full duplex support to
-	i2s
-Date: Wed, 10 May 2017 15:35:19 +0200
-Message-ID: <1494423319-15063-4-git-send-email-olivier.moysan@st.com>
-References: <1494423319-15063-1-git-send-email-olivier.moysan@st.com>
+From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH 3/4] ARM: dts: rockchip: use pin constants to describe IO in pinctrl
+Date: Wed, 10 May 2017 15:55:37 +0200
+Message-ID: <3502373.tsXPg1D3p7@phil>
+References: <1491981044-24635-1-git-send-email-kever.yang@rock-chips.com> <3966386.YQGqDXjHSp@phil> <c98e2eaf-3e92-a6b6-5367-df31d0614d5c@rock-chips.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <1494423319-15063-1-git-send-email-olivier.moysan@st.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: lgirdwood@gmail.com, broonie@kernel.org, perex@perex.cz, tiwai@suse.com, mcoquelin.stm32@gmail.com, alexandre.torgue@st.com, alsa-devel@alsa-project.org, robh@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kernel@stlinux.com, linux-kernel@vger.kernel.org, olivier.moysan@st.com
-Cc: arnaud.pouliquen@st.com, benjamin.gaignard@st.com
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <c98e2eaf-3e92-a6b6-5367-df31d0614d5c-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Huibin Hong <huibin.hong-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, David Wu <david.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jianqun Xu <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Roge
 List-Id: devicetree@vger.kernel.org
 
-This patch allows to use i2s interface either as single
-audio path (rx or tx), or bidirectional audio path.
-This patch is added separately, as the driver does not
-follow recommended use of the interface, to support this
-configuration.
+Hi Kever,
 
-Signed-off-by: olivier moysan <olivier.moysan@st.com>
----
- sound/soc/stm/stm32_i2s.c | 88 +++++++++++++++++++++++++----------------------
- 1 file changed, 47 insertions(+), 41 deletions(-)
+Am Mittwoch, 10. Mai 2017, 09:25:25 CEST schrieb Kever Yang:
+> On 05/10/2017 05:43 AM, Heiko Stuebner wrote:
+> > Am Mittwoch, 12. April 2017, 15:10:43 CEST schrieb Kever Yang:
+> >> Use command below to replace the IO naming in pinctrl:
+> >> sed -i -e 's/ 31 RK_FUNC_/ RK_PD7 RK_FUNC_/' arch/arm/boot/dts/rk*
+> >> sed -i -e 's/ 0 RK_FUNC_/ RK_PA0 RK_FUNC_/'
+> >> arch/arm64/boot/dts/rockchip/*
+> >>
+> >> Signed-off-by: Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> > I'm not sure, if we really want to mass-convert each and every pin.
+> > All pins in use right now seem to be working and it hides other
+> > history/blame for these entries.
+> 
+> Do you mean you want to leave the code already there as is, and new
+> code using MACRO define for IO?
+> 
+> This sounds reasonable, I can agree on this. I send this patch because I 
+> see there is
+> a patch from Andy using MACRO for many IOs, but not complete enough
+> and my patch suppose to make all Rockchip IO has update.
 
-diff --git a/sound/soc/stm/stm32_i2s.c b/sound/soc/stm/stm32_i2s.c
-index 22152a1..a8e03c5 100644
---- a/sound/soc/stm/stm32_i2s.c
-+++ b/sound/soc/stm/stm32_i2s.c
-@@ -489,7 +489,6 @@ static int stm32_i2s_configure(struct snd_soc_dai *cpu_dai,
- 	struct stm32_i2s_data *i2s = snd_soc_dai_get_drvdata(cpu_dai);
- 	int format = params_width(params);
- 	u32 cfgr, cfgr_mask, cfg1, cfg1_mask;
--	bool playback_flg = (substream->stream == SNDRV_PCM_STREAM_PLAYBACK);
- 	unsigned int fthlv;
- 	int ret;
- 
-@@ -515,19 +514,13 @@ static int stm32_i2s_configure(struct snd_soc_dai *cpu_dai,
- 	}
- 
- 	if (STM32_I2S_IS_SLAVE(i2s)) {
--		if (playback_flg)
--			cfgr |= I2S_CGFR_I2SCFG_SET(I2S_I2SMOD_TX_SLAVE);
--		else
--			cfgr |= I2S_CGFR_I2SCFG_SET(I2S_I2SMOD_RX_SLAVE);
-+		cfgr |= I2S_CGFR_I2SCFG_SET(I2S_I2SMOD_FD_SLAVE);
- 
- 		/* As data length is either 16 or 32 bits, fixch always set */
- 		cfgr |= I2S_CGFR_FIXCH;
- 		cfgr_mask |= I2S_CGFR_FIXCH;
- 	} else {
--		if (playback_flg)
--			cfgr |= I2S_CGFR_I2SCFG_SET(I2S_I2SMOD_TX_MASTER);
--		else
--			cfgr |= I2S_CGFR_I2SCFG_SET(I2S_I2SMOD_RX_MASTER);
-+		cfgr |= I2S_CGFR_I2SCFG_SET(I2S_I2SMOD_FD_MASTER);
- 	}
- 	cfgr_mask |= I2S_CGFR_I2SCFG_MASK;
- 
-@@ -536,9 +529,7 @@ static int stm32_i2s_configure(struct snd_soc_dai *cpu_dai,
- 	if (ret < 0)
- 		return ret;
- 
--	cfg1 = I2S_CFG1_RXDMAEN;
--	if (playback_flg)
--		cfg1 = I2S_CFG1_TXDMAEN;
-+	cfg1 = I2S_CFG1_RXDMAEN | I2S_CFG1_TXDMAEN;
- 	cfg1_mask = cfg1;
- 
- 	fthlv = STM32_I2S_FIFO_SIZE * I2S_FIFO_TH_ONE_QUARTER / 4;
-@@ -553,32 +544,15 @@ static int stm32_i2s_startup(struct snd_pcm_substream *substream,
- 			     struct snd_soc_dai *cpu_dai)
- {
- 	struct stm32_i2s_data *i2s = snd_soc_dai_get_drvdata(cpu_dai);
--	int ret, ier;
- 
- 	i2s->substream = substream;
- 
- 	spin_lock(&i2s->lock_fd);
--	if (i2s->refcount) {
--		dev_err(cpu_dai->dev, "%s stream already started\n",
--			(substream->stream == SNDRV_PCM_STREAM_PLAYBACK ?
--			"Capture" : "Playback"));
--		spin_unlock(&i2s->lock_fd);
--		return -EBUSY;
--	}
--	i2s->refcount = 1;
-+	i2s->refcount++;
- 	spin_unlock(&i2s->lock_fd);
- 
--	ret = regmap_update_bits(i2s->regmap, STM32_I2S_IFCR_REG,
--				 I2S_IFCR_MASK, I2S_IFCR_MASK);
--	if (ret < 0)
--		return ret;
--
--	/* Enable ITs */
--	ier = I2S_IER_OVRIE | I2S_IER_UDRIE;
--	if (STM32_I2S_IS_SLAVE(i2s))
--		ier |= I2S_IER_TIFREIE;
--
--	return regmap_update_bits(i2s->regmap, STM32_I2S_IER_REG, ier, ier);
-+	return regmap_update_bits(i2s->regmap, STM32_I2S_IFCR_REG,
-+				  I2S_IFCR_MASK, I2S_IFCR_MASK);
- }
- 
- static int stm32_i2s_hw_params(struct snd_pcm_substream *substream,
-@@ -605,9 +579,11 @@ static int stm32_i2s_trigger(struct snd_pcm_substream *substream, int cmd,
- {
- 	struct stm32_i2s_data *i2s = snd_soc_dai_get_drvdata(cpu_dai);
- 	bool playback_flg = (substream->stream == SNDRV_PCM_STREAM_PLAYBACK);
--	u32 cfg1_mask;
-+	u32 cfg1_mask, ier;
- 	int ret;
- 
-+	spin_lock(&i2s->lock_fd);
-+
- 	switch (cmd) {
- 	case SNDRV_PCM_TRIGGER_START:
- 	case SNDRV_PCM_TRIGGER_RESUME:
-@@ -628,10 +604,45 @@ static int stm32_i2s_trigger(struct snd_pcm_substream *substream, int cmd,
- 			dev_err(cpu_dai->dev, "Error %d starting I2S\n", ret);
- 			return ret;
- 		}
-+
-+		regmap_update_bits(i2s->regmap, STM32_I2S_IFCR_REG,
-+				   I2S_IFCR_MASK, I2S_IFCR_MASK);
-+
-+		if (playback_flg) {
-+			ier = I2S_IER_UDRIE;
-+		} else {
-+			ier = I2S_IER_OVRIE;
-+
-+			if (i2s->refcount == 1) {
-+				/* dummy write to trigger capture */
-+				ret = regmap_write(i2s->regmap,
-+						   STM32_I2S_TXDR_REG, 0);
-+				if (ret)
-+					return ret;
-+			}
-+		}
-+
-+		if (STM32_I2S_IS_SLAVE(i2s))
-+			ier |= I2S_IER_TIFREIE;
-+
-+		regmap_update_bits(i2s->regmap, STM32_I2S_IER_REG, ier, ier);
- 		break;
- 	case SNDRV_PCM_TRIGGER_STOP:
- 	case SNDRV_PCM_TRIGGER_SUSPEND:
- 	case SNDRV_PCM_TRIGGER_PAUSE_PUSH:
-+		if (playback_flg)
-+			regmap_update_bits(i2s->regmap, STM32_I2S_IER_REG,
-+					   I2S_IER_UDRIE,
-+					   (unsigned int)~I2S_IER_UDRIE);
-+		else
-+			regmap_update_bits(i2s->regmap, STM32_I2S_IER_REG,
-+					   I2S_IER_OVRIE,
-+					   (unsigned int)~I2S_IER_OVRIE);
-+
-+		i2s->refcount--;
-+		if (i2s->refcount)
-+			break;
-+
- 		dev_dbg(cpu_dai->dev, "stop I2S\n");
- 
- 		ret = regmap_update_bits(i2s->regmap, STM32_I2S_CR1_REG,
-@@ -641,10 +652,7 @@ static int stm32_i2s_trigger(struct snd_pcm_substream *substream, int cmd,
- 			return ret;
- 		}
- 
--		cfg1_mask = I2S_CFG1_RXDMAEN;
--		if (playback_flg)
--			cfg1_mask = I2S_CFG1_TXDMAEN;
--
-+		cfg1_mask = I2S_CFG1_RXDMAEN | I2S_CFG1_TXDMAEN;
- 		regmap_update_bits(i2s->regmap, STM32_I2S_CFG1_REG,
- 				   cfg1_mask, 0);
- 		break;
-@@ -652,6 +660,8 @@ static int stm32_i2s_trigger(struct snd_pcm_substream *substream, int cmd,
- 		return -EINVAL;
- 	}
- 
-+	spin_unlock(&i2s->lock_fd);
-+
- 	return 0;
- }
- 
-@@ -662,10 +672,6 @@ static void stm32_i2s_shutdown(struct snd_pcm_substream *substream,
- 
- 	i2s->substream = NULL;
- 
--	spin_lock(&i2s->lock_fd);
--	i2s->refcount = 0;
--	spin_unlock(&i2s->lock_fd);
--
- 	regmap_update_bits(i2s->regmap, STM32_I2S_CGFR_REG,
- 			   I2S_CGFR_MCKOE, (unsigned int)~I2S_CGFR_MCKOE);
- }
--- 
-1.9.1
+As I said, I'm really not sure. On the one hand it's nicer and it will
+be easier to check devicetree against schematics, but mass-converting
+them makes me anxious. Andy did convert the rk3288-popmetal
+board which is somewhat sparsely used I think. If anything breaks with
+Firefly, Rock, Veyron etc we might make a lot of people unhappy :-) .
+
+But having boards use both paradigms at the same time (pin number and
+names) could also be confusing.
+
+> > In any case though, this needs to be split into separate arm32/arm64
+> > patches.
+
+Maybe we could split not only on the arm/arm64 border, but also on
+something like soc-level (rk3188, rk3288, rk3368). That way the amount
+of changes per patch would go down making review easier :-) .
+
+
+Just to make sure you saw it, I've also had to drop patch2 again (see
+separate response from yesterday).
+
+
+Heiko
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
