@@ -1,54 +1,59 @@
-From: Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: Re: [PATCH 3/4] ARM: dts: rockchip: use pin constants to describe IO
- in pinctrl
-Date: Wed, 10 May 2017 09:25:25 +0800
-Message-ID: <c98e2eaf-3e92-a6b6-5367-df31d0614d5c@rock-chips.com>
-References: <1491981044-24635-1-git-send-email-kever.yang@rock-chips.com>
- <1491981044-24635-3-git-send-email-kever.yang@rock-chips.com>
- <3966386.YQGqDXjHSp@phil>
+From: Ryder Lee <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v3 0/2] Add PCIe host driver support for Mediatek SoCs
+Date: Wed, 10 May 2017 10:06:58 +0800
+Message-ID: <1494382020-26790-1-git-send-email-ryder.lee@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <3966386.YQGqDXjHSp@phil>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Huibin Hong <huibin.hong-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, David Wu <david.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jianqun Xu <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Roge
+To: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Red Hung <red.hung-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Ryder Lee <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Heiko,
+Hi,
 
+This patch series add Mediatek Gen2 PCIe host controller driver and
+dt-binding document. It can be found on MT7623 series SoCs.
 
-On 05/10/2017 05:43 AM, Heiko Stuebner wrote:
-> Am Mittwoch, 12. April 2017, 15:10:43 CEST schrieb Kever Yang:
->> Use command below to replace the IO naming in pinctrl:
->> sed -i -e 's/ 31 RK_FUNC_/ RK_PD7 RK_FUNC_/' arch/arm/boot/dts/rk*
->> sed -i -e 's/ 0 RK_FUNC_/ RK_PA0 RK_FUNC_/'
->> arch/arm64/boot/dts/rockchip/*
->>
->> Signed-off-by: Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> I'm not sure, if we really want to mass-convert each and every pin.
-> All pins in use right now seem to be working and it hides other
-> history/blame for these entries.
+This driver was validated using Broadcom Tigon3 and Intel(R) 82575/82576
+gigabit ethernet card.
 
-Do you mean you want to leave the code already there as is, and new
-code using MACRO define for IO?
+Changes since v3:
+- correct sub-nodes unit addresses.
 
-This sounds reasonable, I can agree on this. I send this patch because I 
-see there is
-a patch from Andy using MACRO for many IOs, but not complete enough
-and my patch suppose to make all Rockchip IO has update.
+Changes since v2:
+- modify Kconfig to avoid kbuild test error on some architecture.
+- change compatible string.
+- revise binding document:
+  add missing interrupt-names.
+  remove the board dts example and drop 'status' properties.
+  remove unnecessary descriptions bout standard PCI bus binding.
 
-Thanks,
-- Kever
->
-> In any case though, this needs to be split into separate arm32/arm64
-> patches.
->
->
-> Heiko
->
+Changes since v1:
+- add .suppress_bind_attrs.
+- remove unnecessary *_valid_device() pattern.
+- remove PCI_PROBE_ONLY.
+- use the regular readl() instead of readl_relaxed().
+- add .map_bus() and change to use pci_generic_config_read/pci_generic_config_write.
+- revise dt-binding document and move nonstandard properties to root node.
+- change compatible string.
+- use interrupt-map property and replace mtk_pcie_map_irq() with of_irq_parse_and_map_pci().
+- use the new pci_register_host_bridge() method instead of pci_scan_root_bus().
 
+Ryder Lee (2):
+  PCI: mediatek: Add Mediatek PCIe host controller support
+  dt-bindings: pcie: Add documentation for Mediatek PCIe
+
+ .../bindings/pci/mediatek,mt7623-pcie.txt          | 149 ++++++
+ drivers/pci/host/Kconfig                           |  11 +
+ drivers/pci/host/Makefile                          |   1 +
+ drivers/pci/host/pcie-mediatek.c                   | 563 +++++++++++++++++++++
+ 4 files changed, 724 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pci/mediatek,mt7623-pcie.txt
+ create mode 100644 drivers/pci/host/pcie-mediatek.c
+
+-- 
+1.9.1
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
