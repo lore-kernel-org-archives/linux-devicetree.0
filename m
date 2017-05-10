@@ -1,108 +1,198 @@
-From: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
-Subject: Re: [PATCH v6 11/23] drivers/fsi: Add master unscan
-Date: Wed, 10 May 2017 17:01:04 +0930
-Message-ID: <CACPK8Xd5g+tZ7_pTO19YhDhyAUggp2fN2YDp7-1SSP+-9qZu9w@mail.gmail.com>
-References: <20170410194706.64280-1-cbostic@linux.vnet.ibm.com> <20170410194706.64280-12-cbostic@linux.vnet.ibm.com>
+From: Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Re: [PATCH v3 2/2] dt-bindings: pcie: Add documentation for Mediatek
+ PCIe
+Date: Wed, 10 May 2017 09:58:47 +0200
+Message-ID: <1f3f1c5a-7618-5af4-73ce-645415c86c06@gmail.com>
+References: <1494382020-26790-1-git-send-email-ryder.lee@mediatek.com>
+ <1494382020-26790-3-git-send-email-ryder.lee@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170410194706.64280-12-cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Christopher Bostic <cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, rostedt-nx8X9YLhiw1AfugRpC6u6w@public.gmane.org, mingo-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>, Alistair Popple <alistair-Y4h6yKqj69EXC2x5gXVKYQ@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <1494382020-26790-3-git-send-email-ryder.lee@mediatek.com>
+Content-Language: en-US
+Sender: linux-pci-owner@vger.kernel.org
+To: Ryder Lee <ryder.lee@mediatek.com>, Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>
+Cc: devicetree@vger.kernel.org, Red Hung <red.hung@mediatek.com>, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 11, 2017 at 5:16 AM, Christopher Bostic
-<cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org> wrote:
-> From: Chris Bostic <cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
->
-> Allow a master to undo a previous scan.  Should a master scan a bus
-> twice it will need to ensure it doesn't double register any
-> previously detected device.
->
-> Signed-off-by: Chris Bostic <cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-> Signed-off-by: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
+
+
+On 10/05/17 04:07, Ryder Lee wrote:
+> Add documentation for PCIe host driver available in MT7623
+> series SoCs.
+> 
+> Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
+> Acked-by: Rob Herring <robh@kernel.org>
 > ---
->  drivers/fsi/fsi-core.c | 40 ++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 40 insertions(+)
->
-> diff --git a/drivers/fsi/fsi-core.c b/drivers/fsi/fsi-core.c
-> index 4da0b030..75d2a88 100644
-> --- a/drivers/fsi/fsi-core.c
-> +++ b/drivers/fsi/fsi-core.c
-> @@ -69,6 +69,7 @@ struct fsi_slave {
->         uint32_t                size;   /* size of slave address space */
->  };
->
-> +#define to_fsi_master(d) container_of(d, struct fsi_master, dev)
->  #define to_fsi_slave(d) container_of(d, struct fsi_slave, dev)
->
->  static int fsi_master_read(struct fsi_master *master, int link,
-> @@ -491,6 +492,37 @@ static int fsi_master_scan(struct fsi_master *master)
->         return 0;
->  }
->
-> +static int __fsi_slave_remove_device(struct device *dev, void *arg)
-> +{
-> +       device_unregister(dev);
-> +       return 0;
-> +}
+>   .../bindings/pci/mediatek,mt7623-pcie.txt          | 149 +++++++++++++++++++++
+>   1 file changed, 149 insertions(+)
+>   create mode 100644 Documentation/devicetree/bindings/pci/mediatek,mt7623-pcie.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/pci/mediatek,mt7623-pcie.txt b/Documentation/devicetree/bindings/pci/mediatek,mt7623-pcie.txt
+> new file mode 100644
+> index 0000000..a9393ce
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pci/mediatek,mt7623-pcie.txt
+> @@ -0,0 +1,149 @@
+> +Mediatek Gen2 PCIe controller which is available on MT7623 series SoCs
 > +
-> +static int __fsi_master_remove_slave(struct device *dev, void *arg)
-> +{
-> +       device_for_each_child(dev, NULL, __fsi_slave_remove_device);
-> +       device_unregister(dev);
-> +       return 0;
-> +}
+> +PCIe subsys supports single root complex (RC) with 3 Root Ports. Each root
+> +ports supports a Gen2 1-lane Link and has PIPE interface to PHY.
+> +
+> +Required properties:
+> +- compatible: Should contain "mediatek,mt7623-pcie".
+> +- device_type: Must be "pci"
+> +- reg: Base addresses and lengths of the PCIe controller.
+> +- #address-cells: Address representation for root ports (must be 3)
+> +- #size-cells: Size representation for root ports (must be 2)
+> +- #interrupt-cells: Size representation for interrupts (must be 1)
+> +- interrupts: Three interrupt outputs of the controller. Must contain an
+> +  entry for each entry in the interrupt-names property.
+> +- interrupt-names: Must include the following names
+> +  - "pcie-int0"
+> +  - "pcie-int1"
+> +  - "pcie-int2"
+> +- interrupt-map-mask and interrupt-map: Standard PCI IRQ mapping properties
+> +  Please refer to the standard PCI bus binding document for a more detailed
+> +  explanation.
+> +- clocks: Must contain an entry for each entry in clock-names.
+> +  See ../clocks/clock-bindings.txt for details.
+> +- clock-names: Must include the following entries:
+> +  - free_ck :for reference clock of PCIe subsys
+> +  - sys_ck0 :for clock of Port0
+> +  - sys_ck1 :for clock of Port1
+> +  - sys_ck2 :for clock of Port2
+> +- resets: Must contain an entry for each entry in reset-names.
+> +  See ../reset/reset.txt for details.
+> +- reset-names: Must include the following entries:
+> +  - pcie-rst0 :port0 reset
+> +  - pcie-rst1 :port1 reset
+> +  - pcie-rst2 :port2 reset
+> +- phys: list of PHY specifiers (used by generic PHY framework).
+> +- phy-names : must be "pcie-phy0", "pcie-phy1", "pcie-phyN".. based on the
+> +  number of PHYs as specified in *phys* property.
+> +- power-domains: A phandle and power domain specifier pair to the power domain
+> +  which is responsible for collapsing and restoring power to the peripheral.
+> +- bus-range: Range of bus numbers associated with this controller.
+> +- ranges:
+> +  - The first three entries are expected to translate the addresses for the root
+> +    port registers, which are referenced by the assigned-addresses property of
+> +    the root port nodes (see below).
+> +  - The remaining entries setup the mapping for the standard I/O and memory
+> +	regions.
+> +  Please refer to the standard PCI bus binding document for a more detailed
+> +  explanation.
+> +
+> +In addition, the device tree node must have sub-nodes describing each
+> +PCIe port interface, having the following mandatory properties:
+> +
+> +Required properties:
+> +- device_type: Must be "pci"
+> +- assigned-addresses: Address and size of the port configuration registers
+> +- reg: Only the first four bytes are used to refer to the correct bus number
+> +  and device number.
+> +- #address-cells: Must be 3
+> +- #size-cells: Must be 2
+> +- #interrupt-cells: Must be 1
+> +- interrupt-map-mask and interrupt-map: Standard PCI IRQ mapping properties
+> +  Please refer to the standard PCI bus binding document for a more detailed
+> +  explanation.
+> +- ranges: Sub-ranges distributed from the PCIe controller node. An empty
+> +  property is sufficient.
+> +- num-lanes: Number of lanes to use for this port.
+> +
+> +Examples:
+> +
+> +	hifsys: syscon@1a000000 {
+> +		compatible = "mediatek,mt7623-hifsys", "syscon";
 
-I can't see why the two above functions to have the __ prefix.
+If you want to put the clock controller subsystem node to the example, 
+please use a valid compatible, for example:
 
-> +
-> +static void fsi_master_unscan(struct fsi_master *master)
-> +{
-> +       device_for_each_child(&master->dev, NULL, __fsi_master_remove_slave);
-> +}
-> +
-> +static ssize_t master_rescan_store(struct device *dev,
-> +               struct device_attribute *attr, const char *buf, size_t count)
-> +{
-> +       struct fsi_master *master = to_fsi_master(dev);
-> +
-> +       fsi_master_unscan(master);
-> +       fsi_master_scan(master);
+		compatible = "mediatek,mt7623-hifsys",
+			     "mediatek,mt2701-hifsys",
+			     "syscon";
 
-These function can return errors. Do you want to return those errors
-to userspace?
+Thanks,
+Matthias
 
+> +		reg = <0 0x1a000000 0 0x1000>;
+> +		#clock-cells = <1>;
+> +		#reset-cells = <1>;
+> +	};
 > +
-> +       return count;
-> +}
+> +	pcie: pcie-controller@1a140000 {
+> +		compatible = "mediatek,mt7623-pcie";
+> +		device_type = "pci";
+> +		reg = <0 0x1a140000 0 0x1000>; /* PCIe shared registers */
+> +		#address-cells = <3>;
+> +		#size-cells = <2>;
+> +		#interrupt-cells = <1>;
+> +		interrupts = <GIC_SPI 193 IRQ_TYPE_LEVEL_LOW>,
+> +			     <GIC_SPI 194 IRQ_TYPE_LEVEL_LOW>,
+> +			     <GIC_SPI 195 IRQ_TYPE_LEVEL_LOW>;
+> +		interrupt-names = "pcie-int0", "pcie-int1", "pcie-int2";
+> +		interrupt-map-mask = <0xf800 0 0 0>;
+> +		interrupt-map = <0x0000 0 0 0 &gic GIC_SPI 193 IRQ_TYPE_NONE>,
+> +				<0x0800 0 0 0 &gic GIC_SPI 194 IRQ_TYPE_NONE>,
+> +				<0x1000 0 0 0 &gic GIC_SPI 195 IRQ_TYPE_NONE>;
+> +		clocks = <&topckgen CLK_TOP_ETHIF_SEL>,
+> +			 <&hifsys CLK_HIFSYS_PCIE0>,
+> +			 <&hifsys CLK_HIFSYS_PCIE1>,
+> +			 <&hifsys CLK_HIFSYS_PCIE2>;
+> +		clock-names = "free_ck", "sys_ck0", "sys_ck1", "sys_ck2";
+> +		resets = <&hifsys MT2701_HIFSYS_PCIE0_RST>,
+> +			 <&hifsys MT2701_HIFSYS_PCIE1_RST>,
+> +			 <&hifsys MT2701_HIFSYS_PCIE2_RST>;
+> +		reset-names = "pcie-rst0", "pcie-rst1", "pcie-rst2";
+> +		phys = <&pcie0_phy>, <&pcie1_phy>, <&pcie2_phy>;
+> +		phy-names = "pcie-phy0", "pcie-phy1", "pcie-phy2";
+> +		power-domains = <&scpsys MT2701_POWER_DOMAIN_HIF>;
+> +		bus-range = <0x00 0xff>;
+> +		ranges = <0x82000000 0 0x1a142000 0 0x1a142000 0 0x1000 /* Port0 registers */
+> +			  0x82000000 0 0x1a143000 0 0x1a143000 0 0x1000 /* Port1 registers */
+> +			  0x82000000 0 0x1a144000 0 0x1a144000 0 0x1000 /* Port2 registers */
+> +			  0x81000000 0 0x1a160000 0 0x1a160000 0 0x00010000 /* I/O space */
+> +			  0x83000000 0 0x60000000 0 0x60000000 0 0x10000000>;	/* memory space */
 > +
-> +static DEVICE_ATTR(rescan, 0200, NULL, master_rescan_store);
+> +		pcie@0,0 {
+> +			device_type = "pci";
+> +			assigned-addresses = <0x82000000 0 0x1a142000 0 0x1000>;
+> +			reg = <0x0000 0 0 0 0>;
+> +			#address-cells = <3>;
+> +			#size-cells = <2>;
+> +			#interrupt-cells = <1>;
+> +			interrupt-map-mask = <0 0 0 0>;
+> +			interrupt-map = <0 0 0 0 &gic GIC_SPI 193 IRQ_TYPE_NONE>;
+> +			ranges;
+> +			num-lanes = <1>;
+> +		};
 > +
->  int fsi_master_register(struct fsi_master *master)
->  {
->         int rc;
-> @@ -507,7 +539,15 @@ int fsi_master_register(struct fsi_master *master)
->                 return rc;
->         }
->
-> +       rc = device_create_file(&master->dev, &dev_attr_rescan);
-> +       if (rc) {
-> +               device_unregister(&master->dev);
-> +               ida_simple_remove(&master_ida, master->idx);
-> +               return rc;
-> +       }
+> +		pcie@1,0 {
+> +			device_type = "pci";
+> +			assigned-addresses = <0x82000800 0 0x1a143000 0 0x1000>;
+> +			reg = <0x0800 0 0 0 0>;
+> +			#address-cells = <3>;
+> +			#size-cells = <2>;
+> +			#interrupt-cells = <1>;
+> +			interrupt-map-mask = <0 0 0 0>;
+> +			interrupt-map = <0 0 0 0 &gic GIC_SPI 194 IRQ_TYPE_NONE>;
+> +			ranges;
+> +			num-lanes = <1>;
+> +		};
 > +
->         fsi_master_scan(master);
-> +
->         return 0;
->  }
->  EXPORT_SYMBOL_GPL(fsi_master_register);
-> --
-> 1.8.2.2
->
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +		pcie@2,0 {
+> +			device_type = "pci";
+> +			assigned-addresses = <0x82001000 0 0x1a144000 0 0x1000>;
+> +			reg = <0x1000 0 0 0 0>;
+> +			#address-cells = <3>;
+> +			#size-cells = <2>;
+> +			#interrupt-cells = <1>;
+> +			interrupt-map-mask = <0 0 0 0>;
+> +			interrupt-map = <0 0 0 0 &gic GIC_SPI 195 IRQ_TYPE_NONE>;
+> +			ranges;
+> +			num-lanes = <1>;
+> +		};
+> +	};
+> 
