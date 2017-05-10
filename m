@@ -1,121 +1,74 @@
-From: Mars Cheng <mars.cheng@mediatek.com>
-Subject: Re: [PATCH v4 00/10] Add Basic SoC support for MT6797
-Date: Wed, 10 May 2017 18:37:06 +0800
-Message-ID: <1494412626.6162.1.camel@mtkswgap22>
-References: <1491614435-23754-1-git-send-email-mars.cheng@mediatek.com>
-         <1492314150.19878.2.camel@mtkswgap22>
-         <6d60bccf-1894-7dc8-5ff7-4536a9755e0b@gmail.com>
+From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 2/2] arm: dts: mt2701: add nor flash node
+Date: Wed, 10 May 2017 12:49:39 +0200
+Message-ID: <1a788098-1cf8-5fec-e847-5c14189f8586@gmail.com>
+References: <1485315515-29942-1-git-send-email-guochun.mao@mediatek.com>
+ <1485315515-29942-3-git-send-email-guochun.mao@mediatek.com>
+ <1486267249.10417.9.camel@mhfsdcap03> <20170206084544.24878633@bbrezillon>
+ <77e0e3b0-2fe4-b32b-9099-11ce9811ba15@gmail.com>
+ <1487044733.19037.0.camel@mhfsdcap03>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <6d60bccf-1894-7dc8-5ff7-4536a9755e0b@gmail.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Matthias Brugger <matthias.bgg@gmail.com>
-Cc: Stephen Boyd <sboyd@codeaurora.org>, CC Hwang <cc.hwang@mediatek.com>, Loda Chou <loda.chou@mediatek.com>, Miles Chen <miles.chen@mediatek.com>, Jades Shih <jades.shih@mediatek.com>, Yingjoe Chen <yingjoe.chen@mediatek.com>, Kevin-CW Chen <kevin-cw.chen@mediatek.com>, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org, wsd_upstream@mediatek.com
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1487044733.19037.0.camel@mhfsdcap03>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Guochun Mao <guochun.mao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, John Crispin <john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org>, "linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Matthias
 
-On Wed, 2017-05-10 at 11:27 +0200, Matthias Brugger wrote:
-> Hi Mars,
+
+On 14/02/17 04:58, Guochun Mao wrote:
+> On Sun, 2017-02-12 at 07:35 +0800, Matthias Brugger wrote:
+>>
+>> On 02/06/2017 08:45 AM, Boris Brezillon wrote:
+>>> Hi Guochun,
+>>>
+>>> On Sun, 5 Feb 2017 12:00:49 +0800
+>>> Guochun Mao <guochun.mao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
+>>>
+>>>
+>>>>>
+>>>>> +   nor_flash: spi@11014000 {
+>>>>> +           compatible = "mediatek,mt2701-nor",
+>>>>> +                        "mediatek,mt8173-nor";
+>>>>> +           reg = <0 0x11014000 0 0xe0>;
+>>>>> +           clocks = <&pericfg CLK_PERI_FLASH>,
+>>>>> +                    <&topckgen CLK_TOP_FLASH_SEL>;
+>>>>> +           clock-names = "spi", "sf";
+>>>>> +           #address-cells = <1>;
+>>>>> +           #size-cells = <0>;
+>>>>> +           status = "disabled";
+>>>>> +   };
+>>>>> +
+>>>>>      mmsys: syscon@14000000 {
+>>>>>              compatible = "mediatek,mt2701-mmsys", "syscon";
+>>>>>              reg = <0 0x14000000 0 0x1000>;
+>>>>
+>>>> Hi,
+>>>> mtk-quadspi.txt had been updated as suggested.
+>>>> Is there suggestion about this patch?
+>>>
+>>> It should probably go through the Mediatek tree. Matthias, any opinion?
+>>>
+>>
+>> Yes, I will take this one through mine tree.
+>>
+>> Thanks,
+>> Matthias
 > 
-> On 16/04/17 05:42, Mars Cheng wrote:
-> > Hi Stephen, Matthias
-> > 
-> > gentle ping. :-)
-> > 
+> Thanks,
+> Guochun
 > 
-> I queued your patches for v4.12-next now.
-> Sorry for the delay in my respons.
-> 
-> Regards,
-> Matthias
 > 
 
-It's great.
-Nice to have you back. Thanks for your help. :-)
+Queued now for v4.12-next/dts32
+Sorry for the delay.
 
-> > Thanks.
-> > 
-> > On Sat, 2017-04-08 at 09:20 +0800, Mars Cheng wrote:
-> >> This patch set adds basic SoC support for mediatek's first 10-core
-> >> chip, X20, also known as MT6797.
-> >>
-> >> - based on 4.11-rc1
-> >> - support common clk framework
-> >> - apply patches about intpol just accepted to get full feature support:
-> >> http://lists.infradead.org/pipermail/linux-mediatek/2017-March/008371.html
-> >> http://lists.infradead.org/pipermail/linux-mediatek/2017-March/008375.html
-> >> http://lists.infradead.org/pipermail/linux-mediatek/2017-March/008373.html
-> >>
-> >> Changes since v3:
-> >> - since intpol patches accepted in v3, remove them
-> >> - clk ID header separated from original clk driver submit
-> >> - clean up clk driver, including unnecessary header and fields in structure
-> >>
-> >> Changes since v2:
-> >> - prevent uncessary #intpol-bases for mtk-sysirq
-> >> - add fast path for mtk-sysirq set_type when introducing multiple bases
-> >> - add acked-by and tested-by
-> >> - remove wrong usage for timer node
-> >>
-> >> Changes since v1:
-> >> - add multiple base addresses support, v1 only allow 2 bases
-> >> - clean up clk driver
-> >>
-> >> Kevin-CW Chen (2):
-> >>    dt-bindings: arm: mediatek: document clk bindings for MT6797
-> >>    clk: mediatek: add clk support for MT6797
-> >>
-> >> Mars Cheng (8):
-> >>    dt-bindings: mediatek: Add bindings for mediatek MT6797 Platform
-> >>    arm64: dts: mediatek: add mt6797 support
-> >>    clk: mediatek: add mt6797 clock IDs
-> >>    soc: mediatek: avoid using fixed spm power status defines
-> >>    soc: mediatek: add vdec item for scpsys
-> >>    dt-bindings: mediatek: add MT6797 power dt-bindings
-> >>    soc: mediatek: add MT6797 scpsys support
-> >>    arm64: dts: mediatek: add clk and scp nodes for MT6797
-> >>
-> >>   Documentation/devicetree/bindings/arm/mediatek.txt |    4 +
-> >>   .../bindings/arm/mediatek/mediatek,apmixedsys.txt  |    1 +
-> >>   .../bindings/arm/mediatek/mediatek,imgsys.txt      |    1 +
-> >>   .../bindings/arm/mediatek/mediatek,infracfg.txt    |    1 +
-> >>   .../bindings/arm/mediatek/mediatek,mmsys.txt       |    1 +
-> >>   .../bindings/arm/mediatek/mediatek,topckgen.txt    |    1 +
-> >>   .../bindings/arm/mediatek/mediatek,vdecsys.txt     |    1 +
-> >>   .../bindings/arm/mediatek/mediatek,vencsys.txt     |    3 +-
-> >>   .../interrupt-controller/mediatek,sysirq.txt       |    1 +
-> >>   .../devicetree/bindings/serial/mtk-uart.txt        |    1 +
-> >>   .../devicetree/bindings/soc/mediatek/scpsys.txt    |    6 +-
-> >>   arch/arm64/boot/dts/mediatek/Makefile              |    1 +
-> >>   arch/arm64/boot/dts/mediatek/mt6797-evb.dts        |   36 +
-> >>   arch/arm64/boot/dts/mediatek/mt6797.dtsi           |  245 +++++++
-> >>   drivers/clk/mediatek/Kconfig                       |   32 +
-> >>   drivers/clk/mediatek/Makefile                      |    5 +
-> >>   drivers/clk/mediatek/clk-mt6797-img.c              |   76 +++
-> >>   drivers/clk/mediatek/clk-mt6797-mm.c               |  136 ++++
-> >>   drivers/clk/mediatek/clk-mt6797-vdec.c             |   93 +++
-> >>   drivers/clk/mediatek/clk-mt6797-venc.c             |   78 +++
-> >>   drivers/clk/mediatek/clk-mt6797.c                  |  714 ++++++++++++++++++++
-> >>   drivers/soc/mediatek/mtk-scpsys.c                  |  149 +++-
-> >>   include/dt-bindings/clock/mt6797-clk.h             |  281 ++++++++
-> >>   include/dt-bindings/power/mt6797-power.h           |   30 +
-> >>   24 files changed, 1889 insertions(+), 8 deletions(-)
-> >>   create mode 100644 arch/arm64/boot/dts/mediatek/mt6797-evb.dts
-> >>   create mode 100644 arch/arm64/boot/dts/mediatek/mt6797.dtsi
-> >>   create mode 100644 drivers/clk/mediatek/clk-mt6797-img.c
-> >>   create mode 100644 drivers/clk/mediatek/clk-mt6797-mm.c
-> >>   create mode 100644 drivers/clk/mediatek/clk-mt6797-vdec.c
-> >>   create mode 100644 drivers/clk/mediatek/clk-mt6797-venc.c
-> >>   create mode 100644 drivers/clk/mediatek/clk-mt6797.c
-> >>   create mode 100644 include/dt-bindings/clock/mt6797-clk.h
-> >>   create mode 100644 include/dt-bindings/power/mt6797-power.h
-> >>
-> >> --
-> >> 1.7.9.5
-> > 
-> > 
-
-
+Matthias
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
