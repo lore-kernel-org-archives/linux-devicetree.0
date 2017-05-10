@@ -1,43 +1,136 @@
-From: Sakari Ailus <sakari.ailus@iki.fi>
-Subject: Re: [PATCH v5 3/7] media: i2c: max2175: Add MAX2175 support
-Date: Wed, 10 May 2017 11:12:31 +0300
-Message-ID: <20170510081231.GB3227@valkosipuli.retiisi.org.uk>
-References: <20170509133738.16414-1-ramesh.shanmugasundaram@bp.renesas.com>
- <20170509133738.16414-4-ramesh.shanmugasundaram@bp.renesas.com>
+From: Joel Stanley <joel@jms.id.au>
+Subject: Re: [PATCH v6 10/23] drivers/fsi: Add device read/write/peek API
+Date: Wed, 10 May 2017 17:43:02 +0930
+Message-ID: <CACPK8Xewjnpvc3sN=X9tMm7NP6rQ=NHKDuxwYO4DFjRw63PP8A@mail.gmail.com>
+References: <20170410194706.64280-1-cbostic@linux.vnet.ibm.com> <20170410194706.64280-11-cbostic@linux.vnet.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170509133738.16414-4-ramesh.shanmugasundaram@bp.renesas.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, mchehab@kernel.org, hverkuil@xs4all.nl, sakari.ailus@linux.intel.com, crope@iki.fi, chris.paterson2@renesas.com, laurent.pinchart@ideasonboard.com, geert+renesas@glider.be, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170410194706.64280-11-cbostic@linux.vnet.ibm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Christopher Bostic <cbostic@linux.vnet.ibm.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, rostedt@goodmis.org, mingo@redhat.com, Greg KH <gregkh@linuxfoundation.org>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel@lists.infradead.org, Jeremy Kerr <jk@ozlabs.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Andrew Jeffery <andrew@aj.id.au>, Alistair Popple <alistair@popple.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, "Edward A . James" <eajames@us.ibm.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Ramesh,
+On Tue, Apr 11, 2017 at 5:16 AM, Christopher Bostic
+<cbostic@linux.vnet.ibm.com> wrote:
+> From: Jeremy Kerr <jk@ozlabs.org>
+>
+> This change introduces the fsi device API: simple read, write and peek
+> accessors for the devices' address spaces.
+>
+> Includes contributions from Chris Bostic <cbostic@linux.vnet.ibm.com>
+> and Edward A. James <eajames@us.ibm.com>.
+>
+> Signed-off-by: Edward A. James <eajames@us.ibm.com>
+> Signed-off-by: Jeremy Kerr <jk@ozlabs.org>
+> Signed-off-by: Chris Bostic <cbostic@linux.vnet.ibm.com>
+> Signed-off-by: Joel Stanley <joel@jms.id.au>
+> ---
+>  drivers/fsi/fsi-core.c | 33 +++++++++++++++++++++++++++++++++
+>  include/linux/fsi.h    |  7 ++++++-
+>  2 files changed, 39 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/fsi/fsi-core.c b/drivers/fsi/fsi-core.c
+> index a8faa89..4da0b030 100644
+> --- a/drivers/fsi/fsi-core.c
+> +++ b/drivers/fsi/fsi-core.c
+> @@ -32,6 +32,8 @@
+>  #define FSI_SLAVE_CONF_CRC_MASK                0x0000000f
+>  #define FSI_SLAVE_CONF_DATA_BITS       28
+>
+> +#define FSI_PEEK_BASE                  0x410
+> +
+>  static const int engine_page_size = 0x400;
+>
+>  #define FSI_SLAVE_BASE                 0x800
+> @@ -73,9 +75,40 @@ static int fsi_master_read(struct fsi_master *master, int link,
+>                 uint8_t slave_id, uint32_t addr, void *val, size_t size);
+>  static int fsi_master_write(struct fsi_master *master, int link,
+>                 uint8_t slave_id, uint32_t addr, const void *val, size_t size);
+> +static int fsi_slave_read(struct fsi_slave *slave, uint32_t addr,
+> +               void *val, size_t size);
+> +static int fsi_slave_write(struct fsi_slave *slave, uint32_t addr,
+> +               const void *val, size_t size);
 
-On Tue, May 09, 2017 at 02:37:34PM +0100, Ramesh Shanmugasundaram wrote:
-...
-> +#include <media/v4l2-ctrls.h>
-> +#include <media/v4l2-device.h>
-> +#include <media/v4l2-of.h>
+I don't think these
+>
+>  /* FSI endpoint-device support */
+>
+> +int fsi_device_read(struct fsi_device *dev, uint32_t addr, void *val,
+> +               size_t size)
 
-Could you rebase this on the V4L2 fwnode patchset here, please?
+I suggest adding some comments about the use of fsi_device_read,
+fsi_device_write and fsi_device_peek APIs for driver authors.
 
-<URL:https://git.linuxtv.org/sailus/media_tree.git/log/?h=v4l2-acpi>
+One important note is that the data in val must be FSI bus endian (big endian).
 
-It depends on other patches which will reach media-tree master in next rc1,
-for now I've merged them here:
+It would be nice to have the sparse notation (eg. __be32) as well.
+That doesn't make sense for void *, but we could add some helper
+functions like:
 
-<URL:https://git.linuxtv.org/sailus/media_tree.git/log/?h=v4l2-acpi-merge>
+ int fsi_device_read32(struct fsi_device *dev, uint32_t addr, __be32 *val)
 
-I'll send a pull request for media-tree once we have 4.12rc1 in media-tree
-master.
+ int fsi_device_write32(struct fsi_device *dev, uint32_t addr, __be32 val)
 
-Thanks.
+We probably only need a 32 bit version, as all of the reads/writes
+being done in users of this function are 32 bit.
 
--- 
-Kind regards,
+What do you think?
 
-Sakari Ailus
-e-mail: sakari.ailus@iki.fi	XMPP: sailus@retiisi.org.uk
+> +{
+> +       if (addr > dev->size || size > dev->size || addr > dev->size - size)
+> +               return -EINVAL;
+> +
+> +       return fsi_slave_read(dev->slave, dev->addr + addr, val, size);
+> +}
+> +EXPORT_SYMBOL_GPL(fsi_device_read);
+> +
+> +int fsi_device_write(struct fsi_device *dev, uint32_t addr, const void *val,
+> +               size_t size)
+> +{
+> +       if (addr > dev->size || size > dev->size || addr > dev->size - size)
+> +               return -EINVAL;
+> +
+> +       return fsi_slave_write(dev->slave, dev->addr + addr, val, size);
+> +}
+> +EXPORT_SYMBOL_GPL(fsi_device_write);
+> +
+> +int fsi_device_peek(struct fsi_device *dev, void *val)
+> +{
+> +       uint32_t addr = FSI_PEEK_BASE + ((dev->unit - 2) * sizeof(uint32_t));
+> +
+> +       return fsi_slave_read(dev->slave, addr, val, sizeof(uint32_t));
+> +}
+> +
+>  static void fsi_device_release(struct device *_device)
+>  {
+>         struct fsi_device *device = to_fsi_dev(_device);
+> diff --git a/include/linux/fsi.h b/include/linux/fsi.h
+> index efa55ba..66bce48 100644
+> --- a/include/linux/fsi.h
+> +++ b/include/linux/fsi.h
+> @@ -27,6 +27,12 @@ struct fsi_device {
+>         uint32_t                size;
+>  };
+>
+> +extern int fsi_device_read(struct fsi_device *dev, uint32_t addr,
+> +               void *val, size_t size);
+> +extern int fsi_device_write(struct fsi_device *dev, uint32_t addr,
+> +               const void *val, size_t size);
+> +extern int fsi_device_peek(struct fsi_device *dev, void *val);
+> +
+>  struct fsi_device_id {
+>         u8      engine_type;
+>         u8      version;
+> @@ -40,7 +46,6 @@ struct fsi_device_id {
+>  #define FSI_DEVICE_VERSIONED(t, v) \
+>         .engine_type = (t), .version = (v),
+>
+> -
+>  struct fsi_driver {
+>         struct device_driver            drv;
+>         const struct fsi_device_id      *id_table;
+> --
+> 1.8.2.2
+>
