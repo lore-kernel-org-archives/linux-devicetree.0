@@ -1,136 +1,172 @@
-From: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v4 3/5] soc: qcom: Introduce APCS IPC driver
-Date: Wed, 10 May 2017 08:03:53 +0530
-Message-ID: <CABb+yY2LoX_rOSCkhnp-gS7EHTN+98xNn2E1+z7_7bFjQ2wtoA@mail.gmail.com>
-References: <20170505183729.GG15143@minitux> <CABb+yY03imq8911rF9dHJjG_a_aosksA=tgk7Rog5AZSezHDyg@mail.gmail.com>
- <338c4262-cc6b-bed2-16fe-1767d1f0d5f6@codeaurora.org> <CABb+yY1K3Hyn7CzQCA6tHu-KrPigARc3cYgBdT8PNX7vjhPK0g@mail.gmail.com>
- <20170506011920.GH15143@minitux> <CABb+yY1u9mspX1Zu0mg21JMYxpKxsXsvBa9LnF6VNr1_42UJUQ@mail.gmail.com>
- <20170508055439.GJ15143@minitux> <CABb+yY3CfWFBDh-qoGHDeHyLhVC7mPQZFB=VDS54OaypG-BqPw@mail.gmail.com>
- <20170508191154.GM15143@minitux> <CABb+yY2uC6vNFTq1KtZwrrw8x4BEfc2cMjF5DwrLbGpYWBNBzQ@mail.gmail.com>
- <20170509191106.GQ15143@minitux>
+From: Oleksij Rempel <linux-YEK0n+YFykbzxQdaRaTXBw@public.gmane.org>
+Subject: Re: [PATCH v3] arm: dts: sun7i-a20-bananapi: name the GPIO lines
+Date: Wed, 10 May 2017 06:47:58 +0200
+Message-ID: <17553199-cc74-96ae-bc75-5e91b866ccd1@rempel-privat.de>
+References: <1494048638-24365-1-git-send-email-linux@rempel-privat.de>
+ <20170509202725.e2tkry7dmsgx7se5@lukather>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="uqWsLDpF7bxRIs8TN7kxweMAjJmgRnx3U"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170509191106.GQ15143@minitux>
+In-Reply-To: <20170509202725.e2tkry7dmsgx7se5@lukather>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Jeffrey Hugo <jhugo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ohad Ben-Cohen <ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-remoteproc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: ore-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 10, 2017 at 12:41 AM, Bjorn Andersson
-<bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> On Tue 09 May 09:41 PDT 2017, Jassi Brar wrote:
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--uqWsLDpF7bxRIs8TN7kxweMAjJmgRnx3U
+Content-Type: multipart/mixed; boundary="UwlDB5iUD3Wr2wuqeDdM6GVaqhduOpb7B";
+ protected-headers="v1"
+From: Oleksij Rempel <linux-YEK0n+YFykbzxQdaRaTXBw@public.gmane.org>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: ore-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>,
+ devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org,
+ Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Message-ID: <17553199-cc74-96ae-bc75-5e91b866ccd1-YEK0n+YFykbzxQdaRaTXBw@public.gmane.org>
+Subject: Re: [PATCH v3] arm: dts: sun7i-a20-bananapi: name the GPIO lines
+References: <1494048638-24365-1-git-send-email-linux-YEK0n+YFykbzxQdaRaTXBw@public.gmane.org>
+ <20170509202725.e2tkry7dmsgx7se5@lukather>
+In-Reply-To: <20170509202725.e2tkry7dmsgx7se5@lukather>
 
+--UwlDB5iUD3Wr2wuqeDdM6GVaqhduOpb7B
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
+Am 09.05.2017 um 22:27 schrieb Maxime Ripard:
+> Hi Oleksij,
+>=20
+> It looks much better, thanks!
+>=20
+> On Sat, May 06, 2017 at 07:30:38AM +0200, Oleksij Rempel wrote:
+>> This names the GPIO lines on the Banana Pi board in accordance with
+>> the A20_Banana_Pi v1.4 Specification.
 >>
->> >> >> The client should call mbox_client_txdone() after
->> >> >> mbox_send_message().
->> >> >
->> >> > So every time we call mbox_send_message() from any of the client drivers
->> >> > we also needs to call mbox_client_txdone()?
->> >> >
->> >> Yes.
->> >>
->> >> > This seems like an awkward side effect of using the mailbox framework -
->> >> > which has to be spread out in at least 6 different client drivers :(
->> >> >
->> >> No. Mailbox or whatever you implement - you must (and do) tick the
->> >> state machine to keep the messages moving.
->> >
->> > But the state you have in the other mailbox drivers is not a concern of
->> > the APCS IPC.
->> >
->> No, as you say above you check for space before writing the next
->> message, this is what I call ticking the state machine.
+>> This will make these line names reflect through to user space
+>> so that they can easily be identified and used with the new
+>> character device ABI.
 >>
->
-> Sure, but you're talking about the mailbox state machine. The APCS IPC
-> doesn't have states.  The _only_ thing that the APCS IPC provides is a
-> mechanism for informing the other side that "hey there's something to
-> do". So it doesn't matter if there's already a pending "hey there's
-> something to do", because adding another will still only be "hey there's
-> something to do".
->
-> I'm just trying to describe the big picture, but you keep confusing the
-> mailbox/doorbell responsibilities with the client's responsibilities.
->
-I think I do understand the bigger picture...
+>> Signed-off-by: Oleksij Rempel <linux-YEK0n+YFykbzxQdaRaTXBw@public.gmane.org>
+>> Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>> Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+>> Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+>> Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+>> ---
+>=20
+> Usually, it's better here if you put a change log with the things that
+> changed from one version to another.
+>=20
+> You probably remember all of the comments that were made on the
+> previous version of that patch, but I don't ;)
 
-The client driver sets up data packet in SHM and submit a "doorbell"
-to be ringed. The controller driver simply sets some bit to trigger an
-irq on the remote side (doorbell). And before submitting a "doorbell"
-the client makes sure there is some space for data packet to be
-written. Right?  You see, in the big picture you do have a
-state-machine.
+ok.
 
-                 [Message to send]
-                               |
-                               |
-           |-------------->|
-           | No             |
-           |                   |
-           |___[Space Available?]
-                               |
-                               |Yes
-                               |
-                               |
-                  [ Setup Data in SHM]
-                               |
-                              V
-                    [Ring Doorbell]
-
-
-Mailbox framework supports this whole picture. There is even a
-callback (tx_prepare) to setup data packet just before the doorbell is
-to be rung.
-
->> BTW, this is an option only if your client driver doesn't want to
->> explicitly tick the state machine by calling mbox_client_txdone()...
->> which I think should be done in the first place.
+>=20
+>>  arch/arm/boot/dts/sun7i-a20-bananapi.dts | 51 +++++++++++++++++++++++=
++++++++++
+>>  1 file changed, 51 insertions(+)
 >>
->
-> There is no state of the APCS IPC, so the overhead is created by the
-> mailbox framework.
->
-Overhead remains the same if you move the check from your client
-drivers to last_tx_done.
-OR your client driver, rightfully, drive the state machine by calling
-mbox_client_txdone() like other platforms.
+>> diff --git a/arch/arm/boot/dts/sun7i-a20-bananapi.dts b/arch/arm/boot/=
+dts/sun7i-a20-bananapi.dts
+>> index 91f2e5f..6b326b3 100644
+>> --- a/arch/arm/boot/dts/sun7i-a20-bananapi.dts
+>> +++ b/arch/arm/boot/dts/sun7i-a20-bananapi.dts
+>> @@ -178,6 +178,57 @@
+>>  };
+>> =20
+>>  &pio {
+>> +	gpio-line-names =3D
+>> +		/* PA */
+>> +		"ERXD3", "ERXD2", "ERXD1", "ERXD0", "ETXD3",
+>> +			"ETXD2", "ETXD1", "ETXD0",
+>> +		"ERXCK", "ERXERR", "ERXDV", "EMDC", "EMDIO",
+>> +			"ETXEN", "ETXCK", "ECRS",
+>> +		"ECOL", "ETXERR", "", "", "", "", "", "",
+>> +		"", "", "", "", "", "", "", "",
+>> +		/* PB */
+>> +		"PMU-SCK", "PMU-SDA", "", "", "", "", "", "",
+>> +		"", "USB0-DRV", "", "", "", "", "", "",
+>> +		"", "", "", "", "SCL", "SDA", "", "",
+>=20
+> I'm not sure how it's called in the schematics / documentation, but
+> having a way to get which bus it's from would be helpful (like you did
+> for the PMIC I2C bus).
 
-                 [Message to send]<----------|
-                               |                             |
-                               |                             |
-           |-------------->|                             |
-           | No             |                             |
-           |                   |                             |
-           |___[Space Available?]             |
-                               |                             |
-                               |Yes                       |
-                               |                             |
-                              V                             |
-                  [Setup Data in SHM]           |
-                               |                              |
-                              V                              |
-                 mbox_send_message()        |
-                               |                               |
-                              V                              |
-                 mbox_client_txdone()           |
-                               |                              |
-                               V______________|
+I use only names provided by schematics. Using something different IMO
+makes no sense and confusing.
+
+>> +		"", "", "", "", "", "", "", "",
+>> +		/* PC */
+>> +		"", "", "", "", "", "", "", "",
+>> +		"", "", "", "", "", "", "", "",
+>> +		"", "", "", "", "", "", "", "",
+>> +		"", "", "", "", "", "", "", "",
+>> +		/* PD */
+>> +		"", "", "", "", "", "", "", "",
+>> +		"", "", "", "", "", "", "", "",
+>> +		"", "", "", "", "", "", "", "",
+>> +		"", "", "", "", "", "", "", "",
+>> +		/* PE */
+>> +		"", "", "", "", "", "", "", "",
+>> +		"", "", "", "", "", "", "", "",
+>> +		"", "", "", "", "", "", "", "",
+>> +		"", "", "", "", "", "", "", "",
+>> +		/* PF */
+>> +		"SD0-D1", "SD0-D0", "SD0-CLK", "SD0-CMD", "SD0-D3",
+>> +			"SD0-D2", "", "",
+>=20
+> Why did you change the wrapping and indentation on those two lines?
+
+i use 8 entry per line to keep counting easier. If line is too wide, i
+wrap it with changed indentation.
+
+>> +		"", "", "", "", "", "", "", "",
+>> +		"", "", "", "", "", "", "", "",
+>> +		"", "", "", "", "", "", "", "",
+>> +		/* PG */
+>> +		"", "", "", "", "", "", "", "",
+>> +		"", "", "", "", "", "", "", "",
+>> +		"", "", "", "", "", "", "", "",
+>> +		"", "", "", "", "", "", "", "",
+>> +		/* PH */
+>> +		"TXD0", "RXD0", "IO-1", "PH3", "USB0-IDDET", "PH5", "", "",
+>=20
+> What are PH3 and PH5 used for on the board? Can't we provide a more
+> explicit name?
+
+Only names used by schematic :) If we will use something different users
+will hate us even more.
+
+I can image to use some kind of combination of connector name and pin
+name. For example: "JP1-RXD0", or some thing like this.
+
+> Thanks!
+> Maxime
+>=20
 
 
-> The part where this piece of hardware differs from the other mailboxes
-> is that TX is done as send_data() returns and in the realm of the
-> mailbox there is no such thing as "tx done". So how about we extend the
-> framework to handle stateless and message-less doorbells?
->
-This is a very common usecase. It would be unfair to other platforms
-to modify the API just because you find it awkward to call
-mbox_client_txdone() right after mbox_send_message(). For example,
-drivers/firmware/tegra/bpmp.c
-I'd much rather have mbox_send_message_and_tick() than implant a new api.
+--=20
+Regards,
+Oleksij
 
-Thanks.
+
+--UwlDB5iUD3Wr2wuqeDdM6GVaqhduOpb7B--
+
+--uqWsLDpF7bxRIs8TN7kxweMAjJmgRnx3U
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF4EAREIAAYFAlkSm4MACgkQHwImuRkmbWl13AD5ARNRNQRG7/NrNMLbvkDcKbU5
+4oigR4pFeK+B7sTI9lIA/087YnUBq7d1jZRFLg7m7u3gpwnzZB30iE+GA/yBM7ZO
+=MIa3
+-----END PGP SIGNATURE-----
+
+--uqWsLDpF7bxRIs8TN7kxweMAjJmgRnx3U--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
