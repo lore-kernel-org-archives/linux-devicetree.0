@@ -1,115 +1,147 @@
 From: Christopher Bostic <cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v6 11/23] drivers/fsi: Add master unscan
-Date: Wed, 10 May 2017 13:33:27 -0500
-Message-ID: <875f5079-0157-6f86-5020-7cfab891664f@linux.vnet.ibm.com>
+Subject: Re: [PATCH v6 10/23] drivers/fsi: Add device read/write/peek API
+Date: Wed, 10 May 2017 13:38:21 -0500
+Message-ID: <4236d20b-be1e-6458-8a69-7de98bfc47ca@linux.vnet.ibm.com>
 References: <20170410194706.64280-1-cbostic@linux.vnet.ibm.com>
- <20170410194706.64280-12-cbostic@linux.vnet.ibm.com>
- <CACPK8Xd5g+tZ7_pTO19YhDhyAUggp2fN2YDp7-1SSP+-9qZu9w@mail.gmail.com>
+ <20170410194706.64280-11-cbostic@linux.vnet.ibm.com>
+ <CACPK8Xewjnpvc3sN=X9tMm7NP6rQ=NHKDuxwYO4DFjRw63PP8A@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CACPK8Xd5g+tZ7_pTO19YhDhyAUggp2fN2YDp7-1SSP+-9qZu9w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <CACPK8Xewjnpvc3sN=X9tMm7NP6rQ=NHKDuxwYO4DFjRw63PP8A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, rostedt-nx8X9YLhiw1AfugRpC6u6w@public.gmane.org, mingo-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>, Alistair Popple <alistair-Y4h6yKqj69EXC2x5gXVKYQ@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, rostedt-nx8X9YLhiw1AfugRpC6u6w@public.gmane.org, mingo-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>, Alistair Popple <alistair-Y4h6yKqj69EXC2x5gXVKYQ@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, "Edward A . James" <eajames-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
 
-On 5/10/17 2:31 AM, Joel Stanley wrote:
+On 5/10/17 3:13 AM, Joel Stanley wrote:
 > On Tue, Apr 11, 2017 at 5:16 AM, Christopher Bostic
 > <cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org> wrote:
->> From: Chris Bostic <cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+>> From: Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
 >>
->> Allow a master to undo a previous scan.  Should a master scan a bus
->> twice it will need to ensure it doesn't double register any
->> previously detected device.
+>> This change introduces the fsi device API: simple read, write and peek
+>> accessors for the devices' address spaces.
 >>
+>> Includes contributions from Chris Bostic <cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+>> and Edward A. James <eajames-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>.
+>>
+>> Signed-off-by: Edward A. James <eajames-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>
+>> Signed-off-by: Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
 >> Signed-off-by: Chris Bostic <cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
 >> Signed-off-by: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
 >> ---
->>   drivers/fsi/fsi-core.c | 40 ++++++++++++++++++++++++++++++++++++++++
->>   1 file changed, 40 insertions(+)
+>>   drivers/fsi/fsi-core.c | 33 +++++++++++++++++++++++++++++++++
+>>   include/linux/fsi.h    |  7 ++++++-
+>>   2 files changed, 39 insertions(+), 1 deletion(-)
 >>
 >> diff --git a/drivers/fsi/fsi-core.c b/drivers/fsi/fsi-core.c
->> index 4da0b030..75d2a88 100644
+>> index a8faa89..4da0b030 100644
 >> --- a/drivers/fsi/fsi-core.c
 >> +++ b/drivers/fsi/fsi-core.c
->> @@ -69,6 +69,7 @@ struct fsi_slave {
->>          uint32_t                size;   /* size of slave address space */
+>> @@ -32,6 +32,8 @@
+>>   #define FSI_SLAVE_CONF_CRC_MASK                0x0000000f
+>>   #define FSI_SLAVE_CONF_DATA_BITS       28
+>>
+>> +#define FSI_PEEK_BASE                  0x410
+>> +
+>>   static const int engine_page_size = 0x400;
+>>
+>>   #define FSI_SLAVE_BASE                 0x800
+>> @@ -73,9 +75,40 @@ static int fsi_master_read(struct fsi_master *master, int link,
+>>                  uint8_t slave_id, uint32_t addr, void *val, size_t size);
+>>   static int fsi_master_write(struct fsi_master *master, int link,
+>>                  uint8_t slave_id, uint32_t addr, const void *val, size_t size);
+>> +static int fsi_slave_read(struct fsi_slave *slave, uint32_t addr,
+>> +               void *val, size_t size);
+>> +static int fsi_slave_write(struct fsi_slave *slave, uint32_t addr,
+>> +               const void *val, size_t size);
+> I don't think these
+>>   /* FSI endpoint-device support */
+>>
+>> +int fsi_device_read(struct fsi_device *dev, uint32_t addr, void *val,
+>> +               size_t size)
+> I suggest adding some comments about the use of fsi_device_read,
+> fsi_device_write and fsi_device_peek APIs for driver authors.
+>
+> One important note is that the data in val must be FSI bus endian (big endian).
+
+Hi Joel,
+
+OK will add some comments here.
+> It would be nice to have the sparse notation (eg. __be32) as well.
+> That doesn't make sense for void *, but we could add some helper
+> functions like:
+>
+>   int fsi_device_read32(struct fsi_device *dev, uint32_t addr, __be32 *val)
+>
+>   int fsi_device_write32(struct fsi_device *dev, uint32_t addr, __be32 val)
+>
+> We probably only need a 32 bit version, as all of the reads/writes
+> being done in users of this function are 32 bit.
+> What do you think?
+
+These functions will need to support reads/writes of 8 bit and 16 bit 
+values.
+
+Thanks
+-Chris
+
+>> +{
+>> +       if (addr > dev->size || size > dev->size || addr > dev->size - size)
+>> +               return -EINVAL;
+>> +
+>> +       return fsi_slave_read(dev->slave, dev->addr + addr, val, size);
+>> +}
+>> +EXPORT_SYMBOL_GPL(fsi_device_read);
+>> +
+>> +int fsi_device_write(struct fsi_device *dev, uint32_t addr, const void *val,
+>> +               size_t size)
+>> +{
+>> +       if (addr > dev->size || size > dev->size || addr > dev->size - size)
+>> +               return -EINVAL;
+>> +
+>> +       return fsi_slave_write(dev->slave, dev->addr + addr, val, size);
+>> +}
+>> +EXPORT_SYMBOL_GPL(fsi_device_write);
+>> +
+>> +int fsi_device_peek(struct fsi_device *dev, void *val)
+>> +{
+>> +       uint32_t addr = FSI_PEEK_BASE + ((dev->unit - 2) * sizeof(uint32_t));
+>> +
+>> +       return fsi_slave_read(dev->slave, addr, val, sizeof(uint32_t));
+>> +}
+>> +
+>>   static void fsi_device_release(struct device *_device)
+>>   {
+>>          struct fsi_device *device = to_fsi_dev(_device);
+>> diff --git a/include/linux/fsi.h b/include/linux/fsi.h
+>> index efa55ba..66bce48 100644
+>> --- a/include/linux/fsi.h
+>> +++ b/include/linux/fsi.h
+>> @@ -27,6 +27,12 @@ struct fsi_device {
+>>          uint32_t                size;
 >>   };
 >>
->> +#define to_fsi_master(d) container_of(d, struct fsi_master, dev)
->>   #define to_fsi_slave(d) container_of(d, struct fsi_slave, dev)
+>> +extern int fsi_device_read(struct fsi_device *dev, uint32_t addr,
+>> +               void *val, size_t size);
+>> +extern int fsi_device_write(struct fsi_device *dev, uint32_t addr,
+>> +               const void *val, size_t size);
+>> +extern int fsi_device_peek(struct fsi_device *dev, void *val);
+>> +
+>>   struct fsi_device_id {
+>>          u8      engine_type;
+>>          u8      version;
+>> @@ -40,7 +46,6 @@ struct fsi_device_id {
+>>   #define FSI_DEVICE_VERSIONED(t, v) \
+>>          .engine_type = (t), .version = (v),
 >>
->>   static int fsi_master_read(struct fsi_master *master, int link,
->> @@ -491,6 +492,37 @@ static int fsi_master_scan(struct fsi_master *master)
->>          return 0;
->>   }
->>
->> +static int __fsi_slave_remove_device(struct device *dev, void *arg)
->> +{
->> +       device_unregister(dev);
->> +       return 0;
->> +}
->> +
->> +static int __fsi_master_remove_slave(struct device *dev, void *arg)
->> +{
->> +       device_for_each_child(dev, NULL, __fsi_slave_remove_device);
->> +       device_unregister(dev);
->> +       return 0;
->> +}
-> I can't see why the two above functions to have the __ prefix.
-
-Jeremy Kerr had introduced this convention.  Jeremy can you comment on 
-this?
-
->
->> +
->> +static void fsi_master_unscan(struct fsi_master *master)
->> +{
->> +       device_for_each_child(&master->dev, NULL, __fsi_master_remove_slave);
->> +}
->> +
->> +static ssize_t master_rescan_store(struct device *dev,
->> +               struct device_attribute *attr, const char *buf, size_t count)
->> +{
->> +       struct fsi_master *master = to_fsi_master(dev);
->> +
->> +       fsi_master_unscan(master);
->> +       fsi_master_scan(master);
-> These function can return errors. Do you want to return those errors
-> to userspace?
-
-That would be the best approach yes... Will change.
-
->
->> +
->> +       return count;
->> +}
->> +
->> +static DEVICE_ATTR(rescan, 0200, NULL, master_rescan_store);
->> +
->>   int fsi_master_register(struct fsi_master *master)
->>   {
->>          int rc;
->> @@ -507,7 +539,15 @@ int fsi_master_register(struct fsi_master *master)
->>                  return rc;
->>          }
->>
->> +       rc = device_create_file(&master->dev, &dev_attr_rescan);
->> +       if (rc) {
->> +               device_unregister(&master->dev);
->> +               ida_simple_remove(&master_ida, master->idx);
->> +               return rc;
->> +       }
->> +
->>          fsi_master_scan(master);
->> +
->>          return 0;
->>   }
->>   EXPORT_SYMBOL_GPL(fsi_master_register);
+>> -
+>>   struct fsi_driver {
+>>          struct device_driver            drv;
+>>          const struct fsi_device_id      *id_table;
 >> --
 >> 1.8.2.2
 >>
