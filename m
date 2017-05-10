@@ -1,124 +1,152 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v3] arm: dts: sun7i-a20-bananapi: name the GPIO lines
-Date: Wed, 10 May 2017 14:47:41 +0200
-Message-ID: <20170510124741.GI5465@flea.lan>
-References: <1494048638-24365-1-git-send-email-linux@rempel-privat.de>
- <20170509202725.e2tkry7dmsgx7se5@lukather>
- <17553199-cc74-96ae-bc75-5e91b866ccd1@rempel-privat.de>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="u3bvv0EcKsvvYeex"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <17553199-cc74-96ae-bc75-5e91b866ccd1-YEK0n+YFykbzxQdaRaTXBw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Oleksij Rempel <linux-YEK0n+YFykbzxQdaRaTXBw@public.gmane.org>
-Cc: ore-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+From: Raviteja Garimella <raviteja.garimella-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v4 0/5] Platform driver support for 'amd5536udc' driver
+Date: Wed, 10 May 2017 18:21:16 +0530
+Message-ID: <1494420681-30719-1-git-send-email-raviteja.garimella@broadcom.com>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Changes in PATCH v4:
+===================
+-- Rebased with Balbi's git repo testing/next branch.
+-- Removed a patch that replaces pci_pool calls with dma_pool
+   since the change is already pushed by other submitter.
 
---u3bvv0EcKsvvYeex
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+<clip: as before>
+Resending PATCH v3 after rebasing with testing/next branch in 
+Felipe Balbi's git tree. Resolved few merge conflicts. 
+Tested applying all patches. Patch 1/7 can be ignored since it's
+already applied.
 
-On Wed, May 10, 2017 at 06:47:58AM +0200, Oleksij Rempel wrote:
-> >> +		"", "", "", "", "SCL", "SDA", "", "",
-> >=20
-> > I'm not sure how it's called in the schematics / documentation, but
-> > having a way to get which bus it's from would be helpful (like you did
-> > for the PMIC I2C bus).
->=20
-> I use only names provided by schematics. Using something different IMO
-> makes no sense and confusing.
+Changes in PATCH v3:
+===================
+1. Updated bindings documentation and platform driver to add
+   "brcm,iproc-udc" compatibility string.
 
-Indeed.
+2. Added a patch to replace references of struct pci_pool with
+   struct dma_pool so that it is compatibile with non-pci drivers.
 
-> >> +		"", "", "", "", "", "", "", "",
-> >> +		/* PC */
-> >> +		"", "", "", "", "", "", "", "",
-> >> +		"", "", "", "", "", "", "", "",
-> >> +		"", "", "", "", "", "", "", "",
-> >> +		"", "", "", "", "", "", "", "",
-> >> +		/* PD */
-> >> +		"", "", "", "", "", "", "", "",
-> >> +		"", "", "", "", "", "", "", "",
-> >> +		"", "", "", "", "", "", "", "",
-> >> +		"", "", "", "", "", "", "", "",
-> >> +		/* PE */
-> >> +		"", "", "", "", "", "", "", "",
-> >> +		"", "", "", "", "", "", "", "",
-> >> +		"", "", "", "", "", "", "", "",
-> >> +		"", "", "", "", "", "", "", "",
-> >> +		/* PF */
-> >> +		"SD0-D1", "SD0-D0", "SD0-CLK", "SD0-CMD", "SD0-D3",
-> >> +			"SD0-D2", "", "",
-> >=20
-> > Why did you change the wrapping and indentation on those two lines?
->=20
-> i use 8 entry per line to keep counting easier. If line is too wide, i
-> wrap it with changed indentation.
+Changes in PATCH v2:
+===================
+1. Updated bindings documentation:
+   -- compatibility string for each supported SoC
+   -- removed extcon node
+   -- rename the file name to just iproc-udc.txt
 
-Ack.
+2. Modified comptability strings in platform driver file
+   to reflect the change made in 1.
 
-> >> +		"", "", "", "", "", "", "", "",
-> >> +		"", "", "", "", "", "", "", "",
-> >> +		"", "", "", "", "", "", "", "",
-> >> +		/* PG */
-> >> +		"", "", "", "", "", "", "", "",
-> >> +		"", "", "", "", "", "", "", "",
-> >> +		"", "", "", "", "", "", "", "",
-> >> +		"", "", "", "", "", "", "", "",
-> >> +		/* PH */
-> >> +		"TXD0", "RXD0", "IO-1", "PH3", "USB0-IDDET", "PH5", "", "",
-> >=20
-> > What are PH3 and PH5 used for on the board? Can't we provide a more
-> > explicit name?
->=20
-> Only names used by schematic :) If we will use something different users
-> will hate us even more.
+3 Kconfig
+   -- Resolved warnings shown by kbuild-test-robot  
 
-Those schematics suck then :)
+The changes are being submitted as PATCH this time. Below are the
+details of main changes with respect to previous RFC versions.
 
-> I can image to use some kind of combination of connector name and pin
-> name. For example: "JP1-RXD0", or some thing like this.
+Changes in PATCH v1:
+===================
+Patch 1/6 now splits the driver into amd5536udc_pci_.c (which
+contains only the PCI device registration part), and amd5536udc.c
+will still be driver that does the rest of UDC driver functionality.
 
-There's no mark on the PCB either? RXD0 and the other are fine, the
-only ones that concern me are PH3 and PH5, which are basically only
-the SoC pin name, and nothing else.
+Patch 2/6 renames amd5536udc.c to snps_udc_core.c.
 
-I guess we don't really have the choice if the schematic uses that,
-and there's nothing on the PCB..
+The DT compatibilty string is changed to "brcm,iproc-snps-udc"
+as per review comments for RFCv2. The driver and bindings
+documentation is modified to reflect this.
 
-Maxime
+This is RFC for the changes made as per the review comments made for
+the previous version. I would like to know  if this approach (the way
+the driver is split and the naming and all)looks good to be submitted.
 
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
 
---u3bvv0EcKsvvYeex
-Content-Type: application/pgp-signature; name="signature.asc"
+Changes in RFC v2:
+=================
+1. Split the driver into platform/pci specific drivers with a core driver
+   file that handles the common driver routines that are exported.
 
------BEGIN PGP SIGNATURE-----
+2. Split the driver into number of patches as suggested in previous
+   review comments.
 
-iQIcBAEBAgAGBQJZEwvtAAoJEBx+YmzsjxAgA8sP/iQ6jH5grh7al1+C7AGS8CXF
-OO2WYKTa+w4i7EC2ZmEol7Pq39fXxiCpRxjL0lxR+jcPZEl18cCbac5sKTu0gGfO
-f5F1M204bEcVUBR0GmVm+dUlB/8NoSoam4ykyMWXSEZ7y4bRLTJ/6QtdFXgfWgEK
-e1kHJu32pns94FzPqXm5E5XIhMyr+Bs9EpLuTRJD2sM6VoQqwxcZzWPXFIrPGJf8
-dGPz2qRKfxIzysYiURX4lqpIY55FaaAeIxQMt+mAZ0L/dMgPZkQBI9uRgU/dlkcv
-1OWlXYZPv2qWTP6pguMFdi3pWKWzZgqqV6swDwSd9W96ApK5ArBbhBm5i+88Qqo3
-v+nbQAtlnzqRE5IvuCojHu627MZwH2wRGL+R9E3oJbkWvBHY+dUdbZNStkTTscrS
-y4EEg6FJtBaH+AkTRg0aavXl9vuCKZ8Vf6OfklB/T5zwFXIv334Zc7ZAC6hhOUaW
-ltqxHpxpK9/WuYLCcA0srMnspJKgdyNaOlz3pCqT3J7I+LCjdHk31HagUvYZSEpQ
-a8p1R9DWWDuAskVxHWvcN2psNJK+vYFkPRW4IEP1A2rhFKTc+1afxIotweFJ49RT
-kcxijS+DhJKYs0qt6jGSQDiYgEvg25iyh20KNtlo/G8UHekMmvpO6Ab/Mm5hYY+T
-8fLk28LRM+LHV6RL5lFj
-=KA+8
------END PGP SIGNATURE-----
+3. Added the devicetree bindings documentation for Synopsys platform
+   driver.
 
---u3bvv0EcKsvvYeex--
+Introduction (RFC v1):
+=====================
+This patch adds platform device support to the existing 'amd5536udc'
+driver.
+
+The UDC is based on Synopsys Designware core USB (2.0) Device controller
+IP.
+
+The driver so far supports UDCs that are a part of AMD southbridge
+and is connected through PCI bus.
+
+The same driver can be used with UDCs that are integrated into SoCs
+like Broadcom's Northstar2/Cygnus platforms by adding platform device
+suooprt.
+
+This patch contains all the changes that were required to get the driver
+functional on Broadcom's Northstar2 platform. 
+
+This is a request for comments from maintainers/others regarding approach
+on whether to have 2 different drivers (one each for AMD and Broadcom)
+with a common library (3 files in total), or have a single driver like
+it's done in this patch and have the driver filename changed to some
+common name based on ther underlying IP, like snps_udc.c.
+
+Below are the main changes done:
+
+1. Added OF based platform device registration -- so that the driver gets
+   probed based on the device tree entry. Like wise, remove routine and
+   platform PM ops are supported.
+
+2. Modified debug prints to be compatible with both pci and platform
+   devices.
+
+3. Added members to 'struct udc' in header file for extcon and phy support.
+   This is required if the UDC is connected to a Dual Role Device Phy
+   where the Phy can be configured to be in Device mode or Host mode based
+   on the type of external cable that is connected to the port.
+ 
+4. Added checks in udc connect/disconnect routines so as to return if the
+   routine is already called.
+
+5. Modified the arguments passed to dma_pool_create routine -- which
+   expects struct device, whereas NULL is passed in the existing version.
+ 
+6. Kconfig changes are done so that the driver now depends on either of
+   CONFIG_OF or CONFIG_PCI. More description about the Synopsys IP is
+   provided.
+
+Raviteja Garimella (5):
+  usb: gadget: udc: Rename amd5536udc driver file based on IP
+  usb: gadget: udc: make debug prints compatible with both pci and
+    platform devices
+  usb: gadget: udc: Provide correct arguments for 'dma_pool_create'
+  dt-bindings: usb: DT bindings documentation for Broadcom IPROC     USB
+    Device controller.
+  usb: gadget: udc: Add Synopsys UDC Platform driver
+
+ .../devicetree/bindings/usb/iproc-udc.txt          |   21 +
+ drivers/usb/gadget/udc/Kconfig                     |   16 +-
+ drivers/usb/gadget/udc/Makefile                    |    3 +-
+ drivers/usb/gadget/udc/amd5536udc.c                | 3219 -------------------
+ drivers/usb/gadget/udc/amd5536udc.h                |   18 +-
+ drivers/usb/gadget/udc/amd5536udc_pci.c            |    1 +
+ drivers/usb/gadget/udc/snps_udc_core.c             | 3235 ++++++++++++++++++++
+ drivers/usb/gadget/udc/snps_udc_plat.c             |  344 +++
+ 8 files changed, 3635 insertions(+), 3222 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/usb/iproc-udc.txt
+ delete mode 100644 drivers/usb/gadget/udc/amd5536udc.c
+ create mode 100644 drivers/usb/gadget/udc/snps_udc_core.c
+ create mode 100644 drivers/usb/gadget/udc/snps_udc_plat.c
+
+-- 
+2.1.0
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
