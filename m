@@ -1,233 +1,96 @@
-From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] arm: dts: mediatek: Add audio driver node for MT2701
-Date: Wed, 10 May 2017 13:11:52 +0200
-Message-ID: <6d165fb2-f94e-604f-cf5c-1ff029195371@gmail.com>
-References: <1493296575-1896-1-git-send-email-garlic.tseng@mediatek.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+From: Christian Lamparter <chunkeey-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Subject: [PATCH 1/2] pinctrl: qcom: ipq4019: add most other IPQ4019 pin functions and groups
+Date: Wed, 10 May 2017 13:27:11 +0200
+Message-ID: <20170510112712.14744-1-chunkeey@googlemail.com>
+References: <d53b7a9b1bab818536680123136ac58481d959c8.1494415174.git.chunkeey@googlemail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1493296575-1896-1-git-send-email-garlic.tseng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Content-Language: en-US
+In-Reply-To: <d53b7a9b1bab818536680123136ac58481d959c8.1494415174.git.chunkeey-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Garlic Tseng <garlic.tseng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Ailsa.Chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, ir.lian-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, erin.lo-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
+To: linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Varadarajan Narayanan <varada-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ram Chandra Jangir <rjangir-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, John Crispin <john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Garlic,
+This patch adds the remaining pin functions and mux groups.
+It also fixes a typo in the existing binding document.
 
-On 27/04/17 14:36, Garlic Tseng wrote:
-> Add audio driver node for mt2701
-> 
-> Depends on [1], which is i2c dts patch for MT2701.
-> [1] https://patchwork.kernel.org/patch/9601961/
-> 
-> Signed-off-by: Garlic Tseng <garlic.tseng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: Varadarajan Narayanan <varada-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Ram Chandra Jangir <rjangir-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: John Crispin <john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org>
+Signed-off-by: Christian Lamparter <chunkeey-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+---
+Note: These definitions were present in the original submission
+<https://patchwork.kernel.org/patch/7630711/>
 
-Can you please rebase on v4.12-next/dts32 and resend.
-Thanks a lot and sorry for the delay.
-Matthias
+The DT patch was acked by Rob Herring back then. However,
+I'm not sure if this is still valid or not. @Rob, can you
+please comment?
 
-> ---
->   arch/arm/boot/dts/mt2701-evb.dts | 65 +++++++++++++++++++++++++++
->   arch/arm/boot/dts/mt2701.dtsi    | 97 ++++++++++++++++++++++++++++++++++++++++
->   2 files changed, 162 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/mt2701-evb.dts b/arch/arm/boot/dts/mt2701-evb.dts
-> index 3f5a96c..c2ad659 100644
-> --- a/arch/arm/boot/dts/mt2701-evb.dts
-> +++ b/arch/arm/boot/dts/mt2701-evb.dts
-> @@ -22,6 +22,40 @@
->   	memory {
->   		reg = <0 0x80000000 0 0x40000000>;
->   	};
-> +
-> +		sound:sound {
-> +		compatible = "mediatek,mt2701-cs42448-machine";
-> +		mediatek,platform = <&afe>;
-> +		/* CS42448 Machine name */
-> +		audio-routing =
-> +		"Line Out Jack", "AOUT1L",
-> +		"Line Out Jack", "AOUT1R",
-> +		"Line Out Jack", "AOUT2L",
-> +		"Line Out Jack", "AOUT2R",
-> +		"Line Out Jack", "AOUT3L",
-> +		"Line Out Jack", "AOUT3R",
-> +		"Line Out Jack", "AOUT4L",
-> +		"Line Out Jack", "AOUT4R",
-> +		"AIN1L", "AMIC",
-> +		"AIN1R", "AMIC",
-> +		"AIN2L", "Tuner In",
-> +		"AIN2R", "Tuner In",
-> +		"AIN3L", "Satellite Tuner In",
-> +		"AIN3R", "Satellite Tuner In",
-> +		"AIN3L", "AUX In",
-> +		"AIN3R", "AUX In";
-> +		mediatek,audio-codec = <&cs42448>;
-> +		mediatek,audio-codec-bt-mrg = <&bt_sco_codec>;
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&aud_pins_default>;
-> +		i2s1-in-sel-gpio1 = <&pio 53 0>;
-> +		i2s1-in-sel-gpio2 = <&pio 54 0>;
-> +		status = "okay";
-> +	};
-> +
-> +	bt_sco_codec:bt_sco_codec {
-> +		compatible = "linux,bt-sco";
-> +	};
->   };
->   
->   &auxadc {
-> @@ -44,9 +78,40 @@
->   	pinctrl-names = "default";
->   	pinctrl-0 = <&i2c2_pins_a>;
->   	status = "okay";
-> +	cs42448: cs42448@48 {
-> +		compatible = "cirrus,cs42448";
-> +		reg = <0x48>;
-> +		clocks = <&topckgen CLK_TOP_AUD_I2S1_MCLK>;
-> +		clock-names = "mclk";
-> +	};
->   };
->   
->   &pio {
-> +	aud_pins_default: audiodefault {
-> +		pins_cmd_dat {
-> +			pinmux = <MT2701_PIN_49_I2S0_DATA__FUNC_I2S0_DATA>,
-> +				 <MT2701_PIN_72_I2S0_DATA_IN__FUNC_I2S0_DATA_IN>,
-> +				 <MT2701_PIN_73_I2S0_LRCK__FUNC_I2S0_LRCK>,
-> +				 <MT2701_PIN_74_I2S0_BCK__FUNC_I2S0_BCK>,
-> +				 <MT2701_PIN_126_I2S0_MCLK__FUNC_I2S0_MCLK>,
-> +				 <MT2701_PIN_33_I2S1_DATA__FUNC_I2S1_DATA>,
-> +				 <MT2701_PIN_34_I2S1_DATA_IN__FUNC_I2S1_DATA_IN>,
-> +				 <MT2701_PIN_35_I2S1_BCK__FUNC_I2S1_BCK>,
-> +				 <MT2701_PIN_36_I2S1_LRCK__FUNC_I2S1_LRCK>,
-> +				 <MT2701_PIN_37_I2S1_MCLK__FUNC_I2S1_MCLK>,
-> +				 <MT2701_PIN_203_PWM0__FUNC_I2S2_DATA>,
-> +				 <MT2701_PIN_204_PWM1__FUNC_I2S3_DATA>,
-> +				 <MT2701_PIN_53_SPI0_CSN__FUNC_GPIO53>,
-> +				 <MT2701_PIN_54_SPI0_CK__FUNC_GPIO54>,
-> +				 <MT2701_PIN_18_PCM_CLK__FUNC_MRG_CLK>,
-> +				 <MT2701_PIN_19_PCM_SYNC__FUNC_MRG_SYNC>,
-> +				 <MT2701_PIN_20_PCM_RX__FUNC_MRG_TX>,
-> +				 <MT2701_PIN_21_PCM_TX__FUNC_MRG_RX>;
-> +			drive-strength = <MTK_DRIVE_12mA>;
-> +			bias-pull-down;
-> +		};
-> +	};
-> +
->   	i2c0_pins_a: i2c0@0 {
->   		pins1 {
->   			pinmux = <MT2701_PIN_75_SDA0__FUNC_SDA0>,
-> diff --git a/arch/arm/boot/dts/mt2701.dtsi b/arch/arm/boot/dts/mt2701.dtsi
-> index 1b6157e..00eef42 100644
-> --- a/arch/arm/boot/dts/mt2701.dtsi
-> +++ b/arch/arm/boot/dts/mt2701.dtsi
-> @@ -400,6 +400,103 @@
->   			 <&pericfg CLK_PERI_SPI2>;
->   		clock-names = "parent-clk", "sel-clk", "spi-clk";
->   		status = "disabled";
-> +
-> +	afe: audio-controller@11220000 {
-> +		compatible = "mediatek,mt2701-audio";
-> +		reg = <0 0x11220000 0 0x2000>,
-> +		      <0 0x112a0000 0 0x20000>;
-> +		interrupts = <GIC_SPI 132 IRQ_TYPE_LEVEL_LOW>;
-> +		power-domains = <&scpsys MT2701_POWER_DOMAIN_IFR_MSC>;
-> +
-> +		clocks = <&infracfg CLK_INFRA_AUDIO>,
-> +			 <&topckgen CLK_TOP_AUD_MUX1_SEL>,
-> +			 <&topckgen CLK_TOP_AUD_MUX2_SEL>,
-> +			 <&topckgen CLK_TOP_AUD_MUX1_DIV>,
-> +			 <&topckgen CLK_TOP_AUD_MUX2_DIV>,
-> +			 <&topckgen CLK_TOP_AUD_48K_TIMING>,
-> +			 <&topckgen CLK_TOP_AUD_44K_TIMING>,
-> +			 <&topckgen CLK_TOP_AUDPLL_MUX_SEL>,
-> +			 <&topckgen CLK_TOP_APLL_SEL>,
-> +			 <&topckgen CLK_TOP_AUD1PLL_98M>,
-> +			 <&topckgen CLK_TOP_AUD2PLL_90M>,
-> +			 <&topckgen CLK_TOP_HADDS2PLL_98M>,
-> +			 <&topckgen CLK_TOP_HADDS2PLL_294M>,
-> +			 <&topckgen CLK_TOP_AUDPLL>,
-> +			 <&topckgen CLK_TOP_AUDPLL_D4>,
-> +			 <&topckgen CLK_TOP_AUDPLL_D8>,
-> +			 <&topckgen CLK_TOP_AUDPLL_D16>,
-> +			 <&topckgen CLK_TOP_AUDPLL_D24>,
-> +			 <&topckgen CLK_TOP_AUDINTBUS_SEL>,
-> +			 <&clk26m>,
-> +			 <&topckgen CLK_TOP_SYSPLL1_D4>,
-> +			 <&topckgen CLK_TOP_AUD_K1_SRC_SEL>,
-> +			 <&topckgen CLK_TOP_AUD_K2_SRC_SEL>,
-> +			 <&topckgen CLK_TOP_AUD_K3_SRC_SEL>,
-> +			 <&topckgen CLK_TOP_AUD_K4_SRC_SEL>,
-> +			 <&topckgen CLK_TOP_AUD_K5_SRC_SEL>,
-> +			 <&topckgen CLK_TOP_AUD_K6_SRC_SEL>,
-> +			 <&topckgen CLK_TOP_AUD_K1_SRC_DIV>,
-> +			 <&topckgen CLK_TOP_AUD_K2_SRC_DIV>,
-> +			 <&topckgen CLK_TOP_AUD_K3_SRC_DIV>,
-> +			 <&topckgen CLK_TOP_AUD_K4_SRC_DIV>,
-> +			 <&topckgen CLK_TOP_AUD_K5_SRC_DIV>,
-> +			 <&topckgen CLK_TOP_AUD_K6_SRC_DIV>,
-> +			 <&topckgen CLK_TOP_AUD_I2S1_MCLK>,
-> +			 <&topckgen CLK_TOP_AUD_I2S2_MCLK>,
-> +			 <&topckgen CLK_TOP_AUD_I2S3_MCLK>,
-> +			 <&topckgen CLK_TOP_AUD_I2S4_MCLK>,
-> +			 <&topckgen CLK_TOP_AUD_I2S5_MCLK>,
-> +			 <&topckgen CLK_TOP_AUD_I2S6_MCLK>,
-> +			 <&topckgen CLK_TOP_ASM_M_SEL>,
-> +			 <&topckgen CLK_TOP_ASM_H_SEL>,
-> +			 <&topckgen CLK_TOP_UNIVPLL2_D4>,
-> +			 <&topckgen CLK_TOP_UNIVPLL2_D2>,
-> +			 <&topckgen CLK_TOP_SYSPLL_D5>;
-> +
-> +		clock-names = "infra_sys_audio_clk",
-> +			 "top_audio_mux1_sel",
-> +			 "top_audio_mux2_sel",
-> +			 "top_audio_mux1_div",
-> +			 "top_audio_mux2_div",
-> +			 "top_audio_48k_timing",
-> +			 "top_audio_44k_timing",
-> +			 "top_audpll_mux_sel",
-> +			 "top_apll_sel",
-> +			 "top_aud1_pll_98M",
-> +			 "top_aud2_pll_90M",
-> +			 "top_hadds2_pll_98M",
-> +			 "top_hadds2_pll_294M",
-> +			 "top_audpll",
-> +			 "top_audpll_d4",
-> +			 "top_audpll_d8",
-> +			 "top_audpll_d16",
-> +			 "top_audpll_d24",
-> +			 "top_audintbus_sel",
-> +			 "clk_26m",
-> +			 "top_syspll1_d4",
-> +			 "top_aud_k1_src_sel",
-> +			 "top_aud_k2_src_sel",
-> +			 "top_aud_k3_src_sel",
-> +			 "top_aud_k4_src_sel",
-> +			 "top_aud_k5_src_sel",
-> +			 "top_aud_k6_src_sel",
-> +			 "top_aud_k1_src_div",
-> +			 "top_aud_k2_src_div",
-> +			 "top_aud_k3_src_div",
-> +			 "top_aud_k4_src_div",
-> +			 "top_aud_k5_src_div",
-> +			 "top_aud_k6_src_div",
-> +			 "top_aud_i2s1_mclk",
-> +			 "top_aud_i2s2_mclk",
-> +			 "top_aud_i2s3_mclk",
-> +			 "top_aud_i2s4_mclk",
-> +			 "top_aud_i2s5_mclk",
-> +			 "top_aud_i2s6_mclk",
-> +			 "top_asm_m_sel",
-> +			 "top_asm_h_sel",
-> +			 "top_univpll2_d4",
-> +			 "top_univpll2_d2",
-> +			 "top_syspll_d5";
->   	};
->   
->   	mmsys: syscon@14000000 {
-> 
+Thanks.
+
+(Link to Matthew McLintock's v3 that was merged)
+<https://patchwork.kernel.org/patch/7662241/>
+---
+ .../bindings/pinctrl/qcom,ipq4019-pinctrl.txt      | 36 ++++++++++++++++++++--
+ 1 file changed, 34 insertions(+), 2 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,ipq4019-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/qcom,ipq4019-pinctrl.txt
+index cfb8500dd56b..4b1c583c51e9 100644
+--- a/Documentation/devicetree/bindings/pinctrl/qcom,ipq4019-pinctrl.txt
++++ b/Documentation/devicetree/bindings/pinctrl/qcom,ipq4019-pinctrl.txt
+@@ -39,7 +39,7 @@ information about e.g. the mux function.
+ 
+ The following generic properties as defined in pinctrl-bindings.txt are valid
+ to specify in a pin configuration subnode:
+- pins, function, bias-disable, bias-pull-down, bias-pull,up, drive-strength.
++ pins, function, bias-disable, bias-pull-down, bias-pull-up, drive-strength.
+ 
+ Non-empty subnodes must specify the 'pins' property.
+ Note that not all properties are valid for all pins.
+@@ -50,7 +50,39 @@ Valid values for qcom,pins are:
+     Supports mux, bias and drive-strength
+ 
+ Valid values for qcom,function are:
+-gpio, blsp_uart1, blsp_i2c0, blsp_i2c1, blsp_uart0, blsp_spi1, blsp_spi0
++gpio, blsp_uart1, blsp_i2c0, blsp_i2c1, blsp_uart0, blsp_spi1, blsp_spi0,
++atest_char, atest_char0, atest_char1, atest_char2, atest_char3,
++audio_pwm0, audio_pwm1, audio_pwm2, audio_pwm3, aud_pin,
++boot2, boot4, boot5, boot7, boot8, boot9, boot11, boot14, boot18, boot19, boot20,
++chip_rst, dbg_out, mdc, mdio0, mdio1, pcie_clk, pcie_clk1,
++i2s_rx_bclk, i2s_rxd, i2s_rx_fsync, i2s_rx_mclk, i2s_spdif_in, i2s_spdif_out,
++i2s_td1, i2s_td2, i2s_td3, i2s_tx_bclk, i2s_tx_fsync, i2s_tx_mclk,
++jtag_rst, jtag_tck, jtag_tdi, jtag_tdo, jtag_tms, jtag_trst,
++led0, led1, led2, led3, led4, led5, led6, led7, led8, led9, led10, led11,
++qdss_cti_trig_out_a0, qdss_cti_trig_out_b0, qdss_traceclk_a,
++qdss_tracectl_a, qdss_tracedata_a, pmu0, pmu1, prng_rosc,
++qpic_pad, qpic_pad0, qpic_pad1, qpic_pad2, qpic_pad3,
++qpic_pad4, qpic_pad5, qpic_pad6, qpic_pad7, qpic_pad8,
++rgmii0, rgmii1, rgmii2, rgmii3, rgmii_rx, rgmii_rxc, rgmii_tx, rgmii_txc,
++rmii00, rmii01, rmii0_dv, rmii0_refclk, rmii0_rx, rmii0_tx,
++rmii10, rmii11, rmii1_dv, rmii1_refclk, rmii1_rx, rmii1_tx,
++sdio0, sdio1, sdio2, sdio3, sdio4, sdio5, sdio6, sdio7, sdio_cd,
++sdio_clk, sdio_cmd, smart0, smart1, smart2, smart3,
++tm0, tm1, tm2, tm3, tm4, tm5, tm6, tm7, tm8, tm9, tm_ack, tm_clk0,
++wcss0_dbg, wcss0_dbg4, wcss0_dbg5, wcss0_dbg6, wcss0_dbg7, wcss0_dbg8,
++wcss0_dbg9, wcss0_dbg10, wcss0_dbg11, wcss0_dbg12, wcss0_dbg14, wcss0_dbg15,
++wcss0_dbg16, wcss0_dbg17, wcss0_dbg18, wcss0_dbg19, wcss0_dbg20, wcss0_dbg21,
++wcss0_dbg22, wcss0_dbg23, wcss0_dbg24, wcss0_dbg25, wcss0_dbg26, wcss0_dbg27,
++wcss0_dbg28, wcss0_dbg29, wcss0_dbg30, wcss0_dbg31,
++wcss1_dbg, wcss1_dbg7, wcss1_dbg8, wcss1_dbg9, wcss1_dbg10, wcss1_dbg11,
++wcss1_dbg12, wcss1_dbg16, wcss1_dbg17, wcss1_dbg18, wcss1_dbg19, wcss1_dbg20,
++wcss1_dbg21, wcss1_dbg22, wcss1_dbg23, wcss1_dbg24, wcss1_dbg25, wcss1_dbg26,
++wcss1_dbg27, wcss1_dbg28, wcss1_dbg29, wcss1_dbg30, wcss1_dbg31,
++wifi00, wifi01, wifi02, wifi03, wifi04, wifi034, wifi0_cal, wifi0_rfsilient0,
++wifi0_rfsilient1, wifi0_uart, wifi0_uart0, wifi0_uart1, wifi0_wci,
++wifi10, wifi11, wifi12, wifi13, wifi14, wifi134, wifi1_cal, wifi1_rfsilient0,
++wifi1_rfsilient1, wifi1_uart, wifi1_uart0, wifi1_uart1, wifi1_wci,
++wifi_wci0, wifi_wci1
+ 
+ Example:
+ 
+-- 
+2.11.0
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
