@@ -1,44 +1,85 @@
-From: codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Subject: [PATCH 2/2] devicetree: add Roofull vendor prefix
-Date: Wed, 10 May 2017 12:31:03 +0000
-Message-ID: <20170510123103.21992-2-codekipper@gmail.com>
-References: <20170510123103.21992-1-codekipper@gmail.com>
-Reply-To: codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: Modifying binding or duplicating compatible string
+Date: Wed, 10 May 2017 07:32:35 -0500
+Message-ID: <CAL_JsqKx0KxJSMLPMr=c9yPuwTYaoOQ-acE4OntSXx=Q7BSjXA@mail.gmail.com>
+References: <591fbd1e-bee4-268f-045b-395d39228a3d@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCHNXO4F7MHBBD4QZTEAKGQE2PA7CGY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20170510123103.21992-1-codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <591fbd1e-bee4-268f-045b-395d39228a3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, "bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org" <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+On Tue, May 9, 2017 at 5:09 AM, Rafał Miłecki <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> Hi,
+>
+> We currently have a "brcm,ns-ax-usb3-phy" binding defined for Broadcom's USB
+> 3.0 PHY which you can find in:
+> Documentation/devicetree/bindings/phy/bcm-ns-usb3-phy.txt
+>
+>
+> It looks like this:
+>
+> usb3-phy {
+>         compatible = "brcm,ns-ax-usb3-phy";
+>         reg = <0x18003000 0x1000>, <0x18105000 0x1000>;
+>         reg-names = "ccb-mii", "dmp";
+>         #phy-cells = <0>;
+> };
+>
+> The problem is that PHY is actually attached to the MDIO bus and 0x18003000
+> + 0x18003004 registers are used to access whole MDIO, not just this single
+> PHY.
+>
+> A correct binding should look like this:
+>
+> mdio: mdio@18003000 {
+>         compatible = "brcm,iproc-mdio";
+>         reg = <0x18003000 0x8>;
+>         #size-cells = <1>;
+>         #address-cells = <0>;
+>
+>         usb3-phy@10 {
+>                 compatible = "brcm,ns-ax-usb3-phy";
+>                 reg = <0x10>;
+>                 usb3-dmp-syscon = <&usb3_dmp>;
+>                 #phy-cells = <0>;
+>         };
+> };
+>
+> usb3_dmp: syscon@18105000 {
+>         reg = <0x18105000 0x1000>;
+> };
+>
+>
+> I mean to clean up this situation. My question is: is this acceptable to
+> support the same compatible string in two contexts?
 
-Add the "roofull" vendor prefix for Shenzhen Roofull Technology Co, Ltd.
+Depends on the context. ;) I think here it would be fine because you
+have differing buses.
 
-Signed-off-by: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
- 1 file changed, 1 insertion(+)
+> 1) For backward compatibility the first one would require specifying both:
+>    ccb-mii / MDIO register and DMP register.
 
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-index 832759934517..4c16c63d7108 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@ -269,6 +269,7 @@ ricoh	Ricoh Co. Ltd.
- rikomagic	Rikomagic Tech Corp. Ltd
- rockchip	Fuzhou Rockchip Electronics Co., Ltd
- rohm	ROHM Semiconductor Co., Ltd
-+roofull	Shenzhen Roofull Technology Co, Ltd
- samsung	Samsung Semiconductor
- samtec	Samtec/Softing company
- sandisk	Sandisk Corporation
--- 
-2.12.2
+You don't need both in the DT. New DT and old OS is not a combination
+we worry about. You either have the old binding or new one in the DT.
+It's the driver that would need to probe the old way (presumably as a
+platform device) and the new way as an mdio device.
+
+You can decide whether you need to support the old way or not. Depends
+on who it would affect for your platform.
+
+> 2) For cleaniness the new one would require reg to be PHY index and DMP one
+>    to be specified with usb3-dmp-syscon.
+>
+> In Linux there shouldn't be a problem as MDIO children nodes are handled
+> separately, but I still don't know if it's an acceptable solution.
+>
+> Can I have some opinions on this, please?
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
