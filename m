@@ -1,44 +1,34 @@
 From: codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Subject: [linux-sunxi][PATCH] ARM: dts: sun8i-h3: orange-pi-2: Enable audio codec
-Date: Wed, 10 May 2017 11:51:38 +0000
-Message-ID: <20170510115138.21765-1-codekipper@gmail.com>
+Subject: [PATCH 1/2] devicetree: add Itead vendor prefix
+Date: Wed, 10 May 2017 12:31:02 +0000
+Message-ID: <20170510123103.21992-1-codekipper@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 From: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-The Orange Pi 2 routes the LINEOUT pins through a SGM8900 PA which
-needs to be enabled. The onboard microphone is routed to MIC1, with
-MBIAS providing power.
+Add the "itead" vendor prefix for ITEAD Intelligent Systems Co.Ltd.
 
 Signed-off-by: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- arch/arm/boot/dts/sun8i-h3-orangepi-2.dts | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm/boot/dts/sun8i-h3-orangepi-2.dts b/arch/arm/boot/dts/sun8i-h3-orangepi-2.dts
-index 5b6d14555b7c..3d9cc20761a1 100644
---- a/arch/arm/boot/dts/sun8i-h3-orangepi-2.dts
-+++ b/arch/arm/boot/dts/sun8i-h3-orangepi-2.dts
-@@ -104,6 +104,15 @@
- 	};
- };
- 
-+&codec {
-+	allwinner,pa-gpios = <&pio 0 16 GPIO_ACTIVE_HIGH>; /* PA16 */
-+	allwinner,audio-routing =
-+		"Speaker", "LINEOUT",
-+		"MIC1", "Mic",
-+		"Mic",  "MBIAS";
-+	status = "okay";
-+};
-+
- &ehci1 {
- 	status = "okay";
- };
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index c03d20140366..832759934517 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -158,6 +158,7 @@ iom	Iomega Corporation
+ isee	ISEE 2007 S.L.
+ isil	Intersil
+ issi	Integrated Silicon Solutions Inc.
++itead	ITEAD Intelligent Systems Co.Ltd
+ jdi	Japan Display Inc.
+ jedec	JEDEC Solid State Technology Association
+ karo	Ka-Ro electronics GmbH
 -- 
 2.12.2
 
