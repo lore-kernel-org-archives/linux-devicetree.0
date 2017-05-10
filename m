@@ -1,152 +1,61 @@
-From: Christopher Bostic <cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v6 10/23] drivers/fsi: Add device read/write/peek API
-Date: Wed, 10 May 2017 13:38:21 -0500
-Message-ID: <4236d20b-be1e-6458-8a69-7de98bfc47ca@linux.vnet.ibm.com>
-References: <20170410194706.64280-1-cbostic@linux.vnet.ibm.com>
- <20170410194706.64280-11-cbostic@linux.vnet.ibm.com>
- <CACPK8Xewjnpvc3sN=X9tMm7NP6rQ=NHKDuxwYO4DFjRw63PP8A@mail.gmail.com>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH v4 3/5] soc: qcom: Introduce APCS IPC driver
+Date: Wed, 10 May 2017 12:00:46 -0700
+Message-ID: <20170510190046.GT15143@minitux>
+References: <338c4262-cc6b-bed2-16fe-1767d1f0d5f6@codeaurora.org>
+ <CABb+yY1K3Hyn7CzQCA6tHu-KrPigARc3cYgBdT8PNX7vjhPK0g@mail.gmail.com>
+ <20170506011920.GH15143@minitux>
+ <CABb+yY1u9mspX1Zu0mg21JMYxpKxsXsvBa9LnF6VNr1_42UJUQ@mail.gmail.com>
+ <20170508055439.GJ15143@minitux>
+ <CABb+yY3CfWFBDh-qoGHDeHyLhVC7mPQZFB=VDS54OaypG-BqPw@mail.gmail.com>
+ <20170508191154.GM15143@minitux>
+ <CABb+yY2uC6vNFTq1KtZwrrw8x4BEfc2cMjF5DwrLbGpYWBNBzQ@mail.gmail.com>
+ <20170509191106.GQ15143@minitux>
+ <CABb+yY2LoX_rOSCkhnp-gS7EHTN+98xNn2E1+z7_7bFjQ2wtoA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CACPK8Xewjnpvc3sN=X9tMm7NP6rQ=NHKDuxwYO4DFjRw63PP8A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, rostedt-nx8X9YLhiw1AfugRpC6u6w@public.gmane.org, mingo-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>, Alistair Popple <alistair-Y4h6yKqj69EXC2x5gXVKYQ@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, "Edward A . James" <eajames-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CABb+yY2LoX_rOSCkhnp-gS7EHTN+98xNn2E1+z7_7bFjQ2wtoA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jassi Brar <jassisinghbrar@gmail.com>
+Cc: Jeffrey Hugo <jhugo@codeaurora.org>, Andy Gross <andy.gross@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ohad Ben-Cohen <ohad@wizery.com>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, Devicetree List <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-remoteproc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On Tue 09 May 19:33 PDT 2017, Jassi Brar wrote:
+
+> On Wed, May 10, 2017 at 12:41 AM, Bjorn Andersson
+> <bjorn.andersson@linaro.org> wrote:
+> > On Tue 09 May 09:41 PDT 2017, Jassi Brar wrote:
+[..]
+> > The part where this piece of hardware differs from the other mailboxes
+> > is that TX is done as send_data() returns and in the realm of the
+> > mailbox there is no such thing as "tx done". So how about we extend the
+> > framework to handle stateless and message-less doorbells?
+> >
+> This is a very common usecase. It would be unfair to other platforms
+> to modify the API just because you find it awkward to call
+> mbox_client_txdone() right after mbox_send_message(). For example,
+> drivers/firmware/tegra/bpmp.c
+> I'd much rather have mbox_send_message_and_tick() than implant a new api.
+> 
+
+I wasn't proposing to implement a new API; for mailbox controllers with
+tx method set to POLL the client will only have call mbox_send_data()
+nothing else. So I proposed [1] yesterday, that will make the apcs
+controller behave just like this case.
 
 
-On 5/10/17 3:13 AM, Joel Stanley wrote:
-> On Tue, Apr 11, 2017 at 5:16 AM, Christopher Bostic
-> <cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org> wrote:
->> From: Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
->>
->> This change introduces the fsi device API: simple read, write and peek
->> accessors for the devices' address spaces.
->>
->> Includes contributions from Chris Bostic <cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
->> and Edward A. James <eajames-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>.
->>
->> Signed-off-by: Edward A. James <eajames-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>
->> Signed-off-by: Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
->> Signed-off-by: Chris Bostic <cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
->> Signed-off-by: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
->> ---
->>   drivers/fsi/fsi-core.c | 33 +++++++++++++++++++++++++++++++++
->>   include/linux/fsi.h    |  7 ++++++-
->>   2 files changed, 39 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/fsi/fsi-core.c b/drivers/fsi/fsi-core.c
->> index a8faa89..4da0b030 100644
->> --- a/drivers/fsi/fsi-core.c
->> +++ b/drivers/fsi/fsi-core.c
->> @@ -32,6 +32,8 @@
->>   #define FSI_SLAVE_CONF_CRC_MASK                0x0000000f
->>   #define FSI_SLAVE_CONF_DATA_BITS       28
->>
->> +#define FSI_PEEK_BASE                  0x410
->> +
->>   static const int engine_page_size = 0x400;
->>
->>   #define FSI_SLAVE_BASE                 0x800
->> @@ -73,9 +75,40 @@ static int fsi_master_read(struct fsi_master *master, int link,
->>                  uint8_t slave_id, uint32_t addr, void *val, size_t size);
->>   static int fsi_master_write(struct fsi_master *master, int link,
->>                  uint8_t slave_id, uint32_t addr, const void *val, size_t size);
->> +static int fsi_slave_read(struct fsi_slave *slave, uint32_t addr,
->> +               void *val, size_t size);
->> +static int fsi_slave_write(struct fsi_slave *slave, uint32_t addr,
->> +               const void *val, size_t size);
-> I don't think these
->>   /* FSI endpoint-device support */
->>
->> +int fsi_device_read(struct fsi_device *dev, uint32_t addr, void *val,
->> +               size_t size)
-> I suggest adding some comments about the use of fsi_device_read,
-> fsi_device_write and fsi_device_peek APIs for driver authors.
->
-> One important note is that the data in val must be FSI bus endian (big endian).
+Looking at it again, making sure that tx method is TXDONE_BY_ACK should
+make mbox_client_txdone() essentially a nop, only locking the channel
+spinlock twice and then returning, as send_data() didn't leave any data
+in the queue. Is my understanding of this correct?
 
-Hi Joel,
+So please let me know what you think about [1], if you don't like it
+I'll fix the things pointed to by Stephen and we'll have to live with
+the two calls.
 
-OK will add some comments here.
-> It would be nice to have the sparse notation (eg. __be32) as well.
-> That doesn't make sense for void *, but we could add some helper
-> functions like:
->
->   int fsi_device_read32(struct fsi_device *dev, uint32_t addr, __be32 *val)
->
->   int fsi_device_write32(struct fsi_device *dev, uint32_t addr, __be32 val)
->
-> We probably only need a 32 bit version, as all of the reads/writes
-> being done in users of this function are 32 bit.
-> What do you think?
+[1] https://patchwork.kernel.org/patch/9718931/
 
-These functions will need to support reads/writes of 8 bit and 16 bit 
-values.
-
-Thanks
--Chris
-
->> +{
->> +       if (addr > dev->size || size > dev->size || addr > dev->size - size)
->> +               return -EINVAL;
->> +
->> +       return fsi_slave_read(dev->slave, dev->addr + addr, val, size);
->> +}
->> +EXPORT_SYMBOL_GPL(fsi_device_read);
->> +
->> +int fsi_device_write(struct fsi_device *dev, uint32_t addr, const void *val,
->> +               size_t size)
->> +{
->> +       if (addr > dev->size || size > dev->size || addr > dev->size - size)
->> +               return -EINVAL;
->> +
->> +       return fsi_slave_write(dev->slave, dev->addr + addr, val, size);
->> +}
->> +EXPORT_SYMBOL_GPL(fsi_device_write);
->> +
->> +int fsi_device_peek(struct fsi_device *dev, void *val)
->> +{
->> +       uint32_t addr = FSI_PEEK_BASE + ((dev->unit - 2) * sizeof(uint32_t));
->> +
->> +       return fsi_slave_read(dev->slave, addr, val, sizeof(uint32_t));
->> +}
->> +
->>   static void fsi_device_release(struct device *_device)
->>   {
->>          struct fsi_device *device = to_fsi_dev(_device);
->> diff --git a/include/linux/fsi.h b/include/linux/fsi.h
->> index efa55ba..66bce48 100644
->> --- a/include/linux/fsi.h
->> +++ b/include/linux/fsi.h
->> @@ -27,6 +27,12 @@ struct fsi_device {
->>          uint32_t                size;
->>   };
->>
->> +extern int fsi_device_read(struct fsi_device *dev, uint32_t addr,
->> +               void *val, size_t size);
->> +extern int fsi_device_write(struct fsi_device *dev, uint32_t addr,
->> +               const void *val, size_t size);
->> +extern int fsi_device_peek(struct fsi_device *dev, void *val);
->> +
->>   struct fsi_device_id {
->>          u8      engine_type;
->>          u8      version;
->> @@ -40,7 +46,6 @@ struct fsi_device_id {
->>   #define FSI_DEVICE_VERSIONED(t, v) \
->>          .engine_type = (t), .version = (v),
->>
->> -
->>   struct fsi_driver {
->>          struct device_driver            drv;
->>          const struct fsi_device_id      *id_table;
->> --
->> 1.8.2.2
->>
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards,
+Bjorn
