@@ -1,84 +1,147 @@
-From: Julia Lawall <julia.lawall-L2FTfq7BK8M@public.gmane.org>
-Subject: Re: [alsa-devel] [PATCH v2 3/3] ASoC: stm32: Add full duplex support
- to i2s (fwd)
-Date: Thu, 11 May 2017 10:13:53 +0800 (SGT)
-Message-ID: <alpine.DEB.2.20.1705111012050.3585@hadrien>
+From: Ryder Lee <ryder.lee@mediatek.com>
+Subject: Re: [PATCH v3 2/2] dt-bindings: pcie: Add documentation for
+ Mediatek PCIe
+Date: Thu, 11 May 2017 10:44:10 +0800
+Message-ID: <1494470650.20742.36.camel@mtkswgap22>
+References: <1494382020-26790-1-git-send-email-ryder.lee@mediatek.com>
+         <1494382020-26790-3-git-send-email-ryder.lee@mediatek.com>
+         <CAK8P3a193RxchvFAMWeZiP0sc0bd+VGg=_aVvipSgcbDpHXojg@mail.gmail.com>
+         <1494408707.31307.32.camel@mtkswgap22>
+         <CAK8P3a1AUsUTNDnN+_9251sxC7R4vvkQRr37dvAke6ooCJ_oxg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: olivier moysan <olivier.moysan-qxv4g6HH51o@public.gmane.org>
-Cc: lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, perex-/Fr2/VpizcU@public.gmane.org, tiwai-IBi9RG/b67k@public.gmane.org, mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnaud.pouliquen-qxv4g6HH51o@public.gmane.org, benjamin.gaignard-qxv4g6HH51o@public.gmane.org, kbuild-all-JC7UmRfGjtg@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <CAK8P3a1AUsUTNDnN+_9251sxC7R4vvkQRr37dvAke6ooCJ_oxg@mail.gmail.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, linux-pci <linux-pci@vger.kernel.org>, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Red Hung <red.hung@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-Please check whether the lock taken on line 585 should be freed on line
-598.  The report also mentions line 652, although that is not shown.
+On Wed, 2017-05-10 at 12:01 +0200, Arnd Bergmann wrote:
+> On Wed, May 10, 2017 at 11:31 AM, Ryder Lee <ryder.lee@mediatek.com> wrote:
+> > On Wed, 2017-05-10 at 10:08 +0200, Arnd Bergmann wrote:
+> >> On Wed, May 10, 2017 at 4:07 AM, Ryder Lee <ryder.lee@mediatek.com> wrote:
+> >>
+> >> > +- ranges:
+> >> > +  - The first three entries are expected to translate the addresses for the root
+> >> > +    port registers, which are referenced by the assigned-addresses property of
+> >> > +    the root port nodes (see below).
+> >>
+> >> I don't understand this part. Why do you need a static translation for these?
+> >> Shouldn't they just be listed in the 'reg' property of the parent node now that
+> >> you have the clk/reset/phy properties in the parent as well?
+> >
+> > At first, I did like that. But I noticed that someone suggest it's
+> > better to use 'assigned-addresses' to handle per-port registers, the
+> > same path as tegra and marvell did, in other platform discussion thread.
+> > So I just put shared register in root node. It could be rolled back if
+> > you feel this is inappropriate.
+> 
+> The marvell case is not a good example for your case: their top-level
+> device is made up by the OS to help with the shared resource allocation,
+> while in your case the bus bridge actually exists in hardware.
+> 
+> I'm not too familiar with the Tegra case, and haven't looked at that here,
+> but it could be an artifact of how for a while we used to list the config
+> space access in the top-level "ranges" instead of the "reg" property.
+> 
+> I'd vote for moving it back, for consistency with the other port specific
+> properties that are now in the root node. Once you do that, the port
+> nodes can be removed completely, which is what I was aiming for with
+> the comments on the previous version.
+ 
+I'll move it back.
 
-julia
+> >> > +Required properties:
+> >> > +- device_type: Must be "pci"
+> >> > +- assigned-addresses: Address and size of the port configuration registers
+> >> > +- reg: Only the first four bytes are used to refer to the correct bus number
+> >> > +  and device number.
+> >> > +- #address-cells: Must be 3
+> >> > +- #size-cells: Must be 2
+> >> > +- #interrupt-cells: Must be 1
+> >> > +- interrupt-map-mask and interrupt-map: Standard PCI IRQ mapping properties
+> >> > +  Please refer to the standard PCI bus binding document for a more detailed
+> >> > +  explanation.
+> >>
+> >> Child nodes do not normally have interrupt-map properties. Isn't this
+> >> already covered by the interrupt-map in the parent?
+> >>
+> >
+> > I have one Intel 4 port ethernet card(0000:00:01) and MTK WLAN card
+> > (0000:00:02), probe message looks good to me.
+> >
+> > pci 0000:00:01.0: fixup irq: got 224
+> > pci 0000:00:01.0: assigning IRQ 224
+> > pci 0000:00:02.0: fixup irq: got 225
+> > pci 0000:00:02.0: assigning IRQ 225
+> >
+> > pci 0000:01:00.0: fixup irq: got 224
+> > pci 0000:01:00.0: assigning IRQ 224
+> > pci 0000:01:00.1: fixup irq: got 224
+> > pci 0000:01:00.1: assigning IRQ 224
+> > pci 0000:01:00.2: fixup irq: got 224
+> > pci 0000:01:00.2: assigning IRQ 224
+> > pci 0000:01:00.3: fixup irq: got 224
+> > pci 0000:01:00.3: assigning IRQ 224
+> >
+> > pci 0000:02:00.0: fixup irq: got 225
+> > pci 0000:02:00.0: assigning IRQ 225
+> >
+> >
+> > But child nodes without interrupt-map properties:
+> > It seems incorrect.
+> >
+> > pci 0000:00:01.0: fixup irq: got 224
+> > pci 0000:00:01.0: assigning IRQ 224
+> > pci 0000:00:02.0: fixup irq: got 225
+> > pci 0000:00:02.0: assigning IRQ 225
+> >
+> > pci 0000:01:00.0: fixup irq: got 223
+> > pci 0000:01:00.0: assigning IRQ 223
+> 
+> Not entirely sure what happens here, but I guess the problem
+> is that the 'reg' portion of the parent interrupt-map refers to
+> the port devices, not the devices attached the devices behind
+> them.
 
----------- Forwarded message ----------
-Date: Thu, 11 May 2017 09:49:21 +0800
-From: kbuild test robot <fengguang.wu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-To: kbuild-JC7UmRfGjtg@public.gmane.org
-Cc: Julia Lawall <julia.lawall-L2FTfq7BK8M@public.gmane.org>
-Subject: Re: [alsa-devel] [PATCH v2 3/3] ASoC: stm32: Add full duplex support to
-     i2s
+I agree with you. That's why I need additional interrupt-map properties
+to resolve IRQ correctly for the devices behind root ports.
 
-Hi olivier,
+Not sure whether other platforms have similar case like me here.
 
-[auto build test WARNING on asoc/for-next]
-[also build test WARNING on next-20170510]
-[cannot apply to v4.11]
-[if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
+> On a related note, I see that you still list
+> 
+> > +- interrupts: Three interrupt outputs of the controller. Must contain an
+> > +  entry for each entry in the interrupt-names property.
+> > +- interrupt-names: Must include the following names
+> > +  - "pcie-int0"
+> > +  - "pcie-int1"
+> > +  - "pcie-int2"
+> 
+> This seems to be an artifact from the older version and should be
+> removed as the driver correctly ignores the properties now.
 
-url:    https://github.com/0day-ci/linux/commits/olivier-moysan/Add-I2S-driver/20170511-075335
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
-:::::: branch date: 2 hours ago
-:::::: commit date: 2 hours ago
+Actually, everything works fine without these properties however when it
+loads we see a few weird error message:
 
->> sound/soc/stm/stm32_i2s.c:598:3-9: preceding lock on line 585
->> sound/soc/stm/stm32_i2s.c:598:3-9: preceding lock on line 585
-   sound/soc/stm/stm32_i2s.c:652:3-9: preceding lock on line 585
+pcieport 0000:00:01.0: Signaling PME with IRQ 232
+pcieport 0000:00:02.0: enabling device (0140 -> 0142)
+pcieport 0000:00:02.0: enabling bus mastering
+irq 232: nobody cared (try booting with the "irqpoll" option)
+...
+[<c03f6be4>] (pcie_pme_probe) from [<c03f47b8>] (pcie_port_probe_service
++0x44/0x6c)
+(pcie_port_probe_service) from [<c0454cf8>] (driver_probe_device
++0x280/0x470)
+...
+(pcie_port_device_register) from [<c03f51a0>] (pcie_portdrv_probe
++0x3c/0xb4)
+(pcie_portdrv_probe) from [<c03e7acc>] (pci_device_probe+0x98/0xfc)
+(pci_device_probe) from [<c0454cf8>] (driver_probe_device+0x280/0x470)
+handlers:
+[<c03f68b0>] pcie_pme_irq
+Disabling IRQ #233
 
-git remote add linux-review https://github.com/0day-ci/linux
-git remote update linux-review
-git checkout 9f5663c4aa8961bf2a547683af787e606503376e
-vim +598 sound/soc/stm/stm32_i2s.c
-
-1ebd36ae olivier moysan 2017-05-10  579  {
-1ebd36ae olivier moysan 2017-05-10  580  	struct stm32_i2s_data *i2s = snd_soc_dai_get_drvdata(cpu_dai);
-1ebd36ae olivier moysan 2017-05-10  581  	bool playback_flg = (substream->stream == SNDRV_PCM_STREAM_PLAYBACK);
-9f5663c4 olivier moysan 2017-05-10  582  	u32 cfg1_mask, ier;
-1ebd36ae olivier moysan 2017-05-10  583  	int ret;
-1ebd36ae olivier moysan 2017-05-10  584
-9f5663c4 olivier moysan 2017-05-10 @585  	spin_lock(&i2s->lock_fd);
-9f5663c4 olivier moysan 2017-05-10  586
-1ebd36ae olivier moysan 2017-05-10  587  	switch (cmd) {
-1ebd36ae olivier moysan 2017-05-10  588  	case SNDRV_PCM_TRIGGER_START:
-1ebd36ae olivier moysan 2017-05-10  589  	case SNDRV_PCM_TRIGGER_RESUME:
-1ebd36ae olivier moysan 2017-05-10  590  	case SNDRV_PCM_TRIGGER_PAUSE_RELEASE:
-1ebd36ae olivier moysan 2017-05-10  591  		/* Enable i2s */
-1ebd36ae olivier moysan 2017-05-10  592  		dev_dbg(cpu_dai->dev, "start I2S\n");
-1ebd36ae olivier moysan 2017-05-10  593
-1ebd36ae olivier moysan 2017-05-10  594  		ret = regmap_update_bits(i2s->regmap, STM32_I2S_CR1_REG,
-1ebd36ae olivier moysan 2017-05-10  595  					 I2S_CR1_SPE, I2S_CR1_SPE);
-1ebd36ae olivier moysan 2017-05-10  596  		if (ret < 0) {
-1ebd36ae olivier moysan 2017-05-10  597  			dev_err(cpu_dai->dev, "Error %d enabling I2S\n", ret);
-1ebd36ae olivier moysan 2017-05-10 @598  			return ret;
-1ebd36ae olivier moysan 2017-05-10  599  		}
-1ebd36ae olivier moysan 2017-05-10  600
-1ebd36ae olivier moysan 2017-05-10  601  		ret = regmap_update_bits(i2s->regmap, STM32_I2S_CR1_REG,
-
-:::::: The code at line 598 was first introduced by commit
-:::::: 1ebd36ae636af5c130a9df4d9a921e4ed984a6e9 ASoC: stm32: Add I2S driver
-
-:::::: TO: olivier moysan <olivier.moysan-qxv4g6HH51o@public.gmane.org>
-:::::: CC: 0day robot <fengguang.wu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-
----
-0-DAY kernel test infrastructure                Open Source Technology Center
-https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I haven't dig it out yet, but just keep them here to solve that.
