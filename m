@@ -1,146 +1,200 @@
-From: Christopher Bostic <cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v7 20/23] drivers/fsi/gpio: Add tracepoints for GPIO master
-Date: Thu, 11 May 2017 16:00:57 -0500
-Message-ID: <20170511210101.78409-21-cbostic@linux.vnet.ibm.com>
+From: Christopher Bostic <cbostic@linux.vnet.ibm.com>
+Subject: [PATCH v7 17/23] drivers/fsi: Add error handling for slave
+Date: Thu, 11 May 2017 16:00:54 -0500
+Message-ID: <20170511210101.78409-18-cbostic@linux.vnet.ibm.com>
 References: <20170511210101.78409-1-cbostic@linux.vnet.ibm.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170511210101.78409-1-cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, rostedt-nx8X9YLhiw1AfugRpC6u6w@public.gmane.org, mingo-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, andrew-zrmu5oMJ5Fs@public.gmane.org, alistair-Y4h6yKqj69EXC2x5gXVKYQ@public.gmane.org, benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, Christopher Bostic <cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170511210101.78409-1-cbostic@linux.vnet.ibm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, rostedt@goodmis.org, mingo@redhat.com, gregkh@linuxfoundation.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: Jeremy Kerr <jk@ozlabs.org>, joel@jms.id.au, linux-kernel@vger.kernel.org, andrew@aj.id.au, alistair@popple.id.au, benh@kernel.crashing.org, Christopher Bostic <cbostic@linux.vnet.ibm.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
+From: Jeremy Kerr <jk@ozlabs.org>
 
-Trace low level input/output GPIO operations.
+This change implements error handling in the FSI core, by cleaning up
+and retrying failed operations, using the SISC, TERM and BREAK
+facilities.
 
-Signed-off-by: Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
-Signed-off-by: Christopher Bostic <cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+Signed-off-by: Jeremy Kerr <jk@ozlabs.org>
+Signed-off-by: Christopher Bostic <cbostic@linux.vnet.ibm.com>
 ---
- drivers/fsi/fsi-master-gpio.c          |  9 +++++
- include/trace/events/fsi_master_gpio.h | 68 ++++++++++++++++++++++++++++++++++
- 2 files changed, 77 insertions(+)
- create mode 100644 include/trace/events/fsi_master_gpio.h
+ drivers/fsi/fsi-core.c | 121 ++++++++++++++++++++++++++++++++++++++++++++++---
+ 1 file changed, 114 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/fsi/fsi-master-gpio.c b/drivers/fsi/fsi-master-gpio.c
-index d467e61..a5d6e70 100644
---- a/drivers/fsi/fsi-master-gpio.c
-+++ b/drivers/fsi/fsi-master-gpio.c
-@@ -61,6 +61,9 @@ struct fsi_master_gpio {
- 	struct gpio_desc	*gpio_mux;	/* Mux control */
- };
+diff --git a/drivers/fsi/fsi-core.c b/drivers/fsi/fsi-core.c
+index bc73f13..6e7d778 100644
+--- a/drivers/fsi/fsi-core.c
++++ b/drivers/fsi/fsi-core.c
+@@ -46,7 +46,9 @@
+ /*
+  * FSI slave engine control register offsets
+  */
+-#define FSI_SMODE			0x0	/* R/W: Mode register */
++#define FSI_SMODE		0x0	/* R/W: Mode register */
++#define FSI_SISC		0x8	/* R/W: Interrupt condition */
++#define FSI_SSTAT		0x14	/* R  : Slave status */
  
-+#define CREATE_TRACE_POINTS
-+#include <trace/events/fsi_master_gpio.h>
-+
- #define to_fsi_master_gpio(m) container_of(m, struct fsi_master_gpio, master)
+ /*
+  * SMODE fields
+@@ -77,10 +79,14 @@ struct fsi_slave {
+ #define to_fsi_master(d) container_of(d, struct fsi_master, dev)
+ #define to_fsi_slave(d) container_of(d, struct fsi_slave, dev)
  
- struct fsi_gpio_msg {
-@@ -126,6 +129,8 @@ static void serial_in(struct fsi_master_gpio *master, struct fsi_gpio_msg *msg,
- 		msg->msg |= ~in_bit & 0x1;	/* Data is active low */
- 	}
- 	msg->bits += num_bits;
++static const int slave_retries = 2;
++static int discard_errors;
 +
-+	trace_fsi_master_gpio_in(master, num_bits, msg->msg);
+ static int fsi_master_read(struct fsi_master *master, int link,
+ 		uint8_t slave_id, uint32_t addr, void *val, size_t size);
+ static int fsi_master_write(struct fsi_master *master, int link,
+ 		uint8_t slave_id, uint32_t addr, const void *val, size_t size);
++static int fsi_master_break(struct fsi_master *master, int link);
+ 
+ /*
+  * fsi_device_read() / fsi_device_write() / fsi_device_peek()
+@@ -173,32 +179,131 @@ static int fsi_slave_calc_addr(struct fsi_slave *slave, uint32_t *addrp,
+ 	return 0;
  }
  
- static void serial_out(struct fsi_master_gpio *master,
-@@ -137,6 +142,8 @@ static void serial_out(struct fsi_master_gpio *master,
- 	uint64_t last_bit = ~0;
- 	int next_bit;
++int fsi_slave_report_and_clear_errors(struct fsi_slave *slave)
++{
++	struct fsi_master *master = slave->master;
++	uint32_t irq, stat;
++	int rc, link;
++	uint8_t id;
++
++	link = slave->link;
++	id = slave->id;
++
++	rc = fsi_master_read(master, link, id, FSI_SLAVE_BASE + FSI_SISC,
++			&irq, sizeof(irq));
++	if (rc)
++		return rc;
++
++	rc =  fsi_master_read(master, link, id, FSI_SLAVE_BASE + FSI_SSTAT,
++			&stat, sizeof(stat));
++	if (rc)
++		return rc;
++
++	dev_info(&slave->dev, "status: 0x%08x, sisc: 0x%08x\n",
++			be32_to_cpu(stat), be32_to_cpu(irq));
++
++	/* clear interrupts */
++	return fsi_master_write(master, link, id, FSI_SLAVE_BASE + FSI_SISC,
++			&irq, sizeof(irq));
++}
++
++static int fsi_slave_set_smode(struct fsi_master *master, int link, int id);
++
++int fsi_slave_handle_error(struct fsi_slave *slave, bool write, uint32_t addr,
++		size_t size)
++{
++	struct fsi_master *master = slave->master;
++	int rc, link;
++	uint32_t reg;
++	uint8_t id;
++
++	if (discard_errors)
++		return -1;
++
++	link = slave->link;
++	id = slave->id;
++
++	dev_dbg(&slave->dev, "handling error on %s to 0x%08x[%zd]",
++			write ? "write" : "read", addr, size);
++
++	/* try a simple clear of error conditions, which may fail if we've lost
++	 * communication with the slave
++	 */
++	rc = fsi_slave_report_and_clear_errors(slave);
++	if (!rc)
++		return 0;
++
++	/* send a TERM and retry */
++	if (master->term) {
++		rc = master->term(master, link, id);
++		if (!rc) {
++			rc = fsi_master_read(master, link, id, 0,
++					&reg, sizeof(reg));
++			if (!rc)
++				rc = fsi_slave_report_and_clear_errors(slave);
++			if (!rc)
++				return 0;
++		}
++	}
++
++	/* getting serious, reset the slave via BREAK */
++	rc = fsi_master_break(master, link);
++	if (rc)
++		return rc;
++
++	rc = fsi_slave_set_smode(master, link, id);
++	if (rc)
++		return rc;
++
++	return fsi_slave_report_and_clear_errors(slave);
++}
++
+ int fsi_slave_read(struct fsi_slave *slave, uint32_t addr,
+ 			void *val, size_t size)
+ {
+ 	uint8_t id = slave->id;
+-	int rc;
++	int rc, err_rc, i;
  
-+	trace_fsi_master_gpio_out(master, cmd->bits, cmd->msg);
-+
- 	if (!cmd->bits) {
- 		dev_warn(master->dev, "trying to output 0 bits\n");
- 		return;
-@@ -458,6 +465,8 @@ static int fsi_master_gpio_break(struct fsi_master *_master, int link)
- 	if (link != 0)
- 		return -ENODEV;
+ 	rc = fsi_slave_calc_addr(slave, &addr, &id);
+ 	if (rc)
+ 		return rc;
  
-+	trace_fsi_master_gpio_break(master);
+-	return fsi_master_read(slave->master, slave->link, id,
+-			addr, val, size);
++	for (i = 0; i < slave_retries; i++) {
++		rc = fsi_master_read(slave->master, slave->link,
++				id, addr, val, size);
++		if (!rc)
++			break;
 +
- 	set_sda_output(master, 1);
- 	sda_out(master, 1);
- 	clock_toggle(master, FSI_PRE_BREAK_CLOCKS);
-diff --git a/include/trace/events/fsi_master_gpio.h b/include/trace/events/fsi_master_gpio.h
-new file mode 100644
-index 0000000..11b36c1
---- /dev/null
-+++ b/include/trace/events/fsi_master_gpio.h
-@@ -0,0 +1,68 @@
++		err_rc = fsi_slave_handle_error(slave, false, addr, size);
++		if (err_rc)
++			break;
++	}
 +
-+#undef TRACE_SYSTEM
-+#define TRACE_SYSTEM fsi_master_gpio
++	return rc;
+ }
+ 
+ int fsi_slave_write(struct fsi_slave *slave, uint32_t addr,
+ 			const void *val, size_t size)
+ {
+ 	uint8_t id = slave->id;
+-	int rc;
++	int rc, err_rc, i;
+ 
+ 	rc = fsi_slave_calc_addr(slave, &addr, &id);
+ 	if (rc)
+ 		return rc;
+ 
+-	return fsi_master_write(slave->master, slave->link, id,
+-			addr, val, size);
++	for (i = 0; i < slave_retries; i++) {
++		rc = fsi_master_write(slave->master, slave->link,
++				id, addr, val, size);
++		if (!rc)
++			break;
 +
-+#if !defined(_TRACE_FSI_MASTER_GPIO_H) || defined(TRACE_HEADER_MULTI_READ)
-+#define _TRACE_FSI_MASTER_GPIO_H
++		err_rc = fsi_slave_handle_error(slave, true, addr, size);
++		if (err_rc)
++			break;
++	}
 +
-+#include <linux/tracepoint.h>
-+
-+TRACE_EVENT(fsi_master_gpio_in,
-+	TP_PROTO(const struct fsi_master_gpio *master, int bits, uint64_t msg),
-+	TP_ARGS(master, bits, msg),
-+	TP_STRUCT__entry(
-+		__field(int,	master_idx)
-+		__field(int,	bits)
-+		__field(uint64_t, msg)
-+	),
-+	TP_fast_assign(
-+		__entry->master_idx = master->master.idx;
-+		__entry->bits = bits;
-+		__entry->msg  = msg & ((1ull<<bits) - 1);
-+	),
-+	TP_printk("fsi-gpio%d => %0*llx[%d]",
-+		__entry->master_idx,
-+		(__entry->bits + 3) / 4,
-+		__entry->msg,
-+		__entry->bits
-+	)
-+);
-+
-+TRACE_EVENT(fsi_master_gpio_out,
-+	TP_PROTO(const struct fsi_master_gpio *master, int bits, uint64_t msg),
-+	TP_ARGS(master, bits, msg),
-+	TP_STRUCT__entry(
-+		__field(int,	master_idx)
-+		__field(int,	bits)
-+		__field(uint64_t, msg)
-+	),
-+	TP_fast_assign(
-+		__entry->master_idx = master->master.idx;
-+		__entry->bits = bits;
-+		__entry->msg  = msg & ((1ull<<bits) - 1);
-+	),
-+	TP_printk("fsi-gpio%d <= %0*llx[%d]",
-+		__entry->master_idx,
-+		(__entry->bits + 3) / 4,
-+		__entry->msg,
-+		__entry->bits
-+	)
-+);
-+
-+TRACE_EVENT(fsi_master_gpio_break,
-+	TP_PROTO(const struct fsi_master_gpio *master),
-+	TP_ARGS(master),
-+	TP_STRUCT__entry(
-+		__field(int,	master_idx)
-+	),
-+	TP_fast_assign(
-+		__entry->master_idx = master->master.idx;
-+	),
-+	TP_printk("fsi-gpio%d ----break---",
-+		__entry->master_idx
-+	)
-+);
-+
-+#endif /* _TRACE_FSI_MASTER_GPIO_H */
-+
-+#include <trace/define_trace.h>
++	return rc;
+ }
+ 
+ extern int fsi_slave_claim_range(struct fsi_slave *slave,
+@@ -766,3 +871,5 @@ static void fsi_exit(void)
+ 
+ module_init(fsi_init);
+ module_exit(fsi_exit);
++module_param(discard_errors, int, 0664);
++MODULE_PARM_DESC(discard_errors, "Don't invoke error handling on bus accesses");
 -- 
 1.8.2.2
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
