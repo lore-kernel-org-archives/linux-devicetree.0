@@ -1,137 +1,462 @@
-From: "Ong, Hean Loong" <hean.loong.ong-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCHv2 0/3] Intel FPGA VIP Frame Buffer II DRM Driver
-Date: Thu, 11 May 2017 02:50:41 +0000
-Message-ID: <1494471040.2062.16.camel@intel.com>
-References: <1493086006-4392-1-git-send-email-hean.loong.ong@intel.com>
-         <87shklznuo.fsf@eliezer.anholt.net> <1493861983.2182.11.camel@intel.com>
-         <87lgqcsg18.fsf@eliezer.anholt.net> <1494209010.2533.4.camel@intel.com>
-         <87efvz2v4m.fsf@eliezer.anholt.net> <1494300270.5383.29.camel@intel.com>
-         <8760hanfua.fsf@eliezer.anholt.net>
+From: Ludovic Desroches <ludovic.desroches@microchip.com>
+Subject: Re: [PATCH v2 2/3] iio: adc: at91-sama5d2_adc: add hw trigger and
+ buffer support
+Date: Thu, 11 May 2017 08:09:37 +0200
+Message-ID: <20170511060937.pzam3drvyaci6rnv@rfolt0960.corp.atmel.com>
+References: <1493900000-26220-1-git-send-email-eugen.hristev@microchip.com>
+ <1493900000-26220-3-git-send-email-eugen.hristev@microchip.com>
+ <aeaf25d7-5e05-d854-1ae9-06d224925cad@kernel.org>
+ <7fb32b5f-4705-ab23-d9c8-020b03af9ac1@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <8760hanfua.fsf-omZaPlIz5HhaEpDpdNBo/KxOck334EZe@public.gmane.org>
-Content-Language: en-US
-Content-ID: <FEB90A43F2FBBF4BB1E9D34254F10855-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org" <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, "dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "Vetter, Daniel" <daniel.vetter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: "dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org" <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, "Loh, Tien Hock" <tien.hock.loh-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <7fb32b5f-4705-ab23-d9c8-020b03af9ac1@microchip.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Eugen Hristev <eugen.hristev@microchip.com>
+Cc: devicetree@vger.kernel.org, lars@metafoo.de, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, ludovic.desroches@microchip.com, alexandre.belloni@free-electrons.com, linux-arm-kernel@lists.infradead.org, Jonathan Cameron <jic23@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCAyMDE3LTA1LTA5IGF0IDA5OjQwIC0wNzAwLCBFcmljIEFuaG9sdCB3cm90ZToNCj4g
-Ik9uZywgSGVhbiBMb29uZyIgPGhlYW4ubG9vbmcub25nQGludGVsLmNvbT4gd3JpdGVzOg0KPiAN
-Cj4gPiANCj4gPiBPbiBNb24sIDIwMTctMDUtMDggYXQgMDk6MDMgLTA3MDAsIEVyaWMgQW5ob2x0
-IHdyb3RlOg0KPiA+ID4gDQo+ID4gPiAiT25nLCBIZWFuIExvb25nIiA8aGVhbi5sb29uZy5vbmdA
-aW50ZWwuY29tPiB3cml0ZXM6DQo+ID4gPiANCj4gPiA+ID4gDQo+ID4gPiA+IA0KPiA+ID4gPiBP
-biBUaHUsIDIwMTctMDUtMDQgYXQgMTA6MTEgLTA3MDAsIEVyaWMgQW5ob2x0IHdyb3RlOg0KPiA+
-ID4gPiA+IA0KPiA+ID4gPiA+IA0KPiA+ID4gPiA+ICJPbmcsIEhlYW4gTG9vbmciIDxoZWFuLmxv
-b25nLm9uZ0BpbnRlbC5jb20+IHdyaXRlczoNCj4gPiA+ID4gPiANCj4gPiA+ID4gPiA+IA0KPiA+
-ID4gPiA+ID4gDQo+ID4gPiA+ID4gPiANCj4gPiA+ID4gPiA+IE9uIFdlZCwgMjAxNy0wNS0wMyBh
-dCAxMzoyOCAtMDcwMCwgRXJpYyBBbmhvbHQgd3JvdGU6DQo+ID4gPiA+ID4gPiA+IA0KPiA+ID4g
-PiA+ID4gPiANCj4gPiA+ID4gPiA+ID4gDQo+ID4gPiA+ID4gPiA+IGhlYW4ubG9vbmcub25nQGlu
-dGVsLmNvbSB3cml0ZXM6DQo+ID4gPiA+ID4gPiA+IA0KPiA+ID4gPiA+ID4gPiA+IA0KPiA+ID4g
-PiA+ID4gPiA+IA0KPiA+ID4gPiA+ID4gPiA+IA0KPiA+ID4gPiA+ID4gPiA+IA0KPiA+ID4gPiA+
-ID4gPiA+IEZyb206IE9uZyBIZWFuIExvb25nIDxoZWFuLmxvb25nLm9uZ0BpbnRlbC5jb20+DQo+
-ID4gPiA+ID4gPiA+ID4gDQo+ID4gPiA+ID4gPiA+ID4gSGksDQo+ID4gPiA+ID4gPiA+ID4gDQo+
-ID4gPiA+ID4gPiA+ID4gVGhlIG5ldyBJbnRlbCBBcnJpYTEwIFNPQyBGUEdBIGRldmtpdCBoYXMg
-YSBEaXNwbGF5DQo+ID4gPiA+ID4gPiA+ID4gUG9ydCBJUA0KPiA+ID4gPiA+ID4gPiA+IGNvbXBv
-bmVudMKgDQo+ID4gPiA+ID4gPiA+ID4gd2hpY2ggcmVxdWlyZXMgYSBuZXcgZHJpdmVyLiBUaGlz
-IGlzIGEgdmlydHVhbCBkcml2ZXINCj4gPiA+ID4gPiA+ID4gPiBpbg0KPiA+ID4gPiA+ID4gPiA+
-IHdoaWNoDQo+ID4gPiA+ID4gPiA+ID4gdGhlDQo+ID4gPiA+ID4gPiA+ID4gRkdQQSBoYXJkd2Fy
-ZSB3b3VsZCBlbmFibGUgdGhlIERpc3BsYXkgUG9ydCBiYXNlZCBvbg0KPiA+ID4gPiA+ID4gPiA+
-IHRoZQ0KPiA+ID4gPiA+ID4gPiA+IGluZm9ybWF0aW9uDQo+ID4gPiA+ID4gPiA+ID4gYW5kIGRh
-dGEgcHJvdmlkZWQgZnJvbSB0aGUgRFJNIGZyYW1lIGJ1ZmZlciBmcm9tIHRoZQ0KPiA+ID4gPiA+
-ID4gPiA+IE9TLg0KPiA+ID4gPiA+ID4gPiA+IEJhc2ljYWxseQ0KPiA+ID4gPiA+ID4gPiA+IGFs
-bA0KPiA+ID4gPiA+ID4gPiA+IGFsbCBpbmZvcm1hdGlvbiB3aXRoIHJlYWdyZHMgdG8gcmVzb2x1
-dGlvbiBhbmQgYml0cyBwZXINCj4gPiA+ID4gPiA+ID4gPiBwaXhlbA0KPiA+ID4gPiA+ID4gPiA+
-IGFyZQ0KPiA+ID4gPiA+ID4gPiA+IHByZS1jb25maWd1cmVkIG9uIHRoZSBGUEdBIGRlc2lnbiBh
-bmQgdGhlc2UgaW5mb3JtYXRpb24NCj4gPiA+ID4gPiA+ID4gPiBhcmUNCj4gPiA+ID4gPiA+ID4g
-PiBmZWQNCj4gPiA+ID4gPiA+ID4gPiB0bw0KPiA+ID4gPiA+ID4gPiA+IHRoZSBkcml2ZXIgdmlh
-IHRoZSBkZXZpY2UgdHJlZSBpbmZvcm1hdGlvbiBhcyBwYXJ0IG9mDQo+ID4gPiA+ID4gPiA+ID4g
-dGhlDQo+ID4gPiA+ID4gPiA+ID4gaGFyZHdhcmXCoA0KPiA+ID4gPiA+ID4gPiA+IGluZm9ybWF0
-aW9uLg0KPiA+ID4gPiA+ID4gPiBJIHN0YXJ0ZWQgcmV2aWV3aW5nIHRoZSBjb2RlLCBidXQgSSB3
-YW50IHRvIG1ha2Ugc3VyZSBJDQo+ID4gPiA+ID4gPiA+IHVuZGVyc3RhbmQNCj4gPiA+ID4gPiA+
-ID4gd2hhdCdzIGdvaW5nIG9uOg0KPiA+ID4gPiA+ID4gPiANCj4gPiA+ID4gPiA+ID4gVGhpcyBJ
-UCBjb3JlIGlzbid0IGRpc3BsYXlpbmcgY29udGVudHMgZnJvbSBzeXN0ZW0gbWVtb3J5DQo+ID4g
-PiA+ID4gPiA+IG9uDQo+ID4gPiA+ID4gPiA+IHNvbWUNCj4gPiA+ID4gPiA+ID4gc29ydA0KPiA+
-ID4gPiA+ID4gPiBvZiBhY3R1YWwgcGh5c2ljYWwgZGlzcGxheSwgcmlnaHQ/wqDCoEl0J3MgYSBj
-b3JlIHRoYXQNCj4gPiA+ID4gPiA+ID4gdGFrZXMNCj4gPiA+ID4gPiA+ID4gc29tZQ0KPiA+ID4g
-PiA+ID4gPiBpbnB1dA0KPiA+ID4gPiA+ID4gPiB2aWRlbyBzdHJlYW0gKG5vdCBkZXNjcmliZWQg
-aW4gdGhlIERUIG9yIGluIHRoaXMgZHJpdmVyKQ0KPiA+ID4gPiA+ID4gPiBhbmQNCj4gPiA+ID4g
-PiA+ID4gc3RvcmVzDQo+ID4gPiA+ID4gPiA+IGl0DQo+ID4gPiA+ID4gPiA+IHRvIG1lbW9yeT8N
-Cj4gPiA+ID4gPiA+IElmIHRoZSBJUCBDb3JlIHlvdSBhcmUgcmVmZXJyaW5nIHRvIGlzIHNvbWUg
-Zm9ybSBvZiBHUFUNCj4gPiA+ID4gPiA+IHRoZW4gaW4NCj4gPiA+ID4gPiA+IHRoaXMNCj4gPiA+
-ID4gPiA+IGNhc2Ugd2UgYXJlIHVzaW5nIHRoZSBJbnRlbCBGUEdBIERpc3BsYXkgUG9ydCBGcmFt
-ZWJ1ZmZlcg0KPiA+ID4gPiA+ID4gSVAuDQo+ID4gPiA+ID4gPiBJdA0KPiA+ID4gPiA+ID4gZG9l
-cw0KPiA+ID4gPiA+ID4gZGlzcGxheSBjb250ZW50cyBzdHJlYW1lZCBmcm9tIHRoZSBBUk0vTGlu
-dXggc3lzdGVtIHRvIHRoZQ0KPiA+ID4gPiA+ID4gRGlzcGxheQ0KPiA+ID4gPiA+ID4gUG9ydA0K
-PiA+ID4gPiA+ID4gb2YgdGhlIHBoeXNpY2FsIE1vbml0b3IuDQo+ID4gPiA+ID4gPiANCj4gPiA+
-ID4gPiA+IEJlbG93IGEgc2ltcGxlIGlsbHVzdHJhdGlvbiBvZiB0aGUgc3lzdGVtOg0KPiA+ID4g
-PiA+ID4gDQo+ID4gPiA+ID4gPiBBUk0vTGludXggLS1ETUEtLT5JbnRlbCBGUEdBIERpc3BsYXkg
-UG9ydCBGcmFtZWJ1ZmZlciBJUA0KPiA+ID4gPiA+ID4gCQkJCXwNCj4gPiA+ID4gPiA+IAkJCQl8
-DQo+ID4gPiA+ID4gPiAJCQlQaHlzaWNhbCBDb25uZWN0aW9uDQo+ID4gPiA+ID4gPiAJCQlEaXNw
-bGF5IFBvcnQNCj4gPiA+ID4gPiBUaGUgIkRNQSIgaW4gdGhpcyBkaWFncmFtIGlzIHRoZSBmcmFt
-ZSByZWFkZXIgSVAsIHJpZ2h0P8KgwqBUaGUNCj4gPiA+ID4gPiBmcmFtZQ0KPiA+ID4gPiA+IHJl
-YWRlciwgYXMgZGVzY3JpYmVkIGluIHRoZSBzcGVjLCBzb3VuZHMgYXBwcm94aW1hdGVseSBsaWtl
-IGENCj4gPiA+ID4gPiBEUk0NCj4gPiA+ID4gPiBwbGFuZSwNCj4gPiA+ID4gPiBzbyBpZiB5b3Ug
-aGF2ZSB0aGF0IGluIHlvdXIgc3lzdGVtIHRoZW4gdGhhdCBuZWVkcyB0byBiZSBwYXJ0DQo+ID4g
-PiA+ID4gb2YNCj4gPiA+ID4gPiB0aGlzDQo+ID4gPiA+ID4gRFJNIGRyaXZlciAob3RoZXJ3aXNl
-IHlvdSB3b24ndCBiZSBwdXR0aW5nIHRoZSByaWdodCB0aGluZ3MNCj4gPiA+ID4gPiBvbg0KPiA+
-ID4gPiA+IHRoZQ0KPiA+ID4gPiA+IHNjcmVlbiEpLg0KPiA+ID4gPiBXb3VsZCB0aGUgZHJtX3Np
-bXBsZV9kaXNwbGF5X3BpcGVfaW5pdMKgYmUgYWJsZSB0byBoYW5kbGUgdGhpcyA/DQo+ID4gPiA+
-IEl0DQo+ID4gPiA+IHNlZW1zIHRvIGJlIGRpc3BsYXlpbmcgdGhlIHByb3BlciBpbWFnZXMgb24g
-c2NyZWVuLCBiYXNlZCBvbiBteQ0KPiA+ID4gPiBjdXJyZW50DQo+ID4gPiA+IGNoYW5nZXMuIFRo
-ZXJlIHdlcmUgcmVjb21tZW5kYXRpb25zIHRvIHVzZSB0aGUNCj4gPiA+ID4gZHJtX3NpbXBsZV9k
-aXNwbGF5X3BpcGVfaW5pdCBpbnN0ZWFkIG9mIGNyZWF0aW5nIHRoZSBDUlRDIGFuZA0KPiA+ID4g
-PiBwbGFuZXMNCj4gPiA+ID4gbXlzZWxmDQo+ID4gPiBUaGUgZG9jcyBJJ3ZlIHJlYWQgZm9yIHRo
-ZSBGcmFtZSBCdWZmZXIgSVAgZG9uJ3QgZml0IGludG8gYW55DQo+ID4gPiBjdXJyZW50DQo+ID4g
-PiBEUk0gY29tcG9uZW50LCBzaW5jZSBpdCdzIHdoYXQgd2UncmUgY3VycmVudGx5IGNhbGxpbmcg
-YQ0KPiA+ID4gIndyaXRlYmFjaw0KPiA+ID4gY29ubmVjdG9yIi4NCj4gPiA+IA0KPiA+IFdoaWxl
-IHJ1bm5pbmcgbXkgb3duIHRlc3QgKHNpbmNlIHRoZSBpbnRlbC1ncHUtdG9vbHMgZG9lc24ndCBz
-ZWVtcw0KPiA+IGFwcGxpY2FibGUuKSBUaGUgZHJtX3NpbXBsZV9kaXNwbGF5X3BpcGVfaW5pdCBz
-ZWVtcyB0byBiZSBzaW1wbGUNCj4gPiBlbm91Z2gNCj4gPiBmb3IgZGlzcGxheWluZyBhIG1hdGNo
-Ym94IGNvbnNvbGUuIFRoZSB1c2UgY2FzZSBmb3IgdGhpcyBkcml2ZXIgaXMNCj4gPiBvbmx5DQo+
-ID4gcGFydCBvZiB0aGUgZW5hYmxlbWVubnQgb2YgdGhlIHJlZmVyZW5jZSBkZXNpZ24gYm9hcmQg
-c28gdGhhdCB1c2Vycw0KPiA+IG9mDQo+ID4gdGhlIEFycmlhMTAgZGV2a2l0IGNhbiB1c2UgdGhp
-cyBhcyBiYXNlIGZvciB0aGVpciBvd24gZGVzaWducy4NCj4gPiANCj4gPiA+IA0KPiA+ID4gSSBk
-b24ndCB1bmRlcnN0YW5kIHlvdXIgc3lzdGVtIGVub3VnaCB0byBhbnN3ZXIuwqDCoFlvdSBkaWRu
-J3QNCj4gPiA+IGFuc3dlcg0KPiA+ID4gaWYNCj4gPiA+IHRoZSAiRE1BIiBibG9jayB5b3UgZGlh
-Z3JhbW1lZCB3YXMgdGhlIGZyYW1lIHJlYWRlciBJUCAob3IgbWF5YmUNCj4gPiA+IHRoZQ0KPiA+
-ID4gZnJhbWUgcmVhZGVyIElQIGNvbWVzIGFmdGVyKS7CoMKgSSBhbHNvIGRvbid0IHNlZSBob3cg
-dGhlIGZyYW1lDQo+ID4gPiBidWZmZXINCj4gPiA+IElQDQo+ID4gPiBjb3VsZCBwb3NzaWJseSBi
-ZSBjb25uZWN0ZWQgZGlyZWN0bHkgdG8gYSBwaHlzaWNhbCBkaXNwbGF5DQo+ID4gPiBjb25uZWN0
-b3IuDQo+ID4gVGhlIEZQR0EgRnJhbWVCdWZmZXIgMiBzb2Z0IElQIHJlYWRzIHRoZSBpbmZvcm1h
-dGlvbiBwcm92aWRlZCB0byBpdA0KPiA+IGZyb20gdGhlIExpbnV4IEtlcm5lbCB2aWEgdGhlIHBs
-YXRmb3JtIGRldmljZSByZWdpc3RlciBwcm92aWRlZCBpbg0KPiA+IHRoZQ0KPiA+IERULiBUaGUg
-TGludXggZHJpdmVyIGhlcmUgYWxsb2NhdGVzIGEgY2h1bmsgb2YgY29oZXJlbnQgbWVtb3J5IHRo
-YXQNCj4gPiBkaXJlY3RseSBtYXBzIHRvIHRoZSBTRFJBTS4gVGhlIEZQR0Egc29mdCBJUCB3b3Vs
-ZCBzdHJlYW0gdGhlDQo+ID4gZGlzcGxheQ0KPiA+IG91dCB0byB0aGUgRGlzcGxheSBQb3J0IGJh
-c2VkIG9uIHRoZSBpbmZvcm1hdGlvbiB0aGF0IHdhcyB3cml0dGVuDQo+ID4gdG8NCj4gPiB0aGUg
-U0RSQU0uDQo+IFlvdXIgIkZQR0Egc29mdCBJUCIgdGhhdCdzIHJlYWRpbmcgcGl4ZWxzIGZyb20g
-YW4gYXJlYSBvZiBtZW1vcnkgKGENCj4gRFJNDQo+IHBsYW5lIGRvZXMgdGhpcykgYW5kIG91dHB1
-dHRpbmcgdGhhdCB0byBhIGRpc3BsYXkgcG9ydCAoYSBEUk0gQ1JUQw0KPiBhbmQNCj4gZW5jb2Rl
-ciBkb2VzIHRoaXMpIHdvdWxkIG1ha2UgYSBsb3Qgb2Ygc2Vuc2UgYXMgYSBEUk0gZHJpdmVyLg0K
-PiANCj4gSG93ZXZlciwgdGhpcyBwaWVjZSBvZiBoYXJkd2FyZSB0aGF0IHRha2VzIGluIHBpeGVs
-cyBpbiBhIHN0cmVhbSBmcm9tDQo+IGVsc2V3aGVyZSBhbmQgc3RvcmVzIGl0IHRvIG1lbW9yeSBk
-b2Vzbid0IG1ha2Ugc2Vuc2UgdG8gbWUgYXMgYSBEUk0NCj4gZHJpdmVyLg0KPiANCj4gSSBjYW4n
-dCByZWFsbHkgb2ZmZXIgbW9yZSBhZHZpY2UgdW50aWwgSSB1bmRlcnN0YW5kIHdoYXQncyBnZW5l
-cmF0aW5nDQo+IHRoZSBwaXhlbHMgdGhhdCB0aGUgRnJhbWVCdWZmZXIgSVAgaXMgc3RvcmluZy4N
-Cg0KTXkgcHJldmlvdXMgZXhwbGFuYXRpb24gbWlnaHQgaGF2ZSBiZWVuIGNvbmZ1c2luZyBoZXJl
-LiBJIGFwb2xvZ2l6ZSBmb3INCnRoYXQuwqANClRvIHB1dCBpdCBpbiBzaW1wbGVyIHRlcm1zIHRo
-ZSBGUEdBIEZyYW1lQnVmZmVyIFNvZnQgSVAgY291bGQgYmUgc2Vlbg0KYXMgdGhlIEdQVSBhbmQg
-dGhlIERSTSBkcml2ZXIgcGF0Y2ggaGVyZSBpcyBhbGxvY2F0aW5nIG1lbW9yeSBmb3INCmluZm9y
-bWF0aW9uIHRvIGJlIHN0cmVhbWVkIGZyb20gdGhlIEFSTS9MaW51eCB0byB0aGUgZGlzcGxheSBw
-b3J0Lg0KQmFzaWNhbGx5IHRoZSBkcml2ZXIganVzdCB3cmFwcyB0aGUgaW5mb3JtYXRpb24gc3Vj
-aCBhcyB0aGUgcGl4ZWxzIHRvDQpiZSBkcmF3biBieSB0aGUgRlBHQSBGcmFtZUJ1ZmZlciAyLg0K
-DQpUaGUgcGllY2Ugb2YgaGFyZHdhcmUgaW4gZGlzY3Vzc2lvbiBpcyB0aGUgU29DIEZQR0Egd2hl
-cmUgTGludXggcnVucyBvbg0KdGhlIEFSTSBjaGlwIGFuZCB0aGUgRkdQQSBpcyBkcml2ZW4gYnkg
-aXRzIE5JT1Mgc29mdCBjb3JlIHdpdGggaXRzIG93bg0KcHJvcHJpZXRhcnkgZmlybXdhcmUuDQoN
-CkZvciBleGFtcGxlIHRoZSBhcHBsaWNhdGlvbiBmcm9tIHRoZSBBUk0gTGludXggd291bGQgaGF2
-ZSB0byB3cml0ZQ0KaW5mb3JtYXRpb24gb24gdGhlIC9kZXYvZmIwIHdpdGggdGhlIGluZm9ybWF0
-aW9uIHN0b3JlZCBpbiB0aGUgU0RSQU0gdG8NCmJlIGZldGNoZWQgYnkgdGhlIEZQR0EgZnJhbWVi
-dWZmZXIgSVAgYW5kIGRpc3BsYXllZCBvbiB0aGUgRGlzcGxheSBQb3J0DQpNb25pdG9yLsKgDQo=
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On Wed, May 10, 2017 at 11:49:07AM +0300, Eugen Hristev wrote:
+> Hello,
+> 
+> Thanks for the suggestions and reply.
+> 
+> Please see my answers inline
+> 
+> Eugen
+> 
+> On 07.05.2017 18:01, Jonathan Cameron wrote:
+> > On 04/05/17 13:13, Eugen Hristev wrote:
+> > > Added support for the external hardware trigger on pin ADTRG,
+> > > integrated the three possible edge triggers into the subsystem
+> > > and created buffer management for data retrieval
+> > > 
+> > > Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
+> > > ---
+> > >   Changes in v2:
+> > >  - Moved buffer allocation and freeing into the preenable and postdisable
+> > >    callbacks.
+> > >    We have a total of scan bytes that can vary a lot depending on each channel
+> > >    enabled at a certain point.
+> > How much?  Having dynamic allocations are likely to prove just as costly as you'll
+> > almost always end up allocating a lot more than you ask for.
+> > 
+> > I'm counting worst case of 18x 2byte channels + timestamp = 48 bytes.
+> > A quick google suggests you'll always allocate 32 bytes whatever with slab
+> > (lower for slob). So not a huge saving...
+> > 
+> > Worth the hassle?
+> 
+> 
+> I will modify the allocation of scan_bytes to make it static.
+> 
+> > 
+> > >  - made the at91 trigger list part of state structure
+> > >  - made the iio trigger list preallocated in state structure
+> > >  - moved irq enabling/disabling into the try_reenable callback
+> > I'd have liked a little explanation on why we need to explicitly disable
+> > the irq.  It will have little effect it if triggers too often as the
+> > trigger consumers are all oneshot anyway.
+> 
+> Regarding the irq, the discussion is a bit longer.
+> 
+> As it is now, the interrupt is not a oneshot threaded one, because only
+> the top half handler is installed, and the threaded one is NULL.
+> Calling trigger_poll without disabling the interrupt will make the
+> handler loop, so that is the reason for disabling and reenabling
+> the interrupt.
+> 
+> One solution is to change it to oneshot threaded interrupt and call
+> trigger_poll_chained to make it a nested handling. This will make a
+> longer response time for conversions though.
+> 
+> One other option is to do irq_save and irq_restore before issuing the
+> trigger poll, but that limits the usability of the trigger by any
+> other device I guess.
+> 
+> I did the behavior with disabling and enabling the interrupt considering
+> the old at91 driver and the stm32-adc driver which looks to be fairly
+> similar with this implementation.
+> 
+> Can you please advise on which approach you think it's best for this
+> driver ?
+> So I can try that, and resend the patch.
+> 
+> > >  - on trigger disable must write disable registries as well
+> > Basically looks good. A few questions inline.
+> > 
+> > Jonathan
+> > > 
+> > >  drivers/iio/adc/at91-sama5d2_adc.c | 231 ++++++++++++++++++++++++++++++++++++-
+> > >  1 file changed, 228 insertions(+), 3 deletions(-)
+> > > 
+> > > diff --git a/drivers/iio/adc/at91-sama5d2_adc.c b/drivers/iio/adc/at91-sama5d2_adc.c
+> > > index e10dca3..11f5570 100644
+> > > --- a/drivers/iio/adc/at91-sama5d2_adc.c
+> > > +++ b/drivers/iio/adc/at91-sama5d2_adc.c
+> > > @@ -23,8 +23,15 @@
+> > >  #include <linux/platform_device.h>
+> > >  #include <linux/sched.h>
+> > >  #include <linux/wait.h>
+> > > +#include <linux/slab.h>
+> > > +
+> > >  #include <linux/iio/iio.h>
+> > >  #include <linux/iio/sysfs.h>
+> > > +#include <linux/iio/buffer.h>
+> > > +#include <linux/iio/trigger.h>
+> > > +#include <linux/iio/trigger_consumer.h>
+> > > +#include <linux/iio/triggered_buffer.h>
+> > > +
+> > >  #include <linux/regulator/consumer.h>
+> > > 
+> > >  /* Control Register */
+> > > @@ -132,6 +139,17 @@
+> > >  #define AT91_SAMA5D2_PRESSR	0xbc
+> > >  /* Trigger Register */
+> > >  #define AT91_SAMA5D2_TRGR	0xc0
+> > > +/* Mask for TRGMOD field of TRGR register */
+> > > +#define AT91_SAMA5D2_TRGR_TRGMOD_MASK GENMASK(2, 0)
+> > > +/* No trigger, only software trigger can start conversions */
+> > > +#define AT91_SAMA5D2_TRGR_TRGMOD_NO_TRIGGER 0
+> > > +/* Trigger Mode external trigger rising edge */
+> > > +#define AT91_SAMA5D2_TRGR_TRGMOD_EXT_TRIG_RISE 1
+> > > +/* Trigger Mode external trigger falling edge */
+> > > +#define AT91_SAMA5D2_TRGR_TRGMOD_EXT_TRIG_FALL 2
+> > > +/* Trigger Mode external trigger any edge */
+> > > +#define AT91_SAMA5D2_TRGR_TRGMOD_EXT_TRIG_ANY 3
+> > > +
+> > >  /* Correction Select Register */
+> > >  #define AT91_SAMA5D2_COSR	0xd0
+> > >  /* Correction Value Register */
+> > > @@ -145,14 +163,20 @@
+> > >  /* Version Register */
+> > >  #define AT91_SAMA5D2_VERSION	0xfc
+> > > 
+> > > +#define AT91_SAMA5D2_HW_TRIG_CNT 3
+> > > +#define AT91_SAMA5D2_SINGLE_CHAN_CNT 12
+> > > +#define AT91_SAMA5D2_DIFF_CHAN_CNT 6
+> > > +
+> > >  #define AT91_SAMA5D2_CHAN_SINGLE(num, addr)				\
+> > >  	{								\
+> > >  		.type = IIO_VOLTAGE,					\
+> > >  		.channel = num,						\
+> > >  		.address = addr,					\
+> > > +		.scan_index = num,					\
+> > >  		.scan_type = {						\
+> > >  			.sign = 'u',					\
+> > >  			.realbits = 12,					\
+> > > +			.storagebits = 16,				\
+> > >  		},							\
+> > >  		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),		\
+> > >  		.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE),	\
+> > > @@ -168,9 +192,11 @@
+> > >  		.channel = num,						\
+> > >  		.channel2 = num2,					\
+> > >  		.address = addr,					\
+> > > +		.scan_index = num + AT91_SAMA5D2_SINGLE_CHAN_CNT,	\
+> > >  		.scan_type = {						\
+> > >  			.sign = 's',					\
+> > >  			.realbits = 12,					\
+> > > +			.storagebits = 16,				\
+> > >  		},							\
+> > >  		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),		\
+> > >  		.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE),	\
+> > > @@ -188,18 +214,25 @@ struct at91_adc_soc_info {
+> > >  	unsigned			max_sample_rate;
+> > >  };
+> > > 
+> > > +struct at91_adc_trigger {
+> > > +	char				*name;
+> > > +	unsigned int			trgmod_value;
+> > > +};
+> > > +
+> > >  struct at91_adc_state {
+> > >  	void __iomem			*base;
+> > >  	int				irq;
+> > >  	struct clk			*per_clk;
+> > >  	struct regulator		*reg;
+> > >  	struct regulator		*vref;
+> > > +	u16				*buffer;
+> > >  	int				vref_uv;
+> > >  	const struct iio_chan_spec	*chan;
+> > >  	bool				conversion_done;
+> > >  	u32				conversion_value;
+> > >  	struct at91_adc_soc_info	soc_info;
+> > >  	wait_queue_head_t		wq_data_available;
+> > > +	struct iio_trigger		*trig[AT91_SAMA5D2_HW_TRIG_CNT];
+> > >  	/*
+> > >  	 * lock to prevent concurrent 'single conversion' requests through
+> > >  	 * sysfs.
+> > > @@ -207,6 +240,21 @@ struct at91_adc_state {
+> > >  	struct mutex			lock;
+> > >  };
+> > > 
+> > > +static const struct at91_adc_trigger at91_adc_trigger_list[] = {
+> > > +	{
+> > > +		.name = "external-rising",
+> > > +		.trgmod_value = AT91_SAMA5D2_TRGR_TRGMOD_EXT_TRIG_RISE,
+> > > +	},
+> > > +	{
+> > > +		.name = "external-falling",
+> > > +		.trgmod_value = AT91_SAMA5D2_TRGR_TRGMOD_EXT_TRIG_FALL,
+> > > +	},
+> > > +	{
+> > > +		.name = "external-any",
+> > > +		.trgmod_value = AT91_SAMA5D2_TRGR_TRGMOD_EXT_TRIG_ANY,
+> > > +	},
+> > Hmm. Should this be a userspace configurable option?  Feels rather like
+> > it is an element of the hardware - reflecting the characteristics of some
+> > hardware device sat on the pin.
+> The user can choose from sysfs which trigger
+> is best suited for the use case, since all
+> three triggers are provided and can be connected to the buffer.
+> It reflects more the triggering capability of the ADC rather than
+> any different hardware device sitting on the pin
+
+I am also in favour of a userspace configurable option. For sure it's
+hardware related but on our board we only provide a trigger pin, we
+don't know which hardware the customer will put on this pin.
+
+Regards
+
+Ludovic
+
+> 
+> > > +};
+> > > +
+> > >  static const struct iio_chan_spec at91_adc_channels[] = {
+> > >  	AT91_SAMA5D2_CHAN_SINGLE(0, 0x50),
+> > >  	AT91_SAMA5D2_CHAN_SINGLE(1, 0x54),
+> > > @@ -226,8 +274,168 @@ static const struct iio_chan_spec at91_adc_channels[] = {
+> > >  	AT91_SAMA5D2_CHAN_DIFF(6, 7, 0x68),
+> > >  	AT91_SAMA5D2_CHAN_DIFF(8, 9, 0x70),
+> > >  	AT91_SAMA5D2_CHAN_DIFF(10, 11, 0x78),
+> > > +	IIO_CHAN_SOFT_TIMESTAMP(AT91_SAMA5D2_SINGLE_CHAN_CNT
+> > > +				+ AT91_SAMA5D2_DIFF_CHAN_CNT + 1),
+> > >  };
+> > > 
+> > > +static int at91_adc_configure_trigger(struct iio_trigger *trig, bool state)
+> > > +{
+> > > +	struct iio_dev *indio = iio_trigger_get_drvdata(trig);
+> > > +	struct at91_adc_state *st = iio_priv(indio);
+> > > +	u32 status = at91_adc_readl(st, AT91_SAMA5D2_TRGR);
+> > > +	u8 bit;
+> > > +	int i;
+> > > +
+> > > +	/* clear TRGMOD */
+> > > +	status &= ~AT91_SAMA5D2_TRGR_TRGMOD_MASK;
+> > > +
+> > > +	if (state)
+> > > +		for (i = 0; i < AT91_SAMA5D2_HW_TRIG_CNT; i++) {
+> > > +			if (!strstr(trig->name,
+> > > +				    at91_adc_trigger_list[i].name)) {
+> > > +				status |= at91_adc_trigger_list[i].trgmod_value;
+> > > +				break;
+> > > +			}
+> > > +		}
+> > > +
+> > > +	/* set/unset hw trigger */
+> > > +	at91_adc_writel(st, AT91_SAMA5D2_TRGR, status);
+> > > +
+> > > +	for_each_set_bit(bit, indio->active_scan_mask, indio->num_channels) {
+> > > +		struct iio_chan_spec const *chan = indio->channels + bit;
+> > > +
+> > > +		if (state) {
+> > > +			at91_adc_writel(st, AT91_SAMA5D2_CHER,
+> > > +					BIT(chan->channel));
+> > > +			at91_adc_writel(st, AT91_SAMA5D2_IER,
+> > > +					BIT(chan->channel));
+> > > +		} else {
+> > > +			at91_adc_writel(st, AT91_SAMA5D2_IDR,
+> > > +					BIT(chan->channel));
+> > > +			at91_adc_writel(st, AT91_SAMA5D2_CHDR,
+> > > +					BIT(chan->channel));
+> > > +		}
+> > > +	}
+> > > +
+> > > +	return 0;
+> > > +}
+> > > +
+> > > +static int at91_adc_reenable_trigger(struct iio_trigger *trig)
+> > > +{
+> > > +	struct iio_dev *indio = iio_trigger_get_drvdata(trig);
+> > > +	struct at91_adc_state *st = iio_priv(indio);
+> > > +
+> > > +	enable_irq(st->irq);
+> > > +	return 0;
+> > > +}
+> > > +
+> > > +static const struct iio_trigger_ops at91_adc_trigger_ops = {
+> > > +	.owner = THIS_MODULE,
+> > > +	.set_trigger_state = &at91_adc_configure_trigger,
+> > > +	.try_reenable = &at91_adc_reenable_trigger,
+> > > +};
+> > > +
+> > > +static int at91_adc_buffer_preenable(struct iio_dev *indio_dev)
+> > > +{
+> > > +	struct at91_adc_state *st = iio_priv(indio_dev);
+> > > +
+> > > +	st->buffer = kmalloc(indio_dev->scan_bytes, GFP_KERNEL);Why allocate it here?  Presumably the biggest it can get is fairly
+> > small?  Unless very large, just make sure you allocate enough
+> > directly in st in the first place.
+> 
+> Yes , as discussed above will change to static allocation.
+> 
+> > 
+> > > +
+> > > +	if (!st->buffer)
+> > > +		return -ENOMEM;
+> > > +
+> > > +	return 0;
+> > > +}
+> > > +
+> > > +static int at91_adc_buffer_postdisable(struct iio_dev *indio_dev)
+> > > +{
+> > > +	struct at91_adc_state *st = iio_priv(indio_dev);
+> > > +
+> > > +	kfree(st->buffer);
+> > > +
+> > > +	return 0;
+> > > +}
+> > > +
+> > > +static const struct iio_buffer_setup_ops at91_buffer_setup_ops = {
+> > > +	.preenable = &at91_adc_buffer_preenable,
+> > > +	.postenable = &iio_triggered_buffer_postenable,
+> > > +	.predisable = &iio_triggered_buffer_predisable,
+> > > +	.postdisable = &at91_adc_buffer_postdisable,
+> > > +};
+> > > +
+> > > +static struct iio_trigger *at91_adc_allocate_trigger(struct iio_dev *indio,
+> > > +						     char *trigger_name)
+> > > +{
+> > > +	struct iio_trigger *trig;
+> > > +	int ret;
+> > > +
+> > > +	trig = devm_iio_trigger_alloc(&indio->dev, "%s-dev%d-%s", indio->name,
+> > > +				      indio->id, trigger_name);
+> > > +	if (!trig)
+> > > +		return NULL;
+> > > +
+> > > +	trig->dev.parent = indio->dev.parent;
+> > > +	iio_trigger_set_drvdata(trig, indio);
+> > > +	trig->ops = &at91_adc_trigger_ops;
+> > > +
+> > > +	ret = devm_iio_trigger_register(&indio->dev, trig);
+> > > +
+> > > +	if (ret)
+> > > +		return NULL;
+> > > +
+> > > +	return trig;
+> > > +}
+> > > +
+> > > +static int at91_adc_trigger_init(struct iio_dev *indio)
+> > > +{
+> > > +	struct at91_adc_state *st = iio_priv(indio);
+> > > +	int i;
+> > > +
+> > > +	for (i = 0; i < AT91_SAMA5D2_HW_TRIG_CNT; i++) {
+> > > +		st->trig[i] = at91_adc_allocate_trigger(indio,
+> > > +						at91_adc_trigger_list[i].name);
+> > > +		if (!st->trig[i]) {
+> > > +			dev_err(&indio->dev,
+> > > +				"could not allocate trigger %d\n", i);
+> > > +			return -ENOMEM;
+> > > +		}
+> > > +	}
+> > > +
+> > > +	return 0;
+> > > +}
+> > > +
+> > > +static irqreturn_t at91_adc_trigger_handler(int irq, void *p)
+> > > +{
+> > > +	struct iio_poll_func *pf = p;
+> > > +	struct iio_dev *indio = pf->indio_dev;
+> > > +	struct at91_adc_state *st = iio_priv(indio);
+> > > +	int i = 0;
+> > > +	u8 bit;
+> > > +
+> > > +	for_each_set_bit(bit, indio->active_scan_mask, indio->num_channels) {
+> > > +		struct iio_chan_spec const *chan = indio->channels + bit;
+> > > +
+> > > +		st->buffer[i] = at91_adc_readl(st, chan->address);
+> > > +		i++;
+> > > +	}
+> > > +
+> > > +	iio_push_to_buffers_with_timestamp(indio, st->buffer, pf->timestamp);
+> > > +
+> > > +	iio_trigger_notify_done(indio->trig);
+> > > +
+> > > +	/* Needed to ACK the DRDY interruption */
+> > > +	at91_adc_readl(st, AT91_SAMA5D2_LCDR);
+> > > +
+> > > +	return IRQ_HANDLED;
+> > > +}
+> > > +
+> > > +static int at91_adc_buffer_init(struct iio_dev *indio)
+> > > +{
+> > > +	return devm_iio_triggered_buffer_setup(&indio->dev, indio,
+> > > +			&iio_pollfunc_store_time,
+> > > +			&at91_adc_trigger_handler, &at91_buffer_setup_ops);
+> > > +}
+> > > +
+> > >  static unsigned at91_adc_startup_time(unsigned startup_time_min,
+> > >  				      unsigned adc_clk_khz)
+> > >  {
+> > > @@ -293,14 +501,19 @@ static irqreturn_t at91_adc_interrupt(int irq, void *private)
+> > >  	u32 status = at91_adc_readl(st, AT91_SAMA5D2_ISR);
+> > >  	u32 imr = at91_adc_readl(st, AT91_SAMA5D2_IMR);
+> > > 
+> > > -	if (status & imr) {
+> > > +	if (!(status & imr))
+> > > +		return IRQ_NONE;
+> > > +
+> > > +	if (iio_buffer_enabled(indio)) {
+> > > +		disable_irq_nosync(irq);
+> > > +		iio_trigger_poll(indio->trig);
+> > > +	} else {
+> > >  		st->conversion_value = at91_adc_readl(st, st->chan->address);
+> > >  		st->conversion_done = true;
+> > >  		wake_up_interruptible(&st->wq_data_available);
+> > > -		return IRQ_HANDLED;
+> > >  	}
+> > > 
+> > > -	return IRQ_NONE;
+> > > +	return IRQ_HANDLED;
+> > >  }
+> > > 
+> > >  static int at91_adc_read_raw(struct iio_dev *indio_dev,
+> > > @@ -499,6 +712,18 @@ static int at91_adc_probe(struct platform_device *pdev)
+> > > 
+> > >  	platform_set_drvdata(pdev, indio_dev);
+> > > 
+> > > +	ret = at91_adc_buffer_init(indio_dev);
+> > > +	if (ret < 0) {
+> > > +		dev_err(&pdev->dev, "couldn't initialize the buffer.\n");
+> > > +		goto per_clk_disable_unprepare;
+> > > +	}
+> > > +
+> > > +	ret = at91_adc_trigger_init(indio_dev);
+> > > +	if (ret < 0) {
+> > > +		dev_err(&pdev->dev, "couldn't setup the triggers.\n");
+> > > +		goto per_clk_disable_unprepare;
+> > > +	}
+> > > +
+> > >  	ret = iio_device_register(indio_dev);
+> > >  	if (ret < 0)
+> > >  		goto per_clk_disable_unprepare;
+> > > 
+> > 
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-iio" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
