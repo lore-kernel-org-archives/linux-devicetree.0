@@ -1,324 +1,142 @@
 From: Christopher Bostic <cbostic@linux.vnet.ibm.com>
-Subject: [PATCH v7 21/23] drivers/fsi: Add SCOM FSI client device driver
-Date: Thu, 11 May 2017 16:00:58 -0500
-Message-ID: <20170511210101.78409-22-cbostic@linux.vnet.ibm.com>
+Subject: [PATCH v7 04/23] lib: Add crc4 module
+Date: Thu, 11 May 2017 16:00:41 -0500
+Message-ID: <20170511210101.78409-5-cbostic@linux.vnet.ibm.com>
 References: <20170511210101.78409-1-cbostic@linux.vnet.ibm.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <20170511210101.78409-1-cbostic@linux.vnet.ibm.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, rostedt@goodmis.org, mingo@redhat.com, gregkh@linuxfoundation.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: Christopher Bostic <cbostic@linux.vnet.ibm.com>, joel@jms.id.au, linux-kernel@vger.kernel.org, andrew@aj.id.au, alistair@popple.id.au, benh@kernel.crashing.org, "Edward A . James" <eajames@us.ibm.com>, Jeremy Kerr <jk@ozlabs.org>
+Cc: Chris Bostic <cbostic@linux.vnet.ibm.com>, andrew@aj.id.au, alistair@popple.id.au, linux-kernel@vger.kernel.org, Jeremy Kerr <jk@ozlabs.org>, benh@kernel.crashing.org, joel@jms.id.au
 List-Id: devicetree@vger.kernel.org
 
-Create a simple SCOM engine device driver that reads and writes
-its control registers via an FSI bus.
+From: Jeremy Kerr <jk@ozlabs.org>
 
-Includes changes from Edward A. James <eajames@us.ibm.com>.
+Add a little helper for crc4 calculations. This works 4-bits-at-a-time,
+using a simple table approach.
 
-Signed-off-by: Christopher Bostic <cbostic@linux.vnet.ibm.com>
-Signed-off-by: Joel Stanley <joel@jms.id.au>
-Signed-off-by: Edward A. James <eajames@us.ibm.com>
+We will need this in the FSI core code, as well as any master
+implementations that need to calculate CRCs in software.
+
 Signed-off-by: Jeremy Kerr <jk@ozlabs.org>
+Signed-off-by: Chris Bostic <cbostic@linux.vnet.ibm.com>
+Signed-off-by: Joel Stanley <joel@jms.id.au>
 ---
- drivers/fsi/Kconfig    |   5 +
- drivers/fsi/Makefile   |   1 +
- drivers/fsi/fsi-scom.c | 263 +++++++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 269 insertions(+)
- create mode 100644 drivers/fsi/fsi-scom.c
+ include/linux/crc4.h |  8 ++++++++
+ lib/Kconfig          |  8 ++++++++
+ lib/Makefile         |  1 +
+ lib/crc4.c           | 46 ++++++++++++++++++++++++++++++++++++++++++++++
+ 4 files changed, 63 insertions(+)
+ create mode 100644 include/linux/crc4.h
+ create mode 100644 lib/crc4.c
 
-diff --git a/drivers/fsi/Kconfig b/drivers/fsi/Kconfig
-index ba16637..5582523 100644
---- a/drivers/fsi/Kconfig
-+++ b/drivers/fsi/Kconfig
-@@ -20,6 +20,11 @@ config FSI_MASTER_GPIO
- 	---help---
- 	This option enables a FSI master driver using GPIO lines.
- 
-+config FSI_SCOM
-+	tristate "SCOM FSI client device driver"
-+	---help---
-+	This option enables an FSI based SCOM device driver.
-+
- endif
- 
- endmenu
-diff --git a/drivers/fsi/Makefile b/drivers/fsi/Makefile
-index ed28ac0..3466f08 100644
---- a/drivers/fsi/Makefile
-+++ b/drivers/fsi/Makefile
-@@ -1,3 +1,4 @@
- 
- obj-$(CONFIG_FSI) += fsi-core.o
- obj-$(CONFIG_FSI_MASTER_GPIO) += fsi-master-gpio.o
-+obj-$(CONFIG_FSI_SCOM) += fsi-scom.o
-diff --git a/drivers/fsi/fsi-scom.c b/drivers/fsi/fsi-scom.c
+diff --git a/include/linux/crc4.h b/include/linux/crc4.h
 new file mode 100644
-index 0000000..98d062f
+index 0000000..8f739f1
 --- /dev/null
-+++ b/drivers/fsi/fsi-scom.c
-@@ -0,0 +1,263 @@
++++ b/include/linux/crc4.h
+@@ -0,0 +1,8 @@
++#ifndef _LINUX_CRC4_H
++#define _LINUX_CRC4_H
++
++#include <linux/types.h>
++
++extern uint8_t crc4(uint8_t c, uint64_t x, int bits);
++
++#endif /* _LINUX_CRC4_H */
+diff --git a/lib/Kconfig b/lib/Kconfig
+index 0c8b78a..d2fd262 100644
+--- a/lib/Kconfig
++++ b/lib/Kconfig
+@@ -158,6 +158,14 @@ config CRC32_BIT
+ 
+ endchoice
+ 
++config CRC4
++	tristate "CRC4 functions"
++	help
++	  This option is provided for the case where no in-kernel-tree
++	  modules require CRC4 functions, but a module built outside
++	  the kernel tree does. Such modules that use library CRC4
++	  functions require M here.
++
+ config CRC7
+ 	tristate "CRC7 functions"
+ 	help
+diff --git a/lib/Makefile b/lib/Makefile
+index 320ac46a..63b3c28 100644
+--- a/lib/Makefile
++++ b/lib/Makefile
+@@ -98,6 +98,7 @@ obj-$(CONFIG_CRC_T10DIF)+= crc-t10dif.o
+ obj-$(CONFIG_CRC_ITU_T)	+= crc-itu-t.o
+ obj-$(CONFIG_CRC32)	+= crc32.o
+ obj-$(CONFIG_CRC32_SELFTEST)	+= crc32test.o
++obj-$(CONFIG_CRC4)	+= crc4.o
+ obj-$(CONFIG_CRC7)	+= crc7.o
+ obj-$(CONFIG_LIBCRC32C)	+= libcrc32c.o
+ obj-$(CONFIG_CRC8)	+= crc8.o
+diff --git a/lib/crc4.c b/lib/crc4.c
+new file mode 100644
+index 0000000..cf6db46
+--- /dev/null
++++ b/lib/crc4.c
+@@ -0,0 +1,46 @@
 +/*
-+ * SCOM FSI Client device driver
++ * crc4.c - simple crc-4 calculations.
 + *
-+ * Copyright (C) IBM Corporation 2016
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERGCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
++ * This source code is licensed under the GNU General Public License, Version
++ * 2. See the file COPYING for more details.
 + */
 +
-+#include <linux/fsi.h>
++#include <linux/crc4.h>
 +#include <linux/module.h>
-+#include <linux/cdev.h>
-+#include <linux/delay.h>
-+#include <linux/fs.h>
-+#include <linux/uaccess.h>
-+#include <linux/slab.h>
-+#include <linux/miscdevice.h>
-+#include <linux/list.h>
-+#include <linux/idr.h>
 +
-+#define FSI_ENGID_SCOM		0x5
-+
-+#define SCOM_FSI2PIB_DELAY	50
-+
-+/* SCOM engine register set */
-+#define SCOM_DATA0_REG		0x00
-+#define SCOM_DATA1_REG		0x04
-+#define SCOM_CMD_REG		0x08
-+#define SCOM_RESET_REG		0x1C
-+
-+#define SCOM_RESET_CMD		0x80000000
-+#define SCOM_WRITE_CMD		0x80000000
-+
-+struct scom_device {
-+	struct list_head link;
-+	struct fsi_device *fsi_dev;
-+	struct miscdevice mdev;
-+	char	name[32];
-+	int idx;
++static const uint8_t crc4_tab[] = {
++	0x0, 0x7, 0xe, 0x9, 0xb, 0xc, 0x5, 0x2,
++	0x1, 0x6, 0xf, 0x8, 0xa, 0xd, 0x4, 0x3,
 +};
 +
-+#define to_scom_dev(x)		container_of((x), struct scom_device, mdev)
-+
-+static struct list_head scom_devices;
-+
-+static DEFINE_IDA(scom_ida);
-+
-+static int put_scom(struct scom_device *scom_dev, uint64_t value,
-+			uint32_t addr)
++/**
++ * crc4 - calculate the 4-bit crc of a value.
++ * @crc:  starting crc4
++ * @x:    value to checksum
++ * @bits: number of bits in @x to checksum
++ *
++ * Returns the crc4 value of @x, using polynomial 0b10111.
++ *
++ * The @x value is treated as left-aligned, and bits above @bits are ignored
++ * in the crc calculations.
++ */
++uint8_t crc4(uint8_t c, uint64_t x, int bits)
 +{
-+	int rc;
-+	uint32_t data;
++	int i;
 +
-+	data = cpu_to_be32(SCOM_RESET_CMD);
-+	rc = fsi_device_write(scom_dev->fsi_dev, SCOM_RESET_REG, &data,
-+				sizeof(uint32_t));
-+	if (rc)
-+		return rc;
++	/* mask off anything above the top bit */
++	x &= (1ull << bits) - 1;
 +
-+	data = cpu_to_be32((value >> 32) & 0xffffffff);
-+	rc = fsi_device_write(scom_dev->fsi_dev, SCOM_DATA0_REG, &data,
-+				sizeof(uint32_t));
-+	if (rc)
-+		return rc;
++	/* Align to 4-bits */
++	bits = (bits + 3) & ~0x3;
 +
-+	data = cpu_to_be32(value & 0xffffffff);
-+	rc = fsi_device_write(scom_dev->fsi_dev, SCOM_DATA1_REG, &data,
-+				sizeof(uint32_t));
-+	if (rc)
-+		return rc;
++	/* Calculate crc4 over four-bit nibbles, starting at the MSbit */
++	for (i = bits - 4; i >= 0; i -= 4)
++		c = crc4_tab[c ^ ((x >> i) & 0xf)];
 +
-+	data = cpu_to_be32(SCOM_WRITE_CMD | addr);
-+	return fsi_device_write(scom_dev->fsi_dev, SCOM_CMD_REG, &data,
-+				sizeof(uint32_t));
++	return c;
 +}
++EXPORT_SYMBOL_GPL(crc4);
 +
-+static int get_scom(struct scom_device *scom_dev, uint64_t *value,
-+			uint32_t addr)
-+{
-+	uint32_t result, data;
-+	int rc;
-+
-+	*value = 0ULL;
-+	data = cpu_to_be32(addr);
-+	rc = fsi_device_write(scom_dev->fsi_dev, SCOM_CMD_REG, &data,
-+				sizeof(uint32_t));
-+	if (rc)
-+		return rc;
-+
-+	rc = fsi_device_read(scom_dev->fsi_dev, SCOM_DATA0_REG, &result,
-+				sizeof(uint32_t));
-+	if (rc)
-+		return rc;
-+
-+	*value |= (uint64_t)cpu_to_be32(result) << 32;
-+	rc = fsi_device_read(scom_dev->fsi_dev, SCOM_DATA1_REG, &result,
-+				sizeof(uint32_t));
-+	if (rc)
-+		return rc;
-+
-+	*value |= cpu_to_be32(result);
-+
-+	return 0;
-+}
-+
-+static ssize_t scom_read(struct file *filep, char __user *buf, size_t len,
-+			loff_t *offset)
-+{
-+	int rc;
-+	struct miscdevice *mdev =
-+				(struct miscdevice *)filep->private_data;
-+	struct scom_device *scom = to_scom_dev(mdev);
-+	struct device *dev = &scom->fsi_dev->dev;
-+	uint64_t val;
-+
-+	if (len != sizeof(uint64_t))
-+		return -EINVAL;
-+
-+	rc = get_scom(scom, &val, *offset);
-+	if (rc) {
-+		dev_dbg(dev, "get_scom fail:%d\n", rc);
-+		return rc;
-+	}
-+
-+	rc = copy_to_user(buf, &val, len);
-+	if (rc)
-+		dev_dbg(dev, "copy to user failed:%d\n", rc);
-+
-+	return rc ? rc : len;
-+}
-+
-+static ssize_t scom_write(struct file *filep, const char __user *buf,
-+			size_t len, loff_t *offset)
-+{
-+	int rc;
-+	struct miscdevice *mdev = filep->private_data;
-+	struct scom_device *scom = to_scom_dev(mdev);
-+	struct device *dev = &scom->fsi_dev->dev;
-+	uint64_t val;
-+
-+	if (len != sizeof(uint64_t))
-+		return -EINVAL;
-+
-+	rc = copy_from_user(&val, buf, len);
-+	if (rc) {
-+		dev_dbg(dev, "copy from user failed:%d\n", rc);
-+		return -EINVAL;
-+	}
-+
-+	rc = put_scom(scom, val, *offset);
-+	if (rc) {
-+		dev_dbg(dev, "put_scom failed with:%d\n", rc);
-+		return rc;
-+	}
-+
-+	return len;
-+}
-+
-+static loff_t scom_llseek(struct file *file, loff_t offset, int whence)
-+{
-+	switch (whence) {
-+	case SEEK_CUR:
-+		break;
-+	case SEEK_SET:
-+		file->f_pos = offset;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	return offset;
-+}
-+
-+static const struct file_operations scom_fops = {
-+	.owner	= THIS_MODULE,
-+	.llseek	= scom_llseek,
-+	.read	= scom_read,
-+	.write	= scom_write,
-+};
-+
-+static int scom_probe(struct device *dev)
-+{
-+	struct fsi_device *fsi_dev = to_fsi_dev(dev);
-+	struct scom_device *scom;
-+
-+	scom = devm_kzalloc(dev, sizeof(*scom), GFP_KERNEL);
-+	if (!scom)
-+		return -ENOMEM;
-+
-+	scom->idx = ida_simple_get(&scom_ida, 1, INT_MAX, GFP_KERNEL);
-+	snprintf(scom->name, sizeof(scom->name), "scom%d", scom->idx);
-+	scom->fsi_dev = fsi_dev;
-+	scom->mdev.minor = MISC_DYNAMIC_MINOR;
-+	scom->mdev.fops = &scom_fops;
-+	scom->mdev.name = scom->name;
-+	scom->mdev.parent = dev;
-+	list_add(&scom->link, &scom_devices);
-+
-+	return misc_register(&scom->mdev);
-+}
-+
-+static int scom_remove(struct device *dev)
-+{
-+	struct scom_device *scom, *scom_tmp;
-+	struct fsi_device *fsi_dev = to_fsi_dev(dev);
-+
-+	list_for_each_entry_safe(scom, scom_tmp, &scom_devices, link) {
-+		if (scom->fsi_dev == fsi_dev) {
-+			list_del(&scom->link);
-+			ida_simple_remove(&scom_ida, scom->idx);
-+			misc_deregister(&scom->mdev);
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+static struct fsi_device_id scom_ids[] = {
-+	{
-+		.engine_type = FSI_ENGID_SCOM,
-+		.version = FSI_VERSION_ANY,
-+	},
-+	{ 0 }
-+};
-+
-+static struct fsi_driver scom_drv = {
-+	.id_table = scom_ids,
-+	.drv = {
-+		.name = "scom",
-+		.bus = &fsi_bus_type,
-+		.probe = scom_probe,
-+		.remove = scom_remove,
-+	}
-+};
-+
-+static int scom_init(void)
-+{
-+	INIT_LIST_HEAD(&scom_devices);
-+	return fsi_driver_register(&scom_drv);
-+}
-+
-+static void scom_exit(void)
-+{
-+	struct list_head *pos;
-+	struct scom_device *scom;
-+
-+	list_for_each(pos, &scom_devices) {
-+		scom = list_entry(pos, struct scom_device, link);
-+		misc_deregister(&scom->mdev);
-+		devm_kfree(&scom->fsi_dev->dev, scom);
-+	}
-+	fsi_driver_unregister(&scom_drv);
-+}
-+
-+module_init(scom_init);
-+module_exit(scom_exit);
++MODULE_DESCRIPTION("CRC4 calculations");
 +MODULE_LICENSE("GPL");
 -- 
 1.8.2.2
