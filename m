@@ -1,57 +1,107 @@
 From: Christopher Bostic <cbostic@linux.vnet.ibm.com>
-Subject: [PATCH v7 12/23] drivers/fsi: Add documentation for GPIO bindings
-Date: Thu, 11 May 2017 16:00:49 -0500
-Message-ID: <20170511210101.78409-13-cbostic@linux.vnet.ibm.com>
+Subject: [PATCH v7 15/23] drivers/fsi: expose direct-access slave API
+Date: Thu, 11 May 2017 16:00:52 -0500
+Message-ID: <20170511210101.78409-16-cbostic@linux.vnet.ibm.com>
 References: <20170511210101.78409-1-cbostic@linux.vnet.ibm.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170511210101.78409-1-cbostic@linux.vnet.ibm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, rostedt@goodmis.org, mingo@redhat.com, gregkh@linuxfoundation.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: Christopher Bostic <cbostic@linux.vnet.ibm.com>, joel@jms.id.au, linux-kernel@vger.kernel.org, andrew@aj.id.au, alistair@popple.id.au, benh@kernel.crashing.org, Jeremy Kerr <jk@ozlabs.org>
+Cc: Jeremy Kerr <jk@ozlabs.org>, joel@jms.id.au, linux-kernel@vger.kernel.org, andrew@aj.id.au, alistair@popple.id.au, benh@kernel.crashing.org, Christopher Bostic <cbostic@linux.vnet.ibm.com>
 List-Id: devicetree@vger.kernel.org
 
-Add fsi master gpio device tree binding documentation.
+From: Jeremy Kerr <jk@ozlabs.org>
 
-Includes changes from Jeremy Kerr <jk@ozlabs.org>.
+Allow drivers to access the slave address ranges.
 
-Signed-off-by: Christopher Bostic <cbostic@linux.vnet.ibm.com>
 Signed-off-by: Jeremy Kerr <jk@ozlabs.org>
 Signed-off-by: Joel Stanley <joel@jms.id.au>
-Acked-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Christopher Bostic <cbostic@linux.vnet.ibm.com>
 ---
- .../devicetree/bindings/fsi/fsi-master-gpio.txt    | 24 ++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/fsi/fsi-master-gpio.txt
+ drivers/fsi/fsi-core.c | 26 ++++++++++++++++++++------
+ include/linux/fsi.h    | 12 ++++++++++++
+ 2 files changed, 32 insertions(+), 6 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/fsi/fsi-master-gpio.txt b/Documentation/devicetree/bindings/fsi/fsi-master-gpio.txt
-new file mode 100644
-index 0000000..a767259
---- /dev/null
-+++ b/Documentation/devicetree/bindings/fsi/fsi-master-gpio.txt
-@@ -0,0 +1,24 @@
-+Device-tree bindings for gpio-based FSI master driver
-+-----------------------------------------------------
+diff --git a/drivers/fsi/fsi-core.c b/drivers/fsi/fsi-core.c
+index 626cc06..d319f67 100644
+--- a/drivers/fsi/fsi-core.c
++++ b/drivers/fsi/fsi-core.c
+@@ -78,10 +78,6 @@ static int fsi_master_read(struct fsi_master *master, int link,
+ 		uint8_t slave_id, uint32_t addr, void *val, size_t size);
+ static int fsi_master_write(struct fsi_master *master, int link,
+ 		uint8_t slave_id, uint32_t addr, const void *val, size_t size);
+-static int fsi_slave_read(struct fsi_slave *slave, uint32_t addr,
+-		void *val, size_t size);
+-static int fsi_slave_write(struct fsi_slave *slave, uint32_t addr,
+-		const void *val, size_t size);
+ 
+ /*
+  * fsi_device_read() / fsi_device_write() / fsi_device_peek()
+@@ -174,7 +170,7 @@ static int fsi_slave_calc_addr(struct fsi_slave *slave, uint32_t *addrp,
+ 	return 0;
+ }
+ 
+-static int fsi_slave_read(struct fsi_slave *slave, uint32_t addr,
++int fsi_slave_read(struct fsi_slave *slave, uint32_t addr,
+ 			void *val, size_t size)
+ {
+ 	uint8_t id = slave->id;
+@@ -188,7 +184,7 @@ static int fsi_slave_read(struct fsi_slave *slave, uint32_t addr,
+ 			addr, val, size);
+ }
+ 
+-static int fsi_slave_write(struct fsi_slave *slave, uint32_t addr,
++int fsi_slave_write(struct fsi_slave *slave, uint32_t addr,
+ 			const void *val, size_t size)
+ {
+ 	uint8_t id = slave->id;
+@@ -202,6 +198,24 @@ static int fsi_slave_write(struct fsi_slave *slave, uint32_t addr,
+ 			addr, val, size);
+ }
+ 
++extern int fsi_slave_claim_range(struct fsi_slave *slave,
++		uint32_t addr, uint32_t size)
++{
++	if (addr + size < addr)
++		return -EINVAL;
 +
-+Required properties:
-+ - compatible = "fsi-master-gpio";
-+ - clock-gpios = <gpio-descriptor>;	: GPIO for FSI clock
-+ - data-gpios = <gpio-descriptor>;	: GPIO for FSI data signal
++	if (addr + size > slave->size)
++		return -EINVAL;
 +
-+Optional properties:
-+ - enable-gpios = <gpio-descriptor>;	: GPIO for enable signal
-+ - trans-gpios = <gpio-descriptor>;	: GPIO for voltage translator enable
-+ - mux-gpios = <gpio-descriptor>;	: GPIO for pin multiplexing with other
-+                                          functions (eg, external FSI masters)
++	/* todo: check for overlapping claims */
++	return 0;
++}
 +
-+Examples:
++extern void fsi_slave_release_range(struct fsi_slave *slave,
++		uint32_t addr, uint32_t size)
++{
++}
 +
-+    fsi-master {
-+        compatible = "fsi-master-gpio", "fsi-master";
-+        clock-gpios = <&gpio 0>;
-+        data-gpios = <&gpio 1>;
-+        enable-gpios = <&gpio 2>;
-+        trans-gpios = <&gpio 3>;
-+        mux-gpios = <&gpio 4>;
-+    }
+ static int fsi_slave_scan(struct fsi_slave *slave)
+ {
+ 	uint32_t engine_addr;
+diff --git a/include/linux/fsi.h b/include/linux/fsi.h
+index 34f1e9a..141fd38 100644
+--- a/include/linux/fsi.h
++++ b/include/linux/fsi.h
+@@ -66,6 +66,18 @@ struct fsi_driver {
+ 		module_driver(__fsi_driver, fsi_driver_register, \
+ 				fsi_driver_unregister)
+ 
++/* direct slave API */
++extern int fsi_slave_claim_range(struct fsi_slave *slave,
++		uint32_t addr, uint32_t size);
++extern void fsi_slave_release_range(struct fsi_slave *slave,
++		uint32_t addr, uint32_t size);
++extern int fsi_slave_read(struct fsi_slave *slave, uint32_t addr,
++		void *val, size_t size);
++extern int fsi_slave_write(struct fsi_slave *slave, uint32_t addr,
++		const void *val, size_t size);
++
++
++
+ extern struct bus_type fsi_bus_type;
+ 
+ #endif /* LINUX_FSI_H */
 -- 
 1.8.2.2
