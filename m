@@ -1,149 +1,43 @@
-From: Yuantian Tang <andy.tang-3arQi8VN3Tc@public.gmane.org>
-Subject: [PATCH] arm64: dts: ls1088a: Add TMU device tree support
-Date: Thu, 11 May 2017 16:01:20 +0800
-Message-ID: <1494489680-9544-2-git-send-email-andy.tang@nxp.com>
-References: <1494489680-9544-1-git-send-email-andy.tang@nxp.com>
+From: Martin Kepplinger <martin.kepplinger@ginzinger.com>
+Subject: Re: [PATCH] input: edt-ft5x06: increase allowed data range for
+ threshold parameter
+Date: Thu, 11 May 2017 10:32:36 +0200
+Message-ID: <2a2d6377-1d3c-8639-0f28-d9519965296c@ginzinger.com>
+References: <1493737259-26210-1-git-send-email-martin.kepplinger@ginzinger.com>
+ <20170508161146.vkmaohiesjd6e6vq@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1494489680-9544-1-git-send-email-andy.tang-3arQi8VN3Tc@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Yuantian Tang <andy.tang-3arQi8VN3Tc@public.gmane.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170508161146.vkmaohiesjd6e6vq@rob-hp-laptop>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>, dmitry.torokhov@gmail.com
+Cc: simon.budig@kernelconcepts.de, daniel.wagener@kernelconcepts.de, mchehab@kernel.org, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, Schoefegger Stefan <stefan.schoefegger@ginzinger.com>, Manfred Schlaegl <manfred.schlaegl@ginzinger.com>
 List-Id: devicetree@vger.kernel.org
 
-Add nodes and properties for thermal management support.
+On 2017-05-08 18:11, Rob Herring wrote:
+> On Tue, May 02, 2017 at 05:00:59PM +0200, Martin Kepplinger wrote:
+>> The datasheet and application note does not mention an allowed range for
+>> the M09_REGISTER_THRESHOLD parameter. One of our customers needs to set
+>> lower values than 20 and they seem to work just fine on EDT EP0xx0M09 with
+>> T5x06 touch.
+>>
+>> So, lacking a known lower limit, we increase the range for thresholds,
+>> and set the lower limit to 0. The documentation is updated accordingly.
+>>
+>> Signed-off-by: Schoefegger Stefan <stefan.schoefegger@ginzinger.com>
+>> Signed-off-by: Manfred Schlaegl <manfred.schlaegl@ginzinger.com>
+>> Signed-off-by: Martin Kepplinger <martin.kepplinger@ginzinger.com>
+>> ---
+>>  Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.txt | 2 +-
+>>  Documentation/input/devices/edt-ft5x06.rst                         | 2 +-
+>>  drivers/input/touchscreen/edt-ft5x06.c                             | 2 +-
+>>  3 files changed, 3 insertions(+), 3 deletions(-)
+> 
+> Acked-by: Rob Herring <robh@kernel.org>
+> 
 
-Signed-off-by: Tang Yuantian <andy.tang-3arQi8VN3Tc@public.gmane.org>
----
- arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi | 89 ++++++++++++++++++++++++++
- 1 file changed, 89 insertions(+)
+Dmitry, any objections or thoughts?
 
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-index caecd14..53dc1c1 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-@@ -44,6 +44,7 @@
-  *     OTHER DEALINGS IN THE SOFTWARE.
-  */
- #include <dt-bindings/interrupt-controller/arm-gic.h>
-+#include <dt-bindings/thermal/thermal.h>
- 
- / {
- 	compatible = "fsl,ls1088a";
-@@ -61,6 +62,7 @@
- 			compatible = "arm,cortex-a53";
- 			reg = <0x0>;
- 			clocks = <&clockgen 1 0>;
-+			#cooling-cells = <2>;
- 		};
- 
- 		cpu1: cpu@1 {
-@@ -89,6 +91,7 @@
- 			compatible = "arm,cortex-a53";
- 			reg = <0x100>;
- 			clocks = <&clockgen 1 1>;
-+			#cooling-cells = <2>;
- 		};
- 
- 		cpu5: cpu@101 {
-@@ -273,6 +276,92 @@
- 			dma-coherent;
- 			status = "disabled";
- 		};
-+
-+		tmu: tmu@1f80000 {
-+			compatible = "fsl,qoriq-tmu";
-+			reg = <0x0 0x1f80000 0x0 0x10000>;
-+			interrupts = <0 23 0x4>;
-+			fsl,tmu-range = <0xb0000 0x9002a 0x6004c 0x30062>;
-+			fsl,tmu-calibration =
-+				/* Calibration data group 1 */
-+				<0x00000000 0x00000026
-+				0x00000001 0x0000002d
-+				0x00000002 0x00000032
-+				0x00000003 0x00000039
-+				0x00000004 0x0000003f
-+				0x00000005 0x00000046
-+				0x00000006 0x0000004d
-+				0x00000007 0x00000054
-+				0x00000008 0x0000005a
-+				0x00000009 0x00000061
-+				0x0000000a 0x0000006a
-+				0x0000000b 0x00000071
-+				/* Calibration data group 2 */
-+				0x00010000 0x00000025
-+				0x00010001 0x0000002c
-+				0x00010002 0x00000035
-+				0x00010003 0x0000003d
-+				0x00010004 0x00000045
-+				0x00010005 0x0000004e
-+				0x00010006 0x00000057
-+				0x00010007 0x00000061
-+				0x00010008 0x0000006b
-+				0x00010009 0x00000076
-+				/* Calibration data group 3 */
-+				0x00020000 0x00000029
-+				0x00020001 0x00000033
-+				0x00020002 0x0000003d
-+				0x00020003 0x00000049
-+				0x00020004 0x00000056
-+				0x00020005 0x00000061
-+				0x00020006 0x0000006d
-+				/* Calibration data group 4 */
-+				0x00030000 0x00000021
-+				0x00030001 0x0000002a
-+				0x00030002 0x0000003c
-+				0x00030003 0x0000004e>;
-+			little-endian;
-+			#thermal-sensor-cells = <1>;
-+		};
-+
-+		thermal-zones {
-+			cpu_thermal: cpu-thermal {
-+				polling-delay-passive = <1000>;
-+				polling-delay = <5000>;
-+				thermal-sensors = <&tmu 0>;
-+
-+				trips {
-+					cpu_alert: cpu-alert {
-+						temperature = <85000>;
-+						hysteresis = <2000>;
-+						type = "passive";
-+					};
-+
-+					cpu_crit: cpu-crit {
-+						temperature = <95000>;
-+						hysteresis = <2000>;
-+						type = "critical";
-+					};
-+				};
-+
-+				cooling-maps {
-+					map0 {
-+						trip = <&cpu_alert>;
-+						cooling-device =
-+							<&cpu0 THERMAL_NO_LIMIT
-+							THERMAL_NO_LIMIT>;
-+					};
-+
-+					map1 {
-+						trip = <&cpu_alert>;
-+						cooling-device =
-+							<&cpu4 THERMAL_NO_LIMIT
-+							THERMAL_NO_LIMIT>;
-+					};
-+				};
-+			};
-+		};
-+
- 	};
- 
- };
--- 
-2.1.0.27.g96db324
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+thanks
+                       martin
