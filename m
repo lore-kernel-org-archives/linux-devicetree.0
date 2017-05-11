@@ -1,157 +1,177 @@
-From: Ryder Lee <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v3 2/2] dt-bindings: pcie: Add documentation for
- Mediatek PCIe
-Date: Thu, 11 May 2017 17:08:39 +0800
-Message-ID: <1494493719.9564.26.camel@mtkswgap22>
-References: <1494382020-26790-1-git-send-email-ryder.lee@mediatek.com>
-         <1494382020-26790-3-git-send-email-ryder.lee@mediatek.com>
-         <CAK8P3a193RxchvFAMWeZiP0sc0bd+VGg=_aVvipSgcbDpHXojg@mail.gmail.com>
-         <1494408707.31307.32.camel@mtkswgap22>
-         <CAK8P3a1AUsUTNDnN+_9251sxC7R4vvkQRr37dvAke6ooCJ_oxg@mail.gmail.com>
-         <1494470650.20742.36.camel@mtkswgap22>
-         <CAK8P3a1FVyoFufnbQFjGovoQpkxMj3kaAgjb5Q+v-DQnYKeA-g@mail.gmail.com>
+From: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [RFC 0/2] Add support for Meson MX "SDIO" MMC driver
+Date: Thu, 11 May 2017 11:39:21 +0200
+Message-ID: <CAPDyKFoC-cCEY+n2383W+JgDANbBMFbsU5cyB51-kG4kbLNNcw@mail.gmail.com>
+References: <20170506171857.16492-1-martin.blumenstingl@googlemail.com>
+ <CAPDyKFoYPjB1bjRfFCFT3vuzKgzm6-7L2qgNjxGL392cLDe7uA@mail.gmail.com> <CAFBinCDGBZAAx_61eyu1_XM57fX62Mk03TEiO3uTL+i8dfPyZA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAK8P3a1FVyoFufnbQFjGovoQpkxMj3kaAgjb5Q+v-DQnYKeA-g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <CAFBinCDGBZAAx_61eyu1_XM57fX62Mk03TEiO3uTL+i8dfPyZA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-pci <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "moderated list:ARM/Mediatek SoC..." <linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Red Hung <red.hung-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+To: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, "linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2017-05-11 at 09:17 +0200, Arnd Bergmann wrote:
-> On Thu, May 11, 2017 at 4:44 AM, Ryder Lee <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
-> > On Wed, 2017-05-10 at 12:01 +0200, Arnd Bergmann wrote:
-> >> On Wed, May 10, 2017 at 11:31 AM, Ryder Lee <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
-> >> > On Wed, 2017-05-10 at 10:08 +0200, Arnd Bergmann wrote:
-> 
-> >> >> > +Required properties:
-> >> >> > +- device_type: Must be "pci"
-> >> >> > +- assigned-addresses: Address and size of the port configuration registers
-> >> >> > +- reg: Only the first four bytes are used to refer to the correct bus number
-> >> >> > +  and device number.
-> >> >> > +- #address-cells: Must be 3
-> >> >> > +- #size-cells: Must be 2
-> >> >> > +- #interrupt-cells: Must be 1
-> >> >> > +- interrupt-map-mask and interrupt-map: Standard PCI IRQ mapping properties
-> >> >> > +  Please refer to the standard PCI bus binding document for a more detailed
-> >> >> > +  explanation.
-> >> >>
-> >> >> Child nodes do not normally have interrupt-map properties. Isn't this
-> >> >> already covered by the interrupt-map in the parent?
-> >> >>
-> >> >
-> >> > I have one Intel 4 port ethernet card(0000:00:01) and MTK WLAN card
-> >> > (0000:00:02), probe message looks good to me.
-> >> >
-> >> > pci 0000:00:01.0: fixup irq: got 224
-> >> > pci 0000:00:01.0: assigning IRQ 224
-> >> > pci 0000:00:02.0: fixup irq: got 225
-> >> > pci 0000:00:02.0: assigning IRQ 225
-> >> >
-> >> > pci 0000:01:00.0: fixup irq: got 224
-> >> > pci 0000:01:00.0: assigning IRQ 224
-> >> > pci 0000:01:00.1: fixup irq: got 224
-> >> > pci 0000:01:00.1: assigning IRQ 224
-> >> > pci 0000:01:00.2: fixup irq: got 224
-> >> > pci 0000:01:00.2: assigning IRQ 224
-> >> > pci 0000:01:00.3: fixup irq: got 224
-> >> > pci 0000:01:00.3: assigning IRQ 224
-> >> >
-> >> > pci 0000:02:00.0: fixup irq: got 225
-> >> > pci 0000:02:00.0: assigning IRQ 225
-> >> >
-> >> >
-> >> > But child nodes without interrupt-map properties:
-> >> > It seems incorrect.
-> >> >
-> >> > pci 0000:00:01.0: fixup irq: got 224
-> >> > pci 0000:00:01.0: assigning IRQ 224
-> >> > pci 0000:00:02.0: fixup irq: got 225
-> >> > pci 0000:00:02.0: assigning IRQ 225
-> >> >
-> >> > pci 0000:01:00.0: fixup irq: got 223
-> >> > pci 0000:01:00.0: assigning IRQ 223
-> >>
-> >> Not entirely sure what happens here, but I guess the problem
-> >> is that the 'reg' portion of the parent interrupt-map refers to
-> >> the port devices, not the devices attached the devices behind
-> >> them.
-> >
-> > I agree with you. That's why I need additional interrupt-map properties
-> > to resolve IRQ correctly for the devices behind root ports.
-> >
-> > Not sure whether other platforms have similar case like me here.
-> 
-> I think it's just a bug in this specific chip where the HW designers
-> wired the IRQs in a nonstandard way.
-> 
-> However, you really should not need the interrupt-map properties
-> in the child nodes, just change the address part in the parent
-> interrupt-map. Specifically, the 'bus' portion of the device address
-> in the interrupt-map would have to be nonzero to refer to
-> child devices.
+On 10 May 2017 at 21:22, Martin Blumenstingl
+<martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org> wrote:
+> Hi Ulf,
+>
+> On Wed, May 10, 2017 at 10:44 AM, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>> On 6 May 2017 at 19:18, Martin Blumenstingl
+>> <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org> wrote:
+>>> This is the successor to Carlo Caione's "Add support for Amlogic Meson
+>>> MMC driver" series (v5) from [0].
+>>>
+>>> I would like you to specifically review:
+>>> - whether I've (ab)used the MMC framework properly (as this is my first
+>>>   "larger" contribution to an MMC driver)
+>>
+>> I take a look soonish.
+> thank you!
+>
+>>> - I think I have improved the locking compared to Carlo's version,
+>>>   however I'd still like feedback on whether this looks sane now or if I
+>>>   can improve that even further
+>>>
+>>> (notable) changes since Carlo's latest version are:
+>>> - renamed the driver to meson-mx-sdio (Amlogic's reference kernel calls
+>>>   the driver "aml_sdio" as there is a second MMC controller in these SoCs
+>>>   which they call the "SDHC controller"). do the same with our driver to
+>>
+>> I don't like to renaming drivers, just because there are a reference
+>> kernel using a different name.
+>>
+>> What's is really the difference between controllers? Why do they have
+>> two variants?
+> the driver from this thread is for the "SDSC/SDHC/SDXC card and SDIO
+> interface with 1-bit and 4-bit data bus width supporting spec version
+> 2.x/3.x/4.x DS/HS modes up to UHS-I SDR50" (quote taken from the S805
+> datasheet: [0])
+> the "other" controller is an "eMMC and MMC card interface with
+> 1/4/8-bit data bus width supporting spec version 4.4x/4.5x HS200 (up
+> to 100MHz clock), compatible with standard iNAND interface" (again,
+> quote taken from the S805 datasheet: [0])
+>
+>>
+>> Can they be managed by the same driver?
+>>
+>>>   avoid confusion once we add support for the second controller (which uses
+>>>   a completely different register layout)
+>>
+>> Besides that, do they behave differently in some other way?
+> both drivers/controllers have a totally different register layout - I
+> don't see any way how they both could be handled by one driver (the
+> registers for the controllers from this series are not part of the
+> documentation, but the registers from the 8-bit capable controller
+> are, see page 76 and following from the S805 datasheet: [0])
 
-This is what I modify for the parent node and remove interrupt-map
-properties from child..
+Okay, I am starting to understand. :-)
 
-interrupt-map-mask = <0xff800 0 0 0>;
-interrupt-map = <0x0000 0 0 0 &gic GIC_SPI 193 IRQ_TYPE_NONE>,
-		 <0x0800 0 0 0 &gic GIC_SPI 194 IRQ_TYPE_NONE>,
-		 <0x1000 0 0 0 &gic GIC_SPI 195 IRQ_TYPE_NONE>,
+The spec in section 13 describes a controller supporting "MMC/SD/SDIO"
+cards. However, there is yet another controller which @subject series
+implement support for.
+You don't happen to have a public datasheet for this controller as
+well? If not, never mind.
 
-		 /* workaround here*/
-		 <0x10000 0 0 0 &gic GIC_SPI 193 IRQ_TYPE_NONE>,
-		 <0x20000 0 0 0 &gic GIC_SPI 194 IRQ_TYPE_NONE>,
-	     <0x30000 0 0 0 &gic GIC_SPI 195 IRQ_TYPE_NONE>;
+Then, meson actually have three different MMC/SD/SDIO controllers, the
+one in the S805 spec, the one supported by the recently up-streamed
+meson-gx-mmc.c driver - and the one being supported in this series.
+Right? And all of them are completely separate and non-compatible?
 
-It works well. But how could we handle the situation if root port0
-status = "disabled" ? I think we cannot assign child bus number
-dynamically from binding.
+>
+>>> - add support for the internal "mux" in this MMC controller (which allows
+>>>   connecting up to three devices to the the controller - at the cost of
+>>>   performance though since the controller can only process one request at
+>>>   a time). The driver registers a new device for each sub-node, which is
+>>>   then fed into the MMC framework to allow per-slot configuration using
+>>>   devicetree (see the example in the documentation)
+>>
+>> Unless there really is deployment for more than one slot on some
+>> boards/SoCs, I would strongly suggest to *not* implement this.
+>>
+>> Simply because of overhead and introduced complexity to the driver.
+> actually there are lots of devices out there which need to use two slots:
+> as mentioned above the S805 (Meson8b) SoC has two MMC controllers:
+> - one which is typically used for the SD card and the SDIO wireless
+> interface (the driver from this series handles this)
+> - the other one is typically connects to eMMC flash (as it supports
+> 8-bit bus width - this controller is not related to the driver from
+> this series)
 
-> >> On a related note, I see that you still list
-> >>
-> >> > +- interrupts: Three interrupt outputs of the controller. Must contain an
-> >> > +  entry for each entry in the interrupt-names property.
-> >> > +- interrupt-names: Must include the following names
-> >> > +  - "pcie-int0"
-> >> > +  - "pcie-int1"
-> >> > +  - "pcie-int2"
-> >>
-> >> This seems to be an artifact from the older version and should be
-> >> removed as the driver correctly ignores the properties now.
-> >
-> > Actually, everything works fine without these properties however when it
-> > loads we see a few weird error message:
-> >
-> > pcieport 0000:00:01.0: Signaling PME with IRQ 232
-> > pcieport 0000:00:02.0: enabling device (0140 -> 0142)
-> > pcieport 0000:00:02.0: enabling bus mastering
-> > irq 232: nobody cared (try booting with the "irqpoll" option)
-> > ...
-> > [<c03f6be4>] (pcie_pme_probe) from [<c03f47b8>] (pcie_port_probe_service
-> > +0x44/0x6c)
-> > (pcie_port_probe_service) from [<c0454cf8>] (driver_probe_device
-> > +0x280/0x470)
-> > ...
-> > (pcie_port_device_register) from [<c03f51a0>] (pcie_portdrv_probe
-> > +0x3c/0xb4)
-> > (pcie_portdrv_probe) from [<c03e7acc>] (pci_device_probe+0x98/0xfc)
-> > (pci_device_probe) from [<c0454cf8>] (driver_probe_device+0x280/0x470)
-> > handlers:
-> > [<c03f68b0>] pcie_pme_irq
-> > Disabling IRQ #233
-> >
-> > I haven't dig it out yet, but just keep them here to solve that.
-> 
-> Something is going very wrong if adding the properties helps. I can't
-> think of what that is, but we have to find out before the binding can
-> be merged.
+Okay.
 
-Not really understand PME service. But I will find the reason here.
+>
+> there are boards out there which use NAND flash instead of eMMC, but
+> the majority of the consumer devices (based on Amlogic SoCs) out there
+> uses eMMC flash.
+> we (unfortunately) have to support the internal mux since there are
+> three MMC devices (SD card, SDIO wifi and eMMC) but only two
+> controllers.
 
+I see.
 
+>
+> I agree with you that it adds extra complexity to the driver. I tried
+> to keep it as simple as possible - but I think we cannot remove it
+> (without "losing" access to one MMC devices on most boards)
+
+Of course.
+
+>
+>>> - use the common clock framework internally for managing the MMC clock
+>>>   (there is a fixed-factor clock in the controller which takes clk81 as
+>>>    input and divides it's clock by two and a divider clock which takes
+>>>    the result from the fixed-factor clock as input)
+>>> - support the regulators provided by the MMC framework
+>>> - support for GPIO-based card-detection and read-only-detection through
+>>>   the MMC framework
+>>> - use of the <linux/bitfield.h> FIELD_PREP and FIELD_GET macros where it
+>>>   make sense (and thus the code easier to read)
+>>> - re-worked locking (based on the locking in dw_mmc as that also provides
+>>>   multiple "MMC slots")
+>>
+>> Lots of changes!
+>>
+>> Before even start to review (or someone else), you really need to make
+>> this review-able.
+>>
+>> So, please, one change per patch - and make sure to write good
+>> changelogs. Then I can start to review.
+> from the mainline tree's perspective this is a new driver:
+
+Yes, I get it now.
+
+I first thought this series was related to the recently up-streamed
+meson-gx-mmc.c driver. Apologize for my ignorance.
+
+> Carlo (the original author) initially sent this driver for review more
+> than 14 months ago. unfortunately it was never merged since you
+> spotted some issues while reviewing that code, see [1].
+
+Yes, I recall that now.
+
+> I would have sent smaller patches for a driver which is already in mainline.
+
+Right.
+
+>
+> I also wanted to avoid extra complexity for the internal mux if it was
+> added later on (if we want to avoid breaking devicetree backwards
+> compatibility then the driver would have to support both: parsing from
+> the mmc node directly and parsing child "slot" nodes). we won't have
+> to change the DT bindings when the first version that will be
+> mainlined already has support for the mux
+>
+> please let me know if there's anything I can do to make the code
+> easier to review.
+
+No worries, let me have a look as is!
+
+[...]
+
+Kind regards
+Uffe
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
