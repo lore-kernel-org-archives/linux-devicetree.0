@@ -1,51 +1,34 @@
 From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 0/5 RfC] pintrl: meson: add support for GPIO IRQs
-Date: Thu, 11 May 2017 16:34:49 +0200
-Message-ID: <CACRpkdbeA9pwnOFjdryKjeyZewLWA7Q6ZRbxc=MreT0zJMbgQA@mail.gmail.com>
-References: <a4ca587b-d3e8-a22d-4d25-289871d2d095@gmail.com>
+Subject: Re: [PATCH v2 04/10] pinctrl: sunxi: switch A20's
+ pinctrl driver to use the A10 version
+Date: Thu, 11 May 2017 16:41:50 +0200
+Message-ID: <CACRpkdapcjoSaCpKev6tTuMVF5ZEQ61HkUMMAC3npJnnYWzNcA@mail.gmail.com>
+References: <20170504135006.16483-1-icenowy@aosc.io> <20170504135006.16483-5-icenowy@aosc.io>
+Reply-To: linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <a4ca587b-d3e8-a22d-4d25-289871d2d095-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Heiner Kallweit <hkallweit1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Cc: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:ARM/Amlogic Meson..." <linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-sunxi+bncBDE6RCFOWIARBMHQ2HEAKGQEJLFAVAA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20170504135006.16483-5-icenowy-h8G6r0blFSE@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, May 7, 2017 at 6:19 PM, Heiner Kallweit <hkallweit1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+On Thu, May 4, 2017 at 3:50 PM, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org> wrote:
 
-> This patch series is partially based on a series Jerome Brunet
-> submitted about half a year ago. Due to open questions this series never
-> made it to mainline, see https://patchwork.kernel.org/patch/9384431/
+> As we added A20 support to A10 pinctrl driver, now we can delete the
+> dedicated A20 pinctrl driver, and enable A10 driver for A20.
 >
-> This new attempt uses GPIOLIB_IRQCHIP resulting in less needed code.
-> Included is also support for using two parent IRQs in case
-> of IRQ_TYPE_EDGE_BOTH, like in the vendor driver.
->
-> Worth to be mentioned is also that I had to work around a strange
-> issue with spurious interrupts resulting in a deadlock.
-> The affected critical section in __setup_irq is executed with interrupts
-> disabled, nevertheless spurious GPIO IRQs result in a deadlock what
-> seems to indicate that they are handled on the same CPU.
-> I didn't find a better explanation than a possible HW flaw so far.
->
-> The series was successfully tested on a Odroid-C2, e.g. with removing
-> polling for SD card insertion/removal from the mmc driver.
->
-> Heiner Kallweit (5):
->   pinctrl: meson: add interrupts to pinctrl data
->   pinctrl: meson: document GPIO IRQ DT binding
->   pinctrl: meson: add DT node for GPIO IRQ on Meson GX
->   pinctrl: meson: add DT node for GPIO IRQ on Meson 8 / 8b
->   pinctrl: meson: add support for GPIO interrupts
+> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
 
-I just merged a bunch of patches from Martin Blumenstigl for this driver.
-
-Martin can you help out reviewing these patches?
+Looks all right to me but I'm waiting for Maxime's review on these
+patches.
 
 Yours,
 Linus Walleij
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
