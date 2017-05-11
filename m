@@ -1,81 +1,38 @@
-From: Guochun Mao <guochun.mao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] arm: dts: mt2701: add nor flash node
-Date: Thu, 11 May 2017 09:30:11 +0800
-Message-ID: <1494466211.6463.2.camel@mhfsdcap03>
-References: <1485315515-29942-1-git-send-email-guochun.mao@mediatek.com>
-         <1485315515-29942-3-git-send-email-guochun.mao@mediatek.com>
-         <1486267249.10417.9.camel@mhfsdcap03> <20170206084544.24878633@bbrezillon>
-         <77e0e3b0-2fe4-b32b-9099-11ce9811ba15@gmail.com>
-         <1487044733.19037.0.camel@mhfsdcap03>
-         <1a788098-1cf8-5fec-e847-5c14189f8586@gmail.com>
+From: Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v6 19/23] drivers/fsi: Add GPIO based FSI master
+Date: Thu, 11 May 2017 09:58:16 +0800
+Message-ID: <a079022b-8434-a204-c9b4-696a0580fc8c@ozlabs.org>
+References: <20170410194706.64280-1-cbostic@linux.vnet.ibm.com>
+ <20170410194706.64280-20-cbostic@linux.vnet.ibm.com>
+ <CACPK8Xf1Y31+HBHb0ErpnZ4xVM+bzfHV-khj-kz8Unk1cTx6gw@mail.gmail.com>
+ <c05599db-7767-e712-7199-7d5a4ac6486f@linux.vnet.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1a788098-1cf8-5fec-e847-5c14189f8586-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <c05599db-7767-e712-7199-7d5a4ac6486f-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, John Crispin <john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org>, "linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Christopher Bostic <cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, rostedt-nx8X9YLhiw1AfugRpC6u6w@public.gmane.org, mingo-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>, Alistair Popple <alistair-Y4h6yKqj69EXC2x5gXVKYQ@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, "Edward A . James" <eajames-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2017-05-10 at 12:49 +0200, Matthias Brugger wrote:
-> 
-> On 14/02/17 04:58, Guochun Mao wrote:
-> > On Sun, 2017-02-12 at 07:35 +0800, Matthias Brugger wrote:
-> >>
-> >> On 02/06/2017 08:45 AM, Boris Brezillon wrote:
-> >>> Hi Guochun,
-> >>>
-> >>> On Sun, 5 Feb 2017 12:00:49 +0800
-> >>> Guochun Mao <guochun.mao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
-> >>>
-> >>>
-> >>>>>
-> >>>>> +   nor_flash: spi@11014000 {
-> >>>>> +           compatible = "mediatek,mt2701-nor",
-> >>>>> +                        "mediatek,mt8173-nor";
-> >>>>> +           reg = <0 0x11014000 0 0xe0>;
-> >>>>> +           clocks = <&pericfg CLK_PERI_FLASH>,
-> >>>>> +                    <&topckgen CLK_TOP_FLASH_SEL>;
-> >>>>> +           clock-names = "spi", "sf";
-> >>>>> +           #address-cells = <1>;
-> >>>>> +           #size-cells = <0>;
-> >>>>> +           status = "disabled";
-> >>>>> +   };
-> >>>>> +
-> >>>>>      mmsys: syscon@14000000 {
-> >>>>>              compatible = "mediatek,mt2701-mmsys", "syscon";
-> >>>>>              reg = <0 0x14000000 0 0x1000>;
-> >>>>
-> >>>> Hi,
-> >>>> mtk-quadspi.txt had been updated as suggested.
-> >>>> Is there suggestion about this patch?
-> >>>
-> >>> It should probably go through the Mediatek tree. Matthias, any opinion?
-> >>>
-> >>
-> >> Yes, I will take this one through mine tree.
-> >>
-> >> Thanks,
-> >> Matthias
-> > 
-> > Thanks,
-> > Guochun
-> > 
-> > 
-> 
-> Queued now for v4.12-next/dts32
-> Sorry for the delay.
-> 
-> Matthias
+Hi Chris,
 
-Hi, Matthias,
+> I don't think we'd want this per master.   The lock is for the 'top'
+> master issuing commands.  Only the top master can initiate any
+> transactions on the bus to any devices connected downstream. Downstream
+> masters such as hub masters, etc... cannot initiate a command.
 
-It's OK. Thanks a lot.
+I think what Joel meant there was that we have it per *GPIO* master; if
+there are two GPIO masters on a system, there's no need to provide
+mutual exclusion to each (separate) set of GPIOs.
 
-Guochun
+To implement this, we'd just move the lock into struct fsi_master_gpio.
+
+Cheers,
 
 
+Jeremy
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
