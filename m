@@ -1,462 +1,76 @@
-From: Ludovic Desroches <ludovic.desroches@microchip.com>
-Subject: Re: [PATCH v2 2/3] iio: adc: at91-sama5d2_adc: add hw trigger and
- buffer support
-Date: Thu, 11 May 2017 08:09:37 +0200
-Message-ID: <20170511060937.pzam3drvyaci6rnv@rfolt0960.corp.atmel.com>
-References: <1493900000-26220-1-git-send-email-eugen.hristev@microchip.com>
- <1493900000-26220-3-git-send-email-eugen.hristev@microchip.com>
- <aeaf25d7-5e05-d854-1ae9-06d224925cad@kernel.org>
- <7fb32b5f-4705-ab23-d9c8-020b03af9ac1@microchip.com>
+From: icenowy-h8G6r0blFSE@public.gmane.org
+Subject: Re: [PATCH v2 20/20] ARM: sun5i: a10s-olinuxino: Enable HDMI
+Date: Thu, 11 May 2017 14:25:23 +0800
+Message-ID: <e273b954cab66fb17d07c9eb987778b6@aosc.io>
+References: <cover.d697f34bb7b0605c5e76cbc4167a64453e5e0984.1493812478.git-series.maxime.ripard@free-electrons.com>
+ <c7ac6faa0568e6418291255af537c4b070bdea63.1493812478.git-series.maxime.ripard@free-electrons.com>
+ <CAGb2v65S2pw3z8NZ+tkPkF=A=5z2toRkC+26pAs6La6CNyeXoQ@mail.gmail.com>
+ <20170510192358.taufs5tsyifueued@flea.home>
+Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <7fb32b5f-4705-ab23-d9c8-020b03af9ac1@microchip.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Eugen Hristev <eugen.hristev@microchip.com>
-Cc: devicetree@vger.kernel.org, lars@metafoo.de, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, ludovic.desroches@microchip.com, alexandre.belloni@free-electrons.com, linux-arm-kernel@lists.infradead.org, Jonathan Cameron <jic23@kernel.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBDS6XAN6ZADRBWEH2DEAKGQETPJSSJY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20170510192358.taufs5tsyifueued-YififvaboMKzQB+pC5nmwQ@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Daniel Vetter <daniel.vetter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 10, 2017 at 11:49:07AM +0300, Eugen Hristev wrote:
-> Hello,
-> 
-> Thanks for the suggestions and reply.
-> 
-> Please see my answers inline
-> 
-> Eugen
-> 
-> On 07.05.2017 18:01, Jonathan Cameron wrote:
-> > On 04/05/17 13:13, Eugen Hristev wrote:
-> > > Added support for the external hardware trigger on pin ADTRG,
-> > > integrated the three possible edge triggers into the subsystem
-> > > and created buffer management for data retrieval
-> > > 
-> > > Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
-> > > ---
-> > >   Changes in v2:
-> > >  - Moved buffer allocation and freeing into the preenable and postdisable
-> > >    callbacks.
-> > >    We have a total of scan bytes that can vary a lot depending on each channel
-> > >    enabled at a certain point.
-> > How much?  Having dynamic allocations are likely to prove just as costly as you'll
-> > almost always end up allocating a lot more than you ask for.
-> > 
-> > I'm counting worst case of 18x 2byte channels + timestamp = 48 bytes.
-> > A quick google suggests you'll always allocate 32 bytes whatever with slab
-> > (lower for slob). So not a huge saving...
-> > 
-> > Worth the hassle?
-> 
-> 
-> I will modify the allocation of scan_bytes to make it static.
-> 
-> > 
-> > >  - made the at91 trigger list part of state structure
-> > >  - made the iio trigger list preallocated in state structure
-> > >  - moved irq enabling/disabling into the try_reenable callback
-> > I'd have liked a little explanation on why we need to explicitly disable
-> > the irq.  It will have little effect it if triggers too often as the
-> > trigger consumers are all oneshot anyway.
-> 
-> Regarding the irq, the discussion is a bit longer.
-> 
-> As it is now, the interrupt is not a oneshot threaded one, because only
-> the top half handler is installed, and the threaded one is NULL.
-> Calling trigger_poll without disabling the interrupt will make the
-> handler loop, so that is the reason for disabling and reenabling
-> the interrupt.
-> 
-> One solution is to change it to oneshot threaded interrupt and call
-> trigger_poll_chained to make it a nested handling. This will make a
-> longer response time for conversions though.
-> 
-> One other option is to do irq_save and irq_restore before issuing the
-> trigger poll, but that limits the usability of the trigger by any
-> other device I guess.
-> 
-> I did the behavior with disabling and enabling the interrupt considering
-> the old at91 driver and the stm32-adc driver which looks to be fairly
-> similar with this implementation.
-> 
-> Can you please advise on which approach you think it's best for this
-> driver ?
-> So I can try that, and resend the patch.
-> 
-> > >  - on trigger disable must write disable registries as well
-> > Basically looks good. A few questions inline.
-> > 
-> > Jonathan
-> > > 
-> > >  drivers/iio/adc/at91-sama5d2_adc.c | 231 ++++++++++++++++++++++++++++++++++++-
-> > >  1 file changed, 228 insertions(+), 3 deletions(-)
-> > > 
-> > > diff --git a/drivers/iio/adc/at91-sama5d2_adc.c b/drivers/iio/adc/at91-sama5d2_adc.c
-> > > index e10dca3..11f5570 100644
-> > > --- a/drivers/iio/adc/at91-sama5d2_adc.c
-> > > +++ b/drivers/iio/adc/at91-sama5d2_adc.c
-> > > @@ -23,8 +23,15 @@
-> > >  #include <linux/platform_device.h>
-> > >  #include <linux/sched.h>
-> > >  #include <linux/wait.h>
-> > > +#include <linux/slab.h>
-> > > +
-> > >  #include <linux/iio/iio.h>
-> > >  #include <linux/iio/sysfs.h>
-> > > +#include <linux/iio/buffer.h>
-> > > +#include <linux/iio/trigger.h>
-> > > +#include <linux/iio/trigger_consumer.h>
-> > > +#include <linux/iio/triggered_buffer.h>
-> > > +
-> > >  #include <linux/regulator/consumer.h>
-> > > 
-> > >  /* Control Register */
-> > > @@ -132,6 +139,17 @@
-> > >  #define AT91_SAMA5D2_PRESSR	0xbc
-> > >  /* Trigger Register */
-> > >  #define AT91_SAMA5D2_TRGR	0xc0
-> > > +/* Mask for TRGMOD field of TRGR register */
-> > > +#define AT91_SAMA5D2_TRGR_TRGMOD_MASK GENMASK(2, 0)
-> > > +/* No trigger, only software trigger can start conversions */
-> > > +#define AT91_SAMA5D2_TRGR_TRGMOD_NO_TRIGGER 0
-> > > +/* Trigger Mode external trigger rising edge */
-> > > +#define AT91_SAMA5D2_TRGR_TRGMOD_EXT_TRIG_RISE 1
-> > > +/* Trigger Mode external trigger falling edge */
-> > > +#define AT91_SAMA5D2_TRGR_TRGMOD_EXT_TRIG_FALL 2
-> > > +/* Trigger Mode external trigger any edge */
-> > > +#define AT91_SAMA5D2_TRGR_TRGMOD_EXT_TRIG_ANY 3
-> > > +
-> > >  /* Correction Select Register */
-> > >  #define AT91_SAMA5D2_COSR	0xd0
-> > >  /* Correction Value Register */
-> > > @@ -145,14 +163,20 @@
-> > >  /* Version Register */
-> > >  #define AT91_SAMA5D2_VERSION	0xfc
-> > > 
-> > > +#define AT91_SAMA5D2_HW_TRIG_CNT 3
-> > > +#define AT91_SAMA5D2_SINGLE_CHAN_CNT 12
-> > > +#define AT91_SAMA5D2_DIFF_CHAN_CNT 6
-> > > +
-> > >  #define AT91_SAMA5D2_CHAN_SINGLE(num, addr)				\
-> > >  	{								\
-> > >  		.type = IIO_VOLTAGE,					\
-> > >  		.channel = num,						\
-> > >  		.address = addr,					\
-> > > +		.scan_index = num,					\
-> > >  		.scan_type = {						\
-> > >  			.sign = 'u',					\
-> > >  			.realbits = 12,					\
-> > > +			.storagebits = 16,				\
-> > >  		},							\
-> > >  		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),		\
-> > >  		.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE),	\
-> > > @@ -168,9 +192,11 @@
-> > >  		.channel = num,						\
-> > >  		.channel2 = num2,					\
-> > >  		.address = addr,					\
-> > > +		.scan_index = num + AT91_SAMA5D2_SINGLE_CHAN_CNT,	\
-> > >  		.scan_type = {						\
-> > >  			.sign = 's',					\
-> > >  			.realbits = 12,					\
-> > > +			.storagebits = 16,				\
-> > >  		},							\
-> > >  		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),		\
-> > >  		.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE),	\
-> > > @@ -188,18 +214,25 @@ struct at91_adc_soc_info {
-> > >  	unsigned			max_sample_rate;
-> > >  };
-> > > 
-> > > +struct at91_adc_trigger {
-> > > +	char				*name;
-> > > +	unsigned int			trgmod_value;
-> > > +};
-> > > +
-> > >  struct at91_adc_state {
-> > >  	void __iomem			*base;
-> > >  	int				irq;
-> > >  	struct clk			*per_clk;
-> > >  	struct regulator		*reg;
-> > >  	struct regulator		*vref;
-> > > +	u16				*buffer;
-> > >  	int				vref_uv;
-> > >  	const struct iio_chan_spec	*chan;
-> > >  	bool				conversion_done;
-> > >  	u32				conversion_value;
-> > >  	struct at91_adc_soc_info	soc_info;
-> > >  	wait_queue_head_t		wq_data_available;
-> > > +	struct iio_trigger		*trig[AT91_SAMA5D2_HW_TRIG_CNT];
-> > >  	/*
-> > >  	 * lock to prevent concurrent 'single conversion' requests through
-> > >  	 * sysfs.
-> > > @@ -207,6 +240,21 @@ struct at91_adc_state {
-> > >  	struct mutex			lock;
-> > >  };
-> > > 
-> > > +static const struct at91_adc_trigger at91_adc_trigger_list[] = {
-> > > +	{
-> > > +		.name = "external-rising",
-> > > +		.trgmod_value = AT91_SAMA5D2_TRGR_TRGMOD_EXT_TRIG_RISE,
-> > > +	},
-> > > +	{
-> > > +		.name = "external-falling",
-> > > +		.trgmod_value = AT91_SAMA5D2_TRGR_TRGMOD_EXT_TRIG_FALL,
-> > > +	},
-> > > +	{
-> > > +		.name = "external-any",
-> > > +		.trgmod_value = AT91_SAMA5D2_TRGR_TRGMOD_EXT_TRIG_ANY,
-> > > +	},
-> > Hmm. Should this be a userspace configurable option?  Feels rather like
-> > it is an element of the hardware - reflecting the characteristics of some
-> > hardware device sat on the pin.
-> The user can choose from sysfs which trigger
-> is best suited for the use case, since all
-> three triggers are provided and can be connected to the buffer.
-> It reflects more the triggering capability of the ADC rather than
-> any different hardware device sitting on the pin
+=E5=9C=A8 2017-05-11 03:23=EF=BC=8CMaxime Ripard =E5=86=99=E9=81=93=EF=BC=
+=9A
+> Hi,
+>=20
+> On Thu, May 04, 2017 at 04:05:18PM +0800, Chen-Yu Tsai wrote:
+>> On Wed, May 3, 2017 at 7:59 PM, Maxime Ripard
+>> <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+>> > The A10s Olinuxino has an HDMI connector. Make sure we can use it.
+>> >
+>> > Acked-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+>> > Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+>> > ---
+>> >  arch/arm/boot/dts/sun5i-a10s-olinuxino-micro.dts | 29 +++++++++++++++=
+++-
+>> >  1 file changed, 29 insertions(+), 0 deletions(-)
+>> >
+>> > diff --git a/arch/arm/boot/dts/sun5i-a10s-olinuxino-micro.dts b/arch/a=
+rm/boot/dts/sun5i-a10s-olinuxino-micro.dts
+>> > index 894f874a5beb..1d13b6407222 100644
+>> > --- a/arch/arm/boot/dts/sun5i-a10s-olinuxino-micro.dts
+>> > +++ b/arch/arm/boot/dts/sun5i-a10s-olinuxino-micro.dts
+>> > @@ -63,6 +63,17 @@
+>> >                 stdout-path =3D "serial0:115200n8";
+>> >         };
+>> >
+>> > +       connector {
+>> > +               compatible =3D "hdmi-connector";
+>> > +               type =3D "a";
+>>=20
+>> Just curious, should we take this into consideration when creating
+>> drm_connector?
+>=20
+> I'm not sure, no other driver does so. And I haven't seen any of our
+> boards with a HDMI-B, C or mini-HDMI connector.
 
-I am also in favour of a userspace configurable option. For sure it's
-hardware related but on our board we only provide a trigger pin, we
-don't know which hardware the customer will put on this pin.
+Tablets usually come with micro-HDMI connector.
 
-Regards
+>=20
+> Maxime
+>=20
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 
-Ludovic
-
-> 
-> > > +};
-> > > +
-> > >  static const struct iio_chan_spec at91_adc_channels[] = {
-> > >  	AT91_SAMA5D2_CHAN_SINGLE(0, 0x50),
-> > >  	AT91_SAMA5D2_CHAN_SINGLE(1, 0x54),
-> > > @@ -226,8 +274,168 @@ static const struct iio_chan_spec at91_adc_channels[] = {
-> > >  	AT91_SAMA5D2_CHAN_DIFF(6, 7, 0x68),
-> > >  	AT91_SAMA5D2_CHAN_DIFF(8, 9, 0x70),
-> > >  	AT91_SAMA5D2_CHAN_DIFF(10, 11, 0x78),
-> > > +	IIO_CHAN_SOFT_TIMESTAMP(AT91_SAMA5D2_SINGLE_CHAN_CNT
-> > > +				+ AT91_SAMA5D2_DIFF_CHAN_CNT + 1),
-> > >  };
-> > > 
-> > > +static int at91_adc_configure_trigger(struct iio_trigger *trig, bool state)
-> > > +{
-> > > +	struct iio_dev *indio = iio_trigger_get_drvdata(trig);
-> > > +	struct at91_adc_state *st = iio_priv(indio);
-> > > +	u32 status = at91_adc_readl(st, AT91_SAMA5D2_TRGR);
-> > > +	u8 bit;
-> > > +	int i;
-> > > +
-> > > +	/* clear TRGMOD */
-> > > +	status &= ~AT91_SAMA5D2_TRGR_TRGMOD_MASK;
-> > > +
-> > > +	if (state)
-> > > +		for (i = 0; i < AT91_SAMA5D2_HW_TRIG_CNT; i++) {
-> > > +			if (!strstr(trig->name,
-> > > +				    at91_adc_trigger_list[i].name)) {
-> > > +				status |= at91_adc_trigger_list[i].trgmod_value;
-> > > +				break;
-> > > +			}
-> > > +		}
-> > > +
-> > > +	/* set/unset hw trigger */
-> > > +	at91_adc_writel(st, AT91_SAMA5D2_TRGR, status);
-> > > +
-> > > +	for_each_set_bit(bit, indio->active_scan_mask, indio->num_channels) {
-> > > +		struct iio_chan_spec const *chan = indio->channels + bit;
-> > > +
-> > > +		if (state) {
-> > > +			at91_adc_writel(st, AT91_SAMA5D2_CHER,
-> > > +					BIT(chan->channel));
-> > > +			at91_adc_writel(st, AT91_SAMA5D2_IER,
-> > > +					BIT(chan->channel));
-> > > +		} else {
-> > > +			at91_adc_writel(st, AT91_SAMA5D2_IDR,
-> > > +					BIT(chan->channel));
-> > > +			at91_adc_writel(st, AT91_SAMA5D2_CHDR,
-> > > +					BIT(chan->channel));
-> > > +		}
-> > > +	}
-> > > +
-> > > +	return 0;
-> > > +}
-> > > +
-> > > +static int at91_adc_reenable_trigger(struct iio_trigger *trig)
-> > > +{
-> > > +	struct iio_dev *indio = iio_trigger_get_drvdata(trig);
-> > > +	struct at91_adc_state *st = iio_priv(indio);
-> > > +
-> > > +	enable_irq(st->irq);
-> > > +	return 0;
-> > > +}
-> > > +
-> > > +static const struct iio_trigger_ops at91_adc_trigger_ops = {
-> > > +	.owner = THIS_MODULE,
-> > > +	.set_trigger_state = &at91_adc_configure_trigger,
-> > > +	.try_reenable = &at91_adc_reenable_trigger,
-> > > +};
-> > > +
-> > > +static int at91_adc_buffer_preenable(struct iio_dev *indio_dev)
-> > > +{
-> > > +	struct at91_adc_state *st = iio_priv(indio_dev);
-> > > +
-> > > +	st->buffer = kmalloc(indio_dev->scan_bytes, GFP_KERNEL);Why allocate it here?  Presumably the biggest it can get is fairly
-> > small?  Unless very large, just make sure you allocate enough
-> > directly in st in the first place.
-> 
-> Yes , as discussed above will change to static allocation.
-> 
-> > 
-> > > +
-> > > +	if (!st->buffer)
-> > > +		return -ENOMEM;
-> > > +
-> > > +	return 0;
-> > > +}
-> > > +
-> > > +static int at91_adc_buffer_postdisable(struct iio_dev *indio_dev)
-> > > +{
-> > > +	struct at91_adc_state *st = iio_priv(indio_dev);
-> > > +
-> > > +	kfree(st->buffer);
-> > > +
-> > > +	return 0;
-> > > +}
-> > > +
-> > > +static const struct iio_buffer_setup_ops at91_buffer_setup_ops = {
-> > > +	.preenable = &at91_adc_buffer_preenable,
-> > > +	.postenable = &iio_triggered_buffer_postenable,
-> > > +	.predisable = &iio_triggered_buffer_predisable,
-> > > +	.postdisable = &at91_adc_buffer_postdisable,
-> > > +};
-> > > +
-> > > +static struct iio_trigger *at91_adc_allocate_trigger(struct iio_dev *indio,
-> > > +						     char *trigger_name)
-> > > +{
-> > > +	struct iio_trigger *trig;
-> > > +	int ret;
-> > > +
-> > > +	trig = devm_iio_trigger_alloc(&indio->dev, "%s-dev%d-%s", indio->name,
-> > > +				      indio->id, trigger_name);
-> > > +	if (!trig)
-> > > +		return NULL;
-> > > +
-> > > +	trig->dev.parent = indio->dev.parent;
-> > > +	iio_trigger_set_drvdata(trig, indio);
-> > > +	trig->ops = &at91_adc_trigger_ops;
-> > > +
-> > > +	ret = devm_iio_trigger_register(&indio->dev, trig);
-> > > +
-> > > +	if (ret)
-> > > +		return NULL;
-> > > +
-> > > +	return trig;
-> > > +}
-> > > +
-> > > +static int at91_adc_trigger_init(struct iio_dev *indio)
-> > > +{
-> > > +	struct at91_adc_state *st = iio_priv(indio);
-> > > +	int i;
-> > > +
-> > > +	for (i = 0; i < AT91_SAMA5D2_HW_TRIG_CNT; i++) {
-> > > +		st->trig[i] = at91_adc_allocate_trigger(indio,
-> > > +						at91_adc_trigger_list[i].name);
-> > > +		if (!st->trig[i]) {
-> > > +			dev_err(&indio->dev,
-> > > +				"could not allocate trigger %d\n", i);
-> > > +			return -ENOMEM;
-> > > +		}
-> > > +	}
-> > > +
-> > > +	return 0;
-> > > +}
-> > > +
-> > > +static irqreturn_t at91_adc_trigger_handler(int irq, void *p)
-> > > +{
-> > > +	struct iio_poll_func *pf = p;
-> > > +	struct iio_dev *indio = pf->indio_dev;
-> > > +	struct at91_adc_state *st = iio_priv(indio);
-> > > +	int i = 0;
-> > > +	u8 bit;
-> > > +
-> > > +	for_each_set_bit(bit, indio->active_scan_mask, indio->num_channels) {
-> > > +		struct iio_chan_spec const *chan = indio->channels + bit;
-> > > +
-> > > +		st->buffer[i] = at91_adc_readl(st, chan->address);
-> > > +		i++;
-> > > +	}
-> > > +
-> > > +	iio_push_to_buffers_with_timestamp(indio, st->buffer, pf->timestamp);
-> > > +
-> > > +	iio_trigger_notify_done(indio->trig);
-> > > +
-> > > +	/* Needed to ACK the DRDY interruption */
-> > > +	at91_adc_readl(st, AT91_SAMA5D2_LCDR);
-> > > +
-> > > +	return IRQ_HANDLED;
-> > > +}
-> > > +
-> > > +static int at91_adc_buffer_init(struct iio_dev *indio)
-> > > +{
-> > > +	return devm_iio_triggered_buffer_setup(&indio->dev, indio,
-> > > +			&iio_pollfunc_store_time,
-> > > +			&at91_adc_trigger_handler, &at91_buffer_setup_ops);
-> > > +}
-> > > +
-> > >  static unsigned at91_adc_startup_time(unsigned startup_time_min,
-> > >  				      unsigned adc_clk_khz)
-> > >  {
-> > > @@ -293,14 +501,19 @@ static irqreturn_t at91_adc_interrupt(int irq, void *private)
-> > >  	u32 status = at91_adc_readl(st, AT91_SAMA5D2_ISR);
-> > >  	u32 imr = at91_adc_readl(st, AT91_SAMA5D2_IMR);
-> > > 
-> > > -	if (status & imr) {
-> > > +	if (!(status & imr))
-> > > +		return IRQ_NONE;
-> > > +
-> > > +	if (iio_buffer_enabled(indio)) {
-> > > +		disable_irq_nosync(irq);
-> > > +		iio_trigger_poll(indio->trig);
-> > > +	} else {
-> > >  		st->conversion_value = at91_adc_readl(st, st->chan->address);
-> > >  		st->conversion_done = true;
-> > >  		wake_up_interruptible(&st->wq_data_available);
-> > > -		return IRQ_HANDLED;
-> > >  	}
-> > > 
-> > > -	return IRQ_NONE;
-> > > +	return IRQ_HANDLED;
-> > >  }
-> > > 
-> > >  static int at91_adc_read_raw(struct iio_dev *indio_dev,
-> > > @@ -499,6 +712,18 @@ static int at91_adc_probe(struct platform_device *pdev)
-> > > 
-> > >  	platform_set_drvdata(pdev, indio_dev);
-> > > 
-> > > +	ret = at91_adc_buffer_init(indio_dev);
-> > > +	if (ret < 0) {
-> > > +		dev_err(&pdev->dev, "couldn't initialize the buffer.\n");
-> > > +		goto per_clk_disable_unprepare;
-> > > +	}
-> > > +
-> > > +	ret = at91_adc_trigger_init(indio_dev);
-> > > +	if (ret < 0) {
-> > > +		dev_err(&pdev->dev, "couldn't setup the triggers.\n");
-> > > +		goto per_clk_disable_unprepare;
-> > > +	}
-> > > +
-> > >  	ret = iio_device_register(indio_dev);
-> > >  	if (ret < 0)
-> > >  		goto per_clk_disable_unprepare;
-> > > 
-> > 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-iio" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
