@@ -1,44 +1,57 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: [PATCH 2/2] of: reserved_mem: fix 'const' annotation
-Date: Thu, 11 May 2017 14:24:50 +0200
-Message-ID: <20170511122458.3862716-2-arnd@arndb.de>
-References: <20170511122458.3862716-1-arnd@arndb.de>
+From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
+        <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: using labels for stdout-path
+Date: Thu, 11 May 2017 15:05:45 +0200
+Message-ID: <20170511130545.co6pyyvlwuitbyne@pengutronix.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170511122458.3862716-1-arnd-r2nGTMty4D4@public.gmane.org>
+Content-Disposition: inline
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-It's the pointer that is supposed to be const, not the return
-type of the function.
+Hello,
 
-drivers/of/of_reserved_mem.c: In function '__reserved_mem_init_node':
-drivers/of/of_reserved_mem.c:200:7: error: type qualifiers ignored on function return type [-Werror=ignored-qualifiers]
-   int const (*initfn)(struct reserved_mem *rmem) = i->data;
+on an i.MX28 based machine I want to have the console on &duart with
+115200 Bd, 8 Bit, no parity.
 
-Fixes: 17a70355ea57 ("of: fix sparse warnings in fdt, irq, reserved mem, and resolver code")
-Signed-off-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
----
- drivers/of/of_reserved_mem.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+The options for that are AFAICT:
 
-diff --git a/drivers/of/of_reserved_mem.c b/drivers/of/of_reserved_mem.c
-index 4dec07ea510f..3f03ec004829 100644
---- a/drivers/of/of_reserved_mem.c
-+++ b/drivers/of/of_reserved_mem.c
-@@ -197,7 +197,7 @@ static int __init __reserved_mem_init_node(struct reserved_mem *rmem)
- 	const struct of_device_id *i;
- 
- 	for (i = __reservedmem_of_table; i < &__rmem_of_table_sentinel; i++) {
--		int const (*initfn)(struct reserved_mem *rmem) = i->data;
-+		int (* const initfn)(struct reserved_mem *rmem) = i->data;
- 		const char *compat = i->compatible;
- 
- 		if (!of_flat_dt_is_compatible(rmem->fdt_node, compat))
+ - use an alias, like:
+
+ 	stdout-path = "serialX:115200n8";
+
+   the problem here is, that the duart doesn't have an alias. I guess I
+   shouldn't introduce a new one for my setup?
+
+ - use a label, like:
+
+ 	stdout-path = &duart, ":115200n8";
+
+   This would be the prettiest, but that doesn't work, because there is
+   a '\0' separating the path and the options.
+
+ - use the full path, like:
+
+ 	stdout-path = "/apb@80000000/apbx@80040000/serial@80074000:115200n8";
+
+   This is ugly.
+
+Do I miss something? Is that worth to introduce new syntax, maybe
+
+	stdout-path = &duart . ":115200n8";
+
+or similar?
+
+Best regards
+Uwe
+
 -- 
-2.9.0
-
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
