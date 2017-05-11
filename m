@@ -1,74 +1,116 @@
 From: Christopher Bostic <cbostic@linux.vnet.ibm.com>
-Subject: [PATCH v7 13/23] drivers/fsi: Add client driver register utilities
-Date: Thu, 11 May 2017 16:00:50 -0500
-Message-ID: <20170511210101.78409-14-cbostic@linux.vnet.ibm.com>
+Subject: [PATCH v7 11/23] drivers/fsi: Add master unscan
+Date: Thu, 11 May 2017 16:00:48 -0500
+Message-ID: <20170511210101.78409-12-cbostic@linux.vnet.ibm.com>
 References: <20170511210101.78409-1-cbostic@linux.vnet.ibm.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <20170511210101.78409-1-cbostic@linux.vnet.ibm.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, rostedt@goodmis.org, mingo@redhat.com, gregkh@linuxfoundation.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: Christopher Bostic <cbostic@linux.vnet.ibm.com>, joel@jms.id.au, linux-kernel@vger.kernel.org, andrew@aj.id.au, alistair@popple.id.au, benh@kernel.crashing.org
+Cc: andrew@aj.id.au, alistair@popple.id.au, linux-kernel@vger.kernel.org, Christopher Bostic <cbostic@linux.vnet.ibm.com>, benh@kernel.crashing.org, joel@jms.id.au
 List-Id: devicetree@vger.kernel.org
 
-Add driver_register and driver_unregister wrappers for FSI.
+Allow a master to undo a previous scan.  Should a master scan a bus
+twice it will need to ensure it doesn't double register any
+previously detected device.
 
 Signed-off-by: Christopher Bostic <cbostic@linux.vnet.ibm.com>
 Signed-off-by: Joel Stanley <joel@jms.id.au>
+----
+v7 - Unscan when unregistering master
+   - Remove leading '__'s from function names
+   - Return fail state for sysfs rescan file
 ---
- drivers/fsi/fsi-core.c | 17 +++++++++++++++++
- include/linux/fsi.h    | 12 ++++++++++++
- 2 files changed, 29 insertions(+)
+ drivers/fsi/fsi-core.c | 44 ++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 44 insertions(+)
 
 diff --git a/drivers/fsi/fsi-core.c b/drivers/fsi/fsi-core.c
-index fcb0c81..e9fbd9f 100644
+index d7a6e76..fcb0c81 100644
 --- a/drivers/fsi/fsi-core.c
 +++ b/drivers/fsi/fsi-core.c
-@@ -586,6 +586,23 @@ static int fsi_bus_match(struct device *dev, struct device_driver *drv)
+@@ -71,6 +71,7 @@ struct fsi_slave {
+ 	uint32_t		size;	/* size of slave address space */
+ };
+ 
++#define to_fsi_master(d) container_of(d, struct fsi_master, dev)
+ #define to_fsi_slave(d) container_of(d, struct fsi_slave, dev)
+ 
+ static int fsi_master_read(struct fsi_master *master, int link,
+@@ -488,6 +489,40 @@ static int fsi_master_scan(struct fsi_master *master)
  	return 0;
  }
  
-+int fsi_driver_register(struct fsi_driver *fsi_drv)
++static int fsi_slave_remove_device(struct device *dev, void *arg)
 +{
-+	if (!fsi_drv)
-+		return -EINVAL;
-+	if (!fsi_drv->id_table)
-+		return -EINVAL;
-+
-+	return driver_register(&fsi_drv->drv);
++	device_unregister(dev);
++	return 0;
 +}
-+EXPORT_SYMBOL_GPL(fsi_driver_register);
 +
-+void fsi_driver_unregister(struct fsi_driver *fsi_drv)
++static int fsi_master_remove_slave(struct device *dev, void *arg)
 +{
-+	driver_unregister(&fsi_drv->drv);
++	device_for_each_child(dev, NULL, fsi_slave_remove_device);
++	device_unregister(dev);
++	return 0;
 +}
-+EXPORT_SYMBOL_GPL(fsi_driver_unregister);
 +
- struct bus_type fsi_bus_type = {
- 	.name		= "fsi",
- 	.match		= fsi_bus_match,
-diff --git a/include/linux/fsi.h b/include/linux/fsi.h
-index 66bce48..34f1e9a 100644
---- a/include/linux/fsi.h
-+++ b/include/linux/fsi.h
-@@ -54,6 +54,18 @@ struct fsi_driver {
- #define to_fsi_dev(devp) container_of(devp, struct fsi_device, dev)
- #define to_fsi_drv(drvp) container_of(drvp, struct fsi_driver, drv)
++static void fsi_master_unscan(struct fsi_master *master)
++{
++	device_for_each_child(&master->dev, NULL, fsi_master_remove_slave);
++}
++
++static ssize_t master_rescan_store(struct device *dev,
++		struct device_attribute *attr, const char *buf, size_t count)
++{
++	struct fsi_master *master = to_fsi_master(dev);
++	int rc;
++
++	fsi_master_unscan(master);
++	rc = fsi_master_scan(master);
++	if (rc < 0)
++		return rc;
++
++	return count;
++}
++
++static DEVICE_ATTR(rescan, 0200, NULL, master_rescan_store);
++
+ int fsi_master_register(struct fsi_master *master)
+ {
+ 	int rc;
+@@ -504,7 +539,15 @@ int fsi_master_register(struct fsi_master *master)
+ 		return rc;
+ 	}
  
-+extern int fsi_driver_register(struct fsi_driver *fsi_drv);
-+extern void fsi_driver_unregister(struct fsi_driver *fsi_drv);
++	rc = device_create_file(&master->dev, &dev_attr_rescan);
++	if (rc) {
++		device_unregister(&master->dev);
++		ida_simple_remove(&master_ida, master->idx);
++		return rc;
++	}
 +
-+/* module_fsi_driver() - Helper macro for drivers that don't do
-+ * anything special in module init/exit.  This eliminates a lot of
-+ * boilerplate.  Each module may only use this macro once, and
-+ * calling it replaces module_init() and module_exit()
-+ */
-+#define module_fsi_driver(__fsi_driver) \
-+		module_driver(__fsi_driver, fsi_driver_register, \
-+				fsi_driver_unregister)
+ 	fsi_master_scan(master);
 +
- extern struct bus_type fsi_bus_type;
+ 	return 0;
+ }
+ EXPORT_SYMBOL_GPL(fsi_master_register);
+@@ -516,6 +559,7 @@ void fsi_master_unregister(struct fsi_master *master)
+ 		master->idx = -1;
+ 	}
  
- #endif /* LINUX_FSI_H */
++	fsi_master_unscan(master);
+ 	device_unregister(&master->dev);
+ }
+ EXPORT_SYMBOL_GPL(fsi_master_unregister);
 -- 
 1.8.2.2
