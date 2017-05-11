@@ -1,57 +1,29 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
-        <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: using labels for stdout-path
-Date: Thu, 11 May 2017 15:05:45 +0200
-Message-ID: <20170511130545.co6pyyvlwuitbyne@pengutronix.de>
+From: Jarkko Nikula <jarkko.nikula-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Subject: Re: [PATCH v9 5/6] i2c: designware: add SLAVE mode functions
+Date: Thu, 11 May 2017 16:20:46 +0300
+Message-ID: <f2c268ba-2f08-e6a6-2af7-b9b9b8afc49a@linux.intel.com>
+References: <cover.1493893241.git.lolivei@synopsys.com>
+ <b2accd73182d19927dfb0cd1a57cadf469ae5e9d.1493893241.git.lolivei@synopsys.com>
+ <1494262399.30052.69.camel@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
+In-Reply-To: <1494262399.30052.69.camel-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+To: Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Luis Oliveira <Luis.Oliveira-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Ramiro.Oliveira-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, Joao.Pinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, CARLOS.PALMINHA-HKixBCOQz3hWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello,
-
-on an i.MX28 based machine I want to have the console on &duart with
-115200 Bd, 8 Bit, no parity.
-
-The options for that are AFAICT:
-
- - use an alias, like:
-
- 	stdout-path = "serialX:115200n8";
-
-   the problem here is, that the duart doesn't have an alias. I guess I
-   shouldn't introduce a new one for my setup?
-
- - use a label, like:
-
- 	stdout-path = &duart, ":115200n8";
-
-   This would be the prettiest, but that doesn't work, because there is
-   a '\0' separating the path and the options.
-
- - use the full path, like:
-
- 	stdout-path = "/apb@80000000/apbx@80040000/serial@80074000:115200n8";
-
-   This is ugly.
-
-Do I miss something? Is that worth to introduce new syntax, maybe
-
-	stdout-path = &duart . ":115200n8";
-
-or similar?
-
-Best regards
-Uwe
+On 05/08/2017 07:53 PM, Andy Shevchenko wrote:
+>> +	} else if (reg == (DW_IC_COMP_TYPE_VALUE & 0x0000ffff)) {
+>
+> GENMASK(15, 0)
+>
+I don't think this increase readability compared to 0x0000ffff here.
 
 -- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Jarkko
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
