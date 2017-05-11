@@ -1,199 +1,45 @@
-From: olivier moysan <olivier.moysan@st.com>
-Subject: [PATCH v3 3/3] ASoC: stm32: Add full duplex support to
-	i2s
-Date: Thu, 11 May 2017 11:45:04 +0200
-Message-ID: <1494495904-18898-4-git-send-email-olivier.moysan@st.com>
-References: <1494495904-18898-1-git-send-email-olivier.moysan@st.com>
+From: Juri Lelli <juri.lelli-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v4 0/8] Fix issues and factorize arm/arm64 capacity
+ information code
+Date: Thu, 11 May 2017 11:27:18 +0100
+Message-ID: <20170511102718.qy54ajkzphasymhr@e106622-lin>
+References: <20170420144316.15632-1-juri.lelli@arm.com>
+ <20170511084830.rn32pvi6weej2cna@e106622-lin>
+ <20170511085952.GA6934@kroah.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <1494495904-18898-1-git-send-email-olivier.moysan@st.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: lgirdwood@gmail.com, broonie@kernel.org, perex@perex.cz, tiwai@suse.com, mcoquelin.stm32@gmail.com, alexandre.torgue@st.com, alsa-devel@alsa-project.org, robh@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kernel@stlinux.com, linux-kernel@vger.kernel.org, olivier.moysan@st.com
-Cc: arnaud.pouliquen@st.com, benjamin.gaignard@st.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170511085952.GA6934-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Cc: linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, peterz-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, vincent.guittot-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, morten.rasmussen-5wv7dgnIgG8@public.gmane.org, dietmar.eggemann-5wv7dgnIgG8@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch allows to use i2s interface either as single
-audio path (rx or tx), or bidirectional audio path.
-This patch is added separately, as the driver does not
-follow recommended use of the interface, to support this
-configuration.
+On 11/05/17 10:59, Greg KH wrote:
+> On Thu, May 11, 2017 at 09:48:30AM +0100, Juri Lelli wrote:
+> > Hi Greg,
+> > 
+> > I'm not sure what your plans are with this set. Are we targeting 4.12?
+> > 
+> > IMHO, if possible, it would be good to have this refactoring in now, so
+> > that we can base further development on it for the next cycle.
+> 
+> It's way too late for new features that have not been in linux-next for
+> a few weeks, to get merged into 4.12-rc1, sorry.  I'll review this
+> patchset after -rc1 is out, and I get a chance to catch up on pending
+> patches.
+> 
 
-Signed-off-by: olivier moysan <olivier.moysan@st.com>
----
- sound/soc/stm/stm32_i2s.c | 87 +++++++++++++++++++++++++----------------------
- 1 file changed, 46 insertions(+), 41 deletions(-)
+Thanks for your reply, I perfecly understand.
 
-diff --git a/sound/soc/stm/stm32_i2s.c b/sound/soc/stm/stm32_i2s.c
-index 22152a1..8052629 100644
---- a/sound/soc/stm/stm32_i2s.c
-+++ b/sound/soc/stm/stm32_i2s.c
-@@ -489,7 +489,6 @@ static int stm32_i2s_configure(struct snd_soc_dai *cpu_dai,
- 	struct stm32_i2s_data *i2s = snd_soc_dai_get_drvdata(cpu_dai);
- 	int format = params_width(params);
- 	u32 cfgr, cfgr_mask, cfg1, cfg1_mask;
--	bool playback_flg = (substream->stream == SNDRV_PCM_STREAM_PLAYBACK);
- 	unsigned int fthlv;
- 	int ret;
- 
-@@ -515,19 +514,13 @@ static int stm32_i2s_configure(struct snd_soc_dai *cpu_dai,
- 	}
- 
- 	if (STM32_I2S_IS_SLAVE(i2s)) {
--		if (playback_flg)
--			cfgr |= I2S_CGFR_I2SCFG_SET(I2S_I2SMOD_TX_SLAVE);
--		else
--			cfgr |= I2S_CGFR_I2SCFG_SET(I2S_I2SMOD_RX_SLAVE);
-+		cfgr |= I2S_CGFR_I2SCFG_SET(I2S_I2SMOD_FD_SLAVE);
- 
- 		/* As data length is either 16 or 32 bits, fixch always set */
- 		cfgr |= I2S_CGFR_FIXCH;
- 		cfgr_mask |= I2S_CGFR_FIXCH;
- 	} else {
--		if (playback_flg)
--			cfgr |= I2S_CGFR_I2SCFG_SET(I2S_I2SMOD_TX_MASTER);
--		else
--			cfgr |= I2S_CGFR_I2SCFG_SET(I2S_I2SMOD_RX_MASTER);
-+		cfgr |= I2S_CGFR_I2SCFG_SET(I2S_I2SMOD_FD_MASTER);
- 	}
- 	cfgr_mask |= I2S_CGFR_I2SCFG_MASK;
- 
-@@ -536,9 +529,7 @@ static int stm32_i2s_configure(struct snd_soc_dai *cpu_dai,
- 	if (ret < 0)
- 		return ret;
- 
--	cfg1 = I2S_CFG1_RXDMAEN;
--	if (playback_flg)
--		cfg1 = I2S_CFG1_TXDMAEN;
-+	cfg1 = I2S_CFG1_RXDMAEN | I2S_CFG1_TXDMAEN;
- 	cfg1_mask = cfg1;
- 
- 	fthlv = STM32_I2S_FIFO_SIZE * I2S_FIFO_TH_ONE_QUARTER / 4;
-@@ -553,32 +544,15 @@ static int stm32_i2s_startup(struct snd_pcm_substream *substream,
- 			     struct snd_soc_dai *cpu_dai)
- {
- 	struct stm32_i2s_data *i2s = snd_soc_dai_get_drvdata(cpu_dai);
--	int ret, ier;
- 
- 	i2s->substream = substream;
- 
- 	spin_lock(&i2s->lock_fd);
--	if (i2s->refcount) {
--		dev_err(cpu_dai->dev, "%s stream already started\n",
--			(substream->stream == SNDRV_PCM_STREAM_PLAYBACK ?
--			"Capture" : "Playback"));
--		spin_unlock(&i2s->lock_fd);
--		return -EBUSY;
--	}
--	i2s->refcount = 1;
-+	i2s->refcount++;
- 	spin_unlock(&i2s->lock_fd);
- 
--	ret = regmap_update_bits(i2s->regmap, STM32_I2S_IFCR_REG,
--				 I2S_IFCR_MASK, I2S_IFCR_MASK);
--	if (ret < 0)
--		return ret;
--
--	/* Enable ITs */
--	ier = I2S_IER_OVRIE | I2S_IER_UDRIE;
--	if (STM32_I2S_IS_SLAVE(i2s))
--		ier |= I2S_IER_TIFREIE;
--
--	return regmap_update_bits(i2s->regmap, STM32_I2S_IER_REG, ier, ier);
-+	return regmap_update_bits(i2s->regmap, STM32_I2S_IFCR_REG,
-+				  I2S_IFCR_MASK, I2S_IFCR_MASK);
- }
- 
- static int stm32_i2s_hw_params(struct snd_pcm_substream *substream,
-@@ -605,7 +579,7 @@ static int stm32_i2s_trigger(struct snd_pcm_substream *substream, int cmd,
- {
- 	struct stm32_i2s_data *i2s = snd_soc_dai_get_drvdata(cpu_dai);
- 	bool playback_flg = (substream->stream == SNDRV_PCM_STREAM_PLAYBACK);
--	u32 cfg1_mask;
-+	u32 cfg1_mask, ier;
- 	int ret;
- 
- 	switch (cmd) {
-@@ -628,10 +602,48 @@ static int stm32_i2s_trigger(struct snd_pcm_substream *substream, int cmd,
- 			dev_err(cpu_dai->dev, "Error %d starting I2S\n", ret);
- 			return ret;
- 		}
-+
-+		regmap_update_bits(i2s->regmap, STM32_I2S_IFCR_REG,
-+				   I2S_IFCR_MASK, I2S_IFCR_MASK);
-+
-+		if (playback_flg) {
-+			ier = I2S_IER_UDRIE;
-+		} else {
-+			ier = I2S_IER_OVRIE;
-+
-+			spin_lock(&i2s->lock_fd);
-+			if (i2s->refcount == 1)
-+				/* dummy write to trigger capture */
-+				regmap_write(i2s->regmap,
-+					     STM32_I2S_TXDR_REG, 0);
-+			spin_unlock(&i2s->lock_fd);
-+		}
-+
-+		if (STM32_I2S_IS_SLAVE(i2s))
-+			ier |= I2S_IER_TIFREIE;
-+
-+		regmap_update_bits(i2s->regmap, STM32_I2S_IER_REG, ier, ier);
- 		break;
- 	case SNDRV_PCM_TRIGGER_STOP:
- 	case SNDRV_PCM_TRIGGER_SUSPEND:
- 	case SNDRV_PCM_TRIGGER_PAUSE_PUSH:
-+		if (playback_flg)
-+			regmap_update_bits(i2s->regmap, STM32_I2S_IER_REG,
-+					   I2S_IER_UDRIE,
-+					   (unsigned int)~I2S_IER_UDRIE);
-+		else
-+			regmap_update_bits(i2s->regmap, STM32_I2S_IER_REG,
-+					   I2S_IER_OVRIE,
-+					   (unsigned int)~I2S_IER_OVRIE);
-+
-+		spin_lock(&i2s->lock_fd);
-+		i2s->refcount--;
-+		if (i2s->refcount) {
-+			spin_unlock(&i2s->lock_fd);
-+			break;
-+		}
-+		spin_unlock(&i2s->lock_fd);
-+
- 		dev_dbg(cpu_dai->dev, "stop I2S\n");
- 
- 		ret = regmap_update_bits(i2s->regmap, STM32_I2S_CR1_REG,
-@@ -641,10 +653,7 @@ static int stm32_i2s_trigger(struct snd_pcm_substream *substream, int cmd,
- 			return ret;
- 		}
- 
--		cfg1_mask = I2S_CFG1_RXDMAEN;
--		if (playback_flg)
--			cfg1_mask = I2S_CFG1_TXDMAEN;
--
-+		cfg1_mask = I2S_CFG1_RXDMAEN | I2S_CFG1_TXDMAEN;
- 		regmap_update_bits(i2s->regmap, STM32_I2S_CFG1_REG,
- 				   cfg1_mask, 0);
- 		break;
-@@ -662,10 +671,6 @@ static void stm32_i2s_shutdown(struct snd_pcm_substream *substream,
- 
- 	i2s->substream = NULL;
- 
--	spin_lock(&i2s->lock_fd);
--	i2s->refcount = 0;
--	spin_unlock(&i2s->lock_fd);
--
- 	regmap_update_bits(i2s->regmap, STM32_I2S_CGFR_REG,
- 			   I2S_CGFR_MCKOE, (unsigned int)~I2S_CGFR_MCKOE);
- }
--- 
-1.9.1
+OK, let's target 4.13 then. Looking forward to receive your comments
+after -rc1 is out.
+
+Best,
+
+- Juri
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
