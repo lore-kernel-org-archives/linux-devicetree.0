@@ -1,158 +1,56 @@
-From: Lino Sanfilippo <LinoSanfilippo-Mmb7MZpHnFY@public.gmane.org>
-Subject: Re: [PATCH v5 17/17] net: qualcomm: add QCA7000 UART driver
-Date: Thu, 11 May 2017 23:58:31 +0200
-Message-ID: <f39d7b94-ef8e-986e-710f-6d9524978f4d@gmx.de>
-References: <1494406408-31760-1-git-send-email-stefan.wahren@i2se.com>
- <1494406408-31760-18-git-send-email-stefan.wahren@i2se.com>
+From: Eric Anholt <eric@anholt.net>
+Subject: [PATCH 0/4] Raspberry Pi Touchscreen bridge/panel drivers
+Date: Thu, 11 May 2017 16:56:21 -0700
+Message-ID: <20170511235625.22427-1-eric@anholt.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1494406408-31760-18-git-send-email-stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Jiri Slaby <jslaby-IBi9RG/b67k@public.gmane.org>, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: dri-devel@lists.freedesktop.org, Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Archit Taneja <architt@codeaurora.org>, Andrzej Hajda <a.hajda@samsung.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On 10.05.2017 10:53, Stefan Wahren wrote:
-
-> +static int qcauart_netdev_init(struct net_device *dev)
-> +{
-> +	struct qcauart *qca = netdev_priv(dev);
-> +	size_t len;
-> +
-> +	/* Finish setting up the device info. */
-> +	dev->mtu = QCAFRM_MAX_MTU;
-> +	dev->type = ARPHRD_ETHER;
-> +
-> +	qca->rx_skb = netdev_alloc_skb_ip_align(qca->net_dev,
-> +						qca->net_dev->mtu +
-> +						VLAN_ETH_HLEN);
-> +	if (!qca->rx_skb)
-> +		return -ENOBUFS;
-> +
-> +	len = QCAFRM_HEADER_LEN + QCAFRM_MAX_LEN + QCAFRM_FOOTER_LEN;
-> +	qca->tx_buffer = kmalloc(len, GFP_KERNEL);
-> +	if (!qca->tx_buffer)
-> +		return -ENOBUFS;
-
-Freeing the rx_skb is missing here.
-
-> +
-> +static void qcauart_netdev_setup(struct net_device *dev)
-> +{
-> +	struct qcauart *qca;
-> +
-> +	dev->netdev_ops = &qcauart_netdev_ops;
-> +	dev->watchdog_timeo = QCAUART_TX_TIMEOUT;
-> +	dev->priv_flags &= ~IFF_TX_SKB_SHARING;
-> +	dev->tx_queue_len = 100;
-> +
-> +	/* MTU range: 46 - 1500 */
-> +	dev->min_mtu = QCAFRM_MIN_MTU;
-> +	dev->max_mtu = QCAFRM_MAX_MTU;
-> +
-> +	qca = netdev_priv(dev);
-> +	memset(qca, 0, sizeof(struct qcauart));
-
-Zeroing the private data is not necessary since it is already done
-at device allocation.
-
-
-> +
-> +static int qca_uart_probe(struct serdev_device *serdev)
-> +{
-> +	struct net_device *qcauart_dev = alloc_etherdev(sizeof(struct qcauart));
-> +	struct qcauart *qca;
-> +	const char *mac;
-> +	u32 speed = 115200;
-> +	int ret;
-> +
-> +	if (!qcauart_dev)
-> +		return -ENOMEM;
-> +
-> +	qcauart_netdev_setup(qcauart_dev);
-> +
-> +	qca = netdev_priv(qcauart_dev);
-> +	if (!qca) {
-> +		pr_err("qca_uart: Fail to retrieve private structure\n");
-> +		ret = -ENOMEM;
-> +		goto free;
-> +	}
-> +	qca->net_dev = qcauart_dev;
-> +	qca->serdev = serdev;
-> +	qcafrm_fsm_init_uart(&qca->frm_handle);
-> +
-> +	spin_lock_init(&qca->lock);
-> +	INIT_WORK(&qca->tx_work, qcauart_transmit);
-> +
-> +	of_property_read_u32(serdev->dev.of_node, "current-speed", &speed);
-> +
-> +	mac = of_get_mac_address(serdev->dev.of_node);
-> +
-> +	if (mac)
-> +		ether_addr_copy(qca->net_dev->dev_addr, mac);
-> +
-> +	if (!is_valid_ether_addr(qca->net_dev->dev_addr)) {
-> +		eth_hw_addr_random(qca->net_dev);
-> +		dev_info(&serdev->dev, "Using random MAC address: %pM\n",
-> +			 qca->net_dev->dev_addr);
-> +	}
-> +
-> +	netif_carrier_on(qca->net_dev);
-> +	serdev_device_set_drvdata(serdev, qca);
-> +	serdev_device_set_client_ops(serdev, &qca_serdev_ops);
-> +
-> +	ret = serdev_device_open(serdev);
-> +	if (ret) {
-> +		dev_err(&serdev->dev, "Unable to open device %s\n",
-> +			qcauart_dev->name);
-> +		goto free;
-> +	}
-> +
-> +	speed = serdev_device_set_baudrate(serdev, speed);
-> +	dev_info(&serdev->dev, "Using baudrate: %u\n", speed);
-> +
-> +	serdev_device_set_flow_control(serdev, false);
-> +
-> +	ret = register_netdev(qcauart_dev);
-> +	if (ret) {
-> +		dev_err(&serdev->dev, "Unable to register net device %s\n",
-> +			qcauart_dev->name);
-
-	serdev_device_close() ?
-
-> +		goto free;
-> +	}
-> +
-> +	return 0;
-> +
-> +free:
-> +	free_netdev(qcauart_dev);
-> +	return ret;
-> +}
-> +
-> +static void qca_uart_remove(struct serdev_device *serdev)
-> +{
-> +	struct qcauart *qca = serdev_device_get_drvdata(serdev);
-
-	Here you should make sure that the tx_work is not running/pending any
-	more (e.g by calling cancel_delayed_work_sync()).
-
-> +	/* Flush any pending characters in the driver. */
-> +	serdev_device_close(serdev);
-> +
-> +	netif_carrier_off(qca->net_dev);
-> +	unregister_netdev(qca->net_dev);
-> +	free_netdev(qca->net_dev);
-> +}
-
-Regards,
-Lino
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGVyZSdzIHRoZSByZXdyaXRlIG9mIHRoZSBSYXNwYmVycnkgUGkgZGlzcGxheSBzdXBwb3J0IHRv
+IHNwbGl0IG91dCBhCmJyaWRnZSBkcml2ZXIgcmVwcmVzZW50aW5nIHRoZSB0b3NoaWJhK2F0bWVs
+IHBhaXIuICBJdCBkZXBlbmRzIG9uIHRoZQpwYW5lbC1icmlkZ2UgbGF5ZXIgSSd2ZSBzdWJtaXR0
+ZWQuCgpUaGUgUlBpIERTSSBzdGFjayBpc24ndCBjb21wbGV0ZWx5IHdvcmtpbmcgeWV0IC0tIEkn
+dmUgZ290IHNvbWUKZmxpY2tlcnkgcGl4ZWxzIG9uIHRoZSBkaXNwbGF5IHdoZXJlIGl0IHNlZW1z
+IHNvbWUgY29sb3IgdmFsdWVzIGFyZQp1bnN0YWJsZSAob24gdGhlIGRlZmF1bHQgZGViaWFuIHN3
+aXJsIGRlc2t0b3AgaW1hZ2UsIHRoZXkncmUKcGFydGljdWxhcmx5IHZpc2libGUgYXMgcGluayBz
+cGFya2xlcyBuZWFyIHRoZSBlZGdlIG9mIHRoZSBzd2lybHMpLgpTbyBmYXIgbWVzc2luZyB3aXRo
+IGNsb2Nrcywgbm90IHNldHRpbmcgY2xvY2tzIGF0IGFsbCwgZm9yY2luZyB0aGUKZmlybXdhcmUn
+cyBEU0kgdGltaW5ncywgYW5kIGEgYnVuY2ggb2Ygb3RoZXIgaGFja3MgaGF2ZW4ndCBtYW5hZ2Vk
+IHRvCnJlc29sdmUgaXQuICBTdGlsbCwgSSB0aGluayB0aGlzIGRyaXZlciBzdGFjayBpcyB1c2Vm
+dWwgdG8gaGF2ZSwgYW5kIEkKYXNzdW1lIHRoYXQgZml4aW5nIHRoaXMgd2lsbCBiZSBhIHNtYWxs
+IGJ1Z2ZpeCBzb21ld2hlcmUgbGF0ZXIuCgpFcmljIEFuaG9sdCAoNCk6CiAgZHJtL3ZjNDogQWRq
+dXN0IG1vZGVzIGluIERTSSB0byB3b3JrIGFyb3VuZCB0aGUgaW50ZWdlciBQTEwgZGl2aWRlci4K
+ICBkdC1iaW5kaW5nczogRG9jdW1lbnQgdGhlIFJhc3BiZXJyeSBQaSBUb3VjaHNjcmVlbiBub2Rl
+cy4KICBkcm0vYnJpZGdlOiBBZGQgc3VwcG9ydCBmb3IgdGhlIFJhc3BiZXJyeSBQaSA3IiBUb3Vj
+aHNjcmVlbi4KICBkcm0vcGFuZWw6IEFkZCB0aGUgUmFzcGJlcnJ5IFBpIDciIHRvdWNoc2NyZWVu
+J3MgcGFuZWwuCgogLi4uL3Jhc3BiZXJyeXBpLDdpbmNoLXRvdWNoc2NyZWVuLWJyaWRnZS50eHQg
+ICAgICAgfCAgNjggKysrCiAuLi4vcGFuZWwvcmFzcGJlcnJ5cGksN2luY2gtdG91Y2hzY3JlZW4t
+cGFuZWwudHh0ICB8ICAgNyArCiBkcml2ZXJzL2dwdS9kcm0vYnJpZGdlL0tjb25maWcgICAgICAg
+ICAgICAgICAgICAgICB8ICAgOSArCiBkcml2ZXJzL2dwdS9kcm0vYnJpZGdlL01ha2VmaWxlICAg
+ICAgICAgICAgICAgICAgICB8ICAgMSArCiBkcml2ZXJzL2dwdS9kcm0vYnJpZGdlL3Jhc3BiZXJy
+eXBpLXRvdWNoc2NyZWVuLmMgICB8IDQ2MCArKysrKysrKysrKysrKysrKysrKysKIGRyaXZlcnMv
+Z3B1L2RybS9wYW5lbC9wYW5lbC1zaW1wbGUuYyAgICAgICAgICAgICAgIHwgIDMwICsrCiBkcml2
+ZXJzL2dwdS9kcm0vdmM0L3ZjNF9kc2kuYyAgICAgICAgICAgICAgICAgICAgICB8IDExMiArKyst
+LQogNyBmaWxlcyBjaGFuZ2VkLCA2NjEgaW5zZXJ0aW9ucygrKSwgMjYgZGVsZXRpb25zKC0pCiBj
+cmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3Bs
+YXkvYnJpZGdlL3Jhc3BiZXJyeXBpLDdpbmNoLXRvdWNoc2NyZWVuLWJyaWRnZS50eHQKIGNyZWF0
+ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9w
+YW5lbC9yYXNwYmVycnlwaSw3aW5jaC10b3VjaHNjcmVlbi1wYW5lbC50eHQKIGNyZWF0ZSBtb2Rl
+IDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vYnJpZGdlL3Jhc3BiZXJyeXBpLXRvdWNoc2NyZWVuLmMK
+Ci0tIAoyLjExLjAKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9y
+ZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZl
+bAo=
