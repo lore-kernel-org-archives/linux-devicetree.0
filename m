@@ -1,142 +1,74 @@
 From: Christopher Bostic <cbostic@linux.vnet.ibm.com>
-Subject: [PATCH v7 04/23] lib: Add crc4 module
-Date: Thu, 11 May 2017 16:00:41 -0500
-Message-ID: <20170511210101.78409-5-cbostic@linux.vnet.ibm.com>
+Subject: [PATCH v7 18/23] drivers/fsi: Document FSI master sysfs files in ABI
+Date: Thu, 11 May 2017 16:00:55 -0500
+Message-ID: <20170511210101.78409-19-cbostic@linux.vnet.ibm.com>
 References: <20170511210101.78409-1-cbostic@linux.vnet.ibm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170511210101.78409-1-cbostic@linux.vnet.ibm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, rostedt@goodmis.org, mingo@redhat.com, gregkh@linuxfoundation.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: Chris Bostic <cbostic@linux.vnet.ibm.com>, andrew@aj.id.au, alistair@popple.id.au, linux-kernel@vger.kernel.org, Jeremy Kerr <jk@ozlabs.org>, benh@kernel.crashing.org, joel@jms.id.au
+Cc: Chris Bostic <cbostic@linux.vnet.ibm.com>, joel@jms.id.au, linux-kernel@vger.kernel.org, andrew@aj.id.au, alistair@popple.id.au, benh@kernel.crashing.org
 List-Id: devicetree@vger.kernel.org
 
-From: Jeremy Kerr <jk@ozlabs.org>
+From: Chris Bostic <cbostic@linux.vnet.ibm.com>
 
-Add a little helper for crc4 calculations. This works 4-bits-at-a-time,
-using a simple table approach.
+Add info for sysfs scan file in Documentaiton ABI/testing
 
-We will need this in the FSI core code, as well as any master
-implementations that need to calculate CRCs in software.
-
-Signed-off-by: Jeremy Kerr <jk@ozlabs.org>
-Signed-off-by: Chris Bostic <cbostic@linux.vnet.ibm.com>
-Signed-off-by: Joel Stanley <joel@jms.id.au>
+Signed-off-by: Christopher Bostic <cbostic@linux.vnet.ibm.com>
 ---
- include/linux/crc4.h |  8 ++++++++
- lib/Kconfig          |  8 ++++++++
- lib/Makefile         |  1 +
- lib/crc4.c           | 46 ++++++++++++++++++++++++++++++++++++++++++++++
- 4 files changed, 63 insertions(+)
- create mode 100644 include/linux/crc4.h
- create mode 100644 lib/crc4.c
+v7 - Rename scan file to 'rescan'
+   - Add 'raw' file details
+   - Add 'term' file details
+   - Add 'break' file details
+   - Update kernel version for each file to 4.12
+---
+ Documentation/ABI/testing/sysfs-bus-fsi | 38 +++++++++++++++++++++++++++++++++
+ 1 file changed, 38 insertions(+)
+ create mode 100644 Documentation/ABI/testing/sysfs-bus-fsi
 
-diff --git a/include/linux/crc4.h b/include/linux/crc4.h
+diff --git a/Documentation/ABI/testing/sysfs-bus-fsi b/Documentation/ABI/testing/sysfs-bus-fsi
 new file mode 100644
-index 0000000..8f739f1
+index 0000000..57c8063
 --- /dev/null
-+++ b/include/linux/crc4.h
-@@ -0,0 +1,8 @@
-+#ifndef _LINUX_CRC4_H
-+#define _LINUX_CRC4_H
++++ b/Documentation/ABI/testing/sysfs-bus-fsi
+@@ -0,0 +1,38 @@
++What:           /sys/bus/platform/devices/fsi-master/rescan
++Date:		May 2017
++KernelVersion:  4.12
++Contact:        cbostic@linux.vnet.ibm.com
++Description:
++                Initiates a FSI master scan for all connected slave devices
++		on its links.
 +
-+#include <linux/types.h>
++What:           /sys/bus/platform/devices/fsi-master/break
++Date:		May 2017
++KernelVersion:  4.12
++Contact:        cbostic@linux.vnet.ibm.com
++Description:
++		Sends an FSI BREAK command on a master's communication
++		link to any connnected slaves.  A BREAK resets connected
++		device's logic and preps it to receive further commands
++		from the master.
 +
-+extern uint8_t crc4(uint8_t c, uint64_t x, int bits);
++What:           /sys/bus/platform/devices/fsi-master/slave@00:00/term
++Date:		May 2017
++KernelVersion:  4.12
++Contact:        cbostic@linux.vnet.ibm.com
++Description:
++		Sends an FSI terminate command from the master to its
++		connected slave. A terminate resets the slave's state machines
++		that control access to the internally connected engines.  In
++		addition the slave freezes its internal error register for
++		debugging purposes.  This command is also needed to abort any
++		ongoing operation in case of an expired 'Master Time Out'
++		timer.
 +
-+#endif /* _LINUX_CRC4_H */
-diff --git a/lib/Kconfig b/lib/Kconfig
-index 0c8b78a..d2fd262 100644
---- a/lib/Kconfig
-+++ b/lib/Kconfig
-@@ -158,6 +158,14 @@ config CRC32_BIT
- 
- endchoice
- 
-+config CRC4
-+	tristate "CRC4 functions"
-+	help
-+	  This option is provided for the case where no in-kernel-tree
-+	  modules require CRC4 functions, but a module built outside
-+	  the kernel tree does. Such modules that use library CRC4
-+	  functions require M here.
-+
- config CRC7
- 	tristate "CRC7 functions"
- 	help
-diff --git a/lib/Makefile b/lib/Makefile
-index 320ac46a..63b3c28 100644
---- a/lib/Makefile
-+++ b/lib/Makefile
-@@ -98,6 +98,7 @@ obj-$(CONFIG_CRC_T10DIF)+= crc-t10dif.o
- obj-$(CONFIG_CRC_ITU_T)	+= crc-itu-t.o
- obj-$(CONFIG_CRC32)	+= crc32.o
- obj-$(CONFIG_CRC32_SELFTEST)	+= crc32test.o
-+obj-$(CONFIG_CRC4)	+= crc4.o
- obj-$(CONFIG_CRC7)	+= crc7.o
- obj-$(CONFIG_LIBCRC32C)	+= libcrc32c.o
- obj-$(CONFIG_CRC8)	+= crc8.o
-diff --git a/lib/crc4.c b/lib/crc4.c
-new file mode 100644
-index 0000000..cf6db46
---- /dev/null
-+++ b/lib/crc4.c
-@@ -0,0 +1,46 @@
-+/*
-+ * crc4.c - simple crc-4 calculations.
-+ *
-+ * This source code is licensed under the GNU General Public License, Version
-+ * 2. See the file COPYING for more details.
-+ */
-+
-+#include <linux/crc4.h>
-+#include <linux/module.h>
-+
-+static const uint8_t crc4_tab[] = {
-+	0x0, 0x7, 0xe, 0x9, 0xb, 0xc, 0x5, 0x2,
-+	0x1, 0x6, 0xf, 0x8, 0xa, 0xd, 0x4, 0x3,
-+};
-+
-+/**
-+ * crc4 - calculate the 4-bit crc of a value.
-+ * @crc:  starting crc4
-+ * @x:    value to checksum
-+ * @bits: number of bits in @x to checksum
-+ *
-+ * Returns the crc4 value of @x, using polynomial 0b10111.
-+ *
-+ * The @x value is treated as left-aligned, and bits above @bits are ignored
-+ * in the crc calculations.
-+ */
-+uint8_t crc4(uint8_t c, uint64_t x, int bits)
-+{
-+	int i;
-+
-+	/* mask off anything above the top bit */
-+	x &= (1ull << bits) - 1;
-+
-+	/* Align to 4-bits */
-+	bits = (bits + 3) & ~0x3;
-+
-+	/* Calculate crc4 over four-bit nibbles, starting at the MSbit */
-+	for (i = bits - 4; i >= 0; i -= 4)
-+		c = crc4_tab[c ^ ((x >> i) & 0xf)];
-+
-+	return c;
-+}
-+EXPORT_SYMBOL_GPL(crc4);
-+
-+MODULE_DESCRIPTION("CRC4 calculations");
-+MODULE_LICENSE("GPL");
++What:           /sys/bus/platform/devices/fsi-master/slave@00:00/raw
++Date:		May 2017
++KernelVersion:  4.12
++Contact:        cbostic@linux.vnet.ibm.com
++Description:
++		Provides a means of reading/writing a 32 bit value from/to a
++		specified FSI bus address.
 -- 
 1.8.2.2
