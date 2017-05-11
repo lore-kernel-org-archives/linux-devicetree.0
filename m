@@ -1,54 +1,48 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH 1/2] of: remove extraneous 'const' in typedef
-Date: Thu, 11 May 2017 09:44:50 -0500
-Message-ID: <CAL_JsqJxubj3Swe7qr7sU8xJbQJRcK17LYKpDhN4DsF-yg7cHg@mail.gmail.com>
-References: <20170511122458.3862716-1-arnd@arndb.de>
+From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/2] of: reserved_mem: fix 'const' annotation
+Date: Thu, 11 May 2017 09:50:32 -0500
+Message-ID: <CAL_Jsq+MHx8Vgj9g4-p3Xs57LNpZB-20opbq2xk9jz-K-57iSw@mail.gmail.com>
+References: <20170511122458.3862716-1-arnd@arndb.de> <20170511122458.3862716-2-arnd@arndb.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170511122458.3862716-1-arnd@arndb.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Frank Rowand <frowand.list@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170511122458.3862716-2-arnd-r2nGTMty4D4@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 11, 2017 at 7:24 AM, Arnd Bergmann <arnd@arndb.de> wrote:
-> One change that was meant to address a sparse warning turned out
-> to cause hundreds of new gcc-7 warnings:
-
-I guess you are the only one on gcc-7.
-
-> include/linux/of_irq.h:11:13: error: type qualifiers ignored on function return type [-Werror=ignored-qualifiers]
+On Thu, May 11, 2017 at 7:24 AM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+> It's the pointer that is supposed to be const, not the return
+> type of the function.
 >
-> After reverting the change, the gcc warnings are gone again, and I
-> can't reproduce the sparse warnings either.
-
-Humm, maybe different sparse versions? I'm on 0.5.0.
-
+> drivers/of/of_reserved_mem.c: In function '__reserved_mem_init_node':
+> drivers/of/of_reserved_mem.c:200:7: error: type qualifiers ignored on function return type [-Werror=ignored-qualifiers]
+>    int const (*initfn)(struct reserved_mem *rmem) = i->data;
 >
 > Fixes: 17a70355ea57 ("of: fix sparse warnings in fdt, irq, reserved mem, and resolver code")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> Signed-off-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
 > ---
->  include/linux/of_irq.h | 2 +-
+>  drivers/of/of_reserved_mem.c | 2 +-
 >  1 file changed, 1 insertion(+), 1 deletion(-)
 >
-> diff --git a/include/linux/of_irq.h b/include/linux/of_irq.h
-> index ec6b11deb773..1e0deb8e8494 100644
-> --- a/include/linux/of_irq.h
-> +++ b/include/linux/of_irq.h
-> @@ -8,7 +8,7 @@
->  #include <linux/ioport.h>
->  #include <linux/of.h>
+> diff --git a/drivers/of/of_reserved_mem.c b/drivers/of/of_reserved_mem.c
+> index 4dec07ea510f..3f03ec004829 100644
+> --- a/drivers/of/of_reserved_mem.c
+> +++ b/drivers/of/of_reserved_mem.c
+> @@ -197,7 +197,7 @@ static int __init __reserved_mem_init_node(struct reserved_mem *rmem)
+>         const struct of_device_id *i;
 >
-> -typedef int const (*of_irq_init_cb_t)(struct device_node *, struct device_node *);
-> +typedef int (*of_irq_init_cb_t)(struct device_node *, struct device_node *);
->
->  /*
->   * Workarounds only applied to 32bit powermac machines
-> --
-> 2.9.0
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>         for (i = __reservedmem_of_table; i < &__rmem_of_table_sentinel; i++) {
+> -               int const (*initfn)(struct reserved_mem *rmem) = i->data;
+> +               int (* const initfn)(struct reserved_mem *rmem) = i->data;
+
+Why did you move the const here? That doesn't seem to help with sparse.
+
+I think I'll just revert this back to using reservedmem_of_init_fn.
+
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
