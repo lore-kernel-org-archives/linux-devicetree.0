@@ -1,239 +1,28 @@
-From: Varadarajan Narayanan <varada@codeaurora.org>
-Subject: Re: [PATCH v2 1/5] pinctrl: qcom: Add ipq8074 pinctrl driver
-Date: Thu, 11 May 2017 16:03:11 +0530
-Message-ID: <1f4c9974-f6a4-bee7-4f37-ad8795e442a3@codeaurora.org>
-References: <1493898841-20583-1-git-send-email-varada@codeaurora.org>
- <1493898841-20583-2-git-send-email-varada@codeaurora.org>
- <20170510224355.GE45273@Bjorns-MacBook-Pro-2.local>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v5 03/14] pinctrl: add a pinctrl driver for the Ingenic
+ jz47xx SoCs
+Date: Thu, 11 May 2017 13:01:30 +0200
+Message-ID: <CACRpkdYR8Y77VXrNz=NwczgxZvitkO72bAYcDuhneZbVVsT6=g@mail.gmail.com>
+References: <20170402204244.14216-2-paul@crapouillou.net> <20170428200824.10906-1-paul@crapouillou.net>
+ <20170428200824.10906-4-paul@crapouillou.net> <7941dbfbaeaf5c23bb177e66165060d3@crapouillou.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <20170510224355.GE45273@Bjorns-MacBook-Pro-2.local>
-Content-Language: en-US
-Sender: linux-gpio-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, mturquette@baylibre.com, sboyd@codeaurora.org, linus.walleij@linaro.org, andy.gross@linaro.org, david.brown@linaro.org, catalin.marinas@arm.com, will.deacon@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, absahu@codeaurora.org, sjaganat@codeaurora.org, sricharan@codeaurora.org, Manoharan Vijaya Raghavan <mraghava@codeaurora.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-pwm-owner@vger.kernel.org>
+In-Reply-To: <7941dbfbaeaf5c23bb177e66165060d3@crapouillou.net>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Paul Cercueil <paul@crapouillou.net>
+Cc: Alexandre Courbot <gnurou@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ralf Baechle <ralf@linux-mips.org>, Boris Brezillon <boris.brezillon@free-electrons.com>, Thierry Reding <thierry.reding@gmail.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Maarten ter Huurne <maarten@treewalker.org>, Lars-Peter Clausen <lars@metafoo.de>, Paul Burton <paul.burton@imgtec.com>, James Hogan <james.hogan@imgtec.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux MIPS <linux-mips@linux-mips.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>"linux-mtd@lists.infradead.org" <li>
 List-Id: devicetree@vger.kernel.org
 
+On Wed, May 3, 2017 at 11:12 AM, Paul Cercueil <paul@crapouillou.net> wrote:
 
+> The dependency on MFD is gone but now I notice I forgot to remove the
+> 'select MFD_CORE'
+> in the Kconfig. It'd be great if you can make a quick edit when merging
+> this,
+> otherwise I'll send a v6.
 
-On 5/11/2017 4:13 AM, Bjorn Andersson wrote:
-> On Thu 04 May 04:53 PDT 2017, Varadarajan Narayanan wrote:
-> 
->> Add initial pinctrl driver to support pin configuration with
->> pinctrl framework for ipq8074.
->>
->> Signed-off-by: Manoharan Vijaya Raghavan <mraghava@codeaurora.org>
->> Signed-off-by: Varadarajan Narayanan <varada@codeaurora.org>
->> ---
->>   .../bindings/pinctrl/qcom,ipq8074-pinctrl.txt      |  187 +++
->>   drivers/pinctrl/qcom/Kconfig                       |   10 +
->>   drivers/pinctrl/qcom/Makefile                      |    1 +
->>   drivers/pinctrl/qcom/pinctrl-ipq8074.c             | 1217 ++++++++++++++++++++
->>   4 files changed, 1415 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,ipq8074-pinctrl.txt
->>   create mode 100644 drivers/pinctrl/qcom/pinctrl-ipq8074.c
->>
->> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,ipq8074-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/qcom,ipq8074-pinctrl.txt
-> [..]
->> +- pins:
->> +	Usage: required
->> +	Value type: <string-array>
->> +	Definition: List of gpio pins affected by the properties specified in
->> +		    this subnode.  Valid pins are:
->> +		    gpio0-gpio121,
->> +		    sdc1_clk,
->> +		    sdc1_cmd,
->> +		    sdc1_data
->> +		    sdc2_clk,
->> +		    sdc2_cmd,
->> +		    sdc2_data,
->> +		    qdsd_cmd,
->> +		    qdsd_data0,
->> +		    qdsd_data1,
->> +		    qdsd_data2,
->> +		    qdsd_data3
-> 
-> These doesn't match the implementation.
+No problem I can fix it up.
 
-Will remove them.
-
->> +
->> +- function:
->> +	Usage: required
->> +	Value type: <string>
->> +	Definition: Specify the alternative function to be configured for the
->> +		    specified pins. Functions are only valid for gpio pins.
->> +		    Valid values are:
->> +	gpio, qpic_pad, blsp5_i2c, blsp5_spi, wci20, blsp3_spi3,
->> +	burn0, pcm_zsi0, blsp5_uart, mac12, blsp3_spi0, burn1, mac01,
->> +	qdss_cti_trig_out_b0, qdss_cti_trig_in_b0, qpic_pad4,
->> +	blsp4_uart0, blsp4_i2c0, blsp4_spi0, mac21,
->> +	qdss_cti_trig_out_b1, qpic_pad5, qdss_cti_trig_in_b1,
->> +	qpic_pad6, qpic_pad7, cxc0, mac13, qdss_cti_trig_in_a1,
->> +	qdss_cti_trig_out_a1, wci22, qdss_cti_trig_in_a0, qpic_pad1,
->> +	qdss_cti_trig_out_a0, qpic_pad2, qpic_pad3, qdss_traceclk_b,
->> +	qpic_pad0, qdss_tracectl_b, qpic_pad8, pcm_zsi1,
->> +	qdss_tracedata_b, led0, pwm04, led1, pwm14, led2, pwm24,
->> +	pwm00, blsp4_uart1, blsp4_i2c1, blsp4_spi1, wci23, mac11,
->> +	blsp3_spi2, pwm10, pwm20, pwm30, audio_txmclk, pwm02,
->> +	audio_txbclk, pwm12, audio_txfsync, pwm22, audio_txd, pwm32,
->> +	audio_rxmclk, pwm03, atest_char0, audio_rxbclk, pwm13,
->> +	atest_char1, audio_rxfsync, pwm23, atest_char2, audio_rxd,
->> +	pwm33, atest_char3, pcm_drx, mac10, mac00, pcm_dtx, pcm_fsync,
->> +	mac20, qdss_traceclk_a, pcm_pclk, qdss_tracectl_a, atest_char,
->> +	qdss_tracedata_a, blsp0_uart, blsp0_i2c, blsp0_spi,
->> +	blsp1_uart, blsp1_i2c, blsp1_spi, blsp2_uart, blsp2_i2c,
->> +	blsp2_spi, blsp3_uart, blsp3_i2c, blsp3_spi, pta2_0, wci21,
->> +	cxc1, blsp3_spi1, pta2_1, pta2_2, pcie0_clk, dbg_out,
->> +	cri_trng0, pcie0_rst, cri_trng1, pcie0_wake, cri_trng,
->> +	pcie1_clk, rx2, ldo_update, pcie1_rst, ldo_en, pcie1_wake,
->> +	gcc_plltest, sd_card, pwm01, pta1_1, pwm11, rx1, pta1_2,
->> +	gcc_tlmm, pta1_0, pwm21, prng_rosc, sd_write, pwm31, rx0,
->> +	tsens_max, mdc, mdio, NA
-> 
-> Please indent these to the same level as the description.
-
-Ok
-
->> +
-> [..]
->> +
->> +- output-high:
->> +	Usage: optional
->> +	Value type: <none>
->> +	Definition: The specified pins are configured in output mode, driven
->> +		    high.
->> +		    Not valid for sdc pins.
-> 
-> If you don't have any sdc pins, drop this.
-
-Ok
-
->> +
->> +- output-low:
->> +	Usage: optional
->> +	Value type: <none>
->> +	Definition: The specified pins are configured in output mode, driven
->> +		    low.
->> +		    Not valid for sdc pins.
-> 
-> If you don't have any sdc pins, drop this.
-
-Ok
-
->> +
->> +- drive-strength:
->> +	Usage: optional
->> +	Value type: <u32>
->> +	Definition: Selects the drive strength for the specified pins, in mA.
->> +		    Valid values are: 2, 4, 6, 8, 10, 12, 14 and 16
->> +
-> [..]
->> diff --git a/drivers/pinctrl/qcom/pinctrl-ipq8074.c b/drivers/pinctrl/qcom/pinctrl-ipq8074.c
-> [..]
->> +
->> +enum ipq8074_functions {
-> 
-> Please keep these sorted alphabetically.
-
-Ok
-
->> +	msm_mux_gpio,
->> +	msm_mux_qpic_pad,
->> +	msm_mux_blsp5_i2c,
->> +	msm_mux_blsp5_spi,
->> +	msm_mux_wci20,
-> 
-> What does "20" mean here?
-
-This is for Wireless Coex Interface. The same functionality can be muxed 
-on to different GPIOs. WCI2, is the 2nd edition of the WCI standard and 
-0, 1 are for the muxing to different GPIOs (alternate muxes).
-
->> +	msm_mux_blsp3_spi3,
->> +	msm_mux_burn0,
->> +	msm_mux_pcm_zsi0,
->> +	msm_mux_blsp5_uart,
->> +	msm_mux_mac12,
-> 
-> What does "12" mean here?
-
-The SoC has three MAC cores. Each core has two pins for the smart 
-antenna feature. macXY indicates the function select for MAC no. X and 
-smart antenna no. Y.
-
->> +	msm_mux_blsp3_spi0,
->> +	msm_mux_burn1,
->> +	msm_mux_mac01,
->> +	msm_mux_qdss_cti_trig_out_b0,
->> +	msm_mux_qdss_cti_trig_in_b0,
->> +	msm_mux_qpic_pad4,
-> 
-> What are qpic_pad and qpic_pad0 through qpic_pad8? Different functions,
-> alternative muxings...?
-
-This is for the NAND and LCD display. The pins listed are the 9 data pins.
-
->> +	msm_mux_blsp4_uart0,
->> +	msm_mux_blsp4_i2c0,
->> +	msm_mux_blsp4_spi0,
->> +	msm_mux_mac21,
->> +	msm_mux_qdss_cti_trig_out_b1,
->> +	msm_mux_qpic_pad5,
->> +	msm_mux_qdss_cti_trig_in_b1,
->> +	msm_mux_qpic_pad6,
->> +	msm_mux_qpic_pad7,
->> +	msm_mux_cxc0,
->> +	msm_mux_mac13,
->> +	msm_mux_qdss_cti_trig_in_a1,
->> +	msm_mux_qdss_cti_trig_out_a1,
->> +	msm_mux_wci22,
->> +	msm_mux_qdss_cti_trig_in_a0,
->> +	msm_mux_qpic_pad1,
->> +	msm_mux_qdss_cti_trig_out_a0,
->> +	msm_mux_qpic_pad2,
->> +	msm_mux_qpic_pad3,
->> +	msm_mux_qdss_traceclk_b,
->> +	msm_mux_qpic_pad0,
->> +	msm_mux_qdss_tracectl_b,
->> +	msm_mux_qpic_pad8,
->> +	msm_mux_pcm_zsi1,
->> +	msm_mux_qdss_tracedata_b,
->> +	msm_mux_led0,
->> +	msm_mux_pwm04,
-> 
-> What does "04" mean here?
-
-There are 4 Pulse Width Modulation channels, pwmXY is pwm channel X and 
-pin Y.
-> 
->> +	msm_mux_led1,
->> +	msm_mux_pwm14,
->> +	msm_mux_led2,
->> +	msm_mux_pwm24,
->> +	msm_mux_pwm00,
->> +	msm_mux_blsp4_uart1,
-> 
-> Are uart0 vs uart1 alternative muxes?
-
-These are two different uarts available at two independent pins.
-
-> [..]
->> +static const struct msm_function ipq8074_functions[] = {
-> 
-> Please keep these sorted alphabetically too.
-
-Ok
-
-Thanks
-Varada
-
-> Regards,
-> Bjorn
-> 
-
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora 
-Forum, a Linux Foundation Collaborative Project
+Yours,
+Linus Walleij
