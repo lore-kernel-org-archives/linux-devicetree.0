@@ -1,34 +1,54 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 04/10] pinctrl: sunxi: switch A20's
- pinctrl driver to use the A10 version
-Date: Thu, 11 May 2017 16:41:50 +0200
-Message-ID: <CACRpkdapcjoSaCpKev6tTuMVF5ZEQ61HkUMMAC3npJnnYWzNcA@mail.gmail.com>
-References: <20170504135006.16483-1-icenowy@aosc.io> <20170504135006.16483-5-icenowy@aosc.io>
-Reply-To: linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH 1/2] of: remove extraneous 'const' in typedef
+Date: Thu, 11 May 2017 09:44:50 -0500
+Message-ID: <CAL_JsqJxubj3Swe7qr7sU8xJbQJRcK17LYKpDhN4DsF-yg7cHg@mail.gmail.com>
+References: <20170511122458.3862716-1-arnd@arndb.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDE6RCFOWIARBMHQ2HEAKGQEJLFAVAA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20170504135006.16483-5-icenowy-h8G6r0blFSE@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170511122458.3862716-1-arnd@arndb.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Frank Rowand <frowand.list@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 4, 2017 at 3:50 PM, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org> wrote:
+On Thu, May 11, 2017 at 7:24 AM, Arnd Bergmann <arnd@arndb.de> wrote:
+> One change that was meant to address a sparse warning turned out
+> to cause hundreds of new gcc-7 warnings:
 
-> As we added A20 support to A10 pinctrl driver, now we can delete the
-> dedicated A20 pinctrl driver, and enable A10 driver for A20.
+I guess you are the only one on gcc-7.
+
+> include/linux/of_irq.h:11:13: error: type qualifiers ignored on function return type [-Werror=ignored-qualifiers]
 >
-> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+> After reverting the change, the gcc warnings are gone again, and I
+> can't reproduce the sparse warnings either.
 
-Looks all right to me but I'm waiting for Maxime's review on these
-patches.
+Humm, maybe different sparse versions? I'm on 0.5.0.
 
-Yours,
-Linus Walleij
+>
+> Fixes: 17a70355ea57 ("of: fix sparse warnings in fdt, irq, reserved mem, and resolver code")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+>  include/linux/of_irq.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/include/linux/of_irq.h b/include/linux/of_irq.h
+> index ec6b11deb773..1e0deb8e8494 100644
+> --- a/include/linux/of_irq.h
+> +++ b/include/linux/of_irq.h
+> @@ -8,7 +8,7 @@
+>  #include <linux/ioport.h>
+>  #include <linux/of.h>
+>
+> -typedef int const (*of_irq_init_cb_t)(struct device_node *, struct device_node *);
+> +typedef int (*of_irq_init_cb_t)(struct device_node *, struct device_node *);
+>
+>  /*
+>   * Workarounds only applied to 32bit powermac machines
+> --
+> 2.9.0
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
