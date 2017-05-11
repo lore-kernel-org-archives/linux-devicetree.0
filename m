@@ -1,57 +1,33 @@
-From: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5@gmail.com>
-Subject: [PATCH 3/5] phy: bcm-ns-usb3: enable MDIO in the platform specific
- code
-Date: Thu, 11 May 2017 15:29:23 +0200
-Message-ID: <20170511132925.14564-4-zajec5@gmail.com>
-References: <20170511132925.14564-1-zajec5@gmail.com>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH v9 5/6] i2c: designware: add SLAVE mode functions
+Date: Thu, 11 May 2017 16:32:24 +0300
+Message-ID: <1494509544.6967.6.camel@linux.intel.com>
+References: <cover.1493893241.git.lolivei@synopsys.com>
+         <b2accd73182d19927dfb0cd1a57cadf469ae5e9d.1493893241.git.lolivei@synopsys.com>
+         <1494262399.30052.69.camel@linux.intel.com>
+         <f2c268ba-2f08-e6a6-2af7-b9b9b8afc49a@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170511132925.14564-1-zajec5@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Jon Mason <jonmason@broadcom.com>, linux-kernel@vger.kernel.org, Yendapally Reddy Dhananjaya Reddy <yendapally.reddy@broadcom.com>, bcm-kernel-feedback-list@broadcom.com, =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-i2c-owner@vger.kernel.org>
+In-Reply-To: <f2c268ba-2f08-e6a6-2af7-b9b9b8afc49a@linux.intel.com>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Jarkko Nikula <jarkko.nikula@linux.intel.com>, Luis Oliveira <Luis.Oliveira@synopsys.com>, wsa@the-dreams.de, robh+dt@kernel.org, mark.rutland@arm.com, mika.westerberg@linux.intel.com, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Ramiro.Oliveira@synopsys.com, Joao.Pinto@synopsys.com, CARLOS.PALMINHA@synopsys.com
 List-Id: devicetree@vger.kernel.org
 
-RnJvbTogUmFmYcWCIE1pxYJlY2tpIDxyYWZhbEBtaWxlY2tpLnBsPgoKV2hlbiB3ZSBmaW5hbGx5
-IHN0YXJ0IHVzaW5nIE1ESU8gbGF5ZXIgdGhlbiBidXMgaW5pdGlhbGl6YXRpb24gd2lsbCBiZQpo
-YW5kbGVkIGluIGEgc2VwYXJhdGVkIGRyaXZlci4gSXQgbWVhbnMgb3VyIGNvZGUgaGFuZGxpbmcg
-dGhpcyBoYXMgdG8gYmUKdXNlZCBmb3IgdGhlIHBsYXRmb3JtIGRyaXZlciBvbmx5LgoKU2lnbmVk
-LW9mZi1ieTogUmFmYcWCIE1pxYJlY2tpIDxyYWZhbEBtaWxlY2tpLnBsPgotLS0KIGRyaXZlcnMv
-cGh5L3BoeS1iY20tbnMtdXNiMy5jIHwgMTggKysrKysrLS0tLS0tLS0tLS0tCiAxIGZpbGUgY2hh
-bmdlZCwgNiBpbnNlcnRpb25zKCspLCAxMiBkZWxldGlvbnMoLSkKCmRpZmYgLS1naXQgYS9kcml2
-ZXJzL3BoeS9waHktYmNtLW5zLXVzYjMuYyBiL2RyaXZlcnMvcGh5L3BoeS1iY20tbnMtdXNiMy5j
-CmluZGV4IDNkMGZlNTcyODAyOS4uMmM5YTBkNWY0M2Q4IDEwMDY0NAotLS0gYS9kcml2ZXJzL3Bo
-eS9waHktYmNtLW5zLXVzYjMuYworKysgYi9kcml2ZXJzL3BoeS9waHktYmNtLW5zLXVzYjMuYwpA
-QCAtODAsMTIgKzgwLDYgQEAgc3RhdGljIGludCBiY21fbnNfdXNiM19waHlfaW5pdF9uc19ieChz
-dHJ1Y3QgYmNtX25zX3VzYjMgKnVzYjMpCiB7CiAJaW50IGVycjsKIAotCS8qIEVuYWJsZSBNRElP
-LiBTZXR0aW5nIE1EQ0RJViBhcyAyNiAgKi8KLQl3cml0ZWwoMHgwMDAwMDA5YSwgdXNiMy0+Y2Ni
-X21paSArIEJDTUFfQ0NCX01JSV9NTkdfQ1RMKTsKLQotCS8qIFdhaXQgZm9yIE1ESU8/ICovCi0J
-dWRlbGF5KDIpOwotCiAJLyogVVNCMyBQTEwgQmxvY2sgKi8KIAllcnIgPSBiY21fbnNfdXNiM19t
-ZGlvX3BoeV93cml0ZSh1c2IzLCBCQ01fTlNfVVNCM19QSFlfQkFTRV9BRERSX1JFRywKIAkJCQkJ
-IEJDTV9OU19VU0IzX1BIWV9QTEwzMF9CTE9DSyk7CkBAIC0xMzQsMTIgKzEyOCw2IEBAIHN0YXRp
-YyBpbnQgYmNtX25zX3VzYjNfcGh5X2luaXRfbnNfYXgoc3RydWN0IGJjbV9uc191c2IzICp1c2Iz
-KQogewogCWludCBlcnI7CiAKLQkvKiBFbmFibGUgTURJTy4gU2V0dGluZyBNRENESVYgYXMgMjYg
-ICovCi0Jd3JpdGVsKDB4MDAwMDAwOWEsIHVzYjMtPmNjYl9taWkgKyBCQ01BX0NDQl9NSUlfTU5H
-X0NUTCk7Ci0KLQkvKiBXYWl0IGZvciBNRElPPyAqLwotCXVkZWxheSgyKTsKLQogCS8qIFBMTDMw
-IGJsb2NrICovCiAJZXJyID0gYmNtX25zX3VzYjNfbWRpb19waHlfd3JpdGUodXNiMywgQkNNX05T
-X1VTQjNfUEhZX0JBU0VfQUREUl9SRUcsCiAJCQkJCSBCQ01fTlNfVVNCM19QSFlfUExMMzBfQkxP
-Q0spOwpAQCAtMjc4LDYgKzI2NiwxMiBAQCBzdGF0aWMgaW50IGJjbV9uc191c2IzX3Byb2JlKHN0
-cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpCiAJCXJldHVybiBQVFJfRVJSKHVzYjMtPmNjYl9t
-aWkpOwogCX0KIAorCS8qIEVuYWJsZSBNRElPLiBTZXR0aW5nIE1EQ0RJViBhcyAyNiAgKi8KKwl3
-cml0ZWwoMHgwMDAwMDA5YSwgdXNiMy0+Y2NiX21paSArIEJDTUFfQ0NCX01JSV9NTkdfQ1RMKTsK
-KworCS8qIFdhaXQgZm9yIE1ESU8/ICovCisJdWRlbGF5KDIpOworCiAJdXNiMy0+cGh5X3dyaXRl
-ID0gYmNtX25zX3VzYjNfcGxhdGZvcm1fcGh5X3dyaXRlOwogCiAJdXNiMy0+cGh5ID0gZGV2bV9w
-aHlfY3JlYXRlKGRldiwgTlVMTCwgJm9wcyk7Ci0tIAoyLjExLjAKCgpfX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcg
-bGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmlu
-ZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+On Thu, 2017-05-11 at 16:20 +0300, Jarkko Nikula wrote:
+> On 05/08/2017 07:53 PM, Andy Shevchenko wrote:
+> > > +	} else if (reg == (DW_IC_COMP_TYPE_VALUE & 0x0000ffff)) {
+> > 
+> > GENMASK(15, 0)
+> > 
+> 
+> I don't think this increase readability compared to 0x0000ffff here.
+
+If it's a defined constant it might do, otherwise I'm fine with explicit
+value.
+
+-- 
+Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Intel Finland Oy
