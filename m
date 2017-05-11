@@ -1,140 +1,126 @@
 From: Christopher Bostic <cbostic@linux.vnet.ibm.com>
-Subject: [PATCH v7 05/23] drivers/fsi: Add slave & master read/write APIs
-Date: Thu, 11 May 2017 16:00:42 -0500
-Message-ID: <20170511210101.78409-6-cbostic@linux.vnet.ibm.com>
+Subject: [PATCH v7 08/23] drivers/fsi: Set slave SMODE to init communication
+Date: Thu, 11 May 2017 16:00:45 -0500
+Message-ID: <20170511210101.78409-9-cbostic@linux.vnet.ibm.com>
 References: <20170511210101.78409-1-cbostic@linux.vnet.ibm.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170511210101.78409-1-cbostic@linux.vnet.ibm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, rostedt@goodmis.org, mingo@redhat.com, gregkh@linuxfoundation.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: Jeremy Kerr <jk@ozlabs.org>, joel@jms.id.au, linux-kernel@vger.kernel.org, andrew@aj.id.au, alistair@popple.id.au, benh@kernel.crashing.org, Chris Bostic <cbostic@linux.vnet.ibm.com>
+Cc: Christopher Bostic <cbostic@linux.vnet.ibm.com>, joel@jms.id.au, linux-kernel@vger.kernel.org, andrew@aj.id.au, alistair@popple.id.au, benh@kernel.crashing.org, Jeremy Kerr <jk@ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Jeremy Kerr <jk@ozlabs.org>
+Set CFAM to appropriate ID so that the controlling master can manage
+link memory ranges.  Add slave engine register definitions.
 
-Introduce functions to perform reads/writes on the slave address space;
-these simply pass the request on the slave's master with the correct
-link and slave ID.
-
-We implement these on top of similar helpers for the master.
+Includes changes from Jeremy Kerr <jk@ozlabs.org>.
 
 Signed-off-by: Jeremy Kerr <jk@ozlabs.org>
+Signed-off-by: Christopher Bostic <cbostic@linux.vnet.ibm.com>
 Signed-off-by: Joel Stanley <joel@jms.id.au>
-Signed-off-by: Chris Bostic <cbostic@linux.vnet.ibm.com>
 ---
- drivers/fsi/fsi-core.c | 92 ++++++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 92 insertions(+)
+ drivers/fsi/fsi-core.c | 75 ++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 75 insertions(+)
 
 diff --git a/drivers/fsi/fsi-core.c b/drivers/fsi/fsi-core.c
-index e90d45d..1ec9790 100644
+index 9d9adc1..04795f2 100644
 --- a/drivers/fsi/fsi-core.c
 +++ b/drivers/fsi/fsi-core.c
-@@ -32,7 +32,64 @@ struct fsi_slave {
+@@ -22,6 +22,27 @@
  
- #define to_fsi_slave(d) container_of(d, struct fsi_slave, dev)
+ #include "fsi-master.h"
  
-+static int fsi_master_read(struct fsi_master *master, int link,
-+		uint8_t slave_id, uint32_t addr, void *val, size_t size);
-+static int fsi_master_write(struct fsi_master *master, int link,
-+		uint8_t slave_id, uint32_t addr, const void *val, size_t size);
++#define FSI_SLAVE_BASE			0x800
 +
- /* FSI slave support */
-+static int fsi_slave_calc_addr(struct fsi_slave *slave, uint32_t *addrp,
-+		uint8_t *idp)
-+{
-+	uint32_t addr = *addrp;
-+	uint8_t id = *idp;
++/*
++ * FSI slave engine control register offsets
++ */
++#define FSI_SMODE			0x0	/* R/W: Mode register */
 +
-+	if (addr > slave->size)
-+		return -EINVAL;
++/*
++ * SMODE fields
++ */
++#define FSI_SMODE_WSC		0x80000000	/* Warm start done */
++#define FSI_SMODE_ECRC		0x20000000	/* Hw CRC check */
++#define FSI_SMODE_SID_SHIFT	24		/* ID shift */
++#define FSI_SMODE_SID_MASK	3		/* ID Mask */
++#define FSI_SMODE_ED_SHIFT	20		/* Echo delay shift */
++#define FSI_SMODE_ED_MASK	0xf		/* Echo delay mask */
++#define FSI_SMODE_SD_SHIFT	16		/* Send delay shift */
++#define FSI_SMODE_SD_MASK	0xf		/* Send delay mask */
++#define FSI_SMODE_LBCRR_SHIFT	8		/* Clk ratio shift */
++#define FSI_SMODE_LBCRR_MASK	0xf		/* Clk ratio mask */
 +
-+	/* For 23 bit addressing, we encode the extra two bits in the slave
-+	 * id (and the slave's actual ID needs to be 0).
-+	 */
-+	if (addr > 0x1fffff) {
-+		if (slave->id != 0)
-+			return -EINVAL;
-+		id = (addr >> 21) & 0x3;
-+		addr &= 0x1fffff;
-+	}
-+
-+	*addrp = addr;
-+	*idp = id;
-+	return 0;
-+}
-+
-+static int fsi_slave_read(struct fsi_slave *slave, uint32_t addr,
-+			void *val, size_t size)
-+{
-+	uint8_t id = slave->id;
-+	int rc;
-+
-+	rc = fsi_slave_calc_addr(slave, &addr, &id);
-+	if (rc)
-+		return rc;
-+
-+	return fsi_master_read(slave->master, slave->link, id,
-+			addr, val, size);
-+}
-+
-+static int fsi_slave_write(struct fsi_slave *slave, uint32_t addr,
-+			const void *val, size_t size)
-+{
-+	uint8_t id = slave->id;
-+	int rc;
-+
-+	rc = fsi_slave_calc_addr(slave, &addr, &id);
-+	if (rc)
-+		return rc;
-+
-+	return fsi_master_write(slave->master, slave->link, id,
-+			addr, val, size);
-+}
-+
- static int fsi_slave_init(struct fsi_master *master, int link, uint8_t id)
- {
- 	/* todo: initialise slave device, perform engine scan */
-@@ -41,6 +98,41 @@ static int fsi_slave_init(struct fsi_master *master, int link, uint8_t id)
+ #define FSI_SLAVE_SIZE_23b		0x800000
+ 
+ static DEFINE_IDA(master_ida);
+@@ -94,6 +115,52 @@ static int fsi_slave_write(struct fsi_slave *slave, uint32_t addr,
+ 			addr, val, size);
  }
  
- /* FSI master support */
-+static int fsi_check_access(uint32_t addr, size_t size)
++/* Encode slave local bus echo delay */
++static inline uint32_t fsi_smode_echodly(int x)
 +{
-+	if (size != 1 && size != 2 && size != 4)
-+		return -EINVAL;
-+
-+	if ((addr & 0x3) != (size & 0x3))
-+		return -EINVAL;
-+
-+	return 0;
++	return (x & FSI_SMODE_ED_MASK) << FSI_SMODE_ED_SHIFT;
 +}
 +
-+static int fsi_master_read(struct fsi_master *master, int link,
-+		uint8_t slave_id, uint32_t addr, void *val, size_t size)
++/* Encode slave local bus send delay */
++static inline uint32_t fsi_smode_senddly(int x)
 +{
-+	int rc;
-+
-+	rc = fsi_check_access(addr, size);
-+	if (rc)
-+		return rc;
-+
-+	return master->read(master, link, slave_id, addr, val, size);
++	return (x & FSI_SMODE_SD_MASK) << FSI_SMODE_SD_SHIFT;
 +}
 +
-+static int fsi_master_write(struct fsi_master *master, int link,
-+		uint8_t slave_id, uint32_t addr, const void *val, size_t size)
++/* Encode slave local bus clock rate ratio */
++static inline uint32_t fsi_smode_lbcrr(int x)
 +{
-+	int rc;
-+
-+	rc = fsi_check_access(addr, size);
-+	if (rc)
-+		return rc;
-+
-+	return master->write(master, link, slave_id, addr, val, size);
++	return (x & FSI_SMODE_LBCRR_MASK) << FSI_SMODE_LBCRR_SHIFT;
 +}
 +
- static int fsi_master_scan(struct fsi_master *master)
++/* Encode slave ID */
++static inline uint32_t fsi_smode_sid(int x)
++{
++	return (x & FSI_SMODE_SID_MASK) << FSI_SMODE_SID_SHIFT;
++}
++
++static const uint32_t fsi_slave_smode(int id)
++{
++	return FSI_SMODE_WSC | FSI_SMODE_ECRC
++		| fsi_smode_sid(id)
++		| fsi_smode_echodly(0xf) | fsi_smode_senddly(0xf)
++		| fsi_smode_lbcrr(0x8);
++}
++
++static int fsi_slave_set_smode(struct fsi_master *master, int link, int id)
++{
++	uint32_t smode;
++
++	/* set our smode register with the slave ID field to 0; this enables
++	 * extended slave addressing
++	 */
++	smode = fsi_slave_smode(id);
++	smode = cpu_to_be32(smode);
++
++	return fsi_master_write(master, link, id, FSI_SLAVE_BASE + FSI_SMODE,
++			&smode, sizeof(smode));
++}
++
+ static void fsi_slave_release(struct device *dev)
  {
- 	int link;
+ 	struct fsi_slave *slave = to_fsi_slave(dev);
+@@ -132,6 +199,14 @@ static int fsi_slave_init(struct fsi_master *master, int link, uint8_t id)
+ 	dev_info(&master->dev, "fsi: found chip %08x at %02x:%02x:%02x\n",
+ 			chip_id, master->idx, link, id);
+ 
++	rc = fsi_slave_set_smode(master, link, id);
++	if (rc) {
++		dev_warn(&master->dev,
++				"can't set smode on slave:%02x:%02x %d\n",
++				link, id, rc);
++		return -ENODEV;
++	}
++
+ 	/* We can communicate with a slave; create the slave device and
+ 	 * register.
+ 	 */
 -- 
 1.8.2.2
