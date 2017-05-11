@@ -1,67 +1,58 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: using labels for stdout-path
-Date: Thu, 11 May 2017 10:49:15 -0500
-Message-ID: <CAL_JsqL66sWFovGhYGaA_sB_pnvTrjyaQ7MW3=5pkD5Qwb6y_w@mail.gmail.com>
-References: <20170511130545.co6pyyvlwuitbyne@pengutronix.de>
+From: Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
+Subject: Re: [PATCH 2/2] of: reserved_mem: fix 'const' annotation
+Date: Thu, 11 May 2017 17:59:01 +0200
+Message-ID: <CAExDi1Q4xAxYWEtTA25FOoGB9Y3=pi4CxmuUpMiAe_+OVUErGg@mail.gmail.com>
+References: <20170511122458.3862716-1-arnd@arndb.de> <20170511122458.3862716-2-arnd@arndb.de>
+ <CAL_Jsq+MHx8Vgj9g4-p3Xs57LNpZB-20opbq2xk9jz-K-57iSw@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170511130545.co6pyyvlwuitbyne-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAL_Jsq+MHx8Vgj9g4-p3Xs57LNpZB-20opbq2xk9jz-K-57iSw@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, Frank Rowand <frowand.list@gmail.com>, Marek Szyprowski <m.szyprowski@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-+dtc list because labels are purely dts syntax.
+On Thu, May 11, 2017 at 4:50 PM, Rob Herring <robh+dt@kernel.org> wrote:
+> On Thu, May 11, 2017 at 7:24 AM, Arnd Bergmann <arnd@arndb.de> wrote:
+>> It's the pointer that is supposed to be const, not the return
+>> type of the function.
+>>
+>> drivers/of/of_reserved_mem.c: In function '__reserved_mem_init_node':
+>> drivers/of/of_reserved_mem.c:200:7: error: type qualifiers ignored on function return type [-Werror=ignored-qualifiers]
+>>    int const (*initfn)(struct reserved_mem *rmem) = i->data;
+>>
+>> Fixes: 17a70355ea57 ("of: fix sparse warnings in fdt, irq, reserved mem, and resolver code")
+>> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+>> ---
+>>  drivers/of/of_reserved_mem.c | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/of/of_reserved_mem.c b/drivers/of/of_reserved_mem.c
+>> index 4dec07ea510f..3f03ec004829 100644
+>> --- a/drivers/of/of_reserved_mem.c
+>> +++ b/drivers/of/of_reserved_mem.c
+>> @@ -197,7 +197,7 @@ static int __init __reserved_mem_init_node(struct reserved_mem *rmem)
+>>         const struct of_device_id *i;
+>>
+>>         for (i = __reservedmem_of_table; i < &__rmem_of_table_sentinel; i++) {
+>> -               int const (*initfn)(struct reserved_mem *rmem) = i->data;
+>> +               int (* const initfn)(struct reserved_mem *rmem) = i->data;
+>
+> Why did you move the const here? That doesn't seem to help with sparse.
 
-On Thu, May 11, 2017 at 8:05 AM, Uwe Kleine-König
-<u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
-> Hello,
->
-> on an i.MX28 based machine I want to have the console on &duart with
-> 115200 Bd, 8 Bit, no parity.
->
-> The options for that are AFAICT:
->
->  - use an alias, like:
->
->         stdout-path = "serialX:115200n8";
->
->    the problem here is, that the duart doesn't have an alias. I guess I
->    shouldn't introduce a new one for my setup?
->
->  - use a label, like:
->
->         stdout-path = &duart, ":115200n8";
->
->    This would be the prettiest, but that doesn't work, because there is
->    a '\0' separating the path and the options.
+The original sparse warning was:
+    ../drivers/of/of_reserved_mem.c:200:50: warning: incorrect type in
+initializer (different modifiers)
+    ../drivers/of/of_reserved_mem.c:200:50:    expected int (
+*[usertype] initfn )( ... )
+    ../drivers/of/of_reserved_mem.c:200:50:    got void const *const data
+right?
+And we're talking about a function (pointer) type.
+Functions return a rvalue thus qualifiers are irrelevant for them,
+so having 'int const (*initfn)(...)' instead of 'int (*initfn)()' should
+solve nothing.
 
-You could make that work changing the kernel parsing, but that's
-probably not a good option if we ever want to support more than 1 out
-path.
+Same for the others patch in this series.
 
->  - use the full path, like:
->
->         stdout-path = "/apb@80000000/apbx@80040000/serial@80074000:115200n8";
->
->    This is ugly.
->
-> Do I miss something? Is that worth to introduce new syntax, maybe
->
->         stdout-path = &duart . ":115200n8";
->
-> or similar?
-
-Seems like we should make a comma be significant in splitting strings.
-I'm not sure if there's anything relying on "foo" "bar" and "foo",
-"bar" being the same. At least for numbers, a comma has no meaning, so
-it would complicate the parsing I'd imagine. Not really an area I'm
-familiar with.
-
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- Luc Van Oostenryck
