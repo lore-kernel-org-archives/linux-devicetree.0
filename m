@@ -1,74 +1,53 @@
 From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 10/10] ARM: dts: sun8i: Add board dts
- file for Banana Pi M2 Ultra
-Date: Thu, 11 May 2017 15:44:54 +0200
-Message-ID: <CACRpkdYg7jLymwi14BMJ3p6oeOwjt+PLzQFC1S8e01v9dtw3=w@mail.gmail.com>
-References: <20170504135006.16483-1-icenowy@aosc.io> <20170504135006.16483-11-icenowy@aosc.io>
-Reply-To: linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Subject: Re: [PATCH v5 10/10] arm: dts: genmai: Add ethernet pin group
+Date: Thu, 11 May 2017 15:48:55 +0200
+Message-ID: <CACRpkdb4-nDs2dPMgn5EBHqibeiKAcjKfiDyG3cu5y13nM3CCg@mail.gmail.com>
+References: <1493281194-5200-1-git-send-email-jacopo+renesas@jmondi.org>
+ <1493281194-5200-11-git-send-email-jacopo+renesas@jmondi.org>
+ <CAMuHMdVHh_40pup1G-1qohS+wEYCFEn6jvOTCnYideQWMxSVLw@mail.gmail.com>
+ <SG2PR06MB1165D46E83254B1757C790498A100@SG2PR06MB1165.apcprd06.prod.outlook.com>
+ <CAMuHMdU2CvipQQQ8-wxsiniHZJQmUMHv-t52Pw=sHD3YTd7Yug@mail.gmail.com>
+ <SG2PR06MB11650F50D93653212039A4348A130@SG2PR06MB1165.apcprd06.prod.outlook.com>
+ <CACRpkdbMpbr_eBnTYA+mBFN4YHUnn2VyuK8PGxz2-Cykv2j83w@mail.gmail.com> <SG2PR06MB1165D80A4642F5A2F27FB6AA8AEB0@SG2PR06MB1165.apcprd06.prod.outlook.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDE6RCFOWIARBWGV2HEAKGQEDMQQSMI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20170504135006.16483-11-icenowy-h8G6r0blFSE@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <SG2PR06MB1165D80A4642F5A2F27FB6AA8AEB0-ESzmfEwOt/xoAsOJh7vwSm0DtJ1/0DrXvxpqHgZTriW3zl9H0oFU5g@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Chris Brandt <Chris.Brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Cc: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 4, 2017 at 3:50 PM, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org> wrote:
-
-> From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+On Fri, May 5, 2017 at 2:45 PM, Chris Brandt <Chris.Brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org> wrote:
+> On Friday, May 05, 2017, Linus Walleij wrote:
+>> > This is the part of the whole "DT is for hardware description only" that
+>> doesn't really make sense to me.
+>>
+>> OK yeah we do hardware description AND configuration.
+>>
+>> And we never do interpreted languages.
+>>
+>> And then there is a bunch of grayzone things. For example we have a
+>> linux,input binding for connecting keypresses to certain Linux input codes.
+>> That is really grayzone, but very useful.
 >
-> The Banana Pi M2 Ultra is an SBC based on the Allwinner R40 SoC. The
-> form factor and position of various connectors, leds and buttons is
-> similar to the Banana Pi M1+, Banana Pi M3, and is exactly the same
-> as the latest Banana Pi M64.
+> Ah....
 >
-> It features:
+>         compatible = "linux,grayzone";
 >
->   - X-Powers AXP221s PMIC connected to i2c0
->   - 2 GB DDR3 DRAM
->   - 8 GB eMMC
->   - micro SD card slot
->   - DC power jack
->   - HDMI output
->   - MIPI DSI connector
->   - 2x USB 2.0 hosts
->   - 1x USB 2.0 OTG
->   - gigabit ethernet with Realtek RTL8211E transceiver
->   - WiFi/Bluetooth with AP6212 chip, with external antenna connector
->   - SATA and power connectors for native SATA support
->   - camera sensor connector
->   - consumer IR receiver
->   - audio out headphone jack
->   - onboard microphone
->   - red, green, and blue LEDs
->   - debug UART pins
->   - Li-Po battery connector
->   - Raspberry Pi B+ compatible GPIO header
->   - power, reset, and boot control buttons
->
-> This patch adds a dts file that enables debug UART and MMC support.
->
-> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-> Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+> Thanks for the reply. I'll stop ranting now.
+> Of course, I'll still probably screw it up again on a future patch somehow...
 
-Eric put a lot of time and effort into naming the GPIO lines on the
-other Pi board.
+For this driver I remarked in some other thread that we may
+end up with some
 
-So please follow the good example and name the GPIO lines on this board
-like in the other rpi boards, should be something like:
+"renesas,bidirectional"
 
-&pio {
-    gpio-line-names = "...", "...";
-};
-
-This is very helpful for users.
+or so. But yeah, it's kinda grayzone too.
 
 Yours,
 Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
