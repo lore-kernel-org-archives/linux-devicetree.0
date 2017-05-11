@@ -1,72 +1,59 @@
 From: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5@gmail.com>
-Subject: [PATCH 4/5] dt-bindings: phy: Modify Broadcom NS USB 3.0 PHY binding to use MDIO
-Date: Thu, 11 May 2017 15:29:24 +0200
-Message-ID: <20170511132925.14564-5-zajec5@gmail.com>
+Subject: [PATCH 1/5] phy: bcm-ns-usb3: always wait for idle after writing to
+ the PHY reg
+Date: Thu, 11 May 2017 15:29:21 +0200
+Message-ID: <20170511132925.14564-2-zajec5@gmail.com>
 References: <20170511132925.14564-1-zajec5@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <20170511132925.14564-1-zajec5@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: Yendapally Reddy Dhananjaya Reddy <yendapally.reddy@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Florian Fainelli <f.fainelli@gmail.com>, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>
+Cc: devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Jon Mason <jonmason@broadcom.com>, linux-kernel@vger.kernel.org, Yendapally Reddy Dhananjaya Reddy <yendapally.reddy@broadcom.com>, bcm-kernel-feedback-list@broadcom.com, =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Rafał Miłecki <rafal@milecki.pl>
-
-Thanks to work done by Broadcom explaining their USB 3.0 PHY details we
-know it's attached to the MDIO bus. Use this knowledge to update the
-binding: make it a subnode to the MDIO bus and rework way of specifying
-required registers.
-
-Signed-off-by: Rafał Miłecki <rafal@milecki.pl>
----
- .../devicetree/bindings/phy/bcm-ns-usb3-phy.txt    | 27 +++++++++++++++-------
- 1 file changed, 19 insertions(+), 8 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/phy/bcm-ns-usb3-phy.txt b/Documentation/devicetree/bindings/phy/bcm-ns-usb3-phy.txt
-index 09aeba94538d..32f057260351 100644
---- a/Documentation/devicetree/bindings/phy/bcm-ns-usb3-phy.txt
-+++ b/Documentation/devicetree/bindings/phy/bcm-ns-usb3-phy.txt
-@@ -3,9 +3,10 @@ Driver for Broadcom Northstar USB 3.0 PHY
- Required properties:
- 
- - compatible: one of: "brcm,ns-ax-usb3-phy", "brcm,ns-bx-usb3-phy".
--- reg: register mappings for DMP (Device Management Plugin) and ChipCommon B
--       MMI.
--- reg-names: "dmp" and "ccb-mii"
-+- reg: address of MDIO bus device
-+- usb3-dmp-syscon: phandle to syscon with DMP (Device Management Plugin)
-+		   registers
-+- #phy-cells: must be 0
- 
- Initialization of USB 3.0 PHY depends on Northstar version. There are currently
- three known series: Ax, Bx and Cx.
-@@ -15,9 +16,19 @@ Known B1: BCM4707 rev 6
- Known C0: BCM47094 rev 0
- 
- Example:
--	usb3-phy {
--		compatible = "brcm,ns-ax-usb3-phy";
--		reg = <0x18105000 0x1000>, <0x18003000 0x1000>;
--		reg-names = "dmp", "ccb-mii";
--		#phy-cells = <0>;
-+	mdio: mdio@0 {
-+		reg = <0x0>;
-+		#size-cells = <1>;
-+		#address-cells = <0>;
-+
-+		usb3-phy@10 {
-+			compatible = "brcm,ns-ax-usb3-phy";
-+			reg = <0x10>;
-+			usb3-dmp-syscon = <&usb3_dmp>;
-+			#phy-cells = <0>;
-+		};
-+	};
-+
-+	usb3_dmp: syscon@18105000 {
-+		reg = <0x18105000 0x1000>;
- 	};
--- 
-2.11.0
+RnJvbTogUmFmYcWCIE1pxYJlY2tpIDxyYWZhbEBtaWxlY2tpLnBsPgoKTW92ZSBNRElPIHNwZWNp
+ZmljIGNvZGUgdG8gdGhlIHdyaXRpbmcgaGVscGVyIGZ1bmN0aW9uLiBUaGlzIG1ha2VzIGluaXQK
+Y29kZSBhIGJpdCBtb3JlIGdlbmVyaWMgYW5kIGRvZXNuJ3QgcmVxdWlyZSBpdCB0byB0cmFjayB3
+aGF0IGhhcHBlbnMKYWZ0ZXIgZXZlcnkgd3JpdGUuCgpTaWduZWQtb2ZmLWJ5OiBSYWZhxYIgTWnF
+gmVja2kgPHJhZmFsQG1pbGVja2kucGw+Ci0tLQogZHJpdmVycy9waHkvcGh5LWJjbS1ucy11c2Iz
+LmMgfCAxMSArLS0tLS0tLS0tLQogMSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCspLCAxMCBk
+ZWxldGlvbnMoLSkKCmRpZmYgLS1naXQgYS9kcml2ZXJzL3BoeS9waHktYmNtLW5zLXVzYjMuYyBi
+L2RyaXZlcnMvcGh5L3BoeS1iY20tbnMtdXNiMy5jCmluZGV4IDIyYjVlNzA0N2ZhNi4uNWU4OTMy
+Njg4NmRjIDEwMDY0NAotLS0gYS9kcml2ZXJzL3BoeS9waHktYmNtLW5zLXVzYjMuYworKysgYi9k
+cml2ZXJzL3BoeS9waHktYmNtLW5zLXVzYjMuYwpAQCAtMTEyLDcgKzExMiw3IEBAIHN0YXRpYyBp
+bnQgYmNtX25zX3VzYjNfbWRpb19waHlfd3JpdGUoc3RydWN0IGJjbV9uc191c2IzICp1c2IzLCB1
+MTYgcmVnLAogCXRtcCB8PSB2YWx1ZTsKIAl3cml0ZWwodG1wLCB1c2IzLT5jY2JfbWlpICsgQkNN
+QV9DQ0JfTUlJX01OR19DTURfREFUQSk7CiAKLQlyZXR1cm4gMDsKKwlyZXR1cm4gYmNtX25zX3Vz
+YjNfbWlpX21uZ193YWl0X2lkbGUodXNiMyk7CiB9CiAKIHN0YXRpYyBpbnQgYmNtX25zX3VzYjNf
+cGh5X2luaXRfbnNfYngoc3RydWN0IGJjbV9uc191c2IzICp1c2IzKQpAQCAtMTQzLDkgKzE0Myw2
+IEBAIHN0YXRpYyBpbnQgYmNtX25zX3VzYjNfcGh5X2luaXRfbnNfYngoc3RydWN0IGJjbV9uc191
+c2IzICp1c2IzKQogCS8qIERlYWFzZXJ0aW5nIFBMTCBSZXNldCAqLwogCWJjbV9uc191c2IzX21k
+aW9fcGh5X3dyaXRlKHVzYjMsIEJDTV9OU19VU0IzX1BMTEFfQ09OVFJPTDEsIDB4ODAwMCk7CiAK
+LQkvKiBXYWl0aW5nIE1JSSBNZ3QgaW50ZXJmYWNlIGlkbGUgKi8KLQliY21fbnNfdXNiM19taWlf
+bW5nX3dhaXRfaWRsZSh1c2IzKTsKLQogCS8qIERlYXNzZXJ0aW5nIFVTQjMgc3lzdGVtIHJlc2V0
+ICovCiAJd3JpdGVsKDAsIHVzYjMtPmRtcCArIEJDTUFfUkVTRVRfQ1RMKTsKIApAQCAtMTY5LDkg
+KzE2Niw2IEBAIHN0YXRpYyBpbnQgYmNtX25zX3VzYjNfcGh5X2luaXRfbnNfYngoc3RydWN0IGJj
+bV9uc191c2IzICp1c2IzKQogCS8qIEVuYWJsaW5nIFNTQyAqLwogCWJjbV9uc191c2IzX21kaW9f
+cGh5X3dyaXRlKHVzYjMsIEJDTV9OU19VU0IzX1RYX1BNRF9DT05UUk9MMSwgMHgxMDAzKTsKIAot
+CS8qIFdhaXRpbmcgTUlJIE1ndCBpbnRlcmZhY2UgaWRsZSAqLwotCWJjbV9uc191c2IzX21paV9t
+bmdfd2FpdF9pZGxlKHVzYjMpOwotCiAJcmV0dXJuIDA7CiB9CiAKQEAgLTIwNSw5ICsxOTksNiBA
+QCBzdGF0aWMgaW50IGJjbV9uc191c2IzX3BoeV9pbml0X25zX2F4KHN0cnVjdCBiY21fbnNfdXNi
+MyAqdXNiMykKIAogCWJjbV9uc191c2IzX21kaW9fcGh5X3dyaXRlKHVzYjMsIEJDTV9OU19VU0Iz
+X1RYX1BNRF9DT05UUk9MMSwgMHgxMDAzKTsKIAotCS8qIFdhaXRpbmcgTUlJIE1ndCBpbnRlcmZh
+Y2UgaWRsZSAqLwotCWJjbV9uc191c2IzX21paV9tbmdfd2FpdF9pZGxlKHVzYjMpOwotCiAJLyog
+RGVhc3NlcnRpbmcgVVNCMyBzeXN0ZW0gcmVzZXQgKi8KIAl3cml0ZWwoMCwgdXNiMy0+ZG1wICsg
+QkNNQV9SRVNFVF9DVEwpOwogCi0tIAoyLjExLjAKCgpfX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51
+eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5v
+cmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
