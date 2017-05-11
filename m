@@ -1,74 +1,223 @@
 From: Christopher Bostic <cbostic@linux.vnet.ibm.com>
-Subject: [PATCH v7 18/23] drivers/fsi: Document FSI master sysfs files in ABI
-Date: Thu, 11 May 2017 16:00:55 -0500
-Message-ID: <20170511210101.78409-19-cbostic@linux.vnet.ibm.com>
+Subject: [PATCH v7 16/23] drivers/fsi: Add tracepoints for low-level operations
+Date: Thu, 11 May 2017 16:00:53 -0500
+Message-ID: <20170511210101.78409-17-cbostic@linux.vnet.ibm.com>
 References: <20170511210101.78409-1-cbostic@linux.vnet.ibm.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170511210101.78409-1-cbostic@linux.vnet.ibm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, rostedt@goodmis.org, mingo@redhat.com, gregkh@linuxfoundation.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: Chris Bostic <cbostic@linux.vnet.ibm.com>, joel@jms.id.au, linux-kernel@vger.kernel.org, andrew@aj.id.au, alistair@popple.id.au, benh@kernel.crashing.org
+Cc: Jeremy Kerr <jk@ozlabs.org>, joel@jms.id.au, linux-kernel@vger.kernel.org, andrew@aj.id.au, alistair@popple.id.au, benh@kernel.crashing.org, Christopher Bostic <cbostic@linux.vnet.ibm.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Chris Bostic <cbostic@linux.vnet.ibm.com>
+From: Jeremy Kerr <jk@ozlabs.org>
 
-Add info for sysfs scan file in Documentaiton ABI/testing
+Trace low level read and write FSI bus operations.
 
+Signed-off-by: Jeremy Kerr <jk@ozlabs.org>
+Signed-off-by: Joel Stanley <joel@jms.id.au>
 Signed-off-by: Christopher Bostic <cbostic@linux.vnet.ibm.com>
 ---
-v7 - Rename scan file to 'rescan'
-   - Add 'raw' file details
-   - Add 'term' file details
-   - Add 'break' file details
-   - Update kernel version for each file to 4.12
----
- Documentation/ABI/testing/sysfs-bus-fsi | 38 +++++++++++++++++++++++++++++++++
- 1 file changed, 38 insertions(+)
- create mode 100644 Documentation/ABI/testing/sysfs-bus-fsi
+ drivers/fsi/fsi-core.c     |  27 +++++++---
+ include/trace/events/fsi.h | 127 +++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 148 insertions(+), 6 deletions(-)
+ create mode 100644 include/trace/events/fsi.h
 
-diff --git a/Documentation/ABI/testing/sysfs-bus-fsi b/Documentation/ABI/testing/sysfs-bus-fsi
+diff --git a/drivers/fsi/fsi-core.c b/drivers/fsi/fsi-core.c
+index d319f67..bc73f13 100644
+--- a/drivers/fsi/fsi-core.c
++++ b/drivers/fsi/fsi-core.c
+@@ -23,6 +23,9 @@
+ 
+ #include "fsi-master.h"
+ 
++#define CREATE_TRACE_POINTS
++#include <trace/events/fsi.h>
++
+ #define FSI_SLAVE_CONF_NEXT_MASK	GENMASK(31, 31)
+ #define FSI_SLAVE_CONF_SLOTS_MASK	GENMASK(23, 16)
+ #define FSI_SLAVE_CONF_SLOTS_SHIFT	16
+@@ -538,11 +541,16 @@ static int fsi_master_read(struct fsi_master *master, int link,
+ {
+ 	int rc;
+ 
++	trace_fsi_master_read(master, link, slave_id, addr, size);
++
+ 	rc = fsi_check_access(addr, size);
+-	if (rc)
+-		return rc;
++	if (!rc)
++		rc = master->read(master, link, slave_id, addr, val, size);
++
++	trace_fsi_master_rw_result(master, link, slave_id, addr, size,
++			false, val, rc);
+ 
+-	return master->read(master, link, slave_id, addr, val, size);
++	return rc;
+ }
+ 
+ static int fsi_master_write(struct fsi_master *master, int link,
+@@ -550,11 +558,16 @@ static int fsi_master_write(struct fsi_master *master, int link,
+ {
+ 	int rc;
+ 
++	trace_fsi_master_write(master, link, slave_id, addr, size, val);
++
+ 	rc = fsi_check_access(addr, size);
+-	if (rc)
+-		return rc;
++	if (!rc)
++		rc = master->write(master, link, slave_id, addr, val, size);
+ 
+-	return master->write(master, link, slave_id, addr, val, size);
++	trace_fsi_master_rw_result(master, link, slave_id, addr, size,
++			true, val, rc);
++
++	return rc;
+ }
+ 
+ static int fsi_master_link_enable(struct fsi_master *master, int link)
+@@ -570,6 +583,8 @@ static int fsi_master_link_enable(struct fsi_master *master, int link)
+  */
+ static int fsi_master_break(struct fsi_master *master, int link)
+ {
++	trace_fsi_master_break(master, link);
++
+ 	if (master->send_break)
+ 		return master->send_break(master, link);
+ 
+diff --git a/include/trace/events/fsi.h b/include/trace/events/fsi.h
 new file mode 100644
-index 0000000..57c8063
+index 0000000..ac74a30
 --- /dev/null
-+++ b/Documentation/ABI/testing/sysfs-bus-fsi
-@@ -0,0 +1,38 @@
-+What:           /sys/bus/platform/devices/fsi-master/rescan
-+Date:		May 2017
-+KernelVersion:  4.12
-+Contact:        cbostic@linux.vnet.ibm.com
-+Description:
-+                Initiates a FSI master scan for all connected slave devices
-+		on its links.
++++ b/include/trace/events/fsi.h
+@@ -0,0 +1,127 @@
 +
-+What:           /sys/bus/platform/devices/fsi-master/break
-+Date:		May 2017
-+KernelVersion:  4.12
-+Contact:        cbostic@linux.vnet.ibm.com
-+Description:
-+		Sends an FSI BREAK command on a master's communication
-+		link to any connnected slaves.  A BREAK resets connected
-+		device's logic and preps it to receive further commands
-+		from the master.
++#undef TRACE_SYSTEM
++#define TRACE_SYSTEM fsi
 +
-+What:           /sys/bus/platform/devices/fsi-master/slave@00:00/term
-+Date:		May 2017
-+KernelVersion:  4.12
-+Contact:        cbostic@linux.vnet.ibm.com
-+Description:
-+		Sends an FSI terminate command from the master to its
-+		connected slave. A terminate resets the slave's state machines
-+		that control access to the internally connected engines.  In
-+		addition the slave freezes its internal error register for
-+		debugging purposes.  This command is also needed to abort any
-+		ongoing operation in case of an expired 'Master Time Out'
-+		timer.
++#if !defined(_TRACE_FSI_H) || defined(TRACE_HEADER_MULTI_READ)
++#define _TRACE_FSI_H
 +
-+What:           /sys/bus/platform/devices/fsi-master/slave@00:00/raw
-+Date:		May 2017
-+KernelVersion:  4.12
-+Contact:        cbostic@linux.vnet.ibm.com
-+Description:
-+		Provides a means of reading/writing a 32 bit value from/to a
-+		specified FSI bus address.
++#include <linux/tracepoint.h>
++
++TRACE_EVENT(fsi_master_read,
++	TP_PROTO(const struct fsi_master *master, int link, int id,
++			uint32_t addr, size_t size),
++	TP_ARGS(master, link, id, addr, size),
++	TP_STRUCT__entry(
++		__field(int,	master_idx)
++		__field(int,	link)
++		__field(int,	id)
++		__field(__u32,	addr)
++		__field(size_t,	size)
++	),
++	TP_fast_assign(
++		__entry->master_idx = master->idx;
++		__entry->link = link;
++		__entry->id = id;
++		__entry->addr = addr;
++		__entry->size = size;
++	),
++	TP_printk("fsi%d:%02d:%02d %08x[%zd]",
++		__entry->master_idx,
++		__entry->link,
++		__entry->id,
++		__entry->addr,
++		__entry->size
++	)
++);
++
++TRACE_EVENT(fsi_master_write,
++	TP_PROTO(const struct fsi_master *master, int link, int id,
++			uint32_t addr, size_t size, const void *data),
++	TP_ARGS(master, link, id, addr, size, data),
++	TP_STRUCT__entry(
++		__field(int,	master_idx)
++		__field(int,	link)
++		__field(int,	id)
++		__field(__u32,	addr)
++		__field(size_t,	size)
++		__field(__u32,	data)
++	),
++	TP_fast_assign(
++		__entry->master_idx = master->idx;
++		__entry->link = link;
++		__entry->id = id;
++		__entry->addr = addr;
++		__entry->size = size;
++		__entry->data = 0;
++		memcpy(&__entry->data, data, size);
++	),
++	TP_printk("fsi%d:%02d:%02d %08x[%zd] <= {%*ph}",
++		__entry->master_idx,
++		__entry->link,
++		__entry->id,
++		__entry->addr,
++		__entry->size,
++		__entry->size, &__entry->data
++	)
++);
++
++TRACE_EVENT(fsi_master_rw_result,
++	TP_PROTO(const struct fsi_master *master, int link, int id,
++			uint32_t addr, size_t size,
++			bool write, const void *data, int ret),
++	TP_ARGS(master, link, id, addr, size, write, data, ret),
++	TP_STRUCT__entry(
++		__field(int,	master_idx)
++		__field(int,	link)
++		__field(int,	id)
++		__field(__u32,	addr)
++		__field(size_t,	size)
++		__field(bool,	write)
++		__field(__u32,	data)
++		__field(int,	ret)
++	),
++	TP_fast_assign(
++		__entry->master_idx = master->idx;
++		__entry->link = link;
++		__entry->id = id;
++		__entry->addr = addr;
++		__entry->size = size;
++		__entry->write = write;
++		__entry->data = 0;
++		__entry->ret = ret;
++		if (__entry->write || !__entry->ret)
++			memcpy(&__entry->data, data, size);
++	),
++	TP_printk("fsi%d:%02d:%02d %08x[%zd] %s {%*ph} ret %d",
++		__entry->master_idx,
++		__entry->link,
++		__entry->id,
++		__entry->addr,
++		__entry->size,
++		__entry->write ? "<=" : "=>",
++		__entry->size, &__entry->data,
++		__entry->ret
++	)
++);
++
++TRACE_EVENT(fsi_master_break,
++	TP_PROTO(const struct fsi_master *master, int link),
++	TP_ARGS(master, link),
++	TP_STRUCT__entry(
++		__field(int,	master_idx)
++		__field(int,	link)
++	),
++	TP_fast_assign(
++		__entry->master_idx = master->idx;
++		__entry->link = link;
++	),
++	TP_printk("fsi%d:%d",
++		__entry->master_idx,
++		__entry->link
++	)
++);
++
++
++#endif /* _TRACE_FSI_H */
++
++#include <trace/define_trace.h>
 -- 
 1.8.2.2
