@@ -1,147 +1,137 @@
-From: Ryder Lee <ryder.lee@mediatek.com>
-Subject: Re: [PATCH v3 2/2] dt-bindings: pcie: Add documentation for
- Mediatek PCIe
-Date: Thu, 11 May 2017 10:44:10 +0800
-Message-ID: <1494470650.20742.36.camel@mtkswgap22>
-References: <1494382020-26790-1-git-send-email-ryder.lee@mediatek.com>
-         <1494382020-26790-3-git-send-email-ryder.lee@mediatek.com>
-         <CAK8P3a193RxchvFAMWeZiP0sc0bd+VGg=_aVvipSgcbDpHXojg@mail.gmail.com>
-         <1494408707.31307.32.camel@mtkswgap22>
-         <CAK8P3a1AUsUTNDnN+_9251sxC7R4vvkQRr37dvAke6ooCJ_oxg@mail.gmail.com>
+From: "Ong, Hean Loong" <hean.loong.ong-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCHv2 0/3] Intel FPGA VIP Frame Buffer II DRM Driver
+Date: Thu, 11 May 2017 02:50:41 +0000
+Message-ID: <1494471040.2062.16.camel@intel.com>
+References: <1493086006-4392-1-git-send-email-hean.loong.ong@intel.com>
+         <87shklznuo.fsf@eliezer.anholt.net> <1493861983.2182.11.camel@intel.com>
+         <87lgqcsg18.fsf@eliezer.anholt.net> <1494209010.2533.4.camel@intel.com>
+         <87efvz2v4m.fsf@eliezer.anholt.net> <1494300270.5383.29.camel@intel.com>
+         <8760hanfua.fsf@eliezer.anholt.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <CAK8P3a1AUsUTNDnN+_9251sxC7R4vvkQRr37dvAke6ooCJ_oxg@mail.gmail.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, linux-pci <linux-pci@vger.kernel.org>, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Red Hung <red.hung@mediatek.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <8760hanfua.fsf-omZaPlIz5HhaEpDpdNBo/KxOck334EZe@public.gmane.org>
+Content-Language: en-US
+Content-ID: <FEB90A43F2FBBF4BB1E9D34254F10855-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org" <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, "dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "Vetter, Daniel" <daniel.vetter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: "dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org" <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, "Loh, Tien Hock" <tien.hock.loh-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2017-05-10 at 12:01 +0200, Arnd Bergmann wrote:
-> On Wed, May 10, 2017 at 11:31 AM, Ryder Lee <ryder.lee@mediatek.com> wrote:
-> > On Wed, 2017-05-10 at 10:08 +0200, Arnd Bergmann wrote:
-> >> On Wed, May 10, 2017 at 4:07 AM, Ryder Lee <ryder.lee@mediatek.com> wrote:
-> >>
-> >> > +- ranges:
-> >> > +  - The first three entries are expected to translate the addresses for the root
-> >> > +    port registers, which are referenced by the assigned-addresses property of
-> >> > +    the root port nodes (see below).
-> >>
-> >> I don't understand this part. Why do you need a static translation for these?
-> >> Shouldn't they just be listed in the 'reg' property of the parent node now that
-> >> you have the clk/reset/phy properties in the parent as well?
-> >
-> > At first, I did like that. But I noticed that someone suggest it's
-> > better to use 'assigned-addresses' to handle per-port registers, the
-> > same path as tegra and marvell did, in other platform discussion thread.
-> > So I just put shared register in root node. It could be rolled back if
-> > you feel this is inappropriate.
-> 
-> The marvell case is not a good example for your case: their top-level
-> device is made up by the OS to help with the shared resource allocation,
-> while in your case the bus bridge actually exists in hardware.
-> 
-> I'm not too familiar with the Tegra case, and haven't looked at that here,
-> but it could be an artifact of how for a while we used to list the config
-> space access in the top-level "ranges" instead of the "reg" property.
-> 
-> I'd vote for moving it back, for consistency with the other port specific
-> properties that are now in the root node. Once you do that, the port
-> nodes can be removed completely, which is what I was aiming for with
-> the comments on the previous version.
- 
-I'll move it back.
-
-> >> > +Required properties:
-> >> > +- device_type: Must be "pci"
-> >> > +- assigned-addresses: Address and size of the port configuration registers
-> >> > +- reg: Only the first four bytes are used to refer to the correct bus number
-> >> > +  and device number.
-> >> > +- #address-cells: Must be 3
-> >> > +- #size-cells: Must be 2
-> >> > +- #interrupt-cells: Must be 1
-> >> > +- interrupt-map-mask and interrupt-map: Standard PCI IRQ mapping properties
-> >> > +  Please refer to the standard PCI bus binding document for a more detailed
-> >> > +  explanation.
-> >>
-> >> Child nodes do not normally have interrupt-map properties. Isn't this
-> >> already covered by the interrupt-map in the parent?
-> >>
-> >
-> > I have one Intel 4 port ethernet card(0000:00:01) and MTK WLAN card
-> > (0000:00:02), probe message looks good to me.
-> >
-> > pci 0000:00:01.0: fixup irq: got 224
-> > pci 0000:00:01.0: assigning IRQ 224
-> > pci 0000:00:02.0: fixup irq: got 225
-> > pci 0000:00:02.0: assigning IRQ 225
-> >
-> > pci 0000:01:00.0: fixup irq: got 224
-> > pci 0000:01:00.0: assigning IRQ 224
-> > pci 0000:01:00.1: fixup irq: got 224
-> > pci 0000:01:00.1: assigning IRQ 224
-> > pci 0000:01:00.2: fixup irq: got 224
-> > pci 0000:01:00.2: assigning IRQ 224
-> > pci 0000:01:00.3: fixup irq: got 224
-> > pci 0000:01:00.3: assigning IRQ 224
-> >
-> > pci 0000:02:00.0: fixup irq: got 225
-> > pci 0000:02:00.0: assigning IRQ 225
-> >
-> >
-> > But child nodes without interrupt-map properties:
-> > It seems incorrect.
-> >
-> > pci 0000:00:01.0: fixup irq: got 224
-> > pci 0000:00:01.0: assigning IRQ 224
-> > pci 0000:00:02.0: fixup irq: got 225
-> > pci 0000:00:02.0: assigning IRQ 225
-> >
-> > pci 0000:01:00.0: fixup irq: got 223
-> > pci 0000:01:00.0: assigning IRQ 223
-> 
-> Not entirely sure what happens here, but I guess the problem
-> is that the 'reg' portion of the parent interrupt-map refers to
-> the port devices, not the devices attached the devices behind
-> them.
-
-I agree with you. That's why I need additional interrupt-map properties
-to resolve IRQ correctly for the devices behind root ports.
-
-Not sure whether other platforms have similar case like me here.
-
-> On a related note, I see that you still list
-> 
-> > +- interrupts: Three interrupt outputs of the controller. Must contain an
-> > +  entry for each entry in the interrupt-names property.
-> > +- interrupt-names: Must include the following names
-> > +  - "pcie-int0"
-> > +  - "pcie-int1"
-> > +  - "pcie-int2"
-> 
-> This seems to be an artifact from the older version and should be
-> removed as the driver correctly ignores the properties now.
-
-Actually, everything works fine without these properties however when it
-loads we see a few weird error message:
-
-pcieport 0000:00:01.0: Signaling PME with IRQ 232
-pcieport 0000:00:02.0: enabling device (0140 -> 0142)
-pcieport 0000:00:02.0: enabling bus mastering
-irq 232: nobody cared (try booting with the "irqpoll" option)
-...
-[<c03f6be4>] (pcie_pme_probe) from [<c03f47b8>] (pcie_port_probe_service
-+0x44/0x6c)
-(pcie_port_probe_service) from [<c0454cf8>] (driver_probe_device
-+0x280/0x470)
-...
-(pcie_port_device_register) from [<c03f51a0>] (pcie_portdrv_probe
-+0x3c/0xb4)
-(pcie_portdrv_probe) from [<c03e7acc>] (pci_device_probe+0x98/0xfc)
-(pci_device_probe) from [<c0454cf8>] (driver_probe_device+0x280/0x470)
-handlers:
-[<c03f68b0>] pcie_pme_irq
-Disabling IRQ #233
-
-I haven't dig it out yet, but just keep them here to solve that.
+T24gVHVlLCAyMDE3LTA1LTA5IGF0IDA5OjQwIC0wNzAwLCBFcmljIEFuaG9sdCB3cm90ZToNCj4g
+Ik9uZywgSGVhbiBMb29uZyIgPGhlYW4ubG9vbmcub25nQGludGVsLmNvbT4gd3JpdGVzOg0KPiAN
+Cj4gPiANCj4gPiBPbiBNb24sIDIwMTctMDUtMDggYXQgMDk6MDMgLTA3MDAsIEVyaWMgQW5ob2x0
+IHdyb3RlOg0KPiA+ID4gDQo+ID4gPiAiT25nLCBIZWFuIExvb25nIiA8aGVhbi5sb29uZy5vbmdA
+aW50ZWwuY29tPiB3cml0ZXM6DQo+ID4gPiANCj4gPiA+ID4gDQo+ID4gPiA+IA0KPiA+ID4gPiBP
+biBUaHUsIDIwMTctMDUtMDQgYXQgMTA6MTEgLTA3MDAsIEVyaWMgQW5ob2x0IHdyb3RlOg0KPiA+
+ID4gPiA+IA0KPiA+ID4gPiA+IA0KPiA+ID4gPiA+ICJPbmcsIEhlYW4gTG9vbmciIDxoZWFuLmxv
+b25nLm9uZ0BpbnRlbC5jb20+IHdyaXRlczoNCj4gPiA+ID4gPiANCj4gPiA+ID4gPiA+IA0KPiA+
+ID4gPiA+ID4gDQo+ID4gPiA+ID4gPiANCj4gPiA+ID4gPiA+IE9uIFdlZCwgMjAxNy0wNS0wMyBh
+dCAxMzoyOCAtMDcwMCwgRXJpYyBBbmhvbHQgd3JvdGU6DQo+ID4gPiA+ID4gPiA+IA0KPiA+ID4g
+PiA+ID4gPiANCj4gPiA+ID4gPiA+ID4gDQo+ID4gPiA+ID4gPiA+IGhlYW4ubG9vbmcub25nQGlu
+dGVsLmNvbSB3cml0ZXM6DQo+ID4gPiA+ID4gPiA+IA0KPiA+ID4gPiA+ID4gPiA+IA0KPiA+ID4g
+PiA+ID4gPiA+IA0KPiA+ID4gPiA+ID4gPiA+IA0KPiA+ID4gPiA+ID4gPiA+IA0KPiA+ID4gPiA+
+ID4gPiA+IEZyb206IE9uZyBIZWFuIExvb25nIDxoZWFuLmxvb25nLm9uZ0BpbnRlbC5jb20+DQo+
+ID4gPiA+ID4gPiA+ID4gDQo+ID4gPiA+ID4gPiA+ID4gSGksDQo+ID4gPiA+ID4gPiA+ID4gDQo+
+ID4gPiA+ID4gPiA+ID4gVGhlIG5ldyBJbnRlbCBBcnJpYTEwIFNPQyBGUEdBIGRldmtpdCBoYXMg
+YSBEaXNwbGF5DQo+ID4gPiA+ID4gPiA+ID4gUG9ydCBJUA0KPiA+ID4gPiA+ID4gPiA+IGNvbXBv
+bmVudMKgDQo+ID4gPiA+ID4gPiA+ID4gd2hpY2ggcmVxdWlyZXMgYSBuZXcgZHJpdmVyLiBUaGlz
+IGlzIGEgdmlydHVhbCBkcml2ZXINCj4gPiA+ID4gPiA+ID4gPiBpbg0KPiA+ID4gPiA+ID4gPiA+
+IHdoaWNoDQo+ID4gPiA+ID4gPiA+ID4gdGhlDQo+ID4gPiA+ID4gPiA+ID4gRkdQQSBoYXJkd2Fy
+ZSB3b3VsZCBlbmFibGUgdGhlIERpc3BsYXkgUG9ydCBiYXNlZCBvbg0KPiA+ID4gPiA+ID4gPiA+
+IHRoZQ0KPiA+ID4gPiA+ID4gPiA+IGluZm9ybWF0aW9uDQo+ID4gPiA+ID4gPiA+ID4gYW5kIGRh
+dGEgcHJvdmlkZWQgZnJvbSB0aGUgRFJNIGZyYW1lIGJ1ZmZlciBmcm9tIHRoZQ0KPiA+ID4gPiA+
+ID4gPiA+IE9TLg0KPiA+ID4gPiA+ID4gPiA+IEJhc2ljYWxseQ0KPiA+ID4gPiA+ID4gPiA+IGFs
+bA0KPiA+ID4gPiA+ID4gPiA+IGFsbCBpbmZvcm1hdGlvbiB3aXRoIHJlYWdyZHMgdG8gcmVzb2x1
+dGlvbiBhbmQgYml0cyBwZXINCj4gPiA+ID4gPiA+ID4gPiBwaXhlbA0KPiA+ID4gPiA+ID4gPiA+
+IGFyZQ0KPiA+ID4gPiA+ID4gPiA+IHByZS1jb25maWd1cmVkIG9uIHRoZSBGUEdBIGRlc2lnbiBh
+bmQgdGhlc2UgaW5mb3JtYXRpb24NCj4gPiA+ID4gPiA+ID4gPiBhcmUNCj4gPiA+ID4gPiA+ID4g
+PiBmZWQNCj4gPiA+ID4gPiA+ID4gPiB0bw0KPiA+ID4gPiA+ID4gPiA+IHRoZSBkcml2ZXIgdmlh
+IHRoZSBkZXZpY2UgdHJlZSBpbmZvcm1hdGlvbiBhcyBwYXJ0IG9mDQo+ID4gPiA+ID4gPiA+ID4g
+dGhlDQo+ID4gPiA+ID4gPiA+ID4gaGFyZHdhcmXCoA0KPiA+ID4gPiA+ID4gPiA+IGluZm9ybWF0
+aW9uLg0KPiA+ID4gPiA+ID4gPiBJIHN0YXJ0ZWQgcmV2aWV3aW5nIHRoZSBjb2RlLCBidXQgSSB3
+YW50IHRvIG1ha2Ugc3VyZSBJDQo+ID4gPiA+ID4gPiA+IHVuZGVyc3RhbmQNCj4gPiA+ID4gPiA+
+ID4gd2hhdCdzIGdvaW5nIG9uOg0KPiA+ID4gPiA+ID4gPiANCj4gPiA+ID4gPiA+ID4gVGhpcyBJ
+UCBjb3JlIGlzbid0IGRpc3BsYXlpbmcgY29udGVudHMgZnJvbSBzeXN0ZW0gbWVtb3J5DQo+ID4g
+PiA+ID4gPiA+IG9uDQo+ID4gPiA+ID4gPiA+IHNvbWUNCj4gPiA+ID4gPiA+ID4gc29ydA0KPiA+
+ID4gPiA+ID4gPiBvZiBhY3R1YWwgcGh5c2ljYWwgZGlzcGxheSwgcmlnaHQ/wqDCoEl0J3MgYSBj
+b3JlIHRoYXQNCj4gPiA+ID4gPiA+ID4gdGFrZXMNCj4gPiA+ID4gPiA+ID4gc29tZQ0KPiA+ID4g
+PiA+ID4gPiBpbnB1dA0KPiA+ID4gPiA+ID4gPiB2aWRlbyBzdHJlYW0gKG5vdCBkZXNjcmliZWQg
+aW4gdGhlIERUIG9yIGluIHRoaXMgZHJpdmVyKQ0KPiA+ID4gPiA+ID4gPiBhbmQNCj4gPiA+ID4g
+PiA+ID4gc3RvcmVzDQo+ID4gPiA+ID4gPiA+IGl0DQo+ID4gPiA+ID4gPiA+IHRvIG1lbW9yeT8N
+Cj4gPiA+ID4gPiA+IElmIHRoZSBJUCBDb3JlIHlvdSBhcmUgcmVmZXJyaW5nIHRvIGlzIHNvbWUg
+Zm9ybSBvZiBHUFUNCj4gPiA+ID4gPiA+IHRoZW4gaW4NCj4gPiA+ID4gPiA+IHRoaXMNCj4gPiA+
+ID4gPiA+IGNhc2Ugd2UgYXJlIHVzaW5nIHRoZSBJbnRlbCBGUEdBIERpc3BsYXkgUG9ydCBGcmFt
+ZWJ1ZmZlcg0KPiA+ID4gPiA+ID4gSVAuDQo+ID4gPiA+ID4gPiBJdA0KPiA+ID4gPiA+ID4gZG9l
+cw0KPiA+ID4gPiA+ID4gZGlzcGxheSBjb250ZW50cyBzdHJlYW1lZCBmcm9tIHRoZSBBUk0vTGlu
+dXggc3lzdGVtIHRvIHRoZQ0KPiA+ID4gPiA+ID4gRGlzcGxheQ0KPiA+ID4gPiA+ID4gUG9ydA0K
+PiA+ID4gPiA+ID4gb2YgdGhlIHBoeXNpY2FsIE1vbml0b3IuDQo+ID4gPiA+ID4gPiANCj4gPiA+
+ID4gPiA+IEJlbG93IGEgc2ltcGxlIGlsbHVzdHJhdGlvbiBvZiB0aGUgc3lzdGVtOg0KPiA+ID4g
+PiA+ID4gDQo+ID4gPiA+ID4gPiBBUk0vTGludXggLS1ETUEtLT5JbnRlbCBGUEdBIERpc3BsYXkg
+UG9ydCBGcmFtZWJ1ZmZlciBJUA0KPiA+ID4gPiA+ID4gCQkJCXwNCj4gPiA+ID4gPiA+IAkJCQl8
+DQo+ID4gPiA+ID4gPiAJCQlQaHlzaWNhbCBDb25uZWN0aW9uDQo+ID4gPiA+ID4gPiAJCQlEaXNw
+bGF5IFBvcnQNCj4gPiA+ID4gPiBUaGUgIkRNQSIgaW4gdGhpcyBkaWFncmFtIGlzIHRoZSBmcmFt
+ZSByZWFkZXIgSVAsIHJpZ2h0P8KgwqBUaGUNCj4gPiA+ID4gPiBmcmFtZQ0KPiA+ID4gPiA+IHJl
+YWRlciwgYXMgZGVzY3JpYmVkIGluIHRoZSBzcGVjLCBzb3VuZHMgYXBwcm94aW1hdGVseSBsaWtl
+IGENCj4gPiA+ID4gPiBEUk0NCj4gPiA+ID4gPiBwbGFuZSwNCj4gPiA+ID4gPiBzbyBpZiB5b3Ug
+aGF2ZSB0aGF0IGluIHlvdXIgc3lzdGVtIHRoZW4gdGhhdCBuZWVkcyB0byBiZSBwYXJ0DQo+ID4g
+PiA+ID4gb2YNCj4gPiA+ID4gPiB0aGlzDQo+ID4gPiA+ID4gRFJNIGRyaXZlciAob3RoZXJ3aXNl
+IHlvdSB3b24ndCBiZSBwdXR0aW5nIHRoZSByaWdodCB0aGluZ3MNCj4gPiA+ID4gPiBvbg0KPiA+
+ID4gPiA+IHRoZQ0KPiA+ID4gPiA+IHNjcmVlbiEpLg0KPiA+ID4gPiBXb3VsZCB0aGUgZHJtX3Np
+bXBsZV9kaXNwbGF5X3BpcGVfaW5pdMKgYmUgYWJsZSB0byBoYW5kbGUgdGhpcyA/DQo+ID4gPiA+
+IEl0DQo+ID4gPiA+IHNlZW1zIHRvIGJlIGRpc3BsYXlpbmcgdGhlIHByb3BlciBpbWFnZXMgb24g
+c2NyZWVuLCBiYXNlZCBvbiBteQ0KPiA+ID4gPiBjdXJyZW50DQo+ID4gPiA+IGNoYW5nZXMuIFRo
+ZXJlIHdlcmUgcmVjb21tZW5kYXRpb25zIHRvIHVzZSB0aGUNCj4gPiA+ID4gZHJtX3NpbXBsZV9k
+aXNwbGF5X3BpcGVfaW5pdCBpbnN0ZWFkIG9mIGNyZWF0aW5nIHRoZSBDUlRDIGFuZA0KPiA+ID4g
+PiBwbGFuZXMNCj4gPiA+ID4gbXlzZWxmDQo+ID4gPiBUaGUgZG9jcyBJJ3ZlIHJlYWQgZm9yIHRo
+ZSBGcmFtZSBCdWZmZXIgSVAgZG9uJ3QgZml0IGludG8gYW55DQo+ID4gPiBjdXJyZW50DQo+ID4g
+PiBEUk0gY29tcG9uZW50LCBzaW5jZSBpdCdzIHdoYXQgd2UncmUgY3VycmVudGx5IGNhbGxpbmcg
+YQ0KPiA+ID4gIndyaXRlYmFjaw0KPiA+ID4gY29ubmVjdG9yIi4NCj4gPiA+IA0KPiA+IFdoaWxl
+IHJ1bm5pbmcgbXkgb3duIHRlc3QgKHNpbmNlIHRoZSBpbnRlbC1ncHUtdG9vbHMgZG9lc24ndCBz
+ZWVtcw0KPiA+IGFwcGxpY2FibGUuKSBUaGUgZHJtX3NpbXBsZV9kaXNwbGF5X3BpcGVfaW5pdCBz
+ZWVtcyB0byBiZSBzaW1wbGUNCj4gPiBlbm91Z2gNCj4gPiBmb3IgZGlzcGxheWluZyBhIG1hdGNo
+Ym94IGNvbnNvbGUuIFRoZSB1c2UgY2FzZSBmb3IgdGhpcyBkcml2ZXIgaXMNCj4gPiBvbmx5DQo+
+ID4gcGFydCBvZiB0aGUgZW5hYmxlbWVubnQgb2YgdGhlIHJlZmVyZW5jZSBkZXNpZ24gYm9hcmQg
+c28gdGhhdCB1c2Vycw0KPiA+IG9mDQo+ID4gdGhlIEFycmlhMTAgZGV2a2l0IGNhbiB1c2UgdGhp
+cyBhcyBiYXNlIGZvciB0aGVpciBvd24gZGVzaWducy4NCj4gPiANCj4gPiA+IA0KPiA+ID4gSSBk
+b24ndCB1bmRlcnN0YW5kIHlvdXIgc3lzdGVtIGVub3VnaCB0byBhbnN3ZXIuwqDCoFlvdSBkaWRu
+J3QNCj4gPiA+IGFuc3dlcg0KPiA+ID4gaWYNCj4gPiA+IHRoZSAiRE1BIiBibG9jayB5b3UgZGlh
+Z3JhbW1lZCB3YXMgdGhlIGZyYW1lIHJlYWRlciBJUCAob3IgbWF5YmUNCj4gPiA+IHRoZQ0KPiA+
+ID4gZnJhbWUgcmVhZGVyIElQIGNvbWVzIGFmdGVyKS7CoMKgSSBhbHNvIGRvbid0IHNlZSBob3cg
+dGhlIGZyYW1lDQo+ID4gPiBidWZmZXINCj4gPiA+IElQDQo+ID4gPiBjb3VsZCBwb3NzaWJseSBi
+ZSBjb25uZWN0ZWQgZGlyZWN0bHkgdG8gYSBwaHlzaWNhbCBkaXNwbGF5DQo+ID4gPiBjb25uZWN0
+b3IuDQo+ID4gVGhlIEZQR0EgRnJhbWVCdWZmZXIgMiBzb2Z0IElQIHJlYWRzIHRoZSBpbmZvcm1h
+dGlvbiBwcm92aWRlZCB0byBpdA0KPiA+IGZyb20gdGhlIExpbnV4IEtlcm5lbCB2aWEgdGhlIHBs
+YXRmb3JtIGRldmljZSByZWdpc3RlciBwcm92aWRlZCBpbg0KPiA+IHRoZQ0KPiA+IERULiBUaGUg
+TGludXggZHJpdmVyIGhlcmUgYWxsb2NhdGVzIGEgY2h1bmsgb2YgY29oZXJlbnQgbWVtb3J5IHRo
+YXQNCj4gPiBkaXJlY3RseSBtYXBzIHRvIHRoZSBTRFJBTS4gVGhlIEZQR0Egc29mdCBJUCB3b3Vs
+ZCBzdHJlYW0gdGhlDQo+ID4gZGlzcGxheQ0KPiA+IG91dCB0byB0aGUgRGlzcGxheSBQb3J0IGJh
+c2VkIG9uIHRoZSBpbmZvcm1hdGlvbiB0aGF0IHdhcyB3cml0dGVuDQo+ID4gdG8NCj4gPiB0aGUg
+U0RSQU0uDQo+IFlvdXIgIkZQR0Egc29mdCBJUCIgdGhhdCdzIHJlYWRpbmcgcGl4ZWxzIGZyb20g
+YW4gYXJlYSBvZiBtZW1vcnkgKGENCj4gRFJNDQo+IHBsYW5lIGRvZXMgdGhpcykgYW5kIG91dHB1
+dHRpbmcgdGhhdCB0byBhIGRpc3BsYXkgcG9ydCAoYSBEUk0gQ1JUQw0KPiBhbmQNCj4gZW5jb2Rl
+ciBkb2VzIHRoaXMpIHdvdWxkIG1ha2UgYSBsb3Qgb2Ygc2Vuc2UgYXMgYSBEUk0gZHJpdmVyLg0K
+PiANCj4gSG93ZXZlciwgdGhpcyBwaWVjZSBvZiBoYXJkd2FyZSB0aGF0IHRha2VzIGluIHBpeGVs
+cyBpbiBhIHN0cmVhbSBmcm9tDQo+IGVsc2V3aGVyZSBhbmQgc3RvcmVzIGl0IHRvIG1lbW9yeSBk
+b2Vzbid0IG1ha2Ugc2Vuc2UgdG8gbWUgYXMgYSBEUk0NCj4gZHJpdmVyLg0KPiANCj4gSSBjYW4n
+dCByZWFsbHkgb2ZmZXIgbW9yZSBhZHZpY2UgdW50aWwgSSB1bmRlcnN0YW5kIHdoYXQncyBnZW5l
+cmF0aW5nDQo+IHRoZSBwaXhlbHMgdGhhdCB0aGUgRnJhbWVCdWZmZXIgSVAgaXMgc3RvcmluZy4N
+Cg0KTXkgcHJldmlvdXMgZXhwbGFuYXRpb24gbWlnaHQgaGF2ZSBiZWVuIGNvbmZ1c2luZyBoZXJl
+LiBJIGFwb2xvZ2l6ZSBmb3INCnRoYXQuwqANClRvIHB1dCBpdCBpbiBzaW1wbGVyIHRlcm1zIHRo
+ZSBGUEdBIEZyYW1lQnVmZmVyIFNvZnQgSVAgY291bGQgYmUgc2Vlbg0KYXMgdGhlIEdQVSBhbmQg
+dGhlIERSTSBkcml2ZXIgcGF0Y2ggaGVyZSBpcyBhbGxvY2F0aW5nIG1lbW9yeSBmb3INCmluZm9y
+bWF0aW9uIHRvIGJlIHN0cmVhbWVkIGZyb20gdGhlIEFSTS9MaW51eCB0byB0aGUgZGlzcGxheSBw
+b3J0Lg0KQmFzaWNhbGx5IHRoZSBkcml2ZXIganVzdCB3cmFwcyB0aGUgaW5mb3JtYXRpb24gc3Vj
+aCBhcyB0aGUgcGl4ZWxzIHRvDQpiZSBkcmF3biBieSB0aGUgRlBHQSBGcmFtZUJ1ZmZlciAyLg0K
+DQpUaGUgcGllY2Ugb2YgaGFyZHdhcmUgaW4gZGlzY3Vzc2lvbiBpcyB0aGUgU29DIEZQR0Egd2hl
+cmUgTGludXggcnVucyBvbg0KdGhlIEFSTSBjaGlwIGFuZCB0aGUgRkdQQSBpcyBkcml2ZW4gYnkg
+aXRzIE5JT1Mgc29mdCBjb3JlIHdpdGggaXRzIG93bg0KcHJvcHJpZXRhcnkgZmlybXdhcmUuDQoN
+CkZvciBleGFtcGxlIHRoZSBhcHBsaWNhdGlvbiBmcm9tIHRoZSBBUk0gTGludXggd291bGQgaGF2
+ZSB0byB3cml0ZQ0KaW5mb3JtYXRpb24gb24gdGhlIC9kZXYvZmIwIHdpdGggdGhlIGluZm9ybWF0
+aW9uIHN0b3JlZCBpbiB0aGUgU0RSQU0gdG8NCmJlIGZldGNoZWQgYnkgdGhlIEZQR0EgZnJhbWVi
+dWZmZXIgSVAgYW5kIGRpc3BsYXllZCBvbiB0aGUgRGlzcGxheSBQb3J0DQpNb25pdG9yLsKgDQo=
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
