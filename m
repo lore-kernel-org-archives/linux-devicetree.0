@@ -1,80 +1,83 @@
-From: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v4 3/5] soc: qcom: Introduce APCS IPC driver
-Date: Thu, 11 May 2017 07:37:01 +0530
-Message-ID: <CABb+yY2Upw_RALXjL_=yAUCOMzpb+PV6v_OjiznKBUJnFE2UVQ@mail.gmail.com>
-References: <338c4262-cc6b-bed2-16fe-1767d1f0d5f6@codeaurora.org>
- <CABb+yY1K3Hyn7CzQCA6tHu-KrPigARc3cYgBdT8PNX7vjhPK0g@mail.gmail.com>
- <20170506011920.GH15143@minitux> <CABb+yY1u9mspX1Zu0mg21JMYxpKxsXsvBa9LnF6VNr1_42UJUQ@mail.gmail.com>
- <20170508055439.GJ15143@minitux> <CABb+yY3CfWFBDh-qoGHDeHyLhVC7mPQZFB=VDS54OaypG-BqPw@mail.gmail.com>
- <20170508191154.GM15143@minitux> <CABb+yY2uC6vNFTq1KtZwrrw8x4BEfc2cMjF5DwrLbGpYWBNBzQ@mail.gmail.com>
- <20170509191106.GQ15143@minitux> <CABb+yY2LoX_rOSCkhnp-gS7EHTN+98xNn2E1+z7_7bFjQ2wtoA@mail.gmail.com>
- <20170510190046.GT15143@minitux>
+From: Julia Lawall <julia.lawall-L2FTfq7BK8M@public.gmane.org>
+Subject: Re: [alsa-devel] [PATCH v2 3/3] ASoC: stm32: Add full duplex support
+ to i2s (fwd)
+Date: Thu, 11 May 2017 10:13:53 +0800 (SGT)
+Message-ID: <alpine.DEB.2.20.1705111012050.3585@hadrien>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170510190046.GT15143@minitux>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Jeffrey Hugo <jhugo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ohad Ben-Cohen <ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-remoteproc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: olivier moysan <olivier.moysan-qxv4g6HH51o@public.gmane.org>
+Cc: lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, perex-/Fr2/VpizcU@public.gmane.org, tiwai-IBi9RG/b67k@public.gmane.org, mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnaud.pouliquen-qxv4g6HH51o@public.gmane.org, benjamin.gaignard-qxv4g6HH51o@public.gmane.org, kbuild-all-JC7UmRfGjtg@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 11, 2017 at 12:30 AM, Bjorn Andersson
-<bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> On Tue 09 May 19:33 PDT 2017, Jassi Brar wrote:
->
->> On Wed, May 10, 2017 at 12:41 AM, Bjorn Andersson
->> <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
->> > On Tue 09 May 09:41 PDT 2017, Jassi Brar wrote:
-> [..]
->> > The part where this piece of hardware differs from the other mailboxes
->> > is that TX is done as send_data() returns and in the realm of the
->> > mailbox there is no such thing as "tx done". So how about we extend the
->> > framework to handle stateless and message-less doorbells?
->> >
->> This is a very common usecase. It would be unfair to other platforms
->> to modify the API just because you find it awkward to call
->> mbox_client_txdone() right after mbox_send_message(). For example,
->> drivers/firmware/tegra/bpmp.c
->> I'd much rather have mbox_send_message_and_tick() than implant a new api.
->>
->
-> I wasn't proposing to implement a new API
->
-Introducing mbox_controller.txdone_none for underlying mailbox
-controllers is indeed a new API.
+Please check whether the lock taken on line 585 should be freed on line
+598.  The report also mentions line 652, although that is not shown.
 
->; for mailbox controllers with
-> tx method set to POLL the client will only have call mbox_send_data()
-> nothing else. So I proposed [1] yesterday, that will make the apcs
-> controller behave just like this case.
->
-mbox_send_data()    for POLL usecase
-mbox_send_data()+mbox_client_txdone()   for your usecase.
+julia
 
-> Looking at it again, making sure that tx method is TXDONE_BY_ACK should
-> make mbox_client_txdone() essentially a nop, only locking the channel
-> spinlock twice and then returning, as send_data() didn't leave any data
-> in the queue. Is my understanding of this correct?
->
-Not exactly. tx_tick() frees the busy flag 'chan->active_req'.
+---------- Forwarded message ----------
+Date: Thu, 11 May 2017 09:49:21 +0800
+From: kbuild test robot <fengguang.wu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+To: kbuild-JC7UmRfGjtg@public.gmane.org
+Cc: Julia Lawall <julia.lawall-L2FTfq7BK8M@public.gmane.org>
+Subject: Re: [alsa-devel] [PATCH v2 3/3] ASoC: stm32: Add full duplex support to
+     i2s
 
-> So please let me know what you think about [1], if you don't like it
-> I'll fix the things pointed to by Stephen and we'll have to live with
-> the two calls.
->
-My last reply was about [1]. Other platforms call
-mbox_send_data()+mbox_client_txdone() see
-drivers/firmware/tegra/bpmp.c, but you want to introduce another API
-in the innards of the framework. If we must do it, it should be done
-above the framework by introducing
+Hi olivier,
 
-void mbox_send_message_and_tick(struct mbox_chan *chan, void *mssg)
-           OR
-void mbox_ring_doorbell(struct mbox_chan *chan, void *mssg)
-{
-   (void)mbox_send_message(chan, mssg);
-   mbox_client_txdone(chan, 0);
-}
+[auto build test WARNING on asoc/for-next]
+[also build test WARNING on next-20170510]
+[cannot apply to v4.11]
+[if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
+
+url:    https://github.com/0day-ci/linux/commits/olivier-moysan/Add-I2S-driver/20170511-075335
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
+:::::: branch date: 2 hours ago
+:::::: commit date: 2 hours ago
+
+>> sound/soc/stm/stm32_i2s.c:598:3-9: preceding lock on line 585
+>> sound/soc/stm/stm32_i2s.c:598:3-9: preceding lock on line 585
+   sound/soc/stm/stm32_i2s.c:652:3-9: preceding lock on line 585
+
+git remote add linux-review https://github.com/0day-ci/linux
+git remote update linux-review
+git checkout 9f5663c4aa8961bf2a547683af787e606503376e
+vim +598 sound/soc/stm/stm32_i2s.c
+
+1ebd36ae olivier moysan 2017-05-10  579  {
+1ebd36ae olivier moysan 2017-05-10  580  	struct stm32_i2s_data *i2s = snd_soc_dai_get_drvdata(cpu_dai);
+1ebd36ae olivier moysan 2017-05-10  581  	bool playback_flg = (substream->stream == SNDRV_PCM_STREAM_PLAYBACK);
+9f5663c4 olivier moysan 2017-05-10  582  	u32 cfg1_mask, ier;
+1ebd36ae olivier moysan 2017-05-10  583  	int ret;
+1ebd36ae olivier moysan 2017-05-10  584
+9f5663c4 olivier moysan 2017-05-10 @585  	spin_lock(&i2s->lock_fd);
+9f5663c4 olivier moysan 2017-05-10  586
+1ebd36ae olivier moysan 2017-05-10  587  	switch (cmd) {
+1ebd36ae olivier moysan 2017-05-10  588  	case SNDRV_PCM_TRIGGER_START:
+1ebd36ae olivier moysan 2017-05-10  589  	case SNDRV_PCM_TRIGGER_RESUME:
+1ebd36ae olivier moysan 2017-05-10  590  	case SNDRV_PCM_TRIGGER_PAUSE_RELEASE:
+1ebd36ae olivier moysan 2017-05-10  591  		/* Enable i2s */
+1ebd36ae olivier moysan 2017-05-10  592  		dev_dbg(cpu_dai->dev, "start I2S\n");
+1ebd36ae olivier moysan 2017-05-10  593
+1ebd36ae olivier moysan 2017-05-10  594  		ret = regmap_update_bits(i2s->regmap, STM32_I2S_CR1_REG,
+1ebd36ae olivier moysan 2017-05-10  595  					 I2S_CR1_SPE, I2S_CR1_SPE);
+1ebd36ae olivier moysan 2017-05-10  596  		if (ret < 0) {
+1ebd36ae olivier moysan 2017-05-10  597  			dev_err(cpu_dai->dev, "Error %d enabling I2S\n", ret);
+1ebd36ae olivier moysan 2017-05-10 @598  			return ret;
+1ebd36ae olivier moysan 2017-05-10  599  		}
+1ebd36ae olivier moysan 2017-05-10  600
+1ebd36ae olivier moysan 2017-05-10  601  		ret = regmap_update_bits(i2s->regmap, STM32_I2S_CR1_REG,
+
+:::::: The code at line 598 was first introduced by commit
+:::::: 1ebd36ae636af5c130a9df4d9a921e4ed984a6e9 ASoC: stm32: Add I2S driver
+
+:::::: TO: olivier moysan <olivier.moysan-qxv4g6HH51o@public.gmane.org>
+:::::: CC: 0day robot <fengguang.wu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+
+---
+0-DAY kernel test infrastructure                Open Source Technology Center
+https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
