@@ -1,38 +1,80 @@
-From: Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v6 19/23] drivers/fsi: Add GPIO based FSI master
-Date: Thu, 11 May 2017 09:58:16 +0800
-Message-ID: <a079022b-8434-a204-c9b4-696a0580fc8c@ozlabs.org>
-References: <20170410194706.64280-1-cbostic@linux.vnet.ibm.com>
- <20170410194706.64280-20-cbostic@linux.vnet.ibm.com>
- <CACPK8Xf1Y31+HBHb0ErpnZ4xVM+bzfHV-khj-kz8Unk1cTx6gw@mail.gmail.com>
- <c05599db-7767-e712-7199-7d5a4ac6486f@linux.vnet.ibm.com>
+From: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v4 3/5] soc: qcom: Introduce APCS IPC driver
+Date: Thu, 11 May 2017 07:37:01 +0530
+Message-ID: <CABb+yY2Upw_RALXjL_=yAUCOMzpb+PV6v_OjiznKBUJnFE2UVQ@mail.gmail.com>
+References: <338c4262-cc6b-bed2-16fe-1767d1f0d5f6@codeaurora.org>
+ <CABb+yY1K3Hyn7CzQCA6tHu-KrPigARc3cYgBdT8PNX7vjhPK0g@mail.gmail.com>
+ <20170506011920.GH15143@minitux> <CABb+yY1u9mspX1Zu0mg21JMYxpKxsXsvBa9LnF6VNr1_42UJUQ@mail.gmail.com>
+ <20170508055439.GJ15143@minitux> <CABb+yY3CfWFBDh-qoGHDeHyLhVC7mPQZFB=VDS54OaypG-BqPw@mail.gmail.com>
+ <20170508191154.GM15143@minitux> <CABb+yY2uC6vNFTq1KtZwrrw8x4BEfc2cMjF5DwrLbGpYWBNBzQ@mail.gmail.com>
+ <20170509191106.GQ15143@minitux> <CABb+yY2LoX_rOSCkhnp-gS7EHTN+98xNn2E1+z7_7bFjQ2wtoA@mail.gmail.com>
+ <20170510190046.GT15143@minitux>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <c05599db-7767-e712-7199-7d5a4ac6486f-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+In-Reply-To: <20170510190046.GT15143@minitux>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Christopher Bostic <cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, rostedt-nx8X9YLhiw1AfugRpC6u6w@public.gmane.org, mingo-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>, Alistair Popple <alistair-Y4h6yKqj69EXC2x5gXVKYQ@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, "Edward A . James" <eajames-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>
+To: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Jeffrey Hugo <jhugo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ohad Ben-Cohen <ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-remoteproc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Chris,
+On Thu, May 11, 2017 at 12:30 AM, Bjorn Andersson
+<bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> On Tue 09 May 19:33 PDT 2017, Jassi Brar wrote:
+>
+>> On Wed, May 10, 2017 at 12:41 AM, Bjorn Andersson
+>> <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>> > On Tue 09 May 09:41 PDT 2017, Jassi Brar wrote:
+> [..]
+>> > The part where this piece of hardware differs from the other mailboxes
+>> > is that TX is done as send_data() returns and in the realm of the
+>> > mailbox there is no such thing as "tx done". So how about we extend the
+>> > framework to handle stateless and message-less doorbells?
+>> >
+>> This is a very common usecase. It would be unfair to other platforms
+>> to modify the API just because you find it awkward to call
+>> mbox_client_txdone() right after mbox_send_message(). For example,
+>> drivers/firmware/tegra/bpmp.c
+>> I'd much rather have mbox_send_message_and_tick() than implant a new api.
+>>
+>
+> I wasn't proposing to implement a new API
+>
+Introducing mbox_controller.txdone_none for underlying mailbox
+controllers is indeed a new API.
 
-> I don't think we'd want this per master.   The lock is for the 'top'
-> master issuing commands.  Only the top master can initiate any
-> transactions on the bus to any devices connected downstream. Downstream
-> masters such as hub masters, etc... cannot initiate a command.
+>; for mailbox controllers with
+> tx method set to POLL the client will only have call mbox_send_data()
+> nothing else. So I proposed [1] yesterday, that will make the apcs
+> controller behave just like this case.
+>
+mbox_send_data()    for POLL usecase
+mbox_send_data()+mbox_client_txdone()   for your usecase.
 
-I think what Joel meant there was that we have it per *GPIO* master; if
-there are two GPIO masters on a system, there's no need to provide
-mutual exclusion to each (separate) set of GPIOs.
+> Looking at it again, making sure that tx method is TXDONE_BY_ACK should
+> make mbox_client_txdone() essentially a nop, only locking the channel
+> spinlock twice and then returning, as send_data() didn't leave any data
+> in the queue. Is my understanding of this correct?
+>
+Not exactly. tx_tick() frees the busy flag 'chan->active_req'.
 
-To implement this, we'd just move the lock into struct fsi_master_gpio.
+> So please let me know what you think about [1], if you don't like it
+> I'll fix the things pointed to by Stephen and we'll have to live with
+> the two calls.
+>
+My last reply was about [1]. Other platforms call
+mbox_send_data()+mbox_client_txdone() see
+drivers/firmware/tegra/bpmp.c, but you want to introduce another API
+in the innards of the framework. If we must do it, it should be done
+above the framework by introducing
 
-Cheers,
-
-
-Jeremy
+void mbox_send_message_and_tick(struct mbox_chan *chan, void *mssg)
+           OR
+void mbox_ring_doorbell(struct mbox_chan *chan, void *mssg)
+{
+   (void)mbox_send_message(chan, mssg);
+   mbox_client_txdone(chan, 0);
+}
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
