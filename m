@@ -1,58 +1,54 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 1/5] pintrl: meson: add interrupts to pinctrl data
-Date: Thu, 11 May 2017 16:50:17 +0200
-Message-ID: <CACRpkdYx0j4Sjv8MhXRSuiF1TyW2Ht47r0+G1ga8mXW5LC7c=g@mail.gmail.com>
-References: <a4ca587b-d3e8-a22d-4d25-289871d2d095@gmail.com> <3b4990ef-bfb4-c62c-f823-431adedc17f1@gmail.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH 2/2] of: reserved_mem: fix 'const' annotation
+Date: Thu, 11 May 2017 17:00:07 +0200
+Message-ID: <CAK8P3a3kSn-YEQXTmer+=NMCJ+5HtE-p0C=TBj1GfSU8=BozKg@mail.gmail.com>
+References: <20170511122458.3862716-1-arnd@arndb.de> <20170511122458.3862716-2-arnd@arndb.de>
+ <CAL_Jsq+MHx8Vgj9g4-p3Xs57LNpZB-20opbq2xk9jz-K-57iSw@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <3b4990ef-bfb4-c62c-f823-431adedc17f1@gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Heiner Kallweit <hkallweit1@gmail.com>, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, Thierry Reding <treding@nvidia.com>
-Cc: Jerome Brunet <jbrunet@baylibre.com>, Mark Rutland <mark.rutland@arm.com>, Marc Zyngier <marc.zyngier@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL_Jsq+MHx8Vgj9g4-p3Xs57LNpZB-20opbq2xk9jz-K-57iSw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, May 7, 2017 at 6:34 PM, Heiner Kallweit <hkallweit1@gmail.com> wrote:
-
-> From: Jerome Brunet <jbrunet@baylibre.com>
-> Add GPIO interrupt information to pinctrl data. Added to the original
-> version from Jerome was data for Meson GXL.
+On Thu, May 11, 2017 at 4:50 PM, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> On Thu, May 11, 2017 at 7:24 AM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+>> It's the pointer that is supposed to be const, not the return
+>> type of the function.
+>>
+>> drivers/of/of_reserved_mem.c: In function '__reserved_mem_init_node':
+>> drivers/of/of_reserved_mem.c:200:7: error: type qualifiers ignored on function return type [-Werror=ignored-qualifiers]
+>>    int const (*initfn)(struct reserved_mem *rmem) = i->data;
+>>
+>> Fixes: 17a70355ea57 ("of: fix sparse warnings in fdt, irq, reserved mem, and resolver code")
+>> Signed-off-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+>> ---
+>>  drivers/of/of_reserved_mem.c | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/of/of_reserved_mem.c b/drivers/of/of_reserved_mem.c
+>> index 4dec07ea510f..3f03ec004829 100644
+>> --- a/drivers/of/of_reserved_mem.c
+>> +++ b/drivers/of/of_reserved_mem.c
+>> @@ -197,7 +197,7 @@ static int __init __reserved_mem_init_node(struct reserved_mem *rmem)
+>>         const struct of_device_id *i;
+>>
+>>         for (i = __reservedmem_of_table; i < &__rmem_of_table_sentinel; i++) {
+>> -               int const (*initfn)(struct reserved_mem *rmem) = i->data;
+>> +               int (* const initfn)(struct reserved_mem *rmem) = i->data;
 >
-> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
-> Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
+> Why did you move the const here? That doesn't seem to help with sparse.
 
-So what this does is:
+I must have misread the sparse warning.
 
-> diff --git a/drivers/pinctrl/meson/pinctrl-meson.h b/drivers/pinctrl/meson/pinctrl-meson.h
-> index 1aa871d5..890f296f 100644
-> --- a/drivers/pinctrl/meson/pinctrl-meson.h
-> +++ b/drivers/pinctrl/meson/pinctrl-meson.h
-> @@ -81,6 +81,7 @@ enum meson_reg_type {
->   * @name:      bank name
->   * @first:     first pin of the bank
->   * @last:      last pin of the bank
-> + * @irq:       hwirq base number of the bank
->   * @regs:      array of register descriptors
->   *
->   * A bank represents a set of pins controlled by a contiguous set of
-> @@ -92,6 +93,8 @@ struct meson_bank {
->         const char *name;
->         unsigned int first;
->         unsigned int last;
-> +       int irq_first;
-> +       int irq_last;
->         struct meson_reg_desc regs[NUM_REG];
->  };
+> I think I'll just revert this back to using reservedmem_of_init_fn.
 
-... adds a per-bank parent IRQ.
+Sounds good, thanks.
 
-I am just discussing with Thierry that I would like to see some code
-in the gpiolib core to deal with this mapping so we don't have to do a
-whole lot of custom back mapping between parent IRQs and cascaded
-IRQ in every driver that has a multiple-bank concept.
-
-Please contribute to the discission, see thread subject:
-"[PATCH v2] gpio: Add Tegra186 support"
-
-Yours,
-Linus Walleij
+    Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
