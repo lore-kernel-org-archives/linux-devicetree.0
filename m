@@ -1,38 +1,137 @@
 From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v3 5/6] ARM: dts: TS-4600: add NBUS support
-Date: Thu, 11 May 2017 15:56:44 +0200
-Message-ID: <CACRpkdYJz0_CWXJ3c=mWznqfhQ7ss4BcjmCXnxdiPF6EJ0V=Hg@mail.gmail.com>
-References: <20170505193259.16517-1-sebastien.bourdelin@savoirfairelinux.com>
- <20170505193259.16517-6-sebastien.bourdelin@savoirfairelinux.com>
+Subject: Re: [PATCH v2 3/3] gpiolib: Add GPIO initialization
+Date: Thu, 11 May 2017 16:29:30 +0200
+Message-ID: <CACRpkdZPwH3vPjdCgCjYW4Q5OvbE5O0RLJ4bV-QLR2nVLy4kAQ@mail.gmail.com>
+References: <1440920686-6892-1-git-send-email-mpa@pengutronix.de>
+ <1440920686-6892-4-git-send-email-mpa@pengutronix.de> <20170207110950.zy5pzo2hq6hrvmr5@pengutronix.de>
+ <20170506203230.7ogwvdrzogvvlu67@pengutronix.de> <CACRpkdZeYXcXo5g-4wH8M7vK6gTFRHH4VMXqC7XJ_iwXUpL8HA@mail.gmail.com>
+ <20170507094524.vi4uhu52m67nlfa6@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170505193259.16517-6-sebastien.bourdelin@savoirfairelinux.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sebastien Bourdelin <sebastien.bourdelin@savoirfairelinux.com>
-Cc: Rob Herring <robh@kernel.org>, linux-watchdog@vger.kernel.org, Mark Featherston <mark@embeddedarm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, kris@embeddedarm.com, kernel <kernel@savoirfairelinux.com>, Guenter Roeck <linux@roeck-us.net>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <20170507094524.vi4uhu52m67nlfa6@pengutronix.de>
+Sender: linux-gpio-owner@vger.kernel.org
+To: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, Rob Herring <robh+dt@kernel.org>
+Cc: Alexandre Courbot <gnurou@gmail.com>, Chris Read <chrisrfq@gmail.com>, Arun Bharadwaj <arun@gumstix.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Johan Hovold <johan@kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Sascha Hauer <kernel@pengutronix.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 5, 2017 at 9:32 PM, Sebastien Bourdelin
-<sebastien.bourdelin@savoirfairelinux.com> wrote:
+On Sun, May 7, 2017 at 11:45 AM, Uwe Kleine-K=C3=B6nig
+<u.kleine-koenig@pengutronix.de> wrote:
+> [Me]
 
-> This commit enables the NBUS on the TS-4600, using the ts-nbus driver.
+>> >    IMHO it is sensible to allow requesting a gpio that is completely
+>> >    hogged and just prevent changing direction and (if it's an output)
+>> >    value.
+>>
+>> No it doesn't make sense at all to take something that is hogged
+>> because it is completely unintuitive to the very word "hog".
 >
-> Signed-off-by: Sebastien Bourdelin <sebastien.bourdelin@savoirfairelinux.com>
-> ---
-> Changes v2 -> v3:
->   - rebase on master
+> What I want is that it is possible to restrict the usage of a GPIO more
+> fine-grained. For example only fix the direction to input but allow a
+> driver to still read out it's value. Or fix the direction to output but
+> allow changing the level.
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+So let me understand this right.
+
+For something input-only, return -EINVAL from .direction_output()
+and vice versa mutatis mutandis for something output-only.
+
+This semantic is set at runtime when using these functions.
+
+Why can't you do this in the specific driver? Why does that have
+to be handled by the core? I mean of course we can add a
+flag to the gpio_desc if you think it's gonna be a common case,
+but then I want an indication that there is a bunch of drivers that
+need this done in the core.
+
+> So the semantic of a hogged gpio as
+> implemented today is a special case of my new use cases. So it seems
+> naturally to extend the already existing concept.
+
+I disagree and the DT maintainer Rob Herring already said he kind
+of dislikes the hogs already, so let's not expand their use beyond
+what is already being done, which is explicit hogging.
+
+> And concerning the meaning of hogging: It still takes some freedom from
+> others, just not everything because you can still request the line. So
+> not being a native English speaker the word still fits for me.
+
+IMO this breaks Rusty Russell's API Design Manifesto,
+levels 7 and 6:
+
+7. The obvious use is (probably) the correct one.
+6. The name tells you how to use it.
+
+In my case, just no. It is not obvuous and does not tell me how
+to use it.
+
+Something like gpio-line-initial-directions, gpio-line-initial-values
+etc does.
+
+> And technically it is sensible to implement the new use cases and
+> today's hogging together and so it is also sensible IMHO to use the same
+> mechanism in the device tree.
+
+I disagree with that, sorry.
+
+But let's ask for more opinions.
+
+> So to stick to your suggestion I would have in the end for two lines
+> io12 that must be 0 for ESD reasons and io13 that drives the RST-line of
+> a companion DSP that should be kept low until userspace is ready and
+> then allow being driven high via gpioctl:
+>
+>         io12 {
+>                 gpio-hog;
+>                 gpio =3D <4 0>;
+>                 output-low;
+>         };
+>
+>         io13 {
+>                 gpio-init;
+>                 gpio =3D <5 0>;
+>                 output-low;
+>                 fixed-direction;
+>         };
+>
+> For me it looks artificial to not use "gpio-hog" for the 2nd
+> specification but if that is the compromise that we can agree on, that's
+> ok for me.
+
+This looks OK to me.
+
+> Orthogonal to gpio-hog being used for this or not, I like
+>
+>         output-low;
+>         fixed-direction;
+>
+> better than
+>
+>         output-low-init;
+>
+> as the former is more intuitive.
+
+Those are OK with me but I guess with
+
+fixed-direction-output;
+fixed-direction-input;
+
+I still don't really understand the fixed-direction thing.
+
+If that is a property of the *hardware* it should not be in the
+device tree IMO. It should be in the driver and derived from
+the compatible string.
+
+If that is a property of the *use case* in *this system*
+then something like this makes sense: we may need to
+restrict it further for electrical reasons, that is nice.
+
+I think you will have a problem with Rob on this though, he's not
+a big fan of these hogging nodes and I'm not sure he's gonna like
+the gpio-init nodes much.
+
+If you send some patch, make sure to get it ACKed by Rob.
 
 Yours,
 Linus Walleij
