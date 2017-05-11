@@ -1,58 +1,32 @@
-From: Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
-Subject: Re: [PATCH 2/2] of: reserved_mem: fix 'const' annotation
-Date: Thu, 11 May 2017 17:59:01 +0200
-Message-ID: <CAExDi1Q4xAxYWEtTA25FOoGB9Y3=pi4CxmuUpMiAe_+OVUErGg@mail.gmail.com>
-References: <20170511122458.3862716-1-arnd@arndb.de> <20170511122458.3862716-2-arnd@arndb.de>
- <CAL_Jsq+MHx8Vgj9g4-p3Xs57LNpZB-20opbq2xk9jz-K-57iSw@mail.gmail.com>
+From: Mason <slash.tmp-GANU6spQydw@public.gmane.org>
+Subject: Supporting "software interrupts" in an irqchip driver
+Date: Thu, 11 May 2017 18:04:38 +0200
+Message-ID: <6a3bc1b5-0df9-c5f8-6102-60427d4cf616@free.fr>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_Jsq+MHx8Vgj9g4-p3Xs57LNpZB-20opbq2xk9jz-K-57iSw@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Arnd Bergmann <arnd@arndb.de>, Frank Rowand <frowand.list@gmail.com>, Marek Szyprowski <m.szyprowski@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=ISO-8859-15
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, DT <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 11, 2017 at 4:50 PM, Rob Herring <robh+dt@kernel.org> wrote:
-> On Thu, May 11, 2017 at 7:24 AM, Arnd Bergmann <arnd@arndb.de> wrote:
->> It's the pointer that is supposed to be const, not the return
->> type of the function.
->>
->> drivers/of/of_reserved_mem.c: In function '__reserved_mem_init_node':
->> drivers/of/of_reserved_mem.c:200:7: error: type qualifiers ignored on function return type [-Werror=ignored-qualifiers]
->>    int const (*initfn)(struct reserved_mem *rmem) = i->data;
->>
->> Fixes: 17a70355ea57 ("of: fix sparse warnings in fdt, irq, reserved mem, and resolver code")
->> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
->> ---
->>  drivers/of/of_reserved_mem.c | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/drivers/of/of_reserved_mem.c b/drivers/of/of_reserved_mem.c
->> index 4dec07ea510f..3f03ec004829 100644
->> --- a/drivers/of/of_reserved_mem.c
->> +++ b/drivers/of/of_reserved_mem.c
->> @@ -197,7 +197,7 @@ static int __init __reserved_mem_init_node(struct reserved_mem *rmem)
->>         const struct of_device_id *i;
->>
->>         for (i = __reservedmem_of_table; i < &__rmem_of_table_sentinel; i++) {
->> -               int const (*initfn)(struct reserved_mem *rmem) = i->data;
->> +               int (* const initfn)(struct reserved_mem *rmem) = i->data;
->
-> Why did you move the const here? That doesn't seem to help with sparse.
+Hello Thomas, Marc, Mark, (and the funky bunch)
 
-The original sparse warning was:
-    ../drivers/of/of_reserved_mem.c:200:50: warning: incorrect type in
-initializer (different modifiers)
-    ../drivers/of/of_reserved_mem.c:200:50:    expected int (
-*[usertype] initfn )( ... )
-    ../drivers/of/of_reserved_mem.c:200:50:    got void const *const data
-right?
-And we're talking about a function (pointer) type.
-Functions return a rvalue thus qualifiers are irrelevant for them,
-so having 'int const (*initfn)(...)' instead of 'int (*initfn)()' should
-solve nothing.
+The interrupt controller on my SoC supports so-called "software"
+interrupts, meaning that the HW exposes a 32-bit register in which
+SW can write some value.
 
-Same for the others patch in this series.
+If the value written is non-zero, then interrupt 0 is raised.
 
--- Luc Van Oostenryck
+How is such a contraption defined in a device tree?
+
+Are there good drivers to read as examples?
+drivers/irqchip/irq-mips-cpu.c mentions "software interrupts"
+in the context of "which we don't really use or support."
+
+Regards.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
