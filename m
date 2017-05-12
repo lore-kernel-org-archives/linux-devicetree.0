@@ -1,76 +1,42 @@
-From: Jakub Kicinski <kubakici@wp.pl>
-Subject: Re: [PATCH v5 15/17] dt-bindings: qca7000: append UART interface to
- binding
-Date: Thu, 11 May 2017 19:45:41 -0700
-Message-ID: <20170511194541.4e58cb7d@cakuba.netronome.com>
-References: <1494406408-31760-1-git-send-email-stefan.wahren@i2se.com>
-        <1494406408-31760-16-git-send-email-stefan.wahren@i2se.com>
-        <1702237.66ccflAQAJ@kerker>
+From: Minghsiu Tsai <minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v2 0/3] Fix mdp device tree
+Date: Fri, 12 May 2017 11:15:11 +0800
+Message-ID: <1494558914-41591-1-git-send-email-minghsiu.tsai@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1702237.66ccflAQAJ@kerker>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Michael Heimpold <mhei@heimpold.de>
-Cc: Rob Herring <robh@kernel.org>, Stefan Wahren <stefan.wahren@i2se.com>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.com>, linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Pawel Osciak <posciak-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Houlong Wei <houlong.wei-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Wu-Cheng Li <wuchengli-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 11 May 2017 21:12:22 +0200, Michael Heimpold wrote:
-> Am Mittwoch, 10. Mai 2017, 10:53:26 CEST schrieb Stefan Wahren:
-> > This merges the serdev binding for the QCA7000 UART driver (Ethernet over
-> > UART) into the existing document.
-> > 
-> > Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
-> > ---
-> >  .../devicetree/bindings/net/qca-qca7000.txt        | 32
-> > ++++++++++++++++++++++ 1 file changed, 32 insertions(+)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/net/qca-qca7000.txt
-> > b/Documentation/devicetree/bindings/net/qca-qca7000.txt index
-> > a37f656..08364c3 100644
-> > --- a/Documentation/devicetree/bindings/net/qca-qca7000.txt
-> > +++ b/Documentation/devicetree/bindings/net/qca-qca7000.txt
-> > @@ -54,3 +54,35 @@ ssp2: spi@80014000 {
-> >  		local-mac-address = [ A0 B0 C0 D0 E0 F0 ];
-> >  	};
-> >  };
-> > +
-> > +(b) Ethernet over UART
-> > +
-> > +In order to use the QCA7000 as UART slave it must be defined as a child of
-> > a +UART master in the device tree. It is possible to preconfigure the UART
-> > +settings of the QCA7000 firmware, but it's not possible to change them
-> > during +runtime.
-> > +
-> > +Required properties:
-> > +- compatible        : Should be "qca,qca7000-uart"  
-> 
-> I already discussed this with Stefan off-list a little bit, but I would like
-> to bring this to a broader audience: I'm not sure whether the compatible 
-> should contain the "-uart" suffix, because the hardware chip is the very same
-> QCA7000 chip which can also be used with SPI protocol.
-> The only difference is the loaded firmware within the chip which can either
-> speak SPI or UART protocol (but not both at the same time - due to shared 
-> pins). So the hardware design decides which interface type is used.
-> 
-> At the moment, this patch series adds a dedicated driver for the UART 
-> protocol, in parallel to the existing SPI driver. So a different compatible
-> string is needed here to match against the new driver.
-> 
-> An alternative approach would be to re-use the existing compatible string
-> "qca,qca7000" for both, the SPI and UART protocol, because a "smarter" 
-> (combined) driver would detect which protocol to use. For example the driver 
-> could check for spi-cpha and/or spi-cpol which are required for SPI protocol: 
-> if these exists the driver could assume that SPI must be used, if both are 
-> missing then UART protocol should be used.
-> (This way it would not be necessary to check whether the node is a child of
-> a SPI or UART master node - but maybe this is even easier - I don't know)
-> 
-> Or in shorter words: my concern is that while "qca7000-uart" describes the 
-> hardware, it's too closely coupled to the driver implementation. Having
-> some feedback of the experts would be nice :-)
+If the mdp_* nodes are under an mdp sub-node, their corresponding
+platform device does not automatically get its iommu assigned properly.
 
-I'm no expert, but devices which can do both I2C and SPI are quite
-common, and they usually have the same compatible string for both
-buses.
+Fix this by moving the mdp component nodes up a level such that they are
+siblings of mdp and all other SoC subsystems.  This also simplifies the
+device tree.
+
+Although it fixes iommu assignment issue, it also break compatibility
+with old device tree. So, the patch in driver is needed to iterate over
+sibling mdp device nodes, not child ones, to keep driver work properly.
+
+Daniel Kurtz (2):
+  arm64: dts: mt8173: Fix mdp device tree
+  media: mtk-mdp: Fix mdp device tree
+
+Minghsiu Tsai (1):
+  dt-bindings: mt8173: Fix mdp device tree
+
+ .../devicetree/bindings/media/mediatek-mdp.txt     |  12 +-
+ arch/arm64/boot/dts/mediatek/mt8173.dtsi           | 126 ++++++++++-----------
+ drivers/media/platform/mtk-mdp/mtk_mdp_core.c      |   2 +-
+ 3 files changed, 64 insertions(+), 76 deletions(-)
+
+-- 
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
