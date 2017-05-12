@@ -1,58 +1,69 @@
-From: Chris Brandt <Chris.Brandt@renesas.com>
-Subject: RE: [PATCH v5 01/10] pinctrl: generic: Add bi-directional and
- output-enable
-Date: Fri, 12 May 2017 12:57:27 +0000
-Message-ID: <SG2PR06MB1165C25E20836CB0B3423AF28AE20@SG2PR06MB1165.apcprd06.prod.outlook.com>
-References: <1493281194-5200-2-git-send-email-jacopo+renesas@jmondi.org>
- <CAHp75Vcy1OE+9htFx9k3kQhGARQPT1C0gg3SEKZd7ULu_vkUMA@mail.gmail.com>
- <CACRpkdayW0qPXDcc_JofkwtX5UHhDPxiY_8deZZ7+hPNJkjgeQ@mail.gmail.com>
- <SG2PR06MB1165E7E651BE96CD7B7738B08A130@SG2PR06MB1165.apcprd06.prod.outlook.com>
- <CAHp75Vcp_eMWrjZRX-x3=Tt3JRXcL_wWG43MymF=oyLLP4EJwg@mail.gmail.com>
- <SG2PR06MB11658EC3A3A80C57E6F539AC8A130@SG2PR06MB1165.apcprd06.prod.outlook.com>
- <CAHp75VeLtOuty=iaxuCaH43rnBZDTT03iH7JyjDJBQhTD-EjzA@mail.gmail.com>
- <CACRpkdZkNGSUvTrEdjbGKO1hr799QpJBGSHPVbsBibph7Jx61A@mail.gmail.com>
- <20170508160120.GB25206@w540>
- <CAHp75VfOMKOhpkec+htA6DRQhivpSmNXy1=Ayig1W+ZC84gTLw@mail.gmail.com>
- <20170508172516.GC25206@w540>
- <CACRpkdY1h+yfFuk2y9=nZqqvW9=G33_eHCisvuMkJ5b3zizY7Q@mail.gmail.com>
- <CAMuHMdXK9VmghZy1RounHWn-HDqgeT_12V_9RVihiuiajn+RDg@mail.gmail.com>
- <CACRpkdYsE1oeDp1HnYAFMKG2iPTg06cAtD41vxrmZPP70MJQdA@mail.gmail.com>
- <CAMuHMdXK7YB2zN4fz9XiqTuydxp7VvVV+wSgXWUYBB0evkp8dw@mail.gmail.com>
- <SG2PR06MB1165FF6C0F4DBD8987BC396A8AE20@SG2PR06MB1165.apcprd06.prod.outlook.com>
- <CAMuHMdWVsuq9eucz9hz47oBtEvBGW2sJ8-G7L4hDk53CNnxd2A@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdWVsuq9eucz9hz47oBtEvBGW2sJ8-G7L4hDk53CNnxd2A@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>, jmondi <jacopo@jmondi.org>, Andy Shevchenko <andy.shevchenko@gmail.com>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King - ARM Linux <linux@armlinux.org.uk>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+From: Romain Perier <romain.perier-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Subject: [PATCH v3 1/3] SoC: es8328-i2c: Add compatible for ES8323
+Date: Fri, 12 May 2017 15:22:17 +0200
+Message-ID: <20170512132227.24916-2-romain.perier@collabora.com>
+References: <20170512132227.24916-1-romain.perier@collabora.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170512132227.24916-1-romain.perier-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Romain Perier <romain.perier-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgR2VlcnQsDQoNCk9uIEZyaWRheSwgTWF5IDEyLCAyMDE3LCBHZWVydCBVeXR0ZXJob2V2ZW4g
-d3JvdGU6DQo+IDEyIHggMTYgPSAxOTIsIG5vdCAzODQuDQoNCk9wcHMsIG15IG1hdGggd2FzIG9m
-ZiENCg0KICAoSSB0aGluayBJIG5lZWQgYW5vdGhlciBjdXAgb2YgY29mZmVlIHRoaXMgbW9ybmlu
-ZykNCg0KDQo+IERvIHlvdSBuZWVkIGFsbCBwb3NzaWJsZSBjb21iaW5hdGlvbnMgb2YgaW5wdXQs
-IG91dHB1dCwgYW5kIGJpLWRpcj8NCj4gSSBhc3N1bWVkIHRoZXkncmUgbXV0dWFsbHkgZXhjbHVz
-aXZlLiBJZiBub3QsIHlvdSBuZWVkIDMgYml0cy9waW4vZnVuY3Rpb24NCg0KWW91J3JlIHJpZ2h0
-LCB0aGV5IGFyZSBtdXR1YWxseSBleGNsdXNpdmUsIHNvIDIgYml0cyBhcmUgZmluZS4NCg0KQWxz
-bywgdGhlIG90aGVyIHBpbm91dCB2YXJpYXRpb25zIGNoaXBzIChSWi9BMUwsQTFMVSxBMUxDKSBv
-bmx5IGhhdmUgMTAgcG9ydHM6DQoNCiAxMiBwb3J0cyB4IDE2IHBpbnMgeCAyYml0cy1wZXItYml0
-ID0+IDM4NCBieXRlcw0KIDEwIHBvcnRzIHggMTYgcGlucyB4IDJiaXRzLXBlci1iaXQgPT4gMzIw
-IGJ5dGVzDQoNCiAzODQgKyAzMjAgPSA3MDQgYnl0ZXMgKG9mIGNvbnN0IGRhdGEpDQoNCg0KPiBX
-aXRoIHBhY2thZ2VzLCBkbyB5b3UgbWVhbiBlLmcuIFJaL0ExSCB2cy4gUlovQTFMPw0KDQpZZXMu
-DQoNCg0KPiBUaGVzZSBpbmRlZWQgZGlmZmVyLA0KPiBidXQNCj4gc2hvdWxkIHVzZSBkaWZmZXJl
-bnQgY29tcGF0aWJsZSB2YWx1ZXMuDQoNCk9LLiBTaW5jZSByN3M3MjEwMC5kdHNpIGhhcw0KICAg
-IGNvbXBhdGlibGUgPSAicmVuZXNhcyxyN3M3MjEwMC1wb3J0cyI7DQoNCldlJ2xsIGp1c3Qgb3Zl
-cnJpZGUgdGhhdCBpbiBzYXkgbXktcnphMWwtYm9hcmQuZHRzDQoNCiZwaW5jdHJsIHsNCgljb21w
-YXRpYmxlID0gInJlbmVzYXMscjdzNzIxMDItcG9ydHMiOw0KfTsNCgkNCiAgYW5kIHRoZW4gbG9v
-ayBmb3IgdGhhdCBpbiB0aGUgZHJpdmVyLg0KCQ0KDQo+IE9yIGRvIHlvdSBtZWFuIFFGUC9CR0Ey
-NTYgdnMuIEJHQTMyND8gSXNuJ3QgdGhlIGZvcm1lciBhIHN1YnNldCBvZiB0aGUNCj4gbGF0dGVy
-Pw0KDQpUaGUgInBhY2thZ2UiIGRvZXNuJ3QgbWF0dGVyLCBpdCdzIHRoZSBwaW4gYXNzaWdubWVu
-dHMgb24gdGhlIGRpZToNCiAgUlovQTFIID0gUlovQTFNID0gcGluIGFzc2lnbm1lbnRzICMxDQog
-IFJaL0ExTCA9IFJaL0ExTFUgPSBSWi9BMUxDID0gcGluIGFzc2lnbm1lbnRzICMyDQoNClRoZW4g
-ZWFjaCBvZiB0aG9zZSBwYXJ0cyBhYm92ZSBoYXZlIG11bHRpcGxlICdwYWNrYWdlIG9wdGlvbnMn
-LCBidXQgb2YNCmNvdXJzZSBkb2Vzbid0IGNoYW5nZSB0aGUgYWN0dWFsIHBpbi9mdW5jdGlvbiBh
-c3NpZ25tZW50cyAodGhhdCdzIHBhcnQNCm9mIHRoZSBzaWxpY29uIGRpZSkNCg0KQ2hyaXMNCg0K
+This commit adds a compatible string for everest,es8323. This is an
+audio codec that is compatible with es8328 and can be found for example
+on the Firefly-RK3288 board.
+
+Signed-off-by: Romain Perier <romain.perier-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+---
+
+Changes in v3: None
+Changes in v2: None
+
+ Documentation/devicetree/bindings/sound/es8328.txt | 5 ++++-
+ sound/soc/codecs/es8328-i2c.c                      | 2 ++
+ 2 files changed, 6 insertions(+), 1 deletion(-)
+
+diff --git a/Documentation/devicetree/bindings/sound/es8328.txt b/Documentation/devicetree/bindings/sound/es8328.txt
+index 33fbf058c997..86b6d6e99732 100644
+--- a/Documentation/devicetree/bindings/sound/es8328.txt
++++ b/Documentation/devicetree/bindings/sound/es8328.txt
+@@ -4,7 +4,10 @@ This device supports both I2C and SPI.
+ 
+ Required properties:
+ 
+-  - compatible  : Should be "everest,es8328" or "everest,es8388"
++  - compatible  : Should be one of the following:
++	- "everest,es8323"
++	- "everest,es8328"
++	- "everest,es8388"
+   - DVDD-supply : Regulator providing digital core supply voltage 1.8 - 3.6V
+   - AVDD-supply : Regulator providing analog supply voltage 3.3V
+   - PVDD-supply : Regulator providing digital IO supply voltage 1.8 - 3.6V
+diff --git a/sound/soc/codecs/es8328-i2c.c b/sound/soc/codecs/es8328-i2c.c
+index 318ab28c5351..be3f03c35137 100644
+--- a/sound/soc/codecs/es8328-i2c.c
++++ b/sound/soc/codecs/es8328-i2c.c
+@@ -19,6 +19,7 @@
+ #include "es8328.h"
+ 
+ static const struct i2c_device_id es8328_id[] = {
++	{ "es8323", 0 },
+ 	{ "es8328", 0 },
+ 	{ "es8388", 0 },
+ 	{ }
+@@ -26,6 +27,7 @@ static const struct i2c_device_id es8328_id[] = {
+ MODULE_DEVICE_TABLE(i2c, es8328_id);
+ 
+ static const struct of_device_id es8328_of_match[] = {
++	{ .compatible = "everest,es8323", },
+ 	{ .compatible = "everest,es8328", },
+ 	{ .compatible = "everest,es8388", },
+ 	{ }
+-- 
+2.11.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
