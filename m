@@ -1,184 +1,149 @@
-From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: Re: using labels for stdout-path
-Date: Fri, 12 May 2017 13:48:16 +1000
-Message-ID: <20170512034816.GA12908@umbus.fritz.box>
-References: <20170511130545.co6pyyvlwuitbyne@pengutronix.de>
- <CAL_JsqL66sWFovGhYGaA_sB_pnvTrjyaQ7MW3=5pkD5Qwb6y_w@mail.gmail.com>
- <20170511184023.oi4bwwrutllexjen@pengutronix.de>
+From: Yuantian Tang <andy.tang-3arQi8VN3Tc@public.gmane.org>
+Subject: [PATCH v2] arm64: dts: ls1088a: Add TMU device tree support
+Date: Fri, 12 May 2017 12:33:16 +0800
+Message-ID: <1494563596-48185-1-git-send-email-andy.tang@nxp.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="PNTmBPCT7hxwcZjr"
-Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170511184023.oi4bwwrutllexjen-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Yuantian Tang <andy.tang-3arQi8VN3Tc@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Add nodes and properties for thermal management support.
 
---PNTmBPCT7hxwcZjr
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Tang Yuantian <andy.tang-3arQi8VN3Tc@public.gmane.org>
+---
+v2:
+	- put tmu node in ip block address order
 
-On Thu, May 11, 2017 at 08:40:23PM +0200, Uwe Kleine-K=F6nig wrote:
-> Hello,
->=20
-> On Thu, May 11, 2017 at 10:49:15AM -0500, Rob Herring wrote:
-> > +dtc list because labels are purely dts syntax.
->=20
-> Ah, I wasn't aware that there is a separate list for that. Thanks.
->=20
-> > On Thu, May 11, 2017 at 8:05 AM, Uwe Kleine-K=F6nig
-> > <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
-> > > Hello,
-> > >
-> > > on an i.MX28 based machine I want to have the console on &duart with
-> > > 115200 Bd, 8 Bit, no parity.
-> > >
-> > > The options for that are AFAICT:
-> > >
-> > >  - use an alias, like:
-> > >
-> > >         stdout-path =3D "serialX:115200n8";
-> > >
-> > >    the problem here is, that the duart doesn't have an alias. I guess=
- I
-> > >    shouldn't introduce a new one for my setup?
-> > >
-> > >  - use a label, like:
-> > >
-> > >         stdout-path =3D &duart, ":115200n8";
-> > >
-> > >    This would be the prettiest, but that doesn't work, because there =
-is
-> > >    a '\0' separating the path and the options.
-> >=20
-> > You could make that work changing the kernel parsing, but that's
-> > probably not a good option if we ever want to support more than 1 out
-> > path.
->=20
-> Good point. That's a good reason to not use this syntax.
+ arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi | 88 ++++++++++++++++++++++++++
+ 1 file changed, 88 insertions(+)
 
-Yes, changing the actual property format is a bad idea.
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
+index caecd14..c4109fb 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
+@@ -44,6 +44,7 @@
+  *     OTHER DEALINGS IN THE SOFTWARE.
+  */
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
++#include <dt-bindings/thermal/thermal.h>
+ 
+ / {
+ 	compatible = "fsl,ls1088a";
+@@ -61,6 +62,7 @@
+ 			compatible = "arm,cortex-a53";
+ 			reg = <0x0>;
+ 			clocks = <&clockgen 1 0>;
++			#cooling-cells = <2>;
+ 		};
+ 
+ 		cpu1: cpu@1 {
+@@ -89,6 +91,7 @@
+ 			compatible = "arm,cortex-a53";
+ 			reg = <0x100>;
+ 			clocks = <&clockgen 1 1>;
++			#cooling-cells = <2>;
+ 		};
+ 
+ 		cpu5: cpu@101 {
+@@ -153,6 +156,91 @@
+ 			clocks = <&sysclk>;
+ 		};
+ 
++		tmu: tmu@1f80000 {
++			compatible = "fsl,qoriq-tmu";
++			reg = <0x0 0x1f80000 0x0 0x10000>;
++			interrupts = <0 23 0x4>;
++			fsl,tmu-range = <0xb0000 0x9002a 0x6004c 0x30062>;
++			fsl,tmu-calibration =
++				/* Calibration data group 1 */
++				<0x00000000 0x00000026
++				0x00000001 0x0000002d
++				0x00000002 0x00000032
++				0x00000003 0x00000039
++				0x00000004 0x0000003f
++				0x00000005 0x00000046
++				0x00000006 0x0000004d
++				0x00000007 0x00000054
++				0x00000008 0x0000005a
++				0x00000009 0x00000061
++				0x0000000a 0x0000006a
++				0x0000000b 0x00000071
++				/* Calibration data group 2 */
++				0x00010000 0x00000025
++				0x00010001 0x0000002c
++				0x00010002 0x00000035
++				0x00010003 0x0000003d
++				0x00010004 0x00000045
++				0x00010005 0x0000004e
++				0x00010006 0x00000057
++				0x00010007 0x00000061
++				0x00010008 0x0000006b
++				0x00010009 0x00000076
++				/* Calibration data group 3 */
++				0x00020000 0x00000029
++				0x00020001 0x00000033
++				0x00020002 0x0000003d
++				0x00020003 0x00000049
++				0x00020004 0x00000056
++				0x00020005 0x00000061
++				0x00020006 0x0000006d
++				/* Calibration data group 4 */
++				0x00030000 0x00000021
++				0x00030001 0x0000002a
++				0x00030002 0x0000003c
++				0x00030003 0x0000004e>;
++			little-endian;
++			#thermal-sensor-cells = <1>;
++		};
++
++		thermal-zones {
++			cpu_thermal: cpu-thermal {
++				polling-delay-passive = <1000>;
++				polling-delay = <5000>;
++				thermal-sensors = <&tmu 0>;
++
++				trips {
++					cpu_alert: cpu-alert {
++						temperature = <85000>;
++						hysteresis = <2000>;
++						type = "passive";
++					};
++
++					cpu_crit: cpu-crit {
++						temperature = <95000>;
++						hysteresis = <2000>;
++						type = "critical";
++					};
++				};
++
++				cooling-maps {
++					map0 {
++						trip = <&cpu_alert>;
++						cooling-device =
++							<&cpu0 THERMAL_NO_LIMIT
++							THERMAL_NO_LIMIT>;
++					};
++
++					map1 {
++						trip = <&cpu_alert>;
++						cooling-device =
++							<&cpu4 THERMAL_NO_LIMIT
++							THERMAL_NO_LIMIT>;
++					};
++				};
++			};
++		};
++
+ 		duart0: serial@21c0500 {
+ 			compatible = "fsl,ns16550", "ns16550a";
+ 			reg = <0x0 0x21c0500 0x0 0x100>;
+-- 
+2.1.0.27.g96db324
 
-> > >  - use the full path, like:
-> > >
-> > >         stdout-path =3D "/apb@80000000/apbx@80040000/serial@80074000:=
-115200n8";
-> > >
-> > >    This is ugly.
-> > >
-> > > Do I miss something? Is that worth to introduce new syntax, maybe
-> > >
-> > >         stdout-path =3D &duart . ":115200n8";
-> > >
-> > > or similar?
-> >=20
-> > Seems like we should make a comma be significant in splitting strings.
-> > I'm not sure if there's anything relying on "foo" "bar" and "foo",
-> > "bar" being the same. At least for numbers, a comma has no meaning, so
-> > it would complicate the parsing I'd imagine. Not really an area I'm
-> > familiar with.
->=20
-> "foo" "bar" is a syntax error now (and another obvious candidate for
-> string concatination). So writing in the dts
-
-Right.  "foo" "bar" would be my preferred syntax for string
-concatenation (the main guiding principle for dts syntax is "be like C
-where possible").
-
->=20
-> 	stdout-path =3D &duart ":115200n8";
->=20
-> and getting the same result as
->=20
-> 	stdout-path =3D "/apb@80000000/apbx@80040000/serial@80074000:115200n8";
->=20
-> looks nicely and consistent with
->=20
-> 	stdout-path =3D &duart;
->=20
-> being equivalent to
->=20
-> 	stdout-path =3D "/apb@80000000/apbx@80040000/serial@80074000";
->=20
-> After a quick look into the dtc sources I imagine that wouldn't be too
-> hard to implement for someone being fluent in lex and yacc.
-
-Unfortunately, there are two complications with this.  The more minor
-one is that an "implicit" operation like this (no actual operator
-symbol) can make things get a bit curly in the grammar - mostly by
-allowing potential ambiguity in situations which are obviously
-different to a human, but not to the parser.
-
-The bigger problem is that during the parse which is when we're (for
-example) evaluating integer expressions, we haven't yet resolved
-labels.  So, we can't expand the reference, we just insert a "marker"
-in the property bytestring which says to insert the node path later.
-That means we can't just have simple code to do a string concatenation
-here.  That marker gets expanded later on, once we've resolved all
-references.
-
-Note that this is the same reason you can do:
-	prop =3D < (1+2+3) &foo >;
-But you can't do
-	prop =3D < (&foo + 1) >;
-
-There are two ways we could deal with this:
-
-   1) The quick and dirty way: special case string append with a
-   reference, so that we insert a new type of marker which will be
-   expaned to the node path without the final \0.
-
-   2) The complicated but powerful way: rather than (mostly)
-   constructing the property values as bytestrings at parse time, we
-   just construct the property values as expression trees at parse
-   time, then evaluate those expression trees later on, once we're
-   able to resolve references.
-
-Approach (2) has been suggested before.  As well as this case it would
-be a necessary step for allowing defined "functions" (for integers or
-otherwise) in dtc.  It has some nice properties, but it's a rather a
-lot of work.
-
-> And probably
-> it would be cheap to add the other obvious extensions like:
->=20
-> 	property =3D < 0x12 0x43 > "a string" &label /incbin/(filename);
-
-Um.. what?  That's not an obvious extension at all.  The proposed
-change is to have (a b) be a string concatenation, but several of the
-things above aren't strings, so it's not clear what it should do.  If
-you want _bytestring_ concatenation, we already have syntax for that -
-that's exactly what ',' does in dtc.
-
---=20
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
-
---PNTmBPCT7hxwcZjr
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAEBCAAGBQJZFTB+AAoJEGw4ysog2bOSZ+gQAJN+88pertlqX+CREH5XcOXn
-2BCLE4gGK8JDq5uzm8yHM3HrkbfSkI7XEJ8fK0th7DRDHPRZEBygXLcx8KdV2UxK
-muqbViPotcvsdaL0+t0Pwt/Q/xq7DX09fbJB+c+Tx0ZAgE3NEehkVykzjcNLCftc
-MIOZ4YLq5JlN91nX/jMkk/xVitGQmtVXM+RKksVWV5fPDwXeTcXuc8NThzkIeC0/
-T7oT6H1ta6WL+UF29RkYibZrZxEzYbXTBfUAYE3IWc/Gv0PQgSXkD1fXNj7JYdVq
-1q8jNThF6cVeKjjbN7XfkXvCoHXNX/dzXX999B4wWT88r9k4BEqDc6EZAF6jy6x9
-//CZl4OWqDYh8O4vUyxt8Eh5TdTiaL5QV7tO3eZhuYcbJpXzE7+hn1wX0x/s/t9e
-HpBhHiOU1flHR4U2XdOWKx/YoqluRArUQdZ0jTILLK48J/zlVAmIWl5VanYF6Ncb
-m9DHCASeuirK2vp5kQgUnmjQPFFswrwSnUgA4hUzb17LpNlB3zW3UnvSn6LY8bCm
-8LzFpW9B8ThHXu3XYwGIzaf/d9eGwDY+Dek83kpXEq4QP7E/P+liLCzbzXkIqEgp
-WkFkPElGSsgKQAh7CcAyCAVwJxG0HR8JRFqkSyEYvVaB1OQ/SYEFEgvcjAq0OEJO
-6d32KzVYezlVu9nfLXeh
-=HSjn
------END PGP SIGNATURE-----
-
---PNTmBPCT7hxwcZjr--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
