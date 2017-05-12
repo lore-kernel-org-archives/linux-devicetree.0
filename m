@@ -1,116 +1,148 @@
-From: Madalin-Cristian Bucur <madalin.bucur@nxp.com>
-Subject: RE: [PATCH 2/3] dts: arm64: add LS1043A DPAA QBMan nodes
-Date: Fri, 12 May 2017 14:14:15 +0000
-Message-ID: <AM5PR0402MB269150AB044CD385DA2C07DAECE20@AM5PR0402MB2691.eurprd04.prod.outlook.com>
-References: <1490884672-18294-1-git-send-email-madalin.bucur@nxp.com>
- <1490884672-18294-3-git-send-email-madalin.bucur@nxp.com>
- <20170331020255.GI683@dragon>
+From: Philippe CORNU <philippe.cornu@st.com>
+Subject: [PATCH v1 2/3] dt-bindings: display: Add STM32 DSI host driver
+Date: Fri, 12 May 2017 16:56:28 +0200
+Message-ID: <1494600989-13507-3-git-send-email-philippe.cornu@st.com>
+References: <1494600989-13507-1-git-send-email-philippe.cornu@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170331020255.GI683@dragon>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Guo <shawnguo@kernel.org>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, Gang Liu <gang.liu@nxp.com>, Roy Pledge <roy.pledge@nxp.com>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1494600989-13507-1-git-send-email-philippe.cornu@st.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Alexandre Torgue <alexandre.torgue@st.com>, Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Russell King <linux@armlinux.org.uk>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Yannick Fertre <yannick.fertre@st.com>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, kernel@stlinux.com, Philippe Cornu <philippe.cornu@st.com>, Fabien Dessenne <fabien.dessenne@st.com>, dri-devel@lists.freedesktop.org, Mickael Reulier <mickael.reulier@st.com>, Vincent Abriou <vincent.abriou@st.com>, Gabriel Fernandez <gabriel.fernandez@st.com>, Ludovic Barre <ludovic.barre@st.com>
 List-Id: devicetree@vger.kernel.org
 
-> -----Original Message-----
-> From: Shawn Guo [mailto:shawnguo@kernel.org]
-> On Thu, Mar 30, 2017 at 05:37:51PM +0300, Madalin Bucur wrote:
-> > Add the DPAA 1.x QMan and BMan nodes in the LS1043A device tree.
-> >
-> > Signed-off-by: Roy Pledge <roy.pledge@nxp.com>
-> > Signed-off-by: Madalin Bucur <madalin.bucur@nxp.com>
-> > ---
-> >  arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi | 52
-> ++++++++++++++++++++++++++
-> >  1 file changed, 52 insertions(+)
-> >
-> > diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
-> b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
-> > index ec13a6e..8434e89 100644
-> > --- a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
-> > +++ b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
-> > @@ -106,6 +106,33 @@
-> >  		      /* DRAM space 1, size: 2GiB DRAM */
-> >  	};
-> >
-> > +	reserved-memory {
-> > +		#address-cells =3D <2>;
-> > +		#size-cells =3D <2>;
-> > +		ranges;
-> > +
-> > +		bman_fbpr: bman-fbpr {
-> > +			compatible =3D "shared-dma-pool";
-> > +			size =3D <0 0x1000000>;
-> > +			alignment =3D <0 0x1000000>;
-> > +			no-map;
-> > +		};
-> > +
-> > +		qman_fqd: qman-fqd {
-> > +			compatible =3D "shared-dma-pool";
-> > +			size =3D <0 0x400000>;
-> > +			alignment =3D <0 0x400000>;
-> > +			no-map;
-> > +		};
-> > +
-> > +		qman_pfdr: qman-pfdr {
-> > +			compatible =3D "shared-dma-pool";
-> > +			size =3D <0 0x2000000>;
-> > +			alignment =3D <0 0x2000000>;
-> > +			no-map;
-> > +		};
-> > +	};
-> > +
-> >  	sysclk: sysclk {
-> >  		compatible =3D "fixed-clock";
-> >  		#clock-cells =3D <0>;
-> > @@ -333,6 +360,28 @@
-> >  			};
-> >  		};
-> >
-> > +		qman: qman@1880000 {
-> > +			compatible =3D "fsl,qman";
-> > +			reg =3D <0x00 0x1880000 0x0 0x10000>;
->=20
-> s/0x00/0x0?
->=20
-> Shawn
+This patch adds documentation of device tree bindings for the STM32
+DSI host driver based on the Synopsys DW MIPI DSI driver from Rockchip.
 
-Yes, fixed all new introduced occurrences.
+Signed-off-by: Philippe CORNU <philippe.cornu@st.com>
+---
+ .../devicetree/bindings/display/st,stm32-ltdc.txt  | 92 +++++++++++++++++++++-
+ 1 file changed, 90 insertions(+), 2 deletions(-)
 
-> > +			interrupts =3D <0 45 0x4>;
-> > +			memory-region =3D <&qman_fqd &qman_pfdr>;
-> > +		};
-> > +
-> > +		bman: bman@1890000 {
-> > +			compatible =3D "fsl,bman";
-> > +			reg =3D <0x00 0x1890000 0x0 0x10000>;
-> > +			interrupts =3D <0 45 0x4>;
-> > +			memory-region =3D <&bman_fbpr>;
-> > +		};
-> > +
-> > +		bportals: bman-portals@508000000 {
-> > +			ranges =3D <0x0 0x5 0x08000000 0x8000000>;
-> > +		};
-> > +
-> > +		qportals: qman-portals@500000000 {
-> > +			ranges =3D <0x0 0x5 0x00000000 0x8000000>;
-> > +		};
-> > +
-> >  		dspi0: dspi@2100000 {
-> >  			compatible =3D "fsl,ls1043a-dspi", "fsl,ls1021a-v1.0-
-> dspi";
-> >  			#address-cells =3D <1>;
-> > @@ -686,3 +735,6 @@
-> >  	};
-> >
-> >  };
-> > +
-> > +#include "qoriq-qman1-portals.dtsi"
-> > +#include "qoriq-bman1-portals.dtsi"
-> > --
-> > 2.1.0
-> >
+diff --git a/Documentation/devicetree/bindings/display/st,stm32-ltdc.txt b/Documentation/devicetree/bindings/display/st,stm32-ltdc.txt
+index 8e14769..a61381b 100644
+--- a/Documentation/devicetree/bindings/display/st,stm32-ltdc.txt
++++ b/Documentation/devicetree/bindings/display/st,stm32-ltdc.txt
+@@ -1,7 +1,6 @@
+ * STMicroelectronics STM32 lcd-tft display controller
+ 
+ - ltdc: lcd-tft display controller host
+-  must be a sub-node of st-display-subsystem
+   Required properties:
+   - compatible: "st,stm32-ltdc"
+   - reg: Physical base address of the IP registers and length of memory mapped region.
+@@ -13,8 +12,25 @@
+   Required nodes:
+     - Video port for RGB output.
+ 
+-Example:
++* STMicroelectronics STM32 specific extensions to Synopsys Designware MIPI DSI
++(similar to "rockchip/dw_mipi_dsi_rockchip.txt")
+ 
++Required properties:
++- #address-cells: Should be <1>.
++- #size-cells: Should be <0>.
++- compatible: "st,stm32-dsi_host".
++- reg: Represent the physical address range of the controller.
++- clocks, clock-names: Phandles to the controller's pll reference
++  clock(ref) and APB clock(pclk). As described in [1].
++- ports: contain a port node with endpoint definitions as defined in [2].
++- resets: list of phandle + reset specifier pairs, as described in [3].
++- reset-names: string reset name, must be "apb".
++
++[1] Documentation/devicetree/bindings/clock/clock-bindings.txt
++[2] Documentation/devicetree/bindings/media/video-interfaces.txt
++[3] Documentation/devicetree/bindings/reset/reset.txt
++
++Example 1: RGB panel
+ / {
+ 	...
+ 	soc {
+@@ -34,3 +50,75 @@ Example:
+ 		};
+ 	};
+ };
++
++Example 2: DSI panel
++
++/ {
++	...
++	soc {
++	...
++		ltdc: display-controller@40016800 {
++			compatible = "st,stm32-ltdc";
++			reg = <0x40016800 0x200>;
++			interrupts = <88>, <89>;
++			resets = <&rcc STM32F4_APB2_RESET(LTDC)>;
++			clocks = <&rcc 1 CLK_LCD>;
++			clock-names = "lcd";
++
++			port {
++				ltdc_out_dsi_host: endpoint {
++					remote-endpoint = <&dsi_host_in>;
++				};
++			};
++		};
++
++
++		dsi_host: dsi_host@40016C00 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			compatible = "st,stm32-dsi_host";
++			reg = <0x40016C00 0x800>;
++			clocks = <&rcc 1 CLK_F469_DSI>, <&clk_hse>;
++			clock-names = "ref", "pclk";
++			resets = <&rcc STM32F4_APB2_RESET(DSI)>;
++			reset-names = "apb";
++			status = "okay";
++
++			ports {
++				#address-cells = <1>;
++				#size-cells = <0>;
++
++				port@0 {
++					reg = <0>;
++					dsi_host_in: endpoint {
++						remote-endpoint = <&ltdc_out_dsi_host>;
++					};
++				};
++
++				port@1 {
++					reg = <1>;
++					dsi_host_out_panel: endpoint {
++						remote-endpoint = <&dsi_host_in_panel>;
++					};
++				};
++
++			};
++
++			panel-dsi@0 {
++				reg = <0>; /* dsi virtual channel (0..3) */
++				compatible = ...;
++				enable-gpios = ...;
++				status = "okay";
++
++				port {
++					dsi_host_in_panel: endpoint {
++						remote-endpoint = <&dsi_host_out_panel>;
++					};
++				};
++
++			};
++
++		};
++
++	};
++};
+-- 
+1.9.1
