@@ -1,171 +1,150 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
-        <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: using labels for stdout-path
-Date: Fri, 12 May 2017 09:41:55 +0200
-Message-ID: <20170512074155.oshpdio2hb7cz377@pengutronix.de>
-References: <20170511130545.co6pyyvlwuitbyne@pengutronix.de>
- <CAL_JsqL66sWFovGhYGaA_sB_pnvTrjyaQ7MW3=5pkD5Qwb6y_w@mail.gmail.com>
- <20170511184023.oi4bwwrutllexjen@pengutronix.de>
- <20170512034816.GA12908@umbus.fritz.box>
+From: Daniel Vetter <daniel@ffwll.ch>
+Subject: Re: [PATCH 1/4] drm/vc4: Adjust modes in DSI to work around the
+ integer PLL divider.
+Date: Fri, 12 May 2017 09:55:23 +0200
+Message-ID: <20170512075523.brljqrfr4g5uamjn@phenom.ffwll.local>
+References: <20170511235625.22427-1-eric@anholt.net>
+ <20170511235625.22427-2-eric@anholt.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 Content-Disposition: inline
-In-Reply-To: <20170512034816.GA12908-K0bRW+63XPQe6aEkudXLsA@public.gmane.org>
-Sender: devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <20170511235625.22427-2-eric@anholt.net>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Eric Anholt <eric@anholt.net>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello David,
-
-On Fri, May 12, 2017 at 01:48:16PM +1000, David Gibson wrote:
-> On Thu, May 11, 2017 at 08:40:23PM +0200, Uwe Kleine-König wrote:
-> > On Thu, May 11, 2017 at 10:49:15AM -0500, Rob Herring wrote:
-> > > On Thu, May 11, 2017 at 8:05 AM, Uwe Kleine-König
-> > > <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
-> > > > Hello,
-> > > >
-> > > > on an i.MX28 based machine I want to have the console on &duart with
-> > > > 115200 Bd, 8 Bit, no parity.
-> > > >
-> > > > The options for that are AFAICT:
-> > > >
-> > > >  - use an alias, like:
-> > > >
-> > > >         stdout-path = "serialX:115200n8";
-> > > >
-> > > >    the problem here is, that the duart doesn't have an alias. I guess I
-> > > >    shouldn't introduce a new one for my setup?
-> > > >
-> > > >  - use a label, like:
-> > > >
-> > > >         stdout-path = &duart, ":115200n8";
-> > > >
-> > > >    This would be the prettiest, but that doesn't work, because there is
-> > > >    a '\0' separating the path and the options.
-> > > 
-> > > You could make that work changing the kernel parsing, but that's
-> > > probably not a good option if we ever want to support more than 1 out
-> > > path.
-> > 
-> > Good point. That's a good reason to not use this syntax.
-> 
-> Yes, changing the actual property format is a bad idea.
-> 
-> > > >  - use the full path, like:
-> > > >
-> > > >         stdout-path = "/apb@80000000/apbx@80040000/serial@80074000:115200n8";
-> > > >
-> > > >    This is ugly.
-> > > >
-> > > > Do I miss something? Is that worth to introduce new syntax, maybe
-> > > >
-> > > >         stdout-path = &duart . ":115200n8";
-> > > >
-> > > > or similar?
-> > > 
-> > > Seems like we should make a comma be significant in splitting strings.
-> > > I'm not sure if there's anything relying on "foo" "bar" and "foo",
-> > > "bar" being the same. At least for numbers, a comma has no meaning, so
-> > > it would complicate the parsing I'd imagine. Not really an area I'm
-> > > familiar with.
-> > 
-> > "foo" "bar" is a syntax error now (and another obvious candidate for
-> > string concatination). So writing in the dts
-> 
-> Right.  "foo" "bar" would be my preferred syntax for string
-> concatenation (the main guiding principle for dts syntax is "be like C
-> where possible").
-> 
-> > 
-> > 	stdout-path = &duart ":115200n8";
-> > 
-> > and getting the same result as
-> > 
-> > 	stdout-path = "/apb@80000000/apbx@80040000/serial@80074000:115200n8";
-> > 
-> > looks nicely and consistent with
-> > 
-> > 	stdout-path = &duart;
-> > 
-> > being equivalent to
-> > 
-> > 	stdout-path = "/apb@80000000/apbx@80040000/serial@80074000";
-> > 
-> > After a quick look into the dtc sources I imagine that wouldn't be too
-> > hard to implement for someone being fluent in lex and yacc.
-> 
-> Unfortunately, there are two complications with this.  The more minor
-> one is that an "implicit" operation like this (no actual operator
-> symbol) can make things get a bit curly in the grammar - mostly by
-> allowing potential ambiguity in situations which are obviously
-> different to a human, but not to the parser.
-
-/me remembers his algorithms courses about ambiguous grammars and
-mumbles something about left and right recursion.
- 
-> The bigger problem is that during the parse which is when we're (for
-> example) evaluating integer expressions, we haven't yet resolved
-> labels.  So, we can't expand the reference, we just insert a "marker"
-> in the property bytestring which says to insert the node path later.
-> That means we can't just have simple code to do a string concatenation
-> here.  That marker gets expanded later on, once we've resolved all
-> references.
-> 
-> Note that this is the same reason you can do:
-> 	prop = < (1+2+3) &foo >;
-> But you can't do
-> 	prop = < (&foo + 1) >;
-> 
-> There are two ways we could deal with this:
-> 
->    1) The quick and dirty way: special case string append with a
->    reference, so that we insert a new type of marker which will be
->    expaned to the node path without the final \0.
-> 
->    2) The complicated but powerful way: rather than (mostly)
->    constructing the property values as bytestrings at parse time, we
->    just construct the property values as expression trees at parse
->    time, then evaluate those expression trees later on, once we're
->    able to resolve references.
-> 
-> Approach (2) has been suggested before.  As well as this case it would
-> be a necessary step for allowing defined "functions" (for integers or
-> otherwise) in dtc.  It has some nice properties, but it's a rather a
-> lot of work.
-
-lex and yacc are great, but I'm not into them to be of help here :-|
-
-> > And probably
-> > it would be cheap to add the other obvious extensions like:
-> > 
-> > 	property = < 0x12 0x43 > "a string" &label /incbin/(filename);
-> 
-> Um.. what?  That's not an obvious extension at all.  The proposed
-> change is to have (a b) be a string concatenation, but several of the
-> things above aren't strings, so it's not clear what it should do.  If
-> you want _bytestring_ concatenation, we already have syntax for that -
-> that's exactly what ',' does in dtc.
-
-When compiling and then decompiling a node that contains
-
-	property = < 0x41424344 0x45464700 >;
-
-I get
-
-	property = "ABCDEFG";
-
-in the dts output. So I assumed that strings and arrays are just
-different syntactic ways to define a value and so concatenation would
-work for both the same way. Now thinking a bit more there are some
-problems that are likely solved best by not allowing concatenation for
-arrays and binary data.
-
-Best regards
-Uwe
-
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+T24gVGh1LCBNYXkgMTEsIDIwMTcgYXQgMDQ6NTY6MjJQTSAtMDcwMCwgRXJpYyBBbmhvbHQgd3Jv
+dGU6Cj4gQkNNMjgzNSdzIFBMTERfRFNJMSBkaXZpZGVyIGRvZXNuJ3QgZ2l2ZSB1cyBtYW55IGNo
+b2ljZXMgZm9yIG91ciBwaXhlbAo+IGNsb2Nrcywgc28gdG8gc3VwcG9ydCBwYW5lbHMgb24gdGhl
+IFJhc3BiZXJyeSBQaSB3ZSBuZWVkIHRvIHNldCBhCj4gaGlnaGVyIHBpeGVsIGNsb2NrIHJhdGUg
+dGhhbiByZXF1ZXN0ZWQgYW5kIGFkanVzdCB0aGUgbW9kZSB3ZSBwcm9ncmFtCj4gdG8gZXh0ZW5k
+IG91dCB0aGUgSEZQIHNvIHRoYXQgdGhlIHJlZnJlc2ggcmF0ZSBtYXRjaGVzLgo+IAo+IFNpZ25l
+ZC1vZmYtYnk6IEVyaWMgQW5ob2x0IDxlcmljQGFuaG9sdC5uZXQ+CgpZZWFoLCB0aGlzIGlzIHdo
+YXQgbW9kZV9maXh1cCBpcyBmb3IgKG9yIHRoZSBmYW5jaWVyIGF0b21pY19jaGVjaywgYnV0IG5v
+CmJlbmVmaXQgd2l0aCB1c2luZyB0aGF0IG9uZSBoZXJlKS4KCkFja2VkLWJ5OiBEYW5pZWwgVmV0
+dGVyIDxkYW5pZWwudmV0dGVyQGZmd2xsLmNoPgo+IC0tLQo+ICBkcml2ZXJzL2dwdS9kcm0vdmM0
+L3ZjNF9kc2kuYyB8IDExMiArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKy0tLS0tLS0t
+LS0KPiAgMSBmaWxlIGNoYW5nZWQsIDg2IGluc2VydGlvbnMoKyksIDI2IGRlbGV0aW9ucygtKQo+
+IAo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vdmM0L3ZjNF9kc2kuYyBiL2RyaXZlcnMv
+Z3B1L2RybS92YzQvdmM0X2RzaS5jCj4gaW5kZXggZmI1NGE5ZDEwMzYwLi42MmNiM2IwZDAzNDUg
+MTAwNjQ0Cj4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL3ZjNC92YzRfZHNpLmMKPiArKysgYi9kcml2
+ZXJzL2dwdS9kcm0vdmM0L3ZjNF9kc2kuYwo+IEBAIC01MTksNyArNTE5LDggQEAgc3RydWN0IHZj
+NF9kc2kgewo+ICAJLyogRFNJIGNoYW5uZWwgZm9yIHRoZSBwYW5lbCB3ZSdyZSBjb25uZWN0ZWQg
+dG8uICovCj4gIAl1MzIgY2hhbm5lbDsKPiAgCXUzMiBsYW5lczsKPiAtCWVudW0gbWlwaV9kc2lf
+cGl4ZWxfZm9ybWF0IGZvcm1hdDsKPiArCXUzMiBmb3JtYXQ7Cj4gKwl1MzIgZGl2aWRlcjsKPiAg
+CXUzMiBtb2RlX2ZsYWdzOwo+ICAKPiAgCS8qIElucHV0IGNsb2NrIGZyb20gQ1BSTUFOIHRvIHRo
+ZSBkaWdpdGFsIFBIWSwgZm9yIHRoZSBEU0kKPiBAQCAtODE3LDEzICs4MTgsNjcgQEAgc3RhdGlj
+IHZvaWQgdmM0X2RzaV9lbmNvZGVyX2Rpc2FibGUoc3RydWN0IGRybV9lbmNvZGVyICplbmNvZGVy
+KQo+ICAJcG1fcnVudGltZV9wdXQoZGV2KTsKPiAgfQo+ICAKPiArLyogRXh0ZW5kcyB0aGUgbW9k
+ZSdzIGJsYW5rIGludGVydmFscyB0byBoYW5kbGUgQkNNMjgzNSdzIGludGVnZXItb25seQo+ICsg
+KiBEU0kgUExMIGRpdmlkZXIuCj4gKyAqCj4gKyAqIE9uIDI4MzUsIFBMTEQgaXMgc2V0IHRvIDJH
+aHosIGFuZCBtYXkgbm90IGJlIGNoYW5nZWQgYnkgdGhlIGRpc3BsYXkKPiArICogZHJpdmVyIHNp
+bmNlIG1vc3QgcGVyaXBoZXJhbHMgYXJlIGhhbmdpbmcgb2ZmIG9mIHRoZSBQTExEX1BFUgo+ICsg
+KiBkaXZpZGVyLiAgUExMRF9EU0kxLCB3aGljaCBkcml2ZXMgb3VyIERTSSBiaXQgY2xvY2sgKGFu
+ZCB0aGVyZWZvcmUKPiArICogdGhlIHBpeGVsIGNsb2NrKSwgb25seSBoYXMgYW4gaW50ZWdlciBk
+aXZpZGVyIG9mZiBvZiBEU0kuCj4gKyAqCj4gKyAqIFRvIGdldCBvdXIgcGFuZWwgbW9kZSB0byBy
+ZWZyZXNoIGF0IHRoZSBleHBlY3RlZCA2MEh6LCB3ZSBuZWVkIHRvCj4gKyAqIGV4dGVuZCB0aGUg
+aG9yaXpvbnRhbCBibGFuayB0aW1lLiAgVGhpcyBtZWFucyB3ZSBkcml2ZSBhCj4gKyAqIGhpZ2hl
+ci10aGFuLWV4cGVjdGVkIGNsb2NrIHJhdGUgdG8gdGhlIHBhbmVsLCBidXQgdGhhdCdzIHdoYXQg
+dGhlCj4gKyAqIGZpcm13YXJlICh3aGljaCApIGRvZXMgdG9vLgo+ICsgKi8KPiArc3RhdGljIGJv
+b2wgdmM0X2RzaV9lbmNvZGVyX21vZGVfZml4dXAoc3RydWN0IGRybV9lbmNvZGVyICplbmNvZGVy
+LAo+ICsJCQkJICAgICAgIGNvbnN0IHN0cnVjdCBkcm1fZGlzcGxheV9tb2RlICptb2RlLAo+ICsJ
+CQkJICAgICAgIHN0cnVjdCBkcm1fZGlzcGxheV9tb2RlICphZGp1c3RlZF9tb2RlKQo+ICt7Cj4g
+KwlzdHJ1Y3QgdmM0X2RzaV9lbmNvZGVyICp2YzRfZW5jb2RlciA9IHRvX3ZjNF9kc2lfZW5jb2Rl
+cihlbmNvZGVyKTsKPiArCXN0cnVjdCB2YzRfZHNpICpkc2kgPSB2YzRfZW5jb2Rlci0+ZHNpOwo+
+ICsJc3RydWN0IGNsayAqcGh5X3BhcmVudCA9IGNsa19nZXRfcGFyZW50KGRzaS0+cGxsX3BoeV9j
+bG9jayk7Cj4gKwl1bnNpZ25lZCBsb25nIHBhcmVudF9yYXRlID0gY2xrX2dldF9yYXRlKHBoeV9w
+YXJlbnQpOwo+ICsJdW5zaWduZWQgbG9uZyBwaXhlbF9jbG9ja19oeiA9IG1vZGUtPmNsb2NrICog
+MTAwMDsKPiArCXVuc2lnbmVkIGxvbmcgcGxsX2Nsb2NrID0gcGl4ZWxfY2xvY2tfaHogKiBkc2kt
+PmRpdmlkZXI7Cj4gKwlpbnQgZGl2aWRlcjsKPiArCj4gKwkvKiBGaW5kIHdoYXQgZGl2aWRlciBn
+ZXRzIHVzIGEgZmFzdGVyIGNsb2NrIHRoYW4gdGhlIHJlcXVlc3RlZAo+ICsJICogcGl4ZWwgY2xv
+Y2suCj4gKwkgKi8KPiArCWZvciAoZGl2aWRlciA9IDE7IGRpdmlkZXIgPCA4OyBkaXZpZGVyKysp
+IHsKPiArCQlpZiAocGFyZW50X3JhdGUgLyBkaXZpZGVyIDwgcGxsX2Nsb2NrKSB7Cj4gKwkJCWRp
+dmlkZXItLTsKPiArCQkJYnJlYWs7Cj4gKwkJfQo+ICsJfQo+ICsKPiArCS8qIE5vdyB0aGF0IHdl
+J3ZlIHBpY2tlZCBhIFBMTCBkaXZpZGVyLCBjYWxjdWxhdGUgYmFjayB0byBpdHMKPiArCSAqIHBp
+eGVsIGNsb2NrLgo+ICsJICovCj4gKwlwbGxfY2xvY2sgPSBwYXJlbnRfcmF0ZSAvIGRpdmlkZXI7
+Cj4gKwlwaXhlbF9jbG9ja19oeiA9IHBsbF9jbG9jayAvIGRzaS0+ZGl2aWRlcjsKPiArCj4gKwkv
+KiBSb3VuZCB1cCB0aGUgY2xrX3NldF9yYXRlKCkgcmVxdWVzdCBzbGlnaHRseSwgc2luY2UKPiAr
+CSAqIFBMTERfRFNJMSBpcyBhbiBpbnRlZ2VyIGRpdmlkZXIgYW5kIGl0cyByYXRlIHNlbGVjdGlv
+biB3aWxsCj4gKwkgKiBuZXZlciByb3VuZCB1cC4KPiArCSAqLwo+ICsJYWRqdXN0ZWRfbW9kZS0+
+Y2xvY2sgPSBwaXhlbF9jbG9ja19oeiAvIDEwMDAgKyAxOwo+ICsKPiArCS8qIEdpdmVuIHRoZSBu
+ZXcgcGl4ZWwgY2xvY2ssIGFkanVzdCBIRlAgdG8ga2VlcCB2cmVmcmVzaCB0aGUgc2FtZS4gKi8K
+PiArCWFkanVzdGVkX21vZGUtPmh0b3RhbCA9IHBpeGVsX2Nsb2NrX2h6IC8gKG1vZGUtPnZyZWZy
+ZXNoICogbW9kZS0+dnRvdGFsKTsKPiArCWFkanVzdGVkX21vZGUtPmhzeW5jX2VuZCArPSBhZGp1
+c3RlZF9tb2RlLT5odG90YWwgLSBtb2RlLT5odG90YWw7Cj4gKwlhZGp1c3RlZF9tb2RlLT5oc3lu
+Y19zdGFydCArPSBhZGp1c3RlZF9tb2RlLT5odG90YWwgLSBtb2RlLT5odG90YWw7Cj4gKwo+ICsJ
+cmV0dXJuIHRydWU7Cj4gK30KPiArCj4gIHN0YXRpYyB2b2lkIHZjNF9kc2lfZW5jb2Rlcl9lbmFi
+bGUoc3RydWN0IGRybV9lbmNvZGVyICplbmNvZGVyKQo+ICB7Cj4gLQlzdHJ1Y3QgZHJtX2Rpc3Bs
+YXlfbW9kZSAqbW9kZSA9ICZlbmNvZGVyLT5jcnRjLT5tb2RlOwo+ICsJc3RydWN0IGRybV9kaXNw
+bGF5X21vZGUgKm1vZGUgPSAmZW5jb2Rlci0+Y3J0Yy0+c3RhdGUtPmFkanVzdGVkX21vZGU7Cj4g
+IAlzdHJ1Y3QgdmM0X2RzaV9lbmNvZGVyICp2YzRfZW5jb2RlciA9IHRvX3ZjNF9kc2lfZW5jb2Rl
+cihlbmNvZGVyKTsKPiAgCXN0cnVjdCB2YzRfZHNpICpkc2kgPSB2YzRfZW5jb2Rlci0+ZHNpOwo+
+ICAJc3RydWN0IGRldmljZSAqZGV2ID0gJmRzaS0+cGRldi0+ZGV2Owo+IC0JdTMyIGZvcm1hdCA9
+IDAsIGRpdmlkZXIgPSAwOwo+ICAJYm9vbCBkZWJ1Z19kdW1wX3JlZ3MgPSBmYWxzZTsKPiAgCXVu
+c2lnbmVkIGxvbmcgaHNfY2xvY2s7Cj4gIAl1MzIgdWlfbnM7Cj4gQEAgLTg0NSwyNiArOTAwLDcg
+QEAgc3RhdGljIHZvaWQgdmM0X2RzaV9lbmNvZGVyX2VuYWJsZShzdHJ1Y3QgZHJtX2VuY29kZXIg
+KmVuY29kZXIpCj4gIAkJdmM0X2RzaV9kdW1wX3JlZ3MoZHNpKTsKPiAgCX0KPiAgCj4gLQlzd2l0
+Y2ggKGRzaS0+Zm9ybWF0KSB7Cj4gLQljYXNlIE1JUElfRFNJX0ZNVF9SR0I4ODg6Cj4gLQkJZm9y
+bWF0ID0gRFNJX1BGT1JNQVRfUkdCODg4Owo+IC0JCWRpdmlkZXIgPSAyNCAvIGRzaS0+bGFuZXM7
+Cj4gLQkJYnJlYWs7Cj4gLQljYXNlIE1JUElfRFNJX0ZNVF9SR0I2NjY6Cj4gLQkJZm9ybWF0ID0g
+RFNJX1BGT1JNQVRfUkdCNjY2Owo+IC0JCWRpdmlkZXIgPSAyNCAvIGRzaS0+bGFuZXM7Cj4gLQkJ
+YnJlYWs7Cj4gLQljYXNlIE1JUElfRFNJX0ZNVF9SR0I2NjZfUEFDS0VEOgo+IC0JCWZvcm1hdCA9
+IERTSV9QRk9STUFUX1JHQjY2Nl9QQUNLRUQ7Cj4gLQkJZGl2aWRlciA9IDE4IC8gZHNpLT5sYW5l
+czsKPiAtCQlicmVhazsKPiAtCWNhc2UgTUlQSV9EU0lfRk1UX1JHQjU2NToKPiAtCQlmb3JtYXQg
+PSBEU0lfUEZPUk1BVF9SR0I1NjU7Cj4gLQkJZGl2aWRlciA9IDE2IC8gZHNpLT5sYW5lczsKPiAt
+CQlicmVhazsKPiAtCX0KPiAtCj4gLQlwaHlfY2xvY2sgPSBwaXhlbF9jbG9ja19oeiAqIGRpdmlk
+ZXI7Cj4gKwlwaHlfY2xvY2sgPSBwaXhlbF9jbG9ja19oeiAqIGRzaS0+ZGl2aWRlcjsKPiAgCXJl
+dCA9IGNsa19zZXRfcmF0ZShkc2ktPnBsbF9waHlfY2xvY2ssIHBoeV9jbG9jayk7Cj4gIAlpZiAo
+cmV0KSB7Cj4gIAkJZGV2X2VycigmZHNpLT5wZGV2LT5kZXYsCj4gQEAgLTEwNDksOCArMTA4NSw5
+IEBAIHN0YXRpYyB2b2lkIHZjNF9kc2lfZW5jb2Rlcl9lbmFibGUoc3RydWN0IGRybV9lbmNvZGVy
+ICplbmNvZGVyKQo+ICAKPiAgCWlmIChkc2ktPm1vZGVfZmxhZ3MgJiBNSVBJX0RTSV9NT0RFX1ZJ
+REVPKSB7Cj4gIAkJRFNJX1BPUlRfV1JJVEUoRElTUDBfQ1RSTCwKPiAtCQkJICAgICAgIFZDNF9T
+RVRfRklFTEQoZGl2aWRlciwgRFNJX0RJU1AwX1BJWF9DTEtfRElWKSB8Cj4gLQkJCSAgICAgICBW
+QzRfU0VUX0ZJRUxEKGZvcm1hdCwgRFNJX0RJU1AwX1BGT1JNQVQpIHwKPiArCQkJICAgICAgIFZD
+NF9TRVRfRklFTEQoZHNpLT5kaXZpZGVyLAo+ICsJCQkJCSAgICAgRFNJX0RJU1AwX1BJWF9DTEtf
+RElWKSB8Cj4gKwkJCSAgICAgICBWQzRfU0VUX0ZJRUxEKGRzaS0+Zm9ybWF0LCBEU0lfRElTUDBf
+UEZPUk1BVCkgfAo+ICAJCQkgICAgICAgVkM0X1NFVF9GSUVMRChEU0lfRElTUDBfTFBfU1RPUF9Q
+RVJGUkFNRSwKPiAgCQkJCQkgICAgIERTSV9ESVNQMF9MUF9TVE9QX0NUUkwpIHwKPiAgCQkJICAg
+ICAgIERTSV9ESVNQMF9TVF9FTkQgfAo+IEBAIC0xMjU1LDkgKzEyOTIsMzEgQEAgc3RhdGljIGlu
+dCB2YzRfZHNpX2hvc3RfYXR0YWNoKHN0cnVjdCBtaXBpX2RzaV9ob3N0ICpob3N0LAo+ICAKPiAg
+CWRzaS0+bGFuZXMgPSBkZXZpY2UtPmxhbmVzOwo+ICAJZHNpLT5jaGFubmVsID0gZGV2aWNlLT5j
+aGFubmVsOwo+IC0JZHNpLT5mb3JtYXQgPSBkZXZpY2UtPmZvcm1hdDsKPiAgCWRzaS0+bW9kZV9m
+bGFncyA9IGRldmljZS0+bW9kZV9mbGFnczsKPiAgCj4gKwlzd2l0Y2ggKGRldmljZS0+Zm9ybWF0
+KSB7Cj4gKwljYXNlIE1JUElfRFNJX0ZNVF9SR0I4ODg6Cj4gKwkJZHNpLT5mb3JtYXQgPSBEU0lf
+UEZPUk1BVF9SR0I4ODg7Cj4gKwkJZHNpLT5kaXZpZGVyID0gMjQgLyBkc2ktPmxhbmVzOwo+ICsJ
+CWJyZWFrOwo+ICsJY2FzZSBNSVBJX0RTSV9GTVRfUkdCNjY2Ogo+ICsJCWRzaS0+Zm9ybWF0ID0g
+RFNJX1BGT1JNQVRfUkdCNjY2Owo+ICsJCWRzaS0+ZGl2aWRlciA9IDI0IC8gZHNpLT5sYW5lczsK
+PiArCQlicmVhazsKPiArCWNhc2UgTUlQSV9EU0lfRk1UX1JHQjY2Nl9QQUNLRUQ6Cj4gKwkJZHNp
+LT5mb3JtYXQgPSBEU0lfUEZPUk1BVF9SR0I2NjZfUEFDS0VEOwo+ICsJCWRzaS0+ZGl2aWRlciA9
+IDE4IC8gZHNpLT5sYW5lczsKPiArCQlicmVhazsKPiArCWNhc2UgTUlQSV9EU0lfRk1UX1JHQjU2
+NToKPiArCQlkc2ktPmZvcm1hdCA9IERTSV9QRk9STUFUX1JHQjU2NTsKPiArCQlkc2ktPmRpdmlk
+ZXIgPSAxNiAvIGRzaS0+bGFuZXM7Cj4gKwkJYnJlYWs7Cj4gKwlkZWZhdWx0Ogo+ICsJCWRldl9l
+cnIoJmRzaS0+cGRldi0+ZGV2LCAiVW5rbm93biBEU0kgZm9ybWF0OiAlZC5cbiIsCj4gKwkJCWRz
+aS0+Zm9ybWF0KTsKPiArCQlyZXR1cm4gMDsKPiArCX0KPiArCj4gIAlpZiAoIShkc2ktPm1vZGVf
+ZmxhZ3MgJiBNSVBJX0RTSV9NT0RFX1ZJREVPKSkgewo+ICAJCWRldl9lcnIoJmRzaS0+cGRldi0+
+ZGV2LAo+ICAJCQkiT25seSBWSURFTyBtb2RlIHBhbmVscyBzdXBwb3J0ZWQgY3VycmVudGx5Llxu
+Iik7Cj4gQEAgLTEzMDQsNiArMTM2Myw3IEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3QgbWlwaV9kc2lf
+aG9zdF9vcHMgdmM0X2RzaV9ob3N0X29wcyA9IHsKPiAgc3RhdGljIGNvbnN0IHN0cnVjdCBkcm1f
+ZW5jb2Rlcl9oZWxwZXJfZnVuY3MgdmM0X2RzaV9lbmNvZGVyX2hlbHBlcl9mdW5jcyA9IHsKPiAg
+CS5kaXNhYmxlID0gdmM0X2RzaV9lbmNvZGVyX2Rpc2FibGUsCj4gIAkuZW5hYmxlID0gdmM0X2Rz
+aV9lbmNvZGVyX2VuYWJsZSwKPiArCS5tb2RlX2ZpeHVwID0gdmM0X2RzaV9lbmNvZGVyX21vZGVf
+Zml4dXAsCj4gIH07Cj4gIAo+ICBzdGF0aWMgY29uc3Qgc3RydWN0IG9mX2RldmljZV9pZCB2YzRf
+ZHNpX2R0X21hdGNoW10gPSB7Cj4gLS0gCj4gMi4xMS4wCj4gCj4gX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX18KPiBkcmktZGV2ZWwgbWFpbGluZyBsaXN0Cj4g
+ZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwo+IGh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0
+b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCgotLSAKRGFuaWVsIFZldHRlcgpTb2Z0
+d2FyZSBFbmdpbmVlciwgSW50ZWwgQ29ycG9yYXRpb24KaHR0cDovL2Jsb2cuZmZ3bGwuY2gKX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1h
+aWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMu
+ZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
