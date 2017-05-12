@@ -1,83 +1,130 @@
-From: Paul Cercueil <paul-icTtO2rgO2OTuSrc4Mpeew@public.gmane.org>
-Subject: [PATCH v6 01/14] dt/bindings: Document pinctrl-ingenic
-Date: Fri, 12 May 2017 18:52:54 +0200
-Message-ID: <20170512165307.31369-1-paul@crapouillou.net>
+From: Paul Cercueil <paul@crapouillou.net>
+Subject: [PATCH v6 09/14] MIPS: JZ4780: CI20: Add pinctrl configuration for several drivers
+Date: Fri, 12 May 2017 18:53:02 +0200
+Message-ID: <20170512165307.31369-9-paul@crapouillou.net>
 References: <20170428200824.10906-2-paul@crapouillou.net>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170428200824.10906-2-paul-icTtO2rgO2OTuSrc4Mpeew@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, Maarten ter Huurne <maarten-Ph2Y2OKCxY1M656bX5wj8A@public.gmane.org>, Paul Cercueil <paul-icTtO2rgO2OTuSrc4Mpeew@public.gmane.org>
+ <20170512165307.31369-1-paul@crapouillou.net>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170512165307.31369-1-paul@crapouillou.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Ralf Baechle <ralf@linux-mips.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, Maarten ter Huurne <maarten@treewalker.org>, Paul Cercueil <paul@crapouillou.net>
 List-Id: devicetree@vger.kernel.org
 
-This commit adds documentation for the devicetree bindings of the
-pinctrl-ingenic driver, which handles pin configuration and pin
-muxing of the Ingenic SoCs currently supported by the Linux kernel.
+We set the pin configuration for the jz4780-nand and jz4780-uart
+drivers.
 
-Signed-off-by: Paul Cercueil <paul-icTtO2rgO2OTuSrc4Mpeew@public.gmane.org>
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 ---
- .../bindings/pinctrl/ingenic,pinctrl.txt           | 41 ++++++++++++++++++++++
- 1 file changed, 41 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pinctrl/ingenic,pinctrl.txt
+ arch/mips/boot/dts/ingenic/ci20.dts | 60 +++++++++++++++++++++++++++++++++++++
+ 1 file changed, 60 insertions(+)
 
- v2: Rewrote the documentation for the new pinctrl-ingenic driver
+ v2: Changed the devicetree bindings to match the new driver
  v3: No changes
- v4: Update for the v4 version of the pinctrl-ingenic driver
- v5: Rename 'ingenic-pinctrl@...' to 'pin-controller@...' in example
+ v4: No changes
+ v5: No changes
  v6: No changes
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/ingenic,pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/ingenic,pinctrl.txt
-new file mode 100644
-index 000000000000..ca313a7aeaff
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pinctrl/ingenic,pinctrl.txt
-@@ -0,0 +1,41 @@
-+Ingenic jz47xx pin controller
+diff --git a/arch/mips/boot/dts/ingenic/ci20.dts b/arch/mips/boot/dts/ingenic/ci20.dts
+index 1652d8d60b1e..fd138d9978c1 100644
+--- a/arch/mips/boot/dts/ingenic/ci20.dts
++++ b/arch/mips/boot/dts/ingenic/ci20.dts
+@@ -29,18 +29,30 @@
+ 
+ &uart0 {
+ 	status = "okay";
 +
-+Please refer to pinctrl-bindings.txt in this directory for details of the
-+common pinctrl bindings used by client devices, including the meaning of the
-+phrase "pin configuration node".
++	pinctrl-names = "default";
++	pinctrl-0 = <&pins_uart0>;
+ };
+ 
+ &uart1 {
+ 	status = "okay";
 +
-+For the jz47xx SoCs, pin control is tightly bound with GPIO ports. All pins may
-+be used as GPIOs, multiplexed device functions are configured within the
-+GPIO port configuration registers and it is typical to refer to pins using the
-+naming scheme "PxN" where x is a character identifying the GPIO port with
-+which the pin is associated and N is an integer from 0 to 31 identifying the
-+pin within that GPIO port. For example PA0 is the first pin in GPIO port A, and
-+PB31 is the last pin in GPIO port B. The jz4740 contains 4 GPIO ports, PA to
-+PD, for a total of 128 pins. The jz4780 contains 6 GPIO ports, PA to PF, for a
-+total of 192 pins.
++	pinctrl-names = "default";
++	pinctrl-0 = <&pins_uart1>;
+ };
+ 
+ &uart3 {
+ 	status = "okay";
 +
++	pinctrl-names = "default";
++	pinctrl-0 = <&pins_uart2>;
+ };
+ 
+ &uart4 {
+ 	status = "okay";
 +
-+Required properties:
-+--------------------
++	pinctrl-names = "default";
++	pinctrl-0 = <&pins_uart4>;
+ };
+ 
+ &nemc {
+@@ -61,6 +73,13 @@
+ 		ingenic,nemc-tAW = <15>;
+ 		ingenic,nemc-tSTRV = <100>;
+ 
++		/*
++		 * Only CLE/ALE are needed for the devices that are connected, rather
++		 * than the full address line set.
++		 */
++		pinctrl-names = "default";
++		pinctrl-0 = <&pins_nemc>;
 +
-+ - compatible: One of:
-+    - "ingenic,jz4740-pinctrl"
-+    - "ingenic,jz4770-pinctrl"
-+    - "ingenic,jz4780-pinctrl"
-+ - reg: Address range of the pinctrl registers.
+ 		nand@1 {
+ 			reg = <1>;
+ 
+@@ -69,6 +88,9 @@
+ 			nand-ecc-mode = "hw";
+ 			nand-on-flash-bbt;
+ 
++			pinctrl-names = "default";
++			pinctrl-0 = <&pins_nemc_cs1>;
 +
+ 			partitions {
+ 				compatible = "fixed-partitions";
+ 				#address-cells = <2>;
+@@ -106,3 +128,41 @@
+ &bch {
+ 	status = "okay";
+ };
 +
-+GPIO sub-nodes
-+--------------
++&pinctrl {
++	pins_uart0: uart0 {
++		function = "uart0";
++		groups = "uart0-data";
++		bias-disable;
++	};
 +
-+The pinctrl node can have optional sub-nodes for the Ingenic GPIO driver;
-+please refer to ../gpio/ingenic,gpio.txt.
++	pins_uart1: uart1 {
++		function = "uart1";
++		groups = "uart1-data";
++		bias-disable;
++	};
 +
++	pins_uart2: uart2 {
++		function = "uart2";
++		groups = "uart2-data", "uart2-hwflow";
++		bias-disable;
++	};
 +
-+Example:
-+--------
++	pins_uart4: uart4 {
++		function = "uart4";
++		groups = "uart4-data";
++		bias-disable;
++	};
 +
-+pinctrl: pin-controller@10010000 {
-+	compatible = "ingenic,jz4740-pinctrl";
-+	reg = <0x10010000 0x400>;
++	pins_nemc: nemc {
++		function = "nemc";
++		groups = "nemc-data", "nemc-cle-ale", "nemc-rd-we", "nemc-frd-fwe";
++		bias-disable;
++	};
++
++	pins_nemc_cs1: nemc-cs1 {
++		function = "nemc-cs1";
++		groups = "nemc-cs1";
++		bias-disable;
++	};
 +};
 -- 
 2.11.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
