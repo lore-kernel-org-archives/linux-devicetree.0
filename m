@@ -1,86 +1,57 @@
-From: Eric Anholt <eric@anholt.net>
-Subject: [PATCH 2/4] dt-bindings: Document the Raspberry Pi Touchscreen nodes.
-Date: Thu, 11 May 2017 16:56:23 -0700
-Message-ID: <20170511235625.22427-3-eric@anholt.net>
-References: <20170511235625.22427-1-eric@anholt.net>
+From: Leo Yan <leo.yan@linaro.org>
+Subject: Re: [PATCH v9 7/9] coresight: add support for CPU debug module
+Date: Fri, 12 May 2017 08:10:11 +0800
+Message-ID: <20170512001010.GA13845@leoy-ThinkPad-T440>
+References: <1494298202-6739-1-git-send-email-leo.yan@linaro.org>
+ <1494298202-6739-8-git-send-email-leo.yan@linaro.org>
+ <20170511171232.GA21765@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20170511235625.22427-1-eric@anholt.net>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: dri-devel@lists.freedesktop.org, Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Archit Taneja <architt@codeaurora.org>, Andrzej Hajda <a.hajda@samsung.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170511171232.GA21765@linaro.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc: Jonathan Corbet <corbet@lwn.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Wei Xu <xuwei5@hisilicon.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Suzuki K Poulose <suzuki.poulose@arm.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, Mike Leach <mike.leach@linaro.org>, Sudeep Holla <sudeep.holla@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-VGhlIFJhc3BiZXJyeSBQaSA3IiBUb3VjaHNjcmVlbiBpcyBhIERQSSB0b3VjaHNjcmVlbiBwYW5l
-bCB3aXRoCkRTSS0+RFBJIGJyaWRnZSBhbmQgdG91Y2hzY3JlZW4gY29udHJvbGxlciBpbnRlZ3Jh
-dGVkLCB0aGF0IGNvbm5lY3RzCnRvIHRoZSBSYXNwYmVycnkgUGkgdGhyb3VnaCBpdHMgMTUtcGlu
-ICJEU0kiIGNvbm5lY3RvciAoc29tZSBsaW5lcyBhcmUKRFNJLCBzb21lIGxpbmVzIGFyZSBJMkMp
-LgoKVGhpcyBkZXZpY2UgaXMgcmVwcmVzZW50ZWQgaW4gdGhlIERUIGFzIHRocmVlIG5vZGVzIChE
-U0kgZGV2aWNlLCBJMkMKZGV2aWNlLCBwYW5lbCkuICBJbnB1dCB3aWxsIGJlIGxlZnQgdG8gYSBz
-ZXBhcmF0ZSBiaW5kaW5nIGxhdGVyLCBhcyBpdAp3aWxsIGJlIGEgYmFzaWMgSTJDIGNsaWVudCBk
-ZXZpY2UuCgpTaWduZWQtb2ZmLWJ5OiBFcmljIEFuaG9sdCA8ZXJpY0BhbmhvbHQubmV0PgotLS0K
-IC4uLi9yYXNwYmVycnlwaSw3aW5jaC10b3VjaHNjcmVlbi1icmlkZ2UudHh0ICAgICAgIHwgNjgg
-KysrKysrKysrKysrKysrKysrKysrKwogLi4uL3BhbmVsL3Jhc3BiZXJyeXBpLDdpbmNoLXRvdWNo
-c2NyZWVuLXBhbmVsLnR4dCAgfCAgNyArKysKIDIgZmlsZXMgY2hhbmdlZCwgNzUgaW5zZXJ0aW9u
-cygrKQogY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
-cy9kaXNwbGF5L2JyaWRnZS9yYXNwYmVycnlwaSw3aW5jaC10b3VjaHNjcmVlbi1icmlkZ2UudHh0
-CiBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rp
-c3BsYXkvcGFuZWwvcmFzcGJlcnJ5cGksN2luY2gtdG91Y2hzY3JlZW4tcGFuZWwudHh0CgpkaWZm
-IC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdl
-L3Jhc3BiZXJyeXBpLDdpbmNoLXRvdWNoc2NyZWVuLWJyaWRnZS50eHQgYi9Eb2N1bWVudGF0aW9u
-L2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvcmFzcGJlcnJ5cGksN2luY2gtdG91
-Y2hzY3JlZW4tYnJpZGdlLnR4dApuZXcgZmlsZSBtb2RlIDEwMDY0NAppbmRleCAwMDAwMDAwMDAw
-MDAuLmE1NjY5YmVhZjY4ZgotLS0gL2Rldi9udWxsCisrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNl
-dHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS9yYXNwYmVycnlwaSw3aW5jaC10b3VjaHNjcmVl
-bi1icmlkZ2UudHh0CkBAIC0wLDAgKzEsNjggQEAKK09mZmljaWFsIDciICg4MDB4NDgwKSBSYXNw
-YmVycnkgUGkgdG91Y2hzY3JlZW4gcGFuZWwncyBicmlkZ2UuCisKK1RoaXMgRFNJIHBhbmVsIGNv
-bnRhaW5zOgorCistIFRDMzU4NzYyIERTSS0+RFBJIGJyaWRnZQorLSBBdG1lbCBtaWNyb2NvbnRy
-b2xsZXIgb24gSTJDIGZvciBwb3dlciBzZXF1ZW5jaW5nIHRoZSBEU0kgYnJpZGdlIGFuZAorICBj
-b250cm9sbGluZyBiYWNrbGlnaHQKKy0gVG91Y2hzY3JlZW4gY29udHJvbGxlciBvbiBJMkMgZm9y
-IHRvdWNoIGlucHV0CisKK2FuZCB0aGlzIGNvdmVycyB0aGUgVEMzNTg3NjIgYnJpZGdlIGFuZCBB
-dG1lbCBtaWNyb2NvbnRyb2xsZXIsIHdoaWxlCisuLi9wYW5lbC9yYXNwYmVycnlwaSw3aW5jaC10
-b3VjaHNjcmVlbi1wYW5lbC50eHQgY292ZXJzIHRoZSBwYW5lbC4KKworUmVxdWlyZWQgcHJvcGVy
-dGllczoKKy0gY29tcGF0aWJsZToJTXVzdCBiZSAicmFzcGJlcnJ5cGksN2luY2gtdG91Y2hzY3Jl
-ZW4tYnJpZGdlIgorLSByYXNwYmVycnlwaSx0b3VjaHNjcmVlbi1icmlkZ2U6CisJCUhhbmRsZSB0
-byB0aGUgSTJDIGRldmljZSBmb3IgQXRtZWwgbWljcm9jb250cm9sbGVyCisKK0V4YW1wbGU6CisK
-K2RzaTE6IGRzaUA3ZTcwMDAwMCB7CisJI2FkZHJlc3MtY2VsbHMgPSA8MT47CisJI3NpemUtY2Vs
-bHMgPSA8MD47CisJPC4uLj4KKworCWxjZC1icmlkZ2VAMCB7CisJCWNvbXBhdGlibGUgPSAicmFz
-cGJlcnJ5cGksN2luY2gtdG91Y2hzY3JlZW4tYnJpZGdlIjsKKwkJcmVnID0gPDA+OworCisJCXJh
-c3BiZXJyeXBpLHRvdWNoc2NyZWVuLWJyaWRnZSA9IDwmcGl0b3VjaHNjcmVlbl9icmlkZ2U+Owor
-CQlwb3J0cyB7CisJCQkjYWRkcmVzcy1jZWxscyA9IDwxPjsKKwkJCSNzaXplLWNlbGxzID0gPDA+
-OworCQkJcG9ydEAwIHsKKwkJCQlyZWcgPSA8MD47CisJCQkJcGl0b3VjaHNjcmVlbl9icmlkZ2Vf
-cG9ydDogZW5kcG9pbnQgeworCQkJCQlyZW1vdGUtZW5kcG9pbnQgPSA8JnBpdG91Y2hzY3JlZW5f
-cGFuZWxfcG9ydD47CisJCQkJfTsKKwkJCX07CisJCX07CisJfTsKK307CisKK2kyY19kc2k6IGky
-YyB7CisJY29tcGF0aWJsZSA9ICJpMmMtZ3BpbyI7CisJI2FkZHJlc3MtY2VsbHMgPSA8MT47CisJ
-I3NpemUtY2VsbHMgPSA8MD47CisJZ3Bpb3MgPSA8JmdwaW8gMjggMAorCQkgJmdwaW8gMjkgMD47
-CisKKwlwaXRvdWNoc2NyZWVuX2JyaWRnZTogYnJpZGdlQDQ1IHsKKwkJY29tcGF0aWJsZSA9ICJy
-YXNwYmVycnlwaSx0b3VjaHNjcmVlbi1icmlkZ2UtaTJjIjsKKwkJcmVnID0gPDB4NDU+OworCX07
-Cit9OworCitsY2QgeworCWNvbXBhdGlibGUgPSAicmFzcGJlcnJ5cGksN2luY2gtdG91Y2hzY3Jl
-ZW4tcGFuZWwiOworCXBvcnRzIHsKKwkJI2FkZHJlc3MtY2VsbHMgPSA8MT47CisJCSNzaXplLWNl
-bGxzID0gPDA+OworCQlwb3J0QDAgeworCQkJcmVnID0gPDA+OworCQkJcGl0b3VjaHNjcmVlbl9w
-YW5lbF9wb3J0OiBlbmRwb2ludCB7CisJCQkJcmVtb3RlLWVuZHBvaW50ID0gPCZwaXRvdWNoc2Ny
-ZWVuX2JyaWRnZV9wb3J0PjsKKwkJCX07CisJCX07CisJfTsKK307CmRpZmYgLS1naXQgYS9Eb2N1
-bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9yYXNwYmVycnlwaSw3
-aW5jaC10b3VjaHNjcmVlbi1wYW5lbC50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
-ZGluZ3MvZGlzcGxheS9wYW5lbC9yYXNwYmVycnlwaSw3aW5jaC10b3VjaHNjcmVlbi1wYW5lbC50
-eHQKbmV3IGZpbGUgbW9kZSAxMDA2NDQKaW5kZXggMDAwMDAwMDAwMDAwLi4xZTg0Zjk3YjNiMjAK
-LS0tIC9kZXYvbnVsbAorKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlz
-cGxheS9wYW5lbC9yYXNwYmVycnlwaSw3aW5jaC10b3VjaHNjcmVlbi1wYW5lbC50eHQKQEAgLTAs
-MCArMSw3IEBACitPZmZpY2lhbCA3IiAoODAweDQ4MCkgUmFzcGJlcnJ5IFBpIHRvdWNoc2NyZWVu
-IHBhbmVsJ3MgcGFuZWwuCisKK1RoaXMgYmluZGluZyBpcyBjb21wYXRpYmxlIHdpdGggdGhlIHNp
-bXBsZS1wYW5lbCBiaW5kaW5nLCB3aGljaCBpcyBzcGVjaWZpZWQKK2luIHNpbXBsZS1wYW5lbC50
-eHQgaW4gdGhpcyBkaXJlY3RvcnkuCisKK1JlcXVpcmVkIHByb3BlcnRpZXM6CistIGNvbXBhdGli
-bGU6CU11c3QgYmUgInJhc3BiZXJyeXBpLDdpbmNoLXRvdWNoc2NyZWVuLXBhbmVsIgotLSAKMi4x
-MS4wCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmkt
-ZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6
-Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+On Thu, May 11, 2017 at 11:12:32AM -0600, Mathieu Poirier wrote:
+
+[...]
+
+> > +static int debug_probe(struct amba_device *adev, const struct amba_id *id)
+> > +{
+> > +	void __iomem *base;
+> > +	struct device *dev = &adev->dev;
+> > +	struct debug_drvdata *drvdata;
+> > +	struct resource *res = &adev->res;
+> > +	struct device_node *np = adev->dev.of_node;
+> > +	int ret;
+> > +
+> > +	drvdata = devm_kzalloc(dev, sizeof(*drvdata), GFP_KERNEL);
+> > +	if (!drvdata)
+> > +		return -ENOMEM;
+> > +
+> > +	drvdata->cpu = np ? of_coresight_get_cpu(np) : 0;
+> > +	if (per_cpu(debug_drvdata, drvdata->cpu)) {
+> > +		dev_err(dev, "CPU%d drvdata has been initialized, "
+> 
+> s/"has been"/"has already been"
+> 
+> That way it really look like an error message.
+
+Will fix.
+
+> Also debug_probe() uses dev_xyz() but everywhere else in the driver it is
+> pr_xyz() - any specific reason for that?  I suggest moving to dev_xyz().
+
+Some logs are shared for all device instances, so I think should use
+pr_xyz(); will spin a new version to change other places to use
+dev_xyz() if the logs are for specific device instance.
+
+> Otherwise things look good.
+
+[...]
+
+Thanks,
+Leo Yan
