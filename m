@@ -1,8 +1,7 @@
-From: Chris Brandt <Chris.Brandt@renesas.com>
-Subject: RE: [PATCH v5 01/10] pinctrl: generic: Add bi-directional and
- output-enable
-Date: Fri, 12 May 2017 12:13:41 +0000
-Message-ID: <SG2PR06MB1165FF6C0F4DBD8987BC396A8AE20@SG2PR06MB1165.apcprd06.prod.outlook.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v5 01/10] pinctrl: generic: Add bi-directional and output-enable
+Date: Fri, 12 May 2017 14:25:23 +0200
+Message-ID: <CAMuHMdWVsuq9eucz9hz47oBtEvBGW2sJ8-G7L4hDk53CNnxd2A@mail.gmail.com>
 References: <1493281194-5200-2-git-send-email-jacopo+renesas@jmondi.org>
  <CAHp75Vcy1OE+9htFx9k3kQhGARQPT1C0gg3SEKZd7ULu_vkUMA@mail.gmail.com>
  <CACRpkdayW0qPXDcc_JofkwtX5UHhDPxiY_8deZZ7+hPNJkjgeQ@mail.gmail.com>
@@ -11,55 +10,79 @@ References: <1493281194-5200-2-git-send-email-jacopo+renesas@jmondi.org>
  <SG2PR06MB11658EC3A3A80C57E6F539AC8A130@SG2PR06MB1165.apcprd06.prod.outlook.com>
  <CAHp75VeLtOuty=iaxuCaH43rnBZDTT03iH7JyjDJBQhTD-EjzA@mail.gmail.com>
  <CACRpkdZkNGSUvTrEdjbGKO1hr799QpJBGSHPVbsBibph7Jx61A@mail.gmail.com>
- <20170508160120.GB25206@w540>
- <CAHp75VfOMKOhpkec+htA6DRQhivpSmNXy1=Ayig1W+ZC84gTLw@mail.gmail.com>
- <20170508172516.GC25206@w540>
- <CACRpkdY1h+yfFuk2y9=nZqqvW9=G33_eHCisvuMkJ5b3zizY7Q@mail.gmail.com>
+ <20170508160120.GB25206@w540> <CAHp75VfOMKOhpkec+htA6DRQhivpSmNXy1=Ayig1W+ZC84gTLw@mail.gmail.com>
+ <20170508172516.GC25206@w540> <CACRpkdY1h+yfFuk2y9=nZqqvW9=G33_eHCisvuMkJ5b3zizY7Q@mail.gmail.com>
  <CAMuHMdXK9VmghZy1RounHWn-HDqgeT_12V_9RVihiuiajn+RDg@mail.gmail.com>
  <CACRpkdYsE1oeDp1HnYAFMKG2iPTg06cAtD41vxrmZPP70MJQdA@mail.gmail.com>
- <CAMuHMdXK7YB2zN4fz9XiqTuydxp7VvVV+wSgXWUYBB0evkp8dw@mail.gmail.com>
+ <CAMuHMdXK7YB2zN4fz9XiqTuydxp7VvVV+wSgXWUYBB0evkp8dw@mail.gmail.com> <SG2PR06MB1165FF6C0F4DBD8987BC396A8AE20@SG2PR06MB1165.apcprd06.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdXK7YB2zN4fz9XiqTuydxp7VvVV+wSgXWUYBB0evkp8dw@mail.gmail.com>
-Content-Language: en-US
+In-Reply-To: <SG2PR06MB1165FF6C0F4DBD8987BC396A8AE20@SG2PR06MB1165.apcprd06.prod.outlook.com>
 Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>, Linus Walleij <linus.walleij@linaro.org>
-Cc: jmondi <jacopo@jmondi.org>, Andy Shevchenko <andy.shevchenko@gmail.com>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King - ARM Linux <linux@armlinux.org.uk>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Chris Brandt <Chris.Brandt@renesas.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, jmondi <jacopo@jmondi.org>, Andy Shevchenko <andy.shevchenko@gmail.com>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King - ARM Linux <linux@armlinux.org.uk>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgR2VlcnQgYW5kIExpbnVzLA0KDQpPbiBGcmlkYXksIE1heSAxMiwgMjAxNywgR2VlcnQgVXl0
-dGVyaG9ldmVuIHdyb3RlOg0KPiBKYWNvcG8sIENocmlzOiBXb3VsZCB0d28gYml0cyBwZXIgcGlu
-L2Z1bmN0aW9uIChub25lLCBpbnB1dCwgb3V0cHV0LA0KPiBiaWRpcikNCj4gYmUgc3VmZmljaWVu
-dD8NCj4gVGhhdCBtYWtlcyBvbmUgdTE2IHBlciBwaW4uIFNvIHJvdWdodGx5IDEyIHBvcnRzIHgg
-MTYgcGlucyA9PiAzODQgYnl0ZXMuDQo+IFBsdXMgY29kZSB0byBoYW5kbGUgaXQuIEFmdGVyIGFs
-bCBub3QgdGhhdCBiYWQuLi4NCg0KT0suLi5JIGdpdmUgdXAhDQpJZiB0aGF0J3Mgd2hhdCBpdCB0
-YWtlcyB0byBnZXQgaXQsIEknbSBmaW5lLg0KDQpOT1RFLCB5b3VyIG1hdGggaXMgYSBsaXR0bGUg
-b2ZmLCB0aGUgaXNzdWUgaXMgdGhhdCBkZXBlbmRpbmcgb24gdGhlDQpmdW5jdGlvbiB0aGF0IHlv
-dSB1c2UsIHlvdSBtaWdodCBuZWVkIHRvIGRvIGV4dHJhIHNldHRpbmdzLCBzbyB5b3UnZA0KaGF2
-ZSB0byBoYXZlIGEgbG9va3VwIHRhYmxlIGZvciBldmVyeSBwaW4gJiBmdW5jdGlvbi4NCkVhY2gg
-cGluIGNhbiBoYXZlIDEgb2YgOCBmdW5jdGlvbnMgKHdoaWNoIGlzIGdvb2QgYmVjYXVzZSBhICdi
-eXRlJyBoYXMNCjggYml0cykuDQoNClNvLA0KIDEyIHBvcnRzIHggMTYgcGlucyA9PiAzODQgYnl0
-ZXMgICh0aGlzIHRhYmxlIHdvdWxkIGp1c3QgYmUgZm9yIGNoZWNraW5nIGlmIGJpLWRpciBpcyBu
-ZWVkZWQpDQogMTIgcG9ydHMgeCAxNiBwaW5zID0+IDM4NCBieXRlcyAgKHRoaXMgdGFibGUgd291
-bGQganVzdCBiZSBmb3IgY2hlY2tpbmcgaWYgaW5wdXQgaXMgbmVlZGVkKQ0KIDEyIHBvcnRzIHgg
-MTYgcGlucyA9PiAzODQgYnl0ZXMgICh0aGlzIHRhYmxlIHdvdWxkIGp1c3QgYmUgZm9yIGNoZWNr
-aW5nIGlmIGlucHV0IGlzIG5lZWRlZCkNCiAgICAgICAgICAgICAgICAgICAgIC0tLS0tLS0tLS0t
-LQ0KICAgICAgICAgICAgICAgICAgICAgMSwxNTIgYnl0ZXMNCg0KQnV0IHRoZW4uLi50aGVyZSBh
-cmUgcGFja2FnZSB2YXJpYXRpb25zIHNvIHlvdSBuZWVkIGFub3RoZXIgZW50aXJlDQp0YWJsZSBm
-b3IgdGhvc2UgcGFydHMuDQogICAxLDE1MiBieXRlcyB4IDIgPSAyLDMwNCBieXRlcw0KDQpIb3dl
-dmVyLCBpZiB0aGVzZSB0YWJsZXMgYXJlIGNvbnN0YW50cywgdGhleSB3aWxsIHJlc2lkZSBpbiBm
-bGFzaCBmb3IgdGhlDQpYSVBfS0VSTkVMIHN5c3RlbXMsIHNvIHRoYXQncyBPSy4NCg0KI1doYXQg
-d2Ugc2hvdWxkIHJlYWxseSBkbyBpcyBqdXN0IG1ha2UgYSBsb29rLXVwIHRhYmxlICh0YWJsZXMp
-IGZvciB0aGUNCidzcGVjaWFsJyBvbmVzLiBCdXQsIHdlIGNhbiBoYXZlIHRoYXQgZGlzY3Vzc2lv
-biBpbiBhIGRpZmZlcmVudCB0aHJlYWQuDQoNCg0KDQpPbmUgZmluYWwgbm90ZToNCg0KVGhlcmUg
-aXMgc3RpbGwgYSBuZWVkIGZvciAiaW5wdXQtZW5hYmxlIiBhbmQgIm91dHB1dC1lbmFibGUiIGZv
-ciB0aGUgdGltZXINCnBpbnMuIEJlY2F1c2UsIHdoZW4geW91IGNob29zZSB0aGUgcGluIHRvIGJl
-IGNvbm5lY3RlZCB0byB0aGUgTVRVMiB0aW1lciwNCnRoZSBwaW4gY2FuIGJlIHVzZWQgYXMgZWl0
-aGVyIGlucHV0LWNhcHR1cmUvb3V0cHV0LWNvbXBhcmUvUFdNIGFuZCB0aGF0J3MNCnRoZSB1c2Vy
-J3MgY2hvaWNlLiBTbyB0aGF0J3MgcHJvYmFibHkgYSB2YWxpZCB1c2FnZSBvZiB0aGUgZ2VuZXJp
-YyBwaW4NCnByb3BlcnRpZXMgZm9yIGNvbmZpZ3VyYXRpb24uDQoNCg0KU29ycnkgSmFjb3BvLCBi
-dXQgd2UnbGwgbmVlZCBhbm90aGVyIHJvdW5kIG9mIHBhdGNoZXMuDQpJdCBzb3VuZHMgbGlrZSBm
-b3Igc3VyZSB0aGUgYmktZGlyZWN0aW9uIG5lZWRzIHRvIGdldCByaXBwZWQgYmFjayBvdXQuDQoN
-Cg0KQ2hyaXMNCg==
+Hi Chris,
+
+On Fri, May 12, 2017 at 2:13 PM, Chris Brandt <Chris.Brandt@renesas.com> wrote:
+> On Friday, May 12, 2017, Geert Uytterhoeven wrote:
+>> Jacopo, Chris: Would two bits per pin/function (none, input, output,
+>> bidir)
+>> be sufficient?
+>> That makes one u16 per pin. So roughtly 12 ports x 16 pins => 384 bytes.
+>> Plus code to handle it. After all not that bad...
+>
+> OK...I give up!
+> If that's what it takes to get it, I'm fine.
+>
+> NOTE, your math is a little off, the issue is that depending on the
+> function that you use, you might need to do extra settings, so you'd
+> have to have a lookup table for every pin & function.
+> Each pin can have 1 of 8 functions (which is good because a 'byte' has
+> 8 bits).
+>
+> So,
+>  12 ports x 16 pins => 384 bytes  (this table would just be for checking if bi-dir is needed)
+>  12 ports x 16 pins => 384 bytes  (this table would just be for checking if input is needed)
+>  12 ports x 16 pins => 384 bytes  (this table would just be for checking if input is needed)
+         ------------
+>                      1,152 bytes
+
+12 x 16 = 192, not 384.
+
+Do you need all possible combinations of input, output, and bi-dir?
+I assumed they're mutually exclusive. If not, you need 3 bits/pin/function.
+
+> But then...there are package variations so you need another entire
+> table for those parts.
+>    1,152 bytes x 2 = 2,304 bytes
+
+With packages, do you mean e.g. RZ/A1H vs. RZ/A1L? These indeed differ, but
+should use different compatible values.
+Or do you mean QFP/BGA256 vs. BGA324? Isn't the former a subset of the latter?
+
+> #What we should really do is just make a look-up table (tables) for the
+> 'special' ones. But, we can have that discussion in a different thread.
+
+Yep, depending on what gives the smallest code/data size.
+
+> There is still a need for "input-enable" and "output-enable" for the timer
+> pins. Because, when you choose the pin to be connected to the MTU2 timer,
+> the pin can be used as either input-capture/output-compare/PWM and that's
+> the user's choice. So that's probably a valid usage of the generic pin
+> properties for configuration.
+
+OK.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
