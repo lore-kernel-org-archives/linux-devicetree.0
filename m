@@ -1,71 +1,37 @@
-From: <sean.wang@mediatek.com>
-Subject: [PATCH v3 7/9] arm: dts: mt7623: enable the usb device on the mt7623n
- rfb
-Date: Fri, 12 May 2017 15:56:44 +0800
-Message-ID: <98cb8c175852364c58425d7b59fe7b182e2b8d02.1494574682.git.sean.wang@mediatek.com>
-References: <cover.1494574682.git.sean.wang@mediatek.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <cover.1494574682.git.sean.wang@mediatek.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: robh+dt@kernel.org, matthias.bgg@gmail.com, mark.rutland@arm.com, devicetree@vger.kernel.org, john@phrozen.org, linux-mediatek@lists.infradead.org
-Cc: Sean Wang <sean.wang@mediatek.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+From: Simon Horman <horms+renesas@verge.net.au>
+Subject: [PATCH v4] dt-bindings: pwm: Add R-Car M3-W device tree bindings
+Date: Fri, 12 May 2017 10:09:42 +0200
+Message-ID: <1494576582-17881-1-git-send-email-horms+renesas@verge.net.au>
+Return-path: <linux-pwm-owner@vger.kernel.org>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: linux-pwm@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-From: John Crispin <john@phrozen.org>
+From: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
 
-All versions of the mt7623n RFB have an USB port so enable the device.
-There is a gpio that gets used to power up the port supply. Add support
-for this gpio using the fixed-regulator driver.
+Add device tree bindings for the PWM controller found on R-Car M3-W SoCs.
 
-Signed-off-by: John Crispin <john@phrozen.org>
-Signed-off-by: Sean Wang <sean.wang@mediatek.com>
+Signed-off-by: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
 ---
- arch/arm/boot/dts/mt7623n-rfb.dtsi | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+v4
+* Broke out of lager patchset on which it appears to have no dependencies
+* Added Reviewed by tags 
+---
+ Documentation/devicetree/bindings/pwm/renesas,pwm-rcar.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm/boot/dts/mt7623n-rfb.dtsi b/arch/arm/boot/dts/mt7623n-rfb.dtsi
-index 4963e6a..2964b4c 100644
---- a/arch/arm/boot/dts/mt7623n-rfb.dtsi
-+++ b/arch/arm/boot/dts/mt7623n-rfb.dtsi
-@@ -28,6 +28,15 @@
- 		serial1 = &uart1;
- 		serial2 = &uart2;
- 	};
-+
-+	usb_p1_vbus: regulator@0 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "usb_vbus";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		gpio = <&pio 135 GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
-+	};
- };
- 
- &uart0 {
-@@ -41,3 +50,12 @@
- &uart2 {
- 	status = "okay";
- };
-+
-+&usb1 {
-+	vbus-supply = <&usb_p1_vbus>;
-+	status = "okay";
-+};
-+
-+&u3phy1 {
-+	status = "okay";
-+};
+diff --git a/Documentation/devicetree/bindings/pwm/renesas,pwm-rcar.txt b/Documentation/devicetree/bindings/pwm/renesas,pwm-rcar.txt
+index d6de64335022..7e94b802395d 100644
+--- a/Documentation/devicetree/bindings/pwm/renesas,pwm-rcar.txt
++++ b/Documentation/devicetree/bindings/pwm/renesas,pwm-rcar.txt
+@@ -8,6 +8,7 @@ Required Properties:
+  - "renesas,pwm-r8a7791": for R-Car M2-W
+  - "renesas,pwm-r8a7794": for R-Car E2
+  - "renesas,pwm-r8a7795": for R-Car H3
++ - "renesas,pwm-r8a7796": for R-Car M3-W
+ - reg: base address and length of the registers block for the PWM.
+ - #pwm-cells: should be 2. See pwm.txt in this directory for a description of
+   the cells format.
 -- 
-2.7.4
+2.1.4
