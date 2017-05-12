@@ -1,123 +1,117 @@
-From: <sean.wang@mediatek.com>
-Subject: [PATCH v3 8/9] arm: dts: mt7623: enable the nand device on the mt7623n nand rfb
-Date: Fri, 12 May 2017 15:56:45 +0800
-Message-ID: <da3e3693ff8a10615e28303905e694dfb96c6629.1494574682.git.sean.wang@mediatek.com>
+From: <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v3 2/9] arm: dts: mt7623: rename mt7623-evb.dts to arch/arm/boot/dts/mt7623n-rfb.dtsi
+Date: Fri, 12 May 2017 15:56:39 +0800
+Message-ID: <b37ec1684cd40cecc31a077d4ae2aa415ae7dd0a.1494574682.git.sean.wang@mediatek.com>
 References: <cover.1494574682.git.sean.wang@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1494574682.git.sean.wang@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, matthias.bgg@gmail.com, mark.rutland@arm.com, devicetree@vger.kernel.org, john@phrozen.org, linux-mediatek@lists.infradead.org
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Sean Wang <sean.wang@mediatek.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <cover.1494574682.git.sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: John Crispin <john@phrozen.org>
+From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 
-Enable the nand device and setup pinmux on the mt7632m rfb with nand
-support.
+There are 2 versions of the MT7623 SoC, the one is MT7623n and the other
+is MT7623a.  MT7623n is almost identical to MT7623a but has some
+additional multimedia features. The reference boards are available as
+NAND or MMC and might have a different ethernet setup. In order to reduce
+the duplication of devicetree code we add an intermediate dtsi file for
+these reference boards. Additionally Mediatek pointed out, that the EVB
+is yet another board and the board in question is infact the RFB. Take
+this into account while renaming the files.
 
-Signed-off-by: John Crispin <john@phrozen.org>
-Signed-off-by: Sean Wang <sean.wang@mediatek.com>
+Signed-off-by: John Crispin <john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org>
+Signed-off-by: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 ---
- arch/arm/boot/dts/mt7623n-rfb-nand.dts | 88 ++++++++++++++++++++++++++++++++++
- 1 file changed, 88 insertions(+)
+ arch/arm/boot/dts/Makefile                          |  2 +-
+ arch/arm/boot/dts/mt7623n-rfb-nand.dts              | 21 +++++++++++++++++++++
+ .../boot/dts/{mt7623-evb.dts => mt7623n-rfb.dtsi}   |  8 ++------
+ 3 files changed, 24 insertions(+), 7 deletions(-)
+ create mode 100644 arch/arm/boot/dts/mt7623n-rfb-nand.dts
+ rename arch/arm/boot/dts/{mt7623-evb.dts => mt7623n-rfb.dtsi} (79%)
 
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index 9c5e1d9..20a7c9d 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -1034,7 +1034,7 @@ dtb-$(CONFIG_ARCH_MEDIATEK) += \
+ 	mt6580-evbp1.dtb \
+ 	mt6589-aquaris5.dtb \
+ 	mt6592-evb.dtb \
+-	mt7623-evb.dtb \
++	mt7623n-rfb-nand.dtb \
+ 	mt8127-moose.dtb \
+ 	mt8135-evbp1.dtb
+ dtb-$(CONFIG_ARCH_ZX) += zx296702-ad1.dtb
 diff --git a/arch/arm/boot/dts/mt7623n-rfb-nand.dts b/arch/arm/boot/dts/mt7623n-rfb-nand.dts
-index 436d51c..9356095 100644
---- a/arch/arm/boot/dts/mt7623n-rfb-nand.dts
+new file mode 100644
+index 0000000..436d51c
+--- /dev/null
 +++ b/arch/arm/boot/dts/mt7623n-rfb-nand.dts
-@@ -19,3 +19,91 @@
- 	model = "MediaTek MT7623N NAND reference board";
- 	compatible = "mediatek,mt7623n-rfb-nand", "mediatek,mt7623";
+@@ -0,0 +1,21 @@
++/*
++ * Copyright (c) 2016 MediaTek Inc.
++ * Author: John Crispin <blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
++
++/dts-v1/;
++#include "mt7623n-rfb.dtsi"
++
++/ {
++	model = "MediaTek MT7623N NAND reference board";
++	compatible = "mediatek,mt7623n-rfb-nand", "mediatek,mt7623";
++};
+diff --git a/arch/arm/boot/dts/mt7623-evb.dts b/arch/arm/boot/dts/mt7623n-rfb.dtsi
+similarity index 79%
+rename from arch/arm/boot/dts/mt7623-evb.dts
+rename to arch/arm/boot/dts/mt7623n-rfb.dtsi
+index a769149..c526116 100644
+--- a/arch/arm/boot/dts/mt7623-evb.dts
++++ b/arch/arm/boot/dts/mt7623n-rfb.dtsi
+@@ -1,6 +1,6 @@
+ /*
+  * Copyright (c) 2016 MediaTek Inc.
+- * Author: John Crispin <john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org>
++ * Author: John Crispin <blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
+  *
+  * This program is free software; you can redistribute it and/or modify
+  * it under the terms of the GNU General Public License version 2 as
+@@ -12,18 +12,14 @@
+  * GNU General Public License for more details.
+  */
+ 
+-/dts-v1/;
+ #include "mt7623-mt6323.dtsi"
+ 
+ / {
+-	model = "MediaTek MT7623 evaluation board";
+-	compatible = "mediatek,mt7623-evb", "mediatek,mt7623";
+-
+ 	chosen {
+ 		stdout-path = &uart2;
+ 	};
+ 
+-	memory {
++	memory@80000000 {
+ 		reg = <0 0x80000000 0 0x40000000>;
+ 	};
  };
-+
-+&pio {
-+	nand_pins_default: nanddefault {
-+		pins_dat {
-+			pinmux = <MT7623_PIN_111_MSDC0_DAT7_FUNC_NLD7>,
-+				 <MT7623_PIN_112_MSDC0_DAT6_FUNC_NLD6>,
-+				 <MT7623_PIN_114_MSDC0_DAT4_FUNC_NLD4>,
-+				 <MT7623_PIN_118_MSDC0_DAT3_FUNC_NLD3>,
-+				 <MT7623_PIN_121_MSDC0_DAT0_FUNC_NLD0>,
-+				 <MT7623_PIN_120_MSDC0_DAT1_FUNC_NLD1>,
-+				 <MT7623_PIN_113_MSDC0_DAT5_FUNC_NLD5>,
-+				 <MT7623_PIN_115_MSDC0_RSTB_FUNC_NLD8>,
-+				 <MT7623_PIN_119_MSDC0_DAT2_FUNC_NLD2>;
-+			input-enable;
-+			drive-strength = <MTK_DRIVE_8mA>;
-+			bias-pull-up;
-+		};
-+
-+		pins_we {
-+			pinmux = <MT7623_PIN_117_MSDC0_CLK_FUNC_NWEB>;
-+			drive-strength = <MTK_DRIVE_8mA>;
-+			bias-pull-up = <MTK_PUPD_SET_R1R0_10>;
-+		};
-+
-+		pins_ale {
-+			pinmux = <MT7623_PIN_116_MSDC0_CMD_FUNC_NALE>;
-+			drive-strength = <MTK_DRIVE_8mA>;
-+			bias-pull-down = <MTK_PUPD_SET_R1R0_10>;
-+		};
-+	};
-+};
-+
-+&nandc {
-+	status = "okay";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&nand_pins_default>;
-+	nand@0 {
-+		reg = <0>;
-+		spare_per_sector = <64>;
-+		nand-ecc-mode = "hw";
-+		nand-ecc-strength = <12>;
-+		nand-ecc-step-size = <1024>;
-+		partitions {
-+			compatible = "fixed-partitions";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+
-+			partition@0 {
-+				label = "preloader";
-+				reg = <0x0 0x40000>;
-+			};
-+
-+			partition@40000 {
-+				label = "uboot";
-+				reg = <0x40000 0x80000>;
-+			};
-+
-+			partition@C0000 {
-+				label = "uboot-env";
-+				reg = <0xC0000 0x40000>;
-+			};
-+
-+			partition@140000 {
-+				label = "bootimg";
-+				reg = <0x140000 0x2000000>;
-+			};
-+
-+			partition@2140000 {
-+				label = "recovery";
-+				reg = <0x2140000 0x2000000>;
-+			};
-+
-+			partition@4140000 {
-+				label = "rootfs";
-+				reg = <0x4140000 0x1000000>;
-+			};
-+
-+			partition@5140000 {
-+				label = "usrdata";
-+				reg = <0x5140000 0x1000000>;
-+			};
-+		};
-+	};
-+};
-+
-+&bch {
-+	status = "okay";
-+};
 -- 
 2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
