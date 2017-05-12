@@ -1,150 +1,69 @@
-From: Daniel Vetter <daniel@ffwll.ch>
-Subject: Re: [PATCH 1/4] drm/vc4: Adjust modes in DSI to work around the
- integer PLL divider.
-Date: Fri, 12 May 2017 09:55:23 +0200
-Message-ID: <20170512075523.brljqrfr4g5uamjn@phenom.ffwll.local>
-References: <20170511235625.22427-1-eric@anholt.net>
- <20170511235625.22427-2-eric@anholt.net>
+From: <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v3 0/9] arm: dts: extend mt7623 support
+Date: Fri, 12 May 2017 15:56:37 +0800
+Message-ID: <cover.1494574682.git.sean.wang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <20170511235625.22427-2-eric@anholt.net>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Eric Anholt <eric@anholt.net>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gVGh1LCBNYXkgMTEsIDIwMTcgYXQgMDQ6NTY6MjJQTSAtMDcwMCwgRXJpYyBBbmhvbHQgd3Jv
-dGU6Cj4gQkNNMjgzNSdzIFBMTERfRFNJMSBkaXZpZGVyIGRvZXNuJ3QgZ2l2ZSB1cyBtYW55IGNo
-b2ljZXMgZm9yIG91ciBwaXhlbAo+IGNsb2Nrcywgc28gdG8gc3VwcG9ydCBwYW5lbHMgb24gdGhl
-IFJhc3BiZXJyeSBQaSB3ZSBuZWVkIHRvIHNldCBhCj4gaGlnaGVyIHBpeGVsIGNsb2NrIHJhdGUg
-dGhhbiByZXF1ZXN0ZWQgYW5kIGFkanVzdCB0aGUgbW9kZSB3ZSBwcm9ncmFtCj4gdG8gZXh0ZW5k
-IG91dCB0aGUgSEZQIHNvIHRoYXQgdGhlIHJlZnJlc2ggcmF0ZSBtYXRjaGVzLgo+IAo+IFNpZ25l
-ZC1vZmYtYnk6IEVyaWMgQW5ob2x0IDxlcmljQGFuaG9sdC5uZXQ+CgpZZWFoLCB0aGlzIGlzIHdo
-YXQgbW9kZV9maXh1cCBpcyBmb3IgKG9yIHRoZSBmYW5jaWVyIGF0b21pY19jaGVjaywgYnV0IG5v
-CmJlbmVmaXQgd2l0aCB1c2luZyB0aGF0IG9uZSBoZXJlKS4KCkFja2VkLWJ5OiBEYW5pZWwgVmV0
-dGVyIDxkYW5pZWwudmV0dGVyQGZmd2xsLmNoPgo+IC0tLQo+ICBkcml2ZXJzL2dwdS9kcm0vdmM0
-L3ZjNF9kc2kuYyB8IDExMiArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKy0tLS0tLS0t
-LS0KPiAgMSBmaWxlIGNoYW5nZWQsIDg2IGluc2VydGlvbnMoKyksIDI2IGRlbGV0aW9ucygtKQo+
-IAo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vdmM0L3ZjNF9kc2kuYyBiL2RyaXZlcnMv
-Z3B1L2RybS92YzQvdmM0X2RzaS5jCj4gaW5kZXggZmI1NGE5ZDEwMzYwLi42MmNiM2IwZDAzNDUg
-MTAwNjQ0Cj4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL3ZjNC92YzRfZHNpLmMKPiArKysgYi9kcml2
-ZXJzL2dwdS9kcm0vdmM0L3ZjNF9kc2kuYwo+IEBAIC01MTksNyArNTE5LDggQEAgc3RydWN0IHZj
-NF9kc2kgewo+ICAJLyogRFNJIGNoYW5uZWwgZm9yIHRoZSBwYW5lbCB3ZSdyZSBjb25uZWN0ZWQg
-dG8uICovCj4gIAl1MzIgY2hhbm5lbDsKPiAgCXUzMiBsYW5lczsKPiAtCWVudW0gbWlwaV9kc2lf
-cGl4ZWxfZm9ybWF0IGZvcm1hdDsKPiArCXUzMiBmb3JtYXQ7Cj4gKwl1MzIgZGl2aWRlcjsKPiAg
-CXUzMiBtb2RlX2ZsYWdzOwo+ICAKPiAgCS8qIElucHV0IGNsb2NrIGZyb20gQ1BSTUFOIHRvIHRo
-ZSBkaWdpdGFsIFBIWSwgZm9yIHRoZSBEU0kKPiBAQCAtODE3LDEzICs4MTgsNjcgQEAgc3RhdGlj
-IHZvaWQgdmM0X2RzaV9lbmNvZGVyX2Rpc2FibGUoc3RydWN0IGRybV9lbmNvZGVyICplbmNvZGVy
-KQo+ICAJcG1fcnVudGltZV9wdXQoZGV2KTsKPiAgfQo+ICAKPiArLyogRXh0ZW5kcyB0aGUgbW9k
-ZSdzIGJsYW5rIGludGVydmFscyB0byBoYW5kbGUgQkNNMjgzNSdzIGludGVnZXItb25seQo+ICsg
-KiBEU0kgUExMIGRpdmlkZXIuCj4gKyAqCj4gKyAqIE9uIDI4MzUsIFBMTEQgaXMgc2V0IHRvIDJH
-aHosIGFuZCBtYXkgbm90IGJlIGNoYW5nZWQgYnkgdGhlIGRpc3BsYXkKPiArICogZHJpdmVyIHNp
-bmNlIG1vc3QgcGVyaXBoZXJhbHMgYXJlIGhhbmdpbmcgb2ZmIG9mIHRoZSBQTExEX1BFUgo+ICsg
-KiBkaXZpZGVyLiAgUExMRF9EU0kxLCB3aGljaCBkcml2ZXMgb3VyIERTSSBiaXQgY2xvY2sgKGFu
-ZCB0aGVyZWZvcmUKPiArICogdGhlIHBpeGVsIGNsb2NrKSwgb25seSBoYXMgYW4gaW50ZWdlciBk
-aXZpZGVyIG9mZiBvZiBEU0kuCj4gKyAqCj4gKyAqIFRvIGdldCBvdXIgcGFuZWwgbW9kZSB0byBy
-ZWZyZXNoIGF0IHRoZSBleHBlY3RlZCA2MEh6LCB3ZSBuZWVkIHRvCj4gKyAqIGV4dGVuZCB0aGUg
-aG9yaXpvbnRhbCBibGFuayB0aW1lLiAgVGhpcyBtZWFucyB3ZSBkcml2ZSBhCj4gKyAqIGhpZ2hl
-ci10aGFuLWV4cGVjdGVkIGNsb2NrIHJhdGUgdG8gdGhlIHBhbmVsLCBidXQgdGhhdCdzIHdoYXQg
-dGhlCj4gKyAqIGZpcm13YXJlICh3aGljaCApIGRvZXMgdG9vLgo+ICsgKi8KPiArc3RhdGljIGJv
-b2wgdmM0X2RzaV9lbmNvZGVyX21vZGVfZml4dXAoc3RydWN0IGRybV9lbmNvZGVyICplbmNvZGVy
-LAo+ICsJCQkJICAgICAgIGNvbnN0IHN0cnVjdCBkcm1fZGlzcGxheV9tb2RlICptb2RlLAo+ICsJ
-CQkJICAgICAgIHN0cnVjdCBkcm1fZGlzcGxheV9tb2RlICphZGp1c3RlZF9tb2RlKQo+ICt7Cj4g
-KwlzdHJ1Y3QgdmM0X2RzaV9lbmNvZGVyICp2YzRfZW5jb2RlciA9IHRvX3ZjNF9kc2lfZW5jb2Rl
-cihlbmNvZGVyKTsKPiArCXN0cnVjdCB2YzRfZHNpICpkc2kgPSB2YzRfZW5jb2Rlci0+ZHNpOwo+
-ICsJc3RydWN0IGNsayAqcGh5X3BhcmVudCA9IGNsa19nZXRfcGFyZW50KGRzaS0+cGxsX3BoeV9j
-bG9jayk7Cj4gKwl1bnNpZ25lZCBsb25nIHBhcmVudF9yYXRlID0gY2xrX2dldF9yYXRlKHBoeV9w
-YXJlbnQpOwo+ICsJdW5zaWduZWQgbG9uZyBwaXhlbF9jbG9ja19oeiA9IG1vZGUtPmNsb2NrICog
-MTAwMDsKPiArCXVuc2lnbmVkIGxvbmcgcGxsX2Nsb2NrID0gcGl4ZWxfY2xvY2tfaHogKiBkc2kt
-PmRpdmlkZXI7Cj4gKwlpbnQgZGl2aWRlcjsKPiArCj4gKwkvKiBGaW5kIHdoYXQgZGl2aWRlciBn
-ZXRzIHVzIGEgZmFzdGVyIGNsb2NrIHRoYW4gdGhlIHJlcXVlc3RlZAo+ICsJICogcGl4ZWwgY2xv
-Y2suCj4gKwkgKi8KPiArCWZvciAoZGl2aWRlciA9IDE7IGRpdmlkZXIgPCA4OyBkaXZpZGVyKysp
-IHsKPiArCQlpZiAocGFyZW50X3JhdGUgLyBkaXZpZGVyIDwgcGxsX2Nsb2NrKSB7Cj4gKwkJCWRp
-dmlkZXItLTsKPiArCQkJYnJlYWs7Cj4gKwkJfQo+ICsJfQo+ICsKPiArCS8qIE5vdyB0aGF0IHdl
-J3ZlIHBpY2tlZCBhIFBMTCBkaXZpZGVyLCBjYWxjdWxhdGUgYmFjayB0byBpdHMKPiArCSAqIHBp
-eGVsIGNsb2NrLgo+ICsJICovCj4gKwlwbGxfY2xvY2sgPSBwYXJlbnRfcmF0ZSAvIGRpdmlkZXI7
-Cj4gKwlwaXhlbF9jbG9ja19oeiA9IHBsbF9jbG9jayAvIGRzaS0+ZGl2aWRlcjsKPiArCj4gKwkv
-KiBSb3VuZCB1cCB0aGUgY2xrX3NldF9yYXRlKCkgcmVxdWVzdCBzbGlnaHRseSwgc2luY2UKPiAr
-CSAqIFBMTERfRFNJMSBpcyBhbiBpbnRlZ2VyIGRpdmlkZXIgYW5kIGl0cyByYXRlIHNlbGVjdGlv
-biB3aWxsCj4gKwkgKiBuZXZlciByb3VuZCB1cC4KPiArCSAqLwo+ICsJYWRqdXN0ZWRfbW9kZS0+
-Y2xvY2sgPSBwaXhlbF9jbG9ja19oeiAvIDEwMDAgKyAxOwo+ICsKPiArCS8qIEdpdmVuIHRoZSBu
-ZXcgcGl4ZWwgY2xvY2ssIGFkanVzdCBIRlAgdG8ga2VlcCB2cmVmcmVzaCB0aGUgc2FtZS4gKi8K
-PiArCWFkanVzdGVkX21vZGUtPmh0b3RhbCA9IHBpeGVsX2Nsb2NrX2h6IC8gKG1vZGUtPnZyZWZy
-ZXNoICogbW9kZS0+dnRvdGFsKTsKPiArCWFkanVzdGVkX21vZGUtPmhzeW5jX2VuZCArPSBhZGp1
-c3RlZF9tb2RlLT5odG90YWwgLSBtb2RlLT5odG90YWw7Cj4gKwlhZGp1c3RlZF9tb2RlLT5oc3lu
-Y19zdGFydCArPSBhZGp1c3RlZF9tb2RlLT5odG90YWwgLSBtb2RlLT5odG90YWw7Cj4gKwo+ICsJ
-cmV0dXJuIHRydWU7Cj4gK30KPiArCj4gIHN0YXRpYyB2b2lkIHZjNF9kc2lfZW5jb2Rlcl9lbmFi
-bGUoc3RydWN0IGRybV9lbmNvZGVyICplbmNvZGVyKQo+ICB7Cj4gLQlzdHJ1Y3QgZHJtX2Rpc3Bs
-YXlfbW9kZSAqbW9kZSA9ICZlbmNvZGVyLT5jcnRjLT5tb2RlOwo+ICsJc3RydWN0IGRybV9kaXNw
-bGF5X21vZGUgKm1vZGUgPSAmZW5jb2Rlci0+Y3J0Yy0+c3RhdGUtPmFkanVzdGVkX21vZGU7Cj4g
-IAlzdHJ1Y3QgdmM0X2RzaV9lbmNvZGVyICp2YzRfZW5jb2RlciA9IHRvX3ZjNF9kc2lfZW5jb2Rl
-cihlbmNvZGVyKTsKPiAgCXN0cnVjdCB2YzRfZHNpICpkc2kgPSB2YzRfZW5jb2Rlci0+ZHNpOwo+
-ICAJc3RydWN0IGRldmljZSAqZGV2ID0gJmRzaS0+cGRldi0+ZGV2Owo+IC0JdTMyIGZvcm1hdCA9
-IDAsIGRpdmlkZXIgPSAwOwo+ICAJYm9vbCBkZWJ1Z19kdW1wX3JlZ3MgPSBmYWxzZTsKPiAgCXVu
-c2lnbmVkIGxvbmcgaHNfY2xvY2s7Cj4gIAl1MzIgdWlfbnM7Cj4gQEAgLTg0NSwyNiArOTAwLDcg
-QEAgc3RhdGljIHZvaWQgdmM0X2RzaV9lbmNvZGVyX2VuYWJsZShzdHJ1Y3QgZHJtX2VuY29kZXIg
-KmVuY29kZXIpCj4gIAkJdmM0X2RzaV9kdW1wX3JlZ3MoZHNpKTsKPiAgCX0KPiAgCj4gLQlzd2l0
-Y2ggKGRzaS0+Zm9ybWF0KSB7Cj4gLQljYXNlIE1JUElfRFNJX0ZNVF9SR0I4ODg6Cj4gLQkJZm9y
-bWF0ID0gRFNJX1BGT1JNQVRfUkdCODg4Owo+IC0JCWRpdmlkZXIgPSAyNCAvIGRzaS0+bGFuZXM7
-Cj4gLQkJYnJlYWs7Cj4gLQljYXNlIE1JUElfRFNJX0ZNVF9SR0I2NjY6Cj4gLQkJZm9ybWF0ID0g
-RFNJX1BGT1JNQVRfUkdCNjY2Owo+IC0JCWRpdmlkZXIgPSAyNCAvIGRzaS0+bGFuZXM7Cj4gLQkJ
-YnJlYWs7Cj4gLQljYXNlIE1JUElfRFNJX0ZNVF9SR0I2NjZfUEFDS0VEOgo+IC0JCWZvcm1hdCA9
-IERTSV9QRk9STUFUX1JHQjY2Nl9QQUNLRUQ7Cj4gLQkJZGl2aWRlciA9IDE4IC8gZHNpLT5sYW5l
-czsKPiAtCQlicmVhazsKPiAtCWNhc2UgTUlQSV9EU0lfRk1UX1JHQjU2NToKPiAtCQlmb3JtYXQg
-PSBEU0lfUEZPUk1BVF9SR0I1NjU7Cj4gLQkJZGl2aWRlciA9IDE2IC8gZHNpLT5sYW5lczsKPiAt
-CQlicmVhazsKPiAtCX0KPiAtCj4gLQlwaHlfY2xvY2sgPSBwaXhlbF9jbG9ja19oeiAqIGRpdmlk
-ZXI7Cj4gKwlwaHlfY2xvY2sgPSBwaXhlbF9jbG9ja19oeiAqIGRzaS0+ZGl2aWRlcjsKPiAgCXJl
-dCA9IGNsa19zZXRfcmF0ZShkc2ktPnBsbF9waHlfY2xvY2ssIHBoeV9jbG9jayk7Cj4gIAlpZiAo
-cmV0KSB7Cj4gIAkJZGV2X2VycigmZHNpLT5wZGV2LT5kZXYsCj4gQEAgLTEwNDksOCArMTA4NSw5
-IEBAIHN0YXRpYyB2b2lkIHZjNF9kc2lfZW5jb2Rlcl9lbmFibGUoc3RydWN0IGRybV9lbmNvZGVy
-ICplbmNvZGVyKQo+ICAKPiAgCWlmIChkc2ktPm1vZGVfZmxhZ3MgJiBNSVBJX0RTSV9NT0RFX1ZJ
-REVPKSB7Cj4gIAkJRFNJX1BPUlRfV1JJVEUoRElTUDBfQ1RSTCwKPiAtCQkJICAgICAgIFZDNF9T
-RVRfRklFTEQoZGl2aWRlciwgRFNJX0RJU1AwX1BJWF9DTEtfRElWKSB8Cj4gLQkJCSAgICAgICBW
-QzRfU0VUX0ZJRUxEKGZvcm1hdCwgRFNJX0RJU1AwX1BGT1JNQVQpIHwKPiArCQkJICAgICAgIFZD
-NF9TRVRfRklFTEQoZHNpLT5kaXZpZGVyLAo+ICsJCQkJCSAgICAgRFNJX0RJU1AwX1BJWF9DTEtf
-RElWKSB8Cj4gKwkJCSAgICAgICBWQzRfU0VUX0ZJRUxEKGRzaS0+Zm9ybWF0LCBEU0lfRElTUDBf
-UEZPUk1BVCkgfAo+ICAJCQkgICAgICAgVkM0X1NFVF9GSUVMRChEU0lfRElTUDBfTFBfU1RPUF9Q
-RVJGUkFNRSwKPiAgCQkJCQkgICAgIERTSV9ESVNQMF9MUF9TVE9QX0NUUkwpIHwKPiAgCQkJICAg
-ICAgIERTSV9ESVNQMF9TVF9FTkQgfAo+IEBAIC0xMjU1LDkgKzEyOTIsMzEgQEAgc3RhdGljIGlu
-dCB2YzRfZHNpX2hvc3RfYXR0YWNoKHN0cnVjdCBtaXBpX2RzaV9ob3N0ICpob3N0LAo+ICAKPiAg
-CWRzaS0+bGFuZXMgPSBkZXZpY2UtPmxhbmVzOwo+ICAJZHNpLT5jaGFubmVsID0gZGV2aWNlLT5j
-aGFubmVsOwo+IC0JZHNpLT5mb3JtYXQgPSBkZXZpY2UtPmZvcm1hdDsKPiAgCWRzaS0+bW9kZV9m
-bGFncyA9IGRldmljZS0+bW9kZV9mbGFnczsKPiAgCj4gKwlzd2l0Y2ggKGRldmljZS0+Zm9ybWF0
-KSB7Cj4gKwljYXNlIE1JUElfRFNJX0ZNVF9SR0I4ODg6Cj4gKwkJZHNpLT5mb3JtYXQgPSBEU0lf
-UEZPUk1BVF9SR0I4ODg7Cj4gKwkJZHNpLT5kaXZpZGVyID0gMjQgLyBkc2ktPmxhbmVzOwo+ICsJ
-CWJyZWFrOwo+ICsJY2FzZSBNSVBJX0RTSV9GTVRfUkdCNjY2Ogo+ICsJCWRzaS0+Zm9ybWF0ID0g
-RFNJX1BGT1JNQVRfUkdCNjY2Owo+ICsJCWRzaS0+ZGl2aWRlciA9IDI0IC8gZHNpLT5sYW5lczsK
-PiArCQlicmVhazsKPiArCWNhc2UgTUlQSV9EU0lfRk1UX1JHQjY2Nl9QQUNLRUQ6Cj4gKwkJZHNp
-LT5mb3JtYXQgPSBEU0lfUEZPUk1BVF9SR0I2NjZfUEFDS0VEOwo+ICsJCWRzaS0+ZGl2aWRlciA9
-IDE4IC8gZHNpLT5sYW5lczsKPiArCQlicmVhazsKPiArCWNhc2UgTUlQSV9EU0lfRk1UX1JHQjU2
-NToKPiArCQlkc2ktPmZvcm1hdCA9IERTSV9QRk9STUFUX1JHQjU2NTsKPiArCQlkc2ktPmRpdmlk
-ZXIgPSAxNiAvIGRzaS0+bGFuZXM7Cj4gKwkJYnJlYWs7Cj4gKwlkZWZhdWx0Ogo+ICsJCWRldl9l
-cnIoJmRzaS0+cGRldi0+ZGV2LCAiVW5rbm93biBEU0kgZm9ybWF0OiAlZC5cbiIsCj4gKwkJCWRz
-aS0+Zm9ybWF0KTsKPiArCQlyZXR1cm4gMDsKPiArCX0KPiArCj4gIAlpZiAoIShkc2ktPm1vZGVf
-ZmxhZ3MgJiBNSVBJX0RTSV9NT0RFX1ZJREVPKSkgewo+ICAJCWRldl9lcnIoJmRzaS0+cGRldi0+
-ZGV2LAo+ICAJCQkiT25seSBWSURFTyBtb2RlIHBhbmVscyBzdXBwb3J0ZWQgY3VycmVudGx5Llxu
-Iik7Cj4gQEAgLTEzMDQsNiArMTM2Myw3IEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3QgbWlwaV9kc2lf
-aG9zdF9vcHMgdmM0X2RzaV9ob3N0X29wcyA9IHsKPiAgc3RhdGljIGNvbnN0IHN0cnVjdCBkcm1f
-ZW5jb2Rlcl9oZWxwZXJfZnVuY3MgdmM0X2RzaV9lbmNvZGVyX2hlbHBlcl9mdW5jcyA9IHsKPiAg
-CS5kaXNhYmxlID0gdmM0X2RzaV9lbmNvZGVyX2Rpc2FibGUsCj4gIAkuZW5hYmxlID0gdmM0X2Rz
-aV9lbmNvZGVyX2VuYWJsZSwKPiArCS5tb2RlX2ZpeHVwID0gdmM0X2RzaV9lbmNvZGVyX21vZGVf
-Zml4dXAsCj4gIH07Cj4gIAo+ICBzdGF0aWMgY29uc3Qgc3RydWN0IG9mX2RldmljZV9pZCB2YzRf
-ZHNpX2R0X21hdGNoW10gPSB7Cj4gLS0gCj4gMi4xMS4wCj4gCj4gX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX18KPiBkcmktZGV2ZWwgbWFpbGluZyBsaXN0Cj4g
-ZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwo+IGh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0
-b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCgotLSAKRGFuaWVsIFZldHRlcgpTb2Z0
-d2FyZSBFbmdpbmVlciwgSW50ZWwgQ29ycG9yYXRpb24KaHR0cDovL2Jsb2cuZmZ3bGwuY2gKX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1h
-aWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMu
-ZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+
+Changes since v2:
+- exclude those patches already queued into v4.11-next/dts32
+- exclude those patches already sent in separation
+- add mt7623a SoC basic support
+- update binding SoC for mt7623n and relevant boards
+
+Changes since v1:
+Continue the upstream journey based on the previous John Crispin's good work.
+- add fixes for the v1 suggestion
+- fix typo in the commit log
+- add missing pinctrl bindings for mt7623
+- reuse pinctrl driver for mt7623
+- enhance existing nodes since the way for binding is changed e.g USB
+- add more nodes which already gets support from the latest tree e.g MT7530 DSA
+- add the dts file for Bananapi R2 (BPI-R2) board
+
+John Crispin (4):
+  arm: dts: mt7623: add mt7623-mt6323.dtsi file
+  arm: dts: mt7623: cleanup the mt7623n rfb uart nodes
+  arm: dts: mt7623: enable the usb device on the mt7623n rfb
+  arm: dts: mt7623: enable the nand device on the mt7623n nand rfb
+
+Sean Wang (5):
+  arm: dts: mt7623: rename mt7623-evb.dts to
+    arch/arm/boot/dts/mt7623n-rfb.dtsi
+  dt-bindings: arm: mediatek: update for MT7623n SoC and relevant boards
+  dt-bindings: arm: mediatek: add bindings for mediatek MT7623a SoC
+    Platform
+  ARM: mediatek: add MT7623a smp bringup code
+  arm: dts: mt7623: add dts file for Bananapi R2 (BPI-R2) board
+
+ Documentation/devicetree/bindings/arm/mediatek.txt |  11 +-
+ arch/arm/boot/dts/Makefile                         |   3 +-
+ arch/arm/boot/dts/mt7623-evb.dts                   |  33 --
+ arch/arm/boot/dts/mt7623-mt6323.dtsi               | 269 ++++++++++++
+ arch/arm/boot/dts/mt7623.dtsi                      |   8 +-
+ arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts      | 478 +++++++++++++++++++++
+ arch/arm/boot/dts/mt7623n-rfb-nand.dts             | 109 +++++
+ arch/arm/boot/dts/mt7623n-rfb.dtsi                 |  61 +++
+ arch/arm/mach-mediatek/mediatek.c                  |   2 +
+ arch/arm/mach-mediatek/platsmp.c                   |   1 +
+ 10 files changed, 933 insertions(+), 42 deletions(-)
+ delete mode 100644 arch/arm/boot/dts/mt7623-evb.dts
+ create mode 100644 arch/arm/boot/dts/mt7623-mt6323.dtsi
+ create mode 100644 arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts
+ create mode 100644 arch/arm/boot/dts/mt7623n-rfb-nand.dts
+ create mode 100644 arch/arm/boot/dts/mt7623n-rfb.dtsi
+
+-- 
+2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
