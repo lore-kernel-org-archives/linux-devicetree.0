@@ -1,67 +1,63 @@
 From: Heiner Kallweit <hkallweit1@gmail.com>
-Subject: Re: [PATCH 1/5] pintrl: meson: add interrupts to pinctrl data
-Date: Fri, 12 May 2017 19:23:52 +0200
-Message-ID: <b2db3015-2816-1489-547d-e3f9c6f3ed3a@gmail.com>
-References: <a4ca587b-d3e8-a22d-4d25-289871d2d095@gmail.com>
- <3b4990ef-bfb4-c62c-f823-431adedc17f1@gmail.com>
- <CACRpkdYx0j4Sjv8MhXRSuiF1TyW2Ht47r0+G1ga8mXW5LC7c=g@mail.gmail.com>
- <1494518886.2375.15.camel@baylibre.com>
- <7ed5a88a-43dd-f7ab-2794-48ceb5a62a93@gmail.com>
- <18ad8094-4e17-3487-7ef2-497d5c7ab9dc@gmail.com>
- <CACRpkdajRQNTEYntY+NuG+3vNenzN9ZOw3ukWtS-=5zgDh5wCA@mail.gmail.com>
+Subject: [PATCH v2 0/6] pintrl: meson: add support for GPIO IRQs
+Date: Fri, 12 May 2017 21:01:09 +0200
+Message-ID: <36164ed8-aa59-2a77-b7fc-9adce03a2fc1@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdajRQNTEYntY+NuG+3vNenzN9ZOw3ukWtS-=5zgDh5wCA@mail.gmail.com>
 Sender: linux-gpio-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>, Marc Zyngier <marc.zyngier@arm.com>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Jerome Brunet <jbrunet@baylibre.com>, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, Thierry Reding <treding@nvidia.com>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
+To: Jerome Brunet <jbrunet@baylibre.com>, Mark Rutland <mark.rutland@arm.com>, Marc Zyngier <marc.zyngier@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Kevin Hilman <khilman@baylibre.com>, Thomas Gleixner <tglx@linutronix.de>
+Cc: devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-gpio@vger.kernel.org, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, Thierry Reding <treding@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-Am 12.05.2017 um 11:51 schrieb Linus Walleij:
-> On Fri, May 12, 2017 at 8:08 AM, Heiner Kallweit <hkallweit1@gmail.com> wrote:
-> 
->> Following Jerome's suggestion I prepared a version making the irq multiplexer
->> an own device. Nice here is that with this approach basically only one line of
->> code needs to be changed in the existing pinctrl driver.
->>
->> As discussion basis I add it here w/o submitting a v2 of patch 5.
-> 
-> I think this is the right way to go, but would ideally like some feedback from
-> the irqchip maintainers.
-> 
-> Have you looked at drivers/irqchip/irq-crossbar.c for inspiration?
-> Also read
-> Documentation/devicetree/bindings/arm/omap/crossbar.txt
-> 
-> It uses an hierarchical domain for a similar cross-connection
-> usecase.
-> 
-When looking at the crassbar driver it seems to be quite similar to Jerome's
-Meson GPIO IRQ driver version. Therefore I think we'd face the same challenges.
-What is special about the Meson GPIO IRQ hw:
-- We have only 8 parent IRQs for 100+ GPIO's.
-- If a GPIO requests IRQ_TYPE_EDGE_BOTH (concrete example: mmc sd detection)
-  then we have to use two parent IRQs, one for each edge.
-- We must be able to dynamically map a GPIO to a parent IRQ, e.g. if a driver
-  uses gpiod_to_irq().
+This patch series is partially based on a series Jerome Brunet
+submitted about half a year ago. Due to open questions this series never
+made it to mainline, see https://patchwork.kernel.org/patch/9384431/
 
-These specifics are the reason why I do the mapping magic in the irq_set_type
-callback of the irq_chip. Only in this callback I have all the info needed to
-do the mapping.
+This new attempt uses GPIOLIB_IRQCHIP resulting in less needed code.
+Included is also support for using two parent IRQs in case
+of IRQ_TYPE_EDGE_BOTH, like in the vendor driver.
 
-> Under any circumstances I think decoupling the IRQ multiplexer
-> and dealing with it in separate is easier for maintainance and
-> also for the irq maintainers to review.
-> 
-Then I'll submit the latest version with the separated device as v2 and we'll
-see which further review comments and suggestions for alternative approaches
-come in.
+Worth to be mentioned is also that I had to work around a strange
+issue with spurious interrupts resulting in a deadlock.
+The affected critical section in __setup_irq is executed with interrupts
+disabled, nevertheless spurious GPIO IRQs result in a deadlock what
+seems to indicate that they are handled on the same CPU.
+I didn't find a better explanation than a possible HW flaw so far.
 
-Rgds, Heiner
+The series was successfully tested on a Odroid-C2, e.g. with removing
+polling for SD card insertion/removal from the mmc driver.
 
-> Yours,
-> Linus Walleij
-> 
+Changes in v2:
+- separate the GPIO IRQ controller from the pinctrl driver
+- minor improvements to the GPIO IRQ controller
+
+Heiner Kallweit (5):
+  pinctrl: meson: add interrupts to pinctrl data
+  pinctrl: meson: document GPIO IRQ DT binding
+  pinctrl: meson: add DT node for GPIO IRQ on Meson GX
+  pinctrl: meson: add DT node for GPIO IRQ on Meson 8 / 8b
+  pinctrl: meson: improve meson_get_bank and export it
+  pinctrl: meson: add support for GPIO interrupts
+
+ .../bindings/gpio/amlogic,meson-gpio-interrupt.txt |  30 ++
+ arch/arm/boot/dts/meson8.dtsi                      |  13 +
+ arch/arm/boot/dts/meson8b.dtsi                     |  13 +
+ arch/arm64/boot/dts/amlogic/meson-gx.dtsi          |  13 +
+ drivers/pinctrl/Kconfig                            |   1 +
+ drivers/pinctrl/meson/Makefile                     |   2 +-
+ drivers/pinctrl/meson/pinctrl-meson-gxbb.c         |  22 +-
+ drivers/pinctrl/meson/pinctrl-meson-gxl.c          |  20 +-
+ drivers/pinctrl/meson/pinctrl-meson-irq.c          | 367 +++++++++++++++++++++
+ drivers/pinctrl/meson/pinctrl-meson.c              |  67 ++--
+ drivers/pinctrl/meson/pinctrl-meson.h              |  19 +-
+ drivers/pinctrl/meson/pinctrl-meson8.c             |  20 +-
+ drivers/pinctrl/meson/pinctrl-meson8b.c            |  32 +-
+ 13 files changed, 538 insertions(+), 81 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/gpio/amlogic,meson-gpio-interrupt.txt
+ create mode 100644 drivers/pinctrl/meson/pinctrl-meson-irq.c
+
+-- 
+2.12.2
 
