@@ -1,7 +1,7 @@
 From: <sean.wang@mediatek.com>
-Subject: [PATCH v3 3/9] dt-bindings: arm: mediatek: update for MT7623n SoC and relevant boards
-Date: Fri, 12 May 2017 15:56:40 +0800
-Message-ID: <e8f5dc8578c3980ac9c6411ad7fae1c8d747f567.1494574682.git.sean.wang@mediatek.com>
+Subject: [PATCH v3 8/9] arm: dts: mt7623: enable the nand device on the mt7623n nand rfb
+Date: Fri, 12 May 2017 15:56:45 +0800
+Message-ID: <da3e3693ff8a10615e28303905e694dfb96c6629.1494574682.git.sean.wang@mediatek.com>
 References: <cover.1494574682.git.sean.wang@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,50 +12,112 @@ To: robh+dt@kernel.org, matthias.bgg@gmail.com, mark.rutland@arm.com, devicetree
 Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Sean Wang <sean.wang@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Sean Wang <sean.wang@mediatek.com>
+From: John Crispin <john@phrozen.org>
 
-Because there are two versions of MT7623 SoC that is MT7623a and MT7623n
-respectively. So update the part of MT7623n bindings to allow that people
-tend to differentiate which MT7623 SoC the boards applies.
+Enable the nand device and setup pinmux on the mt7632m rfb with nand
+support.
 
 Signed-off-by: John Crispin <john@phrozen.org>
 Signed-off-by: Sean Wang <sean.wang@mediatek.com>
 ---
- Documentation/devicetree/bindings/arm/mediatek.txt | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ arch/arm/boot/dts/mt7623n-rfb-nand.dts | 88 ++++++++++++++++++++++++++++++++++
+ 1 file changed, 88 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/arm/mediatek.txt b/Documentation/devicetree/bindings/arm/mediatek.txt
-index c860b24..0924b62 100644
---- a/Documentation/devicetree/bindings/arm/mediatek.txt
-+++ b/Documentation/devicetree/bindings/arm/mediatek.txt
-@@ -1,6 +1,6 @@
- MediaTek mt65xx, mt67xx & mt81xx Platforms Device Tree Bindings
- 
--Boards with a MediaTek mt65xx/mt67xx/mt81xx SoC shall have the
-+Boards with a MediaTek mt65xx/mt67xx/mt762x/mt81xx SoC shall have the
- following property:
- 
- Required root node property:
-@@ -12,7 +12,7 @@ compatible: Must contain one of
-    "mediatek,mt6592"
-    "mediatek,mt6755"
-    "mediatek,mt6795"
--   "mediatek,mt7623"
-+   "mediatek,mt7623" which is referred to MT7623N SoC
-    "mediatek,mt8127"
-    "mediatek,mt8135"
-    "mediatek,mt8173"
-@@ -38,9 +38,9 @@ Supported boards:
- - Evaluation board for MT6795(Helio X10):
-     Required root node properties:
-       - compatible = "mediatek,mt6795-evb", "mediatek,mt6795";
--- Evaluation board for MT7623:
-+- Reference  board for MT7623n with NAND:
-     Required root node properties:
--      - compatible = "mediatek,mt7623-evb", "mediatek,mt7623";
-+      - compatible = "mediatek,mt7623n-rfb-nand", "mediatek,mt7623";
- - MTK mt8127 tablet moose EVB:
-     Required root node properties:
-       - compatible = "mediatek,mt8127-moose", "mediatek,mt8127";
+diff --git a/arch/arm/boot/dts/mt7623n-rfb-nand.dts b/arch/arm/boot/dts/mt7623n-rfb-nand.dts
+index 436d51c..9356095 100644
+--- a/arch/arm/boot/dts/mt7623n-rfb-nand.dts
++++ b/arch/arm/boot/dts/mt7623n-rfb-nand.dts
+@@ -19,3 +19,91 @@
+ 	model = "MediaTek MT7623N NAND reference board";
+ 	compatible = "mediatek,mt7623n-rfb-nand", "mediatek,mt7623";
+ };
++
++&pio {
++	nand_pins_default: nanddefault {
++		pins_dat {
++			pinmux = <MT7623_PIN_111_MSDC0_DAT7_FUNC_NLD7>,
++				 <MT7623_PIN_112_MSDC0_DAT6_FUNC_NLD6>,
++				 <MT7623_PIN_114_MSDC0_DAT4_FUNC_NLD4>,
++				 <MT7623_PIN_118_MSDC0_DAT3_FUNC_NLD3>,
++				 <MT7623_PIN_121_MSDC0_DAT0_FUNC_NLD0>,
++				 <MT7623_PIN_120_MSDC0_DAT1_FUNC_NLD1>,
++				 <MT7623_PIN_113_MSDC0_DAT5_FUNC_NLD5>,
++				 <MT7623_PIN_115_MSDC0_RSTB_FUNC_NLD8>,
++				 <MT7623_PIN_119_MSDC0_DAT2_FUNC_NLD2>;
++			input-enable;
++			drive-strength = <MTK_DRIVE_8mA>;
++			bias-pull-up;
++		};
++
++		pins_we {
++			pinmux = <MT7623_PIN_117_MSDC0_CLK_FUNC_NWEB>;
++			drive-strength = <MTK_DRIVE_8mA>;
++			bias-pull-up = <MTK_PUPD_SET_R1R0_10>;
++		};
++
++		pins_ale {
++			pinmux = <MT7623_PIN_116_MSDC0_CMD_FUNC_NALE>;
++			drive-strength = <MTK_DRIVE_8mA>;
++			bias-pull-down = <MTK_PUPD_SET_R1R0_10>;
++		};
++	};
++};
++
++&nandc {
++	status = "okay";
++	pinctrl-names = "default";
++	pinctrl-0 = <&nand_pins_default>;
++	nand@0 {
++		reg = <0>;
++		spare_per_sector = <64>;
++		nand-ecc-mode = "hw";
++		nand-ecc-strength = <12>;
++		nand-ecc-step-size = <1024>;
++		partitions {
++			compatible = "fixed-partitions";
++			#address-cells = <1>;
++			#size-cells = <1>;
++
++			partition@0 {
++				label = "preloader";
++				reg = <0x0 0x40000>;
++			};
++
++			partition@40000 {
++				label = "uboot";
++				reg = <0x40000 0x80000>;
++			};
++
++			partition@C0000 {
++				label = "uboot-env";
++				reg = <0xC0000 0x40000>;
++			};
++
++			partition@140000 {
++				label = "bootimg";
++				reg = <0x140000 0x2000000>;
++			};
++
++			partition@2140000 {
++				label = "recovery";
++				reg = <0x2140000 0x2000000>;
++			};
++
++			partition@4140000 {
++				label = "rootfs";
++				reg = <0x4140000 0x1000000>;
++			};
++
++			partition@5140000 {
++				label = "usrdata";
++				reg = <0x5140000 0x1000000>;
++			};
++		};
++	};
++};
++
++&bch {
++	status = "okay";
++};
 -- 
 2.7.4
