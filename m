@@ -1,103 +1,60 @@
-From: Heiner Kallweit <hkallweit1@gmail.com>
-Subject: Re: [PATCH 2/5] pintrl: meson: document GPIO IRQ DT binding
-Date: Fri, 12 May 2017 23:41:18 +0200
-Message-ID: <b39f1742-0558-beaa-1e06-eed80d644424@gmail.com>
-References: <a4ca587b-d3e8-a22d-4d25-289871d2d095@gmail.com>
- <0d835130-7c6c-751c-af15-c2ab69edcb42@gmail.com>
- <20170512193806.trt7jbvfyygkqard@rob-hp-laptop>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH v4 3/5] soc: qcom: Introduce APCS IPC driver
+Date: Fri, 12 May 2017 15:48:40 -0700
+Message-ID: <20170512224840.GW15143@minitux>
+References: <20170506011920.GH15143@minitux>
+ <CABb+yY1u9mspX1Zu0mg21JMYxpKxsXsvBa9LnF6VNr1_42UJUQ@mail.gmail.com>
+ <20170508055439.GJ15143@minitux>
+ <CABb+yY3CfWFBDh-qoGHDeHyLhVC7mPQZFB=VDS54OaypG-BqPw@mail.gmail.com>
+ <20170508191154.GM15143@minitux>
+ <CABb+yY2uC6vNFTq1KtZwrrw8x4BEfc2cMjF5DwrLbGpYWBNBzQ@mail.gmail.com>
+ <20170509191106.GQ15143@minitux>
+ <CABb+yY2LoX_rOSCkhnp-gS7EHTN+98xNn2E1+z7_7bFjQ2wtoA@mail.gmail.com>
+ <20170510190046.GT15143@minitux>
+ <CABb+yY2Upw_RALXjL_=yAUCOMzpb+PV6v_OjiznKBUJnFE2UVQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <20170512193806.trt7jbvfyygkqard@rob-hp-laptop>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Jerome Brunet <jbrunet@baylibre.com>, Mark Rutland <mark.rutland@arm.com>, Marc Zyngier <marc.zyngier@arm.com>, Linus Walleij <linus.walleij@linaro.org>, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-gpio@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CABb+yY2Upw_RALXjL_=yAUCOMzpb+PV6v_OjiznKBUJnFE2UVQ@mail.gmail.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Jassi Brar <jassisinghbrar@gmail.com>
+Cc: Jeffrey Hugo <jhugo@codeaurora.org>, Andy Gross <andy.gross@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ohad Ben-Cohen <ohad@wizery.com>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, Devicetree List <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-remoteproc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Am 12.05.2017 um 21:38 schrieb Rob Herring:
-> On Sun, May 07, 2017 at 06:34:09PM +0200, Heiner Kallweit wrote:
->> Document the DT binding for GPIO IRQ support on Amlogic Meson SoC's.
->>
->> This documentation is intentionally not placed under
->> interrupt-controllers as GPIO IRQ support on these SoC's acts more
->> like an interrupt multiplexer.
->>
->> Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
->> ---
->>  .../bindings/gpio/amlogic,meson-gpio-interrupt.txt | 30 ++++++++++++++++++++++
-> 
-> Seems more like an irqchip?
-> 
-It is an irq_chip. Would you therefore prefer a different name or another location
-for this binding documentation?
+On Wed 10 May 19:07 PDT 2017, Jassi Brar wrote:
 
->>  1 file changed, 30 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/gpio/amlogic,meson-gpio-interrupt.txt
->>
->> diff --git a/Documentation/devicetree/bindings/gpio/amlogic,meson-gpio-interrupt.txt b/Documentation/devicetree/bindings/gpio/amlogic,meson-gpio-interrupt.txt
->> new file mode 100644
->> index 00000000..35a052b8
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/gpio/amlogic,meson-gpio-interrupt.txt
->> @@ -0,0 +1,30 @@
->> +Amlogic meson GPIO interrupt controller
->> +
->> +Meson SoCs contains an interrupt controller which is able watch the SoC pads
->> +and generate an interrupt on edges or level. The controller is essentially a
->> +256 pads to 8 GIC interrupt multiplexer, with a filter block to select edge
->> +or level and polarity. We don't expose all 256 mux inputs because the
->> +documentation shows that upper part is not mapped to any pad. The actual number
->> +of interrupt exposed depends on the SoC.
->> +
->> +Required properties:
->> +
->> +- compatible : should be "amlogic,meson-gpio-interrupt", "syscon".
-> 
-> Why syscon?
-> 
-Has been removed already in v2 of the patch.
+> On Thu, May 11, 2017 at 12:30 AM, Bjorn Andersson
+> <bjorn.andersson@linaro.org> wrote:
+> > On Tue 09 May 19:33 PDT 2017, Jassi Brar wrote:
+[..]
+> > So please let me know what you think about [1], if you don't like it
+> > I'll fix the things pointed to by Stephen and we'll have to live with
+> > the two calls.
+> >
+> My last reply was about [1]. Other platforms call
+> mbox_send_data()+mbox_client_txdone() see
+> drivers/firmware/tegra/bpmp.c, but you want to introduce another API
+> in the innards of the framework.
 
->> +- reg : Specifies base physical address and size of the registers.
->> +- interrupts : list of GIC interrupts which can be used with the
->> +	       GPIO IRQ multiplexer
-> 
-> What about interrupt-controller property?
-> 
-This HW is somewhat special, it's more or less a multiplexer between
-100+ GPIO's and 8 GIC IRQ's. And we have two GPIO domains, both having
-a "gpio-controller".
-It doesn't seem that the "interrupt-controller" property is right here.
-I'd tend to say it should be added to the "gpio-controller" nodes.
+Okay, lets go with that then. I will incorporate the changes requested
+by Stephen and post a final version and then add the
+mbox_client_txdone() in the clients.
 
->> +
->> +Example:
->> +
->> +gpio_irq@9880 {
+> If we must do it, it should be done
+> above the framework by introducing
 > 
-> interrupt-controller@...
-> 
-This relates to previous comment, as it isn't really an interrupt
-controller I'm not sure we should use this name.
+> void mbox_send_message_and_tick(struct mbox_chan *chan, void *mssg)
+>            OR
+> void mbox_ring_doorbell(struct mbox_chan *chan, void *mssg)
+> {
+>    (void)mbox_send_message(chan, mssg);
+>    mbox_client_txdone(chan, 0);
+> }
 
->> +	compatible = "amlogic,meson-gpio-interrupt", "syscon";
->> +	reg = <0x0 0x09880 0x0 0x10>;
->> +	interrupts = <GIC_SPI 64 IRQ_TYPE_NONE>,
->> +		     <GIC_SPI 65 IRQ_TYPE_NONE>,
->> +		     <GIC_SPI 66 IRQ_TYPE_NONE>,
->> +		     <GIC_SPI 67 IRQ_TYPE_NONE>,
->> +		     <GIC_SPI 68 IRQ_TYPE_NONE>,
->> +		     <GIC_SPI 69 IRQ_TYPE_NONE>,
->> +		     <GIC_SPI 70 IRQ_TYPE_NONE>,
->> +		     <GIC_SPI 71 IRQ_TYPE_NONE>;
->> +	};
->> -- 
->> 2.12.2
->>
->>
->> --
->> To unsubscribe from this list: send the line "unsubscribe devicetree" in
->> the body of a message to majordomo@vger.kernel.org
->> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
+This sounds reasonable, but I would prefer that we get the two drivers
+merged - so I suggest that we deal with that later, when we see if its
+worth the effort.
 
+Regards,
+Bjorn
