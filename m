@@ -1,70 +1,85 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH V6 1/9] PM / OPP: Introduce "power-domain-opp" property
-Date: Fri, 12 May 2017 21:48:28 +0530
-Message-ID: <CAKohpomHH+GZ=4zRyVJz7OqGZ0cU=Qpm4f9xScMTDXyDk_brXA@mail.gmail.com>
-References: <cover.1493203884.git.viresh.kumar@linaro.org> <025acedb263eaa6089d354d9630214ada8013990.1493203884.git.viresh.kumar@linaro.org>
- <20170428204803.plu467okibtxga4d@rob-hp-laptop> <m2inleux0w.fsf@baylibre.com>
- <20170508041511.GB17010@vireshk-i7> <m2pofeazo4.fsf@baylibre.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <m2pofeazo4.fsf@baylibre.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Kevin Hilman <khilman@baylibre.com>
-Cc: Rob Herring <robh@kernel.org>, Rafael Wysocki <rjw@rjwysocki.net>, Ulf Hansson <ulf.hansson@linaro.org>, Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@codeaurora.org>, Lists linaro-kernel <linaro-kernel@lists.linaro.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Vincent Guittot <vincent.guittot@linaro.org>, Lina Iyer <lina.iyer@linaro.org>, "Nayak, Rajendra" <rnayak@codeaurora.org>, Sudeep Holla <sudeep.holla@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+From: Paul Cercueil <paul@crapouillou.net>
+Subject: [PATCH v6 02/14] dt/bindings: Document gpio-ingenic
+Date: Fri, 12 May 2017 18:52:55 +0200
+Message-ID: <20170512165307.31369-2-paul@crapouillou.net>
+References: <20170428200824.10906-2-paul@crapouillou.net>
+ <20170512165307.31369-1-paul@crapouillou.net>
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <20170512165307.31369-1-paul@crapouillou.net>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Ralf Baechle <ralf@linux-mips.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, Maarten ter Huurne <maarten@treewalker.org>, Paul Cercueil <paul@crapouillou.net>
 List-Id: devicetree@vger.kernel.org
 
-On 12 May 2017 at 20:29, Kevin Hilman <khilman@baylibre.com> wrote:
-> Viresh Kumar <viresh.kumar@linaro.org> writes:
+This commit adds documentation for the devicetree bindings of the
+gpio-ingenic driver, which handles GPIOs of the Ingenic SoCs
+currently supported by the Linux kernel.
 
->> Why should we do that?
->
-> For starters, because the lack of it looks very strange upon first read
-> (notice that both Rob and I pointed that out), and because you didn't
-> explain why in the first place, it draws attention.
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+Acked-by: Rob Herring <robh@kernel.org>
+---
+ .../devicetree/bindings/gpio/ingenic,gpio.txt      | 46 ++++++++++++++++++++++
+ 1 file changed, 46 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/gpio/ingenic,gpio.txt
 
-:)
+ v2: New patch
+ v3: No changes
+ v4: Update for the v4 version of the gpio-ingenic driver
+ v5: Remove gpio-bank-... compatible strings, and add 'reg' property
+ v6: No changes
 
->> I don't see why would we like to put some index value in the microvolts
->> property. We are setting the index value in the opp-hz property to avoid adding
->> extra fields and making sure opp-hz is still the unique property for the nodes.
->
-> What about the case where firmware wants exact frequencies, and
-> microvolts property is just an index?
->
-> The point is, you have a very specific SoC and use-case in mind, but the
-> goal of a binding change like this is to make something that could be
-> generically useful.
+diff --git a/Documentation/devicetree/bindings/gpio/ingenic,gpio.txt b/Documentation/devicetree/bindings/gpio/ingenic,gpio.txt
+new file mode 100644
+index 000000000000..7988aeb725f4
+--- /dev/null
++++ b/Documentation/devicetree/bindings/gpio/ingenic,gpio.txt
+@@ -0,0 +1,46 @@
++Ingenic jz47xx GPIO controller
++
++That the Ingenic GPIO driver node must be a sub-node of the Ingenic pinctrl
++driver node.
++
++Required properties:
++--------------------
++
++ - compatible: Must contain one of:
++    - "ingenic,jz4740-gpio"
++    - "ingenic,jz4770-gpio"
++    - "ingenic,jz4780-gpio"
++ - reg: The GPIO bank number.
++ - interrupt-controller: Marks the device node as an interrupt controller.
++ - interrupts: Interrupt specifier for the controllers interrupt.
++ - #interrupt-cells: Should be 2. Refer to
++   ../interrupt-controller/interrupts.txt for more details.
++ - gpio-controller: Marks the device node as a GPIO controller.
++ - #gpio-cells: Should be 2. The first cell is the GPIO number and the second
++    cell specifies GPIO flags, as defined in <dt-bindings/gpio/gpio.h>. Only the
++    GPIO_ACTIVE_HIGH and GPIO_ACTIVE_LOW flags are supported.
++ - gpio-ranges: Range of pins managed by the GPIO controller. Refer to
++   'gpio.txt' in this directory for more details.
++
++Example:
++--------
++
++&pinctrl {
++	#address-cells = <1>;
++	#size-cells = <0>;
++
++	gpa: gpio@0 {
++		compatible = "ingenic,jz4740-gpio";
++		reg = <0>;
++
++		gpio-controller;
++		gpio-ranges = <&pinctrl 0 0 32>;
++		#gpio-cells = <2>;
++
++		interrupt-controller;
++		#interrupt-cells = <2>;
++
++		interrupt-parent = <&intc>;
++		interrupts = <28>;
++	};
++};
+-- 
+2.11.0
 
-I agree, but I am not sure of having such a case in very near future at least.
-Wouldn't it be wise to not touch opp-microvolt for now and update it only
-when needed? Its not a big change anyway..
-
->> Hmm, I am not sure how things are going to work in that case. The opp-hz value
->> read from the phandle is passed to the QoS framework in this series, which makes
->> sure that we select the highest requested performance point for a particular
->> power-domain. The index value is required to be present with the OPP framework
->> to make it all work, at least based on the way I have designed it for now.
->
-> IMO, this kind of dependency isn't the job of the OPP framework, it's
-> the job of the power-domain governor.
-
-Okay. So the way it will work with the current suggestions is:
-
-- OPP framework gets DVFS update request for device X
-- OPP framework finds that the device has a power-domain and so it asks
-  the power-domain framework to set the device in a particular state
-  corresponding to the OPP (if we are going to a higher OPP).
-- If the power-domain supports state selection, it does that or returns error.
-  (Actually we can optimize this by asking the genpd initially if
-state selection
-   is possible, only then OPP core calls the genpd API).
-- The genpd API will manage a list of all devices in the domain (which it
-  already does) and also the states selected for them. It finds the max of
-  the requested states and selects that.
-- Note that the QoS framework isn't there in the picture anymore.
-
-Will that be fine ?
-
---
-viresh
