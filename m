@@ -1,117 +1,143 @@
-Return-Path: <SRS0=byqR=4V=linaro.org=guodong.xu@kernel.org>
+Return-Path: <SRS0=HD01=4S=mediatek.com=minghsiu.tsai@kernel.org>
+Message-ID: <1494555074.9244.2.camel@mtksdaap41>
+Subject: Re: [PATCH] [media] mtk-mdp: Fix g_/s_selection capture/compose
+ logic
+From: Minghsiu Tsai <minghsiu.tsai@mediatek.com>
+Date: Fri, 12 May 2017 10:11:14 +0800
+In-Reply-To: <a8c1da24-d812-7c4d-a05d-34cb90edddf5@linaro.org>
+References: <1492057130-1194-1-git-send-email-minghsiu.tsai@mediatek.com>
+	 <a8c1da24-d812-7c4d-a05d-34cb90edddf5@linaro.org>
+Content-Type: multipart/alternative; boundary="=-rnpVXM6MvLGcXpQKhNNh"
 MIME-Version: 1.0
-In-Reply-To: <201705151738.ls8RIrFp%fengguang.wu@intel.com>
-References: <20170515062745.70082-1-songxiaowei@hisilicon.com> <201705151738.ls8RIrFp%fengguang.wu@intel.com>
-From: Guodong Xu <guodong.xu@linaro.org>
-Date: Mon, 15 May 2017 17:36:38 +0800
-Message-ID: <CAFGCpxwmuEKdc6FF=OmQz8tEipbcO+PjkwmywXLtY5=UxSeKvg@mail.gmail.com>
-Subject: Re: [PATCH 1/3] arm64: dts: hi3660: add pcie node
-Content-Type: multipart/alternative; boundary="001a114934dcb87a80054f8cca4a"
-To: kbuild test robot <lkp@intel.com>, "xuwei (O)" <xuwei5@hisilicon.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
-Cc: Song Xiaowei <songxiaowei@hisilicon.com>, kbuild-all@01.org, Bjorn Helgaas <bhelgaas@google.com>, Kishon <kishon@ti.com>, jingoohan1@gmail.com, Arnd Bergmann <arnd@arndb.de>, tn@semihalf.com, keith.busch@intel.com, Niklas Cassel <niklas.cassel@axis.com>, Duc Dang <dhdang@apm.com>, "liudongdong (C)" <liudongdong3@huawei.com>, "Chenfeng (puck)" <puck.chen@hisilicon.com>, Wangbinghui <wangbinghui@hisilicon.com>, Suzhuangluan <suzhuangluan@hisilicon.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-pci@vger.kernel.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org
+To: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Cc: Hans Verkuil <hans.verkuil@cisco.com>, daniel.thompson@linaro.org, "Rob Herring  <robh+dt@kernel.org>, Mauro Carvalho Chehab" <mchehab@osg.samsung.com>, Matthias Brugger <matthias.bgg@gmail.com>, Daniel Kurtz <djkurtz@chromium.org>, Pawel Osciak <posciak@chromium.org>, Houlong Wei <houlong.wei@mediatek.com>, srv_heupstream@mediatek.com, Eddie Huang <eddie.huang@mediatek.com>, Yingjoe Chen <yingjoe.chen@mediatek.com>, Wu-Cheng Li <wuchengli@google.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org, linux-mediatek@lists.infradead.org
 List-ID: <devicetree@vger.kernel.org>
 
---001a114934dcb87a80054f8cca4a
+--=-rnpVXM6MvLGcXpQKhNNh
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-This PCIe node has dependencies on &crg_ctrl and &gpio11. However, both of
-them are not appearing in mainline kernel tree yet. Sorry about that. But I
-do have a plan to send all dts related changes to maillist within this
-week, no later than this Wed (17/May). Would it be possible you maintainers
-review this patch in parallel?
+Hi Stan,
 
-+Device tree maintainers.
+On Thu, 2017-04-27 at 17:42 +0300, Stanimir Varbanov wrote:
 
--Guodong
+> Hi,
+> 
+> On 04/13/2017 07:18 AM, Minghsiu Tsai wrote:
+> > From: Daniel Kurtz <djkurtz@chromium.org>
+> > 
+> > Experiments show that the:
+> >  (1) mtk-mdp uses the _MPLANE form of CAPTURE/OUTPUT
+> >  (2) CAPTURE types use CROP targets, and OUTPUT types use COMPOSE targets
+> > 
+> > Signed-off-by: Daniel Kurtz <djkurtz@chromium.org>
+> > Signed-off-by: Minghsiu Tsai <minghsiu.tsai@mediatek.com>
+> > 
+> > ---
+> >  drivers/media/platform/mtk-mdp/mtk_mdp_m2m.c | 18 +++++++++---------
+> >  1 file changed, 9 insertions(+), 9 deletions(-)
+> > 
+> > diff --git a/drivers/media/platform/mtk-mdp/mtk_mdp_m2m.c b/drivers/media/platform/mtk-mdp/mtk_mdp_m2m.c
+> > index 13afe48..8ab7ca0 100644
+> > --- a/drivers/media/platform/mtk-mdp/mtk_mdp_m2m.c
+> > +++ b/drivers/media/platform/mtk-mdp/mtk_mdp_m2m.c
+> > @@ -837,12 +837,12 @@ static int mtk_mdp_m2m_g_selection(struct file *file, void *fh,
+> >  	struct mtk_mdp_ctx *ctx = fh_to_ctx(fh);
+> >  	bool valid = false;
+> >  
+> > -	if (s->type == V4L2_BUF_TYPE_VIDEO_CAPTURE) {
+> > -		if (mtk_mdp_is_target_compose(s->target))
+> > -			valid = true;
+> > -	} else if (s->type == V4L2_BUF_TYPE_VIDEO_OUTPUT) {
+> > +	if (s->type == V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE) {
+> >  		if (mtk_mdp_is_target_crop(s->target))
+> >  			valid = true;
+> > +	} else if (s->type == V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE) {
+> > +		if (mtk_mdp_is_target_compose(s->target))
+> > +			valid = true;
+> >  	}
+> 
+> Using MPLANE formats in g/s_selection violates the v4l2 spec. See [1].
+> 
 
 
-On Mon, May 15, 2017 at 5:18 PM, kbuild test robot <lkp@intel.com> wrote:
+Sorry for reply too late. I will fix it soon. Thanks.
 
-> Hi Song,
->
-> [auto build test ERROR on pci/next]
-> [also build test ERROR on v4.12-rc1 next-20170515]
-> [if your patch is applied to the wrong git tree, please drop us a note to
-> help improve the system]
->
-> url:    https://github.com/0day-ci/linux/commits/Song-Xiaowei/
-> arm64-dts-hi3660-add-pcie-node/20170515-144035
-> base:   https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git
-> next
-> config: arm64-defconfig (attached as .config)
-> compiler: aarch64-linux-gnu-gcc (Debian 6.1.1-9) 6.1.1 20160705
-> reproduce:
->         wget https://raw.githubusercontent.com/01org/lkp-tests/master/
-> sbin/make.cross -O ~/bin/make.cross
->         chmod +x ~/bin/make.cross
->         # save the attached .config to linux build tree
->         make.cross ARCH=arm64
->
-> All errors (new ones prefixed by >>):
->
-> >> Error: arch/arm64/boot/dts/hisilicon/hi3660.dtsi:180.24-25 syntax error
->    FATAL ERROR: Unable to parse input tree
->
-> ---
-> 0-DAY kernel test infrastructure                Open Source Technology
-> Center
-> https://lists.01.org/pipermail/kbuild-all                   Intel
-> Corporation
->
 
---001a114934dcb87a80054f8cca4a
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-<div dir=3D"ltr">This PCIe node has dependencies on &amp;crg_ctrl and &amp;=
-gpio11. However, both of them are not appearing in mainline kernel tree yet=
-. Sorry about that. But I do have a plan to send all dts related changes to=
- maillist within this week, no later than this Wed (17/May). Would it be po=
-ssible you maintainers review this patch in parallel?=C2=A0<div><br></div><=
-div>+Device tree maintainers.</div><div><br></div><div>-Guodong</div><div>=
-=C2=A0<br></div></div><div class=3D"gmail_extra"><br><div class=3D"gmail_qu=
-ote">On Mon, May 15, 2017 at 5:18 PM, kbuild test robot <span dir=3D"ltr">&=
-lt;<a href=3D"mailto:lkp@intel.com" target=3D"_blank">lkp@intel.com</a>&gt;=
-</span> wrote:<br><blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .=
-8ex;border-left:1px #ccc solid;padding-left:1ex">Hi Song,<br>
-<br>
-[auto build test ERROR on pci/next]<br>
-[also build test ERROR on v4.12-rc1 next-20170515]<br>
-[if your patch is applied to the wrong git tree, please drop us a note to h=
-elp improve the system]<br>
-<br>
-url:=C2=A0 =C2=A0 <a href=3D"https://github.com/0day-ci/linux/commits/Song-=
-Xiaowei/arm64-dts-hi3660-add-pcie-node/20170515-144035" rel=3D"noreferrer" =
-target=3D"_blank">https://github.com/0day-ci/<wbr>linux/commits/Song-Xiaowe=
-i/<wbr>arm64-dts-hi3660-add-pcie-<wbr>node/20170515-144035</a><br>
-base:=C2=A0 =C2=A0<a href=3D"https://git.kernel.org/pub/scm/linux/kernel/gi=
-t/helgaas/pci.git" rel=3D"noreferrer" target=3D"_blank">https://git.kernel.=
-org/pub/<wbr>scm/linux/kernel/git/helgaas/<wbr>pci.git</a> next<br>
-config: arm64-defconfig (attached as .config)<br>
-compiler: aarch64-linux-gnu-gcc (Debian 6.1.1-9) 6.1.1 20160705<br>
-reproduce:<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 wget <a href=3D"https://raw.githubusercontent.c=
-om/01org/lkp-tests/master/sbin/make.cross" rel=3D"noreferrer" target=3D"_bl=
-ank">https://raw.githubusercontent.<wbr>com/01org/lkp-tests/master/<wbr>sbi=
-n/make.cross</a> -O ~/bin/make.cross<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 chmod +x ~/bin/make.cross<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 # save the attached .config to linux build tree=
-<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 make.cross ARCH=3Darm64<br>
-<br>
-All errors (new ones prefixed by &gt;&gt;):<br>
-<br>
-&gt;&gt; Error: arch/arm64/boot/dts/hisilicon/<wbr>hi3660.dtsi:180.24-25 sy=
-ntax error<br>
-=C2=A0 =C2=A0FATAL ERROR: Unable to parse input tree<br>
-<br>
----<br>
-0-DAY kernel test infrastructure=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
-=C2=A0 =C2=A0 Open Source Technology Center<br>
-<a href=3D"https://lists.01.org/pipermail/kbuild-all" rel=3D"noreferrer" ta=
-rget=3D"_blank">https://lists.01.org/<wbr>pipermail/kbuild-all</a>=C2=A0 =
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0Intel Corpora=
-tion<br>
-</blockquote></div><br></div>
+> <snip>
+> 
 
---001a114934dcb87a80054f8cca4a--
+
+
+--=-rnpVXM6MvLGcXpQKhNNh
+Content-Type: text/html; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 TRANSITIONAL//EN">
+<HTML>
+<HEAD>
+  <META HTTP-EQUIV="Content-Type" CONTENT="text/html; CHARSET=UTF-8">
+  <META NAME="GENERATOR" CONTENT="GtkHTML/4.2.2">
+</HEAD>
+<BODY>
+Hi Stan,<BR>
+<BR>
+On Thu, 2017-04-27 at 17:42 +0300, Stanimir Varbanov wrote:
+<BLOCKQUOTE TYPE=CITE>
+<PRE>
+Hi,
+
+On 04/13/2017 07:18 AM, Minghsiu Tsai wrote:
+&gt; From: Daniel Kurtz &lt;<A HREF="mailto:djkurtz@chromium.org">djkurtz@chromium.org</A>&gt;
+&gt; 
+&gt; Experiments show that the:
+&gt;  (1) mtk-mdp uses the _MPLANE form of CAPTURE/OUTPUT
+&gt;  (2) CAPTURE types use CROP targets, and OUTPUT types use COMPOSE targets
+&gt; 
+&gt; Signed-off-by: Daniel Kurtz &lt;<A HREF="mailto:djkurtz@chromium.org">djkurtz@chromium.org</A>&gt;
+&gt; Signed-off-by: Minghsiu Tsai &lt;<A HREF="mailto:minghsiu.tsai@mediatek.com">minghsiu.tsai@mediatek.com</A>&gt;
+&gt; 
+&gt; ---
+&gt;  drivers/media/platform/mtk-mdp/mtk_mdp_m2m.c | 18 +++++++++---------
+&gt;  1 file changed, 9 insertions(+), 9 deletions(-)
+&gt; 
+&gt; diff --git a/drivers/media/platform/mtk-mdp/mtk_mdp_m2m.c b/drivers/media/platform/mtk-mdp/mtk_mdp_m2m.c
+&gt; index 13afe48..8ab7ca0 100644
+&gt; --- a/drivers/media/platform/mtk-mdp/mtk_mdp_m2m.c
+&gt; +++ b/drivers/media/platform/mtk-mdp/mtk_mdp_m2m.c
+&gt; @@ -837,12 +837,12 @@ static int mtk_mdp_m2m_g_selection(struct file *file, void *fh,
+&gt;  	struct mtk_mdp_ctx *ctx = fh_to_ctx(fh);
+&gt;  	bool valid = false;
+&gt;  
+&gt; -	if (s-&gt;type == V4L2_BUF_TYPE_VIDEO_CAPTURE) {
+&gt; -		if (mtk_mdp_is_target_compose(s-&gt;target))
+&gt; -			valid = true;
+&gt; -	} else if (s-&gt;type == V4L2_BUF_TYPE_VIDEO_OUTPUT) {
+&gt; +	if (s-&gt;type == V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE) {
+&gt;  		if (mtk_mdp_is_target_crop(s-&gt;target))
+&gt;  			valid = true;
+&gt; +	} else if (s-&gt;type == V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE) {
+&gt; +		if (mtk_mdp_is_target_compose(s-&gt;target))
+&gt; +			valid = true;
+&gt;  	}
+
+Using MPLANE formats in g/s_selection violates the v4l2 spec. See [1].
+
+</PRE>
+</BLOCKQUOTE>
+<BR>
+Sorry for reply too late. I will fix it soon. Thanks.<BR>
+<BR>
+<BR>
+<BLOCKQUOTE TYPE=CITE>
+<PRE>
+&lt;snip&gt;
+
+</PRE>
+</BLOCKQUOTE>
+<BR>
+</BODY>
+</HTML>
+
+--=-rnpVXM6MvLGcXpQKhNNh--
