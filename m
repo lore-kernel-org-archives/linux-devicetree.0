@@ -1,48 +1,42 @@
-From: Markus Mayer <code-7CzEARzsJhSsTnJN9+BGXg@public.gmane.org>
-Subject: Enumerating multiple devices of the same kind
-Date: Fri, 12 May 2017 16:28:45 -0700
-Message-ID: <CANEuBv5+94On4oxKzOJBKC_Gi6ycJwtUEb477d3ZcnxFOVCe-w@mail.gmail.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] dt-bindings: Document optional "reserved-names" property
+Date: Fri, 12 May 2017 18:55:01 -0500
+Message-ID: <20170512235501.ziplwgevcjqyjims@rob-hp-laptop>
+References: <20170509171847.27457-1-f.fainelli@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Device Tree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170509171847.27457-1-f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org, devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, glikely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, stewart-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi all,
+On Tue, May 09, 2017 at 10:18:47AM -0700, Florian Fainelli wrote:
+> Define an optional string property: "reserved-names" which can be used
+> by the client program to tag/identify reserved memory regions.
+> 
+> Signed-off-by: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt b/Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt
+> index 3da0ebdba8d9..bd3c9485f637 100644
+> --- a/Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt
+> +++ b/Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt
+> @@ -64,6 +64,10 @@ reusable (optional) - empty property
+>        system can use that region to store volatile or cached data that
+>        can be otherwise regenerated or migrated elsewhere.
+>  
+> +reserved-names (optional)
+> +    - Provides a named tag to the client program to help pretty print/identify
+> +      the reserved memory region.
 
-We are in the position of needing to enumerate multiple devices of the
-same kind in device tree. I was originally thinking to just use
-"index". Florian pointed out that "cell-index" seemed to be what was
-being used by others. I submitted that upstream. Rob subsequently
-pointed out that cell-index is "not a valid property for FDT (only
-real OpenFirmware)."
+*-names is normally on the client side. I'd like to keep that 
+consistent.
 
-The whole thread is archived here: https://patchwork.kernel.org/patch/9686283/.
+Second, I don't see the need for this. The compatible is not enough?
 
-The driver has since been converted into a SoC driver (no longer part
-of the hwmon subsystem) and the cell-index property has been removed
-from the binding. I'll be sending all that out for upstreaming in the
-near future.
-
-The reworked binding now looks like this:
-
-       dpfe_cpu0: dpfe-cpu@f1132000 {
-               compatible = "brcm,bcm7271-dpfe-cpu", "brcm,dpfe-cpu";
-               reg =  <0xf1132000 0x180
-                       0xf1134000 0x1000
-                       0xf1138000 0x4000>;
-               reg-names = "dpfe-cpu", "dpfe-dmem", "dpfe-imem";
-       };
-
-We still need some form of index, however, since we do have SoCs that
-have more than one such node. What would be the preferred approach to
-include such an index in the node?
-
-Thanks,
--Markus
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Rob
