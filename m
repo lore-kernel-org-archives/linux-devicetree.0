@@ -1,63 +1,58 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 02/11] dt-bindings: clk: Extend binding doc for Stingray
- SOC
-Date: Fri, 12 May 2017 10:21:34 -0500
-Message-ID: <20170512152134.tjuc5exo4plalujs@rob-hp-laptop>
-References: <1494071686-19098-1-git-send-email-anup.patel@broadcom.com>
- <1494071686-19098-3-git-send-email-anup.patel@broadcom.com>
+Subject: Re: [PATCH 1/4] ata: Add DT bindings for Faraday Technology FTIDE010
+Date: Fri, 12 May 2017 10:24:52 -0500
+Message-ID: <20170512152452.jps5akmsxuvovugy@rob-hp-laptop>
+References: <20170506121053.11554-1-linus.walleij@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1494071686-19098-3-git-send-email-anup.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+In-Reply-To: <20170506121053.11554-1-linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Anup Patel <anup.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Oza Pawandeep <oza-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Srinath Mannam <srinath.mannam-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Pramod Kumar <pramod.kumar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Sandeep Tripathy <sandeep.tripathy-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Tejun Heo <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Janos Laube <janos.dev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Paulius Zaleckas <paulius.zaleckas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, openwrt-devel-p3rKhJxN3npAfugRpC6u6w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Hans Ulli Kroll <ulli.kroll-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, John Feng-Hsin Chiang <john453-w0jeGXs5+AWXmMXjJBpWqg@public.gmane.org>, Greentime Hu <green.hu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, May 06, 2017 at 05:24:37PM +0530, Anup Patel wrote:
-> From: Sandeep Tripathy <sandeep.tripathy-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+On Sat, May 06, 2017 at 02:10:50PM +0200, Linus Walleij wrote:
+> This adds device tree bindings for the Faraday Technology
+> FTIDE010 found in the Storlink/Storm/Cortina Systems Gemini SoC.
 > 
-> Update iproc clock dt-binding documentation with
-> Stingray pll and clock details.
-> 
-> Signed-off-by: Sandeep Tripathy <sandeep.tripathy-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-> Reviewed-by: Ray Jui <ray.jui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-> Reviewed-by: Scott Branden <scott.branden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-> ---
->  .../bindings/clock/brcm,iproc-clocks.txt           | 76 ++++++++++++++++++++++
->  1 file changed, 76 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/clock/brcm,iproc-clocks.txt b/Documentation/devicetree/bindings/clock/brcm,iproc-clocks.txt
-> index 6f66e9a..f2c5f0e4a 100644
-> --- a/Documentation/devicetree/bindings/clock/brcm,iproc-clocks.txt
-> +++ b/Documentation/devicetree/bindings/clock/brcm,iproc-clocks.txt
-> @@ -219,3 +219,79 @@ BCM63138
->  --------
->  PLL and leaf clock compatible strings for BCM63138 are:
->      "brcm,bcm63138-armpll"
-> +
-> +Stingray
-> +-----------
-> +PLL and leaf clock compatible strings for Stingray are:
-> +    "brcm,sr-genpll0"
-> +    "brcm,sr-genpll1"
-> +    "brcm,sr-genpll2"
-> +    "brcm,sr-genpll3"
-> +    "brcm,sr-genpll4"
-> +    "brcm,sr-genpll5"
-> +    "brcm,sr-genpll6"
-> +
-> +    "brcm,sr-lcpll0"
-> +    "brcm,sr-lcpll1"
-> +    "brcm,sr-lcpll-pcie"
-> +
-> +
-> +The following table defines the set of PLL/clock index and ID for Stingray.
-> +These clock IDs are defined in:
-> +    "include/dt-bindings/clock/bcm-sr.h"
+> I am not 100% sure that this part if from Faraday Technology but
 
-This header should be part of this commit. With that,
+s/if/is/
+
+> a lot points in that direction:
+> 
+> - A later IDE interface called FTIDE020 exist and share some
+>   properties.
+> 
+> - The SATA bridge has the same Built In Self Test (BIST) that the
+>   Faraday FTSATA100 seems to have, and it has version number 0100
+>   in the device ID register, so this is very likely a FTSATA100
+>   bundled with the FTIDE010.
+> 
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Cc: John Feng-Hsin Chiang <john453-w0jeGXs5+AWXmMXjJBpWqg@public.gmane.org>
+> Cc: Greentime Hu <green.hu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+> Greentime: I think this may be interesting to you since the
+> FTIDE020 will need the same bindings so we can probably
+> just reuse them and maybe make the parser a library if you
+> want to upstream the FTIDE020.
+> 
+> Faraday people: I do not have it from a source that this
+> hardware is really FTIDE010 but I would be VERY surprised
+> if it is not. U-Boot has an FTIDE020 IDE controller
+> synthesized in the Andestech platform, and it has a similar
+> yet different register layout, featuring similar timing
+> set-ups:
+> http://git.denx.de/?p=u-boot.git;a=blob;f=drivers/block/ftide020.h
+> http://git.denx.de/?p=u-boot.git;a=blob;f=drivers/block/ftide020.c
+> ---
+>  .../devicetree/bindings/ata/faraday,ftide010.txt   | 63 ++++++++++++++++++++++
+>  1 file changed, 63 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/ata/faraday,ftide010.txt
 
 Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 --
