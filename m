@@ -1,54 +1,63 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 4/6] spi: sh-msiof: Add slave mode support
-Date: Fri, 12 May 2017 10:14:34 -0500
-Message-ID: <20170512151434.bwzak7rqna3racdq@rob-hp-laptop>
-References: <1493919951-32122-1-git-send-email-geert+renesas@glider.be>
- <1493919951-32122-5-git-send-email-geert+renesas@glider.be>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3 3/6] dt-bindings: bus: Add documentation for the
+ Technologic Systems NBUS
+Date: Fri, 12 May 2017 10:17:11 -0500
+Message-ID: <20170512151711.plggiqffktsa3xuv@rob-hp-laptop>
+References: <20170505193259.16517-1-sebastien.bourdelin@savoirfairelinux.com>
+ <20170505193259.16517-4-sebastien.bourdelin@savoirfairelinux.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1493919951-32122-5-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Wolfram Sang <wsa+renesas-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org>, Hiromitsu Yamasaki <hiromitsu.yamasaki.ym-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Jiada Wang <jiada_wang-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hisashi Nakamura <hisashi.nakamura.ak-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <20170505193259.16517-4-sebastien.bourdelin@savoirfairelinux.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sebastien Bourdelin <sebastien.bourdelin@savoirfairelinux.com>
+Cc: linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, kernel@savoirfairelinux.com, linux@roeck-us.net, linus.walleij@linaro.org, shawnguo@kernel.org, fabio.estevam@nxp.com, mark@embeddedarm.com, kris@embeddedarm.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 04, 2017 at 07:45:49PM +0200, Geert Uytterhoeven wrote:
-> From: Hisashi Nakamura <hisashi.nakamura.ak-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+On Fri, May 05, 2017 at 03:32:56PM -0400, Sebastien Bourdelin wrote:
+> Add binding documentation for the Technologic Systems NBUS that is used
+> to interface with peripherals in the FPGA of the TS-4600 SoM.
 > 
-> Add slave mode support to the MSIOF driver, in both PIO and DMA mode.
-> 
-> For now this only supports the transmission of messages with a size
-> that is known in advance.
-> 
-> Signed-off-by: Hisashi Nakamura <hisashi.nakamura.ak-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-> Signed-off-by: Hiromitsu Yamasaki <hiromitsu.yamasaki.ym-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-> [geert: Timeout handling cleanup, spi core integration, cancellation,
-> 	rewording]
-> Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+> Signed-off-by: Sebastien Bourdelin <sebastien.bourdelin@savoirfairelinux.com>
 > ---
-> v3:
->   - Clear TIF_SIGPENDING when interrupted to fix cancellation,
->   - Extract sh_msiof_wait_for_completion(),
->   - Add #include <linux/sched/signal.h>,
->   - Convert to use spi_alloc_slave(),
+> Changes v2 -> v3:
+>   - rebase on master
+>   - fix typo (suggested by Rob Herring)
 > 
-> v2:
->   - Document "spi-slave" property in DT bindings,
->   - Use spi_controller_is_slave() helper,
->   - Check for "spi-slave" property instead of "slave" child node,
->   - Replace SPI_MASTER_IS_SLAVE by SPI_CONTROLLER_IS_SLAVE,
->   - Implement cancellation.
+> Changes v1 -> v2:
+>   - rebase on master
+>   - remove the simple-bus compatibility as the root node will now
+>   populate child nodes (suggested by Rob Herring)
+>   - use the ts vendor prefix for gpios (suggested by Rob Herring)
 > ---
->  Documentation/devicetree/bindings/spi/sh-msiof.txt |   2 +
+>  Documentation/devicetree/bindings/bus/ts-nbus.txt | 50 +++++++++++++++++++++++
+>  1 file changed, 50 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/bus/ts-nbus.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/bus/ts-nbus.txt b/Documentation/devicetree/bindings/bus/ts-nbus.txt
+> new file mode 100644
+> index 000000000000..905600adfb64
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/bus/ts-nbus.txt
+> @@ -0,0 +1,50 @@
+> +Technologic Systems NBUS
+> +
+> +The NBUS is a bus used to interface with peripherals in the Technologic
+> +Systems FPGA on the TS-4600 SoM.
+> +
+> +Required properties :
+> + - compatible		: "technologic,ts-nbus"
+> + - #address-cells	: must be 1
+> + - #size-cells		: must be 0
+> + - pwms			: The PWM bound to the FPGA
+> + - ts-data-gpios	: The 8 GPIO pins connected to the data lines on the FPGA
+> + - ts-csn-gpios		: The GPIO pin connected to the csn line on the FPGA
+> + - ts-txrx-gpios	: The GPIO pin connected to the txrx line on the FPGA
+> + - ts-strobe-gpios	: The GPIO pin connected to the stobe line on the FPGA
+> + - ts-ale-gpios		: The GPIO pin connected to the ale line on the FPGA
+> + - ts-rdy-gpios		: The GPIO pin connected to the rdy line on the FPGA
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Vendor prefixes are in the form <vendor>,<propname>. So ts,rdy-gpios.
 
->  drivers/spi/spi-sh-msiof.c                         | 121 +++++++++++++++------
->  include/linux/spi/sh_msiof.h                       |   6 +
->  3 files changed, 96 insertions(+), 33 deletions(-)
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Rob
