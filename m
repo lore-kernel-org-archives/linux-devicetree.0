@@ -1,930 +1,957 @@
 From: Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH v6 03/14] pinctrl: add a pinctrl driver for the Ingenic jz47xx SoCs
-Date: Fri, 12 May 2017 18:52:56 +0200
-Message-ID: <20170512165307.31369-3-paul@crapouillou.net>
+Subject: [PATCH v6 14/14] MIPS: jz4740: Remove custom GPIO code
+Date: Fri, 12 May 2017 18:53:07 +0200
+Message-ID: <20170512165307.31369-14-paul@crapouillou.net>
 References: <20170428200824.10906-2-paul@crapouillou.net>
  <20170512165307.31369-1-paul@crapouillou.net>
-Return-path: <linux-mips-bounce@linux-mips.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170512165307.31369-1-paul@crapouillou.net>
-Sender: linux-mips-bounce@linux-mips.org
-Errors-to: linux-mips-bounce@linux-mips.org
-List-help: <mailto:ecartis@linux-mips.org?Subject=help>
-List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
-List-software: Ecartis version 1.0.0
-List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
-List-owner: <mailto:ralf@linux-mips.org>
-List-post: <mailto:linux-mips@linux-mips.org>
-List-archive: <http://www.linux-mips.org/archives/linux-mips/>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Ralf Baechle <ralf@linux-mips.org>
 Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, Maarten ter Huurne <maarten@treewalker.org>, Paul Cercueil <paul@crapouillou.net>
 List-Id: devicetree@vger.kernel.org
 
-This driver handles pin configuration and pin muxing for the
-JZ4740 and JZ4780 SoCs from Ingenic.
+All the drivers for the various hardware elements of the jz4740 SoC have
+been modified to use the pinctrl framework for their pin configuration
+needs.
+As such, this platform code is now unused and can be deleted.
 
 Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 ---
- drivers/pinctrl/Kconfig           |   9 +
- drivers/pinctrl/Makefile          |   1 +
- drivers/pinctrl/pinctrl-ingenic.c | 852 ++++++++++++++++++++++++++++++++++++++
- 3 files changed, 862 insertions(+)
- create mode 100644 drivers/pinctrl/pinctrl-ingenic.c
+ arch/mips/include/asm/mach-jz4740/gpio.h | 371 ----------------------
+ arch/mips/jz4740/Makefile                |   2 -
+ arch/mips/jz4740/gpio.c                  | 519 -------------------------------
+ 3 files changed, 892 deletions(-)
+ delete mode 100644 arch/mips/jz4740/gpio.c
 
- v2: Consider it's a new patch. Completely rewritten from v1.
- v3: 'unsigned' -> 'unsigned int'
- v4: Completely rewritten from v3.
- v5: Probe child devices directly instead of using MFD framework
- v6: Remove selection of MFD_CORE in Kconfig
+ v2: No changes
+ v3: No changes
+ v4: No changes
+ v5: No changes
+ v6: No changes
 
-diff --git a/drivers/pinctrl/Kconfig b/drivers/pinctrl/Kconfig
-index 8f8c2af45781..1ac952065051 100644
---- a/drivers/pinctrl/Kconfig
-+++ b/drivers/pinctrl/Kconfig
-@@ -285,6 +285,15 @@ config PINCTRL_ZYNQ
- 	help
- 	  This selects the pinctrl driver for Xilinx Zynq.
+diff --git a/arch/mips/include/asm/mach-jz4740/gpio.h b/arch/mips/include/asm/mach-jz4740/gpio.h
+index 7c7708a23baa..fd847c984701 100644
+--- a/arch/mips/include/asm/mach-jz4740/gpio.h
++++ b/arch/mips/include/asm/mach-jz4740/gpio.h
+@@ -16,380 +16,9 @@
+ #ifndef _JZ_GPIO_H
+ #define _JZ_GPIO_H
  
-+config PINCTRL_INGENIC
-+	bool "Pinctrl driver for the Ingenic JZ47xx SoCs"
-+	default y
-+	depends on MACH_INGENIC || COMPILE_TEST
-+	select GENERIC_PINCONF
-+	select GENERIC_PINCTRL_GROUPS
-+	select GENERIC_PINMUX_FUNCTIONS
-+	select REGMAP_MMIO
-+
- source "drivers/pinctrl/aspeed/Kconfig"
- source "drivers/pinctrl/bcm/Kconfig"
- source "drivers/pinctrl/berlin/Kconfig"
-diff --git a/drivers/pinctrl/Makefile b/drivers/pinctrl/Makefile
-index a251f439626f..80f327239d4b 100644
---- a/drivers/pinctrl/Makefile
-+++ b/drivers/pinctrl/Makefile
-@@ -38,6 +38,7 @@ obj-$(CONFIG_PINCTRL_LPC18XX)	+= pinctrl-lpc18xx.o
- obj-$(CONFIG_PINCTRL_TB10X)	+= pinctrl-tb10x.o
- obj-$(CONFIG_PINCTRL_ST) 	+= pinctrl-st.o
- obj-$(CONFIG_PINCTRL_ZYNQ)	+= pinctrl-zynq.o
-+obj-$(CONFIG_PINCTRL_INGENIC)	+= pinctrl-ingenic.o
+-#include <linux/types.h>
+-
+-enum jz_gpio_function {
+-    JZ_GPIO_FUNC_NONE,
+-    JZ_GPIO_FUNC1,
+-    JZ_GPIO_FUNC2,
+-    JZ_GPIO_FUNC3,
+-};
+-
+-/*
+- Usually a driver for a SoC component has to request several gpio pins and
+- configure them as function pins.
+- jz_gpio_bulk_request can be used to ease this process.
+- Usually one would do something like:
+-
+- static const struct jz_gpio_bulk_request i2c_pins[] = {
+-	JZ_GPIO_BULK_PIN(I2C_SDA),
+-	JZ_GPIO_BULK_PIN(I2C_SCK),
+- };
+-
+- inside the probe function:
+-
+-    ret = jz_gpio_bulk_request(i2c_pins, ARRAY_SIZE(i2c_pins));
+-    if (ret) {
+-	...
+-
+- inside the remove function:
+-
+-    jz_gpio_bulk_free(i2c_pins, ARRAY_SIZE(i2c_pins));
+-
+-*/
+-
+-struct jz_gpio_bulk_request {
+-	int gpio;
+-	const char *name;
+-	enum jz_gpio_function function;
+-};
+-
+-#define JZ_GPIO_BULK_PIN(pin) { \
+-    .gpio = JZ_GPIO_ ## pin, \
+-    .name = #pin, \
+-    .function = JZ_GPIO_FUNC_ ## pin \
+-}
+-
+-int jz_gpio_bulk_request(const struct jz_gpio_bulk_request *request, size_t num);
+-void jz_gpio_bulk_free(const struct jz_gpio_bulk_request *request, size_t num);
+-void jz_gpio_bulk_suspend(const struct jz_gpio_bulk_request *request, size_t num);
+-void jz_gpio_bulk_resume(const struct jz_gpio_bulk_request *request, size_t num);
+-void jz_gpio_enable_pullup(unsigned gpio);
+-void jz_gpio_disable_pullup(unsigned gpio);
+-int jz_gpio_set_function(int gpio, enum jz_gpio_function function);
+-
+-int jz_gpio_port_direction_input(int port, uint32_t mask);
+-int jz_gpio_port_direction_output(int port, uint32_t mask);
+-void jz_gpio_port_set_value(int port, uint32_t value, uint32_t mask);
+-uint32_t jz_gpio_port_get_value(int port, uint32_t mask);
+-
+ #define JZ_GPIO_PORTA(x) ((x) + 32 * 0)
+ #define JZ_GPIO_PORTB(x) ((x) + 32 * 1)
+ #define JZ_GPIO_PORTC(x) ((x) + 32 * 2)
+ #define JZ_GPIO_PORTD(x) ((x) + 32 * 3)
  
- obj-$(CONFIG_ARCH_ASPEED)	+= aspeed/
- obj-y				+= bcm/
-diff --git a/drivers/pinctrl/pinctrl-ingenic.c b/drivers/pinctrl/pinctrl-ingenic.c
-new file mode 100644
-index 000000000000..d8473d929cb1
---- /dev/null
-+++ b/drivers/pinctrl/pinctrl-ingenic.c
-@@ -0,0 +1,852 @@
-+/*
-+ * Ingenic SoCs pinctrl driver
-+ *
-+ * Copyright (c) 2017 Paul Cercueil <paul@crapouillou.net>
-+ *
-+ * License terms: GNU General Public License (GPL) version 2
-+ */
-+
-+#include <linux/compiler.h>
-+#include <linux/gpio.h>
-+#include <linux/interrupt.h>
-+#include <linux/io.h>
-+#include <linux/of_device.h>
-+#include <linux/of_platform.h>
-+#include <linux/pinctrl/pinctrl.h>
-+#include <linux/pinctrl/pinmux.h>
-+#include <linux/pinctrl/pinconf.h>
-+#include <linux/pinctrl/pinconf-generic.h>
-+#include <linux/platform_device.h>
-+#include <linux/regmap.h>
-+#include <linux/slab.h>
-+
-+#include "core.h"
-+#include "pinconf.h"
-+#include "pinmux.h"
-+
-+#define JZ4740_GPIO_DATA	0x10
-+#define JZ4740_GPIO_PULL_DIS	0x30
-+#define JZ4740_GPIO_FUNC	0x40
-+#define JZ4740_GPIO_SELECT	0x50
-+#define JZ4740_GPIO_DIR		0x60
-+#define JZ4740_GPIO_TRIG	0x70
-+#define JZ4740_GPIO_FLAG	0x80
-+
-+#define JZ4770_GPIO_INT		0x10
-+#define JZ4770_GPIO_MSK		0x20
-+#define JZ4770_GPIO_PAT1	0x30
-+#define JZ4770_GPIO_PAT0	0x40
-+#define JZ4770_GPIO_FLAG	0x50
-+#define JZ4770_GPIO_PEN		0x70
-+
-+#define REG_SET(x) ((x) + 0x4)
-+#define REG_CLEAR(x) ((x) + 0x8)
-+
-+#define PINS_PER_GPIO_CHIP 32
-+
-+enum jz_version {
-+	ID_JZ4740,
-+	ID_JZ4770,
-+	ID_JZ4780,
-+};
-+
-+struct ingenic_chip_info {
-+	unsigned int num_chips;
-+
-+	const struct group_desc *groups;
-+	unsigned int num_groups;
-+
-+	const struct function_desc *functions;
-+	unsigned int num_functions;
-+
-+	const u32 *pull_ups, *pull_downs;
-+};
-+
-+struct ingenic_pinctrl {
-+	struct device *dev;
-+	struct regmap *map;
-+	struct pinctrl_dev *pctl;
-+	struct pinctrl_pin_desc *pdesc;
-+	enum jz_version version;
-+
-+	const struct ingenic_chip_info *info;
-+};
-+
-+static const u32 jz4740_pull_ups[4] = {
-+	0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff,
-+};
-+
-+static const u32 jz4740_pull_downs[4] = {
-+	0x00000000, 0x00000000, 0x00000000, 0x00000000,
-+};
-+
-+static int jz4740_mmc_1bit_pins[] = { 0x69, 0x68, 0x6a, };
-+static int jz4740_mmc_4bit_pins[] = { 0x6b, 0x6c, 0x6d, };
-+static int jz4740_uart0_data_pins[] = { 0x7a, 0x79, };
-+static int jz4740_uart0_hwflow_pins[] = { 0x7e, 0x7f, };
-+static int jz4740_uart1_data_pins[] = { 0x7e, 0x7f, };
-+static int jz4740_lcd_8bit_pins[] = {
-+	0x40, 0x41, 0x42, 0x43, 0x44, 0x45, 0x46, 0x47, 0x52, 0x53, 0x54,
-+};
-+static int jz4740_lcd_16bit_pins[] = {
-+	0x48, 0x49, 0x4a, 0x4b, 0x4c, 0x4d, 0x4e, 0x4f, 0x55,
-+};
-+static int jz4740_lcd_18bit_pins[] = { 0x50, 0x51, };
-+static int jz4740_lcd_18bit_tft_pins[] = { 0x56, 0x57, 0x31, 0x32, };
-+static int jz4740_nand_cs1_pins[] = { 0x39, };
-+static int jz4740_nand_cs2_pins[] = { 0x3a, };
-+static int jz4740_nand_cs3_pins[] = { 0x3b, };
-+static int jz4740_nand_cs4_pins[] = { 0x3c, };
-+static int jz4740_pwm_pwm0_pins[] = { 0x77, };
-+static int jz4740_pwm_pwm1_pins[] = { 0x78, };
-+static int jz4740_pwm_pwm2_pins[] = { 0x79, };
-+static int jz4740_pwm_pwm3_pins[] = { 0x7a, };
-+static int jz4740_pwm_pwm4_pins[] = { 0x7b, };
-+static int jz4740_pwm_pwm5_pins[] = { 0x7c, };
-+static int jz4740_pwm_pwm6_pins[] = { 0x7e, };
-+static int jz4740_pwm_pwm7_pins[] = { 0x7f, };
-+
-+static int jz4740_mmc_1bit_funcs[] = { 0, 0, 0, };
-+static int jz4740_mmc_4bit_funcs[] = { 0, 0, 0, };
-+static int jz4740_uart0_data_funcs[] = { 1, 1, };
-+static int jz4740_uart0_hwflow_funcs[] = { 1, 1, };
-+static int jz4740_uart1_data_funcs[] = { 2, 2, };
-+static int jz4740_lcd_8bit_funcs[] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, };
-+static int jz4740_lcd_16bit_funcs[] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, };
-+static int jz4740_lcd_18bit_funcs[] = { 0, 0, };
-+static int jz4740_lcd_18bit_tft_funcs[] = { 0, 0, 0, 0, };
-+static int jz4740_nand_cs1_funcs[] = { 0, };
-+static int jz4740_nand_cs2_funcs[] = { 0, };
-+static int jz4740_nand_cs3_funcs[] = { 0, };
-+static int jz4740_nand_cs4_funcs[] = { 0, };
-+static int jz4740_pwm_pwm0_funcs[] = { 0, };
-+static int jz4740_pwm_pwm1_funcs[] = { 0, };
-+static int jz4740_pwm_pwm2_funcs[] = { 0, };
-+static int jz4740_pwm_pwm3_funcs[] = { 0, };
-+static int jz4740_pwm_pwm4_funcs[] = { 0, };
-+static int jz4740_pwm_pwm5_funcs[] = { 0, };
-+static int jz4740_pwm_pwm6_funcs[] = { 0, };
-+static int jz4740_pwm_pwm7_funcs[] = { 0, };
-+
-+#define INGENIC_PIN_GROUP(name, id)			\
-+	{						\
-+		name,					\
-+		id##_pins,				\
-+		ARRAY_SIZE(id##_pins),			\
-+		id##_funcs,				\
-+	}
-+
-+static const struct group_desc jz4740_groups[] = {
-+	INGENIC_PIN_GROUP("mmc-1bit", jz4740_mmc_1bit),
-+	INGENIC_PIN_GROUP("mmc-4bit", jz4740_mmc_4bit),
-+	INGENIC_PIN_GROUP("uart0-data", jz4740_uart0_data),
-+	INGENIC_PIN_GROUP("uart0-hwflow", jz4740_uart0_hwflow),
-+	INGENIC_PIN_GROUP("uart1-data", jz4740_uart1_data),
-+	INGENIC_PIN_GROUP("lcd-8bit", jz4740_lcd_8bit),
-+	INGENIC_PIN_GROUP("lcd-16bit", jz4740_lcd_16bit),
-+	INGENIC_PIN_GROUP("lcd-18bit", jz4740_lcd_18bit),
-+	INGENIC_PIN_GROUP("lcd-18bit-tft", jz4740_lcd_18bit_tft),
-+	{ "lcd-no-pins", },
-+	INGENIC_PIN_GROUP("nand-cs1", jz4740_nand_cs1),
-+	INGENIC_PIN_GROUP("nand-cs2", jz4740_nand_cs2),
-+	INGENIC_PIN_GROUP("nand-cs3", jz4740_nand_cs3),
-+	INGENIC_PIN_GROUP("nand-cs4", jz4740_nand_cs4),
-+	INGENIC_PIN_GROUP("pwm0", jz4740_pwm_pwm0),
-+	INGENIC_PIN_GROUP("pwm1", jz4740_pwm_pwm1),
-+	INGENIC_PIN_GROUP("pwm2", jz4740_pwm_pwm2),
-+	INGENIC_PIN_GROUP("pwm3", jz4740_pwm_pwm3),
-+	INGENIC_PIN_GROUP("pwm4", jz4740_pwm_pwm4),
-+	INGENIC_PIN_GROUP("pwm5", jz4740_pwm_pwm5),
-+	INGENIC_PIN_GROUP("pwm6", jz4740_pwm_pwm6),
-+	INGENIC_PIN_GROUP("pwm7", jz4740_pwm_pwm7),
-+};
-+
-+static const char *jz4740_mmc_groups[] = { "mmc-1bit", "mmc-4bit", };
-+static const char *jz4740_uart0_groups[] = { "uart0-data", "uart0-hwflow", };
-+static const char *jz4740_uart1_groups[] = { "uart1-data", };
-+static const char *jz4740_lcd_groups[] = {
-+	"lcd-8bit", "lcd-16bit", "lcd-18bit", "lcd-18bit-tft", "lcd-no-pins",
-+};
-+static const char *jz4740_nand_groups[] = {
-+	"nand-cs1", "nand-cs2", "nand-cs3", "nand-cs4",
-+};
-+static const char *jz4740_pwm0_groups[] = { "pwm0", };
-+static const char *jz4740_pwm1_groups[] = { "pwm1", };
-+static const char *jz4740_pwm2_groups[] = { "pwm2", };
-+static const char *jz4740_pwm3_groups[] = { "pwm3", };
-+static const char *jz4740_pwm4_groups[] = { "pwm4", };
-+static const char *jz4740_pwm5_groups[] = { "pwm5", };
-+static const char *jz4740_pwm6_groups[] = { "pwm6", };
-+static const char *jz4740_pwm7_groups[] = { "pwm7", };
-+
-+static const struct function_desc jz4740_functions[] = {
-+	{ "mmc", jz4740_mmc_groups, ARRAY_SIZE(jz4740_mmc_groups), },
-+	{ "uart0", jz4740_uart0_groups, ARRAY_SIZE(jz4740_uart0_groups), },
-+	{ "uart1", jz4740_uart1_groups, ARRAY_SIZE(jz4740_uart1_groups), },
-+	{ "lcd", jz4740_lcd_groups, ARRAY_SIZE(jz4740_lcd_groups), },
-+	{ "nand", jz4740_nand_groups, ARRAY_SIZE(jz4740_nand_groups), },
-+	{ "pwm0", jz4740_pwm0_groups, ARRAY_SIZE(jz4740_pwm0_groups), },
-+	{ "pwm1", jz4740_pwm1_groups, ARRAY_SIZE(jz4740_pwm1_groups), },
-+	{ "pwm2", jz4740_pwm2_groups, ARRAY_SIZE(jz4740_pwm2_groups), },
-+	{ "pwm3", jz4740_pwm3_groups, ARRAY_SIZE(jz4740_pwm3_groups), },
-+	{ "pwm4", jz4740_pwm4_groups, ARRAY_SIZE(jz4740_pwm4_groups), },
-+	{ "pwm5", jz4740_pwm5_groups, ARRAY_SIZE(jz4740_pwm5_groups), },
-+	{ "pwm6", jz4740_pwm6_groups, ARRAY_SIZE(jz4740_pwm6_groups), },
-+	{ "pwm7", jz4740_pwm7_groups, ARRAY_SIZE(jz4740_pwm7_groups), },
-+};
-+
-+static const struct ingenic_chip_info jz4740_chip_info = {
-+	.num_chips = 4,
-+	.groups = jz4740_groups,
-+	.num_groups = ARRAY_SIZE(jz4740_groups),
-+	.functions = jz4740_functions,
-+	.num_functions = ARRAY_SIZE(jz4740_functions),
-+	.pull_ups = jz4740_pull_ups,
-+	.pull_downs = jz4740_pull_downs,
-+};
-+
-+static const u32 jz4770_pull_ups[6] = {
-+	0x3fffffff, 0xfff0030c, 0xffffffff, 0xffff4fff, 0xfffffb7c, 0xffa7f00f,
-+};
-+
-+static const u32 jz4770_pull_downs[6] = {
-+	0x00000000, 0x000f0c03, 0x00000000, 0x0000b000, 0x00000483, 0x00580ff0,
-+};
-+
-+static int jz4770_uart0_data_pins[] = { 0xa0, 0xa3, };
-+static int jz4770_uart0_hwflow_pins[] = { 0xa1, 0xa2, };
-+static int jz4770_uart1_data_pins[] = { 0x7a, 0x7c, };
-+static int jz4770_uart1_hwflow_pins[] = { 0x7b, 0x7d, };
-+static int jz4770_uart2_data_pins[] = { 0x66, 0x67, };
-+static int jz4770_uart2_hwflow_pins[] = { 0x65, 0x64, };
-+static int jz4770_uart3_data_pins[] = { 0x6c, 0x85, };
-+static int jz4770_uart3_hwflow_pins[] = { 0x88, 0x89, };
-+static int jz4770_uart4_data_pins[] = { 0x54, 0x4a, };
-+static int jz4770_mmc0_8bit_a_pins[] = { 0x04, 0x05, 0x06, 0x07, 0x18, };
-+static int jz4770_mmc0_4bit_a_pins[] = { 0x15, 0x16, 0x17, };
-+static int jz4770_mmc0_1bit_a_pins[] = { 0x12, 0x13, 0x14, };
-+static int jz4770_mmc0_4bit_e_pins[] = { 0x95, 0x96, 0x97, };
-+static int jz4770_mmc0_1bit_e_pins[] = { 0x9c, 0x9d, 0x94, };
-+static int jz4770_mmc1_4bit_d_pins[] = { 0x75, 0x76, 0x77, };
-+static int jz4770_mmc1_1bit_d_pins[] = { 0x78, 0x79, 0x74, };
-+static int jz4770_mmc1_4bit_e_pins[] = { 0x95, 0x96, 0x97, };
-+static int jz4770_mmc1_1bit_e_pins[] = { 0x9c, 0x9d, 0x94, };
-+static int jz4770_nemc_data_pins[] = {
-+	0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,
-+};
-+static int jz4770_nemc_cle_ale_pins[] = { 0x20, 0x21, };
-+static int jz4770_nemc_addr_pins[] = { 0x22, 0x23, 0x24, 0x25, };
-+static int jz4770_nemc_rd_we_pins[] = { 0x10, 0x11, };
-+static int jz4770_nemc_frd_fwe_pins[] = { 0x12, 0x13, };
-+static int jz4770_nemc_cs1_pins[] = { 0x15, };
-+static int jz4770_nemc_cs2_pins[] = { 0x16, };
-+static int jz4770_nemc_cs3_pins[] = { 0x17, };
-+static int jz4770_nemc_cs4_pins[] = { 0x18, };
-+static int jz4770_nemc_cs5_pins[] = { 0x19, };
-+static int jz4770_nemc_cs6_pins[] = { 0x1a, };
-+static int jz4770_i2c0_pins[] = { 0x6e, 0x6f, };
-+static int jz4770_i2c1_pins[] = { 0x8e, 0x8f, };
-+static int jz4770_i2c2_pins[] = { 0xb0, 0xb1, };
-+static int jz4770_i2c3_pins[] = { 0x6a, 0x6b, };
-+static int jz4770_i2c4_e_pins[] = { 0x8c, 0x8d, };
-+static int jz4770_i2c4_f_pins[] = { 0xb9, 0xb8, };
-+static int jz4770_cim_pins[] = {
-+	0x26, 0x27, 0x28, 0x29, 0x2a, 0x2b, 0x2c, 0x2d, 0x2e, 0x2f, 0x30, 0x31,
-+};
-+static int jz4770_lcd_32bit_pins[] = {
-+	0x40, 0x41, 0x42, 0x43, 0x44, 0x45, 0x46, 0x47,
-+	0x48, 0x49, 0x4a, 0x4b, 0x4c, 0x4d, 0x4e, 0x4f,
-+	0x50, 0x51, 0x52, 0x53, 0x54, 0x55, 0x56, 0x57,
-+	0x58, 0x59, 0x51,
-+};
-+static int jz4770_pwm_pwm0_pins[] = { 0x80, };
-+static int jz4770_pwm_pwm1_pins[] = { 0x81, };
-+static int jz4770_pwm_pwm2_pins[] = { 0x82, };
-+static int jz4770_pwm_pwm3_pins[] = { 0x83, };
-+static int jz4770_pwm_pwm4_pins[] = { 0x84, };
-+static int jz4770_pwm_pwm5_pins[] = { 0x85, };
-+static int jz4770_pwm_pwm6_pins[] = { 0x6a, };
-+static int jz4770_pwm_pwm7_pins[] = { 0x6b, };
-+
-+static int jz4770_uart0_data_funcs[] = { 0, 0, };
-+static int jz4770_uart0_hwflow_funcs[] = { 0, 0, };
-+static int jz4770_uart1_data_funcs[] = { 0, 0, };
-+static int jz4770_uart1_hwflow_funcs[] = { 0, 0, };
-+static int jz4770_uart2_data_funcs[] = { 1, 1, };
-+static int jz4770_uart2_hwflow_funcs[] = { 1, 1, };
-+static int jz4770_uart3_data_funcs[] = { 0, 1, };
-+static int jz4770_uart3_hwflow_funcs[] = { 0, 0, };
-+static int jz4770_uart4_data_funcs[] = { 2, 2, };
-+static int jz4770_mmc0_8bit_a_funcs[] = { 1, 1, 1, 1, 1, };
-+static int jz4770_mmc0_4bit_a_funcs[] = { 1, 1, 1, };
-+static int jz4770_mmc0_1bit_a_funcs[] = { 1, 1, 0, };
-+static int jz4770_mmc0_4bit_e_funcs[] = { 0, 0, 0, };
-+static int jz4770_mmc0_1bit_e_funcs[] = { 0, 0, 0, };
-+static int jz4770_mmc1_4bit_d_funcs[] = { 0, 0, 0, };
-+static int jz4770_mmc1_1bit_d_funcs[] = { 0, 0, 0, };
-+static int jz4770_mmc1_4bit_e_funcs[] = { 1, 1, 1, };
-+static int jz4770_mmc1_1bit_e_funcs[] = { 1, 1, 1, };
-+static int jz4770_nemc_data_funcs[] = { 0, 0, 0, 0, 0, 0, 0, 0, };
-+static int jz4770_nemc_cle_ale_funcs[] = { 0, 0, };
-+static int jz4770_nemc_addr_funcs[] = { 0, 0, 0, 0, };
-+static int jz4770_nemc_rd_we_funcs[] = { 0, 0, };
-+static int jz4770_nemc_frd_fwe_funcs[] = { 0, 0, };
-+static int jz4770_nemc_cs1_funcs[] = { 0, };
-+static int jz4770_nemc_cs2_funcs[] = { 0, };
-+static int jz4770_nemc_cs3_funcs[] = { 0, };
-+static int jz4770_nemc_cs4_funcs[] = { 0, };
-+static int jz4770_nemc_cs5_funcs[] = { 0, };
-+static int jz4770_nemc_cs6_funcs[] = { 0, };
-+static int jz4770_i2c0_funcs[] = { 0, 0, };
-+static int jz4770_i2c1_funcs[] = { 0, 0, };
-+static int jz4770_i2c2_funcs[] = { 2, 2, };
-+static int jz4770_i2c3_funcs[] = { 1, 1, };
-+static int jz4770_i2c4_e_funcs[] = { 1, 1, };
-+static int jz4770_i2c4_f_funcs[] = { 1, 1, };
-+static int jz4770_cim_funcs[] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, };
-+static int jz4770_lcd_32bit_funcs[] = {
-+	0, 0, 0, 0, 0, 0, 0, 0,
-+	0, 0, 0, 0, 0, 0, 0, 0,
-+	0, 0, 0,
-+};
-+static int jz4770_pwm_pwm0_funcs[] = { 0, };
-+static int jz4770_pwm_pwm1_funcs[] = { 0, };
-+static int jz4770_pwm_pwm2_funcs[] = { 0, };
-+static int jz4770_pwm_pwm3_funcs[] = { 0, };
-+static int jz4770_pwm_pwm4_funcs[] = { 0, };
-+static int jz4770_pwm_pwm5_funcs[] = { 0, };
-+static int jz4770_pwm_pwm6_funcs[] = { 0, };
-+static int jz4770_pwm_pwm7_funcs[] = { 0, };
-+
-+static const struct group_desc jz4770_groups[] = {
-+	INGENIC_PIN_GROUP("uart0-data", jz4770_uart0_data),
-+	INGENIC_PIN_GROUP("uart0-hwflow", jz4770_uart0_hwflow),
-+	INGENIC_PIN_GROUP("uart1-data", jz4770_uart1_data),
-+	INGENIC_PIN_GROUP("uart1-hwflow", jz4770_uart1_hwflow),
-+	INGENIC_PIN_GROUP("uart2-data", jz4770_uart2_data),
-+	INGENIC_PIN_GROUP("uart2-hwflow", jz4770_uart2_hwflow),
-+	INGENIC_PIN_GROUP("uart3-data", jz4770_uart3_data),
-+	INGENIC_PIN_GROUP("uart3-hwflow", jz4770_uart3_hwflow),
-+	INGENIC_PIN_GROUP("uart4-data", jz4770_uart4_data),
-+	INGENIC_PIN_GROUP("mmc0-8bit-a", jz4770_mmc0_8bit_a),
-+	INGENIC_PIN_GROUP("mmc0-4bit-a", jz4770_mmc0_4bit_a),
-+	INGENIC_PIN_GROUP("mmc0-1bit-a", jz4770_mmc0_1bit_a),
-+	INGENIC_PIN_GROUP("mmc0-4bit-e", jz4770_mmc0_4bit_e),
-+	INGENIC_PIN_GROUP("mmc0-1bit-e", jz4770_mmc0_1bit_e),
-+	INGENIC_PIN_GROUP("mmc1-4bit-d", jz4770_mmc1_4bit_d),
-+	INGENIC_PIN_GROUP("mmc1-1bit-d", jz4770_mmc1_1bit_d),
-+	INGENIC_PIN_GROUP("mmc1-4bit-e", jz4770_mmc1_4bit_e),
-+	INGENIC_PIN_GROUP("mmc1-1bit-e", jz4770_mmc1_1bit_e),
-+	INGENIC_PIN_GROUP("nemc-data", jz4770_nemc_data),
-+	INGENIC_PIN_GROUP("nemc-cle-ale", jz4770_nemc_cle_ale),
-+	INGENIC_PIN_GROUP("nemc-addr", jz4770_nemc_addr),
-+	INGENIC_PIN_GROUP("nemc-rd-we", jz4770_nemc_rd_we),
-+	INGENIC_PIN_GROUP("nemc-frd-fwe", jz4770_nemc_frd_fwe),
-+	INGENIC_PIN_GROUP("nemc-cs1", jz4770_nemc_cs1),
-+	INGENIC_PIN_GROUP("nemc-cs2", jz4770_nemc_cs2),
-+	INGENIC_PIN_GROUP("nemc-cs3", jz4770_nemc_cs3),
-+	INGENIC_PIN_GROUP("nemc-cs4", jz4770_nemc_cs4),
-+	INGENIC_PIN_GROUP("nemc-cs5", jz4770_nemc_cs5),
-+	INGENIC_PIN_GROUP("nemc-cs6", jz4770_nemc_cs6),
-+	INGENIC_PIN_GROUP("i2c0-data", jz4770_i2c0),
-+	INGENIC_PIN_GROUP("i2c1-data", jz4770_i2c1),
-+	INGENIC_PIN_GROUP("i2c2-data", jz4770_i2c2),
-+	INGENIC_PIN_GROUP("i2c3-data", jz4770_i2c3),
-+	INGENIC_PIN_GROUP("i2c4-data-e", jz4770_i2c4_e),
-+	INGENIC_PIN_GROUP("i2c4-data-f", jz4770_i2c4_f),
-+	INGENIC_PIN_GROUP("cim-data", jz4770_cim),
-+	INGENIC_PIN_GROUP("lcd-32bit", jz4770_lcd_32bit),
-+	{ "lcd-no-pins", },
-+	INGENIC_PIN_GROUP("pwm0", jz4770_pwm_pwm0),
-+	INGENIC_PIN_GROUP("pwm1", jz4770_pwm_pwm1),
-+	INGENIC_PIN_GROUP("pwm2", jz4770_pwm_pwm2),
-+	INGENIC_PIN_GROUP("pwm3", jz4770_pwm_pwm3),
-+	INGENIC_PIN_GROUP("pwm4", jz4770_pwm_pwm4),
-+	INGENIC_PIN_GROUP("pwm5", jz4770_pwm_pwm5),
-+	INGENIC_PIN_GROUP("pwm6", jz4770_pwm_pwm6),
-+	INGENIC_PIN_GROUP("pwm7", jz4770_pwm_pwm7),
-+};
-+
-+static const char *jz4770_uart0_groups[] = { "uart0-data", "uart0-hwflow", };
-+static const char *jz4770_uart1_groups[] = { "uart1-data", "uart1-hwflow", };
-+static const char *jz4770_uart2_groups[] = { "uart2-data", "uart2-hwflow", };
-+static const char *jz4770_uart3_groups[] = { "uart3-data", "uart3-hwflow", };
-+static const char *jz4770_uart4_groups[] = { "uart4-data", };
-+static const char *jz4770_mmc0_groups[] = {
-+	"mmc0-8bit-a", "mmc0-4bit-a", "mmc0-1bit-a",
-+	"mmc0-1bit-e", "mmc0-4bit-e",
-+};
-+static const char *jz4770_mmc1_groups[] = {
-+	"mmc1-1bit-d", "mmc1-4bit-d", "mmc1-1bit-e", "mmc1-4bit-e",
-+};
-+static const char *jz4770_nemc_groups[] = {
-+	"nemc-data", "nemc-cle-ale", "nemc-addr", "nemc-rd-we", "nemc-frd-fwe",
-+};
-+static const char *jz4770_cs1_groups[] = { "nemc-cs1", };
-+static const char *jz4770_cs6_groups[] = { "nemc-cs6", };
-+static const char *jz4770_i2c0_groups[] = { "i2c0-data", };
-+static const char *jz4770_i2c1_groups[] = { "i2c1-data", };
-+static const char *jz4770_i2c2_groups[] = { "i2c2-data", };
-+static const char *jz4770_i2c3_groups[] = { "i2c3-data", };
-+static const char *jz4770_i2c4_groups[] = { "i2c4-data-e", "i2c4-data-f", };
-+static const char *jz4770_cim_groups[] = { "cim-data", };
-+static const char *jz4770_lcd_groups[] = { "lcd-32bit", "lcd-no-pins", };
-+static const char *jz4770_pwm0_groups[] = { "pwm0", };
-+static const char *jz4770_pwm1_groups[] = { "pwm1", };
-+static const char *jz4770_pwm2_groups[] = { "pwm2", };
-+static const char *jz4770_pwm3_groups[] = { "pwm3", };
-+static const char *jz4770_pwm4_groups[] = { "pwm4", };
-+static const char *jz4770_pwm5_groups[] = { "pwm5", };
-+static const char *jz4770_pwm6_groups[] = { "pwm6", };
-+static const char *jz4770_pwm7_groups[] = { "pwm7", };
-+
-+static const struct function_desc jz4770_functions[] = {
-+	{ "uart0", jz4770_uart0_groups, ARRAY_SIZE(jz4770_uart0_groups), },
-+	{ "uart1", jz4770_uart1_groups, ARRAY_SIZE(jz4770_uart1_groups), },
-+	{ "uart2", jz4770_uart2_groups, ARRAY_SIZE(jz4770_uart2_groups), },
-+	{ "uart3", jz4770_uart3_groups, ARRAY_SIZE(jz4770_uart3_groups), },
-+	{ "uart4", jz4770_uart4_groups, ARRAY_SIZE(jz4770_uart4_groups), },
-+	{ "mmc0", jz4770_mmc0_groups, ARRAY_SIZE(jz4770_mmc0_groups), },
-+	{ "mmc1", jz4770_mmc1_groups, ARRAY_SIZE(jz4770_mmc1_groups), },
-+	{ "nemc", jz4770_nemc_groups, ARRAY_SIZE(jz4770_nemc_groups), },
-+	{ "nemc-cs1", jz4770_cs1_groups, ARRAY_SIZE(jz4770_cs1_groups), },
-+	{ "nemc-cs6", jz4770_cs6_groups, ARRAY_SIZE(jz4770_cs6_groups), },
-+	{ "i2c0", jz4770_i2c0_groups, ARRAY_SIZE(jz4770_i2c0_groups), },
-+	{ "i2c1", jz4770_i2c1_groups, ARRAY_SIZE(jz4770_i2c1_groups), },
-+	{ "i2c2", jz4770_i2c2_groups, ARRAY_SIZE(jz4770_i2c2_groups), },
-+	{ "i2c3", jz4770_i2c3_groups, ARRAY_SIZE(jz4770_i2c3_groups), },
-+	{ "i2c4", jz4770_i2c4_groups, ARRAY_SIZE(jz4770_i2c4_groups), },
-+	{ "cim", jz4770_cim_groups, ARRAY_SIZE(jz4770_cim_groups), },
-+	{ "lcd", jz4770_lcd_groups, ARRAY_SIZE(jz4770_lcd_groups), },
-+	{ "pwm0", jz4770_pwm0_groups, ARRAY_SIZE(jz4770_pwm0_groups), },
-+	{ "pwm1", jz4770_pwm1_groups, ARRAY_SIZE(jz4770_pwm1_groups), },
-+	{ "pwm2", jz4770_pwm2_groups, ARRAY_SIZE(jz4770_pwm2_groups), },
-+	{ "pwm3", jz4770_pwm3_groups, ARRAY_SIZE(jz4770_pwm3_groups), },
-+	{ "pwm4", jz4770_pwm4_groups, ARRAY_SIZE(jz4770_pwm4_groups), },
-+	{ "pwm5", jz4770_pwm5_groups, ARRAY_SIZE(jz4770_pwm5_groups), },
-+	{ "pwm6", jz4770_pwm6_groups, ARRAY_SIZE(jz4770_pwm6_groups), },
-+	{ "pwm7", jz4770_pwm7_groups, ARRAY_SIZE(jz4770_pwm7_groups), },
-+};
-+
-+static const struct ingenic_chip_info jz4770_chip_info = {
-+	.num_chips = 6,
-+	.groups = jz4770_groups,
-+	.num_groups = ARRAY_SIZE(jz4770_groups),
-+	.functions = jz4770_functions,
-+	.num_functions = ARRAY_SIZE(jz4770_functions),
-+	.pull_ups = jz4770_pull_ups,
-+	.pull_downs = jz4770_pull_downs,
-+};
-+
-+static inline void ingenic_config_pin(struct ingenic_pinctrl *jzpc,
-+		unsigned int pin, u8 reg, bool set)
-+{
-+	unsigned int idx = pin % PINS_PER_GPIO_CHIP;
-+	unsigned int offt = pin / PINS_PER_GPIO_CHIP;
-+
-+	regmap_write(jzpc->map, offt * 0x100 +
-+			(set ? REG_SET(reg) : REG_CLEAR(reg)), BIT(idx));
-+}
-+
-+static inline bool ingenic_get_pin_config(struct ingenic_pinctrl *jzpc,
-+		unsigned int pin, u8 reg)
-+{
-+	unsigned int idx = pin % PINS_PER_GPIO_CHIP;
-+	unsigned int offt = pin / PINS_PER_GPIO_CHIP;
-+	unsigned int val;
-+
-+	regmap_read(jzpc->map, offt * 0x100 + reg, &val);
-+
-+	return val & BIT(idx);
-+}
-+
-+static struct pinctrl_ops ingenic_pctlops = {
-+	.get_groups_count = pinctrl_generic_get_group_count,
-+	.get_group_name = pinctrl_generic_get_group_name,
-+	.get_group_pins = pinctrl_generic_get_group_pins,
-+	.dt_node_to_map = pinconf_generic_dt_node_to_map_all,
-+	.dt_free_map = pinconf_generic_dt_free_map,
-+};
-+
-+static int ingenic_pinmux_set_pin_fn(struct ingenic_pinctrl *jzpc,
-+		int pin, int func)
-+{
-+	unsigned int idx = pin % PINS_PER_GPIO_CHIP;
-+	unsigned int offt = pin / PINS_PER_GPIO_CHIP;
-+
-+	dev_dbg(jzpc->dev, "set pin P%c%u to function %u\n",
-+			'A' + offt, idx, func);
-+
-+	if (jzpc->version >= ID_JZ4770) {
-+		ingenic_config_pin(jzpc, pin, JZ4770_GPIO_INT, false);
-+		ingenic_config_pin(jzpc, pin, JZ4770_GPIO_MSK, false);
-+		ingenic_config_pin(jzpc, pin, JZ4770_GPIO_PAT1, func & 0x2);
-+		ingenic_config_pin(jzpc, pin, JZ4770_GPIO_PAT0, func & 0x1);
-+	} else {
-+		ingenic_config_pin(jzpc, pin, JZ4740_GPIO_FUNC, true);
-+		ingenic_config_pin(jzpc, pin, JZ4740_GPIO_TRIG, func & 0x2);
-+		ingenic_config_pin(jzpc, pin, JZ4740_GPIO_SELECT, func > 0);
-+	}
-+
-+	return 0;
-+}
-+
-+static int ingenic_pinmux_set_mux(struct pinctrl_dev *pctldev,
-+		unsigned int selector, unsigned int group)
-+{
-+	struct ingenic_pinctrl *jzpc = pinctrl_dev_get_drvdata(pctldev);
-+	struct function_desc *func;
-+	struct group_desc *grp;
-+	unsigned int i;
-+
-+	func = pinmux_generic_get_function(pctldev, selector);
-+	if (!func)
-+		return -EINVAL;
-+
-+	grp = pinctrl_generic_get_group(pctldev, group);
-+	if (!grp)
-+		return -EINVAL;
-+
-+	dev_dbg(pctldev->dev, "enable function %s group %s\n",
-+		func->name, grp->name);
-+
-+	for (i = 0; i < grp->num_pins; i++) {
-+		int *pin_modes = grp->data;
-+
-+		ingenic_pinmux_set_pin_fn(jzpc, grp->pins[i], pin_modes[i]);
-+	}
-+
-+	return 0;
-+}
-+
-+static int ingenic_pinmux_gpio_set_direction(struct pinctrl_dev *pctldev,
-+		struct pinctrl_gpio_range *range,
-+		unsigned int pin, bool input)
-+{
-+	struct ingenic_pinctrl *jzpc = pinctrl_dev_get_drvdata(pctldev);
-+	unsigned int idx = pin % PINS_PER_GPIO_CHIP;
-+	unsigned int offt = pin / PINS_PER_GPIO_CHIP;
-+
-+	dev_dbg(pctldev->dev, "set pin P%c%u to %sput\n",
-+			'A' + offt, idx, input ? "in" : "out");
-+
-+	if (jzpc->version >= ID_JZ4770) {
-+		ingenic_config_pin(jzpc, pin, JZ4770_GPIO_INT, false);
-+		ingenic_config_pin(jzpc, pin, JZ4770_GPIO_MSK, true);
-+		ingenic_config_pin(jzpc, pin, JZ4770_GPIO_PAT1, input);
-+	} else {
-+		ingenic_config_pin(jzpc, pin, JZ4740_GPIO_SELECT, false);
-+		ingenic_config_pin(jzpc, pin, JZ4740_GPIO_DIR, input);
-+		ingenic_config_pin(jzpc, pin, JZ4740_GPIO_FUNC, false);
-+	}
-+
-+	return 0;
-+}
-+
-+static struct pinmux_ops ingenic_pmxops = {
-+	.get_functions_count = pinmux_generic_get_function_count,
-+	.get_function_name = pinmux_generic_get_function_name,
-+	.get_function_groups = pinmux_generic_get_function_groups,
-+	.set_mux = ingenic_pinmux_set_mux,
-+	.gpio_set_direction = ingenic_pinmux_gpio_set_direction,
-+};
-+
-+static int ingenic_pinconf_get(struct pinctrl_dev *pctldev,
-+		unsigned int pin, unsigned long *config)
-+{
-+	struct ingenic_pinctrl *jzpc = pinctrl_dev_get_drvdata(pctldev);
-+	enum pin_config_param param = pinconf_to_config_param(*config);
-+	unsigned int idx = pin % PINS_PER_GPIO_CHIP;
-+	unsigned int offt = pin / PINS_PER_GPIO_CHIP;
-+	bool pull;
-+
-+	if (jzpc->version >= ID_JZ4770)
-+		pull = !ingenic_get_pin_config(jzpc, pin, JZ4770_GPIO_PEN);
-+	else
-+		pull = !ingenic_get_pin_config(jzpc, pin, JZ4740_GPIO_PULL_DIS);
-+
-+	switch (param) {
-+	case PIN_CONFIG_BIAS_DISABLE:
-+		if (pull)
-+			return -EINVAL;
-+		break;
-+
-+	case PIN_CONFIG_BIAS_PULL_UP:
-+		if (!pull || !(jzpc->info->pull_ups[offt] & BIT(idx)))
-+			return -EINVAL;
-+		break;
-+
-+	case PIN_CONFIG_BIAS_PULL_DOWN:
-+		if (!pull || !(jzpc->info->pull_downs[offt] & BIT(idx)))
-+			return -EINVAL;
-+		break;
-+
-+	default:
-+		return -ENOTSUPP;
-+	}
-+
-+	*config = pinconf_to_config_packed(param, 1);
-+	return 0;
-+}
-+
-+static void ingenic_set_bias(struct ingenic_pinctrl *jzpc,
-+		unsigned int pin, bool enabled)
-+{
-+	if (jzpc->version >= ID_JZ4770)
-+		ingenic_config_pin(jzpc, pin, JZ4770_GPIO_PEN, !enabled);
-+	else
-+		ingenic_config_pin(jzpc, pin, JZ4740_GPIO_PULL_DIS, !enabled);
-+}
-+
-+static int ingenic_pinconf_set(struct pinctrl_dev *pctldev, unsigned int pin,
-+		unsigned long *configs, unsigned int num_configs)
-+{
-+	struct ingenic_pinctrl *jzpc = pinctrl_dev_get_drvdata(pctldev);
-+	unsigned int idx = pin % PINS_PER_GPIO_CHIP;
-+	unsigned int offt = pin / PINS_PER_GPIO_CHIP;
-+	unsigned int cfg;
-+
-+	for (cfg = 0; cfg < num_configs; cfg++) {
-+		switch (pinconf_to_config_param(configs[cfg])) {
-+		case PIN_CONFIG_BIAS_DISABLE:
-+		case PIN_CONFIG_BIAS_PULL_UP:
-+		case PIN_CONFIG_BIAS_PULL_DOWN:
-+			continue;
-+		default:
-+			return -ENOTSUPP;
-+		}
-+	}
-+
-+	for (cfg = 0; cfg < num_configs; cfg++) {
-+		switch (pinconf_to_config_param(configs[cfg])) {
-+		case PIN_CONFIG_BIAS_DISABLE:
-+			dev_dbg(jzpc->dev, "disable pull-over for pin P%c%u\n",
-+					'A' + offt, idx);
-+			ingenic_set_bias(jzpc, pin, false);
-+			break;
-+
-+		case PIN_CONFIG_BIAS_PULL_UP:
-+			if (!(jzpc->info->pull_ups[offt] & BIT(idx)))
-+				return -EINVAL;
-+			dev_dbg(jzpc->dev, "set pull-up for pin P%c%u\n",
-+					'A' + offt, idx);
-+			ingenic_set_bias(jzpc, pin, true);
-+			break;
-+
-+		case PIN_CONFIG_BIAS_PULL_DOWN:
-+			if (!(jzpc->info->pull_downs[offt] & BIT(idx)))
-+				return -EINVAL;
-+			dev_dbg(jzpc->dev, "set pull-down for pin P%c%u\n",
-+					'A' + offt, idx);
-+			ingenic_set_bias(jzpc, pin, true);
-+			break;
-+
-+		default:
-+			unreachable();
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+static int ingenic_pinconf_group_get(struct pinctrl_dev *pctldev,
-+		unsigned int group, unsigned long *config)
-+{
-+	const unsigned int *pins;
-+	unsigned int i, npins, old = 0;
-+	int ret;
-+
-+	ret = pinctrl_generic_get_group_pins(pctldev, group, &pins, &npins);
-+	if (ret)
-+		return ret;
-+
-+	for (i = 0; i < npins; i++) {
-+		if (ingenic_pinconf_get(pctldev, pins[i], config))
-+			return -ENOTSUPP;
-+
-+		/* configs do not match between two pins */
-+		if (i && (old != *config))
-+			return -ENOTSUPP;
-+
-+		old = *config;
-+	}
-+
-+	return 0;
-+}
-+
-+static int ingenic_pinconf_group_set(struct pinctrl_dev *pctldev,
-+		unsigned int group, unsigned long *configs,
-+		unsigned int num_configs)
-+{
-+	const unsigned int *pins;
-+	unsigned int i, npins;
-+	int ret;
-+
-+	ret = pinctrl_generic_get_group_pins(pctldev, group, &pins, &npins);
-+	if (ret)
-+		return ret;
-+
-+	for (i = 0; i < npins; i++) {
-+		ret = ingenic_pinconf_set(pctldev,
-+				pins[i], configs, num_configs);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static struct pinconf_ops ingenic_confops = {
-+	.is_generic = true,
-+	.pin_config_get = ingenic_pinconf_get,
-+	.pin_config_set = ingenic_pinconf_set,
-+	.pin_config_group_get = ingenic_pinconf_group_get,
-+	.pin_config_group_set = ingenic_pinconf_group_set,
-+};
-+
-+static const struct regmap_config ingenic_pinctrl_regmap_config = {
-+	.reg_bits = 32,
-+	.val_bits = 32,
-+	.reg_stride = 4,
-+};
-+
-+static const struct of_device_id ingenic_pinctrl_of_match[] = {
-+	{ .compatible = "ingenic,jz4740-pinctrl", .data = (void *) ID_JZ4740 },
-+	{ .compatible = "ingenic,jz4770-pinctrl", .data = (void *) ID_JZ4770 },
-+	{ .compatible = "ingenic,jz4780-pinctrl", .data = (void *) ID_JZ4780 },
-+	{},
-+};
-+
-+int ingenic_pinctrl_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct ingenic_pinctrl *jzpc;
-+	struct pinctrl_desc *pctl_desc;
-+	void __iomem *base;
-+	const struct platform_device_id *id = platform_get_device_id(pdev);
-+	const struct of_device_id *of_id = of_match_device(
-+			ingenic_pinctrl_of_match, dev);
-+	const struct ingenic_chip_info *chip_info;
-+	unsigned int i;
-+	int err;
-+
-+	jzpc = devm_kzalloc(dev, sizeof(*jzpc), GFP_KERNEL);
-+	if (!jzpc)
-+		return -ENOMEM;
-+
-+	base = devm_ioremap_resource(dev,
-+			platform_get_resource(pdev, IORESOURCE_MEM, 0));
-+	if (IS_ERR(base)) {
-+		dev_err(dev, "Failed to ioremap registers\n");
-+		return PTR_ERR(base);
-+	}
-+
-+	jzpc->map = devm_regmap_init_mmio(dev, base,
-+			&ingenic_pinctrl_regmap_config);
-+	if (IS_ERR(jzpc->map)) {
-+		dev_err(dev, "Failed to create regmap\n");
-+		return PTR_ERR(jzpc->map);
-+	}
-+
-+	jzpc->dev = dev;
-+
-+	if (of_id)
-+		jzpc->version = (enum jz_version)of_id->data;
-+	else
-+		jzpc->version = (enum jz_version)id->driver_data;
-+
-+	if (jzpc->version >= ID_JZ4770)
-+		chip_info = &jz4770_chip_info;
-+	else
-+		chip_info = &jz4740_chip_info;
-+	jzpc->info = chip_info;
-+
-+	pctl_desc = devm_kzalloc(&pdev->dev, sizeof(*pctl_desc), GFP_KERNEL);
-+	if (!pctl_desc)
-+		return -ENOMEM;
-+
-+	/* fill in pinctrl_desc structure */
-+	pctl_desc->name = dev_name(dev);
-+	pctl_desc->owner = THIS_MODULE;
-+	pctl_desc->pctlops = &ingenic_pctlops;
-+	pctl_desc->pmxops = &ingenic_pmxops;
-+	pctl_desc->confops = &ingenic_confops;
-+	pctl_desc->npins = chip_info->num_chips * PINS_PER_GPIO_CHIP;
-+	pctl_desc->pins = jzpc->pdesc = devm_kzalloc(&pdev->dev,
-+			sizeof(*jzpc->pdesc) * pctl_desc->npins, GFP_KERNEL);
-+	if (!jzpc->pdesc)
-+		return -ENOMEM;
-+
-+	for (i = 0; i < pctl_desc->npins; i++) {
-+		jzpc->pdesc[i].number = i;
-+		jzpc->pdesc[i].name = kasprintf(GFP_KERNEL, "P%c%d",
-+						'A' + (i / PINS_PER_GPIO_CHIP),
-+						i % PINS_PER_GPIO_CHIP);
-+	}
-+
-+	jzpc->pctl = devm_pinctrl_register(dev, pctl_desc, jzpc);
-+	if (!jzpc->pctl) {
-+		dev_err(dev, "Failed to register pinctrl\n");
-+		return -EINVAL;
-+	}
-+
-+	for (i = 0; i < chip_info->num_groups; i++) {
-+		const struct group_desc *group = &chip_info->groups[i];
-+
-+		err = pinctrl_generic_add_group(jzpc->pctl, group->name,
-+				group->pins, group->num_pins, group->data);
-+		if (err) {
-+			dev_err(dev, "Failed to register group %s\n",
-+					group->name);
-+			return err;
-+		}
-+	}
-+
-+	for (i = 0; i < chip_info->num_functions; i++) {
-+		const struct function_desc *func = &chip_info->functions[i];
-+
-+		err = pinmux_generic_add_function(jzpc->pctl, func->name,
-+				func->group_names, func->num_group_names,
-+				func->data);
-+		if (err) {
-+			dev_err(dev, "Failed to register function %s\n",
-+					func->name);
-+			return err;
-+		}
-+	}
-+
-+	dev_set_drvdata(dev, jzpc->map);
-+
-+	if (dev->of_node) {
-+		err = of_platform_populate(dev->of_node, NULL, NULL, dev);
-+		if (err) {
-+			dev_err(dev, "Failed to probe GPIO devices\n");
-+			return err;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+static const struct platform_device_id ingenic_pinctrl_ids[] = {
-+	{ "jz4740-pinctrl", ID_JZ4740 },
-+	{ "jz4770-pinctrl", ID_JZ4770 },
-+	{ "jz4780-pinctrl", ID_JZ4780 },
-+	{},
-+};
-+
-+static struct platform_driver ingenic_pinctrl_driver = {
-+	.driver = {
-+		.name = "pinctrl-ingenic",
-+		.of_match_table = of_match_ptr(ingenic_pinctrl_of_match),
-+		.suppress_bind_attrs = true,
-+	},
-+	.probe = ingenic_pinctrl_probe,
-+	.id_table = ingenic_pinctrl_ids,
-+};
-+
-+static int __init ingenic_pinctrl_drv_register(void)
-+{
-+	return platform_driver_register(&ingenic_pinctrl_driver);
-+}
-+postcore_initcall(ingenic_pinctrl_drv_register);
+-/* Port A function pins */
+-#define JZ_GPIO_MEM_DATA0		JZ_GPIO_PORTA(0)
+-#define JZ_GPIO_MEM_DATA1		JZ_GPIO_PORTA(1)
+-#define JZ_GPIO_MEM_DATA2		JZ_GPIO_PORTA(2)
+-#define JZ_GPIO_MEM_DATA3		JZ_GPIO_PORTA(3)
+-#define JZ_GPIO_MEM_DATA4		JZ_GPIO_PORTA(4)
+-#define JZ_GPIO_MEM_DATA5		JZ_GPIO_PORTA(5)
+-#define JZ_GPIO_MEM_DATA6		JZ_GPIO_PORTA(6)
+-#define JZ_GPIO_MEM_DATA7		JZ_GPIO_PORTA(7)
+-#define JZ_GPIO_MEM_DATA8		JZ_GPIO_PORTA(8)
+-#define JZ_GPIO_MEM_DATA9		JZ_GPIO_PORTA(9)
+-#define JZ_GPIO_MEM_DATA10		JZ_GPIO_PORTA(10)
+-#define JZ_GPIO_MEM_DATA11		JZ_GPIO_PORTA(11)
+-#define JZ_GPIO_MEM_DATA12		JZ_GPIO_PORTA(12)
+-#define JZ_GPIO_MEM_DATA13		JZ_GPIO_PORTA(13)
+-#define JZ_GPIO_MEM_DATA14		JZ_GPIO_PORTA(14)
+-#define JZ_GPIO_MEM_DATA15		JZ_GPIO_PORTA(15)
+-#define JZ_GPIO_MEM_DATA16		JZ_GPIO_PORTA(16)
+-#define JZ_GPIO_MEM_DATA17		JZ_GPIO_PORTA(17)
+-#define JZ_GPIO_MEM_DATA18		JZ_GPIO_PORTA(18)
+-#define JZ_GPIO_MEM_DATA19		JZ_GPIO_PORTA(19)
+-#define JZ_GPIO_MEM_DATA20		JZ_GPIO_PORTA(20)
+-#define JZ_GPIO_MEM_DATA21		JZ_GPIO_PORTA(21)
+-#define JZ_GPIO_MEM_DATA22		JZ_GPIO_PORTA(22)
+-#define JZ_GPIO_MEM_DATA23		JZ_GPIO_PORTA(23)
+-#define JZ_GPIO_MEM_DATA24		JZ_GPIO_PORTA(24)
+-#define JZ_GPIO_MEM_DATA25		JZ_GPIO_PORTA(25)
+-#define JZ_GPIO_MEM_DATA26		JZ_GPIO_PORTA(26)
+-#define JZ_GPIO_MEM_DATA27		JZ_GPIO_PORTA(27)
+-#define JZ_GPIO_MEM_DATA28		JZ_GPIO_PORTA(28)
+-#define JZ_GPIO_MEM_DATA29		JZ_GPIO_PORTA(29)
+-#define JZ_GPIO_MEM_DATA30		JZ_GPIO_PORTA(30)
+-#define JZ_GPIO_MEM_DATA31		JZ_GPIO_PORTA(31)
+-
+-#define JZ_GPIO_FUNC_MEM_DATA0		JZ_GPIO_FUNC1
+-#define JZ_GPIO_FUNC_MEM_DATA1		JZ_GPIO_FUNC1
+-#define JZ_GPIO_FUNC_MEM_DATA2		JZ_GPIO_FUNC1
+-#define JZ_GPIO_FUNC_MEM_DATA3		JZ_GPIO_FUNC1
+-#define JZ_GPIO_FUNC_MEM_DATA4		JZ_GPIO_FUNC1
+-#define JZ_GPIO_FUNC_MEM_DATA5		JZ_GPIO_FUNC1
+-#define JZ_GPIO_FUNC_MEM_DATA6		JZ_GPIO_FUNC1
+-#define JZ_GPIO_FUNC_MEM_DATA7		JZ_GPIO_FUNC1
+-#define JZ_GPIO_FUNC_MEM_DATA8		JZ_GPIO_FUNC1
+-#define JZ_GPIO_FUNC_MEM_DATA9		JZ_GPIO_FUNC1
+-#define JZ_GPIO_FUNC_MEM_DATA10		JZ_GPIO_FUNC1
+-#define JZ_GPIO_FUNC_MEM_DATA11		JZ_GPIO_FUNC1
+-#define JZ_GPIO_FUNC_MEM_DATA12		JZ_GPIO_FUNC1
+-#define JZ_GPIO_FUNC_MEM_DATA13		JZ_GPIO_FUNC1
+-#define JZ_GPIO_FUNC_MEM_DATA14		JZ_GPIO_FUNC1
+-#define JZ_GPIO_FUNC_MEM_DATA15		JZ_GPIO_FUNC1
+-#define JZ_GPIO_FUNC_MEM_DATA16		JZ_GPIO_FUNC1
+-#define JZ_GPIO_FUNC_MEM_DATA17		JZ_GPIO_FUNC1
+-#define JZ_GPIO_FUNC_MEM_DATA18		JZ_GPIO_FUNC1
+-#define JZ_GPIO_FUNC_MEM_DATA19		JZ_GPIO_FUNC1
+-#define JZ_GPIO_FUNC_MEM_DATA20		JZ_GPIO_FUNC1
+-#define JZ_GPIO_FUNC_MEM_DATA21		JZ_GPIO_FUNC1
+-#define JZ_GPIO_FUNC_MEM_DATA22		JZ_GPIO_FUNC1
+-#define JZ_GPIO_FUNC_MEM_DATA23		JZ_GPIO_FUNC1
+-#define JZ_GPIO_FUNC_MEM_DATA24		JZ_GPIO_FUNC1
+-#define JZ_GPIO_FUNC_MEM_DATA25		JZ_GPIO_FUNC1
+-#define JZ_GPIO_FUNC_MEM_DATA26		JZ_GPIO_FUNC1
+-#define JZ_GPIO_FUNC_MEM_DATA27		JZ_GPIO_FUNC1
+-#define JZ_GPIO_FUNC_MEM_DATA28		JZ_GPIO_FUNC1
+-#define JZ_GPIO_FUNC_MEM_DATA29		JZ_GPIO_FUNC1
+-#define JZ_GPIO_FUNC_MEM_DATA30		JZ_GPIO_FUNC1
+-#define JZ_GPIO_FUNC_MEM_DATA31		JZ_GPIO_FUNC1
+-
+-/* Port B function pins */
+-#define JZ_GPIO_MEM_ADDR0		JZ_GPIO_PORTB(0)
+-#define JZ_GPIO_MEM_ADDR1		JZ_GPIO_PORTB(1)
+-#define JZ_GPIO_MEM_ADDR2		JZ_GPIO_PORTB(2)
+-#define JZ_GPIO_MEM_ADDR3		JZ_GPIO_PORTB(3)
+-#define JZ_GPIO_MEM_ADDR4		JZ_GPIO_PORTB(4)
+-#define JZ_GPIO_MEM_ADDR5		JZ_GPIO_PORTB(5)
+-#define JZ_GPIO_MEM_ADDR6		JZ_GPIO_PORTB(6)
+-#define JZ_GPIO_MEM_ADDR7		JZ_GPIO_PORTB(7)
+-#define JZ_GPIO_MEM_ADDR8		JZ_GPIO_PORTB(8)
+-#define JZ_GPIO_MEM_ADDR9		JZ_GPIO_PORTB(9)
+-#define JZ_GPIO_MEM_ADDR10		JZ_GPIO_PORTB(10)
+-#define JZ_GPIO_MEM_ADDR11		JZ_GPIO_PORTB(11)
+-#define JZ_GPIO_MEM_ADDR12		JZ_GPIO_PORTB(12)
+-#define JZ_GPIO_MEM_ADDR13		JZ_GPIO_PORTB(13)
+-#define JZ_GPIO_MEM_ADDR14		JZ_GPIO_PORTB(14)
+-#define JZ_GPIO_MEM_ADDR15		JZ_GPIO_PORTB(15)
+-#define JZ_GPIO_MEM_ADDR16		JZ_GPIO_PORTB(16)
+-#define JZ_GPIO_LCD_CLS			JZ_GPIO_PORTB(17)
+-#define JZ_GPIO_LCD_SPL			JZ_GPIO_PORTB(18)
+-#define JZ_GPIO_MEM_DCS			JZ_GPIO_PORTB(19)
+-#define JZ_GPIO_MEM_RAS			JZ_GPIO_PORTB(20)
+-#define JZ_GPIO_MEM_CAS			JZ_GPIO_PORTB(21)
+-#define JZ_GPIO_MEM_SDWE		JZ_GPIO_PORTB(22)
+-#define JZ_GPIO_MEM_CKE			JZ_GPIO_PORTB(23)
+-#define JZ_GPIO_MEM_CKO			JZ_GPIO_PORTB(24)
+-#define JZ_GPIO_MEM_CS0			JZ_GPIO_PORTB(25)
+-#define JZ_GPIO_MEM_CS1			JZ_GPIO_PORTB(26)
+-#define JZ_GPIO_MEM_CS2			JZ_GPIO_PORTB(27)
+-#define JZ_GPIO_MEM_CS3			JZ_GPIO_PORTB(28)
+-#define JZ_GPIO_MEM_RD			JZ_GPIO_PORTB(29)
+-#define JZ_GPIO_MEM_WR			JZ_GPIO_PORTB(30)
+-#define JZ_GPIO_MEM_WE0			JZ_GPIO_PORTB(31)
+-
+-#define JZ_GPIO_FUNC_MEM_ADDR0		JZ_GPIO_FUNC1
+-#define JZ_GPIO_FUNC_MEM_ADDR1		JZ_GPIO_FUNC1
+-#define JZ_GPIO_FUNC_MEM_ADDR2		JZ_GPIO_FUNC1
+-#define JZ_GPIO_FUNC_MEM_ADDR3		JZ_GPIO_FUNC1
+-#define JZ_GPIO_FUNC_MEM_ADDR4		JZ_GPIO_FUNC1
+-#define JZ_GPIO_FUNC_MEM_ADDR5		JZ_GPIO_FUNC1
+-#define JZ_GPIO_FUNC_MEM_ADDR6		JZ_GPIO_FUNC1
+-#define JZ_GPIO_FUNC_MEM_ADDR7		JZ_GPIO_FUNC1
+-#define JZ_GPIO_FUNC_MEM_ADDR8		JZ_GPIO_FUNC1
+-#define JZ_GPIO_FUNC_MEM_ADDR9		JZ_GPIO_FUNC1
+-#define JZ_GPIO_FUNC_MEM_ADDR10		JZ_GPIO_FUNC1
+-#define JZ_GPIO_FUNC_MEM_ADDR11		JZ_GPIO_FUNC1
+-#define JZ_GPIO_FUNC_MEM_ADDR12		JZ_GPIO_FUNC1
+-#define JZ_GPIO_FUNC_MEM_ADDR13		JZ_GPIO_FUNC1
+-#define JZ_GPIO_FUNC_MEM_ADDR14		JZ_GPIO_FUNC1
+-#define JZ_GPIO_FUNC_MEM_ADDR15		JZ_GPIO_FUNC1
+-#define JZ_GPIO_FUNC_MEM_ADDR16		JZ_GPIO_FUNC1
+-#define JZ_GPIO_FUNC_LCD_CLS		JZ_GPIO_FUNC1
+-#define JZ_GPIO_FUNC_LCD_SPL		JZ_GPIO_FUNC1
+-#define JZ_GPIO_FUNC_MEM_DCS		JZ_GPIO_FUNC1
+-#define JZ_GPIO_FUNC_MEM_RAS		JZ_GPIO_FUNC1
+-#define JZ_GPIO_FUNC_MEM_CAS		JZ_GPIO_FUNC1
+-#define JZ_GPIO_FUNC_MEM_SDWE		JZ_GPIO_FUNC1
+-#define JZ_GPIO_FUNC_MEM_CKE		JZ_GPIO_FUNC1
+-#define JZ_GPIO_FUNC_MEM_CKO		JZ_GPIO_FUNC1
+-#define JZ_GPIO_FUNC_MEM_CS0		JZ_GPIO_FUNC1
+-#define JZ_GPIO_FUNC_MEM_CS1		JZ_GPIO_FUNC1
+-#define JZ_GPIO_FUNC_MEM_CS2		JZ_GPIO_FUNC1
+-#define JZ_GPIO_FUNC_MEM_CS3		JZ_GPIO_FUNC1
+-#define JZ_GPIO_FUNC_MEM_RD		JZ_GPIO_FUNC1
+-#define JZ_GPIO_FUNC_MEM_WR		JZ_GPIO_FUNC1
+-#define JZ_GPIO_FUNC_MEM_WE0		JZ_GPIO_FUNC1
+-
+-
+-#define JZ_GPIO_MEM_ADDR21		JZ_GPIO_PORTB(17)
+-#define JZ_GPIO_MEM_ADDR22		JZ_GPIO_PORTB(18)
+-
+-#define JZ_GPIO_FUNC_MEM_ADDR21		JZ_GPIO_FUNC2
+-#define JZ_GPIO_FUNC_MEM_ADDR22		JZ_GPIO_FUNC2
+-
+-/* Port C function pins */
+-#define JZ_GPIO_LCD_DATA0		JZ_GPIO_PORTC(0)
+-#define JZ_GPIO_LCD_DATA1		JZ_GPIO_PORTC(1)
+-#define JZ_GPIO_LCD_DATA2		JZ_GPIO_PORTC(2)
+-#define JZ_GPIO_LCD_DATA3		JZ_GPIO_PORTC(3)
+-#define JZ_GPIO_LCD_DATA4		JZ_GPIO_PORTC(4)
+-#define JZ_GPIO_LCD_DATA5		JZ_GPIO_PORTC(5)
+-#define JZ_GPIO_LCD_DATA6		JZ_GPIO_PORTC(6)
+-#define JZ_GPIO_LCD_DATA7		JZ_GPIO_PORTC(7)
+-#define JZ_GPIO_LCD_DATA8		JZ_GPIO_PORTC(8)
+-#define JZ_GPIO_LCD_DATA9		JZ_GPIO_PORTC(9)
+-#define JZ_GPIO_LCD_DATA10		JZ_GPIO_PORTC(10)
+-#define JZ_GPIO_LCD_DATA11		JZ_GPIO_PORTC(11)
+-#define JZ_GPIO_LCD_DATA12		JZ_GPIO_PORTC(12)
+-#define JZ_GPIO_LCD_DATA13		JZ_GPIO_PORTC(13)
+-#define JZ_GPIO_LCD_DATA14		JZ_GPIO_PORTC(14)
+-#define JZ_GPIO_LCD_DATA15		JZ_GPIO_PORTC(15)
+-#define JZ_GPIO_LCD_DATA16		JZ_GPIO_PORTC(16)
+-#define JZ_GPIO_LCD_DATA17		JZ_GPIO_PORTC(17)
+-#define JZ_GPIO_LCD_PCLK		JZ_GPIO_PORTC(18)
+-#define JZ_GPIO_LCD_HSYNC		JZ_GPIO_PORTC(19)
+-#define JZ_GPIO_LCD_VSYNC		JZ_GPIO_PORTC(20)
+-#define JZ_GPIO_LCD_DE			JZ_GPIO_PORTC(21)
+-#define JZ_GPIO_LCD_PS			JZ_GPIO_PORTC(22)
+-#define JZ_GPIO_LCD_REV			JZ_GPIO_PORTC(23)
+-#define JZ_GPIO_MEM_WE1			JZ_GPIO_PORTC(24)
+-#define JZ_GPIO_MEM_WE2			JZ_GPIO_PORTC(25)
+-#define JZ_GPIO_MEM_WE3			JZ_GPIO_PORTC(26)
+-#define JZ_GPIO_MEM_WAIT		JZ_GPIO_PORTC(27)
+-#define JZ_GPIO_MEM_FRE			JZ_GPIO_PORTC(28)
+-#define JZ_GPIO_MEM_FWE			JZ_GPIO_PORTC(29)
+-
+-#define JZ_GPIO_FUNC_LCD_DATA0		JZ_GPIO_FUNC1
+-#define JZ_GPIO_FUNC_LCD_DATA1		JZ_GPIO_FUNC1
+-#define JZ_GPIO_FUNC_LCD_DATA2		JZ_GPIO_FUNC1
+-#define JZ_GPIO_FUNC_LCD_DATA3		JZ_GPIO_FUNC1
+-#define JZ_GPIO_FUNC_LCD_DATA4		JZ_GPIO_FUNC1
+-#define JZ_GPIO_FUNC_LCD_DATA5		JZ_GPIO_FUNC1
+-#define JZ_GPIO_FUNC_LCD_DATA6		JZ_GPIO_FUNC1
+-#define JZ_GPIO_FUNC_LCD_DATA7		JZ_GPIO_FUNC1
+-#define JZ_GPIO_FUNC_LCD_DATA8		JZ_GPIO_FUNC1
+-#define JZ_GPIO_FUNC_LCD_DATA9		JZ_GPIO_FUNC1
+-#define JZ_GPIO_FUNC_LCD_DATA10		JZ_GPIO_FUNC1
+-#define JZ_GPIO_FUNC_LCD_DATA11		JZ_GPIO_FUNC1
+-#define JZ_GPIO_FUNC_LCD_DATA12		JZ_GPIO_FUNC1
+-#define JZ_GPIO_FUNC_LCD_DATA13		JZ_GPIO_FUNC1
+-#define JZ_GPIO_FUNC_LCD_DATA14		JZ_GPIO_FUNC1
+-#define JZ_GPIO_FUNC_LCD_DATA15		JZ_GPIO_FUNC1
+-#define JZ_GPIO_FUNC_LCD_DATA16		JZ_GPIO_FUNC1
+-#define JZ_GPIO_FUNC_LCD_DATA17		JZ_GPIO_FUNC1
+-#define JZ_GPIO_FUNC_LCD_PCLK		JZ_GPIO_FUNC1
+-#define JZ_GPIO_FUNC_LCD_VSYNC		JZ_GPIO_FUNC1
+-#define JZ_GPIO_FUNC_LCD_HSYNC		JZ_GPIO_FUNC1
+-#define JZ_GPIO_FUNC_LCD_DE		JZ_GPIO_FUNC1
+-#define JZ_GPIO_FUNC_LCD_PS		JZ_GPIO_FUNC1
+-#define JZ_GPIO_FUNC_LCD_REV		JZ_GPIO_FUNC1
+-#define JZ_GPIO_FUNC_MEM_WE1		JZ_GPIO_FUNC1
+-#define JZ_GPIO_FUNC_MEM_WE2		JZ_GPIO_FUNC1
+-#define JZ_GPIO_FUNC_MEM_WE3		JZ_GPIO_FUNC1
+-#define JZ_GPIO_FUNC_MEM_WAIT		JZ_GPIO_FUNC1
+-#define JZ_GPIO_FUNC_MEM_FRE		JZ_GPIO_FUNC1
+-#define JZ_GPIO_FUNC_MEM_FWE		JZ_GPIO_FUNC1
+-
+-
+-#define JZ_GPIO_MEM_ADDR19		JZ_GPIO_PORTB(22)
+-#define JZ_GPIO_MEM_ADDR20		JZ_GPIO_PORTB(23)
+-
+-#define JZ_GPIO_FUNC_MEM_ADDR19		JZ_GPIO_FUNC2
+-#define JZ_GPIO_FUNC_MEM_ADDR20		JZ_GPIO_FUNC2
+-
+-/* Port D function pins */
+-#define JZ_GPIO_CIM_DATA0		JZ_GPIO_PORTD(0)
+-#define JZ_GPIO_CIM_DATA1		JZ_GPIO_PORTD(1)
+-#define JZ_GPIO_CIM_DATA2		JZ_GPIO_PORTD(2)
+-#define JZ_GPIO_CIM_DATA3		JZ_GPIO_PORTD(3)
+-#define JZ_GPIO_CIM_DATA4		JZ_GPIO_PORTD(4)
+-#define JZ_GPIO_CIM_DATA5		JZ_GPIO_PORTD(5)
+-#define JZ_GPIO_CIM_DATA6		JZ_GPIO_PORTD(6)
+-#define JZ_GPIO_CIM_DATA7		JZ_GPIO_PORTD(7)
+-#define JZ_GPIO_MSC_CMD			JZ_GPIO_PORTD(8)
+-#define JZ_GPIO_MSC_CLK			JZ_GPIO_PORTD(9)
+-#define JZ_GPIO_MSC_DATA0		JZ_GPIO_PORTD(10)
+-#define JZ_GPIO_MSC_DATA1		JZ_GPIO_PORTD(11)
+-#define JZ_GPIO_MSC_DATA2		JZ_GPIO_PORTD(12)
+-#define JZ_GPIO_MSC_DATA3		JZ_GPIO_PORTD(13)
+-#define JZ_GPIO_CIM_MCLK		JZ_GPIO_PORTD(14)
+-#define JZ_GPIO_CIM_PCLK		JZ_GPIO_PORTD(15)
+-#define JZ_GPIO_CIM_VSYNC		JZ_GPIO_PORTD(16)
+-#define JZ_GPIO_CIM_HSYNC		JZ_GPIO_PORTD(17)
+-#define JZ_GPIO_SPI_CLK			JZ_GPIO_PORTD(18)
+-#define JZ_GPIO_SPI_CE0			JZ_GPIO_PORTD(19)
+-#define JZ_GPIO_SPI_DT			JZ_GPIO_PORTD(20)
+-#define JZ_GPIO_SPI_DR			JZ_GPIO_PORTD(21)
+-#define JZ_GPIO_SPI_CE1			JZ_GPIO_PORTD(22)
+-#define JZ_GPIO_PWM0			JZ_GPIO_PORTD(23)
+-#define JZ_GPIO_PWM1			JZ_GPIO_PORTD(24)
+-#define JZ_GPIO_PWM2			JZ_GPIO_PORTD(25)
+-#define JZ_GPIO_PWM3			JZ_GPIO_PORTD(26)
+-#define JZ_GPIO_PWM4			JZ_GPIO_PORTD(27)
+-#define JZ_GPIO_PWM5			JZ_GPIO_PORTD(28)
+-#define JZ_GPIO_PWM6			JZ_GPIO_PORTD(30)
+-#define JZ_GPIO_PWM7			JZ_GPIO_PORTD(31)
+-
+-#define JZ_GPIO_FUNC_CIM_DATA		JZ_GPIO_FUNC1
+-#define JZ_GPIO_FUNC_CIM_DATA0		JZ_GPIO_FUNC_CIM_DATA
+-#define JZ_GPIO_FUNC_CIM_DATA1		JZ_GPIO_FUNC_CIM_DATA
+-#define JZ_GPIO_FUNC_CIM_DATA2		JZ_GPIO_FUNC_CIM_DATA
+-#define JZ_GPIO_FUNC_CIM_DATA3		JZ_GPIO_FUNC_CIM_DATA
+-#define JZ_GPIO_FUNC_CIM_DATA4		JZ_GPIO_FUNC_CIM_DATA
+-#define JZ_GPIO_FUNC_CIM_DATA5		JZ_GPIO_FUNC_CIM_DATA
+-#define JZ_GPIO_FUNC_CIM_DATA6		JZ_GPIO_FUNC_CIM_DATA
+-#define JZ_GPIO_FUNC_CIM_DATA7		JZ_GPIO_FUNC_CIM_DATA
+-#define JZ_GPIO_FUNC_MSC_CMD		JZ_GPIO_FUNC1
+-#define JZ_GPIO_FUNC_MSC_CLK		JZ_GPIO_FUNC1
+-#define JZ_GPIO_FUNC_MSC_DATA		JZ_GPIO_FUNC1
+-#define JZ_GPIO_FUNC_MSC_DATA0		JZ_GPIO_FUNC_MSC_DATA
+-#define JZ_GPIO_FUNC_MSC_DATA1		JZ_GPIO_FUNC_MSC_DATA
+-#define JZ_GPIO_FUNC_MSC_DATA2		JZ_GPIO_FUNC_MSC_DATA
+-#define JZ_GPIO_FUNC_MSC_DATA3		JZ_GPIO_FUNC_MSC_DATA
+-#define JZ_GPIO_FUNC_CIM_MCLK		JZ_GPIO_FUNC1
+-#define JZ_GPIO_FUNC_CIM_PCLK		JZ_GPIO_FUNC1
+-#define JZ_GPIO_FUNC_CIM_VSYNC		JZ_GPIO_FUNC1
+-#define JZ_GPIO_FUNC_CIM_HSYNC		JZ_GPIO_FUNC1
+-#define JZ_GPIO_FUNC_SPI_CLK		JZ_GPIO_FUNC1
+-#define JZ_GPIO_FUNC_SPI_CE0		JZ_GPIO_FUNC1
+-#define JZ_GPIO_FUNC_SPI_DT		JZ_GPIO_FUNC1
+-#define JZ_GPIO_FUNC_SPI_DR		JZ_GPIO_FUNC1
+-#define JZ_GPIO_FUNC_SPI_CE1		JZ_GPIO_FUNC1
+-
+-#define JZ_GPIO_FUNC_PWM		JZ_GPIO_FUNC1
+-#define JZ_GPIO_FUNC_PWM0		JZ_GPIO_FUNC_PWM
+-#define JZ_GPIO_FUNC_PWM1		JZ_GPIO_FUNC_PWM
+-#define JZ_GPIO_FUNC_PWM2		JZ_GPIO_FUNC_PWM
+-#define JZ_GPIO_FUNC_PWM3		JZ_GPIO_FUNC_PWM
+-#define JZ_GPIO_FUNC_PWM4		JZ_GPIO_FUNC_PWM
+-#define JZ_GPIO_FUNC_PWM5		JZ_GPIO_FUNC_PWM
+-#define JZ_GPIO_FUNC_PWM6		JZ_GPIO_FUNC_PWM
+-#define JZ_GPIO_FUNC_PWM7		JZ_GPIO_FUNC_PWM
+-
+-#define JZ_GPIO_MEM_SCLK_RSTN		JZ_GPIO_PORTD(18)
+-#define JZ_GPIO_MEM_BCLK		JZ_GPIO_PORTD(19)
+-#define JZ_GPIO_MEM_SDATO		JZ_GPIO_PORTD(20)
+-#define JZ_GPIO_MEM_SDATI		JZ_GPIO_PORTD(21)
+-#define JZ_GPIO_MEM_SYNC		JZ_GPIO_PORTD(22)
+-#define JZ_GPIO_I2C_SDA			JZ_GPIO_PORTD(23)
+-#define JZ_GPIO_I2C_SCK			JZ_GPIO_PORTD(24)
+-#define JZ_GPIO_UART0_TXD		JZ_GPIO_PORTD(25)
+-#define JZ_GPIO_UART0_RXD		JZ_GPIO_PORTD(26)
+-#define JZ_GPIO_MEM_ADDR17		JZ_GPIO_PORTD(27)
+-#define JZ_GPIO_MEM_ADDR18		JZ_GPIO_PORTD(28)
+-#define JZ_GPIO_UART0_CTS		JZ_GPIO_PORTD(30)
+-#define JZ_GPIO_UART0_RTS		JZ_GPIO_PORTD(31)
+-
+-#define JZ_GPIO_FUNC_MEM_SCLK_RSTN	JZ_GPIO_FUNC2
+-#define JZ_GPIO_FUNC_MEM_BCLK		JZ_GPIO_FUNC2
+-#define JZ_GPIO_FUNC_MEM_SDATO		JZ_GPIO_FUNC2
+-#define JZ_GPIO_FUNC_MEM_SDATI		JZ_GPIO_FUNC2
+-#define JZ_GPIO_FUNC_MEM_SYNC		JZ_GPIO_FUNC2
+-#define JZ_GPIO_FUNC_I2C_SDA		JZ_GPIO_FUNC2
+-#define JZ_GPIO_FUNC_I2C_SCK		JZ_GPIO_FUNC2
+-#define JZ_GPIO_FUNC_UART0_TXD		JZ_GPIO_FUNC2
+-#define JZ_GPIO_FUNC_UART0_RXD		JZ_GPIO_FUNC2
+-#define JZ_GPIO_FUNC_MEM_ADDR17		JZ_GPIO_FUNC2
+-#define JZ_GPIO_FUNC_MEM_ADDR18		JZ_GPIO_FUNC2
+-#define JZ_GPIO_FUNC_UART0_CTS		JZ_GPIO_FUNC2
+-#define JZ_GPIO_FUNC_UART0_RTS		JZ_GPIO_FUNC2
+-
+-#define JZ_GPIO_UART1_RXD		JZ_GPIO_PORTD(30)
+-#define JZ_GPIO_UART1_TXD		JZ_GPIO_PORTD(31)
+-
+-#define JZ_GPIO_FUNC_UART1_RXD		JZ_GPIO_FUNC3
+-#define JZ_GPIO_FUNC_UART1_TXD		JZ_GPIO_FUNC3
+-
+ #endif
+diff --git a/arch/mips/jz4740/Makefile b/arch/mips/jz4740/Makefile
+index 39d70bde8cfe..6b9c1f7c31c9 100644
+--- a/arch/mips/jz4740/Makefile
++++ b/arch/mips/jz4740/Makefile
+@@ -7,8 +7,6 @@
+ obj-y += prom.o time.o reset.o setup.o \
+ 	platform.o timer.o
+ 
+-obj-$(CONFIG_MACH_JZ4740) += gpio.o
+-
+ CFLAGS_setup.o = -I$(src)/../../../scripts/dtc/libfdt
+ 
+ # board specific support
+diff --git a/arch/mips/jz4740/gpio.c b/arch/mips/jz4740/gpio.c
+deleted file mode 100644
+index cac1ccde2214..000000000000
+--- a/arch/mips/jz4740/gpio.c
++++ /dev/null
+@@ -1,519 +0,0 @@
+-/*
+- *  Copyright (C) 2009-2010, Lars-Peter Clausen <lars@metafoo.de>
+- *  JZ4740 platform GPIO support
+- *
+- *  This program is free software; you can redistribute it and/or modify it
+- *  under  the terms of the GNU General	 Public License as published by the
+- *  Free Software Foundation;  either version 2 of the License, or (at your
+- *  option) any later version.
+- *
+- *  You should have received a copy of the GNU General Public License along
+- *  with this program; if not, write to the Free Software Foundation, Inc.,
+- *  675 Mass Ave, Cambridge, MA 02139, USA.
+- *
+- */
+-
+-#include <linux/kernel.h>
+-#include <linux/export.h>
+-#include <linux/init.h>
+-
+-#include <linux/io.h>
+-#include <linux/gpio/driver.h>
+-/* FIXME: needed for gpio_request(), try to remove consumer API from driver */
+-#include <linux/gpio.h>
+-#include <linux/delay.h>
+-#include <linux/interrupt.h>
+-#include <linux/irqchip/ingenic.h>
+-#include <linux/bitops.h>
+-
+-#include <linux/debugfs.h>
+-#include <linux/seq_file.h>
+-
+-#include <asm/mach-jz4740/base.h>
+-#include <asm/mach-jz4740/gpio.h>
+-
+-#define JZ4740_GPIO_BASE_A (32*0)
+-#define JZ4740_GPIO_BASE_B (32*1)
+-#define JZ4740_GPIO_BASE_C (32*2)
+-#define JZ4740_GPIO_BASE_D (32*3)
+-
+-#define JZ4740_GPIO_NUM_A 32
+-#define JZ4740_GPIO_NUM_B 32
+-#define JZ4740_GPIO_NUM_C 31
+-#define JZ4740_GPIO_NUM_D 32
+-
+-#define JZ4740_IRQ_GPIO_BASE_A (JZ4740_IRQ_GPIO(0) + JZ4740_GPIO_BASE_A)
+-#define JZ4740_IRQ_GPIO_BASE_B (JZ4740_IRQ_GPIO(0) + JZ4740_GPIO_BASE_B)
+-#define JZ4740_IRQ_GPIO_BASE_C (JZ4740_IRQ_GPIO(0) + JZ4740_GPIO_BASE_C)
+-#define JZ4740_IRQ_GPIO_BASE_D (JZ4740_IRQ_GPIO(0) + JZ4740_GPIO_BASE_D)
+-
+-#define JZ_REG_GPIO_PIN			0x00
+-#define JZ_REG_GPIO_DATA		0x10
+-#define JZ_REG_GPIO_DATA_SET		0x14
+-#define JZ_REG_GPIO_DATA_CLEAR		0x18
+-#define JZ_REG_GPIO_MASK		0x20
+-#define JZ_REG_GPIO_MASK_SET		0x24
+-#define JZ_REG_GPIO_MASK_CLEAR		0x28
+-#define JZ_REG_GPIO_PULL		0x30
+-#define JZ_REG_GPIO_PULL_SET		0x34
+-#define JZ_REG_GPIO_PULL_CLEAR		0x38
+-#define JZ_REG_GPIO_FUNC		0x40
+-#define JZ_REG_GPIO_FUNC_SET		0x44
+-#define JZ_REG_GPIO_FUNC_CLEAR		0x48
+-#define JZ_REG_GPIO_SELECT		0x50
+-#define JZ_REG_GPIO_SELECT_SET		0x54
+-#define JZ_REG_GPIO_SELECT_CLEAR	0x58
+-#define JZ_REG_GPIO_DIRECTION		0x60
+-#define JZ_REG_GPIO_DIRECTION_SET	0x64
+-#define JZ_REG_GPIO_DIRECTION_CLEAR	0x68
+-#define JZ_REG_GPIO_TRIGGER		0x70
+-#define JZ_REG_GPIO_TRIGGER_SET		0x74
+-#define JZ_REG_GPIO_TRIGGER_CLEAR	0x78
+-#define JZ_REG_GPIO_FLAG		0x80
+-#define JZ_REG_GPIO_FLAG_CLEAR		0x14
+-
+-#define GPIO_TO_BIT(gpio) BIT(gpio & 0x1f)
+-#define GPIO_TO_REG(gpio, reg) (gpio_to_jz_gpio_chip(gpio)->base + (reg))
+-#define CHIP_TO_REG(chip, reg) (gpio_chip_to_jz_gpio_chip(chip)->base + (reg))
+-
+-struct jz_gpio_chip {
+-	unsigned int irq;
+-	unsigned int irq_base;
+-	uint32_t edge_trigger_both;
+-
+-	void __iomem *base;
+-
+-	struct gpio_chip gpio_chip;
+-};
+-
+-static struct jz_gpio_chip jz4740_gpio_chips[];
+-
+-static inline struct jz_gpio_chip *gpio_to_jz_gpio_chip(unsigned int gpio)
+-{
+-	return &jz4740_gpio_chips[gpio >> 5];
+-}
+-
+-static inline struct jz_gpio_chip *gpio_chip_to_jz_gpio_chip(struct gpio_chip *gc)
+-{
+-	return gpiochip_get_data(gc);
+-}
+-
+-static inline struct jz_gpio_chip *irq_to_jz_gpio_chip(struct irq_data *data)
+-{
+-	struct irq_chip_generic *gc = irq_data_get_irq_chip_data(data);
+-	return gc->private;
+-}
+-
+-static inline void jz_gpio_write_bit(unsigned int gpio, unsigned int reg)
+-{
+-	writel(GPIO_TO_BIT(gpio), GPIO_TO_REG(gpio, reg));
+-}
+-
+-int jz_gpio_set_function(int gpio, enum jz_gpio_function function)
+-{
+-	if (function == JZ_GPIO_FUNC_NONE) {
+-		jz_gpio_write_bit(gpio, JZ_REG_GPIO_FUNC_CLEAR);
+-		jz_gpio_write_bit(gpio, JZ_REG_GPIO_SELECT_CLEAR);
+-		jz_gpio_write_bit(gpio, JZ_REG_GPIO_TRIGGER_CLEAR);
+-	} else {
+-		jz_gpio_write_bit(gpio, JZ_REG_GPIO_FUNC_SET);
+-		jz_gpio_write_bit(gpio, JZ_REG_GPIO_TRIGGER_CLEAR);
+-		switch (function) {
+-		case JZ_GPIO_FUNC1:
+-			jz_gpio_write_bit(gpio, JZ_REG_GPIO_SELECT_CLEAR);
+-			break;
+-		case JZ_GPIO_FUNC3:
+-			jz_gpio_write_bit(gpio, JZ_REG_GPIO_TRIGGER_SET);
+-		case JZ_GPIO_FUNC2: /* Falltrough */
+-			jz_gpio_write_bit(gpio, JZ_REG_GPIO_SELECT_SET);
+-			break;
+-		default:
+-			BUG();
+-			break;
+-		}
+-	}
+-
+-	return 0;
+-}
+-EXPORT_SYMBOL_GPL(jz_gpio_set_function);
+-
+-int jz_gpio_bulk_request(const struct jz_gpio_bulk_request *request, size_t num)
+-{
+-	size_t i;
+-	int ret;
+-
+-	for (i = 0; i < num; ++i, ++request) {
+-		ret = gpio_request(request->gpio, request->name);
+-		if (ret)
+-			goto err;
+-		jz_gpio_set_function(request->gpio, request->function);
+-	}
+-
+-	return 0;
+-
+-err:
+-	for (--request; i > 0; --i, --request) {
+-		gpio_free(request->gpio);
+-		jz_gpio_set_function(request->gpio, JZ_GPIO_FUNC_NONE);
+-	}
+-
+-	return ret;
+-}
+-EXPORT_SYMBOL_GPL(jz_gpio_bulk_request);
+-
+-void jz_gpio_bulk_free(const struct jz_gpio_bulk_request *request, size_t num)
+-{
+-	size_t i;
+-
+-	for (i = 0; i < num; ++i, ++request) {
+-		gpio_free(request->gpio);
+-		jz_gpio_set_function(request->gpio, JZ_GPIO_FUNC_NONE);
+-	}
+-
+-}
+-EXPORT_SYMBOL_GPL(jz_gpio_bulk_free);
+-
+-void jz_gpio_bulk_suspend(const struct jz_gpio_bulk_request *request, size_t num)
+-{
+-	size_t i;
+-
+-	for (i = 0; i < num; ++i, ++request) {
+-		jz_gpio_set_function(request->gpio, JZ_GPIO_FUNC_NONE);
+-		jz_gpio_write_bit(request->gpio, JZ_REG_GPIO_DIRECTION_CLEAR);
+-		jz_gpio_write_bit(request->gpio, JZ_REG_GPIO_PULL_SET);
+-	}
+-}
+-EXPORT_SYMBOL_GPL(jz_gpio_bulk_suspend);
+-
+-void jz_gpio_bulk_resume(const struct jz_gpio_bulk_request *request, size_t num)
+-{
+-	size_t i;
+-
+-	for (i = 0; i < num; ++i, ++request)
+-		jz_gpio_set_function(request->gpio, request->function);
+-}
+-EXPORT_SYMBOL_GPL(jz_gpio_bulk_resume);
+-
+-void jz_gpio_enable_pullup(unsigned gpio)
+-{
+-	jz_gpio_write_bit(gpio, JZ_REG_GPIO_PULL_CLEAR);
+-}
+-EXPORT_SYMBOL_GPL(jz_gpio_enable_pullup);
+-
+-void jz_gpio_disable_pullup(unsigned gpio)
+-{
+-	jz_gpio_write_bit(gpio, JZ_REG_GPIO_PULL_SET);
+-}
+-EXPORT_SYMBOL_GPL(jz_gpio_disable_pullup);
+-
+-static int jz_gpio_get_value(struct gpio_chip *chip, unsigned gpio)
+-{
+-	return !!(readl(CHIP_TO_REG(chip, JZ_REG_GPIO_PIN)) & BIT(gpio));
+-}
+-
+-static void jz_gpio_set_value(struct gpio_chip *chip, unsigned gpio, int value)
+-{
+-	uint32_t __iomem *reg = CHIP_TO_REG(chip, JZ_REG_GPIO_DATA_SET);
+-	reg += !value;
+-	writel(BIT(gpio), reg);
+-}
+-
+-static int jz_gpio_direction_output(struct gpio_chip *chip, unsigned gpio,
+-	int value)
+-{
+-	writel(BIT(gpio), CHIP_TO_REG(chip, JZ_REG_GPIO_DIRECTION_SET));
+-	jz_gpio_set_value(chip, gpio, value);
+-
+-	return 0;
+-}
+-
+-static int jz_gpio_direction_input(struct gpio_chip *chip, unsigned gpio)
+-{
+-	writel(BIT(gpio), CHIP_TO_REG(chip, JZ_REG_GPIO_DIRECTION_CLEAR));
+-
+-	return 0;
+-}
+-
+-static int jz_gpio_to_irq(struct gpio_chip *chip, unsigned gpio)
+-{
+-	struct jz_gpio_chip *jz_gpio = gpiochip_get_data(chip);
+-
+-	return jz_gpio->irq_base + gpio;
+-}
+-
+-int jz_gpio_port_direction_input(int port, uint32_t mask)
+-{
+-	writel(mask, GPIO_TO_REG(port, JZ_REG_GPIO_DIRECTION_CLEAR));
+-
+-	return 0;
+-}
+-EXPORT_SYMBOL(jz_gpio_port_direction_input);
+-
+-int jz_gpio_port_direction_output(int port, uint32_t mask)
+-{
+-	writel(mask, GPIO_TO_REG(port, JZ_REG_GPIO_DIRECTION_SET));
+-
+-	return 0;
+-}
+-EXPORT_SYMBOL(jz_gpio_port_direction_output);
+-
+-void jz_gpio_port_set_value(int port, uint32_t value, uint32_t mask)
+-{
+-	writel(~value & mask, GPIO_TO_REG(port, JZ_REG_GPIO_DATA_CLEAR));
+-	writel(value & mask, GPIO_TO_REG(port, JZ_REG_GPIO_DATA_SET));
+-}
+-EXPORT_SYMBOL(jz_gpio_port_set_value);
+-
+-uint32_t jz_gpio_port_get_value(int port, uint32_t mask)
+-{
+-	uint32_t value = readl(GPIO_TO_REG(port, JZ_REG_GPIO_PIN));
+-
+-	return value & mask;
+-}
+-EXPORT_SYMBOL(jz_gpio_port_get_value);
+-
+-#define IRQ_TO_BIT(irq) BIT((irq - JZ4740_IRQ_GPIO(0)) & 0x1f)
+-
+-static void jz_gpio_check_trigger_both(struct jz_gpio_chip *chip, unsigned int irq)
+-{
+-	uint32_t value;
+-	void __iomem *reg;
+-	uint32_t mask = IRQ_TO_BIT(irq);
+-
+-	if (!(chip->edge_trigger_both & mask))
+-		return;
+-
+-	reg = chip->base;
+-
+-	value = readl(chip->base + JZ_REG_GPIO_PIN);
+-	if (value & mask)
+-		reg += JZ_REG_GPIO_DIRECTION_CLEAR;
+-	else
+-		reg += JZ_REG_GPIO_DIRECTION_SET;
+-
+-	writel(mask, reg);
+-}
+-
+-static void jz_gpio_irq_demux_handler(struct irq_desc *desc)
+-{
+-	uint32_t flag;
+-	unsigned int gpio_irq;
+-	struct jz_gpio_chip *chip = irq_desc_get_handler_data(desc);
+-
+-	flag = readl(chip->base + JZ_REG_GPIO_FLAG);
+-	if (!flag)
+-		return;
+-
+-	gpio_irq = chip->irq_base + __fls(flag);
+-
+-	jz_gpio_check_trigger_both(chip, gpio_irq);
+-
+-	generic_handle_irq(gpio_irq);
+-};
+-
+-static inline void jz_gpio_set_irq_bit(struct irq_data *data, unsigned int reg)
+-{
+-	struct jz_gpio_chip *chip = irq_to_jz_gpio_chip(data);
+-	writel(IRQ_TO_BIT(data->irq), chip->base + reg);
+-}
+-
+-static void jz_gpio_irq_unmask(struct irq_data *data)
+-{
+-	struct jz_gpio_chip *chip = irq_to_jz_gpio_chip(data);
+-
+-	jz_gpio_check_trigger_both(chip, data->irq);
+-	irq_gc_unmask_enable_reg(data);
+-};
+-
+-/* TODO: Check if function is gpio */
+-static unsigned int jz_gpio_irq_startup(struct irq_data *data)
+-{
+-	jz_gpio_set_irq_bit(data, JZ_REG_GPIO_SELECT_SET);
+-	jz_gpio_irq_unmask(data);
+-	return 0;
+-}
+-
+-static void jz_gpio_irq_shutdown(struct irq_data *data)
+-{
+-	irq_gc_mask_disable_reg(data);
+-
+-	/* Set direction to input */
+-	jz_gpio_set_irq_bit(data, JZ_REG_GPIO_DIRECTION_CLEAR);
+-	jz_gpio_set_irq_bit(data, JZ_REG_GPIO_SELECT_CLEAR);
+-}
+-
+-static int jz_gpio_irq_set_type(struct irq_data *data, unsigned int flow_type)
+-{
+-	struct jz_gpio_chip *chip = irq_to_jz_gpio_chip(data);
+-	unsigned int irq = data->irq;
+-
+-	if (flow_type == IRQ_TYPE_EDGE_BOTH) {
+-		uint32_t value = readl(chip->base + JZ_REG_GPIO_PIN);
+-		if (value & IRQ_TO_BIT(irq))
+-			flow_type = IRQ_TYPE_EDGE_FALLING;
+-		else
+-			flow_type = IRQ_TYPE_EDGE_RISING;
+-		chip->edge_trigger_both |= IRQ_TO_BIT(irq);
+-	} else {
+-		chip->edge_trigger_both &= ~IRQ_TO_BIT(irq);
+-	}
+-
+-	switch (flow_type) {
+-	case IRQ_TYPE_EDGE_RISING:
+-		jz_gpio_set_irq_bit(data, JZ_REG_GPIO_DIRECTION_SET);
+-		jz_gpio_set_irq_bit(data, JZ_REG_GPIO_TRIGGER_SET);
+-		break;
+-	case IRQ_TYPE_EDGE_FALLING:
+-		jz_gpio_set_irq_bit(data, JZ_REG_GPIO_DIRECTION_CLEAR);
+-		jz_gpio_set_irq_bit(data, JZ_REG_GPIO_TRIGGER_SET);
+-		break;
+-	case IRQ_TYPE_LEVEL_HIGH:
+-		jz_gpio_set_irq_bit(data, JZ_REG_GPIO_DIRECTION_SET);
+-		jz_gpio_set_irq_bit(data, JZ_REG_GPIO_TRIGGER_CLEAR);
+-		break;
+-	case IRQ_TYPE_LEVEL_LOW:
+-		jz_gpio_set_irq_bit(data, JZ_REG_GPIO_DIRECTION_CLEAR);
+-		jz_gpio_set_irq_bit(data, JZ_REG_GPIO_TRIGGER_CLEAR);
+-		break;
+-	default:
+-		return -EINVAL;
+-	}
+-
+-	return 0;
+-}
+-
+-static int jz_gpio_irq_set_wake(struct irq_data *data, unsigned int on)
+-{
+-	struct jz_gpio_chip *chip = irq_to_jz_gpio_chip(data);
+-
+-	irq_gc_set_wake(data, on);
+-	irq_set_irq_wake(chip->irq, on);
+-
+-	return 0;
+-}
+-
+-#define JZ4740_GPIO_CHIP(_bank) { \
+-	.irq_base = JZ4740_IRQ_GPIO_BASE_ ## _bank, \
+-	.gpio_chip = { \
+-		.label = "Bank " # _bank, \
+-		.owner = THIS_MODULE, \
+-		.set = jz_gpio_set_value, \
+-		.get = jz_gpio_get_value, \
+-		.direction_output = jz_gpio_direction_output, \
+-		.direction_input = jz_gpio_direction_input, \
+-		.to_irq = jz_gpio_to_irq, \
+-		.base = JZ4740_GPIO_BASE_ ## _bank, \
+-		.ngpio = JZ4740_GPIO_NUM_ ## _bank, \
+-	}, \
+-}
+-
+-static struct jz_gpio_chip jz4740_gpio_chips[] = {
+-	JZ4740_GPIO_CHIP(A),
+-	JZ4740_GPIO_CHIP(B),
+-	JZ4740_GPIO_CHIP(C),
+-	JZ4740_GPIO_CHIP(D),
+-};
+-
+-static void jz4740_gpio_chip_init(struct jz_gpio_chip *chip, unsigned int id)
+-{
+-	struct irq_chip_generic *gc;
+-	struct irq_chip_type *ct;
+-
+-	chip->base = ioremap(JZ4740_GPIO_BASE_ADDR + (id * 0x100), 0x100);
+-
+-	chip->irq = JZ4740_IRQ_INTC_GPIO(id);
+-	irq_set_chained_handler_and_data(chip->irq,
+-					 jz_gpio_irq_demux_handler, chip);
+-
+-	gc = irq_alloc_generic_chip(chip->gpio_chip.label, 1, chip->irq_base,
+-		chip->base, handle_level_irq);
+-
+-	gc->wake_enabled = IRQ_MSK(chip->gpio_chip.ngpio);
+-	gc->private = chip;
+-
+-	ct = gc->chip_types;
+-	ct->regs.enable = JZ_REG_GPIO_MASK_CLEAR;
+-	ct->regs.disable = JZ_REG_GPIO_MASK_SET;
+-	ct->regs.ack = JZ_REG_GPIO_FLAG_CLEAR;
+-
+-	ct->chip.name = "GPIO";
+-	ct->chip.irq_mask = irq_gc_mask_disable_reg;
+-	ct->chip.irq_unmask = jz_gpio_irq_unmask;
+-	ct->chip.irq_ack = irq_gc_ack_set_bit;
+-	ct->chip.irq_suspend = ingenic_intc_irq_suspend;
+-	ct->chip.irq_resume = ingenic_intc_irq_resume;
+-	ct->chip.irq_startup = jz_gpio_irq_startup;
+-	ct->chip.irq_shutdown = jz_gpio_irq_shutdown;
+-	ct->chip.irq_set_type = jz_gpio_irq_set_type;
+-	ct->chip.irq_set_wake = jz_gpio_irq_set_wake;
+-	ct->chip.flags = IRQCHIP_SET_TYPE_MASKED;
+-
+-	irq_setup_generic_chip(gc, IRQ_MSK(chip->gpio_chip.ngpio),
+-		IRQ_GC_INIT_NESTED_LOCK, 0, IRQ_NOPROBE | IRQ_LEVEL);
+-
+-	gpiochip_add_data(&chip->gpio_chip, chip);
+-}
+-
+-static int __init jz4740_gpio_init(void)
+-{
+-	unsigned int i;
+-
+-	for (i = 0; i < ARRAY_SIZE(jz4740_gpio_chips); ++i)
+-		jz4740_gpio_chip_init(&jz4740_gpio_chips[i], i);
+-
+-	printk(KERN_INFO "JZ4740 GPIO initialized\n");
+-
+-	return 0;
+-}
+-arch_initcall(jz4740_gpio_init);
+-
+-#ifdef CONFIG_DEBUG_FS
+-
+-static inline void gpio_seq_reg(struct seq_file *s, struct jz_gpio_chip *chip,
+-	const char *name, unsigned int reg)
+-{
+-	seq_printf(s, "\t%s: %08x\n", name, readl(chip->base + reg));
+-}
+-
+-static int gpio_regs_show(struct seq_file *s, void *unused)
+-{
+-	struct jz_gpio_chip *chip = jz4740_gpio_chips;
+-	int i;
+-
+-	for (i = 0; i < ARRAY_SIZE(jz4740_gpio_chips); ++i, ++chip) {
+-		seq_printf(s, "==GPIO %d==\n", i);
+-		gpio_seq_reg(s, chip, "Pin", JZ_REG_GPIO_PIN);
+-		gpio_seq_reg(s, chip, "Data", JZ_REG_GPIO_DATA);
+-		gpio_seq_reg(s, chip, "Mask", JZ_REG_GPIO_MASK);
+-		gpio_seq_reg(s, chip, "Pull", JZ_REG_GPIO_PULL);
+-		gpio_seq_reg(s, chip, "Func", JZ_REG_GPIO_FUNC);
+-		gpio_seq_reg(s, chip, "Select", JZ_REG_GPIO_SELECT);
+-		gpio_seq_reg(s, chip, "Direction", JZ_REG_GPIO_DIRECTION);
+-		gpio_seq_reg(s, chip, "Trigger", JZ_REG_GPIO_TRIGGER);
+-		gpio_seq_reg(s, chip, "Flag", JZ_REG_GPIO_FLAG);
+-	}
+-
+-	return 0;
+-}
+-
+-static int gpio_regs_open(struct inode *inode, struct file *file)
+-{
+-	return single_open(file, gpio_regs_show, NULL);
+-}
+-
+-static const struct file_operations gpio_regs_operations = {
+-	.open		= gpio_regs_open,
+-	.read		= seq_read,
+-	.llseek		= seq_lseek,
+-	.release	= single_release,
+-};
+-
+-static int __init gpio_debugfs_init(void)
+-{
+-	(void) debugfs_create_file("jz_regs_gpio", S_IFREG | S_IRUGO,
+-				NULL, NULL, &gpio_regs_operations);
+-	return 0;
+-}
+-subsys_initcall(gpio_debugfs_init);
+-
+-#endif
 -- 
 2.11.0
