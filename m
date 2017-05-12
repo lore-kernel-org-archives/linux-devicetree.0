@@ -1,7 +1,7 @@
 From: Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH v6 09/14] MIPS: JZ4780: CI20: Add pinctrl configuration for several drivers
-Date: Fri, 12 May 2017 18:53:02 +0200
-Message-ID: <20170512165307.31369-9-paul@crapouillou.net>
+Subject: [PATCH v6 07/14] MIPS: jz4780: DTS: Add nodes for ingenic pinctrl and gpio drivers
+Date: Fri, 12 May 2017 18:53:00 +0200
+Message-ID: <20170512165307.31369-7-paul@crapouillou.net>
 References: <20170428200824.10906-2-paul@crapouillou.net>
  <20170512165307.31369-1-paul@crapouillou.net>
 Return-path: <linux-kernel-owner@vger.kernel.org>
@@ -11,120 +11,131 @@ To: Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.co
 Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, Maarten ter Huurne <maarten@treewalker.org>, Paul Cercueil <paul@crapouillou.net>
 List-Id: devicetree@vger.kernel.org
 
-We set the pin configuration for the jz4780-nand and jz4780-uart
-drivers.
+For a description of the devicetree node, please read
+Documentation/devicetree/bindings/pinctrl/ingenic,pinctrl.txt
+
+For a description of the gpio devicetree nodes, please read
+Documentation/devicetree/bindings/gpio/ingenic,gpio.txt
 
 Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 ---
- arch/mips/boot/dts/ingenic/ci20.dts | 60 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 60 insertions(+)
+ arch/mips/boot/dts/ingenic/jz4780.dtsi | 98 ++++++++++++++++++++++++++++++++++
+ 1 file changed, 98 insertions(+)
 
  v2: Changed the devicetree bindings to match the new driver
  v3: No changes
- v4: No changes
- v5: No changes
+ v4: Update the bindings for the v4 version of the drivers
+ v5: Add 'reg' properties and rename pinctrl/gpio nodes
  v6: No changes
 
-diff --git a/arch/mips/boot/dts/ingenic/ci20.dts b/arch/mips/boot/dts/ingenic/ci20.dts
-index 1652d8d60b1e..fd138d9978c1 100644
---- a/arch/mips/boot/dts/ingenic/ci20.dts
-+++ b/arch/mips/boot/dts/ingenic/ci20.dts
-@@ -29,18 +29,30 @@
+diff --git a/arch/mips/boot/dts/ingenic/jz4780.dtsi b/arch/mips/boot/dts/ingenic/jz4780.dtsi
+index b868b429add2..4853ef67b3ab 100644
+--- a/arch/mips/boot/dts/ingenic/jz4780.dtsi
++++ b/arch/mips/boot/dts/ingenic/jz4780.dtsi
+@@ -44,6 +44,104 @@
+ 		#clock-cells = <1>;
+ 	};
  
- &uart0 {
- 	status = "okay";
++	pinctrl: pin-controller@10010000 {
++		compatible = "ingenic,jz4780-pinctrl";
++		reg = <0x10010000 0x600>;
 +
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pins_uart0>;
- };
- 
- &uart1 {
- 	status = "okay";
++		#address-cells = <1>;
++		#size-cells = <0>;
 +
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pins_uart1>;
- };
- 
- &uart3 {
- 	status = "okay";
++		gpa: gpio@0 {
++			compatible = "ingenic,jz4780-gpio";
++			reg = <0>;
 +
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pins_uart2>;
- };
- 
- &uart4 {
- 	status = "okay";
++			gpio-controller;
++			gpio-ranges = <&pinctrl 0 0 32>;
++			#gpio-cells = <2>;
 +
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pins_uart4>;
- };
- 
- &nemc {
-@@ -61,6 +73,13 @@
- 		ingenic,nemc-tAW = <15>;
- 		ingenic,nemc-tSTRV = <100>;
- 
-+		/*
-+		 * Only CLE/ALE are needed for the devices that are connected, rather
-+		 * than the full address line set.
-+		 */
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pins_nemc>;
++			interrupt-controller;
++			#interrupt-cells = <2>;
 +
- 		nand@1 {
- 			reg = <1>;
- 
-@@ -69,6 +88,9 @@
- 			nand-ecc-mode = "hw";
- 			nand-on-flash-bbt;
- 
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&pins_nemc_cs1>;
++			interrupt-parent = <&intc>;
++			interrupts = <17>;
++		};
 +
- 			partitions {
- 				compatible = "fixed-partitions";
- 				#address-cells = <2>;
-@@ -106,3 +128,41 @@
- &bch {
- 	status = "okay";
- };
++		gpb: gpio@1 {
++			compatible = "ingenic,jz4780-gpio";
++			reg = <1>;
 +
-+&pinctrl {
-+	pins_uart0: uart0 {
-+		function = "uart0";
-+		groups = "uart0-data";
-+		bias-disable;
++			gpio-controller;
++			gpio-ranges = <&pinctrl 0 32 32>;
++			#gpio-cells = <2>;
++
++			interrupt-controller;
++			#interrupt-cells = <2>;
++
++			interrupt-parent = <&intc>;
++			interrupts = <16>;
++		};
++
++		gpc: gpio@2 {
++			compatible = "ingenic,jz4780-gpio";
++			reg = <2>;
++
++			gpio-controller;
++			gpio-ranges = <&pinctrl 0 64 32>;
++			#gpio-cells = <2>;
++
++			interrupt-controller;
++			#interrupt-cells = <2>;
++
++			interrupt-parent = <&intc>;
++			interrupts = <15>;
++		};
++
++		gpd: gpio@3 {
++			compatible = "ingenic,jz4780-gpio";
++			reg = <3>;
++
++			gpio-controller;
++			gpio-ranges = <&pinctrl 0 96 32>;
++			#gpio-cells = <2>;
++
++			interrupt-controller;
++			#interrupt-cells = <2>;
++
++			interrupt-parent = <&intc>;
++			interrupts = <14>;
++		};
++
++		gpe: gpio@4 {
++			compatible = "ingenic,jz4780-gpio";
++			reg = <4>;
++
++			gpio-controller;
++			gpio-ranges = <&pinctrl 0 128 32>;
++			#gpio-cells = <2>;
++
++			interrupt-controller;
++			#interrupt-cells = <2>;
++
++			interrupt-parent = <&intc>;
++			interrupts = <13>;
++		};
++
++		gpf: gpio@5 {
++			compatible = "ingenic,jz4780-gpio";
++			reg = <5>;
++
++			gpio-controller;
++			gpio-ranges = <&pinctrl 0 160 32>;
++			#gpio-cells = <2>;
++
++			interrupt-controller;
++			#interrupt-cells = <2>;
++
++			interrupt-parent = <&intc>;
++			interrupts = <12>;
++		};
 +	};
 +
-+	pins_uart1: uart1 {
-+		function = "uart1";
-+		groups = "uart1-data";
-+		bias-disable;
-+	};
-+
-+	pins_uart2: uart2 {
-+		function = "uart2";
-+		groups = "uart2-data", "uart2-hwflow";
-+		bias-disable;
-+	};
-+
-+	pins_uart4: uart4 {
-+		function = "uart4";
-+		groups = "uart4-data";
-+		bias-disable;
-+	};
-+
-+	pins_nemc: nemc {
-+		function = "nemc";
-+		groups = "nemc-data", "nemc-cle-ale", "nemc-rd-we", "nemc-frd-fwe";
-+		bias-disable;
-+	};
-+
-+	pins_nemc_cs1: nemc-cs1 {
-+		function = "nemc-cs1";
-+		groups = "nemc-cs1";
-+		bias-disable;
-+	};
-+};
+ 	uart0: serial@10030000 {
+ 		compatible = "ingenic,jz4780-uart";
+ 		reg = <0x10030000 0x100>;
 -- 
 2.11.0
