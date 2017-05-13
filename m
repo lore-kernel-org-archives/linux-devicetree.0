@@ -1,117 +1,58 @@
-From: =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
-Subject: [PATCH v2 11/18] arm64: dts: meson-gxbb-odroidc2: Fix node order
-Date: Sat, 13 May 2017 16:33:30 +0200
-Message-ID: <20170513143337.14278-12-afaerber@suse.de>
+From: =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
+Subject: [PATCH v2 12/18] arm64: dts: meson-gxbb-vega-s95: Fix node order
+Date: Sat, 13 May 2017 16:33:31 +0200
+Message-ID: <20170513143337.14278-13-afaerber@suse.de>
 References: <20170513143337.14278-1-afaerber@suse.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170513143337.14278-1-afaerber@suse.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-amlogic@lists.infradead.org
-Cc: Carlo Caione <carlo@caione.org>, Kevin Hilman <khilman@baylibre.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, devicetree@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170513143337.14278-1-afaerber-l3A5Bk7waGM@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 Sort nodes referenced by label alphabetically.
 
-Signed-off-by: Andreas Färber <afaerber@suse.de>
+Signed-off-by: Andreas Färber <afaerber-l3A5Bk7waGM@public.gmane.org>
 ---
  v1 -> v2:
  * Rebased (new nodes added)
  
- .../arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts | 108 ++++++++++-----------
- 1 file changed, 54 insertions(+), 54 deletions(-)
+ .../boot/dts/amlogic/meson-gxbb-vega-s95.dtsi      | 54 +++++++++++-----------
+ 1 file changed, 27 insertions(+), 27 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
-index 54a9c6a6b392..d147c853ab05 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
-@@ -137,16 +137,6 @@
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi
+index f4bfee8e2e08..346753fb6324 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi
+@@ -111,18 +111,6 @@
  	};
  };
  
--&scpi_clocks {
--	status = "disabled";
--};
--
 -&uart_AO {
 -	status = "okay";
 -	pinctrl-0 = <&uart_ao_a_pins>;
 -	pinctrl-names = "default";
 -};
 -
- &ethmac {
- 	status = "okay";
- 	pinctrl-0 = <&eth_rgmii_pins>;
-@@ -172,6 +162,33 @@
- 	};
- };
- 
-+&gpio_ao {
-+	/*
-+	 * WARNING: The USB Hub on the Odroid-C2 needs a reset signal
-+	 * to be turned high in order to be detected by the USB Controller
-+	 * This signal should be handled by a USB specific power sequence
-+	 * in order to reset the Hub when USB bus is powered down.
-+	 */
-+	usb-hub {
-+		gpio-hog;
-+		gpios = <GPIOAO_4 GPIO_ACTIVE_HIGH>;
-+		output-high;
-+		line-name = "usb-hub-reset";
-+	};
-+};
-+
-+&i2c_A {
-+	status = "okay";
-+	pinctrl-0 = <&i2c_a_pins>;
-+	pinctrl-names = "default";
-+};
-+
-+&ir {
-+	status = "okay";
-+	pinctrl-0 = <&remote_input_ao_pins>;
-+	pinctrl-names = "default";
-+};
-+
- &pinctrl_aobus {
- 	gpio-line-names = "UART TX", "UART RX", "VCCK En", "TF 3V3/1V8 En",
- 			  "USB HUB nRESET", "USB OTG Power En",
-@@ -223,55 +240,15 @@
- 			  "";
- };
- 
 -&ir {
 -	status = "okay";
 -	pinctrl-0 = <&remote_input_ao_pins>;
 -	pinctrl-names = "default";
 -};
 -
--&i2c_A {
--	status = "okay";
--	pinctrl-0 = <&i2c_a_pins>;
--	pinctrl-names = "default";
--};
--
--&gpio_ao {
--	/*
--	 * WARNING: The USB Hub on the Odroid-C2 needs a reset signal
--	 * to be turned high in order to be detected by the USB Controller
--	 * This signal should be handled by a USB specific power sequence
--	 * in order to reset the Hub when USB bus is powered down.
--	 */
--	usb-hub {
--		gpio-hog;
--		gpios = <GPIOAO_4 GPIO_ACTIVE_HIGH>;
--		output-high;
--		line-name = "usb-hub-reset";
--	};
--};
--
+ &ethmac {
+ 	status = "okay";
+ 	pinctrl-0 = <&eth_rgmii_pins>;
+@@ -149,21 +137,18 @@
+ 	};
+ };
+ 
 -&usb0_phy {
 -	status = "okay";
--	phy-supply = <&usb_otg_pwr>;
+-	phy-supply = <&usb_vbus>;
 -};
 -
 -&usb1_phy {
@@ -119,39 +60,39 @@ index 54a9c6a6b392..d147c853ab05 100644
 -};
 -
 -&usb0 {
--	status = "okay";
--};
--
--&usb1 {
--	status = "okay";
--};
--
- &saradc {
++&ir {
  	status = "okay";
- 	vref-supply = <&vcc1v8>;
++	pinctrl-0 = <&remote_input_ao_pins>;
++	pinctrl-names = "default";
  };
  
-+&scpi_clocks {
-+	status = "disabled";
-+};
-+
- /* SD */
- &sd_emmc_b {
+-&usb1 {
++&pwm_ef {
  	status = "okay";
-@@ -309,3 +286,26 @@
- 	vmmc-supply = <&vcc3v3>;
- 	vqmmc-supply = <&vcc1v8>;
- };
-+
-+&uart_AO {
-+	status = "okay";
-+	pinctrl-0 = <&uart_ao_a_pins>;
++	pinctrl-0 = <&pwm_e_pins>;
 +	pinctrl-names = "default";
++	clocks = <&clkc CLKID_FCLK_DIV4>;
++	clock-names = "clkin0";
+ };
+ 
+ /* Wireless SDIO Module */
+@@ -229,10 +214,25 @@
+ 	vmmcq-sumpply = <&vcc_1v8>;
+ };
+ 
+-&pwm_ef {
++&uart_AO {
+ 	status = "okay";
+-	pinctrl-0 = <&pwm_e_pins>;
++	pinctrl-0 = <&uart_ao_a_pins>;
+ 	pinctrl-names = "default";
+-	clocks = <&clkc CLKID_FCLK_DIV4>;
+-	clock-names = "clkin0";
 +};
 +
 +&usb0_phy {
 +	status = "okay";
-+	phy-supply = <&usb_otg_pwr>;
++	phy-supply = <&usb_vbus>;
 +};
 +
 +&usb1_phy {
@@ -164,6 +105,11 @@ index 54a9c6a6b392..d147c853ab05 100644
 +
 +&usb1 {
 +	status = "okay";
-+};
+ };
 -- 
 2.12.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
