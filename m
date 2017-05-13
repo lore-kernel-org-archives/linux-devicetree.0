@@ -1,320 +1,69 @@
-From: Olof Johansson <olof@lixom.net>
-Subject: [PATCH] devicetree: Move include prefixes from arch to separate directory
-Date: Fri, 12 May 2017 20:34:31 -0700
-Message-ID: <1494646471-24624-1-git-send-email-olof@lixom.net>
-Return-path: <linux-arch-owner@vger.kernel.org>
-Sender: linux-arch-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Olof Johansson <olof@lixom.net>, Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Mikael Starvik <starvik@axis.com>, Jesper Nilsson <jesper.nilsson@axis.com>, James Hogan <james.hogan@imgtec.com>, Ralf Baechle <ralf@linux-mips.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Michael Ellerman <mpe@ellerman.id.au>, Frank Rowand <frowand.list@gmail.com>, linux-arch <linux-arch@vger.kernel.org>
+From: Dong Aisheng <aisheng.dong-3arQi8VN3Tc@public.gmane.org>
+Subject: [PATCH 1/2] dt-bindings: timer: add nxp tpm timer binding doc
+Date: Sat, 13 May 2017 15:29:34 +0800
+Message-ID: <1494660575-30465-1-git-send-email-aisheng.dong@nxp.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, ping.bai-3arQi8VN3Tc@public.gmane.org, anson.huang-3arQi8VN3Tc@public.gmane.org, dongas86-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Dong Aisheng <aisheng.dong-3arQi8VN3Tc@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-We use a directory under arch/$ARCH/boot/dts as an include path
-that has links outside of the subtree to find dt-bindings from under
-include/dt-bindings. That's been working well, but new DT architectures
-haven't been adding them by default.
+Adding NXP Low Power Timer/Pulse Width Modulation Module (TPM)
+binding doc.
 
-Recently there's been a desire to share some of the DT material between
-arm and arm64, which originally caused developers to create symlinks or
-relative includes between the subtrees. This isn't ideal -- it breaks
-if the DT files aren't stored in the exact same hierarchy as the kernel
-tree, and generally it's just icky.
-
-As a somewhat cleaner solution we decided to add a $ARCH/ prefix link
-once, and allow DTS files to reference dtsi (and dts) files in other
-architectures that way.
-
-Original approach was to create these links under each architecture,
-but it lead to the problem of recursive symlinks.
-
-As a remedy, move the include link directories out of the architecture
-trees into a common location. At the same time, they can now share one
-directory and one dt-bindings/ link as well.
-
-Fixes: 4027494ae6e3 ('ARM: dts: add arm/arm64 include symlinks')
-Reported-by: Russell King <linux@armlinux.org.uk>
-Reported-by: Omar Sandoval <osandov@osandov.com>
-Cc: Heiko Stuebner <heiko@sntech.de>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Russell King <linux@armlinux.org.uk>
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Will Deacon <will.deacon@arm.com>
-Cc: Mikael Starvik <starvik@axis.com>
-Cc: Jesper Nilsson <jesper.nilsson@axis.com>
-Cc: James Hogan <james.hogan@imgtec.com>
-Cc: Ralf Baechle <ralf@linux-mips.org>
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: Paul Mackerras <paulus@samba.org>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Cc: Frank Rowand <frowand.list@gmail.com>
-Cc: linux-arch <linux-arch@vger.kernel.org>
-Signed-off-by: Olof Johansson <olof@lixom.net>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Bai Ping <ping.bai-3arQi8VN3Tc@public.gmane.org>
+Signed-off-by: Dong Aisheng <aisheng.dong-3arQi8VN3Tc@public.gmane.org>
 ---
- arch/arm/boot/dts/include/arm             | 1 -
- arch/arm/boot/dts/include/arm64           | 1 -
- arch/arm/boot/dts/include/dt-bindings     | 1 -
- arch/arm64/boot/dts/include/arm           | 1 -
- arch/arm64/boot/dts/include/arm64         | 1 -
- arch/arm64/boot/dts/include/dt-bindings   | 1 -
- arch/cris/boot/dts/include/dt-bindings    | 1 -
- arch/metag/boot/dts/include/dt-bindings   | 1 -
- arch/mips/boot/dts/include/dt-bindings    | 1 -
- arch/powerpc/boot/dts/include/dt-bindings | 1 -
- scripts/Makefile.lib                      | 2 +-
- scripts/dtc/include-prefixes/arc          | 1 +
- scripts/dtc/include-prefixes/arm          | 1 +
- scripts/dtc/include-prefixes/arm64        | 1 +
- scripts/dtc/include-prefixes/c6x          | 1 +
- scripts/dtc/include-prefixes/cris         | 1 +
- scripts/dtc/include-prefixes/dt-bindings  | 1 +
- scripts/dtc/include-prefixes/h8300        | 1 +
- scripts/dtc/include-prefixes/metag        | 1 +
- scripts/dtc/include-prefixes/microblaze   | 1 +
- scripts/dtc/include-prefixes/mips         | 1 +
- scripts/dtc/include-prefixes/nios2        | 1 +
- scripts/dtc/include-prefixes/openrisc     | 1 +
- scripts/dtc/include-prefixes/powerpc      | 1 +
- scripts/dtc/include-prefixes/sh           | 1 +
- scripts/dtc/include-prefixes/xtensa       | 1 +
- 26 files changed, 16 insertions(+), 11 deletions(-)
- delete mode 120000 arch/arm/boot/dts/include/arm
- delete mode 120000 arch/arm/boot/dts/include/arm64
- delete mode 120000 arch/arm/boot/dts/include/dt-bindings
- delete mode 120000 arch/arm64/boot/dts/include/arm
- delete mode 120000 arch/arm64/boot/dts/include/arm64
- delete mode 120000 arch/arm64/boot/dts/include/dt-bindings
- delete mode 120000 arch/cris/boot/dts/include/dt-bindings
- delete mode 120000 arch/metag/boot/dts/include/dt-bindings
- delete mode 120000 arch/mips/boot/dts/include/dt-bindings
- delete mode 120000 arch/powerpc/boot/dts/include/dt-bindings
- create mode 120000 scripts/dtc/include-prefixes/arc
- create mode 120000 scripts/dtc/include-prefixes/arm
- create mode 120000 scripts/dtc/include-prefixes/arm64
- create mode 120000 scripts/dtc/include-prefixes/c6x
- create mode 120000 scripts/dtc/include-prefixes/cris
- create mode 120000 scripts/dtc/include-prefixes/dt-bindings
- create mode 120000 scripts/dtc/include-prefixes/h8300
- create mode 120000 scripts/dtc/include-prefixes/metag
- create mode 120000 scripts/dtc/include-prefixes/microblaze
- create mode 120000 scripts/dtc/include-prefixes/mips
- create mode 120000 scripts/dtc/include-prefixes/nios2
- create mode 120000 scripts/dtc/include-prefixes/openrisc
- create mode 120000 scripts/dtc/include-prefixes/powerpc
- create mode 120000 scripts/dtc/include-prefixes/sh
- create mode 120000 scripts/dtc/include-prefixes/xtensa
+ .../devicetree/bindings/timer/nxp,tpm-timer.txt    | 28 ++++++++++++++++++++++
+ 1 file changed, 28 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/timer/nxp,tpm-timer.txt
 
-diff --git a/arch/arm/boot/dts/include/arm b/arch/arm/boot/dts/include/arm
-deleted file mode 120000
-index a96aa0e..0000000
---- a/arch/arm/boot/dts/include/arm
-+++ /dev/null
-@@ -1 +0,0 @@
--..
-\ No newline at end of file
-diff --git a/arch/arm/boot/dts/include/arm64 b/arch/arm/boot/dts/include/arm64
-deleted file mode 120000
-index 074a835..0000000
---- a/arch/arm/boot/dts/include/arm64
-+++ /dev/null
-@@ -1 +0,0 @@
--../../../../arm64/boot/dts
-\ No newline at end of file
-diff --git a/arch/arm/boot/dts/include/dt-bindings b/arch/arm/boot/dts/include/dt-bindings
-deleted file mode 120000
-index 08c00e4..0000000
---- a/arch/arm/boot/dts/include/dt-bindings
-+++ /dev/null
-@@ -1 +0,0 @@
--../../../../../include/dt-bindings
-\ No newline at end of file
-diff --git a/arch/arm64/boot/dts/include/arm b/arch/arm64/boot/dts/include/arm
-deleted file mode 120000
-index cf63d80..0000000
---- a/arch/arm64/boot/dts/include/arm
-+++ /dev/null
-@@ -1 +0,0 @@
--../../../../arm/boot/dts
-\ No newline at end of file
-diff --git a/arch/arm64/boot/dts/include/arm64 b/arch/arm64/boot/dts/include/arm64
-deleted file mode 120000
-index a96aa0e..0000000
---- a/arch/arm64/boot/dts/include/arm64
-+++ /dev/null
-@@ -1 +0,0 @@
--..
-\ No newline at end of file
-diff --git a/arch/arm64/boot/dts/include/dt-bindings b/arch/arm64/boot/dts/include/dt-bindings
-deleted file mode 120000
-index 08c00e4..0000000
---- a/arch/arm64/boot/dts/include/dt-bindings
-+++ /dev/null
-@@ -1 +0,0 @@
--../../../../../include/dt-bindings
-\ No newline at end of file
-diff --git a/arch/cris/boot/dts/include/dt-bindings b/arch/cris/boot/dts/include/dt-bindings
-deleted file mode 120000
-index 08c00e4..0000000
---- a/arch/cris/boot/dts/include/dt-bindings
-+++ /dev/null
-@@ -1 +0,0 @@
--../../../../../include/dt-bindings
-\ No newline at end of file
-diff --git a/arch/metag/boot/dts/include/dt-bindings b/arch/metag/boot/dts/include/dt-bindings
-deleted file mode 120000
-index 08c00e4..0000000
---- a/arch/metag/boot/dts/include/dt-bindings
-+++ /dev/null
-@@ -1 +0,0 @@
--../../../../../include/dt-bindings
-\ No newline at end of file
-diff --git a/arch/mips/boot/dts/include/dt-bindings b/arch/mips/boot/dts/include/dt-bindings
-deleted file mode 120000
-index 08c00e4..0000000
---- a/arch/mips/boot/dts/include/dt-bindings
-+++ /dev/null
-@@ -1 +0,0 @@
--../../../../../include/dt-bindings
-\ No newline at end of file
-diff --git a/arch/powerpc/boot/dts/include/dt-bindings b/arch/powerpc/boot/dts/include/dt-bindings
-deleted file mode 120000
-index 08c00e4..0000000
---- a/arch/powerpc/boot/dts/include/dt-bindings
-+++ /dev/null
-@@ -1 +0,0 @@
--../../../../../include/dt-bindings
-\ No newline at end of file
-diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
-index c9f975a..2c759b0 100644
---- a/scripts/Makefile.lib
-+++ b/scripts/Makefile.lib
-@@ -175,7 +175,7 @@ ld_flags       = $(LDFLAGS) $(ldflags-y)
- 
- dtc_cpp_flags  = -Wp,-MD,$(depfile).pre.tmp -nostdinc                    \
- 		 -I$(srctree)/arch/$(SRCARCH)/boot/dts                   \
--		 -I$(srctree)/arch/$(SRCARCH)/boot/dts/include           \
-+		 -I$(srctree)/scripts/dtc/include-prefixes               \
- 		 -I$(srctree)/drivers/of/testcase-data                   \
- 		 -undef -D__DTS__
- 
-diff --git a/scripts/dtc/include-prefixes/arc b/scripts/dtc/include-prefixes/arc
-new file mode 120000
-index 0000000..5d21b5a
+diff --git a/Documentation/devicetree/bindings/timer/nxp,tpm-timer.txt b/Documentation/devicetree/bindings/timer/nxp,tpm-timer.txt
+new file mode 100644
+index 0000000..b4aa7dd
 --- /dev/null
-+++ b/scripts/dtc/include-prefixes/arc
-@@ -0,0 +1 @@
-+../../../arch/arc/boot/dts
-\ No newline at end of file
-diff --git a/scripts/dtc/include-prefixes/arm b/scripts/dtc/include-prefixes/arm
-new file mode 120000
-index 0000000..eb14d45
---- /dev/null
-+++ b/scripts/dtc/include-prefixes/arm
-@@ -0,0 +1 @@
-+../../../arch/arm/boot/dts
-\ No newline at end of file
-diff --git a/scripts/dtc/include-prefixes/arm64 b/scripts/dtc/include-prefixes/arm64
-new file mode 120000
-index 0000000..275c42c
---- /dev/null
-+++ b/scripts/dtc/include-prefixes/arm64
-@@ -0,0 +1 @@
-+../../../arch/arm64/boot/dts
-\ No newline at end of file
-diff --git a/scripts/dtc/include-prefixes/c6x b/scripts/dtc/include-prefixes/c6x
-new file mode 120000
-index 0000000..49ded4c
---- /dev/null
-+++ b/scripts/dtc/include-prefixes/c6x
-@@ -0,0 +1 @@
-+../../../arch/c6x/boot/dts
-\ No newline at end of file
-diff --git a/scripts/dtc/include-prefixes/cris b/scripts/dtc/include-prefixes/cris
-new file mode 120000
-index 0000000..736d998
---- /dev/null
-+++ b/scripts/dtc/include-prefixes/cris
-@@ -0,0 +1 @@
-+../../../arch/cris/boot/dts
-\ No newline at end of file
-diff --git a/scripts/dtc/include-prefixes/dt-bindings b/scripts/dtc/include-prefixes/dt-bindings
-new file mode 120000
-index 0000000..04fdbb3
---- /dev/null
-+++ b/scripts/dtc/include-prefixes/dt-bindings
-@@ -0,0 +1 @@
-+../../../include/dt-bindings
-\ No newline at end of file
-diff --git a/scripts/dtc/include-prefixes/h8300 b/scripts/dtc/include-prefixes/h8300
-new file mode 120000
-index 0000000..3bdaa33
---- /dev/null
-+++ b/scripts/dtc/include-prefixes/h8300
-@@ -0,0 +1 @@
-+../../../arch/h8300/boot/dts
-\ No newline at end of file
-diff --git a/scripts/dtc/include-prefixes/metag b/scripts/dtc/include-prefixes/metag
-new file mode 120000
-index 0000000..87a3c84
---- /dev/null
-+++ b/scripts/dtc/include-prefixes/metag
-@@ -0,0 +1 @@
-+../../../arch/metag/boot/dts
-\ No newline at end of file
-diff --git a/scripts/dtc/include-prefixes/microblaze b/scripts/dtc/include-prefixes/microblaze
-new file mode 120000
-index 0000000..d983033
---- /dev/null
-+++ b/scripts/dtc/include-prefixes/microblaze
-@@ -0,0 +1 @@
-+../../../arch/microblaze/boot/dts
-\ No newline at end of file
-diff --git a/scripts/dtc/include-prefixes/mips b/scripts/dtc/include-prefixes/mips
-new file mode 120000
-index 0000000..ae8d494
---- /dev/null
-+++ b/scripts/dtc/include-prefixes/mips
-@@ -0,0 +1 @@
-+../../../arch/mips/boot/dts
-\ No newline at end of file
-diff --git a/scripts/dtc/include-prefixes/nios2 b/scripts/dtc/include-prefixes/nios2
-new file mode 120000
-index 0000000..5177233
---- /dev/null
-+++ b/scripts/dtc/include-prefixes/nios2
-@@ -0,0 +1 @@
-+../../../arch/nios2/boot/dts
-\ No newline at end of file
-diff --git a/scripts/dtc/include-prefixes/openrisc b/scripts/dtc/include-prefixes/openrisc
-new file mode 120000
-index 0000000..71c3bc7
---- /dev/null
-+++ b/scripts/dtc/include-prefixes/openrisc
-@@ -0,0 +1 @@
-+../../../arch/openrisc/boot/dts
-\ No newline at end of file
-diff --git a/scripts/dtc/include-prefixes/powerpc b/scripts/dtc/include-prefixes/powerpc
-new file mode 120000
-index 0000000..7cd6ec1
---- /dev/null
-+++ b/scripts/dtc/include-prefixes/powerpc
-@@ -0,0 +1 @@
-+../../../arch/powerpc/boot/dts
-\ No newline at end of file
-diff --git a/scripts/dtc/include-prefixes/sh b/scripts/dtc/include-prefixes/sh
-new file mode 120000
-index 0000000..67d3780
---- /dev/null
-+++ b/scripts/dtc/include-prefixes/sh
-@@ -0,0 +1 @@
-+../../../arch/sh/boot/dts
-\ No newline at end of file
-diff --git a/scripts/dtc/include-prefixes/xtensa b/scripts/dtc/include-prefixes/xtensa
-new file mode 120000
-index 0000000..d1eaf6e
---- /dev/null
-+++ b/scripts/dtc/include-prefixes/xtensa
-@@ -0,0 +1 @@
-+../../../arch/xtensa/boot/dts
-\ No newline at end of file
++++ b/Documentation/devicetree/bindings/timer/nxp,tpm-timer.txt
+@@ -0,0 +1,28 @@
++NXP Low Power Timer/Pulse Width Modulation Module (TPM)
++
++The Timer/PWM Module (TPM) supports input capture, output compare,
++and the generation of PWM signals to control electric motor and power
++management applications. The counter, compare and capture registers
++are clocked by an asynchronous clock that can remain enabled in low
++power modes. TPM can support global counter bus where one TPM drives
++the counter bus for the others, provided bit width is the same.
++
++Required properties:
++
++- compatible :	should be "fsl,imx7ulp-tpm"
++- reg :		Specifies base physical address and size of the register sets
++		for the clock event device and clock source device.
++- interrupts :	Should be the clock event device interrupt.
++- clocks :	The clocks provided by the SoC to drive the timer, must contain
++		an entry for each entry in clock-names.
++- clock-names : Must include the following entries: "igp" and "per".
++
++Example:
++tpm5: tpm@40260000 {
++	compatible = "fsl,imx7ulp-tpm";
++	reg = <0x40260000 0x1000>;
++	interrupts = <GIC_SPI 22 IRQ_TYPE_LEVEL_HIGH>;
++	clocks = <&clks IMX7ULP_CLK_NIC1_BUS_DIV>,
++		 <&clks IMX7ULP_CLK_LPTPM5>;
++	clock-names = "ipg", "per";
++};
 -- 
-2.1.4
+2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
