@@ -1,92 +1,53 @@
 From: =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
-Subject: [PATCH v2 00/18] ARM64: meson: DT cleanups
-Date: Sat, 13 May 2017 16:33:19 +0200
-Message-ID: <20170513143337.14278-1-afaerber@suse.de>
+Subject: [PATCH v2 02/18] arm64: dts: amlogic: Sort Makefile
+Date: Sat, 13 May 2017 16:33:21 +0200
+Message-ID: <20170513143337.14278-3-afaerber@suse.de>
+References: <20170513143337.14278-1-afaerber@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20170513143337.14278-1-afaerber@suse.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: linux-amlogic@lists.infradead.org
-Cc: Carlo Caione <carlo@caione.org>, Kevin Hilman <khilman@baylibre.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>, devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>, Neil Armstrong <narmstrong@baylibre.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Kevin Hilman <khilman@baylibre.com>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Carlo Caione <carlo@caione.org>, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Kevin,
-
-This series fixes several cosmetic issues, on top of your for-next branch.
-
-Patches 3-6 rename a node, the rest should all be non-functional changes.
-
-PLEASE STOP merging random new nodes at the bottom of DT files!
-Just like it's a convention to sort new nodes by unit address, it has been
-a convention to sort by-label nodes by their label. As discussed here and
-elsewhere, this helps avoid merge conflicts and makes nodes easy to find.
-I don't care whether we order A0 before A or after, but adding new HDMI
-or CVBS nodes at the very bottom is totally out of alphabetical order.
-Since my v1 you really should've known that...
-
-Similarly, Khadas Vim shouldn't have been merged with the "bcrmf" typo.
-
-Which proves my point that we need to fix these issues now so that they
-don't keep spreading (Broken Window Theory). New boards have not been
-checked for sort order, only boards already touched in v1.
-
-Board and Makefile order affect my pending R-Box Pro patches.
-Node order affects Martin's pending Bluetooth patches among others.
-
-Patches 7-9 (had and) have no dependency, please start applying.
-
-Thanks,
-Andreas
-
-v1 -> v2:
-* Rebased (new nodes/properties added)
-* Chose a different name for the misnamed Wifi nodes (Rob)
-* Added patch to fix another new misnamed Wifi node
-* Dropped patch fixing a trailing white line error (resolved)
-* Tweaked subjects
-
-Cc: Kevin Hilman <khilman@baylibre.com>
-Cc: devicetree@vger.kernel.org
-Cc: Rob Herring <robh@kernel.org>
-Cc: Neil Armstrong <narmstrong@baylibre.com>
-Cc: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-
-Andreas Färber (18):
-  dt-bindings: arm: amlogic: Reorder boards
-  arm64: dts: amlogic: Sort Makefile
-  arm64: dts: meson-gxbb-vega-s95: Fix Wifi node name
-  arm64: dts: meson-gxbb-p20x: Fix Wifi node name
-  arm64: dts: meson-gx-p23x-q20x: Fix Wifi node name
-  arm64: dts: meson-gxl-s905x-khadas-vim: Fix Wifi node name
-  arm64: dts: meson-gxm-nexbox-a1: Drop UART comment
-  arm64: dts: meson-gxl-s905x: Comment typo fix
-  arm64: dts: meson-gxbb-wetek-hub: Reference CVBS node by label
-  arm64: dts: meson-gxbb: Fix node order
-  arm64: dts: meson-gxbb-odroidc2: Fix node order
-  arm64: dts: meson-gxbb-vega-s95: Fix node order
-  arm64: dts: meson-gxbb-nexbox-a95x: Fix node order
-  arm64: dts: meson-gxbb-p20x: Fix node order
-  arm64: dts: meson-gxl: Fix node order
-  arm64: dts: meson-gxl-s905x-nexbox-a95x: Fix node order
-  arm64: dts: meson-gxm-nexbox-a1: Fix node order
-  arm64: dts: meson-gx-p23x-q20x: Fix node order
-
- Documentation/devicetree/bindings/arm/amlogic.txt  |  20 ++-
- arch/arm64/boot/dts/amlogic/Makefile               |   6 +-
- .../arm64/boot/dts/amlogic/meson-gx-p23x-q20x.dtsi |  60 ++++----
- .../boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts    |  52 +++----
- .../arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts | 108 ++++++-------
- arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi   |  66 ++++----
- .../boot/dts/amlogic/meson-gxbb-vega-s95.dtsi      |  56 +++----
- .../boot/dts/amlogic/meson-gxbb-wetek-hub.dts      |   6 +-
- arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi        | 171 +++++++++++----------
- .../dts/amlogic/meson-gxl-s905x-khadas-vim.dts     |   2 +-
- .../dts/amlogic/meson-gxl-s905x-nexbox-a95x.dts    |  52 +++----
- arch/arm64/boot/dts/amlogic/meson-gxl-s905x.dtsi   |   2 +-
- arch/arm64/boot/dts/amlogic/meson-gxl.dtsi         |  72 ++++-----
- .../arm64/boot/dts/amlogic/meson-gxm-nexbox-a1.dts |  87 ++++++-----
- 14 files changed, 388 insertions(+), 372 deletions(-)
-
--- 
-2.12.0
+U29ydCB0aGUgLmR0YiBmaWxlcyBhbHBoYWJldGljYWxseSB0byBtYWtlIGNsZWFyIHdoZXJlIHRv
+IGFkZCBuZXcgb25lcy4KClNpZ25lZC1vZmYtYnk6IEFuZHJlYXMgRsOkcmJlciA8YWZhZXJiZXJA
+c3VzZS5kZT4KLS0tCiB2MSAtPiB2MjoKICogUmViYXNlZCAobmV3IGJvYXJkcyBhZGRlZCkKICog
+RXh0ZW5kZWQgY29tbWl0IG1lc3NhZ2UKIAogYXJjaC9hcm02NC9ib290L2R0cy9hbWxvZ2ljL01h
+a2VmaWxlIHwgNiArKystLS0KIDEgZmlsZSBjaGFuZ2VkLCAzIGluc2VydGlvbnMoKyksIDMgZGVs
+ZXRpb25zKC0pCgpkaWZmIC0tZ2l0IGEvYXJjaC9hcm02NC9ib290L2R0cy9hbWxvZ2ljL01ha2Vm
+aWxlIGIvYXJjaC9hcm02NC9ib290L2R0cy9hbWxvZ2ljL01ha2VmaWxlCmluZGV4IGI5YWQyZGI3
+Mzk4Yi4uMTRmYTI3Y2NkNTg5IDEwMDY0NAotLS0gYS9hcmNoL2FybTY0L2Jvb3QvZHRzL2FtbG9n
+aWMvTWFrZWZpbGUKKysrIGIvYXJjaC9hcm02NC9ib290L2R0cy9hbWxvZ2ljL01ha2VmaWxlCkBA
+IC03LDE1ICs3LDE1IEBAIGR0Yi0kKENPTkZJR19BUkNIX01FU09OKSArPSBtZXNvbi1neGJiLXZl
+Z2Etczk1LW1ldGEuZHRiCiBkdGItJChDT05GSUdfQVJDSF9NRVNPTikgKz0gbWVzb24tZ3hiYi12
+ZWdhLXM5NS10ZWxvcy5kdGIKIGR0Yi0kKENPTkZJR19BUkNIX01FU09OKSArPSBtZXNvbi1neGJi
+LXdldGVrLWh1Yi5kdGIKIGR0Yi0kKENPTkZJR19BUkNIX01FU09OKSArPSBtZXNvbi1neGJiLXdl
+dGVrLXBsYXkyLmR0YgorZHRiLSQoQ09ORklHX0FSQ0hfTUVTT04pICs9IG1lc29uLWd4bC1zOTA1
+eC1od2Fjb20tYW1hemV0di5kdGIKIGR0Yi0kKENPTkZJR19BUkNIX01FU09OKSArPSBtZXNvbi1n
+eGwtczkwNXgta2hhZGFzLXZpbS5kdGIKK2R0Yi0kKENPTkZJR19BUkNIX01FU09OKSArPSBtZXNv
+bi1neGwtczkwNXgtbmV4Ym94LWE5NXguZHRiCiBkdGItJChDT05GSUdfQVJDSF9NRVNPTikgKz0g
+bWVzb24tZ3hsLXM5MDV4LXAyMTIuZHRiCiBkdGItJChDT05GSUdfQVJDSF9NRVNPTikgKz0gbWVz
+b24tZ3hsLXM5MDVkLXAyMzAuZHRiCiBkdGItJChDT05GSUdfQVJDSF9NRVNPTikgKz0gbWVzb24t
+Z3hsLXM5MDVkLXAyMzEuZHRiCi1kdGItJChDT05GSUdfQVJDSF9NRVNPTikgKz0gbWVzb24tZ3hs
+LXM5MDV4LWh3YWNvbS1hbWF6ZXR2LmR0YgotZHRiLSQoQ09ORklHX0FSQ0hfTUVTT04pICs9IG1l
+c29uLWd4bC1zOTA1eC1uZXhib3gtYTk1eC5kdGIKK2R0Yi0kKENPTkZJR19BUkNIX01FU09OKSAr
+PSBtZXNvbi1neG0tbmV4Ym94LWExLmR0YgogZHRiLSQoQ09ORklHX0FSQ0hfTUVTT04pICs9IG1l
+c29uLWd4bS1xMjAwLmR0YgogZHRiLSQoQ09ORklHX0FSQ0hfTUVTT04pICs9IG1lc29uLWd4bS1x
+MjAxLmR0YgotZHRiLSQoQ09ORklHX0FSQ0hfTUVTT04pICs9IG1lc29uLWd4bS1uZXhib3gtYTEu
+ZHRiCiAKIGFsd2F5cwkJOj0gJChkdGIteSkKIHN1YmRpci15CTo9ICQoZHRzLWRpcnMpCi0tIAoy
+LjEyLjAKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwps
+aW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJh
+ZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51
+eC1hcm0ta2VybmVsCg==
