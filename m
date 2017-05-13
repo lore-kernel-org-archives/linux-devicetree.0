@@ -1,7 +1,7 @@
 From: =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
-Subject: [PATCH v2 13/18] arm64: dts: meson-gxbb-nexbox-a95x: Fix node order
-Date: Sat, 13 May 2017 16:33:32 +0200
-Message-ID: <20170513143337.14278-14-afaerber@suse.de>
+Subject: [PATCH v2 16/18] arm64: dts: meson-gxl-s905x-nexbox-a95x: Fix node order
+Date: Sat, 13 May 2017 16:33:35 +0200
+Message-ID: <20170513143337.14278-17-afaerber@suse.de>
 References: <20170513143337.14278-1-afaerber@suse.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -20,14 +20,14 @@ Signed-off-by: Andreas Färber <afaerber@suse.de>
  v1 -> v2:
  * Rebased (new nodes added)
  
- .../boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts    | 52 +++++++++++-----------
+ .../dts/amlogic/meson-gxl-s905x-nexbox-a95x.dts    | 52 +++++++++++-----------
  1 file changed, 26 insertions(+), 26 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts
-index 87198eafb04b..a1078b3e1c76 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts
-@@ -165,10 +165,10 @@
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-nexbox-a95x.dts b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-nexbox-a95x.dts
+index 8873c058fad2..6633a5d8fdd3 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-nexbox-a95x.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-nexbox-a95x.dts
+@@ -140,10 +140,10 @@
  	};
  };
  
@@ -42,8 +42,8 @@ index 87198eafb04b..a1078b3e1c76 100644
  };
  
  &ethmac {
-@@ -195,12 +195,32 @@
- 	};
+@@ -152,12 +152,32 @@
+ 	phy-handle = <&internal_phy>;
  };
  
 +&hdmi_tx {
@@ -75,7 +75,7 @@ index 87198eafb04b..a1078b3e1c76 100644
  /* Wireless SDIO Module */
  &sd_emmc_a {
  	status = "okay";
-@@ -260,28 +280,8 @@
+@@ -217,28 +237,8 @@
  	vqmmc-supply = <&vddio_boot>;
  };
  
