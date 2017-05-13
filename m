@@ -1,73 +1,46 @@
-From: =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
-Subject: [PATCH v2 01/18] dt-bindings: arm: amlogic: Reorder boards
-Date: Sat, 13 May 2017 16:33:20 +0200
-Message-ID: <20170513143337.14278-2-afaerber@suse.de>
-References: <20170513143337.14278-1-afaerber@suse.de>
+From: =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
+Subject: [PATCH v2 1/3] dt-bindings: Add Kingnovel vendor prefix
+Date: Sat, 13 May 2017 17:23:10 +0200
+Message-ID: <20170513152312.19912-2-afaerber@suse.de>
+References: <20170513152312.19912-1-afaerber@suse.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170513143337.14278-1-afaerber@suse.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-amlogic@lists.infradead.org
-Cc: Carlo Caione <carlo@caione.org>, Kevin Hilman <khilman@baylibre.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170513152312.19912-1-afaerber-l3A5Bk7waGM@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>, ada-MUr+2Ic57fgS+FvcfC7Uqw@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Enforce groupment by SoCs, and order alphabetically within the group
-(with some exceptions). This should facilitate adding new boards.
+Their domain name is spelled kingnoval, but textually Kingnovel.
 
-Signed-off-by: Andreas Färber <afaerber@suse.de>
+Cc: ada-MUr+2Ic57fgS+FvcfC7Uqw@public.gmane.org
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Signed-off-by: Andreas Färber <afaerber-l3A5Bk7waGM@public.gmane.org>
 ---
  v1 -> v2:
- * Rebased (new boards added)
- * Pointed out alphabetical order in the binding, too (Rob)
+ * Tweaked subject
  
- Documentation/devicetree/bindings/arm/amlogic.txt | 20 +++++++++++++-------
- 1 file changed, 13 insertions(+), 7 deletions(-)
+ Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/arm/amlogic.txt b/Documentation/devicetree/bindings/arm/amlogic.txt
-index bfd5b558477d..cad5b5a48d92 100644
---- a/Documentation/devicetree/bindings/arm/amlogic.txt
-+++ b/Documentation/devicetree/bindings/arm/amlogic.txt
-@@ -29,26 +29,32 @@ Boards with the Amlogic Meson GXM S912 SoC shall have the following properties:
-   Required root node property:
-     compatible: "amlogic,s912", "amlogic,meson-gxm";
- 
--Board compatible values:
-+Board compatible values (alphabetically, grouped by SoC):
-+
-   - "geniatech,atv1200" (Meson6)
-+
-   - "minix,neo-x8" (Meson8)
--  - "tronfy,mxq" (Meson8b)
-+
-   - "hardkernel,odroid-c1" (Meson8b)
-+  - "tronfy,mxq" (Meson8b)
-+
-+  - "amlogic,p200" (Meson gxbb)
-+  - "amlogic,p201" (Meson gxbb)
-+  - "hardkernel,odroid-c2" (Meson gxbb)
-+  - "nexbox,a95x" (Meson gxbb or Meson gxl s905x)
-   - "tronsmart,vega-s95-pro", "tronsmart,vega-s95" (Meson gxbb)
-   - "tronsmart,vega-s95-meta", "tronsmart,vega-s95" (Meson gxbb)
-   - "tronsmart,vega-s95-telos", "tronsmart,vega-s95" (Meson gxbb)
--  - "hardkernel,odroid-c2" (Meson gxbb)
--  - "amlogic,p200" (Meson gxbb)
--  - "amlogic,p201" (Meson gxbb)
-   - "wetek,hub" (Meson gxbb)
-   - "wetek,play2" (Meson gxbb)
-+
-   - "amlogic,p212" (Meson gxl s905x)
-+  - "hwacom,amazetv" (Meson gxl s905x)
-   - "khadas,vim" (Meson gxl s905x)
- 
-   - "amlogic,p230" (Meson gxl s905d)
-   - "amlogic,p231" (Meson gxl s905d)
--  - "hwacom,amazetv" (Meson gxl s905x)
-+
-   - "amlogic,q200" (Meson gxm s912)
-   - "amlogic,q201" (Meson gxm s912)
--  - "nexbox,a95x" (Meson gxbb or Meson gxl s905x)
-   - "nexbox,a1" (Meson gxm s912)
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index 4dcc3a7bcf2d..33342feb6c23 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -162,6 +162,7 @@ keithkoep	Keith & Koep GmbH
+ keymile	Keymile GmbH
+ khadas	Khadas
+ kinetic Kinetic Technologies
++kingnovel	Kingnovel Technology Co., Ltd.
+ kosagi	Sutajio Ko-Usagi PTE Ltd.
+ kyo	Kyocera Corporation
+ lacie	LaCie
 -- 
 2.12.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
