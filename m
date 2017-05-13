@@ -1,88 +1,63 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 4/5] dt-bindings: phy: Modify Broadcom NS USB 3.0 PHY
- binding to use MDIO
-Date: Fri, 12 May 2017 19:19:23 -0500
-Message-ID: <20170513001923.z3paipm7vxwajqgl@rob-hp-laptop>
-References: <20170511132925.14564-1-zajec5@gmail.com>
- <20170511132925.14564-5-zajec5@gmail.com>
+From: Fengguang Wu <lkp-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 1/9] arm: dts: mt7623: add mt7623-mt6323.dtsi file
+Date: Sat, 13 May 2017 08:44:15 +0800
+Message-ID: <20170513004415.5laehgg3mf7lcere@wfg-t540p.sh.intel.com>
+References: <201705121837.eDU3hOId%fengguang.wu@intel.com>
+ <7f1d5fb3-5295-bb61-f21b-9d08bfaf070c@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20170511132925.14564-5-zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <7f1d5fb3-5295-bb61-f21b-9d08bfaf070c-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Yendapally Reddy Dhananjaya Reddy <yendapally.reddy-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, kbuild-all-JC7UmRfGjtg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 11, 2017 at 03:29:24PM +0200, Rafał Miłecki wrote:
-> From: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
-> 
-> Thanks to work done by Broadcom explaining their USB 3.0 PHY details we
-> know it's attached to the MDIO bus. Use this knowledge to update the
-> binding: make it a subnode to the MDIO bus and rework way of specifying
-> required registers.
+On Fri, May 12, 2017 at 05:46:06PM +0200, Matthias Brugger wrote:
+>
+>
+>On 12/05/17 12:46, kbuild test robot wrote:
+>> Hi John,
+>>
+>> [auto build test ERROR on robh/for-next]
+>> [also build test ERROR on v4.11 next-20170512]
+>> [if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
+>
+>Mediatek dts patches should be tested against this branch:
+>https://github.com/mbgg/linux-mediatek.git for-next
 
-Please document here that you are breaking compatibility and why you 
-think that is okay.
+OK. I just send a patch for that.
 
-> 
-> Signed-off-by: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
-> ---
->  .../devicetree/bindings/phy/bcm-ns-usb3-phy.txt    | 27 +++++++++++++++-------
->  1 file changed, 19 insertions(+), 8 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/phy/bcm-ns-usb3-phy.txt b/Documentation/devicetree/bindings/phy/bcm-ns-usb3-phy.txt
-> index 09aeba94538d..32f057260351 100644
-> --- a/Documentation/devicetree/bindings/phy/bcm-ns-usb3-phy.txt
-> +++ b/Documentation/devicetree/bindings/phy/bcm-ns-usb3-phy.txt
-> @@ -3,9 +3,10 @@ Driver for Broadcom Northstar USB 3.0 PHY
->  Required properties:
->  
->  - compatible: one of: "brcm,ns-ax-usb3-phy", "brcm,ns-bx-usb3-phy".
-> -- reg: register mappings for DMP (Device Management Plugin) and ChipCommon B
-> -       MMI.
-> -- reg-names: "dmp" and "ccb-mii"
-> +- reg: address of MDIO bus device
-> +- usb3-dmp-syscon: phandle to syscon with DMP (Device Management Plugin)
-> +		   registers
-> +- #phy-cells: must be 0
->  
->  Initialization of USB 3.0 PHY depends on Northstar version. There are currently
->  three known series: Ax, Bx and Cx.
-> @@ -15,9 +16,19 @@ Known B1: BCM4707 rev 6
->  Known C0: BCM47094 rev 0
->  
->  Example:
-> -	usb3-phy {
-> -		compatible = "brcm,ns-ax-usb3-phy";
-> -		reg = <0x18105000 0x1000>, <0x18003000 0x1000>;
-> -		reg-names = "dmp", "ccb-mii";
-> -		#phy-cells = <0>;
-> +	mdio: mdio@0 {
-> +		reg = <0x0>;
-> +		#size-cells = <1>;
-> +		#address-cells = <0>;
-> +
-> +		usb3-phy@10 {
-> +			compatible = "brcm,ns-ax-usb3-phy";
-> +			reg = <0x10>;
-> +			usb3-dmp-syscon = <&usb3_dmp>;
-> +			#phy-cells = <0>;
-> +		};
-> +	};
-> +
-> +	usb3_dmp: syscon@18105000 {
-> +		reg = <0x18105000 0x1000>;
->  	};
-> -- 
-> 2.11.0
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>Thanks for maintaining the kbuild test robot.
+
+You are welcome!
+
+Thanks,
+Fengguang
+
+>>
+>> url:    https://github.com/0day-ci/linux/commits/sean-wang-mediatek-com/arm-dts-extend-mt7623-support/20170512-165138
+>> base:   https://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git for-next
+>> config: arm-at91_dt_defconfig (attached as .config)
+>> compiler: arm-linux-gnueabi-gcc (Debian 6.1.1-9) 6.1.1 20160705
+>> reproduce:
+>>          wget https://raw.githubusercontent.com/01org/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+>>          chmod +x ~/bin/make.cross
+>>          # save the attached .config to linux build tree
+>>          make.cross ARCH=arm
+>>
+>> All errors (new ones prefixed by >>):
+>>
+>>>> Error: arch/arm/boot/dts/mt7623-mt6323.dtsi:33.1-7 Label or path pwrap not found
+>>>> Error: arch/arm/boot/dts/mt7623-mt6323.dtsi:261.1-6 Label or path mmc0 not found
+>>>> Error: arch/arm/boot/dts/mt7623-mt6323.dtsi:266.1-6 Label or path mmc1 not found
+>>     FATAL ERROR: Syntax error parsing input tree
+>>
+>> ---
+>> 0-DAY kernel test infrastructure                Open Source Technology Center
+>> https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
+>>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
