@@ -1,49 +1,38 @@
 From: =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
-Subject: [PATCH v2 0/3] arm64: meson-gxm: R-Box Pro enablement
-Date: Sat, 13 May 2017 17:23:09 +0200
-Message-ID: <20170513152312.19912-1-afaerber@suse.de>
+Subject: [PATCH v2 2/3] dt-bindings: arm: amlogic: Add R-Box Pro
+Date: Sat, 13 May 2017 17:23:11 +0200
+Message-ID: <20170513152312.19912-3-afaerber@suse.de>
+References: <20170513152312.19912-1-afaerber@suse.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170513152312.19912-1-afaerber@suse.de>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-amlogic@lists.infradead.org
-Cc: Carlo Caione <carlo@caione.org>, Kevin Hilman <khilman@baylibre.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>, devicetree@vger.kernel.org, ada@kingnoval.com
+Cc: Carlo Caione <carlo@caione.org>, Kevin Hilman <khilman@baylibre.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>, ada@kingnoval.com, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hello,
-
-This mini-series adds initial support for the Amlogic S912 based
-R-Box Pro TV boxes.
-
-v2 depends on my Meson cleanup series (amlogic.txt, Makefile) and
-squashes the addition of a board compatible string.
-
-@Kingnovel: Your Acked-by would be appreciated.
-
-Regards,
-Andreas
-
-v1 -> v2:
-* Dropped Bluetooth patch, awaiting serdev drivers (Kevin)
-* Rebased onto my cleanup series
-* Added vendor prefix
-* Added board compatible string
-
-Cc: devicetree@vger.kernel.org
 Cc: ada@kingnoval.com
+Acked-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Andreas Färber <afaerber@suse.de>
+---
+ v1 -> v2:
+ * Rebased onto my cleanup series
+ * Tweaked subject
+ 
+ Documentation/devicetree/bindings/arm/amlogic.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-Andreas Färber (3):
-  dt-bindings: Add Kingnovel vendor prefix
-  dt-bindings: arm: amlogic: Add R-Box Pro
-  arm64: dts: meson-gxm: Add R-Box Pro
-
- Documentation/devicetree/bindings/arm/amlogic.txt  |   1 +
- .../devicetree/bindings/vendor-prefixes.txt        |   1 +
- arch/arm64/boot/dts/amlogic/Makefile               |   1 +
- arch/arm64/boot/dts/amlogic/meson-gxm-rbox-pro.dts | 240 +++++++++++++++++++++
- 4 files changed, 243 insertions(+)
- create mode 100644 arch/arm64/boot/dts/amlogic/meson-gxm-rbox-pro.dts
-
+diff --git a/Documentation/devicetree/bindings/arm/amlogic.txt b/Documentation/devicetree/bindings/arm/amlogic.txt
+index cad5b5a48d92..7f05978791c1 100644
+--- a/Documentation/devicetree/bindings/arm/amlogic.txt
++++ b/Documentation/devicetree/bindings/arm/amlogic.txt
+@@ -57,4 +57,5 @@ Board compatible values (alphabetically, grouped by SoC):
+ 
+   - "amlogic,q200" (Meson gxm s912)
+   - "amlogic,q201" (Meson gxm s912)
++  - "kingnovel,r-box-pro" (Meson gxm S912)
+   - "nexbox,a1" (Meson gxm s912)
 -- 
 2.12.0
