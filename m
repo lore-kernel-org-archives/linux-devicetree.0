@@ -1,115 +1,73 @@
-From: =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
-Subject: [PATCH v2 12/18] arm64: dts: meson-gxbb-vega-s95: Fix node order
-Date: Sat, 13 May 2017 16:33:31 +0200
-Message-ID: <20170513143337.14278-13-afaerber@suse.de>
+From: =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
+Subject: [PATCH v2 01/18] dt-bindings: arm: amlogic: Reorder boards
+Date: Sat, 13 May 2017 16:33:20 +0200
+Message-ID: <20170513143337.14278-2-afaerber@suse.de>
 References: <20170513143337.14278-1-afaerber@suse.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170513143337.14278-1-afaerber-l3A5Bk7waGM@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170513143337.14278-1-afaerber@suse.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-amlogic@lists.infradead.org
+Cc: Carlo Caione <carlo@caione.org>, Kevin Hilman <khilman@baylibre.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Sort nodes referenced by label alphabetically.
+Enforce groupment by SoCs, and order alphabetically within the group
+(with some exceptions). This should facilitate adding new boards.
 
-Signed-off-by: Andreas Färber <afaerber-l3A5Bk7waGM@public.gmane.org>
+Signed-off-by: Andreas Färber <afaerber@suse.de>
 ---
  v1 -> v2:
- * Rebased (new nodes added)
+ * Rebased (new boards added)
+ * Pointed out alphabetical order in the binding, too (Rob)
  
- .../boot/dts/amlogic/meson-gxbb-vega-s95.dtsi      | 54 +++++++++++-----------
- 1 file changed, 27 insertions(+), 27 deletions(-)
+ Documentation/devicetree/bindings/arm/amlogic.txt | 20 +++++++++++++-------
+ 1 file changed, 13 insertions(+), 7 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi
-index f4bfee8e2e08..346753fb6324 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi
-@@ -111,18 +111,6 @@
- 	};
- };
+diff --git a/Documentation/devicetree/bindings/arm/amlogic.txt b/Documentation/devicetree/bindings/arm/amlogic.txt
+index bfd5b558477d..cad5b5a48d92 100644
+--- a/Documentation/devicetree/bindings/arm/amlogic.txt
++++ b/Documentation/devicetree/bindings/arm/amlogic.txt
+@@ -29,26 +29,32 @@ Boards with the Amlogic Meson GXM S912 SoC shall have the following properties:
+   Required root node property:
+     compatible: "amlogic,s912", "amlogic,meson-gxm";
  
--&uart_AO {
--	status = "okay";
--	pinctrl-0 = <&uart_ao_a_pins>;
--	pinctrl-names = "default";
--};
--
--&ir {
--	status = "okay";
--	pinctrl-0 = <&remote_input_ao_pins>;
--	pinctrl-names = "default";
--};
--
- &ethmac {
- 	status = "okay";
- 	pinctrl-0 = <&eth_rgmii_pins>;
-@@ -149,21 +137,18 @@
- 	};
- };
- 
--&usb0_phy {
--	status = "okay";
--	phy-supply = <&usb_vbus>;
--};
--
--&usb1_phy {
--	status = "okay";
--};
--
--&usb0 {
-+&ir {
- 	status = "okay";
-+	pinctrl-0 = <&remote_input_ao_pins>;
-+	pinctrl-names = "default";
- };
- 
--&usb1 {
-+&pwm_ef {
- 	status = "okay";
-+	pinctrl-0 = <&pwm_e_pins>;
-+	pinctrl-names = "default";
-+	clocks = <&clkc CLKID_FCLK_DIV4>;
-+	clock-names = "clkin0";
- };
- 
- /* Wireless SDIO Module */
-@@ -229,10 +214,25 @@
- 	vmmcq-sumpply = <&vcc_1v8>;
- };
- 
--&pwm_ef {
-+&uart_AO {
- 	status = "okay";
--	pinctrl-0 = <&pwm_e_pins>;
-+	pinctrl-0 = <&uart_ao_a_pins>;
- 	pinctrl-names = "default";
--	clocks = <&clkc CLKID_FCLK_DIV4>;
--	clock-names = "clkin0";
-+};
+-Board compatible values:
++Board compatible values (alphabetically, grouped by SoC):
 +
-+&usb0_phy {
-+	status = "okay";
-+	phy-supply = <&usb_vbus>;
-+};
+   - "geniatech,atv1200" (Meson6)
 +
-+&usb1_phy {
-+	status = "okay";
-+};
+   - "minix,neo-x8" (Meson8)
+-  - "tronfy,mxq" (Meson8b)
 +
-+&usb0 {
-+	status = "okay";
-+};
+   - "hardkernel,odroid-c1" (Meson8b)
++  - "tronfy,mxq" (Meson8b)
 +
-+&usb1 {
-+	status = "okay";
- };
++  - "amlogic,p200" (Meson gxbb)
++  - "amlogic,p201" (Meson gxbb)
++  - "hardkernel,odroid-c2" (Meson gxbb)
++  - "nexbox,a95x" (Meson gxbb or Meson gxl s905x)
+   - "tronsmart,vega-s95-pro", "tronsmart,vega-s95" (Meson gxbb)
+   - "tronsmart,vega-s95-meta", "tronsmart,vega-s95" (Meson gxbb)
+   - "tronsmart,vega-s95-telos", "tronsmart,vega-s95" (Meson gxbb)
+-  - "hardkernel,odroid-c2" (Meson gxbb)
+-  - "amlogic,p200" (Meson gxbb)
+-  - "amlogic,p201" (Meson gxbb)
+   - "wetek,hub" (Meson gxbb)
+   - "wetek,play2" (Meson gxbb)
++
+   - "amlogic,p212" (Meson gxl s905x)
++  - "hwacom,amazetv" (Meson gxl s905x)
+   - "khadas,vim" (Meson gxl s905x)
+ 
+   - "amlogic,p230" (Meson gxl s905d)
+   - "amlogic,p231" (Meson gxl s905d)
+-  - "hwacom,amazetv" (Meson gxl s905x)
++
+   - "amlogic,q200" (Meson gxm s912)
+   - "amlogic,q201" (Meson gxm s912)
+-  - "nexbox,a95x" (Meson gxbb or Meson gxl s905x)
+   - "nexbox,a1" (Meson gxm s912)
 -- 
 2.12.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
