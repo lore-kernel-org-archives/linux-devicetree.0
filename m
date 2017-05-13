@@ -1,47 +1,133 @@
-From: =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
-Subject: [PATCH v2 05/18] arm64: dts: meson-gx-p23x-q20x: Fix Wifi node name
-Date: Sat, 13 May 2017 16:33:24 +0200
-Message-ID: <20170513143337.14278-6-afaerber@suse.de>
+From: =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
+Subject: [PATCH v2 17/18] arm64: dts: meson-gxm-nexbox-a1: Fix node order
+Date: Sat, 13 May 2017 16:33:36 +0200
+Message-ID: <20170513143337.14278-18-afaerber@suse.de>
 References: <20170513143337.14278-1-afaerber@suse.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170513143337.14278-1-afaerber-l3A5Bk7waGM@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170513143337.14278-1-afaerber@suse.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-amlogic@lists.infradead.org
+Cc: Carlo Caione <carlo@caione.org>, Kevin Hilman <khilman@baylibre.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-bcrmf -> brcmf -> wifi
+Sort nodes referenced by label alphabetically.
 
-Fixes: bb51b5350d2f ("ARM64: dts: Add support for Meson GXM")
-Cc: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Signed-off-by: Andreas Färber <afaerber-l3A5Bk7waGM@public.gmane.org>
+Signed-off-by: Andreas Färber <afaerber@suse.de>
 ---
  v1 -> v2:
- * Renamed node brmcf -> wifi (Rob)
+ * Rebased (new nodes added)
  
- arch/arm64/boot/dts/amlogic/meson-gx-p23x-q20x.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ .../arm64/boot/dts/amlogic/meson-gxm-nexbox-a1.dts | 86 +++++++++++-----------
+ 1 file changed, 43 insertions(+), 43 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gx-p23x-q20x.dtsi b/arch/arm64/boot/dts/amlogic/meson-gx-p23x-q20x.dtsi
-index a84e27622639..25eed18a7439 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gx-p23x-q20x.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gx-p23x-q20x.dtsi
-@@ -154,7 +154,7 @@
- 	vmmc-supply = <&vddao_3v3>;
- 	vqmmc-supply = <&vddio_boot>;
- 
--	brcmf: bcrmf@1 {
-+	brcmf: wifi@1 {
- 		reg = <1>;
- 		compatible = "brcm,bcm4329-fmac";
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxm-nexbox-a1.dts b/arch/arm64/boot/dts/amlogic/meson-gxm-nexbox-a1.dts
+index 920fac10de93..5f626d683088 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxm-nexbox-a1.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-gxm-nexbox-a1.dts
+@@ -113,10 +113,49 @@
  	};
+ };
+ 
+-&uart_AO {
++&cvbs_vdac_port {
++	cvbs_vdac_out: endpoint {
++		remote-endpoint = <&cvbs_connector_in>;
++	};
++};
++
++&ethmac {
+ 	status = "okay";
+-	pinctrl-0 = <&uart_ao_a_pins>;
++
++	pinctrl-0 = <&eth_pins>;
+ 	pinctrl-names = "default";
++
++	/* Select external PHY by default */
++	phy-handle = <&external_phy>;
++
++	amlogic,tx-delay-ns = <2>;
++
++	snps,reset-gpio = <&gpio GPIOZ_14 0>;
++	snps,reset-delays-us = <0 10000 1000000>;
++	snps,reset-active-low;
++
++	/* External PHY is in RGMII */
++	phy-mode = "rgmii";
++};
++
++&external_mdio {
++	external_phy: ethernet-phy@0 {
++		compatible = "ethernet-phy-id001c.c916", "ethernet-phy-ieee802.3-c22";
++		reg = <0>;
++		max-speed = <1000>;
++	};
++};
++
++&hdmi_tx {
++	status = "okay";
++	pinctrl-0 = <&hdmi_hpd_pins>, <&hdmi_i2c_pins>;
++	pinctrl-names = "default";
++};
++
++&hdmi_tx_tmds_port {
++	hdmi_tx_tmds_out: endpoint {
++		remote-endpoint = <&hdmi_connector_in>;
++	};
+ };
+ 
+ &ir {
+@@ -163,47 +202,8 @@
+ 	vqmmc-supply = <&vddio_boot>;
+ };
+ 
+-&ethmac {
+-	status = "okay";
+-
+-	pinctrl-0 = <&eth_pins>;
+-	pinctrl-names = "default";
+-
+-	/* Select external PHY by default */
+-	phy-handle = <&external_phy>;
+-
+-	amlogic,tx-delay-ns = <2>;
+-
+-	snps,reset-gpio = <&gpio GPIOZ_14 0>;
+-	snps,reset-delays-us = <0 10000 1000000>;
+-	snps,reset-active-low;
+-
+-	/* External PHY is in RGMII */
+-	phy-mode = "rgmii";
+-};
+-
+-&external_mdio {
+-	external_phy: ethernet-phy@0 {
+-		compatible = "ethernet-phy-id001c.c916", "ethernet-phy-ieee802.3-c22";
+-		reg = <0>;
+-		max-speed = <1000>;
+-	};
+-};
+-
+-&cvbs_vdac_port {
+-	cvbs_vdac_out: endpoint {
+-		remote-endpoint = <&cvbs_connector_in>;
+-	};
+-};
+-
+-&hdmi_tx {
++&uart_AO {
+ 	status = "okay";
+-	pinctrl-0 = <&hdmi_hpd_pins>, <&hdmi_i2c_pins>;
++	pinctrl-0 = <&uart_ao_a_pins>;
+ 	pinctrl-names = "default";
+ };
+-
+-&hdmi_tx_tmds_port {
+-	hdmi_tx_tmds_out: endpoint {
+-		remote-endpoint = <&hdmi_connector_in>;
+-	};
+-};
 -- 
 2.12.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
