@@ -1,38 +1,63 @@
 From: Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: Re: [PATCH V5 6/7] ARM: uniphier: Use - instead of @ for DT OPP entries
-Date: Sun, 14 May 2017 01:23:52 +0900
-Message-ID: <CAK7LNASgFd1V=gRpEqOsQkRpqVZu25N10mCSjRR=Vbmwbxp6yA@mail.gmail.com>
-References: <cover.1492685450.git.viresh.kumar@linaro.org> <1faba32eeaa493cc5463488af32eaea0dc2f7a94.1492685450.git.viresh.kumar@linaro.org>
+Subject: [PATCH 2/2] arm64: dts: uniphier: fix simple-bus unit address format
+ error
+Date: Sun, 14 May 2017 02:20:50 +0900
+Message-ID: <1494696050-4615-2-git-send-email-yamada.masahiro@socionext.com>
+References: <1494696050-4615-1-git-send-email-yamada.masahiro@socionext.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1faba32eeaa493cc5463488af32eaea0dc2f7a94.1492685450.git.viresh.kumar@linaro.org>
-Sender: linux-pm-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: arm@kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linaro-kernel@lists.linaro.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-pm@vger.kernel.org, Rafael Wysocki <rjw@rjwysocki.net>, Krzysztof Kozlowski <krzk@kernel.org>, Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1494696050-4615-1-git-send-email-yamada.masahiro@socionext.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Masahiro Yamada <yamada.masahiro@socionext.com>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-2017-04-20 19:55 GMT+09:00 Viresh Kumar <viresh.kumar@linaro.org>:
-> Compiling the DT file with W=1, DTC warns like follows:
->
-> Warning (unit_address_vs_reg): Node /opp_table0/opp@1000000000 has a
-> unit name, but no reg property
->
-> Fix this by replacing '@' with '-' as the OPP nodes will never have a
-> "reg" property.
->
-> Reported-by: Krzysztof Kozlowski <krzk@kernel.org>
-> Reported-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> Suggested-by: Mark Rutland <mark.rutland@arm.com>
-> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
-> Acked-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> Acked-by: Rob Herring <robh@kernel.org>
-> ---
+Compiling the UniPhier DT files with W=1, DTC warns like follows:
 
-Applied to linux-uniphier.  Thanks!
+Warning (simple_bus_reg): Node /soc/smpctrl@59800000 simple-bus unit address format error, expected "59801000"
 
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+---
 
+ arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi | 2 +-
+ arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
+diff --git a/arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi b/arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi
+index dc0cd94..20bea49 100644
+--- a/arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi
++++ b/arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi
+@@ -268,7 +268,7 @@
+ 			pinctrl-0 = <&pinctrl_system_bus>;
+ 		};
+ 
+-		smpctrl@59800000 {
++		smpctrl@59801000 {
+ 			compatible = "socionext,uniphier-smpctrl";
+ 			reg = <0x59801000 0x400>;
+ 		};
+diff --git a/arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi b/arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi
+index c7bd006..4b856af 100644
+--- a/arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi
++++ b/arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi
+@@ -337,7 +337,7 @@
+ 			pinctrl-0 = <&pinctrl_system_bus>;
+ 		};
+ 
+-		smpctrl@59800000 {
++		smpctrl@59801000 {
+ 			compatible = "socionext,uniphier-smpctrl";
+ 			reg = <0x59801000 0x400>;
+ 		};
 -- 
-Best Regards
-Masahiro Yamada
+2.7.4
