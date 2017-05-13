@@ -1,40 +1,121 @@
 From: =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
-Subject: [PATCH v2 08/18] arm64: dts: meson-gxl-s905x: Comment typo fix
-Date: Sat, 13 May 2017 16:33:27 +0200
-Message-ID: <20170513143337.14278-9-afaerber@suse.de>
+Subject: [PATCH v2 15/18] arm64: dts: meson-gxl: Fix node order
+Date: Sat, 13 May 2017 16:33:34 +0200
+Message-ID: <20170513143337.14278-16-afaerber@suse.de>
 References: <20170513143337.14278-1-afaerber@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170513143337.14278-1-afaerber@suse.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: linux-amlogic@lists.infradead.org
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Kevin Hilman <khilman@baylibre.com>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Carlo Caione <carlo@caione.org>, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>, linux-arm-kernel@lists.infradead.org
+Cc: Carlo Caione <carlo@caione.org>, Kevin Hilman <khilman@baylibre.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-UmV2aWV3ZWQtYnk6IE5laWwgQXJtc3Ryb25nIDxuYXJtc3Ryb25nQGJheWxpYnJlLmNvbT4KU2ln
-bmVkLW9mZi1ieTogQW5kcmVhcyBGw6RyYmVyIDxhZmFlcmJlckBzdXNlLmRlPgotLS0KIHYxIC0+
-IHYyOiBVbmNoYW5nZWQKIAogYXJjaC9hcm02NC9ib290L2R0cy9hbWxvZ2ljL21lc29uLWd4bC1z
-OTA1eC5kdHNpIHwgMiArLQogMSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCspLCAxIGRlbGV0
-aW9uKC0pCgpkaWZmIC0tZ2l0IGEvYXJjaC9hcm02NC9ib290L2R0cy9hbWxvZ2ljL21lc29uLWd4
-bC1zOTA1eC5kdHNpIGIvYXJjaC9hcm02NC9ib290L2R0cy9hbWxvZ2ljL21lc29uLWd4bC1zOTA1
-eC5kdHNpCmluZGV4IDBmNzhkODM2ZWRhZi4uMzMxNGEwYjNkYWQ5IDEwMDY0NAotLS0gYS9hcmNo
-L2FybTY0L2Jvb3QvZHRzL2FtbG9naWMvbWVzb24tZ3hsLXM5MDV4LmR0c2kKKysrIGIvYXJjaC9h
-cm02NC9ib290L2R0cy9hbWxvZ2ljL21lc29uLWd4bC1zOTA1eC5kdHNpCkBAIC00OCw3ICs0OCw3
-IEBACiAJY29tcGF0aWJsZSA9ICJhbWxvZ2ljLHM5MDV4IiwgImFtbG9naWMsbWVzb24tZ3hsIjsK
-IH07CiAKLS8qIFM5MDVYIE9ubHkgaGFzIGFjY2VzcyB0byBpdHMgaW50ZXJuYWwgUEhZICovCisv
-KiBTOTA1WCBvbmx5IGhhcyBhY2Nlc3MgdG8gaXRzIGludGVybmFsIFBIWSAqLwogJmV0aG1hYyB7
-CiAJcGh5LW1vZGUgPSAicm1paSI7CiAJcGh5LWhhbmRsZSA9IDwmaW50ZXJuYWxfcGh5PjsKLS0g
-CjIuMTIuMAoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-CmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5m
-cmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xp
-bnV4LWFybS1rZXJuZWwK
+Sort nodes referenced by label alphabetically.
+
+Signed-off-by: Andreas Färber <afaerber@suse.de>
+---
+ v1 -> v2:
+ * Rebased (new nodes added)
+ 
+ arch/arm64/boot/dts/amlogic/meson-gxl.dtsi | 72 +++++++++++++++---------------
+ 1 file changed, 36 insertions(+), 36 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
+index d8e096dff10a..3efad5f0bca4 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
+@@ -193,6 +193,42 @@
+ 	};
+ };
+ 
++&hdmi_tx {
++	compatible = "amlogic,meson-gxl-dw-hdmi", "amlogic,meson-gx-dw-hdmi";
++	resets = <&reset RESET_HDMITX_CAPB3>,
++		 <&reset RESET_HDMI_SYSTEM_RESET>,
++		 <&reset RESET_HDMI_TX>;
++	reset-names = "hdmitx_apb", "hdmitx", "hdmitx_phy";
++	clocks = <&clkc CLKID_HDMI_PCLK>,
++		 <&clkc CLKID_CLK81>,
++		 <&clkc CLKID_GCLK_VENCI_INT0>;
++	clock-names = "isfr", "iahb", "venci";
++};
++
++&hiubus {
++	clkc: clock-controller@0 {
++		compatible = "amlogic,gxl-clkc", "amlogic,gxbb-clkc";
++		#clock-cells = <1>;
++		reg = <0x0 0x0 0x0 0x3db>;
++	};
++};
++
++&i2c_A {
++	clocks = <&clkc CLKID_I2C>;
++};
++
++&i2c_AO {
++	clocks = <&clkc CLKID_AO_I2C>;
++};
++
++&i2c_B {
++	clocks = <&clkc CLKID_I2C>;
++};
++
++&i2c_C {
++	clocks = <&clkc CLKID_I2C>;
++};
++
+ &periphs {
+ 	pinctrl_periphs: pinctrl@4b0 {
+ 		compatible = "amlogic,meson-gxl-periphs-pinctrl";
+@@ -501,30 +537,6 @@
+ 	};
+ };
+ 
+-&hiubus {
+-	clkc: clock-controller@0 {
+-		compatible = "amlogic,gxl-clkc", "amlogic,gxbb-clkc";
+-		#clock-cells = <1>;
+-		reg = <0x0 0x0 0x0 0x3db>;
+-	};
+-};
+-
+-&i2c_A {
+-	clocks = <&clkc CLKID_I2C>;
+-};
+-
+-&i2c_AO {
+-	clocks = <&clkc CLKID_AO_I2C>;
+-};
+-
+-&i2c_B {
+-	clocks = <&clkc CLKID_I2C>;
+-};
+-
+-&i2c_C {
+-	clocks = <&clkc CLKID_I2C>;
+-};
+-
+ &saradc {
+ 	compatible = "amlogic,meson-gxl-saradc", "amlogic,meson-saradc";
+ 	clocks = <&xtal>,
+@@ -563,15 +575,3 @@
+ &vpu {
+ 	compatible = "amlogic,meson-gxl-vpu", "amlogic,meson-gx-vpu";
+ };
+-
+-&hdmi_tx {
+-	compatible = "amlogic,meson-gxl-dw-hdmi", "amlogic,meson-gx-dw-hdmi";
+-	resets = <&reset RESET_HDMITX_CAPB3>,
+-		 <&reset RESET_HDMI_SYSTEM_RESET>,
+-		 <&reset RESET_HDMI_TX>;
+-	reset-names = "hdmitx_apb", "hdmitx", "hdmitx_phy";
+-	clocks = <&clkc CLKID_HDMI_PCLK>,
+-		 <&clkc CLKID_CLK81>,
+-		 <&clkc CLKID_GCLK_VENCI_INT0>;
+-	clock-names = "isfr", "iahb", "venci";
+-};
+-- 
+2.12.0
