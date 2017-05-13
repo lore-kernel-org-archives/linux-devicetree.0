@@ -1,49 +1,33 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2] pinctrl: qcom: ipq4019: add most other IPQ4019 pin
- functions and groups
-Date: Fri, 12 May 2017 19:10:37 -0500
-Message-ID: <20170513001037.tpqdrjh3r6aciskx@rob-hp-laptop>
-References: <d53b7a9b1bab818536680123136ac58481d959c8.1494415174.git.chunkeey@googlemail.com>
- <20170510112712.14744-1-chunkeey@googlemail.com>
+Subject: Re: [RESEND PATCH v4 4/5] dt-bindings: usb: DT bindings
+ documentation for Broadcom IPROC USB Device controller.
+Date: Fri, 12 May 2017 19:12:18 -0500
+Message-ID: <20170513001218.l2gftfhxjbkh2mo5@rob-hp-laptop>
+References: <1494422289-1533-1-git-send-email-raviteja.garimella@broadcom.com>
+ <1494422289-1533-5-git-send-email-raviteja.garimella@broadcom.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20170510112712.14744-1-chunkeey-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Christian Lamparter <chunkeey-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Cc: linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Varadarajan Narayanan <varada-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ram Chandra Jangir <rjangir-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, John Crispin <john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org>
+In-Reply-To: <1494422289-1533-5-git-send-email-raviteja.garimella-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Raviteja Garimella <raviteja.garimella-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 10, 2017 at 01:27:11PM +0200, Christian Lamparter wrote:
-> This patch adds the remaining pin functions and mux groups.
-> It also fixes a typo in the existing binding document.
+On Wed, May 10, 2017 at 06:48:08PM +0530, Raviteja Garimella wrote:
+> The device node is used for UDCs integrated into Broadcom's
+> iProc family of SoCs'. The UDC is based on Synopsys Designware
+> Cores AHB Subsystem USB Device Controller IP.
 > 
-> Cc: Varadarajan Narayanan <varada-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> Cc: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Cc: Ram Chandra Jangir <rjangir-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> Cc: John Crispin <john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org>
-> Signed-off-by: Christian Lamparter <chunkeey-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+> Signed-off-by: Raviteja Garimella <raviteja.garimella-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 > ---
-> Note: These definitions were present in the original submission
-> <https://patchwork.kernel.org/patch/7630711/>
-> 
-> The DT patch was acked by Rob Herring back then. However,
-> I'm not sure if this is still valid or not. @Rob, can you
-> please comment?
+>  Documentation/devicetree/bindings/usb/iproc-udc.txt | 21 +++++++++++++++++++++
+>  1 file changed, 21 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/usb/iproc-udc.txt
 
-Am I supposed to ack patch 1/2 or patch 1/2...? The first one has the 
-preferred subject prefix.
-
-> 
-> Thanks.
-> 
-> (Link to Matthew McLintock's v3 that was merged)
-> <https://patchwork.kernel.org/patch/7662241/>
-> ---
->  .../bindings/pinctrl/qcom,ipq4019-pinctrl.txt      | 36 ++++++++++++++++++++--
->  1 file changed, 34 insertions(+), 2 deletions(-)
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
