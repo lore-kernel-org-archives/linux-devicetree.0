@@ -1,33 +1,39 @@
-From: Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [PATCH v2 6/6] ARM: dts: rockchip: rename RK1108-evb to RV1108-evb
-Date: Sun, 14 May 2017 14:54:53 +0200
-Message-ID: <17588038.0Ltp2v6IRL@phil>
-References: <20170317171840.4683-1-heiko@sntech.de> <20170317171840.4683-7-heiko@sntech.de>
+From: Valentin Sitdikov <valentin_sitdikov-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v2 0/2] dt-bindings: mfd: Add max7360 mfd driver and DT documentation
+Date: Sun, 14 May 2017 16:54:58 +0300
+Message-ID: <20170514135500.4947-1-valentin_sitdikov@mentor.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <20170317171840.4683-7-heiko@sntech.de>
-Sender: linux-clk-owner@vger.kernel.org
-To: linux-rockchip@lists.infradead.org
-Cc: linus.walleij@linaro.org, robh+dt@kernel.org, andy.yan@rock-chips.com, sboyd@codeaurora.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, linux-clk@vger.kernel.org, mturquette@baylibre.com
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Valentin Sitdikov <valentin_sitdikov-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Am Freitag, 17. März 2017, 18:18:40 CEST schrieb Heiko Stuebner:
-> From: Andy Yan <andy.yan@rock-chips.com>
-> 
-> Rockchip finally named the SOC as RV1108, so change it
-> for compatible.
-> 
-> The rk1108/rv1108 is completely new to the market, so there no real
-> devices exist in the wild, only the Rockchip internal evaluation
-> board. Therefore we're not breaking any existing devices when
-> changing compatible values.
-> 
-> Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
-> Acked-by: Rob Herring <robh@kernel.org>
-> 
-> [added paragraph about no real devices existing]
-> Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+This series add initial support of mfd core driver for max7360 chip
 
-adapted for Makefile changes in 4.12-rc1 and applied for 4.13
+Andrei Dranitca (1):
+  mfd: max7360: Add mfd core device driver
+
+Valentin Sitdikov (1):
+  dt-bindings: Add DT bindings documentation for the max7360 mfd driver
+
+ Documentation/devicetree/bindings/mfd/max7360.txt |  72 ++++
+ drivers/mfd/Kconfig                               |  16 +
+ drivers/mfd/Makefile                              |   1 +
+ drivers/mfd/max7360.c                             | 397 ++++++++++++++++++++++
+ include/linux/mfd/max7360.h                       | 130 +++++++
+ max7360.txt                                       |  72 ++++
+ 6 files changed, 688 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mfd/max7360.txt
+ create mode 100644 drivers/mfd/max7360.c
+ create mode 100644 include/linux/mfd/max7360.h
+ create mode 100644 max7360.txt
+
+-- 
+2.9.3
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
