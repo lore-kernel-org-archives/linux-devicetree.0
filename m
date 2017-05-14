@@ -1,468 +1,388 @@
 From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 2/3] iio: adc: at91-sama5d2_adc: add hw trigger and
- buffer support
-Date: Sun, 14 May 2017 16:12:49 +0100
-Message-ID: <af420704-0df8-184a-4fa2-c7e509a9b15d@kernel.org>
-References: <1493900000-26220-1-git-send-email-eugen.hristev@microchip.com>
- <1493900000-26220-3-git-send-email-eugen.hristev@microchip.com>
- <aeaf25d7-5e05-d854-1ae9-06d224925cad@kernel.org>
- <7fb32b5f-4705-ab23-d9c8-020b03af9ac1@microchip.com>
- <20170511060937.pzam3drvyaci6rnv@rfolt0960.corp.atmel.com>
+Subject: Re: [PATCH v4 2/2] iio: adc: add driver for the ti-adc084s021 chip
+Date: Sun, 14 May 2017 16:35:02 +0100
+Message-ID: <79792da9-40ea-b366-84cc-93be792abc0e@kernel.org>
+References: <1494345901-4714-1-git-send-email-marten.lindahl@axis.com>
+ <1494345901-4714-3-git-send-email-marten.lindahl@axis.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170511060937.pzam3drvyaci6rnv-fC2aZbRiGnsAAwgTK2POJVCF2YAvjlIb@public.gmane.org>
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1494345901-4714-3-git-send-email-marten.lindahl-VrBV9hrLPhE@public.gmane.org>
 Content-Language: en-GH
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Eugen Hristev <eugen.hristev-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, nicolas.ferre-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?UTF-8?Q?M=c3=a5rten_Lindahl?= <marten.lindahl-VrBV9hrLPhE@public.gmane.org>
+Cc: knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?Q?M=c3=a5rten_Lindahl?= <martenli-VrBV9hrLPhE@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/05/17 07:09, Ludovic Desroches wrote:
-> On Wed, May 10, 2017 at 11:49:07AM +0300, Eugen Hristev wrote:
->> Hello,
->>
->> Thanks for the suggestions and reply.
->>
->> Please see my answers inline
->>
->> Eugen
->>
->> On 07.05.2017 18:01, Jonathan Cameron wrote:
->>> On 04/05/17 13:13, Eugen Hristev wrote:
->>>> Added support for the external hardware trigger on pin ADTRG,
->>>> integrated the three possible edge triggers into the subsystem
->>>> and created buffer management for data retrieval
->>>>
->>>> Signed-off-by: Eugen Hristev <eugen.hristev-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
->>>> ---
->>>>    Changes in v2:
->>>>   - Moved buffer allocation and freeing into the preenable and postdisable
->>>>     callbacks.
->>>>     We have a total of scan bytes that can vary a lot depending on each channel
->>>>     enabled at a certain point.
->>> How much?  Having dynamic allocations are likely to prove just as costly as you'll
->>> almost always end up allocating a lot more than you ask for.
->>>
->>> I'm counting worst case of 18x 2byte channels + timestamp = 48 bytes.
->>> A quick google suggests you'll always allocate 32 bytes whatever with slab
->>> (lower for slob). So not a huge saving...
->>>
->>> Worth the hassle?
->>
->>
->> I will modify the allocation of scan_bytes to make it static.
->>
->>>
->>>>   - made the at91 trigger list part of state structure
->>>>   - made the iio trigger list preallocated in state structure
->>>>   - moved irq enabling/disabling into the try_reenable callback
->>> I'd have liked a little explanation on why we need to explicitly disable
->>> the irq.  It will have little effect it if triggers too often as the
->>> trigger consumers are all oneshot anyway.
->>
->> Regarding the irq, the discussion is a bit longer.
->>
->> As it is now, the interrupt is not a oneshot threaded one, because only
->> the top half handler is installed, and the threaded one is NULL.
->> Calling trigger_poll without disabling the interrupt will make the
->> handler loop, so that is the reason for disabling and reenabling
->> the interrupt.
->>
->> One solution is to change it to oneshot threaded interrupt and call
->> trigger_poll_chained to make it a nested handling. This will make a
->> longer response time for conversions though.
->>
->> One other option is to do irq_save and irq_restore before issuing the
->> trigger poll, but that limits the usability of the trigger by any
->> other device I guess.
->>
->> I did the behavior with disabling and enabling the interrupt considering
->> the old at91 driver and the stm32-adc driver which looks to be fairly
->> similar with this implementation.
->>
->> Can you please advise on which approach you think it's best for this
->> driver ?
->> So I can try that, and resend the patch.
-Leave it as is.  Thanks for the explanation.
->>
->>>>   - on trigger disable must write disable registries as well
->>> Basically looks good. A few questions inline.
->>>
->>> Jonathan
->>>>
->>>>   drivers/iio/adc/at91-sama5d2_adc.c | 231 ++++++++++++++++++++++++++++++++++++-
->>>>   1 file changed, 228 insertions(+), 3 deletions(-)
->>>>
->>>> diff --git a/drivers/iio/adc/at91-sama5d2_adc.c b/drivers/iio/adc/at91-sama5d2_adc.c
->>>> index e10dca3..11f5570 100644
->>>> --- a/drivers/iio/adc/at91-sama5d2_adc.c
->>>> +++ b/drivers/iio/adc/at91-sama5d2_adc.c
->>>> @@ -23,8 +23,15 @@
->>>>   #include <linux/platform_device.h>
->>>>   #include <linux/sched.h>
->>>>   #include <linux/wait.h>
->>>> +#include <linux/slab.h>
->>>> +
->>>>   #include <linux/iio/iio.h>
->>>>   #include <linux/iio/sysfs.h>
->>>> +#include <linux/iio/buffer.h>
->>>> +#include <linux/iio/trigger.h>
->>>> +#include <linux/iio/trigger_consumer.h>
->>>> +#include <linux/iio/triggered_buffer.h>
->>>> +
->>>>   #include <linux/regulator/consumer.h>
->>>>
->>>>   /* Control Register */
->>>> @@ -132,6 +139,17 @@
->>>>   #define AT91_SAMA5D2_PRESSR	0xbc
->>>>   /* Trigger Register */
->>>>   #define AT91_SAMA5D2_TRGR	0xc0
->>>> +/* Mask for TRGMOD field of TRGR register */
->>>> +#define AT91_SAMA5D2_TRGR_TRGMOD_MASK GENMASK(2, 0)
->>>> +/* No trigger, only software trigger can start conversions */
->>>> +#define AT91_SAMA5D2_TRGR_TRGMOD_NO_TRIGGER 0
->>>> +/* Trigger Mode external trigger rising edge */
->>>> +#define AT91_SAMA5D2_TRGR_TRGMOD_EXT_TRIG_RISE 1
->>>> +/* Trigger Mode external trigger falling edge */
->>>> +#define AT91_SAMA5D2_TRGR_TRGMOD_EXT_TRIG_FALL 2
->>>> +/* Trigger Mode external trigger any edge */
->>>> +#define AT91_SAMA5D2_TRGR_TRGMOD_EXT_TRIG_ANY 3
->>>> +
->>>>   /* Correction Select Register */
->>>>   #define AT91_SAMA5D2_COSR	0xd0
->>>>   /* Correction Value Register */
->>>> @@ -145,14 +163,20 @@
->>>>   /* Version Register */
->>>>   #define AT91_SAMA5D2_VERSION	0xfc
->>>>
->>>> +#define AT91_SAMA5D2_HW_TRIG_CNT 3
->>>> +#define AT91_SAMA5D2_SINGLE_CHAN_CNT 12
->>>> +#define AT91_SAMA5D2_DIFF_CHAN_CNT 6
->>>> +
->>>>   #define AT91_SAMA5D2_CHAN_SINGLE(num, addr)				\
->>>>   	{								\
->>>>   		.type = IIO_VOLTAGE,					\
->>>>   		.channel = num,						\
->>>>   		.address = addr,					\
->>>> +		.scan_index = num,					\
->>>>   		.scan_type = {						\
->>>>   			.sign = 'u',					\
->>>>   			.realbits = 12,					\
->>>> +			.storagebits = 16,				\
->>>>   		},							\
->>>>   		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),		\
->>>>   		.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE),	\
->>>> @@ -168,9 +192,11 @@
->>>>   		.channel = num,						\
->>>>   		.channel2 = num2,					\
->>>>   		.address = addr,					\
->>>> +		.scan_index = num + AT91_SAMA5D2_SINGLE_CHAN_CNT,	\
->>>>   		.scan_type = {						\
->>>>   			.sign = 's',					\
->>>>   			.realbits = 12,					\
->>>> +			.storagebits = 16,				\
->>>>   		},							\
->>>>   		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),		\
->>>>   		.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE),	\
->>>> @@ -188,18 +214,25 @@ struct at91_adc_soc_info {
->>>>   	unsigned			max_sample_rate;
->>>>   };
->>>>
->>>> +struct at91_adc_trigger {
->>>> +	char				*name;
->>>> +	unsigned int			trgmod_value;
->>>> +};
->>>> +
->>>>   struct at91_adc_state {
->>>>   	void __iomem			*base;
->>>>   	int				irq;
->>>>   	struct clk			*per_clk;
->>>>   	struct regulator		*reg;
->>>>   	struct regulator		*vref;
->>>> +	u16				*buffer;
->>>>   	int				vref_uv;
->>>>   	const struct iio_chan_spec	*chan;
->>>>   	bool				conversion_done;
->>>>   	u32				conversion_value;
->>>>   	struct at91_adc_soc_info	soc_info;
->>>>   	wait_queue_head_t		wq_data_available;
->>>> +	struct iio_trigger		*trig[AT91_SAMA5D2_HW_TRIG_CNT];
->>>>   	/*
->>>>   	 * lock to prevent concurrent 'single conversion' requests through
->>>>   	 * sysfs.
->>>> @@ -207,6 +240,21 @@ struct at91_adc_state {
->>>>   	struct mutex			lock;
->>>>   };
->>>>
->>>> +static const struct at91_adc_trigger at91_adc_trigger_list[] = {
->>>> +	{
->>>> +		.name = "external-rising",
->>>> +		.trgmod_value = AT91_SAMA5D2_TRGR_TRGMOD_EXT_TRIG_RISE,
->>>> +	},
->>>> +	{
->>>> +		.name = "external-falling",
->>>> +		.trgmod_value = AT91_SAMA5D2_TRGR_TRGMOD_EXT_TRIG_FALL,
->>>> +	},
->>>> +	{
->>>> +		.name = "external-any",
->>>> +		.trgmod_value = AT91_SAMA5D2_TRGR_TRGMOD_EXT_TRIG_ANY,
->>>> +	},
->>> Hmm. Should this be a userspace configurable option?  Feels rather like
->>> it is an element of the hardware - reflecting the characteristics of some
->>> hardware device sat on the pin.
->> The user can choose from sysfs which trigger
->> is best suited for the use case, since all
->> three triggers are provided and can be connected to the buffer.
->> It reflects more the triggering capability of the ADC rather than
->> any different hardware device sitting on the pin
+On 09/05/17 17:05, Mårten Lindahl wrote:
+> From: Mårten Lindahl <martenli-VrBV9hrLPhE@public.gmane.org>
 > 
-> I am also in favour of a userspace configurable option. For sure it's
-> hardware related but on our board we only provide a trigger pin, we
-> don't know which hardware the customer will put on this pin.
-hmm. OK I'm persuaded I think.
+> This adds support for the Texas Instruments ADC084S021 ADC chip.
+> 
+> Signed-off-by: Mårten Lindahl <martenli-VrBV9hrLPhE@public.gmane.org>
+Nice driver.
 
-Could do this with devicetree overlays or similar.
+Applied to the togreg branch of iio.git and pushed out as
+testing for the autobuilders to play with it.
 
-So follow up question is whether this is the right interface.
-Can all 3 run at once sensibly?  If not are we not looking at a control
-parameter for a single trigger?
-> 
-> Regards
-> 
-> Ludovic
-> 
->>
->>>> +};
->>>> +
->>>>   static const struct iio_chan_spec at91_adc_channels[] = {
->>>>   	AT91_SAMA5D2_CHAN_SINGLE(0, 0x50),
->>>>   	AT91_SAMA5D2_CHAN_SINGLE(1, 0x54),
->>>> @@ -226,8 +274,168 @@ static const struct iio_chan_spec at91_adc_channels[] = {
->>>>   	AT91_SAMA5D2_CHAN_DIFF(6, 7, 0x68),
->>>>   	AT91_SAMA5D2_CHAN_DIFF(8, 9, 0x70),
->>>>   	AT91_SAMA5D2_CHAN_DIFF(10, 11, 0x78),
->>>> +	IIO_CHAN_SOFT_TIMESTAMP(AT91_SAMA5D2_SINGLE_CHAN_CNT
->>>> +				+ AT91_SAMA5D2_DIFF_CHAN_CNT + 1),
->>>>   };
->>>>
->>>> +static int at91_adc_configure_trigger(struct iio_trigger *trig, bool state)
->>>> +{
->>>> +	struct iio_dev *indio = iio_trigger_get_drvdata(trig);
->>>> +	struct at91_adc_state *st = iio_priv(indio);
->>>> +	u32 status = at91_adc_readl(st, AT91_SAMA5D2_TRGR);
->>>> +	u8 bit;
->>>> +	int i;
->>>> +
->>>> +	/* clear TRGMOD */
->>>> +	status &= ~AT91_SAMA5D2_TRGR_TRGMOD_MASK;
->>>> +
->>>> +	if (state)
->>>> +		for (i = 0; i < AT91_SAMA5D2_HW_TRIG_CNT; i++) {
->>>> +			if (!strstr(trig->name,
->>>> +				    at91_adc_trigger_list[i].name)) {
->>>> +				status |= at91_adc_trigger_list[i].trgmod_value;
->>>> +				break;
->>>> +			}
->>>> +		}
->>>> +
->>>> +	/* set/unset hw trigger */
->>>> +	at91_adc_writel(st, AT91_SAMA5D2_TRGR, status);
->>>> +
->>>> +	for_each_set_bit(bit, indio->active_scan_mask, indio->num_channels) {
->>>> +		struct iio_chan_spec const *chan = indio->channels + bit;
->>>> +
->>>> +		if (state) {
->>>> +			at91_adc_writel(st, AT91_SAMA5D2_CHER,
->>>> +					BIT(chan->channel));
->>>> +			at91_adc_writel(st, AT91_SAMA5D2_IER,
->>>> +					BIT(chan->channel));
->>>> +		} else {
->>>> +			at91_adc_writel(st, AT91_SAMA5D2_IDR,
->>>> +					BIT(chan->channel));
->>>> +			at91_adc_writel(st, AT91_SAMA5D2_CHDR,
->>>> +					BIT(chan->channel));
->>>> +		}
->>>> +	}
->>>> +
->>>> +	return 0;
->>>> +}
->>>> +
->>>> +static int at91_adc_reenable_trigger(struct iio_trigger *trig)
->>>> +{
->>>> +	struct iio_dev *indio = iio_trigger_get_drvdata(trig);
->>>> +	struct at91_adc_state *st = iio_priv(indio);
->>>> +
->>>> +	enable_irq(st->irq);
->>>> +	return 0;
->>>> +}
->>>> +
->>>> +static const struct iio_trigger_ops at91_adc_trigger_ops = {
->>>> +	.owner = THIS_MODULE,
->>>> +	.set_trigger_state = &at91_adc_configure_trigger,
->>>> +	.try_reenable = &at91_adc_reenable_trigger,
->>>> +};
->>>> +
->>>> +static int at91_adc_buffer_preenable(struct iio_dev *indio_dev)
->>>> +{
->>>> +	struct at91_adc_state *st = iio_priv(indio_dev);
->>>> +
->>>> +	st->buffer = kmalloc(indio_dev->scan_bytes, GFP_KERNEL);Why allocate it here?  Presumably the biggest it can get is fairly
->>> small?  Unless very large, just make sure you allocate enough
->>> directly in st in the first place.
->>
->> Yes , as discussed above will change to static allocation.
->>
->>>
->>>> +
->>>> +	if (!st->buffer)
->>>> +		return -ENOMEM;
->>>> +
->>>> +	return 0;
->>>> +}
->>>> +
->>>> +static int at91_adc_buffer_postdisable(struct iio_dev *indio_dev)
->>>> +{
->>>> +	struct at91_adc_state *st = iio_priv(indio_dev);
->>>> +
->>>> +	kfree(st->buffer);
->>>> +
->>>> +	return 0;
->>>> +}
->>>> +
->>>> +static const struct iio_buffer_setup_ops at91_buffer_setup_ops = {
->>>> +	.preenable = &at91_adc_buffer_preenable,
->>>> +	.postenable = &iio_triggered_buffer_postenable,
->>>> +	.predisable = &iio_triggered_buffer_predisable,
->>>> +	.postdisable = &at91_adc_buffer_postdisable,
->>>> +};
->>>> +
->>>> +static struct iio_trigger *at91_adc_allocate_trigger(struct iio_dev *indio,
->>>> +						     char *trigger_name)
->>>> +{
->>>> +	struct iio_trigger *trig;
->>>> +	int ret;
->>>> +
->>>> +	trig = devm_iio_trigger_alloc(&indio->dev, "%s-dev%d-%s", indio->name,
->>>> +				      indio->id, trigger_name);
->>>> +	if (!trig)
->>>> +		return NULL;
->>>> +
->>>> +	trig->dev.parent = indio->dev.parent;
->>>> +	iio_trigger_set_drvdata(trig, indio);
->>>> +	trig->ops = &at91_adc_trigger_ops;
->>>> +
->>>> +	ret = devm_iio_trigger_register(&indio->dev, trig);
->>>> +
->>>> +	if (ret)
->>>> +		return NULL;
->>>> +
->>>> +	return trig;
->>>> +}
->>>> +
->>>> +static int at91_adc_trigger_init(struct iio_dev *indio)
->>>> +{
->>>> +	struct at91_adc_state *st = iio_priv(indio);
->>>> +	int i;
->>>> +
->>>> +	for (i = 0; i < AT91_SAMA5D2_HW_TRIG_CNT; i++) {
->>>> +		st->trig[i] = at91_adc_allocate_trigger(indio,
->>>> +						at91_adc_trigger_list[i].name);
->>>> +		if (!st->trig[i]) {
->>>> +			dev_err(&indio->dev,
->>>> +				"could not allocate trigger %d\n", i);
->>>> +			return -ENOMEM;
->>>> +		}
->>>> +	}
->>>> +
->>>> +	return 0;
->>>> +}
->>>> +
->>>> +static irqreturn_t at91_adc_trigger_handler(int irq, void *p)
->>>> +{
->>>> +	struct iio_poll_func *pf = p;
->>>> +	struct iio_dev *indio = pf->indio_dev;
->>>> +	struct at91_adc_state *st = iio_priv(indio);
->>>> +	int i = 0;
->>>> +	u8 bit;
->>>> +
->>>> +	for_each_set_bit(bit, indio->active_scan_mask, indio->num_channels) {
->>>> +		struct iio_chan_spec const *chan = indio->channels + bit;
->>>> +
->>>> +		st->buffer[i] = at91_adc_readl(st, chan->address);
->>>> +		i++;
->>>> +	}
->>>> +
->>>> +	iio_push_to_buffers_with_timestamp(indio, st->buffer, pf->timestamp);
->>>> +
->>>> +	iio_trigger_notify_done(indio->trig);
->>>> +
->>>> +	/* Needed to ACK the DRDY interruption */
->>>> +	at91_adc_readl(st, AT91_SAMA5D2_LCDR);
->>>> +
->>>> +	return IRQ_HANDLED;
->>>> +}
->>>> +
->>>> +static int at91_adc_buffer_init(struct iio_dev *indio)
->>>> +{
->>>> +	return devm_iio_triggered_buffer_setup(&indio->dev, indio,
->>>> +			&iio_pollfunc_store_time,
->>>> +			&at91_adc_trigger_handler, &at91_buffer_setup_ops);
->>>> +}
->>>> +
->>>>   static unsigned at91_adc_startup_time(unsigned startup_time_min,
->>>>   				      unsigned adc_clk_khz)
->>>>   {
->>>> @@ -293,14 +501,19 @@ static irqreturn_t at91_adc_interrupt(int irq, void *private)
->>>>   	u32 status = at91_adc_readl(st, AT91_SAMA5D2_ISR);
->>>>   	u32 imr = at91_adc_readl(st, AT91_SAMA5D2_IMR);
->>>>
->>>> -	if (status & imr) {
->>>> +	if (!(status & imr))
->>>> +		return IRQ_NONE;
->>>> +
->>>> +	if (iio_buffer_enabled(indio)) {
->>>> +		disable_irq_nosync(irq);
->>>> +		iio_trigger_poll(indio->trig);
->>>> +	} else {
->>>>   		st->conversion_value = at91_adc_readl(st, st->chan->address);
->>>>   		st->conversion_done = true;
->>>>   		wake_up_interruptible(&st->wq_data_available);
->>>> -		return IRQ_HANDLED;
->>>>   	}
->>>>
->>>> -	return IRQ_NONE;
->>>> +	return IRQ_HANDLED;
->>>>   }
->>>>
->>>>   static int at91_adc_read_raw(struct iio_dev *indio_dev,
->>>> @@ -499,6 +712,18 @@ static int at91_adc_probe(struct platform_device *pdev)
->>>>
->>>>   	platform_set_drvdata(pdev, indio_dev);
->>>>
->>>> +	ret = at91_adc_buffer_init(indio_dev);
->>>> +	if (ret < 0) {
->>>> +		dev_err(&pdev->dev, "couldn't initialize the buffer.\n");
->>>> +		goto per_clk_disable_unprepare;
->>>> +	}
->>>> +
->>>> +	ret = at91_adc_trigger_init(indio_dev);
->>>> +	if (ret < 0) {
->>>> +		dev_err(&pdev->dev, "couldn't setup the triggers.\n");
->>>> +		goto per_clk_disable_unprepare;
->>>> +	}
->>>> +
->>>>   	ret = iio_device_register(indio_dev);
->>>>   	if (ret < 0)
->>>>   		goto per_clk_disable_unprepare;
->>>>
->>>
->> --
->> To unsubscribe from this list: send the line "unsubscribe linux-iio" in
->> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Jonathan
+> ---
+> Changes in v4:
+> - Use same cacheline for rx and tx buffers
+> - Inlining regulator enable/disable instead of functions
+> - Do kernel endian conversion only for _read_raw access
+> 
+> Changes in v3:
+> - Removed unnecessary comment about channel specification
+> - Skipped usage of 'address' in iio_chan_spec config macro
+> - Mask and shift channel readings only for _read_raw function
+> - Enable/disable regulator in _read_raw function
+> - Improved setup of ADC channel readings
+> - Use SPI config of speed_hz and bits_per_word
+> - Use devm_iio_triggered_buffer_setup and devm_iio_device_register
+> - Removed error message for failed devm_iio_device_register
+> - Removed driver _remove callback function
+> 
+> Changes in v2:
+> - Removed most #defines in favor of inlines
+> - Corrected channel macro
+> - Removed configuration array with only one item
+> - Updated func adc084s021_adc_conversion to use be16_to_cpu
+> - Added IIO_CHAN_INFO_SCALE to func adc084s021_read_raw
+> - Use iio_device_claim_direct_mode in func adc084s021_read_raw
+> - Removed documentation for standard driver functions
+> - Changed retval to ret everywhere
+> - Removed dynamic alloc for data buffer in trigger handler
+> - Keeping mutex for all iterations in trigger handler
+> - Removed usage of events in this driver
+> - Removed info log in probe
+> - Use spi_message_init_with_transfers for spi message structs
+> - Use preenable and postdisable functions for regulator
+> - Inserted blank line before last return in all functions
+> 
+>   drivers/iio/adc/Kconfig         |  12 ++
+>   drivers/iio/adc/Makefile        |   1 +
+>   drivers/iio/adc/ti-adc084s021.c | 275 ++++++++++++++++++++++++++++++++++++++++
+>   3 files changed, 288 insertions(+)
+>   create mode 100644 drivers/iio/adc/ti-adc084s021.c
+> 
+> diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
+> index dedae7a..13141e5 100644
+> --- a/drivers/iio/adc/Kconfig
+> +++ b/drivers/iio/adc/Kconfig
+> @@ -560,6 +560,18 @@ config TI_ADC0832
+>   	  This driver can also be built as a module. If so, the module will be
+>   	  called ti-adc0832.
+>   
+> +config TI_ADC084S021
+> +	tristate "Texas Instruments ADC084S021"
+> +	depends on SPI
+> +	select IIO_BUFFER
+> +	select IIO_TRIGGERED_BUFFER
+> +	help
+> +	  If you say yes here you get support for Texas Instruments ADC084S021
+> +	  chips.
+> +
+> +	  This driver can also be built as a module. If so, the module will be
+> +	  called ti-adc084s021.
+> +
+>   config TI_ADC12138
+>   	tristate "Texas Instruments ADC12130/ADC12132/ADC12138"
+>   	depends on SPI
+> diff --git a/drivers/iio/adc/Makefile b/drivers/iio/adc/Makefile
+> index d001262..b1a6158 100644
+> --- a/drivers/iio/adc/Makefile
+> +++ b/drivers/iio/adc/Makefile
+> @@ -51,6 +51,7 @@ obj-$(CONFIG_STM32_ADC_CORE) += stm32-adc-core.o
+>   obj-$(CONFIG_STM32_ADC) += stm32-adc.o
+>   obj-$(CONFIG_TI_ADC081C) += ti-adc081c.o
+>   obj-$(CONFIG_TI_ADC0832) += ti-adc0832.o
+> +obj-$(CONFIG_TI_ADC084S021) += ti-adc084s021.o
+>   obj-$(CONFIG_TI_ADC12138) += ti-adc12138.o
+>   obj-$(CONFIG_TI_ADC128S052) += ti-adc128s052.o
+>   obj-$(CONFIG_TI_ADC161S626) += ti-adc161s626.o
+> diff --git a/drivers/iio/adc/ti-adc084s021.c b/drivers/iio/adc/ti-adc084s021.c
+> new file mode 100644
+> index 0000000..a355121
+> --- /dev/null
+> +++ b/drivers/iio/adc/ti-adc084s021.c
+> @@ -0,0 +1,275 @@
+> +/**
+> + * Copyright (C) 2017 Axis Communications AB
+> + *
+> + * Driver for Texas Instruments' ADC084S021 ADC chip.
+> + * Datasheets can be found here:
+> + * http://www.ti.com/lit/ds/symlink/adc084s021.pdf
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + */
+> +
+> +#include <linux/err.h>
+> +#include <linux/spi/spi.h>
+> +#include <linux/module.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/iio/iio.h>
+> +#include <linux/iio/buffer.h>
+> +#include <linux/iio/triggered_buffer.h>
+> +#include <linux/iio/trigger_consumer.h>
+> +#include <linux/regulator/consumer.h>
+> +
+> +#define ADC084S021_DRIVER_NAME "adc084s021"
+> +
+> +struct adc084s021 {
+> +	struct spi_device *spi;
+> +	struct spi_message message;
+> +	struct spi_transfer spi_trans;
+> +	struct regulator *reg;
+> +	struct mutex lock;
+> +	/*
+> +	 * DMA (thus cache coherency maintenance) requires the
+> +	 * transfer buffers to live in their own cache line.
+> +	 */
+> +	u16 tx_buf[4] ____cacheline_aligned;
+> +	__be16 rx_buf[5]; /* First 16-bits are trash */
+> +};
+> +
+> +#define ADC084S021_VOLTAGE_CHANNEL(num)                  \
+> +	{                                                      \
+> +		.type = IIO_VOLTAGE,                                 \
+> +		.channel = (num),                                    \
+> +		.indexed = 1,                                        \
+> +		.scan_index = (num),                                 \
+> +		.scan_type = {                                       \
+> +			.sign = 'u',                                       \
+> +			.realbits = 8,                                     \
+> +			.storagebits = 16,                                 \
+> +			.shift = 4,                                        \
+> +			.endianness = IIO_BE,                              \
+> +		},                                                   \
+> +		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),        \
+> +		.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE),\
+> +	}
+> +
+> +static const struct iio_chan_spec adc084s021_channels[] = {
+> +	ADC084S021_VOLTAGE_CHANNEL(0),
+> +	ADC084S021_VOLTAGE_CHANNEL(1),
+> +	ADC084S021_VOLTAGE_CHANNEL(2),
+> +	ADC084S021_VOLTAGE_CHANNEL(3),
+> +	IIO_CHAN_SOFT_TIMESTAMP(4),
+> +};
+> +
+> +/**
+> + * Read an ADC channel and return its value.
+> + *
+> + * @adc: The ADC SPI data.
+> + * @data: Buffer for converted data.
+> + */
+> +static int adc084s021_adc_conversion(struct adc084s021 *adc, void *data)
+> +{
+> +	int n_words = (adc->spi_trans.len >> 1) - 1; /* Discard first word */
+> +	int ret, i = 0;
+> +	u16 *p = data;
+> +
+> +	/* Do the transfer */
+> +	ret = spi_sync(adc->spi, &adc->message);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	for (; i < n_words; i++)
+> +		*(p + i) = adc->rx_buf[i + 1];
+> +
+> +	return ret;
+> +}
+> +
+> +static int adc084s021_read_raw(struct iio_dev *indio_dev,
+> +			   struct iio_chan_spec const *channel, int *val,
+> +			   int *val2, long mask)
+> +{
+> +	struct adc084s021 *adc = iio_priv(indio_dev);
+> +	int ret;
+> +
+> +	switch (mask) {
+> +	case IIO_CHAN_INFO_RAW:
+> +		ret = iio_device_claim_direct_mode(indio_dev);
+> +		if (ret < 0)
+> +			return ret;
+> +
+> +		ret = regulator_enable(adc->reg);
+> +		if (ret) {
+> +			iio_device_release_direct_mode(indio_dev);
+> +			return ret;
+> +		}
+> +
+> +		adc->tx_buf[0] = channel->channel << 3;
+> +		ret = adc084s021_adc_conversion(adc, val);
+> +		iio_device_release_direct_mode(indio_dev);
+> +		regulator_disable(adc->reg);
+> +		if (ret < 0)
+> +			return ret;
+> +
+> +		*val = be16_to_cpu(*val);
+> +		*val = (*val >> channel->scan_type.shift) & 0xff;
+> +
+> +		return IIO_VAL_INT;
+> +	case IIO_CHAN_INFO_SCALE:
+> +		ret = regulator_enable(adc->reg);
+> +		if (ret)
+> +			return ret;
+> +
+> +		ret = regulator_get_voltage(adc->reg);
+> +		regulator_disable(adc->reg);
+> +		if (ret < 0)
+> +			return ret;
+> +
+> +		*val = ret / 1000;
+> +
+> +		return IIO_VAL_INT;
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +}
+> +
+> +/**
+> + * Read enabled ADC channels and push data to the buffer.
+> + *
+> + * @irq: The interrupt number (not used).
+> + * @pollfunc: Pointer to the poll func.
+> + */
+> +static irqreturn_t adc084s021_buffer_trigger_handler(int irq, void *pollfunc)
+> +{
+> +	struct iio_poll_func *pf = pollfunc;
+> +	struct iio_dev *indio_dev = pf->indio_dev;
+> +	struct adc084s021 *adc = iio_priv(indio_dev);
+> +	__be16 data[8] = {0}; /* 4 * 16-bit words of data + 8 bytes timestamp */
+> +
+> +	mutex_lock(&adc->lock);
+> +
+> +	if (adc084s021_adc_conversion(adc, &data) < 0)
+> +		dev_err(&adc->spi->dev, "Failed to read data\n");
+> +
+> +	iio_push_to_buffers_with_timestamp(indio_dev, data,
+> +					   iio_get_time_ns(indio_dev));
+> +	mutex_unlock(&adc->lock);
+> +	iio_trigger_notify_done(indio_dev->trig);
+> +
+> +	return IRQ_HANDLED;
+> +}
+> +
+> +static int adc084s021_buffer_preenable(struct iio_dev *indio_dev)
+> +{
+> +	struct adc084s021 *adc = iio_priv(indio_dev);
+> +	int scan_index;
+> +	int i = 0;
+> +
+> +	for_each_set_bit(scan_index, indio_dev->active_scan_mask,
+> +			 indio_dev->masklength) {
+> +		const struct iio_chan_spec *channel =
+> +			&indio_dev->channels[scan_index];
+> +		adc->tx_buf[i++] = channel->channel << 3;
+> +	}
+> +	adc->spi_trans.len = 2 + (i * sizeof(__be16)); /* Trash + channels */
+> +
+> +	return regulator_enable(adc->reg);
+> +}
+> +
+> +static int adc084s021_buffer_postdisable(struct iio_dev *indio_dev)
+> +{
+> +	struct adc084s021 *adc = iio_priv(indio_dev);
+> +
+> +	adc->spi_trans.len = 4; /* Trash + single channel */
+> +
+> +	return regulator_disable(adc->reg);
+> +}
+> +
+> +static const struct iio_info adc084s021_info = {
+> +	.read_raw = adc084s021_read_raw,
+> +	.driver_module = THIS_MODULE,
+> +};
+> +
+> +static const struct iio_buffer_setup_ops adc084s021_buffer_setup_ops = {
+> +	.preenable = adc084s021_buffer_preenable,
+> +	.postenable = iio_triggered_buffer_postenable,
+> +	.predisable = iio_triggered_buffer_predisable,
+> +	.postdisable = adc084s021_buffer_postdisable,
+> +};
+> +
+> +static int adc084s021_probe(struct spi_device *spi)
+> +{
+> +	struct iio_dev *indio_dev;
+> +	struct adc084s021 *adc;
+> +	int ret;
+> +
+> +	indio_dev = devm_iio_device_alloc(&spi->dev, sizeof(*adc));
+> +	if (!indio_dev) {
+> +		dev_err(&spi->dev, "Failed to allocate IIO device\n");
+> +		return -ENOMEM;
+> +	}
+> +
+> +	adc = iio_priv(indio_dev);
+> +	adc->spi = spi;
+> +
+> +	/* Connect the SPI device and the iio dev */
+> +	spi_set_drvdata(spi, indio_dev);
+> +
+> +	/* Initiate the Industrial I/O device */
+> +	indio_dev->dev.parent = &spi->dev;
+> +	indio_dev->dev.of_node = spi->dev.of_node;
+> +	indio_dev->name = spi_get_device_id(spi)->name;
+> +	indio_dev->modes = INDIO_DIRECT_MODE;
+> +	indio_dev->info = &adc084s021_info;
+> +	indio_dev->channels = adc084s021_channels;
+> +	indio_dev->num_channels = ARRAY_SIZE(adc084s021_channels);
+> +
+> +	/* Create SPI transfer for channel reads */
+> +	adc->spi_trans.tx_buf = adc->tx_buf;
+> +	adc->spi_trans.rx_buf = adc->rx_buf;
+> +	adc->spi_trans.len = 4; /* Trash + single channel */
+> +	spi_message_init_with_transfers(&adc->message, &adc->spi_trans, 1);
+> +
+> +	adc->reg = devm_regulator_get(&spi->dev, "vref");
+> +	if (IS_ERR(adc->reg))
+> +		return PTR_ERR(adc->reg);
+> +
+> +	mutex_init(&adc->lock);
+> +
+> +	/* Setup triggered buffer with pollfunction */
+> +	ret = devm_iio_triggered_buffer_setup(&spi->dev, indio_dev, NULL,
+> +					    adc084s021_buffer_trigger_handler,
+> +					    &adc084s021_buffer_setup_ops);
+> +	if (ret) {
+> +		dev_err(&spi->dev, "Failed to setup triggered buffer\n");
+> +		return ret;
+> +	}
+> +
+> +	return devm_iio_device_register(&spi->dev, indio_dev);
+> +}
+> +
+> +static const struct of_device_id adc084s021_of_match[] = {
+> +	{ .compatible = "ti,adc084s021", },
+> +	{},
+> +};
+> +MODULE_DEVICE_TABLE(of, adc084s021_of_match);
+> +
+> +static const struct spi_device_id adc084s021_id[] = {
+> +	{ ADC084S021_DRIVER_NAME, 0},
+> +	{}
+> +};
+> +MODULE_DEVICE_TABLE(spi, adc084s021_id);
+> +
+> +static struct spi_driver adc084s021_driver = {
+> +	.driver = {
+> +		.name = ADC084S021_DRIVER_NAME,
+> +		.of_match_table = of_match_ptr(adc084s021_of_match),
+> +	},
+> +	.probe = adc084s021_probe,
+> +	.id_table = adc084s021_id,
+> +};
+> +module_spi_driver(adc084s021_driver);
+> +
+> +MODULE_AUTHOR("Mårten Lindahl <martenli-VrBV9hrLPhE@public.gmane.org>");
+> +MODULE_DESCRIPTION("Texas Instruments ADC084S021");
+> +MODULE_LICENSE("GPL v2");
+> +MODULE_VERSION("1.0");
+> 
