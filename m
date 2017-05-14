@@ -1,141 +1,84 @@
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: [PATCH 1/2] ARM: dts: uniphier: fix simple-bus unit address format
- error
-Date: Sun, 14 May 2017 02:20:49 +0900
-Message-ID: <1494696050-4615-1-git-send-email-yamada.masahiro@socionext.com>
+From: =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
+Subject: [PATCH v3 0/5] arm64: Initial Realtek RTD1295 enablement
+Date: Sun, 14 May 2017 04:24:24 +0200
+Message-ID: <20170514022429.11555-1-afaerber@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: linux-arm-kernel@lists.infradead.org
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Russell King <linux@armlinux.org.uk>, Masahiro Yamada <yamada.masahiro@socionext.com>, Rob Herring <robh+dt@kernel.org>
+Cc: linux-kernel@vger.kernel.org, Roc He <hepeng@zidoo.tv>, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Compiling the UniPhier DT files with W=1, DTC warns like follows:
+Hello,
 
-Warning (simple_bus_reg): Node /soc/system-bus@58c00000/support_card@1,1f00000/ethernet@00000000 simple-bus unit address format error, expected "0"
-Warning (simple_bus_reg): Node /soc/system-bus@58c00000/support_card@1,1f00000/uart@000b0000 simple-bus unit address format error, expected "b0000"
-Warning (simple_bus_reg): Node /soc/smpctrl@59800000 simple-bus unit address format error, expected "59801000"
+This mini-series adds initial support for the Realtek RTD1295 SoC and
+the Zidoo X9S TV box.
 
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
----
+v3 changes #address-cells, #size-cells and ranges.
 
- arch/arm/boot/dts/uniphier-ld4.dtsi          | 2 +-
- arch/arm/boot/dts/uniphier-pro4.dtsi         | 2 +-
- arch/arm/boot/dts/uniphier-pro5.dtsi         | 2 +-
- arch/arm/boot/dts/uniphier-pxs2.dtsi         | 2 +-
- arch/arm/boot/dts/uniphier-sld3.dtsi         | 2 +-
- arch/arm/boot/dts/uniphier-sld8.dtsi         | 2 +-
- arch/arm/boot/dts/uniphier-support-card.dtsi | 4 ++--
- 7 files changed, 8 insertions(+), 8 deletions(-)
+With these patches CPU0 can be booted with earlycon.
 
-diff --git a/arch/arm/boot/dts/uniphier-ld4.dtsi b/arch/arm/boot/dts/uniphier-ld4.dtsi
-index 4f5fe15..e608895 100644
---- a/arch/arm/boot/dts/uniphier-ld4.dtsi
-+++ b/arch/arm/boot/dts/uniphier-ld4.dtsi
-@@ -201,7 +201,7 @@
- 			pinctrl-0 = <&pinctrl_system_bus>;
- 		};
- 
--		smpctrl@59800000 {
-+		smpctrl@59801000 {
- 			compatible = "socionext,uniphier-smpctrl";
- 			reg = <0x59801000 0x400>;
- 		};
-diff --git a/arch/arm/boot/dts/uniphier-pro4.dtsi b/arch/arm/boot/dts/uniphier-pro4.dtsi
-index 794a85a..f55708e 100644
---- a/arch/arm/boot/dts/uniphier-pro4.dtsi
-+++ b/arch/arm/boot/dts/uniphier-pro4.dtsi
-@@ -233,7 +233,7 @@
- 			pinctrl-0 = <&pinctrl_system_bus>;
- 		};
- 
--		smpctrl@59800000 {
-+		smpctrl@59801000 {
- 			compatible = "socionext,uniphier-smpctrl";
- 			reg = <0x59801000 0x400>;
- 		};
-diff --git a/arch/arm/boot/dts/uniphier-pro5.dtsi b/arch/arm/boot/dts/uniphier-pro5.dtsi
-index 81605e3..9577769 100644
---- a/arch/arm/boot/dts/uniphier-pro5.dtsi
-+++ b/arch/arm/boot/dts/uniphier-pro5.dtsi
-@@ -320,7 +320,7 @@
- 			pinctrl-0 = <&pinctrl_system_bus>;
- 		};
- 
--		smpctrl@59800000 {
-+		smpctrl@59801000 {
- 			compatible = "socionext,uniphier-smpctrl";
- 			reg = <0x59801000 0x400>;
- 		};
-diff --git a/arch/arm/boot/dts/uniphier-pxs2.dtsi b/arch/arm/boot/dts/uniphier-pxs2.dtsi
-index bc5a1af..bf3bafc 100644
---- a/arch/arm/boot/dts/uniphier-pxs2.dtsi
-+++ b/arch/arm/boot/dts/uniphier-pxs2.dtsi
-@@ -304,7 +304,7 @@
- 			pinctrl-0 = <&pinctrl_system_bus>;
- 		};
- 
--		smpctrl@59800000 {
-+		smpctrl@59801000 {
- 			compatible = "socionext,uniphier-smpctrl";
- 			reg = <0x59801000 0x400>;
- 		};
-diff --git a/arch/arm/boot/dts/uniphier-sld3.dtsi b/arch/arm/boot/dts/uniphier-sld3.dtsi
-index 01d77ed..7c9f41d 100644
---- a/arch/arm/boot/dts/uniphier-sld3.dtsi
-+++ b/arch/arm/boot/dts/uniphier-sld3.dtsi
-@@ -216,7 +216,7 @@
- 			#size-cells = <1>;
- 		};
- 
--		smpctrl@59800000 {
-+		smpctrl@59801000 {
- 			compatible = "socionext,uniphier-smpctrl";
- 			reg = <0x59801000 0x400>;
- 		};
-diff --git a/arch/arm/boot/dts/uniphier-sld8.dtsi b/arch/arm/boot/dts/uniphier-sld8.dtsi
-index eb06fdc..19aa139 100644
---- a/arch/arm/boot/dts/uniphier-sld8.dtsi
-+++ b/arch/arm/boot/dts/uniphier-sld8.dtsi
-@@ -201,7 +201,7 @@
- 			pinctrl-0 = <&pinctrl_system_bus>;
- 		};
- 
--		smpctrl@59800000 {
-+		smpctrl@59801000 {
- 			compatible = "socionext,uniphier-smpctrl";
- 			reg = <0x59801000 0x400>;
- 		};
-diff --git a/arch/arm/boot/dts/uniphier-support-card.dtsi b/arch/arm/boot/dts/uniphier-support-card.dtsi
-index f61dfec..fdbf0f6 100644
---- a/arch/arm/boot/dts/uniphier-support-card.dtsi
-+++ b/arch/arm/boot/dts/uniphier-support-card.dtsi
-@@ -53,14 +53,14 @@
- 		#size-cells = <1>;
- 		ranges = <0x00000000 1 0x01f00000 0x00100000>;
- 
--		ethsc: ethernet@00000000 {
-+		ethsc: ethernet@0 {
- 			compatible = "smsc,lan9118", "smsc,lan9115";
- 			reg = <0x00000000 0x1000>;
- 			phy-mode = "mii";
- 			reg-io-width = <4>;
- 		};
- 
--		serialsc: uart@000b0000 {
-+		serialsc: uart@b0000 {
- 			compatible = "ns16550a";
- 			reg = <0x000b0000 0x20>;
- 			clock-frequency = <12288000>;
+PSCI doesn't work despite present in the vendor device tree; as enable-method
+it instead used a custom "rtk-spin-table" that I sadly have no source code of.
+
+The UARTs use a custom interrupt controller that I again lack source code of;
+with interrupts = <GIC_SPI 41 IRQ_TYPE_LEVEL_HIGH> it can boot into an initrd.
+
+The boot process is slightly twisted: The files need to be loaded from a
+32-bit U-Boot, then boot into 64-bit U-Boot where the kernel can be booted.
+Similar to my previous Amlogic S905 work, the TEXT_OFFSET poses a problem, so
+a uImage needs to be used (or the kernel patched) for load address 0x00280000.
+I haven't succeeded loading an initrd via bootm/booti; but as quick workaround
+initrd=$rootfs_loadaddr,0x$filesize can manually be specified in $bootargs.
+
+Cf. https://en.opensuse.org/HCL:Zidoo_X9S
+
+More experimental patches at:
+https://github.com/afaerber/linux/commits/rtd1295-next
+
+Have a lot of fun!
+
+Cheers,
+Andreas
+
+v2 -> v3:
+* DT cleanups (Rob)
+* Drop arm@kernel.org again (Olof)
+
+v1 -> v2:
+* Add Acked-bys
+* Tweak DT subjects
+* Reword DT bindings
+* Drop one memreserve
+* Add MAINTAINERS patch
+
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Olof Johansson <olof@lixom.net>
+Cc: Roc He <hepeng@zidoo.tv>
+Cc: devicetree@vger.kernel.org
+
+Andreas Färber (5):
+  dt-bindings: Add vendor prefix for Zidoo
+  dt-bindings: arm: Add Realtek RTD1295 bindings
+  ARM64: Prepare Realtek RTD1295
+  ARM64: dts: Add Realtek RTD1295 and Zidoo X9S
+  MAINTAINERS: Add Realtek section
+
+ Documentation/devicetree/bindings/arm/realtek.txt  |  20 ++++
+ .../devicetree/bindings/vendor-prefixes.txt        |   1 +
+ MAINTAINERS                                        |   7 ++
+ arch/arm64/Kconfig.platforms                       |   6 +
+ arch/arm64/boot/dts/Makefile                       |   1 +
+ arch/arm64/boot/dts/realtek/Makefile               |   5 +
+ arch/arm64/boot/dts/realtek/rtd1295-zidoo-x9s.dts  |  42 +++++++
+ arch/arm64/boot/dts/realtek/rtd1295.dtsi           | 131 +++++++++++++++++++++
+ 8 files changed, 213 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/realtek.txt
+ create mode 100644 arch/arm64/boot/dts/realtek/Makefile
+ create mode 100644 arch/arm64/boot/dts/realtek/rtd1295-zidoo-x9s.dts
+ create mode 100644 arch/arm64/boot/dts/realtek/rtd1295.dtsi
+
 -- 
-2.7.4
+2.12.0
