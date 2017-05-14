@@ -1,336 +1,180 @@
-From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Subject: Re: [PATCH v3 6/6] watchdog: ts4600: add driver for TS-4600 watchdog
-Date: Sun, 14 May 2017 07:40:38 -0700
-Message-ID: <158eee74-0031-967a-a7ea-f6e08defa96f@roeck-us.net>
-References: <20170505193259.16517-1-sebastien.bourdelin@savoirfairelinux.com>
- <20170505193259.16517-7-sebastien.bourdelin@savoirfairelinux.com>
+From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] iio: proximity: as3935: noise detection + threshold
+ changes
+Date: Sun, 14 May 2017 15:45:15 +0100
+Message-ID: <c71c0035-1bc5-2964-5b03-34c7851bd065@kernel.org>
+References: <20170508015041.10285-1-matt.ranostay@konsulko.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170505193259.16517-7-sebastien.bourdelin-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>
-Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sebastien Bourdelin <sebastien.bourdelin-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: fabio.estevam-3arQi8VN3Tc@public.gmane.org, mark-L1vi/lXTdtvnC/t2CciAbw@public.gmane.org, kris-L1vi/lXTdtvnC/t2CciAbw@public.gmane.org
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170508015041.10285-1-matt.ranostay-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Content-Language: en-GH
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Matt Ranostay <matt.ranostay-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 05/05/2017 12:32 PM, Sebastien Bourdelin wrote:
-> This watchdog is instantiated in a FPGA and can only be access using a
-> GPIOs bit-banged bus, called the NBUS by Technologic Systems.
-> The watchdog is made of only one register, called the feed register.
-> Writing to this register will re-arm the watchdog for a given time (and
-> enable it if it was disable). It can be disabled by writing a special
-> value into it.
->
-> Signed-off-by: Sebastien Bourdelin <sebastien.bourdelin-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>
-
-Reviewed-by: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-
-When you send v4, please retain unless you make other changes.
-
-Thanks,
-Guenter
-
+On 08/05/17 02:50, Matt Ranostay wrote:
+> Most applications are too noisy to allow the default noise and
+> watchdog settings, and thus need to be configurable via DT
+> properties.
+> 
+> Also default settings to POR defaults on a reset, and register
+> distuber interrupts as noise since it prevents proper usage.
+> 
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Signed-off-by: Matt Ranostay <matt.ranostay-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
 > ---
-> Changes v2 -> v3:
->   - rebase on master
->   - remove the timeout table to simplify the logic (suggested by
->   Guenter Roeck)
->   - fix the set_timeout function (suggested by Guenter Roeck)
->   - hardcode the max_hw_heartbeat_ms value based on the ts4600 max
->   timeout value supported (suggested by Guenter Roeck)
->   - remove the max_timeout usage and set a default timeout value
-> (suggested by Guenter Roeck)
->   - use the devm_watchdog_register_device function instead of
->   watchdog_register_device (suggested by Guenter Roeck)
->
-> Changes v1 -> v2:
->   - rebase on master
->   - retrieve the ts_nbus instantiated by the parent node (suggested by
->   Linus Walleij)
->   - rename the wdt by watchdog in the device tree and in the
->   documentation (suggested by Rob Herring)
->   - add a dependency to the TS_NBUS driver in the Kconfig (suggested by
->   Guenter Roeck)
->   - simplify the set_timeout function (suggested by Guenter Roeck)
->   - use the max_hw_heartbeat_ms callback instead of the max_timeout
->   callback (suggested by Guenter Roeck)
-> ---
->  .../devicetree/bindings/watchdog/ts4600-wdt.txt    |  16 ++
->  arch/arm/boot/dts/imx28-ts4600-common.dtsi         |   5 +
->  drivers/watchdog/Kconfig                           |  11 ++
->  drivers/watchdog/Makefile                          |   1 +
->  drivers/watchdog/ts4600_wdt.c                      | 185 +++++++++++++++++++++
->  5 files changed, 218 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/watchdog/ts4600-wdt.txt
->  create mode 100644 drivers/watchdog/ts4600_wdt.c
->
-> diff --git a/Documentation/devicetree/bindings/watchdog/ts4600-wdt.txt b/Documentation/devicetree/bindings/watchdog/ts4600-wdt.txt
-> new file mode 100644
-> index 000000000000..7de00ceae341
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/watchdog/ts4600-wdt.txt
-> @@ -0,0 +1,16 @@
-> +TS-4600 Technologic Systems Watchdog
+>   .../devicetree/bindings/iio/proximity/as3935.txt   |  6 +++
+>   drivers/iio/proximity/as3935.c                     | 43 ++++++++++++++++++++--
+>   2 files changed, 46 insertions(+), 3 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/proximity/as3935.txt b/Documentation/devicetree/bindings/iio/proximity/as3935.txt
+> index ae23dd8da736..50d370fca533 100644
+> --- a/Documentation/devicetree/bindings/iio/proximity/as3935.txt
+> +++ b/Documentation/devicetree/bindings/iio/proximity/as3935.txt
+> @@ -15,14 +15,20 @@ Optional properties:
+>   	- ams,tuning-capacitor-pf: Calibration tuning capacitor stepping
+>   	  value 0 - 120pF. This will require using the calibration data from
+>   	  the manufacturer.
+> +	- ams,nflwdth: Set the noise and watchdog threshold register on
+> +	  startup. This will need to set according to the noise from the
+> +	  MCU board, and possibly the local environment. Refer to the
+> +	  datasheet for the threshold settings.
+>   
+>   Example:
+>   
+>   as3935@0 {
+>   	compatible = "ams,as3935";
+>   	reg = <0>;
+> +	spi-max-frequency = <400000>;
+Matt, this should be in a different patch.  Worthwhile addition
+but not mentioned in the patch description or title at all...
+>   	spi-cpha;
+>   	interrupt-parent = <&gpio1>;
+>   	interrupts = <16 1>;
+>   	ams,tuning-capacitor-pf = <80>;
+> +	ams,nflwdth = <0x44>;
+>   };
+> diff --git a/drivers/iio/proximity/as3935.c b/drivers/iio/proximity/as3935.c
+> index aa4df0dcc8c9..ec2f40e0791c 100644
+> --- a/drivers/iio/proximity/as3935.c
+> +++ b/drivers/iio/proximity/as3935.c
+> @@ -39,8 +39,12 @@
+>   #define AS3935_AFE_GAIN_MAX	0x1F
+>   #define AS3935_AFE_PWR_BIT	BIT(0)
+>   
+> +#define AS3935_NFLWDTH		0x01
+> +#define AS3935_NFLWDTH_MASK	0x7f
 > +
-> +Required properties:
-> +- compatible: must be "technologic,ts4600-wdt"
-> +- reg: offset to the FPGA's watchdog register
-> +
-> +Optional property:
-> +- timeout-sec: contains the watchdog timeout in seconds.
-> +
-> +Example:
-> +
-> +watchdog {
-> +	compatible = "technologic,ts4600-wdt";
-> +	reg = <0x2a>;
-> +	timeout-sec = <10>;
-> +};
-> diff --git a/arch/arm/boot/dts/imx28-ts4600-common.dtsi b/arch/arm/boot/dts/imx28-ts4600-common.dtsi
-> index c6282d5479de..092c2eed0fe7 100644
-> --- a/arch/arm/boot/dts/imx28-ts4600-common.dtsi
-> +++ b/arch/arm/boot/dts/imx28-ts4600-common.dtsi
-> @@ -116,6 +116,11 @@
->  		ts-strobe-gpios = <&gpio0 25 GPIO_ACTIVE_HIGH>;
->  		ts-ale-gpios    = <&gpio0 26 GPIO_ACTIVE_HIGH>;
->  		ts-rdy-gpios    = <&gpio0 21 GPIO_ACTIVE_HIGH>;
-> +
-> +		watchdog@2a {
-> +			compatible = "technologic,ts4600-wdt";
-> +			reg = <0x2a>;
-> +		};
->  	};
->
->  };
-> diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
-> index 52a70ee6014f..408ad7c92cb3 100644
-> --- a/drivers/watchdog/Kconfig
-> +++ b/drivers/watchdog/Kconfig
-> @@ -520,6 +520,17 @@ config NUC900_WATCHDOG
->  	  To compile this driver as a module, choose M here: the
->  	  module will be called nuc900_wdt.
->
-> +config TS4600_WATCHDOG
-> +	tristate "TS-4600 Watchdog"
-> +	depends on TS_NBUS
-> +	depends on HAS_IOMEM && OF
-> +	depends on SOC_IMX28 || COMPILE_TEST
-> +	select WATCHDOG_CORE
-> +	help
-> +	  Technologic Systems TS-4600 has watchdog timer implemented in
-> +	  an external FPGA. Say Y here if you want to support for the
-> +	  watchdog timer on TS-4600 board.
-> +
->  config TS4800_WATCHDOG
->  	tristate "TS-4800 Watchdog"
->  	depends on HAS_IOMEM && OF
-> diff --git a/drivers/watchdog/Makefile b/drivers/watchdog/Makefile
-> index a2126e2a99ae..19553f27061a 100644
-> --- a/drivers/watchdog/Makefile
-> +++ b/drivers/watchdog/Makefile
-> @@ -62,6 +62,7 @@ obj-$(CONFIG_RN5T618_WATCHDOG) += rn5t618_wdt.o
->  obj-$(CONFIG_COH901327_WATCHDOG) += coh901327_wdt.o
->  obj-$(CONFIG_STMP3XXX_RTC_WATCHDOG) += stmp3xxx_rtc_wdt.o
->  obj-$(CONFIG_NUC900_WATCHDOG) += nuc900_wdt.o
-> +obj-$(CONFIG_TS4600_WATCHDOG) += ts4600_wdt.o
->  obj-$(CONFIG_TS4800_WATCHDOG) += ts4800_wdt.o
->  obj-$(CONFIG_TS72XX_WATCHDOG) += ts72xx_wdt.o
->  obj-$(CONFIG_IMX2_WDT) += imx2_wdt.o
-> diff --git a/drivers/watchdog/ts4600_wdt.c b/drivers/watchdog/ts4600_wdt.c
-> new file mode 100644
-> index 000000000000..ed530dd2f800
-> --- /dev/null
-> +++ b/drivers/watchdog/ts4600_wdt.c
-> @@ -0,0 +1,185 @@
-> +/*
-> + * Watchdog driver for TS-4600 based boards
-> + *
-> + * Copyright (c) 2016 - Savoir-faire Linux
-> + * Author: Sebastien Bourdelin <sebastien.bourdelin-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>
-> + *
-> + * This file is licensed under the terms of the GNU General Public
-> + * License version 2. This program is licensed "as is" without any
-> + * warranty of any kind, whether express or implied.
-> + *
-> + * The watchdog on the TS-4600 based boards is in an FPGA and can only be
-> + * accessed using a GPIO bit-banged bus called the NBUS by Technologic Systems.
-> + * The logic for the watchdog is the same then for the TS-4800 SoM, only the way
-> + * to access it change, therefore this driver is heavely based on the ts4800_wdt
-> + * driver from Damien Riegel <damien.riegel-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>.
-> + */
-> +
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/ts-nbus.h>
-> +#include <linux/watchdog.h>
-> +
-> +static bool nowayout = WATCHDOG_NOWAYOUT;
-> +module_param(nowayout, bool, 0);
-> +MODULE_PARM_DESC(nowayout,
-> +	"Watchdog cannot be stopped once started (default="
-> +	__MODULE_STRING(WATCHDOG_NOWAYOUT) ")");
-> +
-> +/*
-> + * TS-4600 supports the following timeout values:
-> + *
-> + *   value desc
-> + *   ---------------------
-> + *     0    feed for 338ms
-> + *     1    feed for 2.706s
-> + *     2    feed for 10.824s
-> + *     3    disable watchdog
-> + */
-> +#define TS4600_WDT_FEED_2S       0x1
-> +#define TS4600_WDT_FEED_10S      0x2
-> +#define TS4600_WDT_DISABLE       0x3
-> +
-> +struct ts4600_wdt {
-> +	struct watchdog_device  wdd;
-> +	struct ts_nbus		*ts_nbus;
-> +	u32                     feed_offset;
-> +	u32                     feed_val;
-> +};
-> +
-> +static void ts4600_write_feed(struct ts4600_wdt *wdt, u32 val)
+>   #define AS3935_INT		0x03
+>   #define AS3935_INT_MASK		0x0f
+> +#define AS3935_DISTURB_INT	BIT(2)
+>   #define AS3935_EVENT_INT	BIT(3)
+>   #define AS3935_NOISE_INT	BIT(0)
+>   
+> @@ -48,6 +52,7 @@
+>   #define AS3935_DATA_MASK	0x3F
+>   
+>   #define AS3935_TUNE_CAP		0x08
+> +#define AS3935_DEFAULTS		0x3C
+>   #define AS3935_CALIBRATE	0x3D
+>   
+>   #define AS3935_READ_DATA	BIT(14)
+> @@ -62,7 +67,9 @@ struct as3935_state {
+>   	struct mutex lock;
+>   	struct delayed_work work;
+>   
+> +	unsigned long noise_tripped;
+>   	u32 tune_cap;
+> +	u32 nflwdth_reg;
+>   	u8 buffer[16]; /* 8-bit data + 56-bit padding + 64-bit timestamp */
+>   	u8 buf[2] ____cacheline_aligned;
+>   };
+> @@ -145,12 +152,29 @@ static ssize_t as3935_sensor_sensitivity_store(struct device *dev,
+>   	return len;
+>   }
+>   
+> +static ssize_t as3935_noise_level_tripped_show(struct device *dev,
+> +					struct device_attribute *attr,
+> +					char *buf)
 > +{
-> +	ts_nbus_write(wdt->ts_nbus, wdt->feed_offset, val);
-> +}
-> +
-> +static int ts4600_wdt_start(struct watchdog_device *wdd)
-> +{
-> +	struct ts4600_wdt *wdt = watchdog_get_drvdata(wdd);
-> +
-> +	ts4600_write_feed(wdt, wdt->feed_val);
-> +
-> +	return 0;
-> +}
-> +
-> +static int ts4600_wdt_stop(struct watchdog_device *wdd)
-> +{
-> +	struct ts4600_wdt *wdt = watchdog_get_drvdata(wdd);
-> +
-> +	ts4600_write_feed(wdt, TS4600_WDT_DISABLE);
-> +	return 0;
-> +}
-> +
-> +static int ts4600_wdt_set_timeout(struct watchdog_device *wdd,
-> +				  unsigned int timeout)
-> +{
-> +	struct ts4600_wdt *wdt = watchdog_get_drvdata(wdd);
-> +
-> +	if (timeout <= 2) {
-> +		wdd->timeout = 2;
-> +		wdt->feed_val = TS4600_WDT_FEED_2S;
-> +	} else {
-> +		wdd->timeout = timeout < 10 ? 10 : timeout;
-> +		wdt->feed_val = TS4600_WDT_FEED_10S;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct watchdog_ops ts4600_wdt_ops = {
-> +	.owner = THIS_MODULE,
-> +	.start = ts4600_wdt_start,
-> +	.stop = ts4600_wdt_stop,
-> +	.set_timeout = ts4600_wdt_set_timeout,
-> +};
-> +
-> +static const struct watchdog_info ts4600_wdt_info = {
-> +	.options = WDIOF_SETTIMEOUT | WDIOF_MAGICCLOSE | WDIOF_KEEPALIVEPING,
-> +	.identity = "TS-4600 Watchdog",
-> +};
-> +
-> +static int ts4600_wdt_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct device_node *np = dev->of_node;
-> +	struct ts_nbus *ts_nbus;
-> +	struct watchdog_device *wdd;
-> +	struct ts4600_wdt *wdt;
-> +	u32 reg;
+> +	struct as3935_state *st = iio_priv(dev_to_iio_dev(dev));
 > +	int ret;
 > +
-> +	ret = of_property_read_u32(np, "reg", &reg);
-> +	if (ret < 0) {
-> +		dev_err(&pdev->dev, "missing reg property\n");
-> +		return ret;
-> +	}
+> +	mutex_lock(&st->lock);
+> +	ret = sprintf(buf, "%d\n", !time_after(jiffies, st->noise_tripped + HZ));
+Documentation of this attribute?
+> +	mutex_unlock(&st->lock);
 > +
-> +	/* allocate memory for watchdog struct */
-> +	wdt = devm_kzalloc(dev, sizeof(*wdt), GFP_KERNEL);
-> +	if (!wdt)
-> +		return -ENOMEM;
-> +
-> +	/* set offset to know where to write */
-> +	wdt->feed_offset = reg;
-> +
-> +	/* keep a pointer to the ts_nbus instanciated by the parent node */
-> +	ts_nbus = dev_get_drvdata(dev->parent);
-> +	if (!ts_nbus) {
-> +		dev_err(dev, "missing ts-nbus compatible parent node\n");
-> +		return PTR_ERR(ts_nbus);
-> +	}
-> +	wdt->ts_nbus = ts_nbus;
-> +
-> +	/* Initialize struct watchdog_device */
-> +	wdd = &wdt->wdd;
-> +	wdd->parent = dev;
-> +	wdd->info = &ts4600_wdt_info;
-> +	wdd->ops = &ts4600_wdt_ops;
-> +	wdd->min_timeout = 2;
-> +	wdd->max_hw_heartbeat_ms = 10824;
-> +	wdd->timeout = 30;
-> +
-> +	watchdog_set_drvdata(wdd, wdt);
-> +	watchdog_set_nowayout(wdd, nowayout);
-> +	watchdog_init_timeout(wdd, 0, dev);
-> +
-> +	ts4600_wdt_set_timeout(wdd, wdd->timeout);
-> +
-> +	/*
-> +	 * The feed register is write-only, so it is not possible to determine
-> +	 * watchdog's state. Disable it to be in a known state.
-> +	 */
-> +	ts4600_wdt_stop(wdd);
-> +
-> +	ret = devm_watchdog_register_device(&pdev->dev, &wdt->wdd);
-> +	if (ret) {
-> +		dev_err(dev, "failed to register watchdog device\n");
-> +		return ret;
-> +	}
-> +
-> +	dev_info(dev, "initialized (timeout = %d sec, nowayout = %d)\n",
-> +		 wdd->timeout, nowayout);
-> +
-> +	return 0;
+> +	return ret;
 > +}
 > +
-> +static const struct of_device_id ts4600_wdt_of_match[] = {
-> +	{ .compatible = "technologic,ts4600-wdt", },
-> +	{ },
-> +};
-> +MODULE_DEVICE_TABLE(of, ts4600_wdt_of_match);
+>   static IIO_DEVICE_ATTR(sensor_sensitivity, S_IRUGO | S_IWUSR,
+>   	as3935_sensor_sensitivity_show, as3935_sensor_sensitivity_store, 0);
+>   
+> +static IIO_DEVICE_ATTR(noise_level_tripped, S_IRUGO,
+> +	as3935_noise_level_tripped_show, NULL, 0);
+>   
+>   static struct attribute *as3935_attributes[] = {
+>   	&iio_dev_attr_sensor_sensitivity.dev_attr.attr,
+> +	&iio_dev_attr_noise_level_tripped.dev_attr.attr,
+>   	NULL,
+>   };
+>   
+> @@ -246,7 +270,11 @@ static void as3935_event_work(struct work_struct *work)
+>   	case AS3935_EVENT_INT:
+>   		iio_trigger_poll_chained(st->trig);
+>   		break;
+> +	case AS3935_DISTURB_INT:
+>   	case AS3935_NOISE_INT:
+> +		mutex_lock(&st->lock);
+> +		st->noise_tripped = jiffies;
+> +		mutex_unlock(&st->lock);
+>   		dev_warn(&st->spi->dev, "noise level is too high\n");
+>   		break;
+>   	}
+> @@ -269,15 +297,14 @@ static irqreturn_t as3935_interrupt_handler(int irq, void *private)
+>   
+>   static void calibrate_as3935(struct as3935_state *st)
+>   {
+> -	/* mask disturber interrupt bit */
+> -	as3935_write(st, AS3935_INT, BIT(5));
+> -
+> +	as3935_write(st, AS3935_DEFAULTS, 0x96);
+>   	as3935_write(st, AS3935_CALIBRATE, 0x96);
+>   	as3935_write(st, AS3935_TUNE_CAP,
+>   		BIT(5) | (st->tune_cap / TUNE_CAP_DIV));
+>   
+>   	mdelay(2);
+>   	as3935_write(st, AS3935_TUNE_CAP, (st->tune_cap / TUNE_CAP_DIV));
+> +	as3935_write(st, AS3935_NFLWDTH, st->nflwdth_reg);
+>   }
+>   
+>   #ifdef CONFIG_PM_SLEEP
+> @@ -370,6 +397,15 @@ static int as3935_probe(struct spi_device *spi)
+>   		return -EINVAL;
+>   	}
+>   
+> +	ret = of_property_read_u32(np,
+> +			"ams,nflwdth", &st->nflwdth_reg);
+> +	if (!ret && st->nflwdth_reg > AS3935_NFLWDTH_MASK) {
+> +		dev_err(&spi->dev,
+> +			"invalid nflwdth setting of %d\n",
+> +			st->nflwdth_reg);
+> +		return -EINVAL;
+> +	}
 > +
-> +static struct platform_driver ts4600_wdt_driver = {
-> +	.probe		= ts4600_wdt_probe,
-> +	.driver		= {
-> +		.name	= "ts4600_wdt",
-> +		.of_match_table = ts4600_wdt_of_match,
-> +	},
-> +};
-> +
-> +module_platform_driver(ts4600_wdt_driver);
-> +
-> +MODULE_AUTHOR("Sebastien Bourdelin <sebastien.bourdelin-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>");
-> +MODULE_LICENSE("GPL v2");
-> +MODULE_ALIAS("platform:ts4600_wdt");
->
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>   	indio_dev->dev.parent = &spi->dev;
+>   	indio_dev->name = spi_get_device_id(spi)->name;
+>   	indio_dev->channels = as3935_channels;
+> @@ -384,6 +420,7 @@ static int as3935_probe(struct spi_device *spi)
+>   		return -ENOMEM;
+>   
+>   	st->trig = trig;
+> +	st->noise_tripped = jiffies - HZ;
+>   	trig->dev.parent = indio_dev->dev.parent;
+>   	iio_trigger_set_drvdata(trig, indio_dev);
+>   	trig->ops = &iio_interrupt_trigger_ops;
+> 
