@@ -1,259 +1,136 @@
-From: =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
-Subject: [PATCH v3 4/5] ARM64: dts: Add Realtek RTD1295 and Zidoo X9S
-Date: Sun, 14 May 2017 04:24:28 +0200
-Message-ID: <20170514022429.11555-5-afaerber@suse.de>
-References: <20170514022429.11555-1-afaerber@suse.de>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH v2 1/5] pinctrl: qcom: Add ipq8074 pinctrl driver
+Date: Sat, 13 May 2017 21:23:07 -0700
+Message-ID: <20170514042307.GE69278@Bjorns-MacBook-Pro-2.local>
+References: <1493898841-20583-1-git-send-email-varada@codeaurora.org>
+ <1493898841-20583-2-git-send-email-varada@codeaurora.org>
+ <20170510224355.GE45273@Bjorns-MacBook-Pro-2.local>
+ <1f4c9974-f6a4-bee7-4f37-ad8795e442a3@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170514022429.11555-1-afaerber@suse.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org, Roc He <hepeng@zidoo.tv>, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1f4c9974-f6a4-bee7-4f37-ad8795e442a3@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Varadarajan Narayanan <varada@codeaurora.org>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, mturquette@baylibre.com, sboyd@codeaurora.org, linus.walleij@linaro.org, andy.gross@linaro.org, david.brown@linaro.org, catalin.marinas@arm.com, will.deacon@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, absahu@codeaurora.org, sjaganat@codeaurora.org, sricharan@codeaurora.org, Manoharan Vijaya Raghavan <mraghava@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Add initial device trees for the RTD1295 SoC and the Zidoo X9S TV box.
+On Thu 11 May 03:33 PDT 2017, Varadarajan Narayanan wrote:
 
-The CPUs lack the enable-method property because the vendor device tree
-uses a custom "rtk-spin-table" method and "psci" did not appear to work.
+> 
+> 
+> On 5/11/2017 4:13 AM, Bjorn Andersson wrote:
+> > On Thu 04 May 04:53 PDT 2017, Varadarajan Narayanan wrote:
+> > 
+[..]
+> > > +enum ipq8074_functions {
+> > 
+> > Please keep these sorted alphabetically.
+> 
+> Ok
+> 
+> > > +	msm_mux_gpio,
+> > > +	msm_mux_qpic_pad,
+> > > +	msm_mux_blsp5_i2c,
+> > > +	msm_mux_blsp5_spi,
+> > > +	msm_mux_wci20,
+> > 
+> > What does "20" mean here?
+> 
+> This is for Wireless Coex Interface. The same functionality can be muxed on
+> to different GPIOs. WCI2, is the 2nd edition of the WCI standard and 0, 1
+> are for the muxing to different GPIOs (alternate muxes).
+> 
 
-The UARTs lack the interrupts properties because the vendor device tree
-connects them to a custom interrupt controller. earlycon works without.
+In other Qualcomm platforms the alternative muxes are denoted by letters
+(a,b,c...). Would you mind picking up this naming scheme, or do you see
+any problems with that? (E.g. wci2a in this case)
 
-A list of memory reservations is adopted from v1.2.11 vendor device tree:
-0x02200000 can be used for an initrd, 0x01b00000 is audio-related;
-ion-related 0x02600000, 0x02c00000 and 0x11000000 are left out;
-0x10000000 is used for sharing the U-Boot environment; others remain
-to be investigated.
 
-Acked-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Andreas Färber <afaerber@suse.de>
----
- v2 -> v3:
- * Adopted SPDX-License-Identifier (Rob)
- * Added ranges for /soc node (Rob)
- * Changed #address-cells and #size-cells to 1 (Rob)
- 
- v1 -> v2:
- * Dropped 0x0000000010000000 /memreserve/
- 
- arch/arm64/boot/dts/Makefile                      |   1 +
- arch/arm64/boot/dts/realtek/Makefile              |   5 +
- arch/arm64/boot/dts/realtek/rtd1295-zidoo-x9s.dts |  42 +++++++
- arch/arm64/boot/dts/realtek/rtd1295.dtsi          | 131 ++++++++++++++++++++++
- 4 files changed, 179 insertions(+)
- create mode 100644 arch/arm64/boot/dts/realtek/Makefile
- create mode 100644 arch/arm64/boot/dts/realtek/rtd1295-zidoo-x9s.dts
- create mode 100644 arch/arm64/boot/dts/realtek/rtd1295.dtsi
+Btw, do you need any additional configuration for selecting alternative
+muxing or is that automagical these days?
 
-diff --git a/arch/arm64/boot/dts/Makefile b/arch/arm64/boot/dts/Makefile
-index 080232b0270e..78f7991a5906 100644
---- a/arch/arm64/boot/dts/Makefile
-+++ b/arch/arm64/boot/dts/Makefile
-@@ -14,6 +14,7 @@ dts-dirs += marvell
- dts-dirs += mediatek
- dts-dirs += nvidia
- dts-dirs += qcom
-+dts-dirs += realtek
- dts-dirs += renesas
- dts-dirs += rockchip
- dts-dirs += socionext
-diff --git a/arch/arm64/boot/dts/realtek/Makefile b/arch/arm64/boot/dts/realtek/Makefile
-new file mode 100644
-index 000000000000..8521e921e59a
---- /dev/null
-+++ b/arch/arm64/boot/dts/realtek/Makefile
-@@ -0,0 +1,5 @@
-+dtb-$(CONFIG_ARCH_REALTEK) += rtd1295-zidoo-x9s.dtb
-+
-+always		:= $(dtb-y)
-+subdir-y	:= $(dts-dirs)
-+clean-files	:= *.dtb
-diff --git a/arch/arm64/boot/dts/realtek/rtd1295-zidoo-x9s.dts b/arch/arm64/boot/dts/realtek/rtd1295-zidoo-x9s.dts
-new file mode 100644
-index 000000000000..6efa8091bb30
---- /dev/null
-+++ b/arch/arm64/boot/dts/realtek/rtd1295-zidoo-x9s.dts
-@@ -0,0 +1,42 @@
-+/*
-+ * Copyright (c) 2016-2017 Andreas Färber
-+ *
-+ * SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+ */
-+
-+/dts-v1/;
-+
-+/memreserve/	0x0000000000000000 0x0000000000030000;
-+/memreserve/	0x000000000001f000 0x0000000000001000;
-+/memreserve/	0x0000000000030000 0x00000000000d0000;
-+/memreserve/	0x0000000001b00000 0x00000000004be000;
-+/memreserve/	0x0000000001ffe000 0x0000000000004000;
-+
-+#include "rtd1295.dtsi"
-+
-+/ {
-+	compatible = "zidoo,x9s", "realtek,rtd1295";
-+	model = "Zidoo X9S";
-+
-+	memory@0 {
-+		device_type = "memory";
-+		reg = <0x0 0x80000000>;
-+	};
-+
-+	aliases {
-+		serial0 = &uart0;
-+		serial1 = &uart1;
-+	};
-+
-+	chosen {
-+		stdout-path = "serial0:115200n8";
-+	};
-+};
-+
-+&uart0 {
-+	status = "okay";
-+};
-+
-+&uart1 {
-+	status = "okay";
-+};
-diff --git a/arch/arm64/boot/dts/realtek/rtd1295.dtsi b/arch/arm64/boot/dts/realtek/rtd1295.dtsi
-new file mode 100644
-index 000000000000..d8f84666c8ce
---- /dev/null
-+++ b/arch/arm64/boot/dts/realtek/rtd1295.dtsi
-@@ -0,0 +1,131 @@
-+/*
-+ * Realtek RTD1295 SoC
-+ *
-+ * Copyright (c) 2016-2017 Andreas Färber
-+ *
-+ * SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+ */
-+
-+#include <dt-bindings/interrupt-controller/arm-gic.h>
-+
-+/ {
-+	compatible = "realtek,rtd1295";
-+	interrupt-parent = <&gic>;
-+	#address-cells = <1>;
-+	#size-cells = <1>;
-+
-+	cpus {
-+		#address-cells = <2>;
-+		#size-cells = <0>;
-+
-+		cpu0: cpu@0 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a53", "arm,armv8";
-+			reg = <0x0 0x0>;
-+			next-level-cache = <&l2>;
-+		};
-+
-+		cpu1: cpu@1 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a53", "arm,armv8";
-+			reg = <0x0 0x1>;
-+			next-level-cache = <&l2>;
-+		};
-+
-+		cpu2: cpu@2 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a53", "arm,armv8";
-+			reg = <0x0 0x2>;
-+			next-level-cache = <&l2>;
-+		};
-+
-+		cpu3: cpu@3 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a53", "arm,armv8";
-+			reg = <0x0 0x3>;
-+			next-level-cache = <&l2>;
-+		};
-+
-+		l2: l2-cache {
-+			compatible = "cache";
-+		};
-+	};
-+
-+	reserved-memory {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges;
-+
-+		tee@10100000 {
-+			reg = <0x10100000 0xf00000>;
-+			no-map;
-+		};
-+	};
-+
-+	arm-pmu {
-+		compatible = "arm,cortex-a53-pmu";
-+		interrupts = <GIC_SPI 48 IRQ_TYPE_LEVEL_HIGH>;
-+		interrupt-affinity = <&cpu0>, <&cpu1>, <&cpu2>, <&cpu3>;
-+	};
-+
-+	timer {
-+		compatible = "arm,armv8-timer";
-+		interrupts = <GIC_PPI 13
-+			(GIC_CPU_MASK_RAW(0xf) | IRQ_TYPE_LEVEL_LOW)>,
-+			     <GIC_PPI 14
-+			(GIC_CPU_MASK_RAW(0xf) | IRQ_TYPE_LEVEL_LOW)>,
-+			     <GIC_PPI 11
-+			(GIC_CPU_MASK_RAW(0xf) | IRQ_TYPE_LEVEL_LOW)>,
-+			     <GIC_PPI 10
-+			(GIC_CPU_MASK_RAW(0xf) | IRQ_TYPE_LEVEL_LOW)>;
-+	};
-+
-+	soc {
-+		compatible = "simple-bus";
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		/* Exclude up to 2 GiB of RAM */
-+		ranges = <0x80000000 0x80000000 0x80000000>;
-+
-+		uart0: serial@98007800 {
-+			compatible = "snps,dw-apb-uart";
-+			reg = <0x98007800 0x400>,
-+			      <0x98007000 0x100>;
-+			reg-shift = <2>;
-+			reg-io-width = <4>;
-+			clock-frequency = <27000000>;
-+			status = "disabled";
-+		};
-+
-+		uart1: serial@9801b200 {
-+			compatible = "snps,dw-apb-uart";
-+			reg = <0x9801b200 0x100>,
-+			      <0x9801b00c 0x100>;
-+			reg-shift = <2>;
-+			reg-io-width = <4>;
-+			clock-frequency = <432000000>;
-+			status = "disabled";
-+		};
-+
-+		uart2: serial@9801b400 {
-+			compatible = "snps,dw-apb-uart";
-+			reg = <0x9801b400 0x100>,
-+			      <0x9801b00c 0x100>;
-+			reg-shift = <2>;
-+			reg-io-width = <4>;
-+			clock-frequency = <432000000>;
-+			status = "disabled";
-+		};
-+
-+		gic: interrupt-controller@ff011000 {
-+			compatible = "arm,gic-400";
-+			reg = <0xff011000 0x1000>,
-+			      <0xff012000 0x2000>,
-+			      <0xff014000 0x2000>,
-+			      <0xff016000 0x2000>;
-+			interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>;
-+			interrupt-controller;
-+			#interrupt-cells = <3>;
-+		};
-+	};
-+};
--- 
-2.12.0
+> > > +	msm_mux_blsp3_spi3,
+> > > +	msm_mux_burn0,
+> > > +	msm_mux_pcm_zsi0,
+> > > +	msm_mux_blsp5_uart,
+> > > +	msm_mux_mac12,
+> > 
+> > What does "12" mean here?
+> 
+> The SoC has three MAC cores. Each core has two pins for the smart antenna
+> feature. macXY indicates the function select for MAC no. X and smart antenna
+> no. Y.
+> 
+
+Ok
+
+> > > +	msm_mux_blsp3_spi0,
+> > > +	msm_mux_burn1,
+> > > +	msm_mux_mac01,
+> > > +	msm_mux_qdss_cti_trig_out_b0,
+> > > +	msm_mux_qdss_cti_trig_in_b0,
+> > > +	msm_mux_qpic_pad4,
+> > 
+> > What are qpic_pad and qpic_pad0 through qpic_pad8? Different functions,
+> > alternative muxings...?
+> 
+> This is for the NAND and LCD display. The pins listed are the 9 data pins.
+> 
+
+Then you can describe them all as "qpic_pad" (or simply "qpic"?). (It's
+possible to reference a partial group in the DTS, if that's necessary)
+
+> > > +	msm_mux_blsp4_uart0,
+> > > +	msm_mux_blsp4_i2c0,
+> > > +	msm_mux_blsp4_spi0,
+> > > +	msm_mux_mac21,
+> > > +	msm_mux_qdss_cti_trig_out_b1,
+> > > +	msm_mux_qpic_pad5,
+> > > +	msm_mux_qdss_cti_trig_in_b1,
+> > > +	msm_mux_qpic_pad6,
+> > > +	msm_mux_qpic_pad7,
+> > > +	msm_mux_cxc0,
+> > > +	msm_mux_mac13,
+> > > +	msm_mux_qdss_cti_trig_in_a1,
+> > > +	msm_mux_qdss_cti_trig_out_a1,
+> > > +	msm_mux_wci22,
+> > > +	msm_mux_qdss_cti_trig_in_a0,
+> > > +	msm_mux_qpic_pad1,
+> > > +	msm_mux_qdss_cti_trig_out_a0,
+> > > +	msm_mux_qpic_pad2,
+> > > +	msm_mux_qpic_pad3,
+> > > +	msm_mux_qdss_traceclk_b,
+> > > +	msm_mux_qpic_pad0,
+> > > +	msm_mux_qdss_tracectl_b,
+> > > +	msm_mux_qpic_pad8,
+> > > +	msm_mux_pcm_zsi1,
+> > > +	msm_mux_qdss_tracedata_b,
+> > > +	msm_mux_led0,
+> > > +	msm_mux_pwm04,
+> > 
+> > What does "04" mean here?
+> 
+> There are 4 Pulse Width Modulation channels, pwmXY is pwm channel X and pin
+> Y.
+
+So Y is alternative mux? Can we use letters for this as well?
+
+> > 
+> > > +	msm_mux_led1,
+> > > +	msm_mux_pwm14,
+> > > +	msm_mux_led2,
+> > > +	msm_mux_pwm24,
+> > > +	msm_mux_pwm00,
+> > > +	msm_mux_blsp4_uart1,
+> > 
+> > Are uart0 vs uart1 alternative muxes?
+> 
+> These are two different uarts available at two independent pins.
+> 
+
+Ok, then I'm happy with the naming of this :)
+
+Thanks,
+Bjorn
