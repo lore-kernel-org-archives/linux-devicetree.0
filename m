@@ -1,61 +1,69 @@
-From: "H. Nikolaus Schaller" <hns@goldelico.com>
-Subject: [PATCH v4] =?UTF-8?q?DTS:=20ARM:=20OMAP5:=20uevm:=20add=20=C2=B5S?= =?UTF-8?q?D=20card=20detect?=
-Date: Mon, 15 May 2017 10:31:16 +0200
-Message-ID: <90e9c1d71ce9ee47b55f4c0794e582167c6b961d.1494837075.git.hns@goldelico.com>
+From: Chunyan Zhang <chunyan.zhang@spreadtrum.com>
+Subject: [PATCH 0/3] add clock driver for Spreadtrum platforms
+Date: Mon, 15 May 2017 16:34:59 +0800
+Message-ID: <20170515083502.4492-1-chunyan.zhang@spreadtrum.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>
-Cc: letux-kernel@openphoenux.org, kernel@pyra-handheld.com, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, "H. Nikolaus Schaller" <hns@goldelico.com>
+To: mturquette@baylibre.com, sboyd@codeaurora.org, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com
+Cc: xiaolong.zhang@spreadtrum.com, orson.zhai@spreadtrum.com, geng.ren@spreadtrum.com, arnd@arndb.de, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, zhang.lyra@gmail.com, chunyan.zhang@spreadtrum.com
 List-Id: devicetree@vger.kernel.org
 
-If we have Linux installed in eMMC we can boot without
-µSD card, but inserting one is not recognised.
+In the last cycle, the patches support Whale2 sc9860 mobile chip have been
+merged. This patchset adds clock driver which is used on almost all
+Spreadtrum SoCs.
 
-The reason is that the card detect gpio (gpio5_152)
-is not configured and attached to the mmc1 interface
-driver and the mmc driver does not poll by default.
+This series also adds Spreadtrum clock bindings and SC9860 clock devicetree
+data.
 
-Hence we add pinmux and gpio setup for the SDCARD_NCD
-signal.
+This driver has been validated on Spreadtrum SC9860 mobile phone.
 
-Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
----
- arch/arm/boot/dts/omap5-uevm.dts | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+Any comments would be greatly appreciated.
 
-diff --git a/arch/arm/boot/dts/omap5-uevm.dts b/arch/arm/boot/dts/omap5-uevm.dts
-index d58b034513da..1a6e28c3d847 100644
---- a/arch/arm/boot/dts/omap5-uevm.dts
-+++ b/arch/arm/boot/dts/omap5-uevm.dts
-@@ -142,6 +142,13 @@
- 	};
- };
- 
-+&mmc1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&mmc1_pins>;
-+
-+	cd-gpios = <&gpio5 24 GPIO_ACTIVE_LOW>;	/* gpio5_152 */
-+};
-+
- &omap5_pmx_core {
- 	evm_keys_pins: pinmux_evm_keys_gpio_pins {
- 		pinctrl-single,pins = <
-@@ -161,6 +168,12 @@
- 			OMAP5_IOPAD(0x0a8, PIN_INPUT_PULLUP | MUX_MODE6)	/* gpio3_76 */
- 		>;
- 	};
-+
-+	mmc1_pins: pinmux_mmc1_pins {
-+		pinctrl-single,pins = <
-+			OMAP5_IOPAD(0x1d4, PIN_INPUT_PULLUP | MUX_MODE6)	/* gpio5_152 */
-+		>;
-+	};
- };
- 
- &tpd12s015 {
+Thanks,
+Chunyan
+
+
+Chunyan Zhang (1):
+  Documentation: add sprd clock bindings
+
+Xiaolong Zhang (2):
+  arm64: dts: add SC9860 clock tree data
+  clk: Add common clock driver for Spreadtrum SoCs
+
+ .../clock/sprd/sprd,adjustable-pll-clock.txt       |   17 +
+ .../bindings/clock/sprd/sprd,composite-clock.txt   |   28 +
+ .../bindings/clock/sprd/sprd,divider-clock.txt     |   24 +
+ .../bindings/clock/sprd/sprd,gates-clock.txt       |   73 +
+ .../bindings/clock/sprd/sprd,muxed-clock.txt       |   23 +
+ arch/arm64/boot/dts/sprd/sc9860-clocks.dtsi        | 1984 ++++++++++++++++++++
+ arch/arm64/boot/dts/sprd/sc9860.dtsi               |    1 +
+ arch/arm64/boot/dts/sprd/whale2.dtsi               |    7 -
+ drivers/clk/Makefile                               |    1 +
+ drivers/clk/sprd/Makefile                          |    3 +
+ drivers/clk/sprd/clk-gates.c                       |  366 ++++
+ drivers/clk/sprd/composite.c                       |  109 ++
+ drivers/clk/sprd/divider.c                         |   79 +
+ drivers/clk/sprd/mux.c                             |   77 +
+ drivers/clk/sprd/pll.c                             |  359 ++++
+ drivers/clk/sprd/pll.h                             |   73 +
+ drivers/clk/sprd/pll_cfg.h                         |  390 ++++
+ 17 files changed, 3607 insertions(+), 7 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/clock/sprd/sprd,adjustable-pll-clock.txt
+ create mode 100644 Documentation/devicetree/bindings/clock/sprd/sprd,composite-clock.txt
+ create mode 100644 Documentation/devicetree/bindings/clock/sprd/sprd,divider-clock.txt
+ create mode 100644 Documentation/devicetree/bindings/clock/sprd/sprd,gates-clock.txt
+ create mode 100644 Documentation/devicetree/bindings/clock/sprd/sprd,muxed-clock.txt
+ create mode 100644 arch/arm64/boot/dts/sprd/sc9860-clocks.dtsi
+ create mode 100644 drivers/clk/sprd/Makefile
+ create mode 100644 drivers/clk/sprd/clk-gates.c
+ create mode 100644 drivers/clk/sprd/composite.c
+ create mode 100644 drivers/clk/sprd/divider.c
+ create mode 100644 drivers/clk/sprd/mux.c
+ create mode 100644 drivers/clk/sprd/pll.c
+ create mode 100644 drivers/clk/sprd/pll.h
+ create mode 100644 drivers/clk/sprd/pll_cfg.h
+
 -- 
-2.12.2
+2.7.4
