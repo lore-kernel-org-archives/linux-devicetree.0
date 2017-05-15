@@ -1,191 +1,127 @@
-From: Madalin Bucur <madalin.bucur@nxp.com>
-Subject: [PATCH v2 1/3] arm64: dts: add DPAA QBMan portals
-Date: Mon, 15 May 2017 12:21:16 +0300
-Message-ID: <1494840078-22243-2-git-send-email-madalin.bucur@nxp.com>
-References: <1494840078-22243-1-git-send-email-madalin.bucur@nxp.com>
-Reply-To: <madalin.bucur@nxp.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v7 11/13] ARM: sun8i: v3s: add device nodes
+ for DE2 display pipeline
+Date: Mon, 15 May 2017 11:24:00 +0200
+Message-ID: <20170515092400.nzxmocrdqgt4u476@flea.home>
+References: <20170514163045.40366-1-icenowy@aosc.io>
+ <20170514163045.40366-12-icenowy@aosc.io>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1494840078-22243-1-git-send-email-madalin.bucur@nxp.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: shawnguo@kernel.org
-Cc: devicetree@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Madalin Bucur <madalin.bucur@nxp.com>, Roy Pledge <roy.pledge@nxp.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="wkdg7dacrwu6npqt"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBMPH4XEAKGQEUUU7THI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20170514163045.40366-12-icenowy-h8G6r0blFSE@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add the DPAA 1.x DPAA QMan and BMan portal nodes.
 
-Signed-off-by: Roy Pledge <roy.pledge@nxp.com>
-Signed-off-by: Madalin Bucur <madalin.bucur@nxp.com>
----
- .../boot/dts/freescale/qoriq-bman-portals.dtsi     | 71 +++++++++++++++++++
- .../boot/dts/freescale/qoriq-qman-portals.dtsi     | 80 ++++++++++++++++++++++
- 2 files changed, 151 insertions(+)
- create mode 100644 arch/arm64/boot/dts/freescale/qoriq-bman-portals.dtsi
- create mode 100644 arch/arm64/boot/dts/freescale/qoriq-qman-portals.dtsi
+--wkdg7dacrwu6npqt
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
 
-diff --git a/arch/arm64/boot/dts/freescale/qoriq-bman-portals.dtsi b/arch/arm64/boot/dts/freescale/qoriq-bman-portals.dtsi
-new file mode 100644
-index 0000000..c3c2be4
---- /dev/null
-+++ b/arch/arm64/boot/dts/freescale/qoriq-bman-portals.dtsi
-@@ -0,0 +1,71 @@
-+/*
-+ * QorIQ BMan Portals device tree
-+ *
-+ * Copyright 2011-2016 Freescale Semiconductor Inc.
-+ *
-+ * SPDX-License-Identifier: (GPL-2.0+ OR BSD-3-Clause)
-+ */
-+
-+&bportals {
-+	#address-cells = <1>;
-+	#size-cells = <1>;
-+	compatible = "simple-bus";
-+
-+	bman-portal@0 {
-+		/*
-+		 * bootloader fix-ups are expected to provide the
-+		 * "fsl,bman-portal-<hardware revision>" compatible
-+		 */
-+		compatible = "fsl,bman-portal";
-+		reg = <0x0 0x4000>, <0x4000000 0x4000>;
-+		interrupts = <GIC_SPI 173 IRQ_TYPE_LEVEL_HIGH>;
-+	};
-+
-+	bman-portal@10000 {
-+		compatible = "fsl,bman-portal";
-+		reg = <0x10000 0x4000>, <0x4010000 0x4000>;
-+		interrupts = <GIC_SPI 175 IRQ_TYPE_LEVEL_HIGH>;
-+	};
-+
-+	bman-portal@20000 {
-+		compatible = "fsl,bman-portal";
-+		reg = <0x20000 0x4000>, <0x4020000 0x4000>;
-+		interrupts = <GIC_SPI 177 IRQ_TYPE_LEVEL_HIGH>;
-+	};
-+
-+	bman-portal@30000 {
-+		compatible = "fsl,bman-portal";
-+		reg = <0x30000 0x4000>, <0x4030000 0x4000>;
-+		interrupts = <GIC_SPI 179 IRQ_TYPE_LEVEL_HIGH>;
-+	};
-+
-+	bman-portal@40000 {
-+		compatible = "fsl,bman-portal";
-+		reg = <0x40000 0x4000>, <0x4040000 0x4000>;
-+		interrupts = <GIC_SPI 181 IRQ_TYPE_LEVEL_HIGH>;
-+	};
-+
-+	bman-portal@50000 {
-+		compatible = "fsl,bman-portal";
-+		reg = <0x50000 0x4000>, <0x4050000 0x4000>;
-+		interrupts = <GIC_SPI 183 IRQ_TYPE_LEVEL_HIGH>;
-+	};
-+
-+	bman-portal@60000 {
-+		compatible = "fsl,bman-portal";
-+		reg = <0x60000 0x4000>, <0x4060000 0x4000>;
-+		interrupts = <GIC_SPI 185 IRQ_TYPE_LEVEL_HIGH>;
-+	};
-+
-+	bman-portal@70000 {
-+		compatible = "fsl,bman-portal";
-+		reg = <0x70000 0x4000>, <0x4070000 0x4000>;
-+		interrupts = <GIC_SPI 187 IRQ_TYPE_LEVEL_HIGH>;
-+	};
-+
-+	bman-portal@80000 {
-+		compatible = "fsl,bman-portal";
-+		reg = <0x80000 0x4000>, <0x4080000 0x4000>;
-+		interrupts = <GIC_SPI 189 IRQ_TYPE_LEVEL_HIGH>;
-+	};
-+};
-diff --git a/arch/arm64/boot/dts/freescale/qoriq-qman-portals.dtsi b/arch/arm64/boot/dts/freescale/qoriq-qman-portals.dtsi
-new file mode 100644
-index 0000000..2a9aa06
---- /dev/null
-+++ b/arch/arm64/boot/dts/freescale/qoriq-qman-portals.dtsi
-@@ -0,0 +1,80 @@
-+/*
-+ * QorIQ QMan Portals device tree
-+ *
-+ * Copyright 2011-2016 Freescale Semiconductor Inc.
-+ *
-+ * SPDX-License-Identifier: (GPL-2.0+ OR BSD-3-Clause)
-+ */
-+
-+&qportals {
-+	#address-cells = <1>;
-+	#size-cells = <1>;
-+	compatible = "simple-bus";
-+
-+	qportal0: qman-portal@0 {
-+		/*
-+		 * bootloader fix-ups are expected to provide the
-+		 * "fsl,bman-portal-<hardware revision>" compatible
-+		 */
-+		compatible = "fsl,qman-portal";
-+		reg = <0x0 0x4000>, <0x4000000 0x4000>;
-+		interrupts = <GIC_SPI 172 IRQ_TYPE_LEVEL_HIGH>;
-+		cell-index = <0>;
-+	};
-+
-+	qportal1: qman-portal@10000 {
-+		compatible = "fsl,qman-portal";
-+		reg = <0x10000 0x4000>, <0x4010000 0x4000>;
-+		interrupts = <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH>;
-+		cell-index = <1>;
-+	};
-+
-+	qportal2: qman-portal@20000 {
-+		compatible = "fsl,qman-portal";
-+		reg = <0x20000 0x4000>, <0x4020000 0x4000>;
-+		interrupts = <GIC_SPI 176 IRQ_TYPE_LEVEL_HIGH>;
-+		cell-index = <2>;
-+	};
-+
-+	qportal3: qman-portal@30000 {
-+		compatible = "fsl,qman-portal";
-+		reg = <0x30000 0x4000>, <0x4030000 0x4000>;
-+		interrupts = <GIC_SPI 178 IRQ_TYPE_LEVEL_HIGH>;
-+		cell-index = <3>;
-+	};
-+
-+	qportal4: qman-portal@40000 {
-+		compatible = "fsl,qman-portal";
-+		reg = <0x40000 0x4000>, <0x4040000 0x4000>;
-+		interrupts = <GIC_SPI 180 IRQ_TYPE_LEVEL_HIGH>;
-+		cell-index = <4>;
-+	};
-+
-+	qportal5: qman-portal@50000 {
-+		compatible = "fsl,qman-portal";
-+		reg = <0x50000 0x4000>, <0x4050000 0x4000>;
-+		interrupts = <GIC_SPI 182 IRQ_TYPE_LEVEL_HIGH>;
-+		cell-index = <5>;
-+	};
-+
-+	qportal6: qman-portal@60000 {
-+		compatible = "fsl,qman-portal";
-+		reg = <0x60000 0x4000>, <0x4060000 0x4000>;
-+		interrupts = <GIC_SPI 184 IRQ_TYPE_LEVEL_HIGH>;
-+		cell-index = <6>;
-+	};
-+
-+	qportal7: qman-portal@70000 {
-+		compatible = "fsl,qman-portal";
-+		reg = <0x70000 0x4000>, <0x4070000 0x4000>;
-+		interrupts = <GIC_SPI 186 IRQ_TYPE_LEVEL_HIGH>;
-+		cell-index = <7>;
-+	};
-+
-+	qportal8: qman-portal@80000 {
-+		compatible = "fsl,qman-portal";
-+		reg = <0x80000 0x4000>, <0x4080000 0x4000>;
-+		interrupts = <GIC_SPI 188 IRQ_TYPE_LEVEL_HIGH>;
-+		cell-index = <8>;
-+	};
-+};
+On Mon, May 15, 2017 at 12:30:43AM +0800, Icenowy Zheng wrote:
+> +		de2_clocks: clock@1000000 {
+
+display_clocks would be better there, we don't have to dissociate de1
+with de2
+
+> +			compatible = "allwinner,sun8i-v3s-de2-clk";
+> +			reg = <0x01000000 0x100000>;
+> +			clocks = <&ccu CLK_DE>,
+> +				 <&ccu CLK_BUS_DE>;
+> +			clock-names = "mod",
+> +				      "bus";
+> +			resets = <&ccu RST_BUS_DE>;
+> +			#clock-cells = <1>;
+> +			#reset-cells = <1>;
+> +		};
+> +
+> +		de2_mixer0: mixer@1100000 {
+
+and mixer0 here is enough too.
+
+Is there several of them? Why not just use mixer if there's only one?
+
+> +			compatible = "allwinner,sun8i-v3s-de2-mixer";
+> +			reg = <0x01100000 0x100000>;
+> +			clocks = <&de2_clocks CLK_MIXER0>,
+> +				 <&de2_clocks CLK_BUS_MIXER0>;
+> +			clock-names = "mod",
+> +				      "bus";
+> +			resets = <&de2_clocks RST_MIXER0>;
+> +			assigned-clocks = <&de2_clocks CLK_MIXER0>;
+> +			assigned-clock-rates = <150000000>;
+> +
+> +			ports {
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +
+> +				mixer0_out: port@1 {
+> +					#address-cells = <1>;
+> +					#size-cells = <0>;
+> +					reg = <1>;
+> +
+> +					mixer0_out_tcon0: endpoint@0 {
+> +						reg = <0>;
+> +						remote-endpoint = <&tcon0_in_mixer0>;
+> +					};
+> +				};
+> +			};
+> +		};
+> +
+> +		tcon0: lcd-controller@1c0c000 {
+> +			compatible = "allwinner,sun8i-v3s-tcon";
+> +			reg = <0x01c0c000 0x1000>;
+> +			interrupts = <GIC_SPI 86 IRQ_TYPE_LEVEL_HIGH>;
+> +			clocks = <&ccu CLK_BUS_TCON0>,
+> +				 <&ccu CLK_TCON0>;
+> +			clock-names = "ahb",
+> +				      "tcon-ch0";
+> +			clock-output-names = "tcon-pixel-clock";
+> +			resets = <&ccu RST_BUS_TCON0>;
+> +			reset-names = "lcd";
+> +			status = "disabled";
+> +
+> +			ports {
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +
+> +				tcon0_in: port@0 {
+> +					#address-cells = <1>;
+> +					#size-cells = <0>;
+> +					reg = <0>;
+> +
+> +					tcon0_in_mixer0: endpoint@0 {
+> +						reg = <0>;
+> +						remote-endpoint = <&mixer0_out_tcon0>;
+> +					};
+> +				};
+> +
+> +				tcon0_out: port@1 {
+> +					#address-cells = <1>;
+> +					#size-cells = <0>;
+> +					reg = <1>;
+> +				};
+> +			};
+> +		};
+> +
+> +
+
+You have an extra new line here.
+
+Maxime
+
 -- 
-2.1.0
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--wkdg7dacrwu6npqt--
