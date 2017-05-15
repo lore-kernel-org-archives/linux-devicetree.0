@@ -1,69 +1,67 @@
 From: Anup Patel <anup.patel@broadcom.com>
-Subject: [PATCH v8 2/4] async_tx: Fix DMA_PREP_FENCE usage in
- do_async_gen_syndrome()
-Date: Mon, 15 May 2017 10:34:53 +0530
-Message-ID: <1494824695-21797-3-git-send-email-anup.patel@broadcom.com>
-References: <1494824695-21797-1-git-send-email-anup.patel@broadcom.com>
+Subject: Re: [PATCH 02/11] dt-bindings: clk: Extend binding doc for Stingray SOC
+Date: Mon, 15 May 2017 10:37:53 +0530
+Message-ID: <CAALAos-5wd6qPvvZqezswsBXm=n1UJhB9kFkoYeanT-RwaXW1A@mail.gmail.com>
+References: <1494071686-19098-1-git-send-email-anup.patel@broadcom.com>
+ <1494071686-19098-3-git-send-email-anup.patel@broadcom.com> <20170512152134.tjuc5exo4plalujs@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1494824695-21797-1-git-send-email-anup.patel@broadcom.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Vinod Koul <vinod.koul@intel.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Herbert Xu <herbert@gondor.apana.org.au>, "David S . Miller" <davem@davemloft.net>, Jassi Brar <jassisinghbrar@gmail.com>
-Cc: devicetree@vger.kernel.org, Anup Patel <anup.patel@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Ray Jui <rjui@broadcom.com>, linux-kernel@vger.kernel.org, linux-raid@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, linux-crypto@vger.kernel.org, Rob Rice <rob.rice@broadcom.com>, dmaengine@vger.kernel.org, Dan Williams <dan.j.williams@intel.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170512152134.tjuc5exo4plalujs@rob-hp-laptop>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Florian Fainelli <f.fainelli@gmail.com>, Oza Pawandeep <oza@broadcom.com>, Srinath Mannam <srinath.mannam@broadcom.com>, Pramod Kumar <pramod.kumar@broadcom.com>, Sandeep Tripathy <sandeep.tripathy@broadcom.com>, Device Tree <devicetree@vger.kernel.org>, Linux Kernel <linux-kernel@vger.kernel.org>, linux-clk@vger.kernel.org, Linux ARM Kernel <linux-arm-kernel@lists.infradead.org>, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-The DMA_PREP_FENCE is to be used when preparing Tx descriptor if output
-of Tx descriptor is to be used by next/dependent Tx descriptor.
+On Fri, May 12, 2017 at 8:51 PM, Rob Herring <robh@kernel.org> wrote:
+> On Sat, May 06, 2017 at 05:24:37PM +0530, Anup Patel wrote:
+>> From: Sandeep Tripathy <sandeep.tripathy@broadcom.com>
+>>
+>> Update iproc clock dt-binding documentation with
+>> Stingray pll and clock details.
+>>
+>> Signed-off-by: Sandeep Tripathy <sandeep.tripathy@broadcom.com>
+>> Reviewed-by: Ray Jui <ray.jui@broadcom.com>
+>> Reviewed-by: Scott Branden <scott.branden@broadcom.com>
+>> ---
+>>  .../bindings/clock/brcm,iproc-clocks.txt           | 76 ++++++++++++++++++++++
+>>  1 file changed, 76 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/clock/brcm,iproc-clocks.txt b/Documentation/devicetree/bindings/clock/brcm,iproc-clocks.txt
+>> index 6f66e9a..f2c5f0e4a 100644
+>> --- a/Documentation/devicetree/bindings/clock/brcm,iproc-clocks.txt
+>> +++ b/Documentation/devicetree/bindings/clock/brcm,iproc-clocks.txt
+>> @@ -219,3 +219,79 @@ BCM63138
+>>  --------
+>>  PLL and leaf clock compatible strings for BCM63138 are:
+>>      "brcm,bcm63138-armpll"
+>> +
+>> +Stingray
+>> +-----------
+>> +PLL and leaf clock compatible strings for Stingray are:
+>> +    "brcm,sr-genpll0"
+>> +    "brcm,sr-genpll1"
+>> +    "brcm,sr-genpll2"
+>> +    "brcm,sr-genpll3"
+>> +    "brcm,sr-genpll4"
+>> +    "brcm,sr-genpll5"
+>> +    "brcm,sr-genpll6"
+>> +
+>> +    "brcm,sr-lcpll0"
+>> +    "brcm,sr-lcpll1"
+>> +    "brcm,sr-lcpll-pcie"
+>> +
+>> +
+>> +The following table defines the set of PLL/clock index and ID for Stingray.
+>> +These clock IDs are defined in:
+>> +    "include/dt-bindings/clock/bcm-sr.h"
+>
+> This header should be part of this commit. With that,
 
-The DMA_PREP_FENSE will not be set correctly in do_async_gen_syndrome()
-when calling dma->device_prep_dma_pq() under following conditions:
-1. ASYNC_TX_FENCE not set in submit->flags
-2. DMA_PREP_FENCE not set in dma_flags
-3. src_cnt (= (disks - 2)) is greater than dma_maxpq(dma, dma_flags)
+Sure, I will include bcm-sr.h as-part of this commit.
 
-This patch fixes DMA_PREP_FENCE usage in do_async_gen_syndrome() taking
-inspiration from do_async_xor() implementation.
+>
+> Acked-by: Rob Herring <robh@kernel.org>
 
-Signed-off-by: Anup Patel <anup.patel@broadcom.com>
-Reviewed-by: Ray Jui <ray.jui@broadcom.com>
-Reviewed-by: Scott Branden <scott.branden@broadcom.com>
-Acked-by: Dan Williams <dan.j.williams@intel.com>
----
- crypto/async_tx/async_pq.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
-
-diff --git a/crypto/async_tx/async_pq.c b/crypto/async_tx/async_pq.c
-index f83de99..56bd612 100644
---- a/crypto/async_tx/async_pq.c
-+++ b/crypto/async_tx/async_pq.c
-@@ -62,9 +62,6 @@ do_async_gen_syndrome(struct dma_chan *chan,
- 	dma_addr_t dma_dest[2];
- 	int src_off = 0;
- 
--	if (submit->flags & ASYNC_TX_FENCE)
--		dma_flags |= DMA_PREP_FENCE;
--
- 	while (src_cnt > 0) {
- 		submit->flags = flags_orig;
- 		pq_src_cnt = min(src_cnt, dma_maxpq(dma, dma_flags));
-@@ -83,6 +80,8 @@ do_async_gen_syndrome(struct dma_chan *chan,
- 			if (cb_fn_orig)
- 				dma_flags |= DMA_PREP_INTERRUPT;
- 		}
-+		if (submit->flags & ASYNC_TX_FENCE)
-+			dma_flags |= DMA_PREP_FENCE;
- 
- 		/* Drivers force forward progress in case they can not provide
- 		 * a descriptor
--- 
-2.7.4
+Thanks,
+Anup
