@@ -1,73 +1,120 @@
-From: <Wenyou.Yang@microchip.com>
-Subject: RE: [PATCH v3] ARM: dts: at91: sama5d2: add m_can nodes
-Date: Mon, 15 May 2017 10:17:08 +0000
-Message-ID: <F9F4555C4E01D7469D37975B62D0EFBB591F84@CHN-SV-EXMX07.mchp-main.com>
-References: <20170424011217.2530-1-wenyou.yang@atmel.com>
- <20170515094336.h6rllnei3cneb4j2@piout.net>
+From: Philippe CORNU <philippe.cornu@st.com>
+Subject: Re: [PATCH v1 3/3] drm/stm: Add STM32 DSI host driver
+Date: Mon, 15 May 2017 10:33:28 +0000
+Message-ID: <250fc42c-8961-c57e-6f59-9b1a6523a0a4@st.com>
+References: <1494600989-13507-1-git-send-email-philippe.cornu@st.com>
+ <1494600989-13507-4-git-send-email-philippe.cornu@st.com>
+ <a254c176-8064-1984-10b8-dce4308cc3d6@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
-Return-path: <linux-can-owner@vger.kernel.org>
-In-Reply-To: <20170515094336.h6rllnei3cneb4j2@piout.net>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <a254c176-8064-1984-10b8-dce4308cc3d6@baylibre.com>
 Content-Language: en-US
-Sender: linux-can-owner@vger.kernel.org
-To: alexandre.belloni@free-electrons.com
-Cc: Nicolas.Ferre@microchip.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, linux-kernel@vger.kernel.org, linux-can@vger.kernel.org, socketcan@hartkopp.net, devicetree@vger.kernel.org, quentin.schulz@free-electrons.com, linux-arm-kernel@lists.infradead.org
+Content-ID: <107644AA7F8BEB4DB30452DA51A18038@st.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Neil Armstrong <narmstrong@baylibre.com>, Alexandre TORGUE <alexandre.torgue@st.com>, Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Russell King <linux@armlinux.org.uk>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Benjamin
+ Gaignard <benjamin.gaignard@linaro.org>, Yannick FERTRE <yannick.fertre@st.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "kernel@stlinux.com" <kernel@stlinux.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Fabien DESSENNE <fabien.dessenne@st.com>, Ludovic BARRE <ludovic.barre@st.com>, Mickael REULIER <mickael.reulier@st.com>, Vincent ABRIOU <vincent.abriou@st.com>, Gabriel FERNANDEZ <gabriel.fernandez@st.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgQWxleGFuZHJlLA0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IEFs
-ZXhhbmRyZSBCZWxsb25pIFttYWlsdG86YWxleGFuZHJlLmJlbGxvbmlAZnJlZS1lbGVjdHJvbnMu
-Y29tXQ0KPiBTZW50OiAyMDE3xOo11MIxNcjVIDE3OjQ0DQo+IFRvOiBXZW55b3UgWWFuZyAtIEE0
-MTUzNSA8V2VueW91LllhbmdAbWljcm9jaGlwLmNvbT4NCj4gQ2M6IE5pY29sYXMgRmVycmUgLSBN
-NDMyMzggPE5pY29sYXMuRmVycmVAbWljcm9jaGlwLmNvbT47IFJvYiBIZXJyaW5nDQo+IDxyb2Jo
-K2R0QGtlcm5lbC5vcmc+OyBQYXdlbCBNb2xsIDxwYXdlbC5tb2xsQGFybS5jb20+OyBNYXJrIFJ1
-dGxhbmQNCj4gPG1hcmsucnV0bGFuZEBhcm0uY29tPjsgSWFuIENhbXBiZWxsIDxpamMrZGV2aWNl
-dHJlZUBoZWxsaW9uLm9yZy51az47IEt1bWFyDQo+IEdhbGEgPGdhbGFrQGNvZGVhdXJvcmEub3Jn
-PjsgUnVzc2VsbCBLaW5nIDxsaW51eEBhcm0ubGludXgub3JnLnVrPjsgbGludXgtDQo+IGtlcm5l
-bEB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWNhbkB2Z2VyLmtlcm5lbC5vcmc7IE9saXZlciBIYXJ0
-a29wcA0KPiA8c29ja2V0Y2FuQGhhcnRrb3BwLm5ldD47IGRldmljZXRyZWVAdmdlci5rZXJuZWwu
-b3JnOyBRdWVudGluIFNjaHVseg0KPiA8cXVlbnRpbi5zY2h1bHpAZnJlZS1lbGVjdHJvbnMuY29t
-PjsgV2VueW91IFlhbmcgLSBBNDE1MzUNCj4gPFdlbnlvdS5ZYW5nQG1pY3JvY2hpcC5jb20+OyBs
-aW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcNCj4gU3ViamVjdDogUmU6IFtQQVRD
-SCB2M10gQVJNOiBkdHM6IGF0OTE6IHNhbWE1ZDI6IGFkZCBtX2NhbiBub2Rlcw0KPiANCj4gT24g
-MjQvMDQvMjAxNyBhdCAwOToxMjoxNyArMDgwMCwgV2VueW91IFlhbmcgd3JvdGU6DQo+ID4gQWRk
-IG5vZGVzIHRvIHN1cHBvcnQgdGhlIENvbnRyb2xsZXIgQXJlYSBOZXR3b3JrKE1fQ0FOKSBvbiBT
-QU1BNUQyLg0KPiA+IFRoZSB2ZXJzaW9uIG9mIE1fQ0FOIElQIGNvcmUgaXMgMy4xLjAgKENSRUwg
-PSAweDMxMDQwNzMwKS4NCj4gPg0KPiA+IEFzIHNhaWQgaW4gU0FNQTVEMiBkYXRhc2hlZXQsIHRo
-ZSBDQU4gY2xvY2sgaXMgcmVjb21tZW5kZWQgdG8gdXNlDQo+ID4gZnJlcXVlbmNpZXMgb2YgMjAs
-IDQwIG9yIDgwIE1Iei4gVG8gYWNoaWV2ZSB0aGVzZSBmcmVxdWVuY2llcywgUE1DDQo+ID4gR0NM
-SzMgbXVzdCBzZWxlY3QgdGhlIFVQTExDSyg0ODAgTUh6KSBhcyBzb3VyY2UgY2xvY2sgYW5kIGRp
-dmlkZSBieQ0KPiA+IDI0LCAxMiwgb3IgNi4gU28sIHRoZSAiYXNzaWduZWQtY2xvY2stcmF0ZXMi
-IHByb3BlcnR5IGhhcyB0aHJlZQ0KPiA+IG9wdGlvbnM6IDIwMDAwMDAwLCA0MDAwMDAwMCwgYW5k
-IDgwMDAwMDAwLg0KPiA+IFRoZSAiYXNzaWduZWQtY2xvY2stcGFyZW50cyIgcHJvcGVydHkgc2hv
-dWxkIGJlIHJlZmVycmVkIHRvIHV0bWkNCj4gPiBmaXhlZGx5Lg0KPiA+DQo+ID4gVGhlIE1TQnMg
-W2JpdHMgMzE6MTZdIG9mIHRoZSBDQU4gTWVzc2FnZSBSQU0gZm9yIENBTjAgYW5kIENBTjEgYXJl
-DQo+ID4gZGVmYXVsdCBjb25maWd1cmVkIGluIDB4MDAyMDAwMDAuIFRvIGF2b2lkIGNvbmZsaWN0
-IHdpdGggU1JBTSBtYXAgZm9yDQo+ID4gUE0sIGNoYW5nZSB0aGVtIHRvIDB4MDAyMTAwMDAgaW4g
-dGhlIEFUOTFCb290c3RyYXAgdmlhIHNldHRpbmcgdGhlIENBTg0KPiA+IE1lbW9yaWVzIEFkZHJl
-c3MtYmFzZWQgUmVnaXN0ZXIoU0ZSX0NBTikgb2YgU0ZSLg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1i
-eTogV2VueW91IFlhbmcgPHdlbnlvdS55YW5nQGF0bWVsLmNvbT4NCj4gPiBUZXN0ZWQtYnk6IFF1
-ZW50aW4gU2NodWx6IDxxdWVudGluLnNjaHVsekBmcmVlLWVsZWN0cm9ucy5jb20+DQo+ID4gLS0t
-DQo+ID4gVGhlIHBhdGNoIGlzIHRlc3RlZCBvbiBTQU1BNUQyIFhwbGFpbmVkIGFuZCBiYXNlZCBv
-biB0aGUgcGF0Y2ggc2V0LA0KPiA+IDEuIFtQQVRDSCB2NCAxLzddIGNhbjogbV9jYW46IERpc2Fi
-bGVkIEludGVycnVwdCBMaW5lIDENCj4gPiAgICAgaHR0cDovL21hcmMuaW5mby8/bD1saW51eC1j
-YW4mbT0xNDkxNjUzNDM2MDQwMzMmdz0yDQo+ID4NCj4gPiBDaGFuZ2VzIGluIHYzOg0KPiA+ICAt
-IEFkZCBUZXN0ZWQtYnkgdGFnLg0KPiA+ICAtIENoYW5nZSB0aGUgbnVtYmVyIG9mIFJ4IFJ4IEJ1
-ZmZlcnMsIFR4IEJ1ZmZlcnMgYW5kIFR4IEV2ZW50IEZJRk8NCj4gPiAgICB0byBtYXhpbXVtLg0K
-PiA+DQo+ID4gQ2hhbmdlcyBpbiB2MjoNCj4gPiAgLSBDb25maWd1cmVzIDEwIFRYIEV2ZW50IEZJ
-Rk8gZWxlbWVudHMgYW5kIDEwIFRYIEJ1ZmZlcnMvRklGTyBzbG90cywNCj4gPiAgICBiZWNhdXNl
-IHRoZSBUWEUgRklGTyBpcyBuZWVkZWQgdG8gYmUgY29uZmlndXJlZC4NCj4gPiAgLSBDb25maWd1
-cmUgdGhlIG9mZnNldCBvZiBNZXNzYWdlIFJBTSBmb3IgQ0FOMSBmb2xsb3dlZCBmcm9tIENBTjAn
-cy4NCj4gPg0KPiA+ICBhcmNoL2FybS9ib290L2R0cy9hdDkxLXNhbWE1ZDJfeHBsYWluZWQuZHRz
-IHwgMjQgKysrKysrKysrKysrKw0KPiA+ICBhcmNoL2FybS9ib290L2R0cy9zYW1hNWQyLmR0c2kg
-ICAgICAgICAgICAgIHwgNTYNCj4gKysrKysrKysrKysrKysrKysrKysrKysrKysrKysNCj4gPiAg
-MiBmaWxlcyBjaGFuZ2VkLCA4MCBpbnNlcnRpb25zKCspDQo+ID4NCj4gDQo+IEl0IGRpZG4ndCBh
-cHBseSBjbGVhbmx5LCBjYW4geW91IHBsZWFzZSB2ZXJpZnkNCj4gaHR0cHM6Ly9naXQua2VybmVs
-Lm9yZy9wdWIvc2NtL2xpbnV4L2tlcm5lbC9naXQvYWJlbGxvbmkvbGludXguZ2l0L2xvZy8/aD1h
-dDkxLWR0DQoNClZlcmlmaWVkLCBpdCB3b3Jrcy4gDQoNClRoYW5rIHlvdSBmb3IgeW91ciBlZmZv
-cnQuDQoNCg0KQlRXLCBpdCB3aWxsIGJlIGJldHRlciB0YWtlIHRoZSBwYXRjaCB0byBhZGQgdGhl
-IGNvbmZpZy4NCltQQVRDSCB2Ml0gQVJNOiBhdDkxL2RlZmNvbmZpZzogYWRkIE1DQU4gZHJpdmVy
-IHRvIHNhbWE1X2RlZmNvbmZpZw0KSSBqdXN0IHN1Ym1pdHRlZC4NCg0KPiANCj4gLS0NCj4gQWxl
-eGFuZHJlIEJlbGxvbmksIEZyZWUgRWxlY3Ryb25zDQo+IEVtYmVkZGVkIExpbnV4IGFuZCBLZXJu
-ZWwgZW5naW5lZXJpbmcNCj4gaHR0cDovL2ZyZWUtZWxlY3Ryb25zLmNvbQ0KDQoNCkJlc3QgUmVn
-YXJkcywNCldlbnlvdSBZYW5nDQo=
+Hi Neil,
+Many thanks for your comments.
+
+The PHY part of the MIPI DSI is the main difference between all chipsets =
+
+based on the Synopsys DesignWare MIPI DSI.
+There is no "generic DSI PHY interface" and that is probably why all soc =
+
+vendors have implemented their own drivers (RockChip, NXP/Freescale, =
+
+HiSilicon and now STM32).
+
+Regarding creating a "generic dw MIPI DSI bridge" as the recent dw hdmi =
+
+bridge, several attempts have been done in the past but without success:
+* Liu Ying from Freescale in February 2015 =
+
+(https://lkml.org/lkml/2015/2/12/38).
+* Chris Zhong from Rockchip in November 2015 =
+
+(http://www.mail-archive.com/linux-kernel@vger.kernel.org/msg1024586.html).
+
+The Rockchip driver looks nice and is updated regularly.
+So, instead of creating a new driver for the STM32 family, we decided to =
+
+use Rockchip=92s in our own drm/stm directory and replace the =
+
+Rockchip-specific PHY by the STM32.
+
+Comments are welcome :-)
+Many thanks,
+Philippe
+
+
+On 05/15/2017 10:22 AM, Neil Armstrong wrote:
+> On 05/12/2017 04:56 PM, Philippe CORNU wrote:
+>> This mipi dsi host driver is based on the Rockchip version of the
+>> Synopsys Designware mipi dsi driver (rockchip/dw-mipi-dsi.c)
+>> modified for the stm32 family:
+>> - replace Rockchip digital & phy specific extensions with stm32's ones.
+>> - add a bridge
+>>
+>> Signed-off-by: Philippe CORNU <philippe.cornu@st.com>
+>> ---
+>>  drivers/gpu/drm/stm/Kconfig       |    7 +
+>>  drivers/gpu/drm/stm/Makefile      |    2 +
+>>  drivers/gpu/drm/stm/dw-mipi-dsi.c | 1197 ++++++++++++++++++++++++++++++=
++++++++
+>>  3 files changed, 1206 insertions(+)
+>>  create mode 100644 drivers/gpu/drm/stm/dw-mipi-dsi.c
+>>
+>> diff --git a/drivers/gpu/drm/stm/Kconfig b/drivers/gpu/drm/stm/Kconfig
+>> index 2c4817f..0007789 100644
+>> --- a/drivers/gpu/drm/stm/Kconfig
+>> +++ b/drivers/gpu/drm/stm/Kconfig
+>> @@ -14,3 +14,10 @@ config DRM_STM
+>>  	  STMicroelectronics STM32 MCUs.
+>>  	  To compile this driver as a module, choose M here: the module
+>>  	  will be called stm-drm.
+>> +
+>> +config DRM_STM_DSI
+>> +	tristate "MIPI DSI support for STMicroelectronics SoC"
+>> +	depends on DRM_STM
+>> +	select DRM_MIPI_DSI
+>> +	help
+>> +	  Choose this option for MIPI DSI support on STMicroelectronics SoC.
+>> diff --git a/drivers/gpu/drm/stm/Makefile b/drivers/gpu/drm/stm/Makefile
+>> index e114d45..e448a93 100644
+>> --- a/drivers/gpu/drm/stm/Makefile
+>> +++ b/drivers/gpu/drm/stm/Makefile
+>> @@ -4,4 +4,6 @@ stm-drm-y :=3D \
+>>  	drv.o \
+>>  	ltdc.o
+>>
+>> +obj-$(CONFIG_DRM_STM_DSI) +=3D dw-mipi-dsi.o
+>> +
+>>  obj-$(CONFIG_DRM_STM) +=3D stm-drm.o
+>> diff --git a/drivers/gpu/drm/stm/dw-mipi-dsi.c b/drivers/gpu/drm/stm/dw-=
+mipi-dsi.c
+>> new file mode 100644
+>> index 0000000..4b7f7b9
+>> --- /dev/null
+>> +++ b/drivers/gpu/drm/stm/dw-mipi-dsi.c
+>
+>
+> Hi Philippe,
+>
+> First question, why couldn't this be transformed as a bridge driver along=
+ the Synopsys DW-HDMI driver ?
+>
+> Neil
+>
