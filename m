@@ -1,124 +1,39 @@
-From: Anup Patel <anup.patel@broadcom.com>
-Subject: [PATCH v2 02/11] dt-bindings: clk: Extend binding doc for Stingray SOC
-Date: Mon, 15 May 2017 17:32:12 +0530
-Message-ID: <1494849741-21294-3-git-send-email-anup.patel@broadcom.com>
+From: Anup Patel <anup.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v2 05/11] arm64: dts: Add clock DT nodes for Stingray SOC
+Date: Mon, 15 May 2017 17:32:15 +0530
+Message-ID: <1494849741-21294-6-git-send-email-anup.patel@broadcom.com>
 References: <1494849741-21294-1-git-send-email-anup.patel@broadcom.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1494849741-21294-1-git-send-email-anup.patel@broadcom.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>
-Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Florian Fainelli <f.fainelli@gmail.com>, Oza Pawandeep <oza.oza@broadcom.com>, Srinath Mannam <srinath.mannam@broadcom.com>, Pramod Kumar <pramod.kumar@broadcom.com>, Sandeep Tripathy <sandeep.tripathy@broadcom.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1494849741-21294-1-git-send-email-anup.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Cc: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Oza Pawandeep <oza.oza-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Srinath Mannam <srinath.mannam-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Pramod Kumar <pramod.kumar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Sandeep Tripathy <sandeep.tripathy-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Sandeep Tripathy <sandeep.tripathy@broadcom.com>
+From: Sandeep Tripathy <sandeep.tripathy-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 
-Update iproc clock dt-binding documentation with
-Stingray pll and clock details.
+This patch describes Stingray SOC clock tree using
+DT nodes in Stingray DTS.
 
-Signed-off-by: Sandeep Tripathy <sandeep.tripathy@broadcom.com>
-Reviewed-by: Ray Jui <ray.jui@broadcom.com>
-Reviewed-by: Scott Branden <scott.branden@broadcom.com>
-Acked-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Sandeep Tripathy <sandeep.tripathy-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Reviewed-by: Ray Jui <ray.jui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Reviewed-by: Scott Branden <scott.branden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 ---
- .../bindings/clock/brcm,iproc-clocks.txt           |  76 ++++++++++++++++
- include/dt-bindings/clock/bcm-sr.h                 | 101 +++++++++++++++++++++
- 2 files changed, 177 insertions(+)
- create mode 100644 include/dt-bindings/clock/bcm-sr.h
+ .../boot/dts/broadcom/stingray/stingray-clock.dtsi | 170 +++++++++++++++++++++
+ .../arm64/boot/dts/broadcom/stingray/stingray.dtsi |   9 ++
+ 2 files changed, 179 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/broadcom/stingray/stingray-clock.dtsi
 
-diff --git a/Documentation/devicetree/bindings/clock/brcm,iproc-clocks.txt b/Documentation/devicetree/bindings/clock/brcm,iproc-clocks.txt
-index 6f66e9a..f2c5f0e4a 100644
---- a/Documentation/devicetree/bindings/clock/brcm,iproc-clocks.txt
-+++ b/Documentation/devicetree/bindings/clock/brcm,iproc-clocks.txt
-@@ -219,3 +219,79 @@ BCM63138
- --------
- PLL and leaf clock compatible strings for BCM63138 are:
-     "brcm,bcm63138-armpll"
-+
-+Stingray
-+-----------
-+PLL and leaf clock compatible strings for Stingray are:
-+    "brcm,sr-genpll0"
-+    "brcm,sr-genpll1"
-+    "brcm,sr-genpll2"
-+    "brcm,sr-genpll3"
-+    "brcm,sr-genpll4"
-+    "brcm,sr-genpll5"
-+    "brcm,sr-genpll6"
-+
-+    "brcm,sr-lcpll0"
-+    "brcm,sr-lcpll1"
-+    "brcm,sr-lcpll-pcie"
-+
-+
-+The following table defines the set of PLL/clock index and ID for Stingray.
-+These clock IDs are defined in:
-+    "include/dt-bindings/clock/bcm-sr.h"
-+
-+    Clock		Source		Index	ID
-+    ---			-----		-----	---------
-+    crystal		N/A		N/A	N/A
-+    crmu_ref25m		crystal		N/A	N/A
-+
-+    genpll0		crystal		0	BCM_SR_GENPLL0
-+    clk_125m		genpll0		1	BCM_SR_GENPLL0_125M_CLK
-+    clk_scr		genpll0		2	BCM_SR_GENPLL0_SCR_CLK
-+    clk_250		genpll0		3	BCM_SR_GENPLL0_250M_CLK
-+    clk_pcie_axi	genpll0		4	BCM_SR_GENPLL0_PCIE_AXI_CLK
-+    clk_paxc_axi_x2	genpll0		5	BCM_SR_GENPLL0_PAXC_AXI_X2_CLK
-+    clk_paxc_axi	genpll0		6	BCM_SR_GENPLL0_PAXC_AXI_CLK
-+
-+    genpll1		crystal		0	BCM_SR_GENPLL1
-+    clk_pcie_tl		genpll1		1	BCM_SR_GENPLL1_PCIE_TL_CLK
-+    clk_mhb_apb		genpll1		2	BCM_SR_GENPLL1_MHB_APB_CLK
-+
-+    genpll2		crystal		0	BCM_SR_GENPLL2
-+    clk_nic		genpll2		1	BCM_SR_GENPLL2_NIC_CLK
-+    clk_ts_500_ref	genpll2		2	BCM_SR_GENPLL2_TS_500_REF_CLK
-+    clk_125_nitro	genpll2		3	BCM_SR_GENPLL2_125_NITRO_CLK
-+    clk_chimp		genpll2		4	BCM_SR_GENPLL2_CHIMP_CLK
-+    clk_nic_flash	genpll2		5	BCM_SR_GENPLL2_NIC_FLASH
-+
-+    genpll3		crystal		0	BCM_SR_GENPLL3
-+    clk_hsls		genpll3		1	BCM_SR_GENPLL3_HSLS_CLK
-+    clk_sdio		genpll3		2	BCM_SR_GENPLL3_SDIO_CLK
-+
-+    genpll4		crystal		0	BCM_SR_GENPLL4
-+    ccn			genpll4		1	BCM_SR_GENPLL4_CCN_CLK
-+    clk_tpiu_pll	genpll4		2	BCM_SR_GENPLL4_TPIU_PLL_CLK
-+    noc_clk		genpll4		3	BCM_SR_GENPLL4_NOC_CLK
-+    clk_chclk_fs4	genpll4		4	BCM_SR_GENPLL4_CHCLK_FS4_CLK
-+    clk_bridge_fscpu	genpll4		5	BCM_SR_GENPLL4_BRIDGE_FSCPU_CLK
-+
-+
-+    genpll5		crystal		0	BCM_SR_GENPLL5
-+    fs4_hf_clk		genpll5		1	BCM_SR_GENPLL5_FS4_HF_CLK
-+    crypto_ae_clk	genpll5		2	BCM_SR_GENPLL5_CRYPTO_AE_CLK
-+    raid_ae_clk		genpll5		3	BCM_SR_GENPLL5_RAID_AE_CLK
-+
-+    genpll6		crystal		0	BCM_SR_GENPLL6
-+    48_usb		genpll6		1	BCM_SR_GENPLL6_48_USB_CLK
-+
-+    lcpll0		crystal		0	BCM_SR_LCPLL0
-+    clk_sata_refp 	lcpll0		1	BCM_SR_LCPLL0_SATA_REFP_CLK
-+    clk_sata_refn	lcpll0		2	BCM_SR_LCPLL0_SATA_REFN_CLK
-+    clk_usb_ref		lcpll0		3	BCM_SR_LCPLL0_USB_REF_CLK
-+    sata_refpn		lcpll0		3	BCM_SR_LCPLL0_SATA_REFPN_CLK
-+
-+    lcpll1		crystal		0	BCM_SR_LCPLL1
-+    wan 		lcpll1		1	BCM_SR_LCPLL0_WAN_CLK
-+
-+    lcpll_pcie		crystal		0	BCM_SR_LCPLL_PCIE
-+    pcie_phy_ref 	lcpll1		1	BCM_SR_LCPLL_PCIE_PHY_REF_CLK
-diff --git a/include/dt-bindings/clock/bcm-sr.h b/include/dt-bindings/clock/bcm-sr.h
+diff --git a/arch/arm64/boot/dts/broadcom/stingray/stingray-clock.dtsi b/arch/arm64/boot/dts/broadcom/stingray/stingray-clock.dtsi
 new file mode 100644
-index 0000000..cff6c6f
+index 0000000..070e22e2
 --- /dev/null
-+++ b/include/dt-bindings/clock/bcm-sr.h
-@@ -0,0 +1,101 @@
++++ b/arch/arm64/boot/dts/broadcom/stingray/stingray-clock.dtsi
+@@ -0,0 +1,170 @@
 +/*
 + *  BSD LICENSE
 + *
-+ *  Copyright(c) 2017 Broadcom. All rights reserved.
++ *  Copyright(c) 2016-2017 Broadcom.  All rights reserved.
 + *
 + *  Redistribution and use in source and binary forms, with or without
 + *  modification, are permitted provided that the following conditions
@@ -130,7 +45,7 @@ index 0000000..cff6c6f
 + *      notice, this list of conditions and the following disclaimer in
 + *      the documentation and/or other materials provided with the
 + *      distribution.
-+ *    * Neither the name of Broadcom Corporation nor the names of its
++ *    * Neither the name of Broadcom nor the names of its
 + *      contributors may be used to endorse or promote products derived
 + *      from this software without specific prior written permission.
 + *
@@ -147,74 +62,168 @@ index 0000000..cff6c6f
 + *  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 + */
 +
-+#ifndef _CLOCK_BCM_SR_H
-+#define _CLOCK_BCM_SR_H
++#include <dt-bindings/clock/bcm-sr.h>
 +
-+/* GENPLL 0 clock channel ID SCR HSLS FS PCIE */
-+#define BCM_SR_GENPLL0			0
-+#define BCM_SR_GENPLL0_SATA_CLK		1
-+#define BCM_SR_GENPLL0_SCR_CLK		2
-+#define BCM_SR_GENPLL0_250M_CLK		3
-+#define BCM_SR_GENPLL0_PCIE_AXI_CLK	4
-+#define BCM_SR_GENPLL0_PAXC_AXI_X2_CLK	5
-+#define BCM_SR_GENPLL0_PAXC_AXI_CLK	6
++		osc: oscillator {
++			#clock-cells = <0>;
++			compatible = "fixed-clock";
++			clock-frequency = <50000000>;
++		};
 +
-+/* GENPLL 1 clock channel ID MHB PCIE NITRO */
-+#define BCM_SR_GENPLL1			0
-+#define BCM_SR_GENPLL1_PCIE_TL_CLK	1
-+#define BCM_SR_GENPLL1_MHB_APB_CLK	2
++		crmu_ref25m: crmu_ref25m {
++			#clock-cells = <0>;
++			compatible = "fixed-factor-clock";
++			clocks = <&osc>;
++			clock-div = <2>;
++			clock-mult = <1>;
++		};
 +
-+/* GENPLL 2 clock channel ID NITRO MHB*/
-+#define BCM_SR_GENPLL2			0
-+#define BCM_SR_GENPLL2_NIC_CLK		1
-+#define BCM_SR_GENPLL2_250_NITRO_CLK	2
-+#define BCM_SR_GENPLL2_125_NITRO_CLK	3
-+#define BCM_SR_GENPLL2_CHIMP_CLK	4
++		genpll0: genpll0@6641d104 {
++			#clock-cells = <1>;
++			compatible = "brcm,sr-genpll0";
++			reg = <0x0001d104 0x32>,
++			      <0x0001c854 0x4>;
++			clocks = <&osc>;
++			clock-output-names = "genpll0", "clk_125", "clk_scr",
++					     "clk_250", "clk_pcie_axi",
++					     "clk_paxc_axi_x2",
++					     "clk_paxc_axi";
++		};
 +
-+/* GENPLL 3 HSLS clock channel ID */
-+#define BCM_SR_GENPLL3			0
-+#define BCM_SR_GENPLL3_HSLS_CLK		1
-+#define BCM_SR_GENPLL3_SDIO_CLK		2
++		genpll3: genpll3@6641d1e0 {
++			#clock-cells = <1>;
++			compatible = "brcm,sr-genpll3";
++			reg = <0x0001d1e0 0x32>,
++			      <0x0001c854 0x4>;
++			clocks = <&osc>;
++			clock-output-names = "genpll3", "clk_hsls",
++					     "clk_sdio";
++		};
 +
-+/* GENPLL 4 SCR clock channel ID */
-+#define BCM_SR_GENPLL4			0
-+#define BCM_SR_GENPLL4_CCN_CLK		1
++		genpll4: genpll4@6641d214 {
++			#clock-cells = <1>;
++			compatible = "brcm,sr-genpll4";
++			reg = <0x0001d214 0x32>,
++			      <0x0001c854 0x4>;
++			clocks = <&osc>;
++			clock-output-names = "genpll4", "clk_ccn",
++					     "clk_tpiu_pll", "noc_clk",
++					     "pll_chclk_fs4",
++					     "clk_bridge_fscpu";
++		};
 +
-+/* GENPLL 5 FS4 clock channel ID */
-+#define BCM_SR_GENPLL5			0
-+#define BCM_SR_GENPLL5_FS_CLK		1
-+#define BCM_SR_GENPLL5_SPU_CLK		2
++		genpll5: genpll5@6641d248 {
++			#clock-cells = <1>;
++			compatible = "brcm,sr-genpll5";
++			reg = <0x0001d248 0x32>,
++			      <0x0001c870 0x4>;
++			clocks = <&osc>;
++			clock-output-names = "genpll5", "fs4_hf_clk",
++					     "crypto_ae_clk", "raid_ae_clk";
++		};
 +
-+/* GENPLL 6 NITRO clock channel ID */
-+#define BCM_SR_GENPLL6			0
-+#define BCM_SR_GENPLL6_48_USB_CLK	1
++		lcpll0: lcpll0 {
++			#clock-cells = <1>;
++			compatible = "brcm,sr-lcpll0";
++			reg = <0x0001d0c4 0x3c>,
++			      <0x0001c870 0x4>;
++			clocks = <&osc>;
++			clock-output-names = "lcpll0", "clk_sata_refp",
++					     "clk_sata_refn", "clk_sata_350",
++					     "clk_sata_500";
++		};
 +
-+/* LCPLL0  clock channel ID */
-+#define BCM_SR_LCPLL0			0
-+#define BCM_SR_LCPLL0_SATA_REF_CLK	1
-+#define BCM_SR_LCPLL0_USB_REF_CLK	2
-+#define BCM_SR_LCPLL0_SATA_REFPN_CLK	3
++		lcpll1: lcpll1 {
++			#clock-cells = <1>;
++			compatible = "brcm,sr-lcpll1";
++			reg = <0x0001d138 0x3c>,
++			      <0x0001c870 0x4>;
++			clocks = <&osc>;
++			clock-output-names = "lcpll1", "clk_wanpn",
++					     "clk_usb_ref",
++					     "timesync_evt_clk";
++		};
 +
-+/* LCPLL1  clock channel ID */
-+#define BCM_SR_LCPLL1			0
-+#define BCM_SR_LCPLL1_WAN_CLK		1
++		hsls_clk: hsls_clk {
++			#clock-cells = <0>;
++			compatible = "fixed-factor-clock";
++			clocks = <&genpll3 1>;
++			clock-div = <1>;
++			clock-mult = <1>;
++		};
 +
-+/* LCPLL PCIE  clock channel ID */
-+#define BCM_SR_LCPLL_PCIE		0
-+#define BCM_SR_LCPLL_PCIE_PHY_REF_CLK	1
++		hsls_div2_clk: hsls_div2_clk {
++			#clock-cells = <0>;
++			compatible = "fixed-factor-clock";
++			clocks = <&genpll3 BCM_SR_GENPLL3_HSLS_CLK>;
++			clock-div = <2>;
++			clock-mult = <1>;
 +
-+/* GENPLL EMEM0 clock channel ID */
-+#define BCM_SR_EMEMPLL0			0
-+#define BCM_SR_EMEMPLL0_EMEM_CLK	1
++		};
 +
-+/* GENPLL EMEM0 clock channel ID */
-+#define BCM_SR_EMEMPLL1			0
-+#define BCM_SR_EMEMPLL1_EMEM_CLK	1
++		hsls_div4_clk: hsls_div4_clk {
++			#clock-cells = <0>;
++			compatible = "fixed-factor-clock";
++			clocks = <&genpll3 BCM_SR_GENPLL3_HSLS_CLK>;
++			clock-div = <4>;
++			clock-mult = <1>;
++		};
 +
-+/* GENPLL EMEM0 clock channel ID */
-+#define BCM_SR_EMEMPLL2			0
-+#define BCM_SR_EMEMPLL2_EMEM_CLK	1
++		hsls_25m_clk: hsls_25m_clk {
++			#clock-cells = <0>;
++			compatible = "fixed-factor-clock";
++			clocks = <&crmu_ref25m>;
++			clock-div = <1>;
++			clock-mult = <1>;
++		};
 +
-+#endif /* _CLOCK_BCM_SR_H */
++		hsls_25m_div2_clk: hsls_25m_div2_clk {
++			#clock-cells = <0>;
++			compatible = "fixed-factor-clock";
++			clocks = <&hsls_25m_clk>;
++			clock-div = <2>;
++			clock-mult = <1>;
++		};
++
++		sdio0_clk: sdio0_clk {
++			#clock-cells = <0>;
++			compatible = "fixed-factor-clock";
++			clocks = <&genpll3 BCM_SR_GENPLL3_SDIO_CLK>;
++			clock-div = <1>;
++			clock-mult = <1>;
++		};
++
++		sdio1_clk: sdio1_clk {
++			#clock-cells = <0>;
++			compatible = "fixed-factor-clock";
++			clocks = <&genpll3 BCM_SR_GENPLL3_SDIO_CLK>;
++			clock-div = <1>;
++			clock-mult = <1>;
++		};
+diff --git a/arch/arm64/boot/dts/broadcom/stingray/stingray.dtsi b/arch/arm64/boot/dts/broadcom/stingray/stingray.dtsi
+index c82e1d8..24856e3 100644
+--- a/arch/arm64/boot/dts/broadcom/stingray/stingray.dtsi
++++ b/arch/arm64/boot/dts/broadcom/stingray/stingray.dtsi
+@@ -249,6 +249,15 @@
+ 		};
+ 	};
+ 
++	crmu: crmu {
++		compatible = "simple-bus";
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges = <0x0 0x0 0x66400000 0x100000>;
++
++		#include "stingray-clock.dtsi"
++	};
++
+ 	hsls {
+ 		compatible = "simple-bus";
+ 		#address-cells = <1>;
 -- 
 2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
