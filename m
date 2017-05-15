@@ -1,40 +1,52 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [RFC v1 3/7] iommu/arm-smmu-v3: Replace the device tree binding
- for hisilicon broken prefetch cmd with erratum id
-Date: Mon, 15 May 2017 10:23:51 -0500
-Message-ID: <CAL_JsqLH7iT7O2U3g6J26YGBUmt53PDymLJ5VCLByW_97L_M4w@mail.gmail.com>
-References: <20170513094731.3676-1-shameerali.kolothum.thodi@huawei.com> <20170513094731.3676-4-shameerali.kolothum.thodi@huawei.com>
+From: Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+Subject: Re: [PATCH] devicetree: Move include prefixes from arch to separate
+ directory
+Date: Mon, 15 May 2017 16:27:14 +0100
+Message-ID: <20170515152713.GV22219@n2100.armlinux.org.uk>
+References: <CAL_JsqKLxA8K8378z4nDBkDWnwM_zBbbf9D7EPtwQ1782dydTw@mail.gmail.com>
+ <20170515142641.GU22219@n2100.armlinux.org.uk>
+ <CAL_JsqJzoe_xNxMOZ88+k+bZ+bSK6-j30HXk0ZsFxHUqVDzwzw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <20170513094731.3676-4-shameerali.kolothum.thodi@huawei.com>
-Sender: linux-acpi-owner@vger.kernel.org
-To: shameer <shameerali.kolothum.thodi@huawei.com>
-Cc: Will Deacon <will.deacon@arm.com>, Robin Murphy <robin.murphy@arm.com>, Mark Rutland <mark.rutland@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Hanjun Guo <hanjun.guo@linaro.org>, Gabriele Paoloni <gabriele.paoloni@huawei.com>, John Garry <john.garry@huawei.com>, Linux IOMMU <iommu@lists.linux-foundation.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, devel@acpica.org, Linuxarm <linuxarm@huawei.com>, "Wangzhou (B)" <wangzhou1@hisilicon.com>, Hanjun Guo <guohanjun@huawei.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqJzoe_xNxMOZ88+k+bZ+bSK6-j30HXk0ZsFxHUqVDzwzw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Mikael Starvik <starvik-VrBV9hrLPhE@public.gmane.org>, Jesper Nilsson <jesper.nilsson-VrBV9hrLPhE@public.gmane.org>, James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Paul Mackerras <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>, Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arch <linux-arch-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, May 13, 2017 at 4:47 AM, shameer
-<shameerali.kolothum.thodi@huawei.com> wrote:
-> Signed-off-by: shameer <shameerali.kolothum.thodi@huawei.com>
-> ---
->  Documentation/devicetree/bindings/iommu/arm,smmu-v3.txt | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/Documentation/devicetree/bindings/iommu/arm,smmu-v3.txt b/Documentation/devicetree/bindings/iommu/arm,smmu-v3.txt
-> index be57550..bf48e92 100644
-> --- a/Documentation/devicetree/bindings/iommu/arm,smmu-v3.txt
-> +++ b/Documentation/devicetree/bindings/iommu/arm,smmu-v3.txt
-> @@ -46,7 +46,7 @@ the PCIe specification.
->                          devicetree/bindings/interrupt-controller/msi.txt
->                        for a description of the msi-parent property.
->
-> -- hisilicon,broken-prefetch-cmd
-> +- hisilicon,erratum-161010701
+On Mon, May 15, 2017 at 09:47:40AM -0500, Rob Herring wrote:
+> On Mon, May 15, 2017 at 9:26 AM, Russell King - ARM Linux
+> <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org> wrote:
+> > Maybe what we should do is:
+> >
+> > mkdir include/dt
+> > git mv include/dt-bindings include/dt
+> > for arch in arch/*; do
+> >   dts=$arch/boot/dts
+> >   if [ -d $dts ]; then
+> >      a=include/dt/$(basename $arch)
+> >      ln -s $dts $a
+> >      git add $a
+> >   fi
+> > done
+> > ... fixup scripts/Makefile.lib ...
+> > git commit
+> 
+> That would just break every existing include in dts files.
 
-Why? Your missing commit msg should answer that. This breaks
-compatibility, so you are stuck with the old string.
+Are you sure about that - the existing:
 
-I'd prefer that you start using the compatible string rather than
-every vendor adding a property for every errata.
+#include <dt-bindings/foo.dtsi>
 
-Rob
+would still work.  Maybe you haven't parsed the shell code properly...
+
+-- 
+RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
+according to speedtest.net.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
