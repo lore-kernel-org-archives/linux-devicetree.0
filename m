@@ -1,62 +1,92 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/8] mmc: dt: pwrseq-simple: Invent power-off-delay-us
-Date: Mon, 15 May 2017 11:16:31 -0500
-Message-ID: <CAL_JsqK4EnME2qH4j4+Nef7+1gAOKsjq00b8e7m0HWR4=w6FtQ@mail.gmail.com>
-References: <1494260477-25163-1-git-send-email-ulf.hansson@linaro.org>
- <1494260477-25163-2-git-send-email-ulf.hansson@linaro.org>
- <20170512200300.a2hq546ra42ptlz5@rob-hp-laptop> <CAPDyKFqhbGqanoQqFsLrLaBXsQ5WdFrrunkvB2eOoJqH+W6jdQ@mail.gmail.com>
+From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] devicetree: Move include prefixes from arch to separate directory
+Date: Mon, 15 May 2017 11:40:09 -0500
+Message-ID: <CAL_JsqL_nwRn-8L5bdcQ=0_HEiSRqF7yfonrq1GsYdcvtykRyQ@mail.gmail.com>
+References: <CAL_JsqKLxA8K8378z4nDBkDWnwM_zBbbf9D7EPtwQ1782dydTw@mail.gmail.com>
+ <20170515142641.GU22219@n2100.armlinux.org.uk> <CAL_JsqJzoe_xNxMOZ88+k+bZ+bSK6-j30HXk0ZsFxHUqVDzwzw@mail.gmail.com>
+ <CAOesGMgYDq5Sdk6OaK-mTyfdNGwcbgOVeKbeMSCOmwqd9k8TGQ@mail.gmail.com>
+ <CAL_JsqJCjwvvta0n7dNpyVZkK5hp25fYO78q_pQZzUAPRDq+-w@mail.gmail.com> <CAOesGMh3UxHPYQ7SDG7+NODuT5TnP_i23ru0ZRR-rOYxbOGe_g@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAPDyKFqhbGqanoQqFsLrLaBXsQ5WdFrrunkvB2eOoJqH+W6jdQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <CAOesGMh3UxHPYQ7SDG7+NODuT5TnP_i23ru0ZRR-rOYxbOGe_g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Cc: Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Mikael Starvik <starvik-VrBV9hrLPhE@public.gmane.org>, Jesper Nilsson <jesper.nilsson-VrBV9hrLPhE@public.gmane.org>, James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Paul Mackerras <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>, Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arch <linux-arch-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 15, 2017 at 6:08 AM, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> On 12 May 2017 at 22:03, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
->> On Mon, May 08, 2017 at 06:21:10PM +0200, Ulf Hansson wrote:
->>> During power off, after the GPIO pin has been asserted, some devices like
->>> the Wifi chip from TI, Wl18xx, needs a delay before the host continues with
->>> clock gating and turning off regulators as to follow a graceful shutdown
->>> sequence.
+On Mon, May 15, 2017 at 11:09 AM, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org> wrote:
+> On Mon, May 15, 2017 at 8:52 AM, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+>> On Mon, May 15, 2017 at 10:27 AM, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org> wrote:
+>>> On Mon, May 15, 2017 at 7:47 AM, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+>>>> On Mon, May 15, 2017 at 9:26 AM, Russell King - ARM Linux
+>>>> <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org> wrote:
+>>>>> On Mon, May 15, 2017 at 08:01:07AM -0500, Rob Herring wrote:
+>>>>>> I'd prefer not to mix things in scripts/dtc that aren't the import of
+>>>>>> dtc (yes, we do have a few other things already, but they are at least
+>>>>>> scripts). Couldn't this go in include/dt-bindings/ instead?
+
+[...]
+
+>>>> Another idea. Could kbuild create all the symlinks at build time instead?
 >>>
->>> Therefore invent an optional power-off-delay-us DT binding for
->>> mmc-pwrseq-simple, to allow us to support this constraint.
+>>> I considered that, but given that we're talking about a few soft links
+>>> that we need to find a good home for, it seemed like overkill that
+>>> adds magic to the build process. Having somehting that is easily
+>>> discovered when looking around the source tree is a lot better.
+>>>
+>>> I looked around the tree for suitable homes for this directory of
+>>> links, and the least out-of-place I could find was under scripts/dtc.
+>>> You even have a script for uprevving the imported dtc sources, so it's
+>>> not like it's causing any problems from that point of view. But I do
+>>> agree that it's not ideal -- it was just the least bad option I could
+>>> find at the time. Better suggestions are welcome.
 >>
->> Do you really need this to be programmable per device. A delay is not
->> going to hurt devices that don't need it.
+>> Fair enough. Like I said, it was only a preference and certainly not
+>> unprecedented. I'll just get less receptive with each addition. :)
 >
-> Well, that depends on what "hurt" means. The device would still be
-> properly shut down, only that it would take unnecessary longer to do
-> so.
+> I'm familiar with that feeling. :)
 >
-> I think the problem here, is that this delay may also affect system
-> suspend/resume time of the device, if the device powers off/on in this
-> sequence.
-
-I was assuming that given you changed the units the time was small
-enough to not be significant.
-
->> Sorry, but this is exactly what I don't like about "simple" bindings:
->> adding one property at a time.
+>> When and by whom do you propose merging this?
 >
-> I understand you opinion, which in the end is a matter of taste/flavor.
+> Given that it crosses architectures but fixes my mistaken recursive
+> linking I was planning on either including it in arm-soc fixes or for
+> full visibility just send it as a patch to Linus. Mind giving me an
+> ack?
 
-It's more than that. The problem is you would end up with a different
-binding if everything is defined up front versus reviewing one
-addition at a time.
+Given what it fixes, arm-soc probably makes the most sense.
 
-To give a trivial example here, now we have power on and off times in
-different units and if I was reviewing them together I would say make
-them both usec. That example is mostly taste, but different units also
-makes it more error prone for the dts writer.
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-> However, for me this just follows the existing approach - and suddenly
-> say no to this, doesn't really seems right either.
+> Or, if you prefer to merge it that's fine with me too. I'd like to fix
+> the tree for people who are seeing the problems soon though.
+>
+>> The only other comment I would have is at some point, we're going to
+>> have overlays that aren't tied to any arch. Where are we going to put
+>> those? Maybe they are tied to some vendor which tends to have most
+>> stuff in $arch and we just continue this band-aid. Or we define some
+>> common location. I bring this up now only because both could use that
+>> location.
+>
+> Those are good questions. What kind of common overlays are you
+> anticipating? Things like fragments describing connectors, etc?
 
-I never said no.
+Daughterboards on connectors is one. Another somewhat different case
+is non-probeable buses hanging off of probeable devices where the host
+system may not even be DT based. For example, GPIOs, I2C, UART, etc.
+devices behind a USB serial chip and standard USB connector.
+
+> Rule so far has been that the first arch to introduce something keeps
+> it (that's between arm/arm64): Mostly it's been arm64 referencing arm
+> contents so far.
+>
+> I guess we could introduce the concept of a common/ directory
+> somewhere. As you say, finding a good home for it isn't 100% obvious
+> today, and we should make sure ownership of the directory is clear
+> since we've seen things go badly when patches get merged through too
+> many paths on these files.
+
+Agreed. I'm happy for you to own that. ;)
 
 Rob
 --
