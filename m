@@ -1,33 +1,41 @@
-From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: Add devicetree for the Raspberry Pi 3, for
- arm32 (v6)
-Date: Mon, 15 May 2017 15:27:27 -0700
-Message-ID: <CAOesGMjSR7AZ0o+bEHbjMDWwkyHgGSLLpVphCtTDVzKUyTzn5Q@mail.gmail.com>
-References: <20170425164508.32242-1-eric@anholt.net>
+From: Matthias Kaehlcke <mka@chromium.org>
+Subject: Re: [PATCH v2 2/2] regulator: Allow for asymmetric settling times
+Date: Mon, 15 May 2017 15:55:17 -0700
+Message-ID: <20170515225517.GB141096@google.com>
+References: <20170501183715.35375-1-mka@chromium.org>
+ <20170501183715.35375-2-mka@chromium.org>
+ <20170514101652.waoc5fhjzpd2emoq@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170425164508.32242-1-eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-Cc: Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>, Broadcom Kernel Feedback List <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Gerd Hoffmann <kraxel-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170514101652.waoc5fhjzpd2emoq@sirena.org.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Laxman Dewangan <ldewangan@nvidia.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Douglas Anderson <dianders@chromium.org>, Brian Norris <briannorris@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+El Sun, May 14, 2017 at 07:16:52PM +0900 Mark Brown ha dit:
 
-On Tue, Apr 25, 2017 at 9:45 AM, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org> wrote:
-> Raspbian and Fedora have decided to support the Pi3 in 32-bit mode for
-> now, so it's useful to be able to test that mode on an upstream
-> kernel.  It's also been useful for me to use the same board for 32-bit
-> and 64-bit development.
->
-> Signed-off-by: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+> On Mon, May 01, 2017 at 11:37:15AM -0700, Matthias Kaehlcke wrote:
+> 
+> >  	else if (rdev->constraints->settling_time)
+> >  		return rdev->constraints->settling_time;
+> > +	else if (rdev->constraints->settling_time_up &&
+> > +		 (new_uV > old_uV))
+> > +		return rdev->constraints->settling_time_up;
+> > +	else if (rdev->constraints->settling_time_down &&
+> > +		 (new_uV < old_uV))
+> > +		return rdev->constraints->settling_time_down;
+> 
+> It feels like we should warn if the user mixes specific up/down settling
+> times with the more general property, can you please send a followup
+> patch adding a warning for that?  It's not exactly obvious what the
+> precedence is and may do the wrong thing with an older kernel or
+> non-Linux OS.
 
-Acked-by: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Sounds good. I'll send out the patch soon.
 
+Thanks
 
--Olof
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Matthias
