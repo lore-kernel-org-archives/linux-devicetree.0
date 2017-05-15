@@ -1,125 +1,102 @@
-From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Subject: Re: [PATCH v2 00/18] ARM64: meson: DT cleanups
-Date: Mon, 15 May 2017 22:24:32 +0200
-Message-ID: <CAFBinCA18Y0CXvu4DtDnz=zvYxpqUNA5WRK5teO_T8zTVj4FnQ@mail.gmail.com>
-References: <20170513143337.14278-1-afaerber@suse.de> <36c02d8a-d3e2-4330-f600-e49a1ba680e8@baylibre.com>
- <5fb0130c-473e-dc15-b60c-e5b6144031ad@suse.de>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 2/4] dt-bindings: Document the Raspberry Pi Touchscreen
+ nodes.
+Date: Mon, 15 May 2017 15:44:57 -0500
+Message-ID: <20170515204457.yxucspgm6yrk24pm@rob-hp-laptop>
+References: <20170511235625.22427-1-eric@anholt.net>
+ <20170511235625.22427-3-eric@anholt.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5fb0130c-473e-dc15-b60c-e5b6144031ad-l3A5Bk7waGM@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
-Cc: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <20170511235625.22427-3-eric@anholt.net>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Eric Anholt <eric@anholt.net>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 15, 2017 at 9:10 PM, Andreas F=C3=A4rber <afaerber-l3A5Bk7waGM@public.gmane.org> wro=
-te:
-> Hi Neil,
->
-> Am 15.05.2017 um 10:16 schrieb Neil Armstrong:
->> Hi Andreas,
->>
->> On 05/13/2017 04:33 PM, Andreas F=C3=A4rber wrote:
->>> Hello Kevin,
->>>
->>> This series fixes several cosmetic issues, on top of your for-next bran=
-ch.
->>>
->>> Patches 3-6 rename a node, the rest should all be non-functional change=
-s.
->>
->> These are OK.
->>
->>> PLEASE STOP merging random new nodes at the bottom of DT files!
->>> Just like it's a convention to sort new nodes by unit address, it has b=
-een
->>> a convention to sort by-label nodes by their label. As discussed here a=
-nd
->>> elsewhere, this helps avoid merge conflicts and makes nodes easy to fin=
-d.
->>> I don't care whether we order A0 before A or after, but adding new HDMI
->>> or CVBS nodes at the very bottom is totally out of alphabetical order.
->>> Since my v1 you really should've known that...
->>
->> It's not perfect, but now it's done, live with it, this has already been=
- discussed.
->
-> No.
->
-> Copy&pasting your comment N times does not make it any more valid. My
-> files, my rules - I insist on vega-s95, gxbb and gx, which you guys
-> refactored out from my gxbb, to be tidy.
->
->> Please try to refactor boards DTS with their parent reference design ins=
-tead
->> like it was done with the P212 and what I did with the Wetek Hub and Pla=
-y2.
->
-> Negative, that means any additions and changes for the reference boards
-> will slip through into boards that you do not test.
->
-> We've already seen how "well" that works with R-Box Pro having inherited
-> a broken U-Boot network configuration due to internal vs. external PHY.
-could you please share your vision how we can a) keep the amount of
-duplicate .dts code low while b) avoiding "accidental" changes? maybe
-there's a better way (compared to what we have now) which I've not
-thought of yet
-
->>> Similarly, Khadas Vim shouldn't have been merged with the "bcrmf" typo.
->>
->> Well, this is why we have 7 rc releases after the merge window...
->
-> If Kevin is the maintainer, then he needs to carefully review patches.
-> It is not my job to review all patches when BayLibre gets paid for it!
-please stop these accusations, I have just sent a fix which should
-actually allow Kevin (and anybody else) to properly review the
-Broadcom FullMAC wireless SDIO devices in the future: [0]
-
->>> Which proves my point that we need to fix these issues now so that they
->>> don't keep spreading (Broken Window Theory). New boards have not been
->>> checked for sort order, only boards already touched in v1.
->>>
->>> Board and Makefile order affect my pending R-Box Pro patches.
->>> Node order affects Martin's pending Bluetooth patches among others.
->>
->> Please order S905x after S905d, and we'll be OK.
->
-> Isn't the historical SoC order S905X before S905D?
->
-> Otherwise your strict interpretation leads to meson-gxbb before meson8,
-> which seems unlogical to me.
->
->>> Patches 7-9 (had and) have no dependency, please start applying.
->>
->> I'll wait for Kevin's advice, but I'm against these since they are
->> only purely cosmetic and will break bisect and add unnecessary complexit=
-y
->> to handle further patches on these board.
->
-> See the gxbb patch for why that statement is wrong.
->
-> Also note that not cleaning up an existing mess and making it worse are
-> two things.
->
-> I will also remind that I was forced to clean up the node order in ALL
-> exynos5250 .dts files before I could get my new exynos5250-spring.dts
-> merged, so I have zero understanding about these "churn" and "live with
-> it" comments here. The same rules need to apply to all (that's =C3=A9gali=
-t=C3=A9
-> for you!), BayLibre is not above everyone else.
->
-> Regards,
-> Andreas
->
-> --
-> SUSE Linux GmbH, Maxfeldstr. 5, 90409 N=C3=BCrnberg, Germany
-> GF: Felix Imend=C3=B6rffer, Jane Smithard, Graham Norton
-> HRB 21284 (AG N=C3=BCrnberg)
-
-[0] https://marc.info/?l=3Dlinux-wireless&m=3D149487928516583&w=3D2
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gVGh1LCBNYXkgMTEsIDIwMTcgYXQgMDQ6NTY6MjNQTSAtMDcwMCwgRXJpYyBBbmhvbHQgd3Jv
+dGU6Cj4gVGhlIFJhc3BiZXJyeSBQaSA3IiBUb3VjaHNjcmVlbiBpcyBhIERQSSB0b3VjaHNjcmVl
+biBwYW5lbCB3aXRoCj4gRFNJLT5EUEkgYnJpZGdlIGFuZCB0b3VjaHNjcmVlbiBjb250cm9sbGVy
+IGludGVncmF0ZWQsIHRoYXQgY29ubmVjdHMKPiB0byB0aGUgUmFzcGJlcnJ5IFBpIHRocm91Z2gg
+aXRzIDE1LXBpbiAiRFNJIiBjb25uZWN0b3IgKHNvbWUgbGluZXMgYXJlCj4gRFNJLCBzb21lIGxp
+bmVzIGFyZSBJMkMpLgo+IAo+IFRoaXMgZGV2aWNlIGlzIHJlcHJlc2VudGVkIGluIHRoZSBEVCBh
+cyB0aHJlZSBub2RlcyAoRFNJIGRldmljZSwgSTJDCj4gZGV2aWNlLCBwYW5lbCkuICBJbnB1dCB3
+aWxsIGJlIGxlZnQgdG8gYSBzZXBhcmF0ZSBiaW5kaW5nIGxhdGVyLCBhcyBpdAo+IHdpbGwgYmUg
+YSBiYXNpYyBJMkMgY2xpZW50IGRldmljZS4KPiAKPiBTaWduZWQtb2ZmLWJ5OiBFcmljIEFuaG9s
+dCA8ZXJpY0BhbmhvbHQubmV0Pgo+IC0tLQo+ICAuLi4vcmFzcGJlcnJ5cGksN2luY2gtdG91Y2hz
+Y3JlZW4tYnJpZGdlLnR4dCAgICAgICB8IDY4ICsrKysrKysrKysrKysrKysrKysrKysKPiAgLi4u
+L3BhbmVsL3Jhc3BiZXJyeXBpLDdpbmNoLXRvdWNoc2NyZWVuLXBhbmVsLnR4dCAgfCAgNyArKysK
+PiAgMiBmaWxlcyBjaGFuZ2VkLCA3NSBpbnNlcnRpb25zKCspCj4gIGNyZWF0ZSBtb2RlIDEwMDY0
+NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvcmFzcGJl
+cnJ5cGksN2luY2gtdG91Y2hzY3JlZW4tYnJpZGdlLnR4dAo+ICBjcmVhdGUgbW9kZSAxMDA2NDQg
+RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvcmFzcGJlcnJ5
+cGksN2luY2gtdG91Y2hzY3JlZW4tcGFuZWwudHh0Cj4gCj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50
+YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS9yYXNwYmVycnlwaSw3aW5j
+aC10b3VjaHNjcmVlbi1icmlkZ2UudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
+bmdzL2Rpc3BsYXkvYnJpZGdlL3Jhc3BiZXJyeXBpLDdpbmNoLXRvdWNoc2NyZWVuLWJyaWRnZS50
+eHQKPiBuZXcgZmlsZSBtb2RlIDEwMDY0NAo+IGluZGV4IDAwMDAwMDAwMDAwMC4uYTU2NjliZWFm
+NjhmCj4gLS0tIC9kZXYvbnVsbAo+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
+aW5ncy9kaXNwbGF5L2JyaWRnZS9yYXNwYmVycnlwaSw3aW5jaC10b3VjaHNjcmVlbi1icmlkZ2Uu
+dHh0Cj4gQEAgLTAsMCArMSw2OCBAQAo+ICtPZmZpY2lhbCA3IiAoODAweDQ4MCkgUmFzcGJlcnJ5
+IFBpIHRvdWNoc2NyZWVuIHBhbmVsJ3MgYnJpZGdlLgo+ICsKPiArVGhpcyBEU0kgcGFuZWwgY29u
+dGFpbnM6Cj4gKwo+ICstIFRDMzU4NzYyIERTSS0+RFBJIGJyaWRnZQo+ICstIEF0bWVsIG1pY3Jv
+Y29udHJvbGxlciBvbiBJMkMgZm9yIHBvd2VyIHNlcXVlbmNpbmcgdGhlIERTSSBicmlkZ2UgYW5k
+Cj4gKyAgY29udHJvbGxpbmcgYmFja2xpZ2h0Cj4gKy0gVG91Y2hzY3JlZW4gY29udHJvbGxlciBv
+biBJMkMgZm9yIHRvdWNoIGlucHV0CgpUaGlzIGlzIDEgdUMgb3IgMj8KCj4gKwo+ICthbmQgdGhp
+cyBjb3ZlcnMgdGhlIFRDMzU4NzYyIGJyaWRnZSBhbmQgQXRtZWwgbWljcm9jb250cm9sbGVyLCB3
+aGlsZQo+ICsuLi9wYW5lbC9yYXNwYmVycnlwaSw3aW5jaC10b3VjaHNjcmVlbi1wYW5lbC50eHQg
+Y292ZXJzIHRoZSBwYW5lbC4KPiArCj4gK1JlcXVpcmVkIHByb3BlcnRpZXM6Cj4gKy0gY29tcGF0
+aWJsZToJTXVzdCBiZSAicmFzcGJlcnJ5cGksN2luY2gtdG91Y2hzY3JlZW4tYnJpZGdlIgo+ICst
+IHJhc3BiZXJyeXBpLHRvdWNoc2NyZWVuLWJyaWRnZToKPiArCQlIYW5kbGUgdG8gdGhlIEkyQyBk
+ZXZpY2UgZm9yIEF0bWVsIG1pY3JvY29udHJvbGxlcgo+ICsKPiArRXhhbXBsZToKPiArCj4gK2Rz
+aTE6IGRzaUA3ZTcwMDAwMCB7Cj4gKwkjYWRkcmVzcy1jZWxscyA9IDwxPjsKPiArCSNzaXplLWNl
+bGxzID0gPDA+Owo+ICsJPC4uLj4KPiArCj4gKwlsY2QtYnJpZGdlQDAgewo+ICsJCWNvbXBhdGli
+bGUgPSAicmFzcGJlcnJ5cGksN2luY2gtdG91Y2hzY3JlZW4tYnJpZGdlIjsKPiArCQlyZWcgPSA8
+MD47Cj4gKwo+ICsJCXJhc3BiZXJyeXBpLHRvdWNoc2NyZWVuLWJyaWRnZSA9IDwmcGl0b3VjaHNj
+cmVlbl9icmlkZ2U+OwoKSSB0aGluayB0aGlzIHNob3VsZCBiZSBhIHBvcnQgd2l0aCBhIGdyYXBo
+IGNvbm5lY3Rpb24gZnJvbSB0aGUgRFNJIApub2RlIHRvIHRoZSBpMmMgYnJpZGdlIGRldmljZSAo
+YW5kIHRoZW4gdG8gdGhlIHBhbmVsKS4KCkl0J3MgYWxzbyBob3cgb3RoZXIgRFNJIGJyaWRnZXMg
+bGlrZSB0aGUgdGMzNTg3NjcgYXJlIGRvbmUuCgo+ICsJCXBvcnRzIHsKPiArCQkJI2FkZHJlc3Mt
+Y2VsbHMgPSA8MT47Cj4gKwkJCSNzaXplLWNlbGxzID0gPDA+Owo+ICsJCQlwb3J0QDAgewo+ICsJ
+CQkJcmVnID0gPDA+OwoKQlRXLCB5b3UgZG9uJ3QgbmVlZCB0aGlzIHdoZW4gdGhlcmUgaXMgb25s
+eSAxLgoKPiArCQkJCXBpdG91Y2hzY3JlZW5fYnJpZGdlX3BvcnQ6IGVuZHBvaW50IHsKPiArCQkJ
+CQlyZW1vdGUtZW5kcG9pbnQgPSA8JnBpdG91Y2hzY3JlZW5fcGFuZWxfcG9ydD47Cj4gKwkJCQl9
+Owo+ICsJCQl9Owo+ICsJCX07Cj4gKwl9Owo+ICt9Owo+ICsKPiAraTJjX2RzaTogaTJjIHsKPiAr
+CWNvbXBhdGlibGUgPSAiaTJjLWdwaW8iOwo+ICsJI2FkZHJlc3MtY2VsbHMgPSA8MT47Cj4gKwkj
+c2l6ZS1jZWxscyA9IDwwPjsKPiArCWdwaW9zID0gPCZncGlvIDI4IDAKPiArCQkgJmdwaW8gMjkg
+MD47Cj4gKwo+ICsJcGl0b3VjaHNjcmVlbl9icmlkZ2U6IGJyaWRnZUA0NSB7Cj4gKwkJY29tcGF0
+aWJsZSA9ICJyYXNwYmVycnlwaSx0b3VjaHNjcmVlbi1icmlkZ2UtaTJjIjsKPiArCQlyZWcgPSA8
+MHg0NT47Cj4gKwl9Owo+ICt9Owo+ICsKPiArbGNkIHsKPiArCWNvbXBhdGlibGUgPSAicmFzcGJl
+cnJ5cGksN2luY2gtdG91Y2hzY3JlZW4tcGFuZWwiOwo+ICsJcG9ydHMgewo+ICsJCSNhZGRyZXNz
+LWNlbGxzID0gPDE+Owo+ICsJCSNzaXplLWNlbGxzID0gPDA+Owo+ICsJCXBvcnRAMCB7Cj4gKwkJ
+CXJlZyA9IDwwPjsKPiArCQkJcGl0b3VjaHNjcmVlbl9wYW5lbF9wb3J0OiBlbmRwb2ludCB7Cj4g
+KwkJCQlyZW1vdGUtZW5kcG9pbnQgPSA8JnBpdG91Y2hzY3JlZW5fYnJpZGdlX3BvcnQ+Owo+ICsJ
+CQl9Owo+ICsJCX07Cj4gKwl9Owo+ICt9Owo+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2Rl
+dmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9yYXNwYmVycnlwaSw3aW5jaC10b3VjaHNj
+cmVlbi1wYW5lbC50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxh
+eS9wYW5lbC9yYXNwYmVycnlwaSw3aW5jaC10b3VjaHNjcmVlbi1wYW5lbC50eHQKPiBuZXcgZmls
+ZSBtb2RlIDEwMDY0NAo+IGluZGV4IDAwMDAwMDAwMDAwMC4uMWU4NGY5N2IzYjIwCj4gLS0tIC9k
+ZXYvbnVsbAo+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5
+L3BhbmVsL3Jhc3BiZXJyeXBpLDdpbmNoLXRvdWNoc2NyZWVuLXBhbmVsLnR4dAo+IEBAIC0wLDAg
+KzEsNyBAQAo+ICtPZmZpY2lhbCA3IiAoODAweDQ4MCkgUmFzcGJlcnJ5IFBpIHRvdWNoc2NyZWVu
+IHBhbmVsJ3MgcGFuZWwuCj4gKwo+ICtUaGlzIGJpbmRpbmcgaXMgY29tcGF0aWJsZSB3aXRoIHRo
+ZSBzaW1wbGUtcGFuZWwgYmluZGluZywgd2hpY2ggaXMgc3BlY2lmaWVkCj4gK2luIHNpbXBsZS1w
+YW5lbC50eHQgaW4gdGhpcyBkaXJlY3RvcnkuCj4gKwo+ICtSZXF1aXJlZCBwcm9wZXJ0aWVzOgo+
+ICstIGNvbXBhdGlibGU6CU11c3QgYmUgInJhc3BiZXJyeXBpLDdpbmNoLXRvdWNoc2NyZWVuLXBh
+bmVsIgo+IC0tIAo+IDIuMTEuMAo+IAo+IF9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fCj4gZHJpLWRldmVsIG1haWxpbmcgbGlzdAo+IGRyaS1kZXZlbEBsaXN0
+cy5mcmVlZGVza3RvcC5vcmcKPiBodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFu
+L2xpc3RpbmZvL2RyaS1kZXZlbApfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVz
+a3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9k
+cmktZGV2ZWwK
