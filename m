@@ -1,138 +1,51 @@
-From: Anup Patel <anup.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 04/11] arm64: dts: Initial DTS files for Broadcom Stingray SOC
-Date: Mon, 15 May 2017 10:41:25 +0530
-Message-ID: <CAALAos_R=zRKSPd8TYyG8NC4s3D6U-vbk83gJBFP__+Wr4G9Eg@mail.gmail.com>
-References: <1494071686-19098-1-git-send-email-anup.patel@broadcom.com>
- <1494071686-19098-5-git-send-email-anup.patel@broadcom.com> <64f4e7c4-d619-2ac2-438b-91d48ea4260b@broadcom.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH 1/3] clk: hi3660: fix wrong parent name of clk_mux_sysbus
+Date: Mon, 15 May 2017 13:54:21 +0800
+Message-ID: <20170515055423.1803-1-guodong.xu@linaro.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <64f4e7c4-d619-2ac2-438b-91d48ea4260b-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Scott Branden <scott.branden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Oza Pawandeep <oza-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Srinath Mannam <srinath.mannam-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Pramod Kumar <pramod.kumar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Sandeep Tripathy <sandeep.tripathy-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Device Tree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux ARM Kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, BCM Kernel Feedback <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+To: mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, chenjun14-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, zhongkaihua-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 9, 2017 at 2:02 AM, Scott Branden
-<scott.branden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org> wrote:
-> One update below needed dealing with memreserve
->
->
-> On 17-05-06 04:54 AM, Anup Patel wrote:
->>
->> The Broadcom Stingray SoC is a new member in Broadcom iProc
->> SoC family.
->>
->> This patch adds initial DTS files for Broadcom Stingray SoC
->> and two of its reference boards (bcm958742k and bcm958742t).
->>
->> We have lot of reference boards and large number of devices
->> in Broadcom Stingray SoC so eventually we will have quite
->> a few DTS files for Stingray. To tackle, we have added a
->> separate directory for Stingray DTS files.
->>
->> Signed-off-by: Anup Patel <anup.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
->> Signed-off-by: Scott Branden <scott.branden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
->> Reviewed-by: Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
->> ---
->>  arch/arm64/boot/dts/broadcom/Makefile              |   1 +
->>  arch/arm64/boot/dts/broadcom/stingray/Makefile     |   6 +
->>  .../boot/dts/broadcom/stingray/bcm958742-base.dtsi |  64 +++++
->>  .../boot/dts/broadcom/stingray/bcm958742k.dts      |  48 ++++
->>  .../boot/dts/broadcom/stingray/bcm958742t.dts      |  40 +++
->>  .../arm64/boot/dts/broadcom/stingray/stingray.dtsi | 307
->> +++++++++++++++++++++
->>  6 files changed, 466 insertions(+)
->>  create mode 100644 arch/arm64/boot/dts/broadcom/stingray/Makefile
->>  create mode 100644
->> arch/arm64/boot/dts/broadcom/stingray/bcm958742-base.dtsi
->>  create mode 100644 arch/arm64/boot/dts/broadcom/stingray/bcm958742k.dts
->>  create mode 100644 arch/arm64/boot/dts/broadcom/stingray/bcm958742t.dts
->>  create mode 100644 arch/arm64/boot/dts/broadcom/stingray/stingray.dtsi
->>
->> diff --git a/arch/arm64/boot/dts/broadcom/Makefile
->> b/arch/arm64/boot/dts/broadcom/Makefile
->> index f1caece..a7c3208 100644
->> --- a/arch/arm64/boot/dts/broadcom/Makefile
->> +++ b/arch/arm64/boot/dts/broadcom/Makefile
->> @@ -2,6 +2,7 @@ dtb-$(CONFIG_ARCH_BCM2835) += bcm2837-rpi-3-b.dtb
->>  dtb-$(CONFIG_ARCH_BCM_IPROC) += ns2-svk.dtb ns2-xmc.dtb
->>  dtb-$(CONFIG_ARCH_VULCAN) += vulcan-eval.dtb
->>
->> +dts-dirs       := stingray
->>  always         := $(dtb-y)
->>  subdir-y       := $(dts-dirs)
->>  clean-files    := *.dtb
->> diff --git a/arch/arm64/boot/dts/broadcom/stingray/Makefile
->> b/arch/arm64/boot/dts/broadcom/stingray/Makefile
->> new file mode 100644
->> index 0000000..f70028e
->> --- /dev/null
->> +++ b/arch/arm64/boot/dts/broadcom/stingray/Makefile
->> @@ -0,0 +1,6 @@
->> +dtb-$(CONFIG_ARCH_BCM_IPROC) += bcm958742k.dtb
->> +dtb-$(CONFIG_ARCH_BCM_IPROC) += bcm958742t.dtb
->> +
->> +always         := $(dtb-y)
->> +subdir-y       := $(dts-dirs)
->> +clean-files    := *.dtb
->> diff --git a/arch/arm64/boot/dts/broadcom/stingray/bcm958742-base.dtsi
->> b/arch/arm64/boot/dts/broadcom/stingray/bcm958742-base.dtsi
->> new file mode 100644
->> index 0000000..e3a2a36
->> --- /dev/null
->> +++ b/arch/arm64/boot/dts/broadcom/stingray/bcm958742-base.dtsi
->> @@ -0,0 +1,64 @@
->> +/*
->> + *  BSD LICENSE
->> + *
->> + *  Copyright(c) 2016-2017 Broadcom.  All rights reserved.
->> + *
->> + *  Redistribution and use in source and binary forms, with or without
->> + *  modification, are permitted provided that the following conditions
->> + *  are met:
->> + *
->> + *    * Redistributions of source code must retain the above copyright
->> + *      notice, this list of conditions and the following disclaimer.
->> + *    * Redistributions in binary form must reproduce the above copyright
->> + *      notice, this list of conditions and the following disclaimer in
->> + *      the documentation and/or other materials provided with the
->> + *      distribution.
->> + *    * Neither the name of Broadcom nor the names of its
->> + *      contributors may be used to endorse or promote products derived
->> + *      from this software without specific prior written permission.
->> + *
->> + *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
->> + *  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
->> + *  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
->> + *  A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
->> + *  OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
->> + *  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
->> + *  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
->> + *  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
->> + *  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
->> + *  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
->> + *  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
->> + */
->> +
->> +/*
->> + * Reserve portion of RAM used by secured firmware
->> + * running in background.
->> + */
->
-> This memreserve comment was changed from the internal version of the dtsi
-> file.  Comment is now misleading as I don't think this memreserve is used at
-> all.  EFI Loader passes in the memory configuration.  Comment needs to be
-> updated to indicate this is not used by standard bootloader.  Or, simply
-> remove the memreserve here.
+From: Chen Jun <chenjun14-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
 
-Actually its always better to have memreserve added by bootloader.
+Parent name of clk_mux_sysbus is not correct. This patch fixes it.
 
-I will try with latest bootloader and if possible I will remove the memreserve
-itself.
+Signed-off-by: Chen Jun <chenjun14-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Signed-off-by: John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Signed-off-by: Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+---
+ drivers/clk/hisilicon/clk-hi3660.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-Regards,
-Anup
+diff --git a/drivers/clk/hisilicon/clk-hi3660.c b/drivers/clk/hisilicon/clk-hi3660.c
+index 96a9697..143ce0c 100644
+--- a/drivers/clk/hisilicon/clk-hi3660.c
++++ b/drivers/clk/hisilicon/clk-hi3660.c
+@@ -206,6 +206,8 @@ static const struct hisi_gate_clock hi3660_crgctrl_gate_clks[] = {
+ };
+ 
+ static const char *const
++clk_mux_sysbus_p[] = {"clk_ppll1", "clk_ppll0"};
++static const char *const
+ clk_mux_sdio_sys_p[] = {"clk_factor_mmc", "clk_div_sdio",};
+ static const char *const
+ clk_mux_sd_sys_p[] = {"clk_factor_mmc", "clk_div_sd",};
+@@ -239,8 +241,8 @@ static const char *const
+ clk_mux_i2c_p[] = {"clkin_sys", "clk_div_i2c",};
+ 
+ static const struct hisi_mux_clock hi3660_crgctrl_mux_clks[] = {
+-	{ HI3660_CLK_MUX_SYSBUS, "clk_mux_sysbus", clk_mux_sdio_sys_p,
+-	  ARRAY_SIZE(clk_mux_sdio_sys_p), CLK_SET_RATE_PARENT, 0xac, 0, 1,
++	{ HI3660_CLK_MUX_SYSBUS, "clk_mux_sysbus", clk_mux_sysbus_p,
++	  ARRAY_SIZE(clk_mux_sysbus_p), CLK_SET_RATE_PARENT, 0xac, 0, 1,
+ 	  CLK_MUX_HIWORD_MASK, },
+ 	{ HI3660_CLK_MUX_UART0, "clk_mux_uart0", clk_mux_uart0_p,
+ 	  ARRAY_SIZE(clk_mux_uart0_p), CLK_SET_RATE_PARENT, 0xac, 2, 1,
+-- 
+2.10.2
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
