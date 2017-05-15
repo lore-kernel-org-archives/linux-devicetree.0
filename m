@@ -1,118 +1,87 @@
-Return-Path: <SRS0=3zco=4O=google.com=brendanhiggins@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20170424181818.2754-5-brendanhiggins@google.com>
-References: <20170424181818.2754-1-brendanhiggins@google.com> <20170424181818.2754-5-brendanhiggins@google.com>
-From: Brendan Higgins <brendanhiggins@google.com>
-Date: Mon, 8 May 2017 16:28:44 -0700
-Message-ID: <CAFd5g47VGa=wqeyg5tFjB5xD=YsTuP27hLN3-ZM62MJD8dCP_Q@mail.gmail.com>
-Subject: Re: [PATCH v7 4/5] i2c: aspeed: added driver for Aspeed I2C
-Content-Type: multipart/alternative; boundary=001a1141047aa5568c054f0b9953
-To: Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Joel Stanley <joel@jms.id.au>, Vladimir Zapolskiy <vz@mleia.com>, Kachalov Anton <mouse@mayc.ru>, =?UTF-8?Q?C=C3=A9dric_Le_Goater?= <clg@kaod.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, OpenBMC Maillist <openbmc@lists.ozlabs.org>, Brendan Higgins <brendanhiggins@google.com>, Ryan Chen <ryan_chen@aspeedtech.com>
+In-Reply-To: <1494646471-24624-1-git-send-email-olof@lixom.net>
+References: <1494646471-24624-1-git-send-email-olof@lixom.net>
+Date: Mon, 15 May 2017 07:53:09 -0500
+Message-ID: <CAL_JsqJ+7yi6DkVpbt6q76NOeE0Lc2gj_h+C3JK0UBRrfroaxw@mail.gmail.com>
+Subject: Re: [PATCH] devicetree: Move include prefixes from arch to separate directory
+From: Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+To: Olof Johansson <olof@lixom.net>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Heiko Stuebner <heiko@sntech.de>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Mikael Starvik <starvik@axis.com>, Jesper Nilsson <jesper.nilsson@axis.com>, James Hogan <james.hogan@imgtec.com>, Ralf Baechle <ralf@linux-mips.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Michael Ellerman <mpe@ellerman.id.au>, Frank Rowand <frowand.list@gmail.com>, linux-arch <linux-arch@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
---001a1141047aa5568c054f0b9953
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-
-=E2=80=8BI would like to release another version this week or next week, an=
-d I
-think that we are pretty closed to having something we can apply, but
-before I do that, I want to get something resolved:
-
-+static int __aspeed_i2c_init(struct aspeed_i2c_bus *bus,
-> +                            struct platform_device *pdev)
-> +{
-> +       int ret;
-> +
-> +       /* Disable everything. */
-> +       writel(0, bus->base + ASPEED_I2C_FUN_CTRL_REG);
-> +
-> +       ret =3D __aspeed_i2c_init_clk(bus, pdev);
-> +       if (ret < 0)
-> +               return ret;
-> +
-> +       /* Enable Master Mode */
-> +       writel(readl(bus->base + ASPEED_I2C_FUN_CTRL_REG) |
-> +              ASPEED_I2CD_MASTER_EN |
-> +              /* TODO: provide device tree option for multi-master mode.
-> */
-
-
-I am curious what everyone thinks about this. It seemed that, earlier on,
-people did not like me disabling multi-master mode, but I think that it
-would make bus recovery not work as well. Given that, I think it makes the
-most sense to provide a device tree option either to enable multi-master
-support or disable it. Thoughts?
-
-
+On Fri, May 12, 2017 at 10:34 PM, Olof Johansson <olof@lixom.net> wrote:
+> We use a directory under arch/$ARCH/boot/dts as an include path
+> that has links outside of the subtree to find dt-bindings from under
+> include/dt-bindings. That's been working well, but new DT architectures
+> haven't been adding them by default.
 >
-> +              ASPEED_I2CD_MULTI_MASTER_DIS,
-> +              bus->base + ASPEED_I2C_FUN_CTRL_REG);
-> +
-> +       /* Set interrupt generation of I2C controller */
-> +       writel(ASPEED_I2CD_INTR_ALL, bus->base + ASPEED_I2C_INTR_CTRL_REG=
-);
-> +
-> +       return 0;
-> +}
+> Recently there's been a desire to share some of the DT material between
+> arm and arm64, which originally caused developers to create symlinks or
+> relative includes between the subtrees. This isn't ideal -- it breaks
+> if the DT files aren't stored in the exact same hierarchy as the kernel
+> tree, and generally it's just icky.
+>
+> As a somewhat cleaner solution we decided to add a $ARCH/ prefix link
+> once, and allow DTS files to reference dtsi (and dts) files in other
+> architectures that way.
+>
+> Original approach was to create these links under each architecture,
+> but it lead to the problem of recursive symlinks.
+>
+> As a remedy, move the include link directories out of the architecture
+> trees into a common location. At the same time, they can now share one
+> directory and one dt-bindings/ link as well.
+>
+> Fixes: 4027494ae6e3 ('ARM: dts: add arm/arm64 include symlinks')
+> Reported-by: Russell King <linux@armlinux.org.uk>
+> Reported-by: Omar Sandoval <osandov@osandov.com>
+> Cc: Heiko Stuebner <heiko@sntech.de>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Russell King <linux@armlinux.org.uk>
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Cc: Will Deacon <will.deacon@arm.com>
+> Cc: Mikael Starvik <starvik@axis.com>
+> Cc: Jesper Nilsson <jesper.nilsson@axis.com>
+> Cc: James Hogan <james.hogan@imgtec.com>
+> Cc: Ralf Baechle <ralf@linux-mips.org>
+> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+> Cc: Paul Mackerras <paulus@samba.org>
+> Cc: Michael Ellerman <mpe@ellerman.id.au>
+> Cc: Frank Rowand <frowand.list@gmail.com>
+> Cc: linux-arch <linux-arch@vger.kernel.org>
+> Signed-off-by: Olof Johansson <olof@lixom.net>
+> ---
+>  arch/arm/boot/dts/include/arm             | 1 -
+>  arch/arm/boot/dts/include/arm64           | 1 -
+>  arch/arm/boot/dts/include/dt-bindings     | 1 -
+>  arch/arm64/boot/dts/include/arm           | 1 -
+>  arch/arm64/boot/dts/include/arm64         | 1 -
+>  arch/arm64/boot/dts/include/dt-bindings   | 1 -
+>  arch/cris/boot/dts/include/dt-bindings    | 1 -
+>  arch/metag/boot/dts/include/dt-bindings   | 1 -
+>  arch/mips/boot/dts/include/dt-bindings    | 1 -
+>  arch/powerpc/boot/dts/include/dt-bindings | 1 -
+>  scripts/Makefile.lib                      | 2 +-
+>  scripts/dtc/include-prefixes/arc          | 1 +
+>  scripts/dtc/include-prefixes/arm          | 1 +
+>  scripts/dtc/include-prefixes/arm64        | 1 +
+>  scripts/dtc/include-prefixes/c6x          | 1 +
+>  scripts/dtc/include-prefixes/cris         | 1 +
+>  scripts/dtc/include-prefixes/dt-bindings  | 1 +
+>  scripts/dtc/include-prefixes/h8300        | 1 +
+>  scripts/dtc/include-prefixes/metag        | 1 +
+>  scripts/dtc/include-prefixes/microblaze   | 1 +
+>  scripts/dtc/include-prefixes/mips         | 1 +
+>  scripts/dtc/include-prefixes/nios2        | 1 +
+>  scripts/dtc/include-prefixes/openrisc     | 1 +
+>  scripts/dtc/include-prefixes/powerpc      | 1 +
+>  scripts/dtc/include-prefixes/sh           | 1 +
+>  scripts/dtc/include-prefixes/xtensa       | 1 +
 
---001a1141047aa5568c054f0b9953
-Content-Type: text/html; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+I'd prefer not to mix things in scripts/dtc that aren't the import of
+dtc (yes, we do have a few other things already, but they are at least
+scripts). Couldn't this go in include/dt-bindings/ instead?
 
-<div dir=3D"ltr"><br>=E2=80=8BI would like to release another version this =
-week or next week, and I think that we are pretty closed to having somethin=
-g we can apply, but before I do that, I want to get something resolved:<br>=
-<div><br></div><blockquote class=3D"gmail_quote" style=3D"margin:0px 0px 0p=
-x 0.8ex;border-left:1px solid rgb(204,204,204);padding-left:1ex"><span styl=
-e=3D"font-size:12.8px">+static int __aspeed_i2c_init(struct aspeed_i2c_bus =
-*bus,</span><br style=3D"font-size:12.8px"><span style=3D"font-size:12.8px"=
->+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 =C2=A0 =C2=A0 struct platform_device *pdev)</span><br style=3D"f=
-ont-size:12.8px"><span style=3D"font-size:12.8px">+{</span><br style=3D"fon=
-t-size:12.8px"><span style=3D"font-size:12.8px">+=C2=A0 =C2=A0 =C2=A0 =C2=
-=A0int ret;</span><br style=3D"font-size:12.8px"><span style=3D"font-size:1=
-2.8px">+</span><br style=3D"font-size:12.8px"><span style=3D"font-size:12.8=
-px">+=C2=A0 =C2=A0 =C2=A0 =C2=A0/* Disable everything. */</span><br style=
-=3D"font-size:12.8px"><span style=3D"font-size:12.8px">+=C2=A0 =C2=A0 =C2=
-=A0 =C2=A0writel(0, bus-&gt;base + ASPEED_I2C_FUN_CTRL_REG);</span><br styl=
-e=3D"font-size:12.8px"><span style=3D"font-size:12.8px">+</span><br style=
-=3D"font-size:12.8px"><span style=3D"font-size:12.8px">+=C2=A0 =C2=A0 =C2=
-=A0 =C2=A0ret =3D __aspeed_i2c_init_clk(bus, pdev);</span><br style=3D"font=
--size:12.8px"><span style=3D"font-size:12.8px">+=C2=A0 =C2=A0 =C2=A0 =C2=A0=
-if (ret &lt; 0)</span><br style=3D"font-size:12.8px"><span style=3D"font-si=
-ze:12.8px">+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0return r=
-et;</span><br style=3D"font-size:12.8px"><span style=3D"font-size:12.8px">+=
-</span><br style=3D"font-size:12.8px"><span style=3D"font-size:12.8px">+=C2=
-=A0 =C2=A0 =C2=A0 =C2=A0/* Enable Master Mode */</span><br style=3D"font-si=
-ze:12.8px"><span style=3D"font-size:12.8px">+=C2=A0 =C2=A0 =C2=A0 =C2=A0wri=
-tel(readl(bus-&gt;base + ASPEED_I2C_FUN_CTRL_REG) |</span><br style=3D"font=
--size:12.8px"><span style=3D"font-size:12.8px">+=C2=A0 =C2=A0 =C2=A0 =C2=A0=
- =C2=A0 =C2=A0 =C2=A0 ASPEED_I2CD_MASTER_EN |</span><br style=3D"font-size:=
-12.8px"><span style=3D"font-size:12.8px">+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 =C2=A0 /* TODO: provide device tree option for multi-master mode=
-. */</span></blockquote><div><br></div><div>I am curious what everyone thin=
-ks about this. It seemed that, earlier on, people did not like me disabling=
- multi-master mode, but I think that it would make bus recovery not work as=
- well. Given that, I think it makes the most sense to provide a device tree=
- option either to enable multi-master support or disable it. Thoughts?</div=
-><div>=C2=A0</div><blockquote class=3D"gmail_quote" style=3D"margin:0px 0px=
- 0px 0.8ex;border-left:1px solid rgb(204,204,204);padding-left:1ex"><br sty=
-le=3D"font-size:12.8px"><span style=3D"font-size:12.8px">+=C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 ASPEED_I2CD_MULTI_MASTER_DIS,</span><br sty=
-le=3D"font-size:12.8px"><span style=3D"font-size:12.8px">+=C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 bus-&gt;base + ASPEED_I2C_FUN_CTRL_REG);</s=
-pan><br style=3D"font-size:12.8px"><span style=3D"font-size:12.8px">+</span=
-><br style=3D"font-size:12.8px"><span style=3D"font-size:12.8px">+=C2=A0 =
-=C2=A0 =C2=A0 =C2=A0/* Set interrupt generation of=C2=A0</span><span class=
-=3D"gmail-il" style=3D"font-size:12.8px">I2C</span><span style=3D"font-size=
-:12.8px">=C2=A0controller */</span><br style=3D"font-size:12.8px"><span sty=
-le=3D"font-size:12.8px">+=C2=A0 =C2=A0 =C2=A0 =C2=A0writel(ASPEED_I2CD_INTR=
-_ALL, bus-&gt;base + ASPEED_I2C_INTR_CTRL_REG);</span><br style=3D"font-siz=
-e:12.8px"><span style=3D"font-size:12.8px">+</span><br style=3D"font-size:1=
-2.8px"><span style=3D"font-size:12.8px">+=C2=A0 =C2=A0 =C2=A0 =C2=A0return =
-0;</span><br style=3D"font-size:12.8px"><span style=3D"font-size:12.8px">+}=
-</span></blockquote></div>
-
---001a1141047aa5568c054f0b9953--
+Rob
