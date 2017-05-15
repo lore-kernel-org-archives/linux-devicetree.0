@@ -1,34 +1,98 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 1/3] watchdog: bindings: dw_wdt: add reset lines
-Date: Mon, 15 May 2017 16:44:55 -0500
-Message-ID: <20170515214455.f7jorcqou4oyvnkq@rob-hp-laptop>
-References: <cover.e174fd0fa926fadf54e0f76e07f238bed3e162fc.1494595189.git-series.s.trumtrar@pengutronix.de>
- <44e4e733055cfa2ed79091542c7bb17aa24afca9.1494595189.git-series.s.trumtrar@pengutronix.de>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH 2/4] dt-bindings: Document the Raspberry Pi Touchscreen
+ nodes.
+Date: Tue, 16 May 2017 00:53:22 +0300
+Message-ID: <1579603.xgvSgGFBs8@avalon>
+References: <20170511235625.22427-1-eric@anholt.net>
+ <20170511235625.22427-3-eric@anholt.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <44e4e733055cfa2ed79091542c7bb17aa24afca9.1494595189.git-series.s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20170511235625.22427-3-eric@anholt.net>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: dri-devel@lists.freedesktop.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 12, 2017 at 03:34:35PM +0200, Steffen Trumtrar wrote:
-> Document the reset lines holding the watchdog core in reset.
-> 
-> Signed-off-by: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> Cc: Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>
-> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-> Cc: linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> ---
->  Documentation/devicetree/bindings/watchdog/dw_wdt.txt | 3 +++
->  1 file changed, 3 insertions(+)
-
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGkgRXJpYywKClRoYW5rIHlvdSBmb3IgdGhlIHBhdGNoLgoKT24gVGh1cnNkYXkgMTEgTWF5IDIw
+MTcgMTY6NTY6MjMgRXJpYyBBbmhvbHQgd3JvdGU6Cj4gVGhlIFJhc3BiZXJyeSBQaSA3IiBUb3Vj
+aHNjcmVlbiBpcyBhIERQSSB0b3VjaHNjcmVlbiBwYW5lbCB3aXRoCj4gRFNJLT5EUEkgYnJpZGdl
+IGFuZCB0b3VjaHNjcmVlbiBjb250cm9sbGVyIGludGVncmF0ZWQsIHRoYXQgY29ubmVjdHMKPiB0
+byB0aGUgUmFzcGJlcnJ5IFBpIHRocm91Z2ggaXRzIDE1LXBpbiAiRFNJIiBjb25uZWN0b3IgKHNv
+bWUgbGluZXMgYXJlCj4gRFNJLCBzb21lIGxpbmVzIGFyZSBJMkMpLgo+IAo+IFRoaXMgZGV2aWNl
+IGlzIHJlcHJlc2VudGVkIGluIHRoZSBEVCBhcyB0aHJlZSBub2RlcyAoRFNJIGRldmljZSwgSTJD
+Cj4gZGV2aWNlLCBwYW5lbCkuICBJbnB1dCB3aWxsIGJlIGxlZnQgdG8gYSBzZXBhcmF0ZSBiaW5k
+aW5nIGxhdGVyLCBhcyBpdAo+IHdpbGwgYmUgYSBiYXNpYyBJMkMgY2xpZW50IGRldmljZS4KPiAK
+PiBTaWduZWQtb2ZmLWJ5OiBFcmljIEFuaG9sdCA8ZXJpY0BhbmhvbHQubmV0Pgo+IC0tLQo+ICAu
+Li4vcmFzcGJlcnJ5cGksN2luY2gtdG91Y2hzY3JlZW4tYnJpZGdlLnR4dCAgICAgICB8IDY4ICsr
+KysrKysrKysrKysrKysrKysKPiAgLi4uL3BhbmVsL3Jhc3BiZXJyeXBpLDdpbmNoLXRvdWNoc2Ny
+ZWVuLXBhbmVsLnR4dCAgfCAgNyArKysKPiAgMiBmaWxlcyBjaGFuZ2VkLCA3NSBpbnNlcnRpb25z
+KCspCj4gIGNyZWF0ZSBtb2RlIDEwMDY0NAo+IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
+aW5ncy9kaXNwbGF5L2JyaWRnZS9yYXNwYmVycnlwaSw3aW5jaC10b3VjaHNjcgo+IGVlbi1icmlk
+Z2UudHh0IGNyZWF0ZSBtb2RlIDEwMDY0NAo+IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
+aW5ncy9kaXNwbGF5L3BhbmVsL3Jhc3BiZXJyeXBpLDdpbmNoLXRvdWNoc2NyZQo+IGVuLXBhbmVs
+LnR4dAo+IAo+IGRpZmYgLS1naXQKPiBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
+cy9kaXNwbGF5L2JyaWRnZS9yYXNwYmVycnlwaSw3aW5jaC10b3VjaHMKPiBjcmVlbi1icmlkZ2Uu
+dHh0Cj4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2Uv
+cmFzcGJlcnJ5cGksN2luY2gtdG91Y2hzCj4gY3JlZW4tYnJpZGdlLnR4dCBuZXcgZmlsZSBtb2Rl
+IDEwMDY0NAo+IGluZGV4IDAwMDAwMDAwMDAwMC4uYTU2NjliZWFmNjhmCj4gLS0tIC9kZXYvbnVs
+bAo+ICsrKwo+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJp
+ZGdlL3Jhc3BiZXJyeXBpLDdpbmNoLXRvdWNocwo+IGNyZWVuLWJyaWRnZS50eHQgQEAgLTAsMCAr
+MSw2OCBAQAo+ICtPZmZpY2lhbCA3IiAoODAweDQ4MCkgUmFzcGJlcnJ5IFBpIHRvdWNoc2NyZWVu
+IHBhbmVsJ3MgYnJpZGdlLgo+ICsKPiArVGhpcyBEU0kgcGFuZWwgY29udGFpbnM6Cj4gKwo+ICst
+IFRDMzU4NzYyIERTSS0+RFBJIGJyaWRnZQo+ICstIEF0bWVsIG1pY3JvY29udHJvbGxlciBvbiBJ
+MkMgZm9yIHBvd2VyIHNlcXVlbmNpbmcgdGhlIERTSSBicmlkZ2UgYW5kCj4gKyAgY29udHJvbGxp
+bmcgYmFja2xpZ2h0Cj4gKy0gVG91Y2hzY3JlZW4gY29udHJvbGxlciBvbiBJMkMgZm9yIHRvdWNo
+IGlucHV0Cj4gKwo+ICthbmQgdGhpcyBjb3ZlcnMgdGhlIFRDMzU4NzYyIGJyaWRnZSBhbmQgQXRt
+ZWwgbWljcm9jb250cm9sbGVyLCB3aGlsZQo+ICsuLi9wYW5lbC9yYXNwYmVycnlwaSw3aW5jaC10
+b3VjaHNjcmVlbi1wYW5lbC50eHQgY292ZXJzIHRoZSBwYW5lbC4KClRoZSBUQzM1ODc2MiBpcyBh
+IHN0YW5kYWxvbmUgYnJpZGdlIHRoYXQgZG9lc24ndCBkZXBlbmQgb24gdGhlIEFUVGlueSAKbWlj
+cm9jb250cm9sbGVyIHVzZWQgYnkgdGhlIFJQSS4gQXMgaXQncyB1c2FibGUgc3RhbmRhbG9uZSwg
+SSBiZWxpZXZlIHRoaXMgCmJpbmRpbmcgc2hvdWxkIGJlIHNwbGl0IGluIHR3by4KCj4gK1JlcXVp
+cmVkIHByb3BlcnRpZXM6Cj4gKy0gY29tcGF0aWJsZToJTXVzdCBiZSAicmFzcGJlcnJ5cGksN2lu
+Y2gtdG91Y2hzY3JlZW4tYnJpZGdlIgo+ICstIHJhc3BiZXJyeXBpLHRvdWNoc2NyZWVuLWJyaWRn
+ZToKPiArCQlIYW5kbGUgdG8gdGhlIEkyQyBkZXZpY2UgZm9yIEF0bWVsIG1pY3JvY29udHJvbGxl
+cgo+ICsKPiArRXhhbXBsZToKPiArCj4gK2RzaTE6IGRzaUA3ZTcwMDAwMCB7Cj4gKwkjYWRkcmVz
+cy1jZWxscyA9IDwxPjsKPiArCSNzaXplLWNlbGxzID0gPDA+Owo+ICsJPC4uLj4KPiArCj4gKwls
+Y2QtYnJpZGdlQDAgewo+ICsJCWNvbXBhdGlibGUgPSAicmFzcGJlcnJ5cGksN2luY2gtdG91Y2hz
+Y3JlZW4tYnJpZGdlIjsKPiArCQlyZWcgPSA8MD47Cj4gKwo+ICsJCXJhc3BiZXJyeXBpLHRvdWNo
+c2NyZWVuLWJyaWRnZSA9IDwmcGl0b3VjaHNjcmVlbl9icmlkZ2U+Owo+ICsJCXBvcnRzIHsKPiAr
+CQkJI2FkZHJlc3MtY2VsbHMgPSA8MT47Cj4gKwkJCSNzaXplLWNlbGxzID0gPDA+Owo+ICsJCQlw
+b3J0QDAgewo+ICsJCQkJcmVnID0gPDA+Owo+ICsJCQkJcGl0b3VjaHNjcmVlbl9icmlkZ2VfcG9y
+dDogZW5kcG9pbnQgewo+ICsJCQkJCXJlbW90ZS1lbmRwb2ludCA9IAo8JnBpdG91Y2hzY3JlZW5f
+cGFuZWxfcG9ydD47Cj4gKwkJCQl9Owo+ICsJCQl9Owo+ICsJCX07Cj4gKwl9Owo+ICt9Owo+ICsK
+PiAraTJjX2RzaTogaTJjIHsKPiArCWNvbXBhdGlibGUgPSAiaTJjLWdwaW8iOwo+ICsJI2FkZHJl
+c3MtY2VsbHMgPSA8MT47Cj4gKwkjc2l6ZS1jZWxscyA9IDwwPjsKPiArCWdwaW9zID0gPCZncGlv
+IDI4IDAKPiArCQkgJmdwaW8gMjkgMD47Cj4gKwo+ICsJcGl0b3VjaHNjcmVlbl9icmlkZ2U6IGJy
+aWRnZUA0NSB7Cj4gKwkJY29tcGF0aWJsZSA9ICJyYXNwYmVycnlwaSx0b3VjaHNjcmVlbi1icmlk
+Z2UtaTJjIjsKPiArCQlyZWcgPSA8MHg0NT47Cj4gKwl9Owo+ICt9Owo+ICsKPiArbGNkIHsKPiAr
+CWNvbXBhdGlibGUgPSAicmFzcGJlcnJ5cGksN2luY2gtdG91Y2hzY3JlZW4tcGFuZWwiOwo+ICsJ
+cG9ydHMgewo+ICsJCSNhZGRyZXNzLWNlbGxzID0gPDE+Owo+ICsJCSNzaXplLWNlbGxzID0gPDA+
+Owo+ICsJCXBvcnRAMCB7Cj4gKwkJCXJlZyA9IDwwPjsKPiArCQkJcGl0b3VjaHNjcmVlbl9wYW5l
+bF9wb3J0OiBlbmRwb2ludCB7Cj4gKwkJCQlyZW1vdGUtZW5kcG9pbnQgPSAKPCZwaXRvdWNoc2Ny
+ZWVuX2JyaWRnZV9wb3J0PjsKPiArCQkJfTsKPiArCQl9Owo+ICsJfTsKPiArfTsKPiBkaWZmIC0t
+Z2l0Cj4gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9y
+YXNwYmVycnlwaSw3aW5jaC10b3VjaHNjCj4gcmVlbi1wYW5lbC50eHQKPiBiL0RvY3VtZW50YXRp
+b24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL3Jhc3BiZXJyeXBpLDdpbmNoLXRv
+dWNoc2MKPiByZWVuLXBhbmVsLnR4dCBuZXcgZmlsZSBtb2RlIDEwMDY0NAo+IGluZGV4IDAwMDAw
+MDAwMDAwMC4uMWU4NGY5N2IzYjIwCj4gLS0tIC9kZXYvbnVsbAo+ICsrKwo+IGIvRG9jdW1lbnRh
+dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvcmFzcGJlcnJ5cGksN2luY2gt
+dG91Y2hzYwo+IHJlZW4tcGFuZWwudHh0IEBAIC0wLDAgKzEsNyBAQAo+ICtPZmZpY2lhbCA3IiAo
+ODAweDQ4MCkgUmFzcGJlcnJ5IFBpIHRvdWNoc2NyZWVuIHBhbmVsJ3MgcGFuZWwuCj4gKwo+ICtU
+aGlzIGJpbmRpbmcgaXMgY29tcGF0aWJsZSB3aXRoIHRoZSBzaW1wbGUtcGFuZWwgYmluZGluZywg
+d2hpY2ggaXMKPiBzcGVjaWZpZWQgK2luIHNpbXBsZS1wYW5lbC50eHQgaW4gdGhpcyBkaXJlY3Rv
+cnkuCj4gKwo+ICtSZXF1aXJlZCBwcm9wZXJ0aWVzOgo+ICstIGNvbXBhdGlibGU6CU11c3QgYmUg
+InJhc3BiZXJyeXBpLDdpbmNoLXRvdWNoc2NyZWVuLXBhbmVsIgoKLS0gClJlZ2FyZHMsCgpMYXVy
+ZW50IFBpbmNoYXJ0CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5v
+cmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2
+ZWwK
