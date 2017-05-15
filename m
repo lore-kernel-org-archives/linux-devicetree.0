@@ -1,49 +1,75 @@
-From: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v2 04/18] arm64: dts: meson-gxbb-p20x: Fix Wifi node name
-Date: Mon, 15 May 2017 10:17:32 +0200
-Message-ID: <4b22c8aa-5ce4-395e-a047-5b01dd8dd9f2@baylibre.com>
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: Re: [PATCH v2 14/18] arm64: dts: meson-gxbb-p20x: Fix node order
+Date: Mon, 15 May 2017 10:17:03 +0200
+Message-ID: <db56e3f5-ed19-4c0f-9271-ecbf64c64f43@baylibre.com>
 References: <20170513143337.14278-1-afaerber@suse.de>
- <20170513143337.14278-5-afaerber@suse.de>
+ <20170513143337.14278-15-afaerber@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170513143337.14278-5-afaerber-l3A5Bk7waGM@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20170513143337.14278-15-afaerber@suse.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>, linux-amlogic@lists.infradead.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Kevin Hilman <khilman@baylibre.com>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Carlo Caione <carlo@caione.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 05/13/2017 04:33 PM, Andreas Färber wrote:
-> bcrmf -> brcmf -> wifi
-> 
-> Fixes: ab3943fe57a2 ("ARM64: dts: meson-gxbb: Add P20x Wifi SDIO support")
-> Cc: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-> Signed-off-by: Andreas Färber <afaerber-l3A5Bk7waGM@public.gmane.org>
-> ---
->  v1 -> v2:
->  * Renamed node brmcf -> wifi (Rob)
->  
->  arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi
-> index 3c6c0b7f4187..a5be438a5c03 100644
-> --- a/arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi
-> +++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi
-> @@ -198,7 +198,7 @@
->  	vmmc-supply = <&vddao_3v3>;
->  	vqmmc-supply = <&vddio_boot>;
->  
-> -	brcmf: bcrmf@1 {
-> +	brcmf: wifi@1 {
->  		reg = <1>;
->  		compatible = "brcm,bcm4329-fmac";
->  	};
-> 
-
-Reviewed-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gMDUvMTMvMjAxNyAwNDozMyBQTSwgQW5kcmVhcyBGw6RyYmVyIHdyb3RlOgo+IFNvcnQgbm9k
+ZXMgcmVmZXJlbmNlZCBieSBsYWJlbCBhbHBoYWJldGljYWxseS4KPiAKPiBTaWduZWQtb2ZmLWJ5
+OiBBbmRyZWFzIEbDpHJiZXIgPGFmYWVyYmVyQHN1c2UuZGU+Cj4gLS0tCj4gIHYxIC0+IHYyOgo+
+ICAqIFJlYmFzZWQgKG5ldyBub2RlcyBhZGRlZCkKPiAgCj4gIGFyY2gvYXJtNjQvYm9vdC9kdHMv
+YW1sb2dpYy9tZXNvbi1neGJiLXAyMHguZHRzaSB8IDYyICsrKysrKysrKysrKy0tLS0tLS0tLS0t
+LQo+ICAxIGZpbGUgY2hhbmdlZCwgMzEgaW5zZXJ0aW9ucygrKSwgMzEgZGVsZXRpb25zKC0pCj4g
+Cj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvYW1sb2dpYy9tZXNvbi1neGJiLXAy
+MHguZHRzaSBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvYW1sb2dpYy9tZXNvbi1neGJiLXAyMHguZHRz
+aQo+IGluZGV4IDBlYzFkMTk1MjJkZC4uZDkwNGRlYjEwMThjIDEwMDY0NAo+IC0tLSBhL2FyY2gv
+YXJtNjQvYm9vdC9kdHMvYW1sb2dpYy9tZXNvbi1neGJiLXAyMHguZHRzaQo+ICsrKyBiL2FyY2gv
+YXJtNjQvYm9vdC9kdHMvYW1sb2dpYy9tZXNvbi1neGJiLXAyMHguZHRzaQo+IEBAIC0xNDgsMzQg
+KzE0OCwzNiBAQAo+ICAJfTsKPiAgfTsKPiAgCj4gLS8qIFRoaXMgVUFSVCBpcyBicm91Z2h0IG91
+dCB0byB0aGUgREI5IGNvbm5lY3RvciAqLwo+IC0mdWFydF9BTyB7Cj4gLQlzdGF0dXMgPSAib2th
+eSI7Cj4gLQlwaW5jdHJsLTAgPSA8JnVhcnRfYW9fYV9waW5zPjsKPiAtCXBpbmN0cmwtbmFtZXMg
+PSAiZGVmYXVsdCI7Cj4gKyZjdmJzX3ZkYWNfcG9ydCB7Cj4gKwljdmJzX3ZkYWNfb3V0OiBlbmRw
+b2ludCB7Cj4gKwkJcmVtb3RlLWVuZHBvaW50ID0gPCZjdmJzX2Nvbm5lY3Rvcl9pbj47Cj4gKwl9
+Owo+ICB9Owo+ICAKPiAtJmlyIHsKPiArJmhkbWlfdHggewo+ICAJc3RhdHVzID0gIm9rYXkiOwo+
+IC0JcGluY3RybC0wID0gPCZyZW1vdGVfaW5wdXRfYW9fcGlucz47Cj4gKwlwaW5jdHJsLTAgPSA8
+JmhkbWlfaHBkX3BpbnM+LCA8JmhkbWlfaTJjX3BpbnM+Owo+ICAJcGluY3RybC1uYW1lcyA9ICJk
+ZWZhdWx0IjsKPiAgfTsKPiAgCj4gLSZ1c2IwX3BoeSB7Cj4gLQlzdGF0dXMgPSAib2theSI7Cj4g
+LQlwaHktc3VwcGx5ID0gPCZ1c2JfcHdyPjsKPiAtfTsKPiAtCj4gLSZ1c2IxX3BoeSB7Cj4gLQlz
+dGF0dXMgPSAib2theSI7Cj4gKyZoZG1pX3R4X3RtZHNfcG9ydCB7Cj4gKwloZG1pX3R4X3RtZHNf
+b3V0OiBlbmRwb2ludCB7Cj4gKwkJcmVtb3RlLWVuZHBvaW50ID0gPCZoZG1pX2Nvbm5lY3Rvcl9p
+bj47Cj4gKwl9Owo+ICB9Owo+ICAKPiAtJnVzYjAgewo+ICsmaXIgewo+ICAJc3RhdHVzID0gIm9r
+YXkiOwo+ICsJcGluY3RybC0wID0gPCZyZW1vdGVfaW5wdXRfYW9fcGlucz47Cj4gKwlwaW5jdHJs
+LW5hbWVzID0gImRlZmF1bHQiOwo+ICB9Owo+ICAKPiAtJnVzYjEgewo+ICsmcHdtX2VmIHsKPiAg
+CXN0YXR1cyA9ICJva2F5IjsKPiArCXBpbmN0cmwtMCA9IDwmcHdtX2VfcGlucz47Cj4gKwlwaW5j
+dHJsLW5hbWVzID0gImRlZmF1bHQiOwo+ICsJY2xvY2tzID0gPCZjbGtjIENMS0lEX0ZDTEtfRElW
+ND47Cj4gKwljbG9jay1uYW1lcyA9ICJjbGtpbjAiOwo+ICB9Owo+ICAKPiAgLyogV2lyZWxlc3Mg
+U0RJTyBNb2R1bGUgKi8KPiBAQCAtMjQyLDI4ICsyNDQsMjYgQEAKPiAgCXZxbW1jLXN1cHBseSA9
+IDwmdmRkaW9fYm9vdD47Cj4gIH07Cj4gIAo+IC0mcHdtX2VmIHsKPiArLyogVGhpcyBVQVJUIGlz
+IGJyb3VnaHQgb3V0IHRvIHRoZSBEQjkgY29ubmVjdG9yICovCj4gKyZ1YXJ0X0FPIHsKPiAgCXN0
+YXR1cyA9ICJva2F5IjsKPiAtCXBpbmN0cmwtMCA9IDwmcHdtX2VfcGlucz47Cj4gKwlwaW5jdHJs
+LTAgPSA8JnVhcnRfYW9fYV9waW5zPjsKPiAgCXBpbmN0cmwtbmFtZXMgPSAiZGVmYXVsdCI7Cj4g
+LQljbG9ja3MgPSA8JmNsa2MgQ0xLSURfRkNMS19ESVY0PjsKPiAtCWNsb2NrLW5hbWVzID0gImNs
+a2luMCI7Cj4gIH07Cj4gIAo+IC0mY3Zic192ZGFjX3BvcnQgewo+IC0JY3Zic192ZGFjX291dDog
+ZW5kcG9pbnQgewo+IC0JCXJlbW90ZS1lbmRwb2ludCA9IDwmY3Zic19jb25uZWN0b3JfaW4+Owo+
+IC0JfTsKPiArJnVzYjBfcGh5IHsKPiArCXN0YXR1cyA9ICJva2F5IjsKPiArCXBoeS1zdXBwbHkg
+PSA8JnVzYl9wd3I+Owo+ICB9Owo+ICAKPiAtJmhkbWlfdHggewo+ICsmdXNiMV9waHkgewo+ICAJ
+c3RhdHVzID0gIm9rYXkiOwo+IC0JcGluY3RybC0wID0gPCZoZG1pX2hwZF9waW5zPiwgPCZoZG1p
+X2kyY19waW5zPjsKPiAtCXBpbmN0cmwtbmFtZXMgPSAiZGVmYXVsdCI7Cj4gIH07Cj4gIAo+IC0m
+aGRtaV90eF90bWRzX3BvcnQgewo+IC0JaGRtaV90eF90bWRzX291dDogZW5kcG9pbnQgewo+IC0J
+CXJlbW90ZS1lbmRwb2ludCA9IDwmaGRtaV9jb25uZWN0b3JfaW4+Owo+IC0JfTsKPiArJnVzYjAg
+ewo+ICsJc3RhdHVzID0gIm9rYXkiOwo+ICt9Owo+ICsKPiArJnVzYjEgewo+ICsJc3RhdHVzID0g
+Im9rYXkiOwo+ICB9Owo+IAoKSGkgQW5kcmVhcywKCkxpa2UgYSBwcmV2aW91cyBhdHRlbXB0LCBJ
+J20gbm90IE9LIHdpdGggc3VjaCByZXdvcmsgc2luY2UgaXQgd2lsbCBicmVhayBiaXNlY3QgYW5k
+IGFkZCBjb21wbGV4aXR5IGZvciBuZXcgcGF0Y2hlcyBoYW5kbGluZy4KClRoZSBvcmRlciBpcyBu
+b3QgYWxwaGFiZXRpY2FsbHkgb3JkZXJlZCwgbGl2ZSB3aXRoIGl0LgoKTmVpbAoKX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBt
+YWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9s
+aXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
