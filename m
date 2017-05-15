@@ -1,98 +1,166 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH 2/4] dt-bindings: Document the Raspberry Pi Touchscreen
- nodes.
-Date: Tue, 16 May 2017 00:53:22 +0300
-Message-ID: <1579603.xgvSgGFBs8@avalon>
-References: <20170511235625.22427-1-eric@anholt.net>
- <20170511235625.22427-3-eric@anholt.net>
+From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Subject: Re: [PATCH 2/4] dt-bindings: Document the Raspberry Pi Touchscreen nodes.
+Date: Tue, 16 May 2017 00:56:10 +0300
+Message-ID: <3258113.psJ57kzgCh@avalon>
+References: <20170511235625.22427-1-eric@anholt.net> <20170511235625.22427-3-eric@anholt.net> <20170515204457.yxucspgm6yrk24pm@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20170511235625.22427-3-eric@anholt.net>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: dri-devel@lists.freedesktop.org
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170515204457.yxucspgm6yrk24pm@rob-hp-laptop>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgRXJpYywKClRoYW5rIHlvdSBmb3IgdGhlIHBhdGNoLgoKT24gVGh1cnNkYXkgMTEgTWF5IDIw
-MTcgMTY6NTY6MjMgRXJpYyBBbmhvbHQgd3JvdGU6Cj4gVGhlIFJhc3BiZXJyeSBQaSA3IiBUb3Vj
-aHNjcmVlbiBpcyBhIERQSSB0b3VjaHNjcmVlbiBwYW5lbCB3aXRoCj4gRFNJLT5EUEkgYnJpZGdl
-IGFuZCB0b3VjaHNjcmVlbiBjb250cm9sbGVyIGludGVncmF0ZWQsIHRoYXQgY29ubmVjdHMKPiB0
-byB0aGUgUmFzcGJlcnJ5IFBpIHRocm91Z2ggaXRzIDE1LXBpbiAiRFNJIiBjb25uZWN0b3IgKHNv
-bWUgbGluZXMgYXJlCj4gRFNJLCBzb21lIGxpbmVzIGFyZSBJMkMpLgo+IAo+IFRoaXMgZGV2aWNl
-IGlzIHJlcHJlc2VudGVkIGluIHRoZSBEVCBhcyB0aHJlZSBub2RlcyAoRFNJIGRldmljZSwgSTJD
-Cj4gZGV2aWNlLCBwYW5lbCkuICBJbnB1dCB3aWxsIGJlIGxlZnQgdG8gYSBzZXBhcmF0ZSBiaW5k
-aW5nIGxhdGVyLCBhcyBpdAo+IHdpbGwgYmUgYSBiYXNpYyBJMkMgY2xpZW50IGRldmljZS4KPiAK
-PiBTaWduZWQtb2ZmLWJ5OiBFcmljIEFuaG9sdCA8ZXJpY0BhbmhvbHQubmV0Pgo+IC0tLQo+ICAu
-Li4vcmFzcGJlcnJ5cGksN2luY2gtdG91Y2hzY3JlZW4tYnJpZGdlLnR4dCAgICAgICB8IDY4ICsr
-KysrKysrKysrKysrKysrKysKPiAgLi4uL3BhbmVsL3Jhc3BiZXJyeXBpLDdpbmNoLXRvdWNoc2Ny
-ZWVuLXBhbmVsLnR4dCAgfCAgNyArKysKPiAgMiBmaWxlcyBjaGFuZ2VkLCA3NSBpbnNlcnRpb25z
-KCspCj4gIGNyZWF0ZSBtb2RlIDEwMDY0NAo+IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
-aW5ncy9kaXNwbGF5L2JyaWRnZS9yYXNwYmVycnlwaSw3aW5jaC10b3VjaHNjcgo+IGVlbi1icmlk
-Z2UudHh0IGNyZWF0ZSBtb2RlIDEwMDY0NAo+IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
-aW5ncy9kaXNwbGF5L3BhbmVsL3Jhc3BiZXJyeXBpLDdpbmNoLXRvdWNoc2NyZQo+IGVuLXBhbmVs
-LnR4dAo+IAo+IGRpZmYgLS1naXQKPiBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
-cy9kaXNwbGF5L2JyaWRnZS9yYXNwYmVycnlwaSw3aW5jaC10b3VjaHMKPiBjcmVlbi1icmlkZ2Uu
-dHh0Cj4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2Uv
-cmFzcGJlcnJ5cGksN2luY2gtdG91Y2hzCj4gY3JlZW4tYnJpZGdlLnR4dCBuZXcgZmlsZSBtb2Rl
-IDEwMDY0NAo+IGluZGV4IDAwMDAwMDAwMDAwMC4uYTU2NjliZWFmNjhmCj4gLS0tIC9kZXYvbnVs
-bAo+ICsrKwo+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJp
-ZGdlL3Jhc3BiZXJyeXBpLDdpbmNoLXRvdWNocwo+IGNyZWVuLWJyaWRnZS50eHQgQEAgLTAsMCAr
-MSw2OCBAQAo+ICtPZmZpY2lhbCA3IiAoODAweDQ4MCkgUmFzcGJlcnJ5IFBpIHRvdWNoc2NyZWVu
-IHBhbmVsJ3MgYnJpZGdlLgo+ICsKPiArVGhpcyBEU0kgcGFuZWwgY29udGFpbnM6Cj4gKwo+ICst
-IFRDMzU4NzYyIERTSS0+RFBJIGJyaWRnZQo+ICstIEF0bWVsIG1pY3JvY29udHJvbGxlciBvbiBJ
-MkMgZm9yIHBvd2VyIHNlcXVlbmNpbmcgdGhlIERTSSBicmlkZ2UgYW5kCj4gKyAgY29udHJvbGxp
-bmcgYmFja2xpZ2h0Cj4gKy0gVG91Y2hzY3JlZW4gY29udHJvbGxlciBvbiBJMkMgZm9yIHRvdWNo
-IGlucHV0Cj4gKwo+ICthbmQgdGhpcyBjb3ZlcnMgdGhlIFRDMzU4NzYyIGJyaWRnZSBhbmQgQXRt
-ZWwgbWljcm9jb250cm9sbGVyLCB3aGlsZQo+ICsuLi9wYW5lbC9yYXNwYmVycnlwaSw3aW5jaC10
-b3VjaHNjcmVlbi1wYW5lbC50eHQgY292ZXJzIHRoZSBwYW5lbC4KClRoZSBUQzM1ODc2MiBpcyBh
-IHN0YW5kYWxvbmUgYnJpZGdlIHRoYXQgZG9lc24ndCBkZXBlbmQgb24gdGhlIEFUVGlueSAKbWlj
-cm9jb250cm9sbGVyIHVzZWQgYnkgdGhlIFJQSS4gQXMgaXQncyB1c2FibGUgc3RhbmRhbG9uZSwg
-SSBiZWxpZXZlIHRoaXMgCmJpbmRpbmcgc2hvdWxkIGJlIHNwbGl0IGluIHR3by4KCj4gK1JlcXVp
-cmVkIHByb3BlcnRpZXM6Cj4gKy0gY29tcGF0aWJsZToJTXVzdCBiZSAicmFzcGJlcnJ5cGksN2lu
-Y2gtdG91Y2hzY3JlZW4tYnJpZGdlIgo+ICstIHJhc3BiZXJyeXBpLHRvdWNoc2NyZWVuLWJyaWRn
-ZToKPiArCQlIYW5kbGUgdG8gdGhlIEkyQyBkZXZpY2UgZm9yIEF0bWVsIG1pY3JvY29udHJvbGxl
-cgo+ICsKPiArRXhhbXBsZToKPiArCj4gK2RzaTE6IGRzaUA3ZTcwMDAwMCB7Cj4gKwkjYWRkcmVz
-cy1jZWxscyA9IDwxPjsKPiArCSNzaXplLWNlbGxzID0gPDA+Owo+ICsJPC4uLj4KPiArCj4gKwls
-Y2QtYnJpZGdlQDAgewo+ICsJCWNvbXBhdGlibGUgPSAicmFzcGJlcnJ5cGksN2luY2gtdG91Y2hz
-Y3JlZW4tYnJpZGdlIjsKPiArCQlyZWcgPSA8MD47Cj4gKwo+ICsJCXJhc3BiZXJyeXBpLHRvdWNo
-c2NyZWVuLWJyaWRnZSA9IDwmcGl0b3VjaHNjcmVlbl9icmlkZ2U+Owo+ICsJCXBvcnRzIHsKPiAr
-CQkJI2FkZHJlc3MtY2VsbHMgPSA8MT47Cj4gKwkJCSNzaXplLWNlbGxzID0gPDA+Owo+ICsJCQlw
-b3J0QDAgewo+ICsJCQkJcmVnID0gPDA+Owo+ICsJCQkJcGl0b3VjaHNjcmVlbl9icmlkZ2VfcG9y
-dDogZW5kcG9pbnQgewo+ICsJCQkJCXJlbW90ZS1lbmRwb2ludCA9IAo8JnBpdG91Y2hzY3JlZW5f
-cGFuZWxfcG9ydD47Cj4gKwkJCQl9Owo+ICsJCQl9Owo+ICsJCX07Cj4gKwl9Owo+ICt9Owo+ICsK
-PiAraTJjX2RzaTogaTJjIHsKPiArCWNvbXBhdGlibGUgPSAiaTJjLWdwaW8iOwo+ICsJI2FkZHJl
-c3MtY2VsbHMgPSA8MT47Cj4gKwkjc2l6ZS1jZWxscyA9IDwwPjsKPiArCWdwaW9zID0gPCZncGlv
-IDI4IDAKPiArCQkgJmdwaW8gMjkgMD47Cj4gKwo+ICsJcGl0b3VjaHNjcmVlbl9icmlkZ2U6IGJy
-aWRnZUA0NSB7Cj4gKwkJY29tcGF0aWJsZSA9ICJyYXNwYmVycnlwaSx0b3VjaHNjcmVlbi1icmlk
-Z2UtaTJjIjsKPiArCQlyZWcgPSA8MHg0NT47Cj4gKwl9Owo+ICt9Owo+ICsKPiArbGNkIHsKPiAr
-CWNvbXBhdGlibGUgPSAicmFzcGJlcnJ5cGksN2luY2gtdG91Y2hzY3JlZW4tcGFuZWwiOwo+ICsJ
-cG9ydHMgewo+ICsJCSNhZGRyZXNzLWNlbGxzID0gPDE+Owo+ICsJCSNzaXplLWNlbGxzID0gPDA+
-Owo+ICsJCXBvcnRAMCB7Cj4gKwkJCXJlZyA9IDwwPjsKPiArCQkJcGl0b3VjaHNjcmVlbl9wYW5l
-bF9wb3J0OiBlbmRwb2ludCB7Cj4gKwkJCQlyZW1vdGUtZW5kcG9pbnQgPSAKPCZwaXRvdWNoc2Ny
-ZWVuX2JyaWRnZV9wb3J0PjsKPiArCQkJfTsKPiArCQl9Owo+ICsJfTsKPiArfTsKPiBkaWZmIC0t
-Z2l0Cj4gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9y
-YXNwYmVycnlwaSw3aW5jaC10b3VjaHNjCj4gcmVlbi1wYW5lbC50eHQKPiBiL0RvY3VtZW50YXRp
-b24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL3Jhc3BiZXJyeXBpLDdpbmNoLXRv
-dWNoc2MKPiByZWVuLXBhbmVsLnR4dCBuZXcgZmlsZSBtb2RlIDEwMDY0NAo+IGluZGV4IDAwMDAw
-MDAwMDAwMC4uMWU4NGY5N2IzYjIwCj4gLS0tIC9kZXYvbnVsbAo+ICsrKwo+IGIvRG9jdW1lbnRh
-dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvcmFzcGJlcnJ5cGksN2luY2gt
-dG91Y2hzYwo+IHJlZW4tcGFuZWwudHh0IEBAIC0wLDAgKzEsNyBAQAo+ICtPZmZpY2lhbCA3IiAo
-ODAweDQ4MCkgUmFzcGJlcnJ5IFBpIHRvdWNoc2NyZWVuIHBhbmVsJ3MgcGFuZWwuCj4gKwo+ICtU
-aGlzIGJpbmRpbmcgaXMgY29tcGF0aWJsZSB3aXRoIHRoZSBzaW1wbGUtcGFuZWwgYmluZGluZywg
-d2hpY2ggaXMKPiBzcGVjaWZpZWQgK2luIHNpbXBsZS1wYW5lbC50eHQgaW4gdGhpcyBkaXJlY3Rv
-cnkuCj4gKwo+ICtSZXF1aXJlZCBwcm9wZXJ0aWVzOgo+ICstIGNvbXBhdGlibGU6CU11c3QgYmUg
-InJhc3BiZXJyeXBpLDdpbmNoLXRvdWNoc2NyZWVuLXBhbmVsIgoKLS0gClJlZ2FyZHMsCgpMYXVy
-ZW50IFBpbmNoYXJ0CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5v
-cmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2
-ZWwK
+Hi Rob,
+
+On Monday 15 May 2017 15:44:57 Rob Herring wrote:
+> On Thu, May 11, 2017 at 04:56:23PM -0700, Eric Anholt wrote:
+> > The Raspberry Pi 7" Touchscreen is a DPI touchscreen panel with
+> > DSI->DPI bridge and touchscreen controller integrated, that connects
+> > to the Raspberry Pi through its 15-pin "DSI" connector (some lines are
+> > DSI, some lines are I2C).
+> > 
+> > This device is represented in the DT as three nodes (DSI device, I2C
+> > device, panel).  Input will be left to a separate binding later, as it
+> > will be a basic I2C client device.
+> > 
+> > Signed-off-by: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+> > ---
+> > 
+> >  .../raspberrypi,7inch-touchscreen-bridge.txt       | 68
+> >  ++++++++++++++++++++++ .../panel/raspberrypi,7inch-touchscreen-panel.txt
+> >   |  7 +++
+> >  2 files changed, 75 insertions(+)
+> >  create mode 100644
+> >  Documentation/devicetree/bindings/display/bridge/raspberrypi,7inch-touch
+> >  screen-bridge.txt create mode 100644
+> >  Documentation/devicetree/bindings/display/panel/raspberrypi,7inch-touchs
+> >  creen-panel.txt> 
+> > diff --git
+> > a/Documentation/devicetree/bindings/display/bridge/raspberrypi,7inch-touc
+> > hscreen-bridge.txt
+> > b/Documentation/devicetree/bindings/display/bridge/raspberrypi,7inch-touc
+> > hscreen-bridge.txt new file mode 100644
+> > index 000000000000..a5669beaf68f
+> > --- /dev/null
+> > +++
+> > b/Documentation/devicetree/bindings/display/bridge/raspberrypi,7inch-touc
+> > hscreen-bridge.txt @@ -0,0 +1,68 @@
+> > +Official 7" (800x480) Raspberry Pi touchscreen panel's bridge.
+> > +
+> > +This DSI panel contains:
+> > +
+> > +- TC358762 DSI->DPI bridge
+> > +- Atmel microcontroller on I2C for power sequencing the DSI bridge and
+> > +  controlling backlight
+> > +- Touchscreen controller on I2C for touch input
+> 
+> This is 1 uC or 2?
+> 
+> > +
+> > +and this covers the TC358762 bridge and Atmel microcontroller, while
+> > +../panel/raspberrypi,7inch-touchscreen-panel.txt covers the panel.
+> > +
+> > +Required properties:
+> > +- compatible:	Must be "raspberrypi,7inch-touchscreen-bridge"
+> > +- raspberrypi,touchscreen-bridge:
+> > +		Handle to the I2C device for Atmel microcontroller
+> > +
+> > +Example:
+> > +
+> > +dsi1: dsi@7e700000 {
+> > +	#address-cells = <1>;
+> > +	#size-cells = <0>;
+> > +	<...>
+> > +
+> > +	lcd-bridge@0 {
+> > +		compatible = "raspberrypi,7inch-touchscreen-bridge";
+> > +		reg = <0>;
+> > +
+> > +		raspberrypi,touchscreen-bridge = <&pitouchscreen_bridge>;
+> 
+> I think this should be a port with a graph connection from the DSI
+> node to the i2c bridge device (and then to the panel).
+
+No, this should actually not exist :-) The property references the I2C device 
+DT node corresponding to the microcontroller that controls the backlight (and, 
+if I understand correctly, handles power sequencing). The DSI driver (in patch 
+3/4) then grabs the I2C device and talks to it. I don't think this is right, 
+as commented separately on this patch, the bindings should be split, with a 
+standalone binding for the TC358762 (and a separate standalone driver too).
+
+> It's also how other DSI bridges like the tc358767 are done.
+> 
+> > +		ports {
+> > +			#address-cells = <1>;
+> > +			#size-cells = <0>;
+> > +			port@0 {
+> > +				reg = <0>;
+> 
+> BTW, you don't need this when there is only 1.
+> 
+> > +				pitouchscreen_bridge_port: endpoint {
+> > +					remote-endpoint = 
+<&pitouchscreen_panel_port>;
+> > +				};
+> > +			};
+> > +		};
+> > +	};
+> > +};
+> > +
+> > +i2c_dsi: i2c {
+> > +	compatible = "i2c-gpio";
+> > +	#address-cells = <1>;
+> > +	#size-cells = <0>;
+> > +	gpios = <&gpio 28 0
+> > +		 &gpio 29 0>;
+> > +
+> > +	pitouchscreen_bridge: bridge@45 {
+> > +		compatible = "raspberrypi,touchscreen-bridge-i2c";
+> > +		reg = <0x45>;
+> > +	};
+> > +};
+> > +
+> > +lcd {
+> > +	compatible = "raspberrypi,7inch-touchscreen-panel";
+> > +	ports {
+> > +		#address-cells = <1>;
+> > +		#size-cells = <0>;
+> > +		port@0 {
+> > +			reg = <0>;
+> > +			pitouchscreen_panel_port: endpoint {
+> > +				remote-endpoint = 
+<&pitouchscreen_bridge_port>;
+> > +			};
+> > +		};
+> > +	};
+> > +};
+> > diff --git
+> > a/Documentation/devicetree/bindings/display/panel/raspberrypi,7inch-touch
+> > screen-panel.txt
+> > b/Documentation/devicetree/bindings/display/panel/raspberrypi,7inch-touch
+> > screen-panel.txt new file mode 100644
+> > index 000000000000..1e84f97b3b20
+> > --- /dev/null
+> > +++
+> > b/Documentation/devicetree/bindings/display/panel/raspberrypi,7inch-touch
+> > screen-panel.txt @@ -0,0 +1,7 @@
+> > +Official 7" (800x480) Raspberry Pi touchscreen panel's panel.
+> > +
+> > +This binding is compatible with the simple-panel binding, which is
+> > specified +in simple-panel.txt in this directory.
+> > +
+> > +Required properties:
+> > +- compatible:	Must be "raspberrypi,7inch-touchscreen-panel"
+
+-- 
+Regards,
+
+Laurent Pinchart
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
