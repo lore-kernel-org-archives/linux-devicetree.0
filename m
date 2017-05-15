@@ -1,45 +1,77 @@
 From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: Re: [PATCH v2 06/18] arm64: dts: meson-gxl-s905x-khadas-vim: Fix Wifi
- node name
-Date: Mon, 15 May 2017 10:17:27 +0200
-Message-ID: <71fcfdf4-6311-feba-0d65-13ac251d69e8@baylibre.com>
+Subject: Re: [PATCH v2 15/18] arm64: dts: meson-gxl: Fix node order
+Date: Mon, 15 May 2017 10:17:06 +0200
+Message-ID: <21f47a71-a3a2-c0ae-46b1-87902f82e93e@baylibre.com>
 References: <20170513143337.14278-1-afaerber@suse.de>
- <20170513143337.14278-7-afaerber@suse.de>
+ <20170513143337.14278-16-afaerber@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170513143337.14278-7-afaerber@suse.de>
-Sender: linux-kernel-owner@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20170513143337.14278-16-afaerber@suse.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>, linux-amlogic@lists.infradead.org
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Kevin Hilman <khilman@baylibre.com>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Carlo Caione <carlo@caione.org>, linux-arm-kernel@lists.infradead.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Kevin Hilman <khilman@baylibre.com>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Carlo Caione <carlo@caione.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 05/13/2017 04:33 PM, Andreas Färber wrote:
-> bcrmf -> brcmf -> wifi
-> 
-> Fixes: e15d2774b8c0 ("ARM64: dts: meson-gxl: add support for the Khadas VIM board")
-> Cc: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-> Signed-off-by: Andreas Färber <afaerber@suse.de>
-> ---
->  v2: New
->  
->  arch/arm64/boot/dts/amlogic/meson-gxl-s905x-khadas-vim.dts | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-khadas-vim.dts b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-khadas-vim.dts
-> index 3c8b0b51ef27..6a81f0168da5 100644
-> --- a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-khadas-vim.dts
-> +++ b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-khadas-vim.dts
-> @@ -95,7 +95,7 @@
->  };
->  
->  &sd_emmc_a {
-> -	brcmf: bcrmf@1 {
-> +	brcmf: wifi@1 {
->  		reg = <1>;
->  		compatible = "brcm,bcm4329-fmac";
->  	};
-> 
-
-Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
+T24gMDUvMTMvMjAxNyAwNDozMyBQTSwgQW5kcmVhcyBGw6RyYmVyIHdyb3RlOgo+IFNvcnQgbm9k
+ZXMgcmVmZXJlbmNlZCBieSBsYWJlbCBhbHBoYWJldGljYWxseS4KPiAKPiBTaWduZWQtb2ZmLWJ5
+OiBBbmRyZWFzIEbDpHJiZXIgPGFmYWVyYmVyQHN1c2UuZGU+Cj4gLS0tCj4gIHYxIC0+IHYyOgo+
+ICAqIFJlYmFzZWQgKG5ldyBub2RlcyBhZGRlZCkKPiAgCj4gIGFyY2gvYXJtNjQvYm9vdC9kdHMv
+YW1sb2dpYy9tZXNvbi1neGwuZHRzaSB8IDcyICsrKysrKysrKysrKysrKy0tLS0tLS0tLS0tLS0t
+LQo+ICAxIGZpbGUgY2hhbmdlZCwgMzYgaW5zZXJ0aW9ucygrKSwgMzYgZGVsZXRpb25zKC0pCj4g
+Cj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvYW1sb2dpYy9tZXNvbi1neGwuZHRz
+aSBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvYW1sb2dpYy9tZXNvbi1neGwuZHRzaQo+IGluZGV4IGQ4
+ZTA5NmRmZjEwYS4uM2VmYWQ1ZjBiY2E0IDEwMDY0NAo+IC0tLSBhL2FyY2gvYXJtNjQvYm9vdC9k
+dHMvYW1sb2dpYy9tZXNvbi1neGwuZHRzaQo+ICsrKyBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvYW1s
+b2dpYy9tZXNvbi1neGwuZHRzaQo+IEBAIC0xOTMsNiArMTkzLDQyIEBACj4gIAl9Owo+ICB9Owo+
+ICAKPiArJmhkbWlfdHggewo+ICsJY29tcGF0aWJsZSA9ICJhbWxvZ2ljLG1lc29uLWd4bC1kdy1o
+ZG1pIiwgImFtbG9naWMsbWVzb24tZ3gtZHctaGRtaSI7Cj4gKwlyZXNldHMgPSA8JnJlc2V0IFJF
+U0VUX0hETUlUWF9DQVBCMz4sCj4gKwkJIDwmcmVzZXQgUkVTRVRfSERNSV9TWVNURU1fUkVTRVQ+
+LAo+ICsJCSA8JnJlc2V0IFJFU0VUX0hETUlfVFg+Owo+ICsJcmVzZXQtbmFtZXMgPSAiaGRtaXR4
+X2FwYiIsICJoZG1pdHgiLCAiaGRtaXR4X3BoeSI7Cj4gKwljbG9ja3MgPSA8JmNsa2MgQ0xLSURf
+SERNSV9QQ0xLPiwKPiArCQkgPCZjbGtjIENMS0lEX0NMSzgxPiwKPiArCQkgPCZjbGtjIENMS0lE
+X0dDTEtfVkVOQ0lfSU5UMD47Cj4gKwljbG9jay1uYW1lcyA9ICJpc2ZyIiwgImlhaGIiLCAidmVu
+Y2kiOwo+ICt9Owo+ICsKPiArJmhpdWJ1cyB7Cj4gKwljbGtjOiBjbG9jay1jb250cm9sbGVyQDAg
+ewo+ICsJCWNvbXBhdGlibGUgPSAiYW1sb2dpYyxneGwtY2xrYyIsICJhbWxvZ2ljLGd4YmItY2xr
+YyI7Cj4gKwkJI2Nsb2NrLWNlbGxzID0gPDE+Owo+ICsJCXJlZyA9IDwweDAgMHgwIDB4MCAweDNk
+Yj47Cj4gKwl9Owo+ICt9Owo+ICsKPiArJmkyY19BIHsKPiArCWNsb2NrcyA9IDwmY2xrYyBDTEtJ
+RF9JMkM+Owo+ICt9Owo+ICsKPiArJmkyY19BTyB7Cj4gKwljbG9ja3MgPSA8JmNsa2MgQ0xLSURf
+QU9fSTJDPjsKPiArfTsKPiArCj4gKyZpMmNfQiB7Cj4gKwljbG9ja3MgPSA8JmNsa2MgQ0xLSURf
+STJDPjsKPiArfTsKPiArCj4gKyZpMmNfQyB7Cj4gKwljbG9ja3MgPSA8JmNsa2MgQ0xLSURfSTJD
+PjsKPiArfTsKPiArCj4gICZwZXJpcGhzIHsKPiAgCXBpbmN0cmxfcGVyaXBoczogcGluY3RybEA0
+YjAgewo+ICAJCWNvbXBhdGlibGUgPSAiYW1sb2dpYyxtZXNvbi1neGwtcGVyaXBocy1waW5jdHJs
+IjsKPiBAQCAtNTAxLDMwICs1MzcsNiBAQAo+ICAJfTsKPiAgfTsKPiAgCj4gLSZoaXVidXMgewo+
+IC0JY2xrYzogY2xvY2stY29udHJvbGxlckAwIHsKPiAtCQljb21wYXRpYmxlID0gImFtbG9naWMs
+Z3hsLWNsa2MiLCAiYW1sb2dpYyxneGJiLWNsa2MiOwo+IC0JCSNjbG9jay1jZWxscyA9IDwxPjsK
+PiAtCQlyZWcgPSA8MHgwIDB4MCAweDAgMHgzZGI+Owo+IC0JfTsKPiAtfTsKPiAtCj4gLSZpMmNf
+QSB7Cj4gLQljbG9ja3MgPSA8JmNsa2MgQ0xLSURfSTJDPjsKPiAtfTsKPiAtCj4gLSZpMmNfQU8g
+ewo+IC0JY2xvY2tzID0gPCZjbGtjIENMS0lEX0FPX0kyQz47Cj4gLX07Cj4gLQo+IC0maTJjX0Ig
+ewo+IC0JY2xvY2tzID0gPCZjbGtjIENMS0lEX0kyQz47Cj4gLX07Cj4gLQo+IC0maTJjX0Mgewo+
+IC0JY2xvY2tzID0gPCZjbGtjIENMS0lEX0kyQz47Cj4gLX07Cj4gLQo+ICAmc2FyYWRjIHsKPiAg
+CWNvbXBhdGlibGUgPSAiYW1sb2dpYyxtZXNvbi1neGwtc2FyYWRjIiwgImFtbG9naWMsbWVzb24t
+c2FyYWRjIjsKPiAgCWNsb2NrcyA9IDwmeHRhbD4sCj4gQEAgLTU2MywxNSArNTc1LDMgQEAKPiAg
+JnZwdSB7Cj4gIAljb21wYXRpYmxlID0gImFtbG9naWMsbWVzb24tZ3hsLXZwdSIsICJhbWxvZ2lj
+LG1lc29uLWd4LXZwdSI7Cj4gIH07Cj4gLQo+IC0maGRtaV90eCB7Cj4gLQljb21wYXRpYmxlID0g
+ImFtbG9naWMsbWVzb24tZ3hsLWR3LWhkbWkiLCAiYW1sb2dpYyxtZXNvbi1neC1kdy1oZG1pIjsK
+PiAtCXJlc2V0cyA9IDwmcmVzZXQgUkVTRVRfSERNSVRYX0NBUEIzPiwKPiAtCQkgPCZyZXNldCBS
+RVNFVF9IRE1JX1NZU1RFTV9SRVNFVD4sCj4gLQkJIDwmcmVzZXQgUkVTRVRfSERNSV9UWD47Cj4g
+LQlyZXNldC1uYW1lcyA9ICJoZG1pdHhfYXBiIiwgImhkbWl0eCIsICJoZG1pdHhfcGh5IjsKPiAt
+CWNsb2NrcyA9IDwmY2xrYyBDTEtJRF9IRE1JX1BDTEs+LAo+IC0JCSA8JmNsa2MgQ0xLSURfQ0xL
+ODE+LAo+IC0JCSA8JmNsa2MgQ0xLSURfR0NMS19WRU5DSV9JTlQwPjsKPiAtCWNsb2NrLW5hbWVz
+ID0gImlzZnIiLCAiaWFoYiIsICJ2ZW5jaSI7Cj4gLX07Cj4gCgpIaSBBbmRyZWFzLAoKTGlrZSBh
+IHByZXZpb3VzIGF0dGVtcHQsIEknbSBub3QgT0sgd2l0aCBzdWNoIHJld29yayBzaW5jZSBpdCB3
+aWxsIGJyZWFrIGJpc2VjdCBhbmQgYWRkIGNvbXBsZXhpdHkgZm9yIG5ldyBwYXRjaGVzIGhhbmRs
+aW5nLgoKVGhlIG9yZGVyIGlzIG5vdCBhbHBoYWJldGljYWxseSBvcmRlcmVkLCBsaXZlIHdpdGgg
+aXQuCgpOZWlsCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+XwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmlu
+ZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9s
+aW51eC1hcm0ta2VybmVsCg==
