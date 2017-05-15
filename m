@@ -1,77 +1,72 @@
-From: "A.S. Dong" <aisheng.dong-3arQi8VN3Tc@public.gmane.org>
-Subject: RE: [PATCH 3/5] dt-bindings: pinctrl: add imx7ulp pinctrl binding doc
-Date: Mon, 15 May 2017 13:12:25 +0000
-Message-ID: <AM3PR04MB3063C9CFC02E03DE2B4C2ED80E10@AM3PR04MB306.eurprd04.prod.outlook.com>
-References: <1494592686-30967-1-git-send-email-aisheng.dong@nxp.com>
- <1494592686-30967-5-git-send-email-aisheng.dong@nxp.com>
- <20170515114319.GP8471@dragon>
- <AM3PR04MB3069C90F23CF9C9CC84BA7580E10@AM3PR04MB306.eurprd04.prod.outlook.com>
- <20170515122032.GS8471@dragon>
- <AM3PR04MB3069C788C96EE2854C2C68080E10@AM3PR04MB306.eurprd04.prod.outlook.com>
- <20170515125905.GV8471@dragon>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v2 04/11] arm64: dts: Initial DTS files for Broadcom
+ Stingray SOC
+Date: Mon, 15 May 2017 14:13:35 +0100
+Message-ID: <20170515131334.GE17776@leverpostej>
+References: <1494849741-21294-1-git-send-email-anup.patel@broadcom.com>
+ <1494849741-21294-5-git-send-email-anup.patel@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170515125905.GV8471@dragon>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <1494849741-21294-5-git-send-email-anup.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Andy Duan <fugang.duan-3arQi8VN3Tc@public.gmane.org>, Jacky Bai <ping.bai-3arQi8VN3Tc@public.gmane.org>, "linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "stefan-XLVq0VzYD2Y@public.gmane.org" <stefan-XLVq0VzYD2Y@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Anup Patel <anup.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Oza Pawandeep <oza.oza-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Srinath Mannam <srinath.mannam-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Pramod Kumar <pramod.kumar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Sandeep Tripathy <sandeep.tripathy-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Scott Branden <scott.branden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-> -----Original Message-----
-> From: Shawn Guo [mailto:shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org]
-> Sent: Monday, May 15, 2017 8:59 PM
-> To: A.S. Dong
-> Cc: Mark Rutland; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Andy Duan; Jacky Bai;
-> linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org; stefan-XLVq0VzYD2Y@public.gmane.org; linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Ro=
-b
-> Herring; kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org; linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> Subject: Re: [PATCH 3/5] dt-bindings: pinctrl: add imx7ulp pinctrl bindin=
-g
-> doc
->=20
-> On Mon, May 15, 2017 at 12:41:09PM +0000, A.S. Dong wrote:
-> > > On Mon, May 15, 2017 at 12:06:19PM +0000, A.S. Dong wrote:
-> > > > > > @@ -0,0 +1,56 @@
-> > > > > > +* Freescale i.MX7ULP IOMUX Controller
-> > > > > > +
-> > > > > > +Please refer to fsl,imx-pinctrl.txt in this directory for
-> > > > > > +common binding part and usage.
-> > > > >
-> > > > > Are imx7ulp-pinctrl bindings more alike to fsl,imx-pinctrl.txt
-> > > > > or generic pinctrl-bindings.txt?  My personal feeling is that it
-> > > > > might be better to take pinctrl-bindings.txt as the reference
-> > > > > base and highlight how imx7ulp- pinctrl bindings differ from it.
-> > > > >
-> > > >
-> > > > It seems still more like fsl,imx-pinctrl.txt.
-> > > >
-> > > > I know fsl,imx-pinctrl.txt is a bit out of date, especially after
-> > > > we add generic pinconf.
-> > > >
-> > > > I plan to update it later after adding generic pin conf support to
-> > > > legacy SoCs (MX6 & 7) as well, do you think it's ok?
-> > >
-> > > Please do not.  Let's use generic pinconf support only for new SoCs,
-> > > and not bother with legacy SoCs.
-> > >
-> >
-> > I wonder there may be some guys interested more in generic Pinconfig
-> > format rather than old one when they add new board support, or someone
-> > else adding the support for legacy SoCs as the pinctrl-imx core
-> > already supports it after this patch series.
->=20
-> I would take this as an unnecessary churn on existing code and increase o=
-f
-> maintenance burden.  So that's definitely a NO from me.
->=20
+Hi,
 
-Okay, personally I would be with you!
+On Mon, May 15, 2017 at 05:32:14PM +0530, Anup Patel wrote:
+> +/ {
+> +	chosen { /* Default kernel args */
+> +		bootargs = "root=/dev/ram rw rootwait \
+> +			    earlycon=uart8250,mmio32,0x68a10000 \
+> +			    pci=pcie_bus_safe cma=64M";
 
-Regards
-Dong Aisheng
+Why do we need all of these?
+
+> +		linux,stdout-path = "serial0:115200n8";
+
+Please drop the 'linux,' prefix here.
+
+[...]
+
+> +	memory: memory@80000000 {
+> +		device_type = "memory";
+> +		reg = <0x00000000 0x80000000 0 0x40000000>;
+> +	};
+> +
+> +	psci {
+> +		compatible = "arm,psci-0.2";
+> +		method = "smc";
+> +	};
+> +
+> +	pmu {
+> +		compatible = "arm,armv8-pmuv3";
+> +		interrupts = <GIC_PPI 7 IRQ_TYPE_LEVEL_HIGH>;
+> +	};
+> +
+> +	timer {
+> +		compatible = "arm,armv8-timer";
+> +		interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(8) |
+> +			      IRQ_TYPE_LEVEL_LOW)>,
+> +			     <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(8) |
+> +			      IRQ_TYPE_LEVEL_LOW)>,
+> +			     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(8) |
+> +			      IRQ_TYPE_LEVEL_LOW)>,
+> +			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(8) |
+> +			      IRQ_TYPE_LEVEL_LOW)>;
+
+GICv3 PPIs don't have a mask. See
+
+Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.txt
+
+Please remove the GIC_CPU_MASK_*() uses here and in this dts. They
+shouldn't be there.
+
+Thanks,
+Mark.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
