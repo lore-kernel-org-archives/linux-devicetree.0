@@ -1,66 +1,504 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v2 15/18] dt-bindings: sound: Add bindings for Cirrus
- Logic Madera codecs
-Date: Sun, 14 May 2017 19:04:03 +0900
-Message-ID: <20170514100403.nocjlb77q5r3nvo2@sirena.org.uk>
-References: <1493050124-5970-1-git-send-email-rf@opensource.wolfsonmicro.com>
- <1493050124-5970-16-git-send-email-rf@opensource.wolfsonmicro.com>
- <20170425155257.s6m4wgrzxxsxcggo@sirena.org.uk>
- <1493137664.4826.75.camel@rf-debian.wolfsonmicro.main>
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: Re: [PATCH v2 6/6] pintrl: meson: add support for GPIO interrupts
+Date: Mon, 15 May 2017 10:05:27 +0200
+Message-ID: <5e6d39fa-8f40-8233-6480-cb8306a4427a@baylibre.com>
+References: <36164ed8-aa59-2a77-b7fc-9adce03a2fc1@gmail.com>
+ <dc23b800-fe69-8143-6367-d3cd801cd6db@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="cza46krmerc4eir5"
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-gpio-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1493137664.4826.75.camel@rf-debian.wolfsonmicro.main>
+In-Reply-To: <dc23b800-fe69-8143-6367-d3cd801cd6db@gmail.com>
 Sender: linux-gpio-owner@vger.kernel.org
-To: Richard Fitzgerald <rf@opensource.wolfsonmicro.com>
-Cc: lee.jones@linaro.org, linus.walleij@linaro.org, gnurou@gmail.com, robh+dt@kernel.org, tglx@linutronix.de, jason@lakedaemon.net, alsa-devel@alsa-project.org, patches@opensource.wolfsonmicro.com, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Heiner Kallweit <hkallweit1@gmail.com>, Jerome Brunet <jbrunet@baylibre.com>, Mark Rutland <mark.rutland@arm.com>, Marc Zyngier <marc.zyngier@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Kevin Hilman <khilman@baylibre.com>, Thomas Gleixner <tglx@linutronix.de>
+Cc: Thierry Reding <treding@nvidia.com>, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, linux-amlogic@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+On 05/12/2017 09:14 PM, Heiner Kallweit wrote:
+> Add support for GPIO interrupts on Amlogic Meson SoC's.
+> 
+> There's a limit of 8 parent interupts which can be used in total.
+> Note that IRQ_TYPE_EDGE_BOTH interrupts reserve two parent IRQ's,
+> one for each edge.
+> 
+> Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
+> ---
+> v2:
+> - make the GPIO IRQ controller a separate driver
+> - several smaller improvements
+> ---
+>  drivers/pinctrl/Kconfig                   |   1 +
+>  drivers/pinctrl/meson/Makefile            |   2 +-
+>  drivers/pinctrl/meson/pinctrl-meson-irq.c | 367 ++++++++++++++++++++++++++++++
 
---cza46krmerc4eir5
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Hi Heiner,
 
-On Tue, Apr 25, 2017 at 05:27:44PM +0100, Richard Fitzgerald wrote:
-> On Tue, 2017-04-25 at 16:52 +0100, Mark Brown wrote:
+This code has nothing to do with GPIOs on pinmux handling here, what we figured with Jerome
+is that this must be an independent IRQ Controller in drivers/irqchip.
 
-> > > +Required properties:
-> > > +  - compatible : One of the following chip-specific strings:
-> > > +        "cirrus,cs47l35-codec"
-> > > +        "cirrus,cs47l85-codec"
-> > > +        "cirrus,cs47l90-codec"
+Please move it and make independent, you should be able to request irqs without any links
+to the pinmux/gpio since physically the GPIO lines input are always connected to this
+irq controller, and the pinmux has no impact on the interrupt management here.
+>From the GPIO-IRQ Controller perspective, the GPIOs are only a number and the pinmux code
+is only here to make the translation to a specific GPIO to a GPIO-IRQ number.
 
-> > You shouldn't have compatible strings for subfunctions of a MFD unless
-> > these represent meaningful reusable IPs that can exist separately from
-> > the parent chip, that's clearly not the case here.  All you're doing
-> > here is encoding Linux internal abstractions which aren't OS neutral and
-> > might change in future (for example clocking might move more into the
-> > clock API).
+For more chance to have it upstreamed in the right way, we should :
+1) Collaborate, we can chat over IRC, maybe Slack, E-mail, skype, forums, ...
+2) Push an independent IRQ controller that matches the capacity of the HW
+3) Push a link from the pinctrl driver to have the to_gpio_irq mapping done in the right way
 
-> While that's nice, the of_node doesn't get populated if there isn't a
-> compatible string. And people don't like workarounds for the missing
-> of_node.
+Jerome spent quite a lot of time and had a chat with the IRQ subsystem maintainers to have s
+clear image of how this should be implemented, and it would be a good point to actually
+have a chat with them to elaborate find a strong solution.
 
-What workarounds are you referring to?  Why would this need any kind of
-workaround, there is no requirement for magic broken nodes like this in
-the subsystem and if there is we should fix that rather than bodge the
-ABI.
+I'm sorry to say that pushing this code without really understanding how and why will lead to
+nothing expect frustration from everybody.
 
---cza46krmerc4eir5
-Content-Type: application/pgp-signature; name="signature.asc"
+Neil
 
------BEGIN PGP SIGNATURE-----
+>  drivers/pinctrl/meson/pinctrl-meson.c     |   8 +-
+>  drivers/pinctrl/meson/pinctrl-meson.h     |   1 +
+>  5 files changed, 377 insertions(+), 2 deletions(-)
+>  create mode 100644 drivers/pinctrl/meson/pinctrl-meson-irq.c
+> 
+> diff --git a/drivers/pinctrl/Kconfig b/drivers/pinctrl/Kconfig
+> index 37af5e30..f8f401a0 100644
+> --- a/drivers/pinctrl/Kconfig
+> +++ b/drivers/pinctrl/Kconfig
+> @@ -153,6 +153,7 @@ config PINCTRL_MESON
+>  	select PINCONF
+>  	select GENERIC_PINCONF
+>  	select GPIOLIB
+> +	select GPIOLIB_IRQCHIP
+>  	select OF_GPIO
+>  	select REGMAP_MMIO
+>  
+> diff --git a/drivers/pinctrl/meson/Makefile b/drivers/pinctrl/meson/Makefile
+> index 27c5b512..827e416d 100644
+> --- a/drivers/pinctrl/meson/Makefile
+> +++ b/drivers/pinctrl/meson/Makefile
+> @@ -1,3 +1,3 @@
+>  obj-y	+= pinctrl-meson8.o pinctrl-meson8b.o
+>  obj-y	+= pinctrl-meson-gxbb.o pinctrl-meson-gxl.o
+> -obj-y	+= pinctrl-meson.o
+> +obj-y	+= pinctrl-meson.o pinctrl-meson-irq.o
+> diff --git a/drivers/pinctrl/meson/pinctrl-meson-irq.c b/drivers/pinctrl/meson/pinctrl-meson-irq.c
+> new file mode 100644
+> index 00000000..c5f403f3
+> --- /dev/null
+> +++ b/drivers/pinctrl/meson/pinctrl-meson-irq.c
+> @@ -0,0 +1,367 @@
+> +/*
+> + * Amlogic Meson GPIO IRQ driver
+> + *
+> + * Copyright 2017 Heiner Kallweit <hkallweit1@gmail.com>
+> + * Based on a first version by Jerome Brunet <jbrunet@baylibre.com>
+> + *
+> + * This program is free software; you can redistribute it and/or
+> + * modify it under the terms of the GNU General Public License as
+> + * published by the Free Software Foundation, version 2.
+> + */
+> +
+> +#include <linux/device.h>
+> +#include <linux/gpio.h>
+> +#include <linux/init.h>
+> +#include <linux/io.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/of.h>
+> +#include <linux/of_irq.h>
+> +#include <linux/of_address.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/regmap.h>
+> +#include "pinctrl-meson.h"
+> +
+> +#define REG_EDGE_POL		0x00
+> +#define REG_PIN_03_SEL		0x04
+> +#define REG_PIN_47_SEL		0x08
+> +#define REG_FILTER_SEL		0x0c
+> +
+> +#define REG_EDGE_POL_MASK(x)	(BIT(x) | BIT(16 + (x)))
+> +#define REG_EDGE_POL_EDGE(x)	BIT(x)
+> +#define REG_EDGE_POL_LOW(x)	BIT(16 + (x))
+> +
+> +#define MESON_GPIO_MAX_PARENT_IRQ_NUM	8
+> +
+> +struct meson_gpio_irq_slot {
+> +	int irq;
+> +	int owner;
+> +};
+> +
+> +static struct regmap *meson_gpio_irq_regmap;
+> +static struct meson_gpio_irq_slot
+> +		meson_gpio_irq_slots[MESON_GPIO_MAX_PARENT_IRQ_NUM];
+> +static int meson_gpio_num_irq_slots;
+> +static DEFINE_MUTEX(meson_gpio_irq_slot_mutex);
+> +static DECLARE_BITMAP(meson_gpio_irq_locked, 256);
+> +
+> +static struct meson_pinctrl *meson_gpio_data_to_pc(struct irq_data *data)
+> +{
+> +	struct gpio_chip *chip = irq_data_get_irq_chip_data(data);
+> +
+> +	return gpiochip_get_data(chip);
+> +}
+> +
+> +static int meson_gpio_to_hwirq(struct meson_bank *bank, unsigned int offset)
+> +{
+> +	int hwirq;
+> +
+> +	if (bank->irq_first < 0)
+> +		/* this bank cannot generate irqs */
+> +		return 0;
+> +
+> +	hwirq = offset - bank->first + bank->irq_first;
+> +
+> +	if (hwirq > bank->irq_last)
+> +		/* this pin cannot generate irqs */
+> +		return 0;
+> +
+> +	return hwirq;
+> +}
+> +
+> +static int meson_gpio_to_irq(struct meson_pinctrl *pc, unsigned int offset)
+> +{
+> +	struct meson_bank *bank;
+> +	int hwirq;
+> +
+> +	offset += pc->data->pin_base;
+> +
+> +	bank = meson_pinctrl_get_bank(pc, offset);
+> +	if (IS_ERR(bank))
+> +		return PTR_ERR(bank);
+> +
+> +	hwirq = meson_gpio_to_hwirq(bank, offset);
+> +	if (!hwirq)
+> +		dev_dbg(pc->dev, "no interrupt for pin %u\n", offset);
+> +
+> +	return hwirq;
+> +}
+> +
+> +static int meson_gpio_data_to_hwirq(struct irq_data *data)
+> +{
+> +	struct meson_pinctrl *pc = meson_gpio_data_to_pc(data);
+> +	unsigned gpio = irqd_to_hwirq(data);
+> +
+> +	return meson_gpio_to_irq(pc, gpio);
+> +}
+> +
+> +static irqreturn_t meson_gpio_irq_handler(int irq, void *data)
+> +{
+> +	struct irq_data *gpio_irqdata = data;
+> +	struct meson_pinctrl *pc = meson_gpio_data_to_pc(data);
+> +	int hwirq = meson_gpio_data_to_hwirq(gpio_irqdata);
+> +
+> +	/*
+> +	 * For some strange reason spurious interrupts created by the chip when
+> +	 * the interrupt source registers are written cause a deadlock here.
+> +	 * generic_handle_irq calls handle_simple_irq which tries to get
+> +	 * spinlock desc->lock. This interrupt handler is called whilst
+> +	 * __setup_irq holds desc->lock.
+> +	 * The deadlock means that both are running on the same CPU what should
+> +	 * not happen as __setup_irq called raw_spin_lock_irqsave thus disabling
+> +	 * interrupts on this CPU.
+> +	 * Work around this by ignoring interrupts in code protected by
+> +	 * chip_bus_lock (__setup_irq/__free_irq for the respective GPIO hwirq).
+> +	 */
+> +	if (test_bit(hwirq, meson_gpio_irq_locked))
+> +		dev_dbg(pc->dev, "spurious interrupt detected!\n");
+> +	else
+> +		generic_handle_irq(gpio_irqdata->irq);
+> +
+> +	return IRQ_HANDLED;
+> +}
+> +
+> +static int meson_gpio_alloc_irq_slot(struct irq_data *data, int num_slots,
+> +				     int *slots)
+> +{
+> +	int i, cnt = 0;
+> +
+> +	mutex_lock(&meson_gpio_irq_slot_mutex);
+> +
+> +	for (i = 0; i < meson_gpio_num_irq_slots; i++)
+> +		if (!meson_gpio_irq_slots[i].owner) {
+> +			meson_gpio_irq_slots[i].owner = data->irq;
+> +			slots[cnt++] = i;
+> +			if (cnt == num_slots)
+> +				break;
+> +		}
+> +
+> +	if (cnt < num_slots)
+> +		for (i = 0; i < cnt; i++)
+> +			meson_gpio_irq_slots[i].owner = 0;
+> +
+> +	mutex_unlock(&meson_gpio_irq_slot_mutex);
+> +
+> +	return cnt == num_slots ? 0 : -ENOSPC;
+> +}
+> +
+> +static void meson_gpio_free_irq_slot(struct irq_data *data)
+> +{
+> +	int i;
+> +
+> +	mutex_lock(&meson_gpio_irq_slot_mutex);
+> +
+> +	for (i = 0; i < meson_gpio_num_irq_slots; i++)
+> +		if (meson_gpio_irq_slots[i].owner == data->irq) {
+> +			free_irq(meson_gpio_irq_slots[i].irq, data);
+> +			meson_gpio_irq_slots[i].owner = 0;
+> +		}
+> +
+> +	mutex_unlock(&meson_gpio_irq_slot_mutex);
+> +}
+> +
+> +static int meson_gpio_find_irq_slot(struct irq_data *data, int *slots)
+> +{
+> +	int i, cnt = 0;
+> +
+> +	mutex_lock(&meson_gpio_irq_slot_mutex);
+> +
+> +	for (i = 0; i < meson_gpio_num_irq_slots; i++)
+> +		if (meson_gpio_irq_slots[i].owner == data->irq)
+> +			slots[cnt++] = i;
+> +
+> +	mutex_unlock(&meson_gpio_irq_slot_mutex);
+> +
+> +	return cnt ?: -EINVAL;
+> +}
+> +
+> +static void meson_gpio_set_hwirq(int idx, int hwirq)
+> +{
+> +	int reg = idx > 3 ? REG_PIN_47_SEL : REG_PIN_03_SEL;
+> +	int shift = 8 * (idx % 4);
+> +
+> +	regmap_update_bits(meson_gpio_irq_regmap, reg, 0xff << shift,
+> +			   hwirq << shift);
+> +}
+> +
+> +static void meson_gpio_irq_set_hwirq(struct irq_data *data, int hwirq)
+> +{
+> +	struct meson_pinctrl *pc = meson_gpio_data_to_pc(data);
+> +	int i, cnt, slots[MESON_GPIO_MAX_PARENT_IRQ_NUM];
+> +
+> +	cnt = meson_gpio_find_irq_slot(data, slots);
+> +	if (cnt < 0) {
+> +		dev_err(pc->dev, "didn't find gpio irq slot\n");
+> +		return;
+> +	}
+> +
+> +	for (i = 0; i < cnt; i++)
+> +		meson_gpio_set_hwirq(slots[i], hwirq);
+> +}
+> +
+> +static void meson_gpio_irq_unmask(struct irq_data *data)
+> +{
+> +	struct meson_pinctrl *pc = meson_gpio_data_to_pc(data);
+> +	unsigned gpio = irqd_to_hwirq(data);
+> +	int hwirq = meson_gpio_to_irq(pc, gpio);
+> +
+> +	meson_gpio_irq_set_hwirq(data, hwirq);
+> +}
+> +
+> +static void meson_gpio_irq_mask(struct irq_data *data)
+> +{
+> +	meson_gpio_irq_set_hwirq(data, 0xff);
+> +}
+> +
+> +static void meson_gpio_irq_shutdown(struct irq_data *data)
+> +{
+> +	meson_gpio_irq_mask(data);
+> +	meson_gpio_free_irq_slot(data);
+> +}
+> +
+> +static int meson_gpio_irq_set_type(struct irq_data *data, unsigned int type)
+> +{
+> +	int i, ret, irq, num_slots, slots[MESON_GPIO_MAX_PARENT_IRQ_NUM];
+> +	unsigned int val = 0;
+> +
+> +	num_slots = (type == IRQ_TYPE_EDGE_BOTH) ? 2 : 1;
+> +	ret = meson_gpio_alloc_irq_slot(data, num_slots, slots);
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (type & (IRQ_TYPE_EDGE_RISING | IRQ_TYPE_EDGE_FALLING))
+> +		val |= REG_EDGE_POL_EDGE(slots[0]);
+> +
+> +	if (type & (IRQ_TYPE_LEVEL_LOW | IRQ_TYPE_EDGE_FALLING))
+> +		val |= REG_EDGE_POL_LOW(slots[0]);
+> +
+> +	regmap_update_bits(meson_gpio_irq_regmap, REG_EDGE_POL,
+> +			   REG_EDGE_POL_MASK(slots[0]), val);
+> +
+> +	/*
+> +	 * The chip can create an interrupt for either rising or falling edge
+> +	 * only. Therefore use two interrupts in case of IRQ_TYPE_EDGE_BOTH,
+> +	 * first for falling edge and second one for rising edge.
+> +	 */
+> +	if (num_slots > 1) {
+> +		val = REG_EDGE_POL_EDGE(slots[1]);
+> +		regmap_update_bits(meson_gpio_irq_regmap, REG_EDGE_POL,
+> +				   REG_EDGE_POL_MASK(slots[1]), val);
+> +	}
+> +
+> +	if (type & IRQ_TYPE_EDGE_BOTH)
+> +		val = IRQ_TYPE_EDGE_RISING;
+> +	else
+> +		val = IRQ_TYPE_LEVEL_HIGH;
+> +
+> +	for (i = 0; i < num_slots; i++) {
+> +		irq = meson_gpio_irq_slots[slots[i]].irq;
+> +		ret = irq_set_irq_type(irq, val);
+> +		if (ret)
+> +			break;
+> +		ret = request_irq(irq, meson_gpio_irq_handler, 0,
+> +				  "GPIO parent", data);
+> +		if (ret)
+> +			break;
+> +	}
+> +
+> +	if (ret)
+> +		while (--i >= 0)
+> +			free_irq(meson_gpio_irq_slots[slots[i]].irq, data);
+> +
+> +	return ret;
+> +}
+> +
+> +static void meson_gpio_irq_bus_lock(struct irq_data *data)
+> +{
+> +	int hwirq = meson_gpio_data_to_hwirq(data);
+> +
+> +	set_bit(hwirq, meson_gpio_irq_locked);
+> +}
+> +
+> +static void meson_gpio_irq_bus_sync_unlock(struct irq_data *data)
+> +{
+> +	int hwirq = meson_gpio_data_to_hwirq(data);
+> +
+> +	clear_bit(hwirq, meson_gpio_irq_locked);
+> +}
+> +
+> +static struct irq_chip meson_gpio_irq_chip = {
+> +	.name = "GPIO",
+> +	.irq_set_type = meson_gpio_irq_set_type,
+> +	.irq_mask = meson_gpio_irq_mask,
+> +	.irq_unmask = meson_gpio_irq_unmask,
+> +	.irq_shutdown = meson_gpio_irq_shutdown,
+> +	.irq_bus_lock = meson_gpio_irq_bus_lock,
+> +	.irq_bus_sync_unlock = meson_gpio_irq_bus_sync_unlock,
+> +};
+> +
+> +static int meson_gpio_get_irqs(struct platform_device *pdev)
+> +{
+> +	struct device_node *np = pdev->dev.of_node;
+> +	int irq, i;
+> +
+> +	for (i = 0; i < MESON_GPIO_MAX_PARENT_IRQ_NUM; i++) {
+> +		irq = irq_of_parse_and_map(np, i);
+> +		if (!irq)
+> +			break;
+> +		meson_gpio_irq_slots[i].irq = irq;
+> +	}
+> +
+> +	meson_gpio_num_irq_slots = i;
+> +
+> +	return i ? 0 : -EINVAL;
+> +}
+> +
+> +static const struct regmap_config meson_gpio_regmap_config = {
+> +	.reg_bits       = 32,
+> +	.reg_stride     = 4,
+> +	.val_bits       = 32,
+> +	.max_register	= REG_FILTER_SEL,
+> +};
+> +
+> +static int meson_gpio_irq_probe(struct platform_device *pdev)
+> +{
+> +	struct resource *res;
+> +	void __iomem *io_base;
+> +	int ret;
+> +
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	io_base = devm_ioremap_resource(&pdev->dev, res);
+> +	if (IS_ERR(io_base))
+> +		return PTR_ERR(io_base);
+> +
+> +	meson_gpio_irq_regmap = devm_regmap_init_mmio(&pdev->dev, io_base,
+> +						&meson_gpio_regmap_config);
+> +	if (IS_ERR(meson_gpio_irq_regmap))
+> +		return PTR_ERR(meson_gpio_irq_regmap);
+> +
+> +	/* initialize to IRQ_TYPE_LEVEL_HIGH */
+> +	regmap_write(meson_gpio_irq_regmap, REG_EDGE_POL, 0);
+> +	/* disable all GPIO interrupt sources */
+> +	regmap_write(meson_gpio_irq_regmap, REG_PIN_03_SEL, 0xffffffff);
+> +	regmap_write(meson_gpio_irq_regmap, REG_PIN_47_SEL, 0xffffffff);
+> +	/* disable filtering */
+> +	regmap_write(meson_gpio_irq_regmap, REG_FILTER_SEL, 0);
+> +
+> +	ret = meson_gpio_get_irqs(pdev);
+> +	if (ret)
+> +		return ret;
+> +
+> +	meson_pinctrl_irq_chip = &meson_gpio_irq_chip;
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id meson_gpio_irq_dt_match[] = {
+> +	{ .compatible = "amlogic,meson-gpio-interrupt" },
+> +	{ },
+> +};
+> +
+> +static struct platform_driver meson_gpio_irq_driver = {
+> +	.probe		= meson_gpio_irq_probe,
+> +	.driver = {
+> +		.name	= "meson-gpio-interrupt",
+> +		.of_match_table = meson_gpio_irq_dt_match,
+> +	},
+> +};
+> +builtin_platform_driver(meson_gpio_irq_driver);
+> diff --git a/drivers/pinctrl/meson/pinctrl-meson.c b/drivers/pinctrl/meson/pinctrl-meson.c
+> index 39ad9861..c587f6f0 100644
+> --- a/drivers/pinctrl/meson/pinctrl-meson.c
+> +++ b/drivers/pinctrl/meson/pinctrl-meson.c
+> @@ -62,6 +62,8 @@
+>  #include "../pinctrl-utils.h"
+>  #include "pinctrl-meson.h"
+>  
+> +struct irq_chip *meson_pinctrl_irq_chip;
+> +
+>  /**
+>   * meson_pinctrl_get_bank() - find the bank containing a given pin
+>   *
+> @@ -551,7 +553,8 @@ static int meson_gpiolib_register(struct meson_pinctrl *pc)
+>  		return ret;
+>  	}
+>  
+> -	return 0;
+> +	return gpiochip_irqchip_add(&pc->chip, meson_pinctrl_irq_chip, 0,
+> +				    handle_simple_irq, IRQ_TYPE_NONE);
+>  }
+>  
+>  static struct regmap_config meson_regmap_config = {
+> @@ -640,6 +643,9 @@ static int meson_pinctrl_probe(struct platform_device *pdev)
+>  	struct meson_pinctrl *pc;
+>  	int ret;
+>  
+> +	if (!meson_pinctrl_irq_chip)
+> +		return -EPROBE_DEFER;
+> +
+>  	pc = devm_kzalloc(dev, sizeof(struct meson_pinctrl), GFP_KERNEL);
+>  	if (!pc)
+>  		return -ENOMEM;
+> diff --git a/drivers/pinctrl/meson/pinctrl-meson.h b/drivers/pinctrl/meson/pinctrl-meson.h
+> index 40b56aff..16aab328 100644
+> --- a/drivers/pinctrl/meson/pinctrl-meson.h
+> +++ b/drivers/pinctrl/meson/pinctrl-meson.h
+> @@ -176,6 +176,7 @@ extern struct meson_pinctrl_data meson_gxbb_periphs_pinctrl_data;
+>  extern struct meson_pinctrl_data meson_gxbb_aobus_pinctrl_data;
+>  extern struct meson_pinctrl_data meson_gxl_periphs_pinctrl_data;
+>  extern struct meson_pinctrl_data meson_gxl_aobus_pinctrl_data;
+> +extern struct irq_chip *meson_pinctrl_irq_chip;
+>  
+>  struct meson_bank *meson_pinctrl_get_bank(const struct meson_pinctrl *pc,
+>  					  unsigned int pin);
+> 
 
-iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlkYK5IACgkQJNaLcl1U
-h9DG+Qf+MXO0kmiz04BZDxWrTzENEIBa0GMVAU39Xh5Kfnbf49VfGU7sb2DuAsv7
-AC2U9wLbIU+Anp5msmrw1LwLym1andkGKHhJu7TKx9QvlVZCkakVUQa3Trac8PGA
-8oFljIE1yossxLtxxz2wa3fIRkRyFIehXMZvxvGL74Y1tpPhU2mFfn6vgzUAMohH
-51As5HEODdIxqrH+PdNgJOPF472UqQsrj2aLrgjThjskeMBoprsr7x1mpvIZTXPY
-AOIzFYeSr4tWORWoMrXYFoiQcrlDh6oWhxcOUTthHOdaUjjAv/ehHzs4rLF966CT
-jDvebOibp9h2ir7DTcavUnGqiVZn3w==
-=hpjz
------END PGP SIGNATURE-----
-
---cza46krmerc4eir5--
