@@ -1,162 +1,94 @@
-From: Ryder Lee <ryder.lee@mediatek.com>
-Subject: [PATCH v4 2/2] dt-bindings: pcie: Add documentation for Mediatek PCIe
-Date: Mon, 15 May 2017 11:09:55 +0800
-Message-ID: <1494817795-15366-3-git-send-email-ryder.lee@mediatek.com>
-References: <1494817795-15366-1-git-send-email-ryder.lee@mediatek.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <1494817795-15366-1-git-send-email-ryder.lee@mediatek.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>
-Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Red Hung <red.hung@mediatek.com>, Ryder Lee <ryder.lee@mediatek.com>
+From: Anup Patel <anup.patel@broadcom.com>
+Subject: [PATCH v8 0/4] Broadcom SBA RAID support
+Date: Mon, 15 May 2017 10:34:51 +0530
+Message-ID: <1494824695-21797-1-git-send-email-anup.patel@broadcom.com>
+Return-path: <linux-crypto-owner@vger.kernel.org>
+Sender: linux-crypto-owner@vger.kernel.org
+To: Vinod Koul <vinod.koul@intel.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Herbert Xu <herbert@gondor.apana.org.au>, "David S . Miller" <davem@davemloft.net>, Jassi Brar <jassisinghbrar@gmail.com>
+Cc: Dan Williams <dan.j.williams@intel.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Rob Rice <rob.rice@broadcom.com>, bcm-kernel-feedback-list@broadcom.com, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org, linux-raid@vger.kernel.org, Anup Patel <anup.patel@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-Add documentation for PCIe host driver available in MT7623
-series SoCs.
+The Broadcom SBA RAID is a stream-based device which provides
+RAID5/6 offload.
 
-Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
-Acked-by: Rob Herring <robh@kernel.org>
----
- .../bindings/pci/mediatek,mt7623-pcie.txt          | 130 +++++++++++++++++++++
- 1 file changed, 130 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pci/mediatek,mt7623-pcie.txt
+It requires a SoC specific ring manager (such as Broadcom FlexRM
+ring manager) to provide ring-based programming interface. Due to
+this, the Broadcom SBA RAID driver (mailbox client) implements
+DMA device having one DMA channel using a set of mailbox channels
+provided by Broadcom SoC specific ring manager driver (mailbox
+controller).
 
-diff --git a/Documentation/devicetree/bindings/pci/mediatek,mt7623-pcie.txt b/Documentation/devicetree/bindings/pci/mediatek,mt7623-pcie.txt
-new file mode 100644
-index 0000000..ae4a3f4
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pci/mediatek,mt7623-pcie.txt
-@@ -0,0 +1,130 @@
-+Mediatek Gen2 PCIe controller which is available on MT7623 series SoCs
-+
-+PCIe subsys supports single root complex (RC) with 3 Root Ports. Each root
-+ports supports a Gen2 1-lane Link and has PIPE interface to PHY.
-+
-+Required properties:
-+- compatible: Should contain "mediatek,mt7623-pcie".
-+- device_type: Must be "pci"
-+- reg: Base addresses and lengths of the PCIe controller.
-+- #address-cells: Address representation for root ports (must be 3)
-+- #size-cells: Size representation for root ports (must be 2)
-+- #interrupt-cells: Size representation for interrupts (must be 1)
-+- interrupt-map-mask and interrupt-map: Standard PCI IRQ mapping properties
-+  Please refer to the standard PCI bus binding document for a more detailed
-+  explanation.
-+- clocks: Must contain an entry for each entry in clock-names.
-+  See ../clocks/clock-bindings.txt for details.
-+- clock-names: Must include the following entries:
-+  - free_ck :for reference clock of PCIe subsys
-+  - sys_ck0 :for clock of Port0
-+  - sys_ck1 :for clock of Port1
-+  - sys_ck2 :for clock of Port2
-+- resets: Must contain an entry for each entry in reset-names.
-+  See ../reset/reset.txt for details.
-+- reset-names: Must include the following entries:
-+  - pcie-rst0 :port0 reset
-+  - pcie-rst1 :port1 reset
-+  - pcie-rst2 :port2 reset
-+- phys: List of PHY specifiers (used by generic PHY framework).
-+- phy-names : Must be "pcie-phy0", "pcie-phy1", "pcie-phyN".. based on the
-+  number of PHYs as specified in *phys* property.
-+- power-domains: A phandle and power domain specifier pair to the power domain
-+  which is responsible for collapsing and restoring power to the peripheral.
-+- bus-range: Range of bus numbers associated with this controller.
-+- ranges: Ranges for the PCI memory and I/O regions.
-+
-+In addition, the device tree node must have sub-nodes describing each
-+PCIe port interface, having the following mandatory properties:
-+
-+Required properties:
-+- device_type: Must be "pci"
-+- reg: Only the first four bytes are used to refer to the correct bus number
-+  and device number.
-+- #address-cells: Must be 3
-+- #size-cells: Must be 2
-+- #interrupt-cells: Must be 1
-+- interrupt-map-mask and interrupt-map: Standard PCI IRQ mapping properties
-+  Please refer to the standard PCI bus binding document for a more detailed
-+  explanation.
-+- ranges: Sub-ranges distributed from the PCIe controller node. An empty
-+  property is sufficient.
-+- num-lanes: Number of lanes to use for this port.
-+
-+Examples:
-+
-+	hifsys: syscon@1a000000 {
-+		compatible = "mediatek,mt7623-hifsys",
-+			     "mediatek,mt2701-hifsys",
-+			     "syscon";
-+		reg = <0 0x1a000000 0 0x1000>;
-+		#clock-cells = <1>;
-+		#reset-cells = <1>;
-+	};
-+
-+	pcie: pcie-controller@1a140000 {
-+		compatible = "mediatek,mt7623-pcie";
-+		device_type = "pci";
-+		reg = <0 0x1a140000 0 0x1000>, /* PCIe shared registers */
-+		      <0 0x1a142000 0 0x1000>, /* Port0 registers */
-+		      <0 0x1a143000 0 0x1000>, /* Port1 registers */
-+		      <0 0x1a144000 0 0x1000>; /* Port2 registers */
-+		#address-cells = <3>;
-+		#size-cells = <2>;
-+		#interrupt-cells = <1>;
-+		interrupt-map-mask = <0xf800 0 0 0>;
-+		interrupt-map = <0x0000 0 0 0 &sysirq GIC_SPI 193 IRQ_TYPE_LEVEL_LOW>,
-+				<0x0800 0 0 0 &sysirq GIC_SPI 194 IRQ_TYPE_LEVEL_LOW>,
-+				<0x1000 0 0 0 &sysirq GIC_SPI 195 IRQ_TYPE_LEVEL_LOW>;
-+		clocks = <&topckgen CLK_TOP_ETHIF_SEL>,
-+			 <&hifsys CLK_HIFSYS_PCIE0>,
-+			 <&hifsys CLK_HIFSYS_PCIE1>,
-+			 <&hifsys CLK_HIFSYS_PCIE2>;
-+		clock-names = "free_ck", "sys_ck0", "sys_ck1", "sys_ck2";
-+		resets = <&hifsys MT2701_HIFSYS_PCIE0_RST>,
-+			 <&hifsys MT2701_HIFSYS_PCIE1_RST>,
-+			 <&hifsys MT2701_HIFSYS_PCIE2_RST>;
-+		reset-names = "pcie-rst0", "pcie-rst1", "pcie-rst2";
-+		phys = <&pcie0_phy>, <&pcie1_phy>, <&pcie2_phy>;
-+		phy-names = "pcie-phy0", "pcie-phy1", "pcie-phy2";
-+		power-domains = <&scpsys MT2701_POWER_DOMAIN_HIF>;
-+		bus-range = <0x00 0xff>;
-+		ranges = <0x81000000 0 0x1a160000 0 0x1a160000 0 0x00010000	/* I/O space */
-+			  0x83000000 0 0x60000000 0 0x60000000 0 0x10000000>;	/* memory space */
-+
-+		pcie@0,0 {
-+			device_type = "pci";
-+			reg = <0x0000 0 0 0 0>;
-+			#address-cells = <3>;
-+			#size-cells = <2>;
-+			#interrupt-cells = <1>;
-+			interrupt-map-mask = <0 0 0 0>;
-+			interrupt-map = <0 0 0 0 &sysirq GIC_SPI 193 IRQ_TYPE_LEVEL_LOW>;
-+			ranges;
-+			num-lanes = <1>;
-+		};
-+
-+		pcie@1,0 {
-+			device_type = "pci";
-+			reg = <0x0800 0 0 0 0>;
-+			#address-cells = <3>;
-+			#size-cells = <2>;
-+			#interrupt-cells = <1>;
-+			interrupt-map-mask = <0 0 0 0>;
-+			interrupt-map = <0 0 0 0 &sysirq GIC_SPI 194 IRQ_TYPE_LEVEL_LOW>;
-+			ranges;
-+			num-lanes = <1>;
-+		};
-+
-+		pcie@2,0 {
-+			device_type = "pci";
-+			reg = <0x1000 0 0 0 0>;
-+			#address-cells = <3>;
-+			#size-cells = <2>;
-+			#interrupt-cells = <1>;
-+			interrupt-map-mask = <0 0 0 0>;
-+			interrupt-map = <0 0 0 0 &sysirq GIC_SPI 195 IRQ_TYPE_LEVEL_LOW>;
-+			ranges;
-+			num-lanes = <1>;
-+		};
-+	};
+The Broadcom SBA RAID hardware requires PQ disk position instead
+of PQ disk coefficient. To address this, we have added raid_gflog
+table which will help driver to convert PQ disk coefficient to PQ
+disk position.
+
+This patchset is based on Linux-4.12-rc1 and is available at
+sba-raid-v8 branch of
+https://github.com/Broadcom/arm64-linux.git
+
+Changes since v7:
+ - Rebased patches for Linux-4.12-rc1 because Broadcom FlexRM
+   ring manager support is available in Linux-4.12
+
+Changes since v6:
+ - Rebased patches for Linux-4.11-rc4 and v7 of Broadcom FlexRM
+   ring manager support
+
+Changes since v5:
+ - Rebased patches for Linux-4.11-rc1
+
+Changes since v4:
+ - Removed dependency of bcm-sba-raid driver on kconfig opton
+   ASYNC_TX_ENABLE_CHANNEL_SWITCH
+ - Select kconfig options ASYNC_TX_DISABLE_XOR_VAL_DMA and
+   ASYNC_TX_DISABLE_PQ_VAL_DMA for bcm-sba-raid driver
+ - Implemented device_prep_dma_interrupt() using dummy 8-byte
+   copy operation so that the dma_async_device_register() can
+   set DMA_ASYNC_TX capability for the DMA device provided
+   by bcm-sba-raid driver
+
+Changes since v3:
+ - Replaced SBA_ENC() with sba_cmd_enc() inline function
+ - Use list_first_entry_or_null() wherever possible
+ - Remove unwanted brances around loops wherever possible
+ - Use lockdep_assert_held() where required
+
+Changes since v2:
+ - Droped patch to handle DMA devices having support for fewer
+   PQ coefficients in Linux Async Tx
+ - Added work-around in bcm-sba-raid driver to handle unsupported
+   PQ coefficients using multiple SBA requests
+
+Changes since v1:
+ - Droped patch to add mbox_channel_device() API
+ - Used GENMASK and BIT macros wherever possible in bcm-sba-raid driver
+ - Replaced C_MDATA macros with static inline functions in
+   bcm-sba-raid driver
+ - Removed sba_alloc_chan_resources() callback in bcm-sba-raid driver
+ - Used dev_err() instead of dev_info() wherever applicable
+ - Removed call to sba_issue_pending() from sba_tx_submit() in
+   bcm-sba-raid driver
+ - Implemented SBA request chaning for handling (len > sba->req_size)
+   in bcm-sba-raid driver
+ - Implemented device_terminate_all() callback in bcm-sba-raid driver
+
+Anup Patel (4):
+  lib/raid6: Add log-of-2 table for RAID6 HW requiring disk position
+  async_tx: Fix DMA_PREP_FENCE usage in do_async_gen_syndrome()
+  dmaengine: Add Broadcom SBA RAID driver
+  dt-bindings: Add DT bindings document for Broadcom SBA RAID driver
+
+ .../devicetree/bindings/dma/brcm,iproc-sba.txt     |   29 +
+ crypto/async_tx/async_pq.c                         |    5 +-
+ drivers/dma/Kconfig                                |   14 +
+ drivers/dma/Makefile                               |    1 +
+ drivers/dma/bcm-sba-raid.c                         | 1785 ++++++++++++++++++++
+ include/linux/raid/pq.h                            |    1 +
+ lib/raid6/mktables.c                               |   20 +
+ 7 files changed, 1852 insertions(+), 3 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/dma/brcm,iproc-sba.txt
+ create mode 100644 drivers/dma/bcm-sba-raid.c
+
 -- 
-1.9.1
+2.7.4
