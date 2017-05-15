@@ -1,91 +1,79 @@
-From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: Re: [PATCH v1 3/3] drm/stm: Add STM32 DSI host driver
-Date: Mon, 15 May 2017 16:38:45 +0200
-Message-ID: <32505dd9-78f5-6ed3-4934-014a9c19d220@baylibre.com>
-References: <1494600989-13507-1-git-send-email-philippe.cornu@st.com>
- <1494600989-13507-4-git-send-email-philippe.cornu@st.com>
- <a254c176-8064-1984-10b8-dce4308cc3d6@baylibre.com>
- <250fc42c-8961-c57e-6f59-9b1a6523a0a4@st.com>
+From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] devicetree: Move include prefixes from arch to separate directory
+Date: Mon, 15 May 2017 09:47:40 -0500
+Message-ID: <CAL_JsqJzoe_xNxMOZ88+k+bZ+bSK6-j30HXk0ZsFxHUqVDzwzw@mail.gmail.com>
+References: <CAL_JsqKLxA8K8378z4nDBkDWnwM_zBbbf9D7EPtwQ1782dydTw@mail.gmail.com>
+ <20170515142641.GU22219@n2100.armlinux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <250fc42c-8961-c57e-6f59-9b1a6523a0a4@st.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Philippe CORNU <philippe.cornu@st.com>, Alexandre TORGUE <alexandre.torgue@st.com>, Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Russell King <linux@armlinux.org.uk>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Yannick FERTRE <yannick.fertre@st.com>, Archit Taneja <architt@codeaurora.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "kernel@stlinux.com" <kernel@stlinux.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Fabien DESSENNE <fabien.dessenne@st.com>, Ludovic BARRE <ludovic.barre@st.com>, Mickael REULIER <mickael.reulier@st.com>, Vincent ABRIOU <vincent.abriou@st.com>, Gabriel FERNANDEZ <gabriel.fernandez@st.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170515142641.GU22219-l+eeeJia6m9URfEZ8mYm6t73F7V6hmMc@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+Cc: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Mikael Starvik <starvik-VrBV9hrLPhE@public.gmane.org>, Jesper Nilsson <jesper.nilsson-VrBV9hrLPhE@public.gmane.org>, James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Paul Mackerras <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>, Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arch <linux-arch-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgUGhpbGlwcGUsCgoocGxlYXNlIGF2b2lkIHRvcCBwb3N0aW5nKQoKT24gMDUvMTUvMjAxNyAx
-MjozMyBQTSwgUGhpbGlwcGUgQ09STlUgd3JvdGU6Cj4gSGkgTmVpbCwKPiBNYW55IHRoYW5rcyBm
-b3IgeW91ciBjb21tZW50cy4KPiAKPiBUaGUgUEhZIHBhcnQgb2YgdGhlIE1JUEkgRFNJIGlzIHRo
-ZSBtYWluIGRpZmZlcmVuY2UgYmV0d2VlbiBhbGwgY2hpcHNldHMgCj4gYmFzZWQgb24gdGhlIFN5
-bm9wc3lzIERlc2lnbldhcmUgTUlQSSBEU0kuCj4gVGhlcmUgaXMgbm8gImdlbmVyaWMgRFNJIFBI
-WSBpbnRlcmZhY2UiIGFuZCB0aGF0IGlzIHByb2JhYmx5IHdoeSBhbGwgc29jIAo+IHZlbmRvcnMg
-aGF2ZSBpbXBsZW1lbnRlZCB0aGVpciBvd24gZHJpdmVycyAoUm9ja0NoaXAsIE5YUC9GcmVlc2Nh
-bGUsIAo+IEhpU2lsaWNvbiBhbmQgbm93IFNUTTMyKS4KClN1cmUsIHRoaXMgaXMgdGhlIHNhbWUg
-d2l0aCB0aGUgRFctSERNSSwgdGhlcmUgaXMgYSBTeW5vcHN5cyBQSFksIGJ1dCBhbHNvCnZlbmRv
-ciBQSFlzLgoKPiAKPiBSZWdhcmRpbmcgY3JlYXRpbmcgYSAiZ2VuZXJpYyBkdyBNSVBJIERTSSBi
-cmlkZ2UiIGFzIHRoZSByZWNlbnQgZHcgaGRtaSAKPiBicmlkZ2UsIHNldmVyYWwgYXR0ZW1wdHMg
-aGF2ZSBiZWVuIGRvbmUgaW4gdGhlIHBhc3QgYnV0IHdpdGhvdXQgc3VjY2VzczoKPiAqIExpdSBZ
-aW5nIGZyb20gRnJlZXNjYWxlIGluIEZlYnJ1YXJ5IDIwMTUgCj4gKGh0dHBzOi8vbGttbC5vcmcv
-bGttbC8yMDE1LzIvMTIvMzgpLgo+ICogQ2hyaXMgWmhvbmcgZnJvbSBSb2NrY2hpcCBpbiBOb3Zl
-bWJlciAyMDE1IAo+IChodHRwOi8vd3d3Lm1haWwtYXJjaGl2ZS5jb20vbGludXgta2VybmVsQHZn
-ZXIua2VybmVsLm9yZy9tc2cxMDI0NTg2Lmh0bWwpLgoKIkltcG9zc2libGUgbidlc3QgcGFzIGZy
-YW7Dp2FpcyAhIgooR2VvcmdlcyBDb3VydGVsaW5lLCBMZSA1MWUgQ2hhc3NldXJzLCBNYXJwb24g
-ZXQgRmxhbW1hcmlvLCAxODg3LCBwLiAyMykKCkkgdGhpbmsgaXQncyB3b3J0aCB0aGUgdHJ5LCBh
-bmQgd2lsbCBhdm9pZCBhIGxvdCBvZiBjb2RlIGR1cGxpY2F0aW9uIGFtb25nIHRoZXNlCmRyaXZl
-cnMuIEFuZCBzaW5jZSBpdCdzIGEgU3lub3BzeXMgSVAsIGl0IHdpbGwgY29udGludWUgdG8gYXBw
-ZWFyIGluIGN1cnJlbnQKYW5kIGZ1dHVyZSBTb0NzLgoKPiAKPiBUaGUgUm9ja2NoaXAgZHJpdmVy
-IGxvb2tzIG5pY2UgYW5kIGlzIHVwZGF0ZWQgcmVndWxhcmx5Lgo+IFNvLCBpbnN0ZWFkIG9mIGNy
-ZWF0aW5nIGEgbmV3IGRyaXZlciBmb3IgdGhlIFNUTTMyIGZhbWlseSwgd2UgZGVjaWRlZCB0byAK
-PiB1c2UgUm9ja2NoaXDigJlzIGluIG91ciBvd24gZHJtL3N0bSBkaXJlY3RvcnkgYW5kIHJlcGxh
-Y2UgdGhlIAo+IFJvY2tjaGlwLXNwZWNpZmljIFBIWSBieSB0aGUgU1RNMzIuCgpTdXJlLCBpdCBs
-b29rcyBPSy4KCkFyY2hpdCwgYW55IGFkdmljZXMgaGVyZSA/Cgo+IENvbW1lbnRzIGFyZSB3ZWxj
-b21lIDotKQo+IE1hbnkgdGhhbmtzLAo+IFBoaWxpcHBlCgpUaGFua3MsCk5laWwKPiAKPiBPbiAw
-NS8xNS8yMDE3IDEwOjIyIEFNLCBOZWlsIEFybXN0cm9uZyB3cm90ZToKPj4gT24gMDUvMTIvMjAx
-NyAwNDo1NiBQTSwgUGhpbGlwcGUgQ09STlUgd3JvdGU6Cj4+PiBUaGlzIG1pcGkgZHNpIGhvc3Qg
-ZHJpdmVyIGlzIGJhc2VkIG9uIHRoZSBSb2NrY2hpcCB2ZXJzaW9uIG9mIHRoZQo+Pj4gU3lub3Bz
-eXMgRGVzaWdud2FyZSBtaXBpIGRzaSBkcml2ZXIgKHJvY2tjaGlwL2R3LW1pcGktZHNpLmMpCj4+
-PiBtb2RpZmllZCBmb3IgdGhlIHN0bTMyIGZhbWlseToKPj4+IC0gcmVwbGFjZSBSb2NrY2hpcCBk
-aWdpdGFsICYgcGh5IHNwZWNpZmljIGV4dGVuc2lvbnMgd2l0aCBzdG0zMidzIG9uZXMuCj4+PiAt
-IGFkZCBhIGJyaWRnZQo+Pj4KPj4+IFNpZ25lZC1vZmYtYnk6IFBoaWxpcHBlIENPUk5VIDxwaGls
-aXBwZS5jb3JudUBzdC5jb20+Cj4+PiAtLS0KPj4+ICBkcml2ZXJzL2dwdS9kcm0vc3RtL0tjb25m
-aWcgICAgICAgfCAgICA3ICsKPj4+ICBkcml2ZXJzL2dwdS9kcm0vc3RtL01ha2VmaWxlICAgICAg
-fCAgICAyICsKPj4+ICBkcml2ZXJzL2dwdS9kcm0vc3RtL2R3LW1pcGktZHNpLmMgfCAxMTk3ICsr
-KysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysKPj4+ICAzIGZpbGVzIGNoYW5nZWQs
-IDEyMDYgaW5zZXJ0aW9ucygrKQo+Pj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9k
-cm0vc3RtL2R3LW1pcGktZHNpLmMKPj4+Cj4+PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJt
-L3N0bS9LY29uZmlnIGIvZHJpdmVycy9ncHUvZHJtL3N0bS9LY29uZmlnCj4+PiBpbmRleCAyYzQ4
-MTdmLi4wMDA3Nzg5IDEwMDY0NAo+Pj4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL3N0bS9LY29uZmln
-Cj4+PiArKysgYi9kcml2ZXJzL2dwdS9kcm0vc3RtL0tjb25maWcKPj4+IEBAIC0xNCwzICsxNCwx
-MCBAQCBjb25maWcgRFJNX1NUTQo+Pj4gIAkgIFNUTWljcm9lbGVjdHJvbmljcyBTVE0zMiBNQ1Vz
-Lgo+Pj4gIAkgIFRvIGNvbXBpbGUgdGhpcyBkcml2ZXIgYXMgYSBtb2R1bGUsIGNob29zZSBNIGhl
-cmU6IHRoZSBtb2R1bGUKPj4+ICAJICB3aWxsIGJlIGNhbGxlZCBzdG0tZHJtLgo+Pj4gKwo+Pj4g
-K2NvbmZpZyBEUk1fU1RNX0RTSQo+Pj4gKwl0cmlzdGF0ZSAiTUlQSSBEU0kgc3VwcG9ydCBmb3Ig
-U1RNaWNyb2VsZWN0cm9uaWNzIFNvQyIKPj4+ICsJZGVwZW5kcyBvbiBEUk1fU1RNCj4+PiArCXNl
-bGVjdCBEUk1fTUlQSV9EU0kKPj4+ICsJaGVscAo+Pj4gKwkgIENob29zZSB0aGlzIG9wdGlvbiBm
-b3IgTUlQSSBEU0kgc3VwcG9ydCBvbiBTVE1pY3JvZWxlY3Ryb25pY3MgU29DLgo+Pj4gZGlmZiAt
-LWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9zdG0vTWFrZWZpbGUgYi9kcml2ZXJzL2dwdS9kcm0vc3Rt
-L01ha2VmaWxlCj4+PiBpbmRleCBlMTE0ZDQ1Li5lNDQ4YTkzIDEwMDY0NAo+Pj4gLS0tIGEvZHJp
-dmVycy9ncHUvZHJtL3N0bS9NYWtlZmlsZQo+Pj4gKysrIGIvZHJpdmVycy9ncHUvZHJtL3N0bS9N
-YWtlZmlsZQo+Pj4gQEAgLTQsNCArNCw2IEBAIHN0bS1kcm0teSA6PSBcCj4+PiAgCWRydi5vIFwK
-Pj4+ICAJbHRkYy5vCj4+Pgo+Pj4gK29iai0kKENPTkZJR19EUk1fU1RNX0RTSSkgKz0gZHctbWlw
-aS1kc2kubwo+Pj4gKwo+Pj4gIG9iai0kKENPTkZJR19EUk1fU1RNKSArPSBzdG0tZHJtLm8KPj4+
-IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vc3RtL2R3LW1pcGktZHNpLmMgYi9kcml2ZXJz
-L2dwdS9kcm0vc3RtL2R3LW1pcGktZHNpLmMKPj4+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0Cj4+PiBp
-bmRleCAwMDAwMDAwLi40YjdmN2I5Cj4+PiAtLS0gL2Rldi9udWxsCj4+PiArKysgYi9kcml2ZXJz
-L2dwdS9kcm0vc3RtL2R3LW1pcGktZHNpLmMKPj4KPj4KPj4gSGkgUGhpbGlwcGUsCj4+Cj4+IEZp
-cnN0IHF1ZXN0aW9uLCB3aHkgY291bGRuJ3QgdGhpcyBiZSB0cmFuc2Zvcm1lZCBhcyBhIGJyaWRn
-ZSBkcml2ZXIgYWxvbmcgdGhlIFN5bm9wc3lzIERXLUhETUkgZHJpdmVyID8KPj4KPj4gTmVpbAo+
-Pgo+IAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJp
-LWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBz
-Oi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+On Mon, May 15, 2017 at 9:26 AM, Russell King - ARM Linux
+<linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org> wrote:
+> On Mon, May 15, 2017 at 08:01:07AM -0500, Rob Herring wrote:
+>> I'd prefer not to mix things in scripts/dtc that aren't the import of
+>> dtc (yes, we do have a few other things already, but they are at least
+>> scripts). Couldn't this go in include/dt-bindings/ instead?
+>
+> I don't think that works.
+>
+> The include path used is "include", which means that we force people
+> to use:
+>
+> #include <dt-bindings/foo.dtsi>
+
+No, I was thinking you'd add include/dt-bindings/include-prefix/ to
+the include path instead of scripts/dtc/include-prefix/. The only
+downside I can see is people could mistakenly do:
+
+#include <dt-bindings/include-prefix/$arch/foo.dtsi>
+
+>
+> in their DT files.  This means that we'd need to populate $topdir/include
+> with per-architecture symlinks on top of the 26 or so directories already
+> there, so that:
+>
+> #include <arch/foo.dtsi>
+>
+> would work.  That's quite horrible, since $topdir/include is the main
+> include path for C headers.
+>
+> I guess we could have symlinks inside include/dt-bindings, but that
+> makes the includes:
+>
+> #include <dt-bindings/arch/foo.dtsi>
+>
+> but that's rather absurd because these _aren't_ dt-binding definitions.
+
+True, but the same can be said that "scripts/dtc" is not includes nor
+kernel build infrastructure.
+
+> Maybe what we should do is:
+>
+> mkdir include/dt
+> git mv include/dt-bindings include/dt
+> for arch in arch/*; do
+>   dts=$arch/boot/dts
+>   if [ -d $dts ]; then
+>      a=include/dt/$(basename $arch)
+>      ln -s $dts $a
+>      git add $a
+>   fi
+> done
+> ... fixup scripts/Makefile.lib ...
+> git commit
+
+That would just break every existing include in dts files.
+
+Another idea. Could kbuild create all the symlinks at build time instead?
+
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
