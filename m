@@ -1,120 +1,61 @@
-From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: Re: [PATCH v2 16/18] arm64: dts: meson-gxl-s905x-nexbox-a95x: Fix
- node order
-Date: Mon, 15 May 2017 10:17:01 +0200
-Message-ID: <e50b3a0f-dab0-d2bc-26f2-a6edcc8af761@baylibre.com>
-References: <20170513143337.14278-1-afaerber@suse.de>
- <20170513143337.14278-17-afaerber@suse.de>
+From: "H. Nikolaus Schaller" <hns@goldelico.com>
+Subject: [PATCH v4] =?UTF-8?q?DTS:=20ARM:=20OMAP5:=20uevm:=20add=20=C2=B5S?= =?UTF-8?q?D=20card=20detect?=
+Date: Mon, 15 May 2017 10:31:16 +0200
+Message-ID: <90e9c1d71ce9ee47b55f4c0794e582167c6b961d.1494837075.git.hns@goldelico.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170513143337.14278-17-afaerber@suse.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>, linux-amlogic@lists.infradead.org
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Kevin Hilman <khilman@baylibre.com>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Carlo Caione <carlo@caione.org>, linux-arm-kernel@lists.infradead.org
+To: =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>
+Cc: letux-kernel@openphoenux.org, kernel@pyra-handheld.com, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, "H. Nikolaus Schaller" <hns@goldelico.com>
 List-Id: devicetree@vger.kernel.org
 
-On 05/13/2017 04:33 PM, Andreas Färber wrote:
-> Sort nodes referenced by label alphabetically.
-> 
-> Signed-off-by: Andreas Färber <afaerber@suse.de>
-> ---
->  v1 -> v2:
->  * Rebased (new nodes added)
->  
->  .../dts/amlogic/meson-gxl-s905x-nexbox-a95x.dts    | 52 +++++++++++-----------
->  1 file changed, 26 insertions(+), 26 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-nexbox-a95x.dts b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-nexbox-a95x.dts
-> index 8873c058fad2..6633a5d8fdd3 100644
-> --- a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-nexbox-a95x.dts
-> +++ b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-nexbox-a95x.dts
-> @@ -140,10 +140,10 @@
->  	};
->  };
->  
-> -&uart_AO {
-> -	status = "okay";
-> -	pinctrl-0 = <&uart_ao_a_pins>;
-> -	pinctrl-names = "default";
-> +&cvbs_vdac_port {
-> +	cvbs_vdac_out: endpoint {
-> +		remote-endpoint = <&cvbs_connector_in>;
-> +	};
->  };
->  
->  &ethmac {
-> @@ -152,12 +152,32 @@
->  	phy-handle = <&internal_phy>;
->  };
->  
-> +&hdmi_tx {
-> +	status = "okay";
-> +	pinctrl-0 = <&hdmi_hpd_pins>, <&hdmi_i2c_pins>;
-> +	pinctrl-names = "default";
-> +};
-> +
-> +&hdmi_tx_tmds_port {
-> +	hdmi_tx_tmds_out: endpoint {
-> +		remote-endpoint = <&hdmi_connector_in>;
-> +	};
-> +};
-> +
->  &ir {
->  	status = "okay";
->  	pinctrl-0 = <&remote_input_ao_pins>;
->  	pinctrl-names = "default";
->  };
->  
-> +&pwm_ef {
-> +	status = "okay";
-> +	pinctrl-0 = <&pwm_e_pins>;
-> +	pinctrl-names = "default";
-> +	clocks = <&clkc CLKID_FCLK_DIV4>;
-> +	clock-names = "clkin0";
-> +};
-> +
->  /* Wireless SDIO Module */
->  &sd_emmc_a {
->  	status = "okay";
-> @@ -217,28 +237,8 @@
->  	vqmmc-supply = <&vddio_boot>;
->  };
->  
-> -&pwm_ef {
-> -	status = "okay";
-> -	pinctrl-0 = <&pwm_e_pins>;
-> -	pinctrl-names = "default";
-> -	clocks = <&clkc CLKID_FCLK_DIV4>;
-> -	clock-names = "clkin0";
-> -};
-> -
-> -&cvbs_vdac_port {
-> -	cvbs_vdac_out: endpoint {
-> -		remote-endpoint = <&cvbs_connector_in>;
-> -	};
-> -};
-> -
-> -&hdmi_tx {
-> +&uart_AO {
->  	status = "okay";
-> -	pinctrl-0 = <&hdmi_hpd_pins>, <&hdmi_i2c_pins>;
-> +	pinctrl-0 = <&uart_ao_a_pins>;
->  	pinctrl-names = "default";
->  };
-> -
-> -&hdmi_tx_tmds_port {
-> -	hdmi_tx_tmds_out: endpoint {
-> -		remote-endpoint = <&hdmi_connector_in>;
-> -	};
-> -};
-> 
+If we have Linux installed in eMMC we can boot without
+µSD card, but inserting one is not recognised.
 
-Hi Andreas,
+The reason is that the card detect gpio (gpio5_152)
+is not configured and attached to the mmc1 interface
+driver and the mmc driver does not poll by default.
 
-Like a previous attempt, I'm not OK with such rework since it will break bisect and add complexity for new patches handling.
+Hence we add pinmux and gpio setup for the SDCARD_NCD
+signal.
 
-The order is not alphabetically ordered, live with it.
+Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+---
+ arch/arm/boot/dts/omap5-uevm.dts | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-Neil
+diff --git a/arch/arm/boot/dts/omap5-uevm.dts b/arch/arm/boot/dts/omap5-uevm.dts
+index d58b034513da..1a6e28c3d847 100644
+--- a/arch/arm/boot/dts/omap5-uevm.dts
++++ b/arch/arm/boot/dts/omap5-uevm.dts
+@@ -142,6 +142,13 @@
+ 	};
+ };
+ 
++&mmc1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&mmc1_pins>;
++
++	cd-gpios = <&gpio5 24 GPIO_ACTIVE_LOW>;	/* gpio5_152 */
++};
++
+ &omap5_pmx_core {
+ 	evm_keys_pins: pinmux_evm_keys_gpio_pins {
+ 		pinctrl-single,pins = <
+@@ -161,6 +168,12 @@
+ 			OMAP5_IOPAD(0x0a8, PIN_INPUT_PULLUP | MUX_MODE6)	/* gpio3_76 */
+ 		>;
+ 	};
++
++	mmc1_pins: pinmux_mmc1_pins {
++		pinctrl-single,pins = <
++			OMAP5_IOPAD(0x1d4, PIN_INPUT_PULLUP | MUX_MODE6)	/* gpio5_152 */
++		>;
++	};
+ };
+ 
+ &tpd12s015 {
+-- 
+2.12.2
