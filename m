@@ -1,116 +1,60 @@
 From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: Re: [PATCH v2 00/18] ARM64: meson: DT cleanups
-Date: Mon, 15 May 2017 10:16:54 +0200
-Message-ID: <36c02d8a-d3e2-4330-f600-e49a1ba680e8@baylibre.com>
-References: <20170513143337.14278-1-afaerber@suse.de>
+Subject: Re: [PATCH v1 3/3] drm/stm: Add STM32 DSI host driver
+Date: Mon, 15 May 2017 10:22:25 +0200
+Message-ID: <a254c176-8064-1984-10b8-dce4308cc3d6@baylibre.com>
+References: <1494600989-13507-1-git-send-email-philippe.cornu@st.com>
+ <1494600989-13507-4-git-send-email-philippe.cornu@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170513143337.14278-1-afaerber@suse.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>, linux-amlogic@lists.infradead.org
-Cc: Carlo Caione <carlo@caione.org>, Kevin Hilman <khilman@baylibre.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1494600989-13507-4-git-send-email-philippe.cornu@st.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Philippe CORNU <philippe.cornu@st.com>, Alexandre Torgue <alexandre.torgue@st.com>, Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Russell King <linux@armlinux.org.uk>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Yannick Fertre <yannick.fertre@st.com>
+Cc: devicetree@vger.kernel.org, kernel@stlinux.com, dri-devel@lists.freedesktop.org, Fabien Dessenne <fabien.dessenne@st.com>, Ludovic Barre <ludovic.barre@st.com>, Mickael Reulier <mickael.reulier@st.com>, Vincent Abriou <vincent.abriou@st.com>, Gabriel Fernandez <gabriel.fernandez@st.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Andreas,
-
-On 05/13/2017 04:33 PM, Andreas Färber wrote:
-> Hello Kevin,
-> 
-> This series fixes several cosmetic issues, on top of your for-next branch.
-> 
-> Patches 3-6 rename a node, the rest should all be non-functional changes.
-
-These are OK.
-
-> 
-> PLEASE STOP merging random new nodes at the bottom of DT files!
-> Just like it's a convention to sort new nodes by unit address, it has been
-> a convention to sort by-label nodes by their label. As discussed here and
-> elsewhere, this helps avoid merge conflicts and makes nodes easy to find.
-> I don't care whether we order A0 before A or after, but adding new HDMI
-> or CVBS nodes at the very bottom is totally out of alphabetical order.
-> Since my v1 you really should've known that...
-
-It's not perfect, but now it's done, live with it, this has already been discussed.
-
-Please try to refactor boards DTS with their parent reference design instead
-like it was done with the P212 and what I did with the Wetek Hub and Play2.
-
-> 
-> Similarly, Khadas Vim shouldn't have been merged with the "bcrmf" typo.
-
-Well, this is why we have 7 rc releases after the merge window...
-
-> 
-> Which proves my point that we need to fix these issues now so that they
-> don't keep spreading (Broken Window Theory). New boards have not been
-> checked for sort order, only boards already touched in v1.
-> 
-> Board and Makefile order affect my pending R-Box Pro patches.
-> Node order affects Martin's pending Bluetooth patches among others.
-
-Please order S905x after S905d, and we'll be OK.
-> 
-> Patches 7-9 (had and) have no dependency, please start applying.
-
-I'll wait for Kevin's advice, but I'm against these since they are
-only purely cosmetic and will break bisect and add unnecessary complexity
-to handle further patches on these board.
-
-> Thanks,
-> Andreas
-
-Thanks,
-Neil
-> 
-> v1 -> v2:
-> * Rebased (new nodes/properties added)
-> * Chose a different name for the misnamed Wifi nodes (Rob)
-> * Added patch to fix another new misnamed Wifi node
-> * Dropped patch fixing a trailing white line error (resolved)
-> * Tweaked subjects
-> 
-> Cc: Kevin Hilman <khilman@baylibre.com>
-> Cc: devicetree@vger.kernel.org
-> Cc: Rob Herring <robh@kernel.org>
-> Cc: Neil Armstrong <narmstrong@baylibre.com>
-> Cc: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-> 
-> Andreas Färber (18):
->   dt-bindings: arm: amlogic: Reorder boards
->   arm64: dts: amlogic: Sort Makefile
->   arm64: dts: meson-gxbb-vega-s95: Fix Wifi node name
->   arm64: dts: meson-gxbb-p20x: Fix Wifi node name
->   arm64: dts: meson-gx-p23x-q20x: Fix Wifi node name
->   arm64: dts: meson-gxl-s905x-khadas-vim: Fix Wifi node name
->   arm64: dts: meson-gxm-nexbox-a1: Drop UART comment
->   arm64: dts: meson-gxl-s905x: Comment typo fix
->   arm64: dts: meson-gxbb-wetek-hub: Reference CVBS node by label
->   arm64: dts: meson-gxbb: Fix node order
->   arm64: dts: meson-gxbb-odroidc2: Fix node order
->   arm64: dts: meson-gxbb-vega-s95: Fix node order
->   arm64: dts: meson-gxbb-nexbox-a95x: Fix node order
->   arm64: dts: meson-gxbb-p20x: Fix node order
->   arm64: dts: meson-gxl: Fix node order
->   arm64: dts: meson-gxl-s905x-nexbox-a95x: Fix node order
->   arm64: dts: meson-gxm-nexbox-a1: Fix node order
->   arm64: dts: meson-gx-p23x-q20x: Fix node order
-> 
->  Documentation/devicetree/bindings/arm/amlogic.txt  |  20 ++-
->  arch/arm64/boot/dts/amlogic/Makefile               |   6 +-
->  .../arm64/boot/dts/amlogic/meson-gx-p23x-q20x.dtsi |  60 ++++----
->  .../boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts    |  52 +++----
->  .../arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts | 108 ++++++-------
->  arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi   |  66 ++++----
->  .../boot/dts/amlogic/meson-gxbb-vega-s95.dtsi      |  56 +++----
->  .../boot/dts/amlogic/meson-gxbb-wetek-hub.dts      |   6 +-
->  arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi        | 171 +++++++++++----------
->  .../dts/amlogic/meson-gxl-s905x-khadas-vim.dts     |   2 +-
->  .../dts/amlogic/meson-gxl-s905x-nexbox-a95x.dts    |  52 +++----
->  arch/arm64/boot/dts/amlogic/meson-gxl-s905x.dtsi   |   2 +-
->  arch/arm64/boot/dts/amlogic/meson-gxl.dtsi         |  72 ++++-----
->  .../arm64/boot/dts/amlogic/meson-gxm-nexbox-a1.dts |  87 ++++++-----
->  14 files changed, 388 insertions(+), 372 deletions(-)
-> 
+T24gMDUvMTIvMjAxNyAwNDo1NiBQTSwgUGhpbGlwcGUgQ09STlUgd3JvdGU6Cj4gVGhpcyBtaXBp
+IGRzaSBob3N0IGRyaXZlciBpcyBiYXNlZCBvbiB0aGUgUm9ja2NoaXAgdmVyc2lvbiBvZiB0aGUK
+PiBTeW5vcHN5cyBEZXNpZ253YXJlIG1pcGkgZHNpIGRyaXZlciAocm9ja2NoaXAvZHctbWlwaS1k
+c2kuYykKPiBtb2RpZmllZCBmb3IgdGhlIHN0bTMyIGZhbWlseToKPiAtIHJlcGxhY2UgUm9ja2No
+aXAgZGlnaXRhbCAmIHBoeSBzcGVjaWZpYyBleHRlbnNpb25zIHdpdGggc3RtMzIncyBvbmVzLgo+
+IC0gYWRkIGEgYnJpZGdlCj4gCj4gU2lnbmVkLW9mZi1ieTogUGhpbGlwcGUgQ09STlUgPHBoaWxp
+cHBlLmNvcm51QHN0LmNvbT4KPiAtLS0KPiAgZHJpdmVycy9ncHUvZHJtL3N0bS9LY29uZmlnICAg
+ICAgIHwgICAgNyArCj4gIGRyaXZlcnMvZ3B1L2RybS9zdG0vTWFrZWZpbGUgICAgICB8ICAgIDIg
+Kwo+ICBkcml2ZXJzL2dwdS9kcm0vc3RtL2R3LW1pcGktZHNpLmMgfCAxMTk3ICsrKysrKysrKysr
+KysrKysrKysrKysrKysrKysrKysrKysrKysKPiAgMyBmaWxlcyBjaGFuZ2VkLCAxMjA2IGluc2Vy
+dGlvbnMoKykKPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9zdG0vZHctbWlw
+aS1kc2kuYwo+IAo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vc3RtL0tjb25maWcgYi9k
+cml2ZXJzL2dwdS9kcm0vc3RtL0tjb25maWcKPiBpbmRleCAyYzQ4MTdmLi4wMDA3Nzg5IDEwMDY0
+NAo+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9zdG0vS2NvbmZpZwo+ICsrKyBiL2RyaXZlcnMvZ3B1
+L2RybS9zdG0vS2NvbmZpZwo+IEBAIC0xNCwzICsxNCwxMCBAQCBjb25maWcgRFJNX1NUTQo+ICAJ
+ICBTVE1pY3JvZWxlY3Ryb25pY3MgU1RNMzIgTUNVcy4KPiAgCSAgVG8gY29tcGlsZSB0aGlzIGRy
+aXZlciBhcyBhIG1vZHVsZSwgY2hvb3NlIE0gaGVyZTogdGhlIG1vZHVsZQo+ICAJICB3aWxsIGJl
+IGNhbGxlZCBzdG0tZHJtLgo+ICsKPiArY29uZmlnIERSTV9TVE1fRFNJCj4gKwl0cmlzdGF0ZSAi
+TUlQSSBEU0kgc3VwcG9ydCBmb3IgU1RNaWNyb2VsZWN0cm9uaWNzIFNvQyIKPiArCWRlcGVuZHMg
+b24gRFJNX1NUTQo+ICsJc2VsZWN0IERSTV9NSVBJX0RTSQo+ICsJaGVscAo+ICsJICBDaG9vc2Ug
+dGhpcyBvcHRpb24gZm9yIE1JUEkgRFNJIHN1cHBvcnQgb24gU1RNaWNyb2VsZWN0cm9uaWNzIFNv
+Qy4KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL3N0bS9NYWtlZmlsZSBiL2RyaXZlcnMv
+Z3B1L2RybS9zdG0vTWFrZWZpbGUKPiBpbmRleCBlMTE0ZDQ1Li5lNDQ4YTkzIDEwMDY0NAo+IC0t
+LSBhL2RyaXZlcnMvZ3B1L2RybS9zdG0vTWFrZWZpbGUKPiArKysgYi9kcml2ZXJzL2dwdS9kcm0v
+c3RtL01ha2VmaWxlCj4gQEAgLTQsNCArNCw2IEBAIHN0bS1kcm0teSA6PSBcCj4gIAlkcnYubyBc
+Cj4gIAlsdGRjLm8KPiAgCj4gK29iai0kKENPTkZJR19EUk1fU1RNX0RTSSkgKz0gZHctbWlwaS1k
+c2kubwo+ICsKPiAgb2JqLSQoQ09ORklHX0RSTV9TVE0pICs9IHN0bS1kcm0ubwo+IGRpZmYgLS1n
+aXQgYS9kcml2ZXJzL2dwdS9kcm0vc3RtL2R3LW1pcGktZHNpLmMgYi9kcml2ZXJzL2dwdS9kcm0v
+c3RtL2R3LW1pcGktZHNpLmMKPiBuZXcgZmlsZSBtb2RlIDEwMDY0NAo+IGluZGV4IDAwMDAwMDAu
+LjRiN2Y3YjkKPiAtLS0gL2Rldi9udWxsCj4gKysrIGIvZHJpdmVycy9ncHUvZHJtL3N0bS9kdy1t
+aXBpLWRzaS5jCgoKSGkgUGhpbGlwcGUsCgpGaXJzdCBxdWVzdGlvbiwgd2h5IGNvdWxkbid0IHRo
+aXMgYmUgdHJhbnNmb3JtZWQgYXMgYSBicmlkZ2UgZHJpdmVyIGFsb25nIHRoZSBTeW5vcHN5cyBE
+Vy1IRE1JIGRyaXZlciA/CgpOZWlsCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVk
+ZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZv
+L2RyaS1kZXZlbAo=
