@@ -1,67 +1,52 @@
 From: Anup Patel <anup.patel@broadcom.com>
-Subject: Re: [PATCH 02/11] dt-bindings: clk: Extend binding doc for Stingray SOC
-Date: Mon, 15 May 2017 10:37:53 +0530
-Message-ID: <CAALAos-5wd6qPvvZqezswsBXm=n1UJhB9kFkoYeanT-RwaXW1A@mail.gmail.com>
+Subject: Re: [PATCH 04/11] arm64: dts: Initial DTS files for Broadcom Stingray SOC
+Date: Mon, 15 May 2017 10:39:54 +0530
+Message-ID: <CAALAos_O_dpN8o0C4cUOGmP+UfRSHWep2P-j0ueMP3o7hZcgmQ@mail.gmail.com>
 References: <1494071686-19098-1-git-send-email-anup.patel@broadcom.com>
- <1494071686-19098-3-git-send-email-anup.patel@broadcom.com> <20170512152134.tjuc5exo4plalujs@rob-hp-laptop>
+ <1494071686-19098-5-git-send-email-anup.patel@broadcom.com> <38356358-cfd1-9a29-2b53-80ed495573c6@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170512152134.tjuc5exo4plalujs@rob-hp-laptop>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Florian Fainelli <f.fainelli@gmail.com>, Oza Pawandeep <oza@broadcom.com>, Srinath Mannam <srinath.mannam@broadcom.com>, Pramod Kumar <pramod.kumar@broadcom.com>, Sandeep Tripathy <sandeep.tripathy@broadcom.com>, Device Tree <devicetree@vger.kernel.org>, Linux Kernel <linux-kernel@vger.kernel.org>, linux-clk@vger.kernel.org, Linux ARM Kernel <linux-arm-kernel@lists.infradead.org>, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <38356358-cfd1-9a29-2b53-80ed495573c6@gmail.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Florian Fainelli <f.fainelli@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Oza Pawandeep <oza@broadcom.com>, Srinath Mannam <srinath.mannam@broadcom.com>, Pramod Kumar <pramod.kumar@broadcom.com>, Sandeep Tripathy <sandeep.tripathy@broadcom.com>, Device Tree <devicetree@vger.kernel.org>, Linux Kernel <linux-kernel@vger.kernel.org>, linux-clk@vger.kernel.org, Linux ARM Kernel <linux-arm-kernel@lists.infradead.org>, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>, Scott Branden <scott.branden@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 12, 2017 at 8:51 PM, Rob Herring <robh@kernel.org> wrote:
-> On Sat, May 06, 2017 at 05:24:37PM +0530, Anup Patel wrote:
->> From: Sandeep Tripathy <sandeep.tripathy@broadcom.com>
+On Mon, May 8, 2017 at 5:00 AM, Florian Fainelli <f.fainelli@gmail.com> wro=
+te:
+> Le 05/06/17 =C3=A0 04:54, Anup Patel a =C3=A9crit :
+>> The Broadcom Stingray SoC is a new member in Broadcom iProc
+>> SoC family.
 >>
->> Update iproc clock dt-binding documentation with
->> Stingray pll and clock details.
+>> This patch adds initial DTS files for Broadcom Stingray SoC
+>> and two of its reference boards (bcm958742k and bcm958742t).
 >>
->> Signed-off-by: Sandeep Tripathy <sandeep.tripathy@broadcom.com>
->> Reviewed-by: Ray Jui <ray.jui@broadcom.com>
->> Reviewed-by: Scott Branden <scott.branden@broadcom.com>
+>> We have lot of reference boards and large number of devices
+>> in Broadcom Stingray SoC so eventually we will have quite
+>> a few DTS files for Stingray. To tackle, we have added a
+>> separate directory for Stingray DTS files.
+>>
+>> Signed-off-by: Anup Patel <anup.patel@broadcom.com>
+>> Signed-off-by: Scott Branden <scott.branden@broadcom.com>
+>> Reviewed-by: Ray Jui <rjui@broadcom.com>
 >> ---
->>  .../bindings/clock/brcm,iproc-clocks.txt           | 76 ++++++++++++++++++++++
->>  1 file changed, 76 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/clock/brcm,iproc-clocks.txt b/Documentation/devicetree/bindings/clock/brcm,iproc-clocks.txt
->> index 6f66e9a..f2c5f0e4a 100644
->> --- a/Documentation/devicetree/bindings/clock/brcm,iproc-clocks.txt
->> +++ b/Documentation/devicetree/bindings/clock/brcm,iproc-clocks.txt
->> @@ -219,3 +219,79 @@ BCM63138
->>  --------
->>  PLL and leaf clock compatible strings for BCM63138 are:
->>      "brcm,bcm63138-armpll"
->> +
->> +Stingray
->> +-----------
->> +PLL and leaf clock compatible strings for Stingray are:
->> +    "brcm,sr-genpll0"
->> +    "brcm,sr-genpll1"
->> +    "brcm,sr-genpll2"
->> +    "brcm,sr-genpll3"
->> +    "brcm,sr-genpll4"
->> +    "brcm,sr-genpll5"
->> +    "brcm,sr-genpll6"
->> +
->> +    "brcm,sr-lcpll0"
->> +    "brcm,sr-lcpll1"
->> +    "brcm,sr-lcpll-pcie"
->> +
->> +
->> +The following table defines the set of PLL/clock index and ID for Stingray.
->> +These clock IDs are defined in:
->> +    "include/dt-bindings/clock/bcm-sr.h"
 >
-> This header should be part of this commit. With that,
-
-Sure, I will include bcm-sr.h as-part of this commit.
-
+>> +
+>> +     scr {
+>> +             compatible =3D "simple-bus";
+>> +             #address-cells =3D <1>;
+>> +             #size-cells =3D <1>;
+>> +             ranges =3D <0 0 0 0xffffffff>;
 >
-> Acked-by: Rob Herring <robh@kernel.org>
+> Sorry for missing that during the internal review, the ranges property
+> here should include the 6300_0000 offset such that everything else under
+> the "scr" node is relative to that base address. This makes it a lot
+> easier to understand the different physical addresses involved and the
+> bus topology.
 
-Thanks,
+Sure, I will do this.
+
+Regards,
 Anup
