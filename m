@@ -1,29 +1,72 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH v2 2/2] ARM: dts: imx7: add USDHC NAND and IPG clock to
- SDHC instances
-Date: Mon, 15 May 2017 09:53:35 +0800
-Message-ID: <20170515015334.GH8471@dragon>
-References: <20170410210015.1620-1-stefan@agner.ch>
- <20170410210015.1620-2-stefan@agner.ch>
+From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 6/6] watchdog: ts4600: add driver for TS-4600 watchdog
+Date: Mon, 15 May 2017 10:00:02 +0800
+Message-ID: <20170515020001.GI8471@dragon>
+References: <20170505193259.16517-1-sebastien.bourdelin@savoirfairelinux.com>
+ <20170505193259.16517-7-sebastien.bourdelin@savoirfairelinux.com>
+ <20170511072231.GD5833@dragon>
+ <ef75bcab-e179-1891-83f6-d26d057f8758@roeck-us.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20170410210015.1620-2-stefan@agner.ch>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stefan Agner <stefan@agner.ch>
-Cc: kernel@pengutronix.de, sboyd@codeaurora.org, aisheng.dong@nxp.com, fabio.estevam@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <ef75bcab-e179-1891-83f6-d26d057f8758-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Cc: Sebastien Bourdelin <sebastien.bourdelin-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark-L1vi/lXTdtvnC/t2CciAbw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kris-L1vi/lXTdtvnC/t2CciAbw@public.gmane.org, kernel-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 10, 2017 at 02:00:15PM -0700, Stefan Agner wrote:
-> The USDHC instances need the USDHC NAND and IPG clock in order to
-> operate. Reference them properly by replacing the dummy clocks with
-> the actual clocks.
+On Sun, May 14, 2017 at 07:39:33AM -0700, Guenter Roeck wrote:
+> On 05/11/2017 12:22 AM, Shawn Guo wrote:
+> >On Fri, May 05, 2017 at 03:32:59PM -0400, Sebastien Bourdelin wrote:
+> >>This watchdog is instantiated in a FPGA and can only be access using a
+> >>GPIOs bit-banged bus, called the NBUS by Technologic Systems.
+> >>The watchdog is made of only one register, called the feed register.
+> >>Writing to this register will re-arm the watchdog for a given time (and
+> >>enable it if it was disable). It can be disabled by writing a special
+> >>value into it.
+> >>
+> >>Signed-off-by: Sebastien Bourdelin <sebastien.bourdelin-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>
+> >>---
+> >>Changes v2 -> v3:
+> >>  - rebase on master
+> >>  - remove the timeout table to simplify the logic (suggested by
+> >>  Guenter Roeck)
+> >>  - fix the set_timeout function (suggested by Guenter Roeck)
+> >>  - hardcode the max_hw_heartbeat_ms value based on the ts4600 max
+> >>  timeout value supported (suggested by Guenter Roeck)
+> >>  - remove the max_timeout usage and set a default timeout value
+> >>(suggested by Guenter Roeck)
+> >>  - use the devm_watchdog_register_device function instead of
+> >>  watchdog_register_device (suggested by Guenter Roeck)
+> >>
+> >>Changes v1 -> v2:
+> >>  - rebase on master
+> >>  - retrieve the ts_nbus instantiated by the parent node (suggested by
+> >>  Linus Walleij)
+> >>  - rename the wdt by watchdog in the device tree and in the
+> >>  documentation (suggested by Rob Herring)
+> >>  - add a dependency to the TS_NBUS driver in the Kconfig (suggested by
+> >>  Guenter Roeck)
+> >>  - simplify the set_timeout function (suggested by Guenter Roeck)
+> >>  - use the max_hw_heartbeat_ms callback instead of the max_timeout
+> >>  callback (suggested by Guenter Roeck)
+> >>---
+> >> .../devicetree/bindings/watchdog/ts4600-wdt.txt    |  16 ++
+> >> arch/arm/boot/dts/imx28-ts4600-common.dtsi         |   5 +
+> >
+> >The dts change shouldn't be mixed within driver patch.
+> >
 > 
-> Note that both clocks are currently implicitly enabled since they
-> are part of the i.MX 7 clock drivers init_on list. This might
-> change in the future.
-> 
-> Signed-off-by: Stefan Agner <stefan@agner.ch>
+> Maybe, but Rob Acked the devicetree changes, so I don't see a reason
+> for splitting it up now.
 
-Applied, thanks.
+What Rob Acked is devicetree bindings, and ARM dts changes should
+normally go via arm-soc tree, unless there is a good reason they
+shouldn't.
+
+Shawn
+--
+To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
