@@ -1,80 +1,1352 @@
-From: "A.S. Dong" <aisheng.dong-3arQi8VN3Tc@public.gmane.org>
-Subject: RE: [PATCH 3/5] dt-bindings: pinctrl: add imx7ulp pinctrl binding doc
-Date: Mon, 15 May 2017 13:32:48 +0000
-Message-ID: <AM3PR04MB3067456191B5B2B2CEE69B380E10@AM3PR04MB306.eurprd04.prod.outlook.com>
-References: <1494592686-30967-1-git-send-email-aisheng.dong@nxp.com>
- <1494592686-30967-5-git-send-email-aisheng.dong@nxp.com>
- <20170515133120.GX8471@dragon>
+From: Madalin Bucur <madalin.bucur@nxp.com>
+Subject: [PATCH] dt-bindings: net: move FMan binding
+Date: Mon, 15 May 2017 16:36:38 +0300
+Message-ID: <1494855398-26215-1-git-send-email-madalin.bucur@nxp.com>
+Reply-To: <madalin.bucur@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170515133120.GX8471@dragon>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Andy Duan <fugang.duan-3arQi8VN3Tc@public.gmane.org>, Jacky Bai <ping.bai-3arQi8VN3Tc@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "stefan-XLVq0VzYD2Y@public.gmane.org" <stefan-XLVq0VzYD2Y@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh+dt@kernel.org, mark.rutland@arm.com
+Cc: oss@buserror.net, benh@kernel.crashing.org, paulus@samba.org, mpe@ellerman.id.au, davem@davemloft.net, linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, Madalin Bucur <madalin.bucur@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-> -----Original Message-----
-> From: Shawn Guo [mailto:shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org]
-> Sent: Monday, May 15, 2017 9:31 PM
-> To: A.S. Dong
-> Cc: linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Mark Rutland; Andy Duan; Jacky Bai;
-> devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org; stefan-XLVq0VzYD2Y@public.gmane.org; Ro=
-b
-> Herring; kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org; linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> Subject: Re: [PATCH 3/5] dt-bindings: pinctrl: add imx7ulp pinctrl bindin=
-g
-> doc
->=20
-> On Fri, May 12, 2017 at 08:38:04PM +0800, Dong Aisheng wrote:
-> > diff --git a/include/dt-bindings/pinctrl/imx7ulp-pinfunc.h b/include/dt=
+Besides the PPC SoCs, the QorIQ DPAA FMan is also present on ARM SoCs,
+moving the device tree binding document into the bindings/net folder.
+
+Signed-off-by: Madalin Bucur <madalin.bucur@nxp.com>
+---
+ Documentation/devicetree/bindings/net/fsl-fman.txt | 657 +++++++++++++++++++++
+ .../devicetree/bindings/powerpc/fsl/fman.txt       | 657 ---------------------
+ 2 files changed, 657 insertions(+), 657 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/net/fsl-fman.txt
+ delete mode 100644 Documentation/devicetree/bindings/powerpc/fsl/fman.txt
+
+diff --git a/Documentation/devicetree/bindings/net/fsl-fman.txt b/Documentation/devicetree/bindings/net/fsl-fman.txt
+new file mode 100644
+index 0000000..df873d1
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/fsl-fman.txt
+@@ -0,0 +1,657 @@
++=============================================================================
++Freescale Frame Manager Device Bindings
++
++CONTENTS
++  - FMan Node
++  - FMan Port Node
++  - FMan MURAM Node
++  - FMan dTSEC/XGEC/mEMAC Node
++  - FMan IEEE 1588 Node
++  - FMan MDIO Node
++  - Example
++
++=============================================================================
++FMan Node
++
++DESCRIPTION
++
++Due to the fact that the FMan is an aggregation of sub-engines (ports, MACs,
++etc.) the FMan node will have child nodes for each of them.
++
++PROPERTIES
++
++- compatible
++		Usage: required
++		Value type: <stringlist>
++		Definition: Must include "fsl,fman"
++		FMan version can be determined via FM_IP_REV_1 register in the
++		FMan block. The offset is 0xc4 from the beginning of the
++		Frame Processing Manager memory map (0xc3000 from the
++		beginning of the FMan node).
++
++- cell-index
++		Usage: required
++		Value type: <u32>
++		Definition: Specifies the index of the FMan unit.
++
++		The cell-index value may be used by the SoC, to identify the
++		FMan unit in the SoC memory map. In the table below,
++		there's a description of the cell-index use in each SoC:
++
++		- P1023:
++		register[bit]			FMan unit	cell-index
++		============================================================
++		DEVDISR[1]			1		0
++
++		- P2041, P3041, P4080 P5020, P5040:
++		register[bit]			FMan unit	cell-index
++		============================================================
++		DCFG_DEVDISR2[6]		1		0
++		DCFG_DEVDISR2[14]		2		1
++			(Second FM available only in P4080 and P5040)
++
++		- B4860, T1040, T2080, T4240:
++		register[bit]			FMan unit	cell-index
++		============================================================
++		DCFG_CCSR_DEVDISR2[24]		1		0
++		DCFG_CCSR_DEVDISR2[25]		2		1
++			(Second FM available only in T4240)
++
++		DEVDISR, DCFG_DEVDISR2 and DCFG_CCSR_DEVDISR2 are located in
++		the specific SoC "Device Configuration/Pin Control" Memory
++		Map.
++
++- reg
++		Usage: required
++		Value type: <prop-encoded-array>
++		Definition: A standard property. Specifies the offset of the
++		following configuration registers:
++		- BMI configuration registers.
++		- QMI configuration registers.
++		- DMA configuration registers.
++		- FPM configuration registers.
++		- FMan controller configuration registers.
++
++- ranges
++		Usage: required
++		Value type: <prop-encoded-array>
++		Definition: A standard property.
++
++- clocks
++		Usage: required
++		Value type: <prop-encoded-array>
++		Definition: phandle for the fman input clock.
++
++- clock-names
++		usage: required
++		Value type: <stringlist>
++		Definition: "fmanclk" for the fman input clock.
++
++- interrupts
++		Usage: required
++		Value type: <prop-encoded-array>
++		Definition: A pair of IRQs are specified in this property.
++		The first element is associated with the event interrupts and
++		the second element is associated with the error interrupts.
++
++- fsl,qman-channel-range
++		Usage: required
++		Value type: <prop-encoded-array>
++		Definition: Specifies the range of the available dedicated
++		channels in the FMan. The first cell specifies the beginning
++		of the range and the second cell specifies the number of
++		channels.
++		Further information available at:
++		"Work Queue (WQ) Channel Assignments in the QMan" section
++		in DPAA Reference Manual.
++
++- fsl,qman
++- fsl,bman
++		Usage: required
++		Definition: See soc/fsl/qman.txt and soc/fsl/bman.txt
++
++=============================================================================
++FMan MURAM Node
++
++DESCRIPTION
++
++FMan Internal memory - shared between all the FMan modules.
++It contains data structures that are common and written to or read by
++the modules.
++FMan internal memory is split into the following parts:
++	Packet buffering (Tx/Rx FIFOs)
++	Frames internal context
++
++PROPERTIES
++
++- compatible
++		Usage: required
++		Value type: <stringlist>
++		Definition: Must include "fsl,fman-muram"
++
++- ranges
++		Usage: required
++		Value type: <prop-encoded-array>
++		Definition: A standard property.
++		Specifies the multi-user memory offset and the size within
++		the FMan.
++
++EXAMPLE
++
++muram@0 {
++	compatible = "fsl,fman-muram";
++	ranges = <0 0x000000 0x28000>;
++};
++
++=============================================================================
++FMan Port Node
++
++DESCRIPTION
++
++The Frame Manager (FMan) supports several types of hardware ports:
++	Ethernet receiver (RX)
++	Ethernet transmitter (TX)
++	Offline/Host command (O/H)
++
++PROPERTIES
++
++- compatible
++		Usage: required
++		Value type: <stringlist>
++		Definition: A standard property.
++		Must include one of the following:
++			- "fsl,fman-v2-port-oh" for FManV2 OH ports
++			- "fsl,fman-v2-port-rx" for FManV2 RX ports
++			- "fsl,fman-v2-port-tx" for FManV2 TX ports
++			- "fsl,fman-v3-port-oh" for FManV3 OH ports
++			- "fsl,fman-v3-port-rx" for FManV3 RX ports
++			- "fsl,fman-v3-port-tx" for FManV3 TX ports
++
++- cell-index
++		Usage: required
++		Value type: <u32>
++		Definition: Specifies the hardware port id.
++		Each hardware port on the FMan has its own hardware PortID.
++		Super set of all hardware Port IDs available at FMan Reference
++		Manual under "FMan Hardware Ports in Freescale Devices" table.
++
++		Each hardware port is assigned a 4KB, port-specific page in
++		the FMan hardware port memory region (which is part of the
++		FMan memory map). The first 4 KB in the FMan hardware ports
++		memory region is used for what are called common registers.
++		The subsequent 63 4KB pages are allocated to the hardware
++		ports.
++		The page of a specific port is determined by the cell-index.
++
++- reg
++		Usage: required
++		Value type: <prop-encoded-array>
++		Definition: There is one reg region describing the port
++		configuration registers.
++
++- fsl,fman-10g-port
++		Usage: optional
++		Value type: boolean
++		Definition: The default port rate is 1G.
++		If this property exists, the port is s 10G port.
++
++- fsl,fman-best-effort-port
++		Usage: optional
++		Value type: boolean
++		Definition: Can be defined only if 10G-support is set.
++		This property marks a best-effort 10G port (10G port that
++		may not be capable of line rate).
++
++EXAMPLE
++
++port@a8000 {
++	cell-index = <0x28>;
++	compatible = "fsl,fman-v2-port-tx";
++	reg = <0xa8000 0x1000>;
++};
++
++port@88000 {
++	cell-index = <0x8>;
++	compatible = "fsl,fman-v2-port-rx";
++	reg = <0x88000 0x1000>;
++};
++
++port@81000 {
++	cell-index = <0x1>;
++	compatible = "fsl,fman-v2-port-oh";
++	reg = <0x81000 0x1000>;
++};
++
++=============================================================================
++FMan dTSEC/XGEC/mEMAC Node
++
++DESCRIPTION
++
++mEMAC/dTSEC/XGEC are the Ethernet network interfaces
++
++PROPERTIES
++
++- compatible
++		Usage: required
++		Value type: <stringlist>
++		Definition: A standard property.
++		Must include one of the following:
++		- "fsl,fman-dtsec" for dTSEC MAC
++		- "fsl,fman-xgec" for XGEC MAC
++		- "fsl,fman-memac for mEMAC MAC
++
++- cell-index
++		Usage: required
++		Value type: <u32>
++		Definition: Specifies the MAC id.
++
++		The cell-index value may be used by the FMan or the SoC, to
++		identify the MAC unit in the FMan (or SoC) memory map.
++		In the tables below there's a description of the cell-index
++		use, there are two tables, one describes the use of cell-index
++		by the FMan, the second describes the use by the SoC:
++
++		1. FMan Registers
++
++		FManV2:
++		register[bit]		MAC		cell-index
++		============================================================
++		FM_EPI[16]		XGEC		8
++		FM_EPI[16+n]		dTSECn		n-1
++		FM_NPI[11+n]		dTSECn		n-1
++			n = 1,..,5
++
++		FManV3:
++		register[bit]		MAC		cell-index
++		============================================================
++		FM_EPI[16+n]		mEMACn		n-1
++		FM_EPI[25]		mEMAC10		9
++
++		FM_NPI[11+n]		mEMACn		n-1
++		FM_NPI[10]		mEMAC10		9
++		FM_NPI[11]		mEMAC9		8
++			n = 1,..8
++
++		FM_EPI and FM_NPI are located in the FMan memory map.
++
++		2. SoC registers:
++
++		- P2041, P3041, P4080 P5020, P5040:
++		register[bit]		FMan		MAC		cell
++					Unit				index
++		============================================================
++		DCFG_DEVDISR2[7]	1		XGEC		8
++		DCFG_DEVDISR2[7+n]	1		dTSECn		n-1
++		DCFG_DEVDISR2[15]	2		XGEC		8
++		DCFG_DEVDISR2[15+n]	2		dTSECn		n-1
++			n = 1,..5
++
++		- T1040, T2080, T4240, B4860:
++		register[bit]			FMan	MAC		cell
++						Unit			index
++		============================================================
++		DCFG_CCSR_DEVDISR2[n-1]		1	mEMACn		n-1
++		DCFG_CCSR_DEVDISR2[11+n]	2	mEMACn		n-1
++			n = 1,..6,9,10
++
++		EVDISR, DCFG_DEVDISR2 and DCFG_CCSR_DEVDISR2 are located in
++		the specific SoC "Device Configuration/Pin Control" Memory
++		Map.
++
++- reg
++		Usage: required
++		Value type: <prop-encoded-array>
++		Definition: A standard property.
++
++- fsl,fman-ports
++		Usage: required
++		Value type: <prop-encoded-array>
++		Definition: An array of two phandles - the first references is
++		the FMan RX port and the second is the TX port used by this
++		MAC.
++
++- ptp-timer
++		Usage required
++		Value type: <phandle>
++		Definition: A phandle for 1EEE1588 timer.
++
++- pcsphy-handle
++		Usage required for "fsl,fman-memac" MACs
++		Value type: <phandle>
++		Definition: A phandle for pcsphy.
++
++- tbi-handle
++		Usage required for "fsl,fman-dtsec" MACs
++		Value type: <phandle>
++		Definition: A phandle for tbiphy.
++
++EXAMPLE
++
++fman1_tx28: port@a8000 {
++	cell-index = <0x28>;
++	compatible = "fsl,fman-v2-port-tx";
++	reg = <0xa8000 0x1000>;
++};
++
++fman1_rx8: port@88000 {
++	cell-index = <0x8>;
++	compatible = "fsl,fman-v2-port-rx";
++	reg = <0x88000 0x1000>;
++};
++
++ptp-timer: ptp_timer@fe000 {
++	compatible = "fsl,fman-ptp-timer";
++	reg = <0xfe000 0x1000>;
++};
++
++ethernet@e0000 {
++	compatible = "fsl,fman-dtsec";
++	cell-index = <0>;
++	reg = <0xe0000 0x1000>;
++	fsl,fman-ports = <&fman1_rx8 &fman1_tx28>;
++	ptp-timer = <&ptp-timer>;
++	tbi-handle = <&tbi0>;
++};
++
++============================================================================
++FMan IEEE 1588 Node
++
++DESCRIPTION
++
++The FMan interface to support IEEE 1588
++
++
++PROPERTIES
++
++- compatible
++		Usage: required
++		Value type: <stringlist>
++		Definition: A standard property.
++		Must include "fsl,fman-ptp-timer".
++
++- reg
++		Usage: required
++		Value type: <prop-encoded-array>
++		Definition: A standard property.
++
++EXAMPLE
++
++ptp-timer@fe000 {
++	compatible = "fsl,fman-ptp-timer";
++	reg = <0xfe000 0x1000>;
++};
++
++=============================================================================
++FMan MDIO Node
++
++DESCRIPTION
++
++The MDIO is a bus to which the PHY devices are connected.
++
++PROPERTIES
++
++- compatible
++		Usage: required
++		Value type: <stringlist>
++		Definition: A standard property.
++		Must include "fsl,fman-mdio" for 1 Gb/s MDIO from FMan v2.
++		Must include "fsl,fman-xmdio" for 10 Gb/s MDIO from FMan v2.
++		Must include "fsl,fman-memac-mdio" for 1/10 Gb/s MDIO from
++		FMan v3.
++
++- reg
++		Usage: required
++		Value type: <prop-encoded-array>
++		Definition: A standard property.
++
++- bus-frequency
++		Usage: optional
++		Value type: <u32>
++		Definition: Specifies the external MDIO bus clock speed to
++		be used, if different from the standard 2.5 MHz.
++		This may be due to the standard speed being unsupported (e.g.
++		due to a hardware problem), or to advertise that all relevant
++		components in the system support a faster speed.
++
++- interrupts
++		Usage: required for external MDIO
++		Value type: <prop-encoded-array>
++		Definition: Event interrupt of external MDIO controller.
++
++- fsl,fman-internal-mdio
++		Usage: required for internal MDIO
++		Value type: boolean
++		Definition: Fman has internal MDIO for internal PCS(Physical
++		Coding Sublayer) PHYs and external MDIO for external PHYs.
++		The settings and programming routines for internal/external
++		MDIO are different. Must be included for internal MDIO.
++
++For internal PHY device on internal mdio bus, a PHY node should be created.
++See the definition of the PHY node in booting-without-of.txt for an
++example of how to define a PHY (Internal PHY has no interrupt line).
++- For "fsl,fman-mdio" compatible internal mdio bus, the PHY is TBI PHY.
++- For "fsl,fman-memac-mdio" compatible internal mdio bus, the PHY is PCS PHY,
++  PCS PHY addr must be '0'.
++
++EXAMPLE
++
++Example for FMan v2 external MDIO:
++
++mdio@f1000 {
++	compatible = "fsl,fman-xmdio";
++	reg = <0xf1000 0x1000>;
++	interrupts = <101 2 0 0>;
++};
++
++Example for FMan v2 internal MDIO:
++
++mdio@e3120 {
++	compatible = "fsl,fman-mdio";
++	reg = <0xe3120 0xee0>;
++	fsl,fman-internal-mdio;
++
++	tbi1: tbi-phy@8 {
++		reg = <0x8>;
++		device_type = "tbi-phy";
++	};
++};
++
++Example for FMan v3 internal MDIO:
++
++mdio@f1000 {
++	compatible = "fsl,fman-memac-mdio";
++	reg = <0xf1000 0x1000>;
++	fsl,fman-internal-mdio;
++
++	pcsphy6: ethernet-phy@0 {
++		reg = <0x0>;
++	};
++};
++
++=============================================================================
++Example
++
++fman@400000 {
++	#address-cells = <1>;
++	#size-cells = <1>;
++	cell-index = <1>;
++	compatible = "fsl,fman"
++	ranges = <0 0x400000 0x100000>;
++	reg = <0x400000 0x100000>;
++	clocks = <&fman_clk>;
++	clock-names = "fmanclk";
++	interrupts = <
++		96 2 0 0
++		16 2 1 1>;
++	fsl,qman-channel-range = <0x40 0xc>;
++
++	muram@0 {
++		compatible = "fsl,fman-muram";
++		reg = <0x0 0x28000>;
++	};
++
++	port@81000 {
++		cell-index = <1>;
++		compatible = "fsl,fman-v2-port-oh";
++		reg = <0x81000 0x1000>;
++	};
++
++	port@82000 {
++		cell-index = <2>;
++		compatible = "fsl,fman-v2-port-oh";
++		reg = <0x82000 0x1000>;
++	};
++
++	port@83000 {
++		cell-index = <3>;
++		compatible = "fsl,fman-v2-port-oh";
++		reg = <0x83000 0x1000>;
++	};
++
++	port@84000 {
++		cell-index = <4>;
++		compatible = "fsl,fman-v2-port-oh";
++		reg = <0x84000 0x1000>;
++	};
++
++	port@85000 {
++		cell-index = <5>;
++		compatible = "fsl,fman-v2-port-oh";
++		reg = <0x85000 0x1000>;
++	};
++
++	port@86000 {
++		cell-index = <6>;
++		compatible = "fsl,fman-v2-port-oh";
++		reg = <0x86000 0x1000>;
++	};
++
++	fman1_rx_0x8: port@88000 {
++		cell-index = <0x8>;
++		compatible = "fsl,fman-v2-port-rx";
++		reg = <0x88000 0x1000>;
++	};
++
++	fman1_rx_0x9: port@89000 {
++		cell-index = <0x9>;
++		compatible = "fsl,fman-v2-port-rx";
++		reg = <0x89000 0x1000>;
++	};
++
++	fman1_rx_0xa: port@8a000 {
++		cell-index = <0xa>;
++		compatible = "fsl,fman-v2-port-rx";
++		reg = <0x8a000 0x1000>;
++	};
++
++	fman1_rx_0xb: port@8b000 {
++		cell-index = <0xb>;
++		compatible = "fsl,fman-v2-port-rx";
++		reg = <0x8b000 0x1000>;
++	};
++
++	fman1_rx_0xc: port@8c000 {
++		cell-index = <0xc>;
++		compatible = "fsl,fman-v2-port-rx";
++		reg = <0x8c000 0x1000>;
++	};
++
++	fman1_rx_0x10: port@90000 {
++		cell-index = <0x10>;
++		compatible = "fsl,fman-v2-port-rx";
++		reg = <0x90000 0x1000>;
++	};
++
++	fman1_tx_0x28: port@a8000 {
++		cell-index = <0x28>;
++		compatible = "fsl,fman-v2-port-tx";
++		reg = <0xa8000 0x1000>;
++	};
++
++	fman1_tx_0x29: port@a9000 {
++		cell-index = <0x29>;
++		compatible = "fsl,fman-v2-port-tx";
++		reg = <0xa9000 0x1000>;
++	};
++
++	fman1_tx_0x2a: port@aa000 {
++		cell-index = <0x2a>;
++		compatible = "fsl,fman-v2-port-tx";
++		reg = <0xaa000 0x1000>;
++	};
++
++	fman1_tx_0x2b: port@ab000 {
++		cell-index = <0x2b>;
++		compatible = "fsl,fman-v2-port-tx";
++		reg = <0xab000 0x1000>;
++	};
++
++	fman1_tx_0x2c: port@ac0000 {
++		cell-index = <0x2c>;
++		compatible = "fsl,fman-v2-port-tx";
++		reg = <0xac000 0x1000>;
++	};
++
++	fman1_tx_0x30: port@b0000 {
++		cell-index = <0x30>;
++		compatible = "fsl,fman-v2-port-tx";
++		reg = <0xb0000 0x1000>;
++	};
++
++	ethernet@e0000 {
++		compatible = "fsl,fman-dtsec";
++		cell-index = <0>;
++		reg = <0xe0000 0x1000>;
++		fsl,fman-ports = <&fman1_rx_0x8 &fman1_tx_0x28>;
++		tbi-handle = <&tbi5>;
++	};
++
++	ethernet@e2000 {
++		compatible = "fsl,fman-dtsec";
++		cell-index = <1>;
++		reg = <0xe2000 0x1000>;
++		fsl,fman-ports = <&fman1_rx_0x9 &fman1_tx_0x29>;
++		tbi-handle = <&tbi6>;
++	};
++
++	ethernet@e4000 {
++		compatible = "fsl,fman-dtsec";
++		cell-index = <2>;
++		reg = <0xe4000 0x1000>;
++		fsl,fman-ports = <&fman1_rx_0xa &fman1_tx_0x2a>;
++		tbi-handle = <&tbi7>;
++	};
++
++	ethernet@e6000 {
++		compatible = "fsl,fman-dtsec";
++		cell-index = <3>;
++		reg = <0xe6000 0x1000>;
++		fsl,fman-ports = <&fman1_rx_0xb &fman1_tx_0x2b>;
++		tbi-handle = <&tbi8>;
++	};
++
++	ethernet@e8000 {
++		compatible = "fsl,fman-dtsec";
++		cell-index = <4>;
++		reg = <0xf0000 0x1000>;
++		fsl,fman-ports = <&fman1_rx_0xc &fman1_tx_0x2c>;
++		tbi-handle = <&tbi9>;
++
++	ethernet@f0000 {
++		cell-index = <8>;
++		compatible = "fsl,fman-xgec";
++		reg = <0xf0000 0x1000>;
++		fsl,fman-ports = <&fman1_rx_0x10 &fman1_tx_0x30>;
++	};
++
++	ptp-timer@fe000 {
++		compatible = "fsl,fman-ptp-timer";
++		reg = <0xfe000 0x1000>;
++	};
++
++	mdio@f1000 {
++		compatible = "fsl,fman-xmdio";
++		reg = <0xf1000 0x1000>;
++		interrupts = <101 2 0 0>;
++	};
++};
+diff --git a/Documentation/devicetree/bindings/powerpc/fsl/fman.txt b/Documentation/devicetree/bindings/powerpc/fsl/fman.txt
+deleted file mode 100644
+index df873d1..0000000
+--- a/Documentation/devicetree/bindings/powerpc/fsl/fman.txt
++++ /dev/null
+@@ -1,657 +0,0 @@
+-=============================================================================
+-Freescale Frame Manager Device Bindings
 -
-> bindings/pinctrl/imx7ulp-pinfunc.h
-> > new file mode 100644
-> > index 0000000..b6db73f
-> > --- /dev/null
-> > +++ b/include/dt-bindings/pinctrl/imx7ulp-pinfunc.h
-> > @@ -0,0 +1,468 @@
-> > +/*
-> > + * Copyright 2016 Freescale Semiconductor, Inc.
-> > + * Copyright 2017 NXP
-> > + *
-> > + * This program is free software; you can redistribute it and/or modif=
-y
-> > + * it under the terms of the GNU General Public License version 2 as
-> > + * published by the Free Software Foundation.
-> > + *
-> > + */
-> > +
-> > +#ifndef __DTS_ULP1_PINFUNC_H
-> > +#define __DTS_ULP1_PINFUNC_H
-> > +
-> > +/*
-> > + * The pin function ID is a tuple of
-> > + * <mux_conf_reg conf_reg input_reg mux_mode input_val>
->=20
-> Forgot this one: it should have only 4 integers.
->=20
-
-Good catch!
-Thanks a lot
-
-Regards
-Dong Aisheng
-
-> Shawn
->=20
-> > + */
-> > +
-> > +#define ULP1_PAD_PTC0__PTC0
-> 0x0000 0x0000 0x1 0x0
-> > +#define ULP1_PAD_PTC0__TRACE_D15
-> 0x0000 0x0000 0xa 0x0
-> > +#define ULP1_PAD_PTC0__LPUART4_CTS_B
-> 0x0000 0x0244 0x4 0x1
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-CONTENTS
+-  - FMan Node
+-  - FMan Port Node
+-  - FMan MURAM Node
+-  - FMan dTSEC/XGEC/mEMAC Node
+-  - FMan IEEE 1588 Node
+-  - FMan MDIO Node
+-  - Example
+-
+-=============================================================================
+-FMan Node
+-
+-DESCRIPTION
+-
+-Due to the fact that the FMan is an aggregation of sub-engines (ports, MACs,
+-etc.) the FMan node will have child nodes for each of them.
+-
+-PROPERTIES
+-
+-- compatible
+-		Usage: required
+-		Value type: <stringlist>
+-		Definition: Must include "fsl,fman"
+-		FMan version can be determined via FM_IP_REV_1 register in the
+-		FMan block. The offset is 0xc4 from the beginning of the
+-		Frame Processing Manager memory map (0xc3000 from the
+-		beginning of the FMan node).
+-
+-- cell-index
+-		Usage: required
+-		Value type: <u32>
+-		Definition: Specifies the index of the FMan unit.
+-
+-		The cell-index value may be used by the SoC, to identify the
+-		FMan unit in the SoC memory map. In the table below,
+-		there's a description of the cell-index use in each SoC:
+-
+-		- P1023:
+-		register[bit]			FMan unit	cell-index
+-		============================================================
+-		DEVDISR[1]			1		0
+-
+-		- P2041, P3041, P4080 P5020, P5040:
+-		register[bit]			FMan unit	cell-index
+-		============================================================
+-		DCFG_DEVDISR2[6]		1		0
+-		DCFG_DEVDISR2[14]		2		1
+-			(Second FM available only in P4080 and P5040)
+-
+-		- B4860, T1040, T2080, T4240:
+-		register[bit]			FMan unit	cell-index
+-		============================================================
+-		DCFG_CCSR_DEVDISR2[24]		1		0
+-		DCFG_CCSR_DEVDISR2[25]		2		1
+-			(Second FM available only in T4240)
+-
+-		DEVDISR, DCFG_DEVDISR2 and DCFG_CCSR_DEVDISR2 are located in
+-		the specific SoC "Device Configuration/Pin Control" Memory
+-		Map.
+-
+-- reg
+-		Usage: required
+-		Value type: <prop-encoded-array>
+-		Definition: A standard property. Specifies the offset of the
+-		following configuration registers:
+-		- BMI configuration registers.
+-		- QMI configuration registers.
+-		- DMA configuration registers.
+-		- FPM configuration registers.
+-		- FMan controller configuration registers.
+-
+-- ranges
+-		Usage: required
+-		Value type: <prop-encoded-array>
+-		Definition: A standard property.
+-
+-- clocks
+-		Usage: required
+-		Value type: <prop-encoded-array>
+-		Definition: phandle for the fman input clock.
+-
+-- clock-names
+-		usage: required
+-		Value type: <stringlist>
+-		Definition: "fmanclk" for the fman input clock.
+-
+-- interrupts
+-		Usage: required
+-		Value type: <prop-encoded-array>
+-		Definition: A pair of IRQs are specified in this property.
+-		The first element is associated with the event interrupts and
+-		the second element is associated with the error interrupts.
+-
+-- fsl,qman-channel-range
+-		Usage: required
+-		Value type: <prop-encoded-array>
+-		Definition: Specifies the range of the available dedicated
+-		channels in the FMan. The first cell specifies the beginning
+-		of the range and the second cell specifies the number of
+-		channels.
+-		Further information available at:
+-		"Work Queue (WQ) Channel Assignments in the QMan" section
+-		in DPAA Reference Manual.
+-
+-- fsl,qman
+-- fsl,bman
+-		Usage: required
+-		Definition: See soc/fsl/qman.txt and soc/fsl/bman.txt
+-
+-=============================================================================
+-FMan MURAM Node
+-
+-DESCRIPTION
+-
+-FMan Internal memory - shared between all the FMan modules.
+-It contains data structures that are common and written to or read by
+-the modules.
+-FMan internal memory is split into the following parts:
+-	Packet buffering (Tx/Rx FIFOs)
+-	Frames internal context
+-
+-PROPERTIES
+-
+-- compatible
+-		Usage: required
+-		Value type: <stringlist>
+-		Definition: Must include "fsl,fman-muram"
+-
+-- ranges
+-		Usage: required
+-		Value type: <prop-encoded-array>
+-		Definition: A standard property.
+-		Specifies the multi-user memory offset and the size within
+-		the FMan.
+-
+-EXAMPLE
+-
+-muram@0 {
+-	compatible = "fsl,fman-muram";
+-	ranges = <0 0x000000 0x28000>;
+-};
+-
+-=============================================================================
+-FMan Port Node
+-
+-DESCRIPTION
+-
+-The Frame Manager (FMan) supports several types of hardware ports:
+-	Ethernet receiver (RX)
+-	Ethernet transmitter (TX)
+-	Offline/Host command (O/H)
+-
+-PROPERTIES
+-
+-- compatible
+-		Usage: required
+-		Value type: <stringlist>
+-		Definition: A standard property.
+-		Must include one of the following:
+-			- "fsl,fman-v2-port-oh" for FManV2 OH ports
+-			- "fsl,fman-v2-port-rx" for FManV2 RX ports
+-			- "fsl,fman-v2-port-tx" for FManV2 TX ports
+-			- "fsl,fman-v3-port-oh" for FManV3 OH ports
+-			- "fsl,fman-v3-port-rx" for FManV3 RX ports
+-			- "fsl,fman-v3-port-tx" for FManV3 TX ports
+-
+-- cell-index
+-		Usage: required
+-		Value type: <u32>
+-		Definition: Specifies the hardware port id.
+-		Each hardware port on the FMan has its own hardware PortID.
+-		Super set of all hardware Port IDs available at FMan Reference
+-		Manual under "FMan Hardware Ports in Freescale Devices" table.
+-
+-		Each hardware port is assigned a 4KB, port-specific page in
+-		the FMan hardware port memory region (which is part of the
+-		FMan memory map). The first 4 KB in the FMan hardware ports
+-		memory region is used for what are called common registers.
+-		The subsequent 63 4KB pages are allocated to the hardware
+-		ports.
+-		The page of a specific port is determined by the cell-index.
+-
+-- reg
+-		Usage: required
+-		Value type: <prop-encoded-array>
+-		Definition: There is one reg region describing the port
+-		configuration registers.
+-
+-- fsl,fman-10g-port
+-		Usage: optional
+-		Value type: boolean
+-		Definition: The default port rate is 1G.
+-		If this property exists, the port is s 10G port.
+-
+-- fsl,fman-best-effort-port
+-		Usage: optional
+-		Value type: boolean
+-		Definition: Can be defined only if 10G-support is set.
+-		This property marks a best-effort 10G port (10G port that
+-		may not be capable of line rate).
+-
+-EXAMPLE
+-
+-port@a8000 {
+-	cell-index = <0x28>;
+-	compatible = "fsl,fman-v2-port-tx";
+-	reg = <0xa8000 0x1000>;
+-};
+-
+-port@88000 {
+-	cell-index = <0x8>;
+-	compatible = "fsl,fman-v2-port-rx";
+-	reg = <0x88000 0x1000>;
+-};
+-
+-port@81000 {
+-	cell-index = <0x1>;
+-	compatible = "fsl,fman-v2-port-oh";
+-	reg = <0x81000 0x1000>;
+-};
+-
+-=============================================================================
+-FMan dTSEC/XGEC/mEMAC Node
+-
+-DESCRIPTION
+-
+-mEMAC/dTSEC/XGEC are the Ethernet network interfaces
+-
+-PROPERTIES
+-
+-- compatible
+-		Usage: required
+-		Value type: <stringlist>
+-		Definition: A standard property.
+-		Must include one of the following:
+-		- "fsl,fman-dtsec" for dTSEC MAC
+-		- "fsl,fman-xgec" for XGEC MAC
+-		- "fsl,fman-memac for mEMAC MAC
+-
+-- cell-index
+-		Usage: required
+-		Value type: <u32>
+-		Definition: Specifies the MAC id.
+-
+-		The cell-index value may be used by the FMan or the SoC, to
+-		identify the MAC unit in the FMan (or SoC) memory map.
+-		In the tables below there's a description of the cell-index
+-		use, there are two tables, one describes the use of cell-index
+-		by the FMan, the second describes the use by the SoC:
+-
+-		1. FMan Registers
+-
+-		FManV2:
+-		register[bit]		MAC		cell-index
+-		============================================================
+-		FM_EPI[16]		XGEC		8
+-		FM_EPI[16+n]		dTSECn		n-1
+-		FM_NPI[11+n]		dTSECn		n-1
+-			n = 1,..,5
+-
+-		FManV3:
+-		register[bit]		MAC		cell-index
+-		============================================================
+-		FM_EPI[16+n]		mEMACn		n-1
+-		FM_EPI[25]		mEMAC10		9
+-
+-		FM_NPI[11+n]		mEMACn		n-1
+-		FM_NPI[10]		mEMAC10		9
+-		FM_NPI[11]		mEMAC9		8
+-			n = 1,..8
+-
+-		FM_EPI and FM_NPI are located in the FMan memory map.
+-
+-		2. SoC registers:
+-
+-		- P2041, P3041, P4080 P5020, P5040:
+-		register[bit]		FMan		MAC		cell
+-					Unit				index
+-		============================================================
+-		DCFG_DEVDISR2[7]	1		XGEC		8
+-		DCFG_DEVDISR2[7+n]	1		dTSECn		n-1
+-		DCFG_DEVDISR2[15]	2		XGEC		8
+-		DCFG_DEVDISR2[15+n]	2		dTSECn		n-1
+-			n = 1,..5
+-
+-		- T1040, T2080, T4240, B4860:
+-		register[bit]			FMan	MAC		cell
+-						Unit			index
+-		============================================================
+-		DCFG_CCSR_DEVDISR2[n-1]		1	mEMACn		n-1
+-		DCFG_CCSR_DEVDISR2[11+n]	2	mEMACn		n-1
+-			n = 1,..6,9,10
+-
+-		EVDISR, DCFG_DEVDISR2 and DCFG_CCSR_DEVDISR2 are located in
+-		the specific SoC "Device Configuration/Pin Control" Memory
+-		Map.
+-
+-- reg
+-		Usage: required
+-		Value type: <prop-encoded-array>
+-		Definition: A standard property.
+-
+-- fsl,fman-ports
+-		Usage: required
+-		Value type: <prop-encoded-array>
+-		Definition: An array of two phandles - the first references is
+-		the FMan RX port and the second is the TX port used by this
+-		MAC.
+-
+-- ptp-timer
+-		Usage required
+-		Value type: <phandle>
+-		Definition: A phandle for 1EEE1588 timer.
+-
+-- pcsphy-handle
+-		Usage required for "fsl,fman-memac" MACs
+-		Value type: <phandle>
+-		Definition: A phandle for pcsphy.
+-
+-- tbi-handle
+-		Usage required for "fsl,fman-dtsec" MACs
+-		Value type: <phandle>
+-		Definition: A phandle for tbiphy.
+-
+-EXAMPLE
+-
+-fman1_tx28: port@a8000 {
+-	cell-index = <0x28>;
+-	compatible = "fsl,fman-v2-port-tx";
+-	reg = <0xa8000 0x1000>;
+-};
+-
+-fman1_rx8: port@88000 {
+-	cell-index = <0x8>;
+-	compatible = "fsl,fman-v2-port-rx";
+-	reg = <0x88000 0x1000>;
+-};
+-
+-ptp-timer: ptp_timer@fe000 {
+-	compatible = "fsl,fman-ptp-timer";
+-	reg = <0xfe000 0x1000>;
+-};
+-
+-ethernet@e0000 {
+-	compatible = "fsl,fman-dtsec";
+-	cell-index = <0>;
+-	reg = <0xe0000 0x1000>;
+-	fsl,fman-ports = <&fman1_rx8 &fman1_tx28>;
+-	ptp-timer = <&ptp-timer>;
+-	tbi-handle = <&tbi0>;
+-};
+-
+-============================================================================
+-FMan IEEE 1588 Node
+-
+-DESCRIPTION
+-
+-The FMan interface to support IEEE 1588
+-
+-
+-PROPERTIES
+-
+-- compatible
+-		Usage: required
+-		Value type: <stringlist>
+-		Definition: A standard property.
+-		Must include "fsl,fman-ptp-timer".
+-
+-- reg
+-		Usage: required
+-		Value type: <prop-encoded-array>
+-		Definition: A standard property.
+-
+-EXAMPLE
+-
+-ptp-timer@fe000 {
+-	compatible = "fsl,fman-ptp-timer";
+-	reg = <0xfe000 0x1000>;
+-};
+-
+-=============================================================================
+-FMan MDIO Node
+-
+-DESCRIPTION
+-
+-The MDIO is a bus to which the PHY devices are connected.
+-
+-PROPERTIES
+-
+-- compatible
+-		Usage: required
+-		Value type: <stringlist>
+-		Definition: A standard property.
+-		Must include "fsl,fman-mdio" for 1 Gb/s MDIO from FMan v2.
+-		Must include "fsl,fman-xmdio" for 10 Gb/s MDIO from FMan v2.
+-		Must include "fsl,fman-memac-mdio" for 1/10 Gb/s MDIO from
+-		FMan v3.
+-
+-- reg
+-		Usage: required
+-		Value type: <prop-encoded-array>
+-		Definition: A standard property.
+-
+-- bus-frequency
+-		Usage: optional
+-		Value type: <u32>
+-		Definition: Specifies the external MDIO bus clock speed to
+-		be used, if different from the standard 2.5 MHz.
+-		This may be due to the standard speed being unsupported (e.g.
+-		due to a hardware problem), or to advertise that all relevant
+-		components in the system support a faster speed.
+-
+-- interrupts
+-		Usage: required for external MDIO
+-		Value type: <prop-encoded-array>
+-		Definition: Event interrupt of external MDIO controller.
+-
+-- fsl,fman-internal-mdio
+-		Usage: required for internal MDIO
+-		Value type: boolean
+-		Definition: Fman has internal MDIO for internal PCS(Physical
+-		Coding Sublayer) PHYs and external MDIO for external PHYs.
+-		The settings and programming routines for internal/external
+-		MDIO are different. Must be included for internal MDIO.
+-
+-For internal PHY device on internal mdio bus, a PHY node should be created.
+-See the definition of the PHY node in booting-without-of.txt for an
+-example of how to define a PHY (Internal PHY has no interrupt line).
+-- For "fsl,fman-mdio" compatible internal mdio bus, the PHY is TBI PHY.
+-- For "fsl,fman-memac-mdio" compatible internal mdio bus, the PHY is PCS PHY,
+-  PCS PHY addr must be '0'.
+-
+-EXAMPLE
+-
+-Example for FMan v2 external MDIO:
+-
+-mdio@f1000 {
+-	compatible = "fsl,fman-xmdio";
+-	reg = <0xf1000 0x1000>;
+-	interrupts = <101 2 0 0>;
+-};
+-
+-Example for FMan v2 internal MDIO:
+-
+-mdio@e3120 {
+-	compatible = "fsl,fman-mdio";
+-	reg = <0xe3120 0xee0>;
+-	fsl,fman-internal-mdio;
+-
+-	tbi1: tbi-phy@8 {
+-		reg = <0x8>;
+-		device_type = "tbi-phy";
+-	};
+-};
+-
+-Example for FMan v3 internal MDIO:
+-
+-mdio@f1000 {
+-	compatible = "fsl,fman-memac-mdio";
+-	reg = <0xf1000 0x1000>;
+-	fsl,fman-internal-mdio;
+-
+-	pcsphy6: ethernet-phy@0 {
+-		reg = <0x0>;
+-	};
+-};
+-
+-=============================================================================
+-Example
+-
+-fman@400000 {
+-	#address-cells = <1>;
+-	#size-cells = <1>;
+-	cell-index = <1>;
+-	compatible = "fsl,fman"
+-	ranges = <0 0x400000 0x100000>;
+-	reg = <0x400000 0x100000>;
+-	clocks = <&fman_clk>;
+-	clock-names = "fmanclk";
+-	interrupts = <
+-		96 2 0 0
+-		16 2 1 1>;
+-	fsl,qman-channel-range = <0x40 0xc>;
+-
+-	muram@0 {
+-		compatible = "fsl,fman-muram";
+-		reg = <0x0 0x28000>;
+-	};
+-
+-	port@81000 {
+-		cell-index = <1>;
+-		compatible = "fsl,fman-v2-port-oh";
+-		reg = <0x81000 0x1000>;
+-	};
+-
+-	port@82000 {
+-		cell-index = <2>;
+-		compatible = "fsl,fman-v2-port-oh";
+-		reg = <0x82000 0x1000>;
+-	};
+-
+-	port@83000 {
+-		cell-index = <3>;
+-		compatible = "fsl,fman-v2-port-oh";
+-		reg = <0x83000 0x1000>;
+-	};
+-
+-	port@84000 {
+-		cell-index = <4>;
+-		compatible = "fsl,fman-v2-port-oh";
+-		reg = <0x84000 0x1000>;
+-	};
+-
+-	port@85000 {
+-		cell-index = <5>;
+-		compatible = "fsl,fman-v2-port-oh";
+-		reg = <0x85000 0x1000>;
+-	};
+-
+-	port@86000 {
+-		cell-index = <6>;
+-		compatible = "fsl,fman-v2-port-oh";
+-		reg = <0x86000 0x1000>;
+-	};
+-
+-	fman1_rx_0x8: port@88000 {
+-		cell-index = <0x8>;
+-		compatible = "fsl,fman-v2-port-rx";
+-		reg = <0x88000 0x1000>;
+-	};
+-
+-	fman1_rx_0x9: port@89000 {
+-		cell-index = <0x9>;
+-		compatible = "fsl,fman-v2-port-rx";
+-		reg = <0x89000 0x1000>;
+-	};
+-
+-	fman1_rx_0xa: port@8a000 {
+-		cell-index = <0xa>;
+-		compatible = "fsl,fman-v2-port-rx";
+-		reg = <0x8a000 0x1000>;
+-	};
+-
+-	fman1_rx_0xb: port@8b000 {
+-		cell-index = <0xb>;
+-		compatible = "fsl,fman-v2-port-rx";
+-		reg = <0x8b000 0x1000>;
+-	};
+-
+-	fman1_rx_0xc: port@8c000 {
+-		cell-index = <0xc>;
+-		compatible = "fsl,fman-v2-port-rx";
+-		reg = <0x8c000 0x1000>;
+-	};
+-
+-	fman1_rx_0x10: port@90000 {
+-		cell-index = <0x10>;
+-		compatible = "fsl,fman-v2-port-rx";
+-		reg = <0x90000 0x1000>;
+-	};
+-
+-	fman1_tx_0x28: port@a8000 {
+-		cell-index = <0x28>;
+-		compatible = "fsl,fman-v2-port-tx";
+-		reg = <0xa8000 0x1000>;
+-	};
+-
+-	fman1_tx_0x29: port@a9000 {
+-		cell-index = <0x29>;
+-		compatible = "fsl,fman-v2-port-tx";
+-		reg = <0xa9000 0x1000>;
+-	};
+-
+-	fman1_tx_0x2a: port@aa000 {
+-		cell-index = <0x2a>;
+-		compatible = "fsl,fman-v2-port-tx";
+-		reg = <0xaa000 0x1000>;
+-	};
+-
+-	fman1_tx_0x2b: port@ab000 {
+-		cell-index = <0x2b>;
+-		compatible = "fsl,fman-v2-port-tx";
+-		reg = <0xab000 0x1000>;
+-	};
+-
+-	fman1_tx_0x2c: port@ac0000 {
+-		cell-index = <0x2c>;
+-		compatible = "fsl,fman-v2-port-tx";
+-		reg = <0xac000 0x1000>;
+-	};
+-
+-	fman1_tx_0x30: port@b0000 {
+-		cell-index = <0x30>;
+-		compatible = "fsl,fman-v2-port-tx";
+-		reg = <0xb0000 0x1000>;
+-	};
+-
+-	ethernet@e0000 {
+-		compatible = "fsl,fman-dtsec";
+-		cell-index = <0>;
+-		reg = <0xe0000 0x1000>;
+-		fsl,fman-ports = <&fman1_rx_0x8 &fman1_tx_0x28>;
+-		tbi-handle = <&tbi5>;
+-	};
+-
+-	ethernet@e2000 {
+-		compatible = "fsl,fman-dtsec";
+-		cell-index = <1>;
+-		reg = <0xe2000 0x1000>;
+-		fsl,fman-ports = <&fman1_rx_0x9 &fman1_tx_0x29>;
+-		tbi-handle = <&tbi6>;
+-	};
+-
+-	ethernet@e4000 {
+-		compatible = "fsl,fman-dtsec";
+-		cell-index = <2>;
+-		reg = <0xe4000 0x1000>;
+-		fsl,fman-ports = <&fman1_rx_0xa &fman1_tx_0x2a>;
+-		tbi-handle = <&tbi7>;
+-	};
+-
+-	ethernet@e6000 {
+-		compatible = "fsl,fman-dtsec";
+-		cell-index = <3>;
+-		reg = <0xe6000 0x1000>;
+-		fsl,fman-ports = <&fman1_rx_0xb &fman1_tx_0x2b>;
+-		tbi-handle = <&tbi8>;
+-	};
+-
+-	ethernet@e8000 {
+-		compatible = "fsl,fman-dtsec";
+-		cell-index = <4>;
+-		reg = <0xf0000 0x1000>;
+-		fsl,fman-ports = <&fman1_rx_0xc &fman1_tx_0x2c>;
+-		tbi-handle = <&tbi9>;
+-
+-	ethernet@f0000 {
+-		cell-index = <8>;
+-		compatible = "fsl,fman-xgec";
+-		reg = <0xf0000 0x1000>;
+-		fsl,fman-ports = <&fman1_rx_0x10 &fman1_tx_0x30>;
+-	};
+-
+-	ptp-timer@fe000 {
+-		compatible = "fsl,fman-ptp-timer";
+-		reg = <0xfe000 0x1000>;
+-	};
+-
+-	mdio@f1000 {
+-		compatible = "fsl,fman-xmdio";
+-		reg = <0xf1000 0x1000>;
+-		interrupts = <101 2 0 0>;
+-	};
+-};
+-- 
+2.1.0
