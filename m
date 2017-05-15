@@ -1,66 +1,51 @@
 From: Madalin Bucur <madalin.bucur@nxp.com>
-Subject: [PATCH v2 3/3] arm64: dts: add LS1046A DPAA QBMan nodes
-Date: Mon, 15 May 2017 12:21:18 +0300
-Message-ID: <1494840078-22243-4-git-send-email-madalin.bucur@nxp.com>
+Subject: [PATCH v2 2/3] arm64: dts: add LS1043A DPAA QBMan nodes
+Date: Mon, 15 May 2017 12:21:17 +0300
+Message-ID: <1494840078-22243-3-git-send-email-madalin.bucur@nxp.com>
 References: <1494840078-22243-1-git-send-email-madalin.bucur@nxp.com>
-Reply-To: <madalin.bucur@nxp.com>
+Reply-To: madalin.bucur@nxp.com
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1494840078-22243-1-git-send-email-madalin.bucur@nxp.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: shawnguo@kernel.org
-Cc: devicetree@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Madalin Bucur <madalin.bucur@nxp.com>, Roy Pledge <roy.pledge@nxp.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, Madalin Bucur <madalin.bucur@nxp.com>, catalin.marinas@arm.com, Roy Pledge <roy.pledge@nxp.com>, will.deacon@arm.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add the QBMan device tree nodes for LS1046A devices.
+Add the DPAA 1.x QMan and BMan nodes in the LS1043A device tree.
 
 Signed-off-by: Roy Pledge <roy.pledge@nxp.com>
 Signed-off-by: Madalin Bucur <madalin.bucur@nxp.com>
 ---
- arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi | 54 ++++++++++++++++++++++++++
- 1 file changed, 54 insertions(+)
+ arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi | 53 ++++++++++++++++++++++++++
+ 1 file changed, 53 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-index f4b8b7e..ce7e6e2 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-@@ -268,6 +268,30 @@
- 			};
- 		};
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
+index 45cface..a729755 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
+@@ -45,6 +45,7 @@
+  */
  
-+		qman: qman@1880000 {
-+			compatible = "fsl,qman";
-+			reg = <0x0 0x1880000 0x0 0x10000>;
-+			interrupts = <0 45 0x4>;
-+			memory-region = <&qman_fqd &qman_pfdr>;
-+
-+		};
-+
-+		bman: bman@1890000 {
-+			compatible = "fsl,bman";
-+			reg = <0x0 0x1890000 0x0 0x10000>;
-+			interrupts = <0 45 0x4>;
-+			memory-region = <&bman_fbpr>;
-+
-+		};
-+
-+		qportals: qman-portals@500000000 {
-+			ranges = <0x0 0x5 0x00000000 0x8000000>;
-+		};
-+
-+		bportals: bman-portals@508000000 {
-+			ranges = <0x0 0x5 0x08000000 0x8000000>;
-+		};
-+
- 		dcfg: dcfg@1ee0000 {
- 			compatible = "fsl,ls1046a-dcfg", "syscon";
- 			reg = <0x0 0x1ee0000 0x0 0x10000>;
-@@ -594,4 +618,34 @@
- 			clocks = <&clockgen 4 1>;
- 		};
+ #include <dt-bindings/thermal/thermal.h>
++#include <dt-bindings/interrupt-controller/arm-gic.h>
+ 
+ / {
+ 	compatible = "fsl,ls1043a";
+@@ -106,6 +107,33 @@
+ 		      /* DRAM space 1, size: 2GiB DRAM */
  	};
-+
+ 
 +	reserved-memory {
 +		#address-cells = <2>;
 +		#size-cells = <2>;
@@ -75,8 +60,8 @@ index f4b8b7e..ce7e6e2 100644
 +
 +		qman_fqd: qman-fqd {
 +			compatible = "shared-dma-pool";
-+			size = <0 0x800000>;
-+			alignment = <0 0x800000>;
++			size = <0 0x400000>;
++			alignment = <0 0x400000>;
 +			no-map;
 +		};
 +
@@ -87,6 +72,42 @@ index f4b8b7e..ce7e6e2 100644
 +			no-map;
 +		};
 +	};
++
+ 	sysclk: sysclk {
+ 		compatible = "fixed-clock";
+ 		#clock-cells = <0>;
+@@ -333,6 +361,28 @@
+ 			};
+ 		};
+ 
++		qman: qman@1880000 {
++			compatible = "fsl,qman";
++			reg = <0x0 0x1880000 0x0 0x10000>;
++			interrupts = <0 45 0x4>;
++			memory-region = <&qman_fqd &qman_pfdr>;
++		};
++
++		bman: bman@1890000 {
++			compatible = "fsl,bman";
++			reg = <0x0 0x1890000 0x0 0x10000>;
++			interrupts = <0 45 0x4>;
++			memory-region = <&bman_fbpr>;
++		};
++
++		bportals: bman-portals@508000000 {
++			ranges = <0x0 0x5 0x08000000 0x8000000>;
++		};
++
++		qportals: qman-portals@500000000 {
++			ranges = <0x0 0x5 0x00000000 0x8000000>;
++		};
++
+ 		dspi0: dspi@2100000 {
+ 			compatible = "fsl,ls1043a-dspi", "fsl,ls1021a-v1.0-dspi";
+ 			#address-cells = <1>;
+@@ -688,3 +738,6 @@
+ 	};
+ 
  };
 +
 +#include "qoriq-qman-portals.dtsi"
