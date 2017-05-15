@@ -1,120 +1,66 @@
-From: Philippe CORNU <philippe.cornu@st.com>
-Subject: Re: [PATCH v1 3/3] drm/stm: Add STM32 DSI host driver
-Date: Mon, 15 May 2017 10:33:28 +0000
-Message-ID: <250fc42c-8961-c57e-6f59-9b1a6523a0a4@st.com>
-References: <1494600989-13507-1-git-send-email-philippe.cornu@st.com>
- <1494600989-13507-4-git-send-email-philippe.cornu@st.com>
- <a254c176-8064-1984-10b8-dce4308cc3d6@baylibre.com>
+From: Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v3 01/21] dt-bindings: i2c: eeprom: Document manufacturer
+ used as generic fallback
+Date: Mon, 15 May 2017 12:48:03 +0200
+Message-ID: <CABxcv=mq7xOKL5WXG+qkhwQCiOuN4J=WWRzKnq0DTx9vxinOpQ@mail.gmail.com>
+References: <20170414010445.21727-1-javier@osg.samsung.com>
+ <20170414010445.21727-2-javier@osg.samsung.com> <20170419232759.mw6g6fwy4xvjaopv@rob-hp-laptop>
+ <CAL_JsqL-DRPBCeeNYzf9YBDijFc9s8ZBVQ-5PNkHxuTSYbHnew@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <a254c176-8064-1984-10b8-dce4308cc3d6@baylibre.com>
-Content-Language: en-US
-Content-ID: <107644AA7F8BEB4DB30452DA51A18038@st.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Neil Armstrong <narmstrong@baylibre.com>, Alexandre TORGUE <alexandre.torgue@st.com>, Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Russell King <linux@armlinux.org.uk>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Benjamin
- Gaignard <benjamin.gaignard@linaro.org>, Yannick FERTRE <yannick.fertre@st.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "kernel@stlinux.com" <kernel@stlinux.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Fabien DESSENNE <fabien.dessenne@st.com>, Ludovic BARRE <ludovic.barre@st.com>, Mickael REULIER <mickael.reulier@st.com>, Vincent ABRIOU <vincent.abriou@st.com>, Gabriel FERNANDEZ <gabriel.fernandez@st.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL_JsqL-DRPBCeeNYzf9YBDijFc9s8ZBVQ-5PNkHxuTSYbHnew-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Neil,
-Many thanks for your comments.
+Hello Rob,
 
-The PHY part of the MIPI DSI is the main difference between all chipsets =
+Thanks for the feedback and sorry for the delayed response (I've been
+moving to a new country so didn't have too much time to answer
+emails).
 
-based on the Synopsys DesignWare MIPI DSI.
-There is no "generic DSI PHY interface" and that is probably why all soc =
+On Thu, Apr 20, 2017 at 1:35 AM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> On Wed, Apr 19, 2017 at 6:27 PM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+>> On Thu, Apr 13, 2017 at 10:04:25PM -0300, Javier Martinez Canillas wrote:
 
-vendors have implemented their own drivers (RockChip, NXP/Freescale, =
+[snip]
 
-HiSilicon and now STM32).
-
-Regarding creating a "generic dw MIPI DSI bridge" as the recent dw hdmi =
-
-bridge, several attempts have been done in the past but without success:
-* Liu Ying from Freescale in February 2015 =
-
-(https://lkml.org/lkml/2015/2/12/38).
-* Chris Zhong from Rockchip in November 2015 =
-
-(http://www.mail-archive.com/linux-kernel@vger.kernel.org/msg1024586.html).
-
-The Rockchip driver looks nice and is updated regularly.
-So, instead of creating a new driver for the STM32 family, we decided to =
-
-use Rockchip=92s in our own drm/stm directory and replace the =
-
-Rockchip-specific PHY by the STM32.
-
-Comments are welcome :-)
-Many thanks,
-Philippe
-
-
-On 05/15/2017 10:22 AM, Neil Armstrong wrote:
-> On 05/12/2017 04:56 PM, Philippe CORNU wrote:
->> This mipi dsi host driver is based on the Rockchip version of the
->> Synopsys Designware mipi dsi driver (rockchip/dw-mipi-dsi.c)
->> modified for the stm32 family:
->> - replace Rockchip digital & phy specific extensions with stm32's ones.
->> - add a bridge
+>>>
+>>>        If there is no specific driver for <manufacturer>, a generic
+>>> -      driver based on <type> is selected. Possible types are:
+>>> +      driver based on <type> and manufacturer "atmel" is selected.
+>>> +      Possible types are:
 >>
->> Signed-off-by: Philippe CORNU <philippe.cornu@st.com>
->> ---
->>  drivers/gpu/drm/stm/Kconfig       |    7 +
->>  drivers/gpu/drm/stm/Makefile      |    2 +
->>  drivers/gpu/drm/stm/dw-mipi-dsi.c | 1197 ++++++++++++++++++++++++++++++=
-+++++++
->>  3 files changed, 1206 insertions(+)
->>  create mode 100644 drivers/gpu/drm/stm/dw-mipi-dsi.c
+>> This isn't quite right. What the driver does isn't really relevant to
+>> the binding.
 >>
->> diff --git a/drivers/gpu/drm/stm/Kconfig b/drivers/gpu/drm/stm/Kconfig
->> index 2c4817f..0007789 100644
->> --- a/drivers/gpu/drm/stm/Kconfig
->> +++ b/drivers/gpu/drm/stm/Kconfig
->> @@ -14,3 +14,10 @@ config DRM_STM
->>  	  STMicroelectronics STM32 MCUs.
->>  	  To compile this driver as a module, choose M here: the module
->>  	  will be called stm-drm.
->> +
->> +config DRM_STM_DSI
->> +	tristate "MIPI DSI support for STMicroelectronics SoC"
->> +	depends on DRM_STM
->> +	select DRM_MIPI_DSI
->> +	help
->> +	  Choose this option for MIPI DSI support on STMicroelectronics SoC.
->> diff --git a/drivers/gpu/drm/stm/Makefile b/drivers/gpu/drm/stm/Makefile
->> index e114d45..e448a93 100644
->> --- a/drivers/gpu/drm/stm/Makefile
->> +++ b/drivers/gpu/drm/stm/Makefile
->> @@ -4,4 +4,6 @@ stm-drm-y :=3D \
->>  	drv.o \
->>  	ltdc.o
+>> These types with no vendor are used as the compatible string, so we have
+>> to allow them. But it should be clear that no vendor is deprecated.
+>> Ironically, it is a lot of Atmel boards that do this.
 >>
->> +obj-$(CONFIG_DRM_STM_DSI) +=3D dw-mipi-dsi.o
->> +
->>  obj-$(CONFIG_DRM_STM) +=3D stm-drm.o
->> diff --git a/drivers/gpu/drm/stm/dw-mipi-dsi.c b/drivers/gpu/drm/stm/dw-=
-mipi-dsi.c
->> new file mode 100644
->> index 0000000..4b7f7b9
->> --- /dev/null
->> +++ b/drivers/gpu/drm/stm/dw-mipi-dsi.c
+>> We should also explicitly list what are valid manufacturers. We also
+>> have "at" as a vendor prefix which perhaps we should explicitly say is
+>> deprecated.
 >
+> I should perhaps look at the rest of the series before replying..
 >
-> Hi Philippe,
+> Based on that, the only comment that applies is listing the
+> manufacturers that are valid. From a DT perspective, I should not have
+> to know what the OS driver supports. If the device is compatible with
+> atmel, then that is required. If not, then the specific manufacturer's
+> compatible alone is enough and the OS has to match to that.
 >
-> First question, why couldn't this be transformed as a bridge driver along=
- the Synopsys DW-HDMI driver ?
->
-> Neil
->
+
+Got it, I'll re-spin the series probably this week adding that
+information to the DT binding doc.
+
+> Rob
+
+Best regards,
+Javier
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
