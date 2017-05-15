@@ -1,178 +1,116 @@
 From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: Re: [PATCH v2 11/18] arm64: dts: meson-gxbb-odroidc2: Fix node order
-Date: Mon, 15 May 2017 10:17:12 +0200
-Message-ID: <995e63a7-f429-a335-7e9b-4994ae849505@baylibre.com>
+Subject: Re: [PATCH v2 00/18] ARM64: meson: DT cleanups
+Date: Mon, 15 May 2017 10:16:54 +0200
+Message-ID: <36c02d8a-d3e2-4330-f600-e49a1ba680e8@baylibre.com>
 References: <20170513143337.14278-1-afaerber@suse.de>
- <20170513143337.14278-12-afaerber@suse.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170513143337.14278-12-afaerber@suse.de>
+In-Reply-To: <20170513143337.14278-1-afaerber@suse.de>
 Sender: linux-kernel-owner@vger.kernel.org
 To: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>, linux-amlogic@lists.infradead.org
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Kevin Hilman <khilman@baylibre.com>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Carlo Caione <carlo@caione.org>, linux-arm-kernel@lists.infradead.org
+Cc: Carlo Caione <carlo@caione.org>, Kevin Hilman <khilman@baylibre.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 List-Id: devicetree@vger.kernel.org
-
-On 05/13/2017 04:33 PM, Andreas Färber wrote:
-> Sort nodes referenced by label alphabetically.
-> 
-> Signed-off-by: Andreas Färber <afaerber@suse.de>
-> ---
->  v1 -> v2:
->  * Rebased (new nodes added)
->  
->  .../arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts | 108 ++++++++++-----------
->  1 file changed, 54 insertions(+), 54 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
-> index 54a9c6a6b392..d147c853ab05 100644
-> --- a/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
-> +++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
-> @@ -137,16 +137,6 @@
->  	};
->  };
->  
-> -&scpi_clocks {
-> -	status = "disabled";
-> -};
-> -
-> -&uart_AO {
-> -	status = "okay";
-> -	pinctrl-0 = <&uart_ao_a_pins>;
-> -	pinctrl-names = "default";
-> -};
-> -
->  &ethmac {
->  	status = "okay";
->  	pinctrl-0 = <&eth_rgmii_pins>;
-> @@ -172,6 +162,33 @@
->  	};
->  };
->  
-> +&gpio_ao {
-> +	/*
-> +	 * WARNING: The USB Hub on the Odroid-C2 needs a reset signal
-> +	 * to be turned high in order to be detected by the USB Controller
-> +	 * This signal should be handled by a USB specific power sequence
-> +	 * in order to reset the Hub when USB bus is powered down.
-> +	 */
-> +	usb-hub {
-> +		gpio-hog;
-> +		gpios = <GPIOAO_4 GPIO_ACTIVE_HIGH>;
-> +		output-high;
-> +		line-name = "usb-hub-reset";
-> +	};
-> +};
-> +
-> +&i2c_A {
-> +	status = "okay";
-> +	pinctrl-0 = <&i2c_a_pins>;
-> +	pinctrl-names = "default";
-> +};
-> +
-> +&ir {
-> +	status = "okay";
-> +	pinctrl-0 = <&remote_input_ao_pins>;
-> +	pinctrl-names = "default";
-> +};
-> +
->  &pinctrl_aobus {
->  	gpio-line-names = "UART TX", "UART RX", "VCCK En", "TF 3V3/1V8 En",
->  			  "USB HUB nRESET", "USB OTG Power En",
-> @@ -223,55 +240,15 @@
->  			  "";
->  };
->  
-> -&ir {
-> -	status = "okay";
-> -	pinctrl-0 = <&remote_input_ao_pins>;
-> -	pinctrl-names = "default";
-> -};
-> -
-> -&i2c_A {
-> -	status = "okay";
-> -	pinctrl-0 = <&i2c_a_pins>;
-> -	pinctrl-names = "default";
-> -};
-> -
-> -&gpio_ao {
-> -	/*
-> -	 * WARNING: The USB Hub on the Odroid-C2 needs a reset signal
-> -	 * to be turned high in order to be detected by the USB Controller
-> -	 * This signal should be handled by a USB specific power sequence
-> -	 * in order to reset the Hub when USB bus is powered down.
-> -	 */
-> -	usb-hub {
-> -		gpio-hog;
-> -		gpios = <GPIOAO_4 GPIO_ACTIVE_HIGH>;
-> -		output-high;
-> -		line-name = "usb-hub-reset";
-> -	};
-> -};
-> -
-> -&usb0_phy {
-> -	status = "okay";
-> -	phy-supply = <&usb_otg_pwr>;
-> -};
-> -
-> -&usb1_phy {
-> -	status = "okay";
-> -};
-> -
-> -&usb0 {
-> -	status = "okay";
-> -};
-> -
-> -&usb1 {
-> -	status = "okay";
-> -};
-> -
->  &saradc {
->  	status = "okay";
->  	vref-supply = <&vcc1v8>;
->  };
->  
-> +&scpi_clocks {
-> +	status = "disabled";
-> +};
-> +
->  /* SD */
->  &sd_emmc_b {
->  	status = "okay";
-> @@ -309,3 +286,26 @@
->  	vmmc-supply = <&vcc3v3>;
->  	vqmmc-supply = <&vcc1v8>;
->  };
-> +
-> +&uart_AO {
-> +	status = "okay";
-> +	pinctrl-0 = <&uart_ao_a_pins>;
-> +	pinctrl-names = "default";
-> +};
-> +
-> +&usb0_phy {
-> +	status = "okay";
-> +	phy-supply = <&usb_otg_pwr>;
-> +};
-> +
-> +&usb1_phy {
-> +	status = "okay";
-> +};
-> +
-> +&usb0 {
-> +	status = "okay";
-> +};
-> +
-> +&usb1 {
-> +	status = "okay";
-> +};
-> 
 
 Hi Andreas,
 
-Like a previous attempt, I'm not OK with such rework since it will break bisect and add complexity for new patches handling.
+On 05/13/2017 04:33 PM, Andreas Färber wrote:
+> Hello Kevin,
+> 
+> This series fixes several cosmetic issues, on top of your for-next branch.
+> 
+> Patches 3-6 rename a node, the rest should all be non-functional changes.
 
-The order is not alphabetically ordered, live with it.
+These are OK.
 
+> 
+> PLEASE STOP merging random new nodes at the bottom of DT files!
+> Just like it's a convention to sort new nodes by unit address, it has been
+> a convention to sort by-label nodes by their label. As discussed here and
+> elsewhere, this helps avoid merge conflicts and makes nodes easy to find.
+> I don't care whether we order A0 before A or after, but adding new HDMI
+> or CVBS nodes at the very bottom is totally out of alphabetical order.
+> Since my v1 you really should've known that...
+
+It's not perfect, but now it's done, live with it, this has already been discussed.
+
+Please try to refactor boards DTS with their parent reference design instead
+like it was done with the P212 and what I did with the Wetek Hub and Play2.
+
+> 
+> Similarly, Khadas Vim shouldn't have been merged with the "bcrmf" typo.
+
+Well, this is why we have 7 rc releases after the merge window...
+
+> 
+> Which proves my point that we need to fix these issues now so that they
+> don't keep spreading (Broken Window Theory). New boards have not been
+> checked for sort order, only boards already touched in v1.
+> 
+> Board and Makefile order affect my pending R-Box Pro patches.
+> Node order affects Martin's pending Bluetooth patches among others.
+
+Please order S905x after S905d, and we'll be OK.
+> 
+> Patches 7-9 (had and) have no dependency, please start applying.
+
+I'll wait for Kevin's advice, but I'm against these since they are
+only purely cosmetic and will break bisect and add unnecessary complexity
+to handle further patches on these board.
+
+> Thanks,
+> Andreas
+
+Thanks,
 Neil
+> 
+> v1 -> v2:
+> * Rebased (new nodes/properties added)
+> * Chose a different name for the misnamed Wifi nodes (Rob)
+> * Added patch to fix another new misnamed Wifi node
+> * Dropped patch fixing a trailing white line error (resolved)
+> * Tweaked subjects
+> 
+> Cc: Kevin Hilman <khilman@baylibre.com>
+> Cc: devicetree@vger.kernel.org
+> Cc: Rob Herring <robh@kernel.org>
+> Cc: Neil Armstrong <narmstrong@baylibre.com>
+> Cc: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+> 
+> Andreas Färber (18):
+>   dt-bindings: arm: amlogic: Reorder boards
+>   arm64: dts: amlogic: Sort Makefile
+>   arm64: dts: meson-gxbb-vega-s95: Fix Wifi node name
+>   arm64: dts: meson-gxbb-p20x: Fix Wifi node name
+>   arm64: dts: meson-gx-p23x-q20x: Fix Wifi node name
+>   arm64: dts: meson-gxl-s905x-khadas-vim: Fix Wifi node name
+>   arm64: dts: meson-gxm-nexbox-a1: Drop UART comment
+>   arm64: dts: meson-gxl-s905x: Comment typo fix
+>   arm64: dts: meson-gxbb-wetek-hub: Reference CVBS node by label
+>   arm64: dts: meson-gxbb: Fix node order
+>   arm64: dts: meson-gxbb-odroidc2: Fix node order
+>   arm64: dts: meson-gxbb-vega-s95: Fix node order
+>   arm64: dts: meson-gxbb-nexbox-a95x: Fix node order
+>   arm64: dts: meson-gxbb-p20x: Fix node order
+>   arm64: dts: meson-gxl: Fix node order
+>   arm64: dts: meson-gxl-s905x-nexbox-a95x: Fix node order
+>   arm64: dts: meson-gxm-nexbox-a1: Fix node order
+>   arm64: dts: meson-gx-p23x-q20x: Fix node order
+> 
+>  Documentation/devicetree/bindings/arm/amlogic.txt  |  20 ++-
+>  arch/arm64/boot/dts/amlogic/Makefile               |   6 +-
+>  .../arm64/boot/dts/amlogic/meson-gx-p23x-q20x.dtsi |  60 ++++----
+>  .../boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts    |  52 +++----
+>  .../arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts | 108 ++++++-------
+>  arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi   |  66 ++++----
+>  .../boot/dts/amlogic/meson-gxbb-vega-s95.dtsi      |  56 +++----
+>  .../boot/dts/amlogic/meson-gxbb-wetek-hub.dts      |   6 +-
+>  arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi        | 171 +++++++++++----------
+>  .../dts/amlogic/meson-gxl-s905x-khadas-vim.dts     |   2 +-
+>  .../dts/amlogic/meson-gxl-s905x-nexbox-a95x.dts    |  52 +++----
+>  arch/arm64/boot/dts/amlogic/meson-gxl-s905x.dtsi   |   2 +-
+>  arch/arm64/boot/dts/amlogic/meson-gxl.dtsi         |  72 ++++-----
+>  .../arm64/boot/dts/amlogic/meson-gxm-nexbox-a1.dts |  87 ++++++-----
+>  14 files changed, 388 insertions(+), 372 deletions(-)
+> 
