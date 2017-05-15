@@ -1,95 +1,57 @@
-From: Nandor Han <nandor.han@ge.com>
-Subject: [PATCH v3 0/2] XRA1403,gpio - add XRA1403 gpio expander driver
-Date: Mon, 15 May 2017 08:58:24 +0300
-Message-ID: <cover.1494827688.git.nandor.han@ge.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: gregkh@linuxfoundation.org, davem@davemloft.net, geert@linux-m68k.org, mchehab@kernel.org, daniel.vetter@ffwll.ch, linus.walleij@linaro.org, gnurou@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Nandor Han <nandor.han@ge.com>
+From: =?UTF-8?Q?C=c3=a9dric_Le_Goater?= <clg@kaod.org>
+Subject: Re: [PATCH] leds: pca955x: add GPIO support
+Date: Mon, 15 May 2017 08:29:06 +0200
+Message-ID: <b1834a28-f094-0c46-4ac1-7830575701c7@kaod.org>
+References: <1494311772-21872-1-git-send-email-clg@kaod.org>
+ <20170513112601.GA21785@amd>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-Reply-To: <20170513112601.GA21785@amd>
+Sender: linux-leds-owner@vger.kernel.org
+To: Pavel Machek <pavel@ucw.cz>
+Cc: Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, Joel Stanley <joel@jms.id.au>
 List-Id: devicetree@vger.kernel.org
 
-The patchset will add a driver to support basic functionality for
-XRA1403 device. Features supported:
-        - get/set GPIO direction (input, output)
-        - get/set GPIO level (low, high)
+Hello,
 
-Documentation: A gpio-xra1403.txt file was added to document the DTS
-	bindings related to driver.
+On 05/13/2017 01:26 PM, Pavel Machek wrote:
+> On Tue 2017-05-09 08:36:12, Cédric Le Goater wrote:
+>> The PCA955x family of chips are I2C LED blinkers whose pins not used
+>> to control LEDs can be used as general purpose I/Os (GPIOs).
+>>
+>> The following adds support for device tree and Open Firmware to be
+>> able do define different operation modes for each pin. See bindings
+>> documentation for more details. The pca955x driver is then extended
+>> with a gpio_chip when pins are operating in GPIO mode.
+> 
+> Actually.. maybe better solution would be to turn this into GPIO
+> driver, and then use gpio-leds on top...?
 
-Testing:
+yes probably. We could introduce a new driver for the PCA955[0-3]
+when all pins are in GPIO mode. I have taken the approach of the 
+leds-pca9532 which behaves quite similarly. 
 
-1.1 XRA1403 connected to iMX53 MCU
-1.2 Use the GPIO tools provided by kernel from tools/gpio dir
+> What is the difference between pin in GPIO mode and pin in LED mode?
 
-2.1 `lsgpio`
+Well, first of all the PCA955[0-3] are LED blinkers chips, and not 
+GPIO chips. So you have an extra couple registers to set the frequency 
+and the pwm.
 
-root@csmon ppd:~# lsgpio
-GPIO chip: gpiochip8, "xra1403", 16 GPIO lines
-        line  0: unnamed unused [output]
-        line  1: unnamed unused [output]
-        line  2: unnamed unused [output]
-        line  3: unnamed unused [output]
-        line  4: unnamed unused [output]
-        line  5: unnamed unused
-        line  6: unnamed unused
-        line  7: unnamed unused [output]
-        line  8: unnamed unused [output]
-        line  9: unnamed unused
-        line 10: unnamed unused [output]
-        line 11: unnamed unused
-        line 12: unnamed unused
-        line 13: unnamed unused
-        line 14: unnamed unused
-        line 15: unnamed unused [output]
-GPIO chip: gpiochip7, "xra1403", 16 GPIO lines
-        line  0: unnamed unused
-        line  1: unnamed unused
-        line  2: unnamed unused
-        line  3: unnamed unused
-        line  4: unnamed unused
-        line  5: unnamed unused
-        line  6: unnamed unused
-        line  7: unnamed unused
-        line  8: unnamed unused
-        line  9: unnamed unused
-        line 10: unnamed unused
-        line 11: unnamed unused
-        line 12: unnamed unused
-        line 13: unnamed unused
-        line 14: unnamed unused
-        line 15: unnamed unused
+As for the pins in GPIO mode, here is what the specs says : 
 
-3.1 `gpio-hammer`
+- For input, set LEDn to high-impedance (01) and then read the pin 
+  state via the input register.
 
-root@csmon ppd:~# gpio-hammer -n gpiochip8 -o0 -o1 -o2 -o3
-Hammer lines [0, 1, 2, 3] on gpiochip8, initial states: [0, 0, 0, 0]
-[\] [0: 0, 1: 0, 2: 0, 3: 0]
-...
-[\] [0: 1, 1: 1, 2: 1, 3: 1]
+- For output, LED output pin is HIGH when the output is programmed 
+  as high-impedance, and LOW when the output is programmed LOW through 
+  the LS register. The output can also be pulse-width controlled when 
+  PWM0 or PWM1 are used.
 
-When using `gpio-hammer` I also attached an oscilloscope to one of the pins and I was
-able to monitor and validate the GPIO status.
+So for output, GPIO control is quite similar to LED control. For input,
+the INPUTx registers need to be read.
 
+Thanks,
 
-Changes since v2: - improve the commit message by removing the "sysfs"
-                    dependency and be more clear.
-                  - include "seq_file.h" header.
-    Note: documentation patches were accepted already.
-
-Changes since v1: - use regmap for driver
-                  - small changes to documentation
-
-
-Nandor Han (2):
-  gpio - Add EXAR XRA1403 SPI GPIO expander driver
-  Add XRA1403 support to MAINTAINERS file
-
- MAINTAINERS                 |   8 ++
- drivers/gpio/Kconfig        |   5 +
- drivers/gpio/Makefile       |   1 +
- drivers/gpio/gpio-xra1403.c | 237 ++++++++++++++++++++++++++++++++++++++++++++
- 4 files changed, 251 insertions(+)
- create mode 100644 drivers/gpio/gpio-xra1403.c
-
--- 
-2.10.1
+C. 
