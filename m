@@ -1,68 +1,144 @@
-From: Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v3 0/7] i.MX7 PCIe related device tree changes
-Date: Mon, 15 May 2017 07:52:58 -0700
-Message-ID: <20170515145305.4465-1-andrew.smirnov@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, yurovsky-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Dong Aisheng <aisheng.dong-3arQi8VN3Tc@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Andrey Smirnov <andrew.smirnov@gmail.com>
+Subject: [PATCH v3 1/7] ARM: dts: imx: Reintroduce 'anatop-enable-bit' where appropriate
+Date: Mon, 15 May 2017 07:52:59 -0700
+Message-ID: <20170515145305.4465-2-andrew.smirnov@gmail.com>
+References: <20170515145305.4465-1-andrew.smirnov@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170515145305.4465-1-andrew.smirnov@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Shawn Guo <shawnguo@kernel.org>
+Cc: Andrey Smirnov <andrew.smirnov@gmail.com>, yurovsky@gmail.com, Dong Aisheng <aisheng.dong@nxp.com>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Shawn, everyone:
+Now that support for 'anatop-enable-bit' has been added to ANADIG
+driver, reintroduce 'anatop-enable-bit' for all applicable LDOs.
 
-This is third version of the series that includes changes made to
-device-tree in order to support PCIe on i.MX7 platform.
+Cc: yurovsky@gmail.com
+Cc: Dong Aisheng <aisheng.dong@nxp.com>
+Cc: Shawn Guo <shawnguo@kernel.org>
+Cc: Sascha Hauer <kernel@pengutronix.de>
+Cc: Fabio Estevam <fabio.estevam@nxp.com>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Russell King <linux@armlinux.org.uk>
+Cc: devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+---
+ arch/arm/boot/dts/imx6qdl.dtsi | 3 +++
+ arch/arm/boot/dts/imx6sl.dtsi  | 3 +++
+ arch/arm/boot/dts/imx6sx.dtsi  | 3 +++
+ arch/arm/boot/dts/imx6ul.dtsi  | 1 +
+ arch/arm/boot/dts/imx7s.dtsi   | 1 +
+ 5 files changed, 11 insertions(+)
 
-These changes are also availible at:
-
-https://github.com/ndreys/linux/tree/imx7d/pcie-support-v11
-
-Changes since [v2]:
-
-	- Patchset rebased and tested against v4.12-rc1
-
-	- Removed needless 'pinctrl-names' property from pcie node in imx7d-sdb.dts
-
-	- Moved 'select IMX_GPCV2' statement according to alphabetical order
-
-	- Changed prefix for patch #1
-
-Changes since [v1]:
-
-	- All 'anatop-enable-bit' patches are squashed into one
-
-	- Added patch to enable GPCv2 driver on i.MX7
-
-	- Dropped accidentally introduced unsupported DT properties
-
-	- A number of node renaming for readability/clarity purpose
-
-[v1] http://lkml.kernel.org/r/20170413133242.5068-1-andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-[v2] http://lkml.kernel.org/r/20170418150133.31679-1-andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-
-Andrey Smirnov (7):
-  ARM: dts: imx: Reintroduce 'anatop-enable-bit' where appropriate
-  ARM: imx: Select GPCv2 for i.MX7
-  ARM: dts: imx7s: Add node for GPC
-  ARM: dts: imx7s: Mark 'gpr' compatible with i.MX6 variant
-  ARM: dts: imx7d-sdb: Add GPIO expander node
-  ARM: dts: imx7d: Add node for PCIe controller
-  ARM: dts: imx7d-sdb: Enable PCIe peripheral
-
- arch/arm/boot/dts/imx6qdl.dtsi  |  3 +++
- arch/arm/boot/dts/imx6sl.dtsi   |  3 +++
- arch/arm/boot/dts/imx6sx.dtsi   |  3 +++
- arch/arm/boot/dts/imx6ul.dtsi   |  1 +
- arch/arm/boot/dts/imx7d-sdb.dts | 34 ++++++++++++++++++++++++++++++++++
- arch/arm/boot/dts/imx7d.dtsi    | 37 +++++++++++++++++++++++++++++++++++++
- arch/arm/boot/dts/imx7s.dtsi    | 30 ++++++++++++++++++++++++++++--
- arch/arm/mach-imx/Kconfig       |  1 +
- 8 files changed, 110 insertions(+), 2 deletions(-)
-
+diff --git a/arch/arm/boot/dts/imx6qdl.dtsi b/arch/arm/boot/dts/imx6qdl.dtsi
+index e426faa..0576ef6 100644
+--- a/arch/arm/boot/dts/imx6qdl.dtsi
++++ b/arch/arm/boot/dts/imx6qdl.dtsi
+@@ -644,6 +644,7 @@
+ 					anatop-min-bit-val = <4>;
+ 					anatop-min-voltage = <800000>;
+ 					anatop-max-voltage = <1375000>;
++					anatop-enable-bit = <0>;
+ 				};
+ 
+ 				regulator-3p0 {
+@@ -658,6 +659,7 @@
+ 					anatop-min-bit-val = <0>;
+ 					anatop-min-voltage = <2625000>;
+ 					anatop-max-voltage = <3400000>;
++					anatop-enable-bit = <0>;
+ 				};
+ 
+ 				regulator-2p5 {
+@@ -672,6 +674,7 @@
+ 					anatop-min-bit-val = <0>;
+ 					anatop-min-voltage = <2100000>;
+ 					anatop-max-voltage = <2875000>;
++					anatop-enable-bit = <0>;
+ 				};
+ 
+ 				reg_arm: regulator-vddcore {
+diff --git a/arch/arm/boot/dts/imx6sl.dtsi b/arch/arm/boot/dts/imx6sl.dtsi
+index cc9572e..3243af4 100644
+--- a/arch/arm/boot/dts/imx6sl.dtsi
++++ b/arch/arm/boot/dts/imx6sl.dtsi
+@@ -530,6 +530,7 @@
+ 					anatop-min-bit-val = <4>;
+ 					anatop-min-voltage = <800000>;
+ 					anatop-max-voltage = <1375000>;
++					anatop-enable-bit = <0>;
+ 				};
+ 
+ 				regulator-3p0 {
+@@ -544,6 +545,7 @@
+ 					anatop-min-bit-val = <0>;
+ 					anatop-min-voltage = <2625000>;
+ 					anatop-max-voltage = <3400000>;
++					anatop-enable-bit = <0>;
+ 				};
+ 
+ 				regulator-2p5 {
+@@ -558,6 +560,7 @@
+ 					anatop-min-bit-val = <0>;
+ 					anatop-min-voltage = <2100000>;
+ 					anatop-max-voltage = <2850000>;
++					anatop-enable-bit = <0>;
+ 				};
+ 
+ 				reg_arm: regulator-vddcore {
+diff --git a/arch/arm/boot/dts/imx6sx.dtsi b/arch/arm/boot/dts/imx6sx.dtsi
+index 3f1416b..f16b9df 100644
+--- a/arch/arm/boot/dts/imx6sx.dtsi
++++ b/arch/arm/boot/dts/imx6sx.dtsi
+@@ -587,6 +587,7 @@
+ 					anatop-min-bit-val = <4>;
+ 					anatop-min-voltage = <800000>;
+ 					anatop-max-voltage = <1375000>;
++					anatop-enable-bit = <0>;
+ 				};
+ 
+ 				regulator-3p0 {
+@@ -601,6 +602,7 @@
+ 					anatop-min-bit-val = <0>;
+ 					anatop-min-voltage = <2625000>;
+ 					anatop-max-voltage = <3400000>;
++					anatop-enable-bit = <0>;
+ 				};
+ 
+ 				regulator-2p5 {
+@@ -615,6 +617,7 @@
+ 					anatop-min-bit-val = <0>;
+ 					anatop-min-voltage = <2100000>;
+ 					anatop-max-voltage = <2875000>;
++					anatop-enable-bit = <0>;
+ 				};
+ 
+ 				reg_arm: regulator-vddcore {
+diff --git a/arch/arm/boot/dts/imx6ul.dtsi b/arch/arm/boot/dts/imx6ul.dtsi
+index b9d7d2d..6da2b77 100644
+--- a/arch/arm/boot/dts/imx6ul.dtsi
++++ b/arch/arm/boot/dts/imx6ul.dtsi
+@@ -542,6 +542,7 @@
+ 					anatop-min-bit-val = <0>;
+ 					anatop-min-voltage = <2625000>;
+ 					anatop-max-voltage = <3400000>;
++					anatop-enable-bit = <0>;
+ 				};
+ 
+ 				reg_arm: regulator-vddcore {
+diff --git a/arch/arm/boot/dts/imx7s.dtsi b/arch/arm/boot/dts/imx7s.dtsi
+index c4f12fd..8fee299 100644
+--- a/arch/arm/boot/dts/imx7s.dtsi
++++ b/arch/arm/boot/dts/imx7s.dtsi
+@@ -516,6 +516,7 @@
+ 					anatop-min-bit-val = <8>;
+ 					anatop-min-voltage = <800000>;
+ 					anatop-max-voltage = <1200000>;
++					anatop-enable-bit = <0>;
+ 				};
+ 			};
+ 
 -- 
 2.9.3
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
