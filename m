@@ -1,94 +1,78 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH 2/5] ARM: dts: use #include "..." to include DT in the
- same directory
-Date: Mon, 15 May 2017 21:10:49 +0800
-Message-ID: <20170515131048.GW8471@dragon>
-References: <1494846888-18966-1-git-send-email-yamada.masahiro@socionext.com>
- <1494846888-18966-3-git-send-email-yamada.masahiro@socionext.com>
+From: "A.S. Dong" <aisheng.dong-3arQi8VN3Tc@public.gmane.org>
+Subject: RE: [PATCH 3/5] dt-bindings: pinctrl: add imx7ulp pinctrl binding doc
+Date: Mon, 15 May 2017 13:12:25 +0000
+Message-ID: <AM3PR04MB3063C9CFC02E03DE2B4C2ED80E10@AM3PR04MB306.eurprd04.prod.outlook.com>
+References: <1494592686-30967-1-git-send-email-aisheng.dong@nxp.com>
+ <1494592686-30967-5-git-send-email-aisheng.dong@nxp.com>
+ <20170515114319.GP8471@dragon>
+ <AM3PR04MB3069C90F23CF9C9CC84BA7580E10@AM3PR04MB306.eurprd04.prod.outlook.com>
+ <20170515122032.GS8471@dragon>
+ <AM3PR04MB3069C788C96EE2854C2C68080E10@AM3PR04MB306.eurprd04.prod.outlook.com>
+ <20170515125905.GV8471@dragon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arch-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1494846888-18966-3-git-send-email-yamada.masahiro@socionext.com>
-Sender: linux-arch-owner@vger.kernel.org
-To: Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: devicetree@vger.kernel.org, linux-arch <linux-arch@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org, Russell King <linux@armlinux.org.uk>, Gaurav Minocha <gaurav.minocha.os@gmail.com>, Olof Johansson <olof@lixom.net>, Rob Herring <robh+dt@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Grant Likely <grant.likely@linaro.org>, Omar Sandoval <osandov@osandov.com>, Frank Rowand <frowand.list@gmail.com>, Fabio Estevam <fabio.estevam@nxp.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170515125905.GV8471@dragon>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Andy Duan <fugang.duan-3arQi8VN3Tc@public.gmane.org>, Jacky Bai <ping.bai-3arQi8VN3Tc@public.gmane.org>, "linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "stefan-XLVq0VzYD2Y@public.gmane.org" <stefan-XLVq0VzYD2Y@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Masahiro,
+> -----Original Message-----
+> From: Shawn Guo [mailto:shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org]
+> Sent: Monday, May 15, 2017 8:59 PM
+> To: A.S. Dong
+> Cc: Mark Rutland; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Andy Duan; Jacky Bai;
+> linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org; stefan-XLVq0VzYD2Y@public.gmane.org; linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Ro=
+b
+> Herring; kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org; linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> Subject: Re: [PATCH 3/5] dt-bindings: pinctrl: add imx7ulp pinctrl bindin=
+g
+> doc
+>=20
+> On Mon, May 15, 2017 at 12:41:09PM +0000, A.S. Dong wrote:
+> > > On Mon, May 15, 2017 at 12:06:19PM +0000, A.S. Dong wrote:
+> > > > > > @@ -0,0 +1,56 @@
+> > > > > > +* Freescale i.MX7ULP IOMUX Controller
+> > > > > > +
+> > > > > > +Please refer to fsl,imx-pinctrl.txt in this directory for
+> > > > > > +common binding part and usage.
+> > > > >
+> > > > > Are imx7ulp-pinctrl bindings more alike to fsl,imx-pinctrl.txt
+> > > > > or generic pinctrl-bindings.txt?  My personal feeling is that it
+> > > > > might be better to take pinctrl-bindings.txt as the reference
+> > > > > base and highlight how imx7ulp- pinctrl bindings differ from it.
+> > > > >
+> > > >
+> > > > It seems still more like fsl,imx-pinctrl.txt.
+> > > >
+> > > > I know fsl,imx-pinctrl.txt is a bit out of date, especially after
+> > > > we add generic pinconf.
+> > > >
+> > > > I plan to update it later after adding generic pin conf support to
+> > > > legacy SoCs (MX6 & 7) as well, do you think it's ok?
+> > >
+> > > Please do not.  Let's use generic pinconf support only for new SoCs,
+> > > and not bother with legacy SoCs.
+> > >
+> >
+> > I wonder there may be some guys interested more in generic Pinconfig
+> > format rather than old one when they add new board support, or someone
+> > else adding the support for legacy SoCs as the pinctrl-imx core
+> > already supports it after this patch series.
+>=20
+> I would take this as an unnecessary churn on existing code and increase o=
+f
+> maintenance burden.  So that's definitely a NO from me.
+>=20
 
-On Mon, May 15, 2017 at 08:14:45PM +0900, Masahiro Yamada wrote:
-> Most of DT files in ARM use #include "..." to make pre-processor
-> include DT in the same directory, but we have 3 exceptional files
-> that use #include <...> for that.
-> 
-> They must be fixed to remove -I$(srctree)/arch/$(SRCARCH)/boot/dts
-> path from dtc_cpp_flags.
-> 
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> ---
-> 
->  arch/arm/boot/dts/imx6q-zii-rdu2.dts  | 4 ++--
->  arch/arm/boot/dts/imx6qp-zii-rdu2.dts | 4 ++--
+Okay, personally I would be with you!
 
-I see this patch depends on nothing and can be applied immediately.  But
-versatile-pb.dts is not really in my charge.  In case you want to get
-this series merged by arm-soc folks, here is my ACK:
-
-Acked-by: Shawn Guo <shawnguo@kernel.org>
-
-Or you need to split versatile-pb.dts out, and then I can take it.
-
-Shawn
-
->  arch/arm/boot/dts/versatile-pb.dts    | 2 +-
->  3 files changed, 5 insertions(+), 5 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/imx6q-zii-rdu2.dts b/arch/arm/boot/dts/imx6q-zii-rdu2.dts
-> index b2d3466..6be8a1e 100644
-> --- a/arch/arm/boot/dts/imx6q-zii-rdu2.dts
-> +++ b/arch/arm/boot/dts/imx6q-zii-rdu2.dts
-> @@ -41,8 +41,8 @@
->  
->  /dts-v1/;
->  
-> -#include <imx6q.dtsi>
-> -#include <imx6qdl-zii-rdu2.dtsi>
-> +#include "imx6q.dtsi"
-> +#include "imx6qdl-zii-rdu2.dtsi"
->  
->  / {
->  	model = "ZII RDU2 Board";
-> diff --git a/arch/arm/boot/dts/imx6qp-zii-rdu2.dts b/arch/arm/boot/dts/imx6qp-zii-rdu2.dts
-> index 882b3bd..547a766 100644
-> --- a/arch/arm/boot/dts/imx6qp-zii-rdu2.dts
-> +++ b/arch/arm/boot/dts/imx6qp-zii-rdu2.dts
-> @@ -41,8 +41,8 @@
->  
->  /dts-v1/;
->  
-> -#include <imx6qp.dtsi>
-> -#include <imx6qdl-zii-rdu2.dtsi>
-> +#include "imx6qp.dtsi"
-> +#include "imx6qdl-zii-rdu2.dtsi"
->  
->  / {
->  	model = "ZII RDU2+ Board";
-> diff --git a/arch/arm/boot/dts/versatile-pb.dts b/arch/arm/boot/dts/versatile-pb.dts
-> index 33a8eb2..06e2331 100644
-> --- a/arch/arm/boot/dts/versatile-pb.dts
-> +++ b/arch/arm/boot/dts/versatile-pb.dts
-> @@ -1,4 +1,4 @@
-> -#include <versatile-ab.dts>
-> +#include "versatile-ab.dts"
->  
->  / {
->  	model = "ARM Versatile PB";
-> -- 
-> 2.7.4
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+Regards
+Dong Aisheng
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
