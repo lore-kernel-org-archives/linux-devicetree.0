@@ -1,45 +1,48 @@
-From: Andrey Smirnov <andrew.smirnov@gmail.com>
-Subject: [PATCH v3 2/7] ARM: imx: Select GPCv2 for i.MX7
-Date: Mon, 15 May 2017 08:03:50 -0700
-Message-ID: <20170515150350.7091-1-andrew.smirnov@gmail.com>
-References: <20170515145305.4465-1-andrew.smirnov@gmail.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH 1/2] fdt: correctly handle uncompressed node names
+Date: Mon, 15 May 2017 10:19:36 -0500
+Message-ID: <CAL_JsqJLbwuzvDCSHr+Z92sseomnWhKXd03WomUgJdfXo_6=8Q@mail.gmail.com>
+References: <20170513102229.22579-1-x-linux@infra-silbe.de> <20170513102229.22579-2-x-linux@infra-silbe.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170515145305.4465-1-andrew.smirnov@gmail.com>
+In-Reply-To: <20170513102229.22579-2-x-linux@infra-silbe.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Guo <shawnguo@kernel.org>
-Cc: Andrey Smirnov <andrew.smirnov@gmail.com>, yurovsky@gmail.com, Dong Aisheng <aisheng.dong@nxp.com>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Sascha Silbe <x-linux@infra-silbe.de>
+Cc: Frank Rowand <frowand.list@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-GPCv2 IP block is a part of i.MX7 SoC. Select it to make corresponding
-driver availible to support DT changes following this patch.
+On Sat, May 13, 2017 at 5:22 AM, Sascha Silbe <x-linux@infra-silbe.de> wrote:
+> When handling uncompressed node names, we need to compare the last
+> component rather than the entire string.
+>
+> Signed-off-by: Sascha Silbe <x-linux@infra-silbe.de>
+> ---
+>  scripts/dtc/libfdt/fdt_ro.c | 3 +++
+>  1 file changed, 3 insertions(+)
 
-Cc: yurovsky@gmail.com
-Cc: Dong Aisheng <aisheng.dong@nxp.com>
-Cc: Shawn Guo <shawnguo@kernel.org>
-Cc: Sascha Hauer <kernel@pengutronix.de>
-Cc: Fabio Estevam <fabio.estevam@nxp.com>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Russell King <linux@armlinux.org.uk>
-Cc: devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org
-Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
----
- arch/arm/mach-imx/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+This needs to be a patch against dtc, sent to devicetree-compiler list
+and accepted there, then I can pick it up.
 
-diff --git a/arch/arm/mach-imx/Kconfig b/arch/arm/mach-imx/Kconfig
-index 936c59d..782699e 100644
---- a/arch/arm/mach-imx/Kconfig
-+++ b/arch/arm/mach-imx/Kconfig
-@@ -536,6 +536,7 @@ config SOC_IMX7D
- 	select HAVE_IMX_ANATOP
- 	select HAVE_IMX_MMDC
- 	select HAVE_IMX_SRC
-+	select IMX_GPCV2
- 	help
- 		This enables support for Freescale i.MX7 Dual processor.
- 
--- 
-2.9.3
+>
+> diff --git a/scripts/dtc/libfdt/fdt_ro.c b/scripts/dtc/libfdt/fdt_ro.c
+> index 3d00d2eee0e3..ca03ff87429c 100644
+> --- a/scripts/dtc/libfdt/fdt_ro.c
+> +++ b/scripts/dtc/libfdt/fdt_ro.c
+> @@ -64,6 +64,9 @@ static int _fdt_nodename_eq(const void *fdt, int offset,
+>                 /* short match */
+>                 return 0;
+>
+> +       if (*p == '/')
+> +               /* Uncompressed node name. Only compare the last part. */
+> +               p = strrchr(p, '/') + 1;
+
+However, you are changing behavior here that I'd guess has existed for
+some time. This makes me suspicious that this is correct especially
+when it is non-FDT DT you are trying to fix.
+
+Given that 0-day reports an error with EFI stub, you also have to
+consider if u-boot, barebox, grub, and all the other libfdt users
+provide strrchr.
+
+Rob
