@@ -1,18 +1,18 @@
 From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v7 03/13] dt-bindings: add bindings for DE2
- on V3s SoC
-Date: Mon, 15 May 2017 11:24:28 +0200
-Message-ID: <20170515092428.dby2cw62gfbfq3ry@flea.home>
+Subject: Re: [PATCH v7 04/13] drm/sun4i: return only planes for
+ layers created
+Date: Mon, 15 May 2017 11:24:53 +0200
+Message-ID: <20170515092453.uv5j3avcktgx4no5@flea.home>
 References: <20170514163045.40366-1-icenowy@aosc.io>
- <20170514163045.40366-4-icenowy@aosc.io>
+ <20170514163045.40366-5-icenowy@aosc.io>
 Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="lcuelmmv4kxkmqfp"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBTPH4XEAKGQE7CJA5GI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="ees4ru5q7pb5d7yx"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBZPH4XEAKGQE7JIRFUI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <20170514163045.40366-4-icenowy-h8G6r0blFSE@public.gmane.org>
+In-Reply-To: <20170514163045.40366-5-icenowy-h8G6r0blFSE@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -24,24 +24,37 @@ Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai 
 List-Id: devicetree@vger.kernel.org
 
 
---lcuelmmv4kxkmqfp
+--ees4ru5q7pb5d7yx
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 
-On Mon, May 15, 2017 at 12:30:35AM +0800, Icenowy Zheng wrote:
-> Allwinner V3s SoC have a display engine which have a different pipeline
-> with older SoCs.
+On Mon, May 15, 2017 at 12:30:36AM +0800, Icenowy Zheng wrote:
+> As we are going to add support for the Allwinner DE2 Mixer in sun4i-drm
+> driver, we will finally have two types of layers.
 > 
-> Add document for it (new compatibles and the new "mixer" part).
+> Each layer is bound to a drm_plane that is CRTC-specific, so we create
+> them when initializing CRTC (calling sun4i_layers_init, which will be
+> generalized in next patch). The drm_plane's will be used when creating
+> CRTC, but the CRTC initialization code do not care other properties of
+> the layer, so we let the sun4i_layers_init function return drm_plane's
+> only.
+> 
+> As we have no need to trace the layers after the CRTC is properly
+> created, we drop the layers pointer in sun4i_crtc struct.
+> 
+> Doing this uncouples the CRTC code from the type of layer (the
+> sun4i_layers_init function name is still hardcoded and will be changed
+> in the next patch), so that we can finally gain support for the
+> mixer in DE2, which has different layers.
 > 
 > Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Reviewed-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 
 Applied, thanks!
-maxime
+Maxime
 
 -- 
 Maxime Ripard, Free Electrons
 Embedded Linux and Kernel engineering
 http://free-electrons.com
---lcuelmmv4kxkmqfp--
+--ees4ru5q7pb5d7yx--
