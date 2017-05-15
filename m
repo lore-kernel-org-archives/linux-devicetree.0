@@ -1,18 +1,18 @@
 From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v7 11/13] ARM: sun8i: v3s: add device nodes
- for DE2 display pipeline
-Date: Mon, 15 May 2017 11:24:00 +0200
-Message-ID: <20170515092400.nzxmocrdqgt4u476@flea.home>
+Subject: Re: [PATCH v7 03/13] dt-bindings: add bindings for DE2
+ on V3s SoC
+Date: Mon, 15 May 2017 11:24:28 +0200
+Message-ID: <20170515092428.dby2cw62gfbfq3ry@flea.home>
 References: <20170514163045.40366-1-icenowy@aosc.io>
- <20170514163045.40366-12-icenowy@aosc.io>
+ <20170514163045.40366-4-icenowy@aosc.io>
 Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="wkdg7dacrwu6npqt"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBMPH4XEAKGQEUUU7THI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="lcuelmmv4kxkmqfp"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBTPH4XEAKGQE7CJA5GI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <20170514163045.40366-12-icenowy-h8G6r0blFSE@public.gmane.org>
+In-Reply-To: <20170514163045.40366-4-icenowy-h8G6r0blFSE@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -24,104 +24,24 @@ Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai 
 List-Id: devicetree@vger.kernel.org
 
 
---wkdg7dacrwu6npqt
+--lcuelmmv4kxkmqfp
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 
-On Mon, May 15, 2017 at 12:30:43AM +0800, Icenowy Zheng wrote:
-> +		de2_clocks: clock@1000000 {
+On Mon, May 15, 2017 at 12:30:35AM +0800, Icenowy Zheng wrote:
+> Allwinner V3s SoC have a display engine which have a different pipeline
+> with older SoCs.
+> 
+> Add document for it (new compatibles and the new "mixer" part).
+> 
+> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-display_clocks would be better there, we don't have to dissociate de1
-with de2
-
-> +			compatible = "allwinner,sun8i-v3s-de2-clk";
-> +			reg = <0x01000000 0x100000>;
-> +			clocks = <&ccu CLK_DE>,
-> +				 <&ccu CLK_BUS_DE>;
-> +			clock-names = "mod",
-> +				      "bus";
-> +			resets = <&ccu RST_BUS_DE>;
-> +			#clock-cells = <1>;
-> +			#reset-cells = <1>;
-> +		};
-> +
-> +		de2_mixer0: mixer@1100000 {
-
-and mixer0 here is enough too.
-
-Is there several of them? Why not just use mixer if there's only one?
-
-> +			compatible = "allwinner,sun8i-v3s-de2-mixer";
-> +			reg = <0x01100000 0x100000>;
-> +			clocks = <&de2_clocks CLK_MIXER0>,
-> +				 <&de2_clocks CLK_BUS_MIXER0>;
-> +			clock-names = "mod",
-> +				      "bus";
-> +			resets = <&de2_clocks RST_MIXER0>;
-> +			assigned-clocks = <&de2_clocks CLK_MIXER0>;
-> +			assigned-clock-rates = <150000000>;
-> +
-> +			ports {
-> +				#address-cells = <1>;
-> +				#size-cells = <0>;
-> +
-> +				mixer0_out: port@1 {
-> +					#address-cells = <1>;
-> +					#size-cells = <0>;
-> +					reg = <1>;
-> +
-> +					mixer0_out_tcon0: endpoint@0 {
-> +						reg = <0>;
-> +						remote-endpoint = <&tcon0_in_mixer0>;
-> +					};
-> +				};
-> +			};
-> +		};
-> +
-> +		tcon0: lcd-controller@1c0c000 {
-> +			compatible = "allwinner,sun8i-v3s-tcon";
-> +			reg = <0x01c0c000 0x1000>;
-> +			interrupts = <GIC_SPI 86 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks = <&ccu CLK_BUS_TCON0>,
-> +				 <&ccu CLK_TCON0>;
-> +			clock-names = "ahb",
-> +				      "tcon-ch0";
-> +			clock-output-names = "tcon-pixel-clock";
-> +			resets = <&ccu RST_BUS_TCON0>;
-> +			reset-names = "lcd";
-> +			status = "disabled";
-> +
-> +			ports {
-> +				#address-cells = <1>;
-> +				#size-cells = <0>;
-> +
-> +				tcon0_in: port@0 {
-> +					#address-cells = <1>;
-> +					#size-cells = <0>;
-> +					reg = <0>;
-> +
-> +					tcon0_in_mixer0: endpoint@0 {
-> +						reg = <0>;
-> +						remote-endpoint = <&mixer0_out_tcon0>;
-> +					};
-> +				};
-> +
-> +				tcon0_out: port@1 {
-> +					#address-cells = <1>;
-> +					#size-cells = <0>;
-> +					reg = <1>;
-> +				};
-> +			};
-> +		};
-> +
-> +
-
-You have an extra new line here.
-
-Maxime
+Applied, thanks!
+maxime
 
 -- 
 Maxime Ripard, Free Electrons
 Embedded Linux and Kernel engineering
 http://free-electrons.com
---wkdg7dacrwu6npqt--
+--lcuelmmv4kxkmqfp--
