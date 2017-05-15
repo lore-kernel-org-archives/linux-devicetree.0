@@ -1,102 +1,29 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 2/4] dt-bindings: Document the Raspberry Pi Touchscreen
- nodes.
-Date: Mon, 15 May 2017 15:44:57 -0500
-Message-ID: <20170515204457.yxucspgm6yrk24pm@rob-hp-laptop>
-References: <20170511235625.22427-1-eric@anholt.net>
- <20170511235625.22427-3-eric@anholt.net>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] nvmem: rockchip-efuse: add support for rk322x-efuse
+Date: Mon, 15 May 2017 15:45:40 -0500
+Message-ID: <20170515204540.t6lzprzmaybjhjmh@rob-hp-laptop>
+References: <1494557060-105230-1-git-send-email-finley.xiao@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20170511235625.22427-3-eric@anholt.net>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Eric Anholt <eric@anholt.net>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
+In-Reply-To: <1494557060-105230-1-git-send-email-finley.xiao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Finley Xiao <finley.xiao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, tony.xie-TNX95d0MmH7DzftRWevZcw@public.gmane.org, cl-TNX95d0MmH7DzftRWevZcw@public.gmane.org, frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T24gVGh1LCBNYXkgMTEsIDIwMTcgYXQgMDQ6NTY6MjNQTSAtMDcwMCwgRXJpYyBBbmhvbHQgd3Jv
-dGU6Cj4gVGhlIFJhc3BiZXJyeSBQaSA3IiBUb3VjaHNjcmVlbiBpcyBhIERQSSB0b3VjaHNjcmVl
-biBwYW5lbCB3aXRoCj4gRFNJLT5EUEkgYnJpZGdlIGFuZCB0b3VjaHNjcmVlbiBjb250cm9sbGVy
-IGludGVncmF0ZWQsIHRoYXQgY29ubmVjdHMKPiB0byB0aGUgUmFzcGJlcnJ5IFBpIHRocm91Z2gg
-aXRzIDE1LXBpbiAiRFNJIiBjb25uZWN0b3IgKHNvbWUgbGluZXMgYXJlCj4gRFNJLCBzb21lIGxp
-bmVzIGFyZSBJMkMpLgo+IAo+IFRoaXMgZGV2aWNlIGlzIHJlcHJlc2VudGVkIGluIHRoZSBEVCBh
-cyB0aHJlZSBub2RlcyAoRFNJIGRldmljZSwgSTJDCj4gZGV2aWNlLCBwYW5lbCkuICBJbnB1dCB3
-aWxsIGJlIGxlZnQgdG8gYSBzZXBhcmF0ZSBiaW5kaW5nIGxhdGVyLCBhcyBpdAo+IHdpbGwgYmUg
-YSBiYXNpYyBJMkMgY2xpZW50IGRldmljZS4KPiAKPiBTaWduZWQtb2ZmLWJ5OiBFcmljIEFuaG9s
-dCA8ZXJpY0BhbmhvbHQubmV0Pgo+IC0tLQo+ICAuLi4vcmFzcGJlcnJ5cGksN2luY2gtdG91Y2hz
-Y3JlZW4tYnJpZGdlLnR4dCAgICAgICB8IDY4ICsrKysrKysrKysrKysrKysrKysrKysKPiAgLi4u
-L3BhbmVsL3Jhc3BiZXJyeXBpLDdpbmNoLXRvdWNoc2NyZWVuLXBhbmVsLnR4dCAgfCAgNyArKysK
-PiAgMiBmaWxlcyBjaGFuZ2VkLCA3NSBpbnNlcnRpb25zKCspCj4gIGNyZWF0ZSBtb2RlIDEwMDY0
-NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvcmFzcGJl
-cnJ5cGksN2luY2gtdG91Y2hzY3JlZW4tYnJpZGdlLnR4dAo+ICBjcmVhdGUgbW9kZSAxMDA2NDQg
-RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvcmFzcGJlcnJ5
-cGksN2luY2gtdG91Y2hzY3JlZW4tcGFuZWwudHh0Cj4gCj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50
-YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS9yYXNwYmVycnlwaSw3aW5j
-aC10b3VjaHNjcmVlbi1icmlkZ2UudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
-bmdzL2Rpc3BsYXkvYnJpZGdlL3Jhc3BiZXJyeXBpLDdpbmNoLXRvdWNoc2NyZWVuLWJyaWRnZS50
-eHQKPiBuZXcgZmlsZSBtb2RlIDEwMDY0NAo+IGluZGV4IDAwMDAwMDAwMDAwMC4uYTU2NjliZWFm
-NjhmCj4gLS0tIC9kZXYvbnVsbAo+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
-aW5ncy9kaXNwbGF5L2JyaWRnZS9yYXNwYmVycnlwaSw3aW5jaC10b3VjaHNjcmVlbi1icmlkZ2Uu
-dHh0Cj4gQEAgLTAsMCArMSw2OCBAQAo+ICtPZmZpY2lhbCA3IiAoODAweDQ4MCkgUmFzcGJlcnJ5
-IFBpIHRvdWNoc2NyZWVuIHBhbmVsJ3MgYnJpZGdlLgo+ICsKPiArVGhpcyBEU0kgcGFuZWwgY29u
-dGFpbnM6Cj4gKwo+ICstIFRDMzU4NzYyIERTSS0+RFBJIGJyaWRnZQo+ICstIEF0bWVsIG1pY3Jv
-Y29udHJvbGxlciBvbiBJMkMgZm9yIHBvd2VyIHNlcXVlbmNpbmcgdGhlIERTSSBicmlkZ2UgYW5k
-Cj4gKyAgY29udHJvbGxpbmcgYmFja2xpZ2h0Cj4gKy0gVG91Y2hzY3JlZW4gY29udHJvbGxlciBv
-biBJMkMgZm9yIHRvdWNoIGlucHV0CgpUaGlzIGlzIDEgdUMgb3IgMj8KCj4gKwo+ICthbmQgdGhp
-cyBjb3ZlcnMgdGhlIFRDMzU4NzYyIGJyaWRnZSBhbmQgQXRtZWwgbWljcm9jb250cm9sbGVyLCB3
-aGlsZQo+ICsuLi9wYW5lbC9yYXNwYmVycnlwaSw3aW5jaC10b3VjaHNjcmVlbi1wYW5lbC50eHQg
-Y292ZXJzIHRoZSBwYW5lbC4KPiArCj4gK1JlcXVpcmVkIHByb3BlcnRpZXM6Cj4gKy0gY29tcGF0
-aWJsZToJTXVzdCBiZSAicmFzcGJlcnJ5cGksN2luY2gtdG91Y2hzY3JlZW4tYnJpZGdlIgo+ICst
-IHJhc3BiZXJyeXBpLHRvdWNoc2NyZWVuLWJyaWRnZToKPiArCQlIYW5kbGUgdG8gdGhlIEkyQyBk
-ZXZpY2UgZm9yIEF0bWVsIG1pY3JvY29udHJvbGxlcgo+ICsKPiArRXhhbXBsZToKPiArCj4gK2Rz
-aTE6IGRzaUA3ZTcwMDAwMCB7Cj4gKwkjYWRkcmVzcy1jZWxscyA9IDwxPjsKPiArCSNzaXplLWNl
-bGxzID0gPDA+Owo+ICsJPC4uLj4KPiArCj4gKwlsY2QtYnJpZGdlQDAgewo+ICsJCWNvbXBhdGli
-bGUgPSAicmFzcGJlcnJ5cGksN2luY2gtdG91Y2hzY3JlZW4tYnJpZGdlIjsKPiArCQlyZWcgPSA8
-MD47Cj4gKwo+ICsJCXJhc3BiZXJyeXBpLHRvdWNoc2NyZWVuLWJyaWRnZSA9IDwmcGl0b3VjaHNj
-cmVlbl9icmlkZ2U+OwoKSSB0aGluayB0aGlzIHNob3VsZCBiZSBhIHBvcnQgd2l0aCBhIGdyYXBo
-IGNvbm5lY3Rpb24gZnJvbSB0aGUgRFNJIApub2RlIHRvIHRoZSBpMmMgYnJpZGdlIGRldmljZSAo
-YW5kIHRoZW4gdG8gdGhlIHBhbmVsKS4KCkl0J3MgYWxzbyBob3cgb3RoZXIgRFNJIGJyaWRnZXMg
-bGlrZSB0aGUgdGMzNTg3NjcgYXJlIGRvbmUuCgo+ICsJCXBvcnRzIHsKPiArCQkJI2FkZHJlc3Mt
-Y2VsbHMgPSA8MT47Cj4gKwkJCSNzaXplLWNlbGxzID0gPDA+Owo+ICsJCQlwb3J0QDAgewo+ICsJ
-CQkJcmVnID0gPDA+OwoKQlRXLCB5b3UgZG9uJ3QgbmVlZCB0aGlzIHdoZW4gdGhlcmUgaXMgb25s
-eSAxLgoKPiArCQkJCXBpdG91Y2hzY3JlZW5fYnJpZGdlX3BvcnQ6IGVuZHBvaW50IHsKPiArCQkJ
-CQlyZW1vdGUtZW5kcG9pbnQgPSA8JnBpdG91Y2hzY3JlZW5fcGFuZWxfcG9ydD47Cj4gKwkJCQl9
-Owo+ICsJCQl9Owo+ICsJCX07Cj4gKwl9Owo+ICt9Owo+ICsKPiAraTJjX2RzaTogaTJjIHsKPiAr
-CWNvbXBhdGlibGUgPSAiaTJjLWdwaW8iOwo+ICsJI2FkZHJlc3MtY2VsbHMgPSA8MT47Cj4gKwkj
-c2l6ZS1jZWxscyA9IDwwPjsKPiArCWdwaW9zID0gPCZncGlvIDI4IDAKPiArCQkgJmdwaW8gMjkg
-MD47Cj4gKwo+ICsJcGl0b3VjaHNjcmVlbl9icmlkZ2U6IGJyaWRnZUA0NSB7Cj4gKwkJY29tcGF0
-aWJsZSA9ICJyYXNwYmVycnlwaSx0b3VjaHNjcmVlbi1icmlkZ2UtaTJjIjsKPiArCQlyZWcgPSA8
-MHg0NT47Cj4gKwl9Owo+ICt9Owo+ICsKPiArbGNkIHsKPiArCWNvbXBhdGlibGUgPSAicmFzcGJl
-cnJ5cGksN2luY2gtdG91Y2hzY3JlZW4tcGFuZWwiOwo+ICsJcG9ydHMgewo+ICsJCSNhZGRyZXNz
-LWNlbGxzID0gPDE+Owo+ICsJCSNzaXplLWNlbGxzID0gPDA+Owo+ICsJCXBvcnRAMCB7Cj4gKwkJ
-CXJlZyA9IDwwPjsKPiArCQkJcGl0b3VjaHNjcmVlbl9wYW5lbF9wb3J0OiBlbmRwb2ludCB7Cj4g
-KwkJCQlyZW1vdGUtZW5kcG9pbnQgPSA8JnBpdG91Y2hzY3JlZW5fYnJpZGdlX3BvcnQ+Owo+ICsJ
-CQl9Owo+ICsJCX07Cj4gKwl9Owo+ICt9Owo+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2Rl
-dmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9yYXNwYmVycnlwaSw3aW5jaC10b3VjaHNj
-cmVlbi1wYW5lbC50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxh
-eS9wYW5lbC9yYXNwYmVycnlwaSw3aW5jaC10b3VjaHNjcmVlbi1wYW5lbC50eHQKPiBuZXcgZmls
-ZSBtb2RlIDEwMDY0NAo+IGluZGV4IDAwMDAwMDAwMDAwMC4uMWU4NGY5N2IzYjIwCj4gLS0tIC9k
-ZXYvbnVsbAo+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5
-L3BhbmVsL3Jhc3BiZXJyeXBpLDdpbmNoLXRvdWNoc2NyZWVuLXBhbmVsLnR4dAo+IEBAIC0wLDAg
-KzEsNyBAQAo+ICtPZmZpY2lhbCA3IiAoODAweDQ4MCkgUmFzcGJlcnJ5IFBpIHRvdWNoc2NyZWVu
-IHBhbmVsJ3MgcGFuZWwuCj4gKwo+ICtUaGlzIGJpbmRpbmcgaXMgY29tcGF0aWJsZSB3aXRoIHRo
-ZSBzaW1wbGUtcGFuZWwgYmluZGluZywgd2hpY2ggaXMgc3BlY2lmaWVkCj4gK2luIHNpbXBsZS1w
-YW5lbC50eHQgaW4gdGhpcyBkaXJlY3RvcnkuCj4gKwo+ICtSZXF1aXJlZCBwcm9wZXJ0aWVzOgo+
-ICstIGNvbXBhdGlibGU6CU11c3QgYmUgInJhc3BiZXJyeXBpLDdpbmNoLXRvdWNoc2NyZWVuLXBh
-bmVsIgo+IC0tIAo+IDIuMTEuMAo+IAo+IF9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fCj4gZHJpLWRldmVsIG1haWxpbmcgbGlzdAo+IGRyaS1kZXZlbEBsaXN0
-cy5mcmVlZGVza3RvcC5vcmcKPiBodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFu
-L2xpc3RpbmZvL2RyaS1kZXZlbApfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVz
-a3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9k
-cmktZGV2ZWwK
+On Fri, May 12, 2017 at 10:44:20AM +0800, Finley Xiao wrote:
+> This adds the necessary data for handling eFuse on the rk322x.
+> 
+> Signed-off-by: Finley Xiao <finley.xiao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/nvmem/rockchip-efuse.txt | 1 +
+>  drivers/nvmem/rockchip-efuse.c                             | 4 ++++
+>  2 files changed, 5 insertions(+)
+
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
