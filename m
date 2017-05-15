@@ -1,58 +1,34 @@
-From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2 0/5] mtd: nand: gpmi: add i.MX 7 support
-Date: Mon, 15 May 2017 21:38:02 +0200
-Message-ID: <20170515213802.4746dcda@bbrezillon>
-References: <20170422012338.4635-1-stefan@agner.ch>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCHv1.1] Documentation: of: Fix grammar usage in graph
+ bindings
+Date: Mon, 15 May 2017 15:10:10 -0500
+Message-ID: <20170515201010.uafhst4j2jpydlhk@rob-hp-laptop>
+References: <1494239666-8516-1-git-send-email-kbingham@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170422012338.4635-1-stefan-XLVq0VzYD2Y@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1494239666-8516-1-git-send-email-kbingham-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
-Cc: dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, richard-/L3Ra7n9ekc@public.gmane.org, cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, han.xu-3arQi8VN3Tc@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kieran Bingham <kbingham-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kieran Bingham <kieran.bingham+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 21 Apr 2017 18:23:33 -0700
-Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org> wrote:
-
-> This patchset adds support for i.MX 7 SoC for the GPMI NAND controller.
-> There have been similar patchsets already:
-> https://lkml.org/lkml/2016/2/23/912
+On Mon, May 08, 2017 at 11:34:25AM +0100, Kieran Bingham wrote:
+> From: Kieran Bingham <kieran.bingham+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
 > 
-> However, this patchset does not make use of any of the new features.
-> The current feature set seems to work fine, I successfully run the MTD
-> tests on a Colibri iMX7.
+> Some minor tweaks to the language and formatting used in the
+> documentation identified while I was reading up on the subject matter.
 > 
-> --
-> Stefan
+> Signed-off-by: Kieran Bingham <kieran.bingham+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+> ---
 > 
-> Changes since v1:
-> - Make clks_count const
-> - Introduce IS_IMX7D for i.MX 7 SoC's and make it part of GPMI_IS_MX6
-> 
-> Stefan Agner (5):
->   mtd: nand: gpmi: unify clock handling
->   mtd: nand: gpmi: add i.MX 7 SoC support
->   mtd: gpmi: document current clock requirements
+> Appologies for the resend. 'usage' was mis-spelled in my previous
+> commit title :-(
 
-Applied patch 1-3 to nand/next.
+Applied, thanks.
 
-Thanks,
-
-Boris
-
->   ARM: dts: imx7: add GPMI NAND
->   ARM: dts: imx7-colibri: add NAND support
-> 
->  .../devicetree/bindings/mtd/gpmi-nand.txt          | 14 +++++-
->  arch/arm/boot/dts/imx7-colibri.dtsi                |  9 ++++
->  arch/arm/boot/dts/imx7s.dtsi                       | 31 ++++++++++++
->  drivers/mtd/nand/gpmi-nand/gpmi-nand.c             | 56 +++++++++++++---------
->  drivers/mtd/nand/gpmi-nand/gpmi-nand.h             |  9 +++-
->  5 files changed, 93 insertions(+), 26 deletions(-)
-> 
-
+Rob
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
