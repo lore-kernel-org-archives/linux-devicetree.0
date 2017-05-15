@@ -1,71 +1,45 @@
 From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: Re: [PATCH v2 18/18] arm64: dts: meson-gx-p23x-q20x: Fix node order
-Date: Mon, 15 May 2017 10:16:56 +0200
-Message-ID: <47f71f15-32b9-824e-244b-ef6e4275fe05@baylibre.com>
+Subject: Re: [PATCH v2 06/18] arm64: dts: meson-gxl-s905x-khadas-vim: Fix Wifi
+ node name
+Date: Mon, 15 May 2017 10:17:27 +0200
+Message-ID: <71fcfdf4-6311-feba-0d65-13ac251d69e8@baylibre.com>
 References: <20170513143337.14278-1-afaerber@suse.de>
- <20170513143337.14278-19-afaerber@suse.de>
+ <20170513143337.14278-7-afaerber@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170513143337.14278-19-afaerber@suse.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170513143337.14278-7-afaerber@suse.de>
+Sender: linux-kernel-owner@vger.kernel.org
 To: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>, linux-amlogic@lists.infradead.org
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Kevin Hilman <khilman@baylibre.com>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Carlo Caione <carlo@caione.org>, linux-arm-kernel@lists.infradead.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Kevin Hilman <khilman@baylibre.com>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Carlo Caione <carlo@caione.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-T24gMDUvMTMvMjAxNyAwNDozMyBQTSwgQW5kcmVhcyBGw6RyYmVyIHdyb3RlOgo+IFNvcnQgbm9k
-ZXMgcmVmZXJlbmNlZCBieSBsYWJlbCBhbHBoYWJldGljYWxseS4KPiAKPiBTaWduZWQtb2ZmLWJ5
-OiBBbmRyZWFzIEbDpHJiZXIgPGFmYWVyYmVyQHN1c2UuZGU+Cj4gLS0tCj4gIHYxIC0+IHYyOgo+
-ICAqIFJlYmFzZWQgKG5ldyBub2RlcyBhZGRlZCkKPiAgCj4gIC4uLi9hcm02NC9ib290L2R0cy9h
-bWxvZ2ljL21lc29uLWd4LXAyM3gtcTIweC5kdHNpIHwgNTggKysrKysrKysrKystLS0tLS0tLS0t
-LQo+ICAxIGZpbGUgY2hhbmdlZCwgMjkgaW5zZXJ0aW9ucygrKSwgMjkgZGVsZXRpb25zKC0pCj4g
-Cj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvYW1sb2dpYy9tZXNvbi1neC1wMjN4
-LXEyMHguZHRzaSBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvYW1sb2dpYy9tZXNvbi1neC1wMjN4LXEy
-MHguZHRzaQo+IGluZGV4IDI1ZWVkMThhNzQzOS4uZGM0NzhkMDk0YzExIDEwMDY0NAo+IC0tLSBh
-L2FyY2gvYXJtNjQvYm9vdC9kdHMvYW1sb2dpYy9tZXNvbi1neC1wMjN4LXEyMHguZHRzaQo+ICsr
-KyBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvYW1sb2dpYy9tZXNvbi1neC1wMjN4LXEyMHguZHRzaQo+
-IEBAIC0xMjEsMTkgKzEyMSw0MiBAQAo+ICAJfTsKPiAgfTsKPiAgCj4gLS8qIFRoaXMgVUFSVCBp
-cyBicm91Z2h0IG91dCB0byB0aGUgREI5IGNvbm5lY3RvciAqLwo+IC0mdWFydF9BTyB7Cj4gKyZj
-dmJzX3ZkYWNfcG9ydCB7Cj4gKwljdmJzX3ZkYWNfb3V0OiBlbmRwb2ludCB7Cj4gKwkJcmVtb3Rl
-LWVuZHBvaW50ID0gPCZjdmJzX2Nvbm5lY3Rvcl9pbj47Cj4gKwl9Owo+ICt9Owo+ICsKPiArJmV0
-aG1hYyB7Cj4gIAlzdGF0dXMgPSAib2theSI7Cj4gLQlwaW5jdHJsLTAgPSA8JnVhcnRfYW9fYV9w
-aW5zPjsKPiArfTsKPiArCj4gKyZoZG1pX3R4IHsKPiArCXN0YXR1cyA9ICJva2F5IjsKPiArCXBp
-bmN0cmwtMCA9IDwmaGRtaV9ocGRfcGlucz4sIDwmaGRtaV9pMmNfcGlucz47Cj4gIAlwaW5jdHJs
-LW5hbWVzID0gImRlZmF1bHQiOwo+ICB9Owo+ICAKPiArJmhkbWlfdHhfdG1kc19wb3J0IHsKPiAr
-CWhkbWlfdHhfdG1kc19vdXQ6IGVuZHBvaW50IHsKPiArCQlyZW1vdGUtZW5kcG9pbnQgPSA8Jmhk
-bWlfY29ubmVjdG9yX2luPjsKPiArCX07Cj4gK307Cj4gKwo+ICAmaXIgewo+ICAJc3RhdHVzID0g
-Im9rYXkiOwo+ICAJcGluY3RybC0wID0gPCZyZW1vdGVfaW5wdXRfYW9fcGlucz47Cj4gIAlwaW5j
-dHJsLW5hbWVzID0gImRlZmF1bHQiOwo+ICB9Owo+ICAKPiArJnB3bV9lZiB7Cj4gKwlzdGF0dXMg
-PSAib2theSI7Cj4gKwlwaW5jdHJsLTAgPSA8JnB3bV9lX3BpbnM+Owo+ICsJcGluY3RybC1uYW1l
-cyA9ICJkZWZhdWx0IjsKPiArCWNsb2NrcyA9IDwmY2xrYyBDTEtJRF9GQ0xLX0RJVjQ+Owo+ICsJ
-Y2xvY2stbmFtZXMgPSAiY2xraW4wIjsKPiArfTsKPiArCj4gIC8qIFdpcmVsZXNzIFNESU8gTW9k
-dWxlICovCj4gICZzZF9lbW1jX2Egewo+ICAJc3RhdHVzID0gIm9rYXkiOwo+IEBAIC0xOTgsMzIg
-KzIyMSw5IEBACj4gIAl2cW1tYy1zdXBwbHkgPSA8JnZkZGlvX2Jvb3Q+Owo+ICB9Owo+ICAKPiAt
-JnB3bV9lZiB7Cj4gLQlzdGF0dXMgPSAib2theSI7Cj4gLQlwaW5jdHJsLTAgPSA8JnB3bV9lX3Bp
-bnM+Owo+IC0JcGluY3RybC1uYW1lcyA9ICJkZWZhdWx0IjsKPiAtCWNsb2NrcyA9IDwmY2xrYyBD
-TEtJRF9GQ0xLX0RJVjQ+Owo+IC0JY2xvY2stbmFtZXMgPSAiY2xraW4wIjsKPiAtfTsKPiAtCj4g
-LSZldGhtYWMgewo+IC0Jc3RhdHVzID0gIm9rYXkiOwo+IC19Owo+IC0KPiAtJmN2YnNfdmRhY19w
-b3J0IHsKPiAtCWN2YnNfdmRhY19vdXQ6IGVuZHBvaW50IHsKPiAtCQlyZW1vdGUtZW5kcG9pbnQg
-PSA8JmN2YnNfY29ubmVjdG9yX2luPjsKPiAtCX07Cj4gLX07Cj4gLQo+IC0maGRtaV90eCB7Cj4g
-Ky8qIFRoaXMgVUFSVCBpcyBicm91Z2h0IG91dCB0byB0aGUgREI5IGNvbm5lY3RvciAqLwo+ICsm
-dWFydF9BTyB7Cj4gIAlzdGF0dXMgPSAib2theSI7Cj4gLQlwaW5jdHJsLTAgPSA8JmhkbWlfaHBk
-X3BpbnM+LCA8JmhkbWlfaTJjX3BpbnM+Owo+ICsJcGluY3RybC0wID0gPCZ1YXJ0X2FvX2FfcGlu
-cz47Cj4gIAlwaW5jdHJsLW5hbWVzID0gImRlZmF1bHQiOwo+ICB9Owo+IC0KPiAtJmhkbWlfdHhf
-dG1kc19wb3J0IHsKPiAtCWhkbWlfdHhfdG1kc19vdXQ6IGVuZHBvaW50IHsKPiAtCQlyZW1vdGUt
-ZW5kcG9pbnQgPSA8JmhkbWlfY29ubmVjdG9yX2luPjsKPiAtCX07Cj4gLX07Cj4gCgpIaSBBbmRy
-ZWFzLAoKTGlrZSBhIHByZXZpb3VzIGF0dGVtcHQsIEknbSBub3QgT0sgd2l0aCBzdWNoIHJld29y
-ayBzaW5jZSBpdCB3aWxsIGJyZWFrIGJpc2VjdCBhbmQgYWRkIGNvbXBsZXhpdHkgZm9yIG5ldyBw
-YXRjaGVzIGhhbmRsaW5nLgoKVGhlIG9yZGVyIGlzIG5vdCBhbHBoYWJldGljYWxseSBvcmRlcmVk
-LCBsaXZlIHdpdGggaXQuCgpOZWlsCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2Vy
-bmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1h
-bi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+On 05/13/2017 04:33 PM, Andreas Färber wrote:
+> bcrmf -> brcmf -> wifi
+> 
+> Fixes: e15d2774b8c0 ("ARM64: dts: meson-gxl: add support for the Khadas VIM board")
+> Cc: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+> Signed-off-by: Andreas Färber <afaerber@suse.de>
+> ---
+>  v2: New
+>  
+>  arch/arm64/boot/dts/amlogic/meson-gxl-s905x-khadas-vim.dts | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-khadas-vim.dts b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-khadas-vim.dts
+> index 3c8b0b51ef27..6a81f0168da5 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-khadas-vim.dts
+> +++ b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-khadas-vim.dts
+> @@ -95,7 +95,7 @@
+>  };
+>  
+>  &sd_emmc_a {
+> -	brcmf: bcrmf@1 {
+> +	brcmf: wifi@1 {
+>  		reg = <1>;
+>  		compatible = "brcm,bcm4329-fmac";
+>  	};
+> 
+
+Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
