@@ -1,54 +1,152 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 4/4] ARM: sun8i: v3s: add support for Lichee
- Pi Zero w/ dock board
-Date: Mon, 15 May 2017 10:59:07 +0200
-Message-ID: <20170515085907.cyitd47elgsy4cq4@flea.home>
-References: <20170515084001.63123-1-icenowy@aosc.io>
- <20170515084001.63123-4-icenowy@aosc.io>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Varadarajan Narayanan <varada@codeaurora.org>
+Subject: Re: [PATCH v2 1/5] pinctrl: qcom: Add ipq8074 pinctrl driver
+Date: Mon, 15 May 2017 14:35:58 +0530
+Message-ID: <7afc7191-bcb1-a566-eac5-a4fe1293c773@codeaurora.org>
+References: <1493898841-20583-1-git-send-email-varada@codeaurora.org>
+ <1493898841-20583-2-git-send-email-varada@codeaurora.org>
+ <20170510224355.GE45273@Bjorns-MacBook-Pro-2.local>
+ <1f4c9974-f6a4-bee7-4f37-ad8795e442a3@codeaurora.org>
+ <20170514042307.GE69278@Bjorns-MacBook-Pro-2.local>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="lfrikcicf257xyz4"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBXG34XEAKGQEOB6ZMRA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20170515084001.63123-4-icenowy-h8G6r0blFSE@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <20170514042307.GE69278@Bjorns-MacBook-Pro-2.local>
+Content-Language: en-US
+Sender: linux-clk-owner@vger.kernel.org
+To: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, mturquette@baylibre.com, sboyd@codeaurora.org, linus.walleij@linaro.org, andy.gross@linaro.org, david.brown@linaro.org, catalin.marinas@arm.com, will.deacon@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, absahu@codeaurora.org, sjaganat@codeaurora.org, sricharan@codeaurora.org, Manoharan Vijaya Raghavan <mraghava@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-
---lfrikcicf257xyz4
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
-
-On Mon, May 15, 2017 at 04:40:01PM +0800, Icenowy Zheng wrote:
-> The Lichee Pi Zero board has a "dock board" which needs to be soldered
-> with the 1.27mm stamp holes on a Lichee Pi Zero board.
+On 5/14/2017 9:53 AM, Bjorn Andersson wrote:
+> On Thu 11 May 03:33 PDT 2017, Varadarajan Narayanan wrote:
 > 
-> It features:
-> - Onboard MIC and headphone jack (not supported yet)
-> - Ethernet port (not supported yet)
-> - An extra MicroSD slot connected to MMC1 controller
-> - four keys connected to the LRADC.
+>> On 5/11/2017 4:13 AM, Bjorn Andersson wrote:
+>>> On Thu 04 May 04:53 PDT 2017, Varadarajan Narayanan wrote:
+>>>
+> [..]
+>>>> +enum ipq8074_functions {
+>>>
+>>> Please keep these sorted alphabetically.
+>>
+>> Ok
+>>
+>>>> +	msm_mux_gpio,
+>>>> +	msm_mux_qpic_pad,
+>>>> +	msm_mux_blsp5_i2c,
+>>>> +	msm_mux_blsp5_spi,
+>>>> +	msm_mux_wci20,
+>>>
+>>> What does "20" mean here?
+>>
+>> This is for Wireless Coex Interface. The same functionality can be muxed on
+>> to different GPIOs. WCI2, is the 2nd edition of the WCI standard and 0, 1
+>> are for the muxing to different GPIOs (alternate muxes).
+>>
 > 
-> As it needs to be soldered with the main board to use, add a stand-alone
-> device tree for it.
+> In other Qualcomm platforms the alternative muxes are denoted by letters
+> (a,b,c...). Would you mind picking up this naming scheme, or do you see
+> any problems with that? (E.g. wci2a in this case)
+
+Ok
+
+> Btw, do you need any additional configuration for selecting alternative
+> muxing or is that automagical these days?
+
+No additional configuration is needed.
+
+>>>> +	msm_mux_blsp3_spi3,
+>>>> +	msm_mux_burn0,
+>>>> +	msm_mux_pcm_zsi0,
+>>>> +	msm_mux_blsp5_uart,
+>>>> +	msm_mux_mac12,
+>>>
+>>> What does "12" mean here?
+>>
+>> The SoC has three MAC cores. Each core has two pins for the smart antenna
+>> feature. macXY indicates the function select for MAC no. X and smart antenna
+>> no. Y.
+>>
 > 
-> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+> Ok
+> 
+>>>> +	msm_mux_blsp3_spi0,
+>>>> +	msm_mux_burn1,
+>>>> +	msm_mux_mac01,
+>>>> +	msm_mux_qdss_cti_trig_out_b0,
+>>>> +	msm_mux_qdss_cti_trig_in_b0,
+>>>> +	msm_mux_qpic_pad4,
+>>>
+>>> What are qpic_pad and qpic_pad0 through qpic_pad8? Different functions,
+>>> alternative muxings...?
+>>
+>> This is for the NAND and LCD display. The pins listed are the 9 data pins.
+>>
+> 
+> Then you can describe them all as "qpic_pad" (or simply "qpic"?). (It's
+> possible to reference a partial group in the DTS, if that's necessary)
 
-Applied all 4, thanks
+There are two sets of 9 pins, either of which can go to NAND or LCD.
+Will rename qpic_pad as qpic_a and qpic_pad[0-8] as qpic_b.
+Is that ok?
 
-Maxime
+>>>> +	msm_mux_blsp4_uart0,
+>>>> +	msm_mux_blsp4_i2c0,
+>>>> +	msm_mux_blsp4_spi0,
+>>>> +	msm_mux_mac21,
+>>>> +	msm_mux_qdss_cti_trig_out_b1,
+>>>> +	msm_mux_qpic_pad5,
+>>>> +	msm_mux_qdss_cti_trig_in_b1,
+>>>> +	msm_mux_qpic_pad6,
+>>>> +	msm_mux_qpic_pad7,
+>>>> +	msm_mux_cxc0,
+>>>> +	msm_mux_mac13,
+>>>> +	msm_mux_qdss_cti_trig_in_a1,
+>>>> +	msm_mux_qdss_cti_trig_out_a1,
+>>>> +	msm_mux_wci22,
+>>>> +	msm_mux_qdss_cti_trig_in_a0,
+>>>> +	msm_mux_qpic_pad1,
+>>>> +	msm_mux_qdss_cti_trig_out_a0,
+>>>> +	msm_mux_qpic_pad2,
+>>>> +	msm_mux_qpic_pad3,
+>>>> +	msm_mux_qdss_traceclk_b,
+>>>> +	msm_mux_qpic_pad0,
+>>>> +	msm_mux_qdss_tracectl_b,
+>>>> +	msm_mux_qpic_pad8,
+>>>> +	msm_mux_pcm_zsi1,
+>>>> +	msm_mux_qdss_tracedata_b,
+>>>> +	msm_mux_led0,
+>>>> +	msm_mux_pwm04,
+>>>
+>>> What does "04" mean here?
+>>
+>> There are 4 Pulse Width Modulation channels, pwmXY is pwm channel X and pin
+>> Y.
+> 
+> So Y is alternative mux? Can we use letters for this as well?
 
+Ok
+
+>>>> +	msm_mux_led1,
+>>>> +	msm_mux_pwm14,
+>>>> +	msm_mux_led2,
+>>>> +	msm_mux_pwm24,
+>>>> +	msm_mux_pwm00,
+>>>> +	msm_mux_blsp4_uart1,
+>>>
+>>> Are uart0 vs uart1 alternative muxes?
+>>
+>> These are two different uarts available at two independent pins.
+>>
+> 
+> Ok, then I'm happy with the naming of this :)
+> 
+> Thanks,
+> Bjorn
+> 
+
+Thanks
+Varada
 -- 
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
---lfrikcicf257xyz4--
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora 
+Forum, a Linux Foundation Collaborative Project
