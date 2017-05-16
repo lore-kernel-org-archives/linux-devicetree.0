@@ -1,66 +1,57 @@
-From: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-Subject: Re: [PATCH 2/5] ARM: dts: use #include "..." to include DT in the
- same directory
-Date: Tue, 16 May 2017 20:53:17 +0900
-Message-ID: <CAK7LNARJGwPfYcEWb7O0OcazWN2i_PsSJ1+vspPAiTnnwUqjnQ@mail.gmail.com>
-References: <1494846888-18966-1-git-send-email-yamada.masahiro@socionext.com>
- <1494846888-18966-3-git-send-email-yamada.masahiro@socionext.com> <20170515131048.GW8471@dragon>
+From: Madalin Bucur <madalin.bucur-3arQi8VN3Tc@public.gmane.org>
+Subject: [PATCH 0/3] arm64: dts: introduce QorIQ DPAA 1.x FMan device tree nodes
+Date: Tue, 16 May 2017 15:07:20 +0300
+Message-ID: <1494936443-14869-1-git-send-email-madalin.bucur@nxp.com>
+Reply-To: <madalin.bucur-3arQi8VN3Tc@public.gmane.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170515131048.GW8471@dragon>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arch <linux-arch-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Gaurav Minocha <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Omar Sandoval <osandov-nWWhXC5lh1RBDgjK7y7TUQ@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, Madalin Bucur <madalin.bucur-3arQi8VN3Tc@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Shawn,
+This patch set introduces the QorIQ Data Path Acceleration Arhitecture
+(DPAA) Frame Manager device tree nodes for the ARM based DPAA 1.x platforms.
 
-2017-05-15 22:10 GMT+09:00 Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>:
-> Hi Masahiro,
->
-> On Mon, May 15, 2017 at 08:14:45PM +0900, Masahiro Yamada wrote:
->> Most of DT files in ARM use #include "..." to make pre-processor
->> include DT in the same directory, but we have 3 exceptional files
->> that use #include <...> for that.
->>
->> They must be fixed to remove -I$(srctree)/arch/$(SRCARCH)/boot/dts
->> path from dtc_cpp_flags.
->>
->> Signed-off-by: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
->> ---
->>
->>  arch/arm/boot/dts/imx6q-zii-rdu2.dts  | 4 ++--
->>  arch/arm/boot/dts/imx6qp-zii-rdu2.dts | 4 ++--
->
-> I see this patch depends on nothing and can be applied immediately.  But
-> versatile-pb.dts is not really in my charge.  In case you want to get
-> this series merged by arm-soc folks, here is my ACK:
->
-> Acked-by: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->
-> Or you need to split versatile-pb.dts out, and then I can take it.
->
-> Shawn
+Madalin Bucur (3):
+  arm64: dts: add DPAA FMan nodes
+  arm64: dts: add LS1043A DPAA FMan support
+  arm64: dts: add LS1046A DPAA FMan nodes
 
-
-This is needed for 4/5:
-https://patchwork.kernel.org/patch/9726697/
-
-Probably, no need to rush for this series.
-
-So, perhaps we can apply DT changes for v4.13 (by splitting per-platform),
-then Makefile changes for 4.14.
-
-I will wait for comments for a while (if any).
-
-
-
-
+ arch/arm64/boot/dts/freescale/fsl-ls1043-post.dtsi | 45 ++++++++++++
+ arch/arm64/boot/dts/freescale/fsl-ls1043a-qds.dts  |  2 +
+ arch/arm64/boot/dts/freescale/fsl-ls1043a-rdb.dts  | 73 +++++++++++++++++++
+ arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi     | 13 +++-
+ arch/arm64/boot/dts/freescale/fsl-ls1046-post.dtsi | 48 +++++++++++++
+ arch/arm64/boot/dts/freescale/fsl-ls1046a-qds.dts  |  2 +
+ arch/arm64/boot/dts/freescale/fsl-ls1046a-rdb.dts  | 60 ++++++++++++++++
+ arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi     | 11 ++-
+ .../boot/dts/freescale/qoriq-fman3-0-10g-0.dtsi    | 42 +++++++++++
+ .../boot/dts/freescale/qoriq-fman3-0-10g-1.dtsi    | 42 +++++++++++
+ .../boot/dts/freescale/qoriq-fman3-0-1g-0.dtsi     | 41 +++++++++++
+ .../boot/dts/freescale/qoriq-fman3-0-1g-1.dtsi     | 41 +++++++++++
+ .../boot/dts/freescale/qoriq-fman3-0-1g-2.dtsi     | 41 +++++++++++
+ .../boot/dts/freescale/qoriq-fman3-0-1g-3.dtsi     | 41 +++++++++++
+ .../boot/dts/freescale/qoriq-fman3-0-1g-4.dtsi     | 41 +++++++++++
+ .../boot/dts/freescale/qoriq-fman3-0-1g-5.dtsi     | 41 +++++++++++
+ arch/arm64/boot/dts/freescale/qoriq-fman3-0.dtsi   | 81 ++++++++++++++++++++++
+ 17 files changed, 663 insertions(+), 2 deletions(-)
+ create mode 100644 arch/arm64/boot/dts/freescale/fsl-ls1043-post.dtsi
+ create mode 100644 arch/arm64/boot/dts/freescale/fsl-ls1046-post.dtsi
+ create mode 100644 arch/arm64/boot/dts/freescale/qoriq-fman3-0-10g-0.dtsi
+ create mode 100644 arch/arm64/boot/dts/freescale/qoriq-fman3-0-10g-1.dtsi
+ create mode 100644 arch/arm64/boot/dts/freescale/qoriq-fman3-0-1g-0.dtsi
+ create mode 100644 arch/arm64/boot/dts/freescale/qoriq-fman3-0-1g-1.dtsi
+ create mode 100644 arch/arm64/boot/dts/freescale/qoriq-fman3-0-1g-2.dtsi
+ create mode 100644 arch/arm64/boot/dts/freescale/qoriq-fman3-0-1g-3.dtsi
+ create mode 100644 arch/arm64/boot/dts/freescale/qoriq-fman3-0-1g-4.dtsi
+ create mode 100644 arch/arm64/boot/dts/freescale/qoriq-fman3-0-1g-5.dtsi
+ create mode 100644 arch/arm64/boot/dts/freescale/qoriq-fman3-0.dtsi
 
 -- 
-Best Regards
-Masahiro Yamada
+2.1.0
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
