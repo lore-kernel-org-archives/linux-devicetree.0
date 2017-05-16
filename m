@@ -1,38 +1,45 @@
-From: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v8 0/4] Broadcom SBA RAID support
-Date: Tue, 16 May 2017 10:02:40 +0530
-Message-ID: <20170516043239.GH15061@localhost>
-References: <1494824695-21797-1-git-send-email-anup.patel@broadcom.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
+Subject: [PATCH RFC v2 0/2] Proposed device tree bindings for FSI bus
+Date: Tue, 16 May 2017 12:51:23 +0800
+Message-ID: <1494910285-20856-1-git-send-email-jk@ozlabs.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1494824695-21797-1-git-send-email-anup.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Anup Patel <anup.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>, "David S . Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Rob Rice <rob.rice-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-raid-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 15, 2017 at 10:34:51AM +0530, Anup Patel wrote:
-> The Broadcom SBA RAID is a stream-based device which provides
-> RAID5/6 offload.
-> 
-> It requires a SoC specific ring manager (such as Broadcom FlexRM
-> ring manager) to provide ring-based programming interface. Due to
-> this, the Broadcom SBA RAID driver (mailbox client) implements
-> DMA device having one DMA channel using a set of mailbox channels
-> provided by Broadcom SoC specific ring manager driver (mailbox
-> controller).
-> 
-> The Broadcom SBA RAID hardware requires PQ disk position instead
-> of PQ disk coefficient. To address this, we have added raid_gflog
-> table which will help driver to convert PQ disk coefficient to PQ
-> disk position.
+This series adds a binding specification and implementation for matching
+device tree nodes to probed FSI busses.
 
-Applied, now
+Version 2 includes feedback from Brad Bishop, Eddie James and Rob
+Herring, and introduces the implementation of the matching in the FSI
+core.
+
+Note that the FSI core (on which patch 2/2 is based) is still pending
+upstream acceptance through lkml, so I'm mostly looking for a first-pass
+review of DT changes at this stage. Once that's done (and the FSI core is
+merged), I'll submit upstream via lkml.
+
+Cheers,
+
+
+Jeremy
+
+---
+Jeremy Kerr (2):
+  Documentation/devicetree: Add specification for FSI busses
+  fsi: Match fsi slaves & engines to available device tree nodes
+
+ Documentation/devicetree/bindings/fsi/fsi.txt | 144 ++++++++++++++++++++++++++
+ drivers/fsi/fsi-core.c                        |  99 ++++++++++++++++++
+ drivers/fsi/fsi-master-gpio.c                 |   4 +
+ drivers/fsi/fsi-master-hub.c                  |   4 +
+ 4 files changed, 251 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/fsi/fsi.txt
 
 -- 
-~Vinod
+2.7.4
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
