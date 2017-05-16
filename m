@@ -1,50 +1,50 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH 1/2] dt/bindings: display: fix display-timing reference
-Date: Tue, 16 May 2017 11:31:33 +0300
-Message-ID: <2147504.7N3R8UMBTy@avalon>
-References: <eabeec88c2831eb8541b78a4977ee7342b810b39.1494922745.git.baruch@tkos.co.il>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <eabeec88c2831eb8541b78a4977ee7342b810b39.1494922745.git.baruch@tkos.co.il>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Baruch Siach <baruch@tkos.co.il>
-Cc: devicetree@vger.kernel.org, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, dri-devel@lists.freedesktop.org
+From: Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH 1/2] binding for stm32 cec driver
+Date: Tue, 16 May 2017 11:01:19 +0200
+Message-ID: <1494925280-4527-2-git-send-email-benjamin.gaignard@linaro.org>
+References: <1494925280-4527-1-git-send-email-benjamin.gaignard@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1494925280-4527-1-git-send-email-benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: yannick.ferte-qxv4g6HH51o@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org
+Cc: Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgQmFydWNoLAoKVGhhbmsgeW91IGZvciB0aGUgcGF0Y2guCgpPbiBUdWVzZGF5IDE2IE1heSAy
-MDE3IDExOjE5OjA0IEJhcnVjaCBTaWFjaCB3cm90ZToKCkEgY29tbWl0IG1lc3NhZ2UgYm9keSB3
-b3VsZCBiZSBuaWNlLgoKPiBGaXhlczogMTRkYTNlZDhkZDA4ICgiZGV2aWNldHJlZS9iaW5kaW5n
-czogZGlzcGxheTogRG9jdW1lbnQgY29tbW9uIHBhbmVsCj4gcHJvcGVydGllcyIpCj4gQ2M6IExh
-dXJlbnQgUGluY2hhcnQgPGxhdXJlbnQucGluY2hhcnQrcmVuZXNhc0BpZGVhc29uYm9hcmQuY29t
-Pgo+IENjOiBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3JnPgo+IFNpZ25lZC1vZmYtYnk6IEJh
-cnVjaCBTaWFjaCA8YmFydWNoQHRrb3MuY28uaWw+Cj4gLS0tCj4gIERvY3VtZW50YXRpb24vZGV2
-aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL3BhbmVsLWNvbW1vbi50eHQgfCAyICstCj4g
-IDEgZmlsZSBjaGFuZ2VkLCAxIGluc2VydGlvbigrKSwgMSBkZWxldGlvbigtKQo+IAo+IGRpZmYg
-LS1naXQKPiBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVs
-L3BhbmVsLWNvbW1vbi50eHQKPiBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9k
-aXNwbGF5L3BhbmVsL3BhbmVsLWNvbW1vbi50eHQgaW5kZXgKPiBlYzUyYzQ3MmM4NDUuLjA2MDNh
-Zjg3NzE1NSAxMDA2NDQKPiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
-ZGlzcGxheS9wYW5lbC9wYW5lbC1jb21tb24udHh0Cj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZp
-Y2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvcGFuZWwtY29tbW9uLnR4dAo+IEBAIC0zOCw3
-ICszOCw3IEBAIERpc3BsYXkgVGltaW5ncwo+ICAgIHJlcXVpcmUgc3BlY2lmaWMgZGlzcGxheSB0
-aW1pbmdzLiBUaGUgcGFuZWwtdGltaW5nIHN1Ym5vZGUgZXhwcmVzc2VzCj4gdGhvc2UgdGltaW5n
-cyBhcyBzcGVjaWZpZWQgaW4gdGhlIHRpbWluZyBzdWJub2RlIHNlY3Rpb24gb2YgdGhlIGRpc3Bs
-YXkKPiB0aW1pbmcgYmluZGluZ3MgZGVmaW5lZCBpbgo+IC0gIERvY3VtZW50YXRpb24vZGV2aWNl
-dHJlZS9iaW5kaW5ncy9kaXNwbGF5L2Rpc3BsYXktdGltaW5nLnR4dC4KPiArICBEb2N1bWVudGF0
-aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9kaXNwbGF5LXRpbWluZy50eHQu
-CgpNeSBiYWQuCgpBY2tlZC1ieTogTGF1cmVudCBQaW5jaGFydCA8bGF1cmVudC5waW5jaGFydEBp
-ZGVhc29uYm9hcmQuY29tPgoKPiAKPiAKPiAgQ29ubmVjdGl2aXR5CgotLSAKUmVnYXJkcywKCkxh
-dXJlbnQgUGluY2hhcnQKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9w
-Lm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1k
-ZXZlbAo=
+Signed-off-by: Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+---
+ .../devicetree/bindings/media/st,stm32-cec.txt        | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/st,stm32-cec.txt
+
+diff --git a/Documentation/devicetree/bindings/media/st,stm32-cec.txt b/Documentation/devicetree/bindings/media/st,stm32-cec.txt
+new file mode 100644
+index 0000000..6be2381
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/st,stm32-cec.txt
+@@ -0,0 +1,19 @@
++STMicroelectronics STM32 CEC driver
++
++Required properties:
++ - compatible : value should be "st,stm32-cec"
++ - reg : Physical base address of the IP registers and length of memory
++	 mapped region.
++ - clocks : from common clock binding: handle to CEC clocks
++ - clock-names : from common clock binding: must be "cec" and "hdmi-cec".
++ - interrupts : CEC interrupt number to the CPU.
++
++Example for stm32f746:
++
++cec: cec@40006c00 {
++	compatible = "st,stm32-cec";
++	reg = <0x40006C00 0x400>;
++	interrupts = <94>;
++	clocks = <&rcc 0 STM32F7_APB1_CLOCK(CEC)>, <&rcc 1 CLK_HDMI_CEC>;
++	clock-names = "cec", "hdmi-cec";
++};
+-- 
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
