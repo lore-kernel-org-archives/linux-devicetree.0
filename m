@@ -1,468 +1,425 @@
-From: Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v2 2/2] cec: add STM32 cec driver
-Date: Tue, 16 May 2017 14:56:23 +0200
-Message-ID: <1494939383-18937-3-git-send-email-benjamin.gaignard@linaro.org>
-References: <1494939383-18937-1-git-send-email-benjamin.gaignard@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1494939383-18937-1-git-send-email-benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: yannick.fertre-qxv4g6HH51o@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org
-Cc: Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [RESEND PATCH v5 2/3] phy:phy-bcm-ns2-usbdrd:Broadcom USB DRD Phy
+ driver for Northstar2
+Date: Tue, 16 May 2017 18:33:57 +0530
+Message-ID: <c436ff4a-ea1d-fb1d-68a0-ff792d2b99a4@ti.com>
+References: <1494399267-21691-1-git-send-email-raviteja.garimella@broadcom.com>
+ <1494399267-21691-3-git-send-email-raviteja.garimella@broadcom.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1494399267-21691-3-git-send-email-raviteja.garimella@broadcom.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Raviteja Garimella <raviteja.garimella@broadcom.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This patch add cec driver for STM32 platforms.
-cec hardware block isn't not always used with hdmi so
-cec notifier is not implemented. That will be done later
-when STM32 DSI driver will be available.
+Hi,
 
-Driver compliance has been tested with cec-ctl and cec-compliance
-tools.
+On Wednesday 10 May 2017 12:24 PM, Raviteja Garimella wrote:
+> This is driver for USB DRD Phy used in Broadcom's Northstar2
+> SoC. The phy can be configured to be in Device mode or Host
+> mode based on the type of cable connected to the port. The
+> driver registers to  extcon framework to get appropriate
+> connect events for Host/Device cables connect/disconnect
+> states based on VBUS and ID interrupts.
+> 
+> Signed-off-by: Raviteja Garimella <raviteja.garimella@broadcom.com>
+> ---
+>  drivers/phy/Kconfig              |  13 +
+>  drivers/phy/Makefile             |   1 +
+>  drivers/phy/phy-bcm-ns2-usbdrd.c | 595 +++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 609 insertions(+)
+>  create mode 100644 drivers/phy/phy-bcm-ns2-usbdrd.c
+> 
+> diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
+> index 005cadb..c9de9a9 100644
+> --- a/drivers/phy/Kconfig
+> +++ b/drivers/phy/Kconfig
+> @@ -488,6 +488,19 @@ config PHY_CYGNUS_PCIE
+>  	  Enable this to support the Broadcom Cygnus PCIe PHY.
+>  	  If unsure, say N.
+>  
+> +config PHY_NS2_USB_DRD
+> +	tristate "Broadcom Northstar2 USB DRD PHY support"
+> +	depends on OF && (ARCH_BCM_IPROC || COMPILE_TEST)
+> +	select GENERIC_PHY
+> +	select EXTCON
+> +	default ARCH_BCM_IPROC
+> +	help
+> +	  Enable this to support the Broadcom Northstar2 USB DRD PHY.
+> +	  This driver initializes the PHY in either HOST or DEVICE mode.
+> +	  The host or device configuration is read from device tree.
+> +
+> +	  If unsure, say N.
+> +
+>  source "drivers/phy/tegra/Kconfig"
+>  
+>  config PHY_NS2_PCIE
+> diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile
+> index dd8f3b5..9285f88 100644
+> --- a/drivers/phy/Makefile
+> +++ b/drivers/phy/Makefile
+> @@ -59,6 +59,7 @@ obj-$(CONFIG_PHY_TUSB1210)		+= phy-tusb1210.o
+>  obj-$(CONFIG_PHY_BRCM_SATA)		+= phy-brcm-sata.o
+>  obj-$(CONFIG_PHY_PISTACHIO_USB)		+= phy-pistachio-usb.o
+>  obj-$(CONFIG_PHY_CYGNUS_PCIE)		+= phy-bcm-cygnus-pcie.o
+> +obj-$(CONFIG_PHY_NS2_USB_DRD)		+= phy-bcm-ns2-usbdrd.o
+>  obj-$(CONFIG_ARCH_TEGRA) += tegra/
+>  obj-$(CONFIG_PHY_NS2_PCIE)		+= phy-bcm-ns2-pcie.o
+>  obj-$(CONFIG_PHY_MESON8B_USB2)		+= phy-meson8b-usb2.o
+> diff --git a/drivers/phy/phy-bcm-ns2-usbdrd.c b/drivers/phy/phy-bcm-ns2-usbdrd.c
+> new file mode 100644
+> index 0000000..92b68b1
+> --- /dev/null
+> +++ b/drivers/phy/phy-bcm-ns2-usbdrd.c
+> @@ -0,0 +1,595 @@
+> +/*
+> + * Copyright (C) 2016 Broadcom
+> + *
+> + * This program is free software; you can redistribute it and/or
+> + * modify it under the terms of the GNU General Public License as
+> + * published by the Free Software Foundation version 2.
+> + *
+> + * This program is distributed "as is" WITHOUT ANY WARRANTY of any
+> + * kind, whether express or implied; without even the implied warranty
+> + * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + */
+> +
+> +#include <linux/delay.h>
+> +#include <linux/extcon.h>
+> +#include <linux/gpio.h>
+> +#include <linux/gpio/consumer.h>
+> +#include <linux/init.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/io.h>
+> +#include <linux/irq.h>
+> +#include <linux/mfd/syscon.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/of_address.h>
+> +#include <linux/phy/phy.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/regmap.h>
+> +#include <linux/slab.h>
+> +#include <linux/workqueue.h>
+> +
+> +#define ICFG_DRD_AFE		0x0
+> +#define ICFG_MISC_STAT		0x18
+> +#define ICFG_DRD_P0CTL		0x1C
+> +#define ICFG_STRAP_CTRL		0x20
+> +#define ICFG_FSM_CTRL		0x24
+> +
+> +#define ICFG_DEV_BIT		BIT(2)
+> +#define IDM_RST_BIT		BIT(0)
+> +#define AFE_CORERDY_VDDC	BIT(18)
+> +#define PHY_PLL_RESETB		BIT(15)
+> +#define PHY_RESETB		BIT(14)
+> +#define PHY_PLL_LOCK		BIT(0)
+> +
+> +#define DRD_DEV_MODE		BIT(20)
+> +#define OHCI_OVRCUR_POL		BIT(11)
+> +#define ICFG_OFF_MODE		BIT(6)
+> +#define PLL_LOCK_RETRY		1000
+> +
+> +#define EVT_DEVICE		0
+> +#define EVT_HOST		1
+> +#define EVT_IDLE		2
+> +
+> +#define DRD_HOST_MODE		(BIT(2) | BIT(3))
+> +#define DRD_DEVICE_MODE		(BIT(4) | BIT(5))
+> +#define DRD_HOST_VAL		0x803
+> +#define DRD_DEV_VAL		0x807
+> +#define GPIO_DELAY		20
+> +#define PHY_WQ_DELAY		msecs_to_jiffies(600)
+> +
+> +struct ns2_phy_data;
+> +struct ns2_phy_driver {
+> +	void __iomem *icfgdrd_regs;
+> +	void __iomem *idmdrd_rst_ctrl;
+> +	void __iomem *crmu_usb2_ctrl;
+> +	void __iomem *usb2h_strap_reg;
+> +	spinlock_t lock; /* spin lock for phy driver */
+> +	struct ns2_phy_data *data;
+> +	struct extcon_specific_cable_nb extcon_dev;
+> +	struct extcon_specific_cable_nb extcon_host;
+> +	struct notifier_block host_nb;
+> +	struct notifier_block dev_nb;
+> +	struct delayed_work conn_work;
+> +	struct extcon_dev *edev;
+> +	struct gpio_desc *vbus_gpiod;
+> +	struct gpio_desc *id_gpiod;
+> +	int id_irq;
+> +	int vbus_irq;
+> +	unsigned long debounce_jiffies;
+> +	struct delayed_work wq_extcon;
+> +};
+> +
+> +struct ns2_phy_data {
+> +	struct ns2_phy_driver *driver;
+> +	struct phy *phy;
+> +	int new_state;
+> +};
+> +
+> +static const unsigned int usb_extcon_cable[] = {
+> +	EXTCON_USB,
+> +	EXTCON_USB_HOST,
+> +	EXTCON_NONE,
+> +};
+> +
+> +static inline int pll_lock_stat(u32 usb_reg, int reg_mask,
+> +				struct ns2_phy_driver *driver)
+> +{
+> +	int retry = PLL_LOCK_RETRY;
+> +	u32 val;
+> +
+> +	do {
+> +		udelay(1);
+> +		val = readl(driver->icfgdrd_regs + usb_reg);
+> +		if (val & reg_mask)
+> +			return 0;
+> +	} while (--retry > 0);
+> +
+> +	return -EBUSY;
+> +}
+> +
+> +static int ns2_drd_phy_init(struct phy *phy)
+> +{
+> +	struct ns2_phy_data *data = phy_get_drvdata(phy);
+> +	struct ns2_phy_driver *driver = data->driver;
+> +	unsigned long flags;
+> +	u32 val;
+> +
+> +	spin_lock_irqsave(&driver->lock, flags);
 
-Signed-off-by: Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Signed-off-by: Yannick Fertre <yannick.fertre-qxv4g6HH51o@public.gmane.org>
----
- drivers/media/platform/Kconfig           |  11 +
- drivers/media/platform/Makefile          |   2 +
- drivers/media/platform/stm32/Makefile    |   1 +
- drivers/media/platform/stm32/stm32-cec.c | 384 +++++++++++++++++++++++++++++++
- 4 files changed, 398 insertions(+)
- create mode 100644 drivers/media/platform/stm32/Makefile
- create mode 100644 drivers/media/platform/stm32/stm32-cec.c
+Why do you need this spin_lock?
+> +
+> +	val = readl(driver->icfgdrd_regs + ICFG_FSM_CTRL);
+> +
+> +	if (data->new_state == EVT_HOST) {
+> +		val &= ~DRD_DEVICE_MODE;
+> +		val |= DRD_HOST_MODE;
+> +	} else {
+> +		val &= ~DRD_HOST_MODE;
+> +		val |= DRD_DEVICE_MODE;
+> +	}
+> +	writel(val, driver->icfgdrd_regs + ICFG_FSM_CTRL);
+> +
+> +	spin_unlock_irqrestore(&driver->lock, flags);
+> +	return 0;
+> +}
+> +
+> +static int ns2_drd_phy_shutdown(struct phy *phy)
+> +{
+> +	struct ns2_phy_data *data = phy_get_drvdata(phy);
+> +	struct ns2_phy_driver *driver = data->driver;
+> +	unsigned long flags;
+> +	u32 val;
+> +
+> +	spin_lock_irqsave(&driver->lock, flags);
 
-diff --git a/drivers/media/platform/Kconfig b/drivers/media/platform/Kconfig
-index ac026ee..72efe34 100644
---- a/drivers/media/platform/Kconfig
-+++ b/drivers/media/platform/Kconfig
-@@ -519,4 +519,15 @@ config VIDEO_STI_HDMI_CEC
-          CEC bus is present in the HDMI connector and enables communication
-          between compatible devices.
- 
-+config VIDEO_STM32_HDMI_CEC
-+       tristate "STMicroelectronics STM32 HDMI CEC driver"
-+       depends on CEC_CORE && (ARCH_STM32 || COMPILE_TEST)
-+       select REGMAP
-+       select REGMAP_MMIO
-+       ---help---
-+         This is a driver for STM32 interface. It uses the
-+         generic CEC framework interface.
-+         CEC bus is present in the HDMI connector and enables communication
-+         between compatible devices.
-+
- endif #CEC_PLATFORM_DRIVERS
-diff --git a/drivers/media/platform/Makefile b/drivers/media/platform/Makefile
-index 63303d6..7cd9965 100644
---- a/drivers/media/platform/Makefile
-+++ b/drivers/media/platform/Makefile
-@@ -44,6 +44,8 @@ obj-$(CONFIG_VIDEO_STI_HDMI_CEC) 	+= sti/cec/
- 
- obj-$(CONFIG_VIDEO_STI_DELTA)		+= sti/delta/
- 
-+obj-$(CONFIG_VIDEO_STM32_HDMI_CEC) 	+= stm32/
-+
- obj-$(CONFIG_BLACKFIN)                  += blackfin/
- 
- obj-$(CONFIG_ARCH_DAVINCI)		+= davinci/
-diff --git a/drivers/media/platform/stm32/Makefile b/drivers/media/platform/stm32/Makefile
-new file mode 100644
-index 0000000..632b04c
---- /dev/null
-+++ b/drivers/media/platform/stm32/Makefile
-@@ -0,0 +1 @@
-+obj-$(CONFIG_VIDEO_STM32_HDMI_CEC) += stm32-cec.o
-diff --git a/drivers/media/platform/stm32/stm32-cec.c b/drivers/media/platform/stm32/stm32-cec.c
-new file mode 100644
-index 0000000..9de3f1d
---- /dev/null
-+++ b/drivers/media/platform/stm32/stm32-cec.c
-@@ -0,0 +1,384 @@
-+/*
-+ * STM32 CEC driver
-+ * Copyright (C) STMicroelectronics SA 2017
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ */
-+
-+#include <linux/clk.h>
-+#include <linux/interrupt.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_device.h>
-+#include <linux/platform_device.h>
-+#include <linux/regmap.h>
-+
-+#include <media/cec.h>
-+
-+#define CEC_NAME	"stm32-cec"
-+
-+/* CEC registers  */
-+#define CEC_CR		0x0000 /* Control Register */
-+#define CEC_CFGR	0x0004 /* ConFiGuration Register */
-+#define CEC_TXDR	0x0008 /* Rx data Register */
-+#define CEC_RXDR	0x000C /* Rx data Register */
-+#define CEC_ISR		0x0010 /* Interrupt and status Register */
-+#define CEC_IER		0x0014 /* Interrupt enable Register */
-+
-+#define TXEOM		BIT(2)
-+#define TXSOM		BIT(1)
-+#define CECEN		BIT(0)
-+
-+#define LSTN		BIT(31)
-+#define OAR		GENMASK(30, 16)
-+#define SFTOP		BIT(8)
-+#define BRDNOGEN	BIT(7)
-+#define LBPEGEN		BIT(6)
-+#define BREGEN		BIT(5)
-+#define BRESTP		BIT(4)
-+#define RXTOL		BIT(3)
-+#define SFT		GENMASK(2, 0)
-+#define FULL_CFG	(LSTN | SFTOP | BRDNOGEN | LBPEGEN | BREGEN | BRESTP \
-+			 | RXTOL | SFT | BRDNOGEN)
-+
-+#define TXACKE		BIT(12)
-+#define TXERR		BIT(11)
-+#define TXUDR		BIT(10)
-+#define TXEND		BIT(9)
-+#define TXBR		BIT(8)
-+#define ARBLST		BIT(7)
-+#define RXACKE		BIT(6)
-+#define RXOVR		BIT(2)
-+#define RXEND		BIT(1)
-+#define RXBR		BIT(0)
-+
-+#define ALL_TX_IT	(TXEND | TXBR | TXACKE | TXERR | TXUDR | ARBLST)
-+#define ALL_RX_IT	(RXEND | RXBR | RXACKE | RXOVR)
-+
-+struct stm32_cec {
-+	struct cec_adapter	*adap;
-+	struct device		*dev;
-+	struct clk		*clk_cec;
-+	struct clk		*clk_hdmi_cec;
-+	struct reset_control	*rstc;
-+	struct regmap		*regmap;
-+	int			irq;
-+	u32			irq_status;
-+	struct cec_msg		rx_msg;
-+	struct cec_msg		tx_msg;
-+	int			tx_cnt;
-+};
-+
-+static void cec_hw_init(struct stm32_cec *cec)
-+{
-+	regmap_update_bits(cec->regmap, CEC_CR, TXEOM | TXSOM | CECEN, 0);
-+
-+	regmap_update_bits(cec->regmap, CEC_IER, ALL_TX_IT | ALL_RX_IT,
-+			   ALL_TX_IT | ALL_RX_IT);
-+
-+	regmap_update_bits(cec->regmap, CEC_CFGR, FULL_CFG, FULL_CFG);
-+}
-+
-+static void stm32_tx_done(struct stm32_cec *cec, u32 status)
-+{
-+	if (status & (TXERR | TXUDR)) {
-+		cec_transmit_done(cec->adap, CEC_TX_STATUS_ERROR,
-+				  0, 0, 0, 1);
-+		return;
-+	}
-+
-+	if (status & ARBLST) {
-+		cec_transmit_done(cec->adap, CEC_TX_STATUS_ARB_LOST,
-+				  1, 0, 0, 0);
-+		return;
-+	}
-+
-+	if (status & TXACKE) {
-+		cec_transmit_done(cec->adap, CEC_TX_STATUS_NACK,
-+				  0, 1, 0, 0);
-+		return;
-+	}
-+
-+	if (cec->irq_status & TXBR) {
-+		/* send next byte */
-+		if (cec->tx_cnt < cec->tx_msg.len)
-+			regmap_write(cec->regmap, CEC_TXDR,
-+				     cec->tx_msg.msg[cec->tx_cnt++]);
-+
-+		/* TXEOM is set to command transmission of the last byte */
-+		if (cec->tx_cnt == cec->tx_msg.len)
-+			regmap_update_bits(cec->regmap, CEC_CR, TXEOM, TXEOM);
-+	}
-+
-+	if (cec->irq_status & TXEND)
-+		cec_transmit_done(cec->adap, CEC_TX_STATUS_OK, 0, 0, 0, 0);
-+}
-+
-+static void stm32_rx_done(struct stm32_cec *cec, u32 status)
-+{
-+	if (cec->irq_status & (RXACKE | RXOVR)) {
-+		cec->rx_msg.len = 0;
-+		return;
-+	}
-+
-+	if (cec->irq_status & RXBR) {
-+		u32 val;
-+
-+		regmap_read(cec->regmap, CEC_RXDR, &val);
-+		cec->rx_msg.msg[cec->rx_msg.len++] = val & 0xFF;
-+	}
-+
-+	if (cec->irq_status & RXEND) {
-+		cec_received_msg(cec->adap, &cec->rx_msg);
-+		cec->rx_msg.len = 0;
-+	}
-+}
-+
-+static irqreturn_t stm32_cec_irq_thread(int irq, void *arg)
-+{
-+	struct stm32_cec *cec = arg;
-+
-+	if (cec->irq_status & ALL_TX_IT)
-+		stm32_tx_done(cec, cec->irq_status);
-+
-+	if (cec->irq_status & ALL_RX_IT)
-+		stm32_rx_done(cec, cec->irq_status);
-+
-+	cec->irq_status = 0;
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static irqreturn_t stm32_cec_irq_handler(int irq, void *arg)
-+{
-+	struct stm32_cec *cec = arg;
-+
-+	regmap_read(cec->regmap, CEC_ISR, &cec->irq_status);
-+
-+	regmap_update_bits(cec->regmap, CEC_ISR,
-+			   ALL_TX_IT | ALL_RX_IT,
-+			   ALL_TX_IT | ALL_RX_IT);
-+
-+	return IRQ_WAKE_THREAD;
-+}
-+
-+static int stm32_cec_adap_enable(struct cec_adapter *adap, bool enable)
-+{
-+	struct stm32_cec *cec = adap->priv;
-+	int ret = 0;
-+
-+	if (enable) {
-+		ret = clk_enable(cec->clk_cec);
-+		if (ret)
-+			dev_err(cec->dev, "fail to enable cec clock\n");
-+
-+		clk_enable(cec->clk_hdmi_cec);
-+		regmap_update_bits(cec->regmap, CEC_CR, CECEN, CECEN);
-+	} else {
-+		clk_disable(cec->clk_cec);
-+		clk_disable(cec->clk_hdmi_cec);
-+		regmap_update_bits(cec->regmap, CEC_CR, CECEN, 0);
-+	}
-+
-+	return ret;
-+}
-+
-+static int stm32_cec_adap_log_addr(struct cec_adapter *adap, u8 logical_addr)
-+{
-+	struct stm32_cec *cec = adap->priv;
-+
-+	regmap_update_bits(cec->regmap, CEC_CR, CECEN, 0);
-+
-+	if (logical_addr == CEC_LOG_ADDR_INVALID)
-+		regmap_update_bits(cec->regmap, CEC_CFGR, OAR, 0);
-+	else
-+		regmap_update_bits(cec->regmap, CEC_CFGR, OAR,
-+				   (1 << logical_addr) << 16);
-+
-+	regmap_update_bits(cec->regmap, CEC_CR, CECEN, CECEN);
-+
-+	return 0;
-+}
-+
-+static int stm32_cec_adap_transmit(struct cec_adapter *adap, u8 attempts,
-+				   u32 signal_free_time, struct cec_msg *msg)
-+{
-+	struct stm32_cec *cec = adap->priv;
-+
-+	/* Copy message */
-+	cec->tx_msg = *msg;
-+	cec->tx_cnt = 0;
-+
-+	/*
-+	 * If the CEC message consists of only one byte,
-+	 * TXEOM must be set before of TXSOM.
-+	 */
-+	if (cec->tx_msg.len == 1)
-+		regmap_update_bits(cec->regmap, CEC_CR, TXEOM, TXEOM);
-+
-+	/* TXSOM is set to command transmission of the first byte */
-+	regmap_update_bits(cec->regmap, CEC_CR, TXSOM, TXSOM);
-+
-+	/* Write the header (first byte of message) */
-+	regmap_write(cec->regmap, CEC_TXDR, cec->tx_msg.msg[0]);
-+	cec->tx_cnt++;
-+
-+	return 0;
-+}
-+
-+static int stm32_cec_monitor_all(struct cec_adapter *adap, bool enable)
-+{
-+	struct stm32_cec *cec = adap->priv;
-+
-+	regmap_update_bits(cec->regmap, CEC_CR, CECEN, 0);
-+
-+	if (enable) {
-+		regmap_update_bits(cec->regmap, CEC_CFGR, OAR, OAR);
-+		regmap_update_bits(cec->regmap, CEC_CFGR, LSTN, 0);
-+	} else {
-+		regmap_update_bits(cec->regmap, CEC_CFGR, OAR, 0);
-+		regmap_update_bits(cec->regmap, CEC_CFGR, LSTN, LSTN);
-+	}
-+
-+	regmap_update_bits(cec->regmap, CEC_CR, CECEN, CECEN);
-+
-+	return 0;
-+}
-+
-+static const struct cec_adap_ops stm32_cec_adap_ops = {
-+	.adap_enable = stm32_cec_adap_enable,
-+	.adap_log_addr = stm32_cec_adap_log_addr,
-+	.adap_transmit = stm32_cec_adap_transmit,
-+	.adap_monitor_all_enable = stm32_cec_monitor_all,
-+};
-+
-+static const struct regmap_config stm32_cec_regmap_cfg = {
-+	.reg_bits = 32,
-+	.val_bits = 32,
-+	.reg_stride = sizeof(u32),
-+	.max_register = 0x14,
-+	.fast_io = true,
-+};
-+
-+static int stm32_cec_probe(struct platform_device *pdev)
-+{
-+	struct resource *res;
-+	struct stm32_cec *cec;
-+	void __iomem *mmio;
-+	int ret;
-+
-+	cec = devm_kzalloc(&pdev->dev, sizeof(*cec), GFP_KERNEL);
-+	if (!cec)
-+		return -ENOMEM;
-+
-+	cec->dev = &pdev->dev;
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	mmio = devm_ioremap_resource(&pdev->dev, res);
-+	if (IS_ERR(mmio))
-+		return PTR_ERR(mmio);
-+
-+	cec->regmap = devm_regmap_init_mmio_clk(&pdev->dev, "cec", mmio,
-+						&stm32_cec_regmap_cfg);
-+
-+	if (IS_ERR(cec->regmap))
-+		return PTR_ERR(cec->regmap);
-+
-+	cec->irq = platform_get_irq(pdev, 0);
-+	if (cec->irq < 0)
-+		return cec->irq;
-+
-+	ret = devm_request_threaded_irq(&pdev->dev, cec->irq,
-+					stm32_cec_irq_handler,
-+					stm32_cec_irq_thread,
-+					0,
-+					pdev->name, cec);
-+	if (ret)
-+		return ret;
-+
-+	cec->clk_cec = devm_clk_get(&pdev->dev, "cec");
-+	if (IS_ERR(cec->clk_cec)) {
-+		dev_err(&pdev->dev, "Cannot get cec clock\n");
-+		return PTR_ERR(cec->clk_cec);
-+	}
-+
-+	ret = clk_prepare(cec->clk_cec);
-+	if (ret) {
-+		dev_err(&pdev->dev, "Unable to prepare cec clock\n");
-+		return ret;
-+	}
-+
-+	cec->clk_hdmi_cec = devm_clk_get(&pdev->dev, "hdmi-cec");
-+	if (!IS_ERR(cec->clk_hdmi_cec)) {
-+		ret = clk_prepare(cec->clk_hdmi_cec);
-+		if (ret) {
-+			dev_err(&pdev->dev, "Unable to prepare hdmi-cec clock\n");
-+			return ret;
-+		}
-+	}
-+
-+	/*
-+	 * CEC_CAP_PHYS_ADDR could be removed when a cec notifier is available
-+	 */
-+	cec->adap = cec_allocate_adapter(&stm32_cec_adap_ops, cec,
-+			CEC_NAME,
-+			CEC_CAP_LOG_ADDRS | CEC_CAP_PASSTHROUGH |
-+			CEC_CAP_PHYS_ADDR | CEC_CAP_TRANSMIT |
-+			CEC_CAP_RC | CEC_MODE_MONITOR_ALL,
-+			CEC_MAX_LOG_ADDRS);
-+	ret = PTR_ERR_OR_ZERO(cec->adap);
-+	if (ret)
-+		return ret;
-+
-+	ret = cec_register_adapter(cec->adap, &pdev->dev);
-+	if (ret) {
-+		cec_delete_adapter(cec->adap);
-+		return ret;
-+	}
-+
-+	cec_hw_init(cec);
-+
-+	platform_set_drvdata(pdev, cec);
-+
-+	return 0;
-+}
-+
-+static int stm32_cec_remove(struct platform_device *pdev)
-+{
-+	struct stm32_cec *cec = platform_get_drvdata(pdev);
-+
-+	clk_unprepare(cec->clk_cec);
-+	clk_unprepare(cec->clk_hdmi_cec);
-+
-+	cec_unregister_adapter(cec->adap);
-+
-+	cec_delete_adapter(cec->adap);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id stm32_cec_of_match[] = {
-+	{ .compatible = "st,stm32-cec" },
-+	{ /* end node */ }
-+};
-+MODULE_DEVICE_TABLE(of, stm32_cec_of_match);
-+
-+static struct platform_driver stm32_cec_driver = {
-+	.probe  = stm32_cec_probe,
-+	.remove = stm32_cec_remove,
-+	.driver = {
-+		.name		= CEC_NAME,
-+		.of_match_table = stm32_cec_of_match,
-+	},
-+};
-+
-+module_platform_driver(stm32_cec_driver);
-+
-+MODULE_AUTHOR("Benjamin Gaignard <benjamin.gaignard-qxv4g6HH51o@public.gmane.org>");
-+MODULE_AUTHOR("Yannick Fertre <yannick.fertre-qxv4g6HH51o@public.gmane.org>");
-+MODULE_DESCRIPTION("STMicroelectronics STM32 Consumer Electronics Control");
-+MODULE_LICENSE("GPL v2");
--- 
-1.9.1
+here too..
+> +
+> +	val = readl(driver->crmu_usb2_ctrl);
+> +	val &= ~AFE_CORERDY_VDDC;
+> +	writel(val, driver->crmu_usb2_ctrl);
+> +
+> +	val = readl(driver->crmu_usb2_ctrl);
+> +	val &= ~DRD_DEV_MODE;
+> +	writel(val, driver->crmu_usb2_ctrl);
+> +
+> +	/* Disable Host and Device Mode */
+> +	val = readl(driver->icfgdrd_regs + ICFG_FSM_CTRL);
+> +	val &= ~(DRD_HOST_MODE | DRD_DEVICE_MODE | ICFG_OFF_MODE);
+> +	writel(val, driver->icfgdrd_regs + ICFG_FSM_CTRL);
+> +
+> +	spin_unlock_irqrestore(&driver->lock, flags);
+> +	return 0;
+> +}
+> +
+> +static int ns2_drd_phy_poweron(struct phy *phy)
+> +{
+> +	struct ns2_phy_data *data = phy_get_drvdata(phy);
+> +	struct ns2_phy_driver *driver = data->driver;
+> +	u32 extcon_event = data->new_state;
+> +	unsigned long flags;
+> +	int ret;
+> +	u32 val;
+> +
+> +	spin_lock_irqsave(&driver->lock, flags);
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+same here..
+> +	if (extcon_event == EVT_DEVICE) {
+> +		writel(DRD_DEV_VAL, driver->icfgdrd_regs + ICFG_DRD_P0CTL);
+> +
+> +		val = readl(driver->icfgdrd_regs + ICFG_FSM_CTRL);
+> +		val &= ~(DRD_HOST_MODE | ICFG_OFF_MODE);
+> +		val |= DRD_DEVICE_MODE;
+> +		writel(val, driver->icfgdrd_regs + ICFG_FSM_CTRL);
+> +
+> +		val = readl(driver->idmdrd_rst_ctrl);
+> +		val &= ~IDM_RST_BIT;
+> +		writel(val, driver->idmdrd_rst_ctrl);
+> +
+> +		val = readl(driver->crmu_usb2_ctrl);
+> +		val |= (AFE_CORERDY_VDDC | DRD_DEV_MODE);
+> +		writel(val, driver->crmu_usb2_ctrl);
+> +
+> +		/* Bring PHY and PHY_PLL out of Reset */
+> +		val = readl(driver->crmu_usb2_ctrl);
+> +		val |= (PHY_PLL_RESETB | PHY_RESETB);
+> +		writel(val, driver->crmu_usb2_ctrl);
+> +
+> +		ret = pll_lock_stat(ICFG_MISC_STAT, PHY_PLL_LOCK, driver);
+> +		if (ret < 0) {
+> +			dev_err(&phy->dev, "Phy PLL lock failed\n");
+> +			goto err_shutdown;
+> +		}
+> +	} else {
+> +		writel(DRD_HOST_VAL, driver->icfgdrd_regs + ICFG_DRD_P0CTL);
+> +
+> +		val = readl(driver->icfgdrd_regs + ICFG_FSM_CTRL);
+> +		val &= ~(DRD_DEVICE_MODE | ICFG_OFF_MODE);
+> +		val |= DRD_HOST_MODE;
+> +		writel(val, driver->icfgdrd_regs + ICFG_FSM_CTRL);
+> +
+> +		val = readl(driver->crmu_usb2_ctrl);
+> +		val |= AFE_CORERDY_VDDC;
+> +		writel(val, driver->crmu_usb2_ctrl);
+> +
+> +		ret = pll_lock_stat(ICFG_MISC_STAT, PHY_PLL_LOCK, driver);
+> +		if (ret < 0) {
+> +			dev_err(&phy->dev, "Phy PLL lock failed\n");
+> +			goto err_shutdown;
+> +		}
+> +
+> +		val = readl(driver->idmdrd_rst_ctrl);
+> +		val &= ~IDM_RST_BIT;
+> +		writel(val, driver->idmdrd_rst_ctrl);
+> +
+> +		/* port over current Polarity */
+> +		val = readl(driver->usb2h_strap_reg);
+> +		val |= OHCI_OVRCUR_POL;
+> +		writel(val, driver->usb2h_strap_reg);
+> +	}
+> +	spin_unlock_irqrestore(&driver->lock, flags);
+> +	return 0;
+> +
+> +err_shutdown:
+> +	spin_unlock_irqrestore(&driver->lock, flags);
+> +	ns2_drd_phy_shutdown(phy);
+> +	return ret;
+> +}
+> +
+> +static void connect_work(struct work_struct *work)
+> +{
+> +	struct ns2_phy_driver *driver;
+> +	u32 extcon_event;
+> +	u32 val;
+> +
+> +	driver  = container_of(to_delayed_work(work),
+> +			       struct ns2_phy_driver, conn_work);
+> +	extcon_event = driver->data->new_state;
+> +
+> +	val = readl(driver->icfgdrd_regs + ICFG_FSM_CTRL);
+> +
+> +	switch (extcon_event) {
+> +	case EVT_DEVICE:
+> +		val = (val & ~DRD_HOST_MODE) | DRD_DEVICE_MODE;
+> +		writel(val, driver->icfgdrd_regs + ICFG_FSM_CTRL);
+> +
+> +		val = readl(driver->icfgdrd_regs + ICFG_DRD_P0CTL);
+> +		val |= ICFG_DEV_BIT;
+> +		writel(val, driver->icfgdrd_regs + ICFG_DRD_P0CTL);
+> +		break;
+> +
+> +	case EVT_HOST:
+> +		val = (val & ~DRD_DEVICE_MODE) | DRD_HOST_MODE;
+> +		writel(val, driver->icfgdrd_regs + ICFG_FSM_CTRL);
+> +
+> +		val = readl(driver->usb2h_strap_reg);
+> +		val |= OHCI_OVRCUR_POL;
+> +		writel(val, driver->usb2h_strap_reg);
+> +
+> +		val = readl(driver->icfgdrd_regs + ICFG_DRD_P0CTL);
+> +		val &= ~ICFG_DEV_BIT;
+> +		writel(val, driver->icfgdrd_regs + ICFG_DRD_P0CTL);
+> +		break;
+> +
+> +	case EVT_IDLE:
+> +		val &= ~(DRD_HOST_MODE | DRD_DEVICE_MODE);
+> +		writel(val, driver->icfgdrd_regs + ICFG_FSM_CTRL);
+> +		break;
+> +
+> +	default:
+> +		pr_err("Invalid extcon event\n");
+> +		break;
+> +	}
+> +}
+> +
+> +static int drd_device_notify(struct notifier_block *self,
+> +			     unsigned long event, void *ptr)
+> +{
+> +	struct ns2_phy_driver *driver = container_of(self,
+> +					struct ns2_phy_driver, dev_nb);
+> +
+> +	if (event) {
+> +		pr_debug("Device connected\n");
+> +		driver->data->new_state = EVT_DEVICE;
+> +		schedule_delayed_work(&driver->conn_work, 0);
+> +	} else {
+> +		pr_debug("Device disconnected\n");
+> +		driver->data->new_state = EVT_IDLE;
+> +		schedule_delayed_work(&driver->conn_work, PHY_WQ_DELAY);
+> +	}
+> +
+> +	return NOTIFY_DONE;
+> +}
+> +
+> +static int drd_host_notify(struct notifier_block *self,
+> +			   unsigned long event, void *ptr)
+> +{
+> +	struct ns2_phy_driver *driver = container_of(self,
+> +					struct ns2_phy_driver, host_nb);
+> +
+> +	if (event) {
+> +		pr_debug("Host connected\n");
+> +		driver->data->new_state = EVT_HOST;
+
+Instead of having this notify, the USB controller can just use set_mode callback.
+> +		schedule_delayed_work(&driver->conn_work, 0);
+> +	} else {
+> +		pr_debug("Host disconnected\n");
+> +		driver->data->new_state = EVT_IDLE;
+> +		schedule_delayed_work(&driver->conn_work, PHY_WQ_DELAY);
+> +	}
+> +
+> +	return NOTIFY_DONE;
+> +}
+> +
+> +static void extcon_work(struct work_struct *work)
+> +{
+> +	struct ns2_phy_driver *driver;
+> +	int vbus;
+> +	int id;
+> +
+> +	driver  = container_of(to_delayed_work(work),
+> +			       struct ns2_phy_driver, wq_extcon);
+> +
+> +	id = gpiod_get_value_cansleep(driver->id_gpiod);
+> +	vbus = gpiod_get_value_cansleep(driver->vbus_gpiod);
+> +
+> +	if (!id && vbus) {
+> +		extcon_set_cable_state_(driver->edev, EXTCON_USB_HOST, true);
+> +	} else if (id && !vbus) {
+> +		extcon_set_cable_state_(driver->edev, EXTCON_USB_HOST, false);
+> +		extcon_set_cable_state_(driver->edev, EXTCON_USB, false);
+> +	} else if (id && vbus) {
+> +		extcon_set_cable_state_(driver->edev, EXTCON_USB, true);
+
+Er.. what's the use of having both extcon_set_cable_state_ and
+register_extcon_notifier in the same driver?
+
+-Kishon
