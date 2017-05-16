@@ -1,7 +1,7 @@
 From: Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
-Subject: [PATCH RFC v2 1/2] Documentation/devicetree: Add specification for FSI busses
-Date: Tue, 16 May 2017 12:51:24 +0800
-Message-ID: <1494910285-20856-2-git-send-email-jk@ozlabs.org>
+Subject: [PATCH RFC v2 2/2] fsi: Match fsi slaves & engines to available device tree nodes
+Date: Tue, 16 May 2017 12:51:25 +0800
+Message-ID: <1494910285-20856-3-git-send-email-jk@ozlabs.org>
 References: <1494910285-20856-1-git-send-email-jk@ozlabs.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1494910285-20856-1-git-send-email-jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
@@ -10,171 +10,232 @@ To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, openbmc-uLR06cmDAlY/bJ5B
 Cc: Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This change introduces a proposed layout for describing FSI busses in
-the device tree. While the bus is probe-able, we'd still like a method
-of describing subordinate (eg i2c) busses that are behind FSI devices.
+This change populates device tree nodes for scanned FSI slaves and
+engines. If the master populates ->of_node of the FSI master device,
+we'll look for matching slaves, and under those slaves we'll look for
+matching engines.
 
-The FSI core will be responsible for matching probed slaves & engines to
-their device tree nodes, so the FSI device drivers' probe() functions
-will be passed a struct device with the appropriate of_node populated
-where a matching DT node is found.
+This means that FSI drivers will have their ->of_node pointer populated
+if there's a corresponding DT node, which they can use for further
+device discover.
+
+Presence of device tree nodes is optional, and only required for
+fsi device drivers that need extra properties, or subordinate devices,
+to be enumerated.
 
 Signed-off-by: Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
 ---
- Documentation/devicetree/bindings/fsi/fsi.txt | 144 ++++++++++++++++++++++++++
- 1 file changed, 144 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/fsi/fsi.txt
+ drivers/fsi/fsi-core.c        | 99 +++++++++++++++++++++++++++++++++++++++++++
+ drivers/fsi/fsi-master-gpio.c |  4 ++
+ drivers/fsi/fsi-master-hub.c  |  4 ++
+ 3 files changed, 107 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/fsi/fsi.txt b/Documentation/devicetree/bindings/fsi/fsi.txt
-new file mode 100644
-index 0000000..4eaf488
---- /dev/null
-+++ b/Documentation/devicetree/bindings/fsi/fsi.txt
-@@ -0,0 +1,144 @@
-+FSI bus & engine generic device tree bindings
-+=============================================
+diff --git a/drivers/fsi/fsi-core.c b/drivers/fsi/fsi-core.c
+index e5bba91..8324627 100644
+--- a/drivers/fsi/fsi-core.c
++++ b/drivers/fsi/fsi-core.c
+@@ -18,6 +18,7 @@
+ #include <linux/fsi.h>
+ #include <linux/idr.h>
+ #include <linux/module.h>
++#include <linux/of.h>
+ #include <linux/slab.h>
+ 
+ #include "fsi-master.h"
+@@ -126,6 +127,7 @@ static void fsi_device_release(struct device *_device)
+ {
+ 	struct fsi_device *device = to_fsi_dev(_device);
+ 
++	of_node_put(device->dev.of_node);
+ 	kfree(device);
+ }
+ 
+@@ -314,6 +316,57 @@ extern void fsi_slave_release_range(struct fsi_slave *slave,
+ {
+ }
+ 
++static bool fsi_device_node_matches(struct device *dev, struct device_node *np,
++		uint32_t addr, uint32_t size)
++{
++	unsigned int len, na, ns;
++	const __be32 *prop;
++	uint32_t psize;
 +
-+The FSI bus is probe-able, so the OS is able to enumerate FSI slaves, and
-+engines within those slaves. However, we have a facility to match devicetree
-+nodes to probed engines. This allows for fsi engines to expose non-probeable
-+busses, which are then exposed by the device tree. For example, an FSI engine
-+that is an I2C master - the I2C bus can be described by the device tree under
-+the engine's device tree node.
++	na = of_n_addr_cells(np);
++	ns = of_n_size_cells(np);
 +
-+FSI masters may require their own DT nodes (to describe the master HW itself);
-+that requirement is defined by the master's implementation, and is described by
-+the fsi-master-* binding specifications.
++	if (na != 1 || ns != 1)
++		return false;
 +
-+Under the masters' nodes, we can describe the bus topology using nodes to
-+represent the FSI slaves and their slave engines. As a basic outline:
++	prop = of_get_property(np, "reg", &len);
++	if (!prop || len != 8)
++		return false;
 +
-+  fsi-master {
-+      /* top-level of FSI bus topology, bound to an FSI master driver and
-+       * exposes an FSI bus */
++	if (of_read_number(prop, 1) != addr)
++		return false;
 +
-+      fsi-slave@<link,id> {
-+          /* this node defines the FSI slave device, and is handled
-+           * entirely with FSI core code */
++	psize = of_read_number(prop + 1, 1);
++	if (psize != size) {
++		dev_warn(dev,
++			"node %s matches probed address, but not size (got 0x%x, expected 0x%x)",
++			of_node_full_name(np), psize, size);
++	}
 +
-+          fsi-slave-engine@<addr> {
-+              /* this node defines the engine endpoint & address range, which
-+               * is bound to the relevant fsi device driver */
-+               ...
-+          };
++	return true;
++}
 +
-+          fsi-slave-engine@<addr> {
-+              ...
-+          };
++/* Find a matching node for the slave engine at @address, using @size bytes
++ * of space. Returns NULL if not found, or a matching node with refcount
++ * already incremented.
++ */
++static struct device_node *fsi_device_find_of_node(struct fsi_device *dev)
++{
++	struct device_node *parent, *np;
 +
-+      };
-+  };
++	parent = dev_of_node(&dev->slave->dev);
++	if (!parent)
++		return NULL;
 +
-+Note that since the bus is probe-able, some (or all) of the topology may
-+not be described; this binding only provides an optional facility for
-+adding subordinate device tree nodes as children of FSI engines.
++	for_each_child_of_node(parent, np) {
++		if (fsi_device_node_matches(&dev->dev, np,
++					dev->addr, dev->size))
++			return np;
++	}
 +
-+FSI masters
-+-----------
++	return NULL;
++}
 +
-+FSI master nodes declare themselves as such with the "fsi-master" compatible
-+value. It's likely that an implementation-specific compatible value will
-+be needed as well, for example:
+ static int fsi_slave_scan(struct fsi_slave *slave)
+ {
+ 	uint32_t engine_addr;
+@@ -382,6 +435,7 @@ static int fsi_slave_scan(struct fsi_slave *slave)
+ 			dev_set_name(&dev->dev, "%02x:%02x:%02x:%02x",
+ 					slave->master->idx, slave->link,
+ 					slave->id, i - 2);
++			dev->dev.of_node = fsi_device_find_of_node(dev);
+ 
+ 			rc = device_register(&dev->dev);
+ 			if (rc) {
+@@ -577,9 +631,53 @@ static void fsi_slave_release(struct device *dev)
+ {
+ 	struct fsi_slave *slave = to_fsi_slave(dev);
+ 
++	of_node_put(dev->of_node);
+ 	kfree(slave);
+ }
+ 
++static bool fsi_slave_node_matches(struct device_node *np,
++		int link, uint8_t id)
++{
++	unsigned int len, na, ns;
++	const __be32 *prop;
 +
-+    compatible = "fsi-master-gpio", "fsi-master";
++	na = of_n_addr_cells(np);
++	ns = of_n_size_cells(np);
 +
-+Since the master nodes describe the top-level of the FSI topology, they also
-+need to declare the FSI-standard addressing scheme. This requires two cells for
-+addresses (link index and slave ID), and no size:
++	/* Ensure we have the correct format for addresses and sizes in
++	 * reg properties
++	 */
++	if (na != 2 || ns != 0)
++		return false;
 +
-+    #address-cells = <2>;
-+    #size-cells = <0>;
++	prop = of_get_property(np, "reg", &len);
++	if (!prop || len != 8)
++		return false;
 +
-+FSI slaves
-+----------
++	return (of_read_number(prop, 1) == link) &&
++		(of_read_number(prop + 1, 1) == id);
++}
 +
-+Slaves are identified by a (link-index, slave-id) pair, so require two cells
-+for an address identifier. Since these are not a range, no size cells are
-+required. For an example, a slave on link 1, with ID 2, could be represented
-+as:
++/* Find a matching node for the slave at (link, id). Returns NULL if none
++ * found, or a matching node with refcount already incremented.
++ */
++static struct device_node *fsi_slave_find_of_node(struct fsi_master *master,
++		int link, uint8_t id)
++{
++	struct device_node *parent, *np;
 +
-+    cfam@1,2 {
-+        reg = <1 2>;
-+	[...];
-+    }
++	parent = dev_of_node(&master->dev);
++	if (!parent)
++		return NULL;
 +
-+Each slave provides an address-space, under which the engines are accessible.
-+That address space has a maximum of 23 bits, so we use one cell to represent
-+addresses and sizes in the slave address space:
++	for_each_child_of_node(parent, np) {
++		if (fsi_slave_node_matches(np, link, id))
++			return np;
++	}
 +
-+    #address-cells = <1>;
-+    #size-cells = <1>;
++	return NULL;
++}
 +
+ static int fsi_slave_init(struct fsi_master *master, int link, uint8_t id)
+ {
+ 	uint32_t chip_id, llmode;
+@@ -642,6 +740,7 @@ static int fsi_slave_init(struct fsi_master *master, int link, uint8_t id)
+ 
+ 	slave->master = master;
+ 	slave->dev.parent = &master->dev;
++	slave->dev.of_node = fsi_slave_find_of_node(master, link, id);
+ 	slave->dev.release = fsi_slave_release;
+ 	slave->link = link;
+ 	slave->id = id;
+diff --git a/drivers/fsi/fsi-master-gpio.c b/drivers/fsi/fsi-master-gpio.c
+index 67b2d77..b349d5e 100644
+--- a/drivers/fsi/fsi-master-gpio.c
++++ b/drivers/fsi/fsi-master-gpio.c
+@@ -9,6 +9,7 @@
+ #include <linux/gpio/consumer.h>
+ #include <linux/io.h>
+ #include <linux/module.h>
++#include <linux/of.h>
+ #include <linux/platform_device.h>
+ #include <linux/slab.h>
+ #include <linux/spinlock.h>
+@@ -533,6 +534,7 @@ static int fsi_master_gpio_probe(struct platform_device *pdev)
+ 
+ 	master->dev = &pdev->dev;
+ 	master->master.dev.parent = master->dev;
++	master->master.dev.of_node = of_node_get(dev_of_node(master->dev));
+ 	master->master.dev.release = fsi_master_gpio_release;
+ 
+ 	gpio = devm_gpiod_get(&pdev->dev, "clock", 0);
+@@ -602,6 +604,8 @@ static int fsi_master_gpio_remove(struct platform_device *pdev)
+ 		devm_gpiod_put(&pdev->dev, master->gpio_mux);
+ 	fsi_master_unregister(&master->master);
+ 
++	of_node_put(master->master.dev.of_node);
 +
-+FSI engines (devices)
-+---------------------
+ 	return 0;
+ }
+ 
+diff --git a/drivers/fsi/fsi-master-hub.c b/drivers/fsi/fsi-master-hub.c
+index 133b9bf..3223a67 100644
+--- a/drivers/fsi/fsi-master-hub.c
++++ b/drivers/fsi/fsi-master-hub.c
+@@ -16,6 +16,7 @@
+ #include <linux/delay.h>
+ #include <linux/fsi.h>
+ #include <linux/module.h>
++#include <linux/of.h>
+ #include <linux/slab.h>
+ 
+ #include "fsi-master.h"
+@@ -274,6 +275,7 @@ static int hub_master_probe(struct device *dev)
+ 
+ 	hub->master.dev.parent = dev;
+ 	hub->master.dev.release = hub_master_release;
++	hub->master.dev.of_node = of_node_get(dev_of_node(dev));
+ 
+ 	hub->master.n_links = links;
+ 	hub->master.read = hub_master_read;
+@@ -302,6 +304,8 @@ static int hub_master_remove(struct device *dev)
+ 
+ 	fsi_master_unregister(&hub->master);
+ 	fsi_slave_release_range(hub->upstream->slave, hub->addr, hub->size);
++	of_node_put(hub->master.dev.of_node);
 +
-+Engines are identified by their address under the slaves' address spaces. We
-+use a single cell for address and size. Engine nodes represent the endpoint
-+FSI device, and are passed to those FSI device drivers' ->probe() functions.
-+
-+For example, for a slave using a single 0x400-byte page starting at address
-+0xc00:
-+
-+    engine@c00 {
-+        reg = <0xc00 0x400>;
-+    };
-+
-+
-+Full example
-+------------
-+
-+Here's an example that illustrates:
-+ - an FSI master
-+   - connected to an FSI slave
-+     - that contains an engine that is an I2C master
-+       - connected to an I2C EEPROM
-+
-+The FSI master may be connected to additional slaves, and slaves may have
-+additional engines, but they don't necessarily need to be describe in the
-+device tree if no extra platform information is required.
-+
-+    /* The GPIO-based FSI master node, describing the top level of the
-+     * FSI bus
-+     */
-+    gpio-fsi {
-+        compatible = "fsi-master-gpio", "fsi-master";
-+        #address-cells = <2>;
-+        #size-cells = <0>;
-+
-+        /* A FSI slave (aka. CFAM) at link 0, ID 0. */
-+        cfam@0,0 {
-+            reg = <0 0>;
-+            #address-cells = <1>;
-+            #size-cells = <1>;
-+
-+            /* FSI engine at 0xc00, using a single page. In this example,
-+             * it's an I2C master controller, so subnodes describe the
-+             * I2C bus.
-+             */
-+            i2c-controller@c00 {
-+                reg = <0xc00 0x400>;
-+
-+                /* Engine-specific data. In this case, we're describing an
-+                 * I2C bus, so we're conforming to the generic I2C binding
-+                 */
-+                compatible = "some-vendor,fsi-i2c-controller";
-+                #address-cells = <1>;
-+                #size-cells = <1>;
-+
-+                /* I2C endpoint device: an Atmel EEPROM */
-+                eeprom@50 {
-+                    compatible = "atmel,24c256";
-+                    reg = <0x50>;
-+                    pagesize = <64>;
-+                };
-+            };
-+        };
-+    };
+ 	return 0;
+ }
+ 
 -- 
 2.7.4
 
