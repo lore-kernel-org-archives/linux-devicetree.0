@@ -1,64 +1,59 @@
-From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
-Subject: Re: [RFC/PATCH 1/2] dt-binding: mfd: Add Maxim/Dallas DS1374 MFD
- device binding
-Date: Tue, 16 May 2017 10:16:38 +0200
-Message-ID: <20170516081638.xg34g52xpvlkpqfg@piout.net>
-References: <1494354021-370-1-git-send-email-mdf@kernel.org>
- <20170513000029.tgzt5p67tcl7uhbx@rob-hp-laptop>
- <20170516023417.GA28179@tyrael.amer.corp.natinst.com>
+From: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
+Subject: [PATCH 2/2] dt/bindings: display: move rotation into a common place
+Date: Tue, 16 May 2017 11:19:05 +0300
+Message-ID: <f2a6516fff9b8f5ac67aabd60527c1d9b3149482.1494922745.git.baruch@tkos.co.il>
+References: <eabeec88c2831eb8541b78a4977ee7342b810b39.1494922745.git.baruch@tkos.co.il>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170516023417.GA28179@tyrael.amer.corp.natinst.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Moritz Fischer <mdf@kernel.org>
-Cc: Rob Herring <robh@kernel.org>, linux-watchdog@vger.kernel.org, rtc-linux@googlegroups.com, linux-kernel@vger.kernel.org, lee.jones@linaro.org, devicetree@vger.kernel.org, linux@roeck-us.net, wim@iguana.be, a.zummo@towertech.it, mark.rutland@arm.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <eabeec88c2831eb8541b78a4977ee7342b810b39.1494922745.git.baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>, =?UTF-8?q?Noralf=20Tr=C3=B8nnes?= <noralf-L59+Z2yzLopAfugRpC6u6w@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 15/05/2017 at 19:34:17 -0700, Moritz Fischer wrote:
-> On Fri, May 12, 2017 at 07:00:29PM -0500, Rob Herring wrote:
-> > On Tue, May 09, 2017 at 11:20:20AM -0700, Moritz Fischer wrote:
-> > > +			<0> for RTC
-> > > +			<1> for RTC + Alarm (Interrupt)
-> > > +			<2> for RTC + Watchdog
-> > > +
-> > > +Required child:
-> > > +A single available child device of type matching the "dallas,ds1374-mode"
-> > > +property.
-> > > +
-> > > +Optional properties (watchdog):
-> > > +- dallas,ds1374-remap-wdt-reset: Boolean describing whether the INT pin
-> > > +				 on the device is used as interrupt for
-> > > +				 the alarm
-> > 
-> > Isn't presence of the interrupt property or not enough? It would be 
-> > kind of useless to have no interrupt and also not do anything on 
-> > timeout.
-> 
-> So you're saying:
-> 
-> If interrupt not present AND mode = <0> ignore interrupt
-> 
-> If interrupt present AND mode = <1> (maybe define here would be nicer),
-> make it an interrupt.
-> 
+Commit b60c1be74741 (dt-bindings: display/panel: Add common rotation property)
+added the rotation property description in a new file. We have a place for
+common display panel properties already. Move there the rotation property.
 
-If mode == 1, WDSTR doesn't matter so it will always be on the INT pin
-anyway.
+Cc: Noralf Trønnes <noralf-L59+Z2yzLopAfugRpC6u6w@public.gmane.org>
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Signed-off-by: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
+---
+ Documentation/devicetree/bindings/display/panel/panel-common.txt | 6 ++++++
+ Documentation/devicetree/bindings/display/panel/panel.txt        | 4 ----
+ 2 files changed, 6 insertions(+), 4 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/display/panel/panel.txt
 
-> If interrupt not present AND mode = <2> then this implies that reset
-> output is mapped to RST pin.
-> 
-> If Interrupt present AND mode = <2> then this implies that the reset
-> output is (re)mapped to INT pin?
-> 
-
-Yes, I think this is sufficient.
-
-
-
+diff --git a/Documentation/devicetree/bindings/display/panel/panel-common.txt b/Documentation/devicetree/bindings/display/panel/panel-common.txt
+index 0603af877155..c92dcfd8c32f 100644
+--- a/Documentation/devicetree/bindings/display/panel/panel-common.txt
++++ b/Documentation/devicetree/bindings/display/panel/panel-common.txt
+@@ -89,3 +89,9 @@ backlight controller.
+ 
+ - backlight: For panels whose backlight is controlled by an external backlight
+   controller, this property contains a phandle that references the controller.
++
++
++Rotation
++--------
++
++- rotation: Display rotation in degrees counter clockwise (0,90,180,270)
+diff --git a/Documentation/devicetree/bindings/display/panel/panel.txt b/Documentation/devicetree/bindings/display/panel/panel.txt
+deleted file mode 100644
+index e2e6867852b8..000000000000
+--- a/Documentation/devicetree/bindings/display/panel/panel.txt
++++ /dev/null
+@@ -1,4 +0,0 @@
+-Common display properties
+--------------------------
+-
+-- rotation:	Display rotation in degrees counter clockwise (0,90,180,270)
 -- 
-Alexandre Belloni, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+2.11.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
