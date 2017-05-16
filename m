@@ -1,118 +1,95 @@
-From: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-Subject: Re: [PATCH 2/4] dt-bindings: Document the Raspberry Pi Touchscreen nodes.
-Date: Tue, 16 May 2017 09:47:49 -0700
-Message-ID: <87h90ku4sq.fsf@eliezer.anholt.net>
-References: <20170511235625.22427-1-eric@anholt.net> <20170511235625.22427-3-eric@anholt.net> <1579603.xgvSgGFBs8@avalon> <87shk53bxq.fsf@eliezer.anholt.net> <CAL_Jsq+Pt5necK9cUPwFqmCbK5d-0NVNv-_LRVqyNgr5ajR8LQ@mail.gmail.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH 2/4] dt-bindings: Document the Raspberry Pi Touchscreen
+ nodes.
+Date: Tue, 16 May 2017 19:54:30 +0300
+Message-ID: <3768334.nZM7df9y4L@avalon>
+References: <20170511235625.22427-1-eric@anholt.net>
+ <CAL_Jsq+Pt5necK9cUPwFqmCbK5d-0NVNv-_LRVqyNgr5ajR8LQ@mail.gmail.com>
+ <87h90ku4sq.fsf@eliezer.anholt.net>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha512; protocol="application/pgp-signature"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_Jsq+Pt5necK9cUPwFqmCbK5d-0NVNv-_LRVqyNgr5ajR8LQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "devicetree@vger.kernel.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel@vger.kernel.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <87h90ku4sq.fsf@eliezer.anholt.net>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Eric Anholt <eric@anholt.net>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-
-Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> writes:
-
-> On Mon, May 15, 2017 at 7:03 PM, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org> wrote:
->> Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org> writes:
->>
->>> Hi Eric,
->>>
->>> Thank you for the patch.
->>>
->>> On Thursday 11 May 2017 16:56:23 Eric Anholt wrote:
->>>> The Raspberry Pi 7" Touchscreen is a DPI touchscreen panel with
->>>> DSI->DPI bridge and touchscreen controller integrated, that connects
->>>> to the Raspberry Pi through its 15-pin "DSI" connector (some lines are
->>>> DSI, some lines are I2C).
->>>>
->>>> This device is represented in the DT as three nodes (DSI device, I2C
->>>> device, panel).  Input will be left to a separate binding later, as it
->>>> will be a basic I2C client device.
->>>>
->>>> Signed-off-by: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
->>>> ---
->>>>  .../raspberrypi,7inch-touchscreen-bridge.txt       | 68 +++++++++++++++++++
->>>>  .../panel/raspberrypi,7inch-touchscreen-panel.txt  |  7 +++
->>>>  2 files changed, 75 insertions(+)
->>>>  create mode 100644
->>>> Documentation/devicetree/bindings/display/bridge/raspberrypi,7inch-touchscr
->>>> een-bridge.txt create mode 100644
->>>> Documentation/devicetree/bindings/display/panel/raspberrypi,7inch-touchscre
->>>> en-panel.txt
->>>>
->>>> diff --git
->>>> a/Documentation/devicetree/bindings/display/bridge/raspberrypi,7inch-touchs
->>>> creen-bridge.txt
->>>> b/Documentation/devicetree/bindings/display/bridge/raspberrypi,7inch-touchs
->>>> creen-bridge.txt new file mode 100644
->>>> index 000000000000..a5669beaf68f
->>>> --- /dev/null
->>>> +++
->>>> b/Documentation/devicetree/bindings/display/bridge/raspberrypi,7inch-touchs
->>>> creen-bridge.txt @@ -0,0 +1,68 @@
->>>> +Official 7" (800x480) Raspberry Pi touchscreen panel's bridge.
->>>> +
->>>> +This DSI panel contains:
->>>> +
->>>> +- TC358762 DSI->DPI bridge
->>>> +- Atmel microcontroller on I2C for power sequencing the DSI bridge and
->>>> +  controlling backlight
->>>> +- Touchscreen controller on I2C for touch input
->>>> +
->>>> +and this covers the TC358762 bridge and Atmel microcontroller, while
->>>> +../panel/raspberrypi,7inch-touchscreen-panel.txt covers the panel.
->>>
->>> The TC358762 is a standalone bridge that doesn't depend on the ATTiny
->>> microcontroller used by the RPI. As it's usable standalone, I believe this
->>> binding should be split in two.
->>
->> Do you have a plan for how I would implement a driver on top of that
->> binding change, though?  Note that we don't program the Toshiba
->> directly, we only send commands to the Atmel.
->
-> I agree. If it is a black box and the interface to the host is defined
-> by the Atmel uC firmware, then that's what the DT should describe.
-> Perhaps a diagram here or pointer to one would help and remove
-> mentioning what kind of bridge chip it is.
-
-It's a *very* black box.  I have some non-public schematics that don't
-even say what panel is involved, and no documentation of the uc
-interface.  The driver code is just replicating the firmware's
-programming sequence.
-
-I would certainly love to be building a generic TC358762 driver, which
-would be a lot more satisfying.  I just don't think it's doable for this
-panel.  Given that, what do I need to do to the DT?  Should I just drop
-mention of the Toshiba and talk about this being a bridge with a custom
-microcontroller firmware?
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE/JuuFDWp9/ZkuCBXtdYpNtH8nugFAlkbLTUACgkQtdYpNtH8
-nuhD0RAAoyUZKCYtVx5DePA2RZGz4aF3hxmS783MMF6z+x3T59MFELMauXFP8wHX
-JY2zTavX8Vh0cQ/wXPYSNOj5LW/wUkRx2kzoFgXSxH+kF9GvX4Raqzb4smxNm55W
-lVS9sWZRN1E2lfcw5XQZDDu4tU/wapHuAXoutz0ajRL92pGB07ji/bad8HhbCiig
-aaUahNTQjU4z/85Hr8dKlrOfaTSxWMvbk81xsAmrWcwGiRCvjSVk1/HJzwtH8Taz
-2OwyoON/laekoxpu05ZuLdJ6WP9gva25n04nMSfIwMfUJysiYuaD85FwWxZocl2t
-LFgWxIf/D15GJ+MtEC2zEHgwi2l9/ayCICcgtNXWogIom1iSslvKL6goqS4nIxjo
-RxtgemHR6803VtWXfU38i30Myxqi7oxSZ8rqw4aqBbvBkyavUVkpB/FNIAGniNHL
-slmdgEMQm+HQSoTamFjf9To2Y3wrPNGunAmWWzgDW1vS5O3mEccDiQv7k+9wjcJK
-uqAjpeIm4c8LwktU5AaI2N9+i9O16Tq3nWA8mbvFmL9S9nayzHVxAcobRvQ3Bd3V
-v1f9c/7krf5v8wC+qtKIPUfQb5AaUZx1i9F5V//toQi4iOju+AYUmp12jbvTYWa3
-D71fKh4m6fdYSItX4TtLzcbY/8H3Bzt6dOE2IWXWSFEJs+XlaIM=
-=yElQ
------END PGP SIGNATURE-----
---=-=-=--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGkgRXJpYywKCk9uIFR1ZXNkYXkgMTYgTWF5IDIwMTcgMDk6NDc6NDkgRXJpYyBBbmhvbHQgd3Jv
+dGU6Cj4gUm9iIEhlcnJpbmcgPHJvYmgrZHRAa2VybmVsLm9yZz4gd3JpdGVzOgo+ID4gT24gTW9u
+LCBNYXkgMTUsIDIwMTcgYXQgNzowMyBQTSwgRXJpYyBBbmhvbHQgPGVyaWNAYW5ob2x0Lm5ldD4g
+d3JvdGU6Cj4gPj4gTGF1cmVudCBQaW5jaGFydCA8bGF1cmVudC5waW5jaGFydEBpZGVhc29uYm9h
+cmQuY29tPiB3cml0ZXM6Cj4gPj4+IEhpIEVyaWMsCj4gPj4+IAo+ID4+PiBUaGFuayB5b3UgZm9y
+IHRoZSBwYXRjaC4KPiA+Pj4gCj4gPj4+IE9uIFRodXJzZGF5IDExIE1heSAyMDE3IDE2OjU2OjIz
+IEVyaWMgQW5ob2x0IHdyb3RlOgo+ID4+Pj4gVGhlIFJhc3BiZXJyeSBQaSA3IiBUb3VjaHNjcmVl
+biBpcyBhIERQSSB0b3VjaHNjcmVlbiBwYW5lbCB3aXRoCj4gPj4+PiBEU0ktPkRQSSBicmlkZ2Ug
+YW5kIHRvdWNoc2NyZWVuIGNvbnRyb2xsZXIgaW50ZWdyYXRlZCwgdGhhdCBjb25uZWN0cwo+ID4+
+Pj4gdG8gdGhlIFJhc3BiZXJyeSBQaSB0aHJvdWdoIGl0cyAxNS1waW4gIkRTSSIgY29ubmVjdG9y
+IChzb21lIGxpbmVzIGFyZQo+ID4+Pj4gRFNJLCBzb21lIGxpbmVzIGFyZSBJMkMpLgo+ID4+Pj4g
+Cj4gPj4+PiBUaGlzIGRldmljZSBpcyByZXByZXNlbnRlZCBpbiB0aGUgRFQgYXMgdGhyZWUgbm9k
+ZXMgKERTSSBkZXZpY2UsIEkyQwo+ID4+Pj4gZGV2aWNlLCBwYW5lbCkuICBJbnB1dCB3aWxsIGJl
+IGxlZnQgdG8gYSBzZXBhcmF0ZSBiaW5kaW5nIGxhdGVyLCBhcyBpdAo+ID4+Pj4gd2lsbCBiZSBh
+IGJhc2ljIEkyQyBjbGllbnQgZGV2aWNlLgo+ID4+Pj4gCj4gPj4+PiBTaWduZWQtb2ZmLWJ5OiBF
+cmljIEFuaG9sdCA8ZXJpY0BhbmhvbHQubmV0Pgo+ID4+Pj4gLS0tCj4gPj4+PiAKPiA+Pj4+ICAu
+Li4vcmFzcGJlcnJ5cGksN2luY2gtdG91Y2hzY3JlZW4tYnJpZGdlLnR4dCAgICAgICB8IDY4ICsr
+KysrKysrKysrKysrCj4gPj4+PiAgLi4uL3BhbmVsL3Jhc3BiZXJyeXBpLDdpbmNoLXRvdWNoc2Ny
+ZWVuLXBhbmVsLnR4dCAgfCAgNyArKysKPiA+Pj4+ICAyIGZpbGVzIGNoYW5nZWQsIDc1IGluc2Vy
+dGlvbnMoKykKPiA+Pj4+ICBjcmVhdGUgbW9kZSAxMDA2NDQKPiA+Pj4+IAo+ID4+Pj4gRG9jdW1l
+bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3Jhc3BiZXJyeXBpLDdp
+bmNoLXRvdWMKPiA+Pj4+IGhzY3JlZW4tYnJpZGdlLnR4dCBjcmVhdGUgbW9kZSAxMDA2NDQKPiA+
+Pj4+IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL3Jhc3Bi
+ZXJyeXBpLDdpbmNoLXRvdWNoCj4gPj4+PiBzY3JlZW4tcGFuZWwudHh0Cj4gPj4+PiAKPiA+Pj4+
+IGRpZmYgLS1naXQKPiA+Pj4+IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rp
+c3BsYXkvYnJpZGdlL3Jhc3BiZXJyeXBpLDdpbmNoLXRvCj4gPj4+PiB1Y2hzY3JlZW4tYnJpZGdl
+LnR4dAo+ID4+Pj4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9i
+cmlkZ2UvcmFzcGJlcnJ5cGksN2luY2gtdG8KPiA+Pj4+IHVjaHNjcmVlbi1icmlkZ2UudHh0IG5l
+dyBmaWxlIG1vZGUgMTAwNjQ0Cj4gPj4+PiBpbmRleCAwMDAwMDAwMDAwMDAuLmE1NjY5YmVhZjY4
+Zgo+ID4+Pj4gLS0tIC9kZXYvbnVsbAo+ID4+Pj4gKysrCj4gPj4+PiBiL0RvY3VtZW50YXRpb24v
+ZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS9yYXNwYmVycnlwaSw3aW5jaC10bwo+
+ID4+Pj4gdWNoc2NyZWVuLWJyaWRnZS50eHQKPiA+Pj4+IEBAIC0wLDAgKzEsNjggQEAKPiA+Pj4+
+ICtPZmZpY2lhbCA3IiAoODAweDQ4MCkgUmFzcGJlcnJ5IFBpIHRvdWNoc2NyZWVuIHBhbmVsJ3Mg
+YnJpZGdlLgo+ID4+Pj4gKwo+ID4+Pj4gK1RoaXMgRFNJIHBhbmVsIGNvbnRhaW5zOgo+ID4+Pj4g
+Kwo+ID4+Pj4gKy0gVEMzNTg3NjIgRFNJLT5EUEkgYnJpZGdlCj4gPj4+PiArLSBBdG1lbCBtaWNy
+b2NvbnRyb2xsZXIgb24gSTJDIGZvciBwb3dlciBzZXF1ZW5jaW5nIHRoZSBEU0kgYnJpZGdlIGFu
+ZAo+ID4+Pj4gKyAgY29udHJvbGxpbmcgYmFja2xpZ2h0Cj4gPj4+PiArLSBUb3VjaHNjcmVlbiBj
+b250cm9sbGVyIG9uIEkyQyBmb3IgdG91Y2ggaW5wdXQKPiA+Pj4+ICsKPiA+Pj4+ICthbmQgdGhp
+cyBjb3ZlcnMgdGhlIFRDMzU4NzYyIGJyaWRnZSBhbmQgQXRtZWwgbWljcm9jb250cm9sbGVyLCB3
+aGlsZQo+ID4+Pj4gKy4uL3BhbmVsL3Jhc3BiZXJyeXBpLDdpbmNoLXRvdWNoc2NyZWVuLXBhbmVs
+LnR4dCBjb3ZlcnMgdGhlIHBhbmVsLgo+ID4+PiAKPiA+Pj4gVGhlIFRDMzU4NzYyIGlzIGEgc3Rh
+bmRhbG9uZSBicmlkZ2UgdGhhdCBkb2Vzbid0IGRlcGVuZCBvbiB0aGUgQVRUaW55Cj4gPj4+IG1p
+Y3JvY29udHJvbGxlciB1c2VkIGJ5IHRoZSBSUEkuIEFzIGl0J3MgdXNhYmxlIHN0YW5kYWxvbmUs
+IEkgYmVsaWV2ZQo+ID4+PiB0aGlzIGJpbmRpbmcgc2hvdWxkIGJlIHNwbGl0IGluIHR3by4KPiA+
+PiAKPiA+PiBEbyB5b3UgaGF2ZSBhIHBsYW4gZm9yIGhvdyBJIHdvdWxkIGltcGxlbWVudCBhIGRy
+aXZlciBvbiB0b3Agb2YgdGhhdAo+ID4+IGJpbmRpbmcgY2hhbmdlLCB0aG91Z2g/ICBOb3RlIHRo
+YXQgd2UgZG9uJ3QgcHJvZ3JhbSB0aGUgVG9zaGliYQo+ID4+IGRpcmVjdGx5LCB3ZSBvbmx5IHNl
+bmQgY29tbWFuZHMgdG8gdGhlIEF0bWVsLgo+ID4gCj4gPiBJIGFncmVlLiBJZiBpdCBpcyBhIGJs
+YWNrIGJveCBhbmQgdGhlIGludGVyZmFjZSB0byB0aGUgaG9zdCBpcyBkZWZpbmVkCj4gPiBieSB0
+aGUgQXRtZWwgdUMgZmlybXdhcmUsIHRoZW4gdGhhdCdzIHdoYXQgdGhlIERUIHNob3VsZCBkZXNj
+cmliZS4KPiA+IFBlcmhhcHMgYSBkaWFncmFtIGhlcmUgb3IgcG9pbnRlciB0byBvbmUgd291bGQg
+aGVscCBhbmQgcmVtb3ZlCj4gPiBtZW50aW9uaW5nIHdoYXQga2luZCBvZiBicmlkZ2UgY2hpcCBp
+dCBpcy4KPiAKPiBJdCdzIGEgKnZlcnkqIGJsYWNrIGJveC4gIEkgaGF2ZSBzb21lIG5vbi1wdWJs
+aWMgc2NoZW1hdGljcyB0aGF0IGRvbid0Cj4gZXZlbiBzYXkgd2hhdCBwYW5lbCBpcyBpbnZvbHZl
+ZCwgYW5kIG5vIGRvY3VtZW50YXRpb24gb2YgdGhlIHVjCj4gaW50ZXJmYWNlLiAgVGhlIGRyaXZl
+ciBjb2RlIGlzIGp1c3QgcmVwbGljYXRpbmcgdGhlIGZpcm13YXJlJ3MKPiBwcm9ncmFtbWluZyBz
+ZXF1ZW5jZS4KPiAKPiBJIHdvdWxkIGNlcnRhaW5seSBsb3ZlIHRvIGJlIGJ1aWxkaW5nIGEgZ2Vu
+ZXJpYyBUQzM1ODc2MiBkcml2ZXIsIHdoaWNoCj4gd291bGQgYmUgYSBsb3QgbW9yZSBzYXRpc2Z5
+aW5nLiAgSSBqdXN0IGRvbid0IHRoaW5rIGl0J3MgZG9hYmxlIGZvciB0aGlzCj4gcGFuZWwuICBH
+aXZlbiB0aGF0LCB3aGF0IGRvIEkgbmVlZCB0byBkbyB0byB0aGUgRFQ/ICBTaG91bGQgSSBqdXN0
+IGRyb3AKPiBtZW50aW9uIG9mIHRoZSBUb3NoaWJhIGFuZCB0YWxrIGFib3V0IHRoaXMgYmVpbmcg
+YSBicmlkZ2Ugd2l0aCBhIGN1c3RvbQo+IG1pY3JvY29udHJvbGxlciBmaXJtd2FyZT8KCkkgdGhp
+bmsgdGhhdCB3b3VsZCBiZSBiZXN0LCB5ZXMuIENvdWxkIHlvdSBzaGFyZSBhIHNpbXBsZSBibG9j
+ay1kaWFncmFtIG9mIHRoZSAKaGFyZHdhcmUgPyBJdCB3b3VsZCBoZWxwIHR1cm5pbmcgbXkgcmFu
+ZG9tIGFkdmljZXMgaW50byBzZW1pLXJhbmRvbSBhZHZpY2VzIAo6LSkKCi0tIApSZWdhcmRzLAoK
+TGF1cmVudCBQaW5jaGFydAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0
+b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJp
+LWRldmVsCg==
