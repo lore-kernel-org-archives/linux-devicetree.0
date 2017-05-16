@@ -1,81 +1,89 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH 1/8] mmc: dt: pwrseq-simple: Invent power-off-delay-us
-Date: Tue, 16 May 2017 09:06:54 +0200
-Message-ID: <CAPDyKFqJ5-tPGSSONPBc34YkwT=VruxfAo1GsBBHJYK6fiSZUA@mail.gmail.com>
-References: <1494260477-25163-1-git-send-email-ulf.hansson@linaro.org>
- <1494260477-25163-2-git-send-email-ulf.hansson@linaro.org>
- <20170512200300.a2hq546ra42ptlz5@rob-hp-laptop> <CAPDyKFqhbGqanoQqFsLrLaBXsQ5WdFrrunkvB2eOoJqH+W6jdQ@mail.gmail.com>
- <CAL_JsqK4EnME2qH4j4+Nef7+1gAOKsjq00b8e7m0HWR4=w6FtQ@mail.gmail.com>
+From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Subject: Re: [PATCH 2/4] dt-bindings: Document the Raspberry Pi Touchscreen nodes.
+Date: Tue, 16 May 2017 10:20:26 +0300
+Message-ID: <6676454.oPjrLVBqHn@avalon>
+References: <20170511235625.22427-1-eric@anholt.net> <1579603.xgvSgGFBs8@avalon> <87shk53bxq.fsf@eliezer.anholt.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqK4EnME2qH4j4+Nef7+1gAOKsjq00b8e7m0HWR4=w6FtQ@mail.gmail.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Wei Xu <xuwei5@hisilicon.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <87shk53bxq.fsf-omZaPlIz5HhaEpDpdNBo/KxOck334EZe@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 15 May 2017 at 18:16, Rob Herring <robh@kernel.org> wrote:
-> On Mon, May 15, 2017 at 6:08 AM, Ulf Hansson <ulf.hansson@linaro.org> wrote:
->> On 12 May 2017 at 22:03, Rob Herring <robh@kernel.org> wrote:
->>> On Mon, May 08, 2017 at 06:21:10PM +0200, Ulf Hansson wrote:
->>>> During power off, after the GPIO pin has been asserted, some devices like
->>>> the Wifi chip from TI, Wl18xx, needs a delay before the host continues with
->>>> clock gating and turning off regulators as to follow a graceful shutdown
->>>> sequence.
->>>>
->>>> Therefore invent an optional power-off-delay-us DT binding for
->>>> mmc-pwrseq-simple, to allow us to support this constraint.
->>>
->>> Do you really need this to be programmable per device. A delay is not
->>> going to hurt devices that don't need it.
->>
->> Well, that depends on what "hurt" means. The device would still be
->> properly shut down, only that it would take unnecessary longer to do
->> so.
->>
->> I think the problem here, is that this delay may also affect system
->> suspend/resume time of the device, if the device powers off/on in this
->> sequence.
->
-> I was assuming that given you changed the units the time was small
-> enough to not be significant.
+Hi Eric,
 
-That's right. We are in the range of < 50us, which is suitable for the
-Wl18xx chip.
+On Monday 15 May 2017 17:03:29 Eric Anholt wrote:
+> Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org> writes:
+> > On Thursday 11 May 2017 16:56:23 Eric Anholt wrote:
+> >> The Raspberry Pi 7" Touchscreen is a DPI touchscreen panel with
+> >> DSI->DPI bridge and touchscreen controller integrated, that connects
+> >> to the Raspberry Pi through its 15-pin "DSI" connector (some lines are
+> >> DSI, some lines are I2C).
+> >> 
+> >> This device is represented in the DT as three nodes (DSI device, I2C
+> >> device, panel).  Input will be left to a separate binding later, as it
+> >> will be a basic I2C client device.
+> >> 
+> >> Signed-off-by: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+> >> ---
+> >> 
+> >>  .../raspberrypi,7inch-touchscreen-bridge.txt       | 68 +++++++++++++++
+> >>  .../panel/raspberrypi,7inch-touchscreen-panel.txt  |  7 +++
+> >>  2 files changed, 75 insertions(+)
+> >>  create mode 100644
+> >> 
+> >> Documentation/devicetree/bindings/display/bridge/raspberrypi,7inch-touchs
+> >> cr
+> >> een-bridge.txt create mode 100644
+> >> Documentation/devicetree/bindings/display/panel/raspberrypi,7inch-touchsc
+> >> re
+> >> en-panel.txt
+> >> 
+> >> diff --git
+> >> a/Documentation/devicetree/bindings/display/bridge/raspberrypi,7inch-touc
+> >> hs
+> >> creen-bridge.txt
+> >> b/Documentation/devicetree/bindings/display/bridge/raspberrypi,7inch-touc
+> >> hs
+> >> creen-bridge.txt new file mode 100644
+> >> index 000000000000..a5669beaf68f
+> >> --- /dev/null
+> >> +++
+> >> b/Documentation/devicetree/bindings/display/bridge/raspberrypi,7inch-touc
+> >> hs
+> >> creen-bridge.txt @@ -0,0 +1,68 @@
+> >> +Official 7" (800x480) Raspberry Pi touchscreen panel's bridge.
+> >> +
+> >> +This DSI panel contains:
+> >> +
+> >> +- TC358762 DSI->DPI bridge
+> >> +- Atmel microcontroller on I2C for power sequencing the DSI bridge and
+> >> +  controlling backlight
+> >> +- Touchscreen controller on I2C for touch input
+> >> +
+> >> +and this covers the TC358762 bridge and Atmel microcontroller, while
+> >> +../panel/raspberrypi,7inch-touchscreen-panel.txt covers the panel.
+> > 
+> > The TC358762 is a standalone bridge that doesn't depend on the ATTiny
+> > microcontroller used by the RPI. As it's usable standalone, I believe this
+> > binding should be split in two.
+> 
+> Do you have a plan for how I would implement a driver on top of that
+> binding change, though?  Note that we don't program the Toshiba
+> directly, we only send commands to the Atmel.
 
-However, the problem occurs when some other device needs a longer
-delay and then we may reach a threshold that isn't acceptable.
+I'm not too familiar with the hardware architecture, let me have a look. Is 
+the schematics publicly available somewhere ?
 
-To me it's better to allow it to be described in DT - then only
-influencing those devices that really needs it.
+-- 
+Regards,
 
->
->>> Sorry, but this is exactly what I don't like about "simple" bindings:
->>> adding one property at a time.
->>
->> I understand you opinion, which in the end is a matter of taste/flavor.
->
-> It's more than that. The problem is you would end up with a different
-> binding if everything is defined up front versus reviewing one
-> addition at a time.
->
-> To give a trivial example here, now we have power on and off times in
-> different units and if I was reviewing them together I would say make
-> them both usec. That example is mostly taste, but different units also
-> makes it more error prone for the dts writer.
+Laurent Pinchart
 
-Okay, I see your a point.
-
->
->> However, for me this just follows the existing approach - and suddenly
->> say no to this, doesn't really seems right either.
->
-> I never said no.
-
-Alright. Is that a yes then? :-)
-
-If not, what do you prefer me to do?
-
-Kind regards
-Uffe
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
