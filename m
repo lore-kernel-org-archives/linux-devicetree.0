@@ -1,425 +1,125 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [RESEND PATCH v5 2/3] phy:phy-bcm-ns2-usbdrd:Broadcom USB DRD Phy
- driver for Northstar2
-Date: Tue, 16 May 2017 18:33:57 +0530
-Message-ID: <c436ff4a-ea1d-fb1d-68a0-ff792d2b99a4@ti.com>
-References: <1494399267-21691-1-git-send-email-raviteja.garimella@broadcom.com>
- <1494399267-21691-3-git-send-email-raviteja.garimella@broadcom.com>
+From: Robin Murphy <robin.murphy@arm.com>
+Subject: Re: [RFC v1 2/7] iommu/arm-smmu-v3: Add erratum framework functions
+Date: Tue, 16 May 2017 14:08:00 +0100
+Message-ID: <44374533-c1ed-5f13-d70c-8a7431bf8451@arm.com>
+References: <20170513094731.3676-1-shameerali.kolothum.thodi@huawei.com>
+ <20170513094731.3676-3-shameerali.kolothum.thodi@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1494399267-21691-3-git-send-email-raviteja.garimella@broadcom.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Raviteja Garimella <raviteja.garimella@broadcom.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <20170513094731.3676-3-shameerali.kolothum.thodi@huawei.com>
+Sender: linux-acpi-owner@vger.kernel.org
+To: shameer <shameerali.kolothum.thodi@huawei.com>, will.deacon@arm.com, mark.rutland@arm.com, lorenzo.pieralisi@arm.com, hanjun.guo@linaro.org
+Cc: gabriele.paoloni@huawei.com, john.garry@huawei.com, iommu@lists.linux-foundation.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-acpi@vger.kernel.org, devel@acpica.org, linuxarm@huawei.com, wangzhou1@hisilicon.com, guohanjun@huawei.com
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On 13/05/17 10:47, shameer wrote:
+> This will provide a way to replace the existing skip_prefetch_cmd
+> erratum using the new framework.
 
-On Wednesday 10 May 2017 12:24 PM, Raviteja Garimella wrote:
-> This is driver for USB DRD Phy used in Broadcom's Northstar2
-> SoC. The phy can be configured to be in Device mode or Host
-> mode based on the type of cable connected to the port. The
-> driver registers to  extcon framework to get appropriate
-> connect events for Host/Device cables connect/disconnect
-> states based on VBUS and ID interrupts.
-> 
-> Signed-off-by: Raviteja Garimella <raviteja.garimella@broadcom.com>
+Yikes, between this and patch 1 we're already pushing 70 lines of new
+code, and it still doesn't actually do anything yet. Implementing the
+SMMUv3 equivalent of SMMUv2's acpi_smmu_get_data() would probably be
+about 10 lines; all you need to do is set some quirk flags based on a
+compatible value. These quirks aren't really any different in principle
+to the firmware COHACC overrides that we already process.
+
+Sorry, I'm saying no to a massively overengineered "framework" for
+something so relatively simple.
+
+Robin.
+
+> Signed-off-by: shameer <shameerali.kolothum.thodi@huawei.com>
 > ---
->  drivers/phy/Kconfig              |  13 +
->  drivers/phy/Makefile             |   1 +
->  drivers/phy/phy-bcm-ns2-usbdrd.c | 595 +++++++++++++++++++++++++++++++++++++++
->  3 files changed, 609 insertions(+)
->  create mode 100644 drivers/phy/phy-bcm-ns2-usbdrd.c
+>  drivers/iommu/arm-smmu-v3.c | 58 +++++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 58 insertions(+)
 > 
-> diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
-> index 005cadb..c9de9a9 100644
-> --- a/drivers/phy/Kconfig
-> +++ b/drivers/phy/Kconfig
-> @@ -488,6 +488,19 @@ config PHY_CYGNUS_PCIE
->  	  Enable this to support the Broadcom Cygnus PCIe PHY.
->  	  If unsure, say N.
+> diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
+> index a166590..f20d5d5 100644
+> --- a/drivers/iommu/arm-smmu-v3.c
+> +++ b/drivers/iommu/arm-smmu-v3.c
+> @@ -664,16 +664,72 @@ enum smmu_erratum_match_type {
+>  	se_match_dt,
+>  };
 >  
-> +config PHY_NS2_USB_DRD
-> +	tristate "Broadcom Northstar2 USB DRD PHY support"
-> +	depends on OF && (ARCH_BCM_IPROC || COMPILE_TEST)
-> +	select GENERIC_PHY
-> +	select EXTCON
-> +	default ARCH_BCM_IPROC
-> +	help
-> +	  Enable this to support the Broadcom Northstar2 USB DRD PHY.
-> +	  This driver initializes the PHY in either HOST or DEVICE mode.
-> +	  The host or device configuration is read from device tree.
+> +void erratum_skip_prefetch_cmd(struct arm_smmu_device *smmu, void *arg)
+> +{
+> +	smmu->options |= ARM_SMMU_OPT_SKIP_PREFETCH;
+> +}
 > +
-> +	  If unsure, say N.
-> +
->  source "drivers/phy/tegra/Kconfig"
+>  struct smmu_erratum_workaround {
+>  	enum smmu_erratum_match_type match_type;
+>  	const void *id;	/* Indicate the Erratum ID */
+>  	const char *desc_str;
+> +	void (*enable)(struct arm_smmu_device *, void *);
+>  };
 >  
->  config PHY_NS2_PCIE
-> diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile
-> index dd8f3b5..9285f88 100644
-> --- a/drivers/phy/Makefile
-> +++ b/drivers/phy/Makefile
-> @@ -59,6 +59,7 @@ obj-$(CONFIG_PHY_TUSB1210)		+= phy-tusb1210.o
->  obj-$(CONFIG_PHY_BRCM_SATA)		+= phy-brcm-sata.o
->  obj-$(CONFIG_PHY_PISTACHIO_USB)		+= phy-pistachio-usb.o
->  obj-$(CONFIG_PHY_CYGNUS_PCIE)		+= phy-bcm-cygnus-pcie.o
-> +obj-$(CONFIG_PHY_NS2_USB_DRD)		+= phy-bcm-ns2-usbdrd.o
->  obj-$(CONFIG_ARCH_TEGRA) += tegra/
->  obj-$(CONFIG_PHY_NS2_PCIE)		+= phy-bcm-ns2-pcie.o
->  obj-$(CONFIG_PHY_MESON8B_USB2)		+= phy-meson8b-usb2.o
-> diff --git a/drivers/phy/phy-bcm-ns2-usbdrd.c b/drivers/phy/phy-bcm-ns2-usbdrd.c
-> new file mode 100644
-> index 0000000..92b68b1
-> --- /dev/null
-> +++ b/drivers/phy/phy-bcm-ns2-usbdrd.c
-> @@ -0,0 +1,595 @@
-> +/*
-> + * Copyright (C) 2016 Broadcom
-> + *
-> + * This program is free software; you can redistribute it and/or
-> + * modify it under the terms of the GNU General Public License as
-> + * published by the Free Software Foundation version 2.
-> + *
-> + * This program is distributed "as is" WITHOUT ANY WARRANTY of any
-> + * kind, whether express or implied; without even the implied warranty
-> + * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + */
-> +
-> +#include <linux/delay.h>
-> +#include <linux/extcon.h>
-> +#include <linux/gpio.h>
-> +#include <linux/gpio/consumer.h>
-> +#include <linux/init.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/io.h>
-> +#include <linux/irq.h>
-> +#include <linux/mfd/syscon.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/of_address.h>
-> +#include <linux/phy/phy.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/regmap.h>
-> +#include <linux/slab.h>
-> +#include <linux/workqueue.h>
-> +
-> +#define ICFG_DRD_AFE		0x0
-> +#define ICFG_MISC_STAT		0x18
-> +#define ICFG_DRD_P0CTL		0x1C
-> +#define ICFG_STRAP_CTRL		0x20
-> +#define ICFG_FSM_CTRL		0x24
-> +
-> +#define ICFG_DEV_BIT		BIT(2)
-> +#define IDM_RST_BIT		BIT(0)
-> +#define AFE_CORERDY_VDDC	BIT(18)
-> +#define PHY_PLL_RESETB		BIT(15)
-> +#define PHY_RESETB		BIT(14)
-> +#define PHY_PLL_LOCK		BIT(0)
-> +
-> +#define DRD_DEV_MODE		BIT(20)
-> +#define OHCI_OVRCUR_POL		BIT(11)
-> +#define ICFG_OFF_MODE		BIT(6)
-> +#define PLL_LOCK_RETRY		1000
-> +
-> +#define EVT_DEVICE		0
-> +#define EVT_HOST		1
-> +#define EVT_IDLE		2
-> +
-> +#define DRD_HOST_MODE		(BIT(2) | BIT(3))
-> +#define DRD_DEVICE_MODE		(BIT(4) | BIT(5))
-> +#define DRD_HOST_VAL		0x803
-> +#define DRD_DEV_VAL		0x807
-> +#define GPIO_DELAY		20
-> +#define PHY_WQ_DELAY		msecs_to_jiffies(600)
-> +
-> +struct ns2_phy_data;
-> +struct ns2_phy_driver {
-> +	void __iomem *icfgdrd_regs;
-> +	void __iomem *idmdrd_rst_ctrl;
-> +	void __iomem *crmu_usb2_ctrl;
-> +	void __iomem *usb2h_strap_reg;
-> +	spinlock_t lock; /* spin lock for phy driver */
-> +	struct ns2_phy_data *data;
-> +	struct extcon_specific_cable_nb extcon_dev;
-> +	struct extcon_specific_cable_nb extcon_host;
-> +	struct notifier_block host_nb;
-> +	struct notifier_block dev_nb;
-> +	struct delayed_work conn_work;
-> +	struct extcon_dev *edev;
-> +	struct gpio_desc *vbus_gpiod;
-> +	struct gpio_desc *id_gpiod;
-> +	int id_irq;
-> +	int vbus_irq;
-> +	unsigned long debounce_jiffies;
-> +	struct delayed_work wq_extcon;
-> +};
-> +
-> +struct ns2_phy_data {
-> +	struct ns2_phy_driver *driver;
-> +	struct phy *phy;
-> +	int new_state;
-> +};
-> +
-> +static const unsigned int usb_extcon_cable[] = {
-> +	EXTCON_USB,
-> +	EXTCON_USB_HOST,
-> +	EXTCON_NONE,
-> +};
-> +
-> +static inline int pll_lock_stat(u32 usb_reg, int reg_mask,
-> +				struct ns2_phy_driver *driver)
+>  static const struct smmu_erratum_workaround smmu_workarounds[] = {
+>  
+>  };
+>  
+> +typedef bool (*se_match_fn_t)(const struct smmu_erratum_workaround *,
+> +							  const void *);
+> +static
+> +bool smmu_check_dt_erratum(const struct smmu_erratum_workaround *wa,
+> +						   const void *arg)
 > +{
-> +	int retry = PLL_LOCK_RETRY;
-> +	u32 val;
+> +	const struct device_node *np = arg;
 > +
-> +	do {
-> +		udelay(1);
-> +		val = readl(driver->icfgdrd_regs + usb_reg);
-> +		if (val & reg_mask)
-> +			return 0;
-> +	} while (--retry > 0);
-> +
-> +	return -EBUSY;
+> +	return of_property_read_bool(np, wa->id);
 > +}
 > +
-> +static int ns2_drd_phy_init(struct phy *phy)
+> +static void smmu_enable_errata(struct arm_smmu_device *smmu,
+> +				enum smmu_erratum_match_type type,
+> +				se_match_fn_t match_fn,
+> +				void *arg)
 > +{
-> +	struct ns2_phy_data *data = phy_get_drvdata(phy);
-> +	struct ns2_phy_driver *driver = data->driver;
-> +	unsigned long flags;
-> +	u32 val;
+> +	const struct smmu_erratum_workaround *wa = smmu_workarounds;
 > +
-> +	spin_lock_irqsave(&driver->lock, flags);
-
-Why do you need this spin_lock?
+> +	for (; wa->desc_str; wa++) {
+> +		if (wa->match_type != type)
+> +			continue;
 > +
-> +	val = readl(driver->icfgdrd_regs + ICFG_FSM_CTRL);
-> +
-> +	if (data->new_state == EVT_HOST) {
-> +		val &= ~DRD_DEVICE_MODE;
-> +		val |= DRD_HOST_MODE;
-> +	} else {
-> +		val &= ~DRD_HOST_MODE;
-> +		val |= DRD_DEVICE_MODE;
-> +	}
-> +	writel(val, driver->icfgdrd_regs + ICFG_FSM_CTRL);
-> +
-> +	spin_unlock_irqrestore(&driver->lock, flags);
-> +	return 0;
-> +}
-> +
-> +static int ns2_drd_phy_shutdown(struct phy *phy)
-> +{
-> +	struct ns2_phy_data *data = phy_get_drvdata(phy);
-> +	struct ns2_phy_driver *driver = data->driver;
-> +	unsigned long flags;
-> +	u32 val;
-> +
-> +	spin_lock_irqsave(&driver->lock, flags);
-
-here too..
-> +
-> +	val = readl(driver->crmu_usb2_ctrl);
-> +	val &= ~AFE_CORERDY_VDDC;
-> +	writel(val, driver->crmu_usb2_ctrl);
-> +
-> +	val = readl(driver->crmu_usb2_ctrl);
-> +	val &= ~DRD_DEV_MODE;
-> +	writel(val, driver->crmu_usb2_ctrl);
-> +
-> +	/* Disable Host and Device Mode */
-> +	val = readl(driver->icfgdrd_regs + ICFG_FSM_CTRL);
-> +	val &= ~(DRD_HOST_MODE | DRD_DEVICE_MODE | ICFG_OFF_MODE);
-> +	writel(val, driver->icfgdrd_regs + ICFG_FSM_CTRL);
-> +
-> +	spin_unlock_irqrestore(&driver->lock, flags);
-> +	return 0;
-> +}
-> +
-> +static int ns2_drd_phy_poweron(struct phy *phy)
-> +{
-> +	struct ns2_phy_data *data = phy_get_drvdata(phy);
-> +	struct ns2_phy_driver *driver = data->driver;
-> +	u32 extcon_event = data->new_state;
-> +	unsigned long flags;
-> +	int ret;
-> +	u32 val;
-> +
-> +	spin_lock_irqsave(&driver->lock, flags);
-
-same here..
-> +	if (extcon_event == EVT_DEVICE) {
-> +		writel(DRD_DEV_VAL, driver->icfgdrd_regs + ICFG_DRD_P0CTL);
-> +
-> +		val = readl(driver->icfgdrd_regs + ICFG_FSM_CTRL);
-> +		val &= ~(DRD_HOST_MODE | ICFG_OFF_MODE);
-> +		val |= DRD_DEVICE_MODE;
-> +		writel(val, driver->icfgdrd_regs + ICFG_FSM_CTRL);
-> +
-> +		val = readl(driver->idmdrd_rst_ctrl);
-> +		val &= ~IDM_RST_BIT;
-> +		writel(val, driver->idmdrd_rst_ctrl);
-> +
-> +		val = readl(driver->crmu_usb2_ctrl);
-> +		val |= (AFE_CORERDY_VDDC | DRD_DEV_MODE);
-> +		writel(val, driver->crmu_usb2_ctrl);
-> +
-> +		/* Bring PHY and PHY_PLL out of Reset */
-> +		val = readl(driver->crmu_usb2_ctrl);
-> +		val |= (PHY_PLL_RESETB | PHY_RESETB);
-> +		writel(val, driver->crmu_usb2_ctrl);
-> +
-> +		ret = pll_lock_stat(ICFG_MISC_STAT, PHY_PLL_LOCK, driver);
-> +		if (ret < 0) {
-> +			dev_err(&phy->dev, "Phy PLL lock failed\n");
-> +			goto err_shutdown;
+> +		if (match_fn(wa, arg)) {
+> +			if (wa->enable) {
+> +				wa->enable(smmu, arg);
+> +				dev_info(smmu->dev,
+> +					"Enabling workaround for %s\n",
+> +					 wa->desc_str);
+> +			}
 > +		}
-> +	} else {
-> +		writel(DRD_HOST_VAL, driver->icfgdrd_regs + ICFG_DRD_P0CTL);
-> +
-> +		val = readl(driver->icfgdrd_regs + ICFG_FSM_CTRL);
-> +		val &= ~(DRD_DEVICE_MODE | ICFG_OFF_MODE);
-> +		val |= DRD_HOST_MODE;
-> +		writel(val, driver->icfgdrd_regs + ICFG_FSM_CTRL);
-> +
-> +		val = readl(driver->crmu_usb2_ctrl);
-> +		val |= AFE_CORERDY_VDDC;
-> +		writel(val, driver->crmu_usb2_ctrl);
-> +
-> +		ret = pll_lock_stat(ICFG_MISC_STAT, PHY_PLL_LOCK, driver);
-> +		if (ret < 0) {
-> +			dev_err(&phy->dev, "Phy PLL lock failed\n");
-> +			goto err_shutdown;
-> +		}
-> +
-> +		val = readl(driver->idmdrd_rst_ctrl);
-> +		val &= ~IDM_RST_BIT;
-> +		writel(val, driver->idmdrd_rst_ctrl);
-> +
-> +		/* port over current Polarity */
-> +		val = readl(driver->usb2h_strap_reg);
-> +		val |= OHCI_OVRCUR_POL;
-> +		writel(val, driver->usb2h_strap_reg);
-> +	}
-> +	spin_unlock_irqrestore(&driver->lock, flags);
-> +	return 0;
-> +
-> +err_shutdown:
-> +	spin_unlock_irqrestore(&driver->lock, flags);
-> +	ns2_drd_phy_shutdown(phy);
-> +	return ret;
-> +}
-> +
-> +static void connect_work(struct work_struct *work)
-> +{
-> +	struct ns2_phy_driver *driver;
-> +	u32 extcon_event;
-> +	u32 val;
-> +
-> +	driver  = container_of(to_delayed_work(work),
-> +			       struct ns2_phy_driver, conn_work);
-> +	extcon_event = driver->data->new_state;
-> +
-> +	val = readl(driver->icfgdrd_regs + ICFG_FSM_CTRL);
-> +
-> +	switch (extcon_event) {
-> +	case EVT_DEVICE:
-> +		val = (val & ~DRD_HOST_MODE) | DRD_DEVICE_MODE;
-> +		writel(val, driver->icfgdrd_regs + ICFG_FSM_CTRL);
-> +
-> +		val = readl(driver->icfgdrd_regs + ICFG_DRD_P0CTL);
-> +		val |= ICFG_DEV_BIT;
-> +		writel(val, driver->icfgdrd_regs + ICFG_DRD_P0CTL);
-> +		break;
-> +
-> +	case EVT_HOST:
-> +		val = (val & ~DRD_DEVICE_MODE) | DRD_HOST_MODE;
-> +		writel(val, driver->icfgdrd_regs + ICFG_FSM_CTRL);
-> +
-> +		val = readl(driver->usb2h_strap_reg);
-> +		val |= OHCI_OVRCUR_POL;
-> +		writel(val, driver->usb2h_strap_reg);
-> +
-> +		val = readl(driver->icfgdrd_regs + ICFG_DRD_P0CTL);
-> +		val &= ~ICFG_DEV_BIT;
-> +		writel(val, driver->icfgdrd_regs + ICFG_DRD_P0CTL);
-> +		break;
-> +
-> +	case EVT_IDLE:
-> +		val &= ~(DRD_HOST_MODE | DRD_DEVICE_MODE);
-> +		writel(val, driver->icfgdrd_regs + ICFG_FSM_CTRL);
-> +		break;
-> +
-> +	default:
-> +		pr_err("Invalid extcon event\n");
-> +		break;
 > +	}
 > +}
 > +
-> +static int drd_device_notify(struct notifier_block *self,
-> +			     unsigned long event, void *ptr)
-> +{
-> +	struct ns2_phy_driver *driver = container_of(self,
-> +					struct ns2_phy_driver, dev_nb);
 > +
-> +	if (event) {
-> +		pr_debug("Device connected\n");
-> +		driver->data->new_state = EVT_DEVICE;
-> +		schedule_delayed_work(&driver->conn_work, 0);
-> +	} else {
-> +		pr_debug("Device disconnected\n");
-> +		driver->data->new_state = EVT_IDLE;
-> +		schedule_delayed_work(&driver->conn_work, PHY_WQ_DELAY);
+> +static void smmu_check_workarounds(struct arm_smmu_device *smmu,
+> +				  enum smmu_erratum_match_type type,
+> +				  void *arg)
+> +{
+> +	se_match_fn_t match_fn = NULL;
+> +
+> +	switch (type) {
+> +	case se_match_dt:
+> +		match_fn = smmu_check_dt_erratum;
+> +		break;
 > +	}
 > +
-> +	return NOTIFY_DONE;
+> +	smmu_enable_errata(smmu, type, match_fn, arg);
+> +
 > +}
 > +
-> +static int drd_host_notify(struct notifier_block *self,
-> +			   unsigned long event, void *ptr)
-> +{
-> +	struct ns2_phy_driver *driver = container_of(self,
-> +					struct ns2_phy_driver, host_nb);
+>  static struct arm_smmu_domain *to_smmu_domain(struct iommu_domain *dom)
+>  {
+>  	return container_of(dom, struct arm_smmu_domain, domain);
+> @@ -2641,6 +2697,8 @@ static int arm_smmu_device_dt_probe(struct platform_device *pdev,
+>  
+>  	parse_driver_options(smmu);
+>  
+> +	smmu_check_workarounds(smmu, se_match_dt, dev->of_node);
 > +
-> +	if (event) {
-> +		pr_debug("Host connected\n");
-> +		driver->data->new_state = EVT_HOST;
+>  	if (of_dma_is_coherent(dev->of_node))
+>  		smmu->features |= ARM_SMMU_FEAT_COHERENCY;
+>  
+> 
 
-Instead of having this notify, the USB controller can just use set_mode callback.
-> +		schedule_delayed_work(&driver->conn_work, 0);
-> +	} else {
-> +		pr_debug("Host disconnected\n");
-> +		driver->data->new_state = EVT_IDLE;
-> +		schedule_delayed_work(&driver->conn_work, PHY_WQ_DELAY);
-> +	}
-> +
-> +	return NOTIFY_DONE;
-> +}
-> +
-> +static void extcon_work(struct work_struct *work)
-> +{
-> +	struct ns2_phy_driver *driver;
-> +	int vbus;
-> +	int id;
-> +
-> +	driver  = container_of(to_delayed_work(work),
-> +			       struct ns2_phy_driver, wq_extcon);
-> +
-> +	id = gpiod_get_value_cansleep(driver->id_gpiod);
-> +	vbus = gpiod_get_value_cansleep(driver->vbus_gpiod);
-> +
-> +	if (!id && vbus) {
-> +		extcon_set_cable_state_(driver->edev, EXTCON_USB_HOST, true);
-> +	} else if (id && !vbus) {
-> +		extcon_set_cable_state_(driver->edev, EXTCON_USB_HOST, false);
-> +		extcon_set_cable_state_(driver->edev, EXTCON_USB, false);
-> +	} else if (id && vbus) {
-> +		extcon_set_cable_state_(driver->edev, EXTCON_USB, true);
-
-Er.. what's the use of having both extcon_set_cable_state_ and
-register_extcon_notifier in the same driver?
-
--Kishon
