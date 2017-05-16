@@ -1,68 +1,83 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH 1/4] power: supply: axp20x_battery: add support for DT battery
-Date: Tue, 16 May 2017 13:18:34 +0800
-Message-ID: <CAGb2v6598dSC278vVdQ_f54piLS0y4BnN3V4ZUhbGXKavx+ryQ@mail.gmail.com>
-References: <20170511134221.5569-1-quentin.schulz@free-electrons.com> <20170511134221.5569-2-quentin.schulz@free-electrons.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170511134221.5569-2-quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, "open list:THERMAL" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Liam Breck <liam-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+From: Oza Pawandeep <oza.oza@broadcom.com>
+Subject: [PATCH v6 0/3] OF/PCI address PCI inbound memory limitations
+Date: Tue, 16 May 2017 10:52:04 +0530
+Message-ID: <1494912127-12890-1-git-send-email-oza.oza@broadcom.com>
+Return-path: <linux-pci-owner@vger.kernel.org>
+Sender: linux-pci-owner@vger.kernel.org
+To: Joerg Roedel <joro@8bytes.org>, Robin Murphy <robin.murphy@arm.com>
+Cc: iommu@lists.linux-foundation.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, Oza Pawandeep <oza.pawandeep@gmail.com>, Oza Pawandeep <oza.oza@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 11, 2017 at 9:42 PM, Quentin Schulz
-<quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> This adds support in X-Powers AXP20X and AXP22X battery driver for a
-> fixed battery in DT.
->
-> It will take the minimum supported voltage by the battery as defined in
-> the battery DT node and set the V_OFF register to this value, telling
-> the system to shut down if the supplied power is below this value.
->
-> Signed-off-by: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> ---
->  drivers/power/supply/axp20x_battery.c | 10 ++++++++++
->  1 file changed, 10 insertions(+)
->
-> diff --git a/drivers/power/supply/axp20x_battery.c b/drivers/power/supply/axp20x_battery.c
-> index 5d29b2eab8fc..66f530541735 100644
-> --- a/drivers/power/supply/axp20x_battery.c
-> +++ b/drivers/power/supply/axp20x_battery.c
-> @@ -433,6 +433,7 @@ static int axp20x_power_probe(struct platform_device *pdev)
->  {
->         struct axp20x_batt_ps *axp20x_batt;
->         struct power_supply_config psy_cfg = {};
-> +       struct power_supply_battery_info info;
->
->         if (!of_device_is_available(pdev->dev.of_node))
->                 return -ENODEV;
-> @@ -484,6 +485,15 @@ static int axp20x_power_probe(struct platform_device *pdev)
->                 return PTR_ERR(axp20x_batt->batt);
->         }
->
-> +       if (!power_supply_get_battery_info(axp20x_batt->batt, &info)) {
+It is possible that PCI device supports 64-bit DMA addressing,
+and thus it's driver sets device's dma_mask to DMA_BIT_MASK(64),
+however PCI host bridge may have limitations on the inbound 
+transaction addressing.
 
-This is not in -next. It would help if you mention any requisite patches.
+This is particularly problematic on ARM/ARM64 SOCs where the 
+IOMMU (i.e. SMMU) translates IOVA to PA for in-bound transactions
+only after PCI Host has forwarded these transactions on SOC IO bus. 
 
-ChenYu
+This means, on such ARM/ARM64 SOCs the IOVA of in-bound transactions
+has to honor the addressing restrictions of the PCI Host.
 
-> +               int vmin = info.voltage_min_design_uv;
-> +
-> +               if (vmin > 0 && axp20x_set_voltage_min_design(axp20x_batt,
-> +                                                             vmin))
-> +                       dev_err(&pdev->dev,
-> +                               "couldn't set voltage_min_design\n");
-> +       }
-> +
->         return 0;
->  }
->
-> --
-> 2.11.0
->
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Current device framework and OF framework integration assumes
+dma-ranges in a way where memory-mapped devices define their
+dma-ranges. (child-bus-address, parent-bus-address, length).
+
+of_dma_configure is specifically written to take care of memory
+mapped devices but no implementation exists for pci devices.
+
+For e.g. iproc based SOCs and other SOCs (such as rcar) have
+PCI world dma-ranges.
+dma-ranges = <0x43000000 0x00 0x00 0x00 0x00 0x80 0x00>;
+
+This patchset
+reserves the IOVA ranges for PCI masters based
+on the PCI world dma-ranges.
+fix of_dma_get_range to cater to PCI dma-ranges.
+fix of_dma_get_range which currently returns size 0 for PCI devices.
+
+IOVA allocation patch:
+[PATCH 2/3] iommu/pci: reserve iova for PCI masters
+
+Fix of_dma_get_range bug and address PCI master.
+[PATCH 3/3] PCI/of fix of_dma_get_range; get PCI specific
+this patch fixes the following problems of_dma_get_range.
+1) return of wrong size as 0.
+2) not handling absence of dma-ranges, which is valid for PCI master.
+3) not handling multipe inbound windows.
+4) in order to get largest possible dma_mask. this patch also
+retuns the largest possible size based on dma-ranges,
+
+Base patch for both of the above patches:
+[PATCH 1/3] of/pci/dma: fix DMA configuration for PCI masters
+
+Changes since v6:
+- Robin's comments addressed.
+Changes since v5:
+Changes since v4:
+Changes since v3:
+Changes since v2:
+- minor changes, redudant checkes removed
+- removed internal review
+Changes since v1:
+- address Rob's comments.
+- Add a get_dma_ranges() function to of_bus struct..
+- Convert existing contents of of_dma_get_range function to
+  of_bus_default_dma_get_ranges and adding that to the
+  default of_bus struct.
+- Make of_dma_get_range call of_bus_match() and then bus->get_dma_ranges.
+
+Oza Pawandeep (3):
+  of/pci/dma: fix DMA configuration for PCI masters
+  iommu/pci: reserve IOVA for PCI masters
+  PCI/of fix of_dma_get_range; get PCI specific dma-ranges
+
+ drivers/iommu/dma-iommu.c |  35 ++++++++
+ drivers/of/address.c      | 215 ++++++++++++++++++++++++++++++++--------------
+ drivers/of/of_pci.c       |  95 ++++++++++++++++++++
+ include/linux/of_pci.h    |   7 ++
+ 4 files changed, 288 insertions(+), 64 deletions(-)
+
+-- 
+1.9.1
