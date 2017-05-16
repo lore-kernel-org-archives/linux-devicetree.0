@@ -1,52 +1,83 @@
-From: Shameerali Kolothum Thodi <shameerali.kolothum.thodi@huawei.com>
-Subject: RE: [RFC v1 3/7] iommu/arm-smmu-v3: Replace the device tree binding
- for hisilicon broken prefetch cmd with erratum id
-Date: Tue, 16 May 2017 10:15:28 +0000
-Message-ID: <5FC3163CFD30C246ABAA99954A238FA838350804@FRAEML521-MBX.china.huawei.com>
-References: <20170513094731.3676-1-shameerali.kolothum.thodi@huawei.com>
- <20170513094731.3676-4-shameerali.kolothum.thodi@huawei.com>
- <CAL_JsqLH7iT7O2U3g6J26YGBUmt53PDymLJ5VCLByW_97L_M4w@mail.gmail.com>
+From: Anup Patel <anup.patel@broadcom.com>
+Subject: Re: [PATCH v2 04/11] arm64: dts: Initial DTS files for Broadcom
+ Stingray SOC
+Date: Tue, 16 May 2017 16:17:58 +0530
+Message-ID: <CAALAos8W72yntS746Q2JE_6qwSBJV65acwapUR_3H7nf6skcFQ@mail.gmail.com>
+References: <1494849741-21294-1-git-send-email-anup.patel@broadcom.com>
+ <1494849741-21294-5-git-send-email-anup.patel@broadcom.com> <20170515131334.GE17776@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqLH7iT7O2U3g6J26YGBUmt53PDymLJ5VCLByW_97L_M4w@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-acpi-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Will Deacon <will.deacon@arm.com>, Robin Murphy <robin.murphy@arm.com>, Mark Rutland <mark.rutland@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Hanjun Guo <hanjun.guo@linaro.org>, Gabriele Paoloni <gabriele.paoloni@huawei.com>, John Garry <john.garry@huawei.com>, Linux IOMMU <iommu@lists.linux-foundation.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, "devel@acpica.org" <devel@acpica.org>, Linuxarm <linuxarm@huawei.com>, "Wangzhou (B)" <wangzhou1@hisilicon.com>, "Guohanjun (Hanjun Guo)" <guohanjun@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170515131334.GE17776@leverpostej>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Florian Fainelli <f.fainelli@gmail.com>, Oza Pawandeep <oza.oza@broadcom.com>, Srinath Mannam <srinath.mannam@broadcom.com>, Pramod Kumar <pramod.kumar@broadcom.com>, Sandeep Tripathy <sandeep.tripathy@broadcom.com>, Device Tree <devicetree@vger.kernel.org>, Linux Kernel <linux-kernel@vger.kernel.org>, linux-clk@vger.kernel.org, Linux ARM Kernel <linux-arm-kernel@lists.infradead.org>, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>, Scott Branden <scott.branden@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogUm9iIEhlcnJpbmcgW21h
-aWx0bzpyb2JoQGtlcm5lbC5vcmddDQo+IFNlbnQ6IE1vbmRheSwgTWF5IDE1LCAyMDE3IDQ6MjQg
-UE0NCj4gVG86IFNoYW1lZXJhbGkgS29sb3RodW0gVGhvZGkNCj4gQ2M6IFdpbGwgRGVhY29uOyBS
-b2JpbiBNdXJwaHk7IE1hcmsgUnV0bGFuZDsgTG9yZW56byBQaWVyYWxpc2k7IEhhbmp1biBHdW87
-DQo+IEdhYnJpZWxlIFBhb2xvbmk7IEpvaG4gR2Fycnk7IExpbnV4IElPTU1VOyBkZXZpY2V0cmVl
-QHZnZXIua2VybmVsLm9yZzsNCj4gbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3Jn
-OyBsaW51eC1hY3BpQHZnZXIua2VybmVsLm9yZzsNCj4gZGV2ZWxAYWNwaWNhLm9yZzsgTGludXhh
-cm07IFdhbmd6aG91IChCKTsgR3VvaGFuanVuIChIYW5qdW4gR3VvKQ0KPiBTdWJqZWN0OiBSZTog
-W1JGQyB2MSAzLzddIGlvbW11L2FybS1zbW11LXYzOiBSZXBsYWNlIHRoZSBkZXZpY2UgdHJlZQ0K
-PiBiaW5kaW5nIGZvciBoaXNpbGljb24gYnJva2VuIHByZWZldGNoIGNtZCB3aXRoIGVycmF0dW0g
-aWQNCj4gDQo+IE9uIFNhdCwgTWF5IDEzLCAyMDE3IGF0IDQ6NDcgQU0sIHNoYW1lZXINCj4gPHNo
-YW1lZXJhbGkua29sb3RodW0udGhvZGlAaHVhd2VpLmNvbT4gd3JvdGU6DQo+ID4gU2lnbmVkLW9m
-Zi1ieTogc2hhbWVlciA8c2hhbWVlcmFsaS5rb2xvdGh1bS50aG9kaUBodWF3ZWkuY29tPg0KPiA+
-IC0tLQ0KPiA+ICBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvaW9tbXUvYXJtLHNt
-bXUtdjMudHh0IHwgMiArLQ0KPiA+ICAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKyksIDEg
-ZGVsZXRpb24oLSkNCj4gPg0KPiA+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRy
-ZWUvYmluZGluZ3MvaW9tbXUvYXJtLHNtbXUtdjMudHh0DQo+ID4gYi9Eb2N1bWVudGF0aW9uL2Rl
-dmljZXRyZWUvYmluZGluZ3MvaW9tbXUvYXJtLHNtbXUtdjMudHh0DQo+ID4gaW5kZXggYmU1NzU1
-MC4uYmY0OGU5MiAxMDA2NDQNCj4gPiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
-ZGluZ3MvaW9tbXUvYXJtLHNtbXUtdjMudHh0DQo+ID4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZp
-Y2V0cmVlL2JpbmRpbmdzL2lvbW11L2FybSxzbW11LXYzLnR4dA0KPiA+IEBAIC00Niw3ICs0Niw3
-IEBAIHRoZSBQQ0llIHNwZWNpZmljYXRpb24uDQo+ID4gICAgICAgICAgICAgICAgICAgICAgICAg
-IGRldmljZXRyZWUvYmluZGluZ3MvaW50ZXJydXB0LWNvbnRyb2xsZXIvbXNpLnR4dA0KPiA+ICAg
-ICAgICAgICAgICAgICAgICAgICAgZm9yIGEgZGVzY3JpcHRpb24gb2YgdGhlIG1zaS1wYXJlbnQg
-cHJvcGVydHkuDQo+ID4NCj4gPiAtLSBoaXNpbGljb24sYnJva2VuLXByZWZldGNoLWNtZA0KPiA+
-ICstIGhpc2lsaWNvbixlcnJhdHVtLTE2MTAxMDcwMQ0KPiANCj4gV2h5PyBZb3VyIG1pc3Npbmcg
-Y29tbWl0IG1zZyBzaG91bGQgYW5zd2VyIHRoYXQuIFRoaXMgYnJlYWtzDQo+IGNvbXBhdGliaWxp
-dHksIHNvIHlvdSBhcmUgc3R1Y2sgd2l0aCB0aGUgb2xkIHN0cmluZy4NCj4gDQo+IEknZCBwcmVm
-ZXIgdGhhdCB5b3Ugc3RhcnQgdXNpbmcgdGhlIGNvbXBhdGlibGUgc3RyaW5nIHJhdGhlciB0aGFu
-IGV2ZXJ5IHZlbmRvcg0KPiBhZGRpbmcgYSBwcm9wZXJ0eSBmb3IgZXZlcnkgZXJyYXRhLg0KDQpP
-ay4gSSB3aWxsIHdhaXQgZm9yIHRoZSByZXZpZXcgb2Ygb3RoZXIgcGF0Y2hlcyBpbiB0aGlzIHNl
-cmllcyBhbmQgdXBkYXRlIGl0IGFjY29yZGluZ2x5DQppbiB0aGUgbmV4dCByZXZpc2lvbi4NCg0K
-VGhhbmtzLA0KU2hhbWVlcg0KDQoNCg==
+On Mon, May 15, 2017 at 6:43 PM, Mark Rutland <mark.rutland@arm.com> wrote:
+> Hi,
+>
+> On Mon, May 15, 2017 at 05:32:14PM +0530, Anup Patel wrote:
+>> +/ {
+>> +     chosen { /* Default kernel args */
+>> +             bootargs = "root=/dev/ram rw rootwait \
+>> +                         earlycon=uart8250,mmio32,0x68a10000 \
+>> +                         pci=pcie_bus_safe cma=64M";
+>
+> Why do we need all of these?
+
+Yes, we don't need bootargs here. This were just for reference.
+
+I will remove default bootargs because its responsibility of
+bootloader to add it.
+
+>
+>> +             linux,stdout-path = "serial0:115200n8";
+>
+> Please drop the 'linux,' prefix here.
+
+Sure, will do.
+
+>
+> [...]
+>
+>> +     memory: memory@80000000 {
+>> +             device_type = "memory";
+>> +             reg = <0x00000000 0x80000000 0 0x40000000>;
+>> +     };
+>> +
+>> +     psci {
+>> +             compatible = "arm,psci-0.2";
+>> +             method = "smc";
+>> +     };
+>> +
+>> +     pmu {
+>> +             compatible = "arm,armv8-pmuv3";
+>> +             interrupts = <GIC_PPI 7 IRQ_TYPE_LEVEL_HIGH>;
+>> +     };
+>> +
+>> +     timer {
+>> +             compatible = "arm,armv8-timer";
+>> +             interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(8) |
+>> +                           IRQ_TYPE_LEVEL_LOW)>,
+>> +                          <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(8) |
+>> +                           IRQ_TYPE_LEVEL_LOW)>,
+>> +                          <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(8) |
+>> +                           IRQ_TYPE_LEVEL_LOW)>,
+>> +                          <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(8) |
+>> +                           IRQ_TYPE_LEVEL_LOW)>;
+>
+> GICv3 PPIs don't have a mask. See
+>
+> Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.txt
+>
+> Please remove the GIC_CPU_MASK_*() uses here and in this dts. They
+> shouldn't be there.
+
+Thanks for catching.
+
+We had taken care of this in PMU DT node but did not cleanup timer
+DT node.
+
+Thanks,
+Anup
