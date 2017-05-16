@@ -1,66 +1,60 @@
-From: Jan Glauber <jglauber@cavium.com>
-Subject: [PATCH 4/5] of/platform: Make of_platform_device_destroy globally visible
-Date: Tue, 16 May 2017 11:36:54 +0200
-Message-ID: <20170516093655.17746-5-jglauber@cavium.com>
-References: <20170516093655.17746-1-jglauber@cavium.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170516093655.17746-1-jglauber@cavium.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: David Daney <david.daney@cavium.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, "Steven J . Hill" <Steven.Hill@cavium.com>, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, Jan Glauber <jglauber@cavium.com>, devicetree@vger.kernel.org
+From: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
+Subject: Re: [PATCH] clocksource: moxart: Add AST2500 compatible string
+Date: Tue, 16 May 2017 18:03:37 +0800
+Message-ID: <CACPK8XdnkBAi_-wjHKoAuL=wtc6+psE4Ap0qsVHO75wzO9EEuA@mail.gmail.com>
+References: <20170516075840.23130-1-andrew@aj.id.au>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170516075840.23130-1-andrew-zrmu5oMJ5Fs@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>
+Cc: Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ryan Chen <ryan_chen-SAlXDmAnmOAqDJ6do+/SaQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-of_platform_device_destroy is the counterpart to
-of_platform_device_create which is a non-static function.
+On Tue, May 16, 2017 at 3:58 PM, Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org> wrote:
+> Also clean up space-before-tab issues in the documentation.
+>
+> Signed-off-by: Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>
 
-After creating a platform device it might be necessary
-to destroy it to deal with -EPROBE_DEFER where a
-repeated of_platform_device_create call would fail otherwise.
+Acked-by: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
 
-Therefore also make of_platform_device_destroy globally visible.
-
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Frank Rowand <frowand.list@gmail.com>
-Cc: devicetree@vger.kernel.org
-
-Signed-off-by: Jan Glauber <jglauber@cavium.com>
----
- drivers/of/platform.c       | 3 ++-
- include/linux/of_platform.h | 1 +
- 2 files changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-index 71fecc2..703a421 100644
---- a/drivers/of/platform.c
-+++ b/drivers/of/platform.c
-@@ -523,7 +523,7 @@ static int __init of_platform_default_populate_init(void)
- arch_initcall_sync(of_platform_default_populate_init);
- #endif
- 
--static int of_platform_device_destroy(struct device *dev, void *data)
-+int of_platform_device_destroy(struct device *dev, void *data)
- {
- 	/* Do not touch devices not populated from the device tree */
- 	if (!dev->of_node || !of_node_check_flag(dev->of_node, OF_POPULATED))
-@@ -544,6 +544,7 @@ static int of_platform_device_destroy(struct device *dev, void *data)
- 	of_node_clear_flag(dev->of_node, OF_POPULATED_BUS);
- 	return 0;
- }
-+EXPORT_SYMBOL_GPL(of_platform_device_destroy);
- 
- /**
-  * of_platform_depopulate() - Remove devices populated from device tree
-diff --git a/include/linux/of_platform.h b/include/linux/of_platform.h
-index dc8224a..e0d1946 100644
---- a/include/linux/of_platform.h
-+++ b/include/linux/of_platform.h
-@@ -64,6 +64,7 @@ extern struct platform_device *of_platform_device_create(struct device_node *np,
- 						   const char *bus_id,
- 						   struct device *parent);
- 
-+extern int of_platform_device_destroy(struct device *dev, void *data);
- extern int of_platform_bus_probe(struct device_node *root,
- 				 const struct of_device_id *matches,
- 				 struct device *parent);
--- 
-2.9.0.rc0.21.g7777322
+> ---
+>  Documentation/devicetree/bindings/timer/moxa,moxart-timer.txt | 5 +++--
+>  drivers/clocksource/moxart_timer.c                            | 3 ++-
+>  2 files changed, 5 insertions(+), 3 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/timer/moxa,moxart-timer.txt b/Documentation/devicetree/bindings/timer/moxa,moxart-timer.txt
+> index e207c11630af..b6b8b4836d3b 100644
+> --- a/Documentation/devicetree/bindings/timer/moxa,moxart-timer.txt
+> +++ b/Documentation/devicetree/bindings/timer/moxa,moxart-timer.txt
+> @@ -3,8 +3,9 @@ MOXA ART timer
+>  Required properties:
+>
+>  - compatible : Must be one of:
+> -       - "moxa,moxart-timer"
+> -       - "aspeed,ast2400-timer"
+> +       - "moxa,moxart-timer"
+> +       - "aspeed,ast2400-timer"
+> +       - "aspeed,ast2500-timer"
+>  - reg : Should contain registers location and length
+>  - interrupts : Should contain the timer interrupt number
+>  - clocks : Should contain phandle for the clock that drives the counter
+> diff --git a/drivers/clocksource/moxart_timer.c b/drivers/clocksource/moxart_timer.c
+> index 7f3430654fbd..b6fa319396c1 100644
+> --- a/drivers/clocksource/moxart_timer.c
+> +++ b/drivers/clocksource/moxart_timer.c
+> @@ -253,4 +253,5 @@ static int __init moxart_timer_init(struct device_node *node)
+>         return ret;
+>  }
+>  CLOCKSOURCE_OF_DECLARE(moxart, "moxa,moxart-timer", moxart_timer_init);
+> -CLOCKSOURCE_OF_DECLARE(aspeed, "aspeed,ast2400-timer", moxart_timer_init);
+> +CLOCKSOURCE_OF_DECLARE(ast2400, "aspeed,ast2400-timer", moxart_timer_init);
+> +CLOCKSOURCE_OF_DECLARE(ast2500, "aspeed,ast2500-timer", moxart_timer_init);
+> --
+> 2.9.3
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
