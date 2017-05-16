@@ -1,38 +1,39 @@
-From: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
-Subject: [PATCH 1/3] gpio: Add new flags to control sleep status of GPIOs
-Date: Tue, 16 May 2017 16:31:52 +0100
-Message-ID: <1494948714-15203-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+From: Shuah Khan <shuahkh-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
+Subject: Re: [PATCH] scripts: check.c fix compile error
+Date: Tue, 16 May 2017 09:39:49 -0600
+Message-ID: <8976ed27-296b-e0ba-8164-7271204eaee7@osg.samsung.com>
+References: <20170515191010.4878-1-shuahkh@osg.samsung.com>
+ <CAL_Jsq+K8wN_OjoePoZCd-xXcAKfO22sBLj6SjoEqxZ+aDwyOg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Sender: linux-gpio-owner@vger.kernel.org
-To: linus.walleij@linaro.org
-Cc: lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, gnurou@gmail.com, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, patches@opensource.wolfsonmicro.com
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL_Jsq+K8wN_OjoePoZCd-xXcAKfO22sBLj6SjoEqxZ+aDwyOg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Shuah Khan <shuahkh-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add new flags to allow users to specify that they are not concerned with
-the status of GPIOs whilst in a sleep/low power state.
+On 05/16/2017 06:52 AM, Rob Herring wrote:
+> On Mon, May 15, 2017 at 2:10 PM, Shuah Khan <shuahkh-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org> wrote:
+>> Fix the following compile error:
+> 
+> On what host? 32-bit I guess.
 
-Signed-off-by: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
----
- include/dt-bindings/gpio/gpio.h | 4 ++++
- 1 file changed, 4 insertions(+)
+Saw this on Odroid-xu4.
 
-diff --git a/include/dt-bindings/gpio/gpio.h b/include/dt-bindings/gpio/gpio.h
-index b4f54da..48c28f0 100644
---- a/include/dt-bindings/gpio/gpio.h
-+++ b/include/dt-bindings/gpio/gpio.h
-@@ -21,6 +21,10 @@
- #define GPIO_LINE_OPEN_SOURCE 0
- #define GPIO_LINE_OPEN_DRAIN 4
- 
-+/* Bit 3 express GPIO suspend/resume persistence */
-+#define GPIO_SLEEP_MAINTAIN_VALUE 0
-+#define GPIO_SLEEP_MAY_LOOSE_VALUE 8
-+
- /*
-  * Open Drain/Collector is the combination of single-ended open drain interface.
-  * Open Source/Emitter is the combination of single-ended open source interface.
--- 
-2.1.4
+> 
+> I'll take this, but can you also send this to upstream dtc and
+> devicetree-compiler list. Normally, dtc is just an import.
 
+Yes. I found this on upstream dtc build last week and git the patch
+ready to send. Then, I noticed that it showed up in 4.12-rc1 with the
+dtc import. I have the patch ready to go for upstream dtc. Will send
+it shortly.
+
+thanks,
+-- Shuah
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
