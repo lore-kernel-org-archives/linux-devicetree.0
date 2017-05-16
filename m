@@ -1,114 +1,159 @@
-From: Robin Murphy <robin.murphy@arm.com>
-Subject: Re: [RFC v1 6/7] iommu/arm-smmu-v3: Rearrange msi resv alloc
- functions
-Date: Tue, 16 May 2017 14:27:50 +0100
-Message-ID: <d2d90929-6e79-70a3-5c82-a25e67931b4a@arm.com>
+From: Shameerali Kolothum Thodi <shameerali.kolothum.thodi@huawei.com>
+Subject: RE: [RFC v1 2/7] iommu/arm-smmu-v3: Add erratum framework functions
+Date: Tue, 16 May 2017 13:45:17 +0000
+Message-ID: <5FC3163CFD30C246ABAA99954A238FA8383509FD@FRAEML521-MBX.china.huawei.com>
 References: <20170513094731.3676-1-shameerali.kolothum.thodi@huawei.com>
- <20170513094731.3676-7-shameerali.kolothum.thodi@huawei.com>
+ <20170513094731.3676-3-shameerali.kolothum.thodi@huawei.com>
+ <44374533-c1ed-5f13-d70c-8a7431bf8451@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <20170513094731.3676-7-shameerali.kolothum.thodi@huawei.com>
+In-Reply-To: <44374533-c1ed-5f13-d70c-8a7431bf8451@arm.com>
+Content-Language: en-US
 Sender: linux-acpi-owner@vger.kernel.org
-To: shameer <shameerali.kolothum.thodi@huawei.com>, will.deacon@arm.com, mark.rutland@arm.com, lorenzo.pieralisi@arm.com, hanjun.guo@linaro.org
-Cc: devicetree@vger.kernel.org, gabriele.paoloni@huawei.com, john.garry@huawei.com, linuxarm@huawei.com, linux-acpi@vger.kernel.org, iommu@lists.linux-foundation.org, wangzhou1@hisilicon.com, guohanjun@huawei.com, linux-arm-kernel@lists.infradead.org, devel@acpica.org
+To: Robin Murphy <robin.murphy@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "hanjun.guo@linaro.org" <hanjun.guo@linaro.org>
+Cc: Gabriele Paoloni <gabriele.paoloni@huawei.com>, John Garry <john.garry@huawei.com>, "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, "devel@acpica.org" <devel@acpica.org>, Linuxarm <linuxarm@huawei.com>, "Wangzhou (B)" <wangzhou1@hisilicon.com>, "Guohanjun (Hanjun Guo)" <guohanjun@huawei.com>
 List-Id: devicetree@vger.kernel.org
 
-On 13/05/17 10:47, shameer wrote:
-> This moves the SW MSI reserve region allocation to probe fn.
 
-Why?
 
-> Signed-off-by: shameer <shameerali.kolothum.thodi@huawei.com>
-> ---
->  drivers/iommu/arm-smmu-v3.c | 36 +++++++++++++++++++++++++++---------
->  1 file changed, 27 insertions(+), 9 deletions(-)
+> -----Original Message-----
+> From: Robin Murphy [mailto:robin.murphy@arm.com]
+> Sent: Tuesday, May 16, 2017 2:08 PM
+> To: Shameerali Kolothum Thodi; will.deacon@arm.com;
+> mark.rutland@arm.com; lorenzo.pieralisi@arm.com; hanjun.guo@linaro.org
+> Cc: Gabriele Paoloni; John Garry; iommu@lists.linux-foundation.org;
+> devicetree@vger.kernel.org; linux-arm-kernel@lists.infradead.org; linux-
+> acpi@vger.kernel.org; devel@acpica.org; Linuxarm; Wangzhou (B);
+> Guohanjun (Hanjun Guo)
+> Subject: Re: [RFC v1 2/7] iommu/arm-smmu-v3: Add erratum framework
+> functions
 > 
-> diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
-> index 770cc9e..e7a8a50 100644
-> --- a/drivers/iommu/arm-smmu-v3.c
-> +++ b/drivers/iommu/arm-smmu-v3.c
-> @@ -619,6 +619,9 @@ struct arm_smmu_device {
->  
->  	/* IOMMU core code handle */
->  	struct iommu_device		iommu;
-> +
-> +	/* MSI Reserve region */
-> +	struct iommu_resv_region        *msi_region;
->  };
->  
->  /* SMMU private data for each master */
-> @@ -1960,15 +1963,12 @@ static int arm_smmu_of_xlate(struct device *dev, struct of_phandle_args *args)
->  static void arm_smmu_get_resv_regions(struct device *dev,
->  				      struct list_head *head)
->  {
-> -	struct iommu_resv_region *region;
-> -	int prot = IOMMU_WRITE | IOMMU_NOEXEC | IOMMU_MMIO;
-> -
-> -	region = iommu_alloc_resv_region(MSI_IOVA_BASE, MSI_IOVA_LENGTH,
-> -					 prot, IOMMU_RESV_SW_MSI);
-> -	if (!region)
-> -		return;
-> +	struct iommu_domain *domain = iommu_get_domain_for_dev(dev);
-> +	struct arm_smmu_domain *smmu_domain = to_smmu_domain(domain);
-> +	struct arm_smmu_device *smmu = smmu_domain->smmu;
-
-There's never any need for the domain dance if you don't need the
-domain, just pull the smmu out of the device's iommu_fwspec.
-
-> -	list_add_tail(&region->list, head);
-> +	if (smmu && smmu->msi_region)
-> +		list_add_tail(&smmu->msi_region->list, head);
-
-Have you considered what happens for the second and subsequent domains
-allocated on this SMMU? I can't see that ending well.
-
-Robin.
-
->  	iommu_dma_get_resv_regions(dev, head);
->  }
-> @@ -1978,8 +1978,13 @@ static void arm_smmu_put_resv_regions(struct device *dev,
->  {
->  	struct iommu_resv_region *entry, *next;
->  
-> -	list_for_each_entry_safe(entry, next, head, list)
-> +	list_for_each_entry_safe(entry, next, head, list) {
-> +		if (entry->type == IOMMU_RESV_SW_MSI ||
-> +				entry->type == IOMMU_RESV_MSI)
-> +			continue;
-> +
->  		kfree(entry);
-> +	}
->  }
->  
->  static struct iommu_ops arm_smmu_ops = {
-> @@ -2711,6 +2716,17 @@ static int arm_smmu_device_dt_probe(struct platform_device *pdev,
->  	return ret;
->  }
->  
-> +static struct iommu_resv_region *arm_smmu_alloc_msi_region(
-> +				struct arm_smmu_device *smmu)
-> +{
-> +	struct iommu_resv_region *region;
-> +	int prot = IOMMU_WRITE | IOMMU_NOEXEC | IOMMU_MMIO;
-> +
-> +	region = iommu_alloc_resv_region(MSI_IOVA_BASE, MSI_IOVA_LENGTH,
-> +					prot, IOMMU_RESV_SW_MSI);
-> +	return region;
-> +}
-> +
->  static int arm_smmu_device_probe(struct platform_device *pdev)
->  {
->  	int irq, ret;
-> @@ -2756,6 +2772,8 @@ static int arm_smmu_device_probe(struct platform_device *pdev)
->  	if (irq > 0)
->  		smmu->gerr_irq = irq;
->  
-> +	smmu->msi_region = arm_smmu_alloc_msi_region(smmu);
-> +
->  	if (dev->of_node) {
->  		ret = arm_smmu_device_dt_probe(pdev, smmu);
->  	} else {
+> On 13/05/17 10:47, shameer wrote:
+> > This will provide a way to replace the existing skip_prefetch_cmd
+> > erratum using the new framework.
 > 
+> Yikes, between this and patch 1 we're already pushing 70 lines of new
+> code, and it still doesn't actually do anything yet. Implementing the
+> SMMUv3 equivalent of SMMUv2's acpi_smmu_get_data() would probably
+> be
+> about 10 lines; all you need to do is set some quirk flags based on a
+> compatible value. These quirks aren't really any different in principle
+> to the firmware COHACC overrides that we already process.
+> 
+> Sorry, I'm saying no to a massively overengineered "framework" for
+> something so relatively simple.
+
+Thanks Robin for going through patches. The "framework" was added thinking
+it might be useful when multiple quirk implementations are added to the
+SMMUv3 driver from different vendors. As you said it doesn't look like, 
+adding any value at the moment. I will revise patch set based on SMMUv2s
+way for ACPI and retain the broken-* for dtb. 
+
+Thanks,
+Shameer
+ 
+> Robin.
+> 
+> > Signed-off-by: shameer <shameerali.kolothum.thodi@huawei.com>
+> > ---
+> >  drivers/iommu/arm-smmu-v3.c | 58
+> +++++++++++++++++++++++++++++++++++++++++++++
+> >  1 file changed, 58 insertions(+)
+> >
+> > diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-
+> v3.c
+> > index a166590..f20d5d5 100644
+> > --- a/drivers/iommu/arm-smmu-v3.c
+> > +++ b/drivers/iommu/arm-smmu-v3.c
+> > @@ -664,16 +664,72 @@ enum smmu_erratum_match_type {
+> >  	se_match_dt,
+> >  };
+> >
+> > +void erratum_skip_prefetch_cmd(struct arm_smmu_device *smmu, void
+> *arg)
+> > +{
+> > +	smmu->options |= ARM_SMMU_OPT_SKIP_PREFETCH;
+> > +}
+> > +
+> >  struct smmu_erratum_workaround {
+> >  	enum smmu_erratum_match_type match_type;
+> >  	const void *id;	/* Indicate the Erratum ID */
+> >  	const char *desc_str;
+> > +	void (*enable)(struct arm_smmu_device *, void *);
+> >  };
+> >
+> >  static const struct smmu_erratum_workaround smmu_workarounds[] = {
+> >
+> >  };
+> >
+> > +typedef bool (*se_match_fn_t)(const struct
+> smmu_erratum_workaround *,
+> > +							  const void *);
+> > +static
+> > +bool smmu_check_dt_erratum(const struct smmu_erratum_workaround
+> *wa,
+> > +						   const void *arg)
+> > +{
+> > +	const struct device_node *np = arg;
+> > +
+> > +	return of_property_read_bool(np, wa->id);
+> > +}
+> > +
+> > +static void smmu_enable_errata(struct arm_smmu_device *smmu,
+> > +				enum smmu_erratum_match_type type,
+> > +				se_match_fn_t match_fn,
+> > +				void *arg)
+> > +{
+> > +	const struct smmu_erratum_workaround *wa =
+> smmu_workarounds;
+> > +
+> > +	for (; wa->desc_str; wa++) {
+> > +		if (wa->match_type != type)
+> > +			continue;
+> > +
+> > +		if (match_fn(wa, arg)) {
+> > +			if (wa->enable) {
+> > +				wa->enable(smmu, arg);
+> > +				dev_info(smmu->dev,
+> > +					"Enabling workaround for %s\n",
+> > +					 wa->desc_str);
+> > +			}
+> > +		}
+> > +	}
+> > +}
+> > +
+> > +
+> > +static void smmu_check_workarounds(struct arm_smmu_device *smmu,
+> > +				  enum smmu_erratum_match_type type,
+> > +				  void *arg)
+> > +{
+> > +	se_match_fn_t match_fn = NULL;
+> > +
+> > +	switch (type) {
+> > +	case se_match_dt:
+> > +		match_fn = smmu_check_dt_erratum;
+> > +		break;
+> > +	}
+> > +
+> > +	smmu_enable_errata(smmu, type, match_fn, arg);
+> > +
+> > +}
+> > +
+> >  static struct arm_smmu_domain *to_smmu_domain(struct
+> iommu_domain *dom)
+> >  {
+> >  	return container_of(dom, struct arm_smmu_domain, domain);
+> > @@ -2641,6 +2697,8 @@ static int arm_smmu_device_dt_probe(struct
+> platform_device *pdev,
+> >
+> >  	parse_driver_options(smmu);
+> >
+> > +	smmu_check_workarounds(smmu, se_match_dt, dev->of_node);
+> > +
+> >  	if (of_dma_is_coherent(dev->of_node))
+> >  		smmu->features |= ARM_SMMU_FEAT_COHERENCY;
+> >
+> >
 
