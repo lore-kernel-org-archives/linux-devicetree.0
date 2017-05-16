@@ -1,27 +1,199 @@
-From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 0/3] arm64: dts: introduce QorIQ DPAA 1.x QBMan device
- tree nodes
-Date: Tue, 16 May 2017 09:39:42 +0800
-Message-ID: <20170516013941.GY8471@dragon>
-References: <1494840078-22243-1-git-send-email-madalin.bucur@nxp.com>
+From: Moritz Fischer <mdf-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [RFC/PATCH 1/2] dt-binding: mfd: Add Maxim/Dallas DS1374 MFD
+ device binding
+Date: Mon, 15 May 2017 19:34:17 -0700
+Message-ID: <20170516023417.GA28179@tyrael.amer.corp.natinst.com>
+References: <1494354021-370-1-git-send-email-mdf@kernel.org>
+ <20170513000029.tgzt5p67tcl7uhbx@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="CE+1k2dSO48ffgeK"
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1494840078-22243-1-git-send-email-madalin.bucur-3arQi8VN3Tc@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Madalin Bucur <madalin.bucur-3arQi8VN3Tc@public.gmane.org>
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <20170513000029.tgzt5p67tcl7uhbx@rob-hp-laptop>
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Moritz Fischer <mdf-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 15, 2017 at 12:21:15PM +0300, Madalin Bucur wrote:
-> Madalin Bucur (3):
->   arm64: dts: add DPAA QBMan portals
->   arm64: dts: add LS1043A DPAA QBMan nodes
->   arm64: dts: add LS1046A DPAA QBMan nodes
 
-Applied all, thanks.
+--CE+1k2dSO48ffgeK
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Fri, May 12, 2017 at 07:00:29PM -0500, Rob Herring wrote:
+> On Tue, May 09, 2017 at 11:20:20AM -0700, Moritz Fischer wrote:
+> > This adds a binding for the Maxim/Dallas DS1374 MFD.
+> >=20
+> > Signed-off-by: Moritz Fischer <mdf-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> > ---
+> >=20
+> > Hi all,
+> >=20
+> > I'm not entirely sure aobut the binding, does anyone
+> > have a better suggestion for the remap-wdt-reset property?
+> >=20
+> > Thanks,
+> >=20
+> > Moritz
+> >=20
+> > ---
+> >  Documentation/devicetree/bindings/mfd/ds1374.txt   | 63 ++++++++++++++=
+++++++++
+> >  .../devicetree/bindings/trivial-devices.txt        |  1 -
+> >  drivers/rtc/Kconfig                                |  2 +
+> >  3 files changed, 65 insertions(+), 1 deletion(-)
+> >  create mode 100644 Documentation/devicetree/bindings/mfd/ds1374.txt
+> >=20
+> > diff --git a/Documentation/devicetree/bindings/mfd/ds1374.txt b/Documen=
+tation/devicetree/bindings/mfd/ds1374.txt
+> > new file mode 100644
+> > index 0000000..b22396f
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/mfd/ds1374.txt
+> > @@ -0,0 +1,63 @@
+> > +* Device tree bindings for Maxim/Dallas DS1374 Multi Function Device (=
+MFD)
+> > +
+> > +The Maxim/Dallas DS1374 is a multi function device that combines rtc,
+> > +watchdog or alarm, as well as trickle charger.
+> > +
+> > +The DS1374 is connected via I2C.
+> > +
+> > +Required properties:
+> > +- compatible: "dallas,ds1374"
+> > +- reg: I2C slave address
+> > +- dallas,ds1374-mode: Should be one of the following values:
+>=20
+> Just "dallas,mode" is sufficient.
+
+Will fix.
+>=20
+> > +			<0> for RTC
+> > +			<1> for RTC + Alarm (Interrupt)
+> > +			<2> for RTC + Watchdog
+> > +
+> > +Required child:
+> > +A single available child device of type matching the "dallas,ds1374-mo=
+de"
+> > +property.
+> > +
+> > +Optional properties (watchdog):
+> > +- dallas,ds1374-remap-wdt-reset: Boolean describing whether the INT pin
+> > +				 on the device is used as interrupt for
+> > +				 the alarm
+>=20
+> Isn't presence of the interrupt property or not enough? It would be=20
+> kind of useless to have no interrupt and also not do anything on=20
+> timeout.
+
+So you're saying:
+
+If interrupt not present AND mode =3D <0> ignore interrupt
+
+If interrupt present AND mode =3D <1> (maybe define here would be nicer),
+make it an interrupt.
+
+If interrupt not present AND mode =3D <2> then this implies that reset
+output is mapped to RST pin.
+
+If Interrupt present AND mode =3D <2> then this implies that the reset
+output is (re)mapped to INT pin?
+
+>=20
+> > +
+> > +See ../watchdog/* for generic watchdog bindings.
+> > +
+> > +Optional properties (real time clock):
+> > +- interrupt: phandle to interrupt cell for the rtc's alarm feature
+> > +
+> > +See ../rtc/* for generic rtc bindings.
+> > +
+> > +Optional properties (trickle-charger):
+> > +- dallas,trickle-resistor-ohms : Selected resistor for trickle charger
+> > +	Values usable for ds1374 are 250, 2000, 4000
+> > +	Should be given if trickle charger should be enabled
+> > +- dallas,trickle-diode-disable : Do not use internal trickle charger d=
+iode
+> > +	Should be given if internal trickle charger diode should be disabled
+> > +
+> > +Example for rtc with alarm mode and interrupt:
+> > +
+> > +i2c@12ca0000 {
+> > +	rtc@68 {
+> > +		compatible =3D "ds1374";
+> > +		reg =3D <0x68>;
+> > +		interrupts =3D <&gpio0 62>;
+> > +		dallas,ds1374-mode =3D <2>
+> > +
+> > +		dallas,trickle-resistor-ohms =3D <250>;
+> > +		dallas,trickle-diode-disable;
+> > +	};
+> > +};
+> > +
+> > +Example for rtc with watchdog and reset on timeout, with reset remapped
+> > +to the INT pin:
+> > +
+> > +i2c@12ca0000 {
+> > +	rtc@68 {
+> > +		compatible =3D "ds1374";
+> > +		reg =3D <0x68>;
+> > +		dallas,ds1374-mode =3D <2>
+> > +		dallas,ds1374-remap-wdt-reset;
+> > +	};
+> > +};
+> > diff --git a/Documentation/devicetree/bindings/trivial-devices.txt b/Do=
+cumentation/devicetree/bindings/trivial-devices.txt
+> > index 3e0a34c..f7a50e5 100644
+> > --- a/Documentation/devicetree/bindings/trivial-devices.txt
+> > +++ b/Documentation/devicetree/bindings/trivial-devices.txt
+> > @@ -29,7 +29,6 @@ cirrus,cs42l51		Cirrus Logic CS42L51 audio codec
+> >  dallas,ds1307		64 x 8, Serial, I2C Real-Time Clock
+> >  dallas,ds1338		I2C RTC with 56-Byte NV RAM
+> >  dallas,ds1340		I2C RTC with Trickle Charger
+> > -dallas,ds1374		I2C, 32-Bit Binary Counter Watchdog RTC with Trickle Ch=
+arger and Reset Input/Output
+> >  dallas,ds1631		High-Precision Digital Thermometer
+> >  dallas,ds1682		Total-Elapsed-Time Recorder with Alarm
+> >  dallas,ds1775		Tiny Digital Thermometer and Thermostat
+> > diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
+> > index 8d3b957..e6763fe 100644
+> > --- a/drivers/rtc/Kconfig
+> > +++ b/drivers/rtc/Kconfig
+> > @@ -250,6 +250,8 @@ config RTC_DRV_DS1307_CENTURY
+> > =20
+> >  config RTC_DRV_DS1374
+> >  	tristate "Dallas/Maxim DS1374"
+> > +	depends on MFD_DS1374
+> > +	depends on REGMAP_I2C
+> >  	help
+> >  	  If you say yes here you get support for Dallas Semiconductor
+> >  	  DS1374 real-time clock chips. If an interrupt is associated
+> > --=20
+> > 2.7.4
+> >=20
+
+Thanks for the review,
+
+Moritz
+
+--CE+1k2dSO48ffgeK
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEcBAEBAgAGBQJZGmUnAAoJEL5CEHepFqovYBYH/36oI5nxdl7JdZ3oQbNXWcm4
+QokKjYVqkGlJRL00ml2XcAcxY2ApGcY6SQvo8pqpP9Jz10y9p5NZYB7u3AiGAa9S
+YUHHKrJ4XGYol3fYqv6k6eFBeevejUR+PzH4U/s6mD9FghvmaB2EAOt2a15B/r2+
+EM9tHnQtotEMGhJOLDa21fxL3SlCNitzijZ6vK//T0QhzaZcD8ufKgsX9zJWKtB8
+BWUWDp89X/ibhZbWoJsV6El7dvEcGxmAWTqX0W9hDUQI9QcvGWh1wIWmFpy2cI7r
+ckYNIYynLp9CH6TNkFtlguL0V/jQQagjIaG19NnG5VY8bo7+IK/q4OayEpu48QM=
+=CkSy
+-----END PGP SIGNATURE-----
+
+--CE+1k2dSO48ffgeK--
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
