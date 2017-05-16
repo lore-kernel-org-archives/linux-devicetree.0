@@ -1,181 +1,106 @@
-From: Eric Anholt <eric@anholt.net>
-Subject: Re: [PATCH 2/4] dt-bindings: Document the Raspberry Pi Touchscreen
- nodes.
-Date: Tue, 16 May 2017 11:46:36 -0700
-Message-ID: <87shk4iqr7.fsf@eliezer.anholt.net>
-References: <20170511235625.22427-1-eric@anholt.net>
- <CAL_Jsq+Pt5necK9cUPwFqmCbK5d-0NVNv-_LRVqyNgr5ajR8LQ@mail.gmail.com>
- <87h90ku4sq.fsf@eliezer.anholt.net> <3768334.nZM7df9y4L@avalon>
+From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Subject: Re: [PATCH v3 00/11] Broadcom Stingray SOC Initial Support
+Date: Tue, 16 May 2017 11:53:04 -0700
+Message-ID: <CAOesGMiwspTuVWp8nPcWK2MhuWh8x9XSkZWJE2x=FxTCtU47Sw@mail.gmail.com>
+References: <1494934256-1350-1-git-send-email-anup.patel@broadcom.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============2087219580=="
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <3768334.nZM7df9y4L@avalon>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1494934256-1350-1-git-send-email-anup.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Anup Patel <anup.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Oza Pawandeep <oza.oza-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Srinath Mannam <srinath.mannam-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Pramod Kumar <pramod.kumar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Sandeep Tripathy <sandeep.tripathy-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Broad
 List-Id: devicetree@vger.kernel.org
 
---===============2087219580==
-Content-Type: multipart/signed; boundary="=-=-=";
-	micalg=pgp-sha512; protocol="application/pgp-signature"
+Hi,
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
 
-Laurent Pinchart <laurent.pinchart@ideasonboard.com> writes:
 
-> Hi Eric,
+On Tue, May 16, 2017 at 4:30 AM, Anup Patel <anup.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org> wrote:
+> This patchset adds initial support of Broadcom Stingray SOC
+> by reusing existing Broadcom iProc device drivers.
 >
-> On Tuesday 16 May 2017 09:47:49 Eric Anholt wrote:
->> Rob Herring <robh+dt@kernel.org> writes:
->> > On Mon, May 15, 2017 at 7:03 PM, Eric Anholt <eric@anholt.net> wrote:
->> >> Laurent Pinchart <laurent.pinchart@ideasonboard.com> writes:
->> >>> Hi Eric,
->> >>>=20
->> >>> Thank you for the patch.
->> >>>=20
->> >>> On Thursday 11 May 2017 16:56:23 Eric Anholt wrote:
->> >>>> The Raspberry Pi 7" Touchscreen is a DPI touchscreen panel with
->> >>>> DSI->DPI bridge and touchscreen controller integrated, that connects
->> >>>> to the Raspberry Pi through its 15-pin "DSI" connector (some lines =
-are
->> >>>> DSI, some lines are I2C).
->> >>>>=20
->> >>>> This device is represented in the DT as three nodes (DSI device, I2C
->> >>>> device, panel).  Input will be left to a separate binding later, as=
- it
->> >>>> will be a basic I2C client device.
->> >>>>=20
->> >>>> Signed-off-by: Eric Anholt <eric@anholt.net>
->> >>>> ---
->> >>>>=20
->> >>>>  .../raspberrypi,7inch-touchscreen-bridge.txt       | 68 ++++++++++=
-++++
->> >>>>  .../panel/raspberrypi,7inch-touchscreen-panel.txt  |  7 +++
->> >>>>  2 files changed, 75 insertions(+)
->> >>>>  create mode 100644
->> >>>>=20
->> >>>> Documentation/devicetree/bindings/display/bridge/raspberrypi,7inch-=
-touc
->> >>>> hscreen-bridge.txt create mode 100644
->> >>>> Documentation/devicetree/bindings/display/panel/raspberrypi,7inch-t=
-ouch
->> >>>> screen-panel.txt
->> >>>>=20
->> >>>> diff --git
->> >>>> a/Documentation/devicetree/bindings/display/bridge/raspberrypi,7inc=
-h-to
->> >>>> uchscreen-bridge.txt
->> >>>> b/Documentation/devicetree/bindings/display/bridge/raspberrypi,7inc=
-h-to
->> >>>> uchscreen-bridge.txt new file mode 100644
->> >>>> index 000000000000..a5669beaf68f
->> >>>> --- /dev/null
->> >>>> +++
->> >>>> b/Documentation/devicetree/bindings/display/bridge/raspberrypi,7inc=
-h-to
->> >>>> uchscreen-bridge.txt
->> >>>> @@ -0,0 +1,68 @@
->> >>>> +Official 7" (800x480) Raspberry Pi touchscreen panel's bridge.
->> >>>> +
->> >>>> +This DSI panel contains:
->> >>>> +
->> >>>> +- TC358762 DSI->DPI bridge
->> >>>> +- Atmel microcontroller on I2C for power sequencing the DSI bridge=
- and
->> >>>> +  controlling backlight
->> >>>> +- Touchscreen controller on I2C for touch input
->> >>>> +
->> >>>> +and this covers the TC358762 bridge and Atmel microcontroller, whi=
-le
->> >>>> +../panel/raspberrypi,7inch-touchscreen-panel.txt covers the panel.
->> >>>=20
->> >>> The TC358762 is a standalone bridge that doesn't depend on the ATTiny
->> >>> microcontroller used by the RPI. As it's usable standalone, I believe
->> >>> this binding should be split in two.
->> >>=20
->> >> Do you have a plan for how I would implement a driver on top of that
->> >> binding change, though?  Note that we don't program the Toshiba
->> >> directly, we only send commands to the Atmel.
->> >=20
->> > I agree. If it is a black box and the interface to the host is defined
->> > by the Atmel uC firmware, then that's what the DT should describe.
->> > Perhaps a diagram here or pointer to one would help and remove
->> > mentioning what kind of bridge chip it is.
->>=20
->> It's a *very* black box.  I have some non-public schematics that don't
->> even say what panel is involved, and no documentation of the uc
->> interface.  The driver code is just replicating the firmware's
->> programming sequence.
->>=20
->> I would certainly love to be building a generic TC358762 driver, which
->> would be a lot more satisfying.  I just don't think it's doable for this
->> panel.  Given that, what do I need to do to the DT?  Should I just drop
->> mention of the Toshiba and talk about this being a bridge with a custom
->> microcontroller firmware?
+> Most of the patches in this patchset are DT patches except
+> the Stingray clock tree support which just one patch.
 >
-> I think that would be best, yes. Could you share a simple block-diagram o=
-f the=20
-> hardware ? It would help turning my random advices into semi-random advic=
-es=20
-> :-)
+> This patchset is based on Linux-4.12-rc1 and it is also available
+> at stingray-v3 branch of https://github.com/Broadcom/arm64-linux.git
+>
+> Changes since v2:
+>  - Remove default bootargs from chosen DT node
+>  - Remove "linux" prefix from stdout DT attribute of chosen DT node
+>  - Remove use of GIC_CPU_MASK_xxx() for PPIs
+>
+> Changes since v1:
+>  - Rebased patches for Linux-4.12-rc1
+>  - Removed unwanted /memreserve/ from bcm958742-base.dtsi
+>  - Use ranges DT property to clear view of memory-layout
+>  - Make bcm-sr.h part of clock DT bindings patch
+>
+> Anup Patel (3):
+>   dt-bindings: bcm: Add Broadcom Stingray bindings document
+>   arm64: dts: Initial DTS files for Broadcom Stingray SOC
+>   arm64: dts: Add PL022, PL330 and SP805 DT nodes for Stingray
+>
+> Oza Pawandeep (1):
+>   arm64: dts: Add I2C DT nodes for Stingray SoC
+>
+> Pramod Kumar (3):
+>   arm64: dts: Add NAND DT nodes for Stingray SOC
+>   arm64: dts: Add pinctrl DT nodes for Stingray SOC
+>   arm64: dts: Add GPIO DT nodes for Stingray SOC
+>
+> Sandeep Tripathy (3):
+>   dt-bindings: clk: Extend binding doc for Stingray SOC
+>   clk: bcm: Add clocks for Stingray SOC
+>   arm64: dts: Add clock DT nodes for Stingray SOC
+>
+> Srinath Mannam (1):
+>   arm64: dts: Add PWM and SDHCI DT nodes for Stingray SOC
+>
+>  .../devicetree/bindings/arm/bcm/brcm,stingray.txt  |  12 +
+>  .../bindings/clock/brcm,iproc-clocks.txt           |  76 ++++
+>  arch/arm64/boot/dts/broadcom/Makefile              |   1 +
+>  arch/arm64/boot/dts/broadcom/stingray/Makefile     |   6 +
+>  .../boot/dts/broadcom/stingray/bcm958742-base.dtsi | 131 ++++++
+>  .../boot/dts/broadcom/stingray/bcm958742k.dts      |  78 ++++
+>  .../boot/dts/broadcom/stingray/bcm958742t.dts      |  40 ++
+>  .../boot/dts/broadcom/stingray/stingray-clock.dtsi | 170 ++++++++
+>  .../dts/broadcom/stingray/stingray-pinctrl.dtsi    | 345 ++++++++++++++++
+>  .../arm64/boot/dts/broadcom/stingray/stingray.dtsi | 460 +++++++++++++++++++++
+>  drivers/clk/bcm/Kconfig                            |   8 +
+>  drivers/clk/bcm/Makefile                           |   1 +
+>  drivers/clk/bcm/clk-sr.c                           | 300 ++++++++++++++
+>  include/dt-bindings/clock/bcm-sr.h                 | 101 +++++
+>  .../dt-bindings/pinctrl/brcm,pinctrl-stingray.h    |  68 +++
+>  15 files changed, 1797 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/arm/bcm/brcm,stingray.txt
+>  create mode 100644 arch/arm64/boot/dts/broadcom/stingray/Makefile
+>  create mode 100644 arch/arm64/boot/dts/broadcom/stingray/bcm958742-base.dtsi
+>  create mode 100644 arch/arm64/boot/dts/broadcom/stingray/bcm958742k.dts
+>  create mode 100644 arch/arm64/boot/dts/broadcom/stingray/bcm958742t.dts
+>  create mode 100644 arch/arm64/boot/dts/broadcom/stingray/stingray-clock.dtsi
+>  create mode 100644 arch/arm64/boot/dts/broadcom/stingray/stingray-pinctrl.dtsi
+>  create mode 100644 arch/arm64/boot/dts/broadcom/stingray/stingray.dtsi
+>  create mode 100644 drivers/clk/bcm/clk-sr.c
+>  create mode 100644 include/dt-bindings/clock/bcm-sr.h
+>  create mode 100644 include/dt-bindings/pinctrl/brcm,pinctrl-stingray.h
 
-In terms of physical connections:
+Grouping as one patchset for review is fine, but when you submit this
+for merge you need to split it up:
 
-   [15-pin "DSI" connector on 2835]
-    |                   |
-    | I2C               | DSI
-    |                   |
-   / \        SPI       |
-[TS]  [Atmel]------[TC358762]
-       \                |
-        \PWM            |
-         \              | DPI
-[some backlight]------[some unknown panel]
+- Documentation/devicetree can go with the driver pieces or with the
+DT changes, your choice
+- DTS/DTSI changes should go through the Broadcom maintainers to arm-soc
+- clk changes should go to clk maintainers.
 
-The binding I'm trying to create is to expose what's necessary for a
-driver that talks I2C to the Atmel, which then controls the PWM and does
-the command sequence over SPI to the Toshiba that sets up its end of the
-DSI link.
+Also, there's usually no need to split up a DT introduction and having
+separate pieces for NAND/pinctrl/GPIO/etc: They can all go in the main
+DT submission patch.
 
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE/JuuFDWp9/ZkuCBXtdYpNtH8nugFAlkbSQwACgkQtdYpNtH8
-nujJnQ//VlJYib/sqU1jM8zuoOg6OI2qaIGrwP+9cekjU/U9A/dh9Zbb23jGQaaQ
-Up+mZW69IqtY+b4XY22oyAKjpxVlUCtfJyFu4zR834TVjjOPL6B+r9sThkchYbsG
-Hl3fiZHbHGS+e628VdamhvBn1EWKSxlwKHpxdDG6yIiNcMs4Kpmb78QwArcKiny3
-TclwAOgdnGZeRM39a9VWy5okZD4kpdfuNkPDrhWsNMDeVvxs+IZEkmeSD+OTBmzj
-Wyq4/sn7l6yyFA47/aCUjrhUAaGvg23+doBIaYYMrdBrPw9CDUdu9Oqr8wHMpu5b
-sh9klgbxG49L1yXkQw6vClNfMEqOCCBEAJUA+WMD4aexbfc3vM9vCMR6dxcVJ8qc
-Dom4EQJO2+1pXAsqVM5lC5YKCqH8YPoXSpCq+zzsg+OKqP3VF9JarBmJpWw1cb8/
-F1UXD3GpJwpdSgbBfcz/dszUC02INAQUYypmj4Z0eKFJiwgr6v74BhTBXZ1Z9oNN
-7fL7N1B0MEGvI+3qtDvzAr6bNc/mv72FnA8C3L6ghVP1U5DzIVDjU2Un7NvSesxE
-7u0BNZBHj+UZDqyW45Al12471yLndptFR43V+ADHYbRzeXPlF78tFn5DJjM4pQDE
-oCZwh5VnvFtYsGoz3HHFKi7drjVNRvCdk5UM17JgnzS1xoz5t/Q=
-=29JP
------END PGP SIGNATURE-----
---=-=-=--
-
---===============2087219580==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: inline
-
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
-
---===============2087219580==--
+-Olof
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
