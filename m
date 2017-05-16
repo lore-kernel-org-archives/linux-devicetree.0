@@ -1,83 +1,67 @@
-From: Anup Patel <anup.patel@broadcom.com>
-Subject: Re: [PATCH v2 04/11] arm64: dts: Initial DTS files for Broadcom
- Stingray SOC
-Date: Tue, 16 May 2017 16:17:58 +0530
-Message-ID: <CAALAos8W72yntS746Q2JE_6qwSBJV65acwapUR_3H7nf6skcFQ@mail.gmail.com>
-References: <1494849741-21294-1-git-send-email-anup.patel@broadcom.com>
- <1494849741-21294-5-git-send-email-anup.patel@broadcom.com> <20170515131334.GE17776@leverpostej>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 1/3] SoC: es8328-i2c: Add compatible for ES8323
+Date: Tue, 16 May 2017 12:18:37 +0100
+Message-ID: <20170516111837.3uf5f5jbdkrnjudi@sirena.org.uk>
+References: <20170512132227.24916-1-romain.perier@collabora.com>
+ <20170512132227.24916-10-romain.perier@collabora.com>
+ <20170515214138.u63u7j53jogk3prm@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170515131334.GE17776@leverpostej>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Florian Fainelli <f.fainelli@gmail.com>, Oza Pawandeep <oza.oza@broadcom.com>, Srinath Mannam <srinath.mannam@broadcom.com>, Pramod Kumar <pramod.kumar@broadcom.com>, Sandeep Tripathy <sandeep.tripathy@broadcom.com>, Device Tree <devicetree@vger.kernel.org>, Linux Kernel <linux-kernel@vger.kernel.org>, linux-clk@vger.kernel.org, Linux ARM Kernel <linux-arm-kernel@lists.infradead.org>, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>, Scott Branden <scott.branden@broadcom.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="oqgk6hcciwcs2oz5"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170515214138.u63u7j53jogk3prm@rob-hp-laptop>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Romain Perier <romain.perier-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 15, 2017 at 6:43 PM, Mark Rutland <mark.rutland@arm.com> wrote:
-> Hi,
->
-> On Mon, May 15, 2017 at 05:32:14PM +0530, Anup Patel wrote:
->> +/ {
->> +     chosen { /* Default kernel args */
->> +             bootargs = "root=/dev/ram rw rootwait \
->> +                         earlycon=uart8250,mmio32,0x68a10000 \
->> +                         pci=pcie_bus_safe cma=64M";
->
-> Why do we need all of these?
 
-Yes, we don't need bootargs here. This were just for reference.
+--oqgk6hcciwcs2oz5
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I will remove default bootargs because its responsibility of
-bootloader to add it.
+On Mon, May 15, 2017 at 04:41:38PM -0500, Rob Herring wrote:
+> On Fri, May 12, 2017 at 03:22:25PM +0200, Romain Perier wrote:
+> > This commit adds a compatible string for everest,es8323. This is an
+> > audio codec that is compatible with es8328 and can be found for example
+> > on the Firefly-RK3288 board.
 
->
->> +             linux,stdout-path = "serial0:115200n8";
->
-> Please drop the 'linux,' prefix here.
+> If it is compatible with the es8328, then that should be a fallback and=
+=20
+> you don't need the driver change.
 
-Sure, will do.
+While people don't strictly need the driver change it doesn't do any
+harm either and encourages people to get the information into the DT
+that it's a different chip.  Thinking about it it might be good to have
+a way for something to validate if fallback compatibles are being listed
+when they should - the drivers could provide the information fairly
+easily I guess, or it could go into the binding docs once we have a
+schema format.
 
->
-> [...]
->
->> +     memory: memory@80000000 {
->> +             device_type = "memory";
->> +             reg = <0x00000000 0x80000000 0 0x40000000>;
->> +     };
->> +
->> +     psci {
->> +             compatible = "arm,psci-0.2";
->> +             method = "smc";
->> +     };
->> +
->> +     pmu {
->> +             compatible = "arm,armv8-pmuv3";
->> +             interrupts = <GIC_PPI 7 IRQ_TYPE_LEVEL_HIGH>;
->> +     };
->> +
->> +     timer {
->> +             compatible = "arm,armv8-timer";
->> +             interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(8) |
->> +                           IRQ_TYPE_LEVEL_LOW)>,
->> +                          <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(8) |
->> +                           IRQ_TYPE_LEVEL_LOW)>,
->> +                          <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(8) |
->> +                           IRQ_TYPE_LEVEL_LOW)>,
->> +                          <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(8) |
->> +                           IRQ_TYPE_LEVEL_LOW)>;
->
-> GICv3 PPIs don't have a mask. See
->
-> Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.txt
->
-> Please remove the GIC_CPU_MASK_*() uses here and in this dts. They
-> shouldn't be there.
+Even if it doesn't currently make a difference to software I'd rather
+get the information in there for mixed signal devices like audio CODECs
+- it's not that unknown to find later that supposedly register identical
+chips have some differences in the analog which we want to care about.
 
-Thanks for catching.
+--oqgk6hcciwcs2oz5
+Content-Type: application/pgp-signature; name="signature.asc"
 
-We had taken care of this in PMU DT node but did not cleanup timer
-DT node.
+-----BEGIN PGP SIGNATURE-----
 
-Thanks,
-Anup
+iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlka4AwACgkQJNaLcl1U
+h9CnCgf/eh6wnAxeB6o6ruQceS0PLXfL9HZ1JONpYvQSsvZbHL6J6CPa9gcnrXpa
+9jtMJ4LoNWhXQKh9N9X8lSH5Jyuxz+giNXai/vEdvDG/bQeD/19zL9DRx90dO2sN
+ccKfScTBRGEsR4V1Njgw5EHBBIbMhoPSJIQt/ccRBizpLHOaBe2x0l2IPgEwUzy+
+sUFbhXY5B0aVjLhlQlVLhnxqVcd5piVg5m8NhhycdGwc5rrjXEJCwwx0/8qgxW/S
+vghQ/OGGSJDXvTD8uZ2x5UiSakHor0BYGT4pW+0ZPyxDm5NV0hn5QcHwQWdqQUgp
+xDq5M+6/qalIW3o6RX2RxInRjLJzBg==
+=nVsJ
+-----END PGP SIGNATURE-----
+
+--oqgk6hcciwcs2oz5--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
