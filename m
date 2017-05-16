@@ -1,70 +1,87 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/2] pinctrl: qcom: ipq4019: add most other IPQ4019 pin
- functions and groups
-Date: Mon, 15 May 2017 19:13:10 -0500
-Message-ID: <CAL_Jsq+cXPUu_cvEKS0EfBykyYBznrfL2fYdBhKfJQXegbKMag@mail.gmail.com>
-References: <d53b7a9b1bab818536680123136ac58481d959c8.1494415174.git.chunkeey@googlemail.com>
- <20170510112712.14744-1-chunkeey@googlemail.com> <20170513001037.tpqdrjh3r6aciskx@rob-hp-laptop>
- <6106539.ylfJifP948@debian64>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/5] pintrl: meson: document GPIO IRQ DT binding
+Date: Mon, 15 May 2017 19:31:26 -0500
+Message-ID: <CAL_JsqL_6NpCBLtnRgsyuikGCGdGf9ZEFEUyrreGiyrtHszCxQ@mail.gmail.com>
+References: <a4ca587b-d3e8-a22d-4d25-289871d2d095@gmail.com>
+ <0d835130-7c6c-751c-af15-c2ab69edcb42@gmail.com> <20170512193806.trt7jbvfyygkqard@rob-hp-laptop>
+ <b39f1742-0558-beaa-1e06-eed80d644424@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <6106539.ylfJifP948@debian64>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Christian Lamparter <chunkeey@googlemail.com>
-Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Varadarajan Narayanan <varada@codeaurora.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Ram Chandra Jangir <rjangir@codeaurora.org>, John Crispin <john@phrozen.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <b39f1742-0558-beaa-1e06-eed80d644424-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Heiner Kallweit <hkallweit1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, May 13, 2017 at 11:03 AM, Christian Lamparter
-<chunkeey@googlemail.com> wrote:
-> On Friday, May 12, 2017 7:10:37 PM CEST Rob Herring wrote:
->> On Wed, May 10, 2017 at 01:27:11PM +0200, Christian Lamparter wrote:
->> > This patch adds the remaining pin functions and mux groups.
->> > It also fixes a typo in the existing binding document.
->> >
->> > Cc: Varadarajan Narayanan <varada@codeaurora.org>
->> > Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
->> > Cc: Ram Chandra Jangir <rjangir@codeaurora.org>
->> > Cc: John Crispin <john@phrozen.org>
->> > Signed-off-by: Christian Lamparter <chunkeey@googlemail.com>
->> > ---
->> > Note: These definitions were present in the original submission
->> > <https://patchwork.kernel.org/patch/7630711/>
->> >
->> > The DT patch was acked by Rob Herring back then. However,
->> > I'm not sure if this is still valid or not. @Rob, can you
->> > please comment?
+On Fri, May 12, 2017 at 4:41 PM, Heiner Kallweit <hkallweit1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> Am 12.05.2017 um 21:38 schrieb Rob Herring:
+>> On Sun, May 07, 2017 at 06:34:09PM +0200, Heiner Kallweit wrote:
+>>> Document the DT binding for GPIO IRQ support on Amlogic Meson SoC's.
+>>>
+>>> This documentation is intentionally not placed under
+>>> interrupt-controllers as GPIO IRQ support on these SoC's acts more
+>>> like an interrupt multiplexer.
+>>>
+>>> Signed-off-by: Heiner Kallweit <hkallweit1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>>> ---
+>>>  .../bindings/gpio/amlogic,meson-gpio-interrupt.txt | 30 ++++++++++++++++++++++
 >>
->> Am I supposed to ack patch 1/2 or patch 1/2...? The first one has the
->> preferred subject prefix.
->
-> This was my fault. I decided to reword the patch and changed
-> the subject among a few other things. So, this patch was sent
-> to the ML twice.
->
-> Bjorn commented that he has some comments.
-> <http://www.spinics.net/lists/devicetree/msg176168.html>
->
-> Unfortunately, he didn't say what exactly needs to be changed.
-> So, I'm not really sure how to proceed.
->
-> @Bjorn: can you please tell what you would like to see changed?
-> I see what I can do about it. I do have access two a few IPQ4019/8
-> and can ask a few people to run tests.
->
-> @Rob:
->
-> I noticed that:
->
-> qcom,apq8064-pinctrl.txt: pins, function, bias-disable, bias-pull-down, bias-pull,up, drive-strength,
-> qcom,ipq4019-pinctrl.txt: pins, function, bias-disable, bias-pull-down, bias-pull,up, drive-strength,
-> qcom,ipq8064-pinctrl.txt: pins, function, bias-disable, bias-pull-down, bias-pull,up, drive-strength,
-> qcom,msm8660-pinctrl.txt: pins, function, bias-disable, bias-pull-down, bias-pull,up, drive-strength,
-> qcom,msm8974-pinctrl.txt: pins, function, bias-disable, bias-pull-down, bias-pull,up, drive-strength.
->
-> all have the same "bias-pull,up". I think I'll just do
-> a separate patch for this to stop it from spreading :D.
+>> Seems more like an irqchip?
+>>
+> It is an irq_chip. Would you therefore prefer a different name or another location
+> for this binding documentation?
 
-Please do. Send it now and I'll apply for 4.12.
+bindings/interrupt-controller
+
+>
+>>>  1 file changed, 30 insertions(+)
+>>>  create mode 100644 Documentation/devicetree/bindings/gpio/amlogic,meson-gpio-interrupt.txt
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/gpio/amlogic,meson-gpio-interrupt.txt b/Documentation/devicetree/bindings/gpio/amlogic,meson-gpio-interrupt.txt
+>>> new file mode 100644
+>>> index 00000000..35a052b8
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/gpio/amlogic,meson-gpio-interrupt.txt
+>>> @@ -0,0 +1,30 @@
+>>> +Amlogic meson GPIO interrupt controller
+>>> +
+>>> +Meson SoCs contains an interrupt controller which is able watch the SoC pads
+>>> +and generate an interrupt on edges or level. The controller is essentially a
+>>> +256 pads to 8 GIC interrupt multiplexer, with a filter block to select edge
+>>> +or level and polarity. We don't expose all 256 mux inputs because the
+>>> +documentation shows that upper part is not mapped to any pad. The actual number
+>>> +of interrupt exposed depends on the SoC.
+>>> +
+>>> +Required properties:
+>>> +
+>>> +- compatible : should be "amlogic,meson-gpio-interrupt", "syscon".
+>>
+>> Why syscon?
+>>
+> Has been removed already in v2 of the patch.
+>
+>>> +- reg : Specifies base physical address and size of the registers.
+>>> +- interrupts : list of GIC interrupts which can be used with the
+>>> +           GPIO IRQ multiplexer
+>>
+>> What about interrupt-controller property?
+>>
+> This HW is somewhat special, it's more or less a multiplexer between
+> 100+ GPIO's and 8 GIC IRQ's. And we have two GPIO domains, both having
+> a "gpio-controller".
+> It doesn't seem that the "interrupt-controller" property is right here.
+> I'd tend to say it should be added to the "gpio-controller" nodes.
+
+I would say an interrupt controller is anything that controls
+routing/delivery of interrupts from source to cpu. This certainly
+meets that criteria.
+
+You could even use interrupt-map property to statically assign the
+sources to parent interrupts.
 
 Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
