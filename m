@@ -1,102 +1,127 @@
-From: Shameerali Kolothum Thodi <shameerali.kolothum.thodi-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Subject: RE: [RFC v1 6/7] iommu/arm-smmu-v3: Rearrange msi resv alloc
- functions
-Date: Tue, 16 May 2017 13:54:23 +0000
-Message-ID: <5FC3163CFD30C246ABAA99954A238FA838350A37@FRAEML521-MBX.china.huawei.com>
-References: <20170513094731.3676-1-shameerali.kolothum.thodi@huawei.com>
- <20170513094731.3676-7-shameerali.kolothum.thodi@huawei.com>
- <d2d90929-6e79-70a3-5c82-a25e67931b4a@arm.com>
+From: Benjamin Gaignard <benjamin.gaignard@linaro.org>
+Subject: Re: [PATCH v2 2/2] cec: add STM32 cec driver
+Date: Tue, 16 May 2017 15:54:59 +0200
+Message-ID: <CA+M3ks6ndVPj9Z5xCkwZ6Ufk3o8OQn-sQAmSpYQmYcJDMT75Qw@mail.gmail.com>
+References: <1494939383-18937-1-git-send-email-benjamin.gaignard@linaro.org>
+ <1494939383-18937-3-git-send-email-benjamin.gaignard@linaro.org> <c1b7a339-7746-76ec-a1f4-e1bcd01fbdd0@xs4all.nl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <d2d90929-6e79-70a3-5c82-a25e67931b4a-5wv7dgnIgG8@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, "will.deacon-5wv7dgnIgG8@public.gmane.org" <will.deacon-5wv7dgnIgG8@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org" <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, "hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Gabriele Paoloni <gabriele.paoloni-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, John Garry <john.garry-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Linuxarm <linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, "linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "Wangzhou (B)" <wangzhou1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, "Guohanjun (Hanjun Guo)" <guohanjun-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devel-E0kO6a4B6psdnm+yROfE0A@public.gmane.org" <devel-E0kO6a4B6psdnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <c1b7a339-7746-76ec-a1f4-e1bcd01fbdd0@xs4all.nl>
+Sender: linux-media-owner@vger.kernel.org
+To: Hans Verkuil <hverkuil@xs4all.nl>
+Cc: Yannick Fertre <yannick.fertre@st.com>, Alexandre Torgue <alexandre.torgue@st.com>, devicetree@vger.kernel.org, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, Rob Herring <robh@kernel.org>, Hans Verkuil <hans.verkuil@cisco.com>
 List-Id: devicetree@vger.kernel.org
 
+2017-05-16 15:09 GMT+02:00 Hans Verkuil <hverkuil@xs4all.nl>:
+> Looks good, except for the logical address handling that I think is wrong=
+:
+>
+> On 16/05/17 14:56, Benjamin Gaignard wrote:
+>> This patch add cec driver for STM32 platforms.
+>> cec hardware block isn't not always used with hdmi so
+>> cec notifier is not implemented. That will be done later
+>> when STM32 DSI driver will be available.
+>>
+>> Driver compliance has been tested with cec-ctl and cec-compliance
+>> tools.
+>>
+>> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@linaro.org>
+>> Signed-off-by: Yannick Fertre <yannick.fertre@st.com>
+>> ---
+>>  drivers/media/platform/Kconfig           |  11 +
+>>  drivers/media/platform/Makefile          |   2 +
+>>  drivers/media/platform/stm32/Makefile    |   1 +
+>>  drivers/media/platform/stm32/stm32-cec.c | 384 ++++++++++++++++++++++++=
++++++++
+>>  4 files changed, 398 insertions(+)
+>>  create mode 100644 drivers/media/platform/stm32/Makefile
+>>  create mode 100644 drivers/media/platform/stm32/stm32-cec.c
+>>
+>
+> <snip>
+>
+>> +static int stm32_cec_adap_log_addr(struct cec_adapter *adap, u8 logical=
+_addr)
+>> +{
+>> +     struct stm32_cec *cec =3D adap->priv;
+>> +
+>> +     regmap_update_bits(cec->regmap, CEC_CR, CECEN, 0);
+>> +
+>> +     if (logical_addr =3D=3D CEC_LOG_ADDR_INVALID)
+>> +             regmap_update_bits(cec->regmap, CEC_CFGR, OAR, 0);
+>> +     else
+>> +             regmap_update_bits(cec->regmap, CEC_CFGR, OAR,
+>> +                                (1 << logical_addr) << 16);
+>> +
+>> +     regmap_update_bits(cec->regmap, CEC_CR, CECEN, CECEN);
+>> +
+>> +     return 0;
+>> +}
+>> +
+>
+> If you allocate more than one logical address, then stm32_cec_adap_log_ad=
+dr()
+> is called once for each LA. But right now the second call would overwrite
+> the first LA. Right?
+>
+> Try 'cec-ctl --audio --playback' to allocate two logical addresses.
+
+I will fix that in v3
+
+>
+> <snip>
+>
+>> +static int stm32_cec_monitor_all(struct cec_adapter *adap, bool enable)
+>> +{
+>> +     struct stm32_cec *cec =3D adap->priv;
+>> +
+>> +     regmap_update_bits(cec->regmap, CEC_CR, CECEN, 0);
+>> +
+>> +     if (enable) {
+>> +             regmap_update_bits(cec->regmap, CEC_CFGR, OAR, OAR)
+>
+> You shouldn't have to change the OAR mask. This would have the adapter
+> Ack all logical addresses.
+>
+>> +             regmap_update_bits(cec->regmap, CEC_CFGR, LSTN, 0);
+>> +     } else {
+>> +             regmap_update_bits(cec->regmap, CEC_CFGR, OAR, 0);
+>
+> And this would disable all logical addresses.
+>
+> I would expect that only the LSTN bit was changed.
+>
+> In monitoring mode it should still Ack any messages directed to us.
+
+This is an impossible mix in my hardware: messages are received if
+corresponding OAR
+bit is set and acked if LSTN is set to 1.
+It can't receive all messages and only ack some of them....
+
+>
+>> +             regmap_update_bits(cec->regmap, CEC_CFGR, LSTN, LSTN);
+>> +     }
+>> +
+>> +     regmap_update_bits(cec->regmap, CEC_CR, CECEN, CECEN);
+>> +
+>> +     return 0;
+>> +}
+>
+> <snip>
+>
+> Regards,
+>
+>         Hans
 
 
-> -----Original Message-----
-> From: Robin Murphy [mailto:robin.murphy-5wv7dgnIgG8@public.gmane.org]
-> Sent: Tuesday, May 16, 2017 2:28 PM
-> To: Shameerali Kolothum Thodi; will.deacon-5wv7dgnIgG8@public.gmane.org;
-> mark.rutland-5wv7dgnIgG8@public.gmane.org; lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org; hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Gabriele Paoloni; John Garry; Linuxarm;
-> linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org; Wangzhou
-> (B); Guohanjun (Hanjun Guo); linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org;
-> devel-E0kO6a4B6psdnm+yROfE0A@public.gmane.org
-> Subject: Re: [RFC v1 6/7] iommu/arm-smmu-v3: Rearrange msi resv alloc
-> functions
-> 
-> On 13/05/17 10:47, shameer wrote:
-> > This moves the SW MSI reserve region allocation to probe fn.
-> 
-> Why?
 
-Sure, I will modify the commit message to mention about the next patch
-where we will add the quirk to modify the default SW MSI region with a HW MSI
-region on Hip06/07 platforms.
+--=20
+Benjamin Gaignard
 
-> > Signed-off-by: shameer <shameerali.kolothum.thodi-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-> > ---
-> >  drivers/iommu/arm-smmu-v3.c | 36 +++++++++++++++++++++++++++---
-> ------
-> >  1 file changed, 27 insertions(+), 9 deletions(-)
-> >
-> > diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-
-> v3.c
-> > index 770cc9e..e7a8a50 100644
-> > --- a/drivers/iommu/arm-smmu-v3.c
-> > +++ b/drivers/iommu/arm-smmu-v3.c
-> > @@ -619,6 +619,9 @@ struct arm_smmu_device {
-> >
-> >  	/* IOMMU core code handle */
-> >  	struct iommu_device		iommu;
-> > +
-> > +	/* MSI Reserve region */
-> > +	struct iommu_resv_region        *msi_region;
-> >  };
-> >
-> >  /* SMMU private data for each master */
-> > @@ -1960,15 +1963,12 @@ static int arm_smmu_of_xlate(struct device
-> *dev, struct of_phandle_args *args)
-> >  static void arm_smmu_get_resv_regions(struct device *dev,
-> >  				      struct list_head *head)
-> >  {
-> > -	struct iommu_resv_region *region;
-> > -	int prot = IOMMU_WRITE | IOMMU_NOEXEC | IOMMU_MMIO;
-> > -
-> > -	region = iommu_alloc_resv_region(MSI_IOVA_BASE,
-> MSI_IOVA_LENGTH,
-> > -					 prot, IOMMU_RESV_SW_MSI);
-> > -	if (!region)
-> > -		return;
-> > +	struct iommu_domain *domain =
-> iommu_get_domain_for_dev(dev);
-> > +	struct arm_smmu_domain *smmu_domain =
-> to_smmu_domain(domain);
-> > +	struct arm_smmu_device *smmu = smmu_domain->smmu;
-> 
-> There's never any need for the domain dance if you don't need the
-> domain, just pull the smmu out of the device's iommu_fwspec.
+Graphic Study Group
 
-Ok. That makes sense. Thanks.
+Linaro.org =E2=94=82 Open source software for ARM SoCs
 
-> > -	list_add_tail(&region->list, head);
-> > +	if (smmu && smmu->msi_region)
-> > +		list_add_tail(&smmu->msi_region->list, head);
-> 
-> Have you considered what happens for the second and subsequent domains
-> allocated on this SMMU? I can't see that ending well.
-
-Yes, I probably missed this part. I will recheck this.
-
-Thanks,
-Shameer
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Follow Linaro: Facebook | Twitter | Blog
