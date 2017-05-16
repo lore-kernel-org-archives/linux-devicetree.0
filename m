@@ -1,95 +1,83 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH 2/4] dt-bindings: Document the Raspberry Pi Touchscreen
- nodes.
-Date: Tue, 16 May 2017 19:54:30 +0300
-Message-ID: <3768334.nZM7df9y4L@avalon>
-References: <20170511235625.22427-1-eric@anholt.net>
- <CAL_Jsq+Pt5necK9cUPwFqmCbK5d-0NVNv-_LRVqyNgr5ajR8LQ@mail.gmail.com>
- <87h90ku4sq.fsf@eliezer.anholt.net>
+From: Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+Subject: Re: [PATCH] arm64: dts: marvell: mcbin: add sdhci
+Date: Tue, 16 May 2017 18:11:59 +0100
+Message-ID: <20170516171159.GH22219@n2100.armlinux.org.uk>
+References: <E1dAcn4-0004z2-Fl@rmk-PC.armlinux.org.uk>
+ <CAPv3WKf4GcOc7g-2yMCjGN4HrftDL0Ro6jHErQL8-zSH-tC10w@mail.gmail.com>
+ <CAPv3WKeK9Z_1dGvBnc=NJrD7+nZOgf60iCNvvTkFGcP7GSyt=Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <87h90ku4sq.fsf@eliezer.anholt.net>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Eric Anholt <eric@anholt.net>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAPv3WKeK9Z_1dGvBnc=NJrD7+nZOgf60iCNvvTkFGcP7GSyt=Q@mail.gmail.com>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Marcin Wojtas <mw-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org>
+Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgRXJpYywKCk9uIFR1ZXNkYXkgMTYgTWF5IDIwMTcgMDk6NDc6NDkgRXJpYyBBbmhvbHQgd3Jv
-dGU6Cj4gUm9iIEhlcnJpbmcgPHJvYmgrZHRAa2VybmVsLm9yZz4gd3JpdGVzOgo+ID4gT24gTW9u
-LCBNYXkgMTUsIDIwMTcgYXQgNzowMyBQTSwgRXJpYyBBbmhvbHQgPGVyaWNAYW5ob2x0Lm5ldD4g
-d3JvdGU6Cj4gPj4gTGF1cmVudCBQaW5jaGFydCA8bGF1cmVudC5waW5jaGFydEBpZGVhc29uYm9h
-cmQuY29tPiB3cml0ZXM6Cj4gPj4+IEhpIEVyaWMsCj4gPj4+IAo+ID4+PiBUaGFuayB5b3UgZm9y
-IHRoZSBwYXRjaC4KPiA+Pj4gCj4gPj4+IE9uIFRodXJzZGF5IDExIE1heSAyMDE3IDE2OjU2OjIz
-IEVyaWMgQW5ob2x0IHdyb3RlOgo+ID4+Pj4gVGhlIFJhc3BiZXJyeSBQaSA3IiBUb3VjaHNjcmVl
-biBpcyBhIERQSSB0b3VjaHNjcmVlbiBwYW5lbCB3aXRoCj4gPj4+PiBEU0ktPkRQSSBicmlkZ2Ug
-YW5kIHRvdWNoc2NyZWVuIGNvbnRyb2xsZXIgaW50ZWdyYXRlZCwgdGhhdCBjb25uZWN0cwo+ID4+
-Pj4gdG8gdGhlIFJhc3BiZXJyeSBQaSB0aHJvdWdoIGl0cyAxNS1waW4gIkRTSSIgY29ubmVjdG9y
-IChzb21lIGxpbmVzIGFyZQo+ID4+Pj4gRFNJLCBzb21lIGxpbmVzIGFyZSBJMkMpLgo+ID4+Pj4g
-Cj4gPj4+PiBUaGlzIGRldmljZSBpcyByZXByZXNlbnRlZCBpbiB0aGUgRFQgYXMgdGhyZWUgbm9k
-ZXMgKERTSSBkZXZpY2UsIEkyQwo+ID4+Pj4gZGV2aWNlLCBwYW5lbCkuICBJbnB1dCB3aWxsIGJl
-IGxlZnQgdG8gYSBzZXBhcmF0ZSBiaW5kaW5nIGxhdGVyLCBhcyBpdAo+ID4+Pj4gd2lsbCBiZSBh
-IGJhc2ljIEkyQyBjbGllbnQgZGV2aWNlLgo+ID4+Pj4gCj4gPj4+PiBTaWduZWQtb2ZmLWJ5OiBF
-cmljIEFuaG9sdCA8ZXJpY0BhbmhvbHQubmV0Pgo+ID4+Pj4gLS0tCj4gPj4+PiAKPiA+Pj4+ICAu
-Li4vcmFzcGJlcnJ5cGksN2luY2gtdG91Y2hzY3JlZW4tYnJpZGdlLnR4dCAgICAgICB8IDY4ICsr
-KysrKysrKysrKysrCj4gPj4+PiAgLi4uL3BhbmVsL3Jhc3BiZXJyeXBpLDdpbmNoLXRvdWNoc2Ny
-ZWVuLXBhbmVsLnR4dCAgfCAgNyArKysKPiA+Pj4+ICAyIGZpbGVzIGNoYW5nZWQsIDc1IGluc2Vy
-dGlvbnMoKykKPiA+Pj4+ICBjcmVhdGUgbW9kZSAxMDA2NDQKPiA+Pj4+IAo+ID4+Pj4gRG9jdW1l
-bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3Jhc3BiZXJyeXBpLDdp
-bmNoLXRvdWMKPiA+Pj4+IGhzY3JlZW4tYnJpZGdlLnR4dCBjcmVhdGUgbW9kZSAxMDA2NDQKPiA+
-Pj4+IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL3Jhc3Bi
-ZXJyeXBpLDdpbmNoLXRvdWNoCj4gPj4+PiBzY3JlZW4tcGFuZWwudHh0Cj4gPj4+PiAKPiA+Pj4+
-IGRpZmYgLS1naXQKPiA+Pj4+IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rp
-c3BsYXkvYnJpZGdlL3Jhc3BiZXJyeXBpLDdpbmNoLXRvCj4gPj4+PiB1Y2hzY3JlZW4tYnJpZGdl
-LnR4dAo+ID4+Pj4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9i
-cmlkZ2UvcmFzcGJlcnJ5cGksN2luY2gtdG8KPiA+Pj4+IHVjaHNjcmVlbi1icmlkZ2UudHh0IG5l
-dyBmaWxlIG1vZGUgMTAwNjQ0Cj4gPj4+PiBpbmRleCAwMDAwMDAwMDAwMDAuLmE1NjY5YmVhZjY4
-Zgo+ID4+Pj4gLS0tIC9kZXYvbnVsbAo+ID4+Pj4gKysrCj4gPj4+PiBiL0RvY3VtZW50YXRpb24v
-ZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS9yYXNwYmVycnlwaSw3aW5jaC10bwo+
-ID4+Pj4gdWNoc2NyZWVuLWJyaWRnZS50eHQKPiA+Pj4+IEBAIC0wLDAgKzEsNjggQEAKPiA+Pj4+
-ICtPZmZpY2lhbCA3IiAoODAweDQ4MCkgUmFzcGJlcnJ5IFBpIHRvdWNoc2NyZWVuIHBhbmVsJ3Mg
-YnJpZGdlLgo+ID4+Pj4gKwo+ID4+Pj4gK1RoaXMgRFNJIHBhbmVsIGNvbnRhaW5zOgo+ID4+Pj4g
-Kwo+ID4+Pj4gKy0gVEMzNTg3NjIgRFNJLT5EUEkgYnJpZGdlCj4gPj4+PiArLSBBdG1lbCBtaWNy
-b2NvbnRyb2xsZXIgb24gSTJDIGZvciBwb3dlciBzZXF1ZW5jaW5nIHRoZSBEU0kgYnJpZGdlIGFu
-ZAo+ID4+Pj4gKyAgY29udHJvbGxpbmcgYmFja2xpZ2h0Cj4gPj4+PiArLSBUb3VjaHNjcmVlbiBj
-b250cm9sbGVyIG9uIEkyQyBmb3IgdG91Y2ggaW5wdXQKPiA+Pj4+ICsKPiA+Pj4+ICthbmQgdGhp
-cyBjb3ZlcnMgdGhlIFRDMzU4NzYyIGJyaWRnZSBhbmQgQXRtZWwgbWljcm9jb250cm9sbGVyLCB3
-aGlsZQo+ID4+Pj4gKy4uL3BhbmVsL3Jhc3BiZXJyeXBpLDdpbmNoLXRvdWNoc2NyZWVuLXBhbmVs
-LnR4dCBjb3ZlcnMgdGhlIHBhbmVsLgo+ID4+PiAKPiA+Pj4gVGhlIFRDMzU4NzYyIGlzIGEgc3Rh
-bmRhbG9uZSBicmlkZ2UgdGhhdCBkb2Vzbid0IGRlcGVuZCBvbiB0aGUgQVRUaW55Cj4gPj4+IG1p
-Y3JvY29udHJvbGxlciB1c2VkIGJ5IHRoZSBSUEkuIEFzIGl0J3MgdXNhYmxlIHN0YW5kYWxvbmUs
-IEkgYmVsaWV2ZQo+ID4+PiB0aGlzIGJpbmRpbmcgc2hvdWxkIGJlIHNwbGl0IGluIHR3by4KPiA+
-PiAKPiA+PiBEbyB5b3UgaGF2ZSBhIHBsYW4gZm9yIGhvdyBJIHdvdWxkIGltcGxlbWVudCBhIGRy
-aXZlciBvbiB0b3Agb2YgdGhhdAo+ID4+IGJpbmRpbmcgY2hhbmdlLCB0aG91Z2g/ICBOb3RlIHRo
-YXQgd2UgZG9uJ3QgcHJvZ3JhbSB0aGUgVG9zaGliYQo+ID4+IGRpcmVjdGx5LCB3ZSBvbmx5IHNl
-bmQgY29tbWFuZHMgdG8gdGhlIEF0bWVsLgo+ID4gCj4gPiBJIGFncmVlLiBJZiBpdCBpcyBhIGJs
-YWNrIGJveCBhbmQgdGhlIGludGVyZmFjZSB0byB0aGUgaG9zdCBpcyBkZWZpbmVkCj4gPiBieSB0
-aGUgQXRtZWwgdUMgZmlybXdhcmUsIHRoZW4gdGhhdCdzIHdoYXQgdGhlIERUIHNob3VsZCBkZXNj
-cmliZS4KPiA+IFBlcmhhcHMgYSBkaWFncmFtIGhlcmUgb3IgcG9pbnRlciB0byBvbmUgd291bGQg
-aGVscCBhbmQgcmVtb3ZlCj4gPiBtZW50aW9uaW5nIHdoYXQga2luZCBvZiBicmlkZ2UgY2hpcCBp
-dCBpcy4KPiAKPiBJdCdzIGEgKnZlcnkqIGJsYWNrIGJveC4gIEkgaGF2ZSBzb21lIG5vbi1wdWJs
-aWMgc2NoZW1hdGljcyB0aGF0IGRvbid0Cj4gZXZlbiBzYXkgd2hhdCBwYW5lbCBpcyBpbnZvbHZl
-ZCwgYW5kIG5vIGRvY3VtZW50YXRpb24gb2YgdGhlIHVjCj4gaW50ZXJmYWNlLiAgVGhlIGRyaXZl
-ciBjb2RlIGlzIGp1c3QgcmVwbGljYXRpbmcgdGhlIGZpcm13YXJlJ3MKPiBwcm9ncmFtbWluZyBz
-ZXF1ZW5jZS4KPiAKPiBJIHdvdWxkIGNlcnRhaW5seSBsb3ZlIHRvIGJlIGJ1aWxkaW5nIGEgZ2Vu
-ZXJpYyBUQzM1ODc2MiBkcml2ZXIsIHdoaWNoCj4gd291bGQgYmUgYSBsb3QgbW9yZSBzYXRpc2Z5
-aW5nLiAgSSBqdXN0IGRvbid0IHRoaW5rIGl0J3MgZG9hYmxlIGZvciB0aGlzCj4gcGFuZWwuICBH
-aXZlbiB0aGF0LCB3aGF0IGRvIEkgbmVlZCB0byBkbyB0byB0aGUgRFQ/ICBTaG91bGQgSSBqdXN0
-IGRyb3AKPiBtZW50aW9uIG9mIHRoZSBUb3NoaWJhIGFuZCB0YWxrIGFib3V0IHRoaXMgYmVpbmcg
-YSBicmlkZ2Ugd2l0aCBhIGN1c3RvbQo+IG1pY3JvY29udHJvbGxlciBmaXJtd2FyZT8KCkkgdGhp
-bmsgdGhhdCB3b3VsZCBiZSBiZXN0LCB5ZXMuIENvdWxkIHlvdSBzaGFyZSBhIHNpbXBsZSBibG9j
-ay1kaWFncmFtIG9mIHRoZSAKaGFyZHdhcmUgPyBJdCB3b3VsZCBoZWxwIHR1cm5pbmcgbXkgcmFu
-ZG9tIGFkdmljZXMgaW50byBzZW1pLXJhbmRvbSBhZHZpY2VzIAo6LSkKCi0tIApSZWdhcmRzLAoK
-TGF1cmVudCBQaW5jaGFydAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0
-b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJp
-LWRldmVsCg==
+On Tue, May 16, 2017 at 05:42:19PM +0200, Marcin Wojtas wrote:
+> Re-send in plain text.
+> 
+> 2017-05-16 17:40 GMT+02:00 Marcin Wojtas <mw-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org>:
+> > Russel,
+> >
+> > 2017-05-16 15:45 GMT+02:00 Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>:
+> >>
+> >> Add sdhci support for MACCHIATOBin boards.  This uses the AP806 SDHCI
+> >> for eMMC and CP110 master for the SD card slot.
+> >>
+> >> Signed-off-by: Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+> >> ---
+> >>
+> >> This version labels up the uSD connector, adds the vqmmc regulator for
+> >> the uSD (the regulator itself already present in the DT), and supports
+> >> the card detect signal.
+> >>
+> >> For eMMC, this version adds the vqmmc regulator, which again is already
+> >> present in the DT, marks it as not supporting SD or SDIO, and also
+> >> includes "slow mode" since testing with previous versions of the driver
+> >> have shown that selecting faster speeds results in errors.
+> >>
+> >>  arch/arm64/boot/dts/marvell/armada-8040-mcbin.dts |   23
+> >> ++++++++++++++++++++++
+> >>  1 file changed, 23 insertions(+)
+> >>
+> >> diff --git a/arch/arm64/boot/dts/marvell/armada-8040-mcbin.dts
+> >> b/arch/arm64/boot/dts/marvell/armada-8040-mcbin.dts
+> >> index cc167e05941a..60111ed3234a 100644
+> >> --- a/arch/arm64/boot/dts/marvell/armada-8040-mcbin.dts
+> >> +++ b/arch/arm64/boot/dts/marvell/armada-8040-mcbin.dts
+> >> @@ -95,6 +95,21 @@
+> >>         status = "okay";
+> >>  };
+> >>
+> >> +&ap_sdhci0 {
+> >> +       bus-width = <8>;
+> >> +       /*
+> >> +        * Not stable in HS modes - phy needs "more calibration", so add
+> >> +        * the "slow-mode" and disable SDR104, SDR50 and DDR50 modes.
+> >> +        */
+> >> +       marvell,xenon-phy-slow-mode;
+> >
+> >
+> > FYI, this property is by default present in armada-ap806.dtsi.
+
+Yes, it may be, it's unclear (at least to me) whether this is a board
+problem or a SoC problem.  Given that it's at the SoC layer, it suggests
+there's a SoC/driver problem that needs resolving.
+
+However, given that the board is tested only in non-HS mode at the
+moment, having the property in place is the sensible thing, even though
+the SoC level currently has the property.  If we can prove that the
+board is capable of HS modes, then I'd be happy to remove it, but not
+before.  It could be that even if the SoC level is capable of HS modes,
+the board may not support them.
+
+-- 
+RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
+according to speedtest.net.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
