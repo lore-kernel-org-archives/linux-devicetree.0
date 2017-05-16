@@ -1,105 +1,128 @@
-From: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] cec: add STM32 cec driver
-Date: Tue, 16 May 2017 15:09:25 +0200
-Message-ID: <c1b7a339-7746-76ec-a1f4-e1bcd01fbdd0@xs4all.nl>
-References: <1494939383-18937-1-git-send-email-benjamin.gaignard@linaro.org>
- <1494939383-18937-3-git-send-email-benjamin.gaignard@linaro.org>
+From: Robin Murphy <robin.murphy@arm.com>
+Subject: Re: [RFC v1 4/7] iommu/arm-smmu-v3: Enable HiSilicon erratum
+ 161010701
+Date: Tue, 16 May 2017 14:13:13 +0100
+Message-ID: <6d290334-cb68-5b20-a969-0cc6010922d5@arm.com>
+References: <20170513094731.3676-1-shameerali.kolothum.thodi@huawei.com>
+ <20170513094731.3676-5-shameerali.kolothum.thodi@huawei.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1494939383-18937-3-git-send-email-benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, yannick.fertre-qxv4g6HH51o@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <20170513094731.3676-5-shameerali.kolothum.thodi@huawei.com>
+Sender: linux-acpi-owner@vger.kernel.org
+To: shameer <shameerali.kolothum.thodi@huawei.com>, will.deacon@arm.com, mark.rutland@arm.com, lorenzo.pieralisi@arm.com, hanjun.guo@linaro.org
+Cc: devicetree@vger.kernel.org, gabriele.paoloni@huawei.com, john.garry@huawei.com, linuxarm@huawei.com, linux-acpi@vger.kernel.org, iommu@lists.linux-foundation.org, wangzhou1@hisilicon.com, guohanjun@huawei.com, linux-arm-kernel@lists.infradead.org, devel@acpica.org
 List-Id: devicetree@vger.kernel.org
 
-Looks good, except for the logical address handling that I think is wrong:
-
-On 16/05/17 14:56, Benjamin Gaignard wrote:
-> This patch add cec driver for STM32 platforms.
-> cec hardware block isn't not always used with hdmi so
-> cec notifier is not implemented. That will be done later
-> when STM32 DSI driver will be available.
+On 13/05/17 10:47, shameer wrote:
+> This replaces the existing broken_prefetch_cmd quirk using
+> the new erratum framework.
 > 
-> Driver compliance has been tested with cec-ctl and cec-compliance
-> tools.
-> 
-> Signed-off-by: Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Signed-off-by: Yannick Fertre <yannick.fertre-qxv4g6HH51o@public.gmane.org>
+> Signed-off-by: shameer <shameerali.kolothum.thodi@huawei.com>
 > ---
->  drivers/media/platform/Kconfig           |  11 +
->  drivers/media/platform/Makefile          |   2 +
->  drivers/media/platform/stm32/Makefile    |   1 +
->  drivers/media/platform/stm32/stm32-cec.c | 384 +++++++++++++++++++++++++++++++
->  4 files changed, 398 insertions(+)
->  create mode 100644 drivers/media/platform/stm32/Makefile
->  create mode 100644 drivers/media/platform/stm32/stm32-cec.c
+>  arch/arm64/Kconfig          | 10 +++++++++-
+>  drivers/iommu/arm-smmu-v3.c | 36 ++++++++++--------------------------
+>  2 files changed, 19 insertions(+), 27 deletions(-)
+> 
+> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+> index a39029b..21d61ff 100644
+> --- a/arch/arm64/Kconfig
+> +++ b/arch/arm64/Kconfig
+> @@ -508,8 +508,16 @@ config QCOM_FALKOR_ERRATUM_1009
+>  
+>  	  If unsure, say Y.
+>  
+> -endmenu
+> +config HISILICON_ERRATUM_161010701
+> +	bool "HiSilicon erratum 161010701: Skip SMMU Prefetch Cmd"
+> +	default y
+> +	help
+> +	  On HiSilicon Hip06/Hip07 platforms, the SMMU v3 doesn't support the
+> +	  CMD_PREFETCH_CFG. This will skip the prefetch cmd usage.
+>  
+> +	  If unsure, say Y.
+
+We don't need a config. This feature (not to mention others like it) is
+runtime-detected, and has effectively zero execution overhead and
+negligible Image-size overhead either way; why would anyone ever turn it
+off?
+
+Robin.
+
+> +
+> +endmenu
+>  
+>  choice
+>  	prompt "Page size"
+> diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
+> index f20d5d5..14538cb 100644
+> --- a/drivers/iommu/arm-smmu-v3.c
+> +++ b/drivers/iommu/arm-smmu-v3.c
+> @@ -650,16 +650,6 @@ struct arm_smmu_domain {
+>  	struct iommu_domain		domain;
+>  };
+>  
+> -struct arm_smmu_option_prop {
+> -	u32 opt;
+> -	const char *prop;
+> -};
+> -
+> -static struct arm_smmu_option_prop arm_smmu_options[] = {
+> -	{ ARM_SMMU_OPT_SKIP_PREFETCH, "hisilicon,broken-prefetch-cmd" },
+> -	{ 0, NULL},
+> -};
+> -
+>  enum smmu_erratum_match_type {
+>  	se_match_dt,
+>  };
+> @@ -677,7 +667,17 @@ struct smmu_erratum_workaround {
+>  };
+>  
+>  static const struct smmu_erratum_workaround smmu_workarounds[] = {
+> +#ifdef CONFIG_HISILICON_ERRATUM_161010701
+> +	{
+> +		.match_type = se_match_dt,
+> +		.id = "hisilicon,erratum-161010701",
+> +		.desc_str = "HiSilicon erratum 161010701",
+> +		.enable = erratum_skip_prefetch_cmd,
+> +	},
+> +#endif
+> +	{
+>  
+> +	},
+>  };
+>  
+>  typedef bool (*se_match_fn_t)(const struct smmu_erratum_workaround *,
+> @@ -735,20 +735,6 @@ static struct arm_smmu_domain *to_smmu_domain(struct iommu_domain *dom)
+>  	return container_of(dom, struct arm_smmu_domain, domain);
+>  }
+>  
+> -static void parse_driver_options(struct arm_smmu_device *smmu)
+> -{
+> -	int i = 0;
+> -
+> -	do {
+> -		if (of_property_read_bool(smmu->dev->of_node,
+> -						arm_smmu_options[i].prop)) {
+> -			smmu->options |= arm_smmu_options[i].opt;
+> -			dev_notice(smmu->dev, "option %s\n",
+> -				arm_smmu_options[i].prop);
+> -		}
+> -	} while (arm_smmu_options[++i].opt);
+> -}
+> -
+>  /* Low-level queue manipulation functions */
+>  static bool queue_full(struct arm_smmu_queue *q)
+>  {
+> @@ -2695,8 +2681,6 @@ static int arm_smmu_device_dt_probe(struct platform_device *pdev,
+>  	else
+>  		ret = 0;
+>  
+> -	parse_driver_options(smmu);
+> -
+>  	smmu_check_workarounds(smmu, se_match_dt, dev->of_node);
+>  
+>  	if (of_dma_is_coherent(dev->of_node))
 > 
 
-<snip>
-
-> +static int stm32_cec_adap_log_addr(struct cec_adapter *adap, u8 logical_addr)
-> +{
-> +	struct stm32_cec *cec = adap->priv;
-> +
-> +	regmap_update_bits(cec->regmap, CEC_CR, CECEN, 0);
-> +
-> +	if (logical_addr == CEC_LOG_ADDR_INVALID)
-> +		regmap_update_bits(cec->regmap, CEC_CFGR, OAR, 0);
-> +	else
-> +		regmap_update_bits(cec->regmap, CEC_CFGR, OAR,
-> +				   (1 << logical_addr) << 16);
-> +
-> +	regmap_update_bits(cec->regmap, CEC_CR, CECEN, CECEN);
-> +
-> +	return 0;
-> +}
-> +
-
-If you allocate more than one logical address, then stm32_cec_adap_log_addr()
-is called once for each LA. But right now the second call would overwrite
-the first LA. Right?
-
-Try 'cec-ctl --audio --playback' to allocate two logical addresses.
-
-<snip>
-
-> +static int stm32_cec_monitor_all(struct cec_adapter *adap, bool enable)
-> +{
-> +	struct stm32_cec *cec = adap->priv;
-> +
-> +	regmap_update_bits(cec->regmap, CEC_CR, CECEN, 0);
-> +
-> +	if (enable) {
-> +		regmap_update_bits(cec->regmap, CEC_CFGR, OAR, OAR)
-
-You shouldn't have to change the OAR mask. This would have the adapter
-Ack all logical addresses.
-
-> +		regmap_update_bits(cec->regmap, CEC_CFGR, LSTN, 0);
-> +	} else {
-> +		regmap_update_bits(cec->regmap, CEC_CFGR, OAR, 0);
-
-And this would disable all logical addresses.
-
-I would expect that only the LSTN bit was changed.
-
-In monitoring mode it should still Ack any messages directed to us.
-
-> +		regmap_update_bits(cec->regmap, CEC_CFGR, LSTN, LSTN);
-> +	}
-> +
-> +	regmap_update_bits(cec->regmap, CEC_CR, CECEN, CECEN);
-> +
-> +	return 0;
-> +}
-
-<snip>
-
-Regards,
-
-	Hans
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
