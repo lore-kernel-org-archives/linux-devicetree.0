@@ -1,44 +1,100 @@
-From: Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>
-Subject: [PATCH] arm: aspeed: Use 'ast2500' compatible strings where appropriate
-Date: Tue, 16 May 2017 15:59:00 +0800
-Message-ID: <20170516075900.23202-1-andrew@aj.id.au>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org
-Cc: Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ryan_chen-SAlXDmAnmOAqDJ6do+/SaQ@public.gmane.org
+From: Archit Taneja <architt@codeaurora.org>
+Subject: Re: [PATCH v1 3/3] drm/stm: Add STM32 DSI host driver
+Date: Tue, 16 May 2017 13:43:20 +0530
+Message-ID: <f8043f78-905f-c3cb-fe42-be58981cdaf6@codeaurora.org>
+References: <1494600989-13507-1-git-send-email-philippe.cornu@st.com>
+ <1494600989-13507-4-git-send-email-philippe.cornu@st.com>
+ <a254c176-8064-1984-10b8-dce4308cc3d6@baylibre.com>
+ <250fc42c-8961-c57e-6f59-9b1a6523a0a4@st.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <250fc42c-8961-c57e-6f59-9b1a6523a0a4@st.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Philippe CORNU <philippe.cornu@st.com>, Neil Armstrong <narmstrong@baylibre.com>, Alexandre TORGUE <alexandre.torgue@st.com>, Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Russell King <linux@armlinux.org.uk>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Yannick FERTRE <yannick.fertre@st.com>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "kernel@stlinux.com" <kernel@stlinux.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Fabien DESSENNE <fabien.dessenne@st.com>, Mickael REULIER <mickael.reulier@st.com>, Vincent ABRIOU <vincent.abriou@st.com>, Gabriel FERNANDEZ <gabriel.fernandez@st.com>, Ludovic BARRE <ludovic.barre@st.com>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>
----
- arch/arm/boot/dts/aspeed-g5.dtsi | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/arch/arm/boot/dts/aspeed-g5.dtsi b/arch/arm/boot/dts/aspeed-g5.dtsi
-index a0bea4a6ec77..48a092e735d9 100644
---- a/arch/arm/boot/dts/aspeed-g5.dtsi
-+++ b/arch/arm/boot/dts/aspeed-g5.dtsi
-@@ -88,7 +88,7 @@
- 		};
- 
- 		vic: interrupt-controller@1e6c0080 {
--			compatible = "aspeed,ast2400-vic";
-+			compatible = "aspeed,ast2500-vic";
- 			interrupt-controller;
- 			#interrupt-cells = <1>;
- 			valid-sources = <0xfefff7ff 0x0807ffff>;
-@@ -993,7 +993,7 @@
- 			};
- 
- 			timer: timer@1e782000 {
--				compatible = "aspeed,ast2400-timer";
-+				compatible = "aspeed,ast2500-timer";
- 				reg = <0x1e782000 0x90>;
- 				// The moxart_timer driver registers only one
- 				// interrupt and assumes it's for timer 1
--- 
-2.9.3
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGksCgpPbiAwNS8xNS8yMDE3IDA0OjAzIFBNLCBQaGlsaXBwZSBDT1JOVSB3cm90ZToKPiBIaSBO
+ZWlsLAo+IE1hbnkgdGhhbmtzIGZvciB5b3VyIGNvbW1lbnRzLgo+Cj4gVGhlIFBIWSBwYXJ0IG9m
+IHRoZSBNSVBJIERTSSBpcyB0aGUgbWFpbiBkaWZmZXJlbmNlIGJldHdlZW4gYWxsIGNoaXBzZXRz
+Cj4gYmFzZWQgb24gdGhlIFN5bm9wc3lzIERlc2lnbldhcmUgTUlQSSBEU0kuCj4gVGhlcmUgaXMg
+bm8gImdlbmVyaWMgRFNJIFBIWSBpbnRlcmZhY2UiIGFuZCB0aGF0IGlzIHByb2JhYmx5IHdoeSBh
+bGwgc29jCj4gdmVuZG9ycyBoYXZlIGltcGxlbWVudGVkIHRoZWlyIG93biBkcml2ZXJzIChSb2Nr
+Q2hpcCwgTlhQL0ZyZWVzY2FsZSwKPiBIaVNpbGljb24gYW5kIG5vdyBTVE0zMikuCgpXZSBkb24n
+dCByZWFsbHkgbmVlZCBhIGdlbmVyaWMgRFNJIFBIWSBpbnRlcmZhY2UgdG8gZW5zdXJlIHdlIHVz
+ZSBhIGNvbW1vbgpicmlkZ2UgZHJpdmVyLiBXZSBuZWVkIHRvIGRvIHdoYXQncyBiZWVuIGRvbmUg
+aW4gdGhlIERXIEhETUkgYnJpZGdlIGRyaXZlci4KVGhlIGR3X2hkbWlfcGxhdF9kYXRhIHN0cnVj
+dCBjb250YWlucyBwaHkgb3BzLCB3aGljaCBjYW4gYmUgdXNlZCB0byBhYnN0cmFjdAp2ZW5kb3Ig
+UEhZcy4KCj4KPiBSZWdhcmRpbmcgY3JlYXRpbmcgYSAiZ2VuZXJpYyBkdyBNSVBJIERTSSBicmlk
+Z2UiIGFzIHRoZSByZWNlbnQgZHcgaGRtaQo+IGJyaWRnZSwgc2V2ZXJhbCBhdHRlbXB0cyBoYXZl
+IGJlZW4gZG9uZSBpbiB0aGUgcGFzdCBidXQgd2l0aG91dCBzdWNjZXNzOgo+ICogTGl1IFlpbmcg
+ZnJvbSBGcmVlc2NhbGUgaW4gRmVicnVhcnkgMjAxNQo+IChodHRwczovL2xrbWwub3JnL2xrbWwv
+MjAxNS8yLzEyLzM4KS4KPiAqIENocmlzIFpob25nIGZyb20gUm9ja2NoaXAgaW4gTm92ZW1iZXIg
+MjAxNQo+IChodHRwOi8vd3d3Lm1haWwtYXJjaGl2ZS5jb20vbGludXgta2VybmVsQHZnZXIua2Vy
+bmVsLm9yZy9tc2cxMDI0NTg2Lmh0bWwpLgoKV2UgY2FuJ3QgaGF2ZSAzIGFsbW9zdCBpZGVudGlj
+YWwgRFcgTUlQSSBEU0kgaW1wbGVtZW50YXRpb25zIGluIHRoZSBrZXJuZWwuCllvdSdsbCBuZWVk
+IHRvIHNlcGFyYXRlIG91dCB0aGUgdmVuZG9yIHNwZWNpZmljIFBIWSBwaWVjZXMgaW50byBvcHMg
+KGxpa2UKaXQncyBkb25lIGluIHRoZSBEVyBIRE1JKSBhbmQgcG9zdCBhIGJyaWRnZSBkcml2ZXIg
+Zm9yIHRoaXMuCgpZb3UgZG9uJ3QgbmVlZCB0byBjb252ZXJ0IHRoZSBleGlzdGluZyByb2NraGlw
+IGFuZCBoaXNpbGljb24gaW1wbGVtZW50YXRpb25zCmludG8gYnJpZGdlIGRyaXZlcnMuIFdlIGNh
+biBDQyB0aGUgYXV0aG9ycyBvZiB0aGUgcm9ja2NoaXAgYW5kIGhpc2lsIHNvIHRoYXQKdGhleSBj
+YW4gYWRhcHQgdG8gdGhlIGJyaWRnZSBkcml2ZXIgdG9vLgoKVGhhbmtzLApBcmNoaXQKCj4KPiBU
+aGUgUm9ja2NoaXAgZHJpdmVyIGxvb2tzIG5pY2UgYW5kIGlzIHVwZGF0ZWQgcmVndWxhcmx5Lgo+
+IFNvLCBpbnN0ZWFkIG9mIGNyZWF0aW5nIGEgbmV3IGRyaXZlciBmb3IgdGhlIFNUTTMyIGZhbWls
+eSwgd2UgZGVjaWRlZCB0bwo+IHVzZSBSb2NrY2hpcOKAmXMgaW4gb3VyIG93biBkcm0vc3RtIGRp
+cmVjdG9yeSBhbmQgcmVwbGFjZSB0aGUKPiBSb2NrY2hpcC1zcGVjaWZpYyBQSFkgYnkgdGhlIFNU
+TTMyLgo+Cj4gQ29tbWVudHMgYXJlIHdlbGNvbWUgOi0pCj4gTWFueSB0aGFua3MsCj4gUGhpbGlw
+cGUKPgo+Cj4gT24gMDUvMTUvMjAxNyAxMDoyMiBBTSwgTmVpbCBBcm1zdHJvbmcgd3JvdGU6Cj4+
+IE9uIDA1LzEyLzIwMTcgMDQ6NTYgUE0sIFBoaWxpcHBlIENPUk5VIHdyb3RlOgo+Pj4gVGhpcyBt
+aXBpIGRzaSBob3N0IGRyaXZlciBpcyBiYXNlZCBvbiB0aGUgUm9ja2NoaXAgdmVyc2lvbiBvZiB0
+aGUKPj4+IFN5bm9wc3lzIERlc2lnbndhcmUgbWlwaSBkc2kgZHJpdmVyIChyb2NrY2hpcC9kdy1t
+aXBpLWRzaS5jKQo+Pj4gbW9kaWZpZWQgZm9yIHRoZSBzdG0zMiBmYW1pbHk6Cj4+PiAtIHJlcGxh
+Y2UgUm9ja2NoaXAgZGlnaXRhbCAmIHBoeSBzcGVjaWZpYyBleHRlbnNpb25zIHdpdGggc3RtMzIn
+cyBvbmVzLgo+Pj4gLSBhZGQgYSBicmlkZ2UKPj4+Cj4+PiBTaWduZWQtb2ZmLWJ5OiBQaGlsaXBw
+ZSBDT1JOVSA8cGhpbGlwcGUuY29ybnVAc3QuY29tPgo+Pj4gLS0tCj4+PiAgZHJpdmVycy9ncHUv
+ZHJtL3N0bS9LY29uZmlnICAgICAgIHwgICAgNyArCj4+PiAgZHJpdmVycy9ncHUvZHJtL3N0bS9N
+YWtlZmlsZSAgICAgIHwgICAgMiArCj4+PiAgZHJpdmVycy9ncHUvZHJtL3N0bS9kdy1taXBpLWRz
+aS5jIHwgMTE5NyArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrCj4+PiAgMyBm
+aWxlcyBjaGFuZ2VkLCAxMjA2IGluc2VydGlvbnMoKykKPj4+ICBjcmVhdGUgbW9kZSAxMDA2NDQg
+ZHJpdmVycy9ncHUvZHJtL3N0bS9kdy1taXBpLWRzaS5jCj4+Pgo+Pj4gZGlmZiAtLWdpdCBhL2Ry
+aXZlcnMvZ3B1L2RybS9zdG0vS2NvbmZpZyBiL2RyaXZlcnMvZ3B1L2RybS9zdG0vS2NvbmZpZwo+
+Pj4gaW5kZXggMmM0ODE3Zi4uMDAwNzc4OSAxMDA2NDQKPj4+IC0tLSBhL2RyaXZlcnMvZ3B1L2Ry
+bS9zdG0vS2NvbmZpZwo+Pj4gKysrIGIvZHJpdmVycy9ncHUvZHJtL3N0bS9LY29uZmlnCj4+PiBA
+QCAtMTQsMyArMTQsMTAgQEAgY29uZmlnIERSTV9TVE0KPj4+ICAJICBTVE1pY3JvZWxlY3Ryb25p
+Y3MgU1RNMzIgTUNVcy4KPj4+ICAJICBUbyBjb21waWxlIHRoaXMgZHJpdmVyIGFzIGEgbW9kdWxl
+LCBjaG9vc2UgTSBoZXJlOiB0aGUgbW9kdWxlCj4+PiAgCSAgd2lsbCBiZSBjYWxsZWQgc3RtLWRy
+bS4KPj4+ICsKPj4+ICtjb25maWcgRFJNX1NUTV9EU0kKPj4+ICsJdHJpc3RhdGUgIk1JUEkgRFNJ
+IHN1cHBvcnQgZm9yIFNUTWljcm9lbGVjdHJvbmljcyBTb0MiCj4+PiArCWRlcGVuZHMgb24gRFJN
+X1NUTQo+Pj4gKwlzZWxlY3QgRFJNX01JUElfRFNJCj4+PiArCWhlbHAKPj4+ICsJICBDaG9vc2Ug
+dGhpcyBvcHRpb24gZm9yIE1JUEkgRFNJIHN1cHBvcnQgb24gU1RNaWNyb2VsZWN0cm9uaWNzIFNv
+Qy4KPj4+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vc3RtL01ha2VmaWxlIGIvZHJpdmVy
+cy9ncHUvZHJtL3N0bS9NYWtlZmlsZQo+Pj4gaW5kZXggZTExNGQ0NS4uZTQ0OGE5MyAxMDA2NDQK
+Pj4+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9zdG0vTWFrZWZpbGUKPj4+ICsrKyBiL2RyaXZlcnMv
+Z3B1L2RybS9zdG0vTWFrZWZpbGUKPj4+IEBAIC00LDQgKzQsNiBAQCBzdG0tZHJtLXkgOj0gXAo+
+Pj4gIAlkcnYubyBcCj4+PiAgCWx0ZGMubwo+Pj4KPj4+ICtvYmotJChDT05GSUdfRFJNX1NUTV9E
+U0kpICs9IGR3LW1pcGktZHNpLm8KPj4+ICsKPj4+ICBvYmotJChDT05GSUdfRFJNX1NUTSkgKz0g
+c3RtLWRybS5vCj4+PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL3N0bS9kdy1taXBpLWRz
+aS5jIGIvZHJpdmVycy9ncHUvZHJtL3N0bS9kdy1taXBpLWRzaS5jCj4+PiBuZXcgZmlsZSBtb2Rl
+IDEwMDY0NAo+Pj4gaW5kZXggMDAwMDAwMC4uNGI3ZjdiOQo+Pj4gLS0tIC9kZXYvbnVsbAo+Pj4g
+KysrIGIvZHJpdmVycy9ncHUvZHJtL3N0bS9kdy1taXBpLWRzaS5jCj4+Cj4+Cj4+IEhpIFBoaWxp
+cHBlLAo+Pgo+PiBGaXJzdCBxdWVzdGlvbiwgd2h5IGNvdWxkbid0IHRoaXMgYmUgdHJhbnNmb3Jt
+ZWQgYXMgYSBicmlkZ2UgZHJpdmVyIGFsb25nIHRoZSBTeW5vcHN5cyBEVy1IRE1JIGRyaXZlciA/
+Cj4+Cj4+IE5laWwKPj4KPiBfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fXwo+IGRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKPiBkcmktZGV2ZWxAbGlzdHMuZnJlZWRl
+c2t0b3Aub3JnCj4gaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5m
+by9kcmktZGV2ZWwKPgoKLS0gClF1YWxjb21tIElubm92YXRpb24gQ2VudGVyLCBJbmMuIGlzIGEg
+bWVtYmVyIG9mIENvZGUgQXVyb3JhIEZvcnVtLAphIExpbnV4IEZvdW5kYXRpb24gQ29sbGFib3Jh
+dGl2ZSBQcm9qZWN0Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9y
+ZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZl
+bAo=
