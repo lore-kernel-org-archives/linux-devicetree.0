@@ -1,60 +1,52 @@
-From: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
-Subject: Re: [PATCH] clocksource: moxart: Add AST2500 compatible string
-Date: Tue, 16 May 2017 18:03:37 +0800
-Message-ID: <CACPK8XdnkBAi_-wjHKoAuL=wtc6+psE4Ap0qsVHO75wzO9EEuA@mail.gmail.com>
-References: <20170516075840.23130-1-andrew@aj.id.au>
+From: Shameerali Kolothum Thodi <shameerali.kolothum.thodi@huawei.com>
+Subject: RE: [RFC v1 3/7] iommu/arm-smmu-v3: Replace the device tree binding
+ for hisilicon broken prefetch cmd with erratum id
+Date: Tue, 16 May 2017 10:15:28 +0000
+Message-ID: <5FC3163CFD30C246ABAA99954A238FA838350804@FRAEML521-MBX.china.huawei.com>
+References: <20170513094731.3676-1-shameerali.kolothum.thodi@huawei.com>
+ <20170513094731.3676-4-shameerali.kolothum.thodi@huawei.com>
+ <CAL_JsqLH7iT7O2U3g6J26YGBUmt53PDymLJ5VCLByW_97L_M4w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170516075840.23130-1-andrew-zrmu5oMJ5Fs@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>
-Cc: Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ryan Chen <ryan_chen-SAlXDmAnmOAqDJ6do+/SaQ@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqLH7iT7O2U3g6J26YGBUmt53PDymLJ5VCLByW_97L_M4w@mail.gmail.com>
+Content-Language: en-US
+Sender: linux-acpi-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Will Deacon <will.deacon@arm.com>, Robin Murphy <robin.murphy@arm.com>, Mark Rutland <mark.rutland@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Hanjun Guo <hanjun.guo@linaro.org>, Gabriele Paoloni <gabriele.paoloni@huawei.com>, John Garry <john.garry@huawei.com>, Linux IOMMU <iommu@lists.linux-foundation.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, "devel@acpica.org" <devel@acpica.org>, Linuxarm <linuxarm@huawei.com>, "Wangzhou (B)" <wangzhou1@hisilicon.com>, "Guohanjun (Hanjun Guo)" <guohanjun@huawei.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 16, 2017 at 3:58 PM, Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org> wrote:
-> Also clean up space-before-tab issues in the documentation.
->
-> Signed-off-by: Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>
-
-Acked-by: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
-
-> ---
->  Documentation/devicetree/bindings/timer/moxa,moxart-timer.txt | 5 +++--
->  drivers/clocksource/moxart_timer.c                            | 3 ++-
->  2 files changed, 5 insertions(+), 3 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/timer/moxa,moxart-timer.txt b/Documentation/devicetree/bindings/timer/moxa,moxart-timer.txt
-> index e207c11630af..b6b8b4836d3b 100644
-> --- a/Documentation/devicetree/bindings/timer/moxa,moxart-timer.txt
-> +++ b/Documentation/devicetree/bindings/timer/moxa,moxart-timer.txt
-> @@ -3,8 +3,9 @@ MOXA ART timer
->  Required properties:
->
->  - compatible : Must be one of:
-> -       - "moxa,moxart-timer"
-> -       - "aspeed,ast2400-timer"
-> +       - "moxa,moxart-timer"
-> +       - "aspeed,ast2400-timer"
-> +       - "aspeed,ast2500-timer"
->  - reg : Should contain registers location and length
->  - interrupts : Should contain the timer interrupt number
->  - clocks : Should contain phandle for the clock that drives the counter
-> diff --git a/drivers/clocksource/moxart_timer.c b/drivers/clocksource/moxart_timer.c
-> index 7f3430654fbd..b6fa319396c1 100644
-> --- a/drivers/clocksource/moxart_timer.c
-> +++ b/drivers/clocksource/moxart_timer.c
-> @@ -253,4 +253,5 @@ static int __init moxart_timer_init(struct device_node *node)
->         return ret;
->  }
->  CLOCKSOURCE_OF_DECLARE(moxart, "moxa,moxart-timer", moxart_timer_init);
-> -CLOCKSOURCE_OF_DECLARE(aspeed, "aspeed,ast2400-timer", moxart_timer_init);
-> +CLOCKSOURCE_OF_DECLARE(ast2400, "aspeed,ast2400-timer", moxart_timer_init);
-> +CLOCKSOURCE_OF_DECLARE(ast2500, "aspeed,ast2500-timer", moxart_timer_init);
-> --
-> 2.9.3
->
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogUm9iIEhlcnJpbmcgW21h
+aWx0bzpyb2JoQGtlcm5lbC5vcmddDQo+IFNlbnQ6IE1vbmRheSwgTWF5IDE1LCAyMDE3IDQ6MjQg
+UE0NCj4gVG86IFNoYW1lZXJhbGkgS29sb3RodW0gVGhvZGkNCj4gQ2M6IFdpbGwgRGVhY29uOyBS
+b2JpbiBNdXJwaHk7IE1hcmsgUnV0bGFuZDsgTG9yZW56byBQaWVyYWxpc2k7IEhhbmp1biBHdW87
+DQo+IEdhYnJpZWxlIFBhb2xvbmk7IEpvaG4gR2Fycnk7IExpbnV4IElPTU1VOyBkZXZpY2V0cmVl
+QHZnZXIua2VybmVsLm9yZzsNCj4gbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3Jn
+OyBsaW51eC1hY3BpQHZnZXIua2VybmVsLm9yZzsNCj4gZGV2ZWxAYWNwaWNhLm9yZzsgTGludXhh
+cm07IFdhbmd6aG91IChCKTsgR3VvaGFuanVuIChIYW5qdW4gR3VvKQ0KPiBTdWJqZWN0OiBSZTog
+W1JGQyB2MSAzLzddIGlvbW11L2FybS1zbW11LXYzOiBSZXBsYWNlIHRoZSBkZXZpY2UgdHJlZQ0K
+PiBiaW5kaW5nIGZvciBoaXNpbGljb24gYnJva2VuIHByZWZldGNoIGNtZCB3aXRoIGVycmF0dW0g
+aWQNCj4gDQo+IE9uIFNhdCwgTWF5IDEzLCAyMDE3IGF0IDQ6NDcgQU0sIHNoYW1lZXINCj4gPHNo
+YW1lZXJhbGkua29sb3RodW0udGhvZGlAaHVhd2VpLmNvbT4gd3JvdGU6DQo+ID4gU2lnbmVkLW9m
+Zi1ieTogc2hhbWVlciA8c2hhbWVlcmFsaS5rb2xvdGh1bS50aG9kaUBodWF3ZWkuY29tPg0KPiA+
+IC0tLQ0KPiA+ICBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvaW9tbXUvYXJtLHNt
+bXUtdjMudHh0IHwgMiArLQ0KPiA+ICAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKyksIDEg
+ZGVsZXRpb24oLSkNCj4gPg0KPiA+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRy
+ZWUvYmluZGluZ3MvaW9tbXUvYXJtLHNtbXUtdjMudHh0DQo+ID4gYi9Eb2N1bWVudGF0aW9uL2Rl
+dmljZXRyZWUvYmluZGluZ3MvaW9tbXUvYXJtLHNtbXUtdjMudHh0DQo+ID4gaW5kZXggYmU1NzU1
+MC4uYmY0OGU5MiAxMDA2NDQNCj4gPiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
+ZGluZ3MvaW9tbXUvYXJtLHNtbXUtdjMudHh0DQo+ID4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZp
+Y2V0cmVlL2JpbmRpbmdzL2lvbW11L2FybSxzbW11LXYzLnR4dA0KPiA+IEBAIC00Niw3ICs0Niw3
+IEBAIHRoZSBQQ0llIHNwZWNpZmljYXRpb24uDQo+ID4gICAgICAgICAgICAgICAgICAgICAgICAg
+IGRldmljZXRyZWUvYmluZGluZ3MvaW50ZXJydXB0LWNvbnRyb2xsZXIvbXNpLnR4dA0KPiA+ICAg
+ICAgICAgICAgICAgICAgICAgICAgZm9yIGEgZGVzY3JpcHRpb24gb2YgdGhlIG1zaS1wYXJlbnQg
+cHJvcGVydHkuDQo+ID4NCj4gPiAtLSBoaXNpbGljb24sYnJva2VuLXByZWZldGNoLWNtZA0KPiA+
+ICstIGhpc2lsaWNvbixlcnJhdHVtLTE2MTAxMDcwMQ0KPiANCj4gV2h5PyBZb3VyIG1pc3Npbmcg
+Y29tbWl0IG1zZyBzaG91bGQgYW5zd2VyIHRoYXQuIFRoaXMgYnJlYWtzDQo+IGNvbXBhdGliaWxp
+dHksIHNvIHlvdSBhcmUgc3R1Y2sgd2l0aCB0aGUgb2xkIHN0cmluZy4NCj4gDQo+IEknZCBwcmVm
+ZXIgdGhhdCB5b3Ugc3RhcnQgdXNpbmcgdGhlIGNvbXBhdGlibGUgc3RyaW5nIHJhdGhlciB0aGFu
+IGV2ZXJ5IHZlbmRvcg0KPiBhZGRpbmcgYSBwcm9wZXJ0eSBmb3IgZXZlcnkgZXJyYXRhLg0KDQpP
+ay4gSSB3aWxsIHdhaXQgZm9yIHRoZSByZXZpZXcgb2Ygb3RoZXIgcGF0Y2hlcyBpbiB0aGlzIHNl
+cmllcyBhbmQgdXBkYXRlIGl0IGFjY29yZGluZ2x5DQppbiB0aGUgbmV4dCByZXZpc2lvbi4NCg0K
+VGhhbmtzLA0KU2hhbWVlcg0KDQoNCg==
