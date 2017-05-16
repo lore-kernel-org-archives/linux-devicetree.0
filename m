@@ -1,38 +1,50 @@
-From: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
-Subject: [PATCH 1/2] dt/bindings: display: fix display-timing reference
-Date: Tue, 16 May 2017 11:19:04 +0300
-Message-ID: <eabeec88c2831eb8541b78a4977ee7342b810b39.1494922745.git.baruch@tkos.co.il>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>, Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH 1/2] dt/bindings: display: fix display-timing reference
+Date: Tue, 16 May 2017 11:31:33 +0300
+Message-ID: <2147504.7N3R8UMBTy@avalon>
+References: <eabeec88c2831eb8541b78a4977ee7342b810b39.1494922745.git.baruch@tkos.co.il>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <eabeec88c2831eb8541b78a4977ee7342b810b39.1494922745.git.baruch@tkos.co.il>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Baruch Siach <baruch@tkos.co.il>
+Cc: devicetree@vger.kernel.org, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, dri-devel@lists.freedesktop.org
 List-Id: devicetree@vger.kernel.org
 
-Fixes: 14da3ed8dd08 ("devicetree/bindings: display: Document common panel properties")
-Cc: Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Signed-off-by: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
----
- Documentation/devicetree/bindings/display/panel/panel-common.txt | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/Documentation/devicetree/bindings/display/panel/panel-common.txt b/Documentation/devicetree/bindings/display/panel/panel-common.txt
-index ec52c472c845..0603af877155 100644
---- a/Documentation/devicetree/bindings/display/panel/panel-common.txt
-+++ b/Documentation/devicetree/bindings/display/panel/panel-common.txt
-@@ -38,7 +38,7 @@ Display Timings
-   require specific display timings. The panel-timing subnode expresses those
-   timings as specified in the timing subnode section of the display timing
-   bindings defined in
--  Documentation/devicetree/bindings/display/display-timing.txt.
-+  Documentation/devicetree/bindings/display/panel/display-timing.txt.
- 
- 
- Connectivity
--- 
-2.11.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGkgQmFydWNoLAoKVGhhbmsgeW91IGZvciB0aGUgcGF0Y2guCgpPbiBUdWVzZGF5IDE2IE1heSAy
+MDE3IDExOjE5OjA0IEJhcnVjaCBTaWFjaCB3cm90ZToKCkEgY29tbWl0IG1lc3NhZ2UgYm9keSB3
+b3VsZCBiZSBuaWNlLgoKPiBGaXhlczogMTRkYTNlZDhkZDA4ICgiZGV2aWNldHJlZS9iaW5kaW5n
+czogZGlzcGxheTogRG9jdW1lbnQgY29tbW9uIHBhbmVsCj4gcHJvcGVydGllcyIpCj4gQ2M6IExh
+dXJlbnQgUGluY2hhcnQgPGxhdXJlbnQucGluY2hhcnQrcmVuZXNhc0BpZGVhc29uYm9hcmQuY29t
+Pgo+IENjOiBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3JnPgo+IFNpZ25lZC1vZmYtYnk6IEJh
+cnVjaCBTaWFjaCA8YmFydWNoQHRrb3MuY28uaWw+Cj4gLS0tCj4gIERvY3VtZW50YXRpb24vZGV2
+aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL3BhbmVsLWNvbW1vbi50eHQgfCAyICstCj4g
+IDEgZmlsZSBjaGFuZ2VkLCAxIGluc2VydGlvbigrKSwgMSBkZWxldGlvbigtKQo+IAo+IGRpZmYg
+LS1naXQKPiBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVs
+L3BhbmVsLWNvbW1vbi50eHQKPiBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9k
+aXNwbGF5L3BhbmVsL3BhbmVsLWNvbW1vbi50eHQgaW5kZXgKPiBlYzUyYzQ3MmM4NDUuLjA2MDNh
+Zjg3NzE1NSAxMDA2NDQKPiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
+ZGlzcGxheS9wYW5lbC9wYW5lbC1jb21tb24udHh0Cj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZp
+Y2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvcGFuZWwtY29tbW9uLnR4dAo+IEBAIC0zOCw3
+ICszOCw3IEBAIERpc3BsYXkgVGltaW5ncwo+ICAgIHJlcXVpcmUgc3BlY2lmaWMgZGlzcGxheSB0
+aW1pbmdzLiBUaGUgcGFuZWwtdGltaW5nIHN1Ym5vZGUgZXhwcmVzc2VzCj4gdGhvc2UgdGltaW5n
+cyBhcyBzcGVjaWZpZWQgaW4gdGhlIHRpbWluZyBzdWJub2RlIHNlY3Rpb24gb2YgdGhlIGRpc3Bs
+YXkKPiB0aW1pbmcgYmluZGluZ3MgZGVmaW5lZCBpbgo+IC0gIERvY3VtZW50YXRpb24vZGV2aWNl
+dHJlZS9iaW5kaW5ncy9kaXNwbGF5L2Rpc3BsYXktdGltaW5nLnR4dC4KPiArICBEb2N1bWVudGF0
+aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9kaXNwbGF5LXRpbWluZy50eHQu
+CgpNeSBiYWQuCgpBY2tlZC1ieTogTGF1cmVudCBQaW5jaGFydCA8bGF1cmVudC5waW5jaGFydEBp
+ZGVhc29uYm9hcmQuY29tPgoKPiAKPiAKPiAgQ29ubmVjdGl2aXR5CgotLSAKUmVnYXJkcywKCkxh
+dXJlbnQgUGluY2hhcnQKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9w
+Lm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1k
+ZXZlbAo=
