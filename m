@@ -1,204 +1,59 @@
-From: Madalin Bucur <madalin.bucur-3arQi8VN3Tc@public.gmane.org>
-Subject: [PATCH 2/3] arm64: dts: add LS1043A DPAA FMan support
-Date: Tue, 16 May 2017 15:07:22 +0300
-Message-ID: <1494936443-14869-3-git-send-email-madalin.bucur@nxp.com>
-References: <1494936443-14869-1-git-send-email-madalin.bucur@nxp.com>
-Reply-To: <madalin.bucur-3arQi8VN3Tc@public.gmane.org>
-Mime-Version: 1.0
-Content-Type: text/plain
+From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH] of: irq: use of_irq_get() in of_irq_to_resource()
+Date: Tue, 16 May 2017 14:09:04 +0200
+Message-ID: <1494936544-27541-1-git-send-email-thomas.petazzoni@free-electrons.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1494936443-14869-1-git-send-email-madalin.bucur-3arQi8VN3Tc@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, Madalin Bucur <madalin.bucur-3arQi8VN3Tc@public.gmane.org>
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add the DPAA 1.x FMan device tree nodes for LS1043A boards.
+of_irq_to_resource() currently uses irq_of_parse_and_map() to
+translate a DT interrupt specification into a Linux virtual interrupt
+number. While this works in most cases, irq_of_parse_and_map() doesn't
+properly handle the case where the interrupt controller is not yet
+available (due to deferred probing for example).
 
-Signed-off-by: Madalin Bucur <madalin.bucur-3arQi8VN3Tc@public.gmane.org>
+So instead, use of_irq_get(), which is implemented exactly like
+irq_of_parse_and_map(), with the exception that if the interrupt
+controller is not yet available, it returns -EPROBE_DEFER. Obviously,
+we also handle this error and bail out from of_irq_to_resource() when
+of_irq_get() returns an error.
+
+This allows to avoid silly error messages at boot time caused by
+irq_create_of_mapping() when the interrupt controller is not
+available:
+
+[    0.153168] irq: no irq domain found for /ap806/config-space@f0000000/interrupt-controller@3f0100 !
+[    0.154041] irq: no irq domain found for /cp110-master/config-space@f2000000/interrupt-controller@1e0000 !
+[    0.154124] irq: no irq domain found for /cp110-master/config-space@f2000000/interrupt-controller@1e0000 !
+[    0.154207] irq: no irq domain found for /cp110-master/config-space@f2000000/interrupt-controller@1e0000 !
+[    0.154437] irq: no irq domain found for /cp110-master/config-space@f2000000/interrupt-controller@1e0000 !
+[    0.154518] irq: no irq domain found for /cp110-master/config-space@f2000000/interrupt-controller@1e0000 !
+
+Signed-off-by: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 ---
- arch/arm64/boot/dts/freescale/fsl-ls1043-post.dtsi | 45 +++++++++++++
- arch/arm64/boot/dts/freescale/fsl-ls1043a-qds.dts  |  2 +
- arch/arm64/boot/dts/freescale/fsl-ls1043a-rdb.dts  | 73 ++++++++++++++++++++++
- arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi     | 13 +++-
- 4 files changed, 132 insertions(+), 1 deletion(-)
- create mode 100644 arch/arm64/boot/dts/freescale/fsl-ls1043-post.dtsi
+ drivers/of/irq.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1043-post.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1043-post.dtsi
-new file mode 100644
-index 0000000..169e171
---- /dev/null
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1043-post.dtsi
-@@ -0,0 +1,45 @@
-+/*
-+ * QorIQ FMan v3 device tree nodes for ls1043
-+ *
-+ * Copyright 2015-2016 Freescale Semiconductor Inc.
-+ *
-+ * SPDX-License-Identifier: (GPL-2.0+ OR BSD-3-Clause)
-+ */
+diff --git a/drivers/of/irq.c b/drivers/of/irq.c
+index 7c56b72..47b3614 100644
+--- a/drivers/of/irq.c
++++ b/drivers/of/irq.c
+@@ -369,7 +369,10 @@ EXPORT_SYMBOL_GPL(of_irq_parse_one);
+  */
+ int of_irq_to_resource(struct device_node *dev, int index, struct resource *r)
+ {
+-	int irq = irq_of_parse_and_map(dev, index);
++	int irq = of_irq_get(dev, index);
 +
-+&soc {
-+
-+/* include used FMan blocks */
-+#include "qoriq-fman3-0.dtsi"
-+#include "qoriq-fman3-0-1g-0.dtsi"
-+#include "qoriq-fman3-0-1g-1.dtsi"
-+#include "qoriq-fman3-0-1g-2.dtsi"
-+#include "qoriq-fman3-0-1g-3.dtsi"
-+#include "qoriq-fman3-0-1g-4.dtsi"
-+#include "qoriq-fman3-0-1g-5.dtsi"
-+#include "qoriq-fman3-0-10g-0.dtsi"
-+
-+};
-+
-+&fman0 {
-+	/* these aliases provide the FMan ports mapping */
-+	enet0: ethernet@e0000 {
-+	};
-+
-+	enet1: ethernet@e2000 {
-+	};
-+
-+	enet2: ethernet@e4000 {
-+	};
-+
-+	enet3: ethernet@e6000 {
-+	};
-+
-+	enet4: ethernet@e8000 {
-+	};
-+
-+	enet5: ethernet@ea000 {
-+	};
-+
-+	enet6: ethernet@f0000 {
-+	};
-+};
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1043a-qds.dts b/arch/arm64/boot/dts/freescale/fsl-ls1043a-qds.dts
-index 0989d63..c5b93ea 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1043a-qds.dts
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1043a-qds.dts
-@@ -181,3 +181,5 @@
- 		reg = <0>;
- 	};
- };
-+
-+#include "fsl-ls1043-post.dtsi"
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1043a-rdb.dts b/arch/arm64/boot/dts/freescale/fsl-ls1043a-rdb.dts
-index c37110b..67dbc94 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1043a-rdb.dts
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1043a-rdb.dts
-@@ -139,3 +139,76 @@
- &duart1 {
- 	status = "okay";
- };
-+
-+#include "fsl-ls1043-post.dtsi"
-+
-+&fman0 {
-+	ethernet@e0000 {
-+		phy-handle = <&qsgmii_phy1>;
-+		phy-connection-type = "qsgmii";
-+	};
-+
-+	ethernet@e2000 {
-+		phy-handle = <&qsgmii_phy2>;
-+		phy-connection-type = "qsgmii";
-+	};
-+
-+	ethernet@e4000 {
-+		phy-handle = <&rgmii_phy1>;
-+		phy-connection-type = "rgmii-txid";
-+	};
-+
-+	ethernet@e6000 {
-+		phy-handle = <&rgmii_phy2>;
-+		phy-connection-type = "rgmii-txid";
-+	};
-+
-+	ethernet@e8000 {
-+		phy-handle = <&qsgmii_phy3>;
-+		phy-connection-type = "qsgmii";
-+	};
-+
-+	ethernet@ea000 {
-+		phy-handle = <&qsgmii_phy4>;
-+		phy-connection-type = "qsgmii";
-+	};
-+
-+	ethernet@f0000 { /* 10GEC1 */
-+		phy-handle = <&aqr105_phy>;
-+		phy-connection-type = "xgmii";
-+	};
-+
-+	mdio@fc000 {
-+		rgmii_phy1: ethernet-phy@1 {
-+			reg = <0x1>;
-+		};
-+
-+		rgmii_phy2: ethernet-phy@2 {
-+			reg = <0x2>;
-+		};
-+
-+		qsgmii_phy1: ethernet-phy@4 {
-+			reg = <0x4>;
-+		};
-+
-+		qsgmii_phy2: ethernet-phy@5 {
-+			reg = <0x5>;
-+		};
-+
-+		qsgmii_phy3: ethernet-phy@6 {
-+			reg = <0x6>;
-+		};
-+
-+		qsgmii_phy4: ethernet-phy@7 {
-+			reg = <0x7>;
-+		};
-+	};
-+
-+	mdio@fd000 {
-+		aqr105_phy: ethernet-phy@1 {
-+			compatible = "ethernet-phy-ieee802.3-c45";
-+			interrupts = <0 132 4>;
-+			reg = <0x1>;
-+		};
-+	};
-+};
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
-index 2247615..5efc088 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
-@@ -53,6 +53,17 @@
- 	#address-cells = <2>;
- 	#size-cells = <2>;
++	if (irq < 0)
++		return irq;
  
-+	aliases {
-+		fman0 = &fman0;
-+		ethernet0 = &enet0;
-+		ethernet1 = &enet1;
-+		ethernet2 = &enet2;
-+		ethernet3 = &enet3;
-+		ethernet4 = &enet4;
-+		ethernet5 = &enet5;
-+		ethernet6 = &enet6;
-+	};
-+
- 	cpus {
- 		#address-cells = <1>;
- 		#size-cells = <0>;
-@@ -180,7 +191,7 @@
- 		interrupts = <1 9 0xf08>;
- 	};
- 
--	soc {
-+	soc: soc {
- 		compatible = "simple-bus";
- 		#address-cells = <2>;
- 		#size-cells = <2>;
+ 	/* Only dereference the resource if both the
+ 	 * resource and the irq are valid. */
 -- 
-2.1.0
+2.7.4
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
