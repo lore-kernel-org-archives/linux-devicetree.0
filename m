@@ -1,94 +1,36 @@
-From: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
-Subject: [PATCH] ARM: dts: imx7: use 3 PWM cells
-Date: Tue, 16 May 2017 00:40:13 -0700
-Message-ID: <20170516074013.3571-1-stefan@agner.ch>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
-Cc: Ying.Liu-KZfg59tc24xl57MIdRCFDg@public.gmane.org, peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+From: Niklas Cassel <niklas.cassel@axis.com>
+Subject: stmmac dtc warnings 4.12-rc1
+Date: Tue, 16 May 2017 09:46:30 +0200
+Message-ID: <34b0f7c7-6cec-c419-da96-7d3b197712ca@axis.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+Content-Language: en-US
+Sender: netdev-owner@vger.kernel.org
+To: Giuseppe Cavallaro <peppe.cavallaro@st.com>, Alexandre Torgue <alexandre.torgue@st.com>, Joao Pinto <Joao.Pinto@synopsys.com>, Thierry Reding <treding@nvidia.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, David Miller <davem@davemloft.net>
+Cc: devicetree@vger.kernel.org, netdev <netdev@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-The PWM driver has now capability to specify the PWM polarity
-which is e.g. for backlight control. Allow to make use of PWM
-polarity by specifying pwm-cells to be 3 in the base dt.
+Hello
 
-Signed-off-by: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
----
- arch/arm/boot/dts/imx7-colibri.dtsi   | 2 +-
- arch/arm/boot/dts/imx7d-nitrogen7.dts | 2 +-
- arch/arm/boot/dts/imx7s.dtsi          | 8 ++++----
- 3 files changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/arch/arm/boot/dts/imx7-colibri.dtsi b/arch/arm/boot/dts/imx7-colibri.dtsi
-index 2d87489f9105..d7753f79937a 100644
---- a/arch/arm/boot/dts/imx7-colibri.dtsi
-+++ b/arch/arm/boot/dts/imx7-colibri.dtsi
-@@ -43,7 +43,7 @@
- / {
- 	bl: backlight {
- 		compatible = "pwm-backlight";
--		pwms = <&pwm1 0 5000000>;
-+		pwms = <&pwm1 0 5000000 0>;
- 	};
- 
- 	reg_module_3v3: regulator-module-3v3 {
-diff --git a/arch/arm/boot/dts/imx7d-nitrogen7.dts b/arch/arm/boot/dts/imx7d-nitrogen7.dts
-index 5d98e2b5d54b..37a7c6f4f8f1 100644
---- a/arch/arm/boot/dts/imx7d-nitrogen7.dts
-+++ b/arch/arm/boot/dts/imx7d-nitrogen7.dts
-@@ -67,7 +67,7 @@
- 
- 	backlight-j20 {
- 		compatible = "pwm-backlight";
--		pwms = <&pwm1 0 5000000>;
-+		pwms = <&pwm1 0 5000000 0>;
- 		brightness-levels = <0 4 8 16 32 64 128 255>;
- 		default-brightness-level = <6>;
- 		status = "okay";
-diff --git a/arch/arm/boot/dts/imx7s.dtsi b/arch/arm/boot/dts/imx7s.dtsi
-index c4f12fd2e044..56a2aeadfe65 100644
---- a/arch/arm/boot/dts/imx7s.dtsi
-+++ b/arch/arm/boot/dts/imx7s.dtsi
-@@ -609,7 +609,7 @@
- 				clocks = <&clks IMX7D_PWM1_ROOT_CLK>,
- 					 <&clks IMX7D_PWM1_ROOT_CLK>;
- 				clock-names = "ipg", "per";
--				#pwm-cells = <2>;
-+				#pwm-cells = <3>;
- 				status = "disabled";
- 			};
- 
-@@ -620,7 +620,7 @@
- 				clocks = <&clks IMX7D_PWM2_ROOT_CLK>,
- 					 <&clks IMX7D_PWM2_ROOT_CLK>;
- 				clock-names = "ipg", "per";
--				#pwm-cells = <2>;
-+				#pwm-cells = <3>;
- 				status = "disabled";
- 			};
- 
-@@ -631,7 +631,7 @@
- 				clocks = <&clks IMX7D_PWM3_ROOT_CLK>,
- 					 <&clks IMX7D_PWM3_ROOT_CLK>;
- 				clock-names = "ipg", "per";
--				#pwm-cells = <2>;
-+				#pwm-cells = <3>;
- 				status = "disabled";
- 			};
- 
-@@ -642,7 +642,7 @@
- 				clocks = <&clks IMX7D_PWM4_ROOT_CLK>,
- 					 <&clks IMX7D_PWM4_ROOT_CLK>;
- 				clock-names = "ipg", "per";
--				#pwm-cells = <2>;
-+				#pwm-cells = <3>;
- 				status = "disabled";
- 			};
- 
--- 
-2.13.0
+With the dtc in linux 4.12-rc1 we get the following
+warning when compiling our stmmac node:
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Warning (simple_bus_reg): Node /amba/stmmac-axi-config missing or empty reg/ranges property
+
+Note that we do follow the example binding for stmmac:
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/devicetree/bindings/net/stmmac.txt
+
+The binding does not specify a reg/ranges property for the stmmac-axi-config node.
+(Neither does the mtl_rx_setup/mtl_tx_setup nodes.)
+
+We are building with a local patch for dtc that fails on warnings (like -Werror).
+However, I figure that there shouldn't be any warnings when compiling a dtc,
+so what's the best solution here?
+Add a reg = <0> property to the stmmac-axi-config/mtl_rx_setup/mtl_tx_setup nodes?
+
+
+Regards,
+Niklas
