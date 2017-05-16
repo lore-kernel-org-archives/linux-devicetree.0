@@ -1,28 +1,42 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH V5 2/7] ARM: TI: Use - instead of @ for DT OPP entries
-Date: Tue, 16 May 2017 08:19:14 -0700
-Message-ID: <20170516151913.GE31418@atomide.com>
-References: <cover.1492685450.git.viresh.kumar@linaro.org>
- <5f0656140309d53a45058c048ca059c4ba294756.1492685450.git.viresh.kumar@linaro.org>
+From: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
+Subject: [PATCH 3/3] mfd: arizona: Update GPIO binding for newly supported flag
+Date: Tue, 16 May 2017 16:31:54 +0100
+Message-ID: <1494948714-15203-3-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+References: <1494948714-15203-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <5f0656140309d53a45058c048ca059c4ba294756.1492685450.git.viresh.kumar@linaro.org>
-Sender: linux-pm-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: arm@kernel.org, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linaro-kernel@lists.linaro.org, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org, Rafael Wysocki <rjw@rjwysocki.net>, Krzysztof Kozlowski <krzk@kernel.org>, Masahiro Yamada <yamada.masahiro@socionext.com>, Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
+Content-Type: text/plain
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1494948714-15203-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: linus.walleij@linaro.org
+Cc: lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, gnurou@gmail.com, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, patches@opensource.wolfsonmicro.com
 List-Id: devicetree@vger.kernel.org
 
-* Viresh Kumar <viresh.kumar@linaro.org> [170420 03:58]:
-> Compiling the DT file with W=1, DTC warns like follows:
-> 
-> Warning (unit_address_vs_reg): Node /opp_table0/opp@1000000000 has a
-> unit name, but no reg property
-> 
-> Fix this by replacing '@' with '-' as the OPP nodes will never have a
-> "reg" property.
+Update the device tree binding to show that the new GPIO_SLEEP flags are
+now supported in the flags field of the GPIO binding for Arizona
+devices.
 
-Applying into omap-for-v4.13/dt thanks.
+Signed-off-by: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
+---
+ Documentation/devicetree/bindings/mfd/arizona.txt | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-Tony
+diff --git a/Documentation/devicetree/bindings/mfd/arizona.txt b/Documentation/devicetree/bindings/mfd/arizona.txt
+index 8f2e282..1729133 100644
+--- a/Documentation/devicetree/bindings/mfd/arizona.txt
++++ b/Documentation/devicetree/bindings/mfd/arizona.txt
+@@ -30,7 +30,10 @@ Required properties:
+ 
+   - gpio-controller : Indicates this device is a GPIO controller.
+   - #gpio-cells : Must be 2. The first cell is the pin number and the
+-    second cell is used to specify optional parameters (currently unused).
++    second cell is used to specify optional parameters, the following flags
++    are supported:
++      "GPIO_SLEEP_MAY_LOOSE_OUTPUT" the output of this GPIO does not need to
++      be maintained whilst the CODEC is in low power mode.
+ 
+   - AVDD-supply, DBVDD1-supply, CPVDD-supply : Power supplies for the device,
+     as covered in Documentation/devicetree/bindings/regulator/regulator.txt
+-- 
+2.1.4
+
