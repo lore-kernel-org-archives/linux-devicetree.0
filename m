@@ -1,82 +1,63 @@
-From: Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
-Subject: Re: [PATCH] arm64: dts: marvell: mcbin: add sdhci
-Date: Tue, 16 May 2017 18:11:59 +0100
-Message-ID: <20170516171159.GH22219@n2100.armlinux.org.uk>
-References: <E1dAcn4-0004z2-Fl@rmk-PC.armlinux.org.uk>
- <CAPv3WKf4GcOc7g-2yMCjGN4HrftDL0Ro6jHErQL8-zSH-tC10w@mail.gmail.com>
- <CAPv3WKeK9Z_1dGvBnc=NJrD7+nZOgf60iCNvvTkFGcP7GSyt=Q@mail.gmail.com>
+From: =?UTF-8?Q?Noralf_Tr=c3=b8nnes?= <noralf-L59+Z2yzLopAfugRpC6u6w@public.gmane.org>
+Subject: Re: [PATCH 2/2] dt/bindings: display: move rotation into a common
+ place
+Date: Tue, 16 May 2017 19:15:35 +0200
+Message-ID: <a7463d70-77b4-b5f5-5053-b46f79d2f162@tronnes.org>
+References: <eabeec88c2831eb8541b78a4977ee7342b810b39.1494922745.git.baruch@tkos.co.il>
+ <f2a6516fff9b8f5ac67aabd60527c1d9b3149482.1494922745.git.baruch@tkos.co.il>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAPv3WKeK9Z_1dGvBnc=NJrD7+nZOgf60iCNvvTkFGcP7GSyt=Q@mail.gmail.com>
+In-Reply-To: <f2a6516fff9b8f5ac67aabd60527c1d9b3149482.1494922745.git.baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marcin Wojtas <mw-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org>
-Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 16, 2017 at 05:42:19PM +0200, Marcin Wojtas wrote:
-> Re-send in plain text.
-> 
-> 2017-05-16 17:40 GMT+02:00 Marcin Wojtas <mw-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org>:
-> > Russel,
-> >
-> > 2017-05-16 15:45 GMT+02:00 Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>:
-> >>
-> >> Add sdhci support for MACCHIATOBin boards.  This uses the AP806 SDHCI
-> >> for eMMC and CP110 master for the SD card slot.
-> >>
-> >> Signed-off-by: Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
-> >> ---
-> >>
-> >> This version labels up the uSD connector, adds the vqmmc regulator for
-> >> the uSD (the regulator itself already present in the DT), and supports
-> >> the card detect signal.
-> >>
-> >> For eMMC, this version adds the vqmmc regulator, which again is already
-> >> present in the DT, marks it as not supporting SD or SDIO, and also
-> >> includes "slow mode" since testing with previous versions of the driver
-> >> have shown that selecting faster speeds results in errors.
-> >>
-> >>  arch/arm64/boot/dts/marvell/armada-8040-mcbin.dts |   23
-> >> ++++++++++++++++++++++
-> >>  1 file changed, 23 insertions(+)
-> >>
-> >> diff --git a/arch/arm64/boot/dts/marvell/armada-8040-mcbin.dts
-> >> b/arch/arm64/boot/dts/marvell/armada-8040-mcbin.dts
-> >> index cc167e05941a..60111ed3234a 100644
-> >> --- a/arch/arm64/boot/dts/marvell/armada-8040-mcbin.dts
-> >> +++ b/arch/arm64/boot/dts/marvell/armada-8040-mcbin.dts
-> >> @@ -95,6 +95,21 @@
-> >>         status = "okay";
-> >>  };
-> >>
-> >> +&ap_sdhci0 {
-> >> +       bus-width = <8>;
-> >> +       /*
-> >> +        * Not stable in HS modes - phy needs "more calibration", so add
-> >> +        * the "slow-mode" and disable SDR104, SDR50 and DDR50 modes.
-> >> +        */
-> >> +       marvell,xenon-phy-slow-mode;
-> >
-> >
-> > FYI, this property is by default present in armada-ap806.dtsi.
 
-Yes, it may be, it's unclear (at least to me) whether this is a board
-problem or a SoC problem.  Given that it's at the SoC layer, it suggests
-there's a SoC/driver problem that needs resolving.
+Den 16.05.2017 10.19, skrev Baruch Siach:
+> Commit b60c1be74741 (dt-bindings: display/panel: Add common rotation property)
+> added the rotation property description in a new file. We have a place for
+> common display panel properties already. Move there the rotation property.
+>
+> Cc: Noralf Trønnes <noralf-L59+Z2yzLopAfugRpC6u6w@public.gmane.org>
+> Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Signed-off-by: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
+> ---
 
-However, given that the board is tested only in non-HS mode at the
-moment, having the property in place is the sensible thing, even though
-the SoC level currently has the property.  If we can prove that the
-board is capable of HS modes, then I'd be happy to remove it, but not
-before.  It could be that even if the SoC level is capable of HS modes,
-the board may not support them.
+Acked-by: Noralf Trønnes <noralf-L59+Z2yzLopAfugRpC6u6w@public.gmane.org>
 
--- 
-RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
-according to speedtest.net.
+>   Documentation/devicetree/bindings/display/panel/panel-common.txt | 6 ++++++
+>   Documentation/devicetree/bindings/display/panel/panel.txt        | 4 ----
+>   2 files changed, 6 insertions(+), 4 deletions(-)
+>   delete mode 100644 Documentation/devicetree/bindings/display/panel/panel.txt
+>
+> diff --git a/Documentation/devicetree/bindings/display/panel/panel-common.txt b/Documentation/devicetree/bindings/display/panel/panel-common.txt
+> index 0603af877155..c92dcfd8c32f 100644
+> --- a/Documentation/devicetree/bindings/display/panel/panel-common.txt
+> +++ b/Documentation/devicetree/bindings/display/panel/panel-common.txt
+> @@ -89,3 +89,9 @@ backlight controller.
+>   
+>   - backlight: For panels whose backlight is controlled by an external backlight
+>     controller, this property contains a phandle that references the controller.
+> +
+> +
+> +Rotation
+> +--------
+> +
+> +- rotation: Display rotation in degrees counter clockwise (0,90,180,270)
+> diff --git a/Documentation/devicetree/bindings/display/panel/panel.txt b/Documentation/devicetree/bindings/display/panel/panel.txt
+> deleted file mode 100644
+> index e2e6867852b8..000000000000
+> --- a/Documentation/devicetree/bindings/display/panel/panel.txt
+> +++ /dev/null
+> @@ -1,4 +0,0 @@
+> -Common display properties
+> --------------------------
+> -
+> -- rotation:	Display rotation in degrees counter clockwise (0,90,180,270)
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
