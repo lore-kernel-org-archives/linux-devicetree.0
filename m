@@ -1,54 +1,190 @@
 From: Madalin Bucur <madalin.bucur-3arQi8VN3Tc@public.gmane.org>
-Subject: [PATCH 0/3] arm64: dts: introduce QorIQ DPAA 1.x FMan device tree nodes
-Date: Tue, 16 May 2017 15:07:20 +0300
-Message-ID: <1494936443-14869-1-git-send-email-madalin.bucur@nxp.com>
+Subject: [PATCH 3/3] arm64: dts: add LS1046A DPAA FMan nodes
+Date: Tue, 16 May 2017 15:07:23 +0300
+Message-ID: <1494936443-14869-4-git-send-email-madalin.bucur@nxp.com>
+References: <1494936443-14869-1-git-send-email-madalin.bucur@nxp.com>
 Reply-To: <madalin.bucur-3arQi8VN3Tc@public.gmane.org>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1494936443-14869-1-git-send-email-madalin.bucur-3arQi8VN3Tc@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, Madalin Bucur <madalin.bucur-3arQi8VN3Tc@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch set introduces the QorIQ Data Path Acceleration Arhitecture
-(DPAA) Frame Manager device tree nodes for the ARM based DPAA 1.x platforms.
+Add the DPAA 1.x FMan device tree nodes for LS1046A boards.
 
-Madalin Bucur (3):
-  arm64: dts: add DPAA FMan nodes
-  arm64: dts: add LS1043A DPAA FMan support
-  arm64: dts: add LS1046A DPAA FMan nodes
-
- arch/arm64/boot/dts/freescale/fsl-ls1043-post.dtsi | 45 ++++++++++++
- arch/arm64/boot/dts/freescale/fsl-ls1043a-qds.dts  |  2 +
- arch/arm64/boot/dts/freescale/fsl-ls1043a-rdb.dts  | 73 +++++++++++++++++++
- arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi     | 13 +++-
- arch/arm64/boot/dts/freescale/fsl-ls1046-post.dtsi | 48 +++++++++++++
+Signed-off-by: Madalin Bucur <madalin.bucur-3arQi8VN3Tc@public.gmane.org>
+---
+ arch/arm64/boot/dts/freescale/fsl-ls1046-post.dtsi | 48 +++++++++++++++++
  arch/arm64/boot/dts/freescale/fsl-ls1046a-qds.dts  |  2 +
- arch/arm64/boot/dts/freescale/fsl-ls1046a-rdb.dts  | 60 ++++++++++++++++
- arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi     | 11 ++-
- .../boot/dts/freescale/qoriq-fman3-0-10g-0.dtsi    | 42 +++++++++++
- .../boot/dts/freescale/qoriq-fman3-0-10g-1.dtsi    | 42 +++++++++++
- .../boot/dts/freescale/qoriq-fman3-0-1g-0.dtsi     | 41 +++++++++++
- .../boot/dts/freescale/qoriq-fman3-0-1g-1.dtsi     | 41 +++++++++++
- .../boot/dts/freescale/qoriq-fman3-0-1g-2.dtsi     | 41 +++++++++++
- .../boot/dts/freescale/qoriq-fman3-0-1g-3.dtsi     | 41 +++++++++++
- .../boot/dts/freescale/qoriq-fman3-0-1g-4.dtsi     | 41 +++++++++++
- .../boot/dts/freescale/qoriq-fman3-0-1g-5.dtsi     | 41 +++++++++++
- arch/arm64/boot/dts/freescale/qoriq-fman3-0.dtsi   | 81 ++++++++++++++++++++++
- 17 files changed, 663 insertions(+), 2 deletions(-)
- create mode 100644 arch/arm64/boot/dts/freescale/fsl-ls1043-post.dtsi
+ arch/arm64/boot/dts/freescale/fsl-ls1046a-rdb.dts  | 60 ++++++++++++++++++++++
+ arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi     | 11 +++-
+ 4 files changed, 120 insertions(+), 1 deletion(-)
  create mode 100644 arch/arm64/boot/dts/freescale/fsl-ls1046-post.dtsi
- create mode 100644 arch/arm64/boot/dts/freescale/qoriq-fman3-0-10g-0.dtsi
- create mode 100644 arch/arm64/boot/dts/freescale/qoriq-fman3-0-10g-1.dtsi
- create mode 100644 arch/arm64/boot/dts/freescale/qoriq-fman3-0-1g-0.dtsi
- create mode 100644 arch/arm64/boot/dts/freescale/qoriq-fman3-0-1g-1.dtsi
- create mode 100644 arch/arm64/boot/dts/freescale/qoriq-fman3-0-1g-2.dtsi
- create mode 100644 arch/arm64/boot/dts/freescale/qoriq-fman3-0-1g-3.dtsi
- create mode 100644 arch/arm64/boot/dts/freescale/qoriq-fman3-0-1g-4.dtsi
- create mode 100644 arch/arm64/boot/dts/freescale/qoriq-fman3-0-1g-5.dtsi
- create mode 100644 arch/arm64/boot/dts/freescale/qoriq-fman3-0.dtsi
 
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1046-post.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1046-post.dtsi
+new file mode 100644
+index 0000000..f5017db
+--- /dev/null
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1046-post.dtsi
+@@ -0,0 +1,48 @@
++/*
++ * QorIQ FMan v3 device tree nodes for ls1046
++ *
++ * Copyright 2015-2016 Freescale Semiconductor Inc.
++ *
++ * SPDX-License-Identifier: (GPL-2.0+ OR BSD-3-Clause)
++ */
++
++&soc {
++
++/* include used FMan blocks */
++#include "qoriq-fman3-0.dtsi"
++#include "qoriq-fman3-0-1g-0.dtsi"
++#include "qoriq-fman3-0-1g-1.dtsi"
++#include "qoriq-fman3-0-1g-2.dtsi"
++#include "qoriq-fman3-0-1g-3.dtsi"
++#include "qoriq-fman3-0-1g-4.dtsi"
++#include "qoriq-fman3-0-1g-5.dtsi"
++#include "qoriq-fman3-0-10g-0.dtsi"
++#include "qoriq-fman3-0-10g-1.dtsi"
++};
++
++&fman0 {
++	/* these aliases provide the FMan ports mapping */
++	enet0: ethernet@e0000 {
++	};
++
++	enet1: ethernet@e2000 {
++	};
++
++	enet2: ethernet@e4000 {
++	};
++
++	enet3: ethernet@e6000 {
++	};
++
++	enet4: ethernet@e8000 {
++	};
++
++	enet5: ethernet@ea000 {
++	};
++
++	enet6: ethernet@f0000 {
++	};
++
++	enet7: ethernet@f2000 {
++	};
++};
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1046a-qds.dts b/arch/arm64/boot/dts/freescale/fsl-ls1046a-qds.dts
+index 290e5b0..40357b1 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1046a-qds.dts
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1046a-qds.dts
+@@ -210,3 +210,5 @@
+ 		reg = <0>;
+ 	};
+ };
++
++#include "fsl-ls1046-post.dtsi"
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1046a-rdb.dts b/arch/arm64/boot/dts/freescale/fsl-ls1046a-rdb.dts
+index d1ccc00..af6e58d 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1046a-rdb.dts
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1046a-rdb.dts
+@@ -148,3 +148,63 @@
+ 		reg = <1>;
+ 	};
+ };
++
++#include "fsl-ls1046-post.dtsi"
++
++&fman0 {
++	ethernet@e4000 {
++		phy-handle = <&rgmii_phy1>;
++		phy-connection-type = "rgmii";
++	};
++
++	ethernet@e6000 {
++		phy-handle = <&rgmii_phy2>;
++		phy-connection-type = "rgmii";
++	};
++
++	ethernet@e8000 {
++		phy-handle = <&sgmii_phy1>;
++		phy-connection-type = "sgmii";
++	};
++
++	ethernet@ea000 {
++		phy-handle = <&sgmii_phy2>;
++		phy-connection-type = "sgmii";
++	};
++
++	ethernet@f0000 { /* 10GEC1 */
++		phy-handle = <&aqr106_phy>;
++		phy-connection-type = "xgmii";
++	};
++
++	ethernet@f2000 { /* 10GEC2 */
++		fixed-link = <0 1 1000 0 0>;
++		phy-connection-type = "xgmii";
++	};
++
++	mdio@fc000 {
++		rgmii_phy1: ethernet-phy@1 {
++			reg = <0x1>;
++		};
++
++		rgmii_phy2: ethernet-phy@2 {
++			reg = <0x2>;
++		};
++
++		sgmii_phy1: ethernet-phy@3 {
++			reg = <0x3>;
++		};
++
++		sgmii_phy2: ethernet-phy@4 {
++			reg = <0x4>;
++		};
++	};
++
++	mdio@fd000 {
++		aqr106_phy: ethernet-phy@0 {
++			compatible = "ethernet-phy-ieee802.3-c45";
++			interrupts = <0 131 4>;
++			reg = <0x0>;
++		};
++	};
++};
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
+index 55f1e4f..318539a 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
+@@ -55,6 +55,15 @@
+ 
+ 	aliases {
+ 		crypto = &crypto;
++		fman0 = &fman0;
++		ethernet0 = &enet0;
++		ethernet1 = &enet1;
++		ethernet2 = &enet2;
++		ethernet3 = &enet3;
++		ethernet4 = &enet4;
++		ethernet5 = &enet5;
++		ethernet6 = &enet6;
++		ethernet7 = &enet7;
+ 	};
+ 
+ 	cpus {
+@@ -174,7 +183,7 @@
+ 					 IRQ_TYPE_LEVEL_LOW)>;
+ 	};
+ 
+-	soc {
++	soc: soc {
+ 		compatible = "simple-bus";
+ 		#address-cells = <2>;
+ 		#size-cells = <2>;
 -- 
 2.1.0
 
