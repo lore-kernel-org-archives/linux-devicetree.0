@@ -1,77 +1,56 @@
-From: Heiner Kallweit <hkallweit1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH RfC v3 2/7] pinctrl: meson: document GPIO IRQ driver DT
- binding
-Date: Wed, 17 May 2017 22:16:35 +0200
-Message-ID: <7c09969b-ac04-cfa4-7459-7ad25b7c5cbf@gmail.com>
+From: Heiner Kallweit <hkallweit1@gmail.com>
+Subject: [PATCH RfC v3 3/7] pinctrl: meson: add DT node for GPIO IRQ on Meson
+ GX
+Date: Wed, 17 May 2017 22:16:44 +0200
+Message-ID: <d41eab00-2074-789d-045d-ac9ce3b4349f@gmail.com>
 References: <16950080-b19d-e25c-fb48-bc79cfe4acc0@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <16950080-b19d-e25c-fb48-bc79cfe4acc0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <16950080-b19d-e25c-fb48-bc79cfe4acc0@gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Jerome Brunet <jbrunet@baylibre.com>, Mark Rutland <mark.rutland@arm.com>, Marc Zyngier <marc.zyngier@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Kevin Hilman <khilman@baylibre.com>, Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-gpio@vger.kernel.org, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, Thierry Reding <treding@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-Document the DT binding for GPIO IRQ support on Amlogic Meson SoC's.
+Add the DT node for GPIO IRQ support on AMlogic Meson GX.
 
-This documentation is intentionally not placed under
-interrupt-controllers as GPIO IRQ support on these SoC's acts more
-like an interrupt multiplexer.
-
-Signed-off-by: Heiner Kallweit <hkallweit1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
 ---
 v2:
 - remove syscon
 v3:
 - no changes
 ---
- .../bindings/gpio/amlogic,meson-gpio-interrupt.txt | 30 ++++++++++++++++++++++
- 1 file changed, 30 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/gpio/amlogic,meson-gpio-interrupt.txt
+ arch/arm64/boot/dts/amlogic/meson-gx.dtsi | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/gpio/amlogic,meson-gpio-interrupt.txt b/Documentation/devicetree/bindings/gpio/amlogic,meson-gpio-interrupt.txt
-new file mode 100644
-index 00000000..ba7d3015
---- /dev/null
-+++ b/Documentation/devicetree/bindings/gpio/amlogic,meson-gpio-interrupt.txt
-@@ -0,0 +1,30 @@
-+Amlogic meson GPIO interrupt controller
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
+index 436b8750..44422b85 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
+@@ -312,6 +312,19 @@
+ 				status = "disabled";
+ 			};
+ 
++			gpio_irq@9880 {
++				compatible = "amlogic,meson-gpio-interrupt";
++				reg = <0x0 0x09880 0x0 0x10>;
++				interrupts = <GIC_SPI 64 IRQ_TYPE_NONE>,
++					     <GIC_SPI 65 IRQ_TYPE_NONE>,
++					     <GIC_SPI 66 IRQ_TYPE_NONE>,
++					     <GIC_SPI 67 IRQ_TYPE_NONE>,
++					     <GIC_SPI 68 IRQ_TYPE_NONE>,
++					     <GIC_SPI 69 IRQ_TYPE_NONE>,
++					     <GIC_SPI 70 IRQ_TYPE_NONE>,
++					     <GIC_SPI 71 IRQ_TYPE_NONE>;
++			};
 +
-+Meson SoCs contains an interrupt controller which is able watch the SoC pads
-+and generate an interrupt on edges or level. The controller is essentially a
-+256 pads to 8 GIC interrupt multiplexer, with a filter block to select edge
-+or level and polarity. We don't expose all 256 mux inputs because the
-+documentation shows that upper part is not mapped to any pad. The actual number
-+of interrupt exposed depends on the SoC.
-+
-+Required properties:
-+
-+- compatible : should be "amlogic,meson-gpio-interrupt".
-+- reg : Specifies base physical address and size of the registers.
-+- interrupts : list of GIC interrupts which can be used with the
-+	       GPIO IRQ multiplexer
-+
-+Example:
-+
-+gpio_irq@9880 {
-+	compatible = "amlogic,meson-gpio-interrupt";
-+	reg = <0x0 0x09880 0x0 0x10>;
-+	interrupts = <GIC_SPI 64 IRQ_TYPE_NONE>,
-+		     <GIC_SPI 65 IRQ_TYPE_NONE>,
-+		     <GIC_SPI 66 IRQ_TYPE_NONE>,
-+		     <GIC_SPI 67 IRQ_TYPE_NONE>,
-+		     <GIC_SPI 68 IRQ_TYPE_NONE>,
-+		     <GIC_SPI 69 IRQ_TYPE_NONE>,
-+		     <GIC_SPI 70 IRQ_TYPE_NONE>,
-+		     <GIC_SPI 71 IRQ_TYPE_NONE>;
-+	};
+ 			watchdog@98d0 {
+ 				compatible = "amlogic,meson-gx-wdt", "amlogic,meson-gxbb-wdt";
+ 				reg = <0x0 0x098d0 0x0 0x10>;
 -- 
 2.13.0
 
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
