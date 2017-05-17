@@ -1,65 +1,74 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH 1/3] arm: dts: rk322x: fix i2s1 pinctrl error
-Date: Wed, 17 May 2017 11:01:00 +0200
-Message-ID: <2781249.GNsgFIKA50@diego>
-References: <1494992451-32542-1-git-send-email-frank.wang@rock-chips.com> <1494992451-32542-2-git-send-email-frank.wang@rock-chips.com>
+From: shameer <shameerali.kolothum.thodi@huawei.com>
+Subject: [PATCH] iommu/arm-smmu-v3: Enable ACPI based HiSilicon CMD_PREFETCH quirk(erratum 161010701)
+Date: Wed, 17 May 2017 10:12:05 +0100
+Message-ID: <20170517091205.7752-1-shameerali.kolothum.thodi@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1494992451-32542-2-git-send-email-frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Frank Wang <frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, charles.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org, cody.xie-TNX95d0MmH7DzftRWevZcw@public.gmane.org, kevan.lan-TNX95d0MmH7DzftRWevZcw@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, sugar.zhang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, wmc-TNX95d0MmH7DzftRWevZcw@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-acpi-owner@vger.kernel.org>
+Sender: linux-acpi-owner@vger.kernel.org
+To: robin.murphy@arm.com, will.deacon@arm.com, mark.rutland@arm.com, lorenzo.pieralisi@arm.com
+Cc: john.garry@huawei.com, gabriele.paoloni@huawei.com, guohanjun@huawei.com, xuwei5@hisilicon.com, linuxarm@huawei.com, devel@acpica.org, linux-acpi@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, shameer <shameerali.kolothum.thodi@huawei.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Frank,
+HiSilicon SMMUv3 on Hip06/Hip07 platforms doesn't support CMD_PREFETCH
+command. The dt based support for this quirk is already present in the
+driver(hisilicon,broken-prefetch-cmd). This adds ACPI support for the
+quirk using the IORT smmu model number.
 
-Am Mittwoch, 17. Mai 2017, 11:40:49 CEST schrieb Frank Wang:
-> From: Sugar Zhang <sugar.zhang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> 
-> Refer to Chapter 5.3.2 of rk3229 TRM, we can see that GPIO1A[2,4,5]
-> using RK_FUNC_2 not RK_FUNC_1. This patch fixes it.
-> 
-> Signed-off-by: Frank Wang <frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Signed-off-by: shameer <shameerali.kolothum.thodi@huawei.com>
+Signed-off-by: hanjun <guohanjun@huawei.com>
+---
+ Documentation/arm64/silicon-errata.txt |  1 +
+ drivers/iommu/arm-smmu-v3.c            | 16 ++++++++++++++++
+ 2 files changed, 17 insertions(+)
 
-if the patch has another author, you should preserve his/her Signed-off-by
-line, so for example this patch would look like:
+diff --git a/Documentation/arm64/silicon-errata.txt b/Documentation/arm64/silicon-errata.txt
+index 10f2ddd..d5d23d0 100644
+--- a/Documentation/arm64/silicon-errata.txt
++++ b/Documentation/arm64/silicon-errata.txt
+@@ -66,6 +66,7 @@ stable kernels.
+ | Freescale/NXP  | LS2080A/LS1043A | A-008585        | FSL_ERRATUM_A008585         |
+ |                |                 |                 |                             |
+ | Hisilicon      | Hip0{5,6,7}     | #161010101      | HISILICON_ERRATUM_161010101 |
++| Hisilicon      | Hip0{6,7}       | #161010701      | N/A                         |
+ |                |                 |                 |                             |
+ | Qualcomm Tech. | Falkor v1       | E1003           | QCOM_FALKOR_ERRATUM_1003    |
+ | Qualcomm Tech. | Falkor v1       | E1009           | QCOM_FALKOR_ERRATUM_1009    |
+diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
+index 380969a..abe4b88 100644
+--- a/drivers/iommu/arm-smmu-v3.c
++++ b/drivers/iommu/arm-smmu-v3.c
+@@ -2605,6 +2605,20 @@ static int arm_smmu_device_hw_probe(struct arm_smmu_device *smmu)
+ }
+ 
+ #ifdef CONFIG_ACPI
++static void parse_driver_acpi_options(struct acpi_iort_smmu_v3 *iort_smmu,
++				      struct arm_smmu_device *smmu)
++{
++	switch (iort_smmu->model) {
++	case ACPI_IORT_SMMU_HISILICON_HI161X:
++		smmu->options |= ARM_SMMU_OPT_SKIP_PREFETCH;
++		break;
++	default:
++		break;
++	}
++
++	dev_notice(smmu->dev, "options set 0x%x\n", smmu->options);
++}
++
+ static int arm_smmu_device_acpi_probe(struct platform_device *pdev,
+ 				      struct arm_smmu_device *smmu)
+ {
+@@ -2617,6 +2631,8 @@ static int arm_smmu_device_acpi_probe(struct platform_device *pdev,
+ 	/* Retrieve SMMUv3 specific data */
+ 	iort_smmu = (struct acpi_iort_smmu_v3 *)node->node_data;
+ 
++	parse_driver_acpi_options(iort_smmu, smmu);
++
+ 	if (iort_smmu->flags & ACPI_IORT_SMMU_V3_COHACC_OVERRIDE)
+ 		smmu->features |= ARM_SMMU_FEAT_COHERENCY;
+ 
+-- 
+1.9.1
 
-Signed-off-by: Sugar Zhang <sugar.zhang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Signed-off-by: Frank Wang <frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 
-Same for all other patches with differing authors in your 2 series from
-today. As this touches the developer-certificate-of-origin, this is also
-something I cannot really correct myself.
-
-
-Heiko
-
-
-> ---
->  arch/arm/boot/dts/rk322x.dtsi | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/rk322x.dtsi b/arch/arm/boot/dts/rk322x.dtsi
-> index 48a0c1c..cc6a27d 100644
-> --- a/arch/arm/boot/dts/rk322x.dtsi
-> +++ b/arch/arm/boot/dts/rk322x.dtsi
-> @@ -621,9 +621,9 @@
->  						<0 12 RK_FUNC_1 &pcfg_pull_none>,
->  						<0 13 RK_FUNC_1 &pcfg_pull_none>,
->  						<0 14 RK_FUNC_1 &pcfg_pull_none>,
-> -						<1 2 RK_FUNC_1 &pcfg_pull_none>,
-> -						<1 4 RK_FUNC_1 &pcfg_pull_none>,
-> -						<1 5 RK_FUNC_1 &pcfg_pull_none>;
-> +						<1 2 RK_FUNC_2 &pcfg_pull_none>,
-> +						<1 4 RK_FUNC_2 &pcfg_pull_none>,
-> +						<1 5 RK_FUNC_2 &pcfg_pull_none>;
->  			};
->  		};
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
