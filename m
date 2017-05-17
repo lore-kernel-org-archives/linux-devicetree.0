@@ -1,50 +1,47 @@
-From: Guodong Xu <guodong.xu@linaro.org>
-Subject: [PATCH 08/12] arm64: dts: hikey960: add WL1837 Bluetooth device node
-Date: Wed, 17 May 2017 16:37:41 +0800
-Message-ID: <20170517083745.24479-9-guodong.xu@linaro.org>
+From: Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH 09/12] arm64: dts: hi3660: Add pl031 rtc node
+Date: Wed, 17 May 2017 16:37:42 +0800
+Message-ID: <20170517083745.24479-10-guodong.xu@linaro.org>
 References: <20170517083745.24479-1-guodong.xu@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170517083745.24479-1-guodong.xu@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, xuwei5@hisilicon.com, catalin.marinas@arm.com, will.deacon@arm.com, wangkefeng.wang@huawei.com, puck.chen@hisilicon.com, xuejiancheng@hisilicon.com, devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Guodong Xu <guodong.xu@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170517083745.24479-1-guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, wangkefeng.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, xuejiancheng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This adds the serial slave device for the WL1837 Bluetooth interface.
+From: Chen Feng <puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
 
-Signed-off-by: Guodong Xu <guodong.xu@linaro.org>
+Add dts node to enable pl031 rtc.
+
+Signed-off-by: Chen Feng <puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
 ---
- arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ arch/arm64/boot/dts/hisilicon/hi3660.dtsi | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts b/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
-index 513c496..69aa207 100644
---- a/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
-+++ b/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
-@@ -9,6 +9,7 @@
+diff --git a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
+index 0951a29..c2bca5d 100644
+--- a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
++++ b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
+@@ -312,6 +312,14 @@
+ 			status = "disabled";
+ 		};
  
- #include "hi3660.dtsi"
- #include "hikey960-pinctrl.dtsi"
-+#include <dt-bindings/gpio/gpio.h>
- 
- / {
- 	model = "HiKey960";
-@@ -55,6 +56,16 @@
- 	status = "okay";
- };
- 
-+&uart4 {
-+	status = "okay";
-+	max-speed = <921600>;
++		rtc0: rtc@fff04000 {
++			compatible = "arm,pl031", "arm,primecell";
++			reg = <0x0 0Xfff04000 0x0 0x1000>;
++			interrupts = <GIC_SPI 46 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&crg_ctrl HI3660_PCLK>;
++			clock-names = "apb_pclk";
++		};
 +
-+	bluetooth {
-+		compatible = "ti,wl1837-st";
-+		enable-gpios = <&gpio15 6 GPIO_ACTIVE_HIGH>;
-+	};
-+};
-+
- &uart6 {
- 	status = "okay";
- };
+ 		gpio0: gpio@e8a0b000 {
+ 			compatible = "arm,pl061", "arm,primecell";
+ 			reg = <0 0xe8a0b000 0 0x1000>;
 -- 
 2.10.2
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
