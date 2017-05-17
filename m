@@ -1,54 +1,174 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH v2 1/5] pinctrl: qcom: Add ipq8074 pinctrl driver
-Date: Wed, 17 May 2017 12:33:15 -0700
-Message-ID: <20170517193315.GF12920@tuxbook>
-References: <1493898841-20583-1-git-send-email-varada@codeaurora.org>
- <1493898841-20583-2-git-send-email-varada@codeaurora.org>
- <20170510224355.GE45273@Bjorns-MacBook-Pro-2.local>
- <1f4c9974-f6a4-bee7-4f37-ad8795e442a3@codeaurora.org>
- <20170514042307.GE69278@Bjorns-MacBook-Pro-2.local>
- <7afc7191-bcb1-a566-eac5-a4fe1293c773@codeaurora.org>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH 2/3] Documentation: add sprd clock bindings
+Date: Wed, 17 May 2017 21:43:26 +0200
+Message-ID: <CAK8P3a0M6M9fUTpdnW+Eso0+HKD-MF-fKPmvj+wN8GBdzu_u8A@mail.gmail.com>
+References: <20170515083502.4492-1-chunyan.zhang@spreadtrum.com> <20170515083502.4492-3-chunyan.zhang@spreadtrum.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-clk-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <7afc7191-bcb1-a566-eac5-a4fe1293c773@codeaurora.org>
-Sender: linux-clk-owner@vger.kernel.org
-To: Varadarajan Narayanan <varada@codeaurora.org>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, mturquette@baylibre.com, sboyd@codeaurora.org, linus.walleij@linaro.org, andy.gross@linaro.org, david.brown@linaro.org, catalin.marinas@arm.com, will.deacon@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, absahu@codeaurora.org, sjaganat@codeaurora.org, sricharan@codeaurora.org, Manoharan Vijaya Raghavan <mraghava@codeaurora.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170515083502.4492-3-chunyan.zhang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Chunyan Zhang <chunyan.zhang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
+Cc: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, xiaolong.zhang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org, =?UTF-8?B?T3Jzb24gWmhhaSAo57+f5LqsKQ==?= <orson.zhai-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>, geng.ren-lxIno14LUO0EEoCn2XhGlw@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Lyra Zhang <zhang.lyra-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon 15 May 02:05 PDT 2017, Varadarajan Narayanan wrote:
+On Mon, May 15, 2017 at 10:35 AM, Chunyan Zhang
+<chunyan.zhang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org> wrote:
+> This patch adds a new directory under the 'clock' for Spreadtrum platform,
+> also bindings which document compatible strings and properties used for
+> devicetree node of clocks on Spreadtrum SoCs.
+>
+> Signed-off-by: Chunyan Zhang <chunyan.zhang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
+> ---
+>  .../clock/sprd/sprd,adjustable-pll-clock.txt       | 17 +++++
+>  .../bindings/clock/sprd/sprd,composite-clock.txt   | 28 +++++++++
+>  .../bindings/clock/sprd/sprd,divider-clock.txt     | 24 +++++++
+>  .../bindings/clock/sprd/sprd,gates-clock.txt       | 73 ++++++++++++++++++++++
+>  .../bindings/clock/sprd/sprd,muxed-clock.txt       | 23 +++++++
+>  5 files changed, 165 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/clock/sprd/sprd,adjustable-pll-clock.txt
+>  create mode 100644 Documentation/devicetree/bindings/clock/sprd/sprd,composite-clock.txt
+>  create mode 100644 Documentation/devicetree/bindings/clock/sprd/sprd,divider-clock.txt
+>  create mode 100644 Documentation/devicetree/bindings/clock/sprd/sprd,gates-clock.txt
+>  create mode 100644 Documentation/devicetree/bindings/clock/sprd/sprd,muxed-clock.txt
+>
+> diff --git a/Documentation/devicetree/bindings/clock/sprd/sprd,adjustable-pll-clock.txt b/Documentation/devicetree/bindings/clock/sprd/sprd,adjustable-pll-clock.txt
+> new file mode 100644
+> index 0000000..476e315
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/clock/sprd/sprd,adjustable-pll-clock.txt
+> @@ -0,0 +1,17 @@
+> +Spreadtrum adjustable pll clock driver
+> +
+> +Required properties:
+> +
+> +- compatible : must be one of:
+> +       "sprd,sc9836-adjustable-pll-clock"
+> +       "sprd,sc9860-adjustable-pll-clock"
+> +
+> +Example:
+> +       clk_mpll0: clk@40400024 {
+> +               compatible = "sprd,sc9860-adjustable-pll-clock";
+> +               #clock-cells = <0>;
+> +               reg = <0 0x40400024 0 0x4>,
+> +                     <0 0x40400028 0 0x4>;
+> +               clocks = <&clk_mpll_gates 2>;
+> +               clock-output-names = "clk_mpll0";
+> +       };
 
-> On 5/14/2017 9:53 AM, Bjorn Andersson wrote:
-> > On Thu 11 May 03:33 PDT 2017, Varadarajan Narayanan wrote:
-> > 
-> > > On 5/11/2017 4:13 AM, Bjorn Andersson wrote:
-> > > > On Thu 04 May 04:53 PDT 2017, Varadarajan Narayanan wrote:
-[..]
-> > > > > +	msm_mux_qpic_pad4,
-> > > > 
-> > > > What are qpic_pad and qpic_pad0 through qpic_pad8? Different functions,
-> > > > alternative muxings...?
-> > > 
-> > > This is for the NAND and LCD display. The pins listed are the 9 data pins.
-> > > 
-> > 
-> > Then you can describe them all as "qpic_pad" (or simply "qpic"?). (It's
-> > possible to reference a partial group in the DTS, if that's necessary)
-> 
-> There are two sets of 9 pins, either of which can go to NAND or LCD.
-> Will rename qpic_pad as qpic_a and qpic_pad[0-8] as qpic_b.
-> Is that ok?
-> 
+The properties listed in the example must all be either
+defined as "required" or "optional" properties and have a
+description.
 
-So you have NAND and LCD hardware muxed to either "a" or "b" and then
-you mux either "a" or "b" out onto actual pins?
+The reg property here is a bit odd, as it lists two consecutive
+4-byte areas, and both are suspiciously close to a round
+address (0x40400000), so I would guess that they are
+in fact part of a clock controller with several registers.
 
-How is this first mux configured?
+If so, please define a node for the entire clock controller,
+the DT description should reflect the design of the hardware
+rather than the design of your device driver.
 
+> diff --git a/Documentation/devicetree/bindings/clock/sprd/sprd,composite-clock.txt b/Documentation/devicetree/bindings/clock/sprd/sprd,composite-clock.txt
+> new file mode 100644
+> index 0000000..a476eb6
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/clock/sprd/sprd,composite-clock.txt
+> @@ -0,0 +1,28 @@
+> +Spreadtrum composite clock driver.
+> +
+> +This binding uses the common clock binding[1].
+> +
+> +[1] Documentation/devicetree/bindings/clock/clock-bindings.txt
+> +
+> +Required properties:
+> +
+> +- compatible:  should be "sprd,composite-clock"
+> +
+> +- sprd,mux-msk:        arbitrary bitmask for selecting clock input
 
-I think the a/b scheme sounds reasonable, if above is how it works.
+"arbitrary" is not a good word to use in a specification document ;-)
 
-Regards,
-Bjorn
+Are there no constraints whatsoever on the allowed values? How
+many bits are there?
+
+> +- sprd,div-msk:        arbitrary bitmask for programming the divider,
+> +               denominator of divider is the value consisted
+> +               of these bits plus 1
+
+This sounds like it should just be the denominator, you can add
+or subtract one in the driver.
+
+> diff --git a/Documentation/devicetree/bindings/clock/sprd/sprd,gates-clock.txt b/Documentation/devicetree/bindings/clock/sprd/sprd,gates-clock.txt
+> new file mode 100644
+> index 0000000..f23ecb6
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/clock/sprd/sprd,gates-clock.txt
+> @@ -0,0 +1,73 @@
+> +Spreadtrum gate clock driver
+> +
+> +This binding uses the common clock binding[1].
+> +
+> +[1] Documentation/devicetree/bindings/clock/clock-bindings.txt
+> +
+> +Spreadtrum's SoCs often use one register to control more than one gate clocks.
+> +Clock consumers can use index to get the correct gate clock.
+> +
+> +In Spreadtrum platform, some of gate clocks have three registers, respectively
+> +used for controlling, setting and clearing gate clock, the addresses of
+> +these three registers generally are <start>, <start + offset>, and
+> +<start + offset * 2>, and offset would be 0x1000 or 0x100, so the register
+> +size of gate clocks is either 0x3000 or 0x300. While for some historical issue
+> +there also are some clocks which don't have independent set/clear registers.
+> +Please see bellow for more specific information.
+> +
+> +Required properties:
+> +
+> +- compatible:  should be one of the following:
+> +               "sprd,sc1000-gates-clock"
+> +               - offset of the registers for setting gate is 0x1000
+> +
+> +               "sprd,sc100-gates-clock"
+> +               - offset of the registers for setting gate is 0x100
+> +
+> +               "sprd,gates-clock"
+> +               - for clocks without independent set/clear registers
+
+I think the compatible value should refer to at least some more
+specific product that uses these: I would guess that there are
+some chips that spreadtrum has made that have clock gates
+which are not compatible with this.
+
+Can all three appear in the same chip, or would you always
+have only one of them?
+
+> +- reg: the first cell represents the address of this clock gate controller
+> +       register, the second cell implies how is the offset of set/clear
+> +       registers of this clock gate, like addressed in the head of this
+> +       file
+> +
+> +optional properties:
+> +
+> +- clock-indices:       If the identifying number for the clocks in the node
+> +                       is not linear from zero, this property is necessary
+> +
+> +Example:
+> +
+> +       clk_mpll_gates: clk@402b00b0 {
+> +               compatible = "sprd,sc1000-gates-clock";
+> +               #clock-cells = <1>;
+> +               reg = <0 0x402b00b0 0 0x3000>;
+> +               clocks = <&ext_26m>;
+> +               clock-indices = <2>, <18>;
+> +               clock-output-names = "clk_mpll0_gate", "clk_mpll1_gate";
+> +       };
+>
+
+For clock-output-names, please drop the "clk_" prefix from each
+identifier, and maybe use '-' instead of '_' as the separator.
+
+       Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
