@@ -1,40 +1,53 @@
-From: Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: [PATCH] of: fdt: add missing allocation-failure check
-Date: Wed, 17 May 2017 17:29:09 +0200
-Message-ID: <20170517152909.13553-1-johan@kernel.org>
+From: Dong Aisheng <aisheng.dong-3arQi8VN3Tc@public.gmane.org>
+Subject: [PATCH 1/4] dt-bindings: fsl: add compatible for imx7ulp evk
+Date: Wed, 17 May 2017 23:50:14 +0800
+Message-ID: <1495036217-20049-2-git-send-email-aisheng.dong@nxp.com>
+References: <1495036217-20049-1-git-send-email-aisheng.dong@nxp.com>
+Mime-Version: 1.0
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1495036217-20049-1-git-send-email-aisheng.dong-3arQi8VN3Tc@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, stable <stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: dongas86-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Anson.Huang-3arQi8VN3Tc@public.gmane.org, Dong Aisheng <aisheng.dong-3arQi8VN3Tc@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The memory allocator passed to __unflatten_device_tree() (e.g. a wrapped
-kzalloc) can fail so add the missing sanity check to avoid dereferencing
-a NULL pointer.
-
-Fixes: fe14042358fa ("of/flattree: Refactor unflatten_device_tree and add fdt_unflatten_tree")
-Cc: stable <stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>     # 2.6.38
-Signed-off-by: Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Signed-off-by: Dong Aisheng <aisheng.dong-3arQi8VN3Tc@public.gmane.org>
 ---
- drivers/of/fdt.c | 3 +++
- 1 file changed, 3 insertions(+)
+ Documentation/devicetree/bindings/arm/fsl.txt | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-index 3080d9dd031d..43bd69dceabf 100644
---- a/drivers/of/fdt.c
-+++ b/drivers/of/fdt.c
-@@ -507,6 +507,9 @@ void *__unflatten_device_tree(const void *blob,
+diff --git a/Documentation/devicetree/bindings/arm/fsl.txt b/Documentation/devicetree/bindings/arm/fsl.txt
+index cdb9dd7..ea10b1f 100644
+--- a/Documentation/devicetree/bindings/arm/fsl.txt
++++ b/Documentation/devicetree/bindings/arm/fsl.txt
+@@ -53,6 +53,10 @@ i.MX6 Quad SABRE Automotive Board
+ Required root node properties:
+     - compatible = "fsl,imx6q-sabreauto", "fsl,imx6q";
  
- 	/* Allocate memory for the expanded device tree */
- 	mem = dt_alloc(size + 4, __alignof__(struct device_node));
-+	if (!mem)
-+		return NULL;
++i.MX7ULP Evaluation Kit
++Required root node properties:
++    - compatible = "fsl,imx7ulp-evk", "fsl,imx7ulp";
 +
- 	memset(mem, 0, size);
+ Generic i.MX boards
+ -------------------
  
- 	*(__be32 *)(mem + size) = cpu_to_be32(0xdeadbeef);
+@@ -75,6 +79,10 @@ i.MX6q generic board
+ Required root node properties:
+     - compatible = "fsl,imx6q";
+ 
++i.MX7ULP generic board
++Required root node properties:
++    - compatible = "fsl,imx7ulp";
++
+ Freescale Vybrid Platform Device Tree Bindings
+ ----------------------------------------------
+ 
 -- 
-2.13.0
+2.7.4
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
