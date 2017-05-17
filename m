@@ -1,31 +1,41 @@
-From: Frank Wang <frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH 0/3] add and fix some device node for rk322x SoC
-Date: Wed, 17 May 2017 11:40:48 +0800
-Message-ID: <1494992451-32542-1-git-send-email-frank.wang@rock-chips.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, charles.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org, cody.xie-TNX95d0MmH7DzftRWevZcw@public.gmane.org, kevan.lan-TNX95d0MmH7DzftRWevZcw@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, sugar.zhang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, wmc-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Frank Wang <frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+From: Frank Wang <frank.wang@rock-chips.com>
+Subject: [PATCH 1/3] arm: dts: rk322x: fix i2s1 pinctrl error
+Date: Wed, 17 May 2017 11:40:49 +0800
+Message-ID: <1494992451-32542-2-git-send-email-frank.wang@rock-chips.com>
+References: <1494992451-32542-1-git-send-email-frank.wang@rock-chips.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1494992451-32542-1-git-send-email-frank.wang@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: heiko@sntech.de, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk
+Cc: linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, charles.chen@rock-chips.com, cody.xie@rock-chips.com, kevan.lan@rock-chips.com, huangtao@rock-chips.com, sugar.zhang@rock-chips.com, wmc@rock-chips.com, Frank Wang <frank.wang@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-These series of patches fix some device node errors and add watchdog
-device node support for rk322x SoC.
+From: Sugar Zhang <sugar.zhang@rock-chips.com>
 
-Frank Wang (2):
-  arm: dts: rk322x: correct uart2 pinctrl and add another sets
-  arm: dts: rk322x: add watchdog device node.
+Refer to Chapter 5.3.2 of rk3229 TRM, we can see that GPIO1A[2,4,5]
+using RK_FUNC_2 not RK_FUNC_1. This patch fixes it.
 
-Sugar Zhang (1):
-  arm: dts: rk322x: fix i2s1 pinctrl error
+Signed-off-by: Frank Wang <frank.wang@rock-chips.com>
+---
+ arch/arm/boot/dts/rk322x.dtsi | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
- arch/arm/boot/dts/rk322x.dtsi | 25 ++++++++++++++++++++-----
- 1 file changed, 20 insertions(+), 5 deletions(-)
-
+diff --git a/arch/arm/boot/dts/rk322x.dtsi b/arch/arm/boot/dts/rk322x.dtsi
+index 48a0c1c..cc6a27d 100644
+--- a/arch/arm/boot/dts/rk322x.dtsi
++++ b/arch/arm/boot/dts/rk322x.dtsi
+@@ -621,9 +621,9 @@
+ 						<0 12 RK_FUNC_1 &pcfg_pull_none>,
+ 						<0 13 RK_FUNC_1 &pcfg_pull_none>,
+ 						<0 14 RK_FUNC_1 &pcfg_pull_none>,
+-						<1 2 RK_FUNC_1 &pcfg_pull_none>,
+-						<1 4 RK_FUNC_1 &pcfg_pull_none>,
+-						<1 5 RK_FUNC_1 &pcfg_pull_none>;
++						<1 2 RK_FUNC_2 &pcfg_pull_none>,
++						<1 4 RK_FUNC_2 &pcfg_pull_none>,
++						<1 5 RK_FUNC_2 &pcfg_pull_none>;
+ 			};
+ 		};
+ 
 -- 
 2.0.0
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
