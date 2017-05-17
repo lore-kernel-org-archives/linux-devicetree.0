@@ -1,71 +1,94 @@
-From: Heiner Kallweit <hkallweit1@gmail.com>
-Subject: [PATCH RfC v3 0/7] pintrl: meson: add support for GPIO IRQs
-Date: Wed, 17 May 2017 22:02:42 +0200
-Message-ID: <16950080-b19d-e25c-fb48-bc79cfe4acc0@gmail.com>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH 2/2] pinctrl: qcom: ipq4019: add remaining pin definitions
+Date: Wed, 17 May 2017 13:07:29 -0700
+Message-ID: <20170517200729.GH12920@tuxbook>
+References: <d53b7a9b1bab818536680123136ac58481d959c8.1494415174.git.chunkeey@googlemail.com>
+ <3dac044cd9a879cad145f9a04dcc3d225721aa3c.1494415174.git.chunkeey@googlemail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <3dac044cd9a879cad145f9a04dcc3d225721aa3c.1494415174.git.chunkeey@googlemail.com>
 Sender: linux-gpio-owner@vger.kernel.org
-To: Jerome Brunet <jbrunet@baylibre.com>, Mark Rutland <mark.rutland@arm.com>, Marc Zyngier <marc.zyngier@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Kevin Hilman <khilman@baylibre.com>, Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-gpio@vger.kernel.org, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, Thierry Reding <treding@nvidia.com>
+To: Christian Lamparter <chunkeey@googlemail.com>
+Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, Ram Chandra Jangir <rjangir@codeaurora.org>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, John Crispin <john@phrozen.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch series is partially based on a series Jerome Brunet
-submitted about half a year ago. Due to open questions this series never
-made it to mainline, see https://patchwork.kernel.org/patch/9384431/
+On Wed 10 May 04:27 PDT 2017, Christian Lamparter wrote:
+> diff --git a/drivers/pinctrl/qcom/pinctrl-ipq4019.c b/drivers/pinctrl/qcom/pinctrl-ipq4019.c
+> index 743d1f458205..7219d1e33c71 100644
+> --- a/drivers/pinctrl/qcom/pinctrl-ipq4019.c
+> +++ b/drivers/pinctrl/qcom/pinctrl-ipq4019.c
+> @@ -276,16 +276,531 @@ DECLARE_QCA_GPIO_PINS(99);
+>  
+>  
+>  enum ipq4019_functions {
 
-This new attempt uses GPIOLIB_IRQCHIP resulting in less needed code.
-Included is also support for using two parent IRQs in case
-of IRQ_TYPE_EDGE_BOTH, like in the vendor driver.
+Please sort these alphabetically - and the following two lists
+accordingly.
 
-The series was successfully tested on a Odroid-C2, e.g. with removing
-polling for SD card insertion/removal from the mmc driver.
+> +	qca_mux_rmii0_refclk,
+> +	qca_mux_wifi0_rfsilient0,
+> +	qca_mux_wifi1_rfsilient0,
+> +	qca_mux_smart2,
+> +	qca_mux_led4,
 
-Known open issues:
-- location of the irqchip driver and its DT binding documentation
+What drives ledX? Is it 11 different LED controllers or is it a single
+LED controller with 11 outputs.
 
-Changes in v2:
-- separate the GPIO IRQ controller from the pinctrl driver
-- minor improvements to the GPIO IRQ controller
+[..]
+> +	qca_mux_wifi01,
 
-Changes in v3:
-- replace the request_irq based allocation of parent irq's with
-  chained irq handling, this also fixes the spurious interrupts issue
-  and allows to remove the workaround code.
-  Last but not least the parent irq's are no longer visible in
-  /proc/interrupts.
-- minor improvements to the GPIO IRQ controller
+Please make these "wifi0" and include all "wifi0XY", rather than having
+a group per pin.
 
-Heiner Kallweit (7):
-  pinctrl: meson: add interrupts to pinctrl data
-  pinctrl: meson: document GPIO IRQ DT binding
-  pinctrl: meson: add DT node for GPIO IRQ on Meson GX
-  pinctrl: meson: add DT node for GPIO IRQ on Meson 8 / 8b
-  pinctrl: meson: improve meson_get_bank and export it
-  pinctrl: meson: add support for GPIO interrupts
-  pinctrl: meson: add interrupt controller to GPIO DT nodes
+> +	qca_mux_wifi11,
 
- .../bindings/gpio/amlogic,meson-gpio-interrupt.txt |  30 ++
- .../devicetree/bindings/pinctrl/meson,pinctrl.txt  |   4 +
- arch/arm/boot/dts/meson8.dtsi                      |  15 +
- arch/arm/boot/dts/meson8b.dtsi                     |  15 +
- arch/arm64/boot/dts/amlogic/meson-gx.dtsi          |  13 +
- arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi        |   4 +
- arch/arm64/boot/dts/amlogic/meson-gxl.dtsi         |   4 +
- drivers/pinctrl/Kconfig                            |   1 +
- drivers/pinctrl/meson/Makefile                     |   2 +-
- drivers/pinctrl/meson/pinctrl-meson-gxbb.c         |  22 +-
- drivers/pinctrl/meson/pinctrl-meson-gxl.c          |  20 +-
- drivers/pinctrl/meson/pinctrl-meson-irq.c          | 320 +++++++++++++++++++++
- drivers/pinctrl/meson/pinctrl-meson.c              |  62 ++--
- drivers/pinctrl/meson/pinctrl-meson.h              |  19 +-
- drivers/pinctrl/meson/pinctrl-meson8.c             |  20 +-
- drivers/pinctrl/meson/pinctrl-meson8b.c            |  32 ++-
- 16 files changed, 502 insertions(+), 81 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/gpio/amlogic,meson-gpio-interrupt.txt
- create mode 100644 drivers/pinctrl/meson/pinctrl-meson-irq.c
+"wifi1"
 
--- 
-2.13.0
+> +	qca_mux_atest_char3,
+> +	qca_mux_pmu0,
+> +	qca_mux_boot8,
+> +	qca_mux_tm1,
+> +	qca_mux_atest_char2,
+> +	qca_mux_pmu1,
+> +	qca_mux_boot9,
+> +	qca_mux_tm2,
+> +	qca_mux_atest_char1,
+> +	qca_mux_tm_ack,
+> +	qca_mux_wifi03,
+> +	qca_mux_wifi13,
+> +	qca_mux_qpic_pad4,
 
+Please keep an eye on the ipq8074 patch from Varadarajan and make this
+follow the same scheme.
+
+> +	qca_mux_atest_char0,
+> +	qca_mux_tm3,
+> +	qca_mux_wifi02,
+> +	qca_mux_wifi12,
+> +	qca_mux_qpic_pad5,
+> +	qca_mux_smart3,
+> +	qca_mux_wcss0_dbg14,
+
+Please squash these into "wcss0_dbg"
+
+> +	qca_mux_tm4,
+> +	qca_mux_wifi04,
+> +	qca_mux_wifi14,
+> +	qca_mux_qpic_pad6,
+> +	qca_mux_wcss0_dbg15,
+> +	qca_mux_qdss_tracectl_a,
+> +	qca_mux_boot18,
+
+Do you know what the "boot" function is and what 2, 4, 5, 7, 8, 9 11,
+14, 18, 19 and 20 means?
+
+[..]
+> +	qca_mux_sdio0,
+
+There are 8 of these, so that's more likely the 8 data pins in a single
+function. Please squash them into "sdio_data".
+
+Regards,
+Bjorn
