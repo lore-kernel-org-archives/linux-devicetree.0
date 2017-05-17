@@ -1,47 +1,85 @@
-From: Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 09/12] arm64: dts: hi3660: Add pl031 rtc node
-Date: Wed, 17 May 2017 16:37:42 +0800
-Message-ID: <20170517083745.24479-10-guodong.xu@linaro.org>
+From: Guodong Xu <guodong.xu@linaro.org>
+Subject: [PATCH 10/12] arm64: dts: hi3660: add spi device nodes
+Date: Wed, 17 May 2017 16:37:43 +0800
+Message-ID: <20170517083745.24479-11-guodong.xu@linaro.org>
 References: <20170517083745.24479-1-guodong.xu@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170517083745.24479-1-guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, wangkefeng.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, xuejiancheng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170517083745.24479-1-guodong.xu@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh+dt@kernel.org, xuwei5@hisilicon.com, catalin.marinas@arm.com, will.deacon@arm.com, wangkefeng.wang@huawei.com, puck.chen@hisilicon.com, xuejiancheng@hisilicon.com, devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Wang Xiaoyin <hw.wangxiaoyin@hisilicon.com>, Guodong Xu <guodong.xu@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Chen Feng <puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+From: Wang Xiaoyin <hw.wangxiaoyin@hisilicon.com>
 
-Add dts node to enable pl031 rtc.
+Add spi2 and spi3 device nodes for hi3660, and enable them for hikey960.
 
-Signed-off-by: Chen Feng <puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+On HiKey960:
+ - SPI2 is wired out through low speed expansion connector.
+ - SPI3 is wired out through high speed expansion connector.
+
+Signed-off-by: Wang Xiaoyin <hw.wangxiaoyin@hisilicon.com>
+Signed-off-by: Guodong Xu <guodong.xu@linaro.org>
 ---
- arch/arm64/boot/dts/hisilicon/hi3660.dtsi | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts |  8 ++++++
+ arch/arm64/boot/dts/hisilicon/hi3660.dtsi         | 30 +++++++++++++++++++++++
+ 2 files changed, 38 insertions(+)
 
+diff --git a/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts b/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
+index 69aa207..79735ee 100644
+--- a/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
++++ b/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
+@@ -69,3 +69,11 @@
+ &uart6 {
+ 	status = "okay";
+ };
++
++&spi2 {
++	status = "okay";
++};
++
++&spi3 {
++	status = "okay";
++};
 diff --git a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
-index 0951a29..c2bca5d 100644
+index c2bca5d..48da97f 100644
 --- a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
 +++ b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
-@@ -312,6 +312,14 @@
- 			status = "disabled";
+@@ -728,5 +728,35 @@
+ 			clock-names = "apb_pclk";
+ 			status = "ok";
  		};
- 
-+		rtc0: rtc@fff04000 {
-+			compatible = "arm,pl031", "arm,primecell";
-+			reg = <0x0 0Xfff04000 0x0 0x1000>;
-+			interrupts = <GIC_SPI 46 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&crg_ctrl HI3660_PCLK>;
++
++		spi2: spi@ffd68000 {
++			compatible = "arm,pl022", "arm,primecell";
++			reg = <0x0 0xffd68000 0x0 0x1000>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++			interrupts = <GIC_SPI 116 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&crg_ctrl HI3660_CLK_GATE_SPI2>;
 +			clock-names = "apb_pclk";
++			pinctrl-names = "default";
++			pinctrl-0 = <&spi2_pmx_func>;
++			num-cs = <1>;
++			cs-gpios = <&gpio27 2 0>;
++			status = "disabled";
 +		};
 +
- 		gpio0: gpio@e8a0b000 {
- 			compatible = "arm,pl061", "arm,primecell";
- 			reg = <0 0xe8a0b000 0 0x1000>;
++		spi3: spi@ff3b3000 {
++			compatible = "arm,pl022", "arm,primecell";
++			reg = <0x0 0xff3b3000 0x0 0x1000>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++			interrupts = <GIC_SPI 312 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&crg_ctrl HI3660_CLK_GATE_SPI3>;
++			clock-names = "apb_pclk";
++			pinctrl-names = "default";
++			pinctrl-0 = <&spi3_pmx_func>;
++			num-cs = <1>;
++			cs-gpios = <&gpio18 5 0>;
++			status = "disabled";
++		};
+ 	};
+ };
 -- 
 2.10.2
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
