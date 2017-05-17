@@ -1,79 +1,57 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 2/8] clocksource/drivers/fttmr010: Merge FTTMR010 DT bindings
-Date: Wed, 17 May 2017 16:05:36 +0200
-Message-ID: <20170517140542.20016-3-linus.walleij@linaro.org>
-References: <20170517140542.20016-1-linus.walleij@linaro.org>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [PATCH] devicetree: Move include prefixes from arch to separate directory
+Date: Wed, 17 May 2017 16:22:28 +0200
+Message-ID: <CAMuHMdVQPB57dckRDjjLLocE4=0J4fQZQux9LJoV6xzZW16eKA@mail.gmail.com>
+References: <CAL_JsqKLxA8K8378z4nDBkDWnwM_zBbbf9D7EPtwQ1782dydTw@mail.gmail.com>
+ <20170515142641.GU22219@n2100.armlinux.org.uk> <CAL_JsqJzoe_xNxMOZ88+k+bZ+bSK6-j30HXk0ZsFxHUqVDzwzw@mail.gmail.com>
+ <CAOesGMgYDq5Sdk6OaK-mTyfdNGwcbgOVeKbeMSCOmwqd9k8TGQ@mail.gmail.com>
+ <CAL_JsqJCjwvvta0n7dNpyVZkK5hp25fYO78q_pQZzUAPRDq+-w@mail.gmail.com> <CAOesGMh3UxHPYQ7SDG7+NODuT5TnP_i23ru0ZRR-rOYxbOGe_g@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170517140542.20016-1-linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+In-Reply-To: <CAOesGMh3UxHPYQ7SDG7+NODuT5TnP_i23ru0ZRR-rOYxbOGe_g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>, Jonas Jensen <jonas.jensen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Janos Laube <janos.dev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Paulius Zaleckas <paulius.zaleckas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Hans Ulli Kroll <ulli.kroll-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Mikael Starvik <starvik-VrBV9hrLPhE@public.gmane.org>, Jesper Nilsson <jesper.nilsson-VrBV9hrLPhE@public.gmane.org>, James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Paul Mackerras <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>, Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>li
 List-Id: devicetree@vger.kernel.org
 
-This merges the Moxa and FTTMR010 device tree bindings into the
-Faraday binding document to avoid confusion.
+Hi Olof,
 
-The FTTMR010 is the IP block used by these SoCs, in vanilla
-or modified variant.
+On Mon, May 15, 2017 at 6:09 PM, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org> wrote:
+>> The only other comment I would have is at some point, we're going to
+>> have overlays that aren't tied to any arch. Where are we going to put
+>> those? Maybe they are tied to some vendor which tends to have most
+>> stuff in $arch and we just continue this band-aid. Or we define some
+>> common location. I bring this up now only because both could use that
+>> location.
+>
+> Those are good questions. What kind of common overlays are you
+> anticipating? Things like fragments describing connectors, etc?
 
-The Aspeed variant is modified such that it is no longer fully
-register-compatible with FTTMR010 so for this reason it is not
-listed with two compatible strings, instead just one.
+I'm mostly using overlays to describe custom test hardware that
+is connection to expansion connectors on standard development boards.
+These fall into one of two classes:
+  1. Overlays enabling an on-SoC device and configuring access to it from
+     an expansion connector,
+  2. Overlays describing hardware connected to a device from class1.
 
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
-Cc: Jonas Jensen <jonas.jensen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
- .../devicetree/bindings/timer/faraday,fttmr010.txt    |  4 +++-
- .../devicetree/bindings/timer/moxa,moxart-timer.txt   | 19 -------------------
- 2 files changed, 3 insertions(+), 20 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/timer/moxa,moxart-timer.txt
+Class 1 overlays are SoC and board-specific, so they belong in e.g.
+arch/arm/boot/dts/.
+Class 2 overlays are more universal (depending on what they extend; Pantelis'
+connectors work may help here), so they can be shared between architectures.
 
-diff --git a/Documentation/devicetree/bindings/timer/faraday,fttmr010.txt b/Documentation/devicetree/bindings/timer/faraday,fttmr010.txt
-index b73ca6cd07f8..6e18bd662ccb 100644
---- a/Documentation/devicetree/bindings/timer/faraday,fttmr010.txt
-+++ b/Documentation/devicetree/bindings/timer/faraday,fttmr010.txt
-@@ -7,7 +7,9 @@ Required properties:
- 
- - compatible : Must be one of
-   "faraday,fttmr010"
--  "cortina,gemini-timer"
-+  "cortina,gemini-timer", "faraday,fttmr010"
-+  "moxa,moxart-timer", "faraday,fttmr010"
-+  "aspeed,ast2400-timer"
- - reg : Should contain registers location and length
- - interrupts : Should contain the three timer interrupts usually with
-   flags for falling edge
-diff --git a/Documentation/devicetree/bindings/timer/moxa,moxart-timer.txt b/Documentation/devicetree/bindings/timer/moxa,moxart-timer.txt
-deleted file mode 100644
-index e207c11630af..000000000000
---- a/Documentation/devicetree/bindings/timer/moxa,moxart-timer.txt
-+++ /dev/null
-@@ -1,19 +0,0 @@
--MOXA ART timer
--
--Required properties:
--
--- compatible : Must be one of:
-- 	- "moxa,moxart-timer"
-- 	- "aspeed,ast2400-timer"
--- reg : Should contain registers location and length
--- interrupts : Should contain the timer interrupt number
--- clocks : Should contain phandle for the clock that drives the counter
--
--Example:
--
--	timer: timer@98400000 {
--		compatible = "moxa,moxart-timer";
--		reg = <0x98400000 0x42>;
--		interrupts = <19 1>;
--		clocks = <&coreclk>;
--	};
--- 
-2.9.3
+Other people may have other use cases.
 
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
