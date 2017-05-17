@@ -1,90 +1,96 @@
-From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Subject: [PATCH v8 9/9] [DO NOT MERGE] ARM: sun8i: v3s: enable
- LCD panel of Lichee Pi Zero
-Date: Wed, 17 May 2017 22:47:25 +0800
-Message-ID: <20170517144725.3463-10-icenowy@aosc.io>
-References: <20170517144725.3463-1-icenowy@aosc.io>
-Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDS6XAN6ZADRBCGH6HEAKGQEIU2KYSA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20170517144725.3463-1-icenowy-h8G6r0blFSE@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+From: Kieran Bingham <kbingham@kernel.org>
+Subject: [PATCH v1 1/3] of: base: Provide of_graph_get_port_parent()
+Date: Wed, 17 May 2017 16:03:37 +0100
+Message-ID: <56c9c74fa9e2879aea9e008d54d8b8d7b450b8ae.1495032810.git-series.kieran.bingham+renesas@ideasonboard.com>
+References: <cover.6800d0e1b9b578b82f68dec1b99b3a601d6e54ca.1495032810.git-series.kieran.bingham+renesas@ideasonboard.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <cover.6800d0e1b9b578b82f68dec1b99b3a601d6e54ca.1495032810.git-series.kieran.bingham+renesas@ideasonboard.com>
+In-Reply-To: <cover.6800d0e1b9b578b82f68dec1b99b3a601d6e54ca.1495032810.git-series.kieran.bingham+renesas@ideasonboard.com>
+References: <cover.6800d0e1b9b578b82f68dec1b99b3a601d6e54ca.1495032810.git-series.kieran.bingham+renesas@ideasonboard.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-renesas-soc@vger.kernel.org, linux-media@vger.kernel.org, sakari.ailus@iki.fi, niklas.soderlund@ragnatech.se, laurent.pinchart@ideasonboard.com
+Cc: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, "open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-A 480x272 QiaoDian QD43003C0-40-7LED panel is available from Lichee Pi.
+From: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
 
-This commit connects this panel to Lichee Pi Zero.
+When handling endpoints, the v4l2 async framework needs to identify the
+parent device of a port endpoint.
 
-Lichee Pi also provides a 800x480 panel without accurate model number,
-so do not merge this patch. It will finally come as device tree overlay.
+Adapt the existing of_graph_get_remote_port_parent() such that a caller
+can obtain the parent of a port without parsing the remote-endpoint
+first.
 
-Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Signed-off-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
 ---
- arch/arm/boot/dts/sun8i-v3s-licheepi-zero.dts | 36 +++++++++++++++++++++++++++
- 1 file changed, 36 insertions(+)
+ drivers/of/base.c        | 30 ++++++++++++++++++++++--------
+ include/linux/of_graph.h |  1 +
+ 2 files changed, 23 insertions(+), 8 deletions(-)
 
-diff --git a/arch/arm/boot/dts/sun8i-v3s-licheepi-zero.dts b/arch/arm/boot/dts/sun8i-v3s-licheepi-zero.dts
-index 387fc2aa546d..7ae72bf63cd0 100644
---- a/arch/arm/boot/dts/sun8i-v3s-licheepi-zero.dts
-+++ b/arch/arm/boot/dts/sun8i-v3s-licheepi-zero.dts
-@@ -75,6 +75,28 @@
- 			gpios = <&pio 6 2 GPIO_ACTIVE_LOW>; /* PG2 */
- 		};
- 	};
-+
-+	panel: panel {
-+		compatible = "qiaodian,qd43003c0-40", "simple-panel";
-+		enable-gpios = <&pio 1 4 GPIO_ACTIVE_HIGH>; /* Should be backlight */
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		port@0 {
-+			reg = <0>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			panel_input: endpoint@0 {
-+				reg = <0>;
-+				remote-endpoint = <&tcon0_out_lcd>;
-+			};
-+		};
-+	};
-+};
-+
-+&de {
-+	status = "okay";
- };
+diff --git a/drivers/of/base.c b/drivers/of/base.c
+index d7c4629a3a2d..f81100500999 100644
+--- a/drivers/of/base.c
++++ b/drivers/of/base.c
+@@ -2455,6 +2455,27 @@ struct device_node *of_graph_get_endpoint_by_regs(
+ EXPORT_SYMBOL(of_graph_get_endpoint_by_regs);
  
- &mmc0 {
-@@ -86,6 +108,20 @@
- 	status = "okay";
- };
+ /**
++ * of_graph_get_port_parent() - get port's parent node
++ * @node: pointer to a local endpoint device_node
++ *
++ * Return: device node associated with endpoint @node.
++ *	   Use of_node_put() on it when done.
++ */
++struct device_node *of_graph_get_port_parent(struct device_node *node)
++{
++	unsigned int depth;
++
++	/* Walk 3 levels up only if there is 'ports' node. */
++	for (depth = 3; depth && node; depth--) {
++		node = of_get_next_parent(node);
++		if (depth == 2 && of_node_cmp(node->name, "ports"))
++			break;
++	}
++	return node;
++}
++EXPORT_SYMBOL(of_graph_get_port_parent);
++
++/**
+  * of_graph_get_remote_port_parent() - get remote port's parent node
+  * @node: pointer to a local endpoint device_node
+  *
+@@ -2465,18 +2486,11 @@ struct device_node *of_graph_get_remote_port_parent(
+ 			       const struct device_node *node)
+ {
+ 	struct device_node *np;
+-	unsigned int depth;
  
-+&tcon0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&lcd_rgb666_pins>;
-+	status = "okay";
-+
-+};
-+
-+&tcon0_out {
-+	tcon0_out_lcd: endpoint@0 {
-+		reg = <0>;
-+		remote-endpoint = <&panel_input>;
-+	};
-+};
-+
- &uart0 {
- 	pinctrl-0 = <&uart0_pins_a>;
- 	pinctrl-names = "default";
+ 	/* Get remote endpoint node. */
+ 	np = of_parse_phandle(node, "remote-endpoint", 0);
+ 
+-	/* Walk 3 levels up only if there is 'ports' node. */
+-	for (depth = 3; depth && np; depth--) {
+-		np = of_get_next_parent(np);
+-		if (depth == 2 && of_node_cmp(np->name, "ports"))
+-			break;
+-	}
+-	return np;
++	return of_graph_get_port_parent(np);
+ }
+ EXPORT_SYMBOL(of_graph_get_remote_port_parent);
+ 
+diff --git a/include/linux/of_graph.h b/include/linux/of_graph.h
+index abdb02eaef06..49bf34880ebc 100644
+--- a/include/linux/of_graph.h
++++ b/include/linux/of_graph.h
+@@ -48,6 +48,7 @@ struct device_node *of_graph_get_next_endpoint(const struct device_node *parent,
+ 					struct device_node *previous);
+ struct device_node *of_graph_get_endpoint_by_regs(
+ 		const struct device_node *parent, int port_reg, int reg);
++struct device_node *of_graph_get_port_parent(struct device_node *node);
+ struct device_node *of_graph_get_remote_port_parent(
+ 					const struct device_node *node);
+ struct device_node *of_graph_get_remote_port(const struct device_node *node);
 -- 
-2.12.2
+git-series 0.9.1
