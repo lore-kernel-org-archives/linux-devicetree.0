@@ -1,69 +1,35 @@
-From: Peter Chen <hzpeterchen@gmail.com>
-Subject: Re: [PATCH v13 00/12] power: add power sequence library
-Date: Wed, 17 May 2017 09:18:10 +0800
-Message-ID: <20170517011810.GA19967@b29397-desktop>
-References: <1486776443-2280-1-git-send-email-peter.chen@nxp.com>
- <f34acc40-41e2-a7ea-a2aa-6cf604086182@ti.com>
- <20170215013808.GB6579@b29397-desktop>
- <20170516172855.hzshlqjvqe2oqb6e@kozik-lap>
+From: zhangfei <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/2] clk: hi6220: add acpu clock
+Date: Wed, 17 May 2017 09:31:36 +0800
+Message-ID: <0e1a391e-cec5-1e94-c491-1c816eca85c3@linaro.org>
+References: <1492478242-16146-1-git-send-email-zhangfei.gao@linaro.org>
+ <20170420155717.mohnrg6lxpwkoytb@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170516172855.hzshlqjvqe2oqb6e@kozik-lap>
-Sender: linux-pm-owner@vger.kernel.org
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Roger Quadros <rogerq@ti.com>, Peter Chen <peter.chen@nxp.com>, gregkh@linuxfoundation.org, stern@rowland.harvard.edu, ulf.hansson@linaro.org, broonie@kernel.org, sre@kernel.org, robh+dt@kernel.org, shawnguo@kernel.org, rjw@rjwysocki.net, dbaryshkov@gmail.com, mark.rutland@arm.com, heiko@sntech.de, stephen.boyd@linaro.org, frank.li@nxp.com, gary.bisson@boundarydevices.com, festevam@gmail.com, stillcompiling@gmail.com, arnd@arndb.de, vaibhav.hiremath@linaro.org, mka@chromium.org, devicetree@vger.kernel.org, mail@maciej.szmigiero.name, pawel.moll@arm.com, linux-pm@vger.kernel.org, s.hauer@pengutronix.de, troy.kisky@boundarydevices.com, linux-arm-kernel@lists.infradead.org, hverkuil@xs4all.nl, oscar@naiandei.net, linux-usb@vger.
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170420155717.mohnrg6lxpwkoytb@rob-hp-laptop>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Li Pengcheng <lipengcheng8-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 16, 2017 at 07:28:55PM +0200, Krzysztof Kozlowski wrote:
-> On Wed, Feb 15, 2017 at 09:38:09AM +0800, Peter Chen wrote:
-> > On Tue, Feb 14, 2017 at 12:21:48PM +0200, Roger Quadros wrote:
-> > > Peter,
-> > > 
-> > > On 11/02/17 03:27, Peter Chen wrote:
-> > > > Hi all,
-> > > > 
-> > > > This is a follow-up for my last power sequence framework patch set [1].
-> > > > According to Rob Herring and Ulf Hansson's comments[2]. The kinds of
-> > > > power sequence instances will be added at postcore_initcall, the match
-> > > > criteria is compatible string first, if the compatible string is not
-> > > > matched between dts and library, it will try to use generic power sequence.
-> > > > 	 
-> > > > The host driver just needs to call of_pwrseq_on/of_pwrseq_off
-> > > > if only one power sequence instance is needed, for more power sequences
-> > > > are used, using of_pwrseq_on_list/of_pwrseq_off_list instead (eg, USB hub driver).
-> > > > 
-> > > > In future, if there are special power sequence requirements, the special
-> > > > power sequence library can be created.
-> > > > 
-> > > > This patch set is tested on i.mx6 sabresx evk using a dts change, I use
-> > > > two hot-plug devices to simulate this use case, the related binding
-> > > > change is updated at patch [1/6], The udoo board changes were tested
-> > > > using my last power sequence patch set.[3]
-> > > > 
-> > > > Except for hard-wired MMC and USB devices, I find the USB ULPI PHY also
-> > > > need to power on itself before it can be found by ULPI bus.
-> > > 
-> > > Can patches 3-7 can be sent independently of the power related patches?
-> > > 
-> > 
-> > Yes, I had planned to submit patches 3-7 for v4.11-rc1 today first, but it
-> > seems you still have comments for patch 6, let's wait a conclusion first.
-> 
-> Hi Peter and others,
-> 
-> What is the status of this patchset? I looked recently and it seemd
-> not-merged. Are there any issues not dealt with?
-> 
-> Just to reminder, this patchset solves not only Peter's problem but few others
-> as well, e.g. Odroid U3 USB hub/lan power sequence.
-> 
 
-The patches 3-7 has already at v4.12-rc1, and I will send power sequence
-patch set again.
 
--- 
+On 2017年04月20日 23:57, Rob Herring wrote:
+> On Tue, Apr 18, 2017 at 09:17:21AM +0800, Zhangfei Gao wrote:
+>> Add acpu clock, including sft clock controlling hi6220 coresight module
+>>
+>> Signed-off-by: Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> Signed-off-by: Li Pengcheng <lipengcheng8-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+>> ---
+>>   .../devicetree/bindings/clock/hi6220-clock.txt     |  1 +
+> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-Best Regards,
-Peter Chen
+Thanks Rob
+
+Btw, have tested on 4.12-rc1, the patches can be applied directly.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
