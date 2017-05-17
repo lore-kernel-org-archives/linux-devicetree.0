@@ -1,13 +1,12 @@
 From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Subject: [RFC PATCH 03/11] drm: sun4i: ignore swapped
- mixer<->tcon connection for DE2
-Date: Thu, 18 May 2017 00:43:46 +0800
-Message-ID: <20170517164354.16399-4-icenowy@aosc.io>
+Subject: [RFC PATCH 04/11] drm: sun4i: add support for H3's TCON0/1
+Date: Thu, 18 May 2017 00:43:47 +0800
+Message-ID: <20170517164354.16399-5-icenowy@aosc.io>
 References: <20170517164354.16399-1-icenowy@aosc.io>
 Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDS6XAN6ZADRBDP46HEAKGQE7AKLDRQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBDS6XAN6ZADRBHP46HEAKGQEDKDRD6A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20170517164354.16399-1-icenowy-h8G6r0blFSE@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -17,160 +16,216 @@ List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto
 List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
  <https://groups.google.com/group/linux-sunxi/subscribe>
 To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Some SoC's DE2 has two mixers. Defaultly the mixer0 is connected to
-tcon0 and mixer1 is connected to tcon1; however by setting a bit
-the connection can be swapped.
+From: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
 
-As we now hardcode the default connection, ignore the bonus endpoint for
-the mixer's output and the TCON's input, as they stands for the swapped
-connection.
+Allwinner H3 has two special TCONs, both come without channel0. And the
+TCON1 of H3 has no special clocks even for the channel1.
+
+Add support for these kinds of TCON.
 
 Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
 ---
- drivers/gpu/drm/sun4i/sun4i_drv.c  | 27 ++++++++++++++++++++++++++
- drivers/gpu/drm/sun4i/sun4i_tcon.c | 39 +++++++++++++++++++++++++++++---------
- drivers/gpu/drm/sun4i/sun4i_tcon.h |  2 ++
- 3 files changed, 59 insertions(+), 9 deletions(-)
+ drivers/gpu/drm/sun4i/sun4i_tcon.c | 78 ++++++++++++++++++++++++++++----------
+ drivers/gpu/drm/sun4i/sun4i_tcon.h |  3 ++
+ 2 files changed, 61 insertions(+), 20 deletions(-)
 
-diff --git a/drivers/gpu/drm/sun4i/sun4i_drv.c b/drivers/gpu/drm/sun4i/sun4i_drv.c
-index 1dd1948025d2..29bf1325ded6 100644
---- a/drivers/gpu/drm/sun4i/sun4i_drv.c
-+++ b/drivers/gpu/drm/sun4i/sun4i_drv.c
-@@ -173,6 +173,13 @@ static bool sun4i_drv_node_is_frontend(struct device_node *node)
- 		of_device_is_compatible(node, "allwinner,sun8i-a33-display-frontend");
- }
- 
-+static bool sun4i_drv_node_is_swappable_de2_mixer(struct device_node *node)
-+{
-+	/* The V3s has only one mixer-tcon pair, so it's not listed here. */
-+	return of_device_is_compatible(node, "allwinner,sun8i-h3-de2-mixer0") ||
-+		of_device_is_compatible(node, "allwinner,sun8i-h3-de2-mixer1");
-+}
-+
- static bool sun4i_drv_node_is_tcon(struct device_node *node)
- {
- 	return of_device_is_compatible(node, "allwinner,sun5i-a13-tcon") ||
-@@ -249,6 +256,26 @@ static int sun4i_drv_add_endpoints(struct device *dev,
- 			}
- 		}
- 
-+		/*
-+		 * The second endpoint of the output of a swappable DE2 mixer
-+		 * is the TCON after connection swapping.
-+		 * Ignore it now, as we now hardcode mixer0->tcon0,
-+		 * mixer1->tcon1 connection.
-+		 */
-+		if (sun4i_drv_node_is_swappable_de2_mixer(node)) {
-+			struct of_endpoint endpoint;
-+
-+			if (of_graph_parse_endpoint(ep, &endpoint)) {
-+				DRM_DEBUG_DRIVER("Couldn't parse endpoint\n");
-+				continue;
-+			}
-+
-+			if (endpoint.id) {
-+				DRM_DEBUG_DRIVER("Endpoint is an unused connection for DE2 mixer... skipping\n");
-+				continue;
-+			}
-+		}
-+
- 		/* Walk down our tree */
- 		count += sun4i_drv_add_endpoints(dev, match, remote);
- 
 diff --git a/drivers/gpu/drm/sun4i/sun4i_tcon.c b/drivers/gpu/drm/sun4i/sun4i_tcon.c
-index f44a37a5993d..89a215ff2370 100644
+index 89a215ff2370..7009292f99e4 100644
 --- a/drivers/gpu/drm/sun4i/sun4i_tcon.c
 +++ b/drivers/gpu/drm/sun4i/sun4i_tcon.c
-@@ -425,7 +425,8 @@ static int sun4i_tcon_init_regmap(struct device *dev,
-  * requested via the get_id function of the engine.
-  */
- static struct sunxi_engine *sun4i_tcon_find_engine(struct sun4i_drv *drv,
--						   struct device_node *node)
-+						   struct device_node *node,
-+						   bool skip_bonus_ep)
+@@ -57,6 +57,7 @@ void sun4i_tcon_channel_disable(struct sun4i_tcon *tcon, int channel)
  {
- 	struct device_node *port, *ep, *remote;
- 	struct sunxi_engine *engine;
-@@ -439,6 +440,20 @@ static struct sunxi_engine *sun4i_tcon_find_engine(struct sun4i_drv *drv,
- 		if (!remote)
- 			continue;
+ 	/* Disable the TCON's channel */
+ 	if (channel == 0) {
++		WARN_ON(!tcon->quirks->has_channel_0);
+ 		regmap_update_bits(tcon->regs, SUN4I_TCON0_CTL_REG,
+ 				   SUN4I_TCON0_CTL_TCON_ENABLE, 0);
+ 		clk_disable_unprepare(tcon->dclk);
+@@ -66,7 +67,8 @@ void sun4i_tcon_channel_disable(struct sun4i_tcon *tcon, int channel)
+ 	WARN_ON(!tcon->quirks->has_channel_1);
+ 	regmap_update_bits(tcon->regs, SUN4I_TCON1_CTL_REG,
+ 			   SUN4I_TCON1_CTL_TCON_ENABLE, 0);
+-	clk_disable_unprepare(tcon->sclk1);
++	if (tcon->quirks->has_channel_1_clk)
++		clk_disable_unprepare(tcon->sclk1);
+ }
+ EXPORT_SYMBOL(sun4i_tcon_channel_disable);
  
-+		if (skip_bonus_ep) {
-+			struct of_endpoint endpoint;
-+
-+			if (of_graph_parse_endpoint(ep, &endpoint)) {
-+				DRM_DEBUG_DRIVER("Couldn't parse endpoint\n");
-+				continue;
-+			}
-+
-+			if (endpoint.id) {
-+				DRM_DEBUG_DRIVER("Skipping bonus mixer->TCON connection when searching engine\n");
-+				continue;
-+			}
+@@ -74,6 +76,7 @@ void sun4i_tcon_channel_enable(struct sun4i_tcon *tcon, int channel)
+ {
+ 	/* Enable the TCON's channel */
+ 	if (channel == 0) {
++		WARN_ON(!tcon->quirks->has_channel_0);
+ 		regmap_update_bits(tcon->regs, SUN4I_TCON0_CTL_REG,
+ 				   SUN4I_TCON0_CTL_TCON_ENABLE,
+ 				   SUN4I_TCON0_CTL_TCON_ENABLE);
+@@ -85,7 +88,8 @@ void sun4i_tcon_channel_enable(struct sun4i_tcon *tcon, int channel)
+ 	regmap_update_bits(tcon->regs, SUN4I_TCON1_CTL_REG,
+ 			   SUN4I_TCON1_CTL_TCON_ENABLE,
+ 			   SUN4I_TCON1_CTL_TCON_ENABLE);
+-	clk_prepare_enable(tcon->sclk1);
++	if (tcon->quirks->has_channel_1_clk)
++		clk_prepare_enable(tcon->sclk1);
+ }
+ EXPORT_SYMBOL(sun4i_tcon_channel_enable);
+ 
+@@ -132,6 +136,7 @@ void sun4i_tcon0_mode_set(struct sun4i_tcon *tcon,
+ 
+ 	/* Configure the dot clock */
+ 	clk_set_rate(tcon->dclk, mode->crtc_clock * 1000);
++	WARN_ON(!tcon->quirks->has_channel_0);
+ 
+ 	/* Adjust clock delay */
+ 	clk_delay = sun4i_tcon_get_clk_delay(mode, 0);
+@@ -209,7 +214,8 @@ void sun4i_tcon1_mode_set(struct sun4i_tcon *tcon,
+ 	WARN_ON(!tcon->quirks->has_channel_1);
+ 
+ 	/* Configure the dot clock */
+-	clk_set_rate(tcon->sclk1, mode->crtc_clock * 1000);
++	if (tcon->quirks->has_channel_1_clk)
++		clk_set_rate(tcon->sclk1, mode->crtc_clock * 1000);
+ 
+ 	/* Adjust clock delay */
+ 	clk_delay = sun4i_tcon_get_clk_delay(mode, 1);
+@@ -327,13 +333,15 @@ static int sun4i_tcon_init_clocks(struct device *dev,
+ 	}
+ 	clk_prepare_enable(tcon->clk);
+ 
+-	tcon->sclk0 = devm_clk_get(dev, "tcon-ch0");
+-	if (IS_ERR(tcon->sclk0)) {
+-		dev_err(dev, "Couldn't get the TCON channel 0 clock\n");
+-		return PTR_ERR(tcon->sclk0);
++	if (tcon->quirks->has_channel_0) {
++		tcon->sclk0 = devm_clk_get(dev, "tcon-ch0");
++		if (IS_ERR(tcon->sclk0)) {
++			dev_err(dev, "Couldn't get the TCON channel 0 clock\n");
++			return PTR_ERR(tcon->sclk0);
 +		}
+ 	}
+ 
+-	if (tcon->quirks->has_channel_1) {
++	if (tcon->quirks->has_channel_1 && tcon->quirks->has_channel_1_clk) {
+ 		tcon->sclk1 = devm_clk_get(dev, "tcon-ch1");
+ 		if (IS_ERR(tcon->sclk1)) {
+ 			dev_err(dev, "Couldn't get the TCON channel 1 clock\n");
+@@ -533,10 +541,12 @@ static int sun4i_tcon_bind(struct device *dev, struct device *master,
+ 		goto err_free_clocks;
+ 	}
+ 
+-	ret = sun4i_dclk_create(dev, tcon);
+-	if (ret) {
+-		dev_err(dev, "Couldn't create our TCON dot clock\n");
+-		goto err_free_clocks;
++	if (tcon->quirks->has_channel_0) {
++		ret = sun4i_dclk_create(dev, tcon);
++		if (ret) {
++			dev_err(dev, "Couldn't create our TCON dot clock\n");
++			goto err_free_clocks;
++		}
+ 	}
+ 
+ 	ret = sun4i_tcon_init_irq(dev, tcon);
+@@ -561,7 +571,8 @@ static int sun4i_tcon_bind(struct device *dev, struct device *master,
+ 	return 0;
+ 
+ err_free_dotclock:
+-	sun4i_dclk_free(tcon);
++	if (tcon->quirks->has_channel_0)
++		sun4i_dclk_free(tcon);
+ err_free_clocks:
+ 	sun4i_tcon_free_clocks(tcon);
+ err_assert_reset:
+@@ -575,7 +586,9 @@ static void sun4i_tcon_unbind(struct device *dev, struct device *master,
+ 	struct sun4i_tcon *tcon = dev_get_drvdata(dev);
+ 
+ 	list_del(&tcon->list);
+-	sun4i_dclk_free(tcon);
 +
- 		/* does this node match any registered engines? */
- 		list_for_each_entry(engine, &drv->engine_list, list) {
- 			if (remote == engine->node) {
-@@ -449,7 +464,7 @@ static struct sunxi_engine *sun4i_tcon_find_engine(struct sun4i_drv *drv,
- 		}
++	if (tcon->quirks->has_channel_0)
++		sun4i_dclk_free(tcon);
+ 	sun4i_tcon_free_clocks(tcon);
+ }
  
- 		/* keep looking through upstream ports */
--		engine = sun4i_tcon_find_engine(drv, remote);
-+		engine = sun4i_tcon_find_engine(drv, remote, skip_bonus_ep);
- 		if (!IS_ERR(engine)) {
- 			of_node_put(remote);
- 			of_node_put(port);
-@@ -469,21 +484,27 @@ static int sun4i_tcon_bind(struct device *dev, struct device *master,
- 	struct sun4i_tcon *tcon;
- 	int ret;
+@@ -606,24 +619,41 @@ static int sun4i_tcon_remove(struct platform_device *pdev)
+ }
  
--	engine = sun4i_tcon_find_engine(drv, dev->of_node);
--	if (IS_ERR(engine)) {
--		dev_err(dev, "Couldn't find matching engine\n");
--		return -EPROBE_DEFER;
--	}
--
- 	tcon = devm_kzalloc(dev, sizeof(*tcon), GFP_KERNEL);
- 	if (!tcon)
- 		return -ENOMEM;
- 	dev_set_drvdata(dev, tcon);
- 	tcon->drm = drm;
- 	tcon->dev = dev;
--	tcon->id = engine->id;
- 	tcon->quirks = of_device_get_match_data(dev);
- 
-+	/*
-+	 * As we keep the connection between DE2 mixer and TCON not swapped,
-+	 * skip the bonus endpoints (which stand for swapped connection)
-+	 * when finding the correspoing engine.
-+	 */
-+	engine = sun4i_tcon_find_engine(drv, dev->of_node,
-+					tcon->quirks->swappable_input);
-+	if (IS_ERR(engine)) {
-+		dev_err(dev, "Couldn't find matching engine\n");
-+		return -EPROBE_DEFER;
-+	}
-+	tcon->id = engine->id;
-+
- 	tcon->lcd_rst = devm_reset_control_get(dev, "lcd");
- 	if (IS_ERR(tcon->lcd_rst)) {
- 		dev_err(dev, "Couldn't get our reset line\n");
-diff --git a/drivers/gpu/drm/sun4i/sun4i_tcon.h b/drivers/gpu/drm/sun4i/sun4i_tcon.h
-index d37e1e2ed60e..568dc736238a 100644
---- a/drivers/gpu/drm/sun4i/sun4i_tcon.h
-+++ b/drivers/gpu/drm/sun4i/sun4i_tcon.h
-@@ -146,6 +146,8 @@
- struct sun4i_tcon_quirks {
- 	bool	has_unknown_mux; /* sun5i has undocumented mux */
- 	bool	has_channel_1;	/* a33 does not have channel 1 */
-+	/* Some DE2 can swap the mixer<->TCON connection */
-+	bool	swappable_input;
+ static const struct sun4i_tcon_quirks sun5i_a13_quirks = {
+-	.has_unknown_mux = true,
+-	.has_channel_1	= true,
++	.has_unknown_mux	= true,
++	.has_channel_0		= true,
++	.has_channel_1		= true,
++	.has_channel_1_clk	= true,
  };
  
- struct sun4i_tcon {
+ static const struct sun4i_tcon_quirks sun6i_a31_quirks = {
+-	.has_channel_1	= true,
++	.has_channel_0		= true,
++	.has_channel_1		= true,
++	.has_channel_1_clk	= true,
+ };
+ 
+ static const struct sun4i_tcon_quirks sun6i_a31s_quirks = {
+-	.has_channel_1	= true,
++	.has_channel_0		= true,
++	.has_channel_1		= true,
++	.has_channel_1_clk	= true,
+ };
+ 
+ static const struct sun4i_tcon_quirks sun8i_a33_quirks = {
+-	/* nothing is supported */
++	.has_channel_0	= true,
+ };
+ 
+ static const struct sun4i_tcon_quirks sun8i_v3s_quirks = {
+-	/* nothing is supported */
++	.has_channel_0	= true,
++};
++
++static const struct sun4i_tcon_quirks sun8i_h3_tcon0_quirks = {
++	.has_channel_1		= true,
++	.has_channel_1_clk	= true,
++	.swappable_input	= true,
++};
++
++static const struct sun4i_tcon_quirks sun8i_h3_tcon1_quirks = {
++	.has_channel_1		= true,
++	.swappable_input	= true,
+ };
+ 
+ static const struct of_device_id sun4i_tcon_of_table[] = {
+@@ -632,6 +662,14 @@ static const struct of_device_id sun4i_tcon_of_table[] = {
+ 	{ .compatible = "allwinner,sun6i-a31s-tcon", .data = &sun6i_a31s_quirks },
+ 	{ .compatible = "allwinner,sun8i-a33-tcon", .data = &sun8i_a33_quirks },
+ 	{ .compatible = "allwinner,sun8i-v3s-tcon", .data = &sun8i_v3s_quirks },
++	{
++		.compatible = "allwinner,sun8i-h3-tcon0",
++		.data = &sun8i_h3_tcon0_quirks
++	},
++	{
++		.compatible = "allwinner,sun8i-h3-tcon1",
++		.data = &sun8i_h3_tcon1_quirks
++	},
+ 	{ }
+ };
+ MODULE_DEVICE_TABLE(of, sun4i_tcon_of_table);
+diff --git a/drivers/gpu/drm/sun4i/sun4i_tcon.h b/drivers/gpu/drm/sun4i/sun4i_tcon.h
+index 568dc736238a..6aeb2d68b523 100644
+--- a/drivers/gpu/drm/sun4i/sun4i_tcon.h
++++ b/drivers/gpu/drm/sun4i/sun4i_tcon.h
+@@ -145,7 +145,10 @@
+ 
+ struct sun4i_tcon_quirks {
+ 	bool	has_unknown_mux; /* sun5i has undocumented mux */
++	bool	has_channel_0;	/* some A83T+ TCONs don't have channel 0*/
+ 	bool	has_channel_1;	/* a33 does not have channel 1 */
++	/* H3 TCON1 doesn't have channel 1 sclk */
++	bool	has_channel_1_clk;
+ 	/* Some DE2 can swap the mixer<->TCON connection */
+ 	bool	swappable_input;
+ };
 -- 
 2.12.2
