@@ -1,149 +1,76 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: [PATCH v3 06/21] clk: sunxi-ng: mux: Change pre-divider application
- function prototype
-Date: Wed, 17 May 2017 09:40:35 +0200
-Message-ID: <2e0b7726cd92e0123c0ffdc6d8f8266ebcb7e160.1495006350.git-series.maxime.ripard@free-electrons.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH v3 03/21] clk: sunxi-ng: div: Switch to divider_round_rate
+Date: Wed, 17 May 2017 09:40:32 +0200
+Message-ID: <13c78d9da524cd9f123a75f56e097fa7bd07cc74.1495006350.git-series.maxime.ripard@free-electrons.com>
 References: <cover.463df61c38224ecbfb5bf1cf192deeb63718b693.1495006350.git-series.maxime.ripard@free-electrons.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <cover.463df61c38224ecbfb5bf1cf192deeb63718b693.1495006350.git-series.maxime.ripard@free-electrons.com>
-In-Reply-To: <cover.463df61c38224ecbfb5bf1cf192deeb63718b693.1495006350.git-series.maxime.ripard@free-electrons.com>
-References: <cover.463df61c38224ecbfb5bf1cf192deeb63718b693.1495006350.git-series.maxime.ripard@free-electrons.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>
-Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Daniel Vetter <daniel.vetter@intel.com>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <cover.463df61c38224ecbfb5bf1cf192deeb63718b693.1495006350.git-series.maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+In-Reply-To: <cover.463df61c38224ecbfb5bf1cf192deeb63718b693.1495006350.git-series.maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+References: <cover.463df61c38224ecbfb5bf1cf192deeb63718b693.1495006350.git-series.maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Daniel Vetter <daniel.vetter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-VGhlIGN1cnJlbnQgZnVuY3Rpb24gbmFtZSBpcyBhIGJpdCBjb25mdXNpbmcsIGFuZCBkb2Vzbid0
-IHJlYWxseSBhbGxvdyB0bwpjcmVhdGUgYW4gZXhwbGljaXQgZnVuY3Rpb24gdG8gcmV2ZXJzZSB0
-aGUgb3BlcmF0aW9uLgoKV2UgYWxzbyBmb3Igbm93IGNoYW5nZSB0aGUgcGFyZW50IHJhdGUgdGhy
-b3VnaCBhIHBvaW50ZXIsIHdoaWxlIHdlIGRvbid0CnJldHVybiBhbnl0aGluZy4KCkluIG9yZGVy
-IHRvIGJlIGxlc3MgY29uZnVzaW5nLCBhbmQgZWFzaWVyIHRvIHVzZSBmb3IgZG93bnN0cmVhbSB1
-c2VycywKY2hhbmdlIHRoZSBmdW5jdGlvbiBuYW1lIHRvIHNvbWV0aGluZyBob3BlZnVsbHkgY2xl
-YXJlciwgYW5kIHJldHVybiB0aGUKYWRqdXN0ZWQgcmF0ZSBpbnN0ZWFkIG9mIGNoYW5naW5nIHRo
-ZSBwb2ludGVyLgoKU2lnbmVkLW9mZi1ieTogTWF4aW1lIFJpcGFyZCA8bWF4aW1lLnJpcGFyZEBm
-cmVlLWVsZWN0cm9ucy5jb20+CkFja2VkLWJ5OiBDaGVuLVl1IFRzYWkgPHdlbnNAY3NpZS5vcmc+
-Ci0tLQogZHJpdmVycy9jbGsvc3VueGktbmcvY2N1X2Rpdi5jICB8ICA4ICsrKystLS0tCiBkcml2
-ZXJzL2Nsay9zdW54aS1uZy9jY3VfbXAuYyAgIHwgIDggKysrKy0tLS0KIGRyaXZlcnMvY2xrL3N1
-bnhpLW5nL2NjdV9tdWx0LmMgfCAgOCArKysrLS0tLQogZHJpdmVycy9jbGsvc3VueGktbmcvY2N1
-X211eC5jICB8IDI5ICsrKysrKysrKysrKy0tLS0tLS0tLS0tLS0tLS0tCiBkcml2ZXJzL2Nsay9z
-dW54aS1uZy9jY3VfbXV4LmggIHwgIDggKysrKy0tLS0KIDUgZmlsZXMgY2hhbmdlZCwgMjggaW5z
-ZXJ0aW9ucygrKSwgMzMgZGVsZXRpb25zKC0pCgpkaWZmIC0tZ2l0IGEvZHJpdmVycy9jbGsvc3Vu
-eGktbmcvY2N1X2Rpdi5jIGIvZHJpdmVycy9jbGsvc3VueGktbmcvY2N1X2Rpdi5jCmluZGV4IDQx
-OTQ2MzM3NWJjMS4uYzBlNWMxMGQwMDkxIDEwMDY0NAotLS0gYS9kcml2ZXJzL2Nsay9zdW54aS1u
-Zy9jY3VfZGl2LmMKKysrIGIvZHJpdmVycy9jbGsvc3VueGktbmcvY2N1X2Rpdi5jCkBAIC01OSw4
-ICs1OSw4IEBAIHN0YXRpYyB1bnNpZ25lZCBsb25nIGNjdV9kaXZfcmVjYWxjX3JhdGUoc3RydWN0
-IGNsa19odyAqaHcsCiAJdmFsID0gcmVnID4+IGNkLT5kaXYuc2hpZnQ7CiAJdmFsICY9ICgxIDw8
-IGNkLT5kaXYud2lkdGgpIC0gMTsKIAotCWNjdV9tdXhfaGVscGVyX2FkanVzdF9wYXJlbnRfZm9y
-X3ByZWRpdigmY2QtPmNvbW1vbiwgJmNkLT5tdXgsIC0xLAotCQkJCQkJJnBhcmVudF9yYXRlKTsK
-KwlwYXJlbnRfcmF0ZSA9IGNjdV9tdXhfaGVscGVyX2FwcGx5X3ByZWRpdigmY2QtPmNvbW1vbiwg
-JmNkLT5tdXgsIC0xLAorCQkJCQkJICBwYXJlbnRfcmF0ZSk7CiAKIAlyZXR1cm4gZGl2aWRlcl9y
-ZWNhbGNfcmF0ZShodywgcGFyZW50X3JhdGUsIHZhbCwgY2QtPmRpdi50YWJsZSwKIAkJCQkgICBj
-ZC0+ZGl2LmZsYWdzKTsKQEAgLTgzLDggKzgzLDggQEAgc3RhdGljIGludCBjY3VfZGl2X3NldF9y
-YXRlKHN0cnVjdCBjbGtfaHcgKmh3LCB1bnNpZ25lZCBsb25nIHJhdGUsCiAJdW5zaWduZWQgbG9u
-ZyB2YWw7CiAJdTMyIHJlZzsKIAotCWNjdV9tdXhfaGVscGVyX2FkanVzdF9wYXJlbnRfZm9yX3By
-ZWRpdigmY2QtPmNvbW1vbiwgJmNkLT5tdXgsIC0xLAotCQkJCQkJJnBhcmVudF9yYXRlKTsKKwlw
-YXJlbnRfcmF0ZSA9IGNjdV9tdXhfaGVscGVyX2FwcGx5X3ByZWRpdigmY2QtPmNvbW1vbiwgJmNk
-LT5tdXgsIC0xLAorCQkJCQkJICBwYXJlbnRfcmF0ZSk7CiAKIAl2YWwgPSBkaXZpZGVyX2dldF92
-YWwocmF0ZSwgcGFyZW50X3JhdGUsIGNkLT5kaXYudGFibGUsIGNkLT5kaXYud2lkdGgsCiAJCQkg
-ICAgICBjZC0+ZGl2LmZsYWdzKTsKZGlmZiAtLWdpdCBhL2RyaXZlcnMvY2xrL3N1bnhpLW5nL2Nj
-dV9tcC5jIGIvZHJpdmVycy9jbGsvc3VueGktbmcvY2N1X21wLmMKaW5kZXggZGUwMmU2YzM4NmQ4
-Li5iOTE3YWQ3YTM4NmMgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvY2xrL3N1bnhpLW5nL2NjdV9tcC5j
-CisrKyBiL2RyaXZlcnMvY2xrL3N1bnhpLW5nL2NjdV9tcC5jCkBAIC04Nyw4ICs4Nyw4IEBAIHN0
-YXRpYyB1bnNpZ25lZCBsb25nIGNjdV9tcF9yZWNhbGNfcmF0ZShzdHJ1Y3QgY2xrX2h3ICpodywK
-IAl1MzIgcmVnOwogCiAJLyogQWRqdXN0IHBhcmVudF9yYXRlIGFjY29yZGluZyB0byBwcmUtZGl2
-aWRlcnMgKi8KLQljY3VfbXV4X2hlbHBlcl9hZGp1c3RfcGFyZW50X2Zvcl9wcmVkaXYoJmNtcC0+
-Y29tbW9uLCAmY21wLT5tdXgsCi0JCQkJCQktMSwgJnBhcmVudF9yYXRlKTsKKwlwYXJlbnRfcmF0
-ZSA9IGNjdV9tdXhfaGVscGVyX2FwcGx5X3ByZWRpdigmY21wLT5jb21tb24sICZjbXAtPm11eCwg
-LTEsCisJCQkJCQkgIHBhcmVudF9yYXRlKTsKIAogCXJlZyA9IHJlYWRsKGNtcC0+Y29tbW9uLmJh
-c2UgKyBjbXAtPmNvbW1vbi5yZWcpOwogCkBAIC0xMjMsOCArMTIzLDggQEAgc3RhdGljIGludCBj
-Y3VfbXBfc2V0X3JhdGUoc3RydWN0IGNsa19odyAqaHcsIHVuc2lnbmVkIGxvbmcgcmF0ZSwKIAl1
-MzIgcmVnOwogCiAJLyogQWRqdXN0IHBhcmVudF9yYXRlIGFjY29yZGluZyB0byBwcmUtZGl2aWRl
-cnMgKi8KLQljY3VfbXV4X2hlbHBlcl9hZGp1c3RfcGFyZW50X2Zvcl9wcmVkaXYoJmNtcC0+Y29t
-bW9uLCAmY21wLT5tdXgsCi0JCQkJCQktMSwgJnBhcmVudF9yYXRlKTsKKwlwYXJlbnRfcmF0ZSA9
-IGNjdV9tdXhfaGVscGVyX2FwcGx5X3ByZWRpdigmY21wLT5jb21tb24sICZjbXAtPm11eCwgLTEs
-CisJCQkJCQkgIHBhcmVudF9yYXRlKTsKIAogCW1heF9tID0gY21wLT5tLm1heCA/OiAxIDw8IGNt
-cC0+bS53aWR0aDsKIAltYXhfcCA9IGNtcC0+cC5tYXggPzogMSA8PCAoKDEgPDwgY21wLT5wLndp
-ZHRoKSAtIDEpOwpkaWZmIC0tZ2l0IGEvZHJpdmVycy9jbGsvc3VueGktbmcvY2N1X211bHQuYyBi
-L2RyaXZlcnMvY2xrL3N1bnhpLW5nL2NjdV9tdWx0LmMKaW5kZXggNmVlN2JhMDczOGZiLi4yMGQw
-MzAwODY3ZjIgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvY2xrL3N1bnhpLW5nL2NjdV9tdWx0LmMKKysr
-IGIvZHJpdmVycy9jbGsvc3VueGktbmcvY2N1X211bHQuYwpAQCAtODgsOCArODgsOCBAQCBzdGF0
-aWMgdW5zaWduZWQgbG9uZyBjY3VfbXVsdF9yZWNhbGNfcmF0ZShzdHJ1Y3QgY2xrX2h3ICpodywK
-IAl2YWwgPSByZWcgPj4gY20tPm11bHQuc2hpZnQ7CiAJdmFsICY9ICgxIDw8IGNtLT5tdWx0Lndp
-ZHRoKSAtIDE7CiAKLQljY3VfbXV4X2hlbHBlcl9hZGp1c3RfcGFyZW50X2Zvcl9wcmVkaXYoJmNt
-LT5jb21tb24sICZjbS0+bXV4LCAtMSwKLQkJCQkJCSZwYXJlbnRfcmF0ZSk7CisJcGFyZW50X3Jh
-dGUgPSBjY3VfbXV4X2hlbHBlcl9hcHBseV9wcmVkaXYoJmNtLT5jb21tb24sICZjbS0+bXV4LCAt
-MSwKKwkJCQkJCSAgcGFyZW50X3JhdGUpOwogCiAJcmV0dXJuIHBhcmVudF9yYXRlICogKHZhbCAr
-IGNtLT5tdWx0Lm9mZnNldCk7CiB9CkBAIC0xMTYsOCArMTE2LDggQEAgc3RhdGljIGludCBjY3Vf
-bXVsdF9zZXRfcmF0ZShzdHJ1Y3QgY2xrX2h3ICpodywgdW5zaWduZWQgbG9uZyByYXRlLAogCWVs
-c2UKIAkJY2N1X2ZyYWNfaGVscGVyX2Rpc2FibGUoJmNtLT5jb21tb24sICZjbS0+ZnJhYyk7CiAK
-LQljY3VfbXV4X2hlbHBlcl9hZGp1c3RfcGFyZW50X2Zvcl9wcmVkaXYoJmNtLT5jb21tb24sICZj
-bS0+bXV4LCAtMSwKLQkJCQkJCSZwYXJlbnRfcmF0ZSk7CisJcGFyZW50X3JhdGUgPSBjY3VfbXV4
-X2hlbHBlcl9hcHBseV9wcmVkaXYoJmNtLT5jb21tb24sICZjbS0+bXV4LCAtMSwKKwkJCQkJCSAg
-cGFyZW50X3JhdGUpOwogCiAJX2NtLm1pbiA9IGNtLT5tdWx0Lm1pbjsKIApkaWZmIC0tZ2l0IGEv
-ZHJpdmVycy9jbGsvc3VueGktbmcvY2N1X211eC5jIGIvZHJpdmVycy9jbGsvc3VueGktbmcvY2N1
-X211eC5jCmluZGV4IDNlYjIzZDRlNjUzNC4uYzMzMjEwOTcyNTgxIDEwMDY0NAotLS0gYS9kcml2
-ZXJzL2Nsay9zdW54aS1uZy9jY3VfbXV4LmMKKysrIGIvZHJpdmVycy9jbGsvc3VueGktbmcvY2N1
-X211eC5jCkBAIC01NiwxMyArNTYsMTIgQEAgc3RhdGljIHUxNiBjY3VfbXV4X2dldF9wcmVkaXYo
-c3RydWN0IGNjdV9jb21tb24gKmNvbW1vbiwKIAlyZXR1cm4gcHJlZGl2OwogfQogCi12b2lkIGNj
-dV9tdXhfaGVscGVyX2FkanVzdF9wYXJlbnRfZm9yX3ByZWRpdihzdHJ1Y3QgY2N1X2NvbW1vbiAq
-Y29tbW9uLAotCQkJCQkgICAgIHN0cnVjdCBjY3VfbXV4X2ludGVybmFsICpjbSwKLQkJCQkJICAg
-ICBpbnQgcGFyZW50X2luZGV4LAotCQkJCQkgICAgIHVuc2lnbmVkIGxvbmcgKnBhcmVudF9yYXRl
-KQordW5zaWduZWQgbG9uZyBjY3VfbXV4X2hlbHBlcl9hcHBseV9wcmVkaXYoc3RydWN0IGNjdV9j
-b21tb24gKmNvbW1vbiwKKwkJCQkJICBzdHJ1Y3QgY2N1X211eF9pbnRlcm5hbCAqY20sCisJCQkJ
-CSAgaW50IHBhcmVudF9pbmRleCwKKwkJCQkJICB1bnNpZ25lZCBsb25nIHBhcmVudF9yYXRlKQog
-ewotCSpwYXJlbnRfcmF0ZSA9ICpwYXJlbnRfcmF0ZSAvIGNjdV9tdXhfZ2V0X3ByZWRpdihjb21t
-b24sIGNtLAotCQkJCQkJCSBwYXJlbnRfaW5kZXgpOworCXJldHVybiBwYXJlbnRfcmF0ZSAvIGNj
-dV9tdXhfZ2V0X3ByZWRpdihjb21tb24sIGNtLCBwYXJlbnRfaW5kZXgpOwogfQogCiBpbnQgY2N1
-X211eF9oZWxwZXJfZGV0ZXJtaW5lX3JhdGUoc3RydWN0IGNjdV9jb21tb24gKmNvbW1vbiwKQEAg
-LTg0LDEwICs4Myw4IEBAIGludCBjY3VfbXV4X2hlbHBlcl9kZXRlcm1pbmVfcmF0ZShzdHJ1Y3Qg
-Y2N1X2NvbW1vbiAqY29tbW9uLAogCiAJCWJlc3RfcGFyZW50ID0gY2xrX2h3X2dldF9wYXJlbnQo
-aHcpOwogCQliZXN0X3BhcmVudF9yYXRlID0gY2xrX2h3X2dldF9yYXRlKGJlc3RfcGFyZW50KTsK
-LQotCQlhZGpfcGFyZW50X3JhdGUgPSBiZXN0X3BhcmVudF9yYXRlOwotCQljY3VfbXV4X2hlbHBl
-cl9hZGp1c3RfcGFyZW50X2Zvcl9wcmVkaXYoY29tbW9uLCBjbSwgLTEsCi0JCQkJCQkJJmFkal9w
-YXJlbnRfcmF0ZSk7CisJCWFkal9wYXJlbnRfcmF0ZSA9IGNjdV9tdXhfaGVscGVyX2FwcGx5X3By
-ZWRpdihjb21tb24sIGNtLCAtMSwKKwkJCQkJCQkgICAgICBiZXN0X3BhcmVudF9yYXRlKTsKIAog
-CQliZXN0X3JhdGUgPSByb3VuZChjbSwgYmVzdF9wYXJlbnQsICZhZGpfcGFyZW50X3JhdGUsCiAJ
-CQkJICByZXEtPnJhdGUsIGRhdGEpOwpAQCAtMTAzLDkgKzEwMCw5IEBAIGludCBjY3VfbXV4X2hl
-bHBlcl9kZXRlcm1pbmVfcmF0ZShzdHJ1Y3QgY2N1X2NvbW1vbiAqY29tbW9uLAogCQlpZiAoIXBh
-cmVudCkKIAkJCWNvbnRpbnVlOwogCi0JCWFkal9wYXJlbnRfcmF0ZSA9IHBhcmVudF9yYXRlID0g
-Y2xrX2h3X2dldF9yYXRlKHBhcmVudCk7Ci0JCWNjdV9tdXhfaGVscGVyX2FkanVzdF9wYXJlbnRf
-Zm9yX3ByZWRpdihjb21tb24sIGNtLCBpLAotCQkJCQkJCSZhZGpfcGFyZW50X3JhdGUpOworCQlw
-YXJlbnRfcmF0ZSA9IGNsa19od19nZXRfcmF0ZShwYXJlbnQpOworCQlhZGpfcGFyZW50X3JhdGUg
-PSBjY3VfbXV4X2hlbHBlcl9hcHBseV9wcmVkaXYoY29tbW9uLCBjbSwgaSwKKwkJCQkJCQkgICAg
-ICBwYXJlbnRfcmF0ZSk7CiAKIAkJdG1wX3JhdGUgPSByb3VuZChjbSwgcGFyZW50LCAmYWRqX3Bh
-cmVudF9yYXRlLCByZXEtPnJhdGUsIGRhdGEpOwogCQlpZiAodG1wX3JhdGUgPT0gcmVxLT5yYXRl
-KSB7CkBAIC0yMTUsMTAgKzIxMiw4IEBAIHN0YXRpYyB1bnNpZ25lZCBsb25nIGNjdV9tdXhfcmVj
-YWxjX3JhdGUoc3RydWN0IGNsa19odyAqaHcsCiB7CiAJc3RydWN0IGNjdV9tdXggKmNtID0gaHdf
-dG9fY2N1X211eChodyk7CiAKLQljY3VfbXV4X2hlbHBlcl9hZGp1c3RfcGFyZW50X2Zvcl9wcmVk
-aXYoJmNtLT5jb21tb24sICZjbS0+bXV4LCAtMSwKLQkJCQkJCSZwYXJlbnRfcmF0ZSk7Ci0KLQly
-ZXR1cm4gcGFyZW50X3JhdGU7CisJcmV0dXJuIGNjdV9tdXhfaGVscGVyX2FwcGx5X3ByZWRpdigm
-Y20tPmNvbW1vbiwgJmNtLT5tdXgsIC0xLAorCQkJCQkgICBwYXJlbnRfcmF0ZSk7CiB9CiAKIGNv
-bnN0IHN0cnVjdCBjbGtfb3BzIGNjdV9tdXhfb3BzID0gewpkaWZmIC0tZ2l0IGEvZHJpdmVycy9j
-bGsvc3VueGktbmcvY2N1X211eC5oIGIvZHJpdmVycy9jbGsvc3VueGktbmcvY2N1X211eC5oCmlu
-ZGV4IDRiZTU2ZWVlMmJmZC4uZGJhMTJjNzZjZjU0IDEwMDY0NAotLS0gYS9kcml2ZXJzL2Nsay9z
-dW54aS1uZy9jY3VfbXV4LmgKKysrIGIvZHJpdmVycy9jbGsvc3VueGktbmcvY2N1X211eC5oCkBA
-IC03OCwxMCArNzgsMTAgQEAgc3RhdGljIGlubGluZSBzdHJ1Y3QgY2N1X211eCAqaHdfdG9fY2N1
-X211eChzdHJ1Y3QgY2xrX2h3ICpodykKIAogZXh0ZXJuIGNvbnN0IHN0cnVjdCBjbGtfb3BzIGNj
-dV9tdXhfb3BzOwogCi12b2lkIGNjdV9tdXhfaGVscGVyX2FkanVzdF9wYXJlbnRfZm9yX3ByZWRp
-dihzdHJ1Y3QgY2N1X2NvbW1vbiAqY29tbW9uLAotCQkJCQkgICAgIHN0cnVjdCBjY3VfbXV4X2lu
-dGVybmFsICpjbSwKLQkJCQkJICAgICBpbnQgcGFyZW50X2luZGV4LAotCQkJCQkgICAgIHVuc2ln
-bmVkIGxvbmcgKnBhcmVudF9yYXRlKTsKK3Vuc2lnbmVkIGxvbmcgY2N1X211eF9oZWxwZXJfYXBw
-bHlfcHJlZGl2KHN0cnVjdCBjY3VfY29tbW9uICpjb21tb24sCisJCQkJCSAgc3RydWN0IGNjdV9t
-dXhfaW50ZXJuYWwgKmNtLAorCQkJCQkgIGludCBwYXJlbnRfaW5kZXgsCisJCQkJCSAgdW5zaWdu
-ZWQgbG9uZyBwYXJlbnRfcmF0ZSk7CiBpbnQgY2N1X211eF9oZWxwZXJfZGV0ZXJtaW5lX3JhdGUo
-c3RydWN0IGNjdV9jb21tb24gKmNvbW1vbiwKIAkJCQkgIHN0cnVjdCBjY3VfbXV4X2ludGVybmFs
-ICpjbSwKIAkJCQkgIHN0cnVjdCBjbGtfcmF0ZV9yZXF1ZXN0ICpyZXEsCi0tIApnaXQtc2VyaWVz
-IDAuOS4xCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRy
-aS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRw
-czovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+divider_round_rate_parent already evaluates changing the parent rate if
+CLK_SET_RATE_PARENT is set. Now that we can do that on muxes too, let's
+just use it.
+
+Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Acked-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+---
+ drivers/clk/sunxi-ng/ccu_div.c | 27 ++++-----------------------
+ 1 file changed, 4 insertions(+), 23 deletions(-)
+
+diff --git a/drivers/clk/sunxi-ng/ccu_div.c b/drivers/clk/sunxi-ng/ccu_div.c
+index a489f18a3c01..419463375bc1 100644
+--- a/drivers/clk/sunxi-ng/ccu_div.c
++++ b/drivers/clk/sunxi-ng/ccu_div.c
+@@ -20,18 +20,11 @@ static unsigned long ccu_div_round_rate(struct ccu_mux_internal *mux,
+ 					void *data)
+ {
+ 	struct ccu_div *cd = data;
+-	unsigned long val;
+-
+-	/*
+-	 * We can't use divider_round_rate that assumes that there's
+-	 * several parents, while we might be called to evaluate
+-	 * several different parents.
+-	 */
+-	val = divider_get_val(rate, *parent_rate, cd->div.table, cd->div.width,
+-			      cd->div.flags);
+ 
+-	return divider_recalc_rate(&cd->common.hw, *parent_rate, val,
+-				   cd->div.table, cd->div.flags);
++	return divider_round_rate_parent(&cd->common.hw, parent,
++					 rate, parent_rate,
++					 cd->div.table, cd->div.width,
++					 cd->div.flags);
+ }
+ 
+ static void ccu_div_disable(struct clk_hw *hw)
+@@ -78,18 +71,6 @@ static int ccu_div_determine_rate(struct clk_hw *hw,
+ {
+ 	struct ccu_div *cd = hw_to_ccu_div(hw);
+ 
+-	if (clk_hw_get_num_parents(hw) == 1) {
+-		req->rate = divider_round_rate(hw, req->rate,
+-					       &req->best_parent_rate,
+-					       cd->div.table,
+-					       cd->div.width,
+-					       cd->div.flags);
+-
+-		req->best_parent_hw = clk_hw_get_parent(hw);
+-
+-		return 0;
+-	}
+-
+ 	return ccu_mux_helper_determine_rate(&cd->common, &cd->mux,
+ 					     req, ccu_div_round_rate, cd);
+ }
+-- 
+git-series 0.9.1
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
