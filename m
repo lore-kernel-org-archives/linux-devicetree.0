@@ -1,53 +1,41 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH] Partially Revert "of: fix sparse warnings in fdt, irq,
- reserved mem, and resolver code"
-Date: Wed, 17 May 2017 16:41:05 +0200
-Message-ID: <CAMuHMdUEJ68f6tEvGtn6mdDj1bY69g+xMBtz3DDNJydc=+pgiw@mail.gmail.com>
-References: <20170511153048.3586-1-robh@kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH v1 0/2] Hi3660: enable sp804 timer
+Date: Wed, 17 May 2017 22:46:30 +0800
+Message-ID: <1495032392-19102-1-git-send-email-leo.yan@linaro.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170511153048.3586-1-robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+To: Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Zhong Kaihua <zhongkaihua-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+This patch set is to enable sp804 timer on Hi3660 for Hikey960 platform.
 
-On Thu, May 11, 2017 at 5:30 PM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> A change to function pointers that was meant to address a sparse warning
-> turned out to cause hundreds of new gcc-7 warnings:
->
-> include/linux/of_irq.h:11:13: error: type qualifiers ignored on function return type [-Werror=ignored-qualifiers]
-> drivers/of/of_reserved_mem.c: In function '__reserved_mem_init_node':
-> drivers/of/of_reserved_mem.c:200:7: error: type qualifiers ignored on function return type [-Werror=ignored-qualifiers]
->    int const (*initfn)(struct reserved_mem *rmem) = i->data;
+On Hi3660, the sp804 timer co-exists with CPUs' architecture timer; but
+sp804 timer is located in SoC level but CPU's architecture timer is in
+CPU power domain. sp804 timer is used as broadcast timer when CPU enters
+idle states and the CPU (includes architecture timer) power domain is
+powered off. So sp804 timer enabling is prerequisite before we enable
+CPUIdle on Hi3660.
 
-Not just gcc-7. Also with the good old 4.1.2 ;-)
+This patch set is to enable sp804 timer, the first patch is to adjust
+timer regiseration so ensure clock is avaiable for timer. the second
+timer is to add description for timer in dts. Have rebased this patch
+set on Guodong's dts patch set [1] and verified this patch set on
+Hikey960.
 
-> Turns out the sparse warnings were spurious and have been fixed in
-> upstream sparse since 0.5.0 in commit "sparse: treat function pointers
-> as pointers to const data".
->
-> This partially reverts commit 17a70355ea576843a7ac851f1db26872a50b2850.
->
-> Fixes: 17a70355ea57 ("of: fix sparse warnings in fdt, irq, reserved mem, and resolver code")
-> Reported-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-> Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+[1] http://archive.armlinux.org.uk/lurker/message/20170517.083733.8207a50e.en.html
 
-Acked-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Leo Yan (2):
+  clk: Hi3660: change to register clock with CLK_OF_DECLARE
+  arm64: dts: add sp804 timer node for Hi3660
 
-Gr{oetje,eeting}s,
+ arch/arm64/boot/dts/hisilicon/hi3660.dtsi | 11 +++++++
+ drivers/clk/hisilicon/clk-hi3660.c        | 48 ++++---------------------------
+ 2 files changed, 16 insertions(+), 43 deletions(-)
 
-                        Geert
+-- 
+1.9.1
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
