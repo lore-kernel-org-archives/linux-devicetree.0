@@ -1,52 +1,81 @@
-From: Leo Yan <leo.yan@linaro.org>
-Subject: [PATCH v1 2/2] arm64: dts: add sp804 timer node for Hi3660
-Date: Wed, 17 May 2017 22:46:32 +0800
-Message-ID: <1495032392-19102-3-git-send-email-leo.yan@linaro.org>
-References: <1495032392-19102-1-git-send-email-leo.yan@linaro.org>
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <1495032392-19102-1-git-send-email-leo.yan@linaro.org>
-Sender: linux-clk-owner@vger.kernel.org
-To: Wei Xu <xuwei5@hisilicon.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Guodong Xu <guodong.xu@linaro.org>, Zhong Kaihua <zhongkaihua@huawei.com>, Zhangfei Gao <zhangfei.gao@linaro.org>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
-Cc: Leo Yan <leo.yan@linaro.org>
+From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Subject: [PATCH v8 0/9] Initial Allwinner Display Engine 2.0 Support
+Date: Wed, 17 May 2017 22:47:16 +0800
+Message-ID: <20170517144725.3463-1-icenowy@aosc.io>
+Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBDS6XAN6ZADRBEWF6HEAKGQECHZ6NJA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The Hi3660 SoC comes with the sp804 timer in addition to the
-architecture timers. These ones are shutdown when reaching a deep idle
-states and a backup timer is needed. The sp804 belongs to another power
-domain and can fulfill the purpose of replacing temporarily an
-architecture timer when the CPU is idle.
+This patchset is the initial patchset for Allwinner DE2 support.
 
-Describe it in the device tree, so it can be enabled at boot time.
+As the DE2 CCU support is already applied, this patchset now contains
+only DRM changes and device tree changes. 
 
-Suggested-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-Signed-off-by: Leo Yan <leo.yan@linaro.org>
----
- arch/arm64/boot/dts/hisilicon/hi3660.dtsi | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+The SoC used to develop this patchset is V3s, as V3s is the simplest
+one of the SoCs that have DE2.
 
-diff --git a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
-index 138fcba..f75c792 100644
---- a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
-+++ b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
-@@ -173,6 +173,17 @@
- 			#clock-cells = <1>;
- 		};
- 
-+		dual_timer0: timer@fff14000 {
-+			compatible = "arm,sp804", "arm,primecell";
-+			reg = <0x0 0xfff14000 0x0 0x1000>;
-+			interrupts = <GIC_SPI 48 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&crg_ctrl HI3660_OSC32K>,
-+				 <&crg_ctrl HI3660_OSC32K>,
-+				 <&crg_ctrl HI3660_OSC32K>;
-+			clock-names = "timer1", "timer2", "apb_pclk";
-+		};
-+
- 		ufs: ufs@ff3b0000 {
- 			compatible = "jedec,ufs-1.1", "hisilicon,hi3660-ufs";
- 			reg = <0x0 0xff3b0000 0x0 0x1000>, /* 0: HCI standard */
+(Allwinner V3s features only one mixer, and its only video output is
+RGB LCD, which is already supported in our TCON driver)
+
+The last patch is only a testing patch, it shouldn't be merged; and
+for the patch to be really usable, the RFC fix of the TCON driver [1]
+is needed.
+
+No HDMI, TV encoder or other internal bridges' support is included
+in this patchset, which makes it currently not usable on H3.
+
+Thanks to Jean-Francois Moine and Jernej Skrabec for their efforts
+to discover the internal of DE2!
+
+[1] https://lists.freedesktop.org/archives/dri-devel/2016-December/126264.html
+
+Icenowy Zheng (9):
+  drm/sun4i: abstract a engine type
+  drm/sun4i: add a dedicated module for sun4i-backend and sun4i-layer
+  drm/sun4i: add a Kconfig option for sun4i-backend
+  drm/sun4i: add support for Allwinner DE2 mixers
+  drm/sun4i: Add compatible string for V3s display engine
+  drm/sun4i: tcon: add support for V3s TCON
+  ARM: sun8i: v3s: add device nodes for DE2 display pipeline
+  ARM: sun8i: v3s: add pinmux for LCD pins of V3s SoC
+  [DO NOT MERGE] ARM: sun8i: v3s: enable LCD panel of Lichee Pi Zero
+
+ arch/arm/boot/dts/sun8i-v3s-licheepi-zero.dts |  36 +++
+ arch/arm/boot/dts/sun8i-v3s.dtsi              |  96 ++++++
+ drivers/gpu/drm/sun4i/Kconfig                 |  20 ++
+ drivers/gpu/drm/sun4i/Makefile                |   9 +-
+ drivers/gpu/drm/sun4i/sun4i_backend.c         |  78 ++---
+ drivers/gpu/drm/sun4i/sun4i_backend.h         |  19 +-
+ drivers/gpu/drm/sun4i/sun4i_crtc.c            |  11 +-
+ drivers/gpu/drm/sun4i/sun4i_crtc.h            |   4 +-
+ drivers/gpu/drm/sun4i/sun4i_drv.c             |   6 +-
+ drivers/gpu/drm/sun4i/sun4i_drv.h             |   2 +-
+ drivers/gpu/drm/sun4i/sun4i_layer.c           |   9 +-
+ drivers/gpu/drm/sun4i/sun4i_layer.h           |   4 +-
+ drivers/gpu/drm/sun4i/sun4i_tcon.c            |  43 +--
+ drivers/gpu/drm/sun4i/sun4i_tv.c              |   9 +-
+ drivers/gpu/drm/sun4i/sun8i_layer.c           | 134 +++++++++
+ drivers/gpu/drm/sun4i/sun8i_layer.h           |  36 +++
+ drivers/gpu/drm/sun4i/sun8i_mixer.c           | 414 ++++++++++++++++++++++++++
+ drivers/gpu/drm/sun4i/sun8i_mixer.h           | 137 +++++++++
+ drivers/gpu/drm/sun4i/sunxi_engine.h          |  98 ++++++
+ 19 files changed, 1077 insertions(+), 88 deletions(-)
+ create mode 100644 drivers/gpu/drm/sun4i/sun8i_layer.c
+ create mode 100644 drivers/gpu/drm/sun4i/sun8i_layer.h
+ create mode 100644 drivers/gpu/drm/sun4i/sun8i_mixer.c
+ create mode 100644 drivers/gpu/drm/sun4i/sun8i_mixer.h
+ create mode 100644 drivers/gpu/drm/sun4i/sunxi_engine.h
+
 -- 
-1.9.1
-
+2.12.2
