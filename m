@@ -1,86 +1,198 @@
-From: Heiner Kallweit <hkallweit1@gmail.com>
-Subject: Re: [PATCH v2 2/6] pintrl: meson: document GPIO IRQ DT binding
-Date: Wed, 17 May 2017 23:02:07 +0200
-Message-ID: <ec9310f1-10eb-789f-e6f7-67e0340f4c64@gmail.com>
-References: <36164ed8-aa59-2a77-b7fc-9adce03a2fc1@gmail.com>
- <c5ea65c5-f604-d890-4e73-f53bdd47bd31@gmail.com>
- <1494977339.2728.8.camel@baylibre.com>
+From: Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v5] of/pci: Fix memory leak in
+ of_pci_get_host_bridge_resources
+Date: Wed, 17 May 2017 16:08:41 -0500
+Message-ID: <20170517210841.GH31462@bhelgaas-glaptop.roam.corp.google.com>
+References: <1491359303-1385-1-git-send-email-jeffy.chen@rock-chips.com>
+ <1491359303-1385-2-git-send-email-jeffy.chen@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1494977339.2728.8.camel@baylibre.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Jerome Brunet <jbrunet@baylibre.com>, Mark Rutland <mark.rutland@arm.com>, Marc Zyngier <marc.zyngier@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Kevin Hilman <khilman@baylibre.com>, Thomas Gleixner <tglx@linutronix.de>
-Cc: devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-gpio@vger.kernel.org, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, Thierry Reding <treding@nvidia.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1491359303-1385-2-git-send-email-jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jeffy Chen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, toshi.kani-ZPxbGqLxI0U@public.gmane.org, shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org, briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, dtor-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Am 17.05.2017 um 01:28 schrieb Jerome Brunet:
-> On Fri, 2017-05-12 at 21:13 +0200, Heiner Kallweit wrote:
->> Document the DT binding for GPIO IRQ support on Amlogic Meson SoC's.
->>
->> This documentation is intentionally not placed under
->> interrupt-controllers as GPIO IRQ support on these SoC's acts more
->> like an interrupt multiplexer.
->>
->> Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
->> ---
->> v2:
->> - remove syscon
->> ---
->>  arch/arm64/boot/dts/amlogic/meson-gx.dtsi | 13 +++++++++++++
->>  1 file changed, 13 insertions(+)
->>
->> diff --git a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
->> b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
->> index 436b8750..44422b85 100644
->> --- a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
->> +++ b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
->> @@ -312,6 +312,19 @@
->>  				status = "disabled";
->>  			};
->>  
->> +			gpio_irq@9880 {
->> +				compatible = "amlogic,meson-gpio-interrupt";
->> +				reg = <0x0 0x09880 0x0 0x10>;
->> +				interrupts = <GIC_SPI 64 IRQ_TYPE_NONE>,
->> +					     <GIC_SPI 65 IRQ_TYPE_NONE>,
->> +					     <GIC_SPI 66 IRQ_TYPE_NONE>,
->> +					     <GIC_SPI 67 IRQ_TYPE_NONE>,
->> +					     <GIC_SPI 68 IRQ_TYPE_NONE>,
->> +					     <GIC_SPI 69 IRQ_TYPE_NONE>,
->> +					     <GIC_SPI 70 IRQ_TYPE_NONE>,
->> +					     <GIC_SPI 71 IRQ_TYPE_NONE>;
->> +			};
->> +
-> 
-> Already tried the same thing:
-> https://marc.info/?l=devicetree&m=147758174404359&w=2
-> 
-> Irq maintainers reminded me that this is not correct as the device is not able
-> to generate these particular irqs (it is merely routing the signal) and the
-> flags are meaning less here
-> 
-In one review comment to your patch series Rob mentioned to be fine with using
-the standard interrupts property.
-However other involved people might have had a different opinion, I didn't read
-all review comments.
+On Wed, Apr 05, 2017 at 10:28:22AM +0800, Jeffy Chen wrote:
+> Currently we only free the allocated resource struct when error.
+> This would cause memory leak after pci_free_resource_list.
 
-I think the standard interrupts property is the best way.
-We need mapped virq's to be used with the irq chaining. And for mapping an
-interrupt we need not only the hwirq but also the IRQ domain. The interrupts
-property and the related OF IRQ API calls like irq_of_parse_and_map provide
-exactly what we need.
+I think I see the problem here.  The release path is this:
 
-If somebody has serious objections to using the interrupts property then we
-basically had to duplicate it and just give it a different name.
-And such code duplication to me seems to be worse than using the interrupts
-property slightly different than in the theory.
+  pci_release_host_bridge_dev
+    pci_free_resource_list
+      resource_list_free
+	list_for_each_entry_safe(entry, tmp, head, node)
+	  resource_list_destroy_entry
+	    resource_list_del
+	    resource_list_free_entry
+	      kfree(entry)
 
+but that frees only the struct resource_entry, not the struct resource
+pointed to by entry->res.  Is that right?
+
+And this patch solves it for of_pci_get_host_bridge_resources() by
+always making entry->res point to entry->__res, which is an element in
+struct resource_entry, so it's sufficient to free the resource_entry.
+
+The memory management here is pretty tangled.  I wonder if there's
+some way to simplify it so it's easier to make sure everybody does it
+correctly.  For example, could we remove the entry->res pointer
+completely and force everybody to use entry->__res?
+
+> Signed-off-by: Jeffy Chen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> ---
 > 
->>  			watchdog@98d0 {
->>  				compatible = "amlogic,meson-gx-wdt",
->> "amlogic,meson-gxbb-wdt";
->>  				reg = <0x0 0x098d0 0x0 0x10>;
+> Changes in v5:
+> Fix some careless compile errors.
 > 
+> Changes in v4:
+> Use IORESOURCE_AUTO to mark struct resources which could be copied.
+> 
+> Changes in v3:
+> Add some comments.
+> 
+> Changes in v2:
+> Don't change the resource_list_create_entry's behavior.
+> 
+>  drivers/of/of_pci.c | 51 ++++++++++++++++++---------------------------------
+>  drivers/pci/bus.c   |  7 ++++++-
+>  2 files changed, 24 insertions(+), 34 deletions(-)
+> 
+> diff --git a/drivers/of/of_pci.c b/drivers/of/of_pci.c
+> index 0ee42c3..49233bf 100644
+> --- a/drivers/of/of_pci.c
+> +++ b/drivers/of/of_pci.c
+> @@ -189,9 +189,7 @@ int of_pci_get_host_bridge_resources(struct device_node *dev,
+>  			unsigned char busno, unsigned char bus_max,
+>  			struct list_head *resources, resource_size_t *io_base)
+>  {
+> -	struct resource_entry *window;
+> -	struct resource *res;
+> -	struct resource *bus_range;
+> +	struct resource res;
+>  	struct of_pci_range range;
+>  	struct of_pci_range_parser parser;
+>  	char range_type[4];
+> @@ -200,24 +198,21 @@ int of_pci_get_host_bridge_resources(struct device_node *dev,
+>  	if (io_base)
+>  		*io_base = (resource_size_t)OF_BAD_ADDR;
+>  
+> -	bus_range = kzalloc(sizeof(*bus_range), GFP_KERNEL);
+> -	if (!bus_range)
+> -		return -ENOMEM;
+> -
+>  	pr_info("host bridge %s ranges:\n", dev->full_name);
+>  
+> -	err = of_pci_parse_bus_range(dev, bus_range);
+> +	err = of_pci_parse_bus_range(dev, &res);
+>  	if (err) {
+> -		bus_range->start = busno;
+> -		bus_range->end = bus_max;
+> -		bus_range->flags = IORESOURCE_BUS;
+> -		pr_info("  No bus range found for %s, using %pR\n",
+> -			dev->full_name, bus_range);
+> +		res.start = busno;
+> +		res.end = bus_max;
+> +		res.flags = IORESOURCE_BUS;
+> +		pr_info("  No bus range found for %s\n", dev->full_name);
+>  	} else {
+> -		if (bus_range->end > bus_range->start + bus_max)
+> -			bus_range->end = bus_range->start + bus_max;
+> +		if (res.end > res.start + bus_max)
+> +			res.end = res.start + bus_max;
+>  	}
+> -	pci_add_resource(resources, bus_range);
+> +
+> +	res.flags |= IORESOURCE_AUTO;
+> +	pci_add_resource(resources, &res);
+>  
+>  	/* Check for ranges property */
+>  	err = of_pci_range_parser_init(&parser, dev);
+> @@ -244,24 +239,16 @@ int of_pci_get_host_bridge_resources(struct device_node *dev,
+>  		if (range.cpu_addr == OF_BAD_ADDR || range.size == 0)
+>  			continue;
+>  
+> -		res = kzalloc(sizeof(struct resource), GFP_KERNEL);
+> -		if (!res) {
+> -			err = -ENOMEM;
+> -			goto parse_failed;
+> -		}
+> -
+> -		err = of_pci_range_to_resource(&range, dev, res);
+> -		if (err) {
+> -			kfree(res);
+> +		err = of_pci_range_to_resource(&range, dev, &res);
+> +		if (err)
+>  			continue;
+> -		}
+>  
+> -		if (resource_type(res) == IORESOURCE_IO) {
+> +		if (resource_type(&res) == IORESOURCE_IO) {
+>  			if (!io_base) {
+>  				pr_err("I/O range found for %s. Please provide an io_base pointer to save CPU base address\n",
+>  					dev->full_name);
+>  				err = -EINVAL;
+> -				goto conversion_failed;
+> +				goto parse_failed;
+>  			}
+>  			if (*io_base != (resource_size_t)OF_BAD_ADDR)
+>  				pr_warn("More than one I/O resource converted for %s. CPU base address for old range lost!\n",
+> @@ -269,16 +256,14 @@ int of_pci_get_host_bridge_resources(struct device_node *dev,
+>  			*io_base = range.cpu_addr;
+>  		}
+>  
+> -		pci_add_resource_offset(resources, res,	res->start - range.pci_addr);
+> +		res.flags |= IORESOURCE_AUTO;
+> +		pci_add_resource_offset(resources, &res,
+> +					res.start - range.pci_addr);
+>  	}
+>  
+>  	return 0;
+>  
+> -conversion_failed:
+> -	kfree(res);
+>  parse_failed:
+> -	resource_list_for_each_entry(window, resources)
+> -		kfree(window->res);
+>  	pci_free_resource_list(resources);
+>  	return err;
+>  }
+> diff --git a/drivers/pci/bus.c b/drivers/pci/bus.c
+> index bc56cf1..3dbcb95 100644
+> --- a/drivers/pci/bus.c
+> +++ b/drivers/pci/bus.c
+> @@ -22,12 +22,17 @@ void pci_add_resource_offset(struct list_head *resources, struct resource *res,
+>  {
+>  	struct resource_entry *entry;
+>  
+> -	entry = resource_list_create_entry(res, 0);
+> +	entry = resource_list_create_entry(NULL, 0);
 
+If we make this change, there are no callers of
+resource_list_create_entry() that supply a non-NULL "res", so 
+we could remove that argument completely.
+
+>  	if (!entry) {
+>  		printk(KERN_ERR "PCI: can't add host bridge window %pR\n", res);
+>  		return;
+>  	}
+>  
+> +	if (res->flags & IORESOURCE_AUTO)
+> +		*entry->res = *res;
+> +	else
+> +		entry->res = res;
+> +
+>  	entry->offset = offset;
+>  	resource_list_add_tail(entry, resources);
+>  }
+> -- 
+> 2.1.4
+> 
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
