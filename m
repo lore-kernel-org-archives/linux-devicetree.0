@@ -1,188 +1,69 @@
-From: Matt Ranostay <matt.ranostay-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH] iio: proximity: as3935: noise detection + threshold changes
-Date: Tue, 16 May 2017 17:38:22 -0700
-Message-ID: <CAJCx=gkT3E=uDFXABOpzDtsguKwdxSosSobtgv-L2TYA5_jpVQ@mail.gmail.com>
-References: <20170508015041.10285-1-matt.ranostay@konsulko.com> <c71c0035-1bc5-2964-5b03-34c7851bd065@kernel.org>
+From: Peter Chen <hzpeterchen@gmail.com>
+Subject: Re: [PATCH v13 00/12] power: add power sequence library
+Date: Wed, 17 May 2017 09:18:10 +0800
+Message-ID: <20170517011810.GA19967@b29397-desktop>
+References: <1486776443-2280-1-git-send-email-peter.chen@nxp.com>
+ <f34acc40-41e2-a7ea-a2aa-6cf604086182@ti.com>
+ <20170215013808.GB6579@b29397-desktop>
+ <20170516172855.hzshlqjvqe2oqb6e@kozik-lap>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <c71c0035-1bc5-2964-5b03-34c7851bd065-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: "open list:IIO SUBSYSTEM AND..." <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170516172855.hzshlqjvqe2oqb6e@kozik-lap>
+Sender: linux-pm-owner@vger.kernel.org
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Roger Quadros <rogerq@ti.com>, Peter Chen <peter.chen@nxp.com>, gregkh@linuxfoundation.org, stern@rowland.harvard.edu, ulf.hansson@linaro.org, broonie@kernel.org, sre@kernel.org, robh+dt@kernel.org, shawnguo@kernel.org, rjw@rjwysocki.net, dbaryshkov@gmail.com, mark.rutland@arm.com, heiko@sntech.de, stephen.boyd@linaro.org, frank.li@nxp.com, gary.bisson@boundarydevices.com, festevam@gmail.com, stillcompiling@gmail.com, arnd@arndb.de, vaibhav.hiremath@linaro.org, mka@chromium.org, devicetree@vger.kernel.org, mail@maciej.szmigiero.name, pawel.moll@arm.com, linux-pm@vger.kernel.org, s.hauer@pengutronix.de, troy.kisky@boundarydevices.com, linux-arm-kernel@lists.infradead.org, hverkuil@xs4all.nl, oscar@naiandei.net, linux-usb@vger.
 List-Id: devicetree@vger.kernel.org
 
-On Sun, May 14, 2017 at 7:45 AM, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> On 08/05/17 02:50, Matt Ranostay wrote:
->>
->> Most applications are too noisy to allow the default noise and
->> watchdog settings, and thus need to be configurable via DT
->> properties.
->>
->> Also default settings to POR defaults on a reset, and register
->> distuber interrupts as noise since it prevents proper usage.
->>
->> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->> Signed-off-by: Matt Ranostay <matt.ranostay-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
->> ---
->>   .../devicetree/bindings/iio/proximity/as3935.txt   |  6 +++
->>   drivers/iio/proximity/as3935.c                     | 43
->> ++++++++++++++++++++--
->>   2 files changed, 46 insertions(+), 3 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/iio/proximity/as3935.txt
->> b/Documentation/devicetree/bindings/iio/proximity/as3935.txt
->> index ae23dd8da736..50d370fca533 100644
->> --- a/Documentation/devicetree/bindings/iio/proximity/as3935.txt
->> +++ b/Documentation/devicetree/bindings/iio/proximity/as3935.txt
->> @@ -15,14 +15,20 @@ Optional properties:
->>         - ams,tuning-capacitor-pf: Calibration tuning capacitor stepping
->>           value 0 - 120pF. This will require using the calibration data
->> from
->>           the manufacturer.
->> +       - ams,nflwdth: Set the noise and watchdog threshold register on
->> +         startup. This will need to set according to the noise from the
->> +         MCU board, and possibly the local environment. Refer to the
->> +         datasheet for the threshold settings.
->>     Example:
->>     as3935@0 {
->>         compatible = "ams,as3935";
->>         reg = <0>;
->> +       spi-max-frequency = <400000>;
->
-> Matt, this should be in a different patch.  Worthwhile addition
-> but not mentioned in the patch description or title at all...
+On Tue, May 16, 2017 at 07:28:55PM +0200, Krzysztof Kozlowski wrote:
+> On Wed, Feb 15, 2017 at 09:38:09AM +0800, Peter Chen wrote:
+> > On Tue, Feb 14, 2017 at 12:21:48PM +0200, Roger Quadros wrote:
+> > > Peter,
+> > > 
+> > > On 11/02/17 03:27, Peter Chen wrote:
+> > > > Hi all,
+> > > > 
+> > > > This is a follow-up for my last power sequence framework patch set [1].
+> > > > According to Rob Herring and Ulf Hansson's comments[2]. The kinds of
+> > > > power sequence instances will be added at postcore_initcall, the match
+> > > > criteria is compatible string first, if the compatible string is not
+> > > > matched between dts and library, it will try to use generic power sequence.
+> > > > 	 
+> > > > The host driver just needs to call of_pwrseq_on/of_pwrseq_off
+> > > > if only one power sequence instance is needed, for more power sequences
+> > > > are used, using of_pwrseq_on_list/of_pwrseq_off_list instead (eg, USB hub driver).
+> > > > 
+> > > > In future, if there are special power sequence requirements, the special
+> > > > power sequence library can be created.
+> > > > 
+> > > > This patch set is tested on i.mx6 sabresx evk using a dts change, I use
+> > > > two hot-plug devices to simulate this use case, the related binding
+> > > > change is updated at patch [1/6], The udoo board changes were tested
+> > > > using my last power sequence patch set.[3]
+> > > > 
+> > > > Except for hard-wired MMC and USB devices, I find the USB ULPI PHY also
+> > > > need to power on itself before it can be found by ULPI bus.
+> > > 
+> > > Can patches 3-7 can be sent independently of the power related patches?
+> > > 
+> > 
+> > Yes, I had planned to submit patches 3-7 for v4.11-rc1 today first, but it
+> > seems you still have comments for patch 6, let's wait a conclusion first.
+> 
+> Hi Peter and others,
+> 
+> What is the status of this patchset? I looked recently and it seemd
+> not-merged. Are there any issues not dealt with?
+> 
+> Just to reminder, this patchset solves not only Peter's problem but few others
+> as well, e.g. Odroid U3 USB hub/lan power sequence.
+> 
 
-Noted.
+The patches 3-7 has already at v4.12-rc1, and I will send power sequence
+patch set again.
 
->>
->>         spi-cpha;
->>         interrupt-parent = <&gpio1>;
->>         interrupts = <16 1>;
->>         ams,tuning-capacitor-pf = <80>;
->> +       ams,nflwdth = <0x44>;
->>   };
->> diff --git a/drivers/iio/proximity/as3935.c
->> b/drivers/iio/proximity/as3935.c
->> index aa4df0dcc8c9..ec2f40e0791c 100644
->> --- a/drivers/iio/proximity/as3935.c
->> +++ b/drivers/iio/proximity/as3935.c
->> @@ -39,8 +39,12 @@
->>   #define AS3935_AFE_GAIN_MAX   0x1F
->>   #define AS3935_AFE_PWR_BIT    BIT(0)
->>   +#define AS3935_NFLWDTH               0x01
->> +#define AS3935_NFLWDTH_MASK    0x7f
->> +
->>   #define AS3935_INT            0x03
->>   #define AS3935_INT_MASK               0x0f
->> +#define AS3935_DISTURB_INT     BIT(2)
->>   #define AS3935_EVENT_INT      BIT(3)
->>   #define AS3935_NOISE_INT      BIT(0)
->>   @@ -48,6 +52,7 @@
->>   #define AS3935_DATA_MASK      0x3F
->>     #define AS3935_TUNE_CAP             0x08
->> +#define AS3935_DEFAULTS                0x3C
->>   #define AS3935_CALIBRATE      0x3D
->>     #define AS3935_READ_DATA    BIT(14)
->> @@ -62,7 +67,9 @@ struct as3935_state {
->>         struct mutex lock;
->>         struct delayed_work work;
->>   +     unsigned long noise_tripped;
->>         u32 tune_cap;
->> +       u32 nflwdth_reg;
->>         u8 buffer[16]; /* 8-bit data + 56-bit padding + 64-bit timestamp
->> */
->>         u8 buf[2] ____cacheline_aligned;
->>   };
->> @@ -145,12 +152,29 @@ static ssize_t
->> as3935_sensor_sensitivity_store(struct device *dev,
->>         return len;
->>   }
->>   +static ssize_t as3935_noise_level_tripped_show(struct device *dev,
->> +                                       struct device_attribute *attr,
->> +                                       char *buf)
->> +{
->> +       struct as3935_state *st = iio_priv(dev_to_iio_dev(dev));
->> +       int ret;
->> +
->> +       mutex_lock(&st->lock);
->> +       ret = sprintf(buf, "%d\n", !time_after(jiffies, st->noise_tripped
->> + HZ));
->
-> Documentation of this attribute?
+-- 
 
-Ok will add.
-
->>
->> +       mutex_unlock(&st->lock);
->> +
->> +       return ret;
->> +}
->> +
->>   static IIO_DEVICE_ATTR(sensor_sensitivity, S_IRUGO | S_IWUSR,
->>         as3935_sensor_sensitivity_show, as3935_sensor_sensitivity_store,
->> 0);
->>   +static IIO_DEVICE_ATTR(noise_level_tripped, S_IRUGO,
->> +       as3935_noise_level_tripped_show, NULL, 0);
->>     static struct attribute *as3935_attributes[] = {
->>         &iio_dev_attr_sensor_sensitivity.dev_attr.attr,
->> +       &iio_dev_attr_noise_level_tripped.dev_attr.attr,
->>         NULL,
->>   };
->>   @@ -246,7 +270,11 @@ static void as3935_event_work(struct work_struct
->> *work)
->>         case AS3935_EVENT_INT:
->>                 iio_trigger_poll_chained(st->trig);
->>                 break;
->> +       case AS3935_DISTURB_INT:
->>         case AS3935_NOISE_INT:
->> +               mutex_lock(&st->lock);
->> +               st->noise_tripped = jiffies;
->> +               mutex_unlock(&st->lock);
->>                 dev_warn(&st->spi->dev, "noise level is too high\n");
->>                 break;
->>         }
->> @@ -269,15 +297,14 @@ static irqreturn_t as3935_interrupt_handler(int irq,
->> void *private)
->>     static void calibrate_as3935(struct as3935_state *st)
->>   {
->> -       /* mask disturber interrupt bit */
->> -       as3935_write(st, AS3935_INT, BIT(5));
->> -
->> +       as3935_write(st, AS3935_DEFAULTS, 0x96);
->>         as3935_write(st, AS3935_CALIBRATE, 0x96);
->>         as3935_write(st, AS3935_TUNE_CAP,
->>                 BIT(5) | (st->tune_cap / TUNE_CAP_DIV));
->>         mdelay(2);
->>         as3935_write(st, AS3935_TUNE_CAP, (st->tune_cap / TUNE_CAP_DIV));
->> +       as3935_write(st, AS3935_NFLWDTH, st->nflwdth_reg);
->>   }
->>     #ifdef CONFIG_PM_SLEEP
->> @@ -370,6 +397,15 @@ static int as3935_probe(struct spi_device *spi)
->>                 return -EINVAL;
->>         }
->>   +     ret = of_property_read_u32(np,
->> +                       "ams,nflwdth", &st->nflwdth_reg);
->> +       if (!ret && st->nflwdth_reg > AS3935_NFLWDTH_MASK) {
->> +               dev_err(&spi->dev,
->> +                       "invalid nflwdth setting of %d\n",
->> +                       st->nflwdth_reg);
->> +               return -EINVAL;
->> +       }
->> +
->>         indio_dev->dev.parent = &spi->dev;
->>         indio_dev->name = spi_get_device_id(spi)->name;
->>         indio_dev->channels = as3935_channels;
->> @@ -384,6 +420,7 @@ static int as3935_probe(struct spi_device *spi)
->>                 return -ENOMEM;
->>         st->trig = trig;
->> +       st->noise_tripped = jiffies - HZ;
->>         trig->dev.parent = indio_dev->dev.parent;
->>         iio_trigger_set_drvdata(trig, indio_dev);
->>         trig->ops = &iio_interrupt_trigger_ops;
->>
->
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best Regards,
+Peter Chen
