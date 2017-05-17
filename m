@@ -1,52 +1,68 @@
-From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Subject: Re: [PATCH v5 16/17] tty: serdev-ttyport: return actual baudrate from
- ttyport_set_baudrate
-Date: Wed, 17 May 2017 13:58:05 +0200
-Message-ID: <d5533816-5d87-3772-19c0-5e57e519a3f1@i2se.com>
-References: <1494406408-31760-1-git-send-email-stefan.wahren@i2se.com>
- <1494406408-31760-17-git-send-email-stefan.wahren@i2se.com>
+From: Pavel Machek <pavel@denx.de>
+Subject: Re: [PATCH] powerpc/sequoia: fix NAND partitions not to overlap
+Date: Wed, 17 May 2017 14:06:13 +0200
+Message-ID: <20170517120613.GA583@amd>
+References: <20170402100535.GA18340@amd>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-15
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1494406408-31760-17-git-send-email-stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jiri Slaby <jslaby-IBi9RG/b67k@public.gmane.org>, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lino Sanfilippo <LinoSanfilippo-Mmb7MZpHnFY@public.gmane.org>, Jakub Kicinski <kubakici-5tc4TXWwyLM@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="qMm9M+Fa2AknHoGS"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170402100535.GA18340@amd>
+Sender: linux-kernel-owner@vger.kernel.org
+To: sr@denx.de, jwboyer@linux.vnet.ibm.com, robh+dt@kernel.org, mark.rutland@arm.com, benh@kernel.crashing.org, paulus@samba.org, mpe@ellerman.id.au, devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Cc: trivial@kernel.org, Andrew Morton <akpm@osdl.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Greg,
 
-Am 10.05.2017 um 10:53 schrieb Stefan Wahren:
-> Instead of returning the requested baudrate, we better return the
-> actual one because it isn't always the same.
->
-> Signed-off-by: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> ---
->  drivers/tty/serdev/serdev-ttyport.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/tty/serdev/serdev-ttyport.c b/drivers/tty/serdev/serdev-ttyport.c
-> index 487c88f..2cfdf34 100644
-> --- a/drivers/tty/serdev/serdev-ttyport.c
-> +++ b/drivers/tty/serdev/serdev-ttyport.c
-> @@ -151,7 +151,7 @@ static unsigned int ttyport_set_baudrate(struct serdev_controller *ctrl, unsigne
->  
->  	/* tty_set_termios() return not checked as it is always 0 */
->  	tty_set_termios(tty, &ktermios);
-> -	return speed;
-> +	return ktermios.c_ospeed;
->  }
->  
->  static void ttyport_set_flow_control(struct serdev_controller *ctrl, bool enable)
+--qMm9M+Fa2AknHoGS
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-there is no dependency to this series. I would be happy if this could be
-applied, so i don't have to carry it for the next version.
+On Sun 2017-04-02 12:05:36, Pavel Machek wrote:
+> Fix overlapping NAND partitions.
+>=20
+> Signed-off-by: Pavel Machek <pavel@ucw.cz>
 
-Thanks
-Stefan
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Ping? Two partitions at same place are bad news...
+									Pavel
+
+> diff --git a/arch/powerpc/boot/dts/sequoia.dts b/arch/powerpc/boot/dts/se=
+quoia.dts
+> index b1d3292..e41b88a 100644
+> --- a/arch/powerpc/boot/dts/sequoia.dts
+> +++ b/arch/powerpc/boot/dts/sequoia.dts
+> @@ -229,7 +229,7 @@
+>  						};
+>  						partition@84000 {
+>  							label =3D "user";
+> -							reg =3D <0x00000000 0x01f7c000>;
+> +							reg =3D <0x00084000 0x01f7c000>;
+>  						};
+>  					};
+>  				};
+>=20
+>=20
+>=20
+
+
+
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--qMm9M+Fa2AknHoGS
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlkcPLUACgkQMOfwapXb+vLv4gCgtb3eCfVmWElFyIPyhlyCSvlz
+/s4AoJ5Hm55rRg5oZVQyfgmrv/FsssHp
+=BR+o
+-----END PGP SIGNATURE-----
+
+--qMm9M+Fa2AknHoGS--
