@@ -1,124 +1,46 @@
-From: icenowy@aosc.io
-Subject: Re: [PATCH v7 11/13] ARM: sun8i: v3s: add device nodes for DE2
- display pipeline
-Date: Wed, 17 May 2017 17:32:15 +0800
-Message-ID: <8c191ed093f97c60a1c758cc219ea63b@aosc.io>
-References: <20170514163045.40366-1-icenowy@aosc.io>
- <20170514163045.40366-12-icenowy@aosc.io>
- <20170515092400.nzxmocrdqgt4u476@flea.home>
- <45e3b368b80fb74f33b18afcc3f783c5@aosc.io>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [PATCH v15 03/13] mux: minimal mux subsystem
+Date: Wed, 17 May 2017 11:38:39 +0200
+Message-ID: <1495013919.3030.43.camel@pengutronix.de>
+References: <1494791476-14599-1-git-send-email-peda@lysator.liu.se>
+         <1494791476-14599-4-git-send-email-peda@lysator.liu.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <45e3b368b80fb74f33b18afcc3f783c5@aosc.io>
-Sender: linux-clk-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-sunxi@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1494791476-14599-4-git-send-email-peda@lysator.liu.se>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Peter Rosin <peda@lysator.liu.se>
+Cc: linux-kernel@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Peter Rosin <peda@axentia.se>, Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Jonathan Corbet <corbet@lwn.net>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, linux-doc@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, Colin Ian King <colin.king@canonical.com>, Paul Gortmaker <paul.gortmaker@windriver.com>, kernel@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-在 2017-05-17 17:27，icenowy@aosc.io 写道：
-> 在 2017-05-15 17:24，Maxime Ripard 写道：
->> On Mon, May 15, 2017 at 12:30:43AM +0800, Icenowy Zheng wrote:
->>> +		de2_clocks: clock@1000000 {
->> 
->> display_clocks would be better there, we don't have to dissociate de1
->> with de2
+On Sun, 2017-05-14 at 21:51 +0200, Peter Rosin wrote:
+> From: Peter Rosin <peda@axentia.se>
 > 
-> How about de_clocks ? (See A80 DTSI)
+> Add a new minimalistic subsystem that handles multiplexer controllers.
+> When multiplexers are used in various places in the kernel, and the
+> same multiplexer controller can be used for several independent things,
+> there should be one place to implement support for said multiplexer
+> controller.
+> 
+> A single multiplexer controller can also be used to control several
+> parallel multiplexers, that are in turn used by different subsystems
+> in the kernel, leading to a need to coordinate multiplexer accesses.
+> The multiplexer subsystem handles this coordination.
+> 
+> Thanks go out to Lars-Peter Clausen, Jonathan Cameron, Rob Herring,
+> Wolfram Sang, Paul Gortmaker, Dan Carpenter, Colin Ian King, Greg
+> Kroah-Hartman and last but certainly not least to Philipp Zabel for
+> helpful comments, reviews, patches and general encouragement!
+> 
+> Reviewed-by: Jonathan Cameron <jic23@kernel.org>
+> Signed-off-by: Peter Rosin <peda@axentia.se>
 
-Oh I regretted... de here indicates "de1".
+Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
+Tested-by: Philipp Zabel <p.zabel@pengutronix.de>
+(using video-mux [1] on i.MX6)
 
-display_clocks is better.
+[1] https://patchwork.kernel.org/patch/9712131/
 
-> 
->> 
->>> +			compatible = "allwinner,sun8i-v3s-de2-clk";
->>> +			reg = <0x01000000 0x100000>;
->>> +			clocks = <&ccu CLK_DE>,
->>> +				 <&ccu CLK_BUS_DE>;
->>> +			clock-names = "mod",
->>> +				      "bus";
->>> +			resets = <&ccu RST_BUS_DE>;
->>> +			#clock-cells = <1>;
->>> +			#reset-cells = <1>;
->>> +		};
->>> +
->>> +		de2_mixer0: mixer@1100000 {
->> 
->> and mixer0 here is enough too.
->> 
->> Is there several of them? Why not just use mixer if there's only one?
-> 
-> Nope, here it's tagged 0 only for consistency with other SoCs.
-> 
->> 
->>> +			compatible = "allwinner,sun8i-v3s-de2-mixer";
->>> +			reg = <0x01100000 0x100000>;
->>> +			clocks = <&de2_clocks CLK_MIXER0>,
->>> +				 <&de2_clocks CLK_BUS_MIXER0>;
->>> +			clock-names = "mod",
->>> +				      "bus";
->>> +			resets = <&de2_clocks RST_MIXER0>;
->>> +			assigned-clocks = <&de2_clocks CLK_MIXER0>;
->>> +			assigned-clock-rates = <150000000>;
->>> +
->>> +			ports {
->>> +				#address-cells = <1>;
->>> +				#size-cells = <0>;
->>> +
->>> +				mixer0_out: port@1 {
->>> +					#address-cells = <1>;
->>> +					#size-cells = <0>;
->>> +					reg = <1>;
->>> +
->>> +					mixer0_out_tcon0: endpoint@0 {
->>> +						reg = <0>;
->>> +						remote-endpoint = <&tcon0_in_mixer0>;
->>> +					};
->>> +				};
->>> +			};
->>> +		};
->>> +
->>> +		tcon0: lcd-controller@1c0c000 {
->>> +			compatible = "allwinner,sun8i-v3s-tcon";
->>> +			reg = <0x01c0c000 0x1000>;
->>> +			interrupts = <GIC_SPI 86 IRQ_TYPE_LEVEL_HIGH>;
->>> +			clocks = <&ccu CLK_BUS_TCON0>,
->>> +				 <&ccu CLK_TCON0>;
->>> +			clock-names = "ahb",
->>> +				      "tcon-ch0";
->>> +			clock-output-names = "tcon-pixel-clock";
->>> +			resets = <&ccu RST_BUS_TCON0>;
->>> +			reset-names = "lcd";
->>> +			status = "disabled";
->>> +
->>> +			ports {
->>> +				#address-cells = <1>;
->>> +				#size-cells = <0>;
->>> +
->>> +				tcon0_in: port@0 {
->>> +					#address-cells = <1>;
->>> +					#size-cells = <0>;
->>> +					reg = <0>;
->>> +
->>> +					tcon0_in_mixer0: endpoint@0 {
->>> +						reg = <0>;
->>> +						remote-endpoint = <&mixer0_out_tcon0>;
->>> +					};
->>> +				};
->>> +
->>> +				tcon0_out: port@1 {
->>> +					#address-cells = <1>;
->>> +					#size-cells = <0>;
->>> +					reg = <1>;
->>> +				};
->>> +			};
->>> +		};
->>> +
->>> +
->> 
->> You have an extra new line here.
->> 
->> Maxime
+regards
+Philipp
