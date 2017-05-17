@@ -1,74 +1,73 @@
-From: shameer <shameerali.kolothum.thodi@huawei.com>
-Subject: [PATCH] iommu/arm-smmu-v3: Enable ACPI based HiSilicon CMD_PREFETCH quirk(erratum 161010701)
-Date: Wed, 17 May 2017 10:12:05 +0100
-Message-ID: <20170517091205.7752-1-shameerali.kolothum.thodi@huawei.com>
+From: Frank Wang <frank.wang@rock-chips.com>
+Subject: Re: [PATCH 1/3] arm: dts: rk322x: fix i2s1 pinctrl error
+Date: Wed, 17 May 2017 17:21:01 +0800
+Message-ID: <1e922ff2-d1ce-5bff-e172-3b2ddf713d9e@rock-chips.com>
+References: <1494992451-32542-1-git-send-email-frank.wang@rock-chips.com>
+ <1494992451-32542-2-git-send-email-frank.wang@rock-chips.com>
+ <2781249.GNsgFIKA50@diego>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-acpi-owner@vger.kernel.org>
-Sender: linux-acpi-owner@vger.kernel.org
-To: robin.murphy@arm.com, will.deacon@arm.com, mark.rutland@arm.com, lorenzo.pieralisi@arm.com
-Cc: john.garry@huawei.com, gabriele.paoloni@huawei.com, guohanjun@huawei.com, xuwei5@hisilicon.com, linuxarm@huawei.com, devel@acpica.org, linux-acpi@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, shameer <shameerali.kolothum.thodi@huawei.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <2781249.GNsgFIKA50@diego>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko@sntech.de>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, charles.chen@rock-chips.com, cody.xie@rock-chips.com, kevan.lan@rock-chips.com, huangtao@rock-chips.com, sugar.zhang@rock-chips.com, wmc@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
-HiSilicon SMMUv3 on Hip06/Hip07 platforms doesn't support CMD_PREFETCH
-command. The dt based support for this quirk is already present in the
-driver(hisilicon,broken-prefetch-cmd). This adds ACPI support for the
-quirk using the IORT smmu model number.
+Hi Heiko,
 
-Signed-off-by: shameer <shameerali.kolothum.thodi@huawei.com>
-Signed-off-by: hanjun <guohanjun@huawei.com>
----
- Documentation/arm64/silicon-errata.txt |  1 +
- drivers/iommu/arm-smmu-v3.c            | 16 ++++++++++++++++
- 2 files changed, 17 insertions(+)
+On 2017/5/17 17:01, Heiko Stübner wrote:
+> Hi Frank,
+>
+> Am Mittwoch, 17. Mai 2017, 11:40:49 CEST schrieb Frank Wang:
+>> From: Sugar Zhang <sugar.zhang@rock-chips.com>
+>>
+>> Refer to Chapter 5.3.2 of rk3229 TRM, we can see that GPIO1A[2,4,5]
+>> using RK_FUNC_2 not RK_FUNC_1. This patch fixes it.
+>>
+>> Signed-off-by: Frank Wang <frank.wang@rock-chips.com>
+> if the patch has another author, you should preserve his/her Signed-off-by
+> line, so for example this patch would look like:
+>
+> Signed-off-by: Sugar Zhang <sugar.zhang@rock-chips.com>
+> Signed-off-by: Frank Wang <frank.wang@rock-chips.com>
+>
+> Same for all other patches with differing authors in your 2 series from
+> today. As this touches the developer-certificate-of-origin, this is also
+> something I cannot really correct myself.
 
-diff --git a/Documentation/arm64/silicon-errata.txt b/Documentation/arm64/silicon-errata.txt
-index 10f2ddd..d5d23d0 100644
---- a/Documentation/arm64/silicon-errata.txt
-+++ b/Documentation/arm64/silicon-errata.txt
-@@ -66,6 +66,7 @@ stable kernels.
- | Freescale/NXP  | LS2080A/LS1043A | A-008585        | FSL_ERRATUM_A008585         |
- |                |                 |                 |                             |
- | Hisilicon      | Hip0{5,6,7}     | #161010101      | HISILICON_ERRATUM_161010101 |
-+| Hisilicon      | Hip0{6,7}       | #161010701      | N/A                         |
- |                |                 |                 |                             |
- | Qualcomm Tech. | Falkor v1       | E1003           | QCOM_FALKOR_ERRATUM_1003    |
- | Qualcomm Tech. | Falkor v1       | E1009           | QCOM_FALKOR_ERRATUM_1009    |
-diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
-index 380969a..abe4b88 100644
---- a/drivers/iommu/arm-smmu-v3.c
-+++ b/drivers/iommu/arm-smmu-v3.c
-@@ -2605,6 +2605,20 @@ static int arm_smmu_device_hw_probe(struct arm_smmu_device *smmu)
- }
- 
- #ifdef CONFIG_ACPI
-+static void parse_driver_acpi_options(struct acpi_iort_smmu_v3 *iort_smmu,
-+				      struct arm_smmu_device *smmu)
-+{
-+	switch (iort_smmu->model) {
-+	case ACPI_IORT_SMMU_HISILICON_HI161X:
-+		smmu->options |= ARM_SMMU_OPT_SKIP_PREFETCH;
-+		break;
-+	default:
-+		break;
-+	}
-+
-+	dev_notice(smmu->dev, "options set 0x%x\n", smmu->options);
-+}
-+
- static int arm_smmu_device_acpi_probe(struct platform_device *pdev,
- 				      struct arm_smmu_device *smmu)
- {
-@@ -2617,6 +2631,8 @@ static int arm_smmu_device_acpi_probe(struct platform_device *pdev,
- 	/* Retrieve SMMUv3 specific data */
- 	iort_smmu = (struct acpi_iort_smmu_v3 *)node->node_data;
- 
-+	parse_driver_acpi_options(iort_smmu, smmu);
-+
- 	if (iort_smmu->flags & ACPI_IORT_SMMU_V3_COHACC_OVERRIDE)
- 		smmu->features |= ARM_SMMU_FEAT_COHERENCY;
- 
--- 
-1.9.1
+Noted and thanks for reminding, I will resend these 2 series.
 
+BR.
+Frank
 
+>
+> Heiko
+>
+>
+>> ---
+>>   arch/arm/boot/dts/rk322x.dtsi | 6 +++---
+>>   1 file changed, 3 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/arch/arm/boot/dts/rk322x.dtsi b/arch/arm/boot/dts/rk322x.dtsi
+>> index 48a0c1c..cc6a27d 100644
+>> --- a/arch/arm/boot/dts/rk322x.dtsi
+>> +++ b/arch/arm/boot/dts/rk322x.dtsi
+>> @@ -621,9 +621,9 @@
+>>   						<0 12 RK_FUNC_1 &pcfg_pull_none>,
+>>   						<0 13 RK_FUNC_1 &pcfg_pull_none>,
+>>   						<0 14 RK_FUNC_1 &pcfg_pull_none>,
+>> -						<1 2 RK_FUNC_1 &pcfg_pull_none>,
+>> -						<1 4 RK_FUNC_1 &pcfg_pull_none>,
+>> -						<1 5 RK_FUNC_1 &pcfg_pull_none>;
+>> +						<1 2 RK_FUNC_2 &pcfg_pull_none>,
+>> +						<1 4 RK_FUNC_2 &pcfg_pull_none>,
+>> +						<1 5 RK_FUNC_2 &pcfg_pull_none>;
+>>   			};
+>>   		};
+>
+>
+>
+>
