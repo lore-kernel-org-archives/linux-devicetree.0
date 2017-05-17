@@ -1,40 +1,72 @@
-From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] scripts: check.c fix compile error
-Date: Wed, 17 May 2017 11:39:52 -0500
-Message-ID: <CAL_Jsq+z1faqAQEEEyVV9mEgu1T_MLak3zCyOPe-DQ0vKXYuHQ@mail.gmail.com>
-References: <20170515191010.4878-1-shuahkh@osg.samsung.com>
- <CAL_Jsq+K8wN_OjoePoZCd-xXcAKfO22sBLj6SjoEqxZ+aDwyOg@mail.gmail.com> <8976ed27-296b-e0ba-8164-7271204eaee7@osg.samsung.com>
+From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Subject: [RFC PATCH 00/11] Support for H3 Composite Output support
+Date: Thu, 18 May 2017 00:43:43 +0800
+Message-ID: <20170517164354.16399-1-icenowy@aosc.io>
+Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <8976ed27-296b-e0ba-8164-7271204eaee7-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shuah Khan <shuahkh-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
-Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-sunxi+bncBDS6XAN6ZADRBXP36HEAKGQETCZQVBY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 16, 2017 at 10:39 AM, Shuah Khan <shuahkh-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org> wrote:
-> On 05/16/2017 06:52 AM, Rob Herring wrote:
->> On Mon, May 15, 2017 at 2:10 PM, Shuah Khan <shuahkh-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org> wrote:
->>> Fix the following compile error:
->>
->> On what host? 32-bit I guess.
->
-> Saw this on Odroid-xu4.
->
->>
->> I'll take this, but can you also send this to upstream dtc and
->> devicetree-compiler list. Normally, dtc is just an import.
->
-> Yes. I found this on upstream dtc build last week and git the patch
-> ready to send. Then, I noticed that it showed up in 4.12-rc1 with the
-> dtc import. I have the patch ready to go for upstream dtc. Will send
-> it shortly.
+This patchset depends on the DE2 patchset, version 8 of that patchset
+is available at [1].
 
-I've cherry-picked the version from dtc and applied.
+Allwinner H3 SoC features a TV Encoder like the one in Allwinner A13,
+which can only output TV Composite signal.
 
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+The display pipeline of H3 is also special -- it has two mixers and
+two TCONs, of which the connection can be swapped. The TCONs do not
+have channel 0 (as they are all connected to internal bridges, TVE
+and HDMI TX).
+
+Add support for the display pipeline and the TVE in H3, in order to
+make it possible to display something with mainline kernel with H3.
+
+The image quality of TVE is bad, so HDMI is a better output -- this
+patchset also prepared the mixers and TCONs for HDMI output, and
+the HDMI controller driver is already done by Jernej Skrabec.
+
+Currently the jack detection feature of the TVE is still not so
+clear -- so it's not implemented in this version. Thus the TV
+output shouldn't be defaultly enabled now.
+
+[1] http://lists.infradead.org/pipermail/linux-arm-kernel/2017-May/506806.html
+
+Icenowy Zheng (11):
+  dt-bindings: update the binding for Allwinner H3 TVE support
+  drm: sun4i: add support for H3 mixers
+  drm: sun4i: ignore swapped mixer<->tcon connection for DE2
+  drm: sun4i: add support for H3's TCON0/1
+  drm: sun4i: add compatible for H3 display engine
+  drm: sun4i: add color space correction support for DE2 mixer
+  drm: sun4i: add support for the TV encoder in H3 SoC
+  clk: sunxi-ng: allow CLK_DE to set CLK_PLL_DE for H3
+  clk: sunxi-ng: export CLK_PLL_DE for H3
+  ARM: sun8i: h3: add display engine pipeline for TVE
+  [DO NOT MERGE] ARM: sun8i: h3: enable TV output on Orange Pi PC
+
+ .../bindings/display/sunxi/sun4i-drm.txt           |  47 ++++-
+ arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts         |  12 ++
+ arch/arm/boot/dts/sun8i-h3.dtsi                    | 189 +++++++++++++++++++++
+ drivers/clk/sunxi-ng/ccu-sun8i-h3.c                |   2 +-
+ drivers/clk/sunxi-ng/ccu-sun8i-h3.h                |   3 +-
+ drivers/gpu/drm/sun4i/sun4i_drv.c                  |  28 +++
+ drivers/gpu/drm/sun4i/sun4i_tcon.c                 | 117 +++++++++----
+ drivers/gpu/drm/sun4i/sun4i_tcon.h                 |   5 +
+ drivers/gpu/drm/sun4i/sun4i_tv.c                   |  65 ++++++-
+ drivers/gpu/drm/sun4i/sun8i_mixer.c                |  53 ++++++
+ drivers/gpu/drm/sun4i/sun8i_mixer.h                |   6 +-
+ include/dt-bindings/clock/sun8i-h3-ccu.h           |   2 +
+ 12 files changed, 488 insertions(+), 41 deletions(-)
+
+-- 
+2.12.2
