@@ -1,41 +1,31 @@
-From: Matt Ranostay <matt.ranostay-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH] iio: proximity: as3935: add missing required spi-max-frequency
-Date: Tue, 16 May 2017 19:03:10 -0700
-Message-ID: <20170517020310.21355-1-matt.ranostay@konsulko.com>
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Matt Ranostay <matt.ranostay-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Frank Wang <frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [PATCH 0/3] add and fix some device node for rk322x SoC
+Date: Wed, 17 May 2017 11:40:48 +0800
+Message-ID: <1494992451-32542-1-git-send-email-frank.wang@rock-chips.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, charles.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org, cody.xie-TNX95d0MmH7DzftRWevZcw@public.gmane.org, kevan.lan-TNX95d0MmH7DzftRWevZcw@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, sugar.zhang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, wmc-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Frank Wang <frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-spi-max-frequency is required to be set for the as3935 part, and
-document such usage.
+These series of patches fix some device node errors and add watchdog
+device node support for rk322x SoC.
 
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Signed-off-by: Matt Ranostay <matt.ranostay-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
----
- Documentation/devicetree/bindings/iio/proximity/as3935.txt | 2 ++
- 1 file changed, 2 insertions(+)
+Frank Wang (2):
+  arm: dts: rk322x: correct uart2 pinctrl and add another sets
+  arm: dts: rk322x: add watchdog device node.
 
-diff --git a/Documentation/devicetree/bindings/iio/proximity/as3935.txt b/Documentation/devicetree/bindings/iio/proximity/as3935.txt
-index ae23dd8da736..96dad93fccca 100644
---- a/Documentation/devicetree/bindings/iio/proximity/as3935.txt
-+++ b/Documentation/devicetree/bindings/iio/proximity/as3935.txt
-@@ -3,6 +3,7 @@ Austrian Microsystems AS3935 Franklin lightning sensor device driver
- Required properties:
- 	- compatible: must be "ams,as3935"
- 	- reg: SPI chip select number for the device
-+	- spi-max-frequency: specifies maximum SPI clock frequency
- 	- spi-cpha: SPI Mode 1. Refer to spi/spi-bus.txt for generic SPI
- 	slave node bindings.
- 	- interrupt-parent : should be the phandle for the interrupt controller
-@@ -21,6 +22,7 @@ Example:
- as3935@0 {
- 	compatible = "ams,as3935";
- 	reg = <0>;
-+	spi-max-frequency = <400000>;
- 	spi-cpha;
- 	interrupt-parent = <&gpio1>;
- 	interrupts = <16 1>;
+Sugar Zhang (1):
+  arm: dts: rk322x: fix i2s1 pinctrl error
+
+ arch/arm/boot/dts/rk322x.dtsi | 25 ++++++++++++++++++++-----
+ 1 file changed, 20 insertions(+), 5 deletions(-)
+
 -- 
-2.11.0
+2.0.0
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
