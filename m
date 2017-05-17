@@ -1,86 +1,40 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Applied "of-graph: export symbol of_phandle_iterator_init/next" to the asoc tree
-Date: Wed, 17 May 2017 10:53:26 +0100
-Message-ID: <E1dAve2-000758-DN@debutante>
-References: <87poh2kufc.wl%kuninori.morimoto.gx@renesas.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <87poh2kufc.wl%kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linux-DT <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-ALSA <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, Simon <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org
+From: Frank Wang <frank.wang@rock-chips.com>
+Subject: [PATCH v2 0/4] amend some properties related clk and cpu for rk322x
+Date: Wed, 17 May 2017 18:16:13 +0800
+Message-ID: <1495016177-2413-1-git-send-email-frank.wang@rock-chips.com>
+Return-path: <linux-pm-owner@vger.kernel.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: heiko@sntech.de, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, mturquette@baylibre.com, sboyd@codeaurora.org, rjw@rjwysocki.net, viresh.kumar@linaro.org, rui.zhang@intel.com, edubezval@gmail.com
+Cc: linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-clk@vger.kernel.org, charles.chen@rock-chips.com, cody.xie@rock-chips.com, kevan.lan@rock-chips.com, huangtao@rock-chips.com, rocky.hao@rock-chips.com, finley.xiao@rock-chips.com, zhangqing@rock-chips.com, wmc@rock-chips.com, Frank Wang <frank.wang@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-The patch
+These series of patches amend some assigned-clocks and add cpu opp table
+for rk322x SoCs.
 
-   of-graph: export symbol of_phandle_iterator_init/next
+the following patches on patchwork are required for this change.
+https://patchwork.kernel.org/patch/9627639/
+https://patchwork.kernel.org/patch/9703945/
+https://patchwork.kernel.org/patch/9703939/
+https://patchwork.kernel.org/patch/9707517/
 
-has been applied to the asoc tree at
+Changes from v1:
+ - Updated the 'Signed-off-by' tag with original authors' email id.
+ - Updated the 'Acked-by' tag from Viresh Kumar <viresh.kumar@linaro.org>.
 
-   git://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
+Elaine Zhang (1):
+  arm: dts: rk322x: add some assigned-clocks
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
+Finley Xiao (2):
+  arm: dts: rk322x: add operating-points-v2 property for cpu
+  arm: dts: rk3229: add a new cpu opp table
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
+Rocky Hao (1):
+  arm: dts: rk322x: update tsadc's frequence setting
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
+ arch/arm/boot/dts/rk3229-cpu-opp.dtsi | 85 +++++++++++++++++++++++++++++++++++
+ arch/arm/boot/dts/rk322x.dtsi         | 52 ++++++++++++++++++---
+ 2 files changed, 131 insertions(+), 6 deletions(-)
+ create mode 100644 arch/arm/boot/dts/rk3229-cpu-opp.dtsi
 
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
->From 00bab23f72100a5fd8a3030f81d0af07a859ed17 Mon Sep 17 00:00:00 2001
-From: Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Date: Thu, 20 Apr 2017 01:31:16 +0000
-Subject: [PATCH] of-graph: export symbol of_phandle_iterator_init/next
-
-of_for_each_phandle() uses of_phandle_iterator_init/next
-but it isn't exported. So kernel module complile will say
-
-ERROR: "of_phandle_iterator_init" [xxx.ko] undefined!
-ERROR: "of_phandle_iterator_next" [xxx.ko] undefined!
-
-This patch solved this issue
-
-Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Signed-off-by: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
----
- drivers/of/base.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/drivers/of/base.c b/drivers/of/base.c
-index 28d5f53bc631..5db6aa1688e9 100644
---- a/drivers/of/base.c
-+++ b/drivers/of/base.c
-@@ -1601,6 +1601,7 @@ int of_phandle_iterator_init(struct of_phandle_iterator *it,
- 
- 	return 0;
- }
-+EXPORT_SYMBOL_GPL(of_phandle_iterator_init);
- 
- int of_phandle_iterator_next(struct of_phandle_iterator *it)
- {
-@@ -1670,6 +1671,7 @@ int of_phandle_iterator_next(struct of_phandle_iterator *it)
- 
- 	return -EINVAL;
- }
-+EXPORT_SYMBOL_GPL(of_phandle_iterator_next);
- 
- int of_phandle_iterator_args(struct of_phandle_iterator *it,
- 			     uint32_t *args,
 -- 
-2.11.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.0.0
