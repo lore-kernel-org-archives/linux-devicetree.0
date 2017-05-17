@@ -1,38 +1,71 @@
-From: Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [PATCH v2 1/3] arm: dts: rk322x: fix i2s1 pinctrl error
-Date: Wed, 17 May 2017 20:10:48 +0200
-Message-ID: <1634694.eXjXQc2COO@phil>
-References: <1495014746-27621-1-git-send-email-frank.wang@rock-chips.com>
- <1495014746-27621-2-git-send-email-frank.wang@rock-chips.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1495014746-27621-2-git-send-email-frank.wang@rock-chips.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Frank Wang <frank.wang@rock-chips.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, huangtao@rock-chips.com, charles.chen@rock-chips.com, wmc@rock-chips.com, kevan.lan@rock-chips.com, linux@armlinux.org.uk, linux-kernel@vger.kernel.org, sugar.zhang@rock-chips.com, linux-rockchip@lists.infradead.org, wim@iguana.be, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, cody.xie@rock-chips.com, ellisys@163.com, linux@roeck-us.net
+From: Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>
+Subject: [PATCH v10 1/3] doc: dt: add altera-ps-spi binding document
+Date: Wed, 17 May 2017 20:23:40 +0200
+Message-ID: <1495045422-19183-1-git-send-email-agust@denx.de>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, joshua.clayton-DelKAr4a3LpBDgjK7y7TUQ@public.gmane.org, bst-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+Cc: linux-fpga-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, atull-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Am Mittwoch, 17. Mai 2017, 17:52:24 CEST schrieb Frank Wang:
-> From: Sugar Zhang <sugar.zhang@rock-chips.com>
-> 
-> Refer to Chapter 5.3.2 of rk3229 TRM, we can see that GPIO1A[2,4,5]
-> using RK_FUNC_2 not RK_FUNC_1. This patch fixes it.
-> 
-> Signed-off-by: Sugar Zhang <sugar.zhang@rock-chips.com>
-> Signed-off-by: Frank Wang <frank.wang@rock-chips.com>
+From: Joshua Clayton <stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-applied for 4.13, after fixing the subject up a bit (ARM: dts: rockchip: ...)
+Describe an altera-ps-spi devicetree entry, required features
 
+Signed-off-by: Joshua Clayton <stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Signed-off-by: Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>
+---
+Changes in v10:
+ - fix compatible string in example
+ - add Arria 10 compatible
+ - s/spi/SPI/
+ - reword to remove entries mentioning cyclone, since it
+   can be used with other FPGAs now (Arria 10, Stratix V)
 
-Thanks
-Heiko
+ .../bindings/fpga/altera-passive-serial.txt        | 29 ++++++++++++++++++++++
+ 1 file changed, 29 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/fpga/altera-passive-serial.txt
+
+diff --git a/Documentation/devicetree/bindings/fpga/altera-passive-serial.txt b/Documentation/devicetree/bindings/fpga/altera-passive-serial.txt
+new file mode 100644
+index 0000000..3e240b2
+--- /dev/null
++++ b/Documentation/devicetree/bindings/fpga/altera-passive-serial.txt
+@@ -0,0 +1,29 @@
++Altera Passive Serial SPI FPGA Manager
++
++Altera FPGAs support a method of loading the bitstream over what is
++referred to as "passive serial".
++The passive serial link is not technically SPI, and might require extra
++circuits in order to play nicely with other SPI slaves on the same bus.
++
++See https://www.altera.com/literature/hb/cyc/cyc_c51013.pdf
++
++Required properties:
++- compatible: Must be one of the following:
++	"altr,fpga-passive-serial",
++	"altr,fpga-arria10-passive-serial"
++- reg: SPI chip select of the FPGA
++- nconfig-gpios: config pin (referred to as nCONFIG in the manual)
++- nstat-gpios: status pin (referred to as nSTATUS in the manual)
++
++Optional properties:
++- confd-gpios: confd pin (referred to as CONF_DONE in the manual)
++
++Example:
++	fpga_spi: evi-fpga-spi@0 {
++		compatible = "altr,fpga-passive-serial";
++		spi-max-frequency = <20000000>;
++		reg = <0>;
++		nconfig-gpios = <&gpio4 9 GPIO_ACTIVE_LOW>;
++		nstat-gpios = <&gpio4 11 GPIO_ACTIVE_LOW>;
++		confd-gpios = <&gpio4 12 GPIO_ACTIVE_LOW>;
++	};
+-- 
+2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
