@@ -1,85 +1,108 @@
 From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: [PATCH v3 21/21] ARM: sun5i: a10s-olinuxino: Enable HDMI
-Date: Wed, 17 May 2017 09:40:50 +0200
-Message-ID: <231bed128af2b4d06093d2a5b24aed4e4ab86a6a.1495006350.git-series.maxime.ripard@free-electrons.com>
+Subject: [PATCH v3 10/21] drm/sun4i: tcon: Move the muxing out of the mode set function
+Date: Wed, 17 May 2017 09:40:39 +0200
+Message-ID: <9633e1c870bba38b34323705134c1e7d00f8c747.1495006350.git-series.maxime.ripard@free-electrons.com>
 References: <cover.463df61c38224ecbfb5bf1cf192deeb63718b693.1495006350.git-series.maxime.ripard@free-electrons.com>
-Return-path: <linux-clk-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <cover.463df61c38224ecbfb5bf1cf192deeb63718b693.1495006350.git-series.maxime.ripard@free-electrons.com>
 In-Reply-To: <cover.463df61c38224ecbfb5bf1cf192deeb63718b693.1495006350.git-series.maxime.ripard@free-electrons.com>
 References: <cover.463df61c38224ecbfb5bf1cf192deeb63718b693.1495006350.git-series.maxime.ripard@free-electrons.com>
-Sender: linux-clk-owner@vger.kernel.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>
 Cc: Daniel Vetter <daniel.vetter@intel.com>, David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-The A10s Olinuxino has an HDMI connector. Make sure we can use it.
+The muxing can actually happen on both channels on some SoCs, so it makes
+more sense to just move it out of the sun4i_tcon1_mode_set function and
+create a separate function that needs to be called by the encoders.
 
-Acked-by: Chen-Yu Tsai <wens@csie.org>
+Let's do that and convert the existing drivers.
+
 Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
+Acked-by: Chen-Yu Tsai <wens@csie.org>
 ---
- arch/arm/boot/dts/sun5i-a10s-olinuxino-micro.dts | 29 +++++++++++++++++-
- 1 file changed, 29 insertions(+)
+ drivers/gpu/drm/sun4i/sun4i_rgb.c  |  1 +
+ drivers/gpu/drm/sun4i/sun4i_tcon.c | 22 ++++++++++++++++------
+ drivers/gpu/drm/sun4i/sun4i_tcon.h |  2 ++
+ drivers/gpu/drm/sun4i/sun4i_tv.c   |  1 +
+ 4 files changed, 20 insertions(+), 6 deletions(-)
 
-diff --git a/arch/arm/boot/dts/sun5i-a10s-olinuxino-micro.dts b/arch/arm/boot/dts/sun5i-a10s-olinuxino-micro.dts
-index 894f874a5beb..1d13b6407222 100644
---- a/arch/arm/boot/dts/sun5i-a10s-olinuxino-micro.dts
-+++ b/arch/arm/boot/dts/sun5i-a10s-olinuxino-micro.dts
-@@ -63,6 +63,17 @@
- 		stdout-path = "serial0:115200n8";
- 	};
+diff --git a/drivers/gpu/drm/sun4i/sun4i_rgb.c b/drivers/gpu/drm/sun4i/sun4i_rgb.c
+index c9bbb3b560a5..422b191faa77 100644
+--- a/drivers/gpu/drm/sun4i/sun4i_rgb.c
++++ b/drivers/gpu/drm/sun4i/sun4i_rgb.c
+@@ -175,6 +175,7 @@ static void sun4i_rgb_encoder_mode_set(struct drm_encoder *encoder,
+ 	struct sun4i_tcon *tcon = rgb->tcon;
  
-+	connector {
-+		compatible = "hdmi-connector";
-+		type = "a";
-+
-+		port {
-+			hdmi_con_in: endpoint {
-+				remote-endpoint = <&hdmi_out_con>;
-+			};
-+		};
-+	};
-+
- 	leds {
- 		compatible = "gpio-leds";
- 		pinctrl-names = "default";
-@@ -76,6 +87,10 @@
- 	};
- };
+ 	sun4i_tcon0_mode_set(tcon, mode);
++	sun4i_tcon_set_mux(tcon, 0, encoder);
  
-+&be0 {
-+	status = "okay";
-+};
-+
- &ehci0 {
- 	status = "okay";
- };
-@@ -91,6 +106,16 @@
- 	status = "okay";
- };
+ 	/* FIXME: This seems to be board specific */
+ 	clk_set_phase(tcon->dclk, 120);
+diff --git a/drivers/gpu/drm/sun4i/sun4i_tcon.c b/drivers/gpu/drm/sun4i/sun4i_tcon.c
+index 48fadd188d65..a3fc6ab3c14b 100644
+--- a/drivers/gpu/drm/sun4i/sun4i_tcon.c
++++ b/drivers/gpu/drm/sun4i/sun4i_tcon.c
+@@ -109,6 +109,22 @@ void sun4i_tcon_enable_vblank(struct sun4i_tcon *tcon, bool enable)
+ }
+ EXPORT_SYMBOL(sun4i_tcon_enable_vblank);
  
-+&hdmi {
-+	status = "okay";
-+};
++void sun4i_tcon_set_mux(struct sun4i_tcon *tcon, int channel,
++			struct drm_encoder *encoder)
++{
++	if (!tcon->quirks->has_unknown_mux)
++		return;
 +
-+&hdmi_out {
-+	hdmi_out_con: endpoint {
-+		remote-endpoint = <&hdmi_con_in>;
-+	};
-+};
++	if (channel != 1)
++		return;
 +
- &i2c0 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&i2c0_pins_a>;
-@@ -248,6 +273,10 @@
- 	status = "okay";
- };
++	/*
++	 * FIXME: Undocumented bits
++	 */
++	regmap_write(tcon->regs, SUN4I_TCON_MUX_CTRL_REG, 1);
++}
++EXPORT_SYMBOL(sun4i_tcon_set_mux);
++
+ static int sun4i_tcon_get_clk_delay(struct drm_display_mode *mode,
+ 				    int channel)
+ {
+@@ -273,12 +289,6 @@ void sun4i_tcon1_mode_set(struct sun4i_tcon *tcon,
+ 	regmap_update_bits(tcon->regs, SUN4I_TCON_GCTL_REG,
+ 			   SUN4I_TCON_GCTL_IOMAP_MASK,
+ 			   SUN4I_TCON_GCTL_IOMAP_TCON1);
+-
+-	/*
+-	 * FIXME: Undocumented bits
+-	 */
+-	if (tcon->quirks->has_unknown_mux)
+-		regmap_write(tcon->regs, SUN4I_TCON_MUX_CTRL_REG, 1);
+ }
+ EXPORT_SYMBOL(sun4i_tcon1_mode_set);
  
-+&tcon0 {
-+	status = "okay";
-+};
-+
- &uart0 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&uart0_pins_a>;
+diff --git a/drivers/gpu/drm/sun4i/sun4i_tcon.h b/drivers/gpu/drm/sun4i/sun4i_tcon.h
+index d37e1e2ed60e..f60e0b4c6db8 100644
+--- a/drivers/gpu/drm/sun4i/sun4i_tcon.h
++++ b/drivers/gpu/drm/sun4i/sun4i_tcon.h
+@@ -196,6 +196,8 @@ void sun4i_tcon_enable_vblank(struct sun4i_tcon *tcon, bool enable);
+ /* Mode Related Controls */
+ void sun4i_tcon_switch_interlace(struct sun4i_tcon *tcon,
+ 				 bool enable);
++void sun4i_tcon_set_mux(struct sun4i_tcon *tcon, int channel,
++			struct drm_encoder *encoder);
+ void sun4i_tcon0_mode_set(struct sun4i_tcon *tcon,
+ 			  struct drm_display_mode *mode);
+ void sun4i_tcon1_mode_set(struct sun4i_tcon *tcon,
+diff --git a/drivers/gpu/drm/sun4i/sun4i_tv.c b/drivers/gpu/drm/sun4i/sun4i_tv.c
+index 542da220818b..1177edaa8094 100644
+--- a/drivers/gpu/drm/sun4i/sun4i_tv.c
++++ b/drivers/gpu/drm/sun4i/sun4i_tv.c
+@@ -393,6 +393,7 @@ static void sun4i_tv_mode_set(struct drm_encoder *encoder,
+ 	const struct tv_mode *tv_mode = sun4i_tv_find_tv_by_mode(mode);
+ 
+ 	sun4i_tcon1_mode_set(tcon, mode);
++	sun4i_tcon_set_mux(tcon, 1, encoder);
+ 
+ 	/* Enable and map the DAC to the output */
+ 	regmap_update_bits(tv->regs, SUN4I_TVE_EN_REG,
 -- 
 git-series 0.9.1
