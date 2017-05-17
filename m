@@ -1,53 +1,86 @@
-From: Frank Wang <frank.wang@rock-chips.com>
-Subject: [PATCH v2 1/3] arm: dts: rk322x: fix i2s1 pinctrl error
-Date: Wed, 17 May 2017 17:52:24 +0800
-Message-ID: <1495014746-27621-2-git-send-email-frank.wang@rock-chips.com>
-References: <1495014746-27621-1-git-send-email-frank.wang@rock-chips.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1495014746-27621-1-git-send-email-frank.wang@rock-chips.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: heiko@sntech.de, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, wim@iguana.be, linux@roeck-us.net, ellisys@163.com
-Cc: huangtao@rock-chips.com, devicetree@vger.kernel.org, charles.chen@rock-chips.com, wmc@rock-chips.com, kevan.lan@rock-chips.com, linux-kernel@vger.kernel.org, sugar.zhang@rock-chips.com, linux-rockchip@lists.infradead.org, Frank Wang <frank.wang@rock-chips.com>, cody.xie@rock-chips.com, linux-arm-kernel@lists.infradead.org
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Applied "ASoC: soc-core: enable "dai-format" on snd_soc_of_parse_daifmt()" to the asoc tree
+Date: Wed, 17 May 2017 10:53:06 +0100
+Message-ID: <E1dAvdi-00070a-N4@debutante>
+References: <87h91mxww7.wl%kuninori.morimoto.gx@renesas.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <87h91mxww7.wl%kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linux-DT <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-ALSA <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, Simon <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Sugar Zhang <sugar.zhang@rock-chips.com>
+The patch
 
-Refer to Chapter 5.3.2 of rk3229 TRM, we can see that GPIO1A[2,4,5]
-using RK_FUNC_2 not RK_FUNC_1. This patch fixes it.
+   ASoC: soc-core: enable "dai-format" on snd_soc_of_parse_daifmt()
 
-Signed-off-by: Sugar Zhang <sugar.zhang@rock-chips.com>
-Signed-off-by: Frank Wang <frank.wang@rock-chips.com>
+has been applied to the asoc tree at
+
+   git://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+>From 5711c97920377827da4bbc18233ffb08c6e3bbef Mon Sep 17 00:00:00 2001
+From: Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Date: Thu, 20 Apr 2017 01:33:24 +0000
+Subject: [PATCH] ASoC: soc-core: enable "dai-format" on
+ snd_soc_of_parse_daifmt()
+
+Current snd_soc_of_parse_daifmt() detects [prefix]format, but
+"format" was unclear in some case. This patch checks "dai-format"
+first, and try to check "[prefix]format" if "dai-format" was not
+exist.
+
+Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Signed-off-by: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 ---
- arch/arm/boot/dts/rk322x.dtsi | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ sound/soc/soc-core.c | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm/boot/dts/rk322x.dtsi b/arch/arm/boot/dts/rk322x.dtsi
-index 48a0c1c..cc6a27d 100644
---- a/arch/arm/boot/dts/rk322x.dtsi
-+++ b/arch/arm/boot/dts/rk322x.dtsi
-@@ -621,9 +621,9 @@
- 						<0 12 RK_FUNC_1 &pcfg_pull_none>,
- 						<0 13 RK_FUNC_1 &pcfg_pull_none>,
- 						<0 14 RK_FUNC_1 &pcfg_pull_none>,
--						<1 2 RK_FUNC_1 &pcfg_pull_none>,
--						<1 4 RK_FUNC_1 &pcfg_pull_none>,
--						<1 5 RK_FUNC_1 &pcfg_pull_none>;
-+						<1 2 RK_FUNC_2 &pcfg_pull_none>,
-+						<1 4 RK_FUNC_2 &pcfg_pull_none>,
-+						<1 5 RK_FUNC_2 &pcfg_pull_none>;
- 			};
- 		};
+diff --git a/sound/soc/soc-core.c b/sound/soc/soc-core.c
+index aae099c0e502..ab7a07f86ab8 100644
+--- a/sound/soc/soc-core.c
++++ b/sound/soc/soc-core.c
+@@ -3960,11 +3960,15 @@ unsigned int snd_soc_of_parse_daifmt(struct device_node *np,
+ 		prefix = "";
  
+ 	/*
+-	 * check "[prefix]format = xxx"
++	 * check "dai-format = xxx"
++	 * or    "[prefix]format = xxx"
+ 	 * SND_SOC_DAIFMT_FORMAT_MASK area
+ 	 */
+-	snprintf(prop, sizeof(prop), "%sformat", prefix);
+-	ret = of_property_read_string(np, prop, &str);
++	ret = of_property_read_string(np, "dai-format", &str);
++	if (ret < 0) {
++		snprintf(prop, sizeof(prop), "%sformat", prefix);
++		ret = of_property_read_string(np, prop, &str);
++	}
+ 	if (ret == 0) {
+ 		for (i = 0; i < ARRAY_SIZE(of_fmt_table); i++) {
+ 			if (strcmp(str, of_fmt_table[i].name) == 0) {
 -- 
-2.0.0
+2.11.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
