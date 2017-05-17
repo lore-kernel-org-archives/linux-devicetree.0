@@ -1,94 +1,43 @@
-From: Madalin-Cristian Bucur <madalin.bucur-3arQi8VN3Tc@public.gmane.org>
-Subject: RE: [PATCH 2/3] arm64: dts: add LS1043A DPAA FMan support
-Date: Wed, 17 May 2017 11:03:20 +0000
-Message-ID: <AM5PR0402MB2691847B7DAA3C3B4A609A9BECE70@AM5PR0402MB2691.eurprd04.prod.outlook.com>
-References: <1494936443-14869-3-git-send-email-madalin.bucur@nxp.com>
- <201705171805.DxANFDT3%fengguang.wu@intel.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <201705171805.DxANFDT3%fengguang.wu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "catalin.marinas-5wv7dgnIgG8@public.gmane.org" <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, "will.deacon-5wv7dgnIgG8@public.gmane.org" <will.deacon-5wv7dgnIgG8@public.gmane.org>, kbuild test robot <lkp-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "kbuild-all-JC7UmRfGjtg@public.gmane.org" <kbuild-all-JC7UmRfGjtg@public.gmane.org>
+From: Sricharan R <sricharan@codeaurora.org>
+Subject: [PATCH 1/3] iommu: of: Fix check for returning EPROBE_DEFER
+Date: Wed, 17 May 2017 17:00:07 +0530
+Message-ID: <1495020609-13397-1-git-send-email-sricharan@codeaurora.org>
+Return-path: <linux-arch-owner@vger.kernel.org>
+Sender: linux-arch-owner@vger.kernel.org
+To: robin.murphy@arm.com, will.deacon@arm.com, joro@8bytes.org, lorenzo.pieralisi@arm.com, iommu@lists.linux-foundation.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, m.szyprowski@samsung.com, bhelgaas@google.com, linux-pci@vger.kernel.org, linux-acpi@vger.kernel.org, tn@semihalf.com, hanjun.guo@linaro.org, okaya@codeaurora.org, robh+dt@kernel.org, frowand.list@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, sudeep.holla@arm.com, rjw@rjwysocki.net, lenb@kernel.org, catalin.marinas@arm.com, arnd@arndb.de, linux-arch@vger.kernel.org, magnus.damm@gmail.com, geert@linux-m68k.org, j.neuschaefer@gmx.net
+Cc: sricharan@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob, Shawn,
+Now with iommu probe deferral, we return -EPROBE_DEFER
+for master's that are connected to an iommu which is not
+probed yet, but going to get probed, so that we can attach
+the correct dma_ops. So while trying to defer the probe of
+the master, check if the of_iommu node that it is connected
+to is marked in DT as 'status=disabled', then the iommu is never
+is going to get probed. So simply return NULL and let the master
+work without an iommu.
 
-The patch that failed depends on a patch set that should be in Shawn's tree=
-:
+Fixes: 7b07cbefb68d ("iommu: of: Handle IOMMU lookup failure with deferred probing or error")
+Signed-off-by: Sricharan R <sricharan@codeaurora.org>
+Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
+Tested-by: Will Deacon <will.deacon@arm.com>
+Tested-by: Magnus Damn <magnus.damn@gmail.com>
+Acked-by: Will Deacon <will.deacon@arm.com>
+---
+ drivers/iommu/of_iommu.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-	-----Original Message-----
-	From: Shawn Guo [mailto:shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org]=20
-	Sent: Tuesday, May 16, 2017 4:40 AM
-	To: Madalin-Cristian Bucur <madalin.bucur-3arQi8VN3Tc@public.gmane.org>
-	Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; catalin.marinas@arm.=
-com; will.deacon-5wv7dgnIgG8@public.gmane.org; linux-	kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org=
-; linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-	Subject: Re: [PATCH v2 0/3] arm64: dts: introduce QorIQ DPAA 1.x QBMan dev=
-ice tree nodes
-
-	On Mon, May 15, 2017 at 12:21:15PM +0300, Madalin Bucur wrote:
-	> Madalin Bucur (3):
-	>   arm64: dts: add DPAA QBMan portals
-	>   arm64: dts: add LS1043A DPAA QBMan nodes
-	>   arm64: dts: add LS1046A DPAA QBMan nodes
-
-	Applied all, thanks.
-
-Crash is related to the use of GIC_SPI and IRQ_TYPE_LEVEL_HIGH that require=
- the
-header included in the above patches (<dt-bindings/interrupt-controller/arm=
--gic.h>).
-
-Madalin
-
-> -----Original Message-----
-> From: kbuild test robot [mailto:lkp-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org]
-> Sent: Wednesday, May 17, 2017 1:42 PM
-> To: Madalin-Cristian Bucur <madalin.bucur-3arQi8VN3Tc@public.gmane.org>
-> Cc: kbuild-all-JC7UmRfGjtg@public.gmane.org; shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org;
-> mark.rutland-5wv7dgnIgG8@public.gmane.org; robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org; linux-arm-
-> kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org; linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org;
-> catalin.marinas-5wv7dgnIgG8@public.gmane.org; will.deacon-5wv7dgnIgG8@public.gmane.org; Madalin-Cristian Bucur
-> <madalin.bucur-3arQi8VN3Tc@public.gmane.org>
-> Subject: Re: [PATCH 2/3] arm64: dts: add LS1043A DPAA FMan support
->=20
-> Hi Madalin,
->=20
-> [auto build test ERROR on robh/for-next]
-> [also build test ERROR on v4.12-rc1 next-20170517]
-> [if your patch is applied to the wrong git tree, please drop us a note to
-> help improve the system]
->=20
-> url:    https://github.com/0day-ci/linux/commits/Madalin-Bucur/arm64-dts-
-> add-DPAA-FMan-nodes/20170517-103731
-> base:   https://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git
-> for-next
-> config: arm64-defconfig (attached as .config)
-> compiler: aarch64-linux-gnu-gcc (Debian 6.1.1-9) 6.1.1 20160705
-> reproduce:
->         wget https://raw.githubusercontent.com/01org/lkp-
-> tests/master/sbin/make.cross -O ~/bin/make.cross
->         chmod +x ~/bin/make.cross
->         # save the attached .config to linux build tree
->         make.cross ARCH=3Darm64
->=20
-> All errors (new ones prefixed by >>):
->=20
-> >> Error: arch/arm64/boot/dts/freescale/qoriq-fman3-0.dtsi:16.16-17 synta=
-x
-> error
->    FATAL ERROR: Unable to parse input tree
->=20
-> ---
-> 0-DAY kernel test infrastructure                Open Source Technology
-> Center
-> https://lists.01.org/pipermail/kbuild-all                   Intel
-> Corporation
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/drivers/iommu/of_iommu.c b/drivers/iommu/of_iommu.c
+index 9f44ee8..e6e9bec 100644
+--- a/drivers/iommu/of_iommu.c
++++ b/drivers/iommu/of_iommu.c
+@@ -118,6 +118,7 @@ static bool of_iommu_driver_present(struct device_node *np)
+ 
+ 	ops = iommu_ops_from_fwnode(fwnode);
+ 	if ((ops && !ops->of_xlate) ||
++	    !of_device_is_available(iommu_spec->np) ||
+ 	    (!ops && !of_iommu_driver_present(iommu_spec->np)))
+ 		return NULL;
+ 
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
