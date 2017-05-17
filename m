@@ -1,36 +1,40 @@
-From: Lionel Debieve <lionel.debieve-qxv4g6HH51o@public.gmane.org>
-Subject: [PATCH 1/1] ARM: dts: stm32: Add missing reset-cells node in stm32f476
-Date: Wed, 17 May 2017 17:15:56 +0200
-Message-ID: <1495034156-19593-1-git-send-email-lionel.debieve@st.com>
-Mime-Version: 1.0
-Content-Type: text/plain
+From: Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: [PATCH] of: fdt: add missing allocation-failure check
+Date: Wed, 17 May 2017 17:29:09 +0200
+Message-ID: <20170517152909.13553-1-johan@kernel.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Gabriel FERNANDEZ <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lionel Debieve <lionel.debieve-qxv4g6HH51o@public.gmane.org>
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, stable <stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-rcc node must include reset-cells node.
+The memory allocator passed to __unflatten_device_tree() (e.g. a wrapped
+kzalloc) can fail so add the missing sanity check to avoid dereferencing
+a NULL pointer.
 
-Signed-off-by: Lionel Debieve <lionel.debieve-qxv4g6HH51o@public.gmane.org>
+Fixes: fe14042358fa ("of/flattree: Refactor unflatten_device_tree and add fdt_unflatten_tree")
+Cc: stable <stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>     # 2.6.38
+Signed-off-by: Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 ---
- arch/arm/boot/dts/stm32f746.dtsi | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/of/fdt.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/arch/arm/boot/dts/stm32f746.dtsi b/arch/arm/boot/dts/stm32f746.dtsi
-index c2765ce..b5a04f1 100644
---- a/arch/arm/boot/dts/stm32f746.dtsi
-+++ b/arch/arm/boot/dts/stm32f746.dtsi
-@@ -336,6 +336,7 @@
- 		};
+diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+index 3080d9dd031d..43bd69dceabf 100644
+--- a/drivers/of/fdt.c
++++ b/drivers/of/fdt.c
+@@ -507,6 +507,9 @@ void *__unflatten_device_tree(const void *blob,
  
- 		rcc: rcc@40023800 {
-+			#reset-cells = <1>;
- 			#clock-cells = <2>;
- 			compatible = "st,stm32f746-rcc", "st,stm32-rcc";
- 			reg = <0x40023800 0x400>;
+ 	/* Allocate memory for the expanded device tree */
+ 	mem = dt_alloc(size + 4, __alignof__(struct device_node));
++	if (!mem)
++		return NULL;
++
+ 	memset(mem, 0, size);
+ 
+ 	*(__be32 *)(mem + size) = cpu_to_be32(0xdeadbeef);
 -- 
-2.7.4
+2.13.0
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
