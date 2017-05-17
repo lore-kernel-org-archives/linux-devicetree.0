@@ -1,143 +1,139 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v3 00/21] drm: sun4i: Add support for the HDMI controller
-Date: Wed, 17 May 2017 09:40:29 +0200
-Message-ID: <cover.463df61c38224ecbfb5bf1cf192deeb63718b693.1495006350.git-series.maxime.ripard@free-electrons.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Daniel Vetter <daniel.vetter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: [PATCH v3 02/21] clk: sunxi-ng: Pass the parent and a pointer to the
+ clocks round rate
+Date: Wed, 17 May 2017 09:40:31 +0200
+Message-ID: <a5c349636d52f73ede2fe439730880393b38cd09.1495006350.git-series.maxime.ripard@free-electrons.com>
+References: <cover.463df61c38224ecbfb5bf1cf192deeb63718b693.1495006350.git-series.maxime.ripard@free-electrons.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <cover.463df61c38224ecbfb5bf1cf192deeb63718b693.1495006350.git-series.maxime.ripard@free-electrons.com>
+In-Reply-To: <cover.463df61c38224ecbfb5bf1cf192deeb63718b693.1495006350.git-series.maxime.ripard@free-electrons.com>
+References: <cover.463df61c38224ecbfb5bf1cf192deeb63718b693.1495006350.git-series.maxime.ripard@free-electrons.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>
+Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Daniel Vetter <daniel.vetter@intel.com>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-Here is an attempt at getting the HDMI controller running.
-
-This HDMI controller is found on a number of old Allwinner SoCs (A10, A10s,
-A20, A31).
-
-This driver only supports for now the A10s because it was an easy target,
-being very close to the A13 that is already supported by our DRM driver.
-
-There's nothing out of the extraordinary there, except maybe the clock
-setup. All the internal clocks (TMDS, DDC) have been modeled using the
-common clock framework, the TMDS clock being the parent of the DDC one.
-
-While this might sound overkill, other SoC have a different, external
-source for the DDC clock, which will be easier to support through the clock
-framework.
-
-The IP also supports audio (through an already supported i2s controller,
-and some missing configuration in the HDMI controller) and CEC. Both will
-come eventually.
-
-Let me know what you think!
-Maxime
-
-Changes from v2:
-  - Fixed the PLL control macros definitions
-  - Called clk_enable / disable on the DDC clock
-  - Added the flags to enable the connection polling
-  - Fixed the vtotal computation in TCON's code, and added a comment
-  - Added and documented the A10s display engine compatible
-  - Reworked the component parsing code to bail out when a standard
-    connector is found
-  - Fixed a inconsistent comment in the predivider unapplication
-  - Fixed a commit log
-  - Added Chen-Yu's and Rob's Acked-By
-  - Changed divider_round_rate to a static, inline function in the header
-  - Added and document the A10s display pipeline compatible
-  - Rebased on top of 4.12
-
-Changes from v1:
-  - Fixed typos in the CCU header and the HDMI code
-  - Reintroduced the comment for the backporch timings
-  - Renamed the hdmi node to hdmi, instead of hdmi0
-  - Added support for hdmi-connector
-  - Added a separate Kconfig option for the HDMI support
-  - Changed the TCON muxing configuration for an explicit call in the
-    TCON's "clients"
-  - Fixed the initialisation sequence that was clearing the clocks bits
-  - Constified the HDMI's structures and removed whitespaces errors
-  - Fixed an issue in the sunxi-ng code that was not reporting the proper
-    parent clock rate if it was modified
-  - Removed unused headers
-  - Removed CLK_SET_RATE_PARENT for the DDC clock
-  - Used the DDC address defines
-  - Removed the interlace flag that wasn't supported at the moment
-  - Moved most of the HDMI encoder init to the bind function like we do for
-    the other encoders
-  - Switched to drm_of_find_possible_crtcs
-  - Removed the extra printk that were still in my code
-  - Rebased on top of linux-next
-  - Removed the patch changing the divider_round_rate prototype to
-    introduce a new function instead that takes the parent clock to
-    evaluate
-  - Added a clk_set_rate for the hdmi module clock
-  - Fixed the V_TOTAL TCON ch0 calculation to be consistent with ch1's
-  - Defined all registers, and remove the TODOs
-  - Fixed the EDID issues by increasing the timeout.
-  - Added an atomic_check to prevent the DBLCLK modes to be used, as it is
-    not supported yet
-  - Updated the binding to add the interrupts and DMA channels
-
-Maxime Ripard (21):
-  clk: divider: Make divider_round_rate take the parent clock
-  clk: sunxi-ng: Pass the parent and a pointer to the clocks round rate
-  clk: sunxi-ng: div: Switch to divider_round_rate
-  clk: sunxi-ng: mux: Don't just rely on the parent for CLK_SET_RATE_PARENT
-  clk: sunxi-ng: mux: split out the pre-divider computation code
-  clk: sunxi-ng: mux: Change pre-divider application function prototype
-  clk: sunxi-ng: mux: Re-adjust parent rate
-  clk: sunxi-ng: sun5i: Export video PLLs
-  drm/sun4i: tcon: Add channel debug
-  drm/sun4i: tcon: Move the muxing out of the mode set function
-  drm/sun4i: tcon: Switch mux on only for composite
-  drm/sun4i: tcon: Fix tcon channel 1 backporch calculation
-  drm/sun4i: tcon: Change vertical total size computation inconsistency
-  drm/sun4i: tcon: multiply the vtotal when not in interlace
-  drm/sun4i: Ignore the generic connectors for components
-  dt-bindings: display: sun4i: Add HDMI display bindings
-  dt-bindings: display: sun4i: Add allwinner,tcon-channel property
-  drm/sun4i: Add HDMI support
-  drm/sun4i: Add compatible for the A10s pipeline
-  ARM: sun5i: a10s: Add the HDMI controller node
-  ARM: sun5i: a10s-olinuxino: Enable HDMI
-
- Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt |  91 +-
- arch/arm/boot/dts/sun5i-a10s-olinuxino-micro.dts              |  29 +-
- arch/arm/boot/dts/sun5i-a10s.dtsi                             |  47 +-
- arch/arm/boot/dts/sun5i.dtsi                                  |   1 +-
- drivers/clk/clk-divider.c                                     |  19 +-
- drivers/clk/sunxi-ng/ccu-sun5i.h                              |   6 +-
- drivers/clk/sunxi-ng/ccu_div.c                                |  38 +-
- drivers/clk/sunxi-ng/ccu_mp.c                                 |  15 +-
- drivers/clk/sunxi-ng/ccu_mult.c                               |  19 +-
- drivers/clk/sunxi-ng/ccu_mux.c                                |  90 +-
- drivers/clk/sunxi-ng/ccu_mux.h                                |  11 +-
- drivers/clk/sunxi-ng/ccu_nkm.c                                |   7 +-
- drivers/gpu/drm/sun4i/Kconfig                                 |   9 +-
- drivers/gpu/drm/sun4i/Makefile                                |   6 +-
- drivers/gpu/drm/sun4i/sun4i_drv.c                             |  13 +-
- drivers/gpu/drm/sun4i/sun4i_hdmi.h                            | 157 ++-
- drivers/gpu/drm/sun4i/sun4i_hdmi_ddc_clk.c                    | 127 ++-
- drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c                        | 501 +++++++-
- drivers/gpu/drm/sun4i/sun4i_hdmi_tmds_clk.c                   | 225 +++-
- drivers/gpu/drm/sun4i/sun4i_rgb.c                             |   1 +-
- drivers/gpu/drm/sun4i/sun4i_tcon.c                            |  62 +-
- drivers/gpu/drm/sun4i/sun4i_tcon.h                            |   4 +-
- drivers/gpu/drm/sun4i/sun4i_tv.c                              |   1 +-
- include/dt-bindings/clock/sun5i-ccu.h                         |   3 +-
- include/linux/clk-provider.h                                  |  16 +-
- 25 files changed, 1378 insertions(+), 120 deletions(-)
- create mode 100644 drivers/gpu/drm/sun4i/sun4i_hdmi.h
- create mode 100644 drivers/gpu/drm/sun4i/sun4i_hdmi_ddc_clk.c
- create mode 100644 drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c
- create mode 100644 drivers/gpu/drm/sun4i/sun4i_hdmi_tmds_clk.c
-
-base-commit: cf80aeef958f2e5b0041c72b567ae949f5b2738d
--- 
-git-series 0.9.1
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+VGhlIGNsb2NrcyBtaWdodCBuZWVkIHRvIG1vZGlmeSB0aGVpciBwYXJlbnQgY2xvY2tzLiBJbiBv
+cmRlciB0byBtYWtlIHRoYXQKcG9zc2libGUsIGdpdmUgdGhlbSBhY2Nlc3MgdG8gdGhlIHBhcmVu
+dCBjbG9jayBiZWluZyBldmFsdWF0ZWQsIGFuZCB0byBhCnBvaW50ZXIgdG8gdGhlIHBhcmVudCBy
+YXRlIHNvIHRoYXQgdGhleSBjYW4gbW9kaWZ5IGl0IGlmIG5lZWRlZC4KClNpZ25lZC1vZmYtYnk6
+IE1heGltZSBSaXBhcmQgPG1heGltZS5yaXBhcmRAZnJlZS1lbGVjdHJvbnMuY29tPgpBY2tlZC1i
+eTogQ2hlbi1ZdSBUc2FpIDx3ZW5zQGNzaWUub3JnPgotLS0KIGRyaXZlcnMvY2xrL3N1bnhpLW5n
+L2NjdV9kaXYuYyAgfCAgNyArKysrLS0tCiBkcml2ZXJzL2Nsay9zdW54aS1uZy9jY3VfbXAuYyAg
+IHwgIDcgKysrKy0tLQogZHJpdmVycy9jbGsvc3VueGktbmcvY2N1X211bHQuYyB8IDExICsrKysr
+Ky0tLS0tCiBkcml2ZXJzL2Nsay9zdW54aS1uZy9jY3VfbXV4LmMgIHwgIDggKysrKystLS0KIGRy
+aXZlcnMvY2xrL3N1bnhpLW5nL2NjdV9tdXguaCAgfCAgMyArKy0KIGRyaXZlcnMvY2xrL3N1bnhp
+LW5nL2NjdV9ua20uYyAgfCAgNyArKysrLS0tCiA2IGZpbGVzIGNoYW5nZWQsIDI1IGluc2VydGlv
+bnMoKyksIDE4IGRlbGV0aW9ucygtKQoKZGlmZiAtLWdpdCBhL2RyaXZlcnMvY2xrL3N1bnhpLW5n
+L2NjdV9kaXYuYyBiL2RyaXZlcnMvY2xrL3N1bnhpLW5nL2NjdV9kaXYuYwppbmRleCA0MDU3ZTYw
+MjFhYTkuLmE0ODlmMThhM2MwMSAxMDA2NDQKLS0tIGEvZHJpdmVycy9jbGsvc3VueGktbmcvY2N1
+X2Rpdi5jCisrKyBiL2RyaXZlcnMvY2xrL3N1bnhpLW5nL2NjdV9kaXYuYwpAQCAtMTQsNyArMTQs
+OCBAQAogI2luY2x1ZGUgImNjdV9kaXYuaCIKIAogc3RhdGljIHVuc2lnbmVkIGxvbmcgY2N1X2Rp
+dl9yb3VuZF9yYXRlKHN0cnVjdCBjY3VfbXV4X2ludGVybmFsICptdXgsCi0JCQkJCXVuc2lnbmVk
+IGxvbmcgcGFyZW50X3JhdGUsCisJCQkJCXN0cnVjdCBjbGtfaHcgKnBhcmVudCwKKwkJCQkJdW5z
+aWduZWQgbG9uZyAqcGFyZW50X3JhdGUsCiAJCQkJCXVuc2lnbmVkIGxvbmcgcmF0ZSwKIAkJCQkJ
+dm9pZCAqZGF0YSkKIHsKQEAgLTI2LDEwICsyNywxMCBAQCBzdGF0aWMgdW5zaWduZWQgbG9uZyBj
+Y3VfZGl2X3JvdW5kX3JhdGUoc3RydWN0IGNjdV9tdXhfaW50ZXJuYWwgKm11eCwKIAkgKiBzZXZl
+cmFsIHBhcmVudHMsIHdoaWxlIHdlIG1pZ2h0IGJlIGNhbGxlZCB0byBldmFsdWF0ZQogCSAqIHNl
+dmVyYWwgZGlmZmVyZW50IHBhcmVudHMuCiAJICovCi0JdmFsID0gZGl2aWRlcl9nZXRfdmFsKHJh
+dGUsIHBhcmVudF9yYXRlLCBjZC0+ZGl2LnRhYmxlLCBjZC0+ZGl2LndpZHRoLAorCXZhbCA9IGRp
+dmlkZXJfZ2V0X3ZhbChyYXRlLCAqcGFyZW50X3JhdGUsIGNkLT5kaXYudGFibGUsIGNkLT5kaXYu
+d2lkdGgsCiAJCQkgICAgICBjZC0+ZGl2LmZsYWdzKTsKIAotCXJldHVybiBkaXZpZGVyX3JlY2Fs
+Y19yYXRlKCZjZC0+Y29tbW9uLmh3LCBwYXJlbnRfcmF0ZSwgdmFsLAorCXJldHVybiBkaXZpZGVy
+X3JlY2FsY19yYXRlKCZjZC0+Y29tbW9uLmh3LCAqcGFyZW50X3JhdGUsIHZhbCwKIAkJCQkgICBj
+ZC0+ZGl2LnRhYmxlLCBjZC0+ZGl2LmZsYWdzKTsKIH0KIApkaWZmIC0tZ2l0IGEvZHJpdmVycy9j
+bGsvc3VueGktbmcvY2N1X21wLmMgYi9kcml2ZXJzL2Nsay9zdW54aS1uZy9jY3VfbXAuYwppbmRl
+eCBiNTgzZjE4NmE4MDQuLmRlMDJlNmMzODZkOCAxMDA2NDQKLS0tIGEvZHJpdmVycy9jbGsvc3Vu
+eGktbmcvY2N1X21wLmMKKysrIGIvZHJpdmVycy9jbGsvc3VueGktbmcvY2N1X21wLmMKQEAgLTQx
+LDcgKzQxLDggQEAgc3RhdGljIHZvaWQgY2N1X21wX2ZpbmRfYmVzdCh1bnNpZ25lZCBsb25nIHBh
+cmVudCwgdW5zaWduZWQgbG9uZyByYXRlLAogfQogCiBzdGF0aWMgdW5zaWduZWQgbG9uZyBjY3Vf
+bXBfcm91bmRfcmF0ZShzdHJ1Y3QgY2N1X211eF9pbnRlcm5hbCAqbXV4LAotCQkJCSAgICAgICB1
+bnNpZ25lZCBsb25nIHBhcmVudF9yYXRlLAorCQkJCSAgICAgICBzdHJ1Y3QgY2xrX2h3ICpodywK
+KwkJCQkgICAgICAgdW5zaWduZWQgbG9uZyAqcGFyZW50X3JhdGUsCiAJCQkJICAgICAgIHVuc2ln
+bmVkIGxvbmcgcmF0ZSwKIAkJCQkgICAgICAgdm9pZCAqZGF0YSkKIHsKQEAgLTUyLDkgKzUzLDkg
+QEAgc3RhdGljIHVuc2lnbmVkIGxvbmcgY2N1X21wX3JvdW5kX3JhdGUoc3RydWN0IGNjdV9tdXhf
+aW50ZXJuYWwgKm11eCwKIAltYXhfbSA9IGNtcC0+bS5tYXggPzogMSA8PCBjbXAtPm0ud2lkdGg7
+CiAJbWF4X3AgPSBjbXAtPnAubWF4ID86IDEgPDwgKCgxIDw8IGNtcC0+cC53aWR0aCkgLSAxKTsK
+IAotCWNjdV9tcF9maW5kX2Jlc3QocGFyZW50X3JhdGUsIHJhdGUsIG1heF9tLCBtYXhfcCwgJm0s
+ICZwKTsKKwljY3VfbXBfZmluZF9iZXN0KCpwYXJlbnRfcmF0ZSwgcmF0ZSwgbWF4X20sIG1heF9w
+LCAmbSwgJnApOwogCi0JcmV0dXJuIHBhcmVudF9yYXRlIC8gcCAvIG07CisJcmV0dXJuICpwYXJl
+bnRfcmF0ZSAvIHAgLyBtOwogfQogCiBzdGF0aWMgdm9pZCBjY3VfbXBfZGlzYWJsZShzdHJ1Y3Qg
+Y2xrX2h3ICpodykKZGlmZiAtLWdpdCBhL2RyaXZlcnMvY2xrL3N1bnhpLW5nL2NjdV9tdWx0LmMg
+Yi9kcml2ZXJzL2Nsay9zdW54aS1uZy9jY3VfbXVsdC5jCmluZGV4IDY3MTE0MTM1OTg5NS4uNmVl
+N2JhMDczOGZiIDEwMDY0NAotLS0gYS9kcml2ZXJzL2Nsay9zdW54aS1uZy9jY3VfbXVsdC5jCisr
+KyBiL2RyaXZlcnMvY2xrL3N1bnhpLW5nL2NjdV9tdWx0LmMKQEAgLTMzLDkgKzMzLDEwIEBAIHN0
+YXRpYyB2b2lkIGNjdV9tdWx0X2ZpbmRfYmVzdCh1bnNpZ25lZCBsb25nIHBhcmVudCwgdW5zaWdu
+ZWQgbG9uZyByYXRlLAogfQogCiBzdGF0aWMgdW5zaWduZWQgbG9uZyBjY3VfbXVsdF9yb3VuZF9y
+YXRlKHN0cnVjdCBjY3VfbXV4X2ludGVybmFsICptdXgsCi0JCQkJCXVuc2lnbmVkIGxvbmcgcGFy
+ZW50X3JhdGUsCi0JCQkJCXVuc2lnbmVkIGxvbmcgcmF0ZSwKLQkJCQkJdm9pZCAqZGF0YSkKKwkJ
+CQkJIHN0cnVjdCBjbGtfaHcgKnBhcmVudCwKKwkJCQkJIHVuc2lnbmVkIGxvbmcgKnBhcmVudF9y
+YXRlLAorCQkJCQkgdW5zaWduZWQgbG9uZyByYXRlLAorCQkJCQkgdm9pZCAqZGF0YSkKIHsKIAlz
+dHJ1Y3QgY2N1X211bHQgKmNtID0gZGF0YTsKIAlzdHJ1Y3QgX2NjdV9tdWx0IF9jbTsKQEAgLTQ3
+LDkgKzQ4LDkgQEAgc3RhdGljIHVuc2lnbmVkIGxvbmcgY2N1X211bHRfcm91bmRfcmF0ZShzdHJ1
+Y3QgY2N1X211eF9pbnRlcm5hbCAqbXV4LAogCWVsc2UKIAkJX2NtLm1heCA9ICgxIDw8IGNtLT5t
+dWx0LndpZHRoKSArIGNtLT5tdWx0Lm9mZnNldCAtIDE7CiAKLQljY3VfbXVsdF9maW5kX2Jlc3Qo
+cGFyZW50X3JhdGUsIHJhdGUsICZfY20pOworCWNjdV9tdWx0X2ZpbmRfYmVzdCgqcGFyZW50X3Jh
+dGUsIHJhdGUsICZfY20pOwogCi0JcmV0dXJuIHBhcmVudF9yYXRlICogX2NtLm11bHQ7CisJcmV0
+dXJuICpwYXJlbnRfcmF0ZSAqIF9jbS5tdWx0OwogfQogCiBzdGF0aWMgdm9pZCBjY3VfbXVsdF9k
+aXNhYmxlKHN0cnVjdCBjbGtfaHcgKmh3KQpkaWZmIC0tZ2l0IGEvZHJpdmVycy9jbGsvc3VueGkt
+bmcvY2N1X211eC5jIGIvZHJpdmVycy9jbGsvc3VueGktbmcvY2N1X211eC5jCmluZGV4IGM2YmIx
+ZjUyMzIzMi4uYmFlNzM1ZTI1MmI2IDEwMDY0NAotLS0gYS9kcml2ZXJzL2Nsay9zdW54aS1uZy9j
+Y3VfbXV4LmMKKysrIGIvZHJpdmVycy9jbGsvc3VueGktbmcvY2N1X211eC5jCkBAIC02MSw3ICs2
+MSw4IEBAIGludCBjY3VfbXV4X2hlbHBlcl9kZXRlcm1pbmVfcmF0ZShzdHJ1Y3QgY2N1X2NvbW1v
+biAqY29tbW9uLAogCQkJCSAgc3RydWN0IGNjdV9tdXhfaW50ZXJuYWwgKmNtLAogCQkJCSAgc3Ry
+dWN0IGNsa19yYXRlX3JlcXVlc3QgKnJlcSwKIAkJCQkgIHVuc2lnbmVkIGxvbmcgKCpyb3VuZCko
+c3RydWN0IGNjdV9tdXhfaW50ZXJuYWwgKiwKLQkJCQkJCQkgdW5zaWduZWQgbG9uZywKKwkJCQkJ
+CQkgc3RydWN0IGNsa19odyAqLAorCQkJCQkJCSB1bnNpZ25lZCBsb25nICosCiAJCQkJCQkJIHVu
+c2lnbmVkIGxvbmcsCiAJCQkJCQkJIHZvaWQgKiksCiAJCQkJICB2b2lkICpkYXRhKQpAQCAtODAs
+NyArODEsOCBAQCBpbnQgY2N1X211eF9oZWxwZXJfZGV0ZXJtaW5lX3JhdGUoc3RydWN0IGNjdV9j
+b21tb24gKmNvbW1vbiwKIAkJY2N1X211eF9oZWxwZXJfYWRqdXN0X3BhcmVudF9mb3JfcHJlZGl2
+KGNvbW1vbiwgY20sIC0xLAogCQkJCQkJCSZhZGpfcGFyZW50X3JhdGUpOwogCi0JCWJlc3RfcmF0
+ZSA9IHJvdW5kKGNtLCBhZGpfcGFyZW50X3JhdGUsIHJlcS0+cmF0ZSwgZGF0YSk7CisJCWJlc3Rf
+cmF0ZSA9IHJvdW5kKGNtLCBiZXN0X3BhcmVudCwgJmFkal9wYXJlbnRfcmF0ZSwKKwkJCQkgIHJl
+cS0+cmF0ZSwgZGF0YSk7CiAKIAkJZ290byBvdXQ7CiAJfQpAQCAtMTA5LDcgKzExMSw3IEBAIGlu
+dCBjY3VfbXV4X2hlbHBlcl9kZXRlcm1pbmVfcmF0ZShzdHJ1Y3QgY2N1X2NvbW1vbiAqY29tbW9u
+LAogCQljY3VfbXV4X2hlbHBlcl9hZGp1c3RfcGFyZW50X2Zvcl9wcmVkaXYoY29tbW9uLCBjbSwg
+aSwKIAkJCQkJCQkmYWRqX3BhcmVudF9yYXRlKTsKIAotCQl0bXBfcmF0ZSA9IHJvdW5kKGNtLCBh
+ZGpfcGFyZW50X3JhdGUsIHJlcS0+cmF0ZSwgZGF0YSk7CisJCXRtcF9yYXRlID0gcm91bmQoY20s
+IHBhcmVudCwgJmFkal9wYXJlbnRfcmF0ZSwgcmVxLT5yYXRlLCBkYXRhKTsKIAkJaWYgKHRtcF9y
+YXRlID09IHJlcS0+cmF0ZSkgewogCQkJYmVzdF9wYXJlbnQgPSBwYXJlbnQ7CiAJCQliZXN0X3Bh
+cmVudF9yYXRlID0gcGFyZW50X3JhdGU7CmRpZmYgLS1naXQgYS9kcml2ZXJzL2Nsay9zdW54aS1u
+Zy9jY3VfbXV4LmggYi9kcml2ZXJzL2Nsay9zdW54aS1uZy9jY3VfbXV4LmgKaW5kZXggNDdhYmEz
+YTQ4MjQ1Li40YmU1NmVlZTJiZmQgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvY2xrL3N1bnhpLW5nL2Nj
+dV9tdXguaAorKysgYi9kcml2ZXJzL2Nsay9zdW54aS1uZy9jY3VfbXV4LmgKQEAgLTg2LDcgKzg2
+LDggQEAgaW50IGNjdV9tdXhfaGVscGVyX2RldGVybWluZV9yYXRlKHN0cnVjdCBjY3VfY29tbW9u
+ICpjb21tb24sCiAJCQkJICBzdHJ1Y3QgY2N1X211eF9pbnRlcm5hbCAqY20sCiAJCQkJICBzdHJ1
+Y3QgY2xrX3JhdGVfcmVxdWVzdCAqcmVxLAogCQkJCSAgdW5zaWduZWQgbG9uZyAoKnJvdW5kKShz
+dHJ1Y3QgY2N1X211eF9pbnRlcm5hbCAqLAotCQkJCQkJCSB1bnNpZ25lZCBsb25nLAorCQkJCQkJ
+CSBzdHJ1Y3QgY2xrX2h3ICosCisJCQkJCQkJIHVuc2lnbmVkIGxvbmcgKiwKIAkJCQkJCQkgdW5z
+aWduZWQgbG9uZywKIAkJCQkJCQkgdm9pZCAqKSwKIAkJCQkgIHZvaWQgKmRhdGEpOwpkaWZmIC0t
+Z2l0IGEvZHJpdmVycy9jbGsvc3VueGktbmcvY2N1X25rbS5jIGIvZHJpdmVycy9jbGsvc3VueGkt
+bmcvY2N1X25rbS5jCmluZGV4IGNiYTg0YWZlMWNmMS4uNDRiMTZkYzhmZWE2IDEwMDY0NAotLS0g
+YS9kcml2ZXJzL2Nsay9zdW54aS1uZy9jY3VfbmttLmMKKysrIGIvZHJpdmVycy9jbGsvc3VueGkt
+bmcvY2N1X25rbS5jCkBAIC0xMDIsNyArMTAyLDggQEAgc3RhdGljIHVuc2lnbmVkIGxvbmcgY2N1
+X25rbV9yZWNhbGNfcmF0ZShzdHJ1Y3QgY2xrX2h3ICpodywKIH0KIAogc3RhdGljIHVuc2lnbmVk
+IGxvbmcgY2N1X25rbV9yb3VuZF9yYXRlKHN0cnVjdCBjY3VfbXV4X2ludGVybmFsICptdXgsCi0J
+CQkJCXVuc2lnbmVkIGxvbmcgcGFyZW50X3JhdGUsCisJCQkJCXN0cnVjdCBjbGtfaHcgKmh3LAor
+CQkJCQl1bnNpZ25lZCBsb25nICpwYXJlbnRfcmF0ZSwKIAkJCQkJdW5zaWduZWQgbG9uZyByYXRl
+LAogCQkJCQl2b2lkICpkYXRhKQogewpAQCAtMTE2LDkgKzExNyw5IEBAIHN0YXRpYyB1bnNpZ25l
+ZCBsb25nIGNjdV9ua21fcm91bmRfcmF0ZShzdHJ1Y3QgY2N1X211eF9pbnRlcm5hbCAqbXV4LAog
+CV9ua20ubWluX20gPSAxOwogCV9ua20ubWF4X20gPSBua20tPm0ubWF4ID86IDEgPDwgbmttLT5t
+LndpZHRoOwogCi0JY2N1X25rbV9maW5kX2Jlc3QocGFyZW50X3JhdGUsIHJhdGUsICZfbmttKTsK
+KwljY3VfbmttX2ZpbmRfYmVzdCgqcGFyZW50X3JhdGUsIHJhdGUsICZfbmttKTsKIAotCXJldHVy
+biBwYXJlbnRfcmF0ZSAqIF9ua20ubiAqIF9ua20uayAvIF9ua20ubTsKKwlyZXR1cm4gKnBhcmVu
+dF9yYXRlICogX25rbS5uICogX25rbS5rIC8gX25rbS5tOwogfQogCiBzdGF0aWMgaW50IGNjdV9u
+a21fZGV0ZXJtaW5lX3JhdGUoc3RydWN0IGNsa19odyAqaHcsCi0tIApnaXQtc2VyaWVzIDAuOS4x
+Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZl
+bCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xp
+c3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
