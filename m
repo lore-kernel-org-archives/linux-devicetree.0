@@ -1,91 +1,65 @@
-From: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v2 00/18] ARM64: meson: DT cleanups
-Date: Wed, 17 May 2017 15:34:05 -0700
-Message-ID: <m2d1b75d0i.fsf@baylibre.com>
-References: <20170513143337.14278-1-afaerber@suse.de>
-        <36c02d8a-d3e2-4330-f600-e49a1ba680e8@baylibre.com>
-        <5fb0130c-473e-dc15-b60c-e5b6144031ad@suse.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH 4/4] ARM: dts: Add remote-wakeup-connected for omap OHCI
+Date: Wed, 17 May 2017 15:59:22 -0700
+Message-ID: <20170517225922.17723-5-tony@atomide.com>
+References: <20170517225922.17723-1-tony@atomide.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5fb0130c-473e-dc15-b60c-e5b6144031ad-l3A5Bk7waGM@public.gmane.org> ("Andreas
-        =?utf-8?Q?F=C3=A4rber=22's?= message of "Mon, 15 May 2017 21:10:58 +0200")
+In-Reply-To: <20170517225922.17723-1-tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andreas =?utf-8?Q?F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
-Cc: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
+Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>, Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Andreas,
+Add remote-wakeup-connected for omap OHCI as that's needed by
+ehci-platform driver.
 
-Andreas F=C3=A4rber <afaerber-l3A5Bk7waGM@public.gmane.org> writes:
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+Cc: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Signed-off-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+---
+ arch/arm/boot/dts/omap3.dtsi | 1 +
+ arch/arm/boot/dts/omap4.dtsi | 1 +
+ arch/arm/boot/dts/omap5.dtsi | 1 +
+ 3 files changed, 3 insertions(+)
 
-> Am 15.05.2017 um 10:16 schrieb Neil Armstrong:
-
-[...]
-
->>=20
->> It's not perfect, but now it's done, live with it, this has already been=
- discussed.
->
-> No.
->
-> Copy&pasting your comment N times does not make it any more valid. My
-> files, my rules - I insist on vega-s95, gxbb and gx, which you guys
-> refactored out from my gxbb, to be tidy.
-
-hmm, "my files, my rules, ... my gxbb"
-
-Very interesting perspective, but sorry, these do not belong to you.
-They belong to the kernel community.  You can insist if you like, but we
-do not make decisions just because someone says "mine".  Again, the
-confrontaional tone is not helpful to the dialogue.
-
-[...]
-
->>=20
->> Well, this is why we have 7 rc releases after the merge window...
->
-> If Kevin is the maintainer, then he needs to carefully review patches.
-
-Thank you for implying that I don't carefully review patches.  You're
-winning me over. :(
-
-Please see my reply to the cover letter as to why this kind of thing has
-not been on my priority list of things I look for during review.
-
-> It is not my job to review all patches when BayLibre gets paid for it!
-
-You have no idea who is getting paid for what kind of work, so please
-don't make decisions about what you review based on your assumptions.
-
-[...]
-
-> I will also remind that I was forced to clean up the node order in ALL
-> exynos5250 .dts files before I could get my new exynos5250-spring.dts
-> merged, so I have zero understanding about these "churn" and "live with
-> it" comments here. The same rules need to apply to all
-
-It's a nice ideal that the same rules would apply to all, and in some
-areas of the kernel, it may be true.  However, in actual practice,
-across the variety of kernel subsystems and platforms, there are in fact
-a rather large variety of "rules" with a huge amount of discretion left
-up to the maintainers.
-
-While that is a point of endless frustration for some (many?) it's also
-part of what makes the kernel community healthy, vibrant and still
-alive.
-
-Look, you convinced me based on sound technical arguments, good code,
-well written changelogs and persistence, even in spite of your
-accusatory tone and insinuations.
-
-For future reference, I'd be much happier to review without the latter.
-
-Thanks,
-
-Kevin
-
+diff --git a/arch/arm/boot/dts/omap3.dtsi b/arch/arm/boot/dts/omap3.dtsi
+--- a/arch/arm/boot/dts/omap3.dtsi
++++ b/arch/arm/boot/dts/omap3.dtsi
+@@ -715,6 +715,7 @@
+ 				reg = <0x48064400 0x400>;
+ 				interrupt-parent = <&intc>;
+ 				interrupts = <76>;
++				remote-wakeup-connected;
+ 			};
+ 
+ 			usbhsehci: ehci@48064800 {
+diff --git a/arch/arm/boot/dts/omap4.dtsi b/arch/arm/boot/dts/omap4.dtsi
+--- a/arch/arm/boot/dts/omap4.dtsi
++++ b/arch/arm/boot/dts/omap4.dtsi
+@@ -863,6 +863,7 @@
+ 				reg = <0x4a064800 0x400>;
+ 				interrupt-parent = <&gic>;
+ 				interrupts = <GIC_SPI 76 IRQ_TYPE_LEVEL_HIGH>;
++				remote-wakeup-connected;
+ 			};
+ 
+ 			usbhsehci: ehci@4a064c00 {
+diff --git a/arch/arm/boot/dts/omap5.dtsi b/arch/arm/boot/dts/omap5.dtsi
+--- a/arch/arm/boot/dts/omap5.dtsi
++++ b/arch/arm/boot/dts/omap5.dtsi
+@@ -939,6 +939,7 @@
+ 				compatible = "ti,ohci-omap3";
+ 				reg = <0x4a064800 0x400>;
+ 				interrupts = <GIC_SPI 76 IRQ_TYPE_LEVEL_HIGH>;
++				remote-wakeup-connected;
+ 			};
+ 
+ 			usbhsehci: ehci@4a064c00 {
+-- 
+2.13.0
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
