@@ -1,26 +1,69 @@
-From: "Karthik BalaGuru  T" <karthik.t-1DPrc2pTZ+p8UrSeD/g0lQ@public.gmane.org>
-Subject: Device tree file for Intel Atom processor
-Date: Wed, 17 May 2017 06:41:05 +0000
-Message-ID: <E41D83B2B2E8CB42AC13E92B4C3FABD3B86CCF@TS-GGN-MBX002.ibtechnology.com>
+From: Hans Verkuil <hverkuil@xs4all.nl>
+Subject: Re: [PATCH 2/4] media: platform: dwc: Support for DW CSI-2 Host
+Date: Wed, 17 May 2017 09:00:59 +0200
+Message-ID: <16996e20-b636-800b-0edc-fa9cca7b4481@xs4all.nl>
+References: <cover.1488885081.git.roliveir@synopsys.com>
+ <6a45f8d24993bc6ab02f8bd76ef1db421ab32d9c.1488885081.git.roliveir@synopsys.com>
+ <24d1c826-8c02-d625-efb7-705d3ad9ce3d@xs4all.nl>
+ <49e4c275-c660-60fd-cb32-e09a5add91a5@synopsys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <49e4c275-c660-60fd-cb32-e09a5add91a5@synopsys.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ramiro Oliveira <Ramiro.Oliveira@synopsys.com>, linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: CARLOS.PALMINHA@synopsys.com, Andrew Morton <akpm@linux-foundation.org>, Arnd Bergmann <arnd@arndb.de>, Benoit Parrot <bparrot@ti.com>, "David S. Miller" <davem@davemloft.net>, Geert Uytterhoeven <geert+renesas@glider.be>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Guenter Roeck <linux@roeck-us.net>, Hans Verkuil <hans.verkuil@cisco.com>, Hugues Fruchet <hugues.fruchet@st.com>, Jean-Christophe Trotin <jean-christophe.trotin@st.com>, Kieran Bingham <kieran+renesas@ksquared.org.uk>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Minghsiu Tsai <minghsiu.tsai@mediatek.com>, =?UTF-8?Q?Niklas_S=c3=b6derlund?= <niklas.soderlund+renesas@ragnatech.se>, Peter
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Sakari,
 
-Can someone point me to a specific device tree file for Intel Atom processor for reference ?
+Can you comment on this? You are much more a CSI sensor expert than I am.
 
-Thanks in advance,
-Karthik Balaguru
-Disclaimer : 
-This email communication may contain privileged and confidential information and is intended for the use of the addressee only. If you are not an intended recipient you are requested not to reproduce, copy disseminate or in any manner distribute this email communication as the same is strictly prohibited. If you have received this email in error, please notify the sender immediately by return e-mail and delete the communication sent in error. Email communications cannot be guaranteed to be secure & error free and Incedo Inc. is not liable for any errors in the email communication or for the proper, timely and complete transmission thereof.
+On 16/05/17 20:18, Ramiro Oliveira wrote:
+> Hi Hans,
+> 
+> Thank you very much for your feedback.
+> 
+> On 5/8/2017 11:38 AM, Hans Verkuil wrote:
+>> Hi Ramiro,
+>>
+>> My sincere apologies for the long delay in reviewing this. The good news is that
+>> I should have more time for reviews going forward, so I hope I'll be a lot quicker
+>> in the future.
+>>
+>> On 03/07/2017 03:37 PM, Ramiro Oliveira wrote:
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+<snip>
+
+>>> +		if (mf->width == bt->width && mf->height == bt->width) {
+>>
+>> This is way too generic. There are many preset timings that have the same
+>> width and height but different blanking periods.
+>>
+>> I am really not sure how this is supposed to work. If you want to support
+>> HDMI here, then I would expect to see support for the s_dv_timings op and friends
+>> in this driver. And I don't see support for that in the host driver either.
+>>
+>> Is this a generic csi driver, or specific for hdmi? Or supposed to handle both?
+> 
+> This is a generic CSI driver.
+> 
+>>
+>> Can you give some background and clarification of this?
+> 
+> This piece of code might seem strange but I'm just using it fill our controller
+> timing configuration.
+> 
+> I don't have any specific requirements, but they should match, more or less, the
+> sensor configurations, so I decided to re-use the HDMI blanking values, since,
+> usually, they match with the sensor configurations
+> 
+> So, my intention is to check if there is any HDMI preset that matches the
+> required width and height, and then use the blanking values to configure our
+> controller. I know this might not be very common, and I'm open to use different
+> approaches, but from my perspective it seems to work fine.
+
+Regards,
+
+	Hans
