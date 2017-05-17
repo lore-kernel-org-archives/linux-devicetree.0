@@ -1,40 +1,115 @@
-From: Frank Wang <frank.wang@rock-chips.com>
-Subject: [PATCH 3/3] arm: dts: rk322x: add watchdog device node.
-Date: Wed, 17 May 2017 11:40:51 +0800
-Message-ID: <1494992451-32542-4-git-send-email-frank.wang@rock-chips.com>
-References: <1494992451-32542-1-git-send-email-frank.wang@rock-chips.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1494992451-32542-1-git-send-email-frank.wang@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: heiko@sntech.de, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk
-Cc: linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, charles.chen@rock-chips.com, cody.xie@rock-chips.com, kevan.lan@rock-chips.com, huangtao@rock-chips.com, sugar.zhang@rock-chips.com, wmc@rock-chips.com, Frank Wang <frank.wang@rock-chips.com>
+From: Anup Patel <anup.patel@broadcom.com>
+Subject: Re: [PATCH v3 00/11] Broadcom Stingray SOC Initial Support
+Date: Wed, 17 May 2017 09:54:34 +0530
+Message-ID: <CAALAos8sRb+cLeHLP4yuD5oXRP1RWn=PGCkPGEBq+6X+DdkuQg@mail.gmail.com>
+References: <1494934256-1350-1-git-send-email-anup.patel@broadcom.com> <CAOesGMiwspTuVWp8nPcWK2MhuWh8x9XSkZWJE2x=FxTCtU47Sw@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <CAOesGMiwspTuVWp8nPcWK2MhuWh8x9XSkZWJE2x=FxTCtU47Sw@mail.gmail.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Olof Johansson <olof@lixom.net>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Florian Fainelli <f.fainelli@gmail.com>, Oza Pawandeep <oza.oza@broadcom.com>, Srinath Mannam <srinath.mannam@broadcom.com>, Pramod Kumar <pramod.kumar@broadcom.com>, Sandeep Tripathy <sandeep.tripathy@broadcom.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-clk <linux-clk@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Broad
 List-Id: devicetree@vger.kernel.org
 
-Add watchdog device node for rk322x SoC.
+On Wed, May 17, 2017 at 12:23 AM, Olof Johansson <olof@lixom.net> wrote:
+> Hi,
+>
+>
+>
+> On Tue, May 16, 2017 at 4:30 AM, Anup Patel <anup.patel@broadcom.com> wrote:
+>> This patchset adds initial support of Broadcom Stingray SOC
+>> by reusing existing Broadcom iProc device drivers.
+>>
+>> Most of the patches in this patchset are DT patches except
+>> the Stingray clock tree support which just one patch.
+>>
+>> This patchset is based on Linux-4.12-rc1 and it is also available
+>> at stingray-v3 branch of https://github.com/Broadcom/arm64-linux.git
+>>
+>> Changes since v2:
+>>  - Remove default bootargs from chosen DT node
+>>  - Remove "linux" prefix from stdout DT attribute of chosen DT node
+>>  - Remove use of GIC_CPU_MASK_xxx() for PPIs
+>>
+>> Changes since v1:
+>>  - Rebased patches for Linux-4.12-rc1
+>>  - Removed unwanted /memreserve/ from bcm958742-base.dtsi
+>>  - Use ranges DT property to clear view of memory-layout
+>>  - Make bcm-sr.h part of clock DT bindings patch
+>>
+>> Anup Patel (3):
+>>   dt-bindings: bcm: Add Broadcom Stingray bindings document
+>>   arm64: dts: Initial DTS files for Broadcom Stingray SOC
+>>   arm64: dts: Add PL022, PL330 and SP805 DT nodes for Stingray
+>>
+>> Oza Pawandeep (1):
+>>   arm64: dts: Add I2C DT nodes for Stingray SoC
+>>
+>> Pramod Kumar (3):
+>>   arm64: dts: Add NAND DT nodes for Stingray SOC
+>>   arm64: dts: Add pinctrl DT nodes for Stingray SOC
+>>   arm64: dts: Add GPIO DT nodes for Stingray SOC
+>>
+>> Sandeep Tripathy (3):
+>>   dt-bindings: clk: Extend binding doc for Stingray SOC
+>>   clk: bcm: Add clocks for Stingray SOC
+>>   arm64: dts: Add clock DT nodes for Stingray SOC
+>>
+>> Srinath Mannam (1):
+>>   arm64: dts: Add PWM and SDHCI DT nodes for Stingray SOC
+>>
+>>  .../devicetree/bindings/arm/bcm/brcm,stingray.txt  |  12 +
+>>  .../bindings/clock/brcm,iproc-clocks.txt           |  76 ++++
+>>  arch/arm64/boot/dts/broadcom/Makefile              |   1 +
+>>  arch/arm64/boot/dts/broadcom/stingray/Makefile     |   6 +
+>>  .../boot/dts/broadcom/stingray/bcm958742-base.dtsi | 131 ++++++
+>>  .../boot/dts/broadcom/stingray/bcm958742k.dts      |  78 ++++
+>>  .../boot/dts/broadcom/stingray/bcm958742t.dts      |  40 ++
+>>  .../boot/dts/broadcom/stingray/stingray-clock.dtsi | 170 ++++++++
+>>  .../dts/broadcom/stingray/stingray-pinctrl.dtsi    | 345 ++++++++++++++++
+>>  .../arm64/boot/dts/broadcom/stingray/stingray.dtsi | 460 +++++++++++++++++++++
+>>  drivers/clk/bcm/Kconfig                            |   8 +
+>>  drivers/clk/bcm/Makefile                           |   1 +
+>>  drivers/clk/bcm/clk-sr.c                           | 300 ++++++++++++++
+>>  include/dt-bindings/clock/bcm-sr.h                 | 101 +++++
+>>  .../dt-bindings/pinctrl/brcm,pinctrl-stingray.h    |  68 +++
+>>  15 files changed, 1797 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/arm/bcm/brcm,stingray.txt
+>>  create mode 100644 arch/arm64/boot/dts/broadcom/stingray/Makefile
+>>  create mode 100644 arch/arm64/boot/dts/broadcom/stingray/bcm958742-base.dtsi
+>>  create mode 100644 arch/arm64/boot/dts/broadcom/stingray/bcm958742k.dts
+>>  create mode 100644 arch/arm64/boot/dts/broadcom/stingray/bcm958742t.dts
+>>  create mode 100644 arch/arm64/boot/dts/broadcom/stingray/stingray-clock.dtsi
+>>  create mode 100644 arch/arm64/boot/dts/broadcom/stingray/stingray-pinctrl.dtsi
+>>  create mode 100644 arch/arm64/boot/dts/broadcom/stingray/stingray.dtsi
+>>  create mode 100644 drivers/clk/bcm/clk-sr.c
+>>  create mode 100644 include/dt-bindings/clock/bcm-sr.h
+>>  create mode 100644 include/dt-bindings/pinctrl/brcm,pinctrl-stingray.h
+>
+> Grouping as one patchset for review is fine, but when you submit this
+> for merge you need to split it up:
+>
+> - Documentation/devicetree can go with the driver pieces or with the
+> DT changes, your choice
+> - DTS/DTSI changes should go through the Broadcom maintainers to arm-soc
+> - clk changes should go to clk maintainers.
 
-Signed-off-by: Frank Wang <frank.wang@rock-chips.com>
----
- arch/arm/boot/dts/rk322x.dtsi | 8 ++++++++
- 1 file changed, 8 insertions(+)
+Only PATCH3 needs to go through clk maintainers rest all patches
+are DT bindings document and DTS changes which can go through
+Broadcom tree. Right ??
 
-diff --git a/arch/arm/boot/dts/rk322x.dtsi b/arch/arm/boot/dts/rk322x.dtsi
-index ea1239a..221251a 100644
---- a/arch/arm/boot/dts/rk322x.dtsi
-+++ b/arch/arm/boot/dts/rk322x.dtsi
-@@ -280,6 +280,14 @@
- 		status = "disabled";
- 	};
- 
-+	wdt: watchdog@110a0000 {
-+		compatible = "snps,dw-wdt";
-+		reg = <0x110a0000 0x100>;
-+		clocks = <&cru PCLK_CPU>;
-+		interrupts = <GIC_SPI 40 IRQ_TYPE_LEVEL_HIGH>;
-+		status = "disabled";
-+	};
-+
- 	pwm0: pwm@110b0000 {
- 		compatible = "rockchip,rk3288-pwm";
- 		reg = <0x110b0000 0x10>;
--- 
-2.0.0
+>
+> Also, there's usually no need to split up a DT introduction and having
+> separate pieces for NAND/pinctrl/GPIO/etc: They can all go in the main
+> DT submission patch.
+
+Yes, we have already squashed DTS patches from same author into
+one DTS patch except NAND, PINCTRL and GPIO patches.
+
+The NAND, PINCTRL, and GPIO patches were not squashed into
+one patch for easy review but since you suggest I will squash these
+three DTS patches into one DTS patch.
+
+Regards,
+Anup
