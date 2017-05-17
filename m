@@ -1,93 +1,52 @@
-From: Frank Wang <frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: Re: [PATCH 2/3] arm: dts: rk322x: correct uart2 pinctrl and add
- another sets
-Date: Wed, 17 May 2017 15:35:42 +0800
-Message-ID: <eb0f4b99-4e9a-7af3-a341-146a692fe49a@rock-chips.com>
-References: <1494992451-32542-1-git-send-email-frank.wang@rock-chips.com>
- <1494992451-32542-3-git-send-email-frank.wang@rock-chips.com>
- <3974d438-89ca-04e2-03cd-6d3946dd461e@163.com>
+From: Oleksij Rempel <ore-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH v1 3/3] nvmem: dt: document SNVS LPGPR binding
+Date: Wed, 17 May 2017 09:37:45 +0200
+Message-ID: <20170517073745.b2akgc3yew32qkde@pengutronix.de>
+References: <20170406073107.32445-1-o.rempel@pengutronix.de>
+ <20170406073107.32445-3-o.rempel@pengutronix.de>
+ <20170410182235.pmobyxn6kvyvcwsj@rob-hp-laptop>
+ <1e0f8a71-9dca-7aaa-a603-86ed3934da4d@pengutronix.de>
+ <CAL_JsqJeqYEw7v_z9zhtnP9hZEvkc5Z8TsktzbrCrmc7vorGkA@mail.gmail.com>
+ <20170412062353.s5nf5thsn2xxdlre@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <3974d438-89ca-04e2-03cd-6d3946dd461e-9Onoh4P/yGk@public.gmane.org>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20170412062353.s5nf5thsn2xxdlre-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kever Yang <ellisys-9Onoh4P/yGk@public.gmane.org>
-Cc: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, charles.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org, wmc-TNX95d0MmH7DzftRWevZcw@public.gmane.org, kevan.lan-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sugar.zhang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, cody.xie-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Oleksij Rempel <o.rempel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, kernel-rffoE+Jg25C1LGEWPFfZhQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Kever,
+On Wed, Apr 12, 2017 at 08:23:53AM +0200, Oleksij Rempel wrote:
+> On Tue, Apr 11, 2017 at 08:35:00AM -0500, Rob Herring wrote:
+> > On Mon, Apr 10, 2017 at 11:36 PM, Oleksij Rempel <ore-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
+> > > Hi,
+> > > On 04/10/2017 08:22 PM, Rob Herring wrote:
+> > >>
+> > >> On Thu, Apr 06, 2017 at 09:31:07AM +0200, Oleksij Rempel wrote:
+> > >>>
+> > >>> Documenation bindings for the Low Power General Purpose Registe
+> > >>
+> > > Jes, it is refereed by other driver.
+> > 
+> > What I mean is snvs-lpgpr referenced elsewhere in DT, not by some
+> > driver? You are not using the nvmem binding here so it doesn't seem
+> > like it is. If that's the case, then you don't need this node. The
+> > only information here is the offset which can be part of a driver for
+> > the parent node. To put it another way, we don't want to fill DT with
+> > a node per register.
+> 
+> This node is referenced insight of product DT. Since the system has
+> or may have more then one nvmem node we need to assigne aliase to it.
 
+Hi, are there still some doubts about this patch set?
 
-On 2017/5/17 14:31, Kever Yang wrote:
-> Hi Frank,
->
->
-> On 05/17/2017 11:40 AM, Frank Wang wrote:
->> Correct UART2 PINCTRL flag and add another PINCTRL sets for UART2
->> in case of confict with SDMMC.
->>
->> Signed-off-by: Frank Wang <frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
->> ---
->>   arch/arm/boot/dts/rk322x.dtsi | 11 +++++++++--
->>   1 file changed, 9 insertions(+), 2 deletions(-)
->>
->> diff --git a/arch/arm/boot/dts/rk322x.dtsi 
->> b/arch/arm/boot/dts/rk322x.dtsi
->> index cc6a27d..ea1239a 100644
->> --- a/arch/arm/boot/dts/rk322x.dtsi
->> +++ b/arch/arm/boot/dts/rk322x.dtsi
->> @@ -222,7 +222,7 @@
->>           clocks = <&cru SCLK_UART2>, <&cru PCLK_UART2>;
->>           clock-names = "baudclk", "apb_pclk";
->>           pinctrl-names = "default";
->> -        pinctrl-0 = <&uart2_xfer>;
->> +        pinctrl-0 = <&uart21_xfer>;
->
-> There are more than one group of UART in rk322x, maybe we need to move
-> or add this setting in the dts file to override dtsi setting?
->
-
-That makes sense, I will delete above change in next version and 
-overwrite it in dts file later.
-
-BR.
-Frank
-
-
-> Thanks,
-> - Kever
->>           reg-shift = <2>;
->>           reg-io-width = <4>;
->>           status = "disabled";
->> @@ -693,7 +693,7 @@
->>             uart2 {
->>               uart2_xfer: uart2-xfer {
->> -                rockchip,pins = <1 18 RK_FUNC_2 &pcfg_pull_none>,
->> +                rockchip,pins = <1 18 RK_FUNC_2 &pcfg_pull_up>,
->>                           <1 19 RK_FUNC_2 &pcfg_pull_none>;
->>               };
->>   @@ -705,5 +705,12 @@
->>                   rockchip,pins = <0 24 RK_FUNC_1 &pcfg_pull_none>;
->>               };
->>           };
->> +
->> +        uart2-1 {
->> +            uart21_xfer: uart21-xfer {
->> +                rockchip,pins = <1 10 RK_FUNC_2 &pcfg_pull_up>,
->> +                        <1 9 RK_FUNC_2 &pcfg_pull_none>;
->> +            };
->> +        };
->>       };
->>   };
->
->
->
->
->
-
-
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
