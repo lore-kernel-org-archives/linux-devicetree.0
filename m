@@ -1,48 +1,191 @@
-From: Frank Wang <frank.wang@rock-chips.com>
-Subject: [PATCH v2 2/3] arm: dts: rk322x: correct uart2 pinctrl and add another sets
-Date: Wed, 17 May 2017 17:52:25 +0800
-Message-ID: <1495014746-27621-3-git-send-email-frank.wang@rock-chips.com>
-References: <1495014746-27621-1-git-send-email-frank.wang@rock-chips.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1495014746-27621-1-git-send-email-frank.wang@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: heiko@sntech.de, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, wim@iguana.be, linux@roeck-us.net, ellisys@163.com
-Cc: linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, charles.chen@rock-chips.com, cody.xie@rock-chips.com, kevan.lan@rock-chips.com, huangtao@rock-chips.com, sugar.zhang@rock-chips.com, wmc@rock-chips.com, Frank Wang <frank.wang@rock-chips.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Applied "ASoC: add audio-graph-card document" to the asoc tree
+Date: Wed, 17 May 2017 10:52:50 +0100
+Message-ID: <E1dAvdS-0006xM-Vs@debutante>
+References: <87tw6xhghs.wl%kuninori.morimoto.gx@renesas.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <87tw6xhghs.wl%kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linux-DT <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-ALSA <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, Simon <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Correct UART2 PINCTRL flag and add another PINCTRL sets for UART2
-in case of confict with SDMMC.
+The patch
 
-Signed-off-by: Frank Wang <frank.wang@rock-chips.com>
+   ASoC: add audio-graph-card document
+
+has been applied to the asoc tree at
+
+   git://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+>From 2d4e31de5bb2b5fbdbcd8a3bfec0eae0bd4ca409 Mon Sep 17 00:00:00 2001
+From: Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Date: Thu, 20 Apr 2017 01:35:41 +0000
+Subject: [PATCH] ASoC: add audio-graph-card document
+
+"Audio Graph Card" = "Simple Card" + "OF-graph"
+
+Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Signed-off-by: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 ---
- arch/arm/boot/dts/rk322x.dtsi | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ .../devicetree/bindings/sound/audio-graph-card.txt | 124 +++++++++++++++++++++
+ 1 file changed, 124 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/audio-graph-card.txt
 
-diff --git a/arch/arm/boot/dts/rk322x.dtsi b/arch/arm/boot/dts/rk322x.dtsi
-index cc6a27d..fe6530f 100644
---- a/arch/arm/boot/dts/rk322x.dtsi
-+++ b/arch/arm/boot/dts/rk322x.dtsi
-@@ -693,7 +693,7 @@
- 
- 		uart2 {
- 			uart2_xfer: uart2-xfer {
--				rockchip,pins = <1 18 RK_FUNC_2 &pcfg_pull_none>,
-+				rockchip,pins = <1 18 RK_FUNC_2 &pcfg_pull_up>,
- 						<1 19 RK_FUNC_2 &pcfg_pull_none>;
- 			};
- 
-@@ -705,5 +705,12 @@
- 				rockchip,pins = <0 24 RK_FUNC_1 &pcfg_pull_none>;
- 			};
- 		};
+diff --git a/Documentation/devicetree/bindings/sound/audio-graph-card.txt b/Documentation/devicetree/bindings/sound/audio-graph-card.txt
+new file mode 100644
+index 000000000000..bac4b1b1060f
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/audio-graph-card.txt
+@@ -0,0 +1,124 @@
++Audio Graph Card:
 +
-+		uart2-1 {
-+			uart21_xfer: uart21-xfer {
-+				rockchip,pins = <1 10 RK_FUNC_2 &pcfg_pull_up>,
-+						<1 9 RK_FUNC_2 &pcfg_pull_none>;
++Audio Graph Card specifies audio DAI connections of SoC <-> codec.
++It is based on common bindings for device graphs.
++see ${LINUX}/Documentation/devicetree/bindings/graph.txt
++
++Basically, Audio Graph Card property is same as Simple Card.
++see ${LINUX}/Documentation/devicetree/bindings/sound/simple-card.txt
++
++Below are same as Simple-Card.
++
++- label
++- dai-format
++- frame-master
++- bitclock-master
++- bitclock-inversion
++- frame-inversion
++- dai-tdm-slot-num
++- dai-tdm-slot-width
++- clocks / system-clock-frequency
++
++Required properties:
++
++- compatible				: "audio-graph-card";
++- dais					: list of CPU DAI port{s}
++
++Example: Single DAI case
++
++	sound_card {
++		compatible = "audio-graph-card";
++
++		dais = <&cpu_port>;
++	};
++
++	dai-controller {
++		...
++		cpu_port: port {
++			cpu_endpoint: endpoint {
++				remote-endpoint = <&codec_endpoint>;
++
++				dai-format = "left_j";
++				...
 +			};
 +		};
- 	};
- };
++	};
++
++	audio-codec {
++		...
++		port {
++			codec_endpoint: endpoint {
++				remote-endpoint = <&cpu_endpoint>;
++			};
++		};
++	};
++
++Example: Multi DAI case
++
++	sound-card {
++		compatible = "audio-graph-card";
++
++		label = "sound-card";
++
++		dais = <&cpu_port0
++			&cpu_port1
++			&cpu_port2>;
++	};
++
++	audio-codec@0 {
++		...
++		port {
++			codec0_endpoint: endpoint {
++				remote-endpoint = <&cpu_endpoint0>;
++			};
++		};
++	};
++
++	audio-codec@1 {
++		...
++		port {
++			codec1_endpoint: endpoint {
++				remote-endpoint = <&cpu_endpoint1>;
++			};
++		};
++	};
++
++	audio-codec@2 {
++		...
++		port {
++			codec2_endpoint: endpoint {
++				remote-endpoint = <&cpu_endpoint2>;
++			};
++		};
++	};
++
++	dai-controller {
++		...
++		ports {
++			cpu_port0: port@0 {
++				cpu_endpoint0: endpoint {
++					remote-endpoint = <&codec0_endpoint>;
++
++					dai-format = "left_j";
++					...
++				};
++			};
++			cpu_port1: port@1 {
++				cpu_endpoint1: endpoint {
++					remote-endpoint = <&codec1_endpoint>;
++
++					dai-format = "i2s";
++					...
++				};
++			};
++			cpu_port2: port@2 {
++				cpu_endpoint2: endpoint {
++					remote-endpoint = <&codec2_endpoint>;
++
++					dai-format = "i2s";
++					...
++				};
++			};
++		};
++	};
++
 -- 
-2.0.0
+2.11.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
