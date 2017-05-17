@@ -1,52 +1,142 @@
-From: Oleksij Rempel <ore-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH v1 3/3] nvmem: dt: document SNVS LPGPR binding
-Date: Wed, 17 May 2017 09:37:45 +0200
-Message-ID: <20170517073745.b2akgc3yew32qkde@pengutronix.de>
-References: <20170406073107.32445-1-o.rempel@pengutronix.de>
- <20170406073107.32445-3-o.rempel@pengutronix.de>
- <20170410182235.pmobyxn6kvyvcwsj@rob-hp-laptop>
- <1e0f8a71-9dca-7aaa-a603-86ed3934da4d@pengutronix.de>
- <CAL_JsqJeqYEw7v_z9zhtnP9hZEvkc5Z8TsktzbrCrmc7vorGkA@mail.gmail.com>
- <20170412062353.s5nf5thsn2xxdlre@pengutronix.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH v3 00/21] drm: sun4i: Add support for the HDMI controller
+Date: Wed, 17 May 2017 09:40:29 +0200
+Message-ID: <cover.463df61c38224ecbfb5bf1cf192deeb63718b693.1495006350.git-series.maxime.ripard@free-electrons.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170412062353.s5nf5thsn2xxdlre-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Oleksij Rempel <o.rempel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, kernel-rffoE+Jg25C1LGEWPFfZhQ@public.gmane.org
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Daniel Vetter <daniel.vetter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 12, 2017 at 08:23:53AM +0200, Oleksij Rempel wrote:
-> On Tue, Apr 11, 2017 at 08:35:00AM -0500, Rob Herring wrote:
-> > On Mon, Apr 10, 2017 at 11:36 PM, Oleksij Rempel <ore-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
-> > > Hi,
-> > > On 04/10/2017 08:22 PM, Rob Herring wrote:
-> > >>
-> > >> On Thu, Apr 06, 2017 at 09:31:07AM +0200, Oleksij Rempel wrote:
-> > >>>
-> > >>> Documenation bindings for the Low Power General Purpose Registe
-> > >>
-> > > Jes, it is refereed by other driver.
-> > 
-> > What I mean is snvs-lpgpr referenced elsewhere in DT, not by some
-> > driver? You are not using the nvmem binding here so it doesn't seem
-> > like it is. If that's the case, then you don't need this node. The
-> > only information here is the offset which can be part of a driver for
-> > the parent node. To put it another way, we don't want to fill DT with
-> > a node per register.
-> 
-> This node is referenced insight of product DT. Since the system has
-> or may have more then one nvmem node we need to assigne aliase to it.
+Hi,
 
-Hi, are there still some doubts about this patch set?
+Here is an attempt at getting the HDMI controller running.
 
+This HDMI controller is found on a number of old Allwinner SoCs (A10, A10s,
+A20, A31).
+
+This driver only supports for now the A10s because it was an easy target,
+being very close to the A13 that is already supported by our DRM driver.
+
+There's nothing out of the extraordinary there, except maybe the clock
+setup. All the internal clocks (TMDS, DDC) have been modeled using the
+common clock framework, the TMDS clock being the parent of the DDC one.
+
+While this might sound overkill, other SoC have a different, external
+source for the DDC clock, which will be easier to support through the clock
+framework.
+
+The IP also supports audio (through an already supported i2s controller,
+and some missing configuration in the HDMI controller) and CEC. Both will
+come eventually.
+
+Let me know what you think!
+Maxime
+
+Changes from v2:
+  - Fixed the PLL control macros definitions
+  - Called clk_enable / disable on the DDC clock
+  - Added the flags to enable the connection polling
+  - Fixed the vtotal computation in TCON's code, and added a comment
+  - Added and documented the A10s display engine compatible
+  - Reworked the component parsing code to bail out when a standard
+    connector is found
+  - Fixed a inconsistent comment in the predivider unapplication
+  - Fixed a commit log
+  - Added Chen-Yu's and Rob's Acked-By
+  - Changed divider_round_rate to a static, inline function in the header
+  - Added and document the A10s display pipeline compatible
+  - Rebased on top of 4.12
+
+Changes from v1:
+  - Fixed typos in the CCU header and the HDMI code
+  - Reintroduced the comment for the backporch timings
+  - Renamed the hdmi node to hdmi, instead of hdmi0
+  - Added support for hdmi-connector
+  - Added a separate Kconfig option for the HDMI support
+  - Changed the TCON muxing configuration for an explicit call in the
+    TCON's "clients"
+  - Fixed the initialisation sequence that was clearing the clocks bits
+  - Constified the HDMI's structures and removed whitespaces errors
+  - Fixed an issue in the sunxi-ng code that was not reporting the proper
+    parent clock rate if it was modified
+  - Removed unused headers
+  - Removed CLK_SET_RATE_PARENT for the DDC clock
+  - Used the DDC address defines
+  - Removed the interlace flag that wasn't supported at the moment
+  - Moved most of the HDMI encoder init to the bind function like we do for
+    the other encoders
+  - Switched to drm_of_find_possible_crtcs
+  - Removed the extra printk that were still in my code
+  - Rebased on top of linux-next
+  - Removed the patch changing the divider_round_rate prototype to
+    introduce a new function instead that takes the parent clock to
+    evaluate
+  - Added a clk_set_rate for the hdmi module clock
+  - Fixed the V_TOTAL TCON ch0 calculation to be consistent with ch1's
+  - Defined all registers, and remove the TODOs
+  - Fixed the EDID issues by increasing the timeout.
+  - Added an atomic_check to prevent the DBLCLK modes to be used, as it is
+    not supported yet
+  - Updated the binding to add the interrupts and DMA channels
+
+Maxime Ripard (21):
+  clk: divider: Make divider_round_rate take the parent clock
+  clk: sunxi-ng: Pass the parent and a pointer to the clocks round rate
+  clk: sunxi-ng: div: Switch to divider_round_rate
+  clk: sunxi-ng: mux: Don't just rely on the parent for CLK_SET_RATE_PARENT
+  clk: sunxi-ng: mux: split out the pre-divider computation code
+  clk: sunxi-ng: mux: Change pre-divider application function prototype
+  clk: sunxi-ng: mux: Re-adjust parent rate
+  clk: sunxi-ng: sun5i: Export video PLLs
+  drm/sun4i: tcon: Add channel debug
+  drm/sun4i: tcon: Move the muxing out of the mode set function
+  drm/sun4i: tcon: Switch mux on only for composite
+  drm/sun4i: tcon: Fix tcon channel 1 backporch calculation
+  drm/sun4i: tcon: Change vertical total size computation inconsistency
+  drm/sun4i: tcon: multiply the vtotal when not in interlace
+  drm/sun4i: Ignore the generic connectors for components
+  dt-bindings: display: sun4i: Add HDMI display bindings
+  dt-bindings: display: sun4i: Add allwinner,tcon-channel property
+  drm/sun4i: Add HDMI support
+  drm/sun4i: Add compatible for the A10s pipeline
+  ARM: sun5i: a10s: Add the HDMI controller node
+  ARM: sun5i: a10s-olinuxino: Enable HDMI
+
+ Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt |  91 +-
+ arch/arm/boot/dts/sun5i-a10s-olinuxino-micro.dts              |  29 +-
+ arch/arm/boot/dts/sun5i-a10s.dtsi                             |  47 +-
+ arch/arm/boot/dts/sun5i.dtsi                                  |   1 +-
+ drivers/clk/clk-divider.c                                     |  19 +-
+ drivers/clk/sunxi-ng/ccu-sun5i.h                              |   6 +-
+ drivers/clk/sunxi-ng/ccu_div.c                                |  38 +-
+ drivers/clk/sunxi-ng/ccu_mp.c                                 |  15 +-
+ drivers/clk/sunxi-ng/ccu_mult.c                               |  19 +-
+ drivers/clk/sunxi-ng/ccu_mux.c                                |  90 +-
+ drivers/clk/sunxi-ng/ccu_mux.h                                |  11 +-
+ drivers/clk/sunxi-ng/ccu_nkm.c                                |   7 +-
+ drivers/gpu/drm/sun4i/Kconfig                                 |   9 +-
+ drivers/gpu/drm/sun4i/Makefile                                |   6 +-
+ drivers/gpu/drm/sun4i/sun4i_drv.c                             |  13 +-
+ drivers/gpu/drm/sun4i/sun4i_hdmi.h                            | 157 ++-
+ drivers/gpu/drm/sun4i/sun4i_hdmi_ddc_clk.c                    | 127 ++-
+ drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c                        | 501 +++++++-
+ drivers/gpu/drm/sun4i/sun4i_hdmi_tmds_clk.c                   | 225 +++-
+ drivers/gpu/drm/sun4i/sun4i_rgb.c                             |   1 +-
+ drivers/gpu/drm/sun4i/sun4i_tcon.c                            |  62 +-
+ drivers/gpu/drm/sun4i/sun4i_tcon.h                            |   4 +-
+ drivers/gpu/drm/sun4i/sun4i_tv.c                              |   1 +-
+ include/dt-bindings/clock/sun5i-ccu.h                         |   3 +-
+ include/linux/clk-provider.h                                  |  16 +-
+ 25 files changed, 1378 insertions(+), 120 deletions(-)
+ create mode 100644 drivers/gpu/drm/sun4i/sun4i_hdmi.h
+ create mode 100644 drivers/gpu/drm/sun4i/sun4i_hdmi_ddc_clk.c
+ create mode 100644 drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c
+ create mode 100644 drivers/gpu/drm/sun4i/sun4i_hdmi_tmds_clk.c
+
+base-commit: cf80aeef958f2e5b0041c72b567ae949f5b2738d
 -- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+git-series 0.9.1
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
