@@ -1,151 +1,99 @@
 From: Guodong Xu <guodong.xu@linaro.org>
-Subject: [PATCH 07/12] arm64: dts: hi3660: Add uarts nodes
-Date: Wed, 17 May 2017 16:37:40 +0800
-Message-ID: <20170517083745.24479-8-guodong.xu@linaro.org>
+Subject: [PATCH 04/12] arm64: dts: hi3660: add resources for clock and reset
+Date: Wed, 17 May 2017 16:37:37 +0800
+Message-ID: <20170517083745.24479-5-guodong.xu@linaro.org>
 References: <20170517083745.24479-1-guodong.xu@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170517083745.24479-1-guodong.xu@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: robh+dt@kernel.org, xuwei5@hisilicon.com, catalin.marinas@arm.com, will.deacon@arm.com, wangkefeng.wang@huawei.com, puck.chen@hisilicon.com, xuejiancheng@hisilicon.com, devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Wang Xiaoyin <hw.wangxiaoyin@hisilicon.com>, Guodong Xu <guodong.xu@linaro.org>
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Zhangfei Gao <zhangfei.gao@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Chen Feng <puck.chen@hisilicon.com>
+From: Zhangfei Gao <zhangfei.gao@linaro.org>
 
-Add nodes uart0 to uart4 and uart6 for hi3660 SoC.
-Enable uart3 and uart6, disable uart5, in hikey960 board dts.
+Add some resource nodes for clock and reset
 
-On HiKey960:
- - UART6 is used as default console, and is wired out through low speed
-         expansion connector.
- - UART3 has RTS/CTS hardware handshake, and is wired out through low
-         speed expansion connector.
- - UART5 is not used in commercial launched boards. So disable it.
- - UART4 is connected to Bluetooth, WL1837.
-
-Signed-off-by: Chen Feng <puck.chen@hisilicon.com>
-Signed-off-by: Wang Xiaoyin <hw.wangxiaoyin@hisilicon.com>
-Signed-off-by: Guodong Xu <guodong.xu@linaro.org>
-Reviewed-by: Zhangfei Gao <zhangfei.gao@hisilicon.com>
+Signed-off-by: Zhangfei Gao <zhangfei.gao@linaro.org>
 ---
- arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts | 18 +++++--
- arch/arm64/boot/dts/hisilicon/hi3660.dtsi         | 60 +++++++++++++++++++++++
- 2 files changed, 73 insertions(+), 5 deletions(-)
+ arch/arm64/boot/dts/hisilicon/hi3660.dtsi | 53 +++++++++++++++++++++++++++----
+ 1 file changed, 46 insertions(+), 7 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts b/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
-index f685b1e..513c496 100644
---- a/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
-+++ b/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
-@@ -15,12 +15,16 @@
- 	compatible = "hisilicon,hi3660-hikey960", "hisilicon,hi3660";
- 
- 	aliases {
--		serial5 = &uart5;       /* console UART */
-+		serial0 = &uart0;
-+		serial1 = &uart1;
-+		serial2 = &uart2;
-+		serial3 = &uart3;
-+		serial4 = &uart4;
-+		serial5 = &uart5;
-+		serial6 = &uart6;
- 	};
- 
--	chosen {
--		stdout-path = "serial5:115200n8";
--	};
-+	chosen {};
- 
- 	memory@0 {
- 		device_type = "memory";
-@@ -47,6 +51,10 @@
- 	status = "okay";
- };
- 
--&uart5 {
-+&uart3 {
-+	status = "okay";
-+};
-+
-+&uart6 {
- 	status = "okay";
- };
 diff --git a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
-index 3bea0d2..0951a29 100644
+index 3983086..f55710a 100644
 --- a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
 +++ b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
-@@ -242,6 +242,56 @@
- 			status = "disabled";
+@@ -5,6 +5,7 @@
+  */
+ 
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
++#include <dt-bindings/clock/hi3660-clock.h>
+ 
+ / {
+ 	compatible = "hisilicon,hi3660";
+@@ -141,18 +142,56 @@
+ 		#size-cells = <2>;
+ 		ranges;
+ 
+-		fixed_uart5: fixed_19_2M {
+-			compatible = "fixed-clock";
+-			#clock-cells = <0>;
+-			clock-frequency = <19200000>;
+-			clock-output-names = "fixed:uart5";
++		crg_ctrl: crg_ctrl@fff35000 {
++			compatible = "hisilicon,hi3660-crgctrl", "syscon";
++			reg = <0x0 0xfff35000 0x0 0x1000>;
++			#clock-cells = <1>;
  		};
  
-+		uart0: serial@fdf02000 {
-+			compatible = "arm,pl011", "arm,primecell";
-+			reg = <0x0 0xfdf02000 0x0 0x1000>;
-+			interrupts = <GIC_SPI 74 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&crg_ctrl HI3660_CLK_MUX_UART0>,
-+				 <&crg_ctrl HI3660_PCLK>;
-+			clock-names = "uartclk", "apb_pclk";
-+			status = "disabled";
+-		uart5: uart@fdf05000 {
++		crg_rst: crg_rst_controller {
++			compatible = "hisilicon,hi3660-reset";
++			#reset-cells = <2>;
++			hisi,rst-syscon = <&crg_ctrl>;
 +		};
 +
-+		uart1: serial@fdf00000 {
-+			compatible = "arm,pl011", "arm,primecell";
-+			reg = <0x0 0xfdf00000 0x0 0x1000>;
-+			interrupts = <GIC_SPI 75 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&crg_ctrl HI3660_CLK_GATE_UART1>,
-+				 <&crg_ctrl HI3660_CLK_GATE_UART1>;
-+			clock-names = "uartclk", "apb_pclk";
-+			status = "disabled";
++
++		pctrl: pctrl@e8a09000 {
++			compatible = "hisilicon,hi3660-pctrl", "syscon";
++			reg = <0x0 0xe8a09000 0x0 0x2000>;
++			#clock-cells = <1>;
 +		};
 +
-+		uart2: serial@fdf03000 {
-+			compatible = "arm,pl011", "arm,primecell";
-+			reg = <0x0 0xfdf03000 0x0 0x1000>;
-+			interrupts = <GIC_SPI 76 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&crg_ctrl HI3660_CLK_GATE_UART2>,
-+				 <&crg_ctrl HI3660_PCLK>;
-+			clock-names = "uartclk", "apb_pclk";
-+			status = "disabled";
++		pmuctrl: crg_ctrl@fff34000 {
++			compatible = "hisilicon,hi3660-pmuctrl", "syscon";
++			reg = <0x0 0xfff34000 0x0 0x1000>;
++			#clock-cells = <1>;
 +		};
 +
-+		uart3: serial@ffd74000 {
-+			compatible = "arm,pl011", "arm,primecell";
-+			reg = <0x0 0xffd74000 0x0 0x1000>;
-+			interrupts = <GIC_SPI 114 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&crg_ctrl HI3660_FACTOR_UART3>,
-+				 <&crg_ctrl HI3660_PCLK>;
-+			clock-names = "uartclk", "apb_pclk";
-+			status = "disabled";
++		sctrl: sctrl@fff0a000 {
++			compatible = "hisilicon,hi3660-sctrl", "syscon";
++			reg = <0x0 0xfff0a000 0x0 0x1000>;
++			#clock-cells = <1>;
 +		};
 +
-+		uart4: serial@fdf01000 {
-+			compatible = "arm,pl011", "arm,primecell";
-+			reg = <0x0 0xfdf01000 0x0 0x1000>;
-+			interrupts = <GIC_SPI 77 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&crg_ctrl HI3660_CLK_GATE_UART4>,
-+				 <&crg_ctrl HI3660_CLK_GATE_UART4>;
-+			clock-names = "uartclk", "apb_pclk";
-+			status = "disabled";
++		iomcu: iomcu@ffd7e000 {
++			compatible = "hisilicon,hi3660-iomcu", "syscon";
++			reg = <0x0 0xffd7e000 0x0 0x1000>;
++			#clock-cells = <1>;
++
 +		};
 +
- 		uart5: serial@fdf05000 {
++		iomcu_rst: reset {
++			compatible = "hisilicon,hi3660-reset";
++			hisi,rst-syscon = <&iomcu>;
++			#reset-cells = <2>;
++		};
++
++		uart5: serial@fdf05000 {
  			compatible = "arm,pl011", "arm,primecell";
  			reg = <0x0 0xfdf05000 0x0 0x1000>;
-@@ -252,6 +302,16 @@
+ 			interrupts = <GIC_SPI 78 IRQ_TYPE_LEVEL_HIGH>;
+-			clocks = <&fixed_uart5 &fixed_uart5>;
++			clocks = <&crg_ctrl HI3660_CLK_GATE_UART5>,
++				 <&crg_ctrl HI3660_CLK_GATE_UART5>;
+ 			clock-names = "uartclk", "apb_pclk";
  			status = "disabled";
  		};
- 
-+		uart6: serial@fff32000 {
-+			compatible = "arm,pl011", "arm,primecell";
-+			reg = <0x0 0xfff32000 0x0 0x1000>;
-+			interrupts = <GIC_SPI 79 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&crg_ctrl HI3660_CLK_UART6>,
-+				 <&crg_ctrl HI3660_PCLK>;
-+			clock-names = "uartclk", "apb_pclk";
-+			status = "disabled";
-+		};
-+
- 		gpio0: gpio@e8a0b000 {
- 			compatible = "arm,pl061", "arm,primecell";
- 			reg = <0 0xe8a0b000 0 0x1000>;
 -- 
 2.10.2
