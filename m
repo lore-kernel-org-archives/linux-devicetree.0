@@ -1,125 +1,54 @@
 From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: [PATCH v3 16/21] dt-bindings: display: sun4i: Add HDMI display bindings
-Date: Wed, 17 May 2017 09:40:45 +0200
-Message-ID: <67bd9d191ce9cc8a172abbc558901ac79da9daab.1495006350.git-series.maxime.ripard@free-electrons.com>
+Subject: [PATCH v3 08/21] clk: sunxi-ng: sun5i: Export video PLLs
+Date: Wed, 17 May 2017 09:40:37 +0200
+Message-ID: <5f07c9602419aba17ad6e25e3edb2d7a643f9bdc.1495006350.git-series.maxime.ripard@free-electrons.com>
 References: <cover.463df61c38224ecbfb5bf1cf192deeb63718b693.1495006350.git-series.maxime.ripard@free-electrons.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 In-Reply-To: <cover.463df61c38224ecbfb5bf1cf192deeb63718b693.1495006350.git-series.maxime.ripard@free-electrons.com>
 In-Reply-To: <cover.463df61c38224ecbfb5bf1cf192deeb63718b693.1495006350.git-series.maxime.ripard@free-electrons.com>
 References: <cover.463df61c38224ecbfb5bf1cf192deeb63718b693.1495006350.git-series.maxime.ripard@free-electrons.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
 To: Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>
-Cc: Daniel Vetter <daniel.vetter@intel.com>, David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Daniel Vetter <daniel.vetter@intel.com>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-One of the possible output of the display pipeline, on the SoCs that have
-it, is the HDMI controller.
-
-Add a binding for it.
-
-Acked-by: Chen-Yu Tsai <wens@csie.org>
-Acked-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
----
- Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt | 79 +++++++-
- 1 file changed, 79 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt b/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
-index 7acdbf14ae1c..e74794f20ec5 100644
---- a/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
-+++ b/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
-@@ -14,6 +14,34 @@ Conversely, for the output ports of the same group, the remote endpoint
- ID must be the index of the local hardware block. If the local backend
- is backend 1, then the remote endpoint ID must be 1.
- 
-+HDMI Encoder
-+------------
-+
-+The HDMI Encoder supports the HDMI video and audio outputs, and does
-+CEC. It is one end of the pipeline.
-+
-+Required properties:
-+  - compatible: value must be one of:
-+    * allwinner,sun5i-a10s-hdmi
-+  - reg: base address and size of memory-mapped region
-+  - interrupts: interrupt associated to this IP
-+  - clocks: phandles to the clocks feeding the HDMI encoder
-+    * ahb: the HDMI interface clock
-+    * mod: the HDMI module clock
-+    * pll-0: the first video PLL
-+    * pll-1: the second video PLL
-+  - clock-names: the clock names mentioned above
-+  - dmas: phandles to the DMA channels used by the HDMI encoder
-+    * ddc-tx: The channel for DDC transmission
-+    * ddc-rx: The channel for DDC reception
-+    * audio-tx: The channel used for audio transmission
-+  - dma-names: the channel names mentioned above
-+
-+  - ports: A ports node with endpoint definitions as defined in
-+    Documentation/devicetree/bindings/media/video-interfaces.txt. The
-+    first port should be the input endpoint. The second should be the
-+    output, usually to an HDMI connector.
-+
- TV Encoder
- ----------
- 
-@@ -183,6 +211,57 @@ panel: panel {
- 	};
- };
- 
-+connector {
-+	compatible = "hdmi-connector";
-+	type = "a";
-+
-+	port {
-+		hdmi_con_in: endpoint {
-+			remote-endpoint = <&hdmi_out_con>;
-+		};
-+	};
-+};
-+
-+hdmi: hdmi@01c16000 {
-+	compatible = "allwinner,sun5i-a10s-hdmi";
-+	reg = <0x01c16000 0x1000>;
-+	interrupts = <58>;
-+	clocks = <&ccu CLK_AHB_HDMI>, <&ccu CLK_HDMI>,
-+		 <&ccu CLK_PLL_VIDEO0_2X>,
-+		 <&ccu CLK_PLL_VIDEO1_2X>;
-+	clock-names = "ahb", "mod", "pll-0", "pll-1";
-+	dmas = <&dma SUN4I_DMA_NORMAL 16>,
-+	       <&dma SUN4I_DMA_NORMAL 16>,
-+	       <&dma SUN4I_DMA_DEDICATED 24>;
-+	dma-names = "ddc-tx", "ddc-rx", "audio-tx";
-+	status = "disabled";
-+
-+	ports {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		port@0 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <0>;
-+
-+			hdmi_in_tcon0: endpoint {
-+				remote-endpoint = <&tcon0_out_hdmi>;
-+			};
-+		};
-+
-+		port@1 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <1>;
-+
-+			hdmi_out_con: endpoint {
-+				remote-endpoint = <&hdmi_con_in>;
-+			};
-+		};
-+	};
-+};
-+
- tve0: tv-encoder@01c0a000 {
- 	compatible = "allwinner,sun4i-a10-tv-encoder";
- 	reg = <0x01c0a000 0x1000>;
--- 
-git-series 0.9.1
+VGhlIHZpZGVvIFBMTHMgYXJlIHVzZWQgZGlyZWN0bHkgYnkgdGhlIEhETUkgY29udHJvbGxlci4g
+RXhwb3J0IHRoZW0gc28KdGhhdCB3ZSBjYW4gdXNlIHRoZW0gaW4gb3VyIERUIG5vZGUuCgpTaWdu
+ZWQtb2ZmLWJ5OiBNYXhpbWUgUmlwYXJkIDxtYXhpbWUucmlwYXJkQGZyZWUtZWxlY3Ryb25zLmNv
+bT4KQWNrZWQtYnk6IENoZW4tWXUgVHNhaSA8d2Vuc0Bjc2llLm9yZz4KLS0tCiBkcml2ZXJzL2Ns
+ay9zdW54aS1uZy9jY3Utc3VuNWkuaCAgICAgIHwgNiArKysrLS0KIGluY2x1ZGUvZHQtYmluZGlu
+Z3MvY2xvY2svc3VuNWktY2N1LmggfCAzICsrKwogMiBmaWxlcyBjaGFuZ2VkLCA3IGluc2VydGlv
+bnMoKyksIDIgZGVsZXRpb25zKC0pCgpkaWZmIC0tZ2l0IGEvZHJpdmVycy9jbGsvc3VueGktbmcv
+Y2N1LXN1bjVpLmggYi9kcml2ZXJzL2Nsay9zdW54aS1uZy9jY3Utc3VuNWkuaAppbmRleCA4MTQ0
+NDg3ZWI3Y2EuLjkzYTI3NWZiZDlhOSAxMDA2NDQKLS0tIGEvZHJpdmVycy9jbGsvc3VueGktbmcv
+Y2N1LXN1bjVpLmgKKysrIGIvZHJpdmVycy9jbGsvc3VueGktbmcvY2N1LXN1bjVpLmgKQEAgLTI4
+LDE1ICsyOCwxNyBAQAogI2RlZmluZSBDTEtfUExMX0FVRElPXzRYCTYKICNkZWZpbmUgQ0xLX1BM
+TF9BVURJT184WAk3CiAjZGVmaW5lIENMS19QTExfVklERU8wCQk4Ci0jZGVmaW5lIENMS19QTExf
+VklERU8wXzJYCTkKKworLyogVGhlIFBMTF9WSURFTzBfMlggaXMgZXhwb3J0ZWQgZm9yIEhETUkg
+Ki8KKwogI2RlZmluZSBDTEtfUExMX1ZFCQkxMAogI2RlZmluZSBDTEtfUExMX0REUl9CQVNFCTEx
+CiAjZGVmaW5lIENMS19QTExfRERSCQkxMgogI2RlZmluZSBDTEtfUExMX0REUl9PVEhFUgkxMwog
+I2RlZmluZSBDTEtfUExMX1BFUklQSAkJMTQKICNkZWZpbmUgQ0xLX1BMTF9WSURFTzEJCTE1Ci0j
+ZGVmaW5lIENMS19QTExfVklERU8xXzJYCTE2CiAKKy8qIFRoZSBQTExfVklERU8xXzJYIGlzIGV4
+cG9ydGVkIGZvciBIRE1JICovCiAvKiBUaGUgQ1BVIGNsb2NrIGlzIGV4cG9ydGVkICovCiAKICNk
+ZWZpbmUgQ0xLX0FYSQkJCTE4CmRpZmYgLS1naXQgYS9pbmNsdWRlL2R0LWJpbmRpbmdzL2Nsb2Nr
+L3N1bjVpLWNjdS5oIGIvaW5jbHVkZS9kdC1iaW5kaW5ncy9jbG9jay9zdW41aS1jY3UuaAppbmRl
+eCBhZWIyZTJmNzgxZmIuLjgxZjM0ZDQ3N2FlYiAxMDA2NDQKLS0tIGEvaW5jbHVkZS9kdC1iaW5k
+aW5ncy9jbG9jay9zdW41aS1jY3UuaAorKysgYi9pbmNsdWRlL2R0LWJpbmRpbmdzL2Nsb2NrL3N1
+bjVpLWNjdS5oCkBAIC0xOSw2ICsxOSw5IEBACiAKICNkZWZpbmUgQ0xLX0hPU0MJCTEKIAorI2Rl
+ZmluZSBDTEtfUExMX1ZJREVPMF8yWAk5CisKKyNkZWZpbmUgQ0xLX1BMTF9WSURFTzFfMlgJMTYK
+ICNkZWZpbmUgQ0xLX0NQVQkJCTE3CiAKICNkZWZpbmUgQ0xLX0FIQl9PVEcJCTIzCi0tIApnaXQt
+c2VyaWVzIDAuOS4xCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9y
+ZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZl
+bAo=
