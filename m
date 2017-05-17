@@ -1,179 +1,236 @@
-From: Heiner Kallweit <hkallweit1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH RfC v3 5/7] pinctrl: meson: improve meson_get_bank and export
- it
-Date: Wed, 17 May 2017 22:16:55 +0200
-Message-ID: <b7b35b6f-ff70-3a6f-c9b7-5ca4a23293e1@gmail.com>
+From: Heiner Kallweit <hkallweit1@gmail.com>
+Subject: [PATCH RfC v3 1/7] pinctrl: meson: add interrupts to pinctrl data
+Date: Wed, 17 May 2017 22:16:25 +0200
+Message-ID: <387c13a1-37f8-20d0-78f7-e99c31274ac1@gmail.com>
 References: <16950080-b19d-e25c-fb48-bc79cfe4acc0@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <16950080-b19d-e25c-fb48-bc79cfe4acc0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <16950080-b19d-e25c-fb48-bc79cfe4acc0@gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Jerome Brunet <jbrunet@baylibre.com>, Mark Rutland <mark.rutland@arm.com>, Marc Zyngier <marc.zyngier@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Kevin Hilman <khilman@baylibre.com>, Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-gpio@vger.kernel.org, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, Thierry Reding <treding@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-Export meson_get_bank because it's needed for the GPIO IRQ controller.
-To avoid potential name conflicts rename it to meson_pinctrl_get_bank.
+From: Jerome Brunet <jbrunet@baylibre.com>
+Add GPIO interrupt information to pinctrl data. Added to the original
+version from Jerome was data for Meson GXL.
 
-In addition simplify it by returning the pointer directly and using
-a ERR_PTR in case of an error.
-
-Signed-off-by: Heiner Kallweit <hkallweit1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
 ---
 v2:
-- add this patch to the series
+- no changes
 v3:
 - no changes
 ---
- drivers/pinctrl/meson/pinctrl-meson.c | 59 +++++++++++++++--------------------
- drivers/pinctrl/meson/pinctrl-meson.h |  3 ++
- 2 files changed, 29 insertions(+), 33 deletions(-)
+ drivers/pinctrl/meson/pinctrl-meson-gxbb.c | 22 ++++++++++----------
+ drivers/pinctrl/meson/pinctrl-meson-gxl.c  | 20 +++++++++----------
+ drivers/pinctrl/meson/pinctrl-meson.h      | 15 +++++++++-----
+ drivers/pinctrl/meson/pinctrl-meson8.c     | 20 +++++++++----------
+ drivers/pinctrl/meson/pinctrl-meson8b.c    | 32 ++++++++++++++++++++----------
+ 5 files changed, 63 insertions(+), 46 deletions(-)
 
-diff --git a/drivers/pinctrl/meson/pinctrl-meson.c b/drivers/pinctrl/meson/pinctrl-meson.c
-index 66ed70c1..39ad9861 100644
---- a/drivers/pinctrl/meson/pinctrl-meson.c
-+++ b/drivers/pinctrl/meson/pinctrl-meson.c
-@@ -63,28 +63,24 @@
- #include "pinctrl-meson.h"
+diff --git a/drivers/pinctrl/meson/pinctrl-meson-gxbb.c b/drivers/pinctrl/meson/pinctrl-meson-gxbb.c
+index 9b00be15..e54dbeaa 100644
+--- a/drivers/pinctrl/meson/pinctrl-meson-gxbb.c
++++ b/drivers/pinctrl/meson/pinctrl-meson-gxbb.c
+@@ -782,20 +782,20 @@ static struct meson_pmx_func meson_gxbb_aobus_functions[] = {
+ };
  
- /**
-- * meson_get_bank() - find the bank containing a given pin
-+ * meson_pinctrl_get_bank() - find the bank containing a given pin
-  *
-  * @pc:		the pinctrl instance
-  * @pin:	the pin number
-- * @bank:	the found bank
-  *
-- * Return:	0 on success, a negative value on error
-+ * Return:	the found bank or an ERR_PTR
-  */
--static int meson_get_bank(struct meson_pinctrl *pc, unsigned int pin,
--			  struct meson_bank **bank)
-+struct meson_bank *meson_pinctrl_get_bank(const struct meson_pinctrl *pc,
-+					  unsigned int pin)
- {
-+	struct meson_bank *bank = pc->data->banks;
- 	int i;
+ static struct meson_bank meson_gxbb_periphs_banks[] = {
+-	/*   name    first                      last                    pullen  pull    dir     out     in  */
+-	BANK("X",    PIN(GPIOX_0, EE_OFF),	PIN(GPIOX_22, EE_OFF),  4,  0,  4,  0,  12, 0,  13, 0,  14, 0),
+-	BANK("Y",    PIN(GPIOY_0, EE_OFF),	PIN(GPIOY_16, EE_OFF),  1,  0,  1,  0,  3,  0,  4,  0,  5,  0),
+-	BANK("DV",   PIN(GPIODV_0, EE_OFF),	PIN(GPIODV_29, EE_OFF), 0,  0,  0,  0,  0,  0,  1,  0,  2,  0),
+-	BANK("H",    PIN(GPIOH_0, EE_OFF),	PIN(GPIOH_3, EE_OFF),   1, 20,  1, 20,  3, 20,  4, 20,  5, 20),
+-	BANK("Z",    PIN(GPIOZ_0, EE_OFF),	PIN(GPIOZ_15, EE_OFF),  3,  0,  3,  0,  9,  0,  10, 0, 11,  0),
+-	BANK("CARD", PIN(CARD_0, EE_OFF),	PIN(CARD_6, EE_OFF),    2, 20,  2, 20,  6, 20,  7, 20,  8, 20),
+-	BANK("BOOT", PIN(BOOT_0, EE_OFF),	PIN(BOOT_17, EE_OFF),   2,  0,  2,  0,  6,  0,  7,  0,  8,  0),
+-	BANK("CLK",  PIN(GPIOCLK_0, EE_OFF),	PIN(GPIOCLK_3, EE_OFF), 3, 28,  3, 28,  9, 28, 10, 28, 11, 28),
++	/*   name    first                      last                    irq       pullen  pull    dir     out     in  */
++	BANK("X",    PIN(GPIOX_0, EE_OFF),	PIN(GPIOX_22, EE_OFF),  106, 128, 4,  0,  4,  0,  12, 0,  13, 0,  14, 0),
++	BANK("Y",    PIN(GPIOY_0, EE_OFF),	PIN(GPIOY_16, EE_OFF),   89, 105, 1,  0,  1,  0,  3,  0,  4,  0,  5,  0),
++	BANK("DV",   PIN(GPIODV_0, EE_OFF),	PIN(GPIODV_29, EE_OFF),  59,  88, 0,  0,  0,  0,  0,  0,  1,  0,  2,  0),
++	BANK("H",    PIN(GPIOH_0, EE_OFF),	PIN(GPIOH_3, EE_OFF),    30,  33, 1, 20,  1, 20,  3, 20,  4, 20,  5, 20),
++	BANK("Z",    PIN(GPIOZ_0, EE_OFF),	PIN(GPIOZ_15, EE_OFF),   14,  29, 3,  0,  3,  0,  9,  0,  10, 0, 11,  0),
++	BANK("CARD", PIN(CARD_0, EE_OFF),	PIN(CARD_6, EE_OFF),     52,  58, 2, 20,  2, 20,  6, 20,  7, 20,  8, 20),
++	BANK("BOOT", PIN(BOOT_0, EE_OFF),	PIN(BOOT_17, EE_OFF),    34,  51, 2,  0,  2,  0,  6,  0,  7,  0,  8,  0),
++	BANK("CLK",  PIN(GPIOCLK_0, EE_OFF),	PIN(GPIOCLK_3, EE_OFF), 129, 132, 3, 28,  3, 28,  9, 28, 10, 28, 11, 28),
+ };
  
--	for (i = 0; i < pc->data->num_banks; i++) {
--		if (pin >= pc->data->banks[i].first &&
--		    pin <= pc->data->banks[i].last) {
--			*bank = &pc->data->banks[i];
--			return 0;
--		}
--	}
-+	for (i = 0; i < pc->data->num_banks; i++, bank++)
-+		if (pin >= bank->first && pin <= bank->last)
-+			return bank;
+ static struct meson_bank meson_gxbb_aobus_banks[] = {
+-	/*   name    first              last               pullen  pull    dir     out     in  */
+-	BANK("AO",   PIN(GPIOAO_0, 0),  PIN(GPIOAO_13, 0), 0,  0,  0, 16,  0,  0,  0, 16,  1,  0),
++	/*   name    first              last               irq    pullen  pull    dir     out     in  */
++	BANK("AO",   PIN(GPIOAO_0, 0),  PIN(GPIOAO_13, 0), 0, 13, 0,  0,  0, 16,  0,  0,  0, 16,  1,  0),
+ };
  
--	return -EINVAL;
-+	return ERR_PTR(-EINVAL);
- }
+ struct meson_pinctrl_data meson_gxbb_periphs_pinctrl_data = {
+diff --git a/drivers/pinctrl/meson/pinctrl-meson-gxl.c b/drivers/pinctrl/meson/pinctrl-meson-gxl.c
+index 998210ea..bcd8da10 100644
+--- a/drivers/pinctrl/meson/pinctrl-meson-gxl.c
++++ b/drivers/pinctrl/meson/pinctrl-meson-gxl.c
+@@ -729,19 +729,19 @@ static struct meson_pmx_func meson_gxl_aobus_functions[] = {
+ };
  
- /**
-@@ -261,9 +257,9 @@ static int meson_pinconf_set(struct pinctrl_dev *pcdev, unsigned int pin,
- 	unsigned int reg, bit;
- 	int i, ret;
+ static struct meson_bank meson_gxl_periphs_banks[] = {
+-	/*   name    first                      last                    pullen  pull    dir     out     in  */
+-	BANK("X",    PIN(GPIOX_0, EE_OFF),	PIN(GPIOX_18, EE_OFF),  4,  0,  4,  0,  12, 0,  13, 0,  14, 0),
+-	BANK("DV",   PIN(GPIODV_0, EE_OFF),	PIN(GPIODV_29, EE_OFF), 0,  0,  0,  0,  0,  0,  1,  0,  2,  0),
+-	BANK("H",    PIN(GPIOH_0, EE_OFF),	PIN(GPIOH_9, EE_OFF),   1, 20,  1, 20,  3, 20,  4, 20,  5, 20),
+-	BANK("Z",    PIN(GPIOZ_0, EE_OFF),	PIN(GPIOZ_15, EE_OFF),  3,  0,  3,  0,  9,  0,  10, 0, 11,  0),
+-	BANK("CARD", PIN(CARD_0, EE_OFF),	PIN(CARD_6, EE_OFF),    2, 20,  2, 20,  6, 20,  7, 20,  8, 20),
+-	BANK("BOOT", PIN(BOOT_0, EE_OFF),	PIN(BOOT_15, EE_OFF),   2,  0,  2,  0,  6,  0,  7,  0,  8,  0),
+-	BANK("CLK",  PIN(GPIOCLK_0, EE_OFF),	PIN(GPIOCLK_1, EE_OFF), 3, 28,  3, 28,  9, 28, 10, 28, 11, 28),
++	/*   name    first                      last                    irq	  pullen  pull    dir     out     in  */
++	BANK("X",    PIN(GPIOX_0, EE_OFF),	PIN(GPIOX_18, EE_OFF),   89, 107, 4,  0,  4,  0,  12, 0,  13, 0,  14, 0),
++	BANK("DV",   PIN(GPIODV_0, EE_OFF),	PIN(GPIODV_29, EE_OFF),  83,  88, 0,  0,  0,  0,  0,  0,  1,  0,  2,  0),
++	BANK("H",    PIN(GPIOH_0, EE_OFF),	PIN(GPIOH_9, EE_OFF),    26,  35, 1, 20,  1, 20,  3, 20,  4, 20,  5, 20),
++	BANK("Z",    PIN(GPIOZ_0, EE_OFF),	PIN(GPIOZ_15, EE_OFF),   10,  25, 3,  0,  3,  0,  9,  0,  10, 0, 11,  0),
++	BANK("CARD", PIN(CARD_0, EE_OFF),	PIN(CARD_6, EE_OFF),     52,  58, 2, 20,  2, 20,  6, 20,  7, 20,  8, 20),
++	BANK("BOOT", PIN(BOOT_0, EE_OFF),	PIN(BOOT_15, EE_OFF),    36,  51, 2,  0,  2,  0,  6,  0,  7,  0,  8,  0),
++	BANK("CLK",  PIN(GPIOCLK_0, EE_OFF),	PIN(GPIOCLK_1, EE_OFF), 108, 109, 3, 28,  3, 28,  9, 28, 10, 28, 11, 28),
+ };
  
--	ret = meson_get_bank(pc, pin, &bank);
--	if (ret)
--		return ret;
-+	bank = meson_pinctrl_get_bank(pc, pin);
-+	if (IS_ERR(bank))
-+		return PTR_ERR(bank);
+ static struct meson_bank meson_gxl_aobus_banks[] = {
+-	/*   name    first              last              pullen  pull    dir     out     in  */
+-	BANK("AO",   PIN(GPIOAO_0, 0),  PIN(GPIOAO_9, 0), 0,  0,  0, 16,  0,  0,  0, 16,  1,  0),
++	/*   name    first              last              irq	pullen  pull    dir     out     in  */
++	BANK("AO",   PIN(GPIOAO_0, 0),  PIN(GPIOAO_9, 0), 0, 9, 0,  0,  0, 16,  0,  0,  0, 16,  1,  0),
+ };
  
- 	for (i = 0; i < num_configs; i++) {
- 		param = pinconf_to_config_param(configs[i]);
-@@ -324,9 +320,9 @@ static int meson_pinconf_get_pull(struct meson_pinctrl *pc, unsigned int pin)
- 	unsigned int reg, bit, val;
- 	int ret, conf;
- 
--	ret = meson_get_bank(pc, pin, &bank);
--	if (ret)
--		return ret;
-+	bank = meson_pinctrl_get_bank(pc, pin);
-+	if (IS_ERR(bank))
-+		return PTR_ERR(bank);
- 
- 	meson_calc_reg_and_bit(bank, pin, REG_PULLEN, &reg, &bit);
- 
-@@ -427,12 +423,11 @@ static int meson_gpio_direction_input(struct gpio_chip *chip, unsigned gpio)
- 	struct meson_pinctrl *pc = gpiochip_get_data(chip);
- 	unsigned int reg, bit, pin;
- 	struct meson_bank *bank;
--	int ret;
- 
- 	pin = pc->data->pin_base + gpio;
--	ret = meson_get_bank(pc, pin, &bank);
--	if (ret)
--		return ret;
-+	bank = meson_pinctrl_get_bank(pc, pin);
-+	if (IS_ERR(bank))
-+		return PTR_ERR(bank);
- 
- 	meson_calc_reg_and_bit(bank, pin, REG_DIR, &reg, &bit);
- 
-@@ -448,9 +443,9 @@ static int meson_gpio_direction_output(struct gpio_chip *chip, unsigned gpio,
- 	int ret;
- 
- 	pin = pc->data->pin_base + gpio;
--	ret = meson_get_bank(pc, pin, &bank);
--	if (ret)
--		return ret;
-+	bank = meson_pinctrl_get_bank(pc, pin);
-+	if (IS_ERR(bank))
-+		return PTR_ERR(bank);
- 
- 	meson_calc_reg_and_bit(bank, pin, REG_DIR, &reg, &bit);
- 	ret = regmap_update_bits(pc->reg_gpio, reg, BIT(bit), 0);
-@@ -467,11 +462,10 @@ static void meson_gpio_set(struct gpio_chip *chip, unsigned gpio, int value)
- 	struct meson_pinctrl *pc = gpiochip_get_data(chip);
- 	unsigned int reg, bit, pin;
- 	struct meson_bank *bank;
--	int ret;
- 
- 	pin = pc->data->pin_base + gpio;
--	ret = meson_get_bank(pc, pin, &bank);
--	if (ret)
-+	bank = meson_pinctrl_get_bank(pc, pin);
-+	if (IS_ERR(bank))
- 		return;
- 
- 	meson_calc_reg_and_bit(bank, pin, REG_OUT, &reg, &bit);
-@@ -484,12 +478,11 @@ static int meson_gpio_get(struct gpio_chip *chip, unsigned gpio)
- 	struct meson_pinctrl *pc = gpiochip_get_data(chip);
- 	unsigned int reg, bit, val, pin;
- 	struct meson_bank *bank;
--	int ret;
- 
- 	pin = pc->data->pin_base + gpio;
--	ret = meson_get_bank(pc, pin, &bank);
--	if (ret)
--		return ret;
-+	bank = meson_pinctrl_get_bank(pc, pin);
-+	if (IS_ERR(bank))
-+		return PTR_ERR(bank);
- 
- 	meson_calc_reg_and_bit(bank, pin, REG_IN, &reg, &bit);
- 	regmap_read(pc->reg_gpio, reg, &val);
+ struct meson_pinctrl_data meson_gxl_periphs_pinctrl_data = {
 diff --git a/drivers/pinctrl/meson/pinctrl-meson.h b/drivers/pinctrl/meson/pinctrl-meson.h
-index 890f296f..40b56aff 100644
+index 1aa871d5..890f296f 100644
 --- a/drivers/pinctrl/meson/pinctrl-meson.h
 +++ b/drivers/pinctrl/meson/pinctrl-meson.h
-@@ -176,3 +176,6 @@ extern struct meson_pinctrl_data meson_gxbb_periphs_pinctrl_data;
- extern struct meson_pinctrl_data meson_gxbb_aobus_pinctrl_data;
- extern struct meson_pinctrl_data meson_gxl_periphs_pinctrl_data;
- extern struct meson_pinctrl_data meson_gxl_aobus_pinctrl_data;
+@@ -81,6 +81,7 @@ enum meson_reg_type {
+  * @name:	bank name
+  * @first:	first pin of the bank
+  * @last:	last pin of the bank
++ * @irq:	hwirq base number of the bank
+  * @regs:	array of register descriptors
+  *
+  * A bank represents a set of pins controlled by a contiguous set of
+@@ -92,6 +93,8 @@ struct meson_bank {
+ 	const char *name;
+ 	unsigned int first;
+ 	unsigned int last;
++	int irq_first;
++	int irq_last;
+ 	struct meson_reg_desc regs[NUM_REG];
+ };
+ 
+@@ -147,12 +150,14 @@ struct meson_pinctrl {
+ 		.num_groups = ARRAY_SIZE(fn ## _groups),		\
+ 	}
+ 
+-#define BANK(n, f, l, per, peb, pr, pb, dr, db, or, ob, ir, ib)		\
++#define BANK(n, f, l, fi, li, per, peb, pr, pb, dr, db, or, ob, ir, ib)	\
+ 	{								\
+-		.name	= n,						\
+-		.first	= f,						\
+-		.last	= l,						\
+-		.regs	= {						\
++		.name		= n,					\
++		.first		= f,					\
++		.last		= l,					\
++		.irq_first	= fi,					\
++		.irq_last	= li,					\
++		.regs = {						\
+ 			[REG_PULLEN]	= { per, peb },			\
+ 			[REG_PULL]	= { pr, pb },			\
+ 			[REG_DIR]	= { dr, db },			\
+diff --git a/drivers/pinctrl/meson/pinctrl-meson8.c b/drivers/pinctrl/meson/pinctrl-meson8.c
+index 07f1cb21..32449820 100644
+--- a/drivers/pinctrl/meson/pinctrl-meson8.c
++++ b/drivers/pinctrl/meson/pinctrl-meson8.c
+@@ -916,19 +916,19 @@ static struct meson_pmx_func meson8_aobus_functions[] = {
+ };
+ 
+ static struct meson_bank meson8_cbus_banks[] = {
+-	/*   name    first             last                 pullen  pull    dir     out     in  */
+-	BANK("X",    PIN(GPIOX_0, 0),  PIN(GPIOX_21, 0),    4,  0,  4,  0,  0,  0,  1,  0,  2,  0),
+-	BANK("Y",    PIN(GPIOY_0, 0),  PIN(GPIOY_16, 0),    3,  0,  3,  0,  3,  0,  4,  0,  5,  0),
+-	BANK("DV",   PIN(GPIODV_0, 0), PIN(GPIODV_29, 0),   0,  0,  0,  0,  7,  0,  8,  0,  9,  0),
+-	BANK("H",    PIN(GPIOH_0, 0),  PIN(GPIOH_9, 0),     1, 16,  1, 16,  9, 19, 10, 19, 11, 19),
+-	BANK("Z",    PIN(GPIOZ_0, 0),  PIN(GPIOZ_14, 0),    1,  0,  1,  0,  3, 17,  4, 17,  5, 17),
+-	BANK("CARD", PIN(CARD_0, 0),   PIN(CARD_6, 0),      2, 20,  2, 20,  0, 22,  1, 22,  2, 22),
+-	BANK("BOOT", PIN(BOOT_0, 0),   PIN(BOOT_18, 0),     2,  0,  2,  0,  9,  0, 10,  0, 11,  0),
++	/*   name    first             last                 irq       pullen  pull    dir     out     in  */
++	BANK("X",    PIN(GPIOX_0, 0),  PIN(GPIOX_21, 0),    112, 133, 4,  0,  4,  0,  0,  0,  1,  0,  2,  0),
++	BANK("Y",    PIN(GPIOY_0, 0),  PIN(GPIOY_16, 0),    95,  111, 3,  0,  3,  0,  3,  0,  4,  0,  5,  0),
++	BANK("DV",   PIN(GPIODV_0, 0), PIN(GPIODV_29, 0),   65,   94, 0,  0,  0,  0,  7,  0,  8,  0,  9,  0),
++	BANK("H",    PIN(GPIOH_0, 0),  PIN(GPIOH_9, 0),     29,   38, 1, 16,  1, 16,  9, 19, 10, 19, 11, 19),
++	BANK("Z",    PIN(GPIOZ_0, 0),  PIN(GPIOZ_14, 0),    14,   28, 1,  0,  1,  0,  3, 17,  4, 17,  5, 17),
++	BANK("CARD", PIN(CARD_0, 0),   PIN(CARD_6, 0),      58,   64, 2, 20,  2, 20,  0, 22,  1, 22,  2, 22),
++	BANK("BOOT", PIN(BOOT_0, 0),   PIN(BOOT_18, 0),     39,   57, 2,  0,  2,  0,  9,  0, 10,  0, 11,  0),
+ };
+ 
+ static struct meson_bank meson8_aobus_banks[] = {
+-	/*   name    first                  last                      pullen  pull    dir     out     in  */
+-	BANK("AO",   PIN(GPIOAO_0, AO_OFF), PIN(GPIO_TEST_N, AO_OFF), 0,  0,  0, 16,  0,  0,  0, 16,  1,  0),
++	/*   name    first                  last                      irq    pullen  pull    dir     out     in  */
++	BANK("AO",   PIN(GPIOAO_0, AO_OFF), PIN(GPIO_TEST_N, AO_OFF), 0, 13, 0,  0,  0, 16,  0,  0,  0, 16,  1,  0),
+ };
+ 
+ struct meson_pinctrl_data meson8_cbus_pinctrl_data = {
+diff --git a/drivers/pinctrl/meson/pinctrl-meson8b.c b/drivers/pinctrl/meson/pinctrl-meson8b.c
+index bf747eb1..71f216b5 100644
+--- a/drivers/pinctrl/meson/pinctrl-meson8b.c
++++ b/drivers/pinctrl/meson/pinctrl-meson8b.c
+@@ -124,6 +124,12 @@ static const struct pinctrl_pin_desc meson8b_aobus_pins[] = {
+ 	MESON_PIN(GPIOAO_11, AO_OFF),
+ 	MESON_PIN(GPIOAO_12, AO_OFF),
+ 	MESON_PIN(GPIOAO_13, AO_OFF),
 +
-+struct meson_bank *meson_pinctrl_get_bank(const struct meson_pinctrl *pc,
-+					  unsigned int pin);
++	/*
++	 * The following 2 pins are not mentionned in the public datasheet
++	 * According to this datasheet, they can't be used with the gpio
++	 * interrupt controller
++	 */
+ 	MESON_PIN(GPIO_BSD_EN, AO_OFF),
+ 	MESON_PIN(GPIO_TEST_N, AO_OFF),
+ };
+@@ -881,19 +887,25 @@ static struct meson_pmx_func meson8b_aobus_functions[] = {
+ };
+ 
+ static struct meson_bank meson8b_cbus_banks[] = {
+-	/*   name    first                      last                   pullen  pull    dir     out     in  */
+-	BANK("X",    PIN(GPIOX_0, 0),		PIN(GPIOX_21, 0),      4,  0,  4,  0,  0,  0,  1,  0,  2,  0),
+-	BANK("Y",    PIN(GPIOY_0, 0),		PIN(GPIOY_14, 0),      3,  0,  3,  0,  3,  0,  4,  0,  5,  0),
+-	BANK("DV",   PIN(GPIODV_9, 0),		PIN(GPIODV_29, 0),     0,  0,  0,  0,  7,  0,  8,  0,  9,  0),
+-	BANK("H",    PIN(GPIOH_0, 0),		PIN(GPIOH_9, 0),       1, 16,  1, 16,  9, 19, 10, 19, 11, 19),
+-	BANK("CARD", PIN(CARD_0, 0),		PIN(CARD_6, 0),        2, 20,  2, 20,  0, 22,  1, 22,  2, 22),
+-	BANK("BOOT", PIN(BOOT_0, 0),		PIN(BOOT_18, 0),       2,  0,  2,  0,  9,  0, 10,  0, 11,  0),
+-	BANK("DIF",  PIN(DIF_0_P, 0),		PIN(DIF_4_N, 0),       5,  8,  5,  8, 12, 12, 13, 12, 14, 12),
++	/*   name    first                      last                irq      pullen  pull    dir     out     in  */
++	BANK("X",    PIN(GPIOX_0, 0),		PIN(GPIOX_21, 0),   97, 118, 4,  0,  4,  0,  0,  0,  1,  0,  2,  0),
++	BANK("Y",    PIN(GPIOY_0, 0),		PIN(GPIOY_14, 0),   80,  96, 3,  0,  3,  0,  3,  0,  4,  0,  5,  0),
++	BANK("DV",   PIN(GPIODV_9, 0),		PIN(GPIODV_29, 0),  59,  79, 0,  0,  0,  0,  7,  0,  8,  0,  9,  0),
++	BANK("H",    PIN(GPIOH_0, 0),		PIN(GPIOH_9, 0),    14,  23, 1, 16,  1, 16,  9, 19, 10, 19, 11, 19),
++	BANK("CARD", PIN(CARD_0, 0),		PIN(CARD_6, 0),     43,  49, 2, 20,  2, 20,  0, 22,  1, 22,  2, 22),
++	BANK("BOOT", PIN(BOOT_0, 0),		PIN(BOOT_18, 0),    24,  42, 2,  0,  2,  0,  9,  0, 10,  0, 11,  0),
++
++	/*
++	 * The following bank is not mentionned in the public datasheet
++	 * There is no information whether it can be used with the gpio
++	 * interrupt controller
++	 */
++	BANK("DIF",  PIN(DIF_0_P, 0),		PIN(DIF_4_N, 0),    -1,  -1, 5,  8,  5,  8, 12, 12, 13, 12, 14, 12),
+ };
+ 
+ static struct meson_bank meson8b_aobus_banks[] = {
+-	/*   name    first                  last                      pullen  pull    dir     out     in  */
+-	BANK("AO",   PIN(GPIOAO_0, AO_OFF), PIN(GPIO_TEST_N, AO_OFF), 0,  0,  0, 16,  0,  0,  0, 16,  1,  0),
++	/*   name    first                  last                      irq    pullen  pull    dir     out     in  */
++	BANK("AO",   PIN(GPIOAO_0, AO_OFF), PIN(GPIO_TEST_N, AO_OFF), 0, 13, 0,  0,  0, 16,  0,  0,  0, 16,  1,  0),
+ };
+ 
+ struct meson_pinctrl_data meson8b_cbus_pinctrl_data = {
 -- 
 2.13.0
 
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
