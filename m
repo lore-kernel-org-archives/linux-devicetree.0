@@ -1,127 +1,51 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Applied "of_graph: add of_graph_get_remote_endpoint()" to the asoc tree
-Date: Wed, 17 May 2017 10:53:21 +0100
-Message-ID: <E1dAvdx-00074D-At@debutante>
-References: <87d1n7xqzd.wl%kuninori.morimoto.gx@renesas.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <87d1n7xqzd.wl%kuninori.morimoto.gx@renesas.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Cc: Rob Herring <robh@kernel.org>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Brown <broonie@linaro.org>Mark Brown <broonie@kernel.org>, Laurent <laurent.pinchart@ideasonboard.com>, Guennadi <g.liakhovetski@gmx.de>, Grant Likely <grant.likely@linaro.org>, Frank Rowand <frowand.list@gmail.com>, Linux-DT <devicetree@vger.kernel.org>, Linux-ALSA <alsa-devel@alsa-project.org>, Linux-Kernel <linux-kernel@vger.kernel.org>alsa-devel@alsa-project.org
+From: Frank Wang <frank.wang@rock-chips.com>
+Subject: [PATCH v2 3/3] arm: dts: rk322x: add watchdog device node.
+Date: Wed, 17 May 2017 17:52:26 +0800
+Message-ID: <1495014746-27621-4-git-send-email-frank.wang@rock-chips.com>
+References: <1495014746-27621-1-git-send-email-frank.wang@rock-chips.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1495014746-27621-1-git-send-email-frank.wang@rock-chips.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: heiko@sntech.de, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, wim@iguana.be, linux@roeck-us.net, ellisys@163.com
+Cc: huangtao@rock-chips.com, devicetree@vger.kernel.org, charles.chen@rock-chips.com, wmc@rock-chips.com, kevan.lan@rock-chips.com, linux-kernel@vger.kernel.org, sugar.zhang@rock-chips.com, linux-rockchip@lists.infradead.org, Frank Wang <frank.wang@rock-chips.com>, cody.xie@rock-chips.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The patch
+Add watchdog device node for rk322x SoC.
 
-   of_graph: add of_graph_get_remote_endpoint()
-
-has been applied to the asoc tree at
-
-   git://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
->From 4c9c3d595f1bad021cc126d20879df4016801736 Mon Sep 17 00:00:00 2001
-From: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Date: Thu, 20 Apr 2017 01:31:42 +0000
-Subject: [PATCH] of_graph: add of_graph_get_remote_endpoint()
-
-It should use same method to get same result.
-To getting remote-endpoint node,
-let's use of_graph_get_remote_endpoint()
-
-Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Acked-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Frank Wang <frank.wang@rock-chips.com>
 ---
- drivers/of/base.c        | 18 ++++++++++++++++--
- include/linux/of_graph.h |  8 ++++++++
- 2 files changed, 24 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/rk322x.dtsi | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/of/base.c b/drivers/of/base.c
-index 5db6aa1688e9..b169508a9b56 100644
---- a/drivers/of/base.c
-+++ b/drivers/of/base.c
-@@ -2487,6 +2487,20 @@ struct device_node *of_graph_get_endpoint_by_regs(
- EXPORT_SYMBOL(of_graph_get_endpoint_by_regs);
+diff --git a/arch/arm/boot/dts/rk322x.dtsi b/arch/arm/boot/dts/rk322x.dtsi
+index fe6530f..f7498b3 100644
+--- a/arch/arm/boot/dts/rk322x.dtsi
++++ b/arch/arm/boot/dts/rk322x.dtsi
+@@ -280,6 +280,14 @@
+ 		status = "disabled";
+ 	};
  
- /**
-+ * of_graph_get_remote_endpoint() - get remote endpoint node
-+ * @node: pointer to a local endpoint device_node
-+ *
-+ * Return: Remote endpoint node associated with remote endpoint node linked
-+ *	   to @node. Use of_node_put() on it when done.
-+ */
-+struct device_node *of_graph_get_remote_endpoint(const struct device_node *node)
-+{
-+	/* Get remote endpoint node. */
-+	return of_parse_phandle(node, "remote-endpoint", 0);
-+}
-+EXPORT_SYMBOL(of_graph_get_remote_endpoint);
++	wdt: watchdog@110a0000 {
++		compatible = "snps,dw-wdt";
++		reg = <0x110a0000 0x100>;
++		clocks = <&cru PCLK_CPU>;
++		interrupts = <GIC_SPI 40 IRQ_TYPE_LEVEL_HIGH>;
++		status = "disabled";
++	};
 +
-+/**
-  * of_graph_get_remote_port_parent() - get remote port's parent node
-  * @node: pointer to a local endpoint device_node
-  *
-@@ -2500,7 +2514,7 @@ struct device_node *of_graph_get_remote_port_parent(
- 	unsigned int depth;
- 
- 	/* Get remote endpoint node. */
--	np = of_parse_phandle(node, "remote-endpoint", 0);
-+	np = of_graph_get_remote_endpoint(node);
- 
- 	/* Walk 3 levels up only if there is 'ports' node. */
- 	for (depth = 3; depth && np; depth--) {
-@@ -2524,7 +2538,7 @@ struct device_node *of_graph_get_remote_port(const struct device_node *node)
- 	struct device_node *np;
- 
- 	/* Get remote endpoint node. */
--	np = of_parse_phandle(node, "remote-endpoint", 0);
-+	np = of_graph_get_remote_endpoint(node);
- 	if (!np)
- 		return NULL;
- 	return of_get_next_parent(np);
-diff --git a/include/linux/of_graph.h b/include/linux/of_graph.h
-index abdb02eaef06..0c9473a169dd 100644
---- a/include/linux/of_graph.h
-+++ b/include/linux/of_graph.h
-@@ -48,6 +48,8 @@ struct device_node *of_graph_get_next_endpoint(const struct device_node *parent,
- 					struct device_node *previous);
- struct device_node *of_graph_get_endpoint_by_regs(
- 		const struct device_node *parent, int port_reg, int reg);
-+struct device_node *of_graph_get_remote_endpoint(
-+					const struct device_node *node);
- struct device_node *of_graph_get_remote_port_parent(
- 					const struct device_node *node);
- struct device_node *of_graph_get_remote_port(const struct device_node *node);
-@@ -80,6 +82,12 @@ static inline struct device_node *of_graph_get_endpoint_by_regs(
- 	return NULL;
- }
- 
-+static inline struct device_node *of_graph_get_remote_endpoint(
-+					const struct device_node *node)
-+{
-+	return NULL;
-+}
-+
- static inline struct device_node *of_graph_get_remote_port_parent(
- 					const struct device_node *node)
- {
+ 	pwm0: pwm@110b0000 {
+ 		compatible = "rockchip,rk3288-pwm";
+ 		reg = <0x110b0000 0x10>;
 -- 
-2.11.0
+2.0.0
