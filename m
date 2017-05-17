@@ -1,66 +1,34 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH] ARM: sun8i: v3s: enable SPI
-Date: Wed, 17 May 2017 19:33:32 +0200
-Message-ID: <20170517173332.hzw7xh74hxzmbphs@flea.home>
-References: <20170517135257.1674-1-icenowy@aosc.io>
+From: Heiko Stuebner <heiko@sntech.de>
+Subject: Re: [PATCH v2 3/3] arm: dts: rk322x: add watchdog device node.
+Date: Wed, 17 May 2017 19:33:26 +0200
+Message-ID: <2285057.KmMH9jGB2S@phil>
+References: <1495014746-27621-1-git-send-email-frank.wang@rock-chips.com>
+ <1495014746-27621-4-git-send-email-frank.wang@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="ypsrtz2uxo6rtu74"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170517135257.1674-1-icenowy-h8G6r0blFSE@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1495014746-27621-4-git-send-email-frank.wang@rock-chips.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Frank Wang <frank.wang@rock-chips.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, huangtao@rock-chips.com, charles.chen@rock-chips.com, wmc@rock-chips.com, kevan.lan@rock-chips.com, linux@armlinux.org.uk, linux-kernel@vger.kernel.org, sugar.zhang@rock-chips.com, linux-rockchip@lists.infradead.org, wim@iguana.be, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, cody.xie@rock-chips.com, ellisys@163.com, linux@roeck-us.net
 List-Id: devicetree@vger.kernel.org
 
+Am Mittwoch, 17. Mai 2017, 17:52:26 CEST schrieb Frank Wang:
+> Add watchdog device node for rk322x SoC.
+> 
+> Signed-off-by: Frank Wang <frank.wang@rock-chips.com>
 
---ypsrtz2uxo6rtu74
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+applied for 4.13, after fixing the subject up a bit (ARM: dts: rockchip: ...)
 
-On Wed, May 17, 2017 at 09:52:57PM +0800, Icenowy Zheng wrote:
-> Allwinner V3s SoC has a SPI controller, muxed with the MMC2 controller
-> at PC bank. The controller itself is identical to the one in H3 SoC.
->=20
-> Add device tree node and the only pinmux node for it.
->=20
-> Tested with a Winbond W25Q128FV SPI NOR soldered on the Lichee Pi
-> early sample.
->=20
-> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
 
-Applied, thanks!
-Maxime
-
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
-
---ypsrtz2uxo6rtu74
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIcBAEBAgAGBQJZHIlsAAoJEBx+YmzsjxAgIuEP+weOQ0k1kNpIM69uerlaD3+t
-VlWuG8qrx2XbxAQy0zeWYvn7eBz5uCCtmICswkvY6qT9xRLL9OGHz7iM82bhXMWo
-rm2uRXaG9JW6OMpjKePzFup1/YFr6uPpainK3Mdf4qt6LCVoVkNA8qjmmRFNkIHv
-AKlvsQqHwx4t7k6uoSSfd4N+rgzmjjtQjd7EaONb12G0a/J9YYRROKsLam7SHe/A
-+AHNdIbeZRbdIROuQrjRXOmSjwVu7LMXRu2gM5xgWvuR4Soi1ESIZbX9bhcEYGX0
-njU3bc3vmWWiWKhCDS+kbvvU/AXUzozAFrGxonGT+60gvXZ0+llqejhOE+toMqEu
-vuXxxCLU1k0nmaRgH5qwbW2bjI8hAWP4dRms+2GxoDsAxQmws8bKIkaZOg5dgzbU
-rviazE2KIa/HKKdKmqEKo5tV3O+DOy9Y+FnronEjKMef9jBUWicCHxUqSwEIfG8W
-C743RgBHO9tcJqwyyWllp++JV9YuV/AJHblR+PwH+FXOfjH0ycMGBMUOtgDVmbuf
-BeJK1wGVjBvCMWpJXe6Yfwg3t0VLdIWejerRXQ0tGAo1F6x94WsINzpJWL8+2aX9
-OjoCBO+rbVItoXWeSYa9dLbt6BIaAV6Xuyxto/ByZsRBro/HP2EzmNkuQ9xP03Wv
-o54mqEAB1Iac97o8CxTG
-=2GeT
------END PGP SIGNATURE-----
-
---ypsrtz2uxo6rtu74--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks
+Heiko
