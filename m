@@ -1,59 +1,33 @@
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-Subject: [RESEND PATCH v4 3/3] of: Support const and non-const use for to_of_node()
-Date: Thu, 18 May 2017 14:12:39 +0300
-Message-ID: <1495105959-20146-1-git-send-email-sakari.ailus@linux.intel.com>
-References: <1495104163-17165-1-git-send-email-sakari.ailus@linux.intel.com>
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <1495104163-17165-1-git-send-email-sakari.ailus@linux.intel.com>
-Sender: linux-acpi-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, robh@kernel.org, frowand.list@gmail.com
-Cc: linux-acpi@vger.kernel.org, sudeep.holla@arm.com, lorenzo.pieralisi@arm.com, mika.westerberg@linux.intel.com, rafael@kernel.org, mark.rutland@arm.com, broonie@kernel.org, ahs3@redhat.com
+From: Anatolij Gustschin <agust@denx.de>
+Subject: Re: [PATCH v10 2/3] fpga manager: Add altera-ps-spi driver for
+ Altera FPGAs
+Date: Thu, 18 May 2017 13:46:59 +0200
+Message-ID: <20170518134659.589b681b@crub>
+References: <1495045422-19183-1-git-send-email-agust@denx.de>
+        <1495045422-19183-2-git-send-email-agust@denx.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1495045422-19183-2-git-send-email-agust@denx.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: stillcompiling@gmail.com, joshua.clayton@uniwest.com, bst@pengutronix.de
+Cc: linux-fpga@vger.kernel.org, atull@kernel.org, moritz.fischer@ettus.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
 List-Id: devicetree@vger.kernel.org
 
-Turn to_of_node() into a macro in order to support both const and
-non-const use. Additionally make the fwnode argument to is_of_node() const
-as well.
+Hi,
 
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
----
-This was actually in another set, but fits better here.
+On Wed, 17 May 2017 20:23:41 +0200
+Anatolij Gustschin agust@denx.de wrote:
+...
+>+	conf->spi = spi;
+>+	conf->config = devm_gpiod_get(&spi->dev, "nconfig", GPIOD_OUT_HIGH);
 
-(Now with correct In-Reply-To header.)
+we should use GPIOD_OUT_LOW flags here. nCONFIG is low active, so
+setting logical high will enable the signal (drive the pin low),
+resulting in configuration reset for already initialised FPGAs when
+loading/reloading the module.
 
- include/linux/of.h | 16 ++++++++++------
- 1 file changed, 10 insertions(+), 6 deletions(-)
+Thanks,
 
-diff --git a/include/linux/of.h b/include/linux/of.h
-index a7ccf34..03dbc94 100644
---- a/include/linux/of.h
-+++ b/include/linux/of.h
-@@ -148,16 +148,20 @@ extern raw_spinlock_t devtree_lock;
- #ifdef CONFIG_OF
- void of_core_init(void);
- 
--static inline bool is_of_node(struct fwnode_handle *fwnode)
-+static inline bool is_of_node(const struct fwnode_handle *fwnode)
- {
- 	return !IS_ERR_OR_NULL(fwnode) && fwnode->type == FWNODE_OF;
- }
- 
--static inline struct device_node *to_of_node(struct fwnode_handle *fwnode)
--{
--	return is_of_node(fwnode) ?
--		container_of(fwnode, struct device_node, fwnode) : NULL;
--}
-+#define to_of_node(__fwnode)						\
-+	({								\
-+		typeof(__fwnode) __to_of_node_fwnode = __fwnode;	\
-+									\
-+		is_of_node(__to_of_node_fwnode) ?			\
-+			container_of(__to_of_node_fwnode,		\
-+				     struct device_node, fwnode) :	\
-+			NULL;						\
-+	})
- 
- #define of_fwnode_handle(node)						\
- 	({								\
--- 
-2.7.4
-
+Anatolij
