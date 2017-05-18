@@ -1,15 +1,14 @@
 From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 1/4] usb: host: ohci-platform: Add basic runtime PM
- support
-Date: Thu, 18 May 2017 12:28:11 +0300
-Message-ID: <5bbd7862-b804-844a-a850-127ab2e66923@ti.com>
+Subject: Re: [PATCH 4/4] ARM: dts: Add remote-wakeup-connected for omap OHCI
+Date: Thu, 18 May 2017 12:28:39 +0300
+Message-ID: <4549017d-4031-a53c-6649-34e364be9330@ti.com>
 References: <20170517225922.17723-1-tony@atomide.com>
- <20170517225922.17723-2-tony@atomide.com>
+ <20170517225922.17723-5-tony@atomide.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170517225922.17723-2-tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <20170517225922.17723-5-tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
 Content-Language: en-GB
 Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
@@ -17,9 +16,8 @@ Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 On 18/05/17 01:59, Tony Lindgren wrote:
-> This is needed in preparation of adding support for omap3 and
-> later OHCI. The runtime PM will only do something on platforms
-> that implement it.
+> Add remote-wakeup-connected for omap OHCI as that's needed by
+> ehci-platform driver.
 > 
 > Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 > Cc: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
@@ -31,65 +29,44 @@ On 18/05/17 01:59, Tony Lindgren wrote:
 Acked-by: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
 
 > ---
->  drivers/usb/host/ohci-platform.c | 11 +++++++++++
->  1 file changed, 11 insertions(+)
+>  arch/arm/boot/dts/omap3.dtsi | 1 +
+>  arch/arm/boot/dts/omap4.dtsi | 1 +
+>  arch/arm/boot/dts/omap5.dtsi | 1 +
+>  3 files changed, 3 insertions(+)
 > 
-> diff --git a/drivers/usb/host/ohci-platform.c b/drivers/usb/host/ohci-platform.c
-> --- a/drivers/usb/host/ohci-platform.c
-> +++ b/drivers/usb/host/ohci-platform.c
-> @@ -24,6 +24,7 @@
->  #include <linux/err.h>
->  #include <linux/phy/phy.h>
->  #include <linux/platform_device.h>
-> +#include <linux/pm_runtime.h>
->  #include <linux/reset.h>
->  #include <linux/usb/ohci_pdriver.h>
->  #include <linux/usb.h>
-> @@ -51,6 +52,10 @@ static int ohci_platform_power_on(struct platform_device *dev)
->  	struct ohci_platform_priv *priv = hcd_to_ohci_priv(hcd);
->  	int clk, ret, phy_num;
+> diff --git a/arch/arm/boot/dts/omap3.dtsi b/arch/arm/boot/dts/omap3.dtsi
+> --- a/arch/arm/boot/dts/omap3.dtsi
+> +++ b/arch/arm/boot/dts/omap3.dtsi
+> @@ -715,6 +715,7 @@
+>  				reg = <0x48064400 0x400>;
+>  				interrupt-parent = <&intc>;
+>  				interrupts = <76>;
+> +				remote-wakeup-connected;
+>  			};
 >  
-> +	ret = pm_runtime_get_sync(&dev->dev);
-> +	if (ret < 0)
-> +		return ret;
-> +
->  	for (clk = 0; clk < OHCI_MAX_CLKS && priv->clks[clk]; clk++) {
->  		ret = clk_prepare_enable(priv->clks[clk]);
->  		if (ret)
-> @@ -96,6 +101,8 @@ static void ohci_platform_power_off(struct platform_device *dev)
->  	for (clk = OHCI_MAX_CLKS - 1; clk >= 0; clk--)
->  		if (priv->clks[clk])
->  			clk_disable_unprepare(priv->clks[clk]);
-> +
-> +	pm_runtime_put_sync(&dev->dev);
->  }
+>  			usbhsehci: ehci@48064800 {
+> diff --git a/arch/arm/boot/dts/omap4.dtsi b/arch/arm/boot/dts/omap4.dtsi
+> --- a/arch/arm/boot/dts/omap4.dtsi
+> +++ b/arch/arm/boot/dts/omap4.dtsi
+> @@ -863,6 +863,7 @@
+>  				reg = <0x4a064800 0x400>;
+>  				interrupt-parent = <&gic>;
+>  				interrupts = <GIC_SPI 76 IRQ_TYPE_LEVEL_HIGH>;
+> +				remote-wakeup-connected;
+>  			};
 >  
->  static struct hc_driver __read_mostly ohci_platform_hc_driver;
-> @@ -242,6 +249,7 @@ static int ohci_platform_probe(struct platform_device *dev)
->  	}
->  #endif
+>  			usbhsehci: ehci@4a064c00 {
+> diff --git a/arch/arm/boot/dts/omap5.dtsi b/arch/arm/boot/dts/omap5.dtsi
+> --- a/arch/arm/boot/dts/omap5.dtsi
+> +++ b/arch/arm/boot/dts/omap5.dtsi
+> @@ -939,6 +939,7 @@
+>  				compatible = "ti,ohci-omap3";
+>  				reg = <0x4a064800 0x400>;
+>  				interrupts = <GIC_SPI 76 IRQ_TYPE_LEVEL_HIGH>;
+> +				remote-wakeup-connected;
+>  			};
 >  
-> +	pm_runtime_enable(&dev->dev);
->  	if (pdata->power_on) {
->  		err = pdata->power_on(dev);
->  		if (err < 0)
-> @@ -271,6 +279,7 @@ static int ohci_platform_probe(struct platform_device *dev)
->  	if (pdata->power_off)
->  		pdata->power_off(dev);
->  err_reset:
-> +	pm_runtime_disable(&dev->dev);
->  	while (--rst >= 0)
->  		reset_control_assert(priv->resets[rst]);
->  err_put_clks:
-> @@ -305,6 +314,8 @@ static int ohci_platform_remove(struct platform_device *dev)
->  
->  	usb_put_hcd(hcd);
->  
-> +	pm_runtime_disable(&dev->dev);
-> +
->  	if (pdata == &ohci_platform_defaults)
->  		dev->dev.platform_data = NULL;
->  
+>  			usbhsehci: ehci@4a064c00 {
 > 
 
 -- 
