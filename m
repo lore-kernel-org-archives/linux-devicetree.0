@@ -1,84 +1,101 @@
-From: Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH 1/3] iommu: of: Fix check for returning EPROBE_DEFER
-Date: Thu, 18 May 2017 14:33:57 +0530
-Message-ID: <1c306cf1-f7fb-87b1-1fef-3b08aea04560@codeaurora.org>
-References: <1495020609-13397-1-git-send-email-sricharan@codeaurora.org>
-	<20170517170430.GD31462@bhelgaas-glaptop.roam.corp.google.com>
+From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 1/4] usb: host: ohci-platform: Add basic runtime PM
+ support
+Date: Thu, 18 May 2017 12:28:11 +0300
+Message-ID: <5bbd7862-b804-844a-a850-127ab2e66923@ti.com>
+References: <20170517225922.17723-1-tony@atomide.com>
+ <20170517225922.17723-2-tony@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <20170517170430.GD31462-1RhO1Y9PlrlHTL0Zs8A6p5iNqAH0jzoTYJqu5kTmcBRl57MIdRCFDg@public.gmane.org>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-arch-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tn-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org, magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, j.neuschaefer-hi6Y0CQ0nG0@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170517225922.17723-2-tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Content-Language: en-GB
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
+Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Bjorn,
-
-On 5/17/2017 10:34 PM, Bjorn Helgaas wrote:
-> On Wed, May 17, 2017 at 05:00:07PM +0530, Sricharan R wrote:
->> Now with iommu probe deferral, we return -EPROBE_DEFER
->> for master's that are connected to an iommu which is not
+On 18/05/17 01:59, Tony Lindgren wrote:
+> This is needed in preparation of adding support for omap3 and
+> later OHCI. The runtime PM will only do something on platforms
+> that implement it.
 > 
-> s/master's/masters/
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Cc: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+> Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Cc: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+> Cc: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+> Signed-off-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+
+Acked-by: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+
+> ---
+>  drivers/usb/host/ohci-platform.c | 11 +++++++++++
+>  1 file changed, 11 insertions(+)
 > 
-> s/iommu/IOMMU/ in your English text (changelogs and comments).  That seems
-> to be the convention, based on "git log drivers/iommu/of_iommu.c"
+> diff --git a/drivers/usb/host/ohci-platform.c b/drivers/usb/host/ohci-platform.c
+> --- a/drivers/usb/host/ohci-platform.c
+> +++ b/drivers/usb/host/ohci-platform.c
+> @@ -24,6 +24,7 @@
+>  #include <linux/err.h>
+>  #include <linux/phy/phy.h>
+>  #include <linux/platform_device.h>
+> +#include <linux/pm_runtime.h>
+>  #include <linux/reset.h>
+>  #include <linux/usb/ohci_pdriver.h>
+>  #include <linux/usb.h>
+> @@ -51,6 +52,10 @@ static int ohci_platform_power_on(struct platform_device *dev)
+>  	struct ohci_platform_priv *priv = hcd_to_ohci_priv(hcd);
+>  	int clk, ret, phy_num;
+>  
+> +	ret = pm_runtime_get_sync(&dev->dev);
+> +	if (ret < 0)
+> +		return ret;
+> +
+>  	for (clk = 0; clk < OHCI_MAX_CLKS && priv->clks[clk]; clk++) {
+>  		ret = clk_prepare_enable(priv->clks[clk]);
+>  		if (ret)
+> @@ -96,6 +101,8 @@ static void ohci_platform_power_off(struct platform_device *dev)
+>  	for (clk = OHCI_MAX_CLKS - 1; clk >= 0; clk--)
+>  		if (priv->clks[clk])
+>  			clk_disable_unprepare(priv->clks[clk]);
+> +
+> +	pm_runtime_put_sync(&dev->dev);
+>  }
+>  
+>  static struct hc_driver __read_mostly ohci_platform_hc_driver;
+> @@ -242,6 +249,7 @@ static int ohci_platform_probe(struct platform_device *dev)
+>  	}
+>  #endif
+>  
+> +	pm_runtime_enable(&dev->dev);
+>  	if (pdata->power_on) {
+>  		err = pdata->power_on(dev);
+>  		if (err < 0)
+> @@ -271,6 +279,7 @@ static int ohci_platform_probe(struct platform_device *dev)
+>  	if (pdata->power_off)
+>  		pdata->power_off(dev);
+>  err_reset:
+> +	pm_runtime_disable(&dev->dev);
+>  	while (--rst >= 0)
+>  		reset_control_assert(priv->resets[rst]);
+>  err_put_clks:
+> @@ -305,6 +314,8 @@ static int ohci_platform_remove(struct platform_device *dev)
+>  
+>  	usb_put_hcd(hcd);
+>  
+> +	pm_runtime_disable(&dev->dev);
+> +
+>  	if (pdata == &ohci_platform_defaults)
+>  		dev->dev.platform_data = NULL;
+>  
 > 
-
-ok, will correct those.
-
-Regards,
- Sricharan
-
-
->> probed yet, but going to get probed, so that we can attach
->> the correct dma_ops. So while trying to defer the probe of
->> the master, check if the of_iommu node that it is connected
->> to is marked in DT as 'status=disabled', then the iommu is never
->> is going to get probed. So simply return NULL and let the master
->> work without an iommu.
->>
->> Fixes: 7b07cbefb68d ("iommu: of: Handle IOMMU lookup failure with deferred probing or error")
->> Signed-off-by: Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
->> Reported-by: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
->> Tested-by: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
->> Tested-by: Magnus Damn <magnus.damn-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> Acked-by: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
->> ---
->>  drivers/iommu/of_iommu.c | 1 +
->>  1 file changed, 1 insertion(+)
->>
->> diff --git a/drivers/iommu/of_iommu.c b/drivers/iommu/of_iommu.c
->> index 9f44ee8..e6e9bec 100644
->> --- a/drivers/iommu/of_iommu.c
->> +++ b/drivers/iommu/of_iommu.c
->> @@ -118,6 +118,7 @@ static bool of_iommu_driver_present(struct device_node *np)
->>  
->>  	ops = iommu_ops_from_fwnode(fwnode);
->>  	if ((ops && !ops->of_xlate) ||
->> +	    !of_device_is_available(iommu_spec->np) ||
->>  	    (!ops && !of_iommu_driver_present(iommu_spec->np)))
->>  		return NULL;
->>  
->> -- 
->> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
->>
->>
->> _______________________________________________
->> linux-arm-kernel mailing list
->> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
->> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 
 -- 
-"QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+cheers,
+-roger
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
