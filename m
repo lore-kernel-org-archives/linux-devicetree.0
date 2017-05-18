@@ -1,73 +1,98 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v4 5/6] spi: slave: Add SPI slave handler reporting uptime
- at previous message
-Date: Thu, 18 May 2017 19:01:59 +0300
-Message-ID: <CAHp75VdphCGXYEMrF0eJ4WLe=wg_0o_xH833jJ1xjGynKV3jXA@mail.gmail.com>
-References: <1495025272-23930-1-git-send-email-geert+renesas@glider.be> <1495025272-23930-6-git-send-email-geert+renesas@glider.be>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH] of_mdio: Fix broken PHY IRQ in case of probe deferral
+Date: Thu, 18 May 2017 18:09:43 +0200
+Message-ID: <20170518160943.GC707@lunn.ch>
+References: <1495112345-24795-1-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <1495025272-23930-6-git-send-email-geert+renesas@glider.be>
+Content-Disposition: inline
+In-Reply-To: <1495112345-24795-1-git-send-email-geert+renesas@glider.be>
 Sender: linux-renesas-soc-owner@vger.kernel.org
 To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, Wolfram Sang <wsa+renesas@sang-engineering.com>, Hiromitsu Yamasaki <hiromitsu.yamasaki.ym@renesas.com>, Jiada Wang <jiada_wang@mentor.com>, Matt Porter <mporter@konsulko.com>, linux-spi <linux-spi@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc: Florian Fainelli <f.fainelli@gmail.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 17, 2017 at 3:47 PM, Geert Uytterhoeven
-<geert+renesas@glider.be> wrote:
-> Add an example SPI slave handler responding with the uptime at the time
-> of reception of the last SPI message.
->
-> This can be used by an external microcontroller as a dead man's switch.
+On Thu, May 18, 2017 at 02:59:05PM +0200, Geert Uytterhoeven wrote:
+> If an Ethernet PHY is initialized before the interrupt controller it is
+> connected to, a message like the following is printed:
+> 
+>     irq: no irq domain found for /interrupt-controller@e61c0000 !
+> 
+> However, the actual error is ignored, leading to a non-functional (-1)
+> PHY interrupt later:
+> 
+>     Micrel KSZ8041RNLI ee700000.ethernet-ffffffff:01: attached PHY driver [Micrel KSZ8041RNLI] (mii_bus:phy_addr=ee700000.ethernet-ffffffff:01, irq=-1)
+> 
+> Depending on whether the PHY driver will fall back to polling, Ethernet
+> may or may not work.
+> 
+> To fix this:
+>   1. Switch of_mdiobus_register_phy() from irq_of_parse_and_map() to
+>      of_irq_get().
+>      Unlike the former, the latter returns -EPROBE_DEFER if the
+>      interrupt controller is not yet available, so this condition can be
+>      detected.
+>      Other errors are handled the same as before, i.e. use the passed
+>      mdio->irq[addr] as interrupt.
+>   2. Propagate and handle errors from of_mdiobus_register_phy() and
+>      of_mdiobus_register_device().
+> 
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> ---
+> Seen on r8a7791/koelsch when using the new CPG/MSSR clock driver.
+> I assume it always happened on RZ/G1 in mainline.
+> ---
+>  drivers/of/of_mdio.c | 39 +++++++++++++++++++++++++++------------
+>  1 file changed, 27 insertions(+), 12 deletions(-)
+> 
+> diff --git a/drivers/of/of_mdio.c b/drivers/of/of_mdio.c
+> index 7e4c80f9b6cda0d3..f9ac2893f56184be 100644
+> --- a/drivers/of/of_mdio.c
+> +++ b/drivers/of/of_mdio.c
+> @@ -44,7 +44,7 @@ static int of_get_phy_id(struct device_node *device, u32 *phy_id)
+>  	return -EINVAL;
+>  }
+>  
+> -static void of_mdiobus_register_phy(struct mii_bus *mdio,
+> +static int of_mdiobus_register_phy(struct mii_bus *mdio,
+>  				    struct device_node *child, u32 addr)
+>  {
+>  	struct phy_device *phy;
+> @@ -60,9 +60,13 @@ static void of_mdiobus_register_phy(struct mii_bus *mdio,
+>  	else
+>  		phy = get_phy_device(mdio, addr, is_c45);
+>  	if (IS_ERR(phy))
+> -		return;
+> +		return PTR_ERR(phy);
+>  
+> -	rc = irq_of_parse_and_map(child, 0);
+> +	rc = of_irq_get(child, 0);
+> +	if (rc == -EPROBE_DEFER) {
+> +		phy_device_free(phy);
+> +		return rc;
+> +	}
 
-> +static int spi_slave_time_submit(struct spi_slave_time_priv *priv)
-> +{
-> +       u32 rem_ns;
-> +       int ret;
-> +       u64 ts;
-> +
-> +       ts = local_clock();
-> +       rem_ns = do_div(ts, 1000000000) / 1000;
+Maybe this should be consistent. All other places there is an error,
+you return it. Here however, you only return the error if it is
+EPROBE_DEFER.
 
-You divide ts by 10^9, which makes it seconds if it was nanoseconds.
+	Andrew
 
-But reminder is still in nanoseconds and you divide it by 10^3.
 
-If I didn't miss anything it should be called like
-
-rem_ns -> reminder_ms
-
-> +
-> +       priv->buf[0] = cpu_to_be32(ts);
-> +       priv->buf[1] = cpu_to_be32(rem_ns);
-> +
-> +       spi_message_init_with_transfers(&priv->msg, &priv->xfer, 1);
-> +
-> +       priv->msg.complete = spi_slave_time_complete;
-> +       priv->msg.context = priv;
-> +
-> +       ret = spi_async(priv->spi, &priv->msg);
-> +       if (ret)
-> +               pr_err("%s: spi_async() failed %d\n", __func__, ret);
-
-Perhaps dev_err() ?
-
-> +
-> +       return ret;
-> +}
-
-> +static int spi_slave_time_probe(struct spi_device *spi)
-> +{
-> +       struct spi_slave_time_priv *priv;
-> +       int ret;
-> +
-> +       /*
-> +        * bits_per_word cannot be configured in platform data
-> +        */
-> +       spi->bits_per_word = 8;
-
-Is it worth to define it? If so, can we use device properties for that?
-
--- 
-With Best Regards,
-Andy Shevchenko
+>  	if (rc > 0) {
+>  		phy->irq = rc;
+>  		mdio->irq[addr] = rc;
+> @@ -84,22 +88,23 @@ static void of_mdiobus_register_phy(struct mii_bus *mdio,
+>  	if (rc) {
+>  		phy_device_free(phy);
+>  		of_node_put(child);
+> -		return;
+> +		return rc;
+>  	}
+>  
+>  	dev_dbg(&mdio->dev, "registered phy %s at address %i\n",
+>  		child->name, addr);
+> +	return 0;
+>  }
+>  
