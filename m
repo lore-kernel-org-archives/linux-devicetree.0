@@ -1,144 +1,187 @@
-From: Olivier MOYSAN <olivier.moysan@st.com>
-Subject: Re: [PATCH v3 1/3] dt-bindings: Document STM32 I2S
-	bindings
-Date: Thu, 18 May 2017 13:29:03 +0000
-Message-ID: <827a2860-1f2e-0296-d58c-4c8686858549@st.com>
-References: <1494495904-18898-1-git-send-email-olivier.moysan@st.com>
- <1494495904-18898-2-git-send-email-olivier.moysan@st.com>
- <20170513001753.hygunrcjqejpbwl6@rob-hp-laptop>
+From: Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH V2 2/3] iommu: of: Ignore all errors except EPROBE_DEFER
+Date: Thu, 18 May 2017 19:08:12 +0530
+Message-ID: <c3dc5e41-b853-9519-53a3-df870ab26230@codeaurora.org>
+References: <1495102030-10548-1-git-send-email-sricharan@codeaurora.org>
+	<6863998.WsTHer29ZI@avalon>
+	<2c3babb3-7bee-340c-d474-267a55f23cd5@codeaurora.org>
+	<2111512.n9LmSLnVgL@avalon>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20170513001753.hygunrcjqejpbwl6@rob-hp-laptop>
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <2111512.n9LmSLnVgL@avalon>
 Content-Language: en-US
-Content-ID: <522EEE913D323E48BF1E987B2B9AF569@st.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Rob Herring <robh@kernel.org>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, Alexandre TORGUE <alexandre.torgue@st.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Arnaud POULIQUEN <arnaud.pouliquen@st.com>, "tiwai@suse.com" <tiwai@suse.com>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "broonie@kernel.org" <broonie@kernel.org>, "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>, Benjamin GAIGNARD <benjamin.gaignard@st.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "kernel@stlinux.com" <kernel@stlinux.com>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Cc: linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-arch-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tn-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org, magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, j.neuschaefer-hi6Y0CQ0nG0@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Rob,
+Hi Laurent,
 
-Thanks for your comment.
-
-On 05/13/2017 02:17 AM, Rob Herring wrote:
-> On Thu, May 11, 2017 at 11:45:02AM +0200, olivier moysan wrote:
->> Add documentation of device tree bindings for STM32 SPI/I2S.
+On 5/18/2017 6:00 PM, Laurent Pinchart wrote:
+> Hi Sricharan,
+> 
+> On Thursday 18 May 2017 17:26:14 Sricharan R wrote:
+>> On 5/18/2017 4:09 PM, Laurent Pinchart wrote:
+>>> On Thursday 18 May 2017 15:37:09 Sricharan R wrote:
+>>>> While deferring the probe of IOMMU masters,
+>>>> xlate and add_device callback can pass back error values
+>>>> like -ENODEV, which means IOMMU cannot be connected
+>>>> with that master for real reasons. So rather than
+>>>> killing the master's probe for such errors, just
+>>>> ignore the errors and let the master work without
+>>>> an IOMMU.
+>>>
+>>> I don't think this is a good idea. Why should we allow IOMMU drivers to
+>>> return an error if we're always going to ignore the error value ? That
+>>> will lead to drivers implementing slightly different behaviours, which
+>>> will be painful the day we'll need to start acting based on the error
+>>> value.
 >>
->> Signed-off-by: olivier moysan <olivier.moysan@st.com>
->> ---
->>  .../devicetree/bindings/sound/st,stm32-i2s.txt     | 68 ++++++++++++++++++++++
->>  1 file changed, 68 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/sound/st,stm32-i2s.txt
->>
->> diff --git a/Documentation/devicetree/bindings/sound/st,stm32-i2s.txt b/Documentation/devicetree/bindings/sound/st,stm32-i2s.txt
->> new file mode 100644
->> index 0000000..67b854a
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/sound/st,stm32-i2s.txt
->> @@ -0,0 +1,68 @@
->> +STMicroelectronics STM32 SPI/I2S Controller
->> +
->> +The SPI/I2S block supports I2S/PCM protocols when configured on I2S mode.
->> +Only some SPI instances support I2S.
->> +
->> +Required properties:
->> +  - compatible: Must be "st,stm32h7-i2s"
->> +  - reg: Offset and length of the device's register set.
->> +  - interrupts: Must contain the interrupt line id.
->> +  - clocks: Must contain phandle and clock specifier pairs for each entry
->> +	in clock-names.
->> +  - clock-names: Must contain "i2sclk", "pclk", "x8k" and "x11k".
->> +	"i2sclk": clock which feeds the internal clock generator
->> +	"pclk": clock which feeds the peripheral bus interface
->> +	"x8k": I2S parent clock for sampling rates multiple of 8kHz.
->> +	"x11k": I2S parent clock for sampling rates multiple of 11.025kHz.
->> +  - dmas: DMA specifiers for tx and rx dma.
->> +    See Documentation/devicetree/bindings/dma/stm32-dma.txt.
->> +  - dma-names: Identifier for each DMA request line. Must be "tx" and "rx".
->> +  - pinctrl-names: should contain only value "default"
->> +  - pinctrl-0: see Documentation/devicetree/bindings/pinctrl/pinctrl-stm32.txt
->> +
->> +Optional properties:
->> +  - resets: Reference to a reset controller asserting the reset controller
->> +
->> +The device node should contain one 'port' child node with one child 'endpoint'
->> +node, according to the bindings defined in Documentation/devicetree/bindings/
->> +graph.txt.
->> +
->> +Example:
->> +sound_card {
->> +	compatible = "audio-graph-card";
->> +	dais = <&i2s2_port 0>;
->
-> What is the 0 representing?
->
+>> The of_iommu_configure interface, before this series, was returning either
+>> correct 'iommu_ops' or NULL. Also there was no return value from
+>> of_dma_configure which calls of_iommu_configure. This means that if we block
+>> only -ENODEV now and let the other errors, the probe of the master devices
+>> can be killed for reasons apart from deferring. This would be a change in
+>> behavior introduced. All of xlate, add_device, of_pci_map_rid and others
+>> can return values apart from -ENODEV. So was thinking that restoring the
+>> old behavior, except for returning EPROBE_DEFER was the better thing to do
+>> ?
+> 
+> We went from a situation where of_iommu_configure() could return either valid 
+> operations in the case the device was to be handled by the IOMMU or NULL 
+> otherwise, to a situation where we needed a third option for probe deferral. 
+> The way we've done this, through error pointers, allows lots of other errors 
+> to be returned as well from the of_xlate and add_device operations.
+> 
 
-This is no more relevant, so to be removed.
+right, this was difference in the behavior now.
 
->> +};
->> +
->> +i2s2: audio-controller@40003800 {
->> +	compatible = "st,stm32h7-i2s";
->> +	#sound-dai-cells = <0>;
->
-> Should be dropped.
->
+> There is currently no use for returning error codes other than -EPROBE_DEFFER 
+> from of_iommu_configure(), so your proposal is to block errors returned from 
+> the of_xlate and add_device operations inside of_iommu_configure(). My point 
+> is that, by doing so, we allow IOMMU drivers to return random error codes that 
+> are then ignored. I believe this can cause problems in the future when we will 
+> need to extend the API and standardize more error codes, as by then IOMMU 
+> drivers will return random errors (they actually do so already to some 
+> extent).
+> 
+> For of_xlate I agree with you to some extent. v4.11 just checked whether 
+> of_xlate succeeded or not, and just didn't use the IOMMU in case it failed. 
+> The exact error value was ignored, and drivers already return random errors. 
+> Going back to the v4.11 behaviour is what we need to do in the short-term, 
+> even if I believe we should standardize the error values returned from 
+> of_xlate after v4.12.
+> 
+> For add_device, however, the situation is a bit different. The add_device  
+> operation is called from the IOMMU bus notifier, and the -ENODEV error is 
+> ignored by add_iommu_group(). Any other error will cause bus_set_iommu() to 
+> fail, which makes IOMMU probing fail for the drivers that check the return 
+> value of bus_set_iommu() (some of them don't :-/).
+> 
+> Fixing all this properly requires standardizing the error codes, and going 
+> through the existing IOMMU drivers to comply with the standardized behaviour. 
 
-ok
+I understand your concern on standardizing the error codes from xlate,
+add_device, others and handling them properly. As you said there are quite some
+errors returned from them today. Also another thing is standardizing the
+behavior of of_iommu_configure itself. So that API serves to connect a device
+to its correct iommu_ops. When that's not possible, what should be the output
+and how should that be handled by the caller. The current behavior is to
+either 1) connect to correct ops or 2) wait for it or 3) progress further
+with plain/default dma_ops. Anyways as you said standardizing the iommu api
+ops, would make the of_iommu_configure handling more specific. Having said that
+i think similar fix needs to be done for acpi's iort_iommu_configure as
+well.
 
->> +	reg = <0x40003800 0x400>;
->> +	interrupts = <36>;
->> +	clocks = <&rcc PCLK1>, <&rcc SPI2_CK>, <&rcc PLL1_Q>, <&rcc PLL2_P>;
->> +	clock-names = "pclk", "i2sclk",  "x8k", "x11k";
->> +	dmas = <&dmamux2 2 39 0x400 0x1>,
->> +           <&dmamux2 3 40 0x400 0x1>;
->> +	dma-names = "rx", "tx";
->> +	pinctrl-names = "default";
->> +	pinctrl-0 = <&pinctrl_i2s2>;
->> +
->> +	i2s2_port: port@0 {
->> +		#address-cells = <1>;
->> +		#size-cells = <0>;
->
-> This shouldn't even compile. You don't need these because because you
-> have no reg property in the endpoint.
->
-> You have a unit-address here w/o a reg property. You don't need a reg
-> prop because you only have 1 port.
->
+> While this shouldn't be very difficult, it's likely not material for a v4.12-
+> rc fix. We will thus likely need to merge this patch (or something very 
+> similar to it), but I'd really like to see this fixed properly for v4.13.
+> 
 
-ok.
+When you say "merge this patch (or something similar)", is that about
+documenting the error values for of_xlate and add_device that you showed
+down below  (or) about the patch in discussion ?
 
->> +
->> +		cpu_endpoint: endpoint {
->> +			remote-endpoint = <&codec_endpoint>;
->> +			format = "i2s";
->> +			bitclock-master = <&codec_endpoint>;
->> +			frame-master = <&codec_endpoint>;
->> +		};
->> +	};
->> +};
->> +
->> +audio-codec {
->> +		codec_port: port@0 {
->> +			codec_endpoint: endpoint {
->> +				remote-endpoint = <&cpu_endpoint>;
->> +		};
->> +	};
->> +};
->> --
->> 1.9.1
->>
+Regards,
+ Sricharan
 
-BRs
-Olivier
+>>> At the very least, if you want to give a specific meaning to -ENODEV, you
+>>> should check for that value specifically and not ignore all errors other
+>>> than -EPROBE_DEFER. You also need to document the meaning of the error
+>>> value. This can be done in the documentation of the of_xlate operation in
+>>> include/linux/iommu.h:
+>>>
+>>> diff --git a/include/linux/iommu.h b/include/linux/iommu.h
+>>> index 2cb54adc4a33..6ba553e7384a 100644
+>>> --- a/include/linux/iommu.h
+>>> +++ b/include/linux/iommu.h
+>>> @@ -181,7 +181,6 @@ struct iommu_resv_region {
+>>>   * @domain_window_disable: Disable a particular window for a domain
+>>>   * @domain_set_windows: Set the number of windows for a domain
+>>>   * @domain_get_windows: Return the number of windows for a domain
+>>> - * @of_xlate: add OF master IDs to iommu grouping
+>>>   * @pgsize_bitmap: bitmap of all possible supported page sizes
+>>>   */
+>>>  
+>>>  struct iommu_ops {
+>>> @@ -224,6 +223,11 @@ struct iommu_ops {
+>>>  	/* Get the number of windows per domain */
+>>>  	u32 (*domain_get_windows)(struct iommu_domain *domain);
+>>>
+>>> +	/**
+>>> +	 * @of_xlate:
+>>> +	 *
+>>> +	 * Add OF master IDs to iommu grouping.
+>>> +	 */
+>>>  	int (*of_xlate)(struct device *dev, struct of_phandle_args *args);
+>>>  	
+>>>  	unsigned long pgsize_bitmap;
+>>>
+>>> And add documentation for the error codes there.
+>>>
+>>> If you want to ignore some errors returned from the add_device operation
+>>> you should document it similarly, and in particular document which error
+>>> check(s) need to be performed by of_xlate and which are the
+>>> responsibility of add_device.
+>>>
+>>>> Fixes: 7b07cbefb68d ("iommu: of: Handle IOMMU lookup failure with
+>>>> deferred probing or error")
+>>>> Reported-by: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+>>>> Tested-by: Magnus Damn <magnus.damn-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>>>> Signed-off-by: Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+>>>> ---
+>>>> [V2] Corrected spelling/case in commit log
+>>>>
+>>>>  drivers/iommu/of_iommu.c | 6 ++++++
+>>>>  1 file changed, 6 insertions(+)
+>>>>
+>>>> diff --git a/drivers/iommu/of_iommu.c b/drivers/iommu/of_iommu.c
+>>>> index e6e9bec..f0d22c0 100644
+>>>> --- a/drivers/iommu/of_iommu.c
+>>>> +++ b/drivers/iommu/of_iommu.c
+>>>> @@ -237,6 +237,12 @@ const struct iommu_ops *of_iommu_configure(struct
+>>>> device *dev, ops = ERR_PTR(err);
+>>>>  	}
+>>>>
+>>>> +	/* Ignore all other errors apart from EPROBE_DEFER */
+>>>> +	if (IS_ERR(ops) && (PTR_ERR(ops) != -EPROBE_DEFER)) {
+>>>> +		dev_info(dev, "Adding to IOMMU failed: %ld\n", PTR_ERR(ops));
+>>>> +		ops = NULL;
+>>>> +	}
+>>>> +
+>>>>  	return ops;
+>>>>  }
+> 
+
+-- 
+"QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
