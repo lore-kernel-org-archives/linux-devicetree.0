@@ -1,90 +1,115 @@
-From: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-Subject: Re: [PATCH v1 1/3] drm/stm: ltdc: Add bridge support
-Date: Thu, 18 May 2017 11:31:20 -0700
-Message-ID: <87y3tuj9tz.fsf@eliezer.anholt.net>
-References: <1494600989-13507-1-git-send-email-philippe.cornu@st.com> <1494600989-13507-2-git-send-email-philippe.cornu@st.com>
+From: Christian Lamparter <chunkeey@googlemail.com>
+Subject: Re: [PATCH 2/2] pinctrl: qcom: ipq4019: add remaining pin definitions
+Date: Thu, 18 May 2017 20:38:15 +0200
+Message-ID: <1975629.nrP45RYYW5@debian64>
+References: <d53b7a9b1bab818536680123136ac58481d959c8.1494415174.git.chunkeey@googlemail.com> <3dac044cd9a879cad145f9a04dcc3d225721aa3c.1494415174.git.chunkeey@googlemail.com> <20170517200729.GH12920@tuxbook>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha512; protocol="application/pgp-signature"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1494600989-13507-2-git-send-email-philippe.cornu-qxv4g6HH51o@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Yannick Fertre <yannick.fertre-qxv4g6HH51o@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, Philippe Cornu <philippe.cornu-qxv4g6HH51o@public.gmane.org>, Fabien Dessenne <fabien.dessenne-qxv4g6HH51o@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Mickael Reulier <mickael.reulier-qxv4g6HH51o@public.gmane.org>, Vincent Abriou <vincent.abriou-qxv4g6HH51o@public.gmane.org>, Gabriel Fernandez <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>, Ludovic Barre <ludovic.barre-qxv4g6HH51o@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <20170517200729.GH12920@tuxbook>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, Ram Chandra Jangir <rjangir@codeaurora.org>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, John Crispin <john@phrozen.org>
 List-Id: devicetree@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+On Wednesday, May 17, 2017 1:07:29 PM CEST Bjorn Andersson wrote:
+> On Wed 10 May 04:27 PDT 2017, Christian Lamparter wrote:
+> > diff --git a/drivers/pinctrl/qcom/pinctrl-ipq4019.c b/drivers/pinctrl/qcom/pinctrl-ipq4019.c
+> > index 743d1f458205..7219d1e33c71 100644
+> > --- a/drivers/pinctrl/qcom/pinctrl-ipq4019.c
+> > +++ b/drivers/pinctrl/qcom/pinctrl-ipq4019.c
+> > +	qca_mux_rmii0_refclk,
+> > +	qca_mux_wifi0_rfsilient0,
+> > +	qca_mux_wifi1_rfsilient0,
+> > +	qca_mux_smart2,
+> > +	qca_mux_led4,
+> 
+> What drives ledX? Is it 11 different LED controllers or is it a single
+> LED controller with 11 outputs.
 
-Philippe CORNU <philippe.cornu-qxv4g6HH51o@public.gmane.org> writes:
+The latter. The IPQ40xx have one LED controller @ 0x1937000. 
+According to the driver (leds-ipq40xx.c in the SDK), it 
+does control up to 11 LEDs. A LED can either be muxed to
+one of the hardware sources (wifi, lan or wan-ports activity/linkspeed),
+or it can be operated by one of four software-programmable "blink"
+sources (each with a variable blink rate and duty cycle). 
+The driver labels each LED as "ipq40xx::led%d".
 
-> Add the bridge support, used by DSI host and HDMI/LVDS bridges.
->
-> Signed-off-by: Philippe CORNU <philippe.cornu-qxv4g6HH51o@public.gmane.org>
+That said: ASUS, Cisco, Compex, Netgear, Zyxel... opted to either
+1. export the individual GPIOs with sysfs
+2. gpio-leds
 
-> @@ -987,19 +1024,36 @@ static struct drm_panel *ltdc_get_panel(struct drm=
-_device *ddev)
->=20=20
->  		port =3D of_graph_get_remote_port_parent(entity);
->  		if (port) {
-> +			struct drm_bridge *bridge;
-> +			struct drm_panel *panel;
-> +
-> +			bridge =3D of_drm_find_bridge(port);
->  			panel =3D of_drm_find_panel(port);
-> -			of_node_put(port);
-> +			if (!bridge && !panel) {
-> +				of_node_put(entity);
-> +				return -EPROBE_DEFER;
-> +			}
-> +
-> +			if (bridge) {
-> +				if (!ldev->bridge) {
-> +					ldev->bridge =3D bridge;
-> +					DRM_INFO("remote bridge %s\n",
-> +						 port->full_name);
-> +				}
-> +			}
-> +
->  			if (panel) {
-> -				DRM_DEBUG_DRIVER("remote panel %s\n",
-> +				if (!ldev->panel) {
-> +					ldev->panel =3D panel;
-> +					DRM_INFO("remote panel %s\n",
->  						 port->full_name);
-> -			} else {
-> -				DRM_DEBUG_DRIVER("panel missing\n");
-> -				of_node_put(entity);
-> +				}
->  			}
-> +			of_node_put(port);
+> [..]
+> > +	qca_mux_wifi01,
+> 
+> Please make these "wifi0" and include all "wifi0XY", rather than having
+> a group per pin.
+> 
+> > +	qca_mux_wifi11,
+> 
+> "wifi1"
 
-Is it possible to use drm_of_find_panel_or_bridge() instead?  I don't
-think it makes sense to have both a bridge and a panel for the same
-node, does it?
+Ok. Can I leave wifi1_cal, _wci, uartX... the way they are?
+ 
+> > +	qca_mux_atest_char3,
+> > +	qca_mux_pmu0,
+> > +	qca_mux_boot8,
+> > +	qca_mux_tm1,
+> > +	qca_mux_atest_char2,
+> > +	qca_mux_pmu1,
+> > +	qca_mux_boot9,
+> > +	qca_mux_tm2,
+> > +	qca_mux_atest_char1,
+> > +	qca_mux_tm_ack,
+> > +	qca_mux_wifi03,
+> > +	qca_mux_wifi13,
+> > +	qca_mux_qpic_pad4,
+> 
+> Please keep an eye on the ipq8074 patch from Varadarajan and make this
+> follow the same scheme.
+Ok, I'll wait for how qca8074 plays out then.
+By the way, can you ask if the QCA8074 follows the IPQ40XX SoC's
+GPIO Pull-up config?
 
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
+I'm asking because Varadarajan was also involved in the
+pinctrl-ipq4019 back in 2015: <https://patchwork.kernel.org/patch/7662241/>
 
------BEGIN PGP SIGNATURE-----
+Back then, this wasn't mentioned anywhere. In fact, the special pull-up
+configuration was only discovered due to an issue with the NAND on the
+Cisco Meraki MR33. So I think it is better ask them now, when the devs
+are actually present/responding. 
 
-iQIzBAEBCgAdFiEE/JuuFDWp9/ZkuCBXtdYpNtH8nugFAlkd6HgACgkQtdYpNtH8
-nuiIohAAr3E/v8Dqkmns/1sQG8L6or+3XC3Cvf8qXTkqGEIbeXLS2EcF3ijvZyTb
-/yho2s9URl0BsQaA/kCt2JtPWI0Bwkybd6NeVLaX1G0hBahU1uZs5nhIF37Zg65X
-C9mpeU0HVEAj3Eyjr3OuF636a+Q/CALZj3y473HYzcgvYcpMNBU8LuagAjd8IxW7
-82WwhCxl8/IPeHkq0Gm6JwVUMIcFvKkVGRkRTKGctfPDMQ8cr1Ezf52lRxBJW7ra
-uxc+YU/zz6OanXNVcpKV7KwXxrtjGDxkLvjG8ZMSDAHB6+WzZDpn3dUTh//6nWcB
-s0j7u4XT2S6NuHvS1cQ0+x1ujkMzcHWy9G8b+VUcgZ07cZVq+xWRcbJIKXAlypvv
-WZqcVEF6MoOjRdgdtLYw4BkwxhjaJxc0FdcQx9RO4Pzb2Lnc9vkpwkQb2S4HHPxA
-VTj9rdkHEJ/3k364wYISpTMJhD7yR05dTzJVczrJj6LbuTsdsU5tfRcKCKW8iCJU
-Q2qyZzk8jIv8TTBUVR40KYZeeuYO1wSol2ts6sim3qoID7EBIhV8j4yhEC+arshF
-uMvTLj1Hr7pJnTeRAicafMkC2LLGYujtylNZzRdjc/Rli5Q21J8bOThmtTZElDnm
-aNYYaDBDFswzIaG+RerbeK01kCeODG4XLv+32ByOh7DUzcgP/Vo=
-=9hWP
------END PGP SIGNATURE-----
---=-=-=--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> > +	qca_mux_atest_char0,
+> > +	qca_mux_tm3,
+> > +	qca_mux_wifi02,
+> > +	qca_mux_wifi12,
+> > +	qca_mux_qpic_pad5,
+> > +	qca_mux_smart3,
+> > +	qca_mux_wcss0_dbg14,
+> 
+> Please squash these into "wcss0_dbg"
+Ok.
+
+> > +	qca_mux_tm4,
+> > +	qca_mux_wifi04,
+> > +	qca_mux_wifi14,
+> > +	qca_mux_qpic_pad6,
+> > +	qca_mux_wcss0_dbg15,
+> > +	qca_mux_qdss_tracectl_a,
+> > +	qca_mux_boot18,
+> 
+> Do you know what the "boot" function is and what 2, 4, 5, 7, 8, 9 11,
+> 14, 18, 19 and 20 means?
+Sadly no. That said, neither the u-boot nor the linux kernel
+sources set any pin to bootX. I think I'll remove it for now.
+
+> [..]
+> > +	qca_mux_sdio0,
+> 
+> There are 8 of these, so that's more likely the 8 data pins in a single
+> function. Please squash them into "sdio_data".
+Yes, this is very likely. We know that this is the case for the qpic_padX.
+
+Regards,
+Christian
