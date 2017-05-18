@@ -1,62 +1,144 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v1 1/3] of: base: Provide of_graph_get_port_parent()
-Date: Thu, 18 May 2017 16:18:39 +0300
-Message-ID: <2172554.nJqIiczhoI@avalon>
-References: <cover.6800d0e1b9b578b82f68dec1b99b3a601d6e54ca.1495032810.git-series.kieran.bingham+renesas@ideasonboard.com> <CAL_JsqLvXH3kKV-DxWuNrAYGh8=L8Mdg5zcm2RsHZTpmi_8g-g@mail.gmail.com> <61138419-5781-bbec-7ac5-44524ad501ce@ideasonboard.com>
+From: Olivier MOYSAN <olivier.moysan@st.com>
+Subject: Re: [PATCH v3 1/3] dt-bindings: Document STM32 I2S
+	bindings
+Date: Thu, 18 May 2017 13:29:03 +0000
+Message-ID: <827a2860-1f2e-0296-d58c-4c8686858549@st.com>
+References: <1494495904-18898-1-git-send-email-olivier.moysan@st.com>
+ <1494495904-18898-2-git-send-email-olivier.moysan@st.com>
+ <20170513001753.hygunrcjqejpbwl6@rob-hp-laptop>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <61138419-5781-bbec-7ac5-44524ad501ce@ideasonboard.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: kieran.bingham@ideasonboard.com
-Cc: Rob Herring <robh+dt@kernel.org>, Kieran Bingham <kbingham@kernel.org>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, "open list:MEDIA DRIVERS FOR RENESAS - FCP" <linux-renesas-soc@vger.kernel.org>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, Sakari Ailus <sakari.ailus@iki.fi>, Niklas =?ISO-8859-1?Q?S=F6derlund?= <niklas.soderlund@ragnatech.se>, Frank Rowand <frowand.list@gmail.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20170513001753.hygunrcjqejpbwl6@rob-hp-laptop>
+Content-Language: en-US
+Content-ID: <522EEE913D323E48BF1E987B2B9AF569@st.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Rob Herring <robh@kernel.org>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, Alexandre TORGUE <alexandre.torgue@st.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Arnaud POULIQUEN <arnaud.pouliquen@st.com>, "tiwai@suse.com" <tiwai@suse.com>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "broonie@kernel.org" <broonie@kernel.org>, "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>, Benjamin GAIGNARD <benjamin.gaignard@st.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "kernel@stlinux.com" <kernel@stlinux.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Kieran,
+Hello Rob,
 
-On Wednesday 17 May 2017 21:02:42 Kieran Bingham wrote:
-> On 17/05/17 17:36, Rob Herring wrote:
-> > On Wed, May 17, 2017 at 10:03 AM, Kieran Bingham wrote:
-> >> From: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-> >> 
-> >> When handling endpoints, the v4l2 async framework needs to identify the
-> >> parent device of a port endpoint.
-> >> 
-> >> Adapt the existing of_graph_get_remote_port_parent() such that a caller
-> >> can obtain the parent of a port without parsing the remote-endpoint
-> >> first.
-> > 
-> > A similar patch is already applied as part of the ASoC graph card support.
-> > 
-> > Rob
-> 
-> Ah yes, a quick google finds it...
-> 
-> :  https://patchwork.kernel.org/patch/9658907/
-> 
-> Surprisingly similar patch ... and a familiar name.
+Thanks for your comment.
 
-Very similar indeed, down to identical problems ;-) Quoting your patch,
+On 05/13/2017 02:17 AM, Rob Herring wrote:
+> On Thu, May 11, 2017 at 11:45:02AM +0200, olivier moysan wrote:
+>> Add documentation of device tree bindings for STM32 SPI/I2S.
+>>
+>> Signed-off-by: olivier moysan <olivier.moysan@st.com>
+>> ---
+>>  .../devicetree/bindings/sound/st,stm32-i2s.txt     | 68 ++++++++++++++++++++++
+>>  1 file changed, 68 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/sound/st,stm32-i2s.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/sound/st,stm32-i2s.txt b/Documentation/devicetree/bindings/sound/st,stm32-i2s.txt
+>> new file mode 100644
+>> index 0000000..67b854a
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/sound/st,stm32-i2s.txt
+>> @@ -0,0 +1,68 @@
+>> +STMicroelectronics STM32 SPI/I2S Controller
+>> +
+>> +The SPI/I2S block supports I2S/PCM protocols when configured on I2S mode.
+>> +Only some SPI instances support I2S.
+>> +
+>> +Required properties:
+>> +  - compatible: Must be "st,stm32h7-i2s"
+>> +  - reg: Offset and length of the device's register set.
+>> +  - interrupts: Must contain the interrupt line id.
+>> +  - clocks: Must contain phandle and clock specifier pairs for each entry
+>> +	in clock-names.
+>> +  - clock-names: Must contain "i2sclk", "pclk", "x8k" and "x11k".
+>> +	"i2sclk": clock which feeds the internal clock generator
+>> +	"pclk": clock which feeds the peripheral bus interface
+>> +	"x8k": I2S parent clock for sampling rates multiple of 8kHz.
+>> +	"x11k": I2S parent clock for sampling rates multiple of 11.025kHz.
+>> +  - dmas: DMA specifiers for tx and rx dma.
+>> +    See Documentation/devicetree/bindings/dma/stm32-dma.txt.
+>> +  - dma-names: Identifier for each DMA request line. Must be "tx" and "rx".
+>> +  - pinctrl-names: should contain only value "default"
+>> +  - pinctrl-0: see Documentation/devicetree/bindings/pinctrl/pinctrl-stm32.txt
+>> +
+>> +Optional properties:
+>> +  - resets: Reference to a reset controller asserting the reset controller
+>> +
+>> +The device node should contain one 'port' child node with one child 'endpoint'
+>> +node, according to the bindings defined in Documentation/devicetree/bindings/
+>> +graph.txt.
+>> +
+>> +Example:
+>> +sound_card {
+>> +	compatible = "audio-graph-card";
+>> +	dais = <&i2s2_port 0>;
+>
+> What is the 0 representing?
+>
 
->  /**
-> + * of_graph_get_port_parent() - get port's parent node
-> + * @node: pointer to a local endpoint device_node
-> + *
-> + * Return: device node associated with endpoint @node.
-> + *	   Use of_node_put() on it when done.
-> + */
+This is no more relevant, so to be removed.
 
-The documentation of the return value is a bit confusing to me. I assume that, 
-by device node, you meant the DT node corresponding to the device of the 
-endpoint which is passed as an argument. However, device node cal also refer 
-to struct device_node. Should this be clarified ?
+>> +};
+>> +
+>> +i2s2: audio-controller@40003800 {
+>> +	compatible = "st,stm32h7-i2s";
+>> +	#sound-dai-cells = <0>;
+>
+> Should be dropped.
+>
 
-> Morimoto-san - you beat me to it :D !
-> 
-> Thanks Rob, (And Morimoto!)
+ok
 
--- 
-Regards,
+>> +	reg = <0x40003800 0x400>;
+>> +	interrupts = <36>;
+>> +	clocks = <&rcc PCLK1>, <&rcc SPI2_CK>, <&rcc PLL1_Q>, <&rcc PLL2_P>;
+>> +	clock-names = "pclk", "i2sclk",  "x8k", "x11k";
+>> +	dmas = <&dmamux2 2 39 0x400 0x1>,
+>> +           <&dmamux2 3 40 0x400 0x1>;
+>> +	dma-names = "rx", "tx";
+>> +	pinctrl-names = "default";
+>> +	pinctrl-0 = <&pinctrl_i2s2>;
+>> +
+>> +	i2s2_port: port@0 {
+>> +		#address-cells = <1>;
+>> +		#size-cells = <0>;
+>
+> This shouldn't even compile. You don't need these because because you
+> have no reg property in the endpoint.
+>
+> You have a unit-address here w/o a reg property. You don't need a reg
+> prop because you only have 1 port.
+>
 
-Laurent Pinchart
+ok.
+
+>> +
+>> +		cpu_endpoint: endpoint {
+>> +			remote-endpoint = <&codec_endpoint>;
+>> +			format = "i2s";
+>> +			bitclock-master = <&codec_endpoint>;
+>> +			frame-master = <&codec_endpoint>;
+>> +		};
+>> +	};
+>> +};
+>> +
+>> +audio-codec {
+>> +		codec_port: port@0 {
+>> +			codec_endpoint: endpoint {
+>> +				remote-endpoint = <&cpu_endpoint>;
+>> +		};
+>> +	};
+>> +};
+>> --
+>> 1.9.1
+>>
+
+BRs
+Olivier
