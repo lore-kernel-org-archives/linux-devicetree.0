@@ -1,76 +1,233 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH 1/2] wcn36xx: Pass used skb to ieee80211_tx_status()
-Date: Wed, 17 May 2017 22:05:38 -0700
-Message-ID: <20170518050538.GL12920@tuxbook>
-References: <20170426220444.10539-1-bjorn.andersson@linaro.org>
- <1493281332.2529.1.camel@sipsolutions.net>
- <20170428234247.GQ15143@minitux>
- <87fugkrchl.fsf@kamboji.qca.qualcomm.com>
- <1495026867.2442.9.camel@sipsolutions.net>
+From: jeffy <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: Re: [PATCH v5] of/pci: Fix memory leak in of_pci_get_host_bridge_resources
+Date: Thu, 18 May 2017 13:27:05 +0800
+Message-ID: <591D30A9.5030606@rock-chips.com>
+References: <1491359303-1385-1-git-send-email-jeffy.chen@rock-chips.com> <1491359303-1385-2-git-send-email-jeffy.chen@rock-chips.com> <20170517210841.GH31462@bhelgaas-glaptop.roam.corp.google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1495026867.2442.9.camel@sipsolutions.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Johannes Berg <johannes@sipsolutions.net>
-Cc: Kalle Valo <kvalo@qca.qualcomm.com>, "k.eugene.e@gmail.com" <k.eugene.e@gmail.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-soc@vger.kernel.org" <linux-soc@vger.kernel.org>, "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "wcn36xx@lists.infradead.org" <wcn36xx@lists.infradead.org>, "nicolas.dechesne@linaro.org" <nicolas.dechesne@linaro.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170517210841.GH31462-1RhO1Y9PlrlHTL0Zs8A6p5iNqAH0jzoTYJqu5kTmcBRl57MIdRCFDg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, toshi.kani-ZPxbGqLxI0U@public.gmane.org, shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org, briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, dtor-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed 17 May 06:14 PDT 2017, Johannes Berg wrote:
+Hi Bjorn,
 
-> On Thu, 2017-05-04 at 13:13 +0000, Kalle Valo wrote:
-> > 
-> > > > This code intentionally checked if TX status was requested, and
-> > > > if not then it doesn't go to the effort of building it.
-> > > > 
-> > > 
-> > > What I'm finding puzzling is the fact that the only caller of
-> > > ieee80211_led_tx() is ieee80211_tx_status() and it seems like
-> > > drivers, such as ath10k, call this for each packet handled - but
-> > > I'm likely missing something.
-> 
-> Yes, many drivers do call it for each packet, and as such, this
-> deficiency was never noted.
-> 
-> > > > As it is with your patch, it'll go and report the TX status
-> > > > without any
-> > > > TX status information - which is handled in
-> > > > wcn36xx_dxe_tx_ack_ind()
-> > > > for those frames needing it.
-> > > > 
-> > > 
-> > > Right, it doesn't sound desired. However, during normal operation
-> > > I'm not seeing IEEE80211_TX_CTL_REQ_TX_STATUS being set and as such
-> > > ieee80211_led_tx() is never called.
-> > 
-> > So what's the conclusion? How do we get leds working?
-> 
-> Well, frankly, I never thought the TX LED was a super good idea - but
-> it had been supported by the original code IIRC, so never removed. Some
-> people like frantic blinking I guess ;-)
-> 
+On 05/18/2017 05:08 AM, Bjorn Helgaas wrote:
+> On Wed, Apr 05, 2017 at 10:28:22AM +0800, Jeffy Chen wrote:
+>> Currently we only free the allocated resource struct when error.
+>> This would cause memory leak after pci_free_resource_list.
+>
+> I think I see the problem here.  The release path is this:
+>
+>    pci_release_host_bridge_dev
+>      pci_free_resource_list
+>        resource_list_free
+> 	list_for_each_entry_safe(entry, tmp, head, node)
+> 	  resource_list_destroy_entry
+> 	    resource_list_del
+> 	    resource_list_free_entry
+> 	      kfree(entry)
+>
+> but that frees only the struct resource_entry, not the struct resource
+> pointed to by entry->res.  Is that right?
+right, that's the leak.
 
-It seems very important to a lot of people...
+>
+> And this patch solves it for of_pci_get_host_bridge_resources() by
+> always making entry->res point to entry->__res, which is an element in
+> struct resource_entry, so it's sufficient to free the resource_entry.
+>
+> The memory management here is pretty tangled.  I wonder if there's
+> some way to simplify it so it's easier to make sure everybody does it
+> correctly.  For example, could we remove the entry->res pointer
+> completely and force everybody to use entry->__res?
+i've tried something like this in 
+https://patchwork.kernel.org/patch/9638003/
+
+but it turns out there are a few codes trying to use shared 
+resources(entry->res pointer point to some common resources), for example:
+
+./arch/tile/kernel/pci.c:307: 
+pci_add_resource(&resources, &ioport_resource);
+./arch/tile/kernel/pci.c:308: 
+pci_add_resource(&resources, &iomem_resource);
+
+so i tried to use IORESOURCE_AUTO to handle non-common(private) resources.
 
 
-But if ieee80211_free_txskb() is the counterpart of
-ieee80211_tx_status() then we should be able to push the
-ieee80211_led_tx() call down into ieee80211_report_used_skb() and handle
-both cases.
+and i saw drivers/pnp/manager.c tried to handle something like this too, 
+by manually free resources marked as IORESOURCE_AUTO:
+static void pnp_clean_resource_table(struct pnp_dev *dev)
+{
+         struct pnp_resource *pnp_res, *tmp;
 
-The ieee80211_free_txskb() seems to be used in various cases where we
-discard skbs, but perhaps this is not an issue in reality.
+         list_for_each_entry_safe(pnp_res, tmp, &dev->resources, list) {
+                 if (pnp_res->res.flags & IORESOURCE_AUTO)
+                         pnp_free_resource(pnp_res);
+         }
+}
 
-> But I think the problem also applies to the throughput trigger thing,
-> so perhaps we need to stick some LED feedback calls into other places,
-> like _noskb() or provide an extra way to do it?
-> 
 
-Looking around it seems that we either have a call to free_txskb() or
-one of the tx_status(); where the _noskb() would need some special
-handling. Are there others or would it be reasonable to add a call in
-this one "special" case?
+>
+>> Signed-off-by: Jeffy Chen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+>> ---
+>>
+>> Changes in v5:
+>> Fix some careless compile errors.
+>>
+>> Changes in v4:
+>> Use IORESOURCE_AUTO to mark struct resources which could be copied.
+>>
+>> Changes in v3:
+>> Add some comments.
+>>
+>> Changes in v2:
+>> Don't change the resource_list_create_entry's behavior.
+>>
+>>   drivers/of/of_pci.c | 51 ++++++++++++++++++---------------------------------
+>>   drivers/pci/bus.c   |  7 ++++++-
+>>   2 files changed, 24 insertions(+), 34 deletions(-)
+>>
+>> diff --git a/drivers/of/of_pci.c b/drivers/of/of_pci.c
+>> index 0ee42c3..49233bf 100644
+>> --- a/drivers/of/of_pci.c
+>> +++ b/drivers/of/of_pci.c
+>> @@ -189,9 +189,7 @@ int of_pci_get_host_bridge_resources(struct device_node *dev,
+>>   			unsigned char busno, unsigned char bus_max,
+>>   			struct list_head *resources, resource_size_t *io_base)
+>>   {
+>> -	struct resource_entry *window;
+>> -	struct resource *res;
+>> -	struct resource *bus_range;
+>> +	struct resource res;
+>>   	struct of_pci_range range;
+>>   	struct of_pci_range_parser parser;
+>>   	char range_type[4];
+>> @@ -200,24 +198,21 @@ int of_pci_get_host_bridge_resources(struct device_node *dev,
+>>   	if (io_base)
+>>   		*io_base = (resource_size_t)OF_BAD_ADDR;
+>>
+>> -	bus_range = kzalloc(sizeof(*bus_range), GFP_KERNEL);
+>> -	if (!bus_range)
+>> -		return -ENOMEM;
+>> -
+>>   	pr_info("host bridge %s ranges:\n", dev->full_name);
+>>
+>> -	err = of_pci_parse_bus_range(dev, bus_range);
+>> +	err = of_pci_parse_bus_range(dev, &res);
+>>   	if (err) {
+>> -		bus_range->start = busno;
+>> -		bus_range->end = bus_max;
+>> -		bus_range->flags = IORESOURCE_BUS;
+>> -		pr_info("  No bus range found for %s, using %pR\n",
+>> -			dev->full_name, bus_range);
+>> +		res.start = busno;
+>> +		res.end = bus_max;
+>> +		res.flags = IORESOURCE_BUS;
+>> +		pr_info("  No bus range found for %s\n", dev->full_name);
+>>   	} else {
+>> -		if (bus_range->end > bus_range->start + bus_max)
+>> -			bus_range->end = bus_range->start + bus_max;
+>> +		if (res.end > res.start + bus_max)
+>> +			res.end = res.start + bus_max;
+>>   	}
+>> -	pci_add_resource(resources, bus_range);
+>> +
+>> +	res.flags |= IORESOURCE_AUTO;
+>> +	pci_add_resource(resources, &res);
+>>
+>>   	/* Check for ranges property */
+>>   	err = of_pci_range_parser_init(&parser, dev);
+>> @@ -244,24 +239,16 @@ int of_pci_get_host_bridge_resources(struct device_node *dev,
+>>   		if (range.cpu_addr == OF_BAD_ADDR || range.size == 0)
+>>   			continue;
+>>
+>> -		res = kzalloc(sizeof(struct resource), GFP_KERNEL);
+>> -		if (!res) {
+>> -			err = -ENOMEM;
+>> -			goto parse_failed;
+>> -		}
+>> -
+>> -		err = of_pci_range_to_resource(&range, dev, res);
+>> -		if (err) {
+>> -			kfree(res);
+>> +		err = of_pci_range_to_resource(&range, dev, &res);
+>> +		if (err)
+>>   			continue;
+>> -		}
+>>
+>> -		if (resource_type(res) == IORESOURCE_IO) {
+>> +		if (resource_type(&res) == IORESOURCE_IO) {
+>>   			if (!io_base) {
+>>   				pr_err("I/O range found for %s. Please provide an io_base pointer to save CPU base address\n",
+>>   					dev->full_name);
+>>   				err = -EINVAL;
+>> -				goto conversion_failed;
+>> +				goto parse_failed;
+>>   			}
+>>   			if (*io_base != (resource_size_t)OF_BAD_ADDR)
+>>   				pr_warn("More than one I/O resource converted for %s. CPU base address for old range lost!\n",
+>> @@ -269,16 +256,14 @@ int of_pci_get_host_bridge_resources(struct device_node *dev,
+>>   			*io_base = range.cpu_addr;
+>>   		}
+>>
+>> -		pci_add_resource_offset(resources, res,	res->start - range.pci_addr);
+>> +		res.flags |= IORESOURCE_AUTO;
+>> +		pci_add_resource_offset(resources, &res,
+>> +					res.start - range.pci_addr);
+>>   	}
+>>
+>>   	return 0;
+>>
+>> -conversion_failed:
+>> -	kfree(res);
+>>   parse_failed:
+>> -	resource_list_for_each_entry(window, resources)
+>> -		kfree(window->res);
+>>   	pci_free_resource_list(resources);
+>>   	return err;
+>>   }
+>> diff --git a/drivers/pci/bus.c b/drivers/pci/bus.c
+>> index bc56cf1..3dbcb95 100644
+>> --- a/drivers/pci/bus.c
+>> +++ b/drivers/pci/bus.c
+>> @@ -22,12 +22,17 @@ void pci_add_resource_offset(struct list_head *resources, struct resource *res,
+>>   {
+>>   	struct resource_entry *entry;
+>>
+>> -	entry = resource_list_create_entry(res, 0);
+>> +	entry = resource_list_create_entry(NULL, 0);
+>
+> If we make this change, there are no callers of
+> resource_list_create_entry() that supply a non-NULL "res", so
+> we could remove that argument completely.
+>
+>>   	if (!entry) {
+>>   		printk(KERN_ERR "PCI: can't add host bridge window %pR\n", res);
+>>   		return;
+>>   	}
+>>
+>> +	if (res->flags & IORESOURCE_AUTO)
+>> +		*entry->res = *res;
+>> +	else
+>> +		entry->res = res;
+>> +
+>>   	entry->offset = offset;
+>>   	resource_list_add_tail(entry, resources);
+>>   }
+>> --
+>> 2.1.4
+>>
+>>
+>
+>
+>
 
-Regards,
-Bjorn
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
