@@ -1,398 +1,87 @@
-From: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
-Subject: Re: [PATCH v5 2/3] platform: add video-multiplexer subdevice driver
-Date: Fri, 19 May 2017 00:48:17 +0300
-Message-ID: <20170518214816.GZ3227@valkosipuli.retiisi.org.uk>
-References: <1495034107-21407-1-git-send-email-p.zabel@pengutronix.de>
- <1495034107-21407-2-git-send-email-p.zabel@pengutronix.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH 2/3] rtc: gemini: Augment DT bindings for Faraday
+Date: Thu, 18 May 2017 23:56:34 +0200
+Message-ID: <20170518215635.13505-2-linus.walleij@linaro.org>
+References: <20170518215635.13505-1-linus.walleij@linaro.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1495034107-21407-2-git-send-email-p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+In-Reply-To: <20170518215635.13505-1-linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Vladimir Zapolskiy <vladimir_zapolskiy-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, Sebastian Reichel <sebastian.reichel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, Kieran Bingham <kieran.bingham+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Steve Longerbeam <steve_longerbeam-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+To: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-rtc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Janos Laube <janos.dev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Paulius Zaleckas <paulius.zaleckas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Hans Ulli Kroll <ulli.kroll-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Po-Yu Chuang <ratbert-w0jeGXs5+AWXmMXjJBpWqg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Philipp,
+The Gemini RTC is actually a standard IP block from Faraday
+Technology called FTRTC010. Rename the bindings, add the
+generic compatible string and add definitions for the two
+available clocks.
 
-Thanks a lot for the update! Just a few really minor comments below. After
-fixing them you can add:
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Po-Yu Chuang <ratbert-w0jeGXs5+AWXmMXjJBpWqg@public.gmane.org>
+Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+---
+ .../devicetree/bindings/rtc/cortina,gemini.txt     | 14 -----------
+ .../devicetree/bindings/rtc/faraday,ftrtc010.txt   | 28 ++++++++++++++++++++++
+ 2 files changed, 28 insertions(+), 14 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/rtc/cortina,gemini.txt
+ create mode 100644 Documentation/devicetree/bindings/rtc/faraday,ftrtc010.txt
 
-Acked-by: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-
-On Wed, May 17, 2017 at 05:15:06PM +0200, Philipp Zabel wrote:
-> This driver can handle SoC internal and external video bus multiplexers,
-> controlled by mux controllers provided by the mux controller framework,
-> such as MMIO register bitfields or GPIOs. The subdevice passes through
-> the mbus configuration of the active input to the output side.
-> 
-> Signed-off-by: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> Signed-off-by: Steve Longerbeam <steve_longerbeam-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
-> ---
-> No changes since v4 [1]:
-> 
-> This patch depends on the mux subsystem [2] and on the mmio-mux driver [3]
-> to work on i.MX6. The follow-up patch will make this usable until the mux
-> framework is merged.
-> 
-> [1] https://patchwork.kernel.org/patch/9712131/
-> [2] https://patchwork.kernel.org/patch/9725911/
-> [3] https://patchwork.kernel.org/patch/9725893/
-> ---
->  drivers/media/platform/Kconfig     |   6 +
->  drivers/media/platform/Makefile    |   2 +
->  drivers/media/platform/video-mux.c | 295 +++++++++++++++++++++++++++++++++++++
->  3 files changed, 303 insertions(+)
->  create mode 100644 drivers/media/platform/video-mux.c
-> 
-> diff --git a/drivers/media/platform/Kconfig b/drivers/media/platform/Kconfig
-> index ac026ee1ca074..259c0ff780937 100644
-> --- a/drivers/media/platform/Kconfig
-> +++ b/drivers/media/platform/Kconfig
-> @@ -74,6 +74,12 @@ config VIDEO_M32R_AR_M64278
->  	  To compile this driver as a module, choose M here: the
->  	  module will be called arv.
->  
-> +config VIDEO_MUX
-> +	tristate "Video Multiplexer"
-> +	depends on OF && VIDEO_V4L2_SUBDEV_API && MEDIA_CONTROLLER && MULTIPLEXER
-
-It'd be nice to have this split (over 80).
-
-> +	help
-> +	  This driver provides support for N:1 video bus multiplexers.
-> +
->  config VIDEO_OMAP3
->  	tristate "OMAP 3 Camera support"
->  	depends on VIDEO_V4L2 && I2C && VIDEO_V4L2_SUBDEV_API && ARCH_OMAP3
-> diff --git a/drivers/media/platform/Makefile b/drivers/media/platform/Makefile
-> index 63303d63c64cf..a6363023f981e 100644
-> --- a/drivers/media/platform/Makefile
-> +++ b/drivers/media/platform/Makefile
-> @@ -28,6 +28,8 @@ obj-$(CONFIG_VIDEO_SH_VEU)		+= sh_veu.o
->  
->  obj-$(CONFIG_VIDEO_MEM2MEM_DEINTERLACE)	+= m2m-deinterlace.o
->  
-> +obj-$(CONFIG_VIDEO_MUX)			+= video-mux.o
-> +
->  obj-$(CONFIG_VIDEO_S3C_CAMIF) 		+= s3c-camif/
->  obj-$(CONFIG_VIDEO_SAMSUNG_EXYNOS4_IS) 	+= exynos4-is/
->  obj-$(CONFIG_VIDEO_SAMSUNG_S5P_JPEG)	+= s5p-jpeg/
-> diff --git a/drivers/media/platform/video-mux.c b/drivers/media/platform/video-mux.c
-> new file mode 100644
-> index 0000000000000..e35ffa18126f3
-> --- /dev/null
-> +++ b/drivers/media/platform/video-mux.c
-> @@ -0,0 +1,295 @@
-> +/*
-> + * video stream multiplexer controlled via mux control
-> + *
-> + * Copyright (C) 2013 Pengutronix, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> + * Copyright (C) 2016-2017 Pengutronix, Philipp Zabel <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> + *
-> + * This program is free software; you can redistribute it and/or
-> + * modify it under the terms of the GNU General Public License
-> + * as published by the Free Software Foundation; either version 2
-> + * of the License, or (at your option) any later version.
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + */
-> +
-> +#include <linux/err.h>
-> +#include <linux/module.h>
-> +#include <linux/mutex.h>
-> +#include <linux/mux/consumer.h>
-> +#include <linux/of.h>
-> +#include <linux/of_graph.h>
-> +#include <linux/platform_device.h>
-> +#include <media/v4l2-async.h>
-> +#include <media/v4l2-device.h>
-> +#include <media/v4l2-subdev.h>
-> +
-> +struct video_mux {
-> +	struct v4l2_subdev subdev;
-> +	struct media_pad *pads;
-> +	struct v4l2_mbus_framefmt *format_mbus;
-> +	struct mux_control *mux;
-> +	struct mutex lock;
-> +	int active;
-> +};
-> +
-> +static inline struct video_mux *v4l2_subdev_to_video_mux(struct v4l2_subdev *sd)
-> +{
-> +	return container_of(sd, struct video_mux, subdev);
-> +}
-> +
-> +static int video_mux_link_setup(struct media_entity *entity,
-> +				const struct media_pad *local,
-> +				const struct media_pad *remote, u32 flags)
-> +{
-> +	struct v4l2_subdev *sd = media_entity_to_v4l2_subdev(entity);
-> +	struct video_mux *vmux = v4l2_subdev_to_video_mux(sd);
-> +	int ret = 0;
-> +
-> +	/*
-> +	 * The mux state is determined by the enabled sink pad link.
-> +	 * Enabling or disabling the source pad link has no effect.
-> +	 */
-> +	if (local->flags & MEDIA_PAD_FL_SOURCE)
-> +		return 0;
-> +
-> +	dev_dbg(sd->dev, "link setup '%s':%d->'%s':%d[%d]",
-> +		remote->entity->name, remote->index, local->entity->name,
-> +		local->index, flags & MEDIA_LNK_FL_ENABLED);
-> +
-> +	mutex_lock(&vmux->lock);
-> +
-> +	if (flags & MEDIA_LNK_FL_ENABLED) {
-> +		if (vmux->active == local->index)
-> +			goto out;
-> +
-> +		if (vmux->active >= 0) {
-> +			ret = -EBUSY;
-> +			goto out;
-> +		}
-> +
-> +		dev_dbg(sd->dev, "setting %d active\n", local->index);
-> +		ret = mux_control_try_select(vmux->mux, local->index);
-> +		if (ret < 0)
-> +			goto out;
-> +		vmux->active = local->index;
-> +	} else {
-> +		if (vmux->active != local->index)
-> +			goto out;
-> +
-> +		dev_dbg(sd->dev, "going inactive\n");
-> +		mux_control_deselect(vmux->mux);
-> +		vmux->active = -1;
-> +	}
-> +
-> +out:
-> +	mutex_unlock(&vmux->lock);
-> +	return ret;
-> +}
-> +
-> +static struct media_entity_operations video_mux_ops = {
-
-const.
-
-> +	.link_setup = video_mux_link_setup,
-> +	.link_validate = v4l2_subdev_link_validate,
-> +};
-> +
-> +static int video_mux_s_stream(struct v4l2_subdev *sd, int enable)
-> +{
-> +	struct video_mux *vmux = v4l2_subdev_to_video_mux(sd);
-> +	struct v4l2_subdev *upstream_sd;
-> +	struct media_pad *pad;
-> +
-> +	if (vmux->active == -1) {
-> +		dev_err(sd->dev, "Can not start streaming on inactive mux\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	pad = media_entity_remote_pad(&sd->entity.pads[vmux->active]);
-> +	if (!pad) {
-> +		dev_err(sd->dev, "Failed to find remote source pad\n");
-> +		return -ENOLINK;
-> +	}
-> +
-> +	if (!is_media_entity_v4l2_subdev(pad->entity)) {
-> +		dev_err(sd->dev, "Upstream entity is not a v4l2 subdev\n");
-> +		return -ENODEV;
-> +	}
-> +
-> +	upstream_sd = media_entity_to_v4l2_subdev(pad->entity);
-> +
-> +	return v4l2_subdev_call(upstream_sd, video, s_stream, enable);
-> +}
-> +
-> +static const struct v4l2_subdev_video_ops video_mux_subdev_video_ops = {
-> +	.s_stream = video_mux_s_stream,
-> +};
-> +
-> +static struct v4l2_mbus_framefmt *
-> +__video_mux_get_pad_format(struct v4l2_subdev *sd,
-> +			   struct v4l2_subdev_pad_config *cfg,
-> +			   unsigned int pad, u32 which)
-> +{
-> +	struct video_mux *vmux = v4l2_subdev_to_video_mux(sd);
-> +
-> +	switch (which) {
-> +	case V4L2_SUBDEV_FORMAT_TRY:
-> +		return v4l2_subdev_get_try_format(sd, cfg, pad);
-> +	case V4L2_SUBDEV_FORMAT_ACTIVE:
-> +		return &vmux->format_mbus[pad];
-> +	default:
-> +		return NULL;
-> +	}
-> +}
-> +
-> +static int video_mux_get_format(struct v4l2_subdev *sd,
-> +			    struct v4l2_subdev_pad_config *cfg,
-> +			    struct v4l2_subdev_format *sdformat)
-> +{
-> +	struct video_mux *vmux = v4l2_subdev_to_video_mux(sd);
-> +
-> +	mutex_lock(&vmux->lock);
-> +
-> +	sdformat->format = *__video_mux_get_pad_format(sd, cfg, sdformat->pad,
-> +						   sdformat->which);
-
-You could align to opening parenthesis on previous line.
-
-> +
-> +	mutex_unlock(&vmux->lock);
-> +
-> +	return 0;
-> +}
-> +
-> +static int video_mux_set_format(struct v4l2_subdev *sd,
-> +			    struct v4l2_subdev_pad_config *cfg,
-> +			    struct v4l2_subdev_format *sdformat)
-> +{
-> +	struct video_mux *vmux = v4l2_subdev_to_video_mux(sd);
-> +	struct v4l2_mbus_framefmt *mbusformat;
-> +	struct media_pad *pad = &vmux->pads[sdformat->pad];
-> +
-> +	mbusformat = __video_mux_get_pad_format(sd, cfg, sdformat->pad,
-> +					    sdformat->which);
-> +	if (!mbusformat)
-> +		return -EINVAL;
-> +
-> +	mutex_lock(&vmux->lock);
-> +
-> +	/* Source pad mirrors active sink pad, no limitations on sink pads */
-> +	if ((pad->flags & MEDIA_PAD_FL_SOURCE) && vmux->active >= 0)
-> +		sdformat->format = vmux->format_mbus[vmux->active];
-> +
-> +	*mbusformat = sdformat->format;
-> +
-> +	mutex_unlock(&vmux->lock);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct v4l2_subdev_pad_ops video_mux_pad_ops = {
-> +	.get_fmt = video_mux_get_format,
-> +	.set_fmt = video_mux_set_format,
-> +};
-> +
-> +static const struct v4l2_subdev_ops video_mux_subdev_ops = {
-> +	.pad = &video_mux_pad_ops,
-> +	.video = &video_mux_subdev_video_ops,
-> +};
-> +
-> +static int video_mux_probe(struct platform_device *pdev)
-> +{
-> +	struct device_node *np = pdev->dev.of_node;
-> +	struct device *dev = &pdev->dev;
-> +	struct device_node *ep;
-> +	struct video_mux *vmux;
-> +	unsigned int num_pads = 0;
-> +	int ret;
-> +	int i;
-> +
-> +	vmux = devm_kzalloc(dev, sizeof(*vmux), GFP_KERNEL);
-> +	if (!vmux)
-> +		return -ENOMEM;
-> +
-> +	platform_set_drvdata(pdev, vmux);
-> +
-> +	v4l2_subdev_init(&vmux->subdev, &video_mux_subdev_ops);
-> +	snprintf(vmux->subdev.name, sizeof(vmux->subdev.name), "%s", np->name);
-> +	vmux->subdev.flags |= V4L2_SUBDEV_FL_HAS_DEVNODE;
-> +	vmux->subdev.dev = dev;
-> +
-> +	/*
-> +	 * The largest numbered port is the output port. It determines
-> +	 * total number of pads.
-> +	 */
-> +	for_each_endpoint_of_node(np, ep) {
-> +		struct of_endpoint endpoint;
-> +
-> +		of_graph_parse_endpoint(ep, &endpoint);
-> +		num_pads = max(num_pads, endpoint.port + 1);
-> +	}
-> +
-> +	if (num_pads < 2) {
-> +		dev_err(dev, "Not enough ports %d\n", num_pads);
-> +		return -EINVAL;
-> +	}
-> +
-> +	vmux->mux = devm_mux_control_get(dev, NULL);
-> +	if (IS_ERR(vmux->mux)) {
-> +		ret = PTR_ERR(vmux->mux);
-> +		if (ret != -EPROBE_DEFER)
-> +			dev_err(dev, "Failed to get mux: %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	mutex_init(&vmux->lock);
-> +	vmux->active = -1;
-> +	vmux->pads = devm_kcalloc(dev, num_pads, sizeof(*vmux->pads),
-> +				  GFP_KERNEL);
-> +	vmux->format_mbus = devm_kcalloc(dev, num_pads,
-> +					 sizeof(*vmux->format_mbus),
-> +					 GFP_KERNEL);
-> +
-> +	for (i = 0; i < num_pads - 1; i++)
-> +		vmux->pads[i].flags = MEDIA_PAD_FL_SINK;
-> +	vmux->pads[num_pads - 1].flags = MEDIA_PAD_FL_SOURCE;
-> +
-> +	vmux->subdev.entity.function = MEDIA_ENT_F_VID_MUX;
-> +	ret = media_entity_pads_init(&vmux->subdev.entity, num_pads,
-> +				     vmux->pads);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	vmux->subdev.entity.ops = &video_mux_ops;
-> +
-> +	return v4l2_async_register_subdev(&vmux->subdev);
-> +}
-> +
-> +static int video_mux_remove(struct platform_device *pdev)
-> +{
-> +	struct video_mux *vmux = platform_get_drvdata(pdev);
-> +	struct v4l2_subdev *sd = &vmux->subdev;
-> +
-> +	v4l2_async_unregister_subdev(sd);
-> +	media_entity_cleanup(&sd->entity);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id video_mux_dt_ids[] = {
-> +	{ .compatible = "video-mux", },
-> +	{ /* sentinel */ }
-> +};
-> +MODULE_DEVICE_TABLE(of, video_mux_dt_ids);
-> +
-> +static struct platform_driver video_mux_driver = {
-> +	.probe		= video_mux_probe,
-> +	.remove		= video_mux_remove,
-> +	.driver		= {
-> +		.of_match_table = video_mux_dt_ids,
-> +		.name = "video-mux",
-> +	},
-> +};
-> +
-> +module_platform_driver(video_mux_driver);
-> +
-> +MODULE_DESCRIPTION("video stream multiplexer");
-> +MODULE_AUTHOR("Sascha Hauer, Pengutronix");
-> +MODULE_AUTHOR("Philipp Zabel, Pengutronix");
-> +MODULE_LICENSE("GPL");
-
+diff --git a/Documentation/devicetree/bindings/rtc/cortina,gemini.txt b/Documentation/devicetree/bindings/rtc/cortina,gemini.txt
+deleted file mode 100644
+index 4ce4e794ddbb..000000000000
+--- a/Documentation/devicetree/bindings/rtc/cortina,gemini.txt
++++ /dev/null
+@@ -1,14 +0,0 @@
+-* Cortina Systems Gemini RTC
+-
+-Gemini SoC real-time clock.
+-
+-Required properties:
+-- compatible : Should be "cortina,gemini-rtc"
+-
+-Examples:
+-
+-rtc@45000000 {
+-	compatible = "cortina,gemini-rtc";
+-	reg = <0x45000000 0x100>;
+-	interrupts = <17 IRQ_TYPE_LEVEL_HIGH>;
+-};
+diff --git a/Documentation/devicetree/bindings/rtc/faraday,ftrtc010.txt b/Documentation/devicetree/bindings/rtc/faraday,ftrtc010.txt
+new file mode 100644
+index 000000000000..e3938f5e0b6c
+--- /dev/null
++++ b/Documentation/devicetree/bindings/rtc/faraday,ftrtc010.txt
+@@ -0,0 +1,28 @@
++* Faraday Technology FTRTC010 Real Time Clock
++
++This RTC appears in for example the Storlink Gemini family of
++SoCs.
++
++Required properties:
++- compatible : Should be one of:
++  "faraday,ftrtc010"
++  "cortina,gemini-rtc", "faraday,ftrtc010"
++
++Optional properties:
++- clocks: when present should contain clock references to the
++  PCLK and EXTCLK clocks. Faraday calls the later CLK1HZ and
++  says the clock should be 1 Hz, but implementers actually seem
++  to choose different clocks here, like Cortina who chose
++  32768 Hz (a typical low-power clock).
++- clock-names: should name the clocks "PCLK" and "EXTCLK"
++  respectively.
++
++Examples:
++
++rtc@45000000 {
++	compatible = "cortina,gemini-rtc";
++	reg = <0x45000000 0x100>;
++	interrupts = <17 IRQ_TYPE_LEVEL_HIGH>;
++	clocks = <&foo 0>, <&foo 1>;
++	clock-names = "PCLK", "EXTCLK";
++};
 -- 
-Kind regards,
+2.9.3
 
-Sakari Ailus
-e-mail: sakari.ailus-X3B1VOXEql0@public.gmane.org	XMPP: sailus-PCDdDYkjdNMDXYZnReoRVg@public.gmane.org
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
