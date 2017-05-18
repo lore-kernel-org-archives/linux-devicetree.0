@@ -1,50 +1,109 @@
-From: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: [PATCH v3 0/3] watchdog: dw_wdt: add reset lines
-Date: Thu, 18 May 2017 10:42:35 +0200
-Message-ID: <cover.9d687e41ad8d91c267143a43d703f656f7d5689c.1495096910.git-series.s.trumtrar@pengutronix.de>
-Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+From: Valentin Sitdikov <valentin_sitdikov-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH 1/2] dt-bindings: mfd: Add DT bindings documentation for the max7360 mfd driver
+Date: Thu, 18 May 2017 11:46:25 +0300
+Message-ID: <20170518084626.28999-2-valentin_sitdikov@mentor.com>
+References: <20170518084626.28999-1-valentin_sitdikov@mentor.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170518084626.28999-1-valentin_sitdikov-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Valentin Sitdikov <valentin_sitdikov-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, Andrei Dranitca <Andrei_Dranitca-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi!
+This patch adds documentation for the max7360 bindings.
+The max7360 is multifunctional device containing gpio, keypad, pwm and rotary encoder submodules.
 
-This series adds support for the reset line that is (potentially) holding
-the watchdog in reset.
+Signed-off-by: Valentin Sitdikov <valentin_sitdikov-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+Signed-off-by: Andrei Dranitca <Andrei_Dranitca-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+---
+ Documentation/devicetree/bindings/mfd/max7360.txt | 72 +++++++++++++++++++++++
+ 1 file changed, 72 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mfd/max7360.txt
 
-As the watchdog is useless if this happens, it needs to be deasserted in
-the probe function.
-
-Tested on a Socrates board.
-
-Regards,
-Steffen
-
-Changes since v2:
-
-  - use optional reset functions
-  - add Acked-by to devicetree bindings
-
-Changes since v1:
-
-  - remove reset-names property
-  - remove warning if reset property is missing
-
-Steffen Trumtrar (3):
-  watchdog: bindings: dw_wdt: add reset lines
-  watchdog: dw_wdt: get reset lines from dt
-  ARM: socfpga: dtsi: add dw-wdt reset lines
-
- Documentation/devicetree/bindings/watchdog/dw_wdt.txt |  3 +++
- arch/arm/boot/dts/socfpga.dtsi                        |  2 ++
- drivers/watchdog/dw_wdt.c                             |  9 +++++++++
- 3 files changed, 14 insertions(+)
-
-base-commit: 2ea659a9ef488125eb46da6eb571de5eae5c43f6
+diff --git a/Documentation/devicetree/bindings/mfd/max7360.txt b/Documentation/devicetree/bindings/mfd/max7360.txt
+new file mode 100644
+index 0000000..fd83227
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mfd/max7360.txt
+@@ -0,0 +1,72 @@
++* Maxim MAX7360 multi-function device
++
++The Maxim MAX7360 is a multifunction device which includes
++64 key switches, eight LED drivers/GPIOs, PWM intensity control,
++and rotary switch control.
++
++Required properties:
++- compatible: Should be the following: "maxim,max7360"
++- reg: Specifies the i2c slave address of the max7360 block. It can be 0x38, 0x3a, 0x3c or 0x3e IIUC.
++
++Optional properties:
++- interrupt-parent: Specifies the phandle of the interrupt controller to which
++  the interrupts from MAX7360 are routed to.
++- interrupt-names: list of "inti" and "intk"
++- interrupt-controller:  Identifies the device as an interrupt controller.
++- #interrupt-cells :  Number of cells to encode an interrupt source, shall be 1.
++
++Examples:
++
++Without subnodes:
++	max7360@38 {
++		compatible = "maxim,max7360";
++		reg = <0x38>;
++		interrupt-parent = <&gpio1>;
++		interrupts = <23 IRQ_TYPE_LEVEL_LOW>, <23 IRQ_TYPE_LEVEL_LOW>;
++		interrupt-names = "inti", "intk";
++		interrupt-controller;
++		#interrupt-cells = <0x1>;
++
++	};
++
++With subnodes:
++	max7360@38 {
++		compatible = "maxim,max7360";
++		reg = <0x38>;
++		interrupt-parent = <&gpio1>;
++		interrupts = <23 IRQ_TYPE_LEVEL_LOW>;
++		interrupt-names = "int-shared";
++		interrupt-controller;
++		#interrupt-cells = <0x1>;
++
++		gpio {
++			compatible = "maxim,max7360-gpio";
++			gpio-controller;
++			#gpio-cells = <0x2>;
++			interrupt-controller;
++			#interrupt-cells = <0x2>;
++			interrupts = <0>;
++		};
++
++		keypad {
++			compatible = "maxim,max7360-keypad";
++			maxim,debounce_reg = /bits/ 8 <0xef>;
++			maxim,ports_reg = /bits/ 8 <0xae>;
++			linux,keymap = < MATRIX_KEY(0, 0, KEY_F5)
++					 MATRIX_KEY(1, 0, KEY_F4) >;
++			keypad,num-rows = <2>;
++			keypad,num-columns = <1>;
++			interrupts = <1>;
++		};
++
++		pwm {
++			compatible = "maxim,max7360-pwm";
++			#pwm-cells = <0x2>;
++		};
++
++		rotary_encoder {
++			compatible = "maxim,max7360-rotary";
++			interrupts = <2>;
++		};
++
++	};
 -- 
-git-series 0.9.1
+2.9.3
+
 --
-To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
