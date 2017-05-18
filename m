@@ -1,33 +1,101 @@
-From: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
-Subject: Re: [PATCH v3] net: dsa: b53: Add compatible strings for the
- Cygnus-family BCM11360.
-Date: Thu, 18 May 2017 11:02:03 -0400 (EDT)
-Message-ID: <20170518.110203.1473505625966088377.davem@davemloft.net>
-References: <20170518003212.4028-1-eric@anholt.net>
+From: olivier moysan <olivier.moysan@st.com>
+Subject: [PATCH v4 1/3] dt-bindings: Document STM32 I2S bindings
+Date: Thu, 18 May 2017 17:19:51 +0200
+Message-ID: <1495120793-11687-2-git-send-email-olivier.moysan@st.com>
+References: <1495120793-11687-1-git-send-email-olivier.moysan@st.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170518003212.4028-1-eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org
-Cc: f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, vivien.didelot-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <1495120793-11687-1-git-send-email-olivier.moysan@st.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: lgirdwood@gmail.com, broonie@kernel.org, perex@perex.cz, tiwai@suse.com, mcoquelin.stm32@gmail.com, alexandre.torgue@st.com, alsa-devel@alsa-project.org, robh@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kernel@stlinux.com, linux-kernel@vger.kernel.org, olivier.moysan@st.com
+Cc: arnaud.pouliquen@st.com, benjamin.gaignard@st.com
 List-Id: devicetree@vger.kernel.org
 
-From: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-Date: Wed, 17 May 2017 17:32:12 -0700
+Add documentation of device tree bindings for STM32 SPI/I2S.
 
-> Cygnus is a small family of SoCs, of which we currently have
-> devicetree for BCM11360 and BCM58300.  The 11360's B53 is mostly the
-> same as 58xx, just requiring a tiny bit of setup that was previously
-> missing.
-> 
-> Signed-off-by: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-> Reviewed-by: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Signed-off-by: olivier moysan <olivier.moysan@st.com>
+---
+ .../devicetree/bindings/sound/st,stm32-i2s.txt     | 62 ++++++++++++++++++++++
+ 1 file changed, 62 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/st,stm32-i2s.txt
 
-Applied to net-next, thanks.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/sound/st,stm32-i2s.txt b/Documentation/devicetree/bindings/sound/st,stm32-i2s.txt
+new file mode 100644
+index 0000000..4bda520
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/st,stm32-i2s.txt
+@@ -0,0 +1,62 @@
++STMicroelectronics STM32 SPI/I2S Controller
++
++The SPI/I2S block supports I2S/PCM protocols when configured on I2S mode.
++Only some SPI instances support I2S.
++
++Required properties:
++  - compatible: Must be "st,stm32h7-i2s"
++  - reg: Offset and length of the device's register set.
++  - interrupts: Must contain the interrupt line id.
++  - clocks: Must contain phandle and clock specifier pairs for each entry
++	in clock-names.
++  - clock-names: Must contain "i2sclk", "pclk", "x8k" and "x11k".
++	"i2sclk": clock which feeds the internal clock generator
++	"pclk": clock which feeds the peripheral bus interface
++	"x8k": I2S parent clock for sampling rates multiple of 8kHz.
++	"x11k": I2S parent clock for sampling rates multiple of 11.025kHz.
++  - dmas: DMA specifiers for tx and rx dma.
++    See Documentation/devicetree/bindings/dma/stm32-dma.txt.
++  - dma-names: Identifier for each DMA request line. Must be "tx" and "rx".
++  - pinctrl-names: should contain only value "default"
++  - pinctrl-0: see Documentation/devicetree/bindings/pinctrl/pinctrl-stm32.txt
++
++Optional properties:
++  - resets: Reference to a reset controller asserting the reset controller
++
++The device node should contain one 'port' child node with one child 'endpoint'
++node, according to the bindings defined in Documentation/devicetree/bindings/
++graph.txt.
++
++Example:
++sound_card {
++	compatible = "audio-graph-card";
++	dais = <&i2s2_port>;
++};
++
++i2s2: audio-controller@40003800 {
++	compatible = "st,stm32h7-i2s";
++	reg = <0x40003800 0x400>;
++	interrupts = <36>;
++	clocks = <&rcc PCLK1>, <&rcc SPI2_CK>, <&rcc PLL1_Q>, <&rcc PLL2_P>;
++	clock-names = "pclk", "i2sclk",  "x8k", "x11k";
++	dmas = <&dmamux2 2 39 0x400 0x1>,
++           <&dmamux2 3 40 0x400 0x1>;
++	dma-names = "rx", "tx";
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_i2s2>;
++
++	i2s2_port: port@0 {
++		cpu_endpoint: endpoint {
++			remote-endpoint = <&codec_endpoint>;
++			format = "i2s";
++		};
++	};
++};
++
++audio-codec {
++	codec_port: port@0 {
++		codec_endpoint: endpoint {
++			remote-endpoint = <&cpu_endpoint>;
++		};
++	};
++};
+-- 
+1.9.1
