@@ -1,56 +1,89 @@
-From: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Subject: Re: [PATCH v5 16/17] tty: serdev-ttyport: return actual baudrate
- from ttyport_set_baudrate
-Date: Thu, 18 May 2017 16:19:04 +0200
-Message-ID: <20170518141904.GA29741@kroah.com>
-References: <1494406408-31760-1-git-send-email-stefan.wahren@i2se.com>
- <1494406408-31760-17-git-send-email-stefan.wahren@i2se.com>
- <d5533816-5d87-3772-19c0-5e57e519a3f1@i2se.com>
+From: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH] arm64: dts: juno: Enable some SMMUs
+Date: Thu, 18 May 2017 15:30:25 +0100
+Message-ID: <ef53211e-1d91-c653-0393-f5e98ce94693@arm.com>
+References: <eeb81dbbd7ddfbbccb961c0f20c5cb90f120e89f.1495110010.git.robin.murphy@arm.com>
+ <1495113239.3174.11.camel@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <d5533816-5d87-3772-19c0-5e57e519a3f1-eS4NqCHxEME@public.gmane.org>
+In-Reply-To: <1495113239.3174.11.camel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jiri Slaby <jslaby-IBi9RG/b67k@public.gmane.org>, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lino Sanfilippo <LinoSanfilippo-Mmb7MZpHnFY@public.gmane.org>, Jakub Kicinski <kubakici-5tc4TXWwyLM@public.gmane.org>
+To: "Jon Medhurst (Tixy)" <tixy-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, liviu.dudau-5wv7dgnIgG8@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 17, 2017 at 01:58:05PM +0200, Stefan Wahren wrote:
-> Hi Greg,
+On 18/05/17 14:13, Jon Medhurst (Tixy) wrote:
+> On Thu, 2017-05-18 at 13:23 +0100, Robin Murphy wrote:
+>> The IOMMU-backed DMA API support has now been in place for a while and
+>> proven stable, so there's no real need to keep most of Juno's SMMUs
+>> disabled. The USB, HDLCDs, and CoreSight ETR all just need to map RAM
+>> buffers for DMA - enabling their SMMUs obviates CPU bounce buffering for
+>> USB's streaming DMA to the upper memory bank, and lets the other two
+>> allocate their relatively large coherent buffers without pressuring CMA.
+>>
+>> Some more software work is still needed for the DMA-330 and PCIe before
+>> those can accommodate SMMU translation correctly in all cases, so we
+>> leave those alone for now.
+>>
+>> Signed-off-by: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+>> ---
 > 
-> Am 10.05.2017 um 10:53 schrieb Stefan Wahren:
-> > Instead of returning the requested baudrate, we better return the
-> > actual one because it isn't always the same.
-> >
-> > Signed-off-by: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-> > Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> > ---
-> >  drivers/tty/serdev/serdev-ttyport.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/tty/serdev/serdev-ttyport.c b/drivers/tty/serdev/serdev-ttyport.c
-> > index 487c88f..2cfdf34 100644
-> > --- a/drivers/tty/serdev/serdev-ttyport.c
-> > +++ b/drivers/tty/serdev/serdev-ttyport.c
-> > @@ -151,7 +151,7 @@ static unsigned int ttyport_set_baudrate(struct serdev_controller *ctrl, unsigne
-> >  
-> >  	/* tty_set_termios() return not checked as it is always 0 */
-> >  	tty_set_termios(tty, &ktermios);
-> > -	return speed;
-> > +	return ktermios.c_ospeed;
-> >  }
-> >  
-> >  static void ttyport_set_flow_control(struct serdev_controller *ctrl, bool enable)
-> 
-> there is no dependency to this series. I would be happy if this could be
-> applied, so i don't have to carry it for the next version.
+> For those that don't already know, status = "disabled" for smmu is
+> broken in Linux 4.12-rc1, and this fixes it...
+> https://lkml.org/lkml/2017/5/17/344
 
-Ok, I'll take it now.
+Well, it's not *technically* broken - we do stop waiting for disabled
+IOMMUs that never appear, you just need to get to an initramfs or other
+workable userspace to load another driver such that the deferred probe
+queue gets kicked again after that point :P
 
-thanks,
+But yeah, the whole business reminded me that it was about time to do
+this anyway. I should dig up that pl330 patch I started, too...
 
-greg k-h
+Robin.
+
+>>  arch/arm64/boot/dts/arm/juno-base.dtsi | 4 ----
+>>  1 file changed, 4 deletions(-)
+>>
+>> diff --git a/arch/arm64/boot/dts/arm/juno-base.dtsi b/arch/arm64/boot/dts/arm/juno-base.dtsi
+>> index bfe7d683a42e..02aea43238fc 100644
+>> --- a/arch/arm64/boot/dts/arm/juno-base.dtsi
+>> +++ b/arch/arm64/boot/dts/arm/juno-base.dtsi
+>> @@ -53,7 +53,6 @@
+>>  		#global-interrupts = <1>;
+>>  		dma-coherent;
+>>  		power-domains = <&scpi_devpd 0>;
+>> -		status = "disabled";
+>>  	};
+>>  
+>>  	gic: interrupt-controller@2c010000 {
+>> @@ -546,7 +545,6 @@
+>>  			     <GIC_SPI 99 IRQ_TYPE_LEVEL_HIGH>;
+>>  		#iommu-cells = <1>;
+>>  		#global-interrupts = <1>;
+>> -		status = "disabled";
+>>  	};
+>>  
+>>  	smmu_hdlcd0: iommu@7fb20000 {
+>> @@ -556,7 +554,6 @@
+>>  			     <GIC_SPI 97 IRQ_TYPE_LEVEL_HIGH>;
+>>  		#iommu-cells = <1>;
+>>  		#global-interrupts = <1>;
+>> -		status = "disabled";
+>>  	};
+>>  
+>>  	smmu_usb: iommu@7fb30000 {
+>> @@ -567,7 +564,6 @@
+>>  		#iommu-cells = <1>;
+>>  		#global-interrupts = <1>;
+>>  		dma-coherent;
+>> -		status = "disabled";
+>>  	};
+>>  
+>>  	dma@7ff00000 {
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
