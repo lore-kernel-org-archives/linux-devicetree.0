@@ -1,88 +1,65 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 2/3] rtc: gemini: Augment DT bindings for Faraday
-Date: Thu, 18 May 2017 23:56:34 +0200
-Message-ID: <20170518215635.13505-2-linus.walleij@linaro.org>
-References: <20170518215635.13505-1-linus.walleij@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170518215635.13505-1-linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-rtc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Janos Laube <janos.dev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Paulius Zaleckas <paulius.zaleckas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Hans Ulli Kroll <ulli.kroll-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Po-Yu Chuang <ratbert-w0jeGXs5+AWXmMXjJBpWqg@public.gmane.org>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH] of_mdio: Fix broken PHY IRQ in case of probe deferral
+Date: Thu, 18 May 2017 15:21:39 -0700
+Message-ID: <08a89dd5-b707-8b8f-b8e1-e20b9ed630b7@gmail.com>
+References: <1495112345-24795-1-git-send-email-geert+renesas@glider.be>
+ <f0ed61c3-062b-cec6-fe19-7412231e8ef1@gmail.com>
+ <CAMuHMdWYeSzofU57LmT_M3KkcHhvjfJy7nkHvcXkKzOYmvhqqA@mail.gmail.com>
+ <20170518193453.GB13759@lunn.ch>
+ <CAMuHMdV+jfh=EGt3SvjtrtVfWQ6P8ofp_JxeQZjRrSEfDWs5hA@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <CAMuHMdV+jfh=EGt3SvjtrtVfWQ6P8ofp_JxeQZjRrSEfDWs5hA@mail.gmail.com>
+Content-Language: en-US
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>, Andrew Lunn <andrew@lunn.ch>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-The Gemini RTC is actually a standard IP block from Faraday
-Technology called FTRTC010. Rename the bindings, add the
-generic compatible string and add definitions for the two
-available clocks.
+On 05/18/2017 01:36 PM, Geert Uytterhoeven wrote:
+> Hi Andrew,
+> 
+> On Thu, May 18, 2017 at 9:34 PM, Andrew Lunn <andrew@lunn.ch> wrote:
+>>>> This most certainly works fine in the simple case where you have one PHY
+>>>> hanging off the MDIO bus, now what happens if you have several?
+>>>>
+>>>> Presumably, the first PHY that returns EPROBE_DEFER will make the entire
+>>>> bus registration return EPROB_DEFER as well, and so on, and so forth,
+>>>> but I am not sure if we will be properly unwinding the successful
+>>>> registration of PHYs that either don't have an interrupt, or did not
+>>>> return EPROBE_DEFER.
+>>>>
+>>>> It should be possible to mimic this behavior by using the fixed PHY, and
+>>>> possibly the dsa_loop.c driver which would create 4 ports, expecting 4
+>>>> fixed PHYs to be present.
+>>>
+>>> mdiobus_unregister(), called from of_mdiobus_register() on failure,
+>>> should do the unwinding, right?
+>>>
+>>> And when the driver is reprobed, all PHYs are reprobed, until they all
+>>> succeed.
+>>
+>> That is the theory. I looked at that while reviewing the patch. But
+>> this has probably not been tested in anger. It would be good to test
+>> this properly, with not just the first PHY returning -EPROBE_DEFER, to
+>> really test the unwind.
+> 
+> Unfortunately I don't have a board with multiple PHYs, so I cannot test
+> that case.
+> 
+> Does unbinding/rebinding a network driver with multiple PHYs currently
+> work? Or module unload/reload?
 
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Po-Yu Chuang <ratbert-w0jeGXs5+AWXmMXjJBpWqg@public.gmane.org>
-Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
- .../devicetree/bindings/rtc/cortina,gemini.txt     | 14 -----------
- .../devicetree/bindings/rtc/faraday,ftrtc010.txt   | 28 ++++++++++++++++++++++
- 2 files changed, 28 insertions(+), 14 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/rtc/cortina,gemini.txt
- create mode 100644 Documentation/devicetree/bindings/rtc/faraday,ftrtc010.txt
+Usually there is a strict 1:1 mapping between a network device (not
+driver) and a PHY device, switch drivers however, would have multiple
+PHYs (one per port, aka net_deice).
 
-diff --git a/Documentation/devicetree/bindings/rtc/cortina,gemini.txt b/Documentation/devicetree/bindings/rtc/cortina,gemini.txt
-deleted file mode 100644
-index 4ce4e794ddbb..000000000000
---- a/Documentation/devicetree/bindings/rtc/cortina,gemini.txt
-+++ /dev/null
-@@ -1,14 +0,0 @@
--* Cortina Systems Gemini RTC
--
--Gemini SoC real-time clock.
--
--Required properties:
--- compatible : Should be "cortina,gemini-rtc"
--
--Examples:
--
--rtc@45000000 {
--	compatible = "cortina,gemini-rtc";
--	reg = <0x45000000 0x100>;
--	interrupts = <17 IRQ_TYPE_LEVEL_HIGH>;
--};
-diff --git a/Documentation/devicetree/bindings/rtc/faraday,ftrtc010.txt b/Documentation/devicetree/bindings/rtc/faraday,ftrtc010.txt
-new file mode 100644
-index 000000000000..e3938f5e0b6c
---- /dev/null
-+++ b/Documentation/devicetree/bindings/rtc/faraday,ftrtc010.txt
-@@ -0,0 +1,28 @@
-+* Faraday Technology FTRTC010 Real Time Clock
-+
-+This RTC appears in for example the Storlink Gemini family of
-+SoCs.
-+
-+Required properties:
-+- compatible : Should be one of:
-+  "faraday,ftrtc010"
-+  "cortina,gemini-rtc", "faraday,ftrtc010"
-+
-+Optional properties:
-+- clocks: when present should contain clock references to the
-+  PCLK and EXTCLK clocks. Faraday calls the later CLK1HZ and
-+  says the clock should be 1 Hz, but implementers actually seem
-+  to choose different clocks here, like Cortina who chose
-+  32768 Hz (a typical low-power clock).
-+- clock-names: should name the clocks "PCLK" and "EXTCLK"
-+  respectively.
-+
-+Examples:
-+
-+rtc@45000000 {
-+	compatible = "cortina,gemini-rtc";
-+	reg = <0x45000000 0x100>;
-+	interrupts = <17 IRQ_TYPE_LEVEL_HIGH>;
-+	clocks = <&foo 0>, <&foo 1>;
-+	clock-names = "PCLK", "EXTCLK";
-+};
+NB: binding and unbinding of PHYs is pretty broken at the moment though,
+because there is a complete disconnect between what the Ethernet MAC
+expects, and the state in which the PHY is. I had some patches to fix
+that, but this turned out to be playing whack-a-mole which I typically
+suck at.
 -- 
-2.9.3
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Florian
