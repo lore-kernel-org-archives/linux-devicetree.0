@@ -1,89 +1,175 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
+From: Florian Fainelli <f.fainelli@gmail.com>
 Subject: Re: [PATCH] of_mdio: Fix broken PHY IRQ in case of probe deferral
-Date: Thu, 18 May 2017 19:38:55 +0200
-Message-ID: <CAMuHMdWJQr7NSgRxE9Nuz7LVuCw7yxG129nYmw8J5M9OCdWzTA@mail.gmail.com>
+Date: Thu, 18 May 2017 11:25:46 -0700
+Message-ID: <f0ed61c3-062b-cec6-fe19-7412231e8ef1@gmail.com>
 References: <1495112345-24795-1-git-send-email-geert+renesas@glider.be>
- <20170518160943.GC707@lunn.ch> <CAMuHMdW_ZSn_nXSNRTHQwFioRD5UTotxKgm1eMqAP06n+cWv+g@mail.gmail.com>
- <20170518163328.GD707@lunn.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <20170518163328.GD707@lunn.ch>
+In-Reply-To: <1495112345-24795-1-git-send-email-geert+renesas@glider.be>
+Content-Language: en-US
 Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: Florian Fainelli <f.fainelli@gmail.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Geert Uytterhoeven <geert+renesas@glider.be>, Andrew Lunn <andrew@lunn.ch>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
+Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Andrew,
+On 05/18/2017 05:59 AM, Geert Uytterhoeven wrote:
+> If an Ethernet PHY is initialized before the interrupt controller it is
+> connected to, a message like the following is printed:
+> 
+>     irq: no irq domain found for /interrupt-controller@e61c0000 !
+> 
+> However, the actual error is ignored, leading to a non-functional (-1)
+> PHY interrupt later:
+> 
+>     Micrel KSZ8041RNLI ee700000.ethernet-ffffffff:01: attached PHY driver [Micrel KSZ8041RNLI] (mii_bus:phy_addr=ee700000.ethernet-ffffffff:01, irq=-1)
+> 
+> Depending on whether the PHY driver will fall back to polling, Ethernet
+> may or may not work.
+> 
+> To fix this:
+>   1. Switch of_mdiobus_register_phy() from irq_of_parse_and_map() to
+>      of_irq_get().
+>      Unlike the former, the latter returns -EPROBE_DEFER if the
+>      interrupt controller is not yet available, so this condition can be
+>      detected.
+>      Other errors are handled the same as before, i.e. use the passed
+>      mdio->irq[addr] as interrupt.
+>   2. Propagate and handle errors from of_mdiobus_register_phy() and
+>      of_mdiobus_register_device().
 
-On Thu, May 18, 2017 at 6:33 PM, Andrew Lunn <andrew@lunn.ch> wrote:
->> >>               phy = get_phy_device(mdio, addr, is_c45);
->> >>       if (IS_ERR(phy))
->> >> -             return;
->> >> +             return PTR_ERR(phy);
->> >>
->> >> -     rc = irq_of_parse_and_map(child, 0);
->> >> +     rc = of_irq_get(child, 0);
->> >> +     if (rc == -EPROBE_DEFER) {
->> >> +             phy_device_free(phy);
->> >> +             return rc;
->> >> +     }
->> >
->> > Maybe this should be consistent. All other places there is an error,
->> > you return it. Here however, you only return the error if it is
->> > EPROBE_DEFER.
->>
->> That's because of the "else" branch in the code below:
->>
->>         if (rc > 0) {
->>                 phy->irq = rc;
->>                 mdio->irq[addr] = rc;
->>         } else {
->>                 phy->irq = mdio->irq[addr];
->>         }
->>
->> cfr. the marked part of the patch description.
->> I didn't want to change that behavior, as it's not clear to me why it's handled
->> that way.
->
-> So there seems to be 3 conditions that need handling:
->
-> 1) of_irq_get() gives us an interrupt number.
-> 2) of_irq_get() indicates there is no irq in the device tree.
-> 3) of_irq_get() indicates a real error
->
-> 1) We have.
->
-> 2) We should fall back to using the mdio busses irq for the
-> device. There are a couple of mdio drivers which do this, e.g.
-> stmicro/stmmac/stmmac_mdio.c. mdiobus_alloc() ensures it is set to
-> PHY_POLL, so if the driver does not set it, we poll.
->
-> 3) This is new. We have two choices. Ignore the error and poll. Or
-> return the error. Historically we have ignored the error. But should
-> we? I would probably return the error, now that we can. But...
+This most certainly works fine in the simple case where you have one PHY
+hanging off the MDIO bus, now what happens if you have several?
 
-The issue itself isn't new, though.
-I reported it in "of_mdiobus_register_phy() and deferred probe"
-(https://lkml.org/lkml/2015/10/22/377), and posted a workaround in "[PATCH v2]
-irqchip/renesas-irqc: Postpone driver initialization"
-(https://lkml.org/lkml/2016/11/8/794).
+Presumably, the first PHY that returns EPROBE_DEFER will make the entire
+bus registration return EPROB_DEFER as well, and so on, and so forth,
+but I am not sure if we will be properly unwinding the successful
+registration of PHYs that either don't have an interrupt, or did not
+return EPROBE_DEFER.
 
-Due to the fallback to polling, so far it was easier to complain when
-someone broke polling, than to fix the real problem ;-)
+It should be possible to mimic this behavior by using the fixed PHY, and
+possibly the dsa_loop.c driver which would create 4 ports, expecting 4
+fixed PHYs to be present.
 
-But when I saw Thomas' patch[*] for of_irq_to_resource(), the time was ripe
-to tackle the root cause.
+> 
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> ---
+> Seen on r8a7791/koelsch when using the new CPG/MSSR clock driver.
+> I assume it always happened on RZ/G1 in mainline.
+> ---
+>  drivers/of/of_mdio.c | 39 +++++++++++++++++++++++++++------------
+>  1 file changed, 27 insertions(+), 12 deletions(-)
+> 
+> diff --git a/drivers/of/of_mdio.c b/drivers/of/of_mdio.c
+> index 7e4c80f9b6cda0d3..f9ac2893f56184be 100644
+> --- a/drivers/of/of_mdio.c
+> +++ b/drivers/of/of_mdio.c
+> @@ -44,7 +44,7 @@ static int of_get_phy_id(struct device_node *device, u32 *phy_id)
+>  	return -EINVAL;
+>  }
+>  
+> -static void of_mdiobus_register_phy(struct mii_bus *mdio,
+> +static int of_mdiobus_register_phy(struct mii_bus *mdio,
+>  				    struct device_node *child, u32 addr)
+>  {
+>  	struct phy_device *phy;
+> @@ -60,9 +60,13 @@ static void of_mdiobus_register_phy(struct mii_bus *mdio,
+>  	else
+>  		phy = get_phy_device(mdio, addr, is_c45);
+>  	if (IS_ERR(phy))
+> -		return;
+> +		return PTR_ERR(phy);
+>  
+> -	rc = irq_of_parse_and_map(child, 0);
+> +	rc = of_irq_get(child, 0);
+> +	if (rc == -EPROBE_DEFER) {
+> +		phy_device_free(phy);
+> +		return rc;
+> +	}
+>  	if (rc > 0) {
+>  		phy->irq = rc;
+>  		mdio->irq[addr] = rc;
+> @@ -84,22 +88,23 @@ static void of_mdiobus_register_phy(struct mii_bus *mdio,
+>  	if (rc) {
+>  		phy_device_free(phy);
+>  		of_node_put(child);
+> -		return;
+> +		return rc;
+>  	}
+>  
+>  	dev_dbg(&mdio->dev, "registered phy %s at address %i\n",
+>  		child->name, addr);
+> +	return 0;
+>  }
+>  
+> -static void of_mdiobus_register_device(struct mii_bus *mdio,
+> -				       struct device_node *child, u32 addr)
+> +static int of_mdiobus_register_device(struct mii_bus *mdio,
+> +				      struct device_node *child, u32 addr)
+>  {
+>  	struct mdio_device *mdiodev;
+>  	int rc;
+>  
+>  	mdiodev = mdio_device_create(mdio, addr);
+>  	if (IS_ERR(mdiodev))
+> -		return;
+> +		return PTR_ERR(mdiodev);
+>  
+>  	/* Associate the OF node with the device structure so it
+>  	 * can be looked up later.
+> @@ -112,11 +117,12 @@ static void of_mdiobus_register_device(struct mii_bus *mdio,
+>  	if (rc) {
+>  		mdio_device_free(mdiodev);
+>  		of_node_put(child);
+> -		return;
+> +		return rc;
+>  	}
+>  
+>  	dev_dbg(&mdio->dev, "registered mdio device %s at address %i\n",
+>  		child->name, addr);
+> +	return 0;
+>  }
+>  
+>  int of_mdio_parse_addr(struct device *dev, const struct device_node *np)
+> @@ -242,9 +248,11 @@ int of_mdiobus_register(struct mii_bus *mdio, struct device_node *np)
+>  		}
+>  
+>  		if (of_mdiobus_child_is_phy(child))
+> -			of_mdiobus_register_phy(mdio, child, addr);
+> +			rc = of_mdiobus_register_phy(mdio, child, addr);
+>  		else
+> -			of_mdiobus_register_device(mdio, child, addr);
+> +			rc = of_mdiobus_register_device(mdio, child, addr);
+> +		if (rc)
+> +			goto unregister;
+>  	}
+>  
+>  	if (!scanphys)
+> @@ -265,12 +273,19 @@ int of_mdiobus_register(struct mii_bus *mdio, struct device_node *np)
+>  			dev_info(&mdio->dev, "scan phy %s at address %i\n",
+>  				 child->name, addr);
+>  
+> -			if (of_mdiobus_child_is_phy(child))
+> -				of_mdiobus_register_phy(mdio, child, addr);
+> +			if (of_mdiobus_child_is_phy(child)) {
+> +				rc = of_mdiobus_register_phy(mdio, child, addr);
+> +				if (rc)
+> +					goto unregister;
+> +			}
+>  		}
+>  	}
+>  
+>  	return 0;
+> +
+> +unregister:
+> +	mdiobus_unregister(mdio);
+> +	return rc;
+>  }
+>  EXPORT_SYMBOL(of_mdiobus_register);
+>  
+> 
 
-[*] https://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git/commit/?h=dt/next&id=7a4228bbff769ebf449981a4248616db9f0cffec
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+-- 
+Florian
