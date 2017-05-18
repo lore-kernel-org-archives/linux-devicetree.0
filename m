@@ -1,78 +1,72 @@
-From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 4/4] ARM: dts: Add remote-wakeup-connected for omap OHCI
-Date: Thu, 18 May 2017 12:28:39 +0300
-Message-ID: <4549017d-4031-a53c-6649-34e364be9330@ti.com>
-References: <20170517225922.17723-1-tony@atomide.com>
- <20170517225922.17723-5-tony@atomide.com>
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: Re: [PATCH v2 1/2] clk: Hi3660: change to register crgctrl clock
+ with CLK_OF_DECLARE_DRIVER
+Date: Thu, 18 May 2017 11:32:26 +0200
+Message-ID: <20170518093226.GA2125@mai>
+References: <1495072247-25217-1-git-send-email-leo.yan@linaro.org>
+ <1495072247-25217-2-git-send-email-leo.yan@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170517225922.17723-5-tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Content-Language: en-GB
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
-Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-clk-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1495072247-25217-2-git-send-email-leo.yan@linaro.org>
+Sender: linux-clk-owner@vger.kernel.org
+To: Leo Yan <leo.yan@linaro.org>
+Cc: Wei Xu <xuwei5@hisilicon.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Guodong Xu <guodong.xu@linaro.org>, Zhong Kaihua <zhongkaihua@huawei.com>, Chen Jun <chenjun14@huawei.com>, Zhangfei Gao <zhangfei.gao@linaro.org>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 18/05/17 01:59, Tony Lindgren wrote:
-> Add remote-wakeup-connected for omap OHCI as that's needed by
-> ehci-platform driver.
+On Thu, May 18, 2017 at 09:50:46AM +0800, Leo Yan wrote:
+> The timer will register into system at very early phase at kernel boot;
+> if timer needs to use clock, the clock should be get ready in function
+> of_clk_init() so later the timer driver probe can retrieve clock
+> successfully. This is finished in below flow on arm64:
 > 
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Cc: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-> Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-> Cc: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-> Signed-off-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-
-Acked-by: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-
+>   start_kernel()
+>     `-> time_init()
+>           `-> of_clk_init(NULL)    => register timer's clock
+>           `-> clocksource_probe()  => register timer
+> 
+> On Hi3660 the sp804 timer uses clock "osc32k", this clock is registered
+> as platform driver rather than CLK_OF_DECLARE_DRIVER method. As result,
+> sp804 timer probe returns failure due if cannot bind clock properly.
+> To fix the failure, this patch is to change crgctrl clock registration
+> from platform driver to CLK_OF_DECLARE_DRIVER method so the clocks can
+> be registered ahead with function of_clk_init() and then timer driver
+> can use it.
+> 
+> Signed-off-by: Leo Yan <leo.yan@linaro.org>
 > ---
->  arch/arm/boot/dts/omap3.dtsi | 1 +
->  arch/arm/boot/dts/omap4.dtsi | 1 +
->  arch/arm/boot/dts/omap5.dtsi | 1 +
->  3 files changed, 3 insertions(+)
+>  drivers/clk/hisilicon/clk-hi3660.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> diff --git a/arch/arm/boot/dts/omap3.dtsi b/arch/arm/boot/dts/omap3.dtsi
-> --- a/arch/arm/boot/dts/omap3.dtsi
-> +++ b/arch/arm/boot/dts/omap3.dtsi
-> @@ -715,6 +715,7 @@
->  				reg = <0x48064400 0x400>;
->  				interrupt-parent = <&intc>;
->  				interrupts = <76>;
-> +				remote-wakeup-connected;
->  			};
+> diff --git a/drivers/clk/hisilicon/clk-hi3660.c b/drivers/clk/hisilicon/clk-hi3660.c
+> index fd5ce7f..4e5713b 100644
+> --- a/drivers/clk/hisilicon/clk-hi3660.c
+> +++ b/drivers/clk/hisilicon/clk-hi3660.c
+> @@ -547,10 +547,10 @@ static void hi3660_clk_crgctrl_init(struct device_node *np)
+>  				  ARRAY_SIZE(hi3660_crgctrl_divider_clks),
+>  				  clk_data);
+>  }
+> +CLK_OF_DECLARE_DRIVER(hi3660_clk_crgctrl, "hisilicon,hi3660-crgctrl",
+> +		      hi3660_clk_crgctrl_init);
 >  
->  			usbhsehci: ehci@48064800 {
-> diff --git a/arch/arm/boot/dts/omap4.dtsi b/arch/arm/boot/dts/omap4.dtsi
-> --- a/arch/arm/boot/dts/omap4.dtsi
-> +++ b/arch/arm/boot/dts/omap4.dtsi
-> @@ -863,6 +863,7 @@
->  				reg = <0x4a064800 0x400>;
->  				interrupt-parent = <&gic>;
->  				interrupts = <GIC_SPI 76 IRQ_TYPE_LEVEL_HIGH>;
-> +				remote-wakeup-connected;
->  			};
->  
->  			usbhsehci: ehci@4a064c00 {
-> diff --git a/arch/arm/boot/dts/omap5.dtsi b/arch/arm/boot/dts/omap5.dtsi
-> --- a/arch/arm/boot/dts/omap5.dtsi
-> +++ b/arch/arm/boot/dts/omap5.dtsi
-> @@ -939,6 +939,7 @@
->  				compatible = "ti,ohci-omap3";
->  				reg = <0x4a064800 0x400>;
->  				interrupts = <GIC_SPI 76 IRQ_TYPE_LEVEL_HIGH>;
-> +				remote-wakeup-connected;
->  			};
->  
->  			usbhsehci: ehci@4a064c00 {
-> 
+>  static const struct of_device_id hi3660_clk_match_table[] = {
+> -	{ .compatible = "hisilicon,hi3660-crgctrl",
+> -	  .data = hi3660_clk_crgctrl_init },
+>  	{ .compatible = "hisilicon,hi3660-pctrl",
+>  	  .data = hi3660_clk_pctrl_init },
+>  	{ .compatible = "hisilicon,hi3660-pmuctrl",
+
+Why not do the change for all the clocks and remove the
+hi3660_clk_match_table[]? and all the related platform driver code?
+
+That will be consistent with the other clk-hi* drivers.
 
 -- 
-cheers,
--roger
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
