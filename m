@@ -1,126 +1,73 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 1/4] usb: host: ohci-platform: Add basic runtime PM
- support
-Date: Thu, 18 May 2017 08:52:37 -0700
-Message-ID: <20170518155237.GD10472@atomide.com>
-References: <20170517225922.17723-2-tony@atomide.com>
- <Pine.LNX.4.44L0.1705181114280.1619-100000@iolanthe.rowland.org>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v4 5/6] spi: slave: Add SPI slave handler reporting uptime
+ at previous message
+Date: Thu, 18 May 2017 19:01:59 +0300
+Message-ID: <CAHp75VdphCGXYEMrF0eJ4WLe=wg_0o_xH833jJ1xjGynKV3jXA@mail.gmail.com>
+References: <1495025272-23930-1-git-send-email-geert+renesas@glider.be> <1495025272-23930-6-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <Pine.LNX.4.44L0.1705181114280.1619-100000-IYeN2dnnYyZXsRXLowluHWD2FQJk+8+b@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
-Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>, Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <1495025272-23930-6-git-send-email-geert+renesas@glider.be>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, Wolfram Sang <wsa+renesas@sang-engineering.com>, Hiromitsu Yamasaki <hiromitsu.yamasaki.ym@renesas.com>, Jiada Wang <jiada_wang@mentor.com>, Matt Porter <mporter@konsulko.com>, linux-spi <linux-spi@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-* Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org> [170518 08:28]:
-> On Wed, 17 May 2017, Tony Lindgren wrote:
-> 
-> > This is needed in preparation of adding support for omap3 and
-> > later OHCI. The runtime PM will only do something on platforms
-> > that implement it.
-> 
-> This patch isn't correct.  See below.
-> 
-> > Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> > Cc: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-> > Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> > Cc: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-> > Cc: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-> > Signed-off-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-> > ---
-> >  drivers/usb/host/ohci-platform.c | 11 +++++++++++
-> >  1 file changed, 11 insertions(+)
-> > 
-> > diff --git a/drivers/usb/host/ohci-platform.c b/drivers/usb/host/ohci-platform.c
-> > --- a/drivers/usb/host/ohci-platform.c
-> > +++ b/drivers/usb/host/ohci-platform.c
-> > @@ -24,6 +24,7 @@
-> >  #include <linux/err.h>
-> >  #include <linux/phy/phy.h>
-> >  #include <linux/platform_device.h>
-> > +#include <linux/pm_runtime.h>
-> >  #include <linux/reset.h>
-> >  #include <linux/usb/ohci_pdriver.h>
-> >  #include <linux/usb.h>
-> > @@ -51,6 +52,10 @@ static int ohci_platform_power_on(struct platform_device *dev)
-> >  	struct ohci_platform_priv *priv = hcd_to_ohci_priv(hcd);
-> >  	int clk, ret, phy_num;
-> >  
-> > +	ret = pm_runtime_get_sync(&dev->dev);
-> > +	if (ret < 0)
-> > +		return ret;
-> > +
-> >  	for (clk = 0; clk < OHCI_MAX_CLKS && priv->clks[clk]; clk++) {
-> >  		ret = clk_prepare_enable(priv->clks[clk]);
-> >  		if (ret)
-> > @@ -96,6 +101,8 @@ static void ohci_platform_power_off(struct platform_device *dev)
-> >  	for (clk = OHCI_MAX_CLKS - 1; clk >= 0; clk--)
-> >  		if (priv->clks[clk])
-> >  			clk_disable_unprepare(priv->clks[clk]);
-> > +
-> > +	pm_runtime_put_sync(&dev->dev);
-> >  }
-> 
-> ohci_platform_power_on() is invoked (by default) by the runtime-resume
-> callback routine ohci_platform_resume(), through the pdata->power_on
-> method pointer.  Likewise, ohci_platform_power_off() is invoked by the
-> runtime-suspend callback routine.
-> 
-> This means you shouldn't do pm_runtime_get/put calls from within these 
-> routines.
+On Wed, May 17, 2017 at 3:47 PM, Geert Uytterhoeven
+<geert+renesas@glider.be> wrote:
+> Add an example SPI slave handler responding with the uptime at the time
+> of reception of the last SPI message.
+>
+> This can be used by an external microcontroller as a dead man's switch.
 
-Oh OK great, so the above should not be needed at all.
+> +static int spi_slave_time_submit(struct spi_slave_time_priv *priv)
+> +{
+> +       u32 rem_ns;
+> +       int ret;
+> +       u64 ts;
+> +
+> +       ts = local_clock();
+> +       rem_ns = do_div(ts, 1000000000) / 1000;
 
-> Is there any particular reason you wanted to add these calls?  In
-> general, USB host controllers are expected to go into runtime suspend
-> whenever there aren't any children keeping them awake.  Hence they
-> usually don't need to worry about initiating their own suspends and
-> resumes.
+You divide ts by 10^9, which makes it seconds if it was nanoseconds.
 
-No particular reason as it sounds things work without it :) I'll check.
+But reminder is still in nanoseconds and you divide it by 10^3.
 
-> >  static struct hc_driver __read_mostly ohci_platform_hc_driver;
-> > @@ -242,6 +249,7 @@ static int ohci_platform_probe(struct platform_device *dev)
-> >  	}
-> >  #endif
-> >  
-> > +	pm_runtime_enable(&dev->dev);
-> 
-> There should be a pm_runtime_set_active() just before this.
+If I didn't miss anything it should be called like
 
-OK
+rem_ns -> reminder_ms
 
-> >  	if (pdata->power_on) {
-> >  		err = pdata->power_on(dev);
-> >  		if (err < 0)
-> > @@ -271,6 +279,7 @@ static int ohci_platform_probe(struct platform_device *dev)
-> >  	if (pdata->power_off)
-> >  		pdata->power_off(dev);
-> >  err_reset:
-> > +	pm_runtime_disable(&dev->dev);
-> >  	while (--rst >= 0)
-> >  		reset_control_assert(priv->resets[rst]);
-> >  err_put_clks:
-> > @@ -305,6 +314,8 @@ static int ohci_platform_remove(struct platform_device *dev)
-> >  
-> >  	usb_put_hcd(hcd);
-> >  
-> > +	pm_runtime_disable(&dev->dev);
-> > +
-> >  	if (pdata == &ohci_platform_defaults)
-> >  		dev->dev.platform_data = NULL;
-> 
-> These changes make sense.
+> +
+> +       priv->buf[0] = cpu_to_be32(ts);
+> +       priv->buf[1] = cpu_to_be32(rem_ns);
+> +
+> +       spi_message_init_with_transfers(&priv->msg, &priv->xfer, 1);
+> +
+> +       priv->msg.complete = spi_slave_time_complete;
+> +       priv->msg.context = priv;
+> +
+> +       ret = spi_async(priv->spi, &priv->msg);
+> +       if (ret)
+> +               pr_err("%s: spi_async() failed %d\n", __func__, ret);
 
-OK thanks for looking.
+Perhaps dev_err() ?
 
-Regards,
+> +
+> +       return ret;
+> +}
 
-Tony
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +static int spi_slave_time_probe(struct spi_device *spi)
+> +{
+> +       struct spi_slave_time_priv *priv;
+> +       int ret;
+> +
+> +       /*
+> +        * bits_per_word cannot be configured in platform data
+> +        */
+> +       spi->bits_per_word = 8;
+
+Is it worth to define it? If so, can we use device properties for that?
+
+-- 
+With Best Regards,
+Andy Shevchenko
