@@ -1,98 +1,84 @@
-From: Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: [PATCH V4 4/4] ARM: dma-mapping: Don't tear third-party mappings
-Date: Thu, 18 May 2017 20:24:17 +0530
-Message-ID: <1495119257-26724-4-git-send-email-sricharan@codeaurora.org>
-References: <1495119257-26724-1-git-send-email-sricharan@codeaurora.org>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH 2/4] dt-bindings: Document the Raspberry Pi Touchscreen
+ nodes.
+Date: Thu, 18 May 2017 17:55:25 +0300
+Message-ID: <3771766.1sVmoPRjsn@avalon>
+References: <20170511235625.22427-1-eric@anholt.net>
+ <87shk4iqr7.fsf@eliezer.anholt.net>
+ <a7494a8a-a87b-213d-707f-33d67da93267@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <1495119257-26724-1-git-send-email-sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: robin.murphy-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tn-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org, hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org, rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org, lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-arch-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, j.neuschaefer-hi6Y0CQ0nG0@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <a7494a8a-a87b-213d-707f-33d67da93267@codeaurora.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Archit Taneja <architt@codeaurora.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-
-arch_setup_dma_ops() is used in device probe code paths to create an
-IOMMU mapping and attach it to the device. The function assumes that the
-device is attached to a device-specific IOMMU instance (or at least a
-device-specific TLB in a shared IOMMU instance) and thus creates a
-separate mapping for every device.
-
-On several systems (Renesas R-Car Gen2 being one of them), that
-assumption is not true, and IOMMU mappings must be shared between
-multiple devices. In those cases the IOMMU driver knows better than the
-generic ARM dma-mapping layer and attaches mapping to devices manually
-with arm_iommu_attach_device(), which sets the DMA ops for the device.
-
-The arch_setup_dma_ops() function takes this into account and bails out
-immediately if the device already has DMA ops assigned. However, the
-corresponding arch_teardown_dma_ops() function, called from driver
-unbind code paths (including probe deferral), will tear the mapping down
-regardless of who created it. When the device is reprobed
-arch_setup_dma_ops() will be called again but won't perform any
-operation as the DMA ops will still be set.
-
-We need to reset the DMA ops in arch_teardown_dma_ops() to fix this.
-However, we can't do so unconditionally, as then a new mapping would be
-created by arch_setup_dma_ops() when the device is reprobed, regardless
-of whether the device needs to share a mapping or not. We must thus keep
-track of whether arch_setup_dma_ops() created the mapping, and only in
-that case tear it down in arch_teardown_dma_ops().
-
-Keep track of that information in the dev_archdata structure. As the
-structure is embedded in all instances of struct device let's not grow
-it, but turn the existing dma_coherent bool field into a bitfield that
-can be used for other purposes.
-
-Fixes: 09515ef5ddad ("of/acpi: Configure dma operations at probe time for platform/amba/pci bus devices")
-Reviewed-by: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
-Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
----
- arch/arm/include/asm/device.h | 3 ++-
- arch/arm/mm/dma-mapping.c     | 4 ++++
- 2 files changed, 6 insertions(+), 1 deletion(-)
-
-diff --git a/arch/arm/include/asm/device.h b/arch/arm/include/asm/device.h
-index 36ec9c8..3234fe9 100644
---- a/arch/arm/include/asm/device.h
-+++ b/arch/arm/include/asm/device.h
-@@ -19,7 +19,8 @@ struct dev_archdata {
- #ifdef CONFIG_XEN
- 	const struct dma_map_ops *dev_dma_ops;
- #endif
--	bool dma_coherent;
-+	unsigned int dma_coherent:1;
-+	unsigned int dma_ops_setup:1;
- };
- 
- struct omap_device;
-diff --git a/arch/arm/mm/dma-mapping.c b/arch/arm/mm/dma-mapping.c
-index c742dfd..b48998f 100644
---- a/arch/arm/mm/dma-mapping.c
-+++ b/arch/arm/mm/dma-mapping.c
-@@ -2430,9 +2430,13 @@ void arch_setup_dma_ops(struct device *dev, u64 dma_base, u64 size,
- 		dev->dma_ops = xen_dma_ops;
- 	}
- #endif
-+	dev->archdata.dma_ops_setup = true;
- }
- 
- void arch_teardown_dma_ops(struct device *dev)
- {
-+	if (!dev->archdata.dma_ops_setup)
-+		return;
-+
- 	arm_teardown_iommu_dma_ops(dev);
- }
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+SGkgQXJjaGl0LAoKT24gVGh1cnNkYXkgMTggTWF5IDIwMTcgMTM6NTY6MTkgQXJjaGl0IFRhbmVq
+YSB3cm90ZToKPiBPbiAwNS8xNy8yMDE3IDEyOjE2IEFNLCBFcmljIEFuaG9sdCB3cm90ZToKCltz
+bmlwXQoKPiA+IEluIHRlcm1zIG9mIHBoeXNpY2FsIGNvbm5lY3Rpb25zOgo+ID4gICAgWzE1LXBp
+biAiRFNJIiBjb25uZWN0b3Igb24gMjgzNV0KPiA+ICAgIAo+ID4gICAgIHwgSTJDICAgICAgICAg
+ICAgICAgfCBEU0kKPiA+ICAgIAo+ID4gICAgLyBcICAgICAgICBTUEkgICAgICAgfAo+ID4gCj4g
+PiBbVFNdICBbQXRtZWxdLS0tLS0tW1RDMzU4NzYyXQo+ID4gCj4gPiAgICAgICAgXCAgICAgICAg
+ICAgICAgICB8Cj4gPiAgICAgICAgCj4gPiAgICAgICAgIFxQV00gICAgICAgICAgICB8Cj4gPiAg
+ICAgICAgIAo+ID4gICAgICAgICAgXCAgICAgICAgICAgICAgfCBEUEkKPiA+IAo+ID4gW3NvbWUg
+YmFja2xpZ2h0XS0tLS0tLVtzb21lIHVua25vd24gcGFuZWxdCj4gPiAKPiA+IFRoZSBiaW5kaW5n
+IEknbSB0cnlpbmcgdG8gY3JlYXRlIGlzIHRvIGV4cG9zZSB3aGF0J3MgbmVjZXNzYXJ5IGZvciBh
+Cj4gPiBkcml2ZXIgdGhhdCB0YWxrcyBJMkMgdG8gdGhlIEF0bWVsLCB3aGljaCB0aGVuIGNvbnRy
+b2xzIHRoZSBQV00gYW5kIGRvZXMKPiA+IHRoZSBjb21tYW5kIHNlcXVlbmNlIG92ZXIgU1BJIHRv
+IHRoZSBUb3NoaWJhIHRoYXQgc2V0cyB1cCBpdHMgZW5kIG9mIHRoZQo+ID4gRFNJIGxpbmsuCj4g
+Cj4gVGhlIGJyaWRnZSAoQXRtZWwgKyBUQzM1ODc2MiBjb21iaW5hdGlvbikgaGVyZSBsb29rcyBs
+aWtlIGl0J3MgcHJpbWFyaWx5Cj4gYW4gaTJjIGRldmljZSAoaS5lLCB0aGUgY29udHJvbCBidXMg
+aXMgaTJjKS4gVGhlcmVmb3JlLCB0aGUgZHJtLWJyaWRnZQo+IGRyaXZlciBoZXJlIHNob3VsZCBi
+ZSBhbiBpMmMgZHJpdmVyIGluc3RlYWQgb2YgYSBtaXBpX2RzaV9kcml2ZXIuCgpHbGFkIHRvIHNl
+ZSB3ZSBhZ3JlZSwgdGhhdCdzIHdoYXQgSSd2ZSBwcm9wb3NlZCBpbiBhIHNlcGFyYXRlIGFuc3dl
+ciA6LSkgSSdkIApnbyBvbmUgc3RlcCBmdXJ0aGVyIHRob3VnaCwgdGhlcmUgc2hvdWxkIGJlIG5v
+IERSTSBicmlkZ2UsIGp1c3QgYSBEUk0gcGFuZWwuCgo+IFdlIGhhdmUgdGhlIGZhY2lsaXR5IHRv
+IGNyZWF0ZSBhIG1pcGkgRFNJIGRldmljZSB3aXRob3V0IHRoZSBuZWVkIHRvIGhhdmUKPiBhIGNv
+cnJlc3BvbmRpbmcgbm9kZSBpbiBEVC4gVGhlIEFEVjc1MzMgYW5kIFRDMzU4NzY3IGRyaXZlcnMg
+YXJlIGV4YW1wbGVzCj4gb2YgdGhhdC4KPiAKPiBUaGUgZm9sbG93aW5nIGlzIHdoYXQgdGhlIGJp
+bmRpbmcgY291bGQgbG9vayBsaWtlLCBpdCdzIHNhbWUgYXMgd2hhdCBSb2IKPiBhbHNvIG1lbnRp
+b25lZCBwcmV2aW91c2x5IGluIHRoZSB0aHJlYWQuCj4gCj4gVGhhbmtzLAo+IEFyY2hpdAo+IAo+
+IGRzaTE6IGRzaUA3ZTcwMDAwMCB7Cj4gCSNhZGRyZXNzLWNlbGxzID0gPDE+Owo+IAkjc2l6ZS1j
+ZWxscyA9IDwwPjsKPiAJPC4uLj4KPiAKPiAJLyogVGhlIFNvQydzIERTSSBpbnB1dC9vdXRwdXQg
+cG9ydCAqLwo+IAlwb3J0cyB7Cj4gCQkjYWRkcmVzcy1jZWxscyA9IDwxPjsKPiAJCSNzaXplLWNl
+bGxzID0gPDA+Owo+IAo+IAkJLyogcG9ydEAwIGlmIG5lZWRlZCAqLwo+IAo+IAkJcG9ydEAxIHsK
+PiAJCQlkc2lfb3V0X3BvcnQ6IGVuZHBvaW50IHsKPiAJCQkJcmVnID0gPDE+Owo+IAkJCQlyZW1v
+dGUtZW5kcG9pbnQgPSA8JmJyaWRnZV9kc2lfcG9ydD47Cj4gCQkJfTsKPiAJCX07Cj4gCX07Cj4g
+fTsKPiAKPiBpMmNfZHNpOiBpMmMgewo+IAljb21wYXRpYmxlID0gImkyYy1ncGlvIjsKPiAJI2Fk
+ZHJlc3MtY2VsbHMgPSA8MT47Cj4gCSNzaXplLWNlbGxzID0gPDA+Owo+IAlncGlvcyA9IDwmZ3Bp
+byAyOCAwCj4gCQkgJmdwaW8gMjkgMD47Cj4gCj4gCS8qIHRoZSBBdG1lbCArIFRDMzU4NzIgYnJp
+ZGdlICovCj4gCXBpdG91Y2hzY3JlZW5fYnJpZGdlOiBicmlkZ2VANDUgewoKVGhpcyBzaG91bGQg
+dGh1cyBiZSBsY2RANDUuCgo+IAkJY29tcGF0aWJsZSA9ICJyYXNwYmVycnlwaSx0b3VjaHNjcmVl
+bi1icmlkZ2UiOwoKQW5kIHRoaXMgcmFzcGJlcnJ5cGksN2luY2gtdG91Y2hzY3JlZW4tcGFuZWwu
+IFNoYW1lIHdlIGhhdmVuJ3Qgc3RhbmRhcmRpemVkIAp0aGUgdmVuZG9yIG5hbWUgcHJlZml4IHRv
+IHJwaSA6LS8KCj4gCQlyZWcgPSA8MHg0NT47Cj4gCj4gCQlwb3J0cyB7Cj4gCQkJI2FkZHJlc3Mt
+Y2VsbHMgPSA8MT47Cj4gCQkJI3NpemUtY2VsbHMgPSA8MD47Cj4gCj4gCQkJcG9ydEAwIHsKPiAJ
+CQkJcmVnID0gPDA+Owo+IAkJCQlicmlkZ2VfZHNpX3BvcnQ6IGVuZHBvaW50IHsKClRoaXMgc2hv
+dWxkIGJlIG5hbWVkIHBhbmVsX2RzaV9wb3J0LgoKPiAJCQkJCXJlbW90ZS1lbmRwb2ludCA9IDwm
+ZHNpX291dF9wb3J0PjsKPiAJCQkJfTsKPiAJCQl9Owo+IAkJCXBvcnRAMSB7Cj4gCQkJCXJlZyA9
+IDwxPjsKPiAJCQkJYnJpZGdlX2RwaV9wb3J0OiBlbmRwb2ludCB7Cj4gCQkJCQlyZW1vdGUtZW5k
+cG9pbnQgPSAKPCZwaXRvdWNoc2NyZWVuX3BhbmVsX3BvcnQ+Owo+IAkJCQl9Owo+IAkJCX07CgpU
+aGUgc2Vjb25kIHBvcnQgaXMgdGh1cyBub3QgbmVlZGVkLgoKPiAJCX07CgpTbyB3ZSBjYW4gc2lt
+cGxpZnkgdGhpcyB0bwoKCQlwb3J0IHsKCQkJcGFuZWxfZHNpX3BvcnQ6IGVuZHBvaW50IHsKCQkJ
+CXJlbW90ZS1lbmRwb2ludCA9IDwmZHNpX291dF9wb3J0PjsKCQkJfTsKCQl9OwoKKG5vIG5lZWQg
+Zm9yIGEgcG9ydHMgbm9kZSB3aGVuIHRoZXJlJ3MgYSBzaW5nbGUgcG9ydCkKCj4gCX07Cj4gfTsK
+PiAKPiBsY2Qgewo+IAljb21wYXRpYmxlID0gInJhc3BiZXJyeXBpLDdpbmNoLXRvdWNoc2NyZWVu
+LXBhbmVsIjsKPiAJcG9ydHMgewo+IAkJI2FkZHJlc3MtY2VsbHMgPSA8MT47Cj4gCQkjc2l6ZS1j
+ZWxscyA9IDwwPjsKPiAJCXBvcnRAMCB7Cj4gCQkJcmVnID0gPDA+Owo+IAkJCXBpdG91Y2hzY3Jl
+ZW5fcGFuZWxfcG9ydDogZW5kcG9pbnQgewo+IAkJCQlyZW1vdGUtZW5kcG9pbnQgPSA8JmJyaWRn
+ZV9kcGlfcG9ydD47Cj4gCQkJfTsKPiAJCX07Cj4gCX07Cj4gfTsKCkFuZCB0aGlzIG5vZGUgY2Fu
+IGdvIGF3YXkuCgotLSAKUmVnYXJkcywKCkxhdXJlbnQgUGluY2hhcnQKCl9fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QK
+ZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9w
+Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
