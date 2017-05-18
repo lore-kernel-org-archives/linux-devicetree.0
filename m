@@ -1,139 +1,175 @@
-From: Archit Taneja <architt@codeaurora.org>
-Subject: Re: [PATCH 2/4] dt-bindings: Document the Raspberry Pi Touchscreen
- nodes.
-Date: Thu, 18 May 2017 13:56:19 +0530
-Message-ID: <a7494a8a-a87b-213d-707f-33d67da93267@codeaurora.org>
-References: <20170511235625.22427-1-eric@anholt.net>
- <CAL_Jsq+Pt5necK9cUPwFqmCbK5d-0NVNv-_LRVqyNgr5ajR8LQ@mail.gmail.com>
- <87h90ku4sq.fsf@eliezer.anholt.net> <3768334.nZM7df9y4L@avalon>
- <87shk4iqr7.fsf@eliezer.anholt.net>
+From: Varadarajan Narayanan <varada-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH v2 1/5] pinctrl: qcom: Add ipq8074 pinctrl driver
+Date: Thu, 18 May 2017 14:07:34 +0530
+Message-ID: <4eff646f-533c-5c85-7431-3c514cd06508@codeaurora.org>
+References: <1493898841-20583-1-git-send-email-varada@codeaurora.org>
+ <1493898841-20583-2-git-send-email-varada@codeaurora.org>
+ <20170510224355.GE45273@Bjorns-MacBook-Pro-2.local>
+ <1f4c9974-f6a4-bee7-4f37-ad8795e442a3@codeaurora.org>
+ <20170514042307.GE69278@Bjorns-MacBook-Pro-2.local>
+ <7afc7191-bcb1-a566-eac5-a4fe1293c773@codeaurora.org>
+ <4a39c13b-378d-08b5-a2fc-d3bdb32d106f@codeaurora.org>
+ <20170517194733.GG12920@tuxbook>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <87shk4iqr7.fsf@eliezer.anholt.net>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Eric Anholt <eric@anholt.net>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170517194733.GG12920@tuxbook>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, absahu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, sjaganat-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Manoharan Vijaya Raghavan <mraghava-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGksCgpPbiAwNS8xNy8yMDE3IDEyOjE2IEFNLCBFcmljIEFuaG9sdCB3cm90ZToKPiBMYXVyZW50
-IFBpbmNoYXJ0IDxsYXVyZW50LnBpbmNoYXJ0QGlkZWFzb25ib2FyZC5jb20+IHdyaXRlczoKPgo+
-PiBIaSBFcmljLAo+Pgo+PiBPbiBUdWVzZGF5IDE2IE1heSAyMDE3IDA5OjQ3OjQ5IEVyaWMgQW5o
-b2x0IHdyb3RlOgo+Pj4gUm9iIEhlcnJpbmcgPHJvYmgrZHRAa2VybmVsLm9yZz4gd3JpdGVzOgo+
-Pj4+IE9uIE1vbiwgTWF5IDE1LCAyMDE3IGF0IDc6MDMgUE0sIEVyaWMgQW5ob2x0IDxlcmljQGFu
-aG9sdC5uZXQ+IHdyb3RlOgo+Pj4+PiBMYXVyZW50IFBpbmNoYXJ0IDxsYXVyZW50LnBpbmNoYXJ0
-QGlkZWFzb25ib2FyZC5jb20+IHdyaXRlczoKPj4+Pj4+IEhpIEVyaWMsCj4+Pj4+Pgo+Pj4+Pj4g
-VGhhbmsgeW91IGZvciB0aGUgcGF0Y2guCj4+Pj4+Pgo+Pj4+Pj4gT24gVGh1cnNkYXkgMTEgTWF5
-IDIwMTcgMTY6NTY6MjMgRXJpYyBBbmhvbHQgd3JvdGU6Cj4+Pj4+Pj4gVGhlIFJhc3BiZXJyeSBQ
-aSA3IiBUb3VjaHNjcmVlbiBpcyBhIERQSSB0b3VjaHNjcmVlbiBwYW5lbCB3aXRoCj4+Pj4+Pj4g
-RFNJLT5EUEkgYnJpZGdlIGFuZCB0b3VjaHNjcmVlbiBjb250cm9sbGVyIGludGVncmF0ZWQsIHRo
-YXQgY29ubmVjdHMKPj4+Pj4+PiB0byB0aGUgUmFzcGJlcnJ5IFBpIHRocm91Z2ggaXRzIDE1LXBp
-biAiRFNJIiBjb25uZWN0b3IgKHNvbWUgbGluZXMgYXJlCj4+Pj4+Pj4gRFNJLCBzb21lIGxpbmVz
-IGFyZSBJMkMpLgo+Pj4+Pj4+Cj4+Pj4+Pj4gVGhpcyBkZXZpY2UgaXMgcmVwcmVzZW50ZWQgaW4g
-dGhlIERUIGFzIHRocmVlIG5vZGVzIChEU0kgZGV2aWNlLCBJMkMKPj4+Pj4+PiBkZXZpY2UsIHBh
-bmVsKS4gIElucHV0IHdpbGwgYmUgbGVmdCB0byBhIHNlcGFyYXRlIGJpbmRpbmcgbGF0ZXIsIGFz
-IGl0Cj4+Pj4+Pj4gd2lsbCBiZSBhIGJhc2ljIEkyQyBjbGllbnQgZGV2aWNlLgo+Pj4+Pj4+Cj4+
-Pj4+Pj4gU2lnbmVkLW9mZi1ieTogRXJpYyBBbmhvbHQgPGVyaWNAYW5ob2x0Lm5ldD4KPj4+Pj4+
-PiAtLS0KPj4+Pj4+Pgo+Pj4+Pj4+ICAuLi4vcmFzcGJlcnJ5cGksN2luY2gtdG91Y2hzY3JlZW4t
-YnJpZGdlLnR4dCAgICAgICB8IDY4ICsrKysrKysrKysrKysrCj4+Pj4+Pj4gIC4uLi9wYW5lbC9y
-YXNwYmVycnlwaSw3aW5jaC10b3VjaHNjcmVlbi1wYW5lbC50eHQgIHwgIDcgKysrCj4+Pj4+Pj4g
-IDIgZmlsZXMgY2hhbmdlZCwgNzUgaW5zZXJ0aW9ucygrKQo+Pj4+Pj4+ICBjcmVhdGUgbW9kZSAx
-MDA2NDQKPj4+Pj4+Pgo+Pj4+Pj4+IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9k
-aXNwbGF5L2JyaWRnZS9yYXNwYmVycnlwaSw3aW5jaC10b3VjCj4+Pj4+Pj4gaHNjcmVlbi1icmlk
-Z2UudHh0IGNyZWF0ZSBtb2RlIDEwMDY0NAo+Pj4+Pj4+IERvY3VtZW50YXRpb24vZGV2aWNldHJl
-ZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL3Jhc3BiZXJyeXBpLDdpbmNoLXRvdWNoCj4+Pj4+Pj4g
-c2NyZWVuLXBhbmVsLnR4dAo+Pj4+Pj4+Cj4+Pj4+Pj4gZGlmZiAtLWdpdAo+Pj4+Pj4+IGEvRG9j
-dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3Jhc3BiZXJyeXBp
-LDdpbmNoLXRvCj4+Pj4+Pj4gdWNoc2NyZWVuLWJyaWRnZS50eHQKPj4+Pj4+PiBiL0RvY3VtZW50
-YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS9yYXNwYmVycnlwaSw3aW5j
-aC10bwo+Pj4+Pj4+IHVjaHNjcmVlbi1icmlkZ2UudHh0IG5ldyBmaWxlIG1vZGUgMTAwNjQ0Cj4+
-Pj4+Pj4gaW5kZXggMDAwMDAwMDAwMDAwLi5hNTY2OWJlYWY2OGYKPj4+Pj4+PiAtLS0gL2Rldi9u
-dWxsCj4+Pj4+Pj4gKysrCj4+Pj4+Pj4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
-Z3MvZGlzcGxheS9icmlkZ2UvcmFzcGJlcnJ5cGksN2luY2gtdG8KPj4+Pj4+PiB1Y2hzY3JlZW4t
-YnJpZGdlLnR4dAo+Pj4+Pj4+IEBAIC0wLDAgKzEsNjggQEAKPj4+Pj4+PiArT2ZmaWNpYWwgNyIg
-KDgwMHg0ODApIFJhc3BiZXJyeSBQaSB0b3VjaHNjcmVlbiBwYW5lbCdzIGJyaWRnZS4KPj4+Pj4+
-PiArCj4+Pj4+Pj4gK1RoaXMgRFNJIHBhbmVsIGNvbnRhaW5zOgo+Pj4+Pj4+ICsKPj4+Pj4+PiAr
-LSBUQzM1ODc2MiBEU0ktPkRQSSBicmlkZ2UKPj4+Pj4+PiArLSBBdG1lbCBtaWNyb2NvbnRyb2xs
-ZXIgb24gSTJDIGZvciBwb3dlciBzZXF1ZW5jaW5nIHRoZSBEU0kgYnJpZGdlIGFuZAo+Pj4+Pj4+
-ICsgIGNvbnRyb2xsaW5nIGJhY2tsaWdodAo+Pj4+Pj4+ICstIFRvdWNoc2NyZWVuIGNvbnRyb2xs
-ZXIgb24gSTJDIGZvciB0b3VjaCBpbnB1dAo+Pj4+Pj4+ICsKPj4+Pj4+PiArYW5kIHRoaXMgY292
-ZXJzIHRoZSBUQzM1ODc2MiBicmlkZ2UgYW5kIEF0bWVsIG1pY3JvY29udHJvbGxlciwgd2hpbGUK
-Pj4+Pj4+PiArLi4vcGFuZWwvcmFzcGJlcnJ5cGksN2luY2gtdG91Y2hzY3JlZW4tcGFuZWwudHh0
-IGNvdmVycyB0aGUgcGFuZWwuCj4+Pj4+Pgo+Pj4+Pj4gVGhlIFRDMzU4NzYyIGlzIGEgc3RhbmRh
-bG9uZSBicmlkZ2UgdGhhdCBkb2Vzbid0IGRlcGVuZCBvbiB0aGUgQVRUaW55Cj4+Pj4+PiBtaWNy
-b2NvbnRyb2xsZXIgdXNlZCBieSB0aGUgUlBJLiBBcyBpdCdzIHVzYWJsZSBzdGFuZGFsb25lLCBJ
-IGJlbGlldmUKPj4+Pj4+IHRoaXMgYmluZGluZyBzaG91bGQgYmUgc3BsaXQgaW4gdHdvLgo+Pj4+
-Pgo+Pj4+PiBEbyB5b3UgaGF2ZSBhIHBsYW4gZm9yIGhvdyBJIHdvdWxkIGltcGxlbWVudCBhIGRy
-aXZlciBvbiB0b3Agb2YgdGhhdAo+Pj4+PiBiaW5kaW5nIGNoYW5nZSwgdGhvdWdoPyAgTm90ZSB0
-aGF0IHdlIGRvbid0IHByb2dyYW0gdGhlIFRvc2hpYmEKPj4+Pj4gZGlyZWN0bHksIHdlIG9ubHkg
-c2VuZCBjb21tYW5kcyB0byB0aGUgQXRtZWwuCj4+Pj4KPj4+PiBJIGFncmVlLiBJZiBpdCBpcyBh
-IGJsYWNrIGJveCBhbmQgdGhlIGludGVyZmFjZSB0byB0aGUgaG9zdCBpcyBkZWZpbmVkCj4+Pj4g
-YnkgdGhlIEF0bWVsIHVDIGZpcm13YXJlLCB0aGVuIHRoYXQncyB3aGF0IHRoZSBEVCBzaG91bGQg
-ZGVzY3JpYmUuCj4+Pj4gUGVyaGFwcyBhIGRpYWdyYW0gaGVyZSBvciBwb2ludGVyIHRvIG9uZSB3
-b3VsZCBoZWxwIGFuZCByZW1vdmUKPj4+PiBtZW50aW9uaW5nIHdoYXQga2luZCBvZiBicmlkZ2Ug
-Y2hpcCBpdCBpcy4KPj4+Cj4+PiBJdCdzIGEgKnZlcnkqIGJsYWNrIGJveC4gIEkgaGF2ZSBzb21l
-IG5vbi1wdWJsaWMgc2NoZW1hdGljcyB0aGF0IGRvbid0Cj4+PiBldmVuIHNheSB3aGF0IHBhbmVs
-IGlzIGludm9sdmVkLCBhbmQgbm8gZG9jdW1lbnRhdGlvbiBvZiB0aGUgdWMKPj4+IGludGVyZmFj
-ZS4gIFRoZSBkcml2ZXIgY29kZSBpcyBqdXN0IHJlcGxpY2F0aW5nIHRoZSBmaXJtd2FyZSdzCj4+
-PiBwcm9ncmFtbWluZyBzZXF1ZW5jZS4KPj4+Cj4+PiBJIHdvdWxkIGNlcnRhaW5seSBsb3ZlIHRv
-IGJlIGJ1aWxkaW5nIGEgZ2VuZXJpYyBUQzM1ODc2MiBkcml2ZXIsIHdoaWNoCj4+PiB3b3VsZCBi
-ZSBhIGxvdCBtb3JlIHNhdGlzZnlpbmcuICBJIGp1c3QgZG9uJ3QgdGhpbmsgaXQncyBkb2FibGUg
-Zm9yIHRoaXMKPj4+IHBhbmVsLiAgR2l2ZW4gdGhhdCwgd2hhdCBkbyBJIG5lZWQgdG8gZG8gdG8g
-dGhlIERUPyAgU2hvdWxkIEkganVzdCBkcm9wCj4+PiBtZW50aW9uIG9mIHRoZSBUb3NoaWJhIGFu
-ZCB0YWxrIGFib3V0IHRoaXMgYmVpbmcgYSBicmlkZ2Ugd2l0aCBhIGN1c3RvbQo+Pj4gbWljcm9j
-b250cm9sbGVyIGZpcm13YXJlPwo+Pgo+PiBJIHRoaW5rIHRoYXQgd291bGQgYmUgYmVzdCwgeWVz
-LiBDb3VsZCB5b3Ugc2hhcmUgYSBzaW1wbGUgYmxvY2stZGlhZ3JhbSBvZiB0aGUKPj4gaGFyZHdh
-cmUgPyBJdCB3b3VsZCBoZWxwIHR1cm5pbmcgbXkgcmFuZG9tIGFkdmljZXMgaW50byBzZW1pLXJh
-bmRvbSBhZHZpY2VzCj4+IDotKQo+Cj4gSW4gdGVybXMgb2YgcGh5c2ljYWwgY29ubmVjdGlvbnM6
-Cj4KPiAgICBbMTUtcGluICJEU0kiIGNvbm5lY3RvciBvbiAyODM1XQo+ICAgICB8ICAgICAgICAg
-ICAgICAgICAgIHwKPiAgICAgfCBJMkMgICAgICAgICAgICAgICB8IERTSQo+ICAgICB8ICAgICAg
-ICAgICAgICAgICAgIHwKPiAgICAvIFwgICAgICAgIFNQSSAgICAgICB8Cj4gW1RTXSAgW0F0bWVs
-XS0tLS0tLVtUQzM1ODc2Ml0KPiAgICAgICAgXCAgICAgICAgICAgICAgICB8Cj4gICAgICAgICBc
-UFdNICAgICAgICAgICAgfAo+ICAgICAgICAgIFwgICAgICAgICAgICAgIHwgRFBJCj4gW3NvbWUg
-YmFja2xpZ2h0XS0tLS0tLVtzb21lIHVua25vd24gcGFuZWxdCj4KPiBUaGUgYmluZGluZyBJJ20g
-dHJ5aW5nIHRvIGNyZWF0ZSBpcyB0byBleHBvc2Ugd2hhdCdzIG5lY2Vzc2FyeSBmb3IgYQo+IGRy
-aXZlciB0aGF0IHRhbGtzIEkyQyB0byB0aGUgQXRtZWwsIHdoaWNoIHRoZW4gY29udHJvbHMgdGhl
-IFBXTSBhbmQgZG9lcwo+IHRoZSBjb21tYW5kIHNlcXVlbmNlIG92ZXIgU1BJIHRvIHRoZSBUb3No
-aWJhIHRoYXQgc2V0cyB1cCBpdHMgZW5kIG9mIHRoZQo+IERTSSBsaW5rLgo+CgpUaGUgYnJpZGdl
-IChBdG1lbCArIFRDMzU4NzYyIGNvbWJpbmF0aW9uKSBoZXJlIGxvb2tzIGxpa2UgaXQncyBwcmlt
-YXJpbHkKYW4gaTJjIGRldmljZSAoaS5lLCB0aGUgY29udHJvbCBidXMgaXMgaTJjKS4gVGhlcmVm
-b3JlLCB0aGUgZHJtLWJyaWRnZQpkcml2ZXIgaGVyZSBzaG91bGQgYmUgYW4gaTJjIGRyaXZlciBp
-bnN0ZWFkIG9mIGEgbWlwaV9kc2lfZHJpdmVyLgoKV2UgaGF2ZSB0aGUgZmFjaWxpdHkgdG8gY3Jl
-YXRlIGEgbWlwaSBEU0kgZGV2aWNlIHdpdGhvdXQgdGhlIG5lZWQgdG8gaGF2ZQphIGNvcnJlc3Bv
-bmRpbmcgbm9kZSBpbiBEVC4gVGhlIEFEVjc1MzMgYW5kIFRDMzU4NzY3IGRyaXZlcnMgYXJlIGV4
-YW1wbGVzCm9mIHRoYXQuCgpUaGUgZm9sbG93aW5nIGlzIHdoYXQgdGhlIGJpbmRpbmcgY291bGQg
-bG9vayBsaWtlLCBpdCdzIHNhbWUgYXMgd2hhdCBSb2IKYWxzbyBtZW50aW9uZWQgcHJldmlvdXNs
-eSBpbiB0aGUgdGhyZWFkLgoKVGhhbmtzLApBcmNoaXQKCmRzaTE6IGRzaUA3ZTcwMDAwMCB7Cgkj
-YWRkcmVzcy1jZWxscyA9IDwxPjsKCSNzaXplLWNlbGxzID0gPDA+OwoJPC4uLj4KCgkvKiBUaGUg
-U29DJ3MgRFNJIGlucHV0L291dHB1dCBwb3J0ICovCglwb3J0cyB7CgkJI2FkZHJlc3MtY2VsbHMg
-PSA8MT47CgkJI3NpemUtY2VsbHMgPSA8MD47CgoJCS8qIHBvcnRAMCBpZiBuZWVkZWQgKi8KCgkJ
-cG9ydEAxIHsKCQkJZHNpX291dF9wb3J0OiBlbmRwb2ludCB7CgkJCQlyZWcgPSA8MT47CgkJCQly
-ZW1vdGUtZW5kcG9pbnQgPSA8JmJyaWRnZV9kc2lfcG9ydD47CgkJCX07CgkJfTsKCX07Cn07Cgpp
-MmNfZHNpOiBpMmMgewoJY29tcGF0aWJsZSA9ICJpMmMtZ3BpbyI7CgkjYWRkcmVzcy1jZWxscyA9
-IDwxPjsKCSNzaXplLWNlbGxzID0gPDA+OwoJZ3Bpb3MgPSA8JmdwaW8gMjggMAoJCSAmZ3BpbyAy
-OSAwPjsKCgkvKiB0aGUgQXRtZWwgKyBUQzM1ODcyIGJyaWRnZSAqLwoJcGl0b3VjaHNjcmVlbl9i
-cmlkZ2U6IGJyaWRnZUA0NSB7CgkJY29tcGF0aWJsZSA9ICJyYXNwYmVycnlwaSx0b3VjaHNjcmVl
-bi1icmlkZ2UiOwoJCXJlZyA9IDwweDQ1PjsKCgkJcG9ydHMgewoJCQkjYWRkcmVzcy1jZWxscyA9
-IDwxPjsKCQkJI3NpemUtY2VsbHMgPSA8MD47CgoJCQlwb3J0QDAgewoJCQkJcmVnID0gPDA+OwoJ
-CQkJYnJpZGdlX2RzaV9wb3J0OiBlbmRwb2ludCB7CgkJCQkJcmVtb3RlLWVuZHBvaW50ID0gPCZk
-c2lfb3V0X3BvcnQ+OwoJCQkJfTsKCQkJfTsKCQkJcG9ydEAxIHsKCQkJCXJlZyA9IDwxPjsKCQkJ
-CWJyaWRnZV9kcGlfcG9ydDogZW5kcG9pbnQgewoJCQkJCXJlbW90ZS1lbmRwb2ludCA9IDwmcGl0
-b3VjaHNjcmVlbl9wYW5lbF9wb3J0PjsKCQkJCX07CgkJCX07CgkJfTsKCX07Cn07CgpsY2QgewoJ
-Y29tcGF0aWJsZSA9ICJyYXNwYmVycnlwaSw3aW5jaC10b3VjaHNjcmVlbi1wYW5lbCI7Cglwb3J0
-cyB7CgkJI2FkZHJlc3MtY2VsbHMgPSA8MT47CgkJI3NpemUtY2VsbHMgPSA8MD47CgkJcG9ydEAw
-IHsKCQkJcmVnID0gPDA+OwoJCQlwaXRvdWNoc2NyZWVuX3BhbmVsX3BvcnQ6IGVuZHBvaW50IHsK
-CQkJCXJlbW90ZS1lbmRwb2ludCA9IDwmYnJpZGdlX2RwaV9wb3J0PjsKCQkJfTsKCQl9OwoJfTsK
-fTsKCi0tIApRdWFsY29tbSBJbm5vdmF0aW9uIENlbnRlciwgSW5jLiBpcyBhIG1lbWJlciBvZiBD
-b2RlIEF1cm9yYSBGb3J1bSwKYSBMaW51eCBGb3VuZGF0aW9uIENvbGxhYm9yYXRpdmUgUHJvamVj
-dApfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2
-ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9s
-aXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+
+
+On 5/18/2017 1:17 AM, Bjorn Andersson wrote:
+> On Mon 15 May 04:24 PDT 2017, Varadarajan Narayanan wrote:
+> 
+>>
+>>
+>> On 5/15/2017 2:35 PM, Varadarajan Narayanan wrote:
+>>> On 5/14/2017 9:53 AM, Bjorn Andersson wrote:
+>>>> On Thu 11 May 03:33 PDT 2017, Varadarajan Narayanan wrote:
+>>>>
+>>>>> On 5/11/2017 4:13 AM, Bjorn Andersson wrote:
+>>>>>> On Thu 04 May 04:53 PDT 2017, Varadarajan Narayanan wrote:
+>>>>>>
+>>>> [..]
+>>>>>>> +enum ipq8074_functions {
+>>>>>>
+>>>>>> Please keep these sorted alphabetically.
+>>>>>
+>>>>> Ok
+>>>>>
+>>>>>>> +    msm_mux_gpio,
+>>>>>>> +    msm_mux_qpic_pad,
+>>>>>>> +    msm_mux_blsp5_i2c,
+>>>>>>> +    msm_mux_blsp5_spi,
+>>>>>>> +    msm_mux_wci20,
+>>>>>>
+>>>>>> What does "20" mean here?
+>>>>>
+>>>>> This is for Wireless Coex Interface. The same functionality can
+>>>>> be muxed on
+>>>>> to different GPIOs. WCI2, is the 2nd edition of the WCI standard
+>>>>> and 0, 1
+>>>>> are for the muxing to different GPIOs (alternate muxes).
+>>>>>
+>>>>
+>>>> In other Qualcomm platforms the alternative muxes are denoted by letters
+>>>> (a,b,c...). Would you mind picking up this naming scheme, or do you see
+>>>> any problems with that? (E.g. wci2a in this case)
+>>>
+>>> Ok
+>>>
+>>>> Btw, do you need any additional configuration for selecting alternative
+>>>> muxing or is that automagical these days?
+>>>
+>>> No additional configuration is needed.
+>>>
+>>>>>>> +    msm_mux_blsp3_spi3,
+>>>>>>> +    msm_mux_burn0,
+>>>>>>> +    msm_mux_pcm_zsi0,
+>>>>>>> +    msm_mux_blsp5_uart,
+>>>>>>> +    msm_mux_mac12,
+>>>>>>
+>>>>>> What does "12" mean here?
+>>>>>
+>>>>> The SoC has three MAC cores. Each core has two pins for the
+>>>>> smart antenna
+>>>>> feature. macXY indicates the function select for MAC no. X and
+>>>>> smart antenna
+>>>>> no. Y.
+>>>>>
+>>>>
+>>>> Ok
+>>>>
+>>>>>>> +    msm_mux_blsp3_spi0,
+>>>>>>> +    msm_mux_burn1,
+>>>>>>> +    msm_mux_mac01,
+>>>>>>> +    msm_mux_qdss_cti_trig_out_b0,
+>>>>>>> +    msm_mux_qdss_cti_trig_in_b0,
+>>>>>>> +    msm_mux_qpic_pad4,
+>>>>>>
+>>>>>> What are qpic_pad and qpic_pad0 through qpic_pad8? Different functions,
+>>>>>> alternative muxings...?
+>>>>>
+>>>>> This is for the NAND and LCD display. The pins listed are the 9
+>>>>> data pins.
+>>>>>
+>>>>
+>>>> Then you can describe them all as "qpic_pad" (or simply "qpic"?). (It's
+>>>> possible to reference a partial group in the DTS, if that's necessary)
+>>>
+>>> There are two sets of 9 pins, either of which can go to NAND or LCD.
+>>> Will rename qpic_pad as qpic_a and qpic_pad[0-8] as qpic_b.
+>>> Is that ok?
+>>>
+>>>>>>> +    msm_mux_blsp4_uart0,
+>>>>>>> +    msm_mux_blsp4_i2c0,
+>>>>>>> +    msm_mux_blsp4_spi0,
+>>>>>>> +    msm_mux_mac21,
+>>>>>>> +    msm_mux_qdss_cti_trig_out_b1,
+>>>>>>> +    msm_mux_qpic_pad5,
+>>>>>>> +    msm_mux_qdss_cti_trig_in_b1,
+>>>>>>> +    msm_mux_qpic_pad6,
+>>>>>>> +    msm_mux_qpic_pad7,
+>>>>>>> +    msm_mux_cxc0,
+>>>>>>> +    msm_mux_mac13,
+>>>>>>> +    msm_mux_qdss_cti_trig_in_a1,
+>>>>>>> +    msm_mux_qdss_cti_trig_out_a1,
+>>>>>>> +    msm_mux_wci22,
+>>>>>>> +    msm_mux_qdss_cti_trig_in_a0,
+>>>>>>> +    msm_mux_qpic_pad1,
+>>>>>>> +    msm_mux_qdss_cti_trig_out_a0,
+>>>>>>> +    msm_mux_qpic_pad2,
+>>>>>>> +    msm_mux_qpic_pad3,
+>>>>>>> +    msm_mux_qdss_traceclk_b,
+>>>>>>> +    msm_mux_qpic_pad0,
+>>>>>>> +    msm_mux_qdss_tracectl_b,
+>>>>>>> +    msm_mux_qpic_pad8,
+>>>>>>> +    msm_mux_pcm_zsi1,
+>>>>>>> +    msm_mux_qdss_tracedata_b,
+>>>>>>> +    msm_mux_led0,
+>>>>>>> +    msm_mux_pwm04,
+>>>>>>
+>>>>>> What does "04" mean here?
+>>>>>
+>>>>> There are 4 Pulse Width Modulation channels, pwmXY is pwm
+>>>>> channel X and pin
+>>>>> Y.
+>>>>
+>>>> So Y is alternative mux? Can we use letters for this as well?
+>>>
+>>> Ok
+>>
+>> Sorry, actually they are not alternative muxes. There are 4 different PWM
+>> instances. Each PWM instance can handle 'n' different GPIOs (for example,
+>> that can be connected to LED etc.).
+>>
+> 
+> So we have 4 PWMs and the output from a single PWM can muxed to drive
+> the output of 4 pins?
+> 
+> Then skip the last digit and just go pwm0, ... pwm3 and include all four
+> pins that can be part of each instance. As the pingroup configuration is
+> per pin in the TLMM it's possible to configure subsets of the pins in a
+> group.
+
+Ok
+
+Thanks
+Varada
+
+> Regards,
+> Bjorn
+> 
+
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora 
+Forum, a Linux Foundation Collaborative Project
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
