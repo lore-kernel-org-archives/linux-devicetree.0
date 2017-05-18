@@ -1,54 +1,62 @@
 From: Leo Yan <leo.yan@linaro.org>
-Subject: [PATCH v2 1/2] clk: Hi3660: change to register crgctrl clock with CLK_OF_DECLARE_DRIVER
-Date: Thu, 18 May 2017 09:50:46 +0800
-Message-ID: <1495072247-25217-2-git-send-email-leo.yan@linaro.org>
+Subject: [PATCH v2 2/2] arm64: dts: add sp804 timer node for Hi3660
+Date: Thu, 18 May 2017 09:50:47 +0800
+Message-ID: <1495072247-25217-3-git-send-email-leo.yan@linaro.org>
 References: <1495072247-25217-1-git-send-email-leo.yan@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1495072247-25217-1-git-send-email-leo.yan@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Wei Xu <xuwei5@hisilicon.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Guodong Xu <guodong.xu@linaro.org>, Zhong Kaihua <zhongkaihua@huawei.com>, Chen Jun <chenjun14@huawei.com>, Zhangfei Gao <zhangfei.gao@linaro.org>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, Daniel Lezcano <daniel.lezcano@linaro.org>
 Cc: Leo Yan <leo.yan@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-The timer will register into system at very early phase at kernel boot;
-if timer needs to use clock, the clock should be get ready in function
-of_clk_init() so later the timer driver probe can retrieve clock
-successfully. This is finished in below flow on arm64:
+The Hi3660 SoC comes with the sp804 timer in addition to the
+architecture timers. These ones are shutdown when reaching a deep idle
+states and a backup timer is needed. The sp804 belongs to another power
+domain and can fulfill the purpose of replacing temporarily an
+architecture timer when the CPU is idle.
 
-  start_kernel()
-    `-> time_init()
-          `-> of_clk_init(NULL)    => register timer's clock
-          `-> clocksource_probe()  => register timer
+Describe it in the device tree, so it can be enabled at boot time.
 
-On Hi3660 the sp804 timer uses clock "osc32k", this clock is registered
-as platform driver rather than CLK_OF_DECLARE_DRIVER method. As result,
-sp804 timer probe returns failure due if cannot bind clock properly.
-To fix the failure, this patch is to change crgctrl clock registration
-from platform driver to CLK_OF_DECLARE_DRIVER method so the clocks can
-be registered ahead with function of_clk_init() and then timer driver
-can use it.
-
+Suggested-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
 Signed-off-by: Leo Yan <leo.yan@linaro.org>
 ---
- drivers/clk/hisilicon/clk-hi3660.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/arm64/boot/dts/hisilicon/hi3660.dtsi | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-diff --git a/drivers/clk/hisilicon/clk-hi3660.c b/drivers/clk/hisilicon/clk-hi3660.c
-index fd5ce7f..4e5713b 100644
---- a/drivers/clk/hisilicon/clk-hi3660.c
-+++ b/drivers/clk/hisilicon/clk-hi3660.c
-@@ -547,10 +547,10 @@ static void hi3660_clk_crgctrl_init(struct device_node *np)
- 				  ARRAY_SIZE(hi3660_crgctrl_divider_clks),
- 				  clk_data);
- }
-+CLK_OF_DECLARE_DRIVER(hi3660_clk_crgctrl, "hisilicon,hi3660-crgctrl",
-+		      hi3660_clk_crgctrl_init);
+diff --git a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
+index 138fcba..f75c792 100644
+--- a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
++++ b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
+@@ -173,6 +173,17 @@
+ 			#clock-cells = <1>;
+ 		};
  
- static const struct of_device_id hi3660_clk_match_table[] = {
--	{ .compatible = "hisilicon,hi3660-crgctrl",
--	  .data = hi3660_clk_crgctrl_init },
- 	{ .compatible = "hisilicon,hi3660-pctrl",
- 	  .data = hi3660_clk_pctrl_init },
- 	{ .compatible = "hisilicon,hi3660-pmuctrl",
++		dual_timer0: timer@fff14000 {
++			compatible = "arm,sp804", "arm,primecell";
++			reg = <0x0 0xfff14000 0x0 0x1000>;
++			interrupts = <GIC_SPI 48 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&crg_ctrl HI3660_OSC32K>,
++				 <&crg_ctrl HI3660_OSC32K>,
++				 <&crg_ctrl HI3660_OSC32K>;
++			clock-names = "timer1", "timer2", "apb_pclk";
++		};
++
+ 		ufs: ufs@ff3b0000 {
+ 			compatible = "jedec,ufs-1.1", "hisilicon,hi3660-ufs";
+ 			reg = <0x0 0xff3b0000 0x0 0x1000>, /* 0: HCI standard */
 -- 
 1.9.1
