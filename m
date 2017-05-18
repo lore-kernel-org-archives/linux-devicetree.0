@@ -1,71 +1,78 @@
-From: Pavel Machek <pavel-ynQEQJNshbs@public.gmane.org>
-Subject: Re: [PATCH] powerpc/sequoia: fix NAND partitions not to overlap
-Date: Thu, 18 May 2017 11:48:13 +0200
-Message-ID: <20170518094813.GA12038@amd>
-References: <20170402100535.GA18340@amd>
- <20170517120613.GA583@amd>
- <20170517143717.ad818a2282378fc7a38af1ff@linux-foundation.org>
+From: Leo Yan <leo.yan@linaro.org>
+Subject: Re: [PATCH v2 1/2] clk: Hi3660: change to register crgctrl clock
+ with CLK_OF_DECLARE_DRIVER
+Date: Thu, 18 May 2017 17:48:54 +0800
+Message-ID: <20170518094853.GB25294@leoy-ThinkPad-T440>
+References: <1495072247-25217-1-git-send-email-leo.yan@linaro.org>
+ <1495072247-25217-2-git-send-email-leo.yan@linaro.org>
+ <20170518093226.GA2125@mai>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="FL5UXtIhxfXey3p5"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-clk-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170517143717.ad818a2282378fc7a38af1ff-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
-Cc: sr-ynQEQJNshbs@public.gmane.org, jwboyer-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org, mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, trivial-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Andrew Morton <akpm-3NddpPZAyC0@public.gmane.org>
+In-Reply-To: <20170518093226.GA2125@mai>
+Sender: linux-clk-owner@vger.kernel.org
+To: Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: Wei Xu <xuwei5@hisilicon.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Guodong Xu <guodong.xu@linaro.org>, Zhong Kaihua <zhongkaihua@huawei.com>, Chen Jun <chenjun14@huawei.com>, Zhangfei Gao <zhangfei.gao@linaro.org>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Daniel,
 
---FL5UXtIhxfXey3p5
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Thu, May 18, 2017 at 11:32:26AM +0200, Daniel Lezcano wrote:
+> On Thu, May 18, 2017 at 09:50:46AM +0800, Leo Yan wrote:
+> > The timer will register into system at very early phase at kernel boot;
+> > if timer needs to use clock, the clock should be get ready in function
+> > of_clk_init() so later the timer driver probe can retrieve clock
+> > successfully. This is finished in below flow on arm64:
+> > 
+> >   start_kernel()
+> >     `-> time_init()
+> >           `-> of_clk_init(NULL)    => register timer's clock
+> >           `-> clocksource_probe()  => register timer
+> > 
+> > On Hi3660 the sp804 timer uses clock "osc32k", this clock is registered
+> > as platform driver rather than CLK_OF_DECLARE_DRIVER method. As result,
+> > sp804 timer probe returns failure due if cannot bind clock properly.
+> > To fix the failure, this patch is to change crgctrl clock registration
+> > from platform driver to CLK_OF_DECLARE_DRIVER method so the clocks can
+> > be registered ahead with function of_clk_init() and then timer driver
+> > can use it.
+> > 
+> > Signed-off-by: Leo Yan <leo.yan@linaro.org>
+> > ---
+> >  drivers/clk/hisilicon/clk-hi3660.c | 4 ++--
+> >  1 file changed, 2 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/drivers/clk/hisilicon/clk-hi3660.c b/drivers/clk/hisilicon/clk-hi3660.c
+> > index fd5ce7f..4e5713b 100644
+> > --- a/drivers/clk/hisilicon/clk-hi3660.c
+> > +++ b/drivers/clk/hisilicon/clk-hi3660.c
+> > @@ -547,10 +547,10 @@ static void hi3660_clk_crgctrl_init(struct device_node *np)
+> >  				  ARRAY_SIZE(hi3660_crgctrl_divider_clks),
+> >  				  clk_data);
+> >  }
+> > +CLK_OF_DECLARE_DRIVER(hi3660_clk_crgctrl, "hisilicon,hi3660-crgctrl",
+> > +		      hi3660_clk_crgctrl_init);
+> >  
+> >  static const struct of_device_id hi3660_clk_match_table[] = {
+> > -	{ .compatible = "hisilicon,hi3660-crgctrl",
+> > -	  .data = hi3660_clk_crgctrl_init },
+> >  	{ .compatible = "hisilicon,hi3660-pctrl",
+> >  	  .data = hi3660_clk_pctrl_init },
+> >  	{ .compatible = "hisilicon,hi3660-pmuctrl",
+> 
+> Why not do the change for all the clocks and remove the
+> hi3660_clk_match_table[]? and all the related platform driver code?
+> 
+> That will be consistent with the other clk-hi* drivers.
 
-On Wed 2017-05-17 14:37:17, Andrew Morton wrote:
-> On Wed, 17 May 2017 14:06:13 +0200 Pavel Machek <pavel-ynQEQJNshbs@public.gmane.org> wrote:
->=20
-> > On Sun 2017-04-02 12:05:36, Pavel Machek wrote:
-> > > Fix overlapping NAND partitions.
-> > >=20
-> > > Signed-off-by: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
-> >=20
-> > Ping? Two partitions at same place are bad news...
->=20
-> Please expand on "bad news"?  What are the runtime effects of this
-> change?  Decisions about which kernel(s) to patch depend on this info.
+I checked a bit with Stephen on IRC, follow the suggestion to 'split
+the clks are registsered between CLK_OF_DECLARE_DRIVER() and driver
+probe so that the ones you need really early are done through the
+CLK_OF path and the other ones are done through regular driver probe'.
 
-Well... two partitions at same place. If you use one, you will corrupt
-information on the other one.
+Also checked for mainline kernel, now there have some examples,
+like: drivers/clk/mediatek/clk-mt2701.c.
 
-OTOH this moves partition around (so that they don't overlap) so it is
-probably not stable candidate.
-
-I guess this is not huge issue; people using these boards probably
-have custom dts changes, anyway...
-
-Best regards,
-
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---FL5UXtIhxfXey3p5
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlkdbd0ACgkQMOfwapXb+vKSwgCdEH0np4PeA0yHxMf1KJy8HJ7I
-fE8AoKN4cfbkO+bYmOOzY/msQyboWBPW
-=p+oE
------END PGP SIGNATURE-----
-
---FL5UXtIhxfXey3p5--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+Leo Yan
