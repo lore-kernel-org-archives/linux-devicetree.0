@@ -1,90 +1,61 @@
-From: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH] arm64: dts: juno: Enable some SMMUs
-Date: Thu, 18 May 2017 15:30:25 +0100
-Message-ID: <ef53211e-1d91-c653-0393-f5e98ce94693@arm.com>
-References: <eeb81dbbd7ddfbbccb961c0f20c5cb90f120e89f.1495110010.git.robin.murphy@arm.com>
- <1495113239.3174.11.camel@linaro.org>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH 2/4] dt-bindings: Document the Raspberry Pi Touchscreen
+ nodes.
+Date: Thu, 18 May 2017 17:45:40 +0300
+Message-ID: <5108517.4KFRtigegR@avalon>
+References: <20170511235625.22427-1-eric@anholt.net>
+ <3768334.nZM7df9y4L@avalon> <87shk4iqr7.fsf@eliezer.anholt.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1495113239.3174.11.camel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Jon Medhurst (Tixy)" <tixy-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, liviu.dudau-5wv7dgnIgG8@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <87shk4iqr7.fsf@eliezer.anholt.net>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Eric Anholt <eric@anholt.net>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 18/05/17 14:13, Jon Medhurst (Tixy) wrote:
-> On Thu, 2017-05-18 at 13:23 +0100, Robin Murphy wrote:
->> The IOMMU-backed DMA API support has now been in place for a while and
->> proven stable, so there's no real need to keep most of Juno's SMMUs
->> disabled. The USB, HDLCDs, and CoreSight ETR all just need to map RAM
->> buffers for DMA - enabling their SMMUs obviates CPU bounce buffering for
->> USB's streaming DMA to the upper memory bank, and lets the other two
->> allocate their relatively large coherent buffers without pressuring CMA.
->>
->> Some more software work is still needed for the DMA-330 and PCIe before
->> those can accommodate SMMU translation correctly in all cases, so we
->> leave those alone for now.
->>
->> Signed-off-by: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
->> ---
-> 
-> For those that don't already know, status = "disabled" for smmu is
-> broken in Linux 4.12-rc1, and this fixes it...
-> https://lkml.org/lkml/2017/5/17/344
-
-Well, it's not *technically* broken - we do stop waiting for disabled
-IOMMUs that never appear, you just need to get to an initramfs or other
-workable userspace to load another driver such that the deferred probe
-queue gets kicked again after that point :P
-
-But yeah, the whole business reminded me that it was about time to do
-this anyway. I should dig up that pl330 patch I started, too...
-
-Robin.
-
->>  arch/arm64/boot/dts/arm/juno-base.dtsi | 4 ----
->>  1 file changed, 4 deletions(-)
->>
->> diff --git a/arch/arm64/boot/dts/arm/juno-base.dtsi b/arch/arm64/boot/dts/arm/juno-base.dtsi
->> index bfe7d683a42e..02aea43238fc 100644
->> --- a/arch/arm64/boot/dts/arm/juno-base.dtsi
->> +++ b/arch/arm64/boot/dts/arm/juno-base.dtsi
->> @@ -53,7 +53,6 @@
->>  		#global-interrupts = <1>;
->>  		dma-coherent;
->>  		power-domains = <&scpi_devpd 0>;
->> -		status = "disabled";
->>  	};
->>  
->>  	gic: interrupt-controller@2c010000 {
->> @@ -546,7 +545,6 @@
->>  			     <GIC_SPI 99 IRQ_TYPE_LEVEL_HIGH>;
->>  		#iommu-cells = <1>;
->>  		#global-interrupts = <1>;
->> -		status = "disabled";
->>  	};
->>  
->>  	smmu_hdlcd0: iommu@7fb20000 {
->> @@ -556,7 +554,6 @@
->>  			     <GIC_SPI 97 IRQ_TYPE_LEVEL_HIGH>;
->>  		#iommu-cells = <1>;
->>  		#global-interrupts = <1>;
->> -		status = "disabled";
->>  	};
->>  
->>  	smmu_usb: iommu@7fb30000 {
->> @@ -567,7 +564,6 @@
->>  		#iommu-cells = <1>;
->>  		#global-interrupts = <1>;
->>  		dma-coherent;
->> -		status = "disabled";
->>  	};
->>  
->>  	dma@7ff00000 {
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGkgRXJpYywKCk9uIFR1ZXNkYXkgMTYgTWF5IDIwMTcgMTE6NDY6MzYgRXJpYyBBbmhvbHQgd3Jv
+dGU6Cgpbc25pcF0KCj4gSW4gdGVybXMgb2YgcGh5c2ljYWwgY29ubmVjdGlvbnM6Cj4gCj4gICAg
+WzE1LXBpbiAiRFNJIiBjb25uZWN0b3Igb24gMjgzNV0KPiAKPiAgICAgfCBJMkMgICAgICAgICAg
+ICAgICB8IERTSQo+ICAgIC8gXCAgICAgICAgU1BJICAgICAgIHwKPiBbVFNdICBbQXRtZWxdLS0t
+LS0tW1RDMzU4NzYyXQo+ICAgICAgICBcICAgICAgICAgICAgICAgIHwKPiAgICAgICAgIFxQV00g
+ICAgICAgICAgICB8Cj4gICAgICAgICAgXCAgICAgICAgICAgICAgfCBEUEkKPiBbc29tZSBiYWNr
+bGlnaHRdLS0tLS0tW3NvbWUgdW5rbm93biBwYW5lbF0KPiAKPiBUaGUgYmluZGluZyBJJ20gdHJ5
+aW5nIHRvIGNyZWF0ZSBpcyB0byBleHBvc2Ugd2hhdCdzIG5lY2Vzc2FyeSBmb3IgYQo+IGRyaXZl
+ciB0aGF0IHRhbGtzIEkyQyB0byB0aGUgQXRtZWwsIHdoaWNoIHRoZW4gY29udHJvbHMgdGhlIFBX
+TSBhbmQgZG9lcwo+IHRoZSBjb21tYW5kIHNlcXVlbmNlIG92ZXIgU1BJIHRvIHRoZSBUb3NoaWJh
+IHRoYXQgc2V0cyB1cCBpdHMgZW5kIG9mIHRoZQo+IERTSSBsaW5rLgoKQWNjb3JkaW5nIHRvIHRo
+ZSBkb2N1bWVudGF0aW9uIEkndmUgYmVlbiBhYmxlIHRvIGZpbmQsIHRoZSBUQzM1ODc2MiBoYXMg
+YW4gU1BJIAptYXN0ZXIgcG9ydCB0aHJvdWdoIHdoaWNoIGl0IGNhbiBvdXRwdXQgdGhlIGNvbW1h
+bmRzIERDUyByZWNlaXZlZCBmcm9tIHRoZSBEU0kgCnBvcnQsIGFuZCBhbiBJMkMgc2xhdmUgcG9y
+dCB0aHJvdWdoIHdoaWNoIGl0IGNhbiBiZSBjb25maWd1cmVkIGJ5IGFuIGV4dGVybmFsIApkZXZp
+Y2UuIElmIHRoZSBjb25uZWN0aW9uIGJldHdlZW4gdGhlIG1pY3JvY29udHJvbGxlciBhbmQgdGhl
+IFRDMzU4NzYyIGlzIAppbmRlZWQgU1BJIGFuZCBub3QgSTJDLCBJIGFzc3VtZSBpdCdzIHVzZWQg
+YnkgdGhlIG1pY3JvY29udHJvbGxlciB0byByZWNlaXZlIAp0aGUgRENTIGNvbW1hbmRzIGFuZCBw
+ZXJmb3JtIGNvbnRyb2wgb2YgdGhlIGJhY2tsaWdodCAoYW5kIHBvc3NpYmx5IG90aGVyIApjb21w
+b25lbnRzKSBhY2NvcmRpbmdseS4gQnkgdGhlIHdheSwgaXMgdGhlcmUgYW55IHBsYWNlIHdoZXJl
+IEkgY2FuIGZpbmQgYSAKbGVha2VkIHZlcnNpb24gb2YgdGhlIG5vbi1wdWJsaWMgcGFuZWwgc2No
+ZW1hdGljcyA/IDstKQoKQXMgZmFyIGFzIEkgY2FuIHRlbGwgZnJvbSB5b3VyIHBhdGNoIHNlcmll
+cywgeW91IGRvbid0IG5lZWQgdG8gc2VuZCBhbnkgCmNvbW1hbmQgdG8gdGhlIFRDMzU4NzYyIG92
+ZXIgRFNJLiBJbiB0aGF0IGNhc2UgSSB3b3VsZCBtb2RlbCB0aGUgcGFuZWwgaW4gRFQgCmFzIGFu
+IEkyQyBkZXZpY2UsIGFzIGFsbCBjb250cm9sIGdvZXMgdGhyb3VnaCB0aGUgSTJDIGJ1cy4gVGhl
+IERTSSB2aWRlbyBkYXRhIApjb25uZWN0aW9uIHNob3VsZCB0aGVuIGJlIG1vZGVsbGVkIHVzaW5n
+IHRoZSBPRiBncmFwaCBEVCBiaW5kaW5ncy4gVGhlIHJlc3VsdCAKd2lsbCBiZSBhIGJsYWNrIGJv
+eCBwYW5lbCB3aXRoIGEgY3VzdG9tIGJsYWNrIGJveCBwYW5lbCBkcml2ZXIsIHVzaW5nIGEgc2lu
+Z2xlIApEVCBub2RlLiBUaGVyZSdzIG5vIG5lZWQgZm9yIGEgc2VwYXJhdGUgYnJpZGdlIGluc3Rh
+bmNlLiBUaGF0J3MgdGhlIGNsZWFuZXN0IApvcHRpb24gSSBjYW4gY29tZSB1cCB3aXRoIHNvIGZh
+ciwgYW5kIEkgYWdyZWUgdGhhdCBzcGxpdHRpbmcgVEMzNTg3NjIgc3VwcG9ydCAKaW50byBhIHN0
+YW5kYWxvbmUgYnJpZGdlIGRyaXZlciBtYWtlcyBubyBzZW5zZSBpbiB0aGlzIGNhc2UuCgotLSAK
+UmVnYXJkcywKCkxhdXJlbnQgUGluY2hhcnQKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3Rz
+LmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xp
+c3RpbmZvL2RyaS1kZXZlbAo=
