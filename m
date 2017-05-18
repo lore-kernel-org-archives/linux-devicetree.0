@@ -1,54 +1,56 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [v1 1/1] usb:host:xhci support option to disable xHCI 1.0 USB2
- HW LPM
-Date: Thu, 18 May 2017 17:30:26 -0500
-Message-ID: <20170518223026.vspw4p3nettjn3kx@rob-hp-laptop>
-References: <1494634394-24388-1-git-send-email-tqnguyen@apm.com>
+From: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
+Subject: Re: [PATCH v5 2/3] platform: add video-multiplexer subdevice driver
+Date: Fri, 19 May 2017 01:37:32 +0200
+Message-ID: <20170518233731.GB26641@amd>
+References: <1495034107-21407-1-git-send-email-p.zabel@pengutronix.de>
+ <1495034107-21407-2-git-send-email-p.zabel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="TRYliJ5NKNqkz5bu"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1494634394-24388-1-git-send-email-tqnguyen-qTEPVZfXA3Y@public.gmane.org>
+In-Reply-To: <1495034107-21407-2-git-send-email-p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Thang Q. Nguyen" <tqnguyen-qTEPVZfXA3Y@public.gmane.org>
-Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Felipe Balbi <felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Phong Vo <pvo-qTEPVZfXA3Y@public.gmane.org>, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>, Duc Tran <dxtran-qTEPVZfXA3Y@public.gmane.org>, Quang Han <qhan-qTEPVZfXA3Y@public.gmane.org>, Tung Nguyen <tunguyen-qTEPVZfXA3Y@public.gmane.org>, patches-qTEPVZfXA3Y@public.gmane.org
+To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>, Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Vladimir Zapolskiy <vladimir_zapolskiy-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, Sebastian Reichel <sebastian.reichel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, Kieran Bingham <kieran.bingham+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Steve Longerbeam <steve_longerbeam-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, May 13, 2017 at 07:13:14AM +0700, Thang Q. Nguyen wrote:
-> XHCI specification 1.1 does not require xHCI 1.0 compliant controllers
-> to always enable hardware USB2 LPM.
-> However, the current xHCI driver always enable it by setting HLE=1 when
-> seeing HLC=1. This makes certain xHCI controllers that have broken USB2
-> HW LPM fail to work as there is no way to disable this feature.
-> This patch adds support to control disabling USB2 Hardware LPM via
-> DT/ACPI attribute.
-> 
-> Signed-off-by: Tung Nguyen <tunguyen-qTEPVZfXA3Y@public.gmane.org>
-> Signed-off-by: Thang Q. Nguyen <tqnguyen-qTEPVZfXA3Y@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/usb/usb-xhci.txt |    1 +
->  drivers/usb/host/xhci-plat.c                       |    3 +++
->  drivers/usb/host/xhci.c                            |    7 ++++++-
->  drivers/usb/host/xhci.h                            |    1 +
->  4 files changed, 11 insertions(+), 1 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/usb/usb-xhci.txt b/Documentation/devicetree/bindings/usb/usb-xhci.txt
-> index 2d80b60..b5da569 100644
-> --- a/Documentation/devicetree/bindings/usb/usb-xhci.txt
-> +++ b/Documentation/devicetree/bindings/usb/usb-xhci.txt
-> @@ -26,6 +26,7 @@ Required properties:
->  
->  Optional properties:
->    - clocks: reference to a clock
-> +  - usb2-hle-disable: disable USB2 LPM for hardware does not support it
->    - usb3-lpm-capable: determines if platform is USB3 LPM capable
 
-Can we have some consistency in the naming of these 2 properties? At 
-least use 'lpm' rather than 'hle'. I don't recall why the 2nd one is not 
-default enabled, but that would make more sense.
+--TRYliJ5NKNqkz5bu
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
->    - quirk-broken-port-ped: set if the controller has broken port disable mechanism
->  
+On Wed 2017-05-17 17:15:06, Philipp Zabel wrote:
+> This driver can handle SoC internal and external video bus multiplexers,
+> controlled by mux controllers provided by the mux controller framework,
+> such as MMIO register bitfields or GPIOs. The subdevice passes through
+> the mbus configuration of the active input to the output side.
+>=20
+> Signed-off-by: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> Signed-off-by: Steve Longerbeam <steve_longerbeam-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+
+Acked-by: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
+
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--TRYliJ5NKNqkz5bu
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlkeMDsACgkQMOfwapXb+vIJewCfc3y9OZvc7iK/SA6NPvQEN292
+61cAnR4V0Xf/sybqg4liOfZ1w5kmJYiT
+=5RLe
+-----END PGP SIGNATURE-----
+
+--TRYliJ5NKNqkz5bu--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
