@@ -1,71 +1,49 @@
-From: olivier moysan <olivier.moysan@st.com>
-Subject: [PATCH v4 0/3] ASoC: Add STM32 I2S support
-Date: Thu, 18 May 2017 17:19:50 +0200
-Message-ID: <1495120793-11687-1-git-send-email-olivier.moysan@st.com>
+From: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
+Subject: Re: [PATCH] of_mdio: Fix broken PHY IRQ in case of probe deferral
+Date: Thu, 18 May 2017 11:21:45 -0400 (EDT)
+Message-ID: <20170518.112145.1364316716714361952.davem@davemloft.net>
+References: <1495112345-24795-1-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: lgirdwood@gmail.com, broonie@kernel.org, perex@perex.cz, tiwai@suse.com, mcoquelin.stm32@gmail.com, alexandre.torgue@st.com, alsa-devel@alsa-project.org, robh@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kernel@stlinux.com, linux-kernel@vger.kernel.org, olivier.moysan@st.com
-Cc: arnaud.pouliquen@st.com, benjamin.gaignard@st.com
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1495112345-24795-1-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org
+Cc: andrew-g2DYL2Zd6BY@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch-set handles the SPI/I2S IP on STM32 platforms.
+From: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Date: Thu, 18 May 2017 14:59:05 +0200
 
-It applies to STM32 platforms implementing version 2 of SPI/I2S IP like STM32H7 series.
+> If an Ethernet PHY is initialized before the interrupt controller it is
+> connected to, a message like the following is printed:
+> 
+>     irq: no irq domain found for /interrupt-controller@e61c0000 !
+> 
+> However, the actual error is ignored, leading to a non-functional (-1)
+> PHY interrupt later:
+> 
+>     Micrel KSZ8041RNLI ee700000.ethernet-ffffffff:01: attached PHY driver [Micrel KSZ8041RNLI] (mii_bus:phy_addr=ee700000.ethernet-ffffffff:01, irq=-1)
+> 
+> Depending on whether the PHY driver will fall back to polling, Ethernet
+> may or may not work.
+> 
+> To fix this:
+>   1. Switch of_mdiobus_register_phy() from irq_of_parse_and_map() to
+>      of_irq_get().
+>      Unlike the former, the latter returns -EPROBE_DEFER if the
+>      interrupt controller is not yet available, so this condition can be
+>      detected.
+>      Other errors are handled the same as before, i.e. use the passed
+>      mdio->irq[addr] as interrupt.
+>   2. Propagate and handle errors from of_mdiobus_register_phy() and
+>      of_mdiobus_register_device().
+> 
+> Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 
-The SPI/I2S block is a serial peripheral interface (SPI), which can also be configured to work on I2S/PCM mode.
-ASoC STM32 I2S driver only supports this I2S/PCM mode.
-
-The I2S/PCM interface can either support full duplex or half-duplex communication
-(transmitter or receiver only). The change of mode requires to stop the interface.
-This means that the two audio paths cannot be basically managed independently.
-
-The driver supports playback and capture through a single bidirectionnal DAI. 
-In the first version of the driver, playback and capture paths are made mutually exclusive.
-
-A second patch introduces support of full duplex mode. 
-In this implementation the interface is systematically configured in full-duplex mode
-from hardware point of view. So, when managing a single audio path, the interface
-is not configured as transmit or receive only, as it should be.
-This restriction is handled by masking underrun/overrun errors from the unused path.
-
-The I2S/PCM interface supports four audio standards:
-I2S Philips standard, MSB justified standard, LSB justified standard, PCM standard
-PCM standard is declined in two versions, PCM short and long,
-according frame synchronization duration.
-
-These standards can be mapped to ASoC standards as follows:
-	- I2S: i2s
-	- MSB justified standard: left_j
-	- LSB justified standard: right_j
-	- PCM short: dsp_a
-PCM long format is not exposed as it does not match supported ASoC standards.
-
-v3 -> v4
-	- update example in dt bindings
-
-olivier moysan (3):
-  dt-bindings: Document STM32 I2S bindings
-  ASoC: stm32: Add I2S driver
-  ASoC: stm32: Add full duplex support to i2s
-
- .../devicetree/bindings/sound/st,stm32-i2s.txt     |  62 ++
- sound/soc/stm/Kconfig                              |   2 +-
- sound/soc/stm/Makefile                             |   4 +
- sound/soc/stm/stm32_i2s.c                          | 946 +++++++++++++++++++++
- 4 files changed, 1013 insertions(+), 1 deletion(-)
- create mode 100644 Documentation/devicetree/bindings/sound/st,stm32-i2s.txt
- create mode 100644 sound/soc/stm/stm32_i2s.c
-
--- 
-1.9.1
+Florian or someone similarly knowledgable, please review.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
