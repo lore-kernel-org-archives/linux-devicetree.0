@@ -1,8 +1,10 @@
 From: Sakari Ailus <sakari.ailus@linux.intel.com>
-Subject: [PATCH v4 3/3] of: Support const and non-const use for to_of_node()
-Date: Thu, 18 May 2017 14:11:30 +0300
-Message-ID: <1495105890-20097-1-git-send-email-sakari.ailus@linux.intel.com>
+Subject: [RESEND PATCH v4 3/3] of: Support const and non-const use for to_of_node()
+Date: Thu, 18 May 2017 14:12:39 +0300
+Message-ID: <1495105959-20146-1-git-send-email-sakari.ailus@linux.intel.com>
+References: <1495104163-17165-1-git-send-email-sakari.ailus@linux.intel.com>
 Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <1495104163-17165-1-git-send-email-sakari.ailus@linux.intel.com>
 Sender: linux-acpi-owner@vger.kernel.org
 To: devicetree@vger.kernel.org, robh@kernel.org, frowand.list@gmail.com
 Cc: linux-acpi@vger.kernel.org, sudeep.holla@arm.com, lorenzo.pieralisi@arm.com, mika.westerberg@linux.intel.com, rafael@kernel.org, mark.rutland@arm.com, broonie@kernel.org, ahs3@redhat.com
@@ -15,6 +17,8 @@ as well.
 Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
 ---
 This was actually in another set, but fits better here.
+
+(Now with correct In-Reply-To header.)
 
  include/linux/of.h | 16 ++++++++++------
  1 file changed, 10 insertions(+), 6 deletions(-)
