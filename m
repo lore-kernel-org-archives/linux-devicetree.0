@@ -1,62 +1,33 @@
-From: Leo Yan <leo.yan@linaro.org>
-Subject: [PATCH v2 2/2] arm64: dts: add sp804 timer node for Hi3660
-Date: Thu, 18 May 2017 09:50:47 +0800
-Message-ID: <1495072247-25217-3-git-send-email-leo.yan@linaro.org>
-References: <1495072247-25217-1-git-send-email-leo.yan@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1495072247-25217-1-git-send-email-leo.yan@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Wei Xu <xuwei5@hisilicon.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Guodong Xu <guodong.xu@linaro.org>, Zhong Kaihua <zhongkaihua@huawei.com>, Chen Jun <chenjun14@huawei.com>, Zhangfei Gao <zhangfei.gao@linaro.org>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: Leo Yan <leo.yan@linaro.org>
+From: Elaine Zhang <zhangqing@rock-chips.com>
+Subject: [PATCH v2 0/3] clk: rockchip: support clk controller for RK3128 SoC
+Date: Thu, 18 May 2017 10:16:56 +0800
+Message-ID: <1495073819-4160-1-git-send-email-zhangqing@rock-chips.com>
+Return-path: <linux-clk-owner@vger.kernel.org>
+Sender: linux-clk-owner@vger.kernel.org
+To: heiko@sntech.de, xf@rock-chips.com
+Cc: linux-clk@vger.kernel.org, huangtao@rock-chips.com, xxx@rock-chips.com, cl@rock-chips.com, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, robh+dt@kernel.org, mark.rutland@arm.com, mturquette@baylibre.com, sboyd@codeaurora.org, zhengxing@rock-chips.com, Elaine Zhang <zhangqing@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-The Hi3660 SoC comes with the sp804 timer in addition to the
-architecture timers. These ones are shutdown when reaching a deep idle
-states and a backup timer is needed. The sp804 belongs to another power
-domain and can fulfill the purpose of replacing temporarily an
-architecture timer when the CPU is idle.
+The driver and clk ID\SRST ID it's also applies to the RK3126 SoC.
 
-Describe it in the device tree, so it can be enabled at boot time.
+change in V2:
+rename the rk312x to rk3128. 
 
-Suggested-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-Signed-off-by: Leo Yan <leo.yan@linaro.org>
----
- arch/arm64/boot/dts/hisilicon/hi3660.dtsi | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+Elaine Zhang (3):
+  clk: rockchip: add dt-binding header for rk3128
+  dt-bindings: add bindings for rk3128 clock controller
+  clk: rockchip: add clock controller for rk3128
 
-diff --git a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
-index 138fcba..f75c792 100644
---- a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
-+++ b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
-@@ -173,6 +173,17 @@
- 			#clock-cells = <1>;
- 		};
- 
-+		dual_timer0: timer@fff14000 {
-+			compatible = "arm,sp804", "arm,primecell";
-+			reg = <0x0 0xfff14000 0x0 0x1000>;
-+			interrupts = <GIC_SPI 48 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&crg_ctrl HI3660_OSC32K>,
-+				 <&crg_ctrl HI3660_OSC32K>,
-+				 <&crg_ctrl HI3660_OSC32K>;
-+			clock-names = "timer1", "timer2", "apb_pclk";
-+		};
-+
- 		ufs: ufs@ff3b0000 {
- 			compatible = "jedec,ufs-1.1", "hisilicon,hi3660-ufs";
- 			reg = <0x0 0xff3b0000 0x0 0x1000>, /* 0: HCI standard */
+ .../bindings/clock/rockchip,rk3128-cru.txt         |  56 ++
+ drivers/clk/rockchip/Makefile                      |   1 +
+ drivers/clk/rockchip/clk-rk3128.c                  | 612 +++++++++++++++++++++
+ include/dt-bindings/clock/rk3128-cru.h             | 281 ++++++++++
+ 4 files changed, 950 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/rockchip,rk3128-cru.txt
+ create mode 100644 drivers/clk/rockchip/clk-rk3128.c
+ create mode 100644 include/dt-bindings/clock/rk3128-cru.h
+
 -- 
 1.9.1
+
+
