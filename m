@@ -1,198 +1,66 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v2 1/2] dt-bindings: mfd: Add DT bindings documentation
- for the max7360 mfd driver
-Date: Thu, 18 May 2017 07:50:27 +0100
-Message-ID: <20170518065027.25i53655q5zpuvff@dell>
-References: <20170514135500.4947-1-valentin_sitdikov@mentor.com>
- <20170514135500.4947-2-valentin_sitdikov@mentor.com>
+From: Johannes Berg <johannes@sipsolutions.net>
+Subject: Re: [PATCH 1/2] wcn36xx: Pass used skb to ieee80211_tx_status()
+Date: Thu, 18 May 2017 09:00:07 +0200
+Message-ID: <1495090807.2442.23.camel@sipsolutions.net>
+References: <20170426220444.10539-1-bjorn.andersson@linaro.org>
+ <1493281332.2529.1.camel@sipsolutions.net> <20170428234247.GQ15143@minitux>
+ <87fugkrchl.fsf@kamboji.qca.qualcomm.com>
+ <1495026867.2442.9.camel@sipsolutions.net> <20170518050538.GL12920@tuxbook>
+ (sfid-20170518_070538_893255_D1A04092)
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170514135500.4947-2-valentin_sitdikov@mentor.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Valentin Sitdikov <valentin_sitdikov@mentor.com>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Andrei Dranitca <Andrei_Dranitca@mentor.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20170518050538.GL12920@tuxbook>
+ (sfid-20170518_070538_893255_D1A04092)
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "nicolas.dechesne@linaro.org" <nicolas.dechesne@linaro.org>, David Brown <david.brown@linaro.org>, Kalle Valo <kvalo@qca.qualcomm.com>, "k.eugene.e@gmail.com" <k.eugene.e@gmail.com>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, Andy Gross <andy.gross@linaro.org>, "wcn36xx@lists.infradead.org" <wcn36xx@lists.infradead.org>, "linux-soc@vger.kernel.org" <linux-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, 14 May 2017, Valentin Sitdikov wrote:
-
-> This patch adds documentation for the max7360 bindings.
-> The max7360 is multifunctional device containing gpio,
-> keypad, pwm and rotary encoder submodules.
+On Wed, 2017-05-17 at 22:05 -0700, Bjorn Andersson wrote:
 > 
-> Signed-off-by: Valentin Sitdikov <valentin_sitdikov@mentor.com>
-> Signed-off-by: Andrei Dranitca <Andrei_Dranitca@mentor.com>
-> ---
->  Documentation/devicetree/bindings/mfd/max7360.txt | 72 +++++++++++++++++++++++
->  max7360.txt                                       | 72 +++++++++++++++++++++++
+> It seems very important to a lot of people...
 
-I think you need to re-roll this patch.
+I get blinking, I guess, but I don't get toggling for every packet :)
+The throughput thing we did in iwlwifi seems like a so much better
+idea. Not that it really matters for this discussion though.
 
->  2 files changed, 144 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mfd/max7360.txt
->  create mode 100644 max7360.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/mfd/max7360.txt b/Documentation/devicetree/bindings/mfd/max7360.txt
-> new file mode 100644
-> index 0000000..fd83227
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mfd/max7360.txt
-> @@ -0,0 +1,72 @@
-> +* Maxim MAX7360 multi-function device
-> +
-> +The Maxim MAX7360 is a multifunction device which includes
-> +64 key switches, eight LED drivers/GPIOs, PWM intensity control,
-> +and rotary switch control.
-> +
-> +Required properties:
-> +- compatible: Should be the following: "maxim,max7360"
-> +- reg: Specifies the i2c slave address of the max7360 block. It can be 0x38, 0x3a, 0x3c or 0x3e IIUC.
-> +
-> +Optional properties:
-> +- interrupt-parent: Specifies the phandle of the interrupt controller to which
-> +  the interrupts from MAX7360 are routed to.
-> +- interrupt-names: list of "inti" and "intk"
-> +- interrupt-controller:  Identifies the device as an interrupt controller.
-> +- #interrupt-cells :  Number of cells to encode an interrupt source, shall be 1.
-> +
-> +Examples:
-> +
-> +Without subnodes:
-> +	max7360@38 {
-> +		compatible = "maxim,max7360";
-> +		reg = <0x38>;
-> +		interrupt-parent = <&gpio1>;
-> +		interrupts = <23 IRQ_TYPE_LEVEL_LOW>, <23 IRQ_TYPE_LEVEL_LOW>;
-> +		interrupt-names = "inti", "intk";
-> +		interrupt-controller;
-> +		#interrupt-cells = <0x1>;
-> +
-> +	};
-> +
-> +With subnodes:
-> +	max7360@38 {
-> +		compatible = "maxim,max7360";
-> +		reg = <0x38>;
-> +		interrupt-parent = <&gpio1>;
-> +		interrupts = <23 IRQ_TYPE_LEVEL_LOW>;
-> +		interrupt-names = "int-shared";
-> +		interrupt-controller;
-> +		#interrupt-cells = <0x1>;
-> +
-> +		gpio {
-> +			compatible = "maxim,max7360-gpio";
-> +			gpio-controller;
-> +			#gpio-cells = <0x2>;
-> +			interrupt-controller;
-> +			#interrupt-cells = <0x2>;
-> +			interrupts = <0>;
-> +		};
-> +
-> +		keypad {
-> +			compatible = "maxim,max7360-keypad";
-> +			maxim,debounce_reg = /bits/ 8 <0xef>;
-> +			maxim,ports_reg = /bits/ 8 <0xae>;
-> +			linux,keymap = < MATRIX_KEY(0, 0, KEY_F5)
-> +					 MATRIX_KEY(1, 0, KEY_F4) >;
-> +			keypad,num-rows = <2>;
-> +			keypad,num-columns = <1>;
-> +			interrupts = <1>;
-> +		};
-> +
-> +		pwm {
-> +			compatible = "maxim,max7360-pwm";
-> +			#pwm-cells = <0x2>;
-> +		};
-> +
-> +		rotary_encoder {
-> +			compatible = "maxim,max7360-rotary";
-> +			interrupts = <2>;
-> +		};
-> +
-> +	};
-> diff --git a/max7360.txt b/max7360.txt
-> new file mode 100644
-> index 0000000..359073a
-> --- /dev/null
-> +++ b/max7360.txt
-> @@ -0,0 +1,72 @@
-> +* Maxim MAX7360 multi-function device
-> +
-> +The Maxim MAX7360 is a multifunction device which includes
-> +64 key switches, eight LED drivers/GPIOs, PWM intensity control,
-> +and rotary switch control.
-> +
-> +Required properties:
-> +- compatible: Should be the following: "maxim,max7360"
-> +- reg: Specifies the i2c slave address of the max7360 block. It can be 0x38, 0x3a, 0x3c or 0x3e IIUC.
-> +
-> +Optional properties:
-> +- interrupt-parent: Specifies the phandle of the interrupt controller to which
-> +  the interrupts from MAX7360 are routed to.
-> +- interrupt-names: might be "int-shared" or list of "inti" and "intk"
-> +- interrupt-controller:  Identifies the device as an interrupt controller.
-> +- #interrupt-cells :  Number of cells to encode an interrupt source, shall be 1.
-> +
-> +Examples:
-> +
-> +Without subnodes:
-> +	max7360@38 {
-> +		compatible = "maxim,max7360";
-> +		reg = <0x38>;
-> +		interrupt-parent = <&gpio1>;
-> +		interrupts = <23 IRQ_TYPE_LEVEL_LOW>;
-> +		interrupt-names = "int-shared";
-> +		interrupt-controller;
-> +		#interrupt-cells = <0x1>;
-> +
-> +	};
-> +
-> +With subnodes:
-> +	max7360@38 {
-> +		compatible = "maxim,max7360";
-> +		reg = <0x38>;
-> +		interrupt-parent = <&gpio1>;
-> +		interrupts = <23 IRQ_TYPE_LEVEL_LOW>;
-> +		interrupt-names = "int-shared";
-> +		interrupt-controller;
-> +		#interrupt-cells = <0x1>;
-> +
-> +		max7360_gpio: max7360_gpio@0 {
-> +			compatible = "maxim,max7360-gpio";
-> +			gpio-controller;
-> +			#gpio-cells = <0x2>;
-> +			interrupt-controller;
-> +			#interrupt-cells = <0x2>;
-> +			interrupts = <0>;
-> +		};
-> +
-> +		max7360_keypad {
-> +			compatible = "maxim,max7360-keypad";
-> +			maxim,debounce_reg = /bits/ 8 <0xef>;
-> +			maxim,ports_reg = /bits/ 8 <0xae>;
-> +			linux,keymap = < MATRIX_KEY(0, 0, KEY_F5)
-> +					 MATRIX_KEY(1, 0, KEY_F4) >;
-> +			keypad,num-rows = <2>;
-> +			keypad,num-columns = <1>;
-> +			interrupts = <1>;
-> +		};
-> +
-> +		max7360_pwm: max7360_pwm {
-> +			compatible = "maxim,max7360-pwm";
-> +			#pwm-cells = <0x2>;
-> +		};
-> +
-> +		max7360_rotary_encoder {
-> +			compatible = "maxim,max7360-rotary";
-> +			interrupts = <2>;
-> +		};
-> +
-> +	};
+> But if ieee80211_free_txskb() is the counterpart of
+> ieee80211_tx_status() then we should be able to push the
+> ieee80211_led_tx() call down into ieee80211_report_used_skb() and
+> handle both cases.
 
--- 
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Yeah, I guess that works.
+
+> The ieee80211_free_txskb() seems to be used in various cases where we
+> discard skbs, but perhaps this is not an issue in reality.
+
+Those should be code paths that are really rare, when we fail
+allocations in some places, etc. So it shouldn't really lead to any
+problems.
+
+> Looking around it seems that we either have a call to free_txskb() or
+> one of the tx_status(); 
+
+Yes, you're right - we always need one of those for each SKB that
+passed through mac80211, everything else is already a bug.
+
+> where the _noskb() would need some special
+> handling. Are there others or would it be reasonable to add a call in
+> this one "special" case?
+
+Now that I think more about it, the _noskb() doesn't actually make
+sense - it's for a separate status report, pretty much only for rate
+control feedback, but the SKB should be freed separately with
+free_txskb().
+
+johannes
