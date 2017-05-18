@@ -1,49 +1,114 @@
-From: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
-Subject: Re: [PATCH] of_mdio: Fix broken PHY IRQ in case of probe deferral
-Date: Thu, 18 May 2017 11:21:45 -0400 (EDT)
-Message-ID: <20170518.112145.1364316716714361952.davem@davemloft.net>
-References: <1495112345-24795-1-git-send-email-geert+renesas@glider.be>
+From: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
+Subject: Re: [PATCH 1/4] usb: host: ohci-platform: Add basic runtime PM
+ support
+Date: Thu, 18 May 2017 11:25:07 -0400 (EDT)
+Message-ID: <Pine.LNX.4.44L0.1705181114280.1619-100000@iolanthe.rowland.org>
+References: <20170517225922.17723-2-tony@atomide.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1495112345-24795-1-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org
-Cc: andrew-g2DYL2Zd6BY@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170517225922.17723-2-tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>, Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Date: Thu, 18 May 2017 14:59:05 +0200
+On Wed, 17 May 2017, Tony Lindgren wrote:
 
-> If an Ethernet PHY is initialized before the interrupt controller it is
-> connected to, a message like the following is printed:
-> 
->     irq: no irq domain found for /interrupt-controller@e61c0000 !
-> 
-> However, the actual error is ignored, leading to a non-functional (-1)
-> PHY interrupt later:
-> 
->     Micrel KSZ8041RNLI ee700000.ethernet-ffffffff:01: attached PHY driver [Micrel KSZ8041RNLI] (mii_bus:phy_addr=ee700000.ethernet-ffffffff:01, irq=-1)
-> 
-> Depending on whether the PHY driver will fall back to polling, Ethernet
-> may or may not work.
-> 
-> To fix this:
->   1. Switch of_mdiobus_register_phy() from irq_of_parse_and_map() to
->      of_irq_get().
->      Unlike the former, the latter returns -EPROBE_DEFER if the
->      interrupt controller is not yet available, so this condition can be
->      detected.
->      Other errors are handled the same as before, i.e. use the passed
->      mdio->irq[addr] as interrupt.
->   2. Propagate and handle errors from of_mdiobus_register_phy() and
->      of_mdiobus_register_device().
-> 
-> Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+> This is needed in preparation of adding support for omap3 and
+> later OHCI. The runtime PM will only do something on platforms
+> that implement it.
 
-Florian or someone similarly knowledgable, please review.
+This patch isn't correct.  See below.
+
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Cc: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+> Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Cc: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+> Cc: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+> Signed-off-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+> ---
+>  drivers/usb/host/ohci-platform.c | 11 +++++++++++
+>  1 file changed, 11 insertions(+)
+> 
+> diff --git a/drivers/usb/host/ohci-platform.c b/drivers/usb/host/ohci-platform.c
+> --- a/drivers/usb/host/ohci-platform.c
+> +++ b/drivers/usb/host/ohci-platform.c
+> @@ -24,6 +24,7 @@
+>  #include <linux/err.h>
+>  #include <linux/phy/phy.h>
+>  #include <linux/platform_device.h>
+> +#include <linux/pm_runtime.h>
+>  #include <linux/reset.h>
+>  #include <linux/usb/ohci_pdriver.h>
+>  #include <linux/usb.h>
+> @@ -51,6 +52,10 @@ static int ohci_platform_power_on(struct platform_device *dev)
+>  	struct ohci_platform_priv *priv = hcd_to_ohci_priv(hcd);
+>  	int clk, ret, phy_num;
+>  
+> +	ret = pm_runtime_get_sync(&dev->dev);
+> +	if (ret < 0)
+> +		return ret;
+> +
+>  	for (clk = 0; clk < OHCI_MAX_CLKS && priv->clks[clk]; clk++) {
+>  		ret = clk_prepare_enable(priv->clks[clk]);
+>  		if (ret)
+> @@ -96,6 +101,8 @@ static void ohci_platform_power_off(struct platform_device *dev)
+>  	for (clk = OHCI_MAX_CLKS - 1; clk >= 0; clk--)
+>  		if (priv->clks[clk])
+>  			clk_disable_unprepare(priv->clks[clk]);
+> +
+> +	pm_runtime_put_sync(&dev->dev);
+>  }
+
+ohci_platform_power_on() is invoked (by default) by the runtime-resume
+callback routine ohci_platform_resume(), through the pdata->power_on
+method pointer.  Likewise, ohci_platform_power_off() is invoked by the
+runtime-suspend callback routine.
+
+This means you shouldn't do pm_runtime_get/put calls from within these 
+routines.
+
+Is there any particular reason you wanted to add these calls?  In
+general, USB host controllers are expected to go into runtime suspend
+whenever there aren't any children keeping them awake.  Hence they
+usually don't need to worry about initiating their own suspends and
+resumes.
+
+>  static struct hc_driver __read_mostly ohci_platform_hc_driver;
+> @@ -242,6 +249,7 @@ static int ohci_platform_probe(struct platform_device *dev)
+>  	}
+>  #endif
+>  
+> +	pm_runtime_enable(&dev->dev);
+
+There should be a pm_runtime_set_active() just before this.
+
+>  	if (pdata->power_on) {
+>  		err = pdata->power_on(dev);
+>  		if (err < 0)
+> @@ -271,6 +279,7 @@ static int ohci_platform_probe(struct platform_device *dev)
+>  	if (pdata->power_off)
+>  		pdata->power_off(dev);
+>  err_reset:
+> +	pm_runtime_disable(&dev->dev);
+>  	while (--rst >= 0)
+>  		reset_control_assert(priv->resets[rst]);
+>  err_put_clks:
+> @@ -305,6 +314,8 @@ static int ohci_platform_remove(struct platform_device *dev)
+>  
+>  	usb_put_hcd(hcd);
+>  
+> +	pm_runtime_disable(&dev->dev);
+> +
+>  	if (pdata == &ohci_platform_defaults)
+>  		dev->dev.platform_data = NULL;
+
+These changes make sense.
+
+Alan Stern
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
