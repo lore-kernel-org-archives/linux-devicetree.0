@@ -1,114 +1,130 @@
-From: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
-Subject: Re: [PATCH 1/4] usb: host: ohci-platform: Add basic runtime PM
- support
-Date: Thu, 18 May 2017 11:25:07 -0400 (EDT)
-Message-ID: <Pine.LNX.4.44L0.1705181114280.1619-100000@iolanthe.rowland.org>
-References: <20170517225922.17723-2-tony@atomide.com>
+From: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
+Subject: [PATCH 4/4] ASoC: cs35l35: Add multi-device
+	synchronisation
+Date: Thu, 18 May 2017 16:32:39 +0100
+Message-ID: <1495121559-1063-4-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+References: <1495121559-1063-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170517225922.17723-2-tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>, Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <1495121559-1063-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: broonie@kernel.org, brian.austin@cirrus.com
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, patches@opensource.wolfsonmicro.com, lgirdwood@gmail.com, Paul.Handrigan@cirrus.com, robh+dt@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 17 May 2017, Tony Lindgren wrote:
+This patch adds multi-device synchronisation capabilities to the
+CS35L35 amp.
 
-> This is needed in preparation of adding support for omap3 and
-> later OHCI. The runtime PM will only do something on platforms
-> that implement it.
+In stereo mode you can select to have the devices communicate
+certain features to each other. Add options to allow the amps to
+synchronise the audio group delay, the brown out protection and the
+over temperature warning.
 
-This patch isn't correct.  See below.
+Signed-off-by: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
+---
+ sound/soc/codecs/cs35l35.c | 48 +++++++++++++++++++++++++++++++++++++++++++---
+ sound/soc/codecs/cs35l35.h |  9 +++++++++
+ 2 files changed, 54 insertions(+), 3 deletions(-)
 
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Cc: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-> Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-> Cc: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-> Signed-off-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-> ---
->  drivers/usb/host/ohci-platform.c | 11 +++++++++++
->  1 file changed, 11 insertions(+)
-> 
-> diff --git a/drivers/usb/host/ohci-platform.c b/drivers/usb/host/ohci-platform.c
-> --- a/drivers/usb/host/ohci-platform.c
-> +++ b/drivers/usb/host/ohci-platform.c
-> @@ -24,6 +24,7 @@
->  #include <linux/err.h>
->  #include <linux/phy/phy.h>
->  #include <linux/platform_device.h>
-> +#include <linux/pm_runtime.h>
->  #include <linux/reset.h>
->  #include <linux/usb/ohci_pdriver.h>
->  #include <linux/usb.h>
-> @@ -51,6 +52,10 @@ static int ohci_platform_power_on(struct platform_device *dev)
->  	struct ohci_platform_priv *priv = hcd_to_ohci_priv(hcd);
->  	int clk, ret, phy_num;
->  
-> +	ret = pm_runtime_get_sync(&dev->dev);
-> +	if (ret < 0)
-> +		return ret;
-> +
->  	for (clk = 0; clk < OHCI_MAX_CLKS && priv->clks[clk]; clk++) {
->  		ret = clk_prepare_enable(priv->clks[clk]);
->  		if (ret)
-> @@ -96,6 +101,8 @@ static void ohci_platform_power_off(struct platform_device *dev)
->  	for (clk = OHCI_MAX_CLKS - 1; clk >= 0; clk--)
->  		if (priv->clks[clk])
->  			clk_disable_unprepare(priv->clks[clk]);
-> +
-> +	pm_runtime_put_sync(&dev->dev);
->  }
-
-ohci_platform_power_on() is invoked (by default) by the runtime-resume
-callback routine ohci_platform_resume(), through the pdata->power_on
-method pointer.  Likewise, ohci_platform_power_off() is invoked by the
-runtime-suspend callback routine.
-
-This means you shouldn't do pm_runtime_get/put calls from within these 
-routines.
-
-Is there any particular reason you wanted to add these calls?  In
-general, USB host controllers are expected to go into runtime suspend
-whenever there aren't any children keeping them awake.  Hence they
-usually don't need to worry about initiating their own suspends and
-resumes.
-
->  static struct hc_driver __read_mostly ohci_platform_hc_driver;
-> @@ -242,6 +249,7 @@ static int ohci_platform_probe(struct platform_device *dev)
->  	}
->  #endif
->  
-> +	pm_runtime_enable(&dev->dev);
-
-There should be a pm_runtime_set_active() just before this.
-
->  	if (pdata->power_on) {
->  		err = pdata->power_on(dev);
->  		if (err < 0)
-> @@ -271,6 +279,7 @@ static int ohci_platform_probe(struct platform_device *dev)
->  	if (pdata->power_off)
->  		pdata->power_off(dev);
->  err_reset:
-> +	pm_runtime_disable(&dev->dev);
->  	while (--rst >= 0)
->  		reset_control_assert(priv->resets[rst]);
->  err_put_clks:
-> @@ -305,6 +314,8 @@ static int ohci_platform_remove(struct platform_device *dev)
->  
->  	usb_put_hcd(hcd);
->  
-> +	pm_runtime_disable(&dev->dev);
-> +
->  	if (pdata == &ohci_platform_defaults)
->  		dev->dev.platform_data = NULL;
-
-These changes make sense.
-
-Alan Stern
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/sound/soc/codecs/cs35l35.c b/sound/soc/codecs/cs35l35.c
+index 375be49..a587269 100644
+--- a/sound/soc/codecs/cs35l35.c
++++ b/sound/soc/codecs/cs35l35.c
+@@ -310,11 +310,49 @@ static const struct snd_kcontrol_new cs35l35_aud_controls[] = {
+ 			amp_gain_tlv),
+ };
+ 
+-static const struct snd_kcontrol_new cs35l35_adv_controls[] = {
++static int cs35l35_put_sync(struct snd_kcontrol *kcontrol,
++			    struct snd_ctl_elem_value *ucontrol)
++{
++	struct snd_soc_codec *codec = snd_soc_kcontrol_codec(kcontrol);
++	struct snd_soc_dapm_context *dapm = snd_soc_codec_get_dapm(codec);
++	struct cs35l35_private *cs35l35 = snd_soc_codec_get_drvdata(codec);
++	unsigned int val;
++	int ret;
++
++	snd_soc_dapm_mutex_lock(dapm);
++
++	ret = regmap_read(cs35l35->regmap, CS35L35_PWRCTL1, &val);
++	if (ret) {
++		dev_err(cs35l35->dev, "Failed to check power state: %d\n", ret);
++		goto err;
++	}
++
++	if (!(val & CS35L35_PDN_ALL)) {
++		dev_err(cs35l35->dev, "Can't change sync when active\n");
++		ret = -EBUSY;
++		goto err;
++	}
++
++	ret = snd_soc_put_volsw(kcontrol, ucontrol);
++
++err:
++	snd_soc_dapm_mutex_unlock(dapm);
++
++	return ret;
++}
++
++static const struct snd_kcontrol_new cs35l35_stereo_controls[] = {
+ 	SOC_SINGLE_SX_TLV("Digital Advisory Volume", CS35L35_ADV_DIG_VOL,
+ 		      0, 0x34, 0xE4, dig_vol_tlv),
+ 	SOC_SINGLE_TLV("Analog Advisory Volume", CS35L35_AMP_GAIN_ADV_CTL, 0, 19, 0,
+ 			amp_gain_tlv),
++
++	SOC_SINGLE_EXT("SYNC Audio", CS35L35_MULT_DEV_SYNCH2, 1, 1, 0,
++		       snd_soc_get_volsw, cs35l35_put_sync),
++	SOC_SINGLE_EXT("SYNC VPBR", CS35L35_MULT_DEV_SYNCH2, 2, 1, 0,
++		       snd_soc_get_volsw, cs35l35_put_sync),
++	SOC_SINGLE_EXT("SYNC OTW", CS35L35_MULT_DEV_SYNCH2, 3, 1, 0,
++		       snd_soc_get_volsw, cs35l35_put_sync),
+ };
+ 
+ static const struct snd_soc_dapm_widget cs35l35_dapm_widgets[] = {
+@@ -872,8 +910,12 @@ static int cs35l35_codec_probe(struct snd_soc_codec *codec)
+ 			regmap_update_bits(cs35l35->regmap, CS35L35_CLASS_H_CTL,
+ 					CS35L35_CH_STEREO_MASK,
+ 					1 << CS35L35_CH_STEREO_SHIFT);
+-		ret = snd_soc_add_codec_controls(codec, cs35l35_adv_controls,
+-					ARRAY_SIZE(cs35l35_adv_controls));
++
++		regmap_update_bits(cs35l35->regmap, CS35L35_MULT_DEV_SYNCH2,
++				   CS35L35_SYNC_EN_MASK, 1);
++
++		ret = snd_soc_add_codec_controls(codec, cs35l35_stereo_controls,
++					ARRAY_SIZE(cs35l35_stereo_controls));
+ 		if (ret)
+ 			return ret;
+ 	}
+diff --git a/sound/soc/codecs/cs35l35.h b/sound/soc/codecs/cs35l35.h
+index 621bfef..7cec198 100644
+--- a/sound/soc/codecs/cs35l35.h
++++ b/sound/soc/codecs/cs35l35.h
+@@ -273,6 +273,15 @@
+ #define CS35L35_VMON_OVFL		0x08
+ #define CS35L35_IMON_OVFL		0x04
+ 
++/* Mulit-Device Sync */
++#define CS35L35_SYNC_EN_MASK		0x01
++#define CS35L35_SYNC_MS_MASK		0x20
++#define CS35L35_SYNC_MS_SHIFT		5
++#define CS35L35_SYNC_MS_CTRL_MASK	0x10
++#define CS35L35_SYNC_MS_CTRL_SHIFT	4
++#define CS35L35_SYNC_CLK_SEL_MASK	0x02
++#define CS35L35_SYNC_CLK_SEL_SHIFT	1
++
+ #define CS35L35_FORMATS (SNDRV_PCM_FMTBIT_U8 | SNDRV_PCM_FMTBIT_S16_LE | \
+ 			SNDRV_PCM_FMTBIT_S24_LE | SNDRV_PCM_FMTBIT_S32_LE)
+ 
+-- 
+2.1.4
