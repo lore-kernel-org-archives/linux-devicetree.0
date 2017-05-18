@@ -1,124 +1,50 @@
-From: Song Xiaowei <songxiaowei@hisilicon.com>
-Subject: [Patch v3 1/3] arm64: dts: hi3660: add pcie node
-Date: Thu, 18 May 2017 15:49:46 +0800
-Message-ID: <20170518074946.21362-1-songxiaowei@hisilicon.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v6 1/9] irqchip/sunxi-nmi: add A64 R_INTC to
+ the binding doc
+Date: Thu, 18 May 2017 09:52:09 +0200
+Message-ID: <20170518075209.pershxhml7m5u5xr@flea.home>
+References: <20170518071653.36561-1-icenowy@aosc.io>
+ <20170518071653.36561-2-icenowy@aosc.io>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: wangzhou1@hisilicon.com, gabriele.paoloni@huawei.com, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, xuwei5@hisilicon.com, catalin.marinas@arm.com, will.deacon@arm.com
-Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, puck.chen@hisilicon.com, songxiaowei@hisilicon.com, guodong.xu@linaro.org, wangbinghui@hisilicon.com, suzhuangluan@hisilicon.com
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="27jjh4mi23l4kbcd"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBT5F6XEAKGQEP4EA5KA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20170518071653.36561-2-icenowy-h8G6r0blFSE@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add PCIe node for hi3660, and add binding documentation.
 
-Cc: Guodong Xu <guodong.xu@linaro.org>
-Signed-off-by: Song Xiaowei <songxiaowei@hisilicon.com>
----
- .../devicetree/bindings/pci/hisilicon-pcie.txt     | 52 ++++++++++++++++++++++
- arch/arm64/boot/dts/hisilicon/hi3660.dtsi          | 31 +++++++++++++
- 2 files changed, 83 insertions(+)
+--27jjh4mi23l4kbcd
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
 
-diff --git a/Documentation/devicetree/bindings/pci/hisilicon-pcie.txt b/Documentation/devicetree/bindings/pci/hisilicon-pcie.txt
-index a339dbb15493..71491178c86c 100644
---- a/Documentation/devicetree/bindings/pci/hisilicon-pcie.txt
-+++ b/Documentation/devicetree/bindings/pci/hisilicon-pcie.txt
-@@ -85,3 +85,55 @@ Example:
- 				 0x0 0 0 4 &mbigen_pcie0 650 4>;
- 		status = "ok";
- 	};
-+
-+
-+
-+HiSilicon Kirin SoC PCIe host DT description
-+
-+Kirin PCIe host controller is also based on Designware PCI core.
-+It shares common functions with PCIe Designware core driver and inherits
-+common properties defined in
-+Documentation/devicetree/bindings/pci/designware-pci.txt.
-+
-+Additional properties are described here:
-+
-+Required properties
-+- compatible: Should contain "hisilicon,kirin-pcie".
-+- reg: Should contain rc_dbi, apb, phy, config registers location and length.
-+- reg-names: Must include the following entries:
-+  "dbi": controller configuration registers;
-+  "apb": apb Ctrl register;
-+  "phy": apb PHY register;
-+  "config": PCIe configuration space registers.
-+- reset-gpio: perst assert/deassert gpio
-+
-+Optional properties:
-+- status: Either "ok" or "disabled".
-+
-+Kirin960 Example:
-+        kirin_pcie@f4000000 {
-+                        compatible = "hisilicon,kirin-pcie";
-+                        reg =  <0x0 0xf4000000 0x0 0x1000>, <0x0 0xff3fe000 0x0 0x1000>,
-+                                 <0x0 0xf3f20000 0x0 0x40000>, <0x0 0xF5000000 0 0x2000>;
-+                        reg-names = "dbi","apb","phy", "config";
-+                        bus-range = <0x0  0x1>;
-+                        #address-cells = <3>;
-+                        #size-cells = <2>;
-+                        device_type = "pci";
-+                        ranges = <0x02000000 0x0 0x00000000 0x0 0xf6000000 0x0 0x2000000>;
-+                        num-lanes = <1>;
-+                        #interrupt-cells = <1>;
-+                        interrupt-map-mask = <0xf800 0 0 7>;
-+			interrupt-map = <0x0 0 0 2 &gic 0 0 0  283 4>,
-+                                        <0x0 0 0 3 &gic 0 0 0  284 4>,
-+                                        <0x0 0 0 4 &gic 0 0 0  285 4>;
-+                        clocks = <&crg_ctrl HI3660_PCIEPHY_REF>,
-+                                <&crg_ctrl HI3660_CLK_GATE_PCIEAUX>,
-+                                <&crg_ctrl HI3660_PCLK_GATE_PCIE_PHY>,
-+                                <&crg_ctrl HI3660_PCLK_GATE_PCIE_SYS>,
-+                                <&crg_ctrl HI3660_ACLK_GATE_PCIE>;
-+                        clock-names = "pcie_phy_ref", "pcie_aux",
-+                                "pcie_apb_phy", "pcie_apb_sys", "pcie_aclk";
-+                        reset-gpio = <&gpio11 1 0 >;
-+                        status = "ok";
-+        };
-diff --git a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
-index 3983086bd67b..2406a54947df 100644
---- a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
-+++ b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
-@@ -156,5 +156,36 @@
- 			clock-names = "uartclk", "apb_pclk";
- 			status = "disabled";
- 		};
-+
-+		kirin_pcie@f4000000 {
-+			compatible = "hisilicon,kirin-pcie";
-+			reg =  <0x0 0xf4000000 0x0 0x1000>,
-+				<0x0 0xff3fe000 0x0 0x1000>,
-+				<0x0 0xf3f20000 0x0 0x40000>,
-+				<0x0 0xF5000000 0x0 0x2000>;
-+			reg-names = "dbi", "apb", "phy", "config";
-+			bus-range = <0x0  0x1>;
-+			#address-cells = <3>;
-+			#size-cells = <2>;
-+			device_type = "pci";
-+			ranges = <0x02000000 0x0 0x00000000 0x0
-+				0xf6000000 0x0 0x2000000>;
-+			num-lanes = <1>;
-+			#interrupt-cells = <1>;
-+			interrupt-map-mask = <0xf800 0 0 7>;
-+			interrupt-map = <0x0 0 0 1 &gic 0 0 0 282 4>,
-+				<0x0 0 0 2 &gic 0 0 0  283 4>,
-+				<0x0 0 0 3 &gic 0 0 0  284 4>,
-+				<0x0 0 0 4 &gic 0 0 0  285 4>;
-+			clocks = <&crg_ctrl HI3660_PCIEPHY_REF>,
-+				<&crg_ctrl HI3660_CLK_GATE_PCIEAUX>,
-+				<&crg_ctrl HI3660_PCLK_GATE_PCIE_PHY>,
-+				<&crg_ctrl HI3660_PCLK_GATE_PCIE_SYS>,
-+				<&crg_ctrl HI3660_ACLK_GATE_PCIE>;
-+			clock-names = "pcie_phy_ref", "pcie_aux",
-+				"pcie_apb_phy", "pcie_apb_sys", "pcie_aclk";
-+			reset-gpio = <&gpio11 1 0 >;
-+			status = "ok";
-+		};
- 	};
- };
+On Thu, May 18, 2017 at 03:16:45PM +0800, Icenowy Zheng wrote:
+> The A31 NMI driver seems to be using wrong base address.
+> 
+> As we're going to convert to use a correct NMI base address (and
+> correctly name it to R_INTC as the datasheet suggests), add a new
+> compatible string for the "correct" R_INTC, which we will use for A64
+> SoC.
+> 
+> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+
+Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+
+Maxime
+
 -- 
-2.11.GIT
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--27jjh4mi23l4kbcd--
