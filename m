@@ -1,101 +1,84 @@
-From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH v3 2/3] watchdog: dw_wdt: get reset lines from dt
-Date: Thu, 18 May 2017 11:02:32 +0200
-Message-ID: <1495098152.2296.18.camel@pengutronix.de>
-References: <cover.9d687e41ad8d91c267143a43d703f656f7d5689c.1495096910.git-series.s.trumtrar@pengutronix.de>
-         <8b116c77d30013b067676fb2f61744840ef51c32.1495096910.git-series.s.trumtrar@pengutronix.de>
+From: Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH 1/3] iommu: of: Fix check for returning EPROBE_DEFER
+Date: Thu, 18 May 2017 14:33:57 +0530
+Message-ID: <1c306cf1-f7fb-87b1-1fef-3b08aea04560@codeaurora.org>
+References: <1495020609-13397-1-git-send-email-sricharan@codeaurora.org>
+	<20170517170430.GD31462@bhelgaas-glaptop.roam.corp.google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <8b116c77d30013b067676fb2f61744840ef51c32.1495096910.git-series.s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <20170517170430.GD31462-1RhO1Y9PlrlHTL0Zs8A6p5iNqAH0jzoTYJqu5kTmcBRl57MIdRCFDg@public.gmane.org>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-arch-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tn-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org, magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, j.neuschaefer-hi6Y0CQ0nG0@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2017-05-18 at 10:42 +0200, Steffen Trumtrar wrote:
-> The dw_wdt has an external reset line, that can keep the device in reset
-> and therefore rendering it useless and also is the only way of stopping
-> the watchdog once it was started.
+Hi Bjorn,
+
+On 5/17/2017 10:34 PM, Bjorn Helgaas wrote:
+> On Wed, May 17, 2017 at 05:00:07PM +0530, Sricharan R wrote:
+>> Now with iommu probe deferral, we return -EPROBE_DEFER
+>> for master's that are connected to an iommu which is not
 > 
-> Get the reset lines for this core from the devicetree. As these lines are
-> optional, use devm_reset_control_get_optional_shared. If the reset line
-> is not specified in the devicetree, the reset framework will just skip
-> deasserting and continue.
-> This way all users of the driver will continue to function without
-> any harm, even if the reset line is not specified in the devicetree.
+> s/master's/masters/
 > 
-> Signed-off-by: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> Cc: Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>
-> Cc: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-> Cc: linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> ---
->  drivers/watchdog/dw_wdt.c |  9 +++++++++
->  1 file changed, 9 insertions(+)
+> s/iommu/IOMMU/ in your English text (changelogs and comments).  That seems
+> to be the convention, based on "git log drivers/iommu/of_iommu.c"
 > 
-> diff --git a/drivers/watchdog/dw_wdt.c b/drivers/watchdog/dw_wdt.c
-> index 914da3a4d334..61cbae3a9331 100644
-> --- a/drivers/watchdog/dw_wdt.c
-> +++ b/drivers/watchdog/dw_wdt.c
-> @@ -29,6 +29,7 @@
->  #include <linux/of.h>
->  #include <linux/pm.h>
->  #include <linux/platform_device.h>
-> +#include <linux/reset.h>
->  #include <linux/watchdog.h>
->  
->  #define WDOG_CONTROL_REG_OFFSET		    0x00
-> @@ -54,6 +55,7 @@ struct dw_wdt {
->  	struct clk		*clk;
->  	unsigned long		rate;
->  	struct watchdog_device	wdd;
-> +	struct reset_control	*rst;
->  };
->  
->  #define to_dw_wdt(wdd)	container_of(wdd, struct dw_wdt, wdd)
-> @@ -234,6 +236,12 @@ static int dw_wdt_drv_probe(struct platform_device *pdev)
->  		goto out_disable_clk;
 
-Sorry, I didn't notice this before.
+ok, will correct those.
 
->  	}
->  
-> +	dw_wdt->rst = devm_reset_control_get_optional_shared(&pdev->dev, NULL);
-> +	if (IS_ERR(dw_wdt->rst))
-> +		return PTR_ERR(dw_wdt->rst);
+Regards,
+ Sricharan
 
-This should either goto out_disable_clk, or the reset_control could be
-acquired a bit earlier before enabling the clock.
 
-> +
-> +	reset_control_deassert(dw_wdt->rst);
-> +
->  	wdd = &dw_wdt->wdd;
->  	wdd->info = &dw_wdt_ident;
->  	wdd->ops = &dw_wdt_ops;
-> @@ -278,6 +286,7 @@ static int dw_wdt_drv_remove(struct platform_device *pdev)
->  {
->  	struct dw_wdt *dw_wdt = platform_get_drvdata(pdev);
->  
-> +	reset_control_assert(dw_wdt->rst);
+>> probed yet, but going to get probed, so that we can attach
+>> the correct dma_ops. So while trying to defer the probe of
+>> the master, check if the of_iommu node that it is connected
+>> to is marked in DT as 'status=disabled', then the iommu is never
+>> is going to get probed. So simply return NULL and let the master
+>> work without an iommu.
+>>
+>> Fixes: 7b07cbefb68d ("iommu: of: Handle IOMMU lookup failure with deferred probing or error")
+>> Signed-off-by: Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+>> Reported-by: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+>> Tested-by: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+>> Tested-by: Magnus Damn <magnus.damn-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> Acked-by: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+>> ---
+>>  drivers/iommu/of_iommu.c | 1 +
+>>  1 file changed, 1 insertion(+)
+>>
+>> diff --git a/drivers/iommu/of_iommu.c b/drivers/iommu/of_iommu.c
+>> index 9f44ee8..e6e9bec 100644
+>> --- a/drivers/iommu/of_iommu.c
+>> +++ b/drivers/iommu/of_iommu.c
+>> @@ -118,6 +118,7 @@ static bool of_iommu_driver_present(struct device_node *np)
+>>  
+>>  	ops = iommu_ops_from_fwnode(fwnode);
+>>  	if ((ops && !ops->of_xlate) ||
+>> +	    !of_device_is_available(iommu_spec->np) ||
+>>  	    (!ops && !of_iommu_driver_present(iommu_spec->np)))
+>>  		return NULL;
+>>  
+>> -- 
+>> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+>>
+>>
+>> _______________________________________________
+>> linux-arm-kernel mailing list
+>> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+>> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 
-And I'd move this ...
-
->  	watchdog_unregister_device(&dw_wdt->wdd);
-
-... here for symmetry.
-
->  	clk_disable_unprepare(dw_wdt->clk);
->  
-
-Otherwise,
-Reviewed-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-
-regards
-Philipp
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+"QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
