@@ -1,27 +1,56 @@
-From: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
-Subject: Re: [PATCH v5] net: ethernet: faraday: To support device tree
- usage.
-Date: Thu, 18 May 2017 10:11:17 -0400 (EDT)
-Message-ID: <20170518.101117.42226951097395899.davem@davemloft.net>
-References: <20170517072810.GA4324@app09>
+From: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Subject: Re: [PATCH v5 16/17] tty: serdev-ttyport: return actual baudrate
+ from ttyport_set_baudrate
+Date: Thu, 18 May 2017 16:19:04 +0200
+Message-ID: <20170518141904.GA29741@kroah.com>
+References: <1494406408-31760-1-git-send-email-stefan.wahren@i2se.com>
+ <1494406408-31760-17-git-send-email-stefan.wahren@i2se.com>
+ <d5533816-5d87-3772-19c0-5e57e519a3f1@i2se.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170517072810.GA4324@app09>
+Content-Disposition: inline
+In-Reply-To: <d5533816-5d87-3772-19c0-5e57e519a3f1-eS4NqCHxEME@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: green.hu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, jiri-rHqAuBHg3fBzbRFIqnYvSA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
+To: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jiri Slaby <jslaby-IBi9RG/b67k@public.gmane.org>, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lino Sanfilippo <LinoSanfilippo-Mmb7MZpHnFY@public.gmane.org>, Jakub Kicinski <kubakici-5tc4TXWwyLM@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Greentime Hu <green.hu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Date: Wed, 17 May 2017 15:28:19 +0800
-
-> To support device tree usage for ftmac100.
+On Wed, May 17, 2017 at 01:58:05PM +0200, Stefan Wahren wrote:
+> Hi Greg,
 > 
-> Signed-off-by: Greentime Hu <green.hu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Am 10.05.2017 um 10:53 schrieb Stefan Wahren:
+> > Instead of returning the requested baudrate, we better return the
+> > actual one because it isn't always the same.
+> >
+> > Signed-off-by: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+> > Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> > ---
+> >  drivers/tty/serdev/serdev-ttyport.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/tty/serdev/serdev-ttyport.c b/drivers/tty/serdev/serdev-ttyport.c
+> > index 487c88f..2cfdf34 100644
+> > --- a/drivers/tty/serdev/serdev-ttyport.c
+> > +++ b/drivers/tty/serdev/serdev-ttyport.c
+> > @@ -151,7 +151,7 @@ static unsigned int ttyport_set_baudrate(struct serdev_controller *ctrl, unsigne
+> >  
+> >  	/* tty_set_termios() return not checked as it is always 0 */
+> >  	tty_set_termios(tty, &ktermios);
+> > -	return speed;
+> > +	return ktermios.c_ospeed;
+> >  }
+> >  
+> >  static void ttyport_set_flow_control(struct serdev_controller *ctrl, bool enable)
+> 
+> there is no dependency to this series. I would be happy if this could be
+> applied, so i don't have to carry it for the next version.
 
-Applied, thanks.
+Ok, I'll take it now.
+
+thanks,
+
+greg k-h
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
