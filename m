@@ -1,96 +1,62 @@
-From: Liviu Dudau <liviu.dudau-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH] arm64: dts: juno: Enable some SMMUs
-Date: Thu, 18 May 2017 14:21:12 +0100
-Message-ID: <20170518132111.GA7759@e110455-lin.cambridge.arm.com>
-References: <eeb81dbbd7ddfbbccb961c0f20c5cb90f120e89f.1495110010.git.robin.murphy@arm.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v1 1/3] of: base: Provide of_graph_get_port_parent()
+Date: Thu, 18 May 2017 16:18:39 +0300
+Message-ID: <2172554.nJqIiczhoI@avalon>
+References: <cover.6800d0e1b9b578b82f68dec1b99b3a601d6e54ca.1495032810.git-series.kieran.bingham+renesas@ideasonboard.com> <CAL_JsqLvXH3kKV-DxWuNrAYGh8=L8Mdg5zcm2RsHZTpmi_8g-g@mail.gmail.com> <61138419-5781-bbec-7ac5-44524ad501ce@ideasonboard.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <eeb81dbbd7ddfbbccb961c0f20c5cb90f120e89f.1495110010.git.robin.murphy-5wv7dgnIgG8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
-Cc: lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <61138419-5781-bbec-7ac5-44524ad501ce@ideasonboard.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: kieran.bingham@ideasonboard.com
+Cc: Rob Herring <robh+dt@kernel.org>, Kieran Bingham <kbingham@kernel.org>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, "open list:MEDIA DRIVERS FOR RENESAS - FCP" <linux-renesas-soc@vger.kernel.org>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, Sakari Ailus <sakari.ailus@iki.fi>, Niklas =?ISO-8859-1?Q?S=F6derlund?= <niklas.soderlund@ragnatech.se>, Frank Rowand <frowand.list@gmail.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 18, 2017 at 01:23:36PM +0100, Robin Murphy wrote:
-> The IOMMU-backed DMA API support has now been in place for a while and
-> proven stable, so there's no real need to keep most of Juno's SMMUs
-> disabled. The USB, HDLCDs, and CoreSight ETR all just need to map RAM
-> buffers for DMA - enabling their SMMUs obviates CPU bounce buffering for
-> USB's streaming DMA to the upper memory bank, and lets the other two
-> allocate their relatively large coherent buffers without pressuring CMA.
+Hi Kieran,
+
+On Wednesday 17 May 2017 21:02:42 Kieran Bingham wrote:
+> On 17/05/17 17:36, Rob Herring wrote:
+> > On Wed, May 17, 2017 at 10:03 AM, Kieran Bingham wrote:
+> >> From: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+> >> 
+> >> When handling endpoints, the v4l2 async framework needs to identify the
+> >> parent device of a port endpoint.
+> >> 
+> >> Adapt the existing of_graph_get_remote_port_parent() such that a caller
+> >> can obtain the parent of a port without parsing the remote-endpoint
+> >> first.
+> > 
+> > A similar patch is already applied as part of the ASoC graph card support.
+> > 
+> > Rob
 > 
-> Some more software work is still needed for the DMA-330 and PCIe before
-> those can accommodate SMMU translation correctly in all cases, so we
-> leave those alone for now.
+> Ah yes, a quick google finds it...
 > 
-> Signed-off-by: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
-
-For the HDLCDs' ones, you can have my Tested-by: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>.
-
-For the whole thing:
-
-Acked-by: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
-
-Best regards,
-Liviu
-
-> ---
->  arch/arm64/boot/dts/arm/juno-base.dtsi | 4 ----
->  1 file changed, 4 deletions(-)
+> :  https://patchwork.kernel.org/patch/9658907/
 > 
-> diff --git a/arch/arm64/boot/dts/arm/juno-base.dtsi b/arch/arm64/boot/dts/arm/juno-base.dtsi
-> index bfe7d683a42e..02aea43238fc 100644
-> --- a/arch/arm64/boot/dts/arm/juno-base.dtsi
-> +++ b/arch/arm64/boot/dts/arm/juno-base.dtsi
-> @@ -53,7 +53,6 @@
->  		#global-interrupts = <1>;
->  		dma-coherent;
->  		power-domains = <&scpi_devpd 0>;
-> -		status = "disabled";
->  	};
->  
->  	gic: interrupt-controller@2c010000 {
-> @@ -546,7 +545,6 @@
->  			     <GIC_SPI 99 IRQ_TYPE_LEVEL_HIGH>;
->  		#iommu-cells = <1>;
->  		#global-interrupts = <1>;
-> -		status = "disabled";
->  	};
->  
->  	smmu_hdlcd0: iommu@7fb20000 {
-> @@ -556,7 +554,6 @@
->  			     <GIC_SPI 97 IRQ_TYPE_LEVEL_HIGH>;
->  		#iommu-cells = <1>;
->  		#global-interrupts = <1>;
-> -		status = "disabled";
->  	};
->  
->  	smmu_usb: iommu@7fb30000 {
-> @@ -567,7 +564,6 @@
->  		#iommu-cells = <1>;
->  		#global-interrupts = <1>;
->  		dma-coherent;
-> -		status = "disabled";
->  	};
->  
->  	dma@7ff00000 {
-> -- 
-> 2.12.2.dirty
+> Surprisingly similar patch ... and a familiar name.
+
+Very similar indeed, down to identical problems ;-) Quoting your patch,
+
+>  /**
+> + * of_graph_get_port_parent() - get port's parent node
+> + * @node: pointer to a local endpoint device_node
+> + *
+> + * Return: device node associated with endpoint @node.
+> + *	   Use of_node_put() on it when done.
+> + */
+
+The documentation of the return value is a bit confusing to me. I assume that, 
+by device node, you meant the DT node corresponding to the device of the 
+endpoint which is passed as an argument. However, device node cal also refer 
+to struct device_node. Should this be clarified ?
+
+> Morimoto-san - you beat me to it :D !
 > 
+> Thanks Rob, (And Morimoto!)
 
 -- 
-====================
-| I would like to |
-| fix the world,  |
-| but they're not |
-| giving me the   |
- \ source code!  /
-  ---------------
-    ¯\_(ツ)_/¯
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards,
+
+Laurent Pinchart
