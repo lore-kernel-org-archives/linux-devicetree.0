@@ -1,171 +1,398 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v1 2/3] dt-bindings: display: Add STM32 DSI host driver
-Date: Thu, 18 May 2017 16:42:00 -0500
-Message-ID: <20170518214200.e2mmsqpvm3rqnh72@rob-hp-laptop>
-References: <1494600989-13507-1-git-send-email-philippe.cornu@st.com>
- <1494600989-13507-3-git-send-email-philippe.cornu@st.com>
+From: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
+Subject: Re: [PATCH v5 2/3] platform: add video-multiplexer subdevice driver
+Date: Fri, 19 May 2017 00:48:17 +0300
+Message-ID: <20170518214816.GZ3227@valkosipuli.retiisi.org.uk>
+References: <1495034107-21407-1-git-send-email-p.zabel@pengutronix.de>
+ <1495034107-21407-2-git-send-email-p.zabel@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1494600989-13507-3-git-send-email-philippe.cornu-qxv4g6HH51o@public.gmane.org>
+In-Reply-To: <1495034107-21407-2-git-send-email-p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Philippe CORNU <philippe.cornu-qxv4g6HH51o@public.gmane.org>
-Cc: Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Yannick Fertre <yannick.fertre-qxv4g6HH51o@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, Fabien Dessenne <fabien.dessenne-qxv4g6HH51o@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Mickael Reulier <mickael.reulier-qxv4g6HH51o@public.gmane.org>, Vincent Abriou <vincent.abriou-qxv4g6HH51o@public.gmane.org>, Gabriel Fernandez <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>, Ludovic Barre <ludovic.barre-qxv4g6HH51o@public.gmane.org>
+To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Vladimir Zapolskiy <vladimir_zapolskiy-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, Sebastian Reichel <sebastian.reichel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, Kieran Bingham <kieran.bingham+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Steve Longerbeam <steve_longerbeam-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 12, 2017 at 04:56:28PM +0200, Philippe CORNU wrote:
-> This patch adds documentation of device tree bindings for the STM32
-> DSI host driver based on the Synopsys DW MIPI DSI driver from Rockchip.
+Hi Philipp,
+
+Thanks a lot for the update! Just a few really minor comments below. After
+fixing them you can add:
+
+Acked-by: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+
+On Wed, May 17, 2017 at 05:15:06PM +0200, Philipp Zabel wrote:
+> This driver can handle SoC internal and external video bus multiplexers,
+> controlled by mux controllers provided by the mux controller framework,
+> such as MMIO register bitfields or GPIOs. The subdevice passes through
+> the mbus configuration of the active input to the output side.
 > 
-> Signed-off-by: Philippe CORNU <philippe.cornu-qxv4g6HH51o@public.gmane.org>
+> Signed-off-by: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> Signed-off-by: Steve Longerbeam <steve_longerbeam-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
 > ---
->  .../devicetree/bindings/display/st,stm32-ltdc.txt  | 92 +++++++++++++++++++++-
->  1 file changed, 90 insertions(+), 2 deletions(-)
+> No changes since v4 [1]:
 > 
-> diff --git a/Documentation/devicetree/bindings/display/st,stm32-ltdc.txt b/Documentation/devicetree/bindings/display/st,stm32-ltdc.txt
-> index 8e14769..a61381b 100644
-> --- a/Documentation/devicetree/bindings/display/st,stm32-ltdc.txt
-> +++ b/Documentation/devicetree/bindings/display/st,stm32-ltdc.txt
-> @@ -1,7 +1,6 @@
->  * STMicroelectronics STM32 lcd-tft display controller
+> This patch depends on the mux subsystem [2] and on the mmio-mux driver [3]
+> to work on i.MX6. The follow-up patch will make this usable until the mux
+> framework is merged.
+> 
+> [1] https://patchwork.kernel.org/patch/9712131/
+> [2] https://patchwork.kernel.org/patch/9725911/
+> [3] https://patchwork.kernel.org/patch/9725893/
+> ---
+>  drivers/media/platform/Kconfig     |   6 +
+>  drivers/media/platform/Makefile    |   2 +
+>  drivers/media/platform/video-mux.c | 295 +++++++++++++++++++++++++++++++++++++
+>  3 files changed, 303 insertions(+)
+>  create mode 100644 drivers/media/platform/video-mux.c
+> 
+> diff --git a/drivers/media/platform/Kconfig b/drivers/media/platform/Kconfig
+> index ac026ee1ca074..259c0ff780937 100644
+> --- a/drivers/media/platform/Kconfig
+> +++ b/drivers/media/platform/Kconfig
+> @@ -74,6 +74,12 @@ config VIDEO_M32R_AR_M64278
+>  	  To compile this driver as a module, choose M here: the
+>  	  module will be called arv.
 >  
->  - ltdc: lcd-tft display controller host
-> -  must be a sub-node of st-display-subsystem
+> +config VIDEO_MUX
+> +	tristate "Video Multiplexer"
+> +	depends on OF && VIDEO_V4L2_SUBDEV_API && MEDIA_CONTROLLER && MULTIPLEXER
 
-Why is this removed? The "must" refers to the location, not whether 
-present or not if that's what you were trying to change.
+It'd be nice to have this split (over 80).
 
->    Required properties:
->    - compatible: "st,stm32-ltdc"
->    - reg: Physical base address of the IP registers and length of memory mapped region.
-> @@ -13,8 +12,25 @@
->    Required nodes:
->      - Video port for RGB output.
+> +	help
+> +	  This driver provides support for N:1 video bus multiplexers.
+> +
+>  config VIDEO_OMAP3
+>  	tristate "OMAP 3 Camera support"
+>  	depends on VIDEO_V4L2 && I2C && VIDEO_V4L2_SUBDEV_API && ARCH_OMAP3
+> diff --git a/drivers/media/platform/Makefile b/drivers/media/platform/Makefile
+> index 63303d63c64cf..a6363023f981e 100644
+> --- a/drivers/media/platform/Makefile
+> +++ b/drivers/media/platform/Makefile
+> @@ -28,6 +28,8 @@ obj-$(CONFIG_VIDEO_SH_VEU)		+= sh_veu.o
 >  
-> -Example:
-> +* STMicroelectronics STM32 specific extensions to Synopsys Designware MIPI DSI
-> +(similar to "rockchip/dw_mipi_dsi_rockchip.txt")
+>  obj-$(CONFIG_VIDEO_MEM2MEM_DEINTERLACE)	+= m2m-deinterlace.o
 >  
-> +Required properties:
-> +- #address-cells: Should be <1>.
-> +- #size-cells: Should be <0>.
-> +- compatible: "st,stm32-dsi_host".
-
-Don't use '_' and this needs to be more specific than just "stm32".
-
-> +- reg: Represent the physical address range of the controller.
-> +- clocks, clock-names: Phandles to the controller's pll reference
-> +  clock(ref) and APB clock(pclk). As described in [1].
-
-Ideally these should be in a common binding (like the driver) as a given 
-IP block doesn't have a varying number of clocks (typically).
-
-> +- ports: contain a port node with endpoint definitions as defined in [2].
-
-a single port? Need to be clear how many ports/endpoints and their 
-function.
-
-> +- resets: list of phandle + reset specifier pairs, as described in [3].
-> +- reset-names: string reset name, must be "apb".
+> +obj-$(CONFIG_VIDEO_MUX)			+= video-mux.o
 > +
-> +[1] Documentation/devicetree/bindings/clock/clock-bindings.txt
-> +[2] Documentation/devicetree/bindings/media/video-interfaces.txt
-> +[3] Documentation/devicetree/bindings/reset/reset.txt
+>  obj-$(CONFIG_VIDEO_S3C_CAMIF) 		+= s3c-camif/
+>  obj-$(CONFIG_VIDEO_SAMSUNG_EXYNOS4_IS) 	+= exynos4-is/
+>  obj-$(CONFIG_VIDEO_SAMSUNG_S5P_JPEG)	+= s5p-jpeg/
+> diff --git a/drivers/media/platform/video-mux.c b/drivers/media/platform/video-mux.c
+> new file mode 100644
+> index 0000000000000..e35ffa18126f3
+> --- /dev/null
+> +++ b/drivers/media/platform/video-mux.c
+> @@ -0,0 +1,295 @@
+> +/*
+> + * video stream multiplexer controlled via mux control
+> + *
+> + * Copyright (C) 2013 Pengutronix, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> + * Copyright (C) 2016-2017 Pengutronix, Philipp Zabel <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> + *
+> + * This program is free software; you can redistribute it and/or
+> + * modify it under the terms of the GNU General Public License
+> + * as published by the Free Software Foundation; either version 2
+> + * of the License, or (at your option) any later version.
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + */
 > +
-> +Example 1: RGB panel
->  / {
->  	...
->  	soc {
-> @@ -34,3 +50,75 @@ Example:
->  		};
->  	};
->  };
+> +#include <linux/err.h>
+> +#include <linux/module.h>
+> +#include <linux/mutex.h>
+> +#include <linux/mux/consumer.h>
+> +#include <linux/of.h>
+> +#include <linux/of_graph.h>
+> +#include <linux/platform_device.h>
+> +#include <media/v4l2-async.h>
+> +#include <media/v4l2-device.h>
+> +#include <media/v4l2-subdev.h>
 > +
-> +Example 2: DSI panel
-> +
-> +/ {
-> +	...
-> +	soc {
-> +	...
-> +		ltdc: display-controller@40016800 {
-> +			compatible = "st,stm32-ltdc";
-> +			reg = <0x40016800 0x200>;
-> +			interrupts = <88>, <89>;
-> +			resets = <&rcc STM32F4_APB2_RESET(LTDC)>;
-> +			clocks = <&rcc 1 CLK_LCD>;
-> +			clock-names = "lcd";
-> +
-> +			port {
-> +				ltdc_out_dsi_host: endpoint {
-> +					remote-endpoint = <&dsi_host_in>;
-> +				};
-> +			};
-> +		};
-> +
-> +
-> +		dsi_host: dsi_host@40016C00 {
-
-dsi@...
-
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			compatible = "st,stm32-dsi_host";
-> +			reg = <0x40016C00 0x800>;
-> +			clocks = <&rcc 1 CLK_F469_DSI>, <&clk_hse>;
-> +			clock-names = "ref", "pclk";
-> +			resets = <&rcc STM32F4_APB2_RESET(DSI)>;
-> +			reset-names = "apb";
-> +			status = "okay";
-
-Don't show status in examples.
-> +
-> +			ports {
-> +				#address-cells = <1>;
-> +				#size-cells = <0>;
-> +
-> +				port@0 {
-> +					reg = <0>;
-> +					dsi_host_in: endpoint {
-> +						remote-endpoint = <&ltdc_out_dsi_host>;
-> +					};
-> +				};
-> +
-> +				port@1 {
-> +					reg = <1>;
-> +					dsi_host_out_panel: endpoint {
-> +						remote-endpoint = <&dsi_host_in_panel>;
-> +					};
-> +				};
-> +
-> +			};
-> +
-> +			panel-dsi@0 {
-> +				reg = <0>; /* dsi virtual channel (0..3) */
-> +				compatible = ...;
-> +				enable-gpios = ...;
-> +				status = "okay";
-> +
-> +				port {
-> +					dsi_host_in_panel: endpoint {
-> +						remote-endpoint = <&dsi_host_out_panel>;
-> +					};
-> +				};
-> +
-> +			};
-> +
-> +		};
-> +
-> +	};
+> +struct video_mux {
+> +	struct v4l2_subdev subdev;
+> +	struct media_pad *pads;
+> +	struct v4l2_mbus_framefmt *format_mbus;
+> +	struct mux_control *mux;
+> +	struct mutex lock;
+> +	int active;
 > +};
-> -- 
-> 1.9.1
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> +
+> +static inline struct video_mux *v4l2_subdev_to_video_mux(struct v4l2_subdev *sd)
+> +{
+> +	return container_of(sd, struct video_mux, subdev);
+> +}
+> +
+> +static int video_mux_link_setup(struct media_entity *entity,
+> +				const struct media_pad *local,
+> +				const struct media_pad *remote, u32 flags)
+> +{
+> +	struct v4l2_subdev *sd = media_entity_to_v4l2_subdev(entity);
+> +	struct video_mux *vmux = v4l2_subdev_to_video_mux(sd);
+> +	int ret = 0;
+> +
+> +	/*
+> +	 * The mux state is determined by the enabled sink pad link.
+> +	 * Enabling or disabling the source pad link has no effect.
+> +	 */
+> +	if (local->flags & MEDIA_PAD_FL_SOURCE)
+> +		return 0;
+> +
+> +	dev_dbg(sd->dev, "link setup '%s':%d->'%s':%d[%d]",
+> +		remote->entity->name, remote->index, local->entity->name,
+> +		local->index, flags & MEDIA_LNK_FL_ENABLED);
+> +
+> +	mutex_lock(&vmux->lock);
+> +
+> +	if (flags & MEDIA_LNK_FL_ENABLED) {
+> +		if (vmux->active == local->index)
+> +			goto out;
+> +
+> +		if (vmux->active >= 0) {
+> +			ret = -EBUSY;
+> +			goto out;
+> +		}
+> +
+> +		dev_dbg(sd->dev, "setting %d active\n", local->index);
+> +		ret = mux_control_try_select(vmux->mux, local->index);
+> +		if (ret < 0)
+> +			goto out;
+> +		vmux->active = local->index;
+> +	} else {
+> +		if (vmux->active != local->index)
+> +			goto out;
+> +
+> +		dev_dbg(sd->dev, "going inactive\n");
+> +		mux_control_deselect(vmux->mux);
+> +		vmux->active = -1;
+> +	}
+> +
+> +out:
+> +	mutex_unlock(&vmux->lock);
+> +	return ret;
+> +}
+> +
+> +static struct media_entity_operations video_mux_ops = {
+
+const.
+
+> +	.link_setup = video_mux_link_setup,
+> +	.link_validate = v4l2_subdev_link_validate,
+> +};
+> +
+> +static int video_mux_s_stream(struct v4l2_subdev *sd, int enable)
+> +{
+> +	struct video_mux *vmux = v4l2_subdev_to_video_mux(sd);
+> +	struct v4l2_subdev *upstream_sd;
+> +	struct media_pad *pad;
+> +
+> +	if (vmux->active == -1) {
+> +		dev_err(sd->dev, "Can not start streaming on inactive mux\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	pad = media_entity_remote_pad(&sd->entity.pads[vmux->active]);
+> +	if (!pad) {
+> +		dev_err(sd->dev, "Failed to find remote source pad\n");
+> +		return -ENOLINK;
+> +	}
+> +
+> +	if (!is_media_entity_v4l2_subdev(pad->entity)) {
+> +		dev_err(sd->dev, "Upstream entity is not a v4l2 subdev\n");
+> +		return -ENODEV;
+> +	}
+> +
+> +	upstream_sd = media_entity_to_v4l2_subdev(pad->entity);
+> +
+> +	return v4l2_subdev_call(upstream_sd, video, s_stream, enable);
+> +}
+> +
+> +static const struct v4l2_subdev_video_ops video_mux_subdev_video_ops = {
+> +	.s_stream = video_mux_s_stream,
+> +};
+> +
+> +static struct v4l2_mbus_framefmt *
+> +__video_mux_get_pad_format(struct v4l2_subdev *sd,
+> +			   struct v4l2_subdev_pad_config *cfg,
+> +			   unsigned int pad, u32 which)
+> +{
+> +	struct video_mux *vmux = v4l2_subdev_to_video_mux(sd);
+> +
+> +	switch (which) {
+> +	case V4L2_SUBDEV_FORMAT_TRY:
+> +		return v4l2_subdev_get_try_format(sd, cfg, pad);
+> +	case V4L2_SUBDEV_FORMAT_ACTIVE:
+> +		return &vmux->format_mbus[pad];
+> +	default:
+> +		return NULL;
+> +	}
+> +}
+> +
+> +static int video_mux_get_format(struct v4l2_subdev *sd,
+> +			    struct v4l2_subdev_pad_config *cfg,
+> +			    struct v4l2_subdev_format *sdformat)
+> +{
+> +	struct video_mux *vmux = v4l2_subdev_to_video_mux(sd);
+> +
+> +	mutex_lock(&vmux->lock);
+> +
+> +	sdformat->format = *__video_mux_get_pad_format(sd, cfg, sdformat->pad,
+> +						   sdformat->which);
+
+You could align to opening parenthesis on previous line.
+
+> +
+> +	mutex_unlock(&vmux->lock);
+> +
+> +	return 0;
+> +}
+> +
+> +static int video_mux_set_format(struct v4l2_subdev *sd,
+> +			    struct v4l2_subdev_pad_config *cfg,
+> +			    struct v4l2_subdev_format *sdformat)
+> +{
+> +	struct video_mux *vmux = v4l2_subdev_to_video_mux(sd);
+> +	struct v4l2_mbus_framefmt *mbusformat;
+> +	struct media_pad *pad = &vmux->pads[sdformat->pad];
+> +
+> +	mbusformat = __video_mux_get_pad_format(sd, cfg, sdformat->pad,
+> +					    sdformat->which);
+> +	if (!mbusformat)
+> +		return -EINVAL;
+> +
+> +	mutex_lock(&vmux->lock);
+> +
+> +	/* Source pad mirrors active sink pad, no limitations on sink pads */
+> +	if ((pad->flags & MEDIA_PAD_FL_SOURCE) && vmux->active >= 0)
+> +		sdformat->format = vmux->format_mbus[vmux->active];
+> +
+> +	*mbusformat = sdformat->format;
+> +
+> +	mutex_unlock(&vmux->lock);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct v4l2_subdev_pad_ops video_mux_pad_ops = {
+> +	.get_fmt = video_mux_get_format,
+> +	.set_fmt = video_mux_set_format,
+> +};
+> +
+> +static const struct v4l2_subdev_ops video_mux_subdev_ops = {
+> +	.pad = &video_mux_pad_ops,
+> +	.video = &video_mux_subdev_video_ops,
+> +};
+> +
+> +static int video_mux_probe(struct platform_device *pdev)
+> +{
+> +	struct device_node *np = pdev->dev.of_node;
+> +	struct device *dev = &pdev->dev;
+> +	struct device_node *ep;
+> +	struct video_mux *vmux;
+> +	unsigned int num_pads = 0;
+> +	int ret;
+> +	int i;
+> +
+> +	vmux = devm_kzalloc(dev, sizeof(*vmux), GFP_KERNEL);
+> +	if (!vmux)
+> +		return -ENOMEM;
+> +
+> +	platform_set_drvdata(pdev, vmux);
+> +
+> +	v4l2_subdev_init(&vmux->subdev, &video_mux_subdev_ops);
+> +	snprintf(vmux->subdev.name, sizeof(vmux->subdev.name), "%s", np->name);
+> +	vmux->subdev.flags |= V4L2_SUBDEV_FL_HAS_DEVNODE;
+> +	vmux->subdev.dev = dev;
+> +
+> +	/*
+> +	 * The largest numbered port is the output port. It determines
+> +	 * total number of pads.
+> +	 */
+> +	for_each_endpoint_of_node(np, ep) {
+> +		struct of_endpoint endpoint;
+> +
+> +		of_graph_parse_endpoint(ep, &endpoint);
+> +		num_pads = max(num_pads, endpoint.port + 1);
+> +	}
+> +
+> +	if (num_pads < 2) {
+> +		dev_err(dev, "Not enough ports %d\n", num_pads);
+> +		return -EINVAL;
+> +	}
+> +
+> +	vmux->mux = devm_mux_control_get(dev, NULL);
+> +	if (IS_ERR(vmux->mux)) {
+> +		ret = PTR_ERR(vmux->mux);
+> +		if (ret != -EPROBE_DEFER)
+> +			dev_err(dev, "Failed to get mux: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	mutex_init(&vmux->lock);
+> +	vmux->active = -1;
+> +	vmux->pads = devm_kcalloc(dev, num_pads, sizeof(*vmux->pads),
+> +				  GFP_KERNEL);
+> +	vmux->format_mbus = devm_kcalloc(dev, num_pads,
+> +					 sizeof(*vmux->format_mbus),
+> +					 GFP_KERNEL);
+> +
+> +	for (i = 0; i < num_pads - 1; i++)
+> +		vmux->pads[i].flags = MEDIA_PAD_FL_SINK;
+> +	vmux->pads[num_pads - 1].flags = MEDIA_PAD_FL_SOURCE;
+> +
+> +	vmux->subdev.entity.function = MEDIA_ENT_F_VID_MUX;
+> +	ret = media_entity_pads_init(&vmux->subdev.entity, num_pads,
+> +				     vmux->pads);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	vmux->subdev.entity.ops = &video_mux_ops;
+> +
+> +	return v4l2_async_register_subdev(&vmux->subdev);
+> +}
+> +
+> +static int video_mux_remove(struct platform_device *pdev)
+> +{
+> +	struct video_mux *vmux = platform_get_drvdata(pdev);
+> +	struct v4l2_subdev *sd = &vmux->subdev;
+> +
+> +	v4l2_async_unregister_subdev(sd);
+> +	media_entity_cleanup(&sd->entity);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id video_mux_dt_ids[] = {
+> +	{ .compatible = "video-mux", },
+> +	{ /* sentinel */ }
+> +};
+> +MODULE_DEVICE_TABLE(of, video_mux_dt_ids);
+> +
+> +static struct platform_driver video_mux_driver = {
+> +	.probe		= video_mux_probe,
+> +	.remove		= video_mux_remove,
+> +	.driver		= {
+> +		.of_match_table = video_mux_dt_ids,
+> +		.name = "video-mux",
+> +	},
+> +};
+> +
+> +module_platform_driver(video_mux_driver);
+> +
+> +MODULE_DESCRIPTION("video stream multiplexer");
+> +MODULE_AUTHOR("Sascha Hauer, Pengutronix");
+> +MODULE_AUTHOR("Philipp Zabel, Pengutronix");
+> +MODULE_LICENSE("GPL");
+
+-- 
+Kind regards,
+
+Sakari Ailus
+e-mail: sakari.ailus-X3B1VOXEql0@public.gmane.org	XMPP: sailus-PCDdDYkjdNMDXYZnReoRVg@public.gmane.org
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
