@@ -1,233 +1,198 @@
-From: jeffy <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: Re: [PATCH v5] of/pci: Fix memory leak in of_pci_get_host_bridge_resources
-Date: Thu, 18 May 2017 13:27:05 +0800
-Message-ID: <591D30A9.5030606@rock-chips.com>
-References: <1491359303-1385-1-git-send-email-jeffy.chen@rock-chips.com> <1491359303-1385-2-git-send-email-jeffy.chen@rock-chips.com> <20170517210841.GH31462@bhelgaas-glaptop.roam.corp.google.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v2 1/2] dt-bindings: mfd: Add DT bindings documentation
+ for the max7360 mfd driver
+Date: Thu, 18 May 2017 07:50:27 +0100
+Message-ID: <20170518065027.25i53655q5zpuvff@dell>
+References: <20170514135500.4947-1-valentin_sitdikov@mentor.com>
+ <20170514135500.4947-2-valentin_sitdikov@mentor.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170517210841.GH31462-1RhO1Y9PlrlHTL0Zs8A6p5iNqAH0jzoTYJqu5kTmcBRl57MIdRCFDg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, toshi.kani-ZPxbGqLxI0U@public.gmane.org, shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org, briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, dtor-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170514135500.4947-2-valentin_sitdikov@mentor.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Valentin Sitdikov <valentin_sitdikov@mentor.com>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Andrei Dranitca <Andrei_Dranitca@mentor.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Bjorn,
+On Sun, 14 May 2017, Valentin Sitdikov wrote:
 
-On 05/18/2017 05:08 AM, Bjorn Helgaas wrote:
-> On Wed, Apr 05, 2017 at 10:28:22AM +0800, Jeffy Chen wrote:
->> Currently we only free the allocated resource struct when error.
->> This would cause memory leak after pci_free_resource_list.
->
-> I think I see the problem here.  The release path is this:
->
->    pci_release_host_bridge_dev
->      pci_free_resource_list
->        resource_list_free
-> 	list_for_each_entry_safe(entry, tmp, head, node)
-> 	  resource_list_destroy_entry
-> 	    resource_list_del
-> 	    resource_list_free_entry
-> 	      kfree(entry)
->
-> but that frees only the struct resource_entry, not the struct resource
-> pointed to by entry->res.  Is that right?
-right, that's the leak.
+> This patch adds documentation for the max7360 bindings.
+> The max7360 is multifunctional device containing gpio,
+> keypad, pwm and rotary encoder submodules.
+> 
+> Signed-off-by: Valentin Sitdikov <valentin_sitdikov@mentor.com>
+> Signed-off-by: Andrei Dranitca <Andrei_Dranitca@mentor.com>
+> ---
+>  Documentation/devicetree/bindings/mfd/max7360.txt | 72 +++++++++++++++++++++++
+>  max7360.txt                                       | 72 +++++++++++++++++++++++
 
->
-> And this patch solves it for of_pci_get_host_bridge_resources() by
-> always making entry->res point to entry->__res, which is an element in
-> struct resource_entry, so it's sufficient to free the resource_entry.
->
-> The memory management here is pretty tangled.  I wonder if there's
-> some way to simplify it so it's easier to make sure everybody does it
-> correctly.  For example, could we remove the entry->res pointer
-> completely and force everybody to use entry->__res?
-i've tried something like this in 
-https://patchwork.kernel.org/patch/9638003/
+I think you need to re-roll this patch.
 
-but it turns out there are a few codes trying to use shared 
-resources(entry->res pointer point to some common resources), for example:
+>  2 files changed, 144 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/max7360.txt
+>  create mode 100644 max7360.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/mfd/max7360.txt b/Documentation/devicetree/bindings/mfd/max7360.txt
+> new file mode 100644
+> index 0000000..fd83227
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mfd/max7360.txt
+> @@ -0,0 +1,72 @@
+> +* Maxim MAX7360 multi-function device
+> +
+> +The Maxim MAX7360 is a multifunction device which includes
+> +64 key switches, eight LED drivers/GPIOs, PWM intensity control,
+> +and rotary switch control.
+> +
+> +Required properties:
+> +- compatible: Should be the following: "maxim,max7360"
+> +- reg: Specifies the i2c slave address of the max7360 block. It can be 0x38, 0x3a, 0x3c or 0x3e IIUC.
+> +
+> +Optional properties:
+> +- interrupt-parent: Specifies the phandle of the interrupt controller to which
+> +  the interrupts from MAX7360 are routed to.
+> +- interrupt-names: list of "inti" and "intk"
+> +- interrupt-controller:  Identifies the device as an interrupt controller.
+> +- #interrupt-cells :  Number of cells to encode an interrupt source, shall be 1.
+> +
+> +Examples:
+> +
+> +Without subnodes:
+> +	max7360@38 {
+> +		compatible = "maxim,max7360";
+> +		reg = <0x38>;
+> +		interrupt-parent = <&gpio1>;
+> +		interrupts = <23 IRQ_TYPE_LEVEL_LOW>, <23 IRQ_TYPE_LEVEL_LOW>;
+> +		interrupt-names = "inti", "intk";
+> +		interrupt-controller;
+> +		#interrupt-cells = <0x1>;
+> +
+> +	};
+> +
+> +With subnodes:
+> +	max7360@38 {
+> +		compatible = "maxim,max7360";
+> +		reg = <0x38>;
+> +		interrupt-parent = <&gpio1>;
+> +		interrupts = <23 IRQ_TYPE_LEVEL_LOW>;
+> +		interrupt-names = "int-shared";
+> +		interrupt-controller;
+> +		#interrupt-cells = <0x1>;
+> +
+> +		gpio {
+> +			compatible = "maxim,max7360-gpio";
+> +			gpio-controller;
+> +			#gpio-cells = <0x2>;
+> +			interrupt-controller;
+> +			#interrupt-cells = <0x2>;
+> +			interrupts = <0>;
+> +		};
+> +
+> +		keypad {
+> +			compatible = "maxim,max7360-keypad";
+> +			maxim,debounce_reg = /bits/ 8 <0xef>;
+> +			maxim,ports_reg = /bits/ 8 <0xae>;
+> +			linux,keymap = < MATRIX_KEY(0, 0, KEY_F5)
+> +					 MATRIX_KEY(1, 0, KEY_F4) >;
+> +			keypad,num-rows = <2>;
+> +			keypad,num-columns = <1>;
+> +			interrupts = <1>;
+> +		};
+> +
+> +		pwm {
+> +			compatible = "maxim,max7360-pwm";
+> +			#pwm-cells = <0x2>;
+> +		};
+> +
+> +		rotary_encoder {
+> +			compatible = "maxim,max7360-rotary";
+> +			interrupts = <2>;
+> +		};
+> +
+> +	};
+> diff --git a/max7360.txt b/max7360.txt
+> new file mode 100644
+> index 0000000..359073a
+> --- /dev/null
+> +++ b/max7360.txt
+> @@ -0,0 +1,72 @@
+> +* Maxim MAX7360 multi-function device
+> +
+> +The Maxim MAX7360 is a multifunction device which includes
+> +64 key switches, eight LED drivers/GPIOs, PWM intensity control,
+> +and rotary switch control.
+> +
+> +Required properties:
+> +- compatible: Should be the following: "maxim,max7360"
+> +- reg: Specifies the i2c slave address of the max7360 block. It can be 0x38, 0x3a, 0x3c or 0x3e IIUC.
+> +
+> +Optional properties:
+> +- interrupt-parent: Specifies the phandle of the interrupt controller to which
+> +  the interrupts from MAX7360 are routed to.
+> +- interrupt-names: might be "int-shared" or list of "inti" and "intk"
+> +- interrupt-controller:  Identifies the device as an interrupt controller.
+> +- #interrupt-cells :  Number of cells to encode an interrupt source, shall be 1.
+> +
+> +Examples:
+> +
+> +Without subnodes:
+> +	max7360@38 {
+> +		compatible = "maxim,max7360";
+> +		reg = <0x38>;
+> +		interrupt-parent = <&gpio1>;
+> +		interrupts = <23 IRQ_TYPE_LEVEL_LOW>;
+> +		interrupt-names = "int-shared";
+> +		interrupt-controller;
+> +		#interrupt-cells = <0x1>;
+> +
+> +	};
+> +
+> +With subnodes:
+> +	max7360@38 {
+> +		compatible = "maxim,max7360";
+> +		reg = <0x38>;
+> +		interrupt-parent = <&gpio1>;
+> +		interrupts = <23 IRQ_TYPE_LEVEL_LOW>;
+> +		interrupt-names = "int-shared";
+> +		interrupt-controller;
+> +		#interrupt-cells = <0x1>;
+> +
+> +		max7360_gpio: max7360_gpio@0 {
+> +			compatible = "maxim,max7360-gpio";
+> +			gpio-controller;
+> +			#gpio-cells = <0x2>;
+> +			interrupt-controller;
+> +			#interrupt-cells = <0x2>;
+> +			interrupts = <0>;
+> +		};
+> +
+> +		max7360_keypad {
+> +			compatible = "maxim,max7360-keypad";
+> +			maxim,debounce_reg = /bits/ 8 <0xef>;
+> +			maxim,ports_reg = /bits/ 8 <0xae>;
+> +			linux,keymap = < MATRIX_KEY(0, 0, KEY_F5)
+> +					 MATRIX_KEY(1, 0, KEY_F4) >;
+> +			keypad,num-rows = <2>;
+> +			keypad,num-columns = <1>;
+> +			interrupts = <1>;
+> +		};
+> +
+> +		max7360_pwm: max7360_pwm {
+> +			compatible = "maxim,max7360-pwm";
+> +			#pwm-cells = <0x2>;
+> +		};
+> +
+> +		max7360_rotary_encoder {
+> +			compatible = "maxim,max7360-rotary";
+> +			interrupts = <2>;
+> +		};
+> +
+> +	};
 
-./arch/tile/kernel/pci.c:307: 
-pci_add_resource(&resources, &ioport_resource);
-./arch/tile/kernel/pci.c:308: 
-pci_add_resource(&resources, &iomem_resource);
-
-so i tried to use IORESOURCE_AUTO to handle non-common(private) resources.
-
-
-and i saw drivers/pnp/manager.c tried to handle something like this too, 
-by manually free resources marked as IORESOURCE_AUTO:
-static void pnp_clean_resource_table(struct pnp_dev *dev)
-{
-         struct pnp_resource *pnp_res, *tmp;
-
-         list_for_each_entry_safe(pnp_res, tmp, &dev->resources, list) {
-                 if (pnp_res->res.flags & IORESOURCE_AUTO)
-                         pnp_free_resource(pnp_res);
-         }
-}
-
-
->
->> Signed-off-by: Jeffy Chen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
->> ---
->>
->> Changes in v5:
->> Fix some careless compile errors.
->>
->> Changes in v4:
->> Use IORESOURCE_AUTO to mark struct resources which could be copied.
->>
->> Changes in v3:
->> Add some comments.
->>
->> Changes in v2:
->> Don't change the resource_list_create_entry's behavior.
->>
->>   drivers/of/of_pci.c | 51 ++++++++++++++++++---------------------------------
->>   drivers/pci/bus.c   |  7 ++++++-
->>   2 files changed, 24 insertions(+), 34 deletions(-)
->>
->> diff --git a/drivers/of/of_pci.c b/drivers/of/of_pci.c
->> index 0ee42c3..49233bf 100644
->> --- a/drivers/of/of_pci.c
->> +++ b/drivers/of/of_pci.c
->> @@ -189,9 +189,7 @@ int of_pci_get_host_bridge_resources(struct device_node *dev,
->>   			unsigned char busno, unsigned char bus_max,
->>   			struct list_head *resources, resource_size_t *io_base)
->>   {
->> -	struct resource_entry *window;
->> -	struct resource *res;
->> -	struct resource *bus_range;
->> +	struct resource res;
->>   	struct of_pci_range range;
->>   	struct of_pci_range_parser parser;
->>   	char range_type[4];
->> @@ -200,24 +198,21 @@ int of_pci_get_host_bridge_resources(struct device_node *dev,
->>   	if (io_base)
->>   		*io_base = (resource_size_t)OF_BAD_ADDR;
->>
->> -	bus_range = kzalloc(sizeof(*bus_range), GFP_KERNEL);
->> -	if (!bus_range)
->> -		return -ENOMEM;
->> -
->>   	pr_info("host bridge %s ranges:\n", dev->full_name);
->>
->> -	err = of_pci_parse_bus_range(dev, bus_range);
->> +	err = of_pci_parse_bus_range(dev, &res);
->>   	if (err) {
->> -		bus_range->start = busno;
->> -		bus_range->end = bus_max;
->> -		bus_range->flags = IORESOURCE_BUS;
->> -		pr_info("  No bus range found for %s, using %pR\n",
->> -			dev->full_name, bus_range);
->> +		res.start = busno;
->> +		res.end = bus_max;
->> +		res.flags = IORESOURCE_BUS;
->> +		pr_info("  No bus range found for %s\n", dev->full_name);
->>   	} else {
->> -		if (bus_range->end > bus_range->start + bus_max)
->> -			bus_range->end = bus_range->start + bus_max;
->> +		if (res.end > res.start + bus_max)
->> +			res.end = res.start + bus_max;
->>   	}
->> -	pci_add_resource(resources, bus_range);
->> +
->> +	res.flags |= IORESOURCE_AUTO;
->> +	pci_add_resource(resources, &res);
->>
->>   	/* Check for ranges property */
->>   	err = of_pci_range_parser_init(&parser, dev);
->> @@ -244,24 +239,16 @@ int of_pci_get_host_bridge_resources(struct device_node *dev,
->>   		if (range.cpu_addr == OF_BAD_ADDR || range.size == 0)
->>   			continue;
->>
->> -		res = kzalloc(sizeof(struct resource), GFP_KERNEL);
->> -		if (!res) {
->> -			err = -ENOMEM;
->> -			goto parse_failed;
->> -		}
->> -
->> -		err = of_pci_range_to_resource(&range, dev, res);
->> -		if (err) {
->> -			kfree(res);
->> +		err = of_pci_range_to_resource(&range, dev, &res);
->> +		if (err)
->>   			continue;
->> -		}
->>
->> -		if (resource_type(res) == IORESOURCE_IO) {
->> +		if (resource_type(&res) == IORESOURCE_IO) {
->>   			if (!io_base) {
->>   				pr_err("I/O range found for %s. Please provide an io_base pointer to save CPU base address\n",
->>   					dev->full_name);
->>   				err = -EINVAL;
->> -				goto conversion_failed;
->> +				goto parse_failed;
->>   			}
->>   			if (*io_base != (resource_size_t)OF_BAD_ADDR)
->>   				pr_warn("More than one I/O resource converted for %s. CPU base address for old range lost!\n",
->> @@ -269,16 +256,14 @@ int of_pci_get_host_bridge_resources(struct device_node *dev,
->>   			*io_base = range.cpu_addr;
->>   		}
->>
->> -		pci_add_resource_offset(resources, res,	res->start - range.pci_addr);
->> +		res.flags |= IORESOURCE_AUTO;
->> +		pci_add_resource_offset(resources, &res,
->> +					res.start - range.pci_addr);
->>   	}
->>
->>   	return 0;
->>
->> -conversion_failed:
->> -	kfree(res);
->>   parse_failed:
->> -	resource_list_for_each_entry(window, resources)
->> -		kfree(window->res);
->>   	pci_free_resource_list(resources);
->>   	return err;
->>   }
->> diff --git a/drivers/pci/bus.c b/drivers/pci/bus.c
->> index bc56cf1..3dbcb95 100644
->> --- a/drivers/pci/bus.c
->> +++ b/drivers/pci/bus.c
->> @@ -22,12 +22,17 @@ void pci_add_resource_offset(struct list_head *resources, struct resource *res,
->>   {
->>   	struct resource_entry *entry;
->>
->> -	entry = resource_list_create_entry(res, 0);
->> +	entry = resource_list_create_entry(NULL, 0);
->
-> If we make this change, there are no callers of
-> resource_list_create_entry() that supply a non-NULL "res", so
-> we could remove that argument completely.
->
->>   	if (!entry) {
->>   		printk(KERN_ERR "PCI: can't add host bridge window %pR\n", res);
->>   		return;
->>   	}
->>
->> +	if (res->flags & IORESOURCE_AUTO)
->> +		*entry->res = *res;
->> +	else
->> +		entry->res = res;
->> +
->>   	entry->offset = offset;
->>   	resource_list_add_tail(entry, resources);
->>   }
->> --
->> 2.1.4
->>
->>
->
->
->
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
