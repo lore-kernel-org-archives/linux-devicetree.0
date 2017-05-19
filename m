@@ -1,109 +1,224 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v4 2/3] ASoC: stm32: Add I2S driver
-Date: Fri, 19 May 2017 18:33:59 +0100
-Message-ID: <20170519173359.277lyg6fzwksqnin@sirena.org.uk>
-References: <1495120793-11687-1-git-send-email-olivier.moysan@st.com>
- <1495120793-11687-3-git-send-email-olivier.moysan@st.com>
-Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============2790957871012226198=="
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <1495120793-11687-3-git-send-email-olivier.moysan@st.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: olivier moysan <olivier.moysan@st.com>
-Cc: mark.rutland@arm.com, robh@kernel.org, alsa-devel@alsa-project.org, alexandre.torgue@st.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, arnaud.pouliquen@st.com, tiwai@suse.com, lgirdwood@gmail.com, mcoquelin.stm32@gmail.com, benjamin.gaignard@st.com, linux-arm-kernel@lists.infradead.org, kernel@stlinux.com
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Applied "ASoC: stm32: Add full duplex support to i2s" to the asoc tree
+Date: Fri, 19 May 2017 18:37:17 +0100
+Message-ID: <E1dBlq1-00054J-37@debutante>
+References: <1494495904-18898-4-git-send-email-olivier.moysan@st.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1494495904-18898-4-git-send-email-olivier.moysan-qxv4g6HH51o@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.orgbroonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, perex-/Fr2/VpizcU@public.gmane.org, tiwai-IBi9RG/b67k@public.gmane.org, mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, olivier.moysan-qxv4g6HH51o@public.gmane.org, arnaud.pouliquen-qxv4g6HH51o@public.gmane.org, benjamin.gaignard-qxv4g6HH51o@public.gmane.orgalsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+The patch
 
---===============2790957871012226198==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="6tmauatph4ecxfay"
-Content-Disposition: inline
+   ASoC: stm32: Add full duplex support to i2s
 
+has been applied to the asoc tree at
 
---6tmauatph4ecxfay
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+   git://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
 
-On Thu, May 18, 2017 at 05:19:52PM +0200, olivier moysan wrote:
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
 
-This looks good so I'm going to apply it, a few things below though -
-can you please send a followup patch for the issue with the Kconfig
-symbol?
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
-> --- a/sound/soc/stm/Kconfig
-> +++ b/sound/soc/stm/Kconfig
-> @@ -5,4 +5,4 @@ menuconfig SND_SOC_STM32
->  	select SND_SOC_GENERIC_DMAENGINE_PCM
->  	select REGMAP_MMIO
->  	help
-> -	  Say Y if you want to enable ASoC-support for STM32
-> +	  Say Y if you want to enable ASoC support for STM32
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
-This appears to be an unrelated typo fix.
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
 
-> diff --git a/sound/soc/stm/Makefile b/sound/soc/stm/Makefile
-> index e466a47..8251931 100644
-> --- a/sound/soc/stm/Makefile
-> +++ b/sound/soc/stm/Makefile
-> @@ -4,3 +4,7 @@ obj-$(CONFIG_SND_SOC_STM32) +=3D snd-soc-stm32-sai-sub.o
-> =20
->  snd-soc-stm32-sai-objs :=3D stm32_sai.o
->  obj-$(CONFIG_SND_SOC_STM32) +=3D snd-soc-stm32-sai.o
-> +
-> +# I2S
-> +snd-soc-stm32-i2s-objs :=3D stm32_i2s.o
-> +obj-$(CONFIG_SND_SOC_STM32) +=3D snd-soc-stm32-i2s.o
+Thanks,
+Mark
 
-Perhaps make this a separate option?  It probably makes sense to rename
-the option for the SAI at the same time.
+>From e7cc49b8adf25e7bae6acaeb37036ef8726b902c Mon Sep 17 00:00:00 2001
+From: olivier moysan <olivier.moysan-qxv4g6HH51o@public.gmane.org>
+Date: Thu, 18 May 2017 17:19:53 +0200
+Subject: [PATCH] ASoC: stm32: Add full duplex support to i2s
 
-> +
-> +	ret =3D clk_prepare_enable(i2s->pclk);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "Enable pclk failed: %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	ret =3D clk_prepare_enable(i2s->i2sclk);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "Enable i2sclk failed: %d\n", ret);
-> +		goto err_pclk_disable;
-> +	}
+This patch allows to use i2s interface either as single
+audio path (rx or tx), or bidirectional audio path.
+This patch is added separately, as the driver does not
+follow recommended use of the interface, to support this
+configuration.
 
-It'd be nice to have runtime PM to disable these when the device is idle
-but that's not essential.
+Signed-off-by: olivier moysan <olivier.moysan-qxv4g6HH51o@public.gmane.org>
+Signed-off-by: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+---
+ sound/soc/stm/stm32_i2s.c | 87 +++++++++++++++++++++++++----------------------
+ 1 file changed, 46 insertions(+), 41 deletions(-)
 
---6tmauatph4ecxfay
-Content-Type: application/pgp-signature; name="signature.asc"
+diff --git a/sound/soc/stm/stm32_i2s.c b/sound/soc/stm/stm32_i2s.c
+index 22152a1ca733..8052629a89df 100644
+--- a/sound/soc/stm/stm32_i2s.c
++++ b/sound/soc/stm/stm32_i2s.c
+@@ -489,7 +489,6 @@ static int stm32_i2s_configure(struct snd_soc_dai *cpu_dai,
+ 	struct stm32_i2s_data *i2s = snd_soc_dai_get_drvdata(cpu_dai);
+ 	int format = params_width(params);
+ 	u32 cfgr, cfgr_mask, cfg1, cfg1_mask;
+-	bool playback_flg = (substream->stream == SNDRV_PCM_STREAM_PLAYBACK);
+ 	unsigned int fthlv;
+ 	int ret;
+ 
+@@ -515,19 +514,13 @@ static int stm32_i2s_configure(struct snd_soc_dai *cpu_dai,
+ 	}
+ 
+ 	if (STM32_I2S_IS_SLAVE(i2s)) {
+-		if (playback_flg)
+-			cfgr |= I2S_CGFR_I2SCFG_SET(I2S_I2SMOD_TX_SLAVE);
+-		else
+-			cfgr |= I2S_CGFR_I2SCFG_SET(I2S_I2SMOD_RX_SLAVE);
++		cfgr |= I2S_CGFR_I2SCFG_SET(I2S_I2SMOD_FD_SLAVE);
+ 
+ 		/* As data length is either 16 or 32 bits, fixch always set */
+ 		cfgr |= I2S_CGFR_FIXCH;
+ 		cfgr_mask |= I2S_CGFR_FIXCH;
+ 	} else {
+-		if (playback_flg)
+-			cfgr |= I2S_CGFR_I2SCFG_SET(I2S_I2SMOD_TX_MASTER);
+-		else
+-			cfgr |= I2S_CGFR_I2SCFG_SET(I2S_I2SMOD_RX_MASTER);
++		cfgr |= I2S_CGFR_I2SCFG_SET(I2S_I2SMOD_FD_MASTER);
+ 	}
+ 	cfgr_mask |= I2S_CGFR_I2SCFG_MASK;
+ 
+@@ -536,9 +529,7 @@ static int stm32_i2s_configure(struct snd_soc_dai *cpu_dai,
+ 	if (ret < 0)
+ 		return ret;
+ 
+-	cfg1 = I2S_CFG1_RXDMAEN;
+-	if (playback_flg)
+-		cfg1 = I2S_CFG1_TXDMAEN;
++	cfg1 = I2S_CFG1_RXDMAEN | I2S_CFG1_TXDMAEN;
+ 	cfg1_mask = cfg1;
+ 
+ 	fthlv = STM32_I2S_FIFO_SIZE * I2S_FIFO_TH_ONE_QUARTER / 4;
+@@ -553,32 +544,15 @@ static int stm32_i2s_startup(struct snd_pcm_substream *substream,
+ 			     struct snd_soc_dai *cpu_dai)
+ {
+ 	struct stm32_i2s_data *i2s = snd_soc_dai_get_drvdata(cpu_dai);
+-	int ret, ier;
+ 
+ 	i2s->substream = substream;
+ 
+ 	spin_lock(&i2s->lock_fd);
+-	if (i2s->refcount) {
+-		dev_err(cpu_dai->dev, "%s stream already started\n",
+-			(substream->stream == SNDRV_PCM_STREAM_PLAYBACK ?
+-			"Capture" : "Playback"));
+-		spin_unlock(&i2s->lock_fd);
+-		return -EBUSY;
+-	}
+-	i2s->refcount = 1;
++	i2s->refcount++;
+ 	spin_unlock(&i2s->lock_fd);
+ 
+-	ret = regmap_update_bits(i2s->regmap, STM32_I2S_IFCR_REG,
+-				 I2S_IFCR_MASK, I2S_IFCR_MASK);
+-	if (ret < 0)
+-		return ret;
+-
+-	/* Enable ITs */
+-	ier = I2S_IER_OVRIE | I2S_IER_UDRIE;
+-	if (STM32_I2S_IS_SLAVE(i2s))
+-		ier |= I2S_IER_TIFREIE;
+-
+-	return regmap_update_bits(i2s->regmap, STM32_I2S_IER_REG, ier, ier);
++	return regmap_update_bits(i2s->regmap, STM32_I2S_IFCR_REG,
++				  I2S_IFCR_MASK, I2S_IFCR_MASK);
+ }
+ 
+ static int stm32_i2s_hw_params(struct snd_pcm_substream *substream,
+@@ -605,7 +579,7 @@ static int stm32_i2s_trigger(struct snd_pcm_substream *substream, int cmd,
+ {
+ 	struct stm32_i2s_data *i2s = snd_soc_dai_get_drvdata(cpu_dai);
+ 	bool playback_flg = (substream->stream == SNDRV_PCM_STREAM_PLAYBACK);
+-	u32 cfg1_mask;
++	u32 cfg1_mask, ier;
+ 	int ret;
+ 
+ 	switch (cmd) {
+@@ -628,10 +602,48 @@ static int stm32_i2s_trigger(struct snd_pcm_substream *substream, int cmd,
+ 			dev_err(cpu_dai->dev, "Error %d starting I2S\n", ret);
+ 			return ret;
+ 		}
++
++		regmap_update_bits(i2s->regmap, STM32_I2S_IFCR_REG,
++				   I2S_IFCR_MASK, I2S_IFCR_MASK);
++
++		if (playback_flg) {
++			ier = I2S_IER_UDRIE;
++		} else {
++			ier = I2S_IER_OVRIE;
++
++			spin_lock(&i2s->lock_fd);
++			if (i2s->refcount == 1)
++				/* dummy write to trigger capture */
++				regmap_write(i2s->regmap,
++					     STM32_I2S_TXDR_REG, 0);
++			spin_unlock(&i2s->lock_fd);
++		}
++
++		if (STM32_I2S_IS_SLAVE(i2s))
++			ier |= I2S_IER_TIFREIE;
++
++		regmap_update_bits(i2s->regmap, STM32_I2S_IER_REG, ier, ier);
+ 		break;
+ 	case SNDRV_PCM_TRIGGER_STOP:
+ 	case SNDRV_PCM_TRIGGER_SUSPEND:
+ 	case SNDRV_PCM_TRIGGER_PAUSE_PUSH:
++		if (playback_flg)
++			regmap_update_bits(i2s->regmap, STM32_I2S_IER_REG,
++					   I2S_IER_UDRIE,
++					   (unsigned int)~I2S_IER_UDRIE);
++		else
++			regmap_update_bits(i2s->regmap, STM32_I2S_IER_REG,
++					   I2S_IER_OVRIE,
++					   (unsigned int)~I2S_IER_OVRIE);
++
++		spin_lock(&i2s->lock_fd);
++		i2s->refcount--;
++		if (i2s->refcount) {
++			spin_unlock(&i2s->lock_fd);
++			break;
++		}
++		spin_unlock(&i2s->lock_fd);
++
+ 		dev_dbg(cpu_dai->dev, "stop I2S\n");
+ 
+ 		ret = regmap_update_bits(i2s->regmap, STM32_I2S_CR1_REG,
+@@ -641,10 +653,7 @@ static int stm32_i2s_trigger(struct snd_pcm_substream *substream, int cmd,
+ 			return ret;
+ 		}
+ 
+-		cfg1_mask = I2S_CFG1_RXDMAEN;
+-		if (playback_flg)
+-			cfg1_mask = I2S_CFG1_TXDMAEN;
+-
++		cfg1_mask = I2S_CFG1_RXDMAEN | I2S_CFG1_TXDMAEN;
+ 		regmap_update_bits(i2s->regmap, STM32_I2S_CFG1_REG,
+ 				   cfg1_mask, 0);
+ 		break;
+@@ -662,10 +671,6 @@ static void stm32_i2s_shutdown(struct snd_pcm_substream *substream,
+ 
+ 	i2s->substream = NULL;
+ 
+-	spin_lock(&i2s->lock_fd);
+-	i2s->refcount = 0;
+-	spin_unlock(&i2s->lock_fd);
+-
+ 	regmap_update_bits(i2s->regmap, STM32_I2S_CGFR_REG,
+ 			   I2S_CGFR_MCKOE, (unsigned int)~I2S_CGFR_MCKOE);
+ }
+-- 
+2.11.0
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlkfLIcACgkQJNaLcl1U
-h9CHnAf+IXsGxqydmvrZlOzBJl5ojod739fGNNDtpjaXuqzW4J/bvG696IE/7xvf
-H4UnPIq665ZlwkriuQg3pMYfnR8UQDQJiqh8p7no88+pv0m/L7zQtcFgbG/Bnbal
-V4CwY5Rv0VxQETvKqL3Zb55u2WHVxkhE/MiJP5Ux/9gLFaeeEQeLnefB7bdQEaxT
-V0dIJ5Q2K4emW94Fsb4yTGGQfsTZAu910yfy/pH5ORSID3ereY1Mvm2h/r/4CDA6
-UAEC8oxEp/+BUzO73yQbK3qKoxNn8pXGN7XXCEnb5sKXWjiZX/wr8rzTq/X/5f3I
-3SkGHc7emwvwWk/S17hoT4DJZz9I7A==
-=JcQo
------END PGP SIGNATURE-----
-
---6tmauatph4ecxfay--
-
---===============2790957871012226198==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-
---===============2790957871012226198==--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
