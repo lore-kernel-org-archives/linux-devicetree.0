@@ -1,61 +1,50 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 00/41] omap_hsmmc: Add ADMA support and UHS/HS200/DDR
- support
-Date: Fri, 19 May 2017 15:13:45 -0700
-Message-ID: <20170519221344.GI10472@atomide.com>
-References: <20170519081541.26753-1-kishon@ti.com>
+From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH v5 0/5] Add ARM Mali Midgard device tree bindings and gpu node for rk3288
+Date: Sat, 20 May 2017 00:25:49 +0200
+Message-ID: <2394922.9rgTI5oGq7@phil>
+References: <cover.1493804968.git.guillaume.tucker@collabora.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170519081541.26753-1-kishon-l0cyMroinI0@public.gmane.org>
+In-Reply-To: <cover.1493804968.git.guillaume.tucker-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Cc: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, nsekhar-l0cyMroinI0@public.gmane.org
+To: Guillaume Tucker <guillaume.tucker-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Sjoerd Simons <sjoerd.simons-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, John Reitan <john.reitan-5wv7dgnIgG8@public.gmane.org>, Wookey <wookey-Xpnwy/r4z8dg9hUCZPvPmw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Guillaume,
 
-* Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org> [170519 01:19]:
-> This series adds UHS, HS200, DDR mode and ADMA support to
-> omap_hsmmc driver used to improve the throughput of MMC/SD in dra7
-> SoCs.
+Am Mittwoch, 3. Mai 2017, 10:56:24 CEST schrieb Guillaume Tucker:
+> The ARM Mali Midgard GPU kernel driver is only available
+> out-of-tree and is not going to be merged in its current form.
+> However, it would be useful to have its device tree bindings
+> merged.  In particular, this would enable distributions to create
+> working driver packages (dkms...) without having to patch the
+> kernel.
+> 
+> The bindings for the earlier Mali Utgard GPU family have already
+> been merged, so this is essentially the same scenario but for
+> newer GPUs (Mali-T604 ~ Mali-T880).
+> 
+> This series of patches first imports the bindings from the latest
+> driver release with some clean-up then adds a gpu node for the
+> rk3288 SoC.  This was successfully tested on Radxa Rock2 Square,
+> Firefly, Veyron Minnie and Jerry boards using Mali kernel driver
+> r16p0 and r12p0 user-space binary.
 
-Certainly seems way less intrusive than earlier before the
-dmaengine changes :)
+as nobody complained anymore, I've applied all patches for 4.13
+with the following small changes:
+- patch2: node name to
+	gpu_opp_table: gpu-opp-table
+  from the original
+	gpu_opp_table: opp_table0
+- patches3-5: moved &gpu{} to its alphabetical correct position
+  (below &gmac and above &hdmi)
 
-> *) tuning ratio of MMC in dra7 is different from sdhci
 
-Hmm what's the tuning ratio?
+Heiko
 
-> This series has been tested on beagleboard, pandaboard, beaglebone-black,
-> beaglebone, am335x-evm, am437x-evm, dra7xx-evm, dra72x-evm, am571x-idk
-> and am572x-idk.
-
-I gave this a quick try after manally applying next-20170519
-after reverting 67d0687224a9 ("mm: drop HASH_ADAPT"). Looks like
-something is missing as I got:
-
-arch/arm/mach-omap2/pdata-quirks.c:445:23: error:
-'struct omap_hsmmc_platform_data' has no member named 'version'
-...
-
-It's possible I messed up something while manually applying.
-
-> I can split the series to go into Ulf Hansson's tree and Tony's tree 
-> separately if that is required.
-
-Yes please. Maybe send the dts parts first that are ready to
-get merged, like the fixes and all the iodelay configuration.
-
-Then the mmc driver changes as a separate set.
-
-Then third set to follow-up and enable things once the mmc
-driver changes are merged.
-
-Regards,
-
-Tony
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
