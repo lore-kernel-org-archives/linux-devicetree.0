@@ -1,142 +1,57 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH v3 00/11] Broadcom Stingray SOC Initial Support
-Date: Fri, 19 May 2017 11:38:35 -0700
-Message-ID: <f76fb782-66f2-e0e1-b526-80befe184c26@gmail.com>
-References: <1494934256-1350-1-git-send-email-anup.patel@broadcom.com>
- <CAOesGMiwspTuVWp8nPcWK2MhuWh8x9XSkZWJE2x=FxTCtU47Sw@mail.gmail.com>
- <CAALAos8sRb+cLeHLP4yuD5oXRP1RWn=PGCkPGEBq+6X+DdkuQg@mail.gmail.com>
+From: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+Subject: Re: [PATCH v2 1/5] drm/stm: ltdc: Add bridge support
+Date: Fri, 19 May 2017 12:33:13 -0700
+Message-ID: <87h90gfxqe.fsf@eliezer.anholt.net>
+References: <1495207218-11372-1-git-send-email-philippe.cornu@st.com> <1495207218-11372-2-git-send-email-philippe.cornu@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAALAos8sRb+cLeHLP4yuD5oXRP1RWn=PGCkPGEBq+6X+DdkuQg@mail.gmail.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Anup Patel <anup.patel@broadcom.com>, Olof Johansson <olof@lixom.net>, Michael Turquette <mturquette@baylibre.com>, sboyd@codeaurora.org
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, Sandeep Tripathy <sandeep.tripathy@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Broadcom Kernel Feedback List <bcm-kernel-feedback-list@broadcom.com>, Pramod Kumar <pramod.kumar@broadcom.com>, Rob Herring <robh+dt@kernel.org>, Oza Pawandeep <oza.oza@broadcom.com>, Ray Jui <rjui@broadcom.com>, Srinath Mannam <srinath.mannam@broadcom.com>, linux-clk <linux-clk@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha512; protocol="application/pgp-signature"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1495207218-11372-2-git-send-email-philippe.cornu-qxv4g6HH51o@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Yannick Fertre <yannick.fertre-qxv4g6HH51o@public.gmane.org>, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: Philippe Cornu <philippe.cornu-qxv4g6HH51o@public.gmane.org>, Mickael Reulier <mickael.reulier-qxv4g6HH51o@public.gmane.org>, Gabriel Fernandez <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>, Vincent Abriou <vincent.abriou-qxv4g6HH51o@public.gmane.org>, Fabien Dessenne <fabien.dessenne-qxv4g6HH51o@public.gmane.org>, Ludovic Barre <ludovic.barre-qxv4g6HH51o@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 05/16/2017 09:24 PM, Anup Patel wrote:
-> On Wed, May 17, 2017 at 12:23 AM, Olof Johansson <olof@lixom.net> wrote:
->> Hi,
->>
->>
->>
->> On Tue, May 16, 2017 at 4:30 AM, Anup Patel <anup.patel@broadcom.com> wrote:
->>> This patchset adds initial support of Broadcom Stingray SOC
->>> by reusing existing Broadcom iProc device drivers.
->>>
->>> Most of the patches in this patchset are DT patches except
->>> the Stingray clock tree support which just one patch.
->>>
->>> This patchset is based on Linux-4.12-rc1 and it is also available
->>> at stingray-v3 branch of https://github.com/Broadcom/arm64-linux.git
->>>
->>> Changes since v2:
->>>  - Remove default bootargs from chosen DT node
->>>  - Remove "linux" prefix from stdout DT attribute of chosen DT node
->>>  - Remove use of GIC_CPU_MASK_xxx() for PPIs
->>>
->>> Changes since v1:
->>>  - Rebased patches for Linux-4.12-rc1
->>>  - Removed unwanted /memreserve/ from bcm958742-base.dtsi
->>>  - Use ranges DT property to clear view of memory-layout
->>>  - Make bcm-sr.h part of clock DT bindings patch
->>>
->>> Anup Patel (3):
->>>   dt-bindings: bcm: Add Broadcom Stingray bindings document
->>>   arm64: dts: Initial DTS files for Broadcom Stingray SOC
->>>   arm64: dts: Add PL022, PL330 and SP805 DT nodes for Stingray
->>>
->>> Oza Pawandeep (1):
->>>   arm64: dts: Add I2C DT nodes for Stingray SoC
->>>
->>> Pramod Kumar (3):
->>>   arm64: dts: Add NAND DT nodes for Stingray SOC
->>>   arm64: dts: Add pinctrl DT nodes for Stingray SOC
->>>   arm64: dts: Add GPIO DT nodes for Stingray SOC
->>>
->>> Sandeep Tripathy (3):
->>>   dt-bindings: clk: Extend binding doc for Stingray SOC
->>>   clk: bcm: Add clocks for Stingray SOC
->>>   arm64: dts: Add clock DT nodes for Stingray SOC
->>>
->>> Srinath Mannam (1):
->>>   arm64: dts: Add PWM and SDHCI DT nodes for Stingray SOC
->>>
->>>  .../devicetree/bindings/arm/bcm/brcm,stingray.txt  |  12 +
->>>  .../bindings/clock/brcm,iproc-clocks.txt           |  76 ++++
->>>  arch/arm64/boot/dts/broadcom/Makefile              |   1 +
->>>  arch/arm64/boot/dts/broadcom/stingray/Makefile     |   6 +
->>>  .../boot/dts/broadcom/stingray/bcm958742-base.dtsi | 131 ++++++
->>>  .../boot/dts/broadcom/stingray/bcm958742k.dts      |  78 ++++
->>>  .../boot/dts/broadcom/stingray/bcm958742t.dts      |  40 ++
->>>  .../boot/dts/broadcom/stingray/stingray-clock.dtsi | 170 ++++++++
->>>  .../dts/broadcom/stingray/stingray-pinctrl.dtsi    | 345 ++++++++++++++++
->>>  .../arm64/boot/dts/broadcom/stingray/stingray.dtsi | 460 +++++++++++++++++++++
->>>  drivers/clk/bcm/Kconfig                            |   8 +
->>>  drivers/clk/bcm/Makefile                           |   1 +
->>>  drivers/clk/bcm/clk-sr.c                           | 300 ++++++++++++++
->>>  include/dt-bindings/clock/bcm-sr.h                 | 101 +++++
->>>  .../dt-bindings/pinctrl/brcm,pinctrl-stingray.h    |  68 +++
->>>  15 files changed, 1797 insertions(+)
->>>  create mode 100644 Documentation/devicetree/bindings/arm/bcm/brcm,stingray.txt
->>>  create mode 100644 arch/arm64/boot/dts/broadcom/stingray/Makefile
->>>  create mode 100644 arch/arm64/boot/dts/broadcom/stingray/bcm958742-base.dtsi
->>>  create mode 100644 arch/arm64/boot/dts/broadcom/stingray/bcm958742k.dts
->>>  create mode 100644 arch/arm64/boot/dts/broadcom/stingray/bcm958742t.dts
->>>  create mode 100644 arch/arm64/boot/dts/broadcom/stingray/stingray-clock.dtsi
->>>  create mode 100644 arch/arm64/boot/dts/broadcom/stingray/stingray-pinctrl.dtsi
->>>  create mode 100644 arch/arm64/boot/dts/broadcom/stingray/stingray.dtsi
->>>  create mode 100644 drivers/clk/bcm/clk-sr.c
->>>  create mode 100644 include/dt-bindings/clock/bcm-sr.h
->>>  create mode 100644 include/dt-bindings/pinctrl/brcm,pinctrl-stingray.h
->>
->> Grouping as one patchset for review is fine, but when you submit this
->> for merge you need to split it up:
->>
->> - Documentation/devicetree can go with the driver pieces or with the
->> DT changes, your choice
->> - DTS/DTSI changes should go through the Broadcom maintainers to arm-soc
->> - clk changes should go to clk maintainers.
-> 
-> Only PATCH3 needs to go through clk maintainers rest all patches
-> are DT bindings document and DTS changes which can go through
-> Broadcom tree. Right ??
+--=-=-=
+Content-Type: text/plain
 
-Patch 2 and 3 should go through the clock maintainers, and I can take
-the remaining patches through the Broadcom ARM/ARM64 SoC pull requests,
-no problem.
+Philippe CORNU <philippe.cornu-qxv4g6HH51o@public.gmane.org> writes:
 
-Unless there are specific changes requested which warrant a v4, I can
-coordinate with Stephen and Mike to make sure that they take the
-appropriate patches.
+> Add the bridge support, used by DSI host and HDMI/LVDS bridges.
+>
+> Signed-off-by: Philippe CORNU <philippe.cornu-qxv4g6HH51o@public.gmane.org>
 
-> 
->>
->> Also, there's usually no need to split up a DT introduction and having
->> separate pieces for NAND/pinctrl/GPIO/etc: They can all go in the main
->> DT submission patch.
-> 
-> Yes, we have already squashed DTS patches from same author into
-> one DTS patch except NAND, PINCTRL and GPIO patches.
-> 
-> The NAND, PINCTRL, and GPIO patches were not squashed into
-> one patch for easy review but since you suggest I will squash these
-> three DTS patches into one DTS patch.
-> 
-> Regards,
-> Anup
-> 
+The DW DSI host is bridging from MIPI DPI to MIPI DSI, right?  I think
+you could just have ltdc always set up a DPI encoder (the
+ltdc_rgb_encoder_create() function), and then depending on whether
+drm_of_find_panel_or_bridge() finds you a panel or a bridge, you
+drm_panel_attach() or drm_bridge_attach().
 
+You wouldn't even need to wrap the drm_panel_prepare() and related calls
+with a check for the panel, because the inlines already do that.
 
--- 
-Florian
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE/JuuFDWp9/ZkuCBXtdYpNtH8nugFAlkfSHkACgkQtdYpNtH8
+nujRbw/+PSPuBLPaZdrdH718s1gOfHeYXn2opudOKsWWidVjs89HBZFbAmfbkkJv
+Z7a9cVzhy76nhzeahaNgXXZBcU0ZU8f9ahZjItHlNyQmD5j1p8e1xgIcJsg0IYQo
+ilmnjbhJBrj8ZcVGt7DpEumap2r2dwqqW0w4l/6Nz4jN2/iDU6iP4zR5Ej/KR8mR
+4xeOqWEDhjHGOUK9XlUgUQlSALWHPf6+RbiBmdbWLGwrTBoPX1WHC0sd9ORcjt/x
+j+R1zgQgDhUvWwOiq+JLw8Hxd22TBK7G+Ua4sAlv7u4ktRPgJhbkiXcV9aeE6Njk
+JOpq2SzfmTPDHPz1bexr6okaE+c3YJE7cUsp8qEsGhcELwqa9XoB7o/O8gZtvWPB
+oHaSggAUuGMGa9+qkumwAx4Y+FgvXC7IW8tR9u0+5LCTyIO4ErglkmIeA3YpO6iA
+0BQBiaDOqIJqqRxFyE9/oDFlAahAD4MhXCtdMpKkkpfa8YbZvaEsPdfSeoNRwdAr
+ywXyWtjI1eQi2eCi041Np3GhSOPZpLCMnCeIQSLdCpWuj/qgS5eY4ycAlQOJ0Rb7
+rXPwyX77KJEWW2YkTyaUWjz5K3nScVj2JumbExAaK6h8leXmsz5VrfV5ISS4+MAL
+dV5Yjf0qAcr245OTvG7T3xNbzzX8IUR2kaNippbjksjAFCE0Mtg=
+=P3Dq
+-----END PGP SIGNATURE-----
+--=-=-=--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
