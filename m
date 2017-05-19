@@ -1,95 +1,209 @@
-From: Archit Taneja <architt@codeaurora.org>
-Subject: Re: [PATCH 2/4] dt-bindings: Document the Raspberry Pi Touchscreen
- nodes.
-Date: Fri, 19 May 2017 14:24:36 +0530
-Message-ID: <c01609b7-d2d6-8ed1-5f51-4b910ba8bef0@codeaurora.org>
-References: <20170511235625.22427-1-eric@anholt.net>
- <87shk4iqr7.fsf@eliezer.anholt.net>
- <a7494a8a-a87b-213d-707f-33d67da93267@codeaurora.org>
- <3771766.1sVmoPRjsn@avalon>
+From: Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [linux-sunxi] [PATCH v6 8/9] arm64: allwinner: a64: enable AXP803
+ regulators for Pine64
+Date: Fri, 19 May 2017 09:55:32 +0100
+Message-ID: <77045320-c19a-6c18-ed68-108fa5416c2a@arm.com>
+References: <20170518071653.36561-1-icenowy@aosc.io>
+ <20170518071653.36561-9-icenowy@aosc.io>
+ <98ae1ea8-ef08-8859-63d8-57c56a6348a6@arm.com>
+ <4B129FD0-4AEB-4DC3-AF33-C279468BD197@aosc.io>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <3771766.1sVmoPRjsn@avalon>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Eric Anholt <eric@anholt.net>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <4B129FD0-4AEB-4DC3-AF33-C279468BD197-h8G6r0blFSE@public.gmane.org>
+Content-Language: en-GB
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-CgpPbiAwNS8xOC8yMDE3IDA4OjI1IFBNLCBMYXVyZW50IFBpbmNoYXJ0IHdyb3RlOgo+IEhpIEFy
-Y2hpdCwKPgo+IE9uIFRodXJzZGF5IDE4IE1heSAyMDE3IDEzOjU2OjE5IEFyY2hpdCBUYW5lamEg
-d3JvdGU6Cj4+IE9uIDA1LzE3LzIwMTcgMTI6MTYgQU0sIEVyaWMgQW5ob2x0IHdyb3RlOgo+Cj4g
-W3NuaXBdCj4KPj4+IEluIHRlcm1zIG9mIHBoeXNpY2FsIGNvbm5lY3Rpb25zOgo+Pj4gICAgWzE1
-LXBpbiAiRFNJIiBjb25uZWN0b3Igb24gMjgzNV0KPj4+Cj4+PiAgICAgfCBJMkMgICAgICAgICAg
-ICAgICB8IERTSQo+Pj4KPj4+ICAgIC8gXCAgICAgICAgU1BJICAgICAgIHwKPj4+Cj4+PiBbVFNd
-ICBbQXRtZWxdLS0tLS0tW1RDMzU4NzYyXQo+Pj4KPj4+ICAgICAgICBcICAgICAgICAgICAgICAg
-IHwKPj4+Cj4+PiAgICAgICAgIFxQV00gICAgICAgICAgICB8Cj4+Pgo+Pj4gICAgICAgICAgXCAg
-ICAgICAgICAgICAgfCBEUEkKPj4+Cj4+PiBbc29tZSBiYWNrbGlnaHRdLS0tLS0tW3NvbWUgdW5r
-bm93biBwYW5lbF0KPj4+Cj4+PiBUaGUgYmluZGluZyBJJ20gdHJ5aW5nIHRvIGNyZWF0ZSBpcyB0
-byBleHBvc2Ugd2hhdCdzIG5lY2Vzc2FyeSBmb3IgYQo+Pj4gZHJpdmVyIHRoYXQgdGFsa3MgSTJD
-IHRvIHRoZSBBdG1lbCwgd2hpY2ggdGhlbiBjb250cm9scyB0aGUgUFdNIGFuZCBkb2VzCj4+PiB0
-aGUgY29tbWFuZCBzZXF1ZW5jZSBvdmVyIFNQSSB0byB0aGUgVG9zaGliYSB0aGF0IHNldHMgdXAg
-aXRzIGVuZCBvZiB0aGUKPj4+IERTSSBsaW5rLgo+Pgo+PiBUaGUgYnJpZGdlIChBdG1lbCArIFRD
-MzU4NzYyIGNvbWJpbmF0aW9uKSBoZXJlIGxvb2tzIGxpa2UgaXQncyBwcmltYXJpbHkKPj4gYW4g
-aTJjIGRldmljZSAoaS5lLCB0aGUgY29udHJvbCBidXMgaXMgaTJjKS4gVGhlcmVmb3JlLCB0aGUg
-ZHJtLWJyaWRnZQo+PiBkcml2ZXIgaGVyZSBzaG91bGQgYmUgYW4gaTJjIGRyaXZlciBpbnN0ZWFk
-IG9mIGEgbWlwaV9kc2lfZHJpdmVyLgo+Cj4gR2xhZCB0byBzZWUgd2UgYWdyZWUsIHRoYXQncyB3
-aGF0IEkndmUgcHJvcG9zZWQgaW4gYSBzZXBhcmF0ZSBhbnN3ZXIgOi0pIEknZAo+IGdvIG9uZSBz
-dGVwIGZ1cnRoZXIgdGhvdWdoLCB0aGVyZSBzaG91bGQgYmUgbm8gRFJNIGJyaWRnZSwganVzdCBh
-IERSTSBwYW5lbC4KCklmIHRoZSBQQ0IgY29udGFpbmluZyB0aGUgY29udHJvbGxlciBjaGlwcyBh
-bmQgdGhlIHBhbmVsIGFyZSBwYXJ0IG9mIGEgc2luZ2xlCmNhc2luZywgYW5kIHRoZSBzZXQgdXAg
-d29uJ3Qgd29yayB3aXRoIGFub3RoZXIgcGFuZWwsIHRoZW4geWVhaCwgSSBhZ3JlZS4gSWYgdGhl
-CmJyaWRnZSBjaGlwcyBhcmUgb24gYSBzZXBhcmF0ZSBhZGFwdGVyIGJvYXJkLCBhbmQgdGhlcmUg
-aXMgYSBwb3NzaWJpbGl0eSB0byBjb25uZWN0Cm90aGVyIHBhbmVscywgdGhlbiBtYXliZSBhIHNl
-cGFyYXRlIERSTSBicmlkZ2UgYW5kIGEgRFJNIHBhbmVsIG1pZ2h0IGJlIGEgc2FmZXIgYmV0LgoK
-VGhhbmtzLApBcmNoaXQKCj4KPj4gV2UgaGF2ZSB0aGUgZmFjaWxpdHkgdG8gY3JlYXRlIGEgbWlw
-aSBEU0kgZGV2aWNlIHdpdGhvdXQgdGhlIG5lZWQgdG8gaGF2ZQo+PiBhIGNvcnJlc3BvbmRpbmcg
-bm9kZSBpbiBEVC4gVGhlIEFEVjc1MzMgYW5kIFRDMzU4NzY3IGRyaXZlcnMgYXJlIGV4YW1wbGVz
-Cj4+IG9mIHRoYXQuCj4+Cj4+IFRoZSBmb2xsb3dpbmcgaXMgd2hhdCB0aGUgYmluZGluZyBjb3Vs
-ZCBsb29rIGxpa2UsIGl0J3Mgc2FtZSBhcyB3aGF0IFJvYgo+PiBhbHNvIG1lbnRpb25lZCBwcmV2
-aW91c2x5IGluIHRoZSB0aHJlYWQuCj4+Cj4+IFRoYW5rcywKPj4gQXJjaGl0Cj4+Cj4+IGRzaTE6
-IGRzaUA3ZTcwMDAwMCB7Cj4+IAkjYWRkcmVzcy1jZWxscyA9IDwxPjsKPj4gCSNzaXplLWNlbGxz
-ID0gPDA+Owo+PiAJPC4uLj4KPj4KPj4gCS8qIFRoZSBTb0MncyBEU0kgaW5wdXQvb3V0cHV0IHBv
-cnQgKi8KPj4gCXBvcnRzIHsKPj4gCQkjYWRkcmVzcy1jZWxscyA9IDwxPjsKPj4gCQkjc2l6ZS1j
-ZWxscyA9IDwwPjsKPj4KPj4gCQkvKiBwb3J0QDAgaWYgbmVlZGVkICovCj4+Cj4+IAkJcG9ydEAx
-IHsKPj4gCQkJZHNpX291dF9wb3J0OiBlbmRwb2ludCB7Cj4+IAkJCQlyZWcgPSA8MT47Cj4+IAkJ
-CQlyZW1vdGUtZW5kcG9pbnQgPSA8JmJyaWRnZV9kc2lfcG9ydD47Cj4+IAkJCX07Cj4+IAkJfTsK
-Pj4gCX07Cj4+IH07Cj4+Cj4+IGkyY19kc2k6IGkyYyB7Cj4+IAljb21wYXRpYmxlID0gImkyYy1n
-cGlvIjsKPj4gCSNhZGRyZXNzLWNlbGxzID0gPDE+Owo+PiAJI3NpemUtY2VsbHMgPSA8MD47Cj4+
-IAlncGlvcyA9IDwmZ3BpbyAyOCAwCj4+IAkJICZncGlvIDI5IDA+Owo+Pgo+PiAJLyogdGhlIEF0
-bWVsICsgVEMzNTg3MiBicmlkZ2UgKi8KPj4gCXBpdG91Y2hzY3JlZW5fYnJpZGdlOiBicmlkZ2VA
-NDUgewo+Cj4gVGhpcyBzaG91bGQgdGh1cyBiZSBsY2RANDUuCj4KPj4gCQljb21wYXRpYmxlID0g
-InJhc3BiZXJyeXBpLHRvdWNoc2NyZWVuLWJyaWRnZSI7Cj4KPiBBbmQgdGhpcyByYXNwYmVycnlw
-aSw3aW5jaC10b3VjaHNjcmVlbi1wYW5lbC4gU2hhbWUgd2UgaGF2ZW4ndCBzdGFuZGFyZGl6ZWQK
-PiB0aGUgdmVuZG9yIG5hbWUgcHJlZml4IHRvIHJwaSA6LS8KPgo+PiAJCXJlZyA9IDwweDQ1PjsK
-Pj4KPj4gCQlwb3J0cyB7Cj4+IAkJCSNhZGRyZXNzLWNlbGxzID0gPDE+Owo+PiAJCQkjc2l6ZS1j
-ZWxscyA9IDwwPjsKPj4KPj4gCQkJcG9ydEAwIHsKPj4gCQkJCXJlZyA9IDwwPjsKPj4gCQkJCWJy
-aWRnZV9kc2lfcG9ydDogZW5kcG9pbnQgewo+Cj4gVGhpcyBzaG91bGQgYmUgbmFtZWQgcGFuZWxf
-ZHNpX3BvcnQuCj4KPj4gCQkJCQlyZW1vdGUtZW5kcG9pbnQgPSA8JmRzaV9vdXRfcG9ydD47Cj4+
-IAkJCQl9Owo+PiAJCQl9Owo+PiAJCQlwb3J0QDEgewo+PiAJCQkJcmVnID0gPDE+Owo+PiAJCQkJ
-YnJpZGdlX2RwaV9wb3J0OiBlbmRwb2ludCB7Cj4+IAkJCQkJcmVtb3RlLWVuZHBvaW50ID0KPiA8
-JnBpdG91Y2hzY3JlZW5fcGFuZWxfcG9ydD47Cj4+IAkJCQl9Owo+PiAJCQl9Owo+Cj4gVGhlIHNl
-Y29uZCBwb3J0IGlzIHRodXMgbm90IG5lZWRlZC4KPgo+PiAJCX07Cj4KPiBTbyB3ZSBjYW4gc2lt
-cGxpZnkgdGhpcyB0bwo+Cj4gCQlwb3J0IHsKPiAJCQlwYW5lbF9kc2lfcG9ydDogZW5kcG9pbnQg
-ewo+IAkJCQlyZW1vdGUtZW5kcG9pbnQgPSA8JmRzaV9vdXRfcG9ydD47Cj4gCQkJfTsKPiAJCX07
-Cj4KPiAobm8gbmVlZCBmb3IgYSBwb3J0cyBub2RlIHdoZW4gdGhlcmUncyBhIHNpbmdsZSBwb3J0
-KQo+Cj4+IAl9Owo+PiB9Owo+Pgo+PiBsY2Qgewo+PiAJY29tcGF0aWJsZSA9ICJyYXNwYmVycnlw
-aSw3aW5jaC10b3VjaHNjcmVlbi1wYW5lbCI7Cj4+IAlwb3J0cyB7Cj4+IAkJI2FkZHJlc3MtY2Vs
-bHMgPSA8MT47Cj4+IAkJI3NpemUtY2VsbHMgPSA8MD47Cj4+IAkJcG9ydEAwIHsKPj4gCQkJcmVn
-ID0gPDA+Owo+PiAJCQlwaXRvdWNoc2NyZWVuX3BhbmVsX3BvcnQ6IGVuZHBvaW50IHsKPj4gCQkJ
-CXJlbW90ZS1lbmRwb2ludCA9IDwmYnJpZGdlX2RwaV9wb3J0PjsKPj4gCQkJfTsKPj4gCQl9Owo+
-PiAJfTsKPj4gfTsKPgo+IEFuZCB0aGlzIG5vZGUgY2FuIGdvIGF3YXkuCj4KCi0tIApRdWFsY29t
-bSBJbm5vdmF0aW9uIENlbnRlciwgSW5jLiBpcyBhIG1lbWJlciBvZiBDb2RlIEF1cm9yYSBGb3J1
-bSwKYSBMaW51eCBGb3VuZGF0aW9uIENvbGxhYm9yYXRpdmUgUHJvamVjdApfX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0
-CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3Rv
-cC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+Hi,
+
+On 19/05/17 09:29, Icenowy Zheng wrote:
+> 
+> 
+> 于 2017年5月19日 GMT+08:00 下午4:27:21, Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org> 写到:
+>> Hi,
+>>
+>> On 18/05/17 08:16, Icenowy Zheng wrote:
+>>> Add support of AXP803 regulators in the Pine64 device tree, in order
+>> to
+>>> enable many future functionalities, e.g. Wi-Fi.
+>>>
+>>> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+>>> ---
+>>> Changes in v6:
+>>> - Rebased on next-20170517.
+>>>
+>>>  .../arm64/boot/dts/allwinner/sun50i-a64-pine64.dts | 109
+>> +++++++++++++++++++++
+>>>  1 file changed, 109 insertions(+)
+>>>
+>>> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts
+>> b/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts
+>>> index 36001884ed33..40921bacb39c 100644
+>>> --- a/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts
+>>> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts
+>>> @@ -118,6 +118,115 @@
+>>>  	};
+>>>  };
+>>>  
+>>> +#include "axp803.dtsi"
+>>> +
+>>> +&reg_aldo1 {
+>>> +	regulator-min-microvolt = <2800000>;
+>>> +	regulator-max-microvolt = <2800000>;
+>>> +	regulator-name = "vcc-csi";
+>>> +};
+>>> +
+>>> +&reg_aldo2 {
+>>> +	regulator-always-on;
+>>> +	regulator-min-microvolt = <1800000>;
+>>> +	regulator-max-microvolt = <3300000>;
+>>> +	regulator-name = "vcc-pl";
+>>> +};
+>>> +
+>>> +&reg_aldo3 {
+>>> +	regulator-always-on;
+>>> +	regulator-min-microvolt = <2700000>;
+>>> +	regulator-max-microvolt = <3300000>;
+>>> +	regulator-name = "vcc-pll-avcc";
+>>> +};
+
+The schematic puts this at a fixed 3.0V, so why the range here? Are we
+expected to tune the voltage of the PLLs?
+
+>>> +
+>>> +&reg_dc1sw {
+>>> +	regulator-name = "vcc-phy";
+>>> +};
+>>> +
+>>> +&reg_dcdc1 {
+>>> +	regulator-always-on;
+>>> +	regulator-min-microvolt = <3300000>;
+>>> +	regulator-max-microvolt = <3300000>;
+>>> +	regulator-name = "vcc-3v3";
+>>> +};
+>>> +
+>>> +&reg_dcdc2 {
+>>> +	regulator-always-on;
+>>> +	regulator-min-microvolt = <1000000>;
+>>> +	regulator-max-microvolt = <1300000>;
+>>> +	regulator-name = "vdd-cpux";
+>>> +};
+>>> +
+>>> +/* DCDC3 is polyphased with DCDC2 */
+>>> +
+>>> +&reg_dcdc5 {
+>>> +	regulator-always-on;
+>>> +	regulator-min-microvolt = <1500000>;
+>>> +	regulator-max-microvolt = <1500000>;
+>>> +	regulator-name = "vcc-dram";
+>>> +};
+>>
+>> I think I mentioned this before, but the Pine64 has DDR3L DRAM, which
+>> is
+>> specified to run at 1.35V (1.36V with the 20mV granularity of the AXP).
+>> The reset value is even (wrongly?) configured to 1.24V.
+>>
+>> So is there any reason you set the voltage to 1.5V? Is that what the
+>> BSP
+>> does? Or did you see any problems with 1.36V?
+> 
+> I just set it based on the schematics.
+
+I wouldn't trust the schematics too much. They are rather generic, see
+the Ethernet page, for instance, showing *different* PHYs, not just the
+ones used.
+For the DRAM the Pine64 schematic does not even tell the DRAM chip used,
+the name under the chip is just describing the package.
+
+> And 1.35v cannot be accurately achieved by dcdc5 and it's a problem whether to use 1.34v or 1.36v ;-)
+
+Well, as I wrote above, 1.36V is the voltage to go with. I think 10mV
+more is well within the tolerance ;-)
+
+>>> +&reg_dcdc6 {
+>>> +	regulator-always-on;
+>>> +	regulator-min-microvolt = <1100000>;
+>>> +	regulator-max-microvolt = <1100000>;
+>>> +	regulator-name = "vdd-sys";
+>>> +};
+>>> +
+>>> +&reg_dldo1 {
+>>> +	regulator-min-microvolt = <3300000>;
+>>> +	regulator-max-microvolt = <3300000>;
+>>> +	regulator-name = "vcc-hdmi";
+>>> +};
+>>> +
+>>> +&reg_dldo2 {
+>>> +	regulator-min-microvolt = <3300000>;
+>>> +	regulator-max-microvolt = <3300000>;
+>>> +	regulator-name = "vcc-mipi";
+>>> +};
+>>> +
+>>> +&reg_dldo3 {
+>>> +	regulator-min-microvolt = <3300000>;
+>>> +	regulator-max-microvolt = <3300000>;
+>>> +	regulator-name = "avdd-csi";
+>>> +};
+
+If you stick to the schematic, this should be 2.8V.
+
+>>> +
+>>> +&reg_dldo4 {
+>>> +	regulator-min-microvolt = <3300000>;
+>>> +	regulator-max-microvolt = <3300000>;
+>>> +	regulator-name = "vcc-wifi";
+>>> +};
+>>> +
+>>> +&reg_eldo1 {
+>>> +	regulator-min-microvolt = <1800000>;
+>>> +	regulator-max-microvolt = <1800000>;
+>>> +	regulator-name = "cpvdd";
+>>> +};
+>>> +
+>>> +&reg_eldo3 {
+>>> +	regulator-min-microvolt = <1800000>;
+>>> +	regulator-max-microvolt = <1800000>;
+>>> +	regulator-name = "vdd-1v8-csi";
+>>> +};
+
+The schematic lists 1.2V/1.5V/1.8V here, so should we have a range?
+
+>>> +
+>>> +&reg_fldo1 {
+>>> +	regulator-min-microvolt = <1200000>;
+>>> +	regulator-max-microvolt = <1200000>;
+>>> +	regulator-name = "vcc-1v2-hsic";
+>>> +};
+>>> +
+>>> +&reg_fldo2 {
+>>> +	regulator-always-on;
+
+Why do we need to turn this on? Upstream firmware does not use the
+arisc, so it can stay off.
+Also in general I think Linux should not tinker with the management
+processor at all.
+
+Cheers,
+Andre.
+
+>>> +	regulator-min-microvolt = <1100000>;
+>>> +	regulator-max-microvolt = <1100000>;
+>>> +	regulator-name = "vdd-cpus";
+>>> +};
+>>> +
+>>> +&reg_rtc_ldo {
+>>> +	regulator-name = "vcc-rtc";
+>>> +};
+>>> +
+>>>  /* On Exp and Euler connectors */
+>>>  &uart0 {
+>>>  	pinctrl-names = "default";
+>>>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
