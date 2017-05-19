@@ -1,73 +1,36 @@
 From: Leo Yan <leo.yan@linaro.org>
-Subject: [PATCH v10 05/10] coresight: of_get_coresight_platform_data: Add missing of_node_put
-Date: Fri, 19 May 2017 12:25:52 +0800
-Message-ID: <1495167957-14923-6-git-send-email-leo.yan@linaro.org>
+Subject: [PATCH v10 04/10] MAINTAINERS: update file entries for Coresight subsystem
+Date: Fri, 19 May 2017 12:25:51 +0800
+Message-ID: <1495167957-14923-5-git-send-email-leo.yan@linaro.org>
 References: <1495167957-14923-1-git-send-email-leo.yan@linaro.org>
-Return-path: <linux-doc-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1495167957-14923-1-git-send-email-leo.yan@linaro.org>
-Sender: linux-doc-owner@vger.kernel.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: Jonathan Corbet <corbet@lwn.net>, Mathieu Poirier <mathieu.poirier@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Liviu Dudau <liviu.dudau@arm.com>, Sudeep Holla <sudeep.holla@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Wei Xu <xuwei5@hisilicon.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Suzuki K Poulose <suzuki.poulose@arm.com>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, Stephen Boyd <sboyd@codeaurora.org>
 Cc: Leo Yan <leo.yan@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Suzuki K Poulose <suzuki.poulose@arm.com>
+Update document file entries for Coresight debug module.
 
-The of_get_coresight_platform_data iterates over the possible CPU nodes
-to find a given cpu phandle. However it does not drop the reference
-to the node pointer returned by the of_get_coresight_platform_data.
-
-This patch also introduces another minor fix is to use
-of_cpu_device_node_get() to replace of_get_cpu_node().
-
-Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
-Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-[Leo: minor tweaks for of_get_coresight_platform_data]
+Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
 Signed-off-by: Leo Yan <leo.yan@linaro.org>
 ---
- drivers/hwtracing/coresight/of_coresight.c | 17 ++++++++++-------
- 1 file changed, 10 insertions(+), 7 deletions(-)
+ MAINTAINERS | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/hwtracing/coresight/of_coresight.c b/drivers/hwtracing/coresight/of_coresight.c
-index 2749853..225b2dd 100644
---- a/drivers/hwtracing/coresight/of_coresight.c
-+++ b/drivers/hwtracing/coresight/of_coresight.c
-@@ -109,7 +109,8 @@ of_get_coresight_platform_data(struct device *dev,
- 	struct coresight_platform_data *pdata;
- 	struct of_endpoint endpoint, rendpoint;
- 	struct device *rdev;
--	struct device_node *dn;
-+	bool found;
-+	struct device_node *dn, *np;
- 	struct device_node *ep = NULL;
- 	struct device_node *rparent = NULL;
- 	struct device_node *rport = NULL;
-@@ -176,17 +177,19 @@ of_get_coresight_platform_data(struct device *dev,
- 		} while (ep);
- 	}
- 
--	/* Affinity defaults to CPU0 */
--	pdata->cpu = 0;
- 	dn = of_parse_phandle(node, "cpu", 0);
--	for (cpu = 0; dn && cpu < nr_cpu_ids; cpu++) {
--		if (dn == of_get_cpu_node(cpu, NULL)) {
--			pdata->cpu = cpu;
-+	for_each_possible_cpu(cpu) {
-+		np = of_cpu_device_node_get(cpu);
-+		found = (dn == np);
-+		of_node_put(np);
-+		if (found)
- 			break;
--		}
- 	}
- 	of_node_put(dn);
- 
-+	/* Affinity to CPU0 if no cpu nodes are found */
-+	pdata->cpu = found ? cpu : 0;
-+
- 	return pdata;
- }
- EXPORT_SYMBOL_GPL(of_get_coresight_platform_data);
+diff --git a/MAINTAINERS b/MAINTAINERS
+index f7d568b..d443258 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -1208,7 +1208,9 @@ L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
+ S:	Maintained
+ F:	drivers/hwtracing/coresight/*
+ F:	Documentation/trace/coresight.txt
++F:	Documentation/trace/coresight-cpu-debug.txt
+ F:	Documentation/devicetree/bindings/arm/coresight.txt
++F:	Documentation/devicetree/bindings/arm/coresight-cpu-debug.txt
+ F:	Documentation/ABI/testing/sysfs-bus-coresight-devices-*
+ F:	tools/perf/arch/arm/util/pmu.c
+ F:	tools/perf/arch/arm/util/auxtrace.c
 -- 
 2.7.4
-
