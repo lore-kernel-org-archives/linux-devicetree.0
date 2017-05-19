@@ -1,282 +1,169 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: [PATCH 13/41] mmc: host: omap_hsmmc: Add support to set IODELAY values
-Date: Fri, 19 May 2017 13:45:13 +0530
-Message-ID: <20170519081541.26753-14-kishon@ti.com>
-References: <20170519081541.26753-1-kishon@ti.com>
+From: Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v6 8/9] arm64: allwinner: a64: enable AXP803
+ regulators for Pine64
+Date: Fri, 19 May 2017 09:27:21 +0100
+Message-ID: <98ae1ea8-ef08-8859-63d8-57c56a6348a6@arm.com>
+References: <20170518071653.36561-1-icenowy@aosc.io>
+ <20170518071653.36561-9-icenowy@aosc.io>
+Reply-To: andre.przywara-5wv7dgnIgG8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170519081541.26753-1-kishon@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Tony Lindgren <tony@atomide.com>
-Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Jonathan Corbet <corbet@lwn.net>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, nsekhar@ti.com, kishon@ti.com
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBDNZNK75ZIKRB4GY7LEAKGQEOZ7KWFQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20170518071653.36561-9-icenowy-h8G6r0blFSE@public.gmane.org>
+Content-Language: en-GB
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: icenowy-h8G6r0blFSE@public.gmane.org, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The data manual of J6/J6 Eco recommends to set different IODELAY values
-depending on the mode in which the MMC/SD is enumerated in order to
-ensure IO timings are met.
+Hi,
 
-Add support to set the IODELAY values depending on the various MMC
-modes using the pinctrl APIs.
+On 18/05/17 08:16, Icenowy Zheng wrote:
+> Add support of AXP803 regulators in the Pine64 device tree, in order to
+> enable many future functionalities, e.g. Wi-Fi.
+> 
+> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+> ---
+> Changes in v6:
+> - Rebased on next-20170517.
+> 
+>  .../arm64/boot/dts/allwinner/sun50i-a64-pine64.dts | 109 +++++++++++++++++++++
+>  1 file changed, 109 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts
+> index 36001884ed33..40921bacb39c 100644
+> --- a/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts
+> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts
+> @@ -118,6 +118,115 @@
+>  	};
+>  };
+>  
+> +#include "axp803.dtsi"
+> +
+> +&reg_aldo1 {
+> +	regulator-min-microvolt = <2800000>;
+> +	regulator-max-microvolt = <2800000>;
+> +	regulator-name = "vcc-csi";
+> +};
+> +
+> +&reg_aldo2 {
+> +	regulator-always-on;
+> +	regulator-min-microvolt = <1800000>;
+> +	regulator-max-microvolt = <3300000>;
+> +	regulator-name = "vcc-pl";
+> +};
+> +
+> +&reg_aldo3 {
+> +	regulator-always-on;
+> +	regulator-min-microvolt = <2700000>;
+> +	regulator-max-microvolt = <3300000>;
+> +	regulator-name = "vcc-pll-avcc";
+> +};
+> +
+> +&reg_dc1sw {
+> +	regulator-name = "vcc-phy";
+> +};
+> +
+> +&reg_dcdc1 {
+> +	regulator-always-on;
+> +	regulator-min-microvolt = <3300000>;
+> +	regulator-max-microvolt = <3300000>;
+> +	regulator-name = "vcc-3v3";
+> +};
+> +
+> +&reg_dcdc2 {
+> +	regulator-always-on;
+> +	regulator-min-microvolt = <1000000>;
+> +	regulator-max-microvolt = <1300000>;
+> +	regulator-name = "vdd-cpux";
+> +};
+> +
+> +/* DCDC3 is polyphased with DCDC2 */
+> +
+> +&reg_dcdc5 {
+> +	regulator-always-on;
+> +	regulator-min-microvolt = <1500000>;
+> +	regulator-max-microvolt = <1500000>;
+> +	regulator-name = "vcc-dram";
+> +};
 
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-[nsekhar@ti.com: introduce OMAP_HSMMC_SETUP_PINCTRL()]
-Signed-off-by: Sekhar Nori <nsekhar@ti.com>
----
- .../devicetree/bindings/mmc/ti-omap-hsmmc.txt      |   5 +
- drivers/mmc/host/omap_hsmmc.c                      | 124 ++++++++++++++++++++-
- include/linux/platform_data/hsmmc-omap.h           |   3 +
- 3 files changed, 129 insertions(+), 3 deletions(-)
+I think I mentioned this before, but the Pine64 has DDR3L DRAM, which is
+specified to run at 1.35V (1.36V with the 20mV granularity of the AXP).
+The reset value is even (wrongly?) configured to 1.24V.
 
-diff --git a/Documentation/devicetree/bindings/mmc/ti-omap-hsmmc.txt b/Documentation/devicetree/bindings/mmc/ti-omap-hsmmc.txt
-index 258e25af10f7..dcf0b777c031 100644
---- a/Documentation/devicetree/bindings/mmc/ti-omap-hsmmc.txt
-+++ b/Documentation/devicetree/bindings/mmc/ti-omap-hsmmc.txt
-@@ -20,6 +20,11 @@ Optional properties:
- ti,dual-volt: boolean, supports dual voltage cards
- <supply-name>-supply: phandle to the regulator device tree node
- "supply-name" examples are "vmmc", "vmmc_aux" etc
-+pinctrl-names: Should be a list of pinctrl state names and can be "sdr104",
-+"hs200_1_8v", "ddr50", "sdr50", "sdr25", "sdr12", "hs", "ddr_1_8v" or
-+"default".
-+pinctrl-<num>: Phandle referencing pin configuration of the sd/emmc controller.
-+See: Documentation/devicetree/bindings/pinctrl/pinctrl-binding.txt
- ti,non-removable: non-removable slot (like eMMC)
- ti,needs-special-reset: Requires a special softreset sequence
- ti,needs-special-hs-handling: HSMMC IP needs special setting for handling High Speed
-diff --git a/drivers/mmc/host/omap_hsmmc.c b/drivers/mmc/host/omap_hsmmc.c
-index b28f0e9631ce..7271c7e3144c 100644
---- a/drivers/mmc/host/omap_hsmmc.c
-+++ b/drivers/mmc/host/omap_hsmmc.c
-@@ -258,6 +258,18 @@ struct omap_hsmmc_host {
- 	struct timer_list	timer;
- 	unsigned long long	data_timeout;
- 
-+	struct pinctrl		*pinctrl;
-+	struct pinctrl_state	*pinctrl_state;
-+	struct pinctrl_state	*default_pinctrl_state;
-+	struct pinctrl_state	*sdr104_pinctrl_state;
-+	struct pinctrl_state	*hs200_1_8v_pinctrl_state;
-+	struct pinctrl_state	*ddr50_pinctrl_state;
-+	struct pinctrl_state	*sdr50_pinctrl_state;
-+	struct pinctrl_state	*sdr25_pinctrl_state;
-+	struct pinctrl_state	*sdr12_pinctrl_state;
-+	struct pinctrl_state	*hs_pinctrl_state;
-+	struct pinctrl_state	*ddr_1_8v_pinctrl_state;
-+
- 	/* return MMC cover switch state, can be NULL if not supported.
- 	 *
- 	 * possible return values:
-@@ -1729,6 +1741,8 @@ static void omap_hsmmc_request(struct mmc_host *mmc, struct mmc_request *req)
- static void omap_hsmmc_set_timing(struct omap_hsmmc_host *host)
- {
- 	u32 val;
-+	int ret;
-+	struct pinctrl_state *pinctrl_state;
- 	struct mmc_ios *ios = &host->mmc->ios;
- 
- 	omap_hsmmc_stop_clock(host);
-@@ -1738,35 +1752,54 @@ static void omap_hsmmc_set_timing(struct omap_hsmmc_host *host)
- 	switch (ios->timing) {
- 	case MMC_TIMING_UHS_SDR104:
- 		val |= AC12_UHSMC_SDR104;
-+		pinctrl_state = host->sdr104_pinctrl_state;
- 		break;
- 	case MMC_TIMING_MMC_HS200:
- 		val |= AC12_UHSMC_SDR104;
-+		pinctrl_state = host->hs200_1_8v_pinctrl_state;
- 		break;
- 	case MMC_TIMING_UHS_DDR50:
- 		val |= AC12_UHSMC_DDR50;
-+		pinctrl_state = host->ddr50_pinctrl_state;
- 		break;
- 	case MMC_TIMING_UHS_SDR50:
- 		val |= AC12_UHSMC_SDR50;
-+		pinctrl_state = host->sdr50_pinctrl_state;
- 		break;
- 	case MMC_TIMING_UHS_SDR25:
- 		val |= AC12_UHSMC_SDR25;
-+		pinctrl_state = host->sdr25_pinctrl_state;
- 		break;
- 	case MMC_TIMING_UHS_SDR12:
- 		val |= AC12_UHSMC_SDR12;
-+		pinctrl_state = host->sdr12_pinctrl_state;
- 		break;
- 	case MMC_TIMING_SD_HS:
- 	case MMC_TIMING_MMC_HS:
- 		val |= AC12_UHSMC_RES;
-+		pinctrl_state = host->hs_pinctrl_state;
- 		break;
- 	case MMC_TIMING_MMC_DDR52:
- 		val |= AC12_UHSMC_RES;
-+		pinctrl_state = host->ddr_1_8v_pinctrl_state;
- 		break;
- 	default:
- 		val |= AC12_UHSMC_RES;
-+		pinctrl_state = host->default_pinctrl_state;
- 		break;
- 	}
- 	OMAP_HSMMC_WRITE(host->base, AC12, val);
- 
-+	if (host->pdata->controller_flags & OMAP_HSMMC_REQUIRE_IODELAY) {
-+		ret = pinctrl_select_state(host->pinctrl, pinctrl_state);
-+		if (ret) {
-+			dev_err(mmc_dev(host->mmc),
-+				"failed to select pinctrl state\n");
-+			return;
-+		}
-+		host->pinctrl_state = pinctrl_state;
-+	}
-+
- 	omap_hsmmc_start_clock(host);
- }
- 
-@@ -2357,8 +2390,14 @@ static struct omap_hsmmc_platform_data *of_get_hsmmc_pdata(struct device *dev)
- 		return ERR_PTR(-ENOMEM); /* out of memory */
- 
- 	legacy = dev_get_platdata(dev);
--	if (legacy && legacy->name)
--		pdata->name = legacy->name;
-+	if (legacy) {
-+		if (legacy->name)
-+			pdata->name = legacy->name;
-+		if (legacy->version)
-+			pdata->version = legacy->version;
-+		if (legacy->max_freq > 0)
-+			pdata->max_freq = legacy->max_freq;
-+	}
- 
- 	if (of_find_property(np, "ti,dual-volt", NULL))
- 		pdata->controller_flags |= OMAP_HSMMC_SUPPORTS_DUAL_VOLT;
-@@ -2388,6 +2427,73 @@ static inline struct omap_hsmmc_platform_data
- }
- #endif
- 
-+#define OMAP_HSMMC_SETUP_PINCTRL(capvar, capmask, mode)			\
-+	do {								\
-+		struct pinctrl_state *s = ERR_PTR(-ENODEV);		\
-+		char str[20];						\
-+		char *version = host->pdata->version;			\
-+									\
-+		if (!(mmc->capvar & (capmask)))				\
-+			break;						\
-+									\
-+		if (host->pdata->version) {				\
-+			sprintf(str, "%s-%s", #mode, version);		\
-+			s = pinctrl_lookup_state(host->pinctrl, str);	\
-+		}							\
-+									\
-+		if (IS_ERR(s)) {					\
-+			sprintf(str, "%s", #mode);			\
-+			s = pinctrl_lookup_state(host->pinctrl, str);	\
-+		}							\
-+									\
-+		if (IS_ERR(s)) {					\
-+			dev_err(host->dev, "no pinctrl state for %s "	\
-+				"mode\n", #mode);			\
-+			mmc->capvar &= ~(capmask);			\
-+		} else {						\
-+			host->mode##_pinctrl_state = s;			\
-+		}							\
-+									\
-+	} while (0)
-+
-+static int omap_hsmmc_get_iodelay_pinctrl_state(struct omap_hsmmc_host *host)
-+{
-+	struct mmc_host *mmc = host->mmc;
-+
-+	if (!(host->pdata->controller_flags & OMAP_HSMMC_REQUIRE_IODELAY))
-+		return 0;
-+
-+	host->pinctrl = devm_pinctrl_get(host->dev);
-+	if (IS_ERR(host->pinctrl)) {
-+		dev_err(host->dev, "Cannot get pinctrl\n");
-+		return PTR_ERR(host->pinctrl);
-+	}
-+
-+	host->default_pinctrl_state = pinctrl_lookup_state(host->pinctrl,
-+							   "default");
-+	if (IS_ERR(host->default_pinctrl_state)) {
-+		dev_err(host->dev,
-+			"no pinctrl state for default mode\n");
-+		return PTR_ERR(host->default_pinctrl_state);
-+	}
-+
-+	OMAP_HSMMC_SETUP_PINCTRL(caps,	MMC_CAP_UHS_SDR104,	sdr104);
-+	OMAP_HSMMC_SETUP_PINCTRL(caps,	MMC_CAP_UHS_DDR50,	ddr50);
-+	OMAP_HSMMC_SETUP_PINCTRL(caps,	MMC_CAP_UHS_SDR50,	sdr50);
-+	OMAP_HSMMC_SETUP_PINCTRL(caps,	MMC_CAP_UHS_SDR25,	sdr25);
-+	OMAP_HSMMC_SETUP_PINCTRL(caps,	MMC_CAP_UHS_SDR12,	sdr12);
-+	OMAP_HSMMC_SETUP_PINCTRL(caps,	MMC_CAP_1_8V_DDR,	ddr_1_8v);
-+	OMAP_HSMMC_SETUP_PINCTRL(caps,
-+				 MMC_CAP_MMC_HIGHSPEED | MMC_CAP_SD_HIGHSPEED,
-+				 hs);
-+	OMAP_HSMMC_SETUP_PINCTRL(caps2,	MMC_CAP2_HS200_1_8V_SDR,
-+				 hs200_1_8v);
-+
-+	host->pinctrl_state = host->default_pinctrl_state;
-+
-+	return 0;
-+}
-+
- static int omap_hsmmc_probe(struct platform_device *pdev)
- {
- 	struct omap_hsmmc_platform_data *pdata = pdev->dev.platform_data;
-@@ -2535,6 +2641,10 @@ static int omap_hsmmc_probe(struct platform_device *pdev)
- 
- 	omap_hsmmc_set_capabilities(host);
- 
-+	ret = omap_hsmmc_get_iodelay_pinctrl_state(host);
-+	if (ret)
-+		goto err_pinctrl;
-+
- 	host->rx_chan = dma_request_chan(&pdev->dev, "rx");
- 	if (IS_ERR(host->rx_chan)) {
- 		dev_err(mmc_dev(host->mmc), "RX DMA channel request failed\n");
-@@ -2606,6 +2716,7 @@ static int omap_hsmmc_probe(struct platform_device *pdev)
- 		dma_release_channel(host->tx_chan);
- 	if (!IS_ERR_OR_NULL(host->rx_chan))
- 		dma_release_channel(host->rx_chan);
-+err_pinctrl:
- 	if (host->dbclk)
- 		clk_disable_unprepare(host->dbclk);
- 	pm_runtime_dont_use_autosuspend(host->dev);
-@@ -2741,6 +2852,7 @@ static int omap_hsmmc_runtime_resume(struct device *dev)
- {
- 	struct omap_hsmmc_host *host;
- 	unsigned long flags;
-+	int ret;
- 
- 	host = platform_get_drvdata(to_platform_device(dev));
- 	omap_hsmmc_context_restore(host);
-@@ -2757,7 +2869,13 @@ static int omap_hsmmc_runtime_resume(struct device *dev)
- 		OMAP_HSMMC_WRITE(host->base, ISE, CIRQ_EN);
- 		OMAP_HSMMC_WRITE(host->base, IE, CIRQ_EN);
- 	} else {
--		pinctrl_pm_select_default_state(host->dev);
-+		if (host->pinctrl) {
-+			ret = pinctrl_select_state(host->pinctrl,
-+						   host->pinctrl_state);
-+			if (ret)
-+				dev_err(mmc_dev(host->mmc),
-+					"failed to activate pinctrl state\n");
-+		}
- 	}
- 	spin_unlock_irqrestore(&host->irq_lock, flags);
- 	return 0;
-diff --git a/include/linux/platform_data/hsmmc-omap.h b/include/linux/platform_data/hsmmc-omap.h
-index 21832a357654..8e771851e07a 100644
---- a/include/linux/platform_data/hsmmc-omap.h
-+++ b/include/linux/platform_data/hsmmc-omap.h
-@@ -71,6 +71,9 @@ struct omap_hsmmc_platform_data {
- #define HSMMC_HAS_HSPE_SUPPORT	(1 << 2)
- 	unsigned features;
- 
-+	/* string specifying a particular variant of hardware */
-+	char *version;
-+
- 	int gpio_cd;			/* gpio (card detect) */
- 	int gpio_cod;			/* gpio (cover detect) */
- 	int gpio_wp;			/* gpio (write protect) */
--- 
-2.11.0
+So is there any reason you set the voltage to 1.5V? Is that what the BSP
+does? Or did you see any problems with 1.36V?
+
+Cheers,
+Andre.
+
+> +&reg_dcdc6 {
+> +	regulator-always-on;
+> +	regulator-min-microvolt = <1100000>;
+> +	regulator-max-microvolt = <1100000>;
+> +	regulator-name = "vdd-sys";
+> +};
+> +
+> +&reg_dldo1 {
+> +	regulator-min-microvolt = <3300000>;
+> +	regulator-max-microvolt = <3300000>;
+> +	regulator-name = "vcc-hdmi";
+> +};
+> +
+> +&reg_dldo2 {
+> +	regulator-min-microvolt = <3300000>;
+> +	regulator-max-microvolt = <3300000>;
+> +	regulator-name = "vcc-mipi";
+> +};
+> +
+> +&reg_dldo3 {
+> +	regulator-min-microvolt = <3300000>;
+> +	regulator-max-microvolt = <3300000>;
+> +	regulator-name = "avdd-csi";
+> +};
+> +
+> +&reg_dldo4 {
+> +	regulator-min-microvolt = <3300000>;
+> +	regulator-max-microvolt = <3300000>;
+> +	regulator-name = "vcc-wifi";
+> +};
+> +
+> +&reg_eldo1 {
+> +	regulator-min-microvolt = <1800000>;
+> +	regulator-max-microvolt = <1800000>;
+> +	regulator-name = "cpvdd";
+> +};
+> +
+> +&reg_eldo3 {
+> +	regulator-min-microvolt = <1800000>;
+> +	regulator-max-microvolt = <1800000>;
+> +	regulator-name = "vdd-1v8-csi";
+> +};
+> +
+> +&reg_fldo1 {
+> +	regulator-min-microvolt = <1200000>;
+> +	regulator-max-microvolt = <1200000>;
+> +	regulator-name = "vcc-1v2-hsic";
+> +};
+> +
+> +&reg_fldo2 {
+> +	regulator-always-on;
+> +	regulator-min-microvolt = <1100000>;
+> +	regulator-max-microvolt = <1100000>;
+> +	regulator-name = "vdd-cpus";
+> +};
+> +
+> +&reg_rtc_ldo {
+> +	regulator-name = "vcc-rtc";
+> +};
+> +
+>  /* On Exp and Euler connectors */
+>  &uart0 {
+>  	pinctrl-names = "default";
+> 
