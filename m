@@ -1,109 +1,72 @@
-From: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
-Subject: [PATCH v3 4/4] ARM: dts: gose: add composite video input
-Date: Fri, 19 May 2017 15:07:04 +0200
-Message-ID: <1495199224-16337-5-git-send-email-ulrich.hecht+renesas@gmail.com>
-References: <1495199224-16337-1-git-send-email-ulrich.hecht+renesas@gmail.com>
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <1495199224-16337-1-git-send-email-ulrich.hecht+renesas@gmail.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: linux-renesas-soc@vger.kernel.org, laurent.pinchart@ideasonboard.com
-Cc: linux-media@vger.kernel.org, geert@linux-m68k.org, magnus.damm@gmail.com, hans.verkuil@cisco.com, niklas.soderlund@ragnatech.se, sergei.shtylyov@cogentembedded.com, horms@verge.net.au, devicetree@vger.kernel.org, Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
+From: Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: [RESEND PATCH v5] ARM: dts: da850: Add the CPPI 4.1 DMA to the USB OTG controller
+Date: Fri, 19 May 2017 15:33:36 +0200
+Message-ID: <20170519133336.5160-1-abailon@baylibre.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: nsekhar-l0cyMroinI0@public.gmane.org
+Cc: ptitiano-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, b-liu-l0cyMroinI0@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Adds VIN, decoder and connector.
+This adds the CPPI 4.1 DMA controller to the USB OTG controller.
 
-Signed-off-by: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
+Changes since v2:
+- Fixed the the property reg-names (had glue register defined)
+- Removed few useless property
+
+Signed-off-by: Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 ---
- arch/arm/boot/dts/r8a7793-gose.dts | 59 ++++++++++++++++++++++++++++++++++++++
- 1 file changed, 59 insertions(+)
+ arch/arm/boot/dts/da850.dtsi | 27 ++++++++++++++++++++++++++-
+ 1 file changed, 26 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/r8a7793-gose.dts b/arch/arm/boot/dts/r8a7793-gose.dts
-index 30f0835..76e3aca 100644
---- a/arch/arm/boot/dts/r8a7793-gose.dts
-+++ b/arch/arm/boot/dts/r8a7793-gose.dts
-@@ -275,6 +275,16 @@
+diff --git a/arch/arm/boot/dts/da850.dtsi b/arch/arm/boot/dts/da850.dtsi
+index 941d455..0bd048e 100644
+--- a/arch/arm/boot/dts/da850.dtsi
++++ b/arch/arm/boot/dts/da850.dtsi
+@@ -446,13 +446,38 @@
  		};
- 	};
- 
-+	composite-in {
-+		compatible = "composite-video-connector";
+ 		usb0: usb@200000 {
+ 			compatible = "ti,da830-musb";
+-			reg = <0x200000 0x10000>;
++			reg = <0x200000 0x1000>;
++			ranges;
+ 			interrupts = <58>;
+ 			interrupt-names = "mc";
+ 			dr_mode = "otg";
+ 			phys = <&usb_phy 0>;
+ 			phy-names = "usb-phy";
+ 			status = "disabled";
 +
-+		port {
-+			composite_con_in: endpoint {
-+				remote-endpoint = <&adv7180_in>;
-+			};
-+		};
-+	};
-+
- 	x2_clk: x2-clock {
- 		compatible = "fixed-clock";
- 		#clock-cells = <0>;
-@@ -411,6 +421,11 @@
- 		groups = "vin0_data24", "vin0_sync", "vin0_clkenb", "vin0_clk";
- 		function = "vin0";
- 	};
-+
-+	vin1_pins: vin1 {
-+		groups = "vin1_data8", "vin1_clk";
-+		function = "vin1";
-+	};
- };
- 
- &ether {
-@@ -542,6 +557,32 @@
- 		reg = <0x12>;
- 	};
- 
-+	composite-in@20 {
-+		compatible = "adi,adv7180cp";
-+		reg = <0x20>;
-+		remote = <&vin1>;
-+
-+		port {
 +			#address-cells = <1>;
-+			#size-cells = <0>;
++			#size-cells = <1>;
 +
-+			port@0 {
-+				reg = <0>;
-+				adv7180_in: endpoint {
-+					remote-endpoint = <&composite_con_in>;
-+				};
++			dmas = <&cppi41dma 0 0 &cppi41dma 1 0
++				&cppi41dma 2 0 &cppi41dma 3 0
++				&cppi41dma 0 1 &cppi41dma 1 1
++				&cppi41dma 2 1 &cppi41dma 3 1>;
++			dma-names =
++				"rx1", "rx2", "rx3", "rx4",
++				"tx1", "tx2", "tx3", "tx4";
++
++			cppi41dma: dma-controller@201000 {
++				compatible = "ti,da830-cppi41";
++				reg =  <0x201000 0x1000
++					0x202000 0x1000
++					0x204000 0x4000>;
++				reg-names = "controller",
++					    "scheduler", "queuemgr";
++				interrupts = <58>;
++				#dma-cells = <2>;
++				#dma-channels = <4>;
++				status = "okay";
 +			};
-+
-+			port@3 {
-+				reg = <3>;
-+				adv7180_out: endpoint {
-+					bus-width = <8>;
-+					remote-endpoint = <&vin1ep>;
-+				};
-+			};
-+		};
-+	};
-+
- 	hdmi@39 {
- 		compatible = "adi,adv7511w";
- 		reg = <0x39>;
-@@ -670,3 +711,21 @@
  		};
- 	};
- };
-+
-+/* composite video input */
-+&vin1 {
-+	pinctrl-0 = <&vin1_pins>;
-+	pinctrl-names = "default";
-+
-+	status = "okay";
-+
-+	port {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		vin1ep: endpoint {
-+			remote-endpoint = <&adv7180_out>;
-+			bus-width = <8>;
-+		};
-+	};
-+};
+ 		sata: sata@218000 {
+ 			compatible = "ti,da850-ahci";
 -- 
-2.7.4
+2.10.2
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
