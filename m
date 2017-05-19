@@ -1,121 +1,152 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH v3 00/21] drm: sun4i: Add support for the HDMI controller
-Date: Fri, 19 May 2017 15:34:28 +0800
-Message-ID: <CAGb2v660H0kje3YWJgLnzLs7gii8VD-jMjdTiUjBsLn3+65S0g@mail.gmail.com>
-References: <cover.463df61c38224ecbfb5bf1cf192deeb63718b693.1495006350.git-series.maxime.ripard@free-electrons.com>
+From: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH 01/41] mmc: host: omap_hsmmc: Support pbias and vmmc_aux to switch to 1.8v
+Date: Fri, 19 May 2017 13:45:01 +0530
+Message-ID: <20170519081541.26753-2-kishon@ti.com>
+References: <20170519081541.26753-1-kishon@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <cover.463df61c38224ecbfb5bf1cf192deeb63718b693.1495006350.git-series.maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+In-Reply-To: <20170519081541.26753-1-kishon-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Daniel Vetter <daniel.vetter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+To: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Cc: linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, nsekhar-l0cyMroinI0@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 17, 2017 at 3:40 PM, Maxime Ripard
-<maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> Hi,
->
-> Here is an attempt at getting the HDMI controller running.
->
-> This HDMI controller is found on a number of old Allwinner SoCs (A10, A10s,
-> A20, A31).
->
-> This driver only supports for now the A10s because it was an easy target,
-> being very close to the A13 that is already supported by our DRM driver.
->
-> There's nothing out of the extraordinary there, except maybe the clock
-> setup. All the internal clocks (TMDS, DDC) have been modeled using the
-> common clock framework, the TMDS clock being the parent of the DDC one.
->
-> While this might sound overkill, other SoC have a different, external
-> source for the DDC clock, which will be easier to support through the clock
-> framework.
->
-> The IP also supports audio (through an already supported i2s controller,
-> and some missing configuration in the HDMI controller) and CEC. Both will
-> come eventually.
->
-> Let me know what you think!
-> Maxime
->
-> Changes from v2:
->   - Fixed the PLL control macros definitions
->   - Called clk_enable / disable on the DDC clock
->   - Added the flags to enable the connection polling
->   - Fixed the vtotal computation in TCON's code, and added a comment
->   - Added and documented the A10s display engine compatible
->   - Reworked the component parsing code to bail out when a standard
->     connector is found
->   - Fixed a inconsistent comment in the predivider unapplication
->   - Fixed a commit log
->   - Added Chen-Yu's and Rob's Acked-By
->   - Changed divider_round_rate to a static, inline function in the header
->   - Added and document the A10s display pipeline compatible
->   - Rebased on top of 4.12
->
-> Changes from v1:
->   - Fixed typos in the CCU header and the HDMI code
->   - Reintroduced the comment for the backporch timings
->   - Renamed the hdmi node to hdmi, instead of hdmi0
->   - Added support for hdmi-connector
->   - Added a separate Kconfig option for the HDMI support
->   - Changed the TCON muxing configuration for an explicit call in the
->     TCON's "clients"
->   - Fixed the initialisation sequence that was clearing the clocks bits
->   - Constified the HDMI's structures and removed whitespaces errors
->   - Fixed an issue in the sunxi-ng code that was not reporting the proper
->     parent clock rate if it was modified
->   - Removed unused headers
->   - Removed CLK_SET_RATE_PARENT for the DDC clock
->   - Used the DDC address defines
->   - Removed the interlace flag that wasn't supported at the moment
->   - Moved most of the HDMI encoder init to the bind function like we do for
->     the other encoders
->   - Switched to drm_of_find_possible_crtcs
->   - Removed the extra printk that were still in my code
->   - Rebased on top of linux-next
->   - Removed the patch changing the divider_round_rate prototype to
->     introduce a new function instead that takes the parent clock to
->     evaluate
->   - Added a clk_set_rate for the hdmi module clock
->   - Fixed the V_TOTAL TCON ch0 calculation to be consistent with ch1's
->   - Defined all registers, and remove the TODOs
->   - Fixed the EDID issues by increasing the timeout.
->   - Added an atomic_check to prevent the DBLCLK modes to be used, as it is
->     not supported yet
->   - Updated the binding to add the interrupts and DMA channels
->
-> Maxime Ripard (21):
->   clk: divider: Make divider_round_rate take the parent clock
->   clk: sunxi-ng: Pass the parent and a pointer to the clocks round rate
->   clk: sunxi-ng: div: Switch to divider_round_rate
->   clk: sunxi-ng: mux: Don't just rely on the parent for CLK_SET_RATE_PARENT
->   clk: sunxi-ng: mux: split out the pre-divider computation code
->   clk: sunxi-ng: mux: Change pre-divider application function prototype
->   clk: sunxi-ng: mux: Re-adjust parent rate
->   clk: sunxi-ng: sun5i: Export video PLLs
+Add support for vmmc_aux to switch to 1.8v. Also use "iov" instead of
+"vdd" to indicate io voltage. This is in preparation for adding support
+for io signal voltage switch.
 
-Merged patches 1 ~ 8 and ...
+Signed-off-by: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Signed-off-by: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+---
+ drivers/mmc/host/omap_hsmmc.c | 50 ++++++++++++++++++++++++++++---------------
+ 1 file changed, 33 insertions(+), 17 deletions(-)
 
->   drm/sun4i: tcon: Add channel debug
->   drm/sun4i: tcon: Move the muxing out of the mode set function
->   drm/sun4i: tcon: Switch mux on only for composite
->   drm/sun4i: tcon: Fix tcon channel 1 backporch calculation
->   drm/sun4i: tcon: Change vertical total size computation inconsistency
->   drm/sun4i: tcon: multiply the vtotal when not in interlace
->   drm/sun4i: Ignore the generic connectors for components
->   dt-bindings: display: sun4i: Add HDMI display bindings
->   dt-bindings: display: sun4i: Add allwinner,tcon-channel property
->   drm/sun4i: Add HDMI support
->   drm/sun4i: Add compatible for the A10s pipeline
+diff --git a/drivers/mmc/host/omap_hsmmc.c b/drivers/mmc/host/omap_hsmmc.c
+index 8c39dccacf39..2000aaa359c8 100644
+--- a/drivers/mmc/host/omap_hsmmc.c
++++ b/drivers/mmc/host/omap_hsmmc.c
+@@ -244,11 +244,12 @@ static int omap_hsmmc_get_cover_state(struct device *dev)
+ 	return mmc_gpio_get_cd(host->mmc);
+ }
+ 
+-static int omap_hsmmc_enable_supply(struct mmc_host *mmc)
++static int omap_hsmmc_enable_supply(struct mmc_host *mmc, int iov)
+ {
+ 	int ret;
+ 	struct omap_hsmmc_host *host = mmc_priv(mmc);
+ 	struct mmc_ios *ios = &mmc->ios;
++	int uvoltage;
+ 
+ 	if (mmc->supply.vmmc) {
+ 		ret = mmc_regulator_set_ocr(mmc, mmc->supply.vmmc, ios->vdd);
+@@ -257,7 +258,25 @@ static int omap_hsmmc_enable_supply(struct mmc_host *mmc)
+ 	}
+ 
+ 	/* Enable interface voltage rail, if needed */
+-	if (mmc->supply.vqmmc && !host->vqmmc_enabled) {
++	if (mmc->supply.vqmmc) {
++		if (host->vqmmc_enabled) {
++			ret = regulator_disable(mmc->supply.vqmmc);
++			if (ret) {
++				dev_err(mmc_dev(mmc),
++					"vmmc_aux reg disable failed\n");
++				goto err_vqmmc;
++			}
++			host->vqmmc_enabled = 0;
++		}
++
++		uvoltage = (iov == VDD_165_195) ? VDD_1V8 : VDD_3V0;
++		ret = regulator_set_voltage(mmc->supply.vqmmc, uvoltage,
++					    uvoltage);
++		if (ret) {
++			dev_err(mmc_dev(mmc), "vmmc_aux set voltage failed\n");
++			goto err_vqmmc;
++		}
++
+ 		ret = regulator_enable(mmc->supply.vqmmc);
+ 		if (ret) {
+ 			dev_err(mmc_dev(mmc), "vmmc_aux reg enable failed\n");
+@@ -309,22 +328,19 @@ static int omap_hsmmc_disable_supply(struct mmc_host *mmc)
+ }
+ 
+ static int omap_hsmmc_set_pbias(struct omap_hsmmc_host *host, bool power_on,
+-				int vdd)
++				int iov)
+ {
+ 	int ret;
++	int uvoltage;
+ 
+ 	if (!host->pbias)
+ 		return 0;
+ 
+ 	if (power_on) {
+-		if (vdd <= VDD_165_195)
+-			ret = regulator_set_voltage(host->pbias, VDD_1V8,
+-						    VDD_1V8);
+-		else
+-			ret = regulator_set_voltage(host->pbias, VDD_3V0,
+-						    VDD_3V0);
+-		if (ret < 0) {
+-			dev_err(host->dev, "pbias set voltage fail\n");
++		uvoltage = (iov <= VDD_165_195) ? VDD_1V8 : VDD_3V0;
++		ret = regulator_set_voltage(host->pbias, uvoltage, uvoltage);
++		if (ret) {
++			dev_err(host->dev, "pbias set voltage failed\n");
+ 			return ret;
+ 		}
+ 
+@@ -351,13 +367,13 @@ static int omap_hsmmc_set_pbias(struct omap_hsmmc_host *host, bool power_on,
+ }
+ 
+ static int omap_hsmmc_set_power(struct omap_hsmmc_host *host, int power_on,
+-				int vdd)
++				int iov)
+ {
+ 	struct mmc_host *mmc = host->mmc;
+ 	int ret = 0;
+ 
+ 	if (mmc_pdata(host)->set_power)
+-		return mmc_pdata(host)->set_power(host->dev, power_on, vdd);
++		return mmc_pdata(host)->set_power(host->dev, power_on, iov);
+ 
+ 	/*
+ 	 * If we don't see a Vcc regulator, assume it's a fixed
+@@ -367,7 +383,7 @@ static int omap_hsmmc_set_power(struct omap_hsmmc_host *host, int power_on,
+ 		return 0;
+ 
+ 	if (mmc_pdata(host)->before_set_reg)
+-		mmc_pdata(host)->before_set_reg(host->dev, power_on, vdd);
++		mmc_pdata(host)->before_set_reg(host->dev, power_on, iov);
+ 
+ 	ret = omap_hsmmc_set_pbias(host, false, 0);
+ 	if (ret)
+@@ -387,11 +403,11 @@ static int omap_hsmmc_set_power(struct omap_hsmmc_host *host, int power_on,
+ 	 * chips/cards need an interface voltage rail too.
+ 	 */
+ 	if (power_on) {
+-		ret = omap_hsmmc_enable_supply(mmc);
++		ret = omap_hsmmc_enable_supply(mmc, iov);
+ 		if (ret)
+ 			return ret;
+ 
+-		ret = omap_hsmmc_set_pbias(host, true, vdd);
++		ret = omap_hsmmc_set_pbias(host, true, iov);
+ 		if (ret)
+ 			goto err_set_voltage;
+ 	} else {
+@@ -401,7 +417,7 @@ static int omap_hsmmc_set_power(struct omap_hsmmc_host *host, int power_on,
+ 	}
+ 
+ 	if (mmc_pdata(host)->after_set_reg)
+-		mmc_pdata(host)->after_set_reg(host->dev, power_on, vdd);
++		mmc_pdata(host)->after_set_reg(host->dev, power_on, iov);
+ 
+ 	return 0;
+ 
+-- 
+2.11.0
 
->   ARM: sun5i: a10s: Add the HDMI controller node
->   ARM: sun5i: a10s-olinuxino: Enable HDMI
-
-... 20 ~ 21 for 4.13.
-
-ChenYu
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
