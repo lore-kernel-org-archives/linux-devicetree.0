@@ -1,15 +1,15 @@
 From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH v6 4/9] arm64: allwinner: a64: add AXP803
- node to Pine64 device tree
-Date: Fri, 19 May 2017 10:28:35 +0800
-Message-ID: <CAGb2v67w=miCHB-3f39vrx_+iZuEJEo9UyrFLw6aPPYWPweJXQ@mail.gmail.com>
-References: <20170518071653.36561-1-icenowy@aosc.io> <20170518071653.36561-5-icenowy@aosc.io>
+Subject: Re: [PATCH v6 7/9] arm64: allwinner: a64: add DTSI file
+ for AXP803 PMIC
+Date: Fri, 19 May 2017 10:29:41 +0800
+Message-ID: <CAGb2v65xZC_iAf4HS6MWX5XbU-J0uUAN0FtAj6TxwD-peEt2mg@mail.gmail.com>
+References: <20170518071653.36561-1-icenowy@aosc.io> <20170518071653.36561-8-icenowy@aosc.io>
 Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCMILY6JWQBBB25Q7HEAKGQEEIXUSGI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBLNR7HEAKGQELZLD5BY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20170518071653.36561-5-icenowy-h8G6r0blFSE@public.gmane.org>
+In-Reply-To: <20170518071653.36561-8-icenowy-h8G6r0blFSE@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -21,10 +21,11 @@ Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper
 List-Id: devicetree@vger.kernel.org
 
 On Thu, May 18, 2017 at 3:16 PM, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org> wrote:
-> The Pine64 (including Pine64+) boards have an AXP803 as its main PMIC.
->
-> Add its device node.
+> As nearly all A64 boards are using AXP803 PMIC, add a DTSI file for it,
+> like the old DTSI files for AXP20x/22x, for the common parts of the
+> PMIC.
 >
 > Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+> Acked-by: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
 Reviewed-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
