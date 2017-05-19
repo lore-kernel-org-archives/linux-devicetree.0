@@ -1,21 +1,22 @@
 From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Applied "ASoC: cs35l35: Add Boost Inductor Calculation" to the asoc tree
-Date: Fri, 19 May 2017 18:03:56 +0100
-Message-ID: <E1dBlJk-0003eq-RX@debutante>
-References: <1495121559-1063-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+Subject: Applied "regulator: axp20x-regulator: add support for AXP803" to the regulator tree
+Date: Fri, 19 May 2017 18:04:40 +0100
+Message-ID: <E1dBlKS-0003o8-BB@debutante>
+References: <20170426152023.41567-7-icenowy@aosc.io>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1495121559-1063-1-git-send-email-ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+In-Reply-To: <20170426152023.41567-7-icenowy-h8G6r0blFSE@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, brian.austin-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Paul.Handrigan-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.orgalsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org
+To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.orglinux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 The patch
 
-   ASoC: cs35l35: Add Boost Inductor Calculation
+   regulator: axp20x-regulator: add support for AXP803
 
-has been applied to the asoc tree at
+has been applied to the regulator tree at
 
-   git://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
+   git://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git 
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
@@ -36,160 +37,306 @@ to this mail.
 Thanks,
 Mark
 
->From b7c752d68aee9c066cb0bd2f24ee73aed64575e8 Mon Sep 17 00:00:00 2001
-From: Brian Austin <brian.austin-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org>
-Date: Thu, 18 May 2017 16:32:36 +0100
-Subject: [PATCH] ASoC: cs35l35: Add Boost Inductor Calculation
+>From 1dbe0ccb0631c4ed399261934fe16f07407b078d Mon Sep 17 00:00:00 2001
+From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Date: Thu, 18 May 2017 15:16:49 +0800
+Subject: [PATCH] regulator: axp20x-regulator: add support for AXP803
 
-Add the Boost Inductor parameters based off the size of the inductor
-on the HW setup
+AXP803 PMIC also have a series of regulators (DCDCs and LDOs)
+controllable via I2C/RSB bus.
 
-Signed-off-by: Brian Austin <brian.austin-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org>
-Signed-off-by: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Add support for them.
+
+Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Acked-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 Signed-off-by: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 ---
- include/sound/cs35l35.h    |  2 ++
- sound/soc/codecs/cs35l35.c | 82 ++++++++++++++++++++++++++++++++++++++++++++++
- sound/soc/codecs/cs35l35.h |  6 ++++
- 3 files changed, 90 insertions(+)
+ drivers/regulator/axp20x-regulator.c | 153 ++++++++++++++++++++++++++++++-----
+ include/linux/mfd/axp20x.h           |  37 +++++++++
+ 2 files changed, 168 insertions(+), 22 deletions(-)
 
-diff --git a/include/sound/cs35l35.h b/include/sound/cs35l35.h
-index 29da899e17e4..d69cd7847afd 100644
---- a/include/sound/cs35l35.h
-+++ b/include/sound/cs35l35.h
-@@ -99,6 +99,8 @@ struct cs35l35_platform_data {
- 	bool shared_bst;
- 	/* Specifies this amp is using an external boost supply */
- 	bool ext_bst;
-+	/* Inductor Value */
-+	int boost_ind;
- 	/* ClassH Algorithm */
- 	struct classh_cfg classh_algo;
- 	/* Monitor Config */
-diff --git a/sound/soc/codecs/cs35l35.c b/sound/soc/codecs/cs35l35.c
-index f8aef5869b03..c6eabb8610f0 100644
---- a/sound/soc/codecs/cs35l35.c
-+++ b/sound/soc/codecs/cs35l35.c
-@@ -756,6 +756,76 @@ static int cs35l35_codec_set_sysclk(struct snd_soc_codec *codec,
- 	return ret;
- }
+diff --git a/drivers/regulator/axp20x-regulator.c b/drivers/regulator/axp20x-regulator.c
+index 0b9d4e3e52c7..e2608fe770b9 100644
+--- a/drivers/regulator/axp20x-regulator.c
++++ b/drivers/regulator/axp20x-regulator.c
+@@ -244,6 +244,82 @@ static const struct regulator_desc axp22x_drivevbus_regulator = {
+ 	.ops		= &axp20x_ops_sw,
+ };
  
-+static int cs35l35_boost_inductor(struct cs35l35_private *cs35l35,
-+				  int inductor)
-+{
-+	struct regmap *regmap = cs35l35->regmap;
-+	unsigned int bst_ipk = 0;
++static const struct regulator_linear_range axp803_dcdc234_ranges[] = {
++	REGULATOR_LINEAR_RANGE(500000, 0x0, 0x46, 10000),
++	REGULATOR_LINEAR_RANGE(1220000, 0x47, 0x4b, 20000),
++};
 +
-+	/*
-+	 * Digital Boost Converter Configuration for feedback,
-+	 * ramping, switching frequency, and estimation block seeding.
-+	 */
++static const struct regulator_linear_range axp803_dcdc5_ranges[] = {
++	REGULATOR_LINEAR_RANGE(800000, 0x0, 0x20, 10000),
++	REGULATOR_LINEAR_RANGE(1140000, 0x21, 0x44, 20000),
++};
 +
-+	regmap_update_bits(regmap, CS35L35_BST_CONV_SW_FREQ,
-+			   CS35L35_BST_CONV_SWFREQ_MASK, 0x00);
++static const struct regulator_linear_range axp803_dcdc6_ranges[] = {
++	REGULATOR_LINEAR_RANGE(600000, 0x0, 0x32, 10000),
++	REGULATOR_LINEAR_RANGE(1120000, 0x33, 0x47, 20000),
++};
 +
-+	regmap_read(regmap, CS35L35_BST_PEAK_I, &bst_ipk);
-+	bst_ipk &= CS35L35_BST_IPK_MASK;
++/* AXP806's CLDO2 and AXP809's DLDO1 shares the same range */
++static const struct regulator_linear_range axp803_dldo2_ranges[] = {
++	REGULATOR_LINEAR_RANGE(700000, 0x0, 0x1a, 100000),
++	REGULATOR_LINEAR_RANGE(3400000, 0x1b, 0x1f, 200000),
++};
 +
-+	switch (inductor) {
-+	case 1000: /* 1 uH */
-+		regmap_write(regmap, CS35L35_BST_CONV_COEF_1, 0x24);
-+		regmap_write(regmap, CS35L35_BST_CONV_COEF_2, 0x24);
-+		regmap_update_bits(regmap, CS35L35_BST_CONV_SW_FREQ,
-+				   CS35L35_BST_CONV_LBST_MASK, 0x00);
++static const struct regulator_desc axp803_regulators[] = {
++	AXP_DESC(AXP803, DCDC1, "dcdc1", "vin1", 1600, 3400, 100,
++		 AXP803_DCDC1_V_OUT, 0x1f, AXP22X_PWR_OUT_CTRL1, BIT(0)),
++	AXP_DESC_RANGES(AXP803, DCDC2, "dcdc2", "vin2", axp803_dcdc234_ranges,
++			76, AXP803_DCDC2_V_OUT, 0x7f, AXP22X_PWR_OUT_CTRL1,
++			BIT(1)),
++	AXP_DESC_RANGES(AXP803, DCDC3, "dcdc3", "vin3", axp803_dcdc234_ranges,
++			76, AXP803_DCDC3_V_OUT, 0x7f, AXP22X_PWR_OUT_CTRL1,
++			BIT(2)),
++	AXP_DESC_RANGES(AXP803, DCDC4, "dcdc4", "vin4", axp803_dcdc234_ranges,
++			76, AXP803_DCDC4_V_OUT, 0x7f, AXP22X_PWR_OUT_CTRL1,
++			BIT(3)),
++	AXP_DESC_RANGES(AXP803, DCDC5, "dcdc5", "vin5", axp803_dcdc5_ranges,
++			68, AXP803_DCDC5_V_OUT, 0x7f, AXP22X_PWR_OUT_CTRL1,
++			BIT(4)),
++	AXP_DESC_RANGES(AXP803, DCDC6, "dcdc6", "vin6", axp803_dcdc6_ranges,
++			72, AXP803_DCDC6_V_OUT, 0x7f, AXP22X_PWR_OUT_CTRL1,
++			BIT(5)),
++	/* secondary switchable output of DCDC1 */
++	AXP_DESC_SW(AXP803, DC1SW, "dc1sw", NULL, AXP22X_PWR_OUT_CTRL2,
++		    BIT(7)),
++	AXP_DESC(AXP803, ALDO1, "aldo1", "aldoin", 700, 3300, 100,
++		 AXP22X_ALDO1_V_OUT, 0x1f, AXP22X_PWR_OUT_CTRL3, BIT(5)),
++	AXP_DESC(AXP803, ALDO2, "aldo2", "aldoin", 700, 3300, 100,
++		 AXP22X_ALDO2_V_OUT, 0x1f, AXP22X_PWR_OUT_CTRL3, BIT(6)),
++	AXP_DESC(AXP803, ALDO3, "aldo3", "aldoin", 700, 3300, 100,
++		 AXP22X_ALDO3_V_OUT, 0x1f, AXP22X_PWR_OUT_CTRL3, BIT(7)),
++	AXP_DESC(AXP803, DLDO1, "dldo1", "dldoin", 700, 3300, 100,
++		 AXP22X_DLDO1_V_OUT, 0x1f, AXP22X_PWR_OUT_CTRL2, BIT(3)),
++	AXP_DESC_RANGES(AXP803, DLDO2, "dldo2", "dldoin", axp803_dldo2_ranges,
++			32, AXP22X_DLDO2_V_OUT, 0x1f, AXP22X_PWR_OUT_CTRL2,
++			BIT(4)),
++	AXP_DESC(AXP803, DLDO3, "dldo3", "dldoin", 700, 3300, 100,
++		 AXP22X_DLDO3_V_OUT, 0x1f, AXP22X_PWR_OUT_CTRL2, BIT(5)),
++	AXP_DESC(AXP803, DLDO4, "dldo4", "dldoin", 700, 3300, 100,
++		 AXP22X_DLDO4_V_OUT, 0x1f, AXP22X_PWR_OUT_CTRL2, BIT(6)),
++	AXP_DESC(AXP803, ELDO1, "eldo1", "eldoin", 700, 1900, 50,
++		 AXP22X_ELDO1_V_OUT, 0x1f, AXP22X_PWR_OUT_CTRL2, BIT(0)),
++	AXP_DESC(AXP803, ELDO2, "eldo2", "eldoin", 700, 1900, 50,
++		 AXP22X_ELDO2_V_OUT, 0x1f, AXP22X_PWR_OUT_CTRL2, BIT(1)),
++	AXP_DESC(AXP803, ELDO3, "eldo3", "eldoin", 700, 1900, 50,
++		 AXP22X_ELDO3_V_OUT, 0x1f, AXP22X_PWR_OUT_CTRL2, BIT(2)),
++	AXP_DESC(AXP803, FLDO1, "fldo1", "fldoin", 700, 1450, 50,
++		 AXP803_FLDO1_V_OUT, 0x0f, AXP22X_PWR_OUT_CTRL3, BIT(2)),
++	AXP_DESC(AXP803, FLDO2, "fldo2", "fldoin", 700, 1450, 50,
++		 AXP803_FLDO2_V_OUT, 0x0f, AXP22X_PWR_OUT_CTRL3, BIT(3)),
++	AXP_DESC_IO(AXP803, LDO_IO0, "ldo-io0", "ips", 700, 3300, 100,
++		    AXP22X_LDO_IO0_V_OUT, 0x1f, AXP20X_GPIO0_CTRL, 0x07,
++		    AXP22X_IO_ENABLED, AXP22X_IO_DISABLED),
++	AXP_DESC_IO(AXP803, LDO_IO1, "ldo-io1", "ips", 700, 3300, 100,
++		    AXP22X_LDO_IO1_V_OUT, 0x1f, AXP20X_GPIO1_CTRL, 0x07,
++		    AXP22X_IO_ENABLED, AXP22X_IO_DISABLED),
++	AXP_DESC_FIXED(AXP803, RTC_LDO, "rtc-ldo", "ips", 3000),
++};
 +
-+		if (bst_ipk < 0x04)
-+			regmap_write(regmap, CS35L35_BST_CONV_SLOPE_COMP, 0x1B);
-+		else
-+			regmap_write(regmap, CS35L35_BST_CONV_SLOPE_COMP, 0x4E);
+ static const struct regulator_linear_range axp806_dcdca_ranges[] = {
+ 	REGULATOR_LINEAR_RANGE(600000, 0x0, 0x32, 10000),
+ 	REGULATOR_LINEAR_RANGE(1120000, 0x33, 0x47, 20000),
+@@ -254,11 +330,6 @@ static const struct regulator_linear_range axp806_dcdcd_ranges[] = {
+ 	REGULATOR_LINEAR_RANGE(1600000, 0x2e, 0x3f, 100000),
+ };
+ 
+-static const struct regulator_linear_range axp806_cldo2_ranges[] = {
+-	REGULATOR_LINEAR_RANGE(700000, 0x0, 0x1a, 100000),
+-	REGULATOR_LINEAR_RANGE(3400000, 0x1b, 0x1f, 200000),
+-};
+-
+ static const struct regulator_desc axp806_regulators[] = {
+ 	AXP_DESC_RANGES(AXP806, DCDCA, "dcdca", "vina", axp806_dcdca_ranges,
+ 			72, AXP806_DCDCA_V_CTRL, 0x7f, AXP806_PWR_OUT_CTRL1,
+@@ -289,7 +360,7 @@ static const struct regulator_desc axp806_regulators[] = {
+ 		 AXP806_BLDO4_V_CTRL, 0x0f, AXP806_PWR_OUT_CTRL2, BIT(3)),
+ 	AXP_DESC(AXP806, CLDO1, "cldo1", "cldoin", 700, 3300, 100,
+ 		 AXP806_CLDO1_V_CTRL, 0x1f, AXP806_PWR_OUT_CTRL2, BIT(4)),
+-	AXP_DESC_RANGES(AXP806, CLDO2, "cldo2", "cldoin", axp806_cldo2_ranges,
++	AXP_DESC_RANGES(AXP806, CLDO2, "cldo2", "cldoin", axp803_dldo2_ranges,
+ 			32, AXP806_CLDO2_V_CTRL, 0x1f, AXP806_PWR_OUT_CTRL2,
+ 			BIT(5)),
+ 	AXP_DESC(AXP806, CLDO3, "cldo3", "cldoin", 700, 3300, 100,
+@@ -326,7 +397,7 @@ static const struct regulator_desc axp809_regulators[] = {
+ 		 AXP22X_ALDO2_V_OUT, 0x1f, AXP22X_PWR_OUT_CTRL1, BIT(7)),
+ 	AXP_DESC(AXP809, ALDO3, "aldo3", "aldoin", 700, 3300, 100,
+ 		 AXP22X_ALDO3_V_OUT, 0x1f, AXP22X_PWR_OUT_CTRL2, BIT(5)),
+-	AXP_DESC_RANGES(AXP809, DLDO1, "dldo1", "dldoin", axp806_cldo2_ranges,
++	AXP_DESC_RANGES(AXP809, DLDO1, "dldo1", "dldoin", axp803_dldo2_ranges,
+ 			32, AXP22X_DLDO1_V_OUT, 0x1f, AXP22X_PWR_OUT_CTRL2,
+ 			BIT(3)),
+ 	AXP_DESC(AXP809, DLDO2, "dldo2", "dldoin", 700, 3300, 100,
+@@ -369,14 +440,21 @@ static int axp20x_set_dcdc_freq(struct platform_device *pdev, u32 dcdcfreq)
+ 		def = 1500;
+ 		step = 75;
+ 		break;
+-	case AXP806_ID:
++	case AXP803_ID:
+ 		/*
+-		 * AXP806 DCDC work frequency setting has the same range and
++		 * AXP803 DCDC work frequency setting has the same range and
+ 		 * step as AXP22X, but at a different register.
+ 		 * Fall through to the check below.
+ 		 * (See include/linux/mfd/axp20x.h)
+ 		 */
+-		reg = AXP806_DCDC_FREQ_CTRL;
++		reg = AXP803_DCDC_FREQ_CTRL;
++	case AXP806_ID:
++		/*
++		 * AXP806 also have DCDC work frequency setting register at a
++		 * different position.
++		 */
++		if (axp20x->variant == AXP806_ID)
++			reg = AXP806_DCDC_FREQ_CTRL;
+ 	case AXP221_ID:
+ 	case AXP223_ID:
+ 	case AXP809_ID:
+@@ -475,6 +553,14 @@ static int axp20x_set_dcdc_workmode(struct regulator_dev *rdev, int id, u32 work
+ 		workmode <<= id - AXP22X_DCDC1;
+ 		break;
+ 
++	case AXP803_ID:
++		if (id < AXP803_DCDC1 || id > AXP803_DCDC6)
++			return -EINVAL;
++
++		mask = AXP22X_WORKMODE_DCDCX_MASK(id - AXP803_DCDC1);
++		workmode <<= id - AXP803_DCDC1;
 +		break;
-+	case 1200: /* 1.2 uH */
-+		regmap_write(regmap, CS35L35_BST_CONV_COEF_1, 0x20);
-+		regmap_write(regmap, CS35L35_BST_CONV_COEF_2, 0x20);
-+		regmap_update_bits(regmap, CS35L35_BST_CONV_SW_FREQ,
-+				   CS35L35_BST_CONV_LBST_MASK, 0x01);
 +
-+		if (bst_ipk < 0x04)
-+			regmap_write(regmap, CS35L35_BST_CONV_SLOPE_COMP, 0x1B);
-+		else
-+			regmap_write(regmap, CS35L35_BST_CONV_SLOPE_COMP, 0x47);
-+		break;
-+	case 1500: /* 1.5uH */
-+		regmap_write(regmap, CS35L35_BST_CONV_COEF_1, 0x20);
-+		regmap_write(regmap, CS35L35_BST_CONV_COEF_2, 0x20);
-+		regmap_update_bits(regmap, CS35L35_BST_CONV_SW_FREQ,
-+				   CS35L35_BST_CONV_LBST_MASK, 0x02);
-+
-+		if (bst_ipk < 0x04)
-+			regmap_write(regmap, CS35L35_BST_CONV_SLOPE_COMP, 0x1B);
-+		else
-+			regmap_write(regmap, CS35L35_BST_CONV_SLOPE_COMP, 0x3C);
-+		break;
-+	case 2200: /* 2.2uH */
-+		regmap_write(regmap, CS35L35_BST_CONV_COEF_1, 0x19);
-+		regmap_write(regmap, CS35L35_BST_CONV_COEF_2, 0x25);
-+		regmap_update_bits(regmap, CS35L35_BST_CONV_SW_FREQ,
-+				   CS35L35_BST_CONV_LBST_MASK, 0x03);
-+
-+		if (bst_ipk < 0x04)
-+			regmap_write(regmap, CS35L35_BST_CONV_SLOPE_COMP, 0x1B);
-+		else
-+			regmap_write(regmap, CS35L35_BST_CONV_SLOPE_COMP, 0x23);
-+		break;
-+	default:
-+		dev_err(cs35l35->dev, "Invalid Inductor Value %d uH\n",
-+			inductor);
-+		return -EINVAL;
-+	}
-+	return 0;
-+}
-+
- static int cs35l35_codec_probe(struct snd_soc_codec *codec)
+ 	default:
+ 		/* should not happen */
+ 		WARN_ON(1);
+@@ -492,20 +578,38 @@ static bool axp20x_is_polyphase_slave(struct axp20x_dev *axp20x, int id)
  {
- 	struct cs35l35_private *cs35l35 = snd_soc_codec_get_drvdata(codec);
-@@ -775,6 +845,10 @@ static int cs35l35_codec_probe(struct snd_soc_codec *codec)
- 				cs35l35->pdata.bst_ipk <<
- 				CS35L35_BST_IPK_SHIFT);
+ 	u32 reg = 0;
  
-+	ret = cs35l35_boost_inductor(cs35l35, cs35l35->pdata.boost_ind);
-+	if (ret)
-+		return ret;
+-	/* Only AXP806 has poly-phase outputs */
+-	if (axp20x->variant != AXP806_ID)
+-		return false;
++	/*
++	 * Currently in our supported AXP variants, only AXP803 and AXP806
++	 * have polyphase regulators.
++	 */
++	switch (axp20x->variant) {
++	case AXP803_ID:
++		regmap_read(axp20x->regmap, AXP803_POLYPHASE_CTRL, &reg);
 +
- 	if (cs35l35->pdata.gain_zc)
- 		regmap_update_bits(cs35l35->regmap, CS35L35_PROTECT_CTL,
- 				CS35L35_AMP_GAIN_ZC_MASK,
-@@ -1198,6 +1272,14 @@ static int cs35l35_handle_of_data(struct i2c_client *i2c_client,
- 		pdata->bst_ipk = (val32 - 1680) / 110;
++		switch (id) {
++		case AXP803_DCDC3:
++			return !!(reg & BIT(6));
++		case AXP803_DCDC6:
++			return !!(reg & BIT(7));
++		}
++		break;
+ 
+-	regmap_read(axp20x->regmap, AXP806_DCDC_MODE_CTRL2, &reg);
++	case AXP806_ID:
++		regmap_read(axp20x->regmap, AXP806_DCDC_MODE_CTRL2, &reg);
++
++		switch (id) {
++		case AXP806_DCDCB:
++			return (((reg & GENMASK(7, 6)) == BIT(6)) ||
++				((reg & GENMASK(7, 6)) == BIT(7)));
++		case AXP806_DCDCC:
++			return ((reg & GENMASK(7, 6)) == BIT(7));
++		case AXP806_DCDCE:
++			return !!(reg & BIT(5));
++		}
++		break;
+ 
+-	switch (id) {
+-	case AXP806_DCDCB:
+-		return (((reg & GENMASK(7, 6)) == BIT(6)) ||
+-			((reg & GENMASK(7, 6)) == BIT(7)));
+-	case AXP806_DCDCC:
+-		return ((reg & GENMASK(7, 6)) == BIT(7));
+-	case AXP806_DCDCE:
+-		return !!(reg & BIT(5));
++	default:
++		return false;
  	}
  
-+	ret = of_property_read_u32(np, "cirrus,boost-ind-nanohenry", &val32);
-+	if (ret >= 0) {
-+		pdata->boost_ind = val32;
-+	} else {
-+		dev_err(&i2c_client->dev, "Inductor not specified.\n");
-+		return -EINVAL;
-+	}
-+
- 	if (of_property_read_u32(np, "cirrus,sp-drv-strength", &val32) >= 0)
- 		pdata->sp_drv_str = val32;
- 	if (of_property_read_u32(np, "cirrus,sp-drv-unused", &val32) >= 0)
-diff --git a/sound/soc/codecs/cs35l35.h b/sound/soc/codecs/cs35l35.h
-index 5a6e43a87c4d..621bfef70d03 100644
---- a/sound/soc/codecs/cs35l35.h
-+++ b/sound/soc/codecs/cs35l35.h
-@@ -200,6 +200,12 @@
- #define CS35L35_SP_I2S_DRV_MASK		0x03
- #define CS35L35_SP_I2S_DRV_SHIFT	0
+ 	return false;
+@@ -540,6 +644,10 @@ static int axp20x_regulator_probe(struct platform_device *pdev)
+ 		drivevbus = of_property_read_bool(pdev->dev.parent->of_node,
+ 						  "x-powers,drive-vbus-en");
+ 		break;
++	case AXP803_ID:
++		regulators = axp803_regulators;
++		nregulators = AXP803_REG_ID_MAX;
++		break;
+ 	case AXP806_ID:
+ 		regulators = axp806_regulators;
+ 		nregulators = AXP806_REG_ID_MAX;
+@@ -579,6 +687,7 @@ static int axp20x_regulator_probe(struct platform_device *pdev)
+ 		 * name.
+ 		 */
+ 		if ((regulators == axp22x_regulators && i == AXP22X_DC1SW) ||
++		    (regulators == axp803_regulators && i == AXP803_DC1SW) ||
+ 		    (regulators == axp809_regulators && i == AXP809_DC1SW)) {
+ 			new_desc = devm_kzalloc(&pdev->dev, sizeof(*desc),
+ 						GFP_KERNEL);
+diff --git a/include/linux/mfd/axp20x.h b/include/linux/mfd/axp20x.h
+index cde56cfe8446..965b027e31b3 100644
+--- a/include/linux/mfd/axp20x.h
++++ b/include/linux/mfd/axp20x.h
+@@ -119,6 +119,17 @@ enum axp20x_variants {
+ #define AXP806_BUS_ADDR_EXT		0xfe
+ #define AXP806_REG_ADDR_EXT		0xff
  
-+/* Boost Converter Config */
-+#define CS35L35_BST_CONV_COEFF_MASK	0xFF
-+#define CS35L35_BST_CONV_SLOPE_MASK	0xFF
-+#define CS35L35_BST_CONV_LBST_MASK	0x03
-+#define CS35L35_BST_CONV_SWFREQ_MASK	0xF0
++#define AXP803_POLYPHASE_CTRL		0x14
++#define AXP803_FLDO1_V_OUT		0x1c
++#define AXP803_FLDO2_V_OUT		0x1d
++#define AXP803_DCDC1_V_OUT		0x20
++#define AXP803_DCDC2_V_OUT		0x21
++#define AXP803_DCDC3_V_OUT		0x22
++#define AXP803_DCDC4_V_OUT		0x23
++#define AXP803_DCDC5_V_OUT		0x24
++#define AXP803_DCDC6_V_OUT		0x25
++#define AXP803_DCDC_FREQ_CTRL		0x3b
 +
- /* Class H Algorithm Control */
- #define CS35L35_CH_STEREO_MASK		0x40
- #define CS35L35_CH_STEREO_SHIFT		6
+ /* Interrupt */
+ #define AXP152_IRQ1_EN			0x40
+ #define AXP152_IRQ2_EN			0x41
+@@ -350,6 +361,32 @@ enum {
+ 	AXP809_REG_ID_MAX,
+ };
+ 
++enum {
++	AXP803_DCDC1 = 0,
++	AXP803_DCDC2,
++	AXP803_DCDC3,
++	AXP803_DCDC4,
++	AXP803_DCDC5,
++	AXP803_DCDC6,
++	AXP803_DC1SW,
++	AXP803_ALDO1,
++	AXP803_ALDO2,
++	AXP803_ALDO3,
++	AXP803_DLDO1,
++	AXP803_DLDO2,
++	AXP803_DLDO3,
++	AXP803_DLDO4,
++	AXP803_ELDO1,
++	AXP803_ELDO2,
++	AXP803_ELDO3,
++	AXP803_FLDO1,
++	AXP803_FLDO2,
++	AXP803_RTC_LDO,
++	AXP803_LDO_IO0,
++	AXP803_LDO_IO1,
++	AXP803_REG_ID_MAX,
++};
++
+ /* IRQs */
+ enum {
+ 	AXP152_IRQ_LDO0IN_CONNECT = 1,
 -- 
 2.11.0
 
