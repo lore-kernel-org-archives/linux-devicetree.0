@@ -1,53 +1,95 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: [PATCH 07/41] mmc: host: omap_hsmmc: Allow io voltage switch even for
- fixed vdd
-Date: Fri, 19 May 2017 13:45:07 +0530
-Message-ID: <20170519081541.26753-8-kishon@ti.com>
-References: <20170519081541.26753-1-kishon@ti.com>
+From: Archit Taneja <architt@codeaurora.org>
+Subject: Re: [PATCH 2/4] dt-bindings: Document the Raspberry Pi Touchscreen
+ nodes.
+Date: Fri, 19 May 2017 14:24:36 +0530
+Message-ID: <c01609b7-d2d6-8ed1-5f51-4b910ba8bef0@codeaurora.org>
+References: <20170511235625.22427-1-eric@anholt.net>
+ <87shk4iqr7.fsf@eliezer.anholt.net>
+ <a7494a8a-a87b-213d-707f-33d67da93267@codeaurora.org>
+ <3771766.1sVmoPRjsn@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170519081541.26753-1-kishon@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Tony Lindgren <tony@atomide.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, nsekhar@ti.com, Jonathan Corbet <corbet@lwn.net>, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, Russell King <linux@armlinux.org.uk>, kishon@ti.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <3771766.1sVmoPRjsn@avalon>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Eric Anholt <eric@anholt.net>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Now that vmmc regulator is made optional, do not bail out if vmmc
-regulator is not found.
-
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-Signed-off-by: Sekhar Nori <nsekhar@ti.com>
----
- drivers/mmc/host/omap_hsmmc.c | 7 -------
- 1 file changed, 7 deletions(-)
-
-diff --git a/drivers/mmc/host/omap_hsmmc.c b/drivers/mmc/host/omap_hsmmc.c
-index d8970a7ff4be..d47ef51fbe51 100644
---- a/drivers/mmc/host/omap_hsmmc.c
-+++ b/drivers/mmc/host/omap_hsmmc.c
-@@ -416,13 +416,6 @@ static int omap_hsmmc_set_power(struct omap_hsmmc_host *host, int power_on,
- 	if (mmc_pdata(host)->set_power)
- 		return mmc_pdata(host)->set_power(host->dev, power_on, iov);
- 
--	/*
--	 * If we don't see a Vcc regulator, assume it's a fixed
--	 * voltage always-on regulator.
--	 */
--	if (!mmc->supply.vmmc)
--		return 0;
--
- 	if (mmc_pdata(host)->before_set_reg)
- 		mmc_pdata(host)->before_set_reg(host->dev, power_on, iov);
- 
--- 
-2.11.0
+CgpPbiAwNS8xOC8yMDE3IDA4OjI1IFBNLCBMYXVyZW50IFBpbmNoYXJ0IHdyb3RlOgo+IEhpIEFy
+Y2hpdCwKPgo+IE9uIFRodXJzZGF5IDE4IE1heSAyMDE3IDEzOjU2OjE5IEFyY2hpdCBUYW5lamEg
+d3JvdGU6Cj4+IE9uIDA1LzE3LzIwMTcgMTI6MTYgQU0sIEVyaWMgQW5ob2x0IHdyb3RlOgo+Cj4g
+W3NuaXBdCj4KPj4+IEluIHRlcm1zIG9mIHBoeXNpY2FsIGNvbm5lY3Rpb25zOgo+Pj4gICAgWzE1
+LXBpbiAiRFNJIiBjb25uZWN0b3Igb24gMjgzNV0KPj4+Cj4+PiAgICAgfCBJMkMgICAgICAgICAg
+ICAgICB8IERTSQo+Pj4KPj4+ICAgIC8gXCAgICAgICAgU1BJICAgICAgIHwKPj4+Cj4+PiBbVFNd
+ICBbQXRtZWxdLS0tLS0tW1RDMzU4NzYyXQo+Pj4KPj4+ICAgICAgICBcICAgICAgICAgICAgICAg
+IHwKPj4+Cj4+PiAgICAgICAgIFxQV00gICAgICAgICAgICB8Cj4+Pgo+Pj4gICAgICAgICAgXCAg
+ICAgICAgICAgICAgfCBEUEkKPj4+Cj4+PiBbc29tZSBiYWNrbGlnaHRdLS0tLS0tW3NvbWUgdW5r
+bm93biBwYW5lbF0KPj4+Cj4+PiBUaGUgYmluZGluZyBJJ20gdHJ5aW5nIHRvIGNyZWF0ZSBpcyB0
+byBleHBvc2Ugd2hhdCdzIG5lY2Vzc2FyeSBmb3IgYQo+Pj4gZHJpdmVyIHRoYXQgdGFsa3MgSTJD
+IHRvIHRoZSBBdG1lbCwgd2hpY2ggdGhlbiBjb250cm9scyB0aGUgUFdNIGFuZCBkb2VzCj4+PiB0
+aGUgY29tbWFuZCBzZXF1ZW5jZSBvdmVyIFNQSSB0byB0aGUgVG9zaGliYSB0aGF0IHNldHMgdXAg
+aXRzIGVuZCBvZiB0aGUKPj4+IERTSSBsaW5rLgo+Pgo+PiBUaGUgYnJpZGdlIChBdG1lbCArIFRD
+MzU4NzYyIGNvbWJpbmF0aW9uKSBoZXJlIGxvb2tzIGxpa2UgaXQncyBwcmltYXJpbHkKPj4gYW4g
+aTJjIGRldmljZSAoaS5lLCB0aGUgY29udHJvbCBidXMgaXMgaTJjKS4gVGhlcmVmb3JlLCB0aGUg
+ZHJtLWJyaWRnZQo+PiBkcml2ZXIgaGVyZSBzaG91bGQgYmUgYW4gaTJjIGRyaXZlciBpbnN0ZWFk
+IG9mIGEgbWlwaV9kc2lfZHJpdmVyLgo+Cj4gR2xhZCB0byBzZWUgd2UgYWdyZWUsIHRoYXQncyB3
+aGF0IEkndmUgcHJvcG9zZWQgaW4gYSBzZXBhcmF0ZSBhbnN3ZXIgOi0pIEknZAo+IGdvIG9uZSBz
+dGVwIGZ1cnRoZXIgdGhvdWdoLCB0aGVyZSBzaG91bGQgYmUgbm8gRFJNIGJyaWRnZSwganVzdCBh
+IERSTSBwYW5lbC4KCklmIHRoZSBQQ0IgY29udGFpbmluZyB0aGUgY29udHJvbGxlciBjaGlwcyBh
+bmQgdGhlIHBhbmVsIGFyZSBwYXJ0IG9mIGEgc2luZ2xlCmNhc2luZywgYW5kIHRoZSBzZXQgdXAg
+d29uJ3Qgd29yayB3aXRoIGFub3RoZXIgcGFuZWwsIHRoZW4geWVhaCwgSSBhZ3JlZS4gSWYgdGhl
+CmJyaWRnZSBjaGlwcyBhcmUgb24gYSBzZXBhcmF0ZSBhZGFwdGVyIGJvYXJkLCBhbmQgdGhlcmUg
+aXMgYSBwb3NzaWJpbGl0eSB0byBjb25uZWN0Cm90aGVyIHBhbmVscywgdGhlbiBtYXliZSBhIHNl
+cGFyYXRlIERSTSBicmlkZ2UgYW5kIGEgRFJNIHBhbmVsIG1pZ2h0IGJlIGEgc2FmZXIgYmV0LgoK
+VGhhbmtzLApBcmNoaXQKCj4KPj4gV2UgaGF2ZSB0aGUgZmFjaWxpdHkgdG8gY3JlYXRlIGEgbWlw
+aSBEU0kgZGV2aWNlIHdpdGhvdXQgdGhlIG5lZWQgdG8gaGF2ZQo+PiBhIGNvcnJlc3BvbmRpbmcg
+bm9kZSBpbiBEVC4gVGhlIEFEVjc1MzMgYW5kIFRDMzU4NzY3IGRyaXZlcnMgYXJlIGV4YW1wbGVz
+Cj4+IG9mIHRoYXQuCj4+Cj4+IFRoZSBmb2xsb3dpbmcgaXMgd2hhdCB0aGUgYmluZGluZyBjb3Vs
+ZCBsb29rIGxpa2UsIGl0J3Mgc2FtZSBhcyB3aGF0IFJvYgo+PiBhbHNvIG1lbnRpb25lZCBwcmV2
+aW91c2x5IGluIHRoZSB0aHJlYWQuCj4+Cj4+IFRoYW5rcywKPj4gQXJjaGl0Cj4+Cj4+IGRzaTE6
+IGRzaUA3ZTcwMDAwMCB7Cj4+IAkjYWRkcmVzcy1jZWxscyA9IDwxPjsKPj4gCSNzaXplLWNlbGxz
+ID0gPDA+Owo+PiAJPC4uLj4KPj4KPj4gCS8qIFRoZSBTb0MncyBEU0kgaW5wdXQvb3V0cHV0IHBv
+cnQgKi8KPj4gCXBvcnRzIHsKPj4gCQkjYWRkcmVzcy1jZWxscyA9IDwxPjsKPj4gCQkjc2l6ZS1j
+ZWxscyA9IDwwPjsKPj4KPj4gCQkvKiBwb3J0QDAgaWYgbmVlZGVkICovCj4+Cj4+IAkJcG9ydEAx
+IHsKPj4gCQkJZHNpX291dF9wb3J0OiBlbmRwb2ludCB7Cj4+IAkJCQlyZWcgPSA8MT47Cj4+IAkJ
+CQlyZW1vdGUtZW5kcG9pbnQgPSA8JmJyaWRnZV9kc2lfcG9ydD47Cj4+IAkJCX07Cj4+IAkJfTsK
+Pj4gCX07Cj4+IH07Cj4+Cj4+IGkyY19kc2k6IGkyYyB7Cj4+IAljb21wYXRpYmxlID0gImkyYy1n
+cGlvIjsKPj4gCSNhZGRyZXNzLWNlbGxzID0gPDE+Owo+PiAJI3NpemUtY2VsbHMgPSA8MD47Cj4+
+IAlncGlvcyA9IDwmZ3BpbyAyOCAwCj4+IAkJICZncGlvIDI5IDA+Owo+Pgo+PiAJLyogdGhlIEF0
+bWVsICsgVEMzNTg3MiBicmlkZ2UgKi8KPj4gCXBpdG91Y2hzY3JlZW5fYnJpZGdlOiBicmlkZ2VA
+NDUgewo+Cj4gVGhpcyBzaG91bGQgdGh1cyBiZSBsY2RANDUuCj4KPj4gCQljb21wYXRpYmxlID0g
+InJhc3BiZXJyeXBpLHRvdWNoc2NyZWVuLWJyaWRnZSI7Cj4KPiBBbmQgdGhpcyByYXNwYmVycnlw
+aSw3aW5jaC10b3VjaHNjcmVlbi1wYW5lbC4gU2hhbWUgd2UgaGF2ZW4ndCBzdGFuZGFyZGl6ZWQK
+PiB0aGUgdmVuZG9yIG5hbWUgcHJlZml4IHRvIHJwaSA6LS8KPgo+PiAJCXJlZyA9IDwweDQ1PjsK
+Pj4KPj4gCQlwb3J0cyB7Cj4+IAkJCSNhZGRyZXNzLWNlbGxzID0gPDE+Owo+PiAJCQkjc2l6ZS1j
+ZWxscyA9IDwwPjsKPj4KPj4gCQkJcG9ydEAwIHsKPj4gCQkJCXJlZyA9IDwwPjsKPj4gCQkJCWJy
+aWRnZV9kc2lfcG9ydDogZW5kcG9pbnQgewo+Cj4gVGhpcyBzaG91bGQgYmUgbmFtZWQgcGFuZWxf
+ZHNpX3BvcnQuCj4KPj4gCQkJCQlyZW1vdGUtZW5kcG9pbnQgPSA8JmRzaV9vdXRfcG9ydD47Cj4+
+IAkJCQl9Owo+PiAJCQl9Owo+PiAJCQlwb3J0QDEgewo+PiAJCQkJcmVnID0gPDE+Owo+PiAJCQkJ
+YnJpZGdlX2RwaV9wb3J0OiBlbmRwb2ludCB7Cj4+IAkJCQkJcmVtb3RlLWVuZHBvaW50ID0KPiA8
+JnBpdG91Y2hzY3JlZW5fcGFuZWxfcG9ydD47Cj4+IAkJCQl9Owo+PiAJCQl9Owo+Cj4gVGhlIHNl
+Y29uZCBwb3J0IGlzIHRodXMgbm90IG5lZWRlZC4KPgo+PiAJCX07Cj4KPiBTbyB3ZSBjYW4gc2lt
+cGxpZnkgdGhpcyB0bwo+Cj4gCQlwb3J0IHsKPiAJCQlwYW5lbF9kc2lfcG9ydDogZW5kcG9pbnQg
+ewo+IAkJCQlyZW1vdGUtZW5kcG9pbnQgPSA8JmRzaV9vdXRfcG9ydD47Cj4gCQkJfTsKPiAJCX07
+Cj4KPiAobm8gbmVlZCBmb3IgYSBwb3J0cyBub2RlIHdoZW4gdGhlcmUncyBhIHNpbmdsZSBwb3J0
+KQo+Cj4+IAl9Owo+PiB9Owo+Pgo+PiBsY2Qgewo+PiAJY29tcGF0aWJsZSA9ICJyYXNwYmVycnlw
+aSw3aW5jaC10b3VjaHNjcmVlbi1wYW5lbCI7Cj4+IAlwb3J0cyB7Cj4+IAkJI2FkZHJlc3MtY2Vs
+bHMgPSA8MT47Cj4+IAkJI3NpemUtY2VsbHMgPSA8MD47Cj4+IAkJcG9ydEAwIHsKPj4gCQkJcmVn
+ID0gPDA+Owo+PiAJCQlwaXRvdWNoc2NyZWVuX3BhbmVsX3BvcnQ6IGVuZHBvaW50IHsKPj4gCQkJ
+CXJlbW90ZS1lbmRwb2ludCA9IDwmYnJpZGdlX2RwaV9wb3J0PjsKPj4gCQkJfTsKPj4gCQl9Owo+
+PiAJfTsKPj4gfTsKPgo+IEFuZCB0aGlzIG5vZGUgY2FuIGdvIGF3YXkuCj4KCi0tIApRdWFsY29t
+bSBJbm5vdmF0aW9uIENlbnRlciwgSW5jLiBpcyBhIG1lbWJlciBvZiBDb2RlIEF1cm9yYSBGb3J1
+bSwKYSBMaW51eCBGb3VuZGF0aW9uIENvbGxhYm9yYXRpdmUgUHJvamVjdApfX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0
+CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3Rv
+cC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
