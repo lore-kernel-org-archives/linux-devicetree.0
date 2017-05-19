@@ -1,91 +1,34 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH 2/3] Documentation: add sprd clock bindings
-Date: Thu, 18 May 2017 19:12:02 -0700
-Message-ID: <20170519021202.GG20170@codeaurora.org>
-References: <20170515083502.4492-1-chunyan.zhang@spreadtrum.com>
- <20170515083502.4492-3-chunyan.zhang@spreadtrum.com>
- <CAK8P3a0M6M9fUTpdnW+Eso0+HKD-MF-fKPmvj+wN8GBdzu_u8A@mail.gmail.com>
- <CAAfSe-u-+snc=b6QYgA4ysknxYDXS5UqbvWBqrnZ92sSBQqJRQ@mail.gmail.com>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: [PATCH v6 2/9] irqchip/sunxi-nmi: add support for
+ the NMI in A64 R_INTC
+Date: Fri, 19 May 2017 10:27:28 +0800
+Message-ID: <CAGb2v650D5CeP1R56kcBwL=Okbb29o=yTi6sYrdNwLJ_TfzY0A@mail.gmail.com>
+References: <20170518071653.36561-1-icenowy@aosc.io> <20170518071653.36561-3-icenowy@aosc.io>
+ <20170518075227.ifjbaahp7bz4ektr@flea.home>
+Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-clk-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAAfSe-u-+snc=b6QYgA4ysknxYDXS5UqbvWBqrnZ92sSBQqJRQ@mail.gmail.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Chunyan Zhang <zhang.lyra@gmail.com>
-Cc: Arnd Bergmann <arnd@arndb.de>, Chunyan Zhang <chunyan.zhang@spreadtrum.com>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, xiaolong.zhang@spreadtrum.com, Orson Zhai =?utf-8?B?KOe/n+S6rCk=?= <orson.zhai@spreadtrum.com>, "geng.ren@spreadtrum.com" <geng.ren@spreadtrum.com>, linux-clk@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBKFQ7HEAKGQEGE7S7QQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20170518075227.ifjbaahp7bz4ektr-YififvaboMKzQB+pC5nmwQ@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 05/18, Chunyan Zhang wrote:
-> On 18 May 2017 at 03:43, Arnd Bergmann <arnd@arndb.de> wrote:
-> > On Mon, May 15, 2017 at 10:35 AM, Chunyan Zhang
-> > <chunyan.zhang@spreadtrum.com> wrote:
-> >> diff --git a/Documentation/devicetree/bindings/clock/sprd/sprd,adjustable-pll-clock.txt b/Documentation/devicetree/bindings/clock/sprd/sprd,adjustable-pll-clock.txt
-> >> new file mode 100644
-> >> index 0000000..476e315
-> >> --- /dev/null
-> >> +++ b/Documentation/devicetree/bindings/clock/sprd/sprd,adjustable-pll-clock.txt
-> >> @@ -0,0 +1,17 @@
-> >> +Spreadtrum adjustable pll clock driver
-> >> +
-> >> +Required properties:
-> >> +
-> >> +- compatible : must be one of:
-> >> +       "sprd,sc9836-adjustable-pll-clock"
-> >> +       "sprd,sc9860-adjustable-pll-clock"
-> >> +
-> >> +Example:
-> >> +       clk_mpll0: clk@40400024 {
-> >> +               compatible = "sprd,sc9860-adjustable-pll-clock";
-> >> +               #clock-cells = <0>;
-> >> +               reg = <0 0x40400024 0 0x4>,
-> >> +                     <0 0x40400028 0 0x4>;
-> >> +               clocks = <&clk_mpll_gates 2>;
-> >> +               clock-output-names = "clk_mpll0";
-> >> +       };
-> >
-> > The properties listed in the example must all be either
-> > defined as "required" or "optional" properties and have a
-> > description.
-> 
-> Since these common properties are documented in the common clock binding [1]
-> 
-> [1] Documentation/devicetree/bindings/clock/clock-bindings.txt
-> 
-> I will add explanation in this file like I do in other bindings
-> introduced in this patch, and will address 'reg' which probably is not
-> similar to the common usage.
-> 
-> >
-> > The reg property here is a bit odd, as it lists two consecutive
-> > 4-byte areas, and both are suspiciously close to a round
-> > address (0x40400000), so I would guess that they are
-> > in fact part of a clock controller with several registers.
-> 
-> They are PLL clock configuration registers.
-> 
-> Different PLL has different configurations which listed in pll_cfg.h,
-> and probably has different number of registers for storing
-> configurations, and on some Spreadtrum's SoCs PLL clock configuration
-> registers aren't consecutive, but all PLLs on all Spreadtrum's SoCs
-> (at least so far) are using the same driver.
-> 
-> >
-> > If so, please define a node for the entire clock controller,
-> > the DT description should reflect the design of the hardware
-> > rather than the design of your device driver.
-> 
-> I also realized our implementation might not be easy to be understood,
-> but I haven't thought out a better solution considering the hardware
-> limitation I explained above.
+On Thu, May 18, 2017 at 3:52 PM, Maxime Ripard
+<maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> On Thu, May 18, 2017 at 03:16:46PM +0800, Icenowy Zheng wrote:
+>> Add support for the newly imported compatible for the A64 R_INTC in
+>> irq-sunxi-nmi driver.
+>>
+>> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+>
+> Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 
-This binding is going down the wrong path. Please look at how
-drivers such as sunxi-ng have done the binding in comparison to
-original sunxi design. We don't put this level of detail into DT,
-instead we put the details into the driver code and have clock
-controller nodes in DT. A quick glance shows that this binding is
-making a node per-clk, which is not going to be accepted.
-
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Reviewed-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
