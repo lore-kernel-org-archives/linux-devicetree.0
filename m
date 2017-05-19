@@ -1,93 +1,40 @@
-From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH 1/5] clk: mvebu: ap806: cosmetic improvement
-Date: Fri, 19 May 2017 17:58:01 +0200
-Message-ID: <5a55e081d96fc6d2a28331b59df90f56d32a9f24.1495209464.git-series.gregory.clement@free-electrons.com>
+From: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Subject: [PATCH 4/5] arm64: dts: marvell: remove clock-output-names on ap806
+Date: Fri, 19 May 2017 17:58:04 +0200
+Message-ID: <f82d7cab7f94b7884334abc7485fc7f2d775c9dd.1495209464.git-series.gregory.clement@free-electrons.com>
 References: <cover.fd6093dbad53cdac70eef4e53b238768721218ac.1495209464.git-series.gregory.clement@free-electrons.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <cover.fd6093dbad53cdac70eef4e53b238768721218ac.1495209464.git-series.gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-In-Reply-To: <cover.fd6093dbad53cdac70eef4e53b238768721218ac.1495209464.git-series.gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-References: <cover.fd6093dbad53cdac70eef4e53b238768721218ac.1495209464.git-series.gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Kostya Porotchkin <kostap-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Neta Zur Hershkovits <neta-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Marcin Wojtas <mw-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org>, Omri Itach <omrii-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Shadi Ammouri <shadi-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <cover.fd6093dbad53cdac70eef4e53b238768721218ac.1495209464.git-series.gregory.clement@free-electrons.com>
+In-Reply-To: <cover.fd6093dbad53cdac70eef4e53b238768721218ac.1495209464.git-series.gregory.clement@free-electrons.com>
+References: <cover.fd6093dbad53cdac70eef4e53b238768721218ac.1495209464.git-series.gregory.clement@free-electrons.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>, Mike Turquette <mturquette@baylibre.com>, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Nadav Haklai <nadavh@marvell.com>, Kostya Porotchkin <kostap@marvell.com>, Neta Zur Hershkovits <neta@marvell.com>, Marcin Wojtas <mw@semihalf.com>, Omri Itach <omrii@marvell.com>, Shadi Ammouri <shadi@marvell.com>
 List-Id: devicetree@vger.kernel.org
 
-Instead of using &pdev->dev all over the place, introduce a pointer
-variable for it.
+The clock-output-names of the ap806-system-controller node are not used
+anymore, so remove them.
 
-Signed-off-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Reviewed-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
 ---
- drivers/clk/mvebu/ap806-system-controller.c | 15 ++++++++-------
- 1 file changed, 8 insertions(+), 7 deletions(-)
+ arch/arm64/boot/dts/marvell/armada-ap806.dtsi | 4 ----
+ 1 file changed, 4 deletions(-)
 
-diff --git a/drivers/clk/mvebu/ap806-system-controller.c b/drivers/clk/mvebu/ap806-system-controller.c
-index 8155baccc98e..b2666b5c944f 100644
---- a/drivers/clk/mvebu/ap806-system-controller.c
-+++ b/drivers/clk/mvebu/ap806-system-controller.c
-@@ -36,20 +36,21 @@ static int ap806_syscon_clk_probe(struct platform_device *pdev)
- {
- 	unsigned int freq_mode, cpuclk_freq;
- 	const char *name, *fixedclk_name;
--	struct device_node *np = pdev->dev.of_node;
-+	struct device *dev = &pdev->dev;
-+	struct device_node *np = dev->of_node;
- 	struct regmap *regmap;
- 	u32 reg;
- 	int ret;
- 
- 	regmap = syscon_node_to_regmap(np);
- 	if (IS_ERR(regmap)) {
--		dev_err(&pdev->dev, "cannot get regmap\n");
-+		dev_err(dev, "cannot get regmap\n");
- 		return PTR_ERR(regmap);
- 	}
- 
- 	ret = regmap_read(regmap, AP806_SAR_REG, &reg);
- 	if (ret) {
--		dev_err(&pdev->dev, "cannot read from regmap\n");
-+		dev_err(dev, "cannot read from regmap\n");
- 		return ret;
- 	}
- 
-@@ -89,7 +90,7 @@ static int ap806_syscon_clk_probe(struct platform_device *pdev)
- 		cpuclk_freq = 600;
- 		break;
- 	default:
--		dev_err(&pdev->dev, "invalid SAR value\n");
-+		dev_err(dev, "invalid SAR value\n");
- 		return -EINVAL;
- 	}
- 
-@@ -99,7 +100,7 @@ static int ap806_syscon_clk_probe(struct platform_device *pdev)
- 	/* CPU clocks depend on the Sample At Reset configuration */
- 	of_property_read_string_index(np, "clock-output-names",
- 				      0, &name);
--	ap806_clks[0] = clk_register_fixed_rate(&pdev->dev, name, NULL,
-+	ap806_clks[0] = clk_register_fixed_rate(dev, name, NULL,
- 						0, cpuclk_freq);
- 	if (IS_ERR(ap806_clks[0])) {
- 		ret = PTR_ERR(ap806_clks[0]);
-@@ -108,7 +109,7 @@ static int ap806_syscon_clk_probe(struct platform_device *pdev)
- 
- 	of_property_read_string_index(np, "clock-output-names",
- 				      1, &name);
--	ap806_clks[1] = clk_register_fixed_rate(&pdev->dev, name, NULL, 0,
-+	ap806_clks[1] = clk_register_fixed_rate(dev, name, NULL, 0,
- 						cpuclk_freq);
- 	if (IS_ERR(ap806_clks[1])) {
- 		ret = PTR_ERR(ap806_clks[1]);
-@@ -118,7 +119,7 @@ static int ap806_syscon_clk_probe(struct platform_device *pdev)
- 	/* Fixed clock is always 1200 Mhz */
- 	of_property_read_string_index(np, "clock-output-names",
- 				      2, &fixedclk_name);
--	ap806_clks[2] = clk_register_fixed_rate(&pdev->dev, fixedclk_name, NULL,
-+	ap806_clks[2] = clk_register_fixed_rate(dev, fixedclk_name, NULL,
- 						0, 1200 * 1000 * 1000);
- 	if (IS_ERR(ap806_clks[2])) {
- 		ret = PTR_ERR(ap806_clks[2]);
+diff --git a/arch/arm64/boot/dts/marvell/armada-ap806.dtsi b/arch/arm64/boot/dts/marvell/armada-ap806.dtsi
+index fe41bf9c301e..0c25ec62a2a3 100644
+--- a/arch/arm64/boot/dts/marvell/armada-ap806.dtsi
++++ b/arch/arm64/boot/dts/marvell/armada-ap806.dtsi
+@@ -244,10 +244,6 @@
+ 				compatible = "marvell,ap806-system-controller",
+ 					     "syscon";
+ 				#clock-cells = <1>;
+-				clock-output-names = "ap-cpu-cluster-0",
+-						     "ap-cpu-cluster-1",
+-						     "ap-fixed", "ap-mss",
+-						     "ap-emmc";
+ 				reg = <0x6f4000 0x1000>;
+ 			};
+ 		};
 -- 
 git-series 0.9.1
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
