@@ -1,106 +1,64 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH 2/4] dt-bindings: Document the Raspberry Pi Touchscreen
- nodes.
-Date: Fri, 19 May 2017 12:32:27 +0300
-Message-ID: <21080088.MT6ayIGAs6@avalon>
-References: <20170511235625.22427-1-eric@anholt.net>
- <3771766.1sVmoPRjsn@avalon>
- <c01609b7-d2d6-8ed1-5f51-4b910ba8bef0@codeaurora.org>
+From: Michael Ellerman <mpe@ellerman.id.au>
+Subject: Re: [PATCH] powerpc/sequoia: fix NAND partitions not to overlap
+Date: Fri, 19 May 2017 20:04:29 +1000
+Message-ID: <87zie95fiq.fsf@concordia.ellerman.id.au>
+References: <20170402100535.GA18340@amd> <20170517120613.GA583@amd> <20170517143717.ad818a2282378fc7a38af1ff@linux-foundation.org> <20170518094813.GA12038@amd> <87efvl75ts.fsf@concordia.ellerman.id.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <c01609b7-d2d6-8ed1-5f51-4b910ba8bef0@codeaurora.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Archit Taneja <architt@codeaurora.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <87efvl75ts.fsf@concordia.ellerman.id.au>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Pavel Machek <pavel@denx.de>, Andrew Morton <akpm@linux-foundation.org>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, trivial@kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, paulus@samba.org, Andrew Morton <akpm@osdl.org>, jwboyer@linux.vnet.ibm.com, sr@denx.de, linuxppc-dev@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgQXJjaGl0LAoKT24gRnJpZGF5IDE5IE1heSAyMDE3IDE0OjI0OjM2IEFyY2hpdCBUYW5lamEg
-d3JvdGU6Cj4gT24gMDUvMTgvMjAxNyAwODoyNSBQTSwgTGF1cmVudCBQaW5jaGFydCB3cm90ZToK
-PiA+IE9uIFRodXJzZGF5IDE4IE1heSAyMDE3IDEzOjU2OjE5IEFyY2hpdCBUYW5lamEgd3JvdGU6
-Cj4gPj4gT24gMDUvMTcvMjAxNyAxMjoxNiBBTSwgRXJpYyBBbmhvbHQgd3JvdGU6Cj4gPgo+ID4g
-W3NuaXBdCj4gPiAKPiA+Pj4gSW4gdGVybXMgb2YgcGh5c2ljYWwgY29ubmVjdGlvbnM6Cj4gPj4+
-ICAgIFsxNS1waW4gIkRTSSIgY29ubmVjdG9yIG9uIDI4MzVdCj4gPj4+ICAgICB8IEkyQyAgICAg
-ICAgICAgICAgIHwgRFNJCj4gPj4+ICAgIC8gXCAgICAgICAgU1BJICAgICAgIHwKPiA+Pj4gW1RT
-XSAgW0F0bWVsXS0tLS0tLVtUQzM1ODc2Ml0KPiA+Pj4gICAgICAgIFwgICAgICAgICAgICAgICAg
-fAo+ID4+PiAgICAgICAgIFxQV00gICAgICAgICAgICB8Cj4gPj4+ICAgICAgICAgIFwgICAgICAg
-ICAgICAgIHwgRFBJCj4gPj4+IAo+ID4+PiBbc29tZSBiYWNrbGlnaHRdLS0tLS0tW3NvbWUgdW5r
-bm93biBwYW5lbF0KPiA+Pj4gCj4gPj4+IFRoZSBiaW5kaW5nIEknbSB0cnlpbmcgdG8gY3JlYXRl
-IGlzIHRvIGV4cG9zZSB3aGF0J3MgbmVjZXNzYXJ5IGZvciBhCj4gPj4+IGRyaXZlciB0aGF0IHRh
-bGtzIEkyQyB0byB0aGUgQXRtZWwsIHdoaWNoIHRoZW4gY29udHJvbHMgdGhlIFBXTSBhbmQgZG9l
-cwo+ID4+PiB0aGUgY29tbWFuZCBzZXF1ZW5jZSBvdmVyIFNQSSB0byB0aGUgVG9zaGliYSB0aGF0
-IHNldHMgdXAgaXRzIGVuZCBvZiB0aGUKPiA+Pj4gRFNJIGxpbmsuCj4gPj4gCj4gPj4gVGhlIGJy
-aWRnZSAoQXRtZWwgKyBUQzM1ODc2MiBjb21iaW5hdGlvbikgaGVyZSBsb29rcyBsaWtlIGl0J3Mg
-cHJpbWFyaWx5Cj4gPj4gYW4gaTJjIGRldmljZSAoaS5lLCB0aGUgY29udHJvbCBidXMgaXMgaTJj
-KS4gVGhlcmVmb3JlLCB0aGUgZHJtLWJyaWRnZQo+ID4+IGRyaXZlciBoZXJlIHNob3VsZCBiZSBh
-biBpMmMgZHJpdmVyIGluc3RlYWQgb2YgYSBtaXBpX2RzaV9kcml2ZXIuCj4gPiAKPiA+IEdsYWQg
-dG8gc2VlIHdlIGFncmVlLCB0aGF0J3Mgd2hhdCBJJ3ZlIHByb3Bvc2VkIGluIGEgc2VwYXJhdGUg
-YW5zd2VyIDotKQo+ID4gSSdkIGdvIG9uZSBzdGVwIGZ1cnRoZXIgdGhvdWdoLCB0aGVyZSBzaG91
-bGQgYmUgbm8gRFJNIGJyaWRnZSwganVzdCBhIERSTQo+ID4gcGFuZWwuCj4KPiBJZiB0aGUgUENC
-IGNvbnRhaW5pbmcgdGhlIGNvbnRyb2xsZXIgY2hpcHMgYW5kIHRoZSBwYW5lbCBhcmUgcGFydCBv
-ZiBhCj4gc2luZ2xlIGNhc2luZywgYW5kIHRoZSBzZXQgdXAgd29uJ3Qgd29yayB3aXRoIGFub3Ro
-ZXIgcGFuZWwsIHRoZW4geWVhaCwgSQo+IGFncmVlLiBJZiB0aGUgYnJpZGdlIGNoaXBzIGFyZSBv
-biBhIHNlcGFyYXRlIGFkYXB0ZXIgYm9hcmQsIGFuZCB0aGVyZSBpcyBhCj4gcG9zc2liaWxpdHkg
-dG8gY29ubmVjdCBvdGhlciBwYW5lbHMsIHRoZW4gbWF5YmUgYSBzZXBhcmF0ZSBEUk0gYnJpZGdl
-IGFuZCBhCj4gRFJNIHBhbmVsIG1pZ2h0IGJlIGEgc2FmZXIgYmV0LgoKSSB0aG91Z2h0IGl0IHdh
-cyBhIHNpbmdsZSBibGFjayBib3gsIGJ1dCB1cG9uIGNsb3NlciBpbnNwZWN0aW9uIHRoZXJlJ3Mg
-YSAKc2VwYXJhdGUgUENCIHdpdGggdGhlIE1pY3JvY29udHJvbGxlciBhbmQgVEMzNTg3NjIuCgpF
-cmljLCBkbyB5b3Uga25vdyBpZiBpdCdzIHBvc3NpYmxlIHRvIGV4Y2hhbmdlIHRoZSBwYW5lbCBm
-b3IgYW5vdGhlciBvbmUgKGFuZCAKbm90IGp1c3QgYW4gbW9kZWwgd2l0aCBpZGVudGljYWwgZmVh
-dHVyZXMgZnJvbSBhbm90aGVyIHZlbmRvciwgYnV0IGFub3RoZXIgCnBhbmVsIHdpdGggYSBkaWZm
-ZXJlbnQgbW9kZSBmb3IgaW5zdGFuY2UpIHdpdGhvdXQgcmVwcm9ncmFtbWluZyB0aGUgCm1pY3Jv
-Y29udHJvbGxlciwgb3IgaXMgdGhlIGJyaWRnZSBib2FyZCB0aWVkIHRvIHRoZSBwYW5lbCBtb2Rl
-bCA/Cgo+ID4+IFdlIGhhdmUgdGhlIGZhY2lsaXR5IHRvIGNyZWF0ZSBhIG1pcGkgRFNJIGRldmlj
-ZSB3aXRob3V0IHRoZSBuZWVkIHRvIGhhdmUKPiA+PiBhIGNvcnJlc3BvbmRpbmcgbm9kZSBpbiBE
-VC4gVGhlIEFEVjc1MzMgYW5kIFRDMzU4NzY3IGRyaXZlcnMgYXJlIGV4YW1wbGVzCj4gPj4gb2Yg
-dGhhdC4KPiA+PiAKPiA+PiBUaGUgZm9sbG93aW5nIGlzIHdoYXQgdGhlIGJpbmRpbmcgY291bGQg
-bG9vayBsaWtlLCBpdCdzIHNhbWUgYXMgd2hhdCBSb2IKPiA+PiBhbHNvIG1lbnRpb25lZCBwcmV2
-aW91c2x5IGluIHRoZSB0aHJlYWQuCj4gPj4gCj4gPj4gVGhhbmtzLAo+ID4+IEFyY2hpdAo+ID4+
-IAo+ID4+IGRzaTE6IGRzaUA3ZTcwMDAwMCB7Cj4gPj4gCj4gPj4gCSNhZGRyZXNzLWNlbGxzID0g
-PDE+Owo+ID4+IAkjc2l6ZS1jZWxscyA9IDwwPjsKPiA+PiAJPC4uLj4KPiA+PiAJCj4gPj4gCS8q
-IFRoZSBTb0MncyBEU0kgaW5wdXQvb3V0cHV0IHBvcnQgKi8KPiA+PiAJcG9ydHMgewo+ID4+IAkJ
-I2FkZHJlc3MtY2VsbHMgPSA8MT47Cj4gPj4gCQkjc2l6ZS1jZWxscyA9IDwwPjsKPiA+PiAJCQo+
-ID4+IAkJLyogcG9ydEAwIGlmIG5lZWRlZCAqLwo+ID4+IAkJcG9ydEAxIHsKPiA+PiAJCQlkc2lf
-b3V0X3BvcnQ6IGVuZHBvaW50IHsKPiA+PiAJCQkJcmVnID0gPDE+Owo+ID4+IAkJCQlyZW1vdGUt
-ZW5kcG9pbnQgPSA8JmJyaWRnZV9kc2lfcG9ydD47Cj4gPj4gCQkJfTsKPiA+PiAJCX07Cj4gPj4g
-CX07Cj4gPj4gfTsKPiA+PiAKPiA+PiBpMmNfZHNpOiBpMmMgewo+ID4+IAljb21wYXRpYmxlID0g
-ImkyYy1ncGlvIjsKPiA+PiAJI2FkZHJlc3MtY2VsbHMgPSA8MT47Cj4gPj4gCSNzaXplLWNlbGxz
-ID0gPDA+Owo+ID4+IAlncGlvcyA9IDwmZ3BpbyAyOCAwCj4gPj4gCQkgJmdwaW8gMjkgMD47Cj4g
-Pj4gCQo+ID4+IAkvKiB0aGUgQXRtZWwgKyBUQzM1ODcyIGJyaWRnZSAqLwo+ID4+IAlwaXRvdWNo
-c2NyZWVuX2JyaWRnZTogYnJpZGdlQDQ1IHsKPiA+IAo+ID4gVGhpcyBzaG91bGQgdGh1cyBiZSBs
-Y2RANDUuCj4gPiAKPiA+PiAJCWNvbXBhdGlibGUgPSAicmFzcGJlcnJ5cGksdG91Y2hzY3JlZW4t
-YnJpZGdlIjsKPiA+IAo+ID4gQW5kIHRoaXMgcmFzcGJlcnJ5cGksN2luY2gtdG91Y2hzY3JlZW4t
-cGFuZWwuIFNoYW1lIHdlIGhhdmVuJ3QKPiA+IHN0YW5kYXJkaXplZAo+ID4gdGhlIHZlbmRvciBu
-YW1lIHByZWZpeCB0byBycGkgOi0vCj4gPiAKPiA+PiAJCXJlZyA9IDwweDQ1PjsKPiA+PiAJCQo+
-ID4+IAkJcG9ydHMgewo+ID4+IAkJCSNhZGRyZXNzLWNlbGxzID0gPDE+Owo+ID4+IAkJCSNzaXpl
-LWNlbGxzID0gPDA+Owo+ID4+IAkJCXBvcnRAMCB7Cj4gPj4gCQkJCXJlZyA9IDwwPjsKPiA+PiAJ
-CQkJYnJpZGdlX2RzaV9wb3J0OiBlbmRwb2ludCB7Cj4gPiAKPiA+IFRoaXMgc2hvdWxkIGJlIG5h
-bWVkIHBhbmVsX2RzaV9wb3J0Lgo+ID4gCj4gPj4gCQkJCQlyZW1vdGUtZW5kcG9pbnQgPSA8JmRz
-aV9vdXRfcG9ydD47Cj4gPj4gCQkJCX07Cj4gPj4gCQkJfTsKPiA+PiAJCQlwb3J0QDEgewo+ID4+
-IAkJCQlyZWcgPSA8MT47Cj4gPj4gCQkJCWJyaWRnZV9kcGlfcG9ydDogZW5kcG9pbnQgewo+ID4+
-IAkJCQkJcmVtb3RlLWVuZHBvaW50ID0KPiA+IDwmcGl0b3VjaHNjcmVlbl9wYW5lbF9wb3J0PjsK
-PiA+PiAJCQkJfTsKPiA+PiAJCQl9Owo+ID4gCj4gPiBUaGUgc2Vjb25kIHBvcnQgaXMgdGh1cyBu
-b3QgbmVlZGVkLgo+ID4gCj4gPj4gCQl9Owo+ID4gCj4gPiBTbyB3ZSBjYW4gc2ltcGxpZnkgdGhp
-cyB0bwo+ID4gCj4gPiAJCXBvcnQgewo+ID4gCQkJcGFuZWxfZHNpX3BvcnQ6IGVuZHBvaW50IHsK
-PiA+IAkJCQlyZW1vdGUtZW5kcG9pbnQgPSA8JmRzaV9vdXRfcG9ydD47Cj4gPiAJCQl9Owo+ID4g
-CQl9Owo+ID4gCj4gPiAobm8gbmVlZCBmb3IgYSBwb3J0cyBub2RlIHdoZW4gdGhlcmUncyBhIHNp
-bmdsZSBwb3J0KQo+ID4gCj4gPj4gCX07Cj4gPj4gfTsKPiA+PiAKPiA+PiBsY2Qgewo+ID4+IAlj
-b21wYXRpYmxlID0gInJhc3BiZXJyeXBpLDdpbmNoLXRvdWNoc2NyZWVuLXBhbmVsIjsKPiA+PiAJ
-cG9ydHMgewo+ID4+IAkJI2FkZHJlc3MtY2VsbHMgPSA8MT47Cj4gPj4gCQkjc2l6ZS1jZWxscyA9
-IDwwPjsKPiA+PiAJCXBvcnRAMCB7Cj4gPj4gCQkJcmVnID0gPDA+Owo+ID4+IAkJCXBpdG91Y2hz
-Y3JlZW5fcGFuZWxfcG9ydDogZW5kcG9pbnQgewo+ID4+IAkJCQlyZW1vdGUtZW5kcG9pbnQgPSA8
-JmJyaWRnZV9kcGlfcG9ydD47Cj4gPj4gCQkJfTsKPiA+PiAJCX07Cj4gPj4gCX07Cj4gPj4gfTsK
-PiA+IAo+ID4gQW5kIHRoaXMgbm9kZSBjYW4gZ28gYXdheS4KCi0tIApSZWdhcmRzLAoKTGF1cmVu
-dCBQaW5jaGFydAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3Jn
-Cmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
-Cg==
+Michael Ellerman <mpe@ellerman.id.au> writes:
+
+> Pavel Machek <pavel@denx.de> writes:
+>
+>> On Wed 2017-05-17 14:37:17, Andrew Morton wrote:
+>>> On Wed, 17 May 2017 14:06:13 +0200 Pavel Machek <pavel@denx.de> wrote:
+>>> 
+>>> > On Sun 2017-04-02 12:05:36, Pavel Machek wrote:
+>>> > > Fix overlapping NAND partitions.
+>>> > > 
+>>> > > Signed-off-by: Pavel Machek <pavel@ucw.cz>
+>>> > 
+>>> > Ping? Two partitions at same place are bad news...
+>>> 
+>>> Please expand on "bad news"?  What are the runtime effects of this
+>>> change?  Decisions about which kernel(s) to patch depend on this info.
+>>
+>> Well... two partitions at same place. If you use one, you will corrupt
+>> information on the other one.
+>>
+>> OTOH this moves partition around (so that they don't overlap) so it is
+>> probably not stable candidate.
+>>
+>> I guess this is not huge issue; people using these boards probably
+>> have custom dts changes, anyway...
+>
+> Or no one's even using it anymore.
+>
+> I can take this via powerpc, I won't mark it for stable etc.
+
+It became:
+
+    Author:     Pavel Machek <pavel@denx.de>
+
+    powerpc/sequoia: Fix NAND partitions not to overlap
+    
+    Currently the DTS defines two partitions at the same addresses, if you
+    use one, you will corrupt information on the other one. Fix it by
+    shifting the second partition.
+    
+    Signed-off-by: Pavel Machek <pavel@ucw.cz>
+    [mpe: Reconstruct change log from email thread]
+    Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+
+
+Minor nit, your From: address doesn't match your Signed-off-by: address,
+which trips my "check patch is signed-off-by author" script. I can
+just ignore it, but I think it's preferable if they match.
+
+cheers
