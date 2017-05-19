@@ -1,81 +1,128 @@
-From: Dave Gerlach <d-gerlach@ti.com>
-Subject: [PATCH v2 1/2] Documentation: dt: Update ti,emif bindings
-Date: Fri, 19 May 2017 12:57:07 -0500
-Message-ID: <20170519175708.6070-2-d-gerlach@ti.com>
-References: <20170519175708.6070-1-d-gerlach@ti.com>
+From: Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+Subject: Re: Re: [RFC PATCH 02/11] drm: sun4i: add support for
+ H3 mixers
+Date: Fri, 19 May 2017 20:00:15 +0200
+Message-ID: <2675772.KPXzA3y97S@jernej-laptop>
+References: <20170517164354.16399-1-icenowy@aosc.io> <20170519174729.q5qk2vqlibzx3zrv@flea.home> <695DFDD0-1925-433C-AB88-B90EE461C203@aosc.io>
+Reply-To: jernej.skrabec-gGgVlfcn5nU@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170519175708.6070-1-d-gerlach@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh+dt@kernel.org>, Tony Lindgren <tony@atomide.com>, Santosh Shilimkar <ssantosh@kernel.org>, Russell King <linux@armlinux.org.uk>
-Cc: devicetree@vger.kernel.org, Dave Gerlach <d-gerlach@ti.com>, Keerthy J <j-keerthy@ti.com>, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBDQNBWPU7YERBM7F7TEAKGQE4NESQYQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <695DFDD0-1925-433C-AB88-B90EE461C203-h8G6r0blFSE@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, icenowy-h8G6r0blFSE@public.gmane.org
+Cc: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Update the Texas Instruments EMIF binding document to include the device
-tree bindings for ti,emif-am3352 and ti,emif-am4372 which are used by
-the ti-emif-sram driver to provide low-level PM functionality.
+Hi!
 
-Signed-off-by: Dave Gerlach <d-gerlach@ti.com>
----
- .../devicetree/bindings/memory-controllers/ti/emif.txt | 18 +++++++++++++++++-
- 1 file changed, 17 insertions(+), 1 deletion(-)
+Dne petek, 19. maj 2017 ob 19:49:58 CEST je Icenowy Zheng napisal(a):
+> =E4=BA=8E 2017=E5=B9=B45=E6=9C=8820=E6=97=A5 GMT+08:00 =E4=B8=8A=E5=8D=88=
+1:47:29, Maxime Ripard <maxime.ripard@free-
+electrons.com> =E5=86=99=E5=88=B0:
+> >On Thu, May 18, 2017 at 12:43:45AM +0800, Icenowy Zheng wrote:
+> >> From: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+> >>=20
+> >> Allwinner H3 SoC has two mixers, one has 1 VI channel and 3 UI
+> >
+> >channels,
+> >
+> >> and the other has 1 VI and 1 UI.
+> >>=20
+> >> Add support for these two variants.
+> >>=20
+> >> Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+> >> ---
+> >>=20
+> >>  drivers/gpu/drm/sun4i/sun8i_mixer.c | 18 ++++++++++++++++++
+> >>  1 file changed, 18 insertions(+)
+> >>=20
+> >> diff --git a/drivers/gpu/drm/sun4i/sun8i_mixer.c
+> >
+> >b/drivers/gpu/drm/sun4i/sun8i_mixer.c
+> >
+> >> index cb193c5f1686..d658a3a8159a 100644
+> >> --- a/drivers/gpu/drm/sun4i/sun8i_mixer.c
+> >> +++ b/drivers/gpu/drm/sun4i/sun8i_mixer.c
+> >> @@ -390,11 +390,29 @@ static const struct sun8i_mixer_cfg
+> >
+> >sun8i_v3s_mixer_cfg =3D {
+> >
+> >>  	.ui_num =3D 1,
+> >> =20
+> >>  };
+> >>=20
+> >> +static const struct sun8i_mixer_cfg sun8i_h3_mixer0_cfg =3D {
+> >> +	.vi_num =3D 1,
+> >> +	.ui_num =3D 3,
+> >> +};
+> >> +
+> >> +static const struct sun8i_mixer_cfg sun8i_h3_mixer1_cfg =3D {
+> >> +	.vi_num =3D 1,
+> >> +	.ui_num =3D 1,
+> >> +};
+> >> +
+> >>=20
+> >>  static const struct of_device_id sun8i_mixer_of_table[] =3D {
+> >> =20
+> >>  	{
+> >>  =09
+> >>  		.compatible =3D "allwinner,sun8i-v3s-de2-mixer",
+> >>  		.data =3D &sun8i_v3s_mixer_cfg,
+> >>  =09
+> >>  	},
+> >>=20
+> >> +	{
+> >> +		.compatible =3D "allwinner,sun8i-h3-de2-mixer0",
+> >> +		.data =3D &sun8i_h3_mixer0_cfg
+> >> +	},
+> >> +	{
+> >> +		.compatible =3D "allwinner,sun8i-h3-de2-mixer1",
+> >> +		.data =3D &sun8i_h3_mixer1_cfg
+> >> +	},
+> >
+> >So the only difference between the two is the number of ui planes?
+>=20
+> Not only., but currently we only implemented this.
+>=20
+> More functions differ, but we still don't support them...
+>=20
 
-diff --git a/Documentation/devicetree/bindings/memory-controllers/ti/emif.txt b/Documentation/devicetree/bindings/memory-controllers/ti/emif.txt
-index 0db60470ebb6..8c0214b17c2b 100644
---- a/Documentation/devicetree/bindings/memory-controllers/ti/emif.txt
-+++ b/Documentation/devicetree/bindings/memory-controllers/ti/emif.txt
-@@ -8,6 +8,7 @@ of the EMIF IP and memory parts attached to it.
- Required properties:
- - compatible	: Should be of the form "ti,emif-<ip-rev>" where <ip-rev>
-   is the IP revision of the specific EMIF instance.
-+		  For am335x should be ti,emif-am3352.
- 		  For am437x should be ti,emif-am4372.
- 
- - phy-type	: <u32> indicating the DDR phy type. Following are the
-@@ -21,6 +22,13 @@ Required properties:
-   the value shall be "emif<n>" where <n> is the number of the EMIF
-   instance with base 1.
- 
-+Required only for "ti,emif-am3352" and "ti,emif-am4372":
-+- sram			: Phandles for generic sram driver nodes,
-+  first should be type 'protect-exec' for the driver to use to copy
-+  and run PM functions, second should be regular pool to be used for
-+  data region for code. See Documentation/devicetree/bindings/sram/sram.txt
-+  for more details.
-+
- Optional properties:
- - cs1-used		: Have this property if CS1 of this EMIF
-   instance has a memory part attached to it. If there is a memory
-@@ -42,7 +50,7 @@ Optional properties:
- - hw-caps-temp-alert	: Have this property if the controller
-   has capability for generating SDRAM temperature alerts
- 
--Example:
-+-Examples:
- 
- emif1: emif@0x4c000000 {
- 	compatible	= "ti,emif-4d";
-@@ -54,3 +62,11 @@ emif1: emif@0x4c000000 {
- 	hw-caps-ll-interface;
- 	hw-caps-temp-alert;
- };
-+
-+/* From am33xx.dtsi */
-+emif: emif@4c000000 {
-+        compatible = "ti,emif-am3352";
-+        reg =   <0x4C000000 0x1000>;
-+        sram = <&pm_sram_code
-+                &pm_sram_data>;
-+};
--- 
-2.13.0
+As far as I can tell, they only differ in ui & vi number of planes and betw=
+een=20
+different SoCs, max plane size.
+
+Icenowy,
+Do you know any other property they differ? I think everything else is base=
+d=20
+mostly on ui & vi number of planes.
+
+Best regards,
+Jernej
+
+> >Why not create a property to give the number then, instead of a
+> >compatible?
+> >
+> >Maxime
+>=20
+> --
+> You received this message because you are subscribed to the Google Groups
+> "linux-sunxi" group. To unsubscribe from this group and stop receiving
+> emails from it, send an email to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org=
+.
+> For more options, visit https://groups.google.com/d/optout.
+
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
