@@ -1,93 +1,71 @@
-From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Subject: Re: Re: [RFC PATCH 02/11] drm: sun4i: add support for
- H3 mixers
-Date: Sat, 20 May 2017 01:49:58 +0800
-Message-ID: <695DFDD0-1925-433C-AB88-B90EE461C203@aosc.io>
-References: <20170517164354.16399-1-icenowy@aosc.io> <20170517164354.16399-3-icenowy@aosc.io> <20170519174729.q5qk2vqlibzx3zrv@flea.home>
-Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 1/4] usb: host: ohci-platform: Add basic runtime PM
+ support
+Date: Fri, 19 May 2017 10:52:32 -0700
+Message-ID: <20170519175232.GG10472@atomide.com>
+References: <20170517225922.17723-2-tony@atomide.com>
+ <Pine.LNX.4.44L0.1705181313320.1619-100000@iolanthe.rowland.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBDS6XAN6ZADRBUHA7TEAKGQERTTGIEA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20170519174729.q5qk2vqlibzx3zrv-YififvaboMKzQB+pC5nmwQ@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.orgMaxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <Pine.LNX.4.44L0.1705181313320.1619-100000-IYeN2dnnYyZXsRXLowluHWD2FQJk+8+b@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
+Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>, Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+* Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org> [170518 10:24]:
+> On Wed, 17 May 2017, Tony Lindgren wrote:
+> 
+> > This is needed in preparation of adding support for omap3 and
+> > later OHCI. The runtime PM will only do something on platforms
+> > that implement it.
+> 
+> > @@ -51,6 +52,10 @@ static int ohci_platform_power_on(struct platform_device *dev)
+> >  	struct ohci_platform_priv *priv = hcd_to_ohci_priv(hcd);
+> >  	int clk, ret, phy_num;
+> >  
+> > +	ret = pm_runtime_get_sync(&dev->dev);
+> > +	if (ret < 0)
+> > +		return ret;
+> > +
+> 
+> I don't remember how probing for platform device drivers is set up.    
+> So although this is definitely the wrong place for 
+> pm_runtime_get_sync(), it may turn out that you need to do a 
+> pm_runtime_get_noresume() before calling pm_runtime_enable(), and a 
+> pm_runtime_put() at the end of ohci_platform_probe().  Otherwise 
+> runtime PM might kick in during the middle of the probe sequence -- not 
+> what you want.
 
+Just removing those parts seems to work for probing.
 
-=E4=BA=8E 2017=E5=B9=B45=E6=9C=8820=E6=97=A5 GMT+08:00 =E4=B8=8A=E5=8D=881:=
-47:29, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> =E5=86=99=E5=88=B0:
->On Thu, May 18, 2017 at 12:43:45AM +0800, Icenowy Zheng wrote:
->> From: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
->>=20
->> Allwinner H3 SoC has two mixers, one has 1 VI channel and 3 UI
->channels,
->> and the other has 1 VI and 1 UI.
->>=20
->> Add support for these two variants.
->>=20
->> Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
->> ---
->>  drivers/gpu/drm/sun4i/sun8i_mixer.c | 18 ++++++++++++++++++
->>  1 file changed, 18 insertions(+)
->>=20
->> diff --git a/drivers/gpu/drm/sun4i/sun8i_mixer.c
->b/drivers/gpu/drm/sun4i/sun8i_mixer.c
->> index cb193c5f1686..d658a3a8159a 100644
->> --- a/drivers/gpu/drm/sun4i/sun8i_mixer.c
->> +++ b/drivers/gpu/drm/sun4i/sun8i_mixer.c
->> @@ -390,11 +390,29 @@ static const struct sun8i_mixer_cfg
->sun8i_v3s_mixer_cfg =3D {
->>  	.ui_num =3D 1,
->>  };
->> =20
->> +static const struct sun8i_mixer_cfg sun8i_h3_mixer0_cfg =3D {
->> +	.vi_num =3D 1,
->> +	.ui_num =3D 3,
->> +};
->> +
->> +static const struct sun8i_mixer_cfg sun8i_h3_mixer1_cfg =3D {
->> +	.vi_num =3D 1,
->> +	.ui_num =3D 1,
->> +};
->> +
->>  static const struct of_device_id sun8i_mixer_of_table[] =3D {
->>  	{
->>  		.compatible =3D "allwinner,sun8i-v3s-de2-mixer",
->>  		.data =3D &sun8i_v3s_mixer_cfg,
->>  	},
->> +	{
->> +		.compatible =3D "allwinner,sun8i-h3-de2-mixer0",
->> +		.data =3D &sun8i_h3_mixer0_cfg
->> +	},
->> +	{
->> +		.compatible =3D "allwinner,sun8i-h3-de2-mixer1",
->> +		.data =3D &sun8i_h3_mixer1_cfg
->> +	},
->
->So the only difference between the two is the number of ui planes?
+> Similarly, you may need pm_runtime_get_sync() at the start of 
+> ohci_platform_remove() and pm_runtime_put_noidle() at the end.
 
-Not only., but currently we only implemented this.
+Yup that I noticed that too trying to rmmod it with no devices
+connected.
 
-More functions differ, but we still don't support them...
+While testing I also saw once "external abort on non-linefetch":
 
->
->Why not create a property to give the number then, instead of a
->compatible?
->
->Maxime
+(ohci_hub_status_data [ohci_hcd]) from [<bf0298bc>]
+(usb_hcd_poll_rh_status+0x3c/0x128 [usbcore])
+(usb_hcd_poll_rh_status [usbcore]) from [<c01c790c>]
+(call_timer_fn+0xb0/0x3f8)
+(call_timer_fn) from [<c01c7d38>] (expire_timers+0xe4/0x220)
+(expire_timers) from [<c01c7f08>] (run_timer_softirq+0x94/0x19c)
+(run_timer_softirq) from [<c0141cf8>] (__do_softirq+0x140/0x570)
 
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+Also I'm still checking if legacy usb_phy vs phy needs handling.
+So far it seems that no need to do anything because most devices
+need a USB hub anyways unless they have USB serial transceiver
+configured with drivers/mfd/omap-usb-host.c for LS/FS.
+
+Regards,
+
+Tony
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
