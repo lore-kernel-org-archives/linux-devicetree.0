@@ -1,334 +1,236 @@
-From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH 7/7] arm64: dts: marvell: use new binding for the system controller on cp110
-Date: Fri, 19 May 2017 17:55:25 +0200
-Message-ID: <4139fcd6c66df1c3d3fa0a0a7cf7f8a8c601a16c.1495208533.git-series.gregory.clement@free-electrons.com>
+From: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Subject: [PATCH 4/7] clk: mvebu: cp110: introduce a new binding
+Date: Fri, 19 May 2017 17:55:22 +0200
+Message-ID: <a9ba62b9d6432af430e2f9cf7212c3ba8e1c5f03.1495208533.git-series.gregory.clement@free-electrons.com>
 References: <cover.737145f06ff0191d1a9210bcd141e679bf45fe5f.1495208533.git-series.gregory.clement@free-electrons.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <cover.737145f06ff0191d1a9210bcd141e679bf45fe5f.1495208533.git-series.gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-In-Reply-To: <cover.737145f06ff0191d1a9210bcd141e679bf45fe5f.1495208533.git-series.gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-References: <cover.737145f06ff0191d1a9210bcd141e679bf45fe5f.1495208533.git-series.gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Kostya Porotchkin <kostap-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Neta Zur Hershkovits <neta-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Marcin Wojtas <mw-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org>, Omri Itach <omrii-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Shadi Ammouri <shadi-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <cover.737145f06ff0191d1a9210bcd141e679bf45fe5f.1495208533.git-series.gregory.clement@free-electrons.com>
+In-Reply-To: <cover.737145f06ff0191d1a9210bcd141e679bf45fe5f.1495208533.git-series.gregory.clement@free-electrons.com>
+References: <cover.737145f06ff0191d1a9210bcd141e679bf45fe5f.1495208533.git-series.gregory.clement@free-electrons.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Stephen Boyd <sboyd@codeaurora.org>, Mike Turquette <mturquette@baylibre.com>, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, Omri Itach <omrii@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Kostya Porotchkin <kostap@marvell.com>, Rob Herring <robh+dt@kernel.org>, Neta Zur Hershkovits <neta@marvell.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Shadi Ammouri <shadi@marvell.com>, Marcin Wojtas <mw@semihalf.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-The new binding for the system controller on cp110 moved the clock
-controller into a subnode. This preliminary step will allow to add gpio
-and pinctrl subnodes.
+The initial intent when the binding of the cp110 system controller was to
+have one flat node. The idea being that what is currently a clock-only
+driver in drivers would become a MFD driver, exposing the clock, GPIO and
+pinctrl functionality. However, after taking a step back, this would lead
+to a messy binding. Indeed, a single node would be a GPIO controller,
+clock controller, pinmux controller, and more.
 
-Reviewed-by: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Signed-off-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+This patch adopts a more classical solution of a top-level syscon node
+with sub-nodes for the individual devices. The main benefit will be to
+have each functional block associated to its own sub-node where we can
+put its own properties.
+
+The introduction of the Armada 7K/8K is still in the early stage so the
+plan is to remove the old binding. However, we don't want to break the
+device tree compatibility for the few devices already in the field. For
+this we still keep the support of the legacy compatible string with a big
+warning in the kernel about updating the device tree.
+
+Reviewed-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
 ---
- arch/arm64/boot/dts/marvell/armada-cp110-master.dtsi | 41 ++++++-------
- arch/arm64/boot/dts/marvell/armada-cp110-slave.dtsi  | 35 +++++------
- 2 files changed, 41 insertions(+), 35 deletions(-)
+ Documentation/devicetree/bindings/arm/marvell/cp110-system-controller0.txt | 18 ++++++++++++++----
+ drivers/clk/mvebu/cp110-system-controller.c                                | 63 ++++++++++++++++++++++++++++++++++++++++++++++++---------------
+ 2 files changed, 62 insertions(+), 19 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/marvell/armada-cp110-master.dtsi b/arch/arm64/boot/dts/marvell/armada-cp110-master.dtsi
-index a0f57a8e5dcb..96a4ff75b3b0 100644
---- a/arch/arm64/boot/dts/marvell/armada-cp110-master.dtsi
-+++ b/arch/arm64/boot/dts/marvell/armada-cp110-master.dtsi
-@@ -62,7 +62,7 @@
- 			cpm_ethernet: ethernet@0 {
- 				compatible = "marvell,armada-7k-pp22";
- 				reg = <0x0 0x100000>, <0x129000 0xb000>;
--				clocks = <&cpm_syscon0 1 3>, <&cpm_syscon0 1 9>, <&cpm_syscon0 1 5>;
-+				clocks = <&cpm_clk 1 3>, <&cpm_clk 1 9>, <&cpm_clk 1 5>;
- 				clock-names = "pp_clk", "gop_clk", "mg_clk";
- 				status = "disabled";
- 				dma-coherent;
-@@ -97,10 +97,13 @@
- 			};
+diff --git a/Documentation/devicetree/bindings/arm/marvell/cp110-system-controller0.txt b/Documentation/devicetree/bindings/arm/marvell/cp110-system-controller0.txt
+index 47f1cf800e25..139e46cc6786 100644
+--- a/Documentation/devicetree/bindings/arm/marvell/cp110-system-controller0.txt
++++ b/Documentation/devicetree/bindings/arm/marvell/cp110-system-controller0.txt
+@@ -7,6 +7,13 @@ Controller 0 and System Controller 1. This Device Tree binding allows
+ to describe the first system controller, which provides registers to
+ configure various aspects of the SoC.
  
- 			cpm_syscon0: system-controller@440000 {
--				compatible = "marvell,cp110-system-controller0",
--					     "syscon";
-+				compatible = "syscon", "simple-mfd";
- 				reg = <0x440000 0x1000>;
--				#clock-cells = <2>;
++For the top level node:
++ - compatible: must be: "syscon", "simple-mfd";
++ - reg: register area of the CP110 system controller 0
 +
-+				cpm_clk: clock {
-+					compatible = "marvell,cp110-clock";
-+					#clock-cells = <2>;
-+				};
- 			};
- 
- 			cpm_rtc: rtc@284000 {
-@@ -115,7 +118,7 @@
- 					     "generic-ahci";
- 				reg = <0x540000 0x30000>;
- 				interrupts = <GIC_SPI 63 IRQ_TYPE_LEVEL_HIGH>;
--				clocks = <&cpm_syscon0 1 15>;
-+				clocks = <&cpm_clk 1 15>;
- 				status = "disabled";
- 			};
- 
-@@ -125,7 +128,7 @@
- 				reg = <0x500000 0x4000>;
- 				dma-coherent;
- 				interrupts = <GIC_SPI 62 IRQ_TYPE_LEVEL_HIGH>;
--				clocks = <&cpm_syscon0 1 22>;
-+				clocks = <&cpm_clk 1 22>;
- 				status = "disabled";
- 			};
- 
-@@ -135,7 +138,7 @@
- 				reg = <0x510000 0x4000>;
- 				dma-coherent;
- 				interrupts = <GIC_SPI 61 IRQ_TYPE_LEVEL_HIGH>;
--				clocks = <&cpm_syscon0 1 23>;
-+				clocks = <&cpm_clk 1 23>;
- 				status = "disabled";
- 			};
- 
-@@ -145,7 +148,7 @@
- 				      <0x6b0000 0x1000>;
- 				dma-coherent;
- 				msi-parent = <&gic_v2m0>;
--				clocks = <&cpm_syscon0 1 8>;
-+				clocks = <&cpm_clk 1 8>;
- 			};
- 
- 			cpm_xor1: xor@6c0000 {
-@@ -154,7 +157,7 @@
- 				      <0x6d0000 0x1000>;
- 				dma-coherent;
- 				msi-parent = <&gic_v2m0>;
--				clocks = <&cpm_syscon0 1 7>;
-+				clocks = <&cpm_clk 1 7>;
- 			};
- 
- 			cpm_spi0: spi@700600 {
-@@ -163,7 +166,7 @@
- 				#address-cells = <0x1>;
- 				#size-cells = <0x0>;
- 				cell-index = <1>;
--				clocks = <&cpm_syscon0 1 21>;
-+				clocks = <&cpm_clk 1 21>;
- 				status = "disabled";
- 			};
- 
-@@ -173,7 +176,7 @@
- 				#address-cells = <1>;
- 				#size-cells = <0>;
- 				cell-index = <2>;
--				clocks = <&cpm_syscon0 1 21>;
-+				clocks = <&cpm_clk 1 21>;
- 				status = "disabled";
- 			};
- 
-@@ -183,7 +186,7 @@
- 				#address-cells = <1>;
- 				#size-cells = <0>;
- 				interrupts = <GIC_SPI 86 IRQ_TYPE_LEVEL_HIGH>;
--				clocks = <&cpm_syscon0 1 21>;
-+				clocks = <&cpm_clk 1 21>;
- 				status = "disabled";
- 			};
- 
-@@ -193,7 +196,7 @@
- 				#address-cells = <1>;
- 				#size-cells = <0>;
- 				interrupts = <GIC_SPI 87 IRQ_TYPE_LEVEL_HIGH>;
--				clocks = <&cpm_syscon0 1 21>;
-+				clocks = <&cpm_clk 1 21>;
- 				status = "disabled";
- 			};
- 
-@@ -201,7 +204,7 @@
- 				compatible = "marvell,armada-8k-rng", "inside-secure,safexcel-eip76";
- 				reg = <0x760000 0x7d>;
- 				interrupts = <GIC_SPI 59 IRQ_TYPE_LEVEL_HIGH>;
--				clocks = <&cpm_syscon0 1 25>;
-+				clocks = <&cpm_clk 1 25>;
- 				status = "okay";
- 			};
- 
-@@ -210,7 +213,7 @@
- 				reg = <0x780000 0x300>;
- 				interrupts = <GIC_SPI 69 IRQ_TYPE_LEVEL_HIGH>;
- 				clock-names = "core";
--				clocks = <&cpm_syscon0 1 4>;
-+				clocks = <&cpm_clk 1 4>;
- 				dma-coherent;
- 				status = "disabled";
- 			};
-@@ -227,7 +230,7 @@
- 					     <GIC_SPI 58 IRQ_TYPE_LEVEL_HIGH>;
- 				interrupt-names = "mem", "ring0", "ring1",
- 				"ring2", "ring3", "eip";
--				clocks = <&cpm_syscon0 1 26>;
-+				clocks = <&cpm_clk 1 26>;
- 				status = "disabled";
- 			};
- 		};
-@@ -254,7 +257,7 @@
- 			interrupt-map = <0 0 0 0 &gic 0 GIC_SPI 32 IRQ_TYPE_LEVEL_HIGH>;
- 			interrupts = <GIC_SPI 32 IRQ_TYPE_LEVEL_HIGH>;
- 			num-lanes = <1>;
--			clocks = <&cpm_syscon0 1 13>;
-+			clocks = <&cpm_clk 1 13>;
- 			status = "disabled";
- 		};
- 
-@@ -281,7 +284,7 @@
- 			interrupts = <GIC_SPI 34 IRQ_TYPE_LEVEL_HIGH>;
- 
- 			num-lanes = <1>;
--			clocks = <&cpm_syscon0 1 11>;
-+			clocks = <&cpm_clk 1 11>;
- 			status = "disabled";
- 		};
- 
-@@ -308,7 +311,7 @@
- 			interrupts = <GIC_SPI 33 IRQ_TYPE_LEVEL_HIGH>;
- 
- 			num-lanes = <1>;
--			clocks = <&cpm_syscon0 1 12>;
-+			clocks = <&cpm_clk 1 12>;
- 			status = "disabled";
- 		};
- 	};
-diff --git a/arch/arm64/boot/dts/marvell/armada-cp110-slave.dtsi b/arch/arm64/boot/dts/marvell/armada-cp110-slave.dtsi
-index 9584bc8d8b3f..48a658aa5b32 100644
---- a/arch/arm64/boot/dts/marvell/armada-cp110-slave.dtsi
-+++ b/arch/arm64/boot/dts/marvell/armada-cp110-slave.dtsi
-@@ -104,10 +104,13 @@
- 			};
- 
- 			cps_syscon0: system-controller@440000 {
--				compatible = "marvell,cp110-system-controller0",
--					     "syscon";
-+				compatible = "syscon", "simple-mfd";
- 				reg = <0x440000 0x1000>;
--				#clock-cells = <2>;
++Clocks:
++-------
 +
-+				cps_clk: clock {
-+					compatible = "marvell,cp110-clock";
-+					#clock-cells = <2>;
-+				};
- 			};
+ The Device Tree node representing this System Controller 0 provides a
+ number of clocks:
  
- 			cps_sata0: sata@540000 {
-@@ -115,7 +118,7 @@
- 					     "generic-ahci";
- 				reg = <0x540000 0x30000>;
- 				interrupts = <GIC_SPI 287 IRQ_TYPE_LEVEL_HIGH>;
--				clocks = <&cps_syscon0 1 15>;
-+				clocks = <&cps_clk 1 15>;
- 				status = "disabled";
- 			};
+@@ -56,14 +63,17 @@ The following clocks are available:
+ Required properties:
  
-@@ -125,7 +128,7 @@
- 				reg = <0x500000 0x4000>;
- 				dma-coherent;
- 				interrupts = <GIC_SPI 286 IRQ_TYPE_LEVEL_HIGH>;
--				clocks = <&cps_syscon0 1 22>;
-+				clocks = <&cps_clk 1 22>;
- 				status = "disabled";
- 			};
+  - compatible: must be:
+-     "marvell,cp110-system-controller0", "syscon";
+- - reg: register area of the CP110 system controller 0
++     "marvell,cp110-clock"
+  - #clock-cells: must be set to 2
  
-@@ -135,7 +138,7 @@
- 				reg = <0x510000 0x4000>;
- 				dma-coherent;
- 				interrupts = <GIC_SPI 285 IRQ_TYPE_LEVEL_HIGH>;
--				clocks = <&cps_syscon0 1 23>;
-+				clocks = <&cps_clk 1 23>;
- 				status = "disabled";
- 			};
+ Example:
  
-@@ -145,7 +148,7 @@
- 				      <0x6b0000 0x1000>;
- 				dma-coherent;
- 				msi-parent = <&gic_v2m0>;
--				clocks = <&cps_syscon0 1 8>;
-+				clocks = <&cps_clk 1 8>;
- 			};
- 
- 			cps_xor1: xor@6c0000 {
-@@ -154,7 +157,7 @@
- 				      <0x6d0000 0x1000>;
- 				dma-coherent;
- 				msi-parent = <&gic_v2m0>;
--				clocks = <&cps_syscon0 1 7>;
-+				clocks = <&cps_clk 1 7>;
- 			};
- 
- 			cps_spi0: spi@700600 {
-@@ -163,7 +166,7 @@
- 				#address-cells = <0x1>;
- 				#size-cells = <0x0>;
- 				cell-index = <3>;
--				clocks = <&cps_syscon0 1 21>;
-+				clocks = <&cps_clk 1 21>;
- 				status = "disabled";
- 			};
- 
-@@ -173,7 +176,7 @@
- 				#address-cells = <1>;
- 				#size-cells = <0>;
- 				cell-index = <4>;
--				clocks = <&cps_syscon0 1 21>;
-+				clocks = <&cps_clk 1 21>;
- 				status = "disabled";
- 			};
- 
-@@ -183,7 +186,7 @@
- 				#address-cells = <1>;
- 				#size-cells = <0>;
- 				interrupts = <GIC_SPI 310 IRQ_TYPE_LEVEL_HIGH>;
--				clocks = <&cps_syscon0 1 21>;
-+				clocks = <&cps_clk 1 21>;
- 				status = "disabled";
- 			};
- 
-@@ -193,7 +196,7 @@
- 				#address-cells = <1>;
- 				#size-cells = <0>;
- 				interrupts = <GIC_SPI 311 IRQ_TYPE_LEVEL_HIGH>;
--				clocks = <&cps_syscon0 1 21>;
-+				clocks = <&cps_clk 1 21>;
- 				status = "disabled";
- 			};
- 
-@@ -201,7 +204,7 @@
- 				compatible = "marvell,armada-8k-rng", "inside-secure,safexcel-eip76";
- 				reg = <0x760000 0x7d>;
- 				interrupts = <GIC_SPI 312 IRQ_TYPE_LEVEL_HIGH>;
--				clocks = <&cps_syscon0 1 25>;
-+				clocks = <&cps_clk 1 25>;
- 				status = "okay";
- 			};
- 
-@@ -244,7 +247,7 @@
- 			interrupt-map = <0 0 0 0 &gic 0 GIC_SPI 256 IRQ_TYPE_LEVEL_HIGH>;
- 			interrupts = <GIC_SPI 256 IRQ_TYPE_LEVEL_HIGH>;
- 			num-lanes = <1>;
--			clocks = <&cps_syscon0 1 13>;
-+			clocks = <&cps_clk 1 13>;
- 			status = "disabled";
- 		};
- 
-@@ -271,7 +274,7 @@
- 			interrupts = <GIC_SPI 258 IRQ_TYPE_LEVEL_HIGH>;
- 
- 			num-lanes = <1>;
--			clocks = <&cps_syscon0 1 11>;
-+			clocks = <&cps_clk 1 11>;
- 			status = "disabled";
- 		};
- 
-@@ -298,7 +301,7 @@
- 			interrupts = <GIC_SPI 257 IRQ_TYPE_LEVEL_HIGH>;
- 
- 			num-lanes = <1>;
--			clocks = <&cps_syscon0 1 12>;
-+			clocks = <&cps_clk 1 12>;
- 			status = "disabled";
- 		};
+ 	cpm_syscon0: system-controller@440000 {
+-		compatible = "marvell,cp110-system-controller0", "syscon";
++		compatible = "syscon", "simple-mfd";
+ 		reg = <0x440000 0x1000>;
+-		#clock-cells = <2>;
++
++		cpm_clk: clock {
++			compatible = "marvell,cp110-clock";
++			#clock-cells = <2>;
++		};
  	};
+diff --git a/drivers/clk/mvebu/cp110-system-controller.c b/drivers/clk/mvebu/cp110-system-controller.c
+index c7df8a69ed9a..ecbcae321424 100644
+--- a/drivers/clk/mvebu/cp110-system-controller.c
++++ b/drivers/clk/mvebu/cp110-system-controller.c
+@@ -213,9 +213,9 @@ static struct clk_hw *cp110_of_clk_get(struct of_phandle_args *clkspec,
+ 	return ERR_PTR(-EINVAL);
+ }
+ 
+-static char *cp110_unique_name(struct device *dev, const char *name)
++static char *cp110_unique_name(struct device *dev, struct device_node *np,
++			       const char *name)
+ {
+-	struct device_node *np = dev->of_node;
+ 	const __be32 *reg;
+ 	u64 addr;
+ 
+@@ -229,7 +229,8 @@ static char *cp110_unique_name(struct device *dev, const char *name)
+ 			      (unsigned long long)addr, name);
+ }
+ 
+-static int cp110_syscon_clk_probe(struct platform_device *pdev)
++static int cp110_syscon_common_probe(struct platform_device *pdev,
++				     struct device_node *syscon_node)
+ {
+ 	struct regmap *regmap;
+ 	struct device *dev = &pdev->dev;
+@@ -241,7 +242,7 @@ static int cp110_syscon_clk_probe(struct platform_device *pdev)
+ 	int i, ret;
+ 	char *gate_name[ARRAY_SIZE(gate_base_names)];
+ 
+-	regmap = syscon_node_to_regmap(np);
++	regmap = syscon_node_to_regmap(syscon_node);
+ 	if (IS_ERR(regmap))
+ 		return PTR_ERR(regmap);
+ 
+@@ -260,7 +261,7 @@ static int cp110_syscon_clk_probe(struct platform_device *pdev)
+ 	cp110_clk_data->num = CP110_CLK_NUM;
+ 
+ 	/* Register the APLL which is the root of the hw tree */
+-	apll_name = cp110_unique_name(dev, "apll");
++	apll_name = cp110_unique_name(dev, syscon_node, "apll");
+ 	hw = clk_hw_register_fixed_rate(NULL, apll_name, NULL, 0,
+ 					1000 * 1000 * 1000);
+ 	if (IS_ERR(hw)) {
+@@ -271,7 +272,7 @@ static int cp110_syscon_clk_probe(struct platform_device *pdev)
+ 	cp110_clks[CP110_CORE_APLL] = hw;
+ 
+ 	/* PPv2 is APLL/3 */
+-	ppv2_name = cp110_unique_name(dev, "ppv2-core");
++	ppv2_name = cp110_unique_name(dev, syscon_node, "ppv2-core");
+ 	hw = clk_hw_register_fixed_factor(NULL, ppv2_name, apll_name, 0, 1, 3);
+ 	if (IS_ERR(hw)) {
+ 		ret = PTR_ERR(hw);
+@@ -281,7 +282,7 @@ static int cp110_syscon_clk_probe(struct platform_device *pdev)
+ 	cp110_clks[CP110_CORE_PPV2] = hw;
+ 
+ 	/* EIP clock is APLL/2 */
+-	eip_name = cp110_unique_name(dev, "eip");
++	eip_name = cp110_unique_name(dev, syscon_node, "eip");
+ 	hw = clk_hw_register_fixed_factor(NULL, eip_name, apll_name, 0, 1, 2);
+ 	if (IS_ERR(hw)) {
+ 		ret = PTR_ERR(hw);
+@@ -291,7 +292,7 @@ static int cp110_syscon_clk_probe(struct platform_device *pdev)
+ 	cp110_clks[CP110_CORE_EIP] = hw;
+ 
+ 	/* Core clock is EIP/2 */
+-	core_name = cp110_unique_name(dev, "core");
++	core_name = cp110_unique_name(dev, syscon_node, "core");
+ 	hw = clk_hw_register_fixed_factor(NULL, core_name, eip_name, 0, 1, 2);
+ 	if (IS_ERR(hw)) {
+ 		ret = PTR_ERR(hw);
+@@ -300,7 +301,7 @@ static int cp110_syscon_clk_probe(struct platform_device *pdev)
+ 
+ 	cp110_clks[CP110_CORE_CORE] = hw;
+ 	/* NAND can be either APLL/2.5 or core clock */
+-	nand_name = cp110_unique_name(dev, "nand-core");
++	nand_name = cp110_unique_name(dev, syscon_node, "nand-core");
+ 	if (nand_clk_ctrl & NF_CLOCK_SEL_400_MASK)
+ 		hw = clk_hw_register_fixed_factor(NULL, nand_name,
+ 						   apll_name, 0, 2, 5);
+@@ -316,7 +317,8 @@ static int cp110_syscon_clk_probe(struct platform_device *pdev)
+ 
+ 	/* create the unique name for all the gate clocks */
+ 	for (i = 0; i < ARRAY_SIZE(gate_base_names); i++)
+-		gate_name[i] =	cp110_unique_name(dev, gate_base_names[i]);
++		gate_name[i] =	cp110_unique_name(dev, syscon_node,
++						  gate_base_names[i]);
+ 
+ 	for (i = 0; i < ARRAY_SIZE(gate_base_names); i++) {
+ 		const char *parent;
+@@ -402,17 +404,48 @@ static int cp110_syscon_clk_probe(struct platform_device *pdev)
+ 	return ret;
+ }
+ 
+-static const struct of_device_id cp110_syscon_of_match[] = {
++static int cp110_syscon_legacy_clk_probe(struct platform_device *pdev)
++{
++	dev_warn(&pdev->dev, FW_WARN "Using legacy device tree binding\n");
++	dev_warn(&pdev->dev, FW_WARN "Update your device tree:\n");
++	dev_warn(&pdev->dev, FW_WARN
++		 "This binding won't be supported in future kernels\n");
++
++	return cp110_syscon_common_probe(pdev, pdev->dev.of_node);
++}
++
++static int cp110_clk_probe(struct platform_device *pdev)
++{
++	return cp110_syscon_common_probe(pdev, pdev->dev.of_node->parent);
++}
++
++
++static const struct of_device_id cp110_syscon_legacy_of_match[] = {
+ 	{ .compatible = "marvell,cp110-system-controller0", },
+ 	{ }
+ };
+ 
+-static struct platform_driver cp110_syscon_driver = {
+-	.probe = cp110_syscon_clk_probe,
++static struct platform_driver cp110_syscon_legacy_driver = {
++	.probe = *cp110_syscon_legacy_clk_probe,
+ 	.driver		= {
+ 		.name	= "marvell-cp110-system-controller0",
+-		.of_match_table = cp110_syscon_of_match,
++		.of_match_table = cp110_syscon_legacy_of_match,
++		.suppress_bind_attrs = true,
++	},
++};
++builtin_platform_driver(cp110_syscon_legacy_driver);
++
++static const struct of_device_id cp110_clock_of_match[] = {
++	{ .compatible = "marvell,cp110-clock", },
++	{ }
++};
++
++static struct platform_driver cp110_clock_driver = {
++	.probe = cp110_clk_probe,
++	.driver		= {
++		.name	= "marvell-cp110-clock",
++		.of_match_table = cp110_clock_of_match,
+ 		.suppress_bind_attrs = true,
+ 	},
+ };
+-builtin_platform_driver(cp110_syscon_driver);
++builtin_platform_driver(cp110_clock_driver);
 -- 
 git-series 0.9.1
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
