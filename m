@@ -1,54 +1,56 @@
-From: Hoegeun Kwon <hoegeun.kwon@samsung.com>
-Subject: Re: [PATCH v3 0/3] Add support for the S6E3HF2 panel on TM2e board
-Date: Fri, 19 May 2017 15:56:25 +0900
-Message-ID: <4b974579-eb2f-1258-86e3-21ffeb22589a@samsung.com>
-References: <CGME20170418084047epcas5p493261a4cb9204e682f60cde8d659565c@epcas5p4.samsung.com>
- <1492504836-19225-1-git-send-email-hoegeun.kwon@samsung.com>
+From: Romain Perier <romain.perier@collabora.com>
+Subject: Re: [PATCH v3 1/3] SoC: es8328-i2c: Add compatible for
+	ES8323
+Date: Fri, 19 May 2017 08:56:53 +0200
+Message-ID: <a052da20-d9c7-69f5-21d9-9111d45702e6@collabora.com>
+References: <20170512132227.24916-1-romain.perier@collabora.com>
+ <20170512132227.24916-10-romain.perier@collabora.com>
+ <20170515214138.u63u7j53jogk3prm@rob-hp-laptop>
+ <20170516111837.3uf5f5jbdkrnjudi@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-reply-to: <1492504836-19225-1-git-send-email-hoegeun.kwon@samsung.com>
-Content-language: en-US
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: thierry.reding@gmail.com, airlied@linux.ie, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, kgene@kernel.org, krzk@kernel.org
-Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, javier@osg.samsung.com, andi.shyti@samsung.com, Hoegeun Kwon <hoegeun.kwon@samsung.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20170516111837.3uf5f5jbdkrnjudi@sirena.org.uk>
+Content-Language: en-US
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Heiko Stuebner <heiko@sntech.de>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>, linux-rockchip@lists.infradead.org, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-RGVhciBUaGllcnJ5LAoKQ291bGQgeW91IGNoZWNrIHRoZXNlIHBhdGNoZXM/CkkgdGhpbmsgdGhp
-cyBwYXRjaGVzIGhhdmUgYWNjdW11bGF0ZWQgZW5vdWdoIGR1c3QuCklmIHlvdSBoYXZlIGEgYW5v
-dGhlciBvcGluaW9uLCBwbGVhc2UgdGVsbCBtZS4KCkJlc3QgcmVnYXJkcywKSG9lZ2V1bgoKT24g
-MDQvMTgvMjAxNyAwNTo0MCBQTSwgSG9lZ2V1biBLd29uIHdyb3RlOgo+IEhpIGFsbCwKPgo+IFRo
-ZSBwdXJwb3NlIG9mIHRoaXMgcGF0Y2ggaXMgYWRkIHN1cHBvcnQgZm9yIHM2ZTNoZjIgQU1PTEVE
-IHBhbmVsIG9uCj4gdGhlIFRNMmUgYm9hcmQuIFRoZSBwYW5lbCBoYXMgMTYwMHgyNTYwIHJlc29s
-dXRpb24gaW4gNS42NSIgcGh5c2ljYWwKPiBwYW5lbCBpbiB0aGUgVE0yZSBkZXZpY2UuCj4KPiBU
-aGUgczZlM2hmMiBwYW5lbCg1LjY1IikgaXMgc2ltbGlhciB0byB0aGUgcHJldmlvdXMgczZlM2hh
-MiBwYW5lbCg1LjciKSwKPiBidXQgcmVzb2x1dGlvbiBhbmQgc29tZSBjb21tYW5kIG1lc3NhZ2Ug
-YXJlIGRpZmZlcmVudC4gU28gaXQgY2FuIGJlCj4gZGlzdGluZ3Vpc2hlZCBhcyBhIGNvbXBhdGli
-bGl0aXkgc3RyaW5nLgo+Cj4gQmVzdCByZWdhcmRzLAo+IEhvZWdldW4KPgo+IENoYW5nZXMgZm9y
-IFYzOgo+IC0gUmVtb3ZlIHRlLWdwaW9zIHByb3BlcnR5IGluIGR0cy4KPiAtIEFkZGVkIFJldmll
-d2VkLWJ5OiBBbmRyemVqIEhhamRhIDxhLmhhamRhQHNhbXN1bmcuY29tPiBvbiBhbGwgcGF0Y2hl
-cy4KPiAtIEFkZGVkIFJldmlld2VkLWJ5OiBJbmtpIERhZSA8aW5raS5kYWVAc2Ftc3VuZy5jb20+
-IG9uIHBhdGNoICgyLzMpLgo+Cj4gQ2hhbmdlcyBmb3IgVjI6Cj4gLSBBZGQgbmV3IGNvbXBhdGli
-bGUgc3RyaW5nIHRvICJzYW1zdW5nLHM2ZTNoYTIudHh0IGJpbmRpbmcgd2l0aCBjb21tZW50cy4K
-PiAtIEZpeCB0aGUgcGFuZWwgbmFtZSBmcm9tIHM2ZTNoYTItZSB0byBzNmUzaGYyCj4KPiBIb2Vn
-ZXVuIEt3b24gKDMpOgo+ICAgIGR0LWJpbmRpbmdzOiBBZGQgc3VwcG9ydCBmb3Igc2Ftc3VuZyBz
-NmUzaGYyIHBhbmVsCj4gICAgZHJtL3BhbmVsOiBzNmUzaGEyOiBBZGQgc3VwcG9ydCBmb3IgczZl
-M2hmMiBwYW5lbCBvbiBUTTJlIGJvYXJkCj4gICAgYXJtNjQ6IGR0czogZXh5bm9zOiBBZGQgc3Vw
-cG9ydCBmb3IgczZlM2hmMiBwYW5lbCBkZXZpY2Ugb24gVE0yZSBib2FyZAo+Cj4gICAuLi4vYmlu
-ZGluZ3MvZGlzcGxheS9wYW5lbC9zYW1zdW5nLHM2ZTNoYTIudHh0ICAgICB8ICA1ICstCj4gICBh
-cmNoL2FybTY0L2Jvb3QvZHRzL2V4eW5vcy9leHlub3M1NDMzLXRtMmUuZHRzICAgICB8IDExICsr
-KysKPiAgIGRyaXZlcnMvZ3B1L2RybS9wYW5lbC9wYW5lbC1zYW1zdW5nLXM2ZTNoYTIuYyAgICAg
-IHwgNjQgKysrKysrKysrKysrKysrKysrKy0tLQo+ICAgMyBmaWxlcyBjaGFuZ2VkLCA3MiBpbnNl
-cnRpb25zKCspLCA4IGRlbGV0aW9ucygtKQo+CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0
-cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9s
-aXN0aW5mby9kcmktZGV2ZWwK
+Hello,
+
+
+Le 16/05/2017 =E0 13:18, Mark Brown a =E9crit :
+> On Mon, May 15, 2017 at 04:41:38PM -0500, Rob Herring wrote:
+>> On Fri, May 12, 2017 at 03:22:25PM +0200, Romain Perier wrote:
+>>> This commit adds a compatible string for everest,es8323. This is an
+>>> audio codec that is compatible with es8328 and can be found for example
+>>> on the Firefly-RK3288 board.
+>> If it is compatible with the es8328, then that should be a fallback and =
+
+>> you don't need the driver change.
+> While people don't strictly need the driver change it doesn't do any
+> harm either and encourages people to get the information into the DT
+> that it's a different chip.  Thinking about it it might be good to have
+> a way for something to validate if fallback compatibles are being listed
+> when they should - the drivers could provide the information fairly
+> easily I guess, or it could go into the binding docs once we have a
+> schema format.
+>
+> Even if it doesn't currently make a difference to software I'd rather
+> get the information in there for mixed signal devices like audio CODECs
+> - it's not that unknown to find later that supposedly register identical
+> chips have some differences in the analog which we want to care about.
+So, what should I do for this patch, finally ? fallback or driver change ?
+
+Thanks,
+Romain
