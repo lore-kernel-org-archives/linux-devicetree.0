@@ -1,89 +1,233 @@
 From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: [PATCH 2/9] pinctrl: dt-bindings: add documentation for AP806 pin controllers
-Date: Fri, 19 May 2017 18:04:44 +0200
-Message-ID: <bfd5b618a295f98a056784d7486dbd128d36fefb.1495209664.git-series.gregory.clement@free-electrons.com>
+Subject: [PATCH 9/9] arm64: dts: marvell: add pinctrl support for Armada 7K/8K
+Date: Fri, 19 May 2017 18:04:51 +0200
+Message-ID: <9ad0dc7eff4919523e557edfb2a46c955673d25d.1495209664.git-series.gregory.clement@free-electrons.com>
 References: <cover.0dd8a92ae74fcec8d0470d0a7016035089e46eed.1495209664.git-series.gregory.clement@free-electrons.com>
-Return-path: <linux-gpio-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <cover.0dd8a92ae74fcec8d0470d0a7016035089e46eed.1495209664.git-series.gregory.clement@free-electrons.com>
 In-Reply-To: <cover.0dd8a92ae74fcec8d0470d0a7016035089e46eed.1495209664.git-series.gregory.clement@free-electrons.com>
 References: <cover.0dd8a92ae74fcec8d0470d0a7016035089e46eed.1495209664.git-series.gregory.clement@free-electrons.com>
-Sender: linux-gpio-owner@vger.kernel.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Russell King <rmk+kernel@armlinux.org.uk>, Nadav Haklai <nadavh@marvell.com>, Kostya Porotchkin <kostap@marvell.com>, Neta Zur Hershkovits <neta@marvell.com>, Marcin Wojtas <mw@semihalf.com>, Omri Itach <omrii@marvell.com>, Shadi Ammouri <shadi@marvell.com>
 List-Id: devicetree@vger.kernel.org
 
-Document the device tree binding for the pin controllers found on the
-Armada 7K and Armada 8K SoCs.
+Enable pinctrl support for CP and AP on the Armada 7K/8K SoCs.
+
+The CP master being different between Armada 7k and Armada 8k. This
+commit introduces the intermediates files armada-70x0.dtsi and
+armada-80x0.dtsi.
+
+These new files will provide different compatible strings depending of
+the SoC family. They will also be the location for the pinmux
+configuration at the SoC level.
 
 Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
 ---
- Documentation/devicetree/bindings/arm/marvell/ap806-system-controller.txt | 53 ++++++++++++++++++++++++++++++++++++++++++++++-------
- 1 file changed, 46 insertions(+), 7 deletions(-)
+ arch/arm64/boot/dts/marvell/armada-7020.dtsi  |  2 +-
+ arch/arm64/boot/dts/marvell/armada-7040.dtsi  |  2 +-
+ arch/arm64/boot/dts/marvell/armada-70x0.dtsi  | 53 ++++++++++++++++++-
+ arch/arm64/boot/dts/marvell/armada-8020.dtsi  |  3 +-
+ arch/arm64/boot/dts/marvell/armada-8040.dtsi  |  3 +-
+ arch/arm64/boot/dts/marvell/armada-80x0.dtsi  | 60 ++++++++++++++++++++-
+ arch/arm64/boot/dts/marvell/armada-ap806.dtsi |  4 +-
+ 7 files changed, 121 insertions(+), 6 deletions(-)
+ create mode 100644 arch/arm64/boot/dts/marvell/armada-70x0.dtsi
+ create mode 100644 arch/arm64/boot/dts/marvell/armada-80x0.dtsi
 
-diff --git a/Documentation/devicetree/bindings/arm/marvell/ap806-system-controller.txt b/Documentation/devicetree/bindings/arm/marvell/ap806-system-controller.txt
-index 888c50e0d64f..4228d158fb31 100644
---- a/Documentation/devicetree/bindings/arm/marvell/ap806-system-controller.txt
-+++ b/Documentation/devicetree/bindings/arm/marvell/ap806-system-controller.txt
-@@ -28,14 +28,53 @@ Required properties:
-  - compatible: must be: "marvell,ap806-clock"
-  - #clock-cells: must be set to 1
+diff --git a/arch/arm64/boot/dts/marvell/armada-7020.dtsi b/arch/arm64/boot/dts/marvell/armada-7020.dtsi
+index 975e73302753..4ab012991d9d 100644
+--- a/arch/arm64/boot/dts/marvell/armada-7020.dtsi
++++ b/arch/arm64/boot/dts/marvell/armada-7020.dtsi
+@@ -46,7 +46,7 @@
+  */
  
-+Pinctrl:
-+--------
-+
-+For common binding part and usage, refer to
-+Documentation/devicetree/bindings/pinctrl/marvell,mvebu-pinctrl.txt.
-+
-+Required properties:
-+- compatible must be "marvell,ap806-pinctrl",
-+
-+Available mpp pins/groups and functions:
-+Note: brackets (x) are not part of the mpp name for marvell,function and given
-+only for more detailed description in this document.
-+
-+name	pins	functions
-+================================================================================
-+mpp0	0	gpio, sdio(clk), spi0(clk)
-+mpp1	1	gpio, sdio(cmd), spi0(miso)
-+mpp2	2	gpio, sdio(d0), spi0(mosi)
-+mpp3	3	gpio, sdio(d1), spi0(cs0n)
-+mpp4	4	gpio, sdio(d2), i2c0(sda)
-+mpp5	5	gpio, sdio(d3), i2c0(sdk)
-+mpp6	6	gpio, sdio(ds)
-+mpp7	7	gpio, sdio(d4), uart1(rxd)
-+mpp8	8	gpio, sdio(d5), uart1(txd)
-+mpp9	9	gpio, sdio(d6), spi0(cs1n)
-+mpp10	10	gpio, sdio(d7)
-+mpp11	11	gpio, uart0(txd)
-+mpp12	12	gpio, sdio(pw_off), sdio(hw_rst)
-+mpp13	13	gpio
-+mpp14	14	gpio
-+mpp15	15	gpio
-+mpp16	16	gpio
-+mpp17	17	gpio
-+mpp18	18	gpio
-+mpp19	19	gpio, uart0(rxd), sdio(pw_off)
-+
- Example:
-+ap_syscon: system-controller@6f4000 {
-+	compatible = "syscon", "simple-mfd";
-+	reg = <0x6f4000 0x1000>;
+ #include "armada-ap806-dual.dtsi"
+-#include "armada-cp110-master.dtsi"
++#include "armada-70x0.dtsi"
  
--	syscon: system-controller@6f4000 {
--		compatible = "syscon", "simple-mfd";
--		reg = <0x6f4000 0x1000>;
-+	ap_clk: clock {
-+		compatible = "marvell,ap806-clock";
-+		#clock-cells = <1>;
+ / {
+ 	model = "Marvell Armada 7020";
+diff --git a/arch/arm64/boot/dts/marvell/armada-7040.dtsi b/arch/arm64/boot/dts/marvell/armada-7040.dtsi
+index 78d995d62707..cbe460b8fc00 100644
+--- a/arch/arm64/boot/dts/marvell/armada-7040.dtsi
++++ b/arch/arm64/boot/dts/marvell/armada-7040.dtsi
+@@ -46,7 +46,7 @@
+  */
+ 
+ #include "armada-ap806-quad.dtsi"
+-#include "armada-cp110-master.dtsi"
++#include "armada-70x0.dtsi"
+ 
+ / {
+ 	model = "Marvell Armada 7040";
+diff --git a/arch/arm64/boot/dts/marvell/armada-70x0.dtsi b/arch/arm64/boot/dts/marvell/armada-70x0.dtsi
+new file mode 100644
+index 000000000000..f6c22665d091
+--- /dev/null
++++ b/arch/arm64/boot/dts/marvell/armada-70x0.dtsi
+@@ -0,0 +1,53 @@
++/*
++ * Copyright (C) 2017 Marvell Technology Group Ltd.
++ *
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPLv2 or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole.
++ *
++ *  a) This library is free software; you can redistribute it and/or
++ *     modify it under the terms of the GNU General Public License as
++ *     published by the Free Software Foundation; either version 2 of the
++ *     License, or (at your option) any later version.
++ *
++ *     This library is distributed in the hope that it will be useful,
++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *     GNU General Public License for more details.
++ *
++ * Or, alternatively,
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use,
++ *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
++ */
++
++/*
++ * Device Tree file for the Armada 70x0 SoC
++ */
++
++#include "armada-cp110-master.dtsi"
++
++&cpm_syscon0 {
++	cpm_pinctrl: pinctrl {
++		compatible = "marvell,armada-7k-pinctrl";
 +	};
- 
--		ap_clk: clock {
--			compatible = "marvell,ap806-clock";
--			#clock-cells = <1>;
--		};
-+	ap_pinctrl: pinctrl {
-+		compatible = "marvell,ap806-pinctrl";
- 	};
 +};
+diff --git a/arch/arm64/boot/dts/marvell/armada-8020.dtsi b/arch/arm64/boot/dts/marvell/armada-8020.dtsi
+index 7c08f1f28d9e..0ba0bc942598 100644
+--- a/arch/arm64/boot/dts/marvell/armada-8020.dtsi
++++ b/arch/arm64/boot/dts/marvell/armada-8020.dtsi
+@@ -46,8 +46,7 @@
+  */
+ 
+ #include "armada-ap806-dual.dtsi"
+-#include "armada-cp110-master.dtsi"
+-#include "armada-cp110-slave.dtsi"
++#include "armada-80x0.dtsi"
+ 
+ / {
+ 	model = "Marvell Armada 8020";
+diff --git a/arch/arm64/boot/dts/marvell/armada-8040.dtsi b/arch/arm64/boot/dts/marvell/armada-8040.dtsi
+index 33813a75bc30..60fe84f5cbcc 100644
+--- a/arch/arm64/boot/dts/marvell/armada-8040.dtsi
++++ b/arch/arm64/boot/dts/marvell/armada-8040.dtsi
+@@ -46,8 +46,7 @@
+  */
+ 
+ #include "armada-ap806-quad.dtsi"
+-#include "armada-cp110-master.dtsi"
+-#include "armada-cp110-slave.dtsi"
++#include "armada-80x0.dtsi"
+ 
+ / {
+ 	model = "Marvell Armada 8040";
+diff --git a/arch/arm64/boot/dts/marvell/armada-80x0.dtsi b/arch/arm64/boot/dts/marvell/armada-80x0.dtsi
+new file mode 100644
+index 000000000000..93d1de03b39a
+--- /dev/null
++++ b/arch/arm64/boot/dts/marvell/armada-80x0.dtsi
+@@ -0,0 +1,60 @@
++/*
++ * Copyright (C) 2017 Marvell Technology Group Ltd.
++ *
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPLv2 or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole.
++ *
++ *  a) This library is free software; you can redistribute it and/or
++ *     modify it under the terms of the GNU General Public License as
++ *     published by the Free Software Foundation; either version 2 of the
++ *     License, or (at your option) any later version.
++ *
++ *     This library is distributed in the hope that it will be useful,
++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *     GNU General Public License for more details.
++ *
++ * Or, alternatively,
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use,
++ *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
++ */
++
++/*
++ * Device Tree file for the Armada 80x0 SoC family
++ */
++
++#include "armada-cp110-master.dtsi"
++#include "armada-cp110-slave.dtsi"
++
++&cpm_syscon0 {
++	cpm_pinctrl: pinctrl {
++		compatible = "marvell,armada-8k-cpm-pinctrl";
++	};
++};
++
++&cps_syscon0 {
++	cps_pinctrl: pinctrl {
++		compatible = "marvell,armada-8k-cps-pinctrl";
++	};
++};
+diff --git a/arch/arm64/boot/dts/marvell/armada-ap806.dtsi b/arch/arm64/boot/dts/marvell/armada-ap806.dtsi
+index 205037e3e7dc..4a1b6e0a604a 100644
+--- a/arch/arm64/boot/dts/marvell/armada-ap806.dtsi
++++ b/arch/arm64/boot/dts/marvell/armada-ap806.dtsi
+@@ -248,6 +248,10 @@
+ 					compatible = "marvell,ap806-clock";
+ 					#clock-cells = <1>;
+ 				};
++
++				ap_pinctrl: pinctrl {
++					compatible = "marvell,ap806-pinctrl";
++				};
+ 			};
+ 		};
+ 	};
 -- 
 git-series 0.9.1
