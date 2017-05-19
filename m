@@ -1,57 +1,40 @@
-From: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH 1/2] ARM: dts: am572x-idk: Enable the system mailboxes 5 and 6
-Date: Fri, 19 May 2017 15:47:41 -0500
-Message-ID: <20170519204742.1563-2-s-anna@ti.com>
-References: <20170519204742.1563-1-s-anna@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain
+From: Sergey Matyukevich <geomatsi-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 1/2] ARM: dts: orange-pi-zero: interrupt triggering for XR819 WiFi chip
+Date: Sat, 20 May 2017 00:35:49 +0300
+Message-ID: <20170519213550.8434-2-geomatsi@gmail.com>
+References: <20170519213550.8434-1-geomatsi@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170519204742.1563-1-s-anna-l0cyMroinI0@public.gmane.org>
+In-Reply-To: <20170519213550.8434-1-geomatsi-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Cc: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sergey Matyukevich <geomatsi-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Enable the System Mailboxes 5 and 6 and the corresponding
-child sub-mailbox (IPC 3.x) nodes for the AM572x IDK board.
-This is needed to enable communication with the respective
-remote processors IPU1, IPU2, DSP1 and DSP2 from the MPU.
+Specify interrupt triggering for XR819 SDIO WiFi chip
+on orange-pi-zero board.
 
-Signed-off-by: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
+For more details see: http://linux-sunxi.org/Wifi#Allwinner
+
+Signed-off-by: Sergey Matyukevich <geomatsi-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- arch/arm/boot/dts/am572x-idk.dts | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
+ arch/arm/boot/dts/sun8i-h2-plus-orangepi-zero.dts | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/arm/boot/dts/am572x-idk.dts b/arch/arm/boot/dts/am572x-idk.dts
-index 8350b4b34b08..9da6d83ca185 100644
---- a/arch/arm/boot/dts/am572x-idk.dts
-+++ b/arch/arm/boot/dts/am572x-idk.dts
-@@ -91,3 +91,23 @@
- &pcie1 {
- 	gpios = <&gpio3 23 GPIO_ACTIVE_HIGH>;
+diff --git a/arch/arm/boot/dts/sun8i-h2-plus-orangepi-zero.dts b/arch/arm/boot/dts/sun8i-h2-plus-orangepi-zero.dts
+index 9e8b082c134f..34e4a5a80136 100644
+--- a/arch/arm/boot/dts/sun8i-h2-plus-orangepi-zero.dts
++++ b/arch/arm/boot/dts/sun8i-h2-plus-orangepi-zero.dts
+@@ -128,6 +128,8 @@
+ 	 */
+ 	xr819: sdio_wifi@1 {
+ 		reg = <1>;
++		interrupt-parent = <&pio>;
++		interrupts = <6 10 IRQ_TYPE_EDGE_RISING>;
+ 	};
  };
-+
-+&mailbox5 {
-+	status = "okay";
-+	mbox_ipu1_ipc3x: mbox_ipu1_ipc3x {
-+		status = "okay";
-+	};
-+	mbox_dsp1_ipc3x: mbox_dsp1_ipc3x {
-+		status = "okay";
-+	};
-+};
-+
-+&mailbox6 {
-+	status = "okay";
-+	mbox_ipu2_ipc3x: mbox_ipu2_ipc3x {
-+		status = "okay";
-+	};
-+	mbox_dsp2_ipc3x: mbox_dsp2_ipc3x {
-+		status = "okay";
-+	};
-+};
+ 
 -- 
-2.12.0
+2.11.0
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
