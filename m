@@ -1,34 +1,55 @@
 From: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
-Subject: [PATCH v3 2/4] media: adv7180: add adv7180cp, adv7180st compatible strings
-Date: Fri, 19 May 2017 15:07:02 +0200
-Message-ID: <1495199224-16337-3-git-send-email-ulrich.hecht+renesas@gmail.com>
+Subject: [PATCH v3 3/4] media: adv7180: Add adv7180cp, adv7180st bindings
+Date: Fri, 19 May 2017 15:07:03 +0200
+Message-ID: <1495199224-16337-4-git-send-email-ulrich.hecht+renesas@gmail.com>
 References: <1495199224-16337-1-git-send-email-ulrich.hecht+renesas@gmail.com>
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Return-path: <linux-media-owner@vger.kernel.org>
 In-Reply-To: <1495199224-16337-1-git-send-email-ulrich.hecht+renesas@gmail.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
+Sender: linux-media-owner@vger.kernel.org
 To: linux-renesas-soc@vger.kernel.org, laurent.pinchart@ideasonboard.com
 Cc: linux-media@vger.kernel.org, geert@linux-m68k.org, magnus.damm@gmail.com, hans.verkuil@cisco.com, niklas.soderlund@ragnatech.se, sergei.shtylyov@cogentembedded.com, horms@verge.net.au, devicetree@vger.kernel.org, Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Used to differentiate between models with 3 and 6 inputs.
+To differentiate between two classes of chip packages that have
+different numbers of input ports.
 
 Signed-off-by: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
 ---
- drivers/media/i2c/adv7180.c | 2 ++
- 1 file changed, 2 insertions(+)
+ Documentation/devicetree/bindings/media/i2c/adv7180.txt | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
-diff --git a/drivers/media/i2c/adv7180.c b/drivers/media/i2c/adv7180.c
-index bdbbf8c..78de7dd 100644
---- a/drivers/media/i2c/adv7180.c
-+++ b/drivers/media/i2c/adv7180.c
-@@ -1452,6 +1452,8 @@ static SIMPLE_DEV_PM_OPS(adv7180_pm_ops, adv7180_suspend, adv7180_resume);
- #ifdef CONFIG_OF
- static const struct of_device_id adv7180_of_id[] = {
- 	{ .compatible = "adi,adv7180", },
-+	{ .compatible = "adi,adv7180cp", },
-+	{ .compatible = "adi,adv7180st", },
- 	{ .compatible = "adi,adv7182", },
- 	{ .compatible = "adi,adv7280", },
- 	{ .compatible = "adi,adv7280-m", },
+diff --git a/Documentation/devicetree/bindings/media/i2c/adv7180.txt b/Documentation/devicetree/bindings/media/i2c/adv7180.txt
+index 4da486f..552b6a8 100644
+--- a/Documentation/devicetree/bindings/media/i2c/adv7180.txt
++++ b/Documentation/devicetree/bindings/media/i2c/adv7180.txt
+@@ -6,6 +6,8 @@ digital interfaces like MIPI CSI-2 or parallel video.
+ Required Properties :
+ - compatible : value must be one of
+ 		"adi,adv7180"
++		"adi,adv7180cp"
++		"adi,adv7180st"
+ 		"adi,adv7182"
+ 		"adi,adv7280"
+ 		"adi,adv7280-m"
+@@ -15,6 +17,19 @@ Required Properties :
+ 		"adi,adv7282"
+ 		"adi,adv7282-m"
+ 
++Device nodes of "adi,adv7180cp" and "adi,adv7180st" must contain one
++'port' child node per device input and output port, in accordance with the
++video interface bindings defined in
++Documentation/devicetree/bindings/media/video-interfaces.txt. The port
++nodes are numbered as follows.
++
++  Port		adv7180cp	adv7180st
++-------------------------------------------------------------------
++  Input		0-2		0-5
++  Output	3		6
++
++The digital output port node must contain at least one endpoint.
++
+ Optional Properties :
+ - powerdown-gpios: reference to the GPIO connected to the powerdown pin,
+   if any.
 -- 
 2.7.4
