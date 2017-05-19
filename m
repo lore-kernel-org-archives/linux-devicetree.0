@@ -1,124 +1,34 @@
 From: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
-Subject: [PATCH v3 1/4] ARM: dts: gose: add HDMI input
-Date: Fri, 19 May 2017 15:07:01 +0200
-Message-ID: <1495199224-16337-2-git-send-email-ulrich.hecht+renesas@gmail.com>
+Subject: [PATCH v3 2/4] media: adv7180: add adv7180cp, adv7180st compatible strings
+Date: Fri, 19 May 2017 15:07:02 +0200
+Message-ID: <1495199224-16337-3-git-send-email-ulrich.hecht+renesas@gmail.com>
 References: <1495199224-16337-1-git-send-email-ulrich.hecht+renesas@gmail.com>
-Return-path: <linux-media-owner@vger.kernel.org>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
 In-Reply-To: <1495199224-16337-1-git-send-email-ulrich.hecht+renesas@gmail.com>
-Sender: linux-media-owner@vger.kernel.org
+Sender: linux-renesas-soc-owner@vger.kernel.org
 To: linux-renesas-soc@vger.kernel.org, laurent.pinchart@ideasonboard.com
 Cc: linux-media@vger.kernel.org, geert@linux-m68k.org, magnus.damm@gmail.com, hans.verkuil@cisco.com, niklas.soderlund@ragnatech.se, sergei.shtylyov@cogentembedded.com, horms@verge.net.au, devicetree@vger.kernel.org, Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Identical to the setup on Koelsch.
+Used to differentiate between models with 3 and 6 inputs.
 
 Signed-off-by: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 ---
- arch/arm/boot/dts/r8a7793-gose.dts | 68 ++++++++++++++++++++++++++++++++++++--
- 1 file changed, 66 insertions(+), 2 deletions(-)
+ drivers/media/i2c/adv7180.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/arm/boot/dts/r8a7793-gose.dts b/arch/arm/boot/dts/r8a7793-gose.dts
-index 95e51b7..30f0835 100644
---- a/arch/arm/boot/dts/r8a7793-gose.dts
-+++ b/arch/arm/boot/dts/r8a7793-gose.dts
-@@ -253,12 +253,23 @@
- 		};
- 	};
- 
-+	hdmi-in {
-+		compatible = "hdmi-connector";
-+		type = "a";
-+
-+		port {
-+			hdmi_con_in: endpoint {
-+				remote-endpoint = <&adv7612_in>;
-+			};
-+		};
-+	};
-+
- 	hdmi-out {
- 		compatible = "hdmi-connector";
- 		type = "a";
- 
- 		port {
--			hdmi_con: endpoint {
-+			hdmi_con_out: endpoint {
- 				remote-endpoint = <&adv7511_out>;
- 			};
- 		};
-@@ -395,6 +406,11 @@
- 		groups = "audio_clk_a";
- 		function = "audio_clk";
- 	};
-+
-+	vin0_pins: vin0 {
-+		groups = "vin0_data24", "vin0_sync", "vin0_clkenb", "vin0_clk";
-+		function = "vin0";
-+	};
- };
- 
- &ether {
-@@ -552,7 +568,34 @@
- 			port@1 {
- 				reg = <1>;
- 				adv7511_out: endpoint {
--					remote-endpoint = <&hdmi_con>;
-+					remote-endpoint = <&hdmi_con_out>;
-+				};
-+			};
-+		};
-+	};
-+
-+	hdmi-in@4c {
-+		compatible = "adi,adv7612";
-+		reg = <0x4c>;
-+		interrupt-parent = <&gpio4>;
-+		interrupts = <2 IRQ_TYPE_LEVEL_LOW>;
-+		default-input = <0>;
-+
-+		port {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			port@0 {
-+				reg = <0>;
-+				adv7612_in: endpoint {
-+					remote-endpoint = <&hdmi_con_in>;
-+				};
-+			};
-+
-+			port@2 {
-+				reg = <2>;
-+				adv7612_out: endpoint {
-+					remote-endpoint = <&vin0ep2>;
- 				};
- 			};
- 		};
-@@ -606,3 +649,24 @@
- &ssi1 {
- 	shared-pin;
- };
-+
-+/* HDMI video input */
-+&vin0 {
-+	status = "okay";
-+	pinctrl-0 = <&vin0_pins>;
-+	pinctrl-names = "default";
-+
-+	port {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		vin0ep2: endpoint {
-+			remote-endpoint = <&adv7612_out>;
-+			bus-width = <24>;
-+			hsync-active = <0>;
-+			vsync-active = <0>;
-+			pclk-sample = <1>;
-+			data-active = <1>;
-+		};
-+	};
-+};
+diff --git a/drivers/media/i2c/adv7180.c b/drivers/media/i2c/adv7180.c
+index bdbbf8c..78de7dd 100644
+--- a/drivers/media/i2c/adv7180.c
++++ b/drivers/media/i2c/adv7180.c
+@@ -1452,6 +1452,8 @@ static SIMPLE_DEV_PM_OPS(adv7180_pm_ops, adv7180_suspend, adv7180_resume);
+ #ifdef CONFIG_OF
+ static const struct of_device_id adv7180_of_id[] = {
+ 	{ .compatible = "adi,adv7180", },
++	{ .compatible = "adi,adv7180cp", },
++	{ .compatible = "adi,adv7180st", },
+ 	{ .compatible = "adi,adv7182", },
+ 	{ .compatible = "adi,adv7280", },
+ 	{ .compatible = "adi,adv7280-m", },
 -- 
 2.7.4
