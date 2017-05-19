@@ -1,50 +1,55 @@
-From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH v5 0/5] Add ARM Mali Midgard device tree bindings and gpu node for rk3288
-Date: Sat, 20 May 2017 00:25:49 +0200
-Message-ID: <2394922.9rgTI5oGq7@phil>
-References: <cover.1493804968.git.guillaume.tucker@collabora.com>
+From: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 1/2] ARM: dts: meson: organize devices in their corresponding busses
+Date: Fri, 19 May 2017 15:49:12 -0700
+Message-ID: <m2inkw4g47.fsf@baylibre.com>
+References: <20170417213938.22626-1-martin.blumenstingl@googlemail.com>
+        <20170417213938.22626-2-martin.blumenstingl@googlemail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <cover.1493804968.git.guillaume.tucker-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+In-Reply-To: <20170417213938.22626-2-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+        (Martin Blumenstingl's message of "Mon, 17 Apr 2017 23:39:37 +0200")
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Guillaume Tucker <guillaume.tucker-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Sjoerd Simons <sjoerd.simons-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, John Reitan <john.reitan-5wv7dgnIgG8@public.gmane.org>, Wookey <wookey-Xpnwy/r4z8dg9hUCZPvPmw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Cc: linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Guillaume,
+Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org> writes:
 
-Am Mittwoch, 3. Mai 2017, 10:56:24 CEST schrieb Guillaume Tucker:
-> The ARM Mali Midgard GPU kernel driver is only available
-> out-of-tree and is not going to be merged in its current form.
-> However, it would be useful to have its device tree bindings
-> merged.  In particular, this would enable distributions to create
-> working driver packages (dkms...) without having to patch the
-> kernel.
-> 
-> The bindings for the earlier Mali Utgard GPU family have already
-> been merged, so this is essentially the same scenario but for
-> newer GPUs (Mali-T604 ~ Mali-T880).
-> 
-> This series of patches first imports the bindings from the latest
-> driver release with some clean-up then adds a gpu node for the
-> rk3288 SoC.  This was successfully tested on Radxa Rock2 Square,
-> Firefly, Veyron Minnie and Jerry boards using Mali kernel driver
-> r16p0 and r12p0 user-space binary.
+> The Amlogic Meson SoCs have most of the internal peripherals organized
+> in busses. Use them to make the dts easier to read and to avoid
+> duplicated register (bus) offset definitions.
+>
+> The bus information is taken from the vendor kernel:
+> 	#define IO_CBUS_PHY_BASE        0xc1100000  ///2M
+> 	#define IO_AOBUS_PHY_BASE       0xc8100000  ///1M
+>
+> There are more internal busses (such as the abp bus which seems to
+> contain audio, HDMI and Mali registers), but since we don't have
+> drivers for them yet these are not added (yet).
+>
+> Signed-off-by: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 
-as nobody complained anymore, I've applied all patches for 4.13
-with the following small changes:
-- patch2: node name to
-	gpu_opp_table: gpu-opp-table
-  from the original
-	gpu_opp_table: opp_table0
-- patches3-5: moved &gpu{} to its alphabetical correct position
-  (below &gmac and above &hdmi)
+I tested this series on my meson8b-odroidc1 and it boots fine.
 
+Series looks fine to me, except...
 
-Heiko
+[...]
 
+>  
+>  		ethmac: ethernet@c9410000 {
+>  			compatible = "amlogic,meson6-dwmac", "snps,dwmac";
+>  			reg = <0xc9410000 0x10000
+> -			       0xc1108108 0x4>;
+> +			0xc1108108 0x4>;
+
+stray tab removal?
+
+I fixed that up locally and applied to v4.13/dt64 branch.
+
+Thanks for the patches!
+
+Kevin
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
