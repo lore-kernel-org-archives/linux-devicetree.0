@@ -1,142 +1,62 @@
-From: Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [PATCH v2 3/4] arm: dts: rk3229: add a new cpu opp table
-Date: Fri, 19 May 2017 23:46:13 +0200
-Message-ID: <3157044.sksXPZM55k@phil>
-References: <1495016177-2413-1-git-send-email-frank.wang@rock-chips.com> <1495016177-2413-4-git-send-email-frank.wang@rock-chips.com>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 00/41] omap_hsmmc: Add ADMA support and UHS/HS200/DDR
+ support
+Date: Fri, 19 May 2017 15:13:45 -0700
+Message-ID: <20170519221344.GI10472@atomide.com>
+References: <20170519081541.26753-1-kishon@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <1495016177-2413-4-git-send-email-frank.wang@rock-chips.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Frank Wang <frank.wang@rock-chips.com>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, mturquette@baylibre.com, sboyd@codeaurora.org, rjw@rjwysocki.net, viresh.kumar@linaro.org, rui.zhang@intel.com, edubezval@gmail.com, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-clk@vger.kernel.org, charles.chen@rock-chips.com, cody.xie@rock-chips.com, kevan.lan@rock-chips.com, huangtao@rock-chips.com, rocky.hao@rock-chips.com, finley.xiao@rock-chips.com, zhangqing@rock-chips.com, wmc@rock-chips.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170519081541.26753-1-kishon-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Cc: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, nsekhar-l0cyMroinI0@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Frank,
+Hi,
 
-Am Mittwoch, 17. Mai 2017, 18:16:16 CEST schrieb Frank Wang:
-> From: Finley Xiao <finley.xiao@rock-chips.com>
-> 
-> This patch adds some new frequencies for rk3229 board.
-> 
-> Signed-off-by: Finley Xiao <finley.xiao@rock-chips.com>
-> Signed-off-by: Frank Wang <frank.wang@rock-chips.com>
-> Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
-> ---
->  arch/arm/boot/dts/rk3229-cpu-opp.dtsi | 85 +++++++++++++++++++++++++++++++++++
+* Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org> [170519 01:19]:
+> This series adds UHS, HS200, DDR mode and ADMA support to
+> omap_hsmmc driver used to improve the throughput of MMC/SD in dra7
+> SoCs.
 
-I'm not yet sure if I like that approach. The other option I'm considering
-and also tend to prefer at the moment would be to have this in a
-rk3229.dtsi, creating a chain of
-	rk322x.dtsi
-		\- rk3228-evb.dts
-		\- rk3229.dtsi
-			\- rk3229-evb.dts
+Certainly seems way less intrusive than earlier before the
+dmaengine changes :)
 
-similar to what we do with the rk3xxx.dtsi -> rk3188.dtsi.
+> *) tuning ratio of MMC in dra7 is different from sdhci
 
-If I remember correctly, there are some other tiny differences between the
-rk3228 and rk3229, so having the rk3229.dtsi already would make it
-easier to place needed stuff into it later on.
+Hmm what's the tuning ratio?
 
+> This series has been tested on beagleboard, pandaboard, beaglebone-black,
+> beaglebone, am335x-evm, am437x-evm, dra7xx-evm, dra72x-evm, am571x-idk
+> and am572x-idk.
 
-Heiko
+I gave this a quick try after manally applying next-20170519
+after reverting 67d0687224a9 ("mm: drop HASH_ADAPT"). Looks like
+something is missing as I got:
 
->  1 file changed, 85 insertions(+)
->  create mode 100644 arch/arm/boot/dts/rk3229-cpu-opp.dtsi
-> 
-> diff --git a/arch/arm/boot/dts/rk3229-cpu-opp.dtsi b/arch/arm/boot/dts/rk3229-cpu-opp.dtsi
-> new file mode 100644
-> index 0000000..89e8413
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/rk3229-cpu-opp.dtsi
-> @@ -0,0 +1,85 @@
-> +/*
-> + * Copyright (c) 2017 Fuzhou Rockchip Electronics Co., Ltd
-> + *
-> + * This file is dual-licensed: you can use it either under the terms
-> + * of the GPL or the X11 license, at your option. Note that this dual
-> + * licensing only applies to this file, and not this project as a
-> + * whole.
-> + *
-> + *  a) This library is free software; you can redistribute it and/or
-> + *     modify it under the terms of the GNU General Public License as
-> + *     published by the Free Software Foundation; either version 2 of the
-> + *     License, or (at your option) any later version.
-> + *
-> + *     This library is distributed in the hope that it will be useful,
-> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + *     GNU General Public License for more details.
-> + *
-> + *  Or, alternatively,
-> + *
-> + *  b) Permission is hereby granted, free of charge, to any person
-> + *     obtaining a copy of this software and associated documentation
-> + *     files (the "Software"), to deal in the Software without
-> + *     restriction, including without limitation the rights to use,
-> + *     copy, modify, merge, publish, distribute, sublicense, and/or
-> + *     sell copies of the Software, and to permit persons to whom the
-> + *     Software is furnished to do so, subject to the following
-> + *     conditions:
-> + *
-> + *     The above copyright notice and this permission notice shall be
-> + *     included in all copies or substantial portions of the Software.
-> + *
-> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-> + *     OTHER DEALINGS IN THE SOFTWARE.
-> + */
-> +
-> +/ {
-> +	/delete-node/ opp-table0;
-> +
-> +	cpu0_opp_table: opp_table0 {
-> +		compatible = "operating-points-v2";
-> +		opp-shared;
-> +
-> +		opp-408000000 {
-> +			opp-hz = /bits/ 64 <408000000>;
-> +			opp-microvolt = <950000>;
-> +			clock-latency-ns = <40000>;
-> +			opp-suspend;
-> +		};
-> +		opp-600000000 {
-> +			opp-hz = /bits/ 64 <600000000>;
-> +			opp-microvolt = <975000>;
-> +		};
-> +		opp-816000000 {
-> +			opp-hz = /bits/ 64 <816000000>;
-> +			opp-microvolt = <1000000>;
-> +		};
-> +		opp-1008000000 {
-> +			opp-hz = /bits/ 64 <1008000000>;
-> +			opp-microvolt = <1175000>;
-> +		};
-> +		opp-1200000000 {
-> +			opp-hz = /bits/ 64 <1200000000>;
-> +			opp-microvolt = <1275000>;
-> +		};
-> +		opp-1296000000 {
-> +			opp-hz = /bits/ 64 <1296000000>;
-> +			opp-microvolt = <1325000>;
-> +		};
-> +		opp-1392000000 {
-> +			opp-hz = /bits/ 64 <1392000000>;
-> +			opp-microvolt = <1375000>;
-> +		};
-> +		opp-1464000000 {
-> +			opp-hz = /bits/ 64 <1464000000>;
-> +			opp-microvolt = <1400000>;
-> +		};
-> +	};
-> +};
-> 
+arch/arm/mach-omap2/pdata-quirks.c:445:23: error:
+'struct omap_hsmmc_platform_data' has no member named 'version'
+...
 
+It's possible I messed up something while manually applying.
 
+> I can split the series to go into Ulf Hansson's tree and Tony's tree 
+> separately if that is required.
+
+Yes please. Maybe send the dts parts first that are ready to
+get merged, like the fixes and all the iodelay configuration.
+
+Then the mmc driver changes as a separate set.
+
+Then third set to follow-up and enable things once the mmc
+driver changes are merged.
+
+Regards,
+
+Tony
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
