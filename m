@@ -1,169 +1,136 @@
-From: Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v6 8/9] arm64: allwinner: a64: enable AXP803
- regulators for Pine64
-Date: Fri, 19 May 2017 09:27:21 +0100
-Message-ID: <98ae1ea8-ef08-8859-63d8-57c56a6348a6@arm.com>
-References: <20170518071653.36561-1-icenowy@aosc.io>
- <20170518071653.36561-9-icenowy@aosc.io>
-Reply-To: andre.przywara-5wv7dgnIgG8@public.gmane.org
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: [PATCH 21/41] ARM: dts: dra72-evm-common: Correct vmmc-supply for mmc2
+Date: Fri, 19 May 2017 13:45:21 +0530
+Message-ID: <20170519081541.26753-22-kishon@ti.com>
+References: <20170519081541.26753-1-kishon@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDNZNK75ZIKRB4GY7LEAKGQEOZ7KWFQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20170518071653.36561-9-icenowy-h8G6r0blFSE@public.gmane.org>
-Content-Language: en-GB
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: icenowy-h8G6r0blFSE@public.gmane.org, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170519081541.26753-1-kishon@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Tony Lindgren <tony@atomide.com>
+Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Jonathan Corbet <corbet@lwn.net>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, nsekhar@ti.com, kishon@ti.com
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+From: Ravikumar Kattekola <rk@ti.com>
 
-On 18/05/17 08:16, Icenowy Zheng wrote:
-> Add support of AXP803 regulators in the Pine64 device tree, in order to
-> enable many future functionalities, e.g. Wi-Fi.
-> 
-> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-> ---
-> Changes in v6:
-> - Rebased on next-20170517.
-> 
->  .../arm64/boot/dts/allwinner/sun50i-a64-pine64.dts | 109 +++++++++++++++++++++
->  1 file changed, 109 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts
-> index 36001884ed33..40921bacb39c 100644
-> --- a/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts
-> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts
-> @@ -118,6 +118,115 @@
->  	};
->  };
->  
-> +#include "axp803.dtsi"
-> +
-> +&reg_aldo1 {
-> +	regulator-min-microvolt = <2800000>;
-> +	regulator-max-microvolt = <2800000>;
-> +	regulator-name = "vcc-csi";
-> +};
-> +
-> +&reg_aldo2 {
-> +	regulator-always-on;
-> +	regulator-min-microvolt = <1800000>;
-> +	regulator-max-microvolt = <3300000>;
-> +	regulator-name = "vcc-pl";
-> +};
-> +
-> +&reg_aldo3 {
-> +	regulator-always-on;
-> +	regulator-min-microvolt = <2700000>;
-> +	regulator-max-microvolt = <3300000>;
-> +	regulator-name = "vcc-pll-avcc";
-> +};
-> +
-> +&reg_dc1sw {
-> +	regulator-name = "vcc-phy";
-> +};
-> +
-> +&reg_dcdc1 {
-> +	regulator-always-on;
-> +	regulator-min-microvolt = <3300000>;
-> +	regulator-max-microvolt = <3300000>;
-> +	regulator-name = "vcc-3v3";
-> +};
-> +
-> +&reg_dcdc2 {
-> +	regulator-always-on;
-> +	regulator-min-microvolt = <1000000>;
-> +	regulator-max-microvolt = <1300000>;
-> +	regulator-name = "vdd-cpux";
-> +};
-> +
-> +/* DCDC3 is polyphased with DCDC2 */
-> +
-> +&reg_dcdc5 {
-> +	regulator-always-on;
-> +	regulator-min-microvolt = <1500000>;
-> +	regulator-max-microvolt = <1500000>;
-> +	regulator-name = "vcc-dram";
-> +};
+On dra72/dra71 evms, mmc2 vdd/ios are connected to a common 1.8V supply
+not 3.3V. Also the regulator that supplies 1.8V is different on dra71-evm
+so move the supply property from common dtsi to evm specific dts files.
 
-I think I mentioned this before, but the Pine64 has DDR3L DRAM, which is
-specified to run at 1.35V (1.36V with the 20mV granularity of the AXP).
-The reset value is even (wrongly?) configured to 1.24V.
+Fixes: a4240d3af677 ("ARM: dts: Add support for dra72-evm rev C (SR2.0)")
+Signed-off-by: Ravikumar Kattekola <rk@ti.com>
+Signed-off-by: Sekhar Nori <nsekhar@ti.com>
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+---
+ arch/arm/boot/dts/dra71-evm.dts         | 14 ++++++++++++++
+ arch/arm/boot/dts/dra72-evm-common.dtsi |  2 --
+ arch/arm/boot/dts/dra72-evm-revc.dts    | 14 ++++++++++++++
+ arch/arm/boot/dts/dra72-evm.dts         | 14 ++++++++++++++
+ 4 files changed, 42 insertions(+), 2 deletions(-)
 
-So is there any reason you set the voltage to 1.5V? Is that what the BSP
-does? Or did you see any problems with 1.36V?
-
-Cheers,
-Andre.
-
-> +&reg_dcdc6 {
-> +	regulator-always-on;
-> +	regulator-min-microvolt = <1100000>;
-> +	regulator-max-microvolt = <1100000>;
-> +	regulator-name = "vdd-sys";
-> +};
-> +
-> +&reg_dldo1 {
-> +	regulator-min-microvolt = <3300000>;
-> +	regulator-max-microvolt = <3300000>;
-> +	regulator-name = "vcc-hdmi";
-> +};
-> +
-> +&reg_dldo2 {
-> +	regulator-min-microvolt = <3300000>;
-> +	regulator-max-microvolt = <3300000>;
-> +	regulator-name = "vcc-mipi";
-> +};
-> +
-> +&reg_dldo3 {
-> +	regulator-min-microvolt = <3300000>;
-> +	regulator-max-microvolt = <3300000>;
-> +	regulator-name = "avdd-csi";
-> +};
-> +
-> +&reg_dldo4 {
-> +	regulator-min-microvolt = <3300000>;
-> +	regulator-max-microvolt = <3300000>;
-> +	regulator-name = "vcc-wifi";
-> +};
-> +
-> +&reg_eldo1 {
-> +	regulator-min-microvolt = <1800000>;
-> +	regulator-max-microvolt = <1800000>;
-> +	regulator-name = "cpvdd";
-> +};
-> +
-> +&reg_eldo3 {
-> +	regulator-min-microvolt = <1800000>;
-> +	regulator-max-microvolt = <1800000>;
-> +	regulator-name = "vdd-1v8-csi";
-> +};
-> +
-> +&reg_fldo1 {
-> +	regulator-min-microvolt = <1200000>;
-> +	regulator-max-microvolt = <1200000>;
-> +	regulator-name = "vcc-1v2-hsic";
-> +};
-> +
-> +&reg_fldo2 {
-> +	regulator-always-on;
-> +	regulator-min-microvolt = <1100000>;
-> +	regulator-max-microvolt = <1100000>;
-> +	regulator-name = "vdd-cpus";
-> +};
-> +
-> +&reg_rtc_ldo {
-> +	regulator-name = "vcc-rtc";
-> +};
-> +
->  /* On Exp and Euler connectors */
->  &uart0 {
->  	pinctrl-names = "default";
-> 
+diff --git a/arch/arm/boot/dts/dra71-evm.dts b/arch/arm/boot/dts/dra71-evm.dts
+index 4d57a55473af..c7a56b6263a6 100644
+--- a/arch/arm/boot/dts/dra71-evm.dts
++++ b/arch/arm/boot/dts/dra71-evm.dts
+@@ -32,6 +32,16 @@
+ 			  3000000 0x1>;
+ 	};
+ 
++	evm_1v8_sw: fixedregulator-evm_1v8 {
++		compatible = "regulator-fixed";
++		regulator-name = "evm_1v8";
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <1800000>;
++		vin-supply = <&lp8732_buck0_reg>;
++		regulator-always-on;
++		regulator-boot-on;
++	};
++
+ 	poweroff: gpio-poweroff {
+ 		compatible = "gpio-poweroff";
+ 		gpios = <&gpio7 30 GPIO_ACTIVE_HIGH>;
+@@ -165,6 +175,10 @@
+ 	vmmc_aux-supply = <&vpo_sd_1v8_3v3>;
+ };
+ 
++&mmc2 {
++	vmmc-supply = <&evm_1v8_sw>;
++};
++
+ &mac {
+ 	mode-gpios = <&pcf_gpio_21 4 GPIO_ACTIVE_LOW>,
+ 		     <&pcf_hdmi 9 GPIO_ACTIVE_LOW>,	/* P11 */
+diff --git a/arch/arm/boot/dts/dra72-evm-common.dtsi b/arch/arm/boot/dts/dra72-evm-common.dtsi
+index ad24544adf0f..d97370217eff 100644
+--- a/arch/arm/boot/dts/dra72-evm-common.dtsi
++++ b/arch/arm/boot/dts/dra72-evm-common.dtsi
+@@ -418,8 +418,6 @@
+ 	status = "okay";
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&mmc2_pins_default>;
+-
+-	vmmc-supply = <&evm_3v3_sw>;
+ 	bus-width = <8>;
+ 	ti,non-removable;
+ 	max-frequency = <192000000>;
+diff --git a/arch/arm/boot/dts/dra72-evm-revc.dts b/arch/arm/boot/dts/dra72-evm-revc.dts
+index 58a2e6599ea7..40a399735533 100644
+--- a/arch/arm/boot/dts/dra72-evm-revc.dts
++++ b/arch/arm/boot/dts/dra72-evm-revc.dts
+@@ -15,6 +15,16 @@
+ 		device_type = "memory";
+ 		reg = <0x0 0x80000000 0x0 0x80000000>; /* 2GB */
+ 	};
++
++	evm_1v8_sw: fixedregulator-evm_1v8 {
++		compatible = "regulator-fixed";
++		regulator-name = "evm_1v8";
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <1800000>;
++		vin-supply = <&smps4_reg>;
++		regulator-always-on;
++		regulator-boot-on;
++	};
+ };
+ 
+ &i2c1 {
+@@ -86,3 +96,7 @@
+ &mmc1 {
+ 	vmmc_aux-supply = <&ldo1_reg>;
+ };
++
++&mmc2 {
++	vmmc-supply = <&evm_1v8_sw>;
++};
+diff --git a/arch/arm/boot/dts/dra72-evm.dts b/arch/arm/boot/dts/dra72-evm.dts
+index 1c570236a1a0..b25e7c67badf 100644
+--- a/arch/arm/boot/dts/dra72-evm.dts
++++ b/arch/arm/boot/dts/dra72-evm.dts
+@@ -13,6 +13,16 @@
+ 		device_type = "memory";
+ 		reg = <0x0 0x80000000 0x0 0x40000000>; /* 1024 MB */
+ 	};
++
++	evm_1v8_sw: fixedregulator-evm_1v8 {
++		compatible = "regulator-fixed";
++		regulator-name = "evm_1v8";
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <1800000>;
++		vin-supply = <&smps4_reg>;
++		regulator-always-on;
++		regulator-boot-on;
++	};
+ };
+ 
+ &i2c1 {
+@@ -47,3 +57,7 @@
+ &mmc1 {
+ 	vmmc_aux-supply = <&ldo1_reg>;
+ };
++
++&mmc2 {
++	vmmc-supply = <&evm_1v8_sw>;
++};
+-- 
+2.11.0
