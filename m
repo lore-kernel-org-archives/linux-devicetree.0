@@ -1,54 +1,62 @@
-From: Leo Yan <leo.yan@linaro.org>
-Subject: Re: [PATCH v2 1/2] clk: Hi3660: change to register crgctrl clock
- with CLK_OF_DECLARE_DRIVER
-Date: Fri, 19 May 2017 10:01:49 +0800
-Message-ID: <20170519020149.GI25294@leoy-ThinkPad-T440>
-References: <1495072247-25217-1-git-send-email-leo.yan@linaro.org>
- <1495072247-25217-2-git-send-email-leo.yan@linaro.org>
- <20170519015137.GE20170@codeaurora.org>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [GIT PULL] DeviceTree fixes for 4.12
+Date: Thu, 18 May 2017 21:04:11 -0500
+Message-ID: <CAL_JsqJ_p91oBtRaZnJLAUrWXObdgwYaNob1+fgQbZiMDfbV8g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170519015137.GE20170@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: Wei Xu <xuwei5@hisilicon.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Michael Turquette <mturquette@baylibre.com>, Guodong Xu <guodong.xu@linaro.org>, Zhong Kaihua <zhongkaihua@huawei.com>, Chen Jun <chenjun14@huawei.com>, Zhangfei Gao <zhangfei.gao@linaro.org>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, Daniel Lezcano <daniel.lezcano@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Linus Torvalds <torvalds-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
+Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 18, 2017 at 06:51:37PM -0700, Stephen Boyd wrote:
-> On 05/18, Leo Yan wrote:
-> > diff --git a/drivers/clk/hisilicon/clk-hi3660.c b/drivers/clk/hisilicon/clk-hi3660.c
-> > index fd5ce7f..4e5713b 100644
-> > --- a/drivers/clk/hisilicon/clk-hi3660.c
-> > +++ b/drivers/clk/hisilicon/clk-hi3660.c
-> > @@ -547,10 +547,10 @@ static void hi3660_clk_crgctrl_init(struct device_node *np)
-> >  				  ARRAY_SIZE(hi3660_crgctrl_divider_clks),
-> >  				  clk_data);
-> >  }
-> > +CLK_OF_DECLARE_DRIVER(hi3660_clk_crgctrl, "hisilicon,hi3660-crgctrl",
-> > +		      hi3660_clk_crgctrl_init);
-> >  
-> >  static const struct of_device_id hi3660_clk_match_table[] = {
-> > -	{ .compatible = "hisilicon,hi3660-crgctrl",
-> > -	  .data = hi3660_clk_crgctrl_init },
-> 
-> I'm slightly confused. CLK_OF_DECLARE_DRIVER is for when a
-> platform driver _and_ CLK_OF_DELARE need to "probe" the same
-> device node. But in this patch, the compatible string is being
-> deleted from the driver's match table. Also, are all the
-> registered in hi3660_clk_crgctrl_init() actually needed for the
-> timer?
+Linus,
 
-No.
+Please pull a few fixes for DT. Details below.
 
-> If only a subset, then I would expect to split the code
-> and have the CLK_OF_DECLARE_DRIVER() path register just the clks
-> that matter for the timer, and then leave the rest of the clks to
-> be registered by the probe of the platform driver.
+Rob
 
-I'm also puzzled if need divide crgctrl clock into two parts. Thanks
-for suggestion, will do this.
 
-Thanks,
-Leo Yan
+The following changes since commit 17a70355ea576843a7ac851f1db26872a50b2850:
+
+  of: fix sparse warnings in fdt, irq, reserved mem, and resolver code
+(2017-05-04 14:01:13 -0500)
+
+are available in the git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git
+devicetree-fixes-for-4.12
+
+for you to fetch changes up to 49e67dd17649b60b4d54966e18ec9c80198227f0:
+
+  of: fdt: add missing allocation-failure check (2017-05-17 11:36:52 -0500)
+
+----------------------------------------------------------------
+DeviceTree fixes for 4.12-rc:
+
+- Fix missing allocation failure handling in fdt code
+
+- Fix dtc compile error on 32-bit hosts
+
+- Revert bad sparse changes causing GCC7 warnings
+
+----------------------------------------------------------------
+Johan Hovold (1):
+      of: fdt: add missing allocation-failure check
+
+Rob Herring (1):
+      Partially Revert "of: fix sparse warnings in fdt, irq, reserved
+mem, and resolver code"
+
+Shuah Khan (1):
+      dtc: check.c fix compile error
+
+ drivers/of/fdt.c             | 3 +++
+ drivers/of/of_reserved_mem.c | 2 +-
+ include/linux/of_irq.h       | 2 +-
+ scripts/dtc/checks.c         | 2 +-
+ 4 files changed, 6 insertions(+), 3 deletions(-)
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
