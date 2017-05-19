@@ -1,127 +1,76 @@
-From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Subject: Re: [PATCH v5 15/17] dt-bindings: qca7000: append UART interface to
- binding
-Date: Fri, 19 May 2017 09:13:53 +0200
-Message-ID: <53509108-fac2-8e8d-9279-ed54e8c1af3b@i2se.com>
-References: <1494406408-31760-1-git-send-email-stefan.wahren@i2se.com>
- <1494406408-31760-16-git-send-email-stefan.wahren@i2se.com>
- <1702237.66ccflAQAJ@kerker> <20170511194541.4e58cb7d@cakuba.netronome.com>
- <20170512061552.Horde.ggjCMHnIsr8LeADwTQwhnx7@www.mhei.heimpold.org>
- <20170511234342.575d9226@cakuba.netronome.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [linux-sunxi] [PATCH v6 9/9] arm64: allwinner: a64: enable Wi-Fi
+ for Pine64
+Date: Fri, 19 May 2017 09:19:22 +0200
+Message-ID: <20170519071922.awmib4qphl6ac6mj@flea.home>
+References: <20170518071653.36561-1-icenowy@aosc.io>
+ <20170518071653.36561-10-icenowy@aosc.io>
+ <CAGb2v66mqMveibKKU9LiBm8jzAOj46hFCK6HvJx0k6077fqLZw@mail.gmail.com>
+ <79B00D42-3F95-4D5E-9A23-8E893CCF2462@aosc.io>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="tafftxaun7gqred4"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170511234342.575d9226-68UzVGuGftmUSpRRplVxJ1aTQe2KTcn/@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <79B00D42-3F95-4D5E-9A23-8E893CCF2462-h8G6r0blFSE@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Jakub Kicinski <kubakici-5tc4TXWwyLM@public.gmane.org>, Michael Heimpold <mhei-Z/Lg1yOAjpkb1SvskN2V4Q@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Jiri Slaby <jslaby-IBi9RG/b67k@public.gmane.org>, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
 
-Am 12.05.2017 um 08:43 schrieb Jakub Kicinski:
-> On Fri, 12 May 2017 06:15:52 +0000, Michael Heimpold wrote:
->> Hi,
->>
->> Zitat von Jakub Kicinski <kubakici-5tc4TXWwyLM@public.gmane.org>:
->>
->>> On Thu, 11 May 2017 21:12:22 +0200, Michael Heimpold wrote:  
->>>> Am Mittwoch, 10. Mai 2017, 10:53:26 CEST schrieb Stefan Wahren:  
->>>>> This merges the serdev binding for the QCA7000 UART driver (Ethernet over
->>>>> UART) into the existing document.
->>>>>
->>>>> Signed-off-by: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
->>>>> ---
->>>>>  .../devicetree/bindings/net/qca-qca7000.txt        | 32
->>>>> ++++++++++++++++++++++ 1 file changed, 32 insertions(+)
->>>>>
->>>>> diff --git a/Documentation/devicetree/bindings/net/qca-qca7000.txt
->>>>> b/Documentation/devicetree/bindings/net/qca-qca7000.txt index
->>>>> a37f656..08364c3 100644
->>>>> --- a/Documentation/devicetree/bindings/net/qca-qca7000.txt
->>>>> +++ b/Documentation/devicetree/bindings/net/qca-qca7000.txt
->>>>> @@ -54,3 +54,35 @@ ssp2: spi@80014000 {
->>>>>  		local-mac-address = [ A0 B0 C0 D0 E0 F0 ];
->>>>>  	};
->>>>>  };
->>>>> +
->>>>> +(b) Ethernet over UART
->>>>> +
->>>>> +In order to use the QCA7000 as UART slave it must be defined as    
->>>> a child of  
->>>>> a +UART master in the device tree. It is possible to preconfigure the UART
->>>>> +settings of the QCA7000 firmware, but it's not possible to change them
->>>>> during +runtime.
->>>>> +
->>>>> +Required properties:
->>>>> +- compatible        : Should be "qca,qca7000-uart"  
->>>> I already discussed this with Stefan off-list a little bit, but I would like
->>>> to bring this to a broader audience: I'm not sure whether the compatible
->>>> should contain the "-uart" suffix, because the hardware chip is the  
->>>> very same
->>>> QCA7000 chip which can also be used with SPI protocol.
->>>> The only difference is the loaded firmware within the chip which can either
->>>> speak SPI or UART protocol (but not both at the same time - due to shared
->>>> pins). So the hardware design decides which interface type is used.
->>>>
->>>> At the moment, this patch series adds a dedicated driver for the UART
->>>> protocol, in parallel to the existing SPI driver. So a different compatible
->>>> string is needed here to match against the new driver.
->>>>
->>>> An alternative approach would be to re-use the existing compatible string
->>>> "qca,qca7000" for both, the SPI and UART protocol, because a "smarter"
->>>> (combined) driver would detect which protocol to use. For example the driver
->>>> could check for spi-cpha and/or spi-cpol which are required for SPI  
->>>> protocol:
->>>> if these exists the driver could assume that SPI must be used, if both are
->>>> missing then UART protocol should be used.
->>>> (This way it would not be necessary to check whether the node is a child of
->>>> a SPI or UART master node - but maybe this is even easier - I don't know)
->>>>
->>>> Or in shorter words: my concern is that while "qca7000-uart" describes the
->>>> hardware, it's too closely coupled to the driver implementation. Having
->>>> some feedback of the experts would be nice :-)  
->>> I'm no expert, but devices which can do both I2C and SPI are quite
->>> common, and they usually have the same compatible string for both
->>> buses.  
->> do you have an example driver at hand? I only found GPIO mcp23s08 driver,
->> which can handle both I2C and SPI chips, but there are different compatible
->> strings used to distinguish several chip models.
-> I think drivers/tty/serial/sc16is7xx.c has the same strings, and some
-> Kconfig magic to work when either bus is enabled in .config.
->
-> Quick grep shows there are couple more potential ones to look at:
->
-> $ find . -name Kconfig | xargs grep -n 'SPI_MASTER.* I2C' 
-> ./drivers/tty/serial/Kconfig:1208:        depends on (SPI_MASTER && !I2C) || I2C
-> ./drivers/mfd/Kconfig:327:	depends on (SPI_MASTER || I2C)
-> ./drivers/iio/dac/Kconfig:10:	depends on (SPI_MASTER && I2C!=m) || I2C
-> ./drivers/iio/dac/Kconfig:34:	depends on (SPI_MASTER && I2C!=m) || I2C
-> ./drivers/iio/dac/Kconfig:57:	depends on (SPI_MASTER && I2C!=m) || I2C
-> ./drivers/gpio/Kconfig:1231:	depends on (SPI_MASTER && !I2C) || I2C
-> $ find . -name Kconfig | xargs grep -n 'I2C.*||.*SPI_MASTER' 
-> ./drivers/mfd/Kconfig:1094:	depends on (I2C=y || SPI_MASTER=y)
-> ./drivers/iio/gyro/Kconfig:55:	depends on (I2C || SPI_MASTER)
-> ./drivers/iio/gyro/Kconfig:107:	depends on (I2C || SPI_MASTER) && SYSFS
-> ./drivers/iio/accel/Kconfig:153:	depends on (I2C || SPI_MASTER) && SYSFS
-> ./drivers/iio/pressure/Kconfig:20:	depends on (I2C || SPI_MASTER)
-> ./drivers/iio/pressure/Kconfig:161:	depends on (I2C || SPI_MASTER) && SYSFS
-> ./drivers/iio/magnetometer/Kconfig:118:	depends on (I2C || SPI_MASTER) && SYSFS
->
-> drivers/mfd/mc13xxx-*.c seems to have the same strings.  The iio/dac drivers
-> don't support DT but do share names.  The MCP GPIO chip you mention indeed has
-> different product names based on the bus it's made for (0 vs s in the middle 
-> of the name), so I gather less relevant case?  drivers/iio/pressure/bmp280-*.c 
-> has the same strings, if I'm looking correctly... I didn't look at the others.
+--tafftxaun7gqred4
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-are you okay with the suggestion to use the compatible "qca,qca7000" for
-both drivers?
+On Fri, May 19, 2017 at 11:03:33AM +0800, Icenowy Zheng wrote:
+> >The patch looks OK, but given the module is removable, I think it
+> >should be
+> >an overlay. The overlay would enable WiFi + Bluetooth, and all the
+> >peripherals needed to connect them.
+> >
+> >That way, if the module is not installed, we avoid confusing the user
+> >with
+> >unused peripherals, and avoid having live voltage on an unoccupied
+> >header.
+>=20
+> But as this header have specific usage, we will also confuse user
+> if it's not enabled as its target usage.
 
-Should we mark "qca,qca7000-spi" as deprecated?
+Yet you would enable unused resources.
 
-Regards
-Stefan
+This was already pointed out here:
+https://patchwork.kernel.org/patch/9670235/
+
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+
+--tafftxaun7gqred4
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIcBAEBAgAGBQJZHpx6AAoJEBx+YmzsjxAgalAP/0j+8+GX9lyGUpR7pDsLEv8q
+JF+fphFq4U8hoIT2ujJxk+qwTHUYLYiz+DJ/0ctej1XLCWQoeLzx1QLC6tdvdix+
+uJ4g5g55OnhuIF7v1OCYyLqyESAM0wBLT40LW3+Ii3aD6I39xA13lCwLmu8Jq0z3
+BkEWIpdM0saIFXp6GJznUjMni9imP2kggcmnE7+THhf1j41dN9uZRSge/vVUwcVR
+alU0Rl9mfcRScwabbz3+PqiB+BdW4rlDHvCiZQWKuBdmm8jCFyXQXTozB1w5lF4d
+2ex/yJHUiLSde2NGOqGNNLREv92P91RecJ8E7QFlHuYoWAa8Qv62CWMMk+IRypkt
+TuSSZXc63Tip6maq1ZSGMZYXFLBC3098sJVjvdC8ltMMIVXpKv7qaV6P1hw/ArPZ
+B1qboXQp3nFa1aY6ShpdryxjdvZO13vyT011DmzxYIEqn8HTk+Z5xcsd5RMw/7Yw
+UrSuXbRm5LwyLKjfBMAe+9zJZbOE/73yB8O/xC1l6c+HS85Yl5PZ0Zby5iw1z28t
+EdnkqjYbnGKdk6bQsSyqQlKbjclCj94FH7eaiEyFJyb5GDguhtudCdfC7GQ36rhU
+3f3EknNSASKRaEs2WCzSsseTqjkGCbOPr4fGmuss9OURNtYJwWiLcyiwAoYSvAvD
+Gjl9W567FgysmufSCOf0
+=TQNS
+-----END PGP SIGNATURE-----
+
+--tafftxaun7gqred4--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
