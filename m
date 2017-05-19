@@ -1,67 +1,171 @@
-From: Pavel Machek <pavel-ynQEQJNshbs@public.gmane.org>
-Subject: Re: [PATCH] powerpc/sequoia: fix NAND partitions not to overlap
-Date: Fri, 19 May 2017 11:12:07 +0200
-Message-ID: <20170519091207.GA3940@amd>
-References: <20170402100535.GA18340@amd>
- <20170517120613.GA583@amd>
- <20170517143717.ad818a2282378fc7a38af1ff@linux-foundation.org>
- <20170518094813.GA12038@amd>
- <87efvl75ts.fsf@concordia.ellerman.id.au>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="d6Gm4EdcadzBjdND"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <87efvl75ts.fsf-W0DJWXSxmBNbyGPkN3NxC2scP1bn1w/D@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>
-Cc: Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, sr-ynQEQJNshbs@public.gmane.org, jwboyer-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, trivial-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Andrew Morton <akpm-3NddpPZAyC0@public.gmane.org>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH 2/4] ARM: dts: r8a7791: Stop grouping clocks under a "clocks" subnode
+Date: Fri, 19 May 2017 11:14:14 +0200
+Message-ID: <1495185256-26674-3-git-send-email-geert+renesas@glider.be>
+References: <1495185256-26674-1-git-send-email-geert+renesas@glider.be>
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <1495185256-26674-1-git-send-email-geert+renesas@glider.be>
+Sender: linux-clk-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
+Cc: linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
+The current practice is to not group clocks under a "clocks" subnode,
+but just put them together with the other on-SoC devices.
 
---d6Gm4EdcadzBjdND
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+ arch/arm/boot/dts/r8a7791.dtsi | 137 ++++++++++++++++++++---------------------
+ 1 file changed, 66 insertions(+), 71 deletions(-)
 
-Hi!
+diff --git a/arch/arm/boot/dts/r8a7791.dtsi b/arch/arm/boot/dts/r8a7791.dtsi
+index f6314f701d91acd4..74d42c9b77f4a2a3 100644
+--- a/arch/arm/boot/dts/r8a7791.dtsi
++++ b/arch/arm/boot/dts/r8a7791.dtsi
+@@ -1079,77 +1079,72 @@
+ 		power-domains = <&sysc R8A7791_PD_ALWAYS_ON>;
+ 	};
+ 
+-	clocks {
+-		#address-cells = <2>;
+-		#size-cells = <2>;
+-		ranges;
+-
+-		/* External root clock */
+-		extal_clk: extal {
+-			compatible = "fixed-clock";
+-			#clock-cells = <0>;
+-			/* This value must be overriden by the board. */
+-			clock-frequency = <0>;
+-		};
+-
+-		/*
+-		 * The external audio clocks are configured as 0 Hz fixed frequency clocks by
+-		 * default. Boards that provide audio clocks should override them.
+-		 */
+-		audio_clk_a: audio_clk_a {
+-			compatible = "fixed-clock";
+-			#clock-cells = <0>;
+-			clock-frequency = <0>;
+-		};
+-		audio_clk_b: audio_clk_b {
+-			compatible = "fixed-clock";
+-			#clock-cells = <0>;
+-			clock-frequency = <0>;
+-		};
+-		audio_clk_c: audio_clk_c {
+-			compatible = "fixed-clock";
+-			#clock-cells = <0>;
+-			clock-frequency = <0>;
+-		};
+-
+-		/* External PCIe clock - can be overridden by the board */
+-		pcie_bus_clk: pcie_bus {
+-			compatible = "fixed-clock";
+-			#clock-cells = <0>;
+-			clock-frequency = <0>;
+-		};
+-
+-		/* External SCIF clock */
+-		scif_clk: scif {
+-			compatible = "fixed-clock";
+-			#clock-cells = <0>;
+-			/* This value must be overridden by the board. */
+-			clock-frequency = <0>;
+-		};
+-
+-		/* External USB clock - can be overridden by the board */
+-		usb_extal_clk: usb_extal {
+-			compatible = "fixed-clock";
+-			#clock-cells = <0>;
+-			clock-frequency = <48000000>;
+-		};
+-
+-		/* External CAN clock */
+-		can_clk: can {
+-			compatible = "fixed-clock";
+-			#clock-cells = <0>;
+-			/* This value must be overridden by the board. */
+-			clock-frequency = <0>;
+-		};
+-
+-		cpg: clock-controller@e6150000 {
+-			compatible = "renesas,r8a7791-cpg-mssr";
+-			reg = <0 0xe6150000 0 0x1000>;
+-			clocks = <&extal_clk>, <&usb_extal_clk>;
+-			clock-names = "extal", "usb_extal";
+-			#clock-cells = <2>;
+-			#power-domain-cells = <0>;
+-		};
++	/* External root clock */
++	extal_clk: extal {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		/* This value must be overridden by the board. */
++		clock-frequency = <0>;
++	};
++
++	/*
++	 * The external audio clocks are configured as 0 Hz fixed frequency
++	 * clocks by default.
++	 * Boards that provide audio clocks should override them.
++	 */
++	audio_clk_a: audio_clk_a {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		clock-frequency = <0>;
++	};
++	audio_clk_b: audio_clk_b {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		clock-frequency = <0>;
++	};
++	audio_clk_c: audio_clk_c {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		clock-frequency = <0>;
++	};
++
++	/* External PCIe clock - can be overridden by the board */
++	pcie_bus_clk: pcie_bus {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		clock-frequency = <0>;
++	};
++
++	/* External SCIF clock */
++	scif_clk: scif {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		/* This value must be overridden by the board. */
++		clock-frequency = <0>;
++	};
++
++	/* External USB clock - can be overridden by the board */
++	usb_extal_clk: usb_extal {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		clock-frequency = <48000000>;
++	};
++
++	/* External CAN clock */
++	can_clk: can {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		/* This value must be overridden by the board. */
++		clock-frequency = <0>;
++	};
++
++	cpg: clock-controller@e6150000 {
++		compatible = "renesas,r8a7791-cpg-mssr";
++		reg = <0 0xe6150000 0 0x1000>;
++		clocks = <&extal_clk>, <&usb_extal_clk>;
++		clock-names = "extal", "usb_extal";
++		#clock-cells = <2>;
++		#power-domain-cells = <0>;
+ 	};
+ 
+ 	rst: reset-controller@e6160000 {
+-- 
+2.7.4
 
-> > Well... two partitions at same place. If you use one, you will corrupt
-> > information on the other one.
-> >
-> > OTOH this moves partition around (so that they don't overlap) so it is
-> > probably not stable candidate.
-> >
-> > I guess this is not huge issue; people using these boards probably
-> > have custom dts changes, anyway...
->=20
-> Or no one's even using it anymore.
->=20
-> I can take this via powerpc, I won't mark it for stable etc.
-
-That sounds good.
-
-Thanks,
-								Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---d6Gm4EdcadzBjdND
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlketucACgkQMOfwapXb+vJh2QCeKtRi+wgeu2f1BTH9CuKl/dR+
-sHgAnjwnjHwNjaA0rIcsScDu2Pt8DClS
-=RWEx
------END PGP SIGNATURE-----
-
---d6Gm4EdcadzBjdND--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
