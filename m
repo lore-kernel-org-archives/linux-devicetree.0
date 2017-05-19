@@ -1,7 +1,7 @@
 From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH 1/4] ARM: dts: r8a7790: Stop grouping clocks under a "clocks" subnode
-Date: Fri, 19 May 2017 11:14:13 +0200
-Message-ID: <1495185256-26674-2-git-send-email-geert+renesas@glider.be>
+Subject: [PATCH 4/4] ARM: dts: r8a7794: Stop grouping clocks under a "clocks" subnode
+Date: Fri, 19 May 2017 11:14:16 +0200
+Message-ID: <1495185256-26674-5-git-send-email-geert+renesas@glider.be>
 References: <1495185256-26674-1-git-send-email-geert+renesas@glider.be>
 Return-path: <linux-renesas-soc-owner@vger.kernel.org>
 In-Reply-To: <1495185256-26674-1-git-send-email-geert+renesas@glider.be>
@@ -15,15 +15,15 @@ but just put them together with the other on-SoC devices.
 
 Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
- arch/arm/boot/dts/r8a7790.dtsi | 137 ++++++++++++++++++++---------------------
- 1 file changed, 66 insertions(+), 71 deletions(-)
+ arch/arm/boot/dts/r8a7794.dtsi | 124 ++++++++++++++++++++---------------------
+ 1 file changed, 59 insertions(+), 65 deletions(-)
 
-diff --git a/arch/arm/boot/dts/r8a7790.dtsi b/arch/arm/boot/dts/r8a7790.dtsi
-index 522f4f81d70601d8..e36d6dd1b086dbba 100644
---- a/arch/arm/boot/dts/r8a7790.dtsi
-+++ b/arch/arm/boot/dts/r8a7790.dtsi
-@@ -1043,77 +1043,72 @@
- 		power-domains = <&sysc R8A7790_PD_ALWAYS_ON>;
+diff --git a/arch/arm/boot/dts/r8a7794.dtsi b/arch/arm/boot/dts/r8a7794.dtsi
+index 9d137cdeaed96638..1d0ce0b4dafba8f4 100644
+--- a/arch/arm/boot/dts/r8a7794.dtsi
++++ b/arch/arm/boot/dts/r8a7794.dtsi
+@@ -968,71 +968,65 @@
+ 		status = "disabled";
  	};
  
 -	clocks {
@@ -36,41 +36,6 @@ index 522f4f81d70601d8..e36d6dd1b086dbba 100644
 -			compatible = "fixed-clock";
 -			#clock-cells = <0>;
 -			/* This value must be overriden by the board. */
--			clock-frequency = <0>;
--		};
--
--		/* External PCIe clock - can be overridden by the board */
--		pcie_bus_clk: pcie_bus {
--			compatible = "fixed-clock";
--			#clock-cells = <0>;
--			clock-frequency = <0>;
--		};
--
--		/*
--		 * The external audio clocks are configured as 0 Hz fixed frequency clocks by
--		 * default. Boards that provide audio clocks should override them.
--		 */
--		audio_clk_a: audio_clk_a {
--			compatible = "fixed-clock";
--			#clock-cells = <0>;
--			clock-frequency = <0>;
--		};
--		audio_clk_b: audio_clk_b {
--			compatible = "fixed-clock";
--			#clock-cells = <0>;
--			clock-frequency = <0>;
--		};
--		audio_clk_c: audio_clk_c {
--			compatible = "fixed-clock";
--			#clock-cells = <0>;
--			clock-frequency = <0>;
--		};
--
--		/* External SCIF clock */
--		scif_clk: scif {
--			compatible = "fixed-clock";
--			#clock-cells = <0>;
--			/* This value must be overridden by the board. */
 -			clock-frequency = <0>;
 -		};
 -
@@ -89,8 +54,37 @@ index 522f4f81d70601d8..e36d6dd1b086dbba 100644
 -			clock-frequency = <0>;
 -		};
 -
+-		/* External SCIF clock */
+-		scif_clk: scif {
+-			compatible = "fixed-clock";
+-			#clock-cells = <0>;
+-			/* This value must be overridden by the board. */
+-			clock-frequency = <0>;
+-		};
+-
+-		/*
+-		 * The external audio clocks are configured  as 0 Hz fixed
+-		 * frequency clocks by default.  Boards that provide audio
+-		 * clocks should override them.
+-		 */
+-		audio_clka: audio_clka {
+-			compatible = "fixed-clock";
+-			#clock-cells = <0>;
+-			clock-frequency = <0>;
+-		};
+-		audio_clkb: audio_clkb {
+-			compatible = "fixed-clock";
+-			#clock-cells = <0>;
+-			clock-frequency = <0>;
+-		};
+-		audio_clkc: audio_clkc {
+-			compatible = "fixed-clock";
+-			#clock-cells = <0>;
+-			clock-frequency = <0>;
+-		};
+-
 -		cpg: clock-controller@e6150000 {
--			compatible = "renesas,r8a7790-cpg-mssr";
+-			compatible = "renesas,r8a7794-cpg-mssr";
 -			reg = <0 0xe6150000 0 0x1000>;
 -			clocks = <&extal_clk>, <&usb_extal_clk>;
 -			clock-names = "extal", "usb_extal";
@@ -99,42 +93,6 @@ index 522f4f81d70601d8..e36d6dd1b086dbba 100644
 -		};
 +	/* External root clock */
 +	extal_clk: extal {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		/* This value must be overridden by the board. */
-+		clock-frequency = <0>;
-+	};
-+
-+	/* External PCIe clock - can be overridden by the board */
-+	pcie_bus_clk: pcie_bus {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <0>;
-+	};
-+
-+	/*
-+	 * The external audio clocks are configured as 0 Hz fixed frequency
-+	 * clocks by default.
-+	 * Boards that provide audio clocks should override them.
-+	 */
-+	audio_clk_a: audio_clk_a {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <0>;
-+	};
-+	audio_clk_b: audio_clk_b {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <0>;
-+	};
-+	audio_clk_c: audio_clk_c {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <0>;
-+	};
-+
-+	/* External SCIF clock */
-+	scif_clk: scif {
 +		compatible = "fixed-clock";
 +		#clock-cells = <0>;
 +		/* This value must be overridden by the board. */
@@ -156,8 +114,37 @@ index 522f4f81d70601d8..e36d6dd1b086dbba 100644
 +		clock-frequency = <0>;
 +	};
 +
++	/* External SCIF clock */
++	scif_clk: scif {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		/* This value must be overridden by the board. */
++		clock-frequency = <0>;
++	};
++
++	/*
++	 * The external audio clocks are configured  as 0 Hz fixed
++	 * frequency clocks by default.  Boards that provide audio
++	 * clocks should override them.
++	 */
++	audio_clka: audio_clka {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		clock-frequency = <0>;
++	};
++	audio_clkb: audio_clkb {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		clock-frequency = <0>;
++	};
++	audio_clkc: audio_clkc {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		clock-frequency = <0>;
++	};
++
 +	cpg: clock-controller@e6150000 {
-+		compatible = "renesas,r8a7790-cpg-mssr";
++		compatible = "renesas,r8a7794-cpg-mssr";
 +		reg = <0 0xe6150000 0 0x1000>;
 +		clocks = <&extal_clk>, <&usb_extal_clk>;
 +		clock-names = "extal", "usb_extal";
@@ -165,6 +152,6 @@ index 522f4f81d70601d8..e36d6dd1b086dbba 100644
 +		#power-domain-cells = <0>;
  	};
  
- 	prr: chipid@ff000044 {
+ 	rst: reset-controller@e6160000 {
 -- 
 2.7.4
