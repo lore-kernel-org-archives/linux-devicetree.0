@@ -1,41 +1,73 @@
 From: Leo Yan <leo.yan@linaro.org>
-Subject: [PATCH v10 03/10] doc: Add coresight_cpu_debug.enable to kernel-parameters.txt
-Date: Fri, 19 May 2017 12:25:50 +0800
-Message-ID: <1495167957-14923-4-git-send-email-leo.yan@linaro.org>
+Subject: [PATCH v10 05/10] coresight: of_get_coresight_platform_data: Add missing of_node_put
+Date: Fri, 19 May 2017 12:25:52 +0800
+Message-ID: <1495167957-14923-6-git-send-email-leo.yan@linaro.org>
 References: <1495167957-14923-1-git-send-email-leo.yan@linaro.org>
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
 In-Reply-To: <1495167957-14923-1-git-send-email-leo.yan@linaro.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
+Sender: linux-doc-owner@vger.kernel.org
 To: Jonathan Corbet <corbet@lwn.net>, Mathieu Poirier <mathieu.poirier@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Liviu Dudau <liviu.dudau@arm.com>, Sudeep Holla <sudeep.holla@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Wei Xu <xuwei5@hisilicon.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Suzuki K Poulose <suzuki.poulose@arm.com>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, Stephen Boyd <sboyd@codeaurora.org>
 Cc: Leo Yan <leo.yan@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Add coresight_cpu_debug.enable to kernel-parameters.txt, this flag is
-used to enable/disable the CPU sampling based debugging.
+From: Suzuki K Poulose <suzuki.poulose@arm.com>
 
-Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+The of_get_coresight_platform_data iterates over the possible CPU nodes
+to find a given cpu phandle. However it does not drop the reference
+to the node pointer returned by the of_get_coresight_platform_data.
+
+This patch also introduces another minor fix is to use
+of_cpu_device_node_get() to replace of_get_cpu_node().
+
+Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
+Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+[Leo: minor tweaks for of_get_coresight_platform_data]
 Signed-off-by: Leo Yan <leo.yan@linaro.org>
 ---
- Documentation/admin-guide/kernel-parameters.txt | 7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/hwtracing/coresight/of_coresight.c | 17 ++++++++++-------
+ 1 file changed, 10 insertions(+), 7 deletions(-)
 
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index 15f79c2..ff67ad7 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -649,6 +649,13 @@
- 			/proc/<pid>/coredump_filter.
- 			See also Documentation/filesystems/proc.txt.
+diff --git a/drivers/hwtracing/coresight/of_coresight.c b/drivers/hwtracing/coresight/of_coresight.c
+index 2749853..225b2dd 100644
+--- a/drivers/hwtracing/coresight/of_coresight.c
++++ b/drivers/hwtracing/coresight/of_coresight.c
+@@ -109,7 +109,8 @@ of_get_coresight_platform_data(struct device *dev,
+ 	struct coresight_platform_data *pdata;
+ 	struct of_endpoint endpoint, rendpoint;
+ 	struct device *rdev;
+-	struct device_node *dn;
++	bool found;
++	struct device_node *dn, *np;
+ 	struct device_node *ep = NULL;
+ 	struct device_node *rparent = NULL;
+ 	struct device_node *rport = NULL;
+@@ -176,17 +177,19 @@ of_get_coresight_platform_data(struct device *dev,
+ 		} while (ep);
+ 	}
  
-+	coresight_cpu_debug.enable
-+			[ARM,ARM64]
-+			Format: <bool>
-+			Enable/disable the CPU sampling based debugging.
-+			0: default value, disable debugging
-+			1: enable debugging at boot time
+-	/* Affinity defaults to CPU0 */
+-	pdata->cpu = 0;
+ 	dn = of_parse_phandle(node, "cpu", 0);
+-	for (cpu = 0; dn && cpu < nr_cpu_ids; cpu++) {
+-		if (dn == of_get_cpu_node(cpu, NULL)) {
+-			pdata->cpu = cpu;
++	for_each_possible_cpu(cpu) {
++		np = of_cpu_device_node_get(cpu);
++		found = (dn == np);
++		of_node_put(np);
++		if (found)
+ 			break;
+-		}
+ 	}
+ 	of_node_put(dn);
+ 
++	/* Affinity to CPU0 if no cpu nodes are found */
++	pdata->cpu = found ? cpu : 0;
 +
- 	cpuidle.off=1	[CPU_IDLE]
- 			disable the cpuidle sub-system
- 
+ 	return pdata;
+ }
+ EXPORT_SYMBOL_GPL(of_get_coresight_platform_data);
 -- 
 2.7.4
+
