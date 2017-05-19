@@ -1,94 +1,134 @@
-From: Dave Gerlach <d-gerlach@ti.com>
-Subject: [PATCH v2 0/2] memory: Introduce ti-emif-sram driver
-Date: Fri, 19 May 2017 12:57:06 -0500
-Message-ID: <20170519175708.6070-1-d-gerlach@ti.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [RFC PATCH 03/11] drm: sun4i: ignore swapped
+ mixer<->tcon connection for DE2
+Date: Fri, 19 May 2017 19:57:53 +0200
+Message-ID: <20170519175753.sygqnwopk7tuv35n@flea.home>
+References: <20170517164354.16399-1-icenowy@aosc.io>
+ <20170517164354.16399-4-icenowy@aosc.io>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh+dt@kernel.org>, Tony Lindgren <tony@atomide.com>, Santosh Shilimkar <ssantosh@kernel.org>, Russell King <linux@armlinux.org.uk>
-Cc: devicetree@vger.kernel.org, Dave Gerlach <d-gerlach@ti.com>, Keerthy J <j-keerthy@ti.com>, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="6fekn7spmm7wi5km"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBLPE7TEAKGQE3N3QY4Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20170517164354.16399-4-icenowy-h8G6r0blFSE@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-This is v2 of the series introduces a ti-emif-sram driver to be used on am335x
-and am437x.  Minor updates were required in the usage of sram_exec_copy due to
-a change that was discussed in v1 here [1], that has since been queued for
-merge. This series depends on that patch. Note that we are not directly calling
-anything copied by sram_exec_copy which is why we are only using return value
-for error checking.
 
-Because there was no discussion on this series last time, I have included the
-same cover letter as v1 below:
+--6fekn7spmm7wi5km
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
 
-These SoCs have low power modes that require that the PER power domain be shut
-off. Because the EMIF (DDR Controller) resides within this power domain, it
-will lose context during a suspend operation, so we must save it so we can
-restore once we resume. However, we cannot execute this code from external
-memory, as it is not available at this point, so the code must be executed late
-in the suspend path and early in the resume path from SRAM.
+On Thu, May 18, 2017 at 12:43:46AM +0800, Icenowy Zheng wrote:
+> Some SoC's DE2 has two mixers. Defaultly the mixer0 is connected to
+> tcon0 and mixer1 is connected to tcon1; however by setting a bit
+> the connection can be swapped.
+> 
+> As we now hardcode the default connection, ignore the bonus endpoint for
+> the mixer's output and the TCON's input, as they stands for the swapped
+> connection.
+> 
+> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+> ---
+>  drivers/gpu/drm/sun4i/sun4i_drv.c  | 27 ++++++++++++++++++++++++++
+>  drivers/gpu/drm/sun4i/sun4i_tcon.c | 39 +++++++++++++++++++++++++++++---------
+>  drivers/gpu/drm/sun4i/sun4i_tcon.h |  2 ++
+>  3 files changed, 59 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/sun4i/sun4i_drv.c b/drivers/gpu/drm/sun4i/sun4i_drv.c
+> index 1dd1948025d2..29bf1325ded6 100644
+> --- a/drivers/gpu/drm/sun4i/sun4i_drv.c
+> +++ b/drivers/gpu/drm/sun4i/sun4i_drv.c
+> @@ -173,6 +173,13 @@ static bool sun4i_drv_node_is_frontend(struct device_node *node)
+>  		of_device_is_compatible(node, "allwinner,sun8i-a33-display-frontend");
+>  }
+>  
+> +static bool sun4i_drv_node_is_swappable_de2_mixer(struct device_node *node)
+> +{
+> +	/* The V3s has only one mixer-tcon pair, so it's not listed here. */
+> +	return of_device_is_compatible(node, "allwinner,sun8i-h3-de2-mixer0") ||
+> +		of_device_is_compatible(node, "allwinner,sun8i-h3-de2-mixer1");
+> +}
+> +
+>  static bool sun4i_drv_node_is_tcon(struct device_node *node)
+>  {
+>  	return of_device_is_compatible(node, "allwinner,sun5i-a13-tcon") ||
+> @@ -249,6 +256,26 @@ static int sun4i_drv_add_endpoints(struct device *dev,
+>  			}
+>  		}
+>  
+> +		/*
+> +		 * The second endpoint of the output of a swappable DE2 mixer
+> +		 * is the TCON after connection swapping.
+> +		 * Ignore it now, as we now hardcode mixer0->tcon0,
+> +		 * mixer1->tcon1 connection.
+> +		 */
+> +		if (sun4i_drv_node_is_swappable_de2_mixer(node)) {
+> +			struct of_endpoint endpoint;
+> +
+> +			if (of_graph_parse_endpoint(ep, &endpoint)) {
+> +				DRM_DEBUG_DRIVER("Couldn't parse endpoint\n");
+> +				continue;
+> +			}
+> +
+> +			if (endpoint.id) {
+> +				DRM_DEBUG_DRIVER("Endpoint is an unused connection for DE2 mixer... skipping\n");
+> +				continue;
+> +			}
+> +		}
+> +
+>  		/* Walk down our tree */
+>  		count += sun4i_drv_add_endpoints(dev, match, remote);
+>  
+> diff --git a/drivers/gpu/drm/sun4i/sun4i_tcon.c b/drivers/gpu/drm/sun4i/sun4i_tcon.c
+> index f44a37a5993d..89a215ff2370 100644
+> --- a/drivers/gpu/drm/sun4i/sun4i_tcon.c
+> +++ b/drivers/gpu/drm/sun4i/sun4i_tcon.c
+> @@ -425,7 +425,8 @@ static int sun4i_tcon_init_regmap(struct device *dev,
+>   * requested via the get_id function of the engine.
+>   */
+>  static struct sunxi_engine *sun4i_tcon_find_engine(struct sun4i_drv *drv,
+> -						   struct device_node *node)
+> +						   struct device_node *node,
+> +						   bool skip_bonus_ep)
+>  {
+>  	struct device_node *port, *ep, *remote;
+>  	struct sunxi_engine *engine;
+> @@ -439,6 +440,20 @@ static struct sunxi_engine *sun4i_tcon_find_engine(struct sun4i_drv *drv,
+>  		if (!remote)
+>  			continue;
+>  
+> +		if (skip_bonus_ep) {
+> +			struct of_endpoint endpoint;
+> +
+> +			if (of_graph_parse_endpoint(ep, &endpoint)) {
+> +				DRM_DEBUG_DRIVER("Couldn't parse endpoint\n");
+> +				continue;
+> +			}
+> +
+> +			if (endpoint.id) {
+> +				DRM_DEBUG_DRIVER("Skipping bonus mixer->TCON connection when searching engine\n");
+> +				continue;
+> +			}
+> +		}
+> +
 
-Patch 2 includes several functions written in ARM ASM that can be relocated to
-on-chip SRAM.  It also exports a table containing the absolute addresses of the
-available PM functions so that other PM code also running from SRAM can branch
-to them. It must also calculate virtual addresses for the suspend path, but
-physical addresses for the resume path as the MMU is not active when the code
-runs.
+You don't list the mixers in the tcon's output, why do you need that
+exactly?
 
-One thing that may not be immediately clear in the driver is that we can only
-get read-only exectuable memory regions from the mmio-sram driver so we also
-provide a second region to the driver that is read/write to be used for data
-during execution. This is the reason two sram regions are mapped and so many
-offsets must be provided to the code section.
-
-In order for structs to co-exist in C and ASM, I went ahead and extended the
-generic asm-offsets.c for ARM and added a single function call for this driver
-that adds all the constants needed for the ASM code to get offsets into the
-struct members. I managed to do it without many direct additions to the
-asm-offsets file so I do not think it is too intrusive. This was the only way I
-saw to do peaceful C and ASM data structure co-existence. Due to the
-dependencies of all of the code on this I did not not split ARM vs drivers/
-changes into separate patches because I think it would be more confusing that
-way but if needed I think it can be done.
-
-This code is required for low-power modes to work on AM335x and AM437x and a
-forthcoming PM series for those platforms will depend on this series. After
-both this and the PM series are reviewed I will send the necessary device tree
-changes for both, but in the meantime all remaining patches for am335x and
-am437x PM can be found here [3].
-
-Regards,
-Dave
-
-[1] http://www.spinics.net/lists/arm-kernel/msg572489.html
-[2] http://www.spinics.net/lists/kernel/msg2511127.html
-[3] https://github.com/dgerlach/linux-pm/tree/upstream/v4.12/amx3-suspend-dev
-
-Dave Gerlach (2):
-  Documentation: dt: Update ti,emif bindings
-  memory: ti-emif-sram: introduce relocatable suspend/resume handlers
-
- .../bindings/memory-controllers/ti/emif.txt        |  18 +-
- arch/arm/kernel/asm-offsets.c                      |   6 +
- drivers/memory/Kconfig                             |  10 +
- drivers/memory/Makefile                            |   4 +
- drivers/memory/emif.h                              |  17 ++
- drivers/memory/ti-emif-pm.c                        | 297 ++++++++++++++++++
- drivers/memory/ti-emif-sram-pm.S                   | 334 +++++++++++++++++++++
- include/linux/ti-emif-sram.h                       | 143 +++++++++
- 8 files changed, 828 insertions(+), 1 deletion(-)
- create mode 100644 drivers/memory/ti-emif-pm.c
- create mode 100644 drivers/memory/ti-emif-sram-pm.S
- create mode 100644 include/linux/ti-emif-sram.h
+Maxime
 
 -- 
-2.13.0
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--6fekn7spmm7wi5km--
