@@ -1,43 +1,121 @@
-From: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH] dt-bindings: rcar-dmac: Document missing error interrupt
-Date: Fri, 19 May 2017 09:27:47 +0200
-Message-ID: <1495178867-817-1-git-send-email-geert+renesas@glider.be>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: [PATCH v3 00/21] drm: sun4i: Add support for the HDMI controller
+Date: Fri, 19 May 2017 15:34:28 +0800
+Message-ID: <CAGb2v660H0kje3YWJgLnzLs7gii8VD-jMjdTiUjBsLn3+65S0g@mail.gmail.com>
+References: <cover.463df61c38224ecbfb5bf1cf192deeb63718b693.1495006350.git-series.maxime.ripard@free-electrons.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <cover.463df61c38224ecbfb5bf1cf192deeb63718b693.1495006350.git-series.maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Cc: Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, =?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Daniel Vetter <daniel.vetter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The documentation for the "interrupt-names" property only mentions the
-per-channel interrupts, while the error interrupt has always been
-mandatory, too.
+On Wed, May 17, 2017 at 3:40 PM, Maxime Ripard
+<maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> Hi,
+>
+> Here is an attempt at getting the HDMI controller running.
+>
+> This HDMI controller is found on a number of old Allwinner SoCs (A10, A10s,
+> A20, A31).
+>
+> This driver only supports for now the A10s because it was an easy target,
+> being very close to the A13 that is already supported by our DRM driver.
+>
+> There's nothing out of the extraordinary there, except maybe the clock
+> setup. All the internal clocks (TMDS, DDC) have been modeled using the
+> common clock framework, the TMDS clock being the parent of the DDC one.
+>
+> While this might sound overkill, other SoC have a different, external
+> source for the DDC clock, which will be easier to support through the clock
+> framework.
+>
+> The IP also supports audio (through an already supported i2s controller,
+> and some missing configuration in the HDMI controller) and CEC. Both will
+> come eventually.
+>
+> Let me know what you think!
+> Maxime
+>
+> Changes from v2:
+>   - Fixed the PLL control macros definitions
+>   - Called clk_enable / disable on the DDC clock
+>   - Added the flags to enable the connection polling
+>   - Fixed the vtotal computation in TCON's code, and added a comment
+>   - Added and documented the A10s display engine compatible
+>   - Reworked the component parsing code to bail out when a standard
+>     connector is found
+>   - Fixed a inconsistent comment in the predivider unapplication
+>   - Fixed a commit log
+>   - Added Chen-Yu's and Rob's Acked-By
+>   - Changed divider_round_rate to a static, inline function in the header
+>   - Added and document the A10s display pipeline compatible
+>   - Rebased on top of 4.12
+>
+> Changes from v1:
+>   - Fixed typos in the CCU header and the HDMI code
+>   - Reintroduced the comment for the backporch timings
+>   - Renamed the hdmi node to hdmi, instead of hdmi0
+>   - Added support for hdmi-connector
+>   - Added a separate Kconfig option for the HDMI support
+>   - Changed the TCON muxing configuration for an explicit call in the
+>     TCON's "clients"
+>   - Fixed the initialisation sequence that was clearing the clocks bits
+>   - Constified the HDMI's structures and removed whitespaces errors
+>   - Fixed an issue in the sunxi-ng code that was not reporting the proper
+>     parent clock rate if it was modified
+>   - Removed unused headers
+>   - Removed CLK_SET_RATE_PARENT for the DDC clock
+>   - Used the DDC address defines
+>   - Removed the interlace flag that wasn't supported at the moment
+>   - Moved most of the HDMI encoder init to the bind function like we do for
+>     the other encoders
+>   - Switched to drm_of_find_possible_crtcs
+>   - Removed the extra printk that were still in my code
+>   - Rebased on top of linux-next
+>   - Removed the patch changing the divider_round_rate prototype to
+>     introduce a new function instead that takes the parent clock to
+>     evaluate
+>   - Added a clk_set_rate for the hdmi module clock
+>   - Fixed the V_TOTAL TCON ch0 calculation to be consistent with ch1's
+>   - Defined all registers, and remove the TODOs
+>   - Fixed the EDID issues by increasing the timeout.
+>   - Added an atomic_check to prevent the DBLCLK modes to be used, as it is
+>     not supported yet
+>   - Updated the binding to add the interrupts and DMA channels
+>
+> Maxime Ripard (21):
+>   clk: divider: Make divider_round_rate take the parent clock
+>   clk: sunxi-ng: Pass the parent and a pointer to the clocks round rate
+>   clk: sunxi-ng: div: Switch to divider_round_rate
+>   clk: sunxi-ng: mux: Don't just rely on the parent for CLK_SET_RATE_PARENT
+>   clk: sunxi-ng: mux: split out the pre-divider computation code
+>   clk: sunxi-ng: mux: Change pre-divider application function prototype
+>   clk: sunxi-ng: mux: Re-adjust parent rate
+>   clk: sunxi-ng: sun5i: Export video PLLs
 
-Fixes: 10f5c8438475909a ("dmaengine: rcar-dmac: Add device tree bindings
-documentation")
-Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
----
- Documentation/devicetree/bindings/dma/renesas,rcar-dmac.txt | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+Merged patches 1 ~ 8 and ...
 
-diff --git a/Documentation/devicetree/bindings/dma/renesas,rcar-dmac.txt b/Documentation/devicetree/bindings/dma/renesas,rcar-dmac.txt
-index 3316a9c2e638b98c..79a204d50234f287 100644
---- a/Documentation/devicetree/bindings/dma/renesas,rcar-dmac.txt
-+++ b/Documentation/devicetree/bindings/dma/renesas,rcar-dmac.txt
-@@ -30,8 +30,9 @@ Required Properties:
- 
- - interrupts: interrupt specifiers for the DMAC, one for each entry in
-   interrupt-names.
--- interrupt-names: one entry per channel, named "ch%u", where %u is the
--  channel number ranging from zero to the number of channels minus one.
-+- interrupt-names: one entry for the error interrupt, named "error", plus one
-+  entry per channel, named "ch%u", where %u is the channel number ranging from
-+  zero to the number of channels minus one.
- 
- - clock-names: "fck" for the functional clock
- - clocks: a list of phandle + clock-specifier pairs, one for each entry
--- 
-2.7.4
+>   drm/sun4i: tcon: Add channel debug
+>   drm/sun4i: tcon: Move the muxing out of the mode set function
+>   drm/sun4i: tcon: Switch mux on only for composite
+>   drm/sun4i: tcon: Fix tcon channel 1 backporch calculation
+>   drm/sun4i: tcon: Change vertical total size computation inconsistency
+>   drm/sun4i: tcon: multiply the vtotal when not in interlace
+>   drm/sun4i: Ignore the generic connectors for components
+>   dt-bindings: display: sun4i: Add HDMI display bindings
+>   dt-bindings: display: sun4i: Add allwinner,tcon-channel property
+>   drm/sun4i: Add HDMI support
+>   drm/sun4i: Add compatible for the A10s pipeline
 
+>   ARM: sun5i: a10s: Add the HDMI controller node
+>   ARM: sun5i: a10s-olinuxino: Enable HDMI
+
+... 20 ~ 21 for 4.13.
+
+ChenYu
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
