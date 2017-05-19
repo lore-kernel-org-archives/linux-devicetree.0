@@ -1,50 +1,782 @@
 From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: [PATCH 4/6] gpio: mvebu: allow building driver for Armada 7K/8K
-Date: Fri, 19 May 2017 18:09:23 +0200
-Message-ID: <ed816f275537bf4e0d4557ed53b685b4f3186605.1495210061.git-series.gregory.clement@free-electrons.com>
+Subject: [PATCH 2/6] gpio: mvebu: switch to regmap for register access
+Date: Fri, 19 May 2017 18:09:21 +0200
+Message-ID: <d3d38eb9cec70544aeedcc76a29e3372ea5683e8.1495210061.git-series.gregory.clement@free-electrons.com>
 References: <cover.e10718b9c0f9fdd07327ae14e213be8da5b1f7ef.1495210061.git-series.gregory.clement@free-electrons.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <cover.e10718b9c0f9fdd07327ae14e213be8da5b1f7ef.1495210061.git-series.gregory.clement@free-electrons.com>
 In-Reply-To: <cover.e10718b9c0f9fdd07327ae14e213be8da5b1f7ef.1495210061.git-series.gregory.clement@free-electrons.com>
 References: <cover.e10718b9c0f9fdd07327ae14e213be8da5b1f7ef.1495210061.git-series.gregory.clement@free-electrons.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, Omri Itach <omrii@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Kostya Porotchkin <kostap@marvell.com>, Russell King <rmk+kernel@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, Neta Zur Hershkovits <neta@marvell.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Shadi Ammouri <shadi@marvell.com>, Marcin Wojtas <mw@semihalf.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Cc: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Russell King <rmk+kernel@armlinux.org.uk>, Nadav Haklai <nadavh@marvell.com>, Kostya Porotchkin <kostap@marvell.com>, Neta Zur Hershkovits <neta@marvell.com>, Marcin Wojtas <mw@semihalf.com>, Omri Itach <omrii@marvell.com>, Shadi Ammouri <shadi@marvell.com>
 List-Id: devicetree@vger.kernel.org
 
-The mvebu gpio driver can also be used on arm64 mvebu SoC such as the
-Armada 7K/8K. This commit allows to build the driver for them (when only
-ARCH_MVEBU is defined)
+From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
 
-Reviewed-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+In order to be able to use this driver with the Armada 7K/8K SoCs, we
+need to use the regmap to access the registers. Indeed for these new SoCs,
+the gpio node will be part of a syscon.
+
+[gregory.clement@free-electrons.com:
+ - fixed merge conflcit from 4.10 to 4.12-rc1
+ - added a commit log]
+
+Signed-off-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
 Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
 ---
- drivers/gpio/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpio/gpio-mvebu.c | 436 +++++++++++++++++++++------------------
+ 1 file changed, 245 insertions(+), 191 deletions(-)
 
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index 23ca51ee6b28..418316b82bd2 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -326,7 +326,7 @@ config GPIO_MPC8XXX
+diff --git a/drivers/gpio/gpio-mvebu.c b/drivers/gpio/gpio-mvebu.c
+index a9e564f3410b..3d03740a20e7 100644
+--- a/drivers/gpio/gpio-mvebu.c
++++ b/drivers/gpio/gpio-mvebu.c
+@@ -47,6 +47,7 @@
+ #include <linux/pinctrl/consumer.h>
+ #include <linux/platform_device.h>
+ #include <linux/pwm.h>
++#include <linux/regmap.h>
+ #include <linux/slab.h>
  
- config GPIO_MVEBU
- 	def_bool y
--	depends on PLAT_ORION
-+	depends on PLAT_ORION || ARCH_MVEBU
- 	depends on OF_GPIO
- 	select GENERIC_IRQ_CHIP
+ #include "gpiolib.h"
+@@ -106,9 +107,8 @@ struct mvebu_pwm {
  
+ struct mvebu_gpio_chip {
+ 	struct gpio_chip   chip;
+-	spinlock_t	   lock;
+-	void __iomem	  *membase;
+-	void __iomem	  *percpu_membase;
++	struct regmap     *regs;
++	struct regmap     *percpu_regs;
+ 	int		   irqbase;
+ 	struct irq_domain *domain;
+ 	int		   soc_variant;
+@@ -130,92 +130,149 @@ struct mvebu_gpio_chip {
+  * Functions returning addresses of individual registers for a given
+  * GPIO controller.
+  */
+-static void __iomem *mvebu_gpioreg_out(struct mvebu_gpio_chip *mvchip)
+-{
+-	return mvchip->membase + GPIO_OUT_OFF;
+-}
+ 
+-static void __iomem *mvebu_gpioreg_blink(struct mvebu_gpio_chip *mvchip)
++static void mvebu_gpioreg_edge_cause(struct mvebu_gpio_chip *mvchip,
++			 struct regmap **map, unsigned int *offset)
+ {
+-	return mvchip->membase + GPIO_BLINK_EN_OFF;
+-}
++	int cpu;
+ 
+-static void __iomem *mvebu_gpioreg_blink_counter_select(struct mvebu_gpio_chip
+-							*mvchip)
+-{
+-	return mvchip->membase + GPIO_BLINK_CNT_SELECT_OFF;
++	switch (mvchip->soc_variant) {
++	case MVEBU_GPIO_SOC_VARIANT_ORION:
++	case MVEBU_GPIO_SOC_VARIANT_MV78200:
++		*map = mvchip->regs;
++		*offset = GPIO_EDGE_CAUSE_OFF;
++		break;
++	case MVEBU_GPIO_SOC_VARIANT_ARMADAXP:
++		cpu = smp_processor_id();
++		*map = mvchip->percpu_regs;
++		*offset = GPIO_EDGE_CAUSE_ARMADAXP_OFF(cpu);
++		break;
++	default:
++		BUG();
++	}
+ }
+ 
+-static void __iomem *mvebu_gpioreg_io_conf(struct mvebu_gpio_chip *mvchip)
++static u32
++mvebu_gpio_read_edge_cause(struct mvebu_gpio_chip *mvchip)
+ {
+-	return mvchip->membase + GPIO_IO_CONF_OFF;
+-}
++	struct regmap *map;
++	unsigned int offset;
++	u32 val;
+ 
+-static void __iomem *mvebu_gpioreg_in_pol(struct mvebu_gpio_chip *mvchip)
+-{
+-	return mvchip->membase + GPIO_IN_POL_OFF;
++	mvebu_gpioreg_edge_cause(mvchip, &map, &offset);
++	regmap_read(map, offset, &val);
++
++	return val;
+ }
+ 
+-static void __iomem *mvebu_gpioreg_data_in(struct mvebu_gpio_chip *mvchip)
++static void
++mvebu_gpio_write_edge_cause(struct mvebu_gpio_chip *mvchip, u32 val)
+ {
+-	return mvchip->membase + GPIO_DATA_IN_OFF;
++	struct regmap *map;
++	unsigned int offset;
++
++	mvebu_gpioreg_edge_cause(mvchip, &map, &offset);
++	regmap_write(map, offset, val);
+ }
+ 
+-static void __iomem *mvebu_gpioreg_edge_cause(struct mvebu_gpio_chip *mvchip)
++static inline void
++mvebu_gpioreg_edge_mask(struct mvebu_gpio_chip *mvchip,
++			struct regmap **map, unsigned int *offset)
+ {
+ 	int cpu;
+ 
+ 	switch (mvchip->soc_variant) {
+ 	case MVEBU_GPIO_SOC_VARIANT_ORION:
++		*map = mvchip->regs;
++		*offset = GPIO_EDGE_MASK_OFF;
++		break;
+ 	case MVEBU_GPIO_SOC_VARIANT_MV78200:
+-		return mvchip->membase + GPIO_EDGE_CAUSE_OFF;
++		cpu = smp_processor_id();
++		*map = mvchip->regs;
++		*offset = GPIO_EDGE_MASK_MV78200_OFF(cpu);
++		break;
+ 	case MVEBU_GPIO_SOC_VARIANT_ARMADAXP:
+ 		cpu = smp_processor_id();
+-		return mvchip->percpu_membase +
+-			GPIO_EDGE_CAUSE_ARMADAXP_OFF(cpu);
++		*map = mvchip->percpu_regs;
++		*offset = GPIO_EDGE_MASK_ARMADAXP_OFF(cpu);
++		break;
+ 	default:
+ 		BUG();
+ 	}
+ }
+ 
+-static void __iomem *mvebu_gpioreg_edge_mask(struct mvebu_gpio_chip *mvchip)
++static u32
++mvebu_gpio_read_edge_mask(struct mvebu_gpio_chip *mvchip)
+ {
+-	int cpu;
++	struct regmap *map;
++	unsigned int offset;
++	u32 val;
+ 
+-	switch (mvchip->soc_variant) {
+-	case MVEBU_GPIO_SOC_VARIANT_ORION:
+-		return mvchip->membase + GPIO_EDGE_MASK_OFF;
+-	case MVEBU_GPIO_SOC_VARIANT_MV78200:
+-		cpu = smp_processor_id();
+-		return mvchip->membase + GPIO_EDGE_MASK_MV78200_OFF(cpu);
+-	case MVEBU_GPIO_SOC_VARIANT_ARMADAXP:
+-		cpu = smp_processor_id();
+-		return mvchip->percpu_membase +
+-			GPIO_EDGE_MASK_ARMADAXP_OFF(cpu);
+-	default:
+-		BUG();
+-	}
++	mvebu_gpioreg_edge_mask(mvchip, &map, &offset);
++	regmap_read(map, offset, &val);
++
++	return val;
+ }
+ 
+-static void __iomem *mvebu_gpioreg_level_mask(struct mvebu_gpio_chip *mvchip)
++static void
++mvebu_gpio_write_edge_mask(struct mvebu_gpio_chip *mvchip, u32 val)
++{
++	struct regmap *map;
++	unsigned int offset;
++
++	mvebu_gpioreg_edge_mask(mvchip, &map, &offset);
++	regmap_write(map, offset, val);
++}
++
++static void
++mvebu_gpioreg_level_mask(struct mvebu_gpio_chip *mvchip,
++			 struct regmap **map, unsigned int *offset)
+ {
+ 	int cpu;
+ 
+ 	switch (mvchip->soc_variant) {
+ 	case MVEBU_GPIO_SOC_VARIANT_ORION:
+-		return mvchip->membase + GPIO_LEVEL_MASK_OFF;
++		*map = mvchip->regs;
++		*offset = GPIO_LEVEL_MASK_OFF;
++		break;
+ 	case MVEBU_GPIO_SOC_VARIANT_MV78200:
+ 		cpu = smp_processor_id();
+-		return mvchip->membase + GPIO_LEVEL_MASK_MV78200_OFF(cpu);
++		*map = mvchip->regs;
++		*offset = GPIO_LEVEL_MASK_MV78200_OFF(cpu);
++		break;
+ 	case MVEBU_GPIO_SOC_VARIANT_ARMADAXP:
+ 		cpu = smp_processor_id();
+-		return mvchip->percpu_membase +
+-			GPIO_LEVEL_MASK_ARMADAXP_OFF(cpu);
++		*map = mvchip->percpu_regs;
++		*offset = GPIO_LEVEL_MASK_ARMADAXP_OFF(cpu);
++		break;
+ 	default:
+ 		BUG();
+ 	}
+ }
+ 
++static u32
++mvebu_gpio_read_level_mask(struct mvebu_gpio_chip *mvchip)
++{
++	struct regmap *map;
++	unsigned int offset;
++	u32 val;
++
++	mvebu_gpioreg_level_mask(mvchip, &map, &offset);
++	regmap_read(map, offset, &val);
++
++	return val;
++}
++
++static void
++mvebu_gpio_write_level_mask(struct mvebu_gpio_chip *mvchip, u32 val)
++{
++	struct regmap *map;
++	unsigned int offset;
++
++	mvebu_gpioreg_level_mask(mvchip, &map, &offset);
++	regmap_write(map, offset, val);
++}
++
+ /*
+  * Functions returning addresses of individual registers for a given
+  * PWM controller.
+@@ -236,17 +293,9 @@ static void __iomem *mvebu_pwmreg_blink_off_duration(struct mvebu_pwm *mvpwm)
+ static void mvebu_gpio_set(struct gpio_chip *chip, unsigned int pin, int value)
+ {
+ 	struct mvebu_gpio_chip *mvchip = gpiochip_get_data(chip);
+-	unsigned long flags;
+-	u32 u;
+ 
+-	spin_lock_irqsave(&mvchip->lock, flags);
+-	u = readl_relaxed(mvebu_gpioreg_out(mvchip));
+-	if (value)
+-		u |= BIT(pin);
+-	else
+-		u &= ~BIT(pin);
+-	writel_relaxed(u, mvebu_gpioreg_out(mvchip));
+-	spin_unlock_irqrestore(&mvchip->lock, flags);
++	regmap_update_bits(mvchip->regs, GPIO_OUT_OFF,
++			   BIT(pin), value ? BIT(pin) : 0);
+ }
+ 
+ static int mvebu_gpio_get(struct gpio_chip *chip, unsigned int pin)
+@@ -254,11 +303,16 @@ static int mvebu_gpio_get(struct gpio_chip *chip, unsigned int pin)
+ 	struct mvebu_gpio_chip *mvchip = gpiochip_get_data(chip);
+ 	u32 u;
+ 
+-	if (readl_relaxed(mvebu_gpioreg_io_conf(mvchip)) & BIT(pin)) {
+-		u = readl_relaxed(mvebu_gpioreg_data_in(mvchip)) ^
+-			readl_relaxed(mvebu_gpioreg_in_pol(mvchip));
++	regmap_read(mvchip->regs, GPIO_IO_CONF_OFF, &u);
++
++	if (u & BIT(pin)) {
++		u32 data_in, in_pol;
++
++		regmap_read(mvchip->regs, GPIO_DATA_IN_OFF, &data_in);
++		regmap_read(mvchip->regs, GPIO_IN_POL_OFF, &in_pol);
++		u = data_in ^ in_pol;
+ 	} else {
+-		u = readl_relaxed(mvebu_gpioreg_out(mvchip));
++		regmap_read(mvchip->regs, GPIO_OUT_OFF, &u);
+ 	}
+ 
+ 	return (u >> pin) & 1;
+@@ -268,25 +322,15 @@ static void mvebu_gpio_blink(struct gpio_chip *chip, unsigned int pin,
+ 			     int value)
+ {
+ 	struct mvebu_gpio_chip *mvchip = gpiochip_get_data(chip);
+-	unsigned long flags;
+-	u32 u;
+ 
+-	spin_lock_irqsave(&mvchip->lock, flags);
+-	u = readl_relaxed(mvebu_gpioreg_blink(mvchip));
+-	if (value)
+-		u |= BIT(pin);
+-	else
+-		u &= ~BIT(pin);
+-	writel_relaxed(u, mvebu_gpioreg_blink(mvchip));
+-	spin_unlock_irqrestore(&mvchip->lock, flags);
++	regmap_update_bits(mvchip->regs, GPIO_BLINK_EN_OFF,
++			   BIT(pin), value ? BIT(pin) : 0);
+ }
+ 
+ static int mvebu_gpio_direction_input(struct gpio_chip *chip, unsigned int pin)
+ {
+ 	struct mvebu_gpio_chip *mvchip = gpiochip_get_data(chip);
+-	unsigned long flags;
+ 	int ret;
+-	u32 u;
+ 
+ 	/*
+ 	 * Check with the pinctrl driver whether this pin is usable as
+@@ -296,11 +340,8 @@ static int mvebu_gpio_direction_input(struct gpio_chip *chip, unsigned int pin)
+ 	if (ret)
+ 		return ret;
+ 
+-	spin_lock_irqsave(&mvchip->lock, flags);
+-	u = readl_relaxed(mvebu_gpioreg_io_conf(mvchip));
+-	u |= BIT(pin);
+-	writel_relaxed(u, mvebu_gpioreg_io_conf(mvchip));
+-	spin_unlock_irqrestore(&mvchip->lock, flags);
++	regmap_update_bits(mvchip->regs, GPIO_IO_CONF_OFF,
++			   BIT(pin), 1);
+ 
+ 	return 0;
+ }
+@@ -309,9 +350,7 @@ static int mvebu_gpio_direction_output(struct gpio_chip *chip, unsigned int pin,
+ 				       int value)
+ {
+ 	struct mvebu_gpio_chip *mvchip = gpiochip_get_data(chip);
+-	unsigned long flags;
+ 	int ret;
+-	u32 u;
+ 
+ 	/*
+ 	 * Check with the pinctrl driver whether this pin is usable as
+@@ -324,11 +363,8 @@ static int mvebu_gpio_direction_output(struct gpio_chip *chip, unsigned int pin,
+ 	mvebu_gpio_blink(chip, pin, 0);
+ 	mvebu_gpio_set(chip, pin, value);
+ 
+-	spin_lock_irqsave(&mvchip->lock, flags);
+-	u = readl_relaxed(mvebu_gpioreg_io_conf(mvchip));
+-	u &= ~BIT(pin);
+-	writel_relaxed(u, mvebu_gpioreg_io_conf(mvchip));
+-	spin_unlock_irqrestore(&mvchip->lock, flags);
++	regmap_update_bits(mvchip->regs, GPIO_IO_CONF_OFF,
++			   BIT(pin), 0);
+ 
+ 	return 0;
+ }
+@@ -350,7 +386,7 @@ static void mvebu_gpio_irq_ack(struct irq_data *d)
+ 	u32 mask = d->mask;
+ 
+ 	irq_gc_lock(gc);
+-	writel_relaxed(~mask, mvebu_gpioreg_edge_cause(mvchip));
++	mvebu_gpio_write_edge_cause(mvchip, ~mask);
+ 	irq_gc_unlock(gc);
+ }
+ 
+@@ -363,8 +399,7 @@ static void mvebu_gpio_edge_irq_mask(struct irq_data *d)
+ 
+ 	irq_gc_lock(gc);
+ 	ct->mask_cache_priv &= ~mask;
+-
+-	writel_relaxed(ct->mask_cache_priv, mvebu_gpioreg_edge_mask(mvchip));
++	mvebu_gpio_write_edge_mask(mvchip, ct->mask_cache_priv);
+ 	irq_gc_unlock(gc);
+ }
+ 
+@@ -377,7 +412,7 @@ static void mvebu_gpio_edge_irq_unmask(struct irq_data *d)
+ 
+ 	irq_gc_lock(gc);
+ 	ct->mask_cache_priv |= mask;
+-	writel_relaxed(ct->mask_cache_priv, mvebu_gpioreg_edge_mask(mvchip));
++	mvebu_gpio_write_edge_mask(mvchip, ct->mask_cache_priv);
+ 	irq_gc_unlock(gc);
+ }
+ 
+@@ -390,7 +425,7 @@ static void mvebu_gpio_level_irq_mask(struct irq_data *d)
+ 
+ 	irq_gc_lock(gc);
+ 	ct->mask_cache_priv &= ~mask;
+-	writel_relaxed(ct->mask_cache_priv, mvebu_gpioreg_level_mask(mvchip));
++	mvebu_gpio_write_level_mask(mvchip, ct->mask_cache_priv);
+ 	irq_gc_unlock(gc);
+ }
+ 
+@@ -403,7 +438,7 @@ static void mvebu_gpio_level_irq_unmask(struct irq_data *d)
+ 
+ 	irq_gc_lock(gc);
+ 	ct->mask_cache_priv |= mask;
+-	writel_relaxed(ct->mask_cache_priv, mvebu_gpioreg_level_mask(mvchip));
++	mvebu_gpio_write_level_mask(mvchip, ct->mask_cache_priv);
+ 	irq_gc_unlock(gc);
+ }
+ 
+@@ -443,8 +478,8 @@ static int mvebu_gpio_irq_set_type(struct irq_data *d, unsigned int type)
+ 
+ 	pin = d->hwirq;
+ 
+-	u = readl_relaxed(mvebu_gpioreg_io_conf(mvchip)) & BIT(pin);
+-	if (!u)
++	regmap_read(mvchip->regs, GPIO_IO_CONF_OFF, &u);
++	if ((u & BIT(pin)) == 0)
+ 		return -EINVAL;
+ 
+ 	type &= IRQ_TYPE_SENSE_MASK;
+@@ -462,31 +497,30 @@ static int mvebu_gpio_irq_set_type(struct irq_data *d, unsigned int type)
+ 	switch (type) {
+ 	case IRQ_TYPE_EDGE_RISING:
+ 	case IRQ_TYPE_LEVEL_HIGH:
+-		u = readl_relaxed(mvebu_gpioreg_in_pol(mvchip));
+-		u &= ~BIT(pin);
+-		writel_relaxed(u, mvebu_gpioreg_in_pol(mvchip));
++		regmap_update_bits(mvchip->regs, GPIO_IN_POL_OFF,
++				   BIT(pin), 0);
+ 		break;
+ 	case IRQ_TYPE_EDGE_FALLING:
+ 	case IRQ_TYPE_LEVEL_LOW:
+-		u = readl_relaxed(mvebu_gpioreg_in_pol(mvchip));
+-		u |= BIT(pin);
+-		writel_relaxed(u, mvebu_gpioreg_in_pol(mvchip));
++		regmap_update_bits(mvchip->regs, GPIO_IN_POL_OFF,
++				   BIT(pin), 1);
+ 		break;
+ 	case IRQ_TYPE_EDGE_BOTH: {
+-		u32 v;
++		u32 data_in, in_pol, val;
+ 
+-		v = readl_relaxed(mvebu_gpioreg_in_pol(mvchip)) ^
+-			readl_relaxed(mvebu_gpioreg_data_in(mvchip));
++		regmap_read(mvchip->regs, GPIO_IN_POL_OFF, &in_pol);
++		regmap_read(mvchip->regs, GPIO_DATA_IN_OFF, &data_in);
+ 
+ 		/*
+ 		 * set initial polarity based on current input level
+ 		 */
+-		u = readl_relaxed(mvebu_gpioreg_in_pol(mvchip));
+-		if (v & BIT(pin))
+-			u |= BIT(pin);		/* falling */
++		if ((data_in ^ in_pol) & BIT(pin))
++			val = BIT(pin); /* falling */
+ 		else
+-			u &= ~BIT(pin);		/* rising */
+-		writel_relaxed(u, mvebu_gpioreg_in_pol(mvchip));
++			val = 0; /* raising */
++
++		regmap_update_bits(mvchip->regs, GPIO_IN_POL_OFF,
++				   BIT(pin), val);
+ 		break;
+ 	}
+ 	}
+@@ -497,7 +531,7 @@ static void mvebu_gpio_irq_handler(struct irq_desc *desc)
+ {
+ 	struct mvebu_gpio_chip *mvchip = irq_desc_get_handler_data(desc);
+ 	struct irq_chip *chip = irq_desc_get_chip(desc);
+-	u32 cause, type;
++	u32 cause, type, data_in, level_mask, edge_cause, edge_mask;
+ 	int i;
+ 
+ 	if (mvchip == NULL)
+@@ -505,10 +539,12 @@ static void mvebu_gpio_irq_handler(struct irq_desc *desc)
+ 
+ 	chained_irq_enter(chip, desc);
+ 
+-	cause = readl_relaxed(mvebu_gpioreg_data_in(mvchip)) &
+-		readl_relaxed(mvebu_gpioreg_level_mask(mvchip));
+-	cause |= readl_relaxed(mvebu_gpioreg_edge_cause(mvchip)) &
+-		readl_relaxed(mvebu_gpioreg_edge_mask(mvchip));
++	regmap_read(mvchip->regs, GPIO_DATA_IN_OFF, &data_in);
++	level_mask = mvebu_gpio_read_level_mask(mvchip);
++	edge_cause = mvebu_gpio_read_edge_cause(mvchip);
++	edge_mask  = mvebu_gpio_read_edge_mask(mvchip);
++
++	cause = (data_in ^ level_mask) | (edge_cause & edge_mask);
+ 
+ 	for (i = 0; i < mvchip->chip.ngpio; i++) {
+ 		int irq;
+@@ -523,9 +559,9 @@ static void mvebu_gpio_irq_handler(struct irq_desc *desc)
+ 			/* Swap polarity (race with GPIO line) */
+ 			u32 polarity;
+ 
+-			polarity = readl_relaxed(mvebu_gpioreg_in_pol(mvchip));
++			regmap_read(mvchip->regs, GPIO_IN_POL_OFF, &polarity);
+ 			polarity ^= BIT(i);
+-			writel_relaxed(polarity, mvebu_gpioreg_in_pol(mvchip));
++			regmap_write(mvchip->regs, GPIO_IN_POL_OFF, polarity);
+ 		}
+ 
+ 		generic_handle_irq(irq);
+@@ -628,7 +664,7 @@ static void mvebu_pwm_get_state(struct pwm_chip *chip,
+ 			state->period = 1;
+ 	}
+ 
+-	u = readl_relaxed(mvebu_gpioreg_blink(mvchip));
++	regmap_read(mvchip->regs, GPIO_BLINK_EN_OFF, &u);
+ 	if (u)
+ 		state->enabled = true;
+ 	else
+@@ -691,8 +727,8 @@ static void __maybe_unused mvebu_pwm_suspend(struct mvebu_gpio_chip *mvchip)
+ {
+ 	struct mvebu_pwm *mvpwm = mvchip->mvpwm;
+ 
+-	mvpwm->blink_select =
+-		readl_relaxed(mvebu_gpioreg_blink_counter_select(mvchip));
++	regmap_read(mvchip->regs, GPIO_BLINK_CNT_SELECT_OFF,
++		    &mvpwm->blink_select);
+ 	mvpwm->blink_on_duration =
+ 		readl_relaxed(mvebu_pwmreg_blink_on_duration(mvpwm));
+ 	mvpwm->blink_off_duration =
+@@ -703,8 +739,8 @@ static void __maybe_unused mvebu_pwm_resume(struct mvebu_gpio_chip *mvchip)
+ {
+ 	struct mvebu_pwm *mvpwm = mvchip->mvpwm;
+ 
+-	writel_relaxed(mvpwm->blink_select,
+-		       mvebu_gpioreg_blink_counter_select(mvchip));
++	regmap_write(mvchip->regs, GPIO_BLINK_CNT_SELECT_OFF,
++		     mvpwm->blink_select);
+ 	writel_relaxed(mvpwm->blink_on_duration,
+ 		       mvebu_pwmreg_blink_on_duration(mvpwm));
+ 	writel_relaxed(mvpwm->blink_off_duration,
+@@ -747,7 +783,7 @@ static int mvebu_pwm_probe(struct platform_device *pdev,
+ 		set = U32_MAX;
+ 	else
+ 		return -EINVAL;
+-	writel_relaxed(0, mvebu_gpioreg_blink_counter_select(mvchip));
++	regmap_write(mvchip->regs, GPIO_BLINK_CNT_SELECT_OFF, 0);
+ 
+ 	mvpwm = devm_kzalloc(dev, sizeof(struct mvebu_pwm), GFP_KERNEL);
+ 	if (!mvpwm)
+@@ -783,14 +819,14 @@ static void mvebu_gpio_dbg_show(struct seq_file *s, struct gpio_chip *chip)
+ 	u32 out, io_conf, blink, in_pol, data_in, cause, edg_msk, lvl_msk;
+ 	int i;
+ 
+-	out	= readl_relaxed(mvebu_gpioreg_out(mvchip));
+-	io_conf	= readl_relaxed(mvebu_gpioreg_io_conf(mvchip));
+-	blink	= readl_relaxed(mvebu_gpioreg_blink(mvchip));
+-	in_pol	= readl_relaxed(mvebu_gpioreg_in_pol(mvchip));
+-	data_in	= readl_relaxed(mvebu_gpioreg_data_in(mvchip));
+-	cause	= readl_relaxed(mvebu_gpioreg_edge_cause(mvchip));
+-	edg_msk	= readl_relaxed(mvebu_gpioreg_edge_mask(mvchip));
+-	lvl_msk	= readl_relaxed(mvebu_gpioreg_level_mask(mvchip));
++	regmap_read(mvchip->regs, GPIO_OUT_OFF, &out);
++	regmap_read(mvchip->regs, GPIO_IO_CONF_OFF, &io_conf);
++	regmap_read(mvchip->regs, GPIO_BLINK_EN_OFF, &blink);
++	regmap_read(mvchip->regs, GPIO_IN_POL_OFF, &in_pol);
++	regmap_read(mvchip->regs, GPIO_DATA_IN_OFF, &data_in);
++	cause	= mvebu_gpio_read_edge_cause(mvchip);
++	edg_msk	= mvebu_gpio_read_edge_mask(mvchip);
++	lvl_msk	= mvebu_gpio_read_level_mask(mvchip);
+ 
+ 	for (i = 0; i < chip->ngpio; i++) {
+ 		const char *label;
+@@ -858,36 +894,36 @@ static int mvebu_gpio_suspend(struct platform_device *pdev, pm_message_t state)
+ 	struct mvebu_gpio_chip *mvchip = platform_get_drvdata(pdev);
+ 	int i;
+ 
+-	mvchip->out_reg = readl(mvebu_gpioreg_out(mvchip));
+-	mvchip->io_conf_reg = readl(mvebu_gpioreg_io_conf(mvchip));
+-	mvchip->blink_en_reg = readl(mvebu_gpioreg_blink(mvchip));
+-	mvchip->in_pol_reg = readl(mvebu_gpioreg_in_pol(mvchip));
++	regmap_read(mvchip->regs, GPIO_OUT_OFF, &mvchip->out_reg);
++	regmap_read(mvchip->regs, GPIO_IO_CONF_OFF, &mvchip->io_conf_reg);
++	regmap_read(mvchip->regs, GPIO_BLINK_EN_OFF, &mvchip->blink_en_reg);
++	regmap_read(mvchip->regs, GPIO_IN_POL_OFF, &mvchip->in_pol_reg);
+ 
+ 	switch (mvchip->soc_variant) {
+ 	case MVEBU_GPIO_SOC_VARIANT_ORION:
+-		mvchip->edge_mask_regs[0] =
+-			readl(mvchip->membase + GPIO_EDGE_MASK_OFF);
+-		mvchip->level_mask_regs[0] =
+-			readl(mvchip->membase + GPIO_LEVEL_MASK_OFF);
++		regmap_read(mvchip->regs, GPIO_EDGE_MASK_OFF,
++			    &mvchip->edge_mask_regs[0]);
++		regmap_read(mvchip->regs, GPIO_LEVEL_MASK_OFF,
++			    &mvchip->level_mask_regs[0]);
+ 		break;
+ 	case MVEBU_GPIO_SOC_VARIANT_MV78200:
+ 		for (i = 0; i < 2; i++) {
+-			mvchip->edge_mask_regs[i] =
+-				readl(mvchip->membase +
+-				      GPIO_EDGE_MASK_MV78200_OFF(i));
+-			mvchip->level_mask_regs[i] =
+-				readl(mvchip->membase +
+-				      GPIO_LEVEL_MASK_MV78200_OFF(i));
++			regmap_read(mvchip->regs,
++				    GPIO_EDGE_MASK_MV78200_OFF(i),
++				    &mvchip->edge_mask_regs[i]);
++			regmap_read(mvchip->regs,
++				    GPIO_LEVEL_MASK_MV78200_OFF(i),
++				    &mvchip->level_mask_regs[i]);
+ 		}
+ 		break;
+ 	case MVEBU_GPIO_SOC_VARIANT_ARMADAXP:
+ 		for (i = 0; i < 4; i++) {
+-			mvchip->edge_mask_regs[i] =
+-				readl(mvchip->membase +
+-				      GPIO_EDGE_MASK_ARMADAXP_OFF(i));
+-			mvchip->level_mask_regs[i] =
+-				readl(mvchip->membase +
+-				      GPIO_LEVEL_MASK_ARMADAXP_OFF(i));
++			regmap_read(mvchip->regs,
++				    GPIO_EDGE_MASK_ARMADAXP_OFF(i),
++				    &mvchip->edge_mask_regs[i]);
++			regmap_read(mvchip->regs,
++				    GPIO_LEVEL_MASK_ARMADAXP_OFF(i),
++				    &mvchip->level_mask_regs[i]);
+ 		}
+ 		break;
+ 	default:
+@@ -905,35 +941,36 @@ static int mvebu_gpio_resume(struct platform_device *pdev)
+ 	struct mvebu_gpio_chip *mvchip = platform_get_drvdata(pdev);
+ 	int i;
+ 
+-	writel(mvchip->out_reg, mvebu_gpioreg_out(mvchip));
+-	writel(mvchip->io_conf_reg, mvebu_gpioreg_io_conf(mvchip));
+-	writel(mvchip->blink_en_reg, mvebu_gpioreg_blink(mvchip));
+-	writel(mvchip->in_pol_reg, mvebu_gpioreg_in_pol(mvchip));
++	regmap_write(mvchip->regs, GPIO_OUT_OFF, mvchip->out_reg);
++	regmap_write(mvchip->regs, GPIO_IO_CONF_OFF, mvchip->io_conf_reg);
++	regmap_write(mvchip->regs, GPIO_BLINK_EN_OFF, mvchip->blink_en_reg);
++	regmap_write(mvchip->regs, GPIO_IN_POL_OFF, mvchip->in_pol_reg);
+ 
+ 	switch (mvchip->soc_variant) {
+ 	case MVEBU_GPIO_SOC_VARIANT_ORION:
+-		writel(mvchip->edge_mask_regs[0],
+-		       mvchip->membase + GPIO_EDGE_MASK_OFF);
+-		writel(mvchip->level_mask_regs[0],
+-		       mvchip->membase + GPIO_LEVEL_MASK_OFF);
++		regmap_write(mvchip->regs, GPIO_EDGE_MASK_OFF,
++			     mvchip->edge_mask_regs[0]);
++		regmap_write(mvchip->regs, GPIO_LEVEL_MASK_OFF,
++			     mvchip->level_mask_regs[0]);
+ 		break;
+ 	case MVEBU_GPIO_SOC_VARIANT_MV78200:
+ 		for (i = 0; i < 2; i++) {
+-			writel(mvchip->edge_mask_regs[i],
+-			       mvchip->membase + GPIO_EDGE_MASK_MV78200_OFF(i));
+-			writel(mvchip->level_mask_regs[i],
+-			       mvchip->membase +
+-			       GPIO_LEVEL_MASK_MV78200_OFF(i));
++			regmap_write(mvchip->regs,
++				     GPIO_EDGE_MASK_MV78200_OFF(i),
++				     mvchip->edge_mask_regs[i]);
++			regmap_write(mvchip->regs,
++				     GPIO_LEVEL_MASK_MV78200_OFF(i),
++				     mvchip->level_mask_regs[i]);
+ 		}
+ 		break;
+ 	case MVEBU_GPIO_SOC_VARIANT_ARMADAXP:
+ 		for (i = 0; i < 4; i++) {
+-			writel(mvchip->edge_mask_regs[i],
+-			       mvchip->membase +
+-			       GPIO_EDGE_MASK_ARMADAXP_OFF(i));
+-			writel(mvchip->level_mask_regs[i],
+-			       mvchip->membase +
+-			       GPIO_LEVEL_MASK_ARMADAXP_OFF(i));
++			regmap_write(mvchip->regs,
++				     GPIO_EDGE_MASK_ARMADAXP_OFF(i),
++				     mvchip->edge_mask_regs[i]);
++			regmap_write(mvchip->regs,
++				     GPIO_LEVEL_MASK_ARMADAXP_OFF(i),
++				     mvchip->level_mask_regs[i]);
+ 		}
+ 		break;
+ 	default:
+@@ -946,6 +983,13 @@ static int mvebu_gpio_resume(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
++static const struct regmap_config mvebu_gpio_regmap_config = {
++	.reg_bits = 32,
++	.reg_stride = 4,
++	.val_bits = 32,
++	.fast_io = true,
++};
++
+ static int mvebu_gpio_probe(struct platform_device *pdev)
+ {
+ 	struct mvebu_gpio_chip *mvchip;
+@@ -954,6 +998,7 @@ static int mvebu_gpio_probe(struct platform_device *pdev)
+ 	struct resource *res;
+ 	struct irq_chip_generic *gc;
+ 	struct irq_chip_type *ct;
++	void __iomem *base;
+ 	unsigned int ngpios;
+ 	bool have_irqs;
+ 	int soc_variant;
+@@ -1009,11 +1054,15 @@ static int mvebu_gpio_probe(struct platform_device *pdev)
+ 	mvchip->chip.of_node = np;
+ 	mvchip->chip.dbg_show = mvebu_gpio_dbg_show;
+ 
+-	spin_lock_init(&mvchip->lock);
+ 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	mvchip->membase = devm_ioremap_resource(&pdev->dev, res);
+-	if (IS_ERR(mvchip->membase))
+-		return PTR_ERR(mvchip->membase);
++	base = devm_ioremap_resource(&pdev->dev, res);
++	if (IS_ERR(base))
++		return PTR_ERR(base);
++
++	mvchip->regs = devm_regmap_init_mmio(&pdev->dev, base,
++					     &mvebu_gpio_regmap_config);
++	if (IS_ERR(mvchip->regs))
++		return PTR_ERR(mvchip->regs);
+ 
+ 	/*
+ 	 * The Armada XP has a second range of registers for the
+@@ -1021,10 +1070,15 @@ static int mvebu_gpio_probe(struct platform_device *pdev)
+ 	 */
+ 	if (soc_variant == MVEBU_GPIO_SOC_VARIANT_ARMADAXP) {
+ 		res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
+-		mvchip->percpu_membase = devm_ioremap_resource(&pdev->dev,
+-							       res);
+-		if (IS_ERR(mvchip->percpu_membase))
+-			return PTR_ERR(mvchip->percpu_membase);
++		base = devm_ioremap_resource(&pdev->dev, res);
++		if (IS_ERR(base))
++			return PTR_ERR(base);
++
++		mvchip->percpu_regs =
++			devm_regmap_init_mmio(&pdev->dev, base,
++					      &mvebu_gpio_regmap_config);
++		if (IS_ERR(mvchip->percpu_regs))
++			return PTR_ERR(mvchip->percpu_regs);
+ 	}
+ 
+ 	/*
+@@ -1032,30 +1086,30 @@ static int mvebu_gpio_probe(struct platform_device *pdev)
+ 	 */
+ 	switch (soc_variant) {
+ 	case MVEBU_GPIO_SOC_VARIANT_ORION:
+-		writel_relaxed(0, mvchip->membase + GPIO_EDGE_CAUSE_OFF);
+-		writel_relaxed(0, mvchip->membase + GPIO_EDGE_MASK_OFF);
+-		writel_relaxed(0, mvchip->membase + GPIO_LEVEL_MASK_OFF);
++		regmap_write(mvchip->regs, GPIO_EDGE_CAUSE_OFF, 0);
++		regmap_write(mvchip->regs, GPIO_EDGE_MASK_OFF, 0);
++		regmap_write(mvchip->regs, GPIO_LEVEL_MASK_OFF, 0);
+ 		break;
+ 	case MVEBU_GPIO_SOC_VARIANT_MV78200:
+-		writel_relaxed(0, mvchip->membase + GPIO_EDGE_CAUSE_OFF);
++		regmap_write(mvchip->regs, GPIO_EDGE_CAUSE_OFF, 0);
+ 		for (cpu = 0; cpu < 2; cpu++) {
+-			writel_relaxed(0, mvchip->membase +
+-				       GPIO_EDGE_MASK_MV78200_OFF(cpu));
+-			writel_relaxed(0, mvchip->membase +
+-				       GPIO_LEVEL_MASK_MV78200_OFF(cpu));
++			regmap_write(mvchip->regs,
++				     GPIO_EDGE_MASK_MV78200_OFF(cpu), 0);
++			regmap_write(mvchip->regs,
++				     GPIO_LEVEL_MASK_MV78200_OFF(cpu), 0);
+ 		}
+ 		break;
+ 	case MVEBU_GPIO_SOC_VARIANT_ARMADAXP:
+-		writel_relaxed(0, mvchip->membase + GPIO_EDGE_CAUSE_OFF);
+-		writel_relaxed(0, mvchip->membase + GPIO_EDGE_MASK_OFF);
+-		writel_relaxed(0, mvchip->membase + GPIO_LEVEL_MASK_OFF);
++		regmap_write(mvchip->regs, GPIO_EDGE_CAUSE_OFF, 0);
++		regmap_write(mvchip->regs, GPIO_EDGE_MASK_OFF, 0);
++		regmap_write(mvchip->regs, GPIO_LEVEL_MASK_OFF, 0);
+ 		for (cpu = 0; cpu < 4; cpu++) {
+-			writel_relaxed(0, mvchip->percpu_membase +
+-				       GPIO_EDGE_CAUSE_ARMADAXP_OFF(cpu));
+-			writel_relaxed(0, mvchip->percpu_membase +
+-				       GPIO_EDGE_MASK_ARMADAXP_OFF(cpu));
+-			writel_relaxed(0, mvchip->percpu_membase +
+-				       GPIO_LEVEL_MASK_ARMADAXP_OFF(cpu));
++			regmap_write(mvchip->percpu_regs,
++				     GPIO_EDGE_CAUSE_ARMADAXP_OFF(cpu), 0);
++			regmap_write(mvchip->percpu_regs,
++				     GPIO_EDGE_MASK_ARMADAXP_OFF(cpu), 0);
++			regmap_write(mvchip->percpu_regs,
++				     GPIO_LEVEL_MASK_ARMADAXP_OFF(cpu), 0);
+ 		}
+ 		break;
+ 	default:
 -- 
 git-series 0.9.1
