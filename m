@@ -1,80 +1,220 @@
 From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: [PATCH 4/9] pinctrl: mvebu: remove the offset property for regmap
-Date: Fri, 19 May 2017 18:04:46 +0200
-Message-ID: <62e2727ca98b6a1cab3387542caa575daddffaab.1495209664.git-series.gregory.clement@free-electrons.com>
+Subject: [PATCH 7/9] pinctrl: mvebu: add driver for Armada AP806 pinctrl
+Date: Fri, 19 May 2017 18:04:49 +0200
+Message-ID: <5a190d4d71cb8626315b832c6f987e9e03da2fa9.1495209664.git-series.gregory.clement@free-electrons.com>
 References: <cover.0dd8a92ae74fcec8d0470d0a7016035089e46eed.1495209664.git-series.gregory.clement@free-electrons.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <cover.0dd8a92ae74fcec8d0470d0a7016035089e46eed.1495209664.git-series.gregory.clement@free-electrons.com>
 In-Reply-To: <cover.0dd8a92ae74fcec8d0470d0a7016035089e46eed.1495209664.git-series.gregory.clement@free-electrons.com>
 References: <cover.0dd8a92ae74fcec8d0470d0a7016035089e46eed.1495209664.git-series.gregory.clement@free-electrons.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, Omri Itach <omrii@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Kostya Porotchkin <kostap@marvell.com>, Russell King <rmk+kernel@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, Neta Zur Hershkovits <neta@marvell.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Shadi Ammouri <shadi@marvell.com>, Marcin Wojtas <mw@semihalf.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Cc: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Russell King <rmk+kernel@armlinux.org.uk>, Nadav Haklai <nadavh@marvell.com>, Kostya Porotchkin <kostap@marvell.com>, Neta Zur Hershkovits <neta@marvell.com>, Marcin Wojtas <mw@semihalf.com>, Omri Itach <omrii@marvell.com>, Shadi Ammouri <shadi@marvell.com>, Hanna Hawa <hannah@marvell.com>
 List-Id: devicetree@vger.kernel.org
 
-The offset property of the pinctrl node, when a regmap is used in the
-device tree, was never used nor documented in the binding. Moreover, the
-compatible string is enough to let the driver know which offset using.
+From: Hanna Hawa <hannah@marvell.com>
 
-So this patch removes the property and move the information at the driver
-level.
+This commit adds a pinctrl driver for the pin-muxing controller found in
+the AP806 part of the Marvell Armada 7K and 8K SoCs. Its register
+interface is compatible with the one used by previous mvebu pin
+controllers, so the common logic in drivers/pinctrl/mvebu/pinctrl-mvebu.c
+is used.
 
+Signed-off-by: Hanna Hawa <hannah@marvell.com>
+Reviewed-by: Shadi Ammouri <shadi@marvell.com>
+[updated for mvebu pinctrl changes
+ - converted to simple_mmio
+ - removed unimplemented .remove function
+ - removed DTS description
+  - converted  to use syscon/regmap
+ --rmk]
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
 Reviewed-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
 Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
 ---
- drivers/pinctrl/mvebu/pinctrl-mvebu.c | 6 +-----
- drivers/pinctrl/mvebu/pinctrl-mvebu.h | 2 +-
- 2 files changed, 2 insertions(+), 6 deletions(-)
+ drivers/pinctrl/mvebu/Kconfig                |   4 +-
+ drivers/pinctrl/mvebu/Makefile               |   1 +-
+ drivers/pinctrl/mvebu/pinctrl-armada-ap806.c | 145 ++++++++++++++++++++-
+ 3 files changed, 150 insertions(+)
+ create mode 100644 drivers/pinctrl/mvebu/pinctrl-armada-ap806.c
 
-diff --git a/drivers/pinctrl/mvebu/pinctrl-mvebu.c b/drivers/pinctrl/mvebu/pinctrl-mvebu.c
-index e4dda12d371a..163d4614b0f8 100644
---- a/drivers/pinctrl/mvebu/pinctrl-mvebu.c
-+++ b/drivers/pinctrl/mvebu/pinctrl-mvebu.c
-@@ -810,21 +810,17 @@ int mvebu_regmap_mpp_ctrl_set(struct mvebu_mpp_ctrl_data *data,
- }
+diff --git a/drivers/pinctrl/mvebu/Kconfig b/drivers/pinctrl/mvebu/Kconfig
+index 8cb444b60ae9..0e0b009f2b71 100644
+--- a/drivers/pinctrl/mvebu/Kconfig
++++ b/drivers/pinctrl/mvebu/Kconfig
+@@ -28,6 +28,10 @@ config PINCTRL_ARMADA_39X
+ 	bool
+ 	select PINCTRL_MVEBU
  
- int mvebu_pinctrl_simple_regmap_probe(struct platform_device *pdev,
--				      struct device *syscon_dev)
-+				      struct device *syscon_dev, u32 offset)
- {
- 	struct mvebu_pinctrl_soc_info *soc = dev_get_platdata(&pdev->dev);
- 	struct mvebu_mpp_ctrl_data *mpp_data;
- 	struct regmap *regmap;
--	u32 offset;
- 	int i;
- 
- 	regmap = syscon_node_to_regmap(syscon_dev->of_node);
- 	if (IS_ERR(regmap))
- 		return PTR_ERR(regmap);
- 
--	if (of_property_read_u32(pdev->dev.of_node, "offset", &offset))
--		return -EINVAL;
--
- 	mpp_data = devm_kcalloc(&pdev->dev, soc->ncontrols, sizeof(*mpp_data),
- 				GFP_KERNEL);
- 	if (!mpp_data)
-diff --git a/drivers/pinctrl/mvebu/pinctrl-mvebu.h b/drivers/pinctrl/mvebu/pinctrl-mvebu.h
-index c90704e74884..75bba436bf59 100644
---- a/drivers/pinctrl/mvebu/pinctrl-mvebu.h
-+++ b/drivers/pinctrl/mvebu/pinctrl-mvebu.h
-@@ -210,6 +210,6 @@ int mvebu_regmap_mpp_ctrl_set(struct mvebu_mpp_ctrl_data *data, unsigned pid,
- int mvebu_pinctrl_probe(struct platform_device *pdev);
- int mvebu_pinctrl_simple_mmio_probe(struct platform_device *pdev);
- int mvebu_pinctrl_simple_regmap_probe(struct platform_device *pdev,
--				      struct device *syscon_dev);
-+				      struct device *syscon_dev, u32 offset);
- 
- #endif
++config PINCTRL_ARMADA_AP806
++	bool
++	select PINCTRL_MVEBU
++
+ config PINCTRL_ARMADA_XP
+ 	bool
+ 	select PINCTRL_MVEBU
+diff --git a/drivers/pinctrl/mvebu/Makefile b/drivers/pinctrl/mvebu/Makefile
+index 60c245a60f39..455db274b53d 100644
+--- a/drivers/pinctrl/mvebu/Makefile
++++ b/drivers/pinctrl/mvebu/Makefile
+@@ -5,6 +5,7 @@ obj-$(CONFIG_PINCTRL_ARMADA_370) += pinctrl-armada-370.o
+ obj-$(CONFIG_PINCTRL_ARMADA_375) += pinctrl-armada-375.o
+ obj-$(CONFIG_PINCTRL_ARMADA_38X) += pinctrl-armada-38x.o
+ obj-$(CONFIG_PINCTRL_ARMADA_39X) += pinctrl-armada-39x.o
++obj-$(CONFIG_PINCTRL_ARMADA_AP806) += pinctrl-armada-ap806.o
+ obj-$(CONFIG_PINCTRL_ARMADA_XP)  += pinctrl-armada-xp.o
+ obj-$(CONFIG_PINCTRL_ARMADA_37XX)  += pinctrl-armada-37xx.o
+ obj-$(CONFIG_PINCTRL_ORION)  += pinctrl-orion.o
+diff --git a/drivers/pinctrl/mvebu/pinctrl-armada-ap806.c b/drivers/pinctrl/mvebu/pinctrl-armada-ap806.c
+new file mode 100644
+index 000000000000..269b1c1f53b1
+--- /dev/null
++++ b/drivers/pinctrl/mvebu/pinctrl-armada-ap806.c
+@@ -0,0 +1,145 @@
++/*
++ * Marvell Armada ap806 pinctrl driver based on mvebu pinctrl core
++ *
++ * Copyright (C) 2017 Marvell
++ *
++ * Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
++ * Hanna Hawa <hannah@marvell.com>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ */
++
++#include <linux/err.h>
++#include <linux/init.h>
++#include <linux/io.h>
++#include <linux/module.h>
++#include <linux/platform_device.h>
++#include <linux/of.h>
++#include <linux/of_device.h>
++#include <linux/pinctrl/pinctrl.h>
++
++#include "pinctrl-mvebu.h"
++
++static struct mvebu_mpp_mode armada_ap806_mpp_modes[] = {
++	MPP_MODE(0,
++		 MPP_FUNCTION(0, "gpio",    NULL),
++		 MPP_FUNCTION(1, "sdio",    "clk"),
++		 MPP_FUNCTION(3, "spi0",    "clk")),
++	MPP_MODE(1,
++		 MPP_FUNCTION(0, "gpio",    NULL),
++		 MPP_FUNCTION(1, "sdio",    "cmd"),
++		 MPP_FUNCTION(3, "spi0",    "miso")),
++	MPP_MODE(2,
++		 MPP_FUNCTION(0, "gpio",    NULL),
++		 MPP_FUNCTION(1, "sdio",    "d0"),
++		 MPP_FUNCTION(3, "spi0",    "mosi")),
++	MPP_MODE(3,
++		 MPP_FUNCTION(0, "gpio",    NULL),
++		 MPP_FUNCTION(1, "sdio",    "d1"),
++		 MPP_FUNCTION(3, "spi0",    "cs0n")),
++	MPP_MODE(4,
++		 MPP_FUNCTION(0, "gpio",    NULL),
++		 MPP_FUNCTION(1, "sdio",    "d2"),
++		 MPP_FUNCTION(3, "i2c0",    "sda")),
++	MPP_MODE(5,
++		 MPP_FUNCTION(0, "gpio",    NULL),
++		 MPP_FUNCTION(1, "sdio",    "d3"),
++		 MPP_FUNCTION(3, "i2c0",    "sdk")),
++	MPP_MODE(6,
++		 MPP_FUNCTION(0, "gpio",    NULL),
++		 MPP_FUNCTION(1, "sdio",    "ds")),
++	MPP_MODE(7,
++		 MPP_FUNCTION(0, "gpio",    NULL),
++		 MPP_FUNCTION(1, "sdio",    "d4"),
++		 MPP_FUNCTION(3, "uart1",   "rxd")),
++	MPP_MODE(8,
++		 MPP_FUNCTION(0, "gpio",    NULL),
++		 MPP_FUNCTION(1, "sdio",    "d5"),
++		 MPP_FUNCTION(3, "uart1",   "txd")),
++	MPP_MODE(9,
++		 MPP_FUNCTION(0, "gpio",    NULL),
++		 MPP_FUNCTION(1, "sdio",    "d6"),
++		 MPP_FUNCTION(3, "spi0",    "cs1n")),
++	MPP_MODE(10,
++		 MPP_FUNCTION(0, "gpio",    NULL),
++		 MPP_FUNCTION(1, "sdio",    "d7")),
++	MPP_MODE(11,
++		 MPP_FUNCTION(0, "gpio",    NULL),
++		 MPP_FUNCTION(3, "uart0",   "txd")),
++	MPP_MODE(12,
++		 MPP_FUNCTION(0, "gpio",    NULL),
++		 MPP_FUNCTION(1, "sdio",    "pw_off"),
++		 MPP_FUNCTION(2, "sdio",    "hw_rst")),
++	MPP_MODE(13,
++		 MPP_FUNCTION(0, "gpio",    NULL)),
++	MPP_MODE(14,
++		 MPP_FUNCTION(0, "gpio",    NULL)),
++	MPP_MODE(15,
++		 MPP_FUNCTION(0, "gpio",    NULL)),
++	MPP_MODE(16,
++		 MPP_FUNCTION(0, "gpio",    NULL)),
++	MPP_MODE(17,
++		 MPP_FUNCTION(0, "gpio",    NULL)),
++	MPP_MODE(18,
++		 MPP_FUNCTION(0, "gpio",    NULL)),
++	MPP_MODE(19,
++		 MPP_FUNCTION(0, "gpio",    NULL),
++		 MPP_FUNCTION(3, "uart0",   "rxd"),
++		 MPP_FUNCTION(4, "sdio",    "pw_off")),
++};
++
++static struct mvebu_pinctrl_soc_info armada_ap806_pinctrl_info;
++
++static const struct of_device_id armada_ap806_pinctrl_of_match[] = {
++	{
++		.compatible = "marvell,ap806-pinctrl",
++	},
++	{ },
++};
++
++static const struct mvebu_mpp_ctrl armada_ap806_mpp_controls[] = {
++	MPP_FUNC_CTRL(0, 19, NULL, mvebu_regmap_mpp_ctrl),
++};
++
++static struct pinctrl_gpio_range armada_ap806_mpp_gpio_ranges[] = {
++	MPP_GPIO_RANGE(0,   0,  0, 20),
++};
++
++static int armada_ap806_pinctrl_probe(struct platform_device *pdev)
++{
++	struct mvebu_pinctrl_soc_info *soc = &armada_ap806_pinctrl_info;
++	const struct of_device_id *match =
++		of_match_device(armada_ap806_pinctrl_of_match, &pdev->dev);
++
++	if (!match || !pdev->dev.parent)
++		return -ENODEV;
++
++	soc->variant = 0; /* no variants for Armada AP806 */
++	soc->controls = armada_ap806_mpp_controls;
++	soc->ncontrols = ARRAY_SIZE(armada_ap806_mpp_controls);
++	soc->gpioranges = armada_ap806_mpp_gpio_ranges;
++	soc->ngpioranges = ARRAY_SIZE(armada_ap806_mpp_gpio_ranges);
++	soc->modes = armada_ap806_mpp_modes;
++	soc->nmodes = armada_ap806_mpp_controls[0].npins;
++
++	pdev->dev.platform_data = soc;
++
++	return mvebu_pinctrl_simple_regmap_probe(pdev, pdev->dev.parent, 0);
++}
++
++static struct platform_driver armada_ap806_pinctrl_driver = {
++	.driver = {
++		.name = "armada-ap806-pinctrl",
++		.of_match_table = of_match_ptr(armada_ap806_pinctrl_of_match),
++	},
++	.probe = armada_ap806_pinctrl_probe,
++};
++
++module_platform_driver(armada_ap806_pinctrl_driver);
++
++MODULE_AUTHOR("Thomas Petazzoni <thomas.petazzoni@free-electrons.com>");
++MODULE_DESCRIPTION("Marvell Armada ap806 pinctrl driver");
++MODULE_LICENSE("GPL v2");
 -- 
 git-series 0.9.1
