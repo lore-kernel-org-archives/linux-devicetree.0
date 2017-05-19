@@ -1,47 +1,109 @@
-From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 5/6] gpio: mvebu: Add support for the Armada 7K/8K SoCs
-Date: Fri, 19 May 2017 19:05:52 +0200
-Message-ID: <20170519190552.744183b0@free-electrons.com>
-References: <cover.e10718b9c0f9fdd07327ae14e213be8da5b1f7ef.1495210061.git-series.gregory.clement@free-electrons.com>
-        <54efbdfb0a9800b2c72c6fa1d945c87182b242b4.1495210061.git-series.gregory.clement@free-electrons.com>
-        <20170519162410.GT22219@n2100.armlinux.org.uk>
-        <20170519162736.GU22219@n2100.armlinux.org.uk>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v4 2/3] ASoC: stm32: Add I2S driver
+Date: Fri, 19 May 2017 18:33:59 +0100
+Message-ID: <20170519173359.277lyg6fzwksqnin@sirena.org.uk>
+References: <1495120793-11687-1-git-send-email-olivier.moysan@st.com>
+ <1495120793-11687-3-git-send-email-olivier.moysan@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170519162736.GU22219-l+eeeJia6m9URfEZ8mYm6t73F7V6hmMc@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
-Cc: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Omri Itach <omrii-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Neta Zur Hershkovits <neta-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Kostya Porotchkin <kostap-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Shadi Ammouri <shadi-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Marcin Wojtas <mw-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: multipart/mixed; boundary="===============2790957871012226198=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <1495120793-11687-3-git-send-email-olivier.moysan@st.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: olivier moysan <olivier.moysan@st.com>
+Cc: mark.rutland@arm.com, robh@kernel.org, alsa-devel@alsa-project.org, alexandre.torgue@st.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, arnaud.pouliquen@st.com, tiwai@suse.com, lgirdwood@gmail.com, mcoquelin.stm32@gmail.com, benjamin.gaignard@st.com, linux-arm-kernel@lists.infradead.org, kernel@stlinux.com
 List-Id: devicetree@vger.kernel.org
 
-Hello,
 
-On Fri, 19 May 2017 17:27:36 +0100, Russell King - ARM Linux wrote:
+--===============2790957871012226198==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="6tmauatph4ecxfay"
+Content-Disposition: inline
 
-> Hmm, in fact, mvebu->offset always appears to be zero in this driver,
-> so I think the changes that add this member are entirely rendundant to
-> the function of this patch.
 
->From PATCH 6/6:
+--6tmauatph4ecxfay
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-+					offset = <0x1040>;
+On Thu, May 18, 2017 at 05:19:52PM +0200, olivier moysan wrote:
 
-+					offset = <0x100>;
+This looks good so I'm going to apply it, a few things below though -
+can you please send a followup patch for the issue with the Kconfig
+symbol?
 
-+					offset = <0x140>;
+> --- a/sound/soc/stm/Kconfig
+> +++ b/sound/soc/stm/Kconfig
+> @@ -5,4 +5,4 @@ menuconfig SND_SOC_STM32
+>  	select SND_SOC_GENERIC_DMAENGINE_PCM
+>  	select REGMAP_MMIO
+>  	help
+> -	  Say Y if you want to enable ASoC-support for STM32
+> +	  Say Y if you want to enable ASoC support for STM32
 
-So, no mvchip->offset is not always 0.
+This appears to be an unrelated typo fix.
 
-Best regards,
+> diff --git a/sound/soc/stm/Makefile b/sound/soc/stm/Makefile
+> index e466a47..8251931 100644
+> --- a/sound/soc/stm/Makefile
+> +++ b/sound/soc/stm/Makefile
+> @@ -4,3 +4,7 @@ obj-$(CONFIG_SND_SOC_STM32) +=3D snd-soc-stm32-sai-sub.o
+> =20
+>  snd-soc-stm32-sai-objs :=3D stm32_sai.o
+>  obj-$(CONFIG_SND_SOC_STM32) +=3D snd-soc-stm32-sai.o
+> +
+> +# I2S
+> +snd-soc-stm32-i2s-objs :=3D stm32_i2s.o
+> +obj-$(CONFIG_SND_SOC_STM32) +=3D snd-soc-stm32-i2s.o
 
-Thomas
--- 
-Thomas Petazzoni, CTO, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Perhaps make this a separate option?  It probably makes sense to rename
+the option for the SAI at the same time.
+
+> +
+> +	ret =3D clk_prepare_enable(i2s->pclk);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "Enable pclk failed: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	ret =3D clk_prepare_enable(i2s->i2sclk);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "Enable i2sclk failed: %d\n", ret);
+> +		goto err_pclk_disable;
+> +	}
+
+It'd be nice to have runtime PM to disable these when the device is idle
+but that's not essential.
+
+--6tmauatph4ecxfay
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlkfLIcACgkQJNaLcl1U
+h9CHnAf+IXsGxqydmvrZlOzBJl5ojod739fGNNDtpjaXuqzW4J/bvG696IE/7xvf
+H4UnPIq665ZlwkriuQg3pMYfnR8UQDQJiqh8p7no88+pv0m/L7zQtcFgbG/Bnbal
+V4CwY5Rv0VxQETvKqL3Zb55u2WHVxkhE/MiJP5Ux/9gLFaeeEQeLnefB7bdQEaxT
+V0dIJ5Q2K4emW94Fsb4yTGGQfsTZAu910yfy/pH5ORSID3ereY1Mvm2h/r/4CDA6
+UAEC8oxEp/+BUzO73yQbK3qKoxNn8pXGN7XXCEnb5sKXWjiZX/wr8rzTq/X/5f3I
+3SkGHc7emwvwWk/S17hoT4DJZz9I7A==
+=JcQo
+-----END PGP SIGNATURE-----
+
+--6tmauatph4ecxfay--
+
+--===============2790957871012226198==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============2790957871012226198==--
