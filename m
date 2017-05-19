@@ -1,60 +1,124 @@
-From: Ulrich Hecht <ulrich.hecht+renesas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v3 0/4] r8a7793 Gose video input support
-Date: Fri, 19 May 2017 15:07:00 +0200
-Message-ID: <1495199224-16337-1-git-send-email-ulrich.hecht+renesas@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org
-Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org, niklas.soderlund-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ulrich Hecht <ulrich.hecht+renesas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
+Subject: [PATCH v3 1/4] ARM: dts: gose: add HDMI input
+Date: Fri, 19 May 2017 15:07:01 +0200
+Message-ID: <1495199224-16337-2-git-send-email-ulrich.hecht+renesas@gmail.com>
+References: <1495199224-16337-1-git-send-email-ulrich.hecht+renesas@gmail.com>
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <1495199224-16337-1-git-send-email-ulrich.hecht+renesas@gmail.com>
+Sender: linux-media-owner@vger.kernel.org
+To: linux-renesas-soc@vger.kernel.org, laurent.pinchart@ideasonboard.com
+Cc: linux-media@vger.kernel.org, geert@linux-m68k.org, magnus.damm@gmail.com, hans.verkuil@cisco.com, niklas.soderlund@ragnatech.se, sergei.shtylyov@cogentembedded.com, horms@verge.net.au, devicetree@vger.kernel.org, Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi!
+Identical to the setup on Koelsch.
 
-This is a by-the-datasheet implementation of analog and digital video input
-on the Gose board.
+Signed-off-by: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+---
+ arch/arm/boot/dts/r8a7793-gose.dts | 68 ++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 66 insertions(+), 2 deletions(-)
 
-This revision adds new bindings that distinguish between ADV7180 variants
-with three and six input ports. There are numerous variants of this chip,
-but since all that have "CP" in their names have three inputs, and all that
-have "ST" have six, I have limited myself to two new compatible strings,
-"adv7180cp" and "adv7180st".
-
-The digital input patch has received minor tweaks of the port names for
-consistency, and the Gose analog input patch has been modified to use the
-new bindings, and a composite video connector has been added.
-
-CU
-Uli
-
-
-Changes since v2:
-- hdmi: port hdmi_con renamed to hdmi_con_out
-- adv7180: added new compatibility strings and bindings
-- composite: added connector, use new bindings
-
-Changes since v1:
-- r8a7793.dtsi: added VIN2
-- modeled HDMI decoder input/output and connector
-- added "renesas,rcar-gen2-vin" compat strings
-- removed unnecessary "remote" node and aliases
-- set ADV7612 interrupt to GP4_2
-
-
-Ulrich Hecht (4):
-  ARM: dts: gose: add HDMI input
-  media: adv7180: add adv7180cp, adv7180st compatible strings
-  media: adv7180: Add adv7180cp, adv7180st bindings
-  ARM: dts: gose: add composite video input
-
- .../devicetree/bindings/media/i2c/adv7180.txt      |  15 +++
- arch/arm/boot/dts/r8a7793-gose.dts                 | 127 ++++++++++++++++++++-
- drivers/media/i2c/adv7180.c                        |   2 +
- 3 files changed, 142 insertions(+), 2 deletions(-)
-
+diff --git a/arch/arm/boot/dts/r8a7793-gose.dts b/arch/arm/boot/dts/r8a7793-gose.dts
+index 95e51b7..30f0835 100644
+--- a/arch/arm/boot/dts/r8a7793-gose.dts
++++ b/arch/arm/boot/dts/r8a7793-gose.dts
+@@ -253,12 +253,23 @@
+ 		};
+ 	};
+ 
++	hdmi-in {
++		compatible = "hdmi-connector";
++		type = "a";
++
++		port {
++			hdmi_con_in: endpoint {
++				remote-endpoint = <&adv7612_in>;
++			};
++		};
++	};
++
+ 	hdmi-out {
+ 		compatible = "hdmi-connector";
+ 		type = "a";
+ 
+ 		port {
+-			hdmi_con: endpoint {
++			hdmi_con_out: endpoint {
+ 				remote-endpoint = <&adv7511_out>;
+ 			};
+ 		};
+@@ -395,6 +406,11 @@
+ 		groups = "audio_clk_a";
+ 		function = "audio_clk";
+ 	};
++
++	vin0_pins: vin0 {
++		groups = "vin0_data24", "vin0_sync", "vin0_clkenb", "vin0_clk";
++		function = "vin0";
++	};
+ };
+ 
+ &ether {
+@@ -552,7 +568,34 @@
+ 			port@1 {
+ 				reg = <1>;
+ 				adv7511_out: endpoint {
+-					remote-endpoint = <&hdmi_con>;
++					remote-endpoint = <&hdmi_con_out>;
++				};
++			};
++		};
++	};
++
++	hdmi-in@4c {
++		compatible = "adi,adv7612";
++		reg = <0x4c>;
++		interrupt-parent = <&gpio4>;
++		interrupts = <2 IRQ_TYPE_LEVEL_LOW>;
++		default-input = <0>;
++
++		port {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			port@0 {
++				reg = <0>;
++				adv7612_in: endpoint {
++					remote-endpoint = <&hdmi_con_in>;
++				};
++			};
++
++			port@2 {
++				reg = <2>;
++				adv7612_out: endpoint {
++					remote-endpoint = <&vin0ep2>;
+ 				};
+ 			};
+ 		};
+@@ -606,3 +649,24 @@
+ &ssi1 {
+ 	shared-pin;
+ };
++
++/* HDMI video input */
++&vin0 {
++	status = "okay";
++	pinctrl-0 = <&vin0_pins>;
++	pinctrl-names = "default";
++
++	port {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		vin0ep2: endpoint {
++			remote-endpoint = <&adv7612_out>;
++			bus-width = <24>;
++			hsync-active = <0>;
++			vsync-active = <0>;
++			pclk-sample = <1>;
++			data-active = <1>;
++		};
++	};
++};
 -- 
 2.7.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
