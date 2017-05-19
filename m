@@ -1,15 +1,15 @@
 From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH v3 2/3] thermal: broadcom: ns-thermal: default on iProc
- SoCs
-Date: Fri, 19 May 2017 11:33:57 -0700
-Message-ID: <95dacb24-8c10-8d3b-9764-a3c208031f6d@gmail.com>
-References: <1493410291-16679-1-git-send-email-jon.mason@broadcom.com>
- <1493410291-16679-3-git-send-email-jon.mason@broadcom.com>
+Subject: Re: [PATCH v3 00/11] Broadcom Stingray SOC Initial Support
+Date: Fri, 19 May 2017 11:38:35 -0700
+Message-ID: <f76fb782-66f2-e0e1-b526-80befe184c26@gmail.com>
+References: <1494934256-1350-1-git-send-email-anup.patel@broadcom.com>
+ <CAOesGMiwspTuVWp8nPcWK2MhuWh8x9XSkZWJE2x=FxTCtU47Sw@mail.gmail.com>
+ <CAALAos8sRb+cLeHLP4yuD5oXRP1RWn=PGCkPGEBq+6X+DdkuQg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1493410291-16679-3-git-send-email-jon.mason@broadcom.com>
+In-Reply-To: <CAALAos8sRb+cLeHLP4yuD5oXRP1RWn=PGCkPGEBq+6X+DdkuQg@mail.gmail.com>
 Content-Language: en-US
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
@@ -20,19 +20,123 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jon Mason <jon.mason@broadcom.com>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: devicetree@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org
+To: Anup Patel <anup.patel@broadcom.com>, Olof Johansson <olof@lixom.net>, Michael Turquette <mturquette@baylibre.com>, sboyd@codeaurora.org
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, Sandeep Tripathy <sandeep.tripathy@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Broadcom Kernel Feedback List <bcm-kernel-feedback-list@broadcom.com>, Pramod Kumar <pramod.kumar@broadcom.com>, Rob Herring <robh+dt@kernel.org>, Oza Pawandeep <oza.oza@broadcom.com>, Ray Jui <rjui@broadcom.com>, Srinath Mannam <srinath.mannam@broadcom.com>, linux-clk <linux-clk@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 04/28/2017 01:11 PM, Jon Mason wrote:
-> Tweak the Kconfig description to mention support for NSP and make the
-> default on for iProc based platforms.
+On 05/16/2017 09:24 PM, Anup Patel wrote:
+> On Wed, May 17, 2017 at 12:23 AM, Olof Johansson <olof@lixom.net> wrote:
+>> Hi,
+>>
+>>
+>>
+>> On Tue, May 16, 2017 at 4:30 AM, Anup Patel <anup.patel@broadcom.com> wrote:
+>>> This patchset adds initial support of Broadcom Stingray SOC
+>>> by reusing existing Broadcom iProc device drivers.
+>>>
+>>> Most of the patches in this patchset are DT patches except
+>>> the Stingray clock tree support which just one patch.
+>>>
+>>> This patchset is based on Linux-4.12-rc1 and it is also available
+>>> at stingray-v3 branch of https://github.com/Broadcom/arm64-linux.git
+>>>
+>>> Changes since v2:
+>>>  - Remove default bootargs from chosen DT node
+>>>  - Remove "linux" prefix from stdout DT attribute of chosen DT node
+>>>  - Remove use of GIC_CPU_MASK_xxx() for PPIs
+>>>
+>>> Changes since v1:
+>>>  - Rebased patches for Linux-4.12-rc1
+>>>  - Removed unwanted /memreserve/ from bcm958742-base.dtsi
+>>>  - Use ranges DT property to clear view of memory-layout
+>>>  - Make bcm-sr.h part of clock DT bindings patch
+>>>
+>>> Anup Patel (3):
+>>>   dt-bindings: bcm: Add Broadcom Stingray bindings document
+>>>   arm64: dts: Initial DTS files for Broadcom Stingray SOC
+>>>   arm64: dts: Add PL022, PL330 and SP805 DT nodes for Stingray
+>>>
+>>> Oza Pawandeep (1):
+>>>   arm64: dts: Add I2C DT nodes for Stingray SoC
+>>>
+>>> Pramod Kumar (3):
+>>>   arm64: dts: Add NAND DT nodes for Stingray SOC
+>>>   arm64: dts: Add pinctrl DT nodes for Stingray SOC
+>>>   arm64: dts: Add GPIO DT nodes for Stingray SOC
+>>>
+>>> Sandeep Tripathy (3):
+>>>   dt-bindings: clk: Extend binding doc for Stingray SOC
+>>>   clk: bcm: Add clocks for Stingray SOC
+>>>   arm64: dts: Add clock DT nodes for Stingray SOC
+>>>
+>>> Srinath Mannam (1):
+>>>   arm64: dts: Add PWM and SDHCI DT nodes for Stingray SOC
+>>>
+>>>  .../devicetree/bindings/arm/bcm/brcm,stingray.txt  |  12 +
+>>>  .../bindings/clock/brcm,iproc-clocks.txt           |  76 ++++
+>>>  arch/arm64/boot/dts/broadcom/Makefile              |   1 +
+>>>  arch/arm64/boot/dts/broadcom/stingray/Makefile     |   6 +
+>>>  .../boot/dts/broadcom/stingray/bcm958742-base.dtsi | 131 ++++++
+>>>  .../boot/dts/broadcom/stingray/bcm958742k.dts      |  78 ++++
+>>>  .../boot/dts/broadcom/stingray/bcm958742t.dts      |  40 ++
+>>>  .../boot/dts/broadcom/stingray/stingray-clock.dtsi | 170 ++++++++
+>>>  .../dts/broadcom/stingray/stingray-pinctrl.dtsi    | 345 ++++++++++++++++
+>>>  .../arm64/boot/dts/broadcom/stingray/stingray.dtsi | 460 +++++++++++++++++++++
+>>>  drivers/clk/bcm/Kconfig                            |   8 +
+>>>  drivers/clk/bcm/Makefile                           |   1 +
+>>>  drivers/clk/bcm/clk-sr.c                           | 300 ++++++++++++++
+>>>  include/dt-bindings/clock/bcm-sr.h                 | 101 +++++
+>>>  .../dt-bindings/pinctrl/brcm,pinctrl-stingray.h    |  68 +++
+>>>  15 files changed, 1797 insertions(+)
+>>>  create mode 100644 Documentation/devicetree/bindings/arm/bcm/brcm,stingray.txt
+>>>  create mode 100644 arch/arm64/boot/dts/broadcom/stingray/Makefile
+>>>  create mode 100644 arch/arm64/boot/dts/broadcom/stingray/bcm958742-base.dtsi
+>>>  create mode 100644 arch/arm64/boot/dts/broadcom/stingray/bcm958742k.dts
+>>>  create mode 100644 arch/arm64/boot/dts/broadcom/stingray/bcm958742t.dts
+>>>  create mode 100644 arch/arm64/boot/dts/broadcom/stingray/stingray-clock.dtsi
+>>>  create mode 100644 arch/arm64/boot/dts/broadcom/stingray/stingray-pinctrl.dtsi
+>>>  create mode 100644 arch/arm64/boot/dts/broadcom/stingray/stingray.dtsi
+>>>  create mode 100644 drivers/clk/bcm/clk-sr.c
+>>>  create mode 100644 include/dt-bindings/clock/bcm-sr.h
+>>>  create mode 100644 include/dt-bindings/pinctrl/brcm,pinctrl-stingray.h
+>>
+>> Grouping as one patchset for review is fine, but when you submit this
+>> for merge you need to split it up:
+>>
+>> - Documentation/devicetree can go with the driver pieces or with the
+>> DT changes, your choice
+>> - DTS/DTSI changes should go through the Broadcom maintainers to arm-soc
+>> - clk changes should go to clk maintainers.
 > 
-> Signed-off-by: Jon Mason <jon.mason@broadcom.com>
+> Only PATCH3 needs to go through clk maintainers rest all patches
+> are DT bindings document and DTS changes which can go through
+> Broadcom tree. Right ??
 
-Zhang, Eduardo, please apply, the Kconfig and DTS changes have been
-queued for 4.13 in my ARM-SoC pull request for Broadcom SoCs.
+Patch 2 and 3 should go through the clock maintainers, and I can take
+the remaining patches through the Broadcom ARM/ARM64 SoC pull requests,
+no problem.
 
-Thanks!
---
+Unless there are specific changes requested which warrant a v4, I can
+coordinate with Stephen and Mike to make sure that they take the
+appropriate patches.
+
+> 
+>>
+>> Also, there's usually no need to split up a DT introduction and having
+>> separate pieces for NAND/pinctrl/GPIO/etc: They can all go in the main
+>> DT submission patch.
+> 
+> Yes, we have already squashed DTS patches from same author into
+> one DTS patch except NAND, PINCTRL and GPIO patches.
+> 
+> The NAND, PINCTRL, and GPIO patches were not squashed into
+> one patch for easy review but since you suggest I will squash these
+> three DTS patches into one DTS patch.
+> 
+> Regards,
+> Anup
+> 
+
+
+-- 
 Florian
