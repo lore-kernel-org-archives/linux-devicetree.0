@@ -1,46 +1,94 @@
-From: Suzuki K Poulose <Suzuki.Poulose-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v10 10/10] arm64: dts: juno: Add Coresight CPU debug nodes
-Date: Fri, 19 May 2017 18:53:23 +0100
-Message-ID: <87991f3d-dcb6-7d57-781e-8b81ff24219d@arm.com>
-References: <1495167957-14923-1-git-send-email-leo.yan@linaro.org>
- <1495167957-14923-11-git-send-email-leo.yan@linaro.org>
- <0e1cf263-f0a0-2e78-c636-4b5d8205b7f7@arm.com>
+From: Dave Gerlach <d-gerlach@ti.com>
+Subject: [PATCH v2 0/2] memory: Introduce ti-emif-sram driver
+Date: Fri, 19 May 2017 12:57:06 -0500
+Message-ID: <20170519175708.6070-1-d-gerlach@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <0e1cf263-f0a0-2e78-c636-4b5d8205b7f7-5wv7dgnIgG8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Liviu Dudau <liviu.dudau-5wv7dgnIgG8@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Brown <david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mike Leach <mike.leach-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mathieu Poirier <mathieu.porier-QSEj5FYQhm5QFI55V6+gNQ@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh+dt@kernel.org>, Tony Lindgren <tony@atomide.com>, Santosh Shilimkar <ssantosh@kernel.org>, Russell King <linux@armlinux.org.uk>
+Cc: devicetree@vger.kernel.org, Dave Gerlach <d-gerlach@ti.com>, Keerthy J <j-keerthy@ti.com>, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 19/05/17 18:44, Sudeep Holla wrote:
-> Hi Suzuki, Leo,
->
-> On 19/05/17 05:25, Leo Yan wrote:
->> From: Suzuki K Poulose <suzuki.poulose-5wv7dgnIgG8@public.gmane.org>
->>
->> Add Coresight CPU debug nodes for Juno r0, r1 & r2. The CPU
->> debug areas are mapped at the same address for all revisions,
->> like the ETM, even though the CPUs have changed from r1 to r2.
->>
->> Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
->> Cc: Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->> Cc: Mathieu Poirier <mathieu.porier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->> Cc: Liviu Dudau <liviu.dudau-5wv7dgnIgG8@public.gmane.org>
->> Signed-off-by: Suzuki K Poulose <suzuki.poulose-5wv7dgnIgG8@public.gmane.org>
->
-> ARM-SoC team expect DTS to be routed via platform tree.
-> So I have queued this for v4.13[1]
+Hi,
+This is v2 of the series introduces a ti-emif-sram driver to be used on am335x
+and am437x.  Minor updates were required in the usage of sram_exec_copy due to
+a change that was discussed in v1 here [1], that has since been queued for
+merge. This series depends on that patch. Note that we are not directly calling
+anything copied by sram_exec_copy which is why we are only using return value
+for error checking.
 
-Sudeep
+Because there was no discussion on this series last time, I have included the
+same cover letter as v1 below:
 
-Thanks for picking that up.
+These SoCs have low power modes that require that the PER power domain be shut
+off. Because the EMIF (DDR Controller) resides within this power domain, it
+will lose context during a suspend operation, so we must save it so we can
+restore once we resume. However, we cannot execute this code from external
+memory, as it is not available at this point, so the code must be executed late
+in the suspend path and early in the resume path from SRAM.
 
-Suzuki
+Patch 2 includes several functions written in ARM ASM that can be relocated to
+on-chip SRAM.  It also exports a table containing the absolute addresses of the
+available PM functions so that other PM code also running from SRAM can branch
+to them. It must also calculate virtual addresses for the suspend path, but
+physical addresses for the resume path as the MMU is not active when the code
+runs.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+One thing that may not be immediately clear in the driver is that we can only
+get read-only exectuable memory regions from the mmio-sram driver so we also
+provide a second region to the driver that is read/write to be used for data
+during execution. This is the reason two sram regions are mapped and so many
+offsets must be provided to the code section.
+
+In order for structs to co-exist in C and ASM, I went ahead and extended the
+generic asm-offsets.c for ARM and added a single function call for this driver
+that adds all the constants needed for the ASM code to get offsets into the
+struct members. I managed to do it without many direct additions to the
+asm-offsets file so I do not think it is too intrusive. This was the only way I
+saw to do peaceful C and ASM data structure co-existence. Due to the
+dependencies of all of the code on this I did not not split ARM vs drivers/
+changes into separate patches because I think it would be more confusing that
+way but if needed I think it can be done.
+
+This code is required for low-power modes to work on AM335x and AM437x and a
+forthcoming PM series for those platforms will depend on this series. After
+both this and the PM series are reviewed I will send the necessary device tree
+changes for both, but in the meantime all remaining patches for am335x and
+am437x PM can be found here [3].
+
+Regards,
+Dave
+
+[1] http://www.spinics.net/lists/arm-kernel/msg572489.html
+[2] http://www.spinics.net/lists/kernel/msg2511127.html
+[3] https://github.com/dgerlach/linux-pm/tree/upstream/v4.12/amx3-suspend-dev
+
+Dave Gerlach (2):
+  Documentation: dt: Update ti,emif bindings
+  memory: ti-emif-sram: introduce relocatable suspend/resume handlers
+
+ .../bindings/memory-controllers/ti/emif.txt        |  18 +-
+ arch/arm/kernel/asm-offsets.c                      |   6 +
+ drivers/memory/Kconfig                             |  10 +
+ drivers/memory/Makefile                            |   4 +
+ drivers/memory/emif.h                              |  17 ++
+ drivers/memory/ti-emif-pm.c                        | 297 ++++++++++++++++++
+ drivers/memory/ti-emif-sram-pm.S                   | 334 +++++++++++++++++++++
+ include/linux/ti-emif-sram.h                       | 143 +++++++++
+ 8 files changed, 828 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/memory/ti-emif-pm.c
+ create mode 100644 drivers/memory/ti-emif-sram-pm.S
+ create mode 100644 include/linux/ti-emif-sram.h
+
+-- 
+2.13.0
