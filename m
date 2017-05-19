@@ -1,50 +1,46 @@
-From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] clk: Hi3660: change to register crgctrl clock
- with CLK_OF_DECLARE_DRIVER
-Date: Thu, 18 May 2017 18:51:37 -0700
-Message-ID: <20170519015137.GE20170@codeaurora.org>
-References: <1495072247-25217-1-git-send-email-leo.yan@linaro.org>
- <1495072247-25217-2-git-send-email-leo.yan@linaro.org>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH v3 01/21] clk: divider: Make divider_round_rate take the
+ parent clock
+Date: Thu, 18 May 2017 18:54:30 -0700
+Message-ID: <20170519015430.GF20170@codeaurora.org>
+References: <cover.463df61c38224ecbfb5bf1cf192deeb63718b693.1495006350.git-series.maxime.ripard@free-electrons.com>
+ <af976be0ecc2ea335cd9694a83fb29174d87e17d.1495006350.git-series.maxime.ripard@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 Content-Disposition: inline
-In-Reply-To: <1495072247-25217-2-git-send-email-leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Zhong Kaihua <zhongkaihua-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Chen Jun <chenjun14-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+In-Reply-To: <af976be0ecc2ea335cd9694a83fb29174d87e17d.1495006350.git-series.maxime.ripard@free-electrons.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, devicetree@vger.kernel.org, Mike Turquette <mturquette@baylibre.com>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Chen-Yu Tsai <wens@csie.org>, Daniel Vetter <daniel.vetter@intel.com>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 05/18, Leo Yan wrote:
-> diff --git a/drivers/clk/hisilicon/clk-hi3660.c b/drivers/clk/hisilicon/clk-hi3660.c
-> index fd5ce7f..4e5713b 100644
-> --- a/drivers/clk/hisilicon/clk-hi3660.c
-> +++ b/drivers/clk/hisilicon/clk-hi3660.c
-> @@ -547,10 +547,10 @@ static void hi3660_clk_crgctrl_init(struct device_node *np)
->  				  ARRAY_SIZE(hi3660_crgctrl_divider_clks),
->  				  clk_data);
->  }
-> +CLK_OF_DECLARE_DRIVER(hi3660_clk_crgctrl, "hisilicon,hi3660-crgctrl",
-> +		      hi3660_clk_crgctrl_init);
->  
->  static const struct of_device_id hi3660_clk_match_table[] = {
-> -	{ .compatible = "hisilicon,hi3660-crgctrl",
-> -	  .data = hi3660_clk_crgctrl_init },
-
-I'm slightly confused. CLK_OF_DECLARE_DRIVER is for when a
-platform driver _and_ CLK_OF_DELARE need to "probe" the same
-device node. But in this patch, the compatible string is being
-deleted from the driver's match table. Also, are all the
-registered in hi3660_clk_crgctrl_init() actually needed for the
-timer? If only a subset, then I would expect to split the code
-and have the CLK_OF_DECLARE_DRIVER() path register just the clks
-that matter for the timer, and then leave the rest of the clks to
-be registered by the probe of the platform driver.
-
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gMDUvMTcsIE1heGltZSBSaXBhcmQgd3JvdGU6Cj4gU28gZmFyLCBkaXZpZGVyX3JvdW5kX3Jh
+dGUgb25seSBjb25zaWRlcnMgdGhlIHBhcmVudCBjbG9jayByZXR1cm5lZCBieQo+IGNsa19od19n
+ZXRfcGFyZW50Lgo+IAo+IFRoaXMgd29ya3MgZmluZSBvbiBjbG9ja3MgdGhhdCBoYXZlIGEgc2lu
+Z2xlIHBhcmVudHMsIHRoaXMgZG9lc24ndCB3b3JrIG9uCj4gbXV4ZXMsIHNpbmNlIHdlIHdpbGwg
+b25seSBjb25zaWRlciB0aGUgZmlyc3QgcGFyZW50LCB3aGlsZSBvdGhlciBwYXJlbnRzCj4gbWF5
+IHRvdGFsbHkgYmUgYWJsZSB0byBwcm92aWRlIGEgYmV0dGVyIGNvbWJpbmF0aW9uLgo+IAo+IENs
+b2NrcyBpbiB0aGF0IGNhc2UgY2Fubm90IHVzZSBkaXZpZGVyX3JvdW5kX3JhdGUsIHNvIHdvdWxk
+IGhhdmUgdG8gY29tZSB1cAo+IHdpdGggYSB2ZXJ5IHNpbWlsYXIgbG9naWMgdG8gd29yayBhcm91
+bmQgaXQuIEluc3RlYWQgb2YgaGF2aW5nIHRvIGRvCj4gc29tZXRoaW5nIGxpa2UgdGhpcywgYW5k
+IGR1cGxpY2F0ZSB0aGF0IGxvZ2ljIGV2ZXJ5d2hlcmUsIGNyZWF0ZSBhCj4gZGl2aWRlcl9yb3Vu
+ZF9yYXRlIHBhcmVudCB0byBhbGxvdyBjYWxsZXIgdG8gZ2l2ZSBhbiBhZGRpdGlvbmFsIHBhcmFt
+ZXRlcgo+IGZvciB0aGUgcGFyZW50IGNsb2NrIHRvIGNvbnNpZGVyLgo+IAo+IFJldmlld2VkLWJ5
+OiBDaGVuLVl1IFRzYWkgPHdlbnNAY3NpZS5vcmc+Cj4gU2lnbmVkLW9mZi1ieTogTWF4aW1lIFJp
+cGFyZCA8bWF4aW1lLnJpcGFyZEBmcmVlLWVsZWN0cm9ucy5jb20+Cj4gLS0tCgpBY2tlZC1ieTog
+U3RlcGhlbiBCb3lkIDxzYm95ZEBjb2RlYXVyb3JhLm9yZz4KCi0tIApRdWFsY29tbSBJbm5vdmF0
+aW9uIENlbnRlciwgSW5jLiBpcyBhIG1lbWJlciBvZiBDb2RlIEF1cm9yYSBGb3J1bSwKYSBMaW51
+eCBGb3VuZGF0aW9uIENvbGxhYm9yYXRpdmUgUHJvamVjdApfX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZl
+bEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFp
+bG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
