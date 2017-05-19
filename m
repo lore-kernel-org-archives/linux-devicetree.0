@@ -1,7 +1,7 @@
 From: Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH 1/4] ata: Add DT bindings for Faraday Technology FTIDE010
-Date: Sat, 20 May 2017 01:05:06 +0200
-Message-ID: <20170519230509.16655-1-linus.walleij@linaro.org>
+Subject: [PATCH 1/4 v2] ata: Add DT bindings for Faraday Technology FTIDE010
+Date: Sat, 20 May 2017 01:05:57 +0200
+Message-ID: <20170519230600.16782-1-linus.walleij@linaro.org>
 Return-path: <linux-ide-owner@vger.kernel.org>
 Sender: linux-ide-owner@vger.kernel.org
 To: Tejun Heo <tj@kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, linux-ide@vger.kernel.org
