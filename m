@@ -1,62 +1,91 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [GIT PULL] DeviceTree fixes for 4.12
-Date: Thu, 18 May 2017 21:04:11 -0500
-Message-ID: <CAL_JsqJ_p91oBtRaZnJLAUrWXObdgwYaNob1+fgQbZiMDfbV8g@mail.gmail.com>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH 2/3] Documentation: add sprd clock bindings
+Date: Thu, 18 May 2017 19:12:02 -0700
+Message-ID: <20170519021202.GG20170@codeaurora.org>
+References: <20170515083502.4492-1-chunyan.zhang@spreadtrum.com>
+ <20170515083502.4492-3-chunyan.zhang@spreadtrum.com>
+ <CAK8P3a0M6M9fUTpdnW+Eso0+HKD-MF-fKPmvj+wN8GBdzu_u8A@mail.gmail.com>
+ <CAAfSe-u-+snc=b6QYgA4ysknxYDXS5UqbvWBqrnZ92sSBQqJRQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Torvalds <torvalds-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
-Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-clk-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAAfSe-u-+snc=b6QYgA4ysknxYDXS5UqbvWBqrnZ92sSBQqJRQ@mail.gmail.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Chunyan Zhang <zhang.lyra@gmail.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, Chunyan Zhang <chunyan.zhang@spreadtrum.com>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, xiaolong.zhang@spreadtrum.com, Orson Zhai =?utf-8?B?KOe/n+S6rCk=?= <orson.zhai@spreadtrum.com>, "geng.ren@spreadtrum.com" <geng.ren@spreadtrum.com>, linux-clk@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Linus,
+On 05/18, Chunyan Zhang wrote:
+> On 18 May 2017 at 03:43, Arnd Bergmann <arnd@arndb.de> wrote:
+> > On Mon, May 15, 2017 at 10:35 AM, Chunyan Zhang
+> > <chunyan.zhang@spreadtrum.com> wrote:
+> >> diff --git a/Documentation/devicetree/bindings/clock/sprd/sprd,adjustable-pll-clock.txt b/Documentation/devicetree/bindings/clock/sprd/sprd,adjustable-pll-clock.txt
+> >> new file mode 100644
+> >> index 0000000..476e315
+> >> --- /dev/null
+> >> +++ b/Documentation/devicetree/bindings/clock/sprd/sprd,adjustable-pll-clock.txt
+> >> @@ -0,0 +1,17 @@
+> >> +Spreadtrum adjustable pll clock driver
+> >> +
+> >> +Required properties:
+> >> +
+> >> +- compatible : must be one of:
+> >> +       "sprd,sc9836-adjustable-pll-clock"
+> >> +       "sprd,sc9860-adjustable-pll-clock"
+> >> +
+> >> +Example:
+> >> +       clk_mpll0: clk@40400024 {
+> >> +               compatible = "sprd,sc9860-adjustable-pll-clock";
+> >> +               #clock-cells = <0>;
+> >> +               reg = <0 0x40400024 0 0x4>,
+> >> +                     <0 0x40400028 0 0x4>;
+> >> +               clocks = <&clk_mpll_gates 2>;
+> >> +               clock-output-names = "clk_mpll0";
+> >> +       };
+> >
+> > The properties listed in the example must all be either
+> > defined as "required" or "optional" properties and have a
+> > description.
+> 
+> Since these common properties are documented in the common clock binding [1]
+> 
+> [1] Documentation/devicetree/bindings/clock/clock-bindings.txt
+> 
+> I will add explanation in this file like I do in other bindings
+> introduced in this patch, and will address 'reg' which probably is not
+> similar to the common usage.
+> 
+> >
+> > The reg property here is a bit odd, as it lists two consecutive
+> > 4-byte areas, and both are suspiciously close to a round
+> > address (0x40400000), so I would guess that they are
+> > in fact part of a clock controller with several registers.
+> 
+> They are PLL clock configuration registers.
+> 
+> Different PLL has different configurations which listed in pll_cfg.h,
+> and probably has different number of registers for storing
+> configurations, and on some Spreadtrum's SoCs PLL clock configuration
+> registers aren't consecutive, but all PLLs on all Spreadtrum's SoCs
+> (at least so far) are using the same driver.
+> 
+> >
+> > If so, please define a node for the entire clock controller,
+> > the DT description should reflect the design of the hardware
+> > rather than the design of your device driver.
+> 
+> I also realized our implementation might not be easy to be understood,
+> but I haven't thought out a better solution considering the hardware
+> limitation I explained above.
 
-Please pull a few fixes for DT. Details below.
+This binding is going down the wrong path. Please look at how
+drivers such as sunxi-ng have done the binding in comparison to
+original sunxi design. We don't put this level of detail into DT,
+instead we put the details into the driver code and have clock
+controller nodes in DT. A quick glance shows that this binding is
+making a node per-clk, which is not going to be accepted.
 
-Rob
-
-
-The following changes since commit 17a70355ea576843a7ac851f1db26872a50b2850:
-
-  of: fix sparse warnings in fdt, irq, reserved mem, and resolver code
-(2017-05-04 14:01:13 -0500)
-
-are available in the git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git
-devicetree-fixes-for-4.12
-
-for you to fetch changes up to 49e67dd17649b60b4d54966e18ec9c80198227f0:
-
-  of: fdt: add missing allocation-failure check (2017-05-17 11:36:52 -0500)
-
-----------------------------------------------------------------
-DeviceTree fixes for 4.12-rc:
-
-- Fix missing allocation failure handling in fdt code
-
-- Fix dtc compile error on 32-bit hosts
-
-- Revert bad sparse changes causing GCC7 warnings
-
-----------------------------------------------------------------
-Johan Hovold (1):
-      of: fdt: add missing allocation-failure check
-
-Rob Herring (1):
-      Partially Revert "of: fix sparse warnings in fdt, irq, reserved
-mem, and resolver code"
-
-Shuah Khan (1):
-      dtc: check.c fix compile error
-
- drivers/of/fdt.c             | 3 +++
- drivers/of/of_reserved_mem.c | 2 +-
- include/linux/of_irq.h       | 2 +-
- scripts/dtc/checks.c         | 2 +-
- 4 files changed, 6 insertions(+), 3 deletions(-)
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
