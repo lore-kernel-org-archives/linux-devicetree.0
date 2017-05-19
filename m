@@ -1,37 +1,104 @@
-From: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 1/1] ARM: dts: meson: Extend L2 cache controller node for Meson8 and Meson8b
-Date: Fri, 19 May 2017 15:50:45 -0700
-Message-ID: <m2d1b44g1m.fsf@baylibre.com>
-References: <20170417214244.23698-1-martin.blumenstingl@googlemail.com>
-        <20170417214244.23698-2-martin.blumenstingl@googlemail.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170417214244.23698-2-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-        (Martin Blumenstingl's message of "Mon, 17 Apr 2017 23:42:44 +0200")
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Cc: linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: [PATCH 1/4] ata: Add DT bindings for Faraday Technology FTIDE010
+Date: Sat, 20 May 2017 01:05:06 +0200
+Message-ID: <20170519230509.16655-1-linus.walleij@linaro.org>
+Return-path: <linux-ide-owner@vger.kernel.org>
+Sender: linux-ide-owner@vger.kernel.org
+To: Tejun Heo <tj@kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, linux-ide@vger.kernel.org
+Cc: Janos Laube <janos.dev@gmail.com>, Paulius Zaleckas <paulius.zaleckas@gmail.com>, linux-arm-kernel@lists.infradead.org, Hans Ulli Kroll <ulli.kroll@googlemail.com>, Florian Fainelli <f.fainelli@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, devicetree@vger.kernel.org, John Feng-Hsin Chiang <john453@faraday-tech.com>, Greentime Hu <green.hu@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org> writes:
+This adds device tree bindings for the Faraday Technology
+FTIDE010 found in the Storlink/Storm/Cortina Systems Gemini SoC.
 
-> From: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
->
-> This patch extends the L2 cache controller node for the Amlogic Meson8
-> and Meson8b SoCs with some missing parameters. These are taken from the
-> Amlogic GPL kernel source.
->
-> Signed-off-by: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
-> [apply the change to Meson8 and Meson8b and updated description]
-> Signed-off-by: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+I am not 100% sure that this part is from Faraday Technology but
+a lot points in that direction:
 
-Applied to v4.13/dt64,
+- A later IDE interface called FTIDE020 exist and share some
+  properties.
 
-Thanks,
+- The SATA bridge has the same Built In Self Test (BIST) that the
+  Faraday FTSATA100 seems to have, and it has version number 0100
+  in the device ID register, so this is very likely a FTSATA100
+  bundled with the FTIDE010.
 
-Kevin
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Cc: devicetree@vger.kernel.org
+Cc: John Feng-Hsin Chiang <john453@faraday-tech.com>
+Cc: Greentime Hu <green.hu@gmail.com>
+Acked-by: Hans Ulli Kroll <ulli.kroll@googlemail.com>
+Acked-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+---
+ChangeLog v1->v2:
+- Cut the timings defintions from the device tree. Hard-code
+  it in the driver instead, keeping the nice layout and
+  configurability by making it easy to tweak the timings
+  in the code.
+- Fix up some confused references to 50 MHz in 66 MHz
+  properties.
+
+Greentime: I think this may be interesting to you since the
+FTIDE020 will need the same bindings so we can probably
+just reuse them and maybe make the parser a library if you
+want to upstream the FTIDE020.
+
+Faraday people: I do not have it from a source that this
+hardware is really FTIDE010 but I would be VERY surprised
+if it is not. U-Boot has an FTIDE020 IDE controller
+synthesized in the Andestech platform, and it has a similar
+yet different register layout, featuring similar timing
+set-ups:
+http://git.denx.de/?p=u-boot.git;a=blob;f=drivers/block/ftide020.h
+http://git.denx.de/?p=u-boot.git;a=blob;f=drivers/block/ftide020.c
+---
+ .../devicetree/bindings/ata/faraday,ftide010.txt   | 38 ++++++++++++++++++++++
+ 1 file changed, 38 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/ata/faraday,ftide010.txt
+
+diff --git a/Documentation/devicetree/bindings/ata/faraday,ftide010.txt b/Documentation/devicetree/bindings/ata/faraday,ftide010.txt
+new file mode 100644
+index 000000000000..a0c64a29104d
+--- /dev/null
++++ b/Documentation/devicetree/bindings/ata/faraday,ftide010.txt
+@@ -0,0 +1,38 @@
++* Faraday Technology FTIDE010 PATA controller
++
++This controller is the first Faraday IDE interface block, used in the
++StorLink SL2312 and SL3516, later known as the Cortina Systems Gemini
++platform. The controller can do PIO modes 0 through 4, Multi-word DMA
++(MWDM)modes 0 through 2 and Ultra DMA modes 0 through 6.
++
++On the Gemini platform, this PATA block is accompanied by a PATA to
++SATA bridge in order to support SATA. This is why a phandle to that
++controller is compulsory on that platform.
++
++The timing properties are unique per-SoC, not per-board.
++
++Required properties:
++- compatible: should be one of
++  "cortina,gemini-pata", "faraday,ftide010"
++  "faraday,ftide010"
++- interrupts: interrupt for the block
++- reg: registers and size for the block
++
++Optional properties:
++- clocks: a SoC clock running the peripheral.
++- clock-names: should be set to "PCLK" for the peripheral clock.
++
++Required properties for "cortina,gemini-pata" compatible:
++- sata: a phande to the Gemini PATA to SATA bridge, see
++  cortina,gemini-sata-bridge.txt for details.
++
++Example:
++
++ata@63000000 {
++	compatible = "cortina,gemini-pata", "faraday,ftide010";
++	reg = <0x63000000 0x100>;
++	interrupts = <4 IRQ_TYPE_EDGE_RISING>;
++	clocks = <&gcc GEMINI_CLK_GATE_IDE>;
++	clock-names = "PCLK";
++	sata = <&sata>;
++};
+-- 
+2.9.4
+
