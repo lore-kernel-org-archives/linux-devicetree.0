@@ -1,130 +1,78 @@
 From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH 2/2] pinctrl: qcom: ipq4019: add remaining pin definitions
-Date: Fri, 19 May 2017 22:08:24 -0700
-Message-ID: <20170520050824.GS12920@tuxbook>
-References: <d53b7a9b1bab818536680123136ac58481d959c8.1494415174.git.chunkeey@googlemail.com>
- <3dac044cd9a879cad145f9a04dcc3d225721aa3c.1494415174.git.chunkeey@googlemail.com>
- <20170517200729.GH12920@tuxbook>
- <1975629.nrP45RYYW5@debian64>
+Subject: Re: [PATCH v2 1/5] pinctrl: qcom: Add ipq8074 pinctrl driver
+Date: Fri, 19 May 2017 22:54:30 -0700
+Message-ID: <20170520055430.GU12920@tuxbook>
+References: <1493898841-20583-1-git-send-email-varada@codeaurora.org>
+ <1493898841-20583-2-git-send-email-varada@codeaurora.org>
+ <20170510224355.GE45273@Bjorns-MacBook-Pro-2.local>
+ <1f4c9974-f6a4-bee7-4f37-ad8795e442a3@codeaurora.org>
+ <20170514042307.GE69278@Bjorns-MacBook-Pro-2.local>
+ <7afc7191-bcb1-a566-eac5-a4fe1293c773@codeaurora.org>
+ <20170517193315.GF12920@tuxbook>
+ <f5a3da8b-c3a4-3cb3-9f5f-0cbdb87688ed@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-gpio-owner@vger.kernel.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1975629.nrP45RYYW5@debian64>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Christian Lamparter <chunkeey@googlemail.com>
-Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, Ram Chandra Jangir <rjangir@codeaurora.org>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, John Crispin <john@phrozen.org>
+In-Reply-To: <f5a3da8b-c3a4-3cb3-9f5f-0cbdb87688ed@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Varadarajan Narayanan <varada@codeaurora.org>, linus.walleij@linaro.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, Manoharan Vijaya Raghavan <mraghava@codeaurora.org>, linux-gpio@vger.kernel.org, catalin.marinas@arm.com, mturquette@baylibre.com, sjaganat@codeaurora.org, sboyd@codeaurora.org, linux-kernel@vger.kernel.org, will.deacon@arm.com, linux-clk@vger.kernel.org, david.brown@linaro.org, absahu@codeaurora.org, robh+dt@kernel.org, linux-arm-msm@vger.kernel.org, andy.gross@linaro.org, sricharan@codeaurora.org, linux-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu 18 May 11:38 PDT 2017, Christian Lamparter wrote:
+On Thu 18 May 01:39 PDT 2017, Varadarajan Narayanan wrote:
 
-> On Wednesday, May 17, 2017 1:07:29 PM CEST Bjorn Andersson wrote:
-> > On Wed 10 May 04:27 PDT 2017, Christian Lamparter wrote:
-> > > diff --git a/drivers/pinctrl/qcom/pinctrl-ipq4019.c b/drivers/pinctrl/qcom/pinctrl-ipq4019.c
-> > > index 743d1f458205..7219d1e33c71 100644
-> > > --- a/drivers/pinctrl/qcom/pinctrl-ipq4019.c
-> > > +++ b/drivers/pinctrl/qcom/pinctrl-ipq4019.c
-> > > +	qca_mux_rmii0_refclk,
-> > > +	qca_mux_wifi0_rfsilient0,
-> > > +	qca_mux_wifi1_rfsilient0,
-> > > +	qca_mux_smart2,
-> > > +	qca_mux_led4,
+> 
+> 
+> On 5/18/2017 1:03 AM, Bjorn Andersson wrote:
+> > On Mon 15 May 02:05 PDT 2017, Varadarajan Narayanan wrote:
 > > 
-> > What drives ledX? Is it 11 different LED controllers or is it a single
-> > LED controller with 11 outputs.
-> 
-> The latter. The IPQ40xx have one LED controller @ 0x1937000. 
-> According to the driver (leds-ipq40xx.c in the SDK), it 
-> does control up to 11 LEDs. A LED can either be muxed to
-> one of the hardware sources (wifi, lan or wan-ports activity/linkspeed),
-> or it can be operated by one of four software-programmable "blink"
-> sources (each with a variable blink rate and duty cycle). 
-> The driver labels each LED as "ipq40xx::led%d".
-> 
-
-As they all stem from the same hardware block I suggest we name the
-function "led".
-
-> That said: ASUS, Cisco, Compex, Netgear, Zyxel... opted to either
-> 1. export the individual GPIOs with sysfs
-> 2. gpio-leds
-> 
-
-For any software-driven LED control it makes sense to configure the pins
-as gpio and just rely on the gpio-leds driver.
-
-But as you have both hardware driven control and hardware blink support
-it sounds like there's good reason to have a specific LED driver as
-well.
-
+> > > On 5/14/2017 9:53 AM, Bjorn Andersson wrote:
+> > > > On Thu 11 May 03:33 PDT 2017, Varadarajan Narayanan wrote:
+> > > > 
+> > > > > On 5/11/2017 4:13 AM, Bjorn Andersson wrote:
+> > > > > > On Thu 04 May 04:53 PDT 2017, Varadarajan Narayanan wrote:
 > > [..]
-> > > +	qca_mux_wifi01,
+> > > > > > > +	msm_mux_qpic_pad4,
+> > > > > > 
+> > > > > > What are qpic_pad and qpic_pad0 through qpic_pad8? Different functions,
+> > > > > > alternative muxings...?
+> > > > > 
+> > > > > This is for the NAND and LCD display. The pins listed are the 9 data pins.
+> > > > > 
+> > > > 
+> > > > Then you can describe them all as "qpic_pad" (or simply "qpic"?). (It's
+> > > > possible to reference a partial group in the DTS, if that's necessary)
+> > > 
+> > > There are two sets of 9 pins, either of which can go to NAND or LCD.
+> > > Will rename qpic_pad as qpic_a and qpic_pad[0-8] as qpic_b.
+> > > Is that ok?
+> > > 
 > > 
-> > Please make these "wifi0" and include all "wifi0XY", rather than having
-> > a group per pin.
+> > So you have NAND and LCD hardware muxed to either "a" or "b" and then
+> > you mux either "a" or "b" out onto actual pins?
 > > 
-> > > +	qca_mux_wifi11,
+> > How is this first mux configured?
 > > 
-> > "wifi1"
+> > I think the a/b scheme sounds reasonable, if above is how it works.
 > 
-> Ok. Can I leave wifi1_cal, _wci, uartX... the way they are?
->  
-
-Yes, that sounds reasonable
-
-> > > +	qca_mux_atest_char3,
-> > > +	qca_mux_pmu0,
-> > > +	qca_mux_boot8,
-> > > +	qca_mux_tm1,
-> > > +	qca_mux_atest_char2,
-> > > +	qca_mux_pmu1,
-> > > +	qca_mux_boot9,
-> > > +	qca_mux_tm2,
-> > > +	qca_mux_atest_char1,
-> > > +	qca_mux_tm_ack,
-> > > +	qca_mux_wifi03,
-> > > +	qca_mux_wifi13,
-> > > +	qca_mux_qpic_pad4,
-> > 
-> > Please keep an eye on the ipq8074 patch from Varadarajan and make this
-> > follow the same scheme.
-> Ok, I'll wait for how qca8074 plays out then.
-> By the way, can you ask if the QCA8074 follows the IPQ40XX SoC's
-> GPIO Pull-up config?
+> Sorry, I was wrong. I had misread the documentation.
 > 
-> I'm asking because Varadarajan was also involved in the
-> pinctrl-ipq4019 back in 2015: <https://patchwork.kernel.org/patch/7662241/>
-> 
-> Back then, this wasn't mentioned anywhere. In fact, the special pull-up
-> configuration was only discovered due to an issue with the NAND on the
-> Cisco Meraki MR33. So I think it is better ask them now, when the devs
-> are actually present/responding. 
+> There are 18 pins. 15 pins are common between LCD and NAND. The QPIC
+> controller arbitrates between LCD and NAND. Of the remaining 4, 2 are for
+> NAND and 2 are for LCD exclusively. We plan to group the qpic pins into 3
+> groups namely, qpic_common, qpic_nand and qpic_lcd. Is that ok?
 > 
 
-I do unfortunately not have access to the specification or either
-platform, I would appreciate if you could post a reply on Varadarajan's
-IPQ8074 patch asking him to verify the layout of the config register.
+If you consider that you are defining the available functions for this
+pinmuxer and then define the sets of pins exposing these available
+functions it does make sense to just name it "qpic".
 
-[..]
-> > > +	qca_mux_boot18,
-> > 
-> > Do you know what the "boot" function is and what 2, 4, 5, 7, 8, 9 11,
-> > 14, 18, 19 and 20 means?
-> Sadly no. That said, neither the u-boot nor the linux kernel
-> sources set any pin to bootX. I think I'll remove it for now.
-> 
+I think that naming them _common, _lcd and _nand is just adding
+confusion when it comes to writing the dts files.
 
-Better leave them out for now then.
 
-> > [..]
-> > > +	qca_mux_sdio0,
-> > 
-> > There are 8 of these, so that's more likely the 8 data pins in a single
-> > function. Please squash them into "sdio_data".
-> Yes, this is very likely. We know that this is the case for the qpic_padX.
-> 
-
-Sounds good.
+@Linus, do you have a different preference here?
 
 Regards,
 Bjorn
