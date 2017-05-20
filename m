@@ -1,33 +1,83 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] Documentation: dt: Update ti,emif bindings
-Date: Fri, 19 May 2017 20:45:54 -0500
-Message-ID: <20170520014554.qisnvr27542n5p7f@rob-hp-laptop>
-References: <20170519175708.6070-1-d-gerlach@ti.com>
- <20170519175708.6070-2-d-gerlach@ti.com>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: Re: [RFC PATCH 01/11] dt-bindings: update the
+ binding for Allwinner H3 TVE support
+Date: Sat, 20 May 2017 10:01:41 +0800
+Message-ID: <CAGb2v66DOZbppAOT6yLaxyLSmSQ3t9RT-ESHaNq1vs=Fwbv93Q@mail.gmail.com>
+References: <20170517164354.16399-1-icenowy@aosc.io> <20170517164354.16399-2-icenowy@aosc.io>
+ <20170519180215.7lc7duueu74pt4kz@flea.home> <ED64A56C-4FD3-4878-B67E-1501F20C7B8D@aosc.io>
+Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170519175708.6070-2-d-gerlach-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Dave Gerlach <d-gerlach-l0cyMroinI0@public.gmane.org>
-Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Keerthy J <j-keerthy-l0cyMroinI0@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBHOH73EAKGQEYCTTQVQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <ED64A56C-4FD3-4878-B67E-1501F20C7B8D-h8G6r0blFSE@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Cc: linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 19, 2017 at 12:57:07PM -0500, Dave Gerlach wrote:
-> Update the Texas Instruments EMIF binding document to include the device
-> tree bindings for ti,emif-am3352 and ti,emif-am4372 which are used by
-> the ti-emif-sram driver to provide low-level PM functionality.
-> 
-> Signed-off-by: Dave Gerlach <d-gerlach-l0cyMroinI0@public.gmane.org>
-> ---
->  .../devicetree/bindings/memory-controllers/ti/emif.txt | 18 +++++++++++++++++-
->  1 file changed, 17 insertions(+), 1 deletion(-)
+On Sat, May 20, 2017 at 2:06 AM, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org> wrote:
+>
+>
+> =E4=BA=8E 2017=E5=B9=B45=E6=9C=8820=E6=97=A5 GMT+08:00 =E4=B8=8A=E5=8D=88=
+2:02:15, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> =E5=86=99=E5=88=
+=B0:
+>>On Thu, May 18, 2017 at 12:43:44AM +0800, Icenowy Zheng wrote:
+>>> -On SoCs other than the A33 and V3s, there is one more clock
+>>required:
+>>> +For the following compatibles:
+>>> +   * allwinner,sun5i-a13-tcon
+>>> +   * allwinner,sun6i-a31-tcon
+>>> +   * allwinner,sun6i-a31s-tcon
+>>> +   * allwinner,sun8i-a33-tcon
+>>> +   * allwinner,sun8i-v3s-tcon
+>>> +there is one more clock and one more property required:
+>>> + - clocks:
+>>> +   - 'tcon-ch0': The clock driving the TCON channel 0
+>>> + - clock-output-names: Name of the pixel clock created
+>>> +
+>>> +For the following compatibles:
+>>> +   * allwinner,sun5i-a13-tcon
+>>> +   * allwinner,sun6i-a31-tcon
+>>> +   * allwinner,sun6i-a31s-tcon
+>>> +   * allwinner,sun8i-h3-tcon0
+>>> +there is one more clock required:
+>>>     - 'tcon-ch1': The clock driving the TCON channel 1
+>>
+>>Putting ID's in the compatible name is usually a bad idea. What is the
+>>difference between the two? Only that the second one doesn't have a
+>>clock?
+>
+> Yes.
+>
+>>
+>>That seems highly unlikely. How does it generate the pixel clock
+>>frequency?
+>
+> Yes it seems impossible, but it's also the fact.
+>
+> There's only one CLK_TCON in H3/5, which is for TCON0.
+>
+> It's possible that lcd-ch1 clk is CLK_TVE, but it's still a weird situati=
+on --
+> Although we have a lcd-ch1 clock, we cannot touch it, otherwise
+> the TVE will refuse to work (the TVE can only work under 216MHz).
 
-I acked v1. Please add acks when posting new versions.
+Assuming the TV encoder is like the old one, then it never had a
+separate module clock. Instead its timing signals are fed from the
+TCON. So CLK_TVE is likely the clock for TCON1 here.
 
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+ChenYu
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
