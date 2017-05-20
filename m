@@ -1,60 +1,100 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 1/2 v2] input: keyboard: DT bindings for the D-Link DIR-685 touchkeys
-Date: Sat, 20 May 2017 18:57:45 +0200
-Message-ID: <20170520165746.13356-1-linus.walleij@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH] power: supply: cpcap-battery: Add a battery driver
+Date: Sat, 20 May 2017 10:05:33 -0700
+Message-ID: <20170520170533.GN10472@atomide.com>
+References: <20170519055146.2038-1-tony@atomide.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170519055146.2038-1-tony@atomide.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Sebastian Reichel <sre@kernel.org>
+Cc: linux-pm@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, Marcel Partap <mpartap@gmx.net>, Michael Scott <michael.scott@linaro.org>, Rob Herring <robh@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-This adds device tree bindings for the D-Link DIR-685 touchkeys.
-It's a simple homebrewn touchkey controller (by D-Link referred
-to as "touchpad") on I2C.
+* Tony Lindgren <tony@atomide.com> [170518 22:55]:
+> Note that I left out the battery interrupt handling for now as I need
+> to spend more time on it for the battery empty interrupts. The driver
+> works just fine without the interrupts too.
+...
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/power/supply/cpcap-battery.txt
+> @@ -0,0 +1,27 @@
+> +Motorola CPCAP PMIC battery driver binding
+> +
+> +Required properties:
+> +- compatible: Shall be "motorola,cpcap-battery"
+> +- interrupts: Interrupt specifier for each name in interrupt-names
+> +- interrupt-names: Should contain the following entries:
+> +		   "lowbph", "lowbpl", "chrgcurr1", "battdetb"
+> +- io-channels: IIO ADC channel specifier for each name in io-channel-names
+> +- io-channel-names: Should contain the following entries:
+> +		    "battdetb", "battp"
+> +
+> +Example:
+> +
+> +cpcap_battery: battery {
+> +	compatible = "motorola,cpcap-battery";
+> +	interrupts-extended = <
+> +		&cpcap 5 0 &cpcap 3 0
+> +		&cpcap 20 0 &cpcap 54 0
+> +	>;
+> +	interrupt-names =
+> +		"lowbph", "lowbpl",
+> +		"chrgcurr1", "battdetb";
+> +	io-channels = <&cpcap_adc 0 &cpcap_adc 1
+> +		       &cpcap_adc 5 &cpcap_adc 6>;
+> +	io-channel-names = "battdetb", "battp",
+> +			   "chg_isense", "batti";
+> +};
 
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
-ChangeLog v1->v2:
-- Rename from "touchpad" to touchkeys" consistently.
-- Add Rob's ACK.
----
- .../bindings/input/dlink,dir685-touchkeys.txt       | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/input/dlink,dir685-touchkeys.txt
+I guess we should leave out the interrupts in the binding for now
+too. Or at least move them to optional properties.
 
-diff --git a/Documentation/devicetree/bindings/input/dlink,dir685-touchkeys.txt b/Documentation/devicetree/bindings/input/dlink,dir685-touchkeys.txt
-new file mode 100644
-index 000000000000..10dec1c57abf
---- /dev/null
-+++ b/Documentation/devicetree/bindings/input/dlink,dir685-touchkeys.txt
-@@ -0,0 +1,21 @@
-+* D-Link DIR-685 Touchkeys
+Anyways, below is the related dts patch I've been using.
+
+Regards,
+
+Tony
+
+8< -------------------------
+>From tony Mon Sep 17 00:00:00 2001
+From: Tony Lindgren <tony@atomide.com>
+Date: Fri, 19 May 2017 14:23:25 -0700
+Subject: [PATCH] ARM: dts: omap4-droid4: Configure CPCAP battery driver
+
+Configure CPCAP battery driver.
+
+Signed-off-by: Tony Lindgren <tony@atomide.com>
+---
+ arch/arm/boot/dts/motorola-cpcap-mapphone.dtsi | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
+
+diff --git a/arch/arm/boot/dts/motorola-cpcap-mapphone.dtsi b/arch/arm/boot/dts/motorola-cpcap-mapphone.dtsi
+--- a/arch/arm/boot/dts/motorola-cpcap-mapphone.dtsi
++++ b/arch/arm/boot/dts/motorola-cpcap-mapphone.dtsi
+@@ -26,6 +26,21 @@
+ 			#io-channel-cells = <1>;
+ 		};
+ 
++		cpcap_battery: battery {
++			compatible = "motorola,cpcap-battery";
++			interrupts-extended = <
++				&cpcap 5 0 &cpcap 3 0
++				&cpcap 20 0 &cpcap 54 0
++			>;
++			interrupt-names =
++				"lowbph", "lowbpl",
++				"chrgcurr1", "battdetb";
++			io-channels = <&cpcap_adc 0 &cpcap_adc 1
++				       &cpcap_adc 5 &cpcap_adc 6>;
++			io-channel-names = "battdetb", "battp",
++					   "chg_isense", "batti";
++		};
 +
-+This is a I2C one-off touchkey controller based on the Cypress Semiconductor
-+CY8C214 MCU with some firmware in its internal 8KB flash. The circuit
-+board inside the router is named E119921.
-+
-+The touchkey device node should be placed inside an I2C bus node.
-+
-+Required properties:
-+- compatible: must be "dlink,dir685-touchkeys"
-+- reg: the I2C address of the touchkeys
-+- interrupts: reference to the interrupt number
-+
-+Example:
-+
-+touchkeys@26 {
-+	compatible = "dlink,dir685-touchkeys";
-+	reg = <0x26>;
-+	interrupt-parent = <&gpio0>;
-+	interrupts = <17 IRQ_TYPE_EDGE_FALLING>;
-+};
+ 		cpcap_charger: charger {
+ 			compatible = "motorola,mapphone-cpcap-charger";
+ 			interrupts-extended = <
 -- 
-2.9.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.13.0
