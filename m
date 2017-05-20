@@ -1,67 +1,47 @@
-From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
-Subject: Re: [PATCH v2 00/18] ARM64: meson: DT cleanups
-Date: Sat, 20 May 2017 15:16:28 +0200
-Message-ID: <8b61eb79-8a63-6f74-b461-30b99ceeecea@suse.de>
-References: <20170513143337.14278-1-afaerber@suse.de>
- <36c02d8a-d3e2-4330-f600-e49a1ba680e8@baylibre.com>
- <5fb0130c-473e-dc15-b60c-e5b6144031ad@suse.de> <m2d1b75d0i.fsf@baylibre.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+From: Cosar Dindar <cosardindar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v2 2/5] dt-bindings : Document the STM32F4 CRC32 binding
+Date: Sat, 20 May 2017 16:32:12 +0300
+Message-ID: <bb672acb88667e9d27beb4d1e4fd8882f265ee47.1495285223.git.cosardindar@gmail.com>
+References: <cover.1495285223.git.cosardindar@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <m2d1b75d0i.fsf-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Content-Language: en-US
+In-Reply-To: <cover.1495285223.git.cosardindar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org
+Cc: davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, fabien.dessenne-qxv4g6HH51o@public.gmane.org, Cosar Dindar <cosardindar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Kevin,
+Add device tree binding for STM32F4.
 
-Am 18.05.2017 um 00:34 schrieb Kevin Hilman:
-> Andreas Färber <afaerber-l3A5Bk7waGM@public.gmane.org> writes:
->> Am 15.05.2017 um 10:16 schrieb Neil Armstrong:
->>> It's not perfect, but now it's done, live with it, this has already been discussed.
->>
->> No.
->>
->> Copy&pasting your comment N times does not make it any more valid. My
->> files, my rules - I insist on vega-s95, gxbb and gx, which you guys
->> refactored out from my gxbb, to be tidy.
-> 
-> hmm, "my files, my rules, ... my gxbb"
-> 
-> Very interesting perspective, but sorry, these do not belong to you.
-> They belong to the kernel community.  You can insist if you like, but we
-> do not make decisions just because someone says "mine".  Again, the
-> confrontaional tone is not helpful to the dialogue.
+Signed-off-by: Cosar Dindar <cosardindar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+ Documentation/devicetree/bindings/crypto/st,stm32-crc.txt | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-We can certainly argue who started which tone here. From my perspective
-I kindly asked Jerome to fix his node order on IRC, he said okay, but
-neither he nor any of you ever sent such patches. (This was back when we
-had an actual mismerge.) Weeks later I grudgingly sent the v1 cleanup
-series myself, but instead of thanking me for doing "your" work, I was
-greeted with unfriendly opposition and - yes, frustratingly is a word
-here - put my efforts elsewhere. Neil's actions - who is neither author
-nor maintainer here - of copying an opinionated personal and partially
-wrong statement into a dozen neutral patches was highly offensive to me
-and further escalated things. Stating his opinion, which he is welcome
-to do, once would has sufficed.
-
-Also what this "my" is about - and that should give you thought - is
-that you guys added nodes to the Vega .dtsi file without adding any
-BayLibre or other copyright. To someone downloading a tarball without
-git history, that makes it look as if _I_ misordered those nodes in the
-file that carries my name. So I would kindly suggest that you add your
-copyright when making non-trivial additions.
-
-Thanks,
-Andreas
-
+diff --git a/Documentation/devicetree/bindings/crypto/st,stm32-crc.txt b/Documentation/devicetree/bindings/crypto/st,stm32-crc.txt
+index 3ba92a5..7b30f1e 100644
+--- a/Documentation/devicetree/bindings/crypto/st,stm32-crc.txt
++++ b/Documentation/devicetree/bindings/crypto/st,stm32-crc.txt
+@@ -1,7 +1,7 @@
+ * STMicroelectronics STM32 CRC
+ 
+ Required properties:
+-- compatible: Should be "st,stm32f7-crc".
++- compatible: Can be either "st,stm32f7-crc" or "st,srm32f4-crc".
+ - reg: The address and length of the peripheral registers space
+ - clocks: The input clock of the CRC instance
+ 
+@@ -10,7 +10,7 @@ Optional properties: none
+ Example:
+ 
+ crc: crc@40023000 {
+-	compatible = "st,stm32f7-crc";
++	compatible = "st,stm32f7-crc", "st,stm32f4-crc";
+ 	reg = <0x40023000 0x400>;
+ 	clocks = <&rcc 0 12>;
+ };
 -- 
-SUSE Linux GmbH, Maxfeldstr. 5, 90409 Nürnberg, Germany
-GF: Felix Imendörffer, Jane Smithard, Graham Norton
-HRB 21284 (AG Nürnberg)
+2.7.4
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
