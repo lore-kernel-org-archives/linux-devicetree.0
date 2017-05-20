@@ -1,83 +1,130 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: Re: [RFC PATCH 01/11] dt-bindings: update the
- binding for Allwinner H3 TVE support
-Date: Sat, 20 May 2017 10:01:41 +0800
-Message-ID: <CAGb2v66DOZbppAOT6yLaxyLSmSQ3t9RT-ESHaNq1vs=Fwbv93Q@mail.gmail.com>
-References: <20170517164354.16399-1-icenowy@aosc.io> <20170517164354.16399-2-icenowy@aosc.io>
- <20170519180215.7lc7duueu74pt4kz@flea.home> <ED64A56C-4FD3-4878-B67E-1501F20C7B8D@aosc.io>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH 2/2] pinctrl: qcom: ipq4019: add remaining pin definitions
+Date: Fri, 19 May 2017 22:08:24 -0700
+Message-ID: <20170520050824.GS12920@tuxbook>
+References: <d53b7a9b1bab818536680123136ac58481d959c8.1494415174.git.chunkeey@googlemail.com>
+ <3dac044cd9a879cad145f9a04dcc3d225721aa3c.1494415174.git.chunkeey@googlemail.com>
+ <20170517200729.GH12920@tuxbook>
+ <1975629.nrP45RYYW5@debian64>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBHOH73EAKGQEYCTTQVQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <ED64A56C-4FD3-4878-B67E-1501F20C7B8D-h8G6r0blFSE@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Cc: linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1975629.nrP45RYYW5@debian64>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Christian Lamparter <chunkeey@googlemail.com>
+Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, Ram Chandra Jangir <rjangir@codeaurora.org>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, John Crispin <john@phrozen.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, May 20, 2017 at 2:06 AM, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org> wrote:
->
->
-> =E4=BA=8E 2017=E5=B9=B45=E6=9C=8820=E6=97=A5 GMT+08:00 =E4=B8=8A=E5=8D=88=
-2:02:15, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> =E5=86=99=E5=88=
-=B0:
->>On Thu, May 18, 2017 at 12:43:44AM +0800, Icenowy Zheng wrote:
->>> -On SoCs other than the A33 and V3s, there is one more clock
->>required:
->>> +For the following compatibles:
->>> +   * allwinner,sun5i-a13-tcon
->>> +   * allwinner,sun6i-a31-tcon
->>> +   * allwinner,sun6i-a31s-tcon
->>> +   * allwinner,sun8i-a33-tcon
->>> +   * allwinner,sun8i-v3s-tcon
->>> +there is one more clock and one more property required:
->>> + - clocks:
->>> +   - 'tcon-ch0': The clock driving the TCON channel 0
->>> + - clock-output-names: Name of the pixel clock created
->>> +
->>> +For the following compatibles:
->>> +   * allwinner,sun5i-a13-tcon
->>> +   * allwinner,sun6i-a31-tcon
->>> +   * allwinner,sun6i-a31s-tcon
->>> +   * allwinner,sun8i-h3-tcon0
->>> +there is one more clock required:
->>>     - 'tcon-ch1': The clock driving the TCON channel 1
->>
->>Putting ID's in the compatible name is usually a bad idea. What is the
->>difference between the two? Only that the second one doesn't have a
->>clock?
->
-> Yes.
->
->>
->>That seems highly unlikely. How does it generate the pixel clock
->>frequency?
->
-> Yes it seems impossible, but it's also the fact.
->
-> There's only one CLK_TCON in H3/5, which is for TCON0.
->
-> It's possible that lcd-ch1 clk is CLK_TVE, but it's still a weird situati=
-on --
-> Although we have a lcd-ch1 clock, we cannot touch it, otherwise
-> the TVE will refuse to work (the TVE can only work under 216MHz).
+On Thu 18 May 11:38 PDT 2017, Christian Lamparter wrote:
 
-Assuming the TV encoder is like the old one, then it never had a
-separate module clock. Instead its timing signals are fed from the
-TCON. So CLK_TVE is likely the clock for TCON1 here.
+> On Wednesday, May 17, 2017 1:07:29 PM CEST Bjorn Andersson wrote:
+> > On Wed 10 May 04:27 PDT 2017, Christian Lamparter wrote:
+> > > diff --git a/drivers/pinctrl/qcom/pinctrl-ipq4019.c b/drivers/pinctrl/qcom/pinctrl-ipq4019.c
+> > > index 743d1f458205..7219d1e33c71 100644
+> > > --- a/drivers/pinctrl/qcom/pinctrl-ipq4019.c
+> > > +++ b/drivers/pinctrl/qcom/pinctrl-ipq4019.c
+> > > +	qca_mux_rmii0_refclk,
+> > > +	qca_mux_wifi0_rfsilient0,
+> > > +	qca_mux_wifi1_rfsilient0,
+> > > +	qca_mux_smart2,
+> > > +	qca_mux_led4,
+> > 
+> > What drives ledX? Is it 11 different LED controllers or is it a single
+> > LED controller with 11 outputs.
+> 
+> The latter. The IPQ40xx have one LED controller @ 0x1937000. 
+> According to the driver (leds-ipq40xx.c in the SDK), it 
+> does control up to 11 LEDs. A LED can either be muxed to
+> one of the hardware sources (wifi, lan or wan-ports activity/linkspeed),
+> or it can be operated by one of four software-programmable "blink"
+> sources (each with a variable blink rate and duty cycle). 
+> The driver labels each LED as "ipq40xx::led%d".
+> 
 
-ChenYu
+As they all stem from the same hardware block I suggest we name the
+function "led".
 
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+> That said: ASUS, Cisco, Compex, Netgear, Zyxel... opted to either
+> 1. export the individual GPIOs with sysfs
+> 2. gpio-leds
+> 
+
+For any software-driven LED control it makes sense to configure the pins
+as gpio and just rely on the gpio-leds driver.
+
+But as you have both hardware driven control and hardware blink support
+it sounds like there's good reason to have a specific LED driver as
+well.
+
+> > [..]
+> > > +	qca_mux_wifi01,
+> > 
+> > Please make these "wifi0" and include all "wifi0XY", rather than having
+> > a group per pin.
+> > 
+> > > +	qca_mux_wifi11,
+> > 
+> > "wifi1"
+> 
+> Ok. Can I leave wifi1_cal, _wci, uartX... the way they are?
+>  
+
+Yes, that sounds reasonable
+
+> > > +	qca_mux_atest_char3,
+> > > +	qca_mux_pmu0,
+> > > +	qca_mux_boot8,
+> > > +	qca_mux_tm1,
+> > > +	qca_mux_atest_char2,
+> > > +	qca_mux_pmu1,
+> > > +	qca_mux_boot9,
+> > > +	qca_mux_tm2,
+> > > +	qca_mux_atest_char1,
+> > > +	qca_mux_tm_ack,
+> > > +	qca_mux_wifi03,
+> > > +	qca_mux_wifi13,
+> > > +	qca_mux_qpic_pad4,
+> > 
+> > Please keep an eye on the ipq8074 patch from Varadarajan and make this
+> > follow the same scheme.
+> Ok, I'll wait for how qca8074 plays out then.
+> By the way, can you ask if the QCA8074 follows the IPQ40XX SoC's
+> GPIO Pull-up config?
+> 
+> I'm asking because Varadarajan was also involved in the
+> pinctrl-ipq4019 back in 2015: <https://patchwork.kernel.org/patch/7662241/>
+> 
+> Back then, this wasn't mentioned anywhere. In fact, the special pull-up
+> configuration was only discovered due to an issue with the NAND on the
+> Cisco Meraki MR33. So I think it is better ask them now, when the devs
+> are actually present/responding. 
+> 
+
+I do unfortunately not have access to the specification or either
+platform, I would appreciate if you could post a reply on Varadarajan's
+IPQ8074 patch asking him to verify the layout of the config register.
+
+[..]
+> > > +	qca_mux_boot18,
+> > 
+> > Do you know what the "boot" function is and what 2, 4, 5, 7, 8, 9 11,
+> > 14, 18, 19 and 20 means?
+> Sadly no. That said, neither the u-boot nor the linux kernel
+> sources set any pin to bootX. I think I'll remove it for now.
+> 
+
+Better leave them out for now then.
+
+> > [..]
+> > > +	qca_mux_sdio0,
+> > 
+> > There are 8 of these, so that's more likely the 8 data pins in a single
+> > function. Please squash them into "sdio_data".
+> Yes, this is very likely. We know that this is the case for the qpic_padX.
+> 
+
+Sounds good.
+
+Regards,
+Bjorn
