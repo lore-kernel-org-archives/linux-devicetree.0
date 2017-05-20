@@ -1,78 +1,101 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH v2 1/5] pinctrl: qcom: Add ipq8074 pinctrl driver
-Date: Fri, 19 May 2017 22:54:30 -0700
-Message-ID: <20170520055430.GU12920@tuxbook>
-References: <1493898841-20583-1-git-send-email-varada@codeaurora.org>
- <1493898841-20583-2-git-send-email-varada@codeaurora.org>
- <20170510224355.GE45273@Bjorns-MacBook-Pro-2.local>
- <1f4c9974-f6a4-bee7-4f37-ad8795e442a3@codeaurora.org>
- <20170514042307.GE69278@Bjorns-MacBook-Pro-2.local>
- <7afc7191-bcb1-a566-eac5-a4fe1293c773@codeaurora.org>
- <20170517193315.GF12920@tuxbook>
- <f5a3da8b-c3a4-3cb3-9f5f-0cbdb87688ed@codeaurora.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <f5a3da8b-c3a4-3cb3-9f5f-0cbdb87688ed@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Varadarajan Narayanan <varada@codeaurora.org>, linus.walleij@linaro.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, Manoharan Vijaya Raghavan <mraghava@codeaurora.org>, linux-gpio@vger.kernel.org, catalin.marinas@arm.com, mturquette@baylibre.com, sjaganat@codeaurora.org, sboyd@codeaurora.org, linux-kernel@vger.kernel.org, will.deacon@arm.com, linux-clk@vger.kernel.org, david.brown@linaro.org, absahu@codeaurora.org, robh+dt@kernel.org, linux-arm-msm@vger.kernel.org, andy.gross@linaro.org, sricharan@codeaurora.org, linux-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+From: "Thang Q. Nguyen" <tqnguyen-qTEPVZfXA3Y@public.gmane.org>
+Subject: [v2 1/1] usb:host:xhci support option to disable xHCI 1.0 USB2 HW LPM
+Date: Sat, 20 May 2017 14:24:56 +0700
+Message-ID: <1495265096-14851-1-git-send-email-tqnguyen@apm.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Felipe Balbi <felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Thang Nguyen <tqnguyen-qTEPVZfXA3Y@public.gmane.org>, Phong Vo <pvo-qTEPVZfXA3Y@public.gmane.org>, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>, Duc Tran <dxtran-qTEPVZfXA3Y@public.gmane.org>, Quang Han <qhan-qTEPVZfXA3Y@public.gmane.org>, Tung Nguyen <tunguyen-qTEPVZfXA3Y@public.gmane.org>, patches-qTEPVZfXA3Y@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu 18 May 01:39 PDT 2017, Varadarajan Narayanan wrote:
+XHCI specification 1.1 does not require xHCI 1.0 compliant controllers
+to always enable hardware USB2 LPM.
+However, the current xHCI driver always enable it by setting HLE=1 when
+seeing HLC=1. This makes certain xHCI controllers that have broken USB2
+HW LPM fail to work as there is no way to disable this feature.
+This patch adds support to control disabling USB2 Hardware LPM via
+DT/ACPI attribute.
 
-> 
-> 
-> On 5/18/2017 1:03 AM, Bjorn Andersson wrote:
-> > On Mon 15 May 02:05 PDT 2017, Varadarajan Narayanan wrote:
-> > 
-> > > On 5/14/2017 9:53 AM, Bjorn Andersson wrote:
-> > > > On Thu 11 May 03:33 PDT 2017, Varadarajan Narayanan wrote:
-> > > > 
-> > > > > On 5/11/2017 4:13 AM, Bjorn Andersson wrote:
-> > > > > > On Thu 04 May 04:53 PDT 2017, Varadarajan Narayanan wrote:
-> > [..]
-> > > > > > > +	msm_mux_qpic_pad4,
-> > > > > > 
-> > > > > > What are qpic_pad and qpic_pad0 through qpic_pad8? Different functions,
-> > > > > > alternative muxings...?
-> > > > > 
-> > > > > This is for the NAND and LCD display. The pins listed are the 9 data pins.
-> > > > > 
-> > > > 
-> > > > Then you can describe them all as "qpic_pad" (or simply "qpic"?). (It's
-> > > > possible to reference a partial group in the DTS, if that's necessary)
-> > > 
-> > > There are two sets of 9 pins, either of which can go to NAND or LCD.
-> > > Will rename qpic_pad as qpic_a and qpic_pad[0-8] as qpic_b.
-> > > Is that ok?
-> > > 
-> > 
-> > So you have NAND and LCD hardware muxed to either "a" or "b" and then
-> > you mux either "a" or "b" out onto actual pins?
-> > 
-> > How is this first mux configured?
-> > 
-> > I think the a/b scheme sounds reasonable, if above is how it works.
-> 
-> Sorry, I was wrong. I had misread the documentation.
-> 
-> There are 18 pins. 15 pins are common between LCD and NAND. The QPIC
-> controller arbitrates between LCD and NAND. Of the remaining 4, 2 are for
-> NAND and 2 are for LCD exclusively. We plan to group the qpic pins into 3
-> groups namely, qpic_common, qpic_nand and qpic_lcd. Is that ok?
-> 
+Signed-off-by: Tung Nguyen <tunguyen-qTEPVZfXA3Y@public.gmane.org>
+Signed-off-by: Thang Q. Nguyen <tqnguyen-qTEPVZfXA3Y@public.gmane.org>
+---
+Changes since v1:
+ - Update DT/ACPI attribute and corresponding codes from HLE to LPM to
+  be consistent with other attribute names.
+---
+ Documentation/devicetree/bindings/usb/usb-xhci.txt |    1 +
+ drivers/usb/host/xhci-plat.c                       |    3 +++
+ drivers/usb/host/xhci.c                            |    7 ++++++-
+ drivers/usb/host/xhci.h                            |    1 +
+ 4 files changed, 11 insertions(+), 1 deletions(-)
 
-If you consider that you are defining the available functions for this
-pinmuxer and then define the sets of pins exposing these available
-functions it does make sense to just name it "qpic".
+diff --git a/Documentation/devicetree/bindings/usb/usb-xhci.txt b/Documentation/devicetree/bindings/usb/usb-xhci.txt
+index 2d80b60..96f1ac0 100644
+--- a/Documentation/devicetree/bindings/usb/usb-xhci.txt
++++ b/Documentation/devicetree/bindings/usb/usb-xhci.txt
+@@ -26,6 +26,7 @@ Required properties:
+ 
+ Optional properties:
+   - clocks: reference to a clock
++  - usb2-lpm-disable: disable USB2 LPM for hardware does not support it
+   - usb3-lpm-capable: determines if platform is USB3 LPM capable
+   - quirk-broken-port-ped: set if the controller has broken port disable mechanism
+ 
+diff --git a/drivers/usb/host/xhci-plat.c b/drivers/usb/host/xhci-plat.c
+index 7c2a9e7..950eaf0 100644
+--- a/drivers/usb/host/xhci-plat.c
++++ b/drivers/usb/host/xhci-plat.c
+@@ -267,6 +267,9 @@ static int xhci_plat_probe(struct platform_device *pdev)
+ 		goto disable_clk;
+ 	}
+ 
++	if (device_property_read_bool(&pdev->dev, "usb2-lpm-disable"))
++		xhci->quirks |= XHCI_USB2_LPM_DISABLE;
++
+ 	if (device_property_read_bool(sysdev, "usb3-lpm-capable"))
+ 		xhci->quirks |= XHCI_LPM_SUPPORT;
+ 
+diff --git a/drivers/usb/host/xhci.c b/drivers/usb/host/xhci.c
+index 2d13102..47d51d4 100644
+--- a/drivers/usb/host/xhci.c
++++ b/drivers/usb/host/xhci.c
+@@ -4055,6 +4055,7 @@ static int xhci_set_usb2_hardware_lpm(struct usb_hcd *hcd,
+ 	unsigned long	flags;
+ 	int		hird, exit_latency;
+ 	int		ret;
++	int		usb2_lpm_disable = 0;
+ 
+ 	if (hcd->speed >= HCD_USB3 || !xhci->hw_lpm_support ||
+ 			!udev->lpm_capable)
+@@ -4079,7 +4080,11 @@ static int xhci_set_usb2_hardware_lpm(struct usb_hcd *hcd,
+ 	xhci_dbg(xhci, "%s port %d USB2 hardware LPM\n",
+ 			enable ? "enable" : "disable", port_num + 1);
+ 
+-	if (enable) {
++	/* Check for optional disable USB2 LPM if XHCI 1.0 */
++	if ((xhci->quirks & XHCI_USB2_LPM_DISABLE) && (xhci->hci_version == 0x100))
++		usb2_lpm_disable = 1;
++
++	if (enable && !usb2_lpm_disable) {
+ 		/* Host supports BESL timeout instead of HIRD */
+ 		if (udev->usb2_hw_lpm_besl_capable) {
+ 			/* if device doesn't have a preferred BESL value use a
+diff --git a/drivers/usb/host/xhci.h b/drivers/usb/host/xhci.h
+index 73a28a9..cfb9f5d 100644
+--- a/drivers/usb/host/xhci.h
++++ b/drivers/usb/host/xhci.h
+@@ -1819,6 +1819,7 @@ struct xhci_hcd {
+ /* For controller with a broken Port Disable implementation */
+ #define XHCI_BROKEN_PORT_PED	(1 << 25)
+ #define XHCI_LIMIT_ENDPOINT_INTERVAL_7	(1 << 26)
++#define XHCI_USB2_LPM_DISABLE	(1 << 27)
+ 
+ 	unsigned int		num_active_eps;
+ 	unsigned int		limit_active_eps;
+-- 
+1.7.1
 
-I think that naming them _common, _lcd and _nand is just adding
-confusion when it comes to writing the dts files.
-
-
-@Linus, do you have a different preference here?
-
-Regards,
-Bjorn
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
