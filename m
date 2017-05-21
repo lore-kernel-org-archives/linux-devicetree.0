@@ -1,70 +1,87 @@
-From: Ralph Sennhauser <ralph.sennhauser-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 04/13] ARM: dts: armada-385-linksys: drop redundant properties in dependants
-Date: Sun, 21 May 2017 14:48:53 +0200
-Message-ID: <20170521124903.11050-5-ralph.sennhauser@gmail.com>
+From: Ralph Sennhauser <ralph.sennhauser@gmail.com>
+Subject: [PATCH 07/13] ARM: dts: armada-385-linksys: drop leagcy DSA bindings
+Date: Sun, 21 May 2017 14:48:56 +0200
+Message-ID: <20170521124903.11050-8-ralph.sennhauser@gmail.com>
 References: <20170521124903.11050-1-ralph.sennhauser@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170521124903.11050-1-ralph.sennhauser-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Imre Kaloz <kaloz-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ralph Sennhauser <ralph.sennhauser-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170521124903.11050-1-ralph.sennhauser@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Gregory Clement <gregory.clement@free-electrons.com>, Imre Kaloz <kaloz@openwrt.org>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Ralph Sennhauser <ralph.sennhauser@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Drop redundant declaration of #address-cells and #size-cells.
+The new ones work so there is little reason to keep the legacy bindings.
+Use the rework as the oportunity to drop the legacy node.
 
-Signed-off-by: Ralph Sennhauser <ralph.sennhauser-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Signed-off-by: Ralph Sennhauser <ralph.sennhauser@gmail.com>
+
 ---
- arch/arm/boot/dts/armada-385-linksys-caiman.dts | 3 ---
- arch/arm/boot/dts/armada-385-linksys-cobra.dts  | 3 ---
- arch/arm/boot/dts/armada-385-linksys-shelby.dts | 3 ---
- 3 files changed, 9 deletions(-)
 
-diff --git a/arch/arm/boot/dts/armada-385-linksys-caiman.dts b/arch/arm/boot/dts/armada-385-linksys-caiman.dts
-index 765c939..05e854a 100644
---- a/arch/arm/boot/dts/armada-385-linksys-caiman.dts
-+++ b/arch/arm/boot/dts/armada-385-linksys-caiman.dts
-@@ -47,9 +47,6 @@
+Notes:
+
+  There is little harm in keeping them but probably no value either, so
+  use the cleanup series to get rid of them.
+---
+ arch/arm/boot/dts/armada-385-linksys.dtsi | 47 -------------------------------
+ 1 file changed, 47 deletions(-)
+
+diff --git a/arch/arm/boot/dts/armada-385-linksys.dtsi b/arch/arm/boot/dts/armada-385-linksys.dtsi
+index 6cc1ec7..f1d6b77 100644
+--- a/arch/arm/boot/dts/armada-385-linksys.dtsi
++++ b/arch/arm/boot/dts/armada-385-linksys.dtsi
+@@ -115,53 +115,6 @@
+ 			linux,default-trigger = "disk-activity";
+ 		};
+ 	};
+-
+-	dsa@0 {
+-		status = "disabled";
+-
+-		compatible = "marvell,dsa";
+-		#address-cells = <2>;
+-		#size-cells = <0>;
+-
+-		dsa,ethernet = <&eth2>;
+-		dsa,mii-bus = <&mdio>;
+-
+-		switch@0 {
+-			#address-cells = <1>;
+-			#size-cells = <0>;
+-			reg = <0x0 0>;	/* MDIO address 0, switch 0 in tree */
+-
+-			port@0 {
+-				reg = <0>;
+-				label = "lan4";
+-			};
+-
+-			port@1 {
+-				reg = <1>;
+-				label = "lan3";
+-			};
+-
+-			port@2 {
+-				reg = <2>;
+-				label = "lan2";
+-			};
+-
+-			port@3 {
+-				reg = <3>;
+-				label = "lan1";
+-			};
+-
+-			port@4 {
+-				reg = <4>;
+-				label = "wan";
+-			};
+-
+-			port@5 {
+-				reg = <5>;
+-				label = "cpu";
+-			};
+-		};
+-	};
  };
  
- &expander0 {
--	#address-cells = <1>;
--	#size-cells = <0>;
--
- 	wan_amber@0 {
- 		label = "caiman:amber:wan";
- 		reg = <0x0>;
-diff --git a/arch/arm/boot/dts/armada-385-linksys-cobra.dts b/arch/arm/boot/dts/armada-385-linksys-cobra.dts
-index 2ae1e71..5b1662b 100644
---- a/arch/arm/boot/dts/armada-385-linksys-cobra.dts
-+++ b/arch/arm/boot/dts/armada-385-linksys-cobra.dts
-@@ -47,9 +47,6 @@
- };
- 
- &expander0 {
--	#address-cells = <1>;
--	#size-cells = <0>;
--
- 	wan_amber@0 {
- 		label = "cobra:amber:wan";
- 		reg = <0x0>;
-diff --git a/arch/arm/boot/dts/armada-385-linksys-shelby.dts b/arch/arm/boot/dts/armada-385-linksys-shelby.dts
-index 74f4273..a909371 100644
---- a/arch/arm/boot/dts/armada-385-linksys-shelby.dts
-+++ b/arch/arm/boot/dts/armada-385-linksys-shelby.dts
-@@ -47,9 +47,6 @@
- };
- 
- &expander0 {
--	#address-cells = <1>;
--	#size-cells = <0>;
--
- 	wan_amber@0 {
- 		label = "shelby:amber:wan";
- 		reg = <0x0>;
+ &ahci0 {
 -- 
 2.10.2
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
