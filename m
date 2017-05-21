@@ -1,288 +1,113 @@
-From: Ralph Sennhauser <ralph.sennhauser@gmail.com>
-Subject: [PATCH 13/13] ARM: dts: mvebu: add support for Linksys WRT3200ACM
- (Rango)
-Date: Sun, 21 May 2017 14:49:02 +0200
-Message-ID: <20170521124903.11050-14-ralph.sennhauser@gmail.com>
-References: <20170521124903.11050-1-ralph.sennhauser@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170521124903.11050-1-ralph.sennhauser@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, Ralph Sennhauser <ralph.sennhauser@gmail.com>, Rob Herring <robh+dt@kernel.org>, Gregory Clement <gregory.clement@free-electrons.com>, Imre Kaloz <kaloz@openwrt.org>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+From: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
+Subject: [PATCH v2 00/15] MIPS: lantiq: handle RCU register by separate drivers
+Date: Sun, 21 May 2017 15:09:03 +0200
+Message-ID: <20170521130918.27446-1-hauke@hauke-m.de>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
+Cc: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org, john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, hauke.mehrtens-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The Linksys WRT3200ACM (Rango) is the lates Armada-385 based router in
-the Linksys WRT AC Series which got released in October 2016.
+The RCU (Reset controller Unit) register block provides many different 
+functionalities. Before they were handed by the code in arch/mips/lantiq
+/xway/reset.c, now there are separate drivers for the functionality.
+This block provides support for reset controller, GPHY firmware 
+loading, USB PHY initialization and cross bar configuration. 
 
-The file armada-385-linksys-rango.dts is loosly based off of a DTS
-authored by Imre Kaloz.
+These changes are making the old device tree incompatible with the 
+current kernel. The upstream Linux kernel supports loading the device 
+tree blob from the boot loader since about one year, the latest 
+released vendor kernel does not support loading the device tree from a 
+bot loader.
 
-As Rango is part of the armada-385-linksys family of boards use the
-armada-385-linksys.dtsi as basis. As for functional differences to Imre
-Kaloz dts, the wlan LEDs aren't connected to the expander chip pca9635
-but directly to GPIOs. Then mpp47 controls the USB2.0 port and not the
-USB3.0 port, so use the correct GPIO mpp44 for it.
+I would prefer if this would go through the mips tree.
+There are more patches planed which would convert the Lantiq code 
+to the common clock framework.
 
-Other changes can be categorized as just cleanup / reorganization due to
-using the armada-385-linksys.dtsi.
+This is based on patches from Martin Blumenstingl and is a preparation 
+to convert the Lantiq target to the common clock framework which was 
+also started by Martin Blumenstingl.
 
-URL: https://github.com/openwrt/openwrt/blob/0abc3fa5a996daf7dafdc7794ccfe3fa7e955c5a/target/linux/mvebu/files/arch/arm/boot/dts/armada-385-linksys-rango.dts
-Signed-off-by: Ralph Sennhauser <ralph.sennhauser@gmail.com>
+Changelog: 
+v2:
+ * remove the rcu_ prefix for device names in device tree
+ * add both clocks to the gphy driver documentation
+ * use 2 cells for the reset controller, one for the status bit and one 
+   for the set bit, they are different for some reset bits.
+   reset-status and reset-request attribute were removed then.
+ * remove the documentation of the not existing sub nodes of the usb phy
+ * remove manual gpio vbus handling in the usb phy driver and use the 
+   generic phy regulator now.
+ * do not check if the usb phy reset is not null, the reset framework does this.
+ * do not print an error message when -EPROBE_DEFER was returned
 
----
 
-Notes:
+Hauke Mehrtens (7):
+  mtd: lantiq-flash: drop check of boot select
+  mtd: spi-falcon: drop check of boot select
+  watchdog: lantiq: access boot cause register through regmap
+  MIPS: lantiq: remove ltq_reset_cause() and ltq_boot_select()
+  MIPS: lantiq: remove old reset controller implementation
+  MIPS: lantiq: remove old GPHY loader code
+  MIPS: lantiq: remove old USB PHY initialisation
 
-  The sdhci node is taken as is, the current node lets one use the
-  wireless part of the attached sd8887. There is an issue with the
-  initalization of the bluetooth firmware though. Haven't had the time
-  to investigate that in depth so far but shouldn't hold up the Rango
-  addition.
+Martin Blumenstingl (8):
+  MIPS: lantiq: Use of_platform_populate instead of __dt_register_buses
+  MIPS: lantiq: Enable MFD_SYSCON to be able to use it for the RCU MFD
+  Documentation: DT: MIPS: lantiq: Add docs for the RCU bindings
+  MIPS: lantiq: Convert the xbar driver to a platform_driver
+  reset: Add a reset controller driver for the Lantiq XWAY based SoCs
+  MIPS: lantiq: Add a GPHY driver which uses the RCU syscon-mfd
+  phy: Add an USB PHY driver for the Lantiq SoCs using the RCU module
+  MIPS: lantiq: Remove the arch/mips/lantiq/xway/reset.c implementation
 
-  The non-removable property might be more appropriate than broken-cd
-  though.
+ .../devicetree/bindings/mips/lantiq/rcu-gphy.txt   |  38 ++
+ .../devicetree/bindings/mips/lantiq/rcu.txt        |  84 +++++
+ .../devicetree/bindings/mips/lantiq/xbar.txt       |  24 ++
+ .../bindings/phy/phy-lantiq-rcu-usb2.txt           |  41 +++
+ .../devicetree/bindings/reset/lantiq,rcu-reset.txt |  30 ++
+ MAINTAINERS                                        |   1 +
+ arch/mips/include/asm/mach-lantiq/lantiq.h         |   4 -
+ arch/mips/lantiq/Kconfig                           |   2 +
+ arch/mips/lantiq/falcon/reset.c                    |  22 --
+ arch/mips/lantiq/prom.c                            |   3 +-
+ arch/mips/lantiq/xway/Makefile                     |   4 +-
+ arch/mips/lantiq/xway/reset.c                      | 387 ---------------------
+ arch/mips/lantiq/xway/sysctrl.c                    |  69 +---
+ arch/mips/lantiq/xway/xrx200_phy_fw.c              | 113 ------
+ drivers/mtd/maps/lantiq-flash.c                    |   6 -
+ drivers/phy/Kconfig                                |   8 +
+ drivers/phy/Makefile                               |   1 +
+ drivers/phy/phy-lantiq-rcu-usb2.c                  | 275 +++++++++++++++
+ drivers/reset/Kconfig                              |   6 +
+ drivers/reset/Makefile                             |   1 +
+ drivers/reset/reset-lantiq-rcu.c                   | 201 +++++++++++
+ drivers/soc/Makefile                               |   1 +
+ drivers/soc/lantiq/Makefile                        |   2 +
+ drivers/soc/lantiq/gphy.c                          | 243 +++++++++++++
+ drivers/soc/lantiq/xbar.c                          | 101 ++++++
+ drivers/spi/spi-falcon.c                           |   5 -
+ drivers/watchdog/lantiq_wdt.c                      |  48 ++-
+ include/dt-bindings/mips/lantiq_rcu_gphy.h         |  15 +
+ 28 files changed, 1135 insertions(+), 600 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/mips/lantiq/rcu-gphy.txt
+ create mode 100644 Documentation/devicetree/bindings/mips/lantiq/rcu.txt
+ create mode 100644 Documentation/devicetree/bindings/mips/lantiq/xbar.txt
+ create mode 100644 Documentation/devicetree/bindings/phy/phy-lantiq-rcu-usb2.txt
+ create mode 100644 Documentation/devicetree/bindings/reset/lantiq,rcu-reset.txt
+ delete mode 100644 arch/mips/lantiq/xway/reset.c
+ delete mode 100644 arch/mips/lantiq/xway/xrx200_phy_fw.c
+ create mode 100644 drivers/phy/phy-lantiq-rcu-usb2.c
+ create mode 100644 drivers/reset/reset-lantiq-rcu.c
+ create mode 100644 drivers/soc/lantiq/Makefile
+ create mode 100644 drivers/soc/lantiq/gphy.c
+ create mode 100644 drivers/soc/lantiq/xbar.c
+ create mode 100644 include/dt-bindings/mips/lantiq_rcu_gphy.h
 
-  Checkpatch complains about the line length of the URL, though not much
-  room there. Checkpatch also complains about the vendor prefix linksys
-  not being documented, however this follows the examples given by the
-  other boards.
----
- arch/arm/boot/dts/Makefile                     |   1 +
- arch/arm/boot/dts/armada-385-linksys-rango.dts | 203 +++++++++++++++++++++++++
- 2 files changed, 204 insertions(+)
- create mode 100644 arch/arm/boot/dts/armada-385-linksys-rango.dts
-
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 9c5e1d9..6be2974 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -999,6 +999,7 @@ dtb-$(CONFIG_MACH_ARMADA_38X) += \
- 	armada-385-db-ap.dtb \
- 	armada-385-linksys-caiman.dtb \
- 	armada-385-linksys-cobra.dtb \
-+	armada-385-linksys-rango.dtb \
- 	armada-385-linksys-shelby.dtb \
- 	armada-385-synology-ds116.dtb \
- 	armada-385-turris-omnia.dtb \
-diff --git a/arch/arm/boot/dts/armada-385-linksys-rango.dts b/arch/arm/boot/dts/armada-385-linksys-rango.dts
-new file mode 100644
-index 0000000..86f3207
---- /dev/null
-+++ b/arch/arm/boot/dts/armada-385-linksys-rango.dts
-@@ -0,0 +1,203 @@
-+/*
-+ * Device Tree file for the Linksys WRT3200ACM (Rango)
-+ *
-+ * Copyright (C) 2016 Imre Kaloz <kaloz@openwrt.org>
-+ *
-+ *
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPL or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
-+ *
-+ *  a) This file is licensed under the terms of the GNU General Public
-+ *     License version 2.  This program is licensed "as is" without
-+ *     any warranty of any kind, whether express or implied.
-+ *
-+ * Or, alternatively,
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use,
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
-+ */
-+
-+/dts-v1/;
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/input/input.h>
-+#include "armada-385-linksys.dtsi"
-+
-+/ {
-+	model = "Linksys WRT3200ACM";
-+	compatible = "linksys,rango", "linksys,armada385", "marvell,armada385",
-+		     "marvell,armada380";
-+};
-+
-+&expander0 {
-+	wan_amber@0 {
-+		label = "rango:amber:wan";
-+		reg = <0x0>;
-+	};
-+
-+	wan_white@1 {
-+		label = "rango:white:wan";
-+		reg = <0x1>;
-+	};
-+
-+	usb2@5 {
-+		label = "rango:white:usb2";
-+		reg = <0x5>;
-+	};
-+
-+	usb3_1@6 {
-+		label = "rango:white:usb3_1";
-+		reg = <0x6>;
-+	};
-+
-+	usb3_2@7 {
-+		label = "rango:white:usb3_2";
-+		reg = <0x7>;
-+	};
-+
-+	wps_white@8 {
-+		label = "rango:white:wps";
-+		reg = <0x8>;
-+	};
-+
-+	wps_amber@9 {
-+		label = "rango:amber:wps";
-+		reg = <0x9>;
-+	};
-+};
-+
-+&gpio_leds {
-+	power {
-+		gpios = <&gpio1 24 GPIO_ACTIVE_HIGH>;
-+		label = "rango:white:power";
-+	};
-+
-+	sata {
-+		gpios = <&gpio0 21 GPIO_ACTIVE_LOW>;
-+		label = "rango:white:sata";
-+	};
-+
-+	wlan_2g {
-+		gpios = <&gpio1 13 GPIO_ACTIVE_LOW>;
-+		label = "rango:white:wlan_2g";
-+	};
-+
-+	wlan_5g {
-+		gpios = <&gpio1 14 GPIO_ACTIVE_LOW>;
-+		label = "rango:white:wlan_5g";
-+	};
-+};
-+
-+&gpio_leds_pins {
-+	marvell,pins = "mpp21", "mpp45", "mpp46", "mpp56";
-+};
-+
-+&nand {
-+	/* AMD/Spansion S34ML02G2 256MiB, OEM Layout */
-+
-+	partition@0 {
-+		label = "u-boot";
-+		reg = <0x0000000 0x200000>;  /* 2MiB */
-+		read-only;
-+	};
-+
-+	partition@200000 {
-+		label = "u_env";
-+		reg = <0x200000 0x20000>;    /* 128KiB */
-+	};
-+
-+	partition@220000 {
-+		label = "s_env";
-+		reg = <0x220000 0x40000>;    /* 256KiB */
-+	};
-+
-+	partition@7e0000 {
-+		label = "devinfo";
-+		reg = <0x7e0000 0x40000>;   /* 256KiB */
-+		read-only;
-+	};
-+
-+	partition@820000 {
-+		label = "sysdiag";
-+		reg = <0x820000 0x1e0000>;   /* 1920KiB */
-+		read-only;
-+	};
-+
-+	/* kernel1 overlaps with rootfs1 by design */
-+	partition@a00000 {
-+		label = "kernel1";
-+		reg = <0xa00000 0x5000000>;  /* 80MiB */
-+	};
-+
-+	partition@1000000 {
-+		label = "rootfs1";
-+		reg = <0x1000000 0x4a00000>;  /* 74MiB */
-+	};
-+
-+	/* kernel2 overlaps with rootfs2 by design */
-+	partition@5a00000 {
-+		label = "kernel2";
-+		reg = <0x5a00000 0x5000000>; /* 80MiB */
-+	};
-+
-+	partition@6000000 {
-+		label = "rootfs2";
-+		reg = <0x6000000 0x4a00000>; /* 74MiB */
-+	};
-+
-+	/*
-+	 * 86MiB, last MiB is for the BBT, not writable
-+	 */
-+	partition@aa00000 {
-+		label = "syscfg";
-+		reg = <0xaa00000 0x5600000>;
-+	};
-+
-+	/*
-+	 * Unused area between "s_env" and "devinfo".
-+	 * Moved here because otherwise the renumbered
-+	 * partitions would break the bootloader
-+	 * supplied bootargs
-+	 */
-+	partition@180000 {
-+		label = "unused_area";
-+		reg = <0x260000 0x5c0000>;   /* 5.75MiB */
-+	};
-+};
-+
-+&sdhci {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&sdhci_pins>;
-+	no-1-8-v;
-+	broken-cd;
-+	wp-inverted;
-+	bus-width = <8>;
-+	status = "okay";
-+};
-+
-+&usb3_1_vbus {
-+	gpio = <&gpio1 12 GPIO_ACTIVE_HIGH>;
-+};
-+
-+&usb3_1_vbus_pins {
-+	marvell,pins = "mpp44";
-+};
 -- 
-2.10.2
+2.11.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
