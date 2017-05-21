@@ -1,54 +1,43 @@
-From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Subject: [PATCH 4/4] ARM: bcm2835_defconfig: Enable serial & ethernet USB gadget support
-Date: Sun, 21 May 2017 18:44:39 +0200
-Message-ID: <1495385079-3697-5-git-send-email-stefan.wahren@i2se.com>
-References: <1495385079-3697-1-git-send-email-stefan.wahren@i2se.com>
+From: =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
+Subject: [PATCH v2 0/2] arm64: meson-gxbb: NanoPi K2 enablement
+Date: Sun, 21 May 2017 20:51:03 +0200
+Message-ID: <20170521185105.23448-1-afaerber@suse.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1495385079-3697-1-git-send-email-stefan.wahren-eS4NqCHxEME@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-Cc: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Phil Elwell <phil-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+To: linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, techsupport-/wLt9BB+Iy7nC/t2CciAbw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-In order to use the serial and ethernet USB gadget support on
-Raspberry Zero, we also need to enable the PHY driver, kernel module
-and OTG support.
+Hello,
 
-Signed-off-by: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
----
- arch/arm/configs/bcm2835_defconfig | 8 ++++++++
- 1 file changed, 8 insertions(+)
+This mini-series adds initial support for the Amlogic S905 based
+FriendlyARM NanoPi K2 SBC.
 
-diff --git a/arch/arm/configs/bcm2835_defconfig b/arch/arm/configs/bcm2835_defconfig
-index 3ba8cd3..3ee9d78 100644
---- a/arch/arm/configs/bcm2835_defconfig
-+++ b/arch/arm/configs/bcm2835_defconfig
-@@ -24,6 +24,8 @@ CONFIG_PROFILING=y
- CONFIG_OPROFILE=y
- CONFIG_JUMP_LABEL=y
- CONFIG_CC_STACKPROTECTOR_REGULAR=y
-+CONFIG_MODULES=y
-+CONFIG_MODULE_UNLOAD=y
- CONFIG_ARCH_MULTI_V6=y
- CONFIG_ARCH_BCM=y
- CONFIG_ARCH_BCM2835=y
-@@ -86,8 +88,14 @@ CONFIG_SND=y
- CONFIG_SND_SOC=y
- CONFIG_SND_BCM2835_SOC_I2S=y
- CONFIG_USB=y
-+CONFIG_USB_OTG=y
- CONFIG_USB_STORAGE=y
- CONFIG_USB_DWC2=y
-+CONFIG_NOP_USB_XCEIV=y
-+CONFIG_USB_GADGET=y
-+CONFIG_USB_ETH=m
-+CONFIG_USB_ETH_EEM=y
-+CONFIG_USB_G_SERIAL=m
- CONFIG_MMC=y
- CONFIG_MMC_SDHCI=y
- CONFIG_MMC_SDHCI_PLTFM=y
+Tested with mainline U-Boot.
+
+v2 adds USB and Wifi among others.
+
+Regards,
+Andreas
+
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: techsupport-/wLt9BB+Iy7nC/t2CciAbw@public.gmane.org
+
+Andreas Färber (2):
+  dt-bindings: arm: amlogic: Add NanoPi K2
+  arm64: dts: amlogic: Add NanoPi K2
+
+ Documentation/devicetree/bindings/arm/amlogic.txt  |   1 +
+ arch/arm64/boot/dts/amlogic/Makefile               |   1 +
+ .../boot/dts/amlogic/meson-gxbb-nanopi-k2.dts      | 291 +++++++++++++++++++++
+ 3 files changed, 293 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/amlogic/meson-gxbb-nanopi-k2.dts
+
 -- 
-2.7.4
+2.12.0
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
