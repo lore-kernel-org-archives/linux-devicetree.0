@@ -1,134 +1,56 @@
-From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: Re: [PATCH 7/9] pinctrl: mvebu: add driver for Armada AP806 pinctrl
-Date: Mon, 22 May 2017 16:37:12 +0200
-Message-ID: <87k2590xgn.fsf@free-electrons.com>
-References: <cover.0dd8a92ae74fcec8d0470d0a7016035089e46eed.1495209664.git-series.gregory.clement@free-electrons.com>
-        <5a190d4d71cb8626315b832c6f987e9e03da2fa9.1495209664.git-series.gregory.clement@free-electrons.com>
-        <CAP=VYLrpQJ+C+KaEVcv8Rjmp470UH9-+MKAsjErXYoh=AME-Qw@mail.gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v5 1/3] of: Move OF property and graph API from base.c to property.c
+Date: Mon, 22 May 2017 09:38:59 -0500
+Message-ID: <CAL_JsqJswk78Be6xJvK0i9y+53XhY+1XkfPSd+3S8ub_Cnm17Q@mail.gmail.com>
+References: <1495440698-22260-1-git-send-email-sakari.ailus@linux.intel.com>
+ <1495440698-22260-2-git-send-email-sakari.ailus@linux.intel.com>
+ <CAL_JsqLwdi-oFxxF9rh4KzKim_ouQ8eDwZ5uicwtjb5-9eWHBw@mail.gmail.com> <91b4159b-cb5b-fd9a-8e9c-c37c2acd1814@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CAP=VYLrpQJ+C+KaEVcv8Rjmp470UH9-+MKAsjErXYoh=AME-Qw@mail.gmail.com>
-        (Paul Gortmaker's message of "Sat, 20 May 2017 15:04:22 -0400")
-Sender: linux-gpio-owner@vger.kernel.org
-To: Paul Gortmaker <paul.gortmaker@windriver.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Russell King <rmk+kernel@armlinux.org.uk>, Nadav Haklai <nadavh@marvell.com>, Kostya Porotchkin <kostap@marvell.com>, Neta Zur Hershkovits <neta@marvell.com>, Marcin Wojtas <mw@semihalf.com>, Omri Itach <omrii@marvell.com>, Shadi Ammouri <shadi@marvell.com>, Hanna Hawa <hannah@marvell.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <91b4159b-cb5b-fd9a-8e9c-c37c2acd1814@linux.intel.com>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Frank Rowand <frowand.list@gmail.com>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, Sudeep Holla <sudeep.holla@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>, "Rafael J. Wysocki" <rafael@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mark Brown <broonie@kernel.org>, Al Stone <ahs3@redhat.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Paul,
- 
- On sam., mai 20 2017, Paul Gortmaker <paul.gortmaker@windriver.com> wrote:
-
-> On Fri, May 19, 2017 at 12:04 PM, Gregory CLEMENT
-> <gregory.clement@free-electrons.com> wrote:
->> From: Hanna Hawa <hannah@marvell.com>
+On Mon, May 22, 2017 at 9:33 AM, Sakari Ailus
+<sakari.ailus@linux.intel.com> wrote:
+> Hi Rob,
+>
+> Thanks for the review!
+>
+> On 05/22/17 17:22, Rob Herring wrote:
+>> On Mon, May 22, 2017 at 3:11 AM, Sakari Ailus
+>> <sakari.ailus@linux.intel.com> wrote:
+>>> base.c contains both core OF functions and increasingly other
+>>> functionality such as accessing properties and graphs, including
+>>> convenience functions. In the near future this would also include OF
+>>> specific implementation of the fwnode property and graph APIs.
+>>>
+>>> Create driver/of/property.c to contain procedures for accessing and
+>>> interpreting device tree properties. The procedures are moved from
+>>> drivers/of/base.c, with no changes other than copying only the includes
+>>> required by the moved procedures.
+>>>
+>>> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+>>> ---
+>>>  drivers/of/Makefile   |   2 +-
+>>>  drivers/of/base.c     | 733 ------------------------------------------------
+>>>  drivers/of/property.c | 763 ++++++++++++++++++++++++++++++++++++++++++++++++++
 >>
->> This commit adds a pinctrl driver for the pin-muxing controller found in
->> the AP806 part of the Marvell Armada 7K and 8K SoCs. Its register
->> interface is compatible with the one used by previous mvebu pin
->> controllers, so the common logic in drivers/pinctrl/mvebu/pinctrl-mvebu.c
->> is used.
->>
->> Signed-off-by: Hanna Hawa <hannah@marvell.com>
->> Reviewed-by: Shadi Ammouri <shadi@marvell.com>
->> [updated for mvebu pinctrl changes
->>  - converted to simple_mmio
->>  - removed unimplemented .remove function
->>  - removed DTS description
->>   - converted  to use syscon/regmap
->>  --rmk]
->> Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
->> Reviewed-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
->> Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
->> ---
->>  drivers/pinctrl/mvebu/Kconfig                |   4 +-
->>  drivers/pinctrl/mvebu/Makefile               |   1 +-
->>  drivers/pinctrl/mvebu/pinctrl-armada-ap806.c | 145 ++++++++++++++++++++-
->>  3 files changed, 150 insertions(+)
->>  create mode 100644 drivers/pinctrl/mvebu/pinctrl-armada-ap806.c
->>
->> diff --git a/drivers/pinctrl/mvebu/Kconfig b/drivers/pinctrl/mvebu/Kconfig
->> index 8cb444b60ae9..0e0b009f2b71 100644
->> --- a/drivers/pinctrl/mvebu/Kconfig
->> +++ b/drivers/pinctrl/mvebu/Kconfig
->> @@ -28,6 +28,10 @@ config PINCTRL_ARMADA_39X
->>         bool
->>         select PINCTRL_MVEBU
->>
->> +config PINCTRL_ARMADA_AP806
->> +       bool
->> +       select PINCTRL_MVEBU
+>> Please put graph functions in graph.c unless there is some reason not to.
 >
-> If this isn't going to be modular, can we remove all the uses
-> of module.h and MODULE_ etc.   I've nearly got all of these
-> cleaned up in pinctrl and it would be nice to not have new
-> ones creep back in.
-
-Indeed it won't be modular, so I will remove it in this driver and the
-next one.
-
-Thanks,
-
-Gregory
-
+> There will be a single fwnode ops struct which will contain both
+> property and graph API primitives. The functions implementing the
+> operations will be private, albeit the corresponding OF functions they
+> will use are global.
 >
-> Thanks,
-> Paul.
-> --
->
->> +
->>  config PINCTRL_ARMADA_XP
->>         bool
->>         select PINCTRL_MVEBU
->> diff --git a/drivers/pinctrl/mvebu/Makefile b/drivers/pinctrl/mvebu/Makefile
->> index 60c245a60f39..455db274b53d 100644
->> --- a/drivers/pinctrl/mvebu/Makefile
->> +++ b/drivers/pinctrl/mvebu/Makefile
->> @@ -5,6 +5,7 @@ obj-$(CONFIG_PINCTRL_ARMADA_370) += pinctrl-armada-370.o
->>  obj-$(CONFIG_PINCTRL_ARMADA_375) += pinctrl-armada-375.o
->>  obj-$(CONFIG_PINCTRL_ARMADA_38X) += pinctrl-armada-38x.o
->>  obj-$(CONFIG_PINCTRL_ARMADA_39X) += pinctrl-armada-39x.o
->> +obj-$(CONFIG_PINCTRL_ARMADA_AP806) += pinctrl-armada-ap806.o
->>  obj-$(CONFIG_PINCTRL_ARMADA_XP)  += pinctrl-armada-xp.o
->>  obj-$(CONFIG_PINCTRL_ARMADA_37XX)  += pinctrl-armada-37xx.o
->>  obj-$(CONFIG_PINCTRL_ORION)  += pinctrl-orion.o
->> diff --git a/drivers/pinctrl/mvebu/pinctrl-armada-ap806.c b/drivers/pinctrl/mvebu/pinctrl-armada-ap806.c
->> new file mode 100644
->> index 000000000000..269b1c1f53b1
->> --- /dev/null
->> +++ b/drivers/pinctrl/mvebu/pinctrl-armada-ap806.c
->> @@ -0,0 +1,145 @@
->> +/*
->> + * Marvell Armada ap806 pinctrl driver based on mvebu pinctrl core
->> + *
->> + * Copyright (C) 2017 Marvell
->> + *
->> + * Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
->> + * Hanna Hawa <hannah@marvell.com>
->> + *
->> + * This program is free software; you can redistribute it and/or modify
->> + * it under the terms of the GNU General Public License as published by
->> + * the Free Software Foundation; either version 2 of the License, or
->> + * (at your option) any later version.
->> + */
->> +
->> +#include <linux/err.h>
->> +#include <linux/init.h>
->> +#include <linux/io.h>
->> +#include <linux/module.h>
->
-> [...]
->
->> +module_platform_driver(armada_ap806_pinctrl_driver);
->> +
->> +MODULE_AUTHOR("Thomas Petazzoni <thomas.petazzoni@free-electrons.com>");
->> +MODULE_DESCRIPTION("Marvell Armada ap806 pinctrl driver");
->> +MODULE_LICENSE("GPL v2");
->> --
->> git-series 0.9.1
+> If I split current properties.c, which of these should the fwnode ops
+> struct and the function callbacks be put? The patch is here (and the
+> previous one; both were submitted earlier today):
 
--- 
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
+Okay, makes sense. The filename is a bit confusing, but I don't have a
+better suggestion.
+
+Rob
