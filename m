@@ -1,42 +1,79 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH RFC v2 1/2] Documentation/devicetree: Add specification
- for FSI busses
-Date: Mon, 22 May 2017 08:10:23 -0500
-Message-ID: <20170522131023.rawtmyrdalxvobrd@rob-hp-laptop>
-References: <1494910285-20856-1-git-send-email-jk@ozlabs.org>
- <1494910285-20856-2-git-send-email-jk@ozlabs.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1494910285-20856-2-git-send-email-jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH v5 3/6] spi: Document SPI slave controller support
+Date: Mon, 22 May 2017 15:11:42 +0200
+Message-ID: <1495458705-11692-4-git-send-email-geert+renesas@glider.be>
+References: <1495458705-11692-1-git-send-email-geert+renesas@glider.be>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <1495458705-11692-1-git-send-email-geert+renesas@glider.be>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, Wolfram Sang <wsa+renesas@sang-engineering.com>, Hiromitsu Yamasaki <hiromitsu.yamasaki.ym@renesas.com>, Jiada Wang <jiada_wang@mentor.com>, Matt Porter <mporter@konsulko.com>, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 16, 2017 at 12:51:24PM +0800, Jeremy Kerr wrote:
-> This change introduces a proposed layout for describing FSI busses in
-> the device tree. While the bus is probe-able, we'd still like a method
-> of describing subordinate (eg i2c) busses that are behind FSI devices.
-> 
-> The FSI core will be responsible for matching probed slaves & engines to
-> their device tree nodes, so the FSI device drivers' probe() functions
-> will be passed a struct device with the appropriate of_node populated
-> where a matching DT node is found.
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+v3, v4, v5:
+  - No changes,
 
-Missed this the first time, "dt-bindings: fsi: " is the preferred 
-subject prefix. No need to respin just for that.
+v2:
+  - New.
+---
+ Documentation/spi/spi-summary | 27 ++++++++++++++++++++-------
+ 1 file changed, 20 insertions(+), 7 deletions(-)
 
-> 
-> Signed-off-by: Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/fsi/fsi.txt | 144 ++++++++++++++++++++++++++
->  1 file changed, 144 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/fsi/fsi.txt
-
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/spi/spi-summary b/Documentation/spi/spi-summary
+index d1824b399b2d1d79..1721c1b570c32466 100644
+--- a/Documentation/spi/spi-summary
++++ b/Documentation/spi/spi-summary
+@@ -62,8 +62,8 @@ chips described as using "three wire" signaling: SCK, data, nCSx.
+ (That data line is sometimes called MOMI or SISO.)
+ 
+ Microcontrollers often support both master and slave sides of the SPI
+-protocol.  This document (and Linux) currently only supports the master
+-side of SPI interactions.
++protocol.  This document (and Linux) supports both the master and slave
++sides of SPI interactions.
+ 
+ 
+ Who uses it?  On what kinds of systems?
+@@ -154,9 +154,8 @@ control audio interfaces, present touchscreen sensors as input interfaces,
+ or monitor temperature and voltage levels during industrial processing.
+ And those might all be sharing the same controller driver.
+ 
+-A "struct spi_device" encapsulates the master-side interface between
+-those two types of driver.  At this writing, Linux has no slave side
+-programming interface.
++A "struct spi_device" encapsulates the controller-side interface between
++those two types of drivers.
+ 
+ There is a minimal core of SPI programming interfaces, focussing on
+ using the driver model to connect controller and protocol drivers using
+@@ -177,10 +176,24 @@ shows up in sysfs in several locations:
+    /sys/bus/spi/drivers/D ... driver for one or more spi*.* devices
+ 
+    /sys/class/spi_master/spiB ... symlink (or actual device node) to
+-	a logical node which could hold class related state for the
+-	controller managing bus "B".  All spiB.* devices share one
++	a logical node which could hold class related state for the SPI
++	master controller managing bus "B".  All spiB.* devices share one
+ 	physical SPI bus segment, with SCLK, MOSI, and MISO.
+ 
++   /sys/devices/.../CTLR/slave ... virtual file for (un)registering the
++	slave device for an SPI slave controller.
++	Writing the driver name of an SPI slave handler to this file
++	registers the slave device; writing "(null)" unregisters the slave
++	device.
++	Reading from this file shows the name of the slave device ("(null)"
++	if not registered).
++
++   /sys/class/spi_slave/spiB ... symlink (or actual device node) to
++	a logical node which could hold class related state for the SPI
++	slave controller on bus "B".  When registered, a single spiB.*
++	device is present here, possible sharing the physical SPI bus
++	segment with other SPI slave devices.
++
+ Note that the actual location of the controller's class state depends
+ on whether you enabled CONFIG_SYSFS_DEPRECATED or not.  At this time,
+ the only class-specific state is the bus number ("B" in "spiB"), so
+-- 
+2.7.4
