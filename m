@@ -1,134 +1,49 @@
-From: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 07/15] MIPS: lantiq: Convert the xbar driver to a platform_driver
-Date: Mon, 22 May 2017 09:05:53 +0300
-Message-ID: <CAHp75VeQgekiWc+YxP5sDFBB4fvmRs1=heFcdYS6mAgqPACW7g@mail.gmail.com>
-References: <20170521130918.27446-1-hauke@hauke-m.de> <20170521130918.27446-8-hauke@hauke-m.de>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: [PATCH 3/6] pinctrl: sunxi: Fix SPDIF function name for A83T
+Date: Mon, 22 May 2017 14:25:49 +0800
+Message-ID: <20170522062552.19026-4-wens@csie.org>
+References: <20170522062552.19026-1-wens@csie.org>
+Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170521130918.27446-8-hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
-Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
-Cc: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Linux MIPS Mailing List <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, "open list:MEMORY TECHNOLOGY..." <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org, john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org, linux-spi <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, hauke.mehrtens-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Return-path: <linux-sunxi+bncBCMILY6JWQBBB74IRLEQKGQENFBX7GQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20170522062552.19026-1-wens-jdAy2FN1RRM@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, May 21, 2017 at 4:09 PM, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org> wrote:
-> From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
->
-> This allows using the xbar driver on ARX300 based SoCs which require the
-> same xbar setup as the xRX200 chipsets because the xbar driver
-> initialization is not guarded by an xRX200 specific
-> of_machine_is_compatible condition anymore. Additionally the new driver
-> takes a syscon phandle to configure the XBAR endianness bits in RCU
-> (before this was done in arch/mips/lantiq/xway/reset.c and also
-> guarded by an VRX200 specific if-statement).
+We use well known standard names for functions that have name, such as
+I2C, SPI, SPDIF, etc..
 
-> +#include <linux/ioport.h>
+Fix the function name of SPDIF, which was named OWA (One Wire Audio)
+based on Allwinner datasheets.
 
-I'm not sure you need this.
+Fixes: 4730f33f0d82 ("pinctrl: sunxi: add allwinner A83T PIO controller
+		      support")
+Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+---
+ drivers/pinctrl/sunxi/pinctrl-sun8i-a83t.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> +#include <linux/mfd/syscon.h>
-> +#include <linux/module.h>
-
-> +#include <linux/of.h>
-> +#include <linux/of_platform.h>
-> +#include <linux/of_address.h>
-
-And these lines are under question, see below.
-
-> +#include <linux/regmap.h>
-> +
-
-> +#include <lantiq_soc.h>
-
-This rather should be "lantiq_soc.h"
-
-> +static int ltq_xbar_probe(struct platform_device *pdev)
-> +{
-> +       struct device *dev = &pdev->dev;
-> +       struct device_node *np = dev->of_node;
-> +       struct resource res_xbar;
-> +       struct regmap *rcu_regmap;
-> +       void __iomem *xbar_membase;
-> +       u32 rcu_ahb_endianness_reg_offset;
-> +       u32 rcu_ahb_endianness_val;
-> +       int ret;
-> +
-
-> +       ret = of_address_to_resource(np, 0, &res_xbar);
-> +       if (ret) {
-> +               dev_err(dev, "Failed to get xbar resources");
-> +               return ret;
-> +       }
-> +
-> +       if (!devm_request_mem_region(dev, res_xbar.start,
-> +                                    resource_size(&res_xbar),
-> +               res_xbar.name)) {
-> +               dev_err(dev, "Failed to get xbar resources");
-> +               return -ENODEV;
-> +       }
-> +
-> +       xbar_membase = devm_ioremap_nocache(dev, res_xbar.start,
-> +                                               resource_size(&res_xbar));
-> +       if (!xbar_membase) {
-> +               dev_err(dev, "Failed to remap xbar resources");
-> +               return -ENODEV;
-> +       }
-
-And what's wrong with traditional pattern
-
-y = platform_get_resource(IOMEM);
-x = devm_ioremap_resource(y);
-if (IS_ERR(x))
- return PTR_ERR(x);
-
-?
-
-> +
-> +       /* RCU configuration is optional */
-> +       rcu_regmap = syscon_regmap_lookup_by_phandle(np, "lantiq,rcu-syscon");
-> +       if (!IS_ERR_OR_NULL(rcu_regmap)) {
-
-> +               if (of_property_read_u32_index(np, "lantiq,rcu-syscon", 1,
-> +                       &rcu_ahb_endianness_reg_offset)) {
-
-device_property_*() ?
-
-> +                       dev_err(&pdev->dev, "Failed to get RCU reg offset\n");
-> +                       return -EINVAL;
-> +               }
-> +
-> +               if (of_device_is_big_endian(np))
-
-Do we have common helper for this (I mean resource provider agnostic one)?
-
-> +                       rcu_ahb_endianness_val = RCU_VR9_BE_AHB1S;
-> +               else
-> +                       rcu_ahb_endianness_val = 0;
-> +
-> +               if (regmap_update_bits(rcu_regmap,
-> +                                       rcu_ahb_endianness_reg_offset,
-> +                                       RCU_VR9_BE_AHB1S,
-> +                                       rcu_ahb_endianness_val))
-> +                       dev_warn(&pdev->dev,
-> +                               "Failed to configure RCU AHB endianness\n");
-> +       }
-> +
-> +       /* disable fpi burst */
-> +       ltq_w32_mask(XBAR_FPI_BURST_EN, 0,
-> +                    xbar_membase + XBAR_ALWAYS_LAST);
-> +
-> +       return 0;
-> +}
-
-> +builtin_platform_driver(xbar_driver);
-
-Why it can't be module?
-
+diff --git a/drivers/pinctrl/sunxi/pinctrl-sun8i-a83t.c b/drivers/pinctrl/sunxi/pinctrl-sun8i-a83t.c
+index 9aec1d2232dd..6624499eae72 100644
+--- a/drivers/pinctrl/sunxi/pinctrl-sun8i-a83t.c
++++ b/drivers/pinctrl/sunxi/pinctrl-sun8i-a83t.c
+@@ -394,7 +394,7 @@ static const struct sunxi_desc_pin sun8i_a83t_pins[] = {
+ 	SUNXI_PIN(SUNXI_PINCTRL_PIN(E, 18),
+ 		  SUNXI_FUNCTION(0x0, "gpio_in"),
+ 		  SUNXI_FUNCTION(0x1, "gpio_out"),
+-		  SUNXI_FUNCTION(0x3, "owa")),		/* DOUT */
++		  SUNXI_FUNCTION(0x3, "spdif")),	/* DOUT */
+ 	SUNXI_PIN(SUNXI_PINCTRL_PIN(E, 19),
+ 		  SUNXI_FUNCTION(0x0, "gpio_in"),
+ 		  SUNXI_FUNCTION(0x1, "gpio_out")),
 -- 
-With Best Regards,
-Andy Shevchenko
---
-To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.11.0
