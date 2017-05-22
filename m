@@ -1,179 +1,115 @@
-From: Oza Oza <oza.oza@broadcom.com>
-Subject: Re: [PATCH 2/3] iommu/pci: reserve iova for PCI masters
-Date: Mon, 22 May 2017 22:15:13 +0530
-Message-ID: <CAMSpPPcaM_10FJGjsjwuSSTcsOB2bONJwOYpeHRemWmw9cJttQ@mail.gmail.com>
-References: <1493786795-28153-1-git-send-email-oza.oza@broadcom.com>
- <1493786795-28153-2-git-send-email-oza.oza@broadcom.com> <0c9a6b09-139c-df49-cf73-6a3935a6aacd@arm.com>
- <CAMSpPPdtfMMkTpi9cWn0QV2qnfBoHayQQg5cGANAswSwFoHX3w@mail.gmail.com> <d063a61c-44f6-11f3-a25b-01cfb5d46172@arm.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v4 00/20] eeprom: at24: Add OF device ID table
+Date: Mon, 22 May 2017 11:52:50 -0500
+Message-ID: <CAL_JsqKj_f-jY3wi78QyAAov=a9-ReaT9qU=ytwSp+5RL0eutg@mail.gmail.com>
+References: <20170522140208.24652-1-javier@dowhile0.org>
+ <CAMuHMdXbhkGGFC80-39Axzv=BdEXyBNuPuHCSWW3eXWDB=SQ+w@mail.gmail.com>
+ <CAL_JsqL2P=C+xRyL-BCC=RtFah4BRf8BHSvWNPZ+6r2ioSk_Yw@mail.gmail.com>
+ <CABxcv==xw7UxF1Ey+hDhGb_wzgAcFR9JLm6iuirvYSTTvSxb0A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <d063a61c-44f6-11f3-a25b-01cfb5d46172@arm.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Robin Murphy <robin.murphy@arm.com>
-Cc: Joerg Roedel <joro@8bytes.org>, Linux IOMMU <iommu@lists.linux-foundation.org>, linux-pci <linux-pci@vger.kernel.org>, linux-kernel@vger.kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>, Oza Pawandeep <oza.pawandeep@gmail.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CABxcv==xw7UxF1Ey+hDhGb_wzgAcFR9JLm6iuirvYSTTvSxb0A@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Javier Martinez Canillas <javier@dowhile0.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Wolfram Sang <wsa@the-dreams.de>, Tony Lindgren <tony@atomide.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Will Deacon <will.deacon@arm.com>, Michal Simek <michal.simek@xilinx.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Paul Mackerras <paulus@samba.org>, Linux I2C <linux-i2c@vger.kernel.org>, Hongtao Jia <hongtao.jia@nxp.com>, Mark Jackson <mpfj@newflow.co.uk>, Jason Cooper <jason@lakedaemon.net>, Herbert Xu <herbert@gondor.apana.org.au>, =?UTF-8?Q?Horia_Geant=C4=83?= <horia.geanta@nxp.com>, Michael Ellerman <mpe@ellerman.id.au>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, Andy Shevchenko <andy.shevchenko@gmail.com>, Geert Uytterhoeven <geert@linux-m68k.org>, =?UTF-8?Q?S=C3=B6ren_Brinkmann?= <soren.brinkmann@xilinx.com>, Catalin Marinas <catalin.marin>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 5, 2017 at 9:21 PM, Robin Murphy <robin.murphy@arm.com> wrote:
-> On 04/05/17 19:52, Oza Oza wrote:
->> On Thu, May 4, 2017 at 11:50 PM, Robin Murphy <robin.murphy@arm.com> wrote:
->>> On 03/05/17 05:46, Oza Pawandeep wrote:
->>>> this patch reserves the iova for PCI masters.
->>>> ARM64 based SOCs may have scattered memory banks.
->>>> such as iproc based SOC has
->>>>
->>>> <0x00000000 0x80000000 0x0 0x80000000>, /* 2G @ 2G */
->>>> <0x00000008 0x80000000 0x3 0x80000000>, /* 14G @ 34G */
->>>> <0x00000090 0x00000000 0x4 0x00000000>, /* 16G @ 576G */
->>>> <0x000000a0 0x00000000 0x4 0x00000000>; /* 16G @ 640G */
->>>>
->>>> but incoming PCI transcation addressing capability is limited
->>>> by host bridge, for example if max incoming window capability
->>>> is 512 GB, then 0x00000090 and 0x000000a0 will fall beyond it.
->>>>
->>>> to address this problem, iommu has to avoid allocating iovas which
->>>> are reserved. which inturn does not allocate iova if it falls into hole.
->>>
->>> I don't necessarily disagree with doing this, as we could do with facing
->>> up to the issue of discontiguous DMA ranges in particular (I too have a
->>> platform with this problem), but I'm still not overly keen on pulling DT
->>> specifics into this layer. More than that, though, if we are going to do
->>> it, then we should do it for all devices with a restrictive
->>> "dma-ranges", not just PCI ones.
->>>
->>
->> How do you propose to do it ?
->>
->> my thinking is this:
->> iova_reserve_pci_windows is written specific for PCI, and I am adding there.
->>
->> ideally
->> struct pci_host_bridge should have new member:
->>
->> struct list_head inbound_windows; /* resource_entry */
->>
->> but somehow this resource have to be filled much before
->> iommu_dma_init_domain happens.
->> and use brdge resource directly in iova_reserve_pci_windows as it is
->> already doing it for outbound memory.
->>
->> this will detach the DT specifics from dma-immu layer.
->> let me know how this sounds.
+On Mon, May 22, 2017 at 9:46 AM, Javier Martinez Canillas
+<javier@dowhile0.org> wrote:
+> Hello Geert and Rob,
 >
-> Please check the state of the code currently queued in Joerg's tree and
-> in linux-next - iommu_dma_get_resv_regions() has room for
-> device-agnostic stuff before the if (!dev_is_pci(dev)) check.
->
-> Furthermore, with the probe-deferral changes we end up with a common
-> dma_configure() routine to abstract the firmware-specifics of
-> of_dma_configure() vs. acpi_dma_configure(), so it would make sense to
-> give drivers etc. a similar interface for interrogating ranges. i.e.
-> some common function that abstracts the difference between parsing DT
-> dma-ranges vs. the ACPI _DMA object, either with a list-based get/put
-> model or perhaps an iterator with a user-provided callback (so users
-> could process in-place or create their own list as necessary). Unless of
-> course we go all the way to making the ranges an inherent part of the
-> device layer like some MIPS platforms currently do.
->
-> Robin.
->
-
-Hi Robin,
-
-your above comments are taken care to the best of my understanding.
-Kindly have a look at the PATCH v7.
-the whole patch-set takes care of IOVA reservation for PCI inbound memory.
-now there is no dependency on IOMMU and OF layer.
-
-Regards,
-Oza.
-
-
->>>> Bug: SOC-5216
->>>> Change-Id: Icbfc99a045d730be143fef427098c937b9d46353
->>>> Signed-off-by: Oza Pawandeep <oza.oza@broadcom.com>
->>>> Reviewed-on: http://gerrit-ccxsw.broadcom.net/40760
->>>> Reviewed-by: vpx_checkpatch status <vpx_checkpatch@broadcom.com>
->>>> Reviewed-by: CCXSW <ccxswbuild@broadcom.com>
->>>> Tested-by: vpx_autobuild status <vpx_autobuild@broadcom.com>
->>>> Tested-by: vpx_smoketest status <vpx_smoketest@broadcom.com>
->>>> Tested-by: CCXSW <ccxswbuild@broadcom.com>
->>>> Reviewed-by: Scott Branden <scott.branden@broadcom.com>
->>>>
->>>> diff --git a/drivers/iommu/dma-iommu.c b/drivers/iommu/dma-iommu.c
->>>> index 48d36ce..08764b0 100644
->>>> --- a/drivers/iommu/dma-iommu.c
->>>> +++ b/drivers/iommu/dma-iommu.c
->>>> @@ -27,6 +27,7 @@
->>>>  #include <linux/iova.h>
->>>>  #include <linux/irq.h>
->>>>  #include <linux/mm.h>
->>>> +#include <linux/of_pci.h>
->>>>  #include <linux/pci.h>
->>>>  #include <linux/scatterlist.h>
->>>>  #include <linux/vmalloc.h>
->>>> @@ -171,8 +172,12 @@ static void iova_reserve_pci_windows(struct pci_dev *dev,
->>>>               struct iova_domain *iovad)
->>>>  {
->>>>       struct pci_host_bridge *bridge = pci_find_host_bridge(dev->bus);
->>>> +     struct device_node *np = bridge->dev.parent->of_node;
->>>>       struct resource_entry *window;
->>>>       unsigned long lo, hi;
->>>> +     int ret;
->>>> +     dma_addr_t tmp_dma_addr = 0, dma_addr;
->>>> +     LIST_HEAD(res);
->>>>
->>>>       resource_list_for_each_entry(window, &bridge->windows) {
->>>>               if (resource_type(window->res) != IORESOURCE_MEM &&
->>>> @@ -183,6 +188,36 @@ static void iova_reserve_pci_windows(struct pci_dev *dev,
->>>>               hi = iova_pfn(iovad, window->res->end - window->offset);
->>>>               reserve_iova(iovad, lo, hi);
->>>>       }
->>>> +
->>>> +     /* PCI inbound memory reservation. */
->>>> +     ret = of_pci_get_dma_ranges(np, &res);
->>>> +     if (!ret) {
->>>> +             resource_list_for_each_entry(window, &res) {
->>>> +                     struct resource *res_dma = window->res;
->>>> +
->>>> +                     dma_addr = res_dma->start - window->offset;
->>>> +                     if (tmp_dma_addr > dma_addr) {
->>>> +                             pr_warn("PCI: failed to reserve iovas; ranges should be sorted\n");
+> On Mon, May 22, 2017 at 4:26 PM, Rob Herring <robh@kernel.org> wrote:
+>> On Mon, May 22, 2017 at 9:23 AM, Geert Uytterhoeven
+>> <geert@linux-m68k.org> wrote:
+>>> Hi Javier,
 >>>
->>> I don't see anything in the DT spec about the entries having to be
->>> sorted, and it's not exactly impossible to sort a list if you need it so
->>> (and if I'm being really pedantic, one could still trigger this with a
->>> list that *is* sorted, only by different criteria).
+>>> On Mon, May 22, 2017 at 4:01 PM, Javier Martinez Canillas
+>>> <javier@dowhile0.org> wrote:
+>>>> This series is a follow-up to patch [0] that added an OF device ID table
+>>>> to the at24 EEPROM driver. As you suggested [1], this version instead of
+>>>> adding entries for every used <vendor,device> tuple, only adds a single
+>>>> entry for each chip type using the "atmel" vendor as a generic fallback.
+>>>>
+>>>> This is a re-spin that addresses some issues pointed out by Rob Herring.
+>>>>
+>>>> The first patch documents in the DT binding what's the correct vendor to
+>>>> use and what are the ones that are being deprecated. The second one adds
+>>>> the OF device ID table for the at24 driver and the next patches use this
+>>>> vendor in the compatible string to each DTS that defines a compatible I2C
+>>>> EEPROM device node.
+>>>>
+>>>> Patches can be applied independently since the DTS changes without driver
+>>>> changes are no-op and the OF table won't be used without the DTS changes.
+>>>>
+>>>> [0]: https://lkml.org/lkml/2017/3/14/589
+>>>> [1]: https://lkml.org/lkml/2017/3/15/99
+>>>>
+>>>> Best regards,
+>>>> Javier
+>>>>
+>>>> Changes in v4:
+>>>> - Document the manufacturers that have been deprecated (Rob Herring).
+>>>> - Only use the atmel manufacturer in the compatible string instead of
+>>>>   keeping the deprecated ones (Rob Herring).
 >>>
+>>> I think you're referring to this (https://lkml.org/lkml/2017/4/19/1136)?
+>>>
+>>> | > --- a/arch/arm/boot/dts/am335x-baltos.dtsi
+>>> | > +++ b/arch/arm/boot/dts/am335x-baltos.dtsi
+>>> | > @@ -255,7 +255,7 @@
+>>> | >     };
+>>> | >
+>>> | >     at24@50 {
+>>> | > -           compatible = "at24,24c02";
+>>> | > +           compatible = "at24,24c02", "atmel,24c02";
+>>> |
+>>> | I think you can just drop the at24 compatibles. A new kernel doesn't
+>>> | need it. An old kernel ignores the manufacturer. I checked that u-boot
+>>> | only matches on "atmel,*", so okay there. Don't know about the *BSDs. I
+>>> | couldn't find anything.
+>>>
+>>> I think you misunderstood what Rob means.
+>>>
+>>> In the case above it makes sense to drop the first compatible, as "at24" is
+>>> not a manufacturer, but refers to ATMEL's "AT24" line of i2c FLASH ROMs.
+>>>
+>>> However, in cases where a real vendor/part combo is specified, like on
+>>> r8a7791-koelsch.dts:
+>>>
+>>> -               compatible = "renesas,24c02";
+>>> +               compatible = "atmel,24c02";
+>>>
+>>> you do want to keep the real vendor/part combo, i.e.
+>>>
+>>>      compatible = "renesas,24c02", "atmel,24c02";
 >>
->> we have to sort it the way we want then. I can make it sort then.
->> thanks for the suggestion.
+>> Yes, Geert is correct.
 >>
->>> Robin.
->>>
->>>> +                             return;
->>>> +                     }
->>>> +                     if (tmp_dma_addr != dma_addr) {
->>>> +                             lo = iova_pfn(iovad, tmp_dma_addr);
->>>> +                             hi = iova_pfn(iovad, dma_addr - 1);
->>>> +                             reserve_iova(iovad, lo, hi);
->>>> +                     }
->>>> +                     tmp_dma_addr = window->res->end - window->offset;
->>>> +             }
->>>> +             /*
->>>> +              * the last dma-range should honour based on the
->>>> +              * 32/64-bit dma addresses.
->>>> +              */
->>>> +             if (tmp_dma_addr < DMA_BIT_MASK(sizeof(dma_addr_t) * 8)) {
->>>> +                     lo = iova_pfn(iovad, tmp_dma_addr);
->>>> +                     hi = iova_pfn(iovad,
->>>> +                                   DMA_BIT_MASK(sizeof(dma_addr_t) * 8) - 1);
->>>> +                     reserve_iova(iovad, lo, hi);
->>>> +             }
->>>> +     }
->>>>  }
->>>>
->>>>  /**
->>>>
->>>
 >
+> Sorry for misunderstanding your previous comment...
+>
+> How this should be documented in the DT binding? Should I include
+> "renesas" as a valid manufacturer or only list the used
+> <vendor,device> pairs (i.e: "renesas,24c02")?
+
+However you are handling any of the vendors. I'll have to go look.
+
+> I also wonder why this is really needed if AFAIU "renesas,24c02" is
+> compatible with "atmel,24c02". IOW, the driver doesn't need to
+> differentiate between the two since the devices are the same and will
+> always match using "atmel,24c02".
+
+It is needed, so that when a difference is found, it can be handled
+without updating the DT.
+
+Rob
