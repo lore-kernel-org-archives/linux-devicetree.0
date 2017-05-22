@@ -1,59 +1,73 @@
 From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 2/6] clk: sunxi-ng: a83t: Fix audio PLL
- divider offset
-Date: Mon, 22 May 2017 09:45:27 +0200
-Message-ID: <20170522074527.4ru2oad4neyiblnp@flea.lan>
-References: <20170522062552.19026-1-wens@csie.org>
- <20170522062552.19026-3-wens@csie.org>
- <20170522072047.bffdbwkz2nqvhums@flea.lan>
- <CAGb2v65SUR2NvGOFFgzUpDh_9Dm6SAhzwC31KBOqFZubOhkK9w@mail.gmail.com>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+Subject: Re: [PATCH 1/2] ARM: dts: orange-pi-zero: interrupt triggering for
+ XR819 WiFi chip
+Date: Mon, 22 May 2017 09:49:17 +0200
+Message-ID: <20170522074917.msy3sypver3kai5p@flea.lan>
+References: <20170519213550.8434-1-geomatsi@gmail.com>
+ <20170519213550.8434-2-geomatsi@gmail.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="ckazgmfm5xncmord"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBIVORLEQKGQESQ2MY3I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+        protocol="application/pgp-signature"; boundary="ez4eittfibstl4yl"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CAGb2v65SUR2NvGOFFgzUpDh_9Dm6SAhzwC31KBOqFZubOhkK9w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <20170519213550.8434-2-geomatsi-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sergey Matyukevich <geomatsi-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---ckazgmfm5xncmord
-Content-Type: text/plain; charset="UTF-8"
+--ez4eittfibstl4yl
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, May 22, 2017 at 03:35:57PM +0800, Chen-Yu Tsai wrote:
-> On Mon, May 22, 2017 at 3:20 PM, Maxime Ripard
-> <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> > On Mon, May 22, 2017 at 02:25:48PM +0800, Chen-Yu Tsai wrote:
-> >> The divider of the audio PLL has an offset of 1.
-> >> Fix this in the driver.
-> >>
-> >> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-> >
-> > Applied, thanks!
-> 
-> So even with this patch applied, the audio is still slow and off pitch.
-> It's even worse without this patch...
-> 
-> Maybe it's time we added a special class of clks for the audio PLL
-> to deal with sigma-delta modulation of the divider?
+Hi Sergey,
 
-I'm not sure how feasible that would be and what it would look like,
-but you can give it a shot yes.
+Thanks for your patches!
 
+On Sat, May 20, 2017 at 12:35:49AM +0300, Sergey Matyukevich wrote:
+> Specify interrupt triggering for XR819 SDIO WiFi chip
+> on orange-pi-zero board.
+>=20
+> For more details see: http://linux-sunxi.org/Wifi#Allwinner
+
+Please don't reference details in a wiki page. URLs can change and
+wiki page get rewritten. git history is immutable. Your commit log
+should contain everything there is.
+
+The patch itself looks good though.
+
+Thanks!
 Maxime
 
--- 
+--=20
 Maxime Ripard, Free Electrons
 Embedded Linux and Kernel engineering
 http://free-electrons.com
---ckazgmfm5xncmord--
+
+--ez4eittfibstl4yl
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIcBAEBAgAGBQJZIpf9AAoJEBx+YmzsjxAgDFoP/AsdikJ0w9UzWtzBYEJ9zggI
+7TeIfyUyFtaL+cyQqWZF/DTRcbwwEq0KrFSlLhnnZ5kOsyya+l1MqnG8ihGvLWQF
+TiTSmnsTxrLyg+yN0n+tYlQ3yVN0WBLg/i8e8zLX3z/ZEvzjjKKyhTCyuylvGq/k
+U1PHbGBfrUmWD5K9vH86ygGg2t3bi7G8XcBrjwe2vm+YL/zFQNPovtMeuZvbshIG
+ful6XGvWlHWoNjR4Kvqr5+RQ66em7wal4QiVthzl8o33WvVNOTUFGm68z3F7Kutd
+juxTQ+Ne8xP+0rPWy8EHyZRGdRDFrTJy5qJe/M8Lzf02rPTsyZ4nke9At59riMCI
+yK1ZOSK+p5I2i+Sn7uHkGrNtE3rKFoJQ72OHswPve7qmvPe18bWhrCanAIx7o28l
+W0dNHnR55seueWx71uhFlQsAqJxy7VFazHjlH1w18Lc9Pz3RTBlysqNX5VpPkuxj
+M/itR0wFAkYqLllWmFpPO8PA0k1GA3RP1M1AafyKtFo2qpOVDo9Obhh0NCevUdkb
+/ZHZeBx56SNmcBt3okBqHVaKJyNbWNYILf75E+81ury3N3ScB+BSvUEQR6UhH1Lo
+dLlWeh6UnBDPTNqjVsQYydOHzH5BqoiETEwo0OZXNgCx5cG2y/xDCJ0IExGfJPSD
+TtUvBz4RWcSfOzObd7aE
+=6Tii
+-----END PGP SIGNATURE-----
+
+--ez4eittfibstl4yl--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
