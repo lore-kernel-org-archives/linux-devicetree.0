@@ -1,56 +1,50 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v5 1/3] of: Move OF property and graph API from base.c to property.c
-Date: Mon, 22 May 2017 09:38:59 -0500
-Message-ID: <CAL_JsqJswk78Be6xJvK0i9y+53XhY+1XkfPSd+3S8ub_Cnm17Q@mail.gmail.com>
-References: <1495440698-22260-1-git-send-email-sakari.ailus@linux.intel.com>
- <1495440698-22260-2-git-send-email-sakari.ailus@linux.intel.com>
- <CAL_JsqLwdi-oFxxF9rh4KzKim_ouQ8eDwZ5uicwtjb5-9eWHBw@mail.gmail.com> <91b4159b-cb5b-fd9a-8e9c-c37c2acd1814@linux.intel.com>
+From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Subject: Re: [PATCH] net: fec: add post PHY reset delay DT property
+Date: Mon, 22 May 2017 16:43:01 +0200
+Message-ID: <20170522144301.GE29447@lunn.ch>
+References: <20170522091517.6857-1-quentin.schulz@free-electrons.com>
+ <20170522135705.GB29447@lunn.ch>
+ <f667da6e-d300-ec79-cc49-3808d9758a99@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <91b4159b-cb5b-fd9a-8e9c-c37c2acd1814@linux.intel.com>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Frank Rowand <frowand.list@gmail.com>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, Sudeep Holla <sudeep.holla@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>, "Rafael J. Wysocki" <rafael@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mark Brown <broonie@kernel.org>, Al Stone <ahs3@redhat.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <f667da6e-d300-ec79-cc49-3808d9758a99-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: fugang.duan-3arQi8VN3Tc@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 22, 2017 at 9:33 AM, Sakari Ailus
-<sakari.ailus@linux.intel.com> wrote:
-> Hi Rob,
->
-> Thanks for the review!
->
-> On 05/22/17 17:22, Rob Herring wrote:
->> On Mon, May 22, 2017 at 3:11 AM, Sakari Ailus
->> <sakari.ailus@linux.intel.com> wrote:
->>> base.c contains both core OF functions and increasingly other
->>> functionality such as accessing properties and graphs, including
->>> convenience functions. In the near future this would also include OF
->>> specific implementation of the fwnode property and graph APIs.
->>>
->>> Create driver/of/property.c to contain procedures for accessing and
->>> interpreting device tree properties. The procedures are moved from
->>> drivers/of/base.c, with no changes other than copying only the includes
->>> required by the moved procedures.
->>>
->>> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
->>> ---
->>>  drivers/of/Makefile   |   2 +-
->>>  drivers/of/base.c     | 733 ------------------------------------------------
->>>  drivers/of/property.c | 763 ++++++++++++++++++++++++++++++++++++++++++++++++++
->>
->> Please put graph functions in graph.c unless there is some reason not to.
->
-> There will be a single fwnode ops struct which will contain both
-> property and graph API primitives. The functions implementing the
-> operations will be private, albeit the corresponding OF functions they
-> will use are global.
->
-> If I split current properties.c, which of these should the fwnode ops
-> struct and the function callbacks be put? The patch is here (and the
-> previous one; both were submitted earlier today):
+On Mon, May 22, 2017 at 04:00:47PM +0200, Quentin Schulz wrote:
+> Hi Andrew
+> 
+> On 22/05/2017 15:57, Andrew Lunn wrote:
+> > On Mon, May 22, 2017 at 11:15:17AM +0200, Quentin Schulz wrote:
+> >> Some PHY require to wait for a bit after the reset GPIO has been
+> >> toggled. This adds support for the DT property `phy-reset-post-delay`
+> >> which gives the delay in milliseconds to wait after reset.
+> >>
+> >> If the DT property is not given, no delay is observed. Post reset delay
+> >> greater than 1000ms are invalid and are default to 1ms.
+> > 
+> > Hi Quentin
+> > 
+> > If it is invalid, please return -EINVAL.
+> > 
+> 
+> Just copying the wording and behavior of phy-reset-duration. Should we
+> then change the behavior of phy-reset-duration as well to return -EINVAL
+> in that case or I just leave both as is?
 
-Okay, makes sense. The filename is a bit confusing, but I don't have a
-better suggestion.
+No, you cannot change phy-reset-duration. There could be device tree
+blobs out in the wild with invalid phy-reset-duration which silently
+get converted to 1000ms by the code. You cannot break them.
 
-Rob
+However, you can prevent new additions which add invalid
+phy-reset-post-delay.
+
+    Andrew
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
