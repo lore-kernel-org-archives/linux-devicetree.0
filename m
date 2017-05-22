@@ -1,71 +1,101 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH V2 4/5] dt-bindings: pinctrl: add imx7ulp pinctrl binding doc
-Date: Mon, 22 May 2017 11:27:11 +0200
-Message-ID: <CACRpkdb6B-f0uHUo9ecUmGCzY8GfFbCjNtJFeQJqtKEYwyB87A@mail.gmail.com>
-References: <1495177545-23006-1-git-send-email-aisheng.dong@nxp.com> <1495177545-23006-5-git-send-email-aisheng.dong@nxp.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 2/2] ARM: dts: orange-pi-zero: enable SPI NOR
+Date: Mon, 22 May 2017 11:29:00 +0200
+Message-ID: <20170522092900.7v2mg5zkbt6eclhr@flea.lan>
+References: <20170519213550.8434-1-geomatsi@gmail.com>
+ <20170519213550.8434-3-geomatsi@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1495177545-23006-5-git-send-email-aisheng.dong@nxp.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Dong Aisheng <aisheng.dong@nxp.com>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Brandt <chris.brandt@renesas.com>, Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Shawn Guo <shawnguo@kernel.org>, Stefan Agner <stefan@agner.ch>, Bai Ping <ping.bai@nxp.com>, fugang.duan@nxp.com, Sascha Hauer <kernel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="jxrb4eirxmoqhfkc"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170519213550.8434-3-geomatsi-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sergey Matyukevich <geomatsi-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 19, 2017 at 9:05 AM, Dong Aisheng <aisheng.dong@nxp.com> wrote:
 
-> i.MX 7ULP has three IOMUXC instances: IOMUXC0 for M4 ports,
-> IOMUXC1 for A7 ports and IOMUXC DDR for DDR interface.
->
-> This patch adds the IOMUXC1 support for A7.
->
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: devicetree@vger.kernel.org
-> Cc: Linus Walleij <linus.walleij@linaro.org>
-> Cc: Shawn Guo <shawnguo@kernel.org>
-> Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
+--jxrb4eirxmoqhfkc
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-(...)
-> +=== Pin Configuration Node ===
-> +- pins: One integers array, represents a group of pins mux setting.
-> +       The format is fsl,pins = <PIN_FUNC_ID>, PIN_FUNC_ID is a pin working on
-> +       a specific function.
+Hi Sergey,
+
+On Sat, May 20, 2017 at 12:35:50AM +0300, Sergey Matyukevich wrote:
+> Enable SPI NOR on orange-pi-zero board.
+>=20
+> For more information see:
+> - http://linux-sunxi.org/Orange_Pi_Zero#SPI_NOR_flash
+
+Same remark here than on the first patch
+
+>=20
+> Signed-off-by: Sergey Matyukevich <geomatsi-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/sun8i-h2-plus-orangepi-zero.dts | 16 ++++++++++++++++
+>  1 file changed, 16 insertions(+)
+>=20
+> diff --git a/arch/arm/boot/dts/sun8i-h2-plus-orangepi-zero.dts b/arch/arm=
+/boot/dts/sun8i-h2-plus-orangepi-zero.dts
+> index 34e4a5a80136..fe39e96cee65 100644
+> --- a/arch/arm/boot/dts/sun8i-h2-plus-orangepi-zero.dts
+> +++ b/arch/arm/boot/dts/sun8i-h2-plus-orangepi-zero.dts
+> @@ -177,3 +177,19 @@
+>  	status =3D "okay";
+>  	usb0_id_det-gpios =3D <&pio 6 12 GPIO_ACTIVE_HIGH>; /* PG12 */
+>  };
 > +
-> +       NOTE: i.MX7ULP PIN_FUNC_ID consists of 4 integers as it shares one mux
-> +       and config register as follows:
-> +       <mux_conf_reg input_reg mux_mode input_val>
+> +&spi0 {
+> +	status =3D "okay";
 > +
-> +       Refer to imx7ulp-pinfunc.h in in device tree source folder for all
-> +       available imx7ulp PIN_FUNC_ID.
+> +	flash@0 {
+> +		#address-cells =3D <1>;
+> +		#size-cells =3D <1>;
+> +		compatible =3D "mxicy,mx25l1606e", "winbond,w25q128";
+> +		reg =3D <0>;
+> +		spi-max-frequency =3D <40000000>;
+
+How do the other OPi Zero that doesn't have that SPI flash behave?
+
 > +
-> +Optional Properties:
-> +- nxp,output-buffer-enable:    Bool. Output buffer enabled
-> +- nxp,input-buffer-enable:     Bool. Input buffer enabled
-> +- drive-strength               Integer. Controls Drive Strength
-> +                                       0: Standard
-> +                                       1: Hi Driver
-(...)
+> +		partition@00000000 {
+> +			reg =3D <0x00000000 0x200000>;	/* 2Mb */
+> +		};
 
-WELL LOOK AT THAT
+There's no need to create a first partition, this needs to be
+user-defined.
 
-Custom input/output buffer enable properties eh?
+Maxime
 
-We had this really really long discussion with the Renesas people
-about whether they make this a custom property or a generic
-one or whether anyone else would ever have the same need.
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
 
-This would be a vote for adding output-buffer-enable and
-input-buffer-enable as generic properies hm?
+--jxrb4eirxmoqhfkc
+Content-Type: application/pgp-signature; name="signature.asc"
 
-UNLESS the existing device tree properties already cover the
-usecases.
+-----BEGIN PGP SIGNATURE-----
 
-Andy has made some good points there.
+iQIcBAEBAgAGBQJZIq9bAAoJEBx+YmzsjxAgvhAP/34tbf7Mq/xOb+Uq5Orkuw3M
+NzGBB0tvkpJeBSK/HZvXNw4sujV7ucCzROcpa1641bj87ZGpSe+zHjvbUdY9QqUL
+2JNYUXycQpUi3zslsugW4dMkmxGDO/EihS//j0k4d2jADDsm4PcjThSYgkk0H+A1
+10H3kN1XFzBg9gxehRNajmYp8L9D/Kn5vuA/52ZpHo2bx7OkY3WkhY//7kfFN6ub
+V5NgRD/kmqt3UIuhtEsVmYqUx89u6ehcuRFs+IM3BsdQVH9xgA05RZ6MNAgoltaX
+LMaJBJBfywaeIBzpqwoFIvlK7pm01/hTfilKLowzWnHmk6wG6bryv9Z0NLu77H12
+T34U0EcyPYozgMaYm6T/YrFEa/pyaPajy7YT9aJRIc76GNeqGM34vHOJ46j9ySVm
+ZIHFIMl8hOT2ic+b+D7+BCilBzcLaqt4ycZWjt9HZhrn70fFxwDDiSfXGIh5AFun
+CbnUA/zHxfYsSAdybzKFMMcAoiVSNaSZdE9nAfxRWcaIC6t5OWcP5Xd0w3qK4yIC
+TfnHNpjM14alsVx5HXB2WCfJs4THldG8vGusV9XmX9rROSQEg1a3ThMLr/bIGDeY
+QiigZHryaEe5es59LyY1M02Ahv2kczLAPGL/QGtdfxGMIQcVXOwOB5sCc8j/t5wE
+FCH3c5kvEmdlLJSYMJHk
+=/16s
+-----END PGP SIGNATURE-----
 
-Can you please read up on the discussion thread for subject
-"[PATCH v5 01/10] pinctrl: generic: Add bi-directional and output-enable"
-and contribute to this discussion?
-
-Yours,
-Linus Walleij
+--jxrb4eirxmoqhfkc--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
