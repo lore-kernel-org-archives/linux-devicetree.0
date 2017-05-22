@@ -1,99 +1,108 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v4 00/20] eeprom: at24: Add OF device ID table
-Date: Mon, 22 May 2017 16:23:39 +0200
-Message-ID: <CAMuHMdXbhkGGFC80-39Axzv=BdEXyBNuPuHCSWW3eXWDB=SQ+w@mail.gmail.com>
-References: <20170522140208.24652-1-javier@dowhile0.org>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: [linux-sunxi] Re: [PATCH v6 2/9] irqchip/sunxi-nmi: add support
+ for the NMI in A64 R_INTC
+Date: Mon, 22 May 2017 22:25:51 +0800
+Message-ID: <CAGb2v66NY49OL0J3C64CKzngri5-Na6uPBizj-BNJW3vNkFUQw@mail.gmail.com>
+References: <20170518071653.36561-1-icenowy@aosc.io> <20170518071653.36561-3-icenowy@aosc.io>
+ <ed99d87b-86eb-cf8a-8614-51d59fa00c8c@arm.com> <98014597-29BA-4D02-8137-4E399955F4FD@aosc.io>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170522140208.24652-1-javier@dowhile0.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Javier Martinez Canillas <javier@dowhile0.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Wolfram Sang <wsa@the-dreams.de>, Tony Lindgren <tony@atomide.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Russell King <linux@armlinux.org.uk>, Masahiro Yamada <yamada.masahiro@socionext.com>, Paul Mackerras <paulus@samba.org>, Linux I2C <linux-i2c@vger.kernel.org>, Hongtao Jia <hongtao.jia@nxp.com>, Mark Jackson <mpfj@newflow.co.uk>, Jason Cooper <jason@lakedaemon.net>, Rob Herring <robh@kernel.org>, Herbert Xu <herbert@gondor.apana.org.au>, =?UTF-8?Q?Horia_Geant=C4=83?= <horia.geanta@nxp.com>, Michael Ellerman <mpe@ellerman.id.au>, Magnus Damm <magnus.damm@gmail.com>, Michal Simek <michal.simek@xilinx.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, =?UTF-8?Q?S=C3=B6ren_Brinkmann?= <soren.brinkmann@xilinx.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <98014597-29BA-4D02-8137-4E399955F4FD-h8G6r0blFSE@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Cc: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Javier,
-
-On Mon, May 22, 2017 at 4:01 PM, Javier Martinez Canillas
-<javier@dowhile0.org> wrote:
-> This series is a follow-up to patch [0] that added an OF device ID table
-> to the at24 EEPROM driver. As you suggested [1], this version instead of
-> adding entries for every used <vendor,device> tuple, only adds a single
-> entry for each chip type using the "atmel" vendor as a generic fallback.
+On Mon, May 22, 2017 at 5:41 PM, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org> wrote:
 >
-> This is a re-spin that addresses some issues pointed out by Rob Herring.
 >
-> The first patch documents in the DT binding what's the correct vendor to
-> use and what are the ones that are being deprecated. The second one adds
-> the OF device ID table for the at24 driver and the next patches use this
-> vendor in the compatible string to each DTS that defines a compatible I2C
-> EEPROM device node.
+> 于 2017年5月22日 GMT+08:00 下午5:39:22, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org> 写到:
+>>On 18/05/17 08:16, Icenowy Zheng wrote:
+>>> Add support for the newly imported compatible for the A64 R_INTC in
+>>> irq-sunxi-nmi driver.
+>>>
+>>> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+>>> ---
+>>> Changes in v5:
+>>> - Fix A64 R_INTC compatible.
+>>>
+>>>  drivers/irqchip/irq-sunxi-nmi.c | 13 +++++++++++++
+>>>  1 file changed, 13 insertions(+)
+>>>
+>>> diff --git a/drivers/irqchip/irq-sunxi-nmi.c
+>>b/drivers/irqchip/irq-sunxi-nmi.c
+>>> index 668730c5cb66..5559c1d593bf 100644
+>>> --- a/drivers/irqchip/irq-sunxi-nmi.c
+>>> +++ b/drivers/irqchip/irq-sunxi-nmi.c
+>>> @@ -56,6 +56,12 @@ static struct sunxi_sc_nmi_reg_offs sun9i_reg_offs
+>>= {
+>>>      .enable = 0x04,
+>>>  };
+>>>
+>>> +static struct sunxi_sc_nmi_reg_offs sun50i_reg_offs = {
+>>> +    .ctrl   = 0x0c,
+>>> +    .pend   = 0x10,
+>>> +    .enable = 0x40,
+>>> +};
+>>> +
+>>
+>>Magic values? Even if no #define is provided, a pointer to the
+>>corresponding documentation would be appreciated (assuming
+>>documentation
+>>exists).
 >
-> Patches can be applied independently since the DTS changes without driver
-> changes are no-op and the OF table won't be used without the DTS changes.
+> No documents is available for A64 R_INTC.
+
+No code either. In Allwinner's BSP, the interrupts for the PMICs go
+through the (closed source) OpenRISC firmware, so there's no driver
+for it in the kernel.
+
+The registers line up with the old interrupt controller from the A10,
+but it seems only the NMI interrupt is wired up.
+
+ChenYu
+
+>>
+>>>  static inline void sunxi_sc_nmi_write(struct irq_chip_generic *gc,
+>>u32 off,
+>>>                                    u32 val)
+>>>  {
+>>> @@ -220,3 +226,10 @@ static int __init sun9i_nmi_irq_init(struct
+>>device_node *node,
+>>>      return sunxi_sc_nmi_irq_init(node, &sun9i_reg_offs);
+>>>  }
+>>>  IRQCHIP_DECLARE(sun9i_nmi, "allwinner,sun9i-a80-nmi",
+>>sun9i_nmi_irq_init);
+>>> +
+>>> +static int __init sun50i_nmi_irq_init(struct device_node *node,
+>>> +                                 struct device_node *parent)
+>>> +{
+>>> +    return sunxi_sc_nmi_irq_init(node, &sun50i_reg_offs);
+>>> +}
+>>> +IRQCHIP_DECLARE(sun50i_nmi, "allwinner,sun50i-a64-r-intc",
+>>sun50i_nmi_irq_init);
+>>>
+>>
+>>Apart from the above:
+>>
+>>Acked-by: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+>>
+>>Let me know how you want this to be merged.
 >
-> [0]: https://lkml.org/lkml/2017/3/14/589
-> [1]: https://lkml.org/lkml/2017/3/15/99
+> I think it can just go via IRQ subsystem.
 >
-> Best regards,
-> Javier
+>>
+>>Thanks,
+>>
+>>       M.
 >
-> Changes in v4:
-> - Document the manufacturers that have been deprecated (Rob Herring).
-> - Only use the atmel manufacturer in the compatible string instead of
->   keeping the deprecated ones (Rob Herring).
-
-I think you're referring to this (https://lkml.org/lkml/2017/4/19/1136)?
-
-| > --- a/arch/arm/boot/dts/am335x-baltos.dtsi
-| > +++ b/arch/arm/boot/dts/am335x-baltos.dtsi
-| > @@ -255,7 +255,7 @@
-| >     };
-| >
-| >     at24@50 {
-| > -           compatible = "at24,24c02";
-| > +           compatible = "at24,24c02", "atmel,24c02";
-|
-| I think you can just drop the at24 compatibles. A new kernel doesn't
-| need it. An old kernel ignores the manufacturer. I checked that u-boot
-| only matches on "atmel,*", so okay there. Don't know about the *BSDs. I
-| couldn't find anything.
-
-I think you misunderstood what Rob means.
-
-In the case above it makes sense to drop the first compatible, as "at24" is
-not a manufacturer, but refers to ATMEL's "AT24" line of i2c FLASH ROMs.
-
-However, in cases where a real vendor/part combo is specified, like on
-r8a7791-koelsch.dts:
-
--               compatible = "renesas,24c02";
-+               compatible = "atmel,24c02";
-
-you do want to keep the real vendor/part combo, i.e.
-
-     compatible = "renesas,24c02", "atmel,24c02";
-
-like in v3, which is what I gave my Reviewed-by for.
-
-Thanks!
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
+> --
+> You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+> For more options, visit https://groups.google.com/d/optout.
 --
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
