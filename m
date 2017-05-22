@@ -1,12 +1,13 @@
 From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH 2/6] clk: sunxi-ng: a83t: Fix audio PLL divider offset
-Date: Mon, 22 May 2017 14:25:48 +0800
-Message-ID: <20170522062552.19026-3-wens@csie.org>
+Subject: [PATCH 6/6] ARM: sun8i: a83t: cubietruck-plus: Enable
+ SPDIF output
+Date: Mon, 22 May 2017 14:25:52 +0800
+Message-ID: <20170522062552.19026-7-wens@csie.org>
 References: <20170522062552.19026-1-wens@csie.org>
 Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCMILY6JWQBBB74IRLEQKGQENFBX7GQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBAEJRLEQKGQE4LKKZ2Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20170522062552.19026-1-wens-jdAy2FN1RRM@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -19,26 +20,46 @@ To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Maxim
 Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The divider of the audio PLL has an offset of 1.
-Fix this in the driver.
+The Cubietruck Plus has an optical SPDIF out connector.
+Enable SPDIF audio output for this board.
 
 Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 ---
- drivers/clk/sunxi-ng/ccu-sun8i-a83t.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/boot/dts/sun8i-a83t-cubietruck-plus.dts | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
 
-diff --git a/drivers/clk/sunxi-ng/ccu-sun8i-a83t.c b/drivers/clk/sunxi-ng/ccu-sun8i-a83t.c
-index a9c5cc87d9d0..947f9f6e05d2 100644
---- a/drivers/clk/sunxi-ng/ccu-sun8i-a83t.c
-+++ b/drivers/clk/sunxi-ng/ccu-sun8i-a83t.c
-@@ -80,7 +80,7 @@ static struct ccu_nm pll_audio_clk = {
- 	.enable		= BIT(31),
- 	.lock		= BIT(2),
- 	.n		= _SUNXI_CCU_MULT_OFFSET_MIN_MAX(8, 8, 0, 12, 0),
--	.m		= _SUNXI_CCU_DIV_OFFSET(0, 6, 0),
-+	.m		= _SUNXI_CCU_DIV(0, 6),
- 	.common		= {
- 		.reg		= SUN8I_A83T_PLL_AUDIO_REG,
- 		.lock_reg	= CCU_SUN8I_A83T_LOCK_REG,
+diff --git a/arch/arm/boot/dts/sun8i-a83t-cubietruck-plus.dts b/arch/arm/boot/dts/sun8i-a83t-cubietruck-plus.dts
+index 9e10cc6f39d4..cff33454fc24 100644
+--- a/arch/arm/boot/dts/sun8i-a83t-cubietruck-plus.dts
++++ b/arch/arm/boot/dts/sun8i-a83t-cubietruck-plus.dts
+@@ -82,6 +82,28 @@
+ 			gpios = <&pio 4 4 GPIO_ACTIVE_HIGH>; /* PE4 */
+ 		};
+ 	};
++
++	sound {
++		compatible = "simple-audio-card";
++		simple-audio-card,name = "On-board SPDIF";
++
++		simple-audio-card,cpu {
++			sound-dai = <&spdif>;
++		};
++
++		simple-audio-card,codec {
++			sound-dai = <&spdif_out>;
++		};
++	};
++
++	spdif_out: spdif-out {
++		#sound-dai-cells = <0>;
++		compatible = "linux,spdif-dit";
++	};
++};
++
++&spdif {
++	status = "okay";
+ };
+ 
+ &uart0 {
 -- 
 2.11.0
