@@ -1,63 +1,95 @@
-From: Hans Verkuil <hverkuil@xs4all.nl>
-Subject: Re: [PATCH v3 0/3] Fix mdp device tree
-Date: Mon, 22 May 2017 11:09:05 +0200
-Message-ID: <20ba4f83-7d22-2a8e-4eb6-7d4eba92e2ae@xs4all.nl>
-References: <1494559361-42835-1-git-send-email-minghsiu.tsai@mediatek.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1494559361-42835-1-git-send-email-minghsiu.tsai@mediatek.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Minghsiu Tsai <minghsiu.tsai@mediatek.com>, Hans Verkuil <hans.verkuil@cisco.com>, daniel.thompson@linaro.org, Rob Herring <robh+dt@kernel.org>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Matthias Brugger <matthias.bgg@gmail.com>, Daniel Kurtz <djkurtz@chromium.org>, Pawel Osciak <posciak@chromium.org>, Houlong Wei <houlong.wei@mediatek.com>
-Cc: srv_heupstream@mediatek.com, Eddie Huang <eddie.huang@mediatek.com>, Yingjoe Chen <yingjoe.chen@mediatek.com>, Wu-Cheng Li <wuchengli@google.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org, linux-mediatek@lists.infradead.org
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+Subject: [PATCH 6/7] v4l: fwnode: Constify fwnode endpoints
+Date: Mon, 22 May 2017 12:07:41 +0300
+Message-ID: <1495444062-23867-7-git-send-email-sakari.ailus@linux.intel.com>
+References: <1495444062-23867-1-git-send-email-sakari.ailus@linux.intel.com>
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <1495444062-23867-1-git-send-email-sakari.ailus@linux.intel.com>
+Sender: linux-acpi-owner@vger.kernel.org
+To: linux-acpi@vger.kernel.org
+Cc: devicetree@vger.kernel.org, sudeep.holla@arm.com, lorenzo.pieralisi@arm.com, mika.westerberg@linux.intel.com, rafael@kernel.org, mark.rutland@arm.com, broonie@kernel.org, robh@kernel.org, ahs3@redhat.com, frowand.list@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On 05/12/2017 05:22 AM, Minghsiu Tsai wrote:
+Make the fwnode arguments to V4L2 fwnode API const as this is now
+possible.
 
-Who should take care of the dtsi changes? I'm not sure who maintains the mdp dts.
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+---
+ drivers/media/v4l2-core/v4l2-fwnode.c | 12 ++++++------
+ include/media/v4l2-fwnode.h           |  6 +++---
+ 2 files changed, 9 insertions(+), 9 deletions(-)
 
-The driver change and the dtsi change need to be in sync, so it is probably easiest
-to merge this via one tree.
+diff --git a/drivers/media/v4l2-core/v4l2-fwnode.c b/drivers/media/v4l2-core/v4l2-fwnode.c
+index 153c53c..a68ed05 100644
+--- a/drivers/media/v4l2-core/v4l2-fwnode.c
++++ b/drivers/media/v4l2-core/v4l2-fwnode.c
+@@ -28,8 +28,8 @@
+ 
+ #include <media/v4l2-fwnode.h>
+ 
+-static int v4l2_fwnode_endpoint_parse_csi_bus(struct fwnode_handle *fwnode,
+-					      struct v4l2_fwnode_endpoint *vep)
++static int v4l2_fwnode_endpoint_parse_csi_bus(
++	const struct fwnode_handle *fwnode, struct v4l2_fwnode_endpoint *vep)
+ {
+ 	struct v4l2_fwnode_bus_mipi_csi2 *bus = &vep->bus.mipi_csi2;
+ 	bool have_clk_lane = false;
+@@ -97,7 +97,7 @@ static int v4l2_fwnode_endpoint_parse_csi_bus(struct fwnode_handle *fwnode,
+ }
+ 
+ static void v4l2_fwnode_endpoint_parse_parallel_bus(
+-	struct fwnode_handle *fwnode, struct v4l2_fwnode_endpoint *vep)
++	const struct fwnode_handle *fwnode, struct v4l2_fwnode_endpoint *vep)
+ {
+ 	struct v4l2_fwnode_bus_parallel *bus = &vep->bus.parallel;
+ 	unsigned int flags = 0;
+@@ -165,7 +165,7 @@ static void v4l2_fwnode_endpoint_parse_parallel_bus(
+  *
+  * Return: 0 on success or a negative error code on failure.
+  */
+-int v4l2_fwnode_endpoint_parse(struct fwnode_handle *fwnode,
++int v4l2_fwnode_endpoint_parse(const struct fwnode_handle *fwnode,
+ 			       struct v4l2_fwnode_endpoint *vep)
+ {
+ 	int rval;
+@@ -232,7 +232,7 @@ EXPORT_SYMBOL_GPL(v4l2_fwnode_endpoint_free);
+  * on error.
+  */
+ struct v4l2_fwnode_endpoint *v4l2_fwnode_endpoint_alloc_parse(
+-	struct fwnode_handle *fwnode)
++	const struct fwnode_handle *fwnode)
+ {
+ 	struct v4l2_fwnode_endpoint *vep;
+ 	int rval;
+@@ -291,7 +291,7 @@ EXPORT_SYMBOL_GPL(v4l2_fwnode_endpoint_alloc_parse);
+  * Return: 0 on success, or -ENOLINK if the remote endpoint fwnode can't be
+  * found.
+  */
+-int v4l2_fwnode_parse_link(struct fwnode_handle *__fwnode,
++int v4l2_fwnode_parse_link(const struct fwnode_handle *__fwnode,
+ 			   struct v4l2_fwnode_link *link)
+ {
+ 	const char *port_prop = is_of_node(__fwnode) ? "reg" : "port";
+diff --git a/include/media/v4l2-fwnode.h b/include/media/v4l2-fwnode.h
+index ecc1233..bdbd785 100644
+--- a/include/media/v4l2-fwnode.h
++++ b/include/media/v4l2-fwnode.h
+@@ -92,12 +92,12 @@ struct v4l2_fwnode_link {
+ 	unsigned int remote_port;
+ };
+ 
+-int v4l2_fwnode_endpoint_parse(struct fwnode_handle *fwnode,
++int v4l2_fwnode_endpoint_parse(const struct fwnode_handle *fwnode,
+ 			       struct v4l2_fwnode_endpoint *vep);
+ struct v4l2_fwnode_endpoint *v4l2_fwnode_endpoint_alloc_parse(
+-	struct fwnode_handle *fwnode);
++	const struct fwnode_handle *fwnode);
+ void v4l2_fwnode_endpoint_free(struct v4l2_fwnode_endpoint *vep);
+-int v4l2_fwnode_parse_link(struct fwnode_handle *fwnode,
++int v4l2_fwnode_parse_link(const struct fwnode_handle *fwnode,
+ 			   struct v4l2_fwnode_link *link);
+ void v4l2_fwnode_put_link(struct v4l2_fwnode_link *link);
+ 
+-- 
+2.7.4
 
-Here is my Acked-by for these three patches:
-
-Acked-by: Hans Verkuil <hans.verkuil@cisco.com>
-
-I can take all three, provided I have the Ack of the mdp dts maintainer. Or it can
-go through him with my Ack.
-
-Regards,
-
-	Hans
-
-> Changes in v3:
-> - Upload patches again because forget to add v2 in title
-> 
-> Changes in v2:
-> - Update commit message
-> 
-> If the mdp_* nodes are under an mdp sub-node, their corresponding
-> platform device does not automatically get its iommu assigned properly.
-> 
-> Fix this by moving the mdp component nodes up a level such that they are
-> siblings of mdp and all other SoC subsystems.  This also simplifies the
-> device tree.
-> 
-> Although it fixes iommu assignment issue, it also break compatibility
-> with old device tree. So, the patch in driver is needed to iterate over
-> sibling mdp device nodes, not child ones, to keep driver work properly.
-> 
-> Daniel Kurtz (2):
->   arm64: dts: mt8173: Fix mdp device tree
->   media: mtk-mdp: Fix mdp device tree
-> 
-> Minghsiu Tsai (1):
->   dt-bindings: mt8173: Fix mdp device tree
-> 
->  .../devicetree/bindings/media/mediatek-mdp.txt     |  12 +-
->  arch/arm64/boot/dts/mediatek/mt8173.dtsi           | 126 ++++++++++-----------
->  drivers/media/platform/mtk-mdp/mtk_mdp_core.c      |   2 +-
->  3 files changed, 64 insertions(+), 76 deletions(-)
-> 
