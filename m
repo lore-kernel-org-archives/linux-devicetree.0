@@ -1,13 +1,13 @@
 From: Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>
-Subject: [PATCH v4 07/20] ARM: dts: keystone: Add generic compatible string for I2C EEPROM
-Date: Mon, 22 May 2017 16:01:55 +0200
-Message-ID: <20170522140208.24652-8-javier@dowhile0.org>
+Subject: [PATCH v4 06/20] ARM: dts: imx: Add generic compatible string for I2C EEPROM
+Date: Mon, 22 May 2017 16:01:54 +0200
+Message-ID: <20170522140208.24652-7-javier@dowhile0.org>
 References: <20170522140208.24652-1-javier@dowhile0.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <20170522140208.24652-1-javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 The at24 driver allows to register I2C EEPROM chips using different vendor
@@ -32,50 +32,92 @@ Changes in v4:
 Changes in v3: None
 Changes in v2: None
 
- arch/arm/boot/dts/keystone-k2e-evm.dts  | 2 +-
- arch/arm/boot/dts/keystone-k2hk-evm.dts | 2 +-
- arch/arm/boot/dts/keystone-k2l-evm.dts  | 2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
+ arch/arm/boot/dts/imx27-phytec-phycard-s-som.dtsi | 2 +-
+ arch/arm/boot/dts/imx27-phytec-phycore-som.dtsi   | 2 +-
+ arch/arm/boot/dts/imx28-evk.dts                   | 2 +-
+ arch/arm/boot/dts/imx53-tqma53.dtsi               | 2 +-
+ arch/arm/boot/dts/imx6q-cm-fx6.dts                | 2 +-
+ arch/arm/boot/dts/imx6q-utilite-pro.dts           | 2 +-
+ 6 files changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/arch/arm/boot/dts/keystone-k2e-evm.dts b/arch/arm/boot/dts/keystone-k2e-evm.dts
-index ae1ebe7ee021..c8d45e6cd9e6 100644
---- a/arch/arm/boot/dts/keystone-k2e-evm.dts
-+++ b/arch/arm/boot/dts/keystone-k2e-evm.dts
-@@ -69,7 +69,7 @@
+diff --git a/arch/arm/boot/dts/imx27-phytec-phycard-s-som.dtsi b/arch/arm/boot/dts/imx27-phytec-phycard-s-som.dtsi
+index 4f3e0f473581..0b8490b21a38 100644
+--- a/arch/arm/boot/dts/imx27-phytec-phycard-s-som.dtsi
++++ b/arch/arm/boot/dts/imx27-phytec-phycard-s-som.dtsi
+@@ -40,7 +40,7 @@
+ 	status = "okay";
  
- &i2c0 {
- 	dtt@50 {
--		compatible = "at,24c1024";
-+		compatible = "atmel,24c1024";
+ 	at24@52 {
+-		compatible = "at,24c32";
++		compatible = "atmel,24c32";
+ 		pagesize = <32>;
+ 		reg = <0x52>;
+ 	};
+diff --git a/arch/arm/boot/dts/imx27-phytec-phycore-som.dtsi b/arch/arm/boot/dts/imx27-phytec-phycore-som.dtsi
+index 82fec935ce83..c973c5d91875 100644
+--- a/arch/arm/boot/dts/imx27-phytec-phycore-som.dtsi
++++ b/arch/arm/boot/dts/imx27-phytec-phycore-som.dtsi
+@@ -193,7 +193,7 @@
+ 	status = "okay";
+ 
+ 	at24@52 {
+-		compatible = "at,24c32";
++		compatible = "atmel,24c32";
+ 		pagesize = <32>;
+ 		reg = <0x52>;
+ 	};
+diff --git a/arch/arm/boot/dts/imx28-evk.dts b/arch/arm/boot/dts/imx28-evk.dts
+index a5ba669b4eaa..b88c087f1fea 100644
+--- a/arch/arm/boot/dts/imx28-evk.dts
++++ b/arch/arm/boot/dts/imx28-evk.dts
+@@ -203,7 +203,7 @@
+ 				};
+ 
+ 				at24@51 {
+-					compatible = "at24,24c32";
++					compatible = "atmel,24c32";
+ 					pagesize = <32>;
+ 					reg = <0x51>;
+ 				};
+diff --git a/arch/arm/boot/dts/imx53-tqma53.dtsi b/arch/arm/boot/dts/imx53-tqma53.dtsi
+index 85972f2201c2..eecdc1c55eef 100644
+--- a/arch/arm/boot/dts/imx53-tqma53.dtsi
++++ b/arch/arm/boot/dts/imx53-tqma53.dtsi
+@@ -272,7 +272,7 @@
+ 	};
+ 
+ 	eeprom: 24c64@50 {
+-		compatible = "at,24c64";
++		compatible = "atmel,24c64";
+ 		pagesize = <32>;
  		reg = <0x50>;
  	};
- };
-diff --git a/arch/arm/boot/dts/keystone-k2hk-evm.dts b/arch/arm/boot/dts/keystone-k2hk-evm.dts
-index 2156ff92d08f..69af3a950da6 100644
---- a/arch/arm/boot/dts/keystone-k2hk-evm.dts
-+++ b/arch/arm/boot/dts/keystone-k2hk-evm.dts
-@@ -145,7 +145,7 @@
+diff --git a/arch/arm/boot/dts/imx6q-cm-fx6.dts b/arch/arm/boot/dts/imx6q-cm-fx6.dts
+index 66cac5328b86..a8af3822d9df 100644
+--- a/arch/arm/boot/dts/imx6q-cm-fx6.dts
++++ b/arch/arm/boot/dts/imx6q-cm-fx6.dts
+@@ -215,7 +215,7 @@
+ 	clock-frequency = <100000>;
  
- &i2c0 {
- 	dtt@50 {
--		compatible = "at,24c1024";
-+		compatible = "atmel,24c1024";
+ 	eeprom@50 {
+-		compatible = "at24,24c02";
++		compatible = "atmel,24c02";
  		reg = <0x50>;
+ 		pagesize = <16>;
  	};
- };
-diff --git a/arch/arm/boot/dts/keystone-k2l-evm.dts b/arch/arm/boot/dts/keystone-k2l-evm.dts
-index 056b42f99d7a..402190e55e40 100644
---- a/arch/arm/boot/dts/keystone-k2l-evm.dts
-+++ b/arch/arm/boot/dts/keystone-k2l-evm.dts
-@@ -42,7 +42,7 @@
+diff --git a/arch/arm/boot/dts/imx6q-utilite-pro.dts b/arch/arm/boot/dts/imx6q-utilite-pro.dts
+index d900ad6ec5f8..16d5be1aeb3c 100644
+--- a/arch/arm/boot/dts/imx6q-utilite-pro.dts
++++ b/arch/arm/boot/dts/imx6q-utilite-pro.dts
+@@ -130,7 +130,7 @@
+ 			#size-cells = <0>;
  
- &i2c0 {
- 	dtt@50 {
--		compatible = "at,24c1024";
-+		compatible = "atmel,24c1024";
- 		reg = <0x50>;
- 	};
- };
+ 			eeprom@50 {
+-				compatible = "at24,24c02";
++				compatible = "atmel,24c02";
+ 				reg = <0x50>;
+ 				pagesize = <16>;
+ 			};
 -- 
 2.9.3
 
