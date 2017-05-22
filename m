@@ -1,73 +1,108 @@
-From: "A.S. Dong" <aisheng.dong-3arQi8VN3Tc@public.gmane.org>
-Subject: RE: [PATCH V2 4/5] dt-bindings: pinctrl: add imx7ulp pinctrl binding
- doc
-Date: Mon, 22 May 2017 12:30:21 +0000
-Message-ID: <AM3PR04MB306C6E7EA4431A773B25CCF80F80@AM3PR04MB306.eurprd04.prod.outlook.com>
-References: <1495177545-23006-1-git-send-email-aisheng.dong@nxp.com>
- <1495177545-23006-5-git-send-email-aisheng.dong@nxp.com>
- <CACRpkdb6B-f0uHUo9ecUmGCzY8GfFbCjNtJFeQJqtKEYwyB87A@mail.gmail.com>
+From: Joshua Kinard <kumba@gentoo.org>
+Subject: Re: [PATCH 00/21] MIPS memblock: Remove bootmem code and switch to
+ NO_BOOTMEM
+Date: Mon, 22 May 2017 08:47:20 -0400
+Message-ID: <ef3d7a8c-2a73-2082-0d64-bdb4f95df204@gentoo.org>
+References: <1482113266-13207-1-git-send-email-fancer.lancer@gmail.com>
+ <be0b6614-708d-a32a-029d-7e606a673e5b@imgtec.com>
+ <20170522102643.GA17763@mobilestation>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CACRpkdb6B-f0uHUo9ecUmGCzY8GfFbCjNtJFeQJqtKEYwyB87A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mips-bounce@linux-mips.org>
+In-Reply-To: <20170522102643.GA17763@mobilestation>
 Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>, Jacky Bai <ping.bai-3arQi8VN3Tc@public.gmane.org>, Andy Duan <fugang.duan-3arQi8VN3Tc@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-mips-bounce@linux-mips.org
+Errors-to: linux-mips-bounce@linux-mips.org
+List-help: <mailto:ecartis@linux-mips.org?Subject=help>
+List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
+List-software: Ecartis version 1.0.0
+List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
+List-owner: <mailto:ralf@linux-mips.org>
+List-post: <mailto:linux-mips@linux-mips.org>
+List-archive: <http://www.linux-mips.org/archives/linux-mips/>
+To: Serge Semin <fancer.lancer@gmail.com>, Marcin Nowakowski <marcin.nowakowski@imgtec.com>
+Cc: ralf@linux-mips.org, paul.burton@imgtec.com, rabinv@axis.com, matt.redfearn@imgtec.com, james.hogan@imgtec.com, alexander.sverdlin@nokia.com, robh+dt@kernel.org, frowand.list@gmail.com, Sergey.Semin@t-platforms.ru, linux-mips@linux-mips.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBMaW51cyBXYWxsZWlqIFttYWls
-dG86bGludXMud2FsbGVpakBsaW5hcm8ub3JnXQ0KPiBTZW50OiBNb25kYXksIE1heSAyMiwgMjAx
-NyA1OjI3IFBNDQo+IFRvOiBBLlMuIERvbmc7IEphY29wbyBNb25kaTsgR2VlcnQgVXl0dGVyaG9l
-dmVuOyBDaHJpcyBCcmFuZHQ7IEFuZHkNCj4gU2hldmNoZW5rbw0KPiBDYzogbGludXgtZ3Bpb0B2
-Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsNCj4g
-U2hhd24gR3VvOyBTdGVmYW4gQWduZXI7IEphY2t5IEJhaTsgQW5keSBEdWFuOyBTYXNjaGEgSGF1
-ZXI7IFJvYiBIZXJyaW5nOw0KPiBNYXJrIFJ1dGxhbmQ7IGRldmljZXRyZWVAdmdlci5rZXJuZWwu
-b3JnDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggVjIgNC81XSBkdC1iaW5kaW5nczogcGluY3RybDog
-YWRkIGlteDd1bHAgcGluY3RybA0KPiBiaW5kaW5nIGRvYw0KPiANCj4gT24gRnJpLCBNYXkgMTks
-IDIwMTcgYXQgOTowNSBBTSwgRG9uZyBBaXNoZW5nIDxhaXNoZW5nLmRvbmdAbnhwLmNvbT4gd3Jv
-dGU6DQo+IA0KPiA+IGkuTVggN1VMUCBoYXMgdGhyZWUgSU9NVVhDIGluc3RhbmNlczogSU9NVVhD
-MCBmb3IgTTQgcG9ydHMsDQo+ID4gSU9NVVhDMSBmb3IgQTcgcG9ydHMgYW5kIElPTVVYQyBERFIg
-Zm9yIEREUiBpbnRlcmZhY2UuDQo+ID4NCj4gPiBUaGlzIHBhdGNoIGFkZHMgdGhlIElPTVVYQzEg
-c3VwcG9ydCBmb3IgQTcuDQo+ID4NCj4gPiBDYzogUm9iIEhlcnJpbmcgPHJvYmgrZHRAa2VybmVs
-Lm9yZz4NCj4gPiBDYzogTWFyayBSdXRsYW5kIDxtYXJrLnJ1dGxhbmRAYXJtLmNvbT4NCj4gPiBD
-YzogZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmcNCj4gPiBDYzogTGludXMgV2FsbGVpaiA8bGlu
-dXMud2FsbGVpakBsaW5hcm8ub3JnPg0KPiA+IENjOiBTaGF3biBHdW8gPHNoYXduZ3VvQGtlcm5l
-bC5vcmc+DQo+ID4gU2lnbmVkLW9mZi1ieTogRG9uZyBBaXNoZW5nIDxhaXNoZW5nLmRvbmdAbnhw
-LmNvbT4NCj4gDQo+ICguLi4pDQo+ID4gKz09PSBQaW4gQ29uZmlndXJhdGlvbiBOb2RlID09PQ0K
-PiA+ICstIHBpbnM6IE9uZSBpbnRlZ2VycyBhcnJheSwgcmVwcmVzZW50cyBhIGdyb3VwIG9mIHBp
-bnMgbXV4IHNldHRpbmcuDQo+ID4gKyAgICAgICBUaGUgZm9ybWF0IGlzIGZzbCxwaW5zID0gPFBJ
-Tl9GVU5DX0lEPiwgUElOX0ZVTkNfSUQgaXMgYSBwaW4NCj4gd29ya2luZyBvbg0KPiA+ICsgICAg
-ICAgYSBzcGVjaWZpYyBmdW5jdGlvbi4NCj4gPiArDQo+ID4gKyAgICAgICBOT1RFOiBpLk1YN1VM
-UCBQSU5fRlVOQ19JRCBjb25zaXN0cyBvZiA0IGludGVnZXJzIGFzIGl0IHNoYXJlcw0KPiBvbmUg
-bXV4DQo+ID4gKyAgICAgICBhbmQgY29uZmlnIHJlZ2lzdGVyIGFzIGZvbGxvd3M6DQo+ID4gKyAg
-ICAgICA8bXV4X2NvbmZfcmVnIGlucHV0X3JlZyBtdXhfbW9kZSBpbnB1dF92YWw+DQo+ID4gKw0K
-PiA+ICsgICAgICAgUmVmZXIgdG8gaW14N3VscC1waW5mdW5jLmggaW4gaW4gZGV2aWNlIHRyZWUg
-c291cmNlIGZvbGRlciBmb3INCj4gYWxsDQo+ID4gKyAgICAgICBhdmFpbGFibGUgaW14N3VscCBQ
-SU5fRlVOQ19JRC4NCj4gPiArDQo+ID4gK09wdGlvbmFsIFByb3BlcnRpZXM6DQo+ID4gKy0gbnhw
-LG91dHB1dC1idWZmZXItZW5hYmxlOiAgICBCb29sLiBPdXRwdXQgYnVmZmVyIGVuYWJsZWQNCj4g
-PiArLSBueHAsaW5wdXQtYnVmZmVyLWVuYWJsZTogICAgIEJvb2wuIElucHV0IGJ1ZmZlciBlbmFi
-bGVkDQo+ID4gKy0gZHJpdmUtc3RyZW5ndGggICAgICAgICAgICAgICBJbnRlZ2VyLiBDb250cm9s
-cyBEcml2ZSBTdHJlbmd0aA0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAwOiBTdGFuZGFyZA0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAxOiBIaSBEcml2ZXINCj4gKC4uLikNCj4gDQo+IFdFTEwgTE9PSyBBVCBUSEFUDQo+IA0K
-PiBDdXN0b20gaW5wdXQvb3V0cHV0IGJ1ZmZlciBlbmFibGUgcHJvcGVydGllcyBlaD8NCj4gDQo+
-IFdlIGhhZCB0aGlzIHJlYWxseSByZWFsbHkgbG9uZyBkaXNjdXNzaW9uIHdpdGggdGhlIFJlbmVz
-YXMgcGVvcGxlIGFib3V0DQo+IHdoZXRoZXIgdGhleSBtYWtlIHRoaXMgYSBjdXN0b20gcHJvcGVy
-dHkgb3IgYSBnZW5lcmljIG9uZSBvciB3aGV0aGVyDQo+IGFueW9uZSBlbHNlIHdvdWxkIGV2ZXIg
-aGF2ZSB0aGUgc2FtZSBuZWVkLg0KPiANCj4gVGhpcyB3b3VsZCBiZSBhIHZvdGUgZm9yIGFkZGlu
-ZyBvdXRwdXQtYnVmZmVyLWVuYWJsZSBhbmQgaW5wdXQtYnVmZmVyLQ0KPiBlbmFibGUgYXMgZ2Vu
-ZXJpYyBwcm9wZXJpZXMgaG0/DQo+IA0KDQpZZXMsIHRoYXQgd291bGQgYmUgZ29vZCBpZiB0aGV5
-J3JlIG1hZGUgZ2VuZXJpYyBwcm9wZXJ0aWVzLg0KDQo+IFVOTEVTUyB0aGUgZXhpc3RpbmcgZGV2
-aWNlIHRyZWUgcHJvcGVydGllcyBhbHJlYWR5IGNvdmVyIHRoZSB1c2VjYXNlcy4NCj4gDQo+IEFu
-ZHkgaGFzIG1hZGUgc29tZSBnb29kIHBvaW50cyB0aGVyZS4NCj4gDQo+IENhbiB5b3UgcGxlYXNl
-IHJlYWQgdXAgb24gdGhlIGRpc2N1c3Npb24gdGhyZWFkIGZvciBzdWJqZWN0ICJbUEFUQ0ggdjUN
-Cj4gMDEvMTBdIHBpbmN0cmw6IGdlbmVyaWM6IEFkZCBiaS1kaXJlY3Rpb25hbCBhbmQgb3V0cHV0
-LWVuYWJsZSINCj4gYW5kIGNvbnRyaWJ1dGUgdG8gdGhpcyBkaXNjdXNzaW9uPw0KPiANCg0KU3Vy
-ZSwgd2lsbCBmaW5kIHRpbWUgdG8gcmVhZCBpdC4NCg0KVGhhbmtzIGZvciB0aGUgcmVtaW5kZXIu
-DQoNClJlZ2FyZHMNCkRvbmcgQWlzaGVuZw0KDQo=
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On 05/22/2017 06:26, Serge Semin wrote:
+> On Mon, May 22, 2017 at 11:48:36AM +0200, Marcin Nowakowski <marcin.nowakowski@imgtec.com> wrote:
+> 
+> Hello Marcin,
+> 
+>> Hi Serge,
+>>
+>> On 19.12.2016 03:07, Serge Semin wrote:
+>>> Most of the modern platforms supported by linux kernel have already
+>>> been cleaned up of old bootmem allocator by moving to nobootmem
+>>> interface wrapping up the memblock. This patchset is the first
+>>> attempt to do the similar improvement for MIPS for UMA systems
+>>> only.
+>>>
+>>> Even though the porting was performed as much careful as possible
+>>> there still might be problem with support of some platforms,
+>>> especially Loonson3 or SGI IP27, which perform early memory manager
+>>> initialization by their self.
+>>>
+>>> The patchset is split so individual patch being consistent in
+>>> functional and buildable ways. But the MIPS early memory manager
+>>> will work correctly only either with or without the whole set being
+>>> applied. For the same reason a reviewer should not pay much attention
+>>> to methods bootmem_init(), arch_mem_init(), paging_init() and
+>>> mem_init() until they are fully refactored.
+>>>
+>>> The patchset is applied on top of kernel v4.9.
+>>
+>> Have you progressed any further with these patches?
+>> They would definitely be useful to include for MIPS arch, so can you let us
+>> know if you are planning to send any updated version?
+>>
+>> thanks,
+>> Marcin
+> 
+> Sorry for such a long delay with response. I have been really busy
+> during last three months. Alas I'll still be busy for next 1-2
+> months as well. You know how it usually works with urgent projects.
+> One needs to do this thing, then that thing, and at some point I just
+> forgot about this thread.
+> 
+> Regarding the patchset. I'm still pretty much eager to make it being
+> part of kernel MIPS arch. But there was a problem I outlined
+> in the patchset header message, which I can't fix by myself.
+> Particulary It's connected with Loonson3 or SGI IP27 code alteration,
+> so to make it free of ancient boot_mem_map dependencies (see the
+> patchset header message). Without a help from someone, who has
+> Loonson64 and SGI IP27 hardware and strong desire to make it free of
+> old bootmem allocator, it is useless to make any progress from my
+> side. That's why Ralf moved this email-thread into RFC actually.
+> Anyway If either you or someone else has got such hardware and is
+> interested in the cooperation, I'll be more than happy to push
+> my efforts forward with this patchset contribution. But only after
+> I got a bit less busy with my work. As I said it will happen within
+> next 1-2 months. So do you have the hardware and desire to be part
+> of this?
+> 
+> Regards,
+> -Sergey
+
+I have an SGI Onyx2 and just recently acquired a working SGI Origin 200.  The
+Onyx2 has NUMA issues yet to be hunted down, but I got ~3 days uptime out of
+the Origin 200 running compiles before powering it down.  Mainline needs 2-3
+small patches to make IP27 workable, last I tested.
+
+I'd have to look at the IP27 code again and see if I can make sense of what
+it's doing.  I think it dealt with either setting up memory for an initrd
+(which I haven't used in over a decade), or it's for the NUMA stuff to discover
+all memory on each node.
+
+-- 
+Joshua Kinard
+Gentoo/MIPS
+kumba@gentoo.org
+6144R/F5C6C943 2015-04-27
+177C 1972 1FB8 F254 BAD0 3E72 5C63 F4E3 F5C6 C943
+
+"The past tempts us, the present confuses us, the future frightens us.  And our
+lives slip away, moment by moment, lost in that vast, terrible in-between."
+
+--Emperor Turhan, Centauri Republic
