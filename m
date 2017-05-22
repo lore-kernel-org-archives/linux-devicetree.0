@@ -1,71 +1,83 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v6 6/9] mfd: axp20x: add axp20x-regulator
- cell for AXP803
-Date: Mon, 22 May 2017 13:17:49 +0100
-Message-ID: <20170522121749.lqedysms2dywcyfl@dell>
-References: <20170518071653.36561-1-icenowy@aosc.io>
- <20170518071653.36561-7-icenowy@aosc.io>
-Reply-To: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+From: Shaokun Zhang <zhangshaokun@hisilicon.com>
+Subject: [PATCH v8 2/9] dt-bindings: hisi: Add Hisilicon HiP05/06/07 Djtag dts bindings
+Date: Mon, 22 May 2017 20:48:14 +0800
+Message-ID: <1495457294-233366-1-git-send-email-zhangshaokun@hisilicon.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBDA7X7F2WUEBB4FNRPEQKGQEFOT2SWQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20170518071653.36561-7-icenowy-h8G6r0blFSE@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh+dt@kernel.org, mark.rutland@arm.com, will.deacon@arm.com
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, anurup.m@huawei.com, zhangshaokun@hisilicon.com, tanxiaojun@huawei.com, xuwei5@hisilicon.com, sanil.kumar@hisilicon.com, john.garry@huawei.com, gabriele.paoloni@huawei.com, shiju.jose@huawei.com, huangdaode@hisilicon.com, wangkefeng.wang@huawei.com, linuxarm@huawei.com, dikshit.n@huawei.com, shyju.pv@huawei.com, anurupvasu@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 18 May 2017, Icenowy Zheng wrote:
+From: Tan Xiaojun <tanxiaojun@huawei.com>
 
-> As axp20x-regulator now supports AXP803, add a cell for it.
->=20
-> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-> Acked-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-> ---
-> Changes in v5:
-> - Removed wrong snippet.
-> Changes in v4:
-> - Added a trailing comma for new cell, for easier further cell addition.
-> Changes in v3:
-> - Make the new cell one-liner.
->=20
->  drivers/mfd/axp20x.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
+Add Hisilicon HiP05/06/07 Djtag dts bindings for CPU and IO Die
 
-Applied, thanks.
+Signed-off-by: Tan Xiaojun <tanxiaojun@huawei.com>
+Signed-off-by: Anurup M <anurup.m@huawei.com>
+Acked-by: Rob Herring <robh@kernel.org>
+---
+ .../devicetree/bindings/arm/hisilicon/djtag.txt    | 51 ++++++++++++++++++++++
+ 1 file changed, 51 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/hisilicon/djtag.txt
 
-> diff --git a/drivers/mfd/axp20x.c b/drivers/mfd/axp20x.c
-> index 1dc6235778eb..917b6ddc4f15 100644
-> --- a/drivers/mfd/axp20x.c
-> +++ b/drivers/mfd/axp20x.c
-> @@ -848,7 +848,8 @@ static struct mfd_cell axp803_cells[] =3D {
->  		.name			=3D "axp20x-pek",
->  		.num_resources		=3D ARRAY_SIZE(axp803_pek_resources),
->  		.resources		=3D axp803_pek_resources,
-> -	}
-> +	},
-> +	{	.name			=3D "axp20x-regulator" },
->  };
-> =20
->  static struct mfd_cell axp806_cells[] =3D {
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
-
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+diff --git a/Documentation/devicetree/bindings/arm/hisilicon/djtag.txt b/Documentation/devicetree/bindings/arm/hisilicon/djtag.txt
+new file mode 100644
+index 0000000..fde5bab
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/hisilicon/djtag.txt
+@@ -0,0 +1,51 @@
++The Hisilicon Djtag is an independent component which connects with some other
++components in the SoC by Debug Bus. The djtag is available in CPU and IO dies
++in the chip. The djtag controls access to connecting modules of CPU and IO
++dies.
++The various connecting components in CPU die (like L3 cache, L3 cache PMU etc.)
++are accessed by djtag during real time debugging. In IO die there are connecting
++components like RSA. These components appear as devices attached to djtag bus.
++
++Hisilicon HiP05/06/07 djtag for CPU die
++Required properties:
++  - compatible : The value should be as follows
++	(a) "hisilicon,hip05-cpu-djtag-v1" for CPU die which use v1 hw in
++	    HiP05 chipset.
++	(b) "hisilicon,hip06-cpu-djtag-v1" for CPU die which use v1 hw in
++	    HiP06 chipset.
++	(c) "hisilicon,hip07-cpu-djtag-v2" for CPU die which use v2 hw in
++	    HiP07 chipset.
++  - reg : Register address and size
++  - hisilicon,scl-id : The Super Cluster ID for CPU or IO die
++
++Example 1: Djtag for CPU die in HiP07
++
++	/* for Hisilicon HiP07 djtag for CPU Die */
++	djtag0: djtag@60010000 {
++		compatible = "hisilicon,hip07-cpu-djtag-v2";
++		reg = <0x0 0x60010000 0x0 0x10000>;
++		hisilicon,scl-id = <0x03>;
++
++		/* All connecting components will appear as child nodes */
++	};
++
++Hisilicon HiP05/06/07 djtag for IO die
++Required properties:
++  - compatible : The value should be as follows
++	(a) "hisilicon,hip05-io-djtag-v1" for IO die which use v1 hw in
++	    HiP05 chipset.
++	(c) "hisilicon,hip06-io-djtag-v2" for IO die which use v2 hw in
++	    HiP06 chipset.
++	(d) "hisilicon,hip07-io-djtag-v2" for IO die which use v2 hw in
++	    HiP07 chipset
++
++Example 2: Djtag for IO die in HiP05
++
++	/* for Hisilicon HiP05 djtag for IO Die */
++	djtag1: djtag@d0000000 {
++		compatible = "hisilicon,hip05-io-djtag-v1";
++		reg = <0x0 0xd0000000 0x0 0x10000>;
++		hisilicon,scl-id = <0x0>;
++
++		/* All connecting components will appear as child nodes */
++	};
+-- 
+1.9.1
