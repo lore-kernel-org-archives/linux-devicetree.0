@@ -1,152 +1,67 @@
 From: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
-Subject: Re: [PATCH V2 4/5] dt-bindings: pinctrl: add imx7ulp pinctrl binding
- doc
-Date: Mon, 22 May 2017 09:15:55 -0700
-Message-ID: <5e78ef100319f229a87e33804384e5b3@agner.ch>
-References: <1495177545-23006-1-git-send-email-aisheng.dong@nxp.com>
- <1495177545-23006-5-git-send-email-aisheng.dong@nxp.com>
+Subject: Re: [PATCH] ARM: dts: vf610-zii-dev-rev-b: add hi8435 device
+Date: Mon, 22 May 2017 09:20:18 -0700
+Message-ID: <a74ee28c1c62fee5a5e75dda70a02990@agner.ch>
+References: <20170522131010.3537-1-nikita.yoush@cogentembedded.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1495177545-23006-5-git-send-email-aisheng.dong-3arQi8VN3Tc@public.gmane.org>
+In-Reply-To: <20170522131010.3537-1-nikita.yoush-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Dong Aisheng <aisheng.dong-3arQi8VN3Tc@public.gmane.org>
-Cc: linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, ping.bai-3arQi8VN3Tc@public.gmane.org, fugang.duan-3arQi8VN3Tc@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Nikita Yushchenko <nikita.yoush-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chris Healy <Chris.Healy-c8ZVq/bFV1I@public.gmane.org>, Jeff White <Jeff.White-c8ZVq/bFV1I@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2017-05-19 00:05, Dong Aisheng wrote:
-> i.MX 7ULP has three IOMUXC instances: IOMUXC0 for M4 ports,
-> IOMUXC1 for A7 ports and IOMUXC DDR for DDR interface.
+On 2017-05-22 06:10, Nikita Yushchenko wrote:
+> ZII dev board rev B has a Holt Hi8435 connected to dspi2.
+> Add it to device tree.
 > 
-> This patch adds the IOMUXC1 support for A7.
+> ZII dev board rev C does not have that, so use rev-b dts file,
+> not common dtsi file.
 > 
-> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Signed-off-by: Dong Aisheng <aisheng.dong-3arQi8VN3Tc@public.gmane.org>
-> 
+> Signed-off-by: Nikita Yushchenko <nikita.yoush-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
 > ---
-> ChangeLog:
-> v1->v2:
->  * add more descriptions in binding doc
->  * add missed prefix for private properties.
->  * move dt-bindings/pinctrl/imx7ulp-pinfunc.h to arch/arm/boot/dts
-> ---
->  .../bindings/pinctrl/fsl,imx7ulp-pinctrl.txt       |  63 +++
->  arch/arm/boot/dts/imx7ulp-pinfunc.h                | 468 +++++++++++++++++++++
->  2 files changed, 531 insertions(+)
->  create mode 100644
-> Documentation/devicetree/bindings/pinctrl/fsl,imx7ulp-pinctrl.txt
->  create mode 100644 arch/arm/boot/dts/imx7ulp-pinfunc.h
+>  arch/arm/boot/dts/vf610-zii-dev-rev-b.dts | 19 +++++++++++++++++++
+>  1 file changed, 19 insertions(+)
 > 
-> diff --git
-> a/Documentation/devicetree/bindings/pinctrl/fsl,imx7ulp-pinctrl.txt
-> b/Documentation/devicetree/bindings/pinctrl/fsl,imx7ulp-pinctrl.txt
-> new file mode 100644
-> index 0000000..7fbf367
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pinctrl/fsl,imx7ulp-pinctrl.txt
-> @@ -0,0 +1,63 @@
-> +* Freescale i.MX7ULP IOMUX Controller
-> +
-> +i.MX 7ULP has three IOMUXC instances: IOMUXC0 for M4 ports, IOMUXC1 for A7
-> +ports and IOMUXC DDR for DDR interface.
-> +
-> +Note:
-> +This binding doc is only for the IOMUXC1 support in A7 Domain and it only
-> +supports generic pin config.
-> +
-> +Please also refer to fsl,imx-pinctrl.txt in this directory for IMX common
-> +binding part and pinctrl-bindings.txt for the generic config binding.
-> +
-> +=== Pin Controller Node ===
-> +
-> +Required properties:
-> +- compatible:	"fsl,imx7ulp-iomuxc1"
-> +- reg:		Should contain the base physical address and size of the iomuxc
-> +		registers.
-> +
-> +=== Pin Configuration Node ===
-> +- pins: One integers array, represents a group of pins mux setting.
-> +	The format is fsl,pins = <PIN_FUNC_ID>, PIN_FUNC_ID is a pin working on
-> +	a specific function.
-> +
-> +	NOTE: i.MX7ULP PIN_FUNC_ID consists of 4 integers as it shares one mux
-> +	and config register as follows:
-> +	<mux_conf_reg input_reg mux_mode input_val>
-> +
-> +	Refer to imx7ulp-pinfunc.h in in device tree source folder for all
-> +	available imx7ulp PIN_FUNC_ID.
-> +
-> +Optional Properties:
-> +- nxp,output-buffer-enable:	Bool. Output buffer enabled
-> +- nxp,input-buffer-enable:	Bool. Input buffer enabled
-> +- drive-strength		Integer. Controls Drive Strength
-> +					0: Standard
-> +					1: Hi Driver
-> +- drive-push-pull		Bool. Enable Pin Push-pull
-> +- drive-open-drain		Bool. Enable Pin Open-drian
-> +- slew-rate:			Integer. Controls Slew Rate
-> +					0: Standard
-> +					1: Slow
-> +- bias-disable:			Bool. Pull disabled
-> +- bias-pull-down:		Bool. Pull down on pin
-> +- bias-pull-up:			Bool. Pull up on pin
-> +
-> +Examples:
-> +#include "imx7ulp-pinfunc.h"
-> +
-> +/* Pin Controller Node */
-> +iomuxc1: iomuxc@40ac0000 {
-> +	compatible = "fsl,imx7ulp-iomuxc1";
-> +	reg = <0x40ac0000 0x1000>;
-> +
-> +	/* Pin Configuration Node */
-> +	pinctrl_lpuart4: lpuart4grp {
-> +		pins = <
-> +			ULP1_PAD_PTC3__LPUART4_RX
-> +			ULP1_PAD_PTC2__LPUART4_TX
-> +		>;
-> +		bias-pull-up;
-> +	};
+> diff --git a/arch/arm/boot/dts/vf610-zii-dev-rev-b.dts
+> b/arch/arm/boot/dts/vf610-zii-dev-rev-b.dts
+> index 37f95427616f..f433465c3a7c 100644
+> --- a/arch/arm/boot/dts/vf610-zii-dev-rev-b.dts
+> +++ b/arch/arm/boot/dts/vf610-zii-dev-rev-b.dts
+> @@ -348,6 +348,25 @@
+>  	};
+>  };
+>  
+> +&edma1 {
+> +	status = "okay";
 > +};
-> diff --git a/arch/arm/boot/dts/imx7ulp-pinfunc.h
-> b/arch/arm/boot/dts/imx7ulp-pinfunc.h
-> new file mode 100644
-> index 0000000..cafd3ed
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/imx7ulp-pinfunc.h
-> @@ -0,0 +1,468 @@
-> +/*
-> + * Copyright 2016 Freescale Semiconductor, Inc.
-> + * Copyright 2017 NXP
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + *
-> + */
 > +
-> +#ifndef __DTS_IMX7ULP_PINFUNC_H
-> +#define __DTS_IMX7ULP_PINFUNC_H
+> +&dspi2 {
+> +	bus-num = <1>;
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_dspi2>;
+> +	status = "okay";
+> +	spi-num-chipselects = <2>;
 > +
-> +/*
-> + * The pin function ID is a tuple of
-> + * <mux_conf_reg input_reg mux_mode input_val>
-> + */
-> +
-> +#define ULP1_PAD_PTC0__PTC0                                      
-> 0x0000 0x0000 0x1 0x0
+> +	hi8435@1 {
+> +		compatible = "holt,hi8435";
+> +		reg = <1>;
+> +		spi-max-frequency = <20000000>;
+> +		gpios = <&gpio5 3 0>;
 
-
-For consistency with other SoCs, can we add MX7 to the define? E.g.
-MX7ULP1?
+Nit: GPIO_ACTIVE_HIGH instead of 0?
 
 --
 Stefan
+
+> +	};
+> +};
+> +
+>  &i2c0 {
+>  	clock-frequency = <100000>;
+>  	pinctrl-names = "default";
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
