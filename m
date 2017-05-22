@@ -1,79 +1,73 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH 00/41] omap_hsmmc: Add ADMA support and UHS/HS200/DDR
- support
-Date: Mon, 22 May 2017 17:50:44 +0530
-Message-ID: <d5bdc61e-abb0-7833-ea2f-a3cca4c4033e@ti.com>
-References: <20170519081541.26753-1-kishon@ti.com>
- <20170519221344.GI10472@atomide.com>
+From: "A.S. Dong" <aisheng.dong-3arQi8VN3Tc@public.gmane.org>
+Subject: RE: [PATCH V2 4/5] dt-bindings: pinctrl: add imx7ulp pinctrl binding
+ doc
+Date: Mon, 22 May 2017 12:30:21 +0000
+Message-ID: <AM3PR04MB306C6E7EA4431A773B25CCF80F80@AM3PR04MB306.eurprd04.prod.outlook.com>
+References: <1495177545-23006-1-git-send-email-aisheng.dong@nxp.com>
+ <1495177545-23006-5-git-send-email-aisheng.dong@nxp.com>
+ <CACRpkdb6B-f0uHUo9ecUmGCzY8GfFbCjNtJFeQJqtKEYwyB87A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <20170519221344.GI10472@atomide.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Jonathan Corbet <corbet@lwn.net>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, nsekhar@ti.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CACRpkdb6B-f0uHUo9ecUmGCzY8GfFbCjNtJFeQJqtKEYwyB87A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>, Jacky Bai <ping.bai-3arQi8VN3Tc@public.gmane.org>, Andy Duan <fugang.duan-3arQi8VN3Tc@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On Saturday 20 May 2017 03:43 AM, Tony Lindgren wrote:
-> Hi,
-> 
-> * Kishon Vijay Abraham I <kishon@ti.com> [170519 01:19]:
->> This series adds UHS, HS200, DDR mode and ADMA support to
->> omap_hsmmc driver used to improve the throughput of MMC/SD in dra7
->> SoCs.
-> 
-> Certainly seems way less intrusive than earlier before the
-> dmaengine changes :)
-> 
->> *) tuning ratio of MMC in dra7 is different from sdhci
-> 
-> Hmm what's the tuning ratio?
-
-For high speed modes like UHS SDR104 and HS200, sampling clock has to adjusted
-according to the position of the data window and it varies depending on the
-host and the card.
-For this we configure the controller with phase delay from 0 to 0x7c (in steps
-of 4) and send the tuning command (CMD19 or CMD21) for which the card responds
-with a known pattern. We keep track of the phase delay's for which we received
-the known patterns (without errors) and select one of the phase delays (3/4th
-ratio from largest consecutive successful phase delay window).
-
-sdhci driver makes use of the HW feature for tuning (no manual setting of phase
-delays etc). Sdhci has an ops for platform specific tuning but that again has
-to be implemented in omap_hsmmc driver.
-> 
->> This series has been tested on beagleboard, pandaboard, beaglebone-black,
->> beaglebone, am335x-evm, am437x-evm, dra7xx-evm, dra72x-evm, am571x-idk
->> and am572x-idk.
-> 
-> I gave this a quick try after manally applying next-20170519
-> after reverting 67d0687224a9 ("mm: drop HASH_ADAPT"). Looks like
-> something is missing as I got:
-> 
-> arch/arm/mach-omap2/pdata-quirks.c:445:23: error:
-> 'struct omap_hsmmc_platform_data' has no member named 'version'
-> ...
-> 
-> It's possible I messed up something while manually applying.
-
-[PATCH 13/41] mmc: host: omap_hsmmc: Add support to set IODELAY values adds
-version member to 'struct omap_hsmmc_platform_data'.
-> 
->> I can split the series to go into Ulf Hansson's tree and Tony's tree 
->> separately if that is required.
-> 
-> Yes please. Maybe send the dts parts first that are ready to
-> get merged, like the fixes and all the iodelay configuration.
-> 
-> Then the mmc driver changes as a separate set.
-> 
-> Then third set to follow-up and enable things once the mmc
-> driver changes are merged.
-
-Sure.
-
-Thanks
-Kishon
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBMaW51cyBXYWxsZWlqIFttYWls
+dG86bGludXMud2FsbGVpakBsaW5hcm8ub3JnXQ0KPiBTZW50OiBNb25kYXksIE1heSAyMiwgMjAx
+NyA1OjI3IFBNDQo+IFRvOiBBLlMuIERvbmc7IEphY29wbyBNb25kaTsgR2VlcnQgVXl0dGVyaG9l
+dmVuOyBDaHJpcyBCcmFuZHQ7IEFuZHkNCj4gU2hldmNoZW5rbw0KPiBDYzogbGludXgtZ3Bpb0B2
+Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsNCj4g
+U2hhd24gR3VvOyBTdGVmYW4gQWduZXI7IEphY2t5IEJhaTsgQW5keSBEdWFuOyBTYXNjaGEgSGF1
+ZXI7IFJvYiBIZXJyaW5nOw0KPiBNYXJrIFJ1dGxhbmQ7IGRldmljZXRyZWVAdmdlci5rZXJuZWwu
+b3JnDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggVjIgNC81XSBkdC1iaW5kaW5nczogcGluY3RybDog
+YWRkIGlteDd1bHAgcGluY3RybA0KPiBiaW5kaW5nIGRvYw0KPiANCj4gT24gRnJpLCBNYXkgMTks
+IDIwMTcgYXQgOTowNSBBTSwgRG9uZyBBaXNoZW5nIDxhaXNoZW5nLmRvbmdAbnhwLmNvbT4gd3Jv
+dGU6DQo+IA0KPiA+IGkuTVggN1VMUCBoYXMgdGhyZWUgSU9NVVhDIGluc3RhbmNlczogSU9NVVhD
+MCBmb3IgTTQgcG9ydHMsDQo+ID4gSU9NVVhDMSBmb3IgQTcgcG9ydHMgYW5kIElPTVVYQyBERFIg
+Zm9yIEREUiBpbnRlcmZhY2UuDQo+ID4NCj4gPiBUaGlzIHBhdGNoIGFkZHMgdGhlIElPTVVYQzEg
+c3VwcG9ydCBmb3IgQTcuDQo+ID4NCj4gPiBDYzogUm9iIEhlcnJpbmcgPHJvYmgrZHRAa2VybmVs
+Lm9yZz4NCj4gPiBDYzogTWFyayBSdXRsYW5kIDxtYXJrLnJ1dGxhbmRAYXJtLmNvbT4NCj4gPiBD
+YzogZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmcNCj4gPiBDYzogTGludXMgV2FsbGVpaiA8bGlu
+dXMud2FsbGVpakBsaW5hcm8ub3JnPg0KPiA+IENjOiBTaGF3biBHdW8gPHNoYXduZ3VvQGtlcm5l
+bC5vcmc+DQo+ID4gU2lnbmVkLW9mZi1ieTogRG9uZyBBaXNoZW5nIDxhaXNoZW5nLmRvbmdAbnhw
+LmNvbT4NCj4gDQo+ICguLi4pDQo+ID4gKz09PSBQaW4gQ29uZmlndXJhdGlvbiBOb2RlID09PQ0K
+PiA+ICstIHBpbnM6IE9uZSBpbnRlZ2VycyBhcnJheSwgcmVwcmVzZW50cyBhIGdyb3VwIG9mIHBp
+bnMgbXV4IHNldHRpbmcuDQo+ID4gKyAgICAgICBUaGUgZm9ybWF0IGlzIGZzbCxwaW5zID0gPFBJ
+Tl9GVU5DX0lEPiwgUElOX0ZVTkNfSUQgaXMgYSBwaW4NCj4gd29ya2luZyBvbg0KPiA+ICsgICAg
+ICAgYSBzcGVjaWZpYyBmdW5jdGlvbi4NCj4gPiArDQo+ID4gKyAgICAgICBOT1RFOiBpLk1YN1VM
+UCBQSU5fRlVOQ19JRCBjb25zaXN0cyBvZiA0IGludGVnZXJzIGFzIGl0IHNoYXJlcw0KPiBvbmUg
+bXV4DQo+ID4gKyAgICAgICBhbmQgY29uZmlnIHJlZ2lzdGVyIGFzIGZvbGxvd3M6DQo+ID4gKyAg
+ICAgICA8bXV4X2NvbmZfcmVnIGlucHV0X3JlZyBtdXhfbW9kZSBpbnB1dF92YWw+DQo+ID4gKw0K
+PiA+ICsgICAgICAgUmVmZXIgdG8gaW14N3VscC1waW5mdW5jLmggaW4gaW4gZGV2aWNlIHRyZWUg
+c291cmNlIGZvbGRlciBmb3INCj4gYWxsDQo+ID4gKyAgICAgICBhdmFpbGFibGUgaW14N3VscCBQ
+SU5fRlVOQ19JRC4NCj4gPiArDQo+ID4gK09wdGlvbmFsIFByb3BlcnRpZXM6DQo+ID4gKy0gbnhw
+LG91dHB1dC1idWZmZXItZW5hYmxlOiAgICBCb29sLiBPdXRwdXQgYnVmZmVyIGVuYWJsZWQNCj4g
+PiArLSBueHAsaW5wdXQtYnVmZmVyLWVuYWJsZTogICAgIEJvb2wuIElucHV0IGJ1ZmZlciBlbmFi
+bGVkDQo+ID4gKy0gZHJpdmUtc3RyZW5ndGggICAgICAgICAgICAgICBJbnRlZ2VyLiBDb250cm9s
+cyBEcml2ZSBTdHJlbmd0aA0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAwOiBTdGFuZGFyZA0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAxOiBIaSBEcml2ZXINCj4gKC4uLikNCj4gDQo+IFdFTEwgTE9PSyBBVCBUSEFUDQo+IA0K
+PiBDdXN0b20gaW5wdXQvb3V0cHV0IGJ1ZmZlciBlbmFibGUgcHJvcGVydGllcyBlaD8NCj4gDQo+
+IFdlIGhhZCB0aGlzIHJlYWxseSByZWFsbHkgbG9uZyBkaXNjdXNzaW9uIHdpdGggdGhlIFJlbmVz
+YXMgcGVvcGxlIGFib3V0DQo+IHdoZXRoZXIgdGhleSBtYWtlIHRoaXMgYSBjdXN0b20gcHJvcGVy
+dHkgb3IgYSBnZW5lcmljIG9uZSBvciB3aGV0aGVyDQo+IGFueW9uZSBlbHNlIHdvdWxkIGV2ZXIg
+aGF2ZSB0aGUgc2FtZSBuZWVkLg0KPiANCj4gVGhpcyB3b3VsZCBiZSBhIHZvdGUgZm9yIGFkZGlu
+ZyBvdXRwdXQtYnVmZmVyLWVuYWJsZSBhbmQgaW5wdXQtYnVmZmVyLQ0KPiBlbmFibGUgYXMgZ2Vu
+ZXJpYyBwcm9wZXJpZXMgaG0/DQo+IA0KDQpZZXMsIHRoYXQgd291bGQgYmUgZ29vZCBpZiB0aGV5
+J3JlIG1hZGUgZ2VuZXJpYyBwcm9wZXJ0aWVzLg0KDQo+IFVOTEVTUyB0aGUgZXhpc3RpbmcgZGV2
+aWNlIHRyZWUgcHJvcGVydGllcyBhbHJlYWR5IGNvdmVyIHRoZSB1c2VjYXNlcy4NCj4gDQo+IEFu
+ZHkgaGFzIG1hZGUgc29tZSBnb29kIHBvaW50cyB0aGVyZS4NCj4gDQo+IENhbiB5b3UgcGxlYXNl
+IHJlYWQgdXAgb24gdGhlIGRpc2N1c3Npb24gdGhyZWFkIGZvciBzdWJqZWN0ICJbUEFUQ0ggdjUN
+Cj4gMDEvMTBdIHBpbmN0cmw6IGdlbmVyaWM6IEFkZCBiaS1kaXJlY3Rpb25hbCBhbmQgb3V0cHV0
+LWVuYWJsZSINCj4gYW5kIGNvbnRyaWJ1dGUgdG8gdGhpcyBkaXNjdXNzaW9uPw0KPiANCg0KU3Vy
+ZSwgd2lsbCBmaW5kIHRpbWUgdG8gcmVhZCBpdC4NCg0KVGhhbmtzIGZvciB0aGUgcmVtaW5kZXIu
+DQoNClJlZ2FyZHMNCkRvbmcgQWlzaGVuZw0KDQo=
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
