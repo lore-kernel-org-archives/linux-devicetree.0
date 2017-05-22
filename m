@@ -1,153 +1,71 @@
-From: Shaokun Zhang <zhangshaokun-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-Subject: [PATCH v8 0/9] perf: arm64: Support for Hisilicon SoC Hardware event counters
-Date: Mon, 22 May 2017 20:46:21 +0800
-Message-ID: <1495457181-230906-1-git-send-email-zhangshaokun@hisilicon.com>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v6 6/9] mfd: axp20x: add axp20x-regulator
+ cell for AXP803
+Date: Mon, 22 May 2017 13:17:49 +0100
+Message-ID: <20170522121749.lqedysms2dywcyfl@dell>
+References: <20170518071653.36561-1-icenowy@aosc.io>
+ <20170518071653.36561-7-icenowy@aosc.io>
+Reply-To: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, corbet-T1hC0tSOHrs@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, anurup.m-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, zhangshaokun-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, tanxiaojun-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, sanil.kumar-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, john.garry-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, gabriele.paoloni-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, shiju.jose-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, huangdaode-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, wangkefeng.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, dikshit.n-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, shyju.pv-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, anurupvasu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBDA7X7F2WUEBB4FNRPEQKGQEFOT2SWQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20170518071653.36561-7-icenowy-h8G6r0blFSE@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Provide Support for Hisilicon SoC(HiP05/06/07) Hardware event counters.
-The Hisilicon SoC HiP0x series has many uncore or non-CPU performance
-events and counters units.
+On Thu, 18 May 2017, Icenowy Zheng wrote:
 
-This v8 version has added ACPI support and some improvements over v7
-version and also is rebased to 4.12-rc1.
+> As axp20x-regulator now supports AXP803, add a cell for it.
+>=20
+> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+> Acked-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+> ---
+> Changes in v5:
+> - Removed wrong snippet.
+> Changes in v4:
+> - Added a trailing comma for new cell, for easier further cell addition.
+> Changes in v3:
+> - Make the new cell one-liner.
+>=20
+>  drivers/mfd/axp20x.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
 
-This patch series is implemented referring to arm-cci, Intel/AMD uncore and
-also the cavium thunderX and xgene uncore pmu patches.
+Applied, thanks.
 
-Support for Hisilicon L3 cache(L3C) and Miscellaneous nodes(MN) hardware
-events and counters are added in this implementation.
+> diff --git a/drivers/mfd/axp20x.c b/drivers/mfd/axp20x.c
+> index 1dc6235778eb..917b6ddc4f15 100644
+> --- a/drivers/mfd/axp20x.c
+> +++ b/drivers/mfd/axp20x.c
+> @@ -848,7 +848,8 @@ static struct mfd_cell axp803_cells[] =3D {
+>  		.name			=3D "axp20x-pek",
+>  		.num_resources		=3D ARRAY_SIZE(axp803_pek_resources),
+>  		.resources		=3D axp803_pek_resources,
+> -	}
+> +	},
+> +	{	.name			=3D "axp20x-regulator" },
+>  };
+> =20
+>  static struct mfd_cell axp806_cells[] =3D {
 
-The uncore PMU units are registered as separate PMUs.
-e.g. in the case of L3 cache, which consist of 4 banks/instances, each bank
-is registered with perf as separate PMU, as each bank have separate control
-registers and interrupts. These units are also not CPU affine in the
-current chip versions.
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
 
-The Hisilicon uncore PMUs can be found under /sys/bus/event_source/devices.
-The counters are exported via sysfs in the corresponding events files
-under the PMU directory so the perf tool can list the event names.
-
-There is no counter overflow IRQ support in hardware for these uncore PMUs.
-So the driver use poll method using hrtimer to avoid overflow.
-
-Version history
----------------
-v8
---
-- Rebased to 4.12-rc1
-- Add ACPI support for PMU and djtag probe and reset
-- Avoid djtag access conflict between kernel and UEFI
-- Move some common code to hisi_uncore_pmu.c
-
-v7
---
-- use BUG_ON for djtag access timeout and simplified callers.
-- Split hisilicon,module-id in dt-bindings and add hisilicon,instance-id
-  property. Also describe the properties with more detail.
-- Add event group validation for available counters.
-- Fold hrtimer patches to main PMU patches of L3 cache and MN.
-- Move event used mask to hisi_pmu_hwevents struct.
-- Remove some unused #define.
-- Fix all sparse and gcc W=1 warnings.
-- Fix comments of V6 version.
-
-v6
---
-- Rebase to 4.11-rc1
-- Modify Copyright year to 2017.
-
-v5
---
-- Use hrtimer to avoid overflow as MN counter overflow IRQ is broken
-  in hardware.
-- Remove IRQ handling of MN in driver and update pmu dt-bindings.
-- Fix reveiw comments in v4 version.
-
-v4
---
-- Counter overflow IRQ handling for MN PMU.
-- Use hrtimer to avoid counter overflow in L3 Cache PMU.
-- Use hisi-cpu- and hisi-io- for djtag compatible field.
-- Fix reveiw comments in v3 version.
-
-v3
---
-- Fix review comments of v2 version.
-- Handle event groups. Do not allow group of mixed PMUs.
-- Use hip0x prefix for compatible names.
-- Fix all sparse and gcc W=1 warnings.
-
-v2
---
-- Fix review comments of v1 version.
-- Move djtag driver to drivers/perf/hisilicon.
-- Have separate PMU instance for each L3 cache banks.
-- Modify device properties in DTS as per review comments.
-- Handle hardware version difference.
-- Change compatible names of djtag so use prefix hisi-
-  and remove chip version as driver only depend on djtag
-  hw version.
-- use devm_kzalloc.
-- Remove DDRC changes in this series. As the DDRC PMU doesnot
-  depend on djtag it will be send separately.
-
-v1
---
--Initial version with support for L3C, MN and DDRC event counters
--Djtag driver is used to access registers of L3 cache and MN.
-
-Anurup M (6):
-  arm64: MAINTAINERS: hisi: Add hisilicon SoC PMU support
-  dt-bindings: perf: hisi: Add Devicetree bindings for Hisilicon SoC PMU
-  Documentation: perf: hisi: Documentation for HiP05/06/07 PMU event
-    counting.
-  drivers: perf: hisi: Update Kconfig for Hisilicon PMU support
-  drivers: perf: hisi: Add support for Hisilicon SoC event counters
-  dts: arm64: hip07: Add Hisilicon SoC PMU support
-
-Shaokun Zhang (1):
-  drivers: perf: hisi: Miscellanous node(MN) event counting in perf
-
-Tan Xiaojun (2):
-  dt-bindings: hisi: Add Hisilicon HiP05/06/07 Djtag dts bindings
-  drivers: perf: hisi: Add support for Hisilicon Djtag driver
-
- .../devicetree/bindings/arm/hisilicon/djtag.txt    |  80 ++
- .../devicetree/bindings/arm/hisilicon/pmu.txt      |  93 +++
- Documentation/perf/hisi-pmu.txt                    |  75 ++
- MAINTAINERS                                        |  10 +
- arch/arm64/boot/dts/hisilicon/hip07.dtsi           |  87 ++
- drivers/perf/Kconfig                               |   8 +
- drivers/perf/Makefile                              |   1 +
- drivers/perf/hisilicon/Makefile                    |   1 +
- drivers/perf/hisilicon/djtag.c                     | 882 +++++++++++++++++++++
- drivers/perf/hisilicon/djtag.h                     |  46 ++
- drivers/perf/hisilicon/hisi_uncore_l3c.c           | 594 ++++++++++++++
- drivers/perf/hisilicon/hisi_uncore_mn.c            | 468 +++++++++++
- drivers/perf/hisilicon/hisi_uncore_pmu.c           | 451 +++++++++++
- drivers/perf/hisilicon/hisi_uncore_pmu.h           | 135 ++++
- 14 files changed, 2931 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/hisilicon/djtag.txt
- create mode 100644 Documentation/devicetree/bindings/arm/hisilicon/pmu.txt
- create mode 100644 Documentation/perf/hisi-pmu.txt
- create mode 100644 drivers/perf/hisilicon/Makefile
- create mode 100644 drivers/perf/hisilicon/djtag.c
- create mode 100644 drivers/perf/hisilicon/djtag.h
- create mode 100644 drivers/perf/hisilicon/hisi_uncore_l3c.c
- create mode 100644 drivers/perf/hisilicon/hisi_uncore_mn.c
- create mode 100644 drivers/perf/hisilicon/hisi_uncore_pmu.c
- create mode 100644 drivers/perf/hisilicon/hisi_uncore_pmu.h
-
--- 
-1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
