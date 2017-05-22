@@ -1,33 +1,35 @@
-From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Subject: Re: [PATCH 03/13] ARM: dts: armada-385-linksys: flatten dependants
-Date: Mon, 22 May 2017 16:51:50 +0200
-Message-ID: <20170522145150.GI29447@lunn.ch>
-References: <20170521124903.11050-1-ralph.sennhauser@gmail.com>
- <20170521124903.11050-4-ralph.sennhauser@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170521124903.11050-4-ralph.sennhauser-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ralph Sennhauser <ralph.sennhauser-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Imre Kaloz <kaloz-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Ricardo Salveti <ricardo.salveti@linaro.org>
+Subject: [PATCH] arm: dts: boneblack-wireless: add WL1835 Bluetooth device node
+Date: Mon, 22 May 2017 11:51:38 -0300
+Message-ID: <1495464701-12046-1-git-send-email-ricardo.salveti@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-omap@vger.kernel.org
+Cc: robertcnelson@gmail.com, Ricardo Salveti <ricardo.salveti@linaro.org>, =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, May 21, 2017 at 02:48:52PM +0200, Ralph Sennhauser wrote:
-> Flatten dts of individual boards to match the new style used in
-> armada-385-linksys.dtsi and for the Rango addition.
-> 
-> * Caiman - Linksys WRT1200AC v1 & v2
-> * Cobra - Linksys WRT1900AC v2
-> * Shelby - Linksys WRT1900ACS v1 & v2
-> 
-> Signed-off-by: Ralph Sennhauser <ralph.sennhauser-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+This adds the serial slave device for the WL1835 Bluetooth interface.
 
-Reviewed-by: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Signed-off-by: Ricardo Salveti <ricardo.salveti@linaro.org>
+---
+ arch/arm/boot/dts/am335x-boneblack-wireless.dts | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-    Andrew
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm/boot/dts/am335x-boneblack-wireless.dts b/arch/arm/boot/dts/am335x-boneblack-wireless.dts
+index 105bd10..83f49f6 100644
+--- a/arch/arm/boot/dts/am335x-boneblack-wireless.dts
++++ b/arch/arm/boot/dts/am335x-boneblack-wireless.dts
+@@ -97,6 +97,11 @@
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&uart3_pins &bt_pins>;
+ 	status = "okay";
++
++	bluetooth {
++		compatible = "ti,wl1835-st";
++		enable-gpios = <&gpio0 28 GPIO_ACTIVE_HIGH>;
++	};
+ };
+ 
+ &gpio3 {
+-- 
+2.7.4
