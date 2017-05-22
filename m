@@ -1,212 +1,124 @@
-From: Luis Oliveira <Luis.Oliveira@synopsys.com>
-Subject: Re: [PATCH v9 5/6] i2c: designware: add SLAVE mode functions
-Date: Mon, 22 May 2017 15:32:16 +0100
-Message-ID: <513c9c43-cf3b-3aa9-b5c2-99932527bf19@synopsys.com>
-References: <cover.1493893241.git.lolivei@synopsys.com>
- <b2accd73182d19927dfb0cd1a57cadf469ae5e9d.1493893241.git.lolivei@synopsys.com>
- <1494262399.30052.69.camel@linux.intel.com>
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+Subject: Re: [PATCH v5 1/3] of: Move OF property and graph API from base.c to
+ property.c
+Date: Mon, 22 May 2017 17:33:32 +0300
+Message-ID: <91b4159b-cb5b-fd9a-8e9c-c37c2acd1814@linux.intel.com>
+References: <1495440698-22260-1-git-send-email-sakari.ailus@linux.intel.com>
+ <1495440698-22260-2-git-send-email-sakari.ailus@linux.intel.com>
+ <CAL_JsqLwdi-oFxxF9rh4KzKim_ouQ8eDwZ5uicwtjb5-9eWHBw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-i2c-owner@vger.kernel.org>
-In-Reply-To: <1494262399.30052.69.camel@linux.intel.com>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Luis Oliveira <Luis.Oliveira@synopsys.com>, wsa@the-dreams.de, robh+dt@kernel.org, mark.rutland@arm.com, jarkko.nikula@linux.intel.com, mika.westerberg@linux.intel.com, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Ramiro.Oliveira@synopsys.com, Joao.Pinto@synopsys.com, CARLOS.PALMINHA@synopsys.com
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqLwdi-oFxxF9rh4KzKim_ouQ8eDwZ5uicwtjb5-9eWHBw@mail.gmail.com>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Frank Rowand <frowand.list@gmail.com>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, Sudeep Holla <sudeep.holla@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>, "Rafael J. Wysocki" <rafael@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mark Brown <broonie@kernel.org>, Al Stone <ahs3@redhat.com>
 List-Id: devicetree@vger.kernel.org
 
-On 08-May-17 17:53, Andy Shevchenko wrote:
-> On Mon, 2017-05-08 at 11:37 +0100, Luis Oliveira wrote:
->> - Changes in Kconfig to enable I2C_DESIGNWARE_SLAVE support
->> - Slave functions added to core library file
->> - Slave abort sources added to common source file
->> - New driver: i2c-designware-slave added
->> - Changes in the Makefile to compile the I2C_DESIGNWARE_SLAVE module
->>   when supported by the architecture.
+Hi Rob,
+
+Thanks for the review!
+
+On 05/22/17 17:22, Rob Herring wrote:
+> On Mon, May 22, 2017 at 3:11 AM, Sakari Ailus
+> <sakari.ailus@linux.intel.com> wrote:
+>> base.c contains both core OF functions and increasingly other
+>> functionality such as accessing properties and graphs, including
+>> convenience functions. In the near future this would also include OF
+>> specific implementation of the fwnode property and graph APIs.
 >>
->> All the SLAVE flow is added but it is not enabled via platform
->> driver.
+>> Create driver/of/property.c to contain procedures for accessing and
+>> interpreting device tree properties. The procedures are moved from
+>> drivers/of/base.c, with no changes other than copying only the includes
+>> required by the moved procedures.
+>>
+>> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+>> ---
+>>  drivers/of/Makefile   |   2 +-
+>>  drivers/of/base.c     | 733 ------------------------------------------------
+>>  drivers/of/property.c | 763 ++++++++++++++++++++++++++++++++++++++++++++++++++
 > 
-> My comments below.
-> Overall entire series looks much much better than first version.
-> 
->> @@ -41,6 +41,7 @@ obj-$(CONFIG_I2C_CPM)		+= i2c-cpm.o
->>  obj-$(CONFIG_I2C_DAVINCI)	+= i2c-davinci.o
->>  obj-$(CONFIG_I2C_DESIGNWARE_CORE)	+= i2c-designware-core.o
->>  i2c-designware-core-objs := i2c-designware-common.o i2c-designware-
->> master.o
-> 
->> +i2c-designware-core-$(CONFIG_I2C_DESIGNWARE_SLAVE) += i2c-designware-
->> slave.o
-> 
-> What is your intention here?
-> 
-> AFAIUC it should be like
-> 
-> ifneq ($(CONFIG_I2C_DESIGNWARE_SLAVE),n)
-> i2c-designware-core-objs += i2c-designware-slave.o
-> endif
-> 
+> Please put graph functions in graph.c unless there is some reason not to.
 
-Ok, I will change it in the next patchset.
+There will be a single fwnode ops struct which will contain both
+property and graph API primitives. The functions implementing the
+operations will be private, albeit the corresponding OF functions they
+will use are global.
 
->> +/**
->> + * i2c_dw_init_slave() - Initialize the designware i2c slave hardware
->> + * @dev: device private data
->> + *
->> + * This functions configures and enables the I2C.
-> 
-> functions -> function
-> I2C -> I2C in slave mode
-> 
-Yes.
+If I split current properties.c, which of these should the fwnode ops
+struct and the function callbacks be put? The patch is here (and the
+previous one; both were submitted earlier today):
 
->> + * This function is called during I2C init function, and in case of
->> timeout at
->> + * run time.
->> + */
->> +int i2c_dw_init_slave(struct dw_i2c_dev *dev)
->> +{
->> +	u32 sda_falling_time, scl_falling_time;
->> +	u32 reg, comp_param1;
->> +	u32 hcnt, lcnt;
->> +	int ret;
->> +
->> +	ret = i2c_dw_acquire_lock(dev);
->> +	if (ret)
->> +		return ret;
->> +
->> +	reg = dw_readl(dev, DW_IC_COMP_TYPE);
->> +	if (reg == ___constant_swab32(DW_IC_COMP_TYPE_VALUE)) {
->> +		/* Configure register endianness access. */
->> +		dev->flags |= ACCESS_SWAP;
-> 
->> +	} else if (reg == (DW_IC_COMP_TYPE_VALUE & 0x0000ffff)) {
-> 
-> GENMASK(15, 0)
-> 
-I think I will leave it as it is. As Jarkko said it has more readability this way.
+<URL:https://git.linuxtv.org/sailus/media_tree.git/commit/?h=acpi-graph-cleaned&id=b8cb45afa52a892d9ec62530b5f882c56533b30d>
 
->> +		/* Configure register access mode 16bit. */
->> +		dev->flags |= ACCESS_16BIT;
->> +	} else if (reg != DW_IC_COMP_TYPE_VALUE) {
->> +		dev_err(dev->dev,
->> +			"Unknown Synopsys component type: 0x%08x\n",
->> reg);
->> +		i2c_dw_release_lock(dev);
->> +		return -ENODEV;
->> +	}
 > 
+> [...]
+> 
+>> diff --git a/drivers/of/property.c b/drivers/of/property.c
+>> new file mode 100644
+>> index 0000000..e5d3e1f
+>> --- /dev/null
+>> +++ b/drivers/of/property.c
+>> @@ -0,0 +1,763 @@
 >> +/*
->> + * Interrupt service routine. This gets called whenever an I2C slave
->> interrupt
->> + * occurs.
+>> + * drivers/of/property.c - Procedures for accessing and interpreting
+>> + *                        Devicetree properties and graphs.
+>> + *
+>> + * Initially created by copying procedures from drivers/of/base.c. This
+>> + * file contains the OF property as well as the OF graph interface
+>> + * functions.
+>> + *
+>> + * Paul Mackerras      August 1996.
+>> + * Copyright (C) 1996-2005 Paul Mackerras.
+>> + *
+>> + *  Adapted for 64bit PowerPC by Dave Engebretsen and Peter Bergner.
+>> + *    {engebret|bergner}@us.ibm.com
+>> + *
+>> + *  Adapted for sparc and sparc64 by David S. Miller davem@davemloft.net
+>> + *
+>> + *  Reconsolidated from arch/x/kernel/prom.c by Stephen Rothwell and
+>> + *  Grant Likely.
+>> + *
+>> + *      This program is free software; you can redistribute it and/or
+>> + *      modify it under the terms of the GNU General Public License
+>> + *      as published by the Free Software Foundation; either version
+>> + *      2 of the License, or (at your option) any later version.
 >> + */
 >> +
->> +static int i2c_dw_irq_handler_slave(struct dw_i2c_dev *dev)
->> +{
->> +	u32 raw_stat, stat, enabled;
->> +	u8 val, slave_activity;
->> +
->> +	stat = dw_readl(dev, DW_IC_INTR_STAT);
->> +	enabled = dw_readl(dev, DW_IC_ENABLE);
->> +	raw_stat = dw_readl(dev, DW_IC_RAW_INTR_STAT);
->> +	slave_activity = ((dw_readl(dev, DW_IC_STATUS) &
->> +		DW_IC_STATUS_SLAVE_ACTIVITY) >> 6);
->> +
->> +	if (!enabled || !(raw_stat & ~DW_IC_INTR_ACTIVITY))
->> +		return 0;
->> +
->> +	dev_dbg(dev->dev,
->> +		"%#x SLAVE_ACTV=%#x : RAW_INTR_STAT=%#x :
->> INTR_STAT=%#x\n",
 > 
-> SLAVE_ACTV -> STATUS_SLAVE_ACTIVITY
+> Need a pr_fmt here.
 
-Ok.
+Indeed. I'll address that in v6.
 
 > 
->> +		enabled, slave_activity, raw_stat, stat);
+>> +#include <linux/of.h>
+>> +#include <linux/of_device.h>
+>> +#include <linux/of_graph.h>
+>> +#include <linux/string.h>
 >> +
+>> +#include "of_private.h"
 > 
->> +	if (slave_activity) {
->> +		if (stat & DW_IC_INTR_RD_REQ) {
-> 
-> Looking into next condition (stat & DW_IC_INTR_RX_DONE) I would 
-> exchange these lines
-> 
+> A blank line needed here.
 
-By order? I don't think I understood your point. Please elaborate a little more.
+Oops!
 
->> +			if (stat & DW_IC_INTR_RX_FULL) {
->> +				val = dw_readl(dev, DW_IC_DATA_CMD);
->> +				if (!i2c_slave_event(dev->slave,
->> +				I2C_SLAVE_WRITE_RECEIVED, &val)) {
->> +					dev_vdbg(dev->dev, "Byte %X
->> acked!",
->> +					val);
->> +					}
->> +				dw_readl(dev, DW_IC_CLR_RD_REQ);
->> +				stat =
->> i2c_dw_read_clear_intrbits_slave(dev);
->> +			} else {
->> +				dw_readl(dev, DW_IC_CLR_RD_REQ);
->> +				dw_readl(dev, DW_IC_CLR_RX_UNDER);
->> +				stat =
->> i2c_dw_read_clear_intrbits_slave(dev);
->> +			}
->> +			if (!i2c_slave_event(dev->slave,
->> +					I2C_SLAVE_READ_REQUESTED,
->> &val))
->> +				dw_writel(dev, val, DW_IC_DATA_CMD);
->> +		}
->> +	}
->> +
->> +	if (stat & DW_IC_INTR_RX_DONE) {
->> +		if (!i2c_slave_event(dev->slave,
->> I2C_SLAVE_READ_PROCESSED,
->> +			&val))
->> +			dw_readl(dev, DW_IC_CLR_RX_DONE);
->> +
->> +		i2c_slave_event(dev->slave, I2C_SLAVE_STOP, &val);
->> +		stat = i2c_dw_read_clear_intrbits_slave(dev);
->> +		return 1;
->> +	}
->> +
->> +	if (stat & DW_IC_INTR_RX_FULL) {
->> +		val = dw_readl(dev, DW_IC_DATA_CMD);
->> +		if (!i2c_slave_event(dev->slave,
->> I2C_SLAVE_WRITE_RECEIVED,
->> +			&val))
->> +			dev_vdbg(dev->dev, "Byte %X acked!", val);
->> +	} else {
->> +		i2c_slave_event(dev->slave, I2C_SLAVE_STOP, &val);
->> +		stat = i2c_dw_read_clear_intrbits_slave(dev);
->> +	}
->> +
->> +	if (stat & DW_IC_INTR_TX_OVER)
->> +		dw_readl(dev, DW_IC_CLR_TX_OVER);
->> +
->> +	return 1;
->> +}
 > 
->> +static irqreturn_t i2c_dw_isr_slave(int this_irq, void *dev_id)
->> +{
->> +	struct dw_i2c_dev *dev = dev_id;
->> +	int ret;
->> +
->> +	i2c_dw_read_clear_intrbits_slave(dev);
->> +	ret = i2c_dw_irq_handler_slave(dev);
-> 
->> +
-> 
-> I would remove this line.
+>> +/**
+>> + * of_property_count_elems_of_size - Count the number of elements in a property
+>> + *
+>> + * @np:                device node from which the property value is to be read.
+>> + * @propname:  name of the property to be searched.
+>> + * @elem_size: size of the individual element
+>> + *
+>> + * Search for a property in a device node and count the number of elements of
+>> + * size elem_size in it. Returns number of elements on sucess, -EINVAL if the
+>> + * property does not exist or its length does not match a multiple of elem_size
+>> + * and -ENODATA if the property does not have a value.
+>> + */
 
-Ok. Thank you.
-> 
->> +	if (ret > 0)
->> +		complete(&dev->cmd_complete);
->> +
->> +	return IRQ_RETVAL(ret);
->> +}
-> 
+-- 
+Kind regards,
+
+Sakari Ailus
+sakari.ailus@linux.intel.com
