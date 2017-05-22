@@ -1,34 +1,92 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: [PATCH 4/4] dt-bindings: i2c-mtk: Add mt7623 binding
-Date: Mon, 22 May 2017 11:40:21 +0200
-Message-ID: <20170522094021.7837-4-matthias.bgg@gmail.com>
-References: <20170522094021.7837-1-matthias.bgg@gmail.com>
-Return-path: <linux-i2c-owner@vger.kernel.org>
-In-Reply-To: <20170522094021.7837-1-matthias.bgg@gmail.com>
-Sender: linux-i2c-owner@vger.kernel.org
-To: robh+dt@kernel.org, mark.rutland@arm.com
-Cc: wsa@the-dreams.de, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, Matthias Brugger <matthias.bgg@gmail.com>
+From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Subject: Re: [PATCH v6 2/9] irqchip/sunxi-nmi: add support for the NMI in A64 R_INTC
+Date: Mon, 22 May 2017 17:41:52 +0800
+Message-ID: <98014597-29BA-4D02-8137-4E399955F4FD@aosc.io>
+References: <20170518071653.36561-1-icenowy@aosc.io> <20170518071653.36561-3-icenowy@aosc.io> <ed99d87b-86eb-cf8a-8614-51d59fa00c8c@arm.com>
+Mime-Version: 1.0
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <ed99d87b-86eb-cf8a-8614-51d59fa00c8c-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The mt7623 dtsi has support for the i2c block, but this is not documented.
-Add the documentation for SoC mt7623 to de description.
 
-Signed-off-by: Matthias Brugger <matthias.bgg@gmail.com>
----
- Documentation/devicetree/bindings/i2c/i2c-mtk.txt | 1 +
- 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/i2c/i2c-mtk.txt b/Documentation/devicetree/bindings/i2c/i2c-mtk.txt
-index 060a9ec98215..aa36099dcee7 100644
---- a/Documentation/devicetree/bindings/i2c/i2c-mtk.txt
-+++ b/Documentation/devicetree/bindings/i2c/i2c-mtk.txt
-@@ -6,6 +6,7 @@ Required properties:
-   - compatible: value should be either of the following.
-       "mediatek,mt6577-i2c": for i2c compatible with mt6577.
-       "mediatek,mt6589-i2c": for i2c compatible with mt6589.
-+      "mediatek,mt7623-i2c", "mediatek,mt6577-i2c": for i2c compatible with mt7623.
-       "mediatek,mt8173-i2c": for i2c compatible with mt8173.
-   - reg: physical base address of the controller and dma base, length of memory
-     mapped region.
--- 
-2.12.0
+于 2017年5月22日 GMT+08:00 下午5:39:22, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org> 写到:
+>On 18/05/17 08:16, Icenowy Zheng wrote:
+>> Add support for the newly imported compatible for the A64 R_INTC in
+>> irq-sunxi-nmi driver.
+>> 
+>> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+>> ---
+>> Changes in v5:
+>> - Fix A64 R_INTC compatible.
+>> 
+>>  drivers/irqchip/irq-sunxi-nmi.c | 13 +++++++++++++
+>>  1 file changed, 13 insertions(+)
+>> 
+>> diff --git a/drivers/irqchip/irq-sunxi-nmi.c
+>b/drivers/irqchip/irq-sunxi-nmi.c
+>> index 668730c5cb66..5559c1d593bf 100644
+>> --- a/drivers/irqchip/irq-sunxi-nmi.c
+>> +++ b/drivers/irqchip/irq-sunxi-nmi.c
+>> @@ -56,6 +56,12 @@ static struct sunxi_sc_nmi_reg_offs sun9i_reg_offs
+>= {
+>>  	.enable	= 0x04,
+>>  };
+>>  
+>> +static struct sunxi_sc_nmi_reg_offs sun50i_reg_offs = {
+>> +	.ctrl	= 0x0c,
+>> +	.pend	= 0x10,
+>> +	.enable	= 0x40,
+>> +};
+>> +
+>
+>Magic values? Even if no #define is provided, a pointer to the
+>corresponding documentation would be appreciated (assuming
+>documentation
+>exists).
+
+No documents is available for A64 R_INTC.
+
+>
+>>  static inline void sunxi_sc_nmi_write(struct irq_chip_generic *gc,
+>u32 off,
+>>  				      u32 val)
+>>  {
+>> @@ -220,3 +226,10 @@ static int __init sun9i_nmi_irq_init(struct
+>device_node *node,
+>>  	return sunxi_sc_nmi_irq_init(node, &sun9i_reg_offs);
+>>  }
+>>  IRQCHIP_DECLARE(sun9i_nmi, "allwinner,sun9i-a80-nmi",
+>sun9i_nmi_irq_init);
+>> +
+>> +static int __init sun50i_nmi_irq_init(struct device_node *node,
+>> +				     struct device_node *parent)
+>> +{
+>> +	return sunxi_sc_nmi_irq_init(node, &sun50i_reg_offs);
+>> +}
+>> +IRQCHIP_DECLARE(sun50i_nmi, "allwinner,sun50i-a64-r-intc",
+>sun50i_nmi_irq_init);
+>> 
+>
+>Apart from the above:
+>
+>Acked-by: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+>
+>Let me know how you want this to be merged.
+
+I think it can just go via IRQ subsystem.
+
+>
+>Thanks,
+>
+>	M.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
