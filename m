@@ -1,34 +1,62 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 1/2] dt-bindings: rockchip-dw-mshc: add optional
- rockchip,desired-num-phases
-Date: Mon, 22 May 2017 15:06:16 -0500
-Message-ID: <20170522200616.6xymymk25eei6qd2@rob-hp-laptop>
-References: <1494916134-68043-1-git-send-email-shawn.lin@rock-chips.com>
+From: Sergey Matyukevich <geomatsi-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 2/2] ARM: dts: orange-pi-zero: enable SPI NOR
+Date: Mon, 22 May 2017 23:30:12 +0300
+Message-ID: <20170522203012.k2f2kizp5jkiliq7@speedy.hunter>
+References: <20170519213550.8434-1-geomatsi@gmail.com>
+ <20170519213550.8434-3-geomatsi@gmail.com>
+ <20170522092900.7v2mg5zkbt6eclhr@flea.lan>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-mmc-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1494916134-68043-1-git-send-email-shawn.lin@rock-chips.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Shawn Lin <shawn.lin@rock-chips.com>
-Cc: Jaehoon Chung <jh80.chung@samsung.com>, Ulf Hansson <ulf.hansson@linaro.org>, linux-mmc@vger.kernel.org, Doug Anderson <dianders@chromium.org>, Ziyuan Xu <xzy.xu@rock-chips.com>, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org
+In-Reply-To: <20170522092900.7v2mg5zkbt6eclhr-ZC1Zs529Oq4@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 16, 2017 at 02:28:53PM +0800, Shawn Lin wrote:
-> By default, dw_mmc-rockchip will execute tuning for each degree.
-> So we won't miss every point of the good sample windows. However,
-> probably the phases are linear inside the good sample window.
-> Actually we don't need to do tuning for each degree so that we could
-> save some time, for instance, probe the driver or resume from S3.
+> > For more information see:
+> > - http://linux-sunxi.org/Orange_Pi_Zero#SPI_NOR_flash
 > 
-> Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
-> 
-> ---
-> 
-> Changes in v2:
-> - rename to rockchip,desired-num-phases
-> 
->  Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.txt | 4 ++++
->  1 file changed, 4 insertions(+)
+> Same remark here than on the first patch
 
-Acked-by: Rob Herring <robh@kernel.org>
+Ok, I will provide a more detailed commit message
+w/o external references.
+
+> > +&spi0 {
+> > +	status = "okay";
+> > +
+> > +	flash@0 {
+> > +		#address-cells = <1>;
+> > +		#size-cells = <1>;
+> > +		compatible = "mxicy,mx25l1606e", "winbond,w25q128";
+> > +		reg = <0>;
+> > +		spi-max-frequency = <40000000>;
+> 
+> How do the other OPi Zero that doesn't have that SPI flash behave?
+Hmmm. Good point. According to linux-sunxi.org docs SPI NOR flash
+was optional in the first production batch in Dec 2016. In later
+batches flash chip was pre-populated. However there are should
+be quite a few boards around which do not have flash.
+
+Does it make sense to set status to 'disabled' by default adding
+appropriate comment in the commit message ?
+
+> > +
+> > +		partition@00000000 {
+> > +			reg = <0x00000000 0x200000>;	/* 2Mb */
+> > +		};
+> 
+> There's no need to create a first partition, this needs to be
+> user-defined.
+
+Ok, than it probably makes sense to drop it from dts. User-defined
+list of partitions can be passed via kernel command line.
+
+Thanks,
+Sergey
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
