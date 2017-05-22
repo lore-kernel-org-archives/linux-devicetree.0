@@ -1,75 +1,79 @@
 From: Anup Patel <anup.patel@broadcom.com>
-Subject: [PATCH v4 06/11] arm64: dts: Add NAND DT nodes for Stingray SOC
-Date: Mon, 22 May 2017 17:28:22 +0530
-Message-ID: <1495454307-23464-7-git-send-email-anup.patel@broadcom.com>
+Subject: [PATCH v4 08/11] arm64: dts: Add GPIO DT nodes for Stingray SOC
+Date: Mon, 22 May 2017 17:28:24 +0530
+Message-ID: <1495454307-23464-9-git-send-email-anup.patel@broadcom.com>
 References: <1495454307-23464-1-git-send-email-anup.patel@broadcom.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-clk-owner@vger.kernel.org>
 In-Reply-To: <1495454307-23464-1-git-send-email-anup.patel@broadcom.com>
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: linux-clk-owner@vger.kernel.org
 To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>
-Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Florian Fainelli <f.fainelli@gmail.com>, Oza Pawandeep <oza.oza@broadcom.com>, Srinath Mannam <srinath.mannam@broadcom.com>, Pramod Kumar <pramod.kumar@broadcom.com>, Sandeep Tripathy <sandeep.tripathy@broadcom.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com, Abhishek Shah <abhishek.shah@broadcom.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Florian Fainelli <f.fainelli@gmail.com>, Oza Pawandeep <oza.oza@broadcom.com>, Srinath Mannam <srinath.mannam@broadcom.com>, Pramod Kumar <pramod.kumar@broadcom.com>, Sandeep Tripathy <sandeep.tripathy@broadcom.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com, Pramod Kumar <pramodku@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
 From: Pramod Kumar <pramod.kumar@broadcom.com>
 
-This patch adds NAND controller DT Node and NAND chip DT
-node for Stingray SOC and Stingray reference boards.
+The GPIOs on Stingray SOC are based on iProc GPIOs hence
+using this we add GPIO DT nodes for Stingray SOC.
 
-Signed-off-by: Pramod Kumar <pramod.kumar@broadcom.com>
-Signed-off-by: Abhishek Shah <abhishek.shah@broadcom.com>
-Reviewed-by: Vikram Prakash <vikram.prakash@broadcom.com>
-Reviewed-by: Ray Jui <ray.jui@broadcom.com>
-Reviewed-by: Scott Branden <scott.branden@broadcom.com>
+Signed-off-by: Pramod Kumar <pramodku@broadcom.com>
+Reviewed-by: Ray Jui <rjui@broadcom.com>
+Reviewed-by: Scott Branden <sbranden@broadcom.com>
 ---
- arch/arm64/boot/dts/broadcom/stingray/bcm958742-base.dtsi | 15 +++++++++++++++
- arch/arm64/boot/dts/broadcom/stingray/stingray.dtsi       | 13 +++++++++++++
- 2 files changed, 28 insertions(+)
+ .../arm64/boot/dts/broadcom/stingray/stingray.dtsi | 34 ++++++++++++++++++++++
+ 1 file changed, 34 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/broadcom/stingray/bcm958742-base.dtsi b/arch/arm64/boot/dts/broadcom/stingray/bcm958742-base.dtsi
-index 992944b..aad45a2 100644
---- a/arch/arm64/boot/dts/broadcom/stingray/bcm958742-base.dtsi
-+++ b/arch/arm64/boot/dts/broadcom/stingray/bcm958742-base.dtsi
-@@ -53,3 +53,18 @@
- &uart1 {
- 	status = "okay";
- };
-+
-+&nand {
-+	status = "ok";
-+	nandcs@0 {
-+		compatible = "brcm,nandcs";
-+		reg = <0>;
-+		nand-ecc-mode = "hw";
-+		nand-ecc-strength = <8>;
-+		nand-ecc-step-size = <512>;
-+		nand-bus-width = <16>;
-+		brcm,nand-oob-sector-size = <16>;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+	};
-+};
 diff --git a/arch/arm64/boot/dts/broadcom/stingray/stingray.dtsi b/arch/arm64/boot/dts/broadcom/stingray/stingray.dtsi
-index 6b690db..003f814 100644
+index a4afd44..059086f 100644
 --- a/arch/arm64/boot/dts/broadcom/stingray/stingray.dtsi
 +++ b/arch/arm64/boot/dts/broadcom/stingray/stingray.dtsi
-@@ -307,5 +307,18 @@
- 			compatible = "brcm,iproc-rng200";
- 			reg = <0x00220000 0x28>;
- 		};
+@@ -251,6 +251,14 @@
+ 		ranges = <0x0 0x0 0x66400000 0x100000>;
+ 
+ 		#include "stingray-clock.dtsi"
 +
-+		nand: nand@68c60000 {
-+			compatible = "brcm,nand-iproc", "brcm,brcmnand-v6.1";
-+			reg = <0x00360000 0x600>,
-+			      <0x0050a408 0x600>,
-+			      <0x00360f00 0x20>;
-+			reg-names = "nand", "iproc-idm", "iproc-ext";
-+			interrupts = <GIC_SPI 203 IRQ_TYPE_LEVEL_HIGH>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			brcm,nand-has-wp;
-+			status = "disabled";
++		gpio_crmu: gpio@66424800 {
++			compatible = "brcm,iproc-gpio";
++			reg = <0x00024800 0x4c>;
++			ngpios = <6>;
++			#gpio-cells = <2>;
++			gpio-controller;
 +		};
  	};
- };
+ 
+ 	hsls {
+@@ -261,6 +269,32 @@
+ 
+ 		#include "stingray-pinctrl.dtsi"
+ 
++		gpio_hsls: gpio@689d0000 {
++			compatible = "brcm,iproc-gpio";
++			reg = <0x000d0000 0x864>;
++			ngpios = <151>;
++			#gpio-cells = <2>;
++			gpio-controller;
++			interrupt-controller;
++			interrupts = <GIC_SPI 183 IRQ_TYPE_LEVEL_HIGH>;
++			gpio-ranges = <&pinmux 0 0 16>,
++					<&pinmux 16 71 2>,
++					<&pinmux 18 131 8>,
++					<&pinmux 26 83 6>,
++					<&pinmux 32 123 4>,
++					<&pinmux 36 43 24>,
++					<&pinmux 60 89 2>,
++					<&pinmux 62 73 4>,
++					<&pinmux 66 95 28>,
++					<&pinmux 94 127 4>,
++					<&pinmux 98 139 10>,
++					<&pinmux 108 16 27>,
++					<&pinmux 135 77 6>,
++					<&pinmux 141 67 4>,
++					<&pinmux 145 149 6>,
++					<&pinmux 151 91 4>;
++		};
++
+ 		uart0: uart@68a00000 {
+ 			device_type = "serial";
+ 			compatible = "snps,dw-apb-uart";
 -- 
 2.7.4
+
