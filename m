@@ -1,56 +1,122 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH 3/3] mfd: arizona: Update GPIO binding for newly
- supported flag
-Date: Mon, 22 May 2017 12:07:58 +0100
-Message-ID: <20170522110758.32hgaetvegk3dzal@dell>
-References: <1494948714-15203-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
- <1494948714-15203-3-git-send-email-ckeepax@opensource.wolfsonmicro.com>
- <20170522110713.qhvsvq7db4j75ebu@dell>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/2] dt-bindings: mfd: Add DT bindings documentation for
+ the max7360 mfd driver
+Date: Mon, 22 May 2017 12:11:34 +0100
+Message-ID: <20170522111134.vwf777w573xeundo@dell>
+References: <20170518084626.28999-1-valentin_sitdikov@mentor.com>
+ <20170518084626.28999-2-valentin_sitdikov@mentor.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20170522110713.qhvsvq7db4j75ebu@dell>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
-Cc: linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, gnurou@gmail.com, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, patches@opensource.wolfsonmicro.com
+In-Reply-To: <20170518084626.28999-2-valentin_sitdikov-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Valentin Sitdikov <valentin_sitdikov-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andrei Dranitca <Andrei_Dranitca-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 22 May 2017, Lee Jones wrote:
+On Thu, 18 May 2017, Valentin Sitdikov wrote:
 
-> On Tue, 16 May 2017, Charles Keepax wrote:
+> This patch adds documentation for the max7360 bindings.
+> The max7360 is multifunctional device containing gpio, keypad, pwm and rotary encoder submodules.
 > 
-> > Update the device tree binding to show that the new GPIO_SLEEP flags are
-> > now supported in the flags field of the GPIO binding for Arizona
-> > devices.
-> > 
-> > Signed-off-by: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
-> > ---
-> >  Documentation/devicetree/bindings/mfd/arizona.txt | 5 ++++-
-> >  1 file changed, 4 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/mfd/arizona.txt b/Documentation/devicetree/bindings/mfd/arizona.txt
-> > index 8f2e282..1729133 100644
-> > --- a/Documentation/devicetree/bindings/mfd/arizona.txt
-> > +++ b/Documentation/devicetree/bindings/mfd/arizona.txt
-> > @@ -30,7 +30,10 @@ Required properties:
-> >  
-> >    - gpio-controller : Indicates this device is a GPIO controller.
-> >    - #gpio-cells : Must be 2. The first cell is the pin number and the
-> > -    second cell is used to specify optional parameters (currently unused).
-> > +    second cell is used to specify optional parameters, the following flags
-> > +    are supported:
-> > +      "GPIO_SLEEP_MAY_LOOSE_OUTPUT" the output of this GPIO does not need to
-> > +      be maintained whilst the CODEC is in low power mode.
-> 
-> I guess this needs a GPIO and DT Ack.
+> Signed-off-by: Valentin Sitdikov <valentin_sitdikov-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+> Signed-off-by: Andrei Dranitca <Andrei_Dranitca-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/mfd/max7360.txt | 72 +++++++++++++++++++++++
+>  1 file changed, 72 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/max7360.txt
 
-FYI, if you receive both of those, you can also add mine without any
-further intervention from me.
+RobH had some comments on this before.
+
+You're going to need his Ack going forward.
+
+> diff --git a/Documentation/devicetree/bindings/mfd/max7360.txt b/Documentation/devicetree/bindings/mfd/max7360.txt
+> new file mode 100644
+> index 0000000..fd83227
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mfd/max7360.txt
+> @@ -0,0 +1,72 @@
+> +* Maxim MAX7360 multi-function device
+> +
+> +The Maxim MAX7360 is a multifunction device which includes
+> +64 key switches, eight LED drivers/GPIOs, PWM intensity control,
+> +and rotary switch control.
+> +
+> +Required properties:
+> +- compatible: Should be the following: "maxim,max7360"
+> +- reg: Specifies the i2c slave address of the max7360 block. It can be 0x38, 0x3a, 0x3c or 0x3e IIUC.
+> +
+> +Optional properties:
+> +- interrupt-parent: Specifies the phandle of the interrupt controller to which
+> +  the interrupts from MAX7360 are routed to.
+> +- interrupt-names: list of "inti" and "intk"
+> +- interrupt-controller:  Identifies the device as an interrupt controller.
+> +- #interrupt-cells :  Number of cells to encode an interrupt source, shall be 1.
+> +
+> +Examples:
+> +
+> +Without subnodes:
+> +	max7360@38 {
+> +		compatible = "maxim,max7360";
+> +		reg = <0x38>;
+> +		interrupt-parent = <&gpio1>;
+> +		interrupts = <23 IRQ_TYPE_LEVEL_LOW>, <23 IRQ_TYPE_LEVEL_LOW>;
+> +		interrupt-names = "inti", "intk";
+> +		interrupt-controller;
+> +		#interrupt-cells = <0x1>;
+> +
+> +	};
+> +
+> +With subnodes:
+> +	max7360@38 {
+> +		compatible = "maxim,max7360";
+> +		reg = <0x38>;
+> +		interrupt-parent = <&gpio1>;
+> +		interrupts = <23 IRQ_TYPE_LEVEL_LOW>;
+> +		interrupt-names = "int-shared";
+> +		interrupt-controller;
+> +		#interrupt-cells = <0x1>;
+> +
+> +		gpio {
+> +			compatible = "maxim,max7360-gpio";
+> +			gpio-controller;
+> +			#gpio-cells = <0x2>;
+> +			interrupt-controller;
+> +			#interrupt-cells = <0x2>;
+> +			interrupts = <0>;
+> +		};
+> +
+> +		keypad {
+> +			compatible = "maxim,max7360-keypad";
+> +			maxim,debounce_reg = /bits/ 8 <0xef>;
+> +			maxim,ports_reg = /bits/ 8 <0xae>;
+> +			linux,keymap = < MATRIX_KEY(0, 0, KEY_F5)
+> +					 MATRIX_KEY(1, 0, KEY_F4) >;
+> +			keypad,num-rows = <2>;
+> +			keypad,num-columns = <1>;
+> +			interrupts = <1>;
+> +		};
+> +
+> +		pwm {
+> +			compatible = "maxim,max7360-pwm";
+> +			#pwm-cells = <0x2>;
+> +		};
+> +
+> +		rotary_encoder {
+> +			compatible = "maxim,max7360-rotary";
+> +			interrupts = <2>;
+> +		};
+> +
+> +	};
 
 -- 
 Lee Jones
 Linaro STMicroelectronics Landing Team Lead
 Linaro.org │ Open source software for ARM SoCs
 Follow Linaro: Facebook | Twitter | Blog
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
