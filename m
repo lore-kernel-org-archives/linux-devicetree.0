@@ -1,36 +1,36 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] Documentation: dt: Update ti,emif bindings
-Date: Mon, 22 May 2017 07:53:50 -0700
-Message-ID: <20170522145350.GP10472@atomide.com>
-References: <20170519175708.6070-1-d-gerlach@ti.com>
- <20170519175708.6070-2-d-gerlach@ti.com>
- <20170520014554.qisnvr27542n5p7f@rob-hp-laptop>
+From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Subject: Re: [PATCH 06/13] ARM: dts: armada-385-linksys: usb3 label cleanup
+Date: Mon, 22 May 2017 16:55:15 +0200
+Message-ID: <20170522145515.GK29447@lunn.ch>
+References: <20170521124903.11050-1-ralph.sennhauser@gmail.com>
+ <20170521124903.11050-7-ralph.sennhauser@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20170520014554.qisnvr27542n5p7f@rob-hp-laptop>
+In-Reply-To: <20170521124903.11050-7-ralph.sennhauser-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Dave Gerlach <d-gerlach-l0cyMroinI0@public.gmane.org>, Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Keerthy J <j-keerthy-l0cyMroinI0@public.gmane.org>
+To: Ralph Sennhauser <ralph.sennhauser-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Imre Kaloz <kaloz-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-* Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> [170519 18:49]:
-> On Fri, May 19, 2017 at 12:57:07PM -0500, Dave Gerlach wrote:
-> > Update the Texas Instruments EMIF binding document to include the device
-> > tree bindings for ti,emif-am3352 and ti,emif-am4372 which are used by
-> > the ti-emif-sram driver to provide low-level PM functionality.
-> > 
-> > Signed-off-by: Dave Gerlach <d-gerlach-l0cyMroinI0@public.gmane.org>
-> > ---
-> >  .../devicetree/bindings/memory-controllers/ti/emif.txt | 18 +++++++++++++++++-
-> >  1 file changed, 17 insertions(+), 1 deletion(-)
+On Sun, May 21, 2017 at 02:48:55PM +0200, Ralph Sennhauser wrote:
+> Now that we use the reference for the USB3.0 port update the node name
+> and labels for the phy and vbus to match the label used by
+> armada-38x.dtsi.
 > 
-> I acked v1. Please add acks when posting new versions.
+> Signed-off-by: Ralph Sennhauser <ralph.sennhauser-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> 
+> ---
+> 
+> Notes:
+> 
+>   Going by documentation regulator-name is only of informative nature so
+>   changing it should be a non issue.
 
-And if I did not do so already:
+Does the regulator name appear in /sys somewhere?
 
-Acked-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+     Andrew
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
