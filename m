@@ -1,26 +1,26 @@
 From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Subject: Re: [PATCH 02/13] ARM: dts: armada-385-linksys: label nodes
-Date: Mon, 22 May 2017 16:49:03 +0200
-Message-ID: <20170522144903.GH29447@lunn.ch>
+Subject: Re: [PATCH 03/13] ARM: dts: armada-385-linksys: flatten dependants
+Date: Mon, 22 May 2017 16:51:50 +0200
+Message-ID: <20170522145150.GI29447@lunn.ch>
 References: <20170521124903.11050-1-ralph.sennhauser@gmail.com>
- <20170521124903.11050-3-ralph.sennhauser@gmail.com>
+ <20170521124903.11050-4-ralph.sennhauser@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20170521124903.11050-3-ralph.sennhauser-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <20170521124903.11050-4-ralph.sennhauser-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Ralph Sennhauser <ralph.sennhauser-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Imre Kaloz <kaloz-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, May 21, 2017 at 02:48:51PM +0200, Ralph Sennhauser wrote:
-> Add labels to nodes used by dependants. Also rename node gpio_keys to
-> gpio-keys to mach the style of the rest of the file as well as the
-
-s/mach/match
-
-> documented example.
+On Sun, May 21, 2017 at 02:48:52PM +0200, Ralph Sennhauser wrote:
+> Flatten dts of individual boards to match the new style used in
+> armada-385-linksys.dtsi and for the Rango addition.
+> 
+> * Caiman - Linksys WRT1200AC v1 & v2
+> * Cobra - Linksys WRT1900AC v2
+> * Shelby - Linksys WRT1900ACS v1 & v2
 > 
 > Signed-off-by: Ralph Sennhauser <ralph.sennhauser-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
