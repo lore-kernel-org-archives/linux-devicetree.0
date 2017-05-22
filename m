@@ -1,124 +1,45 @@
-From: Shaokun Zhang <zhangshaokun-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-Subject: [PATCH v8 9/9] dts: arm64: hip07: Add Hisilicon SoC PMU support
-Date: Mon, 22 May 2017 20:48:40 +0800
-Message-ID: <1495457320-239973-1-git-send-email-zhangshaokun@hisilicon.com>
+From: Marcin Nowakowski <marcin.nowakowski-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 00/21] MIPS memblock: Remove bootmem code and switch to
+ NO_BOOTMEM
+Date: Mon, 22 May 2017 14:19:09 +0200
+Message-ID: <eeb52dd6-3fdd-01b9-6774-236ab50e3f4d@imgtec.com>
+References: <1482113266-13207-1-git-send-email-fancer.lancer@gmail.com>
+ <be0b6614-708d-a32a-029d-7e606a673e5b@imgtec.com>
+ <20170522102643.GA17763@mobilestation>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170522102643.GA17763@mobilestation>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: mark.rutland-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, anurup.m-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, zhangshaokun-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, tanxiaojun-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, sanil.kumar-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, john.garry-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, gabriele.paoloni-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, shiju.jose-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, huangdaode-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, dikshit.n-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, shyju.pv-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, anurupvasu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+To: Serge Semin <fancer.lancer-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org, rabinv-VrBV9hrLPhE@public.gmane.org, matt.redfearn-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org, james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org, alexander.sverdlin-xNZwKgViW5gAvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Sergey.Semin-vHJ8rsvMqnUPfZBKTuL5GA@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Anurup M <anurup.m-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Hi Serge,
 
-Add nodes for djtag, L3 cache and MN to support uncore events.
+On 22.05.2017 12:26, Serge Semin wrote:
 
-Signed-off-by: Anurup M <anurup.m-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Signed-off-by: Shaokun Zhang <zhangshaokun-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
----
- arch/arm64/boot/dts/hisilicon/hip07.dtsi | 87 ++++++++++++++++++++++++++++++++
- 1 file changed, 87 insertions(+)
+> Regarding the patchset. I'm still pretty much eager to make it being
+> part of kernel MIPS arch. But there was a problem I outlined
+> in the patchset header message, which I can't fix by myself.
+> Particulary It's connected with Loonson3 or SGI IP27 code alteration,
+> so to make it free of ancient boot_mem_map dependencies (see the
+> patchset header message). Without a help from someone, who has
+> Loonson64 and SGI IP27 hardware and strong desire to make it free of
+> old bootmem allocator, it is useless to make any progress from my
+> side. That's why Ralf moved this email-thread into RFC actually.
+> Anyway If either you or someone else has got such hardware and is
+> interested in the cooperation, I'll be more than happy to push
+> my efforts forward with this patchset contribution. But only after
+> I got a bit less busy with my work. As I said it will happen within
+> next 1-2 months. So do you have the hardware and desire to be part
+> of this?
 
-diff --git a/arch/arm64/boot/dts/hisilicon/hip07.dtsi b/arch/arm64/boot/dts/hisilicon/hip07.dtsi
-index 283d7b5..38bf2e8 100644
---- a/arch/arm64/boot/dts/hisilicon/hip07.dtsi
-+++ b/arch/arm64/boot/dts/hisilicon/hip07.dtsi
-@@ -1535,4 +1535,91 @@
- 			status = "disabled";
- 		};
- 	};
-+
-+	djtag0: djtag@60010000 {
-+		compatible = "hisilicon,hip07-cpu-djtag-v2";
-+		reg = <0x0 0x60010000 0x0 0x10000>;
-+		hisilicon,scl-id = <0x03>;
-+
-+		/* L3 cache bank 0 for socket0 CPU die scl#3 */
-+		pmul3c0 {
-+			compatible = "hisilicon,hip07-pmu-l3c-v2";
-+			hisilicon,module-id = <0x01>;
-+			hisilicon,instance-id = <0x01>;
-+		};
-+
-+		/* L3 cache bank 1 for socket0 CPU die scl#3 */
-+		pmul3c1 {
-+			compatible = "hisilicon,hip07-pmu-l3c-v2";
-+			hisilicon,module-id = <0x02>;
-+			hisilicon,instance-id = <0x01>;
-+		};
-+
-+		/* L3 cache bank 2 for socket0 CPU die scl#3 */
-+		pmul3c2 {
-+			compatible = "hisilicon,hip07-pmu-l3c-v2";
-+			hisilicon,module-id = <0x03>;
-+			hisilicon,instance-id = <0x01>;
-+		};
-+
-+		/* L3 cache bank 3 for socket0 CPU die scl#3 */
-+		pmul3c3 {
-+			compatible = "hisilicon,hip07-pmu-l3c-v2";
-+			hisilicon,module-id = <0x04>;
-+			hisilicon,instance-id = <0x01>;
-+		};
-+
-+		/*
-+		 * Miscellaneous node for socket0
-+		 * CPU die scl#3
-+		 */
-+		pmumn0 {
-+			compatible = "hisilicon,hip07-pmu-mn-v2";
-+			hisilicon,module-id = <0x21>;
-+		};
-+	};
-+
-+	djtag1: djtag@40010000 {
-+		compatible = "hisilicon,hip07-cpu-djtag-v2";
-+		reg = <0x0 0x40010000 0x0 0x10000>;
-+		hisilicon,scl-id = <0x01>;
-+
-+		/* L3 cache bank 0 for socket0 CPU die scl#1 */
-+		pmul3c0 {
-+			compatible = "hisilicon,hip07-pmu-l3c-v2";
-+			hisilicon,module-id = <0x01>;
-+			hisilicon,instance-id = <0x01>;
-+		};
-+
-+		/* L3 cache bank 1 for socket0 CPU die scl#1 */
-+		pmul3c1 {
-+			compatible = "hisilicon,hip07-pmu-l3c-v2";
-+			hisilicon,module-id = <0x02>;
-+			hisilicon,instance-id = <0x01>;
-+		};
-+
-+		/* L3 cache bank 2 for socket0 CPU die scl#1 */
-+		pmul3c2 {
-+			compatible = "hisilicon,hip07-pmu-l3c-v2";
-+			hisilicon,module-id = <0x03>;
-+			hisilicon,instance-id = <0x01>;
-+		};
-+
-+		/* L3 cache bank 3 for socket0 CPU die scl#1 */
-+		pmul3c3 {
-+			compatible = "hisilicon,hip07-pmu-l3c-v2";
-+			hisilicon,module-id = <0x04>;
-+			hisilicon,instance-id = <0x01>;
-+		};
-+
-+		/*
-+		 * Miscellaneous node for socket0
-+		 * CPU die scl#1
-+		 */
-+		pmumn1 {
-+			compatible = "hisilicon,hip07-pmu-mn-v2";
-+			hisilicon,module-id = <0x21>;
-+		};
-+	};
-+
- };
--- 
-1.9.1
+I should be able to update/test the changes on a Loongson64 platform.
 
+
+Marcin
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
