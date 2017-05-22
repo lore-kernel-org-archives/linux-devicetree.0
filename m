@@ -1,55 +1,91 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v1 2/3] dt-bindings: display: Add STM32 DSI host driver
-Date: Mon, 22 May 2017 07:58:48 -0500
-Message-ID: <CAL_JsqKUeQXJ-KqKkgwBHsapwW9XdwShSnBQ81RMKgW0XQbODA@mail.gmail.com>
-References: <1494600989-13507-1-git-send-email-philippe.cornu@st.com>
- <1494600989-13507-3-git-send-email-philippe.cornu@st.com>
- <20170518214200.e2mmsqpvm3rqnh72@rob-hp-laptop>
- <f8db9525-6c56-85f9-d3de-af7bb8312b46@st.com>
+From: Tero Kristo <t-kristo@ti.com>
+Subject: [PATCHv4 1/2] Documentation: dt: Add TI SCI clock driver
+Date: Mon, 22 May 2017 16:01:52 +0300
+Message-ID: <1495458113-7366-2-git-send-email-t-kristo@ti.com>
+References: <1495458113-7366-1-git-send-email-t-kristo@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <f8db9525-6c56-85f9-d3de-af7bb8312b46@st.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Philippe CORNU <philippe.cornu@st.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Alexandre TORGUE <alexandre.torgue@st.com>, Arnd Bergmann <arnd@arndb.de>, Russell King <linux@armlinux.org.uk>, Fabien DESSENNE <fabien.dessenne@st.com>, Yannick FERTRE <yannick.fertre@st.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Ludovic BARRE <ludovic.barre@st.com>, Mickael REULIER <mickael.reulier@st.com>, Vincent ABRIOU <vincent.abriou@st.com>, Gabriel FERNANDEZ <gabriel.fernandez@st.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "kernel@stlinux.com" <kernel@stlinux.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1495458113-7366-1-git-send-email-t-kristo@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-clk@vger.kernel.org, ssantosh@kernel.org, sboyd@codeaurora.org, mturquette@baylibre.com, devicetree@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCBNYXkgMTksIDIwMTcgYXQgMTE6MjUgQU0sIFBoaWxpcHBlIENPUk5VIDxwaGlsaXBw
-ZS5jb3JudUBzdC5jb20+IHdyb3RlOgo+Cj4KPiBPbiAwNS8xOC8yMDE3IDExOjQyIFBNLCBSb2Ig
-SGVycmluZyB3cm90ZToKPj4gT24gRnJpLCBNYXkgMTIsIDIwMTcgYXQgMDQ6NTY6MjhQTSArMDIw
-MCwgUGhpbGlwcGUgQ09STlUgd3JvdGU6Cj4+PiBUaGlzIHBhdGNoIGFkZHMgZG9jdW1lbnRhdGlv
-biBvZiBkZXZpY2UgdHJlZSBiaW5kaW5ncyBmb3IgdGhlIFNUTTMyCj4+PiBEU0kgaG9zdCBkcml2
-ZXIgYmFzZWQgb24gdGhlIFN5bm9wc3lzIERXIE1JUEkgRFNJIGRyaXZlciBmcm9tIFJvY2tjaGlw
-Lgo+Pj4KPj4+IFNpZ25lZC1vZmYtYnk6IFBoaWxpcHBlIENPUk5VIDxwaGlsaXBwZS5jb3JudUBz
-dC5jb20+Cj4+PiAtLS0KPj4+ICAgLi4uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9zdCxz
-dG0zMi1sdGRjLnR4dCAgfCA5MiArKysrKysrKysrKysrKysrKysrKystCj4+PiAgIDEgZmlsZSBj
-aGFuZ2VkLCA5MCBpbnNlcnRpb25zKCspLCAyIGRlbGV0aW9ucygtKQo+Pj4KPj4+IGRpZmYgLS1n
-aXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9zdCxzdG0zMi1s
-dGRjLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3N0LHN0
-bTMyLWx0ZGMudHh0Cj4+PiBpbmRleCA4ZTE0NzY5Li5hNjEzODFiIDEwMDY0NAo+Pj4gLS0tIGEv
-RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvc3Qsc3RtMzItbHRkYy50
-eHQKPj4+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3N0
-LHN0bTMyLWx0ZGMudHh0Cj4+PiBAQCAtMSw3ICsxLDYgQEAKPj4+ICAgKiBTVE1pY3JvZWxlY3Ry
-b25pY3MgU1RNMzIgbGNkLXRmdCBkaXNwbGF5IGNvbnRyb2xsZXIKPj4+Cj4+PiAgIC0gbHRkYzog
-bGNkLXRmdCBkaXNwbGF5IGNvbnRyb2xsZXIgaG9zdAo+Pj4gLSAgbXVzdCBiZSBhIHN1Yi1ub2Rl
-IG9mIHN0LWRpc3BsYXktc3Vic3lzdGVtCj4+Cj4+IFdoeSBpcyB0aGlzIHJlbW92ZWQ/IFRoZSAi
-bXVzdCIgcmVmZXJzIHRvIHRoZSBsb2NhdGlvbiwgbm90IHdoZXRoZXIKPj4gcHJlc2VudCBvciBu
-b3QgaWYgdGhhdCdzIHdoYXQgeW91IHdlcmUgdHJ5aW5nIHRvIGNoYW5nZS4KPj4KPiBEZWFyIFJv
-YiwKPiBNYW55IHRoYW5rcyBmb3IgeW91ciBjb21tZW50cy4KPgo+IFRoZXJlIGlzIG5vIG5lZWQg
-YW55bW9yZSB0byBoYXZlIGEgc3QtZGlzcGxheS1zdWJzeXN0ZW0gcGFyZW50IG5vZGUgaW4KPiB0
-aGUgZGV2aWNlIHRyZWUgZm9yIHRoZSBsdGRjLCB0aGF0IGlzIHdoeSBJIHJlbW92ZWQgdGhpcyAi
-bXVzdCIgaW5mb3JtYXRpb24uCgpPa2F5LCB0aGF0J3MgZ29vZCBiZWNhdXNlIEknbSBub3QgYSBm
-YW4gb2YgdGhlbS4gVGhhdCBzZWVtcyBsaWtlIGFuCnVucmVsYXRlZCBjaGFuZ2UgdGhvdWdoLgoK
-Um9iCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1k
-ZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczov
-L2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+Add a clock implementation, TI SCI clock, that will hook to the common
+clock framework, and allow each clock to be controlled via TI SCI
+protocol.
+
+Signed-off-by: Tero Kristo <t-kristo@ti.com>
+---
+ .../devicetree/bindings/clock/ti,sci-clk.txt       | 37 ++++++++++++++++++++++
+ MAINTAINERS                                        |  1 +
+ 2 files changed, 38 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/ti,sci-clk.txt
+
+diff --git a/Documentation/devicetree/bindings/clock/ti,sci-clk.txt b/Documentation/devicetree/bindings/clock/ti,sci-clk.txt
+new file mode 100644
+index 0000000..1e884c4
+--- /dev/null
++++ b/Documentation/devicetree/bindings/clock/ti,sci-clk.txt
+@@ -0,0 +1,37 @@
++Texas Instruments TI-SCI Clocks
++===============================
++
++All clocks on Texas Instruments' SoCs that contain a System Controller,
++are only controlled by this entity. Communication between a host processor
++running an OS and the System Controller happens through a protocol known
++as TI-SCI[1]. This clock implementation plugs into the common clock
++framework and makes use of the TI-SCI protocol on clock API requests.
++
++[1] Documentation/devicetree/bindings/arm/keystone/ti,sci.txt
++
++Required properties:
++-------------------
++- compatible: Must be "ti,k2g-sci-clk"
++- #clock-cells: Shall be 2.
++  In clock consumers, this cell represents the device ID and clock ID
++  exposed by the PM firmware. The assignments can be found in the header
++  files <dt-bindings/genpd/<soc>.h> (which covers the device IDs) and
++  <dt-bindings/clock/<soc>.h> (which covers the clock IDs), where <soc>
++  is the SoC involved, for example 'k2g'.
++
++Examples:
++--------
++
++pmmc: pmmc {
++	compatible = "ti,k2g-sci";
++
++	k2g_clks: clocks {
++		compatible = "ti,k2g-sci-clk";
++		#clock-cells = <2>;
++	};
++};
++
++uart0: serial@2530c00 {
++	compatible = "ns16550a";
++	clocks = <&k2g_clks 0x2c 0>;
++};
+diff --git a/MAINTAINERS b/MAINTAINERS
+index f7d568b..880a23d 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -12630,6 +12630,7 @@ F:	include/linux/soc/ti/ti_sci_protocol.h
+ F:	Documentation/devicetree/bindings/soc/ti/sci-pm-domain.txt
+ F:	include/dt-bindings/genpd/k2g.h
+ F:	drivers/soc/ti/ti_sci_pm_domains.c
++F:	Documentation/devicetree/bindings/clock/ti,sci-clk.txt
+ 
+ THANKO'S RAREMONO AM/FM/SW RADIO RECEIVER USB DRIVER
+ M:	Hans Verkuil <hverkuil@xs4all.nl>
+-- 
+1.9.1
