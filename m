@@ -1,13 +1,13 @@
-From: Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>
-Subject: [PATCH v4 14/20] arm64: dts: ls1043a: Add generic compatible string for I2C EEPROM
-Date: Mon, 22 May 2017 16:02:02 +0200
-Message-ID: <20170522140208.24652-15-javier@dowhile0.org>
+From: Javier Martinez Canillas <javier@dowhile0.org>
+Subject: [PATCH v4 13/20] ARM: dts: zynq: Add generic compatible string for I2C EEPROM
+Date: Mon, 22 May 2017 16:02:01 +0200
+Message-ID: <20170522140208.24652-14-javier@dowhile0.org>
 References: <20170522140208.24652-1-javier@dowhile0.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170522140208.24652-1-javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stuart Yoder <stuart.yoder-3arQi8VN3Tc@public.gmane.org>, Li Yang <leoyang.li-3arQi8VN3Tc@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hongtao Jia <hongtao.jia-3arQi8VN3Tc@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, =?UTF-8?q?Horia=20Geant=C4=83?= <horia.geanta-3arQi8VN3Tc@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170522140208.24652-1-javier@dowhile0.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh@kernel.org>, Javier Martinez Canillas <javier@dowhile0.org>, =?UTF-8?q?S=C3=B6ren=20Brinkmann?= <soren.brinkmann@xilinx.com>, devicetree@vger.kernel.org, Michal Simek <michal.simek@xilinx.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
 The at24 driver allows to register I2C EEPROM chips using different vendor
@@ -21,7 +21,7 @@ using the "atmel" vendor as a generic fallback for compatible I2C devices.
 So add this generic fallback to the device node compatible string to make
 the device to match the driver using the OF device ID table.
 
-Signed-off-by: Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>
+Signed-off-by: Javier Martinez Canillas <javier@dowhile0.org>
 
 ---
 
@@ -32,31 +32,35 @@ Changes in v4:
 Changes in v3: None
 Changes in v2: None
 
- arch/arm64/boot/dts/freescale/fsl-ls1043a-rdb.dts | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/zynq-zc702.dts | 2 +-
+ arch/arm/boot/dts/zynq-zc706.dts | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1043a-rdb.dts b/arch/arm64/boot/dts/freescale/fsl-ls1043a-rdb.dts
-index d64370ed0738..0a3853240c8b 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1043a-rdb.dts
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1043a-rdb.dts
-@@ -75,11 +75,11 @@
- 		reg = <0x4c>;
- 	};
- 	eeprom@52 {
--		compatible = "at24,24c512";
-+		compatible = "atmel,24c512";
- 		reg = <0x52>;
- 	};
- 	eeprom@53 {
--		compatible = "at24,24c512";
-+		compatible = "atmel,24c512";
- 		reg = <0x53>;
- 	};
- 	rtc@68 {
+diff --git a/arch/arm/boot/dts/zynq-zc702.dts b/arch/arm/boot/dts/zynq-zc702.dts
+index 0cdad2cc8b78..f8c840f7118f 100644
+--- a/arch/arm/boot/dts/zynq-zc702.dts
++++ b/arch/arm/boot/dts/zynq-zc702.dts
+@@ -136,7 +136,7 @@
+ 			#size-cells = <0>;
+ 			reg = <2>;
+ 			eeprom@54 {
+-				compatible = "at,24c08";
++				compatible = "atmel,24c08";
+ 				reg = <0x54>;
+ 			};
+ 		};
+diff --git a/arch/arm/boot/dts/zynq-zc706.dts b/arch/arm/boot/dts/zynq-zc706.dts
+index ad4bb06dba25..76492be4a912 100644
+--- a/arch/arm/boot/dts/zynq-zc706.dts
++++ b/arch/arm/boot/dts/zynq-zc706.dts
+@@ -92,7 +92,7 @@
+ 			#size-cells = <0>;
+ 			reg = <2>;
+ 			eeprom@54 {
+-				compatible = "at,24c08";
++				compatible = "atmel,24c08";
+ 				reg = <0x54>;
+ 			};
+ 		};
 -- 
 2.9.3
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
