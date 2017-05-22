@@ -1,101 +1,366 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 2/2] ARM: dts: orange-pi-zero: enable SPI NOR
-Date: Mon, 22 May 2017 11:29:00 +0200
-Message-ID: <20170522092900.7v2mg5zkbt6eclhr@flea.lan>
-References: <20170519213550.8434-1-geomatsi@gmail.com>
- <20170519213550.8434-3-geomatsi@gmail.com>
+From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH v2 09/15] reset: Add a reset controller driver for the
+ Lantiq XWAY based SoCs
+Date: Mon, 22 May 2017 11:33:33 +0200
+Message-ID: <1495445613.3558.67.camel@pengutronix.de>
+References: <20170521130918.27446-1-hauke@hauke-m.de>
+         <20170521130918.27446-10-hauke@hauke-m.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="jxrb4eirxmoqhfkc"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170519213550.8434-3-geomatsi-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sergey Matyukevich <geomatsi-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170521130918.27446-10-hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
+Cc: ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org, john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, hauke.mehrtens-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Hauke,
 
---jxrb4eirxmoqhfkc
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+thank you for the patch. I have a few questions and comments below:
 
-Hi Sergey,
+On Sun, 2017-05-21 at 15:09 +0200, Hauke Mehrtens wrote:
+> From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+> 
+> The reset controllers (on xRX200 and newer SoCs have two of them) are
+> provided by the RCU module. This was initially implemented as a simple
+> reset controller. However, the RCU module provides more functionality
+> (ethernet GPHYs, USB PHY, etc.), which makes it a MFD device.
+> The old reset controller driver implementation from
+> arch/mips/lantiq/xway/reset.c did not honor this fact.
 
-On Sat, May 20, 2017 at 12:35:50AM +0300, Sergey Matyukevich wrote:
-> Enable SPI NOR on orange-pi-zero board.
->=20
-> For more information see:
-> - http://linux-sunxi.org/Orange_Pi_Zero#SPI_NOR_flash
+Does this driver replace arch/mips/lantiq/xway/reset.c?
 
-Same remark here than on the first patch
-
->=20
-> Signed-off-by: Sergey Matyukevich <geomatsi-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> For some devices the request and the status bits are different.
+> 
+> Signed-off-by: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
+> Cc: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 > ---
->  arch/arm/boot/dts/sun8i-h2-plus-orangepi-zero.dts | 16 ++++++++++++++++
->  1 file changed, 16 insertions(+)
->=20
-> diff --git a/arch/arm/boot/dts/sun8i-h2-plus-orangepi-zero.dts b/arch/arm=
-/boot/dts/sun8i-h2-plus-orangepi-zero.dts
-> index 34e4a5a80136..fe39e96cee65 100644
-> --- a/arch/arm/boot/dts/sun8i-h2-plus-orangepi-zero.dts
-> +++ b/arch/arm/boot/dts/sun8i-h2-plus-orangepi-zero.dts
-> @@ -177,3 +177,19 @@
->  	status =3D "okay";
->  	usb0_id_det-gpios =3D <&pio 6 12 GPIO_ACTIVE_HIGH>; /* PG12 */
->  };
+>  .../devicetree/bindings/reset/lantiq,rcu-reset.txt |  30 +++
+>  drivers/reset/Kconfig                              |   6 +
+>  drivers/reset/Makefile                             |   1 +
+>  drivers/reset/reset-lantiq-rcu.c                   | 201 +++++++++++++++++++++
+>  4 files changed, 238 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/reset/lantiq,rcu-reset.txt
+>  create mode 100644 drivers/reset/reset-lantiq-rcu.c
+> 
+> diff --git a/Documentation/devicetree/bindings/reset/lantiq,rcu-reset.txt b/Documentation/devicetree/bindings/reset/lantiq,rcu-reset.txt
+> new file mode 100644
+> index 000000000000..ac57c4a1b191
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/reset/lantiq,rcu-reset.txt
+> @@ -0,0 +1,30 @@
+> +Lantiq XWAY SoC RCU reset controller binding
+> +============================================
 > +
-> +&spi0 {
-> +	status =3D "okay";
+> +This binding describes a reset-controller found on the RCU module on Lantiq
+> +XWAY SoCs.
 > +
-> +	flash@0 {
-> +		#address-cells =3D <1>;
-> +		#size-cells =3D <1>;
-> +		compatible =3D "mxicy,mx25l1606e", "winbond,w25q128";
-> +		reg =3D <0>;
-> +		spi-max-frequency =3D <40000000>;
-
-How do the other OPi Zero that doesn't have that SPI flash behave?
-
 > +
-> +		partition@00000000 {
-> +			reg =3D <0x00000000 0x200000>;	/* 2Mb */
-> +		};
+> +-------------------------------------------------------------------------------
+> +Required properties (controller (parent) node):
+> +- compatible		: Should be "lantiq,rcu-reset"
+> +- lantiq,rcu-syscon	: A phandle to the RCU syscon, the reset register
+> +			  offset and the status register offset.
+> +- #reset-cells		: Specifies the number of cells needed to encode the
+> +			  reset line, should be 2.
+> +			  The first cell takes the reset set bit and the
+> +			  second cell takes the status bit.
+> +
+> +-------------------------------------------------------------------------------
+> +Example for the reset-controllers on the xRX200 SoCs:
+> +	rcu_reset0: rcu_reset {
 
-There's no need to create a first partition, this needs to be
-user-defined.
+I'd prefer
+	rcu_reset0: reset-controller {
 
-Maxime
+> +		compatible = "lantiq,rcu-reset";
+> +		lantiq,rcu-syscon = <&rcu0 0x10 0x14>;
+> +		#reset-cells = <2>;
+> +	};
+> +
+> +	rcu_reset1: rcu_reset {
+> +		compatible = "lantiq,rcu-reset";
+> +		lantiq,rcu-syscon = <&rcu0 0x48 0x24>;
+> +		#reset-cells = <2>;
+> +	};
 
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+I think these should be children of the &rcu0 node. Then you could use
+the reg property to specify the registers.
 
---jxrb4eirxmoqhfkc
-Content-Type: application/pgp-signature; name="signature.asc"
+Also, have you considered using a binding like the ti-syscon-reset? 
+That could remove the need for a rcu_reset node per register pair
+altogether, but might not make sense if the reset registers are densely
+populated.
 
------BEGIN PGP SIGNATURE-----
+> diff --git a/drivers/reset/Kconfig b/drivers/reset/Kconfig
+> index d21c07ccc94e..632e82155590 100644
+> --- a/drivers/reset/Kconfig
+> +++ b/drivers/reset/Kconfig
+> @@ -41,6 +41,12 @@ config RESET_IMX7
+>  	help
+>  	  This enables the reset controller driver for i.MX7 SoCs.
+>  
+> +config RESET_LANTIQ_RCU
+> +	bool "Lantiq XWAY Reset Driver" if COMPILE_TEST
+> +	default SOC_TYPE_XWAY
+> +	help
+> +	  This enables the reset controller driver for Lantiq / Intel XWAY SoCs.
+> +
+>  config RESET_LPC18XX
+>  	bool "LPC18xx/43xx Reset Driver" if COMPILE_TEST
+>  	default ARCH_LPC18XX
+> diff --git a/drivers/reset/Makefile b/drivers/reset/Makefile
+> index 02a74db94339..b19e77847b98 100644
+> --- a/drivers/reset/Makefile
+> +++ b/drivers/reset/Makefile
+> @@ -6,6 +6,7 @@ obj-$(CONFIG_RESET_A10SR) += reset-a10sr.o
+>  obj-$(CONFIG_RESET_ATH79) += reset-ath79.o
+>  obj-$(CONFIG_RESET_BERLIN) += reset-berlin.o
+>  obj-$(CONFIG_RESET_IMX7) += reset-imx7.o
+> +obj-$(CONFIG_RESET_LANTIQ_RCU) += reset-lantiq-rcu.o
+>  obj-$(CONFIG_RESET_LPC18XX) += reset-lpc18xx.o
+>  obj-$(CONFIG_RESET_MESON) += reset-meson.o
+>  obj-$(CONFIG_RESET_OXNAS) += reset-oxnas.o
+> diff --git a/drivers/reset/reset-lantiq-rcu.c b/drivers/reset/reset-lantiq-rcu.c
+> new file mode 100644
+> index 000000000000..f24191beed56
+> --- /dev/null
+> +++ b/drivers/reset/reset-lantiq-rcu.c
+> @@ -0,0 +1,201 @@
+> +/*
+> + *  This program is free software; you can redistribute it and/or modify it
+> + *  under the terms of the GNU General Public License version 2 as published
+> + *  by the Free Software Foundation.
+> + *
+> + *  Copyright (C) 2010 John Crispin <blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
+> + *  Copyright (C) 2013-2015 Lantiq Beteiligungs-GmbH & Co.KG
+> + *  Copyright (C) 2016 Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+> + *  Copyright (C) 2017 Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
+> + */
+> +
+> +#include <linux/mfd/syscon.h>
+> +#include <linux/module.h>
+> +#include <linux/regmap.h>
+> +#include <linux/reset-controller.h>
+> +#include <linux/of_platform.h>
+> +
+> +#define LANTIQ_RCU_RESET_TIMEOUT	1000000
+> +
+> +struct lantiq_rcu_reset_priv {
+> +	struct reset_controller_dev rcdev;
+> +	struct device *dev;
+> +	struct regmap *regmap;
+> +	u32 reset_offset;
+> +	u32 status_offset;
+> +};
+> +
+> +static struct lantiq_rcu_reset_priv *to_lantiq_rcu_reset_priv(
+> +	struct reset_controller_dev *rcdev)
+> +{
+> +	return container_of(rcdev, struct lantiq_rcu_reset_priv, rcdev);
+> +}
+> +
+> +static int lantiq_rcu_reset_status(struct reset_controller_dev *rcdev,
+> +			     unsigned long id)
 
-iQIcBAEBAgAGBQJZIq9bAAoJEBx+YmzsjxAgvhAP/34tbf7Mq/xOb+Uq5Orkuw3M
-NzGBB0tvkpJeBSK/HZvXNw4sujV7ucCzROcpa1641bj87ZGpSe+zHjvbUdY9QqUL
-2JNYUXycQpUi3zslsugW4dMkmxGDO/EihS//j0k4d2jADDsm4PcjThSYgkk0H+A1
-10H3kN1XFzBg9gxehRNajmYp8L9D/Kn5vuA/52ZpHo2bx7OkY3WkhY//7kfFN6ub
-V5NgRD/kmqt3UIuhtEsVmYqUx89u6ehcuRFs+IM3BsdQVH9xgA05RZ6MNAgoltaX
-LMaJBJBfywaeIBzpqwoFIvlK7pm01/hTfilKLowzWnHmk6wG6bryv9Z0NLu77H12
-T34U0EcyPYozgMaYm6T/YrFEa/pyaPajy7YT9aJRIc76GNeqGM34vHOJ46j9ySVm
-ZIHFIMl8hOT2ic+b+D7+BCilBzcLaqt4ycZWjt9HZhrn70fFxwDDiSfXGIh5AFun
-CbnUA/zHxfYsSAdybzKFMMcAoiVSNaSZdE9nAfxRWcaIC6t5OWcP5Xd0w3qK4yIC
-TfnHNpjM14alsVx5HXB2WCfJs4THldG8vGusV9XmX9rROSQEg1a3ThMLr/bIGDeY
-QiigZHryaEe5es59LyY1M02Ahv2kczLAPGL/QGtdfxGMIQcVXOwOB5sCc8j/t5wE
-FCH3c5kvEmdlLJSYMJHk
-=/16s
------END PGP SIGNATURE-----
+Please align with the opening parenthesis above, or use consistent
+indentation for broken lines, also in the other cases below.
 
---jxrb4eirxmoqhfkc--
+> +{
+> +	struct lantiq_rcu_reset_priv *priv = to_lantiq_rcu_reset_priv(rcdev);
+> +	unsigned int status = (id >> 8) & 0x1f;
+> +	u32 val;
+> +	int ret;
+> +
+> +	if (status >= rcdev->nr_resets)
+> +		return -EINVAL;
+
+This should be checked in lantiq_rcu_reset_xlate instead.
+
+> +	ret = regmap_read(priv->regmap, priv->status_offset, &val);
+> +	if (ret)
+> +		return ret;
+> +
+> +	return !!(val & BIT(status));
+> +}
+> +
+> +static int lantiq_rcu_reset_update(struct reset_controller_dev *rcdev,
+> +				   unsigned long id, bool assert)
+> +{
+> +	struct lantiq_rcu_reset_priv *priv = to_lantiq_rcu_reset_priv(rcdev);
+> +	int ret, retry = LANTIQ_RCU_RESET_TIMEOUT;
+> +	unsigned int set = id & 0x1f;
+> +	u32 val;
+> +
+> +	if (set >= rcdev->nr_resets)
+> +		return -EINVAL;
+
+This should be checked in lantiq_rcu_reset_xlate instead.
+
+> +	if (assert)
+> +		val = BIT(set);
+> +	else
+> +		val = 0;
+> +
+> +	ret = regmap_update_bits(priv->regmap, priv->reset_offset, BIT(set),
+> +				 val);
+> +	if (ret) {
+> +		dev_err(priv->dev, "Failed to set reset bit %u\n", set);
+> +		return ret;
+> +	}
+> +
+> +	do {} while (--retry && lantiq_rcu_reset_status(rcdev, id) != assert);
+
+This ignores errors returned by lantiq_rcu_reset_status. Consider using
+regmap_read_poll_timeout() instead of open-coding the timeout.
+
+> +	if (!retry) {
+> +		dev_err(priv->dev, "Failed to %s bit %u\n",
+> +			assert ? "assert" : "deassert", set);
+> +		return -EIO;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int lantiq_rcu_reset_assert(struct reset_controller_dev *rcdev,
+> +			     unsigned long id)
+> +{
+> +	return lantiq_rcu_reset_update(rcdev, id, true);
+> +}
+> +
+> +static int lantiq_rcu_reset_deassert(struct reset_controller_dev *rcdev,
+> +			       unsigned long id)
+> +{
+> +	return lantiq_rcu_reset_update(rcdev, id, false);
+> +}
+> +
+> +static int lantiq_rcu_reset_reset(struct reset_controller_dev *rcdev,
+> +			    unsigned long id)
+> +{
+> +	int ret;
+> +
+> +	ret = lantiq_rcu_reset_assert(rcdev, id);
+> +	if (ret)
+> +		return ret;
+> +
+> +	return lantiq_rcu_reset_deassert(rcdev, id);
+> +}
+> +
+> +static struct reset_control_ops lantiq_rcu_reset_ops = {
+
+reset_control_ops should be const.
+
+> +	.assert = lantiq_rcu_reset_assert,
+> +	.deassert = lantiq_rcu_reset_deassert,
+> +	.status = lantiq_rcu_reset_status,
+> +	.reset	= lantiq_rcu_reset_reset,
+> +};
+> +
+> +static int lantiq_rcu_reset_of_probe(struct platform_device *pdev,
+> +			       struct lantiq_rcu_reset_priv *priv)
+> +{
+> +	struct device_node *np = pdev->dev.of_node;
+> +
+> +	priv->regmap = syscon_regmap_lookup_by_phandle(np,
+> +							"lantiq,rcu-syscon");
+
+This could be
+	priv->regmap = syscon_node_to_regmap(np->parent);
+if the reset controller device node is a child of the MFD device node.
+
+> +	if (IS_ERR(priv->regmap)) {
+> +		dev_err(&pdev->dev, "Failed to lookup RCU regmap\n");
+> +		return PTR_ERR(priv->regmap);
+> +	}
+> +
+> +	if (of_property_read_u32_index(np, "lantiq,rcu-syscon", 1,
+> +		&priv->reset_offset)) {
+> +		dev_err(&pdev->dev, "Failed to get RCU reset offset\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	if (of_property_read_u32_index(np, "lantiq,rcu-syscon", 2,
+> +		&priv->status_offset)) {
+> +		dev_err(&pdev->dev, "Failed to get RCU status offset\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int lantiq_rcu_reset_xlate(struct reset_controller_dev *rcdev,
+> +				  const struct of_phandle_args *reset_spec)
+> +{
+> +	unsigned int status, set;
+> +
+> +	set = reset_spec->args[0];
+> +	status = reset_spec->args[1];
+
+Check that set and status are valid here.
+
+> +	return (status << 8) | set;
+> +}
+> +
+> +static int lantiq_rcu_reset_probe(struct platform_device *pdev)
+> +{
+> +	struct lantiq_rcu_reset_priv *priv;
+> +	int err;
+> +
+> +	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
+> +	if (!priv)
+> +		return -ENOMEM;
+> +
+> +	priv->dev = &pdev->dev;
+> +	platform_set_drvdata(pdev, priv);
+> +
+> +	err = lantiq_rcu_reset_of_probe(pdev, priv);
+> +	if (err)
+> +		return err;
+> +
+> +	priv->rcdev.ops = &lantiq_rcu_reset_ops;
+> +	priv->rcdev.owner = THIS_MODULE;
+> +	priv->rcdev.of_node = pdev->dev.of_node;
+> +	priv->rcdev.nr_resets = 32;
+> +	priv->rcdev.of_xlate = lantiq_rcu_reset_xlate;
+> +	priv->rcdev.of_reset_n_cells = 2;
+> +
+> +	err = reset_controller_register(&priv->rcdev);
+> +	if (err)
+> +		return err;
+> +
+> +	return 0;
+
+You can just
+	return reset_controller_register(&priv->rcdev);
+here.
+
+> +}
+> +
+> +static const struct of_device_id lantiq_rcu_reset_dt_ids[] = {
+> +	{ .compatible = "lantiq,rcu-reset", },
+> +	{ },
+> +};
+> +MODULE_DEVICE_TABLE(of, lantiq_rcu_reset_dt_ids);
+> +
+> +static struct platform_driver lantiq_rcu_reset_driver = {
+> +	.probe	= lantiq_rcu_reset_probe,
+> +	.driver = {
+> +		.name		= "lantiq-rcu-reset",
+> +		.of_match_table	= lantiq_rcu_reset_dt_ids,
+> +	},
+> +};
+> +module_platform_driver(lantiq_rcu_reset_driver);
+> +
+> +MODULE_AUTHOR("Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>");
+> +MODULE_DESCRIPTION("Lantiq XWAY RCU Reset Controller Driver");
+> +MODULE_LICENSE("GPL");
+
+regards
+Philipp
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
