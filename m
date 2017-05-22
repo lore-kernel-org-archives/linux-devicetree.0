@@ -1,92 +1,38 @@
-From: Olivier MOYSAN <olivier.moysan@st.com>
-Subject: Re: [PATCH v4 2/3] ASoC: stm32: Add I2S driver
-Date: Mon, 22 May 2017 15:11:45 +0000
-Message-ID: <3b507e82-d8d1-c2c4-8a50-ca130382171a@st.com>
-References: <1495120793-11687-1-git-send-email-olivier.moysan@st.com>
- <1495120793-11687-3-git-send-email-olivier.moysan@st.com>
- <20170519173359.277lyg6fzwksqnin@sirena.org.uk>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v5 05/14] MIPS: ingenic: Enable pinctrl for all ingenic SoCs
+Date: Mon, 22 May 2017 17:31:20 +0200
+Message-ID: <CACRpkdauf5c2i4o5i8QY8YHPNjizkvTu6kAbnquWiP_=v2=KdQ@mail.gmail.com>
+References: <20170402204244.14216-2-paul@crapouillou.net> <20170428200824.10906-1-paul@crapouillou.net>
+ <20170428200824.10906-6-paul@crapouillou.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20170519173359.277lyg6fzwksqnin@sirena.org.uk>
-Content-Language: en-US
-Content-ID: <9D8D9CB309872E4A9834C53F7980614B@st.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Mark Brown <broonie@kernel.org>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "robh@kernel.org" <robh@kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, Alexandre TORGUE <alexandre.torgue@st.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Arnaud POULIQUEN <arnaud.pouliquen@st.com>, "tiwai@suse.com" <tiwai@suse.com>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>, Benjamin GAIGNARD <benjamin.gaignard@st.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "kernel@stlinux.com" <kernel@stlinux.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <20170428200824.10906-6-paul@crapouillou.net>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Paul Cercueil <paul@crapouillou.net>, Ralf Baechle <ralf@linux-mips.org>
+Cc: Alexandre Courbot <gnurou@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Thierry Reding <thierry.reding@gmail.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Maarten ter Huurne <maarten@treewalker.org>, Lars-Peter Clausen <lars@metafoo.de>, Paul Burton <paul.burton@imgtec.com>, James Hogan <james.hogan@imgtec.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux MIPS <linux-mips@linux-mips.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>linux
 List-Id: devicetree@vger.kernel.org
 
-Hello Mark,
+On Fri, Apr 28, 2017 at 10:08 PM, Paul Cercueil <paul@crapouillou.net> wrote:
 
-Thanks, for applying the patches.
+> There is a pinctrl driver for each of the Ingenic SoCs supported by the
+> upstream Linux kernel. In order to switch away from the old GPIO
+> platform code, we now enable the pinctrl drivers by default for the
+> Ingenic SoCs.
+>
+> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 
-On 05/19/2017 07:33 PM, Mark Brown wrote:
-> On Thu, May 18, 2017 at 05:19:52PM +0200, olivier moysan wrote:
-> 
-> This looks good so I'm going to apply it, a few things below though -
-> can you please send a followup patch for the issue with the Kconfig
-> symbol?
-> 
->> --- a/sound/soc/stm/Kconfig
->> +++ b/sound/soc/stm/Kconfig
->> @@ -5,4 +5,4 @@ menuconfig SND_SOC_STM32
->>   	select SND_SOC_GENERIC_DMAENGINE_PCM
->>   	select REGMAP_MMIO
->>   	help
->> -	  Say Y if you want to enable ASoC-support for STM32
->> +	  Say Y if you want to enable ASoC support for STM32
-> 
-> This appears to be an unrelated typo fix.
-> 
+I applied all the patches to a branch in pinctrl and merged into my
+devel branch for testing:
 
-ok
+https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git/
+Branch: ingenic
 
->> diff --git a/sound/soc/stm/Makefile b/sound/soc/stm/Makefile
->> index e466a47..8251931 100644
->> --- a/sound/soc/stm/Makefile
->> +++ b/sound/soc/stm/Makefile
->> @@ -4,3 +4,7 @@ obj-$(CONFIG_SND_SOC_STM32) += snd-soc-stm32-sai-sub.o
->>   
->>   snd-soc-stm32-sai-objs := stm32_sai.o
->>   obj-$(CONFIG_SND_SOC_STM32) += snd-soc-stm32-sai.o
->> +
->> +# I2S
->> +snd-soc-stm32-i2s-objs := stm32_i2s.o
->> +obj-$(CONFIG_SND_SOC_STM32) += snd-soc-stm32-i2s.o
-> 
-> Perhaps make this a separate option?  It probably makes sense to rename
-> the option for the SAI at the same time.
-> 
+Ralf: are you OK with this? It would be nice to have your ACK on
+all patches. If you want you can pull this branch into the MIPS
+tree, or we can hope for it all to settle nicely because of low platform
+activity in MIPS on this platform, so it only needs to come in
+from my trees.
 
-ok, I will fix it in a new patch.
-
->> +
->> +	ret = clk_prepare_enable(i2s->pclk);
->> +	if (ret) {
->> +		dev_err(&pdev->dev, "Enable pclk failed: %d\n", ret);
->> +		return ret;
->> +	}
->> +
->> +	ret = clk_prepare_enable(i2s->i2sclk);
->> +	if (ret) {
->> +		dev_err(&pdev->dev, "Enable i2sclk failed: %d\n", ret);
->> +		goto err_pclk_disable;
->> +	}
-> 
-> It'd be nice to have runtime PM to disable these when the device is idle
-> but that's not essential.
-> 
-
-Yes, I agree.
-
-BRs
-olivier
+Yours,
+Linus Walleij
