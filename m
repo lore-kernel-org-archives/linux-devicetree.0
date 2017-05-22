@@ -1,8 +1,7 @@
 From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH 1/6] clk: sunxi-ng: a83t: Fix PLL lock status
- register offset
-Date: Mon, 22 May 2017 14:25:47 +0800
-Message-ID: <20170522062552.19026-2-wens@csie.org>
+Subject: [PATCH 4/6] ARM: sun8i: a83t: Add device node for DMA controller
+Date: Mon, 22 May 2017 14:25:50 +0800
+Message-ID: <20170522062552.19026-5-wens@csie.org>
 References: <20170522062552.19026-1-wens@csie.org>
 Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
@@ -20,27 +19,35 @@ To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Maxim
 Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The offset for the PLL lock status register was incorrectly set to
-0x208, which actually points to an unused register. The correct
-register offset is 0x20c.
+The A83T SoC has a DMA controller that supports 8 DMA channels
+to and from various peripherals.
+
+Add a device node for it.
 
 Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 ---
- drivers/clk/sunxi-ng/ccu-sun8i-a83t.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/boot/dts/sun8i-a83t.dtsi | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/drivers/clk/sunxi-ng/ccu-sun8i-a83t.c b/drivers/clk/sunxi-ng/ccu-sun8i-a83t.c
-index 4a201a7e03b8..a9c5cc87d9d0 100644
---- a/drivers/clk/sunxi-ng/ccu-sun8i-a83t.c
-+++ b/drivers/clk/sunxi-ng/ccu-sun8i-a83t.c
-@@ -28,7 +28,7 @@
+diff --git a/arch/arm/boot/dts/sun8i-a83t.dtsi b/arch/arm/boot/dts/sun8i-a83t.dtsi
+index e12dd7170b8f..47196feda26b 100644
+--- a/arch/arm/boot/dts/sun8i-a83t.dtsi
++++ b/arch/arm/boot/dts/sun8i-a83t.dtsi
+@@ -163,6 +163,15 @@
+ 		#size-cells = <1>;
+ 		ranges;
  
- #include "ccu-sun8i-a83t.h"
- 
--#define CCU_SUN8I_A83T_LOCK_REG	0x208
-+#define CCU_SUN8I_A83T_LOCK_REG	0x20c
- 
- /*
-  * The CPU PLLs are actually NP clocks, with P being /1 or /4. However
++		dma: dma-controller@1c02000 {
++			compatible = "allwinner,sun8i-a83t-dma";
++			reg = <0x01c02000 0x1000>;
++			interrupts = <GIC_SPI 50 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&ccu 21>;
++			resets = <&ccu 7>;
++			#dma-cells = <1>;
++		};
++
+ 		ccu: clock@1c20000 {
+ 			compatible = "allwinner,sun8i-a83t-ccu";
+ 			reg = <0x01c20000 0x400>;
 -- 
 2.11.0
