@@ -1,91 +1,99 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v5 1/3] of: Move OF property and graph API from base.c to property.c
-Date: Mon, 22 May 2017 09:22:29 -0500
-Message-ID: <CAL_JsqLwdi-oFxxF9rh4KzKim_ouQ8eDwZ5uicwtjb5-9eWHBw@mail.gmail.com>
-References: <1495440698-22260-1-git-send-email-sakari.ailus@linux.intel.com> <1495440698-22260-2-git-send-email-sakari.ailus@linux.intel.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v4 00/20] eeprom: at24: Add OF device ID table
+Date: Mon, 22 May 2017 16:23:39 +0200
+Message-ID: <CAMuHMdXbhkGGFC80-39Axzv=BdEXyBNuPuHCSWW3eXWDB=SQ+w@mail.gmail.com>
+References: <20170522140208.24652-1-javier@dowhile0.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <1495440698-22260-2-git-send-email-sakari.ailus@linux.intel.com>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Frank Rowand <frowand.list@gmail.com>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, Sudeep Holla <sudeep.holla@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>, "Rafael J. Wysocki" <rafael@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mark Brown <broonie@kernel.org>, Al Stone <ahs3@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20170522140208.24652-1-javier@dowhile0.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Javier Martinez Canillas <javier@dowhile0.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Wolfram Sang <wsa@the-dreams.de>, Tony Lindgren <tony@atomide.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Russell King <linux@armlinux.org.uk>, Masahiro Yamada <yamada.masahiro@socionext.com>, Paul Mackerras <paulus@samba.org>, Linux I2C <linux-i2c@vger.kernel.org>, Hongtao Jia <hongtao.jia@nxp.com>, Mark Jackson <mpfj@newflow.co.uk>, Jason Cooper <jason@lakedaemon.net>, Rob Herring <robh@kernel.org>, Herbert Xu <herbert@gondor.apana.org.au>, =?UTF-8?Q?Horia_Geant=C4=83?= <horia.geanta@nxp.com>, Michael Ellerman <mpe@ellerman.id.au>, Magnus Damm <magnus.damm@gmail.com>, Michal Simek <michal.simek@xilinx.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, =?UTF-8?Q?S=C3=B6ren_Brinkmann?= <soren.brinkmann@xilinx.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 22, 2017 at 3:11 AM, Sakari Ailus
-<sakari.ailus@linux.intel.com> wrote:
-> base.c contains both core OF functions and increasingly other
-> functionality such as accessing properties and graphs, including
-> convenience functions. In the near future this would also include OF
-> specific implementation of the fwnode property and graph APIs.
+Hi Javier,
+
+On Mon, May 22, 2017 at 4:01 PM, Javier Martinez Canillas
+<javier@dowhile0.org> wrote:
+> This series is a follow-up to patch [0] that added an OF device ID table
+> to the at24 EEPROM driver. As you suggested [1], this version instead of
+> adding entries for every used <vendor,device> tuple, only adds a single
+> entry for each chip type using the "atmel" vendor as a generic fallback.
 >
-> Create driver/of/property.c to contain procedures for accessing and
-> interpreting device tree properties. The procedures are moved from
-> drivers/of/base.c, with no changes other than copying only the includes
-> required by the moved procedures.
+> This is a re-spin that addresses some issues pointed out by Rob Herring.
 >
-> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-> ---
->  drivers/of/Makefile   |   2 +-
->  drivers/of/base.c     | 733 ------------------------------------------------
->  drivers/of/property.c | 763 ++++++++++++++++++++++++++++++++++++++++++++++++++
+> The first patch documents in the DT binding what's the correct vendor to
+> use and what are the ones that are being deprecated. The second one adds
+> the OF device ID table for the at24 driver and the next patches use this
+> vendor in the compatible string to each DTS that defines a compatible I2C
+> EEPROM device node.
+>
+> Patches can be applied independently since the DTS changes without driver
+> changes are no-op and the OF table won't be used without the DTS changes.
+>
+> [0]: https://lkml.org/lkml/2017/3/14/589
+> [1]: https://lkml.org/lkml/2017/3/15/99
+>
+> Best regards,
+> Javier
+>
+> Changes in v4:
+> - Document the manufacturers that have been deprecated (Rob Herring).
+> - Only use the atmel manufacturer in the compatible string instead of
+>   keeping the deprecated ones (Rob Herring).
 
-Please put graph functions in graph.c unless there is some reason not to.
+I think you're referring to this (https://lkml.org/lkml/2017/4/19/1136)?
 
-[...]
+| > --- a/arch/arm/boot/dts/am335x-baltos.dtsi
+| > +++ b/arch/arm/boot/dts/am335x-baltos.dtsi
+| > @@ -255,7 +255,7 @@
+| >     };
+| >
+| >     at24@50 {
+| > -           compatible = "at24,24c02";
+| > +           compatible = "at24,24c02", "atmel,24c02";
+|
+| I think you can just drop the at24 compatibles. A new kernel doesn't
+| need it. An old kernel ignores the manufacturer. I checked that u-boot
+| only matches on "atmel,*", so okay there. Don't know about the *BSDs. I
+| couldn't find anything.
 
-> diff --git a/drivers/of/property.c b/drivers/of/property.c
-> new file mode 100644
-> index 0000000..e5d3e1f
-> --- /dev/null
-> +++ b/drivers/of/property.c
-> @@ -0,0 +1,763 @@
-> +/*
-> + * drivers/of/property.c - Procedures for accessing and interpreting
-> + *                        Devicetree properties and graphs.
-> + *
-> + * Initially created by copying procedures from drivers/of/base.c. This
-> + * file contains the OF property as well as the OF graph interface
-> + * functions.
-> + *
-> + * Paul Mackerras      August 1996.
-> + * Copyright (C) 1996-2005 Paul Mackerras.
-> + *
-> + *  Adapted for 64bit PowerPC by Dave Engebretsen and Peter Bergner.
-> + *    {engebret|bergner}@us.ibm.com
-> + *
-> + *  Adapted for sparc and sparc64 by David S. Miller davem@davemloft.net
-> + *
-> + *  Reconsolidated from arch/x/kernel/prom.c by Stephen Rothwell and
-> + *  Grant Likely.
-> + *
-> + *      This program is free software; you can redistribute it and/or
-> + *      modify it under the terms of the GNU General Public License
-> + *      as published by the Free Software Foundation; either version
-> + *      2 of the License, or (at your option) any later version.
-> + */
-> +
+I think you misunderstood what Rob means.
 
-Need a pr_fmt here.
+In the case above it makes sense to drop the first compatible, as "at24" is
+not a manufacturer, but refers to ATMEL's "AT24" line of i2c FLASH ROMs.
 
-> +#include <linux/of.h>
-> +#include <linux/of_device.h>
-> +#include <linux/of_graph.h>
-> +#include <linux/string.h>
-> +
-> +#include "of_private.h"
+However, in cases where a real vendor/part combo is specified, like on
+r8a7791-koelsch.dts:
 
-A blank line needed here.
+-               compatible = "renesas,24c02";
++               compatible = "atmel,24c02";
 
-> +/**
-> + * of_property_count_elems_of_size - Count the number of elements in a property
-> + *
-> + * @np:                device node from which the property value is to be read.
-> + * @propname:  name of the property to be searched.
-> + * @elem_size: size of the individual element
-> + *
-> + * Search for a property in a device node and count the number of elements of
-> + * size elem_size in it. Returns number of elements on sucess, -EINVAL if the
-> + * property does not exist or its length does not match a multiple of elem_size
-> + * and -ENODATA if the property does not have a value.
-> + */
+you do want to keep the real vendor/part combo, i.e.
+
+     compatible = "renesas,24c02", "atmel,24c02";
+
+like in v3, which is what I gave my Reviewed-by for.
+
+Thanks!
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
