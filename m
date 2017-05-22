@@ -1,29 +1,47 @@
-From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Subject: Re: [PATCH 04/13] ARM: dts: armada-385-linksys: drop redundant
- properties in dependants
-Date: Mon, 22 May 2017 16:52:57 +0200
-Message-ID: <20170522145257.GJ29447@lunn.ch>
-References: <20170521124903.11050-1-ralph.sennhauser@gmail.com>
- <20170521124903.11050-5-ralph.sennhauser@gmail.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH v2 2/2] memory: ti-emif-sram: introduce relocatable
+ suspend/resume handlers
+Date: Mon, 22 May 2017 07:53:04 -0700
+Message-ID: <20170522145304.GO10472@atomide.com>
+References: <20170519175708.6070-1-d-gerlach@ti.com>
+ <20170519175708.6070-3-d-gerlach@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170521124903.11050-5-ralph.sennhauser-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ralph Sennhauser <ralph.sennhauser-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Imre Kaloz <kaloz-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <20170519175708.6070-3-d-gerlach@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Dave Gerlach <d-gerlach@ti.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Santosh Shilimkar <ssantosh@kernel.org>, Russell King <linux@armlinux.org.uk>, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Keerthy J <j-keerthy@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, May 21, 2017 at 02:48:53PM +0200, Ralph Sennhauser wrote:
-> Drop redundant declaration of #address-cells and #size-cells.
-> 
-> Signed-off-by: Ralph Sennhauser <ralph.sennhauser-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+* Dave Gerlach <d-gerlach@ti.com> [170519 11:00]:
+> diff --git a/arch/arm/kernel/asm-offsets.c b/arch/arm/kernel/asm-offsets.c
+> index 608008229c7d..d728b5660e36 100644
+> --- a/arch/arm/kernel/asm-offsets.c
+> +++ b/arch/arm/kernel/asm-offsets.c
+> @@ -28,6 +28,7 @@
+>  #include <asm/vdso_datapage.h>
+>  #include <asm/hardware/cache-l2x0.h>
+>  #include <linux/kbuild.h>
+> +#include <linux/ti-emif-sram.h>
+>  
+>  /*
+>   * Make sure that the compiler and target are compatible.
+> @@ -183,5 +184,10 @@ int main(void)
+>  #ifdef CONFIG_VDSO
+>    DEFINE(VDSO_DATA_SIZE,	sizeof(union vdso_data_store));
+>  #endif
+> +#if defined(CONFIG_SOC_AM33XX) || defined(CONFIG_SOC_AM43XX)
+> +  BLANK();
+> +  ti_emif_offsets();
+> +#endif
+> +
+>    return 0; 
+>  }
 
-Reviewed-by: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Above still needs to be commented by Russell.
 
-    Andrew
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+As far as I'm concerned:
+
+Acked-by: Tony Lindgren <tony@atomide.com>
