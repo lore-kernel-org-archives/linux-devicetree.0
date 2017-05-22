@@ -1,119 +1,91 @@
-From: Anup Patel <anup.patel@broadcom.com>
-Subject: Re: [PATCH v3 00/11] Broadcom Stingray SOC Initial Support
-Date: Mon, 22 May 2017 17:27:09 +0530
-Message-ID: <CAALAos-U_=y+ENc2u3eZWXE24Vqcfzpf0WNsQ-Zi4kVvJEq1CQ@mail.gmail.com>
-References: <1494934256-1350-1-git-send-email-anup.patel@broadcom.com>
- <CAOesGMiwspTuVWp8nPcWK2MhuWh8x9XSkZWJE2x=FxTCtU47Sw@mail.gmail.com>
- <CAALAos8sRb+cLeHLP4yuD5oXRP1RWn=PGCkPGEBq+6X+DdkuQg@mail.gmail.com> <f76fb782-66f2-e0e1-b526-80befe184c26@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <f76fb782-66f2-e0e1-b526-80befe184c26@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Florian Fainelli <f.fainelli@gmail.com>
-Cc: Olof Johansson <olof@lixom.net>, Michael Turquette <mturquette@baylibre.com>, sboyd@codeaurora.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Oza Pawandeep <oza.oza@broadcom.com>, Srinath Mannam <srinath.mannam@broadcom.com>, Pramod Kumar <pramod.kumar@broadcom.com>, Sandeep Tripathy <sandeep.tripathy@broadcom.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-clk <linux-clk@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+From: Anup Patel <anup.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v4 00/11] Broadcom Stingray SOC Initial Support
+Date: Mon, 22 May 2017 17:28:16 +0530
+Message-ID: <1495454307-23464-1-git-send-email-anup.patel@broadcom.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Oza Pawandeep <oza.oza-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Srinath Mannam <srinath.mannam-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Pramod Kumar <pramod.kumar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Sandeep Tripathy <sandeep.tripathy-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Anup Patel <anup.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, May 20, 2017 at 12:08 AM, Florian Fainelli <f.fainelli@gmail.com> wrote:
-> On 05/16/2017 09:24 PM, Anup Patel wrote:
->> On Wed, May 17, 2017 at 12:23 AM, Olof Johansson <olof@lixom.net> wrote:
->>> Hi,
->>>
->>>
->>>
->>> On Tue, May 16, 2017 at 4:30 AM, Anup Patel <anup.patel@broadcom.com> wrote:
->>>> This patchset adds initial support of Broadcom Stingray SOC
->>>> by reusing existing Broadcom iProc device drivers.
->>>>
->>>> Most of the patches in this patchset are DT patches except
->>>> the Stingray clock tree support which just one patch.
->>>>
->>>> This patchset is based on Linux-4.12-rc1 and it is also available
->>>> at stingray-v3 branch of https://github.com/Broadcom/arm64-linux.git
->>>>
->>>> Changes since v2:
->>>>  - Remove default bootargs from chosen DT node
->>>>  - Remove "linux" prefix from stdout DT attribute of chosen DT node
->>>>  - Remove use of GIC_CPU_MASK_xxx() for PPIs
->>>>
->>>> Changes since v1:
->>>>  - Rebased patches for Linux-4.12-rc1
->>>>  - Removed unwanted /memreserve/ from bcm958742-base.dtsi
->>>>  - Use ranges DT property to clear view of memory-layout
->>>>  - Make bcm-sr.h part of clock DT bindings patch
->>>>
->>>> Anup Patel (3):
->>>>   dt-bindings: bcm: Add Broadcom Stingray bindings document
->>>>   arm64: dts: Initial DTS files for Broadcom Stingray SOC
->>>>   arm64: dts: Add PL022, PL330 and SP805 DT nodes for Stingray
->>>>
->>>> Oza Pawandeep (1):
->>>>   arm64: dts: Add I2C DT nodes for Stingray SoC
->>>>
->>>> Pramod Kumar (3):
->>>>   arm64: dts: Add NAND DT nodes for Stingray SOC
->>>>   arm64: dts: Add pinctrl DT nodes for Stingray SOC
->>>>   arm64: dts: Add GPIO DT nodes for Stingray SOC
->>>>
->>>> Sandeep Tripathy (3):
->>>>   dt-bindings: clk: Extend binding doc for Stingray SOC
->>>>   clk: bcm: Add clocks for Stingray SOC
->>>>   arm64: dts: Add clock DT nodes for Stingray SOC
->>>>
->>>> Srinath Mannam (1):
->>>>   arm64: dts: Add PWM and SDHCI DT nodes for Stingray SOC
->>>>
->>>>  .../devicetree/bindings/arm/bcm/brcm,stingray.txt  |  12 +
->>>>  .../bindings/clock/brcm,iproc-clocks.txt           |  76 ++++
->>>>  arch/arm64/boot/dts/broadcom/Makefile              |   1 +
->>>>  arch/arm64/boot/dts/broadcom/stingray/Makefile     |   6 +
->>>>  .../boot/dts/broadcom/stingray/bcm958742-base.dtsi | 131 ++++++
->>>>  .../boot/dts/broadcom/stingray/bcm958742k.dts      |  78 ++++
->>>>  .../boot/dts/broadcom/stingray/bcm958742t.dts      |  40 ++
->>>>  .../boot/dts/broadcom/stingray/stingray-clock.dtsi | 170 ++++++++
->>>>  .../dts/broadcom/stingray/stingray-pinctrl.dtsi    | 345 ++++++++++++++++
->>>>  .../arm64/boot/dts/broadcom/stingray/stingray.dtsi | 460 +++++++++++++++++++++
->>>>  drivers/clk/bcm/Kconfig                            |   8 +
->>>>  drivers/clk/bcm/Makefile                           |   1 +
->>>>  drivers/clk/bcm/clk-sr.c                           | 300 ++++++++++++++
->>>>  include/dt-bindings/clock/bcm-sr.h                 | 101 +++++
->>>>  .../dt-bindings/pinctrl/brcm,pinctrl-stingray.h    |  68 +++
->>>>  15 files changed, 1797 insertions(+)
->>>>  create mode 100644 Documentation/devicetree/bindings/arm/bcm/brcm,stingray.txt
->>>>  create mode 100644 arch/arm64/boot/dts/broadcom/stingray/Makefile
->>>>  create mode 100644 arch/arm64/boot/dts/broadcom/stingray/bcm958742-base.dtsi
->>>>  create mode 100644 arch/arm64/boot/dts/broadcom/stingray/bcm958742k.dts
->>>>  create mode 100644 arch/arm64/boot/dts/broadcom/stingray/bcm958742t.dts
->>>>  create mode 100644 arch/arm64/boot/dts/broadcom/stingray/stingray-clock.dtsi
->>>>  create mode 100644 arch/arm64/boot/dts/broadcom/stingray/stingray-pinctrl.dtsi
->>>>  create mode 100644 arch/arm64/boot/dts/broadcom/stingray/stingray.dtsi
->>>>  create mode 100644 drivers/clk/bcm/clk-sr.c
->>>>  create mode 100644 include/dt-bindings/clock/bcm-sr.h
->>>>  create mode 100644 include/dt-bindings/pinctrl/brcm,pinctrl-stingray.h
->>>
->>> Grouping as one patchset for review is fine, but when you submit this
->>> for merge you need to split it up:
->>>
->>> - Documentation/devicetree can go with the driver pieces or with the
->>> DT changes, your choice
->>> - DTS/DTSI changes should go through the Broadcom maintainers to arm-soc
->>> - clk changes should go to clk maintainers.
->>
->> Only PATCH3 needs to go through clk maintainers rest all patches
->> are DT bindings document and DTS changes which can go through
->> Broadcom tree. Right ??
->
-> Patch 2 and 3 should go through the clock maintainers, and I can take
-> the remaining patches through the Broadcom ARM/ARM64 SoC pull requests,
-> no problem.
->
-> Unless there are specific changes requested which warrant a v4, I can
-> coordinate with Stephen and Mike to make sure that they take the
-> appropriate patches.
+This patchset adds initial support of Broadcom Stingray SOC
+by reusing existing Broadcom iProc device drivers.
 
-We have minor changes in clk driver to address Stephen's comments.
+Most of the patches in this patchset are DT patches except
+the Stingray clock tree support which just one patch.
 
-I will send v4 patchset will updated clk driver.
+This patchset is based on Linux-4.12-rc2 and it is also available
+at stingray-v4 branch of https://github.com/Broadcom/arm64-linux.git
 
-Thanks,
-Anup
+Changes since v3:
+ - Rebased patches for Linux-4.12-rc1
+ - Updated PATCH3 to have all clocks except genpll3 to be
+   registered via platform driver probe
+
+Changes since v2:
+ - Remove default bootargs from chosen DT node
+ - Remove "linux" prefix from stdout DT attribute of chosen DT node
+ - Remove use of GIC_CPU_MASK_xxx() for PPIs
+
+Changes since v1:
+ - Rebased patches for Linux-4.12-rc1
+ - Removed unwanted /memreserve/ from bcm958742-base.dtsi
+ - Use ranges DT property to clear view of memory-layout
+ - Make bcm-sr.h part of clock DT bindings patch
+
+Anup Patel (3):
+  dt-bindings: bcm: Add Broadcom Stingray bindings document
+  arm64: dts: Initial DTS files for Broadcom Stingray SOC
+  arm64: dts: Add PL022, PL330 and SP805 DT nodes for Stingray
+
+Oza Pawandeep (1):
+  arm64: dts: Add I2C DT nodes for Stingray SoC
+
+Pramod Kumar (3):
+  arm64: dts: Add NAND DT nodes for Stingray SOC
+  arm64: dts: Add pinctrl DT nodes for Stingray SOC
+  arm64: dts: Add GPIO DT nodes for Stingray SOC
+
+Sandeep Tripathy (3):
+  dt-bindings: clk: Extend binding doc for Stingray SOC
+  clk: bcm: Add clocks for Stingray SOC
+  arm64: dts: Add clock DT nodes for Stingray SOC
+
+Srinath Mannam (1):
+  arm64: dts: Add PWM and SDHCI DT nodes for Stingray SOC
+
+ .../devicetree/bindings/arm/bcm/brcm,stingray.txt  |  12 +
+ .../bindings/clock/brcm,iproc-clocks.txt           |  76 ++++
+ arch/arm64/boot/dts/broadcom/Makefile              |   1 +
+ arch/arm64/boot/dts/broadcom/stingray/Makefile     |   6 +
+ .../boot/dts/broadcom/stingray/bcm958742-base.dtsi | 131 ++++++
+ .../boot/dts/broadcom/stingray/bcm958742k.dts      |  78 ++++
+ .../boot/dts/broadcom/stingray/bcm958742t.dts      |  40 ++
+ .../boot/dts/broadcom/stingray/stingray-clock.dtsi | 170 ++++++++
+ .../dts/broadcom/stingray/stingray-pinctrl.dtsi    | 345 ++++++++++++++++
+ .../arm64/boot/dts/broadcom/stingray/stingray.dtsi | 460 +++++++++++++++++++++
+ drivers/clk/bcm/Kconfig                            |   8 +
+ drivers/clk/bcm/Makefile                           |   1 +
+ drivers/clk/bcm/clk-sr.c                           | 324 +++++++++++++++
+ include/dt-bindings/clock/bcm-sr.h                 | 101 +++++
+ .../dt-bindings/pinctrl/brcm,pinctrl-stingray.h    |  68 +++
+ 15 files changed, 1821 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/bcm/brcm,stingray.txt
+ create mode 100644 arch/arm64/boot/dts/broadcom/stingray/Makefile
+ create mode 100644 arch/arm64/boot/dts/broadcom/stingray/bcm958742-base.dtsi
+ create mode 100644 arch/arm64/boot/dts/broadcom/stingray/bcm958742k.dts
+ create mode 100644 arch/arm64/boot/dts/broadcom/stingray/bcm958742t.dts
+ create mode 100644 arch/arm64/boot/dts/broadcom/stingray/stingray-clock.dtsi
+ create mode 100644 arch/arm64/boot/dts/broadcom/stingray/stingray-pinctrl.dtsi
+ create mode 100644 arch/arm64/boot/dts/broadcom/stingray/stingray.dtsi
+ create mode 100644 drivers/clk/bcm/clk-sr.c
+ create mode 100644 include/dt-bindings/clock/bcm-sr.h
+ create mode 100644 include/dt-bindings/pinctrl/brcm,pinctrl-stingray.h
+
+-- 
+2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
