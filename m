@@ -1,66 +1,64 @@
-From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: Re: [PATCH] clk: meson-gxbb: Expose SPICC gate
-Date: Mon, 22 May 2017 15:27:16 +0200
-Message-ID: <578eb358-60f2-e65d-1aaa-fece2d77987a@baylibre.com>
-References: <1495457326-32659-1-git-send-email-narmstrong@baylibre.com>
- <1495459426.2344.1.camel@baylibre.com>
+From: Serge Semin <fancer.lancer@gmail.com>
+Subject: Re: [PATCH 00/21] MIPS memblock: Remove bootmem code and switch to
+ NO_BOOTMEM
+Date: Mon, 22 May 2017 16:29:14 +0300
+Message-ID: <20170522132914.GB20910@mobilestation>
+References: <1482113266-13207-1-git-send-email-fancer.lancer@gmail.com>
+ <be0b6614-708d-a32a-029d-7e606a673e5b@imgtec.com>
+ <20170522102643.GA17763@mobilestation>
+ <ef3d7a8c-2a73-2082-0d64-bdb4f95df204@gentoo.org>
+ <20170522130348.GA20910@mobilestation>
+ <f14c7a41-ae2d-b19d-fb86-d6e9c9c53949@nokia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <1495459426.2344.1.camel@baylibre.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Jerome Brunet <jbrunet@baylibre.com>
-Cc: linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <f14c7a41-ae2d-b19d-fb86-d6e9c9c53949@nokia.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Alexander Sverdlin <alexander.sverdlin@nokia.com>
+Cc: Joshua Kinard <kumba@gentoo.org>, Marcin Nowakowski <marcin.nowakowski@imgtec.com>, ralf@linux-mips.org, paul.burton@imgtec.com, rabinv@axis.com, matt.redfearn@imgtec.com, james.hogan@imgtec.com, robh+dt@kernel.org, frowand.list@gmail.com, Sergey.Semin@t-platforms.ru, linux-mips@linux-mips.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 05/22/2017 03:23 PM, Jerome Brunet wrote:
-> On Mon, 2017-05-22 at 14:48 +0200, Neil Armstrong wrote:
->> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-> 
-> I would prefer to have a short commit message here. With it included:
+Hello Alexandr,
+Ok, I will.
 
-Indeed, sorry.
+Regards,
+-Sergey
 
-I'll push it with a short commit message and your Ack.
-
-Thanks,
-Neil
-
+On Mon, May 22, 2017 at 03:20:44PM +0200, Alexander Sverdlin <alexander.sverdlin@nokia.com> wrote:
+> Hello Serge,
 > 
-> Acked-by: Jerome Brunet <jbrunet@baylibre.com>
+> On 22/05/17 15:03, Serge Semin wrote:
+> >> I have an SGI Onyx2 and just recently acquired a working SGI Origin 200.  The
+> >> Onyx2 has NUMA issues yet to be hunted down, but I got ~3 days uptime out of
+> >> the Origin 200 running compiles before powering it down.  Mainline needs 2-3
+> >> small patches to make IP27 workable, last I tested.
+> >>
+> >> I'd have to look at the IP27 code again and see if I can make sense of what
+> >> it's doing.  I think it dealt with either setting up memory for an initrd
+> >> (which I haven't used in over a decade), or it's for the NUMA stuff to discover
+> >> all memory on each node.
+> >>
+> >> -- 
+> >> Joshua Kinard
+> >> Gentoo/MIPS
+> >> kumba@gentoo.org
+> >> 6144R/F5C6C943 2015-04-27
+> >> 177C 1972 1FB8 F254 BAD0 3E72 5C63 F4E3 F5C6 C943
+> >>
+> >> "The past tempts us, the present confuses us, the future frightens us.  And our
+> >> lives slip away, moment by moment, lost in that vast, terrible in-between."
+> >>
+> >> --Emperor Turhan, Centauri Republic
+> > It's great to hear of your willingness to help. Since both Loonson64 and SGI IP27
+> > problematic architecture-specific code will be appropriately altered, I'll publish
+> > the fixed general MIPS-memblock patchset within two months. I'll also try to
+> > involve Ralf in it when I'm ready, so to make sure all my alterations are made
+> > within kernel arch-code coding style. While I'm working on it, you can still use
+> > the current patchset for some limited tests.
 > 
+> Please Cc me in this case, I should be able to test on Octeon MIPS64 platform.
 > 
->> ---
->>  drivers/clk/meson/gxbb.h              | 2 +-
->>  include/dt-bindings/clock/gxbb-clkc.h | 1 +
->>  2 files changed, 2 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/clk/meson/gxbb.h b/drivers/clk/meson/gxbb.h
->> index 93b8f07..cc7b35c 100644
->> --- a/drivers/clk/meson/gxbb.h
->> +++ b/drivers/clk/meson/gxbb.h
->> @@ -191,7 +191,7 @@
->>  #define CLKID_ISA		  18
->>  #define CLKID_PL301		  19
->>  #define CLKID_PERIPHS		  20
->> -#define CLKID_SPICC		  21
->> +/* CLKID_SPICC */
->>  /* CLKID_I2C */
->>  /* #define CLKID_SAR_ADC */
->>  #define CLKID_SMART_CARD	  24
->> diff --git a/include/dt-bindings/clock/gxbb-clkc.h b/include/dt-
->> bindings/clock/gxbb-clkc.h
->> index 3190e30..88da194 100644
->> --- a/include/dt-bindings/clock/gxbb-clkc.h
->> +++ b/include/dt-bindings/clock/gxbb-clkc.h
->> @@ -13,6 +13,7 @@
->>  #define CLKID_GP0_PLL		9
->>  #define CLKID_CLK81		12
->>  #define CLKID_MPLL2		15
->> +#define CLKID_SPICC		21
->>  #define CLKID_I2C		22
->>  #define CLKID_SAR_ADC		23
->>  #define CLKID_RNG0		25
-> 
-
+> -- 
+> Best regards,
+> Alexander Sverdlin.
