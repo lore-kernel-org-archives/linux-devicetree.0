@@ -1,57 +1,41 @@
-From: Nikita Yushchenko <nikita.yoush-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH] ARM: dts: vf610-zii-dev-rev-b: add hi8435 device
-Date: Mon, 22 May 2017 16:10:10 +0300
-Message-ID: <20170522131010.3537-1-nikita.yoush@cogentembedded.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH RFC v2 1/2] Documentation/devicetree: Add specification
+ for FSI busses
+Date: Mon, 22 May 2017 08:10:23 -0500
+Message-ID: <20170522131023.rawtmyrdalxvobrd@rob-hp-laptop>
+References: <1494910285-20856-1-git-send-email-jk@ozlabs.org>
+ <1494910285-20856-2-git-send-email-jk@ozlabs.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1494910285-20856-2-git-send-email-jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chris Healy <Chris.Healy-c8ZVq/bFV1I@public.gmane.org>, Jeff White <Jeff.White-c8ZVq/bFV1I@public.gmane.org>, Nikita Yushchenko <nikita.yoush-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+To: Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-ZII dev board rev B has a Holt Hi8435 connected to dspi2.
-Add it to device tree.
+On Tue, May 16, 2017 at 12:51:24PM +0800, Jeremy Kerr wrote:
+> This change introduces a proposed layout for describing FSI busses in
+> the device tree. While the bus is probe-able, we'd still like a method
+> of describing subordinate (eg i2c) busses that are behind FSI devices.
+> 
+> The FSI core will be responsible for matching probed slaves & engines to
+> their device tree nodes, so the FSI device drivers' probe() functions
+> will be passed a struct device with the appropriate of_node populated
+> where a matching DT node is found.
 
-ZII dev board rev C does not have that, so use rev-b dts file,
-not common dtsi file.
+Missed this the first time, "dt-bindings: fsi: " is the preferred 
+subject prefix. No need to respin just for that.
 
-Signed-off-by: Nikita Yushchenko <nikita.yoush-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
----
- arch/arm/boot/dts/vf610-zii-dev-rev-b.dts | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+> 
+> Signed-off-by: Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/fsi/fsi.txt | 144 ++++++++++++++++++++++++++
+>  1 file changed, 144 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/fsi/fsi.txt
 
-diff --git a/arch/arm/boot/dts/vf610-zii-dev-rev-b.dts b/arch/arm/boot/dts/vf610-zii-dev-rev-b.dts
-index 37f95427616f..f433465c3a7c 100644
---- a/arch/arm/boot/dts/vf610-zii-dev-rev-b.dts
-+++ b/arch/arm/boot/dts/vf610-zii-dev-rev-b.dts
-@@ -348,6 +348,25 @@
- 	};
- };
- 
-+&edma1 {
-+	status = "okay";
-+};
-+
-+&dspi2 {
-+	bus-num = <1>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_dspi2>;
-+	status = "okay";
-+	spi-num-chipselects = <2>;
-+
-+	hi8435@1 {
-+		compatible = "holt,hi8435";
-+		reg = <1>;
-+		spi-max-frequency = <20000000>;
-+		gpios = <&gpio5 3 0>;
-+	};
-+};
-+
- &i2c0 {
- 	clock-frequency = <100000>;
- 	pinctrl-names = "default";
--- 
-2.11.0
-
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
