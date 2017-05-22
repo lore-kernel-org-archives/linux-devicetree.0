@@ -1,29 +1,60 @@
-From: "Austin, Brian" <Brian.Austin-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 1/4] ASoC: cs35l35: Add Boost Inductor Calculation
-Date: Mon, 22 May 2017 13:18:43 +0000
-Message-ID: <cc56db0b-40f2-4d40-9035-b1e5c53528d1@EX4.ad.cirrus.com>
-References: <1495121559-1063-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+From: Alexander Sverdlin <alexander.sverdlin-xNZwKgViW5gAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 00/21] MIPS memblock: Remove bootmem code and switch to
+ NO_BOOTMEM
+Date: Mon, 22 May 2017 15:20:44 +0200
+Message-ID: <f14c7a41-ae2d-b19d-fb86-d6e9c9c53949@nokia.com>
+References: <1482113266-13207-1-git-send-email-fancer.lancer@gmail.com>
+ <be0b6614-708d-a32a-029d-7e606a673e5b@imgtec.com>
+ <20170522102643.GA17763@mobilestation>
+ <ef3d7a8c-2a73-2082-0d64-bdb4f95df204@gentoo.org>
+ <20170522130348.GA20910@mobilestation>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1495121559-1063-1-git-send-email-ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+In-Reply-To: <20170522130348.GA20910@mobilestation>
 Content-Language: en-US
-Content-ID: <874E9D27F3A1D74D9750655AA1117F21-BNO7SilVNoKakBO8gow8eQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, "broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: "lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "Handrigan, Paul" <Paul.Handrigan-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org" <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org" <patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+To: Serge Semin <fancer.lancer-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Joshua Kinard <kumba-aBrp7R+bbdUdnm+yROfE0A@public.gmane.org>
+Cc: Marcin Nowakowski <marcin.nowakowski-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org, rabinv-VrBV9hrLPhE@public.gmane.org, matt.redfearn-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org, james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Sergey.Semin-vHJ8rsvMqnUPfZBKTuL5GA@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-DQoNCk9uIDUvMTgvMTcsIDEwOjMyIEFNLCAiQ2hhcmxlcyBLZWVwYXgiIDxja2VlcGF4QG9wZW5z
-b3VyY2Uud29sZnNvbm1pY3JvLmNvbT4gd3JvdGU6DQoNCiAgICBGcm9tOiBCcmlhbiBBdXN0aW4g
-PGJyaWFuLmF1c3RpbkBjaXJydXMuY29tPg0KICAgIA0KICAgIEFkZCB0aGUgQm9vc3QgSW5kdWN0
-b3IgcGFyYW1ldGVycyBiYXNlZCBvZmYgdGhlIHNpemUgb2YgdGhlIGluZHVjdG9yDQogICAgb24g
-dGhlIEhXIHNldHVwDQogICAgDQogICAgU2lnbmVkLW9mZi1ieTogQnJpYW4gQXVzdGluIDxicmlh
-bi5hdXN0aW5AY2lycnVzLmNvbT4NCiAgICBTaWduZWQtb2ZmLWJ5OiBDaGFybGVzIEtlZXBheCA8
-Y2tlZXBheEBvcGVuc291cmNlLndvbGZzb25taWNyby5jb20+DQogICAgLS0tDQpGb3IgdGhlIHNl
-cmllcw0KQWNrZWQtYnk6IEJyaWFuIEF1c3RpbiA8YnJpYW4uYXVzdGluQGNpcnJ1cy5jb20+IA0K
-DQo=
+Hello Serge,
+
+On 22/05/17 15:03, Serge Semin wrote:
+>> I have an SGI Onyx2 and just recently acquired a working SGI Origin 200.  The
+>> Onyx2 has NUMA issues yet to be hunted down, but I got ~3 days uptime out of
+>> the Origin 200 running compiles before powering it down.  Mainline needs 2-3
+>> small patches to make IP27 workable, last I tested.
+>>
+>> I'd have to look at the IP27 code again and see if I can make sense of what
+>> it's doing.  I think it dealt with either setting up memory for an initrd
+>> (which I haven't used in over a decade), or it's for the NUMA stuff to discover
+>> all memory on each node.
+>>
+>> -- 
+>> Joshua Kinard
+>> Gentoo/MIPS
+>> kumba-aBrp7R+bbdUdnm+yROfE0A@public.gmane.org
+>> 6144R/F5C6C943 2015-04-27
+>> 177C 1972 1FB8 F254 BAD0 3E72 5C63 F4E3 F5C6 C943
+>>
+>> "The past tempts us, the present confuses us, the future frightens us.  And our
+>> lives slip away, moment by moment, lost in that vast, terrible in-between."
+>>
+>> --Emperor Turhan, Centauri Republic
+> It's great to hear of your willingness to help. Since both Loonson64 and SGI IP27
+> problematic architecture-specific code will be appropriately altered, I'll publish
+> the fixed general MIPS-memblock patchset within two months. I'll also try to
+> involve Ralf in it when I'm ready, so to make sure all my alterations are made
+> within kernel arch-code coding style. While I'm working on it, you can still use
+> the current patchset for some limited tests.
+
+Please Cc me in this case, I should be able to test on Octeon MIPS64 platform.
+
+-- 
+Best regards,
+Alexander Sverdlin.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
