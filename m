@@ -1,64 +1,78 @@
-From: Serge Semin <fancer.lancer@gmail.com>
-Subject: Re: [PATCH 00/21] MIPS memblock: Remove bootmem code and switch to
- NO_BOOTMEM
-Date: Mon, 22 May 2017 16:29:14 +0300
-Message-ID: <20170522132914.GB20910@mobilestation>
-References: <1482113266-13207-1-git-send-email-fancer.lancer@gmail.com>
- <be0b6614-708d-a32a-029d-7e606a673e5b@imgtec.com>
- <20170522102643.GA17763@mobilestation>
- <ef3d7a8c-2a73-2082-0d64-bdb4f95df204@gentoo.org>
- <20170522130348.GA20910@mobilestation>
- <f14c7a41-ae2d-b19d-fb86-d6e9c9c53949@nokia.com>
+From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Subject: Re: [PATCH] net: fec: add post PHY reset delay DT property
+Date: Mon, 22 May 2017 15:57:05 +0200
+Message-ID: <20170522135705.GB29447@lunn.ch>
+References: <20170522091517.6857-1-quentin.schulz@free-electrons.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <f14c7a41-ae2d-b19d-fb86-d6e9c9c53949@nokia.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Alexander Sverdlin <alexander.sverdlin@nokia.com>
-Cc: Joshua Kinard <kumba@gentoo.org>, Marcin Nowakowski <marcin.nowakowski@imgtec.com>, ralf@linux-mips.org, paul.burton@imgtec.com, rabinv@axis.com, matt.redfearn@imgtec.com, james.hogan@imgtec.com, robh+dt@kernel.org, frowand.list@gmail.com, Sergey.Semin@t-platforms.ru, linux-mips@linux-mips.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20170522091517.6857-1-quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: fugang.duan-3arQi8VN3Tc@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Alexandr,
-Ok, I will.
+On Mon, May 22, 2017 at 11:15:17AM +0200, Quentin Schulz wrote:
+> Some PHY require to wait for a bit after the reset GPIO has been
+> toggled. This adds support for the DT property `phy-reset-post-delay`
+> which gives the delay in milliseconds to wait after reset.
+> 
+> If the DT property is not given, no delay is observed. Post reset delay
+> greater than 1000ms are invalid and are default to 1ms.
 
-Regards,
--Sergey
+Hi Quentin
 
-On Mon, May 22, 2017 at 03:20:44PM +0200, Alexander Sverdlin <alexander.sverdlin@nokia.com> wrote:
-> Hello Serge,
+If it is invalid, please return -EINVAL.
+
+> Signed-off-by: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/net/fsl-fec.txt |  5 +++++
+>  drivers/net/ethernet/freescale/fec_main.c         | 17 +++++++++++++++--
+>  2 files changed, 20 insertions(+), 2 deletions(-)
 > 
-> On 22/05/17 15:03, Serge Semin wrote:
-> >> I have an SGI Onyx2 and just recently acquired a working SGI Origin 200.  The
-> >> Onyx2 has NUMA issues yet to be hunted down, but I got ~3 days uptime out of
-> >> the Origin 200 running compiles before powering it down.  Mainline needs 2-3
-> >> small patches to make IP27 workable, last I tested.
-> >>
-> >> I'd have to look at the IP27 code again and see if I can make sense of what
-> >> it's doing.  I think it dealt with either setting up memory for an initrd
-> >> (which I haven't used in over a decade), or it's for the NUMA stuff to discover
-> >> all memory on each node.
-> >>
-> >> -- 
-> >> Joshua Kinard
-> >> Gentoo/MIPS
-> >> kumba@gentoo.org
-> >> 6144R/F5C6C943 2015-04-27
-> >> 177C 1972 1FB8 F254 BAD0 3E72 5C63 F4E3 F5C6 C943
-> >>
-> >> "The past tempts us, the present confuses us, the future frightens us.  And our
-> >> lives slip away, moment by moment, lost in that vast, terrible in-between."
-> >>
-> >> --Emperor Turhan, Centauri Republic
-> > It's great to hear of your willingness to help. Since both Loonson64 and SGI IP27
-> > problematic architecture-specific code will be appropriately altered, I'll publish
-> > the fixed general MIPS-memblock patchset within two months. I'll also try to
-> > involve Ralf in it when I'm ready, so to make sure all my alterations are made
-> > within kernel arch-code coding style. While I'm working on it, you can still use
-> > the current patchset for some limited tests.
-> 
-> Please Cc me in this case, I should be able to test on Octeon MIPS64 platform.
-> 
-> -- 
-> Best regards,
-> Alexander Sverdlin.
+> diff --git a/Documentation/devicetree/bindings/net/fsl-fec.txt b/Documentation/devicetree/bindings/net/fsl-fec.txt
+> index a1e3693cca16..8795e8ca5793 100644
+> --- a/Documentation/devicetree/bindings/net/fsl-fec.txt
+> +++ b/Documentation/devicetree/bindings/net/fsl-fec.txt
+> @@ -15,6 +15,11 @@ Optional properties:
+>  - phy-reset-active-high : If present then the reset sequence using the GPIO
+>    specified in the "phy-reset-gpios" property is reversed (H=reset state,
+>    L=operation state).
+> +- phy-reset-post-delay : Post reset delay in milliseconds. If present then
+> +  a delay of phy-reset-post-delay milliseconds will be observed after the
+> +  phy-reset-gpios has been toggled. Can be omitted thus no delay is
+> +  observed. Delay is in range of 1ms to 1000ms. If given delay is higher
+> +  than 1000ms, 1ms delay is done instead.
+>  - phy-supply : regulator that powers the Ethernet PHY.
+>  - phy-handle : phandle to the PHY device connected to this device.
+>  - fixed-link : Assume a fixed link. See fixed-link.txt in the same directory.
+> diff --git a/drivers/net/ethernet/freescale/fec_main.c b/drivers/net/ethernet/freescale/fec_main.c
+> index 56a563f90b0b..00a7fd0bcd59 100644
+> --- a/drivers/net/ethernet/freescale/fec_main.c
+> +++ b/drivers/net/ethernet/freescale/fec_main.c
+> @@ -3192,7 +3192,7 @@ static int fec_reset_phy(struct platform_device *pdev)
+>  {
+>  	int err, phy_reset;
+>  	bool active_high = false;
+> -	int msec = 1;
+> +	int msec = 1, phy_post_delay = 0;
+>  	struct device_node *np = pdev->dev.of_node;
+>  
+>  	if (!np)
+> @@ -3210,7 +3210,6 @@ static int fec_reset_phy(struct platform_device *pdev)
+>  		return 0;
+>  
+>  	active_high = of_property_read_bool(np, "phy-reset-active-high");
+> -
+>  	err = devm_gpio_request_one(&pdev->dev, phy_reset,
+>  			active_high ? GPIOF_OUT_INIT_HIGH : GPIOF_OUT_INIT_LOW,
+>  			"phy-reset");
+
+No white space changes please.
+
+   Andrew
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
