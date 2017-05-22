@@ -1,106 +1,106 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH V4 3/4] ACPI/IORT: Ignore all errors except EPROBE_DEFER
-Date: Mon, 22 May 2017 12:31:16 +0100
-Message-ID: <20170522113116.GB10449@red-moon>
-References: <1495119257-26724-1-git-send-email-sricharan@codeaurora.org>
- <1495119257-26724-3-git-send-email-sricharan@codeaurora.org>
- <20170522103730.GB7553@red-moon>
- <ffb088d6-e40f-7a7d-dafb-e52dc86704fc@codeaurora.org>
+From: Sandeep Tripathy <sandeep.tripathy@broadcom.com>
+Subject: Re: [PATCH 03/11] clk: bcm: Add clocks for Stingray SOC
+Date: Mon, 22 May 2017 17:23:58 +0530
+Message-ID: <CALf0Xcxv3QfgDLC9DaRc6c28FZzjARX+38KjSHfVftwhkh3Dcw@mail.gmail.com>
+References: <1494071686-19098-1-git-send-email-anup.patel@broadcom.com>
+ <1494071686-19098-4-git-send-email-anup.patel@broadcom.com> <20170519013709.GD20170@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <ffb088d6-e40f-7a7d-dafb-e52dc86704fc-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: robin.murphy-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tn-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org, hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org, rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org, lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-arch-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, j.neuschaefer-hi6Y0CQ0nG0@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <20170519013709.GD20170@codeaurora.org>
+Sender: linux-clk-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>
+Cc: Anup Patel <anup.patel@broadcom.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Florian Fainelli <f.fainelli@gmail.com>, Oza Pawandeep <oza@broadcom.com>, Srinath Mannam <srinath.mannam@broadcom.com>, Pramod Kumar <pramod.kumar@broadcom.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 22, 2017 at 04:35:43PM +0530, Sricharan R wrote:
-> Hi Lorenzo,
-> 
-> On 5/22/2017 4:07 PM, Lorenzo Pieralisi wrote:
-> > Hi Sricharan,
-> > 
-> > On Thu, May 18, 2017 at 08:24:16PM +0530, Sricharan R wrote:
-> >> While deferring the probe of IOMMU masters, xlate and
-> >> add_device callbacks called from iort_iommu_configure
-> >> can pass back error values like -ENODEV, which means
-> >> the IOMMU cannot be connected with that master for real
-> >> reasons. Before the IOMMU probe deferral, all such errors
-> >> were ignored. Now all those errors are propagated back,
-> >> killing the master's probe for such errors. Instead ignore
-> >> all the errors except EPROBE_DEFER, which is the only one
-> >> of concern and let the master work without IOMMU, thus
-> >> restoring the old behavior.
-> >>
-> >> Fixes: 5a1bb638d567 ("drivers: acpi: Handle IOMMU lookup failure with deferred probing or error")
-> >> Signed-off-by: Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> >> ---
-> >> [V4] Added this patch newly.
-> >>
-> >>  drivers/acpi/arm64/iort.c | 6 ++++++
-> >>  1 file changed, 6 insertions(+)
-> >>
-> >> diff --git a/drivers/acpi/arm64/iort.c b/drivers/acpi/arm64/iort.c
-> >> index c5fecf9..16e101f 100644
-> >> --- a/drivers/acpi/arm64/iort.c
-> >> +++ b/drivers/acpi/arm64/iort.c
-> >> @@ -782,6 +782,12 @@ const struct iommu_ops *iort_iommu_configure(struct device *dev)
-> >>  	if (err)
-> >>  		ops = ERR_PTR(err);
-> >>  
-> >> +	/* Ignore all other errors apart from EPROBE_DEFER */
-> >> +	if (IS_ERR(ops) && (PTR_ERR(ops) != -EPROBE_DEFER)) {
-> >> +		dev_dbg(dev, "Adding to IOMMU failed: %ld\n", PTR_ERR(ops));
-> >> +		ops = NULL;
-> >> +	}
-> >> +
-> >>  	return ops;
-> >>  }
-> >>  
-> > 
-> > It is getting a bit convoluted. Is not it better to propagate the
-> > error back and let acpi_dma_configure() make a decision accordingly ?
-> > 
-> 
-> ok, I was trying to keep it in same way as DT, where of_dma_configure
-> (here acpi_dma_configure) calls of_iommu_configure(here iort_iommu_configure)
-> which ends up doing the check. So will have to be changed in both places
-> for symmetry.
-> 
-> > Something like:
-> > 
-> > -- >8 --
-> > diff --git a/drivers/acpi/scan.c b/drivers/acpi/scan.c
-> > index e39ec7b..3a10d757 100644
-> > --- a/drivers/acpi/scan.c
-> > +++ b/drivers/acpi/scan.c
-> > @@ -1371,8 +1371,8 @@ int acpi_dma_configure(struct device *dev, enum dev_dma_attr attr)
-> >  	iort_set_dma_mask(dev);
-> >  
-> >  	iommu = iort_iommu_configure(dev);
-> > -	if (IS_ERR(iommu))
-> > -		return PTR_ERR(iommu);
-> > +	if (IS_ERR(iommu) && PTR_ERR(iommu) == -EPROBE_DEFER)
-> > +		return -EPROBE_DEFER;
-> 
-> In case of other errors apart from EPROBE_DEFER,
-> iommu = NULL should be set, before passing it on to
-> arch_setup_dma_ops.
-
-Ah yes, sorry, that makes it uglier :(
-
-Point is, it does not make sense to me to have of/acpi_dma_configure()
-check a return code with (IS_ERR()) whilst we know the only error
-code you are allowed to handle is -EPROBE_DEFER, while at it it is
-better to make the -EPROBE_DEFER check explicit (otherwise it may
-seem that of/acpi_dma_configure() can handle an error code that
-is different from -EPROBE_DEFER - but they don't), no big deal either
-way though.
-
-Lorenzo
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On Fri, May 19, 2017 at 7:07 AM, Stephen Boyd <sboyd@codeaurora.org> wrote:
+>
+> On 05/06, Anup Patel wrote:
+> > From: Sandeep Tripathy <sandeep.tripathy@broadcom.com>
+> >
+> > This patch adds support for Stingray clocks in iproc
+> > ccf. The Stingray SOC has various plls based on iproc
+> > pll architecture.
+> >
+>
+> Does it have anything besides PLLs?
+It describes various plls and soc specific details for the particular
+SOC based on
+bcm iproc architecture. the core functionality is implemented for all
+Broadcom SOC
+using iproc pll architecture in generic iproc drivers  eg: clk-iproc-pll.c
+>
+> > +CLK_OF_DECLARE(sr_genpll0_clk, "brcm,sr-genpll0",
+> > +                             sr_genpll0_clk_init);
+> > +
+> > +static const struct iproc_pll_ctrl genpll3 = {
+> > +     .flags = IPROC_CLK_AON | IPROC_CLK_PLL_HAS_NDIV_FRAC |
+> > +             IPROC_CLK_PLL_NEEDS_SW_CFG,
+> > +     .aon = AON_VAL(0x0, 1, 19, 18),
+> > +     .reset = RESET_VAL(0x0, 12, 11),
+> > +     .dig_filter = DF_VAL(0x0, 4, 3, 0, 4, 7, 3),
+> > +     .sw_ctrl = SW_CTRL_VAL(0x10, 31),
+> > +     .ndiv_int = REG_VAL(0x10, 20, 10),
+> > +     .ndiv_frac = REG_VAL(0x10, 0, 20),
+> > +     .pdiv = REG_VAL(0x14, 0, 4),
+> > +     .status = REG_VAL(0x30, 12, 1),
+> > +};
+> > +
+> > +static const struct iproc_clk_ctrl genpll3_clk[] = {
+> > +     [BCM_SR_GENPLL3_HSLS_CLK] = {
+> > +             .channel = BCM_SR_GENPLL3_HSLS_CLK,
+> > +             .flags = IPROC_CLK_AON,
+> > +             .enable = ENABLE_VAL(0x4, 6, 0, 12),
+> > +             .mdiv = REG_VAL(0x18, 0, 9),
+> > +     },
+> > +     [BCM_SR_GENPLL3_SDIO_CLK] = {
+> > +             .channel = BCM_SR_GENPLL3_SDIO_CLK,
+> > +             .flags = IPROC_CLK_AON,
+> > +             .enable = ENABLE_VAL(0x4, 7, 1, 13),
+> > +             .mdiv = REG_VAL(0x18, 10, 9),
+> > +     },
+> > +};
+> > +
+> > +static void __init sr_genpll3_clk_init(struct device_node *node)
+> > +{
+> > +     iproc_pll_clk_setup(node, &genpll3, NULL, 0, genpll3_clk,
+> > +                             ARRAY_SIZE(genpll3_clk));
+> > +}
+> > +CLK_OF_DECLARE(sr_genpll3_clk, "brcm,sr-genpll3",
+> > +                     sr_genpll3_clk_init);
+>
+> Can you make this a platform driver instead? Are all these clks
+> really used for getting the interrupt and timers running?
+Not all clocks needed early except the genpll3. sp804 timer clks are derived
+from genpll. we will send revised patch to have most of the clocks registered
+via platform driver probe.
+>
+> > +
+> > +static const struct iproc_pll_ctrl genpll4 = {
+> > +     .flags = IPROC_CLK_AON | IPROC_CLK_PLL_HAS_NDIV_FRAC |
+> > +             IPROC_CLK_PLL_NEEDS_SW_CFG,
+> > +     .aon = AON_VAL(0x0, 1, 25, 24),
+> > +     .reset = RESET_VAL(0x0, 12, 11),
+> > +     .dig_filter = DF_VAL(0x0, 4, 3, 0, 4, 7, 3),
+> > +     .sw_ctrl = SW_CTRL_VAL(0x10, 31),
+> > +     .ndiv_int = REG_VAL(0x10, 20, 10),
+> > +     .ndiv_frac = REG_VAL(0x10, 0, 20),
+> > +     .pdiv = REG_VAL(0x14, 0, 4),
+> > +     .status = REG_VAL(0x30, 12, 1),
+> > +};
+> > +
+> > +static const struct iproc_clk_ctrl genpll4_clk[] = {
+> > +     [BCM_SR_GENPLL4_CCN_CLK] = {
+> > +             .channel = BCM_SR_GENPLL4_CCN_CLK,
+> > +             .flags = IPROC_CLK_AON,
+> > +             .enable = ENABLE_VAL(0x4, 6, 0, 12),
+> > +             .mdiv = REG_VAL(0x18, 0, 9),
+> > +     },
+> > +};
+> > +
+>
+> --
+> Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+> a Linux Foundation Collaborative Project
+regards
+Sandeep
