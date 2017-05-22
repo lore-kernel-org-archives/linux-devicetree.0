@@ -1,484 +1,153 @@
-From: Anup Patel <anup.patel@broadcom.com>
-Subject: [PATCH v4 07/11] arm64: dts: Add pinctrl DT nodes for Stingray SOC
-Date: Mon, 22 May 2017 17:28:23 +0530
-Message-ID: <1495454307-23464-8-git-send-email-anup.patel@broadcom.com>
-References: <1495454307-23464-1-git-send-email-anup.patel@broadcom.com>
+From: Shaokun Zhang <zhangshaokun-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Subject: [PATCH v8 0/9] perf: arm64: Support for Hisilicon SoC Hardware event counters
+Date: Mon, 22 May 2017 20:46:21 +0800
+Message-ID: <1495457181-230906-1-git-send-email-zhangshaokun@hisilicon.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1495454307-23464-1-git-send-email-anup.patel@broadcom.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>
-Cc: devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Sandeep Tripathy <sandeep.tripathy@broadcom.com>, Anup Patel <anup.patel@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, Pramod Kumar <pramod.kumar@broadcom.com>, Oza Pawandeep <oza.oza@broadcom.com>, Ray Jui <rjui@broadcom.com>, Srinath Mannam <srinath.mannam@broadcom.com>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, corbet-T1hC0tSOHrs@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, anurup.m-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, zhangshaokun-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, tanxiaojun-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, sanil.kumar-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, john.garry-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, gabriele.paoloni-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, shiju.jose-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, huangdaode-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, wangkefeng.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, dikshit.n-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, shyju.pv-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, anurupvasu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Pramod Kumar <pramod.kumar@broadcom.com>
+Provide Support for Hisilicon SoC(HiP05/06/07) Hardware event counters.
+The Hisilicon SoC HiP0x series has many uncore or non-CPU performance
+events and counters units.
 
-This patch adds pinctrl and pinmux related DT nodes for
-Stingray SOC.
+This v8 version has added ACPI support and some improvements over v7
+version and also is rebased to 4.12-rc1.
 
-For manageability, pinctrl and pinmum DT nodes are added
-as separate DTSi file and included in main DTSi file.
+This patch series is implemented referring to arm-cci, Intel/AMD uncore and
+also the cavium thunderX and xgene uncore pmu patches.
 
-Signed-off-by: Pramod Kumar <pramod.kumar@broadcom.com>
-Signed-off-by: Anup Patel <anup.patel@broadcom.com>
-Reviewed-by: Ray Jui <ray.jui@broadcom.com>
-Reviewed-by: Vikram Prakash <vikram.prakash@broadcom.com>
-Reviewed-by: Scott Branden <scott.branden@broadcom.com>
----
- .../dts/broadcom/stingray/stingray-pinctrl.dtsi    | 345 +++++++++++++++++++++
- .../arm64/boot/dts/broadcom/stingray/stingray.dtsi |   2 +
- .../dt-bindings/pinctrl/brcm,pinctrl-stingray.h    |  68 ++++
- 3 files changed, 415 insertions(+)
- create mode 100644 arch/arm64/boot/dts/broadcom/stingray/stingray-pinctrl.dtsi
- create mode 100644 include/dt-bindings/pinctrl/brcm,pinctrl-stingray.h
+Support for Hisilicon L3 cache(L3C) and Miscellaneous nodes(MN) hardware
+events and counters are added in this implementation.
 
-diff --git a/arch/arm64/boot/dts/broadcom/stingray/stingray-pinctrl.dtsi b/arch/arm64/boot/dts/broadcom/stingray/stingray-pinctrl.dtsi
-new file mode 100644
-index 0000000..af5d480
---- /dev/null
-+++ b/arch/arm64/boot/dts/broadcom/stingray/stingray-pinctrl.dtsi
-@@ -0,0 +1,345 @@
-+/*
-+ *  BSD LICENSE
-+ *
-+ *  Copyright(c) 2016-2017 Broadcom.  All rights reserved.
-+ *
-+ *  Redistribution and use in source and binary forms, with or without
-+ *  modification, are permitted provided that the following conditions
-+ *  are met:
-+ *
-+ *    * Redistributions of source code must retain the above copyright
-+ *      notice, this list of conditions and the following disclaimer.
-+ *    * Redistributions in binary form must reproduce the above copyright
-+ *      notice, this list of conditions and the following disclaimer in
-+ *      the documentation and/or other materials provided with the
-+ *      distribution.
-+ *    * Neither the name of Broadcom nor the names of its
-+ *      contributors may be used to endorse or promote products derived
-+ *      from this software without specific prior written permission.
-+ *
-+ *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-+ *  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-+ *  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-+ *  A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
-+ *  OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-+ *  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-+ *  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-+ *  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
-+ *  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-+ *  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-+ *  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-+ */
-+
-+#include <dt-bindings/pinctrl/brcm,pinctrl-stingray.h>
-+
-+		pinconf: pinconf@68a40000 {
-+			compatible = "pinconf-single";
-+			reg = <0x00140000 0x250>;
-+			pinctrl-single,register-width = <32>;
-+
-+			/* pinconf functions */
-+		};
-+
-+		pinmux: pinmux@68a4029c {
-+			compatible = "pinctrl-single";
-+			reg = <0x0014029c 0x250>;
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			pinctrl-single,register-width = <32>;
-+			pinctrl-single,function-mask = <0xf>;
-+			pinctrl-single,gpio-range = <
-+				&range 0 154 MODE_GPIO
-+				>;
-+			range: gpio-range {
-+				#pinctrl-single,gpio-range-cells = <3>;
-+			};
-+
-+			/* pinctrl functions */
-+			tsio_pins: pinmux_gpio_14 {
-+				pinctrl-single,pins = <
-+					0x038 MODE_NITRO /* tsio_0 */
-+					0x03c MODE_NITRO /* tsio_1 */
-+				>;
-+			};
-+
-+			nor_pins: pinmux_pnor_adv_n {
-+				pinctrl-single,pins = <
-+					0x0ac MODE_PNOR /* nand_ce1_n */
-+					0x0b0 MODE_PNOR /* nand_ce0_n */
-+					0x0b4 MODE_PNOR /* nand_we_n */
-+					0x0b8 MODE_PNOR /* nand_wp_n */
-+					0x0bc MODE_PNOR /* nand_re_n */
-+					0x0c0 MODE_PNOR /* nand_rdy_bsy_n */
-+					0x0c4 MODE_PNOR /* nand_io0_0 */
-+					0x0c8 MODE_PNOR /* nand_io1_0 */
-+					0x0cc MODE_PNOR /* nand_io2_0 */
-+					0x0d0 MODE_PNOR /* nand_io3_0 */
-+					0x0d4 MODE_PNOR /* nand_io4_0 */
-+					0x0d8 MODE_PNOR /* nand_io5_0 */
-+					0x0dc MODE_PNOR /* nand_io6_0 */
-+					0x0e0 MODE_PNOR /* nand_io7_0 */
-+					0x0e4 MODE_PNOR /* nand_io8_0 */
-+					0x0e8 MODE_PNOR /* nand_io9_0 */
-+					0x0ec MODE_PNOR /* nand_io10_0 */
-+					0x0f0 MODE_PNOR /* nand_io11_0 */
-+					0x0f4 MODE_PNOR /* nand_io12_0 */
-+					0x0f8 MODE_PNOR /* nand_io13_0 */
-+					0x0fc MODE_PNOR /* nand_io14_0 */
-+					0x100 MODE_PNOR /* nand_io15_0 */
-+					0x104 MODE_PNOR /* nand_ale_0 */
-+					0x108 MODE_PNOR /* nand_cle_0 */
-+					0x040 MODE_PNOR /* pnor_adv_n */
-+					0x044 MODE_PNOR /* pnor_baa_n */
-+					0x048 MODE_PNOR /* pnor_bls_0_n */
-+					0x04c MODE_PNOR /* pnor_bls_1_n */
-+					0x050 MODE_PNOR /* pnor_cre */
-+					0x054 MODE_PNOR /* pnor_cs_2_n */
-+					0x058 MODE_PNOR /* pnor_cs_1_n */
-+					0x05c MODE_PNOR /* pnor_cs_0_n */
-+					0x060 MODE_PNOR /* pnor_we_n */
-+					0x064 MODE_PNOR /* pnor_oe_n */
-+					0x068 MODE_PNOR /* pnor_intr */
-+					0x06c MODE_PNOR /* pnor_dat_0 */
-+					0x070 MODE_PNOR /* pnor_dat_1 */
-+					0x074 MODE_PNOR /* pnor_dat_2 */
-+					0x078 MODE_PNOR /* pnor_dat_3 */
-+					0x07c MODE_PNOR /* pnor_dat_4 */
-+					0x080 MODE_PNOR /* pnor_dat_5 */
-+					0x084 MODE_PNOR /* pnor_dat_6 */
-+					0x088 MODE_PNOR /* pnor_dat_7 */
-+					0x08c MODE_PNOR /* pnor_dat_8 */
-+					0x090 MODE_PNOR /* pnor_dat_9 */
-+					0x094 MODE_PNOR /* pnor_dat_10 */
-+					0x098 MODE_PNOR /* pnor_dat_11 */
-+					0x09c MODE_PNOR /* pnor_dat_12 */
-+					0x0a0 MODE_PNOR /* pnor_dat_13 */
-+					0x0a4 MODE_PNOR /* pnor_dat_14 */
-+					0x0a8 MODE_PNOR /* pnor_dat_15 */
-+				>;
-+			};
-+
-+			nand_pins: pinmux_nand_ce1_n {
-+				pinctrl-single,pins = <
-+					0x0ac MODE_NAND /* nand_ce1_n */
-+					0x0b0 MODE_NAND /* nand_ce0_n */
-+					0x0b4 MODE_NAND /* nand_we_n */
-+					0x0b8 MODE_NAND /* nand_wp_n */
-+					0x0bc MODE_NAND /* nand_re_n */
-+					0x0c0 MODE_NAND /* nand_rdy_bsy_n */
-+					0x0c4 MODE_NAND /* nand_io0_0 */
-+					0x0c8 MODE_NAND /* nand_io1_0 */
-+					0x0cc MODE_NAND /* nand_io2_0 */
-+					0x0d0 MODE_NAND /* nand_io3_0 */
-+					0x0d4 MODE_NAND /* nand_io4_0 */
-+					0x0d8 MODE_NAND /* nand_io5_0 */
-+					0x0dc MODE_NAND /* nand_io6_0 */
-+					0x0e0 MODE_NAND /* nand_io7_0 */
-+					0x0e4 MODE_NAND /* nand_io8_0 */
-+					0x0e8 MODE_NAND /* nand_io9_0 */
-+					0x0ec MODE_NAND /* nand_io10_0 */
-+					0x0f0 MODE_NAND /* nand_io11_0 */
-+					0x0f4 MODE_NAND /* nand_io12_0 */
-+					0x0f8 MODE_NAND /* nand_io13_0 */
-+					0x0fc MODE_NAND /* nand_io14_0 */
-+					0x100 MODE_NAND /* nand_io15_0 */
-+					0x104 MODE_NAND /* nand_ale_0 */
-+					0x108 MODE_NAND /* nand_cle_0 */
-+				>;
-+			};
-+
-+			pwm0_pins: pinmux_pwm_0 {
-+				pinctrl-single,pins = <
-+					0x10c MODE_NITRO
-+				>;
-+			};
-+
-+			pwm1_pins: pinmux_pwm_1 {
-+				pinctrl-single,pins = <
-+					0x110 MODE_NITRO
-+				>;
-+			};
-+
-+			pwm2_pins: pinmux_pwm_2 {
-+				pinctrl-single,pins = <
-+					0x114 MODE_NITRO
-+				>;
-+			};
-+
-+			pwm3_pins: pinmux_pwm_3 {
-+				pinctrl-single,pins = <
-+					0x118 MODE_NITRO
-+				>;
-+			};
-+
-+			dbu_rxd_pins: pinmux_uart1_sin_nitro {
-+				pinctrl-single,pins = <
-+					0x11c MODE_NITRO /* dbu_rxd */
-+					0x120 MODE_NITRO /* dbu_txd */
-+				>;
-+			};
-+
-+			uart1_pins: pinmux_uart1_sin_nand {
-+				pinctrl-single,pins = <
-+					0x11c MODE_NAND /* uart1_sin */
-+					0x120 MODE_NAND /* uart1_out */
-+				>;
-+			};
-+
-+			uart2_pins: pinmux_uart2_sin {
-+				pinctrl-single,pins = <
-+					0x124 MODE_NITRO /* uart2_sin */
-+					0x128 MODE_NITRO /* uart2_out */
-+				>;
-+			};
-+
-+			uart3_pins: pinmux_uart3_sin {
-+				pinctrl-single,pins = <
-+					0x12c MODE_NITRO /* uart3_sin */
-+					0x130 MODE_NITRO /* uart3_out */
-+				>;
-+			};
-+
-+			i2s_pins: pinmux_i2s_bitclk {
-+				pinctrl-single,pins = <
-+					0x134 MODE_NITRO /* i2s_bitclk */
-+					0x138 MODE_NITRO /* i2s_sdout */
-+					0x13c MODE_NITRO /* i2s_sdin */
-+					0x140 MODE_NITRO /* i2s_ws */
-+					0x144 MODE_NITRO /* i2s_mclk */
-+					0x148 MODE_NITRO /* i2s_spdif_out */
-+				>;
-+			};
-+
-+			qspi_pins: pinumx_qspi_hold_n {
-+				pinctrl-single,pins = <
-+					0x14c MODE_NAND /* qspi_hold_n */
-+					0x150 MODE_NAND /* qspi_wp_n */
-+					0x154 MODE_NAND /* qspi_sck */
-+					0x158 MODE_NAND /* qspi_cs_n */
-+					0x15c MODE_NAND /* qspi_mosi */
-+					0x160 MODE_NAND /* qspi_miso */
-+				>;
-+			};
-+
-+			mdio_pins: pinumx_ext_mdio {
-+				pinctrl-single,pins = <
-+					0x164 MODE_NITRO /* ext_mdio */
-+					0x168 MODE_NITRO /* ext_mdc */
-+				>;
-+			};
-+
-+			i2c0_pins: pinmux_i2c0_sda {
-+				pinctrl-single,pins = <
-+					0x16c MODE_NITRO /* i2c0_sda */
-+					0x170 MODE_NITRO /* i2c0_scl */
-+				>;
-+			};
-+
-+			i2c1_pins: pinmux_i2c1_sda {
-+				pinctrl-single,pins = <
-+					0x174 MODE_NITRO /* i2c1_sda */
-+					0x178 MODE_NITRO /* i2c1_scl */
-+				>;
-+			};
-+
-+			sdio0_pins: pinmux_sdio0_cd_l {
-+				pinctrl-single,pins = <
-+					0x17c MODE_NITRO /* sdio0_cd_l */
-+					0x180 MODE_NITRO /* sdio0_clk_sdcard */
-+					0x184 MODE_NITRO /* sdio0_data0 */
-+					0x188 MODE_NITRO /* sdio0_data1 */
-+					0x18c MODE_NITRO /* sdio0_data2 */
-+					0x190 MODE_NITRO /* sdio0_data3 */
-+					0x194 MODE_NITRO /* sdio0_data4 */
-+					0x198 MODE_NITRO /* sdio0_data5 */
-+					0x19c MODE_NITRO /* sdio0_data6 */
-+					0x1a0 MODE_NITRO /* sdio0_data7 */
-+					0x1a4 MODE_NITRO /* sdio0_cmd */
-+					0x1a8 MODE_NITRO /* sdio0_emmc_rst_n */
-+					0x1ac MODE_NITRO /* sdio0_led_on */
-+					0x1b0 MODE_NITRO /* sdio0_wp */
-+				>;
-+			};
-+
-+			sdio1_pins: pinmux_sdio1_cd_l {
-+				pinctrl-single,pins = <
-+					0x1b4 MODE_NITRO /* sdio1_cd_l */
-+					0x1b8 MODE_NITRO /* sdio1_clk_sdcard */
-+					0x1bc MODE_NITRO /* sdio1_data0 */
-+					0x1c0 MODE_NITRO /* sdio1_data1 */
-+					0x1c4 MODE_NITRO /* sdio1_data2 */
-+					0x1c8 MODE_NITRO /* sdio1_data3 */
-+					0x1cc MODE_NITRO /* sdio1_data4 */
-+					0x1d0 MODE_NITRO /* sdio1_data5 */
-+					0x1d4 MODE_NITRO /* sdio1_data6 */
-+					0x1d8 MODE_NITRO /* sdio1_data7 */
-+					0x1dc MODE_NITRO /* sdio1_cmd */
-+					0x1e0 MODE_NITRO /* sdio1_emmc_rst_n */
-+					0x1e4 MODE_NITRO /* sdio1_led_on */
-+					0x1e8 MODE_NITRO /* sdio1_wp */
-+				>;
-+			};
-+
-+			spi0_pins: pinmux_spi0_sck_nand {
-+				pinctrl-single,pins = <
-+					0x1ec MODE_NITRO /* spi0_sck */
-+					0x1f0 MODE_NITRO /* spi0_rxd */
-+					0x1f4 MODE_NITRO /* spi0_fss */
-+					0x1f8 MODE_NITRO /* spi0_txd */
-+				>;
-+			};
-+
-+			spi1_pins: pinmux_spi1_sck_nand {
-+				pinctrl-single,pins = <
-+					0x1fc MODE_NITRO /* spi1_sck */
-+					0x200 MODE_NITRO /* spi1_rxd */
-+					0x204 MODE_NITRO /* spi1_fss */
-+					0x208 MODE_NITRO /* spi1_txd */
-+				>;
-+			};
-+
-+			nuart_pins: pinmux_uart0_sin_nitro {
-+				pinctrl-single,pins = <
-+					0x20c MODE_NITRO /* nuart_rxd */
-+					0x210 MODE_NITRO /* nuart_txd */
-+				>;
-+			};
-+
-+			uart0_pins: pinumux_uart0_sin_nand {
-+				pinctrl-single,pins = <
-+					0x20c MODE_NAND /* uart0_sin */
-+					0x210 MODE_NAND /* uart0_out */
-+					0x214 MODE_NAND /* uart0_rts */
-+					0x218 MODE_NAND /* uart0_cts */
-+					0x21c MODE_NAND /* uart0_dtr */
-+					0x220 MODE_NAND /* uart0_dcd */
-+					0x224 MODE_NAND /* uart0_dsr */
-+					0x228 MODE_NAND /* uart0_ri */
-+				>;
-+			};
-+
-+			drdu2_pins: pinmux_drdu2_overcurrent {
-+				pinctrl-single,pins = <
-+					0x22c MODE_NITRO /* drdu2_overcurrent */
-+					0x230 MODE_NITRO /* drdu2_vbus_ppc */
-+					0x234 MODE_NITRO /* drdu2_vbus_present */
-+					0x238 MODE_NITRO /* drdu2_id */
-+				>;
-+			};
-+
-+			drdu3_pins: pinmux_drdu3_overcurrent {
-+				pinctrl-single,pins = <
-+					0x23c MODE_NITRO /* drdu3_overcurrent */
-+					0x240 MODE_NITRO /* drdu3_vbus_ppc */
-+					0x244 MODE_NITRO /* drdu3_vbus_present */
-+					0x248 MODE_NITRO /* drdu3_id */
-+				>;
-+			};
-+
-+			usb3h_pins: pinmux_usb3h_overcurrent {
-+				pinctrl-single,pins = <
-+					0x24c MODE_NITRO /* usb3h_overcurrent */
-+					0x250 MODE_NITRO /* usb3h_vbus_ppc */
-+				>;
-+			};
-+		};
-diff --git a/arch/arm64/boot/dts/broadcom/stingray/stingray.dtsi b/arch/arm64/boot/dts/broadcom/stingray/stingray.dtsi
-index 003f814..a4afd44 100644
---- a/arch/arm64/boot/dts/broadcom/stingray/stingray.dtsi
-+++ b/arch/arm64/boot/dts/broadcom/stingray/stingray.dtsi
-@@ -259,6 +259,8 @@
- 		#size-cells = <1>;
- 		ranges = <0x0 0x0 0x68900000 0x17700000>;
- 
-+		#include "stingray-pinctrl.dtsi"
-+
- 		uart0: uart@68a00000 {
- 			device_type = "serial";
- 			compatible = "snps,dw-apb-uart";
-diff --git a/include/dt-bindings/pinctrl/brcm,pinctrl-stingray.h b/include/dt-bindings/pinctrl/brcm,pinctrl-stingray.h
-new file mode 100644
-index 0000000..caa6c66
---- /dev/null
-+++ b/include/dt-bindings/pinctrl/brcm,pinctrl-stingray.h
-@@ -0,0 +1,68 @@
-+/*
-+ *  BSD LICENSE
-+ *
-+ *  Copyright(c) 2017 Broadcom Corporation.  All rights reserved.
-+ *
-+ *  Redistribution and use in source and binary forms, with or without
-+ *  modification, are permitted provided that the following conditions
-+ *  are met:
-+ *
-+ *    * Redistributions of source code must retain the above copyright
-+ *      notice, this list of conditions and the following disclaimer.
-+ *    * Redistributions in binary form must reproduce the above copyright
-+ *      notice, this list of conditions and the following disclaimer in
-+ *      the documentation and/or other materials provided with the
-+ *      distribution.
-+ *    * Neither the name of Broadcom Corporation nor the names of its
-+ *      contributors may be used to endorse or promote products derived
-+ *      from this software without specific prior written permission.
-+ *
-+ *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-+ *  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-+ *  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-+ *  A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
-+ *  OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-+ *  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-+ *  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-+ *  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
-+ *  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-+ *  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-+ */
-+
-+#ifndef __DT_BINDINGS_PINCTRL_BRCM_STINGRAY_H__
-+#define __DT_BINDINGS_PINCTRL_BRCM_STINGRAY_H__
-+
-+/* Alternate functions available in MUX controller */
-+#define MODE_NITRO				0
-+#define MODE_NAND				1
-+#define MODE_PNOR				2
-+#define MODE_GPIO				3
-+
-+/* Pad configuration attribute */
-+#define PAD_SLEW_RATE_ENA			(1 << 0)
-+#define PAD_SLEW_RATE_ENA_MASK			(1 << 0)
-+
-+#define PAD_DRIVE_STRENGTH_2_MA			(0 << 1)
-+#define PAD_DRIVE_STRENGTH_4_MA			(1 << 1)
-+#define PAD_DRIVE_STRENGTH_6_MA			(2 << 1)
-+#define PAD_DRIVE_STRENGTH_8_MA			(3 << 1)
-+#define PAD_DRIVE_STRENGTH_10_MA		(4 << 1)
-+#define PAD_DRIVE_STRENGTH_12_MA		(5 << 1)
-+#define PAD_DRIVE_STRENGTH_14_MA		(6 << 1)
-+#define PAD_DRIVE_STRENGTH_16_MA		(7 << 1)
-+#define PAD_DRIVE_STRENGTH_MASK			(7 << 1)
-+
-+#define PAD_PULL_UP_ENA				(1 << 4)
-+#define PAD_PULL_UP_ENA_MASK			(1 << 4)
-+
-+#define PAD_PULL_DOWN_ENA			(1 << 5)
-+#define PAD_PULL_DOWN_ENA_MASK			(1 << 5)
-+
-+#define PAD_INPUT_PATH_DIS			(1 << 6)
-+#define PAD_INPUT_PATH_DIS_MASK			(1 << 6)
-+
-+#define PAD_HYSTERESIS_ENA			(1 << 7)
-+#define PAD_HYSTERESIS_ENA_MASK			(1 << 7)
-+
-+#endif
+The uncore PMU units are registered as separate PMUs.
+e.g. in the case of L3 cache, which consist of 4 banks/instances, each bank
+is registered with perf as separate PMU, as each bank have separate control
+registers and interrupts. These units are also not CPU affine in the
+current chip versions.
+
+The Hisilicon uncore PMUs can be found under /sys/bus/event_source/devices.
+The counters are exported via sysfs in the corresponding events files
+under the PMU directory so the perf tool can list the event names.
+
+There is no counter overflow IRQ support in hardware for these uncore PMUs.
+So the driver use poll method using hrtimer to avoid overflow.
+
+Version history
+---------------
+v8
+--
+- Rebased to 4.12-rc1
+- Add ACPI support for PMU and djtag probe and reset
+- Avoid djtag access conflict between kernel and UEFI
+- Move some common code to hisi_uncore_pmu.c
+
+v7
+--
+- use BUG_ON for djtag access timeout and simplified callers.
+- Split hisilicon,module-id in dt-bindings and add hisilicon,instance-id
+  property. Also describe the properties with more detail.
+- Add event group validation for available counters.
+- Fold hrtimer patches to main PMU patches of L3 cache and MN.
+- Move event used mask to hisi_pmu_hwevents struct.
+- Remove some unused #define.
+- Fix all sparse and gcc W=1 warnings.
+- Fix comments of V6 version.
+
+v6
+--
+- Rebase to 4.11-rc1
+- Modify Copyright year to 2017.
+
+v5
+--
+- Use hrtimer to avoid overflow as MN counter overflow IRQ is broken
+  in hardware.
+- Remove IRQ handling of MN in driver and update pmu dt-bindings.
+- Fix reveiw comments in v4 version.
+
+v4
+--
+- Counter overflow IRQ handling for MN PMU.
+- Use hrtimer to avoid counter overflow in L3 Cache PMU.
+- Use hisi-cpu- and hisi-io- for djtag compatible field.
+- Fix reveiw comments in v3 version.
+
+v3
+--
+- Fix review comments of v2 version.
+- Handle event groups. Do not allow group of mixed PMUs.
+- Use hip0x prefix for compatible names.
+- Fix all sparse and gcc W=1 warnings.
+
+v2
+--
+- Fix review comments of v1 version.
+- Move djtag driver to drivers/perf/hisilicon.
+- Have separate PMU instance for each L3 cache banks.
+- Modify device properties in DTS as per review comments.
+- Handle hardware version difference.
+- Change compatible names of djtag so use prefix hisi-
+  and remove chip version as driver only depend on djtag
+  hw version.
+- use devm_kzalloc.
+- Remove DDRC changes in this series. As the DDRC PMU doesnot
+  depend on djtag it will be send separately.
+
+v1
+--
+-Initial version with support for L3C, MN and DDRC event counters
+-Djtag driver is used to access registers of L3 cache and MN.
+
+Anurup M (6):
+  arm64: MAINTAINERS: hisi: Add hisilicon SoC PMU support
+  dt-bindings: perf: hisi: Add Devicetree bindings for Hisilicon SoC PMU
+  Documentation: perf: hisi: Documentation for HiP05/06/07 PMU event
+    counting.
+  drivers: perf: hisi: Update Kconfig for Hisilicon PMU support
+  drivers: perf: hisi: Add support for Hisilicon SoC event counters
+  dts: arm64: hip07: Add Hisilicon SoC PMU support
+
+Shaokun Zhang (1):
+  drivers: perf: hisi: Miscellanous node(MN) event counting in perf
+
+Tan Xiaojun (2):
+  dt-bindings: hisi: Add Hisilicon HiP05/06/07 Djtag dts bindings
+  drivers: perf: hisi: Add support for Hisilicon Djtag driver
+
+ .../devicetree/bindings/arm/hisilicon/djtag.txt    |  80 ++
+ .../devicetree/bindings/arm/hisilicon/pmu.txt      |  93 +++
+ Documentation/perf/hisi-pmu.txt                    |  75 ++
+ MAINTAINERS                                        |  10 +
+ arch/arm64/boot/dts/hisilicon/hip07.dtsi           |  87 ++
+ drivers/perf/Kconfig                               |   8 +
+ drivers/perf/Makefile                              |   1 +
+ drivers/perf/hisilicon/Makefile                    |   1 +
+ drivers/perf/hisilicon/djtag.c                     | 882 +++++++++++++++++++++
+ drivers/perf/hisilicon/djtag.h                     |  46 ++
+ drivers/perf/hisilicon/hisi_uncore_l3c.c           | 594 ++++++++++++++
+ drivers/perf/hisilicon/hisi_uncore_mn.c            | 468 +++++++++++
+ drivers/perf/hisilicon/hisi_uncore_pmu.c           | 451 +++++++++++
+ drivers/perf/hisilicon/hisi_uncore_pmu.h           | 135 ++++
+ 14 files changed, 2931 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/hisilicon/djtag.txt
+ create mode 100644 Documentation/devicetree/bindings/arm/hisilicon/pmu.txt
+ create mode 100644 Documentation/perf/hisi-pmu.txt
+ create mode 100644 drivers/perf/hisilicon/Makefile
+ create mode 100644 drivers/perf/hisilicon/djtag.c
+ create mode 100644 drivers/perf/hisilicon/djtag.h
+ create mode 100644 drivers/perf/hisilicon/hisi_uncore_l3c.c
+ create mode 100644 drivers/perf/hisilicon/hisi_uncore_mn.c
+ create mode 100644 drivers/perf/hisilicon/hisi_uncore_pmu.c
+ create mode 100644 drivers/perf/hisilicon/hisi_uncore_pmu.h
+
 -- 
-2.7.4
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
