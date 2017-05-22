@@ -1,341 +1,117 @@
-From: =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
-Subject: [PATCH v2 2/2] arm64: dts: amlogic: Add NanoPi K2
-Date: Sun, 21 May 2017 20:51:05 +0200
-Message-ID: <20170521185105.23448-3-afaerber@suse.de>
-References: <20170521185105.23448-1-afaerber@suse.de>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: [DT Question] "simple-mfd" DT binding
+Date: Mon, 22 May 2017 10:29:26 +0900
+Message-ID: <CAK7LNARQmfX+3RwFgwtvf2Qu79XNX1zh0O741-pPFWS6npytLw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170521185105.23448-1-afaerber@suse.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-amlogic@lists.infradead.org
-Cc: Carlo Caione <carlo@caione.org>, Kevin Hilman <khilman@baylibre.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>, techsupport@friendlyarm.com, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, devicetree@vger.kernel.org
+To: devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Lee Jones <lee.jones@linaro.org>, Linus Walleij <linus.walleij@linaro.org>
+Cc: masahiroy@kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-The FriendlyARM NanoPi K2 is a single-board computer.
+Hi DT experts,
 
-Cc: techsupport@friendlyarm.com
-Signed-off-by: Andreas Färber <afaerber@suse.de>
----
- v1 -> v2:
- * Renamed gpio-regulator-vddio-tf to regulator-vddio-tf
- * Added SDIO wifi node
- * Prepared emmc-pwrseq node
- * Added USB nodes
- * Added saradc node
- * Prepared more UART nodes
- 
- arch/arm64/boot/dts/amlogic/Makefile               |   1 +
- .../boot/dts/amlogic/meson-gxbb-nanopi-k2.dts      | 291 +++++++++++++++++++++
- 2 files changed, 292 insertions(+)
- create mode 100644 arch/arm64/boot/dts/amlogic/meson-gxbb-nanopi-k2.dts
+I have a question about "simple-mfd".
 
-diff --git a/arch/arm64/boot/dts/amlogic/Makefile b/arch/arm64/boot/dts/amlogic/Makefile
-index 14fa27ccd589..60ab708d1210 100644
---- a/arch/arm64/boot/dts/amlogic/Makefile
-+++ b/arch/arm64/boot/dts/amlogic/Makefile
-@@ -1,3 +1,4 @@
-+dtb-$(CONFIG_ARCH_MESON) += meson-gxbb-nanopi-k2.dtb
- dtb-$(CONFIG_ARCH_MESON) += meson-gxbb-nexbox-a95x.dtb
- dtb-$(CONFIG_ARCH_MESON) += meson-gxbb-odroidc2.dtb
- dtb-$(CONFIG_ARCH_MESON) += meson-gxbb-p200.dtb
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-nanopi-k2.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-nanopi-k2.dts
-new file mode 100644
-index 000000000000..fa462831ccaf
---- /dev/null
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-nanopi-k2.dts
-@@ -0,0 +1,291 @@
-+/*
-+ * Copyright (c) 2017 Andreas Färber
-+ *
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPL or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
-+ *
-+ *  a) This library is free software; you can redistribute it and/or
-+ *     modify it under the terms of the GNU General Public License as
-+ *     published by the Free Software Foundation; either version 2 of the
-+ *     License, or (at your option) any later version.
-+ *
-+ *     This library is distributed in the hope that it will be useful,
-+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *     GNU General Public License for more details.
-+ *
-+ * Or, alternatively,
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use,
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
-+ *
-+ * SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+ */
-+
-+/dts-v1/;
-+
-+#include "meson-gxbb.dtsi"
-+#include <dt-bindings/gpio/gpio.h>
-+
-+/ {
-+	compatible = "friendlyarm,nanopi-k2", "amlogic,meson-gxbb";
-+
-+	aliases {
-+		serial0 = &uart_AO;
-+	};
-+
-+	chosen {
-+		stdout-path = "serial0:115200n8";
-+	};
-+
-+	memory@0 {
-+		device_type = "memory";
-+		reg = <0x0 0x0 0x0 0x80000000>;
-+	};
-+
-+	leds {
-+		compatible = "gpio-leds";
-+
-+		stat {
-+			label = "nanopi-k2:blue:stat";
-+			gpios = <&gpio_ao GPIOAO_13 GPIO_ACTIVE_HIGH>;
-+			default-state = "on";
-+			panic-indicator;
-+		};
-+	};
-+
-+	vdd_5v: regulator-vdd-5v {
-+		compatible = "regulator-fixed";
-+		regulator-name = "VDD_5V";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+	};
-+
-+	vddio_ao18: regulator-vddio-ao18 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "VDDIO_AO18";
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <1800000>;
-+	};
-+
-+	vddio_ao3v3: regulator-vddio-ao3v3 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "VDDIO_AO3.3V";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+	};
-+
-+	vddio_tf: regulator-vddio-tf {
-+		compatible = "regulator-gpio";
-+
-+		regulator-name = "VDDIO_TF";
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <3300000>;
-+
-+		gpios = <&gpio_ao GPIOAO_2 GPIO_ACTIVE_HIGH>;
-+		gpios-states = <0>;
-+
-+		states = <3300000 0>,
-+		         <1800000 1>;
-+	};
-+
-+	wifi_32k: wifi-32k {
-+		compatible = "pwm-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <32768>;
-+		pwms = <&pwm_ef 0 30518 0>; /* PWM_E at 32.768KHz */
-+	};
-+
-+	sdio_pwrseq: sdio-pwrseq {
-+		compatible = "mmc-pwrseq-simple";
-+		reset-gpios = <&gpio GPIOX_6 GPIO_ACTIVE_LOW>;
-+		clocks = <&wifi_32k>;
-+		clock-names = "ext_clock";
-+	};
-+
-+	vcc1v8: regulator-vcc1v8 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "VCC1.8V";
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <1800000>;
-+	};
-+
-+	vcc3v3: regulator-vcc3v3 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "VCC3.3V";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+	};
-+
-+	emmc_pwrseq: emmc-pwrseq {
-+		compatible = "mmc-pwrseq-emmc";
-+		reset-gpios = <&gpio BOOT_9 GPIO_ACTIVE_LOW>;
-+	};
-+};
-+
-+&ethmac {
-+	status = "okay";
-+	pinctrl-0 = <&eth_rgmii_pins>;
-+	pinctrl-names = "default";
-+
-+	phy-handle = <&eth_phy0>;
-+	phy-mode = "rgmii";
-+
-+	amlogic,tx-delay-ns = <2>;
-+
-+	snps,reset-gpio = <&gpio GPIOZ_14 0>;
-+	snps,reset-delays-us = <0 10000 1000000>;
-+	snps,reset-active-low;
-+
-+	mdio {
-+		compatible = "snps,dwmac-mdio";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		eth_phy0: ethernet-phy@0 {
-+			/* Realtek RTL8211F (0x001cc916) */
-+			reg = <0>;
-+		};
-+	};
-+};
-+
-+&ir {
-+	status = "okay";
-+	pinctrl-0 = <&remote_input_ao_pins>;
-+	pinctrl-names = "default";
-+};
-+
-+&pwm_ef {
-+	status = "okay";
-+	pinctrl-0 = <&pwm_e_pins>;
-+	pinctrl-names = "default";
-+	clocks = <&clkc CLKID_FCLK_DIV4>;
-+	clock-names = "clkin0";
-+};
-+
-+&saradc {
-+	status = "okay";
-+	vref-supply = <&vddio_ao18>;
-+};
-+
-+/* SDIO */
-+&sd_emmc_a {
-+	status = "okay";
-+	pinctrl-0 = <&sdio_pins>, <&sdio_irq_pins>;
-+	pinctrl-names = "default";
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+
-+	bus-width = <4>;
-+	cap-sd-highspeed;
-+	max-frequency = <200000000>;
-+
-+	non-removable;
-+	disable-wp;
-+
-+	mmc-pwrseq = <&sdio_pwrseq>;
-+
-+	vmmc-supply = <&vddio_ao3v3>;
-+	vqmmc-supply = <&vddio_ao18>;
-+
-+	brcmf: wifi@1 {
-+		compatible = "brcm,bcm4329-fmac";
-+		reg = <1>;
-+	};
-+};
-+
-+/* SD */
-+&sd_emmc_b {
-+	status = "okay";
-+	pinctrl-0 = <&sdcard_pins>;
-+	pinctrl-names = "default";
-+
-+	bus-width = <4>;
-+	cap-sd-highspeed;
-+	max-frequency = <100000000>;
-+	disable-wp;
-+
-+	cd-gpios = <&gpio CARD_6 GPIO_ACTIVE_HIGH>;
-+	cd-inverted;
-+
-+	vmmc-supply = <&vddio_ao3v3>;
-+	vqmmc-supply = <&vddio_tf>;
-+};
-+
-+/* eMMC */
-+&sd_emmc_c {
-+	status = "disabled";
-+	pinctrl-0 = <&emmc_pins>;
-+	pinctrl-names = "default";
-+
-+	bus-width = <8>;
-+	cap-sd-highspeed;
-+	max-frequency = <200000000>;
-+	non-removable;
-+	disable-wp;
-+	cap-mmc-highspeed;
-+	mmc-ddr-1_8v;
-+	mmc-hs200-1_8v;
-+
-+	mmc-pwrseq = <&emmc_pwrseq>;
-+	vmmc-supply = <&vcc3v3>;
-+	vqmmc-supply = <&vcc1v8>;
-+};
-+
-+/* DBG_UART */
-+&uart_AO {
-+	status = "okay";
-+	pinctrl-0 = <&uart_ao_a_pins>;
-+	pinctrl-names = "default";
-+};
-+
-+/* Bluetooth on AP6212 */
-+&uart_A {
-+	status = "disabled";
-+	pinctrl-0 = <&uart_a_pins>, <&uart_a_cts_rts_pins>;
-+	pinctrl-names = "default";
-+};
-+
-+/* 40-pin CON1 */
-+&uart_C {
-+	status = "disabled";
-+	pinctrl-0 = <&uart_c_pins>;
-+	pinctrl-names = "default";
-+};
-+
-+&usb0_phy {
-+	status = "okay";
-+	phy-supply = <&vdd_5v>;
-+};
-+
-+&usb1_phy {
-+	status = "okay";
-+};
-+
-+&usb0 {
-+	status = "okay";
-+};
-+
-+&usb1 {
-+	status = "okay";
-+};
+
+Documentation/devicetree/bindings/mfd/mfd.txt says as allows:
+
+----------------------8<---------------------
+Optional properties:
+
+- compatible : "simple-mfd" - this signifies that the operating system should
+  consider all subnodes of the MFD device as separate devices akin to how
+  "simple-bus" indicates when to see subnodes as children for a simple
+  memory-mapped bus.   <snip>
+----------------------8<---------------------
+
+
+I'd like to be sure about the statement above.
+
+Does this mean, "simple-bus" and "simple-mfd" are technically interchangeable?
+
+
+
+If so, I thought the example some lines below is questionable.
+
+---------------------8<---------------------------
+Example:
+
+foo@1000 {
+        compatible = "syscon", "simple-mfd";
+        reg = <0x01000 0x1000>;
+
+        led@08.0 {
+                compatible = "register-bit-led";
+                offset = <0x08>;
+                mask = <0x01>;
+                label = "myled";
+                default-state = "on";
+        };
+};
+---------------------8<---------------------------
+
+
+Because "simple-bus" indicates that child nodes are
+simply memory mapped, but the node "register-bit-led"
+can not be memory-mapped.
+So, "simple-mfd" can not be replaced "simple-bus" here.
+
+
+
+arch/arm/boot/dts/arm-realview-pb1176.dts is a real example.
+
+If I replace "simple-mfd" with "simple-bus",
+DTC warns "empty reg/ranges property".
+
+
+
+$ sed -i  -e 's/simple-mfd/simple-bus/'
+arch/arm/boot/dts/arm-realview-pb1176.dts
+$ make -s ARCH=arm defconfig
+$ make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- W=1  arm-realview-pb1176.dtb
+   ...
+arch/arm/boot/dts/arm-realview-pb1176.dtb: Warning (simple_bus_reg):
+Node /soc/syscon@10000000/led@08.0 missing or empty reg/ranges
+property
+arch/arm/boot/dts/arm-realview-pb1176.dtb: Warning (simple_bus_reg):
+Node /soc/syscon@10000000/led@08.1 missing or empty reg/ranges
+property
+arch/arm/boot/dts/arm-realview-pb1176.dtb: Warning (simple_bus_reg):
+Node /soc/syscon@10000000/led@08.2 missing or empty reg/ranges
+property
+arch/arm/boot/dts/arm-realview-pb1176.dtb: Warning (simple_bus_reg):
+Node /soc/syscon@10000000/led@08.3 missing or empty reg/ranges
+property
+arch/arm/boot/dts/arm-realview-pb1176.dtb: Warning (simple_bus_reg):
+Node /soc/syscon@10000000/led@08.4 missing or empty reg/ranges
+property
+arch/arm/boot/dts/arm-realview-pb1176.dtb: Warning (simple_bus_reg):
+Node /soc/syscon@10000000/led@08.5 missing or empty reg/ranges
+property
+arch/arm/boot/dts/arm-realview-pb1176.dtb: Warning (simple_bus_reg):
+Node /soc/syscon@10000000/led@08.6 missing or empty reg/ranges
+property
+arch/arm/boot/dts/arm-realview-pb1176.dtb: Warning (simple_bus_reg):
+Node /soc/syscon@10000000/led@08.7 missing or empty reg/ranges
+property
+arch/arm/boot/dts/arm-realview-pb1176.dtb: Warning (simple_bus_reg):
+Node /soc/syscon@10000000/osc0@0c missing or empty reg/ranges property
+arch/arm/boot/dts/arm-realview-pb1176.dtb: Warning (simple_bus_reg):
+Node /soc/syscon@10000000/osc1@10 missing or empty reg/ranges property
+arch/arm/boot/dts/arm-realview-pb1176.dtb: Warning (simple_bus_reg):
+Node /soc/syscon@10000000/osc2@14 missing or empty reg/ranges property
+arch/arm/boot/dts/arm-realview-pb1176.dtb: Warning (simple_bus_reg):
+Node /soc/syscon@10000000/osc3@18 missing or empty reg/ranges property
+arch/arm/boot/dts/arm-realview-pb1176.dtb: Warning (simple_bus_reg):
+Node /soc/syscon@10000000/osc4@1c missing or empty reg/ranges property
+
+
+
+
+
+
 -- 
-2.12.0
+Best Regards
+Masahiro Yamada
