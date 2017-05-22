@@ -1,72 +1,50 @@
-From: Ralph Sennhauser <ralph.sennhauser-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 06/13] ARM: dts: armada-385-linksys: usb3 label cleanup
-Date: Mon, 22 May 2017 20:13:17 +0200
-Message-ID: <20170522201317.3f9a4d4b@gmail.com>
-References: <20170521124903.11050-1-ralph.sennhauser@gmail.com>
- <20170521124903.11050-7-ralph.sennhauser@gmail.com>
- <20170522145515.GK29447@lunn.ch>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH] ARM: dts: vf610-zii-dev-rev-b: add hi8435 device
+Date: Mon, 22 May 2017 20:21:19 +0200
+Message-ID: <20170522182119.GN29447@lunn.ch>
+References: <20170522131010.3537-1-nikita.yoush@cogentembedded.com>
+ <a74ee28c1c62fee5a5e75dda70a02990@agner.ch>
+ <076f6258-f0b4-6ba5-9670-e2c0582a92b5@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170522145515.GK29447-g2DYL2Zd6BY@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Imre Kaloz <kaloz-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <076f6258-f0b4-6ba5-9670-e2c0582a92b5@cogentembedded.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Nikita Yushchenko <nikita.yoush@cogentembedded.com>
+Cc: Stefan Agner <stefan@agner.ch>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Jeff White <Jeff.White@zii.aero>, Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Jonathan Cameron <jic23@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Vladimir Barinov <vladimir.barinov@cogentembedded.com>, Shawn Guo <shawnguo@kernel.org>, linux-arm-kernel@lists.infradead.org, Chris Healy <Chris.Healy@zii.aero>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 22 May 2017 16:55:15 +0200
-Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org> wrote:
-
-> On Sun, May 21, 2017 at 02:48:55PM +0200, Ralph Sennhauser wrote:
-> > Now that we use the reference for the USB3.0 port update the node
-> > name and labels for the phy and vbus to match the label used by
-> > armada-38x.dtsi.
+On Mon, May 22, 2017 at 07:29:14PM +0300, Nikita Yushchenko wrote:
+> >> +	hi8435@1 {
+> >> +		compatible = "holt,hi8435";
+> >> +		reg = <1>;
+> >> +		spi-max-frequency = <20000000>;
+> >> +		gpios = <&gpio5 3 0>;
 > > 
-> > Signed-off-by: Ralph Sennhauser <ralph.sennhauser-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> > 
-> > ---
-> > 
-> > Notes:
-> > 
-> >   Going by documentation regulator-name is only of informative
-> > nature so changing it should be a non issue.  
+> > Nit: GPIO_ACTIVE_HIGH instead of 0?
 > 
-> Does the regulator name appear in /sys somewhere?
+> Gray area here.
+> 
+> Chip's reset input is active LOW.
 
-To differentiate between node-name and regulator-name property I changed
-the regulator name to usb3_1-vbus-regulator-name
+Nikita
 
-# find /sys -name *usb3_1-vbus*
-/sys/kernel/debug/regulator/usb3_1-vbus-regulator-name
-/sys/devices/platform/usb3_1-vbus
-/sys/firmware/devicetree/base/soc/internal-regs/pinctrl@18000/usb3_1-vbus-pins
-/sys/firmware/devicetree/base/usb3_1-vbus
-/sys/bus/platform/devices/usb3_1-vbus
-/sys/bus/platform/drivers/reg-fixed-voltage/usb3_1-vbus
+There second issue here is that you are going to be getting newbies
+looking at .dts files and submitting patches to replace the 0 with
+GPIO_ACTIVE_HIGH in all files, just like they submit patches fixing
+checkpatch warnings. 
 
-So yes, however, only under /sys/kernel/debug and more importantly not
-under /sys/class which would be covered by
-Documentation/ABI/testing/sysfs-class-regulator.
+> However, hi8435 driver historically was coded using inverted values
+> passed to gpiolib calls.  And there are setups in the wild with device
+> trees containing GPIO_ACTIVE_HIGH that I'd prefer not breaking.
+> 
+> To solve, I submitted a patch on hi8435 driver that changes to _raw()
+> gpio calls (thus making it independent of what is written in device
+> tree), and want [future] device trees not to contain explicitly written
+> gpio polarity.
 
-How the description is worded in regulator.txt [1] under optional
-properties, "regulator-name: A string used as a descriptive name for
-regulator outputs" doesn't give the impression its considered part of
-the ABI implicitly either, well, as you know this might just be my lack
-of English skill. As I was uncertain and still am not under the
-impression this to be an issue I decided to change it and leave a note
-so it doesn't make it in unnoticed and can be discussed / clarified.
+So maybe add another #define, GPIO_ACTIVE_IGNORED, to make it clear
+that it does not matter what value you put there, it is ignored.
 
-Changing the node name has a similar impact but the same can be said
-for gpio_keys vs gpio-keys which got your Reviewed-by already.
-
-The new name would better match some recent dts additions beside being
-the more obvious choice with the related changes.
-
-[1] Documentation/devicetree/bindings/regulator/regulator.txt 
-
-Ralph
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+     Andrew
