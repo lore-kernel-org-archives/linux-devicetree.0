@@ -1,187 +1,37 @@
 From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH] ARM: dts: Configure USB host for 37xx-evm
-Date: Mon, 22 May 2017 09:06:47 -0700
-Message-ID: <20170522160647.9606-1-tony@atomide.com>
+Subject: [PATCH 1/2] ARM: dts: Enable earlycon stdout path for LogicPD torpedo
+Date: Mon, 22 May 2017 09:13:45 -0700
+Message-ID: <20170522161346.10591-1-tony@atomide.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+Cc: =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Adam Ford <aford173-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Looks like nobody bothered to configure USB host for 37xx-evm
-when we converted things to device tree, so let's add it. This
-is similar to beagleboard configuration with few extra quirks
-to configure the port. And as with beagleboard, OHCI won't work
-because there is no USB LS/FS PHY. A HS USB hub is needed to use
-devices like keyboard and mice.
+As long as the kernel cmdline has "earlycon" in it, this allows
+seeing debug messages earlier and does not require DEBUG_LL to
+be enabled.
 
-Cc: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+Cc: Adam Ford <aford173-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Signed-off-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
 ---
- arch/arm/boot/dts/omap3-evm-37xx.dts    | 82 +++++++++++++++++++++++++++++++++
- arch/arm/boot/dts/omap3-evm-common.dtsi | 33 +++++++++++++
- 2 files changed, 115 insertions(+)
+ arch/arm/boot/dts/logicpd-torpedo-som.dtsi | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/arch/arm/boot/dts/omap3-evm-37xx.dts b/arch/arm/boot/dts/omap3-evm-37xx.dts
---- a/arch/arm/boot/dts/omap3-evm-37xx.dts
-+++ b/arch/arm/boot/dts/omap3-evm-37xx.dts
-@@ -98,6 +98,32 @@
- 		>;
- 	};
+diff --git a/arch/arm/boot/dts/logicpd-torpedo-som.dtsi b/arch/arm/boot/dts/logicpd-torpedo-som.dtsi
+--- a/arch/arm/boot/dts/logicpd-torpedo-som.dtsi
++++ b/arch/arm/boot/dts/logicpd-torpedo-som.dtsi
+@@ -7,6 +7,10 @@
+ #include <dt-bindings/input/input.h>
  
-+	hsusb2_pins: pinmux_hsusb2_pins {
-+		pinctrl-single,pins = <
-+
-+		/* On-board EHCI USB2 gpmc_nbe1.gpio_61 */
-+		OMAP3_CORE1_IOPAD(0x20c8, PIN_OUTPUT | MUX_MODE4)
-+
-+		/* mcspi1_cs3.hsusb2_data2 */
-+		OMAP3_CORE1_IOPAD(0x21d4, PIN_INPUT_PULLDOWN | MUX_MODE3)
-+
-+		/* mcspi2_clk.hsusb2_data7 */
-+		OMAP3_CORE1_IOPAD(0x21d6, PIN_INPUT_PULLDOWN | MUX_MODE3)
-+
-+		/* mcspi2_simo.hsusb2_data4 */
-+		OMAP3_CORE1_IOPAD(0x21d8, PIN_INPUT_PULLDOWN | MUX_MODE3)
-+
-+		/* mcspi2_somi.hsusb2_data5 */
-+		OMAP3_CORE1_IOPAD(0x21da, PIN_INPUT_PULLDOWN | MUX_MODE3)
-+
-+		/* mcspi2_cs0.hsusb2_data6 */
-+		OMAP3_CORE1_IOPAD(0x21dc, PIN_INPUT_PULLDOWN | MUX_MODE3)
-+
-+		/* mcspi2_cs1.hsusb2_data3 */
-+		OMAP3_CORE1_IOPAD(0x21de, PIN_INPUT_PULLDOWN | MUX_MODE3)
-+		>;
+ / {
++	chosen {
++		stdout-path = &uart1;
 +	};
 +
- 	wl12xx_gpio: pinmux_wl12xx_gpio {
- 		pinctrl-single,pins = <
- 			OMAP3_CORE1_IOPAD(0x2180, PIN_OUTPUT | MUX_MODE4)		/* uart1_cts.gpio_150 */
-@@ -112,6 +138,37 @@
- 	};
- };
- 
-+&omap3_pmx_core2 {
-+	hsusb2_2_pins: pinmux_hsusb2_2_pins {
-+		pinctrl-single,pins = <
-+
-+		/* EHCI PHY reset GPIO etk_d7.gpio_21 */
-+		OMAP3630_CORE2_IOPAD(0x25ea, PIN_OUTPUT | MUX_MODE4)
-+
-+		/* EHCI VBUS etk_d8.gpio_22 */
-+		OMAP3630_CORE2_IOPAD(0x25ec, PIN_OUTPUT | MUX_MODE4)
-+
-+		/* etk_d10.hsusb2_clk */
-+		OMAP3630_CORE2_IOPAD(0x25f0, PIN_OUTPUT | MUX_MODE3)
-+
-+		/* etk_d11.hsusb2_stp */
-+		OMAP3630_CORE2_IOPAD(0x25f2, PIN_OUTPUT | MUX_MODE3)
-+
-+		/* etk_d12.hsusb2_dir */
-+		OMAP3630_CORE2_IOPAD(0x25f4, PIN_INPUT_PULLDOWN | MUX_MODE3)
-+
-+		/* etk_d13.hsusb2_nxt */
-+		OMAP3630_CORE2_IOPAD(0x25f6, PIN_INPUT_PULLDOWN | MUX_MODE3)
-+
-+		/* etk_d14.hsusb2_data0 */
-+		OMAP3630_CORE2_IOPAD(0x25f8, PIN_INPUT_PULLDOWN | MUX_MODE3)
-+
-+		/* etk_d15.hsusb2_data1 */
-+		OMAP3630_CORE2_IOPAD(0x25fa, PIN_INPUT_PULLDOWN | MUX_MODE3)
-+		>;
-+	};
-+};
-+
- &omap3_pmx_wkup {
- 	dss_dpi_pins2: pinmux_dss_dpi_pins1 {
- 		pinctrl-single,pins = <
-@@ -153,6 +210,31 @@
- 	pinctrl-0 = <&uart3_pins>;
- };
- 
-+&hsusb2_power {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&hsusb2_pins &hsusb2_2_pins>;
-+};
-+
-+/* GPIO_61 (nUSB2_EN_1V8) low for on-board EHCI USB2 interface */
-+&gpio2 {
-+	en_hsusb2_clk {
-+		gpio-hog;
-+		gpios = <29 GPIO_ACTIVE_HIGH>;
-+		output-low;
-+		line-name = "hsusb2 port";
-+	};
-+};
-+
-+/* T2_GPIO_2 low to route GPIO_61 to on-board devices */
-+&twl_gpio {
-+	en_hsusb2_clk {
-+		gpio-hog;
-+		gpios = <2 GPIO_ACTIVE_HIGH>;
-+		output-low;
-+		line-name = "en_hsusb2_clk";
-+	};
-+};
-+
- &gpmc {
- 	ranges = <0 0 0x30000000 0x1000000>,	/* CS0: 16MB for NAND */
- 		 <5 0 0x2c000000 0x01000000>;
-diff --git a/arch/arm/boot/dts/omap3-evm-common.dtsi b/arch/arm/boot/dts/omap3-evm-common.dtsi
---- a/arch/arm/boot/dts/omap3-evm-common.dtsi
-+++ b/arch/arm/boot/dts/omap3-evm-common.dtsi
-@@ -12,6 +12,24 @@
- 		};
- 	};
- 
-+	/* HS USB Port 2 Power */
-+	hsusb2_power: hsusb2_power_reg {
-+		compatible = "regulator-fixed";
-+		regulator-name = "hsusb2_vbus";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		gpio = <&gpio1 22 GPIO_ACTIVE_HIGH>; /* gpio_22 */
-+		startup-delay-us = <70000>;
-+		enable-active-high;
-+	};
-+
-+	/* HS USB Host PHY on PORT 2 */
-+	hsusb2_phy: hsusb2_phy {
-+		compatible = "usb-nop-xceiv";
-+		reset-gpios = <&gpio1 21 GPIO_ACTIVE_LOW>; /* gpio_21 */
-+		vcc-supply = <&hsusb2_power>;
-+	};
-+
- 	leds {
- 		compatible = "gpio-leds";
- 		ledb {
-@@ -143,6 +161,14 @@
- 			>;
- };
- 
-+&usbhshost {
-+	port2-mode = "ehci-phy";
-+};
-+
-+&usbhsehci {
-+	phys = <0 &hsusb2_phy>;
-+};
-+
- &usb_otg_hs {
- 	interface-type = <0>;
- 	usb-phy = <&usb2_phy>;
-@@ -159,3 +185,10 @@
- 		reg = <5 0 0xff>;
- 	};
- };
-+
-+&vaux2 {
-+	regulator-name = "usb_1v8";
-+	regulator-min-microvolt = <1800000>;
-+	regulator-max-microvolt = <1800000>;
-+	regulator-always-on;
-+};
+ 	cpus {
+ 		cpu@0 {
+ 			cpu0-supply = <&vcc>;
 -- 
 2.13.0
 --
