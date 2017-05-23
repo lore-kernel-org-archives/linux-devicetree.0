@@ -1,40 +1,58 @@
-From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH V5 resend] PM / OPP: Use - instead of @ for DT entries
-Date: Mon, 22 May 2017 18:36:17 -0700
-Message-ID: <20170523013617.GM20170@codeaurora.org>
-References: <f8323bb507a97755c7c164f1d2aff45d2f0be3f0.1494217312.git.viresh.kumar@linaro.org>
+From: Chris Packham <Chris.Packham@alliedtelesis.co.nz>
+Subject: Re: [PATCH v3 5/5] mtd: mchp23k256: Add support for mchp23lcv1024
+Date: Tue, 23 May 2017 01:38:22 +0000
+Message-ID: <f2d5f14ab64a412eab5eab5d572cc4a6@svr-chch-ex1.atlnz.lc>
+References: <20170523004317.16908-1-chris.packham@alliedtelesis.co.nz>
+ <20170523004317.16908-6-chris.packham@alliedtelesis.co.nz>
+ <20170523005845.GI13759@lunn.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <f8323bb507a97755c7c164f1d2aff45d2f0be3f0.1494217312.git.viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Rafael Wysocki <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Viresh Kumar <vireshk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, linaro-kernel-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Vincent Guittot <vincent.guittot-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "computersforpeace@gmail.com" <computersforpeace@gmail.com>, "dwmw2@infradead.org" <dwmw2@infradead.org>, "boris.brezillon@free-electrons.com" <boris.brezillon@free-electrons.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Cyrille Pitchen <cyrille.pitchen@wedev4u.fr>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 05/08, Viresh Kumar wrote:
-> Compiling the DT file with W=1, DTC warns like follows:
-> 
-> Warning (unit_address_vs_reg): Node /opp_table0/opp@1000000000 has a
-> unit name, but no reg property
-> 
-> Fix this by replacing '@' with '-' as the OPP nodes will never have a
-> "reg" property.
-> 
-> Reported-by: Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Reported-by: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-> Suggested-by: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-> Signed-off-by: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> ---
-
-Reviewed-by: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On 23/05/17 12:58, Andrew Lunn wrote:=0A=
+> On Tue, May 23, 2017 at 12:43:17PM +1200, Chris Packham wrote:=0A=
+>> The mchp23lcv1024 is software compatible with the mchp23k256, the=0A=
+>> only difference (from a software point of view) is the size.=0A=
+> =0A=
+> This is not really true. The size of the address is also different,=0A=
+> and the point of the v2 change.=0A=
+=0A=
+Agreed. How about this revised commit message=0A=
+=0A=
+--- 8< ---=0A=
+mtd: mchp23k256: Add support for mchp23lcv1024=0A=
+=0A=
+The mchp23lcv1024 is similar to the mchp23k256, the differences (from a =0A=
+software point of view) are the capacity of the chip and the size of the =
+=0A=
+addresses used.=0A=
+=0A=
+There is no way to detect the specific chip so we must be told via a =0A=
+Device Tree or default to mchp23k256 when device tree is not used.=0A=
+=0A=
+Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>=0A=
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>=0A=
+--- >8 ---=0A=
+=0A=
+Can someone fixup the commit message or should I re-send?=0A=
+=0A=
+> =0A=
+>> There=0A=
+>> is no way to detect the size so we must be told via a Device Tree.=0A=
+> =0A=
+> or defaults to 256K when device tree is not used.=0A=
+> =0A=
+>>=0A=
+>> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>=0A=
+> =0A=
+> Reviewed-by: Andrew Lunn <andrew@lunn.ch>=0A=
+> =0A=
+>      Andrew=0A=
+> =0A=
+=0A=
