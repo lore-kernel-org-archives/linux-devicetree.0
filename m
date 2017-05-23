@@ -1,130 +1,113 @@
-From: Ralph Sennhauser <ralph.sennhauser-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 00/13] Linksys WRT3200ACM (Rango) support
-Date: Tue, 23 May 2017 18:11:28 +0200
-Message-ID: <20170523181128.43bd1f96@gmail.com>
-References: <20170521124903.11050-1-ralph.sennhauser@gmail.com>
-        <87mva3wqci.fsf@free-electrons.com>
+From: Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v11 8/9] arm64: dts: hi6220: register debug module
+Date: Tue, 23 May 2017 10:29:36 -0600
+Message-ID: <CANLsYkwbjT38KhkOLJTBbubnDi4JOsGSK0rVuYuRbs3xsmWj0A@mail.gmail.com>
+References: <1495548980-30432-1-git-send-email-leo.yan@linaro.org> <1495548980-30432-9-git-send-email-leo.yan@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <87mva3wqci.fsf-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+In-Reply-To: <1495548980-30432-9-git-send-email-leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Imre Kaloz <kaloz-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Liviu Dudau <liviu.dudau-5wv7dgnIgG8@public.gmane.org>, Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Brown <david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Suzuki K Poulose <suzuki.poulose-5wv7dgnIgG8@public.gmane.org>, "open list:DOCUMENTATION" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 23 May 2017 17:22:05 +0200
-Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+On 23 May 2017 at 08:16, Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> Bind debug module driver for Hi6220.
+>
+> Reviewed-by: Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Signed-off-by: Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
-> Hi Ralph,
->  
->  On dim., mai 21 2017, Ralph Sennhauser <ralph.sennhauser-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> wrote:
-> 
-> > Hi everyone
-> >
-> > This series adds support for the latest model in Linksys WRT AC
-> > series of routers. The WRT3200ACM was released in October 2016 and
-> > the code name is Rango.
-> >
-> > As it comes with a flash chip twice as big the dts Imre Kaloz has
-> > written for OpenWrt isn't based on armada-385-linksys.dtsi to avoid
-> > conflicts. Nonetheless its part of the same family, so the bigger
-> > part of this series is dedicated to reorganize / modernize /
-> > cleanup / somewhat future proof the armada-385-linksys.dtsi and
-> > it's dependants so the dts for the Rango addition can use the same
-> > dtsi.
-> >
-> > Key differences to the earlier Armada-385 based devices in the
-> > series is a bigger flash chip, next generation wireless modules in
-> > the mini pcie slots as well as a Marvell SD8887. Finally the CPU is
-> > clocked at 1866 GHz by default.
-> >
-> > The series depends on Linux 4.12-rc1 and is targeted for 4.13.
-> >
-> > Ralph
-> >
-> >  
-> 
+Wei and Mark,
 
-Hi Gregory,
+I think it makes sense to have this go through the coresight tree
+along with the rest of the driver.  Please have a look and let me
+know.
 
-> I applied the 11 first patches on mvebu/dt. I added the
-> "Signed-off-by" from Imre Kaloz <kaloz-p3rKhJxN3npAfugRpC6u6w@public.gmane.org> on all of them
-> and the "Reviewed-by" from Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org> when
-> approriate.
+Thanks,
+Mathieu
 
-That was a lot faster than expected
-
-> 
-> I also did the following things:
-> 
-> > Ralph Sennhauser (13):
-> >   ARM: dts: armada-385-linksys: flatten dtsi
-
-Just noticed the commit message has "helps helps" in it.
-
-> >   ARM: dts: armada-385-linksys: label nodes  
-> Fixed typo pointed by Andrew
-> 
-> >   ARM: dts: armada-385-linksys: flatten dependants  
-> Fixed typo pointed by Andrew
-> 
-> Something that I didn't change is the word "dependants", I don't know
-> what do you means exactly. But not being native speaker I maybe missed
-> something.
-
-Dependants is the noun, tho that might be a British English thing (what
-I had in school). I learned English as 4th/5th language together with
-Latin, so beside being a mixture of American and British English some
-custom English surfaces from time to time. :)
-
-> 
-> >   ARM: dts: armada-385-linksys: drop redundant properties in
-> > dependants ARM: dts: armada-385-linksys: bm pools by label order
-> >   ARM: dts: armada-385-linksys: usb3 label cleanup  
-> 
-> I applied this one because I found Ralph explanation convincing about
-> not modifying the ABI
-> 
-> >   ARM: dts: armada-385-linksys: drop leagcy DSA bindings  
-> Fixed typo in title and commit log
-> 
-
-Didn't notice until you pointed it out. Thanks.
-
-> >   ARM: dts: armada-385-linksys: use binary unit prefixes  
-> 
-> As Ralph I prefer that we use normalized unit. Especially when we use
-> MiB or KiB then we are sure that we use a power of 2, whereas when we
-> see KB we don't know if it is 1024B or 1000B.
-> 
-> >   ARM: dts: armada-385-linksys: partition layout is board specific
-> >   ARM: dts: armada-385-linksys: group pins in pinctrl
-> >   ARM: dts: armada-385-linksys: fixup button node names  
-> 
-> >   clk: mvebu: add support for 1866MHz variants  
-> 
-> I didn't apply this one as it must go through the clk tree and there
-> was also a pending question from Andrew.
-
-And the way he formulated it he probably already knows that more is
-needed. I'll investigate it.
-
-> 
-> >   ARM: dts: mvebu: add support for Linksys WRT3200ACM (Rango)  
-> 
-> For this last one do you finally agree to use "non-removable" instead
-> of "broken-cd" ?
-
-The card isn't really accessible and as such polling sort of pointless.
-I prefer non-removable but left it as-is for V1.
-
-Thanks
-Ralph
-
-PS: Also thanks for applying the reminder of the pwm-fan series.
+> ---
+>  arch/arm64/boot/dts/hisilicon/hi6220.dtsi | 64 +++++++++++++++++++++++++++++++
+>  1 file changed, 64 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
+> index 1e5129b..21805b9 100644
+> --- a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
+> +++ b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
+> @@ -916,5 +916,69 @@
+>                                 };
+>                         };
+>                 };
+> +
+> +               debug@f6590000 {
+> +                       compatible = "arm,coresight-cpu-debug","arm,primecell";
+> +                       reg = <0 0xf6590000 0 0x1000>;
+> +                       clocks = <&sys_ctrl HI6220_DAPB_CLK>;
+> +                       clock-names = "apb_pclk";
+> +                       cpu = <&cpu0>;
+> +               };
+> +
+> +               debug@f6592000 {
+> +                       compatible = "arm,coresight-cpu-debug","arm,primecell";
+> +                       reg = <0 0xf6592000 0 0x1000>;
+> +                       clocks = <&sys_ctrl HI6220_DAPB_CLK>;
+> +                       clock-names = "apb_pclk";
+> +                       cpu = <&cpu1>;
+> +               };
+> +
+> +               debug@f6594000 {
+> +                       compatible = "arm,coresight-cpu-debug","arm,primecell";
+> +                       reg = <0 0xf6594000 0 0x1000>;
+> +                       clocks = <&sys_ctrl HI6220_DAPB_CLK>;
+> +                       clock-names = "apb_pclk";
+> +                       cpu = <&cpu2>;
+> +               };
+> +
+> +               debug@f6596000 {
+> +                       compatible = "arm,coresight-cpu-debug","arm,primecell";
+> +                       reg = <0 0xf6596000 0 0x1000>;
+> +                       clocks = <&sys_ctrl HI6220_DAPB_CLK>;
+> +                       clock-names = "apb_pclk";
+> +                       cpu = <&cpu3>;
+> +               };
+> +
+> +               debug@f65d0000 {
+> +                       compatible = "arm,coresight-cpu-debug","arm,primecell";
+> +                       reg = <0 0xf65d0000 0 0x1000>;
+> +                       clocks = <&sys_ctrl HI6220_DAPB_CLK>;
+> +                       clock-names = "apb_pclk";
+> +                       cpu = <&cpu4>;
+> +               };
+> +
+> +               debug@f65d2000 {
+> +                       compatible = "arm,coresight-cpu-debug","arm,primecell";
+> +                       reg = <0 0xf65d2000 0 0x1000>;
+> +                       clocks = <&sys_ctrl HI6220_DAPB_CLK>;
+> +                       clock-names = "apb_pclk";
+> +                       cpu = <&cpu5>;
+> +               };
+> +
+> +               debug@f65d4000 {
+> +                       compatible = "arm,coresight-cpu-debug","arm,primecell";
+> +                       reg = <0 0xf65d4000 0 0x1000>;
+> +                       clocks = <&sys_ctrl HI6220_DAPB_CLK>;
+> +                       clock-names = "apb_pclk";
+> +                       cpu = <&cpu6>;
+> +               };
+> +
+> +               debug@f65d6000 {
+> +                       compatible = "arm,coresight-cpu-debug","arm,primecell";
+> +                       reg = <0 0xf65d6000 0 0x1000>;
+> +                       clocks = <&sys_ctrl HI6220_DAPB_CLK>;
+> +                       clock-names = "apb_pclk";
+> +                       cpu = <&cpu7>;
+> +               };
+>         };
+>  };
+> --
+> 2.7.4
+>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
