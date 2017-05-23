@@ -1,50 +1,36 @@
-From: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Subject: [PATCH v2 5/5] mfd: arizona: Update GPIO binding for newly supported specifiers
-Date: Tue, 23 May 2017 15:47:32 +0100
-Message-ID: <1495550852-3672-5-git-send-email-ckeepax@opensource.wolfsonmicro.com>
-References: <1495550852-3672-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/2] dt/bindings: display: fix display-timing reference
+Date: Tue, 23 May 2017 09:47:56 -0500
+Message-ID: <20170523144756.6gfagkwfy7ocogqe@rob-hp-laptop>
+References: <eabeec88c2831eb8541b78a4977ee7342b810b39.1494922745.git.baruch@tkos.co.il>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1495550852-3672-1-git-send-email-ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Cc: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <eabeec88c2831eb8541b78a4977ee7342b810b39.1494922745.git.baruch@tkos.co.il>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Baruch Siach <baruch@tkos.co.il>
+Cc: devicetree@vger.kernel.org, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, dri-devel@lists.freedesktop.org
 List-Id: devicetree@vger.kernel.org
 
-Link to the generic GPIO specifier bindings now that the second cell of
-the binding has some support in the driver.
-
-Signed-off-by: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
----
-
-Changes since v1:
- - Now just points at the standard gpio binding stuff
-
-Thanks,
-Charles
-
- Documentation/devicetree/bindings/mfd/arizona.txt | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/Documentation/devicetree/bindings/mfd/arizona.txt b/Documentation/devicetree/bindings/mfd/arizona.txt
-index 8f2e282..b37bdde 100644
---- a/Documentation/devicetree/bindings/mfd/arizona.txt
-+++ b/Documentation/devicetree/bindings/mfd/arizona.txt
-@@ -30,7 +30,8 @@ Required properties:
- 
-   - gpio-controller : Indicates this device is a GPIO controller.
-   - #gpio-cells : Must be 2. The first cell is the pin number and the
--    second cell is used to specify optional parameters (currently unused).
-+    second cell is used to specify optional parameters, see ../gpio/gpio.txt
-+    for details.
- 
-   - AVDD-supply, DBVDD1-supply, CPVDD-supply : Power supplies for the device,
-     as covered in Documentation/devicetree/bindings/regulator/regulator.txt
--- 
-2.1.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gVHVlLCBNYXkgMTYsIDIwMTcgYXQgMTE6MTk6MDRBTSArMDMwMCwgQmFydWNoIFNpYWNoIHdy
+b3RlOgo+IEZpeGVzOiAxNGRhM2VkOGRkMDggKCJkZXZpY2V0cmVlL2JpbmRpbmdzOiBkaXNwbGF5
+OiBEb2N1bWVudCBjb21tb24gcGFuZWwgcHJvcGVydGllcyIpCj4gQ2M6IExhdXJlbnQgUGluY2hh
+cnQgPGxhdXJlbnQucGluY2hhcnQrcmVuZXNhc0BpZGVhc29uYm9hcmQuY29tPgo+IENjOiBSb2Ig
+SGVycmluZyA8cm9iaEBrZXJuZWwub3JnPgo+IFNpZ25lZC1vZmYtYnk6IEJhcnVjaCBTaWFjaCA8
+YmFydWNoQHRrb3MuY28uaWw+Cj4gLS0tCj4gIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
+aW5ncy9kaXNwbGF5L3BhbmVsL3BhbmVsLWNvbW1vbi50eHQgfCAyICstCj4gIDEgZmlsZSBjaGFu
+Z2VkLCAxIGluc2VydGlvbigrKSwgMSBkZWxldGlvbigtKQoKQWNrZWQtYnk6IFJvYiBIZXJyaW5n
+IDxyb2JoQGtlcm5lbC5vcmc+Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNr
+dG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2Ry
+aS1kZXZlbAo=
