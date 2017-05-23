@@ -1,53 +1,84 @@
-From: Javier Martinez Canillas <javier@dowhile0.org>
-Subject: Re: [PATCH v6 0/8] mfd: Add OF device table to I2C drivers that are
- missing it
-Date: Tue, 23 May 2017 10:46:17 +0200
-Message-ID: <CABxcv=n+BfADaoc0dG7hBBPZS2F6TtxgjhwBv8f=GVYSdjovGg@mail.gmail.com>
-References: <20170504052107.18995-1-javier@dowhile0.org> <20170504080931.GA1487@katana>
- <20170504115016.ayrgbqdshdvnop6k@dell> <CABxcv=nXhyuRwwhzv0H8mK98wUmAPDNPErkV92o9nRFZV2dEsw@mail.gmail.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 2/3] gpio: arizona: Add support for GPIOs that need to be maintained
+Date: Tue, 23 May 2017 10:46:29 +0200
+Message-ID: <CACRpkdZHVWrHWBon+TubnV_B5mCAoOtmcJKyXt4C5iP01OSQuQ@mail.gmail.com>
+References: <1494948714-15203-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+ <1494948714-15203-2-git-send-email-ckeepax@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CABxcv=nXhyuRwwhzv0H8mK98wUmAPDNPErkV92o9nRFZV2dEsw@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: Wolfram Sang <wsa@the-dreams.de>, Linux Kernel <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Tony Lindgren <tony@atomide.com>, Aaro Koskinen <aaro.koskinen@iki.fi>
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1494948714-15203-2-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
+Cc: Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexandre Courbot <gnurou@gmail.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "open list:WOLFSON MICROELECTRONICS DRIVERS" <patches@opensource.wolfsonmicro.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello Lee,
+On Tue, May 16, 2017 at 5:31 PM, Charles Keepax
+<ckeepax@opensource.wolfsonmicro.com> wrote:
 
-On Fri, May 5, 2017 at 12:40 PM, Javier Martinez Canillas
-<javier@dowhile0.org> wrote:
-> Hello,
+> The Arizona devices only maintain the state of output GPIOs whilst the
+> CODEC is active, this can cause issues if the CODEC suspends whilst
+> something is relying on the state of one of its GPIOs. However, in
+> many systems the CODEC GPIOs are used for audio related features
+> and thus the state of the GPIOs is unimportant whilst the CODEC is
+> suspended. Often keeping the CODEC resumed in such a system would
+> incur a power impact that is unacceptable.
 >
-> On Thu, May 4, 2017 at 1:50 PM, Lee Jones <lee.jones@linaro.org> wrote:
->> On Thu, 04 May 2017, Wolfram Sang wrote:
->>> thanks for the series.
->>>
->>> > Most patches can be applied independently, with the exception of patches
->>> > 2 to 4 that should be applied in the same tree to keep bisect-ability. I
->>> > suggest these to go through the MFD subsystem tree.
->>>
->>> From my POV, patches 2-5 should be applied to the same tree. Since all
+> Allow the user to select whether a GPIO output should keep the
+> CODEC resumed, by adding a flag through the second cell of the GPIO
+> specifier in device tree.
 >
-> Yes, I didn't mention 5 because is just a documentation change. But it
-> would be better if is merged together with 2-4 indeed.
->
->>> I2C related patches have my tag, I assume they will be picked up by MFD.
->>> Lee, let me know if you prefer differently.
->>
->> I can pick them up, no problem.  Can the ARM patches be taking
->> independently?  I'm guessing they can since they are separate from one
->> another.
->>
->
-> That's corect. The only platform changes that can't be picked
-> independently from MFD are the ones in patch 2, but tha's why I added
-> in the same patch. The OMAP folks (Tony and Aaro) already acked so you
-> can pick it.
->
+> Signed-off-by: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
 
-Is there anything else I need to do for you to pick this series?
+This adds the handling locally in the driver for a certain Arizona chip.
 
-Best regards,
-Javier
+And then the next time you have to duplicate the code again and again.
+
+That's not working, put this in the core.
+
+>  static int arizona_gpio_direction_in(struct gpio_chip *chip, unsigned offset)
+>  {
+>         struct arizona_gpio *arizona_gpio = gpiochip_get_data(chip);
+>         struct arizona *arizona = arizona_gpio->arizona;
+> +       int status = arizona_gpio->status[offset];
+
+Don't use a local array for this.
+
+This should be something like gpiochip_get_sleep_persistance(chip, offset)
+
+> +       if (change && !(status & GPIO_SLEEP_MAY_LOOSE_VALUE)) {
+
+That us a dt-binfings header define, that is not a Linux constant.
+
+Add FLAG_MAY_LOOSE_VALUE_DURING_SLEEP or something in
+drivers/gpio/gpiolib.h, store this inside the struct gpio_desc like all
+other flags and retrieve it from there.
+
+Augment the code in gpiolib.c and gpiolib-of.c to parse this and
+store it properly in the gpio_desc and use it as described above.
+
+Then it is reusable for others.
+
+> +#ifdef CONFIG_OF_GPIO
+> +static int arizona_gpio_of_xlate(struct gpio_chip *chip,
+> +                                const struct of_phandle_args *gpiospec,
+> +                                u32 *flags)
+> +{
+> +       struct arizona_gpio *arizona_gpio = gpiochip_get_data(chip);
+> +       int offset;
+> +
+> +       offset = of_gpio_simple_xlate(chip, gpiospec, flags);
+> +       if (offset < 0)
+> +               return offset;
+> +
+> +       if (flags)
+> +               arizona_gpio->status[offset] = *flags;
+> +
+> +       return offset;
+> +}
+> +#endif
+
+No need for this hackery if you move the parsing to the core, so do that.
+
+Yours,
+Linus Walleij
