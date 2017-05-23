@@ -1,39 +1,35 @@
-From: Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] PCI: qcom: Add support for IPQ4019 PCIe controller
-Date: Tue, 23 May 2017 15:07:19 -0500
-Message-ID: <20170523200719.GG7241@bhelgaas-glaptop.roam.corp.google.com>
-References: <20170505152524.29337-1-john@phrozen.org>
+From: Chris Packham <Chris.Packham@alliedtelesis.co.nz>
+Subject: Re: [PATCH v3 5/5] mtd: mchp23k256: Add support for mchp23lcv1024
+Date: Tue, 23 May 2017 20:29:09 +0000
+Message-ID: <9caa87dc05f947198670bc8c5123d941@svr-chch-ex1.atlnz.lc>
+References: <20170523004317.16908-1-chris.packham@alliedtelesis.co.nz>
+ <20170523004317.16908-6-chris.packham@alliedtelesis.co.nz>
+ <20170523091423.1a0b84d9@bbrezillon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170505152524.29337-1-john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: John Crispin <john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org>
-Cc: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Stanimir Varbanov <svarbanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: Boris Brezillon <boris.brezillon@free-electrons.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "andrew@lunn.ch" <andrew@lunn.ch>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Richard Weinberger <richard@nod.at>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Marek Vasut <marek.vasut@gmail.com>, Rob Herring <robh+dt@kernel.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, Cyrille Pitchen <cyrille.pitchen@wedev4u.fr>, "computersforpeace@gmail.com" <computersforpeace@gmail.com>, "dwmw2@infradead.org" <dwmw2@infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Stanimir?
+On 23/05/17 19:19, Boris Brezillon wrote:
+> BTW, it's really weird to have the _flash extension in the struct name,
+> while we're actually dealing with SRAMs.
 
-On Fri, May 05, 2017 at 05:25:24PM +0200, John Crispin wrote:
-> Add support for the IPQ4019 PCIe controller. IPQ4019 supports Gen
-> 1/2, one lane, one PCIe root complex with support for MSI and legacy
-> interrupts, and it conforms to PCI Express Base 2.1 specification.
-> 
-> The core init is the sames as for the MSM8996, however the clocks and
-> reset lines differ.
-> 
-> Signed-off-by: John Crispin <john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org>
-> ---
->  .../devicetree/bindings/pci/qcom,pcie.txt          |  20 +-
->  drivers/pci/host/pcie-qcom.c                       | 304 +++++++++++++++++++++
+Agreed. After the dust settles on this series I'll send a trivial patch 
+to change "flash" to something sensible like "sram" or "chip".
 
-pcie-qcom.c was recently moved to drivers/pci/dwc, but I was able to
-apply this by hand pretty easily.  But I would like Stanimir's ack
-first.
-
-Bjorn
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+______________________________________________________
+Linux MTD discussion mailing list
+http://lists.infradead.org/mailman/listinfo/linux-mtd/
