@@ -1,26 +1,31 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH 12/13] clk: mvebu: add support for 1866MHz variants
-Date: Tue, 23 May 2017 14:15:14 +0200
-Message-ID: <20170523121514.GS13759@lunn.ch>
+From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Subject: Re: [PATCH 13/13] ARM: dts: mvebu: add support for Linksys
+ WRT3200ACM (Rango)
+Date: Tue, 23 May 2017 14:18:44 +0200
+Message-ID: <20170523121844.GT13759@lunn.ch>
 References: <20170521124903.11050-1-ralph.sennhauser@gmail.com>
- <20170521124903.11050-13-ralph.sennhauser@gmail.com>
+ <20170521124903.11050-14-ralph.sennhauser@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20170521124903.11050-13-ralph.sennhauser@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ralph Sennhauser <ralph.sennhauser@gmail.com>
-Cc: linux-arm-kernel@lists.infradead.org, Gregory Clement <gregory.clement@free-electrons.com>, Imre Kaloz <kaloz@openwrt.org>, Jason Cooper <jason@lakedaemon.net>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-clk@vger.kernel.org
+In-Reply-To: <20170521124903.11050-14-ralph.sennhauser-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ralph Sennhauser <ralph.sennhauser-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Imre Kaloz <kaloz-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, May 21, 2017 at 02:49:01PM +0200, Ralph Sennhauser wrote:
-> The Linksys WRT3200ACM CPU is clocked at 1866MHz. Add 1866MHz to
-> the list of supported CPU frequencies.
-> 
-> Noticed by the following warning:
-> [    0.000000] Selected CPU frequency (16) unsupported
+>   Checkpatch also complains about the vendor prefix linksys
+>   not being documented, however this follows the examples given by the
+>   other boards.
 
-Are the L2 and DDR clocks using sensible values?
+Hi Ralph
 
-    Andrew
+Please feel free to submit a patch adding linksys to
+Documentation/devicetree/binding/vendor-prefixes.txt
+
+	Andrew
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
