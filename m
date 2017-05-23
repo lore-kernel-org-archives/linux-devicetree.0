@@ -1,38 +1,86 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 3/6] pinctrl: sunxi: Fix SPDIF function name
- for A83T
-Date: Tue, 23 May 2017 11:32:05 +0200
-Message-ID: <CACRpkdbjExYKgMCgNznaWHJBkufFR7WmisrFzKrP9bc0NudRhQ@mail.gmail.com>
-References: <20170522062552.19026-1-wens@csie.org> <20170522062552.19026-4-wens@csie.org>
-Reply-To: linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [PATCH] of_mdio: Fix broken PHY IRQ in case of probe deferral
+Date: Tue, 23 May 2017 11:36:47 +0200
+Message-ID: <CAMuHMdWWfaP8=H7H+UzrmOYpydi2mGLFGzuk9FQWJtEOug6u5g@mail.gmail.com>
+References: <1495112345-24795-1-git-send-email-geert+renesas@glider.be>
+ <f0ed61c3-062b-cec6-fe19-7412231e8ef1@gmail.com> <CAMuHMdWYeSzofU57LmT_M3KkcHhvjfJy7nkHvcXkKzOYmvhqqA@mail.gmail.com>
+ <20170518193453.GB13759@lunn.ch> <CAMuHMdV+jfh=EGt3SvjtrtVfWQ6P8ofp_JxeQZjRrSEfDWs5hA@mail.gmail.com>
+ <08a89dd5-b707-8b8f-b8e1-e20b9ed630b7@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDE6RCFOWIARBGEDSDEQKGQE6FJPB2Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20170522062552.19026-4-wens-jdAy2FN1RRM@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <08a89dd5-b707-8b8f-b8e1-e20b9ed630b7-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, "netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 22, 2017 at 8:25 AM, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org> wrote:
+Hi Florian,
 
-> We use well known standard names for functions that have name, such as
-> I2C, SPI, SPDIF, etc..
+On Fri, May 19, 2017 at 12:21 AM, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> On 05/18/2017 01:36 PM, Geert Uytterhoeven wrote:
+>> On Thu, May 18, 2017 at 9:34 PM, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org> wrote:
+>>>>> This most certainly works fine in the simple case where you have one PHY
+>>>>> hanging off the MDIO bus, now what happens if you have several?
+>>>>>
+>>>>> Presumably, the first PHY that returns EPROBE_DEFER will make the entire
+>>>>> bus registration return EPROB_DEFER as well, and so on, and so forth,
+>>>>> but I am not sure if we will be properly unwinding the successful
+>>>>> registration of PHYs that either don't have an interrupt, or did not
+>>>>> return EPROBE_DEFER.
+>>>>>
+>>>>> It should be possible to mimic this behavior by using the fixed PHY, and
+>>>>> possibly the dsa_loop.c driver which would create 4 ports, expecting 4
+>>>>> fixed PHYs to be present.
+>>>>
+>>>> mdiobus_unregister(), called from of_mdiobus_register() on failure,
+>>>> should do the unwinding, right?
+>>>>
+>>>> And when the driver is reprobed, all PHYs are reprobed, until they all
+>>>> succeed.
+>>>
+>>> That is the theory. I looked at that while reviewing the patch. But
+>>> this has probably not been tested in anger. It would be good to test
+>>> this properly, with not just the first PHY returning -EPROBE_DEFER, to
+>>> really test the unwind.
+>>
+>> Unfortunately I don't have a board with multiple PHYs, so I cannot test
+>> that case.
+
+I tried adding a few dummy PHYs in DT, but that didn't work.
+
+So how can we proceed?
+
+I think the only way my patch can cause issues is because some systems
+may rely on EPROBE_DEFER errors being ignored.
+
+>> Does unbinding/rebinding a network driver with multiple PHYs currently
+>> work? Or module unload/reload?
 >
-> Fix the function name of SPDIF, which was named OWA (One Wire Audio)
-> based on Allwinner datasheets.
+> Usually there is a strict 1:1 mapping between a network device (not
+> driver) and a PHY device, switch drivers however, would have multiple
+> PHYs (one per port, aka net_deice).
 >
-> Fixes: 4730f33f0d82 ("pinctrl: sunxi: add allwinner A83T PIO controller
->                       support")
-> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+> NB: binding and unbinding of PHYs is pretty broken at the moment though,
+> because there is a complete disconnect between what the Ethernet MAC
+> expects, and the state in which the PHY is. I had some patches to fix
+> that, but this turned out to be playing whack-a-mole which I typically
+> suck at.
 
-Patch applied for fixes with Maxime's ACK.
+I didn't mean unbinding the PHY, but the network device.
+Don't you have the same issue with the state of PHYs as left by the bootloader?
 
-Yours,
-Linus Walleij
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
