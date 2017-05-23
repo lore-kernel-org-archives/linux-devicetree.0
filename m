@@ -1,49 +1,71 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 10/12] arm64: dts: hi3660: add spi device nodes
-Date: Mon, 22 May 2017 19:46:27 -0500
-Message-ID: <20170523004627.caeoqezj3leydj2t@rob-hp-laptop>
+Subject: Re: [PATCH 11/12] arm64: dts: hi3660: add power key dts node
+Date: Mon, 22 May 2017 19:47:26 -0500
+Message-ID: <20170523004726.lwdnzkveeadbkcqw@rob-hp-laptop>
 References: <20170517083745.24479-1-guodong.xu@linaro.org>
- <20170517083745.24479-11-guodong.xu@linaro.org>
+ <20170517083745.24479-12-guodong.xu@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170517083745.24479-11-guodong.xu@linaro.org>
+In-Reply-To: <20170517083745.24479-12-guodong.xu@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Guodong Xu <guodong.xu@linaro.org>
-Cc: xuwei5@hisilicon.com, catalin.marinas@arm.com, will.deacon@arm.com, wangkefeng.wang@huawei.com, puck.chen@hisilicon.com, xuejiancheng@hisilicon.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Wang Xiaoyin <hw.wangxiaoyin@hisilicon.com>
+Cc: xuwei5@hisilicon.com, catalin.marinas@arm.com, will.deacon@arm.com, wangkefeng.wang@huawei.com, puck.chen@hisilicon.com, xuejiancheng@hisilicon.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Chen Jun <chenjun14@huawei.com>, John Stultz <john.stultz@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 17, 2017 at 04:37:43PM +0800, Guodong Xu wrote:
-> From: Wang Xiaoyin <hw.wangxiaoyin@hisilicon.com>
+On Wed, May 17, 2017 at 04:37:44PM +0800, Guodong Xu wrote:
+> From: Chen Jun <chenjun14@huawei.com>
 > 
-> Add spi2 and spi3 device nodes for hi3660, and enable them for hikey960.
+> We use gpio_034 as power key on hikey960, and set gpio with pull-up
+> state, when key press the voltage on the gpio will come to lower, and
+> power key event will be reported.
 > 
-> On HiKey960:
->  - SPI2 is wired out through low speed expansion connector.
->  - SPI3 is wired out through high speed expansion connector.
-> 
-> Signed-off-by: Wang Xiaoyin <hw.wangxiaoyin@hisilicon.com>
+> Signed-off-by: Chen Jun <chenjun14@huawei.com>
+> Signed-off-by: John Stultz <john.stultz@linaro.org>
 > Signed-off-by: Guodong Xu <guodong.xu@linaro.org>
 > ---
->  arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts |  8 ++++++
->  arch/arm64/boot/dts/hisilicon/hi3660.dtsi         | 30 +++++++++++++++++++++++
->  2 files changed, 38 insertions(+)
+>  arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts | 17 +++++++++++++++++
+>  1 file changed, 17 insertions(+)
 > 
 > diff --git a/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts b/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
-> index 69aa207..79735ee 100644
+> index 79735ee..6de86c0 100644
 > --- a/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
 > +++ b/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
-> @@ -69,3 +69,11 @@
->  &uart6 {
->  	status = "okay";
->  };
+> @@ -10,6 +10,8 @@
+>  #include "hi3660.dtsi"
+>  #include "hikey960-pinctrl.dtsi"
+>  #include <dt-bindings/gpio/gpio.h>
+> +#include <dt-bindings/input/input.h>
+> +#include <dt-bindings/interrupt-controller/irq.h>
+>  
+>  / {
+>  	model = "HiKey960";
+> @@ -32,6 +34,21 @@
+>  		/* rewrite this at bootloader */
+>  		reg = <0x0 0x0 0x0 0x0>;
+>  	};
 > +
-> +&spi2 {
-> +	status = "okay";
-> +};
-> +
-> +&spi3 {
-> +	status = "okay";
+> +	soc {
+> +		keys: gpio-keys {
 
-LS connector label?
+This isn't part of the SoC, so it should move out of the soc node.
+
+> +			compatible = "gpio-keys";
+> +			pinctrl-names = "default";
+> +			pinctrl-0 = <&pwr_key_pmx_func &pwr_key_cfg_func>;
+> +
+> +			power {
+> +				wakeup-source;
+> +				gpios = <&gpio4 2 GPIO_ACTIVE_LOW>;
+> +				label = "GPIO Power";
+> +				linux,code = <KEY_POWER>;
+> +			};
+> +		};
+> +	};
+>  };
+>  
+>  &i2c0 {
+> -- 
+> 2.10.2
+> 
