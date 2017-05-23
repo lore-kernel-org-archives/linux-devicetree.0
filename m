@@ -1,53 +1,119 @@
-From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: Re: [PATCH v6 3/4] ARM: mvebu: Enable SENSORS_PWM_FAN in defconfig
-Date: Tue, 23 May 2017 16:00:25 +0200
-Message-ID: <87lgpny8p2.fsf@free-electrons.com>
-References: <20170414154056.32055-1-ralph.sennhauser@gmail.com>
-        <20170414154056.32055-4-ralph.sennhauser@gmail.com>
-        <CACRpkda6P026U4pBXPuEJ=cYu+Hz9N_-snXcOXr5c0Q9g4jBig@mail.gmail.com>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [RESEND PATCH V7 7/7] MAINTAINERS: da9062/61 updates to the
+ Dialog Semiconductor search terms
+Date: Tue, 23 May 2017 07:04:50 -0700
+Message-ID: <3b1ef68b-fc5d-8bbb-dba4-e4941bc33baf@roeck-us.net>
+References: <cover.1495546845.git.stwiss.opensource@diasemi.com>
+ <d1c3ceda19be1363cd37bb52fd7fae5b1b9a164e.1495546845.git.stwiss.opensource@diasemi.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACRpkda6P026U4pBXPuEJ=cYu+Hz9N_-snXcOXr5c0Q9g4jBig@mail.gmail.com>
-        (Linus Walleij's message of "Mon, 24 Apr 2017 11:20:02 +0200")
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ralph Sennhauser <ralph.sennhauser@gmail.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Andrew Lunn <andrew@lunn.ch>, Thierry Reding <thierry.reding@gmail.com>, Alexandre Courbot <gnurou@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jason Cooper <jason@lakedaemon.net>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Russell King <linux@armlinux.org.uk>, "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <d1c3ceda19be1363cd37bb52fd7fae5b1b9a164e.1495546845.git.stwiss.opensource@diasemi.com>
+Content-Language: en-US
+Sender: linux-input-owner@vger.kernel.org
+To: Steve Twiss <stwiss.opensource@diasemi.com>, DEVICETREE <devicetree@vger.kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Eduardo Valentin <edubezval@gmail.com>, LINUX-INPUT <linux-input@vger.kernel.org>, LINUX-KERNEL <linux-kernel@vger.kernel.org>, LINUX-PM <linux-pm@vger.kernel.org>, LINUX-WATCHDOG <linux-watchdog@vger.kernel.org>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Wim Van Sebroeck <wim@iguana.be>, Zhang Rui <rui.zhang@intel.com>
+Cc: Support Opensource <support.opensource@diasemi.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
- 
- On lun., avril 24 2017, Linus Walleij <linus.walleij@linaro.org> wrote:
+On 05/23/2017 06:40 AM, Steve Twiss wrote:
+> From: Steve Twiss <stwiss.opensource@diasemi.com>
+> 
+> Additions to search terms for files supported by Dialog Semiconductor.
+> This update will allow Dialog support to follow files for device tree
+> bindings (onkey, thermal and watchdog) and source code for chip thermal
+> monitoring drivers.
+> 
+> Signed-off-by: Steve Twiss <stwiss.opensource@diasemi.com>
 
-> On Fri, Apr 14, 2017 at 5:40 PM, Ralph Sennhauser
-> <ralph.sennhauser@gmail.com> wrote:
->
->> From: Andrew Lunn <andrew@lunn.ch>
->>
->> Now that the GPIO driver also supports PWM operation, enable the PWM
->> framework and fan driver in mvebu_v7_defconfig.
->>
->> Signed-off-by: Andrew Lunn <andrew@lunn.ch>
->> URL: https://patchwork.ozlabs.org/patch/427297/
->> [Ralph Sennhauser: add fan driver to defconfig]
->> Signed-off-by: Ralph Sennhauser <ralph.sennhauser@gmail.com>
->> Tested-by: Andrew Lunn <andrew@lunn.ch>
->
-> Acked-by: Linus Walleij <linus.walleij@linaro.org>
->
-> Please funnel this through ARM SoC.
+FWIW: For watchdog:
 
-Applied on mvebu/defconfig
+Acked-by: Guenter Roeck <linux@roeck-us.net>
 
-Thanks,
+If no one else picks it up, I can ask Wim to queue it up in watchdog for
+the next release. If necessary please send me a note around rc5 or rc6.
 
-Gregory
->
-> Yours,
-> Linus Walleij
+Guenter
 
--- 
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
+> 
+> ---
+> Hi all,
+> 
+> Is there anybody willing to take this patch through their tree please?
+> 
+> Dialog Semiconductor support would like to add to the MAINTAINERS search
+> terms. This update will allow us to follow all of our files for device
+> tree bindings and the source code relating to chip thermal monitoring
+> described in this patch set.
+> 
+> All dependencies for this patch have been accepted into linux-next:
+> 
+> bindings/input/da90??-onkey.txt     -> linux-next.git/commit/?id=406d5a2de0718622241eff35831f6fed0316a7d4
+> bindings/thermal/da90??-thermal.txt -> linux-next.git/commit/?id=28c1b08d2a156ef16e912a4c618a529e586e5dbc
+> bindings/watchdog/da92??-wdt.txt    -> linux-next.git/commit/?id=be62f363a8d5b1703c08d2cb462786a68215bcca
+> drivers/thermal/da90??-thermal.c    -> linux-next.git/commit/?id=608567aac3206ae886c79688fbb8a62c473b55ef
+> 
+> Regards,
+> Steve Twiss, Dialog Semiconductor
+> 
+> 
+> This patch applies against linux-next and v4.12-rc2
+> 
+> v6 -> v7
+>   - NO CODE CHANGE
+>   - Rebased from v4.11-rc3 to v4.11-rc11
+>   - Updated the commit message
+>   - Moved the following names from CC: to TO: e-mail fields
+>     - Lee Jones
+>     - Liam Girdwood
+>     - Mark Brown
+> 
+> v5 -> v6
+>   - NO CODE CHANGE
+>   - Rebased from v4.8 to v4.11-rc3
+>   - Patch renamed from [PATCH V5 8/8] to [PATCH V5 7/7]
+> 
+> v4 -> v5
+>   - NO CODE CHANGE
+>   - Rebased from v4.8 to v4.9
+> 
+> v3 -> v4
+>   - NO CODE CHANGE
+>   - Patch renamed from [PATCH V3 9/9] to [PATCH V4 8/8]
+> 
+> v2 -> v3
+>   - NO CODE CHANGE
+>   - Patch renamed from [PATCH V2 10/10] to [PATCH V3 9/9]
+> 
+> v1 -> v2
+>   - NO CODE CHANGE
+> 
+> 
+>   MAINTAINERS | 4 ++++
+>   1 file changed, 4 insertions(+)
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 9e98464..a580bed 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -3988,7 +3988,10 @@ W:	http://www.dialog-semiconductor.com/products
+>   S:	Supported
+>   F:	Documentation/hwmon/da90??
+>   F:	Documentation/devicetree/bindings/mfd/da90*.txt
+> +F:	Documentation/devicetree/bindings/input/da90??-onkey.txt
+> +F:	Documentation/devicetree/bindings/thermal/da90??-thermal.txt
+>   F:	Documentation/devicetree/bindings/regulator/da92*.txt
+> +F:	Documentation/devicetree/bindings/watchdog/da92??-wdt.txt
+>   F:	Documentation/devicetree/bindings/sound/da[79]*.txt
+>   F:	drivers/gpio/gpio-da90??.c
+>   F:	drivers/hwmon/da90??-hwmon.c
+> @@ -4003,6 +4006,7 @@ F:	drivers/power/supply/da9052-battery.c
+>   F:	drivers/power/supply/da91??-*.c
+>   F:	drivers/regulator/da903x.c
+>   F:	drivers/regulator/da9???-regulator.[ch]
+> +F:	drivers/thermal/da90??-thermal.c
+>   F:	drivers/rtc/rtc-da90??.c
+>   F:	drivers/video/backlight/da90??_bl.c
+>   F:	drivers/watchdog/da90??_wdt.c
+> 
+
