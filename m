@@ -1,139 +1,140 @@
-From: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] extcon: cros-ec: Add extcon-cros-ec driver to
- support display out.
-Date: Tue, 23 May 2017 18:58:12 +0900
-Message-ID: <592407B4.5040108@samsung.com>
-References: <20170301111943.12170-1-enric.balletbo@collabora.com>
-        <CGME20170301112844epcas4p34012f1564f1145f8d8a8967f4fe9a821@epcas4p3.samsung.com>
-        <20170301111943.12170-2-enric.balletbo@collabora.com>
-        <58B7C9BF.1040708@samsung.com> <58E44698.5020605@samsung.com>
-        <b0a76ac2-b524-23b3-ef58-22114e8bf209@collabora.com>
-        <59240507.1040005@samsung.com>
-        <3f4c4b85-e9db-0531-e3da-2e671a8fa750@collabora.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH] arm: dts: r7s72100: Add support for GR-Peach
+Date: Tue, 23 May 2017 12:08:30 +0200
+Message-ID: <CAMuHMdUR0Djqi-7DWAHpN_F6xt-WcYzT4H2+mLCjHE9T+7UuJg@mail.gmail.com>
+References: <1495532834-25670-1-git-send-email-jacopo+renesas@jmondi.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <3f4c4b85-e9db-0531-e3da-2e671a8fa750-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, MyungJoo Ham <myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Benson Leung <bleung-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <1495532834-25670-1-git-send-email-jacopo+renesas@jmondi.org>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Jacopo,
 
-On 2017년 05월 23일 18:52, Enric Balletbo i Serra wrote:
-> 
-> 
-> On 23/05/17 11:46, Chanwoo Choi wrote:
->> Hi Enric,
->>
->> On 2017년 04월 20일 19:16, Enric Balletbo i Serra wrote:
->>> On 05/04/17 03:21, Chanwoo Choi wrote:
->>>> Hi Enric,
->>>>
->>>> On 2017년 03월 02일 16:29, Chanwoo Choi wrote:
->>>>> Hi,
->>>>>
->>>>> On 2017년 03월 01일 20:19, Enric Balletbo i Serra wrote:
->>>>>> From: Benson Leung <bleung-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
->>>>>>
->>>>>> This is the driver for the USB Type C cable detection mechanism
->>>>>> built into the ChromeOS Embedded Controller on systems that
->>>>>> have USB Type-C ports.
->>>>>>
->>>>>> At present, this allows for the presence of display out, but in
->>>>>> future, it may also be used to notify host and device type cables
->>>>>> and the presence of power.
->>>>>>
->>>>>> Signed-off-by: Benson Leung <bleung-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
->>>>>> Signed-off-by: Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
->>>>>> ---
->>>>>> Changes since v1:
->>>>>>  Requested by Chanwoo Choi
->>>>>>  - Rename files changing _ for -
->>>>>>  - Remove the unneeded blank line on bottom of header.
->>>>>>  - Remove kobject.h and cros_ec_commands.h includes.
->>>>>>  - Remove the debug message as is not necessary.
->>>>>>  - Use the tab for indentation instead of space for if sentence.
->>>>>>  - Define each variable on different lines when the variables should be
->>>>>>    initialized.
->>>>>>  - Remove EXTCON_USB and EXTCON_USB_HOST as are not really used for now.
->>>>>>  - Add one blank line to split out between state and property setting.
->>>>>>  - Add the author information (header and module)
->>>>>>
->>>>>>  Enric Balletbo
->>>>>>  - As Rob suggested to rename the compatible name to something indicating that
->>>>>>    is USB Type C related I also renamed the file names, extcon-cros-ec ->
->>>>>>    extcon-usbc-cros-ec, I think it's more clear.
->>>>>>
->>>>>>  drivers/extcon/Kconfig               |   7 +
->>>>>>  drivers/extcon/Makefile              |   1 +
->>>>>>  drivers/extcon/extcon-usbc-cros-ec.c | 415 +++++++++++++++++++++++++++++++++++
->>>>>>  include/linux/mfd/cros_ec_commands.h |  75 +++++++
->>>>>>  4 files changed, 498 insertions(+)
->>>>>>  create mode 100644 drivers/extcon/extcon-usbc-cros-ec.c
->>>>>>
->>>>>
->>>>> Looks good to me.
->>>>> Acked-by: Chanwoo Choi <cw00.chio-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
->>>>>
->>>>> I think this patch should be handled with patches[1].
->>>>> [1] https://lkml.org/lkml/2017/2/14/655
->>>>>
->>>>> I think that one maintainer among following subsystems
->>>>> (mfd, chrome h/w platform, rtc and extcon)
->>>>> will apply their git repository, and then one maintainer
->>>>> will send the pull request of immutable branch for these patches.
->>>>>
->>>>
->>>> As I mentioned, these patch should be handled with related patches[1].
->>>> [1] https://lkml.org/lkml/2017/2/14/655
->>>>
->>>> So, I can't apply these patch on extcon git because there is a merge conflict
->>>> and we should handle these patches with immutable branch between subsystem maintainer.
->>>>
->>>> The v4.11-rc5 was released, if you want to apply this patch to the v4.12-rc1,
->>>> please take care of these patches.
->>>>
->>>
->>> CC'ied : Olof Johansson
->>>
->>> Olof, Benson,
->>>
->>> Could at least the following patch in this series [1] picked as soon as possible
->>> if it's ok.
->>>
->>> 9630769 New          [01/13] mfd: cros_ec: Add helper for event notifier
->>>
->>> This specific patch is blocking this and others like the rtc-cros-ec to land and
->>> the series were send some time ago without received bad feedback.
->>>
->>> [1] https://lkml.org/lkml/2017/3/17/321
->>>
->>> Many thanks,
->>>  Enric
->>
->> Maybe, you better to resend these patches based on v4.12-rcX.
->>
-> 
-> I did a week ago :) The patches were rebased on top of current linux-next,
-> waiting for the maintainers, hope will be accepted soon so we can unblock this
-> patch and the rtc patches.
-> 
-> https://lkml.org/lkml/2017/5/16/478
-> 
+On Tue, May 23, 2017 at 11:47 AM, Jacopo Mondi
+<jacopo+renesas@jmondi.org> wrote:
+> Add device tree source for Renesas GR-Peach board.
+> GR-Peach is an RZ/A1H based board with 10MB of on-chip SRAM and 8MB
+> QSPI flash storage.
+> Add support for the board, and create a 2MB partition to use as rootfs.
+>
+> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
 
-OK. This patch must need the immutable branch.
+Thanks for your patch!
 
-I expect that some maintainer will make the immutable branch
-and then send pull request to other maintainer related to them.
+> --- a/Documentation/devicetree/bindings/arm/shmobile.txt
+> +++ b/Documentation/devicetree/bindings/arm/shmobile.txt
+> @@ -51,6 +51,8 @@ Boards:
+>      compatible = "renesas,bockw", "renesas,r8a7778"
+>    - Genmai (RTK772100BC00000BR)
+>      compatible = "renesas,genmai", "renesas,r7s72100"
+> +  - GR-Peach (RTK772100BC00000BR)
 
--- 
-Best Regards,
-Chanwoo Choi
-Samsung Electronics
+That part number is Genmai?
+
+> +    compatible = "renesas,grpeach", "renesas,r7s72100"
+
+"renesas,gr-peach"?
+
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -716,6 +716,7 @@ dtb-$(CONFIG_ARCH_S5PV210) += \
+>  dtb-$(CONFIG_ARCH_SHMOBILE_MULTI) += \
+>         emev2-kzm9d.dtb \
+>         r7s72100-genmai.dtb \
+> +       r7s72100-grpeach.dtb \
+
+r7s72100-gr-peach.dtb?
+
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/r7s72100-grpeach.dts
+
+r7s72100-gr-peach.dts
+
+> @@ -0,0 +1,65 @@
+> +/*
+> + * Device Tree Source for the GRPEACH board
+
+GR-PEACH
+
+> +/ {
+> +       model = "GRPEACH";
+
+GR-PEACH
+
+> +       compatible = "renesas,grpeach", "renesas,r7s72100";
+
+renesas,gr-peach
+
+> +
+> +       aliases {
+> +               serial2 = &scif2;
+
+The first serial port is supposed to be called serial0, unless labeled
+otherwise.
+
+> +       };
+> +
+> +       chosen {
+> +               bootargs = "console=ttySC2,115200 ignore_loglevel rw root=/dev/mtdblock0";
+
+bootargs = "ignore_loglevel rw root=/dev/mtdblock0";
+stdout-path = "serial0:115200n8";
+
+> +       memory {
+
+memory@20000000
+
+(please run "make dtbs W=1")
+
+> +               device_type = "memory";
+> +               reg = <0x20000000 0x00A00000>;  /* 10Mb @ 0x20000000 */
+
+reg = <0x20000000 0x00a00000>;
+
+No need for the comment, esp. since it says 10 megabits instead of
+10 mebibyte ;-)
+
+> +       qspi@18000000 {
+
+flash@18000000?
+
+> +               compatible = "mtd-rom";
+> +               probe-type = "map_rom";
+> +               reg = <0x18000000 0x00800000>;   /* 8 MB*/
+
+No need for the comment (megabyte vs. mebibyte)
+
+> +               bank-width = <4>;
+> +               device-width = <1>;
+> +
+> +               #address-cells = <1>;
+> +               #size-cells = <1>;
+> +
+> +               rootfs@18600000 {
+
+rootfs@600000?
+
+> +                       label = "rootfs";
+> +                       reg = <0x00600000 0x00200000>; /* 2MB @ 0x18600000 */
+
+Do we need the comment?
+
+> +&extal_clk {
+> +       clock-frequency = <13330000>;
+
+My schematics have one more digit of precision: <13333000>
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
