@@ -1,35 +1,55 @@
-From: Chris Packham <Chris.Packham@alliedtelesis.co.nz>
-Subject: Re: [PATCH v3 5/5] mtd: mchp23k256: Add support for mchp23lcv1024
-Date: Tue, 23 May 2017 20:29:09 +0000
-Message-ID: <9caa87dc05f947198670bc8c5123d941@svr-chch-ex1.atlnz.lc>
-References: <20170523004317.16908-1-chris.packham@alliedtelesis.co.nz>
- <20170523004317.16908-6-chris.packham@alliedtelesis.co.nz>
- <20170523091423.1a0b84d9@bbrezillon>
+From: Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/2] pci: ftpci100: add clock bindings
+Date: Tue, 23 May 2017 15:40:41 -0500
+Message-ID: <20170523204041.GB15055@bhelgaas-glaptop.roam.corp.google.com>
+References: <20170515172312.1722-1-linus.walleij@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: Boris Brezillon <boris.brezillon@free-electrons.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "andrew@lunn.ch" <andrew@lunn.ch>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Richard Weinberger <richard@nod.at>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Marek Vasut <marek.vasut@gmail.com>, Rob Herring <robh+dt@kernel.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, Cyrille Pitchen <cyrille.pitchen@wedev4u.fr>, "computersforpeace@gmail.com" <computersforpeace@gmail.com>, "dwmw2@infradead.org" <dwmw2@infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170515172312.1722-1-linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 23/05/17 19:19, Boris Brezillon wrote:
-> BTW, it's really weird to have the _flash extension in the struct name,
-> while we're actually dealing with SRAMs.
+On Mon, May 15, 2017 at 07:23:12PM +0200, Linus Walleij wrote:
+> The Faraday FTPCI100 controller has two clock ports, PCLK and PCICLK.
+> We add bindings for these two clocks so we can assign them in the device
+> tree.
+> 
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
-Agreed. After the dust settles on this series I'll send a trivial patch 
-to change "flash" to something sensible like "sram" or "chip".
+Applied both (with Rob's ack on the first) to pci/host-faraday for v4.13,
+thanks!
 
-______________________________________________________
-Linux MTD discussion mailing list
-http://lists.infradead.org/mailman/listinfo/linux-mtd/
+> ---
+>  Documentation/devicetree/bindings/pci/faraday,ftpci100.txt | 7 +++++++
+>  1 file changed, 7 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/pci/faraday,ftpci100.txt b/Documentation/devicetree/bindings/pci/faraday,ftpci100.txt
+> index 35d4a979bb7b..89a84f8aa621 100644
+> --- a/Documentation/devicetree/bindings/pci/faraday,ftpci100.txt
+> +++ b/Documentation/devicetree/bindings/pci/faraday,ftpci100.txt
+> @@ -30,6 +30,13 @@ Mandatory properties:
+>    128MB, 256MB, 512MB, 1GB or 2GB in size. The memory should be marked as
+>    pre-fetchable.
+>  
+> +Optional properties:
+> +- clocks: when present, this should contain the peripheral clock (PCLK) and the
+> +  PCI clock (PCICLK). If these are not present, they are assumed to be
+> +  hard-wired enabled and always on. The PCI clock will be 33 or 66 MHz.
+> +- clock-names: when present, this should contain "PCLK" for the peripheral
+> +  clock and "PCICLK" for the PCI-side clock.
+> +
+>  Mandatory subnodes:
+>  - For "faraday,ftpci100" a node representing the interrupt-controller inside the
+>    host bridge is mandatory. It has the following mandatory properties:
+> -- 
+> 2.9.3
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
