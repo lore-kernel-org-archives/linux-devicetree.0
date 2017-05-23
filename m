@@ -1,77 +1,75 @@
-From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: Re: [PATCH 3/6] gpio: dt-bindings: Add documentation for gpio controllers on Armada 7K/8K
-Date: Tue, 23 May 2017 15:06:04 +0200
-Message-ID: <878tlnzps3.fsf@free-electrons.com>
-References: <cover.e10718b9c0f9fdd07327ae14e213be8da5b1f7ef.1495210061.git-series.gregory.clement@free-electrons.com>
-        <306395ff39de3d3d3c8f55e5da4de8def29ae8d1.1495210061.git-series.gregory.clement@free-electrons.com>
-        <CACRpkdY97DDcwec+J-4X1AT5a7Mbo4GnWUJmuAOYhNzOA8_HZQ@mail.gmail.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [RFC 0/3] misc: new serdev based drivers for w2sg00x4 GPS module
+ and w2cbw003 wifi/bluetooth
+Date: Tue, 23 May 2017 08:10:55 -0500
+Message-ID: <CAL_JsqK5NxL+rHU2enW0Lo+e+HThp-iK3hpW-UxeFREbivRZOw@mail.gmail.com>
+References: <cover.1495363443.git.hns@goldelico.com> <CAL_Jsq+fmi2QwE7J8xv47ece1b+jqnOo99NghfjtocnrRvBkPg@mail.gmail.com>
+ <78B1501A-B9AD-4C6E-A481-26F647AA2BCE@goldelico.com> <CAL_JsqJamBBggr9AOQtQWtZOG+FevK1XEU_D=nYL6=hyvjviVw@mail.gmail.com>
+ <0D94BEA0-F98D-48F6-9DDC-99F932AE7834@goldelico.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdY97DDcwec+J-4X1AT5a7Mbo4GnWUJmuAOYhNzOA8_HZQ@mail.gmail.com>
-        (Linus Walleij's message of "Tue, 23 May 2017 11:20:19 +0200")
-Sender: linux-gpio-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Stephen Boyd <sboyd@codeaurora.org>, Mike Turquette <mturquette@baylibre.com>, Alexandre Courbot <gnurou@gmail.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King <rmk+kernel@armlinux.org.uk>, Nadav Haklai <nadavh@marvell.com>, Kostya Porotchkin <kostap@marvell.com>, Neta Zur Hershkovits <neta@marvell.com>, Marci
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <0D94BEA0-F98D-48F6-9DDC-99F932AE7834@goldelico.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Russell King <linux@armlinux.org.uk>, Thierry Reding <treding@nvidia.com>, Jonathan Cameron <jic23@kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-omap <linux-omap@vger.kernel.org>, Discussions about the Letux Kernel <letux-kernel@openphoenux.org>, kernel@pyra-handheld.com, Marcel Holtmann <marcel@holtmann.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Linus,
- 
- On mar., mai 23 2017, Linus Walleij <linus.walleij@linaro.org> wrote:
++Marcel
 
-> On Fri, May 19, 2017 at 6:09 PM, Gregory CLEMENT
-> <gregory.clement@free-electrons.com> wrote:
+On Tue, May 23, 2017 at 7:48 AM, H. Nikolaus Schaller <hns@goldelico.com> wrote:
+> Hi Rob,
 >
->> Document the device tree binding for the gpio controllers found on the
->> Marvell Armada 7K and Armada 8K SoCs.
+>> Am 23.05.2017 um 14:28 schrieb Rob Herring <robh+dt@kernel.org>:
 >>
->> Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
+>> On Tue, May 23, 2017 at 12:43 AM, H. Nikolaus Schaller
+>> <hns@goldelico.com> wrote:
+>>> Hi Rob,
+>>>
+>>>> Am 23.05.2017 um 04:26 schrieb Rob Herring <robh+dt@kernel.org>:
+>>>>
+>>>> On Sun, May 21, 2017 at 5:44 AM, H. Nikolaus Schaller <hns@goldelico.com> wrote:
+>>>>> Since our proposed API was not acceptable and the new serdev API has arrived in 4.11 kernels,
+>>>>> we finally took the challenge to update the w2sg and w2cbw drivers to use the serdev API.
+>>>>>
+>>>>> The approach is to write a "man in the middle" driver which is on one side a serdev client
+>>>>> which directly controls the UART where the device is connected to and on the other side
+>>>>> presents a new tty port so that user-space software can talk to the chips as if they would
+>>>>> directly talk to the UART of the SoC (e.g. ttyO1). This is similar to connecting to a remote
+>>>>> serial device e.g. through USB (ttyACM) or Bluetooth UART profiles.
+>>>>>
+>>>>> For example gpsd or hciattach expect a /dev/tty they can control (flow control, baud rate
+>>>>> etc.).
+>>>>
+>>>> I understand from the prior discussion why you want to pass the data
+>>>> thru for gps, but why do you need to do that for BT?
+>>>
+>>> Because we otherwise can't turn on power when /dev/ttyBT0 is opened and turn off when it
+>>> is closed. I.e. it should not be powered unless someone does a hciattach /dev/ttyBT0. And it
+>>> should be turned off by a killall hciattach.
+>>
+>> Still, you can do power control within BT HCI drivers.
 >
-> This does not apply at all to the GPIO "devel" branch.
-> And that is a fairly clean v4.12-rc2.
+> We do not use any driver for bluetooth. We just start hciattach on demand.
+> And afaik there is no plugin mechanism for adding power control to hciattach.
+
+You don't need hciattach. All userspace has to do for kernel BT
+drivers is "hciconfig hci0 up|down".
+
+> Or do you have a link to what you think about?
+
+Look at the nokia BT or TI (HCI_LL) BT drivers. Those both have f/w
+downloading and some GPIO controls. Given that this module is based on
+Marvell chipset, I'd expect you need to add serdev support to
+hci_mrvl.c.
+
+>> You wouldn't be
+>> limited to just open/close, but can handle suspend/resume as well.
 >
-> Please rebase and resend the rest of the patches.
+> Well, it does not look as if we need more than open/close since suspend/resume
+> is already handled by the regulator driver. We just need to keep it powered off
+> if there is no user-space client.
 
-Actually I was wrong with my assumption that there was no dependency.
-For the binding documentation there is dependecy accross the series I
-sent.
+Okay.
 
-This patch depends on "pinctrl: dt-bindings: add documentation for AP806
-pin controllers" [1] and "pinctrl: dt-bindings: add documentation for
-CP110 pin controllers" [3] from the series "Add support for the pin
-controllers on the Marvell Armada 7K/8K".
-
-As you are maintainer of both gpio and pinctrl subsystem it will be easy
-to resolv.
-
-But these last patches depend also on "clk: mvebu: ap806: introduce a
-new binding" [3] in the clock series "Improve ap806 clk support on
-Marvell Armada 7K/8K" and on "clk: mvebu: cp110: introduce a new
-binding" [4] in the clock series "Improve cp110 clk support on Marvell
-Armada 7K/8K".
-
-So for these particular patches, either I rebase them on the v4.12-rc2
-and there will be a small merge conflict during the merge window for
-v4.13, or we can ask a stable branch with only these few patches (I am
-adding the clock maintainer to this email).
-
-If we chose this last option I can split the clock patches to have patch
-modifying only the binding documentation.
-
-Gregory
-
-[1]: http://lists.infradead.org/pipermail/linux-arm-kernel/2017-May/507399.html
-[2]: http://lists.infradead.org/pipermail/linux-arm-kernel/2017-May/507398.html
-[3]: http://lists.infradead.org/pipermail/linux-arm-kernel/2017-May/507393.html
-[4]: http://lists.infradead.org/pipermail/linux-arm-kernel/2017-May/507384.html
-
-> Would be nice with a DT ACK but no controversial changes here.
->
-> Yours,
-> Linus Walleij
-
--- 
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
+Rob
