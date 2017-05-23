@@ -1,284 +1,104 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 2/2] arm64: dts: Add Mediatek SoC MT2712 and evaluation
- board dts and Makefile
-Date: Tue, 23 May 2017 10:01:37 -0500
-Message-ID: <20170523150137.ouyloy46ahuhsenu@rob-hp-laptop>
-References: <1495192186-22480-1-git-send-email-yt.shen@mediatek.com>
- <1495192186-22480-3-git-send-email-yt.shen@mediatek.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/5] dt-bindings: iio: stm32-adc: add support for STM32H7
+Date: Tue, 23 May 2017 10:07:30 -0500
+Message-ID: <20170523150730.735kyrb5kuheqtyi@rob-hp-laptop>
+References: <1495197928-1439-1-git-send-email-fabrice.gasnier@st.com>
+ <1495197928-1439-2-git-send-email-fabrice.gasnier@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1495192186-22480-3-git-send-email-yt.shen@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: YT Shen <yt.shen@mediatek.com>
-Cc: Matthias Brugger <matthias.bgg@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Mars Cheng <mars.cheng@mediatek.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com
+In-Reply-To: <1495197928-1439-2-git-send-email-fabrice.gasnier-qxv4g6HH51o@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Fabrice Gasnier <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>
+Cc: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, benjamin.gaignard-qxv4g6HH51o@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 19, 2017 at 07:09:46PM +0800, YT Shen wrote:
-> This adds basic chip support for Mediatek 2712
+On Fri, May 19, 2017 at 02:45:24PM +0200, Fabrice Gasnier wrote:
+> Document support for STM32H7 Analog to Digital Converter.
+> Main difference is regarding compatible, clock definitions and new
+> features like differential channels support:
+> STM32H7 ADC block has two clock inputs, common clock for all ADCs.
+> One 'bus' clock for registers access, and one optional 'adc' clock
+> for analog circuitry (bus clock may be used for conversions).
 > 
-> Signed-off-by: YT Shen <yt.shen@mediatek.com>
+> Signed-off-by: Fabrice Gasnier <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>
 > ---
->  arch/arm64/boot/dts/mediatek/Makefile       |   1 +
->  arch/arm64/boot/dts/mediatek/mt2712-evb.dts |  44 +++++++
->  arch/arm64/boot/dts/mediatek/mt2712e.dtsi   | 172 ++++++++++++++++++++++++++++
->  3 files changed, 217 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/mediatek/mt2712-evb.dts
->  create mode 100644 arch/arm64/boot/dts/mediatek/mt2712e.dtsi
+>  .../devicetree/bindings/iio/adc/st,stm32-adc.txt     | 20 ++++++++++++++------
+>  1 file changed, 14 insertions(+), 6 deletions(-)
 > 
-> diff --git a/arch/arm64/boot/dts/mediatek/Makefile b/arch/arm64/boot/dts/mediatek/Makefile
-> index 9fbfd32..fcc0604 100644
-> --- a/arch/arm64/boot/dts/mediatek/Makefile
-> +++ b/arch/arm64/boot/dts/mediatek/Makefile
-> @@ -1,3 +1,4 @@
-> +dtb-$(CONFIG_ARCH_MEDIATEK) += mt2712-evb.dtb
->  dtb-$(CONFIG_ARCH_MEDIATEK) += mt6755-evb.dtb
->  dtb-$(CONFIG_ARCH_MEDIATEK) += mt6795-evb.dtb
->  dtb-$(CONFIG_ARCH_MEDIATEK) += mt8173-evb.dtb
-> diff --git a/arch/arm64/boot/dts/mediatek/mt2712-evb.dts b/arch/arm64/boot/dts/mediatek/mt2712-evb.dts
-> new file mode 100644
-> index 0000000..40b0c91
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/mediatek/mt2712-evb.dts
-> @@ -0,0 +1,44 @@
-> +/*
-> + * Copyright (c) 2017 MediaTek Inc.
-> + * Author: YT Shen <yt.shen@mediatek.com>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + */
+> diff --git a/Documentation/devicetree/bindings/iio/adc/st,stm32-adc.txt b/Documentation/devicetree/bindings/iio/adc/st,stm32-adc.txt
+> index e35f9f1..9519d2e 100644
+> --- a/Documentation/devicetree/bindings/iio/adc/st,stm32-adc.txt
+> +++ b/Documentation/devicetree/bindings/iio/adc/st,stm32-adc.txt
+> @@ -21,11 +21,17 @@ own configurable sequence and trigger:
+>  Contents of a stm32 adc root node:
+>  -----------------------------------
+>  Required properties:
+> -- compatible: Should be "st,stm32f4-adc-core".
+> +- compatible: Should be one of "st,stm32f4-adc-core" or "st,stm32h7-adc-core".
 
-You may want to dual license this. Not sure what the rest of Mediatek 
-dts files do though. Also, you can use SPDX tag here if you want.
+Reformat this to 1 per line.
 
-> +
-> +/dts-v1/;
-> +#include "mt2712e.dtsi"
-> +
-> +/ {
-> +	model = "MediaTek MT2712 evaluation board";
-> +	compatible = "mediatek,mt2712-evb", "mediatek,mt2712";
-> +
-> +	aliases {
-> +		serial0 = &uart0;
-> +		serial1 = &uart1;
-> +		serial2 = &uart2;
-> +		serial3 = &uart3;
-> +		serial4 = &uart4;
-> +		serial5 = &uart5;
-> +	};
-> +
-> +	memory@40000000 {
-> +		device_type = "memory";
-> +		reg = <0 0x40000000 0 0x80000000>;
-> +	};
-> +
-> +	chosen {
-> +		bootargs = "console=ttyS0,921600n1 initrd=0x45000000,90M";
+>  - reg: Offset and length of the ADC block register set.
+>  - interrupts: Must contain the interrupt for ADC block.
+> -- clocks: Clock for the analog circuitry (common to all ADCs).
+> -- clock-names: Must be "adc".
+> +- clocks: Core can use up to two clocks, depending on part used:
+> +  - "adc" clock: for the analog circuitry, common to all ADCs.
+> +    It's required on stm32f4.
+> +    It's optional on stm32h7, bus clock will be used by default if not set.
 
-Both of these have a way to be expressed in DT. For the initrd, the 
-bootloader should be setting the address and size anyway.
+The clocks listed should be all connections present, not policy as to 
+what clock you want to use for conversions.
 
-> +	};
-> +};
-> +
-> +&uart0 {
-> +	status = "okay";
-> +};
-> +
-> diff --git a/arch/arm64/boot/dts/mediatek/mt2712e.dtsi b/arch/arm64/boot/dts/mediatek/mt2712e.dtsi
-> new file mode 100644
-> index 0000000..40747a9
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/mediatek/mt2712e.dtsi
-> @@ -0,0 +1,172 @@
-> +/*
-> + * Copyright (c) 2017 MediaTek Inc.
-> + * Author: YT Shen <yt.shen@mediatek.com>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + */
-> +
-> +#include <dt-bindings/interrupt-controller/irq.h>
-> +#include <dt-bindings/interrupt-controller/arm-gic.h>
-> +
-> +/ {
-> +	compatible = "mediatek,mt2712";
-> +	interrupt-parent = <&sysirq>;
-> +	#address-cells = <2>;
-> +	#size-cells = <2>;
-> +
-> +	cpus {
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		cpu-map {
-> +			cluster0 {
-> +				core0 {
-> +					cpu = <&cpu0>;
-> +				};
-> +				core1 {
-> +					cpu = <&cpu1>;
-> +				};
-> +			};
-> +
-> +			cluster1 {
-> +				core0 {
-> +					cpu = <&cpu2>;
-> +				};
-> +			};
-> +		};
-> +
-> +		cpu0: cpu@0 {
-> +			device_type = "cpu";
-> +			compatible = "arm,cortex-a35";
-> +			reg = <0x000>;
-> +		};
-> +
-> +		cpu1: cpu@1 {
-> +			device_type = "cpu";
-> +			compatible = "arm,cortex-a35";
-> +			reg = <0x001>;
-> +			enable-method = "psci";
-> +		};
-> +
-> +		cpu2: cpu@200 {
-> +			device_type = "cpu";
-> +			compatible = "arm,cortex-a72";
-> +			reg = <0x200>;
-> +			enable-method = "psci";
-> +		};
-> +	};
-> +
-> +	psci {
-> +		compatible = "arm,psci-0.2";
-> +		method = "smc";
-> +	};
-> +
-> +	uart_clk: dummy26m {
-> +		compatible = "fixed-clock";
-> +		clock-frequency = <26000000>;
-> +		#clock-cells = <0>;
-> +	};
-> +
-> +	timer {
-> +		compatible = "arm,armv8-timer";
-> +		interrupt-parent = <&gic>;
-> +		interrupts = <GIC_PPI 13
-> +			      (GIC_CPU_MASK_SIMPLE(6) | IRQ_TYPE_LEVEL_LOW)>,
-> +			     <GIC_PPI 14
-> +			      (GIC_CPU_MASK_SIMPLE(6) | IRQ_TYPE_LEVEL_LOW)>,
-> +			     <GIC_PPI 11
-> +			      (GIC_CPU_MASK_SIMPLE(6) | IRQ_TYPE_LEVEL_LOW)>,
-> +			     <GIC_PPI 10
-> +			      (GIC_CPU_MASK_SIMPLE(6) | IRQ_TYPE_LEVEL_LOW)>;
-> +	};
-> +
-> +	soc {
-> +		#address-cells = <2>;
-> +		#size-cells = <2>;
-> +		compatible = "simple-bus";
-> +		ranges;
-> +
-> +		uart5: serial@1000f000 {
-> +			compatible = "mediatek,mt2712-uart",
-> +				     "mediatek,mt6577-uart";
-> +			reg = <0 0x1000f000 0 0x400>;
-> +			interrupts = <GIC_SPI 127 IRQ_TYPE_LEVEL_LOW>;
-> +			clocks = <&uart_clk>;
-> +			status = "disabled";
-> +		};
-> +
-> +		sysirq: intpol-controller@10220a80 {
+> +  - "bus" clock: for registers access, common to all ADCs.
+> +    It's unused on stm32f4.
 
-interrupt-controller@...
+s/unused/not present/
 
-> +			compatible = "mediatek,mt2712-sysirq",
-> +				     "mediatek,mt6577-sysirq";
-> +			interrupt-controller;
-> +			#interrupt-cells = <3>;
-> +			interrupt-parent = <&gic>;
-> +			reg = <0 0x10220a80 0 0x40>;
-> +		};
-> +
-> +		gic: interrupt-controller@10510000 {
-> +			compatible = "arm,gic-400";
-> +			#interrupt-cells = <3>;
-> +			interrupt-parent = <&gic>;
-> +			interrupt-controller;
-> +			reg = <0 0x10510000 0 0x1000>,
-> +			      <0 0x10520000 0 0x1000>,
-> +			      <0 0x10540000 0 0x2000>,
-> +			      <0 0x10560000 0 0x2000>;
-> +			interrupts = <GIC_PPI 9
-> +				(GIC_CPU_MASK_SIMPLE(6) | IRQ_TYPE_LEVEL_HIGH)>;
-> +		};
-> +
-> +		uart0: serial@11002000 {
-> +			compatible = "mediatek,mt2712-uart",
-> +				     "mediatek,mt6577-uart";
-> +			reg = <0 0x11002000 0 0x400>;
-> +			interrupts = <GIC_SPI 91 IRQ_TYPE_LEVEL_LOW>;
-> +			clocks = <&uart_clk>;
-> +			status = "disabled";
-> +		};
-> +
-> +		uart1: serial@11003000 {
-> +			compatible = "mediatek,mt2712-uart",
-> +				     "mediatek,mt6577-uart";
-> +			reg = <0 0x11003000 0 0x400>;
-> +			interrupts = <GIC_SPI 92 IRQ_TYPE_LEVEL_LOW>;
-> +			clocks = <&uart_clk>;
-> +			status = "disabled";
-> +		};
-> +
-> +		uart2: serial@11004000 {
-> +			compatible = "mediatek,mt2712-uart",
-> +				     "mediatek,mt6577-uart";
-> +			reg = <0 0x11004000 0 0x400>;
-> +			interrupts = <GIC_SPI 93 IRQ_TYPE_LEVEL_LOW>;
-> +			clocks = <&uart_clk>;
-> +			status = "disabled";
-> +		};
-> +
-> +		uart3: serial@11005000 {
-> +			compatible = "mediatek,mt2712-uart",
-> +				     "mediatek,mt6577-uart";
-> +			reg = <0 0x11005000 0 0x400>;
-> +			interrupts = <GIC_SPI 94 IRQ_TYPE_LEVEL_LOW>;
-> +			clocks = <&uart_clk>;
-> +			status = "disabled";
-> +		};
-> +
-> +		uart4: serial@11019000 {
-> +			compatible = "mediatek,mt2712-uart",
-> +				     "mediatek,mt6577-uart";
-> +			reg = <0 0x11019000 0 0x400>;
-> +			interrupts = <GIC_SPI 126 IRQ_TYPE_LEVEL_LOW>;
-> +			clocks = <&uart_clk>;
-> +			status = "disabled";
-> +		};
-> +	};
-> +};
-> +
+> +    It's required on stm32h7.
+> +- clock-names: Must be "adc" and/or "bus" depending on part used.
+>  - interrupt-controller: Identifies the controller node as interrupt-parent
+>  - vref-supply: Phandle to the vref input analog reference voltage.
+>  - #interrupt-cells = <1>;
+> @@ -42,14 +48,16 @@ An ADC block node should contain at least one subnode, representing an
+>  ADC instance available on the machine.
+>  
+>  Required properties:
+> -- compatible: Should be "st,stm32f4-adc".
+> +- compatible: Should be one of "st,stm32f4-adc" or "st,stm32h7-adc".
+
+One per line.
+
+>  - reg: Offset of ADC instance in ADC block (e.g. may be 0x0, 0x100, 0x200).
+> -- clocks: Input clock private to this ADC instance.
+> +- clocks: Input clock private to this ADC instance. It's required only on
+> +  stm32f4, that has per instance clock input for registers access.
+
+Does the h7 simply have the same parent connected to all ADC instances 
+or really doesn't have a per instance clock? For the former case, you 
+should still have a clock, but just all be the same parent.
+
+>  - interrupt-parent: Phandle to the parent interrupt controller.
+>  - interrupts: IRQ Line for the ADC (e.g. may be 0 for adc@0, 1 for adc@100 or
+>    2 for adc@200).
+>  - st,adc-channels: List of single-ended channels muxed for this ADC.
+> -  It can have up to 16 channels, numbered from 0 to 15 (resp. for in0..in15).
+> +  It can have up to 16 channels on stm32f4 or 20 channels on stm32h7, numbered
+> +  from 0 to 15 or 19 (resp. for in0..in15 or in0..in19).
+>  - #io-channel-cells = <1>: See the IIO bindings section "IIO consumers" in
+>    Documentation/devicetree/bindings/iio/iio-bindings.txt
+>  
 > -- 
 > 1.9.1
 > 
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
