@@ -1,109 +1,45 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH V11 08/11] drivers: acpi: Handle IOMMU lookup failure
-	with deferred probing or error
-Date: Tue, 23 May 2017 10:26:59 +0100
-Message-ID: <20170523092659.GA19999@red-moon>
-References: <1491823266-1209-1-git-send-email-sricharan@codeaurora.org>
-	<1491823266-1209-9-git-send-email-sricharan@codeaurora.org>
-	<41668eff-271c-1c4c-7665-3bf0faa74669@codeaurora.org>
-	<20170523085241.GA18204@red-moon>
-	<c6d5c033-a8f9-03e3-9963-cd291ae2d7e1@codeaurora.org>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 1/5] pinctrl: qcom: Add ipq8074 pinctrl driver
+Date: Tue, 23 May 2017 11:26:24 +0200
+Message-ID: <CACRpkdaiXq9ivmPOcAS4UVM-7Fz1aPYuqPw5bOHjOn2PJvSKzw@mail.gmail.com>
+References: <1493898841-20583-1-git-send-email-varada@codeaurora.org>
+ <1493898841-20583-2-git-send-email-varada@codeaurora.org> <20170510224355.GE45273@Bjorns-MacBook-Pro-2.local>
+ <1f4c9974-f6a4-bee7-4f37-ad8795e442a3@codeaurora.org> <20170514042307.GE69278@Bjorns-MacBook-Pro-2.local>
+ <7afc7191-bcb1-a566-eac5-a4fe1293c773@codeaurora.org> <20170517193315.GF12920@tuxbook>
+ <f5a3da8b-c3a4-3cb3-9f5f-0cbdb87688ed@codeaurora.org> <20170520055430.GU12920@tuxbook>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <c6d5c033-a8f9-03e3-9963-cd291ae2d7e1-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-arch-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tn-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org, linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170520055430.GU12920@tuxbook>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Varadarajan Narayanan <varada-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Manoharan Vijaya Raghavan <mraghava-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, sjaganat-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Brown <david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, absahu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 23, 2017 at 02:31:17PM +0530, Sricharan R wrote:
-> Hi Lorenzo,
-> 
-> On 5/23/2017 2:22 PM, Lorenzo Pieralisi wrote:
-> > On Tue, May 23, 2017 at 02:26:10AM -0400, Nate Watterson wrote:
-> >> Hi Sricharan,
-> >>
-> >> On 4/10/2017 7:21 AM, Sricharan R wrote:
-> >>> This is an equivalent to the DT's handling of the iommu master's probe
-> >>> with deferred probing when the corrsponding iommu is not probed yet.
-> >>> The lack of a registered IOMMU can be caused by the lack of a driver for
-> >>> the IOMMU, the IOMMU device probe not having been performed yet, having
-> >>> been deferred, or having failed.
-> >>>
-> >>> The first case occurs when the firmware describes the bus master and
-> >>> IOMMU topology correctly but no device driver exists for the IOMMU yet
-> >>> or the device driver has not been compiled in. Return NULL, the caller
-> >>> will configure the device without an IOMMU.
-> >>>
-> >>> The second and third cases are handled by deferring the probe of the bus
-> >>> master device which will eventually get reprobed after the IOMMU.
-> >>>
-> >>> The last case is currently handled by deferring the probe of the bus
-> >>> master device as well. A mechanism to either configure the bus master
-> >>> device without an IOMMU or to fail the bus master device probe depending
-> >>> on whether the IOMMU is optional or mandatory would be a good
-> >>> enhancement.
-> >>>
-> >>> Tested-by: Hanjun Guo <hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> >>> Reviewed-by: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
-> >>> [Lorenzo: Added fixes for dma_coherent_mask overflow, acpi_dma_configure
-> >>>           called multiple times for same device]
-> >>> Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-> >>> Signed-off-by: Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> >>> ---
-> >>>  drivers/acpi/arm64/iort.c  | 33 ++++++++++++++++++++++++++++++++-
-> >>>  drivers/acpi/scan.c        | 11 ++++++++---
-> >>>  drivers/base/dma-mapping.c |  2 +-
-> >>>  include/acpi/acpi_bus.h    |  2 +-
-> >>>  include/linux/acpi.h       |  7 +++++--
-> >>>  5 files changed, 47 insertions(+), 8 deletions(-)
-> >>>
-> >>> diff --git a/drivers/acpi/arm64/iort.c b/drivers/acpi/arm64/iort.c
-> >>> index 3dd9ec3..e323ece 100644
-> >>> --- a/drivers/acpi/arm64/iort.c
-> >>> +++ b/drivers/acpi/arm64/iort.c
-> >>> @@ -543,6 +543,14 @@ static const struct iommu_ops *iort_iommu_xlate(struct device *dev,
-> >>>  	const struct iommu_ops *ops = NULL;
-> >>>  	int ret = -ENODEV;
-> >>>  	struct fwnode_handle *iort_fwnode;
-> >>> +	struct iommu_fwspec *fwspec = dev->iommu_fwspec;
-> >>> +
-> >>> +	/*
-> >>> +	 * If we already translated the fwspec there
-> >>> +	 * is nothing left to do, return the iommu_ops.
-> >>> +	 */
-> >>> +	if (fwspec && fwspec->ops)
-> >>> +		return fwspec->ops;
-> >>
-> >> Is this logic strictly required? It breaks masters with multiple SIDs
-> >> as only the first SID is actually added to the master's fwspec.
-> > 
-> > My bad, that's indeed a silly bug I introduced. Please let me know if the
-> > patch below fixes it, we will send it upstream shortly.
-> > 
-> 
-> oops, i think emails crossed. Please let me know if you are ok to add
-> this to the other fixes.
+On Sat, May 20, 2017 at 7:54 AM, Bjorn Andersson
+<bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> On Thu 18 May 01:39 PDT 2017, Varadarajan Narayanan wrote:
 
-No worries, yes I am ok thanks but please give Nate some time to report
-back to make sure the diff I sent actually fixes the problem.
+>> There are 18 pins. 15 pins are common between LCD and NAND. The QPIC
+>> controller arbitrates between LCD and NAND. Of the remaining 4, 2 are for
+>> NAND and 2 are for LCD exclusively. We plan to group the qpic pins into 3
+>> groups namely, qpic_common, qpic_nand and qpic_lcd. Is that ok?
+>>
+>
+> If you consider that you are defining the available functions for this
+> pinmuxer and then define the sets of pins exposing these available
+> functions it does make sense to just name it "qpic".
+>
+> I think that naming them _common, _lcd and _nand is just adding
+> confusion when it comes to writing the dts files.
+>
+> @Linus, do you have a different preference here?
 
-Apologies for the breakage.
+No I pretty much trust the driver maintainer to know this best.
 
-Lorenzo
-
-> 
-> Regards,
->  Sricharan
-> 
+Yours,
+Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
