@@ -1,114 +1,95 @@
-From: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 11/15] MIPS: lantiq: Add a GPHY driver which uses the
- RCU syscon-mfd
-Date: Tue, 23 May 2017 10:52:12 +0300
-Message-ID: <CAHp75VdSAGv0md8YsvwdZJX4Eo-K6Tv3TcyAVKfOmdk6De1iGQ@mail.gmail.com>
-References: <20170521130918.27446-1-hauke@hauke-m.de> <20170521130918.27446-12-hauke@hauke-m.de>
+From: Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 1/3] mfd: lp87565: Add lp87565 PMIC support
+Date: Tue, 23 May 2017 13:28:30 +0530
+Message-ID: <8e1d50d1-378b-aca5-a6f5-457a0bb1544a@ti.com>
+References: <1495197739-17446-1-git-send-email-j-keerthy@ti.com>
+ <1495197739-17446-2-git-send-email-j-keerthy@ti.com>
+ <20170522174806.nnpk5jso7jhgygm3@dell>
+ <26169872-1b43-88d1-3e5b-367b4d446222@ti.com>
+ <20170523065742.44ytkxdagw2wwttz@dell>
+ <a753fdb4-feb9-0894-6f40-a19d3f05714c@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170521130918.27446-12-hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
-Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
-Cc: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Linux MIPS Mailing List <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, "open list:MEMORY TECHNOLOGY..." <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "martin.blumenstingl" <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, john <john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org>, linux-spi <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "hauke.mehrtens" <hauke.mehrtens-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <a753fdb4-feb9-0894-6f40-a19d3f05714c-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, t-kristo-l0cyMroinI0@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, May 21, 2017 at 4:09 PM, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org> wrote:
 
-> Compared to the old xrx200_phy_fw driver the new version has multiple
-> enhancements. The name of the firmware files does not have to be added
-> to all .dts files anymore - one now configures the GPHY mode (FE or GE)
-> instead. Each GPHY can now also boot separate firmware (thus mixing of
-> GE and FE GPHYs is now possible).
-> The new implementation is based on the RCU syscon-mfd and uses the
-> reeset_controller framework instead of raw RCU register reads/writes.
 
-> +static int xway_gphy_load(struct platform_device *pdev,
-> +                         const char *fw_name, dma_addr_t *dev_addr)
-> +{
-> +       const struct firmware *fw;
-> +       void *fw_addr;
-> +       size_t size;
-> +       int ret;
-> +
+On Tuesday 23 May 2017 01:11 PM, Keerthy wrote:
+> 
+> 
+> On Tuesday 23 May 2017 12:27 PM, Lee Jones wrote:
+>> On Tue, 23 May 2017, Keerthy wrote:
+>>> On Monday 22 May 2017 11:18 PM, Lee Jones wrote:
+>>>> On Fri, 19 May 2017, Keerthy wrote:
+>>>>
+>>>>> The LP87565 chip is a power management IC for Portable Navigation Systems
+>>>>> and Tablet Computing devices. It contains the following components:
+>>>>>
+>>>>>         - Configurable Bucks(Single and multi-phase).
+>>>>>         - Configurable General Purpose Output Signals (GPO).
+>>>>>
+>>>>> The LP87565-Q1 variant device uses two 2-phase outputs configuration,
+>>>>> Buck0 is master for Buck0/1 output and Buck2 is master for Buck2/3
+>>>>> output.
+>>>>>
+>>>>> Signed-off-by: Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>
+>>>>> ---
+>>>>>  Documentation/devicetree/bindings/mfd/lp87565.txt |  44 ++++
+>>>>>  drivers/mfd/Kconfig                               |  14 ++
+>>>>>  drivers/mfd/Makefile                              |   1 +
+>>>>>  drivers/mfd/lp87565.c                             | 103 ++++++++
+>>>>>  include/linux/mfd/lp87565.h                       | 275 ++++++++++++++++++++++
+>>>>>  5 files changed, 437 insertions(+)
+>>>>>  create mode 100644 Documentation/devicetree/bindings/mfd/lp87565.txt
+>>>>>  create mode 100644 drivers/mfd/lp87565.c
+>>>>>  create mode 100644 include/linux/mfd/lp87565.h
+>>>>>
+>>
+>> [...]
+>>
+>>>>> +/*
+>>>>> + * Copyright (C) 2017 Texas Instruments Incorporated - http://www.ti.com/
+>>>>> + *
+>>>>> + * Author: Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>
+>>>>
+>>>> We usually ask for full "first last" names.
+>>>
+>>> Keerthy is my full name and i do not have a surname.
+>>
+>> What is the 'J' for in your email address?
+> 
+> Father's initials.
 
-> +       dev_info(&pdev->dev, "requesting %s\n", fw_name);
+https://lkml.org/lkml/2012/7/11/482
 
-Noise.
+I have been using this for a while now.
 
-> +       ret = request_firmware(&fw, fw_name, &pdev->dev);
-> +       if (ret) {
-> +               dev_err(&pdev->dev, "failed to load firmware: %s, error: %i\n",
-> +                       fw_name, ret);
-> +               return ret;
-> +       }
-> +
-
-> +       /*
-> +        * GPHY cores need the firmware code in a persistent and contiguous
-> +        * memory area with a 16 kB boundary aligned start address
-
-Add period to the end.
-
-> +        */
-
-> +static int xway_gphy_of_probe(struct platform_device *pdev,
-> +                               struct xway_gphy_priv *priv)
-> +{
-
-> +       priv->gphy_reset = devm_reset_control_get(&pdev->dev, "gphy");
-> +       if (IS_ERR_OR_NULL(priv->gphy_reset)) {
-
-_OR_NULL part looks suspicious.
-There is _optional() variant of reset API, AFAIR.
-
-> +               if (PTR_ERR(priv->gphy_reset) != -EPROBE_DEFER)
-> +                       dev_err(&pdev->dev, "Failed to lookup gphy reset\n");
-> +               return PTR_ERR(priv->gphy_reset);
-> +       }
-
-> +       priv->gphy_reset2 = devm_reset_control_get_optional(&pdev->dev, "gphy2");
-> +       if (IS_ERR(priv->gphy_reset2)) {
-> +               if (PTR_ERR(priv->gphy_reset2) == -EPROBE_DEFER)
-> +                       return PTR_ERR(priv->gphy_reset2);
-
-> +               priv->gphy_reset2 = NULL;
-
-Why?
-
-If there is a problem in reset framework it should be fixed there, not here.
-
-> +       }
-> +
-> +       if (of_property_read_u32(np, "lantiq,gphy-mode", &gphy_mode))
-
-> +               /* Default to GE mode */
-
-If you put more lines in the branch you perhaps need {}.
-
-> +               gphy_mode = GPHY_MODE_GE;
-
-> +static int xway_gphy_probe(struct platform_device *pdev)
-> +{
-> +       struct xway_gphy_priv *priv;
-> +       dma_addr_t fw_addr = 0;
-> +       int ret;
-
-> +       if (!IS_ERR_OR_NULL(priv->gphy_clk_gate))
-
-_OR_NULL is redundant.
-IS_ERR should not happen here if clock is mandatory.
-
-Thus, complete line is redundant.
-
-> +               clk_prepare_enable(priv->gphy_clk_gate);
-
-You need to check return value.
-
--- 
-With Best Regards,
-Andy Shevchenko
+> 
+>> [...]
+>>
+>>>>> +static const struct i2c_device_id lp87565_id_table[] = {
+>>>>> +	{ "lp87565-q1", 0 },
+>>>>> +	{ },
+>>>>> +};
+>>>>> +MODULE_DEVICE_TABLE(i2c, lp87565_id_table);
+>>>>
+>>>> Is this an OF only driver, or not?
+>>
+>> You didn't answer my question?
+>>
+> 
+> Sorry i replied on top again. It will be an OF only driver.
+> 
+> Regards,
+> Keerthy
+> 
 --
-To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
