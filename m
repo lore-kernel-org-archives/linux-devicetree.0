@@ -1,41 +1,57 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 11/41] mmc: host: omap_hsmmc: Add new compatible string
- to support dra7
-Date: Tue, 23 May 2017 09:44:24 -0500
-Message-ID: <20170523144424.5aj5xl3vlwyuj6ws@rob-hp-laptop>
-References: <20170519081541.26753-1-kishon@ti.com>
- <20170519081541.26753-12-kishon@ti.com>
+From: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Subject: [PATCH v2 1/5] gpio: of: Reflect decoupling of open collector and active low/high
+Date: Tue, 23 May 2017 15:47:28 +0100
+Message-ID: <1495550852-3672-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20170519081541.26753-12-kishon@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>, linux-doc@vger.kernel.org, Tony Lindgren <tony@atomide.com>, nsekhar@ti.com, Jonathan Corbet <corbet@lwn.net>, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, Russell King <linux@armlinux.org.uk>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Cc: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 19, 2017 at 01:45:11PM +0530, Kishon Vijay Abraham I wrote:
-> Add a new compatible string "ti,dra7-hsmmc" to support
-> dra7 and dra72 controllers. Also create a new controller flag
-> "OMAP_HSMMC_REQUIRE_IODELAY" to specify all controllers that use
-> "ti,dra7-hsmmc" require iodealy configuration to be set.
-> 
-> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-> Signed-off-by: Sekhar Nori <nsekhar@ti.com>
-> ---
->  Documentation/devicetree/bindings/mmc/ti-omap-hsmmc.txt |  1 +
->  drivers/mmc/host/omap_hsmmc.c                           | 10 ++++++++++
->  include/linux/platform_data/hsmmc-omap.h                |  1 +
->  3 files changed, 12 insertions(+)
+Commit 4c0facddb7d8 ("gpio: core: Decouple open drain/source flag with
+active low/high") decoupled the open collector outputs from active
+low/high but did not update the documentation.
 
-Acked-by: Rob Herring <robh@kernel.org>
+Update the device tree documentation to correctly reflect this new
+separation between the two concepts.
+
+Signed-off-by: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+---
+
+New to the series.
+
+Thanks,
+Charles
+
+ Documentation/devicetree/bindings/gpio/gpio.txt | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/gpio/gpio.txt b/Documentation/devicetree/bindings/gpio/gpio.txt
+index 2209c16..bccb8623 100644
+--- a/Documentation/devicetree/bindings/gpio/gpio.txt
++++ b/Documentation/devicetree/bindings/gpio/gpio.txt
+@@ -74,11 +74,12 @@ GPIO pin number, and GPIO flags as accepted by the "qe_pio_e" gpio-controller.
+ Optional standard bitfield specifiers for the last cell:
+ 
+ - Bit 0: 0 means active high, 1 means active low
+-- Bit 1: 1 means single-ended wiring, see:
++- Bit 1: 0 mean push-pull wiring, see:
++           https://en.wikipedia.org/wiki/Push-pull_output
++         1 means single-ended wiring, see:
+            https://en.wikipedia.org/wiki/Single-ended_triode
+-	   When used with active-low, this means open drain/collector, see:
++- Bit 2: 0 means open-source, 1 means open drain, see:
+            https://en.wikipedia.org/wiki/Open_collector
+-	   When used with active-high, this means open source/emitter
+ 
+ 1.1) GPIO specifier best practices
+ ----------------------------------
+-- 
+2.1.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
