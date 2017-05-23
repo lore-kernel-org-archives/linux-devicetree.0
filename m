@@ -1,125 +1,70 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH V11 08/11] drivers: acpi: Handle IOMMU lookup failure
-	with deferred probing or error
-Date: Tue, 23 May 2017 09:52:41 +0100
-Message-ID: <20170523085241.GA18204@red-moon>
-References: <1491823266-1209-1-git-send-email-sricharan@codeaurora.org>
-	<1491823266-1209-9-git-send-email-sricharan@codeaurora.org>
-	<41668eff-271c-1c4c-7665-3bf0faa74669@codeaurora.org>
+From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH 1/2] Documentation: rockchip-dw-mshc: add description for rk3328
+Date: Tue, 23 May 2017 10:52:41 +0200
+Message-ID: <3267037.o7d5UcHIWF@phil>
+References: <1495528862-29452-1-git-send-email-shawn.lin@rock-chips.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <41668eff-271c-1c4c-7665-3bf0faa74669-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Nate Watterson <nwatters-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-arch-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tn-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org, linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1495528862-29452-1-git-send-email-shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 23, 2017 at 02:26:10AM -0400, Nate Watterson wrote:
-> Hi Sricharan,
+Hi Shawn,
+
+Am Dienstag, 23. Mai 2017, 16:41:01 CEST schrieb Shawn Lin:
+> Add "rockchip,rk3328-dw-mshc", "rockchip,rk3288-dw-mshc" for
+> dwmmc on rk3328 platform.
 > 
-> On 4/10/2017 7:21 AM, Sricharan R wrote:
-> >This is an equivalent to the DT's handling of the iommu master's probe
-> >with deferred probing when the corrsponding iommu is not probed yet.
-> >The lack of a registered IOMMU can be caused by the lack of a driver for
-> >the IOMMU, the IOMMU device probe not having been performed yet, having
-> >been deferred, or having failed.
-> >
-> >The first case occurs when the firmware describes the bus master and
-> >IOMMU topology correctly but no device driver exists for the IOMMU yet
-> >or the device driver has not been compiled in. Return NULL, the caller
-> >will configure the device without an IOMMU.
-> >
-> >The second and third cases are handled by deferring the probe of the bus
-> >master device which will eventually get reprobed after the IOMMU.
-> >
-> >The last case is currently handled by deferring the probe of the bus
-> >master device as well. A mechanism to either configure the bus master
-> >device without an IOMMU or to fail the bus master device probe depending
-> >on whether the IOMMU is optional or mandatory would be a good
-> >enhancement.
-> >
-> >Tested-by: Hanjun Guo <hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> >Reviewed-by: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
-> >[Lorenzo: Added fixes for dma_coherent_mask overflow, acpi_dma_configure
-> >           called multiple times for same device]
-> >Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-> >Signed-off-by: Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> >---
-> >  drivers/acpi/arm64/iort.c  | 33 ++++++++++++++++++++++++++++++++-
-> >  drivers/acpi/scan.c        | 11 ++++++++---
-> >  drivers/base/dma-mapping.c |  2 +-
-> >  include/acpi/acpi_bus.h    |  2 +-
-> >  include/linux/acpi.h       |  7 +++++--
-> >  5 files changed, 47 insertions(+), 8 deletions(-)
-> >
-> >diff --git a/drivers/acpi/arm64/iort.c b/drivers/acpi/arm64/iort.c
-> >index 3dd9ec3..e323ece 100644
-> >--- a/drivers/acpi/arm64/iort.c
-> >+++ b/drivers/acpi/arm64/iort.c
-> >@@ -543,6 +543,14 @@ static const struct iommu_ops *iort_iommu_xlate(struct device *dev,
-> >  	const struct iommu_ops *ops = NULL;
-> >  	int ret = -ENODEV;
-> >  	struct fwnode_handle *iort_fwnode;
-> >+	struct iommu_fwspec *fwspec = dev->iommu_fwspec;
-> >+
-> >+	/*
-> >+	 * If we already translated the fwspec there
-> >+	 * is nothing left to do, return the iommu_ops.
-> >+	 */
-> >+	if (fwspec && fwspec->ops)
-> >+		return fwspec->ops;
+> Signed-off-by: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+
+You might want to follow get_maintainer.pl's output of recipients
+of at least:
+
+Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> (maintainer:MULTIMEDIA CARD (MMC), SECURE DIGITAL (SD) AND...)
+Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> (maintainer:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS)
+Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> (maintainer:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS)
+Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org> (maintainer:ARM/Rockchip SoC support)
+linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org (open list:MULTIMEDIA CARD (MMC), SECURE DIGITAL (SD) AND...)
+devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org (open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS)
+linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org (moderated list:ARM/Rockchip SoC support)
+linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org (open list:ARM/Rockchip SoC support)
+
+Ulf for example may want to apply the binding.txt patch via his tree and
+the dt-people or random people on the lists _may_ want to comment on
+patches and not everybody is reading the linux-rockchip list :-) .
+
+
+Patch itself looks good though.
+
+Heiko
+
+
+
+> ---
 > 
-> Is this logic strictly required? It breaks masters with multiple SIDs
-> as only the first SID is actually added to the master's fwspec.
+>  Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.txt | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.txt b/Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.txt
+> index 520d61d..18e33cb 100644
+> --- a/Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.txt
+> +++ b/Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.txt
+> @@ -15,6 +15,7 @@ Required Properties:
+>  	- "rockchip,rk3288-dw-mshc": for Rockchip RK3288
+>  	- "rockchip,rv1108-dw-mshc", "rockchip,rk3288-dw-mshc": for Rockchip RV1108
+>  	- "rockchip,rk3036-dw-mshc", "rockchip,rk3288-dw-mshc": for Rockchip RK3036
+> +	- "rockchip,rk3328-dw-mshc", "rockchip,rk3288-dw-mshc": for Rockchip RK3328
+>  	- "rockchip,rk3368-dw-mshc", "rockchip,rk3288-dw-mshc": for Rockchip RK3368
+>  	- "rockchip,rk3399-dw-mshc", "rockchip,rk3288-dw-mshc": for Rockchip RK3399
+>  
+> 
 
-My bad, that's indeed a silly bug I introduced. Please let me know if the
-patch below fixes it, we will send it upstream shortly.
 
-Lorenzo
-
--- >8 --
-diff --git a/drivers/acpi/arm64/iort.c b/drivers/acpi/arm64/iort.c
-index c5fecf9..e326f2a 100644
---- a/drivers/acpi/arm64/iort.c
-+++ b/drivers/acpi/arm64/iort.c
-@@ -666,14 +666,6 @@ static const struct iommu_ops *iort_iommu_xlate(struct device *dev,
- 	int ret = -ENODEV;
- 	struct fwnode_handle *iort_fwnode;
- 
--	/*
--	 * If we already translated the fwspec there
--	 * is nothing left to do, return the iommu_ops.
--	 */
--	ops = iort_fwspec_iommu_ops(dev->iommu_fwspec);
--	if (ops)
--		return ops;
--
- 	if (node) {
- 		iort_fwnode = iort_get_fwnode(node);
- 		if (!iort_fwnode)
-@@ -735,6 +727,14 @@ const struct iommu_ops *iort_iommu_configure(struct device *dev)
- 	u32 streamid = 0;
- 	int err;
- 
-+	/*
-+	 * If we already translated the fwspec there
-+	 * is nothing left to do, return the iommu_ops.
-+	 */
-+	ops = iort_fwspec_iommu_ops(dev->iommu_fwspec);
-+	if (ops)
-+		return ops;
-+
- 	if (dev_is_pci(dev)) {
- 		struct pci_bus *bus = to_pci_dev(dev)->bus;
- 		u32 rid;
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
