@@ -1,7 +1,7 @@
 From: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH V3 1/4] dt-bindings: mtd: make partitions doc a bit more generic
-Date: Tue, 23 May 2017 07:30:19 +0200
-Message-ID: <20170523053022.3251-2-zajec5@gmail.com>
+Subject: [PATCH V3 2/4] mtd: partitions: factor out code calling parser
+Date: Tue, 23 May 2017 07:30:20 +0200
+Message-ID: <20170523053022.3251-3-zajec5@gmail.com>
 References: <20170523053022.3251-1-zajec5@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -15,84 +15,74 @@ List-Id: devicetree@vger.kernel.org
 
 From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-Currently the only documented partitioning is "fixed-partitions" but
-there are more methods in use that we may want to support in the future.
-Mention them and make it clear Fixed Partitions are just a single case.
+This code is going to be reused for parsers matched using OF so let's
+factor it out to make this easier.
 
 Signed-off-by: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Signed-off-by: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+Acked-by: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
 This is based on Brian's patch:
-[RFC PATCH 3/7] doc: dt: mtd: partition: add on-flash format binding
+[RFC PATCH 5/7] mtd: partitions: factor out "match by name" handling
 
-V1: Dropped "Section B: On-Flash Partition Tables" with Google's FMAP as this
-    patchset doesn't add that new parser.
-V2: Add "We currently only document a binding for fixed layouts." part
-V3: Extend description of 'partitions' subnode - thanks Florian
+V1: Do not factor out mtd_part_parser_get_by_name as it's not required by this
+    patchset.
 ---
- .../devicetree/bindings/mtd/partition.txt          | 32 ++++++++++++++++++----
- 1 file changed, 26 insertions(+), 6 deletions(-)
+ drivers/mtd/mtdpart.c | 33 ++++++++++++++++++++++++---------
+ 1 file changed, 24 insertions(+), 9 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/mtd/partition.txt b/Documentation/devicetree/bindings/mtd/partition.txt
-index 81a224da63be..36f3b769a626 100644
---- a/Documentation/devicetree/bindings/mtd/partition.txt
-+++ b/Documentation/devicetree/bindings/mtd/partition.txt
-@@ -1,29 +1,49 @@
--Representing flash partitions in devicetree
-+Flash partitions in device tree
-+===============================
+diff --git a/drivers/mtd/mtdpart.c b/drivers/mtd/mtdpart.c
+index 81e0b80237df..73c52f1a2e4c 100644
+--- a/drivers/mtd/mtdpart.c
++++ b/drivers/mtd/mtdpart.c
+@@ -840,6 +840,27 @@ static const char * const default_mtd_part_types[] = {
+ 	NULL
+ };
  
--Partitions can be represented by sub-nodes of an mtd device. This can be used
-+Flash devices can be partitioned into one or more functional ranges (e.g. "boot
-+code", "nvram", "kernel").
++static int mtd_part_do_parse(struct mtd_part_parser *parser,
++			     struct mtd_info *master,
++			     struct mtd_partitions *pparts,
++			     struct mtd_part_parser_data *data)
++{
++	int ret;
 +
-+Different devices may be partitioned in a different ways. Some may use a fixed
-+flash layout set at production time. Some may use on-flash table that describes
-+the geometry and naming/purpose of each functional region. It is also possible
-+to see these methods mixed.
++	ret = (*parser->parse_fn)(master, &pparts->parts, data);
++	pr_debug("%s: parser %s: %i\n", master->name, parser->name, ret);
++	if (ret <= 0)
++		return ret;
 +
-+To assist system software in locating partitions, we allow describing which
-+method is used for a given flash device. To describe the method there should be
-+a subnode of the flash device that is named 'partitions'. It must have a
-+'compatible' property, which is used to identify the method to use.
++	pr_notice("%d %s partitions found on MTD device %s\n", ret,
++		  parser->name, master->name);
 +
-+We currently only document a binding for fixed layouts.
++	pparts->nr_parts = ret;
++	pparts->parser = parser;
 +
++	return ret;
++}
 +
-+Fixed Partitions
-+================
-+
-+Partitions can be represented by sub-nodes of a flash device. This can be used
- on platforms which have strong conventions about which portions of a flash are
- used for what purposes, but which don't use an on-flash partition table such
- as RedBoot.
- 
--The partition table should be a subnode of the mtd node and should be named
-+The partition table should be a subnode of the flash node and should be named
- 'partitions'. This node should have the following property:
- - compatible : (required) must be "fixed-partitions"
- Partitions are then defined in subnodes of the partitions node.
- 
--For backwards compatibility partitions as direct subnodes of the mtd device are
-+For backwards compatibility partitions as direct subnodes of the flash device are
- supported. This use is discouraged.
- NOTE: also for backwards compatibility, direct subnodes that have a compatible
- string are not considered partitions, as they may be used for other bindings.
- 
- #address-cells & #size-cells must both be present in the partitions subnode of the
--mtd device. There are two valid values for both:
-+flash device. There are two valid values for both:
- <1>: for partitions that require a single 32-bit cell to represent their
-      size/address (aka the value is below 4 GiB)
- <2>: for partitions that require two 32-bit cells to represent their
-      size/address (aka the value is 4 GiB or greater).
- 
- Required properties:
--- reg : The partition's offset and size within the mtd bank.
-+- reg : The partition's offset and size within the flash
- 
- Optional properties:
- - label : The label / name for this partition.  If omitted, the label is taken
+ /**
+  * parse_mtd_partitions - parse MTD partitions
+  * @master: the master partition (describes whole MTD device)
+@@ -880,16 +901,10 @@ int parse_mtd_partitions(struct mtd_info *master, const char *const *types,
+ 			 parser ? parser->name : NULL);
+ 		if (!parser)
+ 			continue;
+-		ret = (*parser->parse_fn)(master, &pparts->parts, data);
+-		pr_debug("%s: parser %s: %i\n",
+-			 master->name, parser->name, ret);
+-		if (ret > 0) {
+-			printk(KERN_NOTICE "%d %s partitions found on MTD device %s\n",
+-			       ret, parser->name, master->name);
+-			pparts->nr_parts = ret;
+-			pparts->parser = parser;
++		ret = mtd_part_do_parse(parser, master, pparts, data);
++		/* Found partitions! */
++		if (ret > 0)
+ 			return 0;
+-		}
+ 		mtd_part_parser_put(parser);
+ 		/*
+ 		 * Stash the first error we see; only report it if no parser
 -- 
 2.11.0
 
