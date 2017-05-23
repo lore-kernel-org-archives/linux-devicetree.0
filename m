@@ -1,97 +1,51 @@
-From: Guodong Xu <guodong.xu@linaro.org>
-Subject: Re: [PATCH 12/12] arm64: dts: hikey960: add LED nodes
-Date: Tue, 23 May 2017 20:07:26 +0800
-Message-ID: <CAFGCpxwP-gvWocqcBmfzuNbMtE9NwUCTU+820F7vqCPcZT7QRg@mail.gmail.com>
-References: <20170517083745.24479-1-guodong.xu@linaro.org> <20170517083745.24479-13-guodong.xu@linaro.org>
- <20170523004820.6x3lo3woqgrlnrtn@rob-hp-laptop>
+From: =?UTF-8?Q?C=c3=a9dric_Le_Goater?= <clg@kaod.org>
+Subject: Re: [PATCH] leds: pca955x: add GPIO support
+Date: Tue, 23 May 2017 12:58:42 +0200
+Message-ID: <0df463c3-c08d-5f5d-0932-cba20ab870d5@kaod.org>
+References: <1494311772-21872-1-git-send-email-clg@kaod.org>
+ <20b94199-a154-53cd-96d1-910ae3de1085@gmail.com>
+ <CACRpkdYRv-ASan1ZJevWbk=+_01LU0a8DDRL_nvhC59o25c5wA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170523004820.6x3lo3woqgrlnrtn@rob-hp-laptop>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: "xuwei (O)" <xuwei5@hisilicon.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Kefeng Wang <wangkefeng.wang@huawei.com>, "Chenfeng (puck)" <puck.chen@hisilicon.com>, Xuejiancheng <xuejiancheng@hisilicon.com>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdYRv-ASan1ZJevWbk=+_01LU0a8DDRL_nvhC59o25c5wA@mail.gmail.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>, Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Cc: Richard Purdie <rpurdie@rpsys.net>, Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Joel Stanley <joel@jms.id.au>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 23, 2017 at 8:48 AM, Rob Herring <robh@kernel.org> wrote:
-> On Wed, May 17, 2017 at 04:37:45PM +0800, Guodong Xu wrote:
->> HiKey960 has four user LEDs, and two special purpose LEDs: WiFi and BT
->> respectively.
->>
->> All of them are implemented as GPIO.
->>
->> Signed-off-by: Guodong Xu <guodong.xu@linaro.org>
->> ---
->>  arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts | 48 +++++++++++++++++++++++
->>  1 file changed, 48 insertions(+)
->>
->> diff --git a/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts b/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
->> index 6de86c0..4839885 100644
->> --- a/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
->> +++ b/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
->> @@ -48,6 +48,54 @@
->>                               linux,code = <KEY_POWER>;
->>                       };
->>               };
->> +
->> +             leds {
->
-> This too should move out of the soc node.
+On 05/23/2017 10:18 AM, Linus Walleij wrote:
+> On Thu, May 11, 2017 at 10:23 PM, Jacek Anaszewski
+> <jacek.anaszewski@gmail.com> wrote:
+> 
+>>> +Optional properties:
+>>> +- gpio-controller: allows pins to be used as GPIOs.
+> 
+> Are these output-only? Then write something about that.
 
-Thanks, Rob. I will fix these.
+no. input is also supported.
 
--Guodong
+>>> +- #gpio-cells: if present, must not be 0.
+> 
+> Must be present and must be <2>
+> 
+>>> +- gpio-base : base number of the pins used as GPIOs. If there are more
+>>> +              than one, they should be contiguous. See 'type' property
+>>> +              below.
+> 
+> NACK. Not in my life.
 
->
->> +                     compatible = "gpio-leds";
->> +                     status = "disabled";
->> +                     user_led1 {
->> +                             label = "user_led1";
->> +                             /* gpio_150_user_led1 */
->> +                             gpios = <&gpio18 6 0>;
->> +                             linux,default-trigger = "heartbeat";
->> +                     };
->> +
->> +                     user_led2 {
->> +                             label = "user_led2";
->> +                             /* gpio_151_user_led2 */
->> +                             gpios = <&gpio18 7 0>;
->> +                             linux,default-trigger = "mmc0";
->> +                     };
->> +
->> +                     user_led3 {
->> +                             label = "user_led3";
->> +                             /* gpio_189_user_led3 */
->> +                             gpios = <&gpio23 5 0>;
->> +                             default-state = "off";
->> +                     };
->> +
->> +                     user_led4 {
->> +                             label = "user_led4";
->> +                             /* gpio_190_user_led4 */
->> +                             gpios = <&gpio23 6 0>;
->> +                             linux,default-trigger = "cpu0";
->> +                     };
->> +
->> +                     wlan_active_led {
->> +                             label = "wifi_active";
->> +                             /* gpio_205_wifi_active */
->> +                             gpios = <&gpio25 5 0>;
->> +                             linux,default-trigger = "phy0tx";
->> +                             default-state = "off";
->> +                     };
->> +
->> +                     bt_active_led {
->> +                             label = "bt_active";
->> +                             gpios = <&gpio25 7 0>;
->> +                             /* gpio_207_user_led1 */
->> +                             linux,default-trigger = "hci0rx";
->> +                             default-state = "off";
->> +                     };
->> +             };
->>       };
->>  };
->>
->> --
->> 2.10.2
->>
+yes, indeed. this is useless. 
+ 
+> Provide -1 in the Linux driver and use the ioctl() from userspace
+> to look up your gpios. Add .names array to the gpiochip if necessary,
+> define line names in the device tree for the board.
+> 
+> Consult tools/gpio/* for the modern way of using GPIOs.
+
+OK. I wasn't aware of these.
+
+Thanks,
+
+C. 
