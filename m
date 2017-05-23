@@ -1,68 +1,108 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [DT Question] "simple-mfd" DT binding
-Date: Tue, 23 May 2017 08:05:47 +0100
-Message-ID: <20170523070547.hhxwrst6np6fpqql@dell>
-References: <CAK7LNARQmfX+3RwFgwtvf2Qu79XNX1zh0O741-pPFWS6npytLw@mail.gmail.com>
- <CACRpkdY88Zdp2zqabWPfYPnTwSzYuCqSQHQg9vF_+Zd=TFOvaA@mail.gmail.com>
- <CAK7LNAQ+DimarhHJOg=BqbH+EB19s+wgtRqJ8-XuLKW6_0FFaQ@mail.gmail.com>
+From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 1/3] usb: host: ohci-platform: Add basic runtime PM
+ support
+Date: Tue, 23 May 2017 10:11:08 +0300
+Message-ID: <c040a768-dd2e-a85d-fb3f-3088988f61aa@ti.com>
+References: <20170522160007.9264-1-tony@atomide.com>
+ <20170522160007.9264-2-tony@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAK7LNAQ+DimarhHJOg=BqbH+EB19s+wgtRqJ8-XuLKW6_0FFaQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170522160007.9264-2-tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Content-Language: en-GB
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
+Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sebastian Reichel <sebastian.reichel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 23 May 2017, Masahiro Yamada wrote:
+Hi,
 
-> Hi Lee, Linus,
+On 22/05/17 19:00, Tony Lindgren wrote:
+> This is needed in preparation of adding support for omap3 and
+> later OHCI. The runtime PM will only do something on platforms
+> that implement it.
 > 
-> Thanks for your comments!
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Cc: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+> Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Cc: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+> Cc: Sebastian Reichel <sebastian.reichel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+> Cc: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+> Signed-off-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+> ---
 > 
-> 2017-05-22 17:43 GMT+09:00 Linus Walleij <linus.walleij@linaro.org>:
-> > On Mon, May 22, 2017 at 3:29 AM, Masahiro Yamada
-> > <yamada.masahiro@socionext.com> wrote:
-> >
-> >> Because "simple-bus" indicates that child nodes are
-> >> simply memory mapped, but the node "register-bit-led"
-> >> can not be memory-mapped.
-> >> So, "simple-mfd" can not be replaced "simple-bus" here.
-> >
-> > Yeah... just like Lee points out, you are spot on, this is exactly
-> > the reason why we created "simple-mfd" in the first place
-> > IIRC.
+> Alan, do you have some better ideas for the ohci_platform_remove()
+> path below?
 > 
-> OK, Linux treats simple-bus and simple-mfd in the same way
-> as far as I see drivers/of/platform.c
+> ---
+>  drivers/usb/host/ohci-platform.c | 17 ++++++++++++++++-
+>  1 file changed, 16 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/usb/host/ohci-platform.c b/drivers/usb/host/ohci-platform.c
+> --- a/drivers/usb/host/ohci-platform.c
+> +++ b/drivers/usb/host/ohci-platform.c
+> @@ -24,6 +24,7 @@
+>  #include <linux/err.h>
+>  #include <linux/phy/phy.h>
+>  #include <linux/platform_device.h>
+> +#include <linux/pm_runtime.h>
+>  #include <linux/reset.h>
+>  #include <linux/usb/ohci_pdriver.h>
+>  #include <linux/usb.h>
+> @@ -242,6 +243,8 @@ static int ohci_platform_probe(struct platform_device *dev)
+>  	}
+>  #endif
+>  
+> +	pm_runtime_set_active(&dev->dev);
+> +	pm_runtime_enable(&dev->dev);
+>  	if (pdata->power_on) {
+>  		err = pdata->power_on(dev);
+>  		if (err < 0)
+> @@ -271,6 +274,7 @@ static int ohci_platform_probe(struct platform_device *dev)
+>  	if (pdata->power_off)
+>  		pdata->power_off(dev);
+>  err_reset:
+> +	pm_runtime_disable(&dev->dev);
+>  	while (--rst >= 0)
+>  		reset_control_assert(priv->resets[rst]);
+>  err_put_clks:
+> @@ -290,7 +294,14 @@ static int ohci_platform_remove(struct platform_device *dev)
+>  	struct usb_hcd *hcd = platform_get_drvdata(dev);
+>  	struct usb_ohci_pdata *pdata = dev_get_platdata(&dev->dev);
+>  	struct ohci_platform_priv *priv = hcd_to_ohci_priv(hcd);
+> -	int clk, rst;
+> +	int clk, rst, enabled;
+> +
+> +	enabled = pm_runtime_get_sync(&dev->dev);
 
-Correct.  As I said, the functionality of the two are the same.  The
-difference is their meaning.  Initially we were using "simple-mfd" to
-achieve our aim (see below), but there was push-back due to the
-differences in what the two properties were trying to achieve.  Ergo,
-we introduced a second property.
+Why do we need to pm_runtime_get_sync() here?
 
-> Perhaps, can we document the difference between simple-bus and
-> simple-mfd clearly?
-> For example, "Unlike simple-bus, it is legitimate that simple-mfd has
-> subnodes without reg property"
+> +	if (enabled < 0) {
+> +		dev_warn(&dev->dev, "pm_runtime_get failed: %i\n",
+> +			 enabled);
+> +		pm_runtime_put_noidle(&dev->dev);
+> +	}
+>  
+>  	usb_remove_hcd(hcd);
+>  
+> @@ -305,6 +316,10 @@ static int ohci_platform_remove(struct platform_device *dev)
+>  
+>  	usb_put_hcd(hcd);
+>  
+> +	if (enabled >= 0)
+> +		pm_runtime_put_sync(&dev->dev);
+> +	pm_runtime_disable(&dev->dev);
+> +
+>  	if (pdata == &ohci_platform_defaults)
+>  		dev->dev.platform_data = NULL;
+>  
 > 
-> 
-> I think this is typical when "simple-mfd" is used together with "syscon".
-> The child devices will use regmap of the parent node.
-> I'd like to be sure this is valid usage.
-
-"simple-mfd" simply means "register all of my child nodes using the
-platform API without any further intervention".  It's goal is to
-prevent the MFD subsystem from being stuffed full of drivers where
-their only purpose is to call of_platform_populate().  All other rules
-and policy which must be followed are generic DT ones.  To that end, I
-do not believe making further statements is necessary.
 
 -- 
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+cheers,
+-roger
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
