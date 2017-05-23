@@ -1,151 +1,177 @@
 From: jmondi <jacopo-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v5 01/10] pinctrl: generic: Add bi-directional and
- output-enable
-Date: Tue, 23 May 2017 20:37:35 +0200
-Message-ID: <20170523183735.GC13664@w540>
-References: <SG2PR06MB1165E7E651BE96CD7B7738B08A130@SG2PR06MB1165.apcprd06.prod.outlook.com>
- <CAHp75Vcp_eMWrjZRX-x3=Tt3JRXcL_wWG43MymF=oyLLP4EJwg@mail.gmail.com>
- <SG2PR06MB11658EC3A3A80C57E6F539AC8A130@SG2PR06MB1165.apcprd06.prod.outlook.com>
- <CAHp75VeLtOuty=iaxuCaH43rnBZDTT03iH7JyjDJBQhTD-EjzA@mail.gmail.com>
- <CACRpkdZkNGSUvTrEdjbGKO1hr799QpJBGSHPVbsBibph7Jx61A@mail.gmail.com>
- <20170508160120.GB25206@w540>
- <CAHp75VfOMKOhpkec+htA6DRQhivpSmNXy1=Ayig1W+ZC84gTLw@mail.gmail.com>
- <20170508172516.GC25206@w540>
- <CACRpkdY1h+yfFuk2y9=nZqqvW9=G33_eHCisvuMkJ5b3zizY7Q@mail.gmail.com>
- <CAA+hA=Q9hwe7_xL440Reoi7z7m8-SScZ5E057419KSA7dQK=tQ@mail.gmail.com>
+Subject: Re: [PATCH] arm: dts: r7s72100: Add support for GR-Peach
+Date: Tue, 23 May 2017 20:49:09 +0200
+Message-ID: <20170523184909.GD13664@w540>
+References: <1495532834-25670-1-git-send-email-jacopo+renesas@jmondi.org>
+ <CAMuHMdUR0Djqi-7DWAHpN_F6xt-WcYzT4H2+mLCjHE9T+7UuJg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CAA+hA=Q9hwe7_xL440Reoi7z7m8-SScZ5E057419KSA7dQK=tQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <CAMuHMdUR0Djqi-7DWAHpN_F6xt-WcYzT4H2+mLCjHE9T+7UuJg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Dong Aisheng <dongas86-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Chris Brandt <Chris.Brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Cc: Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Linus,
+Hi Geert,
 
-On Tue, May 23, 2017 at 06:08:31PM +0800, Dong Aisheng wrote:
-> On Tue, May 9, 2017 at 5:19 AM, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> > On Mon, May 8, 2017 at 7:25 PM, jmondi <jacopo-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org> wrote:
-> >
-> >> From my perspective these flags are configurations internal to the pin
-> >> controller hardware used to enable/disable input buffers when a pin needs to
-> >> perform in both direction.
-> >> The level of detail I can provide on this is the logical diagram we have pointed
-> >> you to already.
-> >>
-> >> As I assume you are trying to get this answer from us in order to
-> >> avoid duplicating things in pin controller sub-system, and I
-> >> understand this, but my question here was "can we have those flags as part
-> >> of the pinmux property argument list, as that property description
-> >> seems to allow us to do that, instead of making them generic pin
-> >> configuration properties and upset other developers?"
-> >
-> > Pinmux with all it's magic flags baked into one is not any better
-> > or any more readable. The solution is already very pretty except
-> > for these two flags which I am sure we can agree on a way forward
-> > for.
-> >
-> > What we choose between is not this or another less transparent
-> > pin configuration mechanism, the mechanism (whether magic bits
-> > to pinmux or reasonable properties) does not matter.
-> >
-> > There is a strong preference to use the generic bindings.
-> >
-> > So the discussion is whether to use:
-> >
-> > bi-directional;
-> > output-enable;
-> >
-> > Or some already defined config flags.
-> >
-> > If these are too idiomatic to be used by others, they should anyways
-> > look similar, like:
-> >
-> > renesas,bi-directional;
-> > renesas,output-enable;
-> >
-> > Like the Qualcomm weirdness found in drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
-> >
-> > qcom,pull-up-strength = <..>;
-> >
-> > Check how they use
-> > #define PMIC_GPIO_CONF_PULL_UP                 (PIN_CONFIG_END + 1)
-> >
-> > Etc.
-> >
-> >> Anyway, I still fail to see why those configuration flags, only
-> >> affecting the way the pin controller hardware enables/disables
-> >> its internal buffers and its internal operations have to be
-> >> described in term of their externally visible electrically characteristics.
-> >
-> > To me internal vs external is not what matters. What matters is
-> > if this is likely to pop up in more platforms, and then the property
-> > should be generic.
-> >
-> > The generic pin config definitions are likely to be picked up by other
-> > standards and even be inspiration to hardware engineers so that
-> > is why it matters so much.
-> >
-> >> To me, what already exists are pin configuration properties generic to
-> >> the whole pin controller subsystem, and I understand you don't want to
-> >> see duplication there.
-> >>
-> >> At the same time, to me, those flags are settings the pin controller
-> >> wants to have specified by software to overcome its hw design flaws,
-> >> and are intended to configure its internal buffers in a way it cannot
-> >> do by itself for some very specific operation modes (they are listed
-> >> in the hw reference manual, it's not something you can chose to
-> >> configure or not, if you want a pin working in i2c mode, you HAVE to
-> >> pass those flags to pin controller).
-> >
-> > Sounds like a case for
-> >
-> > renesas,bi-directional;
-> > renesas,output-enable;
-> >
-> > following the Qualcomm pattern in that case.
-> >
-> > But let's see if something else comes out of this discussion.
-> >
+On Tue, May 23, 2017 at 12:08:30PM +0200, Geert Uytterhoeven wrote:
+> Hi Jacopo,
 >
-> I did not follow too much.
-> But it seems IMX7ULP/Vybrid to be also a fan of generic
-> output-enable/input-enable
-> property.
+> On Tue, May 23, 2017 at 11:47 AM, Jacopo Mondi
+> <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org> wrote:
+> > Add device tree source for Renesas GR-Peach board.
+> > GR-Peach is an RZ/A1H based board with 10MB of on-chip SRAM and 8MB
+> > QSPI flash storage.
+> > Add support for the board, and create a 2MB partition to use as rootfs.
+> >
+> > Signed-off-by: Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
 >
-> See:
-> Figure 5-2. GPIO PAD in Page 241
-> http://www.nxp.com/assets/documents/data/en/reference-manuals/VFXXXRM.pdf
+> Thanks for your patch!
 >
-> It has separate register bits to control input buffer enable and
-> output buffer enable
-> and we need set it property for GPIO function.
+> > --- a/Documentation/devicetree/bindings/arm/shmobile.txt
+> > +++ b/Documentation/devicetree/bindings/arm/shmobile.txt
+> > @@ -51,6 +51,8 @@ Boards:
+> >      compatible = "renesas,bockw", "renesas,r8a7778"
+> >    - Genmai (RTK772100BC00000BR)
+> >      compatible = "renesas,genmai", "renesas,r7s72100"
+> > +  - GR-Peach (RTK772100BC00000BR)
+>
+> That part number is Genmai?
 
-As it seems we have another user for 'output-enable' here, what if we just
-add that one to the generic bindings properties list, and we keep
-'bi-directional' (which seems to be the most debated property we have
-added) out of generic properties?
+Oh, I thought that was the SoC part number, and being both based on
+RZ/A1H, I used the same.
 
-We can handle 'bi-directional' pins with static tables in our pin
-controller driver and not have it anywhere in DT.
+Where can I find the correct part number?
 
-I see commit 42d5a11200d0[1] has not been reverted yet as Andy asked
-in some previous email. I can send another version of that patch with
-only 'output-enable' if you wish.
+>
+> > +    compatible = "renesas,grpeach", "renesas,r7s72100"
+>
+> "renesas,gr-peach"?
 
-Once we reach consesus, I can then send v6 of our pin controller driver
-based on that.
+Let's use gr-peach in place of grpeach everywhere then.
+
+>
+> > --- a/arch/arm/boot/dts/Makefile
+> > +++ b/arch/arm/boot/dts/Makefile
+> > @@ -716,6 +716,7 @@ dtb-$(CONFIG_ARCH_S5PV210) += \
+> >  dtb-$(CONFIG_ARCH_SHMOBILE_MULTI) += \
+> >         emev2-kzm9d.dtb \
+> >         r7s72100-genmai.dtb \
+> > +       r7s72100-grpeach.dtb \
+>
+> r7s72100-gr-peach.dtb?
+>
+> > --- /dev/null
+> > +++ b/arch/arm/boot/dts/r7s72100-grpeach.dts
+>
+> r7s72100-gr-peach.dts
+>
+> > @@ -0,0 +1,65 @@
+> > +/*
+> > + * Device Tree Source for the GRPEACH board
+>
+> GR-PEACH
+>
+> > +/ {
+> > +       model = "GRPEACH";
+>
+> GR-PEACH
+>
+> > +       compatible = "renesas,grpeach", "renesas,r7s72100";
+>
+> renesas,gr-peach
+>
+> > +
+> > +       aliases {
+> > +               serial2 = &scif2;
+>
+> The first serial port is supposed to be called serial0, unless labeled
+> otherwise.
+
+I assumed it had to match the SCIF number. Will change.
+
+>
+> > +       };
+> > +
+> > +       chosen {
+> > +               bootargs = "console=ttySC2,115200 ignore_loglevel rw root=/dev/mtdblock0";
+>
+> bootargs = "ignore_loglevel rw root=/dev/mtdblock0";
+> stdout-path = "serial0:115200n8";
+>
+> > +       memory {
+>
+> memory@20000000
+>
+> (please run "make dtbs W=1")
+>
+> > +               device_type = "memory";
+> > +               reg = <0x20000000 0x00A00000>;  /* 10Mb @ 0x20000000 */
+>
+> reg = <0x20000000 0x00a00000>;
+>
+> No need for the comment, esp. since it says 10 megabits instead of
+> 10 mebibyte ;-)
+
+Was I the only one that had to go on Wikipedia to find out what a
+mebibyte is :p ?
+
+I'll drop comments here and in the rest of the patch.
+
+>
+> > +       qspi@18000000 {
+>
+> flash@18000000?
+>
+> > +               compatible = "mtd-rom";
+> > +               probe-type = "map_rom";
+> > +               reg = <0x18000000 0x00800000>;   /* 8 MB*/
+>
+> No need for the comment (megabyte vs. mebibyte)
+>
+> > +               bank-width = <4>;
+> > +               device-width = <1>;
+> > +
+> > +               #address-cells = <1>;
+> > +               #size-cells = <1>;
+> > +
+> > +               rootfs@18600000 {
+>
+> rootfs@600000?
+>
+> > +                       label = "rootfs";
+> > +                       reg = <0x00600000 0x00200000>; /* 2MB @ 0x18600000 */
+>
+> Do we need the comment?
+>
+> > +&extal_clk {
+> > +       clock-frequency = <13330000>;
+>
+> My schematics have one more digit of precision: <13333000>
+
+Thanks, I'll change this.
+
+Do we need to change that on Genmai as well while at there?
+Some parts of its documentation report a frequency of 13.33Mhz, but X1
+is listed in the BOM as
+
+X1 XIN oscillator (socket mounted) SG-8002DC-13.3333MHz (Epson)
 
 Thanks
    j
-
-[1]
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=8c58f1a7a4b6d1d723bf25fef9d842d5a11200d0
 >
-> Regards
-> Dong Aisheng
+> Gr{oetje,eeting}s,
+>
+>                         Geert
+>
+> --
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+>
+> In personal conversations with technical people, I call myself a hacker. But
+> when I'm talking to journalists I just say "programmer" or something like that.
+>                                 -- Linus Torvalds
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
