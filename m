@@ -1,13 +1,25 @@
 From: Javier Martinez Canillas <javier@dowhile0.org>
-Subject: [PATCH v5 20/20] powerpc/44x: Add generic compatible string for I2C EEPROM
-Date: Tue, 23 May 2017 15:34:48 +0200
-Message-ID: <20170523133448.4794-21-javier@dowhile0.org>
+Subject: [PATCH v5 09/20] ARM: dts: r7s72100: Add generic compatible string
+ for I2C EEPROM
+Date: Tue, 23 May 2017 15:34:37 +0200
+Message-ID: <20170523133448.4794-10-javier@dowhile0.org>
 References: <20170523133448.4794-1-javier@dowhile0.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <20170523133448.4794-1-javier@dowhile0.org>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: linux-kernel@vger.kernel.org
-Cc: Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh@kernel.org>, Javier Martinez Canillas <javier@dowhile0.org>, devicetree@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linuxppc-dev@lists.ozlabs.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, Wolfram Sang <wsa@the-dreams.de>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, linux-renesas-soc@vger.kernel.org, Simon Horman <horms@verge.net.au>, Javier Martinez Canillas <javier@dowhile0.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
 The at24 driver allows to register I2C EEPROM chips using different vendor
@@ -22,32 +34,37 @@ So add this generic fallback to the device node compatible string to make
 the device to match the driver using the OF device ID table.
 
 Signed-off-by: Javier Martinez Canillas <javier@dowhile0.org>
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
 ---
 
-Changes in v5: None
+Changes in v5:
+- Only replace atmel variant but keep other EEPROM vendors (Geert Uytterhoeven).
+
 Changes in v4:
 - Only use the atmel manufacturer in the compatible string instead of
   keeping the deprecated ones (Rob Herring).
 
-Changes in v3: None
+Changes in v3:
+- Add Geert Uytterhoeven reviewed-by tag.
+
 Changes in v2: None
 
- arch/powerpc/boot/dts/warp.dts | 2 +-
+ arch/arm/boot/dts/r7s72100-genmai.dts | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/powerpc/boot/dts/warp.dts b/arch/powerpc/boot/dts/warp.dts
-index e576ee85c42f..ea9053ef4819 100644
---- a/arch/powerpc/boot/dts/warp.dts
-+++ b/arch/powerpc/boot/dts/warp.dts
-@@ -238,7 +238,7 @@
+diff --git a/arch/arm/boot/dts/r7s72100-genmai.dts b/arch/arm/boot/dts/r7s72100-genmai.dts
+index 52a7b586bac7..b0db621ff176 100644
+--- a/arch/arm/boot/dts/r7s72100-genmai.dts
++++ b/arch/arm/boot/dts/r7s72100-genmai.dts
+@@ -57,7 +57,7 @@
+ 	clock-frequency = <400000>;
  
- 				/* This will create 52 and 53 */
- 				at24@52 {
--					compatible = "at,24c04";
-+					compatible = "atmel,24c04";
- 					reg = <0x52>;
- 				};
- 			};
+ 	eeprom@50 {
+-		compatible = "renesas,24c128";
++		compatible = "renesas,24c128", "atmel,24c128";
+ 		reg = <0x50>;
+ 		pagesize = <64>;
+ 	};
 -- 
 2.9.3
