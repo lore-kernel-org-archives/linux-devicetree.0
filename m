@@ -1,7 +1,7 @@
 From: Leo Yan <leo.yan@linaro.org>
-Subject: [PATCH v11 8/9] arm64: dts: hi6220: register debug module
-Date: Tue, 23 May 2017 22:16:19 +0800
-Message-ID: <1495548980-30432-9-git-send-email-leo.yan@linaro.org>
+Subject: [PATCH v11 9/9] arm64: dts: qcom: msm8916: Add debug unit
+Date: Tue, 23 May 2017 22:16:20 +0800
+Message-ID: <1495548980-30432-10-git-send-email-leo.yan@linaro.org>
 References: <1495548980-30432-1-git-send-email-leo.yan@linaro.org>
 Return-path: <linux-arm-msm-owner@vger.kernel.org>
 In-Reply-To: <1495548980-30432-1-git-send-email-leo.yan@linaro.org>
@@ -10,87 +10,57 @@ To: Jonathan Corbet <corbet@lwn.net>, Mathieu Poirier <mathieu.poirier@linaro.or
 Cc: Leo Yan <leo.yan@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Bind debug module driver for Hi6220.
+Add debug unit on Qualcomm msm8916 based platforms, including the
+DragonBoard 410c board.
 
 Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
 Signed-off-by: Leo Yan <leo.yan@linaro.org>
 ---
- arch/arm64/boot/dts/hisilicon/hi6220.dtsi | 64 +++++++++++++++++++++++++++++++
- 1 file changed, 64 insertions(+)
+ arch/arm64/boot/dts/qcom/msm8916.dtsi | 32 ++++++++++++++++++++++++++++++++
+ 1 file changed, 32 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
-index 1e5129b..21805b9 100644
---- a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
-+++ b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
-@@ -916,5 +916,69 @@
- 				};
+diff --git a/arch/arm64/boot/dts/qcom/msm8916.dtsi b/arch/arm64/boot/dts/qcom/msm8916.dtsi
+index ab30939..17691ab 100644
+--- a/arch/arm64/boot/dts/qcom/msm8916.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8916.dtsi
+@@ -1116,6 +1116,38 @@
  			};
  		};
-+
-+		debug@f6590000 {
+ 
++		debug@850000 {
 +			compatible = "arm,coresight-cpu-debug","arm,primecell";
-+			reg = <0 0xf6590000 0 0x1000>;
-+			clocks = <&sys_ctrl HI6220_DAPB_CLK>;
++			reg = <0x850000 0x1000>;
++			clocks = <&rpmcc RPM_QDSS_CLK>;
 +			clock-names = "apb_pclk";
-+			cpu = <&cpu0>;
++			cpu = <&CPU0>;
 +		};
 +
-+		debug@f6592000 {
++		debug@852000 {
 +			compatible = "arm,coresight-cpu-debug","arm,primecell";
-+			reg = <0 0xf6592000 0 0x1000>;
-+			clocks = <&sys_ctrl HI6220_DAPB_CLK>;
++			reg = <0x852000 0x1000>;
++			clocks = <&rpmcc RPM_QDSS_CLK>;
 +			clock-names = "apb_pclk";
-+			cpu = <&cpu1>;
++			cpu = <&CPU1>;
 +		};
 +
-+		debug@f6594000 {
++		debug@854000 {
 +			compatible = "arm,coresight-cpu-debug","arm,primecell";
-+			reg = <0 0xf6594000 0 0x1000>;
-+			clocks = <&sys_ctrl HI6220_DAPB_CLK>;
++			reg = <0x854000 0x1000>;
++			clocks = <&rpmcc RPM_QDSS_CLK>;
 +			clock-names = "apb_pclk";
-+			cpu = <&cpu2>;
++			cpu = <&CPU2>;
 +		};
 +
-+		debug@f6596000 {
++		debug@856000 {
 +			compatible = "arm,coresight-cpu-debug","arm,primecell";
-+			reg = <0 0xf6596000 0 0x1000>;
-+			clocks = <&sys_ctrl HI6220_DAPB_CLK>;
++			reg = <0x856000 0x1000>;
++			clocks = <&rpmcc RPM_QDSS_CLK>;
 +			clock-names = "apb_pclk";
-+			cpu = <&cpu3>;
++			cpu = <&CPU3>;
 +		};
 +
-+		debug@f65d0000 {
-+			compatible = "arm,coresight-cpu-debug","arm,primecell";
-+			reg = <0 0xf65d0000 0 0x1000>;
-+			clocks = <&sys_ctrl HI6220_DAPB_CLK>;
-+			clock-names = "apb_pclk";
-+			cpu = <&cpu4>;
-+		};
-+
-+		debug@f65d2000 {
-+			compatible = "arm,coresight-cpu-debug","arm,primecell";
-+			reg = <0 0xf65d2000 0 0x1000>;
-+			clocks = <&sys_ctrl HI6220_DAPB_CLK>;
-+			clock-names = "apb_pclk";
-+			cpu = <&cpu5>;
-+		};
-+
-+		debug@f65d4000 {
-+			compatible = "arm,coresight-cpu-debug","arm,primecell";
-+			reg = <0 0xf65d4000 0 0x1000>;
-+			clocks = <&sys_ctrl HI6220_DAPB_CLK>;
-+			clock-names = "apb_pclk";
-+			cpu = <&cpu6>;
-+		};
-+
-+		debug@f65d6000 {
-+			compatible = "arm,coresight-cpu-debug","arm,primecell";
-+			reg = <0 0xf65d6000 0 0x1000>;
-+			clocks = <&sys_ctrl HI6220_DAPB_CLK>;
-+			clock-names = "apb_pclk";
-+			cpu = <&cpu7>;
-+		};
- 	};
- };
+ 		etm@85c000 {
+ 			compatible = "arm,coresight-etm4x", "arm,primecell";
+ 			reg = <0x85c000 0x1000>;
 -- 
 2.7.4
