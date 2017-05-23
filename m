@@ -1,104 +1,58 @@
-From: Christian Lamparter <chunkeey-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Subject: Re: [PATCH 2/2] pinctrl: qcom: ipq4019: add remaining pin definitions
-Date: Tue, 23 May 2017 18:58:53 +0200
-Message-ID: <2018547.lycQhaDrJg@debian64>
-References: <d53b7a9b1bab818536680123136ac58481d959c8.1494415174.git.chunkeey@googlemail.com> <1975629.nrP45RYYW5@debian64> <20170520050824.GS12920@tuxbook>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [RESEND PATCH V7 5/7] regulator: da9061: BUCK and LDO regulator
+ driver
+Date: Tue, 23 May 2017 18:17:21 +0100
+Message-ID: <20170523171721.lpqjhakaawnz4prz@sirena.org.uk>
+References: <cover.1495546845.git.stwiss.opensource@diasemi.com>
+ <ac0c9c0edf9a3a48d8de7a5c07b16b771871796e.1495546845.git.stwiss.opensource@diasemi.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170520050824.GS12920@tuxbook>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ram Chandra Jangir <rjangir-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, John Crispin <john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="w5ixrwk7fifrgbqj"
+Return-path: <linux-input-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <ac0c9c0edf9a3a48d8de7a5c07b16b771871796e.1495546845.git.stwiss.opensource@diasemi.com>
+Sender: linux-input-owner@vger.kernel.org
+To: Steve Twiss <stwiss.opensource@diasemi.com>
+Cc: LINUX-KERNEL <linux-kernel@vger.kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, DEVICETREE <devicetree@vger.kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Eduardo Valentin <edubezval@gmail.com>, Guenter Roeck <linux@roeck-us.net>, LINUX-INPUT <linux-input@vger.kernel.org>, LINUX-PM <linux-pm@vger.kernel.org>, LINUX-WATCHDOG <linux-watchdog@vger.kernel.org>, Lee Jones <lee.jones@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Support Opensource <support.opensource@diasemi.com>, Wim Van Sebroeck <wim@iguana.be>, Zhang Rui <rui.zhang@intel.com>
 List-Id: devicetree@vger.kernel.org
 
-On Friday, May 19, 2017 10:08:24 PM CEST Bjorn Andersson wrote:
-> On Thu 18 May 11:38 PDT 2017, Christian Lamparter wrote:
-> > On Wednesday, May 17, 2017 1:07:29 PM CEST Bjorn Andersson wrote:
-> > > On Wed 10 May 04:27 PDT 2017, Christian Lamparter wrote:
-> > > > diff --git a/drivers/pinctrl/qcom/pinctrl-ipq4019.c b/drivers/pinctrl/qcom/pinctrl-ipq4019.c
-> > > > index 743d1f458205..7219d1e33c71 100644
-> > > > --- a/drivers/pinctrl/qcom/pinctrl-ipq4019.c
-> > > > +++ b/drivers/pinctrl/qcom/pinctrl-ipq4019.c
-> > > > +	qca_mux_rmii0_refclk,
-> > > > +	qca_mux_wifi0_rfsilient0,
-> > > > +	qca_mux_wifi1_rfsilient0,
-> > > > +	qca_mux_smart2,
-> > > > +	qca_mux_led4,
-> > > 
-> > > What drives ledX? Is it 11 different LED controllers or is it a single
-> > > LED controller with 11 outputs.
-> > 
-> > The latter. The IPQ40xx have one LED controller @ 0x1937000. 
-> > According to the driver (leds-ipq40xx.c in the SDK), it 
-> > does control up to 11 LEDs. A LED can either be muxed to
-> > one of the hardware sources (wifi, lan or wan-ports activity/linkspeed),
-> > or it can be operated by one of four software-programmable "blink"
-> > sources (each with a variable blink rate and duty cycle). 
-> > The driver labels each LED as "ipq40xx::led%d".
-> > 
-> 
-> As they all stem from the same hardware block I suggest we name the
-> function "led".
 
-This is going to be a problem for Pin 36:
+--w5ixrwk7fifrgbqj
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-PINGROUP(36, rmii0, *led2*, *led0*, NA, ...)
+On Tue, May 23, 2017 at 02:40:45PM +0100, Steve Twiss wrote:
 
-I checked the other pins too, but this seems to be the only time two 
-LED-lines share the same pin. What's the recommended/prefered option
-in this case? Something like led_alt, or should I keep the led0-led11?
+> This patch was Acked by Mark Brown, a long time ago, way back in Oct 2016
+> (https://patchwork.kernel.org/patch/9397787/).
+> I have kept Mark Brown's Ack attached because there have been no real
+> code changes since then, but I have recently updated the copyright header
+> slightly, rebased the code (no changes necessary) and compile tested it
+> against x86_64.
 
-There are a few more collisions with other functions as well:
-smartX, i2s_*, wifi1_uart*:
+> The MFD files which this patch depended on were accepted into linux-next
+> by Lee Jones last week. If there is anything in the way of this patch
+> acceptance, could you please let me know?
 
-PINGROUP(58, qpic, led2, blsp_i2c0, *smart3*, *smart1*,
-         i2s_rx_mclk, NA, wcss0_dbg, tm4, wifi0, wifi1, NA, NA, NA),
+Given that I've acked this and it depends on the MFD changes I'd have
+expected Lee to apply it.  If nothing else happens I can apply it after
+the next merge window, otherwise either Lee needs to send me a pull
+request for the MFD change so I've got the dependency or he needs to
+apply this.
 
-PINGROUP(60, qpic, blsp_uart0, smart1, smart3, led0,
-         *i2s_tx_bclk*, *i2s_rx_bclk*, atest_char, NA, wcss0_dbg,
-         qdss_traceclk_a, NA, tm6, NA),
+--w5ixrwk7fifrgbqj
+Content-Type: application/pgp-signature; name="signature.asc"
 
-PINGROUP(61, qpic, blsp_uart0, *smart1*, *smart3*, led1, *i2s_tx_fsync*,
-         *i2s_rx_fsync*, NA, NA, wcss0_dbg, qdss_cti_trig_out_a0,
-         NA, tm7, NA),
+-----BEGIN PGP SIGNATURE-----
 
-PINGROUP(63, qpic, wifi0_uart1, *wifi1_uart1*, *wifi1_uart*, *i2s_td1*,
-         *i2s_rxd*, *i2s_spdif_out*, *i2s_spdif_in*, NA, wcss0_dbg,
-         wcss1_dbg, NA, tm, NA),
-...
-> > > > +	qca_mux_qpic_pad4,
-> > > 
-> > > Please keep an eye on the ipq8074 patch from Varadarajan and make this
-> > > follow the same scheme.
-> > Ok, I'll wait for how qca8074 plays out then.
+iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlkkbqAACgkQJNaLcl1U
+h9CBowgAgzyAaejHDzDDrmYGX5ZusFRiVhSCk9YjtEl7zyX7RZC5AK5RqWrO7N9C
+VYmQVj+hK3T/JV/I/wHfABIhmq2dfOSRjKAFvJmGyetIwvDyOjSnmXpnNw3feyrc
+URrCDUjtqCPGYPcex5vSjC9ahSsvoot9qit3sU1dU6SbpvhBefEwGpTW5EeS+Cub
+6FdGgQcNr1kaAZAWrc+Q9Z0nCtk4+Y3DQT2bwveUYxI3Fj+u9oCVrTeDpnZJfG1o
+jaYNOQQfWS6DDutsT+p1bwncj8NCDDGsHNk7hsxSEXYXpFqQWY7sda/pMjjR86T1
+fLuqTh+F5bphR70n8mfwtq7c1Hcwyw==
+=wnhk
+-----END PGP SIGNATURE-----
 
-<https://www.spinics.net/lists/arm-kernel/msg582958.html>:
-| On Sat, May 20, 2017 at 7:54 AM, Bjorn Andersson wrote:
-| [...]
-| > If you consider that you are defining the available functions for this
-| > pinmuxer and then define the sets of pins exposing these available
-| > functions it does make sense to just name it "qpic".
-| >
-| > I think that naming them _common, _lcd and _nand is just adding
-| > confusion when it comes to writing the dts files.
-| >
-| > @Linus, do you have a different preference here?
-|
-|No I pretty much trust the driver maintainer to know this best.
-|
-|Yours,
-|Linus Walleij
-
-Thanks for the answer, I'll go with "qpic" then.
-I'll also combine the various sdio_* to sdio and look at the other candidates
-(rgmii*, rmii0/1*, pmuX, pcie_clk*, jtag*, tmX, audio_pwmX). Unless someone
-comes up with a good reason not to.
-
-Regards,
-Christian
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--w5ixrwk7fifrgbqj--
