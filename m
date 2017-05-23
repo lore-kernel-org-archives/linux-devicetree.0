@@ -1,96 +1,175 @@
-From: Keerthy <j-keerthy@ti.com>
-Subject: Re: [PATCH 1/3] mfd: lp87565: Add lp87565 PMIC support
-Date: Tue, 23 May 2017 15:41:02 +0530
-Message-ID: <ce83f605-879b-dee0-d09e-63d01a7f66c7@ti.com>
-References: <1495197739-17446-1-git-send-email-j-keerthy@ti.com>
- <1495197739-17446-2-git-send-email-j-keerthy@ti.com>
- <20170522174806.nnpk5jso7jhgygm3@dell>
- <26169872-1b43-88d1-3e5b-367b4d446222@ti.com>
- <20170523065742.44ytkxdagw2wwttz@dell>
- <a753fdb4-feb9-0894-6f40-a19d3f05714c@ti.com>
- <20170523084531.oanijbheozgtoufe@dell>
+From: "A.S. Dong" <aisheng.dong@nxp.com>
+Subject: RE: [PATCH V2 4/5] dt-bindings: pinctrl: add imx7ulp pinctrl binding
+ doc
+Date: Tue, 23 May 2017 10:37:27 +0000
+Message-ID: <DBXPR04MB320A55DE4386DE561A1D4DC80F90@DBXPR04MB320.eurprd04.prod.outlook.com>
+References: <1495177545-23006-1-git-send-email-aisheng.dong@nxp.com>
+ <1495177545-23006-5-git-send-email-aisheng.dong@nxp.com>
+ <5e78ef100319f229a87e33804384e5b3@agner.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170523084531.oanijbheozgtoufe@dell>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: broonie@kernel.org, robh+dt@kernel.org, t-kristo@ti.com, tony@atomide.com, mark.rutland@arm.com, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <5e78ef100319f229a87e33804384e5b3@agner.ch>
+Content-Language: en-US
+Sender: linux-gpio-owner@vger.kernel.org
+To: Stefan Agner <stefan@agner.ch>
+Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Jacky Bai <ping.bai@nxp.com>, Andy Duan <fugang.duan@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+> -----Original Message-----
+> From: Stefan Agner [mailto:stefan@agner.ch]
+> Sent: Tuesday, May 23, 2017 12:16 AM
+> To: A.S. Dong
+> Cc: linux-gpio@vger.kernel.org; linux-arm-kernel@lists.infradead.org;
+> linus.walleij@linaro.org; shawnguo@kernel.org; Jacky Bai; Andy Duan;
+> kernel@pengutronix.de; Rob Herring; Mark Rutland;
+> devicetree@vger.kernel.org
+> Subject: Re: [PATCH V2 4/5] dt-bindings: pinctrl: add imx7ulp pinctrl
+> binding doc
+>=20
+> On 2017-05-19 00:05, Dong Aisheng wrote:
+> > i.MX 7ULP has three IOMUXC instances: IOMUXC0 for M4 ports,
+> > IOMUXC1 for A7 ports and IOMUXC DDR for DDR interface.
+> >
+> > This patch adds the IOMUXC1 support for A7.
+> >
+> > Cc: Rob Herring <robh+dt@kernel.org>
+> > Cc: Mark Rutland <mark.rutland@arm.com>
+> > Cc: devicetree@vger.kernel.org
+> > Cc: Linus Walleij <linus.walleij@linaro.org>
+> > Cc: Shawn Guo <shawnguo@kernel.org>
+> > Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
+> >
+> > ---
+> > ChangeLog:
+> > v1->v2:
+> >  * add more descriptions in binding doc
+> >  * add missed prefix for private properties.
+> >  * move dt-bindings/pinctrl/imx7ulp-pinfunc.h to arch/arm/boot/dts
+> > ---
+> >  .../bindings/pinctrl/fsl,imx7ulp-pinctrl.txt       |  63 +++
+> >  arch/arm/boot/dts/imx7ulp-pinfunc.h                | 468
+> +++++++++++++++++++++
+> >  2 files changed, 531 insertions(+)
+> >  create mode 100644
+> > Documentation/devicetree/bindings/pinctrl/fsl,imx7ulp-pinctrl.txt
+> >  create mode 100644 arch/arm/boot/dts/imx7ulp-pinfunc.h
+> >
+> > diff --git
+> > a/Documentation/devicetree/bindings/pinctrl/fsl,imx7ulp-pinctrl.txt
+> > b/Documentation/devicetree/bindings/pinctrl/fsl,imx7ulp-pinctrl.txt
+> > new file mode 100644
+> > index 0000000..7fbf367
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/pinctrl/fsl,imx7ulp-pinctrl.tx
+> > +++ t
+> > @@ -0,0 +1,63 @@
+> > +* Freescale i.MX7ULP IOMUX Controller
+> > +
+> > +i.MX 7ULP has three IOMUXC instances: IOMUXC0 for M4 ports, IOMUXC1
+> > +for A7 ports and IOMUXC DDR for DDR interface.
+> > +
+> > +Note:
+> > +This binding doc is only for the IOMUXC1 support in A7 Domain and it
+> > +only supports generic pin config.
+> > +
+> > +Please also refer to fsl,imx-pinctrl.txt in this directory for IMX
+> > +common binding part and pinctrl-bindings.txt for the generic config
+> binding.
+> > +
+> > +=3D=3D=3D Pin Controller Node =3D=3D=3D
+> > +
+> > +Required properties:
+> > +- compatible:	"fsl,imx7ulp-iomuxc1"
+> > +- reg:		Should contain the base physical address and size of the
+> iomuxc
+> > +		registers.
+> > +
+> > +=3D=3D=3D Pin Configuration Node =3D=3D=3D
+> > +- pins: One integers array, represents a group of pins mux setting.
+> > +	The format is fsl,pins =3D <PIN_FUNC_ID>, PIN_FUNC_ID is a pin workin=
+g
+> on
+> > +	a specific function.
+> > +
+> > +	NOTE: i.MX7ULP PIN_FUNC_ID consists of 4 integers as it shares one
+> mux
+> > +	and config register as follows:
+> > +	<mux_conf_reg input_reg mux_mode input_val>
+> > +
+> > +	Refer to imx7ulp-pinfunc.h in in device tree source folder for all
+> > +	available imx7ulp PIN_FUNC_ID.
+> > +
+> > +Optional Properties:
+> > +- nxp,output-buffer-enable:	Bool. Output buffer enabled
+> > +- nxp,input-buffer-enable:	Bool. Input buffer enabled
+> > +- drive-strength		Integer. Controls Drive Strength
+> > +					0: Standard
+> > +					1: Hi Driver
+> > +- drive-push-pull		Bool. Enable Pin Push-pull
+> > +- drive-open-drain		Bool. Enable Pin Open-drian
+> > +- slew-rate:			Integer. Controls Slew Rate
+> > +					0: Standard
+> > +					1: Slow
+> > +- bias-disable:			Bool. Pull disabled
+> > +- bias-pull-down:		Bool. Pull down on pin
+> > +- bias-pull-up:			Bool. Pull up on pin
+> > +
+> > +Examples:
+> > +#include "imx7ulp-pinfunc.h"
+> > +
+> > +/* Pin Controller Node */
+> > +iomuxc1: iomuxc@40ac0000 {
+> > +	compatible =3D "fsl,imx7ulp-iomuxc1";
+> > +	reg =3D <0x40ac0000 0x1000>;
+> > +
+> > +	/* Pin Configuration Node */
+> > +	pinctrl_lpuart4: lpuart4grp {
+> > +		pins =3D <
+> > +			ULP1_PAD_PTC3__LPUART4_RX
+> > +			ULP1_PAD_PTC2__LPUART4_TX
+> > +		>;
+> > +		bias-pull-up;
+> > +	};
+> > +};
+> > diff --git a/arch/arm/boot/dts/imx7ulp-pinfunc.h
+> > b/arch/arm/boot/dts/imx7ulp-pinfunc.h
+> > new file mode 100644
+> > index 0000000..cafd3ed
+> > --- /dev/null
+> > +++ b/arch/arm/boot/dts/imx7ulp-pinfunc.h
+> > @@ -0,0 +1,468 @@
+> > +/*
+> > + * Copyright 2016 Freescale Semiconductor, Inc.
+> > + * Copyright 2017 NXP
+> > + *
+> > + * This program is free software; you can redistribute it and/or
+> > +modify
+> > + * it under the terms of the GNU General Public License version 2 as
+> > + * published by the Free Software Foundation.
+> > + *
+> > + */
+> > +
+> > +#ifndef __DTS_IMX7ULP_PINFUNC_H
+> > +#define __DTS_IMX7ULP_PINFUNC_H
+> > +
+> > +/*
+> > + * The pin function ID is a tuple of
+> > + * <mux_conf_reg input_reg mux_mode input_val>  */
+> > +
+> > +#define ULP1_PAD_PTC0__PTC0
+> > 0x0000 0x0000 0x1 0x0
+>=20
+>=20
+> For consistency with other SoCs, can we add MX7 to the define? E.g.
+> MX7ULP1?
+>=20
 
+ULP1 is another SoC name of IMX7ULP.
+And there will be ULP0, ULPx in the future..
 
-On Tuesday 23 May 2017 02:15 PM, Lee Jones wrote:
-> On Tue, 23 May 2017, Keerthy wrote:
->> On Tuesday 23 May 2017 12:27 PM, Lee Jones wrote:
->>> On Tue, 23 May 2017, Keerthy wrote:
->>>> On Monday 22 May 2017 11:18 PM, Lee Jones wrote:
->>>>> On Fri, 19 May 2017, Keerthy wrote:
->>>>>
->>>>>> The LP87565 chip is a power management IC for Portable Navigation Systems
->>>>>> and Tablet Computing devices. It contains the following components:
->>>>>>
->>>>>>         - Configurable Bucks(Single and multi-phase).
->>>>>>         - Configurable General Purpose Output Signals (GPO).
->>>>>>
->>>>>> The LP87565-Q1 variant device uses two 2-phase outputs configuration,
->>>>>> Buck0 is master for Buck0/1 output and Buck2 is master for Buck2/3
->>>>>> output.
->>>>>>
->>>>>> Signed-off-by: Keerthy <j-keerthy@ti.com>
->>>>>> ---
->>>>>>  Documentation/devicetree/bindings/mfd/lp87565.txt |  44 ++++
->>>>>>  drivers/mfd/Kconfig                               |  14 ++
->>>>>>  drivers/mfd/Makefile                              |   1 +
->>>>>>  drivers/mfd/lp87565.c                             | 103 ++++++++
->>>>>>  include/linux/mfd/lp87565.h                       | 275 ++++++++++++++++++++++
->>>>>>  5 files changed, 437 insertions(+)
->>>>>>  create mode 100644 Documentation/devicetree/bindings/mfd/lp87565.txt
->>>>>>  create mode 100644 drivers/mfd/lp87565.c
->>>>>>  create mode 100644 include/linux/mfd/lp87565.h
->>>>>>
->>>
->>> [...]
->>>
->>>>>> +/*
->>>>>> + * Copyright (C) 2017 Texas Instruments Incorporated - http://www.ti.com/
->>>>>> + *
->>>>>> + * Author: Keerthy <j-keerthy@ti.com>
->>>>>
->>>>> We usually ask for full "first last" names.
->>>>
->>>> Keerthy is my full name and i do not have a surname.
->>>
->>> What is the 'J' for in your email address?
->>
->> Father's initials.
-> 
-> Okay.
-> 
->>> [...]
->>>
->>>>>> +static const struct i2c_device_id lp87565_id_table[] = {
->>>>>> +	{ "lp87565-q1", 0 },
->>>>>> +	{ },
->>>>>> +};
->>>>>> +MODULE_DEVICE_TABLE(i2c, lp87565_id_table);
->>>>>
->>>>> Is this an OF only driver, or not?
->>>
->>> You didn't answer my question?
->>
->> Sorry i replied on top again. It will be an OF only driver.
-> 
-> Okay, then you don't need this table and you should depend on OF in
-> the Kconfig file.
+It looks like not big issue, so I did not change it.
 
-Okay. Cool thanks for this info.
-
-I am seeing this commit: 4895e493f91bff7f96f328b883c7f6448aa6abc6
-
-mfd: Export OF module alias information in missing drivers
-
-So no need of i2c_device_id for any of the OF-only mfd drivers?
-
-> 
+Regards
+Dong Aisheng
