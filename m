@@ -1,30 +1,55 @@
-From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Subject: Re: [PATCH 13/13] ARM: dts: mvebu: add support for Linksys
- WRT3200ACM (Rango)
-Date: Tue, 23 May 2017 14:18:44 +0200
-Message-ID: <20170523121844.GT13759@lunn.ch>
-References: <20170521124903.11050-1-ralph.sennhauser@gmail.com>
- <20170521124903.11050-14-ralph.sennhauser@gmail.com>
+From: Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH v2 0/3] mfd: lp87565: Add lp87565 PMIC support
+Date: Tue, 23 May 2017 17:46:53 +0530
+Message-ID: <1495541816-14801-1-git-send-email-j-keerthy@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170521124903.11050-14-ralph.sennhauser-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ralph Sennhauser <ralph.sennhauser-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Imre Kaloz <kaloz-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: j-keerthy-l0cyMroinI0@public.gmane.org, t-kristo-l0cyMroinI0@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, afd-l0cyMroinI0@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
->   Checkpatch also complains about the vendor prefix linksys
->   not being documented, however this follows the examples given by the
->   other boards.
+The LP87565 chip is a power management IC for Portable Navigation Systems
+    and Tablet Computing devices. It contains the following components:
 
-Hi Ralph
+     - Regulators.
+     - Configurable General Purpose Output Signals(GPO).
 
-Please feel free to submit a patch adding linksys to
-Documentation/devicetree/binding/vendor-prefixes.txt
+PMIC interacts with the main processor through i2c. PMIC has
+a bunch of regulatos (Step-Down DC-DC Converter Cores)
+that can be programmed to be single phase or multi phase
+regulators. PMIC also has a couple of GPOs(General Purpose Output
+Signals).
 
-	Andrew
+The register sets and the individual bit fields of registers were
+compared against lp87* PMICs. None were matching even close. Hence
+came up with new drivers and is based on lp873x drivers. 
+
+Keerthy (3):
+  mfd: lp87565: Add lp87565 PMIC support
+  regulator: lp87565: Add support for lp87565 PMIC      regulators
+  regulator: tps65917: Add support for SMPS12
+
+ Documentation/devicetree/bindings/mfd/lp87565.txt |  45 ++++
+ drivers/mfd/Kconfig                               |  14 ++
+ drivers/mfd/Makefile                              |   1 +
+ drivers/mfd/lp87565.c                             | 101 ++++++++
+ drivers/regulator/Kconfig                         |   8 +
+ drivers/regulator/Makefile                        |   1 +
+ drivers/regulator/lp87565-regulator.c             | 237 +++++++++++++++++++
+ drivers/regulator/palmas-regulator.c              |  18 +-
+ include/linux/mfd/lp87565.h                       | 271 ++++++++++++++++++++++
+ include/linux/mfd/palmas.h                        |   2 +
+ 10 files changed, 695 insertions(+), 3 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/mfd/lp87565.txt
+ create mode 100644 drivers/mfd/lp87565.c
+ create mode 100644 drivers/regulator/lp87565-regulator.c
+ create mode 100644 include/linux/mfd/lp87565.h
+
+-- 
+1.9.1
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
