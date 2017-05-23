@@ -1,13 +1,13 @@
 From: Javier Martinez Canillas <javier@dowhile0.org>
-Subject: [PATCH v5 13/20] ARM: dts: zynq: Add generic compatible string for I2C EEPROM
-Date: Tue, 23 May 2017 15:34:41 +0200
-Message-ID: <20170523133448.4794-14-javier@dowhile0.org>
+Subject: [PATCH v5 18/20] powerpc/512x: Add generic compatible string for I2C EEPROM
+Date: Tue, 23 May 2017 15:34:46 +0200
+Message-ID: <20170523133448.4794-19-javier@dowhile0.org>
 References: <20170523133448.4794-1-javier@dowhile0.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170523133448.4794-1-javier@dowhile0.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org
-Cc: Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh@kernel.org>, Javier Martinez Canillas <javier@dowhile0.org>, =?UTF-8?q?S=C3=B6ren=20Brinkmann?= <soren.brinkmann@xilinx.com>, devicetree@vger.kernel.org, Michal Simek <michal.simek@xilinx.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, linux-arm-kernel@lists.infradead.org
+Cc: Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh@kernel.org>, Javier Martinez Canillas <javier@dowhile0.org>, devicetree@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linuxppc-dev@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
 The at24 driver allows to register I2C EEPROM chips using different vendor
@@ -33,35 +33,21 @@ Changes in v4:
 Changes in v3: None
 Changes in v2: None
 
- arch/arm/boot/dts/zynq-zc702.dts | 2 +-
- arch/arm/boot/dts/zynq-zc706.dts | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ arch/powerpc/boot/dts/mpc5121ads.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/zynq-zc702.dts b/arch/arm/boot/dts/zynq-zc702.dts
-index 0cdad2cc8b78..f8c840f7118f 100644
---- a/arch/arm/boot/dts/zynq-zc702.dts
-+++ b/arch/arm/boot/dts/zynq-zc702.dts
-@@ -136,7 +136,7 @@
- 			#size-cells = <0>;
- 			reg = <2>;
- 			eeprom@54 {
--				compatible = "at,24c08";
-+				compatible = "atmel,24c08";
- 				reg = <0x54>;
+diff --git a/arch/powerpc/boot/dts/mpc5121ads.dts b/arch/powerpc/boot/dts/mpc5121ads.dts
+index 75888ce2c792..fcaa9bad4bda 100644
+--- a/arch/powerpc/boot/dts/mpc5121ads.dts
++++ b/arch/powerpc/boot/dts/mpc5121ads.dts
+@@ -94,7 +94,7 @@
  			};
- 		};
-diff --git a/arch/arm/boot/dts/zynq-zc706.dts b/arch/arm/boot/dts/zynq-zc706.dts
-index ad4bb06dba25..76492be4a912 100644
---- a/arch/arm/boot/dts/zynq-zc706.dts
-+++ b/arch/arm/boot/dts/zynq-zc706.dts
-@@ -92,7 +92,7 @@
- 			#size-cells = <0>;
- 			reg = <2>;
- 			eeprom@54 {
--				compatible = "at,24c08";
-+				compatible = "atmel,24c08";
- 				reg = <0x54>;
+ 
+ 			eeprom@50 {
+-				compatible = "at,24c32";
++				compatible = "atmel,24c32";
+ 				reg = <0x50>;
  			};
- 		};
+ 
 -- 
 2.9.3
