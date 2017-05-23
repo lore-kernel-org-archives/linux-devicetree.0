@@ -1,43 +1,59 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 3/3] mfd: arizona: Update GPIO binding for newly supported flag
-Date: Tue, 23 May 2017 10:49:23 +0200
-Message-ID: <CACRpkdaLR9pH4HX4h3wuGAVbcETGn-k6VkXYsMAq_YPAsnOUvg@mail.gmail.com>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/3] gpio: Add new flags to control sleep status of GPIOs
+Date: Tue, 23 May 2017 09:51:02 +0100
+Message-ID: <20170523085102.hgr7yovshqy5arkq@dell>
 References: <1494948714-15203-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
- <1494948714-15203-3-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+ <CACRpkdbiyZ9jPnuaX9OuYjVbrUYxtpqO-XMqb75ScCEH-=kOEg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1494948714-15203-3-git-send-email-ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CACRpkdbiyZ9jPnuaX9OuYjVbrUYxtpqO-XMqb75ScCEH-=kOEg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:WOLFSON MICROELECTRONICS DRIVERS" <patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:WOLFSON MICROELECTRONICS DRIVERS" <patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 16, 2017 at 5:31 PM, Charles Keepax
-<ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org> wrote:
+On Tue, 23 May 2017, Linus Walleij wrote:
 
-> Update the device tree binding to show that the new GPIO_SLEEP flags are
-> now supported in the flags field of the GPIO binding for Arizona
-> devices.
->
-> Signed-off-by: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-(...)
->    - gpio-controller : Indicates this device is a GPIO controller.
->    - #gpio-cells : Must be 2. The first cell is the pin number and the
-> -    second cell is used to specify optional parameters (currently unused).
-> +    second cell is used to specify optional parameters, the following flags
-> +    are supported:
-> +      "GPIO_SLEEP_MAY_LOOSE_OUTPUT" the output of this GPIO does not need to
-> +      be maintained whilst the CODEC is in low power mode.
+> On Tue, May 16, 2017 at 5:31 PM, Charles Keepax
+> <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org> wrote:
+> 
+> > Add new flags to allow users to specify that they are not concerned with
+> > the status of GPIOs whilst in a sleep/low power state.
+> >
+> > Signed-off-by: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+> 
+> Would be nice to have some opinion from the DT maintainers about
+> this but seems all right to me.
 
-Your gpio controller most definately support more options than that,
-for example open drain.
+Not sure if it makes a difference, but Rob Acked the bindings already.
 
-But it is supposed to be a generic property so instead patch gpio.txt
-and reference that file from here.
+> > +++ b/include/dt-bindings/gpio/gpio.h
+> > @@ -21,6 +21,10 @@
+> >  #define GPIO_LINE_OPEN_SOURCE 0
+> >  #define GPIO_LINE_OPEN_DRAIN 4
+> >
+> > +/* Bit 3 express GPIO suspend/resume persistence */
+> > +#define GPIO_SLEEP_MAINTAIN_VALUE 0
+> > +#define GPIO_SLEEP_MAY_LOOSE_VALUE 8
+> > +
+> >  /*
+> >   * Open Drain/Collector is the combination of single-ended open drain interface.
+> >   * Open Source/Emitter is the combination of single-ended open source interface.
+> 
+> Please move the define below the comment and macros below it,
+> that is using the defines right above...
+> 
+> Yours,
+> Linus Walleij
 
-Yours,
-Linus Walleij
+-- 
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
