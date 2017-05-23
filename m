@@ -1,309 +1,47 @@
-From: Ralph Sennhauser <ralph.sennhauser@gmail.com>
-Subject: [PATCH v2] ARM: dts: mvebu: add support for Linksys WRT3200ACM (Rango)
-Date: Tue, 23 May 2017 23:29:21 +0200
-Message-ID: <20170523212921.16684-1-ralph.sennhauser@gmail.com>
+From: Benson Leung <bleung-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v2 1/2] extcon: cros-ec: Add extcon-cros-ec driver to
+ support display out.
+Date: Tue, 23 May 2017 15:24:53 -0700
+Message-ID: <CANLzEktUM4sitQFRTTbDZm6WsTSA8bAohAr-x_y0szkF9GmRVw@mail.gmail.com>
+References: <20170301111943.12170-1-enric.balletbo@collabora.com>
+ <CGME20170301112844epcas4p34012f1564f1145f8d8a8967f4fe9a821@epcas4p3.samsung.com>
+ <20170301111943.12170-2-enric.balletbo@collabora.com> <58B7C9BF.1040708@samsung.com>
+ <58E44698.5020605@samsung.com> <b0a76ac2-b524-23b3-ef58-22114e8bf209@collabora.com>
+ <59240507.1040005@samsung.com> <3f4c4b85-e9db-0531-e3da-2e671a8fa750@collabora.com>
+ <592407B4.5040108@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, Gregory Clement <gregory.clement@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Ralph Sennhauser <ralph.sennhauser@gmail.com>, Imre Kaloz <kaloz@openwrt.org>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <592407B4.5040108-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, MyungJoo Ham <myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The Linksys WRT3200ACM (Rango) is the latest Armada-385 based router in
-the Linksys WRT AC Series which got released in October 2016.
+Hi Chanwoo,
 
-Key differences to the earlier Armada-385 based devices in the series is
-a bigger flash chip, next generation wireless modules (Marvell 88W8964)
-in the mini-pcie slots as well as a Marvell SD8887. Finally the CPU is
-clocked at 1866 GHz by default.
 
-The file armada-385-linksys-rango.dts is loosely based off of a DTS
-authored by Imre Kaloz.
+On Tue, May 23, 2017 at 2:58 AM, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
 
-As Rango is part of the armada-385-linksys family of boards use the
-armada-385-linksys.dtsi as basis. As for functional differences to Imre
-Kaloz dts, the wlan LEDs aren't connected to the expander chip pca9635
-but directly to GPIOs. Then mpp47 controls the USB2.0 port and not the
-USB3.0 port, so use the correct GPIO mpp44 for it. Finally use
-non-removable instead of broken-cd with the sdhci node to avoid polling.
+> OK. This patch must need the immutable branch.
+>
+> I expect that some maintainer will make the immutable branch
+> and then send pull request to other maintainer related to them.
+>
 
-Other changes can be categorized as just cleanup / reorganization due to
-using the armada-385-linksys.dtsi.
+I'll create an immutable branch with this this week. Thank you!
 
-URL: https://github.com/openwrt/openwrt/blob/0abc3fa5a996daf7dafdc7794ccfe3fa7e955c5a/target/linux/mvebu/files/arch/arm/boot/dts/armada-385-linksys-rango.dts
-Signed-off-by: Ralph Sennhauser <ralph.sennhauser@gmail.com>
-Signed-off-by: Imre Kaloz <kaloz@openwrt.org>
----
+Benson
 
-Hi everyone,
-
-this patch was part of a series adding support for this device, the
-preparatory patches all got merged already except for "clk: mvebu: add
-support for 1866MHz variants" which isn't strictly required for the
-board to run and was sent to linux-clk for inclusion.
-
-Thanks
-Ralph
----
-
-Changes since v1:
-
-  - Use non-removable with the sdhci node
-  - Update commit message (mostly add hardware highlights from cover letter)
-  - Add collected tags (Imre)
----
-
-Original notes:
-
-  The sdhci node is taken as is, the current node lets one use the
-  wireless part of the attached sd8887. There is an issue with the
-  initalization of the bluetooth firmware though. Haven't had the time
-  to investigate that in depth so far but shouldn't hold up the Rango
-  addition.
-
-  The non-removable property might be more appropriate than broken-cd
-  though.
-
-  Checkpatch complains about the line length of the URL, though not much
-  room there. Checkpatch also complains about the vendor prefix linksys
-  not being documented, however this follows the examples given by the
-  other boards.
----
- arch/arm/boot/dts/Makefile                     |   1 +
- arch/arm/boot/dts/armada-385-linksys-rango.dts | 203 +++++++++++++++++++++++++
- 2 files changed, 204 insertions(+)
- create mode 100644 arch/arm/boot/dts/armada-385-linksys-rango.dts
-
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 9c5e1d9..6be2974 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -999,6 +999,7 @@ dtb-$(CONFIG_MACH_ARMADA_38X) += \
- 	armada-385-db-ap.dtb \
- 	armada-385-linksys-caiman.dtb \
- 	armada-385-linksys-cobra.dtb \
-+	armada-385-linksys-rango.dtb \
- 	armada-385-linksys-shelby.dtb \
- 	armada-385-synology-ds116.dtb \
- 	armada-385-turris-omnia.dtb \
-diff --git a/arch/arm/boot/dts/armada-385-linksys-rango.dts b/arch/arm/boot/dts/armada-385-linksys-rango.dts
-new file mode 100644
-index 0000000..86f3207
---- /dev/null
-+++ b/arch/arm/boot/dts/armada-385-linksys-rango.dts
-@@ -0,0 +1,203 @@
-+/*
-+ * Device Tree file for the Linksys WRT3200ACM (Rango)
-+ *
-+ * Copyright (C) 2016 Imre Kaloz <kaloz@openwrt.org>
-+ *
-+ *
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPL or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
-+ *
-+ *  a) This file is licensed under the terms of the GNU General Public
-+ *     License version 2.  This program is licensed "as is" without
-+ *     any warranty of any kind, whether express or implied.
-+ *
-+ * Or, alternatively,
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use,
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
-+ */
-+
-+/dts-v1/;
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/input/input.h>
-+#include "armada-385-linksys.dtsi"
-+
-+/ {
-+	model = "Linksys WRT3200ACM";
-+	compatible = "linksys,rango", "linksys,armada385", "marvell,armada385",
-+		     "marvell,armada380";
-+};
-+
-+&expander0 {
-+	wan_amber@0 {
-+		label = "rango:amber:wan";
-+		reg = <0x0>;
-+	};
-+
-+	wan_white@1 {
-+		label = "rango:white:wan";
-+		reg = <0x1>;
-+	};
-+
-+	usb2@5 {
-+		label = "rango:white:usb2";
-+		reg = <0x5>;
-+	};
-+
-+	usb3_1@6 {
-+		label = "rango:white:usb3_1";
-+		reg = <0x6>;
-+	};
-+
-+	usb3_2@7 {
-+		label = "rango:white:usb3_2";
-+		reg = <0x7>;
-+	};
-+
-+	wps_white@8 {
-+		label = "rango:white:wps";
-+		reg = <0x8>;
-+	};
-+
-+	wps_amber@9 {
-+		label = "rango:amber:wps";
-+		reg = <0x9>;
-+	};
-+};
-+
-+&gpio_leds {
-+	power {
-+		gpios = <&gpio1 24 GPIO_ACTIVE_HIGH>;
-+		label = "rango:white:power";
-+	};
-+
-+	sata {
-+		gpios = <&gpio0 21 GPIO_ACTIVE_LOW>;
-+		label = "rango:white:sata";
-+	};
-+
-+	wlan_2g {
-+		gpios = <&gpio1 13 GPIO_ACTIVE_LOW>;
-+		label = "rango:white:wlan_2g";
-+	};
-+
-+	wlan_5g {
-+		gpios = <&gpio1 14 GPIO_ACTIVE_LOW>;
-+		label = "rango:white:wlan_5g";
-+	};
-+};
-+
-+&gpio_leds_pins {
-+	marvell,pins = "mpp21", "mpp45", "mpp46", "mpp56";
-+};
-+
-+&nand {
-+	/* AMD/Spansion S34ML02G2 256MiB, OEM Layout */
-+
-+	partition@0 {
-+		label = "u-boot";
-+		reg = <0x0000000 0x200000>;  /* 2MiB */
-+		read-only;
-+	};
-+
-+	partition@200000 {
-+		label = "u_env";
-+		reg = <0x200000 0x20000>;    /* 128KiB */
-+	};
-+
-+	partition@220000 {
-+		label = "s_env";
-+		reg = <0x220000 0x40000>;    /* 256KiB */
-+	};
-+
-+	partition@7e0000 {
-+		label = "devinfo";
-+		reg = <0x7e0000 0x40000>;   /* 256KiB */
-+		read-only;
-+	};
-+
-+	partition@820000 {
-+		label = "sysdiag";
-+		reg = <0x820000 0x1e0000>;   /* 1920KiB */
-+		read-only;
-+	};
-+
-+	/* kernel1 overlaps with rootfs1 by design */
-+	partition@a00000 {
-+		label = "kernel1";
-+		reg = <0xa00000 0x5000000>;  /* 80MiB */
-+	};
-+
-+	partition@1000000 {
-+		label = "rootfs1";
-+		reg = <0x1000000 0x4a00000>;  /* 74MiB */
-+	};
-+
-+	/* kernel2 overlaps with rootfs2 by design */
-+	partition@5a00000 {
-+		label = "kernel2";
-+		reg = <0x5a00000 0x5000000>; /* 80MiB */
-+	};
-+
-+	partition@6000000 {
-+		label = "rootfs2";
-+		reg = <0x6000000 0x4a00000>; /* 74MiB */
-+	};
-+
-+	/*
-+	 * 86MiB, last MiB is for the BBT, not writable
-+	 */
-+	partition@aa00000 {
-+		label = "syscfg";
-+		reg = <0xaa00000 0x5600000>;
-+	};
-+
-+	/*
-+	 * Unused area between "s_env" and "devinfo".
-+	 * Moved here because otherwise the renumbered
-+	 * partitions would break the bootloader
-+	 * supplied bootargs
-+	 */
-+	partition@180000 {
-+		label = "unused_area";
-+		reg = <0x260000 0x5c0000>;   /* 5.75MiB */
-+	};
-+};
-+
-+&sdhci {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&sdhci_pins>;
-+	no-1-8-v;
-+	broken-cd;
-+	wp-inverted;
-+	bus-width = <8>;
-+	status = "okay";
-+};
-+
-+&usb3_1_vbus {
-+	gpio = <&gpio1 12 GPIO_ACTIVE_HIGH>;
-+};
-+
-+&usb3_1_vbus_pins {
-+	marvell,pins = "mpp44";
-+};
 -- 
-2.10.2
+Benson Leung
+Staff Software Engineer
+Chrome OS Kernel
+Google Inc.
+bleung-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org
+Chromium OS Project
+bleung-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
