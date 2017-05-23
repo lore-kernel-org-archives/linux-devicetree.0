@@ -1,106 +1,103 @@
-From: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
-Subject: Re: [PATCH 1/3] usb: host: ohci-platform: Add basic runtime PM
- support
-Date: Tue, 23 May 2017 12:53:47 -0400 (EDT)
-Message-ID: <Pine.LNX.4.44L0.1705231250110.1853-100000@iolanthe.rowland.org>
-References: <20170522160007.9264-2-tony@atomide.com>
+From: Christian Lamparter <chunkeey-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Subject: Re: [PATCH 2/2] pinctrl: qcom: ipq4019: add remaining pin definitions
+Date: Tue, 23 May 2017 18:58:53 +0200
+Message-ID: <2018547.lycQhaDrJg@debian64>
+References: <d53b7a9b1bab818536680123136ac58481d959c8.1494415174.git.chunkeey@googlemail.com> <1975629.nrP45RYYW5@debian64> <20170520050824.GS12920@tuxbook>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170522160007.9264-2-tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <20170520050824.GS12920@tuxbook>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>, Sebastian Reichel <sebastian.reichel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+To: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ram Chandra Jangir <rjangir-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, John Crispin <john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 22 May 2017, Tony Lindgren wrote:
-
-> This is needed in preparation of adding support for omap3 and
-> later OHCI. The runtime PM will only do something on platforms
-> that implement it.
+On Friday, May 19, 2017 10:08:24 PM CEST Bjorn Andersson wrote:
+> On Thu 18 May 11:38 PDT 2017, Christian Lamparter wrote:
+> > On Wednesday, May 17, 2017 1:07:29 PM CEST Bjorn Andersson wrote:
+> > > On Wed 10 May 04:27 PDT 2017, Christian Lamparter wrote:
+> > > > diff --git a/drivers/pinctrl/qcom/pinctrl-ipq4019.c b/drivers/pinctrl/qcom/pinctrl-ipq4019.c
+> > > > index 743d1f458205..7219d1e33c71 100644
+> > > > --- a/drivers/pinctrl/qcom/pinctrl-ipq4019.c
+> > > > +++ b/drivers/pinctrl/qcom/pinctrl-ipq4019.c
+> > > > +	qca_mux_rmii0_refclk,
+> > > > +	qca_mux_wifi0_rfsilient0,
+> > > > +	qca_mux_wifi1_rfsilient0,
+> > > > +	qca_mux_smart2,
+> > > > +	qca_mux_led4,
+> > > 
+> > > What drives ledX? Is it 11 different LED controllers or is it a single
+> > > LED controller with 11 outputs.
+> > 
+> > The latter. The IPQ40xx have one LED controller @ 0x1937000. 
+> > According to the driver (leds-ipq40xx.c in the SDK), it 
+> > does control up to 11 LEDs. A LED can either be muxed to
+> > one of the hardware sources (wifi, lan or wan-ports activity/linkspeed),
+> > or it can be operated by one of four software-programmable "blink"
+> > sources (each with a variable blink rate and duty cycle). 
+> > The driver labels each LED as "ipq40xx::led%d".
+> > 
 > 
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Cc: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-> Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-> Cc: Sebastian Reichel <sebastian.reichel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
-> Cc: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-> Signed-off-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-> ---
-> 
-> Alan, do you have some better ideas for the ohci_platform_remove()
-> path below?
-> 
-> ---
->  drivers/usb/host/ohci-platform.c | 17 ++++++++++++++++-
->  1 file changed, 16 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/usb/host/ohci-platform.c b/drivers/usb/host/ohci-platform.c
-> --- a/drivers/usb/host/ohci-platform.c
-> +++ b/drivers/usb/host/ohci-platform.c
-> @@ -24,6 +24,7 @@
->  #include <linux/err.h>
->  #include <linux/phy/phy.h>
->  #include <linux/platform_device.h>
-> +#include <linux/pm_runtime.h>
->  #include <linux/reset.h>
->  #include <linux/usb/ohci_pdriver.h>
->  #include <linux/usb.h>
-> @@ -242,6 +243,8 @@ static int ohci_platform_probe(struct platform_device *dev)
->  	}
->  #endif
->  
-> +	pm_runtime_set_active(&dev->dev);
-> +	pm_runtime_enable(&dev->dev);
->  	if (pdata->power_on) {
->  		err = pdata->power_on(dev);
->  		if (err < 0)
-> @@ -271,6 +274,7 @@ static int ohci_platform_probe(struct platform_device *dev)
->  	if (pdata->power_off)
->  		pdata->power_off(dev);
->  err_reset:
-> +	pm_runtime_disable(&dev->dev);
->  	while (--rst >= 0)
->  		reset_control_assert(priv->resets[rst]);
->  err_put_clks:
-> @@ -290,7 +294,14 @@ static int ohci_platform_remove(struct platform_device *dev)
->  	struct usb_hcd *hcd = platform_get_drvdata(dev);
->  	struct usb_ohci_pdata *pdata = dev_get_platdata(&dev->dev);
->  	struct ohci_platform_priv *priv = hcd_to_ohci_priv(hcd);
-> -	int clk, rst;
-> +	int clk, rst, enabled;
-> +
-> +	enabled = pm_runtime_get_sync(&dev->dev);
-> +	if (enabled < 0) {
-> +		dev_warn(&dev->dev, "pm_runtime_get failed: %i\n",
-> +			 enabled);
-> +		pm_runtime_put_noidle(&dev->dev);
-> +	}
+> As they all stem from the same hardware block I suggest we name the
+> function "led".
 
-I wouldn't worry about checking the return value.  There's no 
-particular reason for this call to fail, is there?
+This is going to be a problem for Pin 36:
 
->  
->  	usb_remove_hcd(hcd);
->  
-> @@ -305,6 +316,10 @@ static int ohci_platform_remove(struct platform_device *dev)
->  
->  	usb_put_hcd(hcd);
->  
-> +	if (enabled >= 0)
-> +		pm_runtime_put_sync(&dev->dev);
-> +	pm_runtime_disable(&dev->dev);
+PINGROUP(36, rmii0, *led2*, *led0*, NA, ...)
 
-And here you could just do the put_sync, with no test.  If the get_sync
-failed then this will probably fail too, but you won't be any worse off
-for the attempt.
+I checked the other pins too, but this seems to be the only time two 
+LED-lines share the same pin. What's the recommended/prefered option
+in this case? Something like led_alt, or should I keep the led0-led11?
 
-Alan Stern
+There are a few more collisions with other functions as well:
+smartX, i2s_*, wifi1_uart*:
 
-> +
->  	if (pdata == &ohci_platform_defaults)
->  		dev->dev.platform_data = NULL;
+PINGROUP(58, qpic, led2, blsp_i2c0, *smart3*, *smart1*,
+         i2s_rx_mclk, NA, wcss0_dbg, tm4, wifi0, wifi1, NA, NA, NA),
 
+PINGROUP(60, qpic, blsp_uart0, smart1, smart3, led0,
+         *i2s_tx_bclk*, *i2s_rx_bclk*, atest_char, NA, wcss0_dbg,
+         qdss_traceclk_a, NA, tm6, NA),
+
+PINGROUP(61, qpic, blsp_uart0, *smart1*, *smart3*, led1, *i2s_tx_fsync*,
+         *i2s_rx_fsync*, NA, NA, wcss0_dbg, qdss_cti_trig_out_a0,
+         NA, tm7, NA),
+
+PINGROUP(63, qpic, wifi0_uart1, *wifi1_uart1*, *wifi1_uart*, *i2s_td1*,
+         *i2s_rxd*, *i2s_spdif_out*, *i2s_spdif_in*, NA, wcss0_dbg,
+         wcss1_dbg, NA, tm, NA),
+...
+> > > > +	qca_mux_qpic_pad4,
+> > > 
+> > > Please keep an eye on the ipq8074 patch from Varadarajan and make this
+> > > follow the same scheme.
+> > Ok, I'll wait for how qca8074 plays out then.
+
+<https://www.spinics.net/lists/arm-kernel/msg582958.html>:
+| On Sat, May 20, 2017 at 7:54 AM, Bjorn Andersson wrote:
+| [...]
+| > If you consider that you are defining the available functions for this
+| > pinmuxer and then define the sets of pins exposing these available
+| > functions it does make sense to just name it "qpic".
+| >
+| > I think that naming them _common, _lcd and _nand is just adding
+| > confusion when it comes to writing the dts files.
+| >
+| > @Linus, do you have a different preference here?
+|
+|No I pretty much trust the driver maintainer to know this best.
+|
+|Yours,
+|Linus Walleij
+
+Thanks for the answer, I'll go with "qpic" then.
+I'll also combine the various sdio_* to sdio and look at the other candidates
+(rgmii*, rmii0/1*, pmuX, pcie_clk*, jtag*, tmX, audio_pwmX). Unless someone
+comes up with a good reason not to.
+
+Regards,
+Christian
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
