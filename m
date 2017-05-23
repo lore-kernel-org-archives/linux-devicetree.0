@@ -1,43 +1,47 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 3/5] clk: mvebu: ap806: introduce a new binding
-Date: Tue, 23 May 2017 10:26:12 -0500
-Message-ID: <20170523152612.e5kpra2ir2vibgrh@rob-hp-laptop>
-References: <cover.fd6093dbad53cdac70eef4e53b238768721218ac.1495209464.git-series.gregory.clement@free-electrons.com>
- <fd62952c043aec1d87ff65d9d69105103a195908.1495209464.git-series.gregory.clement@free-electrons.com>
+Subject: Re: [PATCH v5 01/20] dt-bindings: i2c: eeprom: Document vendor to be
+ used and deprecated ones
+Date: Tue, 23 May 2017 10:30:35 -0500
+Message-ID: <CAL_JsqKWfSrAOdJOCmNAe_PGkR1yntjTmO7q9wwA5W_NCcxmmw@mail.gmail.com>
+References: <20170523133448.4794-1-javier@dowhile0.org> <20170523133448.4794-2-javier@dowhile0.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <fd62952c043aec1d87ff65d9d69105103a195908.1495209464.git-series.gregory.clement@free-electrons.com>
+In-Reply-To: <20170523133448.4794-2-javier@dowhile0.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Cc: Stephen Boyd <sboyd@codeaurora.org>, Mike Turquette <mturquette@baylibre.com>, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Nadav Haklai <nadavh@marvell.com>, Kostya Porotchkin <kostap@marvell.com>, Neta Zur Hershkovits <neta@marvell.com>, Marcin Wojtas <mw@semihalf.com>, Omri Itach <omrii@marvell.com>, Shadi Ammouri <shadi@marvell.com>
+To: Javier Martinez Canillas <javier@dowhile0.org>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Wolfram Sang <wsa@the-dreams.de>, Simon Horman <horms@verge.net.au>, Sekhar Nori <nsekhar@ti.com>, David Lechner <david@lechnology.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 19, 2017 at 05:58:03PM +0200, Gregory CLEMENT wrote:
-> As for cp110, the initial intent when the binding of the ap806 system
-> controller was to have one flat node. The idea being that what is
-> currently a clock-only driver in drivers would become a MFD driver,
-> exposing the clock, GPIO and pinctrl functionality. However, after taking
-> a step back, this would lead to a messy binding. Indeed, a single node
-> would be a GPIO controller, clock controller, pinmux controller, and
-> more.
-> 
-> This patch adopts a more classical solution of a top-level syscon node
-> with sub-nodes for the individual devices. The main benefit will be to
-> have each functional block associated to its own sub-node where we can
-> put its own properties.
-> 
-> The introduction of the Armada 7K/8K is still in the early stage so the
-> plan is to remove the old binding. However, we don't want to break the
-> device tree compatibility for the few devices already in the field. For
-> this we still keep the support of the legacy compatible string with a big
-> warning in the kernel about updating the device tree.
-> 
-> Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
+On Tue, May 23, 2017 at 8:34 AM, Javier Martinez Canillas
+<javier@dowhile0.org> wrote:
+> The at24 driver allows to register I2C EEPROM chips using different vendor
+> and devices, but the I2C subsystem does not take the vendor into account
+> when matching using the I2C table since it only has device entries.
+>
+> But when matching using an OF table, both the vendor and device has to be
+> taken into account so the driver defines only a set of compatible strings
+> using the "atmel" vendor as a generic fallback for compatible I2C devices.
+>
+> Document in the Device Tree binding document that this manufacturer should
+> be used as the generic fallback. Also document the deprecated vendors.
+>
+> Suggested-by: Wolfram Sang <wsa@the-dreams.de>
+> Suggested-by: Rob Herring <robh@kernel.org>
+> Signed-off-by: Javier Martinez Canillas <javier@dowhile0.org>
+>
 > ---
->  Documentation/devicetree/bindings/arm/marvell/ap806-system-controller.txt | 20 +++++++++++++++-----
->  drivers/clk/mvebu/ap806-system-controller.c                               | 56 ++++++++++++++++++++++++++++++++++++++++++++------------
->  2 files changed, 59 insertions(+), 17 deletions(-)
+>
+> Changes in v5:
+> - Only deprecate the atmel variants at25 and at (Geert Uytterhoeven).
+>
+> Changes in v4:
+> - Document the manufacturers that have been deprecated (Rob Herring).
+>
+> Changes in v3: None
+> Changes in v2: None
+>
+>  Documentation/devicetree/bindings/eeprom/eeprom.txt | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
 
-Acked-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
