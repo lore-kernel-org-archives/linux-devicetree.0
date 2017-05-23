@@ -1,25 +1,13 @@
 From: Javier Martinez Canillas <javier@dowhile0.org>
-Subject: [PATCH v5 04/20] ARM: dts: turris-omnia: Add generic compatible
- string for I2C EEPROM
-Date: Tue, 23 May 2017 15:34:32 +0200
-Message-ID: <20170523133448.4794-5-javier@dowhile0.org>
+Subject: [PATCH v5 13/20] ARM: dts: zynq: Add generic compatible string for I2C EEPROM
+Date: Tue, 23 May 2017 15:34:41 +0200
+Message-ID: <20170523133448.4794-14-javier@dowhile0.org>
 References: <20170523133448.4794-1-javier@dowhile0.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170523133448.4794-1-javier@dowhile0.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh@kernel.org>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, Wolfram Sang <wsa@the-dreams.de>, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@free-electrons.com>, Javier Martinez Canillas <javier@dowhile0.org>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Cc: Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh@kernel.org>, Javier Martinez Canillas <javier@dowhile0.org>, =?UTF-8?q?S=C3=B6ren=20Brinkmann?= <soren.brinkmann@xilinx.com>, devicetree@vger.kernel.org, Michal Simek <michal.simek@xilinx.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
 The at24 driver allows to register I2C EEPROM chips using different vendor
@@ -45,21 +33,35 @@ Changes in v4:
 Changes in v3: None
 Changes in v2: None
 
- arch/arm/boot/dts/armada-385-turris-omnia.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/boot/dts/zynq-zc702.dts | 2 +-
+ arch/arm/boot/dts/zynq-zc706.dts | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/armada-385-turris-omnia.dts b/arch/arm/boot/dts/armada-385-turris-omnia.dts
-index 28eede180e4f..be16ce39fb3d 100644
---- a/arch/arm/boot/dts/armada-385-turris-omnia.dts
-+++ b/arch/arm/boot/dts/armada-385-turris-omnia.dts
-@@ -171,7 +171,7 @@
- 			/* leds device (in STM32F0) at address 0x2b */
- 
+diff --git a/arch/arm/boot/dts/zynq-zc702.dts b/arch/arm/boot/dts/zynq-zc702.dts
+index 0cdad2cc8b78..f8c840f7118f 100644
+--- a/arch/arm/boot/dts/zynq-zc702.dts
++++ b/arch/arm/boot/dts/zynq-zc702.dts
+@@ -136,7 +136,7 @@
+ 			#size-cells = <0>;
+ 			reg = <2>;
  			eeprom@54 {
--				compatible = "at,24c64";
-+				compatible = "atmel,24c64";
+-				compatible = "at,24c08";
++				compatible = "atmel,24c08";
  				reg = <0x54>;
- 
- 				/* The EEPROM contains data for bootloader.
+ 			};
+ 		};
+diff --git a/arch/arm/boot/dts/zynq-zc706.dts b/arch/arm/boot/dts/zynq-zc706.dts
+index ad4bb06dba25..76492be4a912 100644
+--- a/arch/arm/boot/dts/zynq-zc706.dts
++++ b/arch/arm/boot/dts/zynq-zc706.dts
+@@ -92,7 +92,7 @@
+ 			#size-cells = <0>;
+ 			reg = <2>;
+ 			eeprom@54 {
+-				compatible = "at,24c08";
++				compatible = "atmel,24c08";
+ 				reg = <0x54>;
+ 			};
+ 		};
 -- 
 2.9.3
