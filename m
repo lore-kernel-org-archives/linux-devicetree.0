@@ -1,105 +1,74 @@
-From: zhangfei <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 05/12] arm64: dts: Add I2C nodes for Hi3660
-Date: Tue, 23 May 2017 14:36:25 +0800
-Message-ID: <c7f16d66-f884-b230-4b44-29d603af12ab@linaro.org>
-References: <20170517083745.24479-1-guodong.xu@linaro.org>
- <20170517083745.24479-6-guodong.xu@linaro.org>
- <20170523003908.ztuh4oohdk3g34pm@rob-hp-laptop>
- <94d06900-d871-7bc6-e1f3-d2b22ba20aaf@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <94d06900-d871-7bc6-e1f3-d2b22ba20aaf-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, wangkefeng.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, xuejiancheng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+Subject: [PATCH v5.1 3/3] of: Support const and non-const use for to_of_node()
+Date: Tue, 23 May 2017 09:39:03 +0300
+Message-ID: <1495521543-31570-1-git-send-email-sakari.ailus@linux.intel.com>
+References: <1495440698-22260-4-git-send-email-sakari.ailus@linux.intel.com>
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <1495440698-22260-4-git-send-email-sakari.ailus@linux.intel.com>
+Sender: linux-acpi-owner@vger.kernel.org
+To: devicetree@vger.kernel.org, robh@kernel.org, frowand.list@gmail.com
+Cc: linux-acpi@vger.kernel.org, sudeep.holla@arm.com, lorenzo.pieralisi@arm.com, mika.westerberg@linux.intel.com, rafael@kernel.org, mark.rutland@arm.com, broonie@kernel.org, ahs3@redhat.com
 List-Id: devicetree@vger.kernel.org
 
+Turn to_of_node() into a macro in order to support both const and
+non-const use. Additionally make the fwnode argument to is_of_node() const
+as well.
 
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+---
+since v5:
 
-On 2017年05月23日 13:55, zhangfei wrote:
-> Hi, Rob
->
->
-> Thanks for the review.
->
-> On 2017年05月23日 08:39, Rob Herring wrote:
->> On Wed, May 17, 2017 at 04:37:38PM +0800, Guodong Xu wrote:
->>> From: Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->>>
->>> Add I2C nodes for Hi3660-hikey960.
->>>
->>> On HiKey960,
->>> I2C0, I2C7 is connected to Low Speed Expansion Connector.
->>> I2C1 is connected to ADV7535.
->>> I2C3 is connected to USB5734.
->>>
->>> Signed-off-by: Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->>> Signed-off-by: Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->>> ---
->>>   arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts | 18 ++++++++
->>>   arch/arm64/boot/dts/hisilicon/hi3660.dtsi         | 56 
->>> +++++++++++++++++++++++
->>>   2 files changed, 74 insertions(+)
->>>
->>> diff --git a/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts 
->>> b/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
->>> index 64875a5..f685b1e 100644
->>> --- a/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
->>> +++ b/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
->>> @@ -29,6 +29,24 @@
->>>       };
->>>   };
->>>   +&i2c0 {
->>> +    status = "okay";
->>> +};
->>> +
->>> +&i2c1 {
->>> +    status = "okay";
->>> +
->>> +    adv7533: adv7533@39 {
->>> +        status = "ok";
->>> +        compatible = "adi,adv7533";
->>> +        reg = <0x39>;
->>> +    };
->>> +};
->>> +
->>> +&i2c7 {
->>> +    status = "okay";
->>> +};
->> labels for the LS connector?
+- Put const to the argument, not the type returned.
 
-Do you mean arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi
+ include/linux/of.h | 20 ++++++++++++--------
+ 1 file changed, 12 insertions(+), 8 deletions(-)
 
-                 i2c@78ba000 {
-                 /* On Low speed expansion */
-                         label = "LS-I2C1";
-                         status = "okay";
-                 };
+diff --git a/include/linux/of.h b/include/linux/of.h
+index a7ccf34..aaf9c18 100644
+--- a/include/linux/of.h
++++ b/include/linux/of.h
+@@ -148,16 +148,20 @@ extern raw_spinlock_t devtree_lock;
+ #ifdef CONFIG_OF
+ void of_core_init(void);
+ 
+-static inline bool is_of_node(struct fwnode_handle *fwnode)
++static inline bool is_of_node(const struct fwnode_handle *fwnode)
+ {
+ 	return !IS_ERR_OR_NULL(fwnode) && fwnode->type == FWNODE_OF;
+ }
+ 
+-static inline struct device_node *to_of_node(struct fwnode_handle *fwnode)
+-{
+-	return is_of_node(fwnode) ?
+-		container_of(fwnode, struct device_node, fwnode) : NULL;
+-}
++#define to_of_node(__fwnode)						\
++	({								\
++		typeof(__fwnode) __to_of_node_fwnode = __fwnode;	\
++									\
++		is_of_node(__to_of_node_fwnode) ?			\
++			container_of(__to_of_node_fwnode,		\
++				     struct device_node, fwnode) :	\
++			NULL;						\
++	})
+ 
+ #define of_fwnode_handle(node)						\
+ 	({								\
+@@ -539,12 +543,12 @@ static inline void of_core_init(void)
+ {
+ }
+ 
+-static inline bool is_of_node(struct fwnode_handle *fwnode)
++static inline bool is_of_node(const struct fwnode_handle *fwnode)
+ {
+ 	return false;
+ }
+ 
+-static inline struct device_node *to_of_node(struct fwnode_handle *fwnode)
++static inline struct device_node *to_of_node(const struct fwnode_handle *fwnode)
+ {
+ 	return NULL;
+ }
+-- 
+2.7.4
 
-                 spi@78b7000 {
-                 /* On High speed expansion */
-                         label = "HS-SPI1";
-                         status = "okay";
-                 };
-
-Thanks
->>
->>> +            compatible = "snps,designware-i2c";
->> These should have an SoC specific compatible.
-> We directly use drivers/i2c/busses/i2c-designware-platdrv.c,
-> do we still an soc specific compatible?
-> Checked arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi, and other examples,
->
-> compatible = "snps,designware-i2c" is used.
->
->
-> Thanks
->
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
