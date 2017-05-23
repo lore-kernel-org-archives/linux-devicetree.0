@@ -1,55 +1,96 @@
-From: Jonas Jensen <jonas.jensen@gmail.com>
-Subject: [PATCH] ARM: dts: moxart: rename sdhci mmc
-Date: Tue, 23 May 2017 16:17:06 +0200
-Message-ID: <1495549026-5805-1-git-send-email-jonas.jensen@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Jonas Jensen <jonas.jensen@gmail.com>
+From: Leo Yan <leo.yan@linaro.org>
+Subject: [PATCH v11 8/9] arm64: dts: hi6220: register debug module
+Date: Tue, 23 May 2017 22:16:19 +0800
+Message-ID: <1495548980-30432-9-git-send-email-leo.yan@linaro.org>
+References: <1495548980-30432-1-git-send-email-leo.yan@linaro.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1495548980-30432-1-git-send-email-leo.yan@linaro.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Jonathan Corbet <corbet@lwn.net>, Mathieu Poirier <mathieu.poirier@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Liviu Dudau <liviu.dudau@arm.com>, Wei Xu <xuwei5@hisilicon.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Suzuki K Poulose <suzuki.poulose@arm.com>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, Stephen Boyd <sboyd@codeaurora.org>, Mike Leach <mike.leach@linaro.org>
+Cc: Leo Yan <leo.yan@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-The host driver compatible string changed to "moxa,moxart-mmc" during
-the review process while the old name was committed to moxart's dts* files.
+Bind debug module driver for Hi6220.
 
-Correct the host driver compatible string and also fix the node name.
-
-Signed-off-by: Jonas Jensen <jonas.jensen@gmail.com>
+Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+Signed-off-by: Leo Yan <leo.yan@linaro.org>
 ---
+ arch/arm64/boot/dts/hisilicon/hi6220.dtsi | 64 +++++++++++++++++++++++++++++++
+ 1 file changed, 64 insertions(+)
 
-Notes:
-    Applies to next-20170518
-
- arch/arm/boot/dts/moxart-uc7112lx.dts | 2 +-
- arch/arm/boot/dts/moxart.dtsi         | 4 ++--
- 2 files changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/arch/arm/boot/dts/moxart-uc7112lx.dts b/arch/arm/boot/dts/moxart-uc7112lx.dts
-index 4a962a2..59d8775 100644
---- a/arch/arm/boot/dts/moxart-uc7112lx.dts
-+++ b/arch/arm/boot/dts/moxart-uc7112lx.dts
-@@ -80,7 +80,7 @@
- 	clocks = <&ref12>;
- };
- 
--&sdhci {
-+&mmc {
- 	status = "okay";
- };
- 
-diff --git a/arch/arm/boot/dts/moxart.dtsi b/arch/arm/boot/dts/moxart.dtsi
-index e86f8c9..54a3ca2 100644
---- a/arch/arm/boot/dts/moxart.dtsi
-+++ b/arch/arm/boot/dts/moxart.dtsi
-@@ -91,8 +91,8 @@
- 			clocks = <&clk_apb>;
+diff --git a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
+index 1e5129b..21805b9 100644
+--- a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
++++ b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
+@@ -916,5 +916,69 @@
+ 				};
+ 			};
  		};
- 
--		sdhci: sdhci@98e00000 {
--			compatible = "moxa,moxart-sdhci";
-+		mmc: mmc@98e00000 {
-+			compatible = "moxa,moxart-mmc";
- 			reg = <0x98e00000 0x5C>;
- 			interrupts = <5 IRQ_TYPE_LEVEL_HIGH>;
- 			clocks = <&clk_apb>;
++
++		debug@f6590000 {
++			compatible = "arm,coresight-cpu-debug","arm,primecell";
++			reg = <0 0xf6590000 0 0x1000>;
++			clocks = <&sys_ctrl HI6220_DAPB_CLK>;
++			clock-names = "apb_pclk";
++			cpu = <&cpu0>;
++		};
++
++		debug@f6592000 {
++			compatible = "arm,coresight-cpu-debug","arm,primecell";
++			reg = <0 0xf6592000 0 0x1000>;
++			clocks = <&sys_ctrl HI6220_DAPB_CLK>;
++			clock-names = "apb_pclk";
++			cpu = <&cpu1>;
++		};
++
++		debug@f6594000 {
++			compatible = "arm,coresight-cpu-debug","arm,primecell";
++			reg = <0 0xf6594000 0 0x1000>;
++			clocks = <&sys_ctrl HI6220_DAPB_CLK>;
++			clock-names = "apb_pclk";
++			cpu = <&cpu2>;
++		};
++
++		debug@f6596000 {
++			compatible = "arm,coresight-cpu-debug","arm,primecell";
++			reg = <0 0xf6596000 0 0x1000>;
++			clocks = <&sys_ctrl HI6220_DAPB_CLK>;
++			clock-names = "apb_pclk";
++			cpu = <&cpu3>;
++		};
++
++		debug@f65d0000 {
++			compatible = "arm,coresight-cpu-debug","arm,primecell";
++			reg = <0 0xf65d0000 0 0x1000>;
++			clocks = <&sys_ctrl HI6220_DAPB_CLK>;
++			clock-names = "apb_pclk";
++			cpu = <&cpu4>;
++		};
++
++		debug@f65d2000 {
++			compatible = "arm,coresight-cpu-debug","arm,primecell";
++			reg = <0 0xf65d2000 0 0x1000>;
++			clocks = <&sys_ctrl HI6220_DAPB_CLK>;
++			clock-names = "apb_pclk";
++			cpu = <&cpu5>;
++		};
++
++		debug@f65d4000 {
++			compatible = "arm,coresight-cpu-debug","arm,primecell";
++			reg = <0 0xf65d4000 0 0x1000>;
++			clocks = <&sys_ctrl HI6220_DAPB_CLK>;
++			clock-names = "apb_pclk";
++			cpu = <&cpu6>;
++		};
++
++		debug@f65d6000 {
++			compatible = "arm,coresight-cpu-debug","arm,primecell";
++			reg = <0 0xf65d6000 0 0x1000>;
++			clocks = <&sys_ctrl HI6220_DAPB_CLK>;
++			clock-names = "apb_pclk";
++			cpu = <&cpu7>;
++		};
+ 	};
+ };
 -- 
-1.8.2.1
+2.7.4
