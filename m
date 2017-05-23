@@ -1,43 +1,50 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] leds: pca955x: add GPIO support
-Date: Tue, 23 May 2017 10:18:31 +0200
-Message-ID: <CACRpkdYRv-ASan1ZJevWbk=+_01LU0a8DDRL_nvhC59o25c5wA@mail.gmail.com>
-References: <1494311772-21872-1-git-send-email-clg@kaod.org> <20b94199-a154-53cd-96d1-910ae3de1085@gmail.com>
+From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH v3 1/3] clk: rockchip: add dt-binding header for rk3128
+Date: Tue, 23 May 2017 10:29:52 +0200
+Message-ID: <1725571.3NA4bbO7jm@phil>
+References: <1495501865-18512-1-git-send-email-zhangqing@rock-chips.com> <1495501865-18512-2-git-send-email-zhangqing@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20b94199-a154-53cd-96d1-910ae3de1085-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <1495501865-18512-2-git-send-email-zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jacek Anaszewski <jacek.anaszewski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: =?UTF-8?Q?C=C3=A9dric_Le_Goater?= <clg-Bxea+6Xhats@public.gmane.org>, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
+To: Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, mark.rutland-5wv7dgnIgG8@public.gmane.org
+Cc: xf-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, xxx-TNX95d0MmH7DzftRWevZcw@public.gmane.org, cl-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 11, 2017 at 10:23 PM, Jacek Anaszewski
-<jacek.anaszewski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+Hi Elaine,
 
->> +Optional properties:
->> +- gpio-controller: allows pins to be used as GPIOs.
+Am Dienstag, 23. Mai 2017, 09:11:03 CEST schrieb Elaine Zhang:
+> Add the dt-bindings header for the rk3128,
+> that gets shared between the clock controller and
+> the clock references in the dts.
+> Add softreset ID for rk3128.
+> And it also applies to the RK3126 SoC.
+> 
+> Signed-off-by: Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> ---
+>  include/dt-bindings/clock/rk3128-cru.h | 283 +++++++++++++++++++++++++++++++++
+>  1 file changed, 283 insertions(+)
+>  create mode 100644 include/dt-bindings/clock/rk3128-cru.h
+> 
+> diff --git a/include/dt-bindings/clock/rk3128-cru.h b/include/dt-bindings/clock/rk3128-cru.h
+> new file mode 100644
+> index 000000000000..5f055a41584b
+> --- /dev/null
+> +++ b/include/dt-bindings/clock/rk3128-cru.h
 
-Are these output-only? Then write something about that.
+[...]
 
->> +- #gpio-cells: if present, must not be 0.
+> +#define SCLK_USB480M		154
+> +#define SCLK_USB480M_PHY	155
 
-Must be present and must be <2>
+We probably don't need the clock-id for USB480M_PHY, as it is an external
+clock and is unused. Instead as I wrote in the previous patch, it should
+be added to the list of external clocks in the binding txt document.
 
->> +- gpio-base : base number of the pins used as GPIOs. If there are more
->> +              than one, they should be contiguous. See 'type' property
->> +              below.
 
-NACK. Not in my life.
-
-Provide -1 in the Linux driver and use the ioctl() from userspace
-to look up your gpios. Add .names array to the gpiochip if necessary,
-define line names in the device tree for the board.
-
-Consult tools/gpio/* for the modern way of using GPIOs.
-
-Yours,
-Linus Walleij
+Heiko
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
