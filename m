@@ -1,124 +1,131 @@
-From: Fabrice Gasnier <fabrice.gasnier@st.com>
-Subject: Re: [PATCH 1/5] dt-bindings: iio: stm32-adc: add support for STM32H7
-Date: Tue, 23 May 2017 17:54:30 +0200
-Message-ID: <1e614174-dde5-f91f-f9bf-e265708290dd@st.com>
-References: <1495197928-1439-1-git-send-email-fabrice.gasnier@st.com>
- <1495197928-1439-2-git-send-email-fabrice.gasnier@st.com>
- <20170523150730.735kyrb5kuheqtyi@rob-hp-laptop>
+From: Ralph Sennhauser <ralph.sennhauser-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 00/13] Linksys WRT3200ACM (Rango) support
+Date: Tue, 23 May 2017 18:11:28 +0200
+Message-ID: <20170523181128.43bd1f96@gmail.com>
+References: <20170521124903.11050-1-ralph.sennhauser@gmail.com>
+        <87mva3wqci.fsf@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170523150730.735kyrb5kuheqtyi@rob-hp-laptop>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, lars@metafoo.de, alexandre.torgue@st.com, linux-iio@vger.kernel.org, pmeerw@pmeerw.net, linux@armlinux.org.uk, mcoquelin.stm32@gmail.com, linux-kernel@vger.kernel.org, jic23@kernel.org, benjamin.gaignard@linaro.org, knaack.h@gmx.de, linux-arm-kernel@lists.infradead.org, benjamin.gaignard@st.com
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <87mva3wqci.fsf-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Imre Kaloz <kaloz-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 05/23/2017 05:07 PM, Rob Herring wrote:
-> On Fri, May 19, 2017 at 02:45:24PM +0200, Fabrice Gasnier wrote:
->> Document support for STM32H7 Analog to Digital Converter.
->> Main difference is regarding compatible, clock definitions and new
->> features like differential channels support:
->> STM32H7 ADC block has two clock inputs, common clock for all ADCs.
->> One 'bus' clock for registers access, and one optional 'adc' clock
->> for analog circuitry (bus clock may be used for conversions).
->>
->> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
->> ---
->>  .../devicetree/bindings/iio/adc/st,stm32-adc.txt     | 20 ++++++++++++++------
->>  1 file changed, 14 insertions(+), 6 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/iio/adc/st,stm32-adc.txt b/Documentation/devicetree/bindings/iio/adc/st,stm32-adc.txt
->> index e35f9f1..9519d2e 100644
->> --- a/Documentation/devicetree/bindings/iio/adc/st,stm32-adc.txt
->> +++ b/Documentation/devicetree/bindings/iio/adc/st,stm32-adc.txt
->> @@ -21,11 +21,17 @@ own configurable sequence and trigger:
->>  Contents of a stm32 adc root node:
->>  -----------------------------------
->>  Required properties:
->> -- compatible: Should be "st,stm32f4-adc-core".
->> +- compatible: Should be one of "st,stm32f4-adc-core" or "st,stm32h7-adc-core".
-> Reformat this to 1 per line.
-Hi Rob,
+On Tue, 23 May 2017 17:22:05 +0200
+Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
 
-I'll fix it in v2
->
->>  - reg: Offset and length of the ADC block register set.
->>  - interrupts: Must contain the interrupt for ADC block.
->> -- clocks: Clock for the analog circuitry (common to all ADCs).
->> -- clock-names: Must be "adc".
->> +- clocks: Core can use up to two clocks, depending on part used:
->> +  - "adc" clock: for the analog circuitry, common to all ADCs.
->> +    It's required on stm32f4.
->> +    It's optional on stm32h7, bus clock will be used by default if not set.
-> The clocks listed should be all connections present, not policy as to 
-> what clock you want to use for conversions.
-Shall I only mention it's optional on stm32h7 ?
-(e.g. remove "bus clock will...")
+> Hi Ralph,
+>  
+>  On dim., mai 21 2017, Ralph Sennhauser <ralph.sennhauser-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> wrote:
+> 
+> > Hi everyone
+> >
+> > This series adds support for the latest model in Linksys WRT AC
+> > series of routers. The WRT3200ACM was released in October 2016 and
+> > the code name is Rango.
+> >
+> > As it comes with a flash chip twice as big the dts Imre Kaloz has
+> > written for OpenWrt isn't based on armada-385-linksys.dtsi to avoid
+> > conflicts. Nonetheless its part of the same family, so the bigger
+> > part of this series is dedicated to reorganize / modernize /
+> > cleanup / somewhat future proof the armada-385-linksys.dtsi and
+> > it's dependants so the dts for the Rango addition can use the same
+> > dtsi.
+> >
+> > Key differences to the earlier Armada-385 based devices in the
+> > series is a bigger flash chip, next generation wireless modules in
+> > the mini pcie slots as well as a Marvell SD8887. Finally the CPU is
+> > clocked at 1866 GHz by default.
+> >
+> > The series depends on Linux 4.12-rc1 and is targeted for 4.13.
+> >
+> > Ralph
+> >
+> >  
+> 
 
->
->> +  - "bus" clock: for registers access, common to all ADCs.
->> +    It's unused on stm32f4.
-> s/unused/not present/
-I'll fix it in v2
+Hi Gregory,
 
->
->> +    It's required on stm32h7.
->> +- clock-names: Must be "adc" and/or "bus" depending on part used.
->>  - interrupt-controller: Identifies the controller node as interrupt-parent
->>  - vref-supply: Phandle to the vref input analog reference voltage.
->>  - #interrupt-cells = <1>;
->> @@ -42,14 +48,16 @@ An ADC block node should contain at least one subnode, representing an
->>  ADC instance available on the machine.
->>  
->>  Required properties:
->> -- compatible: Should be "st,stm32f4-adc".
->> +- compatible: Should be one of "st,stm32f4-adc" or "st,stm32h7-adc".
-> One per line.
-I'll fix it in v2
+> I applied the 11 first patches on mvebu/dt. I added the
+> "Signed-off-by" from Imre Kaloz <kaloz-p3rKhJxN3npAfugRpC6u6w@public.gmane.org> on all of them
+> and the "Reviewed-by" from Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org> when
+> approriate.
 
->
->>  - reg: Offset of ADC instance in ADC block (e.g. may be 0x0, 0x100, 0x200).
->> -- clocks: Input clock private to this ADC instance.
->> +- clocks: Input clock private to this ADC instance. It's required only on
->> +  stm32f4, that has per instance clock input for registers access.
-> Does the h7 simply have the same parent connected to all ADC instances 
-> or really doesn't have a per instance clock? For the former case, you 
-> should still have a clock, but just all be the same parent.
-It's the second case. There's no per instance clock.
-Do you want me to rephrase a little ?
-e.g. like it's required on stm32f4 and not present on stm32h7 ?
+That was a lot faster than expected
 
-Please advise,
-Thanks for reviewing,
-Fabrice
+> 
+> I also did the following things:
+> 
+> > Ralph Sennhauser (13):
+> >   ARM: dts: armada-385-linksys: flatten dtsi
 
->
->>  - interrupt-parent: Phandle to the parent interrupt controller.
->>  - interrupts: IRQ Line for the ADC (e.g. may be 0 for adc@0, 1 for adc@100 or
->>    2 for adc@200).
->>  - st,adc-channels: List of single-ended channels muxed for this ADC.
->> -  It can have up to 16 channels, numbered from 0 to 15 (resp. for in0..in15).
->> +  It can have up to 16 channels on stm32f4 or 20 channels on stm32h7, numbered
->> +  from 0 to 15 or 19 (resp. for in0..in15 or in0..in19).
->>  - #io-channel-cells = <1>: See the IIO bindings section "IIO consumers" in
->>    Documentation/devicetree/bindings/iio/iio-bindings.txt
->>  
->> -- 
->> 1.9.1
->>
->>
->> _______________________________________________
->> linux-arm-kernel mailing list
->> linux-arm-kernel@lists.infradead.org
->> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+Just noticed the commit message has "helps helps" in it.
+
+> >   ARM: dts: armada-385-linksys: label nodes  
+> Fixed typo pointed by Andrew
+> 
+> >   ARM: dts: armada-385-linksys: flatten dependants  
+> Fixed typo pointed by Andrew
+> 
+> Something that I didn't change is the word "dependants", I don't know
+> what do you means exactly. But not being native speaker I maybe missed
+> something.
+
+Dependants is the noun, tho that might be a British English thing (what
+I had in school). I learned English as 4th/5th language together with
+Latin, so beside being a mixture of American and British English some
+custom English surfaces from time to time. :)
+
+> 
+> >   ARM: dts: armada-385-linksys: drop redundant properties in
+> > dependants ARM: dts: armada-385-linksys: bm pools by label order
+> >   ARM: dts: armada-385-linksys: usb3 label cleanup  
+> 
+> I applied this one because I found Ralph explanation convincing about
+> not modifying the ABI
+> 
+> >   ARM: dts: armada-385-linksys: drop leagcy DSA bindings  
+> Fixed typo in title and commit log
+> 
+
+Didn't notice until you pointed it out. Thanks.
+
+> >   ARM: dts: armada-385-linksys: use binary unit prefixes  
+> 
+> As Ralph I prefer that we use normalized unit. Especially when we use
+> MiB or KiB then we are sure that we use a power of 2, whereas when we
+> see KB we don't know if it is 1024B or 1000B.
+> 
+> >   ARM: dts: armada-385-linksys: partition layout is board specific
+> >   ARM: dts: armada-385-linksys: group pins in pinctrl
+> >   ARM: dts: armada-385-linksys: fixup button node names  
+> 
+> >   clk: mvebu: add support for 1866MHz variants  
+> 
+> I didn't apply this one as it must go through the clk tree and there
+> was also a pending question from Andrew.
+
+And the way he formulated it he probably already knows that more is
+needed. I'll investigate it.
+
+> 
+> >   ARM: dts: mvebu: add support for Linksys WRT3200ACM (Rango)  
+> 
+> For this last one do you finally agree to use "non-removable" instead
+> of "broken-cd" ?
+
+The card isn't really accessible and as such polling sort of pointless.
+I prefer non-removable but left it as-is for V1.
+
+Thanks
+Ralph
+
+PS: Also thanks for applying the reminder of the pwm-fan series.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
