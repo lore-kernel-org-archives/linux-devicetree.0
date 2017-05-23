@@ -1,34 +1,27 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 2/3] dt-bindings: add bindings for rk3128 clock
- controller
-Date: Tue, 23 May 2017 09:08:48 -0500
-Message-ID: <20170523140848.7a3auouimenz5ii2@rob-hp-laptop>
-References: <1495073819-4160-1-git-send-email-zhangqing@rock-chips.com>
- <1495073819-4160-3-git-send-email-zhangqing@rock-chips.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH] DT: hwspinlock: Add binding documentation for Spreadtrum
+ hwspinlock
+Date: Tue, 23 May 2017 09:10:10 -0500
+Message-ID: <20170523141010.tkqrbylau37fkfcj@rob-hp-laptop>
+References: <fe3d04f400460673ee88324c414544ff3e15990e.1495075341.git.baolin.wang@spreadtrum.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1495073819-4160-3-git-send-email-zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, xf-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, xxx-TNX95d0MmH7DzftRWevZcw@public.gmane.org, cl-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org
+In-Reply-To: <fe3d04f400460673ee88324c414544ff3e15990e.1495075341.git.baolin.wang@spreadtrum.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Baolin Wang <baolin.wang@spreadtrum.com>
+Cc: ohad@wizery.com, bjorn.andersson@linaro.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-remoteproc@vger.kernel.org, broonie@kernel.org, baolin.wang@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 18, 2017 at 10:16:58AM +0800, Elaine Zhang wrote:
-> Add devicetree bindings for Rockchip cru which found on
-> Rockchip SoCs.
+On Thu, May 18, 2017 at 10:49:19AM +0800, Baolin Wang wrote:
+> This patch adds the binding documentation for Spreadtrum hardware spinlock
+> device.
 > 
-> Signed-off-by: Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> Signed-off-by: Baolin Wang <baolin.wang@spreadtrum.com>
 > ---
->  .../bindings/clock/rockchip,rk3128-cru.txt         | 56 ++++++++++++++++++++++
->  1 file changed, 56 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/clock/rockchip,rk3128-cru.txt
+>  .../devicetree/bindings/hwlock/sprd-hwspinlock.txt |   23 ++++++++++++++++++++
+>  1 file changed, 23 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/hwlock/sprd-hwspinlock.txt
 
-This and patch 1 can be combined, but don't have to be. For both:
-
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Acked-by: Rob Herring <robh@kernel.org> 
