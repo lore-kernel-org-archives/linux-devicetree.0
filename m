@@ -1,92 +1,90 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 19/20] powerpc/83xx: Add generic compatible string for
- I2C EEPROM
-Date: Tue, 23 May 2017 08:42:59 -0500
-Message-ID: <CAL_JsqLGC9sh9jhwtCHu1NE2z85cZh0CVXuMc9aohzCoxE_4fg@mail.gmail.com>
-References: <20170522140208.24652-1-javier@dowhile0.org> <20170522140208.24652-20-javier@dowhile0.org>
+Subject: Re: [PATCH v4 01/20] dt-bindings: i2c: eeprom: Document vendor to be
+ used and deprecated ones
+Date: Tue, 23 May 2017 08:48:12 -0500
+Message-ID: <CAL_JsqLrdyUW=h9+SMc+5Eu558KSVXuS-ABD3-kv=Q02X5TY=A@mail.gmail.com>
+References: <20170522140208.24652-1-javier@dowhile0.org> <20170522140208.24652-2-javier@dowhile0.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170522140208.24652-20-javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>
+In-Reply-To: <20170522140208.24652-2-javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>
-Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Paul Mackerras <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linuxppc-dev <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 22, 2017 at 9:02 AM, Javier Martinez Canillas
+On Mon, May 22, 2017 at 9:01 AM, Javier Martinez Canillas
 <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org> wrote:
 > The at24 driver allows to register I2C EEPROM chips using different vendor
 > and devices, but the I2C subsystem does not take the vendor into account
 > when matching using the I2C table since it only has device entries.
 >
 > But when matching using an OF table, both the vendor and device has to be
-> taken into account so the driver defines only a set of compatible strings
-> using the "atmel" vendor as a generic fallback for compatible I2C devices.
+> taken into account, so the exact list of supported <vendor,device> tuples
+> should be documented in the Device Tree binding document.
 >
-> So add this generic fallback to the device node compatible string to make
-> the device to match the driver using the OF device ID table.
+> But there is no need to have different manufacturers if the EEPROM chips
+> from different manufacturers are really compatible, so matching using a
+> single "atmel" vendor is enough for all chip types.
 >
+> Document in the Device Tree binding that the "atmel" manufacturer should
+> be used, and also document the manufacturers that have been deprecated.
+>
+> Suggested-by: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+> Suggested-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 > Signed-off-by: Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>
 >
 > ---
 >
 > Changes in v4:
-> - Only use the atmel manufacturer in the compatible string instead of
->   keeping the deprecated ones (Rob Herring).
+> - Document the manufacturers that have been deprecated (Rob Herring).
+
+I don't think that's what I said.
+
 >
 > Changes in v3: None
 > Changes in v2: None
 >
->  arch/powerpc/boot/dts/mpc8308_p1m.dts  | 2 +-
->  arch/powerpc/boot/dts/mpc8349emitx.dts | 4 ++--
->  arch/powerpc/boot/dts/mpc8377_rdb.dts  | 2 +-
->  arch/powerpc/boot/dts/mpc8377_wlan.dts | 2 +-
->  arch/powerpc/boot/dts/mpc8378_rdb.dts  | 2 +-
->  arch/powerpc/boot/dts/mpc8379_rdb.dts  | 2 +-
->  6 files changed, 7 insertions(+), 7 deletions(-)
+>  Documentation/devicetree/bindings/eeprom/eeprom.txt | 14 ++++----------
+>  1 file changed, 4 insertions(+), 10 deletions(-)
 >
-> diff --git a/arch/powerpc/boot/dts/mpc8308_p1m.dts b/arch/powerpc/boot/dts/mpc8308_p1m.dts
-> index 57f86cdf9f36..702ab4fc5b4a 100644
-> --- a/arch/powerpc/boot/dts/mpc8308_p1m.dts
-> +++ b/arch/powerpc/boot/dts/mpc8308_p1m.dts
-> @@ -123,7 +123,7 @@
->                         interrupt-parent = <&ipic>;
->                         dfsrr;
->                         fram@50 {
-> -                               compatible = "ramtron,24c64";
-> +                               compatible = "atmel,24c64";
-
-This should be '"ramtron,24c64", "atmel,24c64"'
-
->                                 reg = <0x50>;
->                         };
->                 };
-> diff --git a/arch/powerpc/boot/dts/mpc8349emitx.dts b/arch/powerpc/boot/dts/mpc8349emitx.dts
-> index 90aed3ac2f69..f49d1cffd927 100644
-> --- a/arch/powerpc/boot/dts/mpc8349emitx.dts
-> +++ b/arch/powerpc/boot/dts/mpc8349emitx.dts
-> @@ -92,7 +92,7 @@
->                         dfsrr;
+> diff --git a/Documentation/devicetree/bindings/eeprom/eeprom.txt b/Documentation/devicetree/bindings/eeprom/eeprom.txt
+> index 5696eb508e95..121499252179 100644
+> --- a/Documentation/devicetree/bindings/eeprom/eeprom.txt
+> +++ b/Documentation/devicetree/bindings/eeprom/eeprom.txt
+> @@ -2,22 +2,16 @@ EEPROMs (I2C)
 >
->                         eeprom: at24@50 {
-> -                               compatible = "st,24c256";
-> +                               compatible = "atmel,24c256";
-
-Similar for this one.
-
->                                 reg = <0x50>;
->                         };
+>  Required properties:
 >
-> @@ -130,7 +130,7 @@
->                         };
+> -  - compatible : should be "<manufacturer>,<type>", like these:
+> +  - compatible : should be "atmel,<type>", like these:
 >
->                         spd: at24@51 {
-> -                               compatible = "at24,spd";
-> +                               compatible = "atmel,spd";
+>         "atmel,24c00", "atmel,24c01", "atmel,24c02", "atmel,24c04",
+>         "atmel,24c08", "atmel,24c16", "atmel,24c32", "atmel,24c64",
+>         "atmel,24c128", "atmel,24c256", "atmel,24c512", "atmel,24c1024"
+>
+> -       "catalyst,24c32"
+> +       The following manufacturers values have been deprecated:
+> +       "at", "at24", "catalyst", "microchip", "nxp", "ramtron", "renesas", "st"
 
-This is fine because at24 is not a vendor.
+Only at and at24 should be deprecated.
 
-Rob
+>
+> -       "microchip,24c128"
+> -
+> -       "ramtron,24c64"
+> -
+> -       "renesas,r1ex24002"
+> -
+> -        If there is no specific driver for <manufacturer>, a generic
+> -        driver based on <type> is selected. Possible types are:
+> +        Possible types are:
+>          "24c00", "24c01", "24c02", "24c04", "24c08", "24c16", "24c32", "24c64",
+>          "24c128", "24c256", "24c512", "24c1024", "spd"
+>
+> --
+> 2.9.3
+>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
