@@ -1,117 +1,76 @@
-From: "H. Nikolaus Schaller" <hns@goldelico.com>
-Subject: Re: [RFC 0/3] misc: new serdev based drivers for w2sg00x4 GPS module and w2cbw003 wifi/bluetooth
-Date: Tue, 23 May 2017 15:49:17 +0200
-Message-ID: <889E8F7F-FC0F-490E-B924-D04D9F4D3402@goldelico.com>
-References: <cover.1495363443.git.hns@goldelico.com> <CAL_Jsq+fmi2QwE7J8xv47ece1b+jqnOo99NghfjtocnrRvBkPg@mail.gmail.com> <78B1501A-B9AD-4C6E-A481-26F647AA2BCE@goldelico.com> <CAL_JsqJamBBggr9AOQtQWtZOG+FevK1XEU_D=nYL6=hyvjviVw@mail.gmail.com> <0D94BEA0-F98D-48F6-9DDC-99F932AE7834@goldelico.com> <CAL_JsqK5NxL+rHU2enW0Lo+e+HThp-iK3hpW-UxeFREbivRZOw@mail.gmail.com>
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqK5NxL+rHU2enW0Lo+e+HThp-iK3hpW-UxeFREbivRZOw@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, =?utf-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Russell King <linux@armlinux.org.uk>, Thierry Reding <treding@nvidia.com>, Jonathan Cameron <jic23@kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-omap <linux-omap@vger.kernel.org>, Discussions about the Letux Kernel <letux-kernel@openphoenux.org>, kernel@pyra-handheld.com, Marcel Holtmann <marcel@holtmann.org>
+From: Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v4 19/20] powerpc/83xx: Add generic compatible string for
+ I2C EEPROM
+Date: Tue, 23 May 2017 15:49:51 +0200
+Message-ID: <CABxcv=nARWUrqSM=vsyrkPygKabcDGP4nTGdQFEEoBWaVLR5dg@mail.gmail.com>
+References: <20170522140208.24652-1-javier@dowhile0.org> <20170522140208.24652-20-javier@dowhile0.org>
+ <CAL_JsqLGC9sh9jhwtCHu1NE2z85cZh0CVXuMc9aohzCoxE_4fg@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL_JsqLGC9sh9jhwtCHu1NE2z85cZh0CVXuMc9aohzCoxE_4fg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Paul Mackerras <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linuxppc-dev <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+Hello Rob,
 
-> Am 23.05.2017 um 15:10 schrieb Rob Herring <robh+dt@kernel.org>:
->=20
-> +Marcel
+On Tue, May 23, 2017 at 3:42 PM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> On Mon, May 22, 2017 at 9:02 AM, Javier Martinez Canillas
+> <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org> wrote:
+>> The at24 driver allows to register I2C EEPROM chips using different vendor
+>> and devices, but the I2C subsystem does not take the vendor into account
+>> when matching using the I2C table since it only has device entries.
+>>
+>> But when matching using an OF table, both the vendor and device has to be
+>> taken into account so the driver defines only a set of compatible strings
+>> using the "atmel" vendor as a generic fallback for compatible I2C devices.
+>>
+>> So add this generic fallback to the device node compatible string to make
+>> the device to match the driver using the OF device ID table.
+>>
+>> Signed-off-by: Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>
+>>
+>> ---
+>>
+>> Changes in v4:
+>> - Only use the atmel manufacturer in the compatible string instead of
+>>   keeping the deprecated ones (Rob Herring).
+>>
+>> Changes in v3: None
+>> Changes in v2: None
+>>
+>>  arch/powerpc/boot/dts/mpc8308_p1m.dts  | 2 +-
+>>  arch/powerpc/boot/dts/mpc8349emitx.dts | 4 ++--
+>>  arch/powerpc/boot/dts/mpc8377_rdb.dts  | 2 +-
+>>  arch/powerpc/boot/dts/mpc8377_wlan.dts | 2 +-
+>>  arch/powerpc/boot/dts/mpc8378_rdb.dts  | 2 +-
+>>  arch/powerpc/boot/dts/mpc8379_rdb.dts  | 2 +-
+>>  6 files changed, 7 insertions(+), 7 deletions(-)
+>>
+>> diff --git a/arch/powerpc/boot/dts/mpc8308_p1m.dts b/arch/powerpc/boot/dts/mpc8308_p1m.dts
+>> index 57f86cdf9f36..702ab4fc5b4a 100644
+>> --- a/arch/powerpc/boot/dts/mpc8308_p1m.dts
+>> +++ b/arch/powerpc/boot/dts/mpc8308_p1m.dts
+>> @@ -123,7 +123,7 @@
+>>                         interrupt-parent = <&ipic>;
+>>                         dfsrr;
+>>                         fram@50 {
+>> -                               compatible = "ramtron,24c64";
+>> +                               compatible = "atmel,24c64";
+>
+> This should be '"ramtron,24c64", "atmel,24c64"'
+>
 
-Good!
+Yes, I (hopefully) fixed all the occurrences in the v5 that I posted
+today, you are cc'ed on that series too.
 
->=20
-> On Tue, May 23, 2017 at 7:48 AM, H. Nikolaus Schaller =
-<hns@goldelico.com> wrote:
->> Hi Rob,
->>=20
->>> Am 23.05.2017 um 14:28 schrieb Rob Herring <robh+dt@kernel.org>:
->>>=20
->>> On Tue, May 23, 2017 at 12:43 AM, H. Nikolaus Schaller
->>> <hns@goldelico.com> wrote:
->>>> Hi Rob,
->>>>=20
->>>>> Am 23.05.2017 um 04:26 schrieb Rob Herring <robh+dt@kernel.org>:
->>>>>=20
->>>>> On Sun, May 21, 2017 at 5:44 AM, H. Nikolaus Schaller =
-<hns@goldelico.com> wrote:
->>>>>> Since our proposed API was not acceptable and the new serdev API =
-has arrived in 4.11 kernels,
->>>>>> we finally took the challenge to update the w2sg and w2cbw =
-drivers to use the serdev API.
->>>>>>=20
->>>>>> The approach is to write a "man in the middle" driver which is on =
-one side a serdev client
->>>>>> which directly controls the UART where the device is connected to =
-and on the other side
->>>>>> presents a new tty port so that user-space software can talk to =
-the chips as if they would
->>>>>> directly talk to the UART of the SoC (e.g. ttyO1). This is =
-similar to connecting to a remote
->>>>>> serial device e.g. through USB (ttyACM) or Bluetooth UART =
-profiles.
->>>>>>=20
->>>>>> For example gpsd or hciattach expect a /dev/tty they can control =
-(flow control, baud rate
->>>>>> etc.).
->>>>>=20
->>>>> I understand from the prior discussion why you want to pass the =
-data
->>>>> thru for gps, but why do you need to do that for BT?
->>>>=20
->>>> Because we otherwise can't turn on power when /dev/ttyBT0 is opened =
-and turn off when it
->>>> is closed. I.e. it should not be powered unless someone does a =
-hciattach /dev/ttyBT0. And it
->>>> should be turned off by a killall hciattach.
->>>=20
->>> Still, you can do power control within BT HCI drivers.
->>=20
->> We do not use any driver for bluetooth. We just start hciattach on =
-demand.
->> And afaik there is no plugin mechanism for adding power control to =
-hciattach.
->=20
-> You don't need hciattach. All userspace has to do for kernel BT
-> drivers is "hciconfig hci0 up|down".
+Again, sorry for misunderstanding your comment on v3.
 
-Hm. Well:
-
-root@letux:~# hciconfig hci0 up
-Can't get device info: No such device
-root@letux:~#
-
-I wonder how I can tell hciconfig about the UART port if not by running =
-hciattach /dev/ttyBT0?
-
->=20
->> Or do you have a link to what you think about?
->=20
-> Look at the nokia BT or TI (HCI_LL) BT drivers. Those both have f/w
-> downloading and some GPIO controls. Given that this module is based on
-> Marvell chipset, I'd expect you need to add serdev support to
-> hci_mrvl.c.
-
-The w2cb003 has a Marvell WiFi (libertas) but a CSR Bluetooth side.
-
-It has built-in firmware and already talks serial HCI over simple UART =
-right
-after power-on. This is why our serdev driver has no firmware download.
-
->=20
->>> You wouldn't be
->>> limited to just open/close, but can handle suspend/resume as well.
->>=20
->> Well, it does not look as if we need more than open/close since =
-suspend/resume
->> is already handled by the regulator driver. We just need to keep it =
-powered off
->> if there is no user-space client.
->=20
-> Okay.
->=20
-> Rob
-
-BR,
-Nikolaus
+Best regards,
+Javier
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
