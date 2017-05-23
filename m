@@ -1,127 +1,103 @@
-From: Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] extcon: cros-ec: Add extcon-cros-ec driver to
- support display out.
-Date: Tue, 23 May 2017 11:52:15 +0200
-Message-ID: <3f4c4b85-e9db-0531-e3da-2e671a8fa750@collabora.com>
-References: <20170301111943.12170-1-enric.balletbo@collabora.com>
- <CGME20170301112844epcas4p34012f1564f1145f8d8a8967f4fe9a821@epcas4p3.samsung.com>
- <20170301111943.12170-2-enric.balletbo@collabora.com>
- <58B7C9BF.1040708@samsung.com> <58E44698.5020605@samsung.com>
- <b0a76ac2-b524-23b3-ef58-22114e8bf209@collabora.com>
- <59240507.1040005@samsung.com>
+From: Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 1/3] mfd: lp87565: Add lp87565 PMIC support
+Date: Tue, 23 May 2017 15:23:56 +0530
+Message-ID: <4fcf6739-ca2c-9286-cf7f-508d86733871@ti.com>
+References: <1495197739-17446-1-git-send-email-j-keerthy@ti.com>
+ <1495197739-17446-2-git-send-email-j-keerthy@ti.com>
+ <20170522174806.nnpk5jso7jhgygm3@dell>
+ <26169872-1b43-88d1-3e5b-367b4d446222@ti.com>
+ <20170523065742.44ytkxdagw2wwttz@dell>
+ <a753fdb4-feb9-0894-6f40-a19d3f05714c@ti.com>
+ <8e1d50d1-378b-aca5-a6f5-457a0bb1544a@ti.com>
+ <20170523084705.vfkqwdis6xxh7umd@dell>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <59240507.1040005-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Content-Language: en-GB
+In-Reply-To: <20170523084705.vfkqwdis6xxh7umd@dell>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, MyungJoo Ham <myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Benson Leung <bleung-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, t-kristo-l0cyMroinI0@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
 
-On 23/05/17 11:46, Chanwoo Choi wrote:
-> Hi Enric,
+On Tuesday 23 May 2017 02:17 PM, Lee Jones wrote:
+> On Tue, 23 May 2017, Keerthy wrote:
+>> On Tuesday 23 May 2017 01:11 PM, Keerthy wrote:
+>>> On Tuesday 23 May 2017 12:27 PM, Lee Jones wrote:
+>>>> On Tue, 23 May 2017, Keerthy wrote:
+>>>>> On Monday 22 May 2017 11:18 PM, Lee Jones wrote:
+>>>>>> On Fri, 19 May 2017, Keerthy wrote:
+>>>>>>
+>>>>>>> The LP87565 chip is a power management IC for Portable Navigation Systems
+>>>>>>> and Tablet Computing devices. It contains the following components:
+>>>>>>>
+>>>>>>>         - Configurable Bucks(Single and multi-phase).
+>>>>>>>         - Configurable General Purpose Output Signals (GPO).
+>>>>>>>
+>>>>>>> The LP87565-Q1 variant device uses two 2-phase outputs configuration,
+>>>>>>> Buck0 is master for Buck0/1 output and Buck2 is master for Buck2/3
+>>>>>>> output.
+>>>>>>>
+>>>>>>> Signed-off-by: Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>
+>>>>>>> ---
+>>>>>>>  Documentation/devicetree/bindings/mfd/lp87565.txt |  44 ++++
+>>>>>>>  drivers/mfd/Kconfig                               |  14 ++
+>>>>>>>  drivers/mfd/Makefile                              |   1 +
+>>>>>>>  drivers/mfd/lp87565.c                             | 103 ++++++++
+>>>>>>>  include/linux/mfd/lp87565.h                       | 275 ++++++++++++++++++++++
+>>>>>>>  5 files changed, 437 insertions(+)
+>>>>>>>  create mode 100644 Documentation/devicetree/bindings/mfd/lp87565.txt
+>>>>>>>  create mode 100644 drivers/mfd/lp87565.c
+>>>>>>>  create mode 100644 include/linux/mfd/lp87565.h
+>>>>>>>
+>>>>
+>>>> [...]
+>>>>
+>>>>>>> +/*
+>>>>>>> + * Copyright (C) 2017 Texas Instruments Incorporated - http://www.ti.com/
+>>>>>>> + *
+>>>>>>> + * Author: Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>
+>>>>>>
+>>>>>> We usually ask for full "first last" names.
+>>>>>
+>>>>> Keerthy is my full name and i do not have a surname.
+>>>>
+>>>> What is the 'J' for in your email address?
+>>>
+>>> Father's initials.
+>>
+>> https://lkml.org/lkml/2012/7/11/482
+>>
+>> I have been using this for a while now.
 > 
-> On 2017년 04월 20일 19:16, Enric Balletbo i Serra wrote:
->> On 05/04/17 03:21, Chanwoo Choi wrote:
->>> Hi Enric,
->>>
->>> On 2017년 03월 02일 16:29, Chanwoo Choi wrote:
->>>> Hi,
->>>>
->>>> On 2017년 03월 01일 20:19, Enric Balletbo i Serra wrote:
->>>>> From: Benson Leung <bleung-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
->>>>>
->>>>> This is the driver for the USB Type C cable detection mechanism
->>>>> built into the ChromeOS Embedded Controller on systems that
->>>>> have USB Type-C ports.
->>>>>
->>>>> At present, this allows for the presence of display out, but in
->>>>> future, it may also be used to notify host and device type cables
->>>>> and the presence of power.
->>>>>
->>>>> Signed-off-by: Benson Leung <bleung-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
->>>>> Signed-off-by: Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
->>>>> ---
->>>>> Changes since v1:
->>>>>  Requested by Chanwoo Choi
->>>>>  - Rename files changing _ for -
->>>>>  - Remove the unneeded blank line on bottom of header.
->>>>>  - Remove kobject.h and cros_ec_commands.h includes.
->>>>>  - Remove the debug message as is not necessary.
->>>>>  - Use the tab for indentation instead of space for if sentence.
->>>>>  - Define each variable on different lines when the variables should be
->>>>>    initialized.
->>>>>  - Remove EXTCON_USB and EXTCON_USB_HOST as are not really used for now.
->>>>>  - Add one blank line to split out between state and property setting.
->>>>>  - Add the author information (header and module)
->>>>>
->>>>>  Enric Balletbo
->>>>>  - As Rob suggested to rename the compatible name to something indicating that
->>>>>    is USB Type C related I also renamed the file names, extcon-cros-ec ->
->>>>>    extcon-usbc-cros-ec, I think it's more clear.
->>>>>
->>>>>  drivers/extcon/Kconfig               |   7 +
->>>>>  drivers/extcon/Makefile              |   1 +
->>>>>  drivers/extcon/extcon-usbc-cros-ec.c | 415 +++++++++++++++++++++++++++++++++++
->>>>>  include/linux/mfd/cros_ec_commands.h |  75 +++++++
->>>>>  4 files changed, 498 insertions(+)
->>>>>  create mode 100644 drivers/extcon/extcon-usbc-cros-ec.c
->>>>>
->>>>
->>>> Looks good to me.
->>>> Acked-by: Chanwoo Choi <cw00.chio-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
->>>>
->>>> I think this patch should be handled with patches[1].
->>>> [1] https://lkml.org/lkml/2017/2/14/655
->>>>
->>>> I think that one maintainer among following subsystems
->>>> (mfd, chrome h/w platform, rtc and extcon)
->>>> will apply their git repository, and then one maintainer
->>>> will send the pull request of immutable branch for these patches.
->>>>
->>>
->>> As I mentioned, these patch should be handled with related patches[1].
->>> [1] https://lkml.org/lkml/2017/2/14/655
->>>
->>> So, I can't apply these patch on extcon git because there is a merge conflict
->>> and we should handle these patches with immutable branch between subsystem maintainer.
->>>
->>> The v4.11-rc5 was released, if you want to apply this patch to the v4.12-rc1,
->>> please take care of these patches.
->>>
->>
->> CC'ied : Olof Johansson
->>
->> Olof, Benson,
->>
->> Could at least the following patch in this series [1] picked as soon as possible
->> if it's ok.
->>
->> 9630769 New          [01/13] mfd: cros_ec: Add helper for event notifier
->>
->> This specific patch is blocking this and others like the rtc-cros-ec to land and
->> the series were send some time ago without received bad feedback.
->>
->> [1] https://lkml.org/lkml/2017/3/17/321
->>
->> Many thanks,
->>  Enric
+> Right and Trump has been president for a while now, it doesn't mean
+> it's okay. ;)
+
+I won't comment on Trump! Let me assure you once again that my full name
+is Keerthy just like your full name is Lee Jones :-).
+
 > 
-> Maybe, you better to resend these patches based on v4.12-rcX.
+>>>> [...]
+>>>>
+>>>>>>> +static const struct i2c_device_id lp87565_id_table[] = {
+>>>>>>> +	{ "lp87565-q1", 0 },
+>>>>>>> +	{ },
+>>>>>>> +};
+>>>>>>> +MODULE_DEVICE_TABLE(i2c, lp87565_id_table);
+>>>>>>
+>>>>>> Is this an OF only driver, or not?
+>>>>
+>>>> You didn't answer my question?
+>>>>
+>>>
+>>> Sorry i replied on top again. It will be an OF only driver.
+>>>
+>>> Regards,
+>>> Keerthy
+>>>
 > 
-
-I did a week ago :) The patches were rebased on top of current linux-next,
-waiting for the maintainers, hope will be accepted soon so we can unblock this
-patch and the rtc patches.
-
-https://lkml.org/lkml/2017/5/16/478
-
-Thanks,
- Enric
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
