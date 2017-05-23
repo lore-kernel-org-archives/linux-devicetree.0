@@ -1,29 +1,29 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] iio: proximity: as3935: add missing required
- spi-max-frequency
-Date: Mon, 22 May 2017 19:31:42 -0500
-Message-ID: <20170523003142.spslp7wtnmcoex2o@rob-hp-laptop>
-References: <20170517020310.21355-1-matt.ranostay@konsulko.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3 19/21] drm/sun4i: Add compatible for the A10s pipeline
+Date: Mon, 22 May 2017 19:33:12 -0500
+Message-ID: <20170523003312.33xdw4r3ngek4fot@rob-hp-laptop>
+References: <cover.463df61c38224ecbfb5bf1cf192deeb63718b693.1495006350.git-series.maxime.ripard@free-electrons.com>
+ <d1bc2420845061a9c057d47a5556c621f8bcd025.1495006350.git-series.maxime.ripard@free-electrons.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-clk-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170517020310.21355-1-matt.ranostay-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Matt Ranostay <matt.ranostay-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Cc: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <d1bc2420845061a9c057d47a5556c621f8bcd025.1495006350.git-series.maxime.ripard@free-electrons.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: Chen-Yu Tsai <wens@csie.org>, Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Daniel Vetter <daniel.vetter@intel.com>, David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 16, 2017 at 07:03:10PM -0700, Matt Ranostay wrote:
-> spi-max-frequency is required to be set for the as3935 part, and
-> document such usage.
+On Wed, May 17, 2017 at 09:40:48AM +0200, Maxime Ripard wrote:
+> The A10s has a slightly different display pipeline than the A13, with an
+> HDMI controller.
 > 
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Signed-off-by: Matt Ranostay <matt.ranostay-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+> Add a compatible for it.
+> 
+> Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
 > ---
->  Documentation/devicetree/bindings/iio/proximity/as3935.txt | 2 ++
->  1 file changed, 2 insertions(+)
+>  Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt | 1 +
+>  drivers/gpu/drm/sun4i/sun4i_drv.c                             | 1 +
+>  2 files changed, 2 insertions(+)
 
-Applied, thanks.
-
-Rob
+Acked-by: Rob Herring <robh@kernel.org>
