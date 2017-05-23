@@ -1,42 +1,29 @@
-From: Rick Altherr <raltherr-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v2 1/2] dt-bindings: timeriomem_rng: Add entropy quality property
-Date: Mon, 22 May 2017 14:12:23 -0700
-Message-ID: <20170522211224.12202-1-raltherr@google.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] irqchip: aspeed: Add AST2500 compatible string
+Date: Mon, 22 May 2017 19:06:32 -0500
+Message-ID: <20170523000632.ojdfqpyn5bklcrni@rob-hp-laptop>
+References: <20170516075747.23067-1-andrew@aj.id.au>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170516075747.23067-1-andrew-zrmu5oMJ5Fs@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Matt Mackall <mpm-VDJrAJ4Gl5ZBDgjK7y7TUQ@public.gmane.org>
+To: Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org, ryan_chen-SAlXDmAnmOAqDJ6do+/SaQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Rick Altherr <raltherr-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
----
+On Tue, May 16, 2017 at 03:57:47PM +0800, Andrew Jeffery wrote:
+> In addition to introducing the new compatible string the bindings
+> description is reworked to be more generic.
+> 
+> Signed-off-by: Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>
+> ---
+>  .../bindings/interrupt-controller/aspeed,ast2400-vic.txt         | 9 +++++----
+>  drivers/irqchip/irq-aspeed-vic.c                                 | 3 ++-
+>  2 files changed, 7 insertions(+), 5 deletions(-)
 
-Changes in v2: None
-
- Documentation/devicetree/bindings/rng/timeriomem_rng.txt | 7 +++++++
- 1 file changed, 7 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/rng/timeriomem_rng.txt b/Documentation/devicetree/bindings/rng/timeriomem_rng.txt
-index 6616d15866a3..214940093b55 100644
---- a/Documentation/devicetree/bindings/rng/timeriomem_rng.txt
-+++ b/Documentation/devicetree/bindings/rng/timeriomem_rng.txt
-@@ -5,6 +5,13 @@ Required properties:
- - reg : base address to sample from
- - period : wait time in microseconds to use between samples
- 
-+Optional properties:
-+- quality : estimated number of bits of true entropy per 1024 bits read from the
-+            rng.  Defaults to zero which causes the kernel's default quality to
-+            be used instead.  Note that the default quality is usually zero
-+            which disables using this rng to automatically fill the kernel's
-+            entropy pool.
-+
- N.B. currently 'reg' must be four bytes wide and aligned
- 
- Example:
--- 
-2.13.0.303.g4ebf302169-goog
-
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
