@@ -1,40 +1,39 @@
-From: Icenowy Zheng <icenowy@aosc.io>
-Subject: Re: [linux-sunxi] Re: [RFC PATCH 07/11] drm: sun4i: add support for the TV encoder in H3 SoC
-Date: Tue, 23 May 2017 20:56:06 +0800
-Message-ID: <29C6A41B-491B-4000-99EE-351118D4E5B2@aosc.io>
-References: <20170517164354.16399-1-icenowy@aosc.io> <1958057.WDKm0nQKgW@jernej-laptop> <CAGb2v66aD=G+V75N-_nYo=dGqhxpKhadM84h9G-B34=dnDwCbg@mail.gmail.com> <3164416.5xR36OcyjH@jernej-laptop> <20170523125321.t7y7yfrrfokpkzgd@flea.home>
+From: icenowy@aosc.io
+Subject: Re: [linux-sunxi] Re: [RFC PATCH 07/11] drm: sun4i: add support for
+ the TV encoder in H3 SoC
+Date: Tue, 23 May 2017 21:00:59 +0800
+Message-ID: <98c3572beee0a81755994b4bdc508b18@aosc.io>
+References: <20170517164354.16399-1-icenowy@aosc.io>
+ <1958057.WDKm0nQKgW@jernej-laptop>
+ <CAGb2v66aD=G+V75N-_nYo=dGqhxpKhadM84h9G-B34=dnDwCbg@mail.gmail.com>
+ <3164416.5xR36OcyjH@jernej-laptop>
+ <20170523125321.t7y7yfrrfokpkzgd@flea.home>
 Mime-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-clk-owner@vger.kernel.org>
 In-Reply-To: <20170523125321.t7y7yfrrfokpkzgd@flea.home>
 Sender: linux-clk-owner@vger.kernel.org
-To: maxime.ripard@free-electrons.comMaxime Ripard <maxime.ripard@free-electrons.com>, =?UTF-8?Q?Jernej_=C5=A0krabec?= <jernej.skrabec@siol.net>
-Cc: linux-sunxi@googlegroups.com, wens@csie.org, Rob Herring <robh+dt@kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-clk <linux-clk@vger.kernel.org>
+To: maxime.ripard@free-electrons.com
+Cc: =?UTF-8?Q?Jernej_=C5=A0krabec?= <jernej.skrabec@siol.net>, linux-sunxi@googlegroups.com, wens@csie.org, Rob Herring <robh+dt@kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-clk <linux-clk@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-
-
-于 2017年5月23日 GMT+08:00 下午8:53:21, Maxime Ripard <maxime.ripard@free-electrons.com> 写到:
->On Mon, May 22, 2017 at 07:55:56PM +0200, Jernej Škrabec wrote:
+在 2017-05-23 20:53，Maxime Ripard 写道：
+> On Mon, May 22, 2017 at 07:55:56PM +0200, Jernej Škrabec wrote:
 >> Hi,
 >> 
 >> Dne sobota, 20. maj 2017 ob 03:37:53 CEST je Chen-Yu Tsai napisal(a):
->> > On Sat, May 20, 2017 at 2:23 AM, Jernej Škrabec
-><jernej.skrabec@siol.net> 
+>> > On Sat, May 20, 2017 at 2:23 AM, Jernej Škrabec <jernej.skrabec@siol.net>
 >> wrote:
 >> > > Hi,
->> > > 
->> > > Dne petek, 19. maj 2017 ob 20:08:18 CEST je Icenowy Zheng
->napisal(a):
->> > >> 于 2017年5月20日 GMT+08:00 上午2:03:30, Maxime Ripard
-><maxime.ripard@free-
->> > > 
+>> > >
+>> > > Dne petek, 19. maj 2017 ob 20:08:18 CEST je Icenowy Zheng napisal(a):
+>> > >> 于 2017年5月20日 GMT+08:00 上午2:03:30, Maxime Ripard <maxime.ripard@free-
+>> > >
 >> > > electrons.com> 写到:
 >> > >> >On Thu, May 18, 2017 at 12:43:50AM +0800, Icenowy Zheng wrote:
->> > >> >> Allwinner H3 features a TV encoder similar to the one in
->earlier
+>> > >> >> Allwinner H3 features a TV encoder similar to the one in earlier
 >> > >> >
 >> > >> >SoCs,
 >> > >> >
@@ -43,75 +42,72 @@ List-Id: devicetree@vger.kernel.org
 >> > >> >> - The mod clock must be at a fixed rate to generate signal.
 >> > >> >
 >> > >> >Why?
->> > >> 
+>> > >>
 >> > >> It's experiment result by Jernej.
->> > >> 
+>> > >>
 >> > >> The clock rates in BSP kernel is also specially designed
 >> > >> (PLL_DE at 432MHz) in order to be able to feed the TVE.
->> > > 
->> > > My experiments and search through BSP code showed that TVE seems
->to have
->> > > additional fixed predivider 8. So if you want to generate 27 MHz
->clock,
+>> > >
+>> > > My experiments and search through BSP code showed that TVE seems to have
+>> > > additional fixed predivider 8. So if you want to generate 27 MHz clock,
 >> > > unit has to be feed with 216 MHz.
->> > > 
->> > > TVE has only one PLL source PLL_DE. And since 216 MHz is a bit
->low for
+>> > >
+>> > > TVE has only one PLL source PLL_DE. And since 216 MHz is a bit low for
 >> > > DE2,
->> > > BSP defaults to 432 MHz for PLL_DE and use divider 2 to generate
->216 MHz.
+>> > > BSP defaults to 432 MHz for PLL_DE and use divider 2 to generate 216 MHz.
 >> > > This clock is then divided by 8 internaly to get final 27 MHz.
->> > > 
->> > > Please note that I don't have any hard evidence to support that,
->only
->> > > experimental data. However, only that explanation make sense to
->me.
->> > > 
->> > > BTW, BSP H3/H5 TV driver supports only PAL and NTSC which both
->use 27 MHz
->> > > base clock. Further experiments are needed to check if there is
->any
->> > > possibility to have other resolutions by manipulating clocks and
->give
->> > > other proper settings. I plan to do that, but not in very near
->future.
->> > 
->> > You only have composite video output, and those are the only 2
->standard
+>> > >
+>> > > Please note that I don't have any hard evidence to support that, only
+>> > > experimental data. However, only that explanation make sense to me.
+>> > >
+>> > > BTW, BSP H3/H5 TV driver supports only PAL and NTSC which both use 27 MHz
+>> > > base clock. Further experiments are needed to check if there is any
+>> > > possibility to have other resolutions by manipulating clocks and give
+>> > > other proper settings. I plan to do that, but not in very near future.
+>> >
+>> > You only have composite video output, and those are the only 2 standard
 >> > resolutions that make any sense.
 >> 
 >> Right, other resolutions are for VGA.
 >> 
->> Anyway, I did some more digging in A10 and R40 datasheets. I think
->that H3 TVE 
->> unit is something in between. R40 TVE has a setting to select "up
->sample".
->
->That might be just another translation of oversampling :)
->
->I didn't know it could be applied to composite signals though, but I
->guess this is just another analog signal after all.
->
->> Possible settings are 27 MHz, 54 MHz, 108 MHz and 216 MHz. BSP driver
->on R40 
->> has this setting enabled only for PAL and NTSC and it is always 216
->MHz. I 
->> think that H3 may have this hardwired to 216 MHz and this would be
->the reason 
+>> Anyway, I did some more digging in A10 and R40 datasheets. I think 
+>> that H3 TVE
+>> unit is something in between. R40 TVE has a setting to select "up 
+>> sample".
+> 
+> That might be just another translation of oversampling :)
+> 
+> I didn't know it could be applied to composite signals though, but I
+> guess this is just another analog signal after all.
+> 
+>> Possible settings are 27 MHz, 54 MHz, 108 MHz and 216 MHz. BSP driver 
+>> on R40
+>> has this setting enabled only for PAL and NTSC and it is always 216 
+>> MHz. I
+>> think that H3 may have this hardwired to 216 MHz and this would be the 
+>> reason
 >> why 216 MHz is needed.
 >> 
 >> Has anyone else any better explanation?
->
->That's already a pretty good one.
->
->Either way, wether this is upsampling, oversampling or just a
->pre-divider, this can and should be dealt with in the mode_set
->callback, and not in the probe.
+> 
+> That's already a pretty good one.
+> 
+> Either way, wether this is upsampling, oversampling or just a
+> pre-divider, this can and should be dealt with in the mode_set
+> callback, and not in the probe.
 
-What should we do for this?
+I got a better idea -- let TVE driver have the CLK_TVE as an
+input and create a subclock output with divider 16, and feed this
+subclock to TCON lcd-ch1.
 
-Add a hook in TCON driver and let TVE driver affect the clock value (*16, as the dotclock is halfed)?
+This is a model of the real hardware -- the clock divider is in
+TVE, not TCON.
 
->
->Thanks!
->Maxime
+> 
+> Thanks!
+> Maxime
+> 
+> --
+> Maxime Ripard, Free Electrons
+> Embedded Linux and Kernel engineering
+> http://free-electrons.com
