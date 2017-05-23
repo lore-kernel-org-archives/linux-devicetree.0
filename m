@@ -1,36 +1,55 @@
-From: Leo Yan <leo.yan@linaro.org>
-Subject: [PATCH v11 4/9] MAINTAINERS: update file entries for Coresight subsystem
-Date: Tue, 23 May 2017 22:16:15 +0800
-Message-ID: <1495548980-30432-5-git-send-email-leo.yan@linaro.org>
-References: <1495548980-30432-1-git-send-email-leo.yan@linaro.org>
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1495548980-30432-1-git-send-email-leo.yan@linaro.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Jonathan Corbet <corbet@lwn.net>, Mathieu Poirier <mathieu.poirier@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Liviu Dudau <liviu.dudau@arm.com>, Wei Xu <xuwei5@hisilicon.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Suzuki K Poulose <suzuki.poulose@arm.com>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, Stephen Boyd <sboyd@codeaurora.org>, Mike Leach <mike.leach@linaro.org>
-Cc: Leo Yan <leo.yan@linaro.org>
+From: Jonas Jensen <jonas.jensen@gmail.com>
+Subject: [PATCH] ARM: dts: moxart: rename sdhci mmc
+Date: Tue, 23 May 2017 16:17:06 +0200
+Message-ID: <1495549026-5805-1-git-send-email-jonas.jensen@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Jonas Jensen <jonas.jensen@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Update document file entries for Coresight debug module.
+The host driver compatible string changed to "moxa,moxart-mmc" during
+the review process while the old name was committed to moxart's dts* files.
 
-Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-Signed-off-by: Leo Yan <leo.yan@linaro.org>
+Correct the host driver compatible string and also fix the node name.
+
+Signed-off-by: Jonas Jensen <jonas.jensen@gmail.com>
 ---
- MAINTAINERS | 2 ++
- 1 file changed, 2 insertions(+)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index f7d568b..d443258 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -1208,7 +1208,9 @@ L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
- S:	Maintained
- F:	drivers/hwtracing/coresight/*
- F:	Documentation/trace/coresight.txt
-+F:	Documentation/trace/coresight-cpu-debug.txt
- F:	Documentation/devicetree/bindings/arm/coresight.txt
-+F:	Documentation/devicetree/bindings/arm/coresight-cpu-debug.txt
- F:	Documentation/ABI/testing/sysfs-bus-coresight-devices-*
- F:	tools/perf/arch/arm/util/pmu.c
- F:	tools/perf/arch/arm/util/auxtrace.c
+Notes:
+    Applies to next-20170518
+
+ arch/arm/boot/dts/moxart-uc7112lx.dts | 2 +-
+ arch/arm/boot/dts/moxart.dtsi         | 4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/arch/arm/boot/dts/moxart-uc7112lx.dts b/arch/arm/boot/dts/moxart-uc7112lx.dts
+index 4a962a2..59d8775 100644
+--- a/arch/arm/boot/dts/moxart-uc7112lx.dts
++++ b/arch/arm/boot/dts/moxart-uc7112lx.dts
+@@ -80,7 +80,7 @@
+ 	clocks = <&ref12>;
+ };
+ 
+-&sdhci {
++&mmc {
+ 	status = "okay";
+ };
+ 
+diff --git a/arch/arm/boot/dts/moxart.dtsi b/arch/arm/boot/dts/moxart.dtsi
+index e86f8c9..54a3ca2 100644
+--- a/arch/arm/boot/dts/moxart.dtsi
++++ b/arch/arm/boot/dts/moxart.dtsi
+@@ -91,8 +91,8 @@
+ 			clocks = <&clk_apb>;
+ 		};
+ 
+-		sdhci: sdhci@98e00000 {
+-			compatible = "moxa,moxart-sdhci";
++		mmc: mmc@98e00000 {
++			compatible = "moxa,moxart-mmc";
+ 			reg = <0x98e00000 0x5C>;
+ 			interrupts = <5 IRQ_TYPE_LEVEL_HIGH>;
+ 			clocks = <&clk_apb>;
 -- 
-2.7.4
+1.8.2.1
