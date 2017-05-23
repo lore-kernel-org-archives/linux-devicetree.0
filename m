@@ -1,84 +1,98 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [RFC 0/3] misc: new serdev based drivers for w2sg00x4 GPS module
- and w2cbw003 wifi/bluetooth
-Date: Tue, 23 May 2017 07:28:18 -0500
-Message-ID: <CAL_JsqJamBBggr9AOQtQWtZOG+FevK1XEU_D=nYL6=hyvjviVw@mail.gmail.com>
-References: <cover.1495363443.git.hns@goldelico.com> <CAL_Jsq+fmi2QwE7J8xv47ece1b+jqnOo99NghfjtocnrRvBkPg@mail.gmail.com>
- <78B1501A-B9AD-4C6E-A481-26F647AA2BCE@goldelico.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 05/12] arm64: dts: Add I2C nodes for Hi3660
+Date: Tue, 23 May 2017 07:44:35 -0500
+Message-ID: <CAL_JsqK5m1oAvAntaJt4CWTCR+j09xunf-QacMTQJWfO3_jxvA@mail.gmail.com>
+References: <20170517083745.24479-1-guodong.xu@linaro.org> <20170517083745.24479-6-guodong.xu@linaro.org>
+ <20170523003908.ztuh4oohdk3g34pm@rob-hp-laptop> <94d06900-d871-7bc6-e1f3-d2b22ba20aaf@linaro.org>
+ <c7f16d66-f884-b230-4b44-29d603af12ab@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <78B1501A-B9AD-4C6E-A481-26F647AA2BCE@goldelico.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Russell King <linux@armlinux.org.uk>, Thierry Reding <treding@nvidia.com>, Jonathan Cameron <jic23@kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-omap <linux-omap@vger.kernel.org>, Discussions about the Letux Kernel <letux-kernel@openphoenux.org>, kernel@pyra-handheld.com
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <c7f16d66-f884-b230-4b44-29d603af12ab-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: zhangfei <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Kefeng Wang <wangkefeng.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Chen Feng <puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Jiancheng Xue <xuejiancheng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 23, 2017 at 12:43 AM, H. Nikolaus Schaller
-<hns@goldelico.com> wrote:
-> Hi Rob,
+On Tue, May 23, 2017 at 1:36 AM, zhangfei <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
 >
->> Am 23.05.2017 um 04:26 schrieb Rob Herring <robh+dt@kernel.org>:
+>
+> On 2017年05月23日 13:55, zhangfei wrote:
 >>
->> On Sun, May 21, 2017 at 5:44 AM, H. Nikolaus Schaller <hns@goldelico.com> wrote:
->>> Since our proposed API was not acceptable and the new serdev API has arrived in 4.11 kernels,
->>> we finally took the challenge to update the w2sg and w2cbw drivers to use the serdev API.
->>>
->>> The approach is to write a "man in the middle" driver which is on one side a serdev client
->>> which directly controls the UART where the device is connected to and on the other side
->>> presents a new tty port so that user-space software can talk to the chips as if they would
->>> directly talk to the UART of the SoC (e.g. ttyO1). This is similar to connecting to a remote
->>> serial device e.g. through USB (ttyACM) or Bluetooth UART profiles.
->>>
->>> For example gpsd or hciattach expect a /dev/tty they can control (flow control, baud rate
->>> etc.).
+>> Hi, Rob
 >>
->> I understand from the prior discussion why you want to pass the data
->> thru for gps, but why do you need to do that for BT?
->
-> Because we otherwise can't turn on power when /dev/ttyBT0 is opened and turn off when it
-> is closed. I.e. it should not be powered unless someone does a hciattach /dev/ttyBT0. And it
-> should be turned off by a killall hciattach.
-
-Still, you can do power control within BT HCI drivers. You wouldn't be
-limited to just open/close, but can handle suspend/resume as well.
-
-> Basically we would like to have a power control automatic like it exists for many other devices.
->
-> Since the BT chip is described as a serdev by DT, we see no other means than to pass data
-> through the serdev driver.
-
-We could have a blacklist if we need to have serdev not create a
-device and create a tty device instead.
-
-> We had looked into the line discipline approach but it makes a lot of problems. The first one
-> is that registering a new system-wide ldesc number is required. Next we do not see how to make
-> a serdev driver (as it seems to be required by the DT) to register a different ldesc.
->
 >>
->>> Here is the result of our first hack which is working as a demo on GTA04 devices (and the
->>> w2cbw driver can also be used to control a GTA04 variant with WL1837).
->>>
->>> Since it is just a demo hack, the code is not yet cleaned up, nor does it completely pass
->>> check-patch, nor follows 100% the coding styles. And certainly has some bugs.
->>>
->>> The most significant issue is that calling tty_port_register_device() inside of the
->>> serdev probe() function makes the serdev probe() function to be entered a second
->>> time. This does not lead to big problems since we currently have minor = 0
->>> and this makes the second call assume the device is not available.
->>>
->>> But we have no idea why this happens and how it can be prevented.
+>> Thanks for the review.
 >>
->> Johan's fixes may help there, but it is intended to be temporary to
->> have a separate API for registering tty ports with or without serdev.
+>> On 2017年05月23日 08:39, Rob Herring wrote:
+>>>
+>>> On Wed, May 17, 2017 at 04:37:38PM +0800, Guodong Xu wrote:
+>>>>
+>>>> From: Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>>>>
+>>>> Add I2C nodes for Hi3660-hikey960.
+>>>>
+>>>> On HiKey960,
+>>>> I2C0, I2C7 is connected to Low Speed Expansion Connector.
+>>>> I2C1 is connected to ADV7535.
+>>>> I2C3 is connected to USB5734.
+>>>>
+>>>> Signed-off-by: Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>>>> Signed-off-by: Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>>>> ---
+>>>>   arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts | 18 ++++++++
+>>>>   arch/arm64/boot/dts/hisilicon/hi3660.dtsi         | 56
+>>>> +++++++++++++++++++++++
+>>>>   2 files changed, 74 insertions(+)
+>>>>
+>>>> diff --git a/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
+>>>> b/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
+>>>> index 64875a5..f685b1e 100644
+>>>> --- a/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
+>>>> +++ b/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
+>>>> @@ -29,6 +29,24 @@
+>>>>       };
+>>>>   };
+>>>>   +&i2c0 {
+>>>> +    status = "okay";
+>>>> +};
+>>>> +
+>>>> +&i2c1 {
+>>>> +    status = "okay";
+>>>> +
+>>>> +    adv7533: adv7533@39 {
+>>>> +        status = "ok";
+>>>> +        compatible = "adi,adv7533";
+>>>> +        reg = <0x39>;
+>>>> +    };
+>>>> +};
+>>>> +
+>>>> +&i2c7 {
+>>>> +    status = "okay";
+>>>> +};
+>>>
+>>> labels for the LS connector?
 >
-> Ah, would that mean something like a tty_port_register_device_without_serdev()?
+>
+> Do you mean arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi
+>
+>                 i2c@78ba000 {
+>                 /* On Low speed expansion */
+>                         label = "LS-I2C1";
+>                         status = "okay";
+>                 };
+>
+>                 spi@78b7000 {
+>                 /* On High speed expansion */
+>                         label = "HS-SPI1";
+>                         status = "okay";
+>                 };
 
-Yes, but other way around. The old function doesn't register with
-serdev and there's a new function that will.
-
-> Do you have a reference to his fixes?
-
-They are in Greg's tty-linus branch if not Linus' tree now.
+Yes. And the names need to align across boards to be useful.
 
 Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
