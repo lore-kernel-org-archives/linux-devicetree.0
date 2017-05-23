@@ -1,383 +1,120 @@
-From: Guodong Xu <guodong.xu@linaro.org>
-Subject: Re: [PATCH 06/12] arm64: dts: hi3660: add gpio dtsi file for
- Hisilicon Hi3660 SOC
-Date: Tue, 23 May 2017 19:20:18 +0800
-Message-ID: <CAFGCpxxhs0HOfwdR=1kX9=4LSNrqryziQKTOqz8SEGveGO11oA@mail.gmail.com>
-References: <20170517083745.24479-1-guodong.xu@linaro.org> <20170517083745.24479-7-guodong.xu@linaro.org>
- <20170523004145.6y4x5n3leohrn7zc@rob-hp-laptop>
+From: Nate Watterson <nwatters-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH V11 08/11] drivers: acpi: Handle IOMMU lookup failure with
+	deferred probing or error
+Date: Tue, 23 May 2017 07:27:38 -0400
+Message-ID: <647cbf74-d171-365c-7ef5-9f1e5986716c@codeaurora.org>
+References: <1491823266-1209-1-git-send-email-sricharan@codeaurora.org>
+	<1491823266-1209-9-git-send-email-sricharan@codeaurora.org>
+	<41668eff-271c-1c4c-7665-3bf0faa74669@codeaurora.org>
+	<20170523085241.GA18204@red-moon>
+	<c6d5c033-a8f9-03e3-9963-cd291ae2d7e1@codeaurora.org>
+	<20170523092659.GA19999@red-moon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170523004145.6y4x5n3leohrn7zc@rob-hp-laptop>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: "xuwei (O)" <xuwei5@hisilicon.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Kefeng Wang <wangkefeng.wang@huawei.com>, "Chenfeng (puck)" <puck.chen@hisilicon.com>, Xuejiancheng <xuejiancheng@hisilicon.com>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Wang Xiaoyin <hw.wangxiaoyin@hisilicon.com>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <20170523092659.GA19999@red-moon>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-arch-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tn-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org, linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 23, 2017 at 8:41 AM, Rob Herring <robh@kernel.org> wrote:
-> On Wed, May 17, 2017 at 04:37:39PM +0800, Guodong Xu wrote:
->> From: Wang Xiaoyin <hw.wangxiaoyin@hisilicon.com>
->>
->> This patch adds pl061 device nodes for Hi3660 SoC.
->>
->> Signed-off-by: Wang Xiaoyin <hw.wangxiaoyin@hisilicon.com>
->> ---
->>  arch/arm64/boot/dts/hisilicon/hi3660.dtsi | 409 ++++++++++++++++++++++++++++++
->>  1 file changed, 409 insertions(+)
->>
->> diff --git a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
->> index f217c9d..3bea0d2 100644
->> --- a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
->> +++ b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
->> @@ -251,5 +251,414 @@
->>                       clock-names = "uartclk", "apb_pclk";
->>                       status = "disabled";
->>               };
->> +
->> +             gpio0: gpio@e8a0b000 {
->> +                     compatible = "arm,pl061", "arm,primecell";
->> +                     reg = <0 0xe8a0b000 0 0x1000>;
->> +                     interrupts = <GIC_SPI 84 IRQ_TYPE_LEVEL_HIGH>;
->> +                     gpio-controller;
->> +                     #gpio-cells = <2>;
->> +                     gpio-ranges = <&pmx0 1 0 7>;
->> +                     interrupt-controller;
->> +                     #interrupt-cells = <2>;
->> +                     clocks = <&crg_ctrl HI3660_PCLK_GPIO0>;
->> +                     clock-names = "apb_pclk";
->> +                     status = "ok";
->
-> You don't need "ok" here if these are default enabled.
->
->> +             };
->> +
->> +             gpio1: gpio@e8a0c000 {
->> +                     compatible = "arm,pl061", "arm,primecell";
->> +                     reg = <0 0xe8a0c000 0 0x1000>;
->> +                     interrupts = <GIC_SPI 85 IRQ_TYPE_LEVEL_HIGH>;
->> +                     gpio-controller;
->> +                     #gpio-cells = <2>;
->> +                     gpio-ranges = <&pmx0 1 7 7>;
->> +                     interrupt-controller;
->> +                     #interrupt-cells = <2>;
->> +                     clocks = <&crg_ctrl HI3660_PCLK_GPIO1>;
->> +                     clock-names = "apb_pclk";
->> +                     status = "ok";
->
-> ditto...
->
->> +             };
->> +
->> +             gpio2: gpio@e8a0d000 {
->> +                     compatible = "arm,pl061", "arm,primecell";
->> +                     reg = <0 0xe8a0d000 0 0x1000>;
->> +                     interrupts = <GIC_SPI 86 IRQ_TYPE_LEVEL_HIGH>;
->> +                     gpio-controller;
->> +                     #gpio-cells = <2>;
->> +                     gpio-ranges = <&pmx0 0 14 8>;
->> +                     interrupt-controller;
->> +                     #interrupt-cells = <2>;
->> +                     clocks = <&crg_ctrl HI3660_PCLK_GPIO2>;
->> +                     clock-names = "apb_pclk";
->> +                     status = "ok";
->> +             };
->> +
->> +             gpio3: gpio@e8a0e000 {
->> +                     compatible = "arm,pl061", "arm,primecell";
->> +                     reg = <0 0xe8a0e000 0 0x1000>;
->> +                     interrupts = <GIC_SPI 87 IRQ_TYPE_LEVEL_HIGH>;
->> +                     gpio-controller;
->> +                     #gpio-cells = <2>;
->> +                     gpio-ranges = <&pmx0 0 22 8>;
->> +                     interrupt-controller;
->> +                     #interrupt-cells = <2>;
->> +                     clocks = <&crg_ctrl HI3660_PCLK_GPIO3>;
->> +                     clock-names = "apb_pclk";
->> +                     status = "ok";
->> +             };
->> +
->> +             gpio4: gpio@e8a0f000 {
->> +                     compatible = "arm,pl061", "arm,primecell";
->> +                     reg = <0 0xe8a0f000 0 0x1000>;
->> +                     interrupts = <GIC_SPI 88 IRQ_TYPE_LEVEL_HIGH>;
->> +                     gpio-controller;
->> +                     #gpio-cells = <2>;
->> +                     gpio-ranges = <&pmx0 0 30 8>;
->> +                     interrupt-controller;
->> +                     #interrupt-cells = <2>;
->> +                     clocks = <&crg_ctrl HI3660_PCLK_GPIO4>;
->> +                     clock-names = "apb_pclk";
->> +                     status = "ok";
->> +             };
->> +
->> +             gpio5: gpio@e8a10000 {
->> +                     compatible = "arm,pl061", "arm,primecell";
->> +                     reg = <0 0xe8a10000 0 0x1000>;
->> +                     interrupts = <GIC_SPI 89 IRQ_TYPE_LEVEL_HIGH>;
->> +                     gpio-controller;
->> +                     #gpio-cells = <2>;
->> +                     gpio-ranges = <&pmx0 0 38 8>;
->> +                     interrupt-controller;
->> +                     #interrupt-cells = <2>;
->> +                     clocks = <&crg_ctrl HI3660_PCLK_GPIO5>;
->> +                     clock-names = "apb_pclk";
->> +                     status = "ok";
->> +             };
->> +
->> +             gpio6: gpio@e8a11000 {
->> +                     compatible = "arm,pl061", "arm,primecell";
->> +                     reg = <0 0xe8a11000 0 0x1000>;
->> +                     interrupts = <GIC_SPI 90 IRQ_TYPE_LEVEL_HIGH>;
->> +                     gpio-controller;
->> +                     #gpio-cells = <2>;
->> +                     gpio-ranges = <&pmx0 0 46 8>;
->> +                     interrupt-controller;
->> +                     #interrupt-cells = <2>;
->> +                     clocks = <&crg_ctrl HI3660_PCLK_GPIO6>;
->> +                     clock-names = "apb_pclk";
->> +                     status = "ok";
->> +             };
->> +
->> +             gpio7: gpio@e8a12000 {
->> +                     compatible = "arm,pl061", "arm,primecell";
->> +                     reg = <0 0xe8a12000 0 0x1000>;
->> +                     interrupts = <GIC_SPI 91 IRQ_TYPE_LEVEL_HIGH>;
->> +                     gpio-controller;
->> +                     #gpio-cells = <2>;
->> +                     gpio-ranges = <&pmx0 0 54 8>;
->> +                     interrupt-controller;
->> +                     #interrupt-cells = <2>;
->> +                     clocks = <&crg_ctrl HI3660_PCLK_GPIO7>;
->> +                     clock-names = "apb_pclk";
->> +                     status = "ok";
->> +             };
->> +
->> +             gpio8: gpio@e8a13000 {
->> +                     compatible = "arm,pl061", "arm,primecell";
->> +                     reg = <0 0xe8a13000 0 0x1000>;
->> +                     interrupts = <GIC_SPI 92 IRQ_TYPE_LEVEL_HIGH>;
->> +                     gpio-controller;
->> +                     #gpio-cells = <2>;
->> +                     gpio-ranges = <&pmx0 0 62 8>;
->> +                     interrupt-controller;
->> +                     #interrupt-cells = <2>;
->> +                     clocks = <&crg_ctrl HI3660_PCLK_GPIO8>;
->> +                     clock-names = "apb_pclk";
->> +                     status = "ok";
->> +             };
->> +
->> +             gpio9: gpio@e8a14000 {
->> +                     compatible = "arm,pl061", "arm,primecell";
->> +                     reg = <0 0xe8a14000 0 0x1000>;
->> +                     interrupts = <GIC_SPI 93 IRQ_TYPE_LEVEL_HIGH>;
->> +                     gpio-controller;
->> +                     #gpio-cells = <2>;
->> +                     gpio-ranges = <&pmx0 0 70 8>;
->> +                     interrupt-controller;
->> +                     #interrupt-cells = <2>;
->> +                     clocks = <&crg_ctrl HI3660_PCLK_GPIO9>;
->> +                     clock-names = "apb_pclk";
->> +                     status = "ok";
->> +             };
->> +
->> +             gpio10: gpio@e8a15000 {
->> +                     compatible = "arm,pl061", "arm,primecell";
->> +                     reg = <0 0xe8a15000 0 0x1000>;
->> +                     interrupts = <GIC_SPI 94 IRQ_TYPE_LEVEL_HIGH>;
->> +                     gpio-controller;
->> +                     #gpio-cells = <2>;
->> +                     gpio-ranges = <&pmx0 0 78 8>;
->> +                     interrupt-controller;
->> +                     #interrupt-cells = <2>;
->> +                     clocks = <&crg_ctrl HI3660_PCLK_GPIO10>;
->> +                     clock-names = "apb_pclk";
->> +                     status = "ok";
->> +             };
->> +
->> +             gpio11: gpio@e8a16000 {
->> +                     compatible = "arm,pl061", "arm,primecell";
->> +                     reg = <0 0xe8a16000 0 0x1000>;
->> +                     interrupts = <GIC_SPI 95 IRQ_TYPE_LEVEL_HIGH>;
->> +                     gpio-controller;
->> +                     #gpio-cells = <2>;
->> +                     gpio-ranges = <&pmx0 0 86 8>;
->> +                     interrupt-controller;
->> +                     #interrupt-cells = <2>;
->> +                     clocks = <&crg_ctrl HI3660_PCLK_GPIO11>;
->> +                     clock-names = "apb_pclk";
->> +                     status = "ok";
->> +             };
->> +
->> +             gpio12: gpio@e8a17000 {
->> +                     compatible = "arm,pl061", "arm,primecell";
->> +                     reg = <0 0xe8a17000 0 0x1000>;
->> +                     interrupts = <GIC_SPI 96 IRQ_TYPE_LEVEL_HIGH>;
->> +                     gpio-controller;
->> +                     #gpio-cells = <2>;
->> +                     gpio-ranges = <&pmx0 0 94 3 &pmx0 7 101 1>;
->> +                     interrupt-controller;
->> +                     #interrupt-cells = <2>;
->> +                     clocks = <&crg_ctrl HI3660_PCLK_GPIO12>;
->> +                     clock-names = "apb_pclk";
->> +                     status = "ok";
->> +             };
->> +
->> +             gpio13: gpio@e8a18000 {
->> +                     compatible = "arm,pl061", "arm,primecell";
->> +                     reg = <0 0xe8a18000 0 0x1000>;
->> +                     interrupts = <GIC_SPI 97 IRQ_TYPE_LEVEL_HIGH>;
->> +                     gpio-controller;
->> +                     #gpio-cells = <2>;
->> +                     gpio-ranges = <&pmx0 0 102 8>;
->> +                     interrupt-controller;
->> +                     #interrupt-cells = <2>;
->> +                     clocks = <&crg_ctrl HI3660_PCLK_GPIO13>;
->> +                     clock-names = "apb_pclk";
->> +                     status = "ok";
->> +             };
->> +
->> +             gpio14: gpio@e8a19000 {
->> +                     compatible = "arm,pl061", "arm,primecell";
->> +                     reg = <0 0xe8a19000 0 0x1000>;
->> +                     interrupts = <GIC_SPI 98 IRQ_TYPE_LEVEL_HIGH>;
->> +                     gpio-controller;
->> +                     #gpio-cells = <2>;
->> +                     gpio-ranges = <&pmx0 0 110 8>;
->> +                     interrupt-controller;
->> +                     #interrupt-cells = <2>;
->> +                     clocks = <&crg_ctrl HI3660_PCLK_GPIO14>;
->> +                     clock-names = "apb_pclk";
->> +                     status = "ok";
->> +             };
->> +
->> +             gpio15: gpio@e8a1a000 {
->> +                     compatible = "arm,pl061", "arm,primecell";
->> +                     reg = <0 0xe8a1a000 0 0x1000>;
->> +                     interrupts = <GIC_SPI 99 IRQ_TYPE_LEVEL_HIGH>;
->> +                     gpio-controller;
->> +                     #gpio-cells = <2>;
->> +                     gpio-ranges = <&pmx0 0 118 6>;
->> +                     interrupt-controller;
->> +                     #interrupt-cells = <2>;
->> +                     clocks = <&crg_ctrl HI3660_PCLK_GPIO15>;
->> +                     clock-names = "apb_pclk";
->> +                     status = "ok";
->> +             };
->> +
->> +             gpio16: gpio@e8a1b000 {
->> +                     compatible = "arm,pl061", "arm,primecell";
->> +                     reg = <0 0xe8a1b000 0 0x1000>;
->> +                     interrupts = <GIC_SPI 100 IRQ_TYPE_LEVEL_HIGH>;
->> +                     gpio-controller;
->> +                     #gpio-cells = <2>;
->> +                     interrupt-controller;
->> +                     #interrupt-cells = <2>;
->> +                     clocks = <&crg_ctrl HI3660_PCLK_GPIO16>;
->> +                     clock-names = "apb_pclk";
->> +                     status = "ok";
->> +             };
->> +
->> +             gpio17: gpio@e8a1c000 {
->> +                     compatible = "arm,pl061", "arm,primecell";
->> +                     reg = <0 0xe8a1c000 0 0x1000>;
->> +                     interrupts = <GIC_SPI 101 IRQ_TYPE_LEVEL_HIGH>;
->> +                     gpio-controller;
->> +                     #gpio-cells = <2>;
->> +                     interrupt-controller;
->> +                     #interrupt-cells = <2>;
->> +                     clocks = <&crg_ctrl HI3660_PCLK_GPIO17>;
->> +                     clock-names = "apb_pclk";
->> +                     status = "ok";
->> +             };
->> +
->> +             gpio18: gpio@ff3b4000 {
->> +                     compatible = "arm,pl061", "arm,primecell";
->> +                     reg = <0 0xff3b4000 0 0x1000>;
->> +                     interrupts = <GIC_SPI 102 IRQ_TYPE_LEVEL_HIGH>;
->> +                     gpio-controller;
->> +                     #gpio-cells = <2>;
->> +                     gpio-ranges = <&pmx2 0 0 8>;
->> +                     interrupt-controller;
->> +                     #interrupt-cells = <2>;
->> +                     clocks = <&crg_ctrl HI3660_PCLK_GPIO18>;
->> +                     clock-names = "apb_pclk";
->> +                     status = "ok";
->> +             };
->> +
->> +             gpio19: gpio@ff3b5000 {
->> +                     compatible = "arm,pl061", "arm,primecell";
->> +                     reg = <0 0xff3b5000 0 0x1000>;
->> +                     interrupts = <GIC_SPI 103 IRQ_TYPE_LEVEL_HIGH>;
->> +                     gpio-controller;
->> +                     #gpio-cells = <2>;
->> +                     gpio-ranges = <&pmx2 0 8 4>;
->> +                     interrupt-controller;
->> +                     #interrupt-cells = <2>;
->> +                     clocks = <&crg_ctrl HI3660_PCLK_GPIO19>;
->> +                     clock-names = "apb_pclk";
->> +                     status = "ok";
->> +             };
->> +
->> +             gpio20: gpio@e8a1f000 {
->> +                     compatible = "arm,pl061", "arm,primecell";
->> +                     reg = <0 0xe8a1f000 0 0x1000>;
->> +                     interrupts = <GIC_SPI 104 IRQ_TYPE_LEVEL_HIGH>;
->> +                     gpio-controller;
->> +                     #gpio-cells = <2>;
->> +                     gpio-ranges = <&pmx1 0 0 6>;
->> +                     interrupt-controller;
->> +                     #interrupt-cells = <2>;
->> +                     clocks = <&crg_ctrl HI3660_PCLK_GPIO20>;
->> +                     clock-names = "apb_pclk";
->> +                     status = "ok";
->> +             };
->> +
->> +             gpio21: gpio@e8a20000 {
->> +                     compatible = "arm,pl061", "arm,primecell";
->> +                     reg = <0 0xe8a20000 0 0x1000>;
->> +                     interrupts = <GIC_SPI 105 IRQ_TYPE_LEVEL_HIGH>;
->> +                     gpio-controller;
->> +                     #gpio-cells = <2>;
->> +                     interrupt-controller;
->> +                     #interrupt-cells = <2>;
->> +                     gpio-ranges = <&pmx3 0 0 6>;
->> +                     clocks = <&crg_ctrl HI3660_PCLK_GPIO21>;
->> +                     clock-names = "apb_pclk";
->> +                     status = "ok";
->> +             };
->> +
->> +             gpio22: gpio@fff0b000 {
->> +                     compatible = "arm,pl061", "arm,primecell";
->> +                     reg = <0 0xfff0b000 0 0x1000>;
->> +                     interrupts = <GIC_SPI 106 IRQ_TYPE_LEVEL_HIGH>;
->> +                     gpio-controller;
->> +                     #gpio-cells = <2>;
->> +                     /* GPIO176 */
->> +                     gpio-ranges = <&pmx4 2 0 6>;
->> +                     interrupt-controller;
->> +                     #interrupt-cells = <2>;
->> +                     clocks = <&sctrl HI3660_PCLK_AO_GPIO0>;
->> +                     clock-names = "apb_pclk";
->> +                     status = "ok";
->> +             };
->> +
->> +             gpio23: gpio@fff0c000 {
->> +                     compatible = "arm,pl061", "arm,primecell";
->> +                     reg = <0 0xfff0c000 0 0x1000>;
->> +                     interrupts = <GIC_SPI 107 IRQ_TYPE_LEVEL_HIGH>;
->> +                     gpio-controller;
->> +                     #gpio-cells = <2>;
->> +                     /* GPIO184 */
->> +                     gpio-ranges = <&pmx4 0 6 7>;
->> +                     interrupt-controller;
->> +                     #interrupt-cells = <2>;
->> +                     clocks = <&sctrl HI3660_PCLK_AO_GPIO1>;
->> +                     clock-names = "apb_pclk";
->> +                     status = "ok";
->> +             };
->> +
->> +              gpio24: gpio@fff0d000 {
->
-> extra space     ^
+Hi Lorenzo,
 
-Thanks, Rob. I will fix this and all above.
+On 5/23/2017 5:26 AM, Lorenzo Pieralisi wrote:
+> On Tue, May 23, 2017 at 02:31:17PM +0530, Sricharan R wrote:
+>> Hi Lorenzo,
+>>
+>> On 5/23/2017 2:22 PM, Lorenzo Pieralisi wrote:
+>>> On Tue, May 23, 2017 at 02:26:10AM -0400, Nate Watterson wrote:
+>>>> Hi Sricharan,
+>>>>
+>>>> On 4/10/2017 7:21 AM, Sricharan R wrote:
+>>>>> This is an equivalent to the DT's handling of the iommu master's probe
+>>>>> with deferred probing when the corrsponding iommu is not probed yet.
+>>>>> The lack of a registered IOMMU can be caused by the lack of a driver for
+>>>>> the IOMMU, the IOMMU device probe not having been performed yet, having
+>>>>> been deferred, or having failed.
+>>>>>
+>>>>> The first case occurs when the firmware describes the bus master and
+>>>>> IOMMU topology correctly but no device driver exists for the IOMMU yet
+>>>>> or the device driver has not been compiled in. Return NULL, the caller
+>>>>> will configure the device without an IOMMU.
+>>>>>
+>>>>> The second and third cases are handled by deferring the probe of the bus
+>>>>> master device which will eventually get reprobed after the IOMMU.
+>>>>>
+>>>>> The last case is currently handled by deferring the probe of the bus
+>>>>> master device as well. A mechanism to either configure the bus master
+>>>>> device without an IOMMU or to fail the bus master device probe depending
+>>>>> on whether the IOMMU is optional or mandatory would be a good
+>>>>> enhancement.
+>>>>>
+>>>>> Tested-by: Hanjun Guo <hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>>>>> Reviewed-by: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+>>>>> [Lorenzo: Added fixes for dma_coherent_mask overflow, acpi_dma_configure
+>>>>>            called multiple times for same device]
+>>>>> Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+>>>>> Signed-off-by: Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+>>>>> ---
+>>>>>   drivers/acpi/arm64/iort.c  | 33 ++++++++++++++++++++++++++++++++-
+>>>>>   drivers/acpi/scan.c        | 11 ++++++++---
+>>>>>   drivers/base/dma-mapping.c |  2 +-
+>>>>>   include/acpi/acpi_bus.h    |  2 +-
+>>>>>   include/linux/acpi.h       |  7 +++++--
+>>>>>   5 files changed, 47 insertions(+), 8 deletions(-)
+>>>>>
+>>>>> diff --git a/drivers/acpi/arm64/iort.c b/drivers/acpi/arm64/iort.c
+>>>>> index 3dd9ec3..e323ece 100644
+>>>>> --- a/drivers/acpi/arm64/iort.c
+>>>>> +++ b/drivers/acpi/arm64/iort.c
+>>>>> @@ -543,6 +543,14 @@ static const struct iommu_ops *iort_iommu_xlate(struct device *dev,
+>>>>>   	const struct iommu_ops *ops = NULL;
+>>>>>   	int ret = -ENODEV;
+>>>>>   	struct fwnode_handle *iort_fwnode;
+>>>>> +	struct iommu_fwspec *fwspec = dev->iommu_fwspec;
+>>>>> +
+>>>>> +	/*
+>>>>> +	 * If we already translated the fwspec there
+>>>>> +	 * is nothing left to do, return the iommu_ops.
+>>>>> +	 */
+>>>>> +	if (fwspec && fwspec->ops)
+>>>>> +		return fwspec->ops;
+>>>>
+>>>> Is this logic strictly required? It breaks masters with multiple SIDs
+>>>> as only the first SID is actually added to the master's fwspec.
+>>>
+>>> My bad, that's indeed a silly bug I introduced. Please let me know if the
+>>> patch below fixes it, we will send it upstream shortly.
+>>>
+>>
+>> oops, i think emails crossed. Please let me know if you are ok to add
+>> this to the other fixes.
+> 
+> No worries, yes I am ok thanks but please give Nate some time to report
+> back to make sure the diff I sent actually fixes the problem.
+
+The patch you sent fixes the problem. Thanks for the quick turnaround.
+
+> 
+> Apologies for the breakage.
+> 
+> Lorenzo
+> 
+>>
+>> Regards,
+>>   Sricharan
+>>
+
+-- 
+Qualcomm Datacenter Technologies as an affiliate of Qualcomm Technologies, Inc.
+Qualcomm Technologies, Inc. is a member of the Code Aurora Forum, a Linux Foundation Collaborative Project.
