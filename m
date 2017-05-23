@@ -1,78 +1,74 @@
-From: Lino Sanfilippo <LinoSanfilippo@gmx.de>
-Subject: Re: [PATCH v6 net-next 17/17] net: qualcomm: add QCA7000 UART driver
-Date: Tue, 23 May 2017 23:01:01 +0200
-Message-ID: <41c7302e-b25c-9f57-470a-dd95200a060f@gmx.de>
-References: <1495545173-22150-1-git-send-email-stefan.wahren@i2se.com>
- <1495545173-22150-18-git-send-email-stefan.wahren@i2se.com>
- <053235ad-a963-6a09-ccb0-b643115dee00@gmx.de>
- <1059621060.236992.1495568289051@email.1und1.de>
+From: James Cameron <quozl@laptop.org>
+Subject: Re: [PATCH] ASoC: Add pcm9211 driver
+Date: Wed, 24 May 2017 07:16:24 +1000
+Message-ID: <20170523211624.GA3245@us.netrek.org>
+References: <20170523090931.9697-1-julian@jusst.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1059621060.236992.1495568289051@email.1und1.de>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stefan Wahren <stefan.wahren@i2se.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "David S. Miller" <davem@davemloft.net>
-Cc: linux-serial@vger.kernel.org, Jiri Slaby <jslaby@suse.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, Jakub Kicinski <kubakici@wp.pl>, devicetree@vger.kernel.org
+Return-path: <alsa-devel-bounces@alsa-project.org>
+Content-Disposition: inline
+In-Reply-To: <20170523090931.9697-1-julian@jusst.de>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Julian Scheel <julian@jusst.de>
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, broonie@kernel.org, ckeepax@opensource.wolfsonmicro.com, lars@metafoo.de
 List-Id: devicetree@vger.kernel.org
 
-On 23.05.2017 21:38, Stefan Wahren wrote:
+On Tue, May 23, 2017 at 11:09:31AM +0200, Julian Scheel wrote:
+> This adds a driver for the TI PCM9211 digital audio interfaces
+> transceiver. The driver currently only handles the receiver aspect of
+> the chip and supports only control of the primary I2S (MAIN) output
+> port. Support for AUX output is trivial to add, but wasn't done due to
+> missing hardware for testing. The same goes for the transmitter
+> functionality.
+> The driver uses some extra device-tree fields to allow configuration of
+> pin functions directly out of this driver.
 > 
->> Lino Sanfilippo <LinoSanfilippo@gmx.de> hat am 23. Mai 2017 um 20:16 geschrieben:
->>
->>
->> Hi,
->>
->> On 23.05.2017 15:12, Stefan Wahren wrote:
->>
->>
->>> +}
->>> +
->>> +static void qca_uart_remove(struct serdev_device *serdev)
->>> +{
->>> +	struct qcauart *qca = serdev_device_get_drvdata(serdev);
->>> +
->>> +	netif_carrier_off(qca->net_dev);
->>> +	cancel_work_sync(&qca->tx_work);
->>> +	unregister_netdev(qca->net_dev);
->>
->> Note that it is still possible that the tx work is queued right after cancel_work_sync()
->> returned and before the net device is unregistered (and thus the check for the net device
->> being up at the beginning of the tx work function is passed and the function is executed).
-> 
-> Even if the carrier is off? Since i see this pattern in some drivers, can you please point me to a reference like a thread or something else?
-> 
+> Signed-off-by: Julian Scheel <julian@jusst.de>
+> ---
+>  .../devicetree/bindings/sound/pcm9211.txt          |  118 ++
+>  MAINTAINERS                                        |    6 +
+>  include/dt-bindings/sound/pcm9211.h                |   55 +
+>  sound/soc/codecs/Kconfig                           |   10 +
+>  sound/soc/codecs/Makefile                          |    4 +
+>  sound/soc/codecs/pcm9211-i2c.c                     |   65 +
+>  sound/soc/codecs/pcm9211.c                         | 1357 ++++++++++++++++++++
+>  sound/soc/codecs/pcm9211.h                         |  206 +++
+>  8 files changed, 1821 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/sound/pcm9211.txt
+>  create mode 100644 include/dt-bindings/sound/pcm9211.h
+>  create mode 100644 sound/soc/codecs/pcm9211-i2c.c
+>  create mode 100644 sound/soc/codecs/pcm9211.c
+>  create mode 100644 sound/soc/codecs/pcm9211.h
+>
+> [...]
+> diff --git a/sound/soc/codecs/pcm9211.c b/sound/soc/codecs/pcm9211.c
+> new file mode 100644
+> index 000000000000..0ab4ad551df8
+> --- /dev/null
+> +++ b/sound/soc/codecs/pcm9211.c
+> @@ -0,0 +1,1357 @@
+> [...]
+> +int pcm9211_probe(struct device *dev, struct regmap *regmap)
+> +{
+> [...]
+> +	priv->int0 = devm_gpiod_get_optional(dev, "int0", GPIOD_IN);
+> +	if (IS_ERR(priv->reset)) {
+> +		ret = PTR_ERR(priv->reset);
+> +		dev_err(dev, "Failed to get reset gpio: %d\n", ret);
+> +		return ret;
+> +	}
 
-The check in the tx work function is against the "running" state not against the carrier. So why should 
-the carrier matter in this case? 
+In above block; reset should be int0, three lines affected.
 
-
->> I suggest to avoid this possible race by first unregistering the netdevice and then 
->> calling cancel_work_sync().
-> 
-> What makes you sure that's safe to unregister the netdev while the tx work queue is possibly active?
-
-unregister_netdevice() calls netdev_close() if the interface is still up. netdev_close() calls flush_work()
-so the unregistration is delayed until the tx work function is finished. Furthermore both close() and
-tx work are synchronized by means of the qca->lock which also guarantees that unregister_netdevice() wont
-be finished until the tx work is done.
-
-But I may have missed something and if unregistering the device while the tx work could be running worries you,
-we could first close and later unregister the device like in the following sequence:
-
-
-dev_close();
-/* the tx work wont be scheduled any more now, however we have to wait for a potentially
-   earlier scheduled work */ 
-cancel_work_sync(&qca->tx_work);
-/* we can be sure that the tx work will neither be running nor be started again, so 
-   it is safe to unregister the netdev */
-unregister_netdev(qca->net_dev);
-serdev_device_close(serdev);
-free_netdev(qca->net_dev);
- 
-What do you think?
-
-Regards,
-Lino
+-- 
+James Cameron
+http://quozl.netrek.org/
