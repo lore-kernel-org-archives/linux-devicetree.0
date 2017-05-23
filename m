@@ -1,25 +1,13 @@
 From: Javier Martinez Canillas <javier@dowhile0.org>
-Subject: [PATCH v5 06/20] ARM: dts: imx: Add generic compatible string for I2C
- EEPROM
-Date: Tue, 23 May 2017 15:34:34 +0200
-Message-ID: <20170523133448.4794-7-javier@dowhile0.org>
+Subject: [PATCH v5 07/20] ARM: dts: keystone: Add generic compatible string for I2C EEPROM
+Date: Tue, 23 May 2017 15:34:35 +0200
+Message-ID: <20170523133448.4794-8-javier@dowhile0.org>
 References: <20170523133448.4794-1-javier@dowhile0.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170523133448.4794-1-javier@dowhile0.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, Wolfram Sang <wsa@the-dreams.de>, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Javier Martinez Canillas <javier@dowhile0.org>, Shawn Guo <shawnguo@kernel.org>, linux-arm-kernel@lists.infradead.org
+Cc: Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh@kernel.org>, Javier Martinez Canillas <javier@dowhile0.org>, devicetree@vger.kernel.org, Santosh Shilimkar <ssantosh@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
 The at24 driver allows to register I2C EEPROM chips using different vendor
@@ -45,91 +33,49 @@ Changes in v4:
 Changes in v3: None
 Changes in v2: None
 
- arch/arm/boot/dts/imx27-phytec-phycard-s-som.dtsi | 2 +-
- arch/arm/boot/dts/imx27-phytec-phycore-som.dtsi   | 2 +-
- arch/arm/boot/dts/imx28-evk.dts                   | 2 +-
- arch/arm/boot/dts/imx53-tqma53.dtsi               | 2 +-
- arch/arm/boot/dts/imx6q-cm-fx6.dts                | 2 +-
- arch/arm/boot/dts/imx6q-utilite-pro.dts           | 2 +-
- 6 files changed, 6 insertions(+), 6 deletions(-)
+ arch/arm/boot/dts/keystone-k2e-evm.dts  | 2 +-
+ arch/arm/boot/dts/keystone-k2hk-evm.dts | 2 +-
+ arch/arm/boot/dts/keystone-k2l-evm.dts  | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm/boot/dts/imx27-phytec-phycard-s-som.dtsi b/arch/arm/boot/dts/imx27-phytec-phycard-s-som.dtsi
-index 4f3e0f473581..0b8490b21a38 100644
---- a/arch/arm/boot/dts/imx27-phytec-phycard-s-som.dtsi
-+++ b/arch/arm/boot/dts/imx27-phytec-phycard-s-som.dtsi
-@@ -40,7 +40,7 @@
- 	status = "okay";
+diff --git a/arch/arm/boot/dts/keystone-k2e-evm.dts b/arch/arm/boot/dts/keystone-k2e-evm.dts
+index ae1ebe7ee021..c8d45e6cd9e6 100644
+--- a/arch/arm/boot/dts/keystone-k2e-evm.dts
++++ b/arch/arm/boot/dts/keystone-k2e-evm.dts
+@@ -69,7 +69,7 @@
  
- 	at24@52 {
--		compatible = "at,24c32";
-+		compatible = "atmel,24c32";
- 		pagesize = <32>;
- 		reg = <0x52>;
- 	};
-diff --git a/arch/arm/boot/dts/imx27-phytec-phycore-som.dtsi b/arch/arm/boot/dts/imx27-phytec-phycore-som.dtsi
-index 82fec935ce83..c973c5d91875 100644
---- a/arch/arm/boot/dts/imx27-phytec-phycore-som.dtsi
-+++ b/arch/arm/boot/dts/imx27-phytec-phycore-som.dtsi
-@@ -193,7 +193,7 @@
- 	status = "okay";
- 
- 	at24@52 {
--		compatible = "at,24c32";
-+		compatible = "atmel,24c32";
- 		pagesize = <32>;
- 		reg = <0x52>;
- 	};
-diff --git a/arch/arm/boot/dts/imx28-evk.dts b/arch/arm/boot/dts/imx28-evk.dts
-index a5ba669b4eaa..b88c087f1fea 100644
---- a/arch/arm/boot/dts/imx28-evk.dts
-+++ b/arch/arm/boot/dts/imx28-evk.dts
-@@ -203,7 +203,7 @@
- 				};
- 
- 				at24@51 {
--					compatible = "at24,24c32";
-+					compatible = "atmel,24c32";
- 					pagesize = <32>;
- 					reg = <0x51>;
- 				};
-diff --git a/arch/arm/boot/dts/imx53-tqma53.dtsi b/arch/arm/boot/dts/imx53-tqma53.dtsi
-index 85972f2201c2..eecdc1c55eef 100644
---- a/arch/arm/boot/dts/imx53-tqma53.dtsi
-+++ b/arch/arm/boot/dts/imx53-tqma53.dtsi
-@@ -272,7 +272,7 @@
- 	};
- 
- 	eeprom: 24c64@50 {
--		compatible = "at,24c64";
-+		compatible = "atmel,24c64";
- 		pagesize = <32>;
+ &i2c0 {
+ 	dtt@50 {
+-		compatible = "at,24c1024";
++		compatible = "atmel,24c1024";
  		reg = <0x50>;
  	};
-diff --git a/arch/arm/boot/dts/imx6q-cm-fx6.dts b/arch/arm/boot/dts/imx6q-cm-fx6.dts
-index 66cac5328b86..a8af3822d9df 100644
---- a/arch/arm/boot/dts/imx6q-cm-fx6.dts
-+++ b/arch/arm/boot/dts/imx6q-cm-fx6.dts
-@@ -215,7 +215,7 @@
- 	clock-frequency = <100000>;
+ };
+diff --git a/arch/arm/boot/dts/keystone-k2hk-evm.dts b/arch/arm/boot/dts/keystone-k2hk-evm.dts
+index 2156ff92d08f..69af3a950da6 100644
+--- a/arch/arm/boot/dts/keystone-k2hk-evm.dts
++++ b/arch/arm/boot/dts/keystone-k2hk-evm.dts
+@@ -145,7 +145,7 @@
  
- 	eeprom@50 {
--		compatible = "at24,24c02";
-+		compatible = "atmel,24c02";
+ &i2c0 {
+ 	dtt@50 {
+-		compatible = "at,24c1024";
++		compatible = "atmel,24c1024";
  		reg = <0x50>;
- 		pagesize = <16>;
  	};
-diff --git a/arch/arm/boot/dts/imx6q-utilite-pro.dts b/arch/arm/boot/dts/imx6q-utilite-pro.dts
-index d900ad6ec5f8..16d5be1aeb3c 100644
---- a/arch/arm/boot/dts/imx6q-utilite-pro.dts
-+++ b/arch/arm/boot/dts/imx6q-utilite-pro.dts
-@@ -130,7 +130,7 @@
- 			#size-cells = <0>;
+ };
+diff --git a/arch/arm/boot/dts/keystone-k2l-evm.dts b/arch/arm/boot/dts/keystone-k2l-evm.dts
+index 056b42f99d7a..402190e55e40 100644
+--- a/arch/arm/boot/dts/keystone-k2l-evm.dts
++++ b/arch/arm/boot/dts/keystone-k2l-evm.dts
+@@ -42,7 +42,7 @@
  
- 			eeprom@50 {
--				compatible = "at24,24c02";
-+				compatible = "atmel,24c02";
- 				reg = <0x50>;
- 				pagesize = <16>;
- 			};
+ &i2c0 {
+ 	dtt@50 {
+-		compatible = "at,24c1024";
++		compatible = "atmel,24c1024";
+ 		reg = <0x50>;
+ 	};
+ };
 -- 
 2.9.3
