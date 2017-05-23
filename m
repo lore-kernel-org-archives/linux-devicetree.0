@@ -1,120 +1,55 @@
-From: Nate Watterson <nwatters-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH V11 08/11] drivers: acpi: Handle IOMMU lookup failure with
-	deferred probing or error
-Date: Tue, 23 May 2017 07:27:38 -0400
-Message-ID: <647cbf74-d171-365c-7ef5-9f1e5986716c@codeaurora.org>
-References: <1491823266-1209-1-git-send-email-sricharan@codeaurora.org>
-	<1491823266-1209-9-git-send-email-sricharan@codeaurora.org>
-	<41668eff-271c-1c4c-7665-3bf0faa74669@codeaurora.org>
-	<20170523085241.GA18204@red-moon>
-	<c6d5c033-a8f9-03e3-9963-cd291ae2d7e1@codeaurora.org>
-	<20170523092659.GA19999@red-moon>
+From: Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 10/12] arm64: dts: hi3660: add spi device nodes
+Date: Tue, 23 May 2017 19:39:16 +0800
+Message-ID: <CAFGCpxyy0vmGhEHEJ3inn98RsO3Fshkw=_RWr_9XQCXiS-C-1w@mail.gmail.com>
+References: <20170517083745.24479-1-guodong.xu@linaro.org> <20170517083745.24479-11-guodong.xu@linaro.org>
+ <20170523004627.caeoqezj3leydj2t@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <20170523092659.GA19999@red-moon>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-arch-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tn-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org, linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170523004627.caeoqezj3leydj2t@rob-hp-laptop>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: "xuwei (O)" <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Kefeng Wang <wangkefeng.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, "Chenfeng (puck)" <puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Xuejiancheng <xuejiancheng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Wang Xiaoyin <hw.wangxiaoyin-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Lorenzo,
-
-On 5/23/2017 5:26 AM, Lorenzo Pieralisi wrote:
-> On Tue, May 23, 2017 at 02:31:17PM +0530, Sricharan R wrote:
->> Hi Lorenzo,
+On Tue, May 23, 2017 at 8:46 AM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> On Wed, May 17, 2017 at 04:37:43PM +0800, Guodong Xu wrote:
+>> From: Wang Xiaoyin <hw.wangxiaoyin-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
 >>
->> On 5/23/2017 2:22 PM, Lorenzo Pieralisi wrote:
->>> On Tue, May 23, 2017 at 02:26:10AM -0400, Nate Watterson wrote:
->>>> Hi Sricharan,
->>>>
->>>> On 4/10/2017 7:21 AM, Sricharan R wrote:
->>>>> This is an equivalent to the DT's handling of the iommu master's probe
->>>>> with deferred probing when the corrsponding iommu is not probed yet.
->>>>> The lack of a registered IOMMU can be caused by the lack of a driver for
->>>>> the IOMMU, the IOMMU device probe not having been performed yet, having
->>>>> been deferred, or having failed.
->>>>>
->>>>> The first case occurs when the firmware describes the bus master and
->>>>> IOMMU topology correctly but no device driver exists for the IOMMU yet
->>>>> or the device driver has not been compiled in. Return NULL, the caller
->>>>> will configure the device without an IOMMU.
->>>>>
->>>>> The second and third cases are handled by deferring the probe of the bus
->>>>> master device which will eventually get reprobed after the IOMMU.
->>>>>
->>>>> The last case is currently handled by deferring the probe of the bus
->>>>> master device as well. A mechanism to either configure the bus master
->>>>> device without an IOMMU or to fail the bus master device probe depending
->>>>> on whether the IOMMU is optional or mandatory would be a good
->>>>> enhancement.
->>>>>
->>>>> Tested-by: Hanjun Guo <hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->>>>> Reviewed-by: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
->>>>> [Lorenzo: Added fixes for dma_coherent_mask overflow, acpi_dma_configure
->>>>>            called multiple times for same device]
->>>>> Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
->>>>> Signed-off-by: Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
->>>>> ---
->>>>>   drivers/acpi/arm64/iort.c  | 33 ++++++++++++++++++++++++++++++++-
->>>>>   drivers/acpi/scan.c        | 11 ++++++++---
->>>>>   drivers/base/dma-mapping.c |  2 +-
->>>>>   include/acpi/acpi_bus.h    |  2 +-
->>>>>   include/linux/acpi.h       |  7 +++++--
->>>>>   5 files changed, 47 insertions(+), 8 deletions(-)
->>>>>
->>>>> diff --git a/drivers/acpi/arm64/iort.c b/drivers/acpi/arm64/iort.c
->>>>> index 3dd9ec3..e323ece 100644
->>>>> --- a/drivers/acpi/arm64/iort.c
->>>>> +++ b/drivers/acpi/arm64/iort.c
->>>>> @@ -543,6 +543,14 @@ static const struct iommu_ops *iort_iommu_xlate(struct device *dev,
->>>>>   	const struct iommu_ops *ops = NULL;
->>>>>   	int ret = -ENODEV;
->>>>>   	struct fwnode_handle *iort_fwnode;
->>>>> +	struct iommu_fwspec *fwspec = dev->iommu_fwspec;
->>>>> +
->>>>> +	/*
->>>>> +	 * If we already translated the fwspec there
->>>>> +	 * is nothing left to do, return the iommu_ops.
->>>>> +	 */
->>>>> +	if (fwspec && fwspec->ops)
->>>>> +		return fwspec->ops;
->>>>
->>>> Is this logic strictly required? It breaks masters with multiple SIDs
->>>> as only the first SID is actually added to the master's fwspec.
->>>
->>> My bad, that's indeed a silly bug I introduced. Please let me know if the
->>> patch below fixes it, we will send it upstream shortly.
->>>
+>> Add spi2 and spi3 device nodes for hi3660, and enable them for hikey960.
 >>
->> oops, i think emails crossed. Please let me know if you are ok to add
->> this to the other fixes.
-> 
-> No worries, yes I am ok thanks but please give Nate some time to report
-> back to make sure the diff I sent actually fixes the problem.
-
-The patch you sent fixes the problem. Thanks for the quick turnaround.
-
-> 
-> Apologies for the breakage.
-> 
-> Lorenzo
-> 
+>> On HiKey960:
+>>  - SPI2 is wired out through low speed expansion connector.
+>>  - SPI3 is wired out through high speed expansion connector.
 >>
->> Regards,
->>   Sricharan
+>> Signed-off-by: Wang Xiaoyin <hw.wangxiaoyin-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+>> Signed-off-by: Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> ---
+>>  arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts |  8 ++++++
+>>  arch/arm64/boot/dts/hisilicon/hi3660.dtsi         | 30 +++++++++++++++++++++++
+>>  2 files changed, 38 insertions(+)
 >>
+>> diff --git a/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts b/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
+>> index 69aa207..79735ee 100644
+>> --- a/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
+>> +++ b/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
+>> @@ -69,3 +69,11 @@
+>>  &uart6 {
+>>       status = "okay";
+>>  };
+>> +
+>> +&spi2 {
+>> +     status = "okay";
+>> +};
+>> +
+>> +&spi3 {
+>> +     status = "okay";
+>
+> LS connector label?
 
--- 
-Qualcomm Datacenter Technologies as an affiliate of Qualcomm Technologies, Inc.
-Qualcomm Technologies, Inc. is a member of the Code Aurora Forum, a Linux Foundation Collaborative Project.
+Thanks Rob. I will fix that, adding label accordingly.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
