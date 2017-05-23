@@ -1,37 +1,29 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] crypto: stm32 - Add CRC32 support for STM32F4XX
-Date: Mon, 22 May 2017 19:29:48 -0500
-Message-ID: <20170523002948.k4fh24rzccix2bsn@rob-hp-laptop>
-References: <1494969530-91589-1-git-send-email-cosardindar@gmail.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] iio: proximity: as3935: add missing required
+ spi-max-frequency
+Date: Mon, 22 May 2017 19:31:42 -0500
+Message-ID: <20170523003142.spslp7wtnmcoex2o@rob-hp-laptop>
+References: <20170517020310.21355-1-matt.ranostay@konsulko.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-crypto-owner@vger.kernel.org>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1494969530-91589-1-git-send-email-cosardindar@gmail.com>
-Sender: linux-crypto-owner@vger.kernel.org
-To: Cosar Dindar <cosardindar@gmail.com>
-Cc: herbert@gondor.apana.org.au, davem@davemloft.net, mark.rutland@arm.com, mcoquelin.stm32@gmail.com, alexandre.torgue@st.com, linux@armlinux.org.uk, weiyongjun1@huawei.com, fabien.dessenne@st.com, linux-crypto@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20170517020310.21355-1-matt.ranostay-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Matt Ranostay <matt.ranostay-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Cc: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 17, 2017 at 12:18:50AM +0300, Cosar Dindar wrote:
-> This patch series add hardware CRC32 ("Ethernet") calculation support
-> for STMicroelectronics STM32F4XX series devices.
+On Tue, May 16, 2017 at 07:03:10PM -0700, Matt Ranostay wrote:
+> spi-max-frequency is required to be set for the as3935 part, and
+> document such usage.
 > 
-> As an hardware limitation polynomial and key setting are not supported
-> as they are fixed as 0x4C11DB7 (poly) and 0xFFFFFFFF (key).
-> 
-> CRC32C Castagnoli algorithm is not supported also.
-> Module is tested on STM32F429-disco board with crypto testmgr using
-> cases within the key 0xFFFFFFFF.
-> 
-> Signed-off-by: Cosar Dindar <cosardindar@gmail.com>
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Signed-off-by: Matt Ranostay <matt.ranostay-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
 > ---
->  .../devicetree/bindings/crypto/st,stm32-crc.txt    |  4 +-
->  arch/arm/boot/dts/stm32429i-eval.dts               |  4 ++
->  arch/arm/boot/dts/stm32f429-disco.dts              |  4 ++
->  arch/arm/boot/dts/stm32f429.dtsi                   |  7 +++
->  arch/arm/boot/dts/stm32f469-disco.dts              |  4 ++
->  drivers/crypto/stm32/stm32_crc32.c                 | 68 ++++++++++++++++++----
->  6 files changed, 79 insertions(+), 12 deletions(-)
+>  Documentation/devicetree/bindings/iio/proximity/as3935.txt | 2 ++
+>  1 file changed, 2 insertions(+)
 
-Acked-by: Rob Herring <robh@kernel.org>
+Applied, thanks.
+
+Rob
