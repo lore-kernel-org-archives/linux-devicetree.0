@@ -1,98 +1,44 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH 1/3] mfd: lp87565: Add lp87565 PMIC support
-Date: Tue, 23 May 2017 09:47:05 +0100
-Message-ID: <20170523084705.vfkqwdis6xxh7umd@dell>
-References: <1495197739-17446-1-git-send-email-j-keerthy@ti.com>
- <1495197739-17446-2-git-send-email-j-keerthy@ti.com>
- <20170522174806.nnpk5jso7jhgygm3@dell>
- <26169872-1b43-88d1-3e5b-367b4d446222@ti.com>
- <20170523065742.44ytkxdagw2wwttz@dell>
- <a753fdb4-feb9-0894-6f40-a19d3f05714c@ti.com>
- <8e1d50d1-378b-aca5-a6f5-457a0bb1544a@ti.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 3/3] mfd: arizona: Update GPIO binding for newly supported flag
+Date: Tue, 23 May 2017 10:49:23 +0200
+Message-ID: <CACRpkdaLR9pH4HX4h3wuGAVbcETGn-k6VkXYsMAq_YPAsnOUvg@mail.gmail.com>
+References: <1494948714-15203-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+ <1494948714-15203-3-git-send-email-ckeepax@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <8e1d50d1-378b-aca5-a6f5-457a0bb1544a@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Keerthy <j-keerthy@ti.com>
-Cc: broonie@kernel.org, robh+dt@kernel.org, t-kristo@ti.com, tony@atomide.com, mark.rutland@arm.com, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1494948714-15203-3-git-send-email-ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:WOLFSON MICROELECTRONICS DRIVERS" <patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 23 May 2017, Keerthy wrote:
-> On Tuesday 23 May 2017 01:11 PM, Keerthy wrote:
-> > On Tuesday 23 May 2017 12:27 PM, Lee Jones wrote:
-> >> On Tue, 23 May 2017, Keerthy wrote:
-> >>> On Monday 22 May 2017 11:18 PM, Lee Jones wrote:
-> >>>> On Fri, 19 May 2017, Keerthy wrote:
-> >>>>
-> >>>>> The LP87565 chip is a power management IC for Portable Navigation Systems
-> >>>>> and Tablet Computing devices. It contains the following components:
-> >>>>>
-> >>>>>         - Configurable Bucks(Single and multi-phase).
-> >>>>>         - Configurable General Purpose Output Signals (GPO).
-> >>>>>
-> >>>>> The LP87565-Q1 variant device uses two 2-phase outputs configuration,
-> >>>>> Buck0 is master for Buck0/1 output and Buck2 is master for Buck2/3
-> >>>>> output.
-> >>>>>
-> >>>>> Signed-off-by: Keerthy <j-keerthy@ti.com>
-> >>>>> ---
-> >>>>>  Documentation/devicetree/bindings/mfd/lp87565.txt |  44 ++++
-> >>>>>  drivers/mfd/Kconfig                               |  14 ++
-> >>>>>  drivers/mfd/Makefile                              |   1 +
-> >>>>>  drivers/mfd/lp87565.c                             | 103 ++++++++
-> >>>>>  include/linux/mfd/lp87565.h                       | 275 ++++++++++++++++++++++
-> >>>>>  5 files changed, 437 insertions(+)
-> >>>>>  create mode 100644 Documentation/devicetree/bindings/mfd/lp87565.txt
-> >>>>>  create mode 100644 drivers/mfd/lp87565.c
-> >>>>>  create mode 100644 include/linux/mfd/lp87565.h
-> >>>>>
-> >>
-> >> [...]
-> >>
-> >>>>> +/*
-> >>>>> + * Copyright (C) 2017 Texas Instruments Incorporated - http://www.ti.com/
-> >>>>> + *
-> >>>>> + * Author: Keerthy <j-keerthy@ti.com>
-> >>>>
-> >>>> We usually ask for full "first last" names.
-> >>>
-> >>> Keerthy is my full name and i do not have a surname.
-> >>
-> >> What is the 'J' for in your email address?
-> > 
-> > Father's initials.
-> 
-> https://lkml.org/lkml/2012/7/11/482
-> 
-> I have been using this for a while now.
+On Tue, May 16, 2017 at 5:31 PM, Charles Keepax
+<ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org> wrote:
 
-Right and Trump has been president for a while now, it doesn't mean
-it's okay. ;)
+> Update the device tree binding to show that the new GPIO_SLEEP flags are
+> now supported in the flags field of the GPIO binding for Arizona
+> devices.
+>
+> Signed-off-by: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+(...)
+>    - gpio-controller : Indicates this device is a GPIO controller.
+>    - #gpio-cells : Must be 2. The first cell is the pin number and the
+> -    second cell is used to specify optional parameters (currently unused).
+> +    second cell is used to specify optional parameters, the following flags
+> +    are supported:
+> +      "GPIO_SLEEP_MAY_LOOSE_OUTPUT" the output of this GPIO does not need to
+> +      be maintained whilst the CODEC is in low power mode.
 
-> >> [...]
-> >>
-> >>>>> +static const struct i2c_device_id lp87565_id_table[] = {
-> >>>>> +	{ "lp87565-q1", 0 },
-> >>>>> +	{ },
-> >>>>> +};
-> >>>>> +MODULE_DEVICE_TABLE(i2c, lp87565_id_table);
-> >>>>
-> >>>> Is this an OF only driver, or not?
-> >>
-> >> You didn't answer my question?
-> >>
-> > 
-> > Sorry i replied on top again. It will be an OF only driver.
-> > 
-> > Regards,
-> > Keerthy
-> > 
+Your gpio controller most definately support more options than that,
+for example open drain.
 
--- 
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+But it is supposed to be a generic property so instead patch gpio.txt
+and reference that file from here.
+
+Yours,
+Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
