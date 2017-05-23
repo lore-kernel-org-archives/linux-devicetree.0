@@ -1,105 +1,55 @@
-From: Steve Twiss <stwiss.opensource@diasemi.com>
-Subject: [RESEND PATCH V7 7/7] MAINTAINERS: da9062/61 updates to the Dialog
- Semiconductor search terms
-Date: Tue, 23 May 2017 14:40:45 +0100
-Message-ID: <d1c3ceda19be1363cd37bb52fd7fae5b1b9a164e.1495546845.git.stwiss.opensource@diasemi.com>
-References: <cover.1495546845.git.stwiss.opensource@diasemi.com>
+From: Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
+Subject: Re: [PATCH v3 3/5] ARM: dts: stm32: Add CRC support to stm32f429
+Date: Tue, 23 May 2017 15:59:13 +0200
+Message-ID: <3ae8fbbc-8ff1-904f-abd7-cbdf65245cff@st.com>
+References: <cover.1495463449.git.cosardindar@gmail.com>
+ <c6975a76f3437b3111c1c9f5560ad78951baa774.1495463449.git.cosardindar@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <cover.1495546845.git.stwiss.opensource@diasemi.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Eduardo Valentin <edubezval@gmail.com>, Guenter Roeck <linux@roeck-us.net>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Wim Van Sebroeck <wim@iguana.be>, Zhang Rui <rui.zhang@intel.com>
-Cc: DEVICETREE <devicetree@vger.kernel.org>, LINUX-INPUT <linux-input@vger.kernel.org>, LINUX-KERNEL <linux-kernel@vger.kernel.org>, LINUX-PM <linux-pm@vger.kernel.org>, LINUX-WATCHDOG <linux-watchdog@vger.kernel.org>, Support Opensource <support.opensource@diasemi.com>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <c6975a76f3437b3111c1c9f5560ad78951baa774.1495463449.git.cosardindar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Cosar Dindar <cosardindar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, fabien.dessenne-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Steve Twiss <stwiss.opensource@diasemi.com>
-
-Additions to search terms for files supported by Dialog Semiconductor.
-This update will allow Dialog support to follow files for device tree
-bindings (onkey, thermal and watchdog) and source code for chip thermal
-monitoring drivers.
-
-Signed-off-by: Steve Twiss <stwiss.opensource@diasemi.com>
-
----
-Hi all,
-
-Is there anybody willing to take this patch through their tree please?
-
-Dialog Semiconductor support would like to add to the MAINTAINERS search
-terms. This update will allow us to follow all of our files for device
-tree bindings and the source code relating to chip thermal monitoring
-described in this patch set.
-
-All dependencies for this patch have been accepted into linux-next:
-
-bindings/input/da90??-onkey.txt     -> linux-next.git/commit/?id=406d5a2de0718622241eff35831f6fed0316a7d4
-bindings/thermal/da90??-thermal.txt -> linux-next.git/commit/?id=28c1b08d2a156ef16e912a4c618a529e586e5dbc
-bindings/watchdog/da92??-wdt.txt    -> linux-next.git/commit/?id=be62f363a8d5b1703c08d2cb462786a68215bcca
-drivers/thermal/da90??-thermal.c    -> linux-next.git/commit/?id=608567aac3206ae886c79688fbb8a62c473b55ef
-
-Regards,
-Steve Twiss, Dialog Semiconductor
 
 
-This patch applies against linux-next and v4.12-rc2
+On 05/22/2017 04:34 PM, Cosar Dindar wrote:
+> Add CRC32 Crypto support to stm32f429.
+>
+> Signed-off-by: Cosar Dindar <cosardindar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-v6 -> v7
- - NO CODE CHANGE
- - Rebased from v4.11-rc3 to v4.11-rc11
- - Updated the commit message
- - Moved the following names from CC: to TO: e-mail fields
-   - Lee Jones
-   - Liam Girdwood
-   - Mark Brown
+Will be applied in STM32 branch for next pull request.
 
-v5 -> v6
- - NO CODE CHANGE
- - Rebased from v4.8 to v4.11-rc3
- - Patch renamed from [PATCH V5 8/8] to [PATCH V5 7/7]
+Thanks
+Alex
 
-v4 -> v5
- - NO CODE CHANGE
- - Rebased from v4.8 to v4.9
-
-v3 -> v4
- - NO CODE CHANGE
- - Patch renamed from [PATCH V3 9/9] to [PATCH V4 8/8]
-
-v2 -> v3
- - NO CODE CHANGE
- - Patch renamed from [PATCH V2 10/10] to [PATCH V3 9/9]
-
-v1 -> v2
- - NO CODE CHANGE
-
-
- MAINTAINERS | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 9e98464..a580bed 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -3988,7 +3988,10 @@ W:	http://www.dialog-semiconductor.com/products
- S:	Supported
- F:	Documentation/hwmon/da90??
- F:	Documentation/devicetree/bindings/mfd/da90*.txt
-+F:	Documentation/devicetree/bindings/input/da90??-onkey.txt
-+F:	Documentation/devicetree/bindings/thermal/da90??-thermal.txt
- F:	Documentation/devicetree/bindings/regulator/da92*.txt
-+F:	Documentation/devicetree/bindings/watchdog/da92??-wdt.txt
- F:	Documentation/devicetree/bindings/sound/da[79]*.txt
- F:	drivers/gpio/gpio-da90??.c
- F:	drivers/hwmon/da90??-hwmon.c
-@@ -4003,6 +4006,7 @@ F:	drivers/power/supply/da9052-battery.c
- F:	drivers/power/supply/da91??-*.c
- F:	drivers/regulator/da903x.c
- F:	drivers/regulator/da9???-regulator.[ch]
-+F:	drivers/thermal/da90??-thermal.c
- F:	drivers/rtc/rtc-da90??.c
- F:	drivers/video/backlight/da90??_bl.c
- F:	drivers/watchdog/da90??_wdt.c
--- 
-end-of-patch for RESEND PATCH V7
+> ---
+>  arch/arm/boot/dts/stm32f429.dtsi | 7 +++++++
+>  1 file changed, 7 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/stm32f429.dtsi b/arch/arm/boot/dts/stm32f429.dtsi
+> index b2a2b5c..18343de 100644
+> --- a/arch/arm/boot/dts/stm32f429.dtsi
+> +++ b/arch/arm/boot/dts/stm32f429.dtsi
+> @@ -766,6 +766,13 @@
+>  			};
+>  		};
+>
+> +		crc: crc@40023000 {
+> +			compatible = "st,stm32f4-crc";
+> +			reg = <0x40023000 0x400>;
+> +			clocks = <&rcc 0 STM32F4_AHB1_CLOCK(CRC)>;
+> +			status = "disabled";
+> +		};
+> +
+>  		rcc: rcc@40023810 {
+>  			#reset-cells = <1>;
+>  			#clock-cells = <2>;
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
