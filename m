@@ -1,385 +1,173 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 06/12] arm64: dts: hi3660: add gpio dtsi file for
- Hisilicon Hi3660 SOC
-Date: Mon, 22 May 2017 19:41:45 -0500
-Message-ID: <20170523004145.6y4x5n3leohrn7zc@rob-hp-laptop>
-References: <20170517083745.24479-1-guodong.xu@linaro.org>
- <20170517083745.24479-7-guodong.xu@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170517083745.24479-7-guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, wangkefeng.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, xuejiancheng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Wang Xiaoyin <hw.wangxiaoyin-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+From: Chris Packham <chris.packham@alliedtelesis.co.nz>
+Subject: [PATCH v3 5/5] mtd: mchp23k256: Add support for mchp23lcv1024
+Date: Tue, 23 May 2017 12:43:17 +1200
+Message-ID: <20170523004317.16908-6-chris.packham@alliedtelesis.co.nz>
+References: <20170523004317.16908-1-chris.packham@alliedtelesis.co.nz>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170523004317.16908-1-chris.packham@alliedtelesis.co.nz>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-mtd@lists.infradead.org, andrew@lunn.ch, computersforpeace@gmail.com, dwmw2@infradead.org, boris.brezillon@free-electrons.com, linux-kernel@vger.kernel.org
+Cc: Chris Packham <chris.packham@alliedtelesis.co.nz>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Cyrille Pitchen <cyrille.pitchen@wedev4u.fr>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 17, 2017 at 04:37:39PM +0800, Guodong Xu wrote:
-> From: Wang Xiaoyin <hw.wangxiaoyin-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-> 
-> This patch adds pl061 device nodes for Hi3660 SoC.
-> 
-> Signed-off-by: Wang Xiaoyin <hw.wangxiaoyin-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-> ---
->  arch/arm64/boot/dts/hisilicon/hi3660.dtsi | 409 ++++++++++++++++++++++++++++++
->  1 file changed, 409 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
-> index f217c9d..3bea0d2 100644
-> --- a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
-> +++ b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
-> @@ -251,5 +251,414 @@
->  			clock-names = "uartclk", "apb_pclk";
->  			status = "disabled";
->  		};
-> +
-> +		gpio0: gpio@e8a0b000 {
-> +			compatible = "arm,pl061", "arm,primecell";
-> +			reg = <0 0xe8a0b000 0 0x1000>;
-> +			interrupts = <GIC_SPI 84 IRQ_TYPE_LEVEL_HIGH>;
-> +			gpio-controller;
-> +			#gpio-cells = <2>;
-> +			gpio-ranges = <&pmx0 1 0 7>;
-> +			interrupt-controller;
-> +			#interrupt-cells = <2>;
-> +			clocks = <&crg_ctrl HI3660_PCLK_GPIO0>;
-> +			clock-names = "apb_pclk";
-> +			status = "ok";
+The mchp23lcv1024 is software compatible with the mchp23k256, the
+only difference (from a software point of view) is the size. There
+is no way to detect the size so we must be told via a Device Tree.
 
-You don't need "ok" here if these are default enabled.
+Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+---
+Changes in v2:
+- fix formatting in switch statement
+- add support for 24-bit addressing
+Changes in v3:
+- None
 
-> +		};
-> +
-> +		gpio1: gpio@e8a0c000 {
-> +			compatible = "arm,pl061", "arm,primecell";
-> +			reg = <0 0xe8a0c000 0 0x1000>;
-> +			interrupts = <GIC_SPI 85 IRQ_TYPE_LEVEL_HIGH>;
-> +			gpio-controller;
-> +			#gpio-cells = <2>;
-> +			gpio-ranges = <&pmx0 1 7 7>;
-> +			interrupt-controller;
-> +			#interrupt-cells = <2>;
-> +			clocks = <&crg_ctrl HI3660_PCLK_GPIO1>;
-> +			clock-names = "apb_pclk";
-> +			status = "ok";
+ .../bindings/mtd/microchip,mchp23k256.txt          |  2 +-
+ drivers/mtd/devices/mchp23k256.c                   | 53 ++++++++++++++++++----
+ 2 files changed, 44 insertions(+), 11 deletions(-)
 
-ditto...
-
-> +		};
-> +
-> +		gpio2: gpio@e8a0d000 {
-> +			compatible = "arm,pl061", "arm,primecell";
-> +			reg = <0 0xe8a0d000 0 0x1000>;
-> +			interrupts = <GIC_SPI 86 IRQ_TYPE_LEVEL_HIGH>;
-> +			gpio-controller;
-> +			#gpio-cells = <2>;
-> +			gpio-ranges = <&pmx0 0 14 8>;
-> +			interrupt-controller;
-> +			#interrupt-cells = <2>;
-> +			clocks = <&crg_ctrl HI3660_PCLK_GPIO2>;
-> +			clock-names = "apb_pclk";
-> +			status = "ok";
-> +		};
-> +
-> +		gpio3: gpio@e8a0e000 {
-> +			compatible = "arm,pl061", "arm,primecell";
-> +			reg = <0 0xe8a0e000 0 0x1000>;
-> +			interrupts = <GIC_SPI 87 IRQ_TYPE_LEVEL_HIGH>;
-> +			gpio-controller;
-> +			#gpio-cells = <2>;
-> +			gpio-ranges = <&pmx0 0 22 8>;
-> +			interrupt-controller;
-> +			#interrupt-cells = <2>;
-> +			clocks = <&crg_ctrl HI3660_PCLK_GPIO3>;
-> +			clock-names = "apb_pclk";
-> +			status = "ok";
-> +		};
-> +
-> +		gpio4: gpio@e8a0f000 {
-> +			compatible = "arm,pl061", "arm,primecell";
-> +			reg = <0 0xe8a0f000 0 0x1000>;
-> +			interrupts = <GIC_SPI 88 IRQ_TYPE_LEVEL_HIGH>;
-> +			gpio-controller;
-> +			#gpio-cells = <2>;
-> +			gpio-ranges = <&pmx0 0 30 8>;
-> +			interrupt-controller;
-> +			#interrupt-cells = <2>;
-> +			clocks = <&crg_ctrl HI3660_PCLK_GPIO4>;
-> +			clock-names = "apb_pclk";
-> +			status = "ok";
-> +		};
-> +
-> +		gpio5: gpio@e8a10000 {
-> +			compatible = "arm,pl061", "arm,primecell";
-> +			reg = <0 0xe8a10000 0 0x1000>;
-> +			interrupts = <GIC_SPI 89 IRQ_TYPE_LEVEL_HIGH>;
-> +			gpio-controller;
-> +			#gpio-cells = <2>;
-> +			gpio-ranges = <&pmx0 0 38 8>;
-> +			interrupt-controller;
-> +			#interrupt-cells = <2>;
-> +			clocks = <&crg_ctrl HI3660_PCLK_GPIO5>;
-> +			clock-names = "apb_pclk";
-> +			status = "ok";
-> +		};
-> +
-> +		gpio6: gpio@e8a11000 {
-> +			compatible = "arm,pl061", "arm,primecell";
-> +			reg = <0 0xe8a11000 0 0x1000>;
-> +			interrupts = <GIC_SPI 90 IRQ_TYPE_LEVEL_HIGH>;
-> +			gpio-controller;
-> +			#gpio-cells = <2>;
-> +			gpio-ranges = <&pmx0 0 46 8>;
-> +			interrupt-controller;
-> +			#interrupt-cells = <2>;
-> +			clocks = <&crg_ctrl HI3660_PCLK_GPIO6>;
-> +			clock-names = "apb_pclk";
-> +			status = "ok";
-> +		};
-> +
-> +		gpio7: gpio@e8a12000 {
-> +			compatible = "arm,pl061", "arm,primecell";
-> +			reg = <0 0xe8a12000 0 0x1000>;
-> +			interrupts = <GIC_SPI 91 IRQ_TYPE_LEVEL_HIGH>;
-> +			gpio-controller;
-> +			#gpio-cells = <2>;
-> +			gpio-ranges = <&pmx0 0 54 8>;
-> +			interrupt-controller;
-> +			#interrupt-cells = <2>;
-> +			clocks = <&crg_ctrl HI3660_PCLK_GPIO7>;
-> +			clock-names = "apb_pclk";
-> +			status = "ok";
-> +		};
-> +
-> +		gpio8: gpio@e8a13000 {
-> +			compatible = "arm,pl061", "arm,primecell";
-> +			reg = <0 0xe8a13000 0 0x1000>;
-> +			interrupts = <GIC_SPI 92 IRQ_TYPE_LEVEL_HIGH>;
-> +			gpio-controller;
-> +			#gpio-cells = <2>;
-> +			gpio-ranges = <&pmx0 0 62 8>;
-> +			interrupt-controller;
-> +			#interrupt-cells = <2>;
-> +			clocks = <&crg_ctrl HI3660_PCLK_GPIO8>;
-> +			clock-names = "apb_pclk";
-> +			status = "ok";
-> +		};
-> +
-> +		gpio9: gpio@e8a14000 {
-> +			compatible = "arm,pl061", "arm,primecell";
-> +			reg = <0 0xe8a14000 0 0x1000>;
-> +			interrupts = <GIC_SPI 93 IRQ_TYPE_LEVEL_HIGH>;
-> +			gpio-controller;
-> +			#gpio-cells = <2>;
-> +			gpio-ranges = <&pmx0 0 70 8>;
-> +			interrupt-controller;
-> +			#interrupt-cells = <2>;
-> +			clocks = <&crg_ctrl HI3660_PCLK_GPIO9>;
-> +			clock-names = "apb_pclk";
-> +			status = "ok";
-> +		};
-> +
-> +		gpio10: gpio@e8a15000 {
-> +			compatible = "arm,pl061", "arm,primecell";
-> +			reg = <0 0xe8a15000 0 0x1000>;
-> +			interrupts = <GIC_SPI 94 IRQ_TYPE_LEVEL_HIGH>;
-> +			gpio-controller;
-> +			#gpio-cells = <2>;
-> +			gpio-ranges = <&pmx0 0 78 8>;
-> +			interrupt-controller;
-> +			#interrupt-cells = <2>;
-> +			clocks = <&crg_ctrl HI3660_PCLK_GPIO10>;
-> +			clock-names = "apb_pclk";
-> +			status = "ok";
-> +		};
-> +
-> +		gpio11: gpio@e8a16000 {
-> +			compatible = "arm,pl061", "arm,primecell";
-> +			reg = <0 0xe8a16000 0 0x1000>;
-> +			interrupts = <GIC_SPI 95 IRQ_TYPE_LEVEL_HIGH>;
-> +			gpio-controller;
-> +			#gpio-cells = <2>;
-> +			gpio-ranges = <&pmx0 0 86 8>;
-> +			interrupt-controller;
-> +			#interrupt-cells = <2>;
-> +			clocks = <&crg_ctrl HI3660_PCLK_GPIO11>;
-> +			clock-names = "apb_pclk";
-> +			status = "ok";
-> +		};
-> +
-> +		gpio12: gpio@e8a17000 {
-> +			compatible = "arm,pl061", "arm,primecell";
-> +			reg = <0 0xe8a17000 0 0x1000>;
-> +			interrupts = <GIC_SPI 96 IRQ_TYPE_LEVEL_HIGH>;
-> +			gpio-controller;
-> +			#gpio-cells = <2>;
-> +			gpio-ranges = <&pmx0 0 94 3 &pmx0 7 101 1>;
-> +			interrupt-controller;
-> +			#interrupt-cells = <2>;
-> +			clocks = <&crg_ctrl HI3660_PCLK_GPIO12>;
-> +			clock-names = "apb_pclk";
-> +			status = "ok";
-> +		};
-> +
-> +		gpio13: gpio@e8a18000 {
-> +			compatible = "arm,pl061", "arm,primecell";
-> +			reg = <0 0xe8a18000 0 0x1000>;
-> +			interrupts = <GIC_SPI 97 IRQ_TYPE_LEVEL_HIGH>;
-> +			gpio-controller;
-> +			#gpio-cells = <2>;
-> +			gpio-ranges = <&pmx0 0 102 8>;
-> +			interrupt-controller;
-> +			#interrupt-cells = <2>;
-> +			clocks = <&crg_ctrl HI3660_PCLK_GPIO13>;
-> +			clock-names = "apb_pclk";
-> +			status = "ok";
-> +		};
-> +
-> +		gpio14: gpio@e8a19000 {
-> +			compatible = "arm,pl061", "arm,primecell";
-> +			reg = <0 0xe8a19000 0 0x1000>;
-> +			interrupts = <GIC_SPI 98 IRQ_TYPE_LEVEL_HIGH>;
-> +			gpio-controller;
-> +			#gpio-cells = <2>;
-> +			gpio-ranges = <&pmx0 0 110 8>;
-> +			interrupt-controller;
-> +			#interrupt-cells = <2>;
-> +			clocks = <&crg_ctrl HI3660_PCLK_GPIO14>;
-> +			clock-names = "apb_pclk";
-> +			status = "ok";
-> +		};
-> +
-> +		gpio15: gpio@e8a1a000 {
-> +			compatible = "arm,pl061", "arm,primecell";
-> +			reg = <0 0xe8a1a000 0 0x1000>;
-> +			interrupts = <GIC_SPI 99 IRQ_TYPE_LEVEL_HIGH>;
-> +			gpio-controller;
-> +			#gpio-cells = <2>;
-> +			gpio-ranges = <&pmx0 0 118 6>;
-> +			interrupt-controller;
-> +			#interrupt-cells = <2>;
-> +			clocks = <&crg_ctrl HI3660_PCLK_GPIO15>;
-> +			clock-names = "apb_pclk";
-> +			status = "ok";
-> +		};
-> +
-> +		gpio16: gpio@e8a1b000 {
-> +			compatible = "arm,pl061", "arm,primecell";
-> +			reg = <0 0xe8a1b000 0 0x1000>;
-> +			interrupts = <GIC_SPI 100 IRQ_TYPE_LEVEL_HIGH>;
-> +			gpio-controller;
-> +			#gpio-cells = <2>;
-> +			interrupt-controller;
-> +			#interrupt-cells = <2>;
-> +			clocks = <&crg_ctrl HI3660_PCLK_GPIO16>;
-> +			clock-names = "apb_pclk";
-> +			status = "ok";
-> +		};
-> +
-> +		gpio17: gpio@e8a1c000 {
-> +			compatible = "arm,pl061", "arm,primecell";
-> +			reg = <0 0xe8a1c000 0 0x1000>;
-> +			interrupts = <GIC_SPI 101 IRQ_TYPE_LEVEL_HIGH>;
-> +			gpio-controller;
-> +			#gpio-cells = <2>;
-> +			interrupt-controller;
-> +			#interrupt-cells = <2>;
-> +			clocks = <&crg_ctrl HI3660_PCLK_GPIO17>;
-> +			clock-names = "apb_pclk";
-> +			status = "ok";
-> +		};
-> +
-> +		gpio18: gpio@ff3b4000 {
-> +			compatible = "arm,pl061", "arm,primecell";
-> +			reg = <0 0xff3b4000 0 0x1000>;
-> +			interrupts = <GIC_SPI 102 IRQ_TYPE_LEVEL_HIGH>;
-> +			gpio-controller;
-> +			#gpio-cells = <2>;
-> +			gpio-ranges = <&pmx2 0 0 8>;
-> +			interrupt-controller;
-> +			#interrupt-cells = <2>;
-> +			clocks = <&crg_ctrl HI3660_PCLK_GPIO18>;
-> +			clock-names = "apb_pclk";
-> +			status = "ok";
-> +		};
-> +
-> +		gpio19: gpio@ff3b5000 {
-> +			compatible = "arm,pl061", "arm,primecell";
-> +			reg = <0 0xff3b5000 0 0x1000>;
-> +			interrupts = <GIC_SPI 103 IRQ_TYPE_LEVEL_HIGH>;
-> +			gpio-controller;
-> +			#gpio-cells = <2>;
-> +			gpio-ranges = <&pmx2 0 8 4>;
-> +			interrupt-controller;
-> +			#interrupt-cells = <2>;
-> +			clocks = <&crg_ctrl HI3660_PCLK_GPIO19>;
-> +			clock-names = "apb_pclk";
-> +			status = "ok";
-> +		};
-> +
-> +		gpio20: gpio@e8a1f000 {
-> +			compatible = "arm,pl061", "arm,primecell";
-> +			reg = <0 0xe8a1f000 0 0x1000>;
-> +			interrupts = <GIC_SPI 104 IRQ_TYPE_LEVEL_HIGH>;
-> +			gpio-controller;
-> +			#gpio-cells = <2>;
-> +			gpio-ranges = <&pmx1 0 0 6>;
-> +			interrupt-controller;
-> +			#interrupt-cells = <2>;
-> +			clocks = <&crg_ctrl HI3660_PCLK_GPIO20>;
-> +			clock-names = "apb_pclk";
-> +			status = "ok";
-> +		};
-> +
-> +		gpio21: gpio@e8a20000 {
-> +			compatible = "arm,pl061", "arm,primecell";
-> +			reg = <0 0xe8a20000 0 0x1000>;
-> +			interrupts = <GIC_SPI 105 IRQ_TYPE_LEVEL_HIGH>;
-> +			gpio-controller;
-> +			#gpio-cells = <2>;
-> +			interrupt-controller;
-> +			#interrupt-cells = <2>;
-> +			gpio-ranges = <&pmx3 0 0 6>;
-> +			clocks = <&crg_ctrl HI3660_PCLK_GPIO21>;
-> +			clock-names = "apb_pclk";
-> +			status = "ok";
-> +		};
-> +
-> +		gpio22: gpio@fff0b000 {
-> +			compatible = "arm,pl061", "arm,primecell";
-> +			reg = <0 0xfff0b000 0 0x1000>;
-> +			interrupts = <GIC_SPI 106 IRQ_TYPE_LEVEL_HIGH>;
-> +			gpio-controller;
-> +			#gpio-cells = <2>;
-> +			/* GPIO176 */
-> +			gpio-ranges = <&pmx4 2 0 6>;
-> +			interrupt-controller;
-> +			#interrupt-cells = <2>;
-> +			clocks = <&sctrl HI3660_PCLK_AO_GPIO0>;
-> +			clock-names = "apb_pclk";
-> +			status = "ok";
-> +		};
-> +
-> +		gpio23: gpio@fff0c000 {
-> +			compatible = "arm,pl061", "arm,primecell";
-> +			reg = <0 0xfff0c000 0 0x1000>;
-> +			interrupts = <GIC_SPI 107 IRQ_TYPE_LEVEL_HIGH>;
-> +			gpio-controller;
-> +			#gpio-cells = <2>;
-> +			/* GPIO184 */
-> +			gpio-ranges = <&pmx4 0 6 7>;
-> +			interrupt-controller;
-> +			#interrupt-cells = <2>;
-> +			clocks = <&sctrl HI3660_PCLK_AO_GPIO1>;
-> +			clock-names = "apb_pclk";
-> +			status = "ok";
-> +		};
-> +
-> +		 gpio24: gpio@fff0d000 {
-
-extra space     ^               
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/mtd/microchip,mchp23k256.txt b/Documentation/devicetree/bindings/mtd/microchip,mchp23k256.txt
+index 25e5ad38b0f0..7328eb92a03c 100644
+--- a/Documentation/devicetree/bindings/mtd/microchip,mchp23k256.txt
++++ b/Documentation/devicetree/bindings/mtd/microchip,mchp23k256.txt
+@@ -3,7 +3,7 @@
+ Required properties:
+ - #address-cells, #size-cells : Must be present if the device has sub-nodes
+   representing partitions.
+-- compatible : Must be "microchip,mchp23k256"
++- compatible : Must be one of "microchip,mchp23k256" or "microchip,mchp23lcv1024"
+ - reg : Chip-Select number
+ - spi-max-frequency : Maximum frequency of the SPI bus the chip can operate at
+ 
+diff --git a/drivers/mtd/devices/mchp23k256.c b/drivers/mtd/devices/mchp23k256.c
+index 3e5feb454644..72ecf374a06a 100644
+--- a/drivers/mtd/devices/mchp23k256.c
++++ b/drivers/mtd/devices/mchp23k256.c
+@@ -21,10 +21,14 @@
+ #include <linux/spi/spi.h>
+ #include <linux/of_device.h>
+ 
++#define MAX_CMD_SIZE		4
++enum chips { mchp23k256, mchp23lcv1024 };
++
+ struct mchp23k256_flash {
+ 	struct spi_device	*spi;
+ 	struct mutex		lock;
+ 	struct mtd_info		mtd;
++	u8			addr_width;
+ };
+ 
+ #define MCHP23K256_CMD_WRITE_STATUS	0x01
+@@ -34,22 +38,35 @@ struct mchp23k256_flash {
+ 
+ #define to_mchp23k256_flash(x) container_of(x, struct mchp23k256_flash, mtd)
+ 
++static void mchp23k256_addr2cmd(struct mchp23k256_flash *flash,
++				unsigned int addr, u8 *cmd)
++{
++	/* cmd[0] has opcode */
++	cmd[1] = addr >> (flash->addr_width * 8 -  8);
++	cmd[2] = addr >> (flash->addr_width * 8 - 16);
++	cmd[3] = addr >> (flash->addr_width * 8 - 24);
++}
++
++static int mchp23k256_cmdsz(struct mchp23k256_flash *flash)
++{
++	return 1 + flash->addr_width;
++}
++
+ static int mchp23k256_write(struct mtd_info *mtd, loff_t to, size_t len,
+ 			    size_t *retlen, const unsigned char *buf)
+ {
+ 	struct mchp23k256_flash *flash = to_mchp23k256_flash(mtd);
+ 	struct spi_transfer transfer[2] = {};
+ 	struct spi_message message;
+-	unsigned char command[3];
++	unsigned char command[MAX_CMD_SIZE];
+ 
+ 	spi_message_init(&message);
+ 
+ 	command[0] = MCHP23K256_CMD_WRITE;
+-	command[1] = to >> 8;
+-	command[2] = to;
++	mchp23k256_addr2cmd(flash, to, command);
+ 
+ 	transfer[0].tx_buf = command;
+-	transfer[0].len = sizeof(command);
++	transfer[0].len = mchp23k256_cmdsz(flash);
+ 	spi_message_add_tail(&transfer[0], &message);
+ 
+ 	transfer[1].tx_buf = buf;
+@@ -73,17 +90,16 @@ static int mchp23k256_read(struct mtd_info *mtd, loff_t from, size_t len,
+ 	struct mchp23k256_flash *flash = to_mchp23k256_flash(mtd);
+ 	struct spi_transfer transfer[2] = {};
+ 	struct spi_message message;
+-	unsigned char command[3];
++	unsigned char command[MAX_CMD_SIZE];
+ 
+ 	spi_message_init(&message);
+ 
+ 	memset(&transfer, 0, sizeof(transfer));
+ 	command[0] = MCHP23K256_CMD_READ;
+-	command[1] = from >> 8;
+-	command[2] = from;
++	mchp23k256_addr2cmd(flash, from, command);
+ 
+ 	transfer[0].tx_buf = command;
+-	transfer[0].len = sizeof(command);
++	transfer[0].len = mchp23k256_cmdsz(flash);
+ 	spi_message_add_tail(&transfer[0], &message);
+ 
+ 	transfer[1].rx_buf = buf;
+@@ -128,6 +144,7 @@ static int mchp23k256_probe(struct spi_device *spi)
+ 	struct mchp23k256_flash *flash;
+ 	struct flash_platform_data *data;
+ 	int err;
++	enum chips chip;
+ 
+ 	flash = devm_kzalloc(&spi->dev, sizeof(*flash), GFP_KERNEL);
+ 	if (!flash)
+@@ -143,15 +160,30 @@ static int mchp23k256_probe(struct spi_device *spi)
+ 
+ 	data = dev_get_platdata(&spi->dev);
+ 
++	if (spi->dev.of_node)
++		chip = (enum chips)of_device_get_match_data(&spi->dev);
++	else
++		chip = mchp23k256;
++
+ 	mtd_set_of_node(&flash->mtd, spi->dev.of_node);
+ 	flash->mtd.dev.parent	= &spi->dev;
+ 	flash->mtd.type		= MTD_RAM;
+ 	flash->mtd.flags	= MTD_CAP_RAM;
+ 	flash->mtd.writesize	= 1;
+-	flash->mtd.size		= SZ_32K;
+ 	flash->mtd._read	= mchp23k256_read;
+ 	flash->mtd._write	= mchp23k256_write;
+ 
++	switch (chip) {
++	case mchp23lcv1024:
++		flash->mtd.size		= SZ_128K;
++		flash->addr_width	= 3;
++		break;
++	default:
++		flash->mtd.size		= SZ_32K;
++		flash->addr_width	= 2;
++		break;
++	}
++
+ 	err = mtd_device_register(&flash->mtd, data ? data->parts : NULL,
+ 				  data ? data->nr_parts : 0);
+ 	if (err)
+@@ -168,7 +200,8 @@ static int mchp23k256_remove(struct spi_device *spi)
+ }
+ 
+ static const struct of_device_id mchp23k256_of_table[] = {
+-	{ .compatible = "microchip,mchp23k256" },
++	{ .compatible = "microchip,mchp23k256", .data = (void *)mchp23k256 },
++	{ .compatible = "microchip,mchp23lcv1024", .data = (void *)mchp23lcv1024 },
+ 	{}
+ };
+ MODULE_DEVICE_TABLE(of, mchp23k256_of_table);
+-- 
+2.11.0.24.ge6920cf
