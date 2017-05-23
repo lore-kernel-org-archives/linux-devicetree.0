@@ -1,25 +1,13 @@
 From: Javier Martinez Canillas <javier@dowhile0.org>
-Subject: [PATCH v5 12/20] ARM: dts: uniphier: Add generic compatible string
- for I2C EEPROM
-Date: Tue, 23 May 2017 15:34:40 +0200
-Message-ID: <20170523133448.4794-13-javier@dowhile0.org>
+Subject: [PATCH v5 14/20] arm64: dts: ls1043a: Add generic compatible string for I2C EEPROM
+Date: Tue, 23 May 2017 15:34:42 +0200
+Message-ID: <20170523133448.4794-15-javier@dowhile0.org>
 References: <20170523133448.4794-1-javier@dowhile0.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170523133448.4794-1-javier@dowhile0.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, Wolfram Sang <wsa@the-dreams.de>, Russell King <linux@armlinux.org.uk>, Masahiro Yamada <yamada.masahiro@socionext.com>, Rob Herring <robh+dt@kernel.org>, Javier Martinez Canillas <javier@dowhile0.org>, linux-arm-kernel@lists.infradead.org
+Cc: Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh@kernel.org>, Javier Martinez Canillas <javier@dowhile0.org>, devicetree@vger.kernel.org, Stuart Yoder <stuart.yoder@nxp.com>, Li Yang <leoyang.li@nxp.com>, Rob Herring <robh+dt@kernel.org>, Hongtao Jia <hongtao.jia@nxp.com>, linux-arm-kernel@lists.infradead.org, Will Deacon <will.deacon@arm.com>, Herbert Xu <herbert@gondor.apana.org.au>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Shawn Guo <shawnguo@kernel.org>, =?UTF-8?q?Horia=20Geant=C4=83?= <horia.geanta@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
 The at24 driver allows to register I2C EEPROM chips using different vendor
@@ -37,9 +25,7 @@ Signed-off-by: Javier Martinez Canillas <javier@dowhile0.org>
 
 ---
 
-Changes in v5:
-- Only replace atmel variant but keep other EEPROM vendors (Geert Uytterhoeven).
-
+Changes in v5: None
 Changes in v4:
 - Only use the atmel manufacturer in the compatible string instead of
   keeping the deprecated ones (Rob Herring).
@@ -47,49 +33,26 @@ Changes in v4:
 Changes in v3: None
 Changes in v2: None
 
- arch/arm/boot/dts/uniphier-pro4-ace.dts    | 2 +-
- arch/arm/boot/dts/uniphier-pro4-sanji.dts  | 2 +-
- arch/arm/boot/dts/uniphier-pxs2-gentil.dts | 2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
+ arch/arm64/boot/dts/freescale/fsl-ls1043a-rdb.dts | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/uniphier-pro4-ace.dts b/arch/arm/boot/dts/uniphier-pro4-ace.dts
-index fefc89149234..b9a4919d7c93 100644
---- a/arch/arm/boot/dts/uniphier-pro4-ace.dts
-+++ b/arch/arm/boot/dts/uniphier-pro4-ace.dts
-@@ -88,7 +88,7 @@
- 	status = "okay";
- 
- 	eeprom@54 {
--		compatible = "st,24c64";
-+		compatible = "st,24c64", "atmel,24c64";
- 		reg = <0x54>;
- 		pagesize = <32>;
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1043a-rdb.dts b/arch/arm64/boot/dts/freescale/fsl-ls1043a-rdb.dts
+index d64370ed0738..0a3853240c8b 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1043a-rdb.dts
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1043a-rdb.dts
+@@ -75,11 +75,11 @@
+ 		reg = <0x4c>;
  	};
-diff --git a/arch/arm/boot/dts/uniphier-pro4-sanji.dts b/arch/arm/boot/dts/uniphier-pro4-sanji.dts
-index 6c63c8bad825..3950baa8d55d 100644
---- a/arch/arm/boot/dts/uniphier-pro4-sanji.dts
-+++ b/arch/arm/boot/dts/uniphier-pro4-sanji.dts
-@@ -83,7 +83,7 @@
- 	status = "okay";
- 
- 	eeprom@54 {
--		compatible = "st,24c64";
-+		compatible = "st,24c64", "atmel,24c64";
- 		reg = <0x54>;
- 		pagesize = <32>;
+ 	eeprom@52 {
+-		compatible = "at24,24c512";
++		compatible = "atmel,24c512";
+ 		reg = <0x52>;
  	};
-diff --git a/arch/arm/boot/dts/uniphier-pxs2-gentil.dts b/arch/arm/boot/dts/uniphier-pxs2-gentil.dts
-index cccc86658d20..afba587ffbbc 100644
---- a/arch/arm/boot/dts/uniphier-pxs2-gentil.dts
-+++ b/arch/arm/boot/dts/uniphier-pxs2-gentil.dts
-@@ -80,7 +80,7 @@
- 	status = "okay";
- 
- 	eeprom@54 {
--		compatible = "st,24c64";
-+		compatible = "st,24c64", "atmel,24c64";
- 		reg = <0x54>;
- 		pagesize = <32>;
+ 	eeprom@53 {
+-		compatible = "at24,24c512";
++		compatible = "atmel,24c512";
+ 		reg = <0x53>;
  	};
+ 	rtc@68 {
 -- 
 2.9.3
