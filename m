@@ -1,34 +1,37 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] dt-bindings: pinctrl: fix bias-pull,up typo
-Date: Mon, 22 May 2017 19:25:46 -0500
-Message-ID: <20170523002546.opon337heukppq2s@rob-hp-laptop>
-References: <20170516201120.32145-1-chunkeey@googlemail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH] crypto: stm32 - Add CRC32 support for STM32F4XX
+Date: Mon, 22 May 2017 19:29:48 -0500
+Message-ID: <20170523002948.k4fh24rzccix2bsn@rob-hp-laptop>
+References: <1494969530-91589-1-git-send-email-cosardindar@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-crypto-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170516201120.32145-1-chunkeey-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Christian Lamparter <chunkeey-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+In-Reply-To: <1494969530-91589-1-git-send-email-cosardindar@gmail.com>
+Sender: linux-crypto-owner@vger.kernel.org
+To: Cosar Dindar <cosardindar@gmail.com>
+Cc: herbert@gondor.apana.org.au, davem@davemloft.net, mark.rutland@arm.com, mcoquelin.stm32@gmail.com, alexandre.torgue@st.com, linux@armlinux.org.uk, weiyongjun1@huawei.com, fabien.dessenne@st.com, linux-crypto@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 16, 2017 at 10:11:20PM +0200, Christian Lamparter wrote:
-> This patch fixes a shared typo in several qcom pinctrl dt-bindings.
+On Wed, May 17, 2017 at 12:18:50AM +0300, Cosar Dindar wrote:
+> This patch series add hardware CRC32 ("Ethernet") calculation support
+> for STMicroelectronics STM32F4XX series devices.
 > 
-> Signed-off-by: Christian Lamparter <chunkeey-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+> As an hardware limitation polynomial and key setting are not supported
+> as they are fixed as 0x4C11DB7 (poly) and 0xFFFFFFFF (key).
+> 
+> CRC32C Castagnoli algorithm is not supported also.
+> Module is tested on STM32F429-disco board with crypto testmgr using
+> cases within the key 0xFFFFFFFF.
+> 
+> Signed-off-by: Cosar Dindar <cosardindar@gmail.com>
 > ---
->  Documentation/devicetree/bindings/pinctrl/qcom,apq8064-pinctrl.txt | 2 +-
->  Documentation/devicetree/bindings/pinctrl/qcom,ipq4019-pinctrl.txt | 2 +-
->  Documentation/devicetree/bindings/pinctrl/qcom,ipq8064-pinctrl.txt | 2 +-
->  Documentation/devicetree/bindings/pinctrl/qcom,msm8660-pinctrl.txt | 2 +-
->  Documentation/devicetree/bindings/pinctrl/qcom,msm8974-pinctrl.txt | 2 +-
->  5 files changed, 5 insertions(+), 5 deletions(-)
+>  .../devicetree/bindings/crypto/st,stm32-crc.txt    |  4 +-
+>  arch/arm/boot/dts/stm32429i-eval.dts               |  4 ++
+>  arch/arm/boot/dts/stm32f429-disco.dts              |  4 ++
+>  arch/arm/boot/dts/stm32f429.dtsi                   |  7 +++
+>  arch/arm/boot/dts/stm32f469-disco.dts              |  4 ++
+>  drivers/crypto/stm32/stm32_crc32.c                 | 68 ++++++++++++++++++----
+>  6 files changed, 79 insertions(+), 12 deletions(-)
 
-Applied, thanks.
-
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Acked-by: Rob Herring <robh@kernel.org>
