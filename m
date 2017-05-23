@@ -1,25 +1,13 @@
-From: Javier Martinez Canillas <javier@dowhile0.org>
-Subject: [PATCH v5 09/20] ARM: dts: r7s72100: Add generic compatible string
- for I2C EEPROM
-Date: Tue, 23 May 2017 15:34:37 +0200
-Message-ID: <20170523133448.4794-10-javier@dowhile0.org>
+From: Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>
+Subject: [PATCH v5 16/20] powerpc/5200: Add generic compatible string for I2C EEPROM
+Date: Tue, 23 May 2017 15:34:44 +0200
+Message-ID: <20170523133448.4794-17-javier@dowhile0.org>
 References: <20170523133448.4794-1-javier@dowhile0.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170523133448.4794-1-javier@dowhile0.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-kernel@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, Wolfram Sang <wsa@the-dreams.de>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, linux-renesas-soc@vger.kernel.org, Simon Horman <horms@verge.net.au>, Javier Martinez Canillas <javier@dowhile0.org>, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170523133448.4794-1-javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Paul Mackerras <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 The at24 driver allows to register I2C EEPROM chips using different vendor
@@ -33,8 +21,7 @@ using the "atmel" vendor as a generic fallback for compatible I2C devices.
 So add this generic fallback to the device node compatible string to make
 the device to match the driver using the OF device ID table.
 
-Signed-off-by: Javier Martinez Canillas <javier@dowhile0.org>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>
 
 ---
 
@@ -45,26 +32,57 @@ Changes in v4:
 - Only use the atmel manufacturer in the compatible string instead of
   keeping the deprecated ones (Rob Herring).
 
-Changes in v3:
-- Add Geert Uytterhoeven reviewed-by tag.
-
+Changes in v3: None
 Changes in v2: None
 
- arch/arm/boot/dts/r7s72100-genmai.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/powerpc/boot/dts/digsy_mtc.dts | 2 +-
+ arch/powerpc/boot/dts/pcm030.dts    | 2 +-
+ arch/powerpc/boot/dts/pcm032.dts    | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm/boot/dts/r7s72100-genmai.dts b/arch/arm/boot/dts/r7s72100-genmai.dts
-index 52a7b586bac7..b0db621ff176 100644
---- a/arch/arm/boot/dts/r7s72100-genmai.dts
-+++ b/arch/arm/boot/dts/r7s72100-genmai.dts
-@@ -57,7 +57,7 @@
- 	clock-frequency = <400000>;
+diff --git a/arch/powerpc/boot/dts/digsy_mtc.dts b/arch/powerpc/boot/dts/digsy_mtc.dts
+index 955bff629df3..c280e75c86bf 100644
+--- a/arch/powerpc/boot/dts/digsy_mtc.dts
++++ b/arch/powerpc/boot/dts/digsy_mtc.dts
+@@ -73,7 +73,7 @@
  
- 	eeprom@50 {
--		compatible = "renesas,24c128";
-+		compatible = "renesas,24c128", "atmel,24c128";
- 		reg = <0x50>;
- 		pagesize = <64>;
- 	};
+ 		i2c@3d00 {
+ 			eeprom@50 {
+-				compatible = "at,24c08";
++				compatible = "atmel,24c08";
+ 				reg = <0x50>;
+ 			};
+ 
+diff --git a/arch/powerpc/boot/dts/pcm030.dts b/arch/powerpc/boot/dts/pcm030.dts
+index 192e66af0001..836e47cc4bed 100644
+--- a/arch/powerpc/boot/dts/pcm030.dts
++++ b/arch/powerpc/boot/dts/pcm030.dts
+@@ -71,7 +71,7 @@
+ 				reg = <0x51>;
+ 			};
+ 			eeprom@52 {
+-				compatible = "catalyst,24c32";
++				compatible = "catalyst,24c32", "atmel,24c32";
+ 				reg = <0x52>;
+ 				pagesize = <32>;
+ 			};
+diff --git a/arch/powerpc/boot/dts/pcm032.dts b/arch/powerpc/boot/dts/pcm032.dts
+index 96b139bf50e9..576249bf2fb9 100644
+--- a/arch/powerpc/boot/dts/pcm032.dts
++++ b/arch/powerpc/boot/dts/pcm032.dts
+@@ -75,7 +75,7 @@
+ 				reg = <0x51>;
+ 			};
+ 			eeprom@52 {
+-				compatible = "catalyst,24c32";
++				compatible = "catalyst,24c32", "atmel,24c32";
+ 				reg = <0x52>;
+ 				pagesize = <32>;
+ 			};
 -- 
 2.9.3
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
