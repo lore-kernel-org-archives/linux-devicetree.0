@@ -1,124 +1,93 @@
-From: Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
-Subject: [PATCH] arm: dts: r7s72100: Add support for GR-Peach
-Date: Tue, 23 May 2017 11:47:14 +0200
-Message-ID: <1495532834-25670-1-git-send-email-jacopo+renesas@jmondi.org>
+From: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH v2] net: fec: add post PHY reset delay DT property
+Date: Tue, 23 May 2017 11:48:08 +0200
+Message-ID: <20170523094808.11102-1-quentin.schulz@free-electrons.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org
-Cc: linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: fugang.duan-3arQi8VN3Tc@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
+Cc: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add device tree source for Renesas GR-Peach board.
-GR-Peach is an RZ/A1H based board with 10MB of on-chip SRAM and 8MB
-QSPI flash storage.
-Add support for the board, and create a 2MB partition to use as rootfs.
+Some PHY require to wait for a bit after the reset GPIO has been
+toggled. This adds support for the DT property `phy-reset-post-delay`
+which gives the delay in milliseconds to wait after reset.
 
-Signed-off-by: Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
+If the DT property is not given, no delay is observed. Post reset delay
+greater than 1000ms are invalid.
+
+Signed-off-by: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 ---
- Documentation/devicetree/bindings/arm/shmobile.txt |  2 +
- arch/arm/boot/dts/Makefile                         |  1 +
- arch/arm/boot/dts/r7s72100-grpeach.dts             | 65 ++++++++++++++++++++++
- 3 files changed, 68 insertions(+)
- create mode 100644 arch/arm/boot/dts/r7s72100-grpeach.dts
 
-diff --git a/Documentation/devicetree/bindings/arm/shmobile.txt b/Documentation/devicetree/bindings/arm/shmobile.txt
-index c950263..1199e48 100644
---- a/Documentation/devicetree/bindings/arm/shmobile.txt
-+++ b/Documentation/devicetree/bindings/arm/shmobile.txt
-@@ -51,6 +51,8 @@ Boards:
-     compatible = "renesas,bockw", "renesas,r8a7778"
-   - Genmai (RTK772100BC00000BR)
-     compatible = "renesas,genmai", "renesas,r7s72100"
-+  - GR-Peach (RTK772100BC00000BR)
-+    compatible = "renesas,grpeach", "renesas,r7s72100"
-   - Gose (RTP0RC7793SEB00010S)
-     compatible = "renesas,gose", "renesas,r8a7793"
-   - H3ULCB (R-Car Starter Kit Premier, RTP0RC7795SKB00010S)
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 0118084..b238a3a 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -716,6 +716,7 @@ dtb-$(CONFIG_ARCH_S5PV210) += \
- dtb-$(CONFIG_ARCH_SHMOBILE_MULTI) += \
- 	emev2-kzm9d.dtb \
- 	r7s72100-genmai.dtb \
-+	r7s72100-grpeach.dtb \
- 	r7s72100-rskrza1.dtb \
- 	r8a73a4-ape6evm.dtb \
- 	r8a7740-armadillo800eva.dtb \
-diff --git a/arch/arm/boot/dts/r7s72100-grpeach.dts b/arch/arm/boot/dts/r7s72100-grpeach.dts
-new file mode 100644
-index 0000000..5edd0a5
---- /dev/null
-+++ b/arch/arm/boot/dts/r7s72100-grpeach.dts
-@@ -0,0 +1,65 @@
-+/*
-+ * Device Tree Source for the GRPEACH board
-+ *
-+ * Copyright (C) 2017 Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
-+ * Copyright (C) 2016 Renesas Electronics
-+ *
-+ * This file is licensed under the terms of the GNU General Public License
-+ * version 2.  This program is licensed "as is" without any warranty of any
-+ * kind, whether express or implied.
-+ */
+v2:
+  - return -EINVAL when phy-reset-post-delay is greater than 1000ms
+  instead of defaulting to 1ms,
+  - remove `default to 1ms` when phy-reset-post-delay > 1000Ms from DT
+  binding doc and commit log,
+  - move phy-reset-post-delay property reading before
+  devm_gpio_request_one(),
+
+ Documentation/devicetree/bindings/net/fsl-fec.txt |  4 ++++
+ drivers/net/ethernet/freescale/fec_main.c         | 16 +++++++++++++++-
+ 2 files changed, 19 insertions(+), 1 deletion(-)
+
+diff --git a/Documentation/devicetree/bindings/net/fsl-fec.txt b/Documentation/devicetree/bindings/net/fsl-fec.txt
+index a1e3693cca16..6f55bdd52f8a 100644
+--- a/Documentation/devicetree/bindings/net/fsl-fec.txt
++++ b/Documentation/devicetree/bindings/net/fsl-fec.txt
+@@ -15,6 +15,10 @@ Optional properties:
+ - phy-reset-active-high : If present then the reset sequence using the GPIO
+   specified in the "phy-reset-gpios" property is reversed (H=reset state,
+   L=operation state).
++- phy-reset-post-delay : Post reset delay in milliseconds. If present then
++  a delay of phy-reset-post-delay milliseconds will be observed after the
++  phy-reset-gpios has been toggled. Can be omitted thus no delay is
++  observed. Delay is in range of 1ms to 1000ms. Other delays are invalid.
+ - phy-supply : regulator that powers the Ethernet PHY.
+ - phy-handle : phandle to the PHY device connected to this device.
+ - fixed-link : Assume a fixed link. See fixed-link.txt in the same directory.
+diff --git a/drivers/net/ethernet/freescale/fec_main.c b/drivers/net/ethernet/freescale/fec_main.c
+index 56a563f90b0b..f7c8649fd28f 100644
+--- a/drivers/net/ethernet/freescale/fec_main.c
++++ b/drivers/net/ethernet/freescale/fec_main.c
+@@ -3192,7 +3192,7 @@ static int fec_reset_phy(struct platform_device *pdev)
+ {
+ 	int err, phy_reset;
+ 	bool active_high = false;
+-	int msec = 1;
++	int msec = 1, phy_post_delay = 0;
+ 	struct device_node *np = pdev->dev.of_node;
+ 
+ 	if (!np)
+@@ -3209,6 +3209,11 @@ static int fec_reset_phy(struct platform_device *pdev)
+ 	else if (!gpio_is_valid(phy_reset))
+ 		return 0;
+ 
++	err = of_property_read_u32(np, "phy-reset-post-delay", &phy_post_delay);
++	/* valid reset duration should be less than 1s */
++	if (!err && phy_post_delay > 1000)
++		return -EINVAL;
 +
-+/dts-v1/;
-+#include "r7s72100.dtsi"
+ 	active_high = of_property_read_bool(np, "phy-reset-active-high");
+ 
+ 	err = devm_gpio_request_one(&pdev->dev, phy_reset,
+@@ -3226,6 +3231,15 @@ static int fec_reset_phy(struct platform_device *pdev)
+ 
+ 	gpio_set_value_cansleep(phy_reset, !active_high);
+ 
++	if (!phy_post_delay)
++		return 0;
 +
-+/ {
-+	model = "GRPEACH";
-+	compatible = "renesas,grpeach", "renesas,r7s72100";
++	if (phy_post_delay > 20)
++		msleep(phy_post_delay);
++	else
++		usleep_range(phy_post_delay * 1000,
++			     phy_post_delay * 1000 + 1000);
 +
-+	aliases {
-+		serial2 = &scif2;
-+	};
-+
-+	chosen {
-+		bootargs = "console=ttySC2,115200 ignore_loglevel rw root=/dev/mtdblock0";
-+	};
-+
-+	memory {
-+		device_type = "memory";
-+		reg = <0x20000000 0x00A00000>;	/* 10Mb @ 0x20000000 */
-+
-+	};
-+
-+	lbsc {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+	};
-+
-+	qspi@18000000 {
-+		compatible = "mtd-rom";
-+		probe-type = "map_rom";
-+		reg = <0x18000000 0x00800000>;   /* 8 MB*/
-+		bank-width = <4>;
-+		device-width = <1>;
-+
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+
-+		rootfs@18600000 {
-+			label = "rootfs";
-+			reg = <0x00600000 0x00200000>; /* 2MB @ 0x18600000 */
-+		};
-+	};
-+};
-+
-+&extal_clk {
-+	clock-frequency = <13330000>;
-+};
-+
-+&usb_x1_clk {
-+	clock-frequency = <48000000>;
-+};
-+
-+&scif2 {
-+	status = "okay";
-+};
+ 	return 0;
+ }
+ #else /* CONFIG_OF */
 -- 
-2.7.4
+2.11.0
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
