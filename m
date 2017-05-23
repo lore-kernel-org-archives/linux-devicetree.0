@@ -1,106 +1,52 @@
-From: Andrzej Hajda <a.hajda@samsung.com>
-Subject: Re: [PATCH v2 1/5] drm/stm: ltdc: Add bridge support
-Date: Tue, 23 May 2017 11:11:34 +0900
-Message-ID: <c9b45faa-89f9-c31c-a5c4-2780fdb79d62@samsung.com>
-References: <1495207218-11372-1-git-send-email-philippe.cornu@st.com>
- <CGME20170520011404epcas1p3bfdaa032f246a5ece9c7b510af89e7fd@epcas1p3.samsung.com>
- <1495207218-11372-2-git-send-email-philippe.cornu@st.com>
+From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [RFC 0/3] misc: new serdev based drivers for w2sg00x4 GPS module
+ and w2cbw003 wifi/bluetooth
+Date: Mon, 22 May 2017 21:26:39 -0500
+Message-ID: <CAL_Jsq+fmi2QwE7J8xv47ece1b+jqnOo99NghfjtocnrRvBkPg@mail.gmail.com>
+References: <cover.1495363443.git.hns@goldelico.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-reply-to: <1495207218-11372-2-git-send-email-philippe.cornu@st.com>
-Content-language: pl
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Philippe CORNU <philippe.cornu@st.com>, Alexandre Torgue <alexandre.torgue@st.com>, Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Russell King <linux@armlinux.org.uk>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Yannick Fertre <yannick.fertre@st.com>, Neil Armstrong <narmstrong@baylibre.com>, Archit Taneja <architt@codeaurora.org>, Eric Anholt <eric@anholt.net>, Chris Zhong <zyw@rock-chips.com>
-Cc: devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, Fabien Dessenne <fabien.dessenne@st.com>, Ludovic Barre <ludovic.barre@st.com>, Mickael Reulier <mickael.reulier@st.com>, Vincent Abriou <vincent.abriou@st.com>, Gabriel Fernandez <gabriel.fernandez@st.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <cover.1495363443.git.hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "H. Nikolaus Schaller" <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Jarkko Sakkinen <jarkko.sakkinen-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-omap <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Discussions about the Letux Kernel <letux-kernel-S0jZdbWzriLCfDggNXIi3w@public.gmane.org>, kernel-Jl6IXVxNIMRxAtABVqVhTwC/G2K4zDHf@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgUGhpbGlwcGUsCgpXIGRuaXUgMjAxNy0wNS0yMCBvIDAwOjIwLCBQaGlsaXBwZSBDT1JOVSBw
-aXN6ZToKPiBBZGQgdGhlIGJyaWRnZSBzdXBwb3J0LCB1c2VkIGJ5IERTSSBob3N0IGFuZCBIRE1J
-L0xWRFMgYnJpZGdlcy4KPgo+IFNpZ25lZC1vZmYtYnk6IFBoaWxpcHBlIENPUk5VIDxwaGlsaXBw
-ZS5jb3JudUBzdC5jb20+Cj4gLS0tCj4gICBkcml2ZXJzL2dwdS9kcm0vc3RtL2x0ZGMuYyB8IDc0
-ICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKystLS0tLS0tLS0tLS0KPiAgIGRyaXZl
-cnMvZ3B1L2RybS9zdG0vbHRkYy5oIHwgIDEgKwo+ICAgMiBmaWxlcyBjaGFuZ2VkLCA1NiBpbnNl
-cnRpb25zKCspLCAxOSBkZWxldGlvbnMoLSkKPgo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9k
-cm0vc3RtL2x0ZGMuYyBiL2RyaXZlcnMvZ3B1L2RybS9zdG0vbHRkYy5jCj4gaW5kZXggN2IyZDYz
-Yi4uODA5ZTQyMCAxMDA2NDQKPiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0vc3RtL2x0ZGMuYwo+ICsr
-KyBiL2RyaXZlcnMvZ3B1L2RybS9zdG0vbHRkYy5jCj4gQEAgLTg1OCw2ICs4NTgsNDMgQEAgc3Rh
-dGljIHN0cnVjdCBkcm1fZW5jb2RlciAqbHRkY19yZ2JfZW5jb2Rlcl9jcmVhdGUoc3RydWN0IGRy
-bV9kZXZpY2UgKmRkZXYpCj4gICAJcmV0dXJuIGVuY29kZXI7Cj4gICB9Cj4gICAKPiArc3RhdGlj
-IGNvbnN0IHN0cnVjdCBkcm1fZW5jb2Rlcl9mdW5jcyBicmlkZ2VfZW5jb2Rlcl9mdW5jcyA9IHsK
-PiArCS5kZXN0cm95ID0gZHJtX2VuY29kZXJfY2xlYW51cCwKPiArfTsKPiArCj4gK3N0cnVjdCBk
-cm1fZW5jb2RlciAqYnJpZGdlX2VuY29kZXJfY3JlYXRlKHN0cnVjdCBkcm1fZGV2aWNlICpkZGV2
-LAo+ICsJCQkJCSAgc3RydWN0IGRybV9icmlkZ2UgKmJyaWRnZSkKPiArewo+ICsJc3RydWN0IGRy
-bV9lbmNvZGVyICplbmNvZGVyOwo+ICsJaW50IHJldDsKPiArCj4gKwllbmNvZGVyID0gZGV2bV9r
-emFsbG9jKGRkZXYtPmRldiwgc2l6ZW9mKCplbmNvZGVyKSwgR0ZQX0tFUk5FTCk7Cj4gKwlpZiAo
-IWVuY29kZXIpCj4gKwkJcmV0dXJuIE5VTEw7Cj4gKwo+ICsJZW5jb2Rlci0+cG9zc2libGVfY3J0
-Y3MgPSBDUlRDX01BU0s7Cj4gKwllbmNvZGVyLT5wb3NzaWJsZV9jbG9uZXMgPSAwOyAvKiBObyBj
-bG9uaW5nIHN1cHBvcnQgKi8KPiArCj4gKwlkcm1fZW5jb2Rlcl9pbml0KGRkZXYsIGVuY29kZXIs
-ICZicmlkZ2VfZW5jb2Rlcl9mdW5jcywKPiArCQkJIERSTV9NT0RFX0VOQ09ERVJfVE1EUywgTlVM
-TCk7Cj4gKwo+ICsJZHJtX2VuY29kZXJfaGVscGVyX2FkZChlbmNvZGVyLCBOVUxMKTsKPiArCj4g
-KwkvKiBMaW5rIGRybV9icmlkZ2UgdG8gZW5jb2RlciAqLwo+ICsJYnJpZGdlLT5lbmNvZGVyID0g
-ZW5jb2RlcjsKPiArCWVuY29kZXItPmJyaWRnZSA9IGJyaWRnZTsKCkkgdGhpbmsgdGhlIGFib3Zl
-IHR3byBsaW5lcyBhcmUgcmVkdW5kYW50LCBkcm1fYnJpZGdlX2F0dGFjaCBzaG91bGQgZG8gdGhh
-dC4KCj4gKwo+ICsJcmV0ID0gZHJtX2JyaWRnZV9hdHRhY2goZW5jb2RlciwgYnJpZGdlLCBOVUxM
-KTsKPiArCWlmIChyZXQpIHsKPiArCQlkcm1fZW5jb2Rlcl9jbGVhbnVwKGVuY29kZXIpOwo+ICsJ
-CXJldHVybiBOVUxMOwo+ICsJfQo+ICsKPiArCURSTV9ERUJVR19EUklWRVIoIkJyaWRnZSBlbmNv
-ZGVyOiVkIGNyZWF0ZWRcbiIsIGVuY29kZXItPmJhc2UuaWQpOwo+ICsKPiArCXJldHVybiBlbmNv
-ZGVyOwo+ICt9Cj4gKwo+ICAgLyoKPiAgICAqIERSTV9DT05ORUNUT1IKPiAgICAqLwo+IEBAIC05
-NjcsMTIgKzEwMDQsMTMgQEAgc3RhdGljIGludCBsdGRjX2dldF9jYXBzKHN0cnVjdCBkcm1fZGV2
-aWNlICpkZGV2KQo+ICAgCXJldHVybiAwOwo+ICAgfQo+ICAgCj4gLXN0YXRpYyBzdHJ1Y3QgZHJt
-X3BhbmVsICpsdGRjX2dldF9wYW5lbChzdHJ1Y3QgZHJtX2RldmljZSAqZGRldikKPiArc3RhdGlj
-IGludCBsdGRjX3BhcnNlX2R0KHN0cnVjdCBkcm1fZGV2aWNlICpkZGV2KQo+ICAgewo+ICsJc3Ry
-dWN0IGx0ZGNfZGV2aWNlICpsZGV2ID0gZGRldi0+ZGV2X3ByaXZhdGU7Cj4gICAJc3RydWN0IGRl
-dmljZSAqZGV2ID0gZGRldi0+ZGV2Owo+ICAgCXN0cnVjdCBkZXZpY2Vfbm9kZSAqbnAgPSBkZXYt
-Pm9mX25vZGU7Cj4gLQlzdHJ1Y3QgZGV2aWNlX25vZGUgKmVudGl0eSwgKnBvcnQgPSBOVUxMOwo+
-IC0Jc3RydWN0IGRybV9wYW5lbCAqcGFuZWwgPSBOVUxMOwo+ICsJc3RydWN0IGRldmljZV9ub2Rl
-ICplbnRpdHk7Cj4gKwlpbnQgcmV0Owo+ICAgCj4gICAJRFJNX0RFQlVHX0RSSVZFUigiXG4iKTsK
-PiAgIAo+IEBAIC05ODUsMjEgKzEwMjMsMTMgQEAgc3RhdGljIHN0cnVjdCBkcm1fcGFuZWwgKmx0
-ZGNfZ2V0X3BhbmVsKHN0cnVjdCBkcm1fZGV2aWNlICpkZGV2KQo+ICAgCQlpZiAoIW9mX2Rldmlj
-ZV9pc19hdmFpbGFibGUoZW50aXR5KSkKPiAgIAkJCWNvbnRpbnVlOwo+ICAgCj4gLQkJcG9ydCA9
-IG9mX2dyYXBoX2dldF9yZW1vdGVfcG9ydF9wYXJlbnQoZW50aXR5KTsKPiAtCQlpZiAocG9ydCkg
-ewo+IC0JCQlwYW5lbCA9IG9mX2RybV9maW5kX3BhbmVsKHBvcnQpOwo+IC0JCQlvZl9ub2RlX3B1
-dChwb3J0KTsKPiAtCQkJaWYgKHBhbmVsKSB7Cj4gLQkJCQlEUk1fREVCVUdfRFJJVkVSKCJyZW1v
-dGUgcGFuZWwgJXNcbiIsCj4gLQkJCQkJCSBwb3J0LT5mdWxsX25hbWUpOwo+IC0JCQl9IGVsc2Ug
-ewo+IC0JCQkJRFJNX0RFQlVHX0RSSVZFUigicGFuZWwgbWlzc2luZ1xuIik7Cj4gLQkJCQlvZl9u
-b2RlX3B1dChlbnRpdHkpOwo+IC0JCQl9Cj4gLQkJfQo+ICsJCXJldCA9IGRybV9vZl9maW5kX3Bh
-bmVsX29yX2JyaWRnZShucCwgMCwgMCwKPiArCQkJCQkJICAmbGRldi0+cGFuZWwsICZsZGV2LT5i
-cmlkZ2UpOwo+ICsJCWlmIChyZXQpCj4gKwkJCXJldHVybiByZXQ7Cj4gICAJfQo+ICAgCj4gLQly
-ZXR1cm4gcGFuZWw7Cj4gKwlyZXR1cm4gMDsKPiAgIH0KPiAgIAo+ICAgaW50IGx0ZGNfbG9hZChz
-dHJ1Y3QgZHJtX2RldmljZSAqZGRldikKPiBAQCAtMTAxNyw5ICsxMDQ3LDkgQEAgaW50IGx0ZGNf
-bG9hZChzdHJ1Y3QgZHJtX2RldmljZSAqZGRldikKPiAgIAo+ICAgCURSTV9ERUJVR19EUklWRVIo
-IlxuIik7Cj4gICAKPiAtCWxkZXYtPnBhbmVsID0gbHRkY19nZXRfcGFuZWwoZGRldik7Cj4gLQlp
-ZiAoIWxkZXYtPnBhbmVsKQo+IC0JCXJldHVybiAtRVBST0JFX0RFRkVSOwo+ICsJcmV0ID0gbHRk
-Y19wYXJzZV9kdChkZGV2KTsKPiArCWlmIChyZXQpCj4gKwkJcmV0dXJuIHJldDsKPiAgIAo+ICAg
-CXJzdGMgPSBvZl9yZXNldF9jb250cm9sX2dldChucCwgTlVMTCk7Cj4gICAKPiBAQCAtMTA3Nyw2
-ICsxMTA3LDEyIEBAIGludCBsdGRjX2xvYWQoc3RydWN0IGRybV9kZXZpY2UgKmRkZXYpCj4gICAK
-PiAgIAlEUk1fSU5GTygibHRkYyBodyB2ZXJzaW9uIDB4JTA4eCAtIHJlYWR5XG4iLCBsZGV2LT5j
-YXBzLmh3X3ZlcnNpb24pOwo+ICAgCj4gKwlpZiAobGRldi0+YnJpZGdlKSB7Cj4gKwkJZW5jb2Rl
-ciA9IGJyaWRnZV9lbmNvZGVyX2NyZWF0ZShkZGV2LCBsZGV2LT5icmlkZ2UpOwo+ICsJCWlmICgh
-ZW5jb2RlcikKPiArCQkJcmV0dXJuIC1FSU5WQUw7Cj4gKwl9Cj4gKwoKSSBndWVzcyB5b3UgY291
-bGQgYWRkICdlbHNlJyBjbGF1c2UgYWZ0ZXIgY2xvc2luZyBicmFja2V0IC0gbGRldi0+YnJpZGdl
-IAphbmQgbGRldi0+cGFuZWwgYXJlIG11dHVhbGx5IGV4Y2x1c2l2ZSwgYnV0IGl0IGlzIHVwIHRv
-IHlvdS4KCkJlc2lkZSB0aGlzOgpSZXZpZXdlZC1ieTogQW5kcnplaiBIYWpkYSA8YS5oYWpkYUBz
-YW1zdW5nLmNvbT4KClJlZ2FyZHMKQW5kcnplagoKPiAgIAlpZiAobGRldi0+cGFuZWwpIHsKPiAg
-IAkJZW5jb2RlciA9IGx0ZGNfcmdiX2VuY29kZXJfY3JlYXRlKGRkZXYpOwo+ICAgCQlpZiAoIWVu
-Y29kZXIpIHsKPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL3N0bS9sdGRjLmggYi9kcml2
-ZXJzL2dwdS9kcm0vc3RtL2x0ZGMuaAo+IGluZGV4IDU0MjdlZjQuLjAwODNjYWQgMTAwNjQ0Cj4g
-LS0tIGEvZHJpdmVycy9ncHUvZHJtL3N0bS9sdGRjLmgKPiArKysgYi9kcml2ZXJzL2dwdS9kcm0v
-c3RtL2x0ZGMuaAo+IEBAIC0yNSw2ICsyNSw3IEBAIHN0cnVjdCBsdGRjX2RldmljZSB7Cj4gICAJ
-dm9pZCBfX2lvbWVtICpyZWdzOwo+ICAgCXN0cnVjdCBjbGsgKnBpeGVsX2NsazsJLyogbGNkIHBp
-eGVsIGNsb2NrICovCj4gICAJc3RydWN0IGRybV9wYW5lbCAqcGFuZWw7Cj4gKwlzdHJ1Y3QgZHJt
-X2JyaWRnZSAqYnJpZGdlOwo+ICAgCXN0cnVjdCBzcGlubG9jayBsb2NrOwkvKiBwcm90ZWN0aW5n
-IGlycSBzdGF0dXMgcmVnaXN0ZXIgKi8KPiAgIAlzdHJ1Y3QgbHRkY19jYXBzIGNhcHM7Cj4gICAJ
-dTMyIGNsdXRbMjU2XTsJCS8qIGNvbG9yIGxvb2sgdXAgdGFibGUgKi8KCl9fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QK
-ZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9w
-Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+On Sun, May 21, 2017 at 5:44 AM, H. Nikolaus Schaller <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org> wrote:
+> Since our proposed API was not acceptable and the new serdev API has arrived in 4.11 kernels,
+> we finally took the challenge to update the w2sg and w2cbw drivers to use the serdev API.
+>
+> The approach is to write a "man in the middle" driver which is on one side a serdev client
+> which directly controls the UART where the device is connected to and on the other side
+> presents a new tty port so that user-space software can talk to the chips as if they would
+> directly talk to the UART of the SoC (e.g. ttyO1). This is similar to connecting to a remote
+> serial device e.g. through USB (ttyACM) or Bluetooth UART profiles.
+>
+> For example gpsd or hciattach expect a /dev/tty they can control (flow control, baud rate
+> etc.).
+
+I understand from the prior discussion why you want to pass the data
+thru for gps, but why do you need to do that for BT?
+
+> Here is the result of our first hack which is working as a demo on GTA04 devices (and the
+> w2cbw driver can also be used to control a GTA04 variant with WL1837).
+>
+> Since it is just a demo hack, the code is not yet cleaned up, nor does it completely pass
+> check-patch, nor follows 100% the coding styles. And certainly has some bugs.
+>
+> The most significant issue is that calling tty_port_register_device() inside of the
+> serdev probe() function makes the serdev probe() function to be entered a second
+> time. This does not lead to big problems since we currently have minor = 0
+> and this makes the second call assume the device is not available.
+>
+> But we have no idea why this happens and how it can be prevented.
+
+Johan's fixes may help there, but it is intended to be temporary to
+have a separate API for registering tty ports with or without serdev.
+
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
