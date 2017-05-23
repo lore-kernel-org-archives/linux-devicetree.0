@@ -1,51 +1,37 @@
-From: Stefan Wahren <stefan.wahren@i2se.com>
-Subject: Re: [PATCH v6 net-next 17/17] net: qualcomm: add QCA7000 UART
- driver
-Date: Tue, 23 May 2017 21:38:08 +0200 (CEST)
-Message-ID: <1059621060.236992.1495568289051@email.1und1.de>
-References: <1495545173-22150-1-git-send-email-stefan.wahren@i2se.com>
- <1495545173-22150-18-git-send-email-stefan.wahren@i2se.com>
- <053235ad-a963-6a09-ccb0-b643115dee00@gmx.de>
+From: Ralph Sennhauser <ralph.sennhauser@gmail.com>
+Subject: Re: [PATCH 12/13] clk: mvebu: add support for 1866MHz variants
+Date: Tue, 23 May 2017 21:55:12 +0200
+Message-ID: <20170523215512.6112d725@gmail.com>
+References: <20170521124903.11050-1-ralph.sennhauser@gmail.com>
+ <20170521124903.11050-13-ralph.sennhauser@gmail.com>
+ <20170523121514.GS13759@lunn.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <053235ad-a963-6a09-ccb0-b643115dee00@gmx.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "David S. Miller" <davem@davemloft.net>, Lino Sanfilippo <LinoSanfilippo@gmx.de>
-Cc: linux-serial@vger.kernel.org, Jiri Slaby <jslaby@suse.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, Jakub Kicinski <kubakici@wp.pl>, devicetree@vger.kernel.org
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <20170523121514.GS13759@lunn.ch>
+Sender: linux-clk-owner@vger.kernel.org
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: linux-arm-kernel@lists.infradead.org, Gregory Clement <gregory.clement@free-electrons.com>, Imre Kaloz <kaloz@openwrt.org>, Jason Cooper <jason@lakedaemon.net>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On Tue, 23 May 2017 14:15:14 +0200
+Andrew Lunn <andrew@lunn.ch> wrote:
 
-> Lino Sanfilippo <LinoSanfilippo@gmx.de> hat am 23. Mai 2017 um 20:16 geschrieben:
+> On Sun, May 21, 2017 at 02:49:01PM +0200, Ralph Sennhauser wrote:
+> > The Linksys WRT3200ACM CPU is clocked at 1866MHz. Add 1866MHz to
+> > the list of supported CPU frequencies.
+> > 
+> > Noticed by the following warning:
+> > [    0.000000] Selected CPU frequency (16) unsupported  
 > 
-> 
-> Hi,
-> 
-> On 23.05.2017 15:12, Stefan Wahren wrote:
-> 
-> 
-> > +}
-> > +
-> > +static void qca_uart_remove(struct serdev_device *serdev)
-> > +{
-> > +	struct qcauart *qca = serdev_device_get_drvdata(serdev);
-> > +
-> > +	netif_carrier_off(qca->net_dev);
-> > +	cancel_work_sync(&qca->tx_work);
-> > +	unregister_netdev(qca->net_dev);
-> 
-> Note that it is still possible that the tx work is queued right after cancel_work_sync()
-> returned and before the net device is unregistered (and thus the check for the net device
-> being up at the beginning of the tx work function is passed and the function is executed).
-
-Even if the carrier is off? Since i see this pattern in some drivers, can you please point me to a reference like a thread or something else?
-
-> I suggest to avoid this possible race by first unregistering the netdevice and then 
-> calling cancel_work_sync().
-
-What makes you sure that's safe to unregister the netdev while the tx work queue is possibly active?
-
-> Regards,
-> Lino 
+> Are the L2 and DDR clocks using sensible values?
 >
+
+Hi Andrew
+
+As you expected more changes are needed to fully support the new
+CPU frequency. Will send out a V2 later.
+
+Thanks for catching this.
+Ralph
