@@ -1,413 +1,309 @@
-From: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
-Subject: Re: [PATCH v2 09/15] reset: Add a reset controller driver for the
- Lantiq XWAY based SoCs
-Date: Tue, 23 May 2017 23:25:25 +0200
-Message-ID: <2f809dc7-53c6-ebf9-53c1-466bf34e39db@hauke-m.de>
-References: <20170521130918.27446-1-hauke@hauke-m.de>
- <20170521130918.27446-10-hauke@hauke-m.de>
- <1495445613.3558.67.camel@pengutronix.de>
+From: Ralph Sennhauser <ralph.sennhauser@gmail.com>
+Subject: [PATCH v2] ARM: dts: mvebu: add support for Linksys WRT3200ACM (Rango)
+Date: Tue, 23 May 2017 23:29:21 +0200
+Message-ID: <20170523212921.16684-1-ralph.sennhauser@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1495445613.3558.67.camel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org, john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, hauke.mehrtens-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, Gregory Clement <gregory.clement@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Ralph Sennhauser <ralph.sennhauser@gmail.com>, Imre Kaloz <kaloz@openwrt.org>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 05/22/2017 11:33 AM, Philipp Zabel wrote:
-> Hi Hauke,
-> 
-> thank you for the patch. I have a few questions and comments below:
-> 
-> On Sun, 2017-05-21 at 15:09 +0200, Hauke Mehrtens wrote:
->> From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
->>
->> The reset controllers (on xRX200 and newer SoCs have two of them) are
->> provided by the RCU module. This was initially implemented as a simple
->> reset controller. However, the RCU module provides more functionality
->> (ethernet GPHYs, USB PHY, etc.), which makes it a MFD device.
->> The old reset controller driver implementation from
->> arch/mips/lantiq/xway/reset.c did not honor this fact.
-> 
-> Does this driver replace arch/mips/lantiq/xway/reset.c?
+The Linksys WRT3200ACM (Rango) is the latest Armada-385 based router in
+the Linksys WRT AC Series which got released in October 2016.
 
-This serial consists of multiple patches which are all together
-replacing this code. The RCU register block does controls multiple
-blocks in the SoC. One is the reset controller, but also the GPHY FW
-loading and some other unrelated stuff.
+Key differences to the earlier Armada-385 based devices in the series is
+a bigger flash chip, next generation wireless modules (Marvell 88W8964)
+in the mini-pcie slots as well as a Marvell SD8887. Finally the CPU is
+clocked at 1866 GHz by default.
 
->> For some devices the request and the status bits are different.
->>
->> Signed-off-by: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
->> Cc: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
->> ---
->>  .../devicetree/bindings/reset/lantiq,rcu-reset.txt |  30 +++
->>  drivers/reset/Kconfig                              |   6 +
->>  drivers/reset/Makefile                             |   1 +
->>  drivers/reset/reset-lantiq-rcu.c                   | 201 +++++++++++++++++++++
->>  4 files changed, 238 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/reset/lantiq,rcu-reset.txt
->>  create mode 100644 drivers/reset/reset-lantiq-rcu.c
->>
->> diff --git a/Documentation/devicetree/bindings/reset/lantiq,rcu-reset.txt b/Documentation/devicetree/bindings/reset/lantiq,rcu-reset.txt
->> new file mode 100644
->> index 000000000000..ac57c4a1b191
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/reset/lantiq,rcu-reset.txt
->> @@ -0,0 +1,30 @@
->> +Lantiq XWAY SoC RCU reset controller binding
->> +============================================
->> +
->> +This binding describes a reset-controller found on the RCU module on Lantiq
->> +XWAY SoCs.
->> +
->> +
->> +-------------------------------------------------------------------------------
->> +Required properties (controller (parent) node):
->> +- compatible		: Should be "lantiq,rcu-reset"
->> +- lantiq,rcu-syscon	: A phandle to the RCU syscon, the reset register
->> +			  offset and the status register offset.
->> +- #reset-cells		: Specifies the number of cells needed to encode the
->> +			  reset line, should be 2.
->> +			  The first cell takes the reset set bit and the
->> +			  second cell takes the status bit.
->> +
->> +-------------------------------------------------------------------------------
->> +Example for the reset-controllers on the xRX200 SoCs:
->> +	rcu_reset0: rcu_reset {
-> 
-> I'd prefer
-> 	rcu_reset0: reset-controller {
+The file armada-385-linksys-rango.dts is loosely based off of a DTS
+authored by Imre Kaloz.
 
-Ok I will change this
+As Rango is part of the armada-385-linksys family of boards use the
+armada-385-linksys.dtsi as basis. As for functional differences to Imre
+Kaloz dts, the wlan LEDs aren't connected to the expander chip pca9635
+but directly to GPIOs. Then mpp47 controls the USB2.0 port and not the
+USB3.0 port, so use the correct GPIO mpp44 for it. Finally use
+non-removable instead of broken-cd with the sdhci node to avoid polling.
 
->> +		compatible = "lantiq,rcu-reset";
->> +		lantiq,rcu-syscon = <&rcu0 0x10 0x14>;
->> +		#reset-cells = <2>;
->> +	};
->> +
->> +	rcu_reset1: rcu_reset {
->> +		compatible = "lantiq,rcu-reset";
->> +		lantiq,rcu-syscon = <&rcu0 0x48 0x24>;
->> +		#reset-cells = <2>;
->> +	};
-> 
-> I think these should be children of the &rcu0 node. Then you could use
-> the reg property to specify the registers.
+Other changes can be categorized as just cleanup / reorganization due to
+using the armada-385-linksys.dtsi.
 
-The problem is that the RCU registers at offset 0x10 and 0x14 also have
-bits to indicate what caused the last hardware reset and which boot mode
-was selected by putting some pins to low or high level. I want to access
-the same register from the watchdog driver and probably form more
-positions which do not have anything to do with a reset controller.
+URL: https://github.com/openwrt/openwrt/blob/0abc3fa5a996daf7dafdc7794ccfe3fa7e955c5a/target/linux/mvebu/files/arch/arm/boot/dts/armada-385-linksys-rango.dts
+Signed-off-by: Ralph Sennhauser <ralph.sennhauser@gmail.com>
+Signed-off-by: Imre Kaloz <kaloz@openwrt.org>
+---
 
-> Also, have you considered using a binding like the ti-syscon-reset? 
-> That could remove the need for a rcu_reset node per register pair
-> altogether, but might not make sense if the reset registers are densely
-> populated.
+Hi everyone,
 
-Would your suggestion be something like this?
+this patch was part of a series adding support for this device, the
+preparatory patches all got merged already except for "clk: mvebu: add
+support for 1866MHz variants" which isn't strictly required for the
+board to run and was sent to linux-clk for inclusion.
 
-rcu_reset0: reset-controller {
-	compatible = "lantiq,rcu-reset";
-	lantiq,rcu-syscon = <&rcu0>;
-	#reset-cells = <2>;
-	ti,reset-bits = <
-		0x48 0x24
-		0x10 0x14
-	>;
-};
+Thanks
+Ralph
+---
 
-I prefer to have two device tree nodes entries for these two register
-blocks.
+Changes since v1:
 
->> diff --git a/drivers/reset/Kconfig b/drivers/reset/Kconfig
->> index d21c07ccc94e..632e82155590 100644
->> --- a/drivers/reset/Kconfig
->> +++ b/drivers/reset/Kconfig
->> @@ -41,6 +41,12 @@ config RESET_IMX7
->>  	help
->>  	  This enables the reset controller driver for i.MX7 SoCs.
->>  
->> +config RESET_LANTIQ_RCU
->> +	bool "Lantiq XWAY Reset Driver" if COMPILE_TEST
->> +	default SOC_TYPE_XWAY
->> +	help
->> +	  This enables the reset controller driver for Lantiq / Intel XWAY SoCs.
->> +
->>  config RESET_LPC18XX
->>  	bool "LPC18xx/43xx Reset Driver" if COMPILE_TEST
->>  	default ARCH_LPC18XX
->> diff --git a/drivers/reset/Makefile b/drivers/reset/Makefile
->> index 02a74db94339..b19e77847b98 100644
->> --- a/drivers/reset/Makefile
->> +++ b/drivers/reset/Makefile
->> @@ -6,6 +6,7 @@ obj-$(CONFIG_RESET_A10SR) += reset-a10sr.o
->>  obj-$(CONFIG_RESET_ATH79) += reset-ath79.o
->>  obj-$(CONFIG_RESET_BERLIN) += reset-berlin.o
->>  obj-$(CONFIG_RESET_IMX7) += reset-imx7.o
->> +obj-$(CONFIG_RESET_LANTIQ_RCU) += reset-lantiq-rcu.o
->>  obj-$(CONFIG_RESET_LPC18XX) += reset-lpc18xx.o
->>  obj-$(CONFIG_RESET_MESON) += reset-meson.o
->>  obj-$(CONFIG_RESET_OXNAS) += reset-oxnas.o
->> diff --git a/drivers/reset/reset-lantiq-rcu.c b/drivers/reset/reset-lantiq-rcu.c
->> new file mode 100644
->> index 000000000000..f24191beed56
->> --- /dev/null
->> +++ b/drivers/reset/reset-lantiq-rcu.c
->> @@ -0,0 +1,201 @@
->> +/*
->> + *  This program is free software; you can redistribute it and/or modify it
->> + *  under the terms of the GNU General Public License version 2 as published
->> + *  by the Free Software Foundation.
->> + *
->> + *  Copyright (C) 2010 John Crispin <blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
->> + *  Copyright (C) 2013-2015 Lantiq Beteiligungs-GmbH & Co.KG
->> + *  Copyright (C) 2016 Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
->> + *  Copyright (C) 2017 Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
->> + */
->> +
->> +#include <linux/mfd/syscon.h>
->> +#include <linux/module.h>
->> +#include <linux/regmap.h>
->> +#include <linux/reset-controller.h>
->> +#include <linux/of_platform.h>
->> +
->> +#define LANTIQ_RCU_RESET_TIMEOUT	1000000
->> +
->> +struct lantiq_rcu_reset_priv {
->> +	struct reset_controller_dev rcdev;
->> +	struct device *dev;
->> +	struct regmap *regmap;
->> +	u32 reset_offset;
->> +	u32 status_offset;
->> +};
->> +
->> +static struct lantiq_rcu_reset_priv *to_lantiq_rcu_reset_priv(
->> +	struct reset_controller_dev *rcdev)
->> +{
->> +	return container_of(rcdev, struct lantiq_rcu_reset_priv, rcdev);
->> +}
->> +
->> +static int lantiq_rcu_reset_status(struct reset_controller_dev *rcdev,
->> +			     unsigned long id)
-> 
-> Please align with the opening parenthesis above, or use consistent
-> indentation for broken lines, also in the other cases below.
+  - Use non-removable with the sdhci node
+  - Update commit message (mostly add hardware highlights from cover letter)
+  - Add collected tags (Imre)
+---
 
-Will change this
+Original notes:
 
->> +{
->> +	struct lantiq_rcu_reset_priv *priv = to_lantiq_rcu_reset_priv(rcdev);
->> +	unsigned int status = (id >> 8) & 0x1f;
->> +	u32 val;
->> +	int ret;
->> +
->> +	if (status >= rcdev->nr_resets)
->> +		return -EINVAL;
-> 
-> This should be checked in lantiq_rcu_reset_xlate instead.
+  The sdhci node is taken as is, the current node lets one use the
+  wireless part of the attached sd8887. There is an issue with the
+  initalization of the bluetooth firmware though. Haven't had the time
+  to investigate that in depth so far but shouldn't hold up the Rango
+  addition.
 
-Ok will do
+  The non-removable property might be more appropriate than broken-cd
+  though.
 
->> +	ret = regmap_read(priv->regmap, priv->status_offset, &val);
->> +	if (ret)
->> +		return ret;
->> +
->> +	return !!(val & BIT(status));
->> +}
->> +
->> +static int lantiq_rcu_reset_update(struct reset_controller_dev *rcdev,
->> +				   unsigned long id, bool assert)
->> +{
->> +	struct lantiq_rcu_reset_priv *priv = to_lantiq_rcu_reset_priv(rcdev);
->> +	int ret, retry = LANTIQ_RCU_RESET_TIMEOUT;
->> +	unsigned int set = id & 0x1f;
->> +	u32 val;
->> +
->> +	if (set >= rcdev->nr_resets)
->> +		return -EINVAL;
-> 
-> This should be checked in lantiq_rcu_reset_xlate instead.
+  Checkpatch complains about the line length of the URL, though not much
+  room there. Checkpatch also complains about the vendor prefix linksys
+  not being documented, however this follows the examples given by the
+  other boards.
+---
+ arch/arm/boot/dts/Makefile                     |   1 +
+ arch/arm/boot/dts/armada-385-linksys-rango.dts | 203 +++++++++++++++++++++++++
+ 2 files changed, 204 insertions(+)
+ create mode 100644 arch/arm/boot/dts/armada-385-linksys-rango.dts
 
-Ok will do
-
->> +	if (assert)
->> +		val = BIT(set);
->> +	else
->> +		val = 0;
->> +
->> +	ret = regmap_update_bits(priv->regmap, priv->reset_offset, BIT(set),
->> +				 val);
->> +	if (ret) {
->> +		dev_err(priv->dev, "Failed to set reset bit %u\n", set);
->> +		return ret;
->> +	}
->> +
->> +	do {} while (--retry && lantiq_rcu_reset_status(rcdev, id) != assert);
-> 
-> This ignores errors returned by lantiq_rcu_reset_status. Consider using
-> regmap_read_poll_timeout() instead of open-coding the timeout.
-
-Thanks for the hint wil use that function.
-
->> +	if (!retry) {
->> +		dev_err(priv->dev, "Failed to %s bit %u\n",
->> +			assert ? "assert" : "deassert", set);
->> +		return -EIO;
->> +	}
->> +
->> +	return 0;
->> +}
->> +
->> +static int lantiq_rcu_reset_assert(struct reset_controller_dev *rcdev,
->> +			     unsigned long id)
->> +{
->> +	return lantiq_rcu_reset_update(rcdev, id, true);
->> +}
->> +
->> +static int lantiq_rcu_reset_deassert(struct reset_controller_dev *rcdev,
->> +			       unsigned long id)
->> +{
->> +	return lantiq_rcu_reset_update(rcdev, id, false);
->> +}
->> +
->> +static int lantiq_rcu_reset_reset(struct reset_controller_dev *rcdev,
->> +			    unsigned long id)
->> +{
->> +	int ret;
->> +
->> +	ret = lantiq_rcu_reset_assert(rcdev, id);
->> +	if (ret)
->> +		return ret;
->> +
->> +	return lantiq_rcu_reset_deassert(rcdev, id);
->> +}
->> +
->> +static struct reset_control_ops lantiq_rcu_reset_ops = {
-> 
-> reset_control_ops should be const.
-
-Ok
-
->> +	.assert = lantiq_rcu_reset_assert,
->> +	.deassert = lantiq_rcu_reset_deassert,
->> +	.status = lantiq_rcu_reset_status,
->> +	.reset	= lantiq_rcu_reset_reset,
->> +};
->> +
->> +static int lantiq_rcu_reset_of_probe(struct platform_device *pdev,
->> +			       struct lantiq_rcu_reset_priv *priv)
->> +{
->> +	struct device_node *np = pdev->dev.of_node;
->> +
->> +	priv->regmap = syscon_regmap_lookup_by_phandle(np,
->> +							"lantiq,rcu-syscon");
-> 
-> This could be
-> 	priv->regmap = syscon_node_to_regmap(np->parent);
-> if the reset controller device node is a child of the MFD device node.
-
-I will look into this.
-
->> +	if (IS_ERR(priv->regmap)) {
->> +		dev_err(&pdev->dev, "Failed to lookup RCU regmap\n");
->> +		return PTR_ERR(priv->regmap);
->> +	}
->> +
->> +	if (of_property_read_u32_index(np, "lantiq,rcu-syscon", 1,
->> +		&priv->reset_offset)) {
->> +		dev_err(&pdev->dev, "Failed to get RCU reset offset\n");
->> +		return -EINVAL;
->> +	}
->> +
->> +	if (of_property_read_u32_index(np, "lantiq,rcu-syscon", 2,
->> +		&priv->status_offset)) {
->> +		dev_err(&pdev->dev, "Failed to get RCU status offset\n");
->> +		return -EINVAL;
->> +	}
->> +
->> +	return 0;
->> +}
->> +
->> +static int lantiq_rcu_reset_xlate(struct reset_controller_dev *rcdev,
->> +				  const struct of_phandle_args *reset_spec)
->> +{
->> +	unsigned int status, set;
->> +
->> +	set = reset_spec->args[0];
->> +	status = reset_spec->args[1];
-> 
-> Check that set and status are valid here.
-
-Will do this.
-
->> +	return (status << 8) | set;
->> +}
->> +
->> +static int lantiq_rcu_reset_probe(struct platform_device *pdev)
->> +{
->> +	struct lantiq_rcu_reset_priv *priv;
->> +	int err;
->> +
->> +	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
->> +	if (!priv)
->> +		return -ENOMEM;
->> +
->> +	priv->dev = &pdev->dev;
->> +	platform_set_drvdata(pdev, priv);
->> +
->> +	err = lantiq_rcu_reset_of_probe(pdev, priv);
->> +	if (err)
->> +		return err;
->> +
->> +	priv->rcdev.ops = &lantiq_rcu_reset_ops;
->> +	priv->rcdev.owner = THIS_MODULE;
->> +	priv->rcdev.of_node = pdev->dev.of_node;
->> +	priv->rcdev.nr_resets = 32;
->> +	priv->rcdev.of_xlate = lantiq_rcu_reset_xlate;
->> +	priv->rcdev.of_reset_n_cells = 2;
->> +
->> +	err = reset_controller_register(&priv->rcdev);
->> +	if (err)
->> +		return err;
->> +
->> +	return 0;
-> 
-> You can just
-> 	return reset_controller_register(&priv->rcdev);
-> here.
-
-Yes
-
->> +}
->> +
->> +static const struct of_device_id lantiq_rcu_reset_dt_ids[] = {
->> +	{ .compatible = "lantiq,rcu-reset", },
->> +	{ },
->> +};
->> +MODULE_DEVICE_TABLE(of, lantiq_rcu_reset_dt_ids);
->> +
->> +static struct platform_driver lantiq_rcu_reset_driver = {
->> +	.probe	= lantiq_rcu_reset_probe,
->> +	.driver = {
->> +		.name		= "lantiq-rcu-reset",
->> +		.of_match_table	= lantiq_rcu_reset_dt_ids,
->> +	},
->> +};
->> +module_platform_driver(lantiq_rcu_reset_driver);
->> +
->> +MODULE_AUTHOR("Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>");
->> +MODULE_DESCRIPTION("Lantiq XWAY RCU Reset Controller Driver");
->> +MODULE_LICENSE("GPL");
-> 
-> regards
-> Philipp
-> 
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index 9c5e1d9..6be2974 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -999,6 +999,7 @@ dtb-$(CONFIG_MACH_ARMADA_38X) += \
+ 	armada-385-db-ap.dtb \
+ 	armada-385-linksys-caiman.dtb \
+ 	armada-385-linksys-cobra.dtb \
++	armada-385-linksys-rango.dtb \
+ 	armada-385-linksys-shelby.dtb \
+ 	armada-385-synology-ds116.dtb \
+ 	armada-385-turris-omnia.dtb \
+diff --git a/arch/arm/boot/dts/armada-385-linksys-rango.dts b/arch/arm/boot/dts/armada-385-linksys-rango.dts
+new file mode 100644
+index 0000000..86f3207
+--- /dev/null
++++ b/arch/arm/boot/dts/armada-385-linksys-rango.dts
+@@ -0,0 +1,203 @@
++/*
++ * Device Tree file for the Linksys WRT3200ACM (Rango)
++ *
++ * Copyright (C) 2016 Imre Kaloz <kaloz@openwrt.org>
++ *
++ *
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPL or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole.
++ *
++ *  a) This file is licensed under the terms of the GNU General Public
++ *     License version 2.  This program is licensed "as is" without
++ *     any warranty of any kind, whether express or implied.
++ *
++ * Or, alternatively,
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use,
++ *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
++ */
++
++/dts-v1/;
++#include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/input/input.h>
++#include "armada-385-linksys.dtsi"
++
++/ {
++	model = "Linksys WRT3200ACM";
++	compatible = "linksys,rango", "linksys,armada385", "marvell,armada385",
++		     "marvell,armada380";
++};
++
++&expander0 {
++	wan_amber@0 {
++		label = "rango:amber:wan";
++		reg = <0x0>;
++	};
++
++	wan_white@1 {
++		label = "rango:white:wan";
++		reg = <0x1>;
++	};
++
++	usb2@5 {
++		label = "rango:white:usb2";
++		reg = <0x5>;
++	};
++
++	usb3_1@6 {
++		label = "rango:white:usb3_1";
++		reg = <0x6>;
++	};
++
++	usb3_2@7 {
++		label = "rango:white:usb3_2";
++		reg = <0x7>;
++	};
++
++	wps_white@8 {
++		label = "rango:white:wps";
++		reg = <0x8>;
++	};
++
++	wps_amber@9 {
++		label = "rango:amber:wps";
++		reg = <0x9>;
++	};
++};
++
++&gpio_leds {
++	power {
++		gpios = <&gpio1 24 GPIO_ACTIVE_HIGH>;
++		label = "rango:white:power";
++	};
++
++	sata {
++		gpios = <&gpio0 21 GPIO_ACTIVE_LOW>;
++		label = "rango:white:sata";
++	};
++
++	wlan_2g {
++		gpios = <&gpio1 13 GPIO_ACTIVE_LOW>;
++		label = "rango:white:wlan_2g";
++	};
++
++	wlan_5g {
++		gpios = <&gpio1 14 GPIO_ACTIVE_LOW>;
++		label = "rango:white:wlan_5g";
++	};
++};
++
++&gpio_leds_pins {
++	marvell,pins = "mpp21", "mpp45", "mpp46", "mpp56";
++};
++
++&nand {
++	/* AMD/Spansion S34ML02G2 256MiB, OEM Layout */
++
++	partition@0 {
++		label = "u-boot";
++		reg = <0x0000000 0x200000>;  /* 2MiB */
++		read-only;
++	};
++
++	partition@200000 {
++		label = "u_env";
++		reg = <0x200000 0x20000>;    /* 128KiB */
++	};
++
++	partition@220000 {
++		label = "s_env";
++		reg = <0x220000 0x40000>;    /* 256KiB */
++	};
++
++	partition@7e0000 {
++		label = "devinfo";
++		reg = <0x7e0000 0x40000>;   /* 256KiB */
++		read-only;
++	};
++
++	partition@820000 {
++		label = "sysdiag";
++		reg = <0x820000 0x1e0000>;   /* 1920KiB */
++		read-only;
++	};
++
++	/* kernel1 overlaps with rootfs1 by design */
++	partition@a00000 {
++		label = "kernel1";
++		reg = <0xa00000 0x5000000>;  /* 80MiB */
++	};
++
++	partition@1000000 {
++		label = "rootfs1";
++		reg = <0x1000000 0x4a00000>;  /* 74MiB */
++	};
++
++	/* kernel2 overlaps with rootfs2 by design */
++	partition@5a00000 {
++		label = "kernel2";
++		reg = <0x5a00000 0x5000000>; /* 80MiB */
++	};
++
++	partition@6000000 {
++		label = "rootfs2";
++		reg = <0x6000000 0x4a00000>; /* 74MiB */
++	};
++
++	/*
++	 * 86MiB, last MiB is for the BBT, not writable
++	 */
++	partition@aa00000 {
++		label = "syscfg";
++		reg = <0xaa00000 0x5600000>;
++	};
++
++	/*
++	 * Unused area between "s_env" and "devinfo".
++	 * Moved here because otherwise the renumbered
++	 * partitions would break the bootloader
++	 * supplied bootargs
++	 */
++	partition@180000 {
++		label = "unused_area";
++		reg = <0x260000 0x5c0000>;   /* 5.75MiB */
++	};
++};
++
++&sdhci {
++	pinctrl-names = "default";
++	pinctrl-0 = <&sdhci_pins>;
++	no-1-8-v;
++	broken-cd;
++	wp-inverted;
++	bus-width = <8>;
++	status = "okay";
++};
++
++&usb3_1_vbus {
++	gpio = <&gpio1 12 GPIO_ACTIVE_HIGH>;
++};
++
++&usb3_1_vbus_pins {
++	marvell,pins = "mpp44";
++};
+-- 
+2.10.2
