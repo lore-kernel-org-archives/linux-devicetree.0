@@ -1,24 +1,46 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v1 1/2] dt-bindings: timeriomem_rng: Add entropy quality
- property
-Date: Tue, 23 May 2017 09:06:14 -0500
-Message-ID: <20170523140614.52m6fnifw7qf4k6b@rob-hp-laptop>
-References: <20170517222911.9295-1-raltherr@google.com>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 1/3] usb: host: ohci-platform: Add basic runtime PM
+ support
+Date: Tue, 23 May 2017 07:08:31 -0700
+Message-ID: <20170523140831.GV10472@atomide.com>
+References: <20170522160007.9264-1-tony@atomide.com>
+ <20170522160007.9264-2-tony@atomide.com>
+ <c040a768-dd2e-a85d-fb3f-3088988f61aa@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-crypto-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20170517222911.9295-1-raltherr@google.com>
-Sender: linux-crypto-owner@vger.kernel.org
-To: Rick Altherr <raltherr@google.com>
-Cc: linux-crypto@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Herbert Xu <herbert@gondor.apana.org.au>, Mark Rutland <mark.rutland@arm.com>, Matt Mackall <mpm@selenic.com>
+In-Reply-To: <c040a768-dd2e-a85d-fb3f-3088988f61aa-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+Cc: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sebastian Reichel <sebastian.reichel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 17, 2017 at 03:29:10PM -0700, Rick Altherr wrote:
-> Signed-off-by: Rick Altherr <raltherr@google.com>
-> ---
+* Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org> [170523 00:14]:
+> On 22/05/17 19:00, Tony Lindgren wrote:
+> > --- a/drivers/usb/host/ohci-platform.c
+> > +++ b/drivers/usb/host/ohci-platform.c
+> > @@ -290,7 +294,14 @@ static int ohci_platform_remove(struct platform_device *dev)
+> >  	struct usb_hcd *hcd = platform_get_drvdata(dev);
+> >  	struct usb_ohci_pdata *pdata = dev_get_platdata(&dev->dev);
+> >  	struct ohci_platform_priv *priv = hcd_to_ohci_priv(hcd);
+> > -	int clk, rst;
+> > +	int clk, rst, enabled;
+> > +
+> > +	enabled = pm_runtime_get_sync(&dev->dev);
 > 
->  Documentation/devicetree/bindings/rng/timeriomem_rng.txt | 7 +++++++
->  1 file changed, 7 insertions(+)
+> Why do we need to pm_runtime_get_sync() here?
 
-Acked-by: Rob Herring <robh@kernel.org>
+ohci_platform_remove()
+	usb_remove_hcd()
+		ohci_stop()
+
+Will cause "external abort on non-linefetch" otherwise.
+
+Regards,
+
+Tony
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
