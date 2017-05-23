@@ -1,64 +1,92 @@
-From: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH 1/2] dt-bindings: spi-meson: Add SPICC bindings
-Date: Tue, 23 May 2017 15:39:32 +0200
-Message-ID: <1495546773-20479-2-git-send-email-narmstrong@baylibre.com>
-References: <1495546773-20479-1-git-send-email-narmstrong@baylibre.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4 19/20] powerpc/83xx: Add generic compatible string for
+ I2C EEPROM
+Date: Tue, 23 May 2017 08:42:59 -0500
+Message-ID: <CAL_JsqLGC9sh9jhwtCHu1NE2z85cZh0CVXuMc9aohzCoxE_4fg@mail.gmail.com>
+References: <20170522140208.24652-1-javier@dowhile0.org> <20170522140208.24652-20-javier@dowhile0.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1495546773-20479-1-git-send-email-narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+In-Reply-To: <20170522140208.24652-20-javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>
+Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Paul Mackerras <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linuxppc-dev <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add the SPICC (SPI Communications Controller) bindings variant.
+On Mon, May 22, 2017 at 9:02 AM, Javier Martinez Canillas
+<javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org> wrote:
+> The at24 driver allows to register I2C EEPROM chips using different vendor
+> and devices, but the I2C subsystem does not take the vendor into account
+> when matching using the I2C table since it only has device entries.
+>
+> But when matching using an OF table, both the vendor and device has to be
+> taken into account so the driver defines only a set of compatible strings
+> using the "atmel" vendor as a generic fallback for compatible I2C devices.
+>
+> So add this generic fallback to the device node compatible string to make
+> the device to match the driver using the OF device ID table.
+>
+> Signed-off-by: Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>
+>
+> ---
+>
+> Changes in v4:
+> - Only use the atmel manufacturer in the compatible string instead of
+>   keeping the deprecated ones (Rob Herring).
+>
+> Changes in v3: None
+> Changes in v2: None
+>
+>  arch/powerpc/boot/dts/mpc8308_p1m.dts  | 2 +-
+>  arch/powerpc/boot/dts/mpc8349emitx.dts | 4 ++--
+>  arch/powerpc/boot/dts/mpc8377_rdb.dts  | 2 +-
+>  arch/powerpc/boot/dts/mpc8377_wlan.dts | 2 +-
+>  arch/powerpc/boot/dts/mpc8378_rdb.dts  | 2 +-
+>  arch/powerpc/boot/dts/mpc8379_rdb.dts  | 2 +-
+>  6 files changed, 7 insertions(+), 7 deletions(-)
+>
+> diff --git a/arch/powerpc/boot/dts/mpc8308_p1m.dts b/arch/powerpc/boot/dts/mpc8308_p1m.dts
+> index 57f86cdf9f36..702ab4fc5b4a 100644
+> --- a/arch/powerpc/boot/dts/mpc8308_p1m.dts
+> +++ b/arch/powerpc/boot/dts/mpc8308_p1m.dts
+> @@ -123,7 +123,7 @@
+>                         interrupt-parent = <&ipic>;
+>                         dfsrr;
+>                         fram@50 {
+> -                               compatible = "ramtron,24c64";
+> +                               compatible = "atmel,24c64";
 
-Signed-off-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
----
- .../devicetree/bindings/spi/spi-meson.txt          | 31 ++++++++++++++++++++++
- 1 file changed, 31 insertions(+)
+This should be '"ramtron,24c64", "atmel,24c64"'
 
-diff --git a/Documentation/devicetree/bindings/spi/spi-meson.txt b/Documentation/devicetree/bindings/spi/spi-meson.txt
-index dc6d031..825c39c 100644
---- a/Documentation/devicetree/bindings/spi/spi-meson.txt
-+++ b/Documentation/devicetree/bindings/spi/spi-meson.txt
-@@ -20,3 +20,34 @@ Required properties:
- 		#address-cells = <1>;
- 		#size-cells = <0>;
- 	};
-+
-+* SPICC (SPI Communication Controller)
-+
-+The Meson SPICC is generic SPI controller for general purpose Full-Duplex
-+communications with dedicated 16 words RX/TX PIO FIFOs.
-+
-+Required properties:
-+ - compatible: should be "amlogic,meson-gx-spicc" on Amlogic GX SoCs.
-+ - reg: physical base address and length of the controller registers
-+ - interrupts: The interrupt specifier
-+ - clock-names: Must contain "core"
-+ - clocks: phandle of the input clock for the baud rate generator
-+ - #address-cells: should be 1
-+ - #size-cells: should be 0
-+
-+Optional properties:
-+ - resets: phandle of the internal reset line
-+
-+See ../spi/spi-bus.txt for more details on SPI bus master and slave devices
-+required and optional properties.
-+
-+Example :
-+	spi@c1108d80 {
-+		compatible = "amlogic,meson-gx-spicc";
-+		reg = <0xc1108d80 0x80>;
-+		interrupts = <GIC_SPI 112 IRQ_TYPE_LEVEL_HIGH>;
-+		clock-names = "core";
-+		clocks = <&clk81>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+	};
--- 
-1.9.1
+>                                 reg = <0x50>;
+>                         };
+>                 };
+> diff --git a/arch/powerpc/boot/dts/mpc8349emitx.dts b/arch/powerpc/boot/dts/mpc8349emitx.dts
+> index 90aed3ac2f69..f49d1cffd927 100644
+> --- a/arch/powerpc/boot/dts/mpc8349emitx.dts
+> +++ b/arch/powerpc/boot/dts/mpc8349emitx.dts
+> @@ -92,7 +92,7 @@
+>                         dfsrr;
+>
+>                         eeprom: at24@50 {
+> -                               compatible = "st,24c256";
+> +                               compatible = "atmel,24c256";
 
+Similar for this one.
+
+>                                 reg = <0x50>;
+>                         };
+>
+> @@ -130,7 +130,7 @@
+>                         };
+>
+>                         spd: at24@51 {
+> -                               compatible = "at24,spd";
+> +                               compatible = "atmel,spd";
+
+This is fine because at24 is not a vendor.
+
+Rob
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
