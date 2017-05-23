@@ -1,134 +1,85 @@
-From: Oza Oza via iommu <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-Subject: Re: [PATCH v7 0/3] PCI/IOMMU: Reserve IOVAs for PCI inbound memory
-Date: Tue, 23 May 2017 10:30:51 +0530
-Message-ID: <CAMSpPPf9O9tdK018VCdHvxnN2rb2Yp2da0=jz1iFDf21vs77wA@mail.gmail.com>
-References: <1495471182-12490-1-git-send-email-oza.oza@broadcom.com>
-	<20170522131838.71258483@w520.home>
-Reply-To: Oza Oza <oza.oza-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+From: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH V3 0/4] mtd: extend support for "fixed-partitions"
+Date: Tue, 23 May 2017 07:30:18 +0200
+Message-ID: <20170523053022.3251-1-zajec5@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <20170522131838.71258483-DGNDKt5SQtizQB+pC5nmwQ@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Alex Williamson <alex.williamson-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Oza Pawandeep <oza.pawandeep-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-pci <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux IOMMU <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, BCM Kernel Feedback <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Jonas Gorski <jonas.gorski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 23, 2017 at 12:48 AM, Alex Williamson
-<alex.williamson-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
-> On Mon, 22 May 2017 22:09:39 +0530
-> Oza Pawandeep <oza.oza-dY08KVG/lbpWk0Htik3J/w@public.gmane.org> wrote:
->
->> iproc based PCI RC and Stingray SOC has limitaiton of addressing only 512GB
->> memory at once.
->>
->> IOVA allocation honors device's coherent_dma_mask/dma_mask.
->> In PCI case, current code honors DMA mask set by EP, there is no
->> concept of PCI host bridge dma-mask,  should be there and hence
->> could truly reflect the limitation of PCI host bridge.
->>
->> However assuming Linux takes care of largest possible dma_mask, still the
->> limitation could exist, because of the way memory banks are implemented.
->>
->> for e.g. memory banks:
->> <0x00000000 0x80000000 0x0 0x80000000>, /* 2G @ 2G */
->> <0x00000008 0x80000000 0x3 0x80000000>, /* 14G @ 34G */
->> <0x00000090 0x00000000 0x4 0x00000000>, /* 16G @ 576G */
->> <0x000000a0 0x00000000 0x4 0x00000000>; /* 16G @ 640G */
->>
->> When run User space (SPDK) which internally uses vfio in order to access
->> PCI EndPoint directly.
->>
->> Vfio uses huge-pages which could come from 640G/0x000000a0.
->> And the way vfio maps the hugepage is to have phys addr as iova,
->> and ends up calling VFIO_IOMMU_MAP_DMA ends up calling iommu_map,
->> inturn arm_lpae_map mapping iovas out of range.
->>
->> So the way kernel allocates IOVA (where it honours device dma_mask) and
->> the way userspace gets IOVA is different.
->>
->> dma-ranges = <0x43000000 0x00 0x00 0x00 0x00 0x80 0x00>; will not work.
->>
->> Instead we have to go for scattered dma-ranges leaving holes.
->> Hence, we have to reserve IOVA allocations for inbound memory.
->> The patch-set caters to only addressing IOVA allocation problem.
->
->
-> The description here confuses me, with vfio the user owns the iova
-> allocation problem.  Mappings are only identity mapped if the user
-> chooses to do so.  The dma_mask of the device is set by the driver and
-> only relevant to the DMA-API.  vfio is a meta-driver and doesn't know
-> the dma_mask of any particular device, that's the user's job.  Is the
-> net result of what's happening here for the vfio case simply to expose
-> extra reserved regions in sysfs, which the user can then consume to
-> craft a compatible iova?  Thanks,
->
-> Alex
+From: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
 
-Hi Alex,
+My recent work on adding wide support for linux,part-probe was reviewed and
+kind of Nack-ed, but fortunately I was pointed to the old (!) patchset from
+Brian doing similar thing in a cleaner way.
 
-this is not a VFIO problem, the reason I have mentioned VFIO because,
-wanted to bring problem
-statement as a whole (which includes both kernel space and user space).
-The way SPDK pipeline is set, yes mapping are identity mapped, and
-whatever user space passes down IOVA,
-VFIO use is as is. which is fine and expected.
+This patchset picks the important changes from Brian, cleans them and rebases.
 
-But the problem is, user space physical memory (hugepages)  reside
-high enough in
-memory, which could be beyond PCI RC's capability.
+Original patches:
+(not picked) [RFC PATCH 1/7] mtd: move partition parsers to drivers/mtd/partitions/
+(not picked) [RFC PATCH 2/7] mtd: move partition parsers' Kconfig under a sub-menu
+(partially)  [RFC PATCH 3/7] doc: dt: mtd: partition: add on-flash format binding
+(picked)     [RFC PATCH 4/7] mtd: add of_match_mtd_parser() and of_mtd_match_mtd_parser() helpers
+(partially)  [RFC PATCH 5/7] mtd: partitions: factor out "match by name" handling
+(picked)     [RFC PATCH 6/7] RFC: mtd: partitions: enable of_match_table matching
+(not picked) [RFC PATCH 7/7] mtd: partitions: add Google's FMAP partition parser
 
-Again, this is not VFIO's problem, neither is of user-space.
-In-fact both have nothing to do with dma-mask as well.
-My reference of dma-mask was for Linux IOMMU framework (not for VFIO)
+At this point this simply adds a full support for "fixed-partitions" binding.
+It should also make adding new bindings (like Google's FMAP) easier in the
+future.
 
-Regards,
-Oza.
->
->>
->> Changes since v7:
->> - Robin's comment addressed
->> where he wanted to remove depedency between IOMMU and OF layer.
->> - Bjorn Helgaas's comments addressed.
->>
->> Changes since v6:
->> - Robin's comments addressed.
->>
->> Changes since v5:
->> Changes since v4:
->> Changes since v3:
->> Changes since v2:
->> - minor changes, redudant checkes removed
->> - removed internal review
->>
->> Changes since v1:
->> - address Rob's comments.
->> - Add a get_dma_ranges() function to of_bus struct..
->> - Convert existing contents of of_dma_get_range function to
->>   of_bus_default_dma_get_ranges and adding that to the
->>   default of_bus struct.
->> - Make of_dma_get_range call of_bus_match() and then bus->get_dma_ranges.
->>
->>
->> Oza Pawandeep (3):
->>   OF/PCI: expose inbound memory interface to PCI RC drivers.
->>   IOMMU/PCI: reserve IOVA for inbound memory for PCI masters
->>   PCI: add support for inbound windows resources
->>
->>  drivers/iommu/dma-iommu.c | 44 ++++++++++++++++++++--
->>  drivers/of/of_pci.c       | 96 +++++++++++++++++++++++++++++++++++++++++++++++
->>  drivers/pci/probe.c       | 30 +++++++++++++--
->>  include/linux/of_pci.h    |  7 ++++
->>  include/linux/pci.h       |  1 +
->>  5 files changed, 170 insertions(+), 8 deletions(-)
->>
->
+I've successfully tested this with bcm47xxsflash driver on Tenda AC9 device. I
+used following DT node to get "ofpart" driver parse & register my partitions.
+
+&bcma-sflash {
+	partitions {
+		compatible = "fixed-partitions";
+		#address-cells = <1>;
+		#size-cells = <1>;
+
+		partition@0 {
+			label = "cfe";
+			reg = <0x0000000 0x40000>;
+			read-only;
+		};
+
+		firmware@40000 {
+			label = "firmware";
+			reg = <0x40000 0x7f0000>;
+		};
+	};
+};
+
+V2: Modify patch 1/4
+    Include list of original patches in 0/4
+    Include changelog in every patch
+    Add Brian's tags (Acked/Reviewed/Tested)
+
+V3: Modify patch 1/4: extend documentation description - thanks Florian
+    Modify patch 3/4: add a simple comment to the code - thanks Jonas
+
+Brian Norris (3):
+  dt-bindings: mtd: make partitions doc a bit more generic
+  mtd: partitions: factor out code calling parser
+  mtd: partitions: add of_match_table parser matching
+
+Rafał Miłecki (1):
+  mtd: ofpart: add of_match_table with "fixed-partitions"
+
+ .../devicetree/bindings/mtd/partition.txt          | 32 +++++++--
+ drivers/mtd/mtdpart.c                              | 81 +++++++++++++++++++---
+ drivers/mtd/ofpart.c                               |  7 ++
+ include/linux/mtd/partitions.h                     |  1 +
+ 4 files changed, 106 insertions(+), 15 deletions(-)
+
+-- 
+2.11.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
