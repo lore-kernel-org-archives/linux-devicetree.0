@@ -1,79 +1,68 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/3] mfd: lp87565: Add lp87565 PMIC support
-Date: Tue, 23 May 2017 07:57:42 +0100
-Message-ID: <20170523065742.44ytkxdagw2wwttz@dell>
-References: <1495197739-17446-1-git-send-email-j-keerthy@ti.com>
- <1495197739-17446-2-git-send-email-j-keerthy@ti.com>
- <20170522174806.nnpk5jso7jhgygm3@dell>
- <26169872-1b43-88d1-3e5b-367b4d446222@ti.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [DT Question] "simple-mfd" DT binding
+Date: Tue, 23 May 2017 08:05:47 +0100
+Message-ID: <20170523070547.hhxwrst6np6fpqql@dell>
+References: <CAK7LNARQmfX+3RwFgwtvf2Qu79XNX1zh0O741-pPFWS6npytLw@mail.gmail.com>
+ <CACRpkdY88Zdp2zqabWPfYPnTwSzYuCqSQHQg9vF_+Zd=TFOvaA@mail.gmail.com>
+ <CAK7LNAQ+DimarhHJOg=BqbH+EB19s+wgtRqJ8-XuLKW6_0FFaQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <26169872-1b43-88d1-3e5b-367b4d446222-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>
-Cc: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, t-kristo-l0cyMroinI0@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <CAK7LNAQ+DimarhHJOg=BqbH+EB19s+wgtRqJ8-XuLKW6_0FFaQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 23 May 2017, Keerthy wrote:
-> On Monday 22 May 2017 11:18 PM, Lee Jones wrote:
-> > On Fri, 19 May 2017, Keerthy wrote:
-> > 
-> >> The LP87565 chip is a power management IC for Portable Navigation Systems
-> >> and Tablet Computing devices. It contains the following components:
-> >>
-> >>         - Configurable Bucks(Single and multi-phase).
-> >>         - Configurable General Purpose Output Signals (GPO).
-> >>
-> >> The LP87565-Q1 variant device uses two 2-phase outputs configuration,
-> >> Buck0 is master for Buck0/1 output and Buck2 is master for Buck2/3
-> >> output.
-> >>
-> >> Signed-off-by: Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>
-> >> ---
-> >>  Documentation/devicetree/bindings/mfd/lp87565.txt |  44 ++++
-> >>  drivers/mfd/Kconfig                               |  14 ++
-> >>  drivers/mfd/Makefile                              |   1 +
-> >>  drivers/mfd/lp87565.c                             | 103 ++++++++
-> >>  include/linux/mfd/lp87565.h                       | 275 ++++++++++++++++++++++
-> >>  5 files changed, 437 insertions(+)
-> >>  create mode 100644 Documentation/devicetree/bindings/mfd/lp87565.txt
-> >>  create mode 100644 drivers/mfd/lp87565.c
-> >>  create mode 100644 include/linux/mfd/lp87565.h
-> >>
+On Tue, 23 May 2017, Masahiro Yamada wrote:
 
-[...]
-
-> >> +/*
-> >> + * Copyright (C) 2017 Texas Instruments Incorporated - http://www.ti.com/
-> >> + *
-> >> + * Author: Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>
-> > 
-> > We usually ask for full "first last" names.
+> Hi Lee, Linus,
 > 
-> Keerthy is my full name and i do not have a surname.
+> Thanks for your comments!
+> 
+> 2017-05-22 17:43 GMT+09:00 Linus Walleij <linus.walleij@linaro.org>:
+> > On Mon, May 22, 2017 at 3:29 AM, Masahiro Yamada
+> > <yamada.masahiro@socionext.com> wrote:
+> >
+> >> Because "simple-bus" indicates that child nodes are
+> >> simply memory mapped, but the node "register-bit-led"
+> >> can not be memory-mapped.
+> >> So, "simple-mfd" can not be replaced "simple-bus" here.
+> >
+> > Yeah... just like Lee points out, you are spot on, this is exactly
+> > the reason why we created "simple-mfd" in the first place
+> > IIRC.
+> 
+> OK, Linux treats simple-bus and simple-mfd in the same way
+> as far as I see drivers/of/platform.c
 
-What is the 'J' for in your email address?
-[...]
+Correct.  As I said, the functionality of the two are the same.  The
+difference is their meaning.  Initially we were using "simple-mfd" to
+achieve our aim (see below), but there was push-back due to the
+differences in what the two properties were trying to achieve.  Ergo,
+we introduced a second property.
 
-> >> +static const struct i2c_device_id lp87565_id_table[] = {
-> >> +	{ "lp87565-q1", 0 },
-> >> +	{ },
-> >> +};
-> >> +MODULE_DEVICE_TABLE(i2c, lp87565_id_table);
-> > 
-> > Is this an OF only driver, or not?
+> Perhaps, can we document the difference between simple-bus and
+> simple-mfd clearly?
+> For example, "Unlike simple-bus, it is legitimate that simple-mfd has
+> subnodes without reg property"
+> 
+> 
+> I think this is typical when "simple-mfd" is used together with "syscon".
+> The child devices will use regmap of the parent node.
+> I'd like to be sure this is valid usage.
 
-You didn't answer my question?
+"simple-mfd" simply means "register all of my child nodes using the
+platform API without any further intervention".  It's goal is to
+prevent the MFD subsystem from being stuffed full of drivers where
+their only purpose is to call of_platform_populate().  All other rules
+and policy which must be followed are generic DT ones.  To that end, I
+do not believe making further statements is necessary.
 
 -- 
 Lee Jones
 Linaro STMicroelectronics Landing Team Lead
 Linaro.org │ Open source software for ARM SoCs
 Follow Linaro: Facebook | Twitter | Blog
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
