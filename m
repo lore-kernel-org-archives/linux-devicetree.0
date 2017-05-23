@@ -1,13 +1,13 @@
-From: Javier Martinez Canillas <javier@dowhile0.org>
-Subject: [PATCH v5 07/20] ARM: dts: keystone: Add generic compatible string for I2C EEPROM
-Date: Tue, 23 May 2017 15:34:35 +0200
-Message-ID: <20170523133448.4794-8-javier@dowhile0.org>
+From: Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>
+Subject: [PATCH v5 15/20] arm64: zynqmp: Add generic compatible string for I2C EEPROM
+Date: Tue, 23 May 2017 15:34:43 +0200
+Message-ID: <20170523133448.4794-16-javier@dowhile0.org>
 References: <20170523133448.4794-1-javier@dowhile0.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170523133448.4794-1-javier@dowhile0.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh@kernel.org>, Javier Martinez Canillas <javier@dowhile0.org>, devicetree@vger.kernel.org, Santosh Shilimkar <ssantosh@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170523133448.4794-1-javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>, =?UTF-8?q?S=C3=B6ren=20Brinkmann?= <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 The at24 driver allows to register I2C EEPROM chips using different vendor
@@ -21,7 +21,7 @@ using the "atmel" vendor as a generic fallback for compatible I2C devices.
 So add this generic fallback to the device node compatible string to make
 the device to match the driver using the OF device ID table.
 
-Signed-off-by: Javier Martinez Canillas <javier@dowhile0.org>
+Signed-off-by: Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>
 
 ---
 
@@ -33,49 +33,35 @@ Changes in v4:
 Changes in v3: None
 Changes in v2: None
 
- arch/arm/boot/dts/keystone-k2e-evm.dts  | 2 +-
- arch/arm/boot/dts/keystone-k2hk-evm.dts | 2 +-
- arch/arm/boot/dts/keystone-k2l-evm.dts  | 2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
+ arch/arm64/boot/dts/xilinx/zynqmp-ep108.dts | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/keystone-k2e-evm.dts b/arch/arm/boot/dts/keystone-k2e-evm.dts
-index ae1ebe7ee021..c8d45e6cd9e6 100644
---- a/arch/arm/boot/dts/keystone-k2e-evm.dts
-+++ b/arch/arm/boot/dts/keystone-k2e-evm.dts
-@@ -69,7 +69,7 @@
- 
- &i2c0 {
- 	dtt@50 {
--		compatible = "at,24c1024";
-+		compatible = "atmel,24c1024";
- 		reg = <0x50>;
+diff --git a/arch/arm64/boot/dts/xilinx/zynqmp-ep108.dts b/arch/arm64/boot/dts/xilinx/zynqmp-ep108.dts
+index ef1b9e573af0..53907b7a7fd9 100644
+--- a/arch/arm64/boot/dts/xilinx/zynqmp-ep108.dts
++++ b/arch/arm64/boot/dts/xilinx/zynqmp-ep108.dts
+@@ -55,7 +55,7 @@
+ 	status = "okay";
+ 	clock-frequency = <400000>;
+ 	eeprom@54 {
+-		compatible = "at,24c64";
++		compatible = "atmel,24c64";
+ 		reg = <0x54>;
  	};
  };
-diff --git a/arch/arm/boot/dts/keystone-k2hk-evm.dts b/arch/arm/boot/dts/keystone-k2hk-evm.dts
-index 2156ff92d08f..69af3a950da6 100644
---- a/arch/arm/boot/dts/keystone-k2hk-evm.dts
-+++ b/arch/arm/boot/dts/keystone-k2hk-evm.dts
-@@ -145,7 +145,7 @@
- 
- &i2c0 {
- 	dtt@50 {
--		compatible = "at,24c1024";
-+		compatible = "atmel,24c1024";
- 		reg = <0x50>;
- 	};
- };
-diff --git a/arch/arm/boot/dts/keystone-k2l-evm.dts b/arch/arm/boot/dts/keystone-k2l-evm.dts
-index 056b42f99d7a..402190e55e40 100644
---- a/arch/arm/boot/dts/keystone-k2l-evm.dts
-+++ b/arch/arm/boot/dts/keystone-k2l-evm.dts
-@@ -42,7 +42,7 @@
- 
- &i2c0 {
- 	dtt@50 {
--		compatible = "at,24c1024";
-+		compatible = "atmel,24c1024";
- 		reg = <0x50>;
+@@ -64,7 +64,7 @@
+ 	status = "okay";
+ 	clock-frequency = <400000>;
+ 	eeprom@55 {
+-		compatible = "at,24c64";
++		compatible = "atmel,24c64";
+ 		reg = <0x55>;
  	};
  };
 -- 
 2.9.3
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
