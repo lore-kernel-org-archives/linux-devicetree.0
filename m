@@ -1,47 +1,36 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH v3 5/5] mtd: mchp23k256: Add support for mchp23lcv1024
-Date: Tue, 23 May 2017 02:58:45 +0200
-Message-ID: <20170523005845.GI13759@lunn.ch>
-References: <20170523004317.16908-1-chris.packham@alliedtelesis.co.nz>
- <20170523004317.16908-6-chris.packham@alliedtelesis.co.nz>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20170523004317.16908-6-chris.packham@alliedtelesis.co.nz>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: Chris Packham <chris.packham@alliedtelesis.co.nz>
-Cc: Mark Rutland <mark.rutland@arm.com>, boris.brezillon@free-electrons.com, devicetree@vger.kernel.org, Richard Weinberger <richard@nod.at>, linux-kernel@vger.kernel.org, Marek Vasut <marek.vasut@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-mtd@lists.infradead.org, Cyrille Pitchen <cyrille.pitchen@wedev4u.fr>, computersforpeace@gmail.com, dwmw2@infradead.org
+From: Elaine Zhang <zhangqing@rock-chips.com>
+Subject: [PATCH v3 0/3] clk: rockchip: support clk controller for RK3128 SoC
+Date: Tue, 23 May 2017 09:11:02 +0800
+Message-ID: <1495501865-18512-1-git-send-email-zhangqing@rock-chips.com>
+Return-path: <linux-clk-owner@vger.kernel.org>
+Sender: linux-clk-owner@vger.kernel.org
+To: heiko@sntech.de, xf@rock-chips.com
+Cc: linux-clk@vger.kernel.org, huangtao@rock-chips.com, xxx@rock-chips.com, cl@rock-chips.com, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, robh+dt@kernel.org, mark.rutland@arm.com, mturquette@baylibre.com, sboyd@codeaurora.org, zhengxing@rock-chips.com, Elaine Zhang <zhangqing@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 23, 2017 at 12:43:17PM +1200, Chris Packham wrote:
-> The mchp23lcv1024 is software compatible with the mchp23k256, the
-> only difference (from a software point of view) is the size.
+The driver and clk ID\SRST ID it's also applies to the RK3126 SoC.
 
-This is not really true. The size of the address is also different,
-and the point of the v2 change.
+change in V3:
+export clk ID for usb480m and usb480m_phy
 
-> There
-> is no way to detect the size so we must be told via a Device Tree.
+change in V2:
+rename the rk312x to rk3128.
 
-or defaults to 256K when device tree is not used.
+Elaine Zhang (3):
+  clk: rockchip: add dt-binding header for rk3128
+  dt-bindings: add bindings for rk3128 clock controller
+  clk: rockchip: add clock controller for rk3128
 
-> 
-> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+ .../bindings/clock/rockchip,rk3128-cru.txt         |  56 ++
+ drivers/clk/rockchip/Makefile                      |   1 +
+ drivers/clk/rockchip/clk-rk3128.c                  | 612 +++++++++++++++++++++
+ include/dt-bindings/clock/rk3128-cru.h             | 283 ++++++++++
+ 4 files changed, 952 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/rockchip,rk3128-cru.txt
+ create mode 100644 drivers/clk/rockchip/clk-rk3128.c
+ create mode 100644 include/dt-bindings/clock/rk3128-cru.h
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+-- 
+1.9.1
 
-    Andrew
 
-______________________________________________________
-Linux MTD discussion mailing list
-http://lists.infradead.org/mailman/listinfo/linux-mtd/
