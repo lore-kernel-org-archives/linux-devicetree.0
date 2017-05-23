@@ -1,34 +1,61 @@
-From: Stefan Wahren <stefan.wahren@i2se.com>
-Subject: [PATCH v6 net-next 04/17] net: qca_spi: Use SET_NETDEV_DEV()
-Date: Tue, 23 May 2017 15:12:40 +0200
-Message-ID: <1495545173-22150-5-git-send-email-stefan.wahren@i2se.com>
-References: <1495545173-22150-1-git-send-email-stefan.wahren@i2se.com>
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1495545173-22150-1-git-send-email-stefan.wahren@i2se.com>
-Sender: netdev-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "David S. Miller" <davem@davemloft.net>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.com>, Lino Sanfilippo <LinoSanfilippo@gmx.de>, Jakub Kicinski <kubakici@wp.pl>, devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org, Stefan Wahren <stefan.wahren@i2se.com>
+From: Javier Martinez Canillas <javier@dowhile0.org>
+Subject: [PATCH v5 01/20] dt-bindings: i2c: eeprom: Document vendor to be used and deprecated ones
+Date: Tue, 23 May 2017 15:34:29 +0200
+Message-ID: <20170523133448.4794-2-javier@dowhile0.org>
+References: <20170523133448.4794-1-javier@dowhile0.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170523133448.4794-1-javier@dowhile0.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh@kernel.org>, Javier Martinez Canillas <javier@dowhile0.org>, Simon Horman <horms@verge.net.au>, Sekhar Nori <nsekhar@ti.com>, David Lechner <david@lechnology.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Use SET_NETDEV_DEV() in qca_spi to create the "/sys/class/net/<if>/device"
-symlink.
+The at24 driver allows to register I2C EEPROM chips using different vendor
+and devices, but the I2C subsystem does not take the vendor into account
+when matching using the I2C table since it only has device entries.
 
-Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
+But when matching using an OF table, both the vendor and device has to be
+taken into account so the driver defines only a set of compatible strings
+using the "atmel" vendor as a generic fallback for compatible I2C devices.
+
+Document in the Device Tree binding document that this manufacturer should
+be used as the generic fallback. Also document the deprecated vendors.
+
+Suggested-by: Wolfram Sang <wsa@the-dreams.de>
+Suggested-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Javier Martinez Canillas <javier@dowhile0.org>
+
 ---
- drivers/net/ethernet/qualcomm/qca_spi.c | 1 +
- 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/ethernet/qualcomm/qca_spi.c b/drivers/net/ethernet/qualcomm/qca_spi.c
-index 24ca7df..0c3fdee 100644
---- a/drivers/net/ethernet/qualcomm/qca_spi.c
-+++ b/drivers/net/ethernet/qualcomm/qca_spi.c
-@@ -894,6 +894,7 @@ qca_spi_probe(struct spi_device *spi)
- 		return -ENOMEM;
+Changes in v5:
+- Only deprecate the atmel variants at25 and at (Geert Uytterhoeven).
+
+Changes in v4:
+- Document the manufacturers that have been deprecated (Rob Herring).
+
+Changes in v3: None
+Changes in v2: None
+
+ Documentation/devicetree/bindings/eeprom/eeprom.txt | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/Documentation/devicetree/bindings/eeprom/eeprom.txt b/Documentation/devicetree/bindings/eeprom/eeprom.txt
+index 5696eb508e95..afc04589eadf 100644
+--- a/Documentation/devicetree/bindings/eeprom/eeprom.txt
++++ b/Documentation/devicetree/bindings/eeprom/eeprom.txt
+@@ -16,8 +16,12 @@ Required properties:
  
- 	qcaspi_netdev_setup(qcaspi_devs);
-+	SET_NETDEV_DEV(qcaspi_devs, &spi->dev);
+ 	"renesas,r1ex24002"
  
- 	qca = netdev_priv(qcaspi_devs);
- 	if (!qca) {
++	The following manufacturers values have been deprecated:
++	"at", "at24"
++
+ 	 If there is no specific driver for <manufacturer>, a generic
+-	 driver based on <type> is selected. Possible types are:
++	 device with <type> and manufacturer "atmel" should be used.
++	 Possible types are:
+ 	 "24c00", "24c01", "24c02", "24c04", "24c08", "24c16", "24c32", "24c64",
+ 	 "24c128", "24c256", "24c512", "24c1024", "spd"
+ 
 -- 
-2.1.4
+2.9.3
