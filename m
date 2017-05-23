@@ -1,159 +1,185 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [Patch v3 1/3] arm64: dts: hi3660: add pcie node
-Date: Tue, 23 May 2017 09:16:41 -0500
-Message-ID: <20170523141641.kbb4falhs574dfpu@rob-hp-laptop>
-References: <20170518074946.21362-1-songxiaowei@hisilicon.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170518074946.21362-1-songxiaowei@hisilicon.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Song Xiaowei <songxiaowei@hisilicon.com>
-Cc: wangzhou1@hisilicon.com, gabriele.paoloni@huawei.com, bhelgaas@google.com, mark.rutland@arm.com, xuwei5@hisilicon.com, catalin.marinas@arm.com, will.deacon@arm.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, puck.chen@hisilicon.com, guodong.xu@linaro.org, wangbinghui@hisilicon.com, suzhuangluan@hisilicon.com
+From: Leo Yan <leo.yan@linaro.org>
+Subject: [PATCH v11 0/9] coresight: enable debug module
+Date: Tue, 23 May 2017 22:16:11 +0800
+Message-ID: <1495548980-30432-1-git-send-email-leo.yan@linaro.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Jonathan Corbet <corbet@lwn.net>, Mathieu Poirier <mathieu.poirier@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Liviu Dudau <liviu.dudau@arm.com>, Wei Xu <xuwei5@hisilicon.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Suzuki K Poulose <suzuki.poulose@arm.com>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, Stephen Boyd <sboyd@codeaurora.org>, Mike Leach <mike.leach@linaro.org>
+Cc: Leo Yan <leo.yan@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 18, 2017 at 03:49:46PM +0800, Song Xiaowei wrote:
-> Add PCIe node for hi3660, and add binding documentation.
-> 
-> Cc: Guodong Xu <guodong.xu@linaro.org>
-> Signed-off-by: Song Xiaowei <songxiaowei@hisilicon.com>
-> ---
->  .../devicetree/bindings/pci/hisilicon-pcie.txt     | 52 ++++++++++++++++++++++
->  arch/arm64/boot/dts/hisilicon/hi3660.dtsi          | 31 +++++++++++++
+ARMv8 architecture reference manual (ARM DDI 0487A.k) Chapter H7 "The
+Sample-based Profiling Extension" has description for sampling
+registers, we can utilize these registers to check program counter
+value with combined CPU exception level, secure state, etc. So this is
+helpful for CPU lockup bugs, e.g. if one CPU has run into infinite loop
+with IRQ disabled; the 'hang' CPU cannot switch context and handle any
+interrupt, so it cannot handle SMP call for stack dump, etc.
 
-These should be separate patches.
+This patch series is to enable coresight debug module with sample-based
+registers and register call back notifier for PCSR register dumping
+when panic happens, so we can see below dumping info for panic; and
+this patch series has considered the conditions for access permission
+for debug registers self, so this can avoid access debug registers when
+CPU power domain is off; the driver also try to figure out the CPU is
+in secure or non-secure state.
 
->  2 files changed, 83 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/pci/hisilicon-pcie.txt b/Documentation/devicetree/bindings/pci/hisilicon-pcie.txt
-> index a339dbb15493..71491178c86c 100644
-> --- a/Documentation/devicetree/bindings/pci/hisilicon-pcie.txt
-> +++ b/Documentation/devicetree/bindings/pci/hisilicon-pcie.txt
-> @@ -85,3 +85,55 @@ Example:
->  				 0x0 0 0 4 &mbigen_pcie0 650 4>;
->  		status = "ok";
->  	};
-> +
-> +
-> +
+Patch 0001 is to document the dt binding; patch 0002 adds one detailed
+document to describe the Coresight debug module implementation, the
+clock and power domain impaction on the driver, some examples for usage.
 
-Why is this in the same document? If there's nothing shared, then just 
-do a separate doc for each SoC.
+Patch 0003 is to document boot parameters used in kernel command line.
 
-> +HiSilicon Kirin SoC PCIe host DT description
+Patch 0004 is to add file entries for MAINTAINERS.
 
-Isn't Kirin the 6220? 
+Patch 0005 is used to fix the func of_get_coresight_platform_data()
+doesn't properly drop the reference to the CPU node pointer; and
+patch 0006 is refactor to add new function of_coresight_get_cpu().
 
-> +
-> +Kirin PCIe host controller is also based on Designware PCI core.
-> +It shares common functions with PCIe Designware core driver and inherits
-> +common properties defined in
-> +Documentation/devicetree/bindings/pci/designware-pci.txt.
-> +
-> +Additional properties are described here:
-> +
-> +Required properties
-> +- compatible: Should contain "hisilicon,kirin-pcie".
+Patch 0007 is the driver for CPU debug module.
 
-Use the part number rather than the code name.
+Patch 0008 in this series are to enable debug unit on 96boards Hikey,
+Patch 0009 is to enable debug on 96boards DB410c. Have verified on both
+two boards.
 
-> +- reg: Should contain rc_dbi, apb, phy, config registers location and length.
-> +- reg-names: Must include the following entries:
-> +  "dbi": controller configuration registers;
-> +  "apb": apb Ctrl register;
-> +  "phy": apb PHY register;
+We can enable debugging with two methods, adding parameters into kernel
+command line for build-in module:
+  coresight_cpu_debug.enable=1
 
-Perhaps the phy should be a separate node and use the phy binding?
+Or we can wait the system has booted up to use debugfs nodes to enable
+debugging:
+  # echo 1 > /sys/kernel/debug/coresight_cpu_debug/enable
 
-> +  "config": PCIe configuration space registers.
-> +- reset-gpio: perst assert/deassert gpio
+As result we can get below log after input command:
+echo c > /proc/sysrq-trigger:
 
-reset-gpios
+ARM external debug module:
+coresight-cpu-debug 850000.debug: CPU[0]:
+coresight-cpu-debug 850000.debug:  EDPRSR:  00000001 (Power:On DLK:Unlock)
+coresight-cpu-debug 850000.debug:  EDPCSR:  [<ffff00000808e9bc>] handle_IPI+0x174/0x1d8
+coresight-cpu-debug 850000.debug:  EDCIDSR: 00000000
+coresight-cpu-debug 850000.debug:  EDVIDSR: 90000000 (State:Non-secure Mode:EL1/0 Width:64bits VMID:0)
+coresight-cpu-debug 852000.debug: CPU[1]:
+coresight-cpu-debug 852000.debug:  EDPRSR:  00000001 (Power:On DLK:Unlock)
+coresight-cpu-debug 852000.debug:  EDPCSR:  [<ffff0000087fab34>] debug_notifier_call+0x23c/0x358
+coresight-cpu-debug 852000.debug:  EDCIDSR: 00000000
+coresight-cpu-debug 852000.debug:  EDVIDSR: 90000000 (State:Non-secure Mode:EL1/0 Width:64bits VMID:0)
 
-> +
-> +Optional properties:
-> +- status: Either "ok" or "disabled".
+[...]
 
-Don't need to document this.
+Changes from v10:
+* Followed Liviu suggestion to improve readability of the documentation.
+* ARM Juno DTS binding patch has been picked by Sudeep, so this patch
+  set has not included anymore. Great!
 
-> +
-> +Kirin960 Example:
-> +        kirin_pcie@f4000000 {
+Changes from v9:
+* Used dev_xyz() to replace pr_xyz() for print log.
+* Added DT binding patch for Juno shared by Suzuki.
 
-pcie@...
+Changes from v8:
+* According to Mathieu suggestions to split the doc into two patches,
+  one is for kernel parameter and another is for driver documentation.
+* Add file entries to MAINTAINERS.
+* According to Mathieu suggestions, refined functions
+  debug_enable_func()/debug_disable_func().
 
-Build the dts with W=1 or W=2. dtc will warn for this now.
+Changes from v7:
+* Fix operator priority bug.
+* Minor sequence adjustment for function debug_func_exit().
 
-> +                        compatible = "hisilicon,kirin-pcie";
-> +                        reg =  <0x0 0xf4000000 0x0 0x1000>, <0x0 0xff3fe000 0x0 0x1000>,
-> +                                 <0x0 0xf3f20000 0x0 0x40000>, <0x0 0xF5000000 0 0x2000>;
-> +                        reg-names = "dbi","apb","phy", "config";
-> +                        bus-range = <0x0  0x1>;
-> +                        #address-cells = <3>;
-> +                        #size-cells = <2>;
-> +                        device_type = "pci";
-> +                        ranges = <0x02000000 0x0 0x00000000 0x0 0xf6000000 0x0 0x2000000>;
-> +                        num-lanes = <1>;
-> +                        #interrupt-cells = <1>;
-> +                        interrupt-map-mask = <0xf800 0 0 7>;
-> +			interrupt-map = <0x0 0 0 2 &gic 0 0 0  283 4>,
-> +                                        <0x0 0 0 3 &gic 0 0 0  284 4>,
-> +                                        <0x0 0 0 4 &gic 0 0 0  285 4>;
-> +                        clocks = <&crg_ctrl HI3660_PCIEPHY_REF>,
-> +                                <&crg_ctrl HI3660_CLK_GATE_PCIEAUX>,
-> +                                <&crg_ctrl HI3660_PCLK_GATE_PCIE_PHY>,
-> +                                <&crg_ctrl HI3660_PCLK_GATE_PCIE_SYS>,
-> +                                <&crg_ctrl HI3660_ACLK_GATE_PCIE>;
-> +                        clock-names = "pcie_phy_ref", "pcie_aux",
-> +                                "pcie_apb_phy", "pcie_apb_sys", "pcie_aclk";
-> +                        reset-gpio = <&gpio11 1 0 >;
-> +                        status = "ok";
+Changes from v6:
+* According to Suzuki and Mathieu suggestions, refined debug module
+  driver to install panic notifier when insmod module; refined function
+  debug_force_cpu_powered_up() for CPU power state checking; some minor
+  fixing for output log, adding comments for memory barrier, code
+  alignment.
 
-Don't show status in examples.
+Changes from v5:
+* According to Suzuki and Mathieu suggestions, refined debug module
+  driver to drop unused structure members, refactored initialization
+  code to distinguish hardware implementation features, refactored
+  flow for forcing CPU powered up, supported pm_runtime operations.
+* Added one new doc file: Documentation/trace/coresight-cpu-debug.txt,
+  which is used to describe detailed info for implementation, clock
+  and power domain impaction on debug module, and exmaples for common
+  usage.
+* Removed "idle constraints" from debug driver.
 
-> +        };
-> diff --git a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
-> index 3983086bd67b..2406a54947df 100644
-> --- a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
-> +++ b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
-> @@ -156,5 +156,36 @@
->  			clock-names = "uartclk", "apb_pclk";
->  			status = "disabled";
->  		};
-> +
-> +		kirin_pcie@f4000000 {
-> +			compatible = "hisilicon,kirin-pcie";
-> +			reg =  <0x0 0xf4000000 0x0 0x1000>,
-> +				<0x0 0xff3fe000 0x0 0x1000>,
-> +				<0x0 0xf3f20000 0x0 0x40000>,
-> +				<0x0 0xF5000000 0x0 0x2000>;
-> +			reg-names = "dbi", "apb", "phy", "config";
-> +			bus-range = <0x0  0x1>;
-> +			#address-cells = <3>;
-> +			#size-cells = <2>;
-> +			device_type = "pci";
-> +			ranges = <0x02000000 0x0 0x00000000 0x0
-> +				0xf6000000 0x0 0x2000000>;
-> +			num-lanes = <1>;
-> +			#interrupt-cells = <1>;
-> +			interrupt-map-mask = <0xf800 0 0 7>;
-> +			interrupt-map = <0x0 0 0 1 &gic 0 0 0 282 4>,
-> +				<0x0 0 0 2 &gic 0 0 0  283 4>,
-> +				<0x0 0 0 3 &gic 0 0 0  284 4>,
-> +				<0x0 0 0 4 &gic 0 0 0  285 4>;
-> +			clocks = <&crg_ctrl HI3660_PCIEPHY_REF>,
-> +				<&crg_ctrl HI3660_CLK_GATE_PCIEAUX>,
-> +				<&crg_ctrl HI3660_PCLK_GATE_PCIE_PHY>,
-> +				<&crg_ctrl HI3660_PCLK_GATE_PCIE_SYS>,
-> +				<&crg_ctrl HI3660_ACLK_GATE_PCIE>;
-> +			clock-names = "pcie_phy_ref", "pcie_aux",
-> +				"pcie_apb_phy", "pcie_apb_sys", "pcie_aclk";
-> +			reset-gpio = <&gpio11 1 0 >;
-> +			status = "ok";
-> +		};
->  	};
->  };
-> -- 
-> 2.11.GIT
-> 
+Changes from v4:
+* This version is mainly credit to ARM colleagues many contribution
+  ideas for better quality (Thanks a lot Suzuki, Mike and Sudeep!).
+* According to Suzuki suggestion, refined debug module driver to avoid
+  memory leak for drvdata struct, handle PCSAMPLE_MODE=1, use flag
+  drvdata.pc_has_offset to indicate if PCSR has offset, minor fixes.
+* According to Mathieu suggestion, refined dt binding description.
+* Changed driver to support module mode;
+* According to Mike suggestion and very appreciate the pseudo code,
+  added support to force CPU powered up with register EDPRCR;
+* According to discussions, added command line and debugfs nodes to
+  support enabling debugging for boot time, or later can dynamically
+  enable/disable debugging by debugfs.
+* According to Rob Herring suggestion, one minor fixes in DT binding.
+* According to Stephen Boyd suggestion, add const quality to structure
+  device_node. And used use of_cpu_device_node_get() to replace
+  of_get_cpu_node() in patch 0003.
+
+Changes from v3:
+* Added Suzuki K Poulose's patch to fix issue for the func
+  of_get_coresight_platform_data() doesn't properly drop the reference
+  to the CPU node pointer.
+* According to Suzuki suggestion, added code to handl the corner case
+  for ARMv8 CPU with aarch32 mode.
+* According to Suzuki suggestion, changed compatible string to
+  "arm,coresight-cpu-debug".
+* According to Mathieu suggestion, added "power-domains" as optional
+  properties.
+
+Changes from v2:
+* According to Mathieu Poirier suggestion, applied some minor fixes.
+* Added two extra patches for enabling debug module on Hikey.
+
+Changes from v1:
+* According to Mike Leach suggestion, removed the binding for debug
+  module clocks which have been directly provided by CPU clocks.
+* According to Mathieu Poirier suggestion, added function
+  of_coresight_get_cpu() and some minor refactors for debug module
+  driver.
+
+Changes from RFC:
+* According to Mike Leach suggestion, added check for EDPRSR to avoid
+  lockup; added supporting EDVIDSR and EDCIDSR registers.
+* According to Mark Rutland and Mathieu Poirier suggestion, rewrote
+  the documentation for DT binding.
+* According to Mark and Mathieu suggestion, refined debug driver.
+
+Leo Yan (8):
+  coresight: bindings for CPU debug module
+  doc: Add documentation for Coresight CPU debug
+  doc: Add coresight_cpu_debug.enable to kernel-parameters.txt
+  MAINTAINERS: update file entries for Coresight subsystem
+  coresight: refactor with function of_coresight_get_cpu
+  coresight: add support for CPU debug module
+  arm64: dts: hi6220: register debug module
+  arm64: dts: qcom: msm8916: Add debug unit
+
+Suzuki K Poulose (1):
+  coresight: of_get_coresight_platform_data: Add missing of_node_put
+
+ Documentation/admin-guide/kernel-parameters.txt    |   7 +
+ .../bindings/arm/coresight-cpu-debug.txt           |  49 ++
+ Documentation/trace/coresight-cpu-debug.txt        | 175 ++++++
+ MAINTAINERS                                        |   2 +
+ arch/arm64/boot/dts/hisilicon/hi6220.dtsi          |  64 ++
+ arch/arm64/boot/dts/qcom/msm8916.dtsi              |  32 +
+ drivers/hwtracing/coresight/Kconfig                |  14 +
+ drivers/hwtracing/coresight/Makefile               |   1 +
+ drivers/hwtracing/coresight/coresight-cpu-debug.c  | 696 +++++++++++++++++++++
+ drivers/hwtracing/coresight/of_coresight.c         |  40 +-
+ include/linux/coresight.h                          |   3 +
+ 11 files changed, 1071 insertions(+), 12 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/coresight-cpu-debug.txt
+ create mode 100644 Documentation/trace/coresight-cpu-debug.txt
+ create mode 100644 drivers/hwtracing/coresight/coresight-cpu-debug.c
+
+-- 
+2.7.4
