@@ -1,58 +1,40 @@
-From: Javier Martinez Canillas <javier@dowhile0.org>
-Subject: [PATCH v5 14/20] arm64: dts: ls1043a: Add generic compatible string for I2C EEPROM
-Date: Tue, 23 May 2017 15:34:42 +0200
-Message-ID: <20170523133448.4794-15-javier@dowhile0.org>
-References: <20170523133448.4794-1-javier@dowhile0.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170523133448.4794-1-javier@dowhile0.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh@kernel.org>, Javier Martinez Canillas <javier@dowhile0.org>, devicetree@vger.kernel.org, Stuart Yoder <stuart.yoder@nxp.com>, Li Yang <leoyang.li@nxp.com>, Rob Herring <robh+dt@kernel.org>, Hongtao Jia <hongtao.jia@nxp.com>, linux-arm-kernel@lists.infradead.org, Will Deacon <will.deacon@arm.com>, Herbert Xu <herbert@gondor.apana.org.au>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Shawn Guo <shawnguo@kernel.org>, =?UTF-8?q?Horia=20Geant=C4=83?= <horia.geanta@nxp.com>
+From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/3] gpio: Add new flags to control sleep status of GPIOs
+Date: Tue, 23 May 2017 08:38:18 -0500
+Message-ID: <CAL_Jsq+cTTkGH7ywQmkjM7sEfJ+jivVv3vY5eMK2etO209Rc9w@mail.gmail.com>
+References: <1494948714-15203-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+ <CACRpkdbiyZ9jPnuaX9OuYjVbrUYxtpqO-XMqb75ScCEH-=kOEg@mail.gmail.com> <20170523085102.hgr7yovshqy5arkq@dell>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170523085102.hgr7yovshqy5arkq@dell>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:WOLFSON MICROELECTRONICS DRIVERS" <patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The at24 driver allows to register I2C EEPROM chips using different vendor
-and devices, but the I2C subsystem does not take the vendor into account
-when matching using the I2C table since it only has device entries.
+On Tue, May 23, 2017 at 3:51 AM, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> On Tue, 23 May 2017, Linus Walleij wrote:
+>
+>> On Tue, May 16, 2017 at 5:31 PM, Charles Keepax
+>> <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org> wrote:
+>>
+>> > Add new flags to allow users to specify that they are not concerned with
+>> > the status of GPIOs whilst in a sleep/low power state.
+>> >
+>> > Signed-off-by: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+>>
+>> Would be nice to have some opinion from the DT maintainers about
+>> this but seems all right to me.
+>
+> Not sure if it makes a difference, but Rob Acked the bindings already.
 
-But when matching using an OF table, both the vendor and device has to be
-taken into account so the driver defines only a set of compatible strings
-using the "atmel" vendor as a generic fallback for compatible I2C devices.
+Seems PW doesn't pick-up header only patches, so I missed this.
 
-So add this generic fallback to the device node compatible string to make
-the device to match the driver using the OF device ID table.
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-Signed-off-by: Javier Martinez Canillas <javier@dowhile0.org>
-
----
-
-Changes in v5: None
-Changes in v4:
-- Only use the atmel manufacturer in the compatible string instead of
-  keeping the deprecated ones (Rob Herring).
-
-Changes in v3: None
-Changes in v2: None
-
- arch/arm64/boot/dts/freescale/fsl-ls1043a-rdb.dts | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1043a-rdb.dts b/arch/arm64/boot/dts/freescale/fsl-ls1043a-rdb.dts
-index d64370ed0738..0a3853240c8b 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1043a-rdb.dts
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1043a-rdb.dts
-@@ -75,11 +75,11 @@
- 		reg = <0x4c>;
- 	};
- 	eeprom@52 {
--		compatible = "at24,24c512";
-+		compatible = "atmel,24c512";
- 		reg = <0x52>;
- 	};
- 	eeprom@53 {
--		compatible = "at24,24c512";
-+		compatible = "atmel,24c512";
- 		reg = <0x53>;
- 	};
- 	rtc@68 {
--- 
-2.9.3
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
