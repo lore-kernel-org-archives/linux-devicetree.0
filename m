@@ -1,117 +1,125 @@
-From: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] extcon: cros-ec: Add extcon-cros-ec driver to
- support display out.
-Date: Tue, 23 May 2017 18:46:47 +0900
-Message-ID: <59240507.1040005@samsung.com>
-References: <20170301111943.12170-1-enric.balletbo@collabora.com>
-        <CGME20170301112844epcas4p34012f1564f1145f8d8a8967f4fe9a821@epcas4p3.samsung.com>
-        <20170301111943.12170-2-enric.balletbo@collabora.com>
-        <58B7C9BF.1040708@samsung.com> <58E44698.5020605@samsung.com>
-        <b0a76ac2-b524-23b3-ef58-22114e8bf209@collabora.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
+From: Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
+Subject: [PATCH] arm: dts: r7s72100: Add support for GR-Peach
+Date: Tue, 23 May 2017 11:47:14 +0200
+Message-ID: <1495532834-25670-1-git-send-email-jacopo+renesas@jmondi.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <b0a76ac2-b524-23b3-ef58-22114e8bf209-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, MyungJoo Ham <myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Benson Leung <bleung-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+To: geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org
+Cc: linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Enric,
+Add device tree source for Renesas GR-Peach board.
+GR-Peach is an RZ/A1H based board with 10MB of on-chip SRAM and 8MB
+QSPI flash storage.
+Add support for the board, and create a 2MB partition to use as rootfs.
 
-On 2017년 04월 20일 19:16, Enric Balletbo i Serra wrote:
-> On 05/04/17 03:21, Chanwoo Choi wrote:
->> Hi Enric,
->>
->> On 2017년 03월 02일 16:29, Chanwoo Choi wrote:
->>> Hi,
->>>
->>> On 2017년 03월 01일 20:19, Enric Balletbo i Serra wrote:
->>>> From: Benson Leung <bleung-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
->>>>
->>>> This is the driver for the USB Type C cable detection mechanism
->>>> built into the ChromeOS Embedded Controller on systems that
->>>> have USB Type-C ports.
->>>>
->>>> At present, this allows for the presence of display out, but in
->>>> future, it may also be used to notify host and device type cables
->>>> and the presence of power.
->>>>
->>>> Signed-off-by: Benson Leung <bleung-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
->>>> Signed-off-by: Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
->>>> ---
->>>> Changes since v1:
->>>>  Requested by Chanwoo Choi
->>>>  - Rename files changing _ for -
->>>>  - Remove the unneeded blank line on bottom of header.
->>>>  - Remove kobject.h and cros_ec_commands.h includes.
->>>>  - Remove the debug message as is not necessary.
->>>>  - Use the tab for indentation instead of space for if sentence.
->>>>  - Define each variable on different lines when the variables should be
->>>>    initialized.
->>>>  - Remove EXTCON_USB and EXTCON_USB_HOST as are not really used for now.
->>>>  - Add one blank line to split out between state and property setting.
->>>>  - Add the author information (header and module)
->>>>
->>>>  Enric Balletbo
->>>>  - As Rob suggested to rename the compatible name to something indicating that
->>>>    is USB Type C related I also renamed the file names, extcon-cros-ec ->
->>>>    extcon-usbc-cros-ec, I think it's more clear.
->>>>
->>>>  drivers/extcon/Kconfig               |   7 +
->>>>  drivers/extcon/Makefile              |   1 +
->>>>  drivers/extcon/extcon-usbc-cros-ec.c | 415 +++++++++++++++++++++++++++++++++++
->>>>  include/linux/mfd/cros_ec_commands.h |  75 +++++++
->>>>  4 files changed, 498 insertions(+)
->>>>  create mode 100644 drivers/extcon/extcon-usbc-cros-ec.c
->>>>
->>>
->>> Looks good to me.
->>> Acked-by: Chanwoo Choi <cw00.chio-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
->>>
->>> I think this patch should be handled with patches[1].
->>> [1] https://lkml.org/lkml/2017/2/14/655
->>>
->>> I think that one maintainer among following subsystems
->>> (mfd, chrome h/w platform, rtc and extcon)
->>> will apply their git repository, and then one maintainer
->>> will send the pull request of immutable branch for these patches.
->>>
->>
->> As I mentioned, these patch should be handled with related patches[1].
->> [1] https://lkml.org/lkml/2017/2/14/655
->>
->> So, I can't apply these patch on extcon git because there is a merge conflict
->> and we should handle these patches with immutable branch between subsystem maintainer.
->>
->> The v4.11-rc5 was released, if you want to apply this patch to the v4.12-rc1,
->> please take care of these patches.
->>
-> 
-> CC'ied : Olof Johansson
-> 
-> Olof, Benson,
-> 
-> Could at least the following patch in this series [1] picked as soon as possible
-> if it's ok.
-> 
-> 9630769 New          [01/13] mfd: cros_ec: Add helper for event notifier
-> 
-> This specific patch is blocking this and others like the rtc-cros-ec to land and
-> the series were send some time ago without received bad feedback.
-> 
-> [1] https://lkml.org/lkml/2017/3/17/321
-> 
-> Many thanks,
->  Enric
+Signed-off-by: Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
+---
+ Documentation/devicetree/bindings/arm/shmobile.txt |  2 +
+ arch/arm/boot/dts/Makefile                         |  1 +
+ arch/arm/boot/dts/r7s72100-grpeach.dts             | 65 ++++++++++++++++++++++
+ 3 files changed, 68 insertions(+)
+ create mode 100644 arch/arm/boot/dts/r7s72100-grpeach.dts
 
-Maybe, you better to resend these patches based on v4.12-rcX.
-
+diff --git a/Documentation/devicetree/bindings/arm/shmobile.txt b/Documentation/devicetree/bindings/arm/shmobile.txt
+index c950263..1199e48 100644
+--- a/Documentation/devicetree/bindings/arm/shmobile.txt
++++ b/Documentation/devicetree/bindings/arm/shmobile.txt
+@@ -51,6 +51,8 @@ Boards:
+     compatible = "renesas,bockw", "renesas,r8a7778"
+   - Genmai (RTK772100BC00000BR)
+     compatible = "renesas,genmai", "renesas,r7s72100"
++  - GR-Peach (RTK772100BC00000BR)
++    compatible = "renesas,grpeach", "renesas,r7s72100"
+   - Gose (RTP0RC7793SEB00010S)
+     compatible = "renesas,gose", "renesas,r8a7793"
+   - H3ULCB (R-Car Starter Kit Premier, RTP0RC7795SKB00010S)
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index 0118084..b238a3a 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -716,6 +716,7 @@ dtb-$(CONFIG_ARCH_S5PV210) += \
+ dtb-$(CONFIG_ARCH_SHMOBILE_MULTI) += \
+ 	emev2-kzm9d.dtb \
+ 	r7s72100-genmai.dtb \
++	r7s72100-grpeach.dtb \
+ 	r7s72100-rskrza1.dtb \
+ 	r8a73a4-ape6evm.dtb \
+ 	r8a7740-armadillo800eva.dtb \
+diff --git a/arch/arm/boot/dts/r7s72100-grpeach.dts b/arch/arm/boot/dts/r7s72100-grpeach.dts
+new file mode 100644
+index 0000000..5edd0a5
+--- /dev/null
++++ b/arch/arm/boot/dts/r7s72100-grpeach.dts
+@@ -0,0 +1,65 @@
++/*
++ * Device Tree Source for the GRPEACH board
++ *
++ * Copyright (C) 2017 Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
++ * Copyright (C) 2016 Renesas Electronics
++ *
++ * This file is licensed under the terms of the GNU General Public License
++ * version 2.  This program is licensed "as is" without any warranty of any
++ * kind, whether express or implied.
++ */
++
++/dts-v1/;
++#include "r7s72100.dtsi"
++
++/ {
++	model = "GRPEACH";
++	compatible = "renesas,grpeach", "renesas,r7s72100";
++
++	aliases {
++		serial2 = &scif2;
++	};
++
++	chosen {
++		bootargs = "console=ttySC2,115200 ignore_loglevel rw root=/dev/mtdblock0";
++	};
++
++	memory {
++		device_type = "memory";
++		reg = <0x20000000 0x00A00000>;	/* 10Mb @ 0x20000000 */
++
++	};
++
++	lbsc {
++		#address-cells = <1>;
++		#size-cells = <1>;
++	};
++
++	qspi@18000000 {
++		compatible = "mtd-rom";
++		probe-type = "map_rom";
++		reg = <0x18000000 0x00800000>;   /* 8 MB*/
++		bank-width = <4>;
++		device-width = <1>;
++
++		#address-cells = <1>;
++		#size-cells = <1>;
++
++		rootfs@18600000 {
++			label = "rootfs";
++			reg = <0x00600000 0x00200000>; /* 2MB @ 0x18600000 */
++		};
++	};
++};
++
++&extal_clk {
++	clock-frequency = <13330000>;
++};
++
++&usb_x1_clk {
++	clock-frequency = <48000000>;
++};
++
++&scif2 {
++	status = "okay";
++};
 -- 
-Best Regards,
-Chanwoo Choi
-Samsung Electronics
+2.7.4
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
