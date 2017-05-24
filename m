@@ -1,34 +1,97 @@
-From: Laxman Dewangan <ldewangan@nvidia.com>
-Subject: Re: [PATCH v2 4/5] gpio: of: Add documentation of new sleep standard
- GPIO specifiers
-Date: Wed, 24 May 2017 14:12:30 +0530
-Message-ID: <59254776.2000901@nvidia.com>
-References: <1495550852-3672-1-git-send-email-ckeepax@opensource.wolfsonmicro.com> <1495550852-3672-4-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+From: Eddie Cai <eddie.cai.linux@gmail.com>
+Subject: Re: [PATCH] ARM: dts: rockchip: correct regular setting for act8846
+Date: Wed, 24 May 2017 16:44:05 +0800
+Message-ID: <CAJrj+DNeK_z1mZQQ_eLeMBQ9yTj50kdY4OFevAVfsFas5_tr=Q@mail.gmail.com>
+References: <1495611221-6749-1-git-send-email-eddie.cai.linux@gmail.com> <5352430.FzU3E8oYou@phil>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1495550852-3672-4-git-send-email-ckeepax@opensource.wolfsonmicro.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>, linus.walleij@linaro.org
-Cc: lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, patches@opensource.wolfsonmicro.com, frowand.list@gmail.com
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <5352430.FzU3E8oYou@phil>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Heiko Stuebner <heiko@sntech.de>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-
-On Tuesday 23 May 2017 08:17 PM, Charles Keepax wrote:
-> Add documentation of new GPIO specifiers indicating if the state of an
-> output pin should be maintained during sleep/low-power mode.
+2017-05-24 16:17 GMT+08:00 Heiko Stuebner <heiko@sntech.de>:
+> Hi Eddie,
 >
-> Signed-off-by: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
-> ---
-Acked-by: Laxman Dewangan <ldewangan@nvidia.com>
-
-Thanks,
-Laxman
-
------------------------------------------------------------------------------------
-This email message is for the sole use of the intended recipient(s) and may contain
-confidential information.  Any unauthorized review, use, disclosure or distribution
-is prohibited.  If you are not the intended recipient, please contact the sender by
-reply email and destroy all copies of the original message.
------------------------------------------------------------------------------------
+> Am Mittwoch, 24. Mai 2017, 15:33:41 CEST schrieb Eddie Cai:
+>> the previous setting of act8846 is just copy from firefly board. but
+>> the reload board is a little different from firefly board. let's correct
+>> it.
+>>
+>> Signed-off-by: Eddie Cai <eddie.cai.linux@gmail.com>
+>> ---
+>>  arch/arm/boot/dts/rk3288-firefly-reload-core.dtsi | 21 +++++++++++----------
+>>  1 file changed, 11 insertions(+), 10 deletions(-)
+>>
+>> diff --git a/arch/arm/boot/dts/rk3288-firefly-reload-core.dtsi b/arch/arm/boot/dts/rk3288-firefly-reload-core.dtsi
+>> index 8134966..4cfa109 100644
+>> --- a/arch/arm/boot/dts/rk3288-firefly-reload-core.dtsi
+>> +++ b/arch/arm/boot/dts/rk3288-firefly-reload-core.dtsi
+>> @@ -179,6 +179,7 @@
+>>                               regulator-name = "vccio_sd";
+>>                               regulator-min-microvolt = <3300000>;
+>>                               regulator-max-microvolt = <3300000>;
+>> +                             regulator-always-on;
+>
+> the rest below looks pretty straight forward, but why does vccio_sd
+> need to be always on?
+>
+> I've checked the reload's schematics but did not find any further users
+> of vccio_sd that may warant this attribute.
+Oh, It's default on. thank you for point out my mistake. I will modify
+it in next version.
+>
+>
+> Heiko
+>
+>
+>>                       };
+>>
+>>                       vdd10_lcd: REG6 {
+>> @@ -187,24 +188,23 @@
+>>                               regulator-max-microvolt = <1000000>;
+>>                       };
+>>
+>> -                     vcca_18: REG7  {
+>> -                             regulator-name = "vcca_18";
+>> -                             regulator-min-microvolt = <1800000>;
+>> -                             regulator-max-microvolt = <1800000>;
+>> -                             regulator-always-on;
+>> +                     vcca_33: REG7  {
+>> +                             regulator-name = "vcca_33";
+>> +                             regulator-min-microvolt = <3300000>;
+>> +                             regulator-max-microvolt = <3300000>;
+>>                       };
+>>
+>> -                     vcca_33: REG8 {
+>> -                             regulator-name = "vcca_33";
+>> +                     vcc_lan: REG8 {
+>> +                             regulator-name = "vcc_lan";
+>>                               regulator-min-microvolt = <3300000>;
+>>                               regulator-max-microvolt = <3300000>;
+>> -                             regulator-always-on;
+>>                       };
+>>
+>> -                     vcc_lan: REG9 {
+>> -                             regulator-name = "vcca_lan";
+>> +                     vccio_pmu: REG9 {
+>> +                             regulator-name = "vccio_pmu";
+>>                               regulator-min-microvolt = <3300000>;
+>>                               regulator-max-microvolt = <3300000>;
+>> +                             regulator-always-on;
+>>                       };
+>>
+>>                       vdd_10: REG10 {
+>> @@ -218,6 +218,7 @@
+>>                               regulator-name = "vcc_18";
+>>                               regulator-min-microvolt = <1800000>;
+>>                               regulator-max-microvolt = <1800000>;
+>> +                             regulator-always-on;
+>>                       };
+>>
+>>                       vcc18_lcd: REG12 {
+>>
+>
+>
