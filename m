@@ -1,97 +1,109 @@
-From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: rockchip: correct regular setting for act8846
-Date: Wed, 24 May 2017 10:17:03 +0200
-Message-ID: <5352430.FzU3E8oYou@phil>
-References: <1495611221-6749-1-git-send-email-eddie.cai.linux@gmail.com>
+From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH] serial: 8250_of: Add reset support
+Date: Wed, 24 May 2017 10:18:36 +0200
+Message-ID: <1495613916.3840.16.camel@pengutronix.de>
+References: <20170524045319.29926-1-joel@jms.id.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1495611221-6749-1-git-send-email-eddie.cai.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <20170524045319.29926-1-joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Eddie Cai <eddie.cai.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
+Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Eddie,
+Hi Joel,
 
-Am Mittwoch, 24. Mai 2017, 15:33:41 CEST schrieb Eddie Cai:
-> the previous setting of act8846 is just copy from firefly board. but
-> the reload board is a little different from firefly board. let's correct
-> it.
+On Wed, 2017-05-24 at 14:53 +1000, Joel Stanley wrote:
+> This adds the hooks for an optional reset controller in the 8250 device
+> tree node.
 > 
-> Signed-off-by: Eddie Cai <eddie.cai.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Signed-off-by: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
 > ---
->  arch/arm/boot/dts/rk3288-firefly-reload-core.dtsi | 21 +++++++++++----------
->  1 file changed, 11 insertions(+), 10 deletions(-)
+>  Documentation/devicetree/bindings/serial/8250.txt |  1 +
+>  drivers/tty/serial/8250/8250_of.c                 | 16 ++++++++++++++++
+>  2 files changed, 17 insertions(+)
 > 
-> diff --git a/arch/arm/boot/dts/rk3288-firefly-reload-core.dtsi b/arch/arm/boot/dts/rk3288-firefly-reload-core.dtsi
-> index 8134966..4cfa109 100644
-> --- a/arch/arm/boot/dts/rk3288-firefly-reload-core.dtsi
-> +++ b/arch/arm/boot/dts/rk3288-firefly-reload-core.dtsi
-> @@ -179,6 +179,7 @@
->  				regulator-name = "vccio_sd";
->  				regulator-min-microvolt = <3300000>;
->  				regulator-max-microvolt = <3300000>;
-> +				regulator-always-on;
-
-the rest below looks pretty straight forward, but why does vccio_sd
-need to be always on?
-
-I've checked the reload's schematics but did not find any further users
-of vccio_sd that may warant this attribute.
-
-
-Heiko
-
-
->  			};
+> diff --git a/Documentation/devicetree/bindings/serial/8250.txt b/Documentation/devicetree/bindings/serial/8250.txt
+> index 10276a46ecef..63e32393f82b 100644
+> --- a/Documentation/devicetree/bindings/serial/8250.txt
+> +++ b/Documentation/devicetree/bindings/serial/8250.txt
+> @@ -45,6 +45,7 @@ Optional properties:
+>    property.
+>  - tx-threshold: Specify the TX FIFO low water indication for parts with
+>    programmable TX FIFO thresholds.
+> +- resets : phandle + reset specifier pairs
 >  
->  			vdd10_lcd: REG6 {
-> @@ -187,24 +188,23 @@
->  				regulator-max-microvolt = <1000000>;
->  			};
+>  Note:
+>  * fsl,ns16550:
+> diff --git a/drivers/tty/serial/8250/8250_of.c b/drivers/tty/serial/8250/8250_of.c
+> index 1cbadafc6889..f34dd23376f4 100644
+> --- a/drivers/tty/serial/8250/8250_of.c
+> +++ b/drivers/tty/serial/8250/8250_of.c
+> @@ -19,11 +19,13 @@
+>  #include <linux/of_irq.h>
+>  #include <linux/of_platform.h>
+>  #include <linux/clk.h>
+> +#include <linux/reset.h>
 >  
-> -			vcca_18: REG7  {
-> -				regulator-name = "vcca_18";
-> -				regulator-min-microvolt = <1800000>;
-> -				regulator-max-microvolt = <1800000>;
-> -				regulator-always-on;
-> +			vcca_33: REG7  {
-> +				regulator-name = "vcca_33";
-> +				regulator-min-microvolt = <3300000>;
-> +				regulator-max-microvolt = <3300000>;
->  			};
+>  #include "8250.h"
 >  
-> -			vcca_33: REG8 {
-> -				regulator-name = "vcca_33";
-> +			vcc_lan: REG8 {
-> +				regulator-name = "vcc_lan";
->  				regulator-min-microvolt = <3300000>;
->  				regulator-max-microvolt = <3300000>;
-> -				regulator-always-on;
->  			};
+>  struct of_serial_info {
+>  	struct clk *clk;
+> +	struct reset_control *rst;
+>  	int type;
+>  	int line;
+>  };
+> @@ -132,6 +134,18 @@ static int of_platform_serial_setup(struct platform_device *ofdev,
+>  		}
+>  	}
 >  
-> -			vcc_lan: REG9 {
-> -				regulator-name = "vcca_lan";
-> +			vccio_pmu: REG9 {
-> +				regulator-name = "vccio_pmu";
->  				regulator-min-microvolt = <3300000>;
->  				regulator-max-microvolt = <3300000>;
-> +				regulator-always-on;
->  			};
->  
->  			vdd_10: REG10 {
-> @@ -218,6 +218,7 @@
->  				regulator-name = "vcc_18";
->  				regulator-min-microvolt = <1800000>;
->  				regulator-max-microvolt = <1800000>;
-> +				regulator-always-on;
->  			};
->  
->  			vcc18_lcd: REG12 {
-> 
+> +	info->rst = devm_reset_control_get_optional(&ofdev->dev, NULL);
 
+Please use devm_reset_control_get_optional_shared instead.
+
+This looks like shared (clock-like) reset use, where you just have to
+make sure that the reset is deasserted while the module is in use, but
+you don't care whether it is actually asserted all the time otherwise.
+
+> +	if (IS_ERR(info->rst)) {
+> +		ret = PTR_ERR(info->rst);
+> +		if (ret == -EPROBE_DEFER)
+> +			goto out;
+> +		info->rst = NULL;
+
+devm_reset_control_get_optional returns NULL if no reset is specified in
+the device tree specifically so we don't have to do this in all the
+drivers. If an error is returned, just goto out unconditionally, ...
+
+> +	} else {
+> +		ret = reset_control_deassert(info->rst);
+> +		if (ret)
+> +			goto out;
+> +	}
+
+... then reset_control_deassert can be called unconditionally, too.
+
+> +
+>  	port->type = type;
+>  	port->uartclk = clk;
+>  	port->flags = UPF_SHARE_IRQ | UPF_BOOT_AUTOCONF | UPF_IOREMAP
+> @@ -231,6 +245,8 @@ static int of_platform_serial_remove(struct platform_device *ofdev)
+>  
+>  	if (info->clk)
+>  		clk_disable_unprepare(info->clk);
+> +	if (info->rst)
+
+Not necessary, reset_control_assert checks this, too.
+
+> +		reset_control_assert(info->rst);
+>  	kfree(info);
+>  	return 0;
+>  }
+
+regards
+Philipp
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
