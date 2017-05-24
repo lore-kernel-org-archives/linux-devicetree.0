@@ -1,116 +1,62 @@
-From: Andy Duan <fugang.duan-3arQi8VN3Tc@public.gmane.org>
-Subject: RE: [PATCH v2] net: fec: add post PHY reset delay DT property
-Date: Wed, 24 May 2017 02:18:09 +0000
-Message-ID: <AM4PR0401MB22605B6BD1901E7A1EEAFC9DFFFE0@AM4PR0401MB2260.eurprd04.prod.outlook.com>
-References: <20170523094808.11102-1-quentin.schulz@free-electrons.com>
+From: zhangfei <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 05/12] arm64: dts: Add I2C nodes for Hi3660
+Date: Wed, 24 May 2017 10:34:09 +0800
+Message-ID: <10a19a02-21ac-364e-ab5c-de8aa16c3858@linaro.org>
+References: <20170517083745.24479-1-guodong.xu@linaro.org>
+ <20170517083745.24479-6-guodong.xu@linaro.org>
+ <20170523003908.ztuh4oohdk3g34pm@rob-hp-laptop>
+ <94d06900-d871-7bc6-e1f3-d2b22ba20aaf@linaro.org>
+ <CAL_JsqJUH-TOufw=dtpgDww_VEvyTW_LZuSQqRSU-cYbAqfJ6A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170523094808.11102-1-quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+In-Reply-To: <CAL_JsqJUH-TOufw=dtpgDww_VEvyTW_LZuSQqRSU-cYbAqfJ6A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: "netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org" <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jarkko Nikula <jarkko.nikula-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Cc: Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Kefeng Wang <wangkefeng.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Chen Feng <puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Jiancheng Xue <xuejiancheng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> Sent: Tuesday, May=
- 23, 2017 5:48 PM
->Some PHY require to wait for a bit after the reset GPIO has been toggled. =
-This
->adds support for the DT property `phy-reset-post-delay` which gives the de=
-lay
->in milliseconds to wait after reset.
->
->If the DT property is not given, no delay is observed. Post reset delay gr=
-eater
->than 1000ms are invalid.
->
->Signed-off-by: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
->---
->
->v2:
->  - return -EINVAL when phy-reset-post-delay is greater than 1000ms
->  instead of defaulting to 1ms,
->  - remove `default to 1ms` when phy-reset-post-delay > 1000Ms from DT
->  binding doc and commit log,
->  - move phy-reset-post-delay property reading before
->  devm_gpio_request_one(),
->
-> Documentation/devicetree/bindings/net/fsl-fec.txt |  4 ++++
-> drivers/net/ethernet/freescale/fec_main.c         | 16 +++++++++++++++-
-> 2 files changed, 19 insertions(+), 1 deletion(-)
->
->diff --git a/Documentation/devicetree/bindings/net/fsl-fec.txt
->b/Documentation/devicetree/bindings/net/fsl-fec.txt
->index a1e3693cca16..6f55bdd52f8a 100644
->--- a/Documentation/devicetree/bindings/net/fsl-fec.txt
->+++ b/Documentation/devicetree/bindings/net/fsl-fec.txt
->@@ -15,6 +15,10 @@ Optional properties:
-> - phy-reset-active-high : If present then the reset sequence using the GP=
-IO
->   specified in the "phy-reset-gpios" property is reversed (H=3Dreset stat=
-e,
->   L=3Doperation state).
->+- phy-reset-post-delay : Post reset delay in milliseconds. If present
->+then
->+  a delay of phy-reset-post-delay milliseconds will be observed after
->+the
->+  phy-reset-gpios has been toggled. Can be omitted thus no delay is
->+  observed. Delay is in range of 1ms to 1000ms. Other delays are invalid.
-> - phy-supply : regulator that powers the Ethernet PHY.
-> - phy-handle : phandle to the PHY device connected to this device.
-> - fixed-link : Assume a fixed link. See fixed-link.txt in the same direct=
-ory.
->diff --git a/drivers/net/ethernet/freescale/fec_main.c
->b/drivers/net/ethernet/freescale/fec_main.c
->index 56a563f90b0b..f7c8649fd28f 100644
->--- a/drivers/net/ethernet/freescale/fec_main.c
->+++ b/drivers/net/ethernet/freescale/fec_main.c
->@@ -3192,7 +3192,7 @@ static int fec_reset_phy(struct platform_device
->*pdev)  {
-> 	int err, phy_reset;
-> 	bool active_high =3D false;
->-	int msec =3D 1;
->+	int msec =3D 1, phy_post_delay =3D 0;
-> 	struct device_node *np =3D pdev->dev.of_node;
->
-> 	if (!np)
->@@ -3209,6 +3209,11 @@ static int fec_reset_phy(struct platform_device
->*pdev)
-> 	else if (!gpio_is_valid(phy_reset))
-> 		return 0;
->
->+	err =3D of_property_read_u32(np, "phy-reset-post-delay",
->&phy_post_delay);
->+	/* valid reset duration should be less than 1s */
->+	if (!err && phy_post_delay > 1000)
->+		return -EINVAL;
->+
-> 	active_high =3D of_property_read_bool(np, "phy-reset-active-high");
->
-> 	err =3D devm_gpio_request_one(&pdev->dev, phy_reset, @@ -3226,6
->+3231,15 @@ static int fec_reset_phy(struct platform_device *pdev)
->
-> 	gpio_set_value_cansleep(phy_reset, !active_high);
->
->+	if (!phy_post_delay)
->+		return 0;
->+
->+	if (phy_post_delay > 20)
->+		msleep(phy_post_delay);
->+	else
->+		usleep_range(phy_post_delay * 1000,
->+			     phy_post_delay * 1000 + 1000);
->+
-> 	return 0;
-> }
-> #else /* CONFIG_OF */
->--
->2.11.0
+Hi, Jarkko
 
-It looks fine.
-Acked-by: Fugang Duan <fugang.duan-3arQi8VN3Tc@public.gmane.org>
+Would you mind give some suggestion?
+
+On 2017年05月23日 20:48, Rob Herring wrote:
+>
+>>>> +                       compatible = "snps,designware-i2c";
+>>> These should have an SoC specific compatible.
+>> We directly use drivers/i2c/busses/i2c-designware-platdrv.c,
+>> do we still an soc specific compatible?
+> It's fine if the driver uses the snps compatible, but the dts should
+> still have an SoC specific one.
+>
+>> Checked arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi, and other examples,
+>>
+>> compatible = "snps,designware-i2c" is used.
+> That was a mistake in the other platforms. We shouldn't continue repeating it.
+>
+> Rob
+
+Rob suggest add something like "hisilicon,hi3660-dw-i2c" as well.
+"The problem is dw-i2c does not give any clue as to what the 
+configuration or version of the IP is.
+Is that fully discoverable with version/capability registers? If not 
+then you need a specific compatible.
+Generally when we have not required them, it ends up being a problem 
+later on."
+
+
+While Documentation/devicetree/bindings/i2c/i2c-designware.txt
+compatible : should be "snps,designware-i2c"
+
+Besides, on Hikey960,
+[    3.822353] dw_readl(dev, DW_IC_COMP_VERSION)=0x3132302a
+[    3.827763] dw_readl(dev, DW_IC_COMP_TYPE)=0x44570140
+Are these two registers enough to distinguish version etc?
+
+Thanks
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
