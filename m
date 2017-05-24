@@ -1,306 +1,91 @@
-From: Ralph Sennhauser <ralph.sennhauser-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v3] ARM: dts: mvebu: add support for Linksys WRT3200ACM (Rango)
-Date: Wed, 24 May 2017 08:16:46 +0200
-Message-ID: <20170524061647.4238-1-ralph.sennhauser@gmail.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 2/2] ARM: dts: orange-pi-zero: enable SPI NOR
+Date: Wed, 24 May 2017 08:35:36 +0200
+Message-ID: <20170524063536.lotdwmkecenywwmi@flea.home>
+References: <20170519213550.8434-1-geomatsi@gmail.com>
+ <20170519213550.8434-3-geomatsi@gmail.com>
+ <20170522092900.7v2mg5zkbt6eclhr@flea.lan>
+ <20170522203012.k2f2kizp5jkiliq7@speedy.hunter>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="l5wvrovc3g6mtkdm"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170522203012.k2f2kizp5jkiliq7-tVm4GcgtBpsfMUw/CLfKLg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Ralph Sennhauser <ralph.sennhauser-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Imre Kaloz <kaloz-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sergey Matyukevich <geomatsi-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The Linksys WRT3200ACM (Rango) is the lates Armada-385 based router in
-the Linksys WRT AC Series which got released in October 2016.
 
-Key differences to the earlier Armada-385 based devices in the series is
-a bigger flash chip, next generation wireless modules (Marvell 88W8964)
-in the mini pcie slots as well as a Marvell SD8887. Finally the CPU is
-clocked at 1866 GHz by default.
+--l5wvrovc3g6mtkdm
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-The file armada-385-linksys-rango.dts is loosly based off of a DTS
-authored by Imre Kaloz.
+Hi Sergey,
 
-As Rango is part of the armada-385-linksys family of boards use the
-armada-385-linksys.dtsi as basis. As for functional differences to Imre
-Kaloz dts, the wlan LEDs aren't connected to the expander chip pca9635
-but directly to GPIOs. Then mpp47 controls the USB2.0 port and not the
-USB3.0 port, so use the correct GPIO mpp44 for it. Finally use
-non-removable instead of broken-cd with the sdhci node to avoid polling.
+On Mon, May 22, 2017 at 11:30:12PM +0300, Sergey Matyukevich wrote:
+> > > For more information see:
+> > > - http://linux-sunxi.org/Orange_Pi_Zero#SPI_NOR_flash
+> >=20
+> > Same remark here than on the first patch
+>=20
+> Ok, I will provide a more detailed commit message
+> w/o external references.
+>=20
+> > > +&spi0 {
+> > > +	status =3D "okay";
+> > > +
+> > > +	flash@0 {
+> > > +		#address-cells =3D <1>;
+> > > +		#size-cells =3D <1>;
+> > > +		compatible =3D "mxicy,mx25l1606e", "winbond,w25q128";
+> > > +		reg =3D <0>;
+> > > +		spi-max-frequency =3D <40000000>;
+> >=20
+> > How do the other OPi Zero that doesn't have that SPI flash behave?
+>
+> Hmmm. Good point. According to linux-sunxi.org docs SPI NOR flash
+> was optional in the first production batch in Dec 2016. In later
+> batches flash chip was pre-populated. However there are should
+> be quite a few boards around which do not have flash.
+>=20
+> Does it make sense to set status to 'disabled' by default adding
+> appropriate comment in the commit message ?
 
-Other changes can be categorized as just cleanup / reorganization due to
-using the armada-385-linksys.dtsi.
+If it's just that the driver fails to probe, we can live with that I
+guess. If not, then yes, that's a solution too.
 
-URL: https://github.com/openwrt/openwrt/blob/0abc3fa5a996daf7dafdc7794ccfe3fa7e955c5a/target/linux/mvebu/files/arch/arm/boot/dts/armada-385-linksys-rango.dts
-Signed-off-by: Ralph Sennhauser <ralph.sennhauser-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Signed-off-by: Imre Kaloz <kaloz-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
----
+Thanks!
+Maxime
 
-Hi everyone,
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
 
-this patch was part of a series adding support for this device, the
-preparatory patches all got merged already except for "clk: mvebu: add
-support for 1866MHz variants" which isn't strictly required for the
-board to run and was sent to linux-clk for inclusion.
+--l5wvrovc3g6mtkdm
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Thanks
-Ralph
----
+-----BEGIN PGP SIGNATURE-----
 
-Changes since v1:
+iQIcBAEBAgAGBQJZJSm4AAoJEBx+YmzsjxAgcy4P/3ba7jH+SC0jL37Rh5Suv82y
+tdGHLfqwTAV3i8cTcIRjG2z7BM/E/0EnnA27V638hADaxbsssT5UhrfcYXbMHLG4
+jdkxncRuzEIAAcy/nZ8IEsydwk0oL1rsjcJ1VFwO5ZgknjO3yxitcusmQ2I0tW96
+kHDmv09b5TbhybohclqwxPJI0LrDr8sHpaCydgXYJFdUA4cWVVtWf/CVggMq3feN
+AUN0kBwz8yImMIt/d7UMa+ljjx33gnhw3HU+2RZVuiHHA2dIM70UCn+KU1aqHQ8r
+IRQ0yIIUjDG7KUR3snkPSijbfi+VM/f8i0LUg8n58K13fb+48cuQES4kHbZznZmq
+qCgxav0hho45JRlmO6tCchc5MZaPpOrzH1dA1rIsK5B2DOtaeNgciBZcA+TX2no2
+eIACHjTKDo/bnOiKqamNhgeEMqcs5WZovlolU4vPjeGqkvTju8hVRgnqspJEPiDW
+6K/7NY/Kgl9/ACV4ukx+d9Z0zhs5BZTqkaAvky/n1MbIYW/9JtTwZx0prxzuxQAq
+MwjDu9qlySHbzF7hj/Z3ERjPYdyGy9UpefdhkPO5l51c64ZmuiGTgwqKzIHL2PgY
+gB6X32t2LG4GITEEufUg4Ni9mEgKZOeWS6Z8IuAiAIq7qhJGVws8I3E4wlIs3q8a
+KJwodIAjGXiHq74vzHVs
+=L9XA
+-----END PGP SIGNATURE-----
 
-  - Update commit message
-  - Add collected tags (Imre)
-
-Changes sice v2:
-
-  - Really use non-removable for the sdhci node
-
----
-
-Original notes:
-
-  The sdhci node is taken as is, the current node lets one use the
-  wireless part of the attached sd8887. There is an issue with the
-  initalization of the bluetooth firmware though. Haven't had the time
-  to investigate that in depth so far but shouldn't hold up the Rango
-  addition.
-
-  The non-removable property might be more appropriate than broken-cd
-  though.
-
-  Checkpatch complains about the line length of the URL, though not much
-  room there. Checkpatch also complains about the vendor prefix linksys
-  not being documented, however this follows the examples given by the
-  other boards.
----
- arch/arm/boot/dts/Makefile                     |   1 +
- arch/arm/boot/dts/armada-385-linksys-rango.dts | 203 +++++++++++++++++++++++++
- 2 files changed, 204 insertions(+)
- create mode 100644 arch/arm/boot/dts/armada-385-linksys-rango.dts
-
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 9c5e1d9..6be2974 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -999,6 +999,7 @@ dtb-$(CONFIG_MACH_ARMADA_38X) += \
- 	armada-385-db-ap.dtb \
- 	armada-385-linksys-caiman.dtb \
- 	armada-385-linksys-cobra.dtb \
-+	armada-385-linksys-rango.dtb \
- 	armada-385-linksys-shelby.dtb \
- 	armada-385-synology-ds116.dtb \
- 	armada-385-turris-omnia.dtb \
-diff --git a/arch/arm/boot/dts/armada-385-linksys-rango.dts b/arch/arm/boot/dts/armada-385-linksys-rango.dts
-new file mode 100644
-index 0000000..da8a0f3
---- /dev/null
-+++ b/arch/arm/boot/dts/armada-385-linksys-rango.dts
-@@ -0,0 +1,203 @@
-+/*
-+ * Device Tree file for the Linksys WRT3200ACM (Rango)
-+ *
-+ * Copyright (C) 2016 Imre Kaloz <kaloz-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
-+ *
-+ *
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPL or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
-+ *
-+ *  a) This file is licensed under the terms of the GNU General Public
-+ *     License version 2.  This program is licensed "as is" without
-+ *     any warranty of any kind, whether express or implied.
-+ *
-+ * Or, alternatively,
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use,
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
-+ */
-+
-+/dts-v1/;
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/input/input.h>
-+#include "armada-385-linksys.dtsi"
-+
-+/ {
-+	model = "Linksys WRT3200ACM";
-+	compatible = "linksys,rango", "linksys,armada385", "marvell,armada385",
-+		     "marvell,armada380";
-+};
-+
-+&expander0 {
-+	wan_amber@0 {
-+		label = "rango:amber:wan";
-+		reg = <0x0>;
-+	};
-+
-+	wan_white@1 {
-+		label = "rango:white:wan";
-+		reg = <0x1>;
-+	};
-+
-+	usb2@5 {
-+		label = "rango:white:usb2";
-+		reg = <0x5>;
-+	};
-+
-+	usb3_1@6 {
-+		label = "rango:white:usb3_1";
-+		reg = <0x6>;
-+	};
-+
-+	usb3_2@7 {
-+		label = "rango:white:usb3_2";
-+		reg = <0x7>;
-+	};
-+
-+	wps_white@8 {
-+		label = "rango:white:wps";
-+		reg = <0x8>;
-+	};
-+
-+	wps_amber@9 {
-+		label = "rango:amber:wps";
-+		reg = <0x9>;
-+	};
-+};
-+
-+&gpio_leds {
-+	power {
-+		gpios = <&gpio1 24 GPIO_ACTIVE_HIGH>;
-+		label = "rango:white:power";
-+	};
-+
-+	sata {
-+		gpios = <&gpio0 21 GPIO_ACTIVE_LOW>;
-+		label = "rango:white:sata";
-+	};
-+
-+	wlan_2g {
-+		gpios = <&gpio1 13 GPIO_ACTIVE_LOW>;
-+		label = "rango:white:wlan_2g";
-+	};
-+
-+	wlan_5g {
-+		gpios = <&gpio1 14 GPIO_ACTIVE_LOW>;
-+		label = "rango:white:wlan_5g";
-+	};
-+};
-+
-+&gpio_leds_pins {
-+	marvell,pins = "mpp21", "mpp45", "mpp46", "mpp56";
-+};
-+
-+&nand {
-+	/* AMD/Spansion S34ML02G2 256MiB, OEM Layout */
-+
-+	partition@0 {
-+		label = "u-boot";
-+		reg = <0x0000000 0x200000>;  /* 2MiB */
-+		read-only;
-+	};
-+
-+	partition@200000 {
-+		label = "u_env";
-+		reg = <0x200000 0x20000>;    /* 128KiB */
-+	};
-+
-+	partition@220000 {
-+		label = "s_env";
-+		reg = <0x220000 0x40000>;    /* 256KiB */
-+	};
-+
-+	partition@7e0000 {
-+		label = "devinfo";
-+		reg = <0x7e0000 0x40000>;   /* 256KiB */
-+		read-only;
-+	};
-+
-+	partition@820000 {
-+		label = "sysdiag";
-+		reg = <0x820000 0x1e0000>;   /* 1920KiB */
-+		read-only;
-+	};
-+
-+	/* kernel1 overlaps with rootfs1 by design */
-+	partition@a00000 {
-+		label = "kernel1";
-+		reg = <0xa00000 0x5000000>;  /* 80MiB */
-+	};
-+
-+	partition@1000000 {
-+		label = "rootfs1";
-+		reg = <0x1000000 0x4a00000>;  /* 74MiB */
-+	};
-+
-+	/* kernel2 overlaps with rootfs2 by design */
-+	partition@5a00000 {
-+		label = "kernel2";
-+		reg = <0x5a00000 0x5000000>; /* 80MiB */
-+	};
-+
-+	partition@6000000 {
-+		label = "rootfs2";
-+		reg = <0x6000000 0x4a00000>; /* 74MiB */
-+	};
-+
-+	/*
-+	 * 86MiB, last MiB is for the BBT, not writable
-+	 */
-+	partition@aa00000 {
-+		label = "syscfg";
-+		reg = <0xaa00000 0x5600000>;
-+	};
-+
-+	/*
-+	 * Unused area between "s_env" and "devinfo".
-+	 * Moved here because otherwise the renumbered
-+	 * partitions would break the bootloader
-+	 * supplied bootargs
-+	 */
-+	partition@180000 {
-+		label = "unused_area";
-+		reg = <0x260000 0x5c0000>;   /* 5.75MiB */
-+	};
-+};
-+
-+&sdhci {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&sdhci_pins>;
-+	no-1-8-v;
-+	non-removable;
-+	wp-inverted;
-+	bus-width = <8>;
-+	status = "okay";
-+};
-+
-+&usb3_1_vbus {
-+	gpio = <&gpio1 12 GPIO_ACTIVE_HIGH>;
-+};
-+
-+&usb3_1_vbus_pins {
-+	marvell,pins = "mpp44";
-+};
--- 
-2.10.2
-
+--l5wvrovc3g6mtkdm--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
