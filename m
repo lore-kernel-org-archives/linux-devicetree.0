@@ -1,109 +1,340 @@
-From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Subject: [PATCH v2 3/6] mailbox: arm_mhu: migrate to threaded irq handler
-Date: Wed, 24 May 2017 11:16:40 +0100
-Message-ID: <1495621003-4291-4-git-send-email-sudeep.holla@arm.com>
+From: Sudeep Holla <sudeep.holla@arm.com>
+Subject: [PATCH v2 4/6] mailbox: arm_mhu: re-factor data structure to add doorbell support
+Date: Wed, 24 May 2017 11:16:41 +0100
+Message-ID: <1495621003-4291-5-git-send-email-sudeep.holla@arm.com>
 References: <1495621003-4291-1-git-send-email-sudeep.holla@arm.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1495621003-4291-1-git-send-email-sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alexey Klimov <alexey.klimov-5wv7dgnIgG8@public.gmane.org>, Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1495621003-4291-1-git-send-email-sudeep.holla@arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org, Jassi Brar <jassisinghbrar@gmail.com>
+Cc: Sudeep Holla <sudeep.holla@arm.com>, devicetree@vger.kernel.org, Alexey Klimov <alexey.klimov@arm.com>, Jassi Brar <jaswinder.singh@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-In preparation to introduce support for doorbells which require the
-interrupt handlers to be threaded, this patch moves the existing
-interrupt handler to threaded handler.
+In order to support doorbells, we need a bit of reword around data
+structures that are per-channel. Since the number of doorbells are
+not fixed though restricted to maximum of 20, the channel assignment
+and initialization is move to xlate function.
 
-Also it moves out the registering and freeing of the handlers from
-the mailbox startup and shutdown methods. This also is required to
-support doorbells.
+This patch also adds the platform data for the existing support of one
+channel per physical channel.
 
-Cc: Alexey Klimov <alexey.klimov-5wv7dgnIgG8@public.gmane.org>
-Cc: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Signed-off-by: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Cc: Alexey Klimov <alexey.klimov@arm.com>
+Cc: Jassi Brar <jaswinder.singh@linaro.org>
+Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
 ---
- drivers/mailbox/arm_mhu.c | 41 ++++++++++++++++++++++-------------------
- 1 file changed, 22 insertions(+), 19 deletions(-)
+ drivers/mailbox/arm_mhu.c | 208 +++++++++++++++++++++++++++++++++++++++++-----
+ 1 file changed, 186 insertions(+), 22 deletions(-)
 
 diff --git a/drivers/mailbox/arm_mhu.c b/drivers/mailbox/arm_mhu.c
-index be0f293a9457..ebe17c097f43 100644
+index ebe17c097f43..ae06924eb6f4 100644
 --- a/drivers/mailbox/arm_mhu.c
 +++ b/drivers/mailbox/arm_mhu.c
-@@ -84,27 +84,15 @@ static int mhu_startup(struct mbox_chan *chan)
+@@ -20,6 +20,8 @@
+ #include <linux/io.h>
+ #include <linux/mailbox_controller.h>
+ #include <linux/module.h>
++#include <linux/of.h>
++#include <linux/of_device.h>
+ 
+ #define INTR_STAT_OFS	0x0
+ #define INTR_SET_OFS	0x8
+@@ -30,7 +32,8 @@
+ #define MHU_SEC_OFFSET	0x200
+ #define TX_REG_OFFSET	0x100
+ 
+-#define MHU_CHANS	3
++#define MHU_NUM_PCHANS	3	/* Secure, Non-Secure High and Low Priority */
++#define MHU_CHAN_MAX	20	/* Max channels to save on unused RAM */
+ 
+ struct mhu_link {
+ 	unsigned irq;
+@@ -40,53 +43,175 @@ struct mhu_link {
+ 
+ struct arm_mhu {
+ 	void __iomem *base;
+-	struct mhu_link mlink[MHU_CHANS];
+-	struct mbox_chan chan[MHU_CHANS];
++	struct mhu_link mlink[MHU_NUM_PCHANS];
+ 	struct mbox_controller mbox;
++	struct device *dev;
+ };
+ 
++/**
++ * ARM MHU Mailbox platform specific configuration
++ *
++ * @num_pchans: Maximum number of physical channels
++ * @num_doorbells: Maximum number of doorbells per physical channel
++ */
++struct mhu_mbox_pdata {
++	unsigned int num_pchans;
++	unsigned int num_doorbells;
++	bool support_doorbells;
++};
++
++/**
++ * ARM MHU Mailbox allocated channel information
++ *
++ * @mhu: Pointer to parent mailbox device
++ * @pchan: Physical channel within which this doorbell resides in
++ * @doorbell: doorbell number pertaining to this channel
++ */
++struct mhu_channel {
++	struct arm_mhu *mhu;
++	unsigned int pchan;
++	unsigned int doorbell;
++};
++
++static inline struct mbox_chan *
++mhu_mbox_to_channel(struct mbox_controller *mbox,
++		    unsigned int pchan, unsigned int doorbell)
++{
++	int i;
++	struct mhu_channel *chan_info;
++
++	for (i = 0; i < mbox->num_chans; i++) {
++		chan_info = mbox->chans[i].con_priv;
++		if (chan_info && chan_info->pchan == pchan &&
++		    chan_info->doorbell == doorbell)
++			return &mbox->chans[i];
++	}
++
++	dev_err(mbox->dev,
++		"Channel not registered: physical channel: %d doorbell: %d\n",
++		pchan, doorbell);
++
++	return NULL;
++}
++
++static unsigned int mhu_mbox_irq_to_pchan_num(struct arm_mhu *mhu, int irq)
++{
++	unsigned int pchan;
++	struct mhu_mbox_pdata *pdata = dev_get_platdata(mhu->dev);
++
++	for (pchan = 0; pchan < pdata->num_pchans; pchan++)
++		if (mhu->mlink[pchan].irq == irq)
++			break;
++	return pchan;
++}
++
++static struct mbox_chan *mhu_mbox_xlate(struct mbox_controller *mbox,
++					const struct of_phandle_args *spec)
++{
++	struct arm_mhu *mhu = dev_get_drvdata(mbox->dev);
++	struct mhu_mbox_pdata *pdata = dev_get_platdata(mhu->dev);
++	struct mhu_channel *chan_info;
++	struct mbox_chan *chan = NULL;
++	unsigned int pchan = spec->args[0];
++	unsigned int doorbell = pdata->support_doorbells ? spec->args[1] : 0;
++	int i;
++
++	/* Bounds checking */
++	if (pchan >= pdata->num_pchans || doorbell >= pdata->num_doorbells) {
++		dev_err(mbox->dev,
++			"Invalid channel requested pchan: %d doorbell: %d\n",
++			pchan, doorbell);
++		return ERR_PTR(-EINVAL);
++	}
++
++	for (i = 0; i < mbox->num_chans; i++) {
++		chan_info = mbox->chans[i].con_priv;
++
++		/* Is requested channel free? */
++		if (chan_info &&
++		    mbox->dev == chan_info->mhu->dev &&
++		    pchan == chan_info->pchan &&
++		    doorbell == chan_info->doorbell) {
++			dev_err(mbox->dev, "Channel in use\n");
++			return ERR_PTR(-EBUSY);
++		}
++
++		/*
++		 * Find the first free slot, then continue checking
++		 * to see if requested channel is in use
++		 */
++		if (!chan && !chan_info)
++			chan = &mbox->chans[i];
++	}
++
++	if (!chan) {
++		dev_err(mbox->dev, "No free channels left\n");
++		return ERR_PTR(-EBUSY);
++	}
++
++	chan_info = devm_kzalloc(mbox->dev, sizeof(*chan_info), GFP_KERNEL);
++	if (!chan_info)
++		return ERR_PTR(-ENOMEM);
++
++	chan_info->mhu = mhu;
++	chan_info->pchan = pchan;
++	chan_info->doorbell = doorbell;
++
++	chan->con_priv = chan_info;
++
++	dev_dbg(mbox->dev, "mbox: created channel phys: %d doorbell: %d\n",
++		pchan, doorbell);
++
++	return chan;
++}
++
+ static irqreturn_t mhu_rx_interrupt(int irq, void *p)
  {
- 	struct mhu_link *mlink = chan->con_priv;
+-	struct mbox_chan *chan = p;
+-	struct mhu_link *mlink = chan->con_priv;
++	struct arm_mhu *mhu = p;
++	unsigned int pchan = mhu_mbox_irq_to_pchan_num(mhu, irq);
++	struct mbox_chan *chan = mhu_mbox_to_channel(&mhu->mbox, pchan, 0);
++	void __iomem *base = mhu->mlink[pchan].rx_reg;
  	u32 val;
--	int ret;
  
- 	val = readl_relaxed(mlink->tx_reg + INTR_STAT_OFS);
- 	writel_relaxed(val, mlink->tx_reg + INTR_CLR_OFS);
+-	val = readl_relaxed(mlink->rx_reg + INTR_STAT_OFS);
++	val = readl_relaxed(base + INTR_STAT_OFS);
+ 	if (!val)
+ 		return IRQ_NONE;
  
--	ret = request_irq(mlink->irq, mhu_rx_interrupt,
--			  IRQF_SHARED, "mhu_link", chan);
--	if (ret) {
--		dev_err(chan->mbox->dev,
--			"Unable to acquire IRQ %d\n", mlink->irq);
--		return ret;
--	}
--
+ 	mbox_chan_received_data(chan, (void *)&val);
+ 
+-	writel_relaxed(val, mlink->rx_reg + INTR_CLR_OFS);
++	writel_relaxed(val, base + INTR_CLR_OFS);
+ 
+ 	return IRQ_HANDLED;
+ }
+ 
+ static bool mhu_last_tx_done(struct mbox_chan *chan)
+ {
+-	struct mhu_link *mlink = chan->con_priv;
+-	u32 val = readl_relaxed(mlink->tx_reg + INTR_STAT_OFS);
++	struct mhu_channel *chan_info = chan->con_priv;
++	void __iomem *base = chan_info->mhu->mlink[chan_info->pchan].tx_reg;
++	u32 val = readl_relaxed(base + INTR_STAT_OFS);
+ 
+ 	return (val == 0);
+ }
+ 
+ static int mhu_send_data(struct mbox_chan *chan, void *data)
+ {
+-	struct mhu_link *mlink = chan->con_priv;
++	struct mhu_channel *chan_info = chan->con_priv;
++	void __iomem *base = chan_info->mhu->mlink[chan_info->pchan].tx_reg;
+ 	u32 *arg = data;
+ 
+-	writel_relaxed(*arg, mlink->tx_reg + INTR_SET_OFS);
++	writel_relaxed(*arg, base + INTR_SET_OFS);
+ 
  	return 0;
  }
  
- static void mhu_shutdown(struct mbox_chan *chan)
+ static int mhu_startup(struct mbox_chan *chan)
  {
 -	struct mhu_link *mlink = chan->con_priv;
--
--	free_irq(mlink->irq, chan);
- }
++	struct mhu_channel *chan_info = chan->con_priv;
++	void __iomem *base = chan_info->mhu->mlink[chan_info->pchan].tx_reg;
+ 	u32 val;
  
- static const struct mbox_chan_ops mhu_ops = {
-@@ -132,13 +120,6 @@ static int mhu_probe(struct amba_device *adev, const struct amba_id *id)
+-	val = readl_relaxed(mlink->tx_reg + INTR_STAT_OFS);
+-	writel_relaxed(val, mlink->tx_reg + INTR_CLR_OFS);
++	val = readl_relaxed(base + INTR_STAT_OFS);
++	writel_relaxed(val, base + INTR_CLR_OFS);
+ 
+ 	return 0;
+ }
+@@ -102,14 +227,46 @@ static const struct mbox_chan_ops mhu_ops = {
+ 	.last_tx_done = mhu_last_tx_done,
+ };
+ 
++static const struct mhu_mbox_pdata arm_mhu_pdata = {
++	.num_pchans = 3,
++	.num_doorbells = 1,
++	.support_doorbells = false,
++};
++
++static const struct of_device_id mhu_mbox_match[] = {
++	{ .compatible = "arm,mhu", .data = (void *)&arm_mhu_pdata },
++	{}
++};
++
++MODULE_DEVICE_TABLE(of, mhu_mbox_match);
++
+ static int mhu_probe(struct amba_device *adev, const struct amba_id *id)
+ {
+-	int i, err;
++	int i, err, max_chans;
+ 	struct arm_mhu *mhu;
++	struct mbox_chan *chans;
++	struct mhu_mbox_pdata *pdata;
++	const struct of_device_id *match;
+ 	struct device *dev = &adev->dev;
+-	int mhu_reg[MHU_CHANS] = {MHU_LP_OFFSET, MHU_HP_OFFSET, MHU_SEC_OFFSET};
++	int mhu_reg[MHU_NUM_PCHANS] = {
++		MHU_LP_OFFSET, MHU_HP_OFFSET, MHU_SEC_OFFSET,
++	};
++
++	match = of_match_device(mhu_mbox_match, dev);
++	if (!match) {
++		dev_err(dev, "No configuration found\n");
++		return -ENODEV;
++	}
++	pdata = (struct mhu_mbox_pdata *)match->data;
++
++	if (pdata->num_pchans > MHU_NUM_PCHANS) {
++		dev_err(dev, "Number of physical channel can't exceed %d\n",
++			MHU_NUM_PCHANS);
++		return -EINVAL;
++	}
++
++	max_chans = pdata->support_doorbells ? MHU_CHAN_MAX : MHU_NUM_PCHANS;
+ 
+-	/* Allocate memory for device */
+ 	mhu = devm_kzalloc(dev, sizeof(*mhu), GFP_KERNEL);
+ 	if (!mhu)
+ 		return -ENOMEM;
+@@ -120,14 +277,22 @@ static int mhu_probe(struct amba_device *adev, const struct amba_id *id)
  		return PTR_ERR(mhu->base);
  	}
  
--	for (i = 0; i < MHU_CHANS; i++) {
--		mhu->chan[i].con_priv = &mhu->mlink[i];
--		mhu->mlink[i].irq = adev->irq[i];
--		mhu->mlink[i].rx_reg = mhu->base + mhu_reg[i];
--		mhu->mlink[i].tx_reg = mhu->mlink[i].rx_reg + TX_REG_OFFSET;
--	}
--
++	chans = devm_kcalloc(dev, max_chans, sizeof(*chans), GFP_KERNEL);
++	if (!chans)
++		return -ENOMEM;
++
++	dev->platform_data = pdata;
++
++	mhu->dev = dev;
  	mhu->mbox.dev = dev;
- 	mhu->mbox.chans = &mhu->chan[0];
- 	mhu->mbox.num_chans = MHU_CHANS;
-@@ -155,6 +136,28 @@ static int mhu_probe(struct amba_device *adev, const struct amba_id *id)
+-	mhu->mbox.chans = &mhu->chan[0];
+-	mhu->mbox.num_chans = MHU_CHANS;
++	mhu->mbox.chans = chans;
++	mhu->mbox.num_chans = max_chans;
+ 	mhu->mbox.ops = &mhu_ops;
+ 	mhu->mbox.txdone_irq = false;
+ 	mhu->mbox.txdone_poll = true;
+ 	mhu->mbox.txpoll_period = 1;
+ 
++	mhu->mbox.of_xlate = mhu_mbox_xlate;
+ 	amba_set_drvdata(adev, mhu);
+ 
+ 	err = mbox_controller_register(&mhu->mbox);
+@@ -136,7 +301,7 @@ static int mhu_probe(struct amba_device *adev, const struct amba_id *id)
  		return err;
  	}
  
-+	for (i = 0; i < MHU_CHANS; i++) {
-+		int irq = mhu->mlink[i].irq = adev->irq[i];
-+
-+		if (irq <= 0) {
-+			dev_dbg(dev, "No IRQ found for Channel %d\n", i);
-+			continue;
-+		}
-+
-+		mhu->chan[i].con_priv = &mhu->mlink[i];
-+		mhu->mlink[i].rx_reg = mhu->base + mhu_reg[i];
-+		mhu->mlink[i].tx_reg = mhu->mlink[i].rx_reg + TX_REG_OFFSET;
-+
-+		err = devm_request_threaded_irq(dev, irq, NULL,
-+						mhu_rx_interrupt, IRQF_ONESHOT,
-+						"mhu_link", &mhu->chan[i]);
-+		if (err) {
-+			dev_err(dev, "Can't claim IRQ %d\n", irq);
-+			mbox_controller_unregister(&mhu->mbox);
-+			return err;
-+		}
-+	}
-+
- 	dev_info(dev, "ARM MHU Mailbox registered\n");
- 	return 0;
- }
+-	for (i = 0; i < MHU_CHANS; i++) {
++	for (i = 0; i < pdata->num_pchans; i++) {
+ 		int irq = mhu->mlink[i].irq = adev->irq[i];
+ 
+ 		if (irq <= 0) {
+@@ -144,13 +309,12 @@ static int mhu_probe(struct amba_device *adev, const struct amba_id *id)
+ 			continue;
+ 		}
+ 
+-		mhu->chan[i].con_priv = &mhu->mlink[i];
+ 		mhu->mlink[i].rx_reg = mhu->base + mhu_reg[i];
+ 		mhu->mlink[i].tx_reg = mhu->mlink[i].rx_reg + TX_REG_OFFSET;
+ 
+ 		err = devm_request_threaded_irq(dev, irq, NULL,
+ 						mhu_rx_interrupt, IRQF_ONESHOT,
+-						"mhu_link", &mhu->chan[i]);
++						"mhu_link", mhu);
+ 		if (err) {
+ 			dev_err(dev, "Can't claim IRQ %d\n", irq);
+ 			mbox_controller_unregister(&mhu->mbox);
 -- 
 2.7.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
