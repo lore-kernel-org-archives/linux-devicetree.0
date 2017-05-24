@@ -1,35 +1,137 @@
-From: "Andrey Jr. Melnikov" <temnota.am@gmail.com>
-Subject: Re: [PATCH net-next v3 5/5] net-next: dsa: add dsa support for Mediatek MT7530 switch
-Date: Wed, 24 May 2017 14:17:39 +0300
-Message-ID: <hn6gvd-qp1.ln1@banana.localnet>
-References: <1490780303-18598-1-git-send-email-sean.wang@mediatek.com> <1490780303-18598-6-git-send-email-sean.wang@mediatek.com>
-Return-path: <netdev-owner@vger.kernel.org>
-Sender: netdev-owner@vger.kernel.org
-To: netdev@vger.kernel.org
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org
+From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: rockchip: correct regular setting for act8846
+Date: Wed, 24 May 2017 13:34:36 +0200
+Message-ID: <1743163.DHHxsEJfsI@phil>
+References: <1495611221-6749-1-git-send-email-eddie.cai.linux@gmail.com>
+ <5352430.FzU3E8oYou@phil> <010ca6dc-e1f7-fb6d-7a22-056d4e1eeef2@arm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <010ca6dc-e1f7-fb6d-7a22-056d4e1eeef2-5wv7dgnIgG8@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Eddie Cai <eddie.cai.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-In gmane.linux.kernel sean.wang@mediatek.com wrote:
-> From: Sean Wang <sean.wang@mediatek.com>
+Am Mittwoch, 24. Mai 2017, 11:26:10 CEST schrieb Robin Murphy:
+> On 24/05/17 09:17, Heiko Stuebner wrote:
+> > Hi Eddie,
+> > 
+> > Am Mittwoch, 24. Mai 2017, 15:33:41 CEST schrieb Eddie Cai:
+> >> the previous setting of act8846 is just copy from firefly board. but
+> >> the reload board is a little different from firefly board. let's correct
+> >> it.
+> >>
+> >> Signed-off-by: Eddie Cai <eddie.cai.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> >> ---
+> >>  arch/arm/boot/dts/rk3288-firefly-reload-core.dtsi | 21 +++++++++++----------
+> >>  1 file changed, 11 insertions(+), 10 deletions(-)
+> >>
+> >> diff --git a/arch/arm/boot/dts/rk3288-firefly-reload-core.dtsi b/arch/arm/boot/dts/rk3288-firefly-reload-core.dtsi
+> >> index 8134966..4cfa109 100644
+> >> --- a/arch/arm/boot/dts/rk3288-firefly-reload-core.dtsi
+> >> +++ b/arch/arm/boot/dts/rk3288-firefly-reload-core.dtsi
+> >> @@ -179,6 +179,7 @@
+> >>  				regulator-name = "vccio_sd";
+> >>  				regulator-min-microvolt = <3300000>;
+> >>  				regulator-max-microvolt = <3300000>;
+> >> +				regulator-always-on;
+> > 
+> > the rest below looks pretty straight forward, but why does vccio_sd
+> > need to be always on?
+> > 
+> > I've checked the reload's schematics but did not find any further users
+> > of vccio_sd that may warant this attribute.
+> 
+> It looks like the card detect line is pulled up externally to vcc_sd,
+> which isn't always-on either, so you probably do want this - on the
+> (unrelated) rk3288 TV box I've been hacking on, I discovered that
+> powering off the sdmmc-supply domain also kills the internal pull-up and
+> leaves sdmmc_cd floating. The resulting stochastic card polling
+> mechanism is amusing, but probably undesirable ;)
 
-> MT7530 is a 7-ports Gigabit Ethernet Switch that could be found on
-> Mediatek router platforms such as MT7623A or MT7623N platform which
-> includes 7-port Gigabit Ethernet MAC and 5-port Gigabit Ethernet PHY.
-> Among these ports, The port from 0 to 4 are the user ports connecting
-> with the remote devices while the port 5 and 6 are the CPU ports
-> connecting into Mediatek Ethernet GMAC.
+Hmm, are you mixing up vcc_sd and vccio_sd?
 
-> For port 6, it can communicate with the CPU via Mediatek Ethernet GMAC
-> through either the TRGMII or RGMII which could be controlled by phy-mode
-> in the dt-bindings to specify which mode is preferred to use. And for
-> port 5, only RGMII can be specified. However, currently, only port 6 is
-> being supported in this DSA driver.
+vccio_sd is the io supply (vqmmc in mmc-terms) to the mmc-host itself
+while vcc_sd is the actual card supply (vmmc in mmc-terms).
 
-> The driver is made with the reference to qca8k and other existing DSA
-> driver. The most of the essential callbacks of the DSA are already
-> support in the driver, including tag insert for user port distinguishing,
-> port control, bridge offloading, STP setup and ethtool operation to allow
-> DSA to model each user port into a standalone netdevice as the other DSA
-> driver had done.
 
-What about JUMBO frames and large MTU support? devlink support?
+After looking through some schematics, the pull-up to vcc_sd seems to be
+the common pattern for rk3288 devices. So I guess this means the fixed
+regulator vcc_sd should get an regulator-always-on instead to stabilize
+the card-detect?
+
+
+Heiko
+
+> > 
+> > 
+> > Heiko
+> > 
+> > 
+> >>  			};
+> >>  
+> >>  			vdd10_lcd: REG6 {
+> >> @@ -187,24 +188,23 @@
+> >>  				regulator-max-microvolt = <1000000>;
+> >>  			};
+> >>  
+> >> -			vcca_18: REG7  {
+> >> -				regulator-name = "vcca_18";
+> >> -				regulator-min-microvolt = <1800000>;
+> >> -				regulator-max-microvolt = <1800000>;
+> >> -				regulator-always-on;
+> >> +			vcca_33: REG7  {
+> >> +				regulator-name = "vcca_33";
+> >> +				regulator-min-microvolt = <3300000>;
+> >> +				regulator-max-microvolt = <3300000>;
+> >>  			};
+> >>  
+> >> -			vcca_33: REG8 {
+> >> -				regulator-name = "vcca_33";
+> >> +			vcc_lan: REG8 {
+> >> +				regulator-name = "vcc_lan";
+> >>  				regulator-min-microvolt = <3300000>;
+> >>  				regulator-max-microvolt = <3300000>;
+> >> -				regulator-always-on;
+> >>  			};
+> >>  
+> >> -			vcc_lan: REG9 {
+> >> -				regulator-name = "vcca_lan";
+> >> +			vccio_pmu: REG9 {
+> >> +				regulator-name = "vccio_pmu";
+> >>  				regulator-min-microvolt = <3300000>;
+> >>  				regulator-max-microvolt = <3300000>;
+> >> +				regulator-always-on;
+> >>  			};
+> >>  
+> >>  			vdd_10: REG10 {
+> >> @@ -218,6 +218,7 @@
+> >>  				regulator-name = "vcc_18";
+> >>  				regulator-min-microvolt = <1800000>;
+> >>  				regulator-max-microvolt = <1800000>;
+> >> +				regulator-always-on;
+> >>  			};
+> >>  
+> >>  			vcc18_lcd: REG12 {
+> >>
+> > 
+> > 
+> > 
+> > _______________________________________________
+> > linux-arm-kernel mailing list
+> > linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> > 
+> 
+> 
+> 
