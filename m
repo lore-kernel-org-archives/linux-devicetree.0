@@ -1,37 +1,47 @@
-From: Eddie Cai <eddie.cai.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH V2] ARM: dts: rockchip:remove hs200 support for firefly reload
-Date: Wed, 24 May 2017 16:57:47 +0800
-Message-ID: <1495616267-5305-1-git-send-email-eddie.cai.linux@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Eddie Cai <eddie.cai.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Stefan Wahren <stefan.wahren@i2se.com>
+Subject: Re: [PATCH v6 net-next 17/17] net: qualcomm: add QCA7000 UART driver
+Date: Wed, 24 May 2017 11:06:37 +0200
+Message-ID: <50e5a442-777f-1516-4e94-16db7fa28f8b@i2se.com>
+References: <1495545173-22150-1-git-send-email-stefan.wahren@i2se.com>
+ <1495545173-22150-18-git-send-email-stefan.wahren@i2se.com>
+ <053235ad-a963-6a09-ccb0-b643115dee00@gmx.de>
+ <1059621060.236992.1495568289051@email.1und1.de>
+ <41c7302e-b25c-9f57-470a-dd95200a060f@gmx.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <41c7302e-b25c-9f57-470a-dd95200a060f@gmx.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lino Sanfilippo <LinoSanfilippo@gmx.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "David S. Miller" <davem@davemloft.net>
+Cc: linux-serial@vger.kernel.org, Jiri Slaby <jslaby@suse.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, Jakub Kicinski <kubakici@wp.pl>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-due to layout limitation. not all of the reload board can support hs200.
-so remove hs200 support to make all board can boot up.
+Am 23.05.2017 um 23:01 schrieb Lino Sanfilippo:
+> On 23.05.2017 21:38, Stefan Wahren wrote:
+>>> Lino Sanfilippo <LinoSanfilippo@gmx.de> hat am 23. Mai 2017 um 20:16 geschrieben:
+>>>
+>>> I suggest to avoid this possible race by first unregistering the netdevice and then 
+>>> calling cancel_work_sync().
+>> What makes you sure that's safe to unregister the netdev while the tx work queue is possibly active?
+> unregister_netdevice() calls netdev_close() if the interface is still up. netdev_close() calls flush_work()
+> so the unregistration is delayed until the tx work function is finished. Furthermore both close() and
+> tx work are synchronized by means of the qca->lock which also guarantees that unregister_netdevice() wont
+> be finished until the tx work is done.
+>
 
-Signed-off-by: Eddie Cai <eddie.cai.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- arch/arm/boot/dts/rk3288-firefly-reload-core.dtsi | 2 --
- 1 file changed, 2 deletions(-)
+Thanks for the explanation. I suspect there could be the same race
+between serdev_device_close() and the tx work queue.
 
-diff --git a/arch/arm/boot/dts/rk3288-firefly-reload-core.dtsi b/arch/arm/boot/dts/rk3288-firefly-reload-core.dtsi
-index 4cfa109..56ac1e6f 100644
---- a/arch/arm/boot/dts/rk3288-firefly-reload-core.dtsi
-+++ b/arch/arm/boot/dts/rk3288-firefly-reload-core.dtsi
-@@ -75,8 +75,6 @@
- 	bus-width = <8>;
- 	cap-mmc-highspeed;
- 	disable-wp;
--	mmc-hs200-1_8v;
- 	non-removable;
- 	num-slots = <1>;
- 	pinctrl-names = "default";
--- 
-1.9.1
+So i would propose a variant of your original suggestion:
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+unregister_netdev(qca->net_dev);
+
+/* Flush any pending characters in the driver. */
+serdev_device_close(serdev);
+cancel_work_sync(&qca->tx_work);
+
+Since we have the same pattern in the error path of the probe function,
+the same applies there.
+
+Stefan
