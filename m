@@ -1,54 +1,65 @@
-From: Steve Twiss <stwiss.opensource@diasemi.com>
-Subject: RE: [RESEND PATCH V7 5/7] regulator: da9061: BUCK and LDO regulator
- driver
-Date: Wed, 24 May 2017 08:12:46 +0000
-Message-ID: <6ED8E3B22081A4459DAC7699F3695FB7018CD8D651@SW-EX-MBX02.diasemi.com>
-References: <cover.1495546845.git.stwiss.opensource@diasemi.com>
- <ac0c9c0edf9a3a48d8de7a5c07b16b771871796e.1495546845.git.stwiss.opensource@diasemi.com>
- <20170523171721.lpqjhakaawnz4prz@sirena.org.uk>
+From: Xiaowei Song <songxiaowei@hisilicon.com>
+Subject: [PATCH v6 2/4] arm64: dts: hisi: add kirin pcie node
+Date: Wed, 24 May 2017 16:12:46 +0800
+Message-ID: <20170524081248.67198-3-songxiaowei@hisilicon.com>
+References: <20170524081248.67198-1-songxiaowei@hisilicon.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20170523171721.lpqjhakaawnz4prz@sirena.org.uk>
-Content-Language: en-US
-Sender: linux-pm-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>, Lee Jones <lee.jones@linaro.org>
-Cc: LINUX-KERNEL <linux-kernel@vger.kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, DEVICETREE <devicetree@vger.kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Eduardo Valentin <edubezval@gmail.com>, Guenter Roeck <linux@roeck-us.net>, LINUX-INPUT <linux-input@vger.kernel.org>, LINUX-PM <linux-pm@vger.kernel.org>, LINUX-WATCHDOG <linux-watchdog@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Support Opensource <Support.Opensource@diasemi.com>, Wim Van Sebroeck <wim@iguana.be>, Zhang Rui <rui.zhang@intel.com>
+Content-Type: text/plain
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <20170524081248.67198-1-songxiaowei@hisilicon.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: bhelgaas@google.com, kishon@ti.com, jingoohan1@gmail.com, arnd@arndb.de, tn@semihalf.com, keith.busch@intel.com, niklas.cassel@axis.com, dhdang@apm.com, liudongdong3@huawei.com, gabriele.paoloni@huawei.com, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com
+Cc: chenyao11@huawei.com, puck.chen@hisilicon.com, songxiaowei@hisilicon.com, guodong.xu@linaro.org, wangbinghui@hisilicon.com, suzhuangluan@hisilicon.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 23 May 2017 18:17 Mark Brown
-> To: Steve Twiss
-> Subject: Re: [RESEND PATCH V7 5/7] regulator: da9061: BUCK and LDO regulator driver
-> 
-> On Tue, May 23, 2017 at 02:40:45PM +0100, Steve Twiss wrote:
-> 
-> > This patch was Acked by Mark Brown, a long time ago, way back in Oct 2016
-> > (https://patchwork.kernel.org/patch/9397787/).
-> > I have kept Mark Brown's Ack attached because there have been no real
-> > code changes since then, but I have recently updated the copyright header
-> > slightly, rebased the code (no changes necessary) and compile tested it
-> > against x86_64.
-> 
-> > The MFD files which this patch depended on were accepted into linux-next
-> > by Lee Jones last week. If there is anything in the way of this patch
-> > acceptance, could you please let me know?
-> 
-> Given that I've acked this and it depends on the MFD changes I'd have
-> expected Lee to apply it.  If nothing else happens I can apply it after
-> the next merge window, otherwise either Lee needs to send me a pull
-> request for the MFD change so I've got the dependency or he needs to
-> apply this.
+Add PCIe node for hi3660, and add binding documentation.
 
-Hi Mark,
+Cc: Guodong Xu <guodong.xu@linaro.org>
+Signed-off-by: Xiaowei Song <songxiaowei@hisilicon.com>
+---
+ arch/arm64/boot/dts/hisilicon/hi3660.dtsi | 31 +++++++++++++++++++++++++++++++
+ 1 file changed, 31 insertions(+)
 
-Thanks,
-No problem, just some minor administration.
-
-@Lee
-Could you please send Mark a pull request for the regulator component to the
-DA9062/61 changes [PATCH V7 5/7] regulator: da9061: BUCK and LDO regulator
-driver.
-
-Regards,
-Steve
+diff --git a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
+index 3983086bd67b..f41276b52248 100644
+--- a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
++++ b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
+@@ -156,5 +156,36 @@
+ 			clock-names = "uartclk", "apb_pclk";
+ 			status = "disabled";
+ 		};
++
++		pcie@f4000000 {
++			compatible = "hisilicon,kirin-pcie";
++			reg =  <0x0 0xf4000000 0x0 0x1000>,
++				<0x0 0xff3fe000 0x0 0x1000>,
++				<0x0 0xf3f20000 0x0 0x40000>,
++				<0x0 0xF5000000 0x0 0x2000>;
++			reg-names = "dbi", "apb", "phy", "config";
++			bus-range = <0x0  0x1>;
++			#address-cells = <3>;
++			#size-cells = <2>;
++			device_type = "pci";
++			ranges = <0x02000000 0x0 0x00000000 0x0
++				0xf6000000 0x0 0x2000000>;
++			num-lanes = <1>;
++			#interrupt-cells = <1>;
++			interrupt-map-mask = <0xf800 0 0 7>;
++			interrupt-map = <0x0 0 0 1 &gic 0 0 0 282 4>,
++				<0x0 0 0 2 &gic 0 0 0  283 4>,
++				<0x0 0 0 3 &gic 0 0 0  284 4>,
++				<0x0 0 0 4 &gic 0 0 0  285 4>;
++			clocks = <&crg_ctrl HI3660_PCIEPHY_REF>,
++				<&crg_ctrl HI3660_CLK_GATE_PCIEAUX>,
++				<&crg_ctrl HI3660_PCLK_GATE_PCIE_PHY>,
++				<&crg_ctrl HI3660_PCLK_GATE_PCIE_SYS>,
++				<&crg_ctrl HI3660_ACLK_GATE_PCIE>;
++			clock-names = "pcie_phy_ref", "pcie_aux",
++				"pcie_apb_phy", "pcie_apb_sys", "pcie_aclk";
++			reset-gpio = <&gpio11 1 0 >;
++			status = "ok";
++		};
+ 	};
+ };
+-- 
+2.11.GIT
