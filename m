@@ -1,340 +1,107 @@
 From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: [PATCH v2 4/6] mailbox: arm_mhu: re-factor data structure to add doorbell support
-Date: Wed, 24 May 2017 11:16:41 +0100
-Message-ID: <1495621003-4291-5-git-send-email-sudeep.holla@arm.com>
+Subject: [PATCH v2 2/6] Documentation: devicetree: add bindings to support ARM MHU doorbells
+Date: Wed, 24 May 2017 11:16:39 +0100
+Message-ID: <1495621003-4291-3-git-send-email-sudeep.holla@arm.com>
 References: <1495621003-4291-1-git-send-email-sudeep.holla@arm.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1495621003-4291-1-git-send-email-sudeep.holla@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org, Jassi Brar <jassisinghbrar@gmail.com>
-Cc: Sudeep Holla <sudeep.holla@arm.com>, devicetree@vger.kernel.org, Alexey Klimov <alexey.klimov@arm.com>, Jassi Brar <jaswinder.singh@linaro.org>
+Cc: Sudeep Holla <sudeep.holla@arm.com>, devicetree@vger.kernel.org, Alexey Klimov <alexey.klimov@arm.com>, Jassi Brar <jaswinder.singh@linaro.org>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-In order to support doorbells, we need a bit of reword around data
-structures that are per-channel. Since the number of doorbells are
-not fixed though restricted to maximum of 20, the channel assignment
-and initialization is move to xlate function.
+The ARM MHU has mechanism to assert interrupt signals to facilitate
+inter-processor message based communication. It drives the signal using
+a 32-bit register, with all 32-bits logically ORed together. It also
+enables software to set, clear and check the status of each of the bits
+of this register independently. Each bit of the register can be
+associated with a type of event that can contribute to raising the
+interrupt thereby allowing it to be used as independent doorbells.
 
-This patch also adds the platform data for the existing support of one
-channel per physical channel.
+Since the first version of this binding can't support doorbells,
+this patch extends the existing binding to support them.
 
 Cc: Alexey Klimov <alexey.klimov@arm.com>
 Cc: Jassi Brar <jaswinder.singh@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: devicetree@vger.kernel.org
 Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
 ---
- drivers/mailbox/arm_mhu.c | 208 +++++++++++++++++++++++++++++++++++++++++-----
- 1 file changed, 186 insertions(+), 22 deletions(-)
+ .../devicetree/bindings/mailbox/arm-mhu.txt        | 46 ++++++++++++++++++++--
+ 1 file changed, 43 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/mailbox/arm_mhu.c b/drivers/mailbox/arm_mhu.c
-index ebe17c097f43..ae06924eb6f4 100644
---- a/drivers/mailbox/arm_mhu.c
-+++ b/drivers/mailbox/arm_mhu.c
-@@ -20,6 +20,8 @@
- #include <linux/io.h>
- #include <linux/mailbox_controller.h>
- #include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_device.h>
+diff --git a/Documentation/devicetree/bindings/mailbox/arm-mhu.txt b/Documentation/devicetree/bindings/mailbox/arm-mhu.txt
+index 4971f03f0b33..bd9a3a267caf 100644
+--- a/Documentation/devicetree/bindings/mailbox/arm-mhu.txt
++++ b/Documentation/devicetree/bindings/mailbox/arm-mhu.txt
+@@ -10,21 +10,42 @@ STAT register and the remote clears it after having read the data.
+ The last channel is specified to be a 'Secure' resource, hence can't be
+ used by Linux running NS.
  
- #define INTR_STAT_OFS	0x0
- #define INTR_SET_OFS	0x8
-@@ -30,7 +32,8 @@
- #define MHU_SEC_OFFSET	0x200
- #define TX_REG_OFFSET	0x100
++The MHU drives the interrupt signal using a 32-bit register, with all
++32-bits logically ORed together. It provides a set of registers to
++enable software to set, clear and check the status of each of the bits
++of this register independently. The use of 32 bits per interrupt line
++enables software to provide more information about the source of the
++interrupt. For example, each bit of the register can be associated with
++a type of event that can contribute to raising the interrupt. Each of
++the 32-bits can be used as "doorbell" to alert the remote processor.
++
+ Mailbox Device Node:
+ ====================
  
--#define MHU_CHANS	3
-+#define MHU_NUM_PCHANS	3	/* Secure, Non-Secure High and Low Priority */
-+#define MHU_CHAN_MAX	20	/* Max channels to save on unused RAM */
+ Required properties:
+ --------------------
+-- compatible:		Shall be "arm,mhu" & "arm,primecell"
++- compatible:		Shall be "arm,primecell" and one of the below:
++			"arm,mhu" - if the controller doesn't support
++				    doorbell model
++			"arm,mhu-doorbell" - if the controller supports
++				    doorbell model
+ - reg:			Contains the mailbox register address range (base
+ 			address and length)
+-- #mbox-cells		Shall be 1 - the index of the channel needed.
++- #mbox-cells		Shall be 1 - the index of the channel needed when
++			compatible is "arm,mhu"
++			Shall be 2 - the index of the channel needed, and
++			the index of the doorbell bit with the channel when
++			compatible is "arm,mhu-doorbell"
+ - interrupts:		Contains the interrupt information corresponding to
+-			each of the 3 links of MHU.
++			each of the 3 physical channels of MHU namely low
++			priority non-secure, high priority non-secure and
++			secure channels.
  
- struct mhu_link {
- 	unsigned irq;
-@@ -40,53 +43,175 @@ struct mhu_link {
+ Example:
+ --------
  
- struct arm_mhu {
- 	void __iomem *base;
--	struct mhu_link mlink[MHU_CHANS];
--	struct mbox_chan chan[MHU_CHANS];
-+	struct mhu_link mlink[MHU_NUM_PCHANS];
- 	struct mbox_controller mbox;
-+	struct device *dev;
- };
- 
-+/**
-+ * ARM MHU Mailbox platform specific configuration
-+ *
-+ * @num_pchans: Maximum number of physical channels
-+ * @num_doorbells: Maximum number of doorbells per physical channel
-+ */
-+struct mhu_mbox_pdata {
-+	unsigned int num_pchans;
-+	unsigned int num_doorbells;
-+	bool support_doorbells;
-+};
++1. Controller which doesn't support doorbells
 +
-+/**
-+ * ARM MHU Mailbox allocated channel information
-+ *
-+ * @mhu: Pointer to parent mailbox device
-+ * @pchan: Physical channel within which this doorbell resides in
-+ * @doorbell: doorbell number pertaining to this channel
-+ */
-+struct mhu_channel {
-+	struct arm_mhu *mhu;
-+	unsigned int pchan;
-+	unsigned int doorbell;
-+};
+ 	mhu: mailbox@2b1f0000 {
+ 		#mbox-cells = <1>;
+ 		compatible = "arm,mhu", "arm,primecell";
+@@ -41,3 +62,22 @@ used by Linux running NS.
+ 		reg = <0 0x2e000000 0x4000>;
+ 		mboxes = <&mhu 1>; /* HP-NonSecure */
+ 	};
 +
-+static inline struct mbox_chan *
-+mhu_mbox_to_channel(struct mbox_controller *mbox,
-+		    unsigned int pchan, unsigned int doorbell)
-+{
-+	int i;
-+	struct mhu_channel *chan_info;
++2. Controller which supports doorbells
 +
-+	for (i = 0; i < mbox->num_chans; i++) {
-+		chan_info = mbox->chans[i].con_priv;
-+		if (chan_info && chan_info->pchan == pchan &&
-+		    chan_info->doorbell == doorbell)
-+			return &mbox->chans[i];
-+	}
-+
-+	dev_err(mbox->dev,
-+		"Channel not registered: physical channel: %d doorbell: %d\n",
-+		pchan, doorbell);
-+
-+	return NULL;
-+}
-+
-+static unsigned int mhu_mbox_irq_to_pchan_num(struct arm_mhu *mhu, int irq)
-+{
-+	unsigned int pchan;
-+	struct mhu_mbox_pdata *pdata = dev_get_platdata(mhu->dev);
-+
-+	for (pchan = 0; pchan < pdata->num_pchans; pchan++)
-+		if (mhu->mlink[pchan].irq == irq)
-+			break;
-+	return pchan;
-+}
-+
-+static struct mbox_chan *mhu_mbox_xlate(struct mbox_controller *mbox,
-+					const struct of_phandle_args *spec)
-+{
-+	struct arm_mhu *mhu = dev_get_drvdata(mbox->dev);
-+	struct mhu_mbox_pdata *pdata = dev_get_platdata(mhu->dev);
-+	struct mhu_channel *chan_info;
-+	struct mbox_chan *chan = NULL;
-+	unsigned int pchan = spec->args[0];
-+	unsigned int doorbell = pdata->support_doorbells ? spec->args[1] : 0;
-+	int i;
-+
-+	/* Bounds checking */
-+	if (pchan >= pdata->num_pchans || doorbell >= pdata->num_doorbells) {
-+		dev_err(mbox->dev,
-+			"Invalid channel requested pchan: %d doorbell: %d\n",
-+			pchan, doorbell);
-+		return ERR_PTR(-EINVAL);
-+	}
-+
-+	for (i = 0; i < mbox->num_chans; i++) {
-+		chan_info = mbox->chans[i].con_priv;
-+
-+		/* Is requested channel free? */
-+		if (chan_info &&
-+		    mbox->dev == chan_info->mhu->dev &&
-+		    pchan == chan_info->pchan &&
-+		    doorbell == chan_info->doorbell) {
-+			dev_err(mbox->dev, "Channel in use\n");
-+			return ERR_PTR(-EBUSY);
-+		}
-+
-+		/*
-+		 * Find the first free slot, then continue checking
-+		 * to see if requested channel is in use
-+		 */
-+		if (!chan && !chan_info)
-+			chan = &mbox->chans[i];
-+	}
-+
-+	if (!chan) {
-+		dev_err(mbox->dev, "No free channels left\n");
-+		return ERR_PTR(-EBUSY);
-+	}
-+
-+	chan_info = devm_kzalloc(mbox->dev, sizeof(*chan_info), GFP_KERNEL);
-+	if (!chan_info)
-+		return ERR_PTR(-ENOMEM);
-+
-+	chan_info->mhu = mhu;
-+	chan_info->pchan = pchan;
-+	chan_info->doorbell = doorbell;
-+
-+	chan->con_priv = chan_info;
-+
-+	dev_dbg(mbox->dev, "mbox: created channel phys: %d doorbell: %d\n",
-+		pchan, doorbell);
-+
-+	return chan;
-+}
-+
- static irqreturn_t mhu_rx_interrupt(int irq, void *p)
- {
--	struct mbox_chan *chan = p;
--	struct mhu_link *mlink = chan->con_priv;
-+	struct arm_mhu *mhu = p;
-+	unsigned int pchan = mhu_mbox_irq_to_pchan_num(mhu, irq);
-+	struct mbox_chan *chan = mhu_mbox_to_channel(&mhu->mbox, pchan, 0);
-+	void __iomem *base = mhu->mlink[pchan].rx_reg;
- 	u32 val;
- 
--	val = readl_relaxed(mlink->rx_reg + INTR_STAT_OFS);
-+	val = readl_relaxed(base + INTR_STAT_OFS);
- 	if (!val)
- 		return IRQ_NONE;
- 
- 	mbox_chan_received_data(chan, (void *)&val);
- 
--	writel_relaxed(val, mlink->rx_reg + INTR_CLR_OFS);
-+	writel_relaxed(val, base + INTR_CLR_OFS);
- 
- 	return IRQ_HANDLED;
- }
- 
- static bool mhu_last_tx_done(struct mbox_chan *chan)
- {
--	struct mhu_link *mlink = chan->con_priv;
--	u32 val = readl_relaxed(mlink->tx_reg + INTR_STAT_OFS);
-+	struct mhu_channel *chan_info = chan->con_priv;
-+	void __iomem *base = chan_info->mhu->mlink[chan_info->pchan].tx_reg;
-+	u32 val = readl_relaxed(base + INTR_STAT_OFS);
- 
- 	return (val == 0);
- }
- 
- static int mhu_send_data(struct mbox_chan *chan, void *data)
- {
--	struct mhu_link *mlink = chan->con_priv;
-+	struct mhu_channel *chan_info = chan->con_priv;
-+	void __iomem *base = chan_info->mhu->mlink[chan_info->pchan].tx_reg;
- 	u32 *arg = data;
- 
--	writel_relaxed(*arg, mlink->tx_reg + INTR_SET_OFS);
-+	writel_relaxed(*arg, base + INTR_SET_OFS);
- 
- 	return 0;
- }
- 
- static int mhu_startup(struct mbox_chan *chan)
- {
--	struct mhu_link *mlink = chan->con_priv;
-+	struct mhu_channel *chan_info = chan->con_priv;
-+	void __iomem *base = chan_info->mhu->mlink[chan_info->pchan].tx_reg;
- 	u32 val;
- 
--	val = readl_relaxed(mlink->tx_reg + INTR_STAT_OFS);
--	writel_relaxed(val, mlink->tx_reg + INTR_CLR_OFS);
-+	val = readl_relaxed(base + INTR_STAT_OFS);
-+	writel_relaxed(val, base + INTR_CLR_OFS);
- 
- 	return 0;
- }
-@@ -102,14 +227,46 @@ static const struct mbox_chan_ops mhu_ops = {
- 	.last_tx_done = mhu_last_tx_done,
- };
- 
-+static const struct mhu_mbox_pdata arm_mhu_pdata = {
-+	.num_pchans = 3,
-+	.num_doorbells = 1,
-+	.support_doorbells = false,
-+};
-+
-+static const struct of_device_id mhu_mbox_match[] = {
-+	{ .compatible = "arm,mhu", .data = (void *)&arm_mhu_pdata },
-+	{}
-+};
-+
-+MODULE_DEVICE_TABLE(of, mhu_mbox_match);
-+
- static int mhu_probe(struct amba_device *adev, const struct amba_id *id)
- {
--	int i, err;
-+	int i, err, max_chans;
- 	struct arm_mhu *mhu;
-+	struct mbox_chan *chans;
-+	struct mhu_mbox_pdata *pdata;
-+	const struct of_device_id *match;
- 	struct device *dev = &adev->dev;
--	int mhu_reg[MHU_CHANS] = {MHU_LP_OFFSET, MHU_HP_OFFSET, MHU_SEC_OFFSET};
-+	int mhu_reg[MHU_NUM_PCHANS] = {
-+		MHU_LP_OFFSET, MHU_HP_OFFSET, MHU_SEC_OFFSET,
++	mhu: mailbox@2b1f0000 {
++		#mbox-cells = <2>;
++		compatible = "arm,mhu-doorbell", "arm,primecell";
++		reg = <0 0x2b1f0000 0x1000>;
++		interrupts = <0 36 4>, /* LP-NonSecure */
++			     <0 35 4>, /* HP-NonSecure */
++			     <0 37 4>; /* Secure */
++		clocks = <&clock 0 2 1>;
++		clock-names = "apb_pclk";
 +	};
 +
-+	match = of_match_device(mhu_mbox_match, dev);
-+	if (!match) {
-+		dev_err(dev, "No configuration found\n");
-+		return -ENODEV;
-+	}
-+	pdata = (struct mhu_mbox_pdata *)match->data;
-+
-+	if (pdata->num_pchans > MHU_NUM_PCHANS) {
-+		dev_err(dev, "Number of physical channel can't exceed %d\n",
-+			MHU_NUM_PCHANS);
-+		return -EINVAL;
-+	}
-+
-+	max_chans = pdata->support_doorbells ? MHU_CHAN_MAX : MHU_NUM_PCHANS;
- 
--	/* Allocate memory for device */
- 	mhu = devm_kzalloc(dev, sizeof(*mhu), GFP_KERNEL);
- 	if (!mhu)
- 		return -ENOMEM;
-@@ -120,14 +277,22 @@ static int mhu_probe(struct amba_device *adev, const struct amba_id *id)
- 		return PTR_ERR(mhu->base);
- 	}
- 
-+	chans = devm_kcalloc(dev, max_chans, sizeof(*chans), GFP_KERNEL);
-+	if (!chans)
-+		return -ENOMEM;
-+
-+	dev->platform_data = pdata;
-+
-+	mhu->dev = dev;
- 	mhu->mbox.dev = dev;
--	mhu->mbox.chans = &mhu->chan[0];
--	mhu->mbox.num_chans = MHU_CHANS;
-+	mhu->mbox.chans = chans;
-+	mhu->mbox.num_chans = max_chans;
- 	mhu->mbox.ops = &mhu_ops;
- 	mhu->mbox.txdone_irq = false;
- 	mhu->mbox.txdone_poll = true;
- 	mhu->mbox.txpoll_period = 1;
- 
-+	mhu->mbox.of_xlate = mhu_mbox_xlate;
- 	amba_set_drvdata(adev, mhu);
- 
- 	err = mbox_controller_register(&mhu->mbox);
-@@ -136,7 +301,7 @@ static int mhu_probe(struct amba_device *adev, const struct amba_id *id)
- 		return err;
- 	}
- 
--	for (i = 0; i < MHU_CHANS; i++) {
-+	for (i = 0; i < pdata->num_pchans; i++) {
- 		int irq = mhu->mlink[i].irq = adev->irq[i];
- 
- 		if (irq <= 0) {
-@@ -144,13 +309,12 @@ static int mhu_probe(struct amba_device *adev, const struct amba_id *id)
- 			continue;
- 		}
- 
--		mhu->chan[i].con_priv = &mhu->mlink[i];
- 		mhu->mlink[i].rx_reg = mhu->base + mhu_reg[i];
- 		mhu->mlink[i].tx_reg = mhu->mlink[i].rx_reg + TX_REG_OFFSET;
- 
- 		err = devm_request_threaded_irq(dev, irq, NULL,
- 						mhu_rx_interrupt, IRQF_ONESHOT,
--						"mhu_link", &mhu->chan[i]);
-+						"mhu_link", mhu);
- 		if (err) {
- 			dev_err(dev, "Can't claim IRQ %d\n", irq);
- 			mbox_controller_unregister(&mhu->mbox);
++	mhu_client: scb@2e000000 {
++		compatible = "arm,scpi";
++		reg = <0 0x2e000000 0x200>;
++		mboxes = <&mhu 1 4>; /* HP-NonSecure 5th doorbell bit */
++	};
 -- 
 2.7.4
