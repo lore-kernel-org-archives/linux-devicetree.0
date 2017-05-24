@@ -1,52 +1,54 @@
-From: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: rockchip:remove hs200 support for firefly
- reload
-Date: Wed, 24 May 2017 16:00:53 +0800
-Message-ID: <65c7a442-4b2e-65e4-ea5e-0a723c257397@rock-chips.com>
-References: <1495612242-28873-1-git-send-email-eddie.cai.linux@gmail.com>
+From: Steve Twiss <stwiss.opensource@diasemi.com>
+Subject: RE: [RESEND PATCH V7 5/7] regulator: da9061: BUCK and LDO regulator
+ driver
+Date: Wed, 24 May 2017 08:12:46 +0000
+Message-ID: <6ED8E3B22081A4459DAC7699F3695FB7018CD8D651@SW-EX-MBX02.diasemi.com>
+References: <cover.1495546845.git.stwiss.opensource@diasemi.com>
+ <ac0c9c0edf9a3a48d8de7a5c07b16b771871796e.1495546845.git.stwiss.opensource@diasemi.com>
+ <20170523171721.lpqjhakaawnz4prz@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1495612242-28873-1-git-send-email-eddie.cai.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Eddie Cai <eddie.cai.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org
-Cc: shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20170523171721.lpqjhakaawnz4prz@sirena.org.uk>
+Content-Language: en-US
+Sender: linux-pm-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>, Lee Jones <lee.jones@linaro.org>
+Cc: LINUX-KERNEL <linux-kernel@vger.kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, DEVICETREE <devicetree@vger.kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Eduardo Valentin <edubezval@gmail.com>, Guenter Roeck <linux@roeck-us.net>, LINUX-INPUT <linux-input@vger.kernel.org>, LINUX-PM <linux-pm@vger.kernel.org>, LINUX-WATCHDOG <linux-watchdog@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Support Opensource <Support.Opensource@diasemi.com>, Wim Van Sebroeck <wim@iguana.be>, Zhang Rui <rui.zhang@intel.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On 23 May 2017 18:17 Mark Brown
+> To: Steve Twiss
+> Subject: Re: [RESEND PATCH V7 5/7] regulator: da9061: BUCK and LDO regulator driver
+> 
+> On Tue, May 23, 2017 at 02:40:45PM +0100, Steve Twiss wrote:
+> 
+> > This patch was Acked by Mark Brown, a long time ago, way back in Oct 2016
+> > (https://patchwork.kernel.org/patch/9397787/).
+> > I have kept Mark Brown's Ack attached because there have been no real
+> > code changes since then, but I have recently updated the copyright header
+> > slightly, rebased the code (no changes necessary) and compile tested it
+> > against x86_64.
+> 
+> > The MFD files which this patch depended on were accepted into linux-next
+> > by Lee Jones last week. If there is anything in the way of this patch
+> > acceptance, could you please let me know?
+> 
+> Given that I've acked this and it depends on the MFD changes I'd have
+> expected Lee to apply it.  If nothing else happens I can apply it after
+> the next merge window, otherwise either Lee needs to send me a pull
+> request for the MFD change so I've got the dependency or he needs to
+> apply this.
 
-On 2017/5/24 15:50, Eddie Cai wrote:
-> due to layout limitation. not all of the reload board can support hs200.
-> so remove hs200 support to make all board can boot up.
+Hi Mark,
 
-You now also remove DDR52, so all reload boards run at high speed mode?
+Thanks,
+No problem, just some minor administration.
 
-I'm curious about what was the layout limitation that mmc tuning
-process could never help?
+@Lee
+Could you please send Mark a pull request for the regulator component to the
+DA9062/61 changes [PATCH V7 5/7] regulator: da9061: BUCK and LDO regulator
+driver.
 
->
-> Signed-off-by: Eddie Cai <eddie.cai.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->  arch/arm/boot/dts/rk3288-firefly-reload-core.dtsi | 2 --
->  1 file changed, 2 deletions(-)
->
-> diff --git a/arch/arm/boot/dts/rk3288-firefly-reload-core.dtsi b/arch/arm/boot/dts/rk3288-firefly-reload-core.dtsi
-> index 4cfa109..56ac1e6f 100644
-> --- a/arch/arm/boot/dts/rk3288-firefly-reload-core.dtsi
-> +++ b/arch/arm/boot/dts/rk3288-firefly-reload-core.dtsi
-> @@ -75,8 +75,6 @@
->  	bus-width = <8>;
->  	cap-mmc-highspeed;
->  	disable-wp;
-> -	mmc-ddr-1_8v;
-> -	mmc-hs200-1_8v;
->  	non-removable;
->  	num-slots = <1>;
->  	pinctrl-names = "default";
->
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards,
+Steve
