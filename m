@@ -1,58 +1,60 @@
-From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: [PATCH 3/5] ARM64: dts: meson-gxl: Add Ethernet PHY LEDS pins nodes
-Date: Wed, 24 May 2017 10:28:23 +0200
-Message-ID: <1495614505-4437-4-git-send-email-narmstrong@baylibre.com>
-References: <1495614505-4437-1-git-send-email-narmstrong@baylibre.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v2 5/5] mfd: arizona: Update GPIO binding for newly
+ supported specifiers
+Date: Wed, 24 May 2017 09:35:19 +0100
+Message-ID: <20170524083519.mi7n6nw6ysc5xdeb@dell>
+References: <1495550852-3672-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+ <1495550852-3672-5-git-send-email-ckeepax@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1495614505-4437-1-git-send-email-narmstrong@baylibre.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: khilman@baylibre.com
-Cc: linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Neil Armstrong <narmstrong@baylibre.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1495550852-3672-5-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
+Cc: linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, patches@opensource.wolfsonmicro.com, frowand.list@gmail.com, ldewangan@nvidia.com
 List-Id: devicetree@vger.kernel.org
 
-The Amlogic Meson GXL SoCs embeds an 10/100 Ethernet PHY, this patchs adds
-the Link and Activity LEDs signals pins nodes.
+On Tue, 23 May 2017, Charles Keepax wrote:
 
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
----
- arch/arm64/boot/dts/amlogic/meson-gxl.dtsi | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+> Link to the generic GPIO specifier bindings now that the second cell of
+> the binding has some support in the driver.
+> 
+> Signed-off-by: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
+> ---
+> 
+> Changes since v1:
+>  - Now just points at the standard gpio binding stuff
+> 
+> Thanks,
+> Charles
+> 
+>  Documentation/devicetree/bindings/mfd/arizona.txt | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
-index 478d3b4..300dfad 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
-@@ -404,6 +404,20 @@
- 			};
- 		};
- 
-+		eth_link_led_pins: eth_link_led {
-+			mux {
-+				groups = "eth_link_led";
-+				function = "eth_led";
-+			};
-+		};
-+
-+		eth_act_led_pins: eth_act_led {
-+			mux {
-+				groups = "eth_act_led";
-+				function = "eth_led";
-+			};
-+		};
-+		
- 		pwm_a_pins: pwm_a {
- 			mux {
- 				groups = "pwm_a";
+I'll take this if/when the GPIO changes are merged.
+
+For my own reference:
+  Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
+  
+> diff --git a/Documentation/devicetree/bindings/mfd/arizona.txt b/Documentation/devicetree/bindings/mfd/arizona.txt
+> index 8f2e282..b37bdde 100644
+> --- a/Documentation/devicetree/bindings/mfd/arizona.txt
+> +++ b/Documentation/devicetree/bindings/mfd/arizona.txt
+> @@ -30,7 +30,8 @@ Required properties:
+>  
+>    - gpio-controller : Indicates this device is a GPIO controller.
+>    - #gpio-cells : Must be 2. The first cell is the pin number and the
+> -    second cell is used to specify optional parameters (currently unused).
+> +    second cell is used to specify optional parameters, see ../gpio/gpio.txt
+> +    for details.
+>  
+>    - AVDD-supply, DBVDD1-supply, CPVDD-supply : Power supplies for the device,
+>      as covered in Documentation/devicetree/bindings/regulator/regulator.txt
+
 -- 
-1.9.1
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
