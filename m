@@ -1,47 +1,57 @@
-From: Stefan Wahren <stefan.wahren@i2se.com>
-Subject: Re: [PATCH v6 net-next 17/17] net: qualcomm: add QCA7000 UART driver
-Date: Wed, 24 May 2017 11:06:37 +0200
-Message-ID: <50e5a442-777f-1516-4e94-16db7fa28f8b@i2se.com>
-References: <1495545173-22150-1-git-send-email-stefan.wahren@i2se.com>
- <1495545173-22150-18-git-send-email-stefan.wahren@i2se.com>
- <053235ad-a963-6a09-ccb0-b643115dee00@gmx.de>
- <1059621060.236992.1495568289051@email.1und1.de>
- <41c7302e-b25c-9f57-470a-dd95200a060f@gmx.de>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/5 v2] clk: qcom: Update DT bindings for the
+ MSM8660/APQ8060 RPMCC
+Date: Wed, 24 May 2017 11:16:22 +0200
+Message-ID: <CACRpkdYvwwJcxKPtKUyZBLWsmjXji7pHDKNz9NRTETqj2P3drQ@mail.gmail.com>
+References: <20170419091326.11226-1-linus.walleij@linaro.org> <CACRpkdbXEFeVkD8rETyrnuoAxUvnFt2BL07UsXuXfSnq3Qdyfw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <41c7302e-b25c-9f57-470a-dd95200a060f@gmx.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lino Sanfilippo <LinoSanfilippo@gmx.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "David S. Miller" <davem@davemloft.net>
-Cc: linux-serial@vger.kernel.org, Jiri Slaby <jslaby@suse.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, Jakub Kicinski <kubakici@wp.pl>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CACRpkdbXEFeVkD8rETyrnuoAxUvnFt2BL07UsXuXfSnq3Qdyfw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Am 23.05.2017 um 23:01 schrieb Lino Sanfilippo:
-> On 23.05.2017 21:38, Stefan Wahren wrote:
->>> Lino Sanfilippo <LinoSanfilippo@gmx.de> hat am 23. Mai 2017 um 20:16 geschrieben:
->>>
->>> I suggest to avoid this possible race by first unregistering the netdevice and then 
->>> calling cancel_work_sync().
->> What makes you sure that's safe to unregister the netdev while the tx work queue is possibly active?
-> unregister_netdevice() calls netdev_close() if the interface is still up. netdev_close() calls flush_work()
-> so the unregistration is delayed until the tx work function is finished. Furthermore both close() and
-> tx work are synchronized by means of the qca->lock which also guarantees that unregister_netdevice() wont
-> be finished until the tx work is done.
+On Wed, May 17, 2017 at 9:23 AM, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> On Wed, Apr 19, 2017 at 11:13 AM, Linus Walleij
+> <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
 >
+>> These compatible strings need to be added to extend support
+>> for the RPM CC to cover MSM8660/APQ8060. We also need to add
+>> enumberators to the include file for a few clocks that were
+>> missing.
+>>
+>> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>> Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> ---
+>> ChangeLog v1->v2:
+>> - Collect Rob's ACK
+>
+> Ping on this patch set. It's been sitting for a month and was
+> not changed from v1 either, if you want me to change something
+> it'd be good to know.
 
-Thanks for the explanation. I suspect there could be the same race
-between serdev_device_close() and the tx work queue.
+Ping on this again.
 
-So i would propose a variant of your original suggestion:
+I am sorry if you guys are swamped, I just don't know what to do,
+clock drivers are starting to become the bottleneck for everything
+I do. I bet the ARM SoC maintainers must be noticing it too.
 
-unregister_netdev(qca->net_dev);
+Unfortunately I am already managing two subsystems and cannot
+volunteer to help out with a third, I would blow a fuse.
 
-/* Flush any pending characters in the driver. */
-serdev_device_close(serdev);
-cancel_work_sync(&qca->tx_work);
+But it seems the CLK subsystem could use some co-maintainers?
 
-Since we have the same pattern in the error path of the probe function,
-the same applies there.
+Peter de Schrijver is a big authority in all things clocking (I clearly
+remember him discussing the subject a lot at conferences with lots
+of good points) so I would ask him to help, but I don't know how busy
+Peter may be with nVidia business etc these days...
 
-Stefan
+Yours,
+Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
