@@ -1,74 +1,72 @@
-From: Julian Scheel <julian@jusst.de>
-Subject: Re: [PATCH] ASoC: Add pcm9211 driver
-Date: Wed, 24 May 2017 09:44:30 +0200
-Message-ID: <553d176f-e32f-821d-a1fc-0313c3291d62@jusst.de>
-References: <20170523090931.9697-1-julian@jusst.de>
- <20170523211624.GA3245@us.netrek.org>
+From: Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v6 8/8] ARM: ux500: Add vendor prefix to tps61052 node
+Date: Wed, 24 May 2017 09:45:04 +0200
+Message-ID: <CABxcv=keYQwOGoxdATnFU0-iP_t6N4pR1FnQj62DL08s8TvfHQ@mail.gmail.com>
+References: <20170504052107.18995-1-javier@dowhile0.org> <20170504052107.18995-9-javier@dowhile0.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20170523211624.GA3245@us.netrek.org>
-Content-Language: en-US
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: James Cameron <quozl@laptop.org>
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, broonie@kernel.org, ckeepax@opensource.wolfsonmicro.com, lars@metafoo.de
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170504052107.18995-9-javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Linux Kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Aaro Koskinen <aaro.koskinen-X3B1VOXEql0@public.gmane.org>, Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 23.05.2017 23:16, James Cameron wrote:
-> On Tue, May 23, 2017 at 11:09:31AM +0200, Julian Scheel wrote:
->> This adds a driver for the TI PCM9211 digital audio interfaces
->> transceiver. The driver currently only handles the receiver aspect of
->> the chip and supports only control of the primary I2S (MAIN) output
->> port. Support for AUX output is trivial to add, but wasn't done due to
->> missing hardware for testing. The same goes for the transmitter
->> functionality.
->> The driver uses some extra device-tree fields to allow configuration of
->> pin functions directly out of this driver.
->>
->> Signed-off-by: Julian Scheel <julian@jusst.de>
->> ---
->>   .../devicetree/bindings/sound/pcm9211.txt          |  118 ++
->>   MAINTAINERS                                        |    6 +
->>   include/dt-bindings/sound/pcm9211.h                |   55 +
->>   sound/soc/codecs/Kconfig                           |   10 +
->>   sound/soc/codecs/Makefile                          |    4 +
->>   sound/soc/codecs/pcm9211-i2c.c                     |   65 +
->>   sound/soc/codecs/pcm9211.c                         | 1357 ++++++++++++++++++++
->>   sound/soc/codecs/pcm9211.h                         |  206 +++
->>   8 files changed, 1821 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/sound/pcm9211.txt
->>   create mode 100644 include/dt-bindings/sound/pcm9211.h
->>   create mode 100644 sound/soc/codecs/pcm9211-i2c.c
->>   create mode 100644 sound/soc/codecs/pcm9211.c
->>   create mode 100644 sound/soc/codecs/pcm9211.h
->>
->> [...]
->> diff --git a/sound/soc/codecs/pcm9211.c b/sound/soc/codecs/pcm9211.c
->> new file mode 100644
->> index 000000000000..0ab4ad551df8
->> --- /dev/null
->> +++ b/sound/soc/codecs/pcm9211.c
->> @@ -0,0 +1,1357 @@
->> [...]
->> +int pcm9211_probe(struct device *dev, struct regmap *regmap)
->> +{
->> [...]
->> +	priv->int0 = devm_gpiod_get_optional(dev, "int0", GPIOD_IN);
->> +	if (IS_ERR(priv->reset)) {
->> +		ret = PTR_ERR(priv->reset);
->> +		dev_err(dev, "Failed to get reset gpio: %d\n", ret);
->> +		return ret;
->> +	}
-> 
-> In above block; reset should be int0, three lines affected.
+[Adding Linus Walleij to cc list]
 
-Thanks, fixed for v2.
+On Thu, May 4, 2017 at 7:21 AM, Javier Martinez Canillas
+<javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org> wrote:
+> The tps61052 device node doesn't have a vendor prefix
+> in its compatible string, fix it by adding one.
+>
+> Signed-off-by: Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>
+> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Acked-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+>
+> ---
+>
+> Changes in v6: None
+> Changes in v5:
+> - Add Rob Herring's Acked-by tag.
+> - Add Acked-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>'s Acked-by tag.
+>
+> Changes in v4: None
+> Changes in v3: None
+> Changes in v2: None
+>
+>  arch/arm/boot/dts/ste-hrefprev60.dtsi | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/arch/arm/boot/dts/ste-hrefprev60.dtsi b/arch/arm/boot/dts/ste-hrefprev60.dtsi
+> index 5882a2606ac3..3f14b4df69b4 100644
+> --- a/arch/arm/boot/dts/ste-hrefprev60.dtsi
+> +++ b/arch/arm/boot/dts/ste-hrefprev60.dtsi
+> @@ -30,7 +30,7 @@
+>
+>                 i2c@80004000 {
+>                         tps61052@33 {
+> -                               compatible = "tps61052";
+> +                               compatible = "ti,tps61052";
+>                                 reg = <0x33>;
+>                         };
+>
+> --
+> 2.9.3
+>
+
+Hello Linus,
+
+I missed copying you this patch when posting the series (sorry about
+that). Could you please give your Ack if you agree with the change in
+this patch so Lee can pick the series?
+
+Alternatively, you can pick $SUBJECT since the change is independently
+of the driver changes. The complete series for your information is:
+http://www.spinics.net/lists/devicetree/msg175446.html
+
+Best regards,
+Javier
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
