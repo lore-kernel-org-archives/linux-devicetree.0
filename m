@@ -1,75 +1,74 @@
-From: Eddie Cai <eddie.cai.linux@gmail.com>
-Subject: [PATCH] ARM: dts: rockchip: correct regular setting for act8846
-Date: Wed, 24 May 2017 15:33:41 +0800
-Message-ID: <1495611221-6749-1-git-send-email-eddie.cai.linux@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: heiko@sntech.de, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk
-Cc: linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Eddie Cai <eddie.cai.linux@gmail.com>
+From: Julian Scheel <julian@jusst.de>
+Subject: Re: [PATCH] ASoC: Add pcm9211 driver
+Date: Wed, 24 May 2017 09:44:30 +0200
+Message-ID: <553d176f-e32f-821d-a1fc-0313c3291d62@jusst.de>
+References: <20170523090931.9697-1-julian@jusst.de>
+ <20170523211624.GA3245@us.netrek.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20170523211624.GA3245@us.netrek.org>
+Content-Language: en-US
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: James Cameron <quozl@laptop.org>
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, broonie@kernel.org, ckeepax@opensource.wolfsonmicro.com, lars@metafoo.de
 List-Id: devicetree@vger.kernel.org
 
-the previous setting of act8846 is just copy from firefly board. but
-the reload board is a little different from firefly board. let's correct
-it.
+On 23.05.2017 23:16, James Cameron wrote:
+> On Tue, May 23, 2017 at 11:09:31AM +0200, Julian Scheel wrote:
+>> This adds a driver for the TI PCM9211 digital audio interfaces
+>> transceiver. The driver currently only handles the receiver aspect of
+>> the chip and supports only control of the primary I2S (MAIN) output
+>> port. Support for AUX output is trivial to add, but wasn't done due to
+>> missing hardware for testing. The same goes for the transmitter
+>> functionality.
+>> The driver uses some extra device-tree fields to allow configuration of
+>> pin functions directly out of this driver.
+>>
+>> Signed-off-by: Julian Scheel <julian@jusst.de>
+>> ---
+>>   .../devicetree/bindings/sound/pcm9211.txt          |  118 ++
+>>   MAINTAINERS                                        |    6 +
+>>   include/dt-bindings/sound/pcm9211.h                |   55 +
+>>   sound/soc/codecs/Kconfig                           |   10 +
+>>   sound/soc/codecs/Makefile                          |    4 +
+>>   sound/soc/codecs/pcm9211-i2c.c                     |   65 +
+>>   sound/soc/codecs/pcm9211.c                         | 1357 ++++++++++++++++++++
+>>   sound/soc/codecs/pcm9211.h                         |  206 +++
+>>   8 files changed, 1821 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/sound/pcm9211.txt
+>>   create mode 100644 include/dt-bindings/sound/pcm9211.h
+>>   create mode 100644 sound/soc/codecs/pcm9211-i2c.c
+>>   create mode 100644 sound/soc/codecs/pcm9211.c
+>>   create mode 100644 sound/soc/codecs/pcm9211.h
+>>
+>> [...]
+>> diff --git a/sound/soc/codecs/pcm9211.c b/sound/soc/codecs/pcm9211.c
+>> new file mode 100644
+>> index 000000000000..0ab4ad551df8
+>> --- /dev/null
+>> +++ b/sound/soc/codecs/pcm9211.c
+>> @@ -0,0 +1,1357 @@
+>> [...]
+>> +int pcm9211_probe(struct device *dev, struct regmap *regmap)
+>> +{
+>> [...]
+>> +	priv->int0 = devm_gpiod_get_optional(dev, "int0", GPIOD_IN);
+>> +	if (IS_ERR(priv->reset)) {
+>> +		ret = PTR_ERR(priv->reset);
+>> +		dev_err(dev, "Failed to get reset gpio: %d\n", ret);
+>> +		return ret;
+>> +	}
+> 
+> In above block; reset should be int0, three lines affected.
 
-Signed-off-by: Eddie Cai <eddie.cai.linux@gmail.com>
----
- arch/arm/boot/dts/rk3288-firefly-reload-core.dtsi | 21 +++++++++++----------
- 1 file changed, 11 insertions(+), 10 deletions(-)
-
-diff --git a/arch/arm/boot/dts/rk3288-firefly-reload-core.dtsi b/arch/arm/boot/dts/rk3288-firefly-reload-core.dtsi
-index 8134966..4cfa109 100644
---- a/arch/arm/boot/dts/rk3288-firefly-reload-core.dtsi
-+++ b/arch/arm/boot/dts/rk3288-firefly-reload-core.dtsi
-@@ -179,6 +179,7 @@
- 				regulator-name = "vccio_sd";
- 				regulator-min-microvolt = <3300000>;
- 				regulator-max-microvolt = <3300000>;
-+				regulator-always-on;
- 			};
- 
- 			vdd10_lcd: REG6 {
-@@ -187,24 +188,23 @@
- 				regulator-max-microvolt = <1000000>;
- 			};
- 
--			vcca_18: REG7  {
--				regulator-name = "vcca_18";
--				regulator-min-microvolt = <1800000>;
--				regulator-max-microvolt = <1800000>;
--				regulator-always-on;
-+			vcca_33: REG7  {
-+				regulator-name = "vcca_33";
-+				regulator-min-microvolt = <3300000>;
-+				regulator-max-microvolt = <3300000>;
- 			};
- 
--			vcca_33: REG8 {
--				regulator-name = "vcca_33";
-+			vcc_lan: REG8 {
-+				regulator-name = "vcc_lan";
- 				regulator-min-microvolt = <3300000>;
- 				regulator-max-microvolt = <3300000>;
--				regulator-always-on;
- 			};
- 
--			vcc_lan: REG9 {
--				regulator-name = "vcca_lan";
-+			vccio_pmu: REG9 {
-+				regulator-name = "vccio_pmu";
- 				regulator-min-microvolt = <3300000>;
- 				regulator-max-microvolt = <3300000>;
-+				regulator-always-on;
- 			};
- 
- 			vdd_10: REG10 {
-@@ -218,6 +218,7 @@
- 				regulator-name = "vcc_18";
- 				regulator-min-microvolt = <1800000>;
- 				regulator-max-microvolt = <1800000>;
-+				regulator-always-on;
- 			};
- 
- 			vcc18_lcd: REG12 {
--- 
-1.9.1
+Thanks, fixed for v2.
