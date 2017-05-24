@@ -1,112 +1,106 @@
-From: Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [PATCH] ARM: dts: rockchip: add adc button for Firefly
-Date: Wed, 24 May 2017 11:50:44 +0200
-Message-ID: <2018816.Fb9eUWctIC@phil>
-References: <20170507142627.5307-1-ayaka@soulik.info>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: CPU_BIG_ENDIAN in generic code (was: Re: [PATCH v3 3/7] arch/sparc:
+ Define config parameter CPU_BIG_ENDIAN)
+Date: Wed, 24 May 2017 11:59:21 +0200
+Message-ID: <CAMuHMdVjh+1TR19mUUQYHSazHnBHa4uxn7KyHUO+jAh7WDxy5Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170507142627.5307-1-ayaka@soulik.info>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Randy Li <ayaka@soulik.info>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux@armlinux.org.uk, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-arch-owner@vger.kernel.org>
+Sender: linux-arch-owner@vger.kernel.org
+To: Babu Moger <babu.moger@oracle.com>
+Cc: "David S. Miller" <davem@davemloft.net>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnd Bergmann <arnd@arndb.de>, sparclinux <sparclinux@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux-Arch <linux-arch@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Randy,
+On Tue, May 23, 2017 at 11:45 PM, Babu Moger <babu.moger@oracle.com> wrote:
+> Found this problem while enabling queued rwlock on SPARC.
+> The parameter CONFIG_CPU_BIG_ENDIAN is used to clear the
+> specific byte in qrwlock structure. Without this parameter,
+> we clear the wrong byte. Here is the code.
+>
+> static inline u8 *__qrwlock_write_byte(struct qrwlock *lock)
+>  {
+>         return (u8 *)lock + 3 * IS_BUILTIN(CONFIG_CPU_BIG_ENDIAN);
+>  }
+>
+> Define CPU_BIG_ENDIAN for SPARC to fix it.
 
-Am Sonntag, 7. Mai 2017, 22:26:27 CEST schrieb Randy Li:
-> The only adc button connected to adc input is recovery button.
-> 
-> Signed-off-by: Randy Li <ayaka@soulik.info>
-> ---
->  arch/arm/boot/dts/rk3288-firefly-reload.dts | 17 +++++++++++++++++
->  arch/arm/boot/dts/rk3288-firefly.dtsi       | 13 +++++++++++++
->  2 files changed, 30 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/rk3288-firefly-reload.dts b/arch/arm/boot/dts/rk3288-firefly-reload.dts
-> index d0b3204a..ed1baa8 100644
-> --- a/arch/arm/boot/dts/rk3288-firefly-reload.dts
-> +++ b/arch/arm/boot/dts/rk3288-firefly-reload.dts
-> @@ -48,6 +48,19 @@
->  	model = "Firefly-RK3288-reload";
->  	compatible = "firefly,firefly-rk3288-reload", "rockchip,rk3288";
->  
-> +	adc-keys {
-> +		compatible = "adc-keys";
-> +		io-channels = <&saradc 1>;
-> +		io-channel-names = "buttons";
-> +		keyup-threshold-microvolt = <1800000>;
-> +
-> +		button-recovery {
-> +			label = "Recovery";
-> +			linux,code = <KEY_BACK>;
+> --- a/arch/sparc/Kconfig
+> +++ b/arch/sparc/Kconfig
+> @@ -92,6 +92,10 @@ config ARCH_DEFCONFIG
+>  config ARCH_PROC_KCORE_TEXT
+>         def_bool y
+>
+> +config CPU_BIG_ENDIAN
+> +       bool
+> +       default y if SPARC
 
-I don't think KEY_BACK is really a suitable keycode for your recovery key.
+Nice catch!
 
-Looking at other devices and already available keycodes. I guess nice
-choices would be one of
+Traditionally, CPU_BIG_ENDIAN and CPU_LITTLE_ENDIAN were defined only on
+architectures that may support both.  And it was checked in platform code
+and drivers only.
+Hence the symbol is lacking from most architectures. Heck, even
+architectures that support both may default to one endiannes, and declare
+only the symbol for the other endianness:
 
-- KEY_VENDOR
-- KEY_MENU
-- KEY_CONFIG
+--- arch/alpha ---
+--- arch/arc ---
+arch/arc/Kconfig:config CPU_BIG_ENDIAN
+--- arch/arm ---
+arch/arm/mm/Kconfig:config CPU_BIG_ENDIAN
+--- arch/arm64 ---
+arch/arm64/Kconfig:config CPU_BIG_ENDIAN
+--- arch/blackfin ---
+--- arch/c6x ---
+arch/c6x/Kconfig:config CPU_BIG_ENDIAN
+--- arch/cris ---
+--- arch/frv ---
+--- arch/h8300 ---
+--- arch/hexagon ---
+--- arch/ia64 ---
+--- arch/Kconfig ---
+--- arch/m32r ---
+arch/m32r/Kconfig:config CPU_LITTLE_ENDIAN
+--- arch/m68k ---
+--- arch/metag ---
+--- arch/microblaze ---
+--- arch/mips ---
+arch/mips/Kconfig:config CPU_BIG_ENDIAN
+arch/mips/Kconfig:config CPU_LITTLE_ENDIAN
+--- arch/mn10300 ---
+--- arch/nios2 ---
+--- arch/openrisc ---
+--- arch/parisc ---
+--- arch/powerpc ---
+arch/powerpc/platforms/Kconfig.cputype:config CPU_BIG_ENDIAN
+arch/powerpc/platforms/Kconfig.cputype:config CPU_LITTLE_ENDIAN
+--- arch/s390 ---
+arch/s390/Kconfig:config CPU_BIG_ENDIAN
+--- arch/score ---
+--- arch/sh ---
+arch/sh/Kconfig.cpu:config CPU_LITTLE_ENDIAN
+arch/sh/Kconfig.cpu:config CPU_BIG_ENDIAN
+--- arch/sparc ---
+--- arch/tile ---
+--- arch/um ---
+--- arch/unicore32 ---
+--- arch/x86 ---
+--- arch/xtensa ---
 
-With for example meson adding KEY_VENDOR as update key recently
-https://lkml.org/lkml/2017/3/7/196
+However, there are already a few users in generic code, which are thus
+broken on many platforms:
 
-So KEY_VENDOR would look like a good choice for us as well.
+    drivers/of/base.c
+    drivers/of/fdt.c
+    drivers/tty/serial/earlycon.c
+    drivers/tty/serial/serial_core.c
 
+include/asm-generic/qrwlock.h is also generic, but depends on the
+architecture to select ARCH_USE_QUEUED_RWLOCKS, which only very few do
+(x86, and now sparc).
 
-Heiko
+I guess the time is ripe for adding (both) symbols to all architectures?
 
-> +			press-threshold-microvolt = <0>;
-> +		};
-> +	};
-> +
->  	gpio-keys {
->  		compatible = "gpio-keys";
->  
-> @@ -246,6 +259,10 @@
->  	status = "okay";
->  };
->  
-> +&saradc {
-> +	status = "okay";
-> +};
-> +
->  &sdmmc {
->  	bus-width = <4>;
->  	cap-mmc-highspeed;
-> diff --git a/arch/arm/boot/dts/rk3288-firefly.dtsi b/arch/arm/boot/dts/rk3288-firefly.dtsi
-> index 10793ac..63b8b2d 100644
-> --- a/arch/arm/boot/dts/rk3288-firefly.dtsi
-> +++ b/arch/arm/boot/dts/rk3288-firefly.dtsi
-> @@ -49,6 +49,19 @@
->  		reg = <0 0x80000000>;
->  	};
->  
-> +	adc-keys {
-> +		compatible = "adc-keys";
-> +		io-channels = <&saradc 1>;
-> +		io-channel-names = "buttons";
-> +		keyup-threshold-microvolt = <1800000>;
-> +
-> +		button-recovery {
-> +			label = "Recovery";
-> +			linux,code = <KEY_BACK>;
-> +			press-threshold-microvolt = <0>;
-> +		};
-> +	};
-> +
->  	dovdd_1v8: dovdd-1v8-regulator {
->  		compatible = "regulator-fixed";
->  		regulator-name = "dovdd_1v8";
-> 
+Gr{oetje,eeting}s,
+
+                        Geert
