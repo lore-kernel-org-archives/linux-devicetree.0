@@ -1,7 +1,7 @@
 From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: [PATCH 1/5] ARM64: dts: meson-gxbb: Add CEC pins nodes
-Date: Wed, 24 May 2017 10:28:21 +0200
-Message-ID: <1495614505-4437-2-git-send-email-narmstrong@baylibre.com>
+Subject: [PATCH 2/5] ARM64: dts: meson-gxl: Add CEC pins nodes
+Date: Wed, 24 May 2017 10:28:22 +0200
+Message-ID: <1495614505-4437-3-git-send-email-narmstrong@baylibre.com>
 References: <1495614505-4437-1-git-send-email-narmstrong@baylibre.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,18 +21,18 @@ To: khilman@baylibre.com
 Cc: linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Neil Armstrong <narmstrong@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-Add the AO and EE domain CEC pins nodes for the Amlogic Meson GXBB SoCs.
+Add the AO and EE domain CEC pins nodes for the Amlogic Meson GXL SoCs.
 
 Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 ---
- arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi | 14 ++++++++++++++
+ arch/arm64/boot/dts/amlogic/meson-gxl.dtsi | 14 ++++++++++++++
  1 file changed, 14 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
-index 6f8b301..f0cfb02 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
-@@ -242,6 +242,20 @@
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
+index 3efad5f..478d3b4 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
+@@ -190,6 +190,20 @@
  				function = "spdif_out_ao";
  			};
  		};
