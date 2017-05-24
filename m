@@ -1,49 +1,87 @@
-From: jmondi <jacopo-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] arm: dts: r7s72100: Add support for GR-Peach
-Date: Wed, 24 May 2017 09:07:02 +0200
-Message-ID: <20170524070702.GB4253@w540>
-References: <1495567254-10226-1-git-send-email-jacopo+renesas@jmondi.org>
- <CAMuHMdUovD=6YfJYckoftWyJZ3eRjcKFkScj=wLhyTDSFPavgw@mail.gmail.com>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [DT Question] "simple-mfd" DT binding
+Date: Wed, 24 May 2017 08:16:20 +0100
+Message-ID: <20170524071620.jk67g6iix4xa7g5w@dell>
+References: <CAK7LNARQmfX+3RwFgwtvf2Qu79XNX1zh0O741-pPFWS6npytLw@mail.gmail.com>
+ <CACRpkdY88Zdp2zqabWPfYPnTwSzYuCqSQHQg9vF_+Zd=TFOvaA@mail.gmail.com>
+ <CAK7LNAQ+DimarhHJOg=BqbH+EB19s+wgtRqJ8-XuLKW6_0FFaQ@mail.gmail.com>
+ <20170523070547.hhxwrst6np6fpqql@dell>
+ <CAK7LNASGW+D7EyX8dKTwheYwn8LTAdZqaK_EuA5o0eEU9a-L+w@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CAMuHMdUovD=6YfJYckoftWyJZ3eRjcKFkScj=wLhyTDSFPavgw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <CAK7LNASGW+D7EyX8dKTwheYwn8LTAdZqaK_EuA5o0eEU9a-L+w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Simon,
+On Wed, 24 May 2017, Masahiro Yamada wrote:
 
-On Tue, May 23, 2017 at 09:25:40PM +0200, Geert Uytterhoeven wrote:
-> On Tue, May 23, 2017 at 9:20 PM, Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org> wrote:
-> > Add device tree source for Renesas GR-Peach board.
-> > GR-Peach is an RZ/A1H based board with 10MB of on-chip SRAM and 8MB
-> > QSPI flash storage.
-> > Add support for the board, and create a 2MB partition to use as rootfs.
+> Hi Lee,
+> 
+> 2017-05-23 16:05 GMT+09:00 Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>:
+> > On Tue, 23 May 2017, Masahiro Yamada wrote:
 > >
-> > Signed-off-by: Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
->
-> Reviewed-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+> >> Hi Lee, Linus,
+> >>
+> >> Thanks for your comments!
+> >>
+> >> 2017-05-22 17:43 GMT+09:00 Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>:
+> >> > On Mon, May 22, 2017 at 3:29 AM, Masahiro Yamada
+> >> > <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org> wrote:
+> >> >
+> >> >> Because "simple-bus" indicates that child nodes are
+> >> >> simply memory mapped, but the node "register-bit-led"
+> >> >> can not be memory-mapped.
+> >> >> So, "simple-mfd" can not be replaced "simple-bus" here.
+> >> >
+> >> > Yeah... just like Lee points out, you are spot on, this is exactly
+> >> > the reason why we created "simple-mfd" in the first place
+> >> > IIRC.
+> >>
+> >> OK, Linux treats simple-bus and simple-mfd in the same way
+> >> as far as I see drivers/of/platform.c
+> >
+> > Correct.  As I said, the functionality of the two are the same.  The
+> > difference is their meaning.  Initially we were using "simple-mfd" to
 
-I forgot to change subject to "PATCH v2".
-Could you please take this one, or would you like me to resend with
-Geert's reviewed-by ?
+This should have read "simple-bus".
 
-Thanks
-   j
->
-> Gr{oetje,eeting}s,
->
->                         Geert
->
-> --
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
->
-> In personal conversations with technical people, I call myself a hacker. But
-> when I'm talking to journalists I just say "programmer" or something like that.
->                                 -- Linus Torvalds
+Sorry for any confusion this may have caused.
+
+> > achieve our aim (see below), but there was push-back due to the
+> > differences in what the two properties were trying to achieve.  Ergo,
+> > we introduced a second property.
+> >
+> >> Perhaps, can we document the difference between simple-bus and
+> >> simple-mfd clearly?
+> >> For example, "Unlike simple-bus, it is legitimate that simple-mfd has
+> >> subnodes without reg property"
+> >>
+> >>
+> >> I think this is typical when "simple-mfd" is used together with "syscon".
+> >> The child devices will use regmap of the parent node.
+> >> I'd like to be sure this is valid usage.
+> >
+> > "simple-mfd" simply means "register all of my child nodes using the
+> > platform API without any further intervention".  It's goal is to
+> > prevent the MFD subsystem from being stuffed full of drivers where
+> > their only purpose is to call of_platform_populate().  All other rules
+> > and policy which must be followed are generic DT ones.  To that end, I
+> > do not believe making further statements is necessary.
+> 
+> I see.  Thanks for your kind explanation!
+
+No problem.
+
+-- 
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
