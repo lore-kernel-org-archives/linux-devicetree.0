@@ -1,47 +1,65 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v2 3/3] regulator: tps65917: Add support for SMPS12
-Date: Wed, 24 May 2017 18:20:28 +0100
-Message-ID: <20170524172028.baxeku6ei373ckdr@sirena.org.uk>
-References: <1495541816-14801-1-git-send-email-j-keerthy@ti.com>
- <1495541816-14801-4-git-send-email-j-keerthy@ti.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH RFC 0/5] *** SPI Slave mode support ***
+Date: Wed, 24 May 2017 18:29:40 +0100
+Message-ID: <20170524172940.6vypisacs3rmmjws@sirena.org.uk>
+References: <1492085644-4195-1-git-send-email-jiada_wang@mentor.com>
+ <20170413125929.dygodgj6c35ydh5p@sirena.org.uk>
+ <CAMuHMdUm=90ddNWM5KWqT+W0hqZ-QO6vPHj5OisbYquDYq1ZmA@mail.gmail.com>
+ <58F06092.9080409@mentor.com>
+ <CAMuHMdXa_O6RsqUciiNWQ0Zp6dniS47AUmPN9UWAWitP0csx=Q@mail.gmail.com>
+ <20170425103113.lxpwoq6sbxvg3ihl@sirena.org.uk>
+ <59019306.2050309@mentor.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="g6voswnfdvvdepe7"
-Return-path: <linux-kernel-owner@vger.kernel.org>
+        protocol="application/pgp-signature"; boundary="mgdh43wcnsoiuwtw"
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1495541816-14801-4-git-send-email-j-keerthy@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Keerthy <j-keerthy@ti.com>
-Cc: lee.jones@linaro.org, robh+dt@kernel.org, t-kristo@ti.com, tony@atomide.com, mark.rutland@arm.com, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, afd@ti.com
+In-Reply-To: <59019306.2050309-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jiada Wang <jiada_wang-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+Cc: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, linux-spi <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
---g6voswnfdvvdepe7
+--mgdh43wcnsoiuwtw
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Tue, May 23, 2017 at 05:46:56PM +0530, Keerthy wrote:
-> App support for SMPS12 dual phase regulator.
->=20
-> Signed-off-by: Keerthy <j-keerthy@ti.com>
-> Acked-by: Lee Jones <lee.jones@linaro.org>
+On Wed, Apr 26, 2017 at 11:43:18PM -0700, Jiada Wang wrote:
 
-What's the relationship between this and support for the lp87565?
+> The reason I gave the example use case is want to point out that
+> with Geert's patch set, a SPI device (with only one controller) can no
+> longer
+> act as master and slave at the same time. because IMO as a SPI core
+> function,
+> it needs to cover all the use cases, and to be as generic as possible.
 
---g6voswnfdvvdepe7
+> BUT if you think the use case don't need to be supported from SPI core,
+> then I don't have objection either, I will only submit imx SPI slave support
+> patch,
+> after your SPI slave support patch set been applied
+
+I think there's a bunch of other problems with how that works reliably
+that'd need to be addressed before someone could actually do that, and
+it seems like such hardware will be very unusual.
+
+--mgdh43wcnsoiuwtw
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlklwNsACgkQJNaLcl1U
-h9AoOgf/QpkGqmgigV60S9xXncno1PykfTtNWTfiSP1Avz02S8nRqd+73AubQ37O
-fEDvkgVq5WLUMlN5nCbyfLvTf05HX8Oaz/HjEAK9Q5wAlMU7K2HU8RGurHzgsvnV
-dEPEqf2hlXS1oNl50KQ1GgOHGEteGREtbfm74vQF1LvH7cxerv1YK5ThPzUL+mit
-mWM9xZy8sGmnOL+VjONcEEDA6/UGQkYo+8HBjrHztncIie+pR8TdhG6pou4Wv8AA
-hEudhYXSW00QHCiVyms4/ZpFfvW/PQIzvcAF6LHpLUgFCvSDERdArgEa77QU5J3q
-oQriYT12OQgC9m3bNyIUlxdZpaMCww==
-=4XCy
+iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlklwwMACgkQJNaLcl1U
+h9CqZwf/V8h7gKz4OzsrRdGWD6M7HOKcrIsaVsVSBlqfRzWuQjwZygr8EGIOfwKP
+TgURwqNMVfgRP1zWFjvTJcWrBdrO2rE9bZ5igFzSQ7Y+9IHmQ/S9XmND8Sbmp8yu
+iXnBMs1Qza18ZH84t1X72me8rwyho6TdWOiJfcR5VFrWRuT5lb6U0lQmkmgEd4CG
+g1n6g20jXlx1AOYhZTEmceD6KHqt5ZYTQ6TaCxw08+wk85gSI4IsPbWZu8CykFtJ
+JDc0S623T4eeYWA15xb6edCaKLNB3Tew0vJMrmG+97ysD0KmKPej/uF1r5Kl9Y5E
+fT8aGR537I9llX/GQT+i76duNG9tkQ==
+=7JNs
 -----END PGP SIGNATURE-----
 
---g6voswnfdvvdepe7--
+--mgdh43wcnsoiuwtw--
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
