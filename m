@@ -1,79 +1,67 @@
-From: Joel Stanley <joel@jms.id.au>
-Subject: [PATCH] serial: 8250_of: Add reset support
-Date: Wed, 24 May 2017 14:53:19 +1000
-Message-ID: <20170524045319.29926-1-joel@jms.id.au>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: linux-serial@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Philipp Zabel <p.zabel@pengutronix.de>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: [PATCH] ARM: dts: imx6: use #include "..." to include local DT
+Date: Wed, 24 May 2017 14:02:42 +0900
+Message-ID: <1495602162-14672-1-git-send-email-yamada.masahiro@socionext.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Shawn Guo <shawnguo@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Russell King <linux@armlinux.org.uk>, Masahiro Yamada <yamada.masahiro@socionext.com>, Rob Herring <robh+dt@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This adds the hooks for an optional reset controller in the 8250 device
-tree node.
+Most of DT files in ARM use #include "..." to make pre-processor
+include DT in the same directory, but we have some exceptional files
+that use #include <...> for that.
 
-Signed-off-by: Joel Stanley <joel@jms.id.au>
+Fix them to remove -I$(srctree)/arch/$(SRCARCH)/boot/dts path from
+dtc_cpp_flags.
+
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 ---
- Documentation/devicetree/bindings/serial/8250.txt |  1 +
- drivers/tty/serial/8250/8250_of.c                 | 16 ++++++++++++++++
- 2 files changed, 17 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/serial/8250.txt b/Documentation/devicetree/bindings/serial/8250.txt
-index 10276a46ecef..63e32393f82b 100644
---- a/Documentation/devicetree/bindings/serial/8250.txt
-+++ b/Documentation/devicetree/bindings/serial/8250.txt
-@@ -45,6 +45,7 @@ Optional properties:
-   property.
- - tx-threshold: Specify the TX FIFO low water indication for parts with
-   programmable TX FIFO thresholds.
-+- resets : phandle + reset specifier pairs
+ arch/arm/boot/dts/imx6q-zii-rdu2.dts  | 4 ++--
+ arch/arm/boot/dts/imx6qp-zii-rdu2.dts | 4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/arch/arm/boot/dts/imx6q-zii-rdu2.dts b/arch/arm/boot/dts/imx6q-zii-rdu2.dts
+index b2d346640fd7..6be8a1eea895 100644
+--- a/arch/arm/boot/dts/imx6q-zii-rdu2.dts
++++ b/arch/arm/boot/dts/imx6q-zii-rdu2.dts
+@@ -41,8 +41,8 @@
  
- Note:
- * fsl,ns16550:
-diff --git a/drivers/tty/serial/8250/8250_of.c b/drivers/tty/serial/8250/8250_of.c
-index 1cbadafc6889..f34dd23376f4 100644
---- a/drivers/tty/serial/8250/8250_of.c
-+++ b/drivers/tty/serial/8250/8250_of.c
-@@ -19,11 +19,13 @@
- #include <linux/of_irq.h>
- #include <linux/of_platform.h>
- #include <linux/clk.h>
-+#include <linux/reset.h>
+ /dts-v1/;
  
- #include "8250.h"
+-#include <imx6q.dtsi>
+-#include <imx6qdl-zii-rdu2.dtsi>
++#include "imx6q.dtsi"
++#include "imx6qdl-zii-rdu2.dtsi"
  
- struct of_serial_info {
- 	struct clk *clk;
-+	struct reset_control *rst;
- 	int type;
- 	int line;
- };
-@@ -132,6 +134,18 @@ static int of_platform_serial_setup(struct platform_device *ofdev,
- 		}
- 	}
+ / {
+ 	model = "ZII RDU2 Board";
+diff --git a/arch/arm/boot/dts/imx6qp-zii-rdu2.dts b/arch/arm/boot/dts/imx6qp-zii-rdu2.dts
+index 882b3bd97e07..547a76677ab3 100644
+--- a/arch/arm/boot/dts/imx6qp-zii-rdu2.dts
++++ b/arch/arm/boot/dts/imx6qp-zii-rdu2.dts
+@@ -41,8 +41,8 @@
  
-+	info->rst = devm_reset_control_get_optional(&ofdev->dev, NULL);
-+	if (IS_ERR(info->rst)) {
-+		ret = PTR_ERR(info->rst);
-+		if (ret == -EPROBE_DEFER)
-+			goto out;
-+		info->rst = NULL;
-+	} else {
-+		ret = reset_control_deassert(info->rst);
-+		if (ret)
-+			goto out;
-+	}
-+
- 	port->type = type;
- 	port->uartclk = clk;
- 	port->flags = UPF_SHARE_IRQ | UPF_BOOT_AUTOCONF | UPF_IOREMAP
-@@ -231,6 +245,8 @@ static int of_platform_serial_remove(struct platform_device *ofdev)
+ /dts-v1/;
  
- 	if (info->clk)
- 		clk_disable_unprepare(info->clk);
-+	if (info->rst)
-+		reset_control_assert(info->rst);
- 	kfree(info);
- 	return 0;
- }
+-#include <imx6qp.dtsi>
+-#include <imx6qdl-zii-rdu2.dtsi>
++#include "imx6qp.dtsi"
++#include "imx6qdl-zii-rdu2.dtsi"
+ 
+ / {
+ 	model = "ZII RDU2+ Board";
 -- 
-2.11.0
+2.7.4
