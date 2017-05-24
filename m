@@ -1,60 +1,44 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v2 5/5] mfd: arizona: Update GPIO binding for newly
- supported specifiers
-Date: Wed, 24 May 2017 09:35:19 +0100
-Message-ID: <20170524083519.mi7n6nw6ysc5xdeb@dell>
-References: <1495550852-3672-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
- <1495550852-3672-5-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+From: Jerome Brunet <jbrunet@baylibre.com>
+Subject: Re: [PATCH 1/3] ARM64: dts: meson-gxl: Fix pinctrl periphs gpio-ranges
+Date: Wed, 24 May 2017 10:39:26 +0200
+Message-ID: <1495615166.14589.2.camel@baylibre.com>
+References: <1495549311-23660-1-git-send-email-narmstrong@baylibre.com>
+ <1495549311-23660-2-git-send-email-narmstrong@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1495550852-3672-5-git-send-email-ckeepax@opensource.wolfsonmicro.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
-Cc: linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, patches@opensource.wolfsonmicro.com, frowand.list@gmail.com, ldewangan@nvidia.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1495549311-23660-2-git-send-email-narmstrong@baylibre.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Neil Armstrong <narmstrong@baylibre.com>, khilman@baylibre.com
+Cc: linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 23 May 2017, Charles Keepax wrote:
-
-> Link to the generic GPIO specifier bindings now that the second cell of
-> the binding has some support in the driver.
-> 
-> Signed-off-by: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
-> ---
-> 
-> Changes since v1:
->  - Now just points at the standard gpio binding stuff
-> 
-> Thanks,
-> Charles
-> 
->  Documentation/devicetree/bindings/mfd/arizona.txt | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-
-I'll take this if/when the GPIO changes are merged.
-
-For my own reference:
-  Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
-  
-> diff --git a/Documentation/devicetree/bindings/mfd/arizona.txt b/Documentation/devicetree/bindings/mfd/arizona.txt
-> index 8f2e282..b37bdde 100644
-> --- a/Documentation/devicetree/bindings/mfd/arizona.txt
-> +++ b/Documentation/devicetree/bindings/mfd/arizona.txt
-> @@ -30,7 +30,8 @@ Required properties:
->  
->    - gpio-controller : Indicates this device is a GPIO controller.
->    - #gpio-cells : Must be 2. The first cell is the pin number and the
-> -    second cell is used to specify optional parameters (currently unused).
-> +    second cell is used to specify optional parameters, see ../gpio/gpio.txt
-> +    for details.
->  
->    - AVDD-supply, DBVDD1-supply, CPVDD-supply : Power supplies for the device,
->      as covered in Documentation/devicetree/bindings/regulator/regulator.txt
-
--- 
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+T24gVHVlLCAyMDE3LTA1LTIzIGF0IDE2OjIxICswMjAwLCBOZWlsIEFybXN0cm9uZyB3cm90ZToK
+PiBUaGUgZ3Bpby1yYW5nZSB3YXMgYmFkbHkgYWRkZWQgb24gdGhlIEdYTCBkdHNpLCB0aGUgQU8g
+cGluIGNvdW50IGlzIDEwCj4gaW5zdGVhZCBvZiAxNC4KPiAKClJldmlld2VkLWJ5OiBKZXJvbWUg
+QnJ1bmV0IDxqYnJ1bmV0QGJheWxpYnJlLmNvbT4KCj4gRml4ZXM6IDg0NDEyZTRlODU3ZiAoIkFS
+TTY0OiBkdHM6IG1lc29uLWd4bDogQWRkIGdwaW8tcmFuZ2VzIHByb3BlcnRpZXMiKQo+IFNpZ25l
+ZC1vZmYtYnk6IE5laWwgQXJtc3Ryb25nIDxuYXJtc3Ryb25nQGJheWxpYnJlLmNvbT4KPiAtLS0K
+PiDCoGFyY2gvYXJtNjQvYm9vdC9kdHMvYW1sb2dpYy9tZXNvbi1neGwuZHRzaSB8IDIgKy0KPiDC
+oDEgZmlsZSBjaGFuZ2VkLCAxIGluc2VydGlvbigrKSwgMSBkZWxldGlvbigtKQo+IAo+IGRpZmYg
+LS1naXQgYS9hcmNoL2FybTY0L2Jvb3QvZHRzL2FtbG9naWMvbWVzb24tZ3hsLmR0c2kKPiBiL2Fy
+Y2gvYXJtNjQvYm9vdC9kdHMvYW1sb2dpYy9tZXNvbi1neGwuZHRzaQo+IGluZGV4IDNlZmFkNWYu
+LjQ4NzFjZTUgMTAwNjQ0Cj4gLS0tIGEvYXJjaC9hcm02NC9ib290L2R0cy9hbWxvZ2ljL21lc29u
+LWd4bC5kdHNpCj4gKysrIGIvYXJjaC9hcm02NC9ib290L2R0cy9hbWxvZ2ljL21lc29uLWd4bC5k
+dHNpCj4gQEAgLTI0NCw3ICsyNDQsNyBAQAo+IMKgCQkJcmVnLW5hbWVzID0gIm11eCIsICJwdWxs
+IiwgInB1bGwtZW5hYmxlIiwgImdwaW8iOwo+IMKgCQkJZ3Bpby1jb250cm9sbGVyOwo+IMKgCQkJ
+I2dwaW8tY2VsbHMgPSA8Mj47Cj4gLQkJCWdwaW8tcmFuZ2VzID0gPCZwaW5jdHJsX3BlcmlwaHMg
+MCAxNCAxMDE+Owo+ICsJCQlncGlvLXJhbmdlcyA9IDwmcGluY3RybF9wZXJpcGhzIDAgMTAgMTAx
+PjsKPiDCoAkJfTsKPiDCoAo+IMKgCQllbW1jX3BpbnM6IGVtbWMgewoKCl9fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGlu
+ZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMu
+aW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
