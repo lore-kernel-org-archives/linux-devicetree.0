@@ -1,7 +1,7 @@
 From: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH V5 4/4] mtd: extract TRX parser out of bcm47xxpart into a separated module
-Date: Wed, 24 May 2017 11:44:37 +0200
-Message-ID: <20170524094437.2174-5-zajec5@gmail.com>
+Subject: [PATCH V5 1/4] mtd: partitions: rename allocate_partition master argument to the parent
+Date: Wed, 24 May 2017 11:44:34 +0200
+Message-ID: <20170524094437.2174-2-zajec5@gmail.com>
 References: <20170524094437.2174-1-zajec5@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -15,335 +15,271 @@ List-Id: devicetree@vger.kernel.org
 
 From: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
 
-This makes TRX parsing code reusable with other platforms and parsers.
+This prepares mtd subsystem for the new feature: subpartitions. In some
+cases flash device partition can be a container with extra subpartitions
+(volumes).
 
-Please note this patch doesn't really change anything in the existing
-code, just moves it. There is still some place for improvement (e.g.
-working on non-hacky method of checking rootfs format) but it's not
-really a subject of this change.
+Supporting this will require updating allocate_partition function. First
+of all we should distinct master (flash device) and parent (flash device
+*or* parent partition). This patch handles a proper renaming.
+
+In allocate_partition we need to accept *parent* as an argument. This is
+required to perform all boundary checks against the parent so in case of
+subpartitions we make sure they don't exceed their parent.
 
 Signed-off-by: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
 ---
-V2: A totally rebased & refreshed version.
-V5: Add TRX format verification, improve comment, fix memory leak
-    Thanks Brian
+V5: Introduction of this patch to prepare allocate_partition for further
+    modification.
 ---
- drivers/mtd/Kconfig              |   4 ++
- drivers/mtd/Makefile             |   1 +
- drivers/mtd/bcm47xxpart.c        |  99 ++----------------------------
- drivers/mtd/parsers/Kconfig      |   8 +++
- drivers/mtd/parsers/Makefile     |   1 +
- drivers/mtd/parsers/parser_trx.c | 126 +++++++++++++++++++++++++++++++++++++++
- 6 files changed, 145 insertions(+), 94 deletions(-)
- create mode 100644 drivers/mtd/parsers/Kconfig
- create mode 100644 drivers/mtd/parsers/Makefile
- create mode 100644 drivers/mtd/parsers/parser_trx.c
+ drivers/mtd/mtdpart.c | 116 +++++++++++++++++++++++++-------------------------
+ 1 file changed, 58 insertions(+), 58 deletions(-)
 
-diff --git a/drivers/mtd/Kconfig b/drivers/mtd/Kconfig
-index e83a279f1217..5a2d71729b9a 100644
---- a/drivers/mtd/Kconfig
-+++ b/drivers/mtd/Kconfig
-@@ -155,6 +155,10 @@ config MTD_BCM47XX_PARTS
- 	  This provides partitions parser for devices based on BCM47xx
- 	  boards.
- 
-+menu "Partition parsers"
-+source "drivers/mtd/parsers/Kconfig"
-+endmenu
-+
- comment "User Modules And Translation Layers"
- 
- #
-diff --git a/drivers/mtd/Makefile b/drivers/mtd/Makefile
-index 99bb9a1f6e16..151d60df303a 100644
---- a/drivers/mtd/Makefile
-+++ b/drivers/mtd/Makefile
-@@ -13,6 +13,7 @@ obj-$(CONFIG_MTD_AFS_PARTS)	+= afs.o
- obj-$(CONFIG_MTD_AR7_PARTS)	+= ar7part.o
- obj-$(CONFIG_MTD_BCM63XX_PARTS)	+= bcm63xxpart.o
- obj-$(CONFIG_MTD_BCM47XX_PARTS)	+= bcm47xxpart.o
-+obj-y				+= parsers/
- 
- # 'Users' - code which presents functionality to userspace.
- obj-$(CONFIG_MTD_BLKDEVS)	+= mtd_blkdevs.o
-diff --git a/drivers/mtd/bcm47xxpart.c b/drivers/mtd/bcm47xxpart.c
-index d10fa6c8f074..fe2581d9d882 100644
---- a/drivers/mtd/bcm47xxpart.c
-+++ b/drivers/mtd/bcm47xxpart.c
-@@ -43,7 +43,8 @@
- #define ML_MAGIC2			0x26594131
- #define TRX_MAGIC			0x30524448
- #define SHSQ_MAGIC			0x71736873	/* shsq (weird ZTE H218N endianness) */
--#define UBI_EC_MAGIC			0x23494255	/* UBI# */
-+
-+static const char * const trx_types[] = { "trx", NULL };
- 
- struct trx_header {
- 	uint32_t magic;
-@@ -62,89 +63,6 @@ static void bcm47xxpart_add_part(struct mtd_partition *part, const char *name,
- 	part->mask_flags = mask_flags;
+diff --git a/drivers/mtd/mtdpart.c b/drivers/mtd/mtdpart.c
+index 6960e66eb7a6..92acd89e07cb 100644
+--- a/drivers/mtd/mtdpart.c
++++ b/drivers/mtd/mtdpart.c
+@@ -389,7 +389,7 @@ int del_mtd_partitions(struct mtd_info *master)
+ 	return err;
  }
  
--static const char *bcm47xxpart_trx_data_part_name(struct mtd_info *master,
--						  size_t offset)
--{
--	uint32_t buf;
--	size_t bytes_read;
--	int err;
--
--	err  = mtd_read(master, offset, sizeof(buf), &bytes_read,
--			(uint8_t *)&buf);
--	if (err && !mtd_is_bitflip(err)) {
--		pr_err("mtd_read error while parsing (offset: 0x%X): %d\n",
--			offset, err);
--		goto out_default;
--	}
--
--	if (buf == UBI_EC_MAGIC)
--		return "ubi";
--
--out_default:
--	return "rootfs";
--}
--
--static int bcm47xxpart_parse_trx(struct mtd_info *master,
--				 struct mtd_partition *trx,
--				 struct mtd_partition *parts,
--				 size_t parts_len)
--{
--	struct trx_header header;
--	size_t bytes_read;
--	int curr_part = 0;
--	int i, err;
--
--	if (parts_len < 3) {
--		pr_warn("No enough space to add TRX partitions!\n");
--		return -ENOMEM;
--	}
--
--	err = mtd_read(master, trx->offset, sizeof(header), &bytes_read,
--		       (uint8_t *)&header);
--	if (err && !mtd_is_bitflip(err)) {
--		pr_err("mtd_read error while reading TRX header: %d\n", err);
--		return err;
--	}
--
--	i = 0;
--
--	/* We have LZMA loader if offset[2] points to sth */
--	if (header.offset[2]) {
--		bcm47xxpart_add_part(&parts[curr_part++], "loader",
--				     trx->offset + header.offset[i], 0);
--		i++;
--	}
--
--	if (header.offset[i]) {
--		bcm47xxpart_add_part(&parts[curr_part++], "linux",
--				     trx->offset + header.offset[i], 0);
--		i++;
--	}
--
--	if (header.offset[i]) {
--		size_t offset = trx->offset + header.offset[i];
--		const char *name = bcm47xxpart_trx_data_part_name(master,
--								  offset);
--
--		bcm47xxpart_add_part(&parts[curr_part++], name, offset, 0);
--		i++;
--	}
--
--	/*
--	 * Assume that every partition ends at the beginning of the one it is
--	 * followed by.
--	 */
--	for (i = 0; i < curr_part; i++) {
--		u64 next_part_offset = (i < curr_part - 1) ?
--					parts[i + 1].offset :
--					trx->offset + trx->size;
--
--		parts[i].size = next_part_offset - parts[i].offset;
--	}
--
--	return curr_part;
--}
--
- /**
-  * bcm47xxpart_bootpartition - gets index of TRX partition used by bootloader
-  *
-@@ -362,17 +280,10 @@ static int bcm47xxpart_parse(struct mtd_info *master,
- 	for (i = 0; i < trx_num; i++) {
- 		struct mtd_partition *trx = &parts[trx_parts[i]];
- 
--		if (i == bcm47xxpart_bootpartition()) {
--			int num_parts;
--
--			num_parts = bcm47xxpart_parse_trx(master, trx,
--							  parts + curr_part,
--							  BCM47XXPART_MAX_PARTS - curr_part);
--			if (num_parts > 0)
--				curr_part += num_parts;
--		} else {
-+		if (i == bcm47xxpart_bootpartition())
-+			trx->types = trx_types;
-+		else
- 			trx->name = "failsafe";
--		}
+-static struct mtd_part *allocate_partition(struct mtd_info *master,
++static struct mtd_part *allocate_partition(struct mtd_info *parent,
+ 			const struct mtd_partition *part, int partno,
+ 			uint64_t cur_offset)
+ {
+@@ -401,25 +401,25 @@ static struct mtd_part *allocate_partition(struct mtd_info *master,
+ 	name = kstrdup(part->name, GFP_KERNEL);
+ 	if (!name || !slave) {
+ 		printk(KERN_ERR"memory allocation error while creating partitions for \"%s\"\n",
+-		       master->name);
++		       parent->name);
+ 		kfree(name);
+ 		kfree(slave);
+ 		return ERR_PTR(-ENOMEM);
  	}
  
- 	*pparts = parts;
-diff --git a/drivers/mtd/parsers/Kconfig b/drivers/mtd/parsers/Kconfig
-new file mode 100644
-index 000000000000..ebb697a52698
---- /dev/null
-+++ b/drivers/mtd/parsers/Kconfig
-@@ -0,0 +1,8 @@
-+config MTD_PARSER_TRX
-+	tristate "Parser for TRX format partitions"
-+	depends on MTD && (BCM47XX || ARCH_BCM_5301X)
-+	help
-+	  TRX is a firmware format used by Broadcom on their devices. It
-+	  may contain up to 3/4 partitions (depending on the version).
-+	  This driver will parse TRX header and report at least two partitions:
-+	  kernel and rootfs.
-diff --git a/drivers/mtd/parsers/Makefile b/drivers/mtd/parsers/Makefile
-new file mode 100644
-index 000000000000..4d9024e0be3b
---- /dev/null
-+++ b/drivers/mtd/parsers/Makefile
-@@ -0,0 +1 @@
-+obj-$(CONFIG_MTD_PARSER_TRX)		+= parser_trx.o
-diff --git a/drivers/mtd/parsers/parser_trx.c b/drivers/mtd/parsers/parser_trx.c
-new file mode 100644
-index 000000000000..e805108afd31
---- /dev/null
-+++ b/drivers/mtd/parsers/parser_trx.c
-@@ -0,0 +1,126 @@
-+/*
-+ * Parser for TRX format partitions
-+ *
-+ * Copyright (C) 2012 - 2017 Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ *
-+ */
-+
-+#include <linux/module.h>
-+#include <linux/slab.h>
-+#include <linux/mtd/mtd.h>
-+#include <linux/mtd/partitions.h>
-+
-+#define TRX_PARSER_MAX_PARTS		4
-+
-+/* Magics */
-+#define TRX_MAGIC			0x30524448
-+#define UBI_EC_MAGIC			0x23494255	/* UBI# */
-+
-+struct trx_header {
-+	uint32_t magic;
-+	uint32_t length;
-+	uint32_t crc32;
-+	uint16_t flags;
-+	uint16_t version;
-+	uint32_t offset[3];
-+} __packed;
-+
-+static const char *parser_trx_data_part_name(struct mtd_info *master,
-+					     size_t offset)
-+{
-+	uint32_t buf;
-+	size_t bytes_read;
-+	int err;
-+
-+	err  = mtd_read(master, offset, sizeof(buf), &bytes_read,
-+			(uint8_t *)&buf);
-+	if (err && !mtd_is_bitflip(err)) {
-+		pr_err("mtd_read error while parsing (offset: 0x%X): %d\n",
-+			offset, err);
-+		goto out_default;
-+	}
-+
-+	if (buf == UBI_EC_MAGIC)
-+		return "ubi";
-+
-+out_default:
-+	return "rootfs";
-+}
-+
-+static int parser_trx_parse(struct mtd_info *mtd,
-+			    const struct mtd_partition **pparts,
-+			    struct mtd_part_parser_data *data)
-+{
-+	struct mtd_partition *parts;
-+	struct mtd_partition *part;
-+	struct trx_header trx;
-+	size_t bytes_read;
-+	uint8_t curr_part = 0, i = 0;
-+	int err;
-+
-+	parts = kzalloc(sizeof(struct mtd_partition) * TRX_PARSER_MAX_PARTS,
-+			GFP_KERNEL);
-+	if (!parts)
-+		return -ENOMEM;
-+
-+	err = mtd_read(mtd, 0, sizeof(trx), &bytes_read, (uint8_t *)&trx);
-+	if (err) {
-+		pr_err("MTD reading error: %d\n", err);
-+		kfree(parts);
-+		return err;
-+	}
-+
-+	if (trx.magic != TRX_MAGIC) {
-+		kfree(parts);
-+		return -ENOENT;
-+	}
-+
-+	/* We have LZMA loader if there is address in offset[2] */
-+	if (trx.offset[2]) {
-+		part = &parts[curr_part++];
-+		part->name = "loader";
-+		part->offset = trx.offset[i];
-+		i++;
-+	}
-+
-+	if (trx.offset[i]) {
-+		part = &parts[curr_part++];
-+		part->name = "linux";
-+		part->offset = trx.offset[i];
-+		i++;
-+	}
-+
-+	if (trx.offset[i]) {
-+		part = &parts[curr_part++];
-+		part->name = parser_trx_data_part_name(mtd, trx.offset[i]);
-+		part->offset = trx.offset[i];
-+		i++;
-+	}
-+
-+	/*
-+	 * Assume that every partition ends at the beginning of the one it is
-+	 * followed by.
-+	 */
-+	for (i = 0; i < curr_part; i++) {
-+		u64 next_part_offset = (i < curr_part - 1) ?
-+				       parts[i + 1].offset : mtd->size;
-+
-+		parts[i].size = next_part_offset - parts[i].offset;
-+	}
-+
-+	*pparts = parts;
-+	return i;
-+};
-+
-+static struct mtd_part_parser mtd_parser_trx = {
-+	.parse_fn = parser_trx_parse,
-+	.name = "trx",
-+};
-+module_mtd_part_parser(mtd_parser_trx);
-+
-+MODULE_LICENSE("GPL v2");
-+MODULE_DESCRIPTION("Parser for TRX format partitions");
+ 	/* set up the MTD object for this partition */
+-	slave->mtd.type = master->type;
+-	slave->mtd.flags = master->flags & ~part->mask_flags;
++	slave->mtd.type = parent->type;
++	slave->mtd.flags = parent->flags & ~part->mask_flags;
+ 	slave->mtd.size = part->size;
+-	slave->mtd.writesize = master->writesize;
+-	slave->mtd.writebufsize = master->writebufsize;
+-	slave->mtd.oobsize = master->oobsize;
+-	slave->mtd.oobavail = master->oobavail;
+-	slave->mtd.subpage_sft = master->subpage_sft;
+-	slave->mtd.pairing = master->pairing;
++	slave->mtd.writesize = parent->writesize;
++	slave->mtd.writebufsize = parent->writebufsize;
++	slave->mtd.oobsize = parent->oobsize;
++	slave->mtd.oobavail = parent->oobavail;
++	slave->mtd.subpage_sft = parent->subpage_sft;
++	slave->mtd.pairing = parent->pairing;
+ 
+ 	slave->mtd.name = name;
+-	slave->mtd.owner = master->owner;
++	slave->mtd.owner = parent->owner;
+ 
+ 	/* NOTE: Historically, we didn't arrange MTDs as a tree out of
+ 	 * concern for showing the same data in multiple partitions.
+@@ -430,79 +430,79 @@ static struct mtd_part *allocate_partition(struct mtd_info *master,
+ 	 * distinguish between the master and the partition in sysfs.
+ 	 */
+ 	slave->mtd.dev.parent = IS_ENABLED(CONFIG_MTD_PARTITIONED_MASTER) ?
+-				&master->dev :
+-				master->dev.parent;
++				&parent->dev :
++				parent->dev.parent;
+ 	slave->mtd.dev.of_node = part->of_node;
+ 
+ 	slave->mtd._read = part_read;
+ 	slave->mtd._write = part_write;
+ 
+-	if (master->_panic_write)
++	if (parent->_panic_write)
+ 		slave->mtd._panic_write = part_panic_write;
+ 
+-	if (master->_point && master->_unpoint) {
++	if (parent->_point && parent->_unpoint) {
+ 		slave->mtd._point = part_point;
+ 		slave->mtd._unpoint = part_unpoint;
+ 	}
+ 
+-	if (master->_get_unmapped_area)
++	if (parent->_get_unmapped_area)
+ 		slave->mtd._get_unmapped_area = part_get_unmapped_area;
+-	if (master->_read_oob)
++	if (parent->_read_oob)
+ 		slave->mtd._read_oob = part_read_oob;
+-	if (master->_write_oob)
++	if (parent->_write_oob)
+ 		slave->mtd._write_oob = part_write_oob;
+-	if (master->_read_user_prot_reg)
++	if (parent->_read_user_prot_reg)
+ 		slave->mtd._read_user_prot_reg = part_read_user_prot_reg;
+-	if (master->_read_fact_prot_reg)
++	if (parent->_read_fact_prot_reg)
+ 		slave->mtd._read_fact_prot_reg = part_read_fact_prot_reg;
+-	if (master->_write_user_prot_reg)
++	if (parent->_write_user_prot_reg)
+ 		slave->mtd._write_user_prot_reg = part_write_user_prot_reg;
+-	if (master->_lock_user_prot_reg)
++	if (parent->_lock_user_prot_reg)
+ 		slave->mtd._lock_user_prot_reg = part_lock_user_prot_reg;
+-	if (master->_get_user_prot_info)
++	if (parent->_get_user_prot_info)
+ 		slave->mtd._get_user_prot_info = part_get_user_prot_info;
+-	if (master->_get_fact_prot_info)
++	if (parent->_get_fact_prot_info)
+ 		slave->mtd._get_fact_prot_info = part_get_fact_prot_info;
+-	if (master->_sync)
++	if (parent->_sync)
+ 		slave->mtd._sync = part_sync;
+-	if (!partno && !master->dev.class && master->_suspend &&
+-	    master->_resume) {
++	if (!partno && !parent->dev.class && parent->_suspend &&
++	    parent->_resume) {
+ 			slave->mtd._suspend = part_suspend;
+ 			slave->mtd._resume = part_resume;
+ 	}
+-	if (master->_writev)
++	if (parent->_writev)
+ 		slave->mtd._writev = part_writev;
+-	if (master->_lock)
++	if (parent->_lock)
+ 		slave->mtd._lock = part_lock;
+-	if (master->_unlock)
++	if (parent->_unlock)
+ 		slave->mtd._unlock = part_unlock;
+-	if (master->_is_locked)
++	if (parent->_is_locked)
+ 		slave->mtd._is_locked = part_is_locked;
+-	if (master->_block_isreserved)
++	if (parent->_block_isreserved)
+ 		slave->mtd._block_isreserved = part_block_isreserved;
+-	if (master->_block_isbad)
++	if (parent->_block_isbad)
+ 		slave->mtd._block_isbad = part_block_isbad;
+-	if (master->_block_markbad)
++	if (parent->_block_markbad)
+ 		slave->mtd._block_markbad = part_block_markbad;
+-	if (master->_max_bad_blocks)
++	if (parent->_max_bad_blocks)
+ 		slave->mtd._max_bad_blocks = part_max_bad_blocks;
+ 
+-	if (master->_get_device)
++	if (parent->_get_device)
+ 		slave->mtd._get_device = part_get_device;
+-	if (master->_put_device)
++	if (parent->_put_device)
+ 		slave->mtd._put_device = part_put_device;
+ 
+ 	slave->mtd._erase = part_erase;
+-	slave->master = master;
++	slave->master = parent;
+ 	slave->offset = part->offset;
+ 
+ 	if (slave->offset == MTDPART_OFS_APPEND)
+ 		slave->offset = cur_offset;
+ 	if (slave->offset == MTDPART_OFS_NXTBLK) {
+ 		slave->offset = cur_offset;
+-		if (mtd_mod_by_eb(cur_offset, master) != 0) {
++		if (mtd_mod_by_eb(cur_offset, parent) != 0) {
+ 			/* Round up to next erasesize */
+-			slave->offset = (mtd_div_by_eb(cur_offset, master) + 1) * master->erasesize;
++			slave->offset = (mtd_div_by_eb(cur_offset, parent) + 1) * parent->erasesize;
+ 			printk(KERN_NOTICE "Moving partition %d: "
+ 			       "0x%012llx -> 0x%012llx\n", partno,
+ 			       (unsigned long long)cur_offset, (unsigned long long)slave->offset);
+@@ -510,25 +510,25 @@ static struct mtd_part *allocate_partition(struct mtd_info *master,
+ 	}
+ 	if (slave->offset == MTDPART_OFS_RETAIN) {
+ 		slave->offset = cur_offset;
+-		if (master->size - slave->offset >= slave->mtd.size) {
+-			slave->mtd.size = master->size - slave->offset
++		if (parent->size - slave->offset >= slave->mtd.size) {
++			slave->mtd.size = parent->size - slave->offset
+ 							- slave->mtd.size;
+ 		} else {
+ 			printk(KERN_ERR "mtd partition \"%s\" doesn't have enough space: %#llx < %#llx, disabled\n",
+-				part->name, master->size - slave->offset,
++				part->name, parent->size - slave->offset,
+ 				slave->mtd.size);
+ 			/* register to preserve ordering */
+ 			goto out_register;
+ 		}
+ 	}
+ 	if (slave->mtd.size == MTDPART_SIZ_FULL)
+-		slave->mtd.size = master->size - slave->offset;
++		slave->mtd.size = parent->size - slave->offset;
+ 
+ 	printk(KERN_NOTICE "0x%012llx-0x%012llx : \"%s\"\n", (unsigned long long)slave->offset,
+ 		(unsigned long long)(slave->offset + slave->mtd.size), slave->mtd.name);
+ 
+ 	/* let's do some sanity checks */
+-	if (slave->offset >= master->size) {
++	if (slave->offset >= parent->size) {
+ 		/* let's register it anyway to preserve ordering */
+ 		slave->offset = 0;
+ 		slave->mtd.size = 0;
+@@ -536,16 +536,16 @@ static struct mtd_part *allocate_partition(struct mtd_info *master,
+ 			part->name);
+ 		goto out_register;
+ 	}
+-	if (slave->offset + slave->mtd.size > master->size) {
+-		slave->mtd.size = master->size - slave->offset;
++	if (slave->offset + slave->mtd.size > parent->size) {
++		slave->mtd.size = parent->size - slave->offset;
+ 		printk(KERN_WARNING"mtd: partition \"%s\" extends beyond the end of device \"%s\" -- size truncated to %#llx\n",
+-			part->name, master->name, (unsigned long long)slave->mtd.size);
++			part->name, parent->name, (unsigned long long)slave->mtd.size);
+ 	}
+-	if (master->numeraseregions > 1) {
++	if (parent->numeraseregions > 1) {
+ 		/* Deal with variable erase size stuff */
+-		int i, max = master->numeraseregions;
++		int i, max = parent->numeraseregions;
+ 		u64 end = slave->offset + slave->mtd.size;
+-		struct mtd_erase_region_info *regions = master->eraseregions;
++		struct mtd_erase_region_info *regions = parent->eraseregions;
+ 
+ 		/* Find the first erase regions which is part of this
+ 		 * partition. */
+@@ -564,7 +564,7 @@ static struct mtd_part *allocate_partition(struct mtd_info *master,
+ 		BUG_ON(slave->mtd.erasesize == 0);
+ 	} else {
+ 		/* Single erase size */
+-		slave->mtd.erasesize = master->erasesize;
++		slave->mtd.erasesize = parent->erasesize;
+ 	}
+ 
+ 	if ((slave->mtd.flags & MTD_WRITEABLE) &&
+@@ -584,17 +584,17 @@ static struct mtd_part *allocate_partition(struct mtd_info *master,
+ 	}
+ 
+ 	mtd_set_ooblayout(&slave->mtd, &part_ooblayout_ops);
+-	slave->mtd.ecc_step_size = master->ecc_step_size;
+-	slave->mtd.ecc_strength = master->ecc_strength;
+-	slave->mtd.bitflip_threshold = master->bitflip_threshold;
++	slave->mtd.ecc_step_size = parent->ecc_step_size;
++	slave->mtd.ecc_strength = parent->ecc_strength;
++	slave->mtd.bitflip_threshold = parent->bitflip_threshold;
+ 
+-	if (master->_block_isbad) {
++	if (parent->_block_isbad) {
+ 		uint64_t offs = 0;
+ 
+ 		while (offs < slave->mtd.size) {
+-			if (mtd_block_isreserved(master, offs + slave->offset))
++			if (mtd_block_isreserved(parent, offs + slave->offset))
+ 				slave->mtd.ecc_stats.bbtblocks++;
+-			else if (mtd_block_isbad(master, offs + slave->offset))
++			else if (mtd_block_isbad(parent, offs + slave->offset))
+ 				slave->mtd.ecc_stats.badblocks++;
+ 			offs += slave->mtd.erasesize;
+ 		}
 -- 
 2.11.0
 
