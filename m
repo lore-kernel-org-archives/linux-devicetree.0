@@ -1,57 +1,61 @@
-From: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-Subject: Re: [PATCH 2/5] ARM: dts: use #include "..." to include DT in the
- same directory
-Date: Wed, 24 May 2017 14:07:38 +0900
-Message-ID: <CAK7LNAQ16mHg=cRxFzVXrHTaDfcUPmbdeEc7MDC3AWG=ncrCoQ@mail.gmail.com>
-References: <1494846888-18966-1-git-send-email-yamada.masahiro@socionext.com>
- <1494846888-18966-3-git-send-email-yamada.masahiro@socionext.com> <20170515131048.GW8471@dragon>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: [PATCH] ARM: dts: versatile: use #include "..." to include local DT
+Date: Wed, 24 May 2017 14:10:10 +0900
+Message-ID: <1495602610-18667-1-git-send-email-yamada.masahiro@socionext.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170515131048.GW8471@dragon>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arch <linux-arch-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Gaurav Minocha <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Omar Sandoval <osandov-nWWhXC5lh1RBDgjK7y7TUQ@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: arm@kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Russell King <linux@armlinux.org.uk>, Masahiro Yamada <yamada.masahiro@socionext.com>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Shawn,
+Most of DT files in ARM use #include "..." to make pre-processor
+include DT in the same directory, but this is one of the exceptional
+files that use #include <...> for that.
 
-2017-05-15 22:10 GMT+09:00 Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>:
-> Hi Masahiro,
->
-> On Mon, May 15, 2017 at 08:14:45PM +0900, Masahiro Yamada wrote:
->> Most of DT files in ARM use #include "..." to make pre-processor
->> include DT in the same directory, but we have 3 exceptional files
->> that use #include <...> for that.
->>
->> They must be fixed to remove -I$(srctree)/arch/$(SRCARCH)/boot/dts
->> path from dtc_cpp_flags.
->>
->> Signed-off-by: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
->> ---
->>
->>  arch/arm/boot/dts/imx6q-zii-rdu2.dts  | 4 ++--
->>  arch/arm/boot/dts/imx6qp-zii-rdu2.dts | 4 ++--
->
-> I see this patch depends on nothing and can be applied immediately.  But
-> versatile-pb.dts is not really in my charge.  In case you want to get
-> this series merged by arm-soc folks, here is my ACK:
->
-> Acked-by: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->
-> Or you need to split versatile-pb.dts out, and then I can take it.
->
-> Shawn
+Fix it to remove -I$(srctree)/arch/$(SRCARCH)/boot/dts path from
+dtc_cpp_flags.
 
-I split it out.
+ARM: dts: versatile: use #include "..." to include DT in the same directory
 
-Please pick up the imx6 one.  Thanks!
+Most of DT files in ARM use #include "..." to make pre-processor
+include DT in the same directory, but we have 3 exceptional files
+that use #include <...> for that.
+
+They must be fixed to remove -I$(srctree)/arch/$(SRCARCH)/boot/dts
+path from dtc_cpp_flags.
+
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+---
+
+Arnd, Olof,
+I could not find a sub-arch maintainer for versatile.
+If nobody picks up this, could you take care of this?
 
 
+
+ arch/arm/boot/dts/versatile-pb.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/arm/boot/dts/versatile-pb.dts b/arch/arm/boot/dts/versatile-pb.dts
+index 33a8eb28374e..06e2331f666d 100644
+--- a/arch/arm/boot/dts/versatile-pb.dts
++++ b/arch/arm/boot/dts/versatile-pb.dts
+@@ -1,4 +1,4 @@
+-#include <versatile-ab.dts>
++#include "versatile-ab.dts"
+ 
+ / {
+ 	model = "ARM Versatile PB";
 -- 
-Best Regards
-Masahiro Yamada
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.7.4
