@@ -1,52 +1,126 @@
-From: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
-Subject: Re: [PATCH 1/2] dt/bindings: display: fix display-timing reference
-Date: Wed, 24 May 2017 15:37:36 +0300
-Message-ID: <20170524123735.fm2nyr6rpyfsomdq@sapphire.tkos.co.il>
-References: <eabeec88c2831eb8541b78a4977ee7342b810b39.1494922745.git.baruch@tkos.co.il>
- <20170523144756.6gfagkwfy7ocogqe@rob-hp-laptop>
- <20170524122322.ebopabnddozamqit@phenom.ffwll.local>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v2] phy: rcar-gen3-usb3: add support for R-Car Gen3 USB
+ 3.0 PHY
+Date: Wed, 24 May 2017 14:38:38 +0200
+Message-ID: <CAMuHMdUK95J+eJmAgDVnRUWzpLQTpSUv1s7see=TF5bDAgcrgg@mail.gmail.com>
+References: <1495628244-28406-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170524122322.ebopabnddozamqit-dv86pmgwkMBes7Z6vYuT8azUEOm+Xw19@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1495628244-28406-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc: Kishon Vijay Abraham I <kishon@ti.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Daniel,
+Hi Shimoda-san,
 
-On Wed, May 24, 2017 at 02:23:22PM +0200, Daniel Vetter wrote:
-> On Tue, May 23, 2017 at 09:47:56AM -0500, Rob Herring wrote:
-> > On Tue, May 16, 2017 at 11:19:04AM +0300, Baruch Siach wrote:
-> > > Fixes: 14da3ed8dd08 ("devicetree/bindings: display: Document common panel properties")
-> > > Cc: Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-> > > Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> > > Signed-off-by: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
-> > > ---
-> > >  Documentation/devicetree/bindings/display/panel/panel-common.txt | 2 +-
-> > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> 
-> We now have a pile of acks on these patches, but no one to push them.
-> Seems like it's for the panel tree, but Thierry isn't on cc afaics.
-> 
-> Someone needs to take care of this (and no it's no going to be me).
+On Wed, May 24, 2017 at 2:17 PM, Yoshihiro Shimoda
+<yoshihiro.shimoda.uh@renesas.com> wrote:
+> The USB 3.0 PHY modules of R-Car Gen3 SoCs have:
+>  - Spread spectrum clock (ssc).
+>  - Using USB 2.0 EXTAL clock instead of USB 3.0 clock.
+>  - Enabling VBUS detection for usb3.0 peripheral.
+>
+> So, this driver supports these features.
+>
+> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> ---
+>  This patch is based on the latest linux-phy.git / next branch and
+>  "[PATCH v5 3/3] phy: Group vendor specific phy drivers" patch.
+>
+>  I discussed with Geert-san about this driver on the ML:
+>  https://patchwork.kernel.org/patch/9731759/
+>
+>  Changes from v1:
+>  - Changes from dev_info to dev_vdbg in rcar_gen3_phy_usb3_init().
+>
+>  .../devicetree/bindings/phy/rcar-gen3-phy-usb3.txt |  47 +++++
+>  MAINTAINERS                                        |   4 +-
+>  drivers/phy/renesas/Kconfig                        |   7 +
+>  drivers/phy/renesas/Makefile                       |   1 +
+>  drivers/phy/renesas/phy-rcar-gen3-usb3.c           | 207 +++++++++++++++++++++
+>  5 files changed, 264 insertions(+), 2 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb3.txt
+>  create mode 100644 drivers/phy/renesas/phy-rcar-gen3-usb3.c
+>
+> diff --git a/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb3.txt b/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb3.txt
+> new file mode 100644
+> index 0000000..e58ba6b
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb3.txt
+> @@ -0,0 +1,47 @@
+> +* Renesas R-Car generation 3 USB 3.0 PHY
+> +
+> +This file provides information on what the device node for the R-Car generation
+> +3 USB 3.0 PHY contains.
+> +If you want to enable spread spectrum clock (ssc), you should use USB_EXTAL
+> +instead of USB3_CLK. However, if you don't want to these features, you don't
+> +need this driver.
+> +
+> +Required properties:
+> +- compatible: "renesas,r8a7795-usb3-phy" if the device is a part of an R8A7795
+> +             SoC.
+> +             "renesas,r8a7796-usb3-phy" if the device is a part of an R8A7796
+> +             SoC.
+> +             "renesas,rcar-gen3-usb3-phy" for a generic R-Car Gen3 compatible
+> +             device.
+> +
+> +             When compatible with the generic version, nodes must list the
+> +             SoC-specific version corresponding to the platform first
+> +             followed by the generic version.
+> +
+> +- reg: offset and length of the USB 3.0 PHY register block.
+> +- clocks: A list of phandles and clock-specifier pairs.
+> +- clock-names: Name of the clocks.
+> +  - The funcional clock must be "usb3-if".
+> +  - The usb3's external clock must be "usb3s_clk". If you want to use the ssc,
+> +    the clock-frequency must be 0.
 
-Thanks for looking into this.
+Given you have "renesas,ssc-range" to enable ssc, I think it doesn't matter
+if the clock frequency is 0 or not, so the "if you..." part can be removed.
 
-Just for the record, Thierry has been on To/Cc of all messages in this thread, 
-accept yours.
+> +  - The usb2's external clock must be "usb_extal". If you want to use the ssc,
+> +    the clock-frequenvy must not be 0.
 
-baruch
+frequency
 
--- 
-     http://baruch.siach.name/blog/                  ~. .~   Tk Open Systems
-=}------------------------------------------------ooO--U--Ooo------------{=
-   - baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org - tel: +972.2.679.5364, http://www.tkos.co.il -
+Here it does matter, as you need this clock for ssc.
+BTW, the driver can fallback to the other clock if ssc cannot be used.
+
+> +Optional properties:
+> +- renesas,ssc-range: Enable/disable spread spectrum clock (ssc) by using
+> +                    the following values as u32:
+> +                       - 0 (or the property doesn't exist): disable the ssc
+> +                       - 4980: enable the ssc as -4980 ppm
+> +                       - 4492: enable the ssc as -4492 ppm
+> +                       - 4003: enable the ssc as -4003 ppm
+
+Using ssc or not sounds like software policy, not hardware description?
+Can this be decided at runtime?
+
+> --- /dev/null
+> +++ b/drivers/phy/renesas/phy-rcar-gen3-usb3.c
+
+> +static const struct of_device_id rcar_gen3_phy_usb3_match_table[] = {
+> +       { .compatible = "renesas,r8a7795-usb3-phy" },
+> +       { .compatible = "renesas,r8a7796-usb3-phy" },
+
+As the driver matches against the generic compatible property, the above two
+lines can be removed.
+
+> +       { .compatible = "renesas,rcar-gen3-usb3-phy" },
+> +       { }
+> +};
+> +MODULE_DEVICE_TABLE(of, rcar_gen3_phy_usb3_match_table);
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
