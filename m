@@ -1,58 +1,84 @@
-From: Jean-Philippe Brucker <jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org>
-Subject: [PATCH 7/7] iommu/arm-smmu-v3: Disable tagged pointers
-Date: Wed, 24 May 2017 19:01:43 +0100
-Message-ID: <20170524180143.19855-8-jean-philippe.brucker@arm.com>
-References: <20170524180143.19855-1-jean-philippe.brucker@arm.com>
+From: Suman Anna <s-anna@ti.com>
+Subject: [PATCH v5 0/2] Add TI SCI Reset Driver
+Date: Wed, 24 May 2017 13:09:28 -0500
+Message-ID: <20170524180930.9290-1-s-anna@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <20170524180143.19855-1-jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org, okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, tn-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org, sunil.kovvuri-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Santosh Shilimkar <ssantosh@kernel.org>
+Cc: Nishanth Menon <nm@ti.com>, devicetree@vger.kernel.org, Dave Gerlach <d-gerlach@ti.com>, linux-kernel@vger.kernel.org, "Andrew F. Davis" <afd@ti.com>, Tero Kristo <t-kristo@ti.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The ARM architecture has a "Top Byte Ignore" (TBI) option that makes the
-MMU mask out bits [63:56] of an address, allowing a userspace application
-to store data in its pointers. This option is incompatible with PCI ATS.
+Hi Philipp,
 
-If TBI is enabled in the SMMU and userspace triggers DMA transactions on
-tagged pointers, the endpoint might create ATC entries for addresses that
-include a tag. Software would then have to send ATC invalidation packets
-for each 255 possible alias of an address, or just wipe the whole address
-space. This is not a viable option, so disable TBI.
+This series adds a reset controller driver that uses the TI SCI protocol
+to manage resets on some TI SoCs. It is a repost of the previous v4 [1]
+submission that has already been acked by Rob and Santosh, but with some
+minor changes. This series has been waiting for the ti-sci-pm-domains
+series to make it to mainline and because of the dependencies against
+a DT header file including the device id values. The ti-sci-pm-domains
+series is now merged and available in 4.12-rc1.
 
-The impact of this change is unclear, since there are very few users of
-tagged pointers, much less SVM. But the requirement introduced by this
-patch doesn't seem excessive: a userspace application using both tagged
-pointers and SVM should now sanitize addresses (clear the tag) before
-using them for device DMA.
+The main changes in v5 is to drop the include/dt-bindings/reset/k2g.h
+file based on some comments received from Arnd on a similar header usage
+in the ti-sci-pm-domains series. The ti-sci-pm-domains usage is being
+addressed in [2] and this reset series is refreshed to follow the same
+rule and drop the reset header file.
 
-Signed-off-by: Jean-Philippe Brucker <jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org>
----
- drivers/iommu/arm-smmu-v3.c | 1 -
- 1 file changed, 1 deletion(-)
+Patches are on top of 4.12-rc1 plus the recent Kconfig name change on
+the TI SYSCON reset driver [3].
 
-diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
-index 87ed6239b9a6..0b2674f8ba0f 100644
---- a/drivers/iommu/arm-smmu-v3.c
-+++ b/drivers/iommu/arm-smmu-v3.c
-@@ -997,7 +997,6 @@ static u64 arm_smmu_cpu_tcr_to_cd(u64 tcr)
- 	val |= ARM_SMMU_TCR2CD(tcr, EPD0);
- 	val |= ARM_SMMU_TCR2CD(tcr, EPD1);
- 	val |= ARM_SMMU_TCR2CD(tcr, IPS);
--	val |= ARM_SMMU_TCR2CD(tcr, TBI0);
- 
- 	return val;
- }
+Rob, Santosh,
+I have retained the Acks received from you on v4, but I am not sure
+since there are some minor changes to the series. Please provide any
+comments if you do not agree with the changes.
+
+regards
+Suman
+
+Changes from v4 [1]:
+ - Removed the include/dt-bindings/reset/k2g.h, and updated the
+   bindings document
+ - Minor checkpatch fixes to the driver patch
+
+Changes from v3:
+ - Addressed Rob Herring's comments
+ - Added Santosh Shilimkar's Ack
+
+Changes from v2:
+ - Merged DT binding patch and reset header patch
+ - Added locking for reset bit mask
+
+Changes from v1:
+ - Revised dt binding
+ - CC Linux ARM list
+
+[1] http://marc.info/?l=devicetree&m=147976458332492&w=2
+[2] http://marc.info/?l=linux-arm-kernel&m=149547831708124&w=2
+[3] https://patchwork.kernel.org/patch/9744909/
+
+Andrew F. Davis (2):
+  Documentation: dt: reset: Add TI SCI reset binding
+  reset: Add the TI SCI reset driver
+
+ .../devicetree/bindings/reset/ti,sci-reset.txt     |  62 +++++
+ MAINTAINERS                                        |   2 +
+ drivers/reset/Kconfig                              |   8 +
+ drivers/reset/Makefile                             |   1 +
+ drivers/reset/reset-ti-sci.c                       | 269 +++++++++++++++++++++
+ 5 files changed, 342 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/reset/ti,sci-reset.txt
+ create mode 100644 drivers/reset/reset-ti-sci.c
+
 -- 
-2.12.1
+2.12.0
