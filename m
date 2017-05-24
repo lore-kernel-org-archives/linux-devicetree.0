@@ -1,297 +1,78 @@
-From: Stanimir Varbanov <svarbanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH] PCI: qcom: Add support for IPQ4019 PCIe controller
-Date: Thu, 25 May 2017 00:55:47 +0300
-Message-ID: <64663df7-7000-7276-d9ca-337321f850a0@mm-sol.com>
-References: <20170505152524.29337-1-john@phrozen.org>
- <20170523200719.GG7241@bhelgaas-glaptop.roam.corp.google.com>
- <41f174d7-7d11-f80f-5508-17f53af1ee97@mm-sol.com>
- <20170524210418.GA31459@bhelgaas-glaptop.roam.corp.google.com>
+From: Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v5 0/2] Add PCIe host driver support for Mediatek SoCs
+Date: Wed, 24 May 2017 16:56:41 -0500
+Message-ID: <20170524215641.GE2794@bhelgaas-glaptop.roam.corp.google.com>
+References: <1495338145-9384-1-git-send-email-ryder.lee@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170524210418.GA31459-1RhO1Y9PlrlHTL0Zs8A6p5iNqAH0jzoTYJqu5kTmcBRl57MIdRCFDg@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1495338145-9384-1-git-send-email-ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: John Crispin <john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ryder Lee <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Red Hung <red.hung-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Bjorn,
+On Sun, May 21, 2017 at 11:42:23AM +0800, Ryder Lee wrote:
+> Hi,
+> 
+> This patch series add Mediatek Gen2 PCIe host controller driver and
+> dt-binding document. It can be found on MT7623 series SoCs.
+> 
+> This driver was validated using Broadcom Tigon3 and Intel(R) 82575/82576
+> gigabit ethernet card.
+> 
+> 
+> Changes since v5:
+> - rebase to Linux 4.12-rc1.
+> - remove redundant module.h header and MODULE macros.
+> 
+> Changes since v4:
+> - move the per-port registers to the parent node.
+> - use a valid compatible for hifsys controller.
+> - use the 'sysirq' instead of 'gic' as a correct 'interrupt-parent' of the
+>   interrupt-map properties.
+> 
+>   'sysirq' is an interrupt-controller that could help us to reverse GIC SPIs polarity
+>   so that we could properly set irq type to level low without any extra properties.
+>   It was a mistake to select wrong interrupt-parent on the previous versions.
+>   Now, we could remove unnecessary interrupt properties entirely from binding.
+> 
+> Changes since v3:
+> - correct sub-nodes unit addresses.
+> 
+> Changes since v2:
+> - modify Kconfig to avoid kbuild test error on some architecture.
+> - change compatible string.
+> - revise binding document:
+>   add missing interrupt-names.
+>   remove the board dts example and drop 'status' properties.
+>   remove unnecessary descriptions bout standard PCI bus binding.
+> 
+> Changes since v1:
+> - add .suppress_bind_attrs.
+> - remove unnecessary *_valid_device() pattern.
+> - remove PCI_PROBE_ONLY.
+> - use the regular readl() instead of readl_relaxed().
+> - add .map_bus() and change to use pci_generic_config_read/pci_generic_config_write.
+> - revise dt-binding document and move nonstandard properties to root node.
+> - change compatible string.
+> - use interrupt-map property and replace mtk_pcie_map_irq() with of_irq_parse_and_map_pci().
+> - use the new pci_register_host_bridge() method instead of pci_scan_root_bus()*
+> 
+> Ryder Lee (2):
+>   PCI: mediatek: Add Mediatek PCIe host controller support
+>   dt-bindings: pcie: Add documentation for Mediatek PCIe
+> 
+>  .../bindings/pci/mediatek,mt7623-pcie.txt          | 130 +++++
+>  drivers/pci/host/Kconfig                           |  11 +
+>  drivers/pci/host/Makefile                          |   1 +
+>  drivers/pci/host/pcie-mediatek.c                   | 553 +++++++++++++++++++++
+>  4 files changed, 695 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pci/mediatek,mt7623-pcie.txt
+>  create mode 100644 drivers/pci/host/pcie-mediatek.c
 
-On 25.05.2017 00:04, Bjorn Helgaas wrote:
-> On Wed, May 24, 2017 at 02:31:27AM +0300, Stanimir Varbanov wrote:
->> Hi,
->>
->> On 23.05.2017 23:07, Bjorn Helgaas wrote:
->>> Stanimir?
->>>
->>> On Fri, May 05, 2017 at 05:25:24PM +0200, John Crispin wrote:
->>>> Add support for the IPQ4019 PCIe controller. IPQ4019 supports Gen
->>>> 1/2, one lane, one PCIe root complex with support for MSI and legacy
->>>> interrupts, and it conforms to PCI Express Base 2.1 specification.
->>>>
->>>> The core init is the sames as for the MSM8996, however the clocks and
->>>> reset lines differ.
->>>>
->>>> Signed-off-by: John Crispin <john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org>
->>>> ---
->>>> .../devicetree/bindings/pci/qcom,pcie.txt          |  20 +-
->>>> drivers/pci/host/pcie-qcom.c                       | 304 +++++++++++++++++++++
->>>
->>> pcie-qcom.c was recently moved to drivers/pci/dwc, but I was able to
->>> apply this by hand pretty easily.  But I would like Stanimir's ack
->>> first.
->>
->> Bjorn, thanks for the reminder.
->>
->> Acked-by: Stanimir Varbanov <svarbanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
->
-> Thanks.
->
-> Rob took the trouble to provide useful comments, so I'm a bit
-> disappointed that there hasn't been a response them.
->
-> Re the verbose error messages, I agree they make the code ugly.  I
-> think John copied the existing style, which is reasonable.  I don't
-> see a good way to move the message into the callee, e.g.,
-> reset_control_assert(), because that's a generic function with
-> hundreds of callers.  But most of those callers don't check the return
-> value.  I'm not sure whether there's really any value in checking
-> here.
-
-I have an idea how all those reset controls will become more beautiful. 
-I'm just waiting this [1] to me merged. When this happened I will post a 
-cleanup patch for resets and error messages.
-
->
-> Re the ordering in the deinit() functions vs the init() error paths,
-> the new v3 code uses the same ordering as the existing v1 code, i.e.,
->
->   qcom_pcie_deinit_v3
->     reset_control_assert
->     clk_disable_unprepare
->
->   qcom_pcie_init_v3
->       reset_control_deassert
->       clk_prepare_enable
->     err:
->       clk_disable_unprepare
->       reset_control_assert
->
-> In general, there's just a worrying lack of symmetry across the init,
-> deinit, and error paths of all the versions.
-
-Probably the order doesn't matter in deinit case so let's keep it as is 
-in John's patch.
-
->
-> I would also propose the patch below, which doesn't change any code,
-> but moves a few functions so all the v0 code is together, all the v1
-> code is together and in the same order, etc.
-
-Thanks, looks good to me.
-
-regards,
-Stan
-
-[1] https://lkml.org/lkml/2017/5/22/273
-
->
-> Bjorn
->
->
->
-> commit ebacba9579462bdc009f4cfc1b605b3ca7a7a1d2
-> Author: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-> Date:   Wed May 24 15:19:36 2017 -0500
->
->     PCI: qcom: Reorder to put v0 functions together, v1 functions together, etc
->
->     Previously the v0, v1, and v2 functions were not grouped together in a
->     consistent order.  Reorder them to make them consistent.
->
->     Signed-off-by: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
->
-> diff --git a/drivers/pci/dwc/pcie-qcom.c b/drivers/pci/dwc/pcie-qcom.c
-> index 9b186518cb72..5872a6771ea5 100644
-> --- a/drivers/pci/dwc/pcie-qcom.c
-> +++ b/drivers/pci/dwc/pcie-qcom.c
-> @@ -152,26 +152,6 @@ static irqreturn_t qcom_pcie_msi_irq_handler(int irq, void *arg)
->  	return dw_handle_msi_irq(pp);
->  }
->
-> -static void qcom_pcie_v0_v1_ltssm_enable(struct qcom_pcie *pcie)
-> -{
-> -	u32 val;
-> -
-> -	/* enable link training */
-> -	val = readl(pcie->elbi + PCIE20_ELBI_SYS_CTRL);
-> -	val |= PCIE20_ELBI_SYS_CTRL_LT_ENABLE;
-> -	writel(val, pcie->elbi + PCIE20_ELBI_SYS_CTRL);
-> -}
-> -
-> -static void qcom_pcie_v2_ltssm_enable(struct qcom_pcie *pcie)
-> -{
-> -	u32 val;
-> -
-> -	/* enable link training */
-> -	val = readl(pcie->parf + PCIE20_PARF_LTSSM);
-> -	val |= BIT(8);
-> -	writel(val, pcie->parf + PCIE20_PARF_LTSSM);
-> -}
-> -
->  static int qcom_pcie_establish_link(struct qcom_pcie *pcie)
->  {
->  	struct dw_pcie *pci = pcie->pci;
-> @@ -186,6 +166,16 @@ static int qcom_pcie_establish_link(struct qcom_pcie *pcie)
->  	return dw_pcie_wait_for_link(pci);
->  }
->
-> +static void qcom_pcie_v0_v1_ltssm_enable(struct qcom_pcie *pcie)
-> +{
-> +	u32 val;
-> +
-> +	/* enable link training */
-> +	val = readl(pcie->elbi + PCIE20_ELBI_SYS_CTRL);
-> +	val |= PCIE20_ELBI_SYS_CTRL_LT_ENABLE;
-> +	writel(val, pcie->elbi + PCIE20_ELBI_SYS_CTRL);
-> +}
-> +
->  static int qcom_pcie_get_resources_v0(struct qcom_pcie *pcie)
->  {
->  	struct qcom_pcie_resources_v0 *res = &pcie->res.v0;
-> @@ -236,36 +226,6 @@ static int qcom_pcie_get_resources_v0(struct qcom_pcie *pcie)
->  	return PTR_ERR_OR_ZERO(res->phy_reset);
->  }
->
-> -static int qcom_pcie_get_resources_v1(struct qcom_pcie *pcie)
-> -{
-> -	struct qcom_pcie_resources_v1 *res = &pcie->res.v1;
-> -	struct dw_pcie *pci = pcie->pci;
-> -	struct device *dev = pci->dev;
-> -
-> -	res->vdda = devm_regulator_get(dev, "vdda");
-> -	if (IS_ERR(res->vdda))
-> -		return PTR_ERR(res->vdda);
-> -
-> -	res->iface = devm_clk_get(dev, "iface");
-> -	if (IS_ERR(res->iface))
-> -		return PTR_ERR(res->iface);
-> -
-> -	res->aux = devm_clk_get(dev, "aux");
-> -	if (IS_ERR(res->aux))
-> -		return PTR_ERR(res->aux);
-> -
-> -	res->master_bus = devm_clk_get(dev, "master_bus");
-> -	if (IS_ERR(res->master_bus))
-> -		return PTR_ERR(res->master_bus);
-> -
-> -	res->slave_bus = devm_clk_get(dev, "slave_bus");
-> -	if (IS_ERR(res->slave_bus))
-> -		return PTR_ERR(res->slave_bus);
-> -
-> -	res->core = devm_reset_control_get(dev, "core");
-> -	return PTR_ERR_OR_ZERO(res->core);
-> -}
-> -
->  static void qcom_pcie_deinit_v0(struct qcom_pcie *pcie)
->  {
->  	struct qcom_pcie_resources_v0 *res = &pcie->res.v0;
-> @@ -394,6 +354,36 @@ static int qcom_pcie_init_v0(struct qcom_pcie *pcie)
->  	return ret;
->  }
->
-> +static int qcom_pcie_get_resources_v1(struct qcom_pcie *pcie)
-> +{
-> +	struct qcom_pcie_resources_v1 *res = &pcie->res.v1;
-> +	struct dw_pcie *pci = pcie->pci;
-> +	struct device *dev = pci->dev;
-> +
-> +	res->vdda = devm_regulator_get(dev, "vdda");
-> +	if (IS_ERR(res->vdda))
-> +		return PTR_ERR(res->vdda);
-> +
-> +	res->iface = devm_clk_get(dev, "iface");
-> +	if (IS_ERR(res->iface))
-> +		return PTR_ERR(res->iface);
-> +
-> +	res->aux = devm_clk_get(dev, "aux");
-> +	if (IS_ERR(res->aux))
-> +		return PTR_ERR(res->aux);
-> +
-> +	res->master_bus = devm_clk_get(dev, "master_bus");
-> +	if (IS_ERR(res->master_bus))
-> +		return PTR_ERR(res->master_bus);
-> +
-> +	res->slave_bus = devm_clk_get(dev, "slave_bus");
-> +	if (IS_ERR(res->slave_bus))
-> +		return PTR_ERR(res->slave_bus);
-> +
-> +	res->core = devm_reset_control_get(dev, "core");
-> +	return PTR_ERR_OR_ZERO(res->core);
-> +}
-> +
->  static void qcom_pcie_deinit_v1(struct qcom_pcie *pcie)
->  {
->  	struct qcom_pcie_resources_v1 *res = &pcie->res.v1;
-> @@ -474,6 +464,16 @@ static int qcom_pcie_init_v1(struct qcom_pcie *pcie)
->  	return ret;
->  }
->
-> +static void qcom_pcie_v2_ltssm_enable(struct qcom_pcie *pcie)
-> +{
-> +	u32 val;
-> +
-> +	/* enable link training */
-> +	val = readl(pcie->parf + PCIE20_PARF_LTSSM);
-> +	val |= BIT(8);
-> +	writel(val, pcie->parf + PCIE20_PARF_LTSSM);
-> +}
-> +
->  static int qcom_pcie_get_resources_v2(struct qcom_pcie *pcie)
->  {
->  	struct qcom_pcie_resources_v2 *res = &pcie->res.v2;
-> @@ -500,6 +500,17 @@ static int qcom_pcie_get_resources_v2(struct qcom_pcie *pcie)
->  	return PTR_ERR_OR_ZERO(res->pipe_clk);
->  }
->
-> +static void qcom_pcie_deinit_v2(struct qcom_pcie *pcie)
-> +{
-> +	struct qcom_pcie_resources_v2 *res = &pcie->res.v2;
-> +
-> +	clk_disable_unprepare(res->pipe_clk);
-> +	clk_disable_unprepare(res->slave_clk);
-> +	clk_disable_unprepare(res->master_clk);
-> +	clk_disable_unprepare(res->cfg_clk);
-> +	clk_disable_unprepare(res->aux_clk);
-> +}
-> +
->  static int qcom_pcie_init_v2(struct qcom_pcie *pcie)
->  {
->  	struct qcom_pcie_resources_v2 *res = &pcie->res.v2;
-> @@ -865,17 +876,6 @@ static int qcom_pcie_link_up(struct dw_pcie *pci)
->  	return !!(val & PCI_EXP_LNKSTA_DLLLA);
->  }
->
-> -static void qcom_pcie_deinit_v2(struct qcom_pcie *pcie)
-> -{
-> -	struct qcom_pcie_resources_v2 *res = &pcie->res.v2;
-> -
-> -	clk_disable_unprepare(res->pipe_clk);
-> -	clk_disable_unprepare(res->slave_clk);
-> -	clk_disable_unprepare(res->master_clk);
-> -	clk_disable_unprepare(res->cfg_clk);
-> -	clk_disable_unprepare(res->aux_clk);
-> -}
-> -
->  static void qcom_pcie_host_init(struct pcie_port *pp)
->  {
->  	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-arm-msm" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->
+Applied to pci/host-mediatek for v4.13, thanks!
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
