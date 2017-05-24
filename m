@@ -1,51 +1,47 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2] dt-bindings: spi-meson: Add SPICC bindings
-Date: Wed, 24 May 2017 18:18:52 +0100
-Message-ID: <20170524171852.gktg6sek67vrt7gs@sirena.org.uk>
-References: <1495546773-20479-1-git-send-email-narmstrong@baylibre.com>
- <1495546773-20479-2-git-send-email-narmstrong@baylibre.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v2 3/3] regulator: tps65917: Add support for SMPS12
+Date: Wed, 24 May 2017 18:20:28 +0100
+Message-ID: <20170524172028.baxeku6ei373ckdr@sirena.org.uk>
+References: <1495541816-14801-1-git-send-email-j-keerthy@ti.com>
+ <1495541816-14801-4-git-send-email-j-keerthy@ti.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="v453cxbt5wvlebu7"
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+        protocol="application/pgp-signature"; boundary="g6voswnfdvvdepe7"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1495546773-20479-2-git-send-email-narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1495541816-14801-4-git-send-email-j-keerthy@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Keerthy <j-keerthy@ti.com>
+Cc: lee.jones@linaro.org, robh+dt@kernel.org, t-kristo@ti.com, tony@atomide.com, mark.rutland@arm.com, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, afd@ti.com
 List-Id: devicetree@vger.kernel.org
 
 
---v453cxbt5wvlebu7
+--g6voswnfdvvdepe7
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, May 23, 2017 at 03:39:32PM +0200, Neil Armstrong wrote:
-> Add the SPICC (SPI Communications Controller) bindings variant.
+On Tue, May 23, 2017 at 05:46:56PM +0530, Keerthy wrote:
+> App support for SMPS12 dual phase regulator.
+>=20
+> Signed-off-by: Keerthy <j-keerthy@ti.com>
+> Acked-by: Lee Jones <lee.jones@linaro.org>
 
-Please submit patches using subject lines reflecting the style for the
-subsystem.  This makes it easier for people to identify relevant
-patches.  Look at what existing commits in the area you're changing are
-doing and make sure your subject lines visually resemble what they're
-doing.
+What's the relationship between this and support for the lp87565?
 
---v453cxbt5wvlebu7
+--g6voswnfdvvdepe7
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlklwHsACgkQJNaLcl1U
-h9CpJgf/cPbeJ58tYOq6nonEHNpNH5oPIbEQ8x/P06qcRCHFB3LC2TKZgj1WjHLn
-Z/Dj91RWz+L4sgSTUxsglv32mY+fnIiTRUD8u6nc3+VO2z1HRDVB/1pbxkvyfeQ5
-aOU/W4yWH+jar3UrRyVmaBsnz/fPll15iyCt/HTKFsEEAPatFERWg2tWbgVY8Ulx
-dXPRI2/Fmx4HcLFZ7Etv5mUmcWK+poUUQl7IvkurtiI+a3t8qs2BrsK8uQ3z0ema
-w6kGHqmpbxD55tNNuqdac9SQg23DpsgKJLig8g8ZAeQCmuqorM6FacFi028CSSv5
-Yp+4RaVjU2gJopr/jfDieGZq3A8uhw==
-=RFlC
+iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlklwNsACgkQJNaLcl1U
+h9AoOgf/QpkGqmgigV60S9xXncno1PykfTtNWTfiSP1Avz02S8nRqd+73AubQ37O
+fEDvkgVq5WLUMlN5nCbyfLvTf05HX8Oaz/HjEAK9Q5wAlMU7K2HU8RGurHzgsvnV
+dEPEqf2hlXS1oNl50KQ1GgOHGEteGREtbfm74vQF1LvH7cxerv1YK5ThPzUL+mit
+mWM9xZy8sGmnOL+VjONcEEDA6/UGQkYo+8HBjrHztncIie+pR8TdhG6pou4Wv8AA
+hEudhYXSW00QHCiVyms4/ZpFfvW/PQIzvcAF6LHpLUgFCvSDERdArgEa77QU5J3q
+oQriYT12OQgC9m3bNyIUlxdZpaMCww==
+=4XCy
 -----END PGP SIGNATURE-----
 
---v453cxbt5wvlebu7--
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--g6voswnfdvvdepe7--
