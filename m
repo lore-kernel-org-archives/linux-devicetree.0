@@ -1,78 +1,127 @@
-From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: [PATCH v2 6/6] mailbox: arm_mhu: add support to read and record mbox-name
-Date: Wed, 24 May 2017 11:16:43 +0100
-Message-ID: <1495621003-4291-7-git-send-email-sudeep.holla@arm.com>
-References: <1495621003-4291-1-git-send-email-sudeep.holla@arm.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: CPU_BIG_ENDIAN in generic code (was: Re: [PATCH v3 3/7]
+ arch/sparc: Define config parameter CPU_BIG_ENDIAN)
+Date: Wed, 24 May 2017 12:18:36 +0200
+Message-ID: <CAK8P3a1XZGQk3b3q+JFJ+mLgw_upUdAtTM1VBjHZq5f2m-YdUg@mail.gmail.com>
+References: <CAMuHMdVjh+1TR19mUUQYHSazHnBHa4uxn7KyHUO+jAh7WDxy5Q@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1495621003-4291-1-git-send-email-sudeep.holla@arm.com>
+In-Reply-To: <CAMuHMdVjh+1TR19mUUQYHSazHnBHa4uxn7KyHUO+jAh7WDxy5Q@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, Jassi Brar <jassisinghbrar@gmail.com>
-Cc: Sudeep Holla <sudeep.holla@arm.com>, devicetree@vger.kernel.org, Alexey Klimov <alexey.klimov@arm.com>, Jassi Brar <jaswinder.singh@linaro.org>
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Babu Moger <babu.moger@oracle.com>, "David S. Miller" <davem@davemloft.net>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, sparclinux <sparclinux@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux-Arch <linux-arch@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-It's sometimes useful to identify the mailbox controller with the name
-as specified in the devicetree via mbox-name property especially in a
-system with multiple controllers.
+On Wed, May 24, 2017 at 11:59 AM, Geert Uytterhoeven
+<geert@linux-m68k.org> wrote:
+> On Tue, May 23, 2017 at 11:45 PM, Babu Moger <babu.moger@oracle.com> wrote:
+>> Found this problem while enabling queued rwlock on SPARC.
+>> The parameter CONFIG_CPU_BIG_ENDIAN is used to clear the
+>> specific byte in qrwlock structure. Without this parameter,
+>> we clear the wrong byte. Here is the code.
+>>
+>> static inline u8 *__qrwlock_write_byte(struct qrwlock *lock)
+>>  {
+>>         return (u8 *)lock + 3 * IS_BUILTIN(CONFIG_CPU_BIG_ENDIAN);
+>>  }
+>>
+>> Define CPU_BIG_ENDIAN for SPARC to fix it.
+>
+>> --- a/arch/sparc/Kconfig
+>> +++ b/arch/sparc/Kconfig
+>> @@ -92,6 +92,10 @@ config ARCH_DEFCONFIG
+>>  config ARCH_PROC_KCORE_TEXT
+>>         def_bool y
+>>
+>> +config CPU_BIG_ENDIAN
+>> +       bool
+>> +       default y if SPARC
+>
+> Nice catch!
+>
+> Traditionally, CPU_BIG_ENDIAN and CPU_LITTLE_ENDIAN were defined only on
+> architectures that may support both.  And it was checked in platform code
+> and drivers only.
+> Hence the symbol is lacking from most architectures. Heck, even
+> architectures that support both may default to one endiannes, and declare
+> only the symbol for the other endianness:
+>
+> --- arch/alpha ---
+> --- arch/arc ---
+> arch/arc/Kconfig:config CPU_BIG_ENDIAN
+> --- arch/arm ---
+> arch/arm/mm/Kconfig:config CPU_BIG_ENDIAN
+> --- arch/arm64 ---
+> arch/arm64/Kconfig:config CPU_BIG_ENDIAN
+> --- arch/blackfin ---
+> --- arch/c6x ---
+> arch/c6x/Kconfig:config CPU_BIG_ENDIAN
+> --- arch/cris ---
+> --- arch/frv ---
+> --- arch/h8300 ---
+> --- arch/hexagon ---
+> --- arch/ia64 ---
+> --- arch/Kconfig ---
+> --- arch/m32r ---
+> arch/m32r/Kconfig:config CPU_LITTLE_ENDIAN
+> --- arch/m68k ---
+> --- arch/metag ---
+> --- arch/microblaze ---
+> --- arch/mips ---
+> arch/mips/Kconfig:config CPU_BIG_ENDIAN
+> arch/mips/Kconfig:config CPU_LITTLE_ENDIAN
+> --- arch/mn10300 ---
+> --- arch/nios2 ---
+> --- arch/openrisc ---
+> --- arch/parisc ---
+> --- arch/powerpc ---
+> arch/powerpc/platforms/Kconfig.cputype:config CPU_BIG_ENDIAN
+> arch/powerpc/platforms/Kconfig.cputype:config CPU_LITTLE_ENDIAN
+> --- arch/s390 ---
+> arch/s390/Kconfig:config CPU_BIG_ENDIAN
+> --- arch/score ---
+> --- arch/sh ---
+> arch/sh/Kconfig.cpu:config CPU_LITTLE_ENDIAN
+> arch/sh/Kconfig.cpu:config CPU_BIG_ENDIAN
+> --- arch/sparc ---
+> --- arch/tile ---
+> --- arch/um ---
+> --- arch/unicore32 ---
+> --- arch/x86 ---
+> --- arch/xtensa ---
+>
+> However, there are already a few users in generic code, which are thus
+> broken on many platforms:
+>
+>     drivers/of/base.c
+>     drivers/of/fdt.c
+>     drivers/tty/serial/earlycon.c
+>     drivers/tty/serial/serial_core.c
+>
+> include/asm-generic/qrwlock.h is also generic, but depends on the
+> architecture to select ARCH_USE_QUEUED_RWLOCKS, which only very few do
+> (x86, and now sparc).
+>
+> I guess the time is ripe for adding (both) symbols to all architectures?
 
-This patch adds support to read and record the mailbox controller name.
+Good idea. I think we can do most of this by adding a few lines to
+arch/Kconfig:
 
-Cc: Alexey Klimov <alexey.klimov@arm.com>
-Cc: Jassi Brar <jaswinder.singh@linaro.org>
-Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
----
- drivers/mailbox/arm_mhu.c | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+config CPU_BIG_ENDIAN
+        bool
 
-diff --git a/drivers/mailbox/arm_mhu.c b/drivers/mailbox/arm_mhu.c
-index 79d2392d7f3b..08ed22e9e347 100644
---- a/drivers/mailbox/arm_mhu.c
-+++ b/drivers/mailbox/arm_mhu.c
-@@ -47,6 +47,7 @@ struct arm_mhu {
- 	struct mhu_link mlink[MHU_NUM_PCHANS];
- 	struct mbox_controller mbox;
- 	struct device *dev;
-+	const char *name;
- };
- 
- /**
-@@ -257,8 +258,8 @@ static struct mbox_chan *mhu_mbox_xlate(struct mbox_controller *mbox,
- 
- 	chan->con_priv = chan_info;
- 
--	dev_dbg(mbox->dev, "mbox: created channel phys: %d doorbell: %d\n",
--		pchan, doorbell);
-+	dev_dbg(mbox->dev, "mbox: %s, created channel phys: %d doorbell: %d\n",
-+		mhu->name, pchan, doorbell);
- 
- 	return chan;
- }
-@@ -366,6 +367,7 @@ static int mhu_probe(struct amba_device *adev, const struct amba_id *id)
- 	struct mhu_mbox_pdata *pdata;
- 	const struct of_device_id *match;
- 	struct device *dev = &adev->dev;
-+	struct device_node *np = dev->of_node;
- 	int mhu_reg[MHU_NUM_PCHANS] = {
- 		MHU_LP_OFFSET, MHU_HP_OFFSET, MHU_SEC_OFFSET,
- 	};
-@@ -395,6 +397,10 @@ static int mhu_probe(struct amba_device *adev, const struct amba_id *id)
- 		return PTR_ERR(mhu->base);
- 	}
- 
-+	err = of_property_read_string(np, "mbox-name", &mhu->name);
-+	if (err)
-+		mhu->name = np->full_name;
-+
- 	chans = devm_kcalloc(dev, max_chans, sizeof(*chans), GFP_KERNEL);
- 	if (!chans)
- 		return -ENOMEM;
-@@ -446,7 +452,7 @@ static int mhu_probe(struct amba_device *adev, const struct amba_id *id)
- 		}
- 	}
- 
--	dev_info(dev, "ARM MHU Mailbox registered\n");
-+	dev_info(dev, "%s mailbox registered\n", mhu->name);
- 	return 0;
- }
- 
--- 
-2.7.4
+config CPU_LITTLE_ENDIAN
+       def_bool !CPU_BIG_ENDIAN
+
+This way, we only need to add 'select CPU_BIG_ENDIAN' to the
+architectures that are always big-endian, and we don't need to
+change anything for the ones that have a single 'CPU_BIG_ENDIAN'
+option.
+
+The three architectures that have a 'choice' statement (mips, ppc and
+sh) will have to convert, and m32r will have to replace the
+option with the opposite one, which could break 'make oldconfig',
+but nobody really cares about m32r any more.
+
+       Arnd
