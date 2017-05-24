@@ -1,53 +1,60 @@
-From: Keerthy <j-keerthy@ti.com>
-Subject: [PATCH v2] ARM: dts: da850: Add interrupt-controller property to gpio
- node
-Date: Wed, 24 May 2017 19:31:41 +0530
-Message-ID: <1495634501-3246-1-git-send-email-j-keerthy@ti.com>
+From: "Lino Sanfilippo" <LinoSanfilippo@gmx.de>
+Subject: Aw: Re: [PATCH v6 net-next 17/17] net: qualcomm: add QCA7000 UART
+ driver
+Date: Wed, 24 May 2017 16:19:59 +0200
+Message-ID: <trinity-2a5e8b0e-888a-49f3-add9-bd0161fa67f5-1495635599212@3capp-gmx-bs75>
+References: <1495545173-22150-1-git-send-email-stefan.wahren@i2se.com>
+ <1495545173-22150-18-git-send-email-stefan.wahren@i2se.com>
+ <053235ad-a963-6a09-ccb0-b643115dee00@gmx.de>
+ <1059621060.236992.1495568289051@email.1und1.de>
+ <41c7302e-b25c-9f57-470a-dd95200a060f@gmx.de>
+ <50e5a442-777f-1516-4e94-16db7fa28f8b@i2se.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: nsekhar@ti.com, linus.walleij@linaro.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, tony@atomide.com, j-keerthy@ti.com, linux-kernel@vger.kernel.org, t-kristo@ti.com, robh+dt@kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <50e5a442-777f-1516-4e94-16db7fa28f8b@i2se.com>
+Sender: netdev-owner@vger.kernel.org
+To: Stefan Wahren <stefan.wahren@i2se.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "David S. Miller" <davem@davemloft.net>, linux-serial@vger.kernel.org, Jiri Slaby <jslaby@suse.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, Jakub Kicinski <kubakici@wp.pl>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The gpio node has 144 gpios. Each gpio is capable of generating
-an interrupt. Hence add interrupt-controller property to the gpio
-node. With this in place one can use interrupts property in device
-tree to request for the gpio interrupts.
+Hi,
 
-Signed-off-by: Keerthy <j-keerthy@ti.com>
----
+> Gesendet: Mittwoch, 24. Mai 2017 um 11:06 Uhr
+> Von: "Stefan Wahren" <stefan.wahren@i2se.com>
+> An: "Lino Sanfilippo" <LinoSanfilippo@gmx.de>, "Rob Herring" <robh+dt@kernel.org>, "Mark Rutland" <mark.rutland@arm.com>, "David S. Miller" <davem@davemloft.net>
+> Cc: linux-serial@vger.kernel.org, "Jiri Slaby" <jslaby@suse.com>, "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, "Jakub Kicinski" <kubakici@wp.pl>, devicetree@vger.kernel.org
+> Betreff: Re: [PATCH v6 net-next 17/17] net: qualcomm: add QCA7000 UART driver
+>
+> Am 23.05.2017 um 23:01 schrieb Lino Sanfilippo:
+> > On 23.05.2017 21:38, Stefan Wahren wrote:
+> >>> Lino Sanfilippo <LinoSanfilippo@gmx.de> hat am 23. Mai 2017 um 20:16 geschrieben:
+> >>>
+> >>> I suggest to avoid this possible race by first unregistering the netdevice and then 
+> >>> calling cancel_work_sync().
+> >> What makes you sure that's safe to unregister the netdev while the tx work queue is possibly active?
+> > unregister_netdevice() calls netdev_close() if the interface is still up. netdev_close() calls flush_work()
+> > so the unregistration is delayed until the tx work function is finished. Furthermore both close() and
+> > tx work are synchronized by means of the qca->lock which also guarantees that unregister_netdevice() wont
+> > be finished until the tx work is done.
+> >
+> 
+> Thanks for the explanation. I suspect there could be the same race
+> between serdev_device_close() and the tx work queue.
+> 
+> So i would propose a variant of your original suggestion:
+> 
+> unregister_netdev(qca->net_dev);
+> 
+> /* Flush any pending characters in the driver. */
+> serdev_device_close(serdev);
+> cancel_work_sync(&qca->tx_work);
+> 
+> Since we have the same pattern in the error path of the probe function,
+> the same applies there.
 
-Changes in v2:
+Agreed, it is much cleaner to have the same cleanup pattern in remove() as
+we have in (error case of) probe().
 
-  * Added LAKML list.
-  * Chaned arm to upper case in $Subject
-
- arch/arm/boot/dts/da850.dtsi | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/arch/arm/boot/dts/da850.dtsi b/arch/arm/boot/dts/da850.dtsi
-index 941d455..2693bd2 100644
---- a/arch/arm/boot/dts/da850.dtsi
-+++ b/arch/arm/boot/dts/da850.dtsi
-@@ -503,6 +503,8 @@
- 			ti,ngpio = <144>;
- 			ti,davinci-gpio-unbanked = <0>;
- 			status = "disabled";
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
- 		};
- 		pinconf: pin-controller@22c00c {
- 			compatible = "ti,da850-pupd";
--- 
-1.9.1
+Regards,
+Lino
