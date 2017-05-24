@@ -1,57 +1,57 @@
-From: Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [PATCH v2] ARM: dts: rockchip: add eDP panel support for Firefly
-Date: Wed, 24 May 2017 17:45:51 +0200
-Message-ID: <1982494.aeoIls14E7@phil>
-References: <20170508155833.19652-1-ayaka@soulik.info>
+From: Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>
+Subject: Re: [PATCH 1/2] dt/bindings: display: fix display-timing reference
+Date: Wed, 24 May 2017 17:51:31 +0200
+Message-ID: <20170524155131.h53lrilrhn2eouqc@phenom.ffwll.local>
+References: <eabeec88c2831eb8541b78a4977ee7342b810b39.1494922745.git.baruch@tkos.co.il>
+ <20170523144756.6gfagkwfy7ocogqe@rob-hp-laptop>
+ <20170524122322.ebopabnddozamqit@phenom.ffwll.local>
+ <20170524123735.fm2nyr6rpyfsomdq@sapphire.tkos.co.il>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170508155833.19652-1-ayaka@soulik.info>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Randy Li <ayaka@soulik.info>
-Cc: devicetree@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170524123735.fm2nyr6rpyfsomdq-MwjkAAnuF3khR1HGirfZ1z4kX+cae0hd@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
+Cc: Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Randy,
-
-Am Montag, 8. Mai 2017, 23:58:33 CEST schrieb Randy Li:
-> This patch adds the supporting to the eDP panel sold by
-> the T-CHIP for the Firefly RK3288. I assign the VOP lite
-> for the eDP panel and VOP big to HDMI, as the HDMI supports
-> 4K resolution. With a different VOP device, eDP panel
-> and HDMI could display a different contents.
+On Wed, May 24, 2017 at 03:37:36PM +0300, Baruch Siach wrote:
+> Hi Daniel,
 > 
-> The InvenSense MPU6050 sensor at the botton of the panel
-> is also enabled.
+> On Wed, May 24, 2017 at 02:23:22PM +0200, Daniel Vetter wrote:
+> > On Tue, May 23, 2017 at 09:47:56AM -0500, Rob Herring wrote:
+> > > On Tue, May 16, 2017 at 11:19:04AM +0300, Baruch Siach wrote:
+> > > > Fixes: 14da3ed8dd08 ("devicetree/bindings: display: Document common panel properties")
+> > > > Cc: Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+> > > > Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> > > > Signed-off-by: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
+> > > > ---
+> > > >  Documentation/devicetree/bindings/display/panel/panel-common.txt | 2 +-
+> > > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > > 
+> > > Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> > 
+> > We now have a pile of acks on these patches, but no one to push them.
+> > Seems like it's for the panel tree, but Thierry isn't on cc afaics.
+> > 
+> > Someone needs to take care of this (and no it's no going to be me).
 > 
-> The Firefly RK3288 Reload use a different GPIO pin to enable
-> the power of the eDP panel.
+> Thanks for looking into this.
 > 
-> Signed-off-by: Randy Li <ayaka@soulik.info>
+> Just for the record, Thierry has been on To/Cc of all messages in this thread, 
+> accept yours.
 
-Sorry, I'm not yet sure, what to make of this patch.
+Ah, that might be his dri-devel settings, there's a mailman option to
+remove the cc if you're subscribed. And I got the mails through the m-l.
 
-On the firefly the edp pins are actual part of the general pin header and
-while the edp pins themself do not have multiple functions, for example
-the pin you claim as interrupt for the mpu6050 (gpio5_b4) also is part
-of the spi0 set of pins and that pin also seems pretty randomly selected.
-Same with the enable-gpio of the display.
-
-
-Also claiming that every firefly board has this display connected also
-feels strange and the whole display thing would make more sense
-as a devicetree overlay [0], though I don't know how these
-should get handled in-kernel - if at all.
-
-
-And finally, please don't try to use the devicetree to configure outputs
-(forcing edp to one and hdmi to the other). The devicetree is supposed
-to describe the hardware and of course both vops can drive the edp and
-if necessary the drm driver should handle differences and decide on the
-vop to use.
-
-
-Heiko
-
-[0] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/devicetree/overlay-notes.txt
+I think this wasn't the first time this happened either ...
+-Daniel
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
