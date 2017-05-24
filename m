@@ -1,43 +1,35 @@
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: RE: [PATCH] phy: rcar-gen3-usb3: add support for R-Car Gen3 USB 3.0
- PHY
-Date: Wed, 24 May 2017 12:12:03 +0000
-Message-ID: <TY1PR06MB099205242691A3A64BD663FBD8FE0@TY1PR06MB0992.apcprd06.prod.outlook.com>
-References: <1495627443-28057-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+From: Fabio Estevam <festevam@gmail.com>
+Subject: Re: [PATCH] ARM: dts: imx6: use #include "..." to include local DT
+Date: Wed, 24 May 2017 09:13:10 -0300
+Message-ID: <CAOMZO5CLtPpPuE2gj3=RMyF98_J9q_gfmgM5d3U_8nA7umeCQw@mail.gmail.com>
+References: <1495602162-14672-1-git-send-email-yamada.masahiro@socionext.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1495627443-28057-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-Content-Language: ja-JP
-Sender: linux-kernel-owner@vger.kernel.org
-To: "kishon@ti.com" <kishon@ti.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1495602162-14672-1-git-send-email-yamada.masahiro@socionext.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Wed, May 24, 2017 at 2:02 AM, Masahiro Yamada
+<yamada.masahiro@socionext.com> wrote:
+> Most of DT files in ARM use #include "..." to make pre-processor
+> include DT in the same directory, but we have some exceptional files
+> that use #include <...> for that.
+>
+> Fix them to remove -I$(srctree)/arch/$(SRCARCH)/boot/dts path from
+> dtc_cpp_flags.
+>
+> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 
-> From: Yoshihiro Shimoda
-> Sent: Wednesday, May 24, 2017 9:04 PM
->=20
-> The USB 3.0 PHY modules of R-Car Gen3 SoCs have:
->  - Spread spectrum clock (ssc).
->  - Using USB 2.0 EXTAL clock instead of USB 3.0 clock.
->  - Enabling VBUS detection for usb3.0 peripheral.
->=20
-> So, this driver supports these features.
->=20
-> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-<snip>
-> +static int rcar_gen3_phy_usb3_init(struct phy *p)
-> +{
-> +	struct rcar_gen3_usb3 *r =3D phy_get_drvdata(p);
-> +
-> +	dev_info(&r->phy->dev, "%s: enter (%d, %d, %d)\n", __func__,
-> +		 r->usb3s_clk, r->usb_extal, r->ssc_range);
-
-Oops, I should change this to dev_vdbg...
-I will submit v2 patch later.
-
-Best regards,
-Yoshihiro Shimoda
+Reviewed-by: Fabio Estevam <fabio.estevam@nxp.com>
