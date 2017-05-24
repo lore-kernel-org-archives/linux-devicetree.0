@@ -1,74 +1,79 @@
-From: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-Subject: Re: [DT Question] "simple-mfd" DT binding
-Date: Wed, 24 May 2017 13:48:38 +0900
-Message-ID: <CAK7LNASGW+D7EyX8dKTwheYwn8LTAdZqaK_EuA5o0eEU9a-L+w@mail.gmail.com>
-References: <CAK7LNARQmfX+3RwFgwtvf2Qu79XNX1zh0O741-pPFWS6npytLw@mail.gmail.com>
- <CACRpkdY88Zdp2zqabWPfYPnTwSzYuCqSQHQg9vF_+Zd=TFOvaA@mail.gmail.com>
- <CAK7LNAQ+DimarhHJOg=BqbH+EB19s+wgtRqJ8-XuLKW6_0FFaQ@mail.gmail.com> <20170523070547.hhxwrst6np6fpqql@dell>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170523070547.hhxwrst6np6fpqql@dell>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+From: Joel Stanley <joel@jms.id.au>
+Subject: [PATCH] serial: 8250_of: Add reset support
+Date: Wed, 24 May 2017 14:53:19 +1000
+Message-ID: <20170524045319.29926-1-joel@jms.id.au>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: linux-serial@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Philipp Zabel <p.zabel@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-Hi Lee,
+This adds the hooks for an optional reset controller in the 8250 device
+tree node.
 
-2017-05-23 16:05 GMT+09:00 Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>:
-> On Tue, 23 May 2017, Masahiro Yamada wrote:
->
->> Hi Lee, Linus,
->>
->> Thanks for your comments!
->>
->> 2017-05-22 17:43 GMT+09:00 Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>:
->> > On Mon, May 22, 2017 at 3:29 AM, Masahiro Yamada
->> > <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org> wrote:
->> >
->> >> Because "simple-bus" indicates that child nodes are
->> >> simply memory mapped, but the node "register-bit-led"
->> >> can not be memory-mapped.
->> >> So, "simple-mfd" can not be replaced "simple-bus" here.
->> >
->> > Yeah... just like Lee points out, you are spot on, this is exactly
->> > the reason why we created "simple-mfd" in the first place
->> > IIRC.
->>
->> OK, Linux treats simple-bus and simple-mfd in the same way
->> as far as I see drivers/of/platform.c
->
-> Correct.  As I said, the functionality of the two are the same.  The
-> difference is their meaning.  Initially we were using "simple-mfd" to
-> achieve our aim (see below), but there was push-back due to the
-> differences in what the two properties were trying to achieve.  Ergo,
-> we introduced a second property.
->
->> Perhaps, can we document the difference between simple-bus and
->> simple-mfd clearly?
->> For example, "Unlike simple-bus, it is legitimate that simple-mfd has
->> subnodes without reg property"
->>
->>
->> I think this is typical when "simple-mfd" is used together with "syscon".
->> The child devices will use regmap of the parent node.
->> I'd like to be sure this is valid usage.
->
-> "simple-mfd" simply means "register all of my child nodes using the
-> platform API without any further intervention".  It's goal is to
-> prevent the MFD subsystem from being stuffed full of drivers where
-> their only purpose is to call of_platform_populate().  All other rules
-> and policy which must be followed are generic DT ones.  To that end, I
-> do not believe making further statements is necessary.
+Signed-off-by: Joel Stanley <joel@jms.id.au>
+---
+ Documentation/devicetree/bindings/serial/8250.txt |  1 +
+ drivers/tty/serial/8250/8250_of.c                 | 16 ++++++++++++++++
+ 2 files changed, 17 insertions(+)
 
-I see.  Thanks for your kind explanation!
-
-
+diff --git a/Documentation/devicetree/bindings/serial/8250.txt b/Documentation/devicetree/bindings/serial/8250.txt
+index 10276a46ecef..63e32393f82b 100644
+--- a/Documentation/devicetree/bindings/serial/8250.txt
++++ b/Documentation/devicetree/bindings/serial/8250.txt
+@@ -45,6 +45,7 @@ Optional properties:
+   property.
+ - tx-threshold: Specify the TX FIFO low water indication for parts with
+   programmable TX FIFO thresholds.
++- resets : phandle + reset specifier pairs
+ 
+ Note:
+ * fsl,ns16550:
+diff --git a/drivers/tty/serial/8250/8250_of.c b/drivers/tty/serial/8250/8250_of.c
+index 1cbadafc6889..f34dd23376f4 100644
+--- a/drivers/tty/serial/8250/8250_of.c
++++ b/drivers/tty/serial/8250/8250_of.c
+@@ -19,11 +19,13 @@
+ #include <linux/of_irq.h>
+ #include <linux/of_platform.h>
+ #include <linux/clk.h>
++#include <linux/reset.h>
+ 
+ #include "8250.h"
+ 
+ struct of_serial_info {
+ 	struct clk *clk;
++	struct reset_control *rst;
+ 	int type;
+ 	int line;
+ };
+@@ -132,6 +134,18 @@ static int of_platform_serial_setup(struct platform_device *ofdev,
+ 		}
+ 	}
+ 
++	info->rst = devm_reset_control_get_optional(&ofdev->dev, NULL);
++	if (IS_ERR(info->rst)) {
++		ret = PTR_ERR(info->rst);
++		if (ret == -EPROBE_DEFER)
++			goto out;
++		info->rst = NULL;
++	} else {
++		ret = reset_control_deassert(info->rst);
++		if (ret)
++			goto out;
++	}
++
+ 	port->type = type;
+ 	port->uartclk = clk;
+ 	port->flags = UPF_SHARE_IRQ | UPF_BOOT_AUTOCONF | UPF_IOREMAP
+@@ -231,6 +245,8 @@ static int of_platform_serial_remove(struct platform_device *ofdev)
+ 
+ 	if (info->clk)
+ 		clk_disable_unprepare(info->clk);
++	if (info->rst)
++		reset_control_assert(info->rst);
+ 	kfree(info);
+ 	return 0;
+ }
 -- 
-Best Regards
-Masahiro Yamada
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.11.0
