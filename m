@@ -1,106 +1,66 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: CPU_BIG_ENDIAN in generic code (was: Re: [PATCH v3 3/7] arch/sparc:
- Define config parameter CPU_BIG_ENDIAN)
-Date: Wed, 24 May 2017 11:59:21 +0200
-Message-ID: <CAMuHMdVjh+1TR19mUUQYHSazHnBHa4uxn7KyHUO+jAh7WDxy5Q@mail.gmail.com>
+From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Subject: [PATCH v3 0/9] Add support for the audio codec on
+ Allwinner V3s
+Date: Wed, 24 May 2017 18:05:58 +0800
+Message-ID: <20170524100607.29790-1-icenowy@aosc.io>
+Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-arch-owner@vger.kernel.org>
-Sender: linux-arch-owner@vger.kernel.org
-To: Babu Moger <babu.moger@oracle.com>
-Cc: "David S. Miller" <davem@davemloft.net>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnd Bergmann <arnd@arndb.de>, sparclinux <sparclinux@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux-Arch <linux-arch@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>
+Return-path: <linux-sunxi+bncBDS6XAN6ZADRBI5WSXEQKGQEB4DFUWY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>
+Cc: dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 23, 2017 at 11:45 PM, Babu Moger <babu.moger@oracle.com> wrote:
-> Found this problem while enabling queued rwlock on SPARC.
-> The parameter CONFIG_CPU_BIG_ENDIAN is used to clear the
-> specific byte in qrwlock structure. Without this parameter,
-> we clear the wrong byte. Here is the code.
->
-> static inline u8 *__qrwlock_write_byte(struct qrwlock *lock)
->  {
->         return (u8 *)lock + 3 * IS_BUILTIN(CONFIG_CPU_BIG_ENDIAN);
->  }
->
-> Define CPU_BIG_ENDIAN for SPARC to fix it.
+Allwinner V3s features a audio codec with dedicated digital and analog parts,
+like the ones on A23/H3, but much simpler (lack of MIC2, LINE IN and MBIAS).
 
-> --- a/arch/sparc/Kconfig
-> +++ b/arch/sparc/Kconfig
-> @@ -92,6 +92,10 @@ config ARCH_DEFCONFIG
->  config ARCH_PROC_KCORE_TEXT
->         def_bool y
->
-> +config CPU_BIG_ENDIAN
-> +       bool
-> +       default y if SPARC
+Add support for it.
 
-Nice catch!
+In order to make the codec usable, DMA support is also added in this series.
 
-Traditionally, CPU_BIG_ENDIAN and CPU_LITTLE_ENDIAN were defined only on
-architectures that may support both.  And it was checked in platform code
-and drivers only.
-Hence the symbol is lacking from most architectures. Heck, even
-architectures that support both may default to one endiannes, and declare
-only the symbol for the other endianness:
+Patch 1 split out MBIAS in analog codec driver.
 
---- arch/alpha ---
---- arch/arc ---
-arch/arc/Kconfig:config CPU_BIG_ENDIAN
---- arch/arm ---
-arch/arm/mm/Kconfig:config CPU_BIG_ENDIAN
---- arch/arm64 ---
-arch/arm64/Kconfig:config CPU_BIG_ENDIAN
---- arch/blackfin ---
---- arch/c6x ---
-arch/c6x/Kconfig:config CPU_BIG_ENDIAN
---- arch/cris ---
---- arch/frv ---
---- arch/h8300 ---
---- arch/hexagon ---
---- arch/ia64 ---
---- arch/Kconfig ---
---- arch/m32r ---
-arch/m32r/Kconfig:config CPU_LITTLE_ENDIAN
---- arch/m68k ---
---- arch/metag ---
---- arch/microblaze ---
---- arch/mips ---
-arch/mips/Kconfig:config CPU_BIG_ENDIAN
-arch/mips/Kconfig:config CPU_LITTLE_ENDIAN
---- arch/mn10300 ---
---- arch/nios2 ---
---- arch/openrisc ---
---- arch/parisc ---
---- arch/powerpc ---
-arch/powerpc/platforms/Kconfig.cputype:config CPU_BIG_ENDIAN
-arch/powerpc/platforms/Kconfig.cputype:config CPU_LITTLE_ENDIAN
---- arch/s390 ---
-arch/s390/Kconfig:config CPU_BIG_ENDIAN
---- arch/score ---
---- arch/sh ---
-arch/sh/Kconfig.cpu:config CPU_LITTLE_ENDIAN
-arch/sh/Kconfig.cpu:config CPU_BIG_ENDIAN
---- arch/sparc ---
---- arch/tile ---
---- arch/um ---
---- arch/unicore32 ---
---- arch/x86 ---
---- arch/xtensa ---
+Patch 2 prepared a set of objects that have MIC2 and LINEIN stripped out
+for V3s.
 
-However, there are already a few users in generic code, which are thus
-broken on many platforms:
+Patch 3/4 adds support for V3s in analog/digital codec.
 
-    drivers/of/base.c
-    drivers/of/fdt.c
-    drivers/tty/serial/earlycon.c
-    drivers/tty/serial/serial_core.c
+Patch 5 add the gate bit as a common quirk of sun6i-dma driver, as V3s also
+needs it.
 
-include/asm-generic/qrwlock.h is also generic, but depends on the
-architecture to select ARCH_USE_QUEUED_RWLOCKS, which only very few do
-(x86, and now sparc).
+Patch 6 really adds support for V3s in DMA engine.
 
-I guess the time is ripe for adding (both) symbols to all architectures?
+Patch 7/8/9 adds three parts of device tree: DMA engine, codec support
+and enable the codec for Lichee Pi Zero dock.
 
-Gr{oetje,eeting}s,
+Icenowy Zheng (9):
+  ASoC: sun8i-codec-analog: split out mbias
+  ASoC: sun8i-codec-analog: prepare a mixer control/widget/route set for
+    V3s
+  ASoC: sun8i-codec-analog: add support for V3s SoC
+  ASoC: sun4i-codec: Add support for V3s codec
+  dmaengine: sun6i: make gate bit in sun8i's DMA engines a common quirk
+  dmaengine: sun6i: support V3s SoC variant
+  ARM: dts: sun8i: add DMA engine in V3s DTSI
+  ARM: dts: sun8i: add audio codec support into V3s DTSI
+  ARM: sun8i: v3s: enable audio on Lichee Pi Zero Dock board
 
-                        Geert
+ .../devicetree/bindings/dma/sun6i-dma.txt          |   1 +
+ .../devicetree/bindings/sound/sun4i-codec.txt      |  11 +-
+ .../bindings/sound/sun8i-codec-analog.txt          |   1 +
+ arch/arm/boot/dts/sun8i-v3s-licheepi-zero-dock.dts |   9 ++
+ arch/arm/boot/dts/sun8i-v3s.dtsi                   |  28 ++++
+ drivers/dma/sun6i-dma.c                            |  25 +++-
+ sound/soc/sunxi/sun4i-codec.c                      |  63 +++++++++
+ sound/soc/sunxi/sun8i-codec-analog.c               | 141 ++++++++++++++++++++-
+ 8 files changed, 266 insertions(+), 13 deletions(-)
+
+-- 
+2.12.2
