@@ -1,127 +1,237 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: CPU_BIG_ENDIAN in generic code (was: Re: [PATCH v3 3/7]
- arch/sparc: Define config parameter CPU_BIG_ENDIAN)
-Date: Wed, 24 May 2017 12:18:36 +0200
-Message-ID: <CAK8P3a1XZGQk3b3q+JFJ+mLgw_upUdAtTM1VBjHZq5f2m-YdUg@mail.gmail.com>
-References: <CAMuHMdVjh+1TR19mUUQYHSazHnBHa4uxn7KyHUO+jAh7WDxy5Q@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdVjh+1TR19mUUQYHSazHnBHa4uxn7KyHUO+jAh7WDxy5Q@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Babu Moger <babu.moger@oracle.com>, "David S. Miller" <davem@davemloft.net>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, sparclinux <sparclinux@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux-Arch <linux-arch@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>
+From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Subject: [PATCH v2 5/6] mailbox: arm_mhu: add full support for the doorbells
+Date: Wed, 24 May 2017 11:16:42 +0100
+Message-ID: <1495621003-4291-6-git-send-email-sudeep.holla@arm.com>
+References: <1495621003-4291-1-git-send-email-sudeep.holla@arm.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1495621003-4291-1-git-send-email-sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alexey Klimov <alexey.klimov-5wv7dgnIgG8@public.gmane.org>, Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 24, 2017 at 11:59 AM, Geert Uytterhoeven
-<geert@linux-m68k.org> wrote:
-> On Tue, May 23, 2017 at 11:45 PM, Babu Moger <babu.moger@oracle.com> wrote:
->> Found this problem while enabling queued rwlock on SPARC.
->> The parameter CONFIG_CPU_BIG_ENDIAN is used to clear the
->> specific byte in qrwlock structure. Without this parameter,
->> we clear the wrong byte. Here is the code.
->>
->> static inline u8 *__qrwlock_write_byte(struct qrwlock *lock)
->>  {
->>         return (u8 *)lock + 3 * IS_BUILTIN(CONFIG_CPU_BIG_ENDIAN);
->>  }
->>
->> Define CPU_BIG_ENDIAN for SPARC to fix it.
->
->> --- a/arch/sparc/Kconfig
->> +++ b/arch/sparc/Kconfig
->> @@ -92,6 +92,10 @@ config ARCH_DEFCONFIG
->>  config ARCH_PROC_KCORE_TEXT
->>         def_bool y
->>
->> +config CPU_BIG_ENDIAN
->> +       bool
->> +       default y if SPARC
->
-> Nice catch!
->
-> Traditionally, CPU_BIG_ENDIAN and CPU_LITTLE_ENDIAN were defined only on
-> architectures that may support both.  And it was checked in platform code
-> and drivers only.
-> Hence the symbol is lacking from most architectures. Heck, even
-> architectures that support both may default to one endiannes, and declare
-> only the symbol for the other endianness:
->
-> --- arch/alpha ---
-> --- arch/arc ---
-> arch/arc/Kconfig:config CPU_BIG_ENDIAN
-> --- arch/arm ---
-> arch/arm/mm/Kconfig:config CPU_BIG_ENDIAN
-> --- arch/arm64 ---
-> arch/arm64/Kconfig:config CPU_BIG_ENDIAN
-> --- arch/blackfin ---
-> --- arch/c6x ---
-> arch/c6x/Kconfig:config CPU_BIG_ENDIAN
-> --- arch/cris ---
-> --- arch/frv ---
-> --- arch/h8300 ---
-> --- arch/hexagon ---
-> --- arch/ia64 ---
-> --- arch/Kconfig ---
-> --- arch/m32r ---
-> arch/m32r/Kconfig:config CPU_LITTLE_ENDIAN
-> --- arch/m68k ---
-> --- arch/metag ---
-> --- arch/microblaze ---
-> --- arch/mips ---
-> arch/mips/Kconfig:config CPU_BIG_ENDIAN
-> arch/mips/Kconfig:config CPU_LITTLE_ENDIAN
-> --- arch/mn10300 ---
-> --- arch/nios2 ---
-> --- arch/openrisc ---
-> --- arch/parisc ---
-> --- arch/powerpc ---
-> arch/powerpc/platforms/Kconfig.cputype:config CPU_BIG_ENDIAN
-> arch/powerpc/platforms/Kconfig.cputype:config CPU_LITTLE_ENDIAN
-> --- arch/s390 ---
-> arch/s390/Kconfig:config CPU_BIG_ENDIAN
-> --- arch/score ---
-> --- arch/sh ---
-> arch/sh/Kconfig.cpu:config CPU_LITTLE_ENDIAN
-> arch/sh/Kconfig.cpu:config CPU_BIG_ENDIAN
-> --- arch/sparc ---
-> --- arch/tile ---
-> --- arch/um ---
-> --- arch/unicore32 ---
-> --- arch/x86 ---
-> --- arch/xtensa ---
->
-> However, there are already a few users in generic code, which are thus
-> broken on many platforms:
->
->     drivers/of/base.c
->     drivers/of/fdt.c
->     drivers/tty/serial/earlycon.c
->     drivers/tty/serial/serial_core.c
->
-> include/asm-generic/qrwlock.h is also generic, but depends on the
-> architecture to select ARCH_USE_QUEUED_RWLOCKS, which only very few do
-> (x86, and now sparc).
->
-> I guess the time is ripe for adding (both) symbols to all architectures?
+We now have the basic infrastructure and binding to support doorbells
+on ARM MHU controller.
 
-Good idea. I think we can do most of this by adding a few lines to
-arch/Kconfig:
+This patch adds all the necessary mailbox operations to add support for
+the doorbells. Maximum of 32 doorbells are supported on each physical
+channel, however the total number of doorbells is restricted to 20
+in order to save memory. It can increased if required in future.
 
-config CPU_BIG_ENDIAN
-        bool
+Cc: Alexey Klimov <alexey.klimov-5wv7dgnIgG8@public.gmane.org>
+Cc: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Signed-off-by: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+---
+ drivers/mailbox/arm_mhu.c | 136 ++++++++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 130 insertions(+), 6 deletions(-)
 
-config CPU_LITTLE_ENDIAN
-       def_bool !CPU_BIG_ENDIAN
+diff --git a/drivers/mailbox/arm_mhu.c b/drivers/mailbox/arm_mhu.c
+index ae06924eb6f4..79d2392d7f3b 100644
+--- a/drivers/mailbox/arm_mhu.c
++++ b/drivers/mailbox/arm_mhu.c
+@@ -18,6 +18,7 @@
+ #include <linux/err.h>
+ #include <linux/interrupt.h>
+ #include <linux/io.h>
++#include <linux/kernel.h>
+ #include <linux/mailbox_controller.h>
+ #include <linux/module.h>
+ #include <linux/of.h>
+@@ -94,6 +95,14 @@ mhu_mbox_to_channel(struct mbox_controller *mbox,
+ 	return NULL;
+ }
+ 
++static void mhu_mbox_clear_irq(struct mbox_chan *chan)
++{
++	struct mhu_channel *chan_info = chan->con_priv;
++	void __iomem *base = chan_info->mhu->mlink[chan_info->pchan].rx_reg;
++
++	writel_relaxed(BIT(chan_info->doorbell), base + INTR_CLR_OFS);
++}
++
+ static unsigned int mhu_mbox_irq_to_pchan_num(struct arm_mhu *mhu, int irq)
+ {
+ 	unsigned int pchan;
+@@ -105,6 +114,95 @@ static unsigned int mhu_mbox_irq_to_pchan_num(struct arm_mhu *mhu, int irq)
+ 	return pchan;
+ }
+ 
++static struct mbox_chan *mhu_mbox_irq_to_channel(struct arm_mhu *mhu,
++						 unsigned int pchan)
++{
++	unsigned long bits;
++	unsigned int doorbell;
++	struct mbox_chan *chan = NULL;
++	struct mbox_controller *mbox = &mhu->mbox;
++	void __iomem *base = mhu->mlink[pchan].rx_reg;
++
++	bits = readl_relaxed(base + INTR_STAT_OFS);
++	if (!bits)
++		/* No IRQs fired in specified physical channel */
++		return NULL;
++
++	/* An IRQ has fired, find the associated channel */
++	for (doorbell = 0; bits; doorbell++) {
++		if (!test_and_clear_bit(doorbell, &bits))
++			continue;
++
++		chan = mhu_mbox_to_channel(mbox, pchan, doorbell);
++		if (chan)
++			break;
++	}
++
++	return chan;
++}
++
++static irqreturn_t mhu_mbox_thread_handler(int irq, void *data)
++{
++	struct mbox_chan *chan;
++	struct arm_mhu *mhu = data;
++	unsigned int pchan = mhu_mbox_irq_to_pchan_num(mhu, irq);
++
++	while (NULL != (chan = mhu_mbox_irq_to_channel(mhu, pchan))) {
++		mbox_chan_received_data(chan, NULL);
++		mhu_mbox_clear_irq(chan);
++	}
++
++	return IRQ_HANDLED;
++}
++
++static bool mhu_doorbell_last_tx_done(struct mbox_chan *chan)
++{
++	struct mhu_channel *chan_info = chan->con_priv;
++	void __iomem *base = chan_info->mhu->mlink[chan_info->pchan].tx_reg;
++
++	if (readl_relaxed(base + INTR_STAT_OFS) & BIT(chan_info->doorbell))
++		return false;
++
++	return true;
++}
++
++static int mhu_doorbell_send_data(struct mbox_chan *chan, void *data)
++{
++	struct mhu_channel *chan_info = chan->con_priv;
++	void __iomem *base = chan_info->mhu->mlink[chan_info->pchan].tx_reg;
++
++	/* Send event to co-processor */
++	writel_relaxed(BIT(chan_info->doorbell), base + INTR_SET_OFS);
++
++	return 0;
++}
++
++static int mhu_doorbell_startup(struct mbox_chan *chan)
++{
++	mhu_mbox_clear_irq(chan);
++	return 0;
++}
++
++static void mhu_doorbell_shutdown(struct mbox_chan *chan)
++{
++	struct mhu_channel *chan_info = chan->con_priv;
++	struct mbox_controller *mbox = &chan_info->mhu->mbox;
++	int i;
++
++	for (i = 0; i < mbox->num_chans; i++)
++		if (chan == &mbox->chans[i])
++			break;
++
++	if (mbox->num_chans == i) {
++		dev_warn(mbox->dev, "Request to free non-existent channel\n");
++		return;
++	}
++
++	/* Reset channel */
++	mhu_mbox_clear_irq(chan);
++	chan->con_priv = NULL;
++}
++
+ static struct mbox_chan *mhu_mbox_xlate(struct mbox_controller *mbox,
+ 					const struct of_phandle_args *spec)
+ {
+@@ -227,15 +325,34 @@ static const struct mbox_chan_ops mhu_ops = {
+ 	.last_tx_done = mhu_last_tx_done,
+ };
+ 
++static const struct mbox_chan_ops mhu_doorbell_ops = {
++	.send_data = mhu_doorbell_send_data,
++	.startup = mhu_doorbell_startup,
++	.shutdown = mhu_doorbell_shutdown,
++	.last_tx_done = mhu_doorbell_last_tx_done,
++};
++
+ static const struct mhu_mbox_pdata arm_mhu_pdata = {
+ 	.num_pchans = 3,
+ 	.num_doorbells = 1,
+ 	.support_doorbells = false,
+ };
+ 
++static const struct mhu_mbox_pdata arm_mhu_doorbell_pdata = {
++	.num_pchans = 2,	/* Secure can't be used */
++	.num_doorbells = 32,
++	.support_doorbells = true,
++};
++
+ static const struct of_device_id mhu_mbox_match[] = {
+-	{ .compatible = "arm,mhu", .data = (void *)&arm_mhu_pdata },
+-	{}
++	{
++		.compatible = "arm,mhu",
++		.data = (void *)&arm_mhu_pdata
++	}, {
++		.compatible = "arm,mhu-doorbell",
++		.data = (void *)&arm_mhu_doorbell_pdata
++	}, {
++	}
+ };
+ 
+ MODULE_DEVICE_TABLE(of, mhu_mbox_match);
+@@ -243,6 +360,7 @@ MODULE_DEVICE_TABLE(of, mhu_mbox_match);
+ static int mhu_probe(struct amba_device *adev, const struct amba_id *id)
+ {
+ 	int i, err, max_chans;
++	irq_handler_t handler;
+ 	struct arm_mhu *mhu;
+ 	struct mbox_chan *chans;
+ 	struct mhu_mbox_pdata *pdata;
+@@ -287,7 +405,6 @@ static int mhu_probe(struct amba_device *adev, const struct amba_id *id)
+ 	mhu->mbox.dev = dev;
+ 	mhu->mbox.chans = chans;
+ 	mhu->mbox.num_chans = max_chans;
+-	mhu->mbox.ops = &mhu_ops;
+ 	mhu->mbox.txdone_irq = false;
+ 	mhu->mbox.txdone_poll = true;
+ 	mhu->mbox.txpoll_period = 1;
+@@ -295,6 +412,14 @@ static int mhu_probe(struct amba_device *adev, const struct amba_id *id)
+ 	mhu->mbox.of_xlate = mhu_mbox_xlate;
+ 	amba_set_drvdata(adev, mhu);
+ 
++	if (pdata->support_doorbells) {
++		mhu->mbox.ops = &mhu_doorbell_ops;
++		handler = mhu_mbox_thread_handler;
++	} else {
++		mhu->mbox.ops = &mhu_ops;
++		handler = mhu_rx_interrupt;
++	}
++
+ 	err = mbox_controller_register(&mhu->mbox);
+ 	if (err) {
+ 		dev_err(dev, "Failed to register mailboxes %d\n", err);
+@@ -312,9 +437,8 @@ static int mhu_probe(struct amba_device *adev, const struct amba_id *id)
+ 		mhu->mlink[i].rx_reg = mhu->base + mhu_reg[i];
+ 		mhu->mlink[i].tx_reg = mhu->mlink[i].rx_reg + TX_REG_OFFSET;
+ 
+-		err = devm_request_threaded_irq(dev, irq, NULL,
+-						mhu_rx_interrupt, IRQF_ONESHOT,
+-						"mhu_link", mhu);
++		err = devm_request_threaded_irq(dev, irq, NULL, handler,
++						IRQF_ONESHOT, "mhu_link", mhu);
+ 		if (err) {
+ 			dev_err(dev, "Can't claim IRQ %d\n", irq);
+ 			mbox_controller_unregister(&mhu->mbox);
+-- 
+2.7.4
 
-This way, we only need to add 'select CPU_BIG_ENDIAN' to the
-architectures that are always big-endian, and we don't need to
-change anything for the ones that have a single 'CPU_BIG_ENDIAN'
-option.
-
-The three architectures that have a 'choice' statement (mips, ppc and
-sh) will have to convert, and m32r will have to replace the
-option with the opposite one, which could break 'make oldconfig',
-but nobody really cares about m32r any more.
-
-       Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
