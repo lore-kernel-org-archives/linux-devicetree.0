@@ -1,101 +1,55 @@
-From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH v2 09/15] reset: Add a reset controller driver for the
- Lantiq XWAY based SoCs
-Date: Wed, 24 May 2017 15:10:52 +0200
-Message-ID: <1495631452.3840.27.camel@pengutronix.de>
-References: <20170521130918.27446-1-hauke@hauke-m.de>
-         <20170521130918.27446-10-hauke@hauke-m.de>
-         <1495445613.3558.67.camel@pengutronix.de>
-         <2f809dc7-53c6-ebf9-53c1-466bf34e39db@hauke-m.de>
+From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 4/5] ARM64: dts: Add Realtek RTD1295 and Zidoo X9S
+Date: Wed, 24 May 2017 08:18:48 -0500
+Message-ID: <CAL_JsqL5PZwKszn8Ge_VyxQE54pyD9GQUSMJp_mjtsGGVwN5xQ@mail.gmail.com>
+References: <20170514022429.11555-1-afaerber@suse.de> <20170514022429.11555-5-afaerber@suse.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <2f809dc7-53c6-ebf9-53c1-466bf34e39db-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
-Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
-Cc: ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org, john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, hauke.mehrtens-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170514022429.11555-5-afaerber-l3A5Bk7waGM@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Roc He <hepeng-qoVzM6YEWSw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2017-05-23 at 23:25 +0200, Hauke Mehrtens wrote:
-> On 05/22/2017 11:33 AM, Philipp Zabel wrote:
-> > Hi Hauke,
-> > 
-> > thank you for the patch. I have a few questions and comments below:
-> > 
-> > On Sun, 2017-05-21 at 15:09 +0200, Hauke Mehrtens wrote:
-> >> From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-> >>
-> >> The reset controllers (on xRX200 and newer SoCs have two of them) are
-> >> provided by the RCU module. This was initially implemented as a simple
-> >> reset controller. However, the RCU module provides more functionality
-> >> (ethernet GPHYs, USB PHY, etc.), which makes it a MFD device.
-> >> The old reset controller driver implementation from
-> >> arch/mips/lantiq/xway/reset.c did not honor this fact.
-> > 
-> > Does this driver replace arch/mips/lantiq/xway/reset.c?
-> 
-> This serial consists of multiple patches which are all together
-> replacing this code. The RCU register block does controls multiple
-> blocks in the SoC. One is the reset controller, but also the GPHY FW
-> loading and some other unrelated stuff.
+On Sat, May 13, 2017 at 9:24 PM, Andreas Färber <afaerber-l3A5Bk7waGM@public.gmane.org> wrote:
+> Add initial device trees for the RTD1295 SoC and the Zidoo X9S TV box.
+>
+> The CPUs lack the enable-method property because the vendor device tree
+> uses a custom "rtk-spin-table" method and "psci" did not appear to work.
+>
+> The UARTs lack the interrupts properties because the vendor device tree
+> connects them to a custom interrupt controller. earlycon works without.
+>
+> A list of memory reservations is adopted from v1.2.11 vendor device tree:
+> 0x02200000 can be used for an initrd, 0x01b00000 is audio-related;
+> ion-related 0x02600000, 0x02c00000 and 0x11000000 are left out;
+> 0x10000000 is used for sharing the U-Boot environment; others remain
+> to be investigated.
+>
+> Acked-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+> Signed-off-by: Andreas Färber <afaerber-l3A5Bk7waGM@public.gmane.org>
+> ---
+>  v2 -> v3:
+>  * Adopted SPDX-License-Identifier (Rob)
+>  * Added ranges for /soc node (Rob)
+>  * Changed #address-cells and #size-cells to 1 (Rob)
+>
+>  v1 -> v2:
+>  * Dropped 0x0000000010000000 /memreserve/
+>
+>  arch/arm64/boot/dts/Makefile                      |   1 +
+>  arch/arm64/boot/dts/realtek/Makefile              |   5 +
+>  arch/arm64/boot/dts/realtek/rtd1295-zidoo-x9s.dts |  42 +++++++
+>  arch/arm64/boot/dts/realtek/rtd1295.dtsi          | 131 ++++++++++++++++++++++
+>  4 files changed, 179 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/realtek/Makefile
+>  create mode 100644 arch/arm64/boot/dts/realtek/rtd1295-zidoo-x9s.dts
+>  create mode 100644 arch/arm64/boot/dts/realtek/rtd1295.dtsi
 
-Thank you for clarifying.
-
-> >> +		compatible = "lantiq,rcu-reset";
-> >> +		lantiq,rcu-syscon = <&rcu0 0x10 0x14>;
-> >> +		#reset-cells = <2>;
-> >> +	};
-> >> +
-> >> +	rcu_reset1: rcu_reset {
-> >> +		compatible = "lantiq,rcu-reset";
-> >> +		lantiq,rcu-syscon = <&rcu0 0x48 0x24>;
-> >> +		#reset-cells = <2>;
-> >> +	};
-> > 
-> > I think these should be children of the &rcu0 node. Then you could use
-> > the reg property to specify the registers.
-> 
-> The problem is that the RCU registers at offset 0x10 and 0x14 also have
-> bits to indicate what caused the last hardware reset and which boot mode
-> was selected by putting some pins to low or high level. I want to access
-> the same register from the watchdog driver and probably form more
-> positions which do not have anything to do with a reset controller.
-
-That is ok, I just suggest to get the syscon regmap not from a phandle
-property, but from the node parent. The reset controller is a part of
-the RCU.
-
-> > Also, have you considered using a binding like the ti-syscon-reset? 
-> > That could remove the need for a rcu_reset node per register pair
-> > altogether, but might not make sense if the reset registers are densely
-> > populated.
-> 
-> Would your suggestion be something like this?
-> 
-> rcu_reset0: reset-controller {
-> 	compatible = "lantiq,rcu-reset";
-> 	lantiq,rcu-syscon = <&rcu0>;
-> 	#reset-cells = <2>;
-> 	ti,reset-bits = <
-> 		0x48 0x24
-> 		0x10 0x14
-> 	>;
-> };
-
-Yes, for example. I'd put the reset-controller node inside the &rcu0
-node and drop the lantiq,rcu-syscon property, though.
-
-> I prefer to have two device tree nodes entries for these two register
-> blocks.
-
-If Rob is fine with this, I won't object. I'd just be interested to know
-why.
-
-regards
-Philipp
-
+Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 --
-To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
