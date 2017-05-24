@@ -1,75 +1,58 @@
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: [PATCH] ARM: dts: am43xx-clocks: Add support for CLKOUT2
-Date: Wed, 24 May 2017 11:43:41 +0300
-Message-ID: <20170524084341.16698-1-peter.ujfalusi@ti.com>
+From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: rockchip: correct regular setting for act8846
+Date: Wed, 24 May 2017 10:47:01 +0200
+Message-ID: <7433998.EkqTVyWeUF@phil>
+References: <1495611221-6749-1-git-send-email-eddie.cai.linux@gmail.com> <5352430.FzU3E8oYou@phil> <CAJrj+DNeK_z1mZQQ_eLeMBQ9yTj50kdY4OFevAVfsFas5_tr=Q@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: tony@atomide.com, t-kristo@ti.com, robh+dt@kernel.org
-Cc: devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bcousson@baylibre.com
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAJrj+DNeK_z1mZQQ_eLeMBQ9yTj50kdY4OFevAVfsFas5_tr=Q@mail.gmail.com>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Eddie Cai <eddie.cai.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add the needed clock nodes for the CLKOUT2 to be usable by boards.
+Am Mittwoch, 24. Mai 2017, 16:44:05 CEST schrieb Eddie Cai:
+> 2017-05-24 16:17 GMT+08:00 Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>:
+> > Hi Eddie,
+> >
+> > Am Mittwoch, 24. Mai 2017, 15:33:41 CEST schrieb Eddie Cai:
+> >> the previous setting of act8846 is just copy from firefly board. but
+> >> the reload board is a little different from firefly board. let's correct
+> >> it.
+> >>
+> >> Signed-off-by: Eddie Cai <eddie.cai.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> >> ---
+> >>  arch/arm/boot/dts/rk3288-firefly-reload-core.dtsi | 21 +++++++++++----------
+> >>  1 file changed, 11 insertions(+), 10 deletions(-)
+> >>
+> >> diff --git a/arch/arm/boot/dts/rk3288-firefly-reload-core.dtsi b/arch/arm/boot/dts/rk3288-firefly-reload-core.dtsi
+> >> index 8134966..4cfa109 100644
+> >> --- a/arch/arm/boot/dts/rk3288-firefly-reload-core.dtsi
+> >> +++ b/arch/arm/boot/dts/rk3288-firefly-reload-core.dtsi
+> >> @@ -179,6 +179,7 @@
+> >>                               regulator-name = "vccio_sd";
+> >>                               regulator-min-microvolt = <3300000>;
+> >>                               regulator-max-microvolt = <3300000>;
+> >> +                             regulator-always-on;
+> >
+> > the rest below looks pretty straight forward, but why does vccio_sd
+> > need to be always on?
+> >
+> > I've checked the reload's schematics but did not find any further users
+> > of vccio_sd that may warant this attribute.
+> Oh, It's default on. thank you for point out my mistake. I will modify
+> it in next version.
 
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
----
- arch/arm/boot/dts/am43xx-clocks.dtsi | 36 ++++++++++++++++++++++++++++++++++++
- 1 file changed, 36 insertions(+)
+not default-on, but the mmc-core will turn on the vccio regulator on its
+own during probe. So yes, please fix :-) .
 
-diff --git a/arch/arm/boot/dts/am43xx-clocks.dtsi b/arch/arm/boot/dts/am43xx-clocks.dtsi
-index d1d73b725f47..430be5829f8f 100644
---- a/arch/arm/boot/dts/am43xx-clocks.dtsi
-+++ b/arch/arm/boot/dts/am43xx-clocks.dtsi
-@@ -833,4 +833,40 @@
- 		ti,bit-shift = <23>;
- 		reg = <0x4100>;
- 	};
-+
-+	clkout2_src_mux_ck: clkout2_src_mux_ck {
-+		#clock-cells = <0>;
-+		compatible = "ti,mux-clock";
-+		clocks = <&clk_rc32k_ck>, <&sysclk_div>, <&dpll_ddr_m2_ck>,
-+			 <&dpll_per_m2_ck>, <&dpll_disp_m2_ck>,
-+			 <&dpll_mpu_m2_ck>, <&dpll_extdev_ck>;
-+		reg = <0x4108>;
-+	};
-+
-+	clkout2_pre_div_ck: clkout2_pre_div_ck {
-+		#clock-cells = <0>;
-+		compatible = "ti,divider-clock";
-+		clocks = <&clkout2_src_mux_ck>;
-+		ti,bit-shift = <4>;
-+		ti,max-div = <8>;
-+		reg = <0x4108>;
-+	};
-+
-+	clkout2_post_div_ck: clkout2_post_div_ck {
-+		#clock-cells = <0>;
-+		compatible = "ti,divider-clock";
-+		clocks = <&clkout2_pre_div_ck>;
-+		ti,bit-shift = <8>;
-+		ti,max-div = <32>;
-+		ti,index-power-of-two;
-+		reg = <0x4108>;
-+	};
-+
-+	clkout2_ck: clkout2_ck {
-+		#clock-cells = <0>;
-+		compatible = "ti,gate-clock";
-+		clocks = <&clkout2_post_div_ck>;
-+		ti,bit-shift = <16>;
-+		reg = <0x4108>;
-+	};
- };
--- 
-2.13.0
+
+Thanks
+Heiko
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
