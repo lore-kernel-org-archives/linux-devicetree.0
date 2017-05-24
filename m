@@ -1,56 +1,32 @@
-From: Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>
-Subject: Re: [PATCH 1/2] dt/bindings: display: fix display-timing reference
-Date: Wed, 24 May 2017 17:51:31 +0200
-Message-ID: <20170524155131.h53lrilrhn2eouqc@phenom.ffwll.local>
-References: <eabeec88c2831eb8541b78a4977ee7342b810b39.1494922745.git.baruch@tkos.co.il>
- <20170523144756.6gfagkwfy7ocogqe@rob-hp-laptop>
- <20170524122322.ebopabnddozamqit@phenom.ffwll.local>
- <20170524123735.fm2nyr6rpyfsomdq@sapphire.tkos.co.il>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: Configure USB host for 37xx-evm
+Date: Wed, 24 May 2017 09:25:27 -0700
+Message-ID: <20170524162526.GA10472@atomide.com>
+References: <20170522160647.9606-1-tony@atomide.com>
+ <921f6aa1-d410-0942-6ddd-692377acb349@ti.com>
+ <20170523141901.GW10472@atomide.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20170524123735.fm2nyr6rpyfsomdq-MwjkAAnuF3khR1HGirfZ1z4kX+cae0hd@public.gmane.org>
+In-Reply-To: <20170523141901.GW10472-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
-Cc: Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+To: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+Cc: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 24, 2017 at 03:37:36PM +0300, Baruch Siach wrote:
-> Hi Daniel,
-> 
-> On Wed, May 24, 2017 at 02:23:22PM +0200, Daniel Vetter wrote:
-> > On Tue, May 23, 2017 at 09:47:56AM -0500, Rob Herring wrote:
-> > > On Tue, May 16, 2017 at 11:19:04AM +0300, Baruch Siach wrote:
-> > > > Fixes: 14da3ed8dd08 ("devicetree/bindings: display: Document common panel properties")
-> > > > Cc: Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-> > > > Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> > > > Signed-off-by: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
-> > > > ---
-> > > >  Documentation/devicetree/bindings/display/panel/panel-common.txt | 2 +-
-> > > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > > 
-> > > Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+* Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> [170523 07:22]:
+> * Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org> [170523 00:40]:
+> > > +		gpio-hog;
+> > > +		gpios = <29 GPIO_ACTIVE_HIGH>;
 > > 
-> > We now have a pile of acks on these patches, but no one to push them.
-> > Seems like it's for the panel tree, but Thierry isn't on cc afaics.
-> > 
-> > Someone needs to take care of this (and no it's no going to be me).
+> > Should this be be GPIO_61?
 > 
-> Thanks for looking into this.
-> 
-> Just for the record, Thierry has been on To/Cc of all messages in this thread, 
-> accept yours.
+> Oh that seems wrong, thanks for noticing it. Will check.
 
-Ah, that might be his dri-devel settings, there's a mailman option to
-remove the cc if you're subscribed. And I got the mails through the m-l.
+Heh that's already at &gpio2, so it is gpio_61.
 
-I think this wasn't the first time this happened either ...
--Daniel
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+Tony
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
