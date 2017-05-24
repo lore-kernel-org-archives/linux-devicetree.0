@@ -1,103 +1,86 @@
-From: Chunyan Zhang <zhang.lyra-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 2/3] Documentation: add sprd clock bindings
-Date: Wed, 24 May 2017 10:48:24 +0800
-Message-ID: <CAAfSe-vY=KwwfBE5KyGByOZ+LVuTR8kwjxp1ykmJoqTT6RqMeg@mail.gmail.com>
-References: <20170515083502.4492-1-chunyan.zhang@spreadtrum.com>
- <20170515083502.4492-3-chunyan.zhang@spreadtrum.com> <CAK8P3a0M6M9fUTpdnW+Eso0+HKD-MF-fKPmvj+wN8GBdzu_u8A@mail.gmail.com>
- <CAAfSe-u-+snc=b6QYgA4ysknxYDXS5UqbvWBqrnZ92sSBQqJRQ@mail.gmail.com> <20170519021202.GG20170@codeaurora.org>
+From: "A.S. Dong" <aisheng.dong@nxp.com>
+Subject: RE: [PATCH V3 1/2] dt-bindings: pinctrl: add imx7ulp pinctrl binding
+ doc
+Date: Wed, 24 May 2017 03:10:12 +0000
+Message-ID: <AM3PR04MB3065626F1B45C8459E5765580FE0@AM3PR04MB306.eurprd04.prod.outlook.com>
+References: <1495539829-23345-1-git-send-email-aisheng.dong@nxp.com>
+ <20170523182321.GA13664@w540>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170519021202.GG20170-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Chunyan Zhang <chunyan.zhang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, xiaolong.zhang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org, =?UTF-8?B?T3Jzb24gWmhhaSAo57+f5LqsKQ==?= <orson.zhai-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>, "geng.ren-lxIno14LUO0EEoCn2XhGlw@public.gmane.org" <geng.ren-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <20170523182321.GA13664@w540>
+Content-Language: en-US
+Sender: linux-gpio-owner@vger.kernel.org
+To: jmondi <jacopo@jmondi.org>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>
+Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "stefan@agner.ch" <stefan@agner.ch>, Jacky Bai <ping.bai@nxp.com>, Andy Duan <fugang.duan@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Stephen,
-
-On 19 May 2017 at 10:12, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
-> On 05/18, Chunyan Zhang wrote:
->> On 18 May 2017 at 03:43, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
->> > On Mon, May 15, 2017 at 10:35 AM, Chunyan Zhang
->> > <chunyan.zhang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org> wrote:
->> >> diff --git a/Documentation/devicetree/bindings/clock/sprd/sprd,adjustable-pll-clock.txt b/Documentation/devicetree/bindings/clock/sprd/sprd,adjustable-pll-clock.txt
->> >> new file mode 100644
->> >> index 0000000..476e315
->> >> --- /dev/null
->> >> +++ b/Documentation/devicetree/bindings/clock/sprd/sprd,adjustable-pll-clock.txt
->> >> @@ -0,0 +1,17 @@
->> >> +Spreadtrum adjustable pll clock driver
->> >> +
->> >> +Required properties:
->> >> +
->> >> +- compatible : must be one of:
->> >> +       "sprd,sc9836-adjustable-pll-clock"
->> >> +       "sprd,sc9860-adjustable-pll-clock"
->> >> +
->> >> +Example:
->> >> +       clk_mpll0: clk@40400024 {
->> >> +               compatible = "sprd,sc9860-adjustable-pll-clock";
->> >> +               #clock-cells = <0>;
->> >> +               reg = <0 0x40400024 0 0x4>,
->> >> +                     <0 0x40400028 0 0x4>;
->> >> +               clocks = <&clk_mpll_gates 2>;
->> >> +               clock-output-names = "clk_mpll0";
->> >> +       };
->> >
->> > The properties listed in the example must all be either
->> > defined as "required" or "optional" properties and have a
->> > description.
->>
->> Since these common properties are documented in the common clock binding [1]
->>
->> [1] Documentation/devicetree/bindings/clock/clock-bindings.txt
->>
->> I will add explanation in this file like I do in other bindings
->> introduced in this patch, and will address 'reg' which probably is not
->> similar to the common usage.
->>
->> >
->> > The reg property here is a bit odd, as it lists two consecutive
->> > 4-byte areas, and both are suspiciously close to a round
->> > address (0x40400000), so I would guess that they are
->> > in fact part of a clock controller with several registers.
->>
->> They are PLL clock configuration registers.
->>
->> Different PLL has different configurations which listed in pll_cfg.h,
->> and probably has different number of registers for storing
->> configurations, and on some Spreadtrum's SoCs PLL clock configuration
->> registers aren't consecutive, but all PLLs on all Spreadtrum's SoCs
->> (at least so far) are using the same driver.
->>
->> >
->> > If so, please define a node for the entire clock controller,
->> > the DT description should reflect the design of the hardware
->> > rather than the design of your device driver.
->>
->> I also realized our implementation might not be easy to be understood,
->> but I haven't thought out a better solution considering the hardware
->> limitation I explained above.
->
-> This binding is going down the wrong path. Please look at how
-> drivers such as sunxi-ng have done the binding in comparison to
-> original sunxi design. We don't put this level of detail into DT,
-> instead we put the details into the driver code and have clock
-> controller nodes in DT. A quick glance shows that this binding is
-> making a node per-clk, which is not going to be accepted.
-
-I have had a look at sunxi-ng design, I will try to rewrite the driver
-included in this patch-set, also DT and bindings.
-
-Thanks for your comments,
-Chunyan
-
->
-> --
-> Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-> a Linux Foundation Collaborative Project
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGkgSg0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IGptb25kaSBbbWFp
+bHRvOmphY29wb0BqbW9uZGkub3JnXQ0KPiBTZW50OiBXZWRuZXNkYXksIE1heSAyNCwgMjAxNyAy
+OjI0IEFNDQo+IFRvOiBBLlMuIERvbmcNCj4gQ2M6IGxpbnV4LWdwaW9Admdlci5rZXJuZWwub3Jn
+OyBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7DQo+IGxpbnVzLndhbGxlaWpA
+bGluYXJvLm9yZzsgc2hhd25ndW9Aa2VybmVsLm9yZzsgc3RlZmFuQGFnbmVyLmNoOyBKYWNreSBC
+YWk7DQo+IEFuZHkgRHVhbjsga2VybmVsQHBlbmd1dHJvbml4LmRlOyBSb2IgSGVycmluZzsgTWFy
+ayBSdXRsYW5kOw0KPiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZw0KPiBTdWJqZWN0OiBSZTog
+W1BBVENIIFYzIDEvMl0gZHQtYmluZGluZ3M6IHBpbmN0cmw6IGFkZCBpbXg3dWxwIHBpbmN0cmwN
+Cj4gYmluZGluZyBkb2MNCj4gDQo+IEhpIERvbmcsDQo+IA0KPiBPbiBUdWUsIE1heSAyMywgMjAx
+NyBhdCAwNzo0Mzo0OFBNICswODAwLCBEb25nIEFpc2hlbmcgd3JvdGU6DQo+ID4gaS5NWCA3VUxQ
+IGhhcyB0aHJlZSBJT01VWEMgaW5zdGFuY2VzOiBJT01VWEMwIGZvciBNNCBwb3J0cywNCj4gPiBJ
+T01VWEMxIGZvciBBNyBwb3J0cyBhbmQgSU9NVVhDIEREUiBmb3IgRERSIGludGVyZmFjZS4NCj4g
+Pg0KPiA+IFRoaXMgcGF0Y2ggYWRkcyB0aGUgSU9NVVhDMSBzdXBwb3J0IGZvciBBNy4NCj4gPg0K
+PiA+IENjOiBSb2IgSGVycmluZyA8cm9iaCtkdEBrZXJuZWwub3JnPg0KPiA+IENjOiBNYXJrIFJ1
+dGxhbmQgPG1hcmsucnV0bGFuZEBhcm0uY29tPg0KPiA+IENjOiBkZXZpY2V0cmVlQHZnZXIua2Vy
+bmVsLm9yZw0KPiA+IENjOiBMaW51cyBXYWxsZWlqIDxsaW51cy53YWxsZWlqQGxpbmFyby5vcmc+
+DQo+ID4gQWNrZWQtYnk6IFNoYXduIEd1byA8c2hhd25ndW9Aa2VybmVsLm9yZz4NCj4gPiBTaWdu
+ZWQtb2ZmLWJ5OiBEb25nIEFpc2hlbmcgPGFpc2hlbmcuZG9uZ0BueHAuY29tPg0KPiA+DQo+ID4g
+LS0tDQo+ID4gQ2hhbmdlTG9nOg0KPiA+IHYyLT52MzoNCj4gPiAgKiBzd2l0Y2ggdG8gZ2VuZXJp
+YyBpbnB1dC9vdXRwdXQtZW5hYmxlIHByb3BlcnR5DQo+ID4gdjEtPnYyOg0KPiA+ICAqIGFkZCBt
+b3JlIGRlc2NyaXB0aW9ucyBpbiBiaW5kaW5nIGRvYw0KPiA+ICAqIGFkZCBtaXNzZWQgcHJlZml4
+IGZvciBwcml2YXRlIHByb3BlcnRpZXMuDQo+ID4gICogbW92ZSBkdC1iaW5kaW5ncy9waW5jdHJs
+L2lteDd1bHAtcGluZnVuYy5oIHRvIGFyY2gvYXJtL2Jvb3QvZHRzDQo+ID4gLS0tDQo+ID4gIC4u
+Li9iaW5kaW5ncy9waW5jdHJsL2ZzbCxpbXg3dWxwLXBpbmN0cmwudHh0ICAgICAgIHwgIDYzICsr
+Kw0KPiA+ICBhcmNoL2FybS9ib290L2R0cy9pbXg3dWxwLXBpbmZ1bmMuaCAgICAgICAgICAgICAg
+ICB8IDQ2OA0KPiArKysrKysrKysrKysrKysrKysrKysNCj4gPiAgMiBmaWxlcyBjaGFuZ2VkLCA1
+MzEgaW5zZXJ0aW9ucygrKQ0KPiA+ICBjcmVhdGUgbW9kZSAxMDA2NDQNCj4gPiBEb2N1bWVudGF0
+aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGluY3RybC9mc2wsaW14N3VscC1waW5jdHJsLnR4dA0K
+PiA+ICBjcmVhdGUgbW9kZSAxMDA2NDQgYXJjaC9hcm0vYm9vdC9kdHMvaW14N3VscC1waW5mdW5j
+LmgNCj4gPg0KPiA+IGRpZmYgLS1naXQNCj4gPiBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
+aW5kaW5ncy9waW5jdHJsL2ZzbCxpbXg3dWxwLXBpbmN0cmwudHh0DQo+ID4gYi9Eb2N1bWVudGF0
+aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGluY3RybC9mc2wsaW14N3VscC1waW5jdHJsLnR4dA0K
+PiA+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0DQo+ID4gaW5kZXggMDAwMDAwMC4uNjdlNGQxZQ0KPiA+
+IC0tLSAvZGV2L251bGwNCj4gPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
+Z3MvcGluY3RybC9mc2wsaW14N3VscC1waW5jdHJsLnR4DQo+ID4gKysrIHQNCj4gPiBAQCAtMCww
+ICsxLDYzIEBADQo+ID4gKyogRnJlZXNjYWxlIGkuTVg3VUxQIElPTVVYIENvbnRyb2xsZXINCj4g
+PiArDQo+ID4gK2kuTVggN1VMUCBoYXMgdGhyZWUgSU9NVVhDIGluc3RhbmNlczogSU9NVVhDMCBm
+b3IgTTQgcG9ydHMsIElPTVVYQzENCj4gPiArZm9yIEE3IHBvcnRzIGFuZCBJT01VWEMgRERSIGZv
+ciBERFIgaW50ZXJmYWNlLg0KPiA+ICsNCj4gPiArTm90ZToNCj4gPiArVGhpcyBiaW5kaW5nIGRv
+YyBpcyBvbmx5IGZvciB0aGUgSU9NVVhDMSBzdXBwb3J0IGluIEE3IERvbWFpbiBhbmQgaXQNCj4g
+PiArb25seSBzdXBwb3J0cyBnZW5lcmljIHBpbiBjb25maWcuDQo+ID4gKw0KPiA+ICtQbGVhc2Ug
+YWxzbyByZWZlciB0byBmc2wsaW14LXBpbmN0cmwudHh0IGluIHRoaXMgZGlyZWN0b3J5IGZvciBJ
+TVgNCj4gPiArY29tbW9uIGJpbmRpbmcgcGFydCBhbmQgcGluY3RybC1iaW5kaW5ncy50eHQgZm9y
+IHRoZSBnZW5lcmljIGNvbmZpZw0KPiBiaW5kaW5nLg0KPiA+ICsNCj4gPiArPT09IFBpbiBDb250
+cm9sbGVyIE5vZGUgPT09DQo+ID4gKw0KPiA+ICtSZXF1aXJlZCBwcm9wZXJ0aWVzOg0KPiA+ICst
+IGNvbXBhdGlibGU6CSJmc2wsaW14N3VscC1pb211eGMxIg0KPiA+ICstIHJlZzoJCVNob3VsZCBj
+b250YWluIHRoZSBiYXNlIHBoeXNpY2FsIGFkZHJlc3MgYW5kIHNpemUgb2YgdGhlDQo+IGlvbXV4
+Yw0KPiA+ICsJCXJlZ2lzdGVycy4NCj4gPiArDQo+ID4gKz09PSBQaW4gQ29uZmlndXJhdGlvbiBO
+b2RlID09PQ0KPiA+ICstIHBpbnM6IE9uZSBpbnRlZ2VycyBhcnJheSwgcmVwcmVzZW50cyBhIGdy
+b3VwIG9mIHBpbnMgbXV4IHNldHRpbmcuDQo+ID4gKwlUaGUgZm9ybWF0IGlzIGZzbCxwaW5zID0g
+PFBJTl9GVU5DX0lEPiwgUElOX0ZVTkNfSUQgaXMgYSBwaW4gd29ya2luZw0KPiBvbg0KPiA+ICsJ
+YSBzcGVjaWZpYyBmdW5jdGlvbi4NCj4gPiArDQo+ID4gKwlOT1RFOiBpLk1YN1VMUCBQSU5fRlVO
+Q19JRCBjb25zaXN0cyBvZiA0IGludGVnZXJzIGFzIGl0IHNoYXJlcyBvbmUNCj4gbXV4DQo+ID4g
+KwlhbmQgY29uZmlnIHJlZ2lzdGVyIGFzIGZvbGxvd3M6DQo+ID4gKwk8bXV4X2NvbmZfcmVnIGlu
+cHV0X3JlZyBtdXhfbW9kZSBpbnB1dF92YWw+DQo+IA0KPiBBcyB5b3VyIFBJTl9GVU5DX0lEIHNw
+ZWNpZmllcyBib3RoIHRoZSBwaW4gaWRzIGFuZCB0aGVpciBtdXggc2V0dGluZ3MsDQo+IHNob3Vs
+ZG4ndCB5b3UgdXNlIHRoZSBuZXdseSBkb2N1bWVudGVkICdwaW5tdXgnIHByb3BlcnR5IGluIHBs
+YWNlIG9mDQo+ICdwaW5zJz8NCj4gDQo+IFBsZWFzZSBzZWUNCj4gaHR0cHM6Ly9naXQua2VybmVs
+Lm9yZy9wdWIvc2NtL2xpbnV4L2tlcm5lbC9naXQvdG9ydmFsZHMvbGludXguZ2l0L2NvbW1pdC8N
+Cj4gP2lkPThkNWU3YzVkZjBhNmM0NDIzNzM2MjhiZTUyMjEzMjExNzJiMWJhZGYNCj4gDQo+IFRo
+ZSBjdXJyZW50IGRvY3VtZW50YXRpb24gc3BlY2lmaWVzIHBpbiBpZHMgYW5kIG11eCBzZXR0aW5n
+cyBoYXZlIHRvIGJlDQo+IGFzc2VtYmxlZCBpbiBvbmUgc2luZ2xlIGludGVnZXIsIHdoaWNoIGlz
+IG5vdCB5b3VyIGNhc2UsIGJ1dCB0aGF0IGNhbiBiZQ0KPiBjaGFuZ2VkIHRvIG1ha2UgaXQgYWNj
+ZXB0IGFuIGFycmF5IG9mIGludGVnZXJzIHZhbHVlcyBpZiBuZWVkZWQuDQo+IA0KDQpUaGFua3Mg
+Zm9yIHRoZSBpbmZvLg0KTG9va3MgZ29vZCB0byBtZS4NCg0KU2hhd24gJiBMaW51cywNCkFyZSB5
+b3Ugb2theSB3aXRoIHRoaXM/DQoNCklmIHllcywgSSBjYW4gZXh0ZW5kIHRoZSBzdGFuZGFyZCAn
+cGlubXV4JyBwcm9wZXJ0eSB0byBzdXBwb3J0IGludGVnZXIgYXJyYXkNCmFuZCByZW5ldyB0aGUg
+cGF0Y2ggc2VyaWVzIHRvIHVzZSBpdC4NCg0KUmVnYXJkcw0KRG9uZyBBaXNoZW5nDQo=
