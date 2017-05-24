@@ -1,53 +1,54 @@
-From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Subject: [PATCH v3 9/9] ARM: sun8i: v3s: enable audio on Lichee
- Pi Zero Dock board
-Date: Wed, 24 May 2017 18:06:07 +0800
-Message-ID: <20170524100607.29790-10-icenowy@aosc.io>
-References: <20170524100607.29790-1-icenowy@aosc.io>
-Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [RESEND PATCH V7 5/7] regulator: da9061: BUCK and LDO regulator
+ driver
+Date: Wed, 24 May 2017 11:10:57 +0100
+Message-ID: <20170524101057.v2fqwki4fopx5k7y@sirena.org.uk>
+References: <cover.1495546845.git.stwiss.opensource@diasemi.com>
+ <ac0c9c0edf9a3a48d8de7a5c07b16b771871796e.1495546845.git.stwiss.opensource@diasemi.com>
+ <20170523171721.lpqjhakaawnz4prz@sirena.org.uk>
+ <20170524083243.5rhritb2tvmycfc6@dell>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDS6XAN6ZADRBAVXSXEQKGQEM5TX5AI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20170524100607.29790-1-icenowy-h8G6r0blFSE@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>
-Cc: dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="ccfyw43wkxzoixsv"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170524083243.5rhritb2tvmycfc6@dell>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Steve Twiss <stwiss.opensource@diasemi.com>, LINUX-KERNEL <linux-kernel@vger.kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, DEVICETREE <devicetree@vger.kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Eduardo Valentin <edubezval@gmail.com>, Guenter Roeck <linux@roeck-us.net>, LINUX-INPUT <linux-input@vger.kernel.org>, LINUX-PM <linux-pm@vger.kernel.org>, LINUX-WATCHDOG <linux-watchdog@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Support Opensource <support.opensource@diasemi.com>, Wim Van Sebroeck <wim@iguana.be>, Zhang Rui <rui.zhang@intel.com>
 List-Id: devicetree@vger.kernel.org
 
-The Lichee Pi Zero Dock board has an audio jack and an onboard MIC.
 
-Enable them.
+--ccfyw43wkxzoixsv
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
----
- arch/arm/boot/dts/sun8i-v3s-licheepi-zero-dock.dts | 9 +++++++++
- 1 file changed, 9 insertions(+)
+On Wed, May 24, 2017 at 09:32:43AM +0100, Lee Jones wrote:
 
-diff --git a/arch/arm/boot/dts/sun8i-v3s-licheepi-zero-dock.dts b/arch/arm/boot/dts/sun8i-v3s-licheepi-zero-dock.dts
-index d1311098ea45..80f477738668 100644
---- a/arch/arm/boot/dts/sun8i-v3s-licheepi-zero-dock.dts
-+++ b/arch/arm/boot/dts/sun8i-v3s-licheepi-zero-dock.dts
-@@ -55,6 +55,15 @@
- 	};
- };
- 
-+&codec {
-+	allwinner,audio-routing =
-+		"Headphone", "HP",
-+		"Headphone", "HPCOM",
-+		"MIC1", "Mic",
-+		"Mic",  "HBIAS";
-+	status = "okay";
-+};
-+
- &mmc1 {
- 	broken-cd;
- 	bus-width = <4>;
--- 
-2.12.2
+> Plan is to push this through the MFD tree.
+
+Great, thanks.
+
+> Do you want a PR for this one?
+
+Ideally but it's not super urgent if (I've started handling these by
+keeping a note of the pull information and only merging if there's an
+actual problem, that way there's less cross tree merges show up when I
+send stuff to Linus).
+
+--ccfyw43wkxzoixsv
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlklXDAACgkQJNaLcl1U
+h9CgIgf/WVhTbByTuJZ+Gq5KUxGuFjPlhcNiSZ0WAAcZiSyzHNBz8qxmTUJZvF8t
+Ha2TjvxigMiIhDCqeLiid96I9BY+EMl3KAV8gia5zjnwlT4pNoSIoQFXLDPLieVy
+G23jNVBhST9hLtqNxJBbQs+12QugkOuxpvO2uFlvG9J6Zu0oQXjPSxs43F2frPuJ
+iem0f0clQ93jKKliPQf2F8UKHzBfXWNgA1K6sqDAWQUs1dGAqWcRem38fiGv+qv+
+Y6zvy0YWp/VOUkAfwaxXRHy5hOqIyRLzLu9USNgqF+G0tnTbSf61u5Ea2dzN9EYg
+78aXlwmk1QTnIOM9jVzWo3/lTUT/rQ==
+=wM4o
+-----END PGP SIGNATURE-----
+
+--ccfyw43wkxzoixsv--
