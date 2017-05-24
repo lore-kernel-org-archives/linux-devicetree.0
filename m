@@ -1,31 +1,30 @@
-From: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
-Subject: Re: [PATCH v2] net: fec: add post PHY reset delay DT property
-Date: Wed, 24 May 2017 15:25:46 -0400 (EDT)
-Message-ID: <20170524.152546.1086133926732541625.davem@davemloft.net>
-References: <20170523094808.11102-1-quentin.schulz@free-electrons.com>
+From: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] DT: hwspinlock: Add binding documentation for Spreadtrum
+ hwspinlock
+Date: Wed, 24 May 2017 12:27:28 -0700
+Message-ID: <20170524192728.GZ12920@tuxbook>
+References: <fe3d04f400460673ee88324c414544ff3e15990e.1495075341.git.baolin.wang@spreadtrum.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170523094808.11102-1-quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <fe3d04f400460673ee88324c414544ff3e15990e.1495075341.git.baolin.wang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
-Cc: fugang.duan-3arQi8VN3Tc@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+To: Baolin Wang <baolin.wang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
+Cc: ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-remoteproc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, baolin.wang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Date: Tue, 23 May 2017 11:48:08 +0200
+On Wed 17 May 19:49 PDT 2017, Baolin Wang wrote:
 
-> Some PHY require to wait for a bit after the reset GPIO has been
-> toggled. This adds support for the DT property `phy-reset-post-delay`
-> which gives the delay in milliseconds to wait after reset.
+> This patch adds the binding documentation for Spreadtrum hardware spinlock
+> device.
 > 
-> If the DT property is not given, no delay is observed. Post reset delay
-> greater than 1000ms are invalid.
-> 
-> Signed-off-by: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> Signed-off-by: Baolin Wang <baolin.wang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
 
-Applied, thanks.
+Applied, with Rob's ack.
+
+Thanks,
+Bjorn
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
