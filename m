@@ -1,7 +1,7 @@
 From: Leo Yan <leo.yan@linaro.org>
-Subject: [PATCH v12 8/9] arm64: dts: hi6220: register debug module
-Date: Wed, 24 May 2017 08:02:56 +0800
-Message-ID: <1495584177-32193-9-git-send-email-leo.yan@linaro.org>
+Subject: [PATCH v12 6/9] coresight: refactor with function of_coresight_get_cpu
+Date: Wed, 24 May 2017 08:02:54 +0800
+Message-ID: <1495584177-32193-7-git-send-email-leo.yan@linaro.org>
 References: <1495584177-32193-1-git-send-email-leo.yan@linaro.org>
 Return-path: <linux-arm-msm-owner@vger.kernel.org>
 In-Reply-To: <1495584177-32193-1-git-send-email-leo.yan@linaro.org>
@@ -10,87 +10,103 @@ To: Jonathan Corbet <corbet@lwn.net>, Mathieu Poirier <mathieu.poirier@linaro.or
 Cc: Leo Yan <leo.yan@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Bind debug module driver for Hi6220.
+This is refactor to add function of_coresight_get_cpu(), so it's used to
+retrieve CPU id for coresight component. Finally can use it as a common
+function for multiple places.
 
-Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+Suggested-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
 Signed-off-by: Leo Yan <leo.yan@linaro.org>
 ---
- arch/arm64/boot/dts/hisilicon/hi6220.dtsi | 64 +++++++++++++++++++++++++++++++
- 1 file changed, 64 insertions(+)
+ drivers/hwtracing/coresight/of_coresight.c | 43 +++++++++++++++++++-----------
+ include/linux/coresight.h                  |  3 +++
+ 2 files changed, 31 insertions(+), 15 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
-index 1e5129b..21805b9 100644
---- a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
-+++ b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
-@@ -916,5 +916,69 @@
- 				};
- 			};
- 		};
+diff --git a/drivers/hwtracing/coresight/of_coresight.c b/drivers/hwtracing/coresight/of_coresight.c
+index 225b2dd..a187941 100644
+--- a/drivers/hwtracing/coresight/of_coresight.c
++++ b/drivers/hwtracing/coresight/of_coresight.c
+@@ -101,16 +101,40 @@ static int of_coresight_alloc_memory(struct device *dev,
+ 	return 0;
+ }
+ 
++int of_coresight_get_cpu(const struct device_node *node)
++{
++	int cpu;
++	bool found;
++	struct device_node *dn, *np;
 +
-+		debug@f6590000 {
-+			compatible = "arm,coresight-cpu-debug","arm,primecell";
-+			reg = <0 0xf6590000 0 0x1000>;
-+			clocks = <&sys_ctrl HI6220_DAPB_CLK>;
-+			clock-names = "apb_pclk";
-+			cpu = <&cpu0>;
-+		};
++	dn = of_parse_phandle(node, "cpu", 0);
 +
-+		debug@f6592000 {
-+			compatible = "arm,coresight-cpu-debug","arm,primecell";
-+			reg = <0 0xf6592000 0 0x1000>;
-+			clocks = <&sys_ctrl HI6220_DAPB_CLK>;
-+			clock-names = "apb_pclk";
-+			cpu = <&cpu1>;
-+		};
++	/* Affinity defaults to CPU0 */
++	if (!dn)
++		return 0;
 +
-+		debug@f6594000 {
-+			compatible = "arm,coresight-cpu-debug","arm,primecell";
-+			reg = <0 0xf6594000 0 0x1000>;
-+			clocks = <&sys_ctrl HI6220_DAPB_CLK>;
-+			clock-names = "apb_pclk";
-+			cpu = <&cpu2>;
-+		};
++	for_each_possible_cpu(cpu) {
++		np = of_cpu_device_node_get(cpu);
++		found = (dn == np);
++		of_node_put(np);
++		if (found)
++			break;
++	}
++	of_node_put(dn);
 +
-+		debug@f6596000 {
-+			compatible = "arm,coresight-cpu-debug","arm,primecell";
-+			reg = <0 0xf6596000 0 0x1000>;
-+			clocks = <&sys_ctrl HI6220_DAPB_CLK>;
-+			clock-names = "apb_pclk";
-+			cpu = <&cpu3>;
-+		};
++	/* Affinity to CPU0 if no cpu nodes are found */
++	return found ? cpu : 0;
++}
++EXPORT_SYMBOL_GPL(of_coresight_get_cpu);
 +
-+		debug@f65d0000 {
-+			compatible = "arm,coresight-cpu-debug","arm,primecell";
-+			reg = <0 0xf65d0000 0 0x1000>;
-+			clocks = <&sys_ctrl HI6220_DAPB_CLK>;
-+			clock-names = "apb_pclk";
-+			cpu = <&cpu4>;
-+		};
-+
-+		debug@f65d2000 {
-+			compatible = "arm,coresight-cpu-debug","arm,primecell";
-+			reg = <0 0xf65d2000 0 0x1000>;
-+			clocks = <&sys_ctrl HI6220_DAPB_CLK>;
-+			clock-names = "apb_pclk";
-+			cpu = <&cpu5>;
-+		};
-+
-+		debug@f65d4000 {
-+			compatible = "arm,coresight-cpu-debug","arm,primecell";
-+			reg = <0 0xf65d4000 0 0x1000>;
-+			clocks = <&sys_ctrl HI6220_DAPB_CLK>;
-+			clock-names = "apb_pclk";
-+			cpu = <&cpu6>;
-+		};
-+
-+		debug@f65d6000 {
-+			compatible = "arm,coresight-cpu-debug","arm,primecell";
-+			reg = <0 0xf65d6000 0 0x1000>;
-+			clocks = <&sys_ctrl HI6220_DAPB_CLK>;
-+			clock-names = "apb_pclk";
-+			cpu = <&cpu7>;
-+		};
- 	};
- };
+ struct coresight_platform_data *
+ of_get_coresight_platform_data(struct device *dev,
+ 			       const struct device_node *node)
+ {
+-	int i = 0, ret = 0, cpu;
++	int i = 0, ret = 0;
+ 	struct coresight_platform_data *pdata;
+ 	struct of_endpoint endpoint, rendpoint;
+ 	struct device *rdev;
+-	bool found;
+-	struct device_node *dn, *np;
+ 	struct device_node *ep = NULL;
+ 	struct device_node *rparent = NULL;
+ 	struct device_node *rport = NULL;
+@@ -177,18 +201,7 @@ of_get_coresight_platform_data(struct device *dev,
+ 		} while (ep);
+ 	}
+ 
+-	dn = of_parse_phandle(node, "cpu", 0);
+-	for_each_possible_cpu(cpu) {
+-		np = of_cpu_device_node_get(cpu);
+-		found = (dn == np);
+-		of_node_put(np);
+-		if (found)
+-			break;
+-	}
+-	of_node_put(dn);
+-
+-	/* Affinity to CPU0 if no cpu nodes are found */
+-	pdata->cpu = found ? cpu : 0;
++	pdata->cpu = of_coresight_get_cpu(node);
+ 
+ 	return pdata;
+ }
+diff --git a/include/linux/coresight.h b/include/linux/coresight.h
+index bf0aa50..d950dad 100644
+--- a/include/linux/coresight.h
++++ b/include/linux/coresight.h
+@@ -263,10 +263,13 @@ static inline int coresight_timeout(void __iomem *addr, u32 offset,
+ #endif
+ 
+ #ifdef CONFIG_OF
++extern int of_coresight_get_cpu(const struct device_node *node);
+ extern struct coresight_platform_data *
+ of_get_coresight_platform_data(struct device *dev,
+ 			       const struct device_node *node);
+ #else
++static inline int of_coresight_get_cpu(const struct device_node *node)
++{ return 0; }
+ static inline struct coresight_platform_data *of_get_coresight_platform_data(
+ 	struct device *dev, const struct device_node *node) { return NULL; }
+ #endif
 -- 
 2.7.4
