@@ -1,44 +1,70 @@
-From: Sekhar Nori <nsekhar@ti.com>
-Subject: [PATCH] MAINTAINERS: add device-tree files to TI DaVinci entry
-Date: Thu, 25 May 2017 15:08:07 +0530
-Message-ID: <20170525093807.21157-1-nsekhar@ti.com>
+From: Eugen Hristev <eugen.hristev-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
+Subject: [PATCH v3 0/4] iio: adc: sama5d2_adc hw triggers and buffers
+Date: Thu, 25 May 2017 14:17:10 +0300
+Message-ID: <1495711034-28410-1-git-send-email-eugen.hristev@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Device Tree Mailing List <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>
+Content-Type: text/plain
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: nicolas.ferre-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, alexandre.belloni-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ludovic.desroches-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: eugen.hristev-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add device-tree files relevant to TI DaVinci platform
-to its entry so mach-davinci sub-arch maintainers get
-copied on patches with device-tree file updates.
+This patch implements the hardware triggers support and buffer management
+for sama5d2.
+The DT modifications ( [PATCH 1/3] ARM: dts: at91: sama5d2_xplained:
+enable ADTRG pin) are for demonstration purposes of the feature,
+setting the pinctrl for the ADC hw trigger pin,should go through
+at91 maintainers.
+As discussed on the mailing list, since we have a single external trigger
+namely the ADTRG, but three different possible edges that can trigger it,
+will have a single trigger in the IIO subsystem and three possible edges
+which can be selected from the device tree.
+Thus I created new bindings in the device tree for having the possible
+edge types for the ADTRG pin.
+The documentation for the bindings is in the patch
+[PATCH v3 2/4] Documentation: dt: iio: at91-sama5d2_adc: add adtrg
+ trigger binding
+The modifications in the DT are in the patch
+[PATCH v3 3/4] ARM: dts: at91: sama5d2: add ADC hw trigger
 
-Signed-off-by: Sekhar Nori <nsekhar@ti.com>
----
- MAINTAINERS | 1 +
- 1 file changed, 1 insertion(+)
+  Changes in v3:
+ - No longer have all three possible triggers registered in the subsystem and
+   available in the sysfs. Only registering one trigger, and the possible edge
+   is being read from the device tree. In the device tree, any possible edge
+   can be set. There are three already made nodes for each possible edge which
+   can be selected.
+ - Fixed a bug where software triggered conversion could be started even if
+   the hardware trigger was enabled.
+ - Preallocate enough space for the buffer, considering all the channels
+   and timestamp
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 9e984645c4b0..7a935d71f56f 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -11778,6 +11778,7 @@ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/nsekhar/linux-davinci.git
- S:	Supported
- F:	arch/arm/mach-davinci/
- F:	drivers/i2c/busses/i2c-davinci.c
-+F:	arch/arm/boot/dts/da850*
- 
- TI DAVINCI SERIES MEDIA DRIVER
- M:	"Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+
+
+  Changes in v2:
+ - Moved buffer allocation and freeing into the preenable and postdisable
+   callbacks.
+   We have a total of scan bytes that can vary a lot depending on each channel
+   enabled at a certain point.
+ - made the at91 trigger list part of state structure
+ - made the iio trigger list preallocated in state structure
+ - moved irq enabling/disabling into the try_reenable callback
+ - on trigger disable must write disable registries as well
+ - Modified trigger name length to 64
+
+
+
+Eugen Hristev (4):
+  ARM: dts: at91: sama5d2_xplained: enable ADTRG pin
+  Documentation: dt: iio: at91-sama5d2_adc: add adtrg trigger binding
+  ARM: dts: at91: sama5d2: add ADC hw trigger
+  iio: adc: at91-sama5d2_adc: add hw trigger and buffer support
+
+ .../bindings/iio/adc/at91-sama5d2_adc.txt          |  17 ++
+ arch/arm/boot/dts/at91-sama5d2_xplained.dts        |  16 +-
+ arch/arm/boot/dts/sama5d2.dtsi                     |  11 +
+ drivers/iio/adc/at91-sama5d2_adc.c                 | 229 ++++++++++++++++++++-
+ 4 files changed, 267 insertions(+), 6 deletions(-)
+
 -- 
-2.9.0
+2.7.4
