@@ -1,13 +1,15 @@
 From: Jagan Teki <jagannadh.teki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 1/3] arm64: allwinner: a64: Add initial Orangepi
- Win/WinPlus support
-Date: Fri, 26 May 2017 00:56:20 +0530
-Message-ID: <1495740382-9061-1-git-send-email-jteki@openedev.com>
+Subject: [PATCH 2/3] arm64: allwinner: h5: Add initial Orangepi
+ Prime support
+Date: Fri, 26 May 2017 00:56:21 +0530
+Message-ID: <1495740382-9061-2-git-send-email-jteki@openedev.com>
+References: <1495740382-9061-1-git-send-email-jteki@openedev.com>
 Reply-To: jagannadh.teki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCV4FV5N34IRB7W7TTEQKGQERGR5RVI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBCV4FV5N34IRBA7ATTEQKGQEPKPVV7Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <1495740382-9061-1-git-send-email-jteki-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -20,47 +22,49 @@ List-Id: devicetree@vger.kernel.org
 
 From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 
-Orangepi Win/WinPlus is an open-source single-board computer
-using the Allwinner A64 SOC.
+Orangepi Prime is an open-source single-board computer
+using the Allwinner h5 SOC.
 
-A64 Orangepi Win/WinPlus has
-- A64 Quad-core Cortex-A53 64bit
-- 1GB(Win)/2GB(Win Plus) DDR3 SDRAM
+H5 Orangepi Prime has
+- Quad-core Cortex-A53
+- 2GB DDR3
 - Debug TTL UART
-- Four USB 2.0
+- 1000M/100M Ethernet RJ45
+- Three USB 2.0
 - HDMI
-- LCD
 - Audio and MIC
 - Wifi + BT
 - IR receiver
-- 5V DC power supply
+- HDMI
+- Wifi + BT
 
-http://www.orangepi.org/OrangePiWin_WinPlus/
+http://www.orangepi.org/OrangePiPrime/
 
 Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 ---
  arch/arm64/boot/dts/allwinner/Makefile             |   1 +
- .../boot/dts/allwinner/sun50i-a64-orangepi-win.dts | 102 +++++++++++++++++++++
- 2 files changed, 103 insertions(+)
- create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-a64-orangepi-win.dts
+ .../dts/allwinner/sun50i-h5-orangepi-prime.dts     | 100 +++++++++++++++++++++
+ 2 files changed, 101 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-prime.dts
 
 diff --git a/arch/arm64/boot/dts/allwinner/Makefile b/arch/arm64/boot/dts/allwinner/Makefile
-index 244e8b7..4120ce9 100644
+index 4120ce9..bf7d3fe 100644
 --- a/arch/arm64/boot/dts/allwinner/Makefile
 +++ b/arch/arm64/boot/dts/allwinner/Makefile
-@@ -1,5 +1,6 @@
- dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-bananapi-m64.dtb
+@@ -2,6 +2,7 @@ dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-bananapi-m64.dtb
  dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-pine64-plus.dtb sun50i-a64-pine64.dtb
-+dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-orangepi-win.dtb
+ dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-orangepi-win.dtb
  dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h5-orangepi-pc2.dtb
++dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h5-orangepi-prime.dtb
  
  always		:= $(dtb-y)
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-orangepi-win.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-orangepi-win.dts
+ subdir-y	:= $(dts-dirs)
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-prime.dts b/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-prime.dts
 new file mode 100644
-index 0000000..b16e606
+index 0000000..9e98aac
 --- /dev/null
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-orangepi-win.dts
-@@ -0,0 +1,102 @@
++++ b/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-prime.dts
+@@ -0,0 +1,100 @@
 +/*
 + * Copyright (C) 2017 Jagan Teki <jteki-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>
 + *
@@ -105,13 +109,13 @@ index 0000000..b16e606
 +
 +/dts-v1/;
 +
-+#include "sun50i-a64.dtsi"
++#include "sun50i-h5.dtsi"
 +
 +#include <dt-bindings/gpio/gpio.h>
 +
 +/ {
-+	model = "OrangePi Win/Win Plus";
-+	compatible = "xunlong,orangepi-win", "allwinner,sun50i-a64";
++	model = "OrangePi Prime";
++	compatible = "xunlong,orangepi-prime", "allwinner,sun50i-h5";
 +
 +	aliases {
 +		serial0 = &uart0;
@@ -119,6 +123,10 @@ index 0000000..b16e606
 +
 +	chosen {
 +		stdout-path = "serial0:115200n8";
++	};
++
++	memory {
++		reg = <0x40000000 0x80000000>;
 +	};
 +
 +	soc {
@@ -133,10 +141,10 @@ index 0000000..b16e606
 +
 +&mmc0 {
 +	pinctrl-names = "default";
-+	pinctrl-0 = <&mmc0_pins>;
++	pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin>;
 +	vmmc-supply = <&reg_vcc3v3>;
++	bus-width = <4>;
 +	cd-gpios = <&pio 5 6 GPIO_ACTIVE_HIGH>;
-+	cd-inverted;
 +	status = "okay";
 +};
 +
@@ -146,22 +154,16 @@ index 0000000..b16e606
 +	status = "okay";
 +};
 +
-+&i2c1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c1_pins>;
++&usbphy {
 +	status = "okay";
 +};
 +
-+&usbphy {
-+       status = "okay";
-+};
-+
 +&ohci1 {
-+       status = "okay";
++	status = "okay";
 +};
 +
 +&ehci1 {
-+       status = "okay";
++	status = "okay";
 +};
 -- 
 1.9.1
