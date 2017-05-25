@@ -1,60 +1,108 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] ARM: dts: orange-pi-zero: specify wifi interrupts
-Date: Thu, 25 May 2017 10:57:39 +0800
-Message-ID: <CAGb2v647GTQW9-ZYrkWS7RoeYTu_7oTm8v4PDs0YD1pZ8oUohQ@mail.gmail.com>
-References: <20170524212433.14386-1-geomatsi@gmail.com> <20170524212433.14386-2-geomatsi@gmail.com>
+From: Xiaowei Song <songxiaowei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Subject: [PATCH v7 0/4]  add PCIe driver for Kirin PCIe
+Date: Thu, 25 May 2017 11:02:00 +0800
+Message-ID: <20170525030204.126233-1-songxiaowei@hisilicon.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170524212433.14386-2-geomatsi-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sergey Matyukevich <geomatsi-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, tn-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org, keith.busch-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, niklas.cassel-VrBV9hrLPhE@public.gmane.org, dhdang-qTEPVZfXA3Y@public.gmane.org, liudongdong3-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, gabriele.paoloni-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org
+Cc: chenyao11-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, songxiaowei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, wangbinghui-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, suzhuangluan-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 25, 2017 at 5:24 AM, Sergey Matyukevich <geomatsi-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> The orange-pi-zero board has Allwinner XR819 SDIO wifi chip. The board
-> dts file provides a node enabling mmc1 controller. Together with an
-> out-of-tree driver https://github.com/fifteenhex/xradio this node
-> enables using the wifi chip.
->
-> This commit specifies XR819 interrupt configuration for the driver.
->
-> Signed-off-by: Sergey Matyukevich <geomatsi-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->  arch/arm/boot/dts/sun8i-h2-plus-orangepi-zero.dts | 3 +++
->  1 file changed, 3 insertions(+)
->
-> diff --git a/arch/arm/boot/dts/sun8i-h2-plus-orangepi-zero.dts b/arch/arm/boot/dts/sun8i-h2-plus-orangepi-zero.dts
-> index 9e8b082c134f..e97dfd1775d1 100644
-> --- a/arch/arm/boot/dts/sun8i-h2-plus-orangepi-zero.dts
-> +++ b/arch/arm/boot/dts/sun8i-h2-plus-orangepi-zero.dts
-> @@ -128,6 +128,9 @@
->          */
->         xr819: sdio_wifi@1 {
->                 reg = <1>;
-> +               compatible = "xradio,xr819";
+Before Version Patches
+======================
+patch V6
+https://www.spinics.net/lists/linux-pci/msg61610.html
 
-You should submit device tree bindings first. See:
+patch V4
+https://www.spinics.net/lists/linux-pci/msg61406.html
 
-https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tree/Documentation/devicetree/bindings/net/wireless
+patch V3
+https://www.spinics.net/lists/linux-pci/msg61399.html
 
-for examples.
+Changes between V7 and V6
+=========================
+1. add enumeration log Based on Hikey960 Board with these patches.
+2. fix issues as fellows:
+   (1) delete reduntant blankets in macro defination,
+   (2) add blank line in  kirin_pcie_clk_ctrl function.
+   (3) Fix compitable property in DT with the SoC name,
+       for example "hisilicon,kirin960-pcie".
 
-> +               interrupt-parent = <&pio>;
-> +               interrupts = <6 10 IRQ_TYPE_EDGE_RISING>;
 
-Are these optional or required properties? AFAIK SDIO supports in-band
-interrupts with a bit of overhead, so they should be optional.
+Enumeration log
+===============
+These test logs come from patches running on Hikey960 Board
+(1) Connect with Atheros Communications WIFI
+	OF: PCI: host bridge /soc/kirin_pcie_rc@f4000000 ranges:
+	OF: PCI:   MEM 0xf6000000..0xf7ffffff -> 0x00000000
+	kirin-pcie f4000000.kirin_pcie_rc: PCI host bridge to bus 0000:00
+	pci_bus 0000:00: root bus resource [bus 00-01]
+	pci_bus 0000:00: root bus resource [mem 0xf6000000-0xf7ffffff] (bus address [0x00000000-0x01ffffff])
+	pci 0000:00:00.0: [19e5:3660] type 01 class 0x060400
+	pci 0000:00:00.0: reg 0x10: [mem 0xf6000000-0xf6ffffff]
+	pci 0000:00:00.0: supports D1 D2
+	pci 0000:00:00.0: PME# supported from D0 D1 D2 D3hot
+	pci 0000:01:00.0: [168c:002a] type 00 class 0x028000
+	pci 0000:01:00.0: reg 0x10: [mem 0xf6000000-0xf600ffff 64bit]
+	pci 0000:01:00.0: supports D1
+	pci 0000:01:00.0: PME# supported from D0 D1 D3hot
+	pci 0000:01:00.0: disabling ASPM on pre-1.1 PCIe device.  You can enable it with 'pcie_aspm=force'
+	pci 0000:00:00.0: BAR 0: assigned [mem 0xf6000000-0xf6ffffff]
+	pci 0000:00:00.0: BAR 14: assigned [mem 0xf7000000-0xf70fffff]
+	pci 0000:01:00.0: BAR 0: assigned [mem 0xf7000000-0xf700ffff 64bit]
+	pci 0000:00:00.0: PCI bridge to [bus 01]
+	pci 0000:00:00.0:   bridge window [mem 0xf7000000-0xf70fffff]
+	pcieport 0000:00:00.0: Signaling PME with IRQ 276
+	pcieport 0000:00:00.0: AER enabled with IRQ 276	
 
-ChenYu
+(2) Connect with Sandisk SSD
+	OF: PCI: host bridge /soc/kirin_pcie_rc@f4000000 ranges:
+	OF: PCI:   MEM 0xf6000000..0xf7ffffff -> 0x00000000
+	kirin-pcie f4000000.kirin_pcie_rc: PCI host bridge to bus 0000:00
+	pci_bus 0000:00: root bus resource [bus 00-01]
+	pci_bus 0000:00: root bus resource [mem 0xf6000000-0xf7ffffff] (bus address [0x00000000-0x01ffffff])
+	pci 0000:00:00.0: [19e5:3660] type 01 class 0x060400
+	pci 0000:00:00.0: reg 0x10: [mem 0xf6000000-0xf6ffffff]
+	pci 0000:00:00.0: supports D1 D2
+	pci 0000:00:00.0: PME# supported from D0 D1 D2 D3hot
+	pci 0000:01:00.0: [1b4b:1093] type 00 class 0x010802
+	pci 0000:01:00.0: reg 0x10: [mem 0xf6000000-0xf6003fff 64bit]
+	pci 0000:01:00.0: reg 0x30: [mem 0xf6000000-0xf600ffff pref]
+	pci 0000:00:00.0: BAR 0: assigned [mem 0xf6000000-0xf6ffffff]
+	pci 0000:00:00.0: BAR 14: assigned [mem 0xf7000000-0xf70fffff]
+	pci 0000:00:00.0: BAR 15: assigned [mem 0xf7100000-0xf71fffff pref]
+	pci 0000:01:00.0: BAR 6: assigned [mem 0xf7100000-0xf710ffff pref]
+	pci 0000:01:00.0: BAR 0: assigned [mem 0xf7000000-0xf7003fff 64bit]
+	pci 0000:00:00.0: PCI bridge to [bus 01]
+	pci 0000:00:00.0:   bridge window [mem 0xf7000000-0xf70fffff]
+	pci 0000:00:00.0:   bridge window [mem 0xf7100000-0xf71fffff pref]
+	pcieport 0000:00:00.0: Signaling PME with IRQ 276
+	pcieport 0000:00:00.0: AER enabled with IRQ 276
 
->         };
->  };
->
-> --
-> 2.11.0
->
+Patches list
+============
+
+Xiaowei Song (4):
+  PCI: hisi: Add DT binding for PCIe of Kirin SoC series
+  arm64: dts: hisi: add kirin pcie node
+  PCI: dwc: kirin: add PCIe Driver for HiSilicon Kirin SoC
+  defconfig: PCI: Enable  Kirin PCIe defconfig
+
+ .../devicetree/bindings/pci/kirin-pcie.txt         |  49 ++
+ arch/arm64/boot/dts/hisilicon/hi3660.dtsi          |  31 ++
+ arch/arm64/configs/defconfig                       |   1 +
+ drivers/pci/dwc/Kconfig                            |  10 +
+ drivers/pci/dwc/Makefile                           |   1 +
+ drivers/pci/dwc/pcie-kirin.c                       | 513 +++++++++++++++++++++
+ 6 files changed, 605 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pci/kirin-pcie.txt
+ create mode 100644 drivers/pci/dwc/pcie-kirin.c
+
+-- 
+2.11.GIT
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
