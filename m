@@ -1,71 +1,57 @@
-From: Guodong Xu <guodong.xu@linaro.org>
-Subject: [PATCH v2 10/12] arm64: dts: hi3660: add power key dts node
-Date: Thu, 25 May 2017 16:18:52 +0800
-Message-ID: <20170525081854.4701-11-guodong.xu@linaro.org>
-References: <20170525081854.4701-1-guodong.xu@linaro.org>
+From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: vf610-zii-dev-rev-b: add hi8435 device
+Date: Thu, 25 May 2017 16:20:32 +0800
+Message-ID: <20170525082030.GB26102@dragon>
+References: <20170522131010.3537-1-nikita.yoush@cogentembedded.com>
+ <20170525070007.GU26102@dragon>
+ <eb86f383-3c27-2276-6213-99c5143420f5@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170525081854.4701-1-guodong.xu@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, xuwei5@hisilicon.com, catalin.marinas@arm.com, will.deacon@arm.com, wangkefeng.wang@huawei.com, xuejiancheng@hisilicon.com, peter.griffin@linaro.org, puck.chen@hisilicon.com
-Cc: devicetree@vger.kernel.org, Guodong Xu <guodong.xu@linaro.org>, linux-kernel@vger.kernel.org, John Stultz <john.stultz@linaro.org>, linux-arm-kernel@lists.infradead.org, zhangfei.gao@linaro.org, Chen Jun <chenjun14@huawei.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <eb86f383-3c27-2276-6213-99c5143420f5-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Nikita Yushchenko <nikita.yoush-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chris Healy <Chris.Healy-c8ZVq/bFV1I@public.gmane.org>, Jeff White <Jeff.White-c8ZVq/bFV1I@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Chen Jun <chenjun14@huawei.com>
+On Thu, May 25, 2017 at 11:06:47AM +0300, Nikita Yushchenko wrote:
+> >> +&edma1 {
+> >> +	status = "okay";
+> >> +};
+> >> +
+> >> +&dspi2 {
+> > 
+> > Please keep these labelled nodes sort alphabetically.
+> 
+> Ok
+> 
+> >> +	bus-num = <1>;
+> >> +	pinctrl-names = "default";
+> >> +	pinctrl-0 = <&pinctrl_dspi2>;
+> >> +	status = "okay";
+> > 
+> > We usually have 'status' line at the bottom of property list.
+> 
+> Ok
+> 
+> >> +	spi-num-chipselects = <2>;
+> >> +
+> >> +	hi8435@1 {
+> > 
+> > Node name should be something generic, while label can be specific
+> > model name.  The following form might be better.
+> > 
+> > 	hi8435: sensor@1
+> 
+> Ok
+> 
+> Although the same file, in lines nearby, has m25p128@0 and at93c46d@1.
 
-We use gpio_034 as power key on hikey960, and set gpio with pull-up
-state, when key press the voltage on the gpio will come to lower, and
-power key event will be reported.
+It seems that I need more eyes to help review.
 
-Signed-off-by: Chen Jun <chenjun14@huawei.com>
-Signed-off-by: John Stultz <john.stultz@linaro.org>
-Signed-off-by: Guodong Xu <guodong.xu@linaro.org>
----
- arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts b/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
-index c25fff9..7aac35b 100644
---- a/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
-+++ b/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
-@@ -10,6 +10,8 @@
- #include "hi3660.dtsi"
- #include "hikey960-pinctrl.dtsi"
- #include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/input/input.h>
-+#include <dt-bindings/interrupt-controller/irq.h>
- 
- / {
- 	model = "HiKey960";
-@@ -34,6 +36,19 @@
- 		/* rewrite this at bootloader */
- 		reg = <0x0 0x0 0x0 0x0>;
- 	};
-+
-+	keys {
-+		compatible = "gpio-keys";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pwr_key_pmx_func &pwr_key_cfg_func>;
-+
-+		power {
-+			wakeup-source;
-+			gpios = <&gpio4 2 GPIO_ACTIVE_LOW>;
-+			label = "GPIO Power";
-+			linux,code = <KEY_POWER>;
-+		};
-+	};
- };
- 
- &i2c0 {
--- 
-2.10.2
+Shawn
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
