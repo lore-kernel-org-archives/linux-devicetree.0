@@ -1,101 +1,188 @@
-From: "A.S. Dong" <aisheng.dong@nxp.com>
-Subject: RE: [PATCH V3 1/2] dt-bindings: pinctrl: add imx7ulp pinctrl binding
- doc
-Date: Thu, 25 May 2017 05:06:56 +0000
-Message-ID: <AM3PR04MB306BB77DD89C680DC42636D80FF0@AM3PR04MB306.eurprd04.prod.outlook.com>
-References: <1495539829-23345-1-git-send-email-aisheng.dong@nxp.com>
- <20170523182321.GA13664@w540>
- <AM3PR04MB3065626F1B45C8459E5765580FE0@AM3PR04MB306.eurprd04.prod.outlook.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <AM3PR04MB3065626F1B45C8459E5765580FE0@AM3PR04MB306.eurprd04.prod.outlook.com>
-Content-Language: en-US
-Sender: linux-gpio-owner@vger.kernel.org
-To: "A.S. Dong" <aisheng.dong@nxp.com>, 'jmondi' <jacopo@jmondi.org>, "'linus.walleij@linaro.org'" <linus.walleij@linaro.org>, "'shawnguo@kernel.org'" <shawnguo@kernel.org>
-Cc: "'linux-gpio@vger.kernel.org'" <linux-gpio@vger.kernel.org>, "'linux-arm-kernel@lists.infradead.org'" <linux-arm-kernel@lists.infradead.org>, "'stefan@agner.ch'" <stefan@agner.ch>, Jacky Bai <ping.bai@nxp.com>, Andy Duan <fugang.duan@nxp.com>, "'kernel@pengutronix.de'" <kernel@pengutronix.de>, 'Rob Herring' <robh+dt@kernel.org>, 'Mark Rutland' <mark.rutland@arm.com>, "'devicetree@vger.kernel.org'" <devicetree@vger.kernel.org>
+From: Matt Ranostay <matt.ranostay-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v2] iio: proximity: as3935: noise detection + threshold changes
+Date: Wed, 24 May 2017 22:52:29 -0700
+Message-ID: <20170525055229.11659-1-matt.ranostay@konsulko.com>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Matt Ranostay <matt.ranostay-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgU2hhd24gJiBMaW51cywNCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9t
-OiBBLlMuIERvbmcNCj4gU2VudDogV2VkbmVzZGF5LCBNYXkgMjQsIDIwMTcgMTE6MTAgQU0NCj4g
-VG86IGptb25kaTsgbGludXMud2FsbGVpakBsaW5hcm8ub3JnOyBzaGF3bmd1b0BrZXJuZWwub3Jn
-DQo+IENjOiBsaW51eC1ncGlvQHZnZXIua2VybmVsLm9yZzsgbGludXgtYXJtLWtlcm5lbEBsaXN0
-cy5pbmZyYWRlYWQub3JnOw0KPiBzdGVmYW5AYWduZXIuY2g7IEphY2t5IEJhaTsgQW5keSBEdWFu
-OyBrZXJuZWxAcGVuZ3V0cm9uaXguZGU7IFJvYiBIZXJyaW5nOw0KPiBNYXJrIFJ1dGxhbmQ7IGRl
-dmljZXRyZWVAdmdlci5rZXJuZWwub3JnDQo+IFN1YmplY3Q6IFJFOiBbUEFUQ0ggVjMgMS8yXSBk
-dC1iaW5kaW5nczogcGluY3RybDogYWRkIGlteDd1bHAgcGluY3RybA0KPiBiaW5kaW5nIGRvYw0K
-PiANCj4gSGkgSg0KPiANCj4gPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiA+IEZyb206
-IGptb25kaSBbbWFpbHRvOmphY29wb0BqbW9uZGkub3JnXQ0KPiA+IFNlbnQ6IFdlZG5lc2RheSwg
-TWF5IDI0LCAyMDE3IDI6MjQgQU0NCj4gPiBUbzogQS5TLiBEb25nDQo+ID4gQ2M6IGxpbnV4LWdw
-aW9Admdlci5rZXJuZWwub3JnOyBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7
-DQo+ID4gbGludXMud2FsbGVpakBsaW5hcm8ub3JnOyBzaGF3bmd1b0BrZXJuZWwub3JnOyBzdGVm
-YW5AYWduZXIuY2g7IEphY2t5DQo+ID4gQmFpOyBBbmR5IER1YW47IGtlcm5lbEBwZW5ndXRyb25p
-eC5kZTsgUm9iIEhlcnJpbmc7IE1hcmsgUnV0bGFuZDsNCj4gPiBkZXZpY2V0cmVlQHZnZXIua2Vy
-bmVsLm9yZw0KPiA+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggVjMgMS8yXSBkdC1iaW5kaW5nczogcGlu
-Y3RybDogYWRkIGlteDd1bHAgcGluY3RybA0KPiA+IGJpbmRpbmcgZG9jDQo+ID4NCj4gPiBIaSBE
-b25nLA0KPiA+DQo+ID4gT24gVHVlLCBNYXkgMjMsIDIwMTcgYXQgMDc6NDM6NDhQTSArMDgwMCwg
-RG9uZyBBaXNoZW5nIHdyb3RlOg0KPiA+ID4gaS5NWCA3VUxQIGhhcyB0aHJlZSBJT01VWEMgaW5z
-dGFuY2VzOiBJT01VWEMwIGZvciBNNCBwb3J0cywNCj4gPiA+IElPTVVYQzEgZm9yIEE3IHBvcnRz
-IGFuZCBJT01VWEMgRERSIGZvciBERFIgaW50ZXJmYWNlLg0KPiA+ID4NCj4gPiA+IFRoaXMgcGF0
-Y2ggYWRkcyB0aGUgSU9NVVhDMSBzdXBwb3J0IGZvciBBNy4NCj4gPiA+DQo+ID4gPiBDYzogUm9i
-IEhlcnJpbmcgPHJvYmgrZHRAa2VybmVsLm9yZz4NCj4gPiA+IENjOiBNYXJrIFJ1dGxhbmQgPG1h
-cmsucnV0bGFuZEBhcm0uY29tPg0KPiA+ID4gQ2M6IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3Jn
-DQo+ID4gPiBDYzogTGludXMgV2FsbGVpaiA8bGludXMud2FsbGVpakBsaW5hcm8ub3JnPg0KPiA+
-ID4gQWNrZWQtYnk6IFNoYXduIEd1byA8c2hhd25ndW9Aa2VybmVsLm9yZz4NCj4gPiA+IFNpZ25l
-ZC1vZmYtYnk6IERvbmcgQWlzaGVuZyA8YWlzaGVuZy5kb25nQG54cC5jb20+DQo+ID4gPg0KPiA+
-ID4gLS0tDQo+ID4gPiBDaGFuZ2VMb2c6DQo+ID4gPiB2Mi0+djM6DQo+ID4gPiAgKiBzd2l0Y2gg
-dG8gZ2VuZXJpYyBpbnB1dC9vdXRwdXQtZW5hYmxlIHByb3BlcnR5DQo+ID4gPiB2MS0+djI6DQo+
-ID4gPiAgKiBhZGQgbW9yZSBkZXNjcmlwdGlvbnMgaW4gYmluZGluZyBkb2MNCj4gPiA+ICAqIGFk
-ZCBtaXNzZWQgcHJlZml4IGZvciBwcml2YXRlIHByb3BlcnRpZXMuDQo+ID4gPiAgKiBtb3ZlIGR0
-LWJpbmRpbmdzL3BpbmN0cmwvaW14N3VscC1waW5mdW5jLmggdG8gYXJjaC9hcm0vYm9vdC9kdHMN
-Cj4gPiA+IC0tLQ0KPiA+ID4gIC4uLi9iaW5kaW5ncy9waW5jdHJsL2ZzbCxpbXg3dWxwLXBpbmN0
-cmwudHh0ICAgICAgIHwgIDYzICsrKw0KPiA+ID4gIGFyY2gvYXJtL2Jvb3QvZHRzL2lteDd1bHAt
-cGluZnVuYy5oICAgICAgICAgICAgICAgIHwgNDY4DQo+ID4gKysrKysrKysrKysrKysrKysrKysr
-DQo+ID4gPiAgMiBmaWxlcyBjaGFuZ2VkLCA1MzEgaW5zZXJ0aW9ucygrKQ0KPiA+ID4gIGNyZWF0
-ZSBtb2RlIDEwMDY0NA0KPiA+ID4gRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Bp
-bmN0cmwvZnNsLGlteDd1bHAtcGluY3RybC50eHQNCj4gPiA+ICBjcmVhdGUgbW9kZSAxMDA2NDQg
-YXJjaC9hcm0vYm9vdC9kdHMvaW14N3VscC1waW5mdW5jLmgNCj4gPiA+DQo+ID4gPiBkaWZmIC0t
-Z2l0DQo+ID4gPiBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9waW5jdHJsL2Zz
-bCxpbXg3dWxwLXBpbmN0cmwudHh0DQo+ID4gPiBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
-aW5kaW5ncy9waW5jdHJsL2ZzbCxpbXg3dWxwLXBpbmN0cmwudHh0DQo+ID4gPiBuZXcgZmlsZSBt
-b2RlIDEwMDY0NA0KPiA+ID4gaW5kZXggMDAwMDAwMC4uNjdlNGQxZQ0KPiA+ID4gLS0tIC9kZXYv
-bnVsbA0KPiA+ID4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BpbmN0
-cmwvZnNsLGlteDd1bHAtcGluY3RybC4NCj4gPiA+ICsrKyB0eA0KPiA+ID4gKysrIHQNCj4gPiA+
-IEBAIC0wLDAgKzEsNjMgQEANCj4gPiA+ICsqIEZyZWVzY2FsZSBpLk1YN1VMUCBJT01VWCBDb250
-cm9sbGVyDQo+ID4gPiArDQo+ID4gPiAraS5NWCA3VUxQIGhhcyB0aHJlZSBJT01VWEMgaW5zdGFu
-Y2VzOiBJT01VWEMwIGZvciBNNCBwb3J0cywgSU9NVVhDMQ0KPiA+ID4gK2ZvciBBNyBwb3J0cyBh
-bmQgSU9NVVhDIEREUiBmb3IgRERSIGludGVyZmFjZS4NCj4gPiA+ICsNCj4gPiA+ICtOb3RlOg0K
-PiA+ID4gK1RoaXMgYmluZGluZyBkb2MgaXMgb25seSBmb3IgdGhlIElPTVVYQzEgc3VwcG9ydCBp
-biBBNyBEb21haW4gYW5kDQo+ID4gPiAraXQgb25seSBzdXBwb3J0cyBnZW5lcmljIHBpbiBjb25m
-aWcuDQo+ID4gPiArDQo+ID4gPiArUGxlYXNlIGFsc28gcmVmZXIgdG8gZnNsLGlteC1waW5jdHJs
-LnR4dCBpbiB0aGlzIGRpcmVjdG9yeSBmb3IgSU1YDQo+ID4gPiArY29tbW9uIGJpbmRpbmcgcGFy
-dCBhbmQgcGluY3RybC1iaW5kaW5ncy50eHQgZm9yIHRoZSBnZW5lcmljIGNvbmZpZw0KPiA+IGJp
-bmRpbmcuDQo+ID4gPiArDQo+ID4gPiArPT09IFBpbiBDb250cm9sbGVyIE5vZGUgPT09DQo+ID4g
-PiArDQo+ID4gPiArUmVxdWlyZWQgcHJvcGVydGllczoNCj4gPiA+ICstIGNvbXBhdGlibGU6CSJm
-c2wsaW14N3VscC1pb211eGMxIg0KPiA+ID4gKy0gcmVnOgkJU2hvdWxkIGNvbnRhaW4gdGhlIGJh
-c2UgcGh5c2ljYWwgYWRkcmVzcyBhbmQgc2l6ZSBvZiB0aGUNCj4gPiBpb211eGMNCj4gPiA+ICsJ
-CXJlZ2lzdGVycy4NCj4gPiA+ICsNCj4gPiA+ICs9PT0gUGluIENvbmZpZ3VyYXRpb24gTm9kZSA9
-PT0NCj4gPiA+ICstIHBpbnM6IE9uZSBpbnRlZ2VycyBhcnJheSwgcmVwcmVzZW50cyBhIGdyb3Vw
-IG9mIHBpbnMgbXV4IHNldHRpbmcuDQo+ID4gPiArCVRoZSBmb3JtYXQgaXMgZnNsLHBpbnMgPSA8
-UElOX0ZVTkNfSUQ+LCBQSU5fRlVOQ19JRCBpcyBhIHBpbg0KPiA+ID4gK3dvcmtpbmcNCj4gPiBv
-bg0KPiA+ID4gKwlhIHNwZWNpZmljIGZ1bmN0aW9uLg0KPiA+ID4gKw0KPiA+ID4gKwlOT1RFOiBp
-Lk1YN1VMUCBQSU5fRlVOQ19JRCBjb25zaXN0cyBvZiA0IGludGVnZXJzIGFzIGl0IHNoYXJlcyBv
-bmUNCj4gPiBtdXgNCj4gPiA+ICsJYW5kIGNvbmZpZyByZWdpc3RlciBhcyBmb2xsb3dzOg0KPiA+
-ID4gKwk8bXV4X2NvbmZfcmVnIGlucHV0X3JlZyBtdXhfbW9kZSBpbnB1dF92YWw+DQo+ID4NCj4g
-PiBBcyB5b3VyIFBJTl9GVU5DX0lEIHNwZWNpZmllcyBib3RoIHRoZSBwaW4gaWRzIGFuZCB0aGVp
-ciBtdXggc2V0dGluZ3MsDQo+ID4gc2hvdWxkbid0IHlvdSB1c2UgdGhlIG5ld2x5IGRvY3VtZW50
-ZWQgJ3Bpbm11eCcgcHJvcGVydHkgaW4gcGxhY2Ugb2YNCj4gPiAncGlucyc/DQo+ID4NCj4gPiBQ
-bGVhc2Ugc2VlDQo+ID4gaHR0cHM6Ly9naXQua2VybmVsLm9yZy9wdWIvc2NtL2xpbnV4L2tlcm5l
-bC9naXQvdG9ydmFsZHMvbGludXguZ2l0L2NvbQ0KPiA+IG1pdC8gP2lkPThkNWU3YzVkZjBhNmM0
-NDIzNzM2MjhiZTUyMjEzMjExNzJiMWJhZGYNCj4gPg0KPiA+IFRoZSBjdXJyZW50IGRvY3VtZW50
-YXRpb24gc3BlY2lmaWVzIHBpbiBpZHMgYW5kIG11eCBzZXR0aW5ncyBoYXZlIHRvDQo+ID4gYmUg
-YXNzZW1ibGVkIGluIG9uZSBzaW5nbGUgaW50ZWdlciwgd2hpY2ggaXMgbm90IHlvdXIgY2FzZSwg
-YnV0IHRoYXQNCj4gPiBjYW4gYmUgY2hhbmdlZCB0byBtYWtlIGl0IGFjY2VwdCBhbiBhcnJheSBv
-ZiBpbnRlZ2VycyB2YWx1ZXMgaWYgbmVlZGVkLg0KPiA+DQo+IA0KPiBUaGFua3MgZm9yIHRoZSBp
-bmZvLg0KPiBMb29rcyBnb29kIHRvIG1lLg0KPiANCj4gU2hhd24gJiBMaW51cywNCj4gQXJlIHlv
-dSBva2F5IHdpdGggdGhpcz8NCj4gDQo+IElmIHllcywgSSBjYW4gZXh0ZW5kIHRoZSBzdGFuZGFy
-ZCAncGlubXV4JyBwcm9wZXJ0eSB0byBzdXBwb3J0IGludGVnZXINCj4gYXJyYXkgYW5kIHJlbmV3
-IHRoZSBwYXRjaCBzZXJpZXMgdG8gdXNlIGl0Lg0KPiANCg0KV291bGQgeW91IGNvbW1lbnQgb24g
-dGhpcyBxdWVzdGlvbj8NCg0KVGhlbiBJIGNhbiBkZWNpZGUgd2hldGhlciBzZW50IGEgbmV3IHNl
-cmllcyBiYXNlZCBvbiBpdC4NCg0KUmVnYXJkcw0KRG9uZyBBaXNoZW5nDQo=
+Most applications are too noisy to allow the default noise and
+watchdog settings, and thus need to be configurable via DT
+properties.
+
+Also default settings to POR defaults on a reset, and register
+distuber interrupts as noise since it prevents proper usage.
+
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Signed-off-by: Matt Ranostay <matt.ranostay-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+---
+
+Changes from v1:
+* Add documentation for noise_level_tripped attribute
+* Broke out spi-max-frequency to another patchset
+
+ .../ABI/testing/sysfs-bus-iio-proximity-as3935     |  8 ++++
+ .../devicetree/bindings/iio/proximity/as3935.txt   |  5 +++
+ drivers/iio/proximity/as3935.c                     | 43 ++++++++++++++++++++--
+ 3 files changed, 53 insertions(+), 3 deletions(-)
+
+diff --git a/Documentation/ABI/testing/sysfs-bus-iio-proximity-as3935 b/Documentation/ABI/testing/sysfs-bus-iio-proximity-as3935
+index 33e96f740639..147d4e8a1403 100644
+--- a/Documentation/ABI/testing/sysfs-bus-iio-proximity-as3935
++++ b/Documentation/ABI/testing/sysfs-bus-iio-proximity-as3935
+@@ -14,3 +14,11 @@ Description:
+ 		Show or set the gain boost of the amp, from 0-31 range.
+ 		18 = indoors (default)
+ 		14 = outdoors
++
++What		/sys/bus/iio/devices/iio:deviceX/noise_level_tripped
++Date:		May 2017
++KernelVersion:	4.13
++Contact:	Matt Ranostay <matt.ranostay-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
++Description:
++		When 1 the noise level is over the trip level and not reporting
++		valid data
+diff --git a/Documentation/devicetree/bindings/iio/proximity/as3935.txt b/Documentation/devicetree/bindings/iio/proximity/as3935.txt
+index ae23dd8da736..0b8a7ec1d3dc 100644
+--- a/Documentation/devicetree/bindings/iio/proximity/as3935.txt
++++ b/Documentation/devicetree/bindings/iio/proximity/as3935.txt
+@@ -15,6 +15,10 @@ Optional properties:
+ 	- ams,tuning-capacitor-pf: Calibration tuning capacitor stepping
+ 	  value 0 - 120pF. This will require using the calibration data from
+ 	  the manufacturer.
++	- ams,nflwdth: Set the noise and watchdog threshold register on
++	  startup. This will need to set according to the noise from the
++	  MCU board, and possibly the local environment. Refer to the
++	  datasheet for the threshold settings.
+ 
+ Example:
+ 
+@@ -25,4 +29,5 @@ as3935@0 {
+ 	interrupt-parent = <&gpio1>;
+ 	interrupts = <16 1>;
+ 	ams,tuning-capacitor-pf = <80>;
++	ams,nflwdth = <0x44>;
+ };
+diff --git a/drivers/iio/proximity/as3935.c b/drivers/iio/proximity/as3935.c
+index aa4df0dcc8c9..ec2f40e0791c 100644
+--- a/drivers/iio/proximity/as3935.c
++++ b/drivers/iio/proximity/as3935.c
+@@ -39,8 +39,12 @@
+ #define AS3935_AFE_GAIN_MAX	0x1F
+ #define AS3935_AFE_PWR_BIT	BIT(0)
+ 
++#define AS3935_NFLWDTH		0x01
++#define AS3935_NFLWDTH_MASK	0x7f
++
+ #define AS3935_INT		0x03
+ #define AS3935_INT_MASK		0x0f
++#define AS3935_DISTURB_INT	BIT(2)
+ #define AS3935_EVENT_INT	BIT(3)
+ #define AS3935_NOISE_INT	BIT(0)
+ 
+@@ -48,6 +52,7 @@
+ #define AS3935_DATA_MASK	0x3F
+ 
+ #define AS3935_TUNE_CAP		0x08
++#define AS3935_DEFAULTS		0x3C
+ #define AS3935_CALIBRATE	0x3D
+ 
+ #define AS3935_READ_DATA	BIT(14)
+@@ -62,7 +67,9 @@ struct as3935_state {
+ 	struct mutex lock;
+ 	struct delayed_work work;
+ 
++	unsigned long noise_tripped;
+ 	u32 tune_cap;
++	u32 nflwdth_reg;
+ 	u8 buffer[16]; /* 8-bit data + 56-bit padding + 64-bit timestamp */
+ 	u8 buf[2] ____cacheline_aligned;
+ };
+@@ -145,12 +152,29 @@ static ssize_t as3935_sensor_sensitivity_store(struct device *dev,
+ 	return len;
+ }
+ 
++static ssize_t as3935_noise_level_tripped_show(struct device *dev,
++					struct device_attribute *attr,
++					char *buf)
++{
++	struct as3935_state *st = iio_priv(dev_to_iio_dev(dev));
++	int ret;
++
++	mutex_lock(&st->lock);
++	ret = sprintf(buf, "%d\n", !time_after(jiffies, st->noise_tripped + HZ));
++	mutex_unlock(&st->lock);
++
++	return ret;
++}
++
+ static IIO_DEVICE_ATTR(sensor_sensitivity, S_IRUGO | S_IWUSR,
+ 	as3935_sensor_sensitivity_show, as3935_sensor_sensitivity_store, 0);
+ 
++static IIO_DEVICE_ATTR(noise_level_tripped, S_IRUGO,
++	as3935_noise_level_tripped_show, NULL, 0);
+ 
+ static struct attribute *as3935_attributes[] = {
+ 	&iio_dev_attr_sensor_sensitivity.dev_attr.attr,
++	&iio_dev_attr_noise_level_tripped.dev_attr.attr,
+ 	NULL,
+ };
+ 
+@@ -246,7 +270,11 @@ static void as3935_event_work(struct work_struct *work)
+ 	case AS3935_EVENT_INT:
+ 		iio_trigger_poll_chained(st->trig);
+ 		break;
++	case AS3935_DISTURB_INT:
+ 	case AS3935_NOISE_INT:
++		mutex_lock(&st->lock);
++		st->noise_tripped = jiffies;
++		mutex_unlock(&st->lock);
+ 		dev_warn(&st->spi->dev, "noise level is too high\n");
+ 		break;
+ 	}
+@@ -269,15 +297,14 @@ static irqreturn_t as3935_interrupt_handler(int irq, void *private)
+ 
+ static void calibrate_as3935(struct as3935_state *st)
+ {
+-	/* mask disturber interrupt bit */
+-	as3935_write(st, AS3935_INT, BIT(5));
+-
++	as3935_write(st, AS3935_DEFAULTS, 0x96);
+ 	as3935_write(st, AS3935_CALIBRATE, 0x96);
+ 	as3935_write(st, AS3935_TUNE_CAP,
+ 		BIT(5) | (st->tune_cap / TUNE_CAP_DIV));
+ 
+ 	mdelay(2);
+ 	as3935_write(st, AS3935_TUNE_CAP, (st->tune_cap / TUNE_CAP_DIV));
++	as3935_write(st, AS3935_NFLWDTH, st->nflwdth_reg);
+ }
+ 
+ #ifdef CONFIG_PM_SLEEP
+@@ -370,6 +397,15 @@ static int as3935_probe(struct spi_device *spi)
+ 		return -EINVAL;
+ 	}
+ 
++	ret = of_property_read_u32(np,
++			"ams,nflwdth", &st->nflwdth_reg);
++	if (!ret && st->nflwdth_reg > AS3935_NFLWDTH_MASK) {
++		dev_err(&spi->dev,
++			"invalid nflwdth setting of %d\n",
++			st->nflwdth_reg);
++		return -EINVAL;
++	}
++
+ 	indio_dev->dev.parent = &spi->dev;
+ 	indio_dev->name = spi_get_device_id(spi)->name;
+ 	indio_dev->channels = as3935_channels;
+@@ -384,6 +420,7 @@ static int as3935_probe(struct spi_device *spi)
+ 		return -ENOMEM;
+ 
+ 	st->trig = trig;
++	st->noise_tripped = jiffies - HZ;
+ 	trig->dev.parent = indio_dev->dev.parent;
+ 	iio_trigger_set_drvdata(trig, indio_dev);
+ 	trig->ops = &iio_interrupt_trigger_ops;
+-- 
+2.11.0
