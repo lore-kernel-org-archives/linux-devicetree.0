@@ -1,40 +1,51 @@
-From: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v4 03/11] clk: bcm: Add clocks for Stingray SOC
-Date: Thu, 25 May 2017 14:33:08 -0700
-Message-ID: <149574798866.52617.17864487502272102012@resonance>
-References: <1495454307-23464-1-git-send-email-anup.patel@broadcom.com>
- <1495454307-23464-4-git-send-email-anup.patel@broadcom.com>
+From: Max Filippov <jcmvbkbc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: CPU_BIG_ENDIAN in generic code (was: Re: [PATCH v3 3/7]
+ arch/sparc: Define config parameter CPU_BIG_ENDIAN)
+Date: Thu, 25 May 2017 15:27:48 -0700
+Message-ID: <CAMo8BfL8G0Fzn2SZ1356yaoxGgm8tpTDmFJ8cCxEEEgyObMwCQ@mail.gmail.com>
+References: <CAMuHMdVjh+1TR19mUUQYHSazHnBHa4uxn7KyHUO+jAh7WDxy5Q@mail.gmail.com>
+ <CAK8P3a1XZGQk3b3q+JFJ+mLgw_upUdAtTM1VBjHZq5f2m-YdUg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1495454307-23464-4-git-send-email-anup.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+In-Reply-To: <CAK8P3a1XZGQk3b3q+JFJ+mLgw_upUdAtTM1VBjHZq5f2m-YdUg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Anup Patel <anup.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Oza Pawandeep <oza.oza-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Srinath Mannam <srinath.mannam-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Pramod Kumar <pramod.kumar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Sandeep Tripathy <sandeep.tripathy-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Babu Moger <babu.moger-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Peter Zijlstra <peterz-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Ingo Molnar <mingo-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, sparclinux <sparclinux-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-Arch <linux-arch-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Anup,
+On Wed, May 24, 2017 at 3:18 AM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+> On Wed, May 24, 2017 at 11:59 AM, Geert Uytterhoeven
+> <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org> wrote:
+>> I guess the time is ripe for adding (both) symbols to all architectures?
+>
+> Good idea. I think we can do most of this by adding a few lines to
+> arch/Kconfig:
+>
+> config CPU_BIG_ENDIAN
+>         bool
+>
+> config CPU_LITTLE_ENDIAN
+>        def_bool !CPU_BIG_ENDIAN
+>
+> This way, we only need to add 'select CPU_BIG_ENDIAN' to the
+> architectures that are always big-endian, and we don't need to
+> change anything for the ones that have a single 'CPU_BIG_ENDIAN'
+> option.
+>
+> The three architectures that have a 'choice' statement (mips, ppc and
+> sh) will have to convert, and m32r will have to replace the
+> option with the opposite one, which could break 'make oldconfig',
+> but nobody really cares about m32r any more.
 
-Quoting Anup Patel (2017-05-22 04:58:19)
-> +#include <linux/kernel.h>
-> +#include <linux/err.h>
-> +#include <linux/clk-provider.h>
-> +#include <linux/io.h>
-> +#include <linux/of.h>
-> +#include <linux/of_address.h>
-> +#include <linux/of_device.h>
-> +#include <linux/platform_device.h>
+Xtensa may have either endianness and for xtensa we define
+CONFIG_CPU_BIG_ENDIAN or CONFIG_CPU_LITTLE_ENDIAN
+in the arch/xtensa/Makefile based on the value of the compiler builtin
+macro.
 
-Are all of those headers really needed?
-
-> +CLK_OF_DECLARE(sr_genpll3_clk, "brcm,sr-genpll3",
-> +                       sr_genpll3_clk_init);
-
-Why use CLK_OF_DECLARE here? You've got a proper platform driver here.
-
-Regards,
-Mike
+-- 
+Thanks.
+-- Max
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
