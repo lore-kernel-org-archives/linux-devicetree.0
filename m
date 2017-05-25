@@ -1,124 +1,166 @@
-From: Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v7 31/34] media: imx: csi: add frame size/interval enumeration
-Date: Wed, 24 May 2017 17:29:46 -0700
-Message-ID: <1495672189-29164-32-git-send-email-steve_longerbeam@mentor.com>
+From: Steve Longerbeam <slongerbeam@gmail.com>
+Subject: [PATCH v7 18/34] platform: video-mux: include temporary mmio-mux
+ support
+Date: Wed, 24 May 2017 17:29:33 -0700
+Message-ID: <1495672189-29164-19-git-send-email-steve_longerbeam@mentor.com>
 References: <1495672189-29164-1-git-send-email-steve_longerbeam@mentor.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1495672189-29164-1-git-send-email-steve_longerbeam-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, nick-gcszYUEDH4VrovVCs/uTlw@public.gmane.org, markus.heiser-O6JHGLzbNUwb1SvskN2V4Q@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, bparrot-l0cyMroinI0@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, sudipm.mukherjee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, jean-christophe.trotin-qxv4g6HH51o@public.gmane.org, horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, robert.jarzmik-GANU6spQydw@public.gmane.org, songjun.wu-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, shuah-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Steve Longerbeam <steve_longerbeam-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <1495672189-29164-1-git-send-email-steve_longerbeam@mentor.com>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com, linux@armlinux.org.uk, mchehab@kernel.org, hverkuil@xs4all.nl, nick@shmanahar.org, markus.heiser@darmarIT.de, p.zabel@pengutronix.de, laurent.pinchart+renesas@ideasonboard.com, bparrot@ti.com, geert@linux-m68k.org, arnd@arndb.de, sudipm.mukherjee@gmail.com, minghsiu.tsai@mediatek.com, tiffany.lin@mediatek.com, jean-christophe.trotin@st.com, horms+renesas@verge.net.au, niklas.soderlund+renesas@ragnatech.se, robert.jarzmik@free.fr, songjun.wu@microchip.com, andrew-ct.chen@mediatek.com, gregkh@linuxfoundation.org, shuah@kernel.org, sakari.ailus@linux.intel.com, pavel@ucw.cz
+Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+From: Philipp Zabel <p.zabel@pengutronix.de>
 
-Add frame size and frame interval enumeration to CSI.
+As long as the mux framework is not merged, add temporary mmio-mux
+support to the video-mux driver itself. This patch is to be reverted
+once the "mux: minimal mux subsystem" and "mux: mmio-based syscon mux
+controller" patches are merged.
 
-CSI can downscale the image independently horizontally and vertically by a
-factor of two, which enumerates to four different frame sizes at the
-output pads. The input pad supports a range of frame sizes.
-
-CSI can also drop frames, resulting in frame rate reduction, so
-enumerate the resulting possible output frame rates.
-
-Signed-off-by: Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
-Signed-off-by: Steve Longerbeam <steve_longerbeam-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
 ---
- drivers/staging/media/imx/imx-media-csi.c | 70 +++++++++++++++++++++++++++++++
- 1 file changed, 70 insertions(+)
+ drivers/media/platform/Kconfig     |  1 -
+ drivers/media/platform/video-mux.c | 62 ++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 62 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/staging/media/imx/imx-media-csi.c b/drivers/staging/media/imx/imx-media-csi.c
-index 9766dee..b8b3630 100644
---- a/drivers/staging/media/imx/imx-media-csi.c
-+++ b/drivers/staging/media/imx/imx-media-csi.c
-@@ -1163,6 +1163,74 @@ static int csi_enum_mbus_code(struct v4l2_subdev *sd,
- 	return ret;
- }
+diff --git a/drivers/media/platform/Kconfig b/drivers/media/platform/Kconfig
+index b98f755..fea1dc0 100644
+--- a/drivers/media/platform/Kconfig
++++ b/drivers/media/platform/Kconfig
+@@ -77,7 +77,6 @@ config VIDEO_M32R_AR_M64278
+ config VIDEO_MUX
+ 	tristate "Video Multiplexer"
+ 	depends on OF && VIDEO_V4L2_SUBDEV_API && MEDIA_CONTROLLER
+-	depends on MULTIPLEXER
+ 	help
+ 	  This driver provides support for N:1 video bus multiplexers.
  
-+static int csi_enum_frame_size(struct v4l2_subdev *sd,
-+			       struct v4l2_subdev_pad_config *cfg,
-+			       struct v4l2_subdev_frame_size_enum *fse)
+diff --git a/drivers/media/platform/video-mux.c b/drivers/media/platform/video-mux.c
+index 5ce2bd3..630dd9a 100644
+--- a/drivers/media/platform/video-mux.c
++++ b/drivers/media/platform/video-mux.c
+@@ -17,7 +17,12 @@
+ #include <linux/err.h>
+ #include <linux/module.h>
+ #include <linux/mutex.h>
++#ifdef CONFIG_MULTIPLEXER
+ #include <linux/mux/consumer.h>
++#else
++#include <linux/regmap.h>
++#include <linux/mfd/syscon.h>
++#endif
+ #include <linux/of.h>
+ #include <linux/of_graph.h>
+ #include <linux/platform_device.h>
+@@ -29,7 +34,11 @@ struct video_mux {
+ 	struct v4l2_subdev subdev;
+ 	struct media_pad *pads;
+ 	struct v4l2_mbus_framefmt *format_mbus;
++#ifdef CONFIG_MULTIPLEXER
+ 	struct mux_control *mux;
++#else
++	struct regmap_field *field;
++#endif
+ 	struct mutex lock;
+ 	int active;
+ };
+@@ -70,7 +79,11 @@ static int video_mux_link_setup(struct media_entity *entity,
+ 		}
+ 
+ 		dev_dbg(sd->dev, "setting %d active\n", local->index);
++#ifdef CONFIG_MULTIPLEXER
+ 		ret = mux_control_try_select(vmux->mux, local->index);
++#else
++		ret = regmap_field_write(vmux->field, local->index);
++#endif
+ 		if (ret < 0)
+ 			goto out;
+ 		vmux->active = local->index;
+@@ -79,7 +92,9 @@ static int video_mux_link_setup(struct media_entity *entity,
+ 			goto out;
+ 
+ 		dev_dbg(sd->dev, "going inactive\n");
++#ifdef CONFIG_MULTIPLEXER
+ 		mux_control_deselect(vmux->mux);
++#endif
+ 		vmux->active = -1;
+ 	}
+ 
+@@ -193,6 +208,48 @@ static const struct v4l2_subdev_ops video_mux_subdev_ops = {
+ 	.video = &video_mux_subdev_video_ops,
+ };
+ 
++#ifndef CONFIG_MULTIPLEXER
++static int video_mux_probe_mmio_mux(struct video_mux *vmux)
 +{
-+	struct csi_priv *priv = v4l2_get_subdevdata(sd);
-+	struct v4l2_rect *crop;
-+	int ret = 0;
++	struct device *dev = vmux->subdev.dev;
++	struct of_phandle_args args;
++	struct reg_field field;
++	struct regmap *regmap;
++	u32 reg, mask;
++	int ret;
 +
-+	if (fse->pad >= CSI_NUM_PADS ||
-+	    fse->index > (fse->pad == CSI_SINK_PAD ? 0 : 3))
++	ret = of_parse_phandle_with_args(dev->of_node, "mux-controls",
++					 "#mux-control-cells", 0, &args);
++	if (ret)
++		return ret;
++
++	if (!of_device_is_compatible(args.np, "mmio-mux"))
 +		return -EINVAL;
 +
-+	mutex_lock(&priv->lock);
++	regmap = syscon_node_to_regmap(args.np->parent);
++	if (IS_ERR(regmap))
++		return PTR_ERR(regmap);
 +
-+	if (fse->pad == CSI_SINK_PAD) {
-+		fse->min_width = MIN_W;
-+		fse->max_width = MAX_W;
-+		fse->min_height = MIN_H;
-+		fse->max_height = MAX_H;
-+	} else {
-+		crop = __csi_get_crop(priv, cfg, fse->which);
++	ret = of_property_read_u32_index(args.np, "mux-reg-masks",
++					 2 * args.args[0], &reg);
++	if (!ret)
++		ret = of_property_read_u32_index(args.np, "mux-reg-masks",
++						 2 * args.args[0] + 1, &mask);
++	if (ret < 0)
++		return ret;
 +
-+		fse->min_width = fse->max_width = fse->index & 1 ?
-+			crop->width / 2 : crop->width;
-+		fse->min_height = fse->max_height = fse->index & 2 ?
-+			crop->height / 2 : crop->height;
-+	}
++	field.reg = reg;
++	field.msb = fls(mask) - 1;
++	field.lsb = ffs(mask) - 1;
 +
-+	mutex_unlock(&priv->lock);
-+	return ret;
++	vmux->field = devm_regmap_field_alloc(dev, regmap, field);
++	if (IS_ERR(vmux->field))
++		return PTR_ERR(vmux->field);
++
++	return 0;
 +}
++#endif
 +
-+static int csi_enum_frame_interval(struct v4l2_subdev *sd,
-+				   struct v4l2_subdev_pad_config *cfg,
-+				   struct v4l2_subdev_frame_interval_enum *fie)
-+{
-+	struct csi_priv *priv = v4l2_get_subdevdata(sd);
-+	struct v4l2_fract *input_fi;
-+	struct v4l2_rect *crop;
-+	int ret = 0;
-+
-+	if (fie->pad >= CSI_NUM_PADS ||
-+	    fie->index >= (fie->pad != CSI_SRC_PAD_IDMAC ?
-+			   1 : ARRAY_SIZE(csi_skip)))
-+		return -EINVAL;
-+
-+	mutex_lock(&priv->lock);
-+
-+	input_fi = &priv->frame_interval[CSI_SINK_PAD];
-+	crop = __csi_get_crop(priv, cfg, fie->which);
-+
-+	if ((fie->width != crop->width && fie->width != crop->width / 2) ||
-+	    (fie->height != crop->height && fie->height != crop->height / 2)) {
-+		ret = -EINVAL;
-+		goto out;
-+	}
-+
-+	fie->interval = *input_fi;
-+
-+	if (fie->pad == CSI_SRC_PAD_IDMAC)
-+		csi_apply_skip_interval(&csi_skip[fie->index],
-+					&fie->interval);
-+
-+out:
-+	mutex_unlock(&priv->lock);
-+	return ret;
-+}
-+
- static int csi_get_fmt(struct v4l2_subdev *sd,
- 		       struct v4l2_subdev_pad_config *cfg,
- 		       struct v4l2_subdev_format *sdformat)
-@@ -1631,6 +1699,8 @@ static const struct v4l2_subdev_video_ops csi_video_ops = {
+ static int video_mux_probe(struct platform_device *pdev)
+ {
+ 	struct device_node *np = pdev->dev.of_node;
+@@ -230,9 +287,14 @@ static int video_mux_probe(struct platform_device *pdev)
+ 		return -EINVAL;
+ 	}
  
- static const struct v4l2_subdev_pad_ops csi_pad_ops = {
- 	.enum_mbus_code = csi_enum_mbus_code,
-+	.enum_frame_size = csi_enum_frame_size,
-+	.enum_frame_interval = csi_enum_frame_interval,
- 	.get_fmt = csi_get_fmt,
- 	.set_fmt = csi_set_fmt,
- 	.get_selection = csi_get_selection,
++#ifdef CONFIG_MULTIPLEXER
+ 	vmux->mux = devm_mux_control_get(dev, NULL);
+ 	if (IS_ERR(vmux->mux)) {
+ 		ret = PTR_ERR(vmux->mux);
++#else
++	ret = video_mux_probe_mmio_mux(vmux);
++	if (ret) {
++#endif
+ 		if (ret != -EPROBE_DEFER)
+ 			dev_err(dev, "Failed to get mux: %d\n", ret);
+ 		return ret;
 -- 
 2.7.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
