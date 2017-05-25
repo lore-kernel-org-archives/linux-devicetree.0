@@ -1,109 +1,79 @@
-From: Chris Brandt <chris.brandt@renesas.com>
-Subject: [PATCH] ARM: dts: r7s72100: add clock bit definitions
-Date: Thu, 25 May 2017 09:05:48 -0700
-Message-ID: <20170525160548.103182-1-chris.brandt@renesas.com>
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Simon Horman <horms+renesas@verge.net.au>, Geert Uytterhoeven <geert@linux-m68k.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Chris Brandt <chris.brandt@renesas.com>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH 1/3] usb: host: ohci-platform: Add basic runtime PM support
+Date: Thu, 25 May 2017 09:13:31 -0700
+Message-ID: <20170525161333.32639-2-tony@atomide.com>
+References: <20170525161333.32639-1-tony@atomide.com>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170525161333.32639-1-tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
+Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>, Sebastian Reichel <sebastian.reichel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add the remaining bit locations for the module stop clock registers.
+This is needed in preparation of adding support for omap3 and
+later OHCI. The runtime PM will only do something on platforms
+that implement it.
 
-Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+Cc: Sebastian Reichel <sebastian.reichel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+Cc: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Signed-off-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
 ---
- include/dt-bindings/clock/r7s72100-clock.h | 40 ++++++++++++++++++++++++++++++
- 1 file changed, 40 insertions(+)
+ drivers/usb/host/ohci-platform.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/include/dt-bindings/clock/r7s72100-clock.h b/include/dt-bindings/clock/r7s72100-clock.h
-index dcd2072151fc..ff5023ca97ed 100644
---- a/include/dt-bindings/clock/r7s72100-clock.h
-+++ b/include/dt-bindings/clock/r7s72100-clock.h
-@@ -13,7 +13,14 @@
- #define R7S72100_CLK_PLL	0
+diff --git a/drivers/usb/host/ohci-platform.c b/drivers/usb/host/ohci-platform.c
+--- a/drivers/usb/host/ohci-platform.c
++++ b/drivers/usb/host/ohci-platform.c
+@@ -24,6 +24,7 @@
+ #include <linux/err.h>
+ #include <linux/phy/phy.h>
+ #include <linux/platform_device.h>
++#include <linux/pm_runtime.h>
+ #include <linux/reset.h>
+ #include <linux/usb/ohci_pdriver.h>
+ #include <linux/usb.h>
+@@ -242,6 +243,8 @@ static int ohci_platform_probe(struct platform_device *dev)
+ 	}
+ #endif
  
- /* MSTP3 */
-+#define R7S72100_CLK_IEBUS	7
-+#define R7S72100_CLK_IRDA	6
-+#define R7S72100_CLK_LIN0	5
-+#define R7S72100_CLK_LIN1	4
- #define R7S72100_CLK_MTU2	3
-+#define R7S72100_CLK_CAN	2
-+#define R7S72100_CLK_ADCPWR	1
-+#define R7S72100_CLK_MCPWM	0
++	pm_runtime_set_active(&dev->dev);
++	pm_runtime_enable(&dev->dev);
+ 	if (pdata->power_on) {
+ 		err = pdata->power_on(dev);
+ 		if (err < 0)
+@@ -271,6 +274,7 @@ static int ohci_platform_probe(struct platform_device *dev)
+ 	if (pdata->power_off)
+ 		pdata->power_off(dev);
+ err_reset:
++	pm_runtime_disable(&dev->dev);
+ 	while (--rst >= 0)
+ 		reset_control_assert(priv->resets[rst]);
+ err_put_clks:
+@@ -292,6 +296,7 @@ static int ohci_platform_remove(struct platform_device *dev)
+ 	struct ohci_platform_priv *priv = hcd_to_ohci_priv(hcd);
+ 	int clk, rst;
  
- /* MSTP4 */
- #define R7S72100_CLK_SCIF0	7
-@@ -26,25 +33,51 @@
- #define R7S72100_CLK_SCIF7	0
++	pm_runtime_get_sync(&dev->dev);
+ 	usb_remove_hcd(hcd);
  
- /* MSTP5 */
-+#define R7S72100_CLK_SCI0	7
-+#define R7S72100_CLK_SCI1	6
-+#define R7S72100_CLK_SNDGEN0	5
-+#define R7S72100_CLK_SNDGEN1	4
-+#define R7S72100_CLK_SNDGEN2	3
-+#define R7S72100_CLK_SNDGEN3	2
- #define R7S72100_CLK_OSTM0	1
- #define R7S72100_CLK_OSTM1	0
+ 	if (pdata->power_off)
+@@ -305,6 +310,9 @@ static int ohci_platform_remove(struct platform_device *dev)
  
- /* MSTP6 */
-+#define R7S72100_CLK_ADC	7
-+#define R7S72100_CLK_CEU	6
-+#define R7S72100_CLK_DOC0	5
-+#define R7S72100_CLK_DOC1	4
-+#define R7S72100_CLK_DRC0	3
-+#define R7S72100_CLK_DRC1	2
-+#define R7S72100_CLK_JCU	1
- #define R7S72100_CLK_RTC	0
+ 	usb_put_hcd(hcd);
  
- /* MSTP7 */
-+#define R7S72100_CLK_VDEC0	7
-+#define R7S72100_CLK_VDEC1	6
- #define R7S72100_CLK_ETHER	4
-+#define R7S72100_CLK_NAND	3
- #define R7S72100_CLK_USB0	1
- #define R7S72100_CLK_USB1	0
- 
- /* MSTP8 */
-+#define R7S72100_CLK_IMR0	7
-+#define R7S72100_CLK_IMR1	6
-+#define R7S72100_CLK_IMRDISP	5
- #define R7S72100_CLK_MMCIF	4
-+#define R7S72100_CLK_MLB	3
-+#define R7S72100_CLK_ETHABV	2
-+#define R7S72100_CLK_SCUX	1
- 
- /* MSTP9 */
- #define R7S72100_CLK_I2C0	7
- #define R7S72100_CLK_I2C1	6
- #define R7S72100_CLK_I2C2	5
- #define R7S72100_CLK_I2C3	4
-+#define R7S72100_CLK_SPIMBC0	3
-+#define R7S72100_CLK_SPIMBC1	2
-+#define R7S72100_CLK_VDC50	1	/* and LVDS */
-+#define R7S72100_CLK_VDC51	0
- 
- /* MSTP10 */
- #define R7S72100_CLK_SPI0	7
-@@ -52,6 +85,9 @@
- #define R7S72100_CLK_SPI2	5
- #define R7S72100_CLK_SPI3	4
- #define R7S72100_CLK_SPI4	3
-+#define R7S72100_CLK_CDROM	2
-+#define R7S72100_CLK_SPDIF	1
-+#define R7S72100_CLK_RGPVG2	0
- 
- /* MSTP12 */
- #define R7S72100_CLK_SDHI00	3
-@@ -59,4 +95,8 @@
- #define R7S72100_CLK_SDHI10	1
- #define R7S72100_CLK_SDHI11	0
- 
-+/* MSTP13 */
-+#define R7S72100_CLK_PIX1	2
-+#define R7S72100_CLK_PIX0	1
++	pm_runtime_put_sync(&dev->dev);
++	pm_runtime_disable(&dev->dev);
 +
- #endif /* __DT_BINDINGS_CLOCK_R7S72100_H__ */
+ 	if (pdata == &ohci_platform_defaults)
+ 		dev->dev.platform_data = NULL;
+ 
 -- 
 2.13.0
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
