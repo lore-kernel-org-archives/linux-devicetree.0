@@ -1,216 +1,56 @@
-From: Sean Wang <sean.wang@mediatek.com>
-Subject: Re: [PATCH 1/6] clk: mediatek: add missing cpu mux causing Mediatek
- cpufreq can't work
-Date: Thu, 25 May 2017 15:30:04 +0800
-Message-ID: <1495697404.22797.2.camel@mtkswgap22>
-References: <1493997974-17699-1-git-send-email-sean.wang@mediatek.com>
-         <1493997974-17699-2-git-send-email-sean.wang@mediatek.com>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: [PATCH 0/6] ARM: sunxi: Enable AXP PMIC power supplies
+Date: Thu, 25 May 2017 15:31:32 +0800
+Message-ID: <20170525073138.20907-1-wens@csie.org>
+Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1493997974-17699-2-git-send-email-sean.wang@mediatek.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: mturquette@baylibre.com, sboyd@codeaurora.org
-Cc: viresh.kumar@linaro.org, robh+dt@kernel.org, matthias.bgg@gmail.com, mark.rutland@arm.com, jamesjj.liao@mediatek.com, p.zabel@pengutronix.de, shunli.wang@mediatek.com, erin.lo@mediatek.com, jdelvare@suse.de, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-pm@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Pi-Cheng Chen <pi-cheng.chen@linaro.org>
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBXMQTLEQKGQEHRUVQPI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Michael and Stephen
+Hi Maxime,
+
+This series enables the power supplies for the AXP PMICs on boards
+that I currently have and am actively testing.
+
+The first patch re-orders the node references for the Cubieboard 2
+dts, to maintain alphabetical order.
+
+Patches 2 through 5 enable the ACIN power supply on various boards.
+
+Patch 6 ties the USB/VBUS power supply of the PMIC to the USB PHY.
+The PHY should have all available methods of VBUS detection configured.
+The Cubietruck already has the power supplies enabled, but the USB
+power supply was not configured to be used for VBUS detection.
+
+Regards
+ChenYu
 
 
-Just a gentle ping on this one :)
+Chen-Yu Tsai (6):
+  ARM: sun7i: a20: cubieboard2: Move usb_otg node for alphabetical
+    ordering
+  ARM: sun7i: a20: cubieboard2: Enable AXP209's ACIN power supply
+  ARM: sun7i: a20: bananapi-m1-plus: Enable AXP209's ACIN power supply
+  ARM: sun4i: a10: cubieboard: Enable AXP209's ACIN power supply
+  ARM: sun6i: a31: hummingbird: Enable AXP221's ACIN power supply
+  ARM: sun7i: a20: cubietruck: Tie AXP209's USB power supply to USB PHY
 
+ arch/arm/boot/dts/sun4i-a10-cubieboard.dts       |  4 ++++
+ arch/arm/boot/dts/sun6i-a31-hummingbird.dts      |  4 ++++
+ arch/arm/boot/dts/sun7i-a20-bananapi-m1-plus.dts |  4 ++++
+ arch/arm/boot/dts/sun7i-a20-cubieboard2.dts      | 12 ++++++++----
+ arch/arm/boot/dts/sun7i-a20-cubietruck.dts       |  1 +
+ 5 files changed, 21 insertions(+), 4 deletions(-)
 
-Cheers, Sean
-
-
-On Fri, 2017-05-05 at 23:26 +0800, sean.wang@mediatek.com wrote:
-> From: Sean Wang <sean.wang@mediatek.com>
-> 
-> This patch adds CPU multiplexer clocks which are essential for Mediatek
-> cpufreq driver. It would use the CPU clock multiplexer to switch to the
-> intermediate clock source temporarily and then wait for the primary clock
-> changing getting stable.
-> 
-> Signed-off-by: Pi-Cheng Chen <pi-cheng.chen@linaro.org>
-> Signed-off-by: Sean Wang <sean.wang@mediatek.com>
-> ---
->  drivers/clk/mediatek/Makefile     |   2 +-
->  drivers/clk/mediatek/clk-cpumux.c | 120 ++++++++++++++++++++++++++++++++++++++
->  drivers/clk/mediatek/clk-cpumux.h |  30 ++++++++++
->  3 files changed, 151 insertions(+), 1 deletion(-)
->  create mode 100644 drivers/clk/mediatek/clk-cpumux.c
->  create mode 100644 drivers/clk/mediatek/clk-cpumux.h
-> 
-> diff --git a/drivers/clk/mediatek/Makefile b/drivers/clk/mediatek/Makefile
-> index 5c3afb8..2a755b5 100644
-> --- a/drivers/clk/mediatek/Makefile
-> +++ b/drivers/clk/mediatek/Makefile
-> @@ -1,4 +1,4 @@
-> -obj-$(CONFIG_COMMON_CLK_MEDIATEK) += clk-mtk.o clk-pll.o clk-gate.o clk-apmixed.o
-> +obj-$(CONFIG_COMMON_CLK_MEDIATEK) += clk-mtk.o clk-pll.o clk-gate.o clk-apmixed.o clk-cpumux.o
->  obj-$(CONFIG_RESET_CONTROLLER) += reset.o
->  obj-$(CONFIG_COMMON_CLK_MT6797) += clk-mt6797.o
->  obj-$(CONFIG_COMMON_CLK_MT6797_IMGSYS) += clk-mt6797-img.o
-> diff --git a/drivers/clk/mediatek/clk-cpumux.c b/drivers/clk/mediatek/clk-cpumux.c
-> new file mode 100644
-> index 0000000..edd8e69
-> --- /dev/null
-> +++ b/drivers/clk/mediatek/clk-cpumux.c
-> @@ -0,0 +1,120 @@
-> +/*
-> + * Copyright (c) 2015 Linaro Ltd.
-> + * Author: Pi-Cheng Chen <pi-cheng.chen@linaro.org>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + */
-> +
-> +#include <linux/clk-provider.h>
-> +#include <linux/mfd/syscon.h>
-> +#include <linux/slab.h>
-> +
-> +#include "clk-mtk.h"
-> +#include "clk-cpumux.h"
-> +
-> +static inline struct mtk_clk_cpumux *to_mtk_clk_cpumux(struct clk_hw *_hw)
-> +{
-> +	return container_of(_hw, struct mtk_clk_cpumux, hw);
-> +}
-> +
-> +static u8 clk_cpumux_get_parent(struct clk_hw *hw)
-> +{
-> +	struct mtk_clk_cpumux *mux = to_mtk_clk_cpumux(hw);
-> +	int num_parents = clk_hw_get_num_parents(hw);
-> +	unsigned int val;
-> +
-> +	regmap_read(mux->regmap, mux->reg, &val);
-> +
-> +	val >>= mux->shift;
-> +	val &= mux->mask;
-> +
-> +	if (val >= num_parents)
-> +		return -EINVAL;
-> +
-> +	return val;
-> +}
-> +
-> +static int clk_cpumux_set_parent(struct clk_hw *hw, u8 index)
-> +{
-> +	struct mtk_clk_cpumux *mux = to_mtk_clk_cpumux(hw);
-> +	u32 mask, val;
-> +
-> +	val = index << mux->shift;
-> +	mask = mux->mask << mux->shift;
-> +
-> +	return regmap_update_bits(mux->regmap, mux->reg, mask, val);
-> +}
-> +
-> +static const struct clk_ops clk_cpumux_ops = {
-> +	.get_parent = clk_cpumux_get_parent,
-> +	.set_parent = clk_cpumux_set_parent,
-> +};
-> +
-> +static struct clk __init *
-> +mtk_clk_register_cpumux(const struct mtk_composite *mux,
-> +			struct regmap *regmap)
-> +{
-> +	struct mtk_clk_cpumux *cpumux;
-> +	struct clk *clk;
-> +	struct clk_init_data init;
-> +
-> +	cpumux = kzalloc(sizeof(*cpumux), GFP_KERNEL);
-> +	if (!cpumux)
-> +		return ERR_PTR(-ENOMEM);
-> +
-> +	init.name = mux->name;
-> +	init.ops = &clk_cpumux_ops;
-> +	init.parent_names = mux->parent_names;
-> +	init.num_parents = mux->num_parents;
-> +	init.flags = mux->flags;
-> +
-> +	cpumux->reg = mux->mux_reg;
-> +	cpumux->shift = mux->mux_shift;
-> +	cpumux->mask = BIT(mux->mux_width) - 1;
-> +	cpumux->regmap = regmap;
-> +	cpumux->hw.init = &init;
-> +
-> +	clk = clk_register(NULL, &cpumux->hw);
-> +	if (IS_ERR(clk))
-> +		kfree(cpumux);
-> +
-> +	return clk;
-> +}
-> +
-> +int __init mtk_clk_register_cpumuxes(struct device_node *node,
-> +				     const struct mtk_composite *clks, int num,
-> +				     struct clk_onecell_data *clk_data)
-> +{
-> +	int i;
-> +	struct clk *clk;
-> +	struct regmap *regmap;
-> +
-> +	regmap = syscon_node_to_regmap(node);
-> +	if (IS_ERR(regmap)) {
-> +		pr_err("Cannot find regmap for %s: %ld\n", node->full_name,
-> +		       PTR_ERR(regmap));
-> +		return PTR_ERR(regmap);
-> +	}
-> +
-> +	for (i = 0; i < num; i++) {
-> +		const struct mtk_composite *mux = &clks[i];
-> +
-> +		clk = mtk_clk_register_cpumux(mux, regmap);
-> +		if (IS_ERR(clk)) {
-> +			pr_err("Failed to register clk %s: %ld\n",
-> +			       mux->name, PTR_ERR(clk));
-> +			continue;
-> +		}
-> +
-> +		clk_data->clks[mux->id] = clk;
-> +	}
-> +
-> +	return 0;
-> +}
-> diff --git a/drivers/clk/mediatek/clk-cpumux.h b/drivers/clk/mediatek/clk-cpumux.h
-> new file mode 100644
-> index 0000000..dddaad5
-> --- /dev/null
-> +++ b/drivers/clk/mediatek/clk-cpumux.h
-> @@ -0,0 +1,30 @@
-> +/*
-> + * Copyright (c) 2015 Linaro Ltd.
-> + * Author: Pi-Cheng Chen <pi-cheng.chen@linaro.org>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + */
-> +
-> +#ifndef __DRV_CLK_CPUMUX_H
-> +#define __DRV_CLK_CPUMUX_H
-> +
-> +struct mtk_clk_cpumux {
-> +	struct clk_hw	hw;
-> +	struct regmap	*regmap;
-> +	u32		reg;
-> +	u32		mask;
-> +	u8		shift;
-> +};
-> +
-> +int mtk_clk_register_cpumuxes(struct device_node *node,
-> +			      const struct mtk_composite *clks, int num,
-> +			      struct clk_onecell_data *clk_data);
-> +
-> +#endif /* __DRV_CLK_CPUMUX_H */
+-- 
+2.11.0
