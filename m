@@ -1,81 +1,62 @@
-From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] ARM: dts: orange-pi-zero: specify wifi interrupts
-Date: Thu, 25 May 2017 16:16:15 +0800
-Message-ID: <DAC099FE-6655-4EE2-A68A-AD2C5BBDDF76@aosc.io>
-References: <20170524212433.14386-1-geomatsi@gmail.com> <20170524212433.14386-2-geomatsi@gmail.com> <CAGb2v647GTQW9-ZYrkWS7RoeYTu_7oTm8v4PDs0YD1pZ8oUohQ@mail.gmail.com> <20170525071055.xdd4sbpnzlkg7wa2@speedy.hunter> <CAGb2v671hWDaTqCAJiN0JAuiPynW+=XtN+Xr5WiyTPDSkk9-FQ@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: 8BIT
+From: Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH v2 00/12] arm64: dts: hi3660: add device nodes
+Date: Thu, 25 May 2017 16:18:42 +0800
+Message-ID: <20170525081854.4701-1-guodong.xu@linaro.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAGb2v671hWDaTqCAJiN0JAuiPynW+=XtN+Xr5WiyTPDSkk9-FQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Sergey Matyukevich <geomatsi-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, wangkefeng.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, xuejiancheng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org
+Cc: zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+This patchset adds various devices nodes for hi3660 and hikey960.
 
+HiKey960 is one of 96boards. For details information about it, please
+refer to [1].
 
-于 2017年5月25日 GMT+08:00 下午3:21:44, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org> 写到:
->On Thu, May 25, 2017 at 3:10 PM, Sergey Matyukevich
-><geomatsi-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->>> > diff --git a/arch/arm/boot/dts/sun8i-h2-plus-orangepi-zero.dts
->b/arch/arm/boot/dts/sun8i-h2-plus-orangepi-zero.dts
->>> > index 9e8b082c134f..e97dfd1775d1 100644
->>> > --- a/arch/arm/boot/dts/sun8i-h2-plus-orangepi-zero.dts
->>> > +++ b/arch/arm/boot/dts/sun8i-h2-plus-orangepi-zero.dts
->>> > @@ -128,6 +128,9 @@
->>> >          */
->>> >         xr819: sdio_wifi@1 {
->>> >                 reg = <1>;
->>> > +               compatible = "xradio,xr819";
->>>
->>> You should submit device tree bindings first. See:
->>>
->>>
->https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tree/Documentation/devicetree/bindings/net/wireless
->>>
->>> for examples.
->>
->> Does it make sense for the out-of-tree driver ?
->
->There is already a binding for ESP8089, which is supported out of tree.
->There are also bindings for Mali GPUs which are, again, supported out
->of tree.
->
->AFAIK there was some discussion about this during the submission of the
->Mali bindings. A set of stable bindings allows the vendor to create
->stable
->device trees. Given that the binding for this WiFi chip is relatively
->simple,
->and it might be compatible or similar to an existing chip already
->supported
->in kernel (but without a binding), it should be straight forward.
->
->>
->>> > +               interrupt-parent = <&pio>;
->>> > +               interrupts = <6 10 IRQ_TYPE_EDGE_RISING>;
->>>
->>> Are these optional or required properties? AFAIK SDIO supports
->in-band
->>> interrupts with a bit of overhead, so they should be optional.
->>
->> Those properties are optional. Driver works anyway, though it
->complains about
->> missing interrupts. IIUC xradio driver falls back to polling mode
->only if
->> xr819 interrupt configuraton is not specified.
->
->So it doesn't support in-band SDIO interrupts right now. Is that a
->hardware
->or driver limitation?
+[1] https://github.com/96boards/documentation/tree/master/ConsumerEdition/HiKey960
 
-The original driver code modified by me to mainline uses in-band interrupts.
+in v2, incorporated review comments from Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+* uart4: max-speed should be in slave device bluetooth node
+* LEDs:	- bt_active triggered by 'hci0-power'
+	- move out of SoC level
+* pinctrl: update dts to use #pinctrl-cells
+* uart: add pinctrl information into uart nodes; add label strings.
+* chosen: update stdout-path. serial6 is used.
+* i2c: add label strings. change reg address to lower case.
+* remove unnecessary status="ok"
+* gpio-keys: move out of SoC level.
 
-But dgp modified it to use out-of-band interrupts.
+Chen Feng (2):
+  arm64: dts: hi3660: Add uarts nodes
+  arm64: dts: hi3660: Add pl031 rtc node
 
->
->ChenYu
+Chen Jun (1):
+  arm64: dts: hi3660: add power key dts node
+
+Guodong Xu (4):
+  dt-bindings: arm: hisilicon: add bindings for HiKey960 board
+  arm64: dts: hisilicon: update compatible string for hikey960
+  arm64: dts: hikey960: add WL1837 Bluetooth device node
+  arm64: dts: hikey960: add LED nodes
+
+Wang Xiaoyin (3):
+  arm64: dts: hikey960: pinctrl: add more pinmux and pinconfig
+  arm64: dts: hi3660: add gpio dtsi file for Hisilicon Hi3660 SOC
+  arm64: dts: hi3660: add spi device nodes
+
+Zhangfei Gao (2):
+  arm64: dts: hi3660: add resources for clock and reset
+  arm64: dts: Add I2C nodes for Hi3660
+
+ .../bindings/arm/hisilicon/hisilicon.txt           |   4 +
+ arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts  | 130 +++-
+ arch/arm64/boot/dts/hisilicon/hi3660.dtsi          | 601 +++++++++++++++-
+ .../arm64/boot/dts/hisilicon/hikey960-pinctrl.dtsi | 778 +++++++++++++++++++--
+ 4 files changed, 1439 insertions(+), 74 deletions(-)
+
+-- 
+2.10.2
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
