@@ -1,65 +1,22 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [RFC 0/3] misc: new serdev based drivers for w2sg00x4 GPS module
- and w2cbw003 wifi/bluetooth
-Date: Thu, 25 May 2017 19:05:40 +0200
-Message-ID: <20170525170540.GF3085@amd>
-References: <cover.1495363443.git.hns@goldelico.com>
- <CAL_Jsq+fmi2QwE7J8xv47ece1b+jqnOo99NghfjtocnrRvBkPg@mail.gmail.com>
- <78B1501A-B9AD-4C6E-A481-26F647AA2BCE@goldelico.com>
- <CAL_JsqJamBBggr9AOQtQWtZOG+FevK1XEU_D=nYL6=hyvjviVw@mail.gmail.com>
- <0D94BEA0-F98D-48F6-9DDC-99F932AE7834@goldelico.com>
- <CAL_JsqK5NxL+rHU2enW0Lo+e+HThp-iK3hpW-UxeFREbivRZOw@mail.gmail.com>
- <889E8F7F-FC0F-490E-B924-D04D9F4D3402@goldelico.com>
+From: David Miller <davem@davemloft.net>
+Subject: Re: [PATCH v7 net-next 17/17] net: qualcomm: add QCA7000 UART
+ driver
+Date: Thu, 25 May 2017 13:13:49 -0400 (EDT)
+Message-ID: <20170525.131349.1007553087594728300.davem@davemloft.net>
+References: <50e5a442-777f-1516-4e94-16db7fa28f8b@i2se.com>
+        <1495618181-1204-1-git-send-email-stefan.wahren@i2se.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="sDKAb4OeUBrWWL6P"
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <889E8F7F-FC0F-490E-B924-D04D9F4D3402@goldelico.com>
+In-Reply-To: <1495618181-1204-1-git-send-email-stefan.wahren@i2se.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Russell King <linux@armlinux.org.uk>, Thierry Reding <treding@nvidia.com>, Jonathan Cameron <jic23@kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-omap <linux-omap@vger.kernel.org>, Discussions about the Letux Kernel <letux-kernel@openphoenux.org>, kernel@pyra-handheld.com, Marcel Holtmann <marcel@holtmann.org>
+To: stefan.wahren@i2se.com
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, gregkh@linuxfoundation.org, jslaby@suse.com, LinoSanfilippo@gmx.de, kubakici@wp.pl, devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
---sDKAb4OeUBrWWL6P
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+When you submit a new version of a patch within a patch series, you must
+always resubmit the entire series not just the patches which change.
 
-Hi!
-
-> > You don't need hciattach. All userspace has to do for kernel BT
-> > drivers is "hciconfig hci0 up|down".
->=20
-> Hm. Well:
->=20
-> root@letux:~# hciconfig hci0 up
-> Can't get device info: No such device
-> root@letux:~#
->=20
-> I wonder how I can tell hciconfig about the UART port if not by running h=
-ciattach /dev/ttyBT0?
-
-You should not have to tell hciconfig about ttyBT0. Kernel should
-automatically setup hci0<->ttyBT0 connection during boot, based on the
-device tree.
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---sDKAb4OeUBrWWL6P
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlknDuQACgkQMOfwapXb+vLfygCglwuirnlxs5N9xPDBEzgZCPoM
-ao0AnRVwl260eN43zizM2TXLywWfwLM/
-=ULag
------END PGP SIGNATURE-----
-
---sDKAb4OeUBrWWL6P--
+Thank you.
