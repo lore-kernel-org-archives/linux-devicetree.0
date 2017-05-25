@@ -1,7 +1,7 @@
 From: Eugen Hristev <eugen.hristev-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
-Subject: [PATCH v3 1/4] ARM: dts: at91: sama5d2_xplained: enable ADTRG pin
-Date: Thu, 25 May 2017 14:17:11 +0300
-Message-ID: <1495711034-28410-2-git-send-email-eugen.hristev@microchip.com>
+Subject: [PATCH v3 3/4] ARM: dts: at91: sama5d2: add ADC hw trigger
+Date: Thu, 25 May 2017 14:17:13 +0300
+Message-ID: <1495711034-28410-4-git-send-email-eugen.hristev@microchip.com>
 References: <1495711034-28410-1-git-send-email-eugen.hristev@microchip.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,47 +12,37 @@ To: nicolas.ferre-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, alexandre.belloni-UWL
 Cc: eugen.hristev-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Enable pinctrl for ADTRG pin (PD31) for ADC hardware trigger support.
+Add ADTRG hardware pin possible edge types as nodes
+and default edge as property to the ADC
 
 Signed-off-by: Eugen Hristev <eugen.hristev-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
 ---
- arch/arm/boot/dts/at91-sama5d2_xplained.dts | 16 +++++++++++++++-
- 1 file changed, 15 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/sama5d2.dtsi | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-diff --git a/arch/arm/boot/dts/at91-sama5d2_xplained.dts b/arch/arm/boot/dts/at91-sama5d2_xplained.dts
-index 0bef9e0..04754b1 100644
---- a/arch/arm/boot/dts/at91-sama5d2_xplained.dts
-+++ b/arch/arm/boot/dts/at91-sama5d2_xplained.dts
-@@ -303,7 +303,7 @@
- 				vddana-supply = <&vdd_3v3_lp_reg>;
- 				vref-supply = <&vdd_3v3_lp_reg>;
- 				pinctrl-names = "default";
--				pinctrl-0 = <&pinctrl_adc_default>;
-+				pinctrl-0 = <&pinctrl_adc_default &pinctrl_adtrg_default>;
- 				status = "okay";
+diff --git a/arch/arm/boot/dts/sama5d2.dtsi b/arch/arm/boot/dts/sama5d2.dtsi
+index 8067c71..a06ca8d 100644
+--- a/arch/arm/boot/dts/sama5d2.dtsi
++++ b/arch/arm/boot/dts/sama5d2.dtsi
+@@ -1267,7 +1267,18 @@
+ 				atmel,min-sample-rate-hz = <200000>;
+ 				atmel,max-sample-rate-hz = <20000000>;
+ 				atmel,startup-time-ms = <4>;
++				atmel,trigger-edge-type = <&external_rising>;
+ 				status = "disabled";
++
++				/* possible edge type for ADTRG trigger pin */
++				adtrg: adtrg {
++					external_rising: external_rising {
++					};
++					external_falling: external_falling {
++					};
++					external_any: external_any {
++					};
++				};
  			};
  
-@@ -322,6 +322,20 @@
- 					bias-disable;
- 				};
- 
-+				/*
-+				 * The ADTRG pin can work on any edge type.
-+				 * In here it's being pulled up, so need to
-+				 * connect it to ground to get an edge e.g.
-+				 * Trigger can be configured on falling, rise
-+				 * or any edge, and the pull-up can be changed
-+				 * to pull-down or left floating according to
-+				 * needs.
-+				 */
-+				pinctrl_adtrg_default: adtrg_default {
-+					pinmux = <PIN_PD31__ADTRG>;
-+					bias-pull-up;
-+				};
-+
- 				pinctrl_charger_chglev: charger_chglev {
- 					pinmux = <PIN_PA12__GPIO>;
- 					bias-disable;
+ 			pioA: pinctrl@fc038000 {
 -- 
 2.7.4
 
