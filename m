@@ -1,8 +1,8 @@
 From: Steve Longerbeam <slongerbeam@gmail.com>
-Subject: [PATCH v7 09/34] ARM: dts: imx6-sabrelite: add OV5642 and OV5640
- camera sensors
-Date: Wed, 24 May 2017 17:29:24 -0700
-Message-ID: <1495672189-29164-10-git-send-email-steve_longerbeam@mentor.com>
+Subject: [PATCH v7 10/34] ARM: dts: imx6-sabresd: add OV5642 and OV5640 camera
+ sensors
+Date: Wed, 24 May 2017 17:29:25 -0700
+Message-ID: <1495672189-29164-11-git-send-email-steve_longerbeam@mentor.com>
 References: <1495672189-29164-1-git-send-email-steve_longerbeam@mentor.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -22,43 +22,41 @@ To: robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, kernel@pengut
 Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Steve Longerbeam <steve_longerbeam@mentor.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Adds the OV5642 parallel-bus sensor, and the OV5640 MIPI CSI-2 sensor.
-Both hang off the same i2c2 bus, so they require different (and non-
-default) i2c slave addresses.
+Enables the OV5642 parallel-bus sensor, and the OV5640 MIPI CSI-2 sensor.
 
 The OV5642 connects to the parallel-bus mux input port on ipu1_csi0_mux.
 
 The OV5640 connects to the input port on the MIPI CSI-2 receiver on
 mipi_csi.
 
-The OV5642 node is disabled temporarily while the subdev driver is
-cleaned up and submitted later.
+Until the OV5652 sensor module compatible with the SabreSD becomes
+available for testing, the ov5642 node is currently disabled.
 
 Signed-off-by: Steve Longerbeam <steve_longerbeam@mentor.com>
 ---
- arch/arm/boot/dts/imx6dl-sabrelite.dts   |   5 ++
- arch/arm/boot/dts/imx6q-sabrelite.dts    |   5 ++
- arch/arm/boot/dts/imx6qdl-sabrelite.dtsi | 148 +++++++++++++++++++++++++++++++
- 3 files changed, 158 insertions(+)
+ arch/arm/boot/dts/imx6dl-sabresd.dts   |   5 ++
+ arch/arm/boot/dts/imx6q-sabresd.dts    |   5 ++
+ arch/arm/boot/dts/imx6qdl-sabresd.dtsi | 114 ++++++++++++++++++++++++++++++++-
+ 3 files changed, 123 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/imx6dl-sabrelite.dts b/arch/arm/boot/dts/imx6dl-sabrelite.dts
-index 2f90452..3304076 100644
---- a/arch/arm/boot/dts/imx6dl-sabrelite.dts
-+++ b/arch/arm/boot/dts/imx6dl-sabrelite.dts
-@@ -48,3 +48,8 @@
- 	model = "Freescale i.MX6 DualLite SABRE Lite Board";
- 	compatible = "fsl,imx6dl-sabrelite", "fsl,imx6dl";
+diff --git a/arch/arm/boot/dts/imx6dl-sabresd.dts b/arch/arm/boot/dts/imx6dl-sabresd.dts
+index 1e45f2f..9607afe 100644
+--- a/arch/arm/boot/dts/imx6dl-sabresd.dts
++++ b/arch/arm/boot/dts/imx6dl-sabresd.dts
+@@ -15,3 +15,8 @@
+ 	model = "Freescale i.MX6 DualLite SABRE Smart Device Board";
+ 	compatible = "fsl,imx6dl-sabresd", "fsl,imx6dl";
  };
 +
 +&ipu1_csi1_from_ipu1_csi1_mux {
 +	clock-lanes = <0>;
 +	data-lanes = <1 2>;
 +};
-diff --git a/arch/arm/boot/dts/imx6q-sabrelite.dts b/arch/arm/boot/dts/imx6q-sabrelite.dts
-index 02a7cdf..dc51262e 100644
---- a/arch/arm/boot/dts/imx6q-sabrelite.dts
-+++ b/arch/arm/boot/dts/imx6q-sabrelite.dts
-@@ -52,3 +52,8 @@
+diff --git a/arch/arm/boot/dts/imx6q-sabresd.dts b/arch/arm/boot/dts/imx6q-sabresd.dts
+index 9cbdfe7..527772b 100644
+--- a/arch/arm/boot/dts/imx6q-sabresd.dts
++++ b/arch/arm/boot/dts/imx6q-sabresd.dts
+@@ -23,3 +23,8 @@
  &sata {
  	status = "okay";
  };
@@ -67,63 +65,19 @@ index 02a7cdf..dc51262e 100644
 +	clock-lanes = <0>;
 +	data-lanes = <1 2>;
 +};
-diff --git a/arch/arm/boot/dts/imx6qdl-sabrelite.dtsi b/arch/arm/boot/dts/imx6qdl-sabrelite.dtsi
-index 89dce27..afe7449 100644
---- a/arch/arm/boot/dts/imx6qdl-sabrelite.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-sabrelite.dtsi
-@@ -39,6 +39,8 @@
-  *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-  *     OTHER DEALINGS IN THE SOFTWARE.
+diff --git a/arch/arm/boot/dts/imx6qdl-sabresd.dtsi b/arch/arm/boot/dts/imx6qdl-sabresd.dtsi
+index 58055ce..342550d 100644
+--- a/arch/arm/boot/dts/imx6qdl-sabresd.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-sabresd.dtsi
+@@ -10,6 +10,7 @@
+  * http://www.gnu.org/copyleft/gpl.html
   */
-+
+ 
 +#include <dt-bindings/clock/imx6qdl-clock.h>
  #include <dt-bindings/gpio/gpio.h>
  #include <dt-bindings/input/input.h>
  
-@@ -94,6 +96,42 @@
- 			pinctrl-0 = <&pinctrl_can_xcvr>;
- 			gpio = <&gpio1 2 GPIO_ACTIVE_LOW>;
- 		};
-+
-+		reg_1p5v: regulator@4 {
-+			compatible = "regulator-fixed";
-+			reg = <4>;
-+			regulator-name = "1P5V";
-+			regulator-min-microvolt = <1500000>;
-+			regulator-max-microvolt = <1500000>;
-+			regulator-always-on;
-+		};
-+
-+		reg_1p8v: regulator@5 {
-+			compatible = "regulator-fixed";
-+			reg = <5>;
-+			regulator-name = "1P8V";
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <1800000>;
-+			regulator-always-on;
-+		};
-+
-+		reg_2p8v: regulator@6 {
-+			compatible = "regulator-fixed";
-+			reg = <6>;
-+			regulator-name = "2P8V";
-+			regulator-min-microvolt = <2800000>;
-+			regulator-max-microvolt = <2800000>;
-+			regulator-always-on;
-+		};
-+	};
-+
-+	mipi_xclk: mipi_xclk {
-+		compatible = "pwm-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <22000000>;
-+		clock-output-names = "mipi_pwm3";
-+		pwms = <&pwm3 0 45>; /* 1 / 45 ns = 22 MHz */
-+		status = "okay";
- 	};
- 
- 	gpio-keys {
-@@ -220,6 +258,22 @@
+@@ -146,6 +147,36 @@
  	};
  };
  
@@ -131,7 +85,7 @@ index 89dce27..afe7449 100644
 +	bus-width = <8>;
 +	data-shift = <12>; /* Lines 19:12 used */
 +	hsync-active = <1>;
-+	vync-active = <1>;
++	vsync-active = <1>;
 +};
 +
 +&ipu1_csi0_mux_from_parallel_sensor {
@@ -143,49 +97,43 @@ index 89dce27..afe7449 100644
 +	pinctrl-0 = <&pinctrl_ipu1_csi0>;
 +};
 +
++&mipi_csi {
++	status = "okay";
++
++	port@0 {
++		reg = <0>;
++
++		mipi_csi2_in: endpoint {
++			remote-endpoint = <&ov5640_to_mipi_csi2>;
++			clock-lanes = <0>;
++			data-lanes = <1 2>;
++		};
++	};
++};
++
  &audmux {
  	pinctrl-names = "default";
  	pinctrl-0 = <&pinctrl_audmux>;
-@@ -298,6 +352,53 @@
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_i2c2>;
- 	status = "okay";
-+
-+	ov5640: camera@40 {
-+		compatible = "ovti,ov5640";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_ov5640>;
-+		reg = <0x40>;
-+		clocks = <&mipi_xclk>;
-+		clock-names = "xclk";
-+		DOVDD-supply = <&reg_1p8v>;
-+		AVDD-supply = <&reg_2p8v>;
-+		DVDD-supply = <&reg_1p5v>;
-+		reset-gpios = <&gpio2 5 GPIO_ACTIVE_LOW>; /* NANDF_D5 */
-+		powerdown-gpios = <&gpio6 9 GPIO_ACTIVE_HIGH>; /* NANDF_WP_B */
-+
-+		port {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			ov5640_to_mipi_csi2: endpoint {
-+				remote-endpoint = <&mipi_csi2_in>;
-+				clock-lanes = <0>;
-+				data-lanes = <1 2>;
-+			};
-+		};
+@@ -213,7 +244,32 @@
+ 			0x8014 /* 4:FN_DMICCDAT */
+ 			0x0000 /* 5:Default */
+ 		>;
+-       };
 +	};
 +
-+	ov5642: camera@42 {
++	ov5642: camera@3c {
 +		compatible = "ovti,ov5642";
 +		pinctrl-names = "default";
 +		pinctrl-0 = <&pinctrl_ov5642>;
-+		clocks = <&clks IMX6QDL_CLK_CKO2>;
++		clocks = <&clks IMX6QDL_CLK_CKO>;
 +		clock-names = "xclk";
-+		reg = <0x42>;
-+		reset-gpios = <&gpio1 8 GPIO_ACTIVE_LOW>;
-+		powerdown-gpios = <&gpio1 6 GPIO_ACTIVE_HIGH>;
-+		gp-gpios = <&gpio1 16 GPIO_ACTIVE_HIGH>;
++		reg = <0x3c>;
++		DOVDD-supply = <&vgen4_reg>; /* 1.8v */
++		AVDD-supply = <&vgen3_reg>;  /* 2.8v, rev C board is VGEN3
++						rev B board is VGEN5 */
++		DVDD-supply = <&vgen2_reg>;  /* 1.5v*/
++		powerdown-gpios = <&gpio1 16 GPIO_ACTIVE_HIGH>;
++		reset-gpios = <&gpio1 17 GPIO_ACTIVE_LOW>;
 +		status = "disabled";
 +
 +		port {
@@ -199,8 +147,41 @@ index 89dce27..afe7449 100644
 +	};
  };
  
- &i2c3 {
-@@ -411,6 +512,23 @@
+ &i2c2 {
+@@ -222,6 +278,32 @@
+ 	pinctrl-0 = <&pinctrl_i2c2>;
+ 	status = "okay";
+ 
++	ov5640: camera@3c {
++		compatible = "ovti,ov5640";
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_ov5640>;
++		reg = <0x3c>;
++		clocks = <&clks IMX6QDL_CLK_CKO>;
++		clock-names = "xclk";
++		DOVDD-supply = <&vgen4_reg>; /* 1.8v */
++		AVDD-supply = <&vgen3_reg>;  /* 2.8v, rev C board is VGEN3
++						rev B board is VGEN5 */
++		DVDD-supply = <&vgen2_reg>;  /* 1.5v*/
++		powerdown-gpios = <&gpio1 19 GPIO_ACTIVE_HIGH>;
++		reset-gpios = <&gpio1 20 GPIO_ACTIVE_LOW>;
++
++		port {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			ov5640_to_mipi_csi2: endpoint {
++				remote-endpoint = <&mipi_csi2_in>;
++				clock-lanes = <0>;
++				data-lanes = <1 2>;
++			};
++		};
++	};
++
+ 	pmic: pfuze100@08 {
+ 		compatible = "fsl,pfuze100";
+ 		reg = <0x08>;
+@@ -425,6 +507,36 @@
  			>;
  		};
  
@@ -217,53 +198,25 @@ index 89dce27..afe7449 100644
 +				MX6QDL_PAD_CSI0_PIXCLK__IPU1_CSI0_PIXCLK   0x1b0b0
 +				MX6QDL_PAD_CSI0_MCLK__IPU1_CSI0_HSYNC      0x1b0b0
 +				MX6QDL_PAD_CSI0_VSYNC__IPU1_CSI0_VSYNC     0x1b0b0
-+				MX6QDL_PAD_CSI0_DATA_EN__IPU1_CSI0_DATA_EN 0x1b0b0
 +			>;
 +		};
 +
- 		pinctrl_j15: j15grp {
- 			fsl,pins = <
- 				MX6QDL_PAD_DI0_DISP_CLK__IPU1_DI0_DISP_CLK 0x10
-@@ -444,6 +562,22 @@
- 			>;
- 		};
- 
 +		pinctrl_ov5640: ov5640grp {
 +			fsl,pins = <
-+				MX6QDL_PAD_NANDF_D5__GPIO2_IO05   0x000b0
-+				MX6QDL_PAD_NANDF_WP_B__GPIO6_IO09 0x0b0b0
++				MX6QDL_PAD_SD1_DAT2__GPIO1_IO19 0x1b0b0
++				MX6QDL_PAD_SD1_CLK__GPIO1_IO20  0x1b0b0
 +			>;
 +		};
 +
 +		pinctrl_ov5642: ov5642grp {
 +			fsl,pins = <
 +				MX6QDL_PAD_SD1_DAT0__GPIO1_IO16 0x1b0b0
-+				MX6QDL_PAD_GPIO_6__GPIO1_IO06   0x1b0b0
-+				MX6QDL_PAD_GPIO_8__GPIO1_IO08   0x130b0
-+				MX6QDL_PAD_GPIO_3__CCM_CLKO2    0x000b0
++				MX6QDL_PAD_SD1_DAT1__GPIO1_IO17 0x1b0b0
 +			>;
 +		};
 +
- 		pinctrl_pwm1: pwm1grp {
+ 		pinctrl_pcie: pciegrp {
  			fsl,pins = <
- 				MX6QDL_PAD_SD1_DAT3__PWM1_OUT 0x1b0b1
-@@ -598,3 +732,17 @@
- 	vmmc-supply = <&reg_3p3v>;
- 	status = "okay";
- };
-+
-+&mipi_csi {
-+	status = "okay";
-+
-+	port@0 {
-+		reg = <0>;
-+
-+		mipi_csi2_in: endpoint {
-+			remote-endpoint = <&ov5640_to_mipi_csi2>;
-+			clock-lanes = <0>;
-+			data-lanes = <1 2>;
-+		};
-+	};
-+};
+ 				MX6QDL_PAD_GPIO_17__GPIO7_IO12	0x1b0b0
 -- 
 2.7.4
