@@ -1,7 +1,7 @@
 From: <sean.wang@mediatek.com>
-Subject: [PATCH 2/4] arm64: dts: mt7622: add basic nodes to the mt7622.dtsi file
-Date: Thu, 25 May 2017 17:28:19 +0800
-Message-ID: <cf3a0264cff770f60235d3be83cef00981ba6d33.1495703415.git.sean.wang@mediatek.com>
+Subject: [PATCH 4/4] arm64: dts: mt7622: group clock DT nodes into separate DT file
+Date: Thu, 25 May 2017 17:28:21 +0800
+Message-ID: <2f620561c49e923badff5118447db17f2cf09514.1495703415.git.sean.wang@mediatek.com>
 References: <cover.1495703415.git.sean.wang@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -14,124 +14,56 @@ List-Id: devicetree@vger.kernel.org
 
 From: Sean Wang <sean.wang@mediatek.com>
 
-add basic nodes into the mt7622.dtsi for the system
-bring-up which includes ARM CPU, GIC, timer, MediaTek
-UART, SYSIRQ and one reserved memory region for ATF.
+For more readability and maintenance, all the clock related DT
+nodes for mt7622 SoC are grouped into a separate DT file. And
+currently mt7622-clock.dtsi only includes the fixed clock for
+uart0 and the oscillator which would be extended after MT7622
+clock driver is introduced.
 
 Signed-off-by: Sean Wang <sean.wang@mediatek.com>
 ---
- arch/arm64/boot/dts/mediatek/mt7622.dtsi | 103 +++++++++++++++++++++++++++++++
- 1 file changed, 103 insertions(+)
- create mode 100644 arch/arm64/boot/dts/mediatek/mt7622.dtsi
+ arch/arm64/boot/dts/mediatek/mt7622-clock.dtsi | 20 ++++++++++++++++++++
+ arch/arm64/boot/dts/mediatek/mt7622.dtsi       |  1 +
+ 2 files changed, 21 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/mediatek/mt7622-clock.dtsi
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt7622.dtsi b/arch/arm64/boot/dts/mediatek/mt7622.dtsi
+diff --git a/arch/arm64/boot/dts/mediatek/mt7622-clock.dtsi b/arch/arm64/boot/dts/mediatek/mt7622-clock.dtsi
 new file mode 100644
-index 0000000..f610d30
+index 0000000..6b1c3db
 --- /dev/null
-+++ b/arch/arm64/boot/dts/mediatek/mt7622.dtsi
-@@ -0,0 +1,103 @@
++++ b/arch/arm64/boot/dts/mediatek/mt7622-clock.dtsi
+@@ -0,0 +1,20 @@
 +/*
 + * Copyright (c) 2017 MediaTek Inc.
-+ * Author: Ming Huang <ming.huang@mediatek.com>
-+ *	   Sean Wang <sean.wang@mediatek.com>
++ * Author: Sean Wang <sean.wang@mediatek.com>
 + *
 + * SPDX-License-Identifier: (GPL-2.0+ OR MIT)
 + */
-+
-+#include <dt-bindings/interrupt-controller/irq.h>
-+#include <dt-bindings/interrupt-controller/arm-gic.h>
-+
 +/ {
-+	compatible = "mediatek,mt7622";
-+	interrupt-parent = <&sysirq>;
-+	#address-cells = <2>;
-+	#size-cells = <2>;
-+
-+	cpus {
-+		#address-cells = <2>;
-+		#size-cells = <0>;
-+
-+		cpu0: cpu@0 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a53", "arm,armv8";
-+			reg = <0x0 0x0>;
-+			enable-method = "psci";
-+			next-level-cache = <&l2>;
-+			clock-frequency = <1300000000>;
-+		};
-+
-+		cpu1: cpu@1 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a53", "arm,armv8";
-+			reg = <0x0 0x1>;
-+			enable-method = "psci";
-+			next-level-cache = <&l2>;
-+			clock-frequency = <1300000000>;
-+		};
-+
-+		l2: l2-cache0 {
-+			compatible = "cache";
-+		};
++	clk25m: oscillator@0 {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		clock-frequency = <25000000>;
++		clock-output-names = "clkxtal";
 +	};
 +
-+	psci {
-+		compatible  = "arm,psci-0.2";
-+		method      = "smc";
-+	};
-+
-+	reserved-memory {
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+
-+		/* 192 KiB reserved for ARM Trusted Firmware (BL31) */
-+		secmon_reserved: secmon@43000000 {
-+			reg = <0 0x43000000 0 0x30000>;
-+			no-map;
-+		};
-+	};
-+
-+	timer {
-+		compatible = "arm,armv8-timer";
-+		interrupt-parent = <&gic>;
-+		interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(4) |
-+			      IRQ_TYPE_LEVEL_HIGH)>,
-+			     <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(4) |
-+			      IRQ_TYPE_LEVEL_HIGH)>,
-+			     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(4) |
-+			      IRQ_TYPE_LEVEL_HIGH)>,
-+			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(4) |
-+			      IRQ_TYPE_LEVEL_HIGH)>;
-+	};
-+
-+	sysirq: interrupt-controller@10200620 {
-+		compatible = "mediatek,mt7622-sysirq",
-+			     "mediatek,mt6577-sysirq";
-+		interrupt-controller;
-+		#interrupt-cells = <3>;
-+		interrupt-parent = <&gic>;
-+		reg = <0 0x10200620 0 0x20>;
-+	};
-+
-+	gic: interrupt-controller@10300000 {
-+		compatible = "arm,gic-400";
-+		interrupt-controller;
-+		#interrupt-cells = <3>;
-+		interrupt-parent = <&gic>;
-+		reg = <0 0x10310000 0 0x1000>,
-+		      <0 0x10320000 0 0x1000>,
-+		      <0 0x10340000 0 0x2000>,
-+		      <0 0x10360000 0 0x2000>;
-+	};
-+
-+	uart0: serial@11002000 {
-+		compatible = "mediatek,mt7622-uart",
-+			     "mediatek,mt6577-uart";
-+		reg = <0 0x11002000 0 0x400>;
-+		interrupts = <GIC_SPI 91 IRQ_TYPE_LEVEL_LOW>;
-+		clocks = <&uart_clk>;
-+		status = "disabled";
++	uart_clk: dummy26m {
++		compatible = "fixed-clock";
++		clock-frequency = <25000000>;
++		#clock-cells = <0>;
 +	};
 +};
+diff --git a/arch/arm64/boot/dts/mediatek/mt7622.dtsi b/arch/arm64/boot/dts/mediatek/mt7622.dtsi
+index f610d30..c192fb9 100644
+--- a/arch/arm64/boot/dts/mediatek/mt7622.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt7622.dtsi
+@@ -8,6 +8,7 @@
+ 
+ #include <dt-bindings/interrupt-controller/irq.h>
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
++#include "mt7622-clock.dtsi"
+ 
+ / {
+ 	compatible = "mediatek,mt7622";
 -- 
 1.9.1
