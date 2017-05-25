@@ -1,91 +1,72 @@
 From: <sean.wang@mediatek.com>
-Subject: [PATCH 1/4] dt-bindings: mediatek: add bindings for MediaTek MT7622
- SoC
-Date: Thu, 25 May 2017 17:28:18 +0800
-Message-ID: <9b4e201f8f9ad11be98f22ccc3022b4e5d76a681.1495703415.git.sean.wang@mediatek.com>
+Subject: [PATCH 3/4] arm64: dts: mt7622: add dts file for MT7622 reference board variant 1
+Date: Thu, 25 May 2017 17:28:20 +0800
+Message-ID: <cadd96535300abd2cf7db724aa3d8aa0d17c6a9d.1495703415.git.sean.wang@mediatek.com>
 References: <cover.1495703415.git.sean.wang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <cover.1495703415.git.sean.wang@mediatek.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: robh+dt@kernel.org, matthias.bgg@gmail.com, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org
-Cc: Sean Wang <sean.wang@mediatek.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Sean Wang <sean.wang@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
 From: Sean Wang <sean.wang@mediatek.com>
 
-This adds dt-binding documentation for MediaTek MT7622 SoC
-which currently only includes basic items such as ARM CPU,
-MediaTek SYSIRQ and UART.
+Add the support for the MT7622 reference board variant 1 from
+MediaTek.
 
 Signed-off-by: Sean Wang <sean.wang@mediatek.com>
 ---
- Documentation/devicetree/bindings/arm/mediatek.txt                    | 4 ++++
- .../devicetree/bindings/interrupt-controller/mediatek,sysirq.txt      | 3 ++-
- Documentation/devicetree/bindings/serial/mtk-uart.txt                 | 1 +
- 3 files changed, 7 insertions(+), 1 deletion(-)
+ arch/arm64/boot/dts/mediatek/Makefile        |  1 +
+ arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts | 27 +++++++++++++++++++++++++++
+ 2 files changed, 28 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts
 
-diff --git a/Documentation/devicetree/bindings/arm/mediatek.txt b/Documentation/devicetree/bindings/arm/mediatek.txt
-index c860b24..fc68570 100644
---- a/Documentation/devicetree/bindings/arm/mediatek.txt
-+++ b/Documentation/devicetree/bindings/arm/mediatek.txt
-@@ -12,6 +12,7 @@ compatible: Must contain one of
-    "mediatek,mt6592"
-    "mediatek,mt6755"
-    "mediatek,mt6795"
-+   "mediatek,mt7622"
-    "mediatek,mt7623"
-    "mediatek,mt8127"
-    "mediatek,mt8135"
-@@ -38,6 +39,9 @@ Supported boards:
- - Evaluation board for MT6795(Helio X10):
-     Required root node properties:
-       - compatible = "mediatek,mt6795-evb", "mediatek,mt6795";
-+- Reference board variant 1 for MT7622:
-+    Required root node properties:
-+      - compatible = "mediatek,mt7622-rfb1", "mediatek,mt7622";
- - Evaluation board for MT7623:
-     Required root node properties:
-       - compatible = "mediatek,mt7623-evb", "mediatek,mt7623";
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/mediatek,sysirq.txt b/Documentation/devicetree/bindings/interrupt-controller/mediatek,sysirq.txt
-index a89c03b..eda1183 100644
---- a/Documentation/devicetree/bindings/interrupt-controller/mediatek,sysirq.txt
-+++ b/Documentation/devicetree/bindings/interrupt-controller/mediatek,sysirq.txt
-@@ -1,4 +1,4 @@
--+Mediatek 65xx/67xx/81xx sysirq
-++Mediatek MT65xx/MT67xx/MT762x/MT81xx sysirq
+diff --git a/arch/arm64/boot/dts/mediatek/Makefile b/arch/arm64/boot/dts/mediatek/Makefile
+index 9fbfd32..e71456a2 100644
+--- a/arch/arm64/boot/dts/mediatek/Makefile
++++ b/arch/arm64/boot/dts/mediatek/Makefile
+@@ -1,5 +1,6 @@
+ dtb-$(CONFIG_ARCH_MEDIATEK) += mt6755-evb.dtb
+ dtb-$(CONFIG_ARCH_MEDIATEK) += mt6795-evb.dtb
++dtb-$(CONFIG_ARCH_MEDIATEK) += mt7622-rfb1.dtb
+ dtb-$(CONFIG_ARCH_MEDIATEK) += mt8173-evb.dtb
  
- Mediatek SOCs sysirq support controllable irq inverter for each GIC SPI
- interrupt.
-@@ -15,6 +15,7 @@ Required properties:
- 	"mediatek,mt6582-sysirq"
- 	"mediatek,mt6580-sysirq"
- 	"mediatek,mt6577-sysirq"
-+	"mediatek,mt7622-sysirq"
- 	"mediatek,mt2701-sysirq"
- - interrupt-controller : Identifies the node as an interrupt controller
- - #interrupt-cells : Use the same format as specified by GIC in arm,gic.txt.
-diff --git a/Documentation/devicetree/bindings/serial/mtk-uart.txt b/Documentation/devicetree/bindings/serial/mtk-uart.txt
-index 0015c72..daa1eef 100644
---- a/Documentation/devicetree/bindings/serial/mtk-uart.txt
-+++ b/Documentation/devicetree/bindings/serial/mtk-uart.txt
-@@ -8,6 +8,7 @@ Required properties:
-   * "mediatek,mt6589-uart" for MT6589 compatible UARTS
-   * "mediatek,mt6755-uart" for MT6755 compatible UARTS
-   * "mediatek,mt6795-uart" for MT6795 compatible UARTS
-+  * "mediatek,mt7622-uart" for MT7622 compatible UARTS
-   * "mediatek,mt7623-uart" for MT7623 compatible UARTS
-   * "mediatek,mt8127-uart" for MT8127 compatible UARTS
-   * "mediatek,mt8135-uart" for MT8135 compatible UARTS
+ always		:= $(dtb-y)
+diff --git a/arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts b/arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts
+new file mode 100644
+index 0000000..e052ab5
+--- /dev/null
++++ b/arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts
+@@ -0,0 +1,27 @@
++/*
++ * Copyright (c) 2017 MediaTek Inc.
++ * Author: Ming Huang <ming.huang@mediatek.com>
++ *	   Sean Wang <sean.wang@mediatek.com>
++ *
++ * SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++ */
++
++/dts-v1/;
++#include "mt7622.dtsi"
++
++/ {
++	model = "MediaTek MT7622 RFB1 board";
++	compatible = "mediatek,mt7622-rfb1", "mediatek,mt7622";
++
++	chosen {
++		bootargs = "console=ttyS0,115200n1";
++	};
++
++	memory {
++		reg = <0 0x40000000 0 0x3F000000>;
++	};
++};
++
++&uart0 {
++	status = "okay";
++};
 -- 
 1.9.1
