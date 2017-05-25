@@ -1,56 +1,80 @@
-From: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Subject: Re: [PATCH v4 0/8] Fix issues and factorize arm/arm64 capacity
- information code
-Date: Thu, 25 May 2017 15:18:31 +0200
-Message-ID: <20170525131831.GF16244@kroah.com>
-References: <20170420144316.15632-1-juri.lelli@arm.com>
- <20170511084830.rn32pvi6weej2cna@e106622-lin>
- <20170511085952.GA6934@kroah.com>
- <20170511102718.qy54ajkzphasymhr@e106622-lin>
- <20170524144515.nuccflbdashlqmcs@e106622-lin>
+From: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 0/6] mailbox: arm_mhu: add support for doorbell mode
+Date: Thu, 25 May 2017 18:50:31 +0530
+Message-ID: <CABb+yY0jKPUW3i69jO+ZhmNum7-MS8xabns+R7hmjCOz+imgJA@mail.gmail.com>
+References: <1495621003-4291-1-git-send-email-sudeep.holla@arm.com>
+ <CABb+yY1eS_cXjCCpgQs18-W3KXPy-K7mPJSkWNb6wFe-is5fDw@mail.gmail.com> <cd57b90c-4250-64df-9142-d12ac7ed7ad3@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170524144515.nuccflbdashlqmcs@e106622-lin>
+In-Reply-To: <cd57b90c-4250-64df-9142-d12ac7ed7ad3-5wv7dgnIgG8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Juri Lelli <juri.lelli-5wv7dgnIgG8@public.gmane.org>
-Cc: linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, peterz-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, vincent.guittot-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, morten.rasmussen-5wv7dgnIgG8@public.gmane.org, dietmar.eggemann-5wv7dgnIgG8@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Cc: Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Alexey Klimov <alexey.klimov-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 24, 2017 at 03:45:15PM +0100, Juri Lelli wrote:
-> Hi,
-> 
-> On 11/05/17 11:27, Juri Lelli wrote:
-> > On 11/05/17 10:59, Greg KH wrote:
-> > > On Thu, May 11, 2017 at 09:48:30AM +0100, Juri Lelli wrote:
-> > > > Hi Greg,
-> > > > 
-> > > > I'm not sure what your plans are with this set. Are we targeting 4.12?
-> > > > 
-> > > > IMHO, if possible, it would be good to have this refactoring in now, so
-> > > > that we can base further development on it for the next cycle.
-> > > 
-> > > It's way too late for new features that have not been in linux-next for
-> > > a few weeks, to get merged into 4.12-rc1, sorry.  I'll review this
-> > > patchset after -rc1 is out, and I get a chance to catch up on pending
-> > > patches.
-> > > 
-> > 
-> > Thanks for your reply, I perfecly understand.
-> > 
-> > OK, let's target 4.13 then. Looking forward to receive your comments
-> > after -rc1 is out.
-> > 
-> 
-> Did you have any chance to have a look at this set?
+On Thu, May 25, 2017 at 5:00 PM, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org> wrote:
+>
+>
+> On 24/05/17 11:56, Jassi Brar wrote:
+>> On Wed, May 24, 2017 at 3:46 PM, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org> wrote:
+>>>
+>>> Hi,
+>>>
+>>> This series adds doorbell support to ARM MHU mailbox controller driver.
+>>> Since we need to callback the different client based on the doorbel bits
+>>> triggered from the remote, we can manage with single channel for the set
+>>> of 32 doorbells.
+>>>
+>>> Regards,
+>>> Sudeep
+>>>
+>>> v1->v2:
+>>>         - Removed the notion od subchannels
+>>>         - Treat each bit in the MHU register as a doorbell and hence
+>>>           different channel with respect to mailbox framework
+>>>
+>> Whatever happened to the endless explanations I gave you, how the MHU
+>> driver already supports your usecase?
+>>
+>
+> Yes but you didn't respond to my queries:
+> 1. The client driver is generic and expects it to be doorbell like
+>    mailbox controller. I am referring to SCMI which will be released
+>    soon. We can't embed ARM MHU or any other mailbox controller info
+>    into that.
+>
+If SCMI is to be usable over different platforms, there has to be 2
+sub-parts of the SCMI - one platform agnostic high level protocol
+implementation, and the other platform specific 'transport' layer
+where actual message xfer is done.
 
-Now reviewed.  Looks fine except for the final names in the last patch,
-naming is hard, I know :)
+For the Nth time:-
+    The 'mssg' in mbox_send_message(struct mbox_chan *chan, void
+*mssg) is platform specific. For MHU it is simple u32*, whereas for
+other platform it will be like 'struct my_protocol_message *'
 
-thanks,
+I can't make it any clearer.
 
-greg k-h
+> 2. How do we call multiple clients from mhu_irq ? I have Slot/bit 0
+>    being used by SCPI protocol(already in mainline) and slot 1/2 or more
+>    will be used by SCMI ?
+>
+Like other platforms do, have a common client that manages messages
+to/from clients working on same channel.
+
+> 3. We already have mailbox-sti.c which implements exactly the same logic
+>    of doorbell. Why did you not push back to implement something like
+>    arm_mhu.c then ? I am confused as why you are so particular in this
+>    case ?
+>
+The way STI's controller works (or as I was told), it warrants that
+design. I know MHU very well and I bet it needs no modification.
+
+ I explained in more than one way how to use the current driver, but
+you refuse to acknowledge. Then I offered to modify your code for you,
+but you don't agree to that either. I am running out of ways to
+respond and point you back to my old posts.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
