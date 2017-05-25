@@ -1,51 +1,67 @@
-From: Sergey Matyukevich <geomatsi-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] ARM: dts: orange-pi-zero: specify wifi interrupts
-Date: Thu, 25 May 2017 10:10:55 +0300
-Message-ID: <20170525071055.xdd4sbpnzlkg7wa2@speedy.hunter>
-References: <20170524212433.14386-1-geomatsi@gmail.com>
- <20170524212433.14386-2-geomatsi@gmail.com>
- <CAGb2v647GTQW9-ZYrkWS7RoeYTu_7oTm8v4PDs0YD1pZ8oUohQ@mail.gmail.com>
+From: <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v2 1/2] dt-bindings: dmaengine: Add Mediatek High-Speed DMA controller bindings
+Date: Thu, 25 May 2017 15:12:48 +0800
+Message-ID: <b44d916a9a3048c2450f438bf25b9d2230ae170b.1495695814.git.sean.wang@mediatek.com>
+References: <cover.1495695814.git.sean.wang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAGb2v647GTQW9-ZYrkWS7RoeYTu_7oTm8v4PDs0YD1pZ8oUohQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <cover.1495695814.git.sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
+Cc: dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, keyhaede-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-> > diff --git a/arch/arm/boot/dts/sun8i-h2-plus-orangepi-zero.dts b/arch/arm/boot/dts/sun8i-h2-plus-orangepi-zero.dts
-> > index 9e8b082c134f..e97dfd1775d1 100644
-> > --- a/arch/arm/boot/dts/sun8i-h2-plus-orangepi-zero.dts
-> > +++ b/arch/arm/boot/dts/sun8i-h2-plus-orangepi-zero.dts
-> > @@ -128,6 +128,9 @@
-> >          */
-> >         xr819: sdio_wifi@1 {
-> >                 reg = <1>;
-> > +               compatible = "xradio,xr819";
-> 
-> You should submit device tree bindings first. See:
-> 
-> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tree/Documentation/devicetree/bindings/net/wireless
-> 
-> for examples.
+From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 
-Does it make sense for the out-of-tree driver ?
+Document the devicetree bindings for Mediatek High-Speed DMA controller
+which could be found on MT7623 SoC or other similar Mediatek SoCs.
 
-> > +               interrupt-parent = <&pio>;
-> > +               interrupts = <6 10 IRQ_TYPE_EDGE_RISING>;
-> 
-> Are these optional or required properties? AFAIK SDIO supports in-band
-> interrupts with a bit of overhead, so they should be optional.
+Signed-off-by: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+---
+ .../devicetree/bindings/dma/mtk-hsdma.txt          | 29 ++++++++++++++++++++++
+ 1 file changed, 29 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/dma/mtk-hsdma.txt
 
-Those properties are optional. Driver works anyway, though it complains about
-missing interrupts. IIUC xradio driver falls back to polling mode only if
-xr819 interrupt configuraton is not specified.
+diff --git a/Documentation/devicetree/bindings/dma/mtk-hsdma.txt b/Documentation/devicetree/bindings/dma/mtk-hsdma.txt
+new file mode 100644
+index 0000000..b37e76e
+--- /dev/null
++++ b/Documentation/devicetree/bindings/dma/mtk-hsdma.txt
+@@ -0,0 +1,29 @@
++Mediatek High-Speed DMA Controller
++==================================
++
++This driver follows the generic DMA bindings defined in dma/dma.txt.
++
++Required properties:
++
++- compatible:	Must be one of
++		  "mediatek,mt7623-hsdma".
++- reg:		Should contain the register's base address and length.
++- interrupts:	Should contain a reference to the interrupt used by this
++		device.
++- clocks:	Should be the clock specifiers corresponding to the entry in
++		clock-names property.
++- clock-names:	Should contain "hsdma" entries.
++- #dma-cells: 	The length of the DMA specifier, must be <1>. This one cell
++		in dmas property of a client device represents the channel
++		number.
++Example:
++
++        hsdma: hsdma@1b007000 {
++		compatible = "mediatek,mt7623-hsdma";
++		reg = <0 0x1b007000 0 0x1000>;
++		interrupts = <GIC_SPI 98 IRQ_TYPE_LEVEL_LOW>;
++		clocks = <&ethsys CLK_ETHSYS_HSDMA>;
++		clock-names = "hsdma";
++	};
++
++DMA clients must use the format described in dma/dma.txt file.
+-- 
+2.7.4
 
-
-Regards,
-Sergey
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
