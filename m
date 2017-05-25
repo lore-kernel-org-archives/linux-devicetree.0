@@ -1,219 +1,113 @@
 From: Leo Yan <leo.yan@linaro.org>
-Subject: [PATCH v13 2/9] doc: Add documentation for Coresight CPU debug
-Date: Thu, 25 May 2017 23:57:09 +0800
-Message-ID: <1495727836-30094-3-git-send-email-leo.yan@linaro.org>
+Subject: [PATCH v13 6/9] coresight: refactor with function of_coresight_get_cpu
+Date: Thu, 25 May 2017 23:57:13 +0800
+Message-ID: <1495727836-30094-7-git-send-email-leo.yan@linaro.org>
 References: <1495727836-30094-1-git-send-email-leo.yan@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
 In-Reply-To: <1495727836-30094-1-git-send-email-leo.yan@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-doc-owner@vger.kernel.org
 To: Jonathan Corbet <corbet@lwn.net>, Mathieu Poirier <mathieu.poirier@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Wei Xu <xuwei5@hisilicon.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Suzuki K Poulose <suzuki.poulose@arm.com>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, Stephen Boyd <sboyd@codeaurora.org>, Mike Leach <mike.leach@linaro.org>
 Cc: Leo Yan <leo.yan@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Add detailed documentation for Coresight CPU debug driver, which
-contains the info for driver implementation, Mike Leach excellent
-summary for "clock and power domain". At the end some examples on how
-to enable the debugging functionality are provided.
+This is refactor to add function of_coresight_get_cpu(), so it's used to
+retrieve CPU id for coresight component. Finally can use it as a common
+function for multiple places.
 
-Suggested-by: Mike Leach <mike.leach@linaro.org>
-Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+Suggested-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
 Signed-off-by: Leo Yan <leo.yan@linaro.org>
 ---
- Documentation/trace/coresight-cpu-debug.txt | 175 ++++++++++++++++++++++++++++
- 1 file changed, 175 insertions(+)
- create mode 100644 Documentation/trace/coresight-cpu-debug.txt
+ drivers/hwtracing/coresight/of_coresight.c | 43 +++++++++++++++++++-----------
+ include/linux/coresight.h                  |  3 +++
+ 2 files changed, 31 insertions(+), 15 deletions(-)
 
-diff --git a/Documentation/trace/coresight-cpu-debug.txt b/Documentation/trace/coresight-cpu-debug.txt
-new file mode 100644
-index 0000000..b3da1f9
---- /dev/null
-+++ b/Documentation/trace/coresight-cpu-debug.txt
-@@ -0,0 +1,175 @@
-+		Coresight CPU Debug Module
-+		==========================
+diff --git a/drivers/hwtracing/coresight/of_coresight.c b/drivers/hwtracing/coresight/of_coresight.c
+index 225b2dd..a187941 100644
+--- a/drivers/hwtracing/coresight/of_coresight.c
++++ b/drivers/hwtracing/coresight/of_coresight.c
+@@ -101,16 +101,40 @@ static int of_coresight_alloc_memory(struct device *dev,
+ 	return 0;
+ }
+ 
++int of_coresight_get_cpu(const struct device_node *node)
++{
++	int cpu;
++	bool found;
++	struct device_node *dn, *np;
 +
-+   Author:   Leo Yan <leo.yan@linaro.org>
-+   Date:     April 5th, 2017
++	dn = of_parse_phandle(node, "cpu", 0);
 +
-+Introduction
-+------------
++	/* Affinity defaults to CPU0 */
++	if (!dn)
++		return 0;
 +
-+Coresight CPU debug module is defined in ARMv8-a architecture reference manual
-+(ARM DDI 0487A.k) Chapter 'Part H: External debug', the CPU can integrate
-+debug module and it is mainly used for two modes: self-hosted debug and
-+external debug. Usually the external debug mode is well known as the external
-+debugger connects with SoC from JTAG port; on the other hand the program can
-+explore debugging method which rely on self-hosted debug mode, this document
-+is to focus on this part.
++	for_each_possible_cpu(cpu) {
++		np = of_cpu_device_node_get(cpu);
++		found = (dn == np);
++		of_node_put(np);
++		if (found)
++			break;
++	}
++	of_node_put(dn);
 +
-+The debug module provides sample-based profiling extension, which can be used
-+to sample CPU program counter, secure state and exception level, etc; usually
-+every CPU has one dedicated debug module to be connected. Based on self-hosted
-+debug mechanism, Linux kernel can access these related registers from mmio
-+region when the kernel panic happens. The callback notifier for kernel panic
-+will dump related registers for every CPU; finally this is good for assistant
-+analysis for panic.
++	/* Affinity to CPU0 if no cpu nodes are found */
++	return found ? cpu : 0;
++}
++EXPORT_SYMBOL_GPL(of_coresight_get_cpu);
 +
-+
-+Implementation
-+--------------
-+
-+- During driver registration, it uses EDDEVID and EDDEVID1 - two device ID
-+  registers to decide if sample-based profiling is implemented or not. On some
-+  platforms this hardware feature is fully or partially implemented; and if
-+  this feature is not supported then registration will fail.
-+
-+- At the time this documentation was written, the debug driver mainly relies on
-+  information gathered by the kernel panic callback notifier from three
-+  sampling registers: EDPCSR, EDVIDSR and EDCIDSR: from EDPCSR we can get
-+  program counter; EDVIDSR has information for secure state, exception level,
-+  bit width, etc; EDCIDSR is context ID value which contains the sampled value
-+  of CONTEXTIDR_EL1.
-+
-+- The driver supports a CPU running in either AArch64 or AArch32 mode. The
-+  registers naming convention is a bit different between them, AArch64 uses
-+  'ED' for register prefix (ARM DDI 0487A.k, chapter H9.1) and AArch32 uses
-+  'DBG' as prefix (ARM DDI 0487A.k, chapter G5.1). The driver is unified to
-+  use AArch64 naming convention.
-+
-+- ARMv8-a (ARM DDI 0487A.k) and ARMv7-a (ARM DDI 0406C.b) have different
-+  register bits definition. So the driver consolidates two difference:
-+
-+  If PCSROffset=0b0000, on ARMv8-a the feature of EDPCSR is not implemented;
-+  but ARMv7-a defines "PCSR samples are offset by a value that depends on the
-+  instruction set state". For ARMv7-a, the driver checks furthermore if CPU
-+  runs with ARM or thumb instruction set and calibrate PCSR value, the
-+  detailed description for offset is in ARMv7-a ARM (ARM DDI 0406C.b) chapter
-+  C11.11.34 "DBGPCSR, Program Counter Sampling Register".
-+
-+  If PCSROffset=0b0010, ARMv8-a defines "EDPCSR implemented, and samples have
-+  no offset applied and do not sample the instruction set state in AArch32
-+  state". So on ARMv8 if EDDEVID1.PCSROffset is 0b0010 and the CPU operates
-+  in AArch32 state, EDPCSR is not sampled; when the CPU operates in AArch64
-+  state EDPCSR is sampled and no offset are applied.
-+
-+
-+Clock and power domain
-+----------------------
-+
-+Before accessing debug registers, we should ensure the clock and power domain
-+have been enabled properly. In ARMv8-a ARM (ARM DDI 0487A.k) chapter 'H9.1
-+Debug registers', the debug registers are spread into two domains: the debug
-+domain and the CPU domain.
-+
-+                                +---------------+
-+                                |               |
-+                                |               |
-+                     +----------+--+            |
-+        dbg_clock -->|          |**|            |<-- cpu_clock
-+                     |    Debug |**|   CPU      |
-+ dbg_power_domain -->|          |**|            |<-- cpu_power_domain
-+                     +----------+--+            |
-+                                |               |
-+                                |               |
-+                                +---------------+
-+
-+For debug domain, the user uses DT binding "clocks" and "power-domains" to
-+specify the corresponding clock source and power supply for the debug logic.
-+The driver calls the pm_runtime_{put|get} operations as needed to handle the
-+debug power domain.
-+
-+For CPU domain, the different SoC designs have different power management
-+schemes and finally this heavily impacts external debug module. So we can
-+divide into below cases:
-+
-+- On systems with a sane power controller which can behave correctly with
-+  respect to CPU power domain, the CPU power domain can be controlled by
-+  register EDPRCR in driver. The driver firstly writes bit EDPRCR.COREPURQ
-+  to power up the CPU, and then writes bit EDPRCR.CORENPDRQ for emulation
-+  of CPU power down. As result, this can ensure the CPU power domain is
-+  powered on properly during the period when access debug related registers;
-+
-+- Some designs will power down an entire cluster if all CPUs on the cluster
-+  are powered down - including the parts of the debug registers that should
-+  remain powered in the debug power domain. The bits in EDPRCR are not
-+  respected in these cases, so these designs do not support debug over
-+  power down in the way that the CoreSight / Debug designers anticipated.
-+  This means that even checking EDPRSR has the potential to cause a bus hang
-+  if the target register is unpowered.
-+
-+  In this case, accessing to the debug registers while they are not powered
-+  is a recipe for disaster; so we need preventing CPU low power states at boot
-+  time or when user enable module at the run time. Please see chapter
-+  "How to use the module" for detailed usage info for this.
-+
-+
-+Device Tree Bindings
-+--------------------
-+
-+See Documentation/devicetree/bindings/arm/coresight-cpu-debug.txt for details.
-+
-+
-+How to use the module
-+---------------------
-+
-+If you want to enable debugging functionality at boot time, you can add
-+"coresight_cpu_debug.enable=1" to the kernel command line parameter.
-+
-+The driver also can work as module, so can enable the debugging when insmod
-+module:
-+# insmod coresight_cpu_debug.ko debug=1
-+
-+When boot time or insmod module you have not enabled the debugging, the driver
-+uses the debugfs file system to provide a knob to dynamically enable or disable
-+debugging:
-+
-+To enable it, write a '1' into /sys/kernel/debug/coresight_cpu_debug/enable:
-+# echo 1 > /sys/kernel/debug/coresight_cpu_debug/enable
-+
-+To disable it, write a '0' into /sys/kernel/debug/coresight_cpu_debug/enable:
-+# echo 0 > /sys/kernel/debug/coresight_cpu_debug/enable
-+
-+As explained in chapter "Clock and power domain", if you are working on one
-+platform which has idle states to power off debug logic and the power
-+controller cannot work well for the request from EDPRCR, then you should
-+firstly constraint CPU idle states before enable CPU debugging feature; so can
-+ensure the accessing to debug logic.
-+
-+If you want to limit idle states at boot time, you can use "nohlt" or
-+"cpuidle.off=1" in the kernel command line.
-+
-+At the runtime you can disable idle states with below methods:
-+
-+Set latency request to /dev/cpu_dma_latency to disable all CPUs specific idle
-+states (if latency = 0uS then disable all idle states):
-+# echo "what_ever_latency_you_need_in_uS" > /dev/cpu_dma_latency
-+
-+Disable specific CPU's specific idle state:
-+# echo 1 > /sys/devices/system/cpu/cpu$cpu/cpuidle/state$state/disable
-+
-+
-+Output format
-+-------------
-+
-+Here is an example of the debugging output format:
-+
-+ARM external debug module:
-+coresight-cpu-debug 850000.debug: CPU[0]:
-+coresight-cpu-debug 850000.debug:  EDPRSR:  00000001 (Power:On DLK:Unlock)
-+coresight-cpu-debug 850000.debug:  EDPCSR:  [<ffff00000808e9bc>] handle_IPI+0x174/0x1d8
-+coresight-cpu-debug 850000.debug:  EDCIDSR: 00000000
-+coresight-cpu-debug 850000.debug:  EDVIDSR: 90000000 (State:Non-secure Mode:EL1/0 Width:64bits VMID:0)
-+coresight-cpu-debug 852000.debug: CPU[1]:
-+coresight-cpu-debug 852000.debug:  EDPRSR:  00000001 (Power:On DLK:Unlock)
-+coresight-cpu-debug 852000.debug:  EDPCSR:  [<ffff0000087fab34>] debug_notifier_call+0x23c/0x358
-+coresight-cpu-debug 852000.debug:  EDCIDSR: 00000000
-+coresight-cpu-debug 852000.debug:  EDVIDSR: 90000000 (State:Non-secure Mode:EL1/0 Width:64bits VMID:0)
+ struct coresight_platform_data *
+ of_get_coresight_platform_data(struct device *dev,
+ 			       const struct device_node *node)
+ {
+-	int i = 0, ret = 0, cpu;
++	int i = 0, ret = 0;
+ 	struct coresight_platform_data *pdata;
+ 	struct of_endpoint endpoint, rendpoint;
+ 	struct device *rdev;
+-	bool found;
+-	struct device_node *dn, *np;
+ 	struct device_node *ep = NULL;
+ 	struct device_node *rparent = NULL;
+ 	struct device_node *rport = NULL;
+@@ -177,18 +201,7 @@ of_get_coresight_platform_data(struct device *dev,
+ 		} while (ep);
+ 	}
+ 
+-	dn = of_parse_phandle(node, "cpu", 0);
+-	for_each_possible_cpu(cpu) {
+-		np = of_cpu_device_node_get(cpu);
+-		found = (dn == np);
+-		of_node_put(np);
+-		if (found)
+-			break;
+-	}
+-	of_node_put(dn);
+-
+-	/* Affinity to CPU0 if no cpu nodes are found */
+-	pdata->cpu = found ? cpu : 0;
++	pdata->cpu = of_coresight_get_cpu(node);
+ 
+ 	return pdata;
+ }
+diff --git a/include/linux/coresight.h b/include/linux/coresight.h
+index bf0aa50..d950dad 100644
+--- a/include/linux/coresight.h
++++ b/include/linux/coresight.h
+@@ -263,10 +263,13 @@ static inline int coresight_timeout(void __iomem *addr, u32 offset,
+ #endif
+ 
+ #ifdef CONFIG_OF
++extern int of_coresight_get_cpu(const struct device_node *node);
+ extern struct coresight_platform_data *
+ of_get_coresight_platform_data(struct device *dev,
+ 			       const struct device_node *node);
+ #else
++static inline int of_coresight_get_cpu(const struct device_node *node)
++{ return 0; }
+ static inline struct coresight_platform_data *of_get_coresight_platform_data(
+ 	struct device *dev, const struct device_node *node) { return NULL; }
+ #endif
 -- 
 2.7.4
+
