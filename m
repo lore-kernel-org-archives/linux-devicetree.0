@@ -1,98 +1,52 @@
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: RE: [PATCH v2] phy: rcar-gen3-usb3: add support for R-Car Gen3 USB
- 3.0 PHY
-Date: Thu, 25 May 2017 07:52:11 +0000
-Message-ID: <TY1PR06MB09923C2EEECD6C86EB53A994D8FF0@TY1PR06MB0992.apcprd06.prod.outlook.com>
-References: <1495628244-28406-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <CAMuHMdUK95J+eJmAgDVnRUWzpLQTpSUv1s7see=TF5bDAgcrgg@mail.gmail.com>
+From: Nikita Yushchenko <nikita.yoush-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: vf610-zii-dev-rev-b: add hi8435 device
+Date: Thu, 25 May 2017 11:03:20 +0300
+Message-ID: <eb1e1778-c228-8e37-be70-3e9fa17e5bab@cogentembedded.com>
+References: <20170522131010.3537-1-nikita.yoush@cogentembedded.com>
+ <a74ee28c1c62fee5a5e75dda70a02990@agner.ch>
+ <076f6258-f0b4-6ba5-9670-e2c0582a92b5@cogentembedded.com>
+ <20170522182119.GN29447@lunn.ch>
+ <486f703b-fc8a-ccc1-134d-a908df798b2e@cogentembedded.com>
+ <20170525071940.GV26102@dragon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdUK95J+eJmAgDVnRUWzpLQTpSUv1s7see=TF5bDAgcrgg@mail.gmail.com>
-Content-Language: ja-JP
-Sender: linux-kernel-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Kishon Vijay Abraham I <kishon@ti.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170525071940.GV26102@dragon>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jeff White <Jeff.White-c8ZVq/bFV1I@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Vladimir Barinov <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Chris Healy <Chris.Healy-c8ZVq/bFV1I@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgR2VlcnQtc2FuLA0KDQo+IEZyb206IEdlZXJ0IFV5dHRlcmhvZXZlbg0KPiBTZW50OiBXZWRu
-ZXNkYXksIE1heSAyNCwgMjAxNyA5OjM5IFBNDQo+IA0KPiBIaSBTaGltb2RhLXNhbiwNCj4gDQo+
-IE9uIFdlZCwgTWF5IDI0LCAyMDE3IGF0IDI6MTcgUE0sIFlvc2hpaGlybyBTaGltb2RhDQo+IDx5
-b3NoaWhpcm8uc2hpbW9kYS51aEByZW5lc2FzLmNvbT4gd3JvdGU6DQo+ID4gVGhlIFVTQiAzLjAg
-UEhZIG1vZHVsZXMgb2YgUi1DYXIgR2VuMyBTb0NzIGhhdmU6DQo+ID4gIC0gU3ByZWFkIHNwZWN0
-cnVtIGNsb2NrIChzc2MpLg0KPiA+ICAtIFVzaW5nIFVTQiAyLjAgRVhUQUwgY2xvY2sgaW5zdGVh
-ZCBvZiBVU0IgMy4wIGNsb2NrLg0KPiA+ICAtIEVuYWJsaW5nIFZCVVMgZGV0ZWN0aW9uIGZvciB1
-c2IzLjAgcGVyaXBoZXJhbC4NCj4gPg0KPiA+IFNvLCB0aGlzIGRyaXZlciBzdXBwb3J0cyB0aGVz
-ZSBmZWF0dXJlcy4NCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IFlvc2hpaGlybyBTaGltb2RhIDx5
-b3NoaWhpcm8uc2hpbW9kYS51aEByZW5lc2FzLmNvbT4NCj4gPiAtLS0NCjxzbmlwPg0KPiA+IGRp
-ZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGh5L3JjYXItZ2Vu
-My1waHktdXNiMy50eHQNCj4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGh5
-L3JjYXItZ2VuMy1waHktdXNiMy50eHQNCj4gPiBuZXcgZmlsZSBtb2RlIDEwMDY0NA0KPiA+IGlu
-ZGV4IDAwMDAwMDAuLmU1OGJhNmINCj4gPiAtLS0gL2Rldi9udWxsDQo+ID4gKysrIGIvRG9jdW1l
-bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BoeS9yY2FyLWdlbjMtcGh5LXVzYjMudHh0DQo+
-ID4gKyogUmVuZXNhcyBSLUNhciBnZW5lcmF0aW9uIDMgVVNCIDMuMCBQSFkNCj4gPiArDQo+ID4g
-K1RoaXMgZmlsZSBwcm92aWRlcyBpbmZvcm1hdGlvbiBvbiB3aGF0IHRoZSBkZXZpY2Ugbm9kZSBm
-b3IgdGhlIFItQ2FyIGdlbmVyYXRpb24NCj4gPiArMyBVU0IgMy4wIFBIWSBjb250YWlucy4NCj4g
-PiArSWYgeW91IHdhbnQgdG8gZW5hYmxlIHNwcmVhZCBzcGVjdHJ1bSBjbG9jayAoc3NjKSwgeW91
-IHNob3VsZCB1c2UgVVNCX0VYVEFMDQo+ID4gK2luc3RlYWQgb2YgVVNCM19DTEsuIEhvd2V2ZXIs
-IGlmIHlvdSBkb24ndCB3YW50IHRvIHRoZXNlIGZlYXR1cmVzLCB5b3UgZG9uJ3QNCj4gPiArbmVl
-ZCB0aGlzIGRyaXZlci4NCj4gPiArDQo+ID4gK1JlcXVpcmVkIHByb3BlcnRpZXM6DQo+ID4gKy0g
-Y29tcGF0aWJsZTogInJlbmVzYXMscjhhNzc5NS11c2IzLXBoeSIgaWYgdGhlIGRldmljZSBpcyBh
-IHBhcnQgb2YgYW4gUjhBNzc5NQ0KPiA+ICsgICAgICAgICAgICAgU29DLg0KPiA+ICsgICAgICAg
-ICAgICAgInJlbmVzYXMscjhhNzc5Ni11c2IzLXBoeSIgaWYgdGhlIGRldmljZSBpcyBhIHBhcnQg
-b2YgYW4gUjhBNzc5Ng0KPiA+ICsgICAgICAgICAgICAgU29DLg0KPiA+ICsgICAgICAgICAgICAg
-InJlbmVzYXMscmNhci1nZW4zLXVzYjMtcGh5IiBmb3IgYSBnZW5lcmljIFItQ2FyIEdlbjMgY29t
-cGF0aWJsZQ0KPiA+ICsgICAgICAgICAgICAgZGV2aWNlLg0KPiA+ICsNCj4gPiArICAgICAgICAg
-ICAgIFdoZW4gY29tcGF0aWJsZSB3aXRoIHRoZSBnZW5lcmljIHZlcnNpb24sIG5vZGVzIG11c3Qg
-bGlzdCB0aGUNCj4gPiArICAgICAgICAgICAgIFNvQy1zcGVjaWZpYyB2ZXJzaW9uIGNvcnJlc3Bv
-bmRpbmcgdG8gdGhlIHBsYXRmb3JtIGZpcnN0DQo+ID4gKyAgICAgICAgICAgICBmb2xsb3dlZCBi
-eSB0aGUgZ2VuZXJpYyB2ZXJzaW9uLg0KPiA+ICsNCj4gPiArLSByZWc6IG9mZnNldCBhbmQgbGVu
-Z3RoIG9mIHRoZSBVU0IgMy4wIFBIWSByZWdpc3RlciBibG9jay4NCj4gPiArLSBjbG9ja3M6IEEg
-bGlzdCBvZiBwaGFuZGxlcyBhbmQgY2xvY2stc3BlY2lmaWVyIHBhaXJzLg0KPiA+ICstIGNsb2Nr
-LW5hbWVzOiBOYW1lIG9mIHRoZSBjbG9ja3MuDQo+ID4gKyAgLSBUaGUgZnVuY2lvbmFsIGNsb2Nr
-IG11c3QgYmUgInVzYjMtaWYiLg0KPiA+ICsgIC0gVGhlIHVzYjMncyBleHRlcm5hbCBjbG9jayBt
-dXN0IGJlICJ1c2Izc19jbGsiLiBJZiB5b3Ugd2FudCB0byB1c2UgdGhlIHNzYywNCj4gPiArICAg
-IHRoZSBjbG9jay1mcmVxdWVuY3kgbXVzdCBiZSAwLg0KPiANCj4gR2l2ZW4geW91IGhhdmUgInJl
-bmVzYXMsc3NjLXJhbmdlIiB0byBlbmFibGUgc3NjLCBJIHRoaW5rIGl0IGRvZXNuJ3QgbWF0dGVy
-DQo+IGlmIHRoZSBjbG9jayBmcmVxdWVuY3kgaXMgMCBvciBub3QsIHNvIHRoZSAiaWYgeW91Li4u
-IiBwYXJ0IGNhbiBiZSByZW1vdmVkLg0KDQpJIHNlZS4gSWYgYm90aCB1c2Izc19jbGsgYW5kIHVz
-Yl9leHRhbCBhcmUgbm90IDAgYW5kICJzc2MtcmFuZ2UiIGlzIGVuYWJsZWQsDQp0aGUgZHJpdmVy
-IHNob3VsZCBjaG9vc2UgdXNiX2V4dGFsIGFuZCBlbmFibGUgdGhlIHNzYy4NClNvLCBJIHVuZGVy
-c3RhbmQgImlmIHlvdS4uIiBwYXJ0IGNhbiBiZSByZW1vdmVkLiBUaGFua3MhDQoNCj4gPiArICAt
-IFRoZSB1c2IyJ3MgZXh0ZXJuYWwgY2xvY2sgbXVzdCBiZSAidXNiX2V4dGFsIi4gSWYgeW91IHdh
-bnQgdG8gdXNlIHRoZSBzc2MsDQo+ID4gKyAgICB0aGUgY2xvY2stZnJlcXVlbnZ5IG11c3Qgbm90
-IGJlIDAuDQo+IA0KPiBmcmVxdWVuY3kNCg0KT29wcywgSSB3aWxsIGZpeCBpdC4NCg0KPiBIZXJl
-IGl0IGRvZXMgbWF0dGVyLCBhcyB5b3UgbmVlZCB0aGlzIGNsb2NrIGZvciBzc2MuDQo+IEJUVywg
-dGhlIGRyaXZlciBjYW4gZmFsbGJhY2sgdG8gdGhlIG90aGVyIGNsb2NrIGlmIHNzYyBjYW5ub3Qg
-YmUgdXNlZC4NCj4gDQo+ID4gK09wdGlvbmFsIHByb3BlcnRpZXM6DQo+ID4gKy0gcmVuZXNhcyxz
-c2MtcmFuZ2U6IEVuYWJsZS9kaXNhYmxlIHNwcmVhZCBzcGVjdHJ1bSBjbG9jayAoc3NjKSBieSB1
-c2luZw0KPiA+ICsgICAgICAgICAgICAgICAgICAgIHRoZSBmb2xsb3dpbmcgdmFsdWVzIGFzIHUz
-MjoNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICAtIDAgKG9yIHRoZSBwcm9wZXJ0eSBkb2Vz
-bid0IGV4aXN0KTogZGlzYWJsZSB0aGUgc3NjDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAg
-LSA0OTgwOiBlbmFibGUgdGhlIHNzYyBhcyAtNDk4MCBwcG0NCj4gPiArICAgICAgICAgICAgICAg
-ICAgICAgICAtIDQ0OTI6IGVuYWJsZSB0aGUgc3NjIGFzIC00NDkyIHBwbQ0KPiA+ICsgICAgICAg
-ICAgICAgICAgICAgICAgIC0gNDAwMzogZW5hYmxlIHRoZSBzc2MgYXMgLTQwMDMgcHBtDQo+IA0K
-PiBVc2luZyBzc2Mgb3Igbm90IHNvdW5kcyBsaWtlIHNvZnR3YXJlIHBvbGljeSwgbm90IGhhcmR3
-YXJlIGRlc2NyaXB0aW9uPw0KPiBDYW4gdGhpcyBiZSBkZWNpZGVkIGF0IHJ1bnRpbWU/DQoNCkkn
-bSB0aGlua2luZyB0aGlzIGlzIGhhcmR3YXJlIGRlc2NyaXB0aW9uIDopDQpUaGlzIHNldHRpbmcg
-bmVlZHMgYmVmb3JlIHVzYjMuMCBjb250cm9sbGVyIHN0YXJ0cy4NClNvLCB0aGlzIGNhbm5vdCBi
-ZSBkZWNpZGVkIGF0IHJ1bnRpbWUuDQoNCkkgZm91bmQgcGh5L2JyY20tc2F0YS1waHkudHh0IGFs
-c28gaGFkIGEgc2ltaWxhciBwcm9wZXJ0eSAiYnJjbSxlbmFibGUtc3NjIi4NCg0KPiA+IC0tLSAv
-ZGV2L251bGwNCj4gPiArKysgYi9kcml2ZXJzL3BoeS9yZW5lc2FzL3BoeS1yY2FyLWdlbjMtdXNi
-My5jDQo+IA0KPiA+ICtzdGF0aWMgY29uc3Qgc3RydWN0IG9mX2RldmljZV9pZCByY2FyX2dlbjNf
-cGh5X3VzYjNfbWF0Y2hfdGFibGVbXSA9IHsNCj4gPiArICAgICAgIHsgLmNvbXBhdGlibGUgPSAi
-cmVuZXNhcyxyOGE3Nzk1LXVzYjMtcGh5IiB9LA0KPiA+ICsgICAgICAgeyAuY29tcGF0aWJsZSA9
-ICJyZW5lc2FzLHI4YTc3OTYtdXNiMy1waHkiIH0sDQo+IA0KPiBBcyB0aGUgZHJpdmVyIG1hdGNo
-ZXMgYWdhaW5zdCB0aGUgZ2VuZXJpYyBjb21wYXRpYmxlIHByb3BlcnR5LCB0aGUgYWJvdmUgdHdv
-DQo+IGxpbmVzIGNhbiBiZSByZW1vdmVkLg0KDQpJIGdvdCBpdC4gSSB3aWxsIHJlbW92ZSBpdC4N
-Cg0KQmVzdCByZWdhcmRzLA0KWW9zaGloaXJvIFNoaW1vZGENCg0KPiA+ICsgICAgICAgeyAuY29t
-cGF0aWJsZSA9ICJyZW5lc2FzLHJjYXItZ2VuMy11c2IzLXBoeSIgfSwNCj4gPiArICAgICAgIHsg
-fQ0KPiA+ICt9Ow0KPiA+ICtNT0RVTEVfREVWSUNFX1RBQkxFKG9mLCByY2FyX2dlbjNfcGh5X3Vz
-YjNfbWF0Y2hfdGFibGUpOw0KPiANCj4gR3J7b2V0amUsZWV0aW5nfXMsDQo+IA0KPiAgICAgICAg
-ICAgICAgICAgICAgICAgICBHZWVydA0KPiANCj4gLS0NCj4gR2VlcnQgVXl0dGVyaG9ldmVuIC0t
-IFRoZXJlJ3MgbG90cyBvZiBMaW51eCBiZXlvbmQgaWEzMiAtLSBnZWVydEBsaW51eC1tNjhrLm9y
-Zw0KPiANCj4gSW4gcGVyc29uYWwgY29udmVyc2F0aW9ucyB3aXRoIHRlY2huaWNhbCBwZW9wbGUs
-IEkgY2FsbCBteXNlbGYgYSBoYWNrZXIuIEJ1dA0KPiB3aGVuIEknbSB0YWxraW5nIHRvIGpvdXJu
-YWxpc3RzIEkganVzdCBzYXkgInByb2dyYW1tZXIiIG9yIHNvbWV0aGluZyBsaWtlIHRoYXQuDQo+
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgLS0gTGludXMgVG9ydmFsZHMNCg==
+>> "Crap origin" here is that in vast majority of cases, polarity is
+>> per-chip, not per-chip-use, knowledge. And proper location for per-chip
+>> knowledge is chip's driver.  Moving this knowledge to per-chip-use
+>> location in device trees only provides a source for errors, with little
+>> gain.
+>>
+>> Vladimir Barinov mentions possibility that signal can be inverted by
+>> board between gpio provider and chip's pin ...   but do we have at least
+>> one practical case of this?  And if we even do, it's quite uncommon, and
+>> something special should be required in device tree for these special
+>> cases and not for "normal" cases.
+> 
+> I disagree.  Not for hi8435, but I have seen quite some board designs
+> invert GPIOs before getting them into board level components.  That's
+> why we should define those xxx-gpios properties on board level DTS,
+> where polarity can be chosen per board design.
+
+Even if such, still board specific knowledge is "is gpio as-is or
+inverted", but knowledge if chip expects signal to be active low or
+active high, remains chip-specific.
+
+I'm thinking of proposing new flags in gpio binding, say
+GPIO_NATIVE_POLARITY / GPIO_INVERTED_POLARITY,  that could be used
+instead of GPIO_ACTIVE_HIGH / GPIO_ACTIVE_LOW, and leave knowledge about
+signal polarity to chip's driver, while still allow to describe
+inversion of needed.
+
+Nikita
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
