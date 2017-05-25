@@ -1,71 +1,51 @@
-From: <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v4 7/9] arm: dts: mt7623: enable the usb device on the mt7623n
- rfb
-Date: Thu, 25 May 2017 12:02:45 +0800
-Message-ID: <4cb528c77f4d44bd0932b69f39b0d5b557d9eab1.1495683769.git.sean.wang@mediatek.com>
-References: <cover.1495683769.git.sean.wang@mediatek.com>
+From: Ryder Lee <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v3 0/2] Add PCIe phy driver for some Mediatek SoCs
+Date: Thu, 25 May 2017 12:36:01 +0800
+Message-ID: <1495686963-50071-1-git-send-email-ryder.lee@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <cover.1495683769.git.sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
-List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ryder Lee <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: John Crispin <john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org>
+Hi,
 
-All versions of the mt7623n RFB have an USB port so enable the device.
-There is a gpio that gets used to power up the port supply. Add support
-for this gpio using the fixed-regulator driver.
+This patch series add PCIe phy driver and related dt-binding file for
+Mediatek SoCs.
 
-Signed-off-by: John Crispin <john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org>
-Signed-off-by: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
----
- arch/arm/boot/dts/mt7623n-rfb.dtsi | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+The PICe host driver has been applied to pci/host-mediatek for v4.13.
 
-diff --git a/arch/arm/boot/dts/mt7623n-rfb.dtsi b/arch/arm/boot/dts/mt7623n-rfb.dtsi
-index 4963e6a..2964b4c 100644
---- a/arch/arm/boot/dts/mt7623n-rfb.dtsi
-+++ b/arch/arm/boot/dts/mt7623n-rfb.dtsi
-@@ -28,6 +28,15 @@
- 		serial1 = &uart1;
- 		serial2 = &uart2;
- 	};
-+
-+	usb_p1_vbus: regulator@0 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "usb_vbus";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		gpio = <&pio 135 GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
-+	};
- };
- 
- &uart0 {
-@@ -41,3 +50,12 @@
- &uart2 {
- 	status = "okay";
- };
-+
-+&usb1 {
-+	vbus-supply = <&usb_p1_vbus>;
-+	status = "okay";
-+};
-+
-+&u3phy1 {
-+	status = "okay";
-+};
+Changes since v3:
+- rename both the driver and the binding document to make it more generic
+  so that we could reuse the driver if needed in the future.
+- correct some anotations.
+
+Changes since v2:
+- rebase to v4.12-rc1
+
+Changes since v1:
+- revise binding document:
+  drop 'status' properties.
+  add a description to 'phy-switch' property and add vendor prefix.
+
+Ryder Lee (2):
+  phy: add PCIe PHY driver for Mediatek SoCs
+  dt-bindings: phy: Add documentation for Mediatek PCIe PHY
+
+ .../devicetree/bindings/phy/phy-mediatek-pcie.txt  |  64 +++++
+ drivers/phy/Kconfig                                |   8 +
+ drivers/phy/Makefile                               |   1 +
+ drivers/phy/phy-mediatek-pcie.c                    | 290 +++++++++++++++++++++
+ 4 files changed, 363 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/phy-mediatek-pcie.txt
+ create mode 100644 drivers/phy/phy-mediatek-pcie.c
+
 -- 
-2.7.4
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
