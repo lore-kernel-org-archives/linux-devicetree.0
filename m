@@ -1,7 +1,7 @@
 From: Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v2 02/12] arm64: dts: hisilicon: update compatible string for hikey960
-Date: Thu, 25 May 2017 16:18:44 +0800
-Message-ID: <20170525081854.4701-3-guodong.xu@linaro.org>
+Subject: [PATCH v2 01/12] dt-bindings: arm: hisilicon: add bindings for HiKey960 board
+Date: Thu, 25 May 2017 16:18:43 +0800
+Message-ID: <20170525081854.4701-2-guodong.xu@linaro.org>
 References: <20170525081854.4701-1-guodong.xu@linaro.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <20170525081854.4701-1-guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
@@ -10,29 +10,29 @@ To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@pu
 Cc: zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Update compatible string for hikey960. HiKey960 is a develpment board built
-with SoC Hi3660.
+Add bindings for HiKey960 Board.
 
 Signed-off-by: Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Signed-off-by: Chen Feng <puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
 Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 ---
- arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ Documentation/devicetree/bindings/arm/hisilicon/hisilicon.txt | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts b/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
-index 186251f..64875a5 100644
---- a/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
-+++ b/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
-@@ -12,7 +12,7 @@
+diff --git a/Documentation/devicetree/bindings/arm/hisilicon/hisilicon.txt b/Documentation/devicetree/bindings/arm/hisilicon/hisilicon.txt
+index 2e73215..7111fbc8 100644
+--- a/Documentation/devicetree/bindings/arm/hisilicon/hisilicon.txt
++++ b/Documentation/devicetree/bindings/arm/hisilicon/hisilicon.txt
+@@ -4,6 +4,10 @@ Hi3660 SoC
+ Required root node properties:
+ 	- compatible = "hisilicon,hi3660";
  
- / {
- 	model = "HiKey960";
--	compatible = "hisilicon,hi3660";
-+	compatible = "hisilicon,hi3660-hikey960", "hisilicon,hi3660";
- 
- 	aliases {
- 		serial5 = &uart5;       /* console UART */
++HiKey960 Board
++Required root node properties:
++	- compatible = "hisilicon,hi3660-hikey960", "hisilicon,hi3660";
++
+ Hi3798cv200 SoC
+ Required root node properties:
+ 	- compatible = "hisilicon,hi3798cv200";
 -- 
 2.10.2
 
