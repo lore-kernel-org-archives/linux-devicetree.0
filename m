@@ -1,160 +1,64 @@
-From: Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 1/4] Docs: dt: document qcom iommu bindings
-Date: Thu, 25 May 2017 13:33:37 -0400
-Message-ID: <20170525173340.26904-2-robdclark@gmail.com>
-References: <20170525173340.26904-1-robdclark@gmail.com>
+From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Subject: Re: [PATCH] usb: dwc2: add support for the DWC2 controller on Meson8 SoCs
+Date: Thu, 25 May 2017 19:39:06 +0200
+Message-ID: <CAFBinCBBN9xAoqjqJKeu66wEXOtp-mN2EQK3ibnvNuw1nOMa=g@mail.gmail.com>
+References: <20170506173745.19593-1-martin.blumenstingl@googlemail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <20170525173340.26904-1-robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Stanimir Varbanov <stanimir.varbanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170506173745.19593-1-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org
+Cc: linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Signed-off-by: Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
----
- .../devicetree/bindings/iommu/qcom,iommu.txt       | 121 +++++++++++++++++++++
- 1 file changed, 121 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iommu/qcom,iommu.txt
+Hi John,
 
-diff --git a/Documentation/devicetree/bindings/iommu/qcom,iommu.txt b/Documentation/devicetree/bindings/iommu/qcom,iommu.txt
-new file mode 100644
-index 0000000..0d50f84
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iommu/qcom,iommu.txt
-@@ -0,0 +1,121 @@
-+* QCOM IOMMU v1 Implementation
-+
-+Qualcomm "B" family devices which are not compatible with arm-smmu have
-+a similar looking IOMMU but without access to the global register space,
-+and optionally requiring additional configuration to route context irqs
-+to non-secure vs secure interrupt line.
-+
-+** Required properties:
-+
-+- compatible       : Should be one of:
-+
-+                        "qcom,msm8916-iommu"
-+
-+                     Followed by "qcom,msm-iommu-v1".
-+
-+- clock-names      : Should be a pair of "iface" (required for IOMMUs
-+                     register group access) and "bus" (required for
-+                     the IOMMUs underlying bus access).
-+
-+- clocks           : Phandles for respective clocks described by
-+                     clock-names.
-+
-+- #address-cells   : must be 1.
-+
-+- #size-cells      : must be 1.
-+
-+- #iommu-cells     : Must be 1.
-+
-+- ranges           : Base address and size of the iommu context banks.
-+
-+- qcom,iommu-secure-id  : secure-id.
-+
-+- List of sub-nodes, one per translation context bank.  Each sub-node
-+  has the following required properties:
-+
-+  - compatible     : Should be one of:
-+        - "qcom,msm-iommu-v1-ns"  : non-secure context bank
-+        - "qcom,msm-iommu-v1-sec" : secure context bank
-+  - reg            : Base address and size of context bank within the iommu
-+  - interrupts     : The context fault irq.
-+
-+** Optional properties:
-+
-+- reg              : Base address and size of the SMMU local base, should
-+                     be only specified if the iommu requires configuration
-+                     for routing of context bank irq's to secure vs non-
-+                     secure lines.  (Ie. if the iommu contains secure
-+                     context banks)
-+
-+
-+** Examples:
-+
-+	apps_iommu: iommu@1e20000 {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		#iommu-cells = <1>;
-+		compatible = "qcom,msm8916-iommu", "qcom,msm-iommu-v1";
-+		ranges = <0 0x1e20000 0x40000>;
-+		reg = <0x1ef0000 0x3000>;
-+		clocks = <&gcc GCC_SMMU_CFG_CLK>,
-+			 <&gcc GCC_APSS_TCU_CLK>;
-+		clock-names = "iface", "bus";
-+		qcom,iommu-secure-id = <17>;
-+
-+		// mdp_0:
-+		iommu-ctx@4000 {
-+			compatible = "qcom,msm-iommu-v1-ns";
-+			reg = <0x4000 0x1000>;
-+			interrupts = <GIC_SPI 70 0>;
-+		};
-+
-+		// venus_ns:
-+		iommu-ctx@5000 {
-+			compatible = "qcom,msm-iommu-v1-sec";
-+			reg = <0x5000 0x1000>;
-+			interrupts = <GIC_SPI 70 0>;
-+		};
-+	};
-+
-+	gpu_iommu: iommu@1f08000 {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		#iommu-cells = <1>;
-+		compatible = "qcom,msm8916-iommu", "qcom,msm-iommu-v1";
-+		ranges = <0 0x1f08000 0x10000>;
-+		clocks = <&gcc GCC_SMMU_CFG_CLK>,
-+			 <&gcc GCC_GFX_TCU_CLK>;
-+		clock-names = "iface", "bus";
-+		qcom,iommu-secure-id = <18>;
-+
-+		// gfx3d_user:
-+		iommu-ctx@1f09000 {
-+			compatible = "qcom,msm-iommu-v1-ns";
-+			reg = <0x1000 0x1000>;
-+			interrupts = <GIC_SPI 241 0>;
-+		};
-+
-+		// gfx3d_priv:
-+		iommu-ctx@1f0a000 {
-+			compatible = "qcom,msm-iommu-v1-ns";
-+			reg = <0x2000 0x1000>;
-+			interrupts = <GIC_SPI 242 0>;
-+		};
-+	};
-+
-+	...
-+
-+	venus: video-codec@1d00000 {
-+		...
-+		iommus = <&apps_iommu 5>;
-+	};
-+
-+	mdp: mdp@1a01000 {
-+		...
-+		iommus = <&apps_iommu 4>;
-+	};
-+
-+	gpu@01c00000 {
-+		...
-+		iommus = <&gpu_iommu 1>, <&gpu_iommu 2>;
-+	};
--- 
-2.9.4
+On Sat, May 6, 2017 at 7:37 PM, Martin Blumenstingl
+<martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org> wrote:
+> USB support in the Meson8 SoCs is provided by a DWC2 controller which
+> works with the same settings as Meson8b and GXBB. Using the generic
+> "snps,dwc2" binding results in an endless stream of "Overcurrent change
+> detected" messages.
+>
+> Signed-off-by: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+do you want me to re-send this with Rob's ACK?
+also please let me know if something is still missing in this patch
+
+> ---
+>  Documentation/devicetree/bindings/usb/dwc2.txt | 1 +
+>  drivers/usb/dwc2/params.c                      | 2 ++
+>  2 files changed, 3 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/usb/dwc2.txt b/Documentation/devicetree/bindings/usb/dwc2.txt
+> index 6c7c2bce6d0c..b55be381ae85 100644
+> --- a/Documentation/devicetree/bindings/usb/dwc2.txt
+> +++ b/Documentation/devicetree/bindings/usb/dwc2.txt
+> @@ -10,6 +10,7 @@ Required properties:
+>    - "rockchip,rk3288-usb", "rockchip,rk3066-usb", "snps,dwc2": for rk3288 Soc;
+>    - "lantiq,arx100-usb": The DWC2 USB controller instance in Lantiq ARX SoCs;
+>    - "lantiq,xrx200-usb": The DWC2 USB controller instance in Lantiq XRX SoCs;
+> +  - "amlogic,meson8-usb": The DWC2 USB controller instance in Amlogic Meson8 SoCs;
+>    - "amlogic,meson8b-usb": The DWC2 USB controller instance in Amlogic Meson8b SoCs;
+>    - "amlogic,meson-gxbb-usb": The DWC2 USB controller instance in Amlogic S905 SoCs;
+>    - "amcc,dwc-otg": The DWC2 USB controller instance in AMCC Canyonlands 460EX SoCs;
+> diff --git a/drivers/usb/dwc2/params.c b/drivers/usb/dwc2/params.c
+> index 2990c347289f..0d6290ed66ea 100644
+> --- a/drivers/usb/dwc2/params.c
+> +++ b/drivers/usb/dwc2/params.c
+> @@ -128,6 +128,8 @@ const struct of_device_id dwc2_of_match_table[] = {
+>         { .compatible = "lantiq,xrx200-usb", .data = dwc2_set_ltq_params },
+>         { .compatible = "snps,dwc2" },
+>         { .compatible = "samsung,s3c6400-hsotg" },
+> +       { .compatible = "amlogic,meson8-usb",
+> +         .data = dwc2_set_amlogic_params },
+>         { .compatible = "amlogic,meson8b-usb",
+>           .data = dwc2_set_amlogic_params },
+>         { .compatible = "amlogic,meson-gxbb-usb",
+> --
+> 2.12.2
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
