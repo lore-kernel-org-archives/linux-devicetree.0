@@ -1,60 +1,187 @@
-From: Babu Moger <babu.moger@oracle.com>
-Subject: Re: CPU_BIG_ENDIAN in generic code (was: Re: [PATCH v3 3/7]
- arch/sparc: Define config parameter CPU_BIG_ENDIAN)
-Date: Thu, 25 May 2017 15:22:13 -0500
-Message-ID: <0b20ab53-a154-0b57-e842-4636b6048e40@oracle.com>
-References: <CAMuHMdVjh+1TR19mUUQYHSazHnBHa4uxn7KyHUO+jAh7WDxy5Q@mail.gmail.com>
- <CAK8P3a1XZGQk3b3q+JFJ+mLgw_upUdAtTM1VBjHZq5f2m-YdUg@mail.gmail.com>
- <8ddc7276-6296-2284-51d3-01093ccbeccb@oracle.com>
- <CAK8P3a0MEkZ0wpsrit+sS8A0Z5T_jFWF5vFq_BqF2A1tReb7tQ@mail.gmail.com>
+From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH V5 2/4] mtd: partitions: add support for allocating
+ subpartition
+Date: Thu, 25 May 2017 13:25:44 -0700
+Message-ID: <20170525202544.GB114788@google.com>
+References: <20170524094437.2174-1-zajec5@gmail.com>
+ <20170524094437.2174-3-zajec5@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <sparclinux-owner@vger.kernel.org>
-In-Reply-To: <CAK8P3a0MEkZ0wpsrit+sS8A0Z5T_jFWF5vFq_BqF2A1tReb7tQ@mail.gmail.com>
-Content-Language: en-US
-Sender: sparclinux-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>, "David S. Miller" <davem@davemloft.net>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, sparclinux <sparclinux@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux-Arch <linux-arch@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170524094437.2174-3-zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Wed, May 24, 2017 at 11:44:35AM +0200, Rafał Miłecki wrote:
+> From: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+> 
+> Some flash device partitions can be containers with extra subpartitions
+> (volumes). When allocating subpartition it should be validated against
+> its parent but its master pointer has to point flash device. It's needed
+> to make all callbacks like part_read work as expected. It also has to
+> have offset calculated correctly.
+> 
+> This patch modifies allocate_partition to detect if provided parent is
+> an existing partition and sets "master" and "offset" correctly if so.
+> 
+> Signed-off-by: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+> ---
+> V5: Introduction of this patch to handle offset in allocate_partition
+>     and avoid casting const to non-const in mtd_parse_part.
+> ---
+>  drivers/mtd/mtdpart.c | 31 +++++++++++++++++++++++--------
+>  1 file changed, 23 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/mtd/mtdpart.c b/drivers/mtd/mtdpart.c
+> index 92acd89e07cb..8a0629449804 100644
+> --- a/drivers/mtd/mtdpart.c
+> +++ b/drivers/mtd/mtdpart.c
+> @@ -37,7 +37,13 @@
+>  static LIST_HEAD(mtd_partitions);
+>  static DEFINE_MUTEX(mtd_partitions_mutex);
+>  
+> -/* Our partition node structure */
+> +/**
+> + * struct mtd_part - our partition node structure
+> + *
+> + * @mtd: struct holding partition details
+> + * @master: pointer to the flash device MTD struct
+> + * @offset: partition offset relative to the *flash device*
+> + */
+>  struct mtd_part {
+>  	struct mtd_info mtd;
+>  	struct mtd_info *master;
+> @@ -393,9 +399,18 @@ static struct mtd_part *allocate_partition(struct mtd_info *parent,
+>  			const struct mtd_partition *part, int partno,
+>  			uint64_t cur_offset)
+>  {
+> +	struct mtd_info *master = parent;
+>  	struct mtd_part *slave;
+> +	uint64_t parent_offset = 0;
+>  	char *name;
+>  
+> +	if (mtd_is_partition(parent)) {
+> +		struct mtd_part *parent_part = mtd_to_part(parent);
+> +
+> +		master = parent_part->master;
 
-On 5/25/2017 3:09 PM, Arnd Bergmann wrote:
-> On Thu, May 25, 2017 at 4:51 PM, Babu Moger <babu.moger@oracle.com> wrote:
->> On 5/24/2017 5:18 AM, Arnd Bergmann wrote:
->>>> I guess the time is ripe for adding (both) symbols to all architectures?
->>> Good idea. I think we can do most of this by adding a few lines to
->>> arch/Kconfig:
->>>
->>> config CPU_BIG_ENDIAN
->>>           bool
->>>
->>> config CPU_LITTLE_ENDIAN
->>>          def_bool !CPU_BIG_ENDIAN
->>>
->>> This way, we only need to add 'select CPU_BIG_ENDIAN' to the
->>> architectures that are always big-endian, and we don't need to
->>> change anything for the ones that have a single 'CPU_BIG_ENDIAN'
->>> option.
->>>
->>> The three architectures that have a 'choice' statement (mips, ppc and
->>> sh) will have to convert, and m32r will have to replace the
->>
->> what to you mean by "(mips, ppc andsh) will have to convert"?  Do you expect
->> any changes here?
->>
-> Kconfig does not allow you to have the same symbol as both a regular
-> 'bool' and also 'bool within choice', so those three have to replace the
-> choice with a user-visible 'config CPU_BIG_ENDIAN' option like the
-> other ones have.
+Are you trying to keep a flat structure, or a tree? It seems like you're mostly
+doing a flat structure (with one bug, see below), but I was kinda thinking it'd
+be natural to actually represent the tree structure. In case that's confusing,
+I'll try to expalin below.
 
-Ok. I will address it in my  next version.  Thanks
+Take a look at these two snippets:
 
->
-> I also notice that  for arch/s390/Kconfig you now have both the
-> 'select CPU_BIG_ENDIAN' and the 'config CPU_BIG_ENDIAN
-> def_bool y', I'd remove the second one in the same patch.
+        slave->mtd.dev.parent = IS_ENABLED(CONFIG_MTD_PARTITIONED_MASTER) ?
+                                &parent->dev :
+                                parent->dev.parent;
+	...
+	slave->master = master;
 
-Sure. Will correct it.
->         Arnd
+So (assuming CONFIG_MTD_PARTITIONED_MASTER), you've set up a sysfs structure in
+which the parent device is always the device that created you, but the ->master
+always points at the top-level "master" MTD.
 
+[In the !CONFIG_MTD_PARTITIONED_MASTER case, then the sub-partitions will have
+->dev.parent set to the device that created the *master*, not the device
+(i.e., MTD) that created the subpartition. This is inconsistent.]
+
+So I guess you need to decide if you're aiming to keep a mostly flat parental
+structure. i.e., should the ->master graph look like:
+
+  master MTD
+   -> partition 1
+   -> partition parsed from partition 1
+
+or should it be a tree:
+
+  master MTD
+   -> partition 1
+      -> partition parsed from partition 1
+
+Then, to be consistent you either need the ->mtd.dev.parent to be flat, like
+this:
+
+	slave->mtd.dev.parent = IS_ENABLED(CONFIG_MTD_PARTITIONED_MASTER) || mtd_is_partition(parent) ?
+				&master->dev :
+				master->dev.parent;
+
+or tree-like:
+
+	slave->mtd.dev.parent = IS_ENABLED(CONFIG_MTD_PARTITIONED_MASTER) || mtd_is_partition(parent) ?
+				&parent->dev :
+				parent->dev.parent;
+
+And the corresponding ->master for flat:
+
+	slave->master = master;
+
+or tree-like:
+
+	slave->master = parent;
+
+With tree-like, you need fewer modifications to this function. (Mostly
+you just would want the naming changes and/or comments, to clarify what
+"master" means.)
+
+With flat, I suppose maybe you only need to bugfix the
+slave->mtd.dev.parent assignment.
+
+Let me know what you think.
+
+Brian
+
+> +		parent_offset = parent_part->offset;
+> +	}
+> +
+>  	/* allocate the partition structure */
+>  	slave = kzalloc(sizeof(*slave), GFP_KERNEL);
+>  	name = kstrdup(part->name, GFP_KERNEL);
+> @@ -493,12 +508,12 @@ static struct mtd_part *allocate_partition(struct mtd_info *parent,
+>  		slave->mtd._put_device = part_put_device;
+>  
+>  	slave->mtd._erase = part_erase;
+> -	slave->master = parent;
+> -	slave->offset = part->offset;
+> +	slave->master = master;
+> +	slave->offset = parent_offset + part->offset;
+>  
+> -	if (slave->offset == MTDPART_OFS_APPEND)
+> +	if (part->offset == MTDPART_OFS_APPEND)
+>  		slave->offset = cur_offset;
+> -	if (slave->offset == MTDPART_OFS_NXTBLK) {
+> +	if (part->offset == MTDPART_OFS_NXTBLK) {
+>  		slave->offset = cur_offset;
+>  		if (mtd_mod_by_eb(cur_offset, parent) != 0) {
+>  			/* Round up to next erasesize */
+> @@ -508,7 +523,7 @@ static struct mtd_part *allocate_partition(struct mtd_info *parent,
+>  			       (unsigned long long)cur_offset, (unsigned long long)slave->offset);
+>  		}
+>  	}
+> -	if (slave->offset == MTDPART_OFS_RETAIN) {
+> +	if (part->offset == MTDPART_OFS_RETAIN) {
+>  		slave->offset = cur_offset;
+>  		if (parent->size - slave->offset >= slave->mtd.size) {
+>  			slave->mtd.size = parent->size - slave->offset
+> @@ -536,8 +551,8 @@ static struct mtd_part *allocate_partition(struct mtd_info *parent,
+>  			part->name);
+>  		goto out_register;
+>  	}
+> -	if (slave->offset + slave->mtd.size > parent->size) {
+> -		slave->mtd.size = parent->size - slave->offset;
+> +	if (slave->offset + slave->mtd.size > parent_offset + parent->size) {
+> +		slave->mtd.size = parent_offset + parent->size - slave->offset;
+>  		printk(KERN_WARNING"mtd: partition \"%s\" extends beyond the end of device \"%s\" -- size truncated to %#llx\n",
+>  			part->name, parent->name, (unsigned long long)slave->mtd.size);
+>  	}
+> -- 
+> 2.11.0
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
