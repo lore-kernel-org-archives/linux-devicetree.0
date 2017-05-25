@@ -1,65 +1,58 @@
-From: <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v4 6/9] arm: dts: mt7623: cleanup the mt7623n rfb uart nodes
-Date: Thu, 25 May 2017 12:02:44 +0800
-Message-ID: <a86b82db861d9f5cfd88425ee642a255a7633de2.1495683769.git.sean.wang@mediatek.com>
+From: <sean.wang@mediatek.com>
+Subject: [PATCH v4 5/9] ARM: mediatek: add MT7623a smp bringup code
+Date: Thu, 25 May 2017 12:02:43 +0800
+Message-ID: <5505e57a74b83ecf31868ab2d5f0d15b0597c22b.1495683769.git.sean.wang@mediatek.com>
 References: <cover.1495683769.git.sean.wang@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <cover.1495683769.git.sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <cover.1495683769.git.sean.wang@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh+dt@kernel.org, matthias.bgg@gmail.com, mark.rutland@arm.com, devicetree@vger.kernel.org, john@phrozen.org, linux-mediatek@lists.infradead.org
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Sean Wang <sean.wang@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-From: John Crispin <john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org>
+From: Sean Wang <sean.wang@mediatek.com>
 
-This patch does a cleanup of the uart nodes in the dts file of the RFB. It
-adds aliases, enables 2 more uarts and explicitly sets the uart mode of the
-console.
+Add support for booting secondary CPUs on MT7623a.
 
-Signed-off-by: John Crispin <john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org>
-Signed-off-by: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Signed-off-by: Sean Wang <sean.wang@mediatek.com>
 ---
- arch/arm/boot/dts/mt7623n-rfb.dtsi | 16 +++++++++++++++-
- 1 file changed, 15 insertions(+), 1 deletion(-)
+ arch/arm/mach-mediatek/mediatek.c | 2 ++
+ arch/arm/mach-mediatek/platsmp.c  | 1 +
+ 2 files changed, 3 insertions(+)
 
-diff --git a/arch/arm/boot/dts/mt7623n-rfb.dtsi b/arch/arm/boot/dts/mt7623n-rfb.dtsi
-index c526116..4963e6a 100644
---- a/arch/arm/boot/dts/mt7623n-rfb.dtsi
-+++ b/arch/arm/boot/dts/mt7623n-rfb.dtsi
-@@ -16,12 +16,26 @@
+diff --git a/arch/arm/mach-mediatek/mediatek.c b/arch/arm/mach-mediatek/mediatek.c
+index a6e3c98..1b52011 100644
+--- a/arch/arm/mach-mediatek/mediatek.c
++++ b/arch/arm/mach-mediatek/mediatek.c
+@@ -30,6 +30,7 @@ static void __init mediatek_timer_init(void)
  
- / {
- 	chosen {
--		stdout-path = &uart2;
-+		stdout-path = "serial2:115200n8";
- 	};
- 
- 	memory@80000000 {
- 		reg = <0 0x80000000 0 0x40000000>;
- 	};
-+
-+	aliases {
-+		serial0 = &uart0;
-+		serial1 = &uart1;
-+		serial2 = &uart2;
-+	};
-+};
-+
-+&uart0 {
-+	status = "okay";
-+};
-+
-+&uart1 {
-+	status = "okay";
+ 	if (of_machine_is_compatible("mediatek,mt6589") ||
+ 	    of_machine_is_compatible("mediatek,mt7623") ||
++	    of_machine_is_compatible("mediatek,mt7623a") ||
+ 	    of_machine_is_compatible("mediatek,mt8135") ||
+ 	    of_machine_is_compatible("mediatek,mt8127")) {
+ 		/* turn on GPT6 which ungates arch timer clocks */
+@@ -49,6 +50,7 @@ static const char * const mediatek_board_dt_compat[] = {
+ 	"mediatek,mt6589",
+ 	"mediatek,mt6592",
+ 	"mediatek,mt7623",
++	"mediatek,mt7623a",
+ 	"mediatek,mt8127",
+ 	"mediatek,mt8135",
+ 	NULL,
+diff --git a/arch/arm/mach-mediatek/platsmp.c b/arch/arm/mach-mediatek/platsmp.c
+index 726eb69..27d78c9 100644
+--- a/arch/arm/mach-mediatek/platsmp.c
++++ b/arch/arm/mach-mediatek/platsmp.c
+@@ -59,6 +59,7 @@ static const struct of_device_id mtk_tz_smp_boot_infos[] __initconst = {
+ static const struct of_device_id mtk_smp_boot_infos[] __initconst = {
+ 	{ .compatible   = "mediatek,mt6589", .data = &mtk_mt6589_boot },
+ 	{ .compatible   = "mediatek,mt7623", .data = &mtk_mt7623_boot },
++	{ .compatible   = "mediatek,mt7623a", .data = &mtk_mt7623_boot },
  };
  
- &uart2 {
+ static void __iomem *mtk_smp_base;
 -- 
 2.7.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
