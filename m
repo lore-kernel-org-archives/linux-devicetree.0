@@ -1,8 +1,8 @@
 From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH 1/6] ARM: sun7i: a20: cubieboard2: Move usb_otg
- node for alphabetical ordering
-Date: Thu, 25 May 2017 15:31:33 +0800
-Message-ID: <20170525073138.20907-2-wens@csie.org>
+Subject: [PATCH 5/6] ARM: sun6i: a31: hummingbird: Enable
+ AXP221's ACIN power supply
+Date: Thu, 25 May 2017 15:31:37 +0800
+Message-ID: <20170525073138.20907-6-wens@csie.org>
 References: <20170525073138.20907-1-wens@csie.org>
 Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
@@ -20,44 +20,30 @@ To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.o
 Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-We want to keep node references in alphabetical order, except for
-instances where node must be #included first.
+The ACIN pins of the AXP221 PMIC on the A31 Hummingbird are tied to the
+DC jack on the board through a 12V to 5V buck converter.
 
-Move the usb_otg node reference so that all references to non-AXP209
-device nodes are in alphabetical order.
+Enable the ACIN power supply.
 
 Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 ---
- arch/arm/boot/dts/sun7i-a20-cubieboard2.dts | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ arch/arm/boot/dts/sun6i-a31-hummingbird.dts | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/arch/arm/boot/dts/sun7i-a20-cubieboard2.dts b/arch/arm/boot/dts/sun7i-a20-cubieboard2.dts
-index 7ac5bcc9f972..c21edd75d0b3 100644
---- a/arch/arm/boot/dts/sun7i-a20-cubieboard2.dts
-+++ b/arch/arm/boot/dts/sun7i-a20-cubieboard2.dts
-@@ -174,11 +174,6 @@
- 	status = "okay";
- };
+diff --git a/arch/arm/boot/dts/sun6i-a31-hummingbird.dts b/arch/arm/boot/dts/sun6i-a31-hummingbird.dts
+index 55607208468b..9ecb5f0b3f83 100644
+--- a/arch/arm/boot/dts/sun6i-a31-hummingbird.dts
++++ b/arch/arm/boot/dts/sun6i-a31-hummingbird.dts
+@@ -253,6 +253,10 @@
  
--&usb_otg {
--	dr_mode = "otg";
--	status = "okay";
--};
--
- #include "axp209.dtsi"
+ #include "axp22x.dtsi"
  
- &reg_dcdc2 {
-@@ -220,6 +215,11 @@
- 	status = "okay";
- };
- 
-+&usb_otg {
-+	dr_mode = "otg";
++&ac_power_supply {
 +	status = "okay";
 +};
 +
- &usbphy {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&usb0_id_detect_pin>;
+ &reg_aldo1 {
+ 	regulator-min-microvolt = <3300000>;
+ 	regulator-max-microvolt = <3300000>;
 -- 
 2.11.0
