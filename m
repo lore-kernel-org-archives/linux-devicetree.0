@@ -1,47 +1,94 @@
-From: Rob Herring <robh@kernel.org>
-Subject: =?UTF-8?B?UmU6IOetlOWkjTogW1BhdGNoIHYzIDEvM10gYXJtNjQ6IGR0czogaGkzNjYwOiBhZGQgcA==?=
-        =?UTF-8?B?Y2llIG5vZGU=?=
-Date: Thu, 25 May 2017 07:38:38 -0500
-Message-ID: <CAL_JsqJV5TA2ADo35tqGXC61NWK9PDqw8Dq5m5fYHg59yaoEUA@mail.gmail.com>
-References: <20170518074946.21362-1-songxiaowei@hisilicon.com>
- <20170523141641.kbb4falhs574dfpu@rob-hp-laptop> <99B4C6BADD9E3241B25E52B02BA737C54116D35D@DGGEMA505-MBX.china.huawei.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [RFC 0/3] misc: new serdev based drivers for w2sg00x4 GPS module
+ and w2cbw003 wifi/bluetooth
+Date: Thu, 25 May 2017 07:48:57 -0500
+Message-ID: <CAL_JsqLE5ANtLNQ9oQR3djEV8V8RX8Kuw_iK34_-YrpTp6+GiA@mail.gmail.com>
+References: <cover.1495363443.git.hns@goldelico.com> <CAL_Jsq+fmi2QwE7J8xv47ece1b+jqnOo99NghfjtocnrRvBkPg@mail.gmail.com>
+ <78B1501A-B9AD-4C6E-A481-26F647AA2BCE@goldelico.com> <CAL_JsqJamBBggr9AOQtQWtZOG+FevK1XEU_D=nYL6=hyvjviVw@mail.gmail.com>
+ <0D94BEA0-F98D-48F6-9DDC-99F932AE7834@goldelico.com> <CAL_JsqK5NxL+rHU2enW0Lo+e+HThp-iK3hpW-UxeFREbivRZOw@mail.gmail.com>
+ <889E8F7F-FC0F-490E-B924-D04D9F4D3402@goldelico.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <99B4C6BADD9E3241B25E52B02BA737C54116D35D@DGGEMA505-MBX.china.huawei.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: songxiaowei <songxiaowei@hisilicon.com>
-Cc: "Wangzhou (B)" <wangzhou1@hisilicon.com>, Gabriele Paoloni <gabriele.paoloni@huawei.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "xuwei (O)" <xuwei5@hisilicon.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Chenfeng (puck)" <puck.chen@hisilicon.com>, "guodong.xu@linaro.org" <guodong.xu@linaro.org>, Wangbinghui <wangbinghui@hisilicon.com>, Suzhuangluan <suzhuangluan@hisilicon.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <889E8F7F-FC0F-490E-B924-D04D9F4D3402@goldelico.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Russell King <linux@armlinux.org.uk>, Thierry Reding <treding@nvidia.com>, Jonathan Cameron <jic23@kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-omap <linux-omap@vger.kernel.org>, Discussions about the Letux Kernel <letux-kernel@openphoenux.org>, kernel@pyra-handheld.com, Marcel Holtmann <marcel@holtmann.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 23, 2017 at 8:39 PM, songxiaowei <songxiaowei@hisilicon.com> wrote:
-> -----邮件原件-----
-> 发件人: Rob Herring [mailto:robh@kernel.org]
-> 发送时间: 2017年5月23日 22:17
-> 收件人: songxiaowei
-> 抄送: Wangzhou (B); Gabriele Paoloni; bhelgaas@google.com; mark.rutland@arm.com; xuwei (O); catalin.marinas@arm.com; will.deacon@arm.com; linux-pci@vger.kernel.org; devicetree@vger.kernel.org; linux-kernel@vger.kernel.org; Chenfeng (puck); guodong.xu@linaro.org; Wangbinghui; Suzhuangluan
-> 主题: Re: [Patch v3 1/3] arm64: dts: hi3660: add pcie node
+On Tue, May 23, 2017 at 8:49 AM, H. Nikolaus Schaller <hns@goldelico.com> wrote:
+> Hi Rob,
 >
-> On Thu, May 18, 2017 at 03:49:46PM +0800, Song Xiaowei wrote:
->> Add PCIe node for hi3660, and add binding documentation.
+>> Am 23.05.2017 um 15:10 schrieb Rob Herring <robh+dt@kernel.org>:
 >>
->> Cc: Guodong Xu <guodong.xu@linaro.org>
->> Signed-off-by: Song Xiaowei <songxiaowei@hisilicon.com>
->> ---
->>  .../devicetree/bindings/pci/hisilicon-pcie.txt     | 52 ++++++++++++++++++++++
->>  arch/arm64/boot/dts/hisilicon/hi3660.dtsi          | 31 +++++++++++++
-
-[...]
-
->> +  "config": PCIe configuration space registers.
->> +- reset-gpio: perst assert/deassert gpio
+>> +Marcel
 >
-> reset-gpios
-> [songxiaowei] rest-gpio is used to signal 'pcie perst': high level refers to deassert
->              and low level refers to assert. So, I think ' reset-gpio: creates perst assert/deassert signal '
->                         would be a better choice.
+> Good!
+>
+>>
+>> On Tue, May 23, 2017 at 7:48 AM, H. Nikolaus Schaller <hns@goldelico.com> wrote:
+>>> Hi Rob,
+>>>
+>>>> Am 23.05.2017 um 14:28 schrieb Rob Herring <robh+dt@kernel.org>:
+>>>>
+>>>> On Tue, May 23, 2017 at 12:43 AM, H. Nikolaus Schaller
+>>>> <hns@goldelico.com> wrote:
+>>>>> Hi Rob,
+>>>>>
+>>>>>> Am 23.05.2017 um 04:26 schrieb Rob Herring <robh+dt@kernel.org>:
+>>>>>>
+>>>>>> On Sun, May 21, 2017 at 5:44 AM, H. Nikolaus Schaller <hns@goldelico.com> wrote:
+>>>>>>> Since our proposed API was not acceptable and the new serdev API has arrived in 4.11 kernels,
+>>>>>>> we finally took the challenge to update the w2sg and w2cbw drivers to use the serdev API.
+>>>>>>>
+>>>>>>> The approach is to write a "man in the middle" driver which is on one side a serdev client
+>>>>>>> which directly controls the UART where the device is connected to and on the other side
+>>>>>>> presents a new tty port so that user-space software can talk to the chips as if they would
+>>>>>>> directly talk to the UART of the SoC (e.g. ttyO1). This is similar to connecting to a remote
+>>>>>>> serial device e.g. through USB (ttyACM) or Bluetooth UART profiles.
+>>>>>>>
+>>>>>>> For example gpsd or hciattach expect a /dev/tty they can control (flow control, baud rate
+>>>>>>> etc.).
+>>>>>>
+>>>>>> I understand from the prior discussion why you want to pass the data
+>>>>>> thru for gps, but why do you need to do that for BT?
+>>>>>
+>>>>> Because we otherwise can't turn on power when /dev/ttyBT0 is opened and turn off when it
+>>>>> is closed. I.e. it should not be powered unless someone does a hciattach /dev/ttyBT0. And it
+>>>>> should be turned off by a killall hciattach.
+>>>>
+>>>> Still, you can do power control within BT HCI drivers.
+>>>
+>>> We do not use any driver for bluetooth. We just start hciattach on demand.
+>>> And afaik there is no plugin mechanism for adding power control to hciattach.
+>>
+>> You don't need hciattach. All userspace has to do for kernel BT
+>> drivers is "hciconfig hci0 up|down".
+>
+> Hm. Well:
+>
+> root@letux:~# hciconfig hci0 up
+> Can't get device info: No such device
+> root@letux:~#
+>
+> I wonder how I can tell hciconfig about the UART port if not by running hciattach /dev/ttyBT0?
 
-What I was saying is the name should be reset-gpios, not reset-gpio.
+You don't create a tty device. Instead you call
+hci_uart_register_device from the serdev probe.
+
+>>> Or do you have a link to what you think about?
+>>
+>> Look at the nokia BT or TI (HCI_LL) BT drivers. Those both have f/w
+>> downloading and some GPIO controls. Given that this module is based on
+>> Marvell chipset, I'd expect you need to add serdev support to
+>> hci_mrvl.c.
+>
+> The w2cb003 has a Marvell WiFi (libertas) but a CSR Bluetooth side.
+>
+> It has built-in firmware and already talks serial HCI over simple UART right
+> after power-on. This is why our serdev driver has no firmware download.
+
+Okay, then probably add serdev support to hci_bcsp. In any case,
+hci_uart_register_device just needs to register the correct protocol.
 
 Rob
