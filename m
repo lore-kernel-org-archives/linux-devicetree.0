@@ -1,275 +1,192 @@
-From: Babu Moger <babu.moger-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>
-Subject: Re: CPU_BIG_ENDIAN in generic code (was: Re: [PATCH v3 3/7]
- arch/sparc: Define config parameter CPU_BIG_ENDIAN)
-Date: Thu, 25 May 2017 09:51:52 -0500
-Message-ID: <8ddc7276-6296-2284-51d3-01093ccbeccb@oracle.com>
-References: <CAMuHMdVjh+1TR19mUUQYHSazHnBHa4uxn7KyHUO+jAh7WDxy5Q@mail.gmail.com>
- <CAK8P3a1XZGQk3b3q+JFJ+mLgw_upUdAtTM1VBjHZq5f2m-YdUg@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAK8P3a1XZGQk3b3q+JFJ+mLgw_upUdAtTM1VBjHZq5f2m-YdUg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Cc: "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Peter Zijlstra <peterz-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Ingo Molnar <mingo-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, sparclinux <sparclinux-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-Arch <linux-arch-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Leo Yan <leo.yan@linaro.org>
+Subject: [PATCH v13 0/9] coresight: enable debug module
+Date: Thu, 25 May 2017 23:57:07 +0800
+Message-ID: <1495727836-30094-1-git-send-email-leo.yan@linaro.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Jonathan Corbet <corbet@lwn.net>, Mathieu Poirier <mathieu.poirier@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Wei Xu <xuwei5@hisilicon.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Suzuki K Poulose <suzuki.poulose@arm.com>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, Stephen Boyd <sboyd@codeaurora.org>, Mike Leach <mike.leach@linaro.org>
+Cc: Leo Yan <leo.yan@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Arnd,
+ARMv8 architecture reference manual (ARM DDI 0487A.k) Chapter H7 "The
+Sample-based Profiling Extension" has description for sampling
+registers, we can utilize these registers to check program counter
+value with combined CPU exception level, secure state, etc. So this is
+helpful for CPU lockup bugs, e.g. if one CPU has run into infinite loop
+with IRQ disabled; the 'hang' CPU cannot switch context and handle any
+interrupt, so it cannot handle SMP call for stack dump, etc.
 
-Here is the draft patch. Some questions below.
+This patch series is to enable coresight debug module with sample-based
+registers and register call back notifier for PCSR register dumping
+when panic happens, so we can see below dumping info for panic; and
+this patch series has considered the conditions for access permission
+for debug registers self, so this can avoid access debug registers when
+CPU power domain is off; the driver also try to figure out the CPU is
+in secure or non-secure state.
 
+Patch 0001 is to document the dt binding; patch 0002 adds one detailed
+document to describe the Coresight debug module implementation, the
+clock and power domain impaction on the driver, some examples for usage.
 
-On 5/24/2017 5:18 AM, Arnd Bergmann wrote:
-> On Wed, May 24, 2017 at 11:59 AM, Geert Uytterhoeven
-> <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org> wrote:
->> On Tue, May 23, 2017 at 11:45 PM, Babu Moger <babu.moger-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org> wrote:
->>> Found this problem while enabling queued rwlock on SPARC.
->>> The parameter CONFIG_CPU_BIG_ENDIAN is used to clear the
->>> specific byte in qrwlock structure. Without this parameter,
->>> we clear the wrong byte. Here is the code.
->>>
->>> static inline u8 *__qrwlock_write_byte(struct qrwlock *lock)
->>>   {
->>>          return (u8 *)lock + 3 * IS_BUILTIN(CONFIG_CPU_BIG_ENDIAN);
->>>   }
->>>
->>> Define CPU_BIG_ENDIAN for SPARC to fix it.
->>> --- a/arch/sparc/Kconfig
->>> +++ b/arch/sparc/Kconfig
->>> @@ -92,6 +92,10 @@ config ARCH_DEFCONFIG
->>>   config ARCH_PROC_KCORE_TEXT
->>>          def_bool y
->>>
->>> +config CPU_BIG_ENDIAN
->>> +       bool
->>> +       default y if SPARC
->> Nice catch!
->>
->> Traditionally, CPU_BIG_ENDIAN and CPU_LITTLE_ENDIAN were defined only on
->> architectures that may support both.  And it was checked in platform code
->> and drivers only.
->> Hence the symbol is lacking from most architectures. Heck, even
->> architectures that support both may default to one endiannes, and declare
->> only the symbol for the other endianness:
->>
->> --- arch/alpha ---
->> --- arch/arc ---
->> arch/arc/Kconfig:config CPU_BIG_ENDIAN
->> --- arch/arm ---
->> arch/arm/mm/Kconfig:config CPU_BIG_ENDIAN
->> --- arch/arm64 ---
->> arch/arm64/Kconfig:config CPU_BIG_ENDIAN
->> --- arch/blackfin ---
->> --- arch/c6x ---
->> arch/c6x/Kconfig:config CPU_BIG_ENDIAN
->> --- arch/cris ---
->> --- arch/frv ---
->> --- arch/h8300 ---
->> --- arch/hexagon ---
->> --- arch/ia64 ---
->> --- arch/Kconfig ---
->> --- arch/m32r ---
->> arch/m32r/Kconfig:config CPU_LITTLE_ENDIAN
->> --- arch/m68k ---
->> --- arch/metag ---
->> --- arch/microblaze ---
->> --- arch/mips ---
->> arch/mips/Kconfig:config CPU_BIG_ENDIAN
->> arch/mips/Kconfig:config CPU_LITTLE_ENDIAN
->> --- arch/mn10300 ---
->> --- arch/nios2 ---
->> --- arch/openrisc ---
->> --- arch/parisc ---
->> --- arch/powerpc ---
->> arch/powerpc/platforms/Kconfig.cputype:config CPU_BIG_ENDIAN
->> arch/powerpc/platforms/Kconfig.cputype:config CPU_LITTLE_ENDIAN
->> --- arch/s390 ---
->> arch/s390/Kconfig:config CPU_BIG_ENDIAN
->> --- arch/score ---
->> --- arch/sh ---
->> arch/sh/Kconfig.cpu:config CPU_LITTLE_ENDIAN
->> arch/sh/Kconfig.cpu:config CPU_BIG_ENDIAN
->> --- arch/sparc ---
->> --- arch/tile ---
->> --- arch/um ---
->> --- arch/unicore32 ---
->> --- arch/x86 ---
->> --- arch/xtensa ---
->>
->> However, there are already a few users in generic code, which are thus
->> broken on many platforms:
->>
->>      drivers/of/base.c
->>      drivers/of/fdt.c
->>      drivers/tty/serial/earlycon.c
->>      drivers/tty/serial/serial_core.c
->>
->> include/asm-generic/qrwlock.h is also generic, but depends on the
->> architecture to select ARCH_USE_QUEUED_RWLOCKS, which only very few do
->> (x86, and now sparc).
->>
->> I guess the time is ripe for adding (both) symbols to all architectures?
-> Good idea. I think we can do most of this by adding a few lines to
-> arch/Kconfig:
->
-> config CPU_BIG_ENDIAN
->          bool
->
-> config CPU_LITTLE_ENDIAN
->         def_bool !CPU_BIG_ENDIAN
->
-> This way, we only need to add 'select CPU_BIG_ENDIAN' to the
-> architectures that are always big-endian, and we don't need to
-> change anything for the ones that have a single 'CPU_BIG_ENDIAN'
-> option.
->
-> The three architectures that have a 'choice' statement (mips, ppc and
-> sh) will have to convert, and m32r will have to replace the
+Patch 0003 is to document boot parameters used in kernel command line.
 
-what to you mean by "(mips, ppc andsh) will have to convert"?  Do you 
-expect any changes here?
+Patch 0004 is to add file entries for MAINTAINERS.
 
-> option with the opposite one, which could break 'make oldconfig',
-> but nobody really cares about m32r any more.
->
->         Arnd
-Here is the proposed draft patch
-======================================
----
-  arch/Kconfig          |    6 ++++++
-  arch/frv/Kconfig      |    1 +
-  arch/h8300/Kconfig    |    1 +
-  arch/m32r/Kconfig     |    6 +++---
-  arch/m68k/Kconfig     |    1 +
-  arch/openrisc/Kconfig |    1 +
-  arch/parisc/Kconfig   |    1 +
-  arch/s390/Kconfig     |    1 +
-  arch/sparc/Kconfig    |    1 +
-  9 files changed, 16 insertions(+), 3 deletions(-)
+Patch 0005 is used to fix the func of_get_coresight_platform_data()
+doesn't properly drop the reference to the CPU node pointer; and
+patch 0006 is refactor to add new function of_coresight_get_cpu().
 
-diff --git a/arch/Kconfig b/arch/Kconfig
-index 6c00e5b..19fcafd 100644
---- a/arch/Kconfig
-+++ b/arch/Kconfig
-@@ -867,4 +867,10 @@ config STRICT_MODULE_RWX
-  config ARCH_WANT_RELAX_ORDER
-         bool
+Patch 0007 is the driver for CPU debug module.
 
-+config CPU_BIG_ENDIAN
-+        bool
-+
-+config CPU_LITTLE_ENDIAN
-+       def_bool !CPU_BIG_ENDIAN
-+
-  source "kernel/gcov/Kconfig"
-diff --git a/arch/frv/Kconfig b/arch/frv/Kconfig
-index eefd9a4..db258a4 100644
---- a/arch/frv/Kconfig
-+++ b/arch/frv/Kconfig
-@@ -16,6 +16,7 @@ config FRV
-         select OLD_SIGACTION
-         select HAVE_DEBUG_STACKOVERFLOW
-         select ARCH_NO_COHERENT_DMA_MMAP
-+       select CPU_BIG_ENDIAN
+Patch 0008 in this series are to enable debug unit on 96boards Hikey,
+Patch 0009 is to enable debug on 96boards DB410c. Have verified on both
+two boards.
 
-  config ZONE_DMA
-         bool
-diff --git a/arch/h8300/Kconfig b/arch/h8300/Kconfig
-index 3ae8525..22ebf28 100644
---- a/arch/h8300/Kconfig
-+++ b/arch/h8300/Kconfig
-@@ -22,6 +22,7 @@ config H8300
-         select HAVE_ARCH_KGDB
-         select HAVE_ARCH_HASH
-         select CPU_NO_EFFICIENT_FFS
-+       select CPU_BIG_ENDIAN
+We can enable debugging with two methods, adding parameters into kernel
+command line for build-in module:
+  coresight_cpu_debug.enable=1
 
-  config RWSEM_GENERIC_SPINLOCK
-         def_bool y
-diff --git a/arch/m32r/Kconfig b/arch/m32r/Kconfig
-index 9547446..d57e37b 100644
---- a/arch/m32r/Kconfig
-+++ b/arch/m32r/Kconfig
-@@ -193,9 +193,9 @@ config TIMER_DIVIDE
-         int "Timer divider (integer)"
-         default "128"
+Or we can wait the system has booted up to use debugfs nodes to enable
+debugging:
+  # echo 1 > /sys/kernel/debug/coresight_cpu_debug/enable
 
--config CPU_LITTLE_ENDIAN
--        bool "Generate little endian code"
--       default n
-+config CPU_BIG_ENDIAN
-+        bool "Generate big endian code"
-+       default y
+As result we can get below log after input command:
+echo c > /proc/sysrq-trigger:
 
-  config MEMORY_START
-         hex "Physical memory start address (hex)"
-diff --git a/arch/m68k/Kconfig b/arch/m68k/Kconfig
-index d140206..b44579b 100644
---- a/arch/m68k/Kconfig
-+++ b/arch/m68k/Kconfig
-@@ -22,6 +22,7 @@ config M68K
-         select MODULES_USE_ELF_RELA
-         select OLD_SIGSUSPEND3
-         select OLD_SIGACTION
-+       select CPU_BIG_ENDIAN
+ARM external debug module:
+coresight-cpu-debug 850000.debug: CPU[0]:
+coresight-cpu-debug 850000.debug:  EDPRSR:  00000001 (Power:On DLK:Unlock)
+coresight-cpu-debug 850000.debug:  EDPCSR:  [<ffff00000808e9bc>] handle_IPI+0x174/0x1d8
+coresight-cpu-debug 850000.debug:  EDCIDSR: 00000000
+coresight-cpu-debug 850000.debug:  EDVIDSR: 90000000 (State:Non-secure Mode:EL1/0 Width:64bits VMID:0)
+coresight-cpu-debug 852000.debug: CPU[1]:
+coresight-cpu-debug 852000.debug:  EDPRSR:  00000001 (Power:On DLK:Unlock)
+coresight-cpu-debug 852000.debug:  EDPCSR:  [<ffff0000087fab34>] debug_notifier_call+0x23c/0x358
+coresight-cpu-debug 852000.debug:  EDCIDSR: 00000000
+coresight-cpu-debug 852000.debug:  EDVIDSR: 90000000 (State:Non-secure Mode:EL1/0 Width:64bits VMID:0)
 
-  config RWSEM_GENERIC_SPINLOCK
-         bool
-diff --git a/arch/openrisc/Kconfig b/arch/openrisc/Kconfig
-index 1e95920..d772983 100644
---- a/arch/openrisc/Kconfig
-+++ b/arch/openrisc/Kconfig
-@@ -28,6 +28,7 @@ config OPENRISC
-         select OR1K_PIC
-         select CPU_NO_EFFICIENT_FFS if !OPENRISC_HAVE_INST_FF1
-         select NO_BOOTMEM
-+       select CPU_BIG_ENDIAN
+[...]
 
-  config MMU
-         def_bool y
-diff --git a/arch/parisc/Kconfig b/arch/parisc/Kconfig
-index 531da9e..7a8ec28 100644
---- a/arch/parisc/Kconfig
-+++ b/arch/parisc/Kconfig
-@@ -40,6 +40,7 @@ config PARISC
-         select GENERIC_CLOCKEVENTS
-         select ARCH_NO_COHERENT_DMA_MMAP
-         select CPU_NO_EFFICIENT_FFS
-+       select CPU_BIG_ENDIAN
+Changes from v12:
+* Fix build warning for 'ARCH=arm' reported by kbuild test robot.
 
-         help
-           The PA-RISC microprocessor is designed by Hewlett-Packard and 
-used
-diff --git a/arch/s390/Kconfig b/arch/s390/Kconfig
-index e161faf..169e50b 100644
---- a/arch/s390/Kconfig
-+++ b/arch/s390/Kconfig
-@@ -177,6 +177,7 @@ config S390
-         select ARCH_HAS_SCALED_CPUTIME
-         select VIRT_TO_BUS
-         select HAVE_NMI
-+       select CPU_BIG_ENDIAN
+Changes from v11:
+* Dismissed checkpatch.pl warning about "quoted string split across
+  multiple lines" and "line over 80 characters".
 
+Changes from v10:
+* Followed Liviu suggestion to improve readability of the documentation.
+* ARM Juno DTS binding patch has been picked by Sudeep, so this patch
+  set has not included anymore. Great!
 
-  config SCHED_OMIT_FRAME_POINTER
-diff --git a/arch/sparc/Kconfig b/arch/sparc/Kconfig
-index c5b5a7b..7a28e8a 100644
---- a/arch/sparc/Kconfig
-+++ b/arch/sparc/Kconfig
-@@ -45,6 +45,7 @@ config SPARC
-         select CPU_NO_EFFICIENT_FFS
-         select LOCKDEP_SMALL if LOCKDEP
-         select ARCH_WANT_RELAX_ORDER
-+       select CPU_BIG_ENDIAN
+Changes from v9:
+* Used dev_xyz() to replace pr_xyz() for print log.
+* Added DT binding patch for Juno shared by Suzuki.
 
-  config SPARC32
-         def_bool !64BIT
---
-1.7.1
+Changes from v8:
+* According to Mathieu suggestions to split the doc into two patches,
+  one is for kernel parameter and another is for driver documentation.
+* Add file entries to MAINTAINERS.
+* According to Mathieu suggestions, refined functions
+  debug_enable_func()/debug_disable_func().
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Changes from v7:
+* Fix operator priority bug.
+* Minor sequence adjustment for function debug_func_exit().
+
+Changes from v6:
+* According to Suzuki and Mathieu suggestions, refined debug module
+  driver to install panic notifier when insmod module; refined function
+  debug_force_cpu_powered_up() for CPU power state checking; some minor
+  fixing for output log, adding comments for memory barrier, code
+  alignment.
+
+Changes from v5:
+* According to Suzuki and Mathieu suggestions, refined debug module
+  driver to drop unused structure members, refactored initialization
+  code to distinguish hardware implementation features, refactored
+  flow for forcing CPU powered up, supported pm_runtime operations.
+* Added one new doc file: Documentation/trace/coresight-cpu-debug.txt,
+  which is used to describe detailed info for implementation, clock
+  and power domain impaction on debug module, and exmaples for common
+  usage.
+* Removed "idle constraints" from debug driver.
+
+Changes from v4:
+* This version is mainly credit to ARM colleagues many contribution
+  ideas for better quality (Thanks a lot Suzuki, Mike and Sudeep!).
+* According to Suzuki suggestion, refined debug module driver to avoid
+  memory leak for drvdata struct, handle PCSAMPLE_MODE=1, use flag
+  drvdata.pc_has_offset to indicate if PCSR has offset, minor fixes.
+* According to Mathieu suggestion, refined dt binding description.
+* Changed driver to support module mode;
+* According to Mike suggestion and very appreciate the pseudo code,
+  added support to force CPU powered up with register EDPRCR;
+* According to discussions, added command line and debugfs nodes to
+  support enabling debugging for boot time, or later can dynamically
+  enable/disable debugging by debugfs.
+* According to Rob Herring suggestion, one minor fixes in DT binding.
+* According to Stephen Boyd suggestion, add const quality to structure
+  device_node. And used use of_cpu_device_node_get() to replace
+  of_get_cpu_node() in patch 0003.
+
+Changes from v3:
+* Added Suzuki K Poulose's patch to fix issue for the func
+  of_get_coresight_platform_data() doesn't properly drop the reference
+  to the CPU node pointer.
+* According to Suzuki suggestion, added code to handl the corner case
+  for ARMv8 CPU with aarch32 mode.
+* According to Suzuki suggestion, changed compatible string to
+  "arm,coresight-cpu-debug".
+* According to Mathieu suggestion, added "power-domains" as optional
+  properties.
+
+Changes from v2:
+* According to Mathieu Poirier suggestion, applied some minor fixes.
+* Added two extra patches for enabling debug module on Hikey.
+
+Changes from v1:
+* According to Mike Leach suggestion, removed the binding for debug
+  module clocks which have been directly provided by CPU clocks.
+* According to Mathieu Poirier suggestion, added function
+  of_coresight_get_cpu() and some minor refactors for debug module
+  driver.
+
+Changes from RFC:
+* According to Mike Leach suggestion, added check for EDPRSR to avoid
+  lockup; added supporting EDVIDSR and EDCIDSR registers.
+* According to Mark Rutland and Mathieu Poirier suggestion, rewrote
+  the documentation for DT binding.
+* According to Mark and Mathieu suggestion, refined debug driver.
+
+Leo Yan (8):
+  coresight: bindings for CPU debug module
+  doc: Add documentation for Coresight CPU debug
+  doc: Add coresight_cpu_debug.enable to kernel-parameters.txt
+  MAINTAINERS: update file entries for Coresight subsystem
+  coresight: refactor with function of_coresight_get_cpu
+  coresight: add support for CPU debug module
+  arm64: dts: hi6220: register debug module
+  arm64: dts: qcom: msm8916: Add debug unit
+
+Suzuki K Poulose (1):
+  coresight: of_get_coresight_platform_data: Add missing of_node_put
+
+ Documentation/admin-guide/kernel-parameters.txt    |   7 +
+ .../bindings/arm/coresight-cpu-debug.txt           |  49 ++
+ Documentation/trace/coresight-cpu-debug.txt        | 175 ++++++
+ MAINTAINERS                                        |   2 +
+ arch/arm64/boot/dts/hisilicon/hi6220.dtsi          |  64 ++
+ arch/arm64/boot/dts/qcom/msm8916.dtsi              |  32 +
+ drivers/hwtracing/coresight/Kconfig                |  14 +
+ drivers/hwtracing/coresight/Makefile               |   1 +
+ drivers/hwtracing/coresight/coresight-cpu-debug.c  | 700 +++++++++++++++++++++
+ drivers/hwtracing/coresight/of_coresight.c         |  40 +-
+ include/linux/coresight.h                          |   3 +
+ 11 files changed, 1075 insertions(+), 12 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/coresight-cpu-debug.txt
+ create mode 100644 Documentation/trace/coresight-cpu-debug.txt
+ create mode 100644 drivers/hwtracing/coresight/coresight-cpu-debug.c
+
+-- 
+2.7.4
