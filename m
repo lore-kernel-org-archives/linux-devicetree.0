@@ -1,56 +1,30 @@
-From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Subject: Re: [PATCH v4 3/3] ARM: socfpga: dtsi: add dw-wdt reset lines
-Date: Wed, 24 May 2017 17:59:04 -0700
-Message-ID: <b373e06d-ecd9-0c22-5c6c-043bb0e395fa@roeck-us.net>
-References: <cover.50aaf23e8fbe9028f711a67e39b96910c986e8b0.1495443015.git-series.s.trumtrar@pengutronix.de>
- <1606b1da6758142628496ae85b15b3f89f0f928d.1495443015.git-series.s.trumtrar@pengutronix.de>
+From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: imx6: use #include "..." to include local DT
+Date: Thu, 25 May 2017 09:27:47 +0800
+Message-ID: <20170525012745.GQ26102@dragon>
+References: <1495602162-14672-1-git-send-email-yamada.masahiro@socionext.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1606b1da6758142628496ae85b15b3f89f0f928d.1495443015.git-series.s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Content-Language: en-US
-Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1495602162-14672-1-git-send-email-yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Cc: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 05/22/2017 01:51 AM, Steffen Trumtrar wrote:
-> Add the reset lines to both watchdogs.
+On Wed, May 24, 2017 at 02:02:42PM +0900, Masahiro Yamada wrote:
+> Most of DT files in ARM use #include "..." to make pre-processor
+> include DT in the same directory, but we have some exceptional files
+> that use #include <...> for that.
 > 
-> Signed-off-by: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> Cc: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-> Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-
-Acked-by: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-
-> ---
->   arch/arm/boot/dts/socfpga.dtsi | 2 ++
->   1 file changed, 2 insertions(+)
+> Fix them to remove -I$(srctree)/arch/$(SRCARCH)/boot/dts path from
+> dtc_cpp_flags.
 > 
-> diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/socfpga.dtsi
-> index b2674bdb8e6a..547b2720abf5 100644
-> --- a/arch/arm/boot/dts/socfpga.dtsi
-> +++ b/arch/arm/boot/dts/socfpga.dtsi
-> @@ -924,6 +924,7 @@
->   			reg = <0xffd02000 0x1000>;
->   			interrupts = <0 171 4>;
->   			clocks = <&osc1>;
-> +			resets = <&rst L4WD0_RESET>;
->   			status = "disabled";
->   		};
->   
-> @@ -932,6 +933,7 @@
->   			reg = <0xffd03000 0x1000>;
->   			interrupts = <0 172 4>;
->   			clocks = <&osc1>;
-> +			resets = <&rst L4WD1_RESET>;
->   			status = "disabled";
->   		};
->   	};
-> 
+> Signed-off-by: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
 
+Applied, thanks.
 --
-To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
