@@ -1,149 +1,109 @@
-From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH v2 2/6] Documentation: devicetree: add bindings to support
- ARM MHU doorbells
-Date: Thu, 25 May 2017 17:04:39 +0100
-Message-ID: <5c8e93a1-8090-0d4c-c689-cb8695361f9c@arm.com>
-References: <1495621003-4291-1-git-send-email-sudeep.holla@arm.com>
- <1495621003-4291-3-git-send-email-sudeep.holla@arm.com>
- <CABb+yY0gXDEfoRmfHPOoEKgGjp_e5B5orYZ2qjcypL7ven50hw@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CABb+yY0gXDEfoRmfHPOoEKgGjp_e5B5orYZ2qjcypL7ven50hw@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jassi Brar <jassisinghbrar@gmail.com>
-Cc: Sudeep Holla <sudeep.holla@arm.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Devicetree List <devicetree@vger.kernel.org>, Alexey Klimov <alexey.klimov@arm.com>, Jassi Brar <jaswinder.singh@linaro.org>, Rob Herring <robh+dt@kernel.org>
+From: Chris Brandt <chris.brandt@renesas.com>
+Subject: [PATCH] ARM: dts: r7s72100: add clock bit definitions
+Date: Thu, 25 May 2017 09:05:48 -0700
+Message-ID: <20170525160548.103182-1-chris.brandt@renesas.com>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Simon Horman <horms+renesas@verge.net.au>, Geert Uytterhoeven <geert@linux-m68k.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Chris Brandt <chris.brandt@renesas.com>
 List-Id: devicetree@vger.kernel.org
 
+Add the remaining bit locations for the module stop clock registers.
 
+Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
+---
+ include/dt-bindings/clock/r7s72100-clock.h | 40 ++++++++++++++++++++++++++++++
+ 1 file changed, 40 insertions(+)
 
-On 25/05/17 14:22, Jassi Brar wrote:
-> On Wed, May 24, 2017 at 3:46 PM, Sudeep Holla <sudeep.holla@arm.com> wrote:
->> The ARM MHU has mechanism to assert interrupt signals to facilitate
->> inter-processor message based communication. It drives the signal using
->> a 32-bit register, with all 32-bits logically ORed together. It also
->> enables software to set, clear and check the status of each of the bits
->> of this register independently. Each bit of the register can be
->> associated with a type of event that can contribute to raising the
->> interrupt thereby allowing it to be used as independent doorbells.
->>
->> Since the first version of this binding can't support doorbells,
->> this patch extends the existing binding to support them.
->>
->> Cc: Alexey Klimov <alexey.klimov@arm.com>
->> Cc: Jassi Brar <jaswinder.singh@linaro.org>
->> Cc: Rob Herring <robh+dt@kernel.org>
->> Cc: devicetree@vger.kernel.org
->> Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
->> ---
->>  .../devicetree/bindings/mailbox/arm-mhu.txt        | 46 ++++++++++++++++++++--
->>  1 file changed, 43 insertions(+), 3 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/mailbox/arm-mhu.txt b/Documentation/devicetree/bindings/mailbox/arm-mhu.txt
->> index 4971f03f0b33..bd9a3a267caf 100644
->> --- a/Documentation/devicetree/bindings/mailbox/arm-mhu.txt
->> +++ b/Documentation/devicetree/bindings/mailbox/arm-mhu.txt
->> @@ -10,21 +10,42 @@ STAT register and the remote clears it after having read the data.
->>  The last channel is specified to be a 'Secure' resource, hence can't be
->>  used by Linux running NS.
->>
->> +The MHU drives the interrupt signal using a 32-bit register, with all
->> +32-bits logically ORed together. It provides a set of registers to
->> +enable software to set, clear and check the status of each of the bits
->> +of this register independently. The use of 32 bits per interrupt line
->> +enables software to provide more information about the source of the
->> +interrupt. For example, each bit of the register can be associated with
->> +a type of event that can contribute to raising the interrupt. Each of
->> +the 32-bits can be used as "doorbell" to alert the remote processor.
->> +
->>  Mailbox Device Node:
->>  ====================
->>
->>  Required properties:
->>  --------------------
->> -- compatible:          Shall be "arm,mhu" & "arm,primecell"
->> +- compatible:          Shall be "arm,primecell" and one of the below:
->> +                       "arm,mhu" - if the controller doesn't support
->> +                                   doorbell model
->> +                       "arm,mhu-doorbell" - if the controller supports
->> +                                   doorbell model
->>  - reg:                 Contains the mailbox register address range (base
->>                         address and length)
->> -- #mbox-cells          Shall be 1 - the index of the channel needed.
->> +- #mbox-cells          Shall be 1 - the index of the channel needed when
->> +                       compatible is "arm,mhu"
->> +                       Shall be 2 - the index of the channel needed, and
->> +                       the index of the doorbell bit with the channel when
->> +                       compatible is "arm,mhu-doorbell"
->>  - interrupts:          Contains the interrupt information corresponding to
->> -                       each of the 3 links of MHU.
->> +                       each of the 3 physical channels of MHU namely low
->> +                       priority non-secure, high priority non-secure and
->> +                       secure channels.
->>
->>  Example:
->>  --------
->>
->> +1. Controller which doesn't support doorbells
->> +
->>         mhu: mailbox@2b1f0000 {
->>                 #mbox-cells = <1>;
->>                 compatible = "arm,mhu", "arm,primecell";
->> @@ -41,3 +62,22 @@ used by Linux running NS.
->>                 reg = <0 0x2e000000 0x4000>;
->>                 mboxes = <&mhu 1>; /* HP-NonSecure */
->>         };
->> +
->> +2. Controller which supports doorbells
->> +
->> +       mhu: mailbox@2b1f0000 {
->> +               #mbox-cells = <2>;
->> +               compatible = "arm,mhu-doorbell", "arm,primecell";
->> +               reg = <0 0x2b1f0000 0x1000>;
->> +               interrupts = <0 36 4>, /* LP-NonSecure */
->> +                            <0 35 4>, /* HP-NonSecure */
->> +                            <0 37 4>; /* Secure */
->> +               clocks = <&clock 0 2 1>;
->> +               clock-names = "apb_pclk";
->> +       };
->> +
->> +       mhu_client: scb@2e000000 {
->> +               compatible = "arm,scpi";
->> +               reg = <0 0x2e000000 0x200>;
->> +               mboxes = <&mhu 1 4>; /* HP-NonSecure 5th doorbell bit */
->> +       };
->>
-> Every MHU controller can by driven as "arm,mhu-doorbell" or "arm,mhu"
-> equally fine. So you are basically smuggling a s/w feature into DT.
-> 
-
-I have asked many times now, please explain how would you handle
-multiple protocol on a single set of MHU registers.
-
-BIT(0) - SCPI protocol
-BIT(1) - SCMI (general)
-BIT(2) - SCMI (notification)
-BIT(3) - A totally new protocol
-:
-:
-with each of the above with specific shared memory reserved for them.
-
-I know you suggested to pass the values from DT, but that sounds
-much horrible than sanely describing the bits as individual doorbells.
-And also have that value as part of any protocol also makes no sense
-as it's not clearly part of that protocol spec.
-
-Further, we need another layer of indirection. All these protocol
-will mbox_request_channel to start with as they need to be generic.
-How do you propose to mux multiple requests of these into arm_mhu ?
-
-Rob,
-
-Do you have any objections to specify the doorbell bits in the mailbox
-controller as opposed to client sending that value as some magic value ?
-
+diff --git a/include/dt-bindings/clock/r7s72100-clock.h b/include/dt-bindings/clock/r7s72100-clock.h
+index dcd2072151fc..ff5023ca97ed 100644
+--- a/include/dt-bindings/clock/r7s72100-clock.h
++++ b/include/dt-bindings/clock/r7s72100-clock.h
+@@ -13,7 +13,14 @@
+ #define R7S72100_CLK_PLL	0
+ 
+ /* MSTP3 */
++#define R7S72100_CLK_IEBUS	7
++#define R7S72100_CLK_IRDA	6
++#define R7S72100_CLK_LIN0	5
++#define R7S72100_CLK_LIN1	4
+ #define R7S72100_CLK_MTU2	3
++#define R7S72100_CLK_CAN	2
++#define R7S72100_CLK_ADCPWR	1
++#define R7S72100_CLK_MCPWM	0
+ 
+ /* MSTP4 */
+ #define R7S72100_CLK_SCIF0	7
+@@ -26,25 +33,51 @@
+ #define R7S72100_CLK_SCIF7	0
+ 
+ /* MSTP5 */
++#define R7S72100_CLK_SCI0	7
++#define R7S72100_CLK_SCI1	6
++#define R7S72100_CLK_SNDGEN0	5
++#define R7S72100_CLK_SNDGEN1	4
++#define R7S72100_CLK_SNDGEN2	3
++#define R7S72100_CLK_SNDGEN3	2
+ #define R7S72100_CLK_OSTM0	1
+ #define R7S72100_CLK_OSTM1	0
+ 
+ /* MSTP6 */
++#define R7S72100_CLK_ADC	7
++#define R7S72100_CLK_CEU	6
++#define R7S72100_CLK_DOC0	5
++#define R7S72100_CLK_DOC1	4
++#define R7S72100_CLK_DRC0	3
++#define R7S72100_CLK_DRC1	2
++#define R7S72100_CLK_JCU	1
+ #define R7S72100_CLK_RTC	0
+ 
+ /* MSTP7 */
++#define R7S72100_CLK_VDEC0	7
++#define R7S72100_CLK_VDEC1	6
+ #define R7S72100_CLK_ETHER	4
++#define R7S72100_CLK_NAND	3
+ #define R7S72100_CLK_USB0	1
+ #define R7S72100_CLK_USB1	0
+ 
+ /* MSTP8 */
++#define R7S72100_CLK_IMR0	7
++#define R7S72100_CLK_IMR1	6
++#define R7S72100_CLK_IMRDISP	5
+ #define R7S72100_CLK_MMCIF	4
++#define R7S72100_CLK_MLB	3
++#define R7S72100_CLK_ETHABV	2
++#define R7S72100_CLK_SCUX	1
+ 
+ /* MSTP9 */
+ #define R7S72100_CLK_I2C0	7
+ #define R7S72100_CLK_I2C1	6
+ #define R7S72100_CLK_I2C2	5
+ #define R7S72100_CLK_I2C3	4
++#define R7S72100_CLK_SPIMBC0	3
++#define R7S72100_CLK_SPIMBC1	2
++#define R7S72100_CLK_VDC50	1	/* and LVDS */
++#define R7S72100_CLK_VDC51	0
+ 
+ /* MSTP10 */
+ #define R7S72100_CLK_SPI0	7
+@@ -52,6 +85,9 @@
+ #define R7S72100_CLK_SPI2	5
+ #define R7S72100_CLK_SPI3	4
+ #define R7S72100_CLK_SPI4	3
++#define R7S72100_CLK_CDROM	2
++#define R7S72100_CLK_SPDIF	1
++#define R7S72100_CLK_RGPVG2	0
+ 
+ /* MSTP12 */
+ #define R7S72100_CLK_SDHI00	3
+@@ -59,4 +95,8 @@
+ #define R7S72100_CLK_SDHI10	1
+ #define R7S72100_CLK_SDHI11	0
+ 
++/* MSTP13 */
++#define R7S72100_CLK_PIX1	2
++#define R7S72100_CLK_PIX0	1
++
+ #endif /* __DT_BINDINGS_CLOCK_R7S72100_H__ */
 -- 
-Regards,
-Sudeep
+2.13.0
