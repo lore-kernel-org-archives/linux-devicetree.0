@@ -1,371 +1,57 @@
-From: Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v7 17/34] platform: add video-multiplexer subdevice driver
-Date: Wed, 24 May 2017 17:29:32 -0700
-Message-ID: <1495672189-29164-18-git-send-email-steve_longerbeam@mentor.com>
+From: Steve Longerbeam <slongerbeam@gmail.com>
+Subject: [PATCH v7 19/34] media: Add userspace header file for i.MX
+Date: Wed, 24 May 2017 17:29:34 -0700
+Message-ID: <1495672189-29164-20-git-send-email-steve_longerbeam@mentor.com>
 References: <1495672189-29164-1-git-send-email-steve_longerbeam@mentor.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1495672189-29164-1-git-send-email-steve_longerbeam-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, nick-gcszYUEDH4VrovVCs/uTlw@public.gmane.org, markus.heiser-O6JHGLzbNUwb1SvskN2V4Q@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, bparrot-l0cyMroinI0@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, sudipm.mukherjee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, jean-christophe.trotin-qxv4g6HH51o@public.gmane.org, horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, robert.jarzmik-GANU6spQydw@public.gmane.org, songjun.wu-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, shuah-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Steve Longerbeam <steve_longerbeam-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1495672189-29164-1-git-send-email-steve_longerbeam@mentor.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com, linux@armlinux.org.uk, mchehab@kernel.org, hverkuil@xs4all.nl, nick@shmanahar.org, markus.heiser@darmarIT.de, p.zabel@pengutronix.de, laurent.pinchart+renesas@ideasonboard.com, bparrot@ti.com, geert@linux-m68k.org, arnd@arndb.de, sudipm.mukherjee@gmail.com, minghsiu.tsai@mediatek.com, tiffany.lin@mediatek.com, jean-christophe.trotin@st.com, horms+renesas@verge.net.au, niklas.soderlund+renesas@ragnatech.se, robert.jarzmik@free.fr, songjun.wu@microchip.com, andrew-ct.chen@mediatek.com, gregkh@linuxfoundation.org, shuah@kernel.org, sakari.ailus@linux.intel.com, pavel@ucw.cz
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org, devel@driverdev.osuosl.org, Steve Longerbeam <steve_longerbeam@mentor.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+This adds a header file for use by userspace programs wanting to interact
+with the i.MX media driver. It defines custom events and v4l2 controls for
+the i.MX v4l2 subdevices.
 
-This driver can handle SoC internal and external video bus multiplexers,
-controlled by mux controllers provided by the mux controller framework,
-such as MMIO register bitfields or GPIOs. The subdevice passes through
-the mbus configuration of the active input to the output side.
-
-Signed-off-by: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Signed-off-by: Steve Longerbeam <steve_longerbeam-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
-Acked-by: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Acked-by: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
-Reviewed-by: Sebastian Reichel <sebastian.reichel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+Signed-off-by: Steve Longerbeam <steve_longerbeam@mentor.com>
 ---
- drivers/media/platform/Kconfig     |   7 +
- drivers/media/platform/Makefile    |   2 +
- drivers/media/platform/video-mux.c | 295 +++++++++++++++++++++++++++++++++++++
- 3 files changed, 304 insertions(+)
- create mode 100644 drivers/media/platform/video-mux.c
+ include/linux/imx-media.h | 27 +++++++++++++++++++++++++++
+ 1 file changed, 27 insertions(+)
+ create mode 100644 include/linux/imx-media.h
 
-diff --git a/drivers/media/platform/Kconfig b/drivers/media/platform/Kconfig
-index ac026ee..b98f755 100644
---- a/drivers/media/platform/Kconfig
-+++ b/drivers/media/platform/Kconfig
-@@ -74,6 +74,13 @@ config VIDEO_M32R_AR_M64278
- 	  To compile this driver as a module, choose M here: the
- 	  module will be called arv.
- 
-+config VIDEO_MUX
-+	tristate "Video Multiplexer"
-+	depends on OF && VIDEO_V4L2_SUBDEV_API && MEDIA_CONTROLLER
-+	depends on MULTIPLEXER
-+	help
-+	  This driver provides support for N:1 video bus multiplexers.
-+
- config VIDEO_OMAP3
- 	tristate "OMAP 3 Camera support"
- 	depends on VIDEO_V4L2 && I2C && VIDEO_V4L2_SUBDEV_API && ARCH_OMAP3
-diff --git a/drivers/media/platform/Makefile b/drivers/media/platform/Makefile
-index 63303d6..a636302 100644
---- a/drivers/media/platform/Makefile
-+++ b/drivers/media/platform/Makefile
-@@ -28,6 +28,8 @@ obj-$(CONFIG_VIDEO_SH_VEU)		+= sh_veu.o
- 
- obj-$(CONFIG_VIDEO_MEM2MEM_DEINTERLACE)	+= m2m-deinterlace.o
- 
-+obj-$(CONFIG_VIDEO_MUX)			+= video-mux.o
-+
- obj-$(CONFIG_VIDEO_S3C_CAMIF) 		+= s3c-camif/
- obj-$(CONFIG_VIDEO_SAMSUNG_EXYNOS4_IS) 	+= exynos4-is/
- obj-$(CONFIG_VIDEO_SAMSUNG_S5P_JPEG)	+= s5p-jpeg/
-diff --git a/drivers/media/platform/video-mux.c b/drivers/media/platform/video-mux.c
+diff --git a/include/linux/imx-media.h b/include/linux/imx-media.h
 new file mode 100644
-index 0000000..5ce2bd3
+index 0000000..267777f
 --- /dev/null
-+++ b/drivers/media/platform/video-mux.c
-@@ -0,0 +1,295 @@
++++ b/include/linux/imx-media.h
+@@ -0,0 +1,27 @@
 +/*
-+ * video stream multiplexer controlled via mux control
++ * Copyright (c) 2014-2017 Mentor Graphics Inc.
 + *
-+ * Copyright (C) 2013 Pengutronix, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-+ * Copyright (C) 2016-2017 Pengutronix, Philipp Zabel <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute it and/or
-+ * modify it under the terms of the GNU General Public License
-+ * as published by the Free Software Foundation; either version 2
-+ * of the License, or (at your option) any later version.
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by the
++ * Free Software Foundation; either version 2 of the
++ * License, or (at your option) any later version
 + */
 +
-+#include <linux/err.h>
-+#include <linux/module.h>
-+#include <linux/mutex.h>
-+#include <linux/mux/consumer.h>
-+#include <linux/of.h>
-+#include <linux/of_graph.h>
-+#include <linux/platform_device.h>
-+#include <media/v4l2-async.h>
-+#include <media/v4l2-device.h>
-+#include <media/v4l2-subdev.h>
++#ifndef __LINUX_IMX_MEDIA_H__
++#define __LINUX_IMX_MEDIA_H__
 +
-+struct video_mux {
-+	struct v4l2_subdev subdev;
-+	struct media_pad *pads;
-+	struct v4l2_mbus_framefmt *format_mbus;
-+	struct mux_control *mux;
-+	struct mutex lock;
-+	int active;
++/*
++ * events from the subdevs
++ */
++#define V4L2_EVENT_IMX_CLASS                V4L2_EVENT_PRIVATE_START
++#define V4L2_EVENT_IMX_FRAME_INTERVAL_ERROR (V4L2_EVENT_IMX_CLASS + 1)
++
++enum imx_ctrl_id {
++	V4L2_CID_IMX_FIM_ENABLE = (V4L2_CID_USER_IMX_BASE + 0),
++	V4L2_CID_IMX_FIM_NUM,
++	V4L2_CID_IMX_FIM_TOLERANCE_MIN,
++	V4L2_CID_IMX_FIM_TOLERANCE_MAX,
++	V4L2_CID_IMX_FIM_NUM_SKIP,
 +};
 +
-+static inline struct video_mux *v4l2_subdev_to_video_mux(struct v4l2_subdev *sd)
-+{
-+	return container_of(sd, struct video_mux, subdev);
-+}
-+
-+static int video_mux_link_setup(struct media_entity *entity,
-+				const struct media_pad *local,
-+				const struct media_pad *remote, u32 flags)
-+{
-+	struct v4l2_subdev *sd = media_entity_to_v4l2_subdev(entity);
-+	struct video_mux *vmux = v4l2_subdev_to_video_mux(sd);
-+	int ret = 0;
-+
-+	/*
-+	 * The mux state is determined by the enabled sink pad link.
-+	 * Enabling or disabling the source pad link has no effect.
-+	 */
-+	if (local->flags & MEDIA_PAD_FL_SOURCE)
-+		return 0;
-+
-+	dev_dbg(sd->dev, "link setup '%s':%d->'%s':%d[%d]",
-+		remote->entity->name, remote->index, local->entity->name,
-+		local->index, flags & MEDIA_LNK_FL_ENABLED);
-+
-+	mutex_lock(&vmux->lock);
-+
-+	if (flags & MEDIA_LNK_FL_ENABLED) {
-+		if (vmux->active == local->index)
-+			goto out;
-+
-+		if (vmux->active >= 0) {
-+			ret = -EBUSY;
-+			goto out;
-+		}
-+
-+		dev_dbg(sd->dev, "setting %d active\n", local->index);
-+		ret = mux_control_try_select(vmux->mux, local->index);
-+		if (ret < 0)
-+			goto out;
-+		vmux->active = local->index;
-+	} else {
-+		if (vmux->active != local->index)
-+			goto out;
-+
-+		dev_dbg(sd->dev, "going inactive\n");
-+		mux_control_deselect(vmux->mux);
-+		vmux->active = -1;
-+	}
-+
-+out:
-+	mutex_unlock(&vmux->lock);
-+	return ret;
-+}
-+
-+static const struct media_entity_operations video_mux_ops = {
-+	.link_setup = video_mux_link_setup,
-+	.link_validate = v4l2_subdev_link_validate,
-+};
-+
-+static int video_mux_s_stream(struct v4l2_subdev *sd, int enable)
-+{
-+	struct video_mux *vmux = v4l2_subdev_to_video_mux(sd);
-+	struct v4l2_subdev *upstream_sd;
-+	struct media_pad *pad;
-+
-+	if (vmux->active == -1) {
-+		dev_err(sd->dev, "Can not start streaming on inactive mux\n");
-+		return -EINVAL;
-+	}
-+
-+	pad = media_entity_remote_pad(&sd->entity.pads[vmux->active]);
-+	if (!pad) {
-+		dev_err(sd->dev, "Failed to find remote source pad\n");
-+		return -ENOLINK;
-+	}
-+
-+	if (!is_media_entity_v4l2_subdev(pad->entity)) {
-+		dev_err(sd->dev, "Upstream entity is not a v4l2 subdev\n");
-+		return -ENODEV;
-+	}
-+
-+	upstream_sd = media_entity_to_v4l2_subdev(pad->entity);
-+
-+	return v4l2_subdev_call(upstream_sd, video, s_stream, enable);
-+}
-+
-+static const struct v4l2_subdev_video_ops video_mux_subdev_video_ops = {
-+	.s_stream = video_mux_s_stream,
-+};
-+
-+static struct v4l2_mbus_framefmt *
-+__video_mux_get_pad_format(struct v4l2_subdev *sd,
-+			   struct v4l2_subdev_pad_config *cfg,
-+			   unsigned int pad, u32 which)
-+{
-+	struct video_mux *vmux = v4l2_subdev_to_video_mux(sd);
-+
-+	switch (which) {
-+	case V4L2_SUBDEV_FORMAT_TRY:
-+		return v4l2_subdev_get_try_format(sd, cfg, pad);
-+	case V4L2_SUBDEV_FORMAT_ACTIVE:
-+		return &vmux->format_mbus[pad];
-+	default:
-+		return NULL;
-+	}
-+}
-+
-+static int video_mux_get_format(struct v4l2_subdev *sd,
-+				struct v4l2_subdev_pad_config *cfg,
-+				struct v4l2_subdev_format *sdformat)
-+{
-+	struct video_mux *vmux = v4l2_subdev_to_video_mux(sd);
-+
-+	mutex_lock(&vmux->lock);
-+
-+	sdformat->format = *__video_mux_get_pad_format(sd, cfg, sdformat->pad,
-+						       sdformat->which);
-+
-+	mutex_unlock(&vmux->lock);
-+
-+	return 0;
-+}
-+
-+static int video_mux_set_format(struct v4l2_subdev *sd,
-+				struct v4l2_subdev_pad_config *cfg,
-+				struct v4l2_subdev_format *sdformat)
-+{
-+	struct video_mux *vmux = v4l2_subdev_to_video_mux(sd);
-+	struct v4l2_mbus_framefmt *mbusformat;
-+	struct media_pad *pad = &vmux->pads[sdformat->pad];
-+
-+	mbusformat = __video_mux_get_pad_format(sd, cfg, sdformat->pad,
-+						sdformat->which);
-+	if (!mbusformat)
-+		return -EINVAL;
-+
-+	mutex_lock(&vmux->lock);
-+
-+	/* Source pad mirrors active sink pad, no limitations on sink pads */
-+	if ((pad->flags & MEDIA_PAD_FL_SOURCE) && vmux->active >= 0)
-+		sdformat->format = vmux->format_mbus[vmux->active];
-+
-+	*mbusformat = sdformat->format;
-+
-+	mutex_unlock(&vmux->lock);
-+
-+	return 0;
-+}
-+
-+static const struct v4l2_subdev_pad_ops video_mux_pad_ops = {
-+	.get_fmt = video_mux_get_format,
-+	.set_fmt = video_mux_set_format,
-+};
-+
-+static const struct v4l2_subdev_ops video_mux_subdev_ops = {
-+	.pad = &video_mux_pad_ops,
-+	.video = &video_mux_subdev_video_ops,
-+};
-+
-+static int video_mux_probe(struct platform_device *pdev)
-+{
-+	struct device_node *np = pdev->dev.of_node;
-+	struct device *dev = &pdev->dev;
-+	struct device_node *ep;
-+	struct video_mux *vmux;
-+	unsigned int num_pads = 0;
-+	int ret;
-+	int i;
-+
-+	vmux = devm_kzalloc(dev, sizeof(*vmux), GFP_KERNEL);
-+	if (!vmux)
-+		return -ENOMEM;
-+
-+	platform_set_drvdata(pdev, vmux);
-+
-+	v4l2_subdev_init(&vmux->subdev, &video_mux_subdev_ops);
-+	snprintf(vmux->subdev.name, sizeof(vmux->subdev.name), "%s", np->name);
-+	vmux->subdev.flags |= V4L2_SUBDEV_FL_HAS_DEVNODE;
-+	vmux->subdev.dev = dev;
-+
-+	/*
-+	 * The largest numbered port is the output port. It determines
-+	 * total number of pads.
-+	 */
-+	for_each_endpoint_of_node(np, ep) {
-+		struct of_endpoint endpoint;
-+
-+		of_graph_parse_endpoint(ep, &endpoint);
-+		num_pads = max(num_pads, endpoint.port + 1);
-+	}
-+
-+	if (num_pads < 2) {
-+		dev_err(dev, "Not enough ports %d\n", num_pads);
-+		return -EINVAL;
-+	}
-+
-+	vmux->mux = devm_mux_control_get(dev, NULL);
-+	if (IS_ERR(vmux->mux)) {
-+		ret = PTR_ERR(vmux->mux);
-+		if (ret != -EPROBE_DEFER)
-+			dev_err(dev, "Failed to get mux: %d\n", ret);
-+		return ret;
-+	}
-+
-+	mutex_init(&vmux->lock);
-+	vmux->active = -1;
-+	vmux->pads = devm_kcalloc(dev, num_pads, sizeof(*vmux->pads),
-+				  GFP_KERNEL);
-+	vmux->format_mbus = devm_kcalloc(dev, num_pads,
-+					 sizeof(*vmux->format_mbus),
-+					 GFP_KERNEL);
-+
-+	for (i = 0; i < num_pads - 1; i++)
-+		vmux->pads[i].flags = MEDIA_PAD_FL_SINK;
-+	vmux->pads[num_pads - 1].flags = MEDIA_PAD_FL_SOURCE;
-+
-+	vmux->subdev.entity.function = MEDIA_ENT_F_VID_MUX;
-+	ret = media_entity_pads_init(&vmux->subdev.entity, num_pads,
-+				     vmux->pads);
-+	if (ret < 0)
-+		return ret;
-+
-+	vmux->subdev.entity.ops = &video_mux_ops;
-+
-+	return v4l2_async_register_subdev(&vmux->subdev);
-+}
-+
-+static int video_mux_remove(struct platform_device *pdev)
-+{
-+	struct video_mux *vmux = platform_get_drvdata(pdev);
-+	struct v4l2_subdev *sd = &vmux->subdev;
-+
-+	v4l2_async_unregister_subdev(sd);
-+	media_entity_cleanup(&sd->entity);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id video_mux_dt_ids[] = {
-+	{ .compatible = "video-mux", },
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, video_mux_dt_ids);
-+
-+static struct platform_driver video_mux_driver = {
-+	.probe		= video_mux_probe,
-+	.remove		= video_mux_remove,
-+	.driver		= {
-+		.of_match_table = video_mux_dt_ids,
-+		.name = "video-mux",
-+	},
-+};
-+
-+module_platform_driver(video_mux_driver);
-+
-+MODULE_DESCRIPTION("video stream multiplexer");
-+MODULE_AUTHOR("Sascha Hauer, Pengutronix");
-+MODULE_AUTHOR("Philipp Zabel, Pengutronix");
-+MODULE_LICENSE("GPL");
++#endif
 -- 
 2.7.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
