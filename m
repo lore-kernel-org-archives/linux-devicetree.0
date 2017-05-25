@@ -1,84 +1,81 @@
-From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v2 0/6] mailbox: arm_mhu: add support for doorbell mode
-Date: Thu, 25 May 2017 12:30:38 +0100
-Message-ID: <cd57b90c-4250-64df-9142-d12ac7ed7ad3@arm.com>
-References: <1495621003-4291-1-git-send-email-sudeep.holla@arm.com>
- <CABb+yY1eS_cXjCCpgQs18-W3KXPy-K7mPJSkWNb6wFe-is5fDw@mail.gmail.com>
+From: Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [PATCH 2/4] arm64: dts: mt7622: add basic nodes to the
+ mt7622.dtsi file
+Date: Thu, 25 May 2017 12:34:28 +0100
+Message-ID: <e2efffae-a2ba-c67e-b1b3-cc7413ae83f7@arm.com>
+References: <cover.1495703415.git.sean.wang@mediatek.com>
+ <cf3a0264cff770f60235d3be83cef00981ba6d33.1495703415.git.sean.wang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CABb+yY1eS_cXjCCpgQs18-W3KXPy-K7mPJSkWNb6wFe-is5fDw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <cf3a0264cff770f60235d3be83cef00981ba6d33.1495703415.git.sean.wang@mediatek.com>
 Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Alexey Klimov <alexey.klimov-5wv7dgnIgG8@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: sean.wang@mediatek.com, robh+dt@kernel.org, matthias.bgg@gmail.com, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Sudeep Holla <sudeep.holla@arm.com>
 List-Id: devicetree@vger.kernel.org
 
 
 
-On 24/05/17 11:56, Jassi Brar wrote:
-> On Wed, May 24, 2017 at 3:46 PM, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org> wrote:
->>
->> Hi,
->>
->> This series adds doorbell support to ARM MHU mailbox controller driver.
->> Since we need to callback the different client based on the doorbel bits
->> triggered from the remote, we can manage with single channel for the set
->> of 32 doorbells.
->>
->> Regards,
->> Sudeep
->>
->> v1->v2:
->>         - Removed the notion od subchannels
->>         - Treat each bit in the MHU register as a doorbell and hence
->>           different channel with respect to mailbox framework
->>
-> Whatever happened to the endless explanations I gave you, how the MHU
-> driver already supports your usecase?
+On 25/05/17 10:28, sean.wang@mediatek.com wrote:
+> From: Sean Wang <sean.wang@mediatek.com>
 > 
+> add basic nodes into the mt7622.dtsi for the system
+> bring-up which includes ARM CPU, GIC, timer, MediaTek
+> UART, SYSIRQ and one reserved memory region for ATF.
+> 
+> Signed-off-by: Sean Wang <sean.wang@mediatek.com>
+> ---
+>  arch/arm64/boot/dts/mediatek/mt7622.dtsi | 103 +++++++++++++++++++++++++++++++
+>  1 file changed, 103 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/mediatek/mt7622.dtsi
+> 
+> diff --git a/arch/arm64/boot/dts/mediatek/mt7622.dtsi b/arch/arm64/boot/dts/mediatek/mt7622.dtsi
+> new file mode 100644
+> index 0000000..f610d30
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/mediatek/mt7622.dtsi
+> @@ -0,0 +1,103 @@
+> +/*
+> + * Copyright (c) 2017 MediaTek Inc.
+> + * Author: Ming Huang <ming.huang@mediatek.com>
+> + *	   Sean Wang <sean.wang@mediatek.com>
+> + *
+> + * SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+> + */
+> +
+> +#include <dt-bindings/interrupt-controller/irq.h>
+> +#include <dt-bindings/interrupt-controller/arm-gic.h>
+> +
+> +/ {
+> +	compatible = "mediatek,mt7622";
+> +	interrupt-parent = <&sysirq>;
+> +	#address-cells = <2>;
+> +	#size-cells = <2>;
+> +
+> +	cpus {
+> +		#address-cells = <2>;
+> +		#size-cells = <0>;
+> +
+> +		cpu0: cpu@0 {
+> +			device_type = "cpu";
+> +			compatible = "arm,cortex-a53", "arm,armv8";
+> +			reg = <0x0 0x0>;
+> +			enable-method = "psci";
+> +			next-level-cache = <&l2>;
 
-Yes but you didn't respond to my queries:
-1. The client driver is generic and expects it to be doorbell like
-   mailbox controller. I am referring to SCMI which will be released
-   soon. We can't embed ARM MHU or any other mailbox controller info
-   into that.
-
-2. How do we call multiple clients from mhu_irq ? I have Slot/bit 0
-   being used by SCPI protocol(already in mainline) and slot 1/2 or more
-   will be used by SCMI ?
-
-3. We already have mailbox-sti.c which implements exactly the same logic
-   of doorbell. Why did you not push back to implement something like
-   arm_mhu.c then ? I am confused as why you are so particular in this
-   case ?
-
-Few more things to note here:
-
-1. Just because the platform you worked used MHU to pass the command
-   doesn't mean that's the only one use-case and others have to
-   workaround in the client drivers.
-
-2. Read the specification again. It's clear that it's designed for
-   doorbell kind of usage. All I am asking is to support that both in
-   the binding and implementation. And lets not assume or make it work
-   with one protocol. It's generic IP and can be used in either
-   doorbell way or the way it's currently supported.
-
-3. That's one of the reason for just have 2 set's of registers as it's
-   possible to use them as 32 different doorbells. Otherwise 2 channels
-   is too limited for any platform.
-
-Please address my queries instead of claiming that you can workout a
-solution. I simply want the mailbox and protocol independent and hence
-the binding. I don't like the idea of you proposed(i.e. 32-bit data to
-be written to the controller register).
-
+Just note that cache geometry detection from architected registers are
+removed from v4.12 and hence needs to be specified in DT if you expect
+it to show up in sysfs.
 -- 
 Regards,
 Sudeep
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
