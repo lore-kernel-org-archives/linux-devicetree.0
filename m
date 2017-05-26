@@ -1,72 +1,43 @@
-From: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Subject: Re: [PATCH v3 0/4] r8a7793 Gose video input support
-Date: Fri, 26 May 2017 08:49:07 +0200
-Message-ID: <20170526064907.GD2628@verge.net.au>
-References: <1495199224-16337-1-git-send-email-ulrich.hecht+renesas@gmail.com>
+From: Shawn Lin <shawn.lin@rock-chips.com>
+Subject: Re: [PATCH V2] ARM: dts: rockchip:remove hs200 support for firefly
+ reload
+Date: Fri, 26 May 2017 14:49:12 +0800
+Message-ID: <354b634b-0ba6-682e-95fa-52b32e3cc94c@rock-chips.com>
+References: <1495616267-5305-1-git-send-email-eddie.cai.linux@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1495199224-16337-1-git-send-email-ulrich.hecht+renesas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ulrich Hecht <ulrich.hecht+renesas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org, niklas.soderlund-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1495616267-5305-1-git-send-email-eddie.cai.linux@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Eddie Cai <eddie.cai.linux@gmail.com>, heiko@sntech.de, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk
+Cc: linux-rockchip@lists.infradead.org, shawn.lin@rock-chips.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 19, 2017 at 03:07:00PM +0200, Ulrich Hecht wrote:
-> Hi!
-> 
-> This is a by-the-datasheet implementation of analog and digital video input
-> on the Gose board.
-> 
-> This revision adds new bindings that distinguish between ADV7180 variants
-> with three and six input ports. There are numerous variants of this chip,
-> but since all that have "CP" in their names have three inputs, and all that
-> have "ST" have six, I have limited myself to two new compatible strings,
-> "adv7180cp" and "adv7180st".
-> 
-> The digital input patch has received minor tweaks of the port names for
-> consistency, and the Gose analog input patch has been modified to use the
-> new bindings, and a composite video connector has been added.
-> 
-> CU
-> Uli
-> 
-> 
-> Changes since v2:
-> - hdmi: port hdmi_con renamed to hdmi_con_out
-> - adv7180: added new compatibility strings and bindings
-> - composite: added connector, use new bindings
-> 
-> Changes since v1:
-> - r8a7793.dtsi: added VIN2
-> - modeled HDMI decoder input/output and connector
-> - added "renesas,rcar-gen2-vin" compat strings
-> - removed unnecessary "remote" node and aliases
-> - set ADV7612 interrupt to GP4_2
-> 
-> 
-> Ulrich Hecht (4):
->   ARM: dts: gose: add HDMI input
-
-I have queued-up the above patch for v4.13.
-
->   media: adv7180: add adv7180cp, adv7180st compatible strings
->   media: adv7180: Add adv7180cp, adv7180st bindings
->   ARM: dts: gose: add composite video input
-
-I have marked the above dts patch as "deferred" pending acceptance
-of the binding. Please repost or otherwise ping me once that has happened.
-
->  .../devicetree/bindings/media/i2c/adv7180.txt      |  15 +++
->  arch/arm/boot/dts/r8a7793-gose.dts                 | 127 ++++++++++++++++++++-
->  drivers/media/i2c/adv7180.c                        |   2 +
->  3 files changed, 142 insertions(+), 2 deletions(-)
-> 
-> -- 
-> 2.7.4
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGkgRWRkaWUsCgrlnKggMjAxNy81LzI0IDE2OjU3LCBFZGRpZSBDYWkg5YaZ6YGTOgo+IGR1ZSB0
+byBsYXlvdXQgbGltaXRhdGlvbi4gbm90IGFsbCBvZiB0aGUgcmVsb2FkIGJvYXJkIGNhbiBzdXBw
+b3J0IGhzMjAwLgo+IHNvIHJlbW92ZSBoczIwMCBzdXBwb3J0IHRvIG1ha2UgYWxsIGJvYXJkIGNh
+biBib290IHVwLgo+Cj4gU2lnbmVkLW9mZi1ieTogRWRkaWUgQ2FpIDxlZGRpZS5jYWkubGludXhA
+Z21haWwuY29tPgo+IC0tLQo+ICBhcmNoL2FybS9ib290L2R0cy9yazMyODgtZmlyZWZseS1yZWxv
+YWQtY29yZS5kdHNpIHwgMiAtLQo+ICAxIGZpbGUgY2hhbmdlZCwgMiBkZWxldGlvbnMoLSkKPgo+
+IGRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9yazMyODgtZmlyZWZseS1yZWxvYWQtY29y
+ZS5kdHNpIGIvYXJjaC9hcm0vYm9vdC9kdHMvcmszMjg4LWZpcmVmbHktcmVsb2FkLWNvcmUuZHRz
+aQo+IGluZGV4IDRjZmExMDkuLjU2YWMxZTZmIDEwMDY0NAo+IC0tLSBhL2FyY2gvYXJtL2Jvb3Qv
+ZHRzL3JrMzI4OC1maXJlZmx5LXJlbG9hZC1jb3JlLmR0c2kKPiArKysgYi9hcmNoL2FybS9ib290
+L2R0cy9yazMyODgtZmlyZWZseS1yZWxvYWQtY29yZS5kdHNpCj4gQEAgLTc1LDggKzc1LDYgQEAK
+PiAgCWJ1cy13aWR0aCA9IDw4PjsKPiAgCWNhcC1tbWMtaGlnaHNwZWVkOwo+ICAJZGlzYWJsZS13
+cDsKPiAtCW1tYy1oczIwMC0xXzh2OwoKT24gd2hpY2ggdHJlZSB3ZXJlIHlvdSBiYXNpbmc/IEkg
+Y2FuJ3QgZ2l0LWFtIHRoaXMgb25lIGZvciB0b2RheSdzCmxpbnV4LW5leHQ/Cgo+ICAJbm9uLXJl
+bW92YWJsZTsKPiAgCW51bS1zbG90cyA9IDwxPjsKPiAgCXBpbmN0cmwtbmFtZXMgPSAiZGVmYXVs
+dCI7Cj4KCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwps
+aW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJh
+ZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51
+eC1hcm0ta2VybmVsCg==
