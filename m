@@ -1,60 +1,69 @@
-From: songxiaowei <songxiaowei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-Subject: =?utf-8?B?562U5aSNOiDnrZTlpI06IFtQYXRjaCB2MyAxLzNdIGFybTY0OiBkdHM6IGhp?=
- =?utf-8?Q?3660:_add_pcie_node?=
-Date: Fri, 26 May 2017 01:40:45 +0000
-Message-ID: <99B4C6BADD9E3241B25E52B02BA737C54116D871@DGGEMA505-MBX.china.huawei.com>
-References: <20170518074946.21362-1-songxiaowei@hisilicon.com>
- <20170523141641.kbb4falhs574dfpu@rob-hp-laptop>
- <99B4C6BADD9E3241B25E52B02BA737C54116D35D@DGGEMA505-MBX.china.huawei.com>
- <CAL_JsqJV5TA2ADo35tqGXC61NWK9PDqw8Dq5m5fYHg59yaoEUA@mail.gmail.com>
+From: Xiaowei Song <songxiaowei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Subject: [PATCH v8 2/4] arm64: dts: hisi: add kirin pcie node
+Date: Fri, 26 May 2017 09:53:31 +0800
+Message-ID: <20170526015333.92482-3-songxiaowei@hisilicon.com>
+References: <20170526015333.92482-1-songxiaowei@hisilicon.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqJV5TA2ADo35tqGXC61NWK9PDqw8Dq5m5fYHg59yaoEUA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-Language: zh-CN
+In-Reply-To: <20170526015333.92482-1-songxiaowei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: "Wangzhou (B)" <wangzhou1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Gabriele Paoloni <gabriele.paoloni-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, "bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org" <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "xuwei (O)" <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, "catalin.marinas-5wv7dgnIgG8@public.gmane.org" <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, "will.deacon-5wv7dgnIgG8@public.gmane.org" <will.deacon-5wv7dgnIgG8@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Chenfeng (puck)" <puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, "guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Wangbinghui <wangbinghui-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Suzhuangluan <suzhuangluan-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+To: bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, tn-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org, keith.busch-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, niklas.cassel-VrBV9hrLPhE@public.gmane.org, dhdang-qTEPVZfXA3Y@public.gmane.org, liudongdong3-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, gabriele.paoloni-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org
+Cc: chenyao11-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, songxiaowei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, wangbinghui-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, suzhuangluan-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-DQoNCi0tLS0t6YKu5Lu25Y6f5Lu2LS0tLS0NCuWPkeS7tuS6ujogUm9iIEhlcnJpbmcgW21haWx0
-bzpyb2JoQGtlcm5lbC5vcmddIA0K5Y+R6YCB5pe26Ze0OiAyMDE35bm0NeaciDI15pelIDIwOjM5
-DQrmlLbku7bkuro6IHNvbmd4aWFvd2VpDQrmioTpgIE6IFdhbmd6aG91IChCKTsgR2FicmllbGUg
-UGFvbG9uaTsgYmhlbGdhYXNAZ29vZ2xlLmNvbTsgbWFyay5ydXRsYW5kQGFybS5jb207IHh1d2Vp
-IChPKTsgY2F0YWxpbi5tYXJpbmFzQGFybS5jb207IHdpbGwuZGVhY29uQGFybS5jb207IGxpbnV4
-LXBjaUB2Z2VyLmtlcm5lbC5vcmc7IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBsaW51eC1r
-ZXJuZWxAdmdlci5rZXJuZWwub3JnOyBDaGVuZmVuZyAocHVjayk7IGd1b2RvbmcueHVAbGluYXJv
-Lm9yZzsgV2FuZ2JpbmdodWk7IFN1emh1YW5nbHVhbg0K5Li76aKYOiBSZTog562U5aSNOiBbUGF0
-Y2ggdjMgMS8zXSBhcm02NDogZHRzOiBoaTM2NjA6IGFkZCBwY2llIG5vZGUNCg0KT24gVHVlLCBN
-YXkgMjMsIDIwMTcgYXQgODozOSBQTSwgc29uZ3hpYW93ZWkgPHNvbmd4aWFvd2VpQGhpc2lsaWNv
-bi5jb20+IHdyb3RlOg0KPiAtLS0tLemCruS7tuWOn+S7ti0tLS0tDQo+IOWPkeS7tuS6ujogUm9i
-IEhlcnJpbmcgW21haWx0bzpyb2JoQGtlcm5lbC5vcmddDQo+IOWPkemAgeaXtumXtDogMjAxN+W5
-tDXmnIgyM+aXpSAyMjoxNw0KPiDmlLbku7bkuro6IHNvbmd4aWFvd2VpDQo+IOaKhOmAgTogV2Fu
-Z3pob3UgKEIpOyBHYWJyaWVsZSBQYW9sb25pOyBiaGVsZ2Fhc0Bnb29nbGUuY29tOyBtYXJrLnJ1
-dGxhbmRAYXJtLmNvbTsgeHV3ZWkgKE8pOyBjYXRhbGluLm1hcmluYXNAYXJtLmNvbTsgd2lsbC5k
-ZWFjb25AYXJtLmNvbTsgbGludXgtcGNpQHZnZXIua2VybmVsLm9yZzsgZGV2aWNldHJlZUB2Z2Vy
-Lmtlcm5lbC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IENoZW5mZW5nIChwdWNr
-KTsgZ3VvZG9uZy54dUBsaW5hcm8ub3JnOyBXYW5nYmluZ2h1aTsgU3V6aHVhbmdsdWFuDQo+IOS4
-u+mimDogUmU6IFtQYXRjaCB2MyAxLzNdIGFybTY0OiBkdHM6IGhpMzY2MDogYWRkIHBjaWUgbm9k
-ZQ0KPg0KPiBPbiBUaHUsIE1heSAxOCwgMjAxNyBhdCAwMzo0OTo0NlBNICswODAwLCBTb25nIFhp
-YW93ZWkgd3JvdGU6DQo+PiBBZGQgUENJZSBub2RlIGZvciBoaTM2NjAsIGFuZCBhZGQgYmluZGlu
-ZyBkb2N1bWVudGF0aW9uLg0KPj4NCj4+IENjOiBHdW9kb25nIFh1IDxndW9kb25nLnh1QGxpbmFy
-by5vcmc+DQo+PiBTaWduZWQtb2ZmLWJ5OiBTb25nIFhpYW93ZWkgPHNvbmd4aWFvd2VpQGhpc2ls
-aWNvbi5jb20+DQo+PiAtLS0NCj4+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9wY2kvaGlzaWxp
-Y29uLXBjaWUudHh0ICAgICB8IDUyICsrKysrKysrKysrKysrKysrKysrKysNCj4+ICBhcmNoL2Fy
-bTY0L2Jvb3QvZHRzL2hpc2lsaWNvbi9oaTM2NjAuZHRzaSAgICAgICAgICB8IDMxICsrKysrKysr
-KysrKysNCg0KWy4uLl0NCg0KPj4gKyAgImNvbmZpZyI6IFBDSWUgY29uZmlndXJhdGlvbiBzcGFj
-ZSByZWdpc3RlcnMuDQo+PiArLSByZXNldC1ncGlvOiBwZXJzdCBhc3NlcnQvZGVhc3NlcnQgZ3Bp
-bw0KPg0KPiByZXNldC1ncGlvcw0KPiBbc29uZ3hpYW93ZWldIHJlc3QtZ3BpbyBpcyB1c2VkIHRv
-IHNpZ25hbCAncGNpZSBwZXJzdCc6IGhpZ2ggbGV2ZWwgcmVmZXJzIHRvIGRlYXNzZXJ0DQo+ICAg
-ICAgICAgICAgICBhbmQgbG93IGxldmVsIHJlZmVycyB0byBhc3NlcnQuIFNvLCBJIHRoaW5rICcg
-cmVzZXQtZ3BpbzogY3JlYXRlcyBwZXJzdCBhc3NlcnQvZGVhc3NlcnQgc2lnbmFsICcNCj4gICAg
-ICAgICAgICAgICAgICAgICAgICAgd291bGQgYmUgYSBiZXR0ZXIgY2hvaWNlLg0KDQpXaGF0IEkg
-d2FzIHNheWluZyBpcyB0aGUgbmFtZSBzaG91bGQgYmUgcmVzZXQtZ3Bpb3MsIG5vdCByZXNldC1n
-cGlvLg0KDQpbc29uZ3hpYW93ZWldIE9rLCBJJ2xsIGZpeCBpdC4gSW4gZmFjdCwgcGVyc3Qgc2ln
-bmFsIG9ubHkgdXNlIG9uZSBsaW5lLCBzbyByZXNldC1ncGlvcyBjb250YWlucyBvbmx5IG9uZSBn
-cGlvLg0KUm9iDQo=
+Add PCIe node for hi3660, and add binding documentation.
+
+Cc: Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Signed-off-by: Xiaowei Song <songxiaowei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+---
+ arch/arm64/boot/dts/hisilicon/hi3660.dtsi | 31 +++++++++++++++++++++++++++++++
+ 1 file changed, 31 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
+index 3983086bd67b..09ffb4becb65 100644
+--- a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
++++ b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
+@@ -156,5 +156,36 @@
+ 			clock-names = "uartclk", "apb_pclk";
+ 			status = "disabled";
+ 		};
++
++		pcie@f4000000 {
++			compatible = "hisilicon,kirin960-pcie";
++			reg =  <0x0 0xf4000000 0x0 0x1000>,
++				<0x0 0xff3fe000 0x0 0x1000>,
++				<0x0 0xf3f20000 0x0 0x40000>,
++				<0x0 0xF5000000 0x0 0x2000>;
++			reg-names = "dbi", "apb", "phy", "config";
++			bus-range = <0x0  0x1>;
++			#address-cells = <3>;
++			#size-cells = <2>;
++			device_type = "pci";
++			ranges = <0x02000000 0x0 0x00000000 0x0
++				0xf6000000 0x0 0x2000000>;
++			num-lanes = <1>;
++			#interrupt-cells = <1>;
++			interrupt-map-mask = <0xf800 0 0 7>;
++			interrupt-map = <0x0 0 0 1 &gic 0 0 0 282 4>,
++				<0x0 0 0 2 &gic 0 0 0  283 4>,
++				<0x0 0 0 3 &gic 0 0 0  284 4>,
++				<0x0 0 0 4 &gic 0 0 0  285 4>;
++			clocks = <&crg_ctrl HI3660_PCIEPHY_REF>,
++				<&crg_ctrl HI3660_CLK_GATE_PCIEAUX>,
++				<&crg_ctrl HI3660_PCLK_GATE_PCIE_PHY>,
++				<&crg_ctrl HI3660_PCLK_GATE_PCIE_SYS>,
++				<&crg_ctrl HI3660_ACLK_GATE_PCIE>;
++			clock-names = "pcie_phy_ref", "pcie_aux",
++				"pcie_apb_phy", "pcie_apb_sys", "pcie_aclk";
++			reset-gpios = <&gpio11 1 0 >;
++			status = "ok";
++		};
+ 	};
+ };
+-- 
+2.11.GIT
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
