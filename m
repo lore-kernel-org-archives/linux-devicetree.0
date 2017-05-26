@@ -1,60 +1,54 @@
 From: Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 0/6] MFD: add driver for HiSilicon Hi6421v530 PMIC
-Date: Fri, 26 May 2017 14:35:12 +0800
-Message-ID: <20170526063518.21246-1-guodong.xu@linaro.org>
+Subject: [PATCH 1/6] dt-bindings: mfd: Add hi6421v530 bindings
+Date: Fri, 26 May 2017 14:35:13 +0800
+Message-ID: <20170526063518.21246-2-guodong.xu@linaro.org>
+References: <20170526063518.21246-1-guodong.xu@linaro.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170526063518.21246-1-guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org, riku.voipio-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org, damm+renesas-yzvPICuk2ACczHhG9Qg4qA@public.gmane.org, ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, hw.wangxiaoyin-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patchset adds driver for HiSilicon Hi6421v530 PMIC.
+DT bindings for hisilicon HI655x PMIC chip.
 
-Mainline kernel already has driver support to a similar chip, Hi6421.
-Hi6421 and Hi6421v530 are both from the same vendor, HiSilicon, but
-they are at different revisions. They both use the same Memory-mapped
-I/O method to communicate with Main SoC. However, they differ quite a
-lot in their regulator designs. Eg. they have completely different LDO
-voltage points.
-
-In order to enable future extension of Hi6421v530 functionality, a new
-mfd driver and regulator driver are added in this patchset. Only header
-file hi6421-pmic.h is reused between them. Patch 2 is for just this
-purpose.
-
-Patch 3 and 4 adds mfd and regulator driver respectively.
-Patch 5 is dts change, it depends and can be applied on hi3660/hikey960
-        patchset [1].
-Patch 6 enables the relevant config items.
-
-[1], http://www.spinics.net/lists/devicetree/msg178303.html
-
-Guodong Xu (4):
-  dt-bindings: mfd: Add hi6421v530 bindings
-  mfd: hi6421-pmic: move hi6421_regmap_config definition to header file
-  mfd: hi6421v530: add support for HiSilicon Hi6421v530
-  arm64: defconfig: enable hi6421v530 MFD and regulator
-
-Wang Xiaoyin (2):
-  regulator: hi6421v530: add driver for hi6421v530 voltage regulator
-  arm64: dts: hikey960: add device node for pmic and regulators
-
- .../bindings/mfd/hisilicon,hi6421v530.txt          |  25 ++
- arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts  |  60 ++++
- arch/arm64/configs/defconfig                       |   2 +
- drivers/mfd/Kconfig                                |   9 +
- drivers/mfd/Makefile                               |   1 +
- drivers/mfd/hi6421-pmic-core.c                     |   7 -
- drivers/mfd/hi6421v530-pmic.c                      |  92 ++++++
- drivers/regulator/Kconfig                          |  10 +
- drivers/regulator/Makefile                         |   1 +
- drivers/regulator/hi6421v530-regulator.c           | 355 +++++++++++++++++++++
- include/linux/mfd/hi6421-pmic.h                    |   6 +
- 11 files changed, 561 insertions(+), 7 deletions(-)
+Signed-off-by: Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+---
+ .../bindings/mfd/hisilicon,hi6421v530.txt          | 25 ++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/mfd/hisilicon,hi6421v530.txt
- create mode 100644 drivers/mfd/hi6421v530-pmic.c
- create mode 100644 drivers/regulator/hi6421v530-regulator.c
 
+diff --git a/Documentation/devicetree/bindings/mfd/hisilicon,hi6421v530.txt b/Documentation/devicetree/bindings/mfd/hisilicon,hi6421v530.txt
+new file mode 100644
+index 0000000..6ffe6f6
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mfd/hisilicon,hi6421v530.txt
+@@ -0,0 +1,25 @@
++Hisilicon Hi6421v530 Power Management Integrated Circuit (PMIC)
++
++The hardware layout for access PMIC Hi6421v530 from AP SoC Hi3660.
++Between PMIC Hi6421v530 and Hi3660, the physical signal channel is SSI.
++We can use memory-mapped I/O to communicate.
++
+++----------------+             +-------------+
++|                |             |             |
++|    Hi3660      |   SSI bus   |  Hi6421v530 |
++|                |-------------|             |
++|                |(REGMAP_MMIO)|             |
+++----------------+             +-------------+
++
++Required properties:
++- compatible:           Should be "hisilicon,hi6421v530-pmic".
++- reg:                  Base address of PMIC on Hi3660 SoC.
++- interrupt-controller: Hi6421v530 has internal IRQs (has own IRQ domain).
++
++Example:
++	pmic: pmic@fff34000 {
++		compatible = "hisilicon,hi6421v530-pmic";
++		reg = <0x0 0xfff34000 0x0 0x1000>;
++		interrupt-controller;
++		#interrupt-cells = <2>;
++	}
 -- 
 2.10.2
 
