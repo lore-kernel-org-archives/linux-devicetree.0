@@ -1,48 +1,51 @@
-From: Guodong Xu <guodong.xu@linaro.org>
-Subject: [PATCH v2 3/3] clk: hi3660: Set PPLL2 to 2880M
-Date: Fri, 26 May 2017 15:38:21 +0800
-Message-ID: <20170526073821.25971-4-guodong.xu@linaro.org>
-References: <20170526073821.25971-1-guodong.xu@linaro.org>
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <20170526073821.25971-1-guodong.xu@linaro.org>
-Sender: linux-clk-owner@vger.kernel.org
-To: mturquette@baylibre.com, sboyd@codeaurora.org, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: chenjun14@huawei.com, zhongkaihua@huawei.com, zhangfei.gao@linaro.org, leo.yan@linaro.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Zheng Shaobo <zhengshaobo1@huawei.com>
+From: Sekhar Nori <nsekhar@ti.com>
+Subject: Re: [PATCH] ARM: dts: keystone-k2l: fix broken Ethernet due to
+ disabled OSR
+Date: Fri, 26 May 2017 13:14:49 +0530
+Message-ID: <1a5730ea-7601-d0bb-15ef-168252f54446@ti.com>
+References: <59ba5ef37f17ff1c10d9d52ca06ef341b2d476eb.1490782833.git.nsekhar@ti.com>
+ <5adb4f5d-78c4-453d-898d-60c588eb1d14@oracle.com>
+ <CAK8P3a2yYK3zO=K__W4jCFYYpFCZLYkm97ADZHunttdUmO_ZOw@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAK8P3a2yYK3zO=K__W4jCFYYpFCZLYkm97ADZHunttdUmO_ZOw@mail.gmail.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Arnd Bergmann <arnd@arndb.de>, "santosh.shilimkar@oracle.com" <santosh.shilimkar@oracle.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "Kristo,
+ Tero" <t-kristo@ti.com>, "arm@kernel.org" <arm@kernel.org>, "Karicheri,
+ Muralidharan" <m-karicheri2@ti.com>, Santosh Shilimkar <ssantosh@kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Zhong Kaihua <zhongkaihua@huawei.com>
+Hi Arnd,
 
-Set PPLL2 to 2880M. With this patch, we saw better compatibility
-on various 1080p HDMI monitors.
+On Friday 31 March 2017 03:43 PM, Arnd Bergmann wrote:
+> On Wed, Mar 29, 2017 at 6:13 PM, santosh.shilimkar@oracle.com
+> <santosh.shilimkar@oracle.com> wrote:
+>>> Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
+>>> Acked-by: Tero Kristo <t-kristo@ti.com>
+>>> [nsekhar@ti.com: commit message updates, port to latest mainline]
+>>> Signed-off-by: Sekhar Nori <nsekhar@ti.com>
+>>> ---
+>>
+>> Acked-by: Santosh Shilimkar <ssantosh@kernel.org>
+>>
+>> Can you please pick this up for rcx fixes ?
+> 
+> Applied, thanks!
 
-Signed-off-by: Zhong Kaihua <zhongkaihua@huawei.com>
-Signed-off-by: Zheng Shaobo <zhengshaobo1@huawei.com>
----
- drivers/clk/hisilicon/clk-hi3660.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Looks like this fix never made to to mainline. Do you have the patch
+with you still? It will have to be marked for v4.11 stable and pushed.
 
-diff --git a/drivers/clk/hisilicon/clk-hi3660.c b/drivers/clk/hisilicon/clk-hi3660.c
-index 67c4d44..eb9ba41 100644
---- a/drivers/clk/hisilicon/clk-hi3660.c
-+++ b/drivers/clk/hisilicon/clk-hi3660.c
-@@ -20,7 +20,7 @@ static const struct hisi_fixed_rate_clock hi3660_fixed_rate_clks[] = {
- 	{ HI3660_CLK_FLL_SRC, "clk_fll_src", NULL, 0, 128000000, },
- 	{ HI3660_CLK_PPLL0, "clk_ppll0", NULL, 0, 1600000000, },
- 	{ HI3660_CLK_PPLL1, "clk_ppll1", NULL, 0, 1866000000, },
--	{ HI3660_CLK_PPLL2, "clk_ppll2", NULL, 0, 960000000, },
-+	{ HI3660_CLK_PPLL2, "clk_ppll2", NULL, 0, 2880000000, },
- 	{ HI3660_CLK_PPLL3, "clk_ppll3", NULL, 0, 1290000000, },
- 	{ HI3660_CLK_SCPLL, "clk_scpll", NULL, 0, 245760000, },
- 	{ HI3660_PCLK, "pclk", NULL, 0, 20000000, },
-@@ -42,7 +42,7 @@ static const struct hisi_fixed_factor_clock hi3660_crg_fixed_factor_clks[] = {
- 	{ HI3660_CLK_GATE_I2C6, "clk_gate_i2c6", "clk_i2c6_iomcu", 1, 4, 0, },
- 	{ HI3660_CLK_DIV_SYSBUS, "clk_div_sysbus", "clk_mux_sysbus", 1, 7, 0, },
- 	{ HI3660_CLK_DIV_320M, "clk_div_320m", "clk_320m_pll_gt", 1, 5, 0, },
--	{ HI3660_CLK_DIV_A53, "clk_div_a53hpm", "clk_a53hpm_andgt", 1, 2, 0, },
-+	{ HI3660_CLK_DIV_A53, "clk_div_a53hpm", "clk_a53hpm_andgt", 1, 6, 0, },
- 	{ HI3660_CLK_GATE_SPI0, "clk_gate_spi0", "clk_ppll0", 1, 8, 0, },
- 	{ HI3660_CLK_GATE_SPI2, "clk_gate_spi2", "clk_ppll0", 1, 8, 0, },
- 	{ HI3660_PCIEPHY_REF, "clk_pciephy_ref", "clk_div_pciephy", 1, 1, 0, },
--- 
-2.10.2
-
+Thanks,
+Sekhar
