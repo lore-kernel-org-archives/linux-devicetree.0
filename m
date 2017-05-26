@@ -1,174 +1,113 @@
-From: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 1/4] Docs: dt: document qcom iommu bindings
-Date: Fri, 26 May 2017 12:33:27 +0100
-Message-ID: <be8c6290-7127-ad2b-d3d7-48029379ab3e@arm.com>
-References: <20170525173340.26904-1-robdclark@gmail.com>
-	<20170525173340.26904-2-robdclark@gmail.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 4/6] regulator: hi6421v530: add driver for hi6421v530
+ voltage regulator
+Date: Fri, 26 May 2017 12:38:22 +0100
+Message-ID: <20170526113822.xsmk5lsrvzmqyljm@sirena.org.uk>
+References: <20170526063518.21246-1-guodong.xu@linaro.org>
+ <20170526063518.21246-5-guodong.xu@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <20170525173340.26904-2-robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Content-Language: en-GB
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Stanimir Varbanov <stanimir.varbanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="i5xer5qsq2f3wzuk"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170526063518.21246-5-guodong.xu@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Guodong Xu <guodong.xu@linaro.org>
+Cc: lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, xuwei5@hisilicon.com, catalin.marinas@arm.com, will.deacon@arm.com, lgirdwood@gmail.com, khilman@baylibre.com, arnd@arndb.de, gregory.clement@free-electrons.com, olof@lixom.net, thomas.petazzoni@free-electrons.com, yamada.masahiro@socionext.com, riku.voipio@linaro.org, treding@nvidia.com, krzk@kernel.org, eric@anholt.net, damm+renesas@opensource.se, ard.biesheuvel@linaro.org, linus.walleij@linaro.org, geert+renesas@glider.be, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, hw.wangxiaoyin@hisilicon.com
 List-Id: devicetree@vger.kernel.org
 
-On 25/05/17 18:33, Rob Clark wrote:
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Signed-off-by: Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> ---
->  .../devicetree/bindings/iommu/qcom,iommu.txt       | 121 +++++++++++++++++++++
->  1 file changed, 121 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iommu/qcom,iommu.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/iommu/qcom,iommu.txt b/Documentation/devicetree/bindings/iommu/qcom,iommu.txt
-> new file mode 100644
-> index 0000000..0d50f84
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iommu/qcom,iommu.txt
-> @@ -0,0 +1,121 @@
-> +* QCOM IOMMU v1 Implementation
-> +
-> +Qualcomm "B" family devices which are not compatible with arm-smmu have
-> +a similar looking IOMMU but without access to the global register space,
-> +and optionally requiring additional configuration to route context irqs
-> +to non-secure vs secure interrupt line.
-> +
-> +** Required properties:
-> +
-> +- compatible       : Should be one of:
-> +
-> +                        "qcom,msm8916-iommu"
-> +
-> +                     Followed by "qcom,msm-iommu-v1".
-> +
-> +- clock-names      : Should be a pair of "iface" (required for IOMMUs
-> +                     register group access) and "bus" (required for
-> +                     the IOMMUs underlying bus access).
-> +
-> +- clocks           : Phandles for respective clocks described by
-> +                     clock-names.
-> +
-> +- #address-cells   : must be 1.
-> +
-> +- #size-cells      : must be 1.
-> +
-> +- #iommu-cells     : Must be 1.
 
-You need to document what the value in the cell means for this binding.
-AFAICS it looks to be the hardware context bank index, but I wonder if
-it might be simpler to use the child node index instead.
+--i5xer5qsq2f3wzuk
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> +- ranges           : Base address and size of the iommu context banks.
-> +
-> +- qcom,iommu-secure-id  : secure-id.
-> +
-> +- List of sub-nodes, one per translation context bank.  Each sub-node
-> +  has the following required properties:
-> +
-> +  - compatible     : Should be one of:
-> +        - "qcom,msm-iommu-v1-ns"  : non-secure context bank
-> +        - "qcom,msm-iommu-v1-sec" : secure context bank
-> +  - reg            : Base address and size of context bank within the iommu
-> +  - interrupts     : The context fault irq.
-> +
-> +** Optional properties:
-> +
-> +- reg              : Base address and size of the SMMU local base, should
-> +                     be only specified if the iommu requires configuration
-> +                     for routing of context bank irq's to secure vs non-
-> +                     secure lines.  (Ie. if the iommu contains secure
-> +                     context banks)
-> +
-> +
-> +** Examples:
-> +
-> +	apps_iommu: iommu@1e20000 {
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		#iommu-cells = <1>;
-> +		compatible = "qcom,msm8916-iommu", "qcom,msm-iommu-v1";
-> +		ranges = <0 0x1e20000 0x40000>;
-> +		reg = <0x1ef0000 0x3000>;
-> +		clocks = <&gcc GCC_SMMU_CFG_CLK>,
-> +			 <&gcc GCC_APSS_TCU_CLK>;
-> +		clock-names = "iface", "bus";
-> +		qcom,iommu-secure-id = <17>;
-> +
-> +		// mdp_0:
-> +		iommu-ctx@4000 {
-> +			compatible = "qcom,msm-iommu-v1-ns";
-> +			reg = <0x4000 0x1000>;
-> +			interrupts = <GIC_SPI 70 0>;
-> +		};
-> +
-> +		// venus_ns:
-> +		iommu-ctx@5000 {
-> +			compatible = "qcom,msm-iommu-v1-sec";
-> +			reg = <0x5000 0x1000>;
-> +			interrupts = <GIC_SPI 70 0>;
-> +		};
-> +	};
-> +
-> +	gpu_iommu: iommu@1f08000 {
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		#iommu-cells = <1>;
-> +		compatible = "qcom,msm8916-iommu", "qcom,msm-iommu-v1";
-> +		ranges = <0 0x1f08000 0x10000>;
-> +		clocks = <&gcc GCC_SMMU_CFG_CLK>,
-> +			 <&gcc GCC_GFX_TCU_CLK>;
-> +		clock-names = "iface", "bus";
-> +		qcom,iommu-secure-id = <18>;
-> +
-> +		// gfx3d_user:
-> +		iommu-ctx@1f09000 {
+On Fri, May 26, 2017 at 02:35:16PM +0800, Guodong Xu wrote:
 
-@1000?
+Overall this driver needs quite a lot of modernization, it's at least a
+couple of years out of date in how it's using the framework - there's
+barely any use of helpers.  It does look like it should be fairly easy
+to get it up to date though, it's mostly going to be a case of deleting
+code that's reimplementing helpers rather than anything else.
 
-> +			compatible = "qcom,msm-iommu-v1-ns";
-> +			reg = <0x1000 0x1000>;
-> +			interrupts = <GIC_SPI 241 0>;
-> +		};
-> +
-> +		// gfx3d_priv:
-> +		iommu-ctx@1f0a000 {
+> +/*
+> + * struct hi6421c530_regulator_pdata - Hi6421V530 regulator data
+> + * of platform device.
+> + * @lock: mutex to serialize regulator enable
+> + */
+> +struct hi6421v530_regulator_pdata {
+> +	struct mutex lock;
+> +};
 
-@2000?
+This isn't platform data so it probably shouldn't be called pdata.  I
+also can't tell what the lock is protecting, every use seems to be a
+call to regmap_update_bits() which is atomic anyway - could we just drop
+the whole thing?
 
-Robin.
+> +static int hi6421v530_regulator_enable(struct regulator_dev *rdev)
+> +{
+> +	struct hi6421v530_regulator_pdata *pdata;
+> +	int ret =3D 0;
+> +
+> +	pdata =3D dev_get_drvdata(rdev->dev.parent);
+> +	mutex_lock(&pdata->lock);
+> +
+> +	ret =3D regmap_update_bits(rdev->regmap, rdev->desc->enable_reg,
+> +			rdev->desc->enable_mask,
+> +			1 << (ffs(rdev->desc->enable_mask) - 1));
+> +
+> +	mutex_unlock(&pdata->lock);
+> +	return ret;
+> +}
 
-> +			compatible = "qcom,msm-iommu-v1-ns";
-> +			reg = <0x2000 0x1000>;
-> +			interrupts = <GIC_SPI 242 0>;
-> +		};
-> +	};
+This looks like it should be able to use the regmap helpers for all the
+enable operations rather than open coding. =20
+
+> +static int hi6421v530_regulator_set_voltage(struct regulator_dev *rdev,
+> +						unsigned int sel)
+> +{
+> +	struct hi6421v530_regulator_pdata *pdata;
+> +	int ret =3D 0;
 > +
-> +	...
+> +	pdata =3D dev_get_drvdata(rdev->dev.parent);
+> +	mutex_lock(&pdata->lock);
 > +
-> +	venus: video-codec@1d00000 {
-> +		...
-> +		iommus = <&apps_iommu 5>;
-> +	};
+> +	ret =3D regmap_update_bits(rdev->regmap, rdev->desc->vsel_reg,
+> +				rdev->desc->vsel_mask,
+> +				sel << (ffs(rdev->desc->vsel_mask) - 1));
+
+Same for all the voltage operations :(
+
+> +	rdev->constraints->valid_modes_mask =3D info->mode_mask;
+> +	rdev->constraints->valid_ops_mask |=3D
+> +			REGULATOR_CHANGE_VOLTAGE | REGULATOR_CHANGE_MODE;
+
+The driver should *never* modify constraints, it's up to the machine
+integration to say what can be supported on a given board.
+
+> +	np =3D of_get_child_by_name(dev->parent->of_node, "regulators");
+> +	if (!np)
+> +		return -ENODEV;
 > +
-> +	mdp: mdp@1a01000 {
-> +		...
-> +		iommus = <&apps_iommu 4>;
-> +	};
-> +
-> +	gpu@01c00000 {
-> +		...
-> +		iommus = <&gpu_iommu 1>, <&gpu_iommu 2>;
-> +	};
-> 
+> +	ret =3D of_regulator_match(dev, np,
+> +				 hi6421v530_regulator_match,
+> +				 ARRAY_SIZE(hi6421v530_regulator_match));
+
+Don't open code this, use of_match and regulators_node.
+
+--i5xer5qsq2f3wzuk
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlkoE60ACgkQJNaLcl1U
+h9A/ggf9GB7edTsYsikyIVRAo1/YF3eMDJWiBwaD44OWVv3FfFytf2hbSaEKvdEB
+MA9+HnQQNGVkVjY2idSgdiQ0cCLtVNQ5CM+puEQpX/URIx2fsA8etlo44ibX/VJq
+TAfaY1MYMW1dwZbqUSqAnFvLhDIhEnFl1EDvn/5VBJ75leNnPU18IWt/OxHWt8XF
+U+S8XnRQcesOfEKqRbLs+zblJEnDr8rVH8gHoCToO8Xt04XlKA8fMqsZvkiHwMNa
+a3lCZPv9ch7Qoz5H8D6sIcmchE14QKB70EGXcHb0EzVjvPlwIsPPGxqgzL2ByCeu
+g+hNFDqAQia/h4Bu6YV6IOS6qhT7ng==
+=Tm/y
+-----END PGP SIGNATURE-----
+
+--i5xer5qsq2f3wzuk--
