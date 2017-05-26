@@ -1,36 +1,59 @@
-From: Bogdan Purcareata <bogdan.purcareata@nxp.com>
-Subject: RE: [PATCH v3 2/2] dt-bindings: net: Add Cortina device tree bindings
-Date: Fri, 26 May 2017 13:41:13 +0000
-Message-ID: <DB5PR04MB1240819AA151E750D32634EEEAFC0@DB5PR04MB1240.eurprd04.prod.outlook.com>
-References: <1495785519-1468-1-git-send-email-bogdan.purcareata@nxp.com>
- <1495785519-1468-3-git-send-email-bogdan.purcareata@nxp.com>
- <20170526133554.GD31389@lunn.ch>
+From: Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Re: [PATCH 2/2] crypto: mediatek - update DT binding documentation
+Date: Fri, 26 May 2017 16:15:23 +0200
+Message-ID: <a16ecc4c-2d82-1239-ec57-94dd3b24efb0@gmail.com>
+References: <1495791789-19230-1-git-send-email-ryder.lee@mediatek.com>
+ <1495791789-19230-2-git-send-email-ryder.lee@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170526133554.GD31389@lunn.ch>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-crypto-owner@vger.kernel.org>
+In-Reply-To: <1495791789-19230-2-git-send-email-ryder.lee@mediatek.com>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: "f.fainelli@gmail.com" <f.fainelli@gmail.com>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Sender: linux-crypto-owner@vger.kernel.org
+To: Ryder Lee <ryder.lee@mediatek.com>, Herbert Xu <herbert@gondor.apana.org.au>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, linux-crypto@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-> -----Original Message-----
-> From: Andrew Lunn [mailto:andrew@lunn.ch]
-> Sent: Friday, May 26, 2017 4:36 PM
-> To: Bogdan Purcareata <bogdan.purcareata@nxp.com>
-> Cc: f.fainelli@gmail.com; netdev@vger.kernel.org;
-> devicetree@vger.kernel.org; linux-kernel@vger.kernel.org
-> Subject: Re: [PATCH v3 2/2] dt-bindings: net: Add Cortina device tree
-> bindings
->=20
-> > +		cs4340_phy@1 {
-> > +			compatible =3D "ethernet-phy-id13e5.1002";
-> > +			reg =3D <0x10>;
->=20
-> The @1 and the reg value should be the same. Please change it to
-> cs4340_phy@10.
 
-Will do, thanks!
-Bogdan
+
+On 26/05/17 11:43, Ryder Lee wrote:
+> This patch removes unnecessary clock in binding file.
+> 
+> Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
+> ---
+
+In the driver clocks are get by name, so this change does not break 
+backwards compatibility.
+
+Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
+
+>   Documentation/devicetree/bindings/crypto/mediatek-crypto.txt | 8 +++-----
+>   1 file changed, 3 insertions(+), 5 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/crypto/mediatek-crypto.txt b/Documentation/devicetree/bindings/crypto/mediatek-crypto.txt
+> index c204725..450da36 100644
+> --- a/Documentation/devicetree/bindings/crypto/mediatek-crypto.txt
+> +++ b/Documentation/devicetree/bindings/crypto/mediatek-crypto.txt
+> @@ -6,8 +6,7 @@ Required properties:
+>   - interrupts: Should contain the five crypto engines interrupts in numeric
+>   	order. These are global system and four descriptor rings.
+>   - clocks: the clock used by the core
+> -- clock-names: the names of the clock listed in the clocks property. These are
+> -	"ethif", "cryp"
+> +- clock-names: Must contain "cryp".
+>   - power-domains: Must contain a reference to the PM domain.
+>   
+>   
+> @@ -20,8 +19,7 @@ Example:
+>   			     <GIC_SPI 84 IRQ_TYPE_LEVEL_LOW>,
+>   			     <GIC_SPI 91 IRQ_TYPE_LEVEL_LOW>,
+>   			     <GIC_SPI 97 IRQ_TYPE_LEVEL_LOW>;
+> -		clocks = <&topckgen CLK_TOP_ETHIF_SEL>,
+> -			 <&ethsys CLK_ETHSYS_CRYPTO>;
+> -		clock-names = "ethif","cryp";
+> +		clocks = <&ethsys CLK_ETHSYS_CRYPTO>;
+> +		clock-names = "cryp";
+>   		power-domains = <&scpsys MT2701_POWER_DOMAIN_ETH>;
+>   	};
+> 
