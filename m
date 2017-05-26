@@ -1,54 +1,64 @@
-From: Suman Anna <s-anna@ti.com>
-Subject: [PATCH 0/3] Add Keystone2 Remoteproc driver
-Date: Fri, 26 May 2017 11:53:14 -0500
-Message-ID: <20170526165317.23164-1-s-anna@ti.com>
+From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <uwe-rXY34ruvC2xidJT2blvkqNi2O/JbrIOy@public.gmane.org>
+Subject: [PATCH RFC 3/5] ARM: dts: at91-sama5d4: use IRQ_TYPE_* to specify irq flags
+Date: Fri, 26 May 2017 20:06:07 +0200
+Message-ID: <20170526180609.2699-3-uwe@kleine-koenig.org>
+References: <20170526180609.2699-1-uwe@kleine-koenig.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>, Ohad Ben-Cohen <ohad@wizery.com>, Rob Herring <robh+dt@kernel.org>
-Cc: Santosh Shilimkar <ssantosh@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-remoteproc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Suman Anna <s-anna@ti.com>, "Andrew F. Davis" <afd@ti.com>, Sam Nelson <sam.nelson@ti.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170526180609.2699-1-uwe-rXY34ruvC2xidJT2blvkqNi2O/JbrIOy@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Nicolas Ferre <nicolas.ferre-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+According to the binding documentation and the source code the atmel-gpio
+controller takes IRQ_TYPE_* as its flags values, not GPIO_ACTIVE_*.
 
-This series adds the DT binding and the driver for loading and booting
-the DSP devices present on various Keystone2 SoC families. The current
-series supports the 66AK2H/K, 66AK2L and 66AK2E SoC families. Support
-for the remaining 66AK2G SoC family will be added later as it is
-awaiting the dependent clock and reset drivers to be merged into
-mainline.
+This patch uses the right variable type which yields the same result
+when compiled. Note that this might be wrong and actually
+IRQ_TYPE_LEVEL_LOW is intended by the dt author.
 
-Supported features include basic load/boot using DSP internal memory
-regions and error recovery. IPC based on the virtio-rpmsg transport
-with vrings in external DDR memory and interrupts supported through
-MMRs.
+Signed-off-by: Uwe Kleine-König <uwe-rXY34ruvC2xidJT2blvkqNi2O/JbrIOy@public.gmane.org>
+---
+Hello,
 
-The DTS nodes will be posted separately once the binding is accepted.
-The virtio-rpmsg based IPC stack would require some support in the
-virtio_rpmsg driver (first 2 patches from Loic's "virtio_rpmsg: make
-rpmsg channel configurable" series [1] to begin with) if using CMA
-pools from HighMem area.
+can somebody with the hardware or it's documentation please check which
+flag is the right one?
 
-regards
-Suman
+Best regards
+Uwe
 
-[1] https://lkml.org/lkml/2017/3/28/349
+ arch/arm/boot/dts/at91-sama5d4_ma5d4.dtsi | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Andrew F. Davis (1):
-  remoteproc/keystone: ensure the DSPs are in reset in probe
-
-Suman Anna (2):
-  Documentation: DT: add Keystone DSP remoteproc binding
-  remoteproc/keystone: add a remoteproc driver for Keystone 2 DSPs
-
- .../bindings/remoteproc/ti,keystone-rproc.txt      | 132 ++++++
- drivers/remoteproc/Kconfig                         |  13 +
- drivers/remoteproc/Makefile                        |   1 +
- drivers/remoteproc/keystone_remoteproc.c           | 525 +++++++++++++++++++++
- 4 files changed, 671 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/remoteproc/ti,keystone-rproc.txt
- create mode 100644 drivers/remoteproc/keystone_remoteproc.c
-
+diff --git a/arch/arm/boot/dts/at91-sama5d4_ma5d4.dtsi b/arch/arm/boot/dts/at91-sama5d4_ma5d4.dtsi
+index b5a5a91bc2ef..b813fdfa2842 100644
+--- a/arch/arm/boot/dts/at91-sama5d4_ma5d4.dtsi
++++ b/arch/arm/boot/dts/at91-sama5d4_ma5d4.dtsi
+@@ -75,7 +75,7 @@
+ 					reg = <0>;
+ 					clocks = <&clk20m>;
+ 					interrupt-parent = <&pioE>;
+-					interrupts = <6 GPIO_ACTIVE_LOW>;
++					interrupts = <6 IRQ_TYPE_EDGE_RISING>;
+ 					spi-max-frequency = <10000000>;
+ 				};
+ 
+@@ -84,7 +84,7 @@
+ 					reg = <1>;
+ 					clocks = <&clk20m>;
+ 					interrupt-parent = <&pioE>;
+-					interrupts = <7 GPIO_ACTIVE_LOW>;
++					interrupts = <7 IRQ_TYPE_EDGE_RISING>;
+ 					spi-max-frequency = <10000000>;
+ 				};
+ 			};
 -- 
-2.12.0
+2.11.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
