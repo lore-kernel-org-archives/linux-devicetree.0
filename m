@@ -1,14 +1,13 @@
 From: Shawn Lin <shawn.lin@rock-chips.com>
-Subject: Re: [PATCH V2] ARM: dts: rockchip:remove hs200 support for firefly
- reload
-Date: Fri, 26 May 2017 14:49:12 +0800
-Message-ID: <354b634b-0ba6-682e-95fa-52b32e3cc94c@rock-chips.com>
-References: <1495616267-5305-1-git-send-email-eddie.cai.linux@gmail.com>
+Subject: Re: [PATCH] ARM: dts: rockchip:add sd card support
+Date: Fri, 26 May 2017 14:54:18 +0800
+Message-ID: <0cf71840-a533-1810-04f3-e6c1a3290857@rock-chips.com>
+References: <1495777966-26212-1-git-send-email-eddie.cai.linux@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"; Format="flowed"
 Content-Transfer-Encoding: base64
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1495616267-5305-1-git-send-email-eddie.cai.linux@gmail.com>
+In-Reply-To: <1495777966-26212-1-git-send-email-eddie.cai.linux@gmail.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -18,26 +17,43 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Eddie Cai <eddie.cai.linux@gmail.com>, heiko@sntech.de, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk
-Cc: linux-rockchip@lists.infradead.org, shawn.lin@rock-chips.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+To: Eddie Cai <eddie.cai.linux@gmail.com>, mark.rutland@arm.com, linux@armlinux.org.uk
+Cc: devicetree@vger.kernel.org, heiko@sntech.de, shawn.lin@rock-chips.com, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgRWRkaWUsCgrlnKggMjAxNy81LzI0IDE2OjU3LCBFZGRpZSBDYWkg5YaZ6YGTOgo+IGR1ZSB0
-byBsYXlvdXQgbGltaXRhdGlvbi4gbm90IGFsbCBvZiB0aGUgcmVsb2FkIGJvYXJkIGNhbiBzdXBw
-b3J0IGhzMjAwLgo+IHNvIHJlbW92ZSBoczIwMCBzdXBwb3J0IHRvIG1ha2UgYWxsIGJvYXJkIGNh
-biBib290IHVwLgo+Cj4gU2lnbmVkLW9mZi1ieTogRWRkaWUgQ2FpIDxlZGRpZS5jYWkubGludXhA
-Z21haWwuY29tPgo+IC0tLQo+ICBhcmNoL2FybS9ib290L2R0cy9yazMyODgtZmlyZWZseS1yZWxv
-YWQtY29yZS5kdHNpIHwgMiAtLQo+ICAxIGZpbGUgY2hhbmdlZCwgMiBkZWxldGlvbnMoLSkKPgo+
-IGRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9yazMyODgtZmlyZWZseS1yZWxvYWQtY29y
-ZS5kdHNpIGIvYXJjaC9hcm0vYm9vdC9kdHMvcmszMjg4LWZpcmVmbHktcmVsb2FkLWNvcmUuZHRz
-aQo+IGluZGV4IDRjZmExMDkuLjU2YWMxZTZmIDEwMDY0NAo+IC0tLSBhL2FyY2gvYXJtL2Jvb3Qv
-ZHRzL3JrMzI4OC1maXJlZmx5LXJlbG9hZC1jb3JlLmR0c2kKPiArKysgYi9hcmNoL2FybS9ib290
-L2R0cy9yazMyODgtZmlyZWZseS1yZWxvYWQtY29yZS5kdHNpCj4gQEAgLTc1LDggKzc1LDYgQEAK
-PiAgCWJ1cy13aWR0aCA9IDw4PjsKPiAgCWNhcC1tbWMtaGlnaHNwZWVkOwo+ICAJZGlzYWJsZS13
-cDsKPiAtCW1tYy1oczIwMC0xXzh2OwoKT24gd2hpY2ggdHJlZSB3ZXJlIHlvdSBiYXNpbmc/IEkg
-Y2FuJ3QgZ2l0LWFtIHRoaXMgb25lIGZvciB0b2RheSdzCmxpbnV4LW5leHQ/Cgo+ICAJbm9uLXJl
-bW92YWJsZTsKPiAgCW51bS1zbG90cyA9IDwxPjsKPiAgCXBpbmN0cmwtbmFtZXMgPSAiZGVmYXVs
-dCI7Cj4KCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwps
-aW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJh
-ZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51
-eC1hcm0ta2VybmVsCg==
+SGkgRWRkaWUsCgrlnKggMjAxNy81LzI2IDEzOjUyLCBFZGRpZSBDYWkg5YaZ6YGTOgo+IGZpcmVm
+bHkgcmVsb2FkIGJvYXJkIG5vdCBzdXBwb3J0IHNkIGNhcmQgeWV0LiBzbyBzdXBwb3J0IGl0LgoK
+SXQgbG9va3MgZ29vZCBvdmVyYWxsLCBidXQgSSB0aGluayB5b3UgbmVlZCB0byBhbWVuZAp5b3Vy
+IGNvbW1pdCB0aXRsZSB0byBzYXkgdGhhdCB5b3UganVzdCBhZGQgc2QgY2FyZCBzdXBwb3J0CmZv
+ciByazMyODgtZmlyZWZseS1yZWxvYWQsIG90aGVyd2lzZSwKClJldmlld2VkLWJ5OiBTaGF3biBM
+aW4gPHNoYXduLmxpbkByb2NrLWNoaXBzLmNvbT4KCj4KPiBTaWduZWQtb2ZmLWJ5OiBFZGRpZSBD
+YWkgPGVkZGllLmNhaS5saW51eEBnbWFpbC5jb20+Cj4gLS0tCj4gIGFyY2gvYXJtL2Jvb3QvZHRz
+L3JrMzI4OC1maXJlZmx5LXJlbG9hZC1jb3JlLmR0c2kgfCAzMSArKysrKysrKysrKysrKysrKysr
+KysrKwo+ICAxIGZpbGUgY2hhbmdlZCwgMzEgaW5zZXJ0aW9ucygrKQo+Cj4gZGlmZiAtLWdpdCBh
+L2FyY2gvYXJtL2Jvb3QvZHRzL3JrMzI4OC1maXJlZmx5LXJlbG9hZC1jb3JlLmR0c2kgYi9hcmNo
+L2FybS9ib290L2R0cy9yazMyODgtZmlyZWZseS1yZWxvYWQtY29yZS5kdHNpCj4gaW5kZXggNDEz
+YjYxZi4uMmY0MTIwOSAxMDA2NDQKPiAtLS0gYS9hcmNoL2FybS9ib290L2R0cy9yazMyODgtZmly
+ZWZseS1yZWxvYWQtY29yZS5kdHNpCj4gKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvcmszMjg4LWZp
+cmVmbHktcmVsb2FkLWNvcmUuZHRzaQo+IEBAIC01Nyw2ICs1NywxNyBAQAo+ICAJCWNsb2NrLW91
+dHB1dC1uYW1lcyA9ICJleHRfZ21hYyI7Cj4gIAl9Owo+Cj4gKwl2Y2Nfc2Q6IHNkbW1jLXJlZ3Vs
+YXRvciB7Cj4gKwkJY29tcGF0aWJsZSA9ICJyZWd1bGF0b3ItZml4ZWQiOwo+ICsJCWdwaW8gPSA8
+JmdwaW83IFJLX1BCMyBHUElPX0FDVElWRV9MT1c+Owo+ICsJCXBpbmN0cmwtbmFtZXMgPSAiZGVm
+YXVsdCI7Cj4gKwkJcGluY3RybC0wID0gPCZzZG1tY19wd3I+Owo+ICsJCXJlZ3VsYXRvci1uYW1l
+ID0gInZjY19zZCI7Cj4gKwkJcmVndWxhdG9yLW1pbi1taWNyb3ZvbHQgPSA8MzMwMDAwMD47Cj4g
+KwkJcmVndWxhdG9yLW1heC1taWNyb3ZvbHQgPSA8MzMwMDAwMD47Cj4gKwkJc3RhcnR1cC1kZWxh
+eS11cyA9IDwxMDAwMDA+Owo+ICsJCXZpbi1zdXBwbHkgPSA8JnZjY19pbz47Cj4gKwl9Owo+Cj4g
+IAl2Y2NfZmxhc2g6IGZsYXNoLXJlZ3VsYXRvciB7Cj4gIAkJY29tcGF0aWJsZSA9ICJyZWd1bGF0
+b3ItZml4ZWQiOwo+IEBAIC0yODEsNiArMjkyLDI2IEBACj4gIAkJCXJvY2tjaGlwLHBpbnMgPSA8
+NCA4IFJLX0ZVTkNfR1BJTyAmcGNmZ19vdXRwdXRfaGlnaD47Cj4gIAkJfTsKPiAgCX07Cj4gKwo+
+ICsJc2RtbWMgewo+ICsJCXNkbW1jX3B3cjogc2RtbWMtcHdyIHsKPiArCQkJcm9ja2NoaXAscGlu
+cyA9IDw3IDExIFJLX0ZVTkNfR1BJTyAmcGNmZ19wdWxsX25vbmU+Owo+ICsJCX07Cj4gKwl9Owo+
+ICt9Owo+ICsKPiArJnNkbW1jIHsKPiArCWJ1cy13aWR0aCA9IDw0PjsKPiArCWNhcC1tbWMtaGln
+aHNwZWVkOwo+ICsJY2FwLXNkLWhpZ2hzcGVlZDsKPiArCWNhcmQtZGV0ZWN0LWRlbGF5ID0gPDIw
+MD47Cj4gKwlkaXNhYmxlLXdwOwo+ICsJbnVtLXNsb3RzID0gPDE+Owo+ICsJcGluY3RybC1uYW1l
+cyA9ICJkZWZhdWx0IjsKPiArCXBpbmN0cmwtMCA9IDwmc2RtbWNfY2xrPiwgPCZzZG1tY19jbWQ+
+LCA8JnNkbW1jX2NkPiwgPCZzZG1tY19idXM0PjsKPiArCXZtbWMtc3VwcGx5ID0gPCZ2Y2Nfc2Q+
+Owo+ICsJdnFtbWMtc3VwcGx5ID0gPCZ2Y2Npb19zZD47Cj4gKwlzdGF0dXMgPSAib2theSI7Cj4g
+IH07Cj4KPiAgJnRzYWRjIHsKPgoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJu
+ZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFu
+L2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
