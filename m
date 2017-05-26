@@ -1,347 +1,601 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Applied "spi: sh-msiof: Add slave mode support" to the spi tree
-Date: Fri, 26 May 2017 13:12:48 +0100
-Message-ID: <E1dEE6q-0001QI-9k@debutante>
-References: <1495025272-23930-5-git-send-email-geert+renesas@glider.be>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1495025272-23930-5-git-send-email-geert+renesas@glider.be>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Hisashi Nakamura <hisashi.nakamura.ak@renesas.com>
-Cc: Hiromitsu Yamasaki <hiromitsu.yamasaki.ym@renesas.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Rob Herring <robh@kernel.org>, Mark Brown <broonie@kernel.org>Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, Wolfram Sang <wsa+renesas@sang-engineering.com>Hiromitsu Yamasaki <hiromitsu.yamasaki.ym@renesas.com>, Jiada Wang <jiada_wang@mentor.com>, Matt Porter <mporter@konsulko.com>, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.orglinux-spi@vger.kernel.org
+From: "Jingoo Han" <jingoohan1@gmail.com>
+Subject: Re: [PATCH v8 3/4] PCI: dwc: kirin: add PCIe Driver for HiSilicon Kirin SoC
+Date: Fri, 26 May 2017 08:38:30 -0400
+Message-ID: <000201d2d61c$fbce5f00$f36b1d00$@gmail.com>
+References: <20170526015333.92482-1-songxiaowei@hisilicon.com> <20170526015333.92482-4-songxiaowei@hisilicon.com>
+Mime-Version: 1.0
+Content-Type: text/plain;
+        charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <20170526015333.92482-4-songxiaowei@hisilicon.com>
+Content-Language: en-us
+Sender: linux-pci-owner@vger.kernel.org
+To: 'Xiaowei Song' <songxiaowei@hisilicon.com>, bhelgaas@google.com
+Cc: kishon@ti.com, arnd@arndb.de, tn@semihalf.com, keith.busch@intel.com, niklas.cassel@axis.com, dhdang@apm.com, liudongdong3@huawei.com, gabriele.paoloni@huawei.com, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, chenyao11@huawei.com, puck.chen@hisilicon.com, guodong.xu@linaro.org, wangbinghui@hisilicon.com, suzhuangluan@hisilicon.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The patch
+On Thursday, May 25, 2017 9:54 PM, Xiaowei Song wrote:
+> 
+> Hisilicon PCIe Driver shares the common functions for PCIe dw-host
+> 
+> The poweron functions is developed on hi3660 SoC,
+> while Others Functions are common for Kirin series SoCs.
+> 
+> Low power mode(L1 sub-state and Suspend/Resume), hotplug
+> and MSI feature are not supported currently.
+> 
+> Cc: Guodong Xu <guodong.xu@linaro.org>
+> Signed-off-by: Xiaowei Song <songxiaowei@hisilicon.com>
 
-   spi: sh-msiof: Add slave mode support
+It looks good.
 
-has been applied to the spi tree at
+Reviewed-by: Jingoo Han <jingoohan1@gmail.com>
 
-   git://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git 
+Best regards,
+Jingoo Han
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
->From cf9e4784f3bde3e4749163384f27450ddffe746c Mon Sep 17 00:00:00 2001
-From: Hisashi Nakamura <hisashi.nakamura.ak@renesas.com>
-Date: Mon, 22 May 2017 15:11:43 +0200
-Subject: [PATCH] spi: sh-msiof: Add slave mode support
-
-Add slave mode support to the MSIOF driver, in both PIO and DMA mode.
-
-For now this only supports the transmission of messages with a size
-that is known in advance.
-
-Signed-off-by: Hisashi Nakamura <hisashi.nakamura.ak@renesas.com>
-Signed-off-by: Hiromitsu Yamasaki <hiromitsu.yamasaki.ym@renesas.com>
-[geert: Timeout handling cleanup, spi core integration, cancellation,
-	rewording]
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Acked-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- Documentation/devicetree/bindings/spi/sh-msiof.txt |   2 +
- drivers/spi/spi-sh-msiof.c                         | 111 +++++++++++++++------
- include/linux/spi/sh_msiof.h                       |   6 ++
- 3 files changed, 86 insertions(+), 33 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/spi/sh-msiof.txt b/Documentation/devicetree/bindings/spi/sh-msiof.txt
-index dc975064fa27..64ee489571c4 100644
---- a/Documentation/devicetree/bindings/spi/sh-msiof.txt
-+++ b/Documentation/devicetree/bindings/spi/sh-msiof.txt
-@@ -38,6 +38,8 @@ Optional properties:
- 			 specifiers, one for transmission, and one for
- 			 reception.
- - dma-names            : Must contain a list of two DMA names, "tx" and "rx".
-+- spi-slave            : Empty property indicating the SPI controller is used
-+			 in slave mode.
- - renesas,dtdl         : delay sync signal (setup) in transmit mode.
- 			 Must contain one of the following values:
- 			 0   (no bit delay)
-diff --git a/drivers/spi/spi-sh-msiof.c b/drivers/spi/spi-sh-msiof.c
-index 2ce15ca97782..c304c7167866 100644
---- a/drivers/spi/spi-sh-msiof.c
-+++ b/drivers/spi/spi-sh-msiof.c
-@@ -2,7 +2,8 @@
-  * SuperH MSIOF SPI Master Interface
-  *
-  * Copyright (c) 2009 Magnus Damm
-- * Copyright (C) 2014 Glider bvba
-+ * Copyright (C) 2014 Renesas Electronics Corporation
-+ * Copyright (C) 2014-2017 Glider bvba
-  *
-  * This program is free software; you can redistribute it and/or modify
-  * it under the terms of the GNU General Public License version 2 as
-@@ -33,7 +34,6 @@
- 
- #include <asm/unaligned.h>
- 
--
- struct sh_msiof_chipdata {
- 	u16 tx_fifo_size;
- 	u16 rx_fifo_size;
-@@ -53,6 +53,7 @@ struct sh_msiof_spi_priv {
- 	void *rx_dma_page;
- 	dma_addr_t tx_dma_addr;
- 	dma_addr_t rx_dma_addr;
-+	bool slave_aborted;
- };
- 
- #define TMDR1	0x00	/* Transmit Mode Register 1 */
-@@ -337,7 +338,10 @@ static void sh_msiof_spi_set_pin_regs(struct sh_msiof_spi_priv *p,
- 	tmp |= !cs_high << MDR1_SYNCAC_SHIFT;
- 	tmp |= lsb_first << MDR1_BITLSB_SHIFT;
- 	tmp |= sh_msiof_spi_get_dtdl_and_syncdl(p);
--	sh_msiof_write(p, TMDR1, tmp | MDR1_TRMD | TMDR1_PCON);
-+	if (spi_controller_is_slave(p->master))
-+		sh_msiof_write(p, TMDR1, tmp | TMDR1_PCON);
-+	else
-+		sh_msiof_write(p, TMDR1, tmp | MDR1_TRMD | TMDR1_PCON);
- 	if (p->master->flags & SPI_MASTER_MUST_TX) {
- 		/* These bits are reserved if RX needs TX */
- 		tmp &= ~0x0000ffff;
-@@ -564,17 +568,19 @@ static int sh_msiof_prepare_message(struct spi_master *master,
- 
- static int sh_msiof_spi_start(struct sh_msiof_spi_priv *p, void *rx_buf)
- {
--	int ret;
-+	bool slave = spi_controller_is_slave(p->master);
-+	int ret = 0;
- 
- 	/* setup clock and rx/tx signals */
--	ret = sh_msiof_modify_ctr_wait(p, 0, CTR_TSCKE);
-+	if (!slave)
-+		ret = sh_msiof_modify_ctr_wait(p, 0, CTR_TSCKE);
- 	if (rx_buf && !ret)
- 		ret = sh_msiof_modify_ctr_wait(p, 0, CTR_RXE);
- 	if (!ret)
- 		ret = sh_msiof_modify_ctr_wait(p, 0, CTR_TXE);
- 
- 	/* start by setting frame bit */
--	if (!ret)
-+	if (!ret && !slave)
- 		ret = sh_msiof_modify_ctr_wait(p, 0, CTR_TFSE);
- 
- 	return ret;
-@@ -582,20 +588,49 @@ static int sh_msiof_spi_start(struct sh_msiof_spi_priv *p, void *rx_buf)
- 
- static int sh_msiof_spi_stop(struct sh_msiof_spi_priv *p, void *rx_buf)
- {
--	int ret;
-+	bool slave = spi_controller_is_slave(p->master);
-+	int ret = 0;
- 
- 	/* shut down frame, rx/tx and clock signals */
--	ret = sh_msiof_modify_ctr_wait(p, CTR_TFSE, 0);
-+	if (!slave)
-+		ret = sh_msiof_modify_ctr_wait(p, CTR_TFSE, 0);
- 	if (!ret)
- 		ret = sh_msiof_modify_ctr_wait(p, CTR_TXE, 0);
- 	if (rx_buf && !ret)
- 		ret = sh_msiof_modify_ctr_wait(p, CTR_RXE, 0);
--	if (!ret)
-+	if (!ret && !slave)
- 		ret = sh_msiof_modify_ctr_wait(p, CTR_TSCKE, 0);
- 
- 	return ret;
- }
- 
-+static int sh_msiof_slave_abort(struct spi_master *master)
-+{
-+	struct sh_msiof_spi_priv *p = spi_master_get_devdata(master);
-+
-+	p->slave_aborted = true;
-+	complete(&p->done);
-+	return 0;
-+}
-+
-+static int sh_msiof_wait_for_completion(struct sh_msiof_spi_priv *p)
-+{
-+	if (spi_controller_is_slave(p->master)) {
-+		if (wait_for_completion_interruptible(&p->done) ||
-+		    p->slave_aborted) {
-+			dev_dbg(&p->pdev->dev, "interrupted\n");
-+			return -EINTR;
-+		}
-+	} else {
-+		if (!wait_for_completion_timeout(&p->done, HZ)) {
-+			dev_err(&p->pdev->dev, "timeout\n");
-+			return -ETIMEDOUT;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
- static int sh_msiof_spi_txrx_once(struct sh_msiof_spi_priv *p,
- 				  void (*tx_fifo)(struct sh_msiof_spi_priv *,
- 						  const void *, int, int),
-@@ -628,6 +663,7 @@ static int sh_msiof_spi_txrx_once(struct sh_msiof_spi_priv *p,
- 		tx_fifo(p, tx_buf, words, fifo_shift);
- 
- 	reinit_completion(&p->done);
-+	p->slave_aborted = false;
- 
- 	ret = sh_msiof_spi_start(p, rx_buf);
- 	if (ret) {
-@@ -636,11 +672,9 @@ static int sh_msiof_spi_txrx_once(struct sh_msiof_spi_priv *p,
- 	}
- 
- 	/* wait for tx fifo to be emptied / rx fifo to be filled */
--	if (!wait_for_completion_timeout(&p->done, HZ)) {
--		dev_err(&p->pdev->dev, "PIO timeout\n");
--		ret = -ETIMEDOUT;
-+	ret = sh_msiof_wait_for_completion(p);
-+	if (ret)
- 		goto stop_reset;
--	}
- 
- 	/* read rx fifo */
- 	if (rx_buf)
-@@ -732,6 +766,7 @@ static int sh_msiof_dma_once(struct sh_msiof_spi_priv *p, const void *tx,
- 	sh_msiof_write(p, IER, ier_bits);
- 
- 	reinit_completion(&p->done);
-+	p->slave_aborted = false;
- 
- 	/* Now start DMA */
- 	if (rx)
-@@ -746,11 +781,9 @@ static int sh_msiof_dma_once(struct sh_msiof_spi_priv *p, const void *tx,
- 	}
- 
- 	/* wait for tx fifo to be emptied / rx fifo to be filled */
--	if (!wait_for_completion_timeout(&p->done, HZ)) {
--		dev_err(&p->pdev->dev, "DMA timeout\n");
--		ret = -ETIMEDOUT;
-+	ret = sh_msiof_wait_for_completion(p);
-+	if (ret)
- 		goto stop_reset;
--	}
- 
- 	/* clear status bits */
- 	sh_msiof_reset_str(p);
-@@ -843,7 +876,8 @@ static int sh_msiof_transfer_one(struct spi_master *master,
- 	int ret;
- 
- 	/* setup clocks (clock already enabled in chipselect()) */
--	sh_msiof_spi_set_clk_regs(p, clk_get_rate(p->clk), t->speed_hz);
-+	if (!spi_controller_is_slave(p->master))
-+		sh_msiof_spi_set_clk_regs(p, clk_get_rate(p->clk), t->speed_hz);
- 
- 	while (master->dma_tx && len > 15) {
- 		/*
-@@ -998,8 +1032,12 @@ static struct sh_msiof_spi_info *sh_msiof_spi_parse_dt(struct device *dev)
- 	if (!info)
- 		return NULL;
- 
-+	info->mode = of_property_read_bool(np, "spi-slave") ? MSIOF_SPI_SLAVE
-+							    : MSIOF_SPI_MASTER;
-+
- 	/* Parse the MSIOF properties */
--	of_property_read_u32(np, "num-cs", &num_cs);
-+	if (info->mode == MSIOF_SPI_MASTER)
-+		of_property_read_u32(np, "num-cs", &num_cs);
- 	of_property_read_u32(np, "renesas,tx-fifo-size",
- 					&info->tx_fifo_override);
- 	of_property_read_u32(np, "renesas,rx-fifo-size",
-@@ -1159,34 +1197,40 @@ static int sh_msiof_spi_probe(struct platform_device *pdev)
- 	struct spi_master *master;
- 	const struct sh_msiof_chipdata *chipdata;
- 	const struct of_device_id *of_id;
-+	struct sh_msiof_spi_info *info;
- 	struct sh_msiof_spi_priv *p;
- 	int i;
- 	int ret;
- 
--	master = spi_alloc_master(&pdev->dev, sizeof(struct sh_msiof_spi_priv));
--	if (master == NULL)
--		return -ENOMEM;
--
--	p = spi_master_get_devdata(master);
--
--	platform_set_drvdata(pdev, p);
--	p->master = master;
--
- 	of_id = of_match_device(sh_msiof_match, &pdev->dev);
- 	if (of_id) {
- 		chipdata = of_id->data;
--		p->info = sh_msiof_spi_parse_dt(&pdev->dev);
-+		info = sh_msiof_spi_parse_dt(&pdev->dev);
- 	} else {
- 		chipdata = (const void *)pdev->id_entry->driver_data;
--		p->info = dev_get_platdata(&pdev->dev);
-+		info = dev_get_platdata(&pdev->dev);
- 	}
- 
--	if (!p->info) {
-+	if (!info) {
- 		dev_err(&pdev->dev, "failed to obtain device info\n");
--		ret = -ENXIO;
--		goto err1;
-+		return -ENXIO;
- 	}
- 
-+	if (info->mode == MSIOF_SPI_SLAVE)
-+		master = spi_alloc_slave(&pdev->dev,
-+					 sizeof(struct sh_msiof_spi_priv));
-+	else
-+		master = spi_alloc_master(&pdev->dev,
-+					  sizeof(struct sh_msiof_spi_priv));
-+	if (master == NULL)
-+		return -ENOMEM;
-+
-+	p = spi_master_get_devdata(master);
-+
-+	platform_set_drvdata(pdev, p);
-+	p->master = master;
-+	p->info = info;
-+
- 	init_completion(&p->done);
- 
- 	p->clk = devm_clk_get(&pdev->dev, NULL);
-@@ -1237,6 +1281,7 @@ static int sh_msiof_spi_probe(struct platform_device *pdev)
- 	master->num_chipselect = p->info->num_chipselect;
- 	master->setup = sh_msiof_spi_setup;
- 	master->prepare_message = sh_msiof_prepare_message;
-+	master->slave_abort = sh_msiof_slave_abort;
- 	master->bits_per_word_mask = SPI_BPW_RANGE_MASK(8, 32);
- 	master->auto_runtime_pm = true;
- 	master->transfer_one = sh_msiof_transfer_one;
-diff --git a/include/linux/spi/sh_msiof.h b/include/linux/spi/sh_msiof.h
-index b087a85f5f72..f74b581f242f 100644
---- a/include/linux/spi/sh_msiof.h
-+++ b/include/linux/spi/sh_msiof.h
-@@ -1,10 +1,16 @@
- #ifndef __SPI_SH_MSIOF_H__
- #define __SPI_SH_MSIOF_H__
- 
-+enum {
-+	MSIOF_SPI_MASTER,
-+	MSIOF_SPI_SLAVE,
-+};
-+
- struct sh_msiof_spi_info {
- 	int tx_fifo_override;
- 	int rx_fifo_override;
- 	u16 num_chipselect;
-+	int mode;
- 	unsigned int dma_tx_id;
- 	unsigned int dma_rx_id;
- 	u32 dtdl;
--- 
-2.11.0
+> ---
+>  drivers/pci/dwc/Kconfig      |  10 +
+>  drivers/pci/dwc/Makefile     |   1 +
+>  drivers/pci/dwc/pcie-kirin.c | 513
+> +++++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 524 insertions(+)
+>  create mode 100644 drivers/pci/dwc/pcie-kirin.c
+> 
+> diff --git a/drivers/pci/dwc/Kconfig b/drivers/pci/dwc/Kconfig
+> index d2d2ba5b8a68..13e617b78430 100644
+> --- a/drivers/pci/dwc/Kconfig
+> +++ b/drivers/pci/dwc/Kconfig
+> @@ -130,4 +130,14 @@ config PCIE_ARTPEC6
+>  	  Say Y here to enable PCIe controller support on Axis ARTPEC-6
+>  	  SoCs.  This PCIe controller uses the DesignWare core.
+> 
+> +config PCIE_KIRIN
+> +	depends on OF && ARM64
+> +	bool "HiSilicon Kirin series SoCs PCIe controllers"
+> +	depends on PCI
+> +	select PCIEPORTBUS
+> +	select PCIE_DW_HOST
+> +	help
+> +	  Say Y here if you want PCIe controller support on HiSilicon Kirin
+> series SoCs
+> +	  kirin960 SoC
+> +
+>  endmenu
+> diff --git a/drivers/pci/dwc/Makefile b/drivers/pci/dwc/Makefile
+> index a2df13c28798..4bd69bacd4ab 100644
+> --- a/drivers/pci/dwc/Makefile
+> +++ b/drivers/pci/dwc/Makefile
+> @@ -10,6 +10,7 @@ obj-$(CONFIG_PCI_LAYERSCAPE) += pci-layerscape.o
+>  obj-$(CONFIG_PCIE_QCOM) += pcie-qcom.o
+>  obj-$(CONFIG_PCIE_ARMADA_8K) += pcie-armada8k.o
+>  obj-$(CONFIG_PCIE_ARTPEC6) += pcie-artpec6.o
+> +obj-$(CONFIG_PCIE_KIRIN) += pcie-kirin.o
+> 
+>  # The following drivers are for devices that use the generic ACPI
+>  # pci_root.c driver but don't support standard ECAM config access.
+> diff --git a/drivers/pci/dwc/pcie-kirin.c b/drivers/pci/dwc/pcie-kirin.c
+> new file mode 100644
+> index 000000000000..2fe3b226957b
+> --- /dev/null
+> +++ b/drivers/pci/dwc/pcie-kirin.c
+> @@ -0,0 +1,513 @@
+> +/*
+> + * PCIe host controller driver for Kirin Phone SoCs
+> + *
+> + * Copyright (C) 2017 Hilisicon Electronics Co., Ltd.
+> + *		http://www.huawei.com
+> + *
+> + * Author: Xiaowei Song <songxiaowei@huawei.com>
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + */
+> +
+> +#include <asm/compiler.h>
+> +#include <linux/compiler.h>
+> +#include <linux/clk.h>
+> +#include <linux/delay.h>
+> +#include <linux/err.h>
+> +#include <linux/gpio.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/mfd/syscon.h>
+> +#include <linux/of_address.h>
+> +#include <linux/of_gpio.h>
+> +#include <linux/of_pci.h>
+> +#include <linux/pci.h>
+> +#include <linux/pci_regs.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/regmap.h>
+> +#include <linux/resource.h>
+> +#include <linux/types.h>
+> +#include "pcie-designware.h"
+> +
+> +#define to_kirin_pcie(x) dev_get_drvdata((x)->dev)
+> +
+> +#define REF_CLK_FREQ 100000000
+> +
+> +/* PCIe ELBI registers */
+> +#define SOC_PCIECTRL_CTRL0_ADDR 0x000
+> +#define SOC_PCIECTRL_CTRL1_ADDR 0x004
+> +#define SOC_PCIEPHY_CTRL2_ADDR 0x008
+> +#define SOC_PCIEPHY_CTRL3_ADDR 0x00c
+> +#define PCIE_ELBI_SLV_DBI_ENABLE	(0x1 << 21)
+> +
+> +#define PCIE_APP_LTSSM_ENABLE		0x01c
+> +#define PCIE_APB_PHY_CTRL0		0x0
+> +#define PCIE_APB_PHY_CTRL1		0x4
+> +#define PCIE_APB_PHY_STATUS0		0x400
+> +#define PCIE_LINKUP_ENABLE		(0x8020)
+> +#define PCIE_LTSSM_ENABLE_BIT	  (0x1 << 11)
+> +#define PIPE_CLK_STABLE		(0x1 << 19)
+> +#define PIPE_CLK_MAX_TRY_TIMES	10
+> +#define PHY_REF_PAD_BIT	(0x1 << 8)
+> +#define PHY_PWR_DOWN_BIT	(0x1 << 22)
+> +#define PHY_RST_ACK_BIT	(0x1 << 16)
+> +
+> +/* info lacated in sysctrl */
+> +#define SCTRL_PCIE_CMOS_OFFSET		0x60
+> +#define SCTRL_PCIE_CMOS_BIT		0x10
+> +#define SCTRL_PCIE_ISO_OFFSET		0x44
+> +#define SCTRL_PCIE_ISO_BIT		0x30
+> +#define SCTRL_PCIE_HPCLK_OFFSET		0x190
+> +#define SCTRL_PCIE_HPCLK_BIT		0x184000
+> +#define SCTRL_PCIE_OE_OFFSET		0x14a
+> +#define PCIE_DEBOUNCE_PARAM		0xF0F400
+> +#define PCIE_OE_BYPASS		(0x3 << 28)
+> +
+> +/* peri_crg ctrl */
+> +#define CRGCTRL_PCIE_ASSERT_OFFSET		0x88
+> +#define CRGCTRL_PCIE_ASSERT_BIT		0x8c000000
+> +
+> +/* Time for delay */
+> +#define REF_2_PERST_MIN		20000
+> +#define REF_2_PERST_MAX		25000
+> +#define PERST_2_ACCESS_MIN	10000
+> +#define PERST_2_ACCESS_MAX	12000
+> +#define LINK_WAIT_MIN		900
+> +#define LINK_WAIT_MAX		1000
+> +#define PIPE_CLK_WAIT_MIN	550
+> +#define PIPE_CLK_WAIT_MAX	600
+> +
+> +struct kirin_pcie {
+> +	struct dw_pcie		*pci;
+> +	void __iomem		*apb_base;
+> +	void __iomem		*phy_base;
+> +	struct regmap *crgctrl;
+> +	struct regmap *sysctrl;
+> +	struct clk			*apb_sys_clk;
+> +	struct clk			*apb_phy_clk;
+> +	struct clk			*phy_ref_clk;
+> +	struct clk			*pcie_aclk;
+> +	struct clk			*pcie_aux_clk;
+> +	int                 gpio_id_reset;
+> +};
+> +
+> +static inline void kirin_apb_ctrl_writel(struct kirin_pcie *kirin_pcie,
+> +		u32 val, u32 reg)
+> +{
+> +	writel(val, kirin_pcie->apb_base + reg);
+> +}
+> +
+> +static inline u32 kirin_apb_ctrl_readl(struct kirin_pcie *kirin_pcie,
+> +		u32 reg)
+> +{
+> +	return readl(kirin_pcie->apb_base + reg);
+> +}
+> +
+> +/*Registers in PCIePHY*/
+> +static inline void kirin_apb_phy_writel(struct kirin_pcie *kirin_pcie,
+> +		u32 val, u32 reg)
+> +{
+> +	writel(val, kirin_pcie->phy_base + reg);
+> +}
+> +
+> +static inline u32 kirin_apb_phy_readl(struct kirin_pcie *kirin_pcie,
+> +		u32 reg)
+> +{
+> +	return readl(kirin_pcie->phy_base + reg);
+> +}
+> +
+> +static int32_t kirin_pcie_get_clk(struct kirin_pcie *kirin_pcie,
+> +		struct platform_device *pdev)
+> +{
+> +	kirin_pcie->phy_ref_clk = devm_clk_get(&pdev->dev, "pcie_phy_ref");
+> +	if (IS_ERR(kirin_pcie->phy_ref_clk))
+> +		return PTR_ERR(kirin_pcie->phy_ref_clk);
+> +
+> +	kirin_pcie->pcie_aux_clk = devm_clk_get(&pdev->dev, "pcie_aux");
+> +	if (IS_ERR(kirin_pcie->pcie_aux_clk))
+> +		return PTR_ERR(kirin_pcie->pcie_aux_clk);
+> +
+> +	kirin_pcie->apb_phy_clk = devm_clk_get(&pdev->dev, "pcie_apb_phy");
+> +	if (IS_ERR(kirin_pcie->apb_phy_clk))
+> +		return PTR_ERR(kirin_pcie->apb_phy_clk);
+> +
+> +	kirin_pcie->apb_sys_clk = devm_clk_get(&pdev->dev, "pcie_apb_sys");
+> +	if (IS_ERR(kirin_pcie->apb_sys_clk))
+> +		return PTR_ERR(kirin_pcie->apb_sys_clk);
+> +
+> +	kirin_pcie->pcie_aclk = devm_clk_get(&pdev->dev, "pcie_aclk");
+> +	if (IS_ERR(kirin_pcie->pcie_aclk))
+> +		return PTR_ERR(kirin_pcie->pcie_aclk);
+> +
+> +	return 0;
+> +}
+> +
+> +static int32_t kirin_pcie_get_resource(struct kirin_pcie *kirin_pcie,
+> +		struct platform_device *pdev)
+> +{
+> +	struct resource *apb;
+> +	struct resource *phy;
+> +	struct resource *dbi;
+> +
+> +	apb = platform_get_resource_byname(pdev, IORESOURCE_MEM, "apb");
+> +	kirin_pcie->apb_base = devm_ioremap_resource(&pdev->dev, apb);
+> +	if (IS_ERR(kirin_pcie->apb_base))
+> +		return PTR_ERR(kirin_pcie->apb_base);
+> +
+> +	phy = platform_get_resource_byname(pdev, IORESOURCE_MEM, "phy");
+> +	kirin_pcie->phy_base = devm_ioremap_resource(&pdev->dev, phy);
+> +	if (IS_ERR(kirin_pcie->phy_base))
+> +		return PTR_ERR(kirin_pcie->phy_base);
+> +
+> +	dbi = platform_get_resource_byname(pdev, IORESOURCE_MEM, "dbi");
+> +	kirin_pcie->pci->dbi_base = devm_ioremap_resource(&pdev->dev, dbi);
+> +	if (IS_ERR(kirin_pcie->pci->dbi_base))
+> +		return PTR_ERR(kirin_pcie->pci->dbi_base);
+> +
+> +	kirin_pcie->crgctrl =
+> +		syscon_regmap_lookup_by_compatible("hisilicon,hi3660-
+> crgctrl");
+> +	if (IS_ERR(kirin_pcie->crgctrl))
+> +		return PTR_ERR(kirin_pcie->crgctrl);
+> +
+> +	kirin_pcie->sysctrl =
+> +
+syscon_regmap_lookup_by_compatible("hisilicon,hi3660-sctrl");
+> +	if (IS_ERR(kirin_pcie->sysctrl))
+> +		return PTR_ERR(kirin_pcie->sysctrl);
+> +
+> +	return 0;
+> +}
+> +
+> +static int kirin_pcie_phy_init(struct kirin_pcie *kirin_pcie)
+> +{
+> +	u32 reg_val;
+> +	u32 time = PIPE_CLK_MAX_TRY_TIMES;
+> +
+> +	reg_val = kirin_apb_phy_readl(kirin_pcie, PCIE_APB_PHY_CTRL1);
+> +	reg_val &= ~PHY_REF_PAD_BIT;
+> +	kirin_apb_phy_writel(kirin_pcie, reg_val, PCIE_APB_PHY_CTRL1);
+> +
+> +	reg_val = kirin_apb_phy_readl(kirin_pcie, PCIE_APB_PHY_CTRL0);
+> +	reg_val &= ~PHY_PWR_DOWN_BIT;
+> +	kirin_apb_phy_writel(kirin_pcie, reg_val, PCIE_APB_PHY_CTRL0);
+> +	udelay(10);
+> +
+> +	reg_val = kirin_apb_phy_readl(kirin_pcie, PCIE_APB_PHY_CTRL1);
+> +	reg_val &= ~PHY_RST_ACK_BIT;
+> +	kirin_apb_phy_writel(kirin_pcie, reg_val, PCIE_APB_PHY_CTRL1);
+> +
+> +	usleep_range(PIPE_CLK_WAIT_MIN, PIPE_CLK_WAIT_MAX);
+> +	reg_val = kirin_apb_phy_readl(kirin_pcie, PCIE_APB_PHY_STATUS0);
+> +	if (reg_val & PIPE_CLK_STABLE) {
+> +		dev_err(kirin_pcie->pci->dev, "PIPE clk is not stable\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static void kirin_pcie_oe_enable(struct kirin_pcie *kirin_pcie)
+> +{
+> +	u32 val;
+> +
+> +	regmap_read(kirin_pcie->sysctrl, SCTRL_PCIE_OE_OFFSET, &val);
+> +	val |= PCIE_DEBOUNCE_PARAM;
+> +	val &= ~PCIE_OE_BYPASS;
+> +	regmap_write(kirin_pcie->sysctrl, SCTRL_PCIE_OE_OFFSET, val);
+> +}
+> +
+> +static int kirin_pcie_clk_ctrl(struct kirin_pcie *kirin_pcie, bool
+enable)
+> +{
+> +	int ret = 0;
+> +
+> +	if (!enable)
+> +		goto close_clk;
+> +
+> +	ret = clk_set_rate(kirin_pcie->phy_ref_clk, REF_CLK_FREQ);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = clk_prepare_enable(kirin_pcie->phy_ref_clk);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = clk_prepare_enable(kirin_pcie->apb_sys_clk);
+> +	if (ret)
+> +		goto apb_sys_fail;
+> +
+> +	ret = clk_prepare_enable(kirin_pcie->apb_phy_clk);
+> +	if (ret)
+> +		goto apb_phy_fail;
+> +
+> +	ret = clk_prepare_enable(kirin_pcie->pcie_aclk);
+> +	if (ret)
+> +		goto aclk_fail;
+> +
+> +	ret = clk_prepare_enable(kirin_pcie->pcie_aux_clk);
+> +	if (ret)
+> +		goto aux_clk_fail;
+> +
+> +	return 0;
+> +
+> +close_clk:
+> +	clk_disable_unprepare(kirin_pcie->pcie_aux_clk);
+> +aux_clk_fail:
+> +	clk_disable_unprepare(kirin_pcie->pcie_aclk);
+> +aclk_fail:
+> +	clk_disable_unprepare(kirin_pcie->apb_phy_clk);
+> +apb_phy_fail:
+> +	clk_disable_unprepare(kirin_pcie->apb_sys_clk);
+> +apb_sys_fail:
+> +	clk_disable_unprepare(kirin_pcie->phy_ref_clk);
+> +
+> +	return ret;
+> +}
+> +
+> +static int kirin_pcie_power_on(struct kirin_pcie *kirin_pcie)
+> +{
+> +	int ret;
+> +
+> +	/* Power supply for Host */
+> +	regmap_write(kirin_pcie->sysctrl,
+> +		SCTRL_PCIE_CMOS_OFFSET, SCTRL_PCIE_CMOS_BIT);
+> +	udelay(100);
+> +	kirin_pcie_oe_enable(kirin_pcie);
+> +
+> +	ret = kirin_pcie_clk_ctrl(kirin_pcie, true);
+> +	if (ret)
+> +		return ret;
+> +
+> +	/* ISO disable, PCIeCtrl,PHY assert and clk gate clear */
+> +	regmap_write(kirin_pcie->sysctrl,
+> +		SCTRL_PCIE_ISO_OFFSET, SCTRL_PCIE_ISO_BIT);
+> +	regmap_write(kirin_pcie->crgctrl,
+> +		CRGCTRL_PCIE_ASSERT_OFFSET, CRGCTRL_PCIE_ASSERT_BIT);
+> +	regmap_write(kirin_pcie->sysctrl,
+> +		SCTRL_PCIE_HPCLK_OFFSET, SCTRL_PCIE_HPCLK_BIT);
+> +
+> +	ret = kirin_pcie_phy_init(kirin_pcie);
+> +	if (ret)
+> +		goto close_clk;
+> +
+> +	/* perst assert Endpoint */
+> +	if (!gpio_request(kirin_pcie->gpio_id_reset, "pcie_perst")) {
+> +		usleep_range(REF_2_PERST_MIN, REF_2_PERST_MAX);
+> +		ret = gpio_direction_output(kirin_pcie->gpio_id_reset, 1);
+> +		if (ret)
+> +			goto close_clk;
+> +		usleep_range(PERST_2_ACCESS_MIN, PERST_2_ACCESS_MAX);
+> +
+> +		return 0;
+> +	}
+> +
+> +close_clk:
+> +	kirin_pcie_clk_ctrl(kirin_pcie, false);
+> +	return ret;
+> +}
+> +
+> +static void kirin_pcie_sideband_dbi_w_mode(struct kirin_pcie *kirin_pcie,
+> +		bool on)
+> +{
+> +	u32 val;
+> +
+> +	val = kirin_apb_ctrl_readl(kirin_pcie, SOC_PCIECTRL_CTRL0_ADDR);
+> +	if (on)
+> +		val = val | PCIE_ELBI_SLV_DBI_ENABLE;
+> +	else
+> +		val = val & ~PCIE_ELBI_SLV_DBI_ENABLE;
+> +
+> +	kirin_apb_ctrl_writel(kirin_pcie, val, SOC_PCIECTRL_CTRL0_ADDR);
+> +}
+> +
+> +static void kirin_pcie_sideband_dbi_r_mode(struct kirin_pcie *kirin_pcie,
+> +		bool on)
+> +{
+> +	u32 val;
+> +
+> +	val = kirin_apb_ctrl_readl(kirin_pcie, SOC_PCIECTRL_CTRL1_ADDR);
+> +	if (on)
+> +		val = val | PCIE_ELBI_SLV_DBI_ENABLE;
+> +	else
+> +		val = val & ~PCIE_ELBI_SLV_DBI_ENABLE;
+> +
+> +	kirin_apb_ctrl_writel(kirin_pcie, val, SOC_PCIECTRL_CTRL1_ADDR);
+> +}
+> +
+> +static int kirin_pcie_rd_own_conf(struct pcie_port *pp,
+> +		int where, int size, u32 *val)
+> +{
+> +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+> +	struct kirin_pcie *kirin_pcie = to_kirin_pcie(pci);
+> +	int ret;
+> +
+> +	kirin_pcie_sideband_dbi_r_mode(kirin_pcie, true);
+> +	ret = dw_pcie_read(pci->dbi_base + where, size, val);
+> +	kirin_pcie_sideband_dbi_r_mode(kirin_pcie, false);
+> +
+> +	return ret;
+> +}
+> +
+> +static int kirin_pcie_wr_own_conf(struct pcie_port *pp,
+> +		int where, int size, u32 val)
+> +{
+> +	int ret;
+> +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+> +	struct kirin_pcie *kirin_pcie = to_kirin_pcie(pci);
+> +
+> +	kirin_pcie_sideband_dbi_w_mode(kirin_pcie, true);
+> +	ret = dw_pcie_write(pci->dbi_base + where, size, val);
+> +	kirin_pcie_sideband_dbi_w_mode(kirin_pcie, false);
+> +
+> +	return ret;
+> +}
+> +
+> +static u32 kirin_pcie_read_dbi(struct dw_pcie *pci, void __iomem *base,
+> +		u32 reg, size_t size)
+> +{
+> +	u32 ret;
+> +	struct kirin_pcie *kirin_pcie = to_kirin_pcie(pci);
+> +
+> +	kirin_pcie_sideband_dbi_r_mode(kirin_pcie, true);
+> +	dw_pcie_read(base + reg, size, &ret);
+> +	kirin_pcie_sideband_dbi_r_mode(kirin_pcie, false);
+> +
+> +	return ret;
+> +}
+> +
+> +static void kirin_pcie_write_dbi(struct dw_pcie *pci, void __iomem *base,
+> +		u32 reg, size_t size, u32 val)
+> +{
+> +	struct kirin_pcie *kirin_pcie = to_kirin_pcie(pci);
+> +
+> +	kirin_pcie_sideband_dbi_w_mode(kirin_pcie, true);
+> +	dw_pcie_write(base + reg, size, val);
+> +	kirin_pcie_sideband_dbi_w_mode(kirin_pcie, false);
+> +}
+> +
+> +static int kirin_pcie_link_up(struct dw_pcie *pci)
+> +{
+> +	struct kirin_pcie *kirin_pcie = to_kirin_pcie(pci);
+> +	u32 val = kirin_apb_ctrl_readl(kirin_pcie, PCIE_APB_PHY_STATUS0);
+> +
+> +	if ((val & PCIE_LINKUP_ENABLE) == PCIE_LINKUP_ENABLE)
+> +		return 1;
+> +
+> +	return 0;
+> +}
+> +
+> +static int kirin_pcie_establish_link(struct pcie_port *pp)
+> +{
+> +	int count = 0;
+> +
+> +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+> +	struct kirin_pcie *kirin_pcie = to_kirin_pcie(pci);
+> +
+> +	if (kirin_pcie_link_up(pci))
+> +		return 0;
+> +
+> +	dw_pcie_setup_rc(pp);
+> +
+> +	/* assert LTSSM enable */
+> +	kirin_apb_ctrl_writel(kirin_pcie, PCIE_LTSSM_ENABLE_BIT,
+> +		PCIE_APP_LTSSM_ENABLE);
+> +
+> +	/* check if the link is up or not */
+> +	while (!kirin_pcie_link_up(pci)) {
+> +		usleep_range(LINK_WAIT_MIN, LINK_WAIT_MAX);
+> +		count++;
+> +		if (count == 1000) {
+> +			dev_err(pci->dev, "Link Fail\n");
+> +			return -EINVAL;
+> +		}
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static void kirin_pcie_host_init(struct pcie_port *pp)
+> +{
+> +	kirin_pcie_establish_link(pp);
+> +}
+> +
+> +static struct dw_pcie_ops kirin_dw_pcie_ops = {
+> +	.read_dbi = kirin_pcie_read_dbi,
+> +	.write_dbi = kirin_pcie_write_dbi,
+> +	.link_up = kirin_pcie_link_up,
+> +};
+> +
+> +static struct dw_pcie_host_ops kirin_pcie_host_ops = {
+> +	.rd_own_conf = kirin_pcie_rd_own_conf,
+> +	.wr_own_conf = kirin_pcie_wr_own_conf,
+> +	.host_init = kirin_pcie_host_init,
+> +};
+> +
+> +static int __init kirin_add_pcie_port(struct dw_pcie *pci,
+> +			struct platform_device *pdev)
+> +{
+> +	pci->pp.ops = &kirin_pcie_host_ops;
+> +
+> +	return dw_pcie_host_init(&pci->pp);
+> +}
+> +
+> +static int kirin_pcie_probe(struct platform_device *pdev)
+> +{
+> +	struct kirin_pcie *kirin_pcie;
+> +	struct dw_pcie *pci;
+> +	struct device *dev = &pdev->dev;
+> +	int ret;
+> +
+> +	if (!pdev->dev.of_node) {
+> +		dev_err(&pdev->dev, "NULL node\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	kirin_pcie = devm_kzalloc(&pdev->dev,
+> +			sizeof(struct kirin_pcie), GFP_KERNEL);
+> +	if (!kirin_pcie)
+> +		return -ENOMEM;
+> +
+> +	pci = devm_kzalloc(dev, sizeof(*pci), GFP_KERNEL);
+> +	if (!pci)
+> +		return -ENOMEM;
+> +
+> +	pci->dev = dev;
+> +	pci->ops = &kirin_dw_pcie_ops;
+> +	kirin_pcie->pci = pci;
+> +
+> +	ret = kirin_pcie_get_clk(kirin_pcie, pdev);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = kirin_pcie_get_resource(kirin_pcie, pdev);
+> +	if (ret)
+> +		return ret;
+> +
+> +	kirin_pcie->gpio_id_reset = of_get_named_gpio(pdev->dev.of_node,
+> +			"reset-gpio", 0);
+> +	if (kirin_pcie->gpio_id_reset < 0)
+> +		return -ENODEV;
+> +
+> +	ret = kirin_pcie_power_on(kirin_pcie);
+> +	if (ret)
+> +		return ret;
+> +
+> +	platform_set_drvdata(pdev, kirin_pcie);
+> +
+> +	return kirin_add_pcie_port(pci, pdev);
+> +}
+> +
+> +static const struct of_device_id kirin_pcie_match[] = {
+> +	{ .compatible = "hisilicon,kirin960-pcie" },
+> +	{},
+> +};
+> +
+> +struct platform_driver kirin_pcie_driver = {
+> +	.probe			= kirin_pcie_probe,
+> +	.driver			= {
+> +		.name			= "kirin-pcie",
+> +		.of_match_table = kirin_pcie_match,
+> +		.suppress_bind_attrs = true,
+> +	},
+> +};
+> +
+> +builtin_platform_driver(kirin_pcie_driver);
+> --
+> 2.11.GIT
