@@ -1,105 +1,60 @@
-From: Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>
-Subject: Re: [PATCH] clocksource: moxart: Add AST2500 compatible string
-Date: Fri, 26 May 2017 11:12:18 +1000
-Message-ID: <1495761138.7794.11.camel@aj.id.au>
-References: <20170516075840.23130-1-andrew@aj.id.au>
-         <20170525202808.GA9501@mai>
+From: songxiaowei <songxiaowei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Subject: =?utf-8?B?562U5aSNOiDnrZTlpI06IFtQYXRjaCB2MyAxLzNdIGFybTY0OiBkdHM6IGhp?=
+ =?utf-8?Q?3660:_add_pcie_node?=
+Date: Fri, 26 May 2017 01:40:45 +0000
+Message-ID: <99B4C6BADD9E3241B25E52B02BA737C54116D871@DGGEMA505-MBX.china.huawei.com>
+References: <20170518074946.21362-1-songxiaowei@hisilicon.com>
+ <20170523141641.kbb4falhs574dfpu@rob-hp-laptop>
+ <99B4C6BADD9E3241B25E52B02BA737C54116D35D@DGGEMA505-MBX.china.huawei.com>
+ <CAL_JsqJV5TA2ADo35tqGXC61NWK9PDqw8Dq5m5fYHg59yaoEUA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg="pgp-sha512";
-        protocol="application/pgp-signature"; boundary="=-PQplvb5ZorwME6CSctlQ"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170525202808.GA9501@mai>
+In-Reply-To: <CAL_JsqJV5TA2ADo35tqGXC61NWK9PDqw8Dq5m5fYHg59yaoEUA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Language: zh-CN
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ryan_chen-SAlXDmAnmOAqDJ6do+/SaQ@public.gmane.org, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: "Wangzhou (B)" <wangzhou1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Gabriele Paoloni <gabriele.paoloni-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, "bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org" <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "xuwei (O)" <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, "catalin.marinas-5wv7dgnIgG8@public.gmane.org" <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, "will.deacon-5wv7dgnIgG8@public.gmane.org" <will.deacon-5wv7dgnIgG8@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Chenfeng (puck)" <puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, "guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Wangbinghui <wangbinghui-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Suzhuangluan <suzhuangluan-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
---=-PQplvb5ZorwME6CSctlQ
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-On Thu, 2017-05-25 at 22:28 +0200, Daniel Lezcano wrote:
-> On Tue, May 16, 2017 at 03:58:40PM +0800, Andrew Jeffery wrote:
-> > Also clean up space-before-tab issues in the documentation.
->=20
-> Andrew,
->=20
-> I reworked the patch to apply to the changes Linus did recently to conver=
-t to
-> the fttrm010 driver.
->=20
-> Please have a look at:
->=20
-> https://git.linaro.org/people/daniel.lezcano/linux.git/commit/?h=3Dclocke=
-vents/4.13&id=3D3ca904162ffdd72f4fad3ab731fc94a12c50f682
->=20
-
-I think we're going to run into trouble here:
-
-https://git.linaro.org/people/daniel.lezcano/linux.git/tree/drivers/clockso=
-urce/timer-fttmr010.c?h=3Dclockevents/4.13&id=3D3ca904162ffdd72f4fad3ab731f=
-c94a12c50f682#n260
-
-As it stands if a aspeed,ast2500-timer compatible is provided we'll
-take the else branch and hit the issues Joel found with Linus' original
-series counting up on the Aspeed hardware.
-
-My change was somewhat cosmetic - Ben (now Cc'ed) didn't seemed too
-concerned about using the the aspeed,ast2400-timer compatible string
-for ast2500 dts. My motivation for the patch was that by describing the
-aspeed,ast2500-timer compatible it signals that someone had taken a
-look and judged it so. However, my point is maybe one solution is
-simply to drop the patch and continue to use aspeed,ast2400-timer
-compatible where we need.
-
-Another is to rework your change to switch to
-of_device_compatible_match() in drivers/clocksource/timer-fttmr010.c
-and also check against aspeed,ast2500-timer.
-
-What direction should we go?
-
-> Shouldn't the compatible string be:
->=20
-> 	"aspeed,ast2400-timer", "faraday,fttmr010"
-> 	"aspeed,ast2500-timer", "faraday,fttmr010"
->=20
-
-Does it makes sense in the face of the Aspeed quirks? If so it seems
-reasonable, but falling back to the faraday,fttmr010 compatible could
-lead to failures (if the compatible driver counted up).
-
-Cheers,
-
-Andrew
-
->=20
-> =C2=A0 -- Daniel
->=20
---=-PQplvb5ZorwME6CSctlQ
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQIcBAABCgAGBQJZJ4DyAAoJEJ0dnzgO5LT5XBsP/2uYn7L09WELg3p8y8GEFbXk
-dlPxh1NJH86gk8b/a/85EEtaA6cByXswIVEsYpQ4XfFWresfMdXqvuv0JRLafkhq
-UkL4zbHNZC7Rcssj0i0G4gfZJBgn61oX+f5gActUoIw8cvgVeI5b2ScmPPay8FaE
-wZCWNWIOtqZamO2VozYOOruoNcMOvJslHdgqqEmXENs8lqkNbn6PuqVi8vV/A6f8
-0GGiSjMI4TEl0pDnOLT5KSa3n1hIhmMygj0ik2wWUFFIVqGtWy8iaHttatKNTEeG
-P3U4X3GDO2gs583tMBAOS+fob0KAwzrTFOmcNiJKl0wzDd6U3g0IX0CcziZJn3Su
-5JvLT6HP8DtorMJndsF4sPMw3J44F5RBzhmEWUqQEY8WU4E+rs9+djSawAjoGb8V
-xCSjUANlrdbRJ+8EfkacvYA3ipKHY68cvM/3WfN18qYq7tsBGqjye4GEbXLC24J+
-05FhGBpXMNXS/1XgPpax14OZxzb3ptZtISYWQY5CcS0MQ5Q0/xeEirVCjiiR2VIS
-SperNTXDxBU4Zq8DSJm84BocR4TybiwwUAVrY88Mkrzq7B2TLRlUpcaQfmHgNemG
-GwwgdaH8FglsL5WCmLGwMrR0vdXneSO8B05rhtS2kyjAMk4le+ag2g9J61QkPM+A
-RP6spr9OxRdCFa2bS6dZ
-=Ky7x
------END PGP SIGNATURE-----
-
---=-PQplvb5ZorwME6CSctlQ--
-
+DQoNCi0tLS0t6YKu5Lu25Y6f5Lu2LS0tLS0NCuWPkeS7tuS6ujogUm9iIEhlcnJpbmcgW21haWx0
+bzpyb2JoQGtlcm5lbC5vcmddIA0K5Y+R6YCB5pe26Ze0OiAyMDE35bm0NeaciDI15pelIDIwOjM5
+DQrmlLbku7bkuro6IHNvbmd4aWFvd2VpDQrmioTpgIE6IFdhbmd6aG91IChCKTsgR2FicmllbGUg
+UGFvbG9uaTsgYmhlbGdhYXNAZ29vZ2xlLmNvbTsgbWFyay5ydXRsYW5kQGFybS5jb207IHh1d2Vp
+IChPKTsgY2F0YWxpbi5tYXJpbmFzQGFybS5jb207IHdpbGwuZGVhY29uQGFybS5jb207IGxpbnV4
+LXBjaUB2Z2VyLmtlcm5lbC5vcmc7IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBsaW51eC1r
+ZXJuZWxAdmdlci5rZXJuZWwub3JnOyBDaGVuZmVuZyAocHVjayk7IGd1b2RvbmcueHVAbGluYXJv
+Lm9yZzsgV2FuZ2JpbmdodWk7IFN1emh1YW5nbHVhbg0K5Li76aKYOiBSZTog562U5aSNOiBbUGF0
+Y2ggdjMgMS8zXSBhcm02NDogZHRzOiBoaTM2NjA6IGFkZCBwY2llIG5vZGUNCg0KT24gVHVlLCBN
+YXkgMjMsIDIwMTcgYXQgODozOSBQTSwgc29uZ3hpYW93ZWkgPHNvbmd4aWFvd2VpQGhpc2lsaWNv
+bi5jb20+IHdyb3RlOg0KPiAtLS0tLemCruS7tuWOn+S7ti0tLS0tDQo+IOWPkeS7tuS6ujogUm9i
+IEhlcnJpbmcgW21haWx0bzpyb2JoQGtlcm5lbC5vcmddDQo+IOWPkemAgeaXtumXtDogMjAxN+W5
+tDXmnIgyM+aXpSAyMjoxNw0KPiDmlLbku7bkuro6IHNvbmd4aWFvd2VpDQo+IOaKhOmAgTogV2Fu
+Z3pob3UgKEIpOyBHYWJyaWVsZSBQYW9sb25pOyBiaGVsZ2Fhc0Bnb29nbGUuY29tOyBtYXJrLnJ1
+dGxhbmRAYXJtLmNvbTsgeHV3ZWkgKE8pOyBjYXRhbGluLm1hcmluYXNAYXJtLmNvbTsgd2lsbC5k
+ZWFjb25AYXJtLmNvbTsgbGludXgtcGNpQHZnZXIua2VybmVsLm9yZzsgZGV2aWNldHJlZUB2Z2Vy
+Lmtlcm5lbC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IENoZW5mZW5nIChwdWNr
+KTsgZ3VvZG9uZy54dUBsaW5hcm8ub3JnOyBXYW5nYmluZ2h1aTsgU3V6aHVhbmdsdWFuDQo+IOS4
+u+mimDogUmU6IFtQYXRjaCB2MyAxLzNdIGFybTY0OiBkdHM6IGhpMzY2MDogYWRkIHBjaWUgbm9k
+ZQ0KPg0KPiBPbiBUaHUsIE1heSAxOCwgMjAxNyBhdCAwMzo0OTo0NlBNICswODAwLCBTb25nIFhp
+YW93ZWkgd3JvdGU6DQo+PiBBZGQgUENJZSBub2RlIGZvciBoaTM2NjAsIGFuZCBhZGQgYmluZGlu
+ZyBkb2N1bWVudGF0aW9uLg0KPj4NCj4+IENjOiBHdW9kb25nIFh1IDxndW9kb25nLnh1QGxpbmFy
+by5vcmc+DQo+PiBTaWduZWQtb2ZmLWJ5OiBTb25nIFhpYW93ZWkgPHNvbmd4aWFvd2VpQGhpc2ls
+aWNvbi5jb20+DQo+PiAtLS0NCj4+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9wY2kvaGlzaWxp
+Y29uLXBjaWUudHh0ICAgICB8IDUyICsrKysrKysrKysrKysrKysrKysrKysNCj4+ICBhcmNoL2Fy
+bTY0L2Jvb3QvZHRzL2hpc2lsaWNvbi9oaTM2NjAuZHRzaSAgICAgICAgICB8IDMxICsrKysrKysr
+KysrKysNCg0KWy4uLl0NCg0KPj4gKyAgImNvbmZpZyI6IFBDSWUgY29uZmlndXJhdGlvbiBzcGFj
+ZSByZWdpc3RlcnMuDQo+PiArLSByZXNldC1ncGlvOiBwZXJzdCBhc3NlcnQvZGVhc3NlcnQgZ3Bp
+bw0KPg0KPiByZXNldC1ncGlvcw0KPiBbc29uZ3hpYW93ZWldIHJlc3QtZ3BpbyBpcyB1c2VkIHRv
+IHNpZ25hbCAncGNpZSBwZXJzdCc6IGhpZ2ggbGV2ZWwgcmVmZXJzIHRvIGRlYXNzZXJ0DQo+ICAg
+ICAgICAgICAgICBhbmQgbG93IGxldmVsIHJlZmVycyB0byBhc3NlcnQuIFNvLCBJIHRoaW5rICcg
+cmVzZXQtZ3BpbzogY3JlYXRlcyBwZXJzdCBhc3NlcnQvZGVhc3NlcnQgc2lnbmFsICcNCj4gICAg
+ICAgICAgICAgICAgICAgICAgICAgd291bGQgYmUgYSBiZXR0ZXIgY2hvaWNlLg0KDQpXaGF0IEkg
+d2FzIHNheWluZyBpcyB0aGUgbmFtZSBzaG91bGQgYmUgcmVzZXQtZ3Bpb3MsIG5vdCByZXNldC1n
+cGlvLg0KDQpbc29uZ3hpYW93ZWldIE9rLCBJJ2xsIGZpeCBpdC4gSW4gZmFjdCwgcGVyc3Qgc2ln
+bmFsIG9ubHkgdXNlIG9uZSBsaW5lLCBzbyByZXNldC1ncGlvcyBjb250YWlucyBvbmx5IG9uZSBn
+cGlvLg0KUm9iDQo=
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
