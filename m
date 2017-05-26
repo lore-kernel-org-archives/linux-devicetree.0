@@ -1,7 +1,7 @@
 From: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
-Subject: [PATCH 1/2] dt-bindings: reset: Add bindings for basic reset controller
-Date: Fri, 26 May 2017 13:32:13 +1000
-Message-ID: <20170526033214.8081-2-joel@jms.id.au>
+Subject: [PATCH 2/2] reset: Add basic single-register reset driver
+Date: Fri, 26 May 2017 13:32:14 +1000
+Message-ID: <20170526033214.8081-3-joel@jms.id.au>
 References: <20170526033214.8081-1-joel@jms.id.au>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <20170526033214.8081-1-joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
@@ -10,56 +10,161 @@ To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This adds the bindings documentation for a basic single-register reset
-controller.
-
-The bindings describe a single 32-bit register that contains up to 32
-reset lines, each deasserted by clearing the appropriate bit in the
-register.
+This driver is a basic single-register reset controller driver that
+supports clearing a single bit in a register.
 
 Signed-off-by: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
 ---
- .../devicetree/bindings/reset/reset-basic.txt      | 31 ++++++++++++++++++++++
- 1 file changed, 31 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/reset/reset-basic.txt
+ drivers/reset/Kconfig       |   6 +++
+ drivers/reset/Makefile      |   1 +
+ drivers/reset/reset-basic.c | 109 ++++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 116 insertions(+)
+ create mode 100644 drivers/reset/reset-basic.c
 
-diff --git a/Documentation/devicetree/bindings/reset/reset-basic.txt b/Documentation/devicetree/bindings/reset/reset-basic.txt
+diff --git a/drivers/reset/Kconfig b/drivers/reset/Kconfig
+index d21c07ccc94e..980cda887dfe 100644
+--- a/drivers/reset/Kconfig
++++ b/drivers/reset/Kconfig
+@@ -28,6 +28,12 @@ config RESET_ATH79
+ 	  This enables the ATH79 reset controller driver that supports the
+ 	  AR71xx SoC reset controller.
+ 
++config RESET_BASIC
++	bool "Basic Reset Driver"
++	help
++	  This enables a basic single-register reset controller driver that
++	  supports clearing a single bit in a register.
++
+ config RESET_BERLIN
+ 	bool "Berlin Reset Driver" if COMPILE_TEST
+ 	default ARCH_BERLIN
+diff --git a/drivers/reset/Makefile b/drivers/reset/Makefile
+index 02a74db94339..e8e8869e098d 100644
+--- a/drivers/reset/Makefile
++++ b/drivers/reset/Makefile
+@@ -4,6 +4,7 @@ obj-$(CONFIG_ARCH_STI) += sti/
+ obj-$(CONFIG_ARCH_TEGRA) += tegra/
+ obj-$(CONFIG_RESET_A10SR) += reset-a10sr.o
+ obj-$(CONFIG_RESET_ATH79) += reset-ath79.o
++obj-$(CONFIG_RESET_BASIC) += reset-basic.o
+ obj-$(CONFIG_RESET_BERLIN) += reset-berlin.o
+ obj-$(CONFIG_RESET_IMX7) += reset-imx7.o
+ obj-$(CONFIG_RESET_LPC18XX) += reset-lpc18xx.o
+diff --git a/drivers/reset/reset-basic.c b/drivers/reset/reset-basic.c
 new file mode 100644
-index 000000000000..7341e04e7904
+index 000000000000..62a676de9f62
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/reset/reset-basic.txt
-@@ -0,0 +1,31 @@
-+Basic single-register reset controller
-+======================================
++++ b/drivers/reset/reset-basic.c
+@@ -0,0 +1,109 @@
++/*
++ * Copyright 2017 IBM Corperation
++ *
++ * Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
++ *
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License
++ * as published by the Free Software Foundation; either version
++ * 2 of the License, or (at your option) any later version.
++ */
 +
-+This describes a generic reset controller where the reset lines are controlled
-+by single bits within a 32-bit memory location. The memory location is assumed
-+to be part of a syscon regmap.
++#include <linux/delay.h>
++#include <linux/init.h>
++#include <linux/of.h>
++#include <linux/of_address.h>
++#include <linux/platform_device.h>
++#include <linux/regmap.h>
++#include <linux/mfd/syscon.h>
++#include <linux/reset-controller.h>
 +
-+Reset controller required properties:
-+ - compatible: should be "reset-basic"
-+ - #reset-cells: must be set to 1
-+ - reg: reset register location within regmap
++#define to_basic_reset_priv(p)		\
++	container_of((p), struct basic_reset_priv, rcdev)
 +
-+Device node required properties:
-+ - resets phandle
-+ - bit number, counting from zero, for the desired reset line. Max is 31.
++struct basic_reset_priv {
++	struct regmap *regmap;
++	struct reset_controller_dev rcdev;
++	u32 reg;
++};
 +
-+Example:
++static int basic_reset_assert(struct reset_controller_dev *rcdev,
++			       unsigned long id)
++{
++	struct basic_reset_priv *priv = to_basic_reset_priv(rcdev);
++	u32 mask = BIT(id);
 +
-+syscon {
-+	compatible = "syscon";
++	regmap_update_bits(priv->regmap, priv->reg, mask, mask);
 +
-+	uart_rest: rest@0c {
-+		compatible = "reset-basic";
-+		#reset-cells = <1>;
-+		reg = <0x0c>;
-+	};
++	return 0;
 +}
 +
-+&uart {
-+	resets = <&uart_rest 0x04>;
++static int basic_reset_deassert(struct reset_controller_dev *rcdev,
++				 unsigned long id)
++{
++	struct basic_reset_priv *priv = to_basic_reset_priv(rcdev);
++	u32 mask = BIT(id);
++
++	regmap_update_bits(priv->regmap, priv->reg, mask, 0);
++
++	return 0;
 +}
++
++static int basic_reset_status(struct reset_controller_dev *rcdev,
++			       unsigned long id)
++{
++	struct basic_reset_priv *priv = to_basic_reset_priv(rcdev);
++	u32 mask = BIT(id);
++	u32 val;
++
++	regmap_read(priv->regmap, priv->reg, &val);
++
++	return !!(val & mask);
++}
++
++static const struct reset_control_ops basic_reset_ops = {
++	.assert = basic_reset_assert,
++	.deassert = basic_reset_deassert,
++	.status = basic_reset_status,
++};
++
++static int basic_reset_probe(struct platform_device *pdev)
++{
++	struct device_node *parent_np = of_get_parent(pdev->dev.of_node);
++	struct basic_reset_priv *priv;
++	int ret;
++
++	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
++	if (!priv)
++		return -ENOMEM;
++
++	priv->regmap = syscon_node_to_regmap(parent_np);
++	of_node_put(parent_np);
++	if (IS_ERR(priv->regmap))
++		return PTR_ERR(priv->regmap);
++
++	ret = of_property_read_u32(pdev->dev.of_node, "reg", &priv->reg);
++	if (ret)
++		return ret;
++
++	priv->rcdev.owner = THIS_MODULE;
++	priv->rcdev.ops = &basic_reset_ops;
++	priv->rcdev.of_node = pdev->dev.of_node;
++	priv->rcdev.nr_resets = 32;
++
++	return reset_controller_register(&priv->rcdev);
++}
++
++static const struct of_device_id basic_reset_dt_match[] = {
++	{ .compatible = "reset-basic" },
++	{ },
++};
++
++static struct platform_driver basic_reset_driver = {
++	.probe	= basic_reset_probe,
++	.driver	= {
++		.name = "basic-reset",
++		.of_match_table = basic_reset_dt_match,
++	},
++};
++builtin_platform_driver(basic_reset_driver);
 -- 
 2.11.0
 
