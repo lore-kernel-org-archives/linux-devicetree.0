@@ -1,61 +1,33 @@
-From: Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>
-Subject: RE: [PATCH v5 3/7] media: i2c: max2175: Add MAX2175 support
-Date: Fri, 26 May 2017 14:47:32 +0000
-Message-ID: <KL1PR0601MB2038AAC0C02926FE168A7952C3FC0@KL1PR0601MB2038.apcprd06.prod.outlook.com>
-References: <20170509133738.16414-1-ramesh.shanmugasundaram@bp.renesas.com>
- <20170509133738.16414-4-ramesh.shanmugasundaram@bp.renesas.com>
- <20170510081231.GB3227@valkosipuli.retiisi.org.uk>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 0/2] Enable Mailboxes for AM57xx IDKs
+Date: Fri, 26 May 2017 08:46:39 -0700
+Message-ID: <20170526154639.GD3717@atomide.com>
+References: <20170519204742.1563-1-s-anna@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <20170510081231.GB3227@valkosipuli.retiisi.org.uk>
-Content-Language: en-US
-Sender: linux-media-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@iki.fi>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "mchehab@kernel.org" <mchehab@kernel.org>, "hverkuil@xs4all.nl" <hverkuil@xs4all.nl>, "sakari.ailus@linux.intel.com" <sakari.ailus@linux.intel.com>, "crope@iki.fi" <crope@iki.fi>, Chris Paterson <Chris.Paterson2@renesas.com>, "laurent.pinchart@ideasonboard.com" <laurent.pinchart@ideasonboard.com>, "geert+renesas@glider.be" <geert+renesas@glider.be>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170519204742.1563-1-s-anna-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
+Cc: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Sakari,
+* Suman Anna <s-anna-l0cyMroinI0@public.gmane.org> [170519 13:51]:
+> Hi Tony,
+> 
+> This series enables the mailbox nodes to be used for communicating with
+> the DSPs and IPUs on AM57xx IDKs using IPC 3.x. The mailbox nodes themselves
+> were already defined/added before for other DRA7 boards, and these patches
+> simply enable the respective nodes for the IDKs.
+> 
+> Patches are based on 4.12-rc1 and are intended for the 4.13 merge
+> window.
 
-Thanks for the review comments on the patches. Sorry for the late response =
-as I was caught up with another work.=20
+Applying into omap-for-v4.13/dt thanks.
 
-I will incorporate your comments and rebase it on top of your branch. I see=
- it is not there in media-tree master yet. Please let me know if there is a=
- change in plan.
-
-Thanks,
-Ramesh
-
-> Subject: Re: [PATCH v5 3/7] media: i2c: max2175: Add MAX2175 support
->=20
-> Hi Ramesh,
->=20
-> On Tue, May 09, 2017 at 02:37:34PM +0100, Ramesh Shanmugasundaram wrote:
-> ...
-> > +#include <media/v4l2-ctrls.h>
-> > +#include <media/v4l2-device.h>
-> > +#include <media/v4l2-of.h>
->=20
-> Could you rebase this on the V4L2 fwnode patchset here, please?
->=20
-> <URL:https://git.linuxtv.org/sailus/media_tree.git/log/?h=3Dv4l2-acpi>
->=20
-> It depends on other patches which will reach media-tree master in next
-> rc1, for now I've merged them here:
->=20
-> <URL:https://git.linuxtv.org/sailus/media_tree.git/log/?h=3Dv4l2-acpi-mer=
-ge>
->=20
-> I'll send a pull request for media-tree once we have 4.12rc1 in media-tre=
-e
-> master.
->=20
-> Thanks.
->=20
-> --
-> Kind regards,
->=20
-> Sakari Ailus
-> e-mail: sakari.ailus@iki.fi	XMPP: sailus@retiisi.org.uk
+Tony
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
