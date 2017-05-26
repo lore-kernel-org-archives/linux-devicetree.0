@@ -1,70 +1,37 @@
-From: Xiaowei Song <songxiaowei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-Subject: [PATCH v8 2/4] arm64: dts: hisi: add kirin pcie node
-Date: Fri, 26 May 2017 09:53:31 +0800
-Message-ID: <20170526015333.92482-3-songxiaowei@hisilicon.com>
-References: <20170526015333.92482-1-songxiaowei@hisilicon.com>
+From: Joel Stanley <joel@jms.id.au>
+Subject: Re: [PATCH] serial: 8250_of: Add reset support
+Date: Fri, 26 May 2017 11:54:26 +1000
+Message-ID: <CACPK8Xc_JOGJRF6-w9XrBGuaYist9y1d=RroiJWxc9wJAtoySg@mail.gmail.com>
+References: <20170524045319.29926-1-joel@jms.id.au> <1495613916.3840.16.camel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170526015333.92482-1-songxiaowei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, tn-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org, keith.busch-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, niklas.cassel-VrBV9hrLPhE@public.gmane.org, dhdang-qTEPVZfXA3Y@public.gmane.org, liudongdong3-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, gabriele.paoloni-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org
-Cc: chenyao11-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, songxiaowei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, wangbinghui-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, suzhuangluan-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1495613916.3840.16.camel@pengutronix.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-serial@vger.kernel.org, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Add PCIe node for hi3660, and add binding documentation.
+On Wed, May 24, 2017 at 6:18 PM, Philipp Zabel <p.zabel@pengutronix.de> wrote:
+> Hi Joel,
+>
+> On Wed, 2017-05-24 at 14:53 +1000, Joel Stanley wrote:
+>> @@ -132,6 +134,18 @@ static int of_platform_serial_setup(struct platform_device *ofdev,
+>>               }
+>>       }
+>>
+>> +     info->rst = devm_reset_control_get_optional(&ofdev->dev, NULL);
+>
+> Please use devm_reset_control_get_optional_shared instead.
+>
+> This looks like shared (clock-like) reset use, where you just have to
+> make sure that the reset is deasserted while the module is in use, but
+> you don't care whether it is actually asserted all the time otherwise.
 
-Cc: Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Signed-off-by: Xiaowei Song <songxiaowei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
----
- arch/arm64/boot/dts/hisilicon/hi3660.dtsi | 31 +++++++++++++++++++++++++++++++
- 1 file changed, 31 insertions(+)
+Thanks for the review. The new reset API is much nicer, and it worked
+for me once I realised the changes came in for 4.11 (my test setup is
+based on 4.10).
 
-diff --git a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
-index 3983086bd67b..09ffb4becb65 100644
---- a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
-+++ b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
-@@ -156,5 +156,36 @@
- 			clock-names = "uartclk", "apb_pclk";
- 			status = "disabled";
- 		};
-+
-+		pcie@f4000000 {
-+			compatible = "hisilicon,kirin960-pcie";
-+			reg =  <0x0 0xf4000000 0x0 0x1000>,
-+				<0x0 0xff3fe000 0x0 0x1000>,
-+				<0x0 0xf3f20000 0x0 0x40000>,
-+				<0x0 0xF5000000 0x0 0x2000>;
-+			reg-names = "dbi", "apb", "phy", "config";
-+			bus-range = <0x0  0x1>;
-+			#address-cells = <3>;
-+			#size-cells = <2>;
-+			device_type = "pci";
-+			ranges = <0x02000000 0x0 0x00000000 0x0
-+				0xf6000000 0x0 0x2000000>;
-+			num-lanes = <1>;
-+			#interrupt-cells = <1>;
-+			interrupt-map-mask = <0xf800 0 0 7>;
-+			interrupt-map = <0x0 0 0 1 &gic 0 0 0 282 4>,
-+				<0x0 0 0 2 &gic 0 0 0  283 4>,
-+				<0x0 0 0 3 &gic 0 0 0  284 4>,
-+				<0x0 0 0 4 &gic 0 0 0  285 4>;
-+			clocks = <&crg_ctrl HI3660_PCIEPHY_REF>,
-+				<&crg_ctrl HI3660_CLK_GATE_PCIEAUX>,
-+				<&crg_ctrl HI3660_PCLK_GATE_PCIE_PHY>,
-+				<&crg_ctrl HI3660_PCLK_GATE_PCIE_SYS>,
-+				<&crg_ctrl HI3660_ACLK_GATE_PCIE>;
-+			clock-names = "pcie_phy_ref", "pcie_aux",
-+				"pcie_apb_phy", "pcie_apb_sys", "pcie_aclk";
-+			reset-gpios = <&gpio11 1 0 >;
-+			status = "ok";
-+		};
- 	};
- };
--- 
-2.11.GIT
+Cheers,
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Joel
