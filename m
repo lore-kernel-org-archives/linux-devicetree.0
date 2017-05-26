@@ -1,54 +1,61 @@
-From: icenowy-h8G6r0blFSE@public.gmane.org
-Subject: Re: [PATCH 2/3] arm64: allwinner: h5: Add initial
- Orangepi Prime support
-Date: Sat, 27 May 2017 00:51:07 +0800
-Message-ID: <816a781514e9eadeb386c0275a5be642@aosc.io>
-References: <1495740382-9061-1-git-send-email-jteki@openedev.com>
- <1495740382-9061-2-git-send-email-jteki@openedev.com>
- <6bd8d6dfb9df0d21d0918d6b81f527e6@aosc.io>
- <CAD6G_RQ16z8rU2f2QwFdahzVwExexFuiXnz6nd_0Y8U6od=_5w@mail.gmail.com>
-Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
+From: Suman Anna <s-anna@ti.com>
+Subject: [PATCH 3/3] remoteproc/keystone: ensure the DSPs are in reset in probe
+Date: Fri, 26 May 2017 11:53:17 -0500
+Message-ID: <20170526165317.23164-4-s-anna@ti.com>
+References: <20170526165317.23164-1-s-anna@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBDS6XAN6ZADRB7NZUHEQKGQE3DALFEA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <CAD6G_RQ16z8rU2f2QwFdahzVwExexFuiXnz6nd_0Y8U6od=_5w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Jagan Teki <jagannadh.teki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20170526165317.23164-1-s-anna@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Bjorn Andersson <bjorn.andersson@linaro.org>, Ohad Ben-Cohen <ohad@wizery.com>, Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, "Andrew F. Davis" <afd@ti.com>, Santosh Shilimkar <ssantosh@kernel.org>, linux-arm-kernel@lists.infradead.org, Sam Nelson <sam.nelson@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-=E5=9C=A8 2017-05-27 00:44=EF=BC=8CJagan Teki =E5=86=99=E9=81=93=EF=BC=9A
-> On Fri, May 26, 2017 at 10:10 PM,  <icenowy-h8G6r0blFSE@public.gmane.org> wrote:
->> =E5=9C=A8 2017-05-26 03:26=EF=BC=8CJagan Teki =E5=86=99=E9=81=93=EF=BC=
-=9A
->>>=20
->>> From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
->>>=20
->>> Orangepi Prime is an open-source single-board computer
->>> using the Allwinner h5 SOC.
->>=20
->>=20
->> Sorry but I have already added this board and it's
->> scheduled at 4.13.
->=20
-> Ohh, unfortunately I missed to find it on ML, can you point?
+From: "Andrew F. Davis" <afd@ti.com>
 
-http://lists.infradead.org/pipermail/linux-arm-kernel/2017-April/501311.htm=
-l
+The DSPs are expected to be in reset when the driver probes a device.
+If the DSPs are out of reset in probe, the system may crash when the
+firmware is being loaded. So, add a check to make sure the DSP resets
+are asserted, and if not, throw a eye-catchy warning and assert the
+resets specifically.
 
->=20
-> thanks!
+Signed-off-by: Andrew F. Davis <afd@ti.com>
+[s-anna@ti.com: replace warning with a WARN]
+Signed-off-by: Suman Anna <s-anna@ti.com>
+---
+ drivers/remoteproc/keystone_remoteproc.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+diff --git a/drivers/remoteproc/keystone_remoteproc.c b/drivers/remoteproc/keystone_remoteproc.c
+index d01d5e3fce28..8233664e85fa 100644
+--- a/drivers/remoteproc/keystone_remoteproc.c
++++ b/drivers/remoteproc/keystone_remoteproc.c
+@@ -456,6 +456,16 @@ static int keystone_rproc_probe(struct platform_device *pdev)
+ 	if (of_reserved_mem_device_init(dev))
+ 		dev_warn(dev, "device does not have specific CMA pool\n");
+ 
++	/* ensure the DSP is in reset before loading firmware */
++	ret = reset_control_status(ksproc->reset);
++	if (ret < 0) {
++		dev_err(dev, "failed to get reset status, status = %d\n", ret);
++		goto release_mem;
++	} else if (ret == 0) {
++		WARN(1, "device is not in reset\n");
++		keystone_rproc_dsp_reset(ksproc);
++	}
++
+ 	ret = rproc_add(rproc);
+ 	if (ret) {
+ 		dev_err(dev, "failed to add register device with remoteproc core, status = %d\n",
+-- 
+2.12.0
