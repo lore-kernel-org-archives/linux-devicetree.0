@@ -1,132 +1,84 @@
-From: Suman Anna <s-anna@ti.com>
-Subject: [PATCH 3/4] Documentation: dt: Add bindings for Davinci DSP processors
-Date: Fri, 26 May 2017 15:21:39 -0500
-Message-ID: <20170526202140.10472-4-s-anna@ti.com>
-References: <20170526202140.10472-1-s-anna@ti.com>
+From: Liam Breck <liam-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org>
+Subject: Re: [PATCH v3 2/4] power: supply: core: add charging voltage/current
+ battery info
+Date: Fri, 26 May 2017 14:22:14 -0700
+Message-ID: <CAKvHMgSPneriwY+HDHVraB3cdWZYx__6LZrExPQJanYNs2aBSA@mail.gmail.com>
+References: <20170526110413.24836-1-enric.balletbo@collabora.com> <20170526110413.24836-2-enric.balletbo@collabora.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170526202140.10472-1-s-anna@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>, Ohad Ben-Cohen <ohad@wizery.com>, Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Robert Tivy <rtivy@ti.com>, Sekhar Nori <nsekhar@ti.com>, linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170526110413.24836-2-enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Cc: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Liam Breck <kernel-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add the device tree bindings document for the DSP processor
-subsystem devices on TI Davinci DA8xx/OMAP-L13x SoCs.
+Hi Enric,
 
-Signed-off-by: Suman Anna <s-anna@ti.com>
----
- .../bindings/remoteproc/ti,davinci-rproc.txt       | 92 ++++++++++++++++++++++
- 1 file changed, 92 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/remoteproc/ti,davinci-rproc.txt
+I'll also incorporate these changes into v14 of my patchset. (See my prev msg.)
 
-diff --git a/Documentation/devicetree/bindings/remoteproc/ti,davinci-rproc.txt b/Documentation/devicetree/bindings/remoteproc/ti,davinci-rproc.txt
-new file mode 100644
-index 000000000000..e53572e22002
---- /dev/null
-+++ b/Documentation/devicetree/bindings/remoteproc/ti,davinci-rproc.txt
-@@ -0,0 +1,92 @@
-+TI Davinci DSP devices
-+=======================
-+
-+Binding status: Unstable - Subject to changes for DT clocks and resets
-+
-+The TI Davinci family of SoCs usually contains a TI DSP Core sub-system that
-+is used to offload some of the processor-intensive tasks or algorithms, for
-+achieving various system level goals.
-+
-+The processor cores in the sub-system usually contain additional sub-modules
-+like L1 and/or L2 caches/SRAMs, an Interrupt Controller, an external memory
-+controller, a dedicated local power/sleep controller etc. The DSP processor
-+core used in Davinci SoCs is usually a C674x DSP CPU.
-+
-+DSP Device Node:
-+================
-+Each DSP Core sub-system is represented as a single DT node.
-+
-+Required properties:
-+--------------------
-+The following are the mandatory properties:
-+
-+- compatible:		Should be one of the following,
-+			    "ti,da850-dsp" for DSPs on OMAP-L138 SoCs
-+
-+- reg:			Should contain an entry for each value in 'reg-names'.
-+			Each entry should have the memory region's start address
-+			and the size of the region, the representation matching
-+			the parent node's '#address-cells' and '#size-cells' values.
-+
-+- reg-names:		Should contain strings with the following names, each
-+			representing a specific internal memory region or a
-+			specific register space,
-+			     "l2sram", "l1pram", "l1dram", "host1cfg", "chipsig_base"
-+
-+- interrupts: 		Should contain the interrupt number used to receive the
-+			interrupts from the DSP. The value should follow the
-+			interrupt-specifier format as dictated by the
-+			'interrupt-parent' node.
-+
-+- memory-region:	phandle to the reserved memory node to be associated
-+			with the remoteproc device. The reserved memory node
-+			can be a CMA memory node, and should be defined as
-+			per the bindings in
-+			Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt
-+
-+Optional properties:
-+--------------------
-+- interrupt-parent:	phandle to the interrupt controller node. This property
-+			is needed if the device node hierarchy doesn't have an
-+			interrupt controller.
-+
-+
-+Example:
-+--------
-+
-+	/* DA850 DTS file */
-+	{
-+		dsp: dsp@11800000 {
-+			compatible = "ti,da850-dsp";
-+			reg = <0x11800000 0x40000>,
-+			      <0x11e00000 0x8000>,
-+			      <0x11f00000 0x8000>,
-+			      <0x01c14044 0x4>,
-+			      <0x01c14174 0x8>;
-+			reg-names = "l2sram", "l1pram", "l1dram", "host1cfg",
-+				    "chipsig";
-+			interrupt-parent = <&intc>;
-+			interrupts = <28>;
-+			status = "disabled";
-+		};
-+
-+	};
-+
-+	/* OMAP-L138 LCDK Board file */
-+	reserved-memory {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges;
-+
-+		dsp_cma_pool: dsp_cma@c3000000 {
-+                        compatible = "shared-dma-pool";
-+                        reg = <0xc3000000 0x1000000>;
-+                        reusable;
-+                        status = "okay";
-+                };
-+	};
-+
-+	&dsp {
-+		status = "okay";
-+		memory-region = <&dsp_cma_pool>;
-+	};
--- 
-2.12.0
+
+On Fri, May 26, 2017 at 4:04 AM, Enric Balletbo i Serra
+<enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org> wrote:
+> Add the parameters to define the battery charging voltage and charging
+> current. Charger driver can get this information from the struct
+> power_supply_battery_info and apply the desired value.
+>
+> Signed-off-by: Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+> ---
+> Changes since v2:
+>  - Requested by Sebastian Reichel
+>    - Move to its own patch and apply to simple-battery framework.
+> Changes since v1:
+>  - Requested by Rob Herring
+>    - Rename ti,charge-* to charge-* to be standard properties.
+>    - Use unit suffixes as per bindings/property-units.txt
+>
+>  drivers/power/supply/power_supply_core.c | 6 ++++++
+>  include/linux/power_supply.h             | 2 ++
+>  2 files changed, 8 insertions(+)
+>
+> diff --git a/drivers/power/supply/power_supply_core.c b/drivers/power/supply/power_supply_core.c
+> index 862fa8fc..a6857c2 100644
+> --- a/drivers/power/supply/power_supply_core.c
+> +++ b/drivers/power/supply/power_supply_core.c
+> @@ -530,6 +530,8 @@ int power_supply_get_battery_info(struct power_supply *psy,
+>         info->energy_full_design_uwh = -EINVAL;
+>         info->charge_full_design_uah = -EINVAL;
+>         info->voltage_min_design_uv  = -EINVAL;
+> +       info->charge_voltage_uv = -EINVAL;
+> +       info->charge_current_ua = -EINVAL;
+>
+>         if (!psy->of_node) {
+>                 dev_warn(&psy->dev, "%s currently only supports devicetree\n",
+> @@ -559,6 +561,10 @@ int power_supply_get_battery_info(struct power_supply *psy,
+>                              &info->charge_full_design_uah);
+>         of_property_read_u32(battery_np, "voltage-min-design-microvolt",
+>                              &info->voltage_min_design_uv);
+> +       of_property_read_u32(battery_np, "charge-voltage-microvolt",
+> +                            &info->charge_voltage_uv);
+> +       of_property_read_u32(battery_np, "charge-current-microamp",
+> +                            &info->charge_current_ua);
+>
+>         return 0;
+>  }
+> diff --git a/include/linux/power_supply.h b/include/linux/power_supply.h
+> index 8220f7b..3eea323 100644
+> --- a/include/linux/power_supply.h
+> +++ b/include/linux/power_supply.h
+> @@ -302,6 +302,8 @@ struct power_supply_battery_info {
+>         int energy_full_design_uwh;     /* microWatt-hours */
+>         int charge_full_design_uah;     /* microAmp-hours */
+>         int voltage_min_design_uv;      /* microVolts */
+> +       int charge_voltage_uv;          /* microVolts */
+> +       int charge_current_ua;          /* microAmp */
+>  };
+>
+>  extern struct atomic_notifier_head power_supply_notifier;
+> --
+> 2.9.3
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
