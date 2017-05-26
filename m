@@ -1,51 +1,52 @@
-From: Sekhar Nori <nsekhar@ti.com>
-Subject: Re: [PATCH] ARM: dts: keystone-k2l: fix broken Ethernet due to
- disabled OSR
-Date: Fri, 26 May 2017 13:14:49 +0530
-Message-ID: <1a5730ea-7601-d0bb-15ef-168252f54446@ti.com>
-References: <59ba5ef37f17ff1c10d9d52ca06ef341b2d476eb.1490782833.git.nsekhar@ti.com>
- <5adb4f5d-78c4-453d-898d-60c588eb1d14@oracle.com>
- <CAK8P3a2yYK3zO=K__W4jCFYYpFCZLYkm97ADZHunttdUmO_ZOw@mail.gmail.com>
+From: Bogdan Purcareata <bogdan.purcareata-3arQi8VN3Tc@public.gmane.org>
+Subject: [PATCH v3 0/2] net: phy: Support managed Cortina phys
+Date: Fri, 26 May 2017 07:58:37 +0000
+Message-ID: <1495785519-1468-1-git-send-email-bogdan.purcareata@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAK8P3a2yYK3zO=K__W4jCFYYpFCZLYkm97ADZHunttdUmO_ZOw@mail.gmail.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Arnd Bergmann <arnd@arndb.de>, "santosh.shilimkar@oracle.com" <santosh.shilimkar@oracle.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "Kristo,
- Tero" <t-kristo@ti.com>, "arm@kernel.org" <arm@kernel.org>, "Karicheri,
- Muralidharan" <m-karicheri2@ti.com>, Santosh Shilimkar <ssantosh@kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: andrew-g2DYL2Zd6BY@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Arnd,
+So far, the Cortina family phys (CS4340 in this particular case) are only
+supported in fixed link mode (via fixed_phy_register). The generic 10G
+phy driver does not work well with the phylib state machine, when the phy
+is registered via of_phy_connect. This prohibits the user from describing the
+phy nodes in the device tree.
 
-On Friday 31 March 2017 03:43 PM, Arnd Bergmann wrote:
-> On Wed, Mar 29, 2017 at 6:13 PM, santosh.shilimkar@oracle.com
-> <santosh.shilimkar@oracle.com> wrote:
->>> Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
->>> Acked-by: Tero Kristo <t-kristo@ti.com>
->>> [nsekhar@ti.com: commit message updates, port to latest mainline]
->>> Signed-off-by: Sekhar Nori <nsekhar@ti.com>
->>> ---
->>
->> Acked-by: Santosh Shilimkar <ssantosh@kernel.org>
->>
->> Can you please pick this up for rcx fixes ?
-> 
-> Applied, thanks!
+In order to support this scenario, and to properly describe the board
+device tree, add a minimal Cortina driver that reads the status from the
+right register. With the generic 10G C45 driver, the kernel will print
+messages like:
+[    0.226521] mdio_bus 8b96000: Error while reading PHY16 reg at 1.6
+[    0.232780] mdio_bus 8b96000: Error while reading PHY16 reg at 1.5
 
-Looks like this fix never made to to mainline. Do you have the patch
-with you still? It will have to be marked for v4.11 stable and pushed.
+v2 -> v3:
+- Add documentation entry.
 
-Thanks,
-Sekhar
+v1 -> v2:
+- Change approach for getting the phy_id from hacking get_phy_c45_ids to
+  describing the device in the device tree via ethernet-phy-id.
+
+More patch version changes per individual patches.
+
+Bogdan Purcareata (2):
+  net: phy: Add Cortina CS4340 driver
+  dt-bindings: net: Add Cortina device tree bindings
+
+ Documentation/devicetree/bindings/net/cortina.txt |  19 ++++
+ drivers/net/phy/Kconfig                           |   5 +
+ drivers/net/phy/Makefile                          |   1 +
+ drivers/net/phy/cortina.c                         | 115 ++++++++++++++++++++++
+ 4 files changed, 140 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/net/cortina.txt
+ create mode 100644 drivers/net/phy/cortina.c
+
+-- 
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
