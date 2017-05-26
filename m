@@ -1,42 +1,71 @@
-From: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
-Subject: Re: [PATCH v5 3/7] media: i2c: max2175: Add MAX2175 support
-Date: Sat, 27 May 2017 00:05:12 +0300
-Message-ID: <20170526210512.GR29527@valkosipuli.retiisi.org.uk>
-References: <20170509133738.16414-1-ramesh.shanmugasundaram@bp.renesas.com>
- <20170509133738.16414-4-ramesh.shanmugasundaram@bp.renesas.com>
- <20170510081231.GB3227@valkosipuli.retiisi.org.uk>
- <KL1PR0601MB2038AAC0C02926FE168A7952C3FC0@KL1PR0601MB2038.apcprd06.prod.outlook.com>
+From: Liam Breck <liam-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org>
+Subject: Re: [PATCH v3 1/4] dt-bindings: power: supply: add battery charge voltage/current
+Date: Fri, 26 May 2017 14:20:02 -0700
+Message-ID: <CAKvHMgTvUkJENP=Y_rdge6Oqq-La341nYW5prB=BpXWo7rF-0A@mail.gmail.com>
+References: <20170526110413.24836-1-enric.balletbo@collabora.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <KL1PR0601MB2038AAC0C02926FE168A7952C3FC0-SZCkFoB/PrGyJSHAh9YqW9K/flDYrvD0nBOFsp37pqbUKgpGm//BTAC/G2K4zDHf@public.gmane.org>
+In-Reply-To: <20170526110413.24836-1-enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ramesh Shanmugasundaram <ramesh.shanmugasundaram-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-Cc: "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org" <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, "sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org" <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, "crope-X3B1VOXEql0@public.gmane.org" <crope-X3B1VOXEql0@public.gmane.org>, Chris Paterson <Chris.Paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, "laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org" <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, "geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org" <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, "linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Cc: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Liam Breck <kernel-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 26, 2017 at 02:47:32PM +0000, Ramesh Shanmugasundaram wrote:
-> Hi Sakari,
-> 
-> Thanks for the review comments on the patches. Sorry for the late response
-> as I was caught up with another work.
+Hi Enric,
 
-No worries.
+On Fri, May 26, 2017 at 4:04 AM, Enric Balletbo i Serra
+<enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org> wrote:
+> Add charging voltage and current characteristics to the battery DT for
+> proper handling of the battery by fuel-gauge and charger chips.
+>
+> Signed-off-by: Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+> ---
+> Changes since v2:
+>  - Requested by Sebastian Reichel
+>    - Move to its own patch and apply to simple-battery framework.
+> Changes since v1:
+>  - Requested by Rob Herring
+>    - Rename ti,charge-* to charge-* to be standard properties.
+>    - Use unit suffixes as per bindings/property-units.txt
+>
+>  Documentation/devicetree/bindings/power/supply/battery.txt | 4 ++++
+>  1 file changed, 4 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/power/supply/battery.txt b/Documentation/devicetree/bindings/power/supply/battery.txt
+> index 63a7028..c87a439 100644
+> --- a/Documentation/devicetree/bindings/power/supply/battery.txt
+> +++ b/Documentation/devicetree/bindings/power/supply/battery.txt
+> @@ -12,6 +12,8 @@ Optional Properties:
+>   - voltage-min-design-microvolt: drained battery voltage
+>   - energy-full-design-microwatt-hours: battery design energy
+>   - charge-full-design-microamp-hours: battery design capacity
+> + - charge-voltage-microvolt: battery charging voltage
+> + - charge-current-microamp: battery charging current
 
-> 
-> I will incorporate your comments and rebase it on top of your branch. I
-> see it is not there in media-tree master yet. Please let me know if there
-> is a change in plan.
+I think you mean constant-charge-* which is how you surface these
+properties in your tps65217_charger patch.
 
-I've sent a pull request to Mauro here and my expectation is it'll reach
-media tree master in not too distant future:
+I'll add these to v14 of my patchset which adds simple-battery
+support. Rob requested a single patch for this file.
 
-<URL:http://www.spinics.net/lists/linux-media/msg115707.html>
+I've been waiting for feedback on v13.2 from Sebastian. If I don't
+hear from him within a few days, I'll post v14.
 
--- 
-Sakari Ailus
-e-mail: sakari.ailus-X3B1VOXEql0@public.gmane.org	XMPP: sailus-PCDdDYkjdNMDXYZnReoRVg@public.gmane.org
+>  Batteries must be referenced by chargers and/or fuel-gauges
+>  using a phandle. The phandle's property should be named
+> @@ -24,6 +26,8 @@ Example:
+>                 voltage-min-design-microvolt = <3200000>;
+>                 energy-full-design-microwatt-hours = <5290000>;
+>                 charge-full-design-microamp-hours = <1430000>;
+> +               charge-voltage-microvolt = <4100000>;
+> +               charge-current-microamp = <300000>;
+>         };
+>
+>         charger: charger@11 {
+> --
+> 2.9.3
+>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
