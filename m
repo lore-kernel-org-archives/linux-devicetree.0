@@ -1,140 +1,61 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Applied "regulator: tps65917: Add support for SMPS12" to the regulator tree
-Date: Fri, 26 May 2017 12:42:04 +0100
-Message-ID: <E1dEDd6-0000nW-Co@debutante>
-References: <1495197739-17446-4-git-send-email-j-keerthy@ti.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1495197739-17446-4-git-send-email-j-keerthy@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-Cc: Lee Jones <lee.jones@linaro.org>, Mark Brown <broonie@kernel.org>broonie@kernel.orglee.jones@linaro.org, robh+dt@kernel.org, j-keerthy@ti.com, t-kristo@ti.com, tony@atomide.com, mark.rutland@arm.com, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.orglinux-kernel@vger.kernel.org
+From: Alexander Amelkin <alexander-RgVAGUil9pwRDxlzMovjVg@public.gmane.org>
+Subject: [GIT][PULL] Improvements to max3421-hcd driver
+Date: Fri, 26 May 2017 14:22:47 +0300
+Message-ID: <fe4f9b0f3a18d48dec6c0a8d79cae386@amelkin.msk.ru>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The patch
+The following changes since commit 
+08332893e37af6ae779367e78e444f8f9571511d:
 
-   regulator: tps65917: Add support for SMPS12
+   Linux 4.12-rc2 (2017-05-21 19:30:23 -0700)
 
-has been applied to the regulator tree at
+are available in the git repository at:
 
-   git://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git 
+   https://github.com/AlexanderAmelkin/linux-wandboard.git 
+tags/max3421-improvements-1
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
+for you to fetch changes up to b9a7559d24c0b2cb6e69124d861a943f79272681:
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
+   usb: max3421-hcd: Remove function name from dev_dbg calls (2017-05-25 
+11:52:13 +0300)
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
+The separate patches for these changes will be sent as a follow up.
 
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
+----------------------------------------------------------------
+usb: max3421-hcd: Make the driver more up-to-date and flexible
 
-Thanks,
-Mark
+This set of patches updates the max3421-hcd driver and fixes
+some bugs in it. Specifically, it:
 
->From be035303182a1260803a1871065d7b1e67c9ebe9 Mon Sep 17 00:00:00 2001
-From: Keerthy <j-keerthy@ti.com>
-Date: Tue, 23 May 2017 17:46:56 +0530
-Subject: [PATCH] regulator: tps65917: Add support for SMPS12
+- Adds support for devicetree
+- Makes platform related parameters configurable
+- Adds sanity checks for platform related parameters
+- Fixes crash on driver removal
+- Tidies up use of memory allocation/deallocation functions
+- Removes superfluous debug text
 
-App support for SMPS12 dual phase regulator.
+----------------------------------------------------------------
+Alexander Amelkin (3):
+       usb: max3421-hcd: Add devicetree support to the driver
+       usb: max3421-hcd: Fix crash on the driver removal
+       usb: max3421-hcd: Remove function name from dev_dbg calls
 
-Signed-off-by: Keerthy <j-keerthy@ti.com>
-Acked-by: Lee Jones <lee.jones@linaro.org>
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- drivers/regulator/palmas-regulator.c | 18 +++++++++++++++---
- include/linux/mfd/palmas.h           |  2 ++
- 2 files changed, 17 insertions(+), 3 deletions(-)
+  .../devicetree/bindings/usb/maxim,max3421-hcd.txt  |  19 +++
+  drivers/usb/host/max3421-hcd.c                     | 131 
++++++++++++++++++----
+  2 files changed, 127 insertions(+), 23 deletions(-)
+  create mode 100644 
+Documentation/devicetree/bindings/usb/maxim,max3421-hcd.txt
 
-diff --git a/drivers/regulator/palmas-regulator.c b/drivers/regulator/palmas-regulator.c
-index 31ae5ee3a80d..8018a44ed4f7 100644
---- a/drivers/regulator/palmas-regulator.c
-+++ b/drivers/regulator/palmas-regulator.c
-@@ -264,6 +264,13 @@ static struct palmas_regs_info tps65917_regs_info[] = {
- 		.sleep_id	= TPS65917_EXTERNAL_REQSTR_ID_SMPS5,
- 	},
- 	{
-+		.name		= "SMPS12",
-+		.sname		= "smps1-in",
-+		.vsel_addr	= TPS65917_SMPS1_VOLTAGE,
-+		.ctrl_addr	= TPS65917_SMPS1_CTRL,
-+		.sleep_id	= TPS65917_EXTERNAL_REQSTR_ID_SMPS12,
-+	},
-+	{
- 		.name		= "LDO1",
- 		.sname		= "ldo1-in",
- 		.vsel_addr	= TPS65917_LDO1_VOLTAGE,
-@@ -367,6 +374,7 @@ static struct palmas_sleep_requestor_info tps65917_sleep_req_info[] = {
- 	EXTERNAL_REQUESTOR_TPS65917(SMPS3, 1, 2),
- 	EXTERNAL_REQUESTOR_TPS65917(SMPS4, 1, 3),
- 	EXTERNAL_REQUESTOR_TPS65917(SMPS5, 1, 4),
-+	EXTERNAL_REQUESTOR_TPS65917(SMPS12, 1, 5),
- 	EXTERNAL_REQUESTOR_TPS65917(LDO1, 2, 0),
- 	EXTERNAL_REQUESTOR_TPS65917(LDO2, 2, 1),
- 	EXTERNAL_REQUESTOR_TPS65917(LDO3, 2, 2),
-@@ -1305,7 +1313,8 @@ static int tps65917_smps_registration(struct palmas_pmic *pmic,
- 		 */
- 		desc = &pmic->desc[id];
- 		desc->n_linear_ranges = 3;
--		if ((id == TPS65917_REG_SMPS2) && pmic->smps12)
-+		if ((id == TPS65917_REG_SMPS2 || id == TPS65917_REG_SMPS1) &&
-+		    pmic->smps12)
- 			continue;
- 
- 		/* Initialise sleep/init values from platform data */
-@@ -1427,6 +1436,7 @@ static struct of_regulator_match tps65917_matches[] = {
- 	{ .name = "smps3", },
- 	{ .name = "smps4", },
- 	{ .name = "smps5", },
-+	{ .name = "smps12",},
- 	{ .name = "ldo1", },
- 	{ .name = "ldo2", },
- 	{ .name = "ldo3", },
-@@ -1455,7 +1465,7 @@ static struct palmas_pmic_driver_data palmas_ddata = {
- 
- static struct palmas_pmic_driver_data tps65917_ddata = {
- 	.smps_start = TPS65917_REG_SMPS1,
--	.smps_end = TPS65917_REG_SMPS5,
-+	.smps_end = TPS65917_REG_SMPS12,
- 	.ldo_begin = TPS65917_REG_LDO1,
- 	.ldo_end = TPS65917_REG_LDO5,
- 	.max_reg = TPS65917_NUM_REGS,
-@@ -1643,8 +1653,10 @@ static int palmas_regulators_probe(struct platform_device *pdev)
- 	if (ret)
- 		return ret;
- 
--	if (reg & PALMAS_SMPS_CTRL_SMPS12_SMPS123_EN)
-+	if (reg & PALMAS_SMPS_CTRL_SMPS12_SMPS123_EN) {
- 		pmic->smps123 = 1;
-+		pmic->smps12 = 1;
-+	}
- 
- 	if (reg & PALMAS_SMPS_CTRL_SMPS45_SMPS457_EN)
- 		pmic->smps457 = 1;
-diff --git a/include/linux/mfd/palmas.h b/include/linux/mfd/palmas.h
-index 5c9a1d44c125..6dec43826303 100644
---- a/include/linux/mfd/palmas.h
-+++ b/include/linux/mfd/palmas.h
-@@ -250,6 +250,7 @@ enum tps65917_regulators {
- 	TPS65917_REG_SMPS3,
- 	TPS65917_REG_SMPS4,
- 	TPS65917_REG_SMPS5,
-+	TPS65917_REG_SMPS12,
- 	/* LDO regulators */
- 	TPS65917_REG_LDO1,
- 	TPS65917_REG_LDO2,
-@@ -317,6 +318,7 @@ enum tps65917_external_requestor_id {
- 	TPS65917_EXTERNAL_REQSTR_ID_SMPS3,
- 	TPS65917_EXTERNAL_REQSTR_ID_SMPS4,
- 	TPS65917_EXTERNAL_REQSTR_ID_SMPS5,
-+	TPS65917_EXTERNAL_REQSTR_ID_SMPS12,
- 	TPS65917_EXTERNAL_REQSTR_ID_LDO1,
- 	TPS65917_EXTERNAL_REQSTR_ID_LDO2,
- 	TPS65917_EXTERNAL_REQSTR_ID_LDO3,
--- 
-2.11.0
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
