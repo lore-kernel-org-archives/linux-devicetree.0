@@ -1,60 +1,63 @@
-From: Alexander Amelkin <alexander-RgVAGUil9pwRDxlzMovjVg@public.gmane.org>
-Subject: [GIT][PULL] Improvements to max3421-hcd driver
-Date: Fri, 26 May 2017 14:22:47 +0300
-Message-ID: <fe4f9b0f3a18d48dec6c0a8d79cae386@amelkin.msk.ru>
+From: Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 1/5 v2] clk: qcom: Update DT bindings for the
+ MSM8660/APQ8060 RPMCC
+Date: Fri, 26 May 2017 14:57:06 +0300
+Message-ID: <20170526115706.GY30730@tbergstrom-lnx.Nvidia.com>
+References: <20170419091326.11226-1-linus.walleij@linaro.org>
+ <CACRpkdbXEFeVkD8rETyrnuoAxUvnFt2BL07UsXuXfSnq3Qdyfw@mail.gmail.com>
+ <CACRpkdYvwwJcxKPtKUyZBLWsmjXji7pHDKNz9NRTETqj2P3drQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CACRpkdYvwwJcxKPtKUyZBLWsmjXji7pHDKNz9NRTETqj2P3drQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, talho-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The following changes since commit 
-08332893e37af6ae779367e78e444f8f9571511d:
+On Wed, May 24, 2017 at 11:16:22AM +0200, Linus Walleij wrote:
+> On Wed, May 17, 2017 at 9:23 AM, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> > On Wed, Apr 19, 2017 at 11:13 AM, Linus Walleij
+> > <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> >
+> >> These compatible strings need to be added to extend support
+> >> for the RPM CC to cover MSM8660/APQ8060. We also need to add
+> >> enumberators to the include file for a few clocks that were
+> >> missing.
+> >>
+> >> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> >> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> >> Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> >> ---
+> >> ChangeLog v1->v2:
+> >> - Collect Rob's ACK
+> >
+> > Ping on this patch set. It's been sitting for a month and was
+> > not changed from v1 either, if you want me to change something
+> > it'd be good to know.
+> 
+> Ping on this again.
+> 
+> I am sorry if you guys are swamped, I just don't know what to do,
+> clock drivers are starting to become the bottleneck for everything
+> I do. I bet the ARM SoC maintainers must be noticing it too.
+> 
+> Unfortunately I am already managing two subsystems and cannot
+> volunteer to help out with a third, I would blow a fuse.
+> 
+> But it seems the CLK subsystem could use some co-maintainers?
+> 
+> Peter de Schrijver is a big authority in all things clocking (I clearly
+> remember him discussing the subject a lot at conferences with lots
+> of good points) so I would ask him to help, but I don't know how busy
+> Peter may be with nVidia business etc these days...
+> 
 
-   Linux 4.12-rc2 (2017-05-21 19:30:23 -0700)
+I'm usually rather busy yes, but I could try to find some time for this if
+asked for.
 
-are available in the git repository at:
-
-   https://github.com/AlexanderAmelkin/linux-wandboard.git 
-tags/max3421-improvements-1
-
-for you to fetch changes up to b9a7559d24c0b2cb6e69124d861a943f79272681:
-
-   usb: max3421-hcd: Remove function name from dev_dbg calls (2017-05-25 
-11:52:13 +0300)
-
-The separate patches for these changes will be sent as a follow up.
-
-----------------------------------------------------------------
-usb: max3421-hcd: Make the driver more up-to-date and flexible
-
-This set of patches updates the max3421-hcd driver and fixes
-some bugs in it. Specifically, it:
-
-- Adds support for devicetree
-- Makes platform related parameters configurable
-- Adds sanity checks for platform related parameters
-- Fixes crash on driver removal
-- Tidies up use of memory allocation/deallocation functions
-- Removes superfluous debug text
-
-----------------------------------------------------------------
-Alexander Amelkin (3):
-       usb: max3421-hcd: Add devicetree support to the driver
-       usb: max3421-hcd: Fix crash on the driver removal
-       usb: max3421-hcd: Remove function name from dev_dbg calls
-
-  .../devicetree/bindings/usb/maxim,max3421-hcd.txt  |  19 +++
-  drivers/usb/host/max3421-hcd.c                     | 131 
-+++++++++++++++++----
-  2 files changed, 127 insertions(+), 23 deletions(-)
-  create mode 100644 
-Documentation/devicetree/bindings/usb/maxim,max3421-hcd.txt
-
+Peter.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
