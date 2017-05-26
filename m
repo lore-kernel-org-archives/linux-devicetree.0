@@ -1,35 +1,32 @@
-From: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Subject: Re: [PATCH 3/3] usb: max3421-hcd: Remove function name from dev_dbg
- calls
-Date: Fri, 26 May 2017 20:41:32 +0200
-Message-ID: <20170526184132.GG16490@kroah.com>
-References: <fe4f9b0f3a18d48dec6c0a8d79cae386@amelkin.msk.ru>
- <4642fe87795c3ec475f7c5ba6e67d025@amelkin.msk.ru>
+From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Subject: Re: [PATCH 1/5] dts: gpio_atmel: adapt binding doc to reality
+Date: Fri, 26 May 2017 20:52:14 +0200
+Message-ID: <20170526185214.GB20946@lunn.ch>
+References: <20170526180609.2699-1-uwe@kleine-koenig.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <4642fe87795c3ec475f7c5ba6e67d025-RgVAGUil9pwRDxlzMovjVg@public.gmane.org>
+In-Reply-To: <20170526180609.2699-1-uwe-rXY34ruvC2xidJT2blvkqNi2O/JbrIOy@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexander Amelkin <alexander-RgVAGUil9pwRDxlzMovjVg@public.gmane.org>
-Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+To: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <uwe-rXY34ruvC2xidJT2blvkqNi2O/JbrIOy@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 26, 2017 at 02:32:42PM +0300, Alexander Amelkin wrote:
-> NOTE:
-> Please don't use the plain text here as a patch because it most probably is
-> corrupted by my webmail client.
-> Attached is a copy of the following text guaranteed to have correct
-> tabs/spaces.
+> +- interrupt-controller: Marks the device node as a GPIO controller.
 
-Why is this here????
+Interrupt controller, not GPIO controller.
 
-What did you do to add this odd stuff to the patches?  Please just use
-git send-email like everyone else does...
+> +- #interrupt-cells: Should be two. The first cell is the pin number and the
+> +  second cell is used to specify irq type flags:
+> +      1 = low-to-high edge triggered.
+> +      2 = high-to-low edge triggered.
+> +      4 = active high level-sensitive.
+> +      8 = active low level-sensitive.
 
-thanks,
+Maybe just reference interrupts.txt?
 
-greg k-h
+      Andrew
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
