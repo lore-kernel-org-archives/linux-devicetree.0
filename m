@@ -1,83 +1,82 @@
-From: "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>
-Subject: Re: [PATCH v6 3/6] ACPI/IORT: Ignore all errors except EPROBE_DEFER
-Date: Sat, 27 May 2017 21:18:39 +0200
-Message-ID: <1564836.5iBbgoacpH@aspire.rjw.lan>
-References: <1495892865-9506-1-git-send-email-sricharan@codeaurora.org>
-	<1495892865-9506-3-git-send-email-sricharan@codeaurora.org>
+From: Enric Balletbo Serra <eballetbo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 1/4] dt-bindings: power: supply: add battery charge voltage/current
+Date: Sat, 27 May 2017 22:11:50 +0200
+Message-ID: <CAFqH_50+58swMjGOK1oyP0152ap=5Ng1m86q5sdq2Enc08Ui5g@mail.gmail.com>
+References: <20170526110413.24836-1-enric.balletbo@collabora.com> <CAKvHMgTvUkJENP=Y_rdge6Oqq-La341nYW5prB=BpXWo7rF-0A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <1495892865-9506-3-git-send-email-sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-arch-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tn-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org, magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, j.neuschaefer-hi6Y0CQ0nG0@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAKvHMgTvUkJENP=Y_rdge6Oqq-La341nYW5prB=BpXWo7rF-0A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Liam Breck <liam-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org>
+Cc: Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Liam Breck <kernel-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Saturday, May 27, 2017 07:17:42 PM Sricharan R wrote:
-> While deferring the probe of IOMMU masters, xlate and
-> add_device callbacks called from iort_iommu_configure
-> can pass back error values like -ENODEV, which means
-> the IOMMU cannot be connected with that master for real
-> reasons. Before the IOMMU probe deferral, all such errors
-> were ignored. Now all those errors are propagated back,
-> killing the master's probe for such errors. Instead ignore
-> all the errors except EPROBE_DEFER, which is the only one
-> of concern and let the master work without IOMMU, thus
-> restoring the old behavior. Also make explicit that
-> acpi_dma_configure handles only -EPROBE_DEFER from
-> iort_iommu_configure.
-> 
-> Fixes: 5a1bb638d567 ("drivers: acpi: Handle IOMMU lookup failure with deferred probing or error")
-> Signed-off-by: Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> ---
->  drivers/acpi/arm64/iort.c | 6 ++++++
->  drivers/acpi/scan.c       | 4 ++--
->  2 files changed, 8 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/acpi/arm64/iort.c b/drivers/acpi/arm64/iort.c
-> index c5fecf9..16e101f 100644
-> --- a/drivers/acpi/arm64/iort.c
-> +++ b/drivers/acpi/arm64/iort.c
-> @@ -782,6 +782,12 @@ const struct iommu_ops *iort_iommu_configure(struct device *dev)
->  	if (err)
->  		ops = ERR_PTR(err);
->  
-> +	/* Ignore all other errors apart from EPROBE_DEFER */
-> +	if (IS_ERR(ops) && (PTR_ERR(ops) != -EPROBE_DEFER)) {
-> +		dev_dbg(dev, "Adding to IOMMU failed: %ld\n", PTR_ERR(ops));
-> +		ops = NULL;
-> +	}
-> +
->  	return ops;
->  }
->  
-> diff --git a/drivers/acpi/scan.c b/drivers/acpi/scan.c
-> index e39ec7b..3a10d757 100644
-> --- a/drivers/acpi/scan.c
-> +++ b/drivers/acpi/scan.c
-> @@ -1371,8 +1371,8 @@ int acpi_dma_configure(struct device *dev, enum dev_dma_attr attr)
->  	iort_set_dma_mask(dev);
->  
->  	iommu = iort_iommu_configure(dev);
-> -	if (IS_ERR(iommu))
-> -		return PTR_ERR(iommu);
-> +	if (IS_ERR(iommu) && PTR_ERR(iommu) == -EPROBE_DEFER)
-> +		return -EPROBE_DEFER;
->  
->  	size = max(dev->coherent_dma_mask, dev->coherent_dma_mask + 1);
->  	/*
-> 
+Hi Liam,
 
-ACK for the scan.c change and I'm assuming this to go in via ARM64.
+2017-05-26 23:20 GMT+02:00 Liam Breck <liam-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org>:
+> Hi Enric,
+>
+> On Fri, May 26, 2017 at 4:04 AM, Enric Balletbo i Serra
+> <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org> wrote:
+>> Add charging voltage and current characteristics to the battery DT for
+>> proper handling of the battery by fuel-gauge and charger chips.
+>>
+>> Signed-off-by: Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+>> ---
+>> Changes since v2:
+>>  - Requested by Sebastian Reichel
+>>    - Move to its own patch and apply to simple-battery framework.
+>> Changes since v1:
+>>  - Requested by Rob Herring
+>>    - Rename ti,charge-* to charge-* to be standard properties.
+>>    - Use unit suffixes as per bindings/property-units.txt
+>>
+>>  Documentation/devicetree/bindings/power/supply/battery.txt | 4 ++++
+>>  1 file changed, 4 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/power/supply/battery.txt b/Documentation/devicetree/bindings/power/supply/battery.txt
+>> index 63a7028..c87a439 100644
+>> --- a/Documentation/devicetree/bindings/power/supply/battery.txt
+>> +++ b/Documentation/devicetree/bindings/power/supply/battery.txt
+>> @@ -12,6 +12,8 @@ Optional Properties:
+>>   - voltage-min-design-microvolt: drained battery voltage
+>>   - energy-full-design-microwatt-hours: battery design energy
+>>   - charge-full-design-microamp-hours: battery design capacity
+>> + - charge-voltage-microvolt: battery charging voltage
+>> + - charge-current-microamp: battery charging current
+>
+> I think you mean constant-charge-* which is how you surface these
+> properties in your tps65217_charger patch.
+>
 
-Thanks,
-Rafael
+Yes, to be strict this is constant-charge-*
+
+> I'll add these to v14 of my patchset which adds simple-battery
+> support. Rob requested a single patch for this file.
+>
+
+Ok, I'll send the tps charger series without this patch, so please,
+include this patch in your series.
+
+> I've been waiting for feedback on v13.2 from Sebastian. If I don't
+> hear from him within a few days, I'll post v14.
+>
+>>  Batteries must be referenced by chargers and/or fuel-gauges
+>>  using a phandle. The phandle's property should be named
+>> @@ -24,6 +26,8 @@ Example:
+>>                 voltage-min-design-microvolt = <3200000>;
+>>                 energy-full-design-microwatt-hours = <5290000>;
+>>                 charge-full-design-microamp-hours = <1430000>;
+>> +               charge-voltage-microvolt = <4100000>;
+>> +               charge-current-microamp = <300000>;
+>>         };
+>>
+>>         charger: charger@11 {
+>> --
+>> 2.9.3
+>>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
