@@ -1,34 +1,65 @@
-From: Daniel Drake <drake@endlessm.com>
-Subject: Re: [RFC 0/2] Add support for Meson MX "SDIO" MMC driver
-Date: Fri, 26 May 2017 20:48:57 -0600
-Message-ID: <CAD8Lp46oR0ODa4ybVW-rMPki9126My+ymxigZmjGwxPm2y1L3g@mail.gmail.com>
-References: <20170506171857.16492-1-martin.blumenstingl@googlemail.com>
- <CAPDyKFoYPjB1bjRfFCFT3vuzKgzm6-7L2qgNjxGL392cLDe7uA@mail.gmail.com>
- <CAFBinCDGBZAAx_61eyu1_XM57fX62Mk03TEiO3uTL+i8dfPyZA@mail.gmail.com>
- <CAPDyKFoC-cCEY+n2383W+JgDANbBMFbsU5cyB51-kG4kbLNNcw@mail.gmail.com> <CAFBinCDocqqo2GNLb2y1XE0ATTEG6TuqO+EZ_-h8=vuTjngr_Q@mail.gmail.com>
+From: Guodong Xu <guodong.xu@linaro.org>
+Subject: Re: [PATCH 2/6] mfd: hi6421-pmic: move hi6421_regmap_config
+ definition to header file
+Date: Sat, 27 May 2017 11:08:29 +0800
+Message-ID: <CAFGCpxxiwevKqJ19v7fFe6SA9HUbDsdoiL3nOKrkRLmg2=U2xw@mail.gmail.com>
+References: <20170526063518.21246-1-guodong.xu@linaro.org> <20170526063518.21246-3-guodong.xu@linaro.org>
+ <CAK8P3a0maxQdwLMMwEnYgmMHRHDRUaeYRb5JM0PtRbWopeHjUw@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <CAFBinCDocqqo2GNLb2y1XE0ATTEG6TuqO+EZ_-h8=vuTjngr_Q@mail.gmail.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc: Ulf Hansson <ulf.hansson@linaro.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kevin Hilman <khilman@baylibre.com>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Carlo Caione <carlo@caione.org>, "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAK8P3a0maxQdwLMMwEnYgmMHRHDRUaeYRb5JM0PtRbWopeHjUw@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Wei Xu <xuwei5@hisilicon.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Kevin Hilman <khilman@baylibre.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Olof Johansson <olof@lixom.net>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Riku Voipio <riku.voipio@linaro.org>, Thierry Reding <treding@nvidia.com>, Krzysztof Kozlowski <krzk@kernel.org>, Eric Anholt <eric@anholt.net>, damm+renesas@opensource.se, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Linus Walleij <linus.walleij@l>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 11, 2017 at 2:44 PM, Martin Blumenstingl
-<martin.blumenstingl@googlemail.com> wrote:
-> the code-names of the older (32-bit) SoCs (at least the ones which are
-> not too old) all start with Meson X (where X is a number: Meson6,
-> Meson8, Meson8b and Meson8m2), Amlogic's vendor code sometimes calls
-> these "MX" (or Meson MX)
+On Fri, May 26, 2017 at 4:33 PM, Arnd Bergmann <arnd@arndb.de> wrote:
+> On Fri, May 26, 2017 at 8:35 AM, Guodong Xu <guodong.xu@linaro.org> wrote:
+>> Move hi6421_regmap_config definition from c code to common header:
+>>  - include/linux/mfd/hi6421-pmic.h
+>>
+>> This is to improve code re-use for upcoming hi6421 series of MFD driver.
+>>
+>> Signed-off-by: Guodong Xu <guodong.xu@linaro.org>
+>
+>> diff --git a/include/linux/mfd/hi6421-pmic.h b/include/linux/mfd/hi6421-pmic.h
+>> index 587273e..f4674ff 100644
+>> --- a/include/linux/mfd/hi6421-pmic.h
+>> +++ b/include/linux/mfd/hi6421-pmic.h
+>> @@ -38,4 +38,10 @@ struct hi6421_pmic {
+>>         struct regmap           *regmap;
+>>  };
+>>
+>> +static const struct regmap_config hi6421_regmap_config = {
+>> +       .reg_bits = 32,
+>> +       .reg_stride = 4,
+>> +       .val_bits = 8,
+>> +       .max_register = HI6421_REG_TO_BUS_ADDR(HI6421_REG_MAX),
+>> +};
+>>  #endif         /* __HI6421_PMIC_H */
+>
+> Header files should not have static variables in general, it will cause warnings
+> about unused variables when you include the header from another file
+> (depending on compiler version and warning options, I think older gcc
+> versions don't warn about this, but clang and latest gcc do).
+>
 
-Just in case it helps you on any future adventures in the Amlogic
-vendor code: I think this is not quite right. I believe that MX
-specifically refers to Meson6 and no other SoC generation.
+I will fix that.
 
-That said, if both MesonX (==Meson6) and Meson8/Meson8b all share the
-same driver code, having this driver named "mx" makes sense to me,
-especially because it helps distinguish from the GX* chips which
-indeed have something rather different.
+> How about adding the new code into the existing
+> drivers/mfd/hi6421-pmic-core.c file, and splitting out the part that differs
+> (the regmap_update_bits is the only difference I see)
 
-Daniel
+Yes, indeed.
+
+> into a callback
+> that you reference through the of_device_id->data pointer?
+>
+
+Thanks Arnd. I will look into this. I'll drop hi6421v530-pmic.c and
+resend this patchset.
+
+-Guodong
+
+>         Arnd
