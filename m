@@ -1,82 +1,62 @@
-From: Enric Balletbo Serra <eballetbo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 3/4] dt-bindings: power: tps65217_charger: add NTC type
- for battery temperature measurement.
-Date: Sat, 27 May 2017 22:14:04 +0200
-Message-ID: <CAFqH_53XFEr1W=gB3JEviQEZzJST67==WFJTGTLr9tc6Ubmb8g@mail.gmail.com>
-References: <20170526110413.24836-1-enric.balletbo@collabora.com>
- <20170526110413.24836-3-enric.balletbo@collabora.com> <CAKvHMgTf7Tz2hTo0-QrO_KjqoQrJtGephEz9Wuo-Ty=W7szCBw@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+From: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH v7 1/3] mailbox: Make startup and shutdown ops optional
+Date: Sat, 27 May 2017 16:14:02 -0700
+Message-ID: <20170527231404.7632-1-bjorn.andersson@linaro.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAKvHMgTf7Tz2hTo0-QrO_KjqoQrJtGephEz9Wuo-Ty=W7szCBw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Liam Breck <liam-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org>
-Cc: Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Liam Breck <kernel-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org>
+To: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-2017-05-26 23:26 GMT+02:00 Liam Breck <liam-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org>:
-> Hi Enric,
->
-> On Fri, May 26, 2017 at 4:04 AM, Enric Balletbo i Serra
-> <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org> wrote:
->> The TS pin of the TPS56217 connects to the NTC resistor in the battery
->> pack. By default the device is setup to support a 10-kohm but can also
->> be configured to support a 100-kohm. Add a propietry to configure the
->> connected NTC resistor. Therefore, the charger would get the wrong
->> temperature information.
->
-> This also needs a monitored-battery property, and a battery node in
-> the example. See https://patchwork.kernel.org/patch/9710803/
->
+Some mailbox hardware doesn't have to perform any additional operations
+on startup of shutdown, so make these optional.
 
-Right I'll add the property in v4.
+Signed-off-by: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+---
 
->
->> Signed-off-by: Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
->> ---
->> Changes since v2:
->>  - Requested by Sebastian Reichel
->>    - Get rid of common properties and only maintain ntc-type.
->> Changes since v1:
->>  - None
->>
->>  .../devicetree/bindings/power/supply/tps65217_charger.txt          | 7 =
-+++++++
->>  1 file changed, 7 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/power/supply/tps65217_cha=
-rger.txt b/Documentation/devicetree/bindings/power/supply/tps65217_charger.=
-txt
->> index a11072c..851f5c7 100644
->> --- a/Documentation/devicetree/bindings/power/supply/tps65217_charger.tx=
-t
->> +++ b/Documentation/devicetree/bindings/power/supply/tps65217_charger.tx=
-t
->> @@ -6,6 +6,12 @@ Required Properties:
->>               Should be <0> for the USB charger and <1> for the AC adapt=
-er.
->>  -interrupt-names: Should be "USB" and "AC"
->>
->> +Optional properties:
->> +-ti,ntc-type: set the NTC type for battery temperature measurement. The=
- value
->> +       must be 0 or 1, where:
->> +         0 =E2=80=93 100k (curve 1, B =3D 3960)
->> +         1 =E2=80=93 10k  (curve 2, B =3D 3480) (default)
->> +
->>  This node is a subnode of the tps65217 PMIC.
->>
->>  Example:
->> @@ -14,4 +20,5 @@ Example:
->>                 compatible =3D "ti,tps65217-charger";
->>                 interrupts =3D <0>, <1>;
->>                 interrupt-names =3D "USB", "AC";
->> +               ti,ntc-type =3D <1>;
->>         };
->> --
->> 2.9.3
->>
+Changes since v6:
+- None
+
+ drivers/mailbox/mailbox.c | 16 ++++++++++------
+ 1 file changed, 10 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/mailbox/mailbox.c b/drivers/mailbox/mailbox.c
+index 9dfbf7ea10a2..537f4f6d009b 100644
+--- a/drivers/mailbox/mailbox.c
++++ b/drivers/mailbox/mailbox.c
+@@ -355,11 +355,14 @@ struct mbox_chan *mbox_request_channel(struct mbox_client *cl, int index)
+ 
+ 	spin_unlock_irqrestore(&chan->lock, flags);
+ 
+-	ret = chan->mbox->ops->startup(chan);
+-	if (ret) {
+-		dev_err(dev, "Unable to startup the chan (%d)\n", ret);
+-		mbox_free_channel(chan);
+-		chan = ERR_PTR(ret);
++	if (chan->mbox->ops->startup) {
++		ret = chan->mbox->ops->startup(chan);
++
++		if (ret) {
++			dev_err(dev, "Unable to startup the chan (%d)\n", ret);
++			mbox_free_channel(chan);
++			chan = ERR_PTR(ret);
++		}
+ 	}
+ 
+ 	mutex_unlock(&con_mutex);
+@@ -408,7 +411,8 @@ void mbox_free_channel(struct mbox_chan *chan)
+ 	if (!chan || !chan->cl)
+ 		return;
+ 
+-	chan->mbox->ops->shutdown(chan);
++	if (chan->mbox->ops->shutdown)
++		chan->mbox->ops->shutdown(chan);
+ 
+ 	/* The queued TX requests are simply aborted, no callbacks are made */
+ 	spin_lock_irqsave(&chan->lock, flags);
+-- 
+2.12.0
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
