@@ -1,71 +1,42 @@
 From: Icenowy Zheng <icenowy@aosc.io>
-Subject: [PATCH v3 01/10] arm: sunxi: add support for R40 SoC
-Date: Sat, 27 May 2017 18:22:59 +0800
-Message-ID: <20170527102308.1988-2-icenowy@aosc.io>
+Subject: [PATCH v3 02/10] pinctrl: sunxi: Add SoC ID definitions for A10, A20 and R40 SoCs
+Date: Sat, 27 May 2017 18:23:00 +0800
+Message-ID: <20170527102308.1988-3-icenowy@aosc.io>
 References: <20170527102308.1988-1-icenowy@aosc.io>
-Return-path: <linux-clk-owner@vger.kernel.org>
+Return-path: <linux-gpio-owner@vger.kernel.org>
 In-Reply-To: <20170527102308.1988-1-icenowy@aosc.io>
-Sender: linux-clk-owner@vger.kernel.org
+Sender: linux-gpio-owner@vger.kernel.org
 To: Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Linus Walleij <linus.walleij@linaro.org>
 Cc: linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, Icenowy Zheng <icenowy@aosc.io>
 List-Id: devicetree@vger.kernel.org
 
-Allwinner R40 is a new SoC, with Quad Core Cortex-A7 and peripherals
-like A20.
+Allwinner A10, A20 and R40 SoCs have similar GPIO layout.
 
-Add support for it.
+Add SoC definitions in pinctrl-sunxi.h, in order to merge A20 support
+into A10 driver, and add R40 support into it.
 
 Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
 ---
 Changes in v3:
-- Use V1.0 documents.
+- Commit message change.
 
- Documentation/arm/sunxi/README                  | 6 ++++++
- Documentation/devicetree/bindings/arm/sunxi.txt | 1 +
- arch/arm/mach-sunxi/sunxi.c                     | 1 +
- 3 files changed, 8 insertions(+)
+ drivers/pinctrl/sunxi/pinctrl-sunxi.h | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/Documentation/arm/sunxi/README b/Documentation/arm/sunxi/README
-index d7b1f016bd62..af56321137e8 100644
---- a/Documentation/arm/sunxi/README
-+++ b/Documentation/arm/sunxi/README
-@@ -75,6 +75,12 @@ SunXi family
-         + Datasheet
-           http://linux-sunxi.org/File:Allwinner_V3s_Datasheet_V1.0.pdf
+diff --git a/drivers/pinctrl/sunxi/pinctrl-sunxi.h b/drivers/pinctrl/sunxi/pinctrl-sunxi.h
+index a9d315a1256c..1bfc0d8a55df 100644
+--- a/drivers/pinctrl/sunxi/pinctrl-sunxi.h
++++ b/drivers/pinctrl/sunxi/pinctrl-sunxi.h
+@@ -87,6 +87,9 @@
+ #define PINCTRL_SUN5I_GR8	BIT(3)
+ #define PINCTRL_SUN6I_A31	BIT(4)
+ #define PINCTRL_SUN6I_A31S	BIT(5)
++#define PINCTRL_SUN4I_A10	BIT(6)
++#define PINCTRL_SUN7I_A20	BIT(7)
++#define PINCTRL_SUN8I_R40	BIT(8)
  
-+      - Allwinner R40 (sun8i)
-+        + Datasheet
-+          https://github.com/tinalinux/docs/blob/r40-v1.y/R40_Datasheet_V1.0.pdf
-+        + User Manual
-+          https://github.com/tinalinux/docs/blob/r40-v1.y/Allwinner_R40_User_Manual_V1.0.pdf
-+
-     * Quad ARM Cortex-A15, Quad ARM Cortex-A7 based SoCs
-       - Allwinner A80
-         + Datasheet
-diff --git a/Documentation/devicetree/bindings/arm/sunxi.txt b/Documentation/devicetree/bindings/arm/sunxi.txt
-index d2c46449b4eb..b3ffe6cf821a 100644
---- a/Documentation/devicetree/bindings/arm/sunxi.txt
-+++ b/Documentation/devicetree/bindings/arm/sunxi.txt
-@@ -14,6 +14,7 @@ using one of the following compatible strings:
-   allwinner,sun8i-a83t
-   allwinner,sun8i-h2-plus
-   allwinner,sun8i-h3
-+  allwinner-sun8i-r40
-   allwinner,sun9i-a80
-   allwinner,sun50i-a64
-   nextthing,gr8
-diff --git a/arch/arm/mach-sunxi/sunxi.c b/arch/arm/mach-sunxi/sunxi.c
-index f44e3acb5c90..aea616759451 100644
---- a/arch/arm/mach-sunxi/sunxi.c
-+++ b/arch/arm/mach-sunxi/sunxi.c
-@@ -66,6 +66,7 @@ static const char * const sun8i_board_dt_compat[] = {
- 	"allwinner,sun8i-h2-plus",
- 	"allwinner,sun8i-h3",
- 	"allwinner,sun8i-v3s",
-+	"allwinner,sun8i-r40",
- 	NULL,
- };
- 
+ struct sunxi_desc_function {
+ 	unsigned long	variant;
 -- 
 2.12.2
 
