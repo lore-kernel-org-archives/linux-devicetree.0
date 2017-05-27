@@ -1,212 +1,72 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: [PATCH v2 2/3] firmware: qcom: scm: Expose download-mode control
-Date: Fri, 26 May 2017 23:33:07 -0700
-Message-ID: <20170527063308.10483-2-bjorn.andersson@linaro.org>
-References: <20170527063308.10483-1-bjorn.andersson@linaro.org>
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <20170527063308.10483-1-bjorn.andersson@linaro.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Andy Gross <andy.gross@linaro.org>
-Cc: Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, David Brown <david.brown@linaro.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org
+From: Guodong Xu <guodong.xu@linaro.org>
+Subject: Re: [PATCH 4/6] regulator: hi6421v530: add driver for hi6421v530
+ voltage regulator
+Date: Sat, 27 May 2017 17:42:01 +0800
+Message-ID: <CAFGCpxw3orr+4OO2_YVj2DrAJsvo9O+WiGeVv6GAk26HLzAnRw@mail.gmail.com>
+References: <20170526063518.21246-1-guodong.xu@linaro.org>
+ <20170526063518.21246-5-guodong.xu@linaro.org>
+ <CABxcv=kP7XLDhUifwDBEfnayfgjGJFf7v9kUkPS6pcLKiaLP-g@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CABxcv=kP7XLDhUifwDBEfnayfgjGJFf7v9kUkPS6pcLKiaLP-g@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Javier Martinez Canillas <javier@dowhile0.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Catalin Marinas <catalin.marinas@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Will Deacon <will.deacon@arm.com>, Linux Kernel <linux-kernel@vger.kernel.org>, Masahiro Yamada <yamada.masahiro@socionext.com>, Krzysztof Kozlowski <krzk@kernel.org>, Lee Jones <lee.jones@linaro.org>, Kevin Hilman <khilman@baylibre.com>, damm+renesas@opensource.se, "xuwei (O)" <xuwei5@hisilicon.com>, Thierry Reding <treding@nvidia.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Mark Brown <broonie@kernel.org>, Gregory Clement <gregory.clement@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Eric Anholt <eric@anholt.net>, Riku Voipio <riku.voipio@lina>
 List-Id: devicetree@vger.kernel.org
 
-In order to aid post-mortem debugging the Qualcomm platforms provides a
-"memory download mode", where the boot loader will provide an interface
-for custom tools to "download" the content of RAM to a host machine.
+On Fri, May 26, 2017 at 8:13 PM, Javier Martinez Canillas
+<javier@dowhile0.org> wrote:
+> Hello Guodong,
+>
+> On Fri, May 26, 2017 at 8:35 AM, Guodong Xu <guodong.xu@linaro.org> wrote:
+>> From: Wang Xiaoyin <hw.wangxiaoyin@hisilicon.com>
+>>
+>
+> [snip]
+>
+>>
+>> +config REGULATOR_HI6421V530
+>> +       tristate "HiSilicon Hi6421v530 PMIC voltage regulator support"
+>
+> The Kconfig symbol is tristate so the driver can be built as a module...
+>
+>> +
+>> +static struct platform_driver hi6421v530_regulator_driver = {
+>> +       .driver = {
+>> +               .name   = "hi6421v530-regulator",
+>> +       },
+>> +       .probe  = hi6421v530_regulator_probe,
+>> +};
+>> +module_platform_driver(hi6421v530_regulator_driver);
+>
+> ... but the driver doesn't have a platform device ID table nor export
+> it as a module alias using MODULE_DEVICE_TABLE().
+>
 
-The mode is triggered by writing a magic value somehwere in RAM, that is
-read in the boot code path after a warm-restart. Two mechanism for
-setting this magic value are supported in modern platforms; a direct SCM
-call to enable the mode or through a secure io write of a magic value.
+I will add that.
+Thanks for your review.
 
-In order for a normal reboot not to trigger "download mode" the magic
-must be cleared during a clean reboot.
+-Guodong
 
-Download mode has to be enabled by including qcom_scm.download_mode=1 on
-the command line.
-
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
----
-
-Changes since v1:
-- Specify DT propert being two-cell
-- Correct handling of scm-call return code
-
- .../devicetree/bindings/firmware/qcom,scm.txt      |  2 +
- drivers/firmware/qcom_scm-32.c                     |  6 +++
- drivers/firmware/qcom_scm-64.c                     | 13 +++++++
- drivers/firmware/qcom_scm.c                        | 43 ++++++++++++++++++++++
- drivers/firmware/qcom_scm.h                        |  2 +
- 5 files changed, 66 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/firmware/qcom,scm.txt b/Documentation/devicetree/bindings/firmware/qcom,scm.txt
-index 20f26fbce875..388817d1d00e 100644
---- a/Documentation/devicetree/bindings/firmware/qcom,scm.txt
-+++ b/Documentation/devicetree/bindings/firmware/qcom,scm.txt
-@@ -18,6 +18,8 @@ Required properties:
-  * Core, iface, and bus clocks required for "qcom,scm"
- - clock-names: Must contain "core" for the core clock, "iface" for the interface
-   clock and "bus" for the bus clock per the requirements of the compatible.
-+- qcom,dload-mode-addr: Specifies the address (2 cells) for the download mode
-+			magic (optional)
- 
- Example for MSM8916:
- 
-diff --git a/drivers/firmware/qcom_scm-32.c b/drivers/firmware/qcom_scm-32.c
-index 11fdb1584823..68b2033bc30e 100644
---- a/drivers/firmware/qcom_scm-32.c
-+++ b/drivers/firmware/qcom_scm-32.c
-@@ -561,6 +561,12 @@ int __qcom_scm_pas_mss_reset(struct device *dev, bool reset)
- 	return ret ? : le32_to_cpu(out);
- }
- 
-+int __qcom_scm_set_dload_mode(struct device *dev, bool enable)
-+{
-+	return qcom_scm_call_atomic2(QCOM_SCM_SVC_BOOT, QCOM_SCM_SET_DLOAD_MODE,
-+				     enable ? QCOM_SCM_SET_DLOAD_MODE : 0, 0);
-+}
-+
- int __qcom_scm_set_remote_state(struct device *dev, u32 state, u32 id)
- {
- 	struct {
-diff --git a/drivers/firmware/qcom_scm-64.c b/drivers/firmware/qcom_scm-64.c
-index bf50fb59852e..3fea6f563ca9 100644
---- a/drivers/firmware/qcom_scm-64.c
-+++ b/drivers/firmware/qcom_scm-64.c
-@@ -440,6 +440,19 @@ int __qcom_scm_iommu_secure_ptbl_init(struct device *dev, u64 addr, u32 size,
- 	return ret;
- }
- 
-+int __qcom_scm_set_dload_mode(struct device *dev, bool enable)
-+{
-+	struct qcom_scm_desc desc = {0};
-+	struct arm_smccc_res res;
-+
-+	desc.args[0] = QCOM_SCM_SET_DLOAD_MODE;
-+	desc.args[1] = enable ? QCOM_SCM_SET_DLOAD_MODE : 0;
-+	desc.arginfo = QCOM_SCM_ARGS(2);
-+
-+	return qcom_scm_call(dev, QCOM_SCM_SVC_BOOT, QCOM_SCM_SET_DLOAD_MODE,
-+			     &desc, &res);
-+}
-+
- int __qcom_scm_io_readl(struct device *dev, phys_addr_t addr,
- 			unsigned int *val)
- {
-diff --git a/drivers/firmware/qcom_scm.c b/drivers/firmware/qcom_scm.c
-index e18d63935648..98f4747acddb 100644
---- a/drivers/firmware/qcom_scm.c
-+++ b/drivers/firmware/qcom_scm.c
-@@ -19,6 +19,7 @@
- #include <linux/cpumask.h>
- #include <linux/export.h>
- #include <linux/dma-mapping.h>
-+#include <linux/module.h>
- #include <linux/types.h>
- #include <linux/qcom_scm.h>
- #include <linux/of.h>
-@@ -28,6 +29,9 @@
- 
- #include "qcom_scm.h"
- 
-+static bool download_mode;
-+module_param(download_mode, bool, 0700);
-+
- #define SCM_HAS_CORE_CLK	BIT(0)
- #define SCM_HAS_IFACE_CLK	BIT(1)
- #define SCM_HAS_BUS_CLK		BIT(2)
-@@ -38,6 +42,8 @@ struct qcom_scm {
- 	struct clk *iface_clk;
- 	struct clk *bus_clk;
- 	struct reset_controller_dev reset;
-+
-+	phys_addr_t dload_mode_addr;
- };
- 
- static struct qcom_scm *__scm;
-@@ -345,6 +351,28 @@ int qcom_scm_io_writel(phys_addr_t addr, unsigned int val)
- }
- EXPORT_SYMBOL(qcom_scm_io_writel);
- 
-+static void qcom_scm_set_download_mode(bool enable)
-+{
-+	bool avail;
-+	int ret;
-+
-+	avail = __qcom_scm_is_call_available(__scm->dev,
-+					     QCOM_SCM_SVC_BOOT,
-+					     QCOM_SCM_SET_DLOAD_MODE);
-+	if (avail) {
-+		ret = __qcom_scm_set_dload_mode(__scm->dev, enable);
-+		if (ret)
-+			dev_err(__scm->dev, "SCM failed to set download mode: %d\n", ret);
-+	} else if (__scm->dload_mode_addr) {
-+		ret = __qcom_scm_io_writel(__scm->dev, __scm->dload_mode_addr,
-+					   enable ? QCOM_SCM_SET_DLOAD_MODE : 0);
-+		if (ret)
-+			dev_err(__scm->dev, "SCM failed to set download mode: %d\n", ret);
-+	} else {
-+		dev_err(__scm->dev, "No available mechanism for setting download mode\n");
-+	}
-+}
-+
- /**
-  * qcom_scm_is_available() - Checks if SCM is available
-  */
-@@ -365,6 +393,7 @@ static int qcom_scm_probe(struct platform_device *pdev)
- 	struct qcom_scm *scm;
- 	unsigned long clks;
- 	int ret;
-+	u64 val;
- 
- 	scm = devm_kzalloc(&pdev->dev, sizeof(*scm), GFP_KERNEL);
- 	if (!scm)
-@@ -418,9 +447,22 @@ static int qcom_scm_probe(struct platform_device *pdev)
- 
- 	__qcom_scm_init();
- 
-+	ret = of_property_read_u64(pdev->dev.of_node, "qcom,dload-mode-addr", &val);
-+	if (!ret)
-+		scm->dload_mode_addr = val;
-+
-+	if (download_mode)
-+		qcom_scm_set_download_mode(true);
-+
- 	return 0;
- }
- 
-+void qcom_scm_shutdown(struct platform_device *pdev)
-+{
-+	if (download_mode)
-+		qcom_scm_set_download_mode(false);
-+}
-+
- static const struct of_device_id qcom_scm_dt_match[] = {
- 	{ .compatible = "qcom,scm-apq8064",
- 	  /* FIXME: This should have .data = (void *) SCM_HAS_CORE_CLK */
-@@ -448,6 +490,7 @@ static struct platform_driver qcom_scm_driver = {
- 		.of_match_table = qcom_scm_dt_match,
- 	},
- 	.probe = qcom_scm_probe,
-+	.shutdown = qcom_scm_shutdown,
- };
- 
- static int __init qcom_scm_init(void)
-diff --git a/drivers/firmware/qcom_scm.h b/drivers/firmware/qcom_scm.h
-index a60e4b9b1394..83f171c23943 100644
---- a/drivers/firmware/qcom_scm.h
-+++ b/drivers/firmware/qcom_scm.h
-@@ -14,9 +14,11 @@
- 
- #define QCOM_SCM_SVC_BOOT		0x1
- #define QCOM_SCM_BOOT_ADDR		0x1
-+#define QCOM_SCM_SET_DLOAD_MODE		0x10
- #define QCOM_SCM_BOOT_ADDR_MC		0x11
- #define QCOM_SCM_SET_REMOTE_STATE	0xa
- extern int __qcom_scm_set_remote_state(struct device *dev, u32 state, u32 id);
-+extern int __qcom_scm_set_dload_mode(struct device *dev, bool enable);
- 
- #define QCOM_SCM_FLAG_HLOS		0x01
- #define QCOM_SCM_FLAG_COLDBOOT_MC	0x02
--- 
-2.12.0
+> That means that if built as a module, it won't be autoloaded when the
+> "hi6421v530-regulator" device is registered by the MFD driver.
+>
+>> +
+>> +MODULE_AUTHOR("Wang Xiaoyin <hw.wangxiaoyin@hisilicon.com>");
+>> +MODULE_DESCRIPTION("Hi6421v530 regulator driver");
+>> +MODULE_LICENSE("GPL v2");
+>
+> Alternative you can add a MODULE_ALIAS().
+>
+> Best regards,
+> Javier
