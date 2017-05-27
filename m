@@ -1,188 +1,83 @@
-From: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 2/2] reset: Add basic single-register reset driver
-Date: Sat, 27 May 2017 18:11:16 +0300
-Message-ID: <CAHp75VdXHnyTDJqZ8D+OxbrAXYQE+-sfTzYvfoo8FCe0SS35PA@mail.gmail.com>
-References: <20170526033214.8081-1-joel@jms.id.au> <20170526033214.8081-3-joel@jms.id.au>
+From: "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>
+Subject: Re: [PATCH v6 3/6] ACPI/IORT: Ignore all errors except EPROBE_DEFER
+Date: Sat, 27 May 2017 21:18:39 +0200
+Message-ID: <1564836.5iBbgoacpH@aspire.rjw.lan>
+References: <1495892865-9506-1-git-send-email-sricharan@codeaurora.org>
+	<1495892865-9506-3-git-send-email-sricharan@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170526033214.8081-3-joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
-Cc: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <1495892865-9506-3-git-send-email-sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-arch-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tn-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org, magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, j.neuschaefer-hi6Y0CQ0nG0@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 26, 2017 at 6:32 AM, Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org> wrote:
-> This driver is a basic single-register reset controller driver that
-> supports clearing a single bit in a register.
->
-
-While this makes sense, I'm wondering if there can be generic
-interface for this from which we can derive this one and GPIO-based
-one.
-
-> Signed-off-by: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
+On Saturday, May 27, 2017 07:17:42 PM Sricharan R wrote:
+> While deferring the probe of IOMMU masters, xlate and
+> add_device callbacks called from iort_iommu_configure
+> can pass back error values like -ENODEV, which means
+> the IOMMU cannot be connected with that master for real
+> reasons. Before the IOMMU probe deferral, all such errors
+> were ignored. Now all those errors are propagated back,
+> killing the master's probe for such errors. Instead ignore
+> all the errors except EPROBE_DEFER, which is the only one
+> of concern and let the master work without IOMMU, thus
+> restoring the old behavior. Also make explicit that
+> acpi_dma_configure handles only -EPROBE_DEFER from
+> iort_iommu_configure.
+> 
+> Fixes: 5a1bb638d567 ("drivers: acpi: Handle IOMMU lookup failure with deferred probing or error")
+> Signed-off-by: Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 > ---
->  drivers/reset/Kconfig       |   6 +++
->  drivers/reset/Makefile      |   1 +
->  drivers/reset/reset-basic.c | 109 ++++++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 116 insertions(+)
->  create mode 100644 drivers/reset/reset-basic.c
->
-> diff --git a/drivers/reset/Kconfig b/drivers/reset/Kconfig
-> index d21c07ccc94e..980cda887dfe 100644
-> --- a/drivers/reset/Kconfig
-> +++ b/drivers/reset/Kconfig
-> @@ -28,6 +28,12 @@ config RESET_ATH79
->           This enables the ATH79 reset controller driver that supports the
->           AR71xx SoC reset controller.
->
-> +config RESET_BASIC
-> +       bool "Basic Reset Driver"
-> +       help
-> +         This enables a basic single-register reset controller driver that
-> +         supports clearing a single bit in a register.
+>  drivers/acpi/arm64/iort.c | 6 ++++++
+>  drivers/acpi/scan.c       | 4 ++--
+>  2 files changed, 8 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/acpi/arm64/iort.c b/drivers/acpi/arm64/iort.c
+> index c5fecf9..16e101f 100644
+> --- a/drivers/acpi/arm64/iort.c
+> +++ b/drivers/acpi/arm64/iort.c
+> @@ -782,6 +782,12 @@ const struct iommu_ops *iort_iommu_configure(struct device *dev)
+>  	if (err)
+>  		ops = ERR_PTR(err);
+>  
+> +	/* Ignore all other errors apart from EPROBE_DEFER */
+> +	if (IS_ERR(ops) && (PTR_ERR(ops) != -EPROBE_DEFER)) {
+> +		dev_dbg(dev, "Adding to IOMMU failed: %ld\n", PTR_ERR(ops));
+> +		ops = NULL;
+> +	}
 > +
->  config RESET_BERLIN
->         bool "Berlin Reset Driver" if COMPILE_TEST
->         default ARCH_BERLIN
-> diff --git a/drivers/reset/Makefile b/drivers/reset/Makefile
-> index 02a74db94339..e8e8869e098d 100644
-> --- a/drivers/reset/Makefile
-> +++ b/drivers/reset/Makefile
-> @@ -4,6 +4,7 @@ obj-$(CONFIG_ARCH_STI) += sti/
->  obj-$(CONFIG_ARCH_TEGRA) += tegra/
->  obj-$(CONFIG_RESET_A10SR) += reset-a10sr.o
->  obj-$(CONFIG_RESET_ATH79) += reset-ath79.o
-> +obj-$(CONFIG_RESET_BASIC) += reset-basic.o
->  obj-$(CONFIG_RESET_BERLIN) += reset-berlin.o
->  obj-$(CONFIG_RESET_IMX7) += reset-imx7.o
->  obj-$(CONFIG_RESET_LPC18XX) += reset-lpc18xx.o
-> diff --git a/drivers/reset/reset-basic.c b/drivers/reset/reset-basic.c
-> new file mode 100644
-> index 000000000000..62a676de9f62
-> --- /dev/null
-> +++ b/drivers/reset/reset-basic.c
-> @@ -0,0 +1,109 @@
-> +/*
-> + * Copyright 2017 IBM Corperation
-> + *
-> + * Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
-> + *
-> + * This program is free software; you can redistribute it and/or
-> + * modify it under the terms of the GNU General Public License
-> + * as published by the Free Software Foundation; either version
-> + * 2 of the License, or (at your option) any later version.
-> + */
-> +
-> +#include <linux/delay.h>
-> +#include <linux/init.h>
-> +#include <linux/of.h>
-> +#include <linux/of_address.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/regmap.h>
-> +#include <linux/mfd/syscon.h>
-> +#include <linux/reset-controller.h>
-> +
-> +#define to_basic_reset_priv(p)         \
-> +       container_of((p), struct basic_reset_priv, rcdev)
-> +
-> +struct basic_reset_priv {
-> +       struct regmap *regmap;
-> +       struct reset_controller_dev rcdev;
-> +       u32 reg;
-> +};
-> +
-> +static int basic_reset_assert(struct reset_controller_dev *rcdev,
-> +                              unsigned long id)
-> +{
-> +       struct basic_reset_priv *priv = to_basic_reset_priv(rcdev);
-> +       u32 mask = BIT(id);
-> +
-> +       regmap_update_bits(priv->regmap, priv->reg, mask, mask);
-> +
-> +       return 0;
-> +}
-> +
-> +static int basic_reset_deassert(struct reset_controller_dev *rcdev,
-> +                                unsigned long id)
-> +{
-> +       struct basic_reset_priv *priv = to_basic_reset_priv(rcdev);
-> +       u32 mask = BIT(id);
-> +
-> +       regmap_update_bits(priv->regmap, priv->reg, mask, 0);
-> +
-> +       return 0;
-> +}
-> +
-> +static int basic_reset_status(struct reset_controller_dev *rcdev,
-> +                              unsigned long id)
-> +{
-> +       struct basic_reset_priv *priv = to_basic_reset_priv(rcdev);
-> +       u32 mask = BIT(id);
-> +       u32 val;
-> +
-> +       regmap_read(priv->regmap, priv->reg, &val);
-> +
-> +       return !!(val & mask);
-> +}
-> +
-> +static const struct reset_control_ops basic_reset_ops = {
-> +       .assert = basic_reset_assert,
-> +       .deassert = basic_reset_deassert,
-> +       .status = basic_reset_status,
-> +};
-> +
-> +static int basic_reset_probe(struct platform_device *pdev)
-> +{
-> +       struct device_node *parent_np = of_get_parent(pdev->dev.of_node);
-> +       struct basic_reset_priv *priv;
-> +       int ret;
-> +
-> +       priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
-> +       if (!priv)
-> +               return -ENOMEM;
-> +
-> +       priv->regmap = syscon_node_to_regmap(parent_np);
-> +       of_node_put(parent_np);
-> +       if (IS_ERR(priv->regmap))
-> +               return PTR_ERR(priv->regmap);
-> +
-> +       ret = of_property_read_u32(pdev->dev.of_node, "reg", &priv->reg);
-> +       if (ret)
-> +               return ret;
-> +
-> +       priv->rcdev.owner = THIS_MODULE;
-> +       priv->rcdev.ops = &basic_reset_ops;
-> +       priv->rcdev.of_node = pdev->dev.of_node;
-> +       priv->rcdev.nr_resets = 32;
-> +
-> +       return reset_controller_register(&priv->rcdev);
-> +}
-> +
-> +static const struct of_device_id basic_reset_dt_match[] = {
-> +       { .compatible = "reset-basic" },
-> +       { },
-> +};
-> +
-> +static struct platform_driver basic_reset_driver = {
-> +       .probe  = basic_reset_probe,
-> +       .driver = {
-> +               .name = "basic-reset",
-> +               .of_match_table = basic_reset_dt_match,
-> +       },
-> +};
-> +builtin_platform_driver(basic_reset_driver);
-> --
-> 2.11.0
->
+>  	return ops;
+>  }
+>  
+> diff --git a/drivers/acpi/scan.c b/drivers/acpi/scan.c
+> index e39ec7b..3a10d757 100644
+> --- a/drivers/acpi/scan.c
+> +++ b/drivers/acpi/scan.c
+> @@ -1371,8 +1371,8 @@ int acpi_dma_configure(struct device *dev, enum dev_dma_attr attr)
+>  	iort_set_dma_mask(dev);
+>  
+>  	iommu = iort_iommu_configure(dev);
+> -	if (IS_ERR(iommu))
+> -		return PTR_ERR(iommu);
+> +	if (IS_ERR(iommu) && PTR_ERR(iommu) == -EPROBE_DEFER)
+> +		return -EPROBE_DEFER;
+>  
+>  	size = max(dev->coherent_dma_mask, dev->coherent_dma_mask + 1);
+>  	/*
+> 
 
+ACK for the scan.c change and I'm assuming this to go in via ARM64.
 
-
--- 
-With Best Regards,
-Andy Shevchenko
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+Rafael
