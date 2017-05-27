@@ -1,52 +1,188 @@
-From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: Re: [RFC 0/2] Add support for Meson MX "SDIO" MMC driver
-Date: Sat, 27 May 2017 16:25:51 +0200
-Message-ID: <CAFBinCAUEgXZ7PUinrOahpRsg8=m5Um7ju518PiFpqnmPxvQqw@mail.gmail.com>
-References: <20170506171857.16492-1-martin.blumenstingl@googlemail.com>
- <CAPDyKFoYPjB1bjRfFCFT3vuzKgzm6-7L2qgNjxGL392cLDe7uA@mail.gmail.com>
- <CAFBinCDGBZAAx_61eyu1_XM57fX62Mk03TEiO3uTL+i8dfPyZA@mail.gmail.com>
- <CAPDyKFoC-cCEY+n2383W+JgDANbBMFbsU5cyB51-kG4kbLNNcw@mail.gmail.com>
- <CAFBinCDocqqo2GNLb2y1XE0ATTEG6TuqO+EZ_-h8=vuTjngr_Q@mail.gmail.com> <CAD8Lp46oR0ODa4ybVW-rMPki9126My+ymxigZmjGwxPm2y1L3g@mail.gmail.com>
+From: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 2/2] reset: Add basic single-register reset driver
+Date: Sat, 27 May 2017 18:11:16 +0300
+Message-ID: <CAHp75VdXHnyTDJqZ8D+OxbrAXYQE+-sfTzYvfoo8FCe0SS35PA@mail.gmail.com>
+References: <20170526033214.8081-1-joel@jms.id.au> <20170526033214.8081-3-joel@jms.id.au>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <CAD8Lp46oR0ODa4ybVW-rMPki9126My+ymxigZmjGwxPm2y1L3g@mail.gmail.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Daniel Drake <drake@endlessm.com>
-Cc: Ulf Hansson <ulf.hansson@linaro.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kevin Hilman <khilman@baylibre.com>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Carlo Caione <carlo@caione.org>, "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170526033214.8081-3-joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
+Cc: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Daniel,
-
-On Sat, May 27, 2017 at 4:48 AM, Daniel Drake <drake@endlessm.com> wrote:
-> On Thu, May 11, 2017 at 2:44 PM, Martin Blumenstingl
-> <martin.blumenstingl@googlemail.com> wrote:
->> the code-names of the older (32-bit) SoCs (at least the ones which are
->> not too old) all start with Meson X (where X is a number: Meson6,
->> Meson8, Meson8b and Meson8m2), Amlogic's vendor code sometimes calls
->> these "MX" (or Meson MX)
+On Fri, May 26, 2017 at 6:32 AM, Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org> wrote:
+> This driver is a basic single-register reset controller driver that
+> supports clearing a single bit in a register.
 >
-> Just in case it helps you on any future adventures in the Amlogic
-> vendor code: I think this is not quite right. I believe that MX
-> specifically refers to Meson6 and no other SoC generation.
-thanks for that hint - I guess that's due to the marketing name of the
-Meson6 SoCs then (AML8726-MX). do you know if there's any codename
-that includes the Meson6 and Meson8 (including Meson8b and Meson8m2)
-families?
+
+While this makes sense, I'm wondering if there can be generic
+interface for this from which we can derive this one and GPIO-based
+one.
+
+> Signed-off-by: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
+> ---
+>  drivers/reset/Kconfig       |   6 +++
+>  drivers/reset/Makefile      |   1 +
+>  drivers/reset/reset-basic.c | 109 ++++++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 116 insertions(+)
+>  create mode 100644 drivers/reset/reset-basic.c
+>
+> diff --git a/drivers/reset/Kconfig b/drivers/reset/Kconfig
+> index d21c07ccc94e..980cda887dfe 100644
+> --- a/drivers/reset/Kconfig
+> +++ b/drivers/reset/Kconfig
+> @@ -28,6 +28,12 @@ config RESET_ATH79
+>           This enables the ATH79 reset controller driver that supports the
+>           AR71xx SoC reset controller.
+>
+> +config RESET_BASIC
+> +       bool "Basic Reset Driver"
+> +       help
+> +         This enables a basic single-register reset controller driver that
+> +         supports clearing a single bit in a register.
+> +
+>  config RESET_BERLIN
+>         bool "Berlin Reset Driver" if COMPILE_TEST
+>         default ARCH_BERLIN
+> diff --git a/drivers/reset/Makefile b/drivers/reset/Makefile
+> index 02a74db94339..e8e8869e098d 100644
+> --- a/drivers/reset/Makefile
+> +++ b/drivers/reset/Makefile
+> @@ -4,6 +4,7 @@ obj-$(CONFIG_ARCH_STI) += sti/
+>  obj-$(CONFIG_ARCH_TEGRA) += tegra/
+>  obj-$(CONFIG_RESET_A10SR) += reset-a10sr.o
+>  obj-$(CONFIG_RESET_ATH79) += reset-ath79.o
+> +obj-$(CONFIG_RESET_BASIC) += reset-basic.o
+>  obj-$(CONFIG_RESET_BERLIN) += reset-berlin.o
+>  obj-$(CONFIG_RESET_IMX7) += reset-imx7.o
+>  obj-$(CONFIG_RESET_LPC18XX) += reset-lpc18xx.o
+> diff --git a/drivers/reset/reset-basic.c b/drivers/reset/reset-basic.c
+> new file mode 100644
+> index 000000000000..62a676de9f62
+> --- /dev/null
+> +++ b/drivers/reset/reset-basic.c
+> @@ -0,0 +1,109 @@
+> +/*
+> + * Copyright 2017 IBM Corperation
+> + *
+> + * Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
+> + *
+> + * This program is free software; you can redistribute it and/or
+> + * modify it under the terms of the GNU General Public License
+> + * as published by the Free Software Foundation; either version
+> + * 2 of the License, or (at your option) any later version.
+> + */
+> +
+> +#include <linux/delay.h>
+> +#include <linux/init.h>
+> +#include <linux/of.h>
+> +#include <linux/of_address.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/regmap.h>
+> +#include <linux/mfd/syscon.h>
+> +#include <linux/reset-controller.h>
+> +
+> +#define to_basic_reset_priv(p)         \
+> +       container_of((p), struct basic_reset_priv, rcdev)
+> +
+> +struct basic_reset_priv {
+> +       struct regmap *regmap;
+> +       struct reset_controller_dev rcdev;
+> +       u32 reg;
+> +};
+> +
+> +static int basic_reset_assert(struct reset_controller_dev *rcdev,
+> +                              unsigned long id)
+> +{
+> +       struct basic_reset_priv *priv = to_basic_reset_priv(rcdev);
+> +       u32 mask = BIT(id);
+> +
+> +       regmap_update_bits(priv->regmap, priv->reg, mask, mask);
+> +
+> +       return 0;
+> +}
+> +
+> +static int basic_reset_deassert(struct reset_controller_dev *rcdev,
+> +                                unsigned long id)
+> +{
+> +       struct basic_reset_priv *priv = to_basic_reset_priv(rcdev);
+> +       u32 mask = BIT(id);
+> +
+> +       regmap_update_bits(priv->regmap, priv->reg, mask, 0);
+> +
+> +       return 0;
+> +}
+> +
+> +static int basic_reset_status(struct reset_controller_dev *rcdev,
+> +                              unsigned long id)
+> +{
+> +       struct basic_reset_priv *priv = to_basic_reset_priv(rcdev);
+> +       u32 mask = BIT(id);
+> +       u32 val;
+> +
+> +       regmap_read(priv->regmap, priv->reg, &val);
+> +
+> +       return !!(val & mask);
+> +}
+> +
+> +static const struct reset_control_ops basic_reset_ops = {
+> +       .assert = basic_reset_assert,
+> +       .deassert = basic_reset_deassert,
+> +       .status = basic_reset_status,
+> +};
+> +
+> +static int basic_reset_probe(struct platform_device *pdev)
+> +{
+> +       struct device_node *parent_np = of_get_parent(pdev->dev.of_node);
+> +       struct basic_reset_priv *priv;
+> +       int ret;
+> +
+> +       priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
+> +       if (!priv)
+> +               return -ENOMEM;
+> +
+> +       priv->regmap = syscon_node_to_regmap(parent_np);
+> +       of_node_put(parent_np);
+> +       if (IS_ERR(priv->regmap))
+> +               return PTR_ERR(priv->regmap);
+> +
+> +       ret = of_property_read_u32(pdev->dev.of_node, "reg", &priv->reg);
+> +       if (ret)
+> +               return ret;
+> +
+> +       priv->rcdev.owner = THIS_MODULE;
+> +       priv->rcdev.ops = &basic_reset_ops;
+> +       priv->rcdev.of_node = pdev->dev.of_node;
+> +       priv->rcdev.nr_resets = 32;
+> +
+> +       return reset_controller_register(&priv->rcdev);
+> +}
+> +
+> +static const struct of_device_id basic_reset_dt_match[] = {
+> +       { .compatible = "reset-basic" },
+> +       { },
+> +};
+> +
+> +static struct platform_driver basic_reset_driver = {
+> +       .probe  = basic_reset_probe,
+> +       .driver = {
+> +               .name = "basic-reset",
+> +               .of_match_table = basic_reset_dt_match,
+> +       },
+> +};
+> +builtin_platform_driver(basic_reset_driver);
+> --
+> 2.11.0
+>
 
 
-> That said, if both MesonX (==Meson6) and Meson8/Meson8b all share the
-> same driver code, having this driver named "mx" makes sense to me,
-> especially because it helps distinguish from the GX* chips which
-> indeed have something rather different.
-from what I could read in Amlogic's GPL kernel sources the MMC
-controller IP is also used in Meson6 SoCs (and possibly even older
-generations). that said, I don't have any Meson6 hardware, which is
-why I didn't add the "amlogic,meson6-sdio" binding.
-so I guess using the "mx" name here should be OK (nevertheless, I'll
-make sure that I don't use "MX" for anything that's
-Meson8/Meson8b/Meson8m2 specific)
 
-
-Regards,
-Martin
+-- 
+With Best Regards,
+Andy Shevchenko
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
