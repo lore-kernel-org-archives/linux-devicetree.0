@@ -1,65 +1,28 @@
-From: Guodong Xu <guodong.xu@linaro.org>
-Subject: Re: [PATCH 2/6] mfd: hi6421-pmic: move hi6421_regmap_config
- definition to header file
-Date: Sat, 27 May 2017 11:08:29 +0800
-Message-ID: <CAFGCpxxiwevKqJ19v7fFe6SA9HUbDsdoiL3nOKrkRLmg2=U2xw@mail.gmail.com>
-References: <20170526063518.21246-1-guodong.xu@linaro.org> <20170526063518.21246-3-guodong.xu@linaro.org>
- <CAK8P3a0maxQdwLMMwEnYgmMHRHDRUaeYRb5JM0PtRbWopeHjUw@mail.gmail.com>
+From: Andy Gross <andy.gross@linaro.org>
+Subject: Re: [RFC 2/3] of: reserved_mem: Accessor for acquiring reserved_mem
+Date: Fri, 26 May 2017 22:37:33 -0500
+Message-ID: <20170527033733.GB19546@hector.attlocal.net>
+References: <20170422173519.5782-1-bjorn.andersson@linaro.org>
+ <20170422173519.5782-2-bjorn.andersson@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAK8P3a0maxQdwLMMwEnYgmMHRHDRUaeYRb5JM0PtRbWopeHjUw@mail.gmail.com>
+Content-Disposition: inline
+In-Reply-To: <20170422173519.5782-2-bjorn.andersson@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Wei Xu <xuwei5@hisilicon.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Kevin Hilman <khilman@baylibre.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Olof Johansson <olof@lixom.net>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Riku Voipio <riku.voipio@linaro.org>, Thierry Reding <treding@nvidia.com>, Krzysztof Kozlowski <krzk@kernel.org>, Eric Anholt <eric@anholt.net>, damm+renesas@opensource.se, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Linus Walleij <linus.walleij@l>
+To: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: David Brown <david.brown@linaro.org>, Frank Rowand <frowand.list@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 26, 2017 at 4:33 PM, Arnd Bergmann <arnd@arndb.de> wrote:
-> On Fri, May 26, 2017 at 8:35 AM, Guodong Xu <guodong.xu@linaro.org> wrote:
->> Move hi6421_regmap_config definition from c code to common header:
->>  - include/linux/mfd/hi6421-pmic.h
->>
->> This is to improve code re-use for upcoming hi6421 series of MFD driver.
->>
->> Signed-off-by: Guodong Xu <guodong.xu@linaro.org>
->
->> diff --git a/include/linux/mfd/hi6421-pmic.h b/include/linux/mfd/hi6421-pmic.h
->> index 587273e..f4674ff 100644
->> --- a/include/linux/mfd/hi6421-pmic.h
->> +++ b/include/linux/mfd/hi6421-pmic.h
->> @@ -38,4 +38,10 @@ struct hi6421_pmic {
->>         struct regmap           *regmap;
->>  };
->>
->> +static const struct regmap_config hi6421_regmap_config = {
->> +       .reg_bits = 32,
->> +       .reg_stride = 4,
->> +       .val_bits = 8,
->> +       .max_register = HI6421_REG_TO_BUS_ADDR(HI6421_REG_MAX),
->> +};
->>  #endif         /* __HI6421_PMIC_H */
->
-> Header files should not have static variables in general, it will cause warnings
-> about unused variables when you include the header from another file
-> (depending on compiler version and warning options, I think older gcc
-> versions don't warn about this, but clang and latest gcc do).
->
+On Sat, Apr 22, 2017 at 10:35:18AM -0700, Bjorn Andersson wrote:
+> In some cases drivers referencing a reserved-memory region might want to
+> remap the entire region, but when defining the reserved-memory by "size"
+> the client driver has no means to know the associated base address of
+> the reserved memory region.
+> 
+> This patch adds an accessor for such drivers to acquire a handle to
+> their associated reserved-memory for this purpose.
+> 
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
-I will fix that.
-
-> How about adding the new code into the existing
-> drivers/mfd/hi6421-pmic-core.c file, and splitting out the part that differs
-> (the regmap_update_bits is the only difference I see)
-
-Yes, indeed.
-
-> into a callback
-> that you reference through the of_device_id->data pointer?
->
-
-Thanks Arnd. I will look into this. I'll drop hi6421v530-pmic.c and
-resend this patchset.
-
--Guodong
-
->         Arnd
+Reviewed-by: Andy Gross <andy.gross@linaro.org>
