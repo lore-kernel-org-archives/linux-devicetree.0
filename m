@@ -1,72 +1,108 @@
-From: Guodong Xu <guodong.xu@linaro.org>
+From: Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Subject: Re: [PATCH 4/6] regulator: hi6421v530: add driver for hi6421v530
  voltage regulator
-Date: Sat, 27 May 2017 17:42:01 +0800
-Message-ID: <CAFGCpxw3orr+4OO2_YVj2DrAJsvo9O+WiGeVv6GAk26HLzAnRw@mail.gmail.com>
-References: <20170526063518.21246-1-guodong.xu@linaro.org>
- <20170526063518.21246-5-guodong.xu@linaro.org>
- <CABxcv=kP7XLDhUifwDBEfnayfgjGJFf7v9kUkPS6pcLKiaLP-g@mail.gmail.com>
+Date: Sat, 27 May 2017 17:47:25 +0800
+Message-ID: <CAFGCpxyc6YnXQQk5TFzh5b7mByQuFg5h+nYfPYyJUdjvforYHA@mail.gmail.com>
+References: <20170526063518.21246-1-guodong.xu@linaro.org> <20170526063518.21246-5-guodong.xu@linaro.org>
+ <20170526113822.xsmk5lsrvzmqyljm@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CABxcv=kP7XLDhUifwDBEfnayfgjGJFf7v9kUkPS6pcLKiaLP-g@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Javier Martinez Canillas <javier@dowhile0.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Catalin Marinas <catalin.marinas@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Will Deacon <will.deacon@arm.com>, Linux Kernel <linux-kernel@vger.kernel.org>, Masahiro Yamada <yamada.masahiro@socionext.com>, Krzysztof Kozlowski <krzk@kernel.org>, Lee Jones <lee.jones@linaro.org>, Kevin Hilman <khilman@baylibre.com>, damm+renesas@opensource.se, "xuwei (O)" <xuwei5@hisilicon.com>, Thierry Reding <treding@nvidia.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Mark Brown <broonie@kernel.org>, Gregory Clement <gregory.clement@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Eric Anholt <eric@anholt.net>, Riku Voipio <riku.voipio@lina>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170526113822.xsmk5lsrvzmqyljm-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "xuwei (O)" <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, Riku Voipio <riku.voipio-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, damm+renesas-yzvPICuk2ACczHhG9Qg4qA@public.gmane.org, Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.wallei>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 26, 2017 at 8:13 PM, Javier Martinez Canillas
-<javier@dowhile0.org> wrote:
-> Hello Guodong,
+On Fri, May 26, 2017 at 7:38 PM, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> On Fri, May 26, 2017 at 02:35:16PM +0800, Guodong Xu wrote:
 >
-> On Fri, May 26, 2017 at 8:35 AM, Guodong Xu <guodong.xu@linaro.org> wrote:
->> From: Wang Xiaoyin <hw.wangxiaoyin@hisilicon.com>
->>
+> Overall this driver needs quite a lot of modernization, it's at least a
+> couple of years out of date in how it's using the framework - there's
+> barely any use of helpers.  It does look like it should be fairly easy
+> to get it up to date though, it's mostly going to be a case of deleting
+> code that's reimplementing helpers rather than anything else.
 >
-> [snip]
->
->>
->> +config REGULATOR_HI6421V530
->> +       tristate "HiSilicon Hi6421v530 PMIC voltage regulator support"
->
-> The Kconfig symbol is tristate so the driver can be built as a module...
->
->> +
->> +static struct platform_driver hi6421v530_regulator_driver = {
->> +       .driver = {
->> +               .name   = "hi6421v530-regulator",
->> +       },
->> +       .probe  = hi6421v530_regulator_probe,
+>> +/*
+>> + * struct hi6421c530_regulator_pdata - Hi6421V530 regulator data
+>> + * of platform device.
+>> + * @lock: mutex to serialize regulator enable
+>> + */
+>> +struct hi6421v530_regulator_pdata {
+>> +     struct mutex lock;
 >> +};
->> +module_platform_driver(hi6421v530_regulator_driver);
 >
-> ... but the driver doesn't have a platform device ID table nor export
-> it as a module alias using MODULE_DEVICE_TABLE().
+> This isn't platform data so it probably shouldn't be called pdata.  I
+> also can't tell what the lock is protecting, every use seems to be a
+> call to regmap_update_bits() which is atomic anyway - could we just drop
+> the whole thing?
+
+In original hi6421 chip, this lock can protect from enabling multiple
+LDOs simultaneously. Because it cannot afford such surging current.
+
+I will double check whether this is still the case for hi6421v530. If
+not, I will remove the whole thing.
+
+>
+>> +static int hi6421v530_regulator_enable(struct regulator_dev *rdev)
+>> +{
+>> +     struct hi6421v530_regulator_pdata *pdata;
+>> +     int ret = 0;
+>> +
+>> +     pdata = dev_get_drvdata(rdev->dev.parent);
+>> +     mutex_lock(&pdata->lock);
+>> +
+>> +     ret = regmap_update_bits(rdev->regmap, rdev->desc->enable_reg,
+>> +                     rdev->desc->enable_mask,
+>> +                     1 << (ffs(rdev->desc->enable_mask) - 1));
+>> +
+>> +     mutex_unlock(&pdata->lock);
+>> +     return ret;
+>> +}
+>
+> This looks like it should be able to use the regmap helpers for all the
+> enable operations rather than open coding.
 >
 
-I will add that.
-Thanks for your review.
+
+>> +static int hi6421v530_regulator_set_voltage(struct regulator_dev *rdev,
+>> +                                             unsigned int sel)
+>> +{
+>> +     struct hi6421v530_regulator_pdata *pdata;
+>> +     int ret = 0;
+>> +
+>> +     pdata = dev_get_drvdata(rdev->dev.parent);
+>> +     mutex_lock(&pdata->lock);
+>> +
+>> +     ret = regmap_update_bits(rdev->regmap, rdev->desc->vsel_reg,
+>> +                             rdev->desc->vsel_mask,
+>> +                             sel << (ffs(rdev->desc->vsel_mask) - 1));
+>
+> Same for all the voltage operations :(
+>
+>> +     rdev->constraints->valid_modes_mask = info->mode_mask;
+>> +     rdev->constraints->valid_ops_mask |=
+>> +                     REGULATOR_CHANGE_VOLTAGE | REGULATOR_CHANGE_MODE;
+>
+> The driver should *never* modify constraints, it's up to the machine
+> integration to say what can be supported on a given board.
+>
+>> +     np = of_get_child_by_name(dev->parent->of_node, "regulators");
+>> +     if (!np)
+>> +             return -ENODEV;
+>> +
+>> +     ret = of_regulator_match(dev, np,
+>> +                              hi6421v530_regulator_match,
+>> +                              ARRAY_SIZE(hi6421v530_regulator_match));
+>
+> Don't open code this, use of_match and regulators_node.
+
+I will fix that.
+
+Thanks Mark for your review.
 
 -Guodong
-
-> That means that if built as a module, it won't be autoloaded when the
-> "hi6421v530-regulator" device is registered by the MFD driver.
->
->> +
->> +MODULE_AUTHOR("Wang Xiaoyin <hw.wangxiaoyin@hisilicon.com>");
->> +MODULE_DESCRIPTION("Hi6421v530 regulator driver");
->> +MODULE_LICENSE("GPL v2");
->
-> Alternative you can add a MODULE_ALIAS().
->
-> Best regards,
-> Javier
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
