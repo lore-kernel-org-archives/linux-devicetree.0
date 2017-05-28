@@ -1,222 +1,129 @@
-From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2] iio: proximity: as3935: noise detection + threshold
- changes
-Date: Sun, 28 May 2017 16:58:30 +0100
-Message-ID: <20170528165830.3878c05c@kernel.org>
-References: <20170525055229.11659-1-matt.ranostay@konsulko.com>
+From: Heiner Kallweit <hkallweit1@gmail.com>
+Subject: Re: [PATCH v2 6/6] pintrl: meson: add support for GPIO interrupts
+Date: Sun, 28 May 2017 18:01:46 +0200
+Message-ID: <1651f464-c0ad-4937-f28b-f49ad60c6248@gmail.com>
+References: <36164ed8-aa59-2a77-b7fc-9adce03a2fc1@gmail.com>
+ <dc23b800-fe69-8143-6367-d3cd801cd6db@gmail.com>
+ <5e6d39fa-8f40-8233-6480-cb8306a4427a@baylibre.com>
+ <64a10dd2-a969-0251-b92f-3a1c40533373@gmail.com>
+ <4954c4b6-3cb7-3f2e-49dd-9a92359ae6e3@baylibre.com>
+ <fbaf536e-3416-3c4a-4902-05b56783f9c2@gmail.com>
+ <1494976589.2728.6.camel@baylibre.com>
+ <3dccae17-f811-bc26-e125-7ff3f0bffa7d@gmail.com>
+ <1495528690.2344.10.camel@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170525055229.11659-1-matt.ranostay-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Matt Ranostay <matt.ranostay-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1495528690.2344.10.camel@baylibre.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Jerome Brunet <jbrunet@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>, Mark Rutland <mark.rutland@arm.com>, Marc Zyngier <marc.zyngier@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Kevin Hilman <khilman@baylibre.com>, Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh@kernel.org>
+Cc: Thierry Reding <treding@nvidia.com>, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, linux-amlogic@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 24 May 2017 22:52:29 -0700
-Matt Ranostay <matt.ranostay-OWPKS81ov/FWk0Htik3J/w@public.gmane.org> wrote:
-
-> Most applications are too noisy to allow the default noise and
-> watchdog settings, and thus need to be configurable via DT
-> properties.
+Am 23.05.2017 um 10:38 schrieb Jerome Brunet:
+> On Wed, 2017-05-17 at 22:36 +0200, Heiner Kallweit wrote:
+>> Am 17.05.2017 um 01:16 schrieb Jerome Brunet:
+>>> On Tue, 2017-05-16 at 20:31 +0200, Heiner Kallweit wrote:
 > 
-> Also default settings to POR defaults on a reset, and register
-> distuber interrupts as noise since it prevents proper usage.
+> [snip]
 > 
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Signed-off-by: Matt Ranostay <matt.ranostay-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-I wonder if there are many other devices where this sort of
-feature is relevant.  Anyone else come across any?
-
-I suppose if we need to modify the ABI for any that show up
-in future, it shouldn't be too hard to maintain this one
-for backwards compatibility.
-
-Anyhow, new devicetree bindings so I'll give Rob / Mark time
-to have a chance to look at it.
-My immediate thought is that you might be able to do something
-a little more user (i.e. devicetree writer) friendly than
-just using the register value...
-
-I see there are values, but it depends on whether the device
-is in 'indoor mode' or 'outdoor mode' (which are just gain
-settings?).  You could just use them though.
-
-Given the gain is userspace controlled, and seems to effect
-the meaning of this setting, is it valid to just put it
-in the devicetree?
-
-Jonathan
-> ---
+>>>
+>>> Maybe you missed it in our previous discussion with Linus but, no you can't
+>>> create mapping in gpio_to_irq. This callback is fast and creating mappings
+>>> might
+>>> sleep because of the irq_domain mutex
+>>>
+>>> https://patchwork.ozlabs.org/patch/684208/
+>>>
+>>
+>> My comment was misunderstandable. What I meant was that a driver doesn't have
+>> to
+>> use gpio_to_irq to request an interrupt, this can also be done via DT.
+>>
 > 
-> Changes from v1:
-> * Add documentation for noise_level_tripped attribute
-> * Broke out spi-max-frequency to another patchset
+> If you don't provide gpio_to_irq, you won't support the drivers which only
+> request a gpio through DT (because they need to read the pin state) and later
+> request an irq from it (to get an event and avoid polling)
 > 
->  .../ABI/testing/sysfs-bus-iio-proximity-as3935     |  8 ++++
->  .../devicetree/bindings/iio/proximity/as3935.txt   |  5 +++
->  drivers/iio/proximity/as3935.c                     | 43 ++++++++++++++++++++--
->  3 files changed, 53 insertions(+), 3 deletions(-)
+> That's a fairly common use-case. IMHO, this callback should be implemented by
+> the gpio controller, when it is an interrupt controller.
 > 
-> diff --git a/Documentation/ABI/testing/sysfs-bus-iio-proximity-as3935 b/Documentation/ABI/testing/sysfs-bus-iio-proximity-as3935
-> index 33e96f740639..147d4e8a1403 100644
-> --- a/Documentation/ABI/testing/sysfs-bus-iio-proximity-as3935
-> +++ b/Documentation/ABI/testing/sysfs-bus-iio-proximity-as3935
-> @@ -14,3 +14,11 @@ Description:
->  		Show or set the gain boost of the amp, from 0-31 range.
->  		18 = indoors (default)
->  		14 = outdoors
-> +
-> +What		/sys/bus/iio/devices/iio:deviceX/noise_level_tripped
-> +Date:		May 2017
-> +KernelVersion:	4.13
-> +Contact:	Matt Ranostay <matt.ranostay-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-> +Description:
-> +		When 1 the noise level is over the trip level and not reporting
-> +		valid data
-> diff --git a/Documentation/devicetree/bindings/iio/proximity/as3935.txt b/Documentation/devicetree/bindings/iio/proximity/as3935.txt
-> index ae23dd8da736..0b8a7ec1d3dc 100644
-> --- a/Documentation/devicetree/bindings/iio/proximity/as3935.txt
-> +++ b/Documentation/devicetree/bindings/iio/proximity/as3935.txt
-> @@ -15,6 +15,10 @@ Optional properties:
->  	- ams,tuning-capacitor-pf: Calibration tuning capacitor stepping
->  	  value 0 - 120pF. This will require using the calibration data from
->  	  the manufacturer.
-> +	- ams,nflwdth: Set the noise and watchdog threshold register on
-> +	  startup. This will need to set according to the noise from the
-> +	  MCU board, and possibly the local environment. Refer to the
-> +	  datasheet for the threshold settings.
->  
->  Example:
->  
-> @@ -25,4 +29,5 @@ as3935@0 {
->  	interrupt-parent = <&gpio1>;
->  	interrupts = <16 1>;
->  	ams,tuning-capacitor-pf = <80>;
-> +	ams,nflwdth = <0x44>;
->  };
-> diff --git a/drivers/iio/proximity/as3935.c b/drivers/iio/proximity/as3935.c
-> index aa4df0dcc8c9..ec2f40e0791c 100644
-> --- a/drivers/iio/proximity/as3935.c
-> +++ b/drivers/iio/proximity/as3935.c
-> @@ -39,8 +39,12 @@
->  #define AS3935_AFE_GAIN_MAX	0x1F
->  #define AS3935_AFE_PWR_BIT	BIT(0)
->  
-> +#define AS3935_NFLWDTH		0x01
-> +#define AS3935_NFLWDTH_MASK	0x7f
-> +
->  #define AS3935_INT		0x03
->  #define AS3935_INT_MASK		0x0f
-> +#define AS3935_DISTURB_INT	BIT(2)
->  #define AS3935_EVENT_INT	BIT(3)
->  #define AS3935_NOISE_INT	BIT(0)
->  
-> @@ -48,6 +52,7 @@
->  #define AS3935_DATA_MASK	0x3F
->  
->  #define AS3935_TUNE_CAP		0x08
-> +#define AS3935_DEFAULTS		0x3C
->  #define AS3935_CALIBRATE	0x3D
->  
->  #define AS3935_READ_DATA	BIT(14)
-> @@ -62,7 +67,9 @@ struct as3935_state {
->  	struct mutex lock;
->  	struct delayed_work work;
->  
-> +	unsigned long noise_tripped;
->  	u32 tune_cap;
-> +	u32 nflwdth_reg;
->  	u8 buffer[16]; /* 8-bit data + 56-bit padding + 64-bit timestamp */
->  	u8 buf[2] ____cacheline_aligned;
->  };
-> @@ -145,12 +152,29 @@ static ssize_t as3935_sensor_sensitivity_store(struct device *dev,
->  	return len;
->  }
->  
-> +static ssize_t as3935_noise_level_tripped_show(struct device *dev,
-> +					struct device_attribute *attr,
-> +					char *buf)
-> +{
-> +	struct as3935_state *st = iio_priv(dev_to_iio_dev(dev));
-> +	int ret;
-> +
-> +	mutex_lock(&st->lock);
-> +	ret = sprintf(buf, "%d\n", !time_after(jiffies, st->noise_tripped + HZ));
-> +	mutex_unlock(&st->lock);
-> +
-> +	return ret;
-> +}
-> +
->  static IIO_DEVICE_ATTR(sensor_sensitivity, S_IRUGO | S_IWUSR,
->  	as3935_sensor_sensitivity_show, as3935_sensor_sensitivity_store, 0);
->  
-> +static IIO_DEVICE_ATTR(noise_level_tripped, S_IRUGO,
-> +	as3935_noise_level_tripped_show, NULL, 0);
->  
->  static struct attribute *as3935_attributes[] = {
->  	&iio_dev_attr_sensor_sensitivity.dev_attr.attr,
-> +	&iio_dev_attr_noise_level_tripped.dev_attr.attr,
->  	NULL,
->  };
->  
-> @@ -246,7 +270,11 @@ static void as3935_event_work(struct work_struct *work)
->  	case AS3935_EVENT_INT:
->  		iio_trigger_poll_chained(st->trig);
->  		break;
-> +	case AS3935_DISTURB_INT:
->  	case AS3935_NOISE_INT:
-> +		mutex_lock(&st->lock);
-> +		st->noise_tripped = jiffies;
-> +		mutex_unlock(&st->lock);
->  		dev_warn(&st->spi->dev, "noise level is too high\n");
->  		break;
->  	}
-> @@ -269,15 +297,14 @@ static irqreturn_t as3935_interrupt_handler(int irq, void *private)
->  
->  static void calibrate_as3935(struct as3935_state *st)
->  {
-> -	/* mask disturber interrupt bit */
-> -	as3935_write(st, AS3935_INT, BIT(5));
-> -
-> +	as3935_write(st, AS3935_DEFAULTS, 0x96);
->  	as3935_write(st, AS3935_CALIBRATE, 0x96);
->  	as3935_write(st, AS3935_TUNE_CAP,
->  		BIT(5) | (st->tune_cap / TUNE_CAP_DIV));
->  
->  	mdelay(2);
->  	as3935_write(st, AS3935_TUNE_CAP, (st->tune_cap / TUNE_CAP_DIV));
-> +	as3935_write(st, AS3935_NFLWDTH, st->nflwdth_reg);
->  }
->  
->  #ifdef CONFIG_PM_SLEEP
-> @@ -370,6 +397,15 @@ static int as3935_probe(struct spi_device *spi)
->  		return -EINVAL;
->  	}
->  
-> +	ret = of_property_read_u32(np,
-> +			"ams,nflwdth", &st->nflwdth_reg);
-> +	if (!ret && st->nflwdth_reg > AS3935_NFLWDTH_MASK) {
-> +		dev_err(&spi->dev,
-> +			"invalid nflwdth setting of %d\n",
-> +			st->nflwdth_reg);
-> +		return -EINVAL;
-> +	}
-> +
->  	indio_dev->dev.parent = &spi->dev;
->  	indio_dev->name = spi_get_device_id(spi)->name;
->  	indio_dev->channels = as3935_channels;
-> @@ -384,6 +420,7 @@ static int as3935_probe(struct spi_device *spi)
->  		return -ENOMEM;
->  
->  	st->trig = trig;
-> +	st->noise_tripped = jiffies - HZ;
->  	trig->dev.parent = indio_dev->dev.parent;
->  	iio_trigger_set_drvdata(trig, indio_dev);
->  	trig->ops = &iio_interrupt_trigger_ops;
+gio_to_irq is provided by the GPIOLIB_IRQCHIP core. So fortunately we don't
+have to take care.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> [snip]
+> 
+>>>> I think you are onto something. As I told you previously, the problem was
+>>>> to
+>>> create the mappings in pinctrl w/o allocating the parent. I struggled with
+>>> that
+>>> back in November and I had no time to really get back to it since.
+>>>
+>>> Creating domains in each gpio controller, w/ all the mapping created at
+>>> startup,
+>>>   stacked to the domain provided by the driver/irqchip would solve the
+>>> problem.
+>>>
+>>> We would just have to call find_mapping in gpio_to_irq, which is fine and
+>>> allocate the parent irq in the request_ressource callback.
+>>>
+>>
+>> In request_resource we don't know the irq type yet (and therefore whether we
+>> need
+>> one or wo parent interrupts). IMHO we can't get completely rid of allocating
+>> parents in set_type.
+> 
+> Yes you can. The HW does *not* support IRQ_BOTH on an irq line. You are trying
+> to come up with a SW workaround to get this feature. W/O this workaround, there
+> no reason to allocate a parent irq in set_type.
+> At this point, no one has come up with a clean solution to add this feature to
+> the meson-gpio-irq device.
+> Maybe evolutions in the irq framework will allow this cleanly in the future, I
+> don't think this is the case right now. 
+> 
+Sure, it's a SW workaround. However working on a solution not supporting
+IRQ_TYPE_EDGE_BOTH I'd consider wasted energy (YMMV).
+Waiting for a future irq framework extension most likely is no solution as we
+need a solution before production of Amlogic Meson chips ends ..
+
+I will come up with a new version of the patch set addressing (most of) the
+review comments. Then we have a updated basis for further discussion.
+
+Thanks for the review / remarks.
+
+> [snip]
+>>
+>>>> And all I had to do is implementing one irq_chip and changing one line in
+>>>> the
+>>>> existing
+>>>> pinctrl driver.
+>>>> Whilst I have to admit that e.g. calling request_irq for a parent irq from
+>>>> the
+>>>> irq_set_type
+>>>> callback may be something people find ugly and hacky.
+>>>>
+>>>
+>>> The fact is that the HW does not directly support IRQ_EDGE_BOTH. Yes, it
+>>> would
+>>> be nice to find a way to support it anyway. There two possibilities for it:
+>>> * Change the change the edge type depending on the next expected edge: Marc
+>>> already stated that he is firmly against that. It is indeed not very robust
+>>> * Allocate and deallocate additional parent irq to get secondary irq in
+>>> set_type: This indeed looks hacky, I'd like to get the view of irq
+>>> maintainers
+>>> on this.
+>>>
+>>
+>> Support for IRQ_TYPE_EDGE_BOTH I'd consider a mandatory feature. It's needed
+>> e.g. by the SD card detection (drivers/mmc/slot-gpio.c).
+>>
+> "You'd consider" maybe, but the fact is that it is not mandatory. Having irq
+> based card detect (or buttons, or jack insert, or whatever) is probably more
+> elegant, but the polled version also works well. Elegant and mandatory are not
+> the same things
+> 
+> 
+> 
+> 
+
