@@ -1,315 +1,338 @@
-From: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
-Subject: [PATCH v3 10/16] reset: Add a reset controller driver for the Lantiq XWAY based SoCs
-Date: Sun, 28 May 2017 20:40:00 +0200
-Message-ID: <20170528184006.31668-11-hauke@hauke-m.de>
-References: <20170528184006.31668-1-hauke@hauke-m.de>
+From: Heiner Kallweit <hkallweit1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH RfC v4 2/6] irqchip: add Amlogic Meson GPIO irqchip driver
+Date: Sun, 28 May 2017 21:11:08 +0200
+Message-ID: <b23d0417-a43b-a28c-3d9f-2be9bf6623f1@gmail.com>
+References: <49ab677f-3165-d6f5-75f5-a963879e8ecf@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170528184006.31668-1-hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
+In-Reply-To: <49ab677f-3165-d6f5-75f5-a963879e8ecf-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
-Cc: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org, john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, hauke.mehrtens-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
+To: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Add a driver supporting the GPIO interrupt controller on certain
+Amlogic meson SoC's.
 
-The reset controllers (on xRX200 and newer SoCs have two of them) are
-provided by the RCU module. This was initially implemented as a simple
-reset controller. However, the RCU module provides more functionality
-(ethernet GPHYs, USB PHY, etc.), which makes it a MFD device.
-The old reset controller driver implementation from
-arch/mips/lantiq/xway/reset.c did not honor this fact.
-
-For some devices the request and the status bits are different.
-
-Signed-off-by: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
-Cc: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Signed-off-by: Heiner Kallweit <hkallweit1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- .../devicetree/bindings/reset/lantiq,reset.txt     |  30 +++
- drivers/reset/Kconfig                              |   6 +
- drivers/reset/Makefile                             |   1 +
- drivers/reset/reset-lantiq.c                       | 205 +++++++++++++++++++++
- 4 files changed, 242 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/reset/lantiq,reset.txt
- create mode 100644 drivers/reset/reset-lantiq.c
+ drivers/irqchip/Kconfig          |   3 +
+ drivers/irqchip/Makefile         |   1 +
+ drivers/irqchip/irq-meson-gpio.c | 280 +++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 284 insertions(+)
+ create mode 100644 drivers/irqchip/irq-meson-gpio.c
 
-diff --git a/Documentation/devicetree/bindings/reset/lantiq,reset.txt b/Documentation/devicetree/bindings/reset/lantiq,reset.txt
-new file mode 100644
-index 000000000000..00cc3d4c68c4
---- /dev/null
-+++ b/Documentation/devicetree/bindings/reset/lantiq,reset.txt
-@@ -0,0 +1,30 @@
-+Lantiq XWAY SoC RCU reset controller binding
-+============================================
-+
-+This binding describes a reset-controller found on the RCU module on Lantiq
-+XWAY SoCs.
-+
-+
-+-------------------------------------------------------------------------------
-+Required properties:
-+- compatible		: Should be one of
-+				"lantiq,reset-danube"
-+				"lantiq,reset-xrx200"
-+- regmap		: A phandle to the RCU syscon
-+- offset-set		: Offset of the reset set register
-+- offset-status		: Offset of the reset status register
-+- #reset-cells		: Specifies the number of cells needed to encode the
-+			  reset line, should be 2.
-+			  The first cell takes the reset set bit and the
-+			  second cell takes the status bit.
-+
-+-------------------------------------------------------------------------------
-+Example for the reset-controllers on the xRX200 SoCs:
-+	reset0: reset-controller@0 {
-+		compatible = "lantiq,reset-xrx200";
-+
-+		regmap = <&rcu0>;
-+		offset-set = <0x10>;
-+		offset-status = <0x14>;
-+		#reset-cells = <2>;
-+	};
-diff --git a/drivers/reset/Kconfig b/drivers/reset/Kconfig
-index d21c07ccc94e..1742c2293bc3 100644
---- a/drivers/reset/Kconfig
-+++ b/drivers/reset/Kconfig
-@@ -41,6 +41,12 @@ config RESET_IMX7
+diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
+index 478f8ace..6bffe733 100644
+--- a/drivers/irqchip/Kconfig
++++ b/drivers/irqchip/Kconfig
+@@ -301,3 +301,6 @@ config QCOM_IRQ_COMBINER
  	help
- 	  This enables the reset controller driver for i.MX7 SoCs.
- 
-+config RESET_LANTIQ
-+	bool "Lantiq XWAY Reset Driver" if COMPILE_TEST
-+	default SOC_TYPE_XWAY
-+	help
-+	  This enables the reset controller driver for Lantiq / Intel XWAY SoCs.
+ 	  Say yes here to add support for the IRQ combiner devices embedded
+ 	  in Qualcomm Technologies chips.
 +
- config RESET_LPC18XX
- 	bool "LPC18xx/43xx Reset Driver" if COMPILE_TEST
- 	default ARCH_LPC18XX
-diff --git a/drivers/reset/Makefile b/drivers/reset/Makefile
-index 02a74db94339..112dba1db6b9 100644
---- a/drivers/reset/Makefile
-+++ b/drivers/reset/Makefile
-@@ -6,6 +6,7 @@ obj-$(CONFIG_RESET_A10SR) += reset-a10sr.o
- obj-$(CONFIG_RESET_ATH79) += reset-ath79.o
- obj-$(CONFIG_RESET_BERLIN) += reset-berlin.o
- obj-$(CONFIG_RESET_IMX7) += reset-imx7.o
-+obj-$(CONFIG_RESET_LANTIQ) += reset-lantiq.o
- obj-$(CONFIG_RESET_LPC18XX) += reset-lpc18xx.o
- obj-$(CONFIG_RESET_MESON) += reset-meson.o
- obj-$(CONFIG_RESET_OXNAS) += reset-oxnas.o
-diff --git a/drivers/reset/reset-lantiq.c b/drivers/reset/reset-lantiq.c
++config MESON_GPIO_INTC
++	bool
+diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
+index b64c59b8..1be482bd 100644
+--- a/drivers/irqchip/Makefile
++++ b/drivers/irqchip/Makefile
+@@ -76,3 +76,4 @@ obj-$(CONFIG_EZNPS_GIC)			+= irq-eznps.o
+ obj-$(CONFIG_ARCH_ASPEED)		+= irq-aspeed-vic.o
+ obj-$(CONFIG_STM32_EXTI) 		+= irq-stm32-exti.o
+ obj-$(CONFIG_QCOM_IRQ_COMBINER)		+= qcom-irq-combiner.o
++obj-$(CONFIG_MESON_GPIO_INTC)		+= irq-meson-gpio.o
+diff --git a/drivers/irqchip/irq-meson-gpio.c b/drivers/irqchip/irq-meson-gpio.c
 new file mode 100644
-index 000000000000..798bf648f36d
+index 00000000..acbbbdb0
 --- /dev/null
-+++ b/drivers/reset/reset-lantiq.c
-@@ -0,0 +1,205 @@
++++ b/drivers/irqchip/irq-meson-gpio.c
+@@ -0,0 +1,280 @@
 +/*
-+ *  This program is free software; you can redistribute it and/or modify it
-+ *  under the terms of the GNU General Public License version 2 as published
-+ *  by the Free Software Foundation.
++ * Amlogic Meson GPIO IRQ chip driver
 + *
-+ *  Copyright (C) 2010 John Crispin <blogic-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org>
-+ *  Copyright (C) 2013-2015 Lantiq Beteiligungs-GmbH & Co.KG
-+ *  Copyright (C) 2016 Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-+ *  Copyright (C) 2017 Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
++ * Copyright 2017 Heiner Kallweit <hkallweit1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
++ *
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License as
++ * published by the Free Software Foundation, version 2.
 + */
 +
-+#include <linux/mfd/syscon.h>
-+#include <linux/module.h>
++#include <linux/device.h>
++#include <linux/init.h>
++#include <linux/interrupt.h>
++#include <linux/irqchip.h>
++#include <linux/of.h>
++#include <linux/of_irq.h>
++#include <linux/of_address.h>
 +#include <linux/regmap.h>
-+#include <linux/reset-controller.h>
-+#include <linux/of_platform.h>
-+#include <linux/platform_device.h>
-+#include <linux/property.h>
 +
-+#define LANTIQ_RCU_RESET_TIMEOUT	10000
++#define REG_EDGE_POL		0x00
++#define REG_PIN_03_SEL		0x04
++#define REG_PIN_47_SEL		0x08
++#define REG_FILTER_SEL		0x0c
 +
-+struct lantiq_rcu_reset_priv {
-+	struct reset_controller_dev rcdev;
-+	struct device *dev;
++#define REG_EDGE_POL_MASK(x)	(BIT(x) | BIT(16 + (x)))
++#define REG_EDGE_POL_EDGE(x)	BIT(x)
++#define REG_EDGE_POL_LOW(x)	BIT(16 + (x))
++
++#define MAX_PARENT_IRQ_NUM	8
++
++struct meson_irq_slot {
++	unsigned int irq;
++	unsigned int owner;
++};
++
++struct meson_data {
 +	struct regmap *regmap;
-+	u32 reset_offset;
-+	u32 status_offset;
++	struct meson_irq_slot slots[MAX_PARENT_IRQ_NUM];
++	unsigned int num_slots;
++	struct mutex lock;
 +};
 +
-+static struct lantiq_rcu_reset_priv *to_lantiq_rcu_reset_priv(
-+	struct reset_controller_dev *rcdev)
++static int meson_alloc_irq_slot(struct meson_data *md, unsigned int virq)
 +{
-+	return container_of(rcdev, struct lantiq_rcu_reset_priv, rcdev);
++	int i, slot = -ENOSPC;
++
++	mutex_lock(&md->lock);
++
++	for (i = 0; i < md->num_slots && slot < 0; i++)
++		if (!md->slots[i].owner) {
++			md->slots[i].owner = virq;
++			slot = i;
++		}
++
++	mutex_unlock(&md->lock);
++
++	return slot;
 +}
 +
-+static int lantiq_rcu_reset_status(struct reset_controller_dev *rcdev,
-+				   unsigned long id)
++static void meson_free_irq_slot(struct meson_data *md, unsigned int virq)
 +{
-+	struct lantiq_rcu_reset_priv *priv = to_lantiq_rcu_reset_priv(rcdev);
-+	unsigned int status = (id >> 8) & 0x1f;
-+	u32 val;
-+	int ret;
++	int i;
 +
-+	ret = regmap_read(priv->regmap, priv->status_offset, &val);
-+	if (ret)
-+		return ret;
++	mutex_lock(&md->lock);
 +
-+	return !!(val & BIT(status));
-+}
-+
-+static int lantiq_rcu_reset_update(struct reset_controller_dev *rcdev,
-+				   unsigned long id, bool assert)
-+{
-+	struct lantiq_rcu_reset_priv *priv = to_lantiq_rcu_reset_priv(rcdev);
-+	int ret, retry = LANTIQ_RCU_RESET_TIMEOUT;
-+	unsigned int set = id & 0x1f;
-+	u32 val;
-+
-+	if (assert)
-+		val = BIT(set);
-+	else
-+		val = 0;
-+
-+	ret = regmap_update_bits(priv->regmap, priv->reset_offset, BIT(set),
-+				 val);
-+	if (ret) {
-+		dev_err(priv->dev, "Failed to set reset bit %u\n", set);
-+		return ret;
-+	}
-+
-+	do {
-+		ret = lantiq_rcu_reset_status(rcdev, id);
-+		if (ret < 0)
-+			return ret;
-+		if (ret == assert)
++	for (i = 0; i < md->num_slots; i++)
++		if (md->slots[i].owner == virq) {
++			md->slots[i].owner = 0;
 +			break;
-+		usleep_range(20, 40);
-+	} while (--retry);
-+	if (!retry) {
-+		dev_err(priv->dev, "Failed to %s bit %u\n",
-+			assert ? "assert" : "deassert", set);
-+		return -EIO;
-+	}
++		}
++
++	mutex_unlock(&md->lock);
++}
++
++static int meson_find_irq_slot(struct meson_data *md, unsigned int virq)
++{
++	int i, slot = -EINVAL;
++
++	mutex_lock(&md->lock);
++
++	for (i = 0; i < md->num_slots && slot < 0; i++)
++		if (md->slots[i].owner == virq)
++			slot = i;
++
++	mutex_unlock(&md->lock);
++
++	return slot;
++}
++
++static void meson_set_hwirq(struct meson_data *md, int idx, unsigned int hwirq)
++{
++	int reg = idx > 3 ? REG_PIN_47_SEL : REG_PIN_03_SEL;
++	int shift = 8 * (idx % 4);
++
++	regmap_update_bits(md->regmap, reg, 0xff << shift,
++			   hwirq << shift);
++}
++
++static void meson_irq_set_hwirq(struct irq_data *data, unsigned int hwirq)
++{
++	struct meson_data *md = data->domain->host_data;
++	int slot = meson_find_irq_slot(md, data->irq);
++
++	if (slot >= 0)
++		meson_set_hwirq(md, slot, hwirq);
++}
++
++static int meson_irq_set_type(struct irq_data *data, unsigned int type)
++{
++	struct meson_data *md = data->domain->host_data;
++	int slot;
++	unsigned int val = 0;
++
++	if (type == IRQ_TYPE_EDGE_BOTH)
++		return -EINVAL;
++
++	slot = meson_find_irq_slot(md, data->irq);
++	if (slot < 0)
++		return slot;
++
++	if (type & IRQ_TYPE_EDGE_BOTH)
++		val |= REG_EDGE_POL_EDGE(slot);
++
++	if (type & (IRQ_TYPE_LEVEL_LOW | IRQ_TYPE_EDGE_FALLING))
++		val |= REG_EDGE_POL_LOW(slot);
++
++	regmap_update_bits(md->regmap, REG_EDGE_POL,
++			   REG_EDGE_POL_MASK(slot), val);
++
++	if (type & IRQ_TYPE_EDGE_BOTH)
++		val = IRQ_TYPE_EDGE_RISING;
++	else
++		val = IRQ_TYPE_LEVEL_HIGH;
++
++	return irq_chip_set_type_parent(data, val);
++}
++
++static unsigned int meson_irq_startup(struct irq_data *data)
++{
++	irq_chip_unmask_parent(data);
++	/*
++	 * An extra bit was added to allow having the same gpio hwirq twice
++	 * for handling IRQ_TYPE_EDGE_BOTH. Remove this bit to get the
++	 * gpio hwirq.
++	 */
++	meson_irq_set_hwirq(data, data->hwirq >> 1);
 +
 +	return 0;
 +}
 +
-+static int lantiq_rcu_reset_assert(struct reset_controller_dev *rcdev,
-+			     unsigned long id)
++static void meson_irq_shutdown(struct irq_data *data)
 +{
-+	return lantiq_rcu_reset_update(rcdev, id, true);
++	meson_irq_set_hwirq(data, 0xff);
++	irq_chip_mask_parent(data);
 +}
 +
-+static int lantiq_rcu_reset_deassert(struct reset_controller_dev *rcdev,
-+			       unsigned long id)
-+{
-+	return lantiq_rcu_reset_update(rcdev, id, false);
-+}
-+
-+static int lantiq_rcu_reset_reset(struct reset_controller_dev *rcdev,
-+			    unsigned long id)
-+{
-+	int ret;
-+
-+	ret = lantiq_rcu_reset_assert(rcdev, id);
-+	if (ret)
-+		return ret;
-+
-+	return lantiq_rcu_reset_deassert(rcdev, id);
-+}
-+
-+static const struct reset_control_ops lantiq_rcu_reset_ops = {
-+	.assert = lantiq_rcu_reset_assert,
-+	.deassert = lantiq_rcu_reset_deassert,
-+	.status = lantiq_rcu_reset_status,
-+	.reset	= lantiq_rcu_reset_reset,
++static struct irq_chip meson_irq_chip = {
++	.name = "meson_gpio_intc",
++	.irq_set_type = meson_irq_set_type,
++	.irq_eoi = irq_chip_eoi_parent,
++	.irq_mask = irq_chip_mask_parent,
++	.irq_unmask = irq_chip_unmask_parent,
++	.irq_startup = meson_irq_startup,
++	.irq_shutdown = meson_irq_shutdown,
++	.irq_set_affinity = irq_chip_set_affinity_parent,
 +};
 +
-+static int lantiq_rcu_reset_of_probe(struct platform_device *pdev,
-+			       struct lantiq_rcu_reset_priv *priv)
++static int meson_irq_alloc(struct irq_domain *d, unsigned int virq,
++			   unsigned int nr_irqs, void *data)
 +{
-+	struct device *dev = &pdev->dev;
++	struct irq_fwspec parent_fwspec, *fwspec = data;
++	struct meson_data *md = d->host_data;
++	irq_hw_number_t hwirq;
++	int ret, slot;
++
++	slot = meson_alloc_irq_slot(md, virq);
++	if (slot < 0)
++		return slot;
++
++	hwirq = fwspec->param[0];
++	irq_domain_set_hwirq_and_chip(d, virq, hwirq, &meson_irq_chip, NULL);
++
++	parent_fwspec.fwnode = d->parent->fwnode;
++	parent_fwspec.param_count = 3;
++	parent_fwspec.param[0] = 0; /* SPI */
++	parent_fwspec.param[1] = md->slots[slot].irq;
++	parent_fwspec.param[2] = IRQ_TYPE_NONE;
++
++	ret = irq_domain_alloc_irqs_parent(d, virq, nr_irqs, &parent_fwspec);
++	if (ret)
++		meson_free_irq_slot(md, virq);
++
++	return ret;
++}
++
++static void meson_irq_free(struct irq_domain *d, unsigned int virq,
++			   unsigned int nr_irqs)
++{
++	struct meson_data *md = d->host_data;
++
++	irq_domain_free_irqs_common(d, virq, nr_irqs);
++	meson_free_irq_slot(md, virq);
++}
++
++static const struct irq_domain_ops meson_irq_ops = {
++	.alloc = meson_irq_alloc,
++	.free = meson_irq_free,
++	.xlate = irq_domain_xlate_twocell,
++};
++
++static int meson_get_irqs(struct meson_data *md, struct device_node *node)
++{
++	int ret, i;
++	u32 irq;
++
++	for (i = 0; i < MAX_PARENT_IRQ_NUM; i++) {
++		ret = of_property_read_u32_index(node, "parent-interrupts", i,
++						 &irq);
++		if (ret)
++			break;
++		md->slots[i].irq = irq;
++	}
++
++	md->num_slots = i;
++
++	return i ? 0 : -EINVAL;
++}
++
++static const struct regmap_config meson_regmap_config = {
++	.reg_bits       = 32,
++	.reg_stride     = 4,
++	.val_bits       = 32,
++	.max_register	= REG_FILTER_SEL,
++};
++
++static int __init meson_gpio_irq_init(struct device_node *node,
++				      struct device_node *parent)
++{
++	struct irq_domain *meson_irq_domain, *parent_domain;
++	struct meson_data *md;
++	void __iomem *io_base;
 +	int ret;
 +
-+	priv->regmap = syscon_regmap_lookup_by_phandle(dev->of_node, "regmap");
-+	if (IS_ERR(priv->regmap)) {
-+		dev_err(&pdev->dev, "Failed to lookup RCU regmap\n");
-+		return PTR_ERR(priv->regmap);
-+	}
-+
-+	ret = device_property_read_u32(dev, "offset-set", &priv->reset_offset);
-+	if (ret) {
-+		dev_err(&pdev->dev, "Failed to get RCU reset offset\n");
-+		return -EINVAL;
-+	}
-+
-+	ret = device_property_read_u32(dev, "offset-status",
-+				       &priv->status_offset);
-+	if (ret) {
-+		dev_err(&pdev->dev, "Failed to get RCU status offset\n");
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
-+static int lantiq_rcu_reset_xlate(struct reset_controller_dev *rcdev,
-+				  const struct of_phandle_args *reset_spec)
-+{
-+	unsigned int status, set;
-+
-+	set = reset_spec->args[0];
-+	status = reset_spec->args[1];
-+
-+	if (set >= rcdev->nr_resets || status >= rcdev->nr_resets)
-+		return -EINVAL;
-+
-+	return (status << 8) | set;
-+}
-+
-+static int lantiq_rcu_reset_probe(struct platform_device *pdev)
-+{
-+	struct lantiq_rcu_reset_priv *priv;
-+	int err;
-+
-+	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
++	md = kzalloc(sizeof(*md), GFP_KERNEL);
++	if (!md)
 +		return -ENOMEM;
 +
-+	priv->dev = &pdev->dev;
-+	platform_set_drvdata(pdev, priv);
++	mutex_init(&md->lock);
 +
-+	err = lantiq_rcu_reset_of_probe(pdev, priv);
-+	if (err)
-+		return err;
++	io_base = of_iomap(node, 0);
++	if (!io_base)
++		return -EINVAL;
 +
-+	priv->rcdev.ops = &lantiq_rcu_reset_ops;
-+	priv->rcdev.owner = THIS_MODULE;
-+	priv->rcdev.of_node = pdev->dev.of_node;
-+	priv->rcdev.nr_resets = 32;
-+	priv->rcdev.of_xlate = lantiq_rcu_reset_xlate;
-+	priv->rcdev.of_reset_n_cells = 2;
++	md->regmap = regmap_init_mmio(NULL, io_base, &meson_regmap_config);
++	if (IS_ERR(md->regmap))
++		return PTR_ERR(md->regmap);
 +
-+	return reset_controller_register(&priv->rcdev);
++	/* initialize to IRQ_TYPE_LEVEL_HIGH */
++	regmap_write(md->regmap, REG_EDGE_POL, 0);
++	/* disable all GPIO interrupt sources */
++	regmap_write(md->regmap, REG_PIN_03_SEL, 0xffffffff);
++	regmap_write(md->regmap, REG_PIN_47_SEL, 0xffffffff);
++	/* disable filtering */
++	regmap_write(md->regmap, REG_FILTER_SEL, 0);
++
++	ret = meson_get_irqs(md, node);
++	if (ret)
++		return ret;
++
++	parent_domain = irq_find_host(parent);
++	if (!parent_domain)
++		return -ENXIO;
++
++	meson_irq_domain = irq_domain_add_hierarchy(parent_domain, 0, 2 * 256,
++						    node, &meson_irq_ops, md);
++
++	return meson_irq_domain ? 0 : -EINVAL;
 +}
 +
-+static const struct of_device_id lantiq_rcu_reset_dt_ids[] = {
-+	{ .compatible = "lantiq,reset-danube", },
-+	{ .compatible = "lantiq,reset-xrx200", },
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(of, lantiq_rcu_reset_dt_ids);
-+
-+static struct platform_driver lantiq_rcu_reset_driver = {
-+	.probe	= lantiq_rcu_reset_probe,
-+	.driver = {
-+		.name		= "lantiq-reset",
-+		.of_match_table	= lantiq_rcu_reset_dt_ids,
-+	},
-+};
-+module_platform_driver(lantiq_rcu_reset_driver);
-+
-+MODULE_AUTHOR("Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>");
-+MODULE_DESCRIPTION("Lantiq XWAY RCU Reset Controller Driver");
-+MODULE_LICENSE("GPL");
++IRQCHIP_DECLARE(meson_gpio_irq, "amlogic,meson-gpio-intc", meson_gpio_irq_init);
 -- 
-2.11.0
+2.13.0
+
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
