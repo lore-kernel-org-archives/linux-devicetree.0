@@ -1,75 +1,87 @@
-From: Heiner Kallweit <hkallweit1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH RfC v4 0/6] pintrl: meson: add support for GPIO IRQs
-Date: Sun, 28 May 2017 20:40:30 +0200
-Message-ID: <49ab677f-3165-d6f5-75f5-a963879e8ecf@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+From: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
+Subject: [PATCH v3 15/16] MIPS: lantiq: remove old USB PHY initialisation
+Date: Sun, 28 May 2017 20:40:05 +0200
+Message-ID: <20170528184006.31668-16-hauke@hauke-m.de>
+References: <20170528184006.31668-1-hauke@hauke-m.de>
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170528184006.31668-1-hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
+Cc: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org, john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, hauke.mehrtens-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch series is partially based on a series Jerome Brunet
-submitted about half a year ago. Due to open questions this series never
-made it to mainline, see https://patchwork.kernel.org/patch/9384431/
+This is now done in a PHY driver.
 
-This new attempt uses GPIOLIB_IRQCHIP resulting in less needed code.
-Included is also support for using two parent IRQs in case
-of IRQ_TYPE_EDGE_BOTH, like in the vendor driver.
+Signed-off-by: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
+---
+ arch/mips/lantiq/xway/reset.c | 43 -------------------------------------------
+ 1 file changed, 43 deletions(-)
 
-The series was successfully tested on a Odroid-C2, e.g. with removing
-polling for SD card insertion/removal from the mmc driver.
-
-Changes in v2:
-- separate the GPIO IRQ controller from the pinctrl driver
-- minor improvements to the GPIO IRQ controller
-
-Changes in v3:
-- replace the request_irq based allocation of parent irq's with
-  chained irq handling, this also fixes the spurious interrupts issue
-  and allows to remove the workaround code.
-  Last but not least the parent irq's are no longer visible in
-  /proc/interrupts.
-- minor improvements to the GPIO IRQ controller
-
-Changes in v4:
-- separate the gpio-independent interrupt controller part and make
-  it a driver under drivers/irqchip
-
-Heiner Kallweit (7):
-  pinctrl: meson: add interrupts to pinctrl data
-  irqchip: add Amlogic Meson GPIO irqchip driver
-  dt-bindings: add Amlogic Meson GPIO interrupt-controller DT binding documentation
-  ARM(64): dts: meson: add GPIO interrupt-controller support
-  pinctrl: meson: add support for GPIO interrupts
-  ARM(64): dts: meson: mark gpio controllers as interrupt controllers and update binding documentation
-
-.../amlogic,meson-gpio-intc.txt                    |  26 ++
- .../devicetree/bindings/pinctrl/meson,pinctrl.txt  |   4 +
- arch/arm/boot/dts/meson8.dtsi                      |  12 +
- arch/arm/boot/dts/meson8b.dtsi                     |  12 +
- arch/arm64/boot/dts/amlogic/meson-gx.dtsi          |   8 +
- arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi        |   4 +
- arch/arm64/boot/dts/amlogic/meson-gxl.dtsi         |   4 +
- drivers/irqchip/Kconfig                            |   3 +
- drivers/irqchip/Makefile                           |   1 +
- drivers/irqchip/irq-meson-gpio.c                   | 280 +++++++++++++++++++++
- drivers/pinctrl/Kconfig                            |   2 +
- drivers/pinctrl/meson/pinctrl-meson-gxbb.c         |  22 +-
- drivers/pinctrl/meson/pinctrl-meson-gxl.c          |  20 +-
- drivers/pinctrl/meson/pinctrl-meson.c              | 164 +++++++++++-
- drivers/pinctrl/meson/pinctrl-meson.h              |  15 +-
- drivers/pinctrl/meson/pinctrl-meson8.c             |  20 +-
- drivers/pinctrl/meson/pinctrl-meson8b.c            |  32 ++-
- 17 files changed, 582 insertions(+), 47 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/interrupt-controller/amlogic,meson-gpio-intc.txt
- create mode 100644 drivers/irqchip/irq-meson-gpio.c
-
+diff --git a/arch/mips/lantiq/xway/reset.c b/arch/mips/lantiq/xway/reset.c
+index be5fd29de523..04cd9a7c04a3 100644
+--- a/arch/mips/lantiq/xway/reset.c
++++ b/arch/mips/lantiq/xway/reset.c
+@@ -114,45 +114,6 @@ static void ltq_machine_power_off(void)
+ 	unreachable();
+ }
+ 
+-static void ltq_usb_init(void)
+-{
+-	/* Power for USB cores 1 & 2 */
+-	ltq_pmu_enable(PMU_AHBM);
+-	ltq_pmu_enable(PMU_USB0);
+-	ltq_pmu_enable(PMU_USB1);
+-
+-	ltq_rcu_w32(ltq_rcu_r32(RCU_CFG1A) | BIT(0), RCU_CFG1A);
+-	ltq_rcu_w32(ltq_rcu_r32(RCU_CFG1B) | BIT(0), RCU_CFG1B);
+-
+-	/* Enable USB PHY power for cores 1 & 2 */
+-	ltq_pmu_enable(PMU_USB0_P);
+-	ltq_pmu_enable(PMU_USB1_P);
+-
+-	/* Configure cores to host mode */
+-	ltq_rcu_w32(ltq_rcu_r32(RCU_USB1CFG) & ~RCU_USBCFG_HDSEL_BIT,
+-		RCU_USB1CFG);
+-	ltq_rcu_w32(ltq_rcu_r32(RCU_USB2CFG) & ~RCU_USBCFG_HDSEL_BIT,
+-		RCU_USB2CFG);
+-
+-	/* Select DMA endianness (Host-endian: big-endian) */
+-	ltq_rcu_w32((ltq_rcu_r32(RCU_USB1CFG) & ~RCU_USBCFG_SLV_END_BIT)
+-		| RCU_USBCFG_HOST_END_BIT, RCU_USB1CFG);
+-	ltq_rcu_w32(ltq_rcu_r32((RCU_USB2CFG) & ~RCU_USBCFG_SLV_END_BIT)
+-		| RCU_USBCFG_HOST_END_BIT, RCU_USB2CFG);
+-
+-	/* Hard reset USB state machines */
+-	ltq_rcu_w32(ltq_rcu_r32(RCU_USBRESET) | USBRESET_BIT, RCU_USBRESET);
+-	udelay(50 * 1000);
+-	ltq_rcu_w32(ltq_rcu_r32(RCU_USBRESET) & ~USBRESET_BIT, RCU_USBRESET);
+-
+-	/* Soft reset USB state machines */
+-	ltq_rcu_w32(ltq_rcu_r32(RCU_USBRESET2)
+-		| USB1RESET_BIT | USB2RESET_BIT, RCU_USBRESET2);
+-	udelay(50 * 1000);
+-	ltq_rcu_w32(ltq_rcu_r32(RCU_USBRESET2)
+-		& ~(USB1RESET_BIT | USB2RESET_BIT), RCU_USBRESET2);
+-}
+-
+ static int __init mips_reboot_setup(void)
+ {
+ 	struct resource res;
+@@ -176,10 +137,6 @@ static int __init mips_reboot_setup(void)
+ 	if (!ltq_rcu_membase)
+ 		panic("Failed to remap core memory");
+ 
+-	if (of_machine_is_compatible("lantiq,ar9") ||
+-	    of_machine_is_compatible("lantiq,vr9"))
+-		ltq_usb_init();
+-
+ 	_machine_restart = ltq_machine_restart;
+ 	_machine_halt = ltq_machine_halt;
+ 	pm_power_off = ltq_machine_power_off;
 -- 
-2.13.0
+2.11.0
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
