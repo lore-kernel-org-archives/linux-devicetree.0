@@ -1,37 +1,30 @@
-From: Wolfram Sang <wsa+renesas-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org>
-Subject: [PATCH 0/7] tree-wide: use proper 'R-Car' product name
-Date: Sun, 28 May 2017 11:30:43 +0200
-Message-ID: <20170528093051.11816-1-wsa+renesas@sang-engineering.com>
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Wolfram Sang <wsa+renesas-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Sergey Matyukevich <geomatsi-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v3 0/1] orange-pi-zero: minor updates for peripherals
+Date: Sun, 28 May 2017 13:30:25 +0300
+Message-ID: <20170528103026.6396-1-geomatsi@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Small series to get the R-Car product name proper. Based on
-renesas-drivers/master, but can be applied to current linus/master as well.
-Except for the MMC patch, which depends on mmc/next.
+This patch adds optional node for SPI NOR chip on the orange-pi-zero board.
 
-Please apply.
+Changes from v2:
+- add new node in alphabetical order
+- drop changes for wifi xr819 node for the time being:
+  -- more work is needed, e.g. adding bindings for XR819
 
-Wolfram Sang (7):
-  dmaengine: use proper name for the R-Car SoC
-  i2c: use proper name for the R-Car SoC
-  iio: use proper name for the R-Car SoC
-  mmc: use proper name for the R-Car SoC
-  pci: use proper name for the R-Car SoC
-  [media] soc_camera: rcar_vin: use proper name for the R-Car SoC
-  [media] v4l: rcar_fdp1: use proper name for the R-Car SoC
+Changes from v1:
+- update commit messages: drop links to wiki at linux-sunxi.org
+- disable SPI NOR flash by default
+- drop description of the flash partitions
+- add compatible property for XR819 wifi node
 
- Documentation/devicetree/bindings/dma/shdma.txt               | 2 +-
- Documentation/devicetree/bindings/iio/adc/renesas,gyroadc.txt | 2 +-
- Documentation/devicetree/bindings/media/rcar_vin.txt          | 4 ++--
- Documentation/devicetree/bindings/pci/rcar-pci.txt            | 2 +-
- drivers/i2c/busses/i2c-rcar.c                                 | 2 +-
- drivers/media/platform/rcar_fdp1.c                            | 2 +-
- drivers/mmc/host/renesas_sdhi_core.c                          | 2 +-
- include/linux/mfd/tmio.h                                      | 2 +-
- 8 files changed, 9 insertions(+), 9 deletions(-)
+sun8i-h2-plus-orangepi-zero.dts |   13 +++++++++++++
+1 file changed, 13 insertions(+)
 
--- 
-2.11.0
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
