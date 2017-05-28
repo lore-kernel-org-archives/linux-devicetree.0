@@ -1,34 +1,54 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH v3 04/10] pinctrl: sunxi: drop dedicated A20 driver
-Date: Sun, 28 May 2017 23:08:02 +0800
-Message-ID: <CAGb2v64ycEzmyZBMvvmHosJSpp2hqRo4gc6xKKPhqK96Npq5xg@mail.gmail.com>
-References: <20170527102308.1988-1-icenowy@aosc.io> <20170527102308.1988-5-icenowy@aosc.io>
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: Re: [PATCH v3 05/10] dt-bindings: add compatible string for Allwinner
+ R40 pinctrl
+Date: Sun, 28 May 2017 23:09:26 +0800
+Message-ID: <CAGb2v6543=F6Mph9dyLbC6SxhW74WxX7yQMfkGA=w8QZsf1zFQ@mail.gmail.com>
+References: <20170527102308.1988-1-icenowy@aosc.io> <20170527102308.1988-6-icenowy@aosc.io>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170527102308.1988-5-icenowy-h8G6r0blFSE@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <20170527102308.1988-6-icenowy@aosc.io>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Icenowy Zheng <icenowy@aosc.io>
+Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, linux-clk <linux-clk@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, May 27, 2017 at 6:23 PM, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org> wrote:
-> As we added A20 support to A10 pinctrl driver, now we can delete the
-> dedicated A20 pinctrl driver, which is duplicated code.
+On Sat, May 27, 2017 at 6:23 PM, Icenowy Zheng <icenowy@aosc.io> wrote:
+> Allwinner R40 has a pin controller like the ones in older Allwinner SoCs
+> (especially A20), and can use modified version of the A10/A20 pinctrl
+> driver.
 >
-> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+> Add a compatible string for it.
+>
+> Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
+> Acked-by: Rob Herring <robh@kernel.org>
+
+Reviewed-by: Chen-Yu Tsai <wens@csie.org>
+
 > ---
 > Changes in v3:
-> - Only remove the A20 driver(A10 driver for A20 is enabled in
->   the previous commit now).
+> - Added Rob's ACK.
 >
->  drivers/pinctrl/sunxi/Kconfig             |    4 -
->  drivers/pinctrl/sunxi/pinctrl-sun7i-a20.c | 1056 -----------------------------
+>  Documentation/devicetree/bindings/pinctrl/allwinner,sunxi-pinctrl.txt | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/Documentation/devicetree/bindings/pinctrl/allwinner,sunxi-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/allwinner,sunxi-pinctrl.txt
+> index b53224473672..3ab9f7849a19 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/allwinner,sunxi-pinctrl.txt
+> +++ b/Documentation/devicetree/bindings/pinctrl/allwinner,sunxi-pinctrl.txt
+> @@ -22,6 +22,7 @@ Required properties:
+>    "allwinner,sun8i-a83t-pinctrl"
+>    "allwinner,sun8i-h3-pinctrl"
+>    "allwinner,sun8i-h3-r-pinctrl"
+> +  "allwinner,sun8i-r40-pinctrl"
 
-You forgot to remove the Makefile entry. Otherwise,
+Seems like we are missing an entry for the V3s. Can you send a separate patch?
 
-Reviewed-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks
+
+>    "allwinner,sun50i-a64-pinctrl"
+>    "allwinner,sun50i-a64-r-pinctrl"
+>    "allwinner,sun50i-h5-pinctrl"
+> --
+> 2.12.2
+>
