@@ -1,8 +1,7 @@
 From: Heiner Kallweit <hkallweit1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH RfC v4 4/6] ARM(64): dts: meson: add GPIO interrupt-controller
- support
-Date: Sun, 28 May 2017 21:11:34 +0200
-Message-ID: <5294644a-967e-dba8-d287-d932b38244d1@gmail.com>
+Subject: [PATCH RfC v4 5/6] pinctrl: meson: add support for GPIO interrupts
+Date: Sun, 28 May 2017 21:12:06 +0200
+Message-ID: <3265fbc9-467d-67fa-8752-f750f234dedd@gmail.com>
 References: <49ab677f-3165-d6f5-75f5-a963879e8ecf@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
@@ -14,73 +13,226 @@ To: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Mark Rutlan
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add support for the GPIO interupt controller of certain Amlogic Meson
-Soc's.
+Add support for GPIO interrupts and make use of the just introduced
+irqchip driver handling the GPIO interrupt-controller.
 
 Signed-off-by: Heiner Kallweit <hkallweit1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- arch/arm/boot/dts/meson8.dtsi             | 8 ++++++++
- arch/arm/boot/dts/meson8b.dtsi            | 8 ++++++++
- arch/arm64/boot/dts/amlogic/meson-gx.dtsi | 8 ++++++++
- 3 files changed, 24 insertions(+)
+ drivers/pinctrl/Kconfig               |   2 +
+ drivers/pinctrl/meson/pinctrl-meson.c | 164 +++++++++++++++++++++++++++++++++-
+ 2 files changed, 165 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/meson8.dtsi b/arch/arm/boot/dts/meson8.dtsi
-index 69930773..b4c4175d 100644
---- a/arch/arm/boot/dts/meson8.dtsi
-+++ b/arch/arm/boot/dts/meson8.dtsi
-@@ -126,6 +126,14 @@
- };
+diff --git a/drivers/pinctrl/Kconfig b/drivers/pinctrl/Kconfig
+index abc1cef7..d8c92809 100644
+--- a/drivers/pinctrl/Kconfig
++++ b/drivers/pinctrl/Kconfig
+@@ -166,8 +166,10 @@ config PINCTRL_MESON
+ 	select PINCONF
+ 	select GENERIC_PINCONF
+ 	select GPIOLIB
++	select GPIOLIB_IRQCHIP
+ 	select OF_GPIO
+ 	select REGMAP_MMIO
++	select MESON_GPIO_INTC
  
- &cbus {
-+	gpio_intc: interrupt-controller@9880 {
-+		compatible = "amlogic,meson-gpio-intc";
-+		reg = <0x9880 0x10>;
-+		interrupt-controller;
-+		#interrupt-cells = <2>;
-+		parent-interrupts = <64 65 66 67 68 79 70 71>;
-+	};
-+
- 	pinctrl_cbus: pinctrl@9880 {
- 		compatible = "amlogic,meson8-cbus-pinctrl";
- 		reg = <0x9880 0x10>;
-diff --git a/arch/arm/boot/dts/meson8b.dtsi b/arch/arm/boot/dts/meson8b.dtsi
-index d9f116a4..1bce64a6 100644
---- a/arch/arm/boot/dts/meson8b.dtsi
-+++ b/arch/arm/boot/dts/meson8b.dtsi
-@@ -151,6 +151,14 @@
- 		interrupts = <0 0 1>;
- 	};
+ config PINCTRL_OXNAS
+ 	bool
+diff --git a/drivers/pinctrl/meson/pinctrl-meson.c b/drivers/pinctrl/meson/pinctrl-meson.c
+index 66ed70c1..7fb98c71 100644
+--- a/drivers/pinctrl/meson/pinctrl-meson.c
++++ b/drivers/pinctrl/meson/pinctrl-meson.c
+@@ -62,6 +62,8 @@
+ #include "../pinctrl-utils.h"
+ #include "pinctrl-meson.h"
  
-+	gpio_intc: interrupt-controller@9880 {
-+		compatible = "amlogic,meson-gpio-intc";
-+		reg = <0x9880 0x10>;
-+		interrupt-controller;
-+		#interrupt-cells = <2>;
-+		parent-interrupts = <64 65 66 67 68 79 70 71>;
-+	};
++static struct irq_domain *meson_pinctrl_irq_domain;
 +
- 	pinctrl_cbus: pinctrl@9880 {
- 		compatible = "amlogic,meson8b-cbus-pinctrl";
- 		reg = <0x9880 0x10>;
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
-index 436b8750..66dde761 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
-@@ -312,6 +312,14 @@
- 				status = "disabled";
- 			};
+ /**
+  * meson_get_bank() - find the bank containing a given pin
+  *
+@@ -497,6 +499,150 @@ static int meson_gpio_get(struct gpio_chip *chip, unsigned gpio)
+ 	return !!(val & BIT(bit));
+ }
  
-+			gpio_intc: interrupt-controller@9880 {
-+				compatible = "amlogic,meson-gpio-intc";
-+				reg = <0x0 0x09880 0x0 0x10>;
-+				interrupt-controller;
-+				#interrupt-cells = <2>;
-+				parent-interrupts = <64 65 66 67 68 79 70 71>;
-+			};
++static struct meson_pinctrl *meson_gpio_data_to_pc(struct irq_data *data)
++{
++        struct gpio_chip *chip = irq_data_get_irq_chip_data(data);
 +
- 			watchdog@98d0 {
- 				compatible = "amlogic,meson-gx-wdt", "amlogic,meson-gxbb-wdt";
- 				reg = <0x0 0x098d0 0x0 0x10>;
++        return gpiochip_get_data(chip);
++}
++
++static int meson_gpio_bank_hwirq(struct meson_bank *bank, unsigned int offset)
++{
++        int hwirq;
++
++        if (bank->irq_first < 0)
++                /* this bank cannot generate irqs */
++                return 0;
++
++        hwirq = offset - bank->first + bank->irq_first;
++
++        if (hwirq > bank->irq_last)
++                /* this pin cannot generate irqs */
++                return 0;
++
++        return hwirq;
++}
++
++static int meson_gpio_to_hwirq(struct irq_data *data)
++{
++	struct meson_pinctrl *pc = meson_gpio_data_to_pc(data);
++	unsigned int offset = data->hwirq;
++        struct meson_bank *bank;
++        int hwirq, ret;
++
++        offset += pc->data->pin_base;
++
++        ret = meson_get_bank(pc, offset, &bank);
++        if (ret)
++                return ret;
++
++        hwirq = meson_gpio_bank_hwirq(bank, offset);
++        if (!hwirq)
++                dev_dbg(pc->dev, "no interrupt for pin %u\n", offset);
++
++        return hwirq;
++}
++
++static void meson_gpio_irq_handler(struct irq_desc *desc)
++{
++        struct irq_chip *chip = irq_desc_get_chip(desc);
++        struct irq_data *gpio_irq_data = irq_desc_get_handler_data(desc);
++
++        chained_irq_enter(chip, desc);
++
++        if (gpio_irq_data)
++                generic_handle_irq(gpio_irq_data->irq);
++
++        chained_irq_exit(chip, desc);
++}
++
++static void meson_gpio_irq_unmask(struct irq_data *data) {}
++static void meson_gpio_irq_mask(struct irq_data *data) {}
++
++static void meson_gpio_irq_shutdown(struct irq_data *data)
++{
++	int hwirq = meson_gpio_to_hwirq(data);
++	int irq;
++
++	if (hwirq <= 0)
++		return;
++
++	irq = irq_find_mapping(meson_pinctrl_irq_domain, hwirq * 2);
++	if (irq) {
++		irq_set_chained_handler_and_data(irq, handle_bad_irq, NULL);
++		irq_domain_free_irqs(irq, 1);
++	}
++	irq = irq_find_mapping(meson_pinctrl_irq_domain, hwirq * 2 + 1);
++	if (irq) {
++		irq_set_chained_handler_and_data(irq, handle_bad_irq, NULL);
++		irq_domain_free_irqs(irq, 1);
++	}
++}
++
++static int meson_gpio_irq_set_type(struct irq_data *data, unsigned int type)
++{
++	int hwirq = meson_gpio_to_hwirq(data);
++	struct irq_fwspec fwspec;
++        int irq, irq2, num_slots;
++
++	if (irqd_is_activated(data))
++		return -EBUSY;
++
++	if (hwirq < 0)
++		return hwirq;
++
++	if (!hwirq)
++		return -ENXIO;
++
++	fwspec.fwnode = meson_pinctrl_irq_domain->fwnode;
++	fwspec.param_count = 2;
++
++        /*
++         * The chip can create an interrupt for either rising or falling edge
++         * only. Therefore use two interrupts in case of IRQ_TYPE_EDGE_BOTH,
++         * first for falling edge and second one for rising edge.
++         */
++        num_slots = (type == IRQ_TYPE_EDGE_BOTH) ? 2 : 1;
++
++        /*
++	 * Add one bit to hwirq to allow for
++	 * - using the same gpio hwirq twice
++	 * - decoding the gpio hwirq in the interrupt controller driver
++         */
++	fwspec.param[0] = hwirq << 1;
++	if (num_slots == 1)
++		fwspec.param[1] = type;
++	else
++		fwspec.param[1] = IRQ_TYPE_EDGE_FALLING;
++
++	irq = irq_create_fwspec_mapping(&fwspec);
++	if (!irq)
++		return -EINVAL;
++
++	irq_set_chained_handler_and_data(irq, meson_gpio_irq_handler, data);
++
++	if (num_slots > 1) {
++		fwspec.param[0]++;
++		fwspec.param[1] = IRQ_TYPE_EDGE_RISING;
++		irq2 = irq_create_fwspec_mapping(&fwspec);
++		if (!irq2) {
++			irq_domain_free_irqs(irq, 1);
++			return -EINVAL;
++		}
++		irq_set_chained_handler_and_data(irq2, meson_gpio_irq_handler, data);
++	}
++
++        return 0;
++}
++
++static struct irq_chip meson_gpio_irq_chip = {
++        .name = "GPIO",
++        .irq_set_type = meson_gpio_irq_set_type,
++        .irq_mask = meson_gpio_irq_mask,
++        .irq_unmask = meson_gpio_irq_unmask,
++        .irq_shutdown = meson_gpio_irq_shutdown,
++};
++
+ static const struct of_device_id meson_pinctrl_dt_match[] = {
+ 	{
+ 		.compatible = "amlogic,meson8-cbus-pinctrl",
+@@ -558,7 +704,8 @@ static int meson_gpiolib_register(struct meson_pinctrl *pc)
+ 		return ret;
+ 	}
+ 
+-	return 0;
++	return gpiochip_irqchip_add(&pc->chip, &meson_gpio_irq_chip, 0,
++				    handle_simple_irq, IRQ_TYPE_NONE);
+ }
+ 
+ static struct regmap_config meson_regmap_config = {
+@@ -637,6 +784,21 @@ static int meson_pinctrl_parse_dt(struct meson_pinctrl *pc,
+ 		return PTR_ERR(pc->reg_gpio);
+ 	}
+ 
++	if (!meson_pinctrl_irq_domain) {
++		np = of_find_compatible_node(NULL, NULL, "amlogic,meson-gpio-intc");
++		if (!np) {
++			dev_err(pc->dev, "interrupt controller DT node not found\n");
++			return -EINVAL;
++		}
++		meson_pinctrl_irq_domain = irq_find_host(np);
++		if (!meson_pinctrl_irq_domain) {
++			dev_err(pc->dev, "interrupt controller not found\n");
++			of_node_put(np);
++			return -EINVAL;
++		}
++		of_node_put(np);
++	}
++
+ 	return 0;
+ }
+ 
 -- 
 2.13.0
 
