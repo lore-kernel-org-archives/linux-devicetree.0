@@ -1,50 +1,135 @@
-From: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] clocksource: moxart: Add AST2500 compatible string
-Date: Sun, 28 May 2017 20:27:22 +0200
-Message-ID: <0f526d58-3138-d7ea-0dc7-5ef623fb0547@linaro.org>
-References: <20170516075840.23130-1-andrew@aj.id.au>
- <CACRpkdZsbzwBKRj1FXAoCW9nD357SNNK8t=gOO-OBtV_pwjpKg@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CACRpkdZsbzwBKRj1FXAoCW9nD357SNNK8t=gOO-OBtV_pwjpKg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>
-Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ryan Chen <ryan_chen-SAlXDmAnmOAqDJ6do+/SaQ@public.gmane.org>
+From: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
+Subject: [PATCH v3 00/16] MIPS: lantiq: handle RCU register by separate drivers
+Date: Sun, 28 May 2017 20:39:50 +0200
+Message-ID: <20170528184006.31668-1-hauke@hauke-m.de>
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
+Cc: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org, john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, hauke.mehrtens-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 28/05/2017 15:59, Linus Walleij wrote:
-> On Tue, May 16, 2017 at 9:58 AM, Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org> wrote:
-> 
->> Also clean up space-before-tab issues in the documentation.
->>
->> Signed-off-by: Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>
-> 
-> Reviewed-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> 
-> Does this collide with Daniel's 2500 patch?
-> 
-> Sorry for the mess, tell me if I need to fix something up :(
+The RCU (Reset controller Unit) register block provides many different 
+functionalities. Before they were handed by the code in arch/mips/lantiq
+/xway/reset.c, now there are separate drivers for the functionality.
+This block provides support for reset controller, GPHY firmware 
+loading, USB PHY initialization and cross bar configuration. 
 
-It is ok, an usual collision change to be fixed when merging ;)
+These changes are making the old device tree incompatible with the 
+current kernel. The upstream Linux kernel supports loading the device 
+tree blob from the boot loader since about one year, the latest 
+released vendor kernel does not support loading the device tree from a 
+bot loader.
 
-By the way, can you have a look at fttmr010_read_sched_clock to remove
-the local_fttmr->count_down test?
+I would prefer if this would go through the mips tree.
+There are more patches planed which would convert the Lantiq code 
+to the common clock framework.
 
-Thanks.
+This is based on patches from Martin Blumenstingl and is a preparation 
+to convert the Lantiq target to the common clock framework which was 
+also started by Martin Blumenstingl.
 
-  -- Daniel
+Changelog:
+v3:
+ * renamed xbar driver into fpi-bus driver and make it manage the bus,
+   this way we make sure it is initialized before the child drivers.
+ * converted the lantiq,rcu-syscon into a "regmap" and an "offset"
+   property, this way we have a offset property for each register we
+   want to access on the regmap.
+ * make the gphy PUM clock mandatory.
+ * renamed the lantiq,rcu-reset to lantiq,reset-xrx200
+ * add binding description for watchdog driver
+ * make watchdog driver use offset and mask to find the correct
+   register to get the watchdog reset cause bit.
+ * use of_platform_default_populate() instead of of_platform_populate()
+ * use device_property_read_u32() instead of
+   of_property_read_u32_index()
+ * changed John's email address to blogic-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org
+ * check the reset bit numbers in the xlate function
+ * use platform_get_resource() in FPI bus driver
+ * make it possible to unload the GPHY driver
+
+v2:
+ * remove the rcu_ prefix for device names in device tree
+ * add both clocks to the gphy driver documentation
+ * use 2 cells for the reset controller, one for the status bit and one
+   for the set bit, they are different for some reset bits.
+   reset-status and reset-request attribute were removed then.
+ * remove the documentation of the not existing sub nodes of the usb phy
+ * remove manual gpio vbus handling in the usb phy driver and use the
+   generic phy regulator now.
+ * do not check if the usb phy reset is not null, the reset framework does this.
+ * do not print an error message when -EPROBE_DEFER was returned
+
+Hauke Mehrtens (8):
+  mtd: lantiq-flash: drop check of boot select
+  mtd: spi-falcon: drop check of boot select
+  watchdog: lantiq: access boot cause register through regmap
+  watchdog: lantiq: add device tree binding documentation
+  MIPS: lantiq: remove ltq_reset_cause() and ltq_boot_select()
+  MIPS: lantiq: remove old reset controller implementation
+  MIPS: lantiq: remove old GPHY loader code
+  MIPS: lantiq: remove old USB PHY initialisation
+
+Martin Blumenstingl (8):
+  MIPS: lantiq: Use of_platform_default_populate instead of
+    __dt_register_buses
+  MIPS: lantiq: Enable MFD_SYSCON to be able to use it for the RCU MFD
+  Documentation: DT: MIPS: lantiq: Add docs for the RCU bindings
+  MIPS: lantiq: Convert the fpi bus driver to a platform_driver
+  reset: Add a reset controller driver for the Lantiq XWAY based SoCs
+  MIPS: lantiq: Add a GPHY driver which uses the RCU syscon-mfd
+  phy: Add an USB PHY driver for the Lantiq SoCs using the RCU module
+  MIPS: lantiq: Remove the arch/mips/lantiq/xway/reset.c implementation
+
+ .../devicetree/bindings/mips/lantiq/fpi-bus.txt    |  33 ++
+ .../devicetree/bindings/mips/lantiq/rcu-gphy.txt   |  38 ++
+ .../devicetree/bindings/mips/lantiq/rcu.txt        |  97 ++++++
+ .../bindings/phy/phy-lantiq-rcu-usb2.txt           |  42 +++
+ .../devicetree/bindings/reset/lantiq,reset.txt     |  30 ++
+ .../devicetree/bindings/watchdog/lantiq-wdt.txt    |  28 ++
+ MAINTAINERS                                        |   1 +
+ arch/mips/include/asm/mach-lantiq/lantiq.h         |   4 -
+ arch/mips/lantiq/Kconfig                           |   2 +
+ arch/mips/lantiq/falcon/reset.c                    |  22 --
+ arch/mips/lantiq/prom.c                            |   2 +-
+ arch/mips/lantiq/xway/Makefile                     |   4 +-
+ arch/mips/lantiq/xway/reset.c                      | 387 ---------------------
+ arch/mips/lantiq/xway/sysctrl.c                    |  71 +---
+ arch/mips/lantiq/xway/xrx200_phy_fw.c              | 113 ------
+ drivers/mtd/maps/lantiq-flash.c                    |   6 -
+ drivers/phy/Kconfig                                |   8 +
+ drivers/phy/Makefile                               |   1 +
+ drivers/phy/phy-lantiq-rcu-usb2.c                  | 275 +++++++++++++++
+ drivers/reset/Kconfig                              |   6 +
+ drivers/reset/Makefile                             |   1 +
+ drivers/reset/reset-lantiq.c                       | 205 +++++++++++
+ drivers/soc/Makefile                               |   1 +
+ drivers/soc/lantiq/Makefile                        |   2 +
+ drivers/soc/lantiq/fpi-bus.c                       |  91 +++++
+ drivers/soc/lantiq/gphy.c                          | 277 +++++++++++++++
+ drivers/spi/spi-falcon.c                           |   5 -
+ drivers/watchdog/lantiq_wdt.c                      |  45 ++-
+ include/dt-bindings/mips/lantiq_rcu_gphy.h         |  15 +
+ 29 files changed, 1212 insertions(+), 600 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/mips/lantiq/fpi-bus.txt
+ create mode 100644 Documentation/devicetree/bindings/mips/lantiq/rcu-gphy.txt
+ create mode 100644 Documentation/devicetree/bindings/mips/lantiq/rcu.txt
+ create mode 100644 Documentation/devicetree/bindings/phy/phy-lantiq-rcu-usb2.txt
+ create mode 100644 Documentation/devicetree/bindings/reset/lantiq,reset.txt
+ create mode 100644 Documentation/devicetree/bindings/watchdog/lantiq-wdt.txt
+ delete mode 100644 arch/mips/lantiq/xway/reset.c
+ delete mode 100644 arch/mips/lantiq/xway/xrx200_phy_fw.c
+ create mode 100644 drivers/phy/phy-lantiq-rcu-usb2.c
+ create mode 100644 drivers/reset/reset-lantiq.c
+ create mode 100644 drivers/soc/lantiq/Makefile
+ create mode 100644 drivers/soc/lantiq/fpi-bus.c
+ create mode 100644 drivers/soc/lantiq/gphy.c
+ create mode 100644 include/dt-bindings/mips/lantiq_rcu_gphy.h
 
 -- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+2.11.0
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
