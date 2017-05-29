@@ -1,44 +1,63 @@
-From: Oleksij Rempel <o.rempel@pengutronix.de>
-Subject: [PATCH v1 3/5] regulator: pfuze100: add fsl,pmic_stby_poweroff property
-Date: Mon, 29 May 2017 19:09:22 +0200
-Message-ID: <20170529170924.25488-3-o.rempel@pengutronix.de>
+From: Oleksij Rempel <o.rempel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: [PATCH v1 5/5] ARM: dts: imx6: RIoTboard provide Standby to PowerOff option
+Date: Mon, 29 May 2017 19:09:24 +0200
+Message-ID: <20170529170924.25488-5-o.rempel@pengutronix.de>
 References: <20170529170924.25488-1-o.rempel@pengutronix.de>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170529170924.25488-1-o.rempel@pengutronix.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux@rempel-orivat.de
-Cc: Oleksij Rempel <o.rempel@pengutronix.de>, kernel@pengutronix.de, linux-arm-kernel@lists.infradead.org, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170529170924.25488-1-o.rempel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-Q5frsOzIlS7zxQdaRaTXBw@public.gmane.org
+Cc: Oleksij Rempel <o.rempel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Document the new optional "fsl,pmic_stby_poweroff" property.
+This board, as well as some other boards with i.MX6 and a PMIC, uses a
+"MPIC_STBY_REQ" line to notify the PMIC about a state change.
+The PMIC is programmed for a specific state change before triggering the
+line.
+In this case, PMIC_STBY_REQ can be used for Stand by, Sleep
+and Power off modes.
 
-Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
-Cc: kernel@pengutronix.de
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: Liam Girdwood <lgirdwood@gmail.com>
-Cc: Mark Brown <broonie@kernel.org>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: linux-kernel@vger.kernel.org
-Cc: devicetree@vger.kernel.org
+Signed-off-by: Oleksij Rempel <o.rempel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 ---
- Documentation/devicetree/bindings/regulator/pfuze100.txt | 4 ++++
- 1 file changed, 4 insertions(+)
+ arch/arm/boot/dts/imx6dl-riotboard.dts | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/regulator/pfuze100.txt b/Documentation/devicetree/bindings/regulator/pfuze100.txt
-index 9b40db88f637..a2e00ca28bd3 100644
---- a/Documentation/devicetree/bindings/regulator/pfuze100.txt
-+++ b/Documentation/devicetree/bindings/regulator/pfuze100.txt
-@@ -4,6 +4,10 @@ Required properties:
- - compatible: "fsl,pfuze100", "fsl,pfuze200", "fsl,pfuze3000"
- - reg: I2C slave address
+diff --git a/arch/arm/boot/dts/imx6dl-riotboard.dts b/arch/arm/boot/dts/imx6dl-riotboard.dts
+index 2cb72824e800..b5f25fe7b809 100644
+--- a/arch/arm/boot/dts/imx6dl-riotboard.dts
++++ b/arch/arm/boot/dts/imx6dl-riotboard.dts
+@@ -90,6 +90,10 @@
+ 	status = "okay";
+ };
  
-+Optional properties:
-+- fsl,pmic_stby_poweroff: if present, configure the PMIC to shutdown all
-+  power rails when PMIC_STBY_REQ line is asserted during the power off sequence.
++&clks {
++	fsl,pmic_stby_poweroff;
++};
 +
- Required child node:
- - regulators: This is the list of child nodes that specify the regulator
-   initialization data for defined regulators. Please refer to below doc
+ &fec {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_enet>;
+@@ -125,6 +129,7 @@
+ 		reg = <0x08>;
+ 		interrupt-parent = <&gpio5>;
+ 		interrupts = <16 8>;
++		fsl,pmic_stby_poweroff;
+ 
+ 		regulators {
+ 			reg_vddcore: sw1ab {				/* VDDARM_IN */
 -- 
 2.11.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
