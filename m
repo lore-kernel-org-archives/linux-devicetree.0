@@ -1,82 +1,38 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 3/3] ARM: sun8i: v3s: add backlight device
- node for Lichee Pi Zero LCD
-Date: Mon, 29 May 2017 11:26:30 +0200
-Message-ID: <20170529092630.z3brclkxoiyeq4ok@flea.lan>
-References: <20170524121320.4171-1-icenowy@aosc.io>
- <20170524121320.4171-3-icenowy@aosc.io>
- <20170529074117.x7pm2k2lbznl2n5j@flea.home>
- <CAGb2v66X2mAiEVnsj_aE8RV7DdRa_Pe41E-O-GOPe-+cjiw4PA@mail.gmail.com>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Fabrice Gasnier <fabrice.gasnier@st.com>
+Subject: [PATCH v2 0/5] iio: add support for STM32H7 ADC
+Date: Mon, 29 May 2017 11:28:15 +0200
+Message-ID: <1496050100-25854-1-git-send-email-fabrice.gasnier@st.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="dm7um4wnf7r5l3nh"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBUWSV7EQKGQE7VTGXUI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <CAGb2v66X2mAiEVnsj_aE8RV7DdRa_Pe41E-O-GOPe-+cjiw4PA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: jic23@kernel.org, linux@armlinux.org.uk, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: linux-iio@vger.kernel.org, mark.rutland@arm.com, mcoquelin.stm32@gmail.com, alexandre.torgue@st.com, lars@metafoo.de, knaack.h@gmx.de, pmeerw@pmeerw.net, fabrice.gasnier@st.com, benjamin.gaignard@linaro.org, benjamin.gaignard@st.com
 List-Id: devicetree@vger.kernel.org
 
+Add support for STM32H7 Analog to Digital Converter variant.
+It has up to 20 external channels, resolution ranges from 8 to 16bits.
+Differences are regarding clocking, registers and bitfields have also
+been re-arranged, but behavior is similar. It also has additional self
+calibration and power on/off procedures.
 
---dm7um4wnf7r5l3nh
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
+---
+Changes in v2:
+- update bindings with Rob's remarks, document stm32h7 resolutions
+- Slightly re-arrange channels definition, remove a trivial comment
 
-On Mon, May 29, 2017 at 04:16:51PM +0800, Chen-Yu Tsai wrote:
-> On Mon, May 29, 2017 at 3:41 PM, Maxime Ripard
-> <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> > Hi,
-> >
-> > On Wed, May 24, 2017 at 08:13:20PM +0800, Icenowy Zheng wrote:
-> >> The 40-pin LCD connector on Lichee Pi Zero has backlight pins, which is
-> >> controlled by the PWM0 controller of the V3s SoC, and the controlling
-> >> part is on the board.
-> >>
-> >> Add the PWM and backlight device nodes in the device tree file, but
-> >> leave them disabled, as they can only be useful when the LCD is
-> >> attached. The LCD device tree overlay files can enable these controllers
-> >> and make use of them.
-> >>
-> >> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-> >> ---
-> >>  arch/arm/boot/dts/sun8i-v3s-licheepi-zero.dts | 14 ++++++++++++++
-> >>  1 file changed, 14 insertions(+)
-> >>
-> >> diff --git a/arch/arm/boot/dts/sun8i-v3s-licheepi-zero.dts b/arch/arm/boot/dts/sun8i-v3s-licheepi-zero.dts
-> >> index 387fc2aa546d..e0721bf725d1 100644
-> >> --- a/arch/arm/boot/dts/sun8i-v3s-licheepi-zero.dts
-> >> +++ b/arch/arm/boot/dts/sun8i-v3s-licheepi-zero.dts
-> >> @@ -52,6 +52,14 @@
-> >>               serial0 = &uart0;
-> >>       };
-> >>
-> >> +     backlight: backlight {
-> >> +             compatible = "pwm-backlight";
-> >> +             pwms = <&pwm 0 50000 0>;
-> >> +             brightness-levels = <0 10 20 30 40 50 60 70 80 90 100>;
-> >
-> > This is unlikely, the perceived brightness by the human eye is not
-> > linear, and is actually much closer to a logarithmic function, which
-> > means you should have use an exponential function here in order to
-> > appear that your brightness increase is linear.
-> 
-> I think the backlight is a functional part of the panel. It probably
-> belongs in the panel's overlay.
+Fabrice Gasnier (5):
+  dt-bindings: iio: stm32-adc: add support for STM32H7
+  iio: adc: stm32: make core adc clock optional by default
+  iio: adc: stm32: introduce compatible data cfg
+  iio: adc: stm32: make per instance bus clock optional
+  iio: adc: stm32: add support for STM32H7
 
-Yeah, that's also true.
-
-Maxime
+ .../devicetree/bindings/iio/adc/st,stm32-adc.txt   |  28 +-
+ drivers/iio/adc/stm32-adc-core.c                   | 269 +++++++-
+ drivers/iio/adc/stm32-adc-core.h                   |   2 +
+ drivers/iio/adc/stm32-adc.c                        | 762 +++++++++++++++++++--
+ 4 files changed, 972 insertions(+), 89 deletions(-)
 
 -- 
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
---dm7um4wnf7r5l3nh--
+1.9.1
