@@ -1,96 +1,71 @@
-From: Sricharan R <sricharan@codeaurora.org>
-Subject: Re: [PATCH v6 3/6] ACPI/IORT: Ignore all errors except EPROBE_DEFER
-Date: Mon, 29 May 2017 10:36:42 +0530
-Message-ID: <68bc9be5-22df-e7af-3fcd-182e935e681c@codeaurora.org>
-References: <1495892865-9506-1-git-send-email-sricharan@codeaurora.org>
- <1495892865-9506-3-git-send-email-sricharan@codeaurora.org>
- <1564836.5iBbgoacpH@aspire.rjw.lan>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 0/6] ARM: sunxi: Enable AXP PMIC power supplies
+Date: Mon, 29 May 2017 08:51:57 +0200
+Message-ID: <20170529065157.2p3pmo3pb4u3fpgr@flea.home>
+References: <20170525073138.20907-1-wens@csie.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <1564836.5iBbgoacpH@aspire.rjw.lan>
-Content-Language: en-US
-Sender: linux-acpi-owner@vger.kernel.org
-To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: robin.murphy@arm.com, will.deacon@arm.com, joro@8bytes.org, lorenzo.pieralisi@arm.com, iommu@lists.linux-foundation.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, m.szyprowski@samsung.com, bhelgaas@google.com, linux-pci@vger.kernel.org, linux-acpi@vger.kernel.org, tn@semihalf.com, hanjun.guo@linaro.org, okaya@codeaurora.org, robh+dt@kernel.org, frowand.list@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, sudeep.holla@arm.com, lenb@kernel.org, catalin.marinas@arm.com, arnd@arndb.de, linux-arch@vger.kernel.org, laurent.pinchart@ideasonboard.com, j.neuschaefer@gmx.net, geert@linux-m68k.org, magnus.damm@gmail.com, nwatters@codeaurora.org, linux@armlinux.org.uk
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="og5kauresaocyipp"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170525073138.20907-1-wens-jdAy2FN1RRM@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rafael,
 
-On 5/28/2017 12:48 AM, Rafael J. Wysocki wrote:
-> On Saturday, May 27, 2017 07:17:42 PM Sricharan R wrote:
->> While deferring the probe of IOMMU masters, xlate and
->> add_device callbacks called from iort_iommu_configure
->> can pass back error values like -ENODEV, which means
->> the IOMMU cannot be connected with that master for real
->> reasons. Before the IOMMU probe deferral, all such errors
->> were ignored. Now all those errors are propagated back,
->> killing the master's probe for such errors. Instead ignore
->> all the errors except EPROBE_DEFER, which is the only one
->> of concern and let the master work without IOMMU, thus
->> restoring the old behavior. Also make explicit that
->> acpi_dma_configure handles only -EPROBE_DEFER from
->> iort_iommu_configure.
->>
->> Fixes: 5a1bb638d567 ("drivers: acpi: Handle IOMMU lookup failure with deferred probing or error")
->> Signed-off-by: Sricharan R <sricharan@codeaurora.org>
->> ---
->>  drivers/acpi/arm64/iort.c | 6 ++++++
->>  drivers/acpi/scan.c       | 4 ++--
->>  2 files changed, 8 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/acpi/arm64/iort.c b/drivers/acpi/arm64/iort.c
->> index c5fecf9..16e101f 100644
->> --- a/drivers/acpi/arm64/iort.c
->> +++ b/drivers/acpi/arm64/iort.c
->> @@ -782,6 +782,12 @@ const struct iommu_ops *iort_iommu_configure(struct device *dev)
->>  	if (err)
->>  		ops = ERR_PTR(err);
->>  
->> +	/* Ignore all other errors apart from EPROBE_DEFER */
->> +	if (IS_ERR(ops) && (PTR_ERR(ops) != -EPROBE_DEFER)) {
->> +		dev_dbg(dev, "Adding to IOMMU failed: %ld\n", PTR_ERR(ops));
->> +		ops = NULL;
->> +	}
->> +
->>  	return ops;
->>  }
->>  
->> diff --git a/drivers/acpi/scan.c b/drivers/acpi/scan.c
->> index e39ec7b..3a10d757 100644
->> --- a/drivers/acpi/scan.c
->> +++ b/drivers/acpi/scan.c
->> @@ -1371,8 +1371,8 @@ int acpi_dma_configure(struct device *dev, enum dev_dma_attr attr)
->>  	iort_set_dma_mask(dev);
->>  
->>  	iommu = iort_iommu_configure(dev);
->> -	if (IS_ERR(iommu))
->> -		return PTR_ERR(iommu);
->> +	if (IS_ERR(iommu) && PTR_ERR(iommu) == -EPROBE_DEFER)
->> +		return -EPROBE_DEFER;
->>  
->>  	size = max(dev->coherent_dma_mask, dev->coherent_dma_mask + 1);
->>  	/*
->>
-> 
-> ACK for the scan.c change and I'm assuming this to go in via ARM64.
-> 
+--og5kauresaocyipp
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Thanks for the ACK, should go through the IOMMU tree, since this fixes the IOMMU probe deferral
-that got merged through it.
+On Thu, May 25, 2017 at 03:31:32PM +0800, Chen-Yu Tsai wrote:
+> Hi Maxime,
+>=20
+> This series enables the power supplies for the AXP PMICs on boards
+> that I currently have and am actively testing.
+>=20
+> The first patch re-orders the node references for the Cubieboard 2
+> dts, to maintain alphabetical order.
+>=20
+> Patches 2 through 5 enable the ACIN power supply on various boards.
+>=20
+> Patch 6 ties the USB/VBUS power supply of the PMIC to the USB PHY.
+> The PHY should have all available methods of VBUS detection configured.
+> The Cubietruck already has the power supplies enabled, but the USB
+> power supply was not configured to be used for VBUS detection.
 
-Regards,
- Sricharan
+Applied all 6, thanks!
+Maxime
 
-> Thanks,
-> Rafael
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-arm-msm" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
 
--- 
-"QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+--og5kauresaocyipp
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIcBAEBAgAGBQJZK8UNAAoJEBx+YmzsjxAgUbUP/1LhsaywcrlQJcYFOcstU1b+
+evkaDZ8X7GiqAn064CYh6lHmYGdnSqY/l0asGNBPIF89RybWxWOWagOwP3drWott
+a6q7CAKyhqwS2A4mTmsef1odcaRIqEuXQSZcOLES2O4eb6fSe9IXYIjhogNaTTrX
+HGu9QwTvo3jWFjKXe5NxyndsYicD7AJKMUu+4mYqcXe9I+vNRKM+wdgpz2ANefvm
+EYWcmS4y2r0q4SVuKG9OkK5aaKe2HIWBuXt3qGm4L2fwkCrdzWDhS8onnM3tLXP9
+MXxCgQNtXDxWijpRrWNC+EMEHQBfplvrmazBrAUWeocivVMw1rhog8HrbXAA5QrW
+QSoqUW9yiWKwvM8z79QHPhjpiSuhvA19HhLexpcveiZRP1JQDVSPmUXQGlD9H7fx
+8b07mQGqXKgDX6zTQUXl+JpfKYdK91pjUUd6Za6iDUTGe/ZJDjISg46Iqvg5SOqI
+4ueDBvJBAapJUQ8lWhwqKugA3a2tid1a7x1se4TfApt8PVX0m9/5Re0aqDFp1H0K
+qGgCt6d7K26PUDSDezjz6tW6G3ZI/nv6mG0WvS3cYAvinRB4M/2Rc8iLK7t3JkUw
+QXTV/DK0eMdfyBTfgQsGCe9kvFYCj4M0dIQ8ta94mucHMuO9PqbMn/ofMOiK6KN+
+uPtsH1A+rtb+8W4iIaKP
+=CSEJ
+-----END PGP SIGNATURE-----
+
+--og5kauresaocyipp--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
