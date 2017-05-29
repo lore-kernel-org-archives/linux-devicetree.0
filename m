@@ -1,65 +1,117 @@
-From: Michael Ellerman <mpe@ellerman.id.au>
-Subject: Re: CPU_BIG_ENDIAN in generic code (was: Re: [PATCH v3 3/7] arch/sparc: Define config parameter CPU_BIG_ENDIAN)
-Date: Tue, 30 May 2017 12:56:39 +1000
-Message-ID: <877f0z6oig.fsf@concordia.ellerman.id.au>
-References: <CAMuHMdVjh+1TR19mUUQYHSazHnBHa4uxn7KyHUO+jAh7WDxy5Q@mail.gmail.com> <87a85v7to2.fsf@concordia.ellerman.id.au> <CAMuHMdU1kne4tKRfyx0hr1LXh_c75bYMs0b=vncHqrhB69jqYg@mail.gmail.com>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [PATCH v3 10/16] reset: Add a reset controller driver for the
+ Lantiq XWAY based SoCs
+Date: Mon, 29 May 2017 12:20:14 +0200
+Message-ID: <1496053214.17695.49.camel@pengutronix.de>
+References: <20170528184006.31668-1-hauke@hauke-m.de>
+         <20170528184006.31668-11-hauke@hauke-m.de>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-arch-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdU1kne4tKRfyx0hr1LXh_c75bYMs0b=vncHqrhB69jqYg@mail.gmail.com>
-Sender: linux-arch-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Babu Moger <babu.moger@oracle.com>, "David S. Miller" <davem@davemloft.net>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnd Bergmann <arnd@arndb.de>, sparclinux <sparclinux@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux-Arch <linux-arch@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mips-bounce@linux-mips.org>
+In-Reply-To: <20170528184006.31668-11-hauke@hauke-m.de>
+Sender: linux-mips-bounce@linux-mips.org
+Errors-to: linux-mips-bounce@linux-mips.org
+List-help: <mailto:ecartis@linux-mips.org?Subject=help>
+List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
+List-software: Ecartis version 1.0.0
+List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
+List-owner: <mailto:ralf@linux-mips.org>
+List-post: <mailto:linux-mips@linux-mips.org>
+List-archive: <http://www.linux-mips.org/archives/linux-mips/>
+To: Hauke Mehrtens <hauke@hauke-m.de>
+Cc: ralf@linux-mips.org, linux-mips@linux-mips.org, linux-mtd@lists.infradead.org, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, martin.blumenstingl@googlemail.com, john@phrozen.org, linux-spi@vger.kernel.org, hauke.mehrtens@intel.com, robh@kernel.org, andy.shevchenko@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-Geert Uytterhoeven <geert@linux-m68k.org> writes:
+Hi Hauke,
 
-> Hi Michael,
->
-> On Mon, May 29, 2017 at 2:07 PM, Michael Ellerman <mpe@ellerman.id.au> wrote:
->> Geert Uytterhoeven <geert@linux-m68k.org> writes:
->>> On Tue, May 23, 2017 at 11:45 PM, Babu Moger <babu.moger@oracle.com> wrote:
->>>> Found this problem while enabling queued rwlock on SPARC.
->>>> The parameter CONFIG_CPU_BIG_ENDIAN is used to clear the
->>>> specific byte in qrwlock structure. Without this parameter,
->>>> we clear the wrong byte. Here is the code.
->>>>
->>>> static inline u8 *__qrwlock_write_byte(struct qrwlock *lock)
->>>>  {
->>>>         return (u8 *)lock + 3 * IS_BUILTIN(CONFIG_CPU_BIG_ENDIAN);
->>>>  }
->>>>
->>>> Define CPU_BIG_ENDIAN for SPARC to fix it.
->>>
->>>> --- a/arch/sparc/Kconfig
->>>> +++ b/arch/sparc/Kconfig
->>>> @@ -92,6 +92,10 @@ config ARCH_DEFCONFIG
->>>>  config ARCH_PROC_KCORE_TEXT
->>>>         def_bool y
->>>>
->>>> +config CPU_BIG_ENDIAN
->>>> +       bool
->>>> +       default y if SPARC
->>>
->>> Nice catch!
->>>
->>> Traditionally, CPU_BIG_ENDIAN and CPU_LITTLE_ENDIAN were defined only on
->>> architectures that may support both.  And it was checked in platform code
->>> and drivers only.
->>> Hence the symbol is lacking from most architectures. Heck, even
->>> architectures that support both may default to one endiannes, and declare
->>> only the symbol for the other endianness:
->>
->> I guess there's a reason we can't use __BIG_ENDIAN__ / __LITTLE_ENDIAN__ ?
->
-> I (C/asm) code we can, in Kconfig we cannot.
->
-> So far we tried always doing that, but a few checks for the semi-existing
-> Kconfig symbol crept in in generic code. Those could be replaced by the __*__
-> variants, but consistently having the Kconfig symbols would be useful anyway
-> (e.g. to avoid building the broken-on-big-endian ISDN drivers).
+On Sun, 2017-05-28 at 20:40 +0200, Hauke Mehrtens wrote:
+[...]
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/reset/lantiq,reset.txt
+> @@ -0,0 +1,30 @@
+> +Lantiq XWAY SoC RCU reset controller binding
+> +============================================
+> +
+> +This binding describes a reset-controller found on the RCU module on Lantiq
+> +XWAY SoCs.
+> +
+> +
+> +-------------------------------------------------------------------------------
+> +Required properties:
+> +- compatible		: Should be one of
+> +				"lantiq,reset-danube"
+> +				"lantiq,reset-xrx200"
+> +- regmap		: A phandle to the RCU syscon
+> +- offset-set		: Offset of the reset set register
+> +- offset-status		: Offset of the reset status register
+> +- #reset-cells		: Specifies the number of cells needed to encode the
+> +			  reset line, should be 2.
+> +			  The first cell takes the reset set bit and the
+> +			  second cell takes the status bit.
+> +
+> +-------------------------------------------------------------------------------
+> +Example for the reset-controllers on the xRX200 SoCs:
+> +	reset0: reset-controller@0 {
+> +		compatible = "lantiq,reset-xrx200";
+> +
+> +		regmap = <&rcu0>;
 
-Ah OK, the original mail was citing C code, but yeah I guess it would be
-handy in Makefiles etc.
+Why not place these nodes as children of &rcu0 ? This property would be
+superfluous then.
 
-cheers
+> +		offset-set = <0x10>;
+> +		offset-status = <0x14>;
+> +		#reset-cells = <2>;
+> +	};
+[...]
+> --- /dev/null
+> +++ b/drivers/reset/reset-lantiq.c
+> @@ -0,0 +1,205 @@
+[...]
+> +static int lantiq_rcu_reset_update(struct reset_controller_dev *rcdev,
+> +				   unsigned long id, bool assert)
+> +{
+> +	struct lantiq_rcu_reset_priv *priv = to_lantiq_rcu_reset_priv(rcdev);
+> +	int ret, retry = LANTIQ_RCU_RESET_TIMEOUT;
+> +	unsigned int set = id & 0x1f;
+> +	u32 val;
+> +
+> +	if (assert)
+> +		val = BIT(set);
+> +	else
+> +		val = 0;
+> +
+> +	ret = regmap_update_bits(priv->regmap, priv->reset_offset, BIT(set),
+> +				 val);
+> +	if (ret) {
+> +		dev_err(priv->dev, "Failed to set reset bit %u\n", set);
+> +		return ret;
+> +	}
+> +
+> +	do {
+> +		ret = lantiq_rcu_reset_status(rcdev, id);
+> +		if (ret < 0)
+> +			return ret;
+> +		if (ret == assert)
+> +			break;
+> +		usleep_range(20, 40);
+> +	} while (--retry);
+
+How about wrapping this in a lantiq_rcu_poll_status(_timeout) function?
+I still think this is a case where regmap_read_poll_timeout could be
+used.
+
+[...]
+> +static int lantiq_rcu_reset_of_probe(struct platform_device *pdev,
+> +			       struct lantiq_rcu_reset_priv *priv)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	int ret;
+> +
+> +	priv->regmap = syscon_regmap_lookup_by_phandle(dev->of_node, "regmap");
+
+Why not use syscon_node_to_regmap(dev->of_node->parent) ?
+
+regards
+Philipp
