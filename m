@@ -1,52 +1,43 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [PATCH 6/7] [media] soc_camera: rcar_vin: use proper name for
- the R-Car SoC
-Date: Mon, 29 May 2017 14:02:02 +0200
-Message-ID: <20170529120202.GC4342@katana>
-References: <20170528093051.11816-1-wsa+renesas@sang-engineering.com>
- <20170528093051.11816-7-wsa+renesas@sang-engineering.com>
- <a133a7f7-e887-5043-83d3-cccbec581487@cogentembedded.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="Pk6IbRAofICFmK5e"
-Return-path: <linux-media-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <a133a7f7-e887-5043-83d3-cccbec581487@cogentembedded.com>
-Sender: linux-media-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>, linux-renesas-soc@vger.kernel.org, Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>, Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Stefan Wahren <stefan.wahren@i2se.com>
+Subject: [PATCH v8 net-next 15/17] dt-bindings: slave-device: add current-speed property
+Date: Mon, 29 May 2017 13:57:23 +0200
+Message-ID: <1496059045-13572-16-git-send-email-stefan.wahren@i2se.com>
+References: <1496059045-13572-1-git-send-email-stefan.wahren@i2se.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1496059045-13572-1-git-send-email-stefan.wahren@i2se.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "David S. Miller" <davem@davemloft.net>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.com>, Lino Sanfilippo <LinoSanfilippo@gmx.de>, Jakub Kicinski <kubakici@wp.pl>, devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org, Stefan Wahren <stefan.wahren@i2se.com>
 List-Id: devicetree@vger.kernel.org
 
+This adds a new DT property to define the current baud rate of the
+slave device.
 
---Pk6IbRAofICFmK5e
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+ Documentation/devicetree/bindings/serial/slave-device.txt | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-
->    Why "soc_camera:" in the subject?
-
-I used 'git log $file' and copied the most recent entry. Do I need to
-resend?
-
-
---Pk6IbRAofICFmK5e
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlksDboACgkQFA3kzBSg
-KbbJsg//Rt0eZgQf7zosP8iChI+47w4RF8TNXvjPt+PYZGXmAREXxy1f1jNgDJjI
-xgOFql4F6a1Z5jfAILAX6WtyUlUlij77uLO9N1rUFg+uZnukWeY/nAn2clkQfqOL
-qSS3E8brsC0k1pdbPpEYOZpfZW5M9stWf6RqjEV9c6fjIDPDEUKcbS2UbeduY4zv
-EXZ+sxenDidxwVa8v0JLmXoP8LQ0oSZo1skR6/46nZgt2Rp9C8KY1aWBnOsfDwUV
-QDj51Odt+8seGPxTi/o9GWpGWdmZ/JUqyrxRUgKibV0+5KQzCzfZis7B5lM9lBqc
-ndYp5dONu9i8+/ksxrcAJExWh1SIFMFB0SmCpIm/4E+WrwVs9zXM7c7p0henlmKR
-2GX5E+eOlhIUXIIioerfS8efCkCDHQ6iuL1/mLxrMyQut5Sf7JjMnKph965LJFDa
-j0hlCvYUKvQtjgOWtF27c91autijAx1CUmU6S7MnT9pEF4D5P4R3lrLlCfaEamYl
-DpJBNYqvb1JvDgZ1VAdO+SIujooddE5SIG2ZV0xmYjjJqi+aOHF93HUnLlDf0ItR
-42WqjNfsCaHqMg9VaDegyeyx3dUyS8NBG/c7oIlNzjJ7hf2tHeExZRtu1N7bshTM
-/ETXJbOo5PJvh1ItRGsQc9sSIUX9Jlp4+47KJfehzyGLWSdJifk=
-=8Vbh
------END PGP SIGNATURE-----
-
---Pk6IbRAofICFmK5e--
+diff --git a/Documentation/devicetree/bindings/serial/slave-device.txt b/Documentation/devicetree/bindings/serial/slave-device.txt
+index f660379..40110e0 100644
+--- a/Documentation/devicetree/bindings/serial/slave-device.txt
++++ b/Documentation/devicetree/bindings/serial/slave-device.txt
+@@ -21,6 +21,15 @@ Optional Properties:
+ 		  can support. For example, a particular board has some signal
+ 		  quality issue or the host processor can't support higher
+ 		  baud rates.
++- current-speed	: The current baud rate the device operates at. This should
++		  only be present in case a driver has no chance to know
++		  the baud rate of the slave device.
++		  Examples:
++		    * device supports auto-baud
++		    * the rate is setup by a bootloader and there is no
++		      way to reset the device
++		    * device baud rate is configured by its firmware but
++		      there is no way to request the actual settings
+ 
+ Example:
+ 
+-- 
+2.1.4
