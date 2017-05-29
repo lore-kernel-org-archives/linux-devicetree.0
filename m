@@ -1,109 +1,66 @@
-From: Fabrice Gasnier <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>
-Subject: [PATCH v2 2/5] iio: adc: stm32: make core adc clock optional by default
-Date: Mon, 29 May 2017 11:28:17 +0200
-Message-ID: <1496050100-25854-3-git-send-email-fabrice.gasnier@st.com>
-References: <1496050100-25854-1-git-send-email-fabrice.gasnier@st.com>
+From: Andrey Melnikov <temnota.am-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH net-next v3 5/5] net-next: dsa: add dsa support for
+ Mediatek MT7530 switch
+Date: Mon, 29 May 2017 13:44:15 +0300
+Message-ID: <CA+PODjoZpYLVKCXveUGvu8MXX4YVmE-bKm241o_3OT3P5pkieQ@mail.gmail.com>
+References: <1490780303-18598-1-git-send-email-sean.wang@mediatek.com>
+ <1490780303-18598-6-git-send-email-sean.wang@mediatek.com>
+ <hn6gvd-qp1.ln1@banana.localnet>
+ <043CDC76-3C57-4F54-97B6-896591A11CB3@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1496050100-25854-1-git-send-email-fabrice.gasnier-qxv4g6HH51o@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, fabrice.gasnier-qxv4g6HH51o@public.gmane.org, benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, benjamin.gaignard-qxv4g6HH51o@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <043CDC76-3C57-4F54-97B6-896591A11CB3-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
+List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Analog clock input is mandatory on stm32f4. But newer version of
-ADC hardware block allow to select either bus clock or asynchronous
-clock, for analog circuitry.
+2017-05-26 8:54 GMT+03:00 Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>:
+> On May 24, 2017 4:17:39 AM PDT, "Andrey Jr. Melnikov" <temnota.am-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>>In gmane.linux.kernel sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org wrote:
+>>> From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+>>
+>>> MT7530 is a 7-ports Gigabit Ethernet Switch that could be found on
+>>> Mediatek router platforms such as MT7623A or MT7623N platform which
+>>> includes 7-port Gigabit Ethernet MAC and 5-port Gigabit Ethernet PHY.
+>>> Among these ports, The port from 0 to 4 are the user ports connecting
+>>> with the remote devices while the port 5 and 6 are the CPU ports
+>>> connecting into Mediatek Ethernet GMAC.
+>>
+>>> For port 6, it can communicate with the CPU via Mediatek Ethernet
+>>GMAC
+>>> through either the TRGMII or RGMII which could be controlled by
+>>phy-mode
+>>> in the dt-bindings to specify which mode is preferred to use. And for
+>>> port 5, only RGMII can be specified. However, currently, only port 6
+>>is
+>>> being supported in this DSA driver.
+>>
+>>> The driver is made with the reference to qca8k and other existing DSA
+>>> driver. The most of the essential callbacks of the DSA are already
+>>> support in the driver, including tag insert for user port
+>>distinguishing,
+>>> port control, bridge offloading, STP setup and ethtool operation to
+>>allow
+>>> DSA to model each user port into a standalone netdevice as the other
+>>DSA
+>>> driver had done.
+>>
+>>What about JUMBO frames and large MTU support? devlink support?
+>
+> We don't have a ndo_change_mtu callback implemented for DSA network devices but that is probably how we should do it.
+> Regarding devlink, Andrew added basic support for it but unlike mlxsw it is currently of mild interest. Do you have something specific in mind with devlink?
 
-So, make it optional by default, but enforce clk presence on stm32f4.
-
-Signed-off-by: Fabrice Gasnier <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>
----
- drivers/iio/adc/stm32-adc-core.c | 38 ++++++++++++++++++++++++++------------
- 1 file changed, 26 insertions(+), 12 deletions(-)
-
-diff --git a/drivers/iio/adc/stm32-adc-core.c b/drivers/iio/adc/stm32-adc-core.c
-index 22b7c93..597ab7a 100644
---- a/drivers/iio/adc/stm32-adc-core.c
-+++ b/drivers/iio/adc/stm32-adc-core.c
-@@ -85,13 +85,21 @@ static int stm32f4_adc_clk_sel(struct platform_device *pdev,
- 	u32 val;
- 	int i;
- 
-+	/* stm32f4 has one clk input for analog (mandatory), enforce it here */
-+	if (!priv->aclk) {
-+		dev_err(&pdev->dev, "No 'adc' clock found\n");
-+		return -ENOENT;
-+	}
-+
- 	rate = clk_get_rate(priv->aclk);
- 	for (i = 0; i < ARRAY_SIZE(stm32f4_pclk_div); i++) {
- 		if ((rate / stm32f4_pclk_div[i]) <= STM32F4_ADC_MAX_CLK_RATE)
- 			break;
- 	}
--	if (i >= ARRAY_SIZE(stm32f4_pclk_div))
-+	if (i >= ARRAY_SIZE(stm32f4_pclk_div)) {
-+		dev_err(&pdev->dev, "adc clk selection failed\n");
- 		return -EINVAL;
-+	}
- 
- 	val = readl_relaxed(priv->common.base + STM32F4_ADC_CCR);
- 	val &= ~STM32F4_ADC_ADCPRE_MASK;
-@@ -227,21 +235,25 @@ static int stm32_adc_probe(struct platform_device *pdev)
- 	priv->aclk = devm_clk_get(&pdev->dev, "adc");
- 	if (IS_ERR(priv->aclk)) {
- 		ret = PTR_ERR(priv->aclk);
--		dev_err(&pdev->dev, "Can't get 'adc' clock\n");
--		goto err_regulator_disable;
-+		if (ret == -ENOENT) {
-+			priv->aclk = NULL;
-+		} else {
-+			dev_err(&pdev->dev, "Can't get 'adc' clock\n");
-+			goto err_regulator_disable;
-+		}
- 	}
- 
--	ret = clk_prepare_enable(priv->aclk);
--	if (ret < 0) {
--		dev_err(&pdev->dev, "adc clk enable failed\n");
--		goto err_regulator_disable;
-+	if (priv->aclk) {
-+		ret = clk_prepare_enable(priv->aclk);
-+		if (ret < 0) {
-+			dev_err(&pdev->dev, "adc clk enable failed\n");
-+			goto err_regulator_disable;
-+		}
- 	}
- 
- 	ret = stm32f4_adc_clk_sel(pdev, priv);
--	if (ret < 0) {
--		dev_err(&pdev->dev, "adc clk selection failed\n");
-+	if (ret < 0)
- 		goto err_clk_disable;
--	}
- 
- 	ret = stm32_adc_irq_probe(pdev, priv);
- 	if (ret < 0)
-@@ -261,7 +273,8 @@ static int stm32_adc_probe(struct platform_device *pdev)
- 	stm32_adc_irq_remove(pdev, priv);
- 
- err_clk_disable:
--	clk_disable_unprepare(priv->aclk);
-+	if (priv->aclk)
-+		clk_disable_unprepare(priv->aclk);
- 
- err_regulator_disable:
- 	regulator_disable(priv->vref);
-@@ -276,7 +289,8 @@ static int stm32_adc_remove(struct platform_device *pdev)
- 
- 	of_platform_depopulate(&pdev->dev);
- 	stm32_adc_irq_remove(pdev, priv);
--	clk_disable_unprepare(priv->aclk);
-+	if (priv->aclk)
-+		clk_disable_unprepare(priv->aclk);
- 	regulator_disable(priv->vref);
- 
- 	return 0;
--- 
-1.9.1
+I want to see each ports behind the bridge as independent ethernet
+devices. If I understand RTFM only devlink may expose this
+configuration.
