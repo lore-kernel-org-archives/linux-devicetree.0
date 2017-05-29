@@ -1,42 +1,50 @@
 From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 0/6] ARM: sunxi: Enable AXP PMIC power supplies
-Date: Mon, 29 May 2017 08:51:57 +0200
-Message-ID: <20170529065157.2p3pmo3pb4u3fpgr@flea.home>
-References: <20170525073138.20907-1-wens@csie.org>
+Subject: Re: [PATCH 1/3] ARM: sun8i: v3s: add PWM device node
+Date: Mon, 29 May 2017 08:59:42 +0200
+Message-ID: <20170529065942.gho4kjgzsv4lfnda@flea.home>
+References: <20170524121320.4171-1-icenowy@aosc.io>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="og5kauresaocyipp"
+        protocol="application/pgp-signature"; boundary="e542b2vzlsxnpyvv"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20170525073138.20907-1-wens-jdAy2FN1RRM@public.gmane.org>
+In-Reply-To: <20170524121320.4171-1-icenowy-h8G6r0blFSE@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---og5kauresaocyipp
+--e542b2vzlsxnpyvv
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, May 25, 2017 at 03:31:32PM +0800, Chen-Yu Tsai wrote:
-> Hi Maxime,
->=20
-> This series enables the power supplies for the AXP PMICs on boards
-> that I currently have and am actively testing.
->=20
-> The first patch re-orders the node references for the Cubieboard 2
-> dts, to maintain alphabetical order.
->=20
-> Patches 2 through 5 enable the ACIN power supply on various boards.
->=20
-> Patch 6 ties the USB/VBUS power supply of the PMIC to the USB PHY.
-> The PHY should have all available methods of VBUS detection configured.
-> The Cubietruck already has the power supplies enabled, but the USB
-> power supply was not configured to be used for VBUS detection.
+Hi,
 
-Applied all 6, thanks!
+On Wed, May 24, 2017 at 08:13:18PM +0800, Icenowy Zheng wrote:
+> As we have already the support for the PWM controller on V3s SoC, add
+> its device node in the SoC's DTSI file.
+>=20
+> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/sun8i-v3s.dtsi | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+>=20
+> diff --git a/arch/arm/boot/dts/sun8i-v3s.dtsi b/arch/arm/boot/dts/sun8i-v=
+3s.dtsi
+> index a49ebef53c91..bb080c4bd22c 100644
+> --- a/arch/arm/boot/dts/sun8i-v3s.dtsi
+> +++ b/arch/arm/boot/dts/sun8i-v3s.dtsi
+> @@ -255,6 +255,14 @@
+>  			interrupts =3D <GIC_SPI 25 IRQ_TYPE_LEVEL_HIGH>;
+>  		};
+> =20
+> +		pwm: pwm@1c21400 {
+> +			compatible =3D "allwinner,sun7i-a20-pwm";
+
+You need to have a v3s compatible here.
+
 Maxime
 
 --=20
@@ -44,27 +52,27 @@ Maxime Ripard, Free Electrons
 Embedded Linux and Kernel engineering
 http://free-electrons.com
 
---og5kauresaocyipp
+--e542b2vzlsxnpyvv
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIcBAEBAgAGBQJZK8UNAAoJEBx+YmzsjxAgUbUP/1LhsaywcrlQJcYFOcstU1b+
-evkaDZ8X7GiqAn064CYh6lHmYGdnSqY/l0asGNBPIF89RybWxWOWagOwP3drWott
-a6q7CAKyhqwS2A4mTmsef1odcaRIqEuXQSZcOLES2O4eb6fSe9IXYIjhogNaTTrX
-HGu9QwTvo3jWFjKXe5NxyndsYicD7AJKMUu+4mYqcXe9I+vNRKM+wdgpz2ANefvm
-EYWcmS4y2r0q4SVuKG9OkK5aaKe2HIWBuXt3qGm4L2fwkCrdzWDhS8onnM3tLXP9
-MXxCgQNtXDxWijpRrWNC+EMEHQBfplvrmazBrAUWeocivVMw1rhog8HrbXAA5QrW
-QSoqUW9yiWKwvM8z79QHPhjpiSuhvA19HhLexpcveiZRP1JQDVSPmUXQGlD9H7fx
-8b07mQGqXKgDX6zTQUXl+JpfKYdK91pjUUd6Za6iDUTGe/ZJDjISg46Iqvg5SOqI
-4ueDBvJBAapJUQ8lWhwqKugA3a2tid1a7x1se4TfApt8PVX0m9/5Re0aqDFp1H0K
-qGgCt6d7K26PUDSDezjz6tW6G3ZI/nv6mG0WvS3cYAvinRB4M/2Rc8iLK7t3JkUw
-QXTV/DK0eMdfyBTfgQsGCe9kvFYCj4M0dIQ8ta94mucHMuO9PqbMn/ofMOiK6KN+
-uPtsH1A+rtb+8W4iIaKP
-=CSEJ
+iQIcBAEBAgAGBQJZK8beAAoJEBx+YmzsjxAgI7YP/1qtIfY40IAN7TRr5Z+JTj9l
+1wPf8u5S14BPDlPj3DFeeRJjSMPoTCiBS4OsqtAI4ZgqX6jpmD9/aFBNhu4nCWjS
+9h4e6w0MAHv28Lvy1Bso7J7zeTN8EqNdODInZSwctHfcn/6CbF/94S8xQpBLYHTC
+TyHMeW3YlTi3JysIs3pwiq3zmdcwUBJtWIgSCtNVi4vDzTUf7vsS703nMqJXgrQd
+htbDmhfHrkgC0BjH9Ebb3YUyGhAYDROCo5BgFy7Yke0P4q6GkANdv1EuzUbVASJa
+XcrmPsF0qQ682wVrQoNZ0OHSXVxtSDouhufs06YsKClmPrR9LqV0tVSMbbR4Uy8h
+N1lzKIGQFGNFjP4fBbUeHgaPpbMA97XSLDD04r3deoq01TspqwSJ+I3srPVy78QX
+JgqULs/+B32nOhPymRbXt2xz4uiAH56WeOm1515om6wUNYyvhNC05h95PhwBze+W
+XZ8Y1rAGUVawmt07YSAZIHeVH01viK+PGrAaF2l16OnY/fIdt1F0ENR2IEXanKFv
+oWrRKcLNiyWiQvlNNpi5VXSdvOs4nOi5IkqNyF+KrlXYLpMaV21bsmzvEDG+4R0Z
+WXgRZvOTkpViq45DRDSHzCnT+aox09IaAVFyTBSY7KU6ygjKYt46WiniKYCg8j1C
+sOETZjaXJ4s6I2f4APxw
+=/iY4
 -----END PGP SIGNATURE-----
 
---og5kauresaocyipp--
+--e542b2vzlsxnpyvv--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
