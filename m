@@ -1,15 +1,15 @@
 From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 4/4] arm64: dts: mt7622: group clock DT nodes into
- separate DT file
-Date: Mon, 29 May 2017 17:09:47 +0200
-Message-ID: <4a57ab2f-03b0-3c68-23cd-ed8253978ed7@gmail.com>
+Subject: Re: [PATCH v2 1/4] dt-bindings: mediatek: add bindings for MediaTek
+ MT7622 SoC
+Date: Mon, 29 May 2017 17:11:16 +0200
+Message-ID: <cf8fabea-8eb1-6a28-0e8e-cfc3087f5fb5@gmail.com>
 References: <cover.1496061587.git.sean.wang@mediatek.com>
- <f5fa4a4dd78bf92500a517b0582c745569aa8ff2.1496061587.git.sean.wang@mediatek.com>
+ <9b4e201f8f9ad11be98f22ccc3022b4e5d76a681.1496061587.git.sean.wang@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <f5fa4a4dd78bf92500a517b0582c745569aa8ff2.1496061587.git.sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+In-Reply-To: <9b4e201f8f9ad11be98f22ccc3022b4e5d76a681.1496061587.git.sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
@@ -21,72 +21,77 @@ List-Id: devicetree@vger.kernel.org
 On 29/05/17 14:56, sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org wrote:
 > From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 > 
-> For more readability and maintenance, all the clock related DT
-> nodes for mt7622 SoC are grouped into a separate DT file. And
-> currently mt7622-clock.dtsi only includes the fixed clock for
-> uart0 and the oscillator which would be extended after MT7622
-> clock driver is introduced.
+> This adds dt-binding documentation for MediaTek MT7622 SoC
+> which currently only includes basic items such as ARM CPU,
+> MediaTek SYSIRQ and UART.
 > 
-
-We've not done this for any other Mediatek SoC at the moment.
-Do you expect the m7622 to have more clock nodes then for example mt7623?
-Apart from that this clock nodes are just dummy clocks which should 
-disappear as soon as the clock driver got merged.
-Last point, you break bisectability if add a clock node in a patch 
-*after* the consumer was added.
-
-So please add the clock nodes to the dtsi as we did up to now. If in the 
-future we see that mt7622 has a whole bunch of clock nodes, we can still 
-abstract them in an external dtsi file.
-
-Thanks,
-Matthias
-
 > Signed-off-by: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 > ---
->   arch/arm64/boot/dts/mediatek/mt7622-clock.dtsi | 20 ++++++++++++++++++++
->   arch/arm64/boot/dts/mediatek/mt7622.dtsi       |  1 +
->   2 files changed, 21 insertions(+)
->   create mode 100644 arch/arm64/boot/dts/mediatek/mt7622-clock.dtsi
+>   Documentation/devicetree/bindings/arm/mediatek.txt                    | 4 ++++
+>   .../devicetree/bindings/interrupt-controller/mediatek,sysirq.txt      | 3 ++-
+>   Documentation/devicetree/bindings/serial/mtk-uart.txt                 | 1 +
+>   3 files changed, 7 insertions(+), 1 deletion(-)
 > 
-> diff --git a/arch/arm64/boot/dts/mediatek/mt7622-clock.dtsi b/arch/arm64/boot/dts/mediatek/mt7622-clock.dtsi
-> new file mode 100644
-> index 0000000..264421d
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/mediatek/mt7622-clock.dtsi
-> @@ -0,0 +1,20 @@
-> +/*
-> + * Copyright (c) 2017 MediaTek Inc.
-> + * Author: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> + *
-> + * SPDX-License-Identifier: (GPL-2.0 OR MIT)
-> + */
-> +/ {
-> +	clk25m: oscillator@0 {
-> +		compatible = "fixed-clock";
-> +		#clock-cells = <0>;
-> +		clock-frequency = <25000000>;
-> +		clock-output-names = "clkxtal";
-> +	};
-> +
-> +	uart_clk: dummy26m {
-> +		compatible = "fixed-clock";
-> +		#clock-cells = <0>;
-> +		clock-frequency = <25000000>;
-> +	};
-> +};
-> diff --git a/arch/arm64/boot/dts/mediatek/mt7622.dtsi b/arch/arm64/boot/dts/mediatek/mt7622.dtsi
-> index 3a729d9..3768c28 100644
-> --- a/arch/arm64/boot/dts/mediatek/mt7622.dtsi
-> +++ b/arch/arm64/boot/dts/mediatek/mt7622.dtsi
-> @@ -8,6 +8,7 @@
+> diff --git a/Documentation/devicetree/bindings/arm/mediatek.txt b/Documentation/devicetree/bindings/arm/mediatek.txt
+> index c860b24..fc68570 100644
+> --- a/Documentation/devicetree/bindings/arm/mediatek.txt
+> +++ b/Documentation/devicetree/bindings/arm/mediatek.txt
+> @@ -12,6 +12,7 @@ compatible: Must contain one of
+>      "mediatek,mt6592"
+>      "mediatek,mt6755"
+>      "mediatek,mt6795"
+> +   "mediatek,mt7622"
+>      "mediatek,mt7623"
+>      "mediatek,mt8127"
+>      "mediatek,mt8135"
+> @@ -38,6 +39,9 @@ Supported boards:
+>   - Evaluation board for MT6795(Helio X10):
+>       Required root node properties:
+>         - compatible = "mediatek,mt6795-evb", "mediatek,mt6795";
+> +- Reference board variant 1 for MT7622:
+> +    Required root node properties:
+> +      - compatible = "mediatek,mt7622-rfb1", "mediatek,mt7622";
+>   - Evaluation board for MT7623:
+>       Required root node properties:
+>         - compatible = "mediatek,mt7623-evb", "mediatek,mt7623";
+> diff --git a/Documentation/devicetree/bindings/interrupt-controller/mediatek,sysirq.txt b/Documentation/devicetree/bindings/interrupt-controller/mediatek,sysirq.txt
+> index a89c03b..eda1183 100644
+> --- a/Documentation/devicetree/bindings/interrupt-controller/mediatek,sysirq.txt
+> +++ b/Documentation/devicetree/bindings/interrupt-controller/mediatek,sysirq.txt
+> @@ -1,4 +1,4 @@
+> -+Mediatek 65xx/67xx/81xx sysirq
+> ++Mediatek MT65xx/MT67xx/MT762x/MT81xx sysirq
 >   
->   #include <dt-bindings/interrupt-controller/irq.h>
->   #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +#include "mt7622-clock.dtsi"
->   
->   / {
->   	compatible = "mediatek,mt7622";
+>   Mediatek SOCs sysirq support controllable irq inverter for each GIC SPI
+>   interrupt.
+> @@ -15,6 +15,7 @@ Required properties:
+>   	"mediatek,mt6582-sysirq"
+>   	"mediatek,mt6580-sysirq"
+>   	"mediatek,mt6577-sysirq"
+> +	"mediatek,mt7622-sysirq"
+>   	"mediatek,mt2701-sysirq"
+
+This file is a mess and I posted some cleanups on the mailinglist. No 
+need for you to resubmit. If the DT maintainers are fine with my 
+cleanups, I cann change the line accordingly.
+
+Regards,
+Matthias
+
+>   - interrupt-controller : Identifies the node as an interrupt controller
+>   - #interrupt-cells : Use the same format as specified by GIC in arm,gic.txt.
+> diff --git a/Documentation/devicetree/bindings/serial/mtk-uart.txt b/Documentation/devicetree/bindings/serial/mtk-uart.txt
+> index 0015c72..daa1eef 100644
+> --- a/Documentation/devicetree/bindings/serial/mtk-uart.txt
+> +++ b/Documentation/devicetree/bindings/serial/mtk-uart.txt
+> @@ -8,6 +8,7 @@ Required properties:
+>     * "mediatek,mt6589-uart" for MT6589 compatible UARTS
+>     * "mediatek,mt6755-uart" for MT6755 compatible UARTS
+>     * "mediatek,mt6795-uart" for MT6795 compatible UARTS
+> +  * "mediatek,mt7622-uart" for MT7622 compatible UARTS
+>     * "mediatek,mt7623-uart" for MT7623 compatible UARTS
+>     * "mediatek,mt8127-uart" for MT8127 compatible UARTS
+>     * "mediatek,mt8135-uart" for MT8135 compatible UARTS
 > 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
